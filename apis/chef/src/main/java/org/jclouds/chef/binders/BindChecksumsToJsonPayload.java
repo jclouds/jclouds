@@ -56,7 +56,7 @@ public class BindChecksumsToJsonPayload extends BindToStringPayload {
       builder.deleteCharAt(builder.length() - 1);
       builder.append("}}");
       super.bindToRequest(request, builder.toString());
-      request.getPayload().setContentType(MediaType.APPLICATION_JSON);
+      request.getPayload().getContentMetadata().setContentType(MediaType.APPLICATION_JSON);
    }
 
 }

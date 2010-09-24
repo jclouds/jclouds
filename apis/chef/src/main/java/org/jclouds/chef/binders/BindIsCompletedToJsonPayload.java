@@ -36,7 +36,7 @@ public class BindIsCompletedToJsonPayload extends BindToStringPayload {
    @Override
    public void bindToRequest(HttpRequest request, Object value) {
       super.bindToRequest(request, String.format("{\"is_completed\":\"%s\"}", value));
-      request.getPayload().setContentType(MediaType.APPLICATION_JSON);
+      request.getPayload().getContentMetadata().setContentType(MediaType.APPLICATION_JSON);
    }
 
 }

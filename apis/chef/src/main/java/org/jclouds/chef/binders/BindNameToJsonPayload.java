@@ -36,7 +36,7 @@ public class BindNameToJsonPayload extends BindToStringPayload {
    @Override
    public void bindToRequest(HttpRequest request, Object payload) {
       super.bindToRequest(request, String.format("{\"name\":\"%s\"}", payload));
-      request.getPayload().setContentType(MediaType.APPLICATION_JSON);
+      request.getPayload().getContentMetadata().setContentType(MediaType.APPLICATION_JSON);
    }
 
 }
