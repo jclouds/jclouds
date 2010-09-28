@@ -14,7 +14,7 @@ if [ ! -f /usr/bin/chef-client ]; then
   gem install chef ohai --no-rdoc --no-ri --verbose
 fi
 mkdir -p /etc/chef
-cat > /etc/chef/client.rb <<'END_OF_FILE'
+cat >> /etc/chef/client.rb <<'END_OF_FILE'
 require 'rubygems'
 require 'ohai'
 o = Ohai::System.new
@@ -25,7 +25,7 @@ log_location STDOUT
 validation_client_name "fooclient"
 chef_server_url "http://localhost:4000"
 END_OF_FILE
-cat > /etc/chef/validation.pem <<'END_OF_FILE'
+cat >> /etc/chef/validation.pem <<'END_OF_FILE'
 -----BEGIN PRIVATE KEY-----
 LS0tLS1CRUdJTiBSU0EgUFJJVkFURSBLRVktLS0tLQpNSUlFcFFJQkFBS0NBUUVB
 eWIyWkpKcUdtMEtLUis4bmZRSk5zU2QrRjl0WE5NVjdDZk9jVzZqc3FzOEVaZ2lW
@@ -64,7 +64,7 @@ SU4wUnl2ZApPNFpwV0RXWW5DTzAyMUpUT1VVT0o0Si95MDQxNkJ2a3cwejU5eTdz
 Tlg3d0RCQkhIYksvWENjPQotLS0tLUVORCBSU0EgUFJJVkFURSBLRVktLS0tLQo=
 -----END PRIVATE KEY-----
 END_OF_FILE
-cat > /etc/chef/first-boot.json <<'END_OF_FILE'
+cat >> /etc/chef/first-boot.json <<'END_OF_FILE'
 {"run_list":["recipe[apache2]"]}
 END_OF_FILE
 chef-client -j /etc/chef/first-boot.json

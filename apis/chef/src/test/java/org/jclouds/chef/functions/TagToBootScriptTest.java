@@ -94,7 +94,7 @@ public class TagToBootScriptTest {
 
       replay(client);
       replay(privateKey);
-
+      
       assertEquals(fn.apply("foo").getRawContent(), CharStreams.toString(Resources.newReaderSupplier(Resources
                .getResource("one-recipe.sh"), Charsets.UTF_8)));
 

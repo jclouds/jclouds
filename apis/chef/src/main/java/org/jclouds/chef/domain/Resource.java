@@ -40,7 +40,7 @@ public class Resource {
    private String specificity;
 
    public Resource(FilePayload payload) {
-      this(payload.getRawContent().getName(), null, payload.getContentMD5(), payload
+      this(payload.getRawContent().getName(), null, payload.getContentMetadata().getContentMD5(), payload
                .getRawContent().getPath(), "default");
    }
 

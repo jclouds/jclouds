@@ -22,7 +22,7 @@ package org.jclouds.chef.functions;
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.base.Preconditions.checkState;
 import static org.jclouds.io.Payloads.newStringPayload;
-import static org.jclouds.scriptbuilder.domain.Statements.createFile;
+import static org.jclouds.scriptbuilder.domain.Statements.appendFile;
 import static org.jclouds.scriptbuilder.domain.Statements.exec;
 import static org.jclouds.scriptbuilder.domain.Statements.newStatementList;
 
@@ -92,18 +92,18 @@ public class TagToBootScript implements Function<String, Payload> {
 
       String chefConfigDir = "{root}etc{fs}chef";
       Statement createChefConfigDir = exec("{md} " + chefConfigDir);
-      Statement createClientRb = createFile(chefConfigDir + "{fs}client.rb", ImmutableList.of("require 'rubygems'",
+      Statement createClientRb = appendFile(chefConfigDir + "{fs}client.rb", ImmutableList.of("require 'rubygems'",
                "require 'ohai'", "o = Ohai::System.new", "o.all_plugins", String.format(
                         "node_name \"%s-\" + o[:ipaddress]", tag), "log_level :info", "log_location STDOUT", String
                         .format("validation_client_name \"%s\"", client.getClientname()), String.format(
                         "chef_server_url \"%s\"", endpoint)));
 
-      Statement createValidationPem = createFile(chefConfigDir + "{fs}validation.pem", Splitter.on('\n').split(
+      Statement createValidationPem = appendFile(chefConfigDir + "{fs}validation.pem", Splitter.on('\n').split(
                Pems.pem(client.getPrivateKey())));
 
       String chefBootFile = chefConfigDir + "{fs}first-boot.json";
 
-      Statement createFirstBoot = createFile(chefBootFile, Collections.singleton(json.toJson(ImmutableMap
+      Statement createFirstBoot = appendFile(chefBootFile, Collections.singleton(json.toJson(ImmutableMap
                .<String, List<String>> of("run_list", runList), RUN_LIST_TYPE)));
 
       Statement runChef = exec("chef-client -j " + chefBootFile);

@@ -95,7 +95,7 @@ public abstract class BaseChefClientLiveTest {
 
       // define the file you want in the cookbook
       FilePayload content = Payloads.newFilePayload(new File(System.getProperty("user.dir"), "pom.xml"));
-      content.setContentType("application/x-binary");
+      content.getContentMetadata().setContentType("application/x-binary");
 
       // get an md5 so that you can see if the server already has it or not
       Payloads.calculateMD5(content);
@@ -103,7 +103,7 @@ public abstract class BaseChefClientLiveTest {
       // Note that java collections cannot effectively do equals or hashcodes on
       // byte arrays,
       // so let's convert to a list of bytes.
-      List<Byte> md5 = Bytes.asList(content.getContentMD5());
+      List<Byte> md5 = Bytes.asList(content.getContentMetadata().getContentMD5());
 
       // request an upload site for this file
       UploadSandbox site = getAdminConnection().getUploadSandboxForChecksums(ImmutableSet.of(md5));
