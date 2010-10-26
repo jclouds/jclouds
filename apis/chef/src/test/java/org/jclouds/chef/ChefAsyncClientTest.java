@@ -48,7 +48,7 @@ import org.jclouds.http.functions.ReturnTrueIf2xx;
 import org.jclouds.rest.ConfiguresRestClient;
 import org.jclouds.rest.RestClientTest;
 import org.jclouds.rest.RestContextFactory;
-import org.jclouds.rest.RestContextFactory.ContextSpec;
+import org.jclouds.rest.RestContextSpec;
 import org.jclouds.rest.functions.MapHttp4xxCodesToExceptions;
 import org.jclouds.rest.functions.ReturnEmptySetOnNotFoundOr404;
 import org.jclouds.rest.functions.ReturnFalseOnNotFoundOr404;
@@ -738,7 +738,7 @@ public class ChefAsyncClientTest extends RestClientTest<ChefAsyncClient> {
    }
 
    @Override
-   public ContextSpec<ChefClient, ChefAsyncClient> createContextSpec() {
+   public RestContextSpec<ChefClient, ChefAsyncClient> createContextSpec() {
       return new RestContextFactory().createContextSpec("chef", "user", SignedHeaderAuthTest.PRIVATE_KEY,
             new Properties());
    }

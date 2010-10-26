@@ -28,7 +28,7 @@ import javax.annotation.Nullable;
 
 import org.jclouds.rest.RestContextBuilder;
 import org.jclouds.rest.RestContextFactory;
-import org.jclouds.rest.RestContextFactory.ContextSpec;
+import org.jclouds.rest.RestContextSpec;
 
 import com.google.inject.Module;
 
@@ -163,7 +163,7 @@ public class ChefContextFactory {
    /**
     * @see RestContextFactory#createContextBuilder(ContextSpec)
     */
-   public <S, A> ChefContext createContext(ContextSpec<S, A> contextSpec) {
+   public <S, A> ChefContext createContext(RestContextSpec<S, A> contextSpec) {
       RestContextBuilder<?, ?> builder = RestContextBuilder.class.cast(createContextBuilder(contextSpec));
       return buildContextUnwrappingExceptions(builder);
 
@@ -172,7 +172,7 @@ public class ChefContextFactory {
    /**
     * @see RestContextFactory#createContextBuilder(ContextSpec, Properties)
     */
-   public <S, A> ChefContext createContext(ContextSpec<S, A> contextSpec, Properties overrides) {
+   public <S, A> ChefContext createContext(RestContextSpec<S, A> contextSpec, Properties overrides) {
       RestContextBuilder<?, ?> builder = RestContextBuilder.class.cast(createContextBuilder(contextSpec, overrides));
       return buildContextUnwrappingExceptions(builder);
    }
