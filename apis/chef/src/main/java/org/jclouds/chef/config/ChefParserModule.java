@@ -33,10 +33,8 @@ import java.security.spec.InvalidKeySpecException;
 import java.util.Map;
 
 import javax.inject.Inject;
-import javax.inject.Named;
 import javax.inject.Singleton;
 
-import org.jclouds.Constants;
 import org.jclouds.chef.domain.DatabagItem;
 import org.jclouds.crypto.Crypto;
 import org.jclouds.crypto.Pems;
@@ -212,7 +210,6 @@ public class ChefParserModule extends AbstractModule {
 
    @Provides
    @Singleton
-   @Named(Constants.PROPERTY_GSON_ADAPTERS)
    public Map<Type, Object> provideCustomAdapterBindings(DataBagItemAdapter adapter, PrivateKeyAdapter privateAdapter,
          PublicKeyAdapter publicAdapter, X509CertificateAdapter certAdapter) {
       return ImmutableMap.<Type, Object> of(DatabagItem.class, adapter, PrivateKey.class, privateAdapter,
