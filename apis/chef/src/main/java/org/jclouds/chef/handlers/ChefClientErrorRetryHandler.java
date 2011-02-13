@@ -57,8 +57,8 @@ public class ChefClientErrorRetryHandler implements HttpRetryHandler {
    public boolean shouldRetryRequest(HttpCommand command, HttpResponse response) {
       if (command.getFailureCount() > retryCountLimit)
          return false;
-      if (response.getStatusCode() == 400 && command.getRequest().getMethod().equals("PUT")
-            && command.getRequest().getEndpoint().getPath().indexOf("sandboxes") != -1) {
+      if (response.getStatusCode() == 400 && command.getCurrentRequest().getMethod().equals("PUT")
+            && command.getCurrentRequest().getEndpoint().getPath().indexOf("sandboxes") != -1) {
          if (response.getPayload() != null) {
             String error = new String(closeClientButKeepContentStream(response));
             if (error != null && error.indexOf("was not uploaded") != -1) {

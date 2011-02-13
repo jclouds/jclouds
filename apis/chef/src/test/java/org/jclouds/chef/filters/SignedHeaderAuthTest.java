@@ -140,7 +140,7 @@ public class SignedHeaderAuthTest {
             expected_string_to_sign);
       assertEquals(signing_obj.sign(expected_string_to_sign), Joiner.on("").join(X_OPS_AUTHORIZATION_LINES));
 
-      signing_obj.filter(request);
+      request = signing_obj.filter(request);
       Multimap<String, String> headersWithoutContentLength = LinkedHashMultimap.create(request.getHeaders());
       headersWithoutContentLength.removeAll(HttpHeaders.CONTENT_LENGTH);
       assertEquals(headersWithoutContentLength.values(), EXPECTED_SIGN_RESULT.values());
@@ -152,7 +152,7 @@ public class SignedHeaderAuthTest {
       URI host = URI.create("http://localhost/" + PATH);
       HttpRequest request = new HttpRequest(HttpMethod.DELETE, host);
 
-      signing_obj.filter(request);
+      request = signing_obj.filter(request);
       Multimap<String, String> headersWithoutContentLength = LinkedHashMultimap.create(request.getHeaders());
       assertEquals(headersWithoutContentLength.entries(), EXPECTED_SIGN_RESULT_EMPTY.entries());
    }

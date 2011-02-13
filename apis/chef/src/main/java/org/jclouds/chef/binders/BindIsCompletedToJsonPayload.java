@@ -34,9 +34,10 @@ import org.jclouds.rest.binders.BindToStringPayload;
 public class BindIsCompletedToJsonPayload extends BindToStringPayload {
 
    @Override
-   public void bindToRequest(HttpRequest request, Object value) {
+   public HttpRequest bindToRequest( HttpRequest request, Object value ) {
       super.bindToRequest(request, String.format("{\"is_completed\":\"%s\"}", value));
       request.getPayload().getContentMetadata().setContentType(MediaType.APPLICATION_JSON);
+      return request;
    }
 
 }

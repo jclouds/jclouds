@@ -74,7 +74,7 @@
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>${project.groupId}</groupId>
+            <groupId>org.jclouds.driver</groupId>
             <artifactId>jclouds-log4j</artifactId>
             <version>${project.version}</version>
             <scope>test</scope>
@@ -93,4 +93,72 @@
             <optional>true</optional>
         </dependency>
     </dependencies>
+    <!--TODO: This is borrowed from another module, the chef properties need to be filled in for the tests to work-->
+<!--
+    <profiles>
+      <profile>
+        <id>live</id>
+        <build>
+          <plugins>
+            <plugin>
+              <groupId>org.apache.maven.plugins</groupId>
+              <artifactId>maven-surefire-plugin</artifactId>
+              <executions>
+                <execution>
+                  <id>integration</id>
+                  <phase>integration-test</phase>
+                  <goals>
+                    <goal>test</goal>
+                  </goals>
+                  <configuration>
+                    <excludes>
+                      <exclude>none</exclude>
+                    </excludes>
+                    <includes>
+                      <include>**/*LiveTest.java</include>
+                    </includes>
+                    <systemProperties>
+                      <property>
+                        <name>jclouds.compute.provider</name>
+                        <value>${jclouds.compute.provider}</value>
+                      </property>
+                      <property>
+                        <name>jclouds.compute.endpoint</name>
+                        <value>${jclouds.compute.endpoint}</value>
+                      </property>
+                      <property>
+                        <name>jclouds.compute.identity</name>
+                        <value>${jclouds.compute.identity}</value>
+                      </property>
+                      <property>
+                        <name>jclouds.compute.credential</name>
+                        <value>${jclouds.compute.credential}</value>
+                      </property>
+                      <property>
+                        <name>jclouds.compute.tag</name>
+                        <value>${jclouds.compute.tag}</value>
+                      </property>
+                      <property>
+                        <name>jclouds.compute.credential</name>
+                        <value>${jclouds.compute.credential}</value>
+                      </property>
+                      <property>
+                        <name>jclouds.chef.credential.pem</name>
+                        <value>${jclouds.chef.credential.pem}</value>
+                      </property>
+                      <property>
+                        <name>jclouds.chef.endpoint</name>
+                        <value>${jclouds.chef.endpoint}</value>
+                      </property>
+                    </systemProperties>
+                  </configuration>
+                </execution>
+              </executions>
+            </plugin>
+          </plugins>
+        </build>
+      </profile>
+    </profiles>
+-->
+
 </project>

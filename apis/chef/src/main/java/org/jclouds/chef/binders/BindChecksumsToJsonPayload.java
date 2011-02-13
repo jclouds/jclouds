@@ -43,7 +43,7 @@ import com.google.common.primitives.Bytes;
 public class BindChecksumsToJsonPayload extends BindToStringPayload {
 
    @SuppressWarnings("unchecked")
-   public void bindToRequest(HttpRequest request, Object input) {
+   public HttpRequest bindToRequest( HttpRequest request, Object input ) {
       checkArgument(checkNotNull(input, "input") instanceof Set, "this binder is only valid for Set!");
 
       Set<List<Byte>> md5s = (Set<List<Byte>>) input;
@@ -57,6 +57,7 @@ public class BindChecksumsToJsonPayload extends BindToStringPayload {
       builder.append("}}");
       super.bindToRequest(request, builder.toString());
       request.getPayload().getContentMetadata().setContentType(MediaType.APPLICATION_JSON);
+      return request;
    }
 
 }

@@ -20,10 +20,14 @@
 package org.jclouds.chef.filters;
 
 import static com.google.common.base.Preconditions.checkArgument;
+import static com.google.common.base.Preconditions.checkNotNull;
 import static org.jclouds.Constants.PROPERTY_IDENTITY;
 
 import java.security.PrivateKey;
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.NoSuchElementException;
 
 import javax.annotation.Resource;
@@ -32,6 +36,11 @@ import javax.inject.Named;
 import javax.inject.Provider;
 import javax.inject.Singleton;
 
+import com.google.common.collect.ArrayListMultimap;
+import com.google.common.collect.ImmutableListMultimap;
+import com.google.common.collect.ImmutableMultimap;
+import com.google.common.collect.Multimap;
+import com.google.common.collect.Multimaps;
 import org.jclouds.Constants;
 import org.jclouds.crypto.Crypto;
 import org.jclouds.crypto.CryptoStreams;
@@ -41,6 +50,7 @@ import org.jclouds.http.HttpRequest;
 import org.jclouds.http.HttpRequestFilter;
 import org.jclouds.http.HttpUtils;
 import org.jclouds.http.internal.SignatureWire;
+import org.jclouds.http.utils.ModifyRequest;
 import org.jclouds.io.InputSuppliers;
 import org.jclouds.io.Payload;
 import org.jclouds.io.Payloads;
@@ -92,30 +102,35 @@ public class SignedHeaderAuth implements HttpRequestFilter {
       this.utils = utils;
    }
 
-   public void filter(HttpRequest request) throws HttpException {
+   public HttpRequest filter( HttpRequest request ) throws HttpException {
 
       String contentHash = hashBody(request.getPayload());
-      request.getHeaders().replaceValues("X-Ops-Content-Hash", Collections.singletonList(contentHash));
+      Multimap<String, String> headers = ArrayListMultimap.create();
+      headers.put( "X-Ops-Content-Hash", contentHash );
       String timestamp = timeStampProvider.get();
       String toSign = createStringToSign(request.getMethod(), hashPath(request.getEndpoint().getPath()), contentHash,
                timestamp);
-      request.getHeaders().replaceValues("X-Ops-Userid", Collections.singletonList(userId));
-      request.getHeaders().replaceValues("X-Ops-Sign", Collections.singletonList(SIGNING_DESCRIPTION));
-      calculateAndReplaceAuthorizationHeaders(request, toSign);
-      request.getHeaders().replaceValues("X-Ops-Timestamp", Collections.singletonList(timestamp));
-      utils.logRequest(signatureLog, request, "<<");
+      headers.put("X-Ops-Userid", userId);
+      headers.put( "X-Ops-Sign", SIGNING_DESCRIPTION );
+      request = calculateAndReplaceAuthorizationHeaders( request, toSign );
+      headers.put( "X-Ops-Timestamp", timestamp );
+      utils.logRequest( signatureLog, request, "<<" );
+
+      return ModifyRequest.putHeaders(request, headers);
    }
 
    @VisibleForTesting
-   void calculateAndReplaceAuthorizationHeaders(HttpRequest request, String toSign) throws HttpException {
+   HttpRequest calculateAndReplaceAuthorizationHeaders( HttpRequest request, String toSign ) throws HttpException {
       String signature = sign(toSign);
       if (signatureWire.enabled())
          signatureWire.input(Utils.toInputStream(signature));
       String[] signatureLines = Iterables.toArray(Splitter.fixedLength(60).split(signature), String.class);
+
+      Multimap<String, String> headers = ArrayListMultimap.create();
       for (int i = 0; i < signatureLines.length; i++) {
-         request.getHeaders().replaceValues("X-Ops-Authorization-" + (i + 1),
-                  Collections.singletonList(signatureLines[i]));
+         headers.put("X-Ops-Authorization-" + (i + 1), signatureLines[i]);
       }
+      return ModifyRequest.putHeaders( request, headers );
    }
 
    public String createStringToSign(String request, String hashedPath, String contentHash, String timestamp) {

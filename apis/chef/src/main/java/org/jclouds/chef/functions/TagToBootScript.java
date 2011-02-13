@@ -40,7 +40,7 @@ import org.jclouds.chef.domain.Client;
 import org.jclouds.crypto.Pems;
 import org.jclouds.io.Payload;
 import org.jclouds.json.Json;
-import org.jclouds.rest.annotations.Provider;
+import org.jclouds.location.Provider;
 import org.jclouds.scriptbuilder.domain.OsFamily;
 import org.jclouds.scriptbuilder.domain.Statement;
 

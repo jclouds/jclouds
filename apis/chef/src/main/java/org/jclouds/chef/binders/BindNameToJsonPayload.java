@@ -34,9 +34,10 @@ import org.jclouds.rest.binders.BindToStringPayload;
 public class BindNameToJsonPayload extends BindToStringPayload {
 
    @Override
-   public void bindToRequest(HttpRequest request, Object payload) {
+   public HttpRequest bindToRequest( HttpRequest request, Object payload ) {
       super.bindToRequest(request, String.format("{\"name\":\"%s\"}", payload));
       request.getPayload().getContentMetadata().setContentType(MediaType.APPLICATION_JSON);
+      return request;
    }
 
 }

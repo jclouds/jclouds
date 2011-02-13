@@ -20,7 +20,9 @@
 package org.jclouds.chef.internal;
 
 import java.net.URI;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -34,7 +36,7 @@ import org.jclouds.lifecycle.Closer;
 import org.jclouds.rest.Utils;
 import org.jclouds.rest.annotations.ApiVersion;
 import org.jclouds.rest.annotations.Identity;
-import org.jclouds.rest.annotations.Provider;
+import org.jclouds.location.Provider;
 import org.jclouds.rest.internal.RestContextImpl;
 
 import com.google.inject.Injector;
@@ -51,7 +53,7 @@ public class ChefContextImpl extends RestContextImpl<ChefClient, ChefAsyncClient
    protected ChefContextImpl(Closer closer, Map<String, Credentials> credentialStore, Utils utils, Injector injector,
          TypeLiteral<ChefClient> syncApi, TypeLiteral<ChefAsyncClient> asyncApi, @Provider URI endpoint,
          @Provider String provider, @Identity String identity, @ApiVersion String apiVersion, ChefService chefService) {
-      super(closer, credentialStore, utils, injector, syncApi, asyncApi, endpoint, provider, identity, apiVersion);
+      super(closer, credentialStore, utils, injector, syncApi, asyncApi, endpoint, provider, identity, apiVersion, null ); // Not sure what needs to go here for Chef
       this.chefService = chefService;
    }
 

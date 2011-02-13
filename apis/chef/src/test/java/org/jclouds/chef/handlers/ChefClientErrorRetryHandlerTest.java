@@ -103,7 +103,7 @@ public class ChefClientErrorRetryHandlerTest {
                   .newStringPayload("{\"error\":[\"Cannot update sandbox bfd68d4052f44053b2e593a33b5e1cd5: checksum 9b7c23369f4b576451216c39f214af6c was not uploaded\"]}"));
 
       expect(command.getFailureCount()).andReturn(0);
-      expect(command.getRequest()).andReturn(request).atLeastOnce();
+      expect(command.getCurrentRequest()).andReturn(request).atLeastOnce();
       expect(retry.shouldRetryRequest(command, response)).andReturn(true);
 
       replay(retry);

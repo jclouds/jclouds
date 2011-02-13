@@ -55,7 +55,7 @@ public class ChefErrorHandler implements HttpErrorHandler {
       String message = errorParser.apply(response);
       Exception exception = new HttpResponseException(command, response, message);
       try {
-         message = message != null ? message : String.format("%s -> %s", command.getRequest()
+         message = message != null ? message : String.format("%s -> %s", command.getCurrentRequest()
                   .getRequestLine(), response.getStatusLine());
          switch (response.getStatusCode()) {
             case 401:
@@ -63,7 +63,7 @@ public class ChefErrorHandler implements HttpErrorHandler {
                exception = new AuthorizationException(message, exception);
                break;
             case 404:
-               if (!command.getRequest().getMethod().equals("DELETE")) {
+               if (!command.getCurrentRequest().getMethod().equals("DELETE")) {
                   exception = new ResourceNotFoundException(message, exception);
                }
                break;
