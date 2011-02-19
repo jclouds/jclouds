@@ -47,7 +47,7 @@
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>jclouds-core</artifactId>
-            <version>${project.version}</version>
+            <version>${jclouds.version}</version>
         </dependency>
         <!-- only required for Pems.java and only writing a private key file -->
         <dependency>
@@ -58,12 +58,12 @@
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>jclouds-scriptbuilder</artifactId>
-            <version>${project.version}</version>
+            <version>${jclouds.version}</version>
         </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>jclouds-core</artifactId>
-            <version>${project.version}</version>
+            <version>${jclouds.version}</version>
             <type>test-jar</type>
             <scope>test</scope>
         </dependency>
@@ -76,7 +76,7 @@
         <dependency>
             <groupId>org.jclouds.driver</groupId>
             <artifactId>jclouds-log4j</artifactId>
-            <version>${project.version}</version>
+            <version>${jclouds.version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -89,7 +89,7 @@
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>jclouds-blobstore</artifactId>
-            <version>${project.version}</version>
+            <version>${jclouds.version}</version>
             <optional>true</optional>
         </dependency>
     </dependencies>
