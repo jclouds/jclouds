@@ -25,13 +25,12 @@
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>org.jclouds</groupId>
-        <artifactId>jclouds-chef-project</artifactId>
+        <artifactId>jclouds-chef-pom</artifactId>
         <version>1.0-SNAPSHOT</version>
-        <relativePath>../pom.xml</relativePath>
+        <relativePath>../project/pom.xml</relativePath>
     </parent>
-    <groupId>org.jclouds</groupId>
     <artifactId>jclouds-chef</artifactId>
-    <name>jclouds Chef core</name>
+    <name>JClouds Chef :: Core</name>
     <description>jclouds components to access Chef</description>
 
     <properties>
@@ -45,9 +44,39 @@
 
     <dependencies>
         <dependency>
-            <groupId>${project.groupId}</groupId>
+            <groupId>org.jclouds</groupId>
             <artifactId>jclouds-core</artifactId>
             <version>${jclouds.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.jclouds</groupId>
+            <artifactId>jclouds-core</artifactId>
+            <version>${jclouds.version}</version>
+            <type>test-jar</type>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.jclouds</groupId>
+            <artifactId>jclouds-scriptbuilder</artifactId>
+            <version>${jclouds.version}</version>
+        </dependency>
+        <!--  for transient chef provider -->
+        <dependency>
+            <groupId>org.jclouds</groupId>
+            <artifactId>jclouds-blobstore</artifactId>
+            <version>${jclouds.version}</version>
+            <optional>true</optional>
+        </dependency>
+        <dependency>
+            <groupId>org.jclouds</groupId>
+            <artifactId>jclouds-compute</artifactId>
+            <version>${jclouds.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.jclouds.driver</groupId>
+            <artifactId>jclouds-log4j</artifactId>
+            <version>${jclouds.version}</version>
+            <scope>test</scope>
         </dependency>
         <!-- only required for Pems.java and only writing a private key file -->
         <dependency>
@@ -56,27 +85,9 @@
             <version>1.44</version>
         </dependency>
         <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>jclouds-scriptbuilder</artifactId>
-            <version>${jclouds.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>jclouds-core</artifactId>
-            <version>${jclouds.version}</version>
-            <type>test-jar</type>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
             <groupId>log4j</groupId>
             <artifactId>log4j</artifactId>
             <version>1.2.14</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.jclouds.driver</groupId>
-            <artifactId>jclouds-log4j</artifactId>
-            <version>${jclouds.version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -85,80 +96,5 @@
             <version>1.1</version>
             <optional>true</optional>
         </dependency>
-        <!--  for transient chef provider -->
-        <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>jclouds-blobstore</artifactId>
-            <version>${jclouds.version}</version>
-            <optional>true</optional>
-        </dependency>
     </dependencies>
-    <!--TODO: This is borrowed from another module, the chef properties need to be filled in for the tests to work-->
-<!--
-    <profiles>
-      <profile>
-        <id>live</id>
-        <build>
-          <plugins>
-            <plugin>
-              <groupId>org.apache.maven.plugins</groupId>
-              <artifactId>maven-surefire-plugin</artifactId>
-              <executions>
-                <execution>
-                  <id>integration</id>
-                  <phase>integration-test</phase>
-                  <goals>
-                    <goal>test</goal>
-                  </goals>
-                  <configuration>
-                    <excludes>
-                      <exclude>none</exclude>
-                    </excludes>
-                    <includes>
-                      <include>**/*LiveTest.java</include>
-                    </includes>
-                    <systemProperties>
-                      <property>
-                        <name>jclouds.compute.provider</name>
-                        <value>${jclouds.compute.provider}</value>
-                      </property>
-                      <property>
-                        <name>jclouds.compute.endpoint</name>
-                        <value>${jclouds.compute.endpoint}</value>
-                      </property>
-                      <property>
-                        <name>jclouds.compute.identity</name>
-                        <value>${jclouds.compute.identity}</value>
-                      </property>
-                      <property>
-                        <name>jclouds.compute.credential</name>
-                        <value>${jclouds.compute.credential}</value>
-                      </property>
-                      <property>
-                        <name>jclouds.compute.tag</name>
-                        <value>${jclouds.compute.tag}</value>
-                      </property>
-                      <property>
-                        <name>jclouds.compute.credential</name>
-                        <value>${jclouds.compute.credential}</value>
-                      </property>
-                      <property>
-                        <name>jclouds.chef.credential.pem</name>
-                        <value>${jclouds.chef.credential.pem}</value>
-                      </property>
-                      <property>
-                        <name>jclouds.chef.endpoint</name>
-                        <value>${jclouds.chef.endpoint}</value>
-                      </property>
-                    </systemProperties>
-                  </configuration>
-                </execution>
-              </executions>
-            </plugin>
-          </plugins>
-        </build>
-      </profile>
-    </profiles>
--->
-
 </project>

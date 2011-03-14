@@ -41,7 +41,7 @@ import com.google.common.collect.ImmutableSet;
  * 
  * @author Adrian Cole
  */
-@Test(groups = "unit", testName = "ohai.UpdateAutomaticAttributesOnNodeImplTest")
+@Test(groups = { "unit" })
 public class UpdateAutomaticAttributesOnNodeImplTest {
 
    @Test

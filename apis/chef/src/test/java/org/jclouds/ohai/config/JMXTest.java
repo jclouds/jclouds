@@ -46,7 +46,7 @@ import com.google.inject.Injector;
  * 
  * @author Adrian Cole
  */
-@Test(groups = "unit", testName = "ohai.JMXTest")
+@Test(groups = { "unit" })
 public class JMXTest {
 
    @Test

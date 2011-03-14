@@ -44,7 +44,7 @@ import com.google.inject.Module;
  * 
  * @author Adrian Cole
  */
-@Test(groups = "live", testName = "chef.UpdateAutomaticAttributesOnNodeImplLiveTest")
+@Test(groups = { "live" })
 public class UpdateAutomaticAttributesOnNodeImplLiveTest extends BaseChefStrategyLiveTest {
    private UpdateAutomaticAttributesOnNodeImpl strategy;
    private ChefClient chef;
@@ -61,7 +61,7 @@ public class UpdateAutomaticAttributesOnNodeImplLiveTest extends BaseChefStrateg
       modules.add(new TestOhaiModule());
    }
 
-   @BeforeTest(groups = "live", dependsOnMethods = "setupClient")
+   @BeforeTest(groups = { "live" }, dependsOnMethods = "setupClient")
    void setupStrategy() {
       this.strategy = injector.getInstance(UpdateAutomaticAttributesOnNodeImpl.class);
       this.chef = injector.getInstance(ChefClient.class);

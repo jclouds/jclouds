@@ -52,7 +52,7 @@ import com.google.inject.TypeLiteral;
  * 
  * @author Adrian Cole
  */
-@Test(groups = "unit", sequential = true, testName = "chef.ParseCookbookVersionFromJsonTest")
+@Test(groups = { "unit" }, sequential = true)
 public class ParseCookbookVersionFromJsonTest {
 
    private ParseJson<CookbookVersion> handler;

@@ -37,7 +37,7 @@ import com.google.common.collect.ImmutableSet;
 /**
  * @author Adrian Cole
  */
-@Test(groups = "unit", testName = "chef.ClientForTagTest")
+@Test(groups = { "unit" })
 public class ClientForTagTest {
 
    public void testWhenNoClientsInList() throws IOException {

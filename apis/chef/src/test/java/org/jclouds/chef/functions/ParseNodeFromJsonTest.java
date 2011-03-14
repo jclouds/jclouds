@@ -45,7 +45,7 @@ import com.google.inject.TypeLiteral;
  * 
  * @author Adrian Cole
  */
-@Test(groups = "unit", sequential = true, testName = "chef.ParseNodeFromJsonTest")
+@Test(groups = { "unit" }, sequential = true)
 public class ParseNodeFromJsonTest {
 
    private ParseJson<Node> handler;

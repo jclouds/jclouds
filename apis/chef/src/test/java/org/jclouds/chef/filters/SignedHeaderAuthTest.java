@@ -20,6 +20,7 @@
 package org.jclouds.chef.filters;
 
 import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertEqualsNoOrder;
 
 import java.io.IOException;
 import java.net.URI;
@@ -54,7 +55,7 @@ import com.google.inject.Module;
  * 
  * @author Adrian Cole
  */
-@Test(groups = "unit", testName = "chef.SignedHeaderAuthTest")
+@Test(groups = { "unit" })
 public class SignedHeaderAuthTest {
 
    public static final String USER_ID = "spec-user";
@@ -77,7 +78,8 @@ public class SignedHeaderAuthTest {
          "NMzYZgyooSvU85qkIUmKuCqgG2AIlvYa2Q/2ctrMhoaHhLOCWWoqYNMaEqPc",
          "3tKHE+CfvP+WuPdWk4jv4wpIkAz6ZLxToxcGhXmZbXpk56YTmqgBW2cbbw4O",
          "IWPZDHSiPcw//AYNgW1CCDptt+UFuaFYbtqZegcBd2n/jzcWODA7zL4KWEUy",
-         "9q4rlh/+1tBReg60QdsmDRsw/cdO1GZrKtuCwbuD4+nbRdVBKv72rqHX9cu0", "utju9jzczCyB+sSAQWrxSsXB/b8vV2qs0l4VD2ML+w==" };
+         "9q4rlh/+1tBReg60QdsmDRsw/cdO1GZrKtuCwbuD4+nbRdVBKv72rqHX9cu0",
+         "utju9jzczCyB+sSAQWrxSsXB/b8vV2qs0l4VD2ML+w==" };
 
    // We expect Mixlib::Authentication::SignedHeaderAuth//sign to return this
    // if passed the BODY above.
@@ -142,8 +144,8 @@ public class SignedHeaderAuthTest {
 
       request = signing_obj.filter(request);
       Multimap<String, String> headersWithoutContentLength = LinkedHashMultimap.create(request.getHeaders());
-      headersWithoutContentLength.removeAll(HttpHeaders.CONTENT_LENGTH);
-      assertEquals(headersWithoutContentLength.values(), EXPECTED_SIGN_RESULT.values());
+      headersWithoutContentLength.removeAll( HttpHeaders.CONTENT_LENGTH );
+      assertEqualsNoOrder( headersWithoutContentLength.values().toArray(), EXPECTED_SIGN_RESULT.values().toArray() );
    }
 
    @Test
@@ -154,7 +156,7 @@ public class SignedHeaderAuthTest {
 
       request = signing_obj.filter(request);
       Multimap<String, String> headersWithoutContentLength = LinkedHashMultimap.create(request.getHeaders());
-      assertEquals(headersWithoutContentLength.entries(), EXPECTED_SIGN_RESULT_EMPTY.entries());
+      assertEqualsNoOrder(headersWithoutContentLength.entries().toArray(), EXPECTED_SIGN_RESULT_EMPTY.entries().toArray());
    }
 
    @Test

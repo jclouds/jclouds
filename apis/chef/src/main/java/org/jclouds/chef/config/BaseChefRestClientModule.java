@@ -92,7 +92,7 @@ public class BaseChefRestClientModule<S, A> extends RestClientModule<S, A> {
    @Singleton
    public PrivateKey provideKey(Crypto crypto, @Named(PROPERTY_CREDENTIAL) String pem) throws InvalidKeySpecException,
             IOException {
-      return crypto.rsaKeyFactory().generatePrivate(Pems.privateKeySpec(InputSuppliers.of(pem)));
+        return crypto.rsaKeyFactory().generatePrivate(Pems.privateKeySpec(InputSuppliers.of(pem)));
    }
 
    @Override

@@ -34,7 +34,7 @@ import com.google.common.collect.ImmutableList;
  * 
  * @author Adrian Cole
  */
-@Test(groups = "unit", sequential = true, testName = "ohai.ChefUtilsTest")
+@Test(groups = { "unit" }, sequential = true)
 public class ChefUtilsTest {
    public static long millis = 1280251180727l;
    public static String millisString = "1280251180727";

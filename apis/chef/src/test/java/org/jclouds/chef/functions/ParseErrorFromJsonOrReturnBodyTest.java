@@ -33,7 +33,7 @@ import org.testng.annotations.Test;
 /**
  * @author Adrian Cole
  */
-@Test(groups = "unit", testName = "chef.ParseErrorFromJsonOrReturnBodyTest")
+@Test(groups = { "unit" })
 public class ParseErrorFromJsonOrReturnBodyTest {
 
    @Test

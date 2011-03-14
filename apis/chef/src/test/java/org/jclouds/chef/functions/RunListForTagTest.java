@@ -42,7 +42,7 @@ import com.google.inject.Injector;
 /**
  * @author Adrian Cole
  */
-@Test(groups = "unit", testName = "chef.RunListForTagTest")
+@Test(groups = { "unit" })
 public class RunListForTagTest {
    Injector injector = Guice.createInjector(new ChefParserModule(), new GsonModule());
    Json json = injector.getInstance(Json.class);

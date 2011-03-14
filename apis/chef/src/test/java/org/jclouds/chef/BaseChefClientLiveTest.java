@@ -60,7 +60,7 @@ import com.google.common.primitives.Bytes;
  * 
  * @author Adrian Cole
  */
-@Test(groups = "live", testName = "chef.ChefClientLiveTest")
+@Test(groups = { "live" })
 public abstract class BaseChefClientLiveTest {
 
    protected String clientKey;

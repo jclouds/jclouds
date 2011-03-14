@@ -49,7 +49,7 @@ import com.google.inject.util.Providers;
  * 
  * @author Adrian Cole
  */
-@Test(groups = "unit", testName = "ohai.OhaiModuleTest")
+@Test(groups = { "unit" })
 public class OhaiModuleTest {
 
    @Test

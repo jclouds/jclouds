@@ -45,7 +45,7 @@ import com.google.inject.Guice;
  * 
  * @author Adrian Cole
  */
-@Test(groups = "integration", testName = "chef.TransientChefClientIntegrationTest")
+@Test(groups = { "integration" })
 public class TransientChefClientIntegrationTest extends BaseChefClientLiveTest {
    public void testCreateDatabag1() throws Exception {
       getAdminConnection().deleteDatabag(PREFIX);

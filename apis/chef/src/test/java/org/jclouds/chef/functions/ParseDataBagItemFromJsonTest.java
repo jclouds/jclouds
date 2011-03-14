@@ -41,7 +41,7 @@ import com.google.inject.TypeLiteral;
 /**
  * @author AdrianCole
  */
-@Test(groups = "unit", testName = "chef.ParseDataBagItemFromJsonTest")
+@Test(groups = { "unit" })
 public class ParseDataBagItemFromJsonTest {
    private ParseJson<DatabagItem> handler;
    private Json mapper;

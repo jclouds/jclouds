@@ -39,7 +39,7 @@ import com.google.inject.Injector;
  * 
  * @author Adrian Cole
  */
-@Test(groups = "unit", sequential = true, testName = "chef.ParseKeySetFromJsonTest")
+@Test(groups = { "unit" }, sequential = true)
 public class ParseKeySetFromJsonTest {
 
    private ParseKeySetFromJson handler;

@@ -46,7 +46,7 @@ import com.google.inject.Module;
  * 
  * @author Adrian Cole
  */
-@Test(groups = "live", testName = "chef.BaseChefStrategyLiveTest")
+@Test(groups = { "live" })
 public abstract class BaseChefStrategyLiveTest {
 
    protected Injector injector;

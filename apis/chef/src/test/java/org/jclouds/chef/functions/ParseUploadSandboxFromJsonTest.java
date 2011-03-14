@@ -48,7 +48,7 @@ import com.google.inject.TypeLiteral;
  * 
  * @author Adrian Cole
  */
-@Test(groups = "unit", sequential = true, testName = "chef.ParseUploadSiteFromJsonTest")
+@Test(groups = { "unit" }, sequential = true)
 public class ParseUploadSandboxFromJsonTest {
 
    private ParseJson<UploadSandbox> handler;

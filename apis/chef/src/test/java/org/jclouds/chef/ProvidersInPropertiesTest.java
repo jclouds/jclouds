@@ -19,22 +19,21 @@
 
 package org.jclouds.chef;
 
-import org.jclouds.util.Utils;
-import org.testng.annotations.Test;
-
 import com.google.common.collect.Iterables;
+import org.jclouds.compute.util.ComputeServiceUtils;
+import org.testng.annotations.Test;
 
 /**
  * 
  * @author Adrian Cole
  * 
  */
-@Test(groups = "unit")
+@Test(groups = { "unit" })
 public class ProvidersInPropertiesTest {
 
    @Test
    public void testSupportedProviders() {
-      Iterable<String> providers = Utils.getSupportedProviders();
+      Iterable<String> providers = ComputeServiceUtils.getSupportedProviders();
       assert Iterables.contains(providers, "chef") : providers;
    }
 

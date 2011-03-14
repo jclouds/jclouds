@@ -41,7 +41,7 @@ import com.google.inject.Injector;
  * 
  * @author Adrian Cole
  */
-@Test(groups = "unit", sequential = true, testName = "ohai.NestSlashKeysTest")
+@Test(groups = { "unit" }, sequential = true)
 public class NestSlashKeysTest {
 
    private NestSlashKeys converter;

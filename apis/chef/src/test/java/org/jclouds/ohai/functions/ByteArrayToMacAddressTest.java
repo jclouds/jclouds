@@ -35,7 +35,7 @@ import com.google.inject.Injector;
  * 
  * @author Adrian Cole
  */
-@Test(groups = "unit", sequential = true, testName = "ohai.ByteArrayToMacAddressTest")
+@Test(groups = { "unit" }, sequential = true)
 public class ByteArrayToMacAddressTest {
 
    private ByteArrayToMacAddress converter;

@@ -38,7 +38,7 @@ import org.testng.annotations.Test;
  * 
  * @author Adrian Cole
  */
-@Test(groups = "unit", testName = "chef.ChefClientErrorRetryHandlerTest")
+@Test(groups = { "unit" })
 public class ChefClientErrorRetryHandlerTest {
    @Test
    public void test401DoesNotRetry() {

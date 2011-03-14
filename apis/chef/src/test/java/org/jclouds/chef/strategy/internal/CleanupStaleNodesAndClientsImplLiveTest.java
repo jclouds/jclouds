@@ -30,13 +30,13 @@ import com.google.common.collect.ImmutableSet;
  * 
  * @author Adrian Cole
  */
-@Test(groups = "live", testName = "chef.CleanupStaleNodesAndClientsImplLiveTest")
+@Test(groups = { "live" })
 public class CleanupStaleNodesAndClientsImplLiveTest extends BaseChefStrategyLiveTest {
    private CreateNodeAndPopulateAutomaticAttributesImpl creater;
    private CleanupStaleNodesAndClientsImpl strategy;
    private ChefClient chef;
 
-   @BeforeTest(groups = "live", dependsOnMethods = "setupClient")
+   @BeforeTest(groups = { "live" }, dependsOnMethods = "setupClient")
    void setupStrategy() {
       this.creater = injector.getInstance(CreateNodeAndPopulateAutomaticAttributesImpl.class);
       this.strategy = injector.getInstance(CleanupStaleNodesAndClientsImpl.class);

@@ -37,20 +37,20 @@ import com.google.common.collect.ImmutableSet;
  * 
  * @author Adrian Cole
  */
-@Test(groups = "live", testName = "chef.GetNodesImplLiveTest")
+@Test(groups = { "live" })
 public class GetNodesImplLiveTest extends BaseChefStrategyLiveTest {
    private ListNodesImpl strategy;
    private CreateNodeAndPopulateAutomaticAttributesImpl creater;
    private ChefClient chef;
 
-   @BeforeTest(groups = "live", dependsOnMethods = "setupClient")
+   @BeforeTest(groups = { "live" }, dependsOnMethods = "setupClient")
    void setupStrategy() {
       this.creater = injector.getInstance(CreateNodeAndPopulateAutomaticAttributesImpl.class);
       this.strategy = injector.getInstance(ListNodesImpl.class);
       this.chef = injector.getInstance(ChefClient.class);
    }
 
-   @BeforeTest(groups = "live", dependsOnMethods = "setupStrategy")
+   @BeforeTest(groups = { "live" }, dependsOnMethods = "setupStrategy")
    void setupNodes() {
       creater.execute(prefix, ImmutableSet.<String> of());
       creater.execute(prefix + 1, ImmutableSet.<String> of());

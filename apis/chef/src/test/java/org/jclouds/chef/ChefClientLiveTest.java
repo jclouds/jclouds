@@ -46,7 +46,7 @@ import com.google.inject.Module;
  * 
  * @author Adrian Cole
  */
-@Test(groups = "live", testName = "chef.ChefClientLiveTest")
+@Test(groups = { "live" })
 public class ChefClientLiveTest extends BaseChefClientLiveTest {
 
    private ChefContext validatorConnection;

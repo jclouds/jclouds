@@ -50,7 +50,7 @@ import com.google.inject.Injector;
 /**
  * @author Adrian Cole
  */
-@Test(groups = "unit", testName = "chef.TagToBootScriptTest")
+@Test(groups = { "unit" })
 public class TagToBootScriptTest {
 
    Injector injector = Guice.createInjector(new ChefParserModule(), new GsonModule());

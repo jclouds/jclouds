@@ -69,7 +69,7 @@ import com.google.inject.TypeLiteral;
  * 
  * @author Adrian Cole
  */
-@Test(groups = "unit", testName = "chef.ChefAsyncClientTest")
+@Test(groups = { "unit" })
 public class ChefAsyncClientTest extends RestClientTest<ChefAsyncClient> {
 
    public void testCommitSandbox() throws SecurityException, NoSuchMethodException, IOException {
