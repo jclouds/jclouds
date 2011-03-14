@@ -19,22 +19,24 @@
 
 package org.jclouds.ohai;
 
-import com.google.common.base.Predicate;
-import com.google.common.collect.Iterables;
-import com.google.inject.Module;
-import org.jclouds.compute.ComputeServiceContextBuilder;
+import java.util.Properties;
+
+import javax.inject.Inject;
+
 import org.jclouds.ohai.config.ConfiguresOhai;
 import org.jclouds.ohai.config.JMXOhaiModule;
 import org.jclouds.rest.RestContext;
+import org.jclouds.rest.RestContextBuilder;
 
-import javax.inject.Inject;
-import java.util.Properties;
+import com.google.common.base.Predicate;
+import com.google.common.collect.Iterables;
+import com.google.inject.Module;
 
 /**
  * 
  * @see RestContext
  */
-public class OhaiContextBuilder<S, A> extends ComputeServiceContextBuilder<S, A> {
+public class OhaiContextBuilder<S, A> extends RestContextBuilder<S, A> {
 
    @Inject
    public OhaiContextBuilder(Class<S> syncClientClass, Class<A> asyncClientClass, Properties properties) {
