@@ -30,6 +30,7 @@
         <relativePath>../project/pom.xml</relativePath>
     </parent>
     <artifactId>jclouds-chef</artifactId>
+    <packaging>bundle</packaging>
     <name>JClouds Chef :: Core</name>
     <description>jclouds components to access Chef</description>
 
@@ -110,6 +111,20 @@
                         </goals>
                     </execution>
                 </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.felix</groupId>
+                <artifactId>maven-bundle-plugin</artifactId>
+                <configuration>
+                    <instructions>
+                        <Bundle-SymbolicName>${project.artifactId}</Bundle-SymbolicName>
+                        <Export-Package>
+                            org.jclouds.chef.*;version="${project.version}",
+                            org.jclouds.ohai.*;version="${project.version}"
+                        </Export-Package>
+                        <Import-Package>org.jclouds.*;version="${jclouds.version}",*</Import-Package>
+                    </instructions>
+                </configuration>
             </plugin>
         </plugins>
     </build>
