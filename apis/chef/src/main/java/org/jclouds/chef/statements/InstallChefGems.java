@@ -19,16 +19,14 @@
 
 package org.jclouds.chef.statements;
 
-import java.io.IOException;
-import java.util.Collections;
-
-import javax.inject.Singleton;
-
+import com.google.common.base.Throwables;
 import org.jclouds.scriptbuilder.domain.OsFamily;
 import org.jclouds.scriptbuilder.domain.Statement;
-import org.jclouds.util.Utils;
+import org.jclouds.util.Strings2;
 
-import com.google.common.base.Throwables;
+import javax.inject.Singleton;
+import java.io.IOException;
+import java.util.Collections;
 
 /**
  * @author Adrian Cole
@@ -38,8 +36,7 @@ public class InstallChefGems implements Statement {
    @Override
    public String render(OsFamily family) {
       try {
-         return Utils.toStringAndClose(InstallChefGems.class.getClassLoader().getResourceAsStream(
-                  "install-chef-gems.sh"));
+         return Strings2.toStringAndClose(getClass().getResourceAsStream("install-chef-gems.sh"));
       } catch (IOException e) {
          Throwables.propagate(e);
          return null;
