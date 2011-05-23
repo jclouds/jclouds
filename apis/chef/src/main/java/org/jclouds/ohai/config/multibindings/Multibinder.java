@@ -42,7 +42,6 @@ import com.google.inject.Module;
 import com.google.inject.Provider;
 import com.google.inject.TypeLiteral;
 import com.google.inject.binder.LinkedBindingBuilder;
-import com.google.inject.internal.Errors;
 import com.google.inject.spi.Dependency;
 import com.google.inject.spi.HasDependencies;
 import com.google.inject.spi.Message;
@@ -399,7 +398,7 @@ public abstract class Multibinder<T> {
          return;
       }
 
-      throw new ConfigurationException(ImmutableSet.of(new Message(Errors.format(format, args))));
+      throw new ConfigurationException(ImmutableSet.of(new Message(String.format(format, args))));
    }
 
    static <T> T checkNotNull(T reference, String name) {
