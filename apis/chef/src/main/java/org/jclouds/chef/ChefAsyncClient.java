@@ -152,7 +152,7 @@ public interface ChefAsyncClient {
     */
    @POST
    @Path("/clients")
-   ListenableFuture<Client> createClient(@BinderParam(BindClientnameToJsonPayload.class) String clientname);
+   ListenableFuture<Client> createClient(@BinderParam(BindNameToJsonPayload.class) String clientname);
 
    /**
     * @see ChefClient#generateKeyForClient
