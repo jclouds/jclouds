@@ -1,8 +1,6 @@
 if [ ! -f /usr/bin/chef-client ]; then
-  apt-get update -o Acquire::http::No-Cache=True
+  apt-get update
   apt-get install -y ruby ruby1.8-dev build-essential wget libruby-extras libruby1.8-extras
-  # Comment next line for production controlled environments, this should be part of a recipe
-  apt-get -y upgrade
   (
   mkdir -p /tmp/bootchef
   cd /tmp/bootchef

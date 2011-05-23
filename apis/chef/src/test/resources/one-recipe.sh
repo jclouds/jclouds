@@ -1,17 +1,16 @@
 if [ ! -f /usr/bin/chef-client ]; then
   apt-get update
   apt-get install -y ruby ruby1.8-dev build-essential wget libruby-extras libruby1.8-extras
-  mkdir -p /tmp/bootchef
   (
-    cd /tmp/bootchef
-    wget http://rubyforge.org/frs/download.php/69365/rubygems-1.3.6.tgz
-    tar xvf rubygems-1.3.6.tgz
-    cd rubygems-1.3.6
-    ruby setup.rb
-    cp /usr/bin/gem1.8 /usr/bin/gem
+  mkdir -p /tmp/bootchef
+  cd /tmp/bootchef
+  wget http://production.cf.rubygems.org/rubygems/rubygems-1.3.7.tgz
+  tar zxf rubygems-1.3.7.tgz
+  cd rubygems-1.3.7
+  ruby setup.rb --no-format-executable
+  rm -fr /tmp/bootchef
   )
-  rm -rf /tmp/bootchef
-  gem install chef ohai --no-rdoc --no-ri --verbose
+  /usr/bin/gem install ohai chef --no-rdoc --no-ri --verbose
 fi
 mkdir -p /etc/chef
 cat >> /etc/chef/client.rb <<'END_OF_FILE'
