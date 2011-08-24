@@ -20,7 +20,6 @@
 package org.jclouds.chef.domain;
 
 import java.util.Map;
-import java.util.Set;
 
 import com.google.common.collect.Maps;
 import com.google.gson.annotations.SerializedName;
