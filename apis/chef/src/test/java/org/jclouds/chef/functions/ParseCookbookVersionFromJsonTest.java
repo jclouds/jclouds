@@ -106,10 +106,10 @@ public class ParseCookbookVersionFromJsonTest {
                         ImmutableSet.<Attribute> of(),
                         ImmutableSet.<Resource> of(),
                         new Metadata("Apache v2.0", "Your Name", ImmutableMap.<String, String> of(), ImmutableMap
-                                 .<String, Set<String>> of(), "youremail@example.com", ImmutableMap
-                                 .<String, Set<String>> of(), "A fabulous new cookbook", ImmutableMap
-                                 .<String, Set<String>> of(), ImmutableMap.<String, Set<String>> of(), "0.0.0",
-                                 ImmutableMap.<String, String> of(), ImmutableMap.<String, Set<String>> of(),
+                                 .<String, String> of(), "youremail@example.com", ImmutableMap
+                                 .<String, String> of(), "A fabulous new cookbook", ImmutableMap
+                                 .<String, String> of(), ImmutableMap.<String, String> of(), "0.0.0",
+                                 ImmutableMap.<String, String> of(), ImmutableMap.<String, String> of(),
                                  "apache-chef-demo", ImmutableMap.<String, String> of(), "", ImmutableMap
                                           .<String, Attribute> of(), ImmutableMap.<String, String> of()),
                         ImmutableSet.<Resource> of(),

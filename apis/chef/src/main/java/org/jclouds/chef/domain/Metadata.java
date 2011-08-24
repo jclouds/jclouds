@@ -35,16 +35,16 @@ public class Metadata {
    private String license;
    private String maintainer;
    private Map<String, String> suggestions = Maps.newLinkedHashMap();
-   private Map<String, Set<String>> dependencies = Maps.newLinkedHashMap();
+   private Map<String, String> dependencies = Maps.newLinkedHashMap();
    @SerializedName("maintainer_email")
    private String maintainerEmail;
-   private Map<String, Set<String>> conflicting = Maps.newLinkedHashMap();
+   private Map<String, String> conflicting = Maps.newLinkedHashMap();
    private String description;
-   private Map<String, Set<String>> providing = Maps.newLinkedHashMap();
-   private Map<String, Set<String>> platforms = Maps.newLinkedHashMap();
+   private Map<String, String> providing = Maps.newLinkedHashMap();
+   private Map<String, String> platforms = Maps.newLinkedHashMap();
    private String version;
    private Map<String, String> recipes = Maps.newLinkedHashMap();
-   private Map<String, Set<String>> replacing = Maps.newLinkedHashMap();
+   private Map<String, String> replacing = Maps.newLinkedHashMap();
    private String name;
    private Map<String, String> groupings = Maps.newLinkedHashMap();
    @SerializedName("long_description")
@@ -53,9 +53,9 @@ public class Metadata {
    private Map<String, String> recommendations = Maps.newLinkedHashMap();
 
    public Metadata(String license, String maintainer, Map<String, String> suggestions,
-         Map<String, Set<String>> dependencies, String maintainerEmail, Map<String, Set<String>> conflicting,
-         String description, Map<String, Set<String>> providing, Map<String, Set<String>> platforms, String version,
-         Map<String, String> recipes, Map<String, Set<String>> replacing, String name, Map<String, String> groupings,
+         Map<String, String> dependencies, String maintainerEmail, Map<String, String> conflicting,
+         String description, Map<String,String> providing, Map<String, String> platforms, String version,
+         Map<String, String> recipes, Map<String, String> replacing, String name, Map<String, String> groupings,
          String longDescription, Map<String, Attribute> attributes, Map<String, String> recommendations) {
       this.license = license;
       this.maintainer = maintainer;
@@ -91,7 +91,7 @@ public class Metadata {
       return suggestions;
    }
 
-   public Map<String, Set<String>> getDependencies() {
+   public Map<String, String> getDependencies() {
       return dependencies;
    }
 
@@ -99,7 +99,7 @@ public class Metadata {
       return maintainerEmail;
    }
 
-   public Map<String, Set<String>> getConflicting() {
+   public Map<String, String> getConflicting() {
       return conflicting;
    }
 
@@ -107,11 +107,11 @@ public class Metadata {
       return description;
    }
 
-   public Map<String, Set<String>> getProviding() {
+   public Map<String, String> getProviding() {
       return providing;
    }
 
-   public Map<String, Set<String>> getPlatforms() {
+   public Map<String, String> getPlatforms() {
       return platforms;
    }
 
@@ -123,7 +123,7 @@ public class Metadata {
       return recipes;
    }
 
-   public Map<String, Set<String>> getReplacing() {
+   public Map<String, String> getReplacing() {
       return replacing;
    }
 
