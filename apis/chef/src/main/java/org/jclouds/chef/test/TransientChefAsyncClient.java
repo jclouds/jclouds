@@ -123,6 +123,12 @@ public class TransientChefAsyncClient implements ChefAsyncClient {
    }
 
    @Override
+   public ListenableFuture<Client> createAdminClient(String clientname) {
+      // TODO Auto-generated method stub
+      return null;
+   }
+
+   @Override
    public ListenableFuture<Void> createDatabag(String databagName) {
       return databags.createContainerInLocationIfAbsent(null, databagName);
    }

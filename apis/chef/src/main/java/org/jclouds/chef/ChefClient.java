@@ -141,6 +141,23 @@ public interface ChefClient {
    Client createClient(String name);
 
    /**
+    * creates a new administrator client
+    *
+    * @return the private key of the client. You can then use this client name
+    *         and private key to access the Opscode API.
+    * @throws AuthorizationException
+    *            <p/>
+    *            "401 Unauthorized" if the caller is not a recognized user.
+    *            <p/>
+    *            "403 Forbidden" if the caller is not authorized to create a
+    *            client.
+    * @throws HttpResponseException
+    *            "409 Conflict" if the client already exists
+    */
+   @Timeout(duration = 120, timeUnit = TimeUnit.SECONDS)
+   Client createAdminClient(String name);
+
+   /**
     * generate a new key-pair for this client, and return the new private key in
     * the response body.
     * 
