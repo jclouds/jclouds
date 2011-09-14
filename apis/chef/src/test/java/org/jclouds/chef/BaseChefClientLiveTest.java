@@ -39,6 +39,7 @@ import org.jclouds.chef.domain.Resource;
 import org.jclouds.chef.domain.Role;
 import org.jclouds.chef.domain.SearchResult;
 import org.jclouds.chef.domain.UploadSandbox;
+import org.jclouds.chef.options.CreateClientOptions;
 import org.jclouds.crypto.CryptoStreams;
 import org.jclouds.crypto.Pems;
 import org.jclouds.io.InputSuppliers;
@@ -204,6 +205,19 @@ public abstract class BaseChefClientLiveTest {
       getAdminConnection().deleteClient(PREFIX);
 
       clientKey = Pems.pem(getAdminConnection().createClient(PREFIX).getPrivateKey());
+
+      recreateClientConnection();
+      getClientConnection().clientExists(PREFIX);
+      Set<String> clients = getAdminConnection().listClients();
+      assert clients.contains(PREFIX) : String.format("client %s not in %s", PREFIX, clients);
+      assertNotNull(getClientConnection().getClient(PREFIX));
+   }
+   
+   @Test
+   public void testCreateAdminClient() throws Exception {
+      getAdminConnection().deleteClient(PREFIX);
+
+      clientKey = Pems.pem(getAdminConnection().createClient(PREFIX, CreateClientOptions.Builder.admin()).getPrivateKey());
 
       recreateClientConnection();
       getClientConnection().clientExists(PREFIX);

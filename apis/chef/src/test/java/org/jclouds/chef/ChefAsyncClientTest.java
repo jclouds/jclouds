@@ -38,6 +38,7 @@ import org.jclouds.chef.functions.ParseSearchClientsFromJson;
 import org.jclouds.chef.functions.ParseSearchDatabagFromJson;
 import org.jclouds.chef.functions.ParseSearchNodesFromJson;
 import org.jclouds.chef.functions.ParseSearchRolesFromJson;
+import org.jclouds.chef.options.CreateClientOptions;
 import org.jclouds.crypto.CryptoStreams;
 import org.jclouds.date.TimeStamp;
 import org.jclouds.http.HttpRequest;
@@ -222,6 +223,22 @@ public class ChefAsyncClientTest extends RestClientTest<ChefAsyncClient> {
       checkFilters(httpRequest);
 
    }
+   
+   public void testCreateAdminClient() throws SecurityException, NoSuchMethodException, IOException {
+       Method method = ChefAsyncClient.class.getMethod("createClient", String.class);
+       GeneratedHttpRequest<ChefAsyncClient> httpRequest = processor.createRequest(method, "client", CreateClientOptions.Builder.admin());
+
+       assertRequestLineEquals(httpRequest, "POST http://localhost:4000/clients HTTP/1.1");
+       assertNonPayloadHeadersEqual(httpRequest, "Accept: application/json\nX-Chef-Version: 0.9.8\n");
+       assertPayloadEquals(httpRequest, "{\"name\":\"client\", \"admin\": true}", "application/json", false);
+
+       assertResponseParserClassEquals(method, httpRequest, ParseJson.class);
+       assertSaxResponseParserClassEquals(method, null);
+       assertExceptionParserClassEquals(method, null);
+
+       checkFilters(httpRequest);
+
+    }
 
    public void testListClients() throws SecurityException, NoSuchMethodException, IOException {
       Method method = ChefAsyncClient.class.getMethod("listClients");

@@ -32,6 +32,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.core.MediaType;
 
+import org.jclouds.chef.binders.AdminFlagFromCreateClientOptions;
 import org.jclouds.chef.binders.BindAdminClientToJsonPayload;
 import org.jclouds.chef.binders.BindChecksumsToJsonPayload;
 import org.jclouds.chef.binders.BindClientnameToJsonPayload;
@@ -55,10 +56,13 @@ import org.jclouds.chef.functions.ParseSearchClientsFromJson;
 import org.jclouds.chef.functions.ParseSearchDatabagFromJson;
 import org.jclouds.chef.functions.ParseSearchNodesFromJson;
 import org.jclouds.chef.functions.ParseSearchRolesFromJson;
+import org.jclouds.chef.options.CreateClientOptions;
 import org.jclouds.rest.annotations.BinderParam;
 import org.jclouds.rest.annotations.ExceptionParser;
 import org.jclouds.rest.annotations.Headers;
+import org.jclouds.rest.annotations.MapBinder;
 import org.jclouds.rest.annotations.ParamParser;
+import org.jclouds.rest.annotations.PayloadParam;
 import org.jclouds.rest.annotations.RequestFilters;
 import org.jclouds.rest.annotations.ResponseParser;
 import org.jclouds.rest.annotations.Unwrap;
@@ -153,14 +157,14 @@ public interface ChefAsyncClient {
     */
    @POST
    @Path("/clients")
-   ListenableFuture<Client> createClient(@BinderParam(BindNameToJsonPayload.class) String clientname);
-
-   /**
-    * @see ChefClient#createAdminClient(String)
-    */
+   @MapBinder(BindToJsonPayload.class)
+   ListenableFuture<Client> createClient(@PayloadParam("name") String clientname);
+   
    @POST
    @Path("/clients")
-   ListenableFuture<Client> createAdminClient(@BinderParam(BindAdminClientToJsonPayload.class) String clientname);
+   @MapBinder(BindToJsonPayload.class)
+   ListenableFuture<Client> createClient(@PayloadParam("name") String clientname,
+       @PayloadParam("admin") @ParamParser(AdminFlagFromCreateClientOptions.class) CreateClientOptions options);
 
    /**
     * @see ChefClient#generateKeyForClient

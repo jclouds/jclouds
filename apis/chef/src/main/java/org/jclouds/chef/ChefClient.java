@@ -23,6 +23,10 @@ import java.util.List;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
+import javax.ws.rs.POST;
+import javax.ws.rs.Path;
+
+import org.jclouds.chef.binders.AdminFlagFromCreateClientOptions;
 import org.jclouds.chef.domain.Client;
 import org.jclouds.chef.domain.CookbookVersion;
 import org.jclouds.chef.domain.DatabagItem;
@@ -31,11 +35,17 @@ import org.jclouds.chef.domain.Role;
 import org.jclouds.chef.domain.Sandbox;
 import org.jclouds.chef.domain.SearchResult;
 import org.jclouds.chef.domain.UploadSandbox;
+import org.jclouds.chef.options.CreateClientOptions;
 import org.jclouds.concurrent.Timeout;
 import org.jclouds.http.HttpResponseException;
 import org.jclouds.rest.AuthorizationException;
 import org.jclouds.rest.annotations.BinderParam;
+import org.jclouds.rest.annotations.MapBinder;
+import org.jclouds.rest.annotations.ParamParser;
+import org.jclouds.rest.annotations.PayloadParam;
 import org.jclouds.rest.binders.BindToJsonPayload;
+
+import com.google.common.util.concurrent.ListenableFuture;
 
 /**
  * Provides synchronous access to Chef.
@@ -155,7 +165,7 @@ public interface ChefClient {
     *            "409 Conflict" if the client already exists
     */
    @Timeout(duration = 120, timeUnit = TimeUnit.SECONDS)
-   Client createAdminClient(String name);
+   Client createClient(String name, CreateClientOptions options);
 
    /**
     * generate a new key-pair for this client, and return the new private key in
