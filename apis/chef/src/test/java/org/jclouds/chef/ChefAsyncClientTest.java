@@ -225,12 +225,12 @@ public class ChefAsyncClientTest extends RestClientTest<ChefAsyncClient> {
    }
    
    public void testCreateAdminClient() throws SecurityException, NoSuchMethodException, IOException {
-       Method method = ChefAsyncClient.class.getMethod("createClient", String.class);
+       Method method = ChefAsyncClient.class.getMethod("createClient", String.class, CreateClientOptions.class);
        GeneratedHttpRequest<ChefAsyncClient> httpRequest = processor.createRequest(method, "client", CreateClientOptions.Builder.admin());
 
        assertRequestLineEquals(httpRequest, "POST http://localhost:4000/clients HTTP/1.1");
        assertNonPayloadHeadersEqual(httpRequest, "Accept: application/json\nX-Chef-Version: 0.9.8\n");
-       assertPayloadEquals(httpRequest, "{\"name\":\"client\", \"admin\": true}", "application/json", false);
+       assertPayloadEquals(httpRequest, "{\"admin\":true,\"name\":\"client\"}", "application/json", false);
 
        assertResponseParserClassEquals(method, httpRequest, ParseJson.class);
        assertSaxResponseParserClassEquals(method, null);

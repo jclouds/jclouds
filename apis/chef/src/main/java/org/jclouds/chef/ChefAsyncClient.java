@@ -36,6 +36,7 @@ import org.jclouds.chef.binders.AdminFlagFromCreateClientOptions;
 import org.jclouds.chef.binders.BindAdminClientToJsonPayload;
 import org.jclouds.chef.binders.BindChecksumsToJsonPayload;
 import org.jclouds.chef.binders.BindClientnameToJsonPayload;
+import org.jclouds.chef.binders.BindCreateClientOptionsToJsonPayload;
 import org.jclouds.chef.binders.BindGenerateKeyForClientToJsonPayload;
 import org.jclouds.chef.binders.BindIsCompletedToJsonPayload;
 import org.jclouds.chef.binders.BindNameToJsonPayload;
@@ -162,7 +163,7 @@ public interface ChefAsyncClient {
    
    @POST
    @Path("/clients")
-   @MapBinder(BindToJsonPayload.class)
+   @MapBinder(BindCreateClientOptionsToJsonPayload.class)
    ListenableFuture<Client> createClient(@PayloadParam("name") String clientname,
        @PayloadParam("admin") @ParamParser(AdminFlagFromCreateClientOptions.class) CreateClientOptions options);
 
