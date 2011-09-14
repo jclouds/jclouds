@@ -33,9 +33,7 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.core.MediaType;
 
 import org.jclouds.chef.binders.AdminFlagFromCreateClientOptions;
-import org.jclouds.chef.binders.BindAdminClientToJsonPayload;
 import org.jclouds.chef.binders.BindChecksumsToJsonPayload;
-import org.jclouds.chef.binders.BindClientnameToJsonPayload;
 import org.jclouds.chef.binders.BindCreateClientOptionsToJsonPayload;
 import org.jclouds.chef.binders.BindGenerateKeyForClientToJsonPayload;
 import org.jclouds.chef.binders.BindIsCompletedToJsonPayload;
