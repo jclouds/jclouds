@@ -18,6 +18,10 @@
  */
 package org.jclouds.chef.binders;
 
+import static com.google.common.base.Preconditions.checkArgument;
+import static com.google.common.base.Preconditions.checkNotNull;
+import static com.google.common.base.Preconditions.checkState;
+
 import java.util.Map;
 
 import javax.inject.Inject;
@@ -26,9 +30,10 @@ import org.jclouds.chef.options.CreateClientOptions;
 import org.jclouds.http.HttpRequest;
 import org.jclouds.json.Json;
 import org.jclouds.rest.binders.BindToJsonPayload;
+import org.jclouds.rest.internal.GeneratedHttpRequest;
 
-import com.google.common.base.Function;
-import com.google.common.collect.Maps;
+import com.google.common.base.Predicates;
+import com.google.common.collect.Iterables;
 
 /**
  * Bind the parameters of a {@link CreateClientOptions} to the payload, taking care of transforming
@@ -44,19 +49,30 @@ public class BindCreateClientOptionsToJsonPayload extends BindToJsonPayload
     }
 
     @Override
-    public <R extends HttpRequest> R bindToRequest(R request, Map<String, String> postParams)
+    public <R extends HttpRequest> R bindToRequest(R request, Map<String, String> postParams) {
+        checkArgument(checkNotNull(request, "request") instanceof GeneratedHttpRequest<?>,
+            "this binder is only valid for GeneratedHttpRequests");
+        GeneratedHttpRequest<?> gRequest = (GeneratedHttpRequest<?>) request;
+        checkState(gRequest.getArgs() != null, "args should be initialized at this point");
+        
+        String name = checkNotNull(postParams.remove("name"), "name");
+        CreateClientOptions options = (CreateClientOptions) Iterables.find(gRequest.getArgs(), 
+            Predicates.instanceOf(CreateClientOptions.class));
+        
+        return bindToRequest(request, new CreateClientParams(name, options));
+    }
+    
+    @SuppressWarnings("unused")
+    private static class CreateClientParams
     {
-        Map<String, Object> params =
-            Maps.transformValues(postParams, new Function<String, Object>() {
-                @Override
-                public Object apply(String input) {
-                    // Transform boolean values to Boolean objects so they are serialized as boolean
-                    return input.equals("true") || input.equals("false") ? Boolean.valueOf(input)
-                        : input;
-                }
-            });
-
-        return bindToRequest(request, (Object) params);
+        private String name;
+        
+        private boolean admin;
+        
+        public CreateClientParams(String name, CreateClientOptions options) {
+            this.name = name;
+            this.admin = options.isAdmin();
+        }
     }
 
 }
