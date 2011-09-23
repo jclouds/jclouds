@@ -36,8 +36,7 @@ import com.google.common.base.Predicates;
 import com.google.common.collect.Iterables;
 
 /**
- * Bind the parameters of a {@link CreateClientOptions} to the payload, taking care of transforming
- * all boolean strings to boolean values.
+ * Bind the parameters of a {@link CreateClientOptions} to the payload.
  * 
  * @author Ignasi Barrera
  */
