@@ -38,19 +38,18 @@ import org.jclouds.chef.domain.DatabagItem;
 import org.jclouds.crypto.Crypto;
 import org.jclouds.crypto.Pems;
 import org.jclouds.io.InputSuppliers;
-import org.jclouds.json.Json;
 import org.jclouds.json.config.GsonModule.DateAdapter;
 import org.jclouds.json.config.GsonModule.Iso8601DateAdapter;
+import org.jclouds.json.internal.NullHackJsonLiteralAdapter;
 
 import com.google.common.base.Throwables;
 import com.google.common.collect.ImmutableMap;
+import com.google.gson.Gson;
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonElement;
-import com.google.gson.JsonLiteral;
 import com.google.gson.JsonParseException;
-import com.google.gson.JsonSerializationContext;
-import com.google.gson.JsonSerializer;
+import com.google.gson.JsonSyntaxException;
 import com.google.inject.AbstractModule;
 import com.google.inject.ImplementedBy;
 import com.google.inject.Provides;
@@ -160,49 +159,41 @@ public class ChefParserModule extends AbstractModule {
       }
    }
 
-   @ImplementedBy(DataBagItemAdapterImpl.class)
-   public static interface DataBagItemAdapter extends JsonSerializer<DatabagItem>, JsonDeserializer<DatabagItem> {
 
-   }
-
+   /**
+    * writes or reads the literal directly
+    */
    @Singleton
-   public static class DataBagItemAdapterImpl implements DataBagItemAdapter {
-      private final Json json;
-
-      @Inject
-      DataBagItemAdapterImpl(Json json) {
-         this.json = json;
-      }
-
+   public static class DataBagItemAdapter extends NullHackJsonLiteralAdapter<DatabagItem> {
+      final Gson gson = new Gson();
       @Override
-      public JsonElement serialize(DatabagItem src, Type typeOfSrc, JsonSerializationContext context) {
-         String text = src.toString();
-         try {
-            IdHolder idHolder = json.fromJson(text, IdHolder.class);
-            if (idHolder.id == null)
-               text = text.replaceFirst("\\{", String.format("{\"id\":\"%s\",", src.getId()));
-            else
-               checkArgument(src.getId().equals(idHolder.id), "incorrect id in databagItem text, should be %s: was %s",
-                     src.getId(), idHolder.id);
-            return new JsonLiteral(text);
-         } catch (JsonParseException e) {
-            throw new IllegalArgumentException(String.format(
-                  "databag item must be a json hash ex. {\"id\":\"item1\",\"my_key\":\"my_data\"}; was %s", text), e);
-         }
-      }
-
-      @Override
-      public DatabagItem deserialize(JsonElement jsonElement, Type typeOfT, JsonDeserializationContext context)
-            throws JsonParseException {
-         String text = jsonElement.toString();
-         IdHolder idHolder = json.fromJson(text, IdHolder.class);
+      protected DatabagItem createJsonLiteralFromRawJson(String text) {
+         IdHolder idHolder = gson.fromJson(text, IdHolder.class);
          checkState(idHolder.id != null,
                "databag item must be a json hash ex. {\"id\":\"item1\",\"my_key\":\"my_data\"}; was %s", text);
          text = text.replaceFirst(String.format("\\{\"id\"[ ]?:\"%s\",", idHolder.id), "{");
          return new DatabagItem(idHolder.id, text);
       }
-   }
+      
+      @Override
+      protected String toString(DatabagItem value) {
+         String text = value.toString();
 
+         try {
+            IdHolder idHolder = gson.fromJson(text, IdHolder.class);
+            if (idHolder.id == null)
+               text = text.replaceFirst("\\{", String.format("{\"id\":\"%s\",", value.getId()));
+            else
+               checkArgument(value.getId().equals(idHolder.id),
+                        "incorrect id in databagItem text, should be %s: was %s", value.getId(), idHolder.id);
+         } catch (JsonSyntaxException e) {
+            throw new IllegalArgumentException(e);
+         }
+
+         return text;
+      }
+   }
+   
    private static class IdHolder {
       private String id;
    }

@@ -39,7 +39,7 @@ import org.jclouds.chef.domain.CookbookVersion;
 import org.jclouds.chef.domain.DatabagItem;
 import org.jclouds.chef.domain.Node;
 import org.jclouds.chef.functions.RunListForTag;
-import org.jclouds.chef.functions.TagToBootScript;
+import org.jclouds.chef.functions.GroupToBootScript;
 import org.jclouds.chef.reference.ChefConstants;
 import org.jclouds.chef.strategy.CleanupStaleNodesAndClients;
 import org.jclouds.chef.strategy.CreateNodeAndPopulateAutomaticAttributes;
@@ -81,7 +81,7 @@ public class BaseChefService implements ChefService {
    private final ListClients listClients;
    private final UpdateAutomaticAttributesOnNode updateAutomaticAttributesOnNode;
    private final Provider<PrivateKey> privateKey;
-   private final TagToBootScript tagToBootScript;
+   private final GroupToBootScript tagToBootScript;
    private final String databag;
    private final RunListForTag runListForTag;
    private final ListCookbookVersions listCookbookVersions;
@@ -93,7 +93,7 @@ public class BaseChefService implements ChefService {
             DeleteAllClientsInList deleteAllClientsInList, ListClients listClients,
             ListCookbookVersions listCookbookVersions, UpdateAutomaticAttributesOnNode updateAutomaticAttributesOnNode,
             Provider<PrivateKey> privateKey, @Named(CHEF_BOOTSTRAP_DATABAG) String databag,
-            TagToBootScript tagToBootScript, RunListForTag runListForTag) {
+            GroupToBootScript tagToBootScript, RunListForTag runListForTag) {
       this.chefContext = checkNotNull(chefContext, "chefContext");
       this.cleanupStaleNodesAndClients = checkNotNull(cleanupStaleNodesAndClients, "cleanupStaleNodesAndClients");
       this.createNodeAndPopulateAutomaticAttributes = checkNotNull(createNodeAndPopulateAutomaticAttributes,

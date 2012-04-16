@@ -39,6 +39,7 @@ import org.jclouds.scriptbuilder.domain.Statement;
 import org.testng.annotations.Test;
 
 import com.google.common.base.Charsets;
+import com.google.common.base.Suppliers;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.io.CharStreams;
@@ -58,7 +59,7 @@ public class TagToBootScriptTest {
 
    @Test(expectedExceptions = IllegalStateException.class)
    public void testMustHaveClients() {
-      TagToBootScript fn = new TagToBootScript(URI.create("http://localhost:4000"), json, ImmutableMap
+      GroupToBootScript fn = new GroupToBootScript(Suppliers.ofInstance(URI.create("http://localhost:4000")), json, ImmutableMap
                .<String, Client> of(), ImmutableMap.<String, List<String>> of("foo", ImmutableList
                .of("recipe[apache2]")), installChefGems);
       fn.apply("foo");
@@ -66,14 +67,14 @@ public class TagToBootScriptTest {
 
    @Test(expectedExceptions = IllegalStateException.class)
    public void testMustHaveRunScripts() {
-      TagToBootScript fn = new TagToBootScript(URI.create("http://localhost:4000"), json, ImmutableMap
+      GroupToBootScript fn = new GroupToBootScript(Suppliers.ofInstance(URI.create("http://localhost:4000")), json, ImmutableMap
                .<String, Client> of("foo", createMock(Client.class)), ImmutableMap.<String, List<String>> of(), installChefGems);
       fn.apply("foo");
    }
 
    @Test(expectedExceptions = IllegalStateException.class)
    public void testMustHaveRunScriptsValue() {
-      TagToBootScript fn = new TagToBootScript(URI.create("http://localhost:4000"), json, ImmutableMap
+      GroupToBootScript fn = new GroupToBootScript(Suppliers.ofInstance(URI.create("http://localhost:4000")), json, ImmutableMap
                .<String, Client> of("foo", createMock(Client.class)), ImmutableMap.<String, List<String>> of("foo",
                ImmutableList.<String> of()), installChefGems);
       fn.apply("foo");
@@ -83,7 +84,7 @@ public class TagToBootScriptTest {
       Client client = createMock(Client.class);
       PrivateKey privateKey = createMock(PrivateKey.class);
 
-      TagToBootScript fn = new TagToBootScript(URI.create("http://localhost:4000"), json, ImmutableMap
+      GroupToBootScript fn = new GroupToBootScript(Suppliers.ofInstance(URI.create("http://localhost:4000")), json, ImmutableMap
                .<String, Client> of("foo", client), ImmutableMap.<String, List<String>> of("foo", ImmutableList
                .<String> of("recipe[apache2]")), installChefGems);
 

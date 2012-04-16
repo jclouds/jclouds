@@ -29,7 +29,6 @@ import org.jclouds.chef.domain.Client;
 import org.jclouds.chef.functions.ClientForTag;
 import org.jclouds.chef.functions.RunListForTag;
 import org.jclouds.chef.statements.InstallChefGems;
-import org.jclouds.http.RequiresHttp;
 import org.jclouds.rest.ConfiguresRestClient;
 import org.jclouds.scriptbuilder.domain.Statement;
 
@@ -42,7 +41,6 @@ import com.google.inject.name.Names;
  * 
  * @author Adrian Cole
  */
-@RequiresHttp
 @ConfiguresRestClient
 public class ChefRestClientModule extends BaseChefRestClientModule<ChefClient, ChefAsyncClient> {
 

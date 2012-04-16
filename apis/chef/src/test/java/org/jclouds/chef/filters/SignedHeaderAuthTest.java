@@ -24,20 +24,20 @@ import static org.testng.Assert.assertEqualsNoOrder;
 import java.io.IOException;
 import java.net.URI;
 import java.security.PrivateKey;
-import java.util.Properties;
 
 import javax.inject.Provider;
 import javax.ws.rs.HttpMethod;
 import javax.ws.rs.core.HttpHeaders;
 
+import org.jclouds.ContextBuilder;
+import org.jclouds.chef.ChefApiMetadata;
 import org.jclouds.crypto.Crypto;
 import org.jclouds.http.HttpRequest;
 import org.jclouds.http.HttpUtils;
 import org.jclouds.http.internal.SignatureWire;
 import org.jclouds.logging.config.NullLoggingModule;
-import org.jclouds.rest.RestContextFactory;
-import org.jclouds.rest.BaseRestClientTest.MockModule;
-import org.jclouds.util.Utils;
+import org.jclouds.rest.internal.BaseRestClientTest.MockModule;
+import org.jclouds.util.Strings2;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
@@ -107,9 +107,9 @@ public class SignedHeaderAuthTest {
 
    static {
       try {
-         PUBLIC_KEY = Utils.toStringAndClose(SignedHeaderAuthTest.class.getResourceAsStream("/pubkey.txt"));
+         PUBLIC_KEY = Strings2.toStringAndClose(SignedHeaderAuthTest.class.getResourceAsStream("/pubkey.txt"));
 
-         PRIVATE_KEY = Utils.toStringAndClose(SignedHeaderAuthTest.class.getResourceAsStream("/privkey.txt"));
+         PRIVATE_KEY = Strings2.toStringAndClose(SignedHeaderAuthTest.class.getResourceAsStream("/privkey.txt"));
       } catch (IOException e) {
          Throwables.propagate(e);
       }
@@ -181,8 +181,8 @@ public class SignedHeaderAuthTest {
    @BeforeClass
    protected void createFilter() throws IOException {
 
-      Injector injector = new RestContextFactory().createContextBuilder("chef", USER_ID, PRIVATE_KEY,
-            ImmutableSet.<Module> of(new MockModule(), new NullLoggingModule()), new Properties()).buildInjector();
+      Injector injector = ContextBuilder.newBuilder(new ChefApiMetadata()).credentials(USER_ID, PRIVATE_KEY).modules(
+            ImmutableSet.<Module> of(new MockModule(), new NullLoggingModule())).buildInjector();
 
       crypto = injector.getInstance(Crypto.class);
       HttpUtils utils = injector.getInstance(HttpUtils.class);

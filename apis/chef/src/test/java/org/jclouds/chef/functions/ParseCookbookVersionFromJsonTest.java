@@ -22,7 +22,6 @@ import static org.testng.Assert.assertEquals;
 
 import java.io.IOException;
 import java.net.URI;
-import java.util.Set;
 
 import org.jclouds.chef.config.ChefParserModule;
 import org.jclouds.chef.domain.Attribute;
@@ -35,7 +34,7 @@ import org.jclouds.http.functions.ParseJson;
 import org.jclouds.io.Payloads;
 import org.jclouds.json.Json;
 import org.jclouds.json.config.GsonModule;
-import org.jclouds.util.Utils;
+import org.jclouds.util.Strings2;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
 
@@ -71,7 +70,7 @@ public class ParseCookbookVersionFromJsonTest {
       CookbookVersion cookbook = handler.apply(new HttpResponse(200, "ok", Payloads
                .newPayload(ParseCookbookVersionFromJsonTest.class.getResourceAsStream("/brew-cookbook.json"))));
 
-      assertEquals(cookbook, handler.apply(new HttpResponse(200, "ok", Payloads.newPayload(Utils.toInputStream(json
+      assertEquals(cookbook, handler.apply(new HttpResponse(200, "ok", Payloads.newPayload(Strings2.toInputStream(json
                .toJson(cookbook))))));
    }
 
@@ -80,7 +79,7 @@ public class ParseCookbookVersionFromJsonTest {
       CookbookVersion cookbook = handler.apply(new HttpResponse(200, "ok", Payloads
                .newPayload(ParseCookbookVersionFromJsonTest.class.getResourceAsStream("/tomcat-cookbook.json"))));
 
-      assertEquals(cookbook, handler.apply(new HttpResponse(200, "ok", Payloads.newPayload(Utils.toInputStream(json
+      assertEquals(cookbook, handler.apply(new HttpResponse(200, "ok", Payloads.newPayload(Strings2.toInputStream(json
                .toJson(cookbook))))));
    }
 
@@ -89,7 +88,7 @@ public class ParseCookbookVersionFromJsonTest {
       CookbookVersion cookbook = handler.apply(new HttpResponse(200, "ok", Payloads
                .newPayload(ParseCookbookVersionFromJsonTest.class.getResourceAsStream("/mysql-cookbook.json"))));
 
-      assertEquals(cookbook, handler.apply(new HttpResponse(200, "ok", Payloads.newPayload(Utils.toInputStream(json
+      assertEquals(cookbook, handler.apply(new HttpResponse(200, "ok", Payloads.newPayload(Strings2.toInputStream(json
                .toJson(cookbook))))));
    }
 

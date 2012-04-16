@@ -46,29 +46,30 @@ import org.jclouds.scriptbuilder.domain.Statement;
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Function;
 import com.google.common.base.Splitter;
+import com.google.common.base.Supplier;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.inject.TypeLiteral;
 
 /**
  * 
- * Generates a bootstrap script relevant for a particular tag
+ * Generates a bootstrap script relevant for a particular group
  * 
  * @author Adrian Cole
  */
 @Singleton
-public class TagToBootScript implements Function<String, Payload> {
+public class GroupToBootScript implements Function<String, Payload> {
    @VisibleForTesting
    static final Type RUN_LIST_TYPE = new TypeLiteral<Map<String, List<String>>>() {
    }.getType();
-   private final URI endpoint;
+   private final Supplier<URI> endpoint;
    private final Json json;
    private final Map<String, Client> tagToClient;
    private final Map<String, List<String>> runListForTag;
    private final Statement installChefGems;
 
    @Inject
-   public TagToBootScript(@Provider URI endpoint, Json json, Map<String, Client> tagToClient,
+   public GroupToBootScript(@Provider Supplier<URI> endpoint, Json json, Map<String, Client> tagToClient,
             Map<String, List<String>> runListForTag, @Named("installChefGems") Statement installChefGems) {
       this.endpoint = checkNotNull(endpoint, "endpoint");
       this.json = checkNotNull(json, "json");
@@ -95,7 +96,7 @@ public class TagToBootScript implements Function<String, Payload> {
                "require 'ohai'", "o = Ohai::System.new", "o.all_plugins", String.format(
                         "node_name \"%s-\" + o[:ipaddress]", tag), "log_level :info", "log_location STDOUT", String
                         .format("validation_client_name \"%s\"", client.getClientname()), String.format(
-                        "chef_server_url \"%s\"", endpoint)));
+                        "chef_server_url \"%s\"", endpoint.get())));
 
       Statement createValidationPem = appendFile(chefConfigDir + "{fs}validation.pem", Splitter.on('\n').split(
                Pems.pem(client.getPrivateKey())));

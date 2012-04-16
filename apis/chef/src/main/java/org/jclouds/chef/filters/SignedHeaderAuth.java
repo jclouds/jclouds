@@ -19,14 +19,9 @@
 package org.jclouds.chef.filters;
 
 import static com.google.common.base.Preconditions.checkArgument;
-import static com.google.common.base.Preconditions.checkNotNull;
 import static org.jclouds.Constants.PROPERTY_IDENTITY;
 
 import java.security.PrivateKey;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.NoSuchElementException;
 
 import javax.annotation.Resource;
@@ -35,11 +30,6 @@ import javax.inject.Named;
 import javax.inject.Provider;
 import javax.inject.Singleton;
 
-import com.google.common.collect.ArrayListMultimap;
-import com.google.common.collect.ImmutableListMultimap;
-import com.google.common.collect.ImmutableMultimap;
-import com.google.common.collect.Multimap;
-import com.google.common.collect.Multimaps;
 import org.jclouds.Constants;
 import org.jclouds.crypto.Crypto;
 import org.jclouds.crypto.CryptoStreams;
@@ -57,13 +47,15 @@ import org.jclouds.io.payloads.MultipartForm;
 import org.jclouds.io.payloads.Part;
 import org.jclouds.io.payloads.RSAEncryptingPayload;
 import org.jclouds.logging.Logger;
-import org.jclouds.util.Utils;
+import org.jclouds.util.Strings2;
 
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Predicate;
 import com.google.common.base.Splitter;
 import com.google.common.base.Throwables;
+import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Iterables;
+import com.google.common.collect.Multimap;
 import com.google.common.io.ByteStreams;
 
 /**
@@ -122,7 +114,7 @@ public class SignedHeaderAuth implements HttpRequestFilter {
    HttpRequest calculateAndReplaceAuthorizationHeaders( HttpRequest request, String toSign ) throws HttpException {
       String signature = sign(toSign);
       if (signatureWire.enabled())
-         signatureWire.input(Utils.toInputStream(signature));
+         signatureWire.input(Strings2.toInputStream(signature));
       String[] signatureLines = Iterables.toArray(Splitter.fixedLength(60).split(signature), String.class);
 
       Multimap<String, String> headers = ArrayListMultimap.create();

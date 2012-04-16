@@ -23,8 +23,8 @@ import static org.testng.Assert.assertNotNull;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Properties;
 
+import org.jclouds.ContextBuilder;
 import org.jclouds.chef.config.ChefParserModule;
 import org.jclouds.chef.domain.CookbookVersion;
 import org.jclouds.json.Json;
@@ -74,10 +74,8 @@ public class ChefClientLiveTest extends BaseChefClientLiveTest {
    }
 
    private ChefContext createConnection(String identity, String key) throws IOException {
-      Properties props = new Properties();
-      props.setProperty("chef.endpoint", endpoint);
-      return new ChefContextFactory().createContext(identity, key, ImmutableSet.<Module> of(new Log4JLoggingModule()),
-               props);
+      return ContextBuilder.newBuilder(new ChefApiMetadata()).endpoint(endpoint).credentials(identity, key).modules(
+               ImmutableSet.<Module> of(new Log4JLoggingModule())).build();
    }
 
    @Override

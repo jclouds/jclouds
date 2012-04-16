@@ -23,6 +23,8 @@ import java.util.Map;
 
 import javax.inject.Singleton;
 
+import org.jclouds.ContextBuilder;
+import org.jclouds.blobstore.TransientApiMetadata;
 import org.jclouds.blobstore.TransientAsyncBlobStore;
 import org.jclouds.chef.ChefAsyncClient;
 import org.jclouds.chef.ChefClient;
@@ -33,10 +35,13 @@ import org.jclouds.chef.functions.RunListForTag;
 import org.jclouds.chef.statements.InstallChefGems;
 import org.jclouds.chef.test.TransientChefAsyncClient;
 import org.jclouds.chef.test.TransientChefClient;
-import org.jclouds.rest.RestContextFactory;
+import org.jclouds.concurrent.MoreExecutors;
+import org.jclouds.concurrent.config.ExecutorServiceModule;
 import org.jclouds.scriptbuilder.domain.Statement;
 
+import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.MapMaker;
+import com.google.inject.Module;
 import com.google.inject.Provides;
 import com.google.inject.name.Names;
 
@@ -53,7 +58,9 @@ public class TransientChefClientModule extends BaseChefRestClientModule<Transien
    @Override
    protected void configure() {
       bind(TransientAsyncBlobStore.class).annotatedWith(Names.named("databags")).toInstance(
-               new RestContextFactory().createContextBuilder("transient", "foo", "bar").buildInjector().getInstance(
+               ContextBuilder.newBuilder(new TransientApiMetadata()).modules(
+                        ImmutableSet.<Module> of(new ExecutorServiceModule(MoreExecutors.sameThreadExecutor(),
+                                 MoreExecutors.sameThreadExecutor()))).buildInjector().getInstance(
                         TransientAsyncBlobStore.class));
       bind(Statement.class).annotatedWith(Names.named("installChefGems")).to(InstallChefGems.class);
       super.configure();

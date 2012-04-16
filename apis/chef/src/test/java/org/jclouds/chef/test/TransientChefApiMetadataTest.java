@@ -16,24 +16,24 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.jclouds.chef;
+package org.jclouds.chef.test;
 
-import com.google.common.collect.Iterables;
-import org.jclouds.rest.Providers;
+import org.jclouds.Wrapper;
+import org.jclouds.rest.internal.BaseRestApiMetadataTest;
 import org.testng.annotations.Test;
+
+import com.google.common.collect.ImmutableSet;
+import com.google.common.reflect.TypeToken;
 
 /**
  * 
  * @author Adrian Cole
- * 
  */
-@Test(groups = { "unit" })
-public class ProvidersInPropertiesTest {
+@Test(groups = "unit", testName = "TransientChefApiMetadataTest")
+public class TransientChefApiMetadataTest extends BaseRestApiMetadataTest {
 
-   @Test
-   public void testSupportedProviders() {
-      Iterable<String> providers = Providers.getSupportedProviders();
-      assert Iterables.contains(providers, "chef") : providers;
+   // no config management abstraction, yet
+   public TransientChefApiMetadataTest() {
+      super(new TransientChefApiMetadata(), ImmutableSet.<TypeToken<? extends Wrapper>> of());
    }
-
 }

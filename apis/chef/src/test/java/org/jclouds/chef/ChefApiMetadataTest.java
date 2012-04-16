@@ -16,27 +16,24 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.jclouds.chef.test;
+package org.jclouds.chef;
 
-import java.util.List;
-import java.util.Properties;
+import org.jclouds.Wrapper;
+import org.jclouds.rest.internal.BaseRestApiMetadataTest;
+import org.testng.annotations.Test;
 
-import org.jclouds.chef.ChefContextBuilder;
-import org.jclouds.chef.test.config.TransientChefClientModule;
-
-import com.google.inject.Module;
+import com.google.common.collect.ImmutableSet;
+import com.google.common.reflect.TypeToken;
 
 /**
+ * 
  * @author Adrian Cole
  */
-public class TransientChefContextBuilder extends ChefContextBuilder {
+@Test(groups = "unit", testName = "ChefApiMetadataTest")
+public class ChefApiMetadataTest extends BaseRestApiMetadataTest {
 
-   public TransientChefContextBuilder(Properties props) {
-      super(props);
-   }
-
-   @Override
-   protected void addClientModule(List<Module> modules) {
-      modules.add(new TransientChefClientModule());
+   // no config management abstraction, yet
+   public ChefApiMetadataTest() {
+      super(new ChefApiMetadata(), ImmutableSet.<TypeToken<? extends Wrapper>> of());
    }
 }

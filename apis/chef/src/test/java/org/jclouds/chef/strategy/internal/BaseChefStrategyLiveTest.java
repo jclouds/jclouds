@@ -22,14 +22,12 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Properties;
 import java.util.Set;
 
-import org.jclouds.chef.ChefAsyncClient;
-import org.jclouds.chef.ChefClient;
+import org.jclouds.ContextBuilder;
+import org.jclouds.chef.ChefApiMetadata;
 import org.jclouds.lifecycle.Closer;
 import org.jclouds.logging.log4j.config.Log4JLoggingModule;
-import org.jclouds.rest.RestContextFactory;
 import org.testng.annotations.AfterTest;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
@@ -59,13 +57,11 @@ public abstract class BaseChefStrategyLiveTest {
       String keyfile = System.getProperty("jclouds.test.credential");
       if (keyfile == null || keyfile.equals(""))
          keyfile = System.getProperty("user.home") + "/.chef/" + user + ".pem";
-      Properties props = new Properties();
-      props.setProperty("chef.endpoint", endpoint);
       Set<Module> modules = Sets.newHashSet();
       modules.add(new Log4JLoggingModule());
       addTestModulesTo(modules);
-      injector = new RestContextFactory().<ChefClient, ChefAsyncClient> createContextBuilder("chef", user,
-            Files.toString(new File(keyfile), Charsets.UTF_8), modules, props).buildInjector();
+      injector = ContextBuilder.newBuilder(new ChefApiMetadata()).credentials(user, Files.toString(new File(keyfile), Charsets.UTF_8))
+      .endpoint(endpoint).modules(modules).buildInjector();
    }
 
    protected void addTestModulesTo(Set<Module> modules) {

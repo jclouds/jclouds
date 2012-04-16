@@ -46,8 +46,9 @@ See http://code.google.com/p/jclouds for details."}
   (:require (org.danlarkin [json :as json]))
   (:import 
         java.util.Properties
+        [org.jclouds ContextBuilder]
         [org.jclouds.chef ChefClient
-          ChefService ChefContext ChefContextFactory]
+          ChefService ChefContext]
         [org.jclouds.chef.domain DatabagItem]))
 (try
  (use '[clojure.contrib.reflect :only [get-field]])
@@ -75,12 +76,13 @@ unit testing"
     (let [module-keys (set (keys module-lookup))
           ext-modules (filter #(module-keys %) options)
           opts (apply hash-map (filter #(not (module-keys %)) options))]
-      (.. (ChefContextFactory.)
-        (createContext provider identity credential 
-          (apply modules (concat ext-modules (opts :extensions)))
-          (reduce #(do (.put %1 (name (first %2)) (second %2)) %1)
-                   (Properties.) (dissoc opts :extensions)))
-        (getChefService)))))
+      (.. (ContextBuilder/newBuilder provider)
+          (credentials provider-identity provider-credential)
+          (modules (apply modules (concat ext-modules (opts :extensions))))
+          (overrides (reduce #(do (.put %1 (name (first %2)) (second %2)) %1)
+            (Properties.) (dissoc opts :extensions)))
+          (build ChefContext)
+          (getChefService)))))
 
 (defn chef-context
   "Returns a chef context from a chef service."

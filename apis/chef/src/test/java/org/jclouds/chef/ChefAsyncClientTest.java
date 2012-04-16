@@ -22,9 +22,9 @@ import static org.testng.Assert.assertEquals;
 
 import java.io.IOException;
 import java.lang.reflect.Method;
-import java.util.Properties;
 import java.util.Set;
 
+import org.jclouds.apis.ApiMetadata;
 import org.jclouds.chef.config.ChefRestClientModule;
 import org.jclouds.chef.domain.CookbookVersion;
 import org.jclouds.chef.domain.DatabagItem;
@@ -41,19 +41,16 @@ import org.jclouds.chef.options.CreateClientOptions;
 import org.jclouds.crypto.CryptoStreams;
 import org.jclouds.date.TimeStamp;
 import org.jclouds.http.HttpRequest;
-import org.jclouds.http.RequiresHttp;
 import org.jclouds.http.functions.ParseJson;
 import org.jclouds.http.functions.ReleasePayloadAndReturn;
 import org.jclouds.http.functions.ReturnTrueIf2xx;
 import org.jclouds.rest.ConfiguresRestClient;
-import org.jclouds.rest.RestClientTest;
-import org.jclouds.rest.RestContextFactory;
-import org.jclouds.rest.RestContextSpec;
 import org.jclouds.rest.functions.MapHttp4xxCodesToExceptions;
 import org.jclouds.rest.functions.ReturnEmptySetOnNotFoundOr404;
 import org.jclouds.rest.functions.ReturnFalseOnNotFoundOr404;
 import org.jclouds.rest.functions.ReturnNullOnNotFoundOr404;
 import org.jclouds.rest.functions.ReturnVoidOnNotFoundOr404;
+import org.jclouds.rest.internal.BaseAsyncClientTest;
 import org.jclouds.rest.internal.GeneratedHttpRequest;
 import org.jclouds.rest.internal.RestAnnotationProcessor;
 import org.testng.annotations.Test;
@@ -70,7 +67,7 @@ import com.google.inject.TypeLiteral;
  * @author Adrian Cole
  */
 @Test(groups = { "unit" })
-public class ChefAsyncClientTest extends RestClientTest<ChefAsyncClient> {
+public class ChefAsyncClientTest extends BaseAsyncClientTest<ChefAsyncClient> {
 
    public void testCommitSandbox() throws SecurityException, NoSuchMethodException, IOException {
 
@@ -743,7 +740,6 @@ public class ChefAsyncClientTest extends RestClientTest<ChefAsyncClient> {
       return new TestChefRestClientModule();
    }
 
-   @RequiresHttp
    @ConfiguresRestClient
    static class TestChefRestClientModule extends ChefRestClientModule {
       @Override
@@ -753,9 +749,12 @@ public class ChefAsyncClientTest extends RestClientTest<ChefAsyncClient> {
 
    }
 
+
    @Override
-   public RestContextSpec<ChefClient, ChefAsyncClient> createContextSpec() {
-      return new RestContextFactory().createContextSpec("chef", "user", SignedHeaderAuthTest.PRIVATE_KEY,
-            new Properties());
+   public ApiMetadata createApiMetadata() {
+      identity = "user";
+      credential = SignedHeaderAuthTest.PRIVATE_KEY;
+      return new ChefApiMetadata();
    }
+
 }

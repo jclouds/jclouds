@@ -48,7 +48,7 @@ import org.jclouds.chef.domain.Sandbox;
 import org.jclouds.chef.domain.SearchResult;
 import org.jclouds.chef.domain.UploadSandbox;
 import org.jclouds.chef.options.CreateClientOptions;
-import org.jclouds.util.Utils;
+import org.jclouds.util.Strings2;
 
 import com.google.common.base.Function;
 import com.google.common.util.concurrent.Futures;
@@ -80,7 +80,7 @@ public class TransientChefAsyncClient implements ChefAsyncClient {
       @Override
       public DatabagItem apply(Blob from) {
          try {
-            return from == null ? null : new DatabagItem(from.getMetadata().getName(), Utils.toStringAndClose(from
+            return from == null ? null : new DatabagItem(from.getMetadata().getName(), Strings2.toStringAndClose(from
                   .getPayload().getInput()));
          } catch (IOException e) {
             propagate(e);
@@ -135,8 +135,7 @@ public class TransientChefAsyncClient implements ChefAsyncClient {
 
    @Override
    public ListenableFuture<DatabagItem> createDatabagItem(String databagName, DatabagItem databagItem) {
-      Blob blob = databags.newBlob(databagItem.getId());
-      blob.setPayload(databagItem.toString());
+      Blob blob = databags.blobBuilder(databagItem.getId()).payload(databagItem.toString()).build();
       databags.putBlobAndReturnOld(databagName, blob);
       return Futures.immediateFuture(databagItem);
    }

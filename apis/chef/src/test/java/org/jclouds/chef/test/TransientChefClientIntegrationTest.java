@@ -24,10 +24,10 @@ import static org.testng.Assert.assertNotNull;
 import java.io.IOException;
 import java.util.Properties;
 
+import org.jclouds.ContextBuilder;
 import org.jclouds.chef.BaseChefClientLiveTest;
 import org.jclouds.chef.ChefClient;
 import org.jclouds.chef.ChefContext;
-import org.jclouds.chef.ChefContextFactory;
 import org.jclouds.chef.config.ChefParserModule;
 import org.jclouds.chef.domain.DatabagItem;
 import org.jclouds.json.Json;
@@ -284,7 +284,7 @@ public class TransientChefClientIntegrationTest extends BaseChefClientLiveTest {
    }
 
    private ChefContext createConnection(String identity, String key) throws IOException {
-      return new ChefContextFactory().createContext("transientchef", identity, key);
+      return ContextBuilder.newBuilder(new TransientChefApiMetadata()).credentials(identity, key).build();
    }
 
    @Override
