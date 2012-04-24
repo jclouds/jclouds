@@ -79,7 +79,7 @@ public class ListClientsImpl implements ListClients {
 
    @Override
    public Iterable<? extends Client> execute(Iterable<String> toGet) {
-      return transformParallel(toGet, new Function<String, Future<Client>>() {
+      return transformParallel(toGet, new Function<String, Future<? extends Client>>() {
 
          @Override
          public Future<Client> apply(String from) {

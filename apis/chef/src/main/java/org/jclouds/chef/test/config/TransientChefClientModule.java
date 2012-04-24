@@ -41,6 +41,7 @@ import org.jclouds.scriptbuilder.domain.Statement;
 
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.MapMaker;
+import com.google.common.reflect.TypeToken;
 import com.google.inject.Module;
 import com.google.inject.Provides;
 import com.google.inject.name.Names;
@@ -52,7 +53,7 @@ import com.google.inject.name.Names;
 public class TransientChefClientModule extends BaseChefRestClientModule<TransientChefClient, ChefAsyncClient> {
 
    public TransientChefClientModule() {
-      super(TransientChefClient.class, ChefAsyncClient.class);
+      super(TypeToken.of(TransientChefClient.class), TypeToken.of(ChefAsyncClient.class));
    }
 
    @Override

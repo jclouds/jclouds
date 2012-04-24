@@ -87,7 +87,7 @@ public class ListCookbookVersionsImpl implements ListCookbookVersions {
          public Iterable<? extends CookbookVersion> apply(final String cookbook) {
             // TODO getting each version could also go parallel
             return transformParallel(chefClient.getVersionsOfCookbook(cookbook),
-                     new Function<String, Future<CookbookVersion>>() {
+                     new Function<String, Future<? extends CookbookVersion>>() {
 
                         @Override
                         public Future<CookbookVersion> apply(String version) {

@@ -33,6 +33,7 @@ import org.jclouds.rest.ConfiguresRestClient;
 import org.jclouds.scriptbuilder.domain.Statement;
 
 import com.google.common.collect.MapMaker;
+import com.google.common.reflect.TypeToken;
 import com.google.inject.Provides;
 import com.google.inject.name.Names;
 
@@ -45,7 +46,7 @@ import com.google.inject.name.Names;
 public class ChefRestClientModule extends BaseChefRestClientModule<ChefClient, ChefAsyncClient> {
 
    public ChefRestClientModule() {
-      super(ChefClient.class, ChefAsyncClient.class);
+      super(TypeToken.of(ChefClient.class), TypeToken.of(ChefAsyncClient.class));
    }
 
    @Provides

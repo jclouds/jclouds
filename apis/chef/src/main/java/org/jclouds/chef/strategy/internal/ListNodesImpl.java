@@ -79,7 +79,7 @@ public class ListNodesImpl implements ListNodes {
 
    @Override
    public Iterable<? extends Node> execute(Iterable<String> toGet) {
-      return transformParallel(toGet, new Function<String, Future<Node>>() {
+      return transformParallel(toGet, new Function<String, Future<? extends Node>>() {
 
          @Override
          public Future<Node> apply(String from) {

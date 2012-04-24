@@ -18,7 +18,7 @@
  */
 package org.jclouds.chef.test;
 
-import org.jclouds.Wrapper;
+import org.jclouds.View;
 import org.jclouds.rest.internal.BaseRestApiMetadataTest;
 import org.testng.annotations.Test;
 
@@ -34,6 +34,6 @@ public class TransientChefApiMetadataTest extends BaseRestApiMetadataTest {
 
    // no config management abstraction, yet
    public TransientChefApiMetadataTest() {
-      super(new TransientChefApiMetadata(), ImmutableSet.<TypeToken<? extends Wrapper>> of());
+      super(new TransientChefApiMetadata(), ImmutableSet.<TypeToken<? extends View>> of());
    }
 }

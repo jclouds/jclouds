@@ -33,7 +33,7 @@ import org.jclouds.rest.binders.BindToStringPayload;
 public class BindGenerateKeyForClientToJsonPayload extends BindToStringPayload {
 
    @Override
-   public HttpRequest bindToRequest( HttpRequest request, Object payload ) {
+   public <R extends HttpRequest> R bindToRequest(R request, Object payload ) {
       super.bindToRequest(request, String.format("{\"clientname\":\"%s\", \"private_key\": true}",
                payload));
       request.getPayload().getContentMetadata().setContentType(MediaType.APPLICATION_JSON);

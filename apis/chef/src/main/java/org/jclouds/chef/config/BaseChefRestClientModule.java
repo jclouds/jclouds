@@ -18,7 +18,6 @@
  */
 package org.jclouds.chef.config;
 
-import static org.jclouds.Constants.PROPERTY_CREDENTIAL;
 import static org.jclouds.Constants.PROPERTY_SESSION_INTERVAL;
 
 import java.io.IOException;
@@ -43,10 +42,12 @@ import org.jclouds.http.annotation.Redirection;
 import org.jclouds.http.annotation.ServerError;
 import org.jclouds.io.InputSuppliers;
 import org.jclouds.rest.ConfiguresRestClient;
+import org.jclouds.rest.annotations.Credential;
 import org.jclouds.rest.config.RestClientModule;
 
 import com.google.common.base.Supplier;
 import com.google.common.base.Suppliers;
+import com.google.common.reflect.TypeToken;
 import com.google.inject.Provides;
 
 /**
@@ -57,11 +58,11 @@ import com.google.inject.Provides;
 @ConfiguresRestClient
 public class BaseChefRestClientModule<S, A> extends RestClientModule<S, A> {
 
-   protected BaseChefRestClientModule(Class<S> syncClientType, Class<A> asyncClientType) {
+   protected BaseChefRestClientModule(TypeToken<S> syncClientType, TypeToken<A> asyncClientType) {
       super(syncClientType, asyncClientType);
    }
 
-   protected BaseChefRestClientModule(Class<S> syncClientType, Class<A> asyncClientType,
+   protected BaseChefRestClientModule(TypeToken<S> syncClientType, TypeToken<A> asyncClientType,
             Map<Class<?>, Class<?>> delegates) {
       super(syncClientType, asyncClientType, delegates);
    }
@@ -87,7 +88,7 @@ public class BaseChefRestClientModule<S, A> extends RestClientModule<S, A> {
 
    @Provides
    @Singleton
-   public PrivateKey provideKey(Crypto crypto, @Named(PROPERTY_CREDENTIAL) String pem) throws InvalidKeySpecException,
+   public PrivateKey provideKey(Crypto crypto, @Credential String pem) throws InvalidKeySpecException,
             IOException {
         return crypto.rsaKeyFactory().generatePrivate(Pems.privateKeySpec(InputSuppliers.of(pem)));
    }

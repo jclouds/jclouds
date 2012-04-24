@@ -19,7 +19,6 @@
 package org.jclouds.chef.filters;
 
 import static com.google.common.base.Preconditions.checkArgument;
-import static org.jclouds.Constants.PROPERTY_IDENTITY;
 
 import java.security.PrivateKey;
 import java.util.NoSuchElementException;
@@ -47,6 +46,7 @@ import org.jclouds.io.payloads.MultipartForm;
 import org.jclouds.io.payloads.Part;
 import org.jclouds.io.payloads.RSAEncryptingPayload;
 import org.jclouds.logging.Logger;
+import org.jclouds.rest.annotations.Identity;
 import org.jclouds.util.Strings2;
 
 import com.google.common.annotations.VisibleForTesting;
@@ -82,7 +82,7 @@ public class SignedHeaderAuth implements HttpRequestFilter {
    Logger signatureLog = Logger.NULL;
 
    @Inject
-   public SignedHeaderAuth(SignatureWire signatureWire, @Named(PROPERTY_IDENTITY) String userId, PrivateKey privateKey,
+   public SignedHeaderAuth(SignatureWire signatureWire, @Identity String userId, PrivateKey privateKey,
             @TimeStamp Provider<String> timeStampProvider, Crypto crypto, HttpUtils utils) {
       this.signatureWire = signatureWire;
       this.userId = userId;
