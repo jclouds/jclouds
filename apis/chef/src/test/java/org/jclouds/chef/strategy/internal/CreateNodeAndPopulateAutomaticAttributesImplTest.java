@@ -39,7 +39,7 @@ import com.google.common.collect.ImmutableSet;
  * 
  * @author Adrian Cole
  */
-@Test(groups = { "unit" })
+@Test(groups = "unit", testName = "CreateNodeAndPopulateAutomaticAttributesImplTest")
 public class CreateNodeAndPopulateAutomaticAttributesImplTest {
 
    @Test

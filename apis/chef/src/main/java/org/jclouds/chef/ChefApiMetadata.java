@@ -25,9 +25,9 @@ import java.net.URI;
 import java.util.Properties;
 
 import org.jclouds.apis.ApiMetadata;
+import org.jclouds.chef.config.ChefParserModule;
 import org.jclouds.chef.config.ChefRestClientModule;
 import org.jclouds.ohai.config.JMXOhaiModule;
-import org.jclouds.rest.RestContext;
 import org.jclouds.rest.internal.BaseRestApiMetadata;
 
 import com.google.common.collect.ImmutableSet;
@@ -43,10 +43,6 @@ public class ChefApiMetadata extends BaseRestApiMetadata {
 
    /** The serialVersionUID */
    private static final long serialVersionUID = 3450830053589179249L;
-
-   public static final TypeToken<RestContext<ChefClient, ChefAsyncClient>> CONTEXT_TOKEN = new TypeToken<RestContext<ChefClient, ChefAsyncClient>>() {
-      private static final long serialVersionUID = -5070937833892503232L;
-   };
 
    @Override
    public Builder toBuilder() {
@@ -81,7 +77,7 @@ public class ChefApiMetadata extends BaseRestApiMetadata {
          .defaultEndpoint("http://localhost:4000")
          .defaultProperties(ChefApiMetadata.defaultProperties())
          .context(TypeToken.of(ChefContext.class))
-         .defaultModules(ImmutableSet.<Class<? extends Module>>of(ChefRestClientModule.class, JMXOhaiModule.class));
+         .defaultModules(ImmutableSet.<Class<? extends Module>>of(ChefRestClientModule.class, ChefParserModule.class, JMXOhaiModule.class));
       }
 
       @Override

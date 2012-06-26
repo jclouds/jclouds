@@ -106,50 +106,51 @@ public class TransientChefAsyncClient implements ChefAsyncClient {
 
    @Override
    public ListenableFuture<Boolean> clientExists(String clientname) {
-      // TODO Auto-generated method stub
-      return null;
+      throw new UnsupportedOperationException();
    }
 
    @Override
    public ListenableFuture<Sandbox> commitSandbox(String id, boolean isCompleted) {
-      // TODO Auto-generated method stub
-      return null;
+      throw new UnsupportedOperationException();
    }
 
    @Override
    public ListenableFuture<Client> createClient(String clientname) {
-      // TODO Auto-generated method stub
-      return null;
+      throw new UnsupportedOperationException();
    }
    
    @Override
    public ListenableFuture<Client> createClient(String clientname, CreateClientOptions options) {
-      // TODO Auto-generated method stub
-      return null;
+      throw new UnsupportedOperationException();
    }
 
    @Override
    public ListenableFuture<Void> createDatabag(String databagName) {
-      return databags.createContainerInLocationIfAbsent(null, databagName);
+      return Futures.transform(databags.createContainerInLocation(null, databagName), new Function<Boolean, Void>(){
+
+         @Override
+         public Void apply(Boolean input) {
+            return null;
+         }
+         
+      });
    }
 
    @Override
    public ListenableFuture<DatabagItem> createDatabagItem(String databagName, DatabagItem databagItem) {
       Blob blob = databags.blobBuilder(databagItem.getId()).payload(databagItem.toString()).build();
-      databags.putBlobAndReturnOld(databagName, blob);
+      databags.putBlob(databagName, blob);
       return Futures.immediateFuture(databagItem);
    }
 
    @Override
    public ListenableFuture<Void> createNode(Node node) {
-      // TODO Auto-generated method stub
-      return null;
+      throw new UnsupportedOperationException();
    }
 
    @Override
    public ListenableFuture<Void> createRole(Role role) {
-      // TODO Auto-generated method stub
-      return null;
+      throw new UnsupportedOperationException();
    }
 
    @Override
@@ -164,14 +165,12 @@ public class TransientChefAsyncClient implements ChefAsyncClient {
 
    @Override
    public ListenableFuture<Client> deleteClient(String clientname) {
-      // TODO Auto-generated method stub
-      return null;
+      throw new UnsupportedOperationException();
    }
 
    @Override
    public ListenableFuture<CookbookVersion> deleteCookbook(String cookbookName, String version) {
-      // TODO Auto-generated method stub
-      return null;
+      throw new UnsupportedOperationException();
    }
 
    @Override
@@ -181,37 +180,32 @@ public class TransientChefAsyncClient implements ChefAsyncClient {
 
    @Override
    public ListenableFuture<DatabagItem> deleteDatabagItem(String databagName, String databagItemId) {
-      return compose(databags.removeBlobAndReturnOld(databagName, databagItemId), blobToDatabagItem, executor);
+      return Futures.immediateFuture(blobToDatabagItem.apply(databags.getContext().createBlobMap(databagName).remove(databagItemId)));
    }
 
    @Override
    public ListenableFuture<Node> deleteNode(String nodename) {
-      // TODO Auto-generated method stub
-      return null;
+      throw new UnsupportedOperationException();
    }
 
    @Override
    public ListenableFuture<Role> deleteRole(String rolename) {
-      // TODO Auto-generated method stub
-      return null;
+      throw new UnsupportedOperationException();
    }
 
    @Override
    public ListenableFuture<Client> generateKeyForClient(String clientname) {
-      // TODO Auto-generated method stub
-      return null;
+      throw new UnsupportedOperationException();
    }
 
    @Override
    public ListenableFuture<Client> getClient(String clientname) {
-      // TODO Auto-generated method stub
-      return null;
+      throw new UnsupportedOperationException();
    }
 
    @Override
    public ListenableFuture<CookbookVersion> getCookbook(String cookbookName, String version) {
-      // TODO Auto-generated method stub
-      return null;
+      throw new UnsupportedOperationException();
    }
 
    @Override
@@ -221,38 +215,32 @@ public class TransientChefAsyncClient implements ChefAsyncClient {
 
    @Override
    public ListenableFuture<Node> getNode(String nodename) {
-      // TODO Auto-generated method stub
-      return null;
+      throw new UnsupportedOperationException();
    }
 
    @Override
    public ListenableFuture<Role> getRole(String rolename) {
-      // TODO Auto-generated method stub
-      return null;
+      throw new UnsupportedOperationException();
    }
 
    @Override
    public ListenableFuture<UploadSandbox> getUploadSandboxForChecksums(Set<List<Byte>> md5s) {
-      // TODO Auto-generated method stub
-      return null;
+      throw new UnsupportedOperationException();
    }
 
    @Override
    public ListenableFuture<Set<String>> getVersionsOfCookbook(String cookbookName) {
-      // TODO Auto-generated method stub
-      return null;
+      throw new UnsupportedOperationException();
    }
 
    @Override
    public ListenableFuture<Set<String>> listClients() {
-      // TODO Auto-generated method stub
-      return null;
+      throw new UnsupportedOperationException();
    }
 
    @Override
    public ListenableFuture<Set<String>> listCookbooks() {
-      // TODO Auto-generated method stub
-      return null;
+      throw new UnsupportedOperationException();
    }
 
    @Override
@@ -267,62 +255,52 @@ public class TransientChefAsyncClient implements ChefAsyncClient {
 
    @Override
    public ListenableFuture<Set<String>> listNodes() {
-      // TODO Auto-generated method stub
-      return null;
+      throw new UnsupportedOperationException();
    }
 
    @Override
    public ListenableFuture<Set<String>> listRoles() {
-      // TODO Auto-generated method stub
-      return null;
+      throw new UnsupportedOperationException();
    }
 
    @Override
    public ListenableFuture<Set<String>> listSearchIndexes() {
-      // TODO Auto-generated method stub
-      return null;
+      throw new UnsupportedOperationException();
    }
 
    @Override
    public ListenableFuture<Boolean> nodeExists(String nodename) {
-      // TODO Auto-generated method stub
-      return null;
+      throw new UnsupportedOperationException();
    }
 
    @Override
    public ListenableFuture<Boolean> roleExists(String rolename) {
-      // TODO Auto-generated method stub
-      return null;
+      throw new UnsupportedOperationException();
    }
 
    @Override
    public ListenableFuture<? extends SearchResult<? extends Client>> searchClients() {
-      // TODO Auto-generated method stub
-      return null;
+      throw new UnsupportedOperationException();
    }
 
    @Override
    public ListenableFuture<? extends SearchResult<? extends DatabagItem>> searchDatabag(String databagName) {
-      // TODO Auto-generated method stub
-      return null;
+      throw new UnsupportedOperationException();
    }
 
    @Override
    public ListenableFuture<? extends SearchResult<? extends Node>> searchNodes() {
-      // TODO Auto-generated method stub
-      return null;
+      throw new UnsupportedOperationException();
    }
 
    @Override
    public ListenableFuture<? extends SearchResult<? extends Role>> searchRoles() {
-      // TODO Auto-generated method stub
-      return null;
+      throw new UnsupportedOperationException();
    }
 
    @Override
    public ListenableFuture<CookbookVersion> updateCookbook(String cookbookName, String version, CookbookVersion cookbook) {
-      // TODO Auto-generated method stub
-      return null;
+      throw new UnsupportedOperationException();
    }
 
    @Override
@@ -332,20 +310,17 @@ public class TransientChefAsyncClient implements ChefAsyncClient {
 
    @Override
    public ListenableFuture<Node> updateNode(Node node) {
-      // TODO Auto-generated method stub
-      return null;
+      throw new UnsupportedOperationException();
    }
 
    @Override
    public ListenableFuture<Role> updateRole(Role role) {
-      // TODO Auto-generated method stub
-      return null;
+      throw new UnsupportedOperationException();
    }
 
    @Override
    public ListenableFuture<Void> uploadContent(Set<List<Byte>> md5s) {
-      // TODO Auto-generated method stub
-      return null;
+      throw new UnsupportedOperationException();
    }
 
 }

@@ -20,64 +20,34 @@ package org.jclouds.chef.strategy.internal;
 
 import static org.testng.Assert.assertEquals;
 
-import java.util.Map;
 import java.util.Set;
 
-import org.jclouds.chef.ChefClient;
 import org.jclouds.chef.domain.Node;
-import org.jclouds.domain.JsonBall;
-import org.jclouds.ohai.AutomaticSupplier;
-import org.jclouds.ohai.config.ConfiguresOhai;
-import org.jclouds.ohai.config.OhaiModule;
-import org.testng.annotations.BeforeTest;
+import org.jclouds.chef.internal.BaseStubbedOhaiLiveTest;
 import org.testng.annotations.Test;
 
-import com.google.common.base.Supplier;
-import com.google.common.base.Suppliers;
-import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
-import com.google.inject.Module;
 
 /**
  * Tests behavior of {@code UpdateAutomaticAttributesOnNodeImpl} strategies
  * 
  * @author Adrian Cole
  */
-@Test(groups = { "live" })
-public class UpdateAutomaticAttributesOnNodeImplLiveTest extends BaseChefStrategyLiveTest {
-   private UpdateAutomaticAttributesOnNodeImpl strategy;
-   private ChefClient chef;
-
-   @ConfiguresOhai
-   static class TestOhaiModule extends OhaiModule {
-      @Override
-      protected Supplier<Map<String, JsonBall>> provideAutomatic(AutomaticSupplier in) {
-         return Suppliers.<Map<String, JsonBall>> ofInstance(ImmutableMap.of("foo", new JsonBall("bar")));
-      }
-   }
-
-   protected void addTestModulesTo(Set<Module> modules) {
-      modules.add(new TestOhaiModule());
-   }
-
-   @BeforeTest(groups = { "live" }, dependsOnMethods = "setupClient")
-   void setupStrategy() {
-      this.strategy = injector.getInstance(UpdateAutomaticAttributesOnNodeImpl.class);
-      this.chef = injector.getInstance(ChefClient.class);
-   }
+@Test(groups = "live", testName = "UpdateAutomaticAttributesOnNodeImplLiveTest")
+public class UpdateAutomaticAttributesOnNodeImplLiveTest extends BaseStubbedOhaiLiveTest {
 
    @Test
    public void testExecute() {
       Set<String> runList = ImmutableSet.of("role[" + prefix + "]");
       try {
-         chef.createNode(new Node(prefix, runList));
-         strategy.execute(prefix);
-         Node node = chef.getNode(prefix);
+         context.getApi().createNode(new Node(prefix, runList));
+         context.utils().injector().getInstance(UpdateAutomaticAttributesOnNodeImpl.class).execute(prefix);
+         Node node = context.getApi().getNode(prefix);
          assertEquals(node.getName(), prefix);
          assertEquals(node.getRunList(), runList);
          assertEquals(node.getAutomatic().get("foo").toString(), "\"bar\"");
       } finally {
-         injector.getInstance(ChefClient.class).deleteNode(prefix);
+         context.getApi().deleteNode(prefix);
       }
    }
 }

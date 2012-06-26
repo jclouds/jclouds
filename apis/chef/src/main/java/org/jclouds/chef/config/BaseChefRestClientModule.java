@@ -105,10 +105,4 @@ public class BaseChefRestClientModule<S, A> extends RestClientModule<S, A> {
       bind(HttpRetryHandler.class).annotatedWith(ClientError.class).to(ChefClientErrorRetryHandler.class);
    }
 
-   @Override
-   protected void configure() {
-      install(new ChefParserModule());
-      super.configure();
-   }
-
 }

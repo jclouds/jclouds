@@ -18,8 +18,8 @@
  */
 package org.jclouds.chef.strategy.internal;
 
-import org.jclouds.chef.ChefClient;
-import org.testng.annotations.BeforeTest;
+import org.jclouds.chef.internal.BaseChefContextLiveTest;
+import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
 import com.google.common.collect.ImmutableSet;
@@ -29,17 +29,18 @@ import com.google.common.collect.ImmutableSet;
  * 
  * @author Adrian Cole
  */
-@Test(groups = { "live" })
-public class CleanupStaleNodesAndClientsImplLiveTest extends BaseChefStrategyLiveTest {
+@Test(groups = "live", testName = "CleanupStaleNodesAndClientsImplLiveTest")
+public class CleanupStaleNodesAndClientsImplLiveTest extends BaseChefContextLiveTest {
+
    private CreateNodeAndPopulateAutomaticAttributesImpl creater;
    private CleanupStaleNodesAndClientsImpl strategy;
-   private ChefClient chef;
-
-   @BeforeTest(groups = { "live" }, dependsOnMethods = "setupClient")
-   void setupStrategy() {
-      this.creater = injector.getInstance(CreateNodeAndPopulateAutomaticAttributesImpl.class);
-      this.strategy = injector.getInstance(CleanupStaleNodesAndClientsImpl.class);
-      this.chef = injector.getInstance(ChefClient.class);
+   
+   @BeforeClass(groups = { "integration", "live" })
+   @Override
+   public void setupContext() {
+      super.setupContext();
+      this.creater = context.utils().injector().getInstance(CreateNodeAndPopulateAutomaticAttributesImpl.class);
+      this.strategy = context.utils().injector().getInstance(CleanupStaleNodesAndClientsImpl.class);
    }
 
    @Test
@@ -48,14 +49,14 @@ public class CleanupStaleNodesAndClientsImplLiveTest extends BaseChefStrategyLiv
          creater.execute(prefix, ImmutableSet.<String> of());
          // http://tickets.corp.opscode.com/browse/PL-522
          // assert chef.nodeExists(prefix);
-         assert chef.getNode(prefix) != null;
+         assert context.getApi().getNode(prefix) != null;
          strategy.execute(prefix, 10);
-         assert chef.getNode(prefix) != null;
+         assert context.getApi().getNode(prefix) != null;
          Thread.sleep(1000);
          strategy.execute(prefix, 1);
-         assert chef.getNode(prefix) == null;
+         assert context.getApi().getNode(prefix) == null;
       } finally {
-         chef.deleteNode(prefix);
+         context.getApi().deleteNode(prefix);
       }
    }
 

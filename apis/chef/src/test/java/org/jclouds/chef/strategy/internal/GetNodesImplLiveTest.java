@@ -21,11 +21,10 @@ package org.jclouds.chef.strategy.internal;
 import static com.google.common.collect.Iterables.size;
 import static org.testng.Assert.assertEquals;
 
-import java.io.IOException;
-
 import org.jclouds.chef.ChefClient;
-import org.testng.annotations.AfterTest;
-import org.testng.annotations.BeforeTest;
+import org.jclouds.chef.internal.BaseChefContextLiveTest;
+import org.testng.annotations.AfterClass;
+import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
 import com.google.common.base.Predicate;
@@ -36,31 +35,30 @@ import com.google.common.collect.ImmutableSet;
  * 
  * @author Adrian Cole
  */
-@Test(groups = { "live" })
-public class GetNodesImplLiveTest extends BaseChefStrategyLiveTest {
+@Test(groups = "live", testName = "GetNodesImplLiveTest")
+public class GetNodesImplLiveTest extends BaseChefContextLiveTest {
+   
    private ListNodesImpl strategy;
    private CreateNodeAndPopulateAutomaticAttributesImpl creater;
    private ChefClient chef;
 
-   @BeforeTest(groups = { "live" }, dependsOnMethods = "setupClient")
-   void setupStrategy() {
-      this.creater = injector.getInstance(CreateNodeAndPopulateAutomaticAttributesImpl.class);
-      this.strategy = injector.getInstance(ListNodesImpl.class);
-      this.chef = injector.getInstance(ChefClient.class);
-   }
-
-   @BeforeTest(groups = { "live" }, dependsOnMethods = "setupStrategy")
-   void setupNodes() {
+   @BeforeClass(groups = { "integration", "live" })
+   @Override
+   public void setupContext() {
+      super.setupContext();
+      this.creater = context.utils().injector().getInstance(CreateNodeAndPopulateAutomaticAttributesImpl.class);
+      this.strategy = context.utils().injector().getInstance(ListNodesImpl.class);
+      this.chef = context.getApi();
       creater.execute(prefix, ImmutableSet.<String> of());
       creater.execute(prefix + 1, ImmutableSet.<String> of());
    }
 
-   @AfterTest(groups = { "live" })
+   @AfterClass(groups = { "integration", "live" })
    @Override
-   public void teardownClient() throws IOException {
+   protected void tearDownContext() {
       chef.deleteNode(prefix);
       chef.deleteNode(prefix + 1);
-      super.teardownClient();
+      super.tearDownContext();
    }
 
    @Test

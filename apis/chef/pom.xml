@@ -23,23 +23,34 @@
     xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
-        <groupId>org.jclouds.provider</groupId>
+        <groupId>org.jclouds.chef</groupId>
         <artifactId>chef-parent</artifactId>
         <version>1.5.0-SNAPSHOT</version>
         <relativePath>../project/pom.xml</relativePath>
     </parent>
-    <artifactId>jclouds-chef</artifactId>
+    <groupId>org.jclouds.api</groupId>
+    <artifactId>chef</artifactId>
     <packaging>bundle</packaging>
     <name>JClouds Chef :: Core</name>
     <description>jclouds components to access Chef</description>
 
     <properties>
-        <jclouds.chef.identity>chef-validator</jclouds.chef.identity>
-        <jclouds.chef.rsa-key>${user.home}/.chef/validation.pem</jclouds.chef.rsa-key>
-        <jclouds.chef.endpoint>http://localhost:4000</jclouds.chef.endpoint>
-        <jclouds.test.identity>${jclouds.chef.identity}</jclouds.test.identity>
-        <jclouds.test.credential>${jclouds.chef.rsa-key}</jclouds.test.credential>
-        <jclouds.test.endpoint>${jclouds.chef.endpoint}</jclouds.test.endpoint>
+        <test.chef.endpoint>http://localhost:4000</test.chef.endpoint>
+        <test.chef.api-version></test.chef.api-version>
+        <test.chef.build-version></test.chef.build-version>
+        <test.chef.identity>chef-validator</test.chef.identity>
+        <test.chef.credential>${user.home}/.chef/validation.pem</test.chef.credential>
+        <test.chef.validator.identity>chef-validator</test.chef.validator.identity>
+        <test.chef.validator.credential>${user.home}/.chef/validation.pem</test.chef.validator.credential>
+        <jclouds.osgi.import>
+          org.jclouds;version=${project.version},
+          org.jclouds*;version=${project.version},
+          *
+        </jclouds.osgi.import>
+        <jclouds.osgi.export>
+          org.jclouds.chef*;version=${project.version};-noimport:=true,
+          org.jclouds.ohai*;version=${project.version};-noimport:=true,
+        </jclouds.osgi.export>
     </properties>
 
     <dependencies>
@@ -68,64 +79,49 @@
             <optional>true</optional>
         </dependency>
         <dependency>
-            <groupId>org.jclouds</groupId>
-            <artifactId>jclouds-compute</artifactId>
-            <version>${jclouds.version}</version>
-        </dependency>
-        <dependency>
             <groupId>org.jclouds.driver</groupId>
-            <artifactId>jclouds-log4j</artifactId>
-            <version>${jclouds.version}</version>
-            <scope>test</scope>
-        </dependency>
-        <!-- only required for Pems.java and only writing a private key file -->
-        <dependency>
-            <groupId>org.bouncycastle</groupId>
-            <artifactId>bcprov-jdk15</artifactId>
-            <version>1.44</version>
-        </dependency>
-        <dependency>
-            <groupId>log4j</groupId>
-            <artifactId>log4j</artifactId>
-            <version>1.2.14</version>
+            <artifactId>jclouds-slf4j</artifactId>
+            <version>${project.version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>org.danlarkin</groupId>
-            <artifactId>clojure-json</artifactId>
-            <version>1.1</version>
-            <optional>true</optional>
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-classic</artifactId>
+            <version>1.0.0</version>
+            <scope>test</scope>
         </dependency>
     </dependencies>
 
-    <build>
-        <plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-jar-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <goals>
-                            <goal>test-jar</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.felix</groupId>
-                <artifactId>maven-bundle-plugin</artifactId>
-                <configuration>
-                    <instructions>
-                        <Bundle-SymbolicName>${project.artifactId}</Bundle-SymbolicName>
-                        <Export-Package>
-                            org.jclouds.chef.*;version="${project.version}",
-                            org.jclouds.ohai.*;version="${project.version}"
-                        </Export-Package>
-                        <Import-Package>org.jclouds.*;version="${jclouds.version}",*</Import-Package>
-                    </instructions>
-                </configuration>
-            </plugin>
-        </plugins>
-    </build>
-
+    <profiles>
+        <profile>
+            <id>live</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-surefire-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <id>integration</id>
+                                <phase>integration-test</phase>
+                                <goals>
+                                    <goal>test</goal>
+                                </goals>
+                                <configuration>
+                                    <systemPropertyVariables>
+                                        <test.chef.endpoint>${test.chef.endpoint}</test.chef.endpoint>
+                                        <test.chef.api-version>${test.chef.api-version}</test.chef.api-version>
+                                        <test.chef.build-version>${test.chef.build-version}</test.chef.build-version>
+                                        <test.chef.identity>${test.chef.identity}</test.chef.identity>
+                                        <test.chef.validator.identity>${test.chef.validator.identity}</test.chef.validator.identity>
+                                        <test.chef.validator.credential>${test.chef.validator.credential}</test.chef.validator.credential>
+                                    </systemPropertyVariables>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
 </project>
