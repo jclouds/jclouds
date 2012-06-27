@@ -22,6 +22,7 @@ import static org.testng.Assert.assertEquals;
 
 import java.io.IOException;
 import java.lang.reflect.Method;
+import java.net.URI;
 import java.util.Set;
 
 import org.jclouds.apis.ApiMetadata;
@@ -44,6 +45,8 @@ import org.jclouds.http.HttpRequest;
 import org.jclouds.http.functions.ParseJson;
 import org.jclouds.http.functions.ReleasePayloadAndReturn;
 import org.jclouds.http.functions.ReturnTrueIf2xx;
+import org.jclouds.io.Payload;
+import org.jclouds.io.payloads.StringPayload;
 import org.jclouds.rest.ConfiguresRestClient;
 import org.jclouds.rest.functions.MapHttp4xxCodesToExceptions;
 import org.jclouds.rest.functions.ReturnEmptySetOnNotFoundOr404;
@@ -107,6 +110,22 @@ public class ChefAsyncClientTest extends BaseAsyncClientTest<ChefAsyncClient> {
       checkFilters(httpRequest);
 
    }
+   
+   public void testUploadContent() throws SecurityException, NoSuchMethodException, IOException {
+       Method method = ChefAsyncClient.class.getMethod("uploadContent", URI.class, Payload.class);
+       GeneratedHttpRequest<ChefAsyncClient> httpRequest = processor.createRequest(method, URI.create("http://foo/bar"),
+           new StringPayload("{\"foo\": \"bar\"}"));
+       assertRequestLineEquals(httpRequest, "PUT http://foo/bar HTTP/1.1");
+       assertNonPayloadHeadersEqual(httpRequest, "Accept: application/json\nX-Chef-Version: 0.9.8\n");
+       assertPayloadEquals(httpRequest, "{\"foo\": \"bar\"}", "application/x-binary", false);
+
+       assertResponseParserClassEquals(method, httpRequest, ReleasePayloadAndReturn.class);
+       assertSaxResponseParserClassEquals(method, null);
+       assertExceptionParserClassEquals(method, null);
+
+       checkFilters(httpRequest);
+
+    }
 
    public void testGetCookbook() throws SecurityException, NoSuchMethodException, IOException {
       Method method = ChefAsyncClient.class.getMethod("getCookbook", String.class, String.class);
@@ -257,7 +276,7 @@ public class ChefAsyncClientTest extends BaseAsyncClientTest<ChefAsyncClient> {
       GeneratedHttpRequest<ChefAsyncClient> httpRequest = processor.createRequest(method, "client");
       assertRequestLineEquals(httpRequest, "PUT http://localhost:4000/clients/client HTTP/1.1");
       assertNonPayloadHeadersEqual(httpRequest, "Accept: application/json\nX-Chef-Version: 0.9.8\n");
-      assertPayloadEquals(httpRequest, "{\"clientname\":\"client\", \"private_key\": true}", "application/json", false);
+      assertPayloadEquals(httpRequest, "{\"name\":\"client\", \"private_key\": true}", "application/json", false);
 
       assertResponseParserClassEquals(method, httpRequest, ParseJson.class);
       assertSaxResponseParserClassEquals(method, null);

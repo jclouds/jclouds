@@ -18,6 +18,7 @@
  */
 package org.jclouds.chef;
 
+import java.net.URI;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
@@ -33,6 +34,7 @@ import org.jclouds.chef.domain.UploadSandbox;
 import org.jclouds.chef.options.CreateClientOptions;
 import org.jclouds.concurrent.Timeout;
 import org.jclouds.http.HttpResponseException;
+import org.jclouds.io.Payload;
 import org.jclouds.rest.AuthorizationException;
 import org.jclouds.rest.annotations.BinderParam;
 import org.jclouds.rest.binders.BindToJsonPayload;
@@ -49,15 +51,31 @@ import org.jclouds.rest.binders.BindToJsonPayload;
 public interface ChefClient {
    /**
     * 
-    * FIXME Comment this
+    * Creates a new sandbox. It accepts a list of checksums as input and returns
+    * the URLs against which to PUT files that need to be uploaded.
     * 
     * @param md5s
     *           raw md5s; uses {@code Bytes.asList()} and {@code
     *           Bytes.toByteArray()} as necessary
-    * @return
+    * @return The URLs against which to PUT files that need to be uploaded.
     */
    UploadSandbox getUploadSandboxForChecksums(Set<List<Byte>> md5s);
+   
+   /**
+    * 
+    * Uploads the given content to the sandbox at the given URI.
+    * <p>
+    * The URI must be obtained, after uploading a sandbox, from the {@link UploadSandbox#getUri()}. 
+    */
+   void uploadContent(URI location, Payload content);
 
+   /**
+    * Confirms if the sandbox is completed or not.
+    * <p>
+    * This method should be used after uploading contents to the sandbox.
+    * 
+    * @return The sandbox
+    */
    Sandbox commitSandbox(String id, boolean isCompleted);
 
    /**

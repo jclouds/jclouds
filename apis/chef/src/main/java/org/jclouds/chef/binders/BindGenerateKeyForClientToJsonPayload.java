@@ -34,7 +34,7 @@ public class BindGenerateKeyForClientToJsonPayload extends BindToStringPayload {
 
    @Override
    public <R extends HttpRequest> R bindToRequest(R request, Object payload ) {
-      super.bindToRequest(request, String.format("{\"clientname\":\"%s\", \"private_key\": true}",
+      super.bindToRequest(request, String.format("{\"name\":\"%s\", \"private_key\": true}",
                payload));
       request.getPayload().getContentMetadata().setContentType(MediaType.APPLICATION_JSON);
       return request;

@@ -54,7 +54,6 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.io.Closeables;
 import com.google.common.primitives.Bytes;
-
 /**
  * Tests behavior of {@code ChefClient}
  * 
@@ -70,8 +69,9 @@ public abstract class BaseChefClientLiveTest extends BaseChefContextLiveTest {
 
    /**
     * at runtime, we attempt to create a new chef client
+ * @throws InterruptedException 
     */
-   protected void recreateClientConnection() {
+   protected void recreateClientConnection() throws InterruptedException {
       Closeables.closeQuietly(clientContext);
       clientContext = createContext(setupClientProperties(), setupModules());
    }
@@ -135,7 +135,8 @@ public abstract class BaseChefClientLiveTest extends BaseChefContextLiveTest {
 
          ChecksumStatus status = site.getChecksums().get(md5);
          if (status.needsUpload()) {
-            context.utils().http().put(status.getUrl(), content);
+            //context.utils().http().put(status.getUrl(), content);
+             context.getApi().uploadContent(status.getUrl(), content);
          }
 
          context.getApi().commitSandbox(site.getSandboxId(), true);
@@ -154,6 +155,7 @@ public abstract class BaseChefClientLiveTest extends BaseChefContextLiveTest {
 
    @Test(dependsOnMethods = "testCreateClient")
    public void testGenerateKeyForClient() throws Exception {
+      testCreateClient(); // Make sure we use the right client
       clientCredential = Pems.pem(clientContext.getApi().generateKeyForClient(PREFIX).getPrivateKey());
 
       assertNotNull(clientCredential);
@@ -216,9 +218,17 @@ public abstract class BaseChefClientLiveTest extends BaseChefContextLiveTest {
       validatorContext.getApi().deleteClient(PREFIX);
    }
 
-   @Test(expectedExceptions = AuthorizationException.class)
-   public void testValidatorCannotCreateClient() throws Exception {
-      validatorContext.getApi().createClient(PREFIX);
+   @Test
+   public void testValidatorCanCreateClient() throws Exception {
+       context.getApi().deleteClient(PREFIX);
+       
+       clientCredential = Pems.pem(validatorContext.getApi().createClient(PREFIX).getPrivateKey());
+
+       recreateClientConnection();
+       clientContext.getApi().clientExists(PREFIX);
+       Set<String> clients = context.getApi().listClients();
+       assert clients.contains(PREFIX) : String.format("client %s not in %s", PREFIX, clients);
+       assertNotNull(clientContext.getApi().getClient(PREFIX));
    }
 
    @Test

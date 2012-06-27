@@ -18,6 +18,7 @@
  */
 package org.jclouds.chef;
 
+import java.net.URI;
 import java.util.List;
 import java.util.Set;
 
@@ -29,6 +30,7 @@ import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
 import org.jclouds.chef.binders.BindChecksumsToJsonPayload;
@@ -54,7 +56,9 @@ import org.jclouds.chef.functions.ParseSearchDatabagFromJson;
 import org.jclouds.chef.functions.ParseSearchNodesFromJson;
 import org.jclouds.chef.functions.ParseSearchRolesFromJson;
 import org.jclouds.chef.options.CreateClientOptions;
+import org.jclouds.io.Payload;
 import org.jclouds.rest.annotations.BinderParam;
+import org.jclouds.rest.annotations.EndpointParam;
 import org.jclouds.rest.annotations.ExceptionParser;
 import org.jclouds.rest.annotations.Headers;
 import org.jclouds.rest.annotations.MapBinder;
@@ -93,9 +97,12 @@ public interface ChefAsyncClient {
    ListenableFuture<UploadSandbox> getUploadSandboxForChecksums(
             @BinderParam(BindChecksumsToJsonPayload.class) Set<List<Byte>> md5s);
 
+   /**
+    * @see ChefClient#uploadContent(URI, Payload)
+    */
    @PUT
-   @Path("")
-   ListenableFuture<Void> uploadContent(@BinderParam(BindChecksumsToJsonPayload.class) Set<List<Byte>> md5s);
+   @Produces("application/x-binary")
+   ListenableFuture<Void> uploadContent(@EndpointParam URI location, Payload content);
 
    /**
     * @see ChefClient#commitSandbox
