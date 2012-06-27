@@ -90,8 +90,8 @@ public abstract class BaseChefClientLiveTest extends BaseChefContextLiveTest {
    @Override
    protected Properties setupProperties() {
       Properties overrides = super.setupProperties();
-      validatorIdentity = setIfTestSystemPropertyPresent(overrides, provider + ".validatorIdentity");
-      validatorCredential = setIfTestSystemPropertyPresent(overrides, provider + ".validatorCredential");
+      validatorIdentity = setIfTestSystemPropertyPresent(overrides, provider + ".validator.identity");
+      validatorCredential = setCredentialFromPemFile(overrides, validatorIdentity, provider + ".validator.credential");
       return overrides;
    }
 

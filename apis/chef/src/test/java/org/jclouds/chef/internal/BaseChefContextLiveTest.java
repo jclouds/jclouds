@@ -27,7 +27,6 @@ import org.jclouds.chef.ChefContext;
 import org.testng.annotations.Test;
 
 import com.google.common.base.Charsets;
-import com.google.common.base.Strings;
 import com.google.common.base.Throwables;
 import com.google.common.io.Files;
 import com.google.common.reflect.TypeToken;
@@ -48,17 +47,26 @@ public class BaseChefContextLiveTest extends BaseContextLiveTest<ChefContext> {
     */
    @Override
    protected Properties setupProperties() {
-      try {
-         return super.setupProperties();
-      } finally {
-         if (Strings.isNullOrEmpty(credential))
-            credential = System.getProperty("user.home") + "/.chef/" + identity + ".pem";
-         try {
-            credential = Files.toString(new File(credential), Charsets.UTF_8);
-         } catch (IOException e) {
-            throw Throwables.propagate(e);
-         }
-      }
+       Properties overrides = super.setupProperties();
+       credential = setCredentialFromPemFile(overrides, identity, provider + ".credential");
+       return overrides;
+   }
+   
+   protected String setCredentialFromPemFile(Properties overrides, String identity, String key) {
+       String val = null;
+       String credentialFromFile = null;
+       if (System.getProperties().containsKey("test." + key)) {
+          val = System.getProperty("test." + key);
+       } else {
+          val = System.getProperty("user.home") + "/.chef/" + identity + ".pem";
+       }
+       try {
+           credentialFromFile = Files.toString(new File(val), Charsets.UTF_8);
+       } catch (IOException e) {
+           throw Throwables.propagate(e);
+       }
+       overrides.setProperty(key, credentialFromFile);
+       return credentialFromFile;
    }
 
    @Override

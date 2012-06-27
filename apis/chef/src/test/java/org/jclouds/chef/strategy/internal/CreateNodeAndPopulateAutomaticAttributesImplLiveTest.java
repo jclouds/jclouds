@@ -23,7 +23,9 @@ import static org.testng.Assert.assertEquals;
 import java.util.Set;
 
 import org.jclouds.chef.domain.Node;
-import org.jclouds.chef.internal.BaseStubbedOhaiLiveTest;
+import org.jclouds.chef.internal.BaseChefContextLiveTest;
+import org.jclouds.ohai.config.OhaiModule.CurrentUserProvider;
+import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
 import com.google.common.collect.ImmutableSet;
@@ -34,8 +36,17 @@ import com.google.common.collect.ImmutableSet;
  * @author Adrian Cole
  */
 @Test(groups = "live", testName = "CreateNodeAndPopulateAutomaticAttributesImplLiveTest")
-public class CreateNodeAndPopulateAutomaticAttributesImplLiveTest extends BaseStubbedOhaiLiveTest {
+public class CreateNodeAndPopulateAutomaticAttributesImplLiveTest extends BaseChefContextLiveTest {
 
+    private CurrentUserProvider currentUserProvider;
+    
+    @BeforeClass(groups = { "integration", "live" })
+    @Override
+    public void setupContext() {
+       super.setupContext();
+       this.currentUserProvider = context.utils().injector().getInstance(CurrentUserProvider.class);
+    }
+    
    @Test
    public void testExecute() {
       Set<String> runList = ImmutableSet.of("role[" + prefix + "]");
@@ -45,7 +56,7 @@ public class CreateNodeAndPopulateAutomaticAttributesImplLiveTest extends BaseSt
          Node node = context.getApi().getNode(prefix);
          assertEquals(node.getName(), prefix);
          assertEquals(node.getRunList(), runList);
-         assertEquals(node.getAutomatic().get("foo").toString(), "\"bar\"");
+         assertEquals(node.getAutomatic().get("current_user").toString(), currentUserProvider.get().toString());
       } finally {
          context.getApi().deleteNode(prefix);
       }
