@@ -30,6 +30,7 @@ import org.jclouds.chef.config.ChefRestClientModule;
 import org.jclouds.chef.domain.CookbookVersion;
 import org.jclouds.chef.domain.DatabagItem;
 import org.jclouds.chef.domain.Node;
+import org.jclouds.chef.domain.Resource;
 import org.jclouds.chef.domain.Role;
 import org.jclouds.chef.filters.SignedHeaderAuth;
 import org.jclouds.chef.filters.SignedHeaderAuthTest;
@@ -44,6 +45,7 @@ import org.jclouds.date.TimeStamp;
 import org.jclouds.http.HttpRequest;
 import org.jclouds.http.functions.ParseJson;
 import org.jclouds.http.functions.ReleasePayloadAndReturn;
+import org.jclouds.http.functions.ReturnInputStream;
 import org.jclouds.http.functions.ReturnTrueIf2xx;
 import org.jclouds.io.Payload;
 import org.jclouds.io.payloads.StringPayload;
@@ -741,6 +743,23 @@ public class ChefAsyncClientTest extends BaseAsyncClientTest<ChefAsyncClient> {
       checkFilters(httpRequest);
 
    }
+   
+   public void testGetResourceContents() throws SecurityException, NoSuchMethodException, IOException {
+       Method method = ChefAsyncClient.class.getMethod("getResourceContents", Resource.class);
+       GeneratedHttpRequest<ChefAsyncClient> httpRequest = processor.createRequest(method,
+           new Resource("test", URI.create("http://foo/bar"), new byte[]{}, null, null));
+
+       assertRequestLineEquals(httpRequest, "GET http://foo/bar HTTP/1.1");
+       assertNonPayloadHeadersEqual(httpRequest, "Accept: application/json\nX-Chef-Version: 0.9.8\n");
+       assertPayloadEquals(httpRequest, null, null, false);
+
+       assertResponseParserClassEquals(method, httpRequest, ReturnInputStream.class);
+       assertSaxResponseParserClassEquals(method, null);
+       assertExceptionParserClassEquals(method, ReturnNullOnNotFoundOr404.class);
+
+       checkFilters(httpRequest);
+
+    }
 
    @Override
    protected void checkFilters(HttpRequest request) {

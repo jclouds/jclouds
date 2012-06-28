@@ -25,6 +25,7 @@ import static com.google.common.collect.Sets.newLinkedHashSet;
 import static org.jclouds.concurrent.Futures.compose;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.URI;
 import java.util.List;
 import java.util.Set;
@@ -44,6 +45,7 @@ import org.jclouds.chef.domain.Client;
 import org.jclouds.chef.domain.CookbookVersion;
 import org.jclouds.chef.domain.DatabagItem;
 import org.jclouds.chef.domain.Node;
+import org.jclouds.chef.domain.Resource;
 import org.jclouds.chef.domain.Role;
 import org.jclouds.chef.domain.Sandbox;
 import org.jclouds.chef.domain.SearchResult;
@@ -324,5 +326,10 @@ public class TransientChefAsyncClient implements ChefAsyncClient {
    public ListenableFuture<Void> uploadContent(URI location, Payload content) {
        throw new UnsupportedOperationException();
    }
+
+    @Override
+    public ListenableFuture<InputStream> getResourceContents(Resource resource) {
+        throw new UnsupportedOperationException();
+    }
 
 }
