@@ -34,6 +34,7 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
+import org.jclouds.Constants;
 import org.jclouds.chef.binders.BindChecksumsToJsonPayload;
 import org.jclouds.chef.binders.BindCreateClientOptionsToJsonPayload;
 import org.jclouds.chef.binders.BindGenerateKeyForClientToJsonPayload;
@@ -87,7 +88,7 @@ import com.google.common.util.concurrent.ListenableFuture;
  * @author Adrian Cole
  */
 @RequestFilters(SignedHeaderAuth.class)
-@Headers(keys = "X-Chef-Version", values = ChefAsyncClient.VERSION)
+@Headers(keys = "X-Chef-Version", values = "{" + Constants.PROPERTY_API_VERSION + "}")
 @Consumes(MediaType.APPLICATION_JSON)
 public interface ChefAsyncClient {
    public static final String VERSION = "0.9.8";
