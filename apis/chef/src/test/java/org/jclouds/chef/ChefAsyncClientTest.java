@@ -36,6 +36,8 @@ import org.jclouds.chef.domain.Resource;
 import org.jclouds.chef.domain.Role;
 import org.jclouds.chef.filters.SignedHeaderAuth;
 import org.jclouds.chef.filters.SignedHeaderAuthTest;
+import org.jclouds.chef.functions.ParseCookbookDefinitionCheckingChefVersion;
+import org.jclouds.chef.functions.ParseCookbookVersionsCheckingChefVersion;
 import org.jclouds.chef.functions.ParseKeySetFromJson;
 import org.jclouds.chef.functions.ParseSearchClientsFromJson;
 import org.jclouds.chef.functions.ParseSearchDatabagFromJson;
@@ -189,13 +191,29 @@ public class ChefAsyncClientTest extends BaseAsyncClientTest<ChefAsyncClient> {
       assertNonPayloadHeadersEqual(httpRequest, "Accept: application/json\nX-Chef-Version: " + ChefAsyncClient.VERSION + "-test\n");
       assertPayloadEquals(httpRequest, null, null, false);
 
-      assertResponseParserClassEquals(method, httpRequest, ParseKeySetFromJson.class);
+      assertResponseParserClassEquals(method, httpRequest, ParseCookbookDefinitionCheckingChefVersion.class);
       assertSaxResponseParserClassEquals(method, null);
       assertExceptionParserClassEquals(method, ReturnEmptySetOnNotFoundOr404.class);
 
       checkFilters(httpRequest);
 
    }
+   
+   public void testGetVersionsOfCookbook() throws SecurityException, NoSuchMethodException, IOException {
+       Method method = ChefAsyncClient.class.getMethod("getVersionsOfCookbook", String.class);
+       GeneratedHttpRequest<ChefAsyncClient> httpRequest = processor.createRequest(method, "apache2");
+
+       assertRequestLineEquals(httpRequest, "GET http://localhost:4000/cookbooks/apache2 HTTP/1.1");
+       assertNonPayloadHeadersEqual(httpRequest, "Accept: application/json\nX-Chef-Version: " + ChefAsyncClient.VERSION + "-test\n");
+       assertPayloadEquals(httpRequest, null, null, false);
+
+       assertResponseParserClassEquals(method, httpRequest, ParseCookbookVersionsCheckingChefVersion.class);
+       assertSaxResponseParserClassEquals(method, null);
+       assertExceptionParserClassEquals(method, ReturnEmptySetOnNotFoundOr404.class);
+
+       checkFilters(httpRequest);
+
+    }
 
    public void testClientExists() throws SecurityException, NoSuchMethodException, IOException {
       Method method = ChefAsyncClient.class.getMethod("clientExists", String.class);

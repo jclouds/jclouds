@@ -22,6 +22,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Properties;
 
+import org.jclouds.Constants;
 import org.jclouds.apis.BaseContextLiveTest;
 import org.jclouds.chef.ChefContext;
 import org.testng.annotations.Test;

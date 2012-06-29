@@ -29,12 +29,14 @@ import java.net.URI;
 import java.security.PrivateKey;
 import java.util.List;
 
+import org.jclouds.chef.ChefAsyncClient;
 import org.jclouds.chef.config.ChefParserModule;
 import org.jclouds.chef.domain.Client;
 import org.jclouds.chef.statements.InstallChefGems;
 import org.jclouds.crypto.PemsTest;
 import org.jclouds.json.Json;
 import org.jclouds.json.config.GsonModule;
+import org.jclouds.rest.annotations.ApiVersion;
 import org.jclouds.scriptbuilder.domain.Statement;
 import org.testng.annotations.Test;
 
@@ -44,6 +46,7 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.io.CharStreams;
 import com.google.common.io.Resources;
+import com.google.inject.AbstractModule;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 
@@ -53,7 +56,14 @@ import com.google.inject.Injector;
 @Test(groups = { "unit" })
 public class TagToBootScriptTest {
 
-   Injector injector = Guice.createInjector(new ChefParserModule(), new GsonModule());
+    Injector injector = Guice.createInjector(new AbstractModule() {
+        @Override
+        protected void configure()
+        {
+            bind(String.class).annotatedWith(ApiVersion.class).toInstance(ChefAsyncClient.VERSION);
+        }
+    }, new ChefParserModule(), new GsonModule());
+
    Json json = injector.getInstance(Json.class);
    Statement installChefGems = new InstallChefGems();
 

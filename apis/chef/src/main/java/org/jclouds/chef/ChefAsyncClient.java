@@ -53,6 +53,8 @@ import org.jclouds.chef.domain.Sandbox;
 import org.jclouds.chef.domain.SearchResult;
 import org.jclouds.chef.domain.UploadSandbox;
 import org.jclouds.chef.filters.SignedHeaderAuth;
+import org.jclouds.chef.functions.ParseCookbookDefinitionCheckingChefVersion;
+import org.jclouds.chef.functions.ParseCookbookVersionsCheckingChefVersion;
 import org.jclouds.chef.functions.ParseKeySetFromJson;
 import org.jclouds.chef.functions.ParseSearchClientsFromJson;
 import org.jclouds.chef.functions.ParseSearchDatabagFromJson;
@@ -70,7 +72,6 @@ import org.jclouds.rest.annotations.ParamParser;
 import org.jclouds.rest.annotations.PayloadParam;
 import org.jclouds.rest.annotations.RequestFilters;
 import org.jclouds.rest.annotations.ResponseParser;
-import org.jclouds.rest.annotations.Unwrap;
 import org.jclouds.rest.binders.BindToJsonPayload;
 import org.jclouds.rest.functions.ReturnEmptySetOnNotFoundOr404;
 import org.jclouds.rest.functions.ReturnFalseOnNotFoundOr404;
@@ -91,7 +92,7 @@ import com.google.common.util.concurrent.ListenableFuture;
 @Headers(keys = "X-Chef-Version", values = "{" + Constants.PROPERTY_API_VERSION + "}")
 @Consumes(MediaType.APPLICATION_JSON)
 public interface ChefAsyncClient {
-   public static final String VERSION = "0.9.8";
+   public static final String VERSION = "0.10.8";
 
    /**
     * @see ChefClient#getUploadSandboxForChecksums(Set)
@@ -121,7 +122,7 @@ public interface ChefAsyncClient {
     */
    @GET
    @Path("/cookbooks")
-   @ResponseParser(ParseKeySetFromJson.class)
+   @ResponseParser(ParseCookbookDefinitionCheckingChefVersion.class)
    @ExceptionParser(ReturnEmptySetOnNotFoundOr404.class)
    ListenableFuture<Set<String>> listCookbooks();
 
@@ -147,7 +148,7 @@ public interface ChefAsyncClient {
     */
    @GET
    @Path("/cookbooks/{cookbookname}")
-   @Unwrap
+   @ResponseParser(ParseCookbookVersionsCheckingChefVersion.class)
    @ExceptionParser(ReturnEmptySetOnNotFoundOr404.class)
    ListenableFuture<Set<String>> getVersionsOfCookbook(@PathParam("cookbookname") String cookbookName);
 

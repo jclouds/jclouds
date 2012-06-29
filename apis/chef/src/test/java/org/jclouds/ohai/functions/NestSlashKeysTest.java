@@ -22,16 +22,19 @@ import static org.testng.Assert.assertEquals;
 
 import java.io.IOException;
 
+import org.jclouds.chef.ChefAsyncClient;
 import org.jclouds.chef.config.ChefParserModule;
 import org.jclouds.domain.JsonBall;
 import org.jclouds.json.Json;
 import org.jclouds.json.config.GsonModule;
+import org.jclouds.rest.annotations.ApiVersion;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
 
 import com.google.common.base.Supplier;
 import com.google.common.base.Suppliers;
 import com.google.common.collect.ImmutableMultimap;
+import com.google.inject.AbstractModule;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 
@@ -48,7 +51,13 @@ public class NestSlashKeysTest {
 
    @BeforeTest
    protected void setUpInjector() throws IOException {
-      Injector injector = Guice.createInjector(new ChefParserModule(), new GsonModule());
+      Injector injector = Guice.createInjector(new AbstractModule() {
+           @Override
+           protected void configure()
+           {
+               bind(String.class).annotatedWith(ApiVersion.class).toInstance(ChefAsyncClient.VERSION);
+           }
+      }, new ChefParserModule(), new GsonModule());
       converter = injector.getInstance(NestSlashKeys.class);
       json = injector.getInstance(Json.class);
    }

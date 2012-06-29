@@ -16,26 +16,37 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.jclouds.ohai.functions;
+package org.jclouds.chef.functions;
 
-import static org.testng.Assert.assertEquals;
+import java.util.Map;
+import java.util.Set;
 
-import java.io.IOException;
+import javax.inject.Inject;
+import javax.inject.Singleton;
 
-import org.jclouds.crypto.CryptoStreams;
-import org.testng.annotations.BeforeTest;
-import org.testng.annotations.Test;
+import org.jclouds.http.HttpResponse;
+import org.jclouds.http.functions.ParseJson;
+
+import com.google.common.base.Function;
+import com.google.common.collect.Iterables;
 
 /**
- * Tests behavior of {@code ByteArrayToMacAddress}
- * 
- * @author Adrian Cole
+ * Parses the cookbook versions in a Chef Server <= 0.9.8.
+ * @author Ignasi Barrera
  */
-@Test(groups = { "unit" }, sequential = true)
-public class ByteArrayToMacAddressTest {
+@Singleton
+public class ParseCookbookVersionsV09FromJson implements Function<HttpResponse, Set<String>> {
 
-   public void test() {
-      assertEquals(new ByteArrayToMacAddress().apply(CryptoStreams.hex("0026bb09e6c4")),
-          "00:26:bb:09:e6:c4");
+   private final ParseJson<Map<String, Set<String>>> json;
+
+   @Inject
+   ParseCookbookVersionsV09FromJson(ParseJson<Map<String, Set<String>>> json) {
+      this.json = json;
+   }
+
+   @Override
+   public Set<String> apply(HttpResponse arg0) {
+      return Iterables.getFirst(json.apply(arg0).values(), null);
+
    }
 }

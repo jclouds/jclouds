@@ -23,6 +23,7 @@ import static org.testng.Assert.assertEquals;
 import java.io.IOException;
 import java.net.URI;
 
+import org.jclouds.chef.ChefAsyncClient;
 import org.jclouds.chef.config.ChefParserModule;
 import org.jclouds.chef.domain.Attribute;
 import org.jclouds.chef.domain.CookbookVersion;
@@ -34,12 +35,14 @@ import org.jclouds.http.functions.ParseJson;
 import org.jclouds.io.Payloads;
 import org.jclouds.json.Json;
 import org.jclouds.json.config.GsonModule;
+import org.jclouds.rest.annotations.ApiVersion;
 import org.jclouds.util.Strings2;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
+import com.google.inject.AbstractModule;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 import com.google.inject.Key;
@@ -50,7 +53,7 @@ import com.google.inject.TypeLiteral;
  * 
  * @author Adrian Cole
  */
-@Test(groups = { "unit" }, sequential = true)
+@Test(groups = { "unit" }, singleThreaded = true)
 public class ParseCookbookVersionFromJsonTest {
 
    private ParseJson<CookbookVersion> handler;
@@ -59,7 +62,14 @@ public class ParseCookbookVersionFromJsonTest {
 
    @BeforeTest
    protected void setUpInjector() throws IOException {
-      injector = Guice.createInjector(new ChefParserModule(), new GsonModule());
+       injector = Guice.createInjector(new AbstractModule() {
+           @Override
+           protected void configure()
+           {
+               bind(String.class).annotatedWith(ApiVersion.class).toInstance(ChefAsyncClient.VERSION);
+           }
+       }, new ChefParserModule(), new GsonModule());
+   
       json = injector.getInstance(Json.class);
       handler = injector.getInstance(Key.get(new TypeLiteral<ParseJson<CookbookVersion>>() {
       }));

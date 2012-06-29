@@ -27,12 +27,14 @@ import java.util.Properties;
 
 import javax.inject.Inject;
 
+import org.jclouds.chef.ChefAsyncClient;
 import org.jclouds.chef.config.ChefParserModule;
 import org.jclouds.domain.JsonBall;
 import org.jclouds.json.Json;
 import org.jclouds.json.config.GsonModule;
 import org.jclouds.ohai.Automatic;
 import org.jclouds.ohai.config.multibindings.MapBinder;
+import org.jclouds.rest.annotations.ApiVersion;
 import org.testng.annotations.Test;
 
 import com.google.common.base.Supplier;
@@ -60,7 +62,13 @@ public class OhaiModuleTest {
       sysProperties.setProperty("os.version", "10.3.0");
       sysProperties.setProperty("user.name", "user");
 
-      Injector injector = Guice.createInjector(new ChefParserModule(), new GsonModule(), new OhaiModule() {
+      Injector injector = Guice.createInjector(new AbstractModule() {
+          @Override
+          protected void configure()
+          {
+              bind(String.class).annotatedWith(ApiVersion.class).toInstance(ChefAsyncClient.VERSION);
+          }
+       }, new ChefParserModule(), new GsonModule(), new OhaiModule() {
          @Override
          protected Long millis() {
             return 127999291932529l;
@@ -89,7 +97,13 @@ public class OhaiModuleTest {
       sysProperties.setProperty("os.version", "10.3.0");
       sysProperties.setProperty("user.name", "user");
 
-      Injector injector = Guice.createInjector(new ChefParserModule(), new GsonModule(), new OhaiModule() {
+      Injector injector = Guice.createInjector(new AbstractModule() {
+          @Override
+          protected void configure()
+          {
+              bind(String.class).annotatedWith(ApiVersion.class).toInstance(ChefAsyncClient.VERSION);
+          }
+       }, new ChefParserModule(), new GsonModule(), new OhaiModule() {
          @Override
          protected Long millis() {
             return 1279992919l;

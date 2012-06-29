@@ -28,15 +28,18 @@ import java.util.Map;
 
 import javax.inject.Inject;
 
+import org.jclouds.chef.ChefAsyncClient;
 import org.jclouds.chef.config.ChefParserModule;
 import org.jclouds.domain.JsonBall;
 import org.jclouds.json.Json;
 import org.jclouds.json.config.GsonModule;
 import org.jclouds.ohai.Automatic;
 import org.jclouds.ohai.config.JMXOhaiModule;
+import org.jclouds.rest.annotations.ApiVersion;
 import org.testng.annotations.Test;
 
 import com.google.common.base.Supplier;
+import com.google.inject.AbstractModule;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 
@@ -57,7 +60,13 @@ public class JMXTest {
 
       replay(runtime);
 
-      Injector injector = Guice.createInjector(new ChefParserModule(), new GsonModule(), new JMXOhaiModule() {
+      Injector injector = Guice.createInjector(new AbstractModule() {
+          @Override
+          protected void configure()
+          {
+              bind(String.class).annotatedWith(ApiVersion.class).toInstance(ChefAsyncClient.VERSION);
+          }
+       }, new ChefParserModule(), new GsonModule(), new JMXOhaiModule() {
          @Override
          protected RuntimeMXBean provideRuntimeMXBean() {
             return runtime;

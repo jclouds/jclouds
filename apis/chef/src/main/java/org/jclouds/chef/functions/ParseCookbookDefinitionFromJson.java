@@ -16,32 +16,38 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 package org.jclouds.chef.functions;
 
-import static com.google.common.base.Preconditions.checkArgument;
-import static com.google.common.base.Preconditions.checkNotNull;
+import java.util.Map;
+import java.util.Set;
 
-import java.net.URI;
-
+import javax.inject.Inject;
 import javax.inject.Singleton;
 
-import org.jclouds.chef.domain.Resource;
+import org.jclouds.chef.domain.CookbookDefinition;
+import org.jclouds.http.HttpResponse;
+import org.jclouds.http.functions.ParseJson;
 
 import com.google.common.base.Function;
 
 /**
- * Extracts the uri field of the given {@link Resource}.
+ * Parses a cookbook definition from a Json response, assuming a Chef Server >= 0.10.8.
  * 
  * @author Ignasi Barrera
  */
 @Singleton
-public class UriForResource implements Function<Object, URI> {
-    
-    @Override
-    public URI apply(Object input) {
-        checkArgument(checkNotNull(input, "input") instanceof Resource,
-            "This function can only be applied to Resource objects");
-        return ((Resource) input).getUrl();
-    }
+public class ParseCookbookDefinitionFromJson implements Function<HttpResponse, Set<String>> {
+
+   /** Parser for responses from chef server >= 0.10.8 */
+   private final ParseJson<Map<String, CookbookDefinition>> parser;
+
+   @Inject
+   ParseCookbookDefinitionFromJson(ParseJson<Map<String, CookbookDefinition>> parser) {
+      this.parser = parser;
+   }
+
+   @Override
+   public Set<String> apply(HttpResponse response) {
+       return parser.apply(response).keySet();
+   }
 }

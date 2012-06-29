@@ -24,8 +24,6 @@ import java.util.List;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
-import javax.ws.rs.GET;
-
 import org.jclouds.chef.domain.Client;
 import org.jclouds.chef.domain.CookbookVersion;
 import org.jclouds.chef.domain.DatabagItem;
@@ -35,19 +33,13 @@ import org.jclouds.chef.domain.Role;
 import org.jclouds.chef.domain.Sandbox;
 import org.jclouds.chef.domain.SearchResult;
 import org.jclouds.chef.domain.UploadSandbox;
-import org.jclouds.chef.functions.UriForResource;
 import org.jclouds.chef.options.CreateClientOptions;
 import org.jclouds.concurrent.Timeout;
 import org.jclouds.http.HttpResponseException;
 import org.jclouds.io.Payload;
 import org.jclouds.rest.AuthorizationException;
 import org.jclouds.rest.annotations.BinderParam;
-import org.jclouds.rest.annotations.EndpointParam;
-import org.jclouds.rest.annotations.ExceptionParser;
 import org.jclouds.rest.binders.BindToJsonPayload;
-import org.jclouds.rest.functions.ReturnNullOnNotFoundOr404;
-
-import com.google.common.util.concurrent.ListenableFuture;
 
 /**
  * Provides synchronous access to Chef.

@@ -18,55 +18,49 @@
  */
 package org.jclouds.chef.functions;
 
-import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertTrue;
 
-import java.io.IOException;
-
-import org.jclouds.chef.ChefAsyncClient;
 import org.jclouds.chef.config.ChefParserModule;
-import org.jclouds.chef.domain.DatabagItem;
-import org.jclouds.http.HttpResponse;
-import org.jclouds.http.functions.ParseJson;
-import org.jclouds.io.Payloads;
-import org.jclouds.json.Json;
 import org.jclouds.json.config.GsonModule;
 import org.jclouds.rest.annotations.ApiVersion;
-import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
 
 import com.google.inject.AbstractModule;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
-import com.google.inject.Key;
-import com.google.inject.TypeLiteral;
 
 /**
- * @author AdrianCole
+ * Tests behavior of {@code ParseCookbookDefinitionCheckingChefVersion}.
+ * 
+ * @author Ignasi Barrera
  */
-@Test(groups = { "unit" })
-public class ParseDataBagItemFromJsonTest {
-   private ParseJson<DatabagItem> handler;
-   private Json mapper;
+@Test(groups = { "unit" }, singleThreaded = true)
+public class ParseCookbookDefinitionCheckingChefVersionTest {
 
-   @BeforeTest
-   protected void setUpInjector() throws IOException {
+   public void testParserFor09() {
        Injector injector = Guice.createInjector(new AbstractModule() {
            @Override
            protected void configure()
            {
-               bind(String.class).annotatedWith(ApiVersion.class).toInstance(ChefAsyncClient.VERSION);
+               bind(String.class).annotatedWith(ApiVersion.class).toInstance("0.9.8");
            }
        }, new ChefParserModule(), new GsonModule());
+       
+       ParseCookbookDefinitionCheckingChefVersion parser = injector.getInstance(ParseCookbookDefinitionCheckingChefVersion.class);
+       assertTrue(parser.parser instanceof ParseKeySetFromJson);
+   }
    
-      handler = injector.getInstance(Key.get(new TypeLiteral<ParseJson<DatabagItem>>() {
-      }));
-      mapper = injector.getInstance(Json.class);
+   public void testParserFor010() {
+       Injector injector = Guice.createInjector(new AbstractModule() {
+           @Override
+           protected void configure()
+           {
+               bind(String.class).annotatedWith(ApiVersion.class).toInstance("0.10.8");
+           }
+       }, new ChefParserModule(), new GsonModule());
+       
+       ParseCookbookDefinitionCheckingChefVersion parser = injector.getInstance(ParseCookbookDefinitionCheckingChefVersion.class);
+       assertTrue(parser.parser instanceof ParseCookbookDefinitionFromJson);
    }
 
-   public void test1() {
-      String json = "{\"my_key\":\"my_data\",\"id\":\"item1\"}";
-      DatabagItem item = new DatabagItem("item1", json);
-      assertEquals(handler.apply(new HttpResponse(200, "ok", Payloads.newStringPayload(json))), item);
-      assertEquals(mapper.toJson(item), json);
-   }
 }

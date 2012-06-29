@@ -54,6 +54,7 @@ import org.testng.annotations.Test;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
+import com.google.common.collect.Iterables;
 import com.google.common.io.Closeables;
 import com.google.common.primitives.Bytes;
 /**
@@ -145,12 +146,11 @@ public abstract class BaseChefClientLiveTest extends BaseChefContextLiveTest {
 
    @Test
    public void testListCookbooks() throws Exception {
-      Set<String> cookbooksNames = context.getApi().listCookbooks();
-      assertFalse(cookbooksNames.isEmpty());
+      Set<String> cookbookNames = context.getApi().listCookbooks();
+      assertFalse(cookbookNames.isEmpty());
       
-      for (String cookbook : cookbooksNames)
+      for (String cookbook : cookbookNames)
          for (String version : context.getApi().getVersionsOfCookbook(cookbook)) {
-            //System.err.printf("%s/%s:%n", cookbook, version);
             CookbookVersion cookbookO = context.getApi().getCookbook(cookbook, version);
             for (Resource resource : ImmutableList.<Resource> builder().addAll(cookbookO.getDefinitions()).addAll(
                      cookbookO.getFiles()).addAll(cookbookO.getLibraries()).addAll(cookbookO.getSuppliers()).addAll(
@@ -163,11 +163,10 @@ public abstract class BaseChefClientLiveTest extends BaseChefContextLiveTest {
                } catch (NullPointerException e) {
                   assert false : "resource not found: " + resource;
                }
-               //System.err.printf("resource %s ok%n", resource.getName());
             }
          }
    }
-
+   
    @Test(dependsOnMethods = "testCreateNewCookbook")
    public void testUpdateCookbook() throws Exception {
       for (String cookbook : context.getApi().listCookbooks())
@@ -376,7 +375,13 @@ public abstract class BaseChefClientLiveTest extends BaseChefContextLiveTest {
       SearchResult<? extends DatabagItem> results = context.getApi().searchDatabag("whoopie");
       assertNotNull(results);
    }
-
+   
+   @Test
+   public void testListCookbookVersionsWithChefService() throws Exception {
+      Iterable<? extends CookbookVersion> cookbooks = context.getChefService().listCookbookVersions();
+      assertNotNull(cookbooks);
+   }
+   
    @AfterClass(groups = { "live", "integration" })
    @Override
    public void tearDownContext() {

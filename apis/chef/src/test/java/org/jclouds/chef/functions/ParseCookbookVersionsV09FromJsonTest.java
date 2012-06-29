@@ -24,29 +24,27 @@ import java.io.IOException;
 
 import org.jclouds.chef.ChefAsyncClient;
 import org.jclouds.chef.config.ChefParserModule;
-import org.jclouds.chef.domain.DatabagItem;
 import org.jclouds.http.HttpResponse;
-import org.jclouds.http.functions.ParseJson;
 import org.jclouds.io.Payloads;
-import org.jclouds.json.Json;
 import org.jclouds.json.config.GsonModule;
 import org.jclouds.rest.annotations.ApiVersion;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
 
+import com.google.common.collect.ImmutableSet;
 import com.google.inject.AbstractModule;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
-import com.google.inject.Key;
-import com.google.inject.TypeLiteral;
 
 /**
- * @author AdrianCole
+ * Tests behavior of {@code ParseCookbookVersionsV09FromJson}
+ * 
+ * @author Ignasi Barrera
  */
-@Test(groups = { "unit" })
-public class ParseDataBagItemFromJsonTest {
-   private ParseJson<DatabagItem> handler;
-   private Json mapper;
+@Test(groups = { "unit" }, singleThreaded = true)
+public class ParseCookbookVersionsV09FromJsonTest {
+
+   private ParseCookbookVersionsV09FromJson handler;
 
    @BeforeTest
    protected void setUpInjector() throws IOException {
@@ -58,15 +56,17 @@ public class ParseDataBagItemFromJsonTest {
            }
        }, new ChefParserModule(), new GsonModule());
    
-      handler = injector.getInstance(Key.get(new TypeLiteral<ParseJson<DatabagItem>>() {
-      }));
-      mapper = injector.getInstance(Json.class);
+      handler = injector.getInstance(ParseCookbookVersionsV09FromJson.class);
    }
 
-   public void test1() {
-      String json = "{\"my_key\":\"my_data\",\"id\":\"item1\"}";
-      DatabagItem item = new DatabagItem("item1", json);
-      assertEquals(handler.apply(new HttpResponse(200, "ok", Payloads.newStringPayload(json))), item);
-      assertEquals(mapper.toJson(item), json);
+   public void testRegex() {
+      assertEquals(
+            handler
+                  .apply(new HttpResponse(
+                        200,
+                        "ok",
+                        Payloads
+                              .newStringPayload("{\"apache2\": [\"0.1.8\", \"0.2\"]}"))),
+            ImmutableSet.of("0.1.8", "0.2"));
    }
 }

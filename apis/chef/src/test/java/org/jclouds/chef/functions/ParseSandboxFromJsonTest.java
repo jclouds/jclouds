@@ -22,6 +22,7 @@ import static org.testng.Assert.assertEquals;
 
 import java.io.IOException;
 
+import org.jclouds.chef.ChefAsyncClient;
 import org.jclouds.chef.config.ChefParserModule;
 import org.jclouds.chef.domain.Sandbox;
 import org.jclouds.date.DateService;
@@ -29,10 +30,12 @@ import org.jclouds.http.HttpResponse;
 import org.jclouds.http.functions.ParseJson;
 import org.jclouds.io.Payloads;
 import org.jclouds.json.config.GsonModule;
+import org.jclouds.rest.annotations.ApiVersion;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
 
 import com.google.common.collect.ImmutableSet;
+import com.google.inject.AbstractModule;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 import com.google.inject.Key;
@@ -43,7 +46,7 @@ import com.google.inject.TypeLiteral;
  * 
  * @author Adrian Cole
  */
-@Test(groups = { "unit" }, sequential = true)
+@Test(groups = { "unit" }, singleThreaded = true)
 public class ParseSandboxFromJsonTest {
 
    private ParseJson<Sandbox> handler;
@@ -51,7 +54,14 @@ public class ParseSandboxFromJsonTest {
 
    @BeforeTest
    protected void setUpInjector() throws IOException {
-      Injector injector = Guice.createInjector(new ChefParserModule(), new GsonModule());
+       Injector injector = Guice.createInjector(new AbstractModule() {
+           @Override
+           protected void configure()
+           {
+               bind(String.class).annotatedWith(ApiVersion.class).toInstance(ChefAsyncClient.VERSION);
+           }
+       }, new ChefParserModule(), new GsonModule());
+   
       handler = injector.getInstance(Key.get(new TypeLiteral<ParseJson<Sandbox>>() {
       }));
       dateService = injector.getInstance(DateService.class);

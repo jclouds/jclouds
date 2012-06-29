@@ -16,32 +16,38 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 package org.jclouds.chef.functions;
 
-import static com.google.common.base.Preconditions.checkArgument;
-import static com.google.common.base.Preconditions.checkNotNull;
+import java.util.Set;
 
-import java.net.URI;
-
+import javax.inject.Inject;
 import javax.inject.Singleton;
 
-import org.jclouds.chef.domain.Resource;
+import org.jclouds.chef.config.CookbookVersionsParser;
+import org.jclouds.http.HttpResponse;
 
+import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Function;
 
 /**
- * Extracts the uri field of the given {@link Resource}.
+ * Parses a cookbook versions from a Json response, taking care of using the
+ * appropriate parser.
  * 
  * @author Ignasi Barrera
  */
 @Singleton
-public class UriForResource implements Function<Object, URI> {
-    
-    @Override
-    public URI apply(Object input) {
-        checkArgument(checkNotNull(input, "input") instanceof Resource,
-            "This function can only be applied to Resource objects");
-        return ((Resource) input).getUrl();
-    }
+public class ParseCookbookVersionsCheckingChefVersion implements Function<HttpResponse, Set<String>> {
+
+   @VisibleForTesting
+   final Function<HttpResponse, Set<String>> parser;
+
+   @Inject
+   ParseCookbookVersionsCheckingChefVersion(@CookbookVersionsParser Function<HttpResponse, Set<String>> parser) {
+      this.parser = parser;
+   }
+
+   @Override
+   public Set<String> apply(HttpResponse response) {
+       return parser.apply(response);
+   }
 }

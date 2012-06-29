@@ -37,14 +37,14 @@ import com.google.inject.Guice;
 import com.google.inject.Injector;
 
 /**
- * Tests behavior of {@code ParseKeySetFromJson}
+ * Tests behavior of {@code ParseCookbookDefinitionFromJson}.
  * 
- * @author Adrian Cole
+ * @author Ignasi Barrera
  */
 @Test(groups = { "unit" }, singleThreaded = true)
-public class ParseKeySetFromJsonTest {
+public class ParseCookbookDefinitionFromJsonTest {
 
-   private ParseKeySetFromJson handler;
+   private ParseCookbookDefinitionFromJson handler;
 
    @BeforeTest
    protected void setUpInjector() throws IOException {
@@ -56,17 +56,36 @@ public class ParseKeySetFromJsonTest {
            }
        }, new ChefParserModule(), new GsonModule());
    
-      handler = injector.getInstance(ParseKeySetFromJson.class);
+      handler = injector.getInstance(ParseCookbookDefinitionFromJson.class);
    }
 
-   public void testRegex() {
+   public void testParse010Response() {
       assertEquals(
             handler
                   .apply(new HttpResponse(
                         200,
                         "ok",
                         Payloads
-                              .newStringPayload("{\n\"opscode-validator\": \"https://api.opscode.com/...\", \"pimp-validator\": \"https://api.opscode.com/...\"}"))),
-            ImmutableSet.of("opscode-validator", "pimp-validator"));
+                              .newStringPayload("{" +
+                                  "\"apache2\" => {" +
+                                      "\"url\" => \"http://localhost:4000/cookbooks/apache2\"," +
+                                      "\"versions\" => [" +
+                                          "{\"url\" => \"http://localhost:4000/cookbooks/apache2/5.1.0\"," +
+                                          "\"version\" => \"5.1.0\"}," +
+                                          "{\"url\" => \"http://localhost:4000/cookbooks/apache2/4.2.0\"," +
+                                          "\"version\" => \"4.2.0\"}" +
+                                      "]" +
+                                  "}," +
+                                  "\"nginx\" => {" +
+                                      "\"url\" => \"http://localhost:4000/cookbooks/nginx\"," +
+                                      "\"versions\" => [" +
+                                          "{\"url\" => \"http://localhost:4000/cookbooks/nginx/1.0.0\"," +
+                                          "\"version\" => \"1.0.0\"}," +
+                                          "{\"url\" => \"http://localhost:4000/cookbooks/nginx/0.3.0\"," +
+                                          "\"version\" => \"0.3.0\"}" +
+                                      "]" +
+                                  "}" +
+                              "}"))),
+            ImmutableSet.of("apache2", "nginx"));
    }
 }

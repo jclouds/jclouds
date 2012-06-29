@@ -16,27 +16,30 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.jclouds.chef;
+package org.jclouds.chef.config;
 
-import java.util.Properties;
+import static java.lang.annotation.ElementType.METHOD;
+import static java.lang.annotation.ElementType.PARAMETER;
+import static java.lang.annotation.ElementType.FIELD;
+import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
-import org.jclouds.Constants;
-import org.jclouds.chef.internal.BaseChefClientLiveTest;
-import org.testng.annotations.Test;
+import java.lang.annotation.Retention;
+import java.lang.annotation.Target;
+
+import javax.inject.Qualifier;
 
 /**
- * Tests behavior of {@code ChefClient} against a Chef Server <= 0.9.8.
+ * Used to configure the cookbook versions Json parser.
+ * <p>
+ * Chef Server version 0.9 and 0.10 return a different Json when rquesting the cookbook
+ * versions. This annotation can be used to setup the cookbook versions parser.
  * 
- * @author Adrian Cole
+ * @author Ignasi Barrera
  */
-@Test(groups = { "live" })
-public class ChefClientLiveTest extends BaseChefClientLiveTest {
-    
-    @Override
-    protected Properties setupProperties() {
-        Properties props = super.setupProperties();
-        props.setProperty(Constants.PROPERTY_API_VERSION, ChefAsyncClient.VERSION);
-        return props;
-    }
-    
+@Target({METHOD, PARAMETER, FIELD})
+@Retention(RUNTIME)
+@Qualifier
+public @interface CookbookVersionsParser
+{
+
 }

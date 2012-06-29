@@ -25,13 +25,16 @@ import java.net.URI;
 
 import javax.ws.rs.HttpMethod;
 
+import org.jclouds.chef.ChefAsyncClient;
 import org.jclouds.chef.config.ChefParserModule;
 import org.jclouds.crypto.CryptoStreams;
 import org.jclouds.http.HttpRequest;
 import org.jclouds.json.config.GsonModule;
+import org.jclouds.rest.annotations.ApiVersion;
 import org.testng.annotations.Test;
 
 import com.google.common.collect.ImmutableSet;
+import com.google.inject.AbstractModule;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 
@@ -41,7 +44,14 @@ import com.google.inject.Injector;
 @Test(groups = { "unit" })
 public class BindHexEncodedMD5sToJsonPayloadTest {
 
-   Injector injector = Guice.createInjector(new ChefParserModule(), new GsonModule());
+   Injector injector = Guice.createInjector(new AbstractModule() {
+           @Override
+           protected void configure()
+           {
+               bind(String.class).annotatedWith(ApiVersion.class).toInstance(ChefAsyncClient.VERSION);
+           }
+       }, new ChefParserModule(), new GsonModule());
+   
    BindChecksumsToJsonPayload binder = injector.getInstance(BindChecksumsToJsonPayload.class);
 
    @Test(expectedExceptions = IllegalArgumentException.class)
