@@ -18,9 +18,6 @@
  */
 package org.jclouds.chef;
 
-import java.util.Properties;
-
-import org.jclouds.Constants;
 import org.jclouds.chef.internal.BaseChefClientLiveTest;
 import org.testng.annotations.Test;
 
@@ -32,11 +29,5 @@ import org.testng.annotations.Test;
 @Test(groups = { "live" })
 public class ChefClientLiveTest extends BaseChefClientLiveTest {
     
-    @Override
-    protected Properties setupProperties() {
-        Properties props = super.setupProperties();
-        props.setProperty(Constants.PROPERTY_API_VERSION, ChefAsyncClient.VERSION);
-        return props;
-    }
     
 }

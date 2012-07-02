@@ -20,10 +20,7 @@ package org.jclouds.ohai.functions;
 
 import static org.testng.Assert.assertEquals;
 
-import java.io.IOException;
-
 import org.jclouds.crypto.CryptoStreams;
-import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
 
 /**
