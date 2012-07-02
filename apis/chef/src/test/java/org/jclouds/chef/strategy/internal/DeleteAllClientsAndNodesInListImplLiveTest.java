@@ -19,11 +19,13 @@
 package org.jclouds.chef.strategy.internal;
 
 import org.jclouds.chef.ChefClient;
+import org.jclouds.chef.ChefContext;
 import org.jclouds.chef.internal.BaseChefContextLiveTest;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
 import com.google.common.collect.ImmutableSet;
+import com.google.common.reflect.TypeToken;
 
 /**
  * Tests behavior of {@code DeleteAllClientsAndNodesInListImpl} strategies
@@ -31,7 +33,7 @@ import com.google.common.collect.ImmutableSet;
  * @author Adrian Cole
  */
 @Test(groups = "live", testName = "DeleteAllClientsAndNodesInListImplLiveTest")
-public class DeleteAllClientsAndNodesInListImplLiveTest extends BaseChefContextLiveTest {
+public class DeleteAllClientsAndNodesInListImplLiveTest extends BaseChefContextLiveTest<ChefContext> {
 
    private DeleteAllNodesInListImpl strategy;
    private CreateNodeAndPopulateAutomaticAttributesImpl creater;
@@ -64,5 +66,17 @@ public class DeleteAllClientsAndNodesInListImplLiveTest extends BaseChefContextL
          chef.deleteNode(prefix);
          chef.deleteNode(prefix + 1);
       }
+   }
+   
+   @Override
+   protected ChefClient getChefClient(ChefContext context)
+   {
+       return context.getApi();
+   }
+   
+   @Override
+   protected TypeToken<ChefContext> contextType()
+   {
+       return TypeToken.of(ChefContext.class);
    }
 }

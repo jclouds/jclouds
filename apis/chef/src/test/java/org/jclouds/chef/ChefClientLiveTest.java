@@ -18,8 +18,13 @@
  */
 package org.jclouds.chef;
 
+import static org.testng.Assert.assertNotNull;
+
+import org.jclouds.chef.domain.CookbookVersion;
 import org.jclouds.chef.internal.BaseChefClientLiveTest;
 import org.testng.annotations.Test;
+
+import com.google.common.reflect.TypeToken;
 
 /**
  * Tests behavior of {@code ChefClient} against a Chef Server <= 0.9.8.
@@ -27,7 +32,24 @@ import org.testng.annotations.Test;
  * @author Adrian Cole
  */
 @Test(groups = { "live" })
-public class ChefClientLiveTest extends BaseChefClientLiveTest {
-    
+public class ChefClientLiveTest extends BaseChefClientLiveTest<ChefContext> {
+
+    @Test
+    public void testListCookbookVersionsWithChefService() throws Exception {
+       Iterable<? extends CookbookVersion> cookbooks = context.getChefService().listCookbookVersions();
+       assertNotNull(cookbooks);
+    }
+
+    @Override
+    protected ChefClient getChefClient(ChefContext context)
+    {
+        return context.getApi();
+    }
+
+    @Override
+    protected TypeToken<ChefContext> contextType()
+    {
+        return TypeToken.of(ChefContext.class);
+    }
     
 }

@@ -22,6 +22,7 @@ import static com.google.common.collect.Iterables.size;
 import static org.testng.Assert.assertEquals;
 
 import org.jclouds.chef.ChefClient;
+import org.jclouds.chef.ChefContext;
 import org.jclouds.chef.internal.BaseChefContextLiveTest;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
@@ -29,6 +30,7 @@ import org.testng.annotations.Test;
 
 import com.google.common.base.Predicate;
 import com.google.common.collect.ImmutableSet;
+import com.google.common.reflect.TypeToken;
 
 /**
  * Tests behavior of {@code GetNodesImpl} strategies
@@ -36,7 +38,7 @@ import com.google.common.collect.ImmutableSet;
  * @author Adrian Cole
  */
 @Test(groups = "live", testName = "GetNodesImplLiveTest")
-public class GetNodesImplLiveTest extends BaseChefContextLiveTest {
+public class GetNodesImplLiveTest extends BaseChefContextLiveTest<ChefContext> {
    
    private ListNodesImpl strategy;
    private CreateNodeAndPopulateAutomaticAttributesImpl creater;
@@ -81,6 +83,18 @@ public class GetNodesImplLiveTest extends BaseChefContextLiveTest {
    @Test
    public void testExecuteIterableOfString() {
       assertEquals(size(strategy.execute(ImmutableSet.of(prefix, prefix + 1))), 2);
+   }
+   
+   @Override
+   protected ChefClient getChefClient(ChefContext context)
+   {
+       return context.getApi();
+   }
+   
+   @Override
+   protected TypeToken<ChefContext> contextType()
+   {
+       return TypeToken.of(ChefContext.class);
    }
 
 }

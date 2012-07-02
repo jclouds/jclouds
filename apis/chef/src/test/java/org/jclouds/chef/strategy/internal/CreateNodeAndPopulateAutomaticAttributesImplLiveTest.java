@@ -22,6 +22,8 @@ import static org.testng.Assert.assertEquals;
 
 import java.util.Set;
 
+import org.jclouds.chef.ChefClient;
+import org.jclouds.chef.ChefContext;
 import org.jclouds.chef.domain.Node;
 import org.jclouds.chef.internal.BaseChefContextLiveTest;
 import org.jclouds.ohai.config.OhaiModule.CurrentUserProvider;
@@ -29,6 +31,7 @@ import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
 import com.google.common.collect.ImmutableSet;
+import com.google.common.reflect.TypeToken;
 
 /**
  * Tests behavior of {@code CreateNodeAndPopulateAutomaticAttributesImpl} strategies
@@ -36,7 +39,7 @@ import com.google.common.collect.ImmutableSet;
  * @author Adrian Cole
  */
 @Test(groups = "live", testName = "CreateNodeAndPopulateAutomaticAttributesImplLiveTest")
-public class CreateNodeAndPopulateAutomaticAttributesImplLiveTest extends BaseChefContextLiveTest {
+public class CreateNodeAndPopulateAutomaticAttributesImplLiveTest extends BaseChefContextLiveTest<ChefContext> {
 
     private CurrentUserProvider currentUserProvider;
     
@@ -60,6 +63,18 @@ public class CreateNodeAndPopulateAutomaticAttributesImplLiveTest extends BaseCh
       } finally {
          context.getApi().deleteNode(prefix);
       }
+   }
+   
+   @Override
+   protected ChefClient getChefClient(ChefContext context)
+   {
+       return context.getApi();
+   }
+   
+   @Override
+   protected TypeToken<ChefContext> contextType()
+   {
+       return TypeToken.of(ChefContext.class);
    }
 
 }

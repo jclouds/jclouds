@@ -22,26 +22,28 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Properties;
 
+import org.jclouds.Context;
 import org.jclouds.apis.BaseContextLiveTest;
-import org.jclouds.chef.ChefContext;
+import org.jclouds.chef.ChefClient;
 import org.testng.annotations.Test;
 
 import com.google.common.base.Charsets;
 import com.google.common.base.Throwables;
 import com.google.common.io.Files;
-import com.google.common.reflect.TypeToken;
 
 /**
  * 
  * @author Adrian Cole
  */
 @Test(groups = "live")
-public class BaseChefContextLiveTest extends BaseContextLiveTest<ChefContext> {
+public abstract class BaseChefContextLiveTest<C extends Context> extends BaseContextLiveTest<C> {
 
    public BaseChefContextLiveTest() {
       provider = "chef";
    }
-
+   
+   protected abstract ChefClient getChefClient(C context);
+   
    /**
     * the credential is a path to the pem file.
     */
@@ -67,11 +69,6 @@ public class BaseChefContextLiveTest extends BaseContextLiveTest<ChefContext> {
        }
        overrides.setProperty(key, credentialFromFile);
        return credentialFromFile;
-   }
-
-   @Override
-   protected TypeToken<ChefContext> contextType() {
-      return TypeToken.of(ChefContext.class);
    }
 
 }

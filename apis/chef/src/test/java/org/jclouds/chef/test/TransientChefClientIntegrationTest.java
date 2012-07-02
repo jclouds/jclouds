@@ -23,12 +23,15 @@ import static org.testng.Assert.assertNotNull;
 
 import java.util.Properties;
 
+import org.jclouds.chef.ChefClient;
+import org.jclouds.chef.ChefContext;
 import org.jclouds.chef.domain.DatabagItem;
 import org.jclouds.chef.internal.BaseChefContextLiveTest;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.Test;
 
 import com.google.common.io.Closeables;
+import com.google.common.reflect.TypeToken;
 
 /**
  * Tests behavior of {@code TransientChefClient}
@@ -36,7 +39,7 @@ import com.google.common.io.Closeables;
  * @author Adrian Cole
  */
 @Test(groups = { "integration" })
-public class TransientChefClientIntegrationTest extends BaseChefContextLiveTest {
+public class TransientChefClientIntegrationTest extends BaseChefContextLiveTest<ChefContext> {
    public static final String PREFIX = System.getProperty("user.name") + "-jcloudstest";
    private DatabagItem databagItem;
 
@@ -87,5 +90,17 @@ public class TransientChefClientIntegrationTest extends BaseChefContextLiveTest 
          DatabagItem databagItem = context.getApi().getDatabagItem(PREFIX, databagItemId);
          context.getApi().updateDatabagItem(PREFIX, databagItem);
       }
+   }
+   
+   @Override
+   protected ChefClient getChefClient(ChefContext context)
+   {
+       return context.getApi();
+   }
+   
+   @Override
+   protected TypeToken<ChefContext> contextType()
+   {
+       return TypeToken.of(ChefContext.class);
    }
 }

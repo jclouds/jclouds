@@ -22,6 +22,8 @@ import java.util.Map;
 
 import org.jclouds.apis.ApiMetadata;
 import org.jclouds.chef.ChefApiMetadata;
+import org.jclouds.chef.ChefClient;
+import org.jclouds.chef.ChefContext;
 import org.jclouds.chef.config.ChefParserModule;
 import org.jclouds.chef.config.ChefRestClientModule;
 import org.jclouds.domain.JsonBall;
@@ -34,6 +36,7 @@ import com.google.common.base.Supplier;
 import com.google.common.base.Suppliers;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
+import com.google.common.reflect.TypeToken;
 import com.google.inject.Module;
 
 /**
@@ -41,7 +44,8 @@ import com.google.inject.Module;
  * @author Adrian Cole
  */
 @Test(groups = "live")
-public class BaseStubbedOhaiLiveTest extends BaseChefContextLiveTest {
+@Deprecated
+public class BaseStubbedOhaiLiveTest extends BaseChefContextLiveTest<ChefContext> {
    
    @ConfiguresOhai
    static class TestOhaiModule extends OhaiModule {
@@ -57,4 +61,16 @@ public class BaseStubbedOhaiLiveTest extends BaseChefContextLiveTest {
       return new ChefApiMetadata().toBuilder().defaultModules(
                ImmutableSet.<Class<? extends Module>> of(ChefRestClientModule.class, ChefParserModule.class, TestOhaiModule.class)).build();
    }
+
+    @Override
+    protected ChefClient getChefClient(ChefContext context)
+    {
+        return context.getApi();
+    }
+    
+    @Override
+    protected TypeToken<ChefContext> contextType()
+    {
+        return TypeToken.of(ChefContext.class);
+    }
 }
