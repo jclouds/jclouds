@@ -130,11 +130,11 @@ public abstract class BaseChefClientLiveTest<C extends Context> extends BaseChef
       }
 
       // create a new cookbook
-      CookbookVersion cookbook = new CookbookVersion("test3", "0.0.0");
+      CookbookVersion cookbook = new CookbookVersion(PREFIX, "0.0.0");
       cookbook.getRootFiles().add(new Resource(content));
 
       // upload the cookbook to the remote server
-      chefClient.updateCookbook("test3", "0.0.0", cookbook);
+      chefClient.updateCookbook(PREFIX, "0.0.0", cookbook);
    }
 
    @Test(dependsOnMethods = "testCreateClient")
@@ -168,22 +168,13 @@ public abstract class BaseChefClientLiveTest<C extends Context> extends BaseChef
    
    @Test(dependsOnMethods = "testCreateNewCookbook")
    public void testUpdateCookbook() throws Exception {
-      for (String cookbook : chefClient.listCookbooks())
-         for (String version : chefClient.getVersionsOfCookbook(cookbook)) {
-            CookbookVersion cook = chefClient.getCookbook(cookbook, version);
-            chefClient.updateCookbook(cookbook, version, cook);
-         }
+      CookbookVersion cookbook = chefClient.getCookbook(PREFIX, "0.0.0");
+      assertNotNull(chefClient.updateCookbook(PREFIX, "0.0.0", cookbook));
    }
 
-   @Test(dependsOnMethods = {"testCreateNewCookbook", "testUpdateCookbook"}, enabled = false)
-   public void testCreateCookbook() throws Exception {
-      for (String cookbook : chefClient.listCookbooks())
-         for (String version : chefClient.getVersionsOfCookbook(cookbook)) {
-            CookbookVersion cook = chefClient.getCookbook(cookbook, version);
-            chefClient.deleteCookbook(cookbook, version);
-            assert chefClient.getCookbook(cookbook, version) == null : cookbook + version;
-            chefClient.updateCookbook(cookbook, version, cook);
-         }
+   @Test(dependsOnMethods = {"testCreateNewCookbook", "testUpdateCookbook"})
+   public void testDeleteCookbook() throws Exception {
+      assertNotNull(chefClient.deleteCookbook(PREFIX, "0.0.0"));
    }
 
    @Test(expectedExceptions = AuthorizationException.class)

@@ -86,7 +86,7 @@ public class ChefAsyncClientTest extends BaseAsyncClientTest<ChefAsyncClient> {
       assertRequestLineEquals(httpRequest,
             "PUT http://localhost:4000/sandboxes/0189e76ccc476701d6b374e5a1a27347 HTTP/1.1");
       assertNonPayloadHeadersEqual(httpRequest, "Accept: application/json\nX-Chef-Version: " + ChefAsyncClient.VERSION + "-test\n");
-      assertPayloadEquals(httpRequest, "{\"is_completed\":\"true\"}", "application/json", false);
+      assertPayloadEquals(httpRequest, "{\"is_completed\":true}", "application/json", false);
 
       assertResponseParserClassEquals(method, httpRequest, ParseJson.class);
       assertSaxResponseParserClassEquals(method, null);
