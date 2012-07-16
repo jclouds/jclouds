@@ -23,8 +23,8 @@ import java.util.Map;
 
 import javax.inject.Singleton;
 
-import org.jclouds.chef.ChefAsyncClient;
-import org.jclouds.chef.ChefClient;
+import org.jclouds.chef.ChefApi;
+import org.jclouds.chef.ChefAsyncApi;
 import org.jclouds.chef.domain.Client;
 import org.jclouds.chef.functions.ClientForTag;
 import org.jclouds.chef.functions.RunListForTag;
@@ -43,10 +43,10 @@ import com.google.inject.name.Names;
  * @author Adrian Cole
  */
 @ConfiguresRestClient
-public class ChefRestClientModule extends BaseChefRestClientModule<ChefClient, ChefAsyncClient> {
+public class ChefRestClientModule extends BaseChefRestClientModule<ChefApi, ChefAsyncApi> {
 
    public ChefRestClientModule() {
-      super(TypeToken.of(ChefClient.class), TypeToken.of(ChefAsyncClient.class));
+      super(TypeToken.of(ChefApi.class), TypeToken.of(ChefAsyncApi.class));
    }
 
    @Provides

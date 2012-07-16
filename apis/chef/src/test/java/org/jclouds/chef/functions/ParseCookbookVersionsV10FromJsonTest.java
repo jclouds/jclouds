@@ -22,10 +22,9 @@ import static org.testng.Assert.assertEquals;
 
 import java.io.IOException;
 
-import org.jclouds.chef.ChefAsyncClient;
+import org.jclouds.chef.ChefAsyncApi;
 import org.jclouds.chef.config.ChefParserModule;
 import org.jclouds.http.HttpResponse;
-import org.jclouds.io.Payloads;
 import org.jclouds.json.config.GsonModule;
 import org.jclouds.rest.annotations.ApiVersion;
 import org.testng.annotations.BeforeTest;
@@ -52,7 +51,7 @@ public class ParseCookbookVersionsV10FromJsonTest {
            @Override
            protected void configure()
            {
-               bind(String.class).annotatedWith(ApiVersion.class).toInstance(ChefAsyncClient.VERSION);
+               bind(String.class).annotatedWith(ApiVersion.class).toInstance(ChefAsyncApi.VERSION);
            }
        }, new ChefParserModule(), new GsonModule());
    
@@ -62,11 +61,10 @@ public class ParseCookbookVersionsV10FromJsonTest {
    public void testRegex() {
        assertEquals(
            handler
-                 .apply(new HttpResponse(
-                       200,
-                       "ok",
-                       Payloads
-                             .newStringPayload("{" +
+                 .apply(HttpResponse.builder()
+                          .statusCode(200)
+                          .message("ok")
+                          .payload("{" +
                                  "\"apache2\" => {" +
                                      "\"url\" => \"http://localhost:4000/cookbooks/apache2\"," +
                                      "\"versions\" => [" +
@@ -76,7 +74,7 @@ public class ParseCookbookVersionsV10FromJsonTest {
                                          "\"version\" => \"4.2.0\"}" +
                                      "]" +
                                  "}" +
-                             "}"))),
+                             "}").build()),
             ImmutableSet.of("5.1.0", "4.2.0"));
    }
 }

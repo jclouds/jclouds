@@ -18,21 +18,22 @@
  */
 package org.jclouds.chef.functions;
 
+import static org.easymock.EasyMock.createMock;
 import static org.easymock.EasyMock.expect;
-import static org.easymock.classextension.EasyMock.createMock;
-import static org.easymock.classextension.EasyMock.replay;
-import static org.easymock.classextension.EasyMock.verify;
+import static org.easymock.EasyMock.replay;
+import static org.easymock.EasyMock.verify;
 import static org.testng.Assert.assertEquals;
 
 import java.io.IOException;
 
-import org.jclouds.chef.ChefAsyncClient;
-import org.jclouds.chef.ChefClient;
+import org.jclouds.chef.ChefApi;
+import org.jclouds.chef.ChefAsyncApi;
 import org.jclouds.chef.config.ChefParserModule;
 import org.jclouds.chef.domain.Client;
 import org.jclouds.chef.domain.DatabagItem;
 import org.jclouds.json.Json;
 import org.jclouds.json.config.GsonModule;
+import org.jclouds.rest.annotations.Api;
 import org.jclouds.rest.annotations.ApiVersion;
 import org.testng.annotations.Test;
 
@@ -50,7 +51,7 @@ public class RunListForTagTest {
         @Override
         protected void configure()
         {
-            bind(String.class).annotatedWith(ApiVersion.class).toInstance(ChefAsyncClient.VERSION);
+            bind(String.class).annotatedWith(ApiVersion.class).toInstance(ChefAsyncApi.VERSION);
         }
    }, new ChefParserModule(), new GsonModule());
     
@@ -58,58 +59,58 @@ public class RunListForTagTest {
 
    @Test(expectedExceptions = IllegalStateException.class)
    public void testWhenNoDatabagItem() throws IOException {
-      ChefClient chefClient = createMock(ChefClient.class);
+      ChefApi chefApi = createMock(ChefApi.class);
       Client client = createMock(Client.class);
 
-      RunListForTag fn = new RunListForTag("jclouds", chefClient, json);
+      RunListForTag fn = new RunListForTag("jclouds", chefApi, json);
 
-      expect(chefClient.getDatabagItem("jclouds", "foo")).andReturn(null);
+      expect(chefApi.getDatabagItem("jclouds", "foo")).andReturn(null);
 
       replay(client);
-      replay(chefClient);
+      replay(chefApi);
 
       fn.apply("foo");
 
       verify(client);
-      verify(chefClient);
+      verify(chefApi);
    }
 
    @Test
    public void testOneRecipe() throws IOException {
-      ChefClient chefClient = createMock(ChefClient.class);
-      Client client = createMock(Client.class);
+      ChefApi chefApi = createMock(ChefApi.class);
+      Api api = createMock(Api.class);
 
-      RunListForTag fn = new RunListForTag("jclouds", chefClient, json);
+      RunListForTag fn = new RunListForTag("jclouds", chefApi, json);
 
-      expect(chefClient.getDatabagItem("jclouds", "foo")).andReturn(
+      expect(chefApi.getDatabagItem("jclouds", "foo")).andReturn(
                new DatabagItem("foo", "{\"run_list\":[\"recipe[apache2]\"]}"));
 
-      replay(client);
-      replay(chefClient);
+      replay(api);
+      replay(chefApi);
 
       assertEquals(fn.apply("foo"), ImmutableList.of("recipe[apache2]"));
 
-      verify(client);
-      verify(chefClient);
+      verify(api);
+      verify(chefApi);
    }
 
    @Test
    public void testTwoRecipes() throws IOException {
-      ChefClient chefClient = createMock(ChefClient.class);
-      Client client = createMock(Client.class);
+      ChefApi chefApi = createMock(ChefApi.class);
+      Api api = createMock(Api.class);
 
-      RunListForTag fn = new RunListForTag("jclouds", chefClient, json);
+      RunListForTag fn = new RunListForTag("jclouds", chefApi, json);
 
-      expect(chefClient.getDatabagItem("jclouds", "foo")).andReturn(
+      expect(chefApi.getDatabagItem("jclouds", "foo")).andReturn(
                new DatabagItem("foo", "{\"run_list\":[\"recipe[apache2]\",\"recipe[mysql]\"]}"));
 
-      replay(client);
-      replay(chefClient);
+      replay(api);
+      replay(chefApi);
 
       assertEquals(fn.apply("foo"), ImmutableList.of("recipe[apache2]", "recipe[mysql]"));
 
-      verify(client);
-      verify(chefClient);
+      verify(api);
+      verify(chefApi);
    }
 
 }

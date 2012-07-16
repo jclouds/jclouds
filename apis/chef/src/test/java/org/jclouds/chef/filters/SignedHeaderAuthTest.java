@@ -22,7 +22,6 @@ import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertEqualsNoOrder;
 
 import java.io.IOException;
-import java.net.URI;
 import java.security.PrivateKey;
 
 import javax.inject.Provider;
@@ -36,7 +35,7 @@ import org.jclouds.http.HttpRequest;
 import org.jclouds.http.HttpUtils;
 import org.jclouds.http.internal.SignatureWire;
 import org.jclouds.logging.config.NullLoggingModule;
-import org.jclouds.rest.internal.BaseRestClientTest.MockModule;
+import org.jclouds.rest.internal.BaseRestApiTest.MockModule;
 import org.jclouds.util.Strings2;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
@@ -128,9 +127,9 @@ public class SignedHeaderAuthTest {
    @Test
    void shouldGenerateTheCorrectStringToSignAndSignature() {
 
-      URI host = URI.create("http://localhost/" + PATH);
-      HttpRequest request = new HttpRequest(HttpMethod.POST, host);
-      request.setPayload(BODY);
+      HttpRequest request = HttpRequest.builder().method(HttpMethod.POST)
+                                       .endpoint("http://localhost/" + PATH)
+                                       .payload(BODY).build();
 
       String expected_string_to_sign = new StringBuilder().append("Method:POST").append("\n").append("Hashed Path:")
             .append(HASHED_CANONICAL_PATH).append("\n").append("X-Ops-Content-Hash:").append(HASHED_BODY).append("\n")
@@ -150,8 +149,8 @@ public class SignedHeaderAuthTest {
    @Test
    void shouldGenerateTheCorrectStringToSignAndSignatureWithNoBody() {
 
-      URI host = URI.create("http://localhost/" + PATH);
-      HttpRequest request = new HttpRequest(HttpMethod.DELETE, host);
+      HttpRequest request = HttpRequest.builder().method(HttpMethod.DELETE)
+                                       .endpoint("http://localhost/" + PATH).build();
 
       request = signing_obj.filter(request);
       Multimap<String, String> headersWithoutContentLength = LinkedHashMultimap.create(request.getHeaders());
@@ -163,9 +162,10 @@ public class SignedHeaderAuthTest {
       StringBuilder path = new StringBuilder("nodes/");
       for (int i = 0; i < 100; i++)
          path.append('A');
-      URI host = URI.create("http://localhost/" + path.toString());
-      HttpRequest request = new HttpRequest(HttpMethod.PUT, host);
-      request.setPayload(BODY);
+      HttpRequest request = HttpRequest.builder().method(HttpMethod.PUT)
+                                       .endpoint("http://localhost/" + path.toString())
+                                       .payload(BODY).build();
+
       signing_obj.filter(request);
    }
 

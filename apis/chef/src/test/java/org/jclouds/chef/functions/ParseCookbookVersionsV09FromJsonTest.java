@@ -22,10 +22,9 @@ import static org.testng.Assert.assertEquals;
 
 import java.io.IOException;
 
-import org.jclouds.chef.ChefAsyncClient;
+import org.jclouds.chef.ChefAsyncApi;
 import org.jclouds.chef.config.ChefParserModule;
 import org.jclouds.http.HttpResponse;
-import org.jclouds.io.Payloads;
 import org.jclouds.json.config.GsonModule;
 import org.jclouds.rest.annotations.ApiVersion;
 import org.testng.annotations.BeforeTest;
@@ -52,7 +51,7 @@ public class ParseCookbookVersionsV09FromJsonTest {
            @Override
            protected void configure()
            {
-               bind(String.class).annotatedWith(ApiVersion.class).toInstance(ChefAsyncClient.VERSION);
+               bind(String.class).annotatedWith(ApiVersion.class).toInstance(ChefAsyncApi.VERSION);
            }
        }, new ChefParserModule(), new GsonModule());
    
@@ -62,11 +61,10 @@ public class ParseCookbookVersionsV09FromJsonTest {
    public void testRegex() {
       assertEquals(
             handler
-                  .apply(new HttpResponse(
-                        200,
-                        "ok",
-                        Payloads
-                              .newStringPayload("{\"apache2\": [\"0.1.8\", \"0.2\"]}"))),
+                  .apply(HttpResponse.builder()
+                           .statusCode(200)
+                           .message("ok")
+                           .payload("{\"apache2\": [\"0.1.8\", \"0.2\"]}").build()),
             ImmutableSet.of("0.1.8", "0.2"));
    }
 }

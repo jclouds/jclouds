@@ -29,7 +29,7 @@ import java.net.URI;
 import java.security.PrivateKey;
 import java.util.List;
 
-import org.jclouds.chef.ChefAsyncClient;
+import org.jclouds.chef.ChefAsyncApi;
 import org.jclouds.chef.config.ChefParserModule;
 import org.jclouds.chef.domain.Client;
 import org.jclouds.chef.statements.InstallChefGems;
@@ -60,7 +60,7 @@ public class TagToBootScriptTest {
         @Override
         protected void configure()
         {
-            bind(String.class).annotatedWith(ApiVersion.class).toInstance(ChefAsyncClient.VERSION);
+            bind(String.class).annotatedWith(ApiVersion.class).toInstance(ChefAsyncApi.VERSION);
         }
     }, new ChefParserModule(), new GsonModule());
 
@@ -68,7 +68,7 @@ public class TagToBootScriptTest {
    Statement installChefGems = new InstallChefGems();
 
    @Test(expectedExceptions = IllegalStateException.class)
-   public void testMustHaveClients() {
+   public void testMustHaveApis() {
       GroupToBootScript fn = new GroupToBootScript(Suppliers.ofInstance(URI.create("http://localhost:4000")), json, ImmutableMap
                .<String, Client> of(), ImmutableMap.<String, List<String>> of("foo", ImmutableList
                .of("recipe[apache2]")), installChefGems);

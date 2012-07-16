@@ -22,12 +22,11 @@ import static org.testng.Assert.assertEquals;
 
 import java.io.IOException;
 
-import org.jclouds.chef.ChefAsyncClient;
+import org.jclouds.chef.ChefAsyncApi;
 import org.jclouds.chef.config.ChefParserModule;
 import org.jclouds.chef.domain.DatabagItem;
 import org.jclouds.http.HttpResponse;
 import org.jclouds.http.functions.ParseJson;
-import org.jclouds.io.Payloads;
 import org.jclouds.json.Json;
 import org.jclouds.json.config.GsonModule;
 import org.jclouds.rest.annotations.ApiVersion;
@@ -54,7 +53,7 @@ public class ParseDataBagItemFromJsonTest {
            @Override
            protected void configure()
            {
-               bind(String.class).annotatedWith(ApiVersion.class).toInstance(ChefAsyncClient.VERSION);
+               bind(String.class).annotatedWith(ApiVersion.class).toInstance(ChefAsyncApi.VERSION);
            }
        }, new ChefParserModule(), new GsonModule());
    
@@ -66,7 +65,10 @@ public class ParseDataBagItemFromJsonTest {
    public void test1() {
       String json = "{\"my_key\":\"my_data\",\"id\":\"item1\"}";
       DatabagItem item = new DatabagItem("item1", json);
-      assertEquals(handler.apply(new HttpResponse(200, "ok", Payloads.newStringPayload(json))), item);
+      assertEquals(handler.apply(HttpResponse.builder()
+               .statusCode(200)
+               .message("ok")
+               .payload(json).build()), item);
       assertEquals(mapper.toJson(item), json);
    }
 }

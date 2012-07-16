@@ -30,7 +30,7 @@ import javax.inject.Inject;
 import javax.inject.Named;
 import javax.inject.Singleton;
 
-import org.jclouds.chef.ChefClient;
+import org.jclouds.chef.ChefApi;
 import org.jclouds.chef.domain.DatabagItem;
 import org.jclouds.json.Json;
 
@@ -48,21 +48,21 @@ import com.google.inject.TypeLiteral;
 public class RunListForTag implements Function<String, List<String>> {
    public static final Type RUN_LIST_TYPE = new TypeLiteral<Map<String, List<String>>>() {
    }.getType();
-   private final ChefClient client;
+   private final ChefApi api;
    private final Json json;
    private final String databag;
 
    @Inject
-   public RunListForTag(@Named(CHEF_BOOTSTRAP_DATABAG) String databag, ChefClient client, Json json) {
+   public RunListForTag(@Named(CHEF_BOOTSTRAP_DATABAG) String databag, ChefApi api, Json json) {
       this.databag = checkNotNull(databag, "databag");
-      this.client = checkNotNull(client, "client");
+      this.api = checkNotNull(api, "api");
       this.json = checkNotNull(json, "json");
    }
 
    @SuppressWarnings("unchecked")
    @Override
    public List<String> apply(String from) {
-      DatabagItem list = client.getDatabagItem(databag, from);
+      DatabagItem list = api.getDatabagItem(databag, from);
       checkState(list != null, "databag item %s/%s not found", databag, from);
       return ((Map<String, List<String>>) json.fromJson(list.toString(), RUN_LIST_TYPE)).get("run_list");
    }

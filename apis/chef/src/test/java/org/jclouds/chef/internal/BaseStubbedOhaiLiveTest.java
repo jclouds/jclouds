@@ -22,7 +22,7 @@ import java.util.Map;
 
 import org.jclouds.apis.ApiMetadata;
 import org.jclouds.chef.ChefApiMetadata;
-import org.jclouds.chef.ChefClient;
+import org.jclouds.chef.ChefApi;
 import org.jclouds.chef.ChefContext;
 import org.jclouds.chef.config.ChefParserModule;
 import org.jclouds.chef.config.ChefRestClientModule;
@@ -63,7 +63,7 @@ public class BaseStubbedOhaiLiveTest extends BaseChefContextLiveTest<ChefContext
    }
 
     @Override
-    protected ChefClient getChefClient(ChefContext context)
+    protected ChefApi getChefApi(ChefContext context)
     {
         return context.getApi();
     }

@@ -23,7 +23,7 @@ import static org.testng.Assert.assertEquals;
 import java.io.IOException;
 import java.net.URI;
 
-import org.jclouds.chef.ChefAsyncClient;
+import org.jclouds.chef.ChefAsyncApi;
 import org.jclouds.chef.config.ChefParserModule;
 import org.jclouds.chef.domain.Attribute;
 import org.jclouds.chef.domain.CookbookVersion;
@@ -32,11 +32,9 @@ import org.jclouds.chef.domain.Resource;
 import org.jclouds.crypto.CryptoStreams;
 import org.jclouds.http.HttpResponse;
 import org.jclouds.http.functions.ParseJson;
-import org.jclouds.io.Payloads;
 import org.jclouds.json.Json;
 import org.jclouds.json.config.GsonModule;
 import org.jclouds.rest.annotations.ApiVersion;
-import org.jclouds.util.Strings2;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
 
@@ -66,7 +64,7 @@ public class ParseCookbookVersionFromJsonTest {
            @Override
            protected void configure()
            {
-               bind(String.class).annotatedWith(ApiVersion.class).toInstance(ChefAsyncClient.VERSION);
+               bind(String.class).annotatedWith(ApiVersion.class).toInstance(ChefAsyncApi.VERSION);
            }
        }, new ChefParserModule(), new GsonModule());
    
@@ -77,37 +75,55 @@ public class ParseCookbookVersionFromJsonTest {
 
    @Test(enabled = false)
    public void testBrew() throws IOException {
-      CookbookVersion cookbook = handler.apply(new HttpResponse(200, "ok", Payloads
-               .newPayload(ParseCookbookVersionFromJsonTest.class.getResourceAsStream("/brew-cookbook.json"))));
+      CookbookVersion cookbook = handler.apply(HttpResponse.builder()
+               .statusCode(200)
+               .message("ok")
+               .payload(ParseCookbookVersionFromJsonTest.class.getResourceAsStream("/brew-cookbook.json")).build());
 
-      assertEquals(cookbook, handler.apply(new HttpResponse(200, "ok", Payloads.newPayload(Strings2.toInputStream(json
-               .toJson(cookbook))))));
+      assertEquals(cookbook, handler.apply(HttpResponse.builder()
+               .statusCode(200)
+               .message("ok")
+               .payload(json
+               .toJson(cookbook)).build()));
    }
 
    @Test(enabled = false)
    public void testTomcat() {
-      CookbookVersion cookbook = handler.apply(new HttpResponse(200, "ok", Payloads
-               .newPayload(ParseCookbookVersionFromJsonTest.class.getResourceAsStream("/tomcat-cookbook.json"))));
+      CookbookVersion cookbook = handler.apply(HttpResponse.builder()
+               .statusCode(200)
+               .message("ok")
+               .payload(ParseCookbookVersionFromJsonTest.class.getResourceAsStream("/tomcat-cookbook.json")).build());
 
-      assertEquals(cookbook, handler.apply(new HttpResponse(200, "ok", Payloads.newPayload(Strings2.toInputStream(json
-               .toJson(cookbook))))));
+      assertEquals(cookbook, handler.apply(HttpResponse.builder()
+               .statusCode(200)
+               .message("ok")
+               .payload(json
+               .toJson(cookbook)).build()));
    }
 
    @Test(enabled = false)
    public void testMysql() throws IOException {
-      CookbookVersion cookbook = handler.apply(new HttpResponse(200, "ok", Payloads
-               .newPayload(ParseCookbookVersionFromJsonTest.class.getResourceAsStream("/mysql-cookbook.json"))));
+      CookbookVersion cookbook = handler.apply(HttpResponse.builder()
+               .statusCode(200)
+               .message("ok")
+               .payload(ParseCookbookVersionFromJsonTest.class.getResourceAsStream("/mysql-cookbook.json")).build());
 
-      assertEquals(cookbook, handler.apply(new HttpResponse(200, "ok", Payloads.newPayload(Strings2.toInputStream(json
-               .toJson(cookbook))))));
+      assertEquals(cookbook, handler.apply(HttpResponse.builder()
+               .statusCode(200)
+               .message("ok")
+               .payload(json
+               .toJson(cookbook)).build()));
    }
 
    @Test(enabled = false)
    public void testApache() {
 
       assertEquals(
-               handler.apply(new HttpResponse(200, "ok", Payloads.newPayload(ParseCookbookVersionFromJsonTest.class
-                        .getResourceAsStream("/apache-chef-demo-cookbook.json")))),
+               handler.apply(HttpResponse.builder()
+                        .statusCode(200)
+                        .message("ok")
+                        .payload(ParseCookbookVersionFromJsonTest.class
+                        .getResourceAsStream("/apache-chef-demo-cookbook.json")).build()),
                new CookbookVersion(
                         "apache-chef-demo-0.0.0",
                         ImmutableSet.<Resource> of(),

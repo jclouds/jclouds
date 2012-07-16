@@ -45,12 +45,12 @@ import org.jclouds.rest.binders.BindToJsonPayload;
  * Provides synchronous access to Chef.
  * <p/>
  * 
- * @see ChefAsyncClient
+ * @see ChefAsyncApi
  * @see <a href="TODO: insert URL of Chef documentation" />
  * @author Adrian Cole
  */
 @Timeout(duration = 30, timeUnit = TimeUnit.SECONDS)
-public interface ChefClient {
+public interface ChefApi {
    /**
     * 
     * Creates a new sandbox. It accepts a list of checksums as input and returns
@@ -105,7 +105,7 @@ public interface ChefClient {
    /**
     * deletes an existing cookbook.
     * 
-    * @return last state of the client you deleted or null, if not found
+    * @return last state of the api you deleted or null, if not found
     * @throws AuthorizationException
     *            <p/>
     *            "401 Unauthorized" if you are not a recognized user.
@@ -387,7 +387,7 @@ public interface ChefClient {
    Role getRole(String name);
 
    /**
-    * lists databags available to the client
+    * lists databags available to the api
     * 
     * @throws AuthorizationException
     *            <p/>
@@ -503,7 +503,7 @@ public interface ChefClient {
    /**
     * Show indexes you can search on
     * <p/>
-    * By default, the "role", "node" and "client" indexes will always be
+    * By default, the "role", "node" and "api" indexes will always be
     * available.
     * <p/>
     * Note that the search indexes may lag behind the most current data by at
@@ -532,7 +532,7 @@ public interface ChefClient {
    SearchResult<? extends Role> searchRoles();
 
    /**
-    * search all clients.
+    * search all apis.
     * <p/>
     * Note that without any request parameters this will return all of the data
     * within the index.

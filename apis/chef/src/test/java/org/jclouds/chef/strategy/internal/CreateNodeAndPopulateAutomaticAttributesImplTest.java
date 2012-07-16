@@ -24,7 +24,7 @@ import static org.easymock.classextension.EasyMock.verify;
 
 import java.util.Map;
 
-import org.jclouds.chef.ChefClient;
+import org.jclouds.chef.ChefApi;
 import org.jclouds.chef.domain.Node;
 import org.jclouds.domain.JsonBall;
 import org.testng.annotations.Test;
@@ -44,7 +44,7 @@ public class CreateNodeAndPopulateAutomaticAttributesImplTest {
 
    @Test
    public void testWithNoRunlist() {
-      ChefClient chef = createMock(ChefClient.class);
+      ChefApi chef = createMock(ChefApi.class);
 
       Map<String, JsonBall> automatic = ImmutableMap.<String, JsonBall> of();
 

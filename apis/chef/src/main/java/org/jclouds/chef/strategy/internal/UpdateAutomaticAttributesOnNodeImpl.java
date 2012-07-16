@@ -27,7 +27,7 @@ import javax.inject.Inject;
 import javax.inject.Named;
 import javax.inject.Singleton;
 
-import org.jclouds.chef.ChefClient;
+import org.jclouds.chef.ChefApi;
 import org.jclouds.chef.domain.Node;
 import org.jclouds.chef.reference.ChefConstants;
 import org.jclouds.chef.strategy.UpdateAutomaticAttributesOnNode;
@@ -50,11 +50,11 @@ public class UpdateAutomaticAttributesOnNodeImpl implements UpdateAutomaticAttri
    @Named(ChefConstants.CHEF_LOGGER)
    protected Logger logger = Logger.NULL;
 
-   private final ChefClient chef;
+   private final ChefApi chef;
    private final Supplier<Map<String, JsonBall>> automaticSupplier;
 
    @Inject
-   public UpdateAutomaticAttributesOnNodeImpl(ChefClient chef,
+   public UpdateAutomaticAttributesOnNodeImpl(ChefApi chef,
          @Automatic Supplier<Map<String, JsonBall>> automaticSupplier) {
       this.chef = checkNotNull(chef, "chef");
       this.automaticSupplier = checkNotNull(automaticSupplier, "automaticSupplier");

@@ -22,7 +22,7 @@ import static org.testng.Assert.assertEquals;
 
 import java.util.Set;
 
-import org.jclouds.chef.ChefClient;
+import org.jclouds.chef.ChefApi;
 import org.jclouds.chef.ChefContext;
 import org.jclouds.chef.domain.Node;
 import org.jclouds.chef.internal.BaseChefContextLiveTest;
@@ -65,7 +65,7 @@ public class UpdateAutomaticAttributesOnNodeImplLiveTest extends BaseChefContext
    }
    
    @Override
-   protected ChefClient getChefClient(ChefContext context)
+   protected ChefApi getChefApi(ChefContext context)
    {
        return context.getApi();
    }

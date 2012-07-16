@@ -31,7 +31,7 @@ import java.util.Properties;
 import java.util.Set;
 
 import org.jclouds.Context;
-import org.jclouds.chef.ChefClient;
+import org.jclouds.chef.ChefApi;
 import org.jclouds.chef.domain.ChecksumStatus;
 import org.jclouds.chef.domain.Client;
 import org.jclouds.chef.domain.CookbookVersion;
@@ -58,12 +58,12 @@ import com.google.common.collect.ImmutableSet;
 import com.google.common.io.Closeables;
 import com.google.common.primitives.Bytes;
 /**
- * Tests behavior of {@code ChefClient}
+ * Tests behavior of {@code ChefApi}
  * 
  * @author Adrian Cole
  */
 @Test(groups = { "live", "integration" })
-public abstract class BaseChefClientLiveTest<C extends Context> extends BaseChefContextLiveTest<C> {
+public abstract class BaseChefApiLiveTest<C extends Context> extends BaseChefContextLiveTest<C> {
    public static final String PREFIX = System.getProperty("user.name") + "-jcloudstest";
    public static final String ADMIN_PREFIX = System.getProperty("user.name") + "-jcloudstest-adm";
    public static final String VALIDATOR_PREFIX = System.getProperty("user.name") + "-jcloudstest-val";
@@ -71,9 +71,9 @@ public abstract class BaseChefClientLiveTest<C extends Context> extends BaseChef
    private String validatorIdentity;
    private String validatorCredential;
    private C validatorContext;
-   private ChefClient validatorClient;
+   private ChefApi validatorClient;
    
-   protected ChefClient chefClient;
+   protected ChefApi chefApi;
 
    protected Properties setupValidatorProperties() {
       Properties overrides = setupProperties();
@@ -89,8 +89,8 @@ public abstract class BaseChefClientLiveTest<C extends Context> extends BaseChef
    public void setupContext() {
       super.setupContext();
       validatorContext = createContext(setupValidatorProperties(), setupModules());
-      chefClient = getChefClient(context);
-      validatorClient = getChefClient(validatorContext);
+      chefApi = getChefApi(context);
+      validatorClient = getChefApi(validatorContext);
    }
 
    private Node node;
@@ -112,7 +112,7 @@ public abstract class BaseChefClientLiveTest<C extends Context> extends BaseChef
       List<Byte> md5 = Bytes.asList(content.getContentMetadata().getContentMD5());
 
       // request an upload site for this file
-      UploadSandbox site = chefClient.getUploadSandboxForChecksums(ImmutableSet.of(md5));
+      UploadSandbox site = chefApi.getUploadSandboxForChecksums(ImmutableSet.of(md5));
 
       try {
          assert site.getChecksums().containsKey(md5) : md5 + " not in " + site.getChecksums();
@@ -120,13 +120,13 @@ public abstract class BaseChefClientLiveTest<C extends Context> extends BaseChef
          ChecksumStatus status = site.getChecksums().get(md5);
          if (status.needsUpload()) {
             //context.utils().http().put(status.getUrl(), content);
-             chefClient.uploadContent(status.getUrl(), content);
+             chefApi.uploadContent(status.getUrl(), content);
          }
 
-         chefClient.commitSandbox(site.getSandboxId(), true);
+         chefApi.commitSandbox(site.getSandboxId(), true);
 
       } catch (RuntimeException e) {
-         chefClient.commitSandbox(site.getSandboxId(), false);
+         chefApi.commitSandbox(site.getSandboxId(), false);
       }
 
       // create a new cookbook
@@ -134,29 +134,29 @@ public abstract class BaseChefClientLiveTest<C extends Context> extends BaseChef
       cookbook.getRootFiles().add(new Resource(content));
 
       // upload the cookbook to the remote server
-      chefClient.updateCookbook(PREFIX, "0.0.0", cookbook);
+      chefApi.updateCookbook(PREFIX, "0.0.0", cookbook);
    }
 
    @Test(dependsOnMethods = "testCreateClient")
    public void testGenerateKeyForClient() throws Exception {
-       String credential = Pems.pem(chefClient.generateKeyForClient(PREFIX).getPrivateKey());
+       String credential = Pems.pem(chefApi.generateKeyForClient(PREFIX).getPrivateKey());
        assertClientCreated(PREFIX, credential);
    }
 
    @Test
    public void testListCookbooks() throws Exception {
-      Set<String> cookbookNames = chefClient.listCookbooks();
+      Set<String> cookbookNames = chefApi.listCookbooks();
       assertFalse(cookbookNames.isEmpty());
       
       for (String cookbook : cookbookNames)
-         for (String version : chefClient.getVersionsOfCookbook(cookbook)) {
-            CookbookVersion cookbookO = chefClient.getCookbook(cookbook, version);
+         for (String version : chefApi.getVersionsOfCookbook(cookbook)) {
+            CookbookVersion cookbookO = chefApi.getCookbook(cookbook, version);
             for (Resource resource : ImmutableList.<Resource> builder().addAll(cookbookO.getDefinitions()).addAll(
                      cookbookO.getFiles()).addAll(cookbookO.getLibraries()).addAll(cookbookO.getSuppliers()).addAll(
                      cookbookO.getRecipes()).addAll(cookbookO.getResources()).addAll(cookbookO.getRootFiles()).addAll(
                      cookbookO.getTemplates()).build()) {
                try {
-                  InputStream stream = chefClient.getResourceContents(resource);
+                  InputStream stream = chefApi.getResourceContents(resource);
                   byte[] md5 = CryptoStreams.md5(InputSuppliers.of(stream));
                   assertEquals(md5, resource.getChecksum());
                } catch (NullPointerException e) {
@@ -168,13 +168,13 @@ public abstract class BaseChefClientLiveTest<C extends Context> extends BaseChef
    
    @Test(dependsOnMethods = "testCreateNewCookbook")
    public void testUpdateCookbook() throws Exception {
-      CookbookVersion cookbook = chefClient.getCookbook(PREFIX, "0.0.0");
-      assertNotNull(chefClient.updateCookbook(PREFIX, "0.0.0", cookbook));
+      CookbookVersion cookbook = chefApi.getCookbook(PREFIX, "0.0.0");
+      assertNotNull(chefApi.updateCookbook(PREFIX, "0.0.0", cookbook));
    }
 
    @Test(dependsOnMethods = {"testCreateNewCookbook", "testUpdateCookbook"})
    public void testDeleteCookbook() throws Exception {
-      assertNotNull(chefClient.deleteCookbook(PREFIX, "0.0.0"));
+      assertNotNull(chefApi.deleteCookbook(PREFIX, "0.0.0"));
    }
 
    @Test(expectedExceptions = AuthorizationException.class)
@@ -196,63 +196,63 @@ public abstract class BaseChefClientLiveTest<C extends Context> extends BaseChef
 
    @Test
    public void testCreateClient() throws Exception {
-      String credential = Pems.pem(chefClient.createClient(PREFIX).getPrivateKey());
+      String credential = Pems.pem(chefApi.createClient(PREFIX).getPrivateKey());
       assertClientCreated(PREFIX, credential);
    }
 
    @Test
    public void testCreateAdminClient() throws Exception {
-       String credential = Pems.pem(chefClient.createClient(ADMIN_PREFIX, CreateClientOptions.Builder.admin())
+       String credential = Pems.pem(chefApi.createClient(ADMIN_PREFIX, CreateClientOptions.Builder.admin())
            .getPrivateKey());
        assertClientCreated(ADMIN_PREFIX, credential);
    }
 
    @Test
    public void testClientExists() throws Exception {
-      assertNotNull(chefClient.clientExists(validatorIdentity));
+      assertNotNull(chefApi.clientExists(validatorIdentity));
    }
 
    @Test
    public void testListNodes() throws Exception {
-      Set<String> nodes = chefClient.listNodes();
+      Set<String> nodes = chefApi.listNodes();
       assertNotNull(nodes);
    }
 
    @Test(dependsOnMethods = "testCreateRole")
    public void testCreateNode() throws Exception {
-      chefClient.deleteNode(PREFIX);
-      chefClient.createNode(new Node(PREFIX, Collections.singleton("role[" + PREFIX + "]")));
-      node = chefClient.getNode(PREFIX);
+      chefApi.deleteNode(PREFIX);
+      chefApi.createNode(new Node(PREFIX, Collections.singleton("role[" + PREFIX + "]")));
+      node = chefApi.getNode(PREFIX);
       // TODO check recipes
       assertNotNull(node);
-      Set<String> nodes = chefClient.listNodes();
+      Set<String> nodes = chefApi.listNodes();
       assert nodes.contains(PREFIX) : String.format("node %s not in %s", PREFIX, nodes);
    }
 
    @Test(dependsOnMethods = "testCreateNode")
    public void testNodeExists() throws Exception {
-      assertNotNull(chefClient.nodeExists(PREFIX));
+      assertNotNull(chefApi.nodeExists(PREFIX));
    }
 
    @Test(dependsOnMethods = "testNodeExists")
    public void testUpdateNode() throws Exception {
-      for (String nodename : chefClient.listNodes()) {
-         Node node = chefClient.getNode(nodename);
-         chefClient.updateNode(node);
+      for (String nodename : chefApi.listNodes()) {
+         Node node = chefApi.getNode(nodename);
+         chefApi.updateNode(node);
       }
    }
 
    @Test
    public void testListRoles() throws Exception {
-      Set<String> roles = chefClient.listRoles();
+      Set<String> roles = chefApi.listRoles();
       assertNotNull(roles);
    }
 
    @Test
    public void testCreateRole() throws Exception {
-      chefClient.deleteRole(PREFIX);
-      chefClient.createRole(new Role(PREFIX, Collections.singleton("recipe[java]")));
-      role = chefClient.getRole(PREFIX);
+      chefApi.deleteRole(PREFIX);
+      chefApi.createRole(new Role(PREFIX, Collections.singleton("recipe[java]")));
+      role = chefApi.getRole(PREFIX);
       assertNotNull(role);
       assertEquals(role.getName(), PREFIX);
       assertEquals(role.getRunList(), Collections.singleton("recipe[java]"));
@@ -260,37 +260,37 @@ public abstract class BaseChefClientLiveTest<C extends Context> extends BaseChef
 
    @Test(dependsOnMethods = "testCreateRole")
    public void testRoleExists() throws Exception {
-      assertNotNull(chefClient.roleExists(PREFIX));
+      assertNotNull(chefApi.roleExists(PREFIX));
    }
 
    @Test(dependsOnMethods = "testRoleExists")
    public void testUpdateRole() throws Exception {
-      for (String rolename : chefClient.listRoles()) {
-         Role role = chefClient.getRole(rolename);
-         chefClient.updateRole(role);
+      for (String rolename : chefApi.listRoles()) {
+         Role role = chefApi.getRole(rolename);
+         chefApi.updateRole(role);
       }
    }
 
    @Test
    public void testListDatabags() throws Exception {
-      Set<String> databags = chefClient.listDatabags();
+      Set<String> databags = chefApi.listDatabags();
       assertNotNull(databags);
    }
 
    @Test
    public void testCreateDatabag() throws Exception {
-      chefClient.deleteDatabag(PREFIX);
-      chefClient.createDatabag(PREFIX);
+      chefApi.deleteDatabag(PREFIX);
+      chefApi.createDatabag(PREFIX);
    }
 
    @Test(dependsOnMethods = "testCreateDatabag")
    public void testDatabagExists() throws Exception {
-      assertNotNull(chefClient.databagExists(PREFIX));
+      assertNotNull(chefApi.databagExists(PREFIX));
    }
 
    @Test(dependsOnMethods = "testCreateDatabagItem")
    public void testListDatabagItems() throws Exception {
-      Set<String> databagItems = chefClient.listDatabagItems(PREFIX);
+      Set<String> databagItems = chefApi.listDatabagItems(PREFIX);
       assertNotNull(databagItems);
    }
 
@@ -298,8 +298,8 @@ public abstract class BaseChefClientLiveTest<C extends Context> extends BaseChef
    public void testCreateDatabagItem() throws Exception {
       Properties config = new Properties();
       config.setProperty("foo", "bar");
-      chefClient.deleteDatabagItem(PREFIX, PREFIX);
-      databagItem = chefClient.createDatabagItem(PREFIX,
+      chefApi.deleteDatabagItem(PREFIX, PREFIX);
+      databagItem = chefApi.createDatabagItem(PREFIX,
                new DatabagItem("config", context.utils().json().toJson(config)));
       assertNotNull(databagItem);
       assertEquals(databagItem.getId(), "config");
@@ -314,20 +314,20 @@ public abstract class BaseChefClientLiveTest<C extends Context> extends BaseChef
 
    @Test(dependsOnMethods = "testCreateDatabagItem")
    public void testDatabagItemExists() throws Exception {
-      assertNotNull(chefClient.databagItemExists(PREFIX, PREFIX));
+      assertNotNull(chefApi.databagItemExists(PREFIX, PREFIX));
    }
 
    @Test(dependsOnMethods = "testDatabagItemExists")
    public void testUpdateDatabagItem() throws Exception {
-      for (String databagItemId : chefClient.listDatabagItems(PREFIX)) {
-         DatabagItem databagItem = chefClient.getDatabagItem(PREFIX, databagItemId);
-         chefClient.updateDatabagItem(PREFIX, databagItem);
+      for (String databagItemId : chefApi.listDatabagItems(PREFIX)) {
+         DatabagItem databagItem = chefApi.getDatabagItem(PREFIX, databagItemId);
+         chefApi.updateDatabagItem(PREFIX, databagItem);
       }
    }
 
    @Test
    public void testListSearchIndexes() throws Exception {
-      Set<String> indexes = chefClient.listSearchIndexes();
+      Set<String> indexes = chefApi.listSearchIndexes();
       assertNotNull(indexes);
       assert indexes.contains("node") : indexes;
       assert indexes.contains("client") : indexes;
@@ -336,31 +336,31 @@ public abstract class BaseChefClientLiveTest<C extends Context> extends BaseChef
 
    @Test
    public void testSearchNodes() throws Exception {
-      SearchResult<? extends Node> results = chefClient.searchNodes();
+      SearchResult<? extends Node> results = chefApi.searchNodes();
       assertNotNull(results);
    }
 
    @Test
    public void testSearchClients() throws Exception {
-      SearchResult<? extends Client> results = chefClient.searchClients();
+      SearchResult<? extends Client> results = chefApi.searchClients();
       assertNotNull(results);
    }
 
    @Test
    public void testSearchRoles() throws Exception {
-      SearchResult<? extends Role> results = chefClient.searchRoles();
+      SearchResult<? extends Role> results = chefApi.searchRoles();
       assertNotNull(results);
    }
 
    @Test(dependsOnMethods = "testDatabagItemExists")
    public void testSearchDatabag() throws Exception {
-      SearchResult<? extends DatabagItem> results = chefClient.searchDatabag(PREFIX);
+      SearchResult<? extends DatabagItem> results = chefApi.searchDatabag(PREFIX);
       assertNotNull(results);
    }
 
    @Test(expectedExceptions = ResourceNotFoundException.class)
    public void testSearchDatabagNotFound() throws Exception {
-      SearchResult<? extends DatabagItem> results = chefClient.searchDatabag("whoopie");
+      SearchResult<? extends DatabagItem> results = chefApi.searchDatabag("whoopie");
       assertNotNull(results);
    }
    
@@ -368,12 +368,12 @@ public abstract class BaseChefClientLiveTest<C extends Context> extends BaseChef
    @Override
    public void tearDownContext() {
       Closeables.closeQuietly(validatorContext);
-      chefClient.deleteClient(PREFIX);
-      chefClient.deleteClient(ADMIN_PREFIX);
-      chefClient.deleteClient(VALIDATOR_PREFIX);
-      chefClient.deleteNode(PREFIX);
-      chefClient.deleteRole(PREFIX);
-      chefClient.deleteDatabag(PREFIX);
+      chefApi.deleteClient(PREFIX);
+      chefApi.deleteClient(ADMIN_PREFIX);
+      chefApi.deleteClient(VALIDATOR_PREFIX);
+      chefApi.deleteNode(PREFIX);
+      chefApi.deleteRole(PREFIX);
+      chefApi.deleteDatabag(PREFIX);
       super.tearDownContext();
    }
    
@@ -385,7 +385,7 @@ public abstract class BaseChefClientLiveTest<C extends Context> extends BaseChef
        C clientContext = createContext(overrides, setupModules());
 
        try {
-           Client client = getChefClient(clientContext).getClient(identity);
+           Client client = getChefApi(clientContext).getClient(identity);
            assertNotNull(client);
        } finally {
            Closeables.closeQuietly(clientContext);

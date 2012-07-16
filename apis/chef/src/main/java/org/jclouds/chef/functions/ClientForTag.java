@@ -26,7 +26,7 @@ import java.util.Set;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
-import org.jclouds.chef.ChefClient;
+import org.jclouds.chef.ChefApi;
 import org.jclouds.chef.domain.Client;
 
 import com.google.common.base.Function;
@@ -39,17 +39,17 @@ import com.google.common.base.Function;
  */
 @Singleton
 public class ClientForTag implements Function<String, Client> {
-   private final ChefClient chefClient;
+   private final ChefApi chefApi;
 
    @Inject
-   public ClientForTag(ChefClient chefClient) {
-      this.chefClient = checkNotNull(chefClient, "chefClient");
+   public ClientForTag(ChefApi chefApi) {
+      this.chefApi = checkNotNull(chefApi, "chefApi");
    }
 
    @Override
    public Client apply(String from) {
-      String clientName = findNextClientName(chefClient.listClients(), from + "-validator-%02d");
-      Client client = chefClient.createClient(clientName);
+      String clientName = findNextClientName(chefApi.listClients(), from + "-validator-%02d");
+      Client client = chefApi.createClient(clientName);
       // response from create only includes the key
       return new Client(null, null, clientName, clientName, false, client.getPrivateKey());
    }

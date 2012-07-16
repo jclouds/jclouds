@@ -37,7 +37,7 @@ import com.google.inject.Inject;
  * 
  * @author Adrian Cole
  */
-public class ChefClientErrorRetryHandler implements HttpRetryHandler {
+public class ChefApiErrorRetryHandler implements HttpRetryHandler {
 
    @Inject(optional = true)
    @Named(Constants.PROPERTY_MAX_RETRIES)
@@ -49,7 +49,7 @@ public class ChefClientErrorRetryHandler implements HttpRetryHandler {
    private final BackoffLimitedRetryHandler backoffLimitedRetryHandler;
 
    @Inject
-   ChefClientErrorRetryHandler(BackoffLimitedRetryHandler backoffLimitedRetryHandler) {
+   ChefApiErrorRetryHandler(BackoffLimitedRetryHandler backoffLimitedRetryHandler) {
       this.backoffLimitedRetryHandler = backoffLimitedRetryHandler;
    }
 

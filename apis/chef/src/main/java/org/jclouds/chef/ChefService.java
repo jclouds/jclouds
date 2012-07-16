@@ -59,7 +59,7 @@ public interface ChefService {
    Node createNodeAndPopulateAutomaticAttributes(String nodeName, Iterable<String> runList);
 
    /**
-    * Creates all steps necessary to bootstrap and run the chef client.
+    * Creates all steps necessary to bootstrap and run the chef api.
     * 
     * @param tag
     *           corresponds to a configured
@@ -81,7 +81,7 @@ public interface ChefService {
     *           corresponds to a configured
     *           {@link org.jclouds.chef.reference.ChefConstants#CHEF_BOOTSTRAP_DATABAG databag}
     *           where run_list and other information are stored
-    * @see #makeChefClientBootstrapScriptForTag
+    * @see #makeChefApiBootstrapScriptForTag
     */
    void updateRunListForTag(Iterable<String> runList, String tag);
 

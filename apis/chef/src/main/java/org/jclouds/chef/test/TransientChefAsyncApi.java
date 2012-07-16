@@ -40,7 +40,7 @@ import org.jclouds.blobstore.TransientAsyncBlobStore;
 import org.jclouds.blobstore.domain.Blob;
 import org.jclouds.blobstore.domain.PageSet;
 import org.jclouds.blobstore.domain.StorageMetadata;
-import org.jclouds.chef.ChefAsyncClient;
+import org.jclouds.chef.ChefAsyncApi;
 import org.jclouds.chef.domain.Client;
 import org.jclouds.chef.domain.CookbookVersion;
 import org.jclouds.chef.domain.DatabagItem;
@@ -64,7 +64,7 @@ import com.google.common.util.concurrent.ListenableFuture;
  * @author Adrian Cole
  */
 
-public class TransientChefAsyncClient implements ChefAsyncClient {
+public class TransientChefAsyncApi implements ChefAsyncApi {
    @Singleton
    private static class StorageMetadataToName implements Function<PageSet<? extends StorageMetadata>, Set<String>> {
       @Override
@@ -99,7 +99,7 @@ public class TransientChefAsyncClient implements ChefAsyncClient {
    private final StorageMetadataToName storageMetadataToName;
 
    @Inject
-   TransientChefAsyncClient(@Named("databags") TransientAsyncBlobStore databags,
+   TransientChefAsyncApi(@Named("databags") TransientAsyncBlobStore databags,
          StorageMetadataToName storageMetadataToName, BlobToDatabagItem blobToDatabagItem,
          @Named(Constants.PROPERTY_USER_THREADS) ExecutorService executor) {
       this.databags = checkNotNull(databags, "databags");

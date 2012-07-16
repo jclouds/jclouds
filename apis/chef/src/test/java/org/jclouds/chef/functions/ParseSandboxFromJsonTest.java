@@ -22,13 +22,12 @@ import static org.testng.Assert.assertEquals;
 
 import java.io.IOException;
 
-import org.jclouds.chef.ChefAsyncClient;
+import org.jclouds.chef.ChefAsyncApi;
 import org.jclouds.chef.config.ChefParserModule;
 import org.jclouds.chef.domain.Sandbox;
 import org.jclouds.date.DateService;
 import org.jclouds.http.HttpResponse;
 import org.jclouds.http.functions.ParseJson;
-import org.jclouds.io.Payloads;
 import org.jclouds.json.config.GsonModule;
 import org.jclouds.rest.annotations.ApiVersion;
 import org.testng.annotations.BeforeTest;
@@ -58,7 +57,7 @@ public class ParseSandboxFromJsonTest {
            @Override
            protected void configure()
            {
-               bind(String.class).annotatedWith(ApiVersion.class).toInstance(ChefAsyncClient.VERSION);
+               bind(String.class).annotatedWith(ApiVersion.class).toInstance(ChefAsyncApi.VERSION);
            }
        }, new ChefParserModule(), new GsonModule());
    
@@ -68,8 +67,11 @@ public class ParseSandboxFromJsonTest {
    }
 
    public void test() {
-      assertEquals(handler.apply(new HttpResponse(200, "ok", Payloads.newPayload(ParseSandboxFromJsonTest.class
-            .getResourceAsStream("/sandbox.json")))), new Sandbox("1-8c27b0ea4c2b7aaedbb44cfbdfcc11b2", false,
+      assertEquals(handler.apply(HttpResponse.builder()
+               .statusCode(200)
+               .message("ok")
+               .payload(ParseSandboxFromJsonTest.class
+            .getResourceAsStream("/sandbox.json")).build()), new Sandbox("1-8c27b0ea4c2b7aaedbb44cfbdfcc11b2", false,
             dateService.iso8601SecondsDateParse("2010-07-07T03:36:00+00:00"), ImmutableSet.<String> of(),
             "f9d6d9b72bae465890aae87969f98a9c", "f9d6d9b72bae465890aae87969f98a9c"));
    }

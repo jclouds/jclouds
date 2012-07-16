@@ -22,10 +22,9 @@ import static org.testng.Assert.assertEquals;
 
 import java.io.IOException;
 
-import org.jclouds.chef.ChefAsyncClient;
+import org.jclouds.chef.ChefAsyncApi;
 import org.jclouds.chef.config.ChefParserModule;
 import org.jclouds.http.HttpResponse;
-import org.jclouds.io.Payloads;
 import org.jclouds.json.config.GsonModule;
 import org.jclouds.rest.annotations.ApiVersion;
 import org.testng.annotations.BeforeTest;
@@ -52,7 +51,7 @@ public class ParseKeySetFromJsonTest {
            @Override
            protected void configure()
            {
-               bind(String.class).annotatedWith(ApiVersion.class).toInstance(ChefAsyncClient.VERSION);
+               bind(String.class).annotatedWith(ApiVersion.class).toInstance(ChefAsyncApi.VERSION);
            }
        }, new ChefParserModule(), new GsonModule());
    
@@ -62,11 +61,10 @@ public class ParseKeySetFromJsonTest {
    public void testRegex() {
       assertEquals(
             handler
-                  .apply(new HttpResponse(
-                        200,
-                        "ok",
-                        Payloads
-                              .newStringPayload("{\n\"opscode-validator\": \"https://api.opscode.com/...\", \"pimp-validator\": \"https://api.opscode.com/...\"}"))),
+                  .apply(HttpResponse.builder()
+                           .statusCode(200)
+                           .message("ok")
+                           .payload("{\n\"opscode-validator\": \"https://api.opscode.com/...\", \"pimp-validator\": \"https://api.opscode.com/...\"}").build()),
             ImmutableSet.of("opscode-validator", "pimp-validator"));
    }
 }

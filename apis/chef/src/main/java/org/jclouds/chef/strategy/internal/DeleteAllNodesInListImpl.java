@@ -30,8 +30,8 @@ import javax.inject.Named;
 import javax.inject.Singleton;
 
 import org.jclouds.Constants;
-import org.jclouds.chef.ChefAsyncClient;
-import org.jclouds.chef.ChefClient;
+import org.jclouds.chef.ChefAsyncApi;
+import org.jclouds.chef.ChefApi;
 import org.jclouds.chef.reference.ChefConstants;
 import org.jclouds.chef.strategy.DeleteAllNodesInList;
 import org.jclouds.logging.Logger;
@@ -46,8 +46,8 @@ import com.google.inject.Inject;
 @Singleton
 public class DeleteAllNodesInListImpl implements DeleteAllNodesInList {
 
-   protected final ChefClient chefClient;
-   protected final ChefAsyncClient chefAsyncClient;
+   protected final ChefApi chefApi;
+   protected final ChefAsyncApi chefAsyncApi;
    protected final ExecutorService userExecutor;
    @Resource
    @Named(ChefConstants.CHEF_LOGGER)
@@ -59,10 +59,10 @@ public class DeleteAllNodesInListImpl implements DeleteAllNodesInList {
 
    @Inject
    DeleteAllNodesInListImpl(@Named(Constants.PROPERTY_USER_THREADS) ExecutorService userExecutor,
-         ChefClient getAllNode, ChefAsyncClient ablobstore) {
+         ChefApi getAllNode, ChefAsyncApi ablobstore) {
       this.userExecutor = userExecutor;
-      this.chefAsyncClient = ablobstore;
-      this.chefClient = getAllNode;
+      this.chefAsyncApi = ablobstore;
+      this.chefApi = getAllNode;
    }
 
    @Override
@@ -70,7 +70,7 @@ public class DeleteAllNodesInListImpl implements DeleteAllNodesInList {
       Map<String, Exception> exceptions = newHashMap();
       Map<String, Future<?>> responses = newHashMap();
       for (String name : names) {
-         responses.put(name, chefAsyncClient.deleteNode(name));
+         responses.put(name, chefAsyncApi.deleteNode(name));
       }
       exceptions = awaitCompletion(responses, userExecutor, maxTime, logger, String.format(
             "deleting nodes: %s", names));

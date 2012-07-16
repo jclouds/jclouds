@@ -38,7 +38,6 @@ import org.jclouds.http.HttpRequest;
 import org.jclouds.http.HttpRequestFilter;
 import org.jclouds.http.HttpUtils;
 import org.jclouds.http.internal.SignatureWire;
-import org.jclouds.http.utils.ModifyRequest;
 import org.jclouds.io.InputSuppliers;
 import org.jclouds.io.Payload;
 import org.jclouds.io.Payloads;
@@ -107,7 +106,7 @@ public class SignedHeaderAuth implements HttpRequestFilter {
       headers.put( "X-Ops-Timestamp", timestamp );
       utils.logRequest( signatureLog, request, "<<" );
 
-      return ModifyRequest.putHeaders(request, headers);
+      return request.toBuilder().replaceHeaders(headers).build();
    }
 
    @VisibleForTesting
@@ -121,7 +120,7 @@ public class SignedHeaderAuth implements HttpRequestFilter {
       for (int i = 0; i < signatureLines.length; i++) {
          headers.put("X-Ops-Authorization-" + (i + 1), signatureLines[i]);
       }
-      return ModifyRequest.putHeaders( request, headers );
+      return request.toBuilder().replaceHeaders(headers).build();
    }
 
    public String createStringToSign(String request, String hashedPath, String contentHash, String timestamp) {

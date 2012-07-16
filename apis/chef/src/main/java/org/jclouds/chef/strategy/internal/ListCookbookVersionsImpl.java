@@ -31,8 +31,8 @@ import javax.inject.Named;
 import javax.inject.Singleton;
 
 import org.jclouds.Constants;
-import org.jclouds.chef.ChefAsyncClient;
-import org.jclouds.chef.ChefClient;
+import org.jclouds.chef.ChefAsyncApi;
+import org.jclouds.chef.ChefApi;
 import org.jclouds.chef.domain.CookbookVersion;
 import org.jclouds.chef.reference.ChefConstants;
 import org.jclouds.chef.strategy.ListCookbookVersions;
@@ -50,8 +50,8 @@ import com.google.inject.Inject;
 @Singleton
 public class ListCookbookVersionsImpl implements ListCookbookVersions {
 
-   protected final ChefClient chefClient;
-   protected final ChefAsyncClient chefAsyncClient;
+   protected final ChefApi chefApi;
+   protected final ChefAsyncApi chefAsyncApi;
    protected final ExecutorService userExecutor;
    @Resource
    @Named(ChefConstants.CHEF_LOGGER)
@@ -63,20 +63,20 @@ public class ListCookbookVersionsImpl implements ListCookbookVersions {
 
    @Inject
    ListCookbookVersionsImpl(@Named(Constants.PROPERTY_USER_THREADS) ExecutorService userExecutor,
-            ChefClient getAllCookbookVersion, ChefAsyncClient ablobstore) {
+            ChefApi getAllCookbookVersion, ChefAsyncApi ablobstore) {
       this.userExecutor = userExecutor;
-      this.chefAsyncClient = ablobstore;
-      this.chefClient = getAllCookbookVersion;
+      this.chefAsyncApi = ablobstore;
+      this.chefApi = getAllCookbookVersion;
    }
 
    @Override
    public Iterable<? extends CookbookVersion> execute() {
-      return execute(chefClient.listCookbooks());
+      return execute(chefApi.listCookbooks());
    }
 
    @Override
    public Iterable<? extends CookbookVersion> execute(Predicate<String> cookbookNameSelector) {
-      return execute(filter(chefClient.listCookbooks(), cookbookNameSelector));
+      return execute(filter(chefApi.listCookbooks(), cookbookNameSelector));
    }
 
    @Override
@@ -86,12 +86,12 @@ public class ListCookbookVersionsImpl implements ListCookbookVersions {
          @Override
          public Iterable<? extends CookbookVersion> apply(final String cookbook) {
             // TODO getting each version could also go parallel
-            return transformParallel(chefClient.getVersionsOfCookbook(cookbook),
+            return transformParallel(chefApi.getVersionsOfCookbook(cookbook),
                      new Function<String, Future<? extends CookbookVersion>>() {
 
                         @Override
                         public Future<CookbookVersion> apply(String version) {
-                           return chefAsyncClient.getCookbook(cookbook, version);
+                           return chefAsyncApi.getCookbook(cookbook, version);
                         }
 
                      }, userExecutor, maxTime, logger, "getting versions of cookbook " + cookbook);

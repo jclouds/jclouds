@@ -24,14 +24,13 @@ import java.io.IOException;
 import java.net.URI;
 import java.util.List;
 
-import org.jclouds.chef.ChefAsyncClient;
+import org.jclouds.chef.ChefAsyncApi;
 import org.jclouds.chef.config.ChefParserModule;
 import org.jclouds.chef.domain.ChecksumStatus;
 import org.jclouds.chef.domain.UploadSandbox;
 import org.jclouds.crypto.CryptoStreams;
 import org.jclouds.http.HttpResponse;
 import org.jclouds.http.functions.ParseJson;
-import org.jclouds.io.Payloads;
 import org.jclouds.json.config.GsonModule;
 import org.jclouds.rest.annotations.ApiVersion;
 import org.testng.annotations.BeforeTest;
@@ -62,7 +61,7 @@ public class ParseUploadSandboxFromJsonTest {
            @Override
            protected void configure()
            {
-               bind(String.class).annotatedWith(ApiVersion.class).toInstance(ChefAsyncClient.VERSION);
+               bind(String.class).annotatedWith(ApiVersion.class).toInstance(ChefAsyncApi.VERSION);
            }
        }, new ChefParserModule(), new GsonModule());
    
@@ -72,8 +71,11 @@ public class ParseUploadSandboxFromJsonTest {
 
    public void test() {
       assertEquals(
-               handler.apply(new HttpResponse(200, "ok", Payloads.newPayload(ParseUploadSandboxFromJsonTest.class
-                        .getResourceAsStream("/upload-site.json")))),
+               handler.apply(HttpResponse.builder()
+                        .statusCode(200)
+                        .message("ok")
+                        .payload(ParseUploadSandboxFromJsonTest.class
+                        .getResourceAsStream("/upload-site.json")).build()),
                new UploadSandbox(
                         URI
                                  .create("https://api.opscode.com/organizations/jclouds/sandboxes/d454f71e2a5f400c808d0c5d04c2c88c"),

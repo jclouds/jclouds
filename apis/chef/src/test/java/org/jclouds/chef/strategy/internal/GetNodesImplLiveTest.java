@@ -21,7 +21,7 @@ package org.jclouds.chef.strategy.internal;
 import static com.google.common.collect.Iterables.size;
 import static org.testng.Assert.assertEquals;
 
-import org.jclouds.chef.ChefClient;
+import org.jclouds.chef.ChefApi;
 import org.jclouds.chef.ChefContext;
 import org.jclouds.chef.internal.BaseChefContextLiveTest;
 import org.testng.annotations.AfterClass;
@@ -42,7 +42,7 @@ public class GetNodesImplLiveTest extends BaseChefContextLiveTest<ChefContext> {
    
    private ListNodesImpl strategy;
    private CreateNodeAndPopulateAutomaticAttributesImpl creater;
-   private ChefClient chef;
+   private ChefApi chef;
 
    @BeforeClass(groups = { "integration", "live" })
    @Override
@@ -86,7 +86,7 @@ public class GetNodesImplLiveTest extends BaseChefContextLiveTest<ChefContext> {
    }
    
    @Override
-   protected ChefClient getChefClient(ChefContext context)
+   protected ChefApi getChefApi(ChefContext context)
    {
        return context.getApi();
    }

@@ -29,8 +29,8 @@ import javax.inject.Named;
 import javax.inject.Singleton;
 
 import org.jclouds.Constants;
-import org.jclouds.chef.ChefAsyncClient;
-import org.jclouds.chef.ChefClient;
+import org.jclouds.chef.ChefAsyncApi;
+import org.jclouds.chef.ChefApi;
 import org.jclouds.chef.domain.Node;
 import org.jclouds.chef.reference.ChefConstants;
 import org.jclouds.chef.strategy.ListNodes;
@@ -48,8 +48,8 @@ import com.google.inject.Inject;
 @Singleton
 public class ListNodesImpl implements ListNodes {
 
-   protected final ChefClient chefClient;
-   protected final ChefAsyncClient chefAsyncClient;
+   protected final ChefApi chefApi;
+   protected final ChefAsyncApi chefAsyncApi;
    protected final ExecutorService userExecutor;
    @Resource
    @Named(ChefConstants.CHEF_LOGGER)
@@ -60,21 +60,21 @@ public class ListNodesImpl implements ListNodes {
    protected Long maxTime;
 
    @Inject
-   ListNodesImpl(@Named(Constants.PROPERTY_USER_THREADS) ExecutorService userExecutor, ChefClient getAllNode,
-            ChefAsyncClient ablobstore) {
+   ListNodesImpl(@Named(Constants.PROPERTY_USER_THREADS) ExecutorService userExecutor, ChefApi getAllNode,
+            ChefAsyncApi ablobstore) {
       this.userExecutor = userExecutor;
-      this.chefAsyncClient = ablobstore;
-      this.chefClient = getAllNode;
+      this.chefAsyncApi = ablobstore;
+      this.chefApi = getAllNode;
    }
 
    @Override
    public Iterable<? extends Node> execute() {
-      return execute(chefClient.listNodes());
+      return execute(chefApi.listNodes());
    }
 
    @Override
    public Iterable<? extends Node> execute(Predicate<String> nodeNameSelector) {
-      return execute(filter(chefClient.listNodes(), nodeNameSelector));
+      return execute(filter(chefApi.listNodes(), nodeNameSelector));
    }
 
    @Override
@@ -83,7 +83,7 @@ public class ListNodesImpl implements ListNodes {
 
          @Override
          public Future<Node> apply(String from) {
-            return chefAsyncClient.getNode(from);
+            return chefAsyncApi.getNode(from);
          }
 
       }, userExecutor, maxTime, logger, "getting nodes");

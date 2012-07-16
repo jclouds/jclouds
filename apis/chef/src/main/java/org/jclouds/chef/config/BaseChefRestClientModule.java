@@ -29,7 +29,7 @@ import java.util.concurrent.TimeUnit;
 import javax.inject.Named;
 import javax.inject.Singleton;
 
-import org.jclouds.chef.handlers.ChefClientErrorRetryHandler;
+import org.jclouds.chef.handlers.ChefApiErrorRetryHandler;
 import org.jclouds.chef.handlers.ChefErrorHandler;
 import org.jclouds.crypto.Crypto;
 import org.jclouds.crypto.Pems;
@@ -58,13 +58,13 @@ import com.google.inject.Provides;
 @ConfiguresRestClient
 public class BaseChefRestClientModule<S, A> extends RestClientModule<S, A> {
 
-   protected BaseChefRestClientModule(TypeToken<S> syncClientType, TypeToken<A> asyncClientType) {
-      super(syncClientType, asyncClientType);
+   protected BaseChefRestClientModule(TypeToken<S> syncApiType, TypeToken<A> asyncApiType) {
+      super(syncApiType, asyncApiType);
    }
 
-   protected BaseChefRestClientModule(TypeToken<S> syncClientType, TypeToken<A> asyncClientType,
+   protected BaseChefRestClientModule(TypeToken<S> syncApiType, TypeToken<A> asyncApiType,
             Map<Class<?>, Class<?>> delegates) {
-      super(syncClientType, asyncClientType, delegates);
+      super(syncApiType, asyncApiType, delegates);
    }
 
    @Provides
@@ -102,7 +102,7 @@ public class BaseChefRestClientModule<S, A> extends RestClientModule<S, A> {
 
    @Override
    protected void bindRetryHandlers() {
-      bind(HttpRetryHandler.class).annotatedWith(ClientError.class).to(ChefClientErrorRetryHandler.class);
+      bind(HttpRetryHandler.class).annotatedWith(ClientError.class).to(ChefApiErrorRetryHandler.class);
    }
 
 }

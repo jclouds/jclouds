@@ -27,8 +27,8 @@ public interface ChefConstants {
    /**
     * There are generally 3 types of identities
     * <ul>
-    * <li>validator - used to create clients within an organization; {@code orgname}-validator</li>
-    * <li>client - scoped to an organization, used on nodes to run chef</li>
+    * <li>validator - used to create apis within an organization; {@code orgname}-validator</li>
+    * <li>api - scoped to an organization, used on nodes to run chef</li>
     * <li>user - used to run commands like knife and access cookbook sites</li>
     * </ul>
     * 
@@ -43,7 +43,7 @@ public interface ChefConstants {
     */
 
    public static final String CHEF_LOGGER = "jclouds.chef";
-   public static final String CHEF_SERVICE_CLIENT = "chef.service-client";
+   public static final String CHEF_SERVICE_CLIENT = "chef.service-api";
    public static final String CHEF_NODE = "chef.node";
    public static final String CHEF_NODE_PATTERN = "chef.node-pattern";
    public static final String CHEF_RUN_LIST = "chef.run-list";

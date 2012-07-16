@@ -47,7 +47,7 @@ import com.google.common.base.Predicate;
 
 /**
  * 
- * Cleans up nodes and clients who have been hanging around too long.
+ * Cleans up nodes and apis who have been hanging around too long.
  * 
  * @author Adrian Cole
  */

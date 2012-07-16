@@ -18,18 +18,15 @@
  */
 package org.jclouds.chef.handlers;
 
+import static org.easymock.EasyMock.createMock;
 import static org.easymock.EasyMock.expect;
-import static org.easymock.classextension.EasyMock.createMock;
-import static org.easymock.classextension.EasyMock.replay;
-import static org.easymock.classextension.EasyMock.verify;
-
-import java.net.URI;
+import static org.easymock.EasyMock.replay;
+import static org.easymock.EasyMock.verify;
 
 import org.jclouds.http.HttpCommand;
 import org.jclouds.http.HttpRequest;
 import org.jclouds.http.HttpResponse;
 import org.jclouds.http.handlers.BackoffLimitedRetryHandler;
-import org.jclouds.io.Payloads;
 import org.testng.annotations.Test;
 
 /**
@@ -38,7 +35,7 @@ import org.testng.annotations.Test;
  * @author Adrian Cole
  */
 @Test(groups = { "unit" })
-public class ChefClientErrorRetryHandlerTest {
+public class ChefApiErrorRetryHandlerTest {
    @Test
    public void test401DoesNotRetry() {
 
@@ -53,7 +50,7 @@ public class ChefClientErrorRetryHandlerTest {
       replay(retry);
       replay(command);
 
-      ChefClientErrorRetryHandler handler = new ChefClientErrorRetryHandler(retry);
+      ChefApiErrorRetryHandler handler = new ChefApiErrorRetryHandler(retry);
 
       assert !handler.shouldRetryRequest(command, response);
 
@@ -77,7 +74,7 @@ public class ChefClientErrorRetryHandlerTest {
       replay(retry);
       replay(command);
 
-      ChefClientErrorRetryHandler handler = new ChefClientErrorRetryHandler(retry);
+      ChefApiErrorRetryHandler handler = new ChefApiErrorRetryHandler(retry);
 
       assert !handler.shouldRetryRequest(command, response);
 
@@ -93,13 +90,12 @@ public class ChefClientErrorRetryHandlerTest {
       HttpCommand command = createMock(HttpCommand.class);
       BackoffLimitedRetryHandler retry = createMock(BackoffLimitedRetryHandler.class);
 
-      HttpRequest request = new HttpRequest("PUT", URI
-            .create("https://api.opscode.com/organizations/jclouds/sandboxes/bfd68d4052f44053b2e593a33b5e1cd5"));
-      HttpResponse response = new HttpResponse(
-            400,
-            "400 Bad Request",
-            Payloads
-                  .newStringPayload("{\"error\":[\"Cannot update sandbox bfd68d4052f44053b2e593a33b5e1cd5: checksum 9b7c23369f4b576451216c39f214af6c was not uploaded\"]}"));
+      HttpRequest request = HttpRequest.builder().method("PUT")
+                                       .endpoint("https://api.opscode.com/organizations/jclouds/sandboxes/bfd68d4052f44053b2e593a33b5e1cd5").build();
+      HttpResponse response = HttpResponse.builder()
+                                          .statusCode(400)
+                                          .message("400 Bad Request")
+                                          .payload("{\"error\":[\"Cannot update sandbox bfd68d4052f44053b2e593a33b5e1cd5: checksum 9b7c23369f4b576451216c39f214af6c was not uploaded\"]}").build();
 
       expect(command.getFailureCount()).andReturn(0);
       expect(command.getCurrentRequest()).andReturn(request).atLeastOnce();
@@ -108,7 +104,7 @@ public class ChefClientErrorRetryHandlerTest {
       replay(retry);
       replay(command);
 
-      ChefClientErrorRetryHandler handler = new ChefClientErrorRetryHandler(retry);
+      ChefApiErrorRetryHandler handler = new ChefApiErrorRetryHandler(retry);
 
       assert handler.shouldRetryRequest(command, response);
 

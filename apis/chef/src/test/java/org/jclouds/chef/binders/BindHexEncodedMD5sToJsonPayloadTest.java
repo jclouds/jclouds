@@ -21,11 +21,10 @@ package org.jclouds.chef.binders;
 import static org.testng.Assert.assertEquals;
 
 import java.io.File;
-import java.net.URI;
 
 import javax.ws.rs.HttpMethod;
 
-import org.jclouds.chef.ChefAsyncClient;
+import org.jclouds.chef.ChefAsyncApi;
 import org.jclouds.chef.config.ChefParserModule;
 import org.jclouds.crypto.CryptoStreams;
 import org.jclouds.http.HttpRequest;
@@ -48,7 +47,7 @@ public class BindHexEncodedMD5sToJsonPayloadTest {
            @Override
            protected void configure()
            {
-               bind(String.class).annotatedWith(ApiVersion.class).toInstance(ChefAsyncClient.VERSION);
+               bind(String.class).annotatedWith(ApiVersion.class).toInstance(ChefAsyncApi.VERSION);
            }
        }, new ChefParserModule(), new GsonModule());
    
@@ -56,20 +55,20 @@ public class BindHexEncodedMD5sToJsonPayloadTest {
 
    @Test(expectedExceptions = IllegalArgumentException.class)
    public void testMustBeIterable() {
-      HttpRequest request = new HttpRequest(HttpMethod.POST, URI.create("http://localhost"));
+      HttpRequest request = HttpRequest.builder().method(HttpMethod.POST).endpoint("http://localhost").build();
       binder.bindToRequest(request, new File("foo"));
    }
 
    @Test(enabled = false)
    public void testCorrect() {
-      HttpRequest request = new HttpRequest(HttpMethod.POST, URI.create("http://localhost"));
+      HttpRequest request = HttpRequest.builder().method(HttpMethod.POST).endpoint("http://localhost").build();
       binder.bindToRequest(request, ImmutableSet.of(CryptoStreams.hex("abddef"), CryptoStreams.hex("1234")));
       assertEquals(request.getPayload().getRawContent(), "{\"checksums\":{\"abddef\":null,\"1234\":null}}");
    }
 
    @Test(expectedExceptions = { NullPointerException.class, IllegalStateException.class })
    public void testNullIsBad() {
-      HttpRequest request = new HttpRequest(HttpMethod.POST, URI.create("http://localhost"));
+      HttpRequest request = HttpRequest.builder().method(HttpMethod.POST).endpoint("http://localhost").build();
       binder.bindToRequest(request, null);
    }
 

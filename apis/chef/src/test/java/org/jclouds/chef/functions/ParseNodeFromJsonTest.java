@@ -23,13 +23,12 @@ import static org.testng.Assert.assertEquals;
 import java.io.IOException;
 import java.util.Collections;
 
-import org.jclouds.chef.ChefAsyncClient;
+import org.jclouds.chef.ChefAsyncApi;
 import org.jclouds.chef.config.ChefParserModule;
 import org.jclouds.chef.domain.Node;
 import org.jclouds.domain.JsonBall;
 import org.jclouds.http.HttpResponse;
 import org.jclouds.http.functions.ParseJson;
-import org.jclouds.io.Payloads;
 import org.jclouds.json.config.GsonModule;
 import org.jclouds.rest.annotations.ApiVersion;
 import org.testng.annotations.BeforeTest;
@@ -58,7 +57,7 @@ public class ParseNodeFromJsonTest {
            @Override
            protected void configure()
            {
-               bind(String.class).annotatedWith(ApiVersion.class).toInstance(ChefAsyncClient.VERSION);
+               bind(String.class).annotatedWith(ApiVersion.class).toInstance(ChefAsyncApi.VERSION);
            }
        }, new ChefParserModule(), new GsonModule());
    
@@ -72,7 +71,10 @@ public class ParseNodeFromJsonTest {
             "{\"ssl_port\":8433}")), ImmutableMap.<String, JsonBall> of(), ImmutableMap.<String, JsonBall> of(),
             ImmutableMap.<String, JsonBall> of(), Collections.singleton("recipe[java]"));
 
-      assertEquals(handler.apply(new HttpResponse(200, "ok", Payloads.newPayload(ParseCookbookVersionFromJsonTest.class
-            .getResourceAsStream("/node.json")))), node);
+      assertEquals(handler.apply(HttpResponse.builder()
+               .statusCode(200)
+               .message("ok")
+               .payload(ParseCookbookVersionFromJsonTest.class
+            .getResourceAsStream("/node.json")).build()), node);
    }
 }

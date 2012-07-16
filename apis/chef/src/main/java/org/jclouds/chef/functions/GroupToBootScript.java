@@ -82,7 +82,7 @@ public class GroupToBootScript implements Function<String, Payload> {
       checkNotNull(tag, "tag");
 
       Client client = tagToClient.get(tag);
-      checkState(client != null, "could not get a client for tag %s", tag);
+      checkState(client != null, "could not get a api for tag %s", tag);
       checkState(client.getClientname() != null, "clientname null for %s", client);
       checkState(client.getPrivateKey() != null, "privatekey null for %s", client);
 

@@ -24,7 +24,7 @@ import java.util.Properties;
 
 import org.jclouds.Context;
 import org.jclouds.apis.BaseContextLiveTest;
-import org.jclouds.chef.ChefClient;
+import org.jclouds.chef.ChefApi;
 import org.testng.annotations.Test;
 
 import com.google.common.base.Charsets;
@@ -42,7 +42,7 @@ public abstract class BaseChefContextLiveTest<C extends Context> extends BaseCon
       provider = "chef";
    }
    
-   protected abstract ChefClient getChefClient(C context);
+   protected abstract ChefApi getChefApi(C context);
    
    /**
     * the credential is a path to the pem file.

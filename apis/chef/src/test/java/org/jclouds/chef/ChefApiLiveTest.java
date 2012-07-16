@@ -21,18 +21,18 @@ package org.jclouds.chef;
 import static org.testng.Assert.assertNotNull;
 
 import org.jclouds.chef.domain.CookbookVersion;
-import org.jclouds.chef.internal.BaseChefClientLiveTest;
+import org.jclouds.chef.internal.BaseChefApiLiveTest;
 import org.testng.annotations.Test;
 
 import com.google.common.reflect.TypeToken;
 
 /**
- * Tests behavior of {@code ChefClient} against a Chef Server <= 0.9.8.
+ * Tests behavior of {@code ChefApi} against a Chef Server <= 0.9.8.
  * 
  * @author Adrian Cole
  */
 @Test(groups = { "live" })
-public class ChefClientLiveTest extends BaseChefClientLiveTest<ChefContext> {
+public class ChefApiLiveTest extends BaseChefApiLiveTest<ChefContext> {
 
     @Test
     public void testListCookbookVersionsWithChefService() throws Exception {
@@ -41,7 +41,7 @@ public class ChefClientLiveTest extends BaseChefClientLiveTest<ChefContext> {
     }
 
     @Override
-    protected ChefClient getChefClient(ChefContext context)
+    protected ChefApi getChefApi(ChefContext context)
     {
         return context.getApi();
     }

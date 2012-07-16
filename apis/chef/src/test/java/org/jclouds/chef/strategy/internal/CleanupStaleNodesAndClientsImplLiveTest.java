@@ -18,7 +18,7 @@
  */
 package org.jclouds.chef.strategy.internal;
 
-import org.jclouds.chef.ChefClient;
+import org.jclouds.chef.ChefApi;
 import org.jclouds.chef.ChefContext;
 import org.jclouds.chef.internal.BaseChefContextLiveTest;
 import org.testng.annotations.BeforeClass;
@@ -64,7 +64,7 @@ public class CleanupStaleNodesAndClientsImplLiveTest extends BaseChefContextLive
    }
    
    @Override
-   protected ChefClient getChefClient(ChefContext context)
+   protected ChefApi getChefApi(ChefContext context)
    {
        return context.getApi();
    }

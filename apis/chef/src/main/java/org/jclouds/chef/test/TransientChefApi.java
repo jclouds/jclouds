@@ -20,19 +20,19 @@ package org.jclouds.chef.test;
 
 import java.util.concurrent.TimeUnit;
 
-import org.jclouds.chef.ChefAsyncClient;
-import org.jclouds.chef.ChefClient;
+import org.jclouds.chef.ChefAsyncApi;
+import org.jclouds.chef.ChefApi;
 import org.jclouds.concurrent.Timeout;
 
 /**
  * In-memory chef simulator.
  * <p/>
  * 
- * @see ChefAsyncClient
+ * @see ChefAsyncApi
  * @see <a href="TODO: insert URL of Chef documentation" />
  * @author Adrian Cole
  */
 @Timeout(duration = 30, timeUnit = TimeUnit.MILLISECONDS)
-public interface TransientChefClient extends ChefClient {
+public interface TransientChefApi extends ChefApi {
 
 }

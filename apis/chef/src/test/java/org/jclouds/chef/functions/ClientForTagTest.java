@@ -18,16 +18,16 @@
  */
 package org.jclouds.chef.functions;
 
+import static org.easymock.EasyMock.createMock;
 import static org.easymock.EasyMock.expect;
-import static org.easymock.classextension.EasyMock.createMock;
-import static org.easymock.classextension.EasyMock.replay;
-import static org.easymock.classextension.EasyMock.verify;
+import static org.easymock.EasyMock.replay;
+import static org.easymock.EasyMock.verify;
 import static org.testng.Assert.assertEquals;
 
 import java.io.IOException;
 import java.security.PrivateKey;
 
-import org.jclouds.chef.ChefClient;
+import org.jclouds.chef.ChefApi;
 import org.jclouds.chef.domain.Client;
 import org.testng.annotations.Test;
 
@@ -40,18 +40,18 @@ import com.google.common.collect.ImmutableSet;
 public class ClientForTagTest {
 
    public void testWhenNoClientsInList() throws IOException {
-      ChefClient chefClient = createMock(ChefClient.class);
+      ChefApi chefApi = createMock(ChefApi.class);
       Client client = createMock(Client.class);
       PrivateKey privateKey = createMock(PrivateKey.class);
 
-      ClientForTag fn = new ClientForTag(chefClient);
+      ClientForTag fn = new ClientForTag(chefApi);
 
-      expect(chefClient.listClients()).andReturn(ImmutableSet.<String> of());
-      expect(chefClient.createClient("foo-validator-00")).andReturn(client);
+      expect(chefApi.listClients()).andReturn(ImmutableSet.<String> of());
+      expect(chefApi.createClient("foo-validator-00")).andReturn(client);
       expect(client.getPrivateKey()).andReturn(privateKey);
 
       replay(client);
-      replay(chefClient);
+      replay(chefApi);
 
       Client compare = fn.apply("foo");
       assertEquals(compare.getClientname(), "foo-validator-00");
@@ -59,23 +59,23 @@ public class ClientForTagTest {
       assertEquals(compare.getPrivateKey(), privateKey);
 
       verify(client);
-      verify(chefClient);
+      verify(chefApi);
    }
 
    public void testWhenClientsInListAddsToEnd() throws IOException {
-      ChefClient chefClient = createMock(ChefClient.class);
+      ChefApi chefApi = createMock(ChefApi.class);
       Client client = createMock(Client.class);
       PrivateKey privateKey = createMock(PrivateKey.class);
 
-      ClientForTag fn = new ClientForTag(chefClient);
+      ClientForTag fn = new ClientForTag(chefApi);
 
-      expect(chefClient.listClients()).andReturn(
+      expect(chefApi.listClients()).andReturn(
                ImmutableSet.<String> of("foo-validator-00", "foo-validator-01", "foo-validator-02"));
-      expect(chefClient.createClient("foo-validator-03")).andReturn(client);
+      expect(chefApi.createClient("foo-validator-03")).andReturn(client);
       expect(client.getPrivateKey()).andReturn(privateKey);
 
       replay(client);
-      replay(chefClient);
+      replay(chefApi);
 
       Client compare = fn.apply("foo");
       assertEquals(compare.getClientname(), "foo-validator-03");
@@ -83,22 +83,22 @@ public class ClientForTagTest {
       assertEquals(compare.getPrivateKey(), privateKey);
 
       verify(client);
-      verify(chefClient);
+      verify(chefApi);
    }
 
    public void testWhenClientsInListReplacesMissing() throws IOException {
-      ChefClient chefClient = createMock(ChefClient.class);
+      ChefApi chefApi = createMock(ChefApi.class);
       Client client = createMock(Client.class);
       PrivateKey privateKey = createMock(PrivateKey.class);
 
-      ClientForTag fn = new ClientForTag(chefClient);
+      ClientForTag fn = new ClientForTag(chefApi);
 
-      expect(chefClient.listClients()).andReturn(ImmutableSet.<String> of("foo-validator-00", "foo-validator-02"));
-      expect(chefClient.createClient("foo-validator-01")).andReturn(client);
+      expect(chefApi.listClients()).andReturn(ImmutableSet.<String> of("foo-validator-00", "foo-validator-02"));
+      expect(chefApi.createClient("foo-validator-01")).andReturn(client);
       expect(client.getPrivateKey()).andReturn(privateKey);
 
       replay(client);
-      replay(chefClient);
+      replay(chefApi);
 
       Client compare = fn.apply("foo");
       assertEquals(compare.getClientname(), "foo-validator-01");
@@ -106,6 +106,6 @@ public class ClientForTagTest {
       assertEquals(compare.getPrivateKey(), privateKey);
 
       verify(client);
-      verify(chefClient);
+      verify(chefApi);
    }
 }

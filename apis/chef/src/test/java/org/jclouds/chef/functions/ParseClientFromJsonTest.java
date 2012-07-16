@@ -18,7 +18,6 @@
  */
 package org.jclouds.chef.functions;
 
-import static org.jclouds.io.Payloads.newInputStreamPayload;
 import static org.testng.Assert.assertEquals;
 
 import java.io.IOException;
@@ -27,7 +26,7 @@ import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
 import java.security.spec.InvalidKeySpecException;
 
-import org.jclouds.chef.ChefAsyncClient;
+import org.jclouds.chef.ChefAsyncApi;
 import org.jclouds.chef.config.ChefParserModule;
 import org.jclouds.chef.domain.Client;
 import org.jclouds.crypto.Crypto;
@@ -70,7 +69,7 @@ public class ParseClientFromJsonTest {
            @Override
            protected void configure()
            {
-               bind(String.class).annotatedWith(ApiVersion.class).toInstance(ChefAsyncClient.VERSION);
+               bind(String.class).annotatedWith(ApiVersion.class).toInstance(ChefAsyncApi.VERSION);
            }
        }, new ChefParserModule(), new GsonModule());
    
@@ -92,7 +91,7 @@ public class ParseClientFromJsonTest {
       assertEquals(ByteStreams.toByteArray(new RSADecryptingPayload(Payloads.newPayload(encrypted), user
                .getPrivateKey())), "fooya".getBytes());
 
-      assertEquals(handler.apply(new HttpResponse(200, "ok", newInputStreamPayload(ParseClientFromJsonTest.class
-               .getResourceAsStream("/client.json")))), user);
+      assertEquals(handler.apply(HttpResponse.builder().statusCode(200).message("ok").payload(ParseClientFromJsonTest.class
+               .getResourceAsStream("/client.json")).build()), user);
    }
 }

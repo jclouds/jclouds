@@ -84,18 +84,18 @@ import com.google.common.util.concurrent.ListenableFuture;
  * Provides asynchronous access to Chef via their REST API.
  * <p/>
  * 
- * @see ChefClient
+ * @see ChefApi
  * @see <a href="TODO: insert URL of provider documentation" />
  * @author Adrian Cole
  */
 @RequestFilters(SignedHeaderAuth.class)
 @Headers(keys = "X-Chef-Version", values = "{" + Constants.PROPERTY_API_VERSION + "}")
 @Consumes(MediaType.APPLICATION_JSON)
-public interface ChefAsyncClient {
+public interface ChefAsyncApi {
    public static final String VERSION = "0.10.8";
 
    /**
-    * @see ChefClient#getUploadSandboxForChecksums(Set)
+    * @see ChefApi#getUploadSandboxForChecksums(Set)
     */
    @POST
    @Path("/sandboxes")
@@ -103,14 +103,14 @@ public interface ChefAsyncClient {
             @BinderParam(BindChecksumsToJsonPayload.class) Set<List<Byte>> md5s);
 
    /**
-    * @see ChefClient#uploadContent(URI, Payload)
+    * @see ChefApi#uploadContent(URI, Payload)
     */
    @PUT
    @Produces("application/x-binary")
    ListenableFuture<Void> uploadContent(@EndpointParam URI location, Payload content);
 
    /**
-    * @see ChefClient#commitSandbox(String, boolean)
+    * @see ChefApi#commitSandbox(String, boolean)
     */
    @PUT
    @Path("/sandboxes/{id}")
@@ -118,7 +118,7 @@ public interface ChefAsyncClient {
             @BinderParam(BindIsCompletedToJsonPayload.class) boolean isCompleted);
 
    /**
-    * @see ChefClient#listCookbooks()
+    * @see ChefApi#listCookbooks()
     */
    @GET
    @Path("/cookbooks")
@@ -127,7 +127,7 @@ public interface ChefAsyncClient {
    ListenableFuture<Set<String>> listCookbooks();
 
    /**
-    * @see ChefClient#updateCookbook(String, String, CookbookVersion)
+    * @see ChefApi#updateCookbook(String, String, CookbookVersion)
     */
    @PUT
    @Path("/cookbooks/{cookbookname}/{version}")
@@ -135,7 +135,7 @@ public interface ChefAsyncClient {
             @PathParam("version") String version, @BinderParam(BindToJsonPayload.class) CookbookVersion cookbook);
 
    /**
-    * @see ChefClient#deleteCookbook(String, String)
+    * @see ChefApi#deleteCookbook(String, String)
     */
    @DELETE
    @Path("/cookbooks/{cookbookname}/{version}")
@@ -144,7 +144,7 @@ public interface ChefAsyncClient {
             @PathParam("version") String version);
 
    /**
-    * @see ChefClient#getVersionsOfCookbook(String)
+    * @see ChefApi#getVersionsOfCookbook(String)
     */
    @GET
    @Path("/cookbooks/{cookbookname}")
@@ -153,7 +153,7 @@ public interface ChefAsyncClient {
    ListenableFuture<Set<String>> getVersionsOfCookbook(@PathParam("cookbookname") String cookbookName);
 
    /**
-    * @see ChefClient#getCookbook(String, String)
+    * @see ChefApi#getCookbook(String, String)
     */
    @GET
    @Path("/cookbooks/{cookbookname}/{version}")
@@ -162,7 +162,7 @@ public interface ChefAsyncClient {
             @PathParam("version") String version);
 
    /**
-    * @see ChefClient#createClient(String)
+    * @see ChefApi#createClient(String)
     */
    @POST
    @Path("/clients")
@@ -170,7 +170,7 @@ public interface ChefAsyncClient {
    ListenableFuture<Client> createClient(@PayloadParam("name") String clientname);
    
    /**
-    * @see ChefClient#createClient(String, CreateClientOptions)
+    * @see ChefApi#createClient(String, CreateApiOptions)
     */
    @POST
    @Path("/clients")
@@ -178,7 +178,7 @@ public interface ChefAsyncClient {
    ListenableFuture<Client> createClient(@PayloadParam("name") String clientname, CreateClientOptions options);
 
    /**
-    * @see ChefClient#generateKeyForClient(String)
+    * @see ChefApi#generateKeyForClient(String)
     */
    @PUT
    @Path("/clients/{clientname}")
@@ -186,7 +186,7 @@ public interface ChefAsyncClient {
             @PathParam("clientname") @BinderParam(BindGenerateKeyForClientToJsonPayload.class) String clientname);
 
    /**
-    * @see ChefClient#clientExists(String)
+    * @see ChefApi#clientExists(String)
     */
    @HEAD
    @Path("/clients/{clientname}")
@@ -194,7 +194,7 @@ public interface ChefAsyncClient {
    ListenableFuture<Boolean> clientExists(@PathParam("clientname") String clientname);
 
    /**
-    * @see ChefClient#getClient(String)
+    * @see ChefApi#getClient(String)
     */
    @GET
    @Path("/clients/{clientname}")
@@ -202,7 +202,7 @@ public interface ChefAsyncClient {
    ListenableFuture<Client> getClient(@PathParam("clientname") String clientname);
 
    /**
-    * @see ChefClient#deleteClient(String)
+    * @see ChefApi#deleteClient(String)
     */
    @DELETE
    @Path("/clients/{clientname}")
@@ -210,7 +210,7 @@ public interface ChefAsyncClient {
    ListenableFuture<Client> deleteClient(@PathParam("clientname") String clientname);
 
    /**
-    * @see ChefClient#listClients()
+    * @see ChefApi#listClients()
     */
    @GET
    @Path("/clients")
@@ -219,14 +219,14 @@ public interface ChefAsyncClient {
    ListenableFuture<Set<String>> listClients();
 
    /**
-    * @see ChefClient#createNode(Node)
+    * @see ChefApi#createNode(Node)
     */
    @POST
    @Path("/nodes")
    ListenableFuture<Void> createNode(@BinderParam(BindToJsonPayload.class) Node node);
 
    /**
-    * @see ChefClient#updateNode(Node)
+    * @see ChefApi#updateNode(Node)
     */
    @PUT
    @Path("/nodes/{nodename}")
@@ -234,7 +234,7 @@ public interface ChefAsyncClient {
             @PathParam("nodename") @ParamParser(NodeName.class) @BinderParam(BindToJsonPayload.class) Node node);
 
    /**
-    * @see ChefClient#nodeExists(String)
+    * @see ChefApi#nodeExists(String)
     */
    @HEAD
    @Path("/nodes/{nodename}")
@@ -242,7 +242,7 @@ public interface ChefAsyncClient {
    ListenableFuture<Boolean> nodeExists(@PathParam("nodename") String nodename);
 
    /**
-    * @see ChefClient#getNode(String)
+    * @see ChefApi#getNode(String)
     */
    @GET
    @Path("/nodes/{nodename}")
@@ -258,7 +258,7 @@ public interface ChefAsyncClient {
    ListenableFuture<Node> deleteNode(@PathParam("nodename") String nodename);
 
    /**
-    * @see ChefClient#listNodes()
+    * @see ChefApi#listNodes()
     */
    @GET
    @Path("/nodes")
@@ -267,14 +267,14 @@ public interface ChefAsyncClient {
    ListenableFuture<Set<String>> listNodes();
 
    /**
-    * @see ChefClient#createRole(Role)
+    * @see ChefApi#createRole(Role)
     */
    @POST
    @Path("/roles")
    ListenableFuture<Void> createRole(@BinderParam(BindToJsonPayload.class) Role role);
 
    /**
-    * @see ChefClient#updateRole(Role)
+    * @see ChefApi#updateRole(Role)
     */
    @PUT
    @Path("/roles/{rolename}")
@@ -282,7 +282,7 @@ public interface ChefAsyncClient {
             @PathParam("rolename") @ParamParser(RoleName.class) @BinderParam(BindToJsonPayload.class) Role role);
 
    /**
-    * @see ChefClient#roleExists(String)
+    * @see ChefApi#roleExists(String)
     */
    @HEAD
    @Path("/roles/{rolename}")
@@ -290,7 +290,7 @@ public interface ChefAsyncClient {
    ListenableFuture<Boolean> roleExists(@PathParam("rolename") String rolename);
 
    /**
-    * @see ChefClient#getRole(String)
+    * @see ChefApi#getRole(String)
     */
    @GET
    @Path("/roles/{rolename}")
@@ -298,7 +298,7 @@ public interface ChefAsyncClient {
    ListenableFuture<Role> getRole(@PathParam("rolename") String rolename);
 
    /**
-    * @see ChefClient#deleteRole(String)
+    * @see ChefApi#deleteRole(String)
     */
    @DELETE
    @Path("/roles/{rolename}")
@@ -306,7 +306,7 @@ public interface ChefAsyncClient {
    ListenableFuture<Role> deleteRole(@PathParam("rolename") String rolename);
 
    /**
-    * @see ChefClient#listRoles()
+    * @see ChefApi#listRoles()
     */
    @GET
    @Path("/roles")
@@ -315,7 +315,7 @@ public interface ChefAsyncClient {
    ListenableFuture<Set<String>> listRoles();
 
    /**
-    * @see ChefClient#listDatabags()
+    * @see ChefApi#listDatabags()
     */
    @GET
    @Path("/data")
@@ -324,14 +324,14 @@ public interface ChefAsyncClient {
    ListenableFuture<Set<String>> listDatabags();
 
    /**
-    * @see ChefClient#createDatabag(String)
+    * @see ChefApi#createDatabag(String)
     */
    @POST
    @Path("/data")
    ListenableFuture<Void> createDatabag(@BinderParam(BindNameToJsonPayload.class) String databagName);
 
    /**
-    * @see ChefClient#databagExists(String)
+    * @see ChefApi#databagExists(String)
     */
    @HEAD
    @Path("/data/{name}")
@@ -339,7 +339,7 @@ public interface ChefAsyncClient {
    ListenableFuture<Boolean> databagExists(@PathParam("name") String databagName);
 
    /**
-    * @see ChefClient#deleteDatabag(String)
+    * @see ChefApi#deleteDatabag(String)
     */
    @DELETE
    @Path("/data/{name}")
@@ -347,7 +347,7 @@ public interface ChefAsyncClient {
    ListenableFuture<Void> deleteDatabag(@PathParam("name") String databagName);
 
    /**
-    * @see ChefClient#listDatabagItems(String)
+    * @see ChefApi#listDatabagItems(String)
     */
    @GET
    @Path("/data/{name}")
@@ -356,7 +356,7 @@ public interface ChefAsyncClient {
    ListenableFuture<Set<String>> listDatabagItems(@PathParam("name") String databagName);
 
    /**
-    * @see ChefClient#createDatabagItem(String, DatabagItem)
+    * @see ChefApi#createDatabagItem(String, DatabagItem)
     */
    @POST
    @Path("/data/{databagName}")
@@ -364,7 +364,7 @@ public interface ChefAsyncClient {
             @BinderParam(BindToJsonPayload.class) DatabagItem databagItem);
 
    /**
-    * @see ChefClient#updateDatabagItem(String, DatabagItem)
+    * @see ChefApi#updateDatabagItem(String, DatabagItem)
     */
    @PUT
    @Path("/data/{databagName}/{databagItemId}")
@@ -373,7 +373,7 @@ public interface ChefAsyncClient {
             @PathParam("databagItemId") @ParamParser(DatabagItemId.class) @BinderParam(BindToJsonPayload.class) DatabagItem item);
 
    /**
-    * @see ChefClient#databagItemExists(String, String)
+    * @see ChefApi#databagItemExists(String, String)
     */
    @HEAD
    @Path("/data/{databagName}/{databagItemId}")
@@ -382,7 +382,7 @@ public interface ChefAsyncClient {
             @PathParam("databagItemId") String databagItemId);
 
    /**
-    * @see ChefClient#getDatabagItem(String, String)
+    * @see ChefApi#getDatabagItem(String, String)
     */
    @GET
    @Path("/data/{databagName}/{databagItemId}")
@@ -391,7 +391,7 @@ public interface ChefAsyncClient {
             @PathParam("databagItemId") String databagItemId);
 
    /**
-    * @see ChefClient#deleteDatabagItem(String, String)
+    * @see ChefApi#deleteDatabagItem(String, String)
     */
    @DELETE
    @Path("/data/{databagName}/{databagItemId}")
@@ -400,7 +400,7 @@ public interface ChefAsyncClient {
             @PathParam("databagItemId") String databagItemId);
 
    /**
-    * @see ChefClient#listSearchIndexes()
+    * @see ChefApi#listSearchIndexes()
     */
    @GET
    @Path("/search")
@@ -409,7 +409,7 @@ public interface ChefAsyncClient {
    ListenableFuture<Set<String>> listSearchIndexes();
 
    /**
-    * @see ChefClient#searchRoles()
+    * @see ChefApi#searchRoles()
     */
    @GET
    @Path("/search/role")
@@ -417,7 +417,7 @@ public interface ChefAsyncClient {
    ListenableFuture<? extends SearchResult<? extends Role>> searchRoles();
 
    /**
-    * @see ChefClient#searchClients()
+    * @see ChefApi#searchClients()
     */
    @GET
    @Path("/search/client")
@@ -425,7 +425,7 @@ public interface ChefAsyncClient {
    ListenableFuture<? extends SearchResult<? extends Client>> searchClients();
 
    /**
-    * @see ChefClient#searchNodes()
+    * @see ChefApi#searchNodes()
     */
    @GET
    @Path("/search/node")
@@ -433,7 +433,7 @@ public interface ChefAsyncClient {
    ListenableFuture<? extends SearchResult<? extends Node>> searchNodes();
 
    /**
-    * @see ChefClient#searchDatabag(String)
+    * @see ChefApi#searchDatabag(String)
     */
    @GET
    @Path("/search/{databagName}")
@@ -442,7 +442,7 @@ public interface ChefAsyncClient {
             @PathParam("databagName") String databagName);
    
    /**
-    * @see ChefClient#getResourceContents(Resource)
+    * @see ChefApi#getResourceContents(Resource)
     */
    @GET
    @ExceptionParser(ReturnNullOnNotFoundOr404.class)

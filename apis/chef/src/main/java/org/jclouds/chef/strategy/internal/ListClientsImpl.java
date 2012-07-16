@@ -29,8 +29,8 @@ import javax.inject.Named;
 import javax.inject.Singleton;
 
 import org.jclouds.Constants;
-import org.jclouds.chef.ChefAsyncClient;
-import org.jclouds.chef.ChefClient;
+import org.jclouds.chef.ChefAsyncApi;
+import org.jclouds.chef.ChefApi;
 import org.jclouds.chef.domain.Client;
 import org.jclouds.chef.reference.ChefConstants;
 import org.jclouds.chef.strategy.ListClients;
@@ -48,8 +48,8 @@ import com.google.inject.Inject;
 @Singleton
 public class ListClientsImpl implements ListClients {
 
-   protected final ChefClient chefClient;
-   protected final ChefAsyncClient chefAsyncClient;
+   protected final ChefApi chefApi;
+   protected final ChefAsyncApi chefAsyncApi;
    protected final ExecutorService userExecutor;
    @Resource
    @Named(ChefConstants.CHEF_LOGGER)
@@ -60,21 +60,21 @@ public class ListClientsImpl implements ListClients {
    protected Long maxTime;
 
    @Inject
-   ListClientsImpl(@Named(Constants.PROPERTY_USER_THREADS) ExecutorService userExecutor, ChefClient getAllClient,
-            ChefAsyncClient ablobstore) {
+   ListClientsImpl(@Named(Constants.PROPERTY_USER_THREADS) ExecutorService userExecutor, ChefApi getAllApi,
+            ChefAsyncApi ablobstore) {
       this.userExecutor = userExecutor;
-      this.chefAsyncClient = ablobstore;
-      this.chefClient = getAllClient;
+      this.chefAsyncApi = ablobstore;
+      this.chefApi = getAllApi;
    }
 
    @Override
    public Iterable<? extends Client> execute() {
-      return execute(chefClient.listClients());
+      return execute(chefApi.listClients());
    }
 
    @Override
    public Iterable<? extends Client> execute(Predicate<String> clientNameSelector) {
-      return execute(filter(chefClient.listClients(), clientNameSelector));
+      return execute(filter(chefApi.listClients(), clientNameSelector));
    }
 
    @Override
@@ -83,10 +83,10 @@ public class ListClientsImpl implements ListClients {
 
          @Override
          public Future<Client> apply(String from) {
-            return chefAsyncClient.getClient(from);
+            return chefAsyncApi.getClient(from);
          }
 
-      }, userExecutor, maxTime, logger, "getting clients");
+      }, userExecutor, maxTime, logger, "getting apis");
 
    }
 

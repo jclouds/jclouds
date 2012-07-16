@@ -50,7 +50,7 @@ public class ChefApiMetadata extends BaseRestApiMetadata {
    }
 
    public ChefApiMetadata() {
-      this(new Builder(ChefClient.class, ChefAsyncClient.class));
+      this(new Builder(ChefApi.class, ChefAsyncApi.class));
    }
 
    protected ChefApiMetadata(Builder builder) {
@@ -66,13 +66,13 @@ public class ChefApiMetadata extends BaseRestApiMetadata {
 
    public static class Builder extends BaseRestApiMetadata.Builder {
 
-      protected Builder(Class<?> client, Class<?> asyncClient) {
-         super(client, asyncClient);
+      protected Builder(Class<?> api, Class<?> asyncApi) {
+         super(api, asyncApi);
          id("chef")
          .name("OpsCode Chef Api")
          .identityName("User")
          .credentialName("Certificate")
-         .version(ChefAsyncClient.VERSION)
+         .version(ChefAsyncApi.VERSION)
          .documentation(URI.create("http://wiki.opscode.com/display/chef/Server+API"))
          .defaultEndpoint("http://localhost:4000")
          .defaultProperties(ChefApiMetadata.defaultProperties())

@@ -22,7 +22,7 @@ import static org.testng.Assert.assertEquals;
 
 import java.io.IOException;
 
-import org.jclouds.chef.ChefAsyncClient;
+import org.jclouds.chef.ChefAsyncApi;
 import org.jclouds.chef.config.ChefParserModule;
 import org.jclouds.domain.JsonBall;
 import org.jclouds.json.Json;
@@ -55,7 +55,7 @@ public class NestSlashKeysTest {
            @Override
            protected void configure()
            {
-               bind(String.class).annotatedWith(ApiVersion.class).toInstance(ChefAsyncClient.VERSION);
+               bind(String.class).annotatedWith(ApiVersion.class).toInstance(ChefAsyncApi.VERSION);
            }
       }, new ChefParserModule(), new GsonModule());
       converter = injector.getInstance(NestSlashKeys.class);

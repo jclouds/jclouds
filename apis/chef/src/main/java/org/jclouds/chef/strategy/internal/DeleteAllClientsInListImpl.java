@@ -30,8 +30,8 @@ import javax.inject.Named;
 import javax.inject.Singleton;
 
 import org.jclouds.Constants;
-import org.jclouds.chef.ChefAsyncClient;
-import org.jclouds.chef.ChefClient;
+import org.jclouds.chef.ChefApi;
+import org.jclouds.chef.ChefAsyncApi;
 import org.jclouds.chef.reference.ChefConstants;
 import org.jclouds.chef.strategy.DeleteAllClientsInList;
 import org.jclouds.logging.Logger;
@@ -46,8 +46,8 @@ import com.google.inject.Inject;
 @Singleton
 public class DeleteAllClientsInListImpl implements DeleteAllClientsInList {
 
-   protected final ChefClient chefClient;
-   protected final ChefAsyncClient chefAsyncClient;
+   protected final ChefApi chefApi;
+   protected final ChefAsyncApi chefAsyncApi;
    protected final ExecutorService userExecutor;
    @Resource
    @Named(ChefConstants.CHEF_LOGGER)
@@ -59,10 +59,10 @@ public class DeleteAllClientsInListImpl implements DeleteAllClientsInList {
 
    @Inject
    DeleteAllClientsInListImpl(@Named(Constants.PROPERTY_USER_THREADS) ExecutorService userExecutor,
-         ChefClient getAllClient, ChefAsyncClient ablobstore) {
+         ChefApi getAllApi, ChefAsyncApi ablobstore) {
       this.userExecutor = userExecutor;
-      this.chefAsyncClient = ablobstore;
-      this.chefClient = getAllClient;
+      this.chefAsyncApi = ablobstore;
+      this.chefApi = getAllApi;
    }
 
    @Override
@@ -70,10 +70,10 @@ public class DeleteAllClientsInListImpl implements DeleteAllClientsInList {
       Map<String, Exception> exceptions = newHashMap();
       Map<String, Future<?>> responses = newHashMap();
       for (String name : names) {
-         responses.put(name, chefAsyncClient.deleteClient(name));
+         responses.put(name, chefAsyncApi.deleteClient(name));
       }
       exceptions = awaitCompletion(responses, userExecutor, maxTime, logger, String.format(
-            "deleting clients: %s", names));
+            "deleting apis: %s", names));
       if (exceptions.size() > 0)
          throw new RuntimeException(String.format("errors deleting clients: %s: %s", names, exceptions));
    }
