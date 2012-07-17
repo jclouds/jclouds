@@ -26,8 +26,8 @@ import javax.inject.Singleton;
 import org.jclouds.chef.ChefApi;
 import org.jclouds.chef.ChefAsyncApi;
 import org.jclouds.chef.domain.Client;
-import org.jclouds.chef.functions.ClientForTag;
-import org.jclouds.chef.functions.RunListForTag;
+import org.jclouds.chef.functions.ClientForGroup;
+import org.jclouds.chef.functions.RunListForGroup;
 import org.jclouds.chef.statements.InstallChefGems;
 import org.jclouds.rest.ConfiguresRestClient;
 import org.jclouds.scriptbuilder.domain.Statement;
@@ -51,14 +51,14 @@ public class ChefRestClientModule extends BaseChefRestClientModule<ChefApi, Chef
 
    @Provides
    @Singleton
-   Map<String, List<String>> runListForTag(RunListForTag runListForTag) {
-      return new MapMaker().makeComputingMap(runListForTag);
+   Map<String, List<String>> runListForGroup(RunListForGroup runListForGroup) {
+      return new MapMaker().makeComputingMap(runListForGroup);
    }
 
    @Provides
    @Singleton
-   Map<String, Client> tagToClient(ClientForTag tagToClient) {
-      return new MapMaker().makeComputingMap(tagToClient);
+   Map<String, Client> tagToClient(ClientForGroup groupToClient) {
+      return new MapMaker().makeComputingMap(groupToClient);
    }
 
    @Override

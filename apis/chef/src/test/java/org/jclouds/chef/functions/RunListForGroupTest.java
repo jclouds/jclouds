@@ -45,8 +45,8 @@ import com.google.inject.Injector;
 /**
  * @author Adrian Cole
  */
-@Test(groups = { "unit" })
-public class RunListForTagTest {
+@Test(groups = "unit", testName = "RunListForGroupTest")
+public class RunListForGroupTest {
    Injector injector = Guice.createInjector(new AbstractModule() {
         @Override
         protected void configure()
@@ -62,7 +62,7 @@ public class RunListForTagTest {
       ChefApi chefApi = createMock(ChefApi.class);
       Client client = createMock(Client.class);
 
-      RunListForTag fn = new RunListForTag("jclouds", chefApi, json);
+      RunListForGroup fn = new RunListForGroup("jclouds", chefApi, json);
 
       expect(chefApi.getDatabagItem("jclouds", "foo")).andReturn(null);
 
@@ -80,7 +80,7 @@ public class RunListForTagTest {
       ChefApi chefApi = createMock(ChefApi.class);
       Api api = createMock(Api.class);
 
-      RunListForTag fn = new RunListForTag("jclouds", chefApi, json);
+      RunListForGroup fn = new RunListForGroup("jclouds", chefApi, json);
 
       expect(chefApi.getDatabagItem("jclouds", "foo")).andReturn(
                new DatabagItem("foo", "{\"run_list\":[\"recipe[apache2]\"]}"));
@@ -99,7 +99,7 @@ public class RunListForTagTest {
       ChefApi chefApi = createMock(ChefApi.class);
       Api api = createMock(Api.class);
 
-      RunListForTag fn = new RunListForTag("jclouds", chefApi, json);
+      RunListForGroup fn = new RunListForGroup("jclouds", chefApi, json);
 
       expect(chefApi.getDatabagItem("jclouds", "foo")).andReturn(
                new DatabagItem("foo", "{\"run_list\":[\"recipe[apache2]\",\"recipe[mysql]\"]}"));

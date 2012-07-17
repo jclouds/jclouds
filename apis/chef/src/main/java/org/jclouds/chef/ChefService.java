@@ -26,7 +26,7 @@ import org.jclouds.chef.domain.Client;
 import org.jclouds.chef.domain.CookbookVersion;
 import org.jclouds.chef.domain.Node;
 import org.jclouds.chef.internal.BaseChefService;
-import org.jclouds.io.Payload;
+import org.jclouds.scriptbuilder.domain.Statement;
 
 import com.google.common.base.Predicate;
 import com.google.common.io.InputSupplier;
@@ -61,39 +61,39 @@ public interface ChefService {
    /**
     * Creates all steps necessary to bootstrap and run the chef api.
     * 
-    * @param tag
+    * @param group
     *           corresponds to a configured
     *           {@link org.jclouds.chef.reference.ChefConstants#CHEF_BOOTSTRAP_DATABAG databag}
     *           where run_list and other information are stored
     * @return boot script
     * @see #updateRunListForTag
     */
-   Payload createClientAndBootstrapScriptForTag(String tag);
+   Statement createClientAndBootstrapScriptForGroup(String group);
 
    /**
-    * assigns a run list to all nodes bootstrapped with a certain tag
+    * assigns a run list to all nodes bootstrapped with a certain group
     * 
     * @param runList
     *           list of recipes or roles to assign. syntax is {@code recipe[name]} and {@code
     *           role[name]}
     * 
-    * @param tag
+    * @param group
     *           corresponds to a configured
     *           {@link org.jclouds.chef.reference.ChefConstants#CHEF_BOOTSTRAP_DATABAG databag}
     *           where run_list and other information are stored
     * @see #makeChefApiBootstrapScriptForTag
     */
-   void updateRunListForTag(Iterable<String> runList, String tag);
+   void updateRunListForGroup(Iterable<String> runList, String group);
 
    /**
-    * @param tag
+    * @param group
     *           corresponds to a configured
     *           {@link org.jclouds.chef.reference.ChefConstants#CHEF_BOOTSTRAP_DATABAG databag}
     *           where run_list and other information are stored
-    * @return run list for all nodes bootstrapped with a certain tag
+    * @return run list for all nodes bootstrapped with a certain group
     * @see #updateRunListForTag
     */
-   List<String> getRunListForTag(String tag);
+   List<String> getRunListForGroup(String group);
 
    void deleteAllNodesInList(Iterable<String> names);
 

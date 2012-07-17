@@ -32,8 +32,8 @@ import org.jclouds.blobstore.TransientAsyncBlobStore;
 import org.jclouds.chef.ChefApi;
 import org.jclouds.chef.ChefAsyncApi;
 import org.jclouds.chef.domain.Client;
-import org.jclouds.chef.functions.ClientForTag;
-import org.jclouds.chef.functions.RunListForTag;
+import org.jclouds.chef.functions.ClientForGroup;
+import org.jclouds.chef.functions.RunListForGroup;
 import org.jclouds.chef.statements.InstallChefGems;
 import org.jclouds.chef.test.TransientChefApi;
 import org.jclouds.chef.test.TransientChefAsyncApi;
@@ -89,13 +89,13 @@ public class TransientChefApiModule extends AbstractModule {
    
    @Provides
    @Singleton
-   Map<String, List<String>> runListForTag(RunListForTag runListForTag) {
+   Map<String, List<String>> runListForTag(RunListForGroup runListForTag) {
       return new MapMaker().makeComputingMap(runListForTag);
    }
 
    @Provides
    @Singleton
-   Map<String, Client> tagToClient(ClientForTag tagToClient) {
+   Map<String, Client> tagToClient(ClientForGroup tagToClient) {
       return new MapMaker().makeComputingMap(tagToClient);
    }
 

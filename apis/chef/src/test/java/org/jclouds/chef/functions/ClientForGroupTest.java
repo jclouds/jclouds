@@ -36,15 +36,15 @@ import com.google.common.collect.ImmutableSet;
 /**
  * @author Adrian Cole
  */
-@Test(groups = { "unit" })
-public class ClientForTagTest {
+@Test(groups = "unit", testName = "ClientForGroupTest")
+public class ClientForGroupTest {
 
    public void testWhenNoClientsInList() throws IOException {
       ChefApi chefApi = createMock(ChefApi.class);
       Client client = createMock(Client.class);
       PrivateKey privateKey = createMock(PrivateKey.class);
 
-      ClientForTag fn = new ClientForTag(chefApi);
+      ClientForGroup fn = new ClientForGroup(chefApi);
 
       expect(chefApi.listClients()).andReturn(ImmutableSet.<String> of());
       expect(chefApi.createClient("foo-validator-00")).andReturn(client);
@@ -67,7 +67,7 @@ public class ClientForTagTest {
       Client client = createMock(Client.class);
       PrivateKey privateKey = createMock(PrivateKey.class);
 
-      ClientForTag fn = new ClientForTag(chefApi);
+      ClientForGroup fn = new ClientForGroup(chefApi);
 
       expect(chefApi.listClients()).andReturn(
                ImmutableSet.<String> of("foo-validator-00", "foo-validator-01", "foo-validator-02"));
@@ -91,7 +91,7 @@ public class ClientForTagTest {
       Client client = createMock(Client.class);
       PrivateKey privateKey = createMock(PrivateKey.class);
 
-      ClientForTag fn = new ClientForTag(chefApi);
+      ClientForGroup fn = new ClientForGroup(chefApi);
 
       expect(chefApi.listClients()).andReturn(ImmutableSet.<String> of("foo-validator-00", "foo-validator-02"));
       expect(chefApi.createClient("foo-validator-01")).andReturn(client);

@@ -39,13 +39,13 @@ import com.google.inject.TypeLiteral;
 
 /**
  * 
- * Retrieves the run-list for a specific tag
+ * Retrieves the run-list for a specific group
  * 
  * 
  * @author Adrian Cole
  */
 @Singleton
-public class RunListForTag implements Function<String, List<String>> {
+public class RunListForGroup implements Function<String, List<String>> {
    public static final Type RUN_LIST_TYPE = new TypeLiteral<Map<String, List<String>>>() {
    }.getType();
    private final ChefApi api;
@@ -53,7 +53,7 @@ public class RunListForTag implements Function<String, List<String>> {
    private final String databag;
 
    @Inject
-   public RunListForTag(@Named(CHEF_BOOTSTRAP_DATABAG) String databag, ChefApi api, Json json) {
+   public RunListForGroup(@Named(CHEF_BOOTSTRAP_DATABAG) String databag, ChefApi api, Json json) {
       this.databag = checkNotNull(databag, "databag");
       this.api = checkNotNull(api, "api");
       this.json = checkNotNull(json, "json");

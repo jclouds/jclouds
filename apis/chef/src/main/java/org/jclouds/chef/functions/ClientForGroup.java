@@ -33,16 +33,16 @@ import com.google.common.base.Function;
 
 /**
  * 
- * Generates a client relevant for a particular tag
+ * Generates a client relevant for a particular group
  * 
  * @author Adrian Cole
  */
 @Singleton
-public class ClientForTag implements Function<String, Client> {
+public class ClientForGroup implements Function<String, Client> {
    private final ChefApi chefApi;
 
    @Inject
-   public ClientForTag(ChefApi chefApi) {
+   public ClientForGroup(ChefApi chefApi) {
       this.chefApi = checkNotNull(chefApi, "chefApi");
    }
 

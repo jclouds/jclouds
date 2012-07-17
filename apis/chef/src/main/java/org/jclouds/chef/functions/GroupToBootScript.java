@@ -20,7 +20,6 @@ package org.jclouds.chef.functions;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.base.Preconditions.checkState;
-import static org.jclouds.io.Payloads.newStringPayload;
 import static org.jclouds.scriptbuilder.domain.Statements.appendFile;
 import static org.jclouds.scriptbuilder.domain.Statements.exec;
 import static org.jclouds.scriptbuilder.domain.Statements.newStatementList;
@@ -37,10 +36,8 @@ import javax.inject.Singleton;
 
 import org.jclouds.chef.domain.Client;
 import org.jclouds.crypto.Pems;
-import org.jclouds.io.Payload;
 import org.jclouds.json.Json;
 import org.jclouds.location.Provider;
-import org.jclouds.scriptbuilder.domain.OsFamily;
 import org.jclouds.scriptbuilder.domain.Statement;
 
 import com.google.common.annotations.VisibleForTesting;
@@ -58,7 +55,7 @@ import com.google.inject.TypeLiteral;
  * @author Adrian Cole
  */
 @Singleton
-public class GroupToBootScript implements Function<String, Payload> {
+public class GroupToBootScript implements Function<String, Statement> {
    @VisibleForTesting
    static final Type RUN_LIST_TYPE = new TypeLiteral<Map<String, List<String>>>() {
    }.getType();
@@ -78,7 +75,7 @@ public class GroupToBootScript implements Function<String, Payload> {
       this.installChefGems = checkNotNull(installChefGems, "installChefGems");
    }
 
-   public Payload apply(String tag) {
+   public Statement apply(String tag) {
       checkNotNull(tag, "tag");
 
       Client client = tagToClient.get(tag);
@@ -108,11 +105,8 @@ public class GroupToBootScript implements Function<String, Payload> {
 
       Statement runChef = exec("chef-client -j " + chefBootFile);
 
-      Statement bootstrapAndRunChef = newStatementList(installChefGems, createChefConfigDir, createClientRb,
+      return newStatementList(installChefGems, createChefConfigDir, createClientRb,
                createValidationPem, createFirstBoot, runChef);
-
-      String runScript = bootstrapAndRunChef.render(OsFamily.UNIX);
-      return newStringPayload(runScript);
    }
 
 }

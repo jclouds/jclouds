@@ -18,10 +18,10 @@
  */
 package org.jclouds.chef.functions;
 
+import static org.easymock.EasyMock.createMock;
 import static org.easymock.EasyMock.expect;
-import static org.easymock.classextension.EasyMock.createMock;
-import static org.easymock.classextension.EasyMock.replay;
-import static org.easymock.classextension.EasyMock.verify;
+import static org.easymock.EasyMock.replay;
+import static org.easymock.EasyMock.verify;
 import static org.testng.Assert.assertEquals;
 
 import java.io.IOException;
@@ -37,6 +37,7 @@ import org.jclouds.crypto.PemsTest;
 import org.jclouds.json.Json;
 import org.jclouds.json.config.GsonModule;
 import org.jclouds.rest.annotations.ApiVersion;
+import org.jclouds.scriptbuilder.domain.OsFamily;
 import org.jclouds.scriptbuilder.domain.Statement;
 import org.testng.annotations.Test;
 
@@ -53,8 +54,8 @@ import com.google.inject.Injector;
 /**
  * @author Adrian Cole
  */
-@Test(groups = { "unit" })
-public class TagToBootScriptTest {
+@Test(groups = "unit", testName = "GroupToBootScriptTest")
+public class GroupToBootScriptTest {
 
     Injector injector = Guice.createInjector(new AbstractModule() {
         @Override
@@ -105,7 +106,7 @@ public class TagToBootScriptTest {
       replay(client);
       replay(privateKey);
       
-      assertEquals(fn.apply("foo").getRawContent(), CharStreams.toString(Resources.newReaderSupplier(Resources
+      assertEquals(fn.apply("foo").render(OsFamily.UNIX), CharStreams.toString(Resources.newReaderSupplier(Resources
                .getResource("one-recipe.sh"), Charsets.UTF_8)));
 
       verify(client);

@@ -39,7 +39,7 @@ import org.jclouds.chef.domain.CookbookVersion;
 import org.jclouds.chef.domain.DatabagItem;
 import org.jclouds.chef.domain.Node;
 import org.jclouds.chef.functions.GroupToBootScript;
-import org.jclouds.chef.functions.RunListForTag;
+import org.jclouds.chef.functions.RunListForGroup;
 import org.jclouds.chef.reference.ChefConstants;
 import org.jclouds.chef.strategy.CleanupStaleNodesAndClients;
 import org.jclouds.chef.strategy.CreateNodeAndPopulateAutomaticAttributes;
@@ -49,11 +49,11 @@ import org.jclouds.chef.strategy.ListClients;
 import org.jclouds.chef.strategy.ListCookbookVersions;
 import org.jclouds.chef.strategy.ListNodes;
 import org.jclouds.chef.strategy.UpdateAutomaticAttributesOnNode;
-import org.jclouds.io.Payload;
 import org.jclouds.io.Payloads;
 import org.jclouds.io.payloads.RSADecryptingPayload;
 import org.jclouds.io.payloads.RSAEncryptingPayload;
 import org.jclouds.logging.Logger;
+import org.jclouds.scriptbuilder.domain.Statement;
 
 import com.google.common.base.Predicate;
 import com.google.common.collect.ImmutableMap;
@@ -81,9 +81,9 @@ public class BaseChefService implements ChefService {
    private final ListClients listClients;
    private final UpdateAutomaticAttributesOnNode updateAutomaticAttributesOnNode;
    private final Provider<PrivateKey> privateKey;
-   private final GroupToBootScript tagToBootScript;
+   private final GroupToBootScript groupToBootScript;
    private final String databag;
-   private final RunListForTag runListForTag;
+   private final RunListForGroup runListForGroup;
    private final ListCookbookVersions listCookbookVersions;
 
    @Inject
@@ -93,7 +93,7 @@ public class BaseChefService implements ChefService {
             DeleteAllClientsInList deleteAllClientsInList, ListClients listClients,
             ListCookbookVersions listCookbookVersions, UpdateAutomaticAttributesOnNode updateAutomaticAttributesOnNode,
             Provider<PrivateKey> privateKey, @Named(CHEF_BOOTSTRAP_DATABAG) String databag,
-            GroupToBootScript tagToBootScript, RunListForTag runListForTag) {
+            GroupToBootScript groupToBootScript, RunListForGroup runListForGroup) {
       this.chefContext = checkNotNull(chefContext, "chefContext");
       this.cleanupStaleNodesAndClients = checkNotNull(cleanupStaleNodesAndClients, "cleanupStaleNodesAndClients");
       this.createNodeAndPopulateAutomaticAttributes = checkNotNull(createNodeAndPopulateAutomaticAttributes,
@@ -106,9 +106,9 @@ public class BaseChefService implements ChefService {
       this.updateAutomaticAttributesOnNode = checkNotNull(updateAutomaticAttributesOnNode,
                "updateAutomaticAttributesOnNode");
       this.privateKey = checkNotNull(privateKey, "privateKey");
-      this.tagToBootScript = checkNotNull(tagToBootScript, "tagToBootScript");
+      this.groupToBootScript = checkNotNull(groupToBootScript, "groupToBootScript");
       this.databag = checkNotNull(databag, "databag");
-      this.runListForTag = checkNotNull(runListForTag, "runListForTag");
+      this.runListForGroup = checkNotNull(runListForGroup, "runListForGroup");
    }
 
    @Override
@@ -188,12 +188,12 @@ public class BaseChefService implements ChefService {
    }
 
    @Override
-   public Payload createClientAndBootstrapScriptForTag(String tag) {
-      return tagToBootScript.apply(tag);
+   public Statement createClientAndBootstrapScriptForGroup(String group) {
+      return groupToBootScript.apply(group);
    }
 
    @Override
-   public void updateRunListForTag(Iterable<String> runList, String tag) {
+   public void updateRunListForGroup(Iterable<String> runList, String group) {
       try {
          chefContext.getApi().createDatabag(databag);
       } catch (IllegalStateException e) {
@@ -201,14 +201,14 @@ public class BaseChefService implements ChefService {
       }
       chefContext.getApi().updateDatabagItem(
                databag,
-               new DatabagItem(tag, chefContext.utils().json().toJson(
+               new DatabagItem(group, chefContext.utils().json().toJson(
                         ImmutableMap.<String, List<String>> of("run_list", Lists.newArrayList(runList)),
-                        RunListForTag.RUN_LIST_TYPE)));
+                        RunListForGroup.RUN_LIST_TYPE)));
    }
 
    @Override
-   public List<String> getRunListForTag(String tag) {
-      return runListForTag.apply(tag);
+   public List<String> getRunListForGroup(String group) {
+      return runListForGroup.apply(group);
    }
 
    @Override
