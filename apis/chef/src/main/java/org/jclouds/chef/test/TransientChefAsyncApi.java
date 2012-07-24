@@ -36,7 +36,7 @@ import javax.inject.Named;
 import javax.inject.Singleton;
 
 import org.jclouds.Constants;
-import org.jclouds.blobstore.TransientAsyncBlobStore;
+import org.jclouds.blobstore.LocalAsyncBlobStore;
 import org.jclouds.blobstore.domain.Blob;
 import org.jclouds.blobstore.domain.PageSet;
 import org.jclouds.blobstore.domain.StorageMetadata;
@@ -93,13 +93,13 @@ public class TransientChefAsyncApi implements ChefAsyncApi {
       }
    }
 
-   private final TransientAsyncBlobStore databags;
+   private final LocalAsyncBlobStore databags;
    private final ExecutorService executor;
    private final BlobToDatabagItem blobToDatabagItem;
    private final StorageMetadataToName storageMetadataToName;
 
    @Inject
-   TransientChefAsyncApi(@Named("databags") TransientAsyncBlobStore databags,
+   TransientChefAsyncApi(@Named("databags") LocalAsyncBlobStore databags,
          StorageMetadataToName storageMetadataToName, BlobToDatabagItem blobToDatabagItem,
          @Named(Constants.PROPERTY_USER_THREADS) ExecutorService executor) {
       this.databags = checkNotNull(databags, "databags");

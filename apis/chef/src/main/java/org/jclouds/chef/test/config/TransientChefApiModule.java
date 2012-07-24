@@ -27,8 +27,8 @@ import java.util.Map;
 import javax.inject.Singleton;
 
 import org.jclouds.ContextBuilder;
+import org.jclouds.blobstore.LocalAsyncBlobStore;
 import org.jclouds.blobstore.TransientApiMetadata;
-import org.jclouds.blobstore.TransientAsyncBlobStore;
 import org.jclouds.chef.ChefApi;
 import org.jclouds.chef.ChefAsyncApi;
 import org.jclouds.chef.domain.Client;
@@ -71,11 +71,11 @@ public class TransientChefApiModule extends AbstractModule {
       BinderUtils.bindClient(binder(), TransientChefApi.class, ChefAsyncApi.class, ImmutableMap.<Class<?>, Class<?>>of());
       bind(ChefApi.class).to(TransientChefApi.class);
 
-      bind(TransientAsyncBlobStore.class).annotatedWith(Names.named("databags")).toInstance(
+      bind(LocalAsyncBlobStore.class).annotatedWith(Names.named("databags")).toInstance(
                ContextBuilder.newBuilder(new TransientApiMetadata()).modules(
                         ImmutableSet.<Module> of(new ExecutorServiceModule(MoreExecutors.sameThreadExecutor(),
                                  MoreExecutors.sameThreadExecutor()))).buildInjector().getInstance(
-                        TransientAsyncBlobStore.class));
+                                     LocalAsyncBlobStore.class));
       
       bind(Statement.class).annotatedWith(Names.named("installChefGems")).to(InstallChefGems.class);
    }
