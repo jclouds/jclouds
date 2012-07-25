@@ -43,6 +43,8 @@ public class Node {
    private Map<String, JsonBall> automatic = Maps.newLinkedHashMap();
    @SerializedName("run_list")
    private List<String> runList = Lists.newArrayList();
+   @SerializedName("chef_environment")
+   private String chefEnvironment;
 
    // internal
    @SerializedName("json_class")
@@ -98,6 +100,10 @@ public class Node {
       return runList;
    }
 
+   public String getChefEnvironment() {
+      return chefEnvironment;
+   }
+
    @SerializedName("chef_type")
    private String _chefType = "node";
 
@@ -113,6 +119,7 @@ public class Node {
       result = prime * result + ((normal == null) ? 0 : normal.hashCode());
       result = prime * result + ((override == null) ? 0 : override.hashCode());
       result = prime * result + ((runList == null) ? 0 : runList.hashCode());
+      result = prime * result + ((chefEnvironment == null) ? 0 : chefEnvironment.hashCode());
       return result;
    }
 
@@ -164,6 +171,11 @@ public class Node {
          if (other.runList != null)
             return false;
       } else if (!runList.equals(other.runList))
+         return false;
+      if (chefEnvironment == null) {
+         if (other.chefEnvironment != null)
+            return false;
+      } else if (!chefEnvironment.equals(other.chefEnvironment))
          return false;
       return true;
    }
