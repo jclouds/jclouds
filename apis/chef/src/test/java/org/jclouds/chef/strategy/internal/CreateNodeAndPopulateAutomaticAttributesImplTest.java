@@ -48,12 +48,13 @@ public class CreateNodeAndPopulateAutomaticAttributesImplTest {
 
       Map<String, JsonBall> automatic = ImmutableMap.<String, JsonBall> of();
 
-      Node node = new Node("name", ImmutableSet.<String> of());
+      Node node = new Node("name", ImmutableSet.<String> of(), "_default");
 
       Supplier<Map<String, JsonBall>> automaticSupplier = Suppliers.<Map<String, JsonBall>> ofInstance(automatic);
 
       Node nodeWithAutomatic = new Node("name", ImmutableMap.<String, JsonBall> of(), ImmutableMap
-            .<String, JsonBall> of(), ImmutableMap.<String, JsonBall> of(), automatic, ImmutableSet.<String> of());
+            .<String, JsonBall> of(), ImmutableMap.<String, JsonBall> of(), automatic, ImmutableSet.<String> of(),
+            "_default");
 
       node.getAutomatic().putAll(automaticSupplier.get());
       chef.createNode(nodeWithAutomatic);

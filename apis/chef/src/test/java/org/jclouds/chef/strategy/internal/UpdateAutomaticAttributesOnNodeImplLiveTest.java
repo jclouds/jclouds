@@ -53,7 +53,7 @@ public class UpdateAutomaticAttributesOnNodeImplLiveTest extends BaseChefContext
    public void testExecute() {
       Set<String> runList = ImmutableSet.of("role[" + prefix + "]");
       try {
-         context.getApi().createNode(new Node(prefix, runList));
+         context.getApi().createNode(new Node(prefix, runList, "_default"));
          context.utils().injector().getInstance(UpdateAutomaticAttributesOnNodeImpl.class).execute(prefix);
          Node node = context.getApi().getNode(prefix);
          assertEquals(node.getName(), prefix);

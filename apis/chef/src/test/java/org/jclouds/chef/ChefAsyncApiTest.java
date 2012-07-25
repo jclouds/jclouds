@@ -341,13 +341,13 @@ public class ChefAsyncApiTest extends BaseAsyncApiTest<ChefAsyncApi> {
    public void testCreateNode() throws SecurityException, NoSuchMethodException, IOException {
       Method method = ChefAsyncApi.class.getMethod("createNode", Node.class);
       GeneratedHttpRequest httpRequest = processor.createRequest(method, new Node("testnode",
-            ImmutableSet.of("recipe[java]")));
+            ImmutableSet.of("recipe[java]"), "_default"));
 
       assertRequestLineEquals(httpRequest, "POST http://localhost:4000/nodes HTTP/1.1");
       assertNonPayloadHeadersEqual(httpRequest, "Accept: application/json\nX-Chef-Version: " + ChefAsyncApi.VERSION + "-test\n");
       assertPayloadEquals(
             httpRequest,
-            "{\"name\":\"testnode\",\"normal\":{},\"override\":{},\"default\":{},\"automatic\":{},\"run_list\":[\"recipe[java]\"],\"json_class\":\"Chef::Node\",\"chef_type\":\"node\"}",
+            "{\"name\":\"testnode\",\"normal\":{},\"override\":{},\"default\":{},\"automatic\":{},\"run_list\":[\"recipe[java]\"],\"chef_environment\":\"_default\",\"json_class\":\"Chef::Node\",\"chef_type\":\"node\"}",
             "application/json", false);
 
       assertResponseParserClassEquals(method, httpRequest, ReleasePayloadAndReturn.class);
@@ -361,13 +361,13 @@ public class ChefAsyncApiTest extends BaseAsyncApiTest<ChefAsyncApi> {
    public void testUpdateNode() throws SecurityException, NoSuchMethodException, IOException {
       Method method = ChefAsyncApi.class.getMethod("updateNode", Node.class);
       GeneratedHttpRequest httpRequest = processor.createRequest(method, new Node("testnode",
-            ImmutableSet.of("recipe[java]")));
+            ImmutableSet.of("recipe[java]"), "_default"));
 
       assertRequestLineEquals(httpRequest, "PUT http://localhost:4000/nodes/testnode HTTP/1.1");
       assertNonPayloadHeadersEqual(httpRequest, "Accept: application/json\nX-Chef-Version: " + ChefAsyncApi.VERSION + "-test\n");
       assertPayloadEquals(
             httpRequest,
-            "{\"name\":\"testnode\",\"normal\":{},\"override\":{},\"default\":{},\"automatic\":{},\"run_list\":[\"recipe[java]\"],\"json_class\":\"Chef::Node\",\"chef_type\":\"node\"}",
+            "{\"name\":\"testnode\",\"normal\":{},\"override\":{},\"default\":{},\"automatic\":{},\"run_list\":[\"recipe[java]\"],\"chef_environment\":\"_default\",\"json_class\":\"Chef::Node\",\"chef_type\":\"node\"}",
             "application/json", false);
 
       assertResponseParserClassEquals(method, httpRequest, ParseJson.class);

@@ -69,7 +69,7 @@ public class ParseNodeFromJsonTest {
 
       Node node = new Node("adrian-jcloudstest", ImmutableMap.<String, JsonBall> of("tomcat6", new JsonBall(
             "{\"ssl_port\":8433}")), ImmutableMap.<String, JsonBall> of(), ImmutableMap.<String, JsonBall> of(),
-            ImmutableMap.<String, JsonBall> of(), Collections.singleton("recipe[java]"));
+            ImmutableMap.<String, JsonBall> of(), Collections.singleton("recipe[java]"), "prod");
 
       assertEquals(handler.apply(HttpResponse.builder()
                .statusCode(200)

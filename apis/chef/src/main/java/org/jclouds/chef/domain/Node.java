@@ -21,6 +21,8 @@ package org.jclouds.chef.domain;
 import java.util.List;
 import java.util.Map;
 
+import javax.annotation.Nullable;
+
 import org.jclouds.domain.JsonBall;
 
 import com.google.common.collect.Iterables;
@@ -43,7 +45,12 @@ public class Node {
    private Map<String, JsonBall> automatic = Maps.newLinkedHashMap();
    @SerializedName("run_list")
    private List<String> runList = Lists.newArrayList();
+
+   /**
+    * @since chef 0.10
+    */
    @SerializedName("chef_environment")
+   @Nullable
    private String chefEnvironment;
 
    // internal
@@ -51,8 +58,18 @@ public class Node {
    private String _jsonClass = "Chef::Node";
 
    public Node(String name, Map<String, JsonBall> normal, Map<String, JsonBall> override,
-         Map<String, JsonBall> defaultA, Map<String, JsonBall> automatic, Iterable<String> runList) {
+	     Map<String, JsonBall> defaultA, Map<String, JsonBall> automatic, Iterable<String> runList) {
+	   this(name, normal, override, defaultA, automatic, runList, null);
+   }
+
+   /**
+    * @since chef 0.10
+    */
+   public Node(String name, Map<String, JsonBall> normal, Map<String, JsonBall> override,
+         Map<String, JsonBall> defaultA, Map<String, JsonBall> automatic, Iterable<String> runList,
+         String chefEnvironment) {
       this.name = name;
+      this.chefEnvironment = chefEnvironment;
       this.normal.putAll(normal);
       this.override.putAll(override);
       this.defaultA.putAll(defaultA);
@@ -67,7 +84,15 @@ public class Node {
    }
 
    public Node(String name, Iterable<String> runList) {
+	   this(name, runList, "_default");
+   }
+
+   /**
+    * @since chef 0.10
+    */
+   public Node(String name, Iterable<String> runList, String chefEnvironment) {
       this.name = name;
+      this.chefEnvironment = chefEnvironment;
       Iterables.addAll(this.runList, runList);
    }
 
@@ -100,6 +125,9 @@ public class Node {
       return runList;
    }
 
+   /**
+    * @since chef 0.10
+    */
    public String getChefEnvironment() {
       return chefEnvironment;
    }

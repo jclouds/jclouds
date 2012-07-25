@@ -71,6 +71,6 @@ public class CreateNodeAndPopulateAutomaticAttributesImpl implements CreateNodeA
 
    @Override
    public Node execute(String nodeName, Iterable<String> runList) {
-      return execute(new Node(nodeName, runList));
+      return execute(new Node(nodeName, runList, "_default"));
    }
 }

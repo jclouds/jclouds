@@ -221,7 +221,7 @@ public abstract class BaseChefApiLiveTest<C extends Context> extends BaseChefCon
    @Test(dependsOnMethods = "testCreateRole")
    public void testCreateNode() throws Exception {
       chefApi.deleteNode(PREFIX);
-      chefApi.createNode(new Node(PREFIX, Collections.singleton("role[" + PREFIX + "]")));
+      chefApi.createNode(new Node(PREFIX, Collections.singleton("role[" + PREFIX + "]"), "_default"));
       node = chefApi.getNode(PREFIX);
       // TODO check recipes
       assertNotNull(node);
