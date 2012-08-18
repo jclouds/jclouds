@@ -21,9 +21,8 @@ package org.jclouds.chef.domain;
 import java.util.List;
 import java.util.Map;
 
-import javax.annotation.Nullable;
-
 import org.jclouds.domain.JsonBall;
+import org.jclouds.javax.annotation.Nullable;
 
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;

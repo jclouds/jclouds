@@ -21,7 +21,7 @@ package org.jclouds.chef.domain;
 import java.security.PrivateKey;
 import java.security.cert.X509Certificate;
 
-import javax.annotation.Nullable;
+import org.jclouds.javax.annotation.Nullable;
 
 import com.google.gson.annotations.SerializedName;
 
