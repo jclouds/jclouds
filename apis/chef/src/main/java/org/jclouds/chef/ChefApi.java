@@ -555,6 +555,19 @@ public interface ChefApi {
     */
    SearchResult<? extends Node> searchNodes();
 
+
+   /**
+    * search all nodes that match the query parameter.
+    * <p/>
+    * Note that without any request parameters this will return all of the data
+    * within the index.
+    * 
+    * @return The response contains the total number of rows that matched your
+    *         request, the position this result set returns (useful for paging)
+    *         and the rows themselves.
+    */
+   SearchResult<? extends Node> searchNodes(String qeury);
+
    /**
     * search all items in a databag.
     * <p/>

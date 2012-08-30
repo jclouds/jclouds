@@ -298,6 +298,11 @@ public class TransientChefAsyncApi implements ChefAsyncApi {
    }
 
    @Override
+   public ListenableFuture<? extends SearchResult<? extends Node>> searchNodes(String query) {
+      throw new UnsupportedOperationException();
+   }
+
+   @Override
    public ListenableFuture<? extends SearchResult<? extends Role>> searchRoles() {
       throw new UnsupportedOperationException();
    }
