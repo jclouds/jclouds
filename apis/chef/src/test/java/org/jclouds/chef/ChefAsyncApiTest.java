@@ -748,6 +748,22 @@ public class ChefAsyncApiTest extends BaseAsyncApiTest<ChefAsyncApi> {
 
    }
 
+   public void testSearchNodesQuery() throws SecurityException, NoSuchMethodException, IOException {
+      Method method = ChefAsyncApi.class.getMethod("searchNodes", String.class);
+      GeneratedHttpRequest httpRequest = processor.createRequest(method, "foo:foo");
+
+      assertRequestLineEquals(httpRequest, "GET http://localhost:4000/search/node?q=foo%3Afoo HTTP/1.1");
+      assertNonPayloadHeadersEqual(httpRequest, "Accept: application/json\nX-Chef-Version: " + ChefAsyncApi.VERSION + "-test\n");
+      assertPayloadEquals(httpRequest, null, null, false);
+
+      assertResponseParserClassEquals(method, httpRequest, ParseSearchNodesFromJson.class);
+      assertSaxResponseParserClassEquals(method, null);
+      assertExceptionParserClassEquals(method, MapHttp4xxCodesToExceptions.class);
+
+      checkFilters(httpRequest);
+
+   }
+
    public void testSearchDatabag() throws SecurityException, NoSuchMethodException, IOException {
       Method method = ChefAsyncApi.class.getMethod("searchDatabag", String.class);
       GeneratedHttpRequest httpRequest = processor.createRequest(method, "foo");
