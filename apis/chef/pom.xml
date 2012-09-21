@@ -56,31 +56,31 @@
         <dependency>
             <groupId>org.jclouds</groupId>
             <artifactId>jclouds-core</artifactId>
-            <version>${jclouds.version}</version>
+            <version>${project.version}</version>
         </dependency>
         <dependency>
             <groupId>org.jclouds</groupId>
             <artifactId>jclouds-core</artifactId>
-            <version>${jclouds.version}</version>
+            <version>${project.version}</version>
             <type>test-jar</type>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.jclouds</groupId>
             <artifactId>jclouds-scriptbuilder</artifactId>
-            <version>${jclouds.version}</version>
+            <version>${project.version}</version>
         </dependency>
         <!--  for transient chef provider -->
         <dependency>
             <groupId>org.jclouds</groupId>
             <artifactId>jclouds-blobstore</artifactId>
-            <version>${jclouds.version}</version>
+            <version>${project.version}</version>
             <optional>true</optional>
         </dependency>
         <dependency>
             <groupId>org.jclouds.driver</groupId>
             <artifactId>jclouds-slf4j</artifactId>
-            <version>${jclouds.version}</version>
+            <version>${project.version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>
