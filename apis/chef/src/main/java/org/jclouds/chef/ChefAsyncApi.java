@@ -29,7 +29,6 @@ import javax.ws.rs.GET;
 import javax.ws.rs.HEAD;
 import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
-import javax.ws.rs.QueryParam;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
@@ -63,6 +62,7 @@ import org.jclouds.chef.functions.ParseSearchNodesFromJson;
 import org.jclouds.chef.functions.ParseSearchRolesFromJson;
 import org.jclouds.chef.functions.UriForResource;
 import org.jclouds.chef.options.CreateClientOptions;
+import org.jclouds.chef.options.SearchOptions;
 import org.jclouds.io.Payload;
 import org.jclouds.rest.annotations.BinderParam;
 import org.jclouds.rest.annotations.EndpointParam;
@@ -416,6 +416,14 @@ public interface ChefAsyncApi {
    @Path("/search/role")
    @ResponseParser(ParseSearchRolesFromJson.class)
    ListenableFuture<? extends SearchResult<? extends Role>> searchRoles();
+   
+   /**
+    * @see ChefApi#searchRoles(SearchOptions)
+    */
+   @GET
+   @Path("/search/role")
+   @ResponseParser(ParseSearchRolesFromJson.class)
+   ListenableFuture<? extends SearchResult<? extends Role>> searchRoles(SearchOptions options);
 
    /**
     * @see ChefApi#searchClients()
@@ -424,6 +432,14 @@ public interface ChefAsyncApi {
    @Path("/search/client")
    @ResponseParser(ParseSearchClientsFromJson.class)
    ListenableFuture<? extends SearchResult<? extends Client>> searchClients();
+   
+   /**
+    * @see ChefApi#searchClients(SearchOptions)
+    */
+   @GET
+   @Path("/search/client")
+   @ResponseParser(ParseSearchClientsFromJson.class)
+   ListenableFuture<? extends SearchResult<? extends Client>> searchClients(SearchOptions options);
 
    /**
     * @see ChefApi#searchNodes()
@@ -432,14 +448,14 @@ public interface ChefAsyncApi {
    @Path("/search/node")
    @ResponseParser(ParseSearchNodesFromJson.class)
    ListenableFuture<? extends SearchResult<? extends Node>> searchNodes();
-
+   
    /**
-    * @see ChefApi#searchNodes(String)
+    * @see ChefApi#searchNodes(SearchOptions)
     */
    @GET
    @Path("/search/node")
    @ResponseParser(ParseSearchNodesFromJson.class)
-   ListenableFuture<? extends SearchResult<? extends Node>> searchNodes(@QueryParam("q") String query);
+   ListenableFuture<? extends SearchResult<? extends Node>> searchNodes(SearchOptions options);
 
    /**
     * @see ChefApi#searchDatabag(String)
@@ -449,6 +465,15 @@ public interface ChefAsyncApi {
    @ResponseParser(ParseSearchDatabagFromJson.class)
    ListenableFuture<? extends SearchResult<? extends DatabagItem>> searchDatabag(
             @PathParam("databagName") String databagName);
+   
+   /**
+    * @see ChefApi#searchDatabag(String, SearchOptions)
+    */
+   @GET
+   @Path("/search/{databagName}")
+   @ResponseParser(ParseSearchDatabagFromJson.class)
+   ListenableFuture<? extends SearchResult<? extends DatabagItem>> searchDatabag(
+            @PathParam("databagName") String databagName, SearchOptions options);
    
    /**
     * @see ChefApi#getResourceContents(Resource)

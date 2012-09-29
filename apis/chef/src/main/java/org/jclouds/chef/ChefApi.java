@@ -34,6 +34,7 @@ import org.jclouds.chef.domain.Sandbox;
 import org.jclouds.chef.domain.SearchResult;
 import org.jclouds.chef.domain.UploadSandbox;
 import org.jclouds.chef.options.CreateClientOptions;
+import org.jclouds.chef.options.SearchOptions;
 import org.jclouds.concurrent.Timeout;
 import org.jclouds.http.HttpResponseException;
 import org.jclouds.io.Payload;
@@ -530,9 +531,18 @@ public interface ChefApi {
     *         and the rows themselves.
     */
    SearchResult<? extends Role> searchRoles();
+   
+   /**
+    * search all roles that match the given options.
+    * 
+    * @return The response contains the total number of rows that matched your
+    *         request, the position this result set returns (useful for paging)
+    *         and the rows themselves.
+    */
+   SearchResult<? extends Role> searchRoles(SearchOptions options);
 
    /**
-    * search all apis.
+    * search all clients.
     * <p/>
     * Note that without any request parameters this will return all of the data
     * within the index.
@@ -542,6 +552,15 @@ public interface ChefApi {
     *         and the rows themselves.
     */
    SearchResult<? extends Client> searchClients();
+   
+   /**
+    * search all clients that match the given options.
+    * 
+    * @return The response contains the total number of rows that matched your
+    *         request, the position this result set returns (useful for paging)
+    *         and the rows themselves.
+    */
+   SearchResult<? extends Client> searchClients(SearchOptions options);
 
    /**
     * search all nodes.
@@ -554,19 +573,15 @@ public interface ChefApi {
     *         and the rows themselves.
     */
    SearchResult<? extends Node> searchNodes();
-
-
+   
    /**
-    * search all nodes that match the query parameter.
-    * <p/>
-    * Note that without any request parameters this will return all of the data
-    * within the index.
+    * search all nodes that match the given options.
     * 
     * @return The response contains the total number of rows that matched your
     *         request, the position this result set returns (useful for paging)
     *         and the rows themselves.
     */
-   SearchResult<? extends Node> searchNodes(String qeury);
+   SearchResult<? extends Node> searchNodes(SearchOptions options);
 
    /**
     * search all items in a databag.
@@ -579,6 +594,15 @@ public interface ChefApi {
     *         and the rows themselves.
     */
    SearchResult<? extends DatabagItem> searchDatabag(String databagName);
+   
+   /**
+    * search all items in a databag that match the given options.
+    * 
+    * @return The response contains the total number of rows that matched your
+    *         request, the position this result set returns (useful for paging)
+    *         and the rows themselves.
+    */
+   SearchResult<? extends DatabagItem> searchDatabag(String databagName, SearchOptions options);
 
    /**
     * Get the contents of the given resource.

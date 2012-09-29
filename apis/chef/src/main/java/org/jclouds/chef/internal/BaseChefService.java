@@ -199,11 +199,16 @@ public class BaseChefService implements ChefService {
       } catch (IllegalStateException e) {
 
       }
-      chefContext.getApi().updateDatabagItem(
-               databag,
-               new DatabagItem(group, chefContext.utils().json().toJson(
-                        ImmutableMap.<String, List<String>> of("run_list", Lists.newArrayList(runList)),
-                        RunListForGroup.RUN_LIST_TYPE)));
+      
+      DatabagItem runlist = new DatabagItem(group, chefContext.utils().json().toJson(
+    		  ImmutableMap.<String, List<String>> of("run_list", Lists.newArrayList(runList)),
+    		  RunListForGroup.RUN_LIST_TYPE));
+      
+      if (chefContext.getApi().getDatabagItem(databag, group) == null) {
+    	  chefContext.getApi().createDatabagItem(databag, runlist);
+      } else {
+    	  chefContext.getApi().updateDatabagItem(databag, runlist);
+      }
    }
 
    @Override

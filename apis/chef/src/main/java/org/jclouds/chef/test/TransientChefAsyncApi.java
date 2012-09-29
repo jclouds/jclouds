@@ -51,6 +51,7 @@ import org.jclouds.chef.domain.Sandbox;
 import org.jclouds.chef.domain.SearchResult;
 import org.jclouds.chef.domain.UploadSandbox;
 import org.jclouds.chef.options.CreateClientOptions;
+import org.jclouds.chef.options.SearchOptions;
 import org.jclouds.io.Payload;
 import org.jclouds.util.Strings2;
 
@@ -286,11 +287,23 @@ public class TransientChefAsyncApi implements ChefAsyncApi {
    public ListenableFuture<? extends SearchResult<? extends Client>> searchClients() {
       throw new UnsupportedOperationException();
    }
+   
+   @Override
+	public ListenableFuture<? extends SearchResult<? extends Client>> searchClients(
+			SearchOptions options) {
+	   throw new UnsupportedOperationException();
+	}
 
    @Override
    public ListenableFuture<? extends SearchResult<? extends DatabagItem>> searchDatabag(String databagName) {
       throw new UnsupportedOperationException();
    }
+   
+   @Override
+	public ListenableFuture<? extends SearchResult<? extends DatabagItem>> searchDatabag(
+			String databagName, SearchOptions options) {
+	   throw new UnsupportedOperationException();
+	}
 
    @Override
    public ListenableFuture<? extends SearchResult<? extends Node>> searchNodes() {
@@ -298,14 +311,21 @@ public class TransientChefAsyncApi implements ChefAsyncApi {
    }
 
    @Override
-   public ListenableFuture<? extends SearchResult<? extends Node>> searchNodes(String query) {
-      throw new UnsupportedOperationException();
-   }
+	public ListenableFuture<? extends SearchResult<? extends Node>> searchNodes(
+			SearchOptions options) {
+	   throw new UnsupportedOperationException();
+	}
 
    @Override
    public ListenableFuture<? extends SearchResult<? extends Role>> searchRoles() {
       throw new UnsupportedOperationException();
    }
+   
+   @Override
+	public ListenableFuture<? extends SearchResult<? extends Role>> searchRoles(
+			SearchOptions options) {
+	   throw new UnsupportedOperationException();
+	}
 
    @Override
    public ListenableFuture<CookbookVersion> updateCookbook(String cookbookName, String version, CookbookVersion cookbook) {
