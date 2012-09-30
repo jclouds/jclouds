@@ -42,6 +42,7 @@ import org.jclouds.chef.domain.Role;
 import org.jclouds.chef.domain.SearchResult;
 import org.jclouds.chef.domain.UploadSandbox;
 import org.jclouds.chef.options.CreateClientOptions;
+import org.jclouds.chef.options.SearchOptions;
 import org.jclouds.crypto.CryptoStreams;
 import org.jclouds.crypto.Pems;
 import org.jclouds.io.InputSuppliers;
@@ -339,11 +340,29 @@ public abstract class BaseChefApiLiveTest<C extends Context> extends BaseChefCon
       SearchResult<? extends Node> results = chefApi.searchNodes();
       assertNotNull(results);
    }
+   
+   @Test
+   public void testSearchNodesWithOptions() throws Exception {
+	  SearchOptions options = SearchOptions.Builder.query(PREFIX);
+      SearchResult<? extends Node> results = chefApi.searchNodes(options);
+      assertNotNull(results);
+      assertEquals(results.size(), 1);
+      assertEquals(results.iterator().next().getName(), PREFIX);
+   }
 
    @Test
    public void testSearchClients() throws Exception {
       SearchResult<? extends Client> results = chefApi.searchClients();
       assertNotNull(results);
+   }
+   
+   @Test
+   public void testSearchClientsWithOptions() throws Exception {
+	  SearchOptions options = SearchOptions.Builder.query(PREFIX);
+      SearchResult<? extends Client> results = chefApi.searchClients(options);
+      assertNotNull(results);
+      assertEquals(results.size(), 1);
+      assertEquals(results.iterator().next().getName(), PREFIX);
    }
 
    @Test
@@ -351,11 +370,29 @@ public abstract class BaseChefApiLiveTest<C extends Context> extends BaseChefCon
       SearchResult<? extends Role> results = chefApi.searchRoles();
       assertNotNull(results);
    }
+   
+   @Test
+   public void testSearchRolesWithOptions() throws Exception {
+	  SearchOptions options = SearchOptions.Builder.query(PREFIX);
+      SearchResult<? extends Role> results = chefApi.searchRoles(options);
+      assertNotNull(results);
+      assertEquals(results.size(), 1);
+      assertEquals(results.iterator().next().getName(), PREFIX);
+   }
 
    @Test(dependsOnMethods = "testDatabagItemExists")
    public void testSearchDatabag() throws Exception {
       SearchResult<? extends DatabagItem> results = chefApi.searchDatabag(PREFIX);
       assertNotNull(results);
+   }
+   
+   @Test
+   public void testSearchDatabagWithOptions() throws Exception {
+	  SearchOptions options = SearchOptions.Builder.query(databagItem.getId());
+      SearchResult<? extends DatabagItem> results = chefApi.searchDatabag(PREFIX, options);
+      assertNotNull(results);
+      assertEquals(results.size(), 1);
+      assertEquals(results.iterator().next().getId(), databagItem.getId());
    }
 
    @Test(expectedExceptions = ResourceNotFoundException.class)
