@@ -78,7 +78,7 @@ public abstract class BaseChefApiLiveTest<C extends Context> extends BaseChefCon
    private ChefApi validatorClient;
    
    // It may take a bit until the search index is populated
-   protected int maxWaitForIndexInMs = 30000;
+   protected int maxWaitForIndexInMs = 60000;
    
    protected ChefApi chefApi;
 
@@ -434,8 +434,7 @@ public abstract class BaseChefApiLiveTest<C extends Context> extends BaseChefCon
       assertNotNull(results);
    }
    
-   // FIXME: The filters works fine, but deserialization of the DatabagItem fails
-   @Test(enabled = false, dependsOnMethods = {"testListSearchIndexes", "testDatabagItemExists"})
+   @Test(dependsOnMethods = {"testListSearchIndexes", "testDatabagItemExists"})
    public void testSearchDatabagWithOptions() throws Exception {
       RetryablePredicate<SearchOptions> waitForIndex =
           new RetryablePredicate<SearchOptions>(new Predicate<SearchOptions>() {
