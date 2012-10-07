@@ -46,7 +46,7 @@ import com.google.inject.TypeLiteral;
  */
 @Singleton
 public class RunListForGroup implements Function<String, List<String>> {
-   public static final Type RUN_LIST_TYPE = new TypeLiteral<Map<String, List<String>>>() {
+   public static final Type RUN_LIST_TYPE = new TypeLiteral<Map<String, Object>>() {
    }.getType();
    private final ChefApi api;
    private final Json json;
