@@ -21,6 +21,7 @@ package org.jclouds.chef.internal;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
+import org.jclouds.annotations.Name;
 import org.jclouds.chef.ChefAsyncApi;
 import org.jclouds.chef.ChefApi;
 import org.jclouds.chef.ChefContext;
@@ -42,9 +43,9 @@ public class ChefContextImpl extends RestContextImpl<ChefApi, ChefAsyncApi> impl
    private final ChefService chefService;
 
    @Inject
-   protected ChefContextImpl(ProviderMetadata providerMetadata, @Identity String identity, Utils utils, Closer closer,
+   protected ChefContextImpl(@Name String name, ProviderMetadata providerMetadata, @Identity String identity, Utils utils, Closer closer,
             Injector injector, ChefService chefService) {
-      super(providerMetadata, identity, utils, closer, injector, TypeLiteral.get(ChefApi.class), TypeLiteral
+      super(name, providerMetadata, identity, utils, closer, injector, TypeLiteral.get(ChefApi.class), TypeLiteral
                .get(ChefAsyncApi.class));
       this.chefService = chefService;
    }
