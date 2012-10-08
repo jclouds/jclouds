@@ -48,7 +48,7 @@ public class ClientForGroup implements Function<String, Client> {
 
    @Override
    public Client apply(String from) {
-      String clientName = findNextClientName(chefApi.listClients(), from + "-validator-%02d");
+      String clientName = findNextClientName(chefApi.listClients(), from + "-client-%02d");
       Client client = chefApi.createClient(clientName);
       // response from create only includes the key
       return new Client(null, null, clientName, clientName, false, client.getPrivateKey());

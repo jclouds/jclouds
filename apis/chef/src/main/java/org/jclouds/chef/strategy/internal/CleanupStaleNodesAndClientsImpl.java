@@ -33,8 +33,8 @@ import javax.inject.Inject;
 import javax.inject.Named;
 import javax.inject.Singleton;
 
+import org.jclouds.chef.config.ChefProperties;
 import org.jclouds.chef.domain.Node;
-import org.jclouds.chef.reference.ChefConstants;
 import org.jclouds.chef.strategy.CleanupStaleNodesAndClients;
 import org.jclouds.chef.strategy.DeleteAllClientsInList;
 import org.jclouds.chef.strategy.DeleteAllNodesInList;
@@ -54,7 +54,7 @@ import com.google.common.base.Predicate;
 @Singleton
 public class CleanupStaleNodesAndClientsImpl implements CleanupStaleNodesAndClients {
    @Resource
-   @Named(ChefConstants.CHEF_LOGGER)
+   @Named(ChefProperties.CHEF_LOGGER)
    protected Logger logger = Logger.NULL;
 
    private final ListNodes nodeLister;

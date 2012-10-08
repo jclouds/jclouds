@@ -21,7 +21,7 @@ cat >> /etc/chef/client.rb <<-'END_OF_JCLOUDS_FILE'
 	node_name "foo-" + o[:ipaddress]
 	log_level :info
 	log_location STDOUT
-	validation_client_name "fooclient"
+	validation_client_name "chef-validator"
 	chef_server_url "http://localhost:4000"
 END_OF_JCLOUDS_FILE
 cat >> /etc/chef/validation.pem <<-'END_OF_JCLOUDS_FILE'

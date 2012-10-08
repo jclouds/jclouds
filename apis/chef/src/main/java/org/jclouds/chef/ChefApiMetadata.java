@@ -19,7 +19,7 @@
 package org.jclouds.chef;
 
 import static org.jclouds.Constants.PROPERTY_SESSION_INTERVAL;
-import static org.jclouds.chef.reference.ChefConstants.CHEF_BOOTSTRAP_DATABAG;
+import static org.jclouds.chef.config.ChefProperties.CHEF_BOOTSTRAP_DATABAG;
 
 import java.net.URI;
 import java.util.Properties;

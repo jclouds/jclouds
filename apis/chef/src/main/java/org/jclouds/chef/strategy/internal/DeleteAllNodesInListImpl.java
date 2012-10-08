@@ -32,7 +32,7 @@ import javax.inject.Singleton;
 import org.jclouds.Constants;
 import org.jclouds.chef.ChefAsyncApi;
 import org.jclouds.chef.ChefApi;
-import org.jclouds.chef.reference.ChefConstants;
+import org.jclouds.chef.config.ChefProperties;
 import org.jclouds.chef.strategy.DeleteAllNodesInList;
 import org.jclouds.logging.Logger;
 
@@ -50,7 +50,7 @@ public class DeleteAllNodesInListImpl implements DeleteAllNodesInList {
    protected final ChefAsyncApi chefAsyncApi;
    protected final ExecutorService userExecutor;
    @Resource
-   @Named(ChefConstants.CHEF_LOGGER)
+   @Named(ChefProperties.CHEF_LOGGER)
    protected Logger logger = Logger.NULL;
 
    @Inject(optional = true)

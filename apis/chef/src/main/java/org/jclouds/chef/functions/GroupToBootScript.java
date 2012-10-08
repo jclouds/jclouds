@@ -26,6 +26,7 @@ import static org.jclouds.scriptbuilder.domain.Statements.newStatementList;
 
 import java.lang.reflect.Type;
 import java.net.URI;
+import java.security.PrivateKey;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -34,7 +35,7 @@ import javax.inject.Inject;
 import javax.inject.Named;
 import javax.inject.Singleton;
 
-import org.jclouds.chef.domain.Client;
+import org.jclouds.chef.config.Validator;
 import org.jclouds.crypto.Pems;
 import org.jclouds.json.Json;
 import org.jclouds.location.Provider;
@@ -42,6 +43,7 @@ import org.jclouds.scriptbuilder.domain.Statement;
 
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Function;
+import com.google.common.base.Optional;
 import com.google.common.base.Splitter;
 import com.google.common.base.Supplier;
 import com.google.common.collect.ImmutableList;
@@ -61,27 +63,27 @@ public class GroupToBootScript implements Function<String, Statement> {
    }.getType();
    private final Supplier<URI> endpoint;
    private final Json json;
-   private final Map<String, Client> tagToClient;
    private final Map<String, List<String>> runListForTag;
    private final Statement installChefGems;
+   private final Optional<String> validatorName;
+   private final Optional<PrivateKey> validatorCredential;
 
    @Inject
-   public GroupToBootScript(@Provider Supplier<URI> endpoint, Json json, Map<String, Client> tagToClient,
-            Map<String, List<String>> runListForTag, @Named("installChefGems") Statement installChefGems) {
+   public GroupToBootScript(@Provider Supplier<URI> endpoint, Json json, Map<String, List<String>> runListForTag,
+		   @Named("installChefGems") Statement installChefGems, @Validator Optional<String> validatorName,
+		   @Validator Optional<PrivateKey> validatorCredential) {
       this.endpoint = checkNotNull(endpoint, "endpoint");
       this.json = checkNotNull(json, "json");
-      this.tagToClient = checkNotNull(tagToClient, "tagToClient");
       this.runListForTag = checkNotNull(runListForTag, "runListForTag");
       this.installChefGems = checkNotNull(installChefGems, "installChefGems");
+      this.validatorName = checkNotNull(validatorName, "validatorName");
+      this.validatorCredential = checkNotNull(validatorCredential, validatorCredential);
    }
 
    public Statement apply(String tag) {
       checkNotNull(tag, "tag");
-
-      Client client = tagToClient.get(tag);
-      checkState(client != null, "could not get a api for tag %s", tag);
-      checkState(client.getClientname() != null, "clientname null for %s", client);
-      checkState(client.getPrivateKey() != null, "privatekey null for %s", client);
+      String validatorClientName = validatorName.get();
+      PrivateKey validatorKey = validatorCredential.get();
 
       List<String> runList = runListForTag.get(tag);
       checkState(runList != null, "runList for %s was not found", tag);
@@ -92,11 +94,11 @@ public class GroupToBootScript implements Function<String, Statement> {
       Statement createClientRb = appendFile(chefConfigDir + "{fs}client.rb", ImmutableList.of("require 'rubygems'",
                "require 'ohai'", "o = Ohai::System.new", "o.all_plugins", String.format(
                         "node_name \"%s-\" + o[:ipaddress]", tag), "log_level :info", "log_location STDOUT", String
-                        .format("validation_client_name \"%s\"", client.getClientname()), String.format(
+                        .format("validation_client_name \"%s\"", validatorClientName), String.format(
                         "chef_server_url \"%s\"", endpoint.get())));
 
       Statement createValidationPem = appendFile(chefConfigDir + "{fs}validation.pem", Splitter.on('\n').split(
-               Pems.pem(client.getPrivateKey())));
+               Pems.pem(validatorKey)));
 
       String chefBootFile = chefConfigDir + "{fs}first-boot.json";
 

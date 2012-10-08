@@ -47,15 +47,15 @@ public class ClientForGroupTest {
       ClientForGroup fn = new ClientForGroup(chefApi);
 
       expect(chefApi.listClients()).andReturn(ImmutableSet.<String> of());
-      expect(chefApi.createClient("foo-validator-00")).andReturn(client);
+      expect(chefApi.createClient("foo-client-00")).andReturn(client);
       expect(client.getPrivateKey()).andReturn(privateKey);
 
       replay(client);
       replay(chefApi);
 
       Client compare = fn.apply("foo");
-      assertEquals(compare.getClientname(), "foo-validator-00");
-      assertEquals(compare.getName(), "foo-validator-00");
+      assertEquals(compare.getClientname(), "foo-client-00");
+      assertEquals(compare.getName(), "foo-client-00");
       assertEquals(compare.getPrivateKey(), privateKey);
 
       verify(client);
@@ -70,16 +70,16 @@ public class ClientForGroupTest {
       ClientForGroup fn = new ClientForGroup(chefApi);
 
       expect(chefApi.listClients()).andReturn(
-               ImmutableSet.<String> of("foo-validator-00", "foo-validator-01", "foo-validator-02"));
-      expect(chefApi.createClient("foo-validator-03")).andReturn(client);
+               ImmutableSet.<String> of("foo-client-00", "foo-client-01", "foo-client-02"));
+      expect(chefApi.createClient("foo-client-03")).andReturn(client);
       expect(client.getPrivateKey()).andReturn(privateKey);
 
       replay(client);
       replay(chefApi);
 
       Client compare = fn.apply("foo");
-      assertEquals(compare.getClientname(), "foo-validator-03");
-      assertEquals(compare.getName(), "foo-validator-03");
+      assertEquals(compare.getClientname(), "foo-client-03");
+      assertEquals(compare.getName(), "foo-client-03");
       assertEquals(compare.getPrivateKey(), privateKey);
 
       verify(client);
@@ -93,16 +93,16 @@ public class ClientForGroupTest {
 
       ClientForGroup fn = new ClientForGroup(chefApi);
 
-      expect(chefApi.listClients()).andReturn(ImmutableSet.<String> of("foo-validator-00", "foo-validator-02"));
-      expect(chefApi.createClient("foo-validator-01")).andReturn(client);
+      expect(chefApi.listClients()).andReturn(ImmutableSet.<String> of("foo-client-00", "foo-client-02"));
+      expect(chefApi.createClient("foo-client-01")).andReturn(client);
       expect(client.getPrivateKey()).andReturn(privateKey);
 
       replay(client);
       replay(chefApi);
 
       Client compare = fn.apply("foo");
-      assertEquals(compare.getClientname(), "foo-validator-01");
-      assertEquals(compare.getName(), "foo-validator-01");
+      assertEquals(compare.getClientname(), "foo-client-01");
+      assertEquals(compare.getName(), "foo-client-01");
       assertEquals(compare.getPrivateKey(), privateKey);
 
       verify(client);

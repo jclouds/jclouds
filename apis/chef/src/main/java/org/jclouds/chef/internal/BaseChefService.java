@@ -19,7 +19,7 @@
 package org.jclouds.chef.internal;
 
 import static com.google.common.base.Preconditions.checkNotNull;
-import static org.jclouds.chef.reference.ChefConstants.CHEF_BOOTSTRAP_DATABAG;
+import static org.jclouds.chef.config.ChefProperties.CHEF_BOOTSTRAP_DATABAG;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -34,13 +34,13 @@ import javax.inject.Singleton;
 
 import org.jclouds.chef.ChefContext;
 import org.jclouds.chef.ChefService;
+import org.jclouds.chef.config.ChefProperties;
 import org.jclouds.chef.domain.Client;
 import org.jclouds.chef.domain.CookbookVersion;
 import org.jclouds.chef.domain.DatabagItem;
 import org.jclouds.chef.domain.Node;
 import org.jclouds.chef.functions.GroupToBootScript;
 import org.jclouds.chef.functions.RunListForGroup;
-import org.jclouds.chef.reference.ChefConstants;
 import org.jclouds.chef.strategy.CleanupStaleNodesAndClients;
 import org.jclouds.chef.strategy.CreateNodeAndPopulateAutomaticAttributes;
 import org.jclouds.chef.strategy.DeleteAllClientsInList;
@@ -69,7 +69,7 @@ import com.google.common.io.InputSupplier;
 public class BaseChefService implements ChefService {
 
    @Resource
-   @Named(ChefConstants.CHEF_LOGGER)
+   @Named(ChefProperties.CHEF_LOGGER)
    protected Logger logger = Logger.NULL;
 
    private final ChefContext chefContext;
@@ -188,7 +188,7 @@ public class BaseChefService implements ChefService {
    }
 
    @Override
-   public Statement createClientAndBootstrapScriptForGroup(String group) {
+   public Statement createBootstrapScriptForGroup(String group) {
       return groupToBootScript.apply(group);
    }
 

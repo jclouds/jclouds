@@ -28,8 +28,8 @@ import javax.inject.Named;
 import javax.inject.Singleton;
 
 import org.jclouds.chef.ChefApi;
+import org.jclouds.chef.config.ChefProperties;
 import org.jclouds.chef.domain.Node;
-import org.jclouds.chef.reference.ChefConstants;
 import org.jclouds.chef.strategy.CreateNodeAndPopulateAutomaticAttributes;
 import org.jclouds.domain.JsonBall;
 import org.jclouds.logging.Logger;
@@ -47,7 +47,7 @@ import com.google.common.base.Supplier;
 public class CreateNodeAndPopulateAutomaticAttributesImpl implements CreateNodeAndPopulateAutomaticAttributes {
 
    @Resource
-   @Named(ChefConstants.CHEF_LOGGER)
+   @Named(ChefProperties.CHEF_LOGGER)
    protected Logger logger = Logger.NULL;
 
    private final ChefApi chef;

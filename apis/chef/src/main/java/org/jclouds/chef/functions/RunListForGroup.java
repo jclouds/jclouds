@@ -20,7 +20,7 @@ package org.jclouds.chef.functions;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.base.Preconditions.checkState;
-import static org.jclouds.chef.reference.ChefConstants.CHEF_BOOTSTRAP_DATABAG;
+import static org.jclouds.chef.config.ChefProperties.CHEF_BOOTSTRAP_DATABAG;
 
 import java.lang.reflect.Type;
 import java.util.List;

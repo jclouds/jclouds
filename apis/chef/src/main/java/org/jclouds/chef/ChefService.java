@@ -63,12 +63,12 @@ public interface ChefService {
     * 
     * @param group
     *           corresponds to a configured
-    *           {@link org.jclouds.chef.reference.ChefConstants#CHEF_BOOTSTRAP_DATABAG databag}
+    *           {@link org.jclouds.chef.config.ChefProperties#CHEF_BOOTSTRAP_DATABAG databag}
     *           where run_list and other information are stored
     * @return boot script
     * @see #updateRunListForTag
     */
-   Statement createClientAndBootstrapScriptForGroup(String group);
+   Statement createBootstrapScriptForGroup(String group);
 
    /**
     * assigns a run list to all nodes bootstrapped with a certain group
@@ -79,7 +79,7 @@ public interface ChefService {
     * 
     * @param group
     *           corresponds to a configured
-    *           {@link org.jclouds.chef.reference.ChefConstants#CHEF_BOOTSTRAP_DATABAG databag}
+    *           {@link org.jclouds.chef.config.ChefProperties#CHEF_BOOTSTRAP_DATABAG databag}
     *           where run_list and other information are stored
     * @see #makeChefApiBootstrapScriptForTag
     */
@@ -88,7 +88,7 @@ public interface ChefService {
    /**
     * @param group
     *           corresponds to a configured
-    *           {@link org.jclouds.chef.reference.ChefConstants#CHEF_BOOTSTRAP_DATABAG databag}
+    *           {@link org.jclouds.chef.config.ChefProperties#CHEF_BOOTSTRAP_DATABAG databag}
     *           where run_list and other information are stored
     * @return run list for all nodes bootstrapped with a certain group
     * @see #updateRunListForTag
