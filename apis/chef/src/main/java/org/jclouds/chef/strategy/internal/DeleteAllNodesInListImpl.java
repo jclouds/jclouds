@@ -18,20 +18,22 @@
  */
 package org.jclouds.chef.strategy.internal;
 
+import static com.google.common.base.Throwables.propagate;
 import static com.google.common.collect.Maps.newHashMap;
 import static org.jclouds.concurrent.FutureIterables.awaitCompletion;
 
 import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Future;
+import java.util.concurrent.TimeoutException;
 
 import javax.annotation.Resource;
 import javax.inject.Named;
 import javax.inject.Singleton;
 
 import org.jclouds.Constants;
-import org.jclouds.chef.ChefAsyncApi;
 import org.jclouds.chef.ChefApi;
+import org.jclouds.chef.ChefAsyncApi;
 import org.jclouds.chef.config.ChefProperties;
 import org.jclouds.chef.strategy.DeleteAllNodesInList;
 import org.jclouds.logging.Logger;
@@ -58,8 +60,8 @@ public class DeleteAllNodesInListImpl implements DeleteAllNodesInList {
    protected Long maxTime;
 
    @Inject
-   DeleteAllNodesInListImpl(@Named(Constants.PROPERTY_USER_THREADS) ExecutorService userExecutor,
-         ChefApi getAllNode, ChefAsyncApi ablobstore) {
+   DeleteAllNodesInListImpl(@Named(Constants.PROPERTY_USER_THREADS) ExecutorService userExecutor, ChefApi getAllNode,
+         ChefAsyncApi ablobstore) {
       this.userExecutor = userExecutor;
       this.chefAsyncApi = ablobstore;
       this.chefApi = getAllNode;
@@ -72,8 +74,12 @@ public class DeleteAllNodesInListImpl implements DeleteAllNodesInList {
       for (String name : names) {
          responses.put(name, chefAsyncApi.deleteNode(name));
       }
-      exceptions = awaitCompletion(responses, userExecutor, maxTime, logger, String.format(
-            "deleting nodes: %s", names));
+      try {
+         exceptions = awaitCompletion(responses, userExecutor, maxTime, logger,
+               String.format("deleting nodes: %s", names));
+      } catch (TimeoutException e) {
+         propagate(e);
+      }
       if (exceptions.size() > 0)
          throw new RuntimeException(String.format("errors deleting nodes: %s: %s", names, exceptions));
    }

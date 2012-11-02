@@ -18,12 +18,14 @@
  */
 package org.jclouds.chef.strategy.internal;
 
+import static com.google.common.base.Throwables.propagate;
 import static com.google.common.collect.Maps.newHashMap;
 import static org.jclouds.concurrent.FutureIterables.awaitCompletion;
 
 import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Future;
+import java.util.concurrent.TimeoutException;
 
 import javax.annotation.Resource;
 import javax.inject.Named;
@@ -58,8 +60,8 @@ public class DeleteAllClientsInListImpl implements DeleteAllClientsInList {
    protected Long maxTime;
 
    @Inject
-   DeleteAllClientsInListImpl(@Named(Constants.PROPERTY_USER_THREADS) ExecutorService userExecutor,
-         ChefApi getAllApi, ChefAsyncApi ablobstore) {
+   DeleteAllClientsInListImpl(@Named(Constants.PROPERTY_USER_THREADS) ExecutorService userExecutor, ChefApi getAllApi,
+         ChefAsyncApi ablobstore) {
       this.userExecutor = userExecutor;
       this.chefAsyncApi = ablobstore;
       this.chefApi = getAllApi;
@@ -72,8 +74,12 @@ public class DeleteAllClientsInListImpl implements DeleteAllClientsInList {
       for (String name : names) {
          responses.put(name, chefAsyncApi.deleteClient(name));
       }
-      exceptions = awaitCompletion(responses, userExecutor, maxTime, logger, String.format(
-            "deleting apis: %s", names));
+      try {
+         exceptions = awaitCompletion(responses, userExecutor, maxTime, logger,
+               String.format("deleting apis: %s", names));
+      } catch (TimeoutException e) {
+         propagate(e);
+      }
       if (exceptions.size() > 0)
          throw new RuntimeException(String.format("errors deleting clients: %s: %s", names, exceptions));
    }
