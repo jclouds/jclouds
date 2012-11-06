@@ -70,6 +70,13 @@
             <artifactId>jclouds-scriptbuilder</artifactId>
             <version>${project.version}</version>
         </dependency>
+        <dependency>
+            <groupId>org.jclouds</groupId>
+            <artifactId>jclouds-scriptbuilder</artifactId>
+            <version>${project.version}</version>
+            <type>test-jar</type>
+            <scope>test</scope>
+        </dependency>
         <!--  for transient chef provider -->
         <dependency>
             <groupId>org.jclouds</groupId>

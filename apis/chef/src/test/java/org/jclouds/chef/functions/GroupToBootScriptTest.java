@@ -31,13 +31,14 @@ import java.util.List;
 
 import org.jclouds.chef.ChefAsyncApi;
 import org.jclouds.chef.config.ChefParserModule;
-import org.jclouds.chef.statements.InstallChefGems;
 import org.jclouds.crypto.PemsTest;
 import org.jclouds.json.Json;
 import org.jclouds.json.config.GsonModule;
 import org.jclouds.rest.annotations.ApiVersion;
 import org.jclouds.scriptbuilder.domain.OsFamily;
+import org.jclouds.scriptbuilder.domain.ShellToken;
 import org.jclouds.scriptbuilder.domain.Statement;
+import org.jclouds.scriptbuilder.statements.chef.InstallChefGems;
 import org.testng.annotations.Test;
 
 import com.google.common.base.Charsets;
@@ -57,60 +58,63 @@ import com.google.inject.Injector;
 @Test(groups = "unit", testName = "GroupToBootScriptTest")
 public class GroupToBootScriptTest {
 
-    Injector injector = Guice.createInjector(new AbstractModule() {
-        @Override
-        protected void configure()
-        {
-            bind(String.class).annotatedWith(ApiVersion.class).toInstance(ChefAsyncApi.VERSION);
-        }
-    }, new ChefParserModule(), new GsonModule());
+   Injector injector = Guice.createInjector(new AbstractModule() {
+      @Override
+      protected void configure() {
+         bind(String.class).annotatedWith(ApiVersion.class).toInstance(ChefAsyncApi.VERSION);
+      }
+   }, new ChefParserModule(), new GsonModule());
 
    Json json = injector.getInstance(Json.class);
    Statement installChefGems = new InstallChefGems();
    Optional<String> validatorName = Optional.<String> of("chef-validator");
    Optional<PrivateKey> validatorCredential = Optional.<PrivateKey> of(createMock(PrivateKey.class));
-   
+
    @Test(expectedExceptions = IllegalStateException.class)
    public void testMustHaveValidatorName() {
       GroupToBootScript fn = new GroupToBootScript(Suppliers.ofInstance(URI.create("http://localhost:4000")), json,
-    		  ImmutableMap.<String, List<String>> of(), installChefGems, Optional.<String> absent(), validatorCredential);
+            ImmutableMap.<String, List<String>> of(), installChefGems, Optional.<String> absent(), validatorCredential);
       fn.apply("foo");
    }
-   
+
    @Test(expectedExceptions = IllegalStateException.class)
    public void testMustHaveValidatorCredential() {
       GroupToBootScript fn = new GroupToBootScript(Suppliers.ofInstance(URI.create("http://localhost:4000")), json,
-    		  ImmutableMap.<String, List<String>> of(), installChefGems, validatorName, Optional.<PrivateKey> absent());
+            ImmutableMap.<String, List<String>> of(), installChefGems, validatorName, Optional.<PrivateKey> absent());
       fn.apply("foo");
    }
 
    @Test(expectedExceptions = IllegalStateException.class)
    public void testMustHaveRunScripts() {
       GroupToBootScript fn = new GroupToBootScript(Suppliers.ofInstance(URI.create("http://localhost:4000")), json,
-    		  ImmutableMap.<String, List<String>> of(), installChefGems, validatorName, validatorCredential);
+            ImmutableMap.<String, List<String>> of(), installChefGems, validatorName, validatorCredential);
       fn.apply("foo");
    }
 
    @Test(expectedExceptions = IllegalStateException.class)
    public void testMustHaveRunScriptsValue() {
       GroupToBootScript fn = new GroupToBootScript(Suppliers.ofInstance(URI.create("http://localhost:4000")), json,
-    		  ImmutableMap.<String, List<String>> of("foo", ImmutableList.<String> of()), installChefGems, validatorName,
-    		  validatorCredential);
+            ImmutableMap.<String, List<String>> of("foo", ImmutableList.<String> of()), installChefGems, validatorName,
+            validatorCredential);
       fn.apply("foo");
    }
 
    public void testOneRecipe() throws IOException {
       GroupToBootScript fn = new GroupToBootScript(Suppliers.ofInstance(URI.create("http://localhost:4000")), json,
-    		  ImmutableMap.<String, List<String>> of("foo", ImmutableList.<String> of("recipe[apache2]")), installChefGems,
-    		  validatorName, validatorCredential);
-      
+            ImmutableMap.<String, List<String>> of("foo", ImmutableList.<String> of("recipe[apache2]")),
+            installChefGems, validatorName, validatorCredential);
+
       PrivateKey validatorKey = validatorCredential.get();
       expect(validatorKey.getEncoded()).andReturn(PemsTest.PRIVATE_KEY.getBytes());
       replay(validatorKey);
 
-      assertEquals(fn.apply("foo").render(OsFamily.UNIX), CharStreams.toString(Resources.newReaderSupplier(Resources
-               .getResource("one-recipe.sh"), Charsets.UTF_8)));
-      
+      assertEquals(
+            fn.apply("foo").render(OsFamily.UNIX),
+            Resources.toString(Resources.getResource("test_install_ruby." + ShellToken.SH.to(OsFamily.UNIX)),
+                  Charsets.UTF_8)
+                  + "installChefGems || return 1\n"
+                  + Resources.toString(Resources.getResource("one-recipe.sh"), Charsets.UTF_8));
+
       verify(validatorKey);
    }
 }

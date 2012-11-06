@@ -28,9 +28,9 @@ import org.jclouds.chef.ChefAsyncApi;
 import org.jclouds.chef.domain.Client;
 import org.jclouds.chef.functions.ClientForGroup;
 import org.jclouds.chef.functions.RunListForGroup;
-import org.jclouds.chef.statements.InstallChefGems;
 import org.jclouds.rest.ConfiguresRestClient;
 import org.jclouds.scriptbuilder.domain.Statement;
+import org.jclouds.scriptbuilder.statements.chef.InstallChefGems;
 
 import com.google.common.collect.MapMaker;
 import com.google.common.reflect.TypeToken;

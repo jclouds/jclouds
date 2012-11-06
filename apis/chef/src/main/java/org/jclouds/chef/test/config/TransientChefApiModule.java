@@ -34,7 +34,6 @@ import org.jclouds.chef.ChefAsyncApi;
 import org.jclouds.chef.domain.Client;
 import org.jclouds.chef.functions.ClientForGroup;
 import org.jclouds.chef.functions.RunListForGroup;
-import org.jclouds.chef.statements.InstallChefGems;
 import org.jclouds.chef.test.TransientChefApi;
 import org.jclouds.chef.test.TransientChefAsyncApi;
 import org.jclouds.concurrent.MoreExecutors;
@@ -47,6 +46,7 @@ import org.jclouds.rest.annotations.Credential;
 import org.jclouds.rest.config.BinderUtils;
 import org.jclouds.rest.config.RestModule;
 import org.jclouds.scriptbuilder.domain.Statement;
+import org.jclouds.scriptbuilder.statements.chef.InstallChefGems;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
