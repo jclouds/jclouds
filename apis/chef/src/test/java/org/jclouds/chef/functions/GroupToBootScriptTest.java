@@ -46,7 +46,6 @@ import com.google.common.base.Optional;
 import com.google.common.base.Suppliers;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
-import com.google.common.io.CharStreams;
 import com.google.common.io.Resources;
 import com.google.inject.AbstractModule;
 import com.google.inject.Guice;
