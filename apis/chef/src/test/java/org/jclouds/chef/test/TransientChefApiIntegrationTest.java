@@ -73,7 +73,7 @@ public class TransientChefApiIntegrationTest extends BaseChefContextLiveTest<Che
       Properties config = new Properties();
       config.setProperty("foo", "bar");
       databagItem = context.getApi().createDatabagItem(PREFIX,
-               new DatabagItem("config", context.utils().json().toJson(config)));
+            new DatabagItem("config", context.utils().json().toJson(config)));
       assertNotNull(databagItem);
       assertEquals(databagItem.getId(), "config");
       assertEquals(config, context.utils().json().fromJson(databagItem.toString(), Properties.class));
@@ -91,16 +91,14 @@ public class TransientChefApiIntegrationTest extends BaseChefContextLiveTest<Che
          context.getApi().updateDatabagItem(PREFIX, databagItem);
       }
    }
-   
+
    @Override
-   protected ChefApi getChefApi(ChefContext context)
-   {
-       return context.getApi();
+   protected ChefApi getChefApi(ChefContext context) {
+      return context.getApi();
    }
-   
+
    @Override
-   protected TypeToken<ChefContext> contextType()
-   {
-       return TypeToken.of(ChefContext.class);
+   protected TypeToken<ChefContext> contextType() {
+      return TypeToken.of(ChefContext.class);
    }
 }

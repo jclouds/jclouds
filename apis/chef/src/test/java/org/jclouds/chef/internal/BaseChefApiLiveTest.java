@@ -61,6 +61,7 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.io.Closeables;
 import com.google.common.primitives.Bytes;
+
 /**
  * Tests behavior of {@code ChefApi}
  * 
@@ -72,14 +73,14 @@ public abstract class BaseChefApiLiveTest<C extends Context> extends BaseChefCon
    public static final String ADMIN_PREFIX = System.getProperty("user.name") + "-jcloudstest-adm";
    public static final String VALIDATOR_PREFIX = System.getProperty("user.name") + "-jcloudstest-val";
 
-   private String validatorIdentity;
-   private String validatorCredential;
-   private C validatorContext;
-   private ChefApi validatorClient;
-   
+   protected String validatorIdentity;
+   protected String validatorCredential;
+   protected C validatorContext;
+   protected ChefApi validatorClient;
+
    // It may take a bit until the search index is populated
    protected int maxWaitForIndexInMs = 60000;
-   
+
    protected ChefApi chefApi;
 
    protected Properties setupValidatorProperties() {
@@ -126,8 +127,8 @@ public abstract class BaseChefApiLiveTest<C extends Context> extends BaseChefCon
 
          ChecksumStatus status = site.getChecksums().get(md5);
          if (status.needsUpload()) {
-            //context.utils().http().put(status.getUrl(), content);
-             chefApi.uploadContent(status.getUrl(), content);
+            // context.utils().http().put(status.getUrl(), content);
+            chefApi.uploadContent(status.getUrl(), content);
          }
 
          chefApi.commitSandbox(site.getSandboxId(), true);
@@ -146,22 +147,22 @@ public abstract class BaseChefApiLiveTest<C extends Context> extends BaseChefCon
 
    @Test(dependsOnMethods = "testCreateClient")
    public void testGenerateKeyForClient() throws Exception {
-       String credential = Pems.pem(chefApi.generateKeyForClient(PREFIX).getPrivateKey());
-       assertClientCreated(PREFIX, credential);
+      String credential = Pems.pem(chefApi.generateKeyForClient(PREFIX).getPrivateKey());
+      assertClientCreated(PREFIX, credential);
    }
 
    @Test
    public void testListCookbooks() throws Exception {
       Set<String> cookbookNames = chefApi.listCookbooks();
       assertFalse(cookbookNames.isEmpty());
-      
-      for (String cookbook : cookbookNames)
+
+      for (String cookbook : cookbookNames) {
          for (String version : chefApi.getVersionsOfCookbook(cookbook)) {
             CookbookVersion cookbookO = chefApi.getCookbook(cookbook, version);
-            for (Resource resource : ImmutableList.<Resource> builder().addAll(cookbookO.getDefinitions()).addAll(
-                     cookbookO.getFiles()).addAll(cookbookO.getLibraries()).addAll(cookbookO.getSuppliers()).addAll(
-                     cookbookO.getRecipes()).addAll(cookbookO.getResources()).addAll(cookbookO.getRootFiles()).addAll(
-                     cookbookO.getTemplates()).build()) {
+            for (Resource resource : ImmutableList.<Resource> builder().addAll(cookbookO.getDefinitions())
+                  .addAll(cookbookO.getFiles()).addAll(cookbookO.getLibraries()).addAll(cookbookO.getSuppliers())
+                  .addAll(cookbookO.getRecipes()).addAll(cookbookO.getResources()).addAll(cookbookO.getRootFiles())
+                  .addAll(cookbookO.getTemplates()).build()) {
                try {
                   InputStream stream = chefApi.getResourceContents(resource);
                   byte[] md5 = CryptoStreams.md5(InputSuppliers.of(stream));
@@ -171,23 +172,25 @@ public abstract class BaseChefApiLiveTest<C extends Context> extends BaseChefCon
                }
             }
          }
+      }
    }
-   
+
    @Test(dependsOnMethods = "testCreateNewCookbook")
    public void testUpdateCookbook() throws Exception {
       CookbookVersion cookbook = chefApi.getCookbook(PREFIX, "0.0.0");
       assertNotNull(chefApi.updateCookbook(PREFIX, "0.0.0", cookbook));
    }
 
-   @Test(dependsOnMethods = {"testCreateNewCookbook", "testUpdateCookbook"})
+   @Test(dependsOnMethods = { "testCreateNewCookbook", "testUpdateCookbook" })
    public void testDeleteCookbook() throws Exception {
       assertNotNull(chefApi.deleteCookbook(PREFIX, "0.0.0"));
    }
 
    @Test(expectedExceptions = AuthorizationException.class)
    public void testValidatorCannotListClients() throws Exception {
-      for (String client : validatorClient.listClients())
+      for (String client : validatorClient.listClients()) {
          assertNotNull(validatorClient.getClient(client));
+      }
    }
 
    @Test(expectedExceptions = AuthorizationException.class)
@@ -197,8 +200,8 @@ public abstract class BaseChefApiLiveTest<C extends Context> extends BaseChefCon
 
    @Test
    public void testValidatorCreateClient() throws Exception {
-       String credential = Pems.pem(validatorClient.createClient(VALIDATOR_PREFIX).getPrivateKey());
-       assertClientCreated(VALIDATOR_PREFIX, credential);
+      String credential = Pems.pem(validatorClient.createClient(VALIDATOR_PREFIX).getPrivateKey());
+      assertClientCreated(VALIDATOR_PREFIX, credential);
    }
 
    @Test
@@ -209,9 +212,9 @@ public abstract class BaseChefApiLiveTest<C extends Context> extends BaseChefCon
 
    @Test
    public void testCreateAdminClient() throws Exception {
-       String credential = Pems.pem(chefApi.createClient(ADMIN_PREFIX, CreateClientOptions.Builder.admin())
-           .getPrivateKey());
-       assertClientCreated(ADMIN_PREFIX, credential);
+      String credential = Pems.pem(chefApi.createClient(ADMIN_PREFIX, CreateClientOptions.Builder.admin())
+            .getPrivateKey());
+      assertClientCreated(ADMIN_PREFIX, credential);
    }
 
    @Test
@@ -306,16 +309,16 @@ public abstract class BaseChefApiLiveTest<C extends Context> extends BaseChefCon
       Properties config = new Properties();
       config.setProperty("foo", "bar");
       chefApi.deleteDatabagItem(PREFIX, PREFIX);
-      databagItem = chefApi.createDatabagItem(PREFIX,
-               new DatabagItem("config", context.utils().json().toJson(config)));
+      databagItem = chefApi.createDatabagItem(PREFIX, new DatabagItem("config", context.utils().json().toJson(config)));
       assertNotNull(databagItem);
       assertEquals(databagItem.getId(), "config");
-      
-      // The databagItem json contains extra keys: (the name and the type if the item)
+
+      // The databagItem json contains extra keys: (the name and the type if the
+      // item)
       Properties props = context.utils().json().fromJson(databagItem.toString(), Properties.class);
       for (Object key : config.keySet()) {
-          assertTrue(props.containsKey(key));
-          assertEquals(config.get(key), props.get(key));
+         assertTrue(props.containsKey(key));
+         assertEquals(config.get(key), props.get(key));
       }
    }
 
@@ -346,28 +349,28 @@ public abstract class BaseChefApiLiveTest<C extends Context> extends BaseChefCon
       SearchResult<? extends Node> results = chefApi.searchNodes();
       assertNotNull(results);
    }
-   
-   @Test(dependsOnMethods = {"testListSearchIndexes", "testCreateNode"})
+
+   @Test(dependsOnMethods = { "testListSearchIndexes", "testCreateNode" })
    public void testSearchNodesWithOptions() throws Exception {
-      RetryablePredicate<SearchOptions> waitForIndex =
-          new RetryablePredicate<SearchOptions>(new Predicate<SearchOptions>() {
-        	  @Override
-        	  public boolean apply(SearchOptions input) {
-        		  SearchResult<? extends Node> results = chefApi.searchNodes(input);
-        		  assertNotNull(results);
-        		  if(results.size() > 0) {
-        			  assertEquals(results.size(), 1);
-        			  assertEquals(results.iterator().next().getName(), PREFIX);
-        			  return true;
-        		  } else {
-        			  // The index may still not be populated
-        			  return false;
-        		  }
-        	  }
-          }, maxWaitForIndexInMs, 5000L, TimeUnit.MILLISECONDS);
-       
-       SearchOptions options = SearchOptions.Builder.query("name:" + PREFIX);
-       assertTrue(waitForIndex.apply(options));
+      RetryablePredicate<SearchOptions> waitForIndex = new RetryablePredicate<SearchOptions>(
+            new Predicate<SearchOptions>() {
+               @Override
+               public boolean apply(SearchOptions input) {
+                  SearchResult<? extends Node> results = chefApi.searchNodes(input);
+                  assertNotNull(results);
+                  if (results.size() > 0) {
+                     assertEquals(results.size(), 1);
+                     assertEquals(results.iterator().next().getName(), PREFIX);
+                     return true;
+                  } else {
+                     // The index may still not be populated
+                     return false;
+                  }
+               }
+            }, maxWaitForIndexInMs, 5000L, TimeUnit.MILLISECONDS);
+
+      SearchOptions options = SearchOptions.Builder.query("name:" + PREFIX);
+      assertTrue(waitForIndex.apply(options));
    }
 
    @Test
@@ -375,28 +378,28 @@ public abstract class BaseChefApiLiveTest<C extends Context> extends BaseChefCon
       SearchResult<? extends Client> results = chefApi.searchClients();
       assertNotNull(results);
    }
-   
-   @Test(dependsOnMethods = {"testListSearchIndexes", "testCreateClient"})
+
+   @Test(dependsOnMethods = { "testListSearchIndexes", "testCreateClient" })
    public void testSearchClientsWithOptions() throws Exception {
-      RetryablePredicate<SearchOptions> waitForIndex =
-          new RetryablePredicate<SearchOptions>(new Predicate<SearchOptions>() {
-        	  @Override
-        	  public boolean apply(SearchOptions input) {
-        		  SearchResult<? extends Client> results = chefApi.searchClients(input);
-        		  assertNotNull(results);
-        		  if(results.size() > 0) {
-        			  assertEquals(results.size(), 1);
-        			  assertEquals(results.iterator().next().getName(), PREFIX);
-        			  return true;
-        		  } else {
-        			  // The index may still not be populated
-        			  return false;
-        		  }
-        	  }
-          }, maxWaitForIndexInMs, 5000L, TimeUnit.MILLISECONDS);
-       
-       SearchOptions options = SearchOptions.Builder.query("name:" + PREFIX);
-       assertTrue(waitForIndex.apply(options));
+      RetryablePredicate<SearchOptions> waitForIndex = new RetryablePredicate<SearchOptions>(
+            new Predicate<SearchOptions>() {
+               @Override
+               public boolean apply(SearchOptions input) {
+                  SearchResult<? extends Client> results = chefApi.searchClients(input);
+                  assertNotNull(results);
+                  if (results.size() > 0) {
+                     assertEquals(results.size(), 1);
+                     assertEquals(results.iterator().next().getName(), PREFIX);
+                     return true;
+                  } else {
+                     // The index may still not be populated
+                     return false;
+                  }
+               }
+            }, maxWaitForIndexInMs, 5000L, TimeUnit.MILLISECONDS);
+
+      SearchOptions options = SearchOptions.Builder.query("name:" + PREFIX);
+      assertTrue(waitForIndex.apply(options));
    }
 
    @Test
@@ -404,57 +407,57 @@ public abstract class BaseChefApiLiveTest<C extends Context> extends BaseChefCon
       SearchResult<? extends Role> results = chefApi.searchRoles();
       assertNotNull(results);
    }
-   
-   @Test(dependsOnMethods = {"testListSearchIndexes", "testCreateRole"})
+
+   @Test(dependsOnMethods = { "testListSearchIndexes", "testCreateRole" })
    public void testSearchRolesWithOptions() throws Exception {
-       RetryablePredicate<SearchOptions> waitForIndex =
-          new RetryablePredicate<SearchOptions>(new Predicate<SearchOptions>() {
-        	  @Override
-        	  public boolean apply(SearchOptions input) {
-        		  SearchResult<? extends Role> results = chefApi.searchRoles(input);
-        		  assertNotNull(results);
-        		  if(results.size() > 0) {
-        			  assertEquals(results.size(), 1);
-        			  assertEquals(results.iterator().next().getName(), PREFIX);
-        			  return true;
-        		  } else {
-        			  // The index may still not be populated
-        			  return false;
-        		  }
-        	  }
-          }, maxWaitForIndexInMs, 5000L, TimeUnit.MILLISECONDS);
-       
-       SearchOptions options = SearchOptions.Builder.query("name:" + PREFIX);
-       assertTrue(waitForIndex.apply(options));
+      RetryablePredicate<SearchOptions> waitForIndex = new RetryablePredicate<SearchOptions>(
+            new Predicate<SearchOptions>() {
+               @Override
+               public boolean apply(SearchOptions input) {
+                  SearchResult<? extends Role> results = chefApi.searchRoles(input);
+                  assertNotNull(results);
+                  if (results.size() > 0) {
+                     assertEquals(results.size(), 1);
+                     assertEquals(results.iterator().next().getName(), PREFIX);
+                     return true;
+                  } else {
+                     // The index may still not be populated
+                     return false;
+                  }
+               }
+            }, maxWaitForIndexInMs, 5000L, TimeUnit.MILLISECONDS);
+
+      SearchOptions options = SearchOptions.Builder.query("name:" + PREFIX);
+      assertTrue(waitForIndex.apply(options));
    }
 
-   @Test(dependsOnMethods = {"testListSearchIndexes", "testDatabagItemExists"})
+   @Test(dependsOnMethods = { "testListSearchIndexes", "testDatabagItemExists" })
    public void testSearchDatabag() throws Exception {
       SearchResult<? extends DatabagItem> results = chefApi.searchDatabag(PREFIX);
       assertNotNull(results);
    }
-   
-   @Test(dependsOnMethods = {"testListSearchIndexes", "testDatabagItemExists"})
+
+   @Test(dependsOnMethods = { "testListSearchIndexes", "testDatabagItemExists" })
    public void testSearchDatabagWithOptions() throws Exception {
-      RetryablePredicate<SearchOptions> waitForIndex =
-          new RetryablePredicate<SearchOptions>(new Predicate<SearchOptions>() {
-        	  @Override
-        	  public boolean apply(SearchOptions input) {
-        		  SearchResult<? extends DatabagItem> results = chefApi.searchDatabag(PREFIX, input);
-        		  assertNotNull(results);
-        		  if(results.size() > 0) {
-        			  assertEquals(results.size(), 1);
-        			  assertEquals(results.iterator().next().getId(), databagItem.getId());
-        			  return true;
-        		  } else {
-        			  // The index may still not be populated
-        			  return false;
-        		  }
-        	  }
-          }, maxWaitForIndexInMs, 5000L, TimeUnit.MILLISECONDS);
-       
-       SearchOptions options = SearchOptions.Builder.query("id:" + databagItem.getId());
-       assertTrue(waitForIndex.apply(options));
+      RetryablePredicate<SearchOptions> waitForIndex = new RetryablePredicate<SearchOptions>(
+            new Predicate<SearchOptions>() {
+               @Override
+               public boolean apply(SearchOptions input) {
+                  SearchResult<? extends DatabagItem> results = chefApi.searchDatabag(PREFIX, input);
+                  assertNotNull(results);
+                  if (results.size() > 0) {
+                     assertEquals(results.size(), 1);
+                     assertEquals(results.iterator().next().getId(), databagItem.getId());
+                     return true;
+                  } else {
+                     // The index may still not be populated
+                     return false;
+                  }
+               }
+            }, maxWaitForIndexInMs, 5000L, TimeUnit.MILLISECONDS);
+
+      SearchOptions options = SearchOptions.Builder.query("id:" + databagItem.getId());
+      assertTrue(waitForIndex.apply(options));
    }
 
    @Test(expectedExceptions = ResourceNotFoundException.class, dependsOnMethods = "testListSearchIndexes")
@@ -462,7 +465,7 @@ public abstract class BaseChefApiLiveTest<C extends Context> extends BaseChefCon
       SearchResult<? extends DatabagItem> results = chefApi.searchDatabag("whoopie");
       assertNotNull(results);
    }
-   
+
    @AfterClass(groups = { "live", "integration" })
    @Override
    public void tearDownContext() {
@@ -475,22 +478,20 @@ public abstract class BaseChefApiLiveTest<C extends Context> extends BaseChefCon
       chefApi.deleteDatabag(PREFIX);
       super.tearDownContext();
    }
-   
-   private void assertClientCreated(String identity, String credential) {
-       Properties overrides = super.setupProperties();
-       overrides.setProperty(provider + ".identity", identity);
-       overrides.setProperty(provider + ".credential", credential);
-       
-       C clientContext = createContext(overrides, setupModules());
 
-       try {
-           Client client = getChefApi(clientContext).getClient(identity);
-           assertNotNull(client);
-       } finally {
-           Closeables.closeQuietly(clientContext);
-       }
+   private void assertClientCreated(String identity, String credential) {
+      Properties overrides = super.setupProperties();
+      overrides.setProperty(provider + ".identity", identity);
+      overrides.setProperty(provider + ".credential", credential);
+
+      C clientContext = createContext(overrides, setupModules());
+
+      try {
+         Client client = getChefApi(clientContext).getClient(identity);
+         assertNotNull(client);
+      } finally {
+         Closeables.closeQuietly(clientContext);
+      }
    }
-   
-   
 
 }

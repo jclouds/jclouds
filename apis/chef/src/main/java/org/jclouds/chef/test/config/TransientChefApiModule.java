@@ -31,6 +31,7 @@ import org.jclouds.blobstore.LocalAsyncBlobStore;
 import org.jclouds.blobstore.TransientApiMetadata;
 import org.jclouds.chef.ChefApi;
 import org.jclouds.chef.ChefAsyncApi;
+import org.jclouds.chef.config.Validator;
 import org.jclouds.chef.domain.Client;
 import org.jclouds.chef.functions.ClientForGroup;
 import org.jclouds.chef.functions.RunListForGroup;
@@ -48,10 +49,12 @@ import org.jclouds.rest.config.RestModule;
 import org.jclouds.scriptbuilder.domain.Statement;
 import org.jclouds.scriptbuilder.statements.chef.InstallChefGems;
 
+import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.MapMaker;
 import com.google.inject.AbstractModule;
+import com.google.inject.Injector;
 import com.google.inject.Module;
 import com.google.inject.Provides;
 import com.google.inject.name.Names;
@@ -67,26 +70,29 @@ public class TransientChefApiModule extends AbstractModule {
    protected void configure() {
       install(new RestModule());
       bind(ChefAsyncApi.class).to(TransientChefAsyncApi.class).asEagerSingleton();
-      // forward all requests from TransientChefApi to ChefAsyncApi.  needs above binding as cannot proxy a class
-      BinderUtils.bindClient(binder(), TransientChefApi.class, ChefAsyncApi.class, ImmutableMap.<Class<?>, Class<?>>of());
+      // forward all requests from TransientChefApi to ChefAsyncApi. needs above
+      // binding as cannot proxy a class
+      BinderUtils.bindClient(binder(), TransientChefApi.class, ChefAsyncApi.class,
+            ImmutableMap.<Class<?>, Class<?>> of());
       bind(ChefApi.class).to(TransientChefApi.class);
 
       bind(LocalAsyncBlobStore.class).annotatedWith(Names.named("databags")).toInstance(
-               ContextBuilder.newBuilder(new TransientApiMetadata()).modules(
+            ContextBuilder
+                  .newBuilder(new TransientApiMetadata())
+                  .modules(
                         ImmutableSet.<Module> of(new ExecutorServiceModule(MoreExecutors.sameThreadExecutor(),
-                                 MoreExecutors.sameThreadExecutor()))).buildInjector().getInstance(
-                                     LocalAsyncBlobStore.class));
-      
+                              MoreExecutors.sameThreadExecutor()))).buildInjector()
+                  .getInstance(LocalAsyncBlobStore.class));
+
       bind(Statement.class).annotatedWith(Names.named("installChefGems")).to(InstallChefGems.class);
    }
-   
+
    @Provides
    @Singleton
-   public PrivateKey provideKey(Crypto crypto, @Credential String pem) throws InvalidKeySpecException,
-            IOException {
-        return crypto.rsaKeyFactory().generatePrivate(Pems.privateKeySpec(InputSuppliers.of(pem)));
+   public PrivateKey provideKey(Crypto crypto, @Credential String pem) throws InvalidKeySpecException, IOException {
+      return crypto.rsaKeyFactory().generatePrivate(Pems.privateKeySpec(InputSuppliers.of(pem)));
    }
-   
+
    @Provides
    @Singleton
    Map<String, List<String>> runListForTag(RunListForGroup runListForTag) {
@@ -99,5 +105,19 @@ public class TransientChefApiModule extends AbstractModule {
       return new MapMaker().makeComputingMap(tagToClient);
    }
 
+   @Provides
+   @Singleton
+   @Validator
+   public Optional<String> provideValidatorName(Injector injector) {
+      return Optional.absent();
+   }
+
+   @Provides
+   @Singleton
+   @Validator
+   public Optional<PrivateKey> provideValidatorCredential(Crypto crypto, Injector injector)
+         throws InvalidKeySpecException, IOException {
+      return Optional.absent();
+   }
 
 }
