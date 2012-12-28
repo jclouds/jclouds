@@ -35,6 +35,10 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
 import org.jclouds.Constants;
+import org.jclouds.Fallbacks.EmptySetOnNotFoundOr404;
+import org.jclouds.Fallbacks.FalseOnNotFoundOr404;
+import org.jclouds.Fallbacks.NullOnNotFoundOr404;
+import org.jclouds.Fallbacks.VoidOnNotFoundOr404;
 import org.jclouds.chef.binders.BindChecksumsToJsonPayload;
 import org.jclouds.chef.binders.BindCreateClientOptionsToJsonPayload;
 import org.jclouds.chef.binders.BindGenerateKeyForClientToJsonPayload;
@@ -66,7 +70,7 @@ import org.jclouds.chef.options.SearchOptions;
 import org.jclouds.io.Payload;
 import org.jclouds.rest.annotations.BinderParam;
 import org.jclouds.rest.annotations.EndpointParam;
-import org.jclouds.rest.annotations.ExceptionParser;
+import org.jclouds.rest.annotations.Fallback;
 import org.jclouds.rest.annotations.Headers;
 import org.jclouds.rest.annotations.MapBinder;
 import org.jclouds.rest.annotations.ParamParser;
@@ -74,10 +78,6 @@ import org.jclouds.rest.annotations.PayloadParam;
 import org.jclouds.rest.annotations.RequestFilters;
 import org.jclouds.rest.annotations.ResponseParser;
 import org.jclouds.rest.binders.BindToJsonPayload;
-import org.jclouds.rest.functions.ReturnEmptySetOnNotFoundOr404;
-import org.jclouds.rest.functions.ReturnFalseOnNotFoundOr404;
-import org.jclouds.rest.functions.ReturnNullOnNotFoundOr404;
-import org.jclouds.rest.functions.ReturnVoidOnNotFoundOr404;
 
 import com.google.common.util.concurrent.ListenableFuture;
 
@@ -124,7 +124,7 @@ public interface ChefAsyncApi {
    @GET
    @Path("/cookbooks")
    @ResponseParser(ParseCookbookDefinitionCheckingChefVersion.class)
-   @ExceptionParser(ReturnEmptySetOnNotFoundOr404.class)
+   @Fallback(EmptySetOnNotFoundOr404.class)
    ListenableFuture<Set<String>> listCookbooks();
 
    /**
@@ -140,7 +140,7 @@ public interface ChefAsyncApi {
     */
    @DELETE
    @Path("/cookbooks/{cookbookname}/{version}")
-   @ExceptionParser(ReturnNullOnNotFoundOr404.class)
+   @Fallback(NullOnNotFoundOr404.class)
    ListenableFuture<CookbookVersion> deleteCookbook(@PathParam("cookbookname") String cookbookName,
             @PathParam("version") String version);
 
@@ -150,7 +150,7 @@ public interface ChefAsyncApi {
    @GET
    @Path("/cookbooks/{cookbookname}")
    @ResponseParser(ParseCookbookVersionsCheckingChefVersion.class)
-   @ExceptionParser(ReturnEmptySetOnNotFoundOr404.class)
+   @Fallback(EmptySetOnNotFoundOr404.class)
    ListenableFuture<Set<String>> getVersionsOfCookbook(@PathParam("cookbookname") String cookbookName);
 
    /**
@@ -158,7 +158,7 @@ public interface ChefAsyncApi {
     */
    @GET
    @Path("/cookbooks/{cookbookname}/{version}")
-   @ExceptionParser(ReturnNullOnNotFoundOr404.class)
+   @Fallback(NullOnNotFoundOr404.class)
    ListenableFuture<CookbookVersion> getCookbook(@PathParam("cookbookname") String cookbookName,
             @PathParam("version") String version);
 
@@ -191,7 +191,7 @@ public interface ChefAsyncApi {
     */
    @HEAD
    @Path("/clients/{clientname}")
-   @ExceptionParser(ReturnFalseOnNotFoundOr404.class)
+   @Fallback(FalseOnNotFoundOr404.class)
    ListenableFuture<Boolean> clientExists(@PathParam("clientname") String clientname);
 
    /**
@@ -199,7 +199,7 @@ public interface ChefAsyncApi {
     */
    @GET
    @Path("/clients/{clientname}")
-   @ExceptionParser(ReturnNullOnNotFoundOr404.class)
+   @Fallback(NullOnNotFoundOr404.class)
    ListenableFuture<Client> getClient(@PathParam("clientname") String clientname);
 
    /**
@@ -207,7 +207,7 @@ public interface ChefAsyncApi {
     */
    @DELETE
    @Path("/clients/{clientname}")
-   @ExceptionParser(ReturnNullOnNotFoundOr404.class)
+   @Fallback(NullOnNotFoundOr404.class)
    ListenableFuture<Client> deleteClient(@PathParam("clientname") String clientname);
 
    /**
@@ -216,7 +216,7 @@ public interface ChefAsyncApi {
    @GET
    @Path("/clients")
    @ResponseParser(ParseKeySetFromJson.class)
-   @ExceptionParser(ReturnEmptySetOnNotFoundOr404.class)
+   @Fallback(EmptySetOnNotFoundOr404.class)
    ListenableFuture<Set<String>> listClients();
 
    /**
@@ -239,7 +239,7 @@ public interface ChefAsyncApi {
     */
    @HEAD
    @Path("/nodes/{nodename}")
-   @ExceptionParser(ReturnFalseOnNotFoundOr404.class)
+   @Fallback(FalseOnNotFoundOr404.class)
    ListenableFuture<Boolean> nodeExists(@PathParam("nodename") String nodename);
 
    /**
@@ -247,7 +247,7 @@ public interface ChefAsyncApi {
     */
    @GET
    @Path("/nodes/{nodename}")
-   @ExceptionParser(ReturnNullOnNotFoundOr404.class)
+   @Fallback(NullOnNotFoundOr404.class)
    ListenableFuture<Node> getNode(@PathParam("nodename") String nodename);
 
    /**
@@ -255,7 +255,7 @@ public interface ChefAsyncApi {
     */
    @DELETE
    @Path("/nodes/{nodename}")
-   @ExceptionParser(ReturnNullOnNotFoundOr404.class)
+   @Fallback(NullOnNotFoundOr404.class)
    ListenableFuture<Node> deleteNode(@PathParam("nodename") String nodename);
 
    /**
@@ -264,7 +264,7 @@ public interface ChefAsyncApi {
    @GET
    @Path("/nodes")
    @ResponseParser(ParseKeySetFromJson.class)
-   @ExceptionParser(ReturnEmptySetOnNotFoundOr404.class)
+   @Fallback(EmptySetOnNotFoundOr404.class)
    ListenableFuture<Set<String>> listNodes();
 
    /**
@@ -287,7 +287,7 @@ public interface ChefAsyncApi {
     */
    @HEAD
    @Path("/roles/{rolename}")
-   @ExceptionParser(ReturnFalseOnNotFoundOr404.class)
+   @Fallback(FalseOnNotFoundOr404.class)
    ListenableFuture<Boolean> roleExists(@PathParam("rolename") String rolename);
 
    /**
@@ -295,7 +295,7 @@ public interface ChefAsyncApi {
     */
    @GET
    @Path("/roles/{rolename}")
-   @ExceptionParser(ReturnNullOnNotFoundOr404.class)
+   @Fallback(NullOnNotFoundOr404.class)
    ListenableFuture<Role> getRole(@PathParam("rolename") String rolename);
 
    /**
@@ -303,7 +303,7 @@ public interface ChefAsyncApi {
     */
    @DELETE
    @Path("/roles/{rolename}")
-   @ExceptionParser(ReturnNullOnNotFoundOr404.class)
+   @Fallback(NullOnNotFoundOr404.class)
    ListenableFuture<Role> deleteRole(@PathParam("rolename") String rolename);
 
    /**
@@ -312,7 +312,7 @@ public interface ChefAsyncApi {
    @GET
    @Path("/roles")
    @ResponseParser(ParseKeySetFromJson.class)
-   @ExceptionParser(ReturnEmptySetOnNotFoundOr404.class)
+   @Fallback(EmptySetOnNotFoundOr404.class)
    ListenableFuture<Set<String>> listRoles();
 
    /**
@@ -321,7 +321,7 @@ public interface ChefAsyncApi {
    @GET
    @Path("/data")
    @ResponseParser(ParseKeySetFromJson.class)
-   @ExceptionParser(ReturnEmptySetOnNotFoundOr404.class)
+   @Fallback(EmptySetOnNotFoundOr404.class)
    ListenableFuture<Set<String>> listDatabags();
 
    /**
@@ -336,7 +336,7 @@ public interface ChefAsyncApi {
     */
    @HEAD
    @Path("/data/{name}")
-   @ExceptionParser(ReturnFalseOnNotFoundOr404.class)
+   @Fallback(FalseOnNotFoundOr404.class)
    ListenableFuture<Boolean> databagExists(@PathParam("name") String databagName);
 
    /**
@@ -344,7 +344,7 @@ public interface ChefAsyncApi {
     */
    @DELETE
    @Path("/data/{name}")
-   @ExceptionParser(ReturnVoidOnNotFoundOr404.class)
+   @Fallback(VoidOnNotFoundOr404.class)
    ListenableFuture<Void> deleteDatabag(@PathParam("name") String databagName);
 
    /**
@@ -353,7 +353,7 @@ public interface ChefAsyncApi {
    @GET
    @Path("/data/{name}")
    @ResponseParser(ParseKeySetFromJson.class)
-   @ExceptionParser(ReturnEmptySetOnNotFoundOr404.class)
+   @Fallback(EmptySetOnNotFoundOr404.class)
    ListenableFuture<Set<String>> listDatabagItems(@PathParam("name") String databagName);
 
    /**
@@ -378,7 +378,7 @@ public interface ChefAsyncApi {
     */
    @HEAD
    @Path("/data/{databagName}/{databagItemId}")
-   @ExceptionParser(ReturnFalseOnNotFoundOr404.class)
+   @Fallback(FalseOnNotFoundOr404.class)
    ListenableFuture<Boolean> databagItemExists(@PathParam("databagName") String databagName,
             @PathParam("databagItemId") String databagItemId);
 
@@ -387,7 +387,7 @@ public interface ChefAsyncApi {
     */
    @GET
    @Path("/data/{databagName}/{databagItemId}")
-   @ExceptionParser(ReturnNullOnNotFoundOr404.class)
+   @Fallback(NullOnNotFoundOr404.class)
    ListenableFuture<DatabagItem> getDatabagItem(@PathParam("databagName") String databagName,
             @PathParam("databagItemId") String databagItemId);
 
@@ -396,7 +396,7 @@ public interface ChefAsyncApi {
     */
    @DELETE
    @Path("/data/{databagName}/{databagItemId}")
-   @ExceptionParser(ReturnNullOnNotFoundOr404.class)
+   @Fallback(NullOnNotFoundOr404.class)
    ListenableFuture<DatabagItem> deleteDatabagItem(@PathParam("databagName") String databagName,
             @PathParam("databagItemId") String databagItemId);
 
@@ -406,7 +406,7 @@ public interface ChefAsyncApi {
    @GET
    @Path("/search")
    @ResponseParser(ParseKeySetFromJson.class)
-   @ExceptionParser(ReturnEmptySetOnNotFoundOr404.class)
+   @Fallback(EmptySetOnNotFoundOr404.class)
    ListenableFuture<Set<String>> listSearchIndexes();
 
    /**
@@ -479,6 +479,6 @@ public interface ChefAsyncApi {
     * @see ChefApi#getResourceContents(Resource)
     */
    @GET
-   @ExceptionParser(ReturnNullOnNotFoundOr404.class)
+   @Fallback(NullOnNotFoundOr404.class)
    ListenableFuture<InputStream> getResourceContents(@EndpointParam(parser=UriForResource.class) Resource resource);
 }
