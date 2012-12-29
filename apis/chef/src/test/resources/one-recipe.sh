@@ -48,6 +48,7 @@ cat >> /etc/chef/validation.pem <<-'END_OF_JCLOUDS_FILE'
 	SU4wUnl2ZApPNFpwV0RXWW5DTzAyMUpUT1VVT0o0Si95MDQxNkJ2a3cwejU5eTdz
 	Tlg3d0RCQkhIYksvWENjPQotLS0tLUVORCBSU0EgUFJJVkFURSBLRVktLS0tLQo=
 	-----END PRIVATE KEY-----
+	
 END_OF_JCLOUDS_FILE
 cat >> /etc/chef/first-boot.json <<-'END_OF_JCLOUDS_FILE'
 	{"run_list":["recipe[apache2]"]}
