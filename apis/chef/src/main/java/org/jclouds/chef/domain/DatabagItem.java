@@ -28,7 +28,6 @@ import org.jclouds.domain.JsonBall;
  */
 public class DatabagItem extends JsonBall {
 
-   private static final long serialVersionUID = 7905637919304343493L;
    private final String id;
 
    public DatabagItem(String id, String value) {

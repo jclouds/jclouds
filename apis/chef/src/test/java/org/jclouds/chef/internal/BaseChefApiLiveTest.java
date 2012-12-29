@@ -18,12 +18,14 @@
  */
 package org.jclouds.chef.internal;
 
+import static com.google.common.base.Throwables.propagate;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertFalse;
 import static org.testng.Assert.assertNotNull;
 import static org.testng.Assert.assertTrue;
 
 import java.io.File;
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.Collections;
 import java.util.List;
@@ -469,13 +471,17 @@ public abstract class BaseChefApiLiveTest<C extends Context> extends BaseChefCon
    @AfterClass(groups = { "live", "integration" })
    @Override
    public void tearDownContext() {
-      Closeables.closeQuietly(validatorContext);
       chefApi.deleteClient(PREFIX);
       chefApi.deleteClient(ADMIN_PREFIX);
       chefApi.deleteClient(VALIDATOR_PREFIX);
       chefApi.deleteNode(PREFIX);
       chefApi.deleteRole(PREFIX);
       chefApi.deleteDatabag(PREFIX);
+      try {
+         Closeables.close(validatorContext, true);
+      } catch (IOException e) {
+         throw propagate(e);
+      }
       super.tearDownContext();
    }
 
@@ -490,7 +496,11 @@ public abstract class BaseChefApiLiveTest<C extends Context> extends BaseChefCon
          Client client = getChefApi(clientContext).getClient(identity);
          assertNotNull(client);
       } finally {
-         Closeables.closeQuietly(clientContext);
+         try {
+            Closeables.close(clientContext, true);
+         } catch (IOException e) {
+            throw propagate(e);
+         }
       }
    }
 

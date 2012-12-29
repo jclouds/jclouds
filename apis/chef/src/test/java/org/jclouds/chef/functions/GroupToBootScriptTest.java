@@ -42,8 +42,10 @@ import org.jclouds.scriptbuilder.statements.chef.InstallChefGems;
 import org.testng.annotations.Test;
 
 import com.google.common.base.Charsets;
+import com.google.common.base.Functions;
 import com.google.common.base.Optional;
 import com.google.common.base.Suppliers;
+import com.google.common.cache.CacheLoader;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.io.Resources;
@@ -72,36 +74,49 @@ public class GroupToBootScriptTest {
    @Test(expectedExceptions = IllegalStateException.class)
    public void testMustHaveValidatorName() {
       GroupToBootScript fn = new GroupToBootScript(Suppliers.ofInstance(URI.create("http://localhost:4000")), json,
-            ImmutableMap.<String, List<String>> of(), installChefGems, Optional.<String> absent(), validatorCredential);
+            CacheLoader.from(Functions.forMap(ImmutableMap.<String, List<String>> of())), installChefGems,
+            Optional.<String> absent(), validatorCredential);
       fn.apply("foo");
    }
 
    @Test(expectedExceptions = IllegalStateException.class)
    public void testMustHaveValidatorCredential() {
       GroupToBootScript fn = new GroupToBootScript(Suppliers.ofInstance(URI.create("http://localhost:4000")), json,
-            ImmutableMap.<String, List<String>> of(), installChefGems, validatorName, Optional.<PrivateKey> absent());
+            CacheLoader.from(Functions.forMap(ImmutableMap.<String, List<String>> of())), installChefGems,
+            validatorName, Optional.<PrivateKey> absent());
       fn.apply("foo");
    }
 
-   @Test(expectedExceptions = IllegalStateException.class)
-   public void testMustHaveRunScripts() {
+   @Test(expectedExceptions = IllegalArgumentException.class, expectedExceptionsMessageRegExp = "Key 'foo' not present in map")
+   public void testMustHaveRunScriptsName() {
       GroupToBootScript fn = new GroupToBootScript(Suppliers.ofInstance(URI.create("http://localhost:4000")), json,
-            ImmutableMap.<String, List<String>> of(), installChefGems, validatorName, validatorCredential);
+            CacheLoader.from(Functions.forMap(ImmutableMap.<String, List<String>> of())), installChefGems,
+            validatorName, validatorCredential);
       fn.apply("foo");
    }
 
-   @Test(expectedExceptions = IllegalStateException.class)
+   @Test(expectedExceptions = NullPointerException.class, expectedExceptionsMessageRegExp = "null value in entry: foo=null")
    public void testMustHaveRunScriptsValue() {
       GroupToBootScript fn = new GroupToBootScript(Suppliers.ofInstance(URI.create("http://localhost:4000")), json,
-            ImmutableMap.<String, List<String>> of("foo", ImmutableList.<String> of()), installChefGems, validatorName,
-            validatorCredential);
+            CacheLoader.from(Functions.forMap(ImmutableMap.<String, List<String>> of("foo", (List<String>) null))),
+            installChefGems, validatorName, validatorCredential);
+      fn.apply("foo");
+   }
+
+   @Test(expectedExceptions = IllegalStateException.class, expectedExceptionsMessageRegExp = "runList for foo was empty")
+   public void testMustHaveRunScriptsContents() {
+      GroupToBootScript fn = new GroupToBootScript(
+            Suppliers.ofInstance(URI.create("http://localhost:4000")),
+            json,
+            CacheLoader.from(Functions.forMap(ImmutableMap.<String, List<String>> of("foo", ImmutableList.<String> of()))),
+            installChefGems, validatorName, validatorCredential);
       fn.apply("foo");
    }
 
    public void testOneRecipe() throws IOException {
       GroupToBootScript fn = new GroupToBootScript(Suppliers.ofInstance(URI.create("http://localhost:4000")), json,
-            ImmutableMap.<String, List<String>> of("foo", ImmutableList.<String> of("recipe[apache2]")),
-            installChefGems, validatorName, validatorCredential);
+            CacheLoader.from(Functions.forMap(ImmutableMap.<String, List<String>> of("foo",
+                  ImmutableList.<String> of("recipe[apache2]")))), installChefGems, validatorName, validatorCredential);
 
       PrivateKey validatorKey = validatorCredential.get();
       expect(validatorKey.getEncoded()).andReturn(PemsTest.PRIVATE_KEY.getBytes());

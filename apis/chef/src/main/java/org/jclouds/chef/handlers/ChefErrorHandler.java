@@ -18,6 +18,10 @@
  */
 package org.jclouds.chef.handlers;
 
+import static com.google.common.base.Throwables.propagate;
+
+import java.io.IOException;
+
 import javax.annotation.Resource;
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -54,8 +58,8 @@ public class ChefErrorHandler implements HttpErrorHandler {
       String message = errorParser.apply(response);
       Exception exception = new HttpResponseException(command, response, message);
       try {
-         message = message != null ? message : String.format("%s -> %s", command.getCurrentRequest()
-                  .getRequestLine(), response.getStatusLine());
+         message = message != null ? message : String.format("%s -> %s", command.getCurrentRequest().getRequestLine(),
+               response.getStatusLine());
          switch (response.getStatusCode()) {
             case 401:
             case 403:
@@ -68,8 +72,13 @@ public class ChefErrorHandler implements HttpErrorHandler {
                break;
          }
       } finally {
-         if (response.getPayload() != null)
-            Closeables.closeQuietly(response.getPayload().getInput());
+         if (response.getPayload() != null) {
+            try {
+               Closeables.close(response.getPayload().getInput(), true);
+            } catch (IOException e) {
+               throw propagate(e);
+            }
+         }
          command.setException(exception);
       }
    }

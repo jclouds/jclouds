@@ -20,6 +20,7 @@ package org.jclouds.chef.functions;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.base.Preconditions.checkState;
+import static com.google.common.base.Throwables.propagate;
 import static org.jclouds.scriptbuilder.domain.Statements.appendFile;
 import static org.jclouds.scriptbuilder.domain.Statements.exec;
 import static org.jclouds.scriptbuilder.domain.Statements.newStatementList;
@@ -46,6 +47,7 @@ import com.google.common.base.Function;
 import com.google.common.base.Optional;
 import com.google.common.base.Splitter;
 import com.google.common.base.Supplier;
+import com.google.common.cache.CacheLoader;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.inject.TypeLiteral;
@@ -63,52 +65,57 @@ public class GroupToBootScript implements Function<String, Statement> {
    }.getType();
    private final Supplier<URI> endpoint;
    private final Json json;
-   private final Map<String, List<String>> runListForTag;
+   private final CacheLoader<String, List<String>> runListForGroup;
    private final Statement installChefGems;
    private final Optional<String> validatorName;
    private final Optional<PrivateKey> validatorCredential;
 
    @Inject
-   public GroupToBootScript(@Provider Supplier<URI> endpoint, Json json, Map<String, List<String>> runListForTag,
-		   @Named("installChefGems") Statement installChefGems, @Validator Optional<String> validatorName,
-		   @Validator Optional<PrivateKey> validatorCredential) {
+   public GroupToBootScript(@Provider Supplier<URI> endpoint, Json json,
+         CacheLoader<String, List<String>> runListForGroup, @Named("installChefGems") Statement installChefGems,
+         @Validator Optional<String> validatorName, @Validator Optional<PrivateKey> validatorCredential) {
       this.endpoint = checkNotNull(endpoint, "endpoint");
       this.json = checkNotNull(json, "json");
-      this.runListForTag = checkNotNull(runListForTag, "runListForTag");
+      this.runListForGroup = checkNotNull(runListForGroup, "runListForTag");
       this.installChefGems = checkNotNull(installChefGems, "installChefGems");
       this.validatorName = checkNotNull(validatorName, "validatorName");
       this.validatorCredential = checkNotNull(validatorCredential, validatorCredential);
    }
 
-   public Statement apply(String tag) {
-      checkNotNull(tag, "tag");
+   public Statement apply(String group) {
+      checkNotNull(group, "group");
       String validatorClientName = validatorName.get();
       PrivateKey validatorKey = validatorCredential.get();
 
-      List<String> runList = runListForTag.get(tag);
-      checkState(runList != null, "runList for %s was not found", tag);
-      checkState(runList.size() > 0, "runList for %s was empty", tag);
+      List<String> runList = null;
+      try {
+         runList = runListForGroup.load(group);
+      } catch (Exception e) {
+         throw propagate(e);
+      }
+
+      checkState(runList.size() > 0, "runList for %s was empty", group);
 
       String chefConfigDir = "{root}etc{fs}chef";
       Statement createChefConfigDir = exec("{md} " + chefConfigDir);
       Statement createClientRb = appendFile(chefConfigDir + "{fs}client.rb", ImmutableList.of("require 'rubygems'",
-               "require 'ohai'", "o = Ohai::System.new", "o.all_plugins", String.format(
-                        "node_name \"%s-\" + o[:ipaddress]", tag), "log_level :info", "log_location STDOUT", String
-                        .format("validation_client_name \"%s\"", validatorClientName), String.format(
-                        "chef_server_url \"%s\"", endpoint.get())));
+            "require 'ohai'", "o = Ohai::System.new", "o.all_plugins",
+            String.format("node_name \"%s-\" + o[:ipaddress]", group), "log_level :info", "log_location STDOUT",
+            String.format("validation_client_name \"%s\"", validatorClientName),
+            String.format("chef_server_url \"%s\"", endpoint.get())));
 
-      Statement createValidationPem = appendFile(chefConfigDir + "{fs}validation.pem", Splitter.on('\n').split(
-               Pems.pem(validatorKey)));
+      Statement createValidationPem = appendFile(chefConfigDir + "{fs}validation.pem",
+            Splitter.on('\n').split(Pems.pem(validatorKey)));
 
       String chefBootFile = chefConfigDir + "{fs}first-boot.json";
 
-      Statement createFirstBoot = appendFile(chefBootFile, Collections.singleton(json.toJson(ImmutableMap
-               .<String, List<String>> of("run_list", runList), RUN_LIST_TYPE)));
+      Statement createFirstBoot = appendFile(chefBootFile, Collections.singleton(json.toJson(
+            ImmutableMap.<String, List<String>> of("run_list", runList), RUN_LIST_TYPE)));
 
       Statement runChef = exec("chef-client -j " + chefBootFile);
 
-      return newStatementList(installChefGems, createChefConfigDir, createClientRb,
-               createValidationPem, createFirstBoot, runChef);
+      return newStatementList(installChefGems, createChefConfigDir, createClientRb, createValidationPem,
+            createFirstBoot, runChef);
    }
 
 }

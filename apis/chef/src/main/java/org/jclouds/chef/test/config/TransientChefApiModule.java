@@ -22,7 +22,6 @@ import java.io.IOException;
 import java.security.PrivateKey;
 import java.security.spec.InvalidKeySpecException;
 import java.util.List;
-import java.util.Map;
 
 import javax.inject.Singleton;
 
@@ -50,9 +49,9 @@ import org.jclouds.scriptbuilder.domain.Statement;
 import org.jclouds.scriptbuilder.statements.chef.InstallChefGems;
 
 import com.google.common.base.Optional;
+import com.google.common.cache.CacheLoader;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
-import com.google.common.collect.MapMaker;
 import com.google.inject.AbstractModule;
 import com.google.inject.Injector;
 import com.google.inject.Module;
@@ -95,14 +94,14 @@ public class TransientChefApiModule extends AbstractModule {
 
    @Provides
    @Singleton
-   Map<String, List<String>> runListForTag(RunListForGroup runListForTag) {
-      return new MapMaker().makeComputingMap(runListForTag);
+   CacheLoader<String, List<String>> runListForGroup(RunListForGroup runListForGroup) {
+      return CacheLoader.from(runListForGroup);
    }
 
    @Provides
    @Singleton
-   Map<String, Client> tagToClient(ClientForGroup tagToClient) {
-      return new MapMaker().makeComputingMap(tagToClient);
+   CacheLoader<String, Client> groupToClient(ClientForGroup clientForGroup) {
+      return CacheLoader.from(clientForGroup);
    }
 
    @Provides

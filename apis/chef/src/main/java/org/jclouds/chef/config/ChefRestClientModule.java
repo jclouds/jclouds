@@ -19,7 +19,6 @@
 package org.jclouds.chef.config;
 
 import java.util.List;
-import java.util.Map;
 
 import javax.inject.Singleton;
 
@@ -32,7 +31,7 @@ import org.jclouds.rest.ConfiguresRestClient;
 import org.jclouds.scriptbuilder.domain.Statement;
 import org.jclouds.scriptbuilder.statements.chef.InstallChefGems;
 
-import com.google.common.collect.MapMaker;
+import com.google.common.cache.CacheLoader;
 import com.google.common.reflect.TypeToken;
 import com.google.inject.Provides;
 import com.google.inject.name.Names;
@@ -51,14 +50,14 @@ public class ChefRestClientModule extends BaseChefRestClientModule<ChefApi, Chef
 
    @Provides
    @Singleton
-   Map<String, List<String>> runListForGroup(RunListForGroup runListForGroup) {
-      return new MapMaker().makeComputingMap(runListForGroup);
+   CacheLoader<String, List<String>> runListForGroup(RunListForGroup runListForGroup) {
+      return CacheLoader.from(runListForGroup);
    }
 
    @Provides
    @Singleton
-   Map<String, Client> tagToClient(ClientForGroup groupToClient) {
-      return new MapMaker().makeComputingMap(groupToClient);
+   CacheLoader<String, Client> groupToClient(ClientForGroup clientForGroup) {
+      return CacheLoader.from(clientForGroup);
    }
 
    @Override

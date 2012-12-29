@@ -34,9 +34,6 @@ import com.google.inject.Module;
  */
 public class TransientChefApiMetadata extends ChefApiMetadata {
 
-   /** The serialVersionUID */
-   private static final long serialVersionUID = -1492951757032303845L;
-
    private static Builder builder() {
       return new Builder();
    }

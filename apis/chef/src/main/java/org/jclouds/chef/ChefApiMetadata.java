@@ -41,9 +41,6 @@ import com.google.inject.Module;
  */
 public class ChefApiMetadata extends BaseRestApiMetadata {
 
-   /** The serialVersionUID */
-   private static final long serialVersionUID = 3450830053589179249L;
-
    @Override
    public Builder toBuilder() {
       return new Builder(getApi(), getAsyncApi()).fromApiMetadata(this);

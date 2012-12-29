@@ -18,9 +18,11 @@
  */
 package org.jclouds.chef.test;
 
+import static com.google.common.base.Throwables.propagate;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
 
+import java.io.IOException;
 import java.util.Properties;
 
 import org.jclouds.chef.ChefApi;
@@ -55,7 +57,11 @@ public class TransientChefApiIntegrationTest extends BaseChefContextLiveTest<Che
    @AfterClass(groups = { "integration", "live" })
    @Override
    public void tearDownContext() {
-      Closeables.closeQuietly(context);
+      try {
+         Closeables.close(context, true);
+      } catch (IOException e) {
+         throw propagate(e);
+      }
    }
 
    public void testCreateDatabag() {
