@@ -18,7 +18,10 @@
  */
 package org.jclouds.chef;
 
+import static java.util.concurrent.TimeUnit.MINUTES;
+import static java.util.concurrent.TimeUnit.SECONDS;
 import static org.jclouds.Constants.PROPERTY_SESSION_INTERVAL;
+import static org.jclouds.Constants.PROPERTY_TIMEOUTS_PREFIX;
 import static org.jclouds.chef.config.ChefProperties.CHEF_BOOTSTRAP_DATABAG;
 
 import java.net.URI;
@@ -56,6 +59,14 @@ public class ChefApiMetadata extends BaseRestApiMetadata {
 
    public static Properties defaultProperties() {
       Properties properties = BaseRestApiMetadata.defaultProperties();
+      properties.setProperty(PROPERTY_TIMEOUTS_PREFIX + "default", SECONDS.toMillis(30) + "");
+      properties.setProperty(PROPERTY_TIMEOUTS_PREFIX + "ChefApi.updateCookbook", MINUTES.toMillis(10) + "");
+      properties.setProperty(PROPERTY_TIMEOUTS_PREFIX + "ChefApi.createClient", MINUTES.toMillis(2) + "");
+      properties.setProperty(PROPERTY_TIMEOUTS_PREFIX + "ChefApi.generateKeyForClient", MINUTES.toMillis(2) + "");
+      properties.setProperty(PROPERTY_TIMEOUTS_PREFIX + "ChefApi.createNode", MINUTES.toMillis(2) + "");
+      properties.setProperty(PROPERTY_TIMEOUTS_PREFIX + "ChefApi.updateNode", MINUTES.toMillis(10) + "");
+      properties.setProperty(PROPERTY_TIMEOUTS_PREFIX + "ChefApi.createRole", MINUTES.toMillis(2) + "");
+      properties.setProperty(PROPERTY_TIMEOUTS_PREFIX + "ChefApi.updateRole", MINUTES.toMillis(10) + "");
       properties.setProperty(PROPERTY_SESSION_INTERVAL, "1");
       properties.setProperty(CHEF_BOOTSTRAP_DATABAG, "bootstrap");
       return properties;

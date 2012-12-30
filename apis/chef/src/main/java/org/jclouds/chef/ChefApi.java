@@ -22,8 +22,6 @@ import java.io.InputStream;
 import java.net.URI;
 import java.util.List;
 import java.util.Set;
-import java.util.concurrent.TimeUnit;
-
 import org.jclouds.chef.domain.Client;
 import org.jclouds.chef.domain.CookbookVersion;
 import org.jclouds.chef.domain.DatabagItem;
@@ -35,7 +33,6 @@ import org.jclouds.chef.domain.SearchResult;
 import org.jclouds.chef.domain.UploadSandbox;
 import org.jclouds.chef.options.CreateClientOptions;
 import org.jclouds.chef.options.SearchOptions;
-import org.jclouds.concurrent.Timeout;
 import org.jclouds.http.HttpResponseException;
 import org.jclouds.io.Payload;
 import org.jclouds.rest.AuthorizationException;
@@ -50,7 +47,6 @@ import org.jclouds.rest.binders.BindToJsonPayload;
  * @see <a href="TODO: insert URL of Chef documentation" />
  * @author Adrian Cole
  */
-@Timeout(duration = 30, timeUnit = TimeUnit.SECONDS)
 public interface ChefApi {
    /**
     * 
@@ -100,7 +96,6 @@ public interface ChefApi {
     * @throws HttpResponseException
     *            "409 Conflict" if the cookbook already exists
     */
-   @Timeout(duration = 10, timeUnit = TimeUnit.MINUTES)
    CookbookVersion updateCookbook(String cookbookName, String version, CookbookVersion cookbook);
 
    /**
@@ -158,7 +153,6 @@ public interface ChefApi {
     * @throws HttpResponseException
     *            "409 Conflict" if the client already exists
     */
-   @Timeout(duration = 120, timeUnit = TimeUnit.SECONDS)
    Client createClient(String name);
 
    /**
@@ -175,7 +169,6 @@ public interface ChefApi {
     * @throws HttpResponseException
     *            "409 Conflict" if the client already exists
     */
-   @Timeout(duration = 120, timeUnit = TimeUnit.SECONDS)
    Client createClient(String name, CreateClientOptions options);
 
    /**
@@ -191,7 +184,6 @@ public interface ChefApi {
     *            "403 Forbidden" if the caller is not authorized to modify the
     *            client.
     */
-   @Timeout(duration = 120, timeUnit = TimeUnit.SECONDS)
    Client generateKeyForClient(String name);
 
    /**
@@ -254,7 +246,6 @@ public interface ChefApi {
     * @throws HttpResponseException
     *            "409 Conflict" if the node already exists
     */
-   @Timeout(duration = 120, timeUnit = TimeUnit.SECONDS)
    void createNode(Node node);
 
    /**
@@ -264,7 +255,6 @@ public interface ChefApi {
     * @throws HttpResponseException
     *            "409 Conflict" if the node already exists
     */
-   @Timeout(duration = 10, timeUnit = TimeUnit.MINUTES)
    Node updateNode(Node node);
 
    /**
@@ -327,7 +317,6 @@ public interface ChefApi {
     * @throws HttpResponseException
     *            "409 Conflict" if the role already exists
     */
-   @Timeout(duration = 120, timeUnit = TimeUnit.SECONDS)
    void createRole(Role role);
 
    /**
@@ -337,7 +326,6 @@ public interface ChefApi {
     * @throws HttpResponseException
     *            "409 Conflict" if the role already exists
     */
-   @Timeout(duration = 10, timeUnit = TimeUnit.MINUTES)
    Role updateRole(Role role);
 
    /**
