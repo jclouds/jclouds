@@ -20,6 +20,8 @@ package org.jclouds.chef.binders;
 
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
+import static com.google.common.io.BaseEncoding.base16;
+import static com.google.common.primitives.Bytes.toArray;
 
 import java.util.List;
 import java.util.Set;
@@ -27,11 +29,8 @@ import java.util.Set;
 import javax.inject.Singleton;
 import javax.ws.rs.core.MediaType;
 
-import org.jclouds.crypto.CryptoStreams;
 import org.jclouds.http.HttpRequest;
 import org.jclouds.rest.binders.BindToStringPayload;
-
-import com.google.common.primitives.Bytes;
 
 /**
  * 
@@ -51,7 +50,7 @@ public class BindChecksumsToJsonPayload extends BindToStringPayload {
       builder.append("{\"checksums\":{");
 
       for (List<Byte> md5 : md5s)
-         builder.append(String.format("\"%s\":null,", CryptoStreams.hex(Bytes.toArray(md5))));
+         builder.append(String.format("\"%s\":null,", base16().lowerCase().encode(toArray(md5))));
       builder.deleteCharAt(builder.length() - 1);
       builder.append("}}");
       super.bindToRequest(request, builder.toString());

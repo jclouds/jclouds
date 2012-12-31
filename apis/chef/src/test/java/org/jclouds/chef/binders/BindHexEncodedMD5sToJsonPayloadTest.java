@@ -18,6 +18,7 @@
  */
 package org.jclouds.chef.binders;
 
+import static com.google.common.io.BaseEncoding.base16;
 import static org.testng.Assert.assertEquals;
 
 import java.io.File;
@@ -26,7 +27,6 @@ import javax.ws.rs.HttpMethod;
 
 import org.jclouds.chef.ChefAsyncApi;
 import org.jclouds.chef.config.ChefParserModule;
-import org.jclouds.crypto.CryptoStreams;
 import org.jclouds.http.HttpRequest;
 import org.jclouds.json.config.GsonModule;
 import org.jclouds.rest.annotations.ApiVersion;
@@ -62,7 +62,7 @@ public class BindHexEncodedMD5sToJsonPayloadTest {
    @Test(enabled = false)
    public void testCorrect() {
       HttpRequest request = HttpRequest.builder().method(HttpMethod.POST).endpoint("http://localhost").build();
-      binder.bindToRequest(request, ImmutableSet.of(CryptoStreams.hex("abddef"), CryptoStreams.hex("1234")));
+      binder.bindToRequest(request, ImmutableSet.of(base16().lowerCase().decode("abddef"), base16().lowerCase().decode("1234")));
       assertEquals(request.getPayload().getRawContent(), "{\"checksums\":{\"abddef\":null,\"1234\":null}}");
    }
 

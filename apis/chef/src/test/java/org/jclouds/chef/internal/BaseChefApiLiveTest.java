@@ -19,6 +19,8 @@
 package org.jclouds.chef.internal;
 
 import static com.google.common.base.Throwables.propagate;
+import static com.google.common.hash.Hashing.md5;
+import static org.jclouds.io.ByteSources.asByteSource;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertFalse;
 import static org.testng.Assert.assertNotNull;
@@ -46,9 +48,7 @@ import org.jclouds.chef.domain.SearchResult;
 import org.jclouds.chef.domain.UploadSandbox;
 import org.jclouds.chef.options.CreateClientOptions;
 import org.jclouds.chef.options.SearchOptions;
-import org.jclouds.crypto.CryptoStreams;
 import org.jclouds.crypto.Pems;
-import org.jclouds.io.InputSuppliers;
 import org.jclouds.io.Payloads;
 import org.jclouds.io.payloads.FilePayload;
 import org.jclouds.predicates.RetryablePredicate;
@@ -167,7 +167,7 @@ public abstract class BaseChefApiLiveTest<C extends Context> extends BaseChefCon
                   .addAll(cookbookO.getTemplates()).build()) {
                try {
                   InputStream stream = chefApi.getResourceContents(resource);
-                  byte[] md5 = CryptoStreams.md5(InputSuppliers.of(stream));
+                  byte[] md5 = asByteSource(stream).hash(md5()).asBytes();
                   assertEquals(md5, resource.getChecksum());
                } catch (NullPointerException e) {
                   assert false : "resource not found: " + resource;

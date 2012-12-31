@@ -30,7 +30,6 @@ import javax.ws.rs.core.HttpHeaders;
 
 import org.jclouds.ContextBuilder;
 import org.jclouds.chef.ChefApiMetadata;
-import org.jclouds.crypto.Crypto;
 import org.jclouds.http.HttpRequest;
 import org.jclouds.http.HttpUtils;
 import org.jclouds.http.internal.SignatureWire;
@@ -170,7 +169,6 @@ public class SignedHeaderAuthTest {
    }
 
    private SignedHeaderAuth signing_obj;
-   private Crypto crypto;
 
    /**
     * before class, as we need to ensure that the filter is threadsafe.
@@ -184,7 +182,6 @@ public class SignedHeaderAuthTest {
       Injector injector = ContextBuilder.newBuilder(new ChefApiMetadata()).credentials(USER_ID, PRIVATE_KEY).modules(
             ImmutableSet.<Module> of(new MockModule(), new NullLoggingModule())).buildInjector();
 
-      crypto = injector.getInstance(Crypto.class);
       HttpUtils utils = injector.getInstance(HttpUtils.class);
 
       PrivateKey privateKey = injector.getInstance(PrivateKey.class);
@@ -196,7 +193,7 @@ public class SignedHeaderAuthTest {
             return TIMESTAMP_ISO8601;
          }
 
-      }, crypto, utils);
+      }, utils);
    }
 
 }

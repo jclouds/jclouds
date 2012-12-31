@@ -18,6 +18,7 @@
  */
 package org.jclouds.chef.functions;
 
+import static com.google.common.io.BaseEncoding.base16;
 import static org.testng.Assert.assertEquals;
 
 import java.io.IOException;
@@ -29,7 +30,6 @@ import org.jclouds.chef.domain.Attribute;
 import org.jclouds.chef.domain.CookbookVersion;
 import org.jclouds.chef.domain.Metadata;
 import org.jclouds.chef.domain.Resource;
-import org.jclouds.crypto.CryptoStreams;
 import org.jclouds.http.HttpResponse;
 import org.jclouds.http.functions.ParseJson;
 import org.jclouds.json.Json;
@@ -149,13 +149,13 @@ public class ParseCookbookVersionFromJsonTest {
                                                    "README",
                                                    URI
                                                             .create("https://s3.amazonaws.com/opscode-platform-production-data/organization-486ca3ac66264fea926aa0b4ff74341c/checksum-11637f98942eafbf49c71b7f2f048b78?AWSAccessKeyId=AKIAJOZTD2N26S7W6APA&Expires=1277766181&Signature=zgpNl6wSxjTNovqZu2nJq0JztU8%3D"),
-                                                   CryptoStreams.hex("11637f98942eafbf49c71b7f2f048b78"), "README",
+                                                   base16().lowerCase().decode("11637f98942eafbf49c71b7f2f048b78"), "README",
                                                    "default"),
                                           new Resource(
                                                    "Rakefile",
                                                    URI
                                                             .create("https://s3.amazonaws.com/opscode-platform-production-data/organization-486ca3ac66264fea926aa0b4ff74341c/checksum-ebcf925a1651b4e04b9cd8aac2bc54eb?AWSAccessKeyId=AKIAJOZTD2N26S7W6APA&Expires=1277766181&Signature=EFzzDSKKytTl7b%2FxrCeNLh05zj4%3D"),
-                                                   CryptoStreams.hex("ebcf925a1651b4e04b9cd8aac2bc54eb"), "Rakefile",
+                                                   base16().lowerCase().decode("ebcf925a1651b4e04b9cd8aac2bc54eb"), "Rakefile",
                                                    "default"))));
 
    }

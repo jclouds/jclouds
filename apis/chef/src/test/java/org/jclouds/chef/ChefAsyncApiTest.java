@@ -18,6 +18,8 @@
  */
 package org.jclouds.chef;
 
+import static com.google.common.io.BaseEncoding.base16;
+import static com.google.common.primitives.Bytes.asList;
 import static org.testng.Assert.assertEquals;
 
 import java.io.IOException;
@@ -49,7 +51,6 @@ import org.jclouds.chef.functions.ParseSearchNodesFromJson;
 import org.jclouds.chef.functions.ParseSearchRolesFromJson;
 import org.jclouds.chef.options.CreateClientOptions;
 import org.jclouds.chef.options.SearchOptions;
-import org.jclouds.crypto.CryptoStreams;
 import org.jclouds.date.TimeStamp;
 import org.jclouds.fallbacks.MapHttp4xxCodesToExceptions;
 import org.jclouds.http.HttpRequest;
@@ -66,7 +67,6 @@ import org.testng.annotations.Test;
 
 import com.google.common.base.Supplier;
 import com.google.common.collect.ImmutableSet;
-import com.google.common.primitives.Bytes;
 import com.google.inject.Module;
 
 /**
@@ -97,10 +97,11 @@ public class ChefAsyncApiTest extends BaseAsyncApiTest<ChefAsyncApi> {
 
    public void testGetUploadSandboxForChecksums() throws SecurityException, NoSuchMethodException, IOException {
       Method method = ChefAsyncApi.class.getMethod("getUploadSandboxForChecksums", Set.class);
-      GeneratedHttpRequest httpRequest = processor.createRequest(method, ImmutableSet.of(Bytes
-            .asList(CryptoStreams.hex("0189e76ccc476701d6b374e5a1a27347")), Bytes.asList(CryptoStreams
-            .hex("0c5ecd7788cf4f6c7de2a57193897a6c")), Bytes.asList(CryptoStreams
-            .hex("1dda05ed139664f1f89b9dec482b77c0"))));
+      GeneratedHttpRequest httpRequest = processor.createRequest(
+            method,
+            ImmutableSet.of(asList(base16().lowerCase().decode("0189e76ccc476701d6b374e5a1a27347")),
+                  asList(base16().lowerCase().decode("0c5ecd7788cf4f6c7de2a57193897a6c")),
+                  asList(base16().lowerCase().decode("1dda05ed139664f1f89b9dec482b77c0"))));
       assertRequestLineEquals(httpRequest, "POST http://localhost:4000/sandboxes HTTP/1.1");
       assertNonPayloadHeadersEqual(httpRequest, "Accept: application/json\nX-Chef-Version: " + ChefAsyncApi.VERSION + "-test\n");
       assertPayloadEquals(
@@ -113,7 +114,6 @@ public class ChefAsyncApiTest extends BaseAsyncApiTest<ChefAsyncApi> {
       assertFallbackClassEquals(method, null);
 
       checkFilters(httpRequest);
-
    }
    
    public void testUploadContent() throws SecurityException, NoSuchMethodException, IOException {

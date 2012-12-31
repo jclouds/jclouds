@@ -20,14 +20,13 @@ package org.jclouds.ohai.functions;
 
 import static com.google.common.collect.Iterables.transform;
 import static com.google.common.collect.Lists.partition;
+import static com.google.common.io.BaseEncoding.base16;
 import static com.google.common.primitives.Bytes.asList;
 import static com.google.common.primitives.Bytes.toArray;
 
 import java.util.List;
 
 import javax.inject.Singleton;
-
-import org.jclouds.crypto.CryptoStreams;
 
 import com.google.common.base.Function;
 import com.google.common.base.Joiner;
@@ -47,7 +46,7 @@ public class ByteArrayToMacAddress implements Function<byte[], String> {
 
          @Override
          public String apply(List<Byte> from) {
-            return CryptoStreams.hex(toArray(from));
+            return base16().lowerCase().encode(toArray(from));
          }
 
       }));

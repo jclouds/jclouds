@@ -18,6 +18,8 @@
  */
 package org.jclouds.chef.functions;
 
+import static com.google.common.io.BaseEncoding.base16;
+import static com.google.common.primitives.Bytes.asList;
 import static org.testng.Assert.assertEquals;
 
 import java.io.IOException;
@@ -28,7 +30,6 @@ import org.jclouds.chef.ChefAsyncApi;
 import org.jclouds.chef.config.ChefParserModule;
 import org.jclouds.chef.domain.ChecksumStatus;
 import org.jclouds.chef.domain.UploadSandbox;
-import org.jclouds.crypto.CryptoStreams;
 import org.jclouds.http.HttpResponse;
 import org.jclouds.http.functions.ParseJson;
 import org.jclouds.json.config.GsonModule;
@@ -37,7 +38,6 @@ import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
 
 import com.google.common.collect.ImmutableMap;
-import com.google.common.primitives.Bytes;
 import com.google.inject.AbstractModule;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
@@ -81,13 +81,11 @@ public class ParseUploadSandboxFromJsonTest {
                                  .create("https://api.opscode.com/organizations/jclouds/sandboxes/d454f71e2a5f400c808d0c5d04c2c88c"),
                         ImmutableMap
                                  .<List<Byte>, ChecksumStatus> of(
-                                          Bytes.asList(CryptoStreams.hex("0c5ecd7788cf4f6c7de2a57193897a6c")),
+                                          asList(base16().lowerCase().decode("0c5ecd7788cf4f6c7de2a57193897a6c")),
                                           new ChecksumStatus(
-                                                   URI
-                                                            .create("https://s3.amazonaws.com/opscode-platform-production-data/organization-486ca3ac66264fea926aa0b4ff74341c/sandbox-d454f71e2a5f400c808d0c5d04c2c88c/checksum-0c5ecd7788cf4f6c7de2a57193897a6c?AWSAccessKeyId=AKIAJOZTD2N26S7W6APA&Expires=1277344702&Signature=FtKyqvYEjhhEKmRY%2B0M8aGPMM7g%3D"),
-                                                   true), Bytes.asList(CryptoStreams
-                                                   .hex("0189e76ccc476701d6b374e5a1a27347")), new ChecksumStatus(),
-                                          Bytes.asList(CryptoStreams.hex("1dda05ed139664f1f89b9dec482b77c0")),
+                                                   URI.create("https://s3.amazonaws.com/opscode-platform-production-data/organization-486ca3ac66264fea926aa0b4ff74341c/sandbox-d454f71e2a5f400c808d0c5d04c2c88c/checksum-0c5ecd7788cf4f6c7de2a57193897a6c?AWSAccessKeyId=AKIAJOZTD2N26S7W6APA&Expires=1277344702&Signature=FtKyqvYEjhhEKmRY%2B0M8aGPMM7g%3D"),
+                                                   true), asList(base16().lowerCase().decode("0189e76ccc476701d6b374e5a1a27347")), new ChecksumStatus(),
+                                          asList(base16().lowerCase().decode("1dda05ed139664f1f89b9dec482b77c0")),
                                           new ChecksumStatus()), "d454f71e2a5f400c808d0c5d04c2c88c"));
    }
 }
