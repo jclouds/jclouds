@@ -62,14 +62,12 @@ import org.jclouds.io.payloads.StringPayload;
 import org.jclouds.rest.ConfiguresRestClient;
 import org.jclouds.rest.internal.BaseAsyncApiTest;
 import org.jclouds.rest.internal.GeneratedHttpRequest;
-import org.jclouds.rest.internal.RestAnnotationProcessor;
 import org.testng.annotations.Test;
 
 import com.google.common.base.Supplier;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.primitives.Bytes;
 import com.google.inject.Module;
-import com.google.inject.TypeLiteral;
 
 /**
  * Tests annotation parsing of {@code ChefAsyncApi}
@@ -855,12 +853,6 @@ public class ChefAsyncApiTest extends BaseAsyncApiTest<ChefAsyncApi> {
    protected void checkFilters(HttpRequest request) {
       assertEquals(request.getFilters().size(), 1);
       assertEquals(request.getFilters().get(0).getClass(), SignedHeaderAuth.class);
-   }
-
-   @Override
-   protected TypeLiteral<RestAnnotationProcessor<ChefAsyncApi>> createTypeLiteral() {
-      return new TypeLiteral<RestAnnotationProcessor<ChefAsyncApi>>() {
-      };
    }
 
    @Override
