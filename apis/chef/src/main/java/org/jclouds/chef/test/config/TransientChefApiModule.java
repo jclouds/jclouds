@@ -18,6 +18,8 @@
  */
 package org.jclouds.chef.test.config;
 
+import static org.jclouds.rest.config.BinderUtils.bindClient;
+
 import java.io.IOException;
 import java.security.PrivateKey;
 import java.security.spec.InvalidKeySpecException;
@@ -43,14 +45,12 @@ import org.jclouds.crypto.Pems;
 import org.jclouds.io.InputSuppliers;
 import org.jclouds.rest.ConfiguresRestClient;
 import org.jclouds.rest.annotations.Credential;
-import org.jclouds.rest.config.BinderUtils;
 import org.jclouds.rest.config.RestModule;
 import org.jclouds.scriptbuilder.domain.Statement;
 import org.jclouds.scriptbuilder.statements.chef.InstallChefGems;
 
 import com.google.common.base.Optional;
 import com.google.common.cache.CacheLoader;
-import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import com.google.inject.AbstractModule;
 import com.google.inject.Injector;
@@ -71,8 +71,7 @@ public class TransientChefApiModule extends AbstractModule {
       bind(ChefAsyncApi.class).to(TransientChefAsyncApi.class).asEagerSingleton();
       // forward all requests from TransientChefApi to ChefAsyncApi. needs above
       // binding as cannot proxy a class
-      BinderUtils.bindClient(binder(), TransientChefApi.class, ChefAsyncApi.class,
-            ImmutableMap.<Class<?>, Class<?>> of());
+      bindClient(binder(), TransientChefApi.class, ChefAsyncApi.class);
       bind(ChefApi.class).to(TransientChefApi.class);
 
       bind(LocalAsyncBlobStore.class).annotatedWith(Names.named("databags")).toInstance(
