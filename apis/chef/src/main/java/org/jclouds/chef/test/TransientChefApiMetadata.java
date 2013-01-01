@@ -33,25 +33,21 @@ import com.google.inject.Module;
  * @author Adrian Cole
  */
 public class TransientChefApiMetadata extends ChefApiMetadata {
-
-   private static Builder builder() {
-      return new Builder();
-   }
-
+   
    @Override
    public Builder toBuilder() {
-      return builder().fromApiMetadata(this);
+      return new Builder().fromApiMetadata(this);
    }
 
    public TransientChefApiMetadata() {
-      this(builder());
+      this(new Builder());
    }
 
    protected TransientChefApiMetadata(Builder builder) {
       super(builder);
    }
 
-   public static class Builder extends ChefApiMetadata.Builder {
+   public static class Builder extends ChefApiMetadata.Builder<Builder> {
       protected Builder() {
          super(TransientChefApi.class, TransientChefAsyncApi.class);
          id("transientchef")
@@ -71,10 +67,8 @@ public class TransientChefApiMetadata extends ChefApiMetadata {
       }
 
       @Override
-      public Builder fromApiMetadata(ApiMetadata in) {
-         super.fromApiMetadata(in);
+      protected Builder self() {
          return this;
       }
    }
-
 }

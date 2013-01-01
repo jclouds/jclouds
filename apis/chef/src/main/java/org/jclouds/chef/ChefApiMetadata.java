@@ -45,15 +45,15 @@ import com.google.inject.Module;
 public class ChefApiMetadata extends BaseRestApiMetadata {
 
    @Override
-   public Builder toBuilder() {
-      return new Builder(getApi(), getAsyncApi()).fromApiMetadata(this);
+   public Builder<?> toBuilder() {
+      return new ConcreteBuilder().fromApiMetadata(this);
    }
 
    public ChefApiMetadata() {
-      this(new Builder(ChefApi.class, ChefAsyncApi.class));
+      this(new ConcreteBuilder());
    }
 
-   protected ChefApiMetadata(Builder builder) {
+   protected ChefApiMetadata(Builder<?> builder) {
       super(Builder.class.cast(builder));
    }
 
@@ -72,7 +72,10 @@ public class ChefApiMetadata extends BaseRestApiMetadata {
       return properties;
    }
 
-   public static class Builder extends BaseRestApiMetadata.Builder {
+   public static abstract class Builder<T extends Builder<T>> extends BaseRestApiMetadata.Builder<T> {
+      protected Builder(){
+         this(ChefApi.class, ChefAsyncApi.class);
+      }
 
       protected Builder(Class<?> api, Class<?> asyncApi) {
          super(api, asyncApi);
@@ -92,12 +95,12 @@ public class ChefApiMetadata extends BaseRestApiMetadata {
       public ChefApiMetadata build() {
          return new ChefApiMetadata(this);
       }
-      
+   }
+   
+   private static class ConcreteBuilder extends Builder<ConcreteBuilder> {
       @Override
-      public Builder fromApiMetadata(ApiMetadata in) {
-         super.fromApiMetadata(in);
+      protected ConcreteBuilder self() {
          return this;
       }
    }
-
 }
