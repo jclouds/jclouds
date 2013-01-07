@@ -52,10 +52,10 @@ public class BindCreateClientOptionsToJsonPayload extends BindToJsonPayload
         checkArgument(checkNotNull(request, "request") instanceof GeneratedHttpRequest,
             "this binder is only valid for GeneratedHttpRequests");
         GeneratedHttpRequest gRequest = (GeneratedHttpRequest) request;
-        checkState(gRequest.getArgs() != null, "args should be initialized at this point");
+        checkState(gRequest.getInvocation().getArgs() != null, "args should be initialized at this point");
         
         String name = checkNotNull(postParams.remove("name"), "name").toString();
-        CreateClientOptions options = (CreateClientOptions) Iterables.find(gRequest.getArgs(), 
+        CreateClientOptions options = (CreateClientOptions) Iterables.find(gRequest.getInvocation().getArgs(), 
             Predicates.instanceOf(CreateClientOptions.class));
         
         return bindToRequest(request, new CreateClientParams(name, options));
