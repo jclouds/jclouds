@@ -18,7 +18,7 @@
  */
 package org.jclouds.chef.test.config;
 
-import static org.jclouds.rest.config.BinderUtils.bindClient;
+import static org.jclouds.rest.config.BinderUtils.bindBlockingApi;
 
 import java.io.IOException;
 import java.security.PrivateKey;
@@ -71,7 +71,7 @@ public class TransientChefApiModule extends AbstractModule {
       bind(ChefAsyncApi.class).to(TransientChefAsyncApi.class).asEagerSingleton();
       // forward all requests from TransientChefApi to ChefAsyncApi. needs above
       // binding as cannot proxy a class
-      bindClient(binder(), TransientChefApi.class, ChefAsyncApi.class);
+      bindBlockingApi(binder(), TransientChefApi.class, ChefAsyncApi.class);
       bind(ChefApi.class).to(TransientChefApi.class);
 
       bind(LocalAsyncBlobStore.class).annotatedWith(Names.named("databags")).toInstance(

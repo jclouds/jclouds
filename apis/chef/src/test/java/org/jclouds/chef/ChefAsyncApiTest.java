@@ -67,7 +67,7 @@ import org.testng.annotations.Test;
 import com.google.common.base.Supplier;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
-import org.jclouds.reflect.Invokable;
+import com.google.common.reflect.Invokable;
 import com.google.inject.Module;
 
 /**
