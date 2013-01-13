@@ -23,16 +23,13 @@ import static com.google.common.collect.Iterables.filter;
 import static com.google.common.collect.Iterables.transform;
 import static org.jclouds.concurrent.FutureIterables.transformParallel;
 
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Future;
-
 import javax.annotation.Resource;
 import javax.inject.Named;
 import javax.inject.Singleton;
 
 import org.jclouds.Constants;
-import org.jclouds.chef.ChefAsyncApi;
 import org.jclouds.chef.ChefApi;
+import org.jclouds.chef.ChefAsyncApi;
 import org.jclouds.chef.config.ChefProperties;
 import org.jclouds.chef.domain.CookbookVersion;
 import org.jclouds.chef.strategy.ListCookbookVersions;
@@ -40,6 +37,8 @@ import org.jclouds.logging.Logger;
 
 import com.google.common.base.Function;
 import com.google.common.base.Predicate;
+import com.google.common.util.concurrent.ListenableFuture;
+import com.google.common.util.concurrent.ListeningExecutorService;
 import com.google.inject.Inject;
 
 /**
@@ -52,7 +51,7 @@ public class ListCookbookVersionsImpl implements ListCookbookVersions {
 
    protected final ChefApi chefApi;
    protected final ChefAsyncApi chefAsyncApi;
-   protected final ExecutorService userExecutor;
+   protected final ListeningExecutorService userExecutor;
    @Resource
    @Named(ChefProperties.CHEF_LOGGER)
    protected Logger logger = Logger.NULL;
@@ -62,7 +61,7 @@ public class ListCookbookVersionsImpl implements ListCookbookVersions {
    protected Long maxTime;
 
    @Inject
-   ListCookbookVersionsImpl(@Named(Constants.PROPERTY_USER_THREADS) ExecutorService userExecutor,
+   ListCookbookVersionsImpl(@Named(Constants.PROPERTY_USER_THREADS) ListeningExecutorService userExecutor,
             ChefApi getAllCookbookVersion, ChefAsyncApi ablobstore) {
       this.userExecutor = userExecutor;
       this.chefAsyncApi = ablobstore;
@@ -87,13 +86,10 @@ public class ListCookbookVersionsImpl implements ListCookbookVersions {
          public Iterable<? extends CookbookVersion> apply(final String cookbook) {
             // TODO getting each version could also go parallel
             return transformParallel(chefApi.getVersionsOfCookbook(cookbook),
-                     new Function<String, Future<? extends CookbookVersion>>() {
-
-                        @Override
-                        public Future<CookbookVersion> apply(String version) {
+                     new Function<String, ListenableFuture<? extends CookbookVersion>>() {
+                        public ListenableFuture<CookbookVersion> apply(String version) {
                            return chefAsyncApi.getCookbook(cookbook, version);
                         }
-
                      }, userExecutor, maxTime, logger, "getting versions of cookbook " + cookbook);
          }
 

@@ -23,8 +23,6 @@ import static com.google.common.collect.Maps.newHashMap;
 import static org.jclouds.concurrent.FutureIterables.awaitCompletion;
 
 import java.util.Map;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Future;
 import java.util.concurrent.TimeoutException;
 
 import javax.annotation.Resource;
@@ -38,6 +36,8 @@ import org.jclouds.chef.config.ChefProperties;
 import org.jclouds.chef.strategy.DeleteAllClientsInList;
 import org.jclouds.logging.Logger;
 
+import com.google.common.util.concurrent.ListenableFuture;
+import com.google.common.util.concurrent.ListeningExecutorService;
 import com.google.inject.Inject;
 
 /**
@@ -50,7 +50,7 @@ public class DeleteAllClientsInListImpl implements DeleteAllClientsInList {
 
    protected final ChefApi chefApi;
    protected final ChefAsyncApi chefAsyncApi;
-   protected final ExecutorService userExecutor;
+   protected final ListeningExecutorService userExecutor;
    @Resource
    @Named(ChefProperties.CHEF_LOGGER)
    protected Logger logger = Logger.NULL;
@@ -60,7 +60,7 @@ public class DeleteAllClientsInListImpl implements DeleteAllClientsInList {
    protected Long maxTime;
 
    @Inject
-   DeleteAllClientsInListImpl(@Named(Constants.PROPERTY_USER_THREADS) ExecutorService userExecutor, ChefApi getAllApi,
+   DeleteAllClientsInListImpl(@Named(Constants.PROPERTY_USER_THREADS) ListeningExecutorService userExecutor, ChefApi getAllApi,
          ChefAsyncApi ablobstore) {
       this.userExecutor = userExecutor;
       this.chefAsyncApi = ablobstore;
@@ -70,13 +70,12 @@ public class DeleteAllClientsInListImpl implements DeleteAllClientsInList {
    @Override
    public void execute(Iterable<String> names) {
       Map<String, Exception> exceptions = newHashMap();
-      Map<String, Future<?>> responses = newHashMap();
+      Map<String, ListenableFuture<?>> responses = newHashMap();
       for (String name : names) {
          responses.put(name, chefAsyncApi.deleteClient(name));
       }
       try {
-         exceptions = awaitCompletion(responses, userExecutor, maxTime, logger,
-               String.format("deleting apis: %s", names));
+         exceptions = awaitCompletion(responses, userExecutor, maxTime, logger, String.format("deleting apis: %s", names));
       } catch (TimeoutException e) {
          propagate(e);
       }

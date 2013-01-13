@@ -22,14 +22,14 @@ import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.base.Throwables.propagate;
 import static com.google.common.collect.Iterables.transform;
 import static com.google.common.collect.Sets.newLinkedHashSet;
-import static org.jclouds.concurrent.Futures.compose;
+import static com.google.common.util.concurrent.Futures.immediateFuture;
+import static com.google.common.util.concurrent.Futures.transform;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
 import java.util.List;
 import java.util.Set;
-import java.util.concurrent.ExecutorService;
 
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -56,8 +56,8 @@ import org.jclouds.io.Payload;
 import org.jclouds.util.Strings2;
 
 import com.google.common.base.Function;
-import com.google.common.util.concurrent.Futures;
 import com.google.common.util.concurrent.ListenableFuture;
+import com.google.common.util.concurrent.ListeningExecutorService;
 
 /**
  * In-memory chef simulator.
@@ -95,18 +95,18 @@ public class TransientChefAsyncApi implements ChefAsyncApi {
    }
 
    private final LocalAsyncBlobStore databags;
-   private final ExecutorService executor;
+   private final ListeningExecutorService userExecutor;
    private final BlobToDatabagItem blobToDatabagItem;
    private final StorageMetadataToName storageMetadataToName;
 
    @Inject
    TransientChefAsyncApi(@Named("databags") LocalAsyncBlobStore databags,
          StorageMetadataToName storageMetadataToName, BlobToDatabagItem blobToDatabagItem,
-         @Named(Constants.PROPERTY_USER_THREADS) ExecutorService executor) {
+         @Named(Constants.PROPERTY_USER_THREADS) ListeningExecutorService userExecutor) {
       this.databags = checkNotNull(databags, "databags");
       this.storageMetadataToName = checkNotNull(storageMetadataToName, "storageMetadataToName");
       this.blobToDatabagItem = checkNotNull(blobToDatabagItem, "blobToDatabagItem");
-      this.executor = checkNotNull(executor, "executor");
+      this.userExecutor = checkNotNull(userExecutor, "userExecutor");
    }
 
    @Override
@@ -131,13 +131,10 @@ public class TransientChefAsyncApi implements ChefAsyncApi {
 
    @Override
    public ListenableFuture<Void> createDatabag(String databagName) {
-      return Futures.transform(databags.createContainerInLocation(null, databagName), new Function<Boolean, Void>(){
-
-         @Override
+      return transform(databags.createContainerInLocation(null, databagName), new Function<Boolean, Void>(){
          public Void apply(Boolean input) {
             return null;
          }
-         
       });
    }
 
@@ -145,7 +142,7 @@ public class TransientChefAsyncApi implements ChefAsyncApi {
    public ListenableFuture<DatabagItem> createDatabagItem(String databagName, DatabagItem databagItem) {
       Blob blob = databags.blobBuilder(databagItem.getId()).payload(databagItem.toString()).build();
       databags.putBlob(databagName, blob);
-      return Futures.immediateFuture(databagItem);
+      return immediateFuture(databagItem);
    }
 
    @Override
@@ -185,7 +182,7 @@ public class TransientChefAsyncApi implements ChefAsyncApi {
 
    @Override
    public ListenableFuture<DatabagItem> deleteDatabagItem(String databagName, String databagItemId) {
-      return Futures.immediateFuture(blobToDatabagItem.apply(databags.getContext().createBlobMap(databagName).remove(databagItemId)));
+      return immediateFuture(blobToDatabagItem.apply(databags.getContext().createBlobMap(databagName).remove(databagItemId)));
    }
 
    @Override
@@ -215,7 +212,7 @@ public class TransientChefAsyncApi implements ChefAsyncApi {
 
    @Override
    public ListenableFuture<DatabagItem> getDatabagItem(String databagName, String databagItemId) {
-      return compose(databags.getBlob(databagName, databagItemId), blobToDatabagItem, executor);
+      return transform(databags.getBlob(databagName, databagItemId), blobToDatabagItem, userExecutor);
    }
 
    @Override
@@ -250,12 +247,12 @@ public class TransientChefAsyncApi implements ChefAsyncApi {
 
    @Override
    public ListenableFuture<Set<String>> listDatabagItems(String databagName) {
-      return compose(databags.list(databagName), storageMetadataToName, executor);
+      return transform(databags.list(databagName), storageMetadataToName, userExecutor);
    }
 
    @Override
    public ListenableFuture<Set<String>> listDatabags() {
-      return compose(databags.list(), storageMetadataToName, executor);
+      return transform(databags.list(), storageMetadataToName, userExecutor);
    }
 
    @Override

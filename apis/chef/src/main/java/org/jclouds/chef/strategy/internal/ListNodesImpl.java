@@ -21,16 +21,13 @@ package org.jclouds.chef.strategy.internal;
 import static com.google.common.collect.Iterables.filter;
 import static org.jclouds.concurrent.FutureIterables.transformParallel;
 
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Future;
-
 import javax.annotation.Resource;
 import javax.inject.Named;
 import javax.inject.Singleton;
 
 import org.jclouds.Constants;
-import org.jclouds.chef.ChefAsyncApi;
 import org.jclouds.chef.ChefApi;
+import org.jclouds.chef.ChefAsyncApi;
 import org.jclouds.chef.config.ChefProperties;
 import org.jclouds.chef.domain.Node;
 import org.jclouds.chef.strategy.ListNodes;
@@ -38,6 +35,8 @@ import org.jclouds.logging.Logger;
 
 import com.google.common.base.Function;
 import com.google.common.base.Predicate;
+import com.google.common.util.concurrent.ListenableFuture;
+import com.google.common.util.concurrent.ListeningExecutorService;
 import com.google.inject.Inject;
 
 /**
@@ -50,7 +49,7 @@ public class ListNodesImpl implements ListNodes {
 
    protected final ChefApi chefApi;
    protected final ChefAsyncApi chefAsyncApi;
-   protected final ExecutorService userExecutor;
+   protected final ListeningExecutorService userExecutor;
    @Resource
    @Named(ChefProperties.CHEF_LOGGER)
    protected Logger logger = Logger.NULL;
@@ -60,7 +59,7 @@ public class ListNodesImpl implements ListNodes {
    protected Long maxTime;
 
    @Inject
-   ListNodesImpl(@Named(Constants.PROPERTY_USER_THREADS) ExecutorService userExecutor, ChefApi getAllNode,
+   ListNodesImpl(@Named(Constants.PROPERTY_USER_THREADS) ListeningExecutorService userExecutor, ChefApi getAllNode,
             ChefAsyncApi ablobstore) {
       this.userExecutor = userExecutor;
       this.chefAsyncApi = ablobstore;
@@ -79,15 +78,11 @@ public class ListNodesImpl implements ListNodes {
 
    @Override
    public Iterable<? extends Node> execute(Iterable<String> toGet) {
-      return transformParallel(toGet, new Function<String, Future<? extends Node>>() {
-
-         @Override
-         public Future<Node> apply(String from) {
+      return transformParallel(toGet, new Function<String, ListenableFuture<? extends Node>>() {
+         public ListenableFuture<Node> apply(String from) {
             return chefAsyncApi.getNode(from);
          }
-
       }, userExecutor, maxTime, logger, "getting nodes");
-
    }
 
 }

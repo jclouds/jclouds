@@ -21,16 +21,13 @@ package org.jclouds.chef.strategy.internal;
 import static com.google.common.collect.Iterables.filter;
 import static org.jclouds.concurrent.FutureIterables.transformParallel;
 
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Future;
-
 import javax.annotation.Resource;
 import javax.inject.Named;
 import javax.inject.Singleton;
 
 import org.jclouds.Constants;
-import org.jclouds.chef.ChefAsyncApi;
 import org.jclouds.chef.ChefApi;
+import org.jclouds.chef.ChefAsyncApi;
 import org.jclouds.chef.config.ChefProperties;
 import org.jclouds.chef.domain.Client;
 import org.jclouds.chef.strategy.ListClients;
@@ -38,6 +35,8 @@ import org.jclouds.logging.Logger;
 
 import com.google.common.base.Function;
 import com.google.common.base.Predicate;
+import com.google.common.util.concurrent.ListenableFuture;
+import com.google.common.util.concurrent.ListeningExecutorService;
 import com.google.inject.Inject;
 
 /**
@@ -50,7 +49,7 @@ public class ListClientsImpl implements ListClients {
 
    protected final ChefApi chefApi;
    protected final ChefAsyncApi chefAsyncApi;
-   protected final ExecutorService userExecutor;
+   protected final ListeningExecutorService userExecutor;
    @Resource
    @Named(ChefProperties.CHEF_LOGGER)
    protected Logger logger = Logger.NULL;
@@ -60,7 +59,7 @@ public class ListClientsImpl implements ListClients {
    protected Long maxTime;
 
    @Inject
-   ListClientsImpl(@Named(Constants.PROPERTY_USER_THREADS) ExecutorService userExecutor, ChefApi getAllApi,
+   ListClientsImpl(@Named(Constants.PROPERTY_USER_THREADS) ListeningExecutorService userExecutor, ChefApi getAllApi,
             ChefAsyncApi ablobstore) {
       this.userExecutor = userExecutor;
       this.chefAsyncApi = ablobstore;
@@ -79,13 +78,10 @@ public class ListClientsImpl implements ListClients {
 
    @Override
    public Iterable<? extends Client> execute(Iterable<String> toGet) {
-      return transformParallel(toGet, new Function<String, Future<? extends Client>>() {
-
-         @Override
-         public Future<Client> apply(String from) {
+      return transformParallel(toGet, new Function<String, ListenableFuture<? extends Client>>() {
+         public ListenableFuture<Client> apply(String from) {
             return chefAsyncApi.getClient(from);
          }
-
       }, userExecutor, maxTime, logger, "getting apis");
 
    }

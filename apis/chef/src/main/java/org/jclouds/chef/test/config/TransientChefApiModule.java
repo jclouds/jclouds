@@ -18,6 +18,7 @@
  */
 package org.jclouds.chef.test.config;
 
+import static com.google.common.util.concurrent.MoreExecutors.sameThreadExecutor;
 import static org.jclouds.rest.config.BinderUtils.bindBlockingApi;
 
 import java.io.IOException;
@@ -38,7 +39,6 @@ import org.jclouds.chef.functions.ClientForGroup;
 import org.jclouds.chef.functions.RunListForGroup;
 import org.jclouds.chef.test.TransientChefApi;
 import org.jclouds.chef.test.TransientChefAsyncApi;
-import org.jclouds.concurrent.MoreExecutors;
 import org.jclouds.concurrent.config.ExecutorServiceModule;
 import org.jclouds.crypto.Crypto;
 import org.jclouds.crypto.Pems;
@@ -77,11 +77,9 @@ public class TransientChefApiModule extends AbstractModule {
       bind(LocalAsyncBlobStore.class).annotatedWith(Names.named("databags")).toInstance(
             ContextBuilder
                   .newBuilder(new TransientApiMetadata())
-                  .modules(
-                        ImmutableSet.<Module> of(new ExecutorServiceModule(MoreExecutors.sameThreadExecutor(),
-                              MoreExecutors.sameThreadExecutor()))).buildInjector()
-                  .getInstance(LocalAsyncBlobStore.class));
-
+                  .modules(ImmutableSet.<Module> of(
+                        new ExecutorServiceModule(sameThreadExecutor(), sameThreadExecutor())))
+                  .buildInjector().getInstance(LocalAsyncBlobStore.class));
       bind(Statement.class).annotatedWith(Names.named("installChefGems")).to(InstallChefGems.class);
    }
 
