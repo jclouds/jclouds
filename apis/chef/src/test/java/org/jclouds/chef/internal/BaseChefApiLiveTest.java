@@ -20,7 +20,9 @@ package org.jclouds.chef.internal;
 
 import static com.google.common.base.Throwables.propagate;
 import static com.google.common.hash.Hashing.md5;
+import static java.util.concurrent.TimeUnit.MILLISECONDS;
 import static org.jclouds.io.ByteSources.asByteSource;
+import static org.jclouds.util.Predicates2.retry;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertFalse;
 import static org.testng.Assert.assertNotNull;
@@ -33,7 +35,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Properties;
 import java.util.Set;
-import java.util.concurrent.TimeUnit;
 
 import org.jclouds.Context;
 import org.jclouds.chef.ChefApi;
@@ -51,7 +52,6 @@ import org.jclouds.chef.options.SearchOptions;
 import org.jclouds.crypto.Pems;
 import org.jclouds.io.Payloads;
 import org.jclouds.io.payloads.FilePayload;
-import org.jclouds.predicates.RetryablePredicate;
 import org.jclouds.rest.AuthorizationException;
 import org.jclouds.rest.ResourceNotFoundException;
 import org.testng.annotations.AfterClass;
@@ -354,7 +354,7 @@ public abstract class BaseChefApiLiveTest<C extends Context> extends BaseChefCon
 
    @Test(dependsOnMethods = { "testListSearchIndexes", "testCreateNode" })
    public void testSearchNodesWithOptions() throws Exception {
-      RetryablePredicate<SearchOptions> waitForIndex = new RetryablePredicate<SearchOptions>(
+      Predicate<SearchOptions> waitForIndex = retry(
             new Predicate<SearchOptions>() {
                @Override
                public boolean apply(SearchOptions input) {
@@ -369,7 +369,7 @@ public abstract class BaseChefApiLiveTest<C extends Context> extends BaseChefCon
                      return false;
                   }
                }
-            }, maxWaitForIndexInMs, 5000L, TimeUnit.MILLISECONDS);
+            }, maxWaitForIndexInMs, 5000L, MILLISECONDS);
 
       SearchOptions options = SearchOptions.Builder.query("name:" + PREFIX);
       assertTrue(waitForIndex.apply(options));
@@ -383,7 +383,7 @@ public abstract class BaseChefApiLiveTest<C extends Context> extends BaseChefCon
 
    @Test(dependsOnMethods = { "testListSearchIndexes", "testCreateClient" })
    public void testSearchClientsWithOptions() throws Exception {
-      RetryablePredicate<SearchOptions> waitForIndex = new RetryablePredicate<SearchOptions>(
+      Predicate<SearchOptions> waitForIndex = retry(
             new Predicate<SearchOptions>() {
                @Override
                public boolean apply(SearchOptions input) {
@@ -398,7 +398,7 @@ public abstract class BaseChefApiLiveTest<C extends Context> extends BaseChefCon
                      return false;
                   }
                }
-            }, maxWaitForIndexInMs, 5000L, TimeUnit.MILLISECONDS);
+            }, maxWaitForIndexInMs, 5000L, MILLISECONDS);
 
       SearchOptions options = SearchOptions.Builder.query("name:" + PREFIX);
       assertTrue(waitForIndex.apply(options));
@@ -412,7 +412,7 @@ public abstract class BaseChefApiLiveTest<C extends Context> extends BaseChefCon
 
    @Test(dependsOnMethods = { "testListSearchIndexes", "testCreateRole" })
    public void testSearchRolesWithOptions() throws Exception {
-      RetryablePredicate<SearchOptions> waitForIndex = new RetryablePredicate<SearchOptions>(
+      Predicate<SearchOptions> waitForIndex = retry(
             new Predicate<SearchOptions>() {
                @Override
                public boolean apply(SearchOptions input) {
@@ -427,7 +427,7 @@ public abstract class BaseChefApiLiveTest<C extends Context> extends BaseChefCon
                      return false;
                   }
                }
-            }, maxWaitForIndexInMs, 5000L, TimeUnit.MILLISECONDS);
+            }, maxWaitForIndexInMs, 5000L, MILLISECONDS);
 
       SearchOptions options = SearchOptions.Builder.query("name:" + PREFIX);
       assertTrue(waitForIndex.apply(options));
@@ -441,7 +441,7 @@ public abstract class BaseChefApiLiveTest<C extends Context> extends BaseChefCon
 
    @Test(dependsOnMethods = { "testListSearchIndexes", "testDatabagItemExists" })
    public void testSearchDatabagWithOptions() throws Exception {
-      RetryablePredicate<SearchOptions> waitForIndex = new RetryablePredicate<SearchOptions>(
+      Predicate<SearchOptions> waitForIndex = retry(
             new Predicate<SearchOptions>() {
                @Override
                public boolean apply(SearchOptions input) {
@@ -456,7 +456,7 @@ public abstract class BaseChefApiLiveTest<C extends Context> extends BaseChefCon
                      return false;
                   }
                }
-            }, maxWaitForIndexInMs, 5000L, TimeUnit.MILLISECONDS);
+            }, maxWaitForIndexInMs, 5000L, MILLISECONDS);
 
       SearchOptions options = SearchOptions.Builder.query("id:" + databagItem.getId());
       assertTrue(waitForIndex.apply(options));
