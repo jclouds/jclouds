@@ -18,9 +18,13 @@
  */
 package org.jclouds.chef.config;
 
+import static com.google.common.base.Suppliers.compose;
+import static com.google.common.base.Suppliers.memoizeWithExpiration;
+import static com.google.common.base.Throwables.propagate;
 import static org.jclouds.Constants.PROPERTY_SESSION_INTERVAL;
 import static org.jclouds.chef.config.ChefProperties.CHEF_VALIDATOR_CREDENTIAL;
 import static org.jclouds.chef.config.ChefProperties.CHEF_VALIDATOR_NAME;
+import static org.jclouds.crypto.Pems.privateKeySpec;
 
 import java.io.IOException;
 import java.security.PrivateKey;
@@ -28,6 +32,7 @@ import java.security.spec.InvalidKeySpecException;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
+import javax.inject.Inject;
 import javax.inject.Named;
 import javax.inject.Singleton;
 
@@ -37,6 +42,7 @@ import org.jclouds.crypto.Crypto;
 import org.jclouds.crypto.Pems;
 import org.jclouds.date.DateService;
 import org.jclouds.date.TimeStamp;
+import org.jclouds.domain.Credentials;
 import org.jclouds.http.HttpErrorHandler;
 import org.jclouds.http.HttpRetryHandler;
 import org.jclouds.http.annotation.ClientError;
@@ -44,12 +50,15 @@ import org.jclouds.http.annotation.Redirection;
 import org.jclouds.http.annotation.ServerError;
 import org.jclouds.io.InputSuppliers;
 import org.jclouds.rest.ConfiguresRestClient;
-import org.jclouds.rest.annotations.Credential;
 import org.jclouds.rest.config.RestClientModule;
 
+import com.google.common.annotations.VisibleForTesting;
+import com.google.common.base.Function;
 import com.google.common.base.Optional;
 import com.google.common.base.Supplier;
-import com.google.common.base.Suppliers;
+import com.google.common.cache.CacheBuilder;
+import com.google.common.cache.CacheLoader;
+import com.google.common.cache.LoadingCache;
 import com.google.common.reflect.TypeToken;
 import com.google.inject.ConfigurationException;
 import com.google.inject.Injector;
@@ -86,18 +95,56 @@ public class BaseChefRestClientModule<S, A> extends RestClientModule<S, A> {
    @Provides
    @TimeStamp
    Supplier<String> provideTimeStampCache(@Named(PROPERTY_SESSION_INTERVAL) long seconds, final DateService dateService) {
-      return Suppliers.memoizeWithExpiration(new Supplier<String>() {
+      return memoizeWithExpiration(new Supplier<String>() {
          public String get() {
             return dateService.iso8601SecondsDateFormat();
          }
       }, seconds, TimeUnit.SECONDS);
    }
 
+   // TODO: potentially change this 
    @Provides
    @Singleton
-   public PrivateKey provideKey(Crypto crypto, @Credential String pem) throws InvalidKeySpecException,
-            IOException {
-        return crypto.rsaKeyFactory().generatePrivate(Pems.privateKeySpec(InputSuppliers.of(pem)));
+   public Supplier<PrivateKey> supplyKey(final LoadingCache<Credentials, PrivateKey> keyCache,
+         @org.jclouds.location.Provider final Supplier<Credentials> creds) {
+      return compose(new Function<Credentials, PrivateKey>() {
+         public PrivateKey apply(Credentials in) {
+            return keyCache.getUnchecked(in);
+         }
+      }, creds);
+   }
+
+   @Provides
+   @Singleton
+   LoadingCache<Credentials, PrivateKey> privateKeyCache(PrivateKeyForCredentials loader) {
+      // throw out the private key related to old credentials
+      return CacheBuilder.newBuilder().maximumSize(2).build(loader);
+   }
+
+   /**
+    * it is relatively expensive to extract a private key from a PEM. cache the relationship between current credentials
+    * so that the private key is only recalculated once.
+    */
+   @VisibleForTesting
+   @Singleton
+   private static class PrivateKeyForCredentials extends CacheLoader<Credentials, PrivateKey> {
+      private final Crypto crypto;
+
+      @Inject
+      private PrivateKeyForCredentials(Crypto crypto) {
+         this.crypto = crypto;
+      }
+
+      @Override
+      public PrivateKey load(Credentials in) {
+         try {
+            return crypto.rsaKeyFactory().generatePrivate(privateKeySpec(InputSuppliers.of(in.credential)));
+         } catch (InvalidKeySpecException e) {
+            throw propagate(e);
+         } catch (IOException e) {
+            throw propagate(e);
+         }
+      }
    }
    
    @Provides

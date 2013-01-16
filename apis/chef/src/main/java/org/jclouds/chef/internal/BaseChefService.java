@@ -29,7 +29,6 @@ import java.util.List;
 import javax.annotation.Resource;
 import javax.inject.Inject;
 import javax.inject.Named;
-import javax.inject.Provider;
 import javax.inject.Singleton;
 
 import org.jclouds.chef.ChefContext;
@@ -56,6 +55,7 @@ import org.jclouds.logging.Logger;
 import org.jclouds.scriptbuilder.domain.Statement;
 
 import com.google.common.base.Predicate;
+import com.google.common.base.Supplier;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Lists;
 import com.google.common.io.ByteStreams;
@@ -80,7 +80,7 @@ public class BaseChefService implements ChefService {
    private final DeleteAllClientsInList deleteAllClientsInList;
    private final ListClients listClients;
    private final UpdateAutomaticAttributesOnNode updateAutomaticAttributesOnNode;
-   private final Provider<PrivateKey> privateKey;
+   private final Supplier<PrivateKey> privateKey;
    private final GroupToBootScript groupToBootScript;
    private final String databag;
    private final RunListForGroup runListForGroup;
@@ -92,7 +92,7 @@ public class BaseChefService implements ChefService {
             DeleteAllNodesInList deleteAllNodesInList, ListNodes listNodes,
             DeleteAllClientsInList deleteAllClientsInList, ListClients listClients,
             ListCookbookVersions listCookbookVersions, UpdateAutomaticAttributesOnNode updateAutomaticAttributesOnNode,
-            Provider<PrivateKey> privateKey, @Named(CHEF_BOOTSTRAP_DATABAG) String databag,
+            Supplier<PrivateKey> privateKey, @Named(CHEF_BOOTSTRAP_DATABAG) String databag,
             GroupToBootScript groupToBootScript, RunListForGroup runListForGroup) {
       this.chefContext = checkNotNull(chefContext, "chefContext");
       this.cleanupStaleNodesAndClients = checkNotNull(cleanupStaleNodesAndClients, "cleanupStaleNodesAndClients");

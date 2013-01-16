@@ -30,6 +30,7 @@ import javax.ws.rs.core.HttpHeaders;
 
 import org.jclouds.ContextBuilder;
 import org.jclouds.chef.ChefApiMetadata;
+import org.jclouds.domain.Credentials;
 import org.jclouds.http.HttpRequest;
 import org.jclouds.http.HttpUtils;
 import org.jclouds.http.internal.SignatureWire;
@@ -40,13 +41,17 @@ import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
 import com.google.common.base.Joiner;
+import com.google.common.base.Supplier;
+import com.google.common.base.Suppliers;
 import com.google.common.base.Throwables;
 import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.LinkedHashMultimap;
 import com.google.common.collect.Multimap;
 import com.google.inject.Injector;
+import com.google.inject.Key;
 import com.google.inject.Module;
+import com.google.inject.TypeLiteral;
 
 /**
  * 
@@ -179,21 +184,23 @@ public class SignedHeaderAuthTest {
    @BeforeClass
    protected void createFilter() throws IOException {
 
-      Injector injector = ContextBuilder.newBuilder(new ChefApiMetadata()).credentials(USER_ID, PRIVATE_KEY).modules(
-            ImmutableSet.<Module> of(new MockModule(), new NullLoggingModule())).buildInjector();
+      Injector injector = ContextBuilder.newBuilder(new ChefApiMetadata()).credentials(USER_ID, PRIVATE_KEY)
+            .modules(ImmutableSet.<Module> of(new MockModule(), new NullLoggingModule())).buildInjector();
 
       HttpUtils utils = injector.getInstance(HttpUtils.class);
 
-      PrivateKey privateKey = injector.getInstance(PrivateKey.class);
+      Supplier<PrivateKey> privateKey = injector.getInstance(Key.get(new TypeLiteral<Supplier<PrivateKey>>() {
+      }));
 
-      signing_obj = new SignedHeaderAuth(new SignatureWire(), USER_ID, privateKey, new Provider<String>() {
+      signing_obj = new SignedHeaderAuth(new SignatureWire(),
+            Suppliers.ofInstance(new Credentials(USER_ID, PRIVATE_KEY)), privateKey, new Provider<String>() {
 
-         @Override
-         public String get() {
-            return TIMESTAMP_ISO8601;
-         }
+               @Override
+               public String get() {
+                  return TIMESTAMP_ISO8601;
+               }
 
-      }, utils);
+            }, utils);
    }
 
 }
