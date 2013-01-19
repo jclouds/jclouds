@@ -23,6 +23,7 @@ import java.net.URI;
 import java.util.List;
 import java.util.Set;
 
+import javax.inject.Named;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
@@ -86,7 +87,6 @@ import com.google.common.util.concurrent.ListenableFuture;
  * <p/>
  * 
  * @see ChefApi
- * @see <a href="TODO: insert URL of provider documentation" />
  * @author Adrian Cole
  */
 @RequestFilters(SignedHeaderAuth.class)
@@ -98,6 +98,7 @@ public interface ChefAsyncApi {
    /**
     * @see ChefApi#getUploadSandboxForChecksums(Set)
     */
+   @Named("sandbox:upload")
    @POST
    @Path("/sandboxes")
    ListenableFuture<UploadSandbox> getUploadSandboxForChecksums(
@@ -106,6 +107,7 @@ public interface ChefAsyncApi {
    /**
     * @see ChefApi#uploadContent(URI, Payload)
     */
+   @Named("content:upload")
    @PUT
    @Produces("application/x-binary")
    ListenableFuture<Void> uploadContent(@EndpointParam URI location, Payload content);
@@ -113,6 +115,7 @@ public interface ChefAsyncApi {
    /**
     * @see ChefApi#commitSandbox(String, boolean)
     */
+   @Named("sandbox:commit")
    @PUT
    @Path("/sandboxes/{id}")
    ListenableFuture<Sandbox> commitSandbox(@PathParam("id") String id,
@@ -121,6 +124,7 @@ public interface ChefAsyncApi {
    /**
     * @see ChefApi#listCookbooks()
     */
+   @Named("cookbook:list")
    @GET
    @Path("/cookbooks")
    @ResponseParser(ParseCookbookDefinitionCheckingChefVersion.class)
@@ -130,6 +134,7 @@ public interface ChefAsyncApi {
    /**
     * @see ChefApi#updateCookbook(String, String, CookbookVersion)
     */
+   @Named("cookbook:update")
    @PUT
    @Path("/cookbooks/{cookbookname}/{version}")
    ListenableFuture<CookbookVersion> updateCookbook(@PathParam("cookbookname") String cookbookName,
@@ -138,6 +143,7 @@ public interface ChefAsyncApi {
    /**
     * @see ChefApi#deleteCookbook(String, String)
     */
+   @Named("cookbook:delete")
    @DELETE
    @Path("/cookbooks/{cookbookname}/{version}")
    @Fallback(NullOnNotFoundOr404.class)
@@ -147,6 +153,7 @@ public interface ChefAsyncApi {
    /**
     * @see ChefApi#getVersionsOfCookbook(String)
     */
+   @Named("cookbook:versions")
    @GET
    @Path("/cookbooks/{cookbookname}")
    @ResponseParser(ParseCookbookVersionsCheckingChefVersion.class)
@@ -156,6 +163,7 @@ public interface ChefAsyncApi {
    /**
     * @see ChefApi#getCookbook(String, String)
     */
+   @Named("cookbook:get")
    @GET
    @Path("/cookbooks/{cookbookname}/{version}")
    @Fallback(NullOnNotFoundOr404.class)
@@ -165,6 +173,7 @@ public interface ChefAsyncApi {
    /**
     * @see ChefApi#createClient(String)
     */
+   @Named("client:create")
    @POST
    @Path("/clients")
    @MapBinder(BindToJsonPayload.class)
@@ -173,6 +182,7 @@ public interface ChefAsyncApi {
    /**
     * @see ChefApi#createClient(String, CreateApiOptions)
     */
+   @Named("client:create")
    @POST
    @Path("/clients")
    @MapBinder(BindCreateClientOptionsToJsonPayload.class)
@@ -181,6 +191,7 @@ public interface ChefAsyncApi {
    /**
     * @see ChefApi#generateKeyForClient(String)
     */
+   @Named("client:generatekey")
    @PUT
    @Path("/clients/{clientname}")
    ListenableFuture<Client> generateKeyForClient(
@@ -189,6 +200,7 @@ public interface ChefAsyncApi {
    /**
     * @see ChefApi#clientExists(String)
     */
+   @Named("client:exists")
    @HEAD
    @Path("/clients/{clientname}")
    @Fallback(FalseOnNotFoundOr404.class)
@@ -197,6 +209,7 @@ public interface ChefAsyncApi {
    /**
     * @see ChefApi#getClient(String)
     */
+   @Named("client:get")
    @GET
    @Path("/clients/{clientname}")
    @Fallback(NullOnNotFoundOr404.class)
@@ -205,6 +218,7 @@ public interface ChefAsyncApi {
    /**
     * @see ChefApi#deleteClient(String)
     */
+   @Named("client:delete")
    @DELETE
    @Path("/clients/{clientname}")
    @Fallback(NullOnNotFoundOr404.class)
@@ -213,6 +227,7 @@ public interface ChefAsyncApi {
    /**
     * @see ChefApi#listClients()
     */
+   @Named("client:list")
    @GET
    @Path("/clients")
    @ResponseParser(ParseKeySetFromJson.class)
@@ -222,6 +237,7 @@ public interface ChefAsyncApi {
    /**
     * @see ChefApi#createNode(Node)
     */
+   @Named("node:create")
    @POST
    @Path("/nodes")
    ListenableFuture<Void> createNode(@BinderParam(BindToJsonPayload.class) Node node);
@@ -229,6 +245,7 @@ public interface ChefAsyncApi {
    /**
     * @see ChefApi#updateNode(Node)
     */
+   @Named("node:update")
    @PUT
    @Path("/nodes/{nodename}")
    ListenableFuture<Node> updateNode(
@@ -237,6 +254,7 @@ public interface ChefAsyncApi {
    /**
     * @see ChefApi#nodeExists(String)
     */
+   @Named("node:exists")
    @HEAD
    @Path("/nodes/{nodename}")
    @Fallback(FalseOnNotFoundOr404.class)
@@ -245,6 +263,7 @@ public interface ChefAsyncApi {
    /**
     * @see ChefApi#getNode(String)
     */
+   @Named("node:get")
    @GET
    @Path("/nodes/{nodename}")
    @Fallback(NullOnNotFoundOr404.class)
@@ -253,6 +272,7 @@ public interface ChefAsyncApi {
    /**
     * @see ChefNode#deleteNode
     */
+   @Named("node:delete")
    @DELETE
    @Path("/nodes/{nodename}")
    @Fallback(NullOnNotFoundOr404.class)
@@ -261,6 +281,7 @@ public interface ChefAsyncApi {
    /**
     * @see ChefApi#listNodes()
     */
+   @Named("node:list")
    @GET
    @Path("/nodes")
    @ResponseParser(ParseKeySetFromJson.class)
@@ -270,6 +291,7 @@ public interface ChefAsyncApi {
    /**
     * @see ChefApi#createRole(Role)
     */
+   @Named("role:create")
    @POST
    @Path("/roles")
    ListenableFuture<Void> createRole(@BinderParam(BindToJsonPayload.class) Role role);
@@ -277,6 +299,7 @@ public interface ChefAsyncApi {
    /**
     * @see ChefApi#updateRole(Role)
     */
+   @Named("role:update")
    @PUT
    @Path("/roles/{rolename}")
    ListenableFuture<Role> updateRole(
@@ -285,6 +308,7 @@ public interface ChefAsyncApi {
    /**
     * @see ChefApi#roleExists(String)
     */
+   @Named("role:exists")
    @HEAD
    @Path("/roles/{rolename}")
    @Fallback(FalseOnNotFoundOr404.class)
@@ -293,6 +317,7 @@ public interface ChefAsyncApi {
    /**
     * @see ChefApi#getRole(String)
     */
+   @Named("role:get")
    @GET
    @Path("/roles/{rolename}")
    @Fallback(NullOnNotFoundOr404.class)
@@ -301,6 +326,7 @@ public interface ChefAsyncApi {
    /**
     * @see ChefApi#deleteRole(String)
     */
+   @Named("role:delete")
    @DELETE
    @Path("/roles/{rolename}")
    @Fallback(NullOnNotFoundOr404.class)
@@ -309,6 +335,7 @@ public interface ChefAsyncApi {
    /**
     * @see ChefApi#listRoles()
     */
+   @Named("role:list")
    @GET
    @Path("/roles")
    @ResponseParser(ParseKeySetFromJson.class)
@@ -318,6 +345,7 @@ public interface ChefAsyncApi {
    /**
     * @see ChefApi#listDatabags()
     */
+   @Named("databag:list")
    @GET
    @Path("/data")
    @ResponseParser(ParseKeySetFromJson.class)
@@ -327,6 +355,7 @@ public interface ChefAsyncApi {
    /**
     * @see ChefApi#createDatabag(String)
     */
+   @Named("databag:create")
    @POST
    @Path("/data")
    ListenableFuture<Void> createDatabag(@BinderParam(BindNameToJsonPayload.class) String databagName);
@@ -334,6 +363,7 @@ public interface ChefAsyncApi {
    /**
     * @see ChefApi#databagExists(String)
     */
+   @Named("databag:exists")
    @HEAD
    @Path("/data/{name}")
    @Fallback(FalseOnNotFoundOr404.class)
@@ -342,6 +372,7 @@ public interface ChefAsyncApi {
    /**
     * @see ChefApi#deleteDatabag(String)
     */
+   @Named("databag:delete")
    @DELETE
    @Path("/data/{name}")
    @Fallback(VoidOnNotFoundOr404.class)
@@ -350,6 +381,7 @@ public interface ChefAsyncApi {
    /**
     * @see ChefApi#listDatabagItems(String)
     */
+   @Named("databag:listitems")
    @GET
    @Path("/data/{name}")
    @ResponseParser(ParseKeySetFromJson.class)
@@ -359,6 +391,7 @@ public interface ChefAsyncApi {
    /**
     * @see ChefApi#createDatabagItem(String, DatabagItem)
     */
+   @Named("databag:createitem")
    @POST
    @Path("/data/{databagName}")
    ListenableFuture<DatabagItem> createDatabagItem(@PathParam("databagName") String databagName,
@@ -367,6 +400,7 @@ public interface ChefAsyncApi {
    /**
     * @see ChefApi#updateDatabagItem(String, DatabagItem)
     */
+   @Named("databag:updateitem")
    @PUT
    @Path("/data/{databagName}/{databagItemId}")
    ListenableFuture<DatabagItem> updateDatabagItem(
@@ -376,6 +410,7 @@ public interface ChefAsyncApi {
    /**
     * @see ChefApi#databagItemExists(String, String)
     */
+   @Named("databag:itemexists")
    @HEAD
    @Path("/data/{databagName}/{databagItemId}")
    @Fallback(FalseOnNotFoundOr404.class)
@@ -385,6 +420,7 @@ public interface ChefAsyncApi {
    /**
     * @see ChefApi#getDatabagItem(String, String)
     */
+   @Named("databag:getitem")
    @GET
    @Path("/data/{databagName}/{databagItemId}")
    @Fallback(NullOnNotFoundOr404.class)
@@ -394,6 +430,7 @@ public interface ChefAsyncApi {
    /**
     * @see ChefApi#deleteDatabagItem(String, String)
     */
+   @Named("databag:deleteitem")
    @DELETE
    @Path("/data/{databagName}/{databagItemId}")
    @Fallback(NullOnNotFoundOr404.class)
@@ -403,6 +440,7 @@ public interface ChefAsyncApi {
    /**
     * @see ChefApi#listSearchIndexes()
     */
+   @Named("search:indexes")
    @GET
    @Path("/search")
    @ResponseParser(ParseKeySetFromJson.class)
@@ -412,6 +450,7 @@ public interface ChefAsyncApi {
    /**
     * @see ChefApi#searchRoles()
     */
+   @Named("search:roles")
    @GET
    @Path("/search/role")
    @ResponseParser(ParseSearchRolesFromJson.class)
@@ -420,6 +459,7 @@ public interface ChefAsyncApi {
    /**
     * @see ChefApi#searchRoles(SearchOptions)
     */
+   @Named("search:roles")
    @GET
    @Path("/search/role")
    @ResponseParser(ParseSearchRolesFromJson.class)
@@ -428,6 +468,7 @@ public interface ChefAsyncApi {
    /**
     * @see ChefApi#searchClients()
     */
+   @Named("search:clients")
    @GET
    @Path("/search/client")
    @ResponseParser(ParseSearchClientsFromJson.class)
@@ -436,6 +477,7 @@ public interface ChefAsyncApi {
    /**
     * @see ChefApi#searchClients(SearchOptions)
     */
+   @Named("search:clients")
    @GET
    @Path("/search/client")
    @ResponseParser(ParseSearchClientsFromJson.class)
@@ -444,6 +486,7 @@ public interface ChefAsyncApi {
    /**
     * @see ChefApi#searchNodes()
     */
+   @Named("search:nodes")
    @GET
    @Path("/search/node")
    @ResponseParser(ParseSearchNodesFromJson.class)
@@ -452,6 +495,7 @@ public interface ChefAsyncApi {
    /**
     * @see ChefApi#searchNodes(SearchOptions)
     */
+   @Named("search:nodes")
    @GET
    @Path("/search/node")
    @ResponseParser(ParseSearchNodesFromJson.class)
@@ -460,6 +504,7 @@ public interface ChefAsyncApi {
    /**
     * @see ChefApi#searchDatabag(String)
     */
+   @Named("search:databag")
    @GET
    @Path("/search/{databagName}")
    @ResponseParser(ParseSearchDatabagFromJson.class)
@@ -469,6 +514,7 @@ public interface ChefAsyncApi {
    /**
     * @see ChefApi#searchDatabag(String, SearchOptions)
     */
+   @Named("search:databag")
    @GET
    @Path("/search/{databagName}")
    @ResponseParser(ParseSearchDatabagFromJson.class)
@@ -478,6 +524,7 @@ public interface ChefAsyncApi {
    /**
     * @see ChefApi#getResourceContents(Resource)
     */
+   @Named("content:get")
    @GET
    @Fallback(NullOnNotFoundOr404.class)
    ListenableFuture<InputStream> getResourceContents(@EndpointParam(parser=UriForResource.class) Resource resource);
