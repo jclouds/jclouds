@@ -27,11 +27,12 @@ import static org.testng.Assert.assertEquals;
 import java.io.IOException;
 import java.net.URI;
 import java.security.PrivateKey;
-import java.util.List;
 
 import org.jclouds.chef.ChefAsyncApi;
 import org.jclouds.chef.config.ChefParserModule;
+import org.jclouds.chef.domain.DatabagItem;
 import org.jclouds.crypto.PemsTest;
+import org.jclouds.domain.JsonBall;
 import org.jclouds.json.Json;
 import org.jclouds.json.config.GsonModule;
 import org.jclouds.rest.annotations.ApiVersion;
@@ -46,7 +47,6 @@ import com.google.common.base.Functions;
 import com.google.common.base.Optional;
 import com.google.common.base.Suppliers;
 import com.google.common.cache.CacheLoader;
-import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.io.Resources;
 import com.google.inject.AbstractModule;
@@ -74,7 +74,7 @@ public class GroupToBootScriptTest {
    @Test(expectedExceptions = IllegalStateException.class)
    public void testMustHaveValidatorName() {
       GroupToBootScript fn = new GroupToBootScript(Suppliers.ofInstance(URI.create("http://localhost:4000")), json,
-            CacheLoader.from(Functions.forMap(ImmutableMap.<String, List<String>> of())), installChefGems,
+            CacheLoader.from(Functions.forMap(ImmutableMap.<String, DatabagItem> of())), installChefGems,
             Optional.<String> absent(), validatorCredential);
       fn.apply("foo");
    }
@@ -82,7 +82,7 @@ public class GroupToBootScriptTest {
    @Test(expectedExceptions = IllegalStateException.class)
    public void testMustHaveValidatorCredential() {
       GroupToBootScript fn = new GroupToBootScript(Suppliers.ofInstance(URI.create("http://localhost:4000")), json,
-            CacheLoader.from(Functions.forMap(ImmutableMap.<String, List<String>> of())), installChefGems,
+            CacheLoader.from(Functions.forMap(ImmutableMap.<String, DatabagItem> of())), installChefGems,
             validatorName, Optional.<PrivateKey> absent());
       fn.apply("foo");
    }
@@ -90,7 +90,7 @@ public class GroupToBootScriptTest {
    @Test(expectedExceptions = IllegalArgumentException.class, expectedExceptionsMessageRegExp = "Key 'foo' not present in map")
    public void testMustHaveRunScriptsName() {
       GroupToBootScript fn = new GroupToBootScript(Suppliers.ofInstance(URI.create("http://localhost:4000")), json,
-            CacheLoader.from(Functions.forMap(ImmutableMap.<String, List<String>> of())), installChefGems,
+            CacheLoader.from(Functions.forMap(ImmutableMap.<String, DatabagItem> of())), installChefGems,
             validatorName, validatorCredential);
       fn.apply("foo");
    }
@@ -98,25 +98,16 @@ public class GroupToBootScriptTest {
    @Test(expectedExceptions = NullPointerException.class, expectedExceptionsMessageRegExp = "null value in entry: foo=null")
    public void testMustHaveRunScriptsValue() {
       GroupToBootScript fn = new GroupToBootScript(Suppliers.ofInstance(URI.create("http://localhost:4000")), json,
-            CacheLoader.from(Functions.forMap(ImmutableMap.<String, List<String>> of("foo", (List<String>) null))),
-            installChefGems, validatorName, validatorCredential);
-      fn.apply("foo");
-   }
-
-   @Test(expectedExceptions = IllegalStateException.class, expectedExceptionsMessageRegExp = "runList for foo was empty")
-   public void testMustHaveRunScriptsContents() {
-      GroupToBootScript fn = new GroupToBootScript(
-            Suppliers.ofInstance(URI.create("http://localhost:4000")),
-            json,
-            CacheLoader.from(Functions.forMap(ImmutableMap.<String, List<String>> of("foo", ImmutableList.<String> of()))),
+            CacheLoader.from(Functions.forMap(ImmutableMap.<String, DatabagItem> of("foo", (DatabagItem) null))),
             installChefGems, validatorName, validatorCredential);
       fn.apply("foo");
    }
 
    public void testOneRecipe() throws IOException {
       GroupToBootScript fn = new GroupToBootScript(Suppliers.ofInstance(URI.create("http://localhost:4000")), json,
-            CacheLoader.from(Functions.forMap(ImmutableMap.<String, List<String>> of("foo",
-                  ImmutableList.<String> of("recipe[apache2]")))), installChefGems, validatorName, validatorCredential);
+            CacheLoader.from(Functions.forMap(ImmutableMap.<String, JsonBall> of("foo", new JsonBall(
+                  "{\"tomcat6\":{\"ssl_port\":8433},\"run_list\":[\"recipe[apache2]\",\"role[webserver]\"]}")))),
+            installChefGems, validatorName, validatorCredential);
 
       PrivateKey validatorKey = validatorCredential.get();
       expect(validatorKey.getEncoded()).andReturn(PemsTest.PRIVATE_KEY.getBytes());
@@ -127,7 +118,7 @@ public class GroupToBootScriptTest {
             Resources.toString(Resources.getResource("test_install_ruby." + ShellToken.SH.to(OsFamily.UNIX)),
                   Charsets.UTF_8)
                   + "gem install chef -v '>= 10.16.4' --no-rdoc --no-ri\n"
-                  + Resources.toString(Resources.getResource("one-recipe.sh"), Charsets.UTF_8));
+                  + Resources.toString(Resources.getResource("bootstrap.sh"), Charsets.UTF_8));
 
       verify(validatorKey);
    }

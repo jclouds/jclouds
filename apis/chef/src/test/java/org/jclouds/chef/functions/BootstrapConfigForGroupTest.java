@@ -27,42 +27,24 @@ import static org.testng.Assert.assertEquals;
 import java.io.IOException;
 
 import org.jclouds.chef.ChefApi;
-import org.jclouds.chef.ChefAsyncApi;
-import org.jclouds.chef.config.ChefParserModule;
 import org.jclouds.chef.domain.Client;
 import org.jclouds.chef.domain.DatabagItem;
-import org.jclouds.json.Json;
-import org.jclouds.json.config.GsonModule;
 import org.jclouds.rest.annotations.Api;
-import org.jclouds.rest.annotations.ApiVersion;
 import org.testng.annotations.Test;
-
-import com.google.common.collect.ImmutableList;
-import com.google.inject.AbstractModule;
-import com.google.inject.Guice;
-import com.google.inject.Injector;
 
 /**
  * @author Adrian Cole
  * @author Ignasi Barrera
  */
-@Test(groups = "unit", testName = "RunListForGroupTest")
-public class RunListForGroupTest {
-   private Injector injector = Guice.createInjector(new AbstractModule() {
-      @Override
-      protected void configure() {
-         bind(String.class).annotatedWith(ApiVersion.class).toInstance(ChefAsyncApi.VERSION);
-      }
-   }, new ChefParserModule(), new GsonModule());
-
-   private Json json = injector.getInstance(Json.class);
+@Test(groups = "unit", testName = "BootstrapConfigForGroupTest")
+public class BootstrapConfigForGroupTest {
 
    @Test(expectedExceptions = IllegalStateException.class)
    public void testWhenNoDatabagItem() throws IOException {
       ChefApi chefApi = createMock(ChefApi.class);
       Client client = createMock(Client.class);
 
-      RunListForGroup fn = new RunListForGroup(new BootstrapConfigForGroup("jclouds", chefApi), json);
+      BootstrapConfigForGroup fn = new BootstrapConfigForGroup("jclouds", chefApi);
 
       expect(chefApi.getDatabagItem("jclouds", "foo")).andReturn(null);
 
@@ -76,11 +58,11 @@ public class RunListForGroupTest {
    }
 
    @Test
-   public void testReadRunList() throws IOException {
+   public void testReturnsItem() throws IOException {
       ChefApi chefApi = createMock(ChefApi.class);
       Api api = createMock(Api.class);
 
-      RunListForGroup fn = new RunListForGroup(new BootstrapConfigForGroup("jclouds", chefApi), json);
+      BootstrapConfigForGroup fn = new BootstrapConfigForGroup("jclouds", chefApi);
       DatabagItem config = new DatabagItem("foo",
             "{\"tomcat6\":{\"ssl_port\":8433},\"run_list\":[\"recipe[apache2]\",\"role[webserver]\"]}");
 
@@ -89,7 +71,7 @@ public class RunListForGroupTest {
       replay(api);
       replay(chefApi);
 
-      assertEquals(fn.apply("foo"), ImmutableList.of("recipe[apache2]", "role[webserver]"));
+      assertEquals(fn.apply("foo"), config);
 
       verify(api);
       verify(chefApi);

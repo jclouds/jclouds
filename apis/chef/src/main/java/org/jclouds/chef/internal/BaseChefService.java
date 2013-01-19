@@ -25,6 +25,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.security.PrivateKey;
 import java.util.List;
+import java.util.Map;
 
 import javax.annotation.Resource;
 import javax.inject.Inject;
@@ -38,6 +39,7 @@ import org.jclouds.chef.domain.Client;
 import org.jclouds.chef.domain.CookbookVersion;
 import org.jclouds.chef.domain.DatabagItem;
 import org.jclouds.chef.domain.Node;
+import org.jclouds.chef.functions.BootstrapConfigForGroup;
 import org.jclouds.chef.functions.GroupToBootScript;
 import org.jclouds.chef.functions.RunListForGroup;
 import org.jclouds.chef.strategy.CleanupStaleNodesAndClients;
@@ -48,16 +50,21 @@ import org.jclouds.chef.strategy.ListClients;
 import org.jclouds.chef.strategy.ListCookbookVersions;
 import org.jclouds.chef.strategy.ListNodes;
 import org.jclouds.chef.strategy.UpdateAutomaticAttributesOnNode;
+import org.jclouds.domain.JsonBall;
 import org.jclouds.io.Payloads;
 import org.jclouds.io.payloads.RSADecryptingPayload;
 import org.jclouds.io.payloads.RSAEncryptingPayload;
+import org.jclouds.javax.annotation.Nullable;
+import org.jclouds.json.Json;
 import org.jclouds.logging.Logger;
 import org.jclouds.scriptbuilder.domain.Statement;
 
+import com.google.common.annotations.VisibleForTesting;
+import com.google.common.base.Optional;
 import com.google.common.base.Predicate;
 import com.google.common.base.Supplier;
-import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 import com.google.common.io.ByteStreams;
 import com.google.common.io.InputSupplier;
 
@@ -83,6 +90,7 @@ public class BaseChefService implements ChefService {
    private final Supplier<PrivateKey> privateKey;
    private final GroupToBootScript groupToBootScript;
    private final String databag;
+   private final BootstrapConfigForGroup bootstrapConfigForGroup;
    private final RunListForGroup runListForGroup;
    private final ListCookbookVersions listCookbookVersions;
 
@@ -93,7 +101,7 @@ public class BaseChefService implements ChefService {
          ListClients listClients, ListCookbookVersions listCookbookVersions,
          UpdateAutomaticAttributesOnNode updateAutomaticAttributesOnNode, Supplier<PrivateKey> privateKey,
          @Named(CHEF_BOOTSTRAP_DATABAG) String databag, GroupToBootScript groupToBootScript,
-         RunListForGroup runListForGroup) {
+         BootstrapConfigForGroup bootstrapConfigForGroup, RunListForGroup runListForGroup) {
       this.chefContext = checkNotNull(chefContext, "chefContext");
       this.cleanupStaleNodesAndClients = checkNotNull(cleanupStaleNodesAndClients, "cleanupStaleNodesAndClients");
       this.createNodeAndPopulateAutomaticAttributes = checkNotNull(createNodeAndPopulateAutomaticAttributes,
@@ -108,6 +116,7 @@ public class BaseChefService implements ChefService {
       this.privateKey = checkNotNull(privateKey, "privateKey");
       this.groupToBootScript = checkNotNull(groupToBootScript, "groupToBootScript");
       this.databag = checkNotNull(databag, "databag");
+      this.bootstrapConfigForGroup = checkNotNull(bootstrapConfigForGroup, "bootstrapConfigForGroup");
       this.runListForGroup = checkNotNull(runListForGroup, "runListForGroup");
    }
 
@@ -192,18 +201,21 @@ public class BaseChefService implements ChefService {
    }
 
    @Override
+   @Deprecated
    public void updateRunListForGroup(Iterable<String> runList, String group) {
+      updateBootstrapConfigForGroup(runList, null, group);
+   }
+
+   @Override
+   public void updateBootstrapConfigForGroup(Iterable<String> runList, @Nullable JsonBall jsonAttributes, String group) {
       try {
          chefContext.getApi().createDatabag(databag);
       } catch (IllegalStateException e) {
 
       }
 
-      DatabagItem runlist = new DatabagItem(group, chefContext
-            .utils()
-            .json()
-            .toJson(ImmutableMap.<String, List<String>> of("run_list", Lists.newArrayList(runList)),
-                  RunListForGroup.RUN_LIST_TYPE));
+      String bootstrapConfig = buildBootstrapConfiguration(runList, Optional.fromNullable(jsonAttributes));
+      DatabagItem runlist = new DatabagItem(group, bootstrapConfig);
 
       if (chefContext.getApi().getDatabagItem(databag, group) == null) {
          chefContext.getApi().createDatabagItem(databag, runlist);
@@ -218,6 +230,11 @@ public class BaseChefService implements ChefService {
    }
 
    @Override
+   public JsonBall getBootstrapConfigForGroup(String group) {
+      return bootstrapConfigForGroup.apply(group);
+   }
+
+   @Override
    public byte[] decrypt(InputSupplier<? extends InputStream> supplier) throws IOException {
       return ByteStreams.toByteArray(new RSADecryptingPayload(Payloads.newPayload(supplier.getInput()), privateKey
             .get()));
@@ -227,6 +244,22 @@ public class BaseChefService implements ChefService {
    public byte[] encrypt(InputSupplier<? extends InputStream> supplier) throws IOException {
       return ByteStreams.toByteArray(new RSAEncryptingPayload(Payloads.newPayload(supplier.getInput()), privateKey
             .get()));
+   }
+
+   @VisibleForTesting
+   String buildBootstrapConfiguration(Iterable<String> runList, Optional<JsonBall> jsonAttributes) {
+      checkNotNull(runList, "runList must not be null");
+      checkNotNull(jsonAttributes, "jsonAttributes must not be null");
+
+      Json json = chefContext.utils().getJson();
+      Map<String, Object> bootstrapConfig = Maps.newHashMap();
+      bootstrapConfig.put("run_list", Lists.newArrayList(runList));
+      if (jsonAttributes.isPresent()) {
+         Map<String, Object> attributes = json.fromJson(jsonAttributes.get().toString(),
+               BootstrapConfigForGroup.BOOTSTRAP_CONFIG_TYPE);
+         bootstrapConfig.putAll(attributes);
+      }
+      return json.toJson(bootstrapConfig);
    }
 
 }

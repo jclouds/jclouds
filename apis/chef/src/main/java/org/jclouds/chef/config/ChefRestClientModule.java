@@ -27,8 +27,10 @@ import javax.inject.Singleton;
 import org.jclouds.chef.ChefApi;
 import org.jclouds.chef.ChefAsyncApi;
 import org.jclouds.chef.domain.Client;
+import org.jclouds.chef.functions.BootstrapConfigForGroup;
 import org.jclouds.chef.functions.ClientForGroup;
 import org.jclouds.chef.functions.RunListForGroup;
+import org.jclouds.domain.JsonBall;
 import org.jclouds.rest.ConfiguresRestClient;
 import org.jclouds.scriptbuilder.domain.Statement;
 import org.jclouds.scriptbuilder.statements.chef.InstallChefGems;
@@ -53,6 +55,12 @@ public class ChefRestClientModule extends BaseChefRestClientModule<ChefApi, Chef
    @Singleton
    CacheLoader<String, List<String>> runListForGroup(RunListForGroup runListForGroup) {
       return CacheLoader.from(runListForGroup);
+   }
+
+   @Provides
+   @Singleton
+   CacheLoader<String, ? extends JsonBall> bootstrapConfigForGroup(BootstrapConfigForGroup bootstrapConfigForGroup) {
+      return CacheLoader.from(bootstrapConfigForGroup);
    }
 
    @Provides

@@ -36,11 +36,13 @@ import org.jclouds.chef.ChefAsyncApi;
 import org.jclouds.chef.config.Validator;
 import org.jclouds.chef.domain.Client;
 import org.jclouds.chef.functions.ClientForGroup;
+import org.jclouds.chef.functions.BootstrapConfigForGroup;
 import org.jclouds.chef.functions.RunListForGroup;
 import org.jclouds.chef.test.TransientChefApi;
 import org.jclouds.chef.test.TransientChefAsyncApi;
 import org.jclouds.concurrent.config.ExecutorServiceModule;
 import org.jclouds.crypto.Crypto;
+import org.jclouds.domain.JsonBall;
 import org.jclouds.rest.ConfiguresRestClient;
 import org.jclouds.rest.config.RestModule;
 import org.jclouds.scriptbuilder.domain.Statement;
@@ -85,6 +87,12 @@ public class TransientChefApiModule extends AbstractModule {
    @Singleton
    CacheLoader<String, List<String>> runListForGroup(RunListForGroup runListForGroup) {
       return CacheLoader.from(runListForGroup);
+   }
+
+   @Provides
+   @Singleton
+   CacheLoader<String, ? extends JsonBall> bootstrapConfigForGroup(BootstrapConfigForGroup bootstrapConfigForGroup) {
+      return CacheLoader.from(bootstrapConfigForGroup);
    }
 
    @Provides

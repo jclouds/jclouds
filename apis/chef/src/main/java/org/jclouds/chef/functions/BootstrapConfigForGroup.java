@@ -19,48 +19,48 @@
 package org.jclouds.chef.functions;
 
 import static com.google.common.base.Preconditions.checkNotNull;
+import static com.google.common.base.Preconditions.checkState;
+import static org.jclouds.chef.config.ChefProperties.CHEF_BOOTSTRAP_DATABAG;
 
 import java.lang.reflect.Type;
-import java.util.List;
 import java.util.Map;
 
 import javax.inject.Inject;
+import javax.inject.Named;
 import javax.inject.Singleton;
 
+import org.jclouds.chef.ChefApi;
 import org.jclouds.chef.domain.DatabagItem;
 import org.jclouds.domain.JsonBall;
-import org.jclouds.json.Json;
 
 import com.google.common.base.Function;
 import com.google.inject.TypeLiteral;
 
 /**
- * Retrieves the run-list for a specific group
+ * 
+ * Retrieves the bootstrap configuration for a specific group
  * 
  * @author Adrian Cole
  * @author Ignasi Barrera
  */
 @Singleton
-public class RunListForGroup implements Function<String, List<String>> {
-   public static final Type RUN_LIST_TYPE = new TypeLiteral<List<String>>() {
+public class BootstrapConfigForGroup implements Function<String, DatabagItem> {
+   public static final Type BOOTSTRAP_CONFIG_TYPE = new TypeLiteral<Map<String, JsonBall>>() {
    }.getType();
-   private final BootstrapConfigForGroup bootstrapConfigForGroup;
-
-   private final Json json;
+   private final ChefApi api;
+   private final String databag;
 
    @Inject
-   public RunListForGroup(BootstrapConfigForGroup bootstrapConfigForGroup, Json json) {
-      this.bootstrapConfigForGroup = checkNotNull(bootstrapConfigForGroup, "bootstrapConfigForGroup");
-      this.json = checkNotNull(json, "json");
+   public BootstrapConfigForGroup(@Named(CHEF_BOOTSTRAP_DATABAG) String databag, ChefApi api) {
+      this.databag = checkNotNull(databag, "databag");
+      this.api = checkNotNull(api, "api");
    }
 
    @Override
-   public List<String> apply(String from) {
-      DatabagItem bootstrapConfig = bootstrapConfigForGroup.apply(from);
-      Map<String, JsonBall> config = json.fromJson(bootstrapConfig.toString(),
-            BootstrapConfigForGroup.BOOTSTRAP_CONFIG_TYPE);
-      JsonBall runlist = config.get("run_list");
-      return json.fromJson(runlist.toString(), RUN_LIST_TYPE);
+   public DatabagItem apply(String from) {
+      DatabagItem bootstrapConfig = api.getDatabagItem(databag, from);
+      checkState(bootstrapConfig != null, "databag item %s/%s not found", databag, from);
+      return bootstrapConfig;
    }
 
 }

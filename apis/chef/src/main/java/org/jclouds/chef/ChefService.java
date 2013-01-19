@@ -26,6 +26,7 @@ import org.jclouds.chef.domain.Client;
 import org.jclouds.chef.domain.CookbookVersion;
 import org.jclouds.chef.domain.Node;
 import org.jclouds.chef.internal.BaseChefService;
+import org.jclouds.domain.JsonBall;
 import org.jclouds.scriptbuilder.domain.Statement;
 
 import com.google.common.base.Predicate;
@@ -81,9 +82,32 @@ public interface ChefService {
     *           corresponds to a configured
     *           {@link org.jclouds.chef.config.ChefProperties#CHEF_BOOTSTRAP_DATABAG
     *           databag} where run_list and other information are stored
+    * @deprecated use
+    *             {@link ChefService#updateBootstrapConfigForGroup(Iterable, JsonBall, String)}
+    */
+   @Deprecated
+   void updateRunListForGroup(Iterable<String> runList, String group);
+
+   /**
+    * assigns a run list to all nodes bootstrapped with a certain group, and
+    * configures the chef run to use the given json attributes.
+    * 
+    * @param runList
+    *           list of recipes or roles to assign. syntax is
+    *           {@code recipe[name]} and {@code role[name]}
+    * 
+    * @param jsonAttributes
+    *           A json string with the attributes to be populated. Since each
+    *           cookbook may define its own attribute structure, a simple Map or
+    *           Properties object may not be convenient.
+    * 
+    * @param group
+    *           corresponds to a configured
+    *           {@link org.jclouds.chef.config.ChefProperties#CHEF_BOOTSTRAP_DATABAG
+    *           databag} where run_list and other information are stored
     * @see #makeChefApiBootstrapScriptForTag
     */
-   void updateRunListForGroup(Iterable<String> runList, String group);
+   public void updateBootstrapConfigForGroup(Iterable<String> runList, JsonBall jsonAttributes, String group);
 
    /**
     * @param group
@@ -94,6 +118,18 @@ public interface ChefService {
     * @see #updateRunListForTag
     */
    List<String> getRunListForGroup(String group);
+
+   /**
+    * Get the bootstrap configuration for a given group.
+    * <p>
+    * The bootstrap configuration is a Json object containing the run list and
+    * the configured attributes.
+    * 
+    * @param group
+    *           The name of the group.
+    * @return The bootstrap configuration for the given group.
+    */
+   public JsonBall getBootstrapConfigForGroup(String group);
 
    void deleteAllNodesInList(Iterable<String> names);
 

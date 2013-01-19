@@ -51,6 +51,6 @@ cat >> /etc/chef/validation.pem <<-'END_OF_JCLOUDS_FILE'
 	
 END_OF_JCLOUDS_FILE
 cat >> /etc/chef/first-boot.json <<-'END_OF_JCLOUDS_FILE'
-	{"run_list":["recipe[apache2]"]}
+	{"tomcat6":{"ssl_port":8433},"run_list":["recipe[apache2]","role[webserver]"]}
 END_OF_JCLOUDS_FILE
 chef-client -j /etc/chef/first-boot.json
