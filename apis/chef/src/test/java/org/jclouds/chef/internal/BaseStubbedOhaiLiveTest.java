@@ -18,11 +18,13 @@
  */
 package org.jclouds.chef.internal;
 
+import static org.jclouds.reflect.Reflection2.typeTokenOf;
+
 import java.util.Map;
 
 import org.jclouds.apis.ApiMetadata;
-import org.jclouds.chef.ChefApiMetadata;
 import org.jclouds.chef.ChefApi;
+import org.jclouds.chef.ChefApiMetadata;
 import org.jclouds.chef.ChefContext;
 import org.jclouds.chef.config.ChefParserModule;
 import org.jclouds.chef.config.ChefRestClientModule;
@@ -71,6 +73,6 @@ public class BaseStubbedOhaiLiveTest extends BaseChefContextLiveTest<ChefContext
     @Override
     protected TypeToken<ChefContext> contextType()
     {
-        return TypeToken.of(ChefContext.class);
+        return typeTokenOf(ChefContext.class);
     }
 }

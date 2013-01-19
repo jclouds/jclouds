@@ -19,6 +19,7 @@
 package org.jclouds.chef.strategy.internal;
 
 import static com.google.common.collect.Iterables.size;
+import static org.jclouds.reflect.Reflection2.typeTokenOf;
 import static org.testng.Assert.assertEquals;
 
 import org.jclouds.chef.ChefApi;
@@ -94,7 +95,7 @@ public class GetNodesImplLiveTest extends BaseChefContextLiveTest<ChefContext> {
    @Override
    protected TypeToken<ChefContext> contextType()
    {
-       return TypeToken.of(ChefContext.class);
+       return typeTokenOf(ChefContext.class);
    }
 
 }

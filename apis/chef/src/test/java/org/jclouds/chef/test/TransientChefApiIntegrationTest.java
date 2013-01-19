@@ -19,6 +19,7 @@
 package org.jclouds.chef.test;
 
 import static com.google.common.base.Throwables.propagate;
+import static org.jclouds.reflect.Reflection2.typeTokenOf;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
 
@@ -105,6 +106,6 @@ public class TransientChefApiIntegrationTest extends BaseChefContextLiveTest<Che
 
    @Override
    protected TypeToken<ChefContext> contextType() {
-      return TypeToken.of(ChefContext.class);
+      return typeTokenOf(ChefContext.class);
    }
 }

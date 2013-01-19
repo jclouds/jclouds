@@ -18,6 +18,8 @@
  */
 package org.jclouds.chef.strategy.internal;
 
+import static org.jclouds.reflect.Reflection2.typeTokenOf;
+
 import org.jclouds.chef.ChefApi;
 import org.jclouds.chef.ChefContext;
 import org.jclouds.chef.internal.BaseChefContextLiveTest;
@@ -72,7 +74,7 @@ public class CleanupStaleNodesAndClientsImplLiveTest extends BaseChefContextLive
    @Override
    protected TypeToken<ChefContext> contextType()
    {
-       return TypeToken.of(ChefContext.class);
+       return typeTokenOf(ChefContext.class);
    }
 
 }

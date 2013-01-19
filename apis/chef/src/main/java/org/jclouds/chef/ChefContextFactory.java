@@ -18,6 +18,8 @@
  */
 package org.jclouds.chef;
 
+import static org.jclouds.reflect.Reflection2.typeTokenOf;
+
 import java.util.NoSuchElementException;
 import java.util.Properties;
 
@@ -29,7 +31,6 @@ import org.jclouds.providers.ProviderMetadata;
 import org.jclouds.providers.Providers;
 
 import com.google.common.collect.ImmutableSet;
-import com.google.common.reflect.TypeToken;
 import com.google.inject.Module;
 
 /**
@@ -124,7 +125,7 @@ public class ChefContextFactory {
          return ChefContext.class.cast(context);
       } else if (context instanceof View) {
          View tctx = View.class.cast(context);
-         return tctx.unwrap(TypeToken.of(ChefContext.class));
+         return tctx.unwrap(typeTokenOf(ChefContext.class));
       } else {
          throw new IllegalArgumentException("provider " + providerOrApi + " contains an unknown context type: "
                + context.getClass().getSimpleName());

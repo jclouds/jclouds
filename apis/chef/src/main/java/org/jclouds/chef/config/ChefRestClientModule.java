@@ -18,6 +18,8 @@
  */
 package org.jclouds.chef.config;
 
+import static org.jclouds.reflect.Reflection2.typeTokenOf;
+
 import java.util.List;
 
 import javax.inject.Singleton;
@@ -32,7 +34,6 @@ import org.jclouds.scriptbuilder.domain.Statement;
 import org.jclouds.scriptbuilder.statements.chef.InstallChefGems;
 
 import com.google.common.cache.CacheLoader;
-import com.google.common.reflect.TypeToken;
 import com.google.inject.Provides;
 import com.google.inject.name.Names;
 
@@ -45,7 +46,7 @@ import com.google.inject.name.Names;
 public class ChefRestClientModule extends BaseChefRestClientModule<ChefApi, ChefAsyncApi> {
 
    public ChefRestClientModule() {
-      super(TypeToken.of(ChefApi.class), TypeToken.of(ChefAsyncApi.class));
+      super(typeTokenOf(ChefApi.class), typeTokenOf(ChefAsyncApi.class));
    }
 
    @Provides

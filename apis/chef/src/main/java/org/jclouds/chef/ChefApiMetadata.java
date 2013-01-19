@@ -23,6 +23,7 @@ import static java.util.concurrent.TimeUnit.SECONDS;
 import static org.jclouds.Constants.PROPERTY_SESSION_INTERVAL;
 import static org.jclouds.Constants.PROPERTY_TIMEOUTS_PREFIX;
 import static org.jclouds.chef.config.ChefProperties.CHEF_BOOTSTRAP_DATABAG;
+import static org.jclouds.reflect.Reflection2.typeTokenOf;
 
 import java.net.URI;
 import java.util.Properties;
@@ -34,7 +35,6 @@ import org.jclouds.ohai.config.JMXOhaiModule;
 import org.jclouds.rest.internal.BaseRestApiMetadata;
 
 import com.google.common.collect.ImmutableSet;
-import com.google.common.reflect.TypeToken;
 import com.google.inject.Module;
 
 /**
@@ -87,7 +87,7 @@ public class ChefApiMetadata extends BaseRestApiMetadata {
          .documentation(URI.create("http://wiki.opscode.com/display/chef/Server+API"))
          .defaultEndpoint("http://localhost:4000")
          .defaultProperties(ChefApiMetadata.defaultProperties())
-         .context(TypeToken.of(ChefContext.class))
+         .context(typeTokenOf(ChefContext.class))
          .defaultModules(ImmutableSet.<Class<? extends Module>>of(ChefRestClientModule.class, ChefParserModule.class, JMXOhaiModule.class));
       }
 
