@@ -18,7 +18,8 @@
  */
 package org.jclouds.chef.strategy.internal;
 
-import static org.jclouds.reflect.Reflection2.typeTokenOf;
+
+import static org.jclouds.reflect.Reflection2.typeToken;
 
 import org.jclouds.chef.ChefApi;
 import org.jclouds.chef.ChefContext;
@@ -79,6 +80,6 @@ public class DeleteAllApisAndNodesInListImplLiveTest extends BaseChefContextLive
    @Override
    protected TypeToken<ChefContext> contextType()
    {
-       return typeTokenOf(ChefContext.class);
+       return typeToken(ChefContext.class);
    }
 }

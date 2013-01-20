@@ -18,7 +18,7 @@
  */
 package org.jclouds.chef;
 
-import static org.jclouds.reflect.Reflection2.typeTokenOf;
+import static org.jclouds.reflect.Reflection2.typeToken;
 import static org.testng.Assert.assertNotNull;
 
 import org.jclouds.chef.domain.CookbookVersion;
@@ -50,7 +50,7 @@ public class ChefApiLiveTest extends BaseChefApiLiveTest<ChefContext> {
     @Override
     protected TypeToken<ChefContext> contextType()
     {
-        return typeTokenOf(ChefContext.class);
+        return typeToken(ChefContext.class);
     }
     
 }

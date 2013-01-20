@@ -18,7 +18,7 @@
  */
 package org.jclouds.chef.internal;
 
-import static org.jclouds.reflect.Reflection2.typeTokenOf;
+import static org.jclouds.reflect.Reflection2.typeToken;
 
 import java.util.Map;
 
@@ -73,6 +73,6 @@ public class BaseStubbedOhaiLiveTest extends BaseChefContextLiveTest<ChefContext
     @Override
     protected TypeToken<ChefContext> contextType()
     {
-        return typeTokenOf(ChefContext.class);
+        return typeToken(ChefContext.class);
     }
 }

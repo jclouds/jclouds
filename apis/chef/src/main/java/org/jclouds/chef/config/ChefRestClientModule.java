@@ -18,7 +18,7 @@
  */
 package org.jclouds.chef.config;
 
-import static org.jclouds.reflect.Reflection2.typeTokenOf;
+import static org.jclouds.reflect.Reflection2.typeToken;
 
 import java.util.List;
 
@@ -46,7 +46,7 @@ import com.google.inject.name.Names;
 public class ChefRestClientModule extends BaseChefRestClientModule<ChefApi, ChefAsyncApi> {
 
    public ChefRestClientModule() {
-      super(typeTokenOf(ChefApi.class), typeTokenOf(ChefAsyncApi.class));
+      super(typeToken(ChefApi.class), typeToken(ChefAsyncApi.class));
    }
 
    @Provides

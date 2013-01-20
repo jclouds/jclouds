@@ -20,6 +20,7 @@ package org.jclouds.chef;
 
 import static com.google.common.io.BaseEncoding.base16;
 import static com.google.common.primitives.Bytes.asList;
+import static org.jclouds.reflect.Reflection2.method;
 import static org.testng.Assert.assertEquals;
 
 import java.io.IOException;
@@ -69,7 +70,6 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.reflect.Invokable;
 import com.google.inject.Module;
-
 /**
  * Tests annotation parsing of {@code ChefAsyncApi}
  * 
@@ -80,7 +80,7 @@ public class ChefAsyncApiTest extends BaseAsyncApiTest<ChefAsyncApi> {
 
    public void testCommitSandbox() throws SecurityException, NoSuchMethodException, IOException {
 
-      Invokable<?, ?> method = Invokable.from(ChefAsyncApi.class.getMethod("commitSandbox", String.class, boolean.class));
+      Invokable<?, ?> method = method(ChefAsyncApi.class, "commitSandbox", String.class, boolean.class);
       GeneratedHttpRequest httpRequest = processor.createRequest(method,
             ImmutableList.<Object> of("0189e76ccc476701d6b374e5a1a27347", true));
       assertRequestLineEquals(httpRequest,
@@ -97,7 +97,7 @@ public class ChefAsyncApiTest extends BaseAsyncApiTest<ChefAsyncApi> {
    }
 
    public void testGetUploadSandboxForChecksums() throws SecurityException, NoSuchMethodException, IOException {
-      Invokable<?, ?> method = Invokable.from(ChefAsyncApi.class.getMethod("getUploadSandboxForChecksums", Set.class));
+      Invokable<?, ?> method = method(ChefAsyncApi.class, "getUploadSandboxForChecksums", Set.class);
       GeneratedHttpRequest httpRequest = processor.createRequest(
             method, ImmutableList.<Object> of(
             ImmutableSet.of(asList(base16().lowerCase().decode("0189e76ccc476701d6b374e5a1a27347")),
@@ -118,7 +118,7 @@ public class ChefAsyncApiTest extends BaseAsyncApiTest<ChefAsyncApi> {
    }
    
    public void testUploadContent() throws SecurityException, NoSuchMethodException, IOException {
-       Invokable<?, ?> method = Invokable.from(ChefAsyncApi.class.getMethod("uploadContent", URI.class, Payload.class));
+       Invokable<?, ?> method = method(ChefAsyncApi.class, "uploadContent", URI.class, Payload.class);
        GeneratedHttpRequest httpRequest = processor.createRequest(method, ImmutableList.<Object> of(URI.create("http://foo/bar"),
            new StringPayload("{\"foo\": \"bar\"}")));
        assertRequestLineEquals(httpRequest, "PUT http://foo/bar HTTP/1.1");
@@ -134,7 +134,7 @@ public class ChefAsyncApiTest extends BaseAsyncApiTest<ChefAsyncApi> {
     }
 
    public void testGetCookbook() throws SecurityException, NoSuchMethodException, IOException {
-      Invokable<?, ?> method = Invokable.from(ChefAsyncApi.class.getMethod("getCookbook", String.class, String.class));
+      Invokable<?, ?> method = method(ChefAsyncApi.class, "getCookbook", String.class, String.class);
       GeneratedHttpRequest httpRequest = processor.createRequest(method, ImmutableList.<Object> of("cookbook", "1.0.0"));
       assertRequestLineEquals(httpRequest, "GET http://localhost:4000/cookbooks/cookbook/1.0.0 HTTP/1.1");
       assertNonPayloadHeadersEqual(httpRequest, "Accept: application/json\nX-Chef-Version: " + ChefAsyncApi.VERSION + "-test\n");
@@ -149,7 +149,7 @@ public class ChefAsyncApiTest extends BaseAsyncApiTest<ChefAsyncApi> {
    }
 
    public void testDeleteCookbook() throws SecurityException, NoSuchMethodException, IOException {
-      Invokable<?, ?> method = Invokable.from(ChefAsyncApi.class.getMethod("deleteCookbook", String.class, String.class));
+      Invokable<?, ?> method = method(ChefAsyncApi.class, "deleteCookbook", String.class, String.class);
       GeneratedHttpRequest httpRequest = processor.createRequest(method, ImmutableList.<Object> of("cookbook", "1.0.0"));
       assertRequestLineEquals(httpRequest, "DELETE http://localhost:4000/cookbooks/cookbook/1.0.0 HTTP/1.1");
       assertNonPayloadHeadersEqual(httpRequest, "Accept: application/json\nX-Chef-Version: " + ChefAsyncApi.VERSION + "-test\n");
@@ -164,8 +164,8 @@ public class ChefAsyncApiTest extends BaseAsyncApiTest<ChefAsyncApi> {
    }
 
    public void testUpdateCookbook() throws SecurityException, NoSuchMethodException, IOException {
-      Invokable<?, ?> method = Invokable.from(ChefAsyncApi.class.getMethod("updateCookbook", String.class, String.class,
-            CookbookVersion.class));
+      Invokable<?, ?> method = method(ChefAsyncApi.class, "updateCookbook", String.class, String.class,
+            CookbookVersion.class);
       GeneratedHttpRequest httpRequest = processor.createRequest(method, ImmutableList.<Object> of("cookbook", "1.0.1",
             new CookbookVersion("cookbook", "1.0.1")));
 
@@ -184,7 +184,7 @@ public class ChefAsyncApiTest extends BaseAsyncApiTest<ChefAsyncApi> {
    }
 
    public void testListCookbooks() throws SecurityException, NoSuchMethodException, IOException {
-      Invokable<?, ?> method = Invokable.from(ChefAsyncApi.class.getMethod("listCookbooks"));
+      Invokable<?, ?> method = method(ChefAsyncApi.class, "listCookbooks");
       GeneratedHttpRequest httpRequest = processor.createRequest(method, ImmutableList.of());
 
       assertRequestLineEquals(httpRequest, "GET http://localhost:4000/cookbooks HTTP/1.1");
@@ -200,7 +200,7 @@ public class ChefAsyncApiTest extends BaseAsyncApiTest<ChefAsyncApi> {
    }
    
    public void testGetVersionsOfCookbook() throws SecurityException, NoSuchMethodException, IOException {
-       Invokable<?, ?> method = Invokable.from(ChefAsyncApi.class.getMethod("getVersionsOfCookbook", String.class));
+       Invokable<?, ?> method = method(ChefAsyncApi.class, "getVersionsOfCookbook", String.class);
        GeneratedHttpRequest httpRequest = processor.createRequest(method, ImmutableList.<Object> of("apache2"));;
 
        assertRequestLineEquals(httpRequest, "GET http://localhost:4000/cookbooks/apache2 HTTP/1.1");
@@ -216,7 +216,7 @@ public class ChefAsyncApiTest extends BaseAsyncApiTest<ChefAsyncApi> {
     }
 
    public void testApiExists() throws SecurityException, NoSuchMethodException, IOException {
-      Invokable<?, ?> method = Invokable.from(ChefAsyncApi.class.getMethod("clientExists", String.class));
+      Invokable<?, ?> method = method(ChefAsyncApi.class, "clientExists", String.class);
       GeneratedHttpRequest httpRequest = processor.createRequest(method, ImmutableList.<Object> of("api"));
       assertRequestLineEquals(httpRequest, "HEAD http://localhost:4000/clients/api HTTP/1.1");
       assertNonPayloadHeadersEqual(httpRequest, "Accept: application/json\nX-Chef-Version: " + ChefAsyncApi.VERSION + "-test\n");
@@ -231,7 +231,7 @@ public class ChefAsyncApiTest extends BaseAsyncApiTest<ChefAsyncApi> {
    }
 
    public void testDeleteClient() throws SecurityException, NoSuchMethodException, IOException {
-      Invokable<?, ?> method = Invokable.from(ChefAsyncApi.class.getMethod("deleteClient", String.class));
+      Invokable<?, ?> method = method(ChefAsyncApi.class, "deleteClient", String.class);
       GeneratedHttpRequest httpRequest = processor.createRequest(method, ImmutableList.<Object> of("client"));
       assertRequestLineEquals(httpRequest, "DELETE http://localhost:4000/clients/client HTTP/1.1");
       assertNonPayloadHeadersEqual(httpRequest, "Accept: application/json\nX-Chef-Version: " + ChefAsyncApi.VERSION + "-test\n");
@@ -246,7 +246,7 @@ public class ChefAsyncApiTest extends BaseAsyncApiTest<ChefAsyncApi> {
    }
 
    public void testCreateApi() throws SecurityException, NoSuchMethodException, IOException {
-      Invokable<?, ?> method = Invokable.from(ChefAsyncApi.class.getMethod("createClient", String.class));
+      Invokable<?, ?> method = method(ChefAsyncApi.class, "createClient", String.class);
       GeneratedHttpRequest httpRequest = processor.createRequest(method, ImmutableList.<Object> of("api"));
 
       assertRequestLineEquals(httpRequest, "POST http://localhost:4000/clients HTTP/1.1");
@@ -262,7 +262,7 @@ public class ChefAsyncApiTest extends BaseAsyncApiTest<ChefAsyncApi> {
    }
    
    public void testCreateAdminApi() throws SecurityException, NoSuchMethodException, IOException {
-       Invokable<?, ?> method = Invokable.from(ChefAsyncApi.class.getMethod("createClient", String.class, CreateClientOptions.class));
+       Invokable<?, ?> method = method(ChefAsyncApi.class, "createClient", String.class, CreateClientOptions.class);
        GeneratedHttpRequest httpRequest = processor.createRequest(method, ImmutableList.<Object> of("api", CreateClientOptions.Builder.admin()));
 
        assertRequestLineEquals(httpRequest, "POST http://localhost:4000/clients HTTP/1.1");
@@ -278,7 +278,7 @@ public class ChefAsyncApiTest extends BaseAsyncApiTest<ChefAsyncApi> {
     }
 
    public void testListClients() throws SecurityException, NoSuchMethodException, IOException {
-      Invokable<?, ?> method = Invokable.from(ChefAsyncApi.class.getMethod("listClients"));
+      Invokable<?, ?> method = method(ChefAsyncApi.class, "listClients");
       GeneratedHttpRequest httpRequest = processor.createRequest(method, ImmutableList.of());
 
       assertRequestLineEquals(httpRequest, "GET http://localhost:4000/clients HTTP/1.1");
@@ -294,7 +294,7 @@ public class ChefAsyncApiTest extends BaseAsyncApiTest<ChefAsyncApi> {
    }
 
    public void testGenerateKeyForClient() throws SecurityException, NoSuchMethodException, IOException {
-      Invokable<?, ?> method = Invokable.from(ChefAsyncApi.class.getMethod("generateKeyForClient", String.class));
+      Invokable<?, ?> method = method(ChefAsyncApi.class, "generateKeyForClient", String.class);
       GeneratedHttpRequest httpRequest = processor.createRequest(method, ImmutableList.<Object> of("client"));
       assertRequestLineEquals(httpRequest, "PUT http://localhost:4000/clients/client HTTP/1.1");
       assertNonPayloadHeadersEqual(httpRequest, "Accept: application/json\nX-Chef-Version: " + ChefAsyncApi.VERSION + "-test\n");
@@ -309,7 +309,7 @@ public class ChefAsyncApiTest extends BaseAsyncApiTest<ChefAsyncApi> {
    }
 
    public void testNodeExists() throws SecurityException, NoSuchMethodException, IOException {
-      Invokable<?, ?> method = Invokable.from(ChefAsyncApi.class.getMethod("nodeExists", String.class));
+      Invokable<?, ?> method = method(ChefAsyncApi.class, "nodeExists", String.class);
       GeneratedHttpRequest httpRequest = processor.createRequest(method, ImmutableList.<Object> of("node"));
       assertNonPayloadHeadersEqual(httpRequest, "Accept: application/json\nX-Chef-Version: " + ChefAsyncApi.VERSION + "-test\n");
       assertPayloadEquals(httpRequest, null, null, false);
@@ -323,7 +323,7 @@ public class ChefAsyncApiTest extends BaseAsyncApiTest<ChefAsyncApi> {
    }
 
    public void testDeleteNode() throws SecurityException, NoSuchMethodException, IOException {
-      Invokable<?, ?> method = Invokable.from(ChefAsyncApi.class.getMethod("deleteNode", String.class));
+      Invokable<?, ?> method = method(ChefAsyncApi.class, "deleteNode", String.class);
       GeneratedHttpRequest httpRequest = processor.createRequest(method, ImmutableList.<Object> of("node"));
       assertRequestLineEquals(httpRequest, "DELETE http://localhost:4000/nodes/node HTTP/1.1");
       assertNonPayloadHeadersEqual(httpRequest, "Accept: application/json\nX-Chef-Version: " + ChefAsyncApi.VERSION + "-test\n");
@@ -338,7 +338,7 @@ public class ChefAsyncApiTest extends BaseAsyncApiTest<ChefAsyncApi> {
    }
 
    public void testCreateNode() throws SecurityException, NoSuchMethodException, IOException {
-      Invokable<?, ?> method = Invokable.from(ChefAsyncApi.class.getMethod("createNode", Node.class));
+      Invokable<?, ?> method = method(ChefAsyncApi.class, "createNode", Node.class);
       GeneratedHttpRequest httpRequest = processor.createRequest(method, ImmutableList.<Object> of(new Node("testnode",
             ImmutableSet.of("recipe[java]"), "_default")));
 
@@ -358,7 +358,7 @@ public class ChefAsyncApiTest extends BaseAsyncApiTest<ChefAsyncApi> {
    }
 
    public void testUpdateNode() throws SecurityException, NoSuchMethodException, IOException {
-      Invokable<?, ?> method = Invokable.from(ChefAsyncApi.class.getMethod("updateNode", Node.class));
+      Invokable<?, ?> method = method(ChefAsyncApi.class, "updateNode", Node.class);
       GeneratedHttpRequest httpRequest = processor.createRequest(method, ImmutableList.<Object> of(new Node("testnode",
             ImmutableSet.of("recipe[java]"), "_default")));
 
@@ -378,7 +378,7 @@ public class ChefAsyncApiTest extends BaseAsyncApiTest<ChefAsyncApi> {
    }
 
    public void testListNodes() throws SecurityException, NoSuchMethodException, IOException {
-      Invokable<?, ?> method = Invokable.from(ChefAsyncApi.class.getMethod("listNodes"));
+      Invokable<?, ?> method = method(ChefAsyncApi.class, "listNodes");
       GeneratedHttpRequest httpRequest = processor.createRequest(method, ImmutableList.of());
 
       assertRequestLineEquals(httpRequest, "GET http://localhost:4000/nodes HTTP/1.1");
@@ -394,7 +394,7 @@ public class ChefAsyncApiTest extends BaseAsyncApiTest<ChefAsyncApi> {
    }
 
    public void testRoleExists() throws SecurityException, NoSuchMethodException, IOException {
-      Invokable<?, ?> method = Invokable.from(ChefAsyncApi.class.getMethod("roleExists", String.class));
+      Invokable<?, ?> method = method(ChefAsyncApi.class, "roleExists", String.class);
       GeneratedHttpRequest httpRequest = processor.createRequest(method, ImmutableList.<Object> of("role"));
       assertRequestLineEquals(httpRequest, "HEAD http://localhost:4000/roles/role HTTP/1.1");
       assertNonPayloadHeadersEqual(httpRequest, "Accept: application/json\nX-Chef-Version: " + ChefAsyncApi.VERSION + "-test\n");
@@ -409,7 +409,7 @@ public class ChefAsyncApiTest extends BaseAsyncApiTest<ChefAsyncApi> {
    }
 
    public void testDeleteRole() throws SecurityException, NoSuchMethodException, IOException {
-      Invokable<?, ?> method = Invokable.from(ChefAsyncApi.class.getMethod("deleteRole", String.class));
+      Invokable<?, ?> method = method(ChefAsyncApi.class, "deleteRole", String.class);
       GeneratedHttpRequest httpRequest = processor.createRequest(method, ImmutableList.<Object> of("role"));
       assertRequestLineEquals(httpRequest, "DELETE http://localhost:4000/roles/role HTTP/1.1");
       assertNonPayloadHeadersEqual(httpRequest, "Accept: application/json\nX-Chef-Version: " + ChefAsyncApi.VERSION + "-test\n");
@@ -424,7 +424,7 @@ public class ChefAsyncApiTest extends BaseAsyncApiTest<ChefAsyncApi> {
    }
 
    public void testCreateRole() throws SecurityException, NoSuchMethodException, IOException {
-      Invokable<?, ?> method = Invokable.from(ChefAsyncApi.class.getMethod("createRole", Role.class));
+      Invokable<?, ?> method = method(ChefAsyncApi.class, "createRole", Role.class);
       GeneratedHttpRequest httpRequest = processor.createRequest(method, ImmutableList.<Object> of(new Role("testrole",
             ImmutableSet.of("recipe[java]"))));
 
@@ -444,7 +444,7 @@ public class ChefAsyncApiTest extends BaseAsyncApiTest<ChefAsyncApi> {
    }
 
    public void testUpdateRole() throws SecurityException, NoSuchMethodException, IOException {
-      Invokable<?, ?> method = Invokable.from(ChefAsyncApi.class.getMethod("updateRole", Role.class));
+      Invokable<?, ?> method = method(ChefAsyncApi.class, "updateRole", Role.class);
       GeneratedHttpRequest httpRequest = processor.createRequest(method, ImmutableList.<Object> of(new Role("testrole",
             ImmutableSet.of("recipe[java]"))));
 
@@ -464,7 +464,7 @@ public class ChefAsyncApiTest extends BaseAsyncApiTest<ChefAsyncApi> {
    }
 
    public void testListRoles() throws SecurityException, NoSuchMethodException, IOException {
-      Invokable<?, ?> method = Invokable.from(ChefAsyncApi.class.getMethod("listRoles"));
+      Invokable<?, ?> method = method(ChefAsyncApi.class, "listRoles");
       GeneratedHttpRequest httpRequest = processor.createRequest(method, ImmutableList.of());
 
       assertRequestLineEquals(httpRequest, "GET http://localhost:4000/roles HTTP/1.1");
@@ -480,7 +480,7 @@ public class ChefAsyncApiTest extends BaseAsyncApiTest<ChefAsyncApi> {
    }
 
    public void testDatabagExists() throws SecurityException, NoSuchMethodException, IOException {
-      Invokable<?, ?> method = Invokable.from(ChefAsyncApi.class.getMethod("databagExists", String.class));
+      Invokable<?, ?> method = method(ChefAsyncApi.class, "databagExists", String.class);
       GeneratedHttpRequest httpRequest = processor.createRequest(method, ImmutableList.<Object> of("databag"));
       assertRequestLineEquals(httpRequest, "HEAD http://localhost:4000/data/databag HTTP/1.1");
       assertNonPayloadHeadersEqual(httpRequest, "Accept: application/json\nX-Chef-Version: " + ChefAsyncApi.VERSION + "-test\n");
@@ -495,7 +495,7 @@ public class ChefAsyncApiTest extends BaseAsyncApiTest<ChefAsyncApi> {
    }
 
    public void testDeleteDatabag() throws SecurityException, NoSuchMethodException, IOException {
-      Invokable<?, ?> method = Invokable.from(ChefAsyncApi.class.getMethod("deleteDatabag", String.class));
+      Invokable<?, ?> method = method(ChefAsyncApi.class, "deleteDatabag", String.class);
       GeneratedHttpRequest httpRequest = processor.createRequest(method, ImmutableList.<Object> of("databag"));
       assertRequestLineEquals(httpRequest, "DELETE http://localhost:4000/data/databag HTTP/1.1");
       assertNonPayloadHeadersEqual(httpRequest, "Accept: application/json\nX-Chef-Version: " + ChefAsyncApi.VERSION + "-test\n");
@@ -510,7 +510,7 @@ public class ChefAsyncApiTest extends BaseAsyncApiTest<ChefAsyncApi> {
    }
 
    public void testCreateDatabag() throws SecurityException, NoSuchMethodException, IOException {
-      Invokable<?, ?> method = Invokable.from(ChefAsyncApi.class.getMethod("createDatabag", String.class));
+      Invokable<?, ?> method = method(ChefAsyncApi.class, "createDatabag", String.class);
       GeneratedHttpRequest httpRequest = processor.createRequest(method, ImmutableList.<Object> of("name"));
 
       assertRequestLineEquals(httpRequest, "POST http://localhost:4000/data HTTP/1.1");
@@ -526,7 +526,7 @@ public class ChefAsyncApiTest extends BaseAsyncApiTest<ChefAsyncApi> {
    }
 
    public void testListDatabags() throws SecurityException, NoSuchMethodException, IOException {
-      Invokable<?, ?> method = Invokable.from(ChefAsyncApi.class.getMethod("listDatabags"));
+      Invokable<?, ?> method = method(ChefAsyncApi.class, "listDatabags");
       GeneratedHttpRequest httpRequest = processor.createRequest(method, ImmutableList.of());
 
       assertRequestLineEquals(httpRequest, "GET http://localhost:4000/data HTTP/1.1");
@@ -542,7 +542,7 @@ public class ChefAsyncApiTest extends BaseAsyncApiTest<ChefAsyncApi> {
    }
 
    public void testDatabagItemExists() throws SecurityException, NoSuchMethodException, IOException {
-      Invokable<?, ?> method = Invokable.from(ChefAsyncApi.class.getMethod("databagItemExists", String.class, String.class));
+      Invokable<?, ?> method = method(ChefAsyncApi.class, "databagItemExists", String.class, String.class);
       GeneratedHttpRequest httpRequest = processor.createRequest(method, ImmutableList.<Object> of("name", "databagItem"));
       assertRequestLineEquals(httpRequest, "HEAD http://localhost:4000/data/name/databagItem HTTP/1.1");
       assertNonPayloadHeadersEqual(httpRequest, "Accept: application/json\nX-Chef-Version: " + ChefAsyncApi.VERSION + "-test\n");
@@ -557,7 +557,7 @@ public class ChefAsyncApiTest extends BaseAsyncApiTest<ChefAsyncApi> {
    }
 
    public void testDeleteDatabagItem() throws SecurityException, NoSuchMethodException, IOException {
-      Invokable<?, ?> method = Invokable.from(ChefAsyncApi.class.getMethod("deleteDatabagItem", String.class, String.class));
+      Invokable<?, ?> method = method(ChefAsyncApi.class, "deleteDatabagItem", String.class, String.class);
       GeneratedHttpRequest httpRequest = processor.createRequest(method, ImmutableList.<Object> of("name", "databagItem"));
       assertNonPayloadHeadersEqual(httpRequest, "Accept: application/json\nX-Chef-Version: " + ChefAsyncApi.VERSION + "-test\n");
       assertPayloadEquals(httpRequest, null, null, false);
@@ -573,7 +573,7 @@ public class ChefAsyncApiTest extends BaseAsyncApiTest<ChefAsyncApi> {
    @Test(expectedExceptions = IllegalArgumentException.class)
    public void testCreateDatabagItemThrowsIllegalArgumentOnPrimitive() throws SecurityException, NoSuchMethodException,
          IOException {
-      Invokable<?, ?> method = Invokable.from(ChefAsyncApi.class.getMethod("createDatabagItem", String.class, DatabagItem.class));
+      Invokable<?, ?> method = method(ChefAsyncApi.class, "createDatabagItem", String.class, DatabagItem.class);
       GeneratedHttpRequest httpRequest = processor.createRequest(method, ImmutableList.<Object> of("name", new DatabagItem("id",
             "100")));
 
@@ -595,7 +595,7 @@ public class ChefAsyncApiTest extends BaseAsyncApiTest<ChefAsyncApi> {
    @Test(expectedExceptions = IllegalArgumentException.class)
    public void testCreateDatabagItemThrowsIllegalArgumentOnWrongId() throws SecurityException, NoSuchMethodException,
          IOException {
-      Invokable<?, ?> method = Invokable.from(ChefAsyncApi.class.getMethod("createDatabagItem", String.class, DatabagItem.class));
+      Invokable<?, ?> method = method(ChefAsyncApi.class, "createDatabagItem", String.class, DatabagItem.class);
       GeneratedHttpRequest httpRequest = processor.createRequest(method, ImmutableList.<Object> of("name", new DatabagItem("id",
             "{\"id\": \"item1\",\"my_key\": \"my_data\"}")));
 
@@ -615,7 +615,7 @@ public class ChefAsyncApiTest extends BaseAsyncApiTest<ChefAsyncApi> {
    }
 
    public void testCreateDatabagItem() throws SecurityException, NoSuchMethodException, IOException {
-      Invokable<?, ?> method = Invokable.from(ChefAsyncApi.class.getMethod("createDatabagItem", String.class, DatabagItem.class));
+      Invokable<?, ?> method = method(ChefAsyncApi.class, "createDatabagItem", String.class, DatabagItem.class);
       GeneratedHttpRequest httpRequest = processor.createRequest(method, ImmutableList.<Object> of("name", new DatabagItem("id",
             "{\"id\": \"id\",\"my_key\": \"my_data\"}")));
 
@@ -632,7 +632,7 @@ public class ChefAsyncApiTest extends BaseAsyncApiTest<ChefAsyncApi> {
    }
 
    public void testCreateDatabagItemEvenWhenUserForgotId() throws SecurityException, NoSuchMethodException, IOException {
-      Invokable<?, ?> method = Invokable.from(ChefAsyncApi.class.getMethod("createDatabagItem", String.class, DatabagItem.class));
+      Invokable<?, ?> method = method(ChefAsyncApi.class, "createDatabagItem", String.class, DatabagItem.class);
       GeneratedHttpRequest httpRequest = processor.createRequest(method, ImmutableList.<Object> of("name", new DatabagItem("id",
             "{\"my_key\": \"my_data\"}")));
 
@@ -649,7 +649,7 @@ public class ChefAsyncApiTest extends BaseAsyncApiTest<ChefAsyncApi> {
    }
 
    public void testUpdateDatabagItem() throws SecurityException, NoSuchMethodException, IOException {
-      Invokable<?, ?> method = Invokable.from(ChefAsyncApi.class.getMethod("updateDatabagItem", String.class, DatabagItem.class));
+      Invokable<?, ?> method = method(ChefAsyncApi.class, "updateDatabagItem", String.class, DatabagItem.class);
       GeneratedHttpRequest httpRequest = processor.createRequest(method, ImmutableList.<Object> of("name", new DatabagItem("id",
             "{\"my_key\": \"my_data\"}")));
 
@@ -667,7 +667,7 @@ public class ChefAsyncApiTest extends BaseAsyncApiTest<ChefAsyncApi> {
    }
 
    public void testListDatabagItems() throws SecurityException, NoSuchMethodException, IOException {
-      Invokable<?, ?> method = Invokable.from(ChefAsyncApi.class.getMethod("listDatabagItems", String.class));
+      Invokable<?, ?> method = method(ChefAsyncApi.class, "listDatabagItems", String.class);
       GeneratedHttpRequest httpRequest = processor.createRequest(method, ImmutableList.<Object> of("name"));
 
       assertRequestLineEquals(httpRequest, "GET http://localhost:4000/data/name HTTP/1.1");
@@ -683,7 +683,7 @@ public class ChefAsyncApiTest extends BaseAsyncApiTest<ChefAsyncApi> {
    }
 
    public void testListSearchIndexes() throws SecurityException, NoSuchMethodException, IOException {
-      Invokable<?, ?> method = Invokable.from(ChefAsyncApi.class.getMethod("listSearchIndexes"));
+      Invokable<?, ?> method = method(ChefAsyncApi.class, "listSearchIndexes");
       GeneratedHttpRequest httpRequest = processor.createRequest(method, ImmutableList.of());
 
       assertRequestLineEquals(httpRequest, "GET http://localhost:4000/search HTTP/1.1");
@@ -699,7 +699,7 @@ public class ChefAsyncApiTest extends BaseAsyncApiTest<ChefAsyncApi> {
    }
 
    public void testSearchRoles() throws SecurityException, NoSuchMethodException, IOException {
-      Invokable<?, ?> method = Invokable.from(ChefAsyncApi.class.getMethod("searchRoles"));
+      Invokable<?, ?> method = method(ChefAsyncApi.class, "searchRoles");
       GeneratedHttpRequest httpRequest = processor.createRequest(method, ImmutableList.of());
 
       assertRequestLineEquals(httpRequest, "GET http://localhost:4000/search/role HTTP/1.1");
@@ -715,7 +715,7 @@ public class ChefAsyncApiTest extends BaseAsyncApiTest<ChefAsyncApi> {
    }
    
    public void testSearchRolesWithOptions() throws SecurityException, NoSuchMethodException, IOException {
-      Invokable<?, ?> method = Invokable.from(ChefAsyncApi.class.getMethod("searchRoles", SearchOptions.class));
+      Invokable<?, ?> method = method(ChefAsyncApi.class, "searchRoles", SearchOptions.class);
       GeneratedHttpRequest httpRequest = processor.createRequest(method, ImmutableList.<Object> of(
     		  SearchOptions.Builder.query("text")));
 
@@ -732,7 +732,7 @@ public class ChefAsyncApiTest extends BaseAsyncApiTest<ChefAsyncApi> {
    }
 
    public void testSearchClients() throws SecurityException, NoSuchMethodException, IOException {
-      Invokable<?, ?> method = Invokable.from(ChefAsyncApi.class.getMethod("searchClients"));
+      Invokable<?, ?> method = method(ChefAsyncApi.class, "searchClients");
       GeneratedHttpRequest httpRequest = processor.createRequest(method, ImmutableList.of());
 
       assertRequestLineEquals(httpRequest, "GET http://localhost:4000/search/client HTTP/1.1");
@@ -748,7 +748,7 @@ public class ChefAsyncApiTest extends BaseAsyncApiTest<ChefAsyncApi> {
    }
    
    public void testSearchClientsWithOptions() throws SecurityException, NoSuchMethodException, IOException {
-	      Invokable<?, ?> method = Invokable.from(ChefAsyncApi.class.getMethod("searchClients", SearchOptions.class));
+	      Invokable<?, ?> method = method(ChefAsyncApi.class, "searchClients", SearchOptions.class);
 	      GeneratedHttpRequest httpRequest = processor.createRequest(method, ImmutableList.<Object> of(
 	    		  SearchOptions.Builder.query("text").rows(5)));
 
@@ -765,7 +765,7 @@ public class ChefAsyncApiTest extends BaseAsyncApiTest<ChefAsyncApi> {
 	   }
 
    public void testSearchNodes() throws SecurityException, NoSuchMethodException, IOException {
-      Invokable<?, ?> method = Invokable.from(ChefAsyncApi.class.getMethod("searchNodes"));
+      Invokable<?, ?> method = method(ChefAsyncApi.class, "searchNodes");
       GeneratedHttpRequest httpRequest = processor.createRequest(method, ImmutableList.of());
 
       assertRequestLineEquals(httpRequest, "GET http://localhost:4000/search/node HTTP/1.1");
@@ -781,7 +781,7 @@ public class ChefAsyncApiTest extends BaseAsyncApiTest<ChefAsyncApi> {
    }
    
    public void testSearchNodesWithOptions() throws SecurityException, NoSuchMethodException, IOException {
-      Invokable<?, ?> method = Invokable.from(ChefAsyncApi.class.getMethod("searchNodes", SearchOptions.class));
+      Invokable<?, ?> method = method(ChefAsyncApi.class, "searchNodes", SearchOptions.class);
       GeneratedHttpRequest httpRequest = processor.createRequest(method, ImmutableList.<Object> of(
     		  SearchOptions.Builder.query("foo:foo").start(3)));
 
@@ -799,7 +799,7 @@ public class ChefAsyncApiTest extends BaseAsyncApiTest<ChefAsyncApi> {
 
 
    public void testSearchDatabag() throws SecurityException, NoSuchMethodException, IOException {
-      Invokable<?, ?> method = Invokable.from(ChefAsyncApi.class.getMethod("searchDatabag", String.class));
+      Invokable<?, ?> method = method(ChefAsyncApi.class, "searchDatabag", String.class);
       GeneratedHttpRequest httpRequest = processor.createRequest(method, ImmutableList.<Object> of("foo"));
 
       assertRequestLineEquals(httpRequest, "GET http://localhost:4000/search/foo HTTP/1.1");
@@ -815,7 +815,7 @@ public class ChefAsyncApiTest extends BaseAsyncApiTest<ChefAsyncApi> {
    }
    
    public void testSearchDatabagWithOptions() throws SecurityException, NoSuchMethodException, IOException {
-      Invokable<?, ?> method = Invokable.from(ChefAsyncApi.class.getMethod("searchDatabag", String.class, SearchOptions.class));
+      Invokable<?, ?> method = method(ChefAsyncApi.class, "searchDatabag", String.class, SearchOptions.class);
       GeneratedHttpRequest httpRequest = processor.createRequest(method, ImmutableList.<Object> of("foo",
     		  SearchOptions.Builder.query("bar").sort("name DESC")));
 
@@ -832,7 +832,7 @@ public class ChefAsyncApiTest extends BaseAsyncApiTest<ChefAsyncApi> {
    }
    
    public void testGetResourceContents() throws SecurityException, NoSuchMethodException, IOException {
-       Invokable<?, ?> method = Invokable.from(ChefAsyncApi.class.getMethod("getResourceContents", Resource.class));
+       Invokable<?, ?> method = method(ChefAsyncApi.class, "getResourceContents", Resource.class);
        GeneratedHttpRequest httpRequest = processor.createRequest(method, ImmutableList.<Object> of(
            new Resource("test", URI.create("http://foo/bar"), new byte[]{}, null, null)));
 

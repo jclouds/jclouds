@@ -18,7 +18,7 @@
  */
 package org.jclouds.chef;
 
-import static org.jclouds.reflect.Reflection2.typeTokenOf;
+import static org.jclouds.reflect.Reflection2.typeToken;
 
 import java.util.NoSuchElementException;
 import java.util.Properties;
@@ -125,7 +125,7 @@ public class ChefContextFactory {
          return ChefContext.class.cast(context);
       } else if (context instanceof View) {
          View tctx = View.class.cast(context);
-         return tctx.unwrap(typeTokenOf(ChefContext.class));
+         return tctx.unwrap(typeToken(ChefContext.class));
       } else {
          throw new IllegalArgumentException("provider " + providerOrApi + " contains an unknown context type: "
                + context.getClass().getSimpleName());

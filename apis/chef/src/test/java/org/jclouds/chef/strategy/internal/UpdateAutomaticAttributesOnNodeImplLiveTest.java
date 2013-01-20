@@ -18,7 +18,7 @@
  */
 package org.jclouds.chef.strategy.internal;
 
-import static org.jclouds.reflect.Reflection2.typeTokenOf;
+import static org.jclouds.reflect.Reflection2.typeToken;
 import static org.testng.Assert.assertEquals;
 
 import java.util.Set;
@@ -74,6 +74,6 @@ public class UpdateAutomaticAttributesOnNodeImplLiveTest extends BaseChefContext
    @Override
    protected TypeToken<ChefContext> contextType()
    {
-       return typeTokenOf(ChefContext.class);
+       return typeToken(ChefContext.class);
    }
 }
