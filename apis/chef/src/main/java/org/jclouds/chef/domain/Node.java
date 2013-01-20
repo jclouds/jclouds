@@ -57,8 +57,8 @@ public class Node {
    private String _jsonClass = "Chef::Node";
 
    public Node(String name, Map<String, JsonBall> normal, Map<String, JsonBall> override,
-	     Map<String, JsonBall> defaultA, Map<String, JsonBall> automatic, Iterable<String> runList) {
-	   this(name, normal, override, defaultA, automatic, runList, null);
+         Map<String, JsonBall> defaultA, Map<String, JsonBall> automatic, Iterable<String> runList) {
+      this(name, normal, override, defaultA, automatic, runList, null);
    }
 
    /**
@@ -83,7 +83,7 @@ public class Node {
    }
 
    public Node(String name, Iterable<String> runList) {
-	   this(name, runList, "_default");
+      this(name, runList, "_default");
    }
 
    /**

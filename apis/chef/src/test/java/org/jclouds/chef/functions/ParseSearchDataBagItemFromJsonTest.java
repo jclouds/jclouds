@@ -45,25 +45,22 @@ public class ParseSearchDataBagItemFromJsonTest {
 
    @BeforeTest
    protected void setUpInjector() throws IOException {
-       Injector injector = Guice.createInjector(new AbstractModule() {
-           @Override
-           protected void configure()
-           {
-               bind(String.class).annotatedWith(ApiVersion.class).toInstance(ChefAsyncApi.VERSION);
-           }
-       }, new ChefParserModule(), new GsonModule());
-   
+      Injector injector = Guice.createInjector(new AbstractModule() {
+         @Override
+         protected void configure() {
+            bind(String.class).annotatedWith(ApiVersion.class).toInstance(ChefAsyncApi.VERSION);
+         }
+      }, new ChefParserModule(), new GsonModule());
+
       handler = injector.getInstance(ParseSearchDatabagFromJson.class);
    }
 
    public void test1() {
-	  String itemJson = "{\"my_key\":\"my_data\"}";
+      String itemJson = "{\"my_key\":\"my_data\"}";
       String searchJson = "{\"rows\":[{\"raw_data\": {\"id\":\"item1\",\"my_key\":\"my_data\"}}]}";
       DatabagItem item = new DatabagItem("item1", itemJson);
-      SearchResult<DatabagItem> result = handler.apply(HttpResponse.builder()
-              .statusCode(200)
-              .message("ok")
-              .payload(searchJson).build());
+      SearchResult<DatabagItem> result = handler.apply(HttpResponse.builder().statusCode(200).message("ok")
+            .payload(searchJson).build());
       assertEquals(result.size(), 1);
       assertEquals(result.iterator().next(), item);
    }

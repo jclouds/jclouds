@@ -71,12 +71,13 @@ public class TransientChefApiModule extends AbstractModule {
       bindBlockingApi(binder(), TransientChefApi.class, ChefAsyncApi.class);
       bind(ChefApi.class).to(TransientChefApi.class);
 
-      bind(LocalAsyncBlobStore.class).annotatedWith(Names.named("databags")).toInstance(
-            ContextBuilder
-                  .newBuilder(new TransientApiMetadata())
-                  .modules(ImmutableSet.<Module> of(
-                        new ExecutorServiceModule(sameThreadExecutor(), sameThreadExecutor())))
-                  .buildInjector().getInstance(LocalAsyncBlobStore.class));
+      bind(LocalAsyncBlobStore.class).annotatedWith(Names.named("databags"))
+            .toInstance(
+                  ContextBuilder
+                        .newBuilder(new TransientApiMetadata())
+                        .modules(
+                              ImmutableSet.<Module> of(new ExecutorServiceModule(sameThreadExecutor(),
+                                    sameThreadExecutor()))).buildInjector().getInstance(LocalAsyncBlobStore.class));
       bind(Statement.class).annotatedWith(Names.named("installChefGems")).to(InstallChefGems.class);
    }
 

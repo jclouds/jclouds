@@ -42,14 +42,15 @@ import com.google.common.reflect.TypeToken;
 @Test(groups = "live", testName = "UpdateAutomaticAttributesOnNodeImplLiveTest")
 public class UpdateAutomaticAttributesOnNodeImplLiveTest extends BaseChefContextLiveTest<ChefContext> {
 
-    private CurrentUserProvider currentUserProvider;
-    
-    @BeforeClass(groups = { "integration", "live" })
-    @Override
-    public void setupContext() {
-       super.setupContext();
-       this.currentUserProvider = context.utils().injector().getInstance(CurrentUserProvider.class);
-    }
+   private CurrentUserProvider currentUserProvider;
+
+   @BeforeClass(groups = { "integration", "live" })
+   @Override
+   public void setupContext() {
+      super.setupContext();
+      this.currentUserProvider = context.utils().injector().getInstance(CurrentUserProvider.class);
+   }
+
    @Test
    public void testExecute() {
       Set<String> runList = ImmutableSet.of("role[" + prefix + "]");
@@ -64,16 +65,14 @@ public class UpdateAutomaticAttributesOnNodeImplLiveTest extends BaseChefContext
          context.getApi().deleteNode(prefix);
       }
    }
-   
+
    @Override
-   protected ChefApi getChefApi(ChefContext context)
-   {
-       return context.getApi();
+   protected ChefApi getChefApi(ChefContext context) {
+      return context.getApi();
    }
-   
+
    @Override
-   protected TypeToken<ChefContext> contextType()
-   {
-       return typeToken(ChefContext.class);
+   protected TypeToken<ChefContext> contextType() {
+      return typeToken(ChefContext.class);
    }
 }

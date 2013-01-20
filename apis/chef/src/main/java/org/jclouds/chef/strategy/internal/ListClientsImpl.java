@@ -60,7 +60,7 @@ public class ListClientsImpl implements ListClients {
 
    @Inject
    ListClientsImpl(@Named(Constants.PROPERTY_USER_THREADS) ListeningExecutorService userExecutor, ChefApi getAllApi,
-            ChefAsyncApi ablobstore) {
+         ChefAsyncApi ablobstore) {
       this.userExecutor = userExecutor;
       this.chefAsyncApi = ablobstore;
       this.chefApi = getAllApi;

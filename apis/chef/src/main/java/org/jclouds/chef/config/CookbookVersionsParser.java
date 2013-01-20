@@ -31,15 +31,15 @@ import javax.inject.Qualifier;
 /**
  * Used to configure the cookbook versions Json parser.
  * <p>
- * Chef Server version 0.9 and 0.10 return a different Json when rquesting the cookbook
- * versions. This annotation can be used to setup the cookbook versions parser.
+ * Chef Server version 0.9 and 0.10 return a different Json when rquesting the
+ * cookbook versions. This annotation can be used to setup the cookbook versions
+ * parser.
  * 
  * @author Ignasi Barrera
  */
-@Target({METHOD, PARAMETER, FIELD})
+@Target({ METHOD, PARAMETER, FIELD })
 @Retention(RUNTIME)
 @Qualifier
-public @interface CookbookVersionsParser
-{
+public @interface CookbookVersionsParser {
 
 }

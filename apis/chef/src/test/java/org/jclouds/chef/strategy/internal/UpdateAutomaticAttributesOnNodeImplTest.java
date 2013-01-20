@@ -53,9 +53,9 @@ public class UpdateAutomaticAttributesOnNodeImplTest {
 
       Supplier<Map<String, JsonBall>> automaticSupplier = Suppliers.<Map<String, JsonBall>> ofInstance(automatic);
 
-      Node nodeWithAutomatic = new Node("name", ImmutableMap.<String, JsonBall> of(), ImmutableMap
-            .<String, JsonBall> of(), ImmutableMap.<String, JsonBall> of(), automatic, ImmutableSet.<String> of(),
-            "_default");
+      Node nodeWithAutomatic = new Node("name", ImmutableMap.<String, JsonBall> of(),
+            ImmutableMap.<String, JsonBall> of(), ImmutableMap.<String, JsonBall> of(), automatic,
+            ImmutableSet.<String> of(), "_default");
 
       expect(chef.getNode("name")).andReturn(node);
       node.getAutomatic().putAll(automaticSupplier.get());

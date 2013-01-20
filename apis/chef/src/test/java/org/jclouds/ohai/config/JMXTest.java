@@ -61,12 +61,11 @@ public class JMXTest {
       replay(runtime);
 
       Injector injector = Guice.createInjector(new AbstractModule() {
-          @Override
-          protected void configure()
-          {
-              bind(String.class).annotatedWith(ApiVersion.class).toInstance(ChefAsyncApi.VERSION);
-          }
-       }, new ChefParserModule(), new GsonModule(), new JMXOhaiModule() {
+         @Override
+         protected void configure() {
+            bind(String.class).annotatedWith(ApiVersion.class).toInstance(ChefAsyncApi.VERSION);
+         }
+      }, new ChefParserModule(), new GsonModule(), new JMXOhaiModule() {
          @Override
          protected RuntimeMXBean provideRuntimeMXBean() {
             return runtime;

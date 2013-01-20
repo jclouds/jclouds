@@ -47,24 +47,24 @@ public class ParseKeySetFromJsonTest {
 
    @BeforeTest
    protected void setUpInjector() throws IOException {
-       Injector injector = Guice.createInjector(new AbstractModule() {
-           @Override
-           protected void configure()
-           {
-               bind(String.class).annotatedWith(ApiVersion.class).toInstance(ChefAsyncApi.VERSION);
-           }
-       }, new ChefParserModule(), new GsonModule());
-   
+      Injector injector = Guice.createInjector(new AbstractModule() {
+         @Override
+         protected void configure() {
+            bind(String.class).annotatedWith(ApiVersion.class).toInstance(ChefAsyncApi.VERSION);
+         }
+      }, new ChefParserModule(), new GsonModule());
+
       handler = injector.getInstance(ParseKeySetFromJson.class);
    }
 
    public void testRegex() {
       assertEquals(
-            handler
-                  .apply(HttpResponse.builder()
-                           .statusCode(200)
-                           .message("ok")
-                           .payload("{\n\"opscode-validator\": \"https://api.opscode.com/...\", \"pimp-validator\": \"https://api.opscode.com/...\"}").build()),
-            ImmutableSet.of("opscode-validator", "pimp-validator"));
+            handler.apply(HttpResponse
+                  .builder()
+                  .statusCode(200)
+                  .message("ok")
+                  .payload(
+                        "{\n\"opscode-validator\": \"https://api.opscode.com/...\", \"pimp-validator\": \"https://api.opscode.com/...\"}")
+                  .build()), ImmutableSet.of("opscode-validator", "pimp-validator"));
    }
 }

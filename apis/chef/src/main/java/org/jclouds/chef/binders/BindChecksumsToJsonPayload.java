@@ -41,7 +41,7 @@ import org.jclouds.rest.binders.BindToStringPayload;
 public class BindChecksumsToJsonPayload extends BindToStringPayload {
 
    @SuppressWarnings("unchecked")
-   public HttpRequest bindToRequest( HttpRequest request, Object input ) {
+   public HttpRequest bindToRequest(HttpRequest request, Object input) {
       checkArgument(checkNotNull(input, "input") instanceof Set, "this binder is only valid for Set!");
 
       Set<List<Byte>> md5s = (Set<List<Byte>>) input;

@@ -80,30 +80,31 @@ public class SignedHeaderAuthTest {
          "NMzYZgyooSvU85qkIUmKuCqgG2AIlvYa2Q/2ctrMhoaHhLOCWWoqYNMaEqPc",
          "3tKHE+CfvP+WuPdWk4jv4wpIkAz6ZLxToxcGhXmZbXpk56YTmqgBW2cbbw4O",
          "IWPZDHSiPcw//AYNgW1CCDptt+UFuaFYbtqZegcBd2n/jzcWODA7zL4KWEUy",
-         "9q4rlh/+1tBReg60QdsmDRsw/cdO1GZrKtuCwbuD4+nbRdVBKv72rqHX9cu0",
-         "utju9jzczCyB+sSAQWrxSsXB/b8vV2qs0l4VD2ML+w==" };
+         "9q4rlh/+1tBReg60QdsmDRsw/cdO1GZrKtuCwbuD4+nbRdVBKv72rqHX9cu0", "utju9jzczCyB+sSAQWrxSsXB/b8vV2qs0l4VD2ML+w==" };
 
    // We expect Mixlib::Authentication::SignedHeaderAuth//sign to return this
    // if passed the BODY above.
    public static final Multimap<String, String> EXPECTED_SIGN_RESULT = ImmutableMultimap.<String, String> builder()
          .put("X-Ops-Content-Hash", X_OPS_CONTENT_HASH).put("X-Ops-Userid", USER_ID).put("X-Ops-Sign", "version=1.0")
-         .put("X-Ops-Authorization-1", X_OPS_AUTHORIZATION_LINES[0]).put("X-Ops-Authorization-2",
-               X_OPS_AUTHORIZATION_LINES[1]).put("X-Ops-Authorization-3", X_OPS_AUTHORIZATION_LINES[2]).put(
-               "X-Ops-Authorization-4", X_OPS_AUTHORIZATION_LINES[3]).put("X-Ops-Authorization-5",
-               X_OPS_AUTHORIZATION_LINES[4]).put("X-Ops-Authorization-6", X_OPS_AUTHORIZATION_LINES[5]).put(
-               "X-Ops-Timestamp", TIMESTAMP_ISO8601).build();
+         .put("X-Ops-Authorization-1", X_OPS_AUTHORIZATION_LINES[0])
+         .put("X-Ops-Authorization-2", X_OPS_AUTHORIZATION_LINES[1])
+         .put("X-Ops-Authorization-3", X_OPS_AUTHORIZATION_LINES[2])
+         .put("X-Ops-Authorization-4", X_OPS_AUTHORIZATION_LINES[3])
+         .put("X-Ops-Authorization-5", X_OPS_AUTHORIZATION_LINES[4])
+         .put("X-Ops-Authorization-6", X_OPS_AUTHORIZATION_LINES[5]).put("X-Ops-Timestamp", TIMESTAMP_ISO8601).build();
 
    // Content hash for empty string
    public static final String X_OPS_CONTENT_HASH_EMPTY = "2jmj7l5rSw0yVb/vlWAYkK/YBwk=";
    public static final Multimap<String, String> EXPECTED_SIGN_RESULT_EMPTY = ImmutableMultimap
          .<String, String> builder().put("X-Ops-Content-Hash", X_OPS_CONTENT_HASH_EMPTY).put("X-Ops-Userid", USER_ID)
-         .put("X-Ops-Sign", "version=1.0").put("X-Ops-Authorization-1",
-               "N6U75kopDK64cEFqrB6vw+PnubnXr0w5LQeXnIGNGLRP2LvifwIeisk7QxEx").put("X-Ops-Authorization-2",
-               "mtpQOWAw8HvnWErjzuk9AvUsqVmWpv14ficvkaD79qsPMvbje+aLcIrCGT1P").put("X-Ops-Authorization-3",
-               "3d2uvf4w7iqwzrIscPnkxLR6o6pymR90gvJXDPzV7Le0jbfD8kmZ8AAK0sGG").put("X-Ops-Authorization-4",
-               "09F1ftW80bLatJTA66Cw2wBz261r6x/abZhIKFJFDWLzyQGJ8ZNOkUrDDtgI").put("X-Ops-Authorization-5",
-               "svLVXpOJKZZfKunsElpWjjsyNt3k8vpI1Y4ANO8Eg2bmeCPeEK+YriGm5fbC").put("X-Ops-Authorization-6",
-               "DzWNPylHJqMeGKVYwGQKpg62QDfe5yXh3wZLiQcXow==").put("X-Ops-Timestamp", TIMESTAMP_ISO8601).build();
+         .put("X-Ops-Sign", "version=1.0")
+         .put("X-Ops-Authorization-1", "N6U75kopDK64cEFqrB6vw+PnubnXr0w5LQeXnIGNGLRP2LvifwIeisk7QxEx")
+         .put("X-Ops-Authorization-2", "mtpQOWAw8HvnWErjzuk9AvUsqVmWpv14ficvkaD79qsPMvbje+aLcIrCGT1P")
+         .put("X-Ops-Authorization-3", "3d2uvf4w7iqwzrIscPnkxLR6o6pymR90gvJXDPzV7Le0jbfD8kmZ8AAK0sGG")
+         .put("X-Ops-Authorization-4", "09F1ftW80bLatJTA66Cw2wBz261r6x/abZhIKFJFDWLzyQGJ8ZNOkUrDDtgI")
+         .put("X-Ops-Authorization-5", "svLVXpOJKZZfKunsElpWjjsyNt3k8vpI1Y4ANO8Eg2bmeCPeEK+YriGm5fbC")
+         .put("X-Ops-Authorization-6", "DzWNPylHJqMeGKVYwGQKpg62QDfe5yXh3wZLiQcXow==")
+         .put("X-Ops-Timestamp", TIMESTAMP_ISO8601).build();
 
    public static String PUBLIC_KEY;
    public static String PRIVATE_KEY;
@@ -131,9 +132,8 @@ public class SignedHeaderAuthTest {
    @Test
    void shouldGenerateTheCorrectStringToSignAndSignature() {
 
-      HttpRequest request = HttpRequest.builder().method(HttpMethod.POST)
-                                       .endpoint("http://localhost/" + PATH)
-                                       .payload(BODY).build();
+      HttpRequest request = HttpRequest.builder().method(HttpMethod.POST).endpoint("http://localhost/" + PATH)
+            .payload(BODY).build();
 
       String expected_string_to_sign = new StringBuilder().append("Method:POST").append("\n").append("Hashed Path:")
             .append(HASHED_CANONICAL_PATH).append("\n").append("X-Ops-Content-Hash:").append(HASHED_BODY).append("\n")
@@ -146,19 +146,20 @@ public class SignedHeaderAuthTest {
 
       request = signing_obj.filter(request);
       Multimap<String, String> headersWithoutContentLength = LinkedHashMultimap.create(request.getHeaders());
-      headersWithoutContentLength.removeAll( HttpHeaders.CONTENT_LENGTH );
-      assertEqualsNoOrder( headersWithoutContentLength.values().toArray(), EXPECTED_SIGN_RESULT.values().toArray() );
+      headersWithoutContentLength.removeAll(HttpHeaders.CONTENT_LENGTH);
+      assertEqualsNoOrder(headersWithoutContentLength.values().toArray(), EXPECTED_SIGN_RESULT.values().toArray());
    }
 
    @Test
    void shouldGenerateTheCorrectStringToSignAndSignatureWithNoBody() {
 
-      HttpRequest request = HttpRequest.builder().method(HttpMethod.DELETE)
-                                       .endpoint("http://localhost/" + PATH).build();
+      HttpRequest request = HttpRequest.builder().method(HttpMethod.DELETE).endpoint("http://localhost/" + PATH)
+            .build();
 
       request = signing_obj.filter(request);
       Multimap<String, String> headersWithoutContentLength = LinkedHashMultimap.create(request.getHeaders());
-      assertEqualsNoOrder(headersWithoutContentLength.entries().toArray(), EXPECTED_SIGN_RESULT_EMPTY.entries().toArray());
+      assertEqualsNoOrder(headersWithoutContentLength.entries().toArray(), EXPECTED_SIGN_RESULT_EMPTY.entries()
+            .toArray());
    }
 
    @Test
@@ -167,8 +168,7 @@ public class SignedHeaderAuthTest {
       for (int i = 0; i < 100; i++)
          path.append('A');
       HttpRequest request = HttpRequest.builder().method(HttpMethod.PUT)
-                                       .endpoint("http://localhost/" + path.toString())
-                                       .payload(BODY).build();
+            .endpoint("http://localhost/" + path.toString()).payload(BODY).build();
 
       signing_obj.filter(request);
    }

@@ -36,7 +36,7 @@ import javax.inject.Qualifier;
  * 
  * @author Ignasi Barrera
  */
-@Target({METHOD, PARAMETER, FIELD})
+@Target({ METHOD, PARAMETER, FIELD })
 @Retention(RUNTIME)
 @Qualifier
 public @interface Validator {

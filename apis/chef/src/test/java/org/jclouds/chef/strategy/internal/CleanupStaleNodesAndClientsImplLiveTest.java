@@ -18,7 +18,6 @@
  */
 package org.jclouds.chef.strategy.internal;
 
-
 import static org.jclouds.reflect.Reflection2.typeToken;
 
 import org.jclouds.chef.ChefApi;
@@ -40,7 +39,7 @@ public class CleanupStaleNodesAndClientsImplLiveTest extends BaseChefContextLive
 
    private CreateNodeAndPopulateAutomaticAttributesImpl creater;
    private CleanupStaleNodesAndClientsImpl strategy;
-   
+
    @BeforeClass(groups = { "integration", "live" })
    @Override
    public void setupContext() {
@@ -65,17 +64,15 @@ public class CleanupStaleNodesAndClientsImplLiveTest extends BaseChefContextLive
          context.getApi().deleteNode(prefix);
       }
    }
-   
+
    @Override
-   protected ChefApi getChefApi(ChefContext context)
-   {
-       return context.getApi();
+   protected ChefApi getChefApi(ChefContext context) {
+      return context.getApi();
    }
-   
+
    @Override
-   protected TypeToken<ChefContext> contextType()
-   {
-       return typeToken(ChefContext.class);
+   protected TypeToken<ChefContext> contextType() {
+      return typeToken(ChefContext.class);
    }
 
 }

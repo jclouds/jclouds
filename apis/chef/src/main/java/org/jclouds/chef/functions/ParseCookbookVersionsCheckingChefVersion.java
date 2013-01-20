@@ -48,6 +48,6 @@ public class ParseCookbookVersionsCheckingChefVersion implements Function<HttpRe
 
    @Override
    public Set<String> apply(HttpResponse response) {
-       return parser.apply(response);
+      return parser.apply(response);
    }
 }

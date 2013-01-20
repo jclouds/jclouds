@@ -70,7 +70,7 @@ public class ClientForGroupTest {
       ClientForGroup fn = new ClientForGroup(chefApi);
 
       expect(chefApi.listClients()).andReturn(
-               ImmutableSet.<String> of("foo-client-00", "foo-client-01", "foo-client-02"));
+            ImmutableSet.<String> of("foo-client-00", "foo-client-01", "foo-client-02"));
       expect(chefApi.createClient("foo-client-03")).andReturn(client);
       expect(client.getPrivateKey()).andReturn(privateKey);
 

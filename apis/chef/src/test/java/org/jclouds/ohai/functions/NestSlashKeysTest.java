@@ -52,11 +52,10 @@ public class NestSlashKeysTest {
    @BeforeTest
    protected void setUpInjector() throws IOException {
       Injector injector = Guice.createInjector(new AbstractModule() {
-           @Override
-           protected void configure()
-           {
-               bind(String.class).annotatedWith(ApiVersion.class).toInstance(ChefAsyncApi.VERSION);
-           }
+         @Override
+         protected void configure() {
+            bind(String.class).annotatedWith(ApiVersion.class).toInstance(ChefAsyncApi.VERSION);
+         }
       }, new ChefParserModule(), new GsonModule());
       converter = injector.getInstance(NestSlashKeys.class);
       json = injector.getInstance(Json.class);
@@ -64,47 +63,59 @@ public class NestSlashKeysTest {
 
    @Test
    public void testBase() {
-      assertEquals(json.toJson(converter.apply(ImmutableMultimap.<String, Supplier<JsonBall>> of("java", Suppliers
-            .ofInstance(new JsonBall("java"))))), "{\"java\":\"java\"}");
+      assertEquals(
+            json.toJson(converter.apply(ImmutableMultimap.<String, Supplier<JsonBall>> of("java",
+                  Suppliers.ofInstance(new JsonBall("java"))))), "{\"java\":\"java\"}");
    }
 
    @Test(expectedExceptions = IllegalArgumentException.class)
    public void testIllegal() {
-      json.toJson(converter.apply(ImmutableMultimap.<String, Supplier<JsonBall>> of("java", Suppliers
-            .ofInstance(new JsonBall("java")), "java/system", Suppliers.ofInstance(new JsonBall("system")))));
+      json.toJson(converter.apply(ImmutableMultimap.<String, Supplier<JsonBall>> of("java",
+            Suppliers.ofInstance(new JsonBall("java")), "java/system", Suppliers.ofInstance(new JsonBall("system")))));
    }
 
    @Test
    public void testOne() {
-      assertEquals(json.toJson(converter.apply(ImmutableMultimap.<String, Supplier<JsonBall>> of("java", Suppliers
-            .ofInstance(new JsonBall("{\"time\":\"time\"}")), "java/system", Suppliers
-            .ofInstance(new JsonBall("system"))))), "{\"java\":{\"time\":\"time\",\"system\":\"system\"}}");
+      assertEquals(
+            json.toJson(converter.apply(ImmutableMultimap.<String, Supplier<JsonBall>> of("java",
+                  Suppliers.ofInstance(new JsonBall("{\"time\":\"time\"}")), "java/system",
+                  Suppliers.ofInstance(new JsonBall("system"))))),
+            "{\"java\":{\"time\":\"time\",\"system\":\"system\"}}");
    }
 
    @Test
    public void testOneDuplicate() {
-      assertEquals(json.toJson(converter.apply(ImmutableMultimap.<String, Supplier<JsonBall>> of("java", Suppliers
-            .ofInstance(new JsonBall("{\"time\":\"time\"}")), "java", Suppliers.ofInstance(new JsonBall(
-            "{\"system\":\"system\"}"))))), "{\"java\":{\"time\":\"time\",\"system\":\"system\"}}");
+      assertEquals(
+            json.toJson(converter.apply(ImmutableMultimap.<String, Supplier<JsonBall>> of("java",
+                  Suppliers.ofInstance(new JsonBall("{\"time\":\"time\"}")), "java",
+                  Suppliers.ofInstance(new JsonBall("{\"system\":\"system\"}"))))),
+            "{\"java\":{\"time\":\"time\",\"system\":\"system\"}}");
    }
 
    @Test
    public void testMerge() {
-      assertEquals(json.toJson(converter.apply(ImmutableMultimap.<String, Supplier<JsonBall>> of("java", Suppliers
-            .ofInstance(new JsonBall("{\"time\":{\"1\":\"hello\"}}")), "java/time", Suppliers.ofInstance(new JsonBall(
-            "{\"2\":\"goodbye\"}"))))), "{\"java\":{\"time\":{\"1\":\"hello\",\"2\":\"goodbye\"}}}");
+      assertEquals(
+            json.toJson(converter.apply(ImmutableMultimap.<String, Supplier<JsonBall>> of("java",
+                  Suppliers.ofInstance(new JsonBall("{\"time\":{\"1\":\"hello\"}}")), "java/time",
+                  Suppliers.ofInstance(new JsonBall("{\"2\":\"goodbye\"}"))))),
+            "{\"java\":{\"time\":{\"1\":\"hello\",\"2\":\"goodbye\"}}}");
    }
+
    @Test
    public void testMergeNestedTwice() {
-      assertEquals(json.toJson(converter.apply(ImmutableMultimap.<String, Supplier<JsonBall>> of("java", Suppliers
-            .ofInstance(new JsonBall("{\"time\":{\"1\":\"hello\"}}")), "java", Suppliers.ofInstance(new JsonBall(
-            "{\"time\":{\"2\":\"goodbye\"}}"))))), "{\"java\":{\"time\":{\"1\":\"hello\",\"2\":\"goodbye\"}}}");
+      assertEquals(
+            json.toJson(converter.apply(ImmutableMultimap.<String, Supplier<JsonBall>> of("java",
+                  Suppliers.ofInstance(new JsonBall("{\"time\":{\"1\":\"hello\"}}")), "java",
+                  Suppliers.ofInstance(new JsonBall("{\"time\":{\"2\":\"goodbye\"}}"))))),
+            "{\"java\":{\"time\":{\"1\":\"hello\",\"2\":\"goodbye\"}}}");
    }
 
    @Test
    public void testReplaceList() {
-      assertEquals(json.toJson(converter.apply(ImmutableMultimap.<String, Supplier<JsonBall>> of("java", Suppliers
-            .ofInstance(new JsonBall("{\"time\":{\"1\":[\"hello\"]}}")), "java/time", Suppliers.ofInstance(new JsonBall(
-            "{\"1\":[\"goodbye\"]}"))))), "{\"java\":{\"time\":{\"1\":[\"goodbye\"]}}}");
+      assertEquals(
+            json.toJson(converter.apply(ImmutableMultimap.<String, Supplier<JsonBall>> of("java",
+                  Suppliers.ofInstance(new JsonBall("{\"time\":{\"1\":[\"hello\"]}}")), "java/time",
+                  Suppliers.ofInstance(new JsonBall("{\"1\":[\"goodbye\"]}"))))),
+            "{\"java\":{\"time\":{\"1\":[\"goodbye\"]}}}");
    }
 }

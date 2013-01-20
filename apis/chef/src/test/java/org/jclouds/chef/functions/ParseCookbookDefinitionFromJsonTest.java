@@ -47,43 +47,30 @@ public class ParseCookbookDefinitionFromJsonTest {
 
    @BeforeTest
    protected void setUpInjector() throws IOException {
-       Injector injector = Guice.createInjector(new AbstractModule() {
-           @Override
-           protected void configure()
-           {
-               bind(String.class).annotatedWith(ApiVersion.class).toInstance(ChefAsyncApi.VERSION);
-           }
-       }, new ChefParserModule(), new GsonModule());
-   
+      Injector injector = Guice.createInjector(new AbstractModule() {
+         @Override
+         protected void configure() {
+            bind(String.class).annotatedWith(ApiVersion.class).toInstance(ChefAsyncApi.VERSION);
+         }
+      }, new ChefParserModule(), new GsonModule());
+
       handler = injector.getInstance(ParseCookbookDefinitionFromJson.class);
    }
 
    public void testParse010Response() {
-      assertEquals(
-            handler
-                  .apply(HttpResponse.builder()
-                                     .statusCode(200)
-                                     .message("ok")
-                                     .payload("{" +
-                                  "\"apache2\" => {" +
-                                      "\"url\" => \"http://localhost:4000/cookbooks/apache2\"," +
-                                      "\"versions\" => [" +
-                                          "{\"url\" => \"http://localhost:4000/cookbooks/apache2/5.1.0\"," +
-                                          "\"version\" => \"5.1.0\"}," +
-                                          "{\"url\" => \"http://localhost:4000/cookbooks/apache2/4.2.0\"," +
-                                          "\"version\" => \"4.2.0\"}" +
-                                      "]" +
-                                  "}," +
-                                  "\"nginx\" => {" +
-                                      "\"url\" => \"http://localhost:4000/cookbooks/nginx\"," +
-                                      "\"versions\" => [" +
-                                          "{\"url\" => \"http://localhost:4000/cookbooks/nginx/1.0.0\"," +
-                                          "\"version\" => \"1.0.0\"}," +
-                                          "{\"url\" => \"http://localhost:4000/cookbooks/nginx/0.3.0\"," +
-                                          "\"version\" => \"0.3.0\"}" +
-                                      "]" +
-                                  "}" +
-                              "}").build()),
-            ImmutableSet.of("apache2", "nginx"));
+      assertEquals(handler.apply(HttpResponse
+            .builder()
+            .statusCode(200)
+            .message("ok")
+            .payload(
+                  "{" + "\"apache2\" => {" + "\"url\" => \"http://localhost:4000/cookbooks/apache2\","
+                        + "\"versions\" => [" + "{\"url\" => \"http://localhost:4000/cookbooks/apache2/5.1.0\","
+                        + "\"version\" => \"5.1.0\"},"
+                        + "{\"url\" => \"http://localhost:4000/cookbooks/apache2/4.2.0\","
+                        + "\"version\" => \"4.2.0\"}" + "]" + "}," + "\"nginx\" => {"
+                        + "\"url\" => \"http://localhost:4000/cookbooks/nginx\"," + "\"versions\" => ["
+                        + "{\"url\" => \"http://localhost:4000/cookbooks/nginx/1.0.0\"," + "\"version\" => \"1.0.0\"},"
+                        + "{\"url\" => \"http://localhost:4000/cookbooks/nginx/0.3.0\"," + "\"version\" => \"0.3.0\"}"
+                        + "]" + "}" + "}").build()), ImmutableSet.of("apache2", "nginx"));
    }
 }

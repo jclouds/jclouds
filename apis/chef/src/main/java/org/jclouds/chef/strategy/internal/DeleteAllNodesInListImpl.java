@@ -60,8 +60,8 @@ public class DeleteAllNodesInListImpl implements DeleteAllNodesInList {
    protected Long maxTime;
 
    @Inject
-   DeleteAllNodesInListImpl(@Named(Constants.PROPERTY_USER_THREADS) ListeningExecutorService userExecutor, ChefApi getAllNode,
-         ChefAsyncApi ablobstore) {
+   DeleteAllNodesInListImpl(@Named(Constants.PROPERTY_USER_THREADS) ListeningExecutorService userExecutor,
+         ChefApi getAllNode, ChefAsyncApi ablobstore) {
       this.userExecutor = userExecutor;
       this.chefAsyncApi = ablobstore;
       this.chefApi = getAllNode;
@@ -75,7 +75,8 @@ public class DeleteAllNodesInListImpl implements DeleteAllNodesInList {
          responses.put(name, chefAsyncApi.deleteNode(name));
       }
       try {
-         exceptions = awaitCompletion(responses, userExecutor, maxTime, logger, String.format("deleting nodes: %s", names));
+         exceptions = awaitCompletion(responses, userExecutor, maxTime, logger,
+               String.format("deleting nodes: %s", names));
       } catch (TimeoutException e) {
          propagate(e);
       }

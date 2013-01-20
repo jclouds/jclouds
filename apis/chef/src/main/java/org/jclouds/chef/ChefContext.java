@@ -30,7 +30,7 @@ import com.google.inject.ImplementedBy;
  * 
  */
 @ImplementedBy(ChefContextImpl.class)
-public interface ChefContext extends RestContext<ChefApi, ChefAsyncApi>{
+public interface ChefContext extends RestContext<ChefApi, ChefAsyncApi> {
 
    ChefService getChefService();
 

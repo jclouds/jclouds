@@ -70,29 +70,28 @@ public class ChefContextFactory {
    /**
     * @see #createContext(String, String,String, Iterable, Properties)
     */
-   public ChefContext createContext(String providerOrApi, Iterable<? extends Module> wiring,
-         Properties overrides) {
+   public ChefContext createContext(String providerOrApi, Iterable<? extends Module> wiring, Properties overrides) {
       return createContext(providerOrApi, null, null, wiring, overrides);
    }
 
    /**
     * @see #createContext(String, String,String, Iterable, Properties)
     */
-   public ChefContext createContext(String providerOrApi, @Nullable String identity,
-         @Nullable String credential, Properties overrides) {
+   public ChefContext createContext(String providerOrApi, @Nullable String identity, @Nullable String credential,
+         Properties overrides) {
       return createContext(providerOrApi, identity, credential, ImmutableSet.<Module> of(), overrides);
    }
 
    /**
     * @see createContext(String, String,String, Iterable, Properties)
     */
-   public ChefContext createContext(String providerOrApi, @Nullable String identity,
-         @Nullable String credential, Iterable<? extends Module> wiring) {
+   public ChefContext createContext(String providerOrApi, @Nullable String identity, @Nullable String credential,
+         Iterable<? extends Module> wiring) {
       return createContext(providerOrApi, identity, credential, wiring, new Properties());
    }
 
    /**
-    *  for porting old code to {@link ContextBuilder}
+    * for porting old code to {@link ContextBuilder}
     * 
     * @param providerOrApi
     * @param identity
@@ -107,8 +106,8 @@ public class ChefContextFactory {
     * @return initialized context ready for use
     */
    @SuppressWarnings("unchecked")
-   public ChefContext createContext(String providerOrApi, @Nullable String identity,
-         @Nullable String credential, Iterable<? extends Module> wiring, Properties overrides) {
+   public ChefContext createContext(String providerOrApi, @Nullable String identity, @Nullable String credential,
+         Iterable<? extends Module> wiring, Properties overrides) {
       ContextBuilder builder = null;
       try {
          ProviderMetadata pm = Providers.withId(providerOrApi);

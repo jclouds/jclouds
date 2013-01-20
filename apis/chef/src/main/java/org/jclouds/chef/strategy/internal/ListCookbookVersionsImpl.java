@@ -62,7 +62,7 @@ public class ListCookbookVersionsImpl implements ListCookbookVersions {
 
    @Inject
    ListCookbookVersionsImpl(@Named(Constants.PROPERTY_USER_THREADS) ListeningExecutorService userExecutor,
-            ChefApi getAllCookbookVersion, ChefAsyncApi ablobstore) {
+         ChefApi getAllCookbookVersion, ChefAsyncApi ablobstore) {
       this.userExecutor = userExecutor;
       this.chefAsyncApi = ablobstore;
       this.chefApi = getAllCookbookVersion;
@@ -86,11 +86,11 @@ public class ListCookbookVersionsImpl implements ListCookbookVersions {
          public Iterable<? extends CookbookVersion> apply(final String cookbook) {
             // TODO getting each version could also go parallel
             return transformParallel(chefApi.getVersionsOfCookbook(cookbook),
-                     new Function<String, ListenableFuture<? extends CookbookVersion>>() {
-                        public ListenableFuture<CookbookVersion> apply(String version) {
-                           return chefAsyncApi.getCookbook(cookbook, version);
-                        }
-                     }, userExecutor, maxTime, logger, "getting versions of cookbook " + cookbook);
+                  new Function<String, ListenableFuture<? extends CookbookVersion>>() {
+                     public ListenableFuture<CookbookVersion> apply(String version) {
+                        return chefAsyncApi.getCookbook(cookbook, version);
+                     }
+                  }, userExecutor, maxTime, logger, "getting versions of cookbook " + cookbook);
          }
 
       }));

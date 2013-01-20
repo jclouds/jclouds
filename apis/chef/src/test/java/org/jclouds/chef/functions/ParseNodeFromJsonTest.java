@@ -53,14 +53,13 @@ public class ParseNodeFromJsonTest {
 
    @BeforeTest
    protected void setUpInjector() throws IOException {
-       Injector injector = Guice.createInjector(new AbstractModule() {
-           @Override
-           protected void configure()
-           {
-               bind(String.class).annotatedWith(ApiVersion.class).toInstance(ChefAsyncApi.VERSION);
-           }
-       }, new ChefParserModule(), new GsonModule());
-   
+      Injector injector = Guice.createInjector(new AbstractModule() {
+         @Override
+         protected void configure() {
+            bind(String.class).annotatedWith(ApiVersion.class).toInstance(ChefAsyncApi.VERSION);
+         }
+      }, new ChefParserModule(), new GsonModule());
+
       handler = injector.getInstance(Key.get(new TypeLiteral<ParseJson<Node>>() {
       }));
    }
@@ -71,10 +70,8 @@ public class ParseNodeFromJsonTest {
             "{\"ssl_port\":8433}")), ImmutableMap.<String, JsonBall> of(), ImmutableMap.<String, JsonBall> of(),
             ImmutableMap.<String, JsonBall> of(), Collections.singleton("recipe[java]"), "prod");
 
-      assertEquals(handler.apply(HttpResponse.builder()
-               .statusCode(200)
-               .message("ok")
-               .payload(ParseCookbookVersionFromJsonTest.class
-            .getResourceAsStream("/node.json")).build()), node);
+      assertEquals(
+            handler.apply(HttpResponse.builder().statusCode(200).message("ok")
+                  .payload(ParseCookbookVersionFromJsonTest.class.getResourceAsStream("/node.json")).build()), node);
    }
 }

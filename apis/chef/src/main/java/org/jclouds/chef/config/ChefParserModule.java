@@ -169,13 +169,13 @@ public class ChefParserModule extends AbstractModule {
       }
    }
 
-
    /**
     * writes or reads the literal directly
     */
    @Singleton
    public static class DataBagItemAdapter extends NullHackJsonLiteralAdapter<DatabagItem> {
       final Gson gson = new Gson();
+
       @Override
       protected DatabagItem createJsonLiteralFromRawJson(String text) {
          IdHolder idHolder = gson.fromJson(text, IdHolder.class);
@@ -184,7 +184,7 @@ public class ChefParserModule extends AbstractModule {
          text = text.replaceFirst(String.format("\\{\"id\"[ ]?:\"%s\",", idHolder.id), "{");
          return new DatabagItem(idHolder.id, text);
       }
-      
+
       @Override
       protected String toString(DatabagItem value) {
          String text = value.toString();
@@ -195,7 +195,7 @@ public class ChefParserModule extends AbstractModule {
                text = text.replaceFirst("\\{", String.format("{\"id\":\"%s\",", value.getId()));
             else
                checkArgument(value.getId().equals(idHolder.id),
-                        "incorrect id in databagItem text, should be %s: was %s", value.getId(), idHolder.id);
+                     "incorrect id in databagItem text, should be %s: was %s", value.getId(), idHolder.id);
          } catch (JsonSyntaxException e) {
             throw new IllegalArgumentException(e);
          }
@@ -203,7 +203,7 @@ public class ChefParserModule extends AbstractModule {
          return text;
       }
    }
-   
+
    private static class IdHolder {
       private String id;
    }
@@ -215,35 +215,35 @@ public class ChefParserModule extends AbstractModule {
       return ImmutableMap.<Type, Object> of(DatabagItem.class, adapter, PrivateKey.class, privateAdapter,
             PublicKey.class, publicAdapter, X509Certificate.class, certAdapter);
    }
-   
+
    @Provides
    @Singleton
    @CookbookParser
    public Function<HttpResponse, Set<String>> provideCookbookDefinitionAdapter(@ApiVersion String apiVersion,
-       ParseCookbookDefinitionFromJson v10parser, ParseKeySetFromJson v09parser) {
-       Pattern versionPattern = Pattern.compile("\\d\\.(\\d)\\.\\d");
-       Matcher m = versionPattern.matcher(apiVersion);
-       if (m.matches()) {
-           return Integer.valueOf(m.group(1)) > 9? v10parser : v09parser;
-       } else {
-           // Default to the latest version of the parser
-           return v10parser;
-       }
+         ParseCookbookDefinitionFromJson v10parser, ParseKeySetFromJson v09parser) {
+      Pattern versionPattern = Pattern.compile("\\d\\.(\\d)\\.\\d");
+      Matcher m = versionPattern.matcher(apiVersion);
+      if (m.matches()) {
+         return Integer.valueOf(m.group(1)) > 9 ? v10parser : v09parser;
+      } else {
+         // Default to the latest version of the parser
+         return v10parser;
+      }
    }
-   
+
    @Provides
    @Singleton
    @CookbookVersionsParser
    public Function<HttpResponse, Set<String>> provideCookbookDefinitionAdapter(@ApiVersion String apiVersion,
-       ParseCookbookVersionsV10FromJson v10parser, ParseCookbookVersionsV09FromJson v09parser) {
-       Pattern versionPattern = Pattern.compile("\\d\\.(\\d)\\.\\d");
-       Matcher m = versionPattern.matcher(apiVersion);
-       if (m.matches()) {
-           return Integer.valueOf(m.group(1)) > 9? v10parser : v09parser;
-       } else {
-           // Default to the latest version of the parser
-           return v10parser;
-       }
+         ParseCookbookVersionsV10FromJson v10parser, ParseCookbookVersionsV09FromJson v09parser) {
+      Pattern versionPattern = Pattern.compile("\\d\\.(\\d)\\.\\d");
+      Matcher m = versionPattern.matcher(apiVersion);
+      if (m.matches()) {
+         return Integer.valueOf(m.group(1)) > 9 ? v10parser : v09parser;
+      } else {
+         // Default to the latest version of the parser
+         return v10parser;
+      }
    }
 
    @Override

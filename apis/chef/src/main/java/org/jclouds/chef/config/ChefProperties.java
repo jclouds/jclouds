@@ -27,42 +27,40 @@ import org.jclouds.chef.ChefService;
  */
 public interface ChefProperties {
 
-	/**
-	 * The name of the Chef logger.
-	 */
-	public static final String CHEF_LOGGER = "jclouds.chef";
-	
-	public static final String CHEF_SERVICE_CLIENT = "chef.service-api";
-	public static final String CHEF_NODE = "chef.node";
-	public static final String CHEF_NODE_PATTERN = "chef.node-pattern";
-	public static final String CHEF_RUN_LIST = "chef.run-list";
+   /**
+    * The name of the Chef logger.
+    */
+   public static final String CHEF_LOGGER = "jclouds.chef";
 
-	/**
-	 * Ddatabag that holds chef bootstrap hints, should be a json ball in the
-	 * following format:
-	 * <p>
-	 * {"tag":{"run_list":["recipe[apache2]"]}}
-	 */
-	public static final String CHEF_BOOTSTRAP_DATABAG = "chef.bootstrap-databag";
+   public static final String CHEF_SERVICE_CLIENT = "chef.service-api";
+   public static final String CHEF_NODE = "chef.node";
+   public static final String CHEF_NODE_PATTERN = "chef.node-pattern";
+   public static final String CHEF_RUN_LIST = "chef.run-list";
 
-	/**
-	 * The name of the validator client used to allow nodes to autoregister in
-	 * the Chef server.
-	 * <p>
-	 * This property must be set prior to running the
-	 * {@link ChefService#createBootstrapScriptForGroup(String)}
-	 * method.
-	 */
-	public static final String CHEF_VALIDATOR_NAME = "chef.validator-name";
+   /**
+    * Ddatabag that holds chef bootstrap hints, should be a json ball in the
+    * following format:
+    * <p>
+    * {"tag":{"run_list":["recipe[apache2]"]}}
+    */
+   public static final String CHEF_BOOTSTRAP_DATABAG = "chef.bootstrap-databag";
 
-	/**
-	 * The credential of the validator client used to allow nodes to
-	 * autoregister in the Chef server.
-	 * <p>
-	 * This property must be set prior to running the
-	 * {@link ChefService#createBootstrapScriptForGroup(String)}
-	 * method.
-	 */
-	public static final String CHEF_VALIDATOR_CREDENTIAL = "chef.validator-credential";
+   /**
+    * The name of the validator client used to allow nodes to autoregister in
+    * the Chef server.
+    * <p>
+    * This property must be set prior to running the
+    * {@link ChefService#createBootstrapScriptForGroup(String)} method.
+    */
+   public static final String CHEF_VALIDATOR_NAME = "chef.validator-name";
+
+   /**
+    * The credential of the validator client used to allow nodes to autoregister
+    * in the Chef server.
+    * <p>
+    * This property must be set prior to running the
+    * {@link ChefService#createBootstrapScriptForGroup(String)} method.
+    */
+   public static final String CHEF_VALIDATOR_CREDENTIAL = "chef.validator-credential";
 
 }

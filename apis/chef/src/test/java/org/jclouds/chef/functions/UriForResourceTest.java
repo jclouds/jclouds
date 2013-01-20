@@ -34,25 +34,25 @@ import com.google.common.base.Function;
  */
 @Test(groups = { "unit" })
 public class UriForResourceTest {
-    
-    @Test(expectedExceptions = NullPointerException.class)
-    public void testWithNullInput() {
-        Function<Object, URI> function = new UriForResource();
-        function.apply(null);
-    }
-    
-    @Test(expectedExceptions = IllegalArgumentException.class)
-    public void testWithInvalidInput() {
-        Function<Object, URI> function = new UriForResource();
-        function.apply(new Object());
-    }
-    
-    @Test
-    public void testWithValidResource() {
-        Function<Object, URI> function = new UriForResource();
-        Resource res = new Resource("test", URI.create("http://foo/bar"), null, null, null);
-        URI result = function.apply(res);
-        assertEquals(res.getUrl().toString(), result.toString());
-    }
-   
+
+   @Test(expectedExceptions = NullPointerException.class)
+   public void testWithNullInput() {
+      Function<Object, URI> function = new UriForResource();
+      function.apply(null);
+   }
+
+   @Test(expectedExceptions = IllegalArgumentException.class)
+   public void testWithInvalidInput() {
+      Function<Object, URI> function = new UriForResource();
+      function.apply(new Object());
+   }
+
+   @Test
+   public void testWithValidResource() {
+      Function<Object, URI> function = new UriForResource();
+      Resource res = new Resource("test", URI.create("http://foo/bar"), null, null, null);
+      URI result = function.apply(res);
+      assertEquals(res.getUrl().toString(), result.toString());
+   }
+
 }

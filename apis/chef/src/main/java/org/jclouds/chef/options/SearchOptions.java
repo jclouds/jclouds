@@ -29,71 +29,71 @@ import org.jclouds.http.options.BaseHttpRequestOptions;
  */
 public class SearchOptions extends BaseHttpRequestOptions {
 
-	/**
-	 * A valid search string.
-	 */
-	public SearchOptions query(String query) {
-		this.queryParameters.put("q", checkNotNull(query, "query"));
-		return this;
-	}
+   /**
+    * A valid search string.
+    */
+   public SearchOptions query(String query) {
+      this.queryParameters.put("q", checkNotNull(query, "query"));
+      return this;
+   }
 
-	/**
-	 * A sort string, such as 'name DESC'.
-	 */
-	public SearchOptions sort(String sort) {
-		this.queryParameters.put("sort", checkNotNull(sort, "sort"));
-		return this;
-	}
+   /**
+    * A sort string, such as 'name DESC'.
+    */
+   public SearchOptions sort(String sort) {
+      this.queryParameters.put("sort", checkNotNull(sort, "sort"));
+      return this;
+   }
 
-	/**
-	 * The number of rows to return.
-	 */
-	public SearchOptions rows(int rows) {
-		this.queryParameters.put("rows", String.valueOf(rows));
-		return this;
-	}
+   /**
+    * The number of rows to return.
+    */
+   public SearchOptions rows(int rows) {
+      this.queryParameters.put("rows", String.valueOf(rows));
+      return this;
+   }
 
-	/**
-	 * The result number to start from.
-	 */
-	public SearchOptions start(int start) {
-		this.queryParameters.put("start", String.valueOf(start));
-		return this;
-	}
+   /**
+    * The result number to start from.
+    */
+   public SearchOptions start(int start) {
+      this.queryParameters.put("start", String.valueOf(start));
+      return this;
+   }
 
-	public static class Builder {
+   public static class Builder {
 
-		/**
-		 * @see SearchOptions#query(String)
-		 */
-		public static SearchOptions query(String query) {
-			SearchOptions options = new SearchOptions();
-			return options.query(query);
-		}
+      /**
+       * @see SearchOptions#query(String)
+       */
+      public static SearchOptions query(String query) {
+         SearchOptions options = new SearchOptions();
+         return options.query(query);
+      }
 
-		/**
-		 * @see SearchOptions#sort(String)
-		 */
-		public static SearchOptions start(String start) {
-			SearchOptions options = new SearchOptions();
-			return options.sort(start);
-		}
+      /**
+       * @see SearchOptions#sort(String)
+       */
+      public static SearchOptions start(String start) {
+         SearchOptions options = new SearchOptions();
+         return options.sort(start);
+      }
 
-		/**
-		 * @see SearchOptions#rows(int)
-		 */
-		public static SearchOptions rows(int rows) {
-			SearchOptions options = new SearchOptions();
-			return options.rows(rows);
-		}
+      /**
+       * @see SearchOptions#rows(int)
+       */
+      public static SearchOptions rows(int rows) {
+         SearchOptions options = new SearchOptions();
+         return options.rows(rows);
+      }
 
-		/**
-		 * @see SearchOptions#start(int)
-		 */
-		public static SearchOptions start(int start) {
-			SearchOptions options = new SearchOptions();
-			return options.start(start);
-		}
-	}
+      /**
+       * @see SearchOptions#start(int)
+       */
+      public static SearchOptions start(int start) {
+         SearchOptions options = new SearchOptions();
+         return options.start(start);
+      }
+   }
 
 }

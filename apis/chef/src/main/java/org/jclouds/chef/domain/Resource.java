@@ -40,7 +40,7 @@ public class Resource {
 
    public Resource(FilePayload payload) {
       this(payload.getRawContent().getName(), null, payload.getContentMetadata().getContentMD5(), payload
-               .getRawContent().getPath(), "default");
+            .getRawContent().getPath(), "default");
    }
 
    public Resource(String name, byte[] checksum, String path) {
@@ -127,8 +127,8 @@ public class Resource {
 
    @Override
    public String toString() {
-      return "Resource [checksum=" + Bytes.asList(checksum) + ", name=" + name + ", path=" + path
-               + ", specificity=" + specificity + ", url=" + url + "]";
+      return "Resource [checksum=" + Bytes.asList(checksum) + ", name=" + name + ", path=" + path + ", specificity="
+            + specificity + ", url=" + url + "]";
    }
 
 }

@@ -139,8 +139,8 @@ public abstract class Multibinder<T> {
     */
    public static <T> Multibinder<T> newSetBinder(Binder binder, TypeLiteral<T> type, Annotation annotation) {
       binder = binder.skipSources(RealMultibinder.class, Multibinder.class);
-      RealMultibinder<T> result = new RealMultibinder<T>(binder, type, annotation.toString(), Key.get(Multibinder
-            .<T> setOf(type), annotation));
+      RealMultibinder<T> result = new RealMultibinder<T>(binder, type, annotation.toString(), Key.get(
+            Multibinder.<T> setOf(type), annotation));
       binder.install(result);
       return result;
    }
@@ -198,8 +198,8 @@ public abstract class Multibinder<T> {
     * time the set is injected.
     * 
     * <p>
-    * It is an error to call this method without also calling one of the {@code
-    * to} methods on the returned binding builder.
+    * It is an error to call this method without also calling one of the
+    * {@code to} methods on the returned binding builder.
     * 
     * <p>
     * Scoping elements independently is supported. Use the {@code in} method to

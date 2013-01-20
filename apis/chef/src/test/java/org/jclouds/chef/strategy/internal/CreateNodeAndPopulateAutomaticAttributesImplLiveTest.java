@@ -35,28 +35,29 @@ import com.google.common.collect.ImmutableSet;
 import com.google.common.reflect.TypeToken;
 
 /**
- * Tests behavior of {@code CreateNodeAndPopulateAutomaticAttributesImpl} strategies
+ * Tests behavior of {@code CreateNodeAndPopulateAutomaticAttributesImpl}
+ * strategies
  * 
  * @author Adrian Cole
  */
 @Test(groups = "live", testName = "CreateNodeAndPopulateAutomaticAttributesImplLiveTest")
 public class CreateNodeAndPopulateAutomaticAttributesImplLiveTest extends BaseChefContextLiveTest<ChefContext> {
 
-    private CurrentUserProvider currentUserProvider;
-    
-    @BeforeClass(groups = { "integration", "live" })
-    @Override
-    public void setupContext() {
-       super.setupContext();
-       this.currentUserProvider = context.utils().injector().getInstance(CurrentUserProvider.class);
-    }
-    
+   private CurrentUserProvider currentUserProvider;
+
+   @BeforeClass(groups = { "integration", "live" })
+   @Override
+   public void setupContext() {
+      super.setupContext();
+      this.currentUserProvider = context.utils().injector().getInstance(CurrentUserProvider.class);
+   }
+
    @Test
    public void testExecute() {
       Set<String> runList = ImmutableSet.of("role[" + prefix + "]");
       try {
-         context.utils().injector().getInstance(CreateNodeAndPopulateAutomaticAttributesImpl.class).execute(prefix,
-                  runList);
+         context.utils().injector().getInstance(CreateNodeAndPopulateAutomaticAttributesImpl.class)
+               .execute(prefix, runList);
          Node node = context.getApi().getNode(prefix);
          assertEquals(node.getName(), prefix);
          assertEquals(node.getRunList(), runList);
@@ -65,17 +66,15 @@ public class CreateNodeAndPopulateAutomaticAttributesImplLiveTest extends BaseCh
          context.getApi().deleteNode(prefix);
       }
    }
-   
+
    @Override
-   protected ChefApi getChefApi(ChefContext context)
-   {
-       return context.getApi();
+   protected ChefApi getChefApi(ChefContext context) {
+      return context.getApi();
    }
-   
+
    @Override
-   protected TypeToken<ChefContext> contextType()
-   {
-       return typeToken(ChefContext.class);
+   protected TypeToken<ChefContext> contextType() {
+      return typeToken(ChefContext.class);
    }
 
 }

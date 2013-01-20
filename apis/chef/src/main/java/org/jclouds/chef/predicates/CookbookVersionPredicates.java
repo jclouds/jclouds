@@ -47,9 +47,10 @@ public class CookbookVersionPredicates {
    }
 
    /**
-    * Note that the default recipe of a cookbook is its name. Otherwise, you prefix the recipe with
-    * the name of the cookbook. ex. {@code apache2} will be the default recipe where {@code
-    * apache2::mod_proxy} is a specific one in the cookbook.
+    * Note that the default recipe of a cookbook is its name. Otherwise, you
+    * prefix the recipe with the name of the cookbook. ex. {@code apache2} will
+    * be the default recipe where {@code apache2::mod_proxy} is a specific one
+    * in the cookbook.
     * 
     * @param recipes
     *           names of the recipes.
@@ -70,21 +71,21 @@ public class CookbookVersionPredicates {
          @Override
          public boolean apply(final CookbookVersion cookbookVersion) {
             return search.containsKey(cookbookVersion.getCookbookName())
-                     && any(search.get(cookbookVersion.getCookbookName()), new Predicate<String>() {
+                  && any(search.get(cookbookVersion.getCookbookName()), new Predicate<String>() {
 
-                        @Override
-                        public boolean apply(final String recipeName) {
-                           return any(cookbookVersion.getRecipes(), new Predicate<Resource>() {
+                     @Override
+                     public boolean apply(final String recipeName) {
+                        return any(cookbookVersion.getRecipes(), new Predicate<Resource>() {
 
-                              @Override
-                              public boolean apply(Resource resource) {
-                                 return resource.getName().equals(recipeName);
-                              }
+                           @Override
+                           public boolean apply(Resource resource) {
+                              return resource.getName().equals(recipeName);
+                           }
 
-                           });
-                        }
+                        });
+                     }
 
-                     });
+                  });
          }
 
          @Override

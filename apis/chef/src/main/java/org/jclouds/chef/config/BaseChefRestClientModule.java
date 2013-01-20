@@ -79,7 +79,7 @@ public class BaseChefRestClientModule<S, A> extends RestClientModule<S, A> {
    }
 
    protected BaseChefRestClientModule(TypeToken<S> syncApiType, TypeToken<A> asyncApiType,
-            Map<Class<?>, Class<?>> delegates) {
+         Map<Class<?>, Class<?>> delegates) {
       super(syncApiType, asyncApiType, delegates);
    }
 
@@ -102,7 +102,7 @@ public class BaseChefRestClientModule<S, A> extends RestClientModule<S, A> {
       }, seconds, TimeUnit.SECONDS);
    }
 
-   // TODO: potentially change this 
+   // TODO: potentially change this
    @Provides
    @Singleton
    public Supplier<PrivateKey> supplyKey(final LoadingCache<Credentials, PrivateKey> keyCache,
@@ -122,8 +122,9 @@ public class BaseChefRestClientModule<S, A> extends RestClientModule<S, A> {
    }
 
    /**
-    * it is relatively expensive to extract a private key from a PEM. cache the relationship between current credentials
-    * so that the private key is only recalculated once.
+    * it is relatively expensive to extract a private key from a PEM. cache the
+    * relationship between current credentials so that the private key is only
+    * recalculated once.
     */
    @VisibleForTesting
    @Singleton
@@ -146,35 +147,37 @@ public class BaseChefRestClientModule<S, A> extends RestClientModule<S, A> {
          }
       }
    }
-   
+
    @Provides
    @Singleton
    @Validator
    public Optional<String> provideValidatorName(Injector injector) {
-	   // Named properties can not be injected as optional here, so let's use the injector to bypass it
-	   Key<String> key = Key.get(String.class, Names.named(CHEF_VALIDATOR_NAME));
-	   try {
-		   return Optional.<String> of(injector.getInstance(key));
-	   } catch (ConfigurationException ex) {
-		   return Optional.<String> absent();
-	   }
+      // Named properties can not be injected as optional here, so let's use the
+      // injector to bypass it
+      Key<String> key = Key.get(String.class, Names.named(CHEF_VALIDATOR_NAME));
+      try {
+         return Optional.<String> of(injector.getInstance(key));
+      } catch (ConfigurationException ex) {
+         return Optional.<String> absent();
+      }
    }
-   
+
    @Provides
    @Singleton
    @Validator
    public Optional<PrivateKey> provideValidatorCredential(Crypto crypto, Injector injector)
-		   throws InvalidKeySpecException, IOException {
-	   // Named properties can not be injected as optional here, so let's use the injector to bypass it
-	   Key<String> key = Key.get(String.class, Names.named(CHEF_VALIDATOR_CREDENTIAL));
-	   try {
-		   String validatorCredential = injector.getInstance(key);
-		   PrivateKey validatorKey = crypto.rsaKeyFactory().generatePrivate(
-				   Pems.privateKeySpec(InputSuppliers.of(validatorCredential)));
-		   return Optional.<PrivateKey> of(validatorKey);
-	   } catch (ConfigurationException ex) {
-		   return Optional.<PrivateKey> absent();
-	   }
+         throws InvalidKeySpecException, IOException {
+      // Named properties can not be injected as optional here, so let's use the
+      // injector to bypass it
+      Key<String> key = Key.get(String.class, Names.named(CHEF_VALIDATOR_CREDENTIAL));
+      try {
+         String validatorCredential = injector.getInstance(key);
+         PrivateKey validatorKey = crypto.rsaKeyFactory().generatePrivate(
+               Pems.privateKeySpec(InputSuppliers.of(validatorCredential)));
+         return Optional.<PrivateKey> of(validatorKey);
+      } catch (ConfigurationException ex) {
+         return Optional.<PrivateKey> absent();
+      }
    }
 
    @Override

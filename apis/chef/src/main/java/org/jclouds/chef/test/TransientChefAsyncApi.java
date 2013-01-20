@@ -100,8 +100,8 @@ public class TransientChefAsyncApi implements ChefAsyncApi {
    private final StorageMetadataToName storageMetadataToName;
 
    @Inject
-   TransientChefAsyncApi(@Named("databags") LocalAsyncBlobStore databags,
-         StorageMetadataToName storageMetadataToName, BlobToDatabagItem blobToDatabagItem,
+   TransientChefAsyncApi(@Named("databags") LocalAsyncBlobStore databags, StorageMetadataToName storageMetadataToName,
+         BlobToDatabagItem blobToDatabagItem,
          @Named(Constants.PROPERTY_USER_THREADS) ListeningExecutorService userExecutor) {
       this.databags = checkNotNull(databags, "databags");
       this.storageMetadataToName = checkNotNull(storageMetadataToName, "storageMetadataToName");
@@ -123,7 +123,7 @@ public class TransientChefAsyncApi implements ChefAsyncApi {
    public ListenableFuture<Client> createClient(String clientname) {
       throw new UnsupportedOperationException();
    }
-   
+
    @Override
    public ListenableFuture<Client> createClient(String clientname, CreateClientOptions options) {
       throw new UnsupportedOperationException();
@@ -131,7 +131,7 @@ public class TransientChefAsyncApi implements ChefAsyncApi {
 
    @Override
    public ListenableFuture<Void> createDatabag(String databagName) {
-      return transform(databags.createContainerInLocation(null, databagName), new Function<Boolean, Void>(){
+      return transform(databags.createContainerInLocation(null, databagName), new Function<Boolean, Void>() {
          public Void apply(Boolean input) {
             return null;
          }
@@ -182,7 +182,8 @@ public class TransientChefAsyncApi implements ChefAsyncApi {
 
    @Override
    public ListenableFuture<DatabagItem> deleteDatabagItem(String databagName, String databagItemId) {
-      return immediateFuture(blobToDatabagItem.apply(databags.getContext().createBlobMap(databagName).remove(databagItemId)));
+      return immediateFuture(blobToDatabagItem.apply(databags.getContext().createBlobMap(databagName)
+            .remove(databagItemId)));
    }
 
    @Override
@@ -284,23 +285,22 @@ public class TransientChefAsyncApi implements ChefAsyncApi {
    public ListenableFuture<? extends SearchResult<? extends Client>> searchClients() {
       throw new UnsupportedOperationException();
    }
-   
+
    @Override
-	public ListenableFuture<? extends SearchResult<? extends Client>> searchClients(
-			SearchOptions options) {
-	   throw new UnsupportedOperationException();
-	}
+   public ListenableFuture<? extends SearchResult<? extends Client>> searchClients(SearchOptions options) {
+      throw new UnsupportedOperationException();
+   }
 
    @Override
    public ListenableFuture<? extends SearchResult<? extends DatabagItem>> searchDatabag(String databagName) {
       throw new UnsupportedOperationException();
    }
-   
+
    @Override
-	public ListenableFuture<? extends SearchResult<? extends DatabagItem>> searchDatabag(
-			String databagName, SearchOptions options) {
-	   throw new UnsupportedOperationException();
-	}
+   public ListenableFuture<? extends SearchResult<? extends DatabagItem>> searchDatabag(String databagName,
+         SearchOptions options) {
+      throw new UnsupportedOperationException();
+   }
 
    @Override
    public ListenableFuture<? extends SearchResult<? extends Node>> searchNodes() {
@@ -308,21 +308,19 @@ public class TransientChefAsyncApi implements ChefAsyncApi {
    }
 
    @Override
-	public ListenableFuture<? extends SearchResult<? extends Node>> searchNodes(
-			SearchOptions options) {
-	   throw new UnsupportedOperationException();
-	}
+   public ListenableFuture<? extends SearchResult<? extends Node>> searchNodes(SearchOptions options) {
+      throw new UnsupportedOperationException();
+   }
 
    @Override
    public ListenableFuture<? extends SearchResult<? extends Role>> searchRoles() {
       throw new UnsupportedOperationException();
    }
-   
+
    @Override
-	public ListenableFuture<? extends SearchResult<? extends Role>> searchRoles(
-			SearchOptions options) {
-	   throw new UnsupportedOperationException();
-	}
+   public ListenableFuture<? extends SearchResult<? extends Role>> searchRoles(SearchOptions options) {
+      throw new UnsupportedOperationException();
+   }
 
    @Override
    public ListenableFuture<CookbookVersion> updateCookbook(String cookbookName, String version, CookbookVersion cookbook) {
@@ -346,12 +344,12 @@ public class TransientChefAsyncApi implements ChefAsyncApi {
 
    @Override
    public ListenableFuture<Void> uploadContent(URI location, Payload content) {
-       throw new UnsupportedOperationException();
+      throw new UnsupportedOperationException();
    }
 
-    @Override
-    public ListenableFuture<InputStream> getResourceContents(Resource resource) {
-        throw new UnsupportedOperationException();
-    }
+   @Override
+   public ListenableFuture<InputStream> getResourceContents(Resource resource) {
+      throw new UnsupportedOperationException();
+   }
 
 }

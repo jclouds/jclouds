@@ -54,17 +54,18 @@ public interface ChefApi {
     * the URLs against which to PUT files that need to be uploaded.
     * 
     * @param md5s
-    *           raw md5s; uses {@code Bytes.asList()} and {@code
-    *           Bytes.toByteArray()} as necessary
+    *           raw md5s; uses {@code Bytes.asList()} and
+    *           {@code Bytes.toByteArray()} as necessary
     * @return The URLs against which to PUT files that need to be uploaded.
     */
    UploadSandbox getUploadSandboxForChecksums(Set<List<Byte>> md5s);
-   
+
    /**
     * 
     * Uploads the given content to the sandbox at the given URI.
     * <p>
-    * The URI must be obtained, after uploading a sandbox, from the {@link UploadSandbox#getUri()}. 
+    * The URI must be obtained, after uploading a sandbox, from the
+    * {@link UploadSandbox#getUri()}.
     */
    void uploadContent(URI location, Payload content);
 
@@ -157,7 +158,7 @@ public interface ChefApi {
 
    /**
     * creates a new administrator client
-    *
+    * 
     * @return the private key of the client. You can then use this client name
     *         and private key to access the Opscode API.
     * @throws AuthorizationException
@@ -492,8 +493,7 @@ public interface ChefApi {
    /**
     * Show indexes you can search on
     * <p/>
-    * By default, the "role", "node" and "api" indexes will always be
-    * available.
+    * By default, the "role", "node" and "api" indexes will always be available.
     * <p/>
     * Note that the search indexes may lag behind the most current data by at
     * least 10 seconds at any given time - so if you need to write data and
@@ -519,7 +519,7 @@ public interface ChefApi {
     *         and the rows themselves.
     */
    SearchResult<? extends Role> searchRoles();
-   
+
    /**
     * search all roles that match the given options.
     * 
@@ -540,7 +540,7 @@ public interface ChefApi {
     *         and the rows themselves.
     */
    SearchResult<? extends Client> searchClients();
-   
+
    /**
     * search all clients that match the given options.
     * 
@@ -561,7 +561,7 @@ public interface ChefApi {
     *         and the rows themselves.
     */
    SearchResult<? extends Node> searchNodes();
-   
+
    /**
     * search all nodes that match the given options.
     * 
@@ -582,7 +582,7 @@ public interface ChefApi {
     *         and the rows themselves.
     */
    SearchResult<? extends DatabagItem> searchDatabag(String databagName);
-   
+
    /**
     * search all items in a databag that match the given options.
     * 
@@ -594,8 +594,10 @@ public interface ChefApi {
 
    /**
     * Get the contents of the given resource.
-    * @param resource The resource to get.
-    * @return An input stream for the content of the requested resource. 
+    * 
+    * @param resource
+    *           The resource to get.
+    * @return An input stream for the content of the requested resource.
     */
    InputStream getResourceContents(Resource resource);
 }

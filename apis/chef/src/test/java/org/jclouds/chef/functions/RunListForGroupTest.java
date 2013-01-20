@@ -48,13 +48,12 @@ import com.google.inject.Injector;
 @Test(groups = "unit", testName = "RunListForGroupTest")
 public class RunListForGroupTest {
    Injector injector = Guice.createInjector(new AbstractModule() {
-        @Override
-        protected void configure()
-        {
-            bind(String.class).annotatedWith(ApiVersion.class).toInstance(ChefAsyncApi.VERSION);
-        }
+      @Override
+      protected void configure() {
+         bind(String.class).annotatedWith(ApiVersion.class).toInstance(ChefAsyncApi.VERSION);
+      }
    }, new ChefParserModule(), new GsonModule());
-    
+
    Json json = injector.getInstance(Json.class);
 
    @Test(expectedExceptions = IllegalStateException.class)
@@ -83,7 +82,7 @@ public class RunListForGroupTest {
       RunListForGroup fn = new RunListForGroup("jclouds", chefApi, json);
 
       expect(chefApi.getDatabagItem("jclouds", "foo")).andReturn(
-               new DatabagItem("foo", "{\"run_list\":[\"recipe[apache2]\"]}"));
+            new DatabagItem("foo", "{\"run_list\":[\"recipe[apache2]\"]}"));
 
       replay(api);
       replay(chefApi);
@@ -102,7 +101,7 @@ public class RunListForGroupTest {
       RunListForGroup fn = new RunListForGroup("jclouds", chefApi, json);
 
       expect(chefApi.getDatabagItem("jclouds", "foo")).andReturn(
-               new DatabagItem("foo", "{\"run_list\":[\"recipe[apache2]\",\"recipe[mysql]\"]}"));
+            new DatabagItem("foo", "{\"run_list\":[\"recipe[apache2]\",\"recipe[mysql]\"]}"));
 
       replay(api);
       replay(chefApi);

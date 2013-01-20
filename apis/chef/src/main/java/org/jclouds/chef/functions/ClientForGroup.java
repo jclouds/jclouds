@@ -59,7 +59,7 @@ public class ClientForGroup implements Function<String, Client> {
       Set<String> names = newHashSet(clients);
       int index = 0;
       while (true) {
-         clientName = String.format(pattern,index++);
+         clientName = String.format(pattern, index++);
          if (!names.contains(clientName))
             break;
       }

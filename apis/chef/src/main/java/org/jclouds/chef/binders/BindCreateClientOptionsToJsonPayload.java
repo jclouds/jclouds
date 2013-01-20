@@ -40,38 +40,36 @@ import com.google.common.collect.Iterables;
  * 
  * @author Ignasi Barrera
  */
-public class BindCreateClientOptionsToJsonPayload extends BindToJsonPayload
-{
-    @Inject
-    public BindCreateClientOptionsToJsonPayload(Json jsonBinder) {
-        super(jsonBinder);
-    }
+public class BindCreateClientOptionsToJsonPayload extends BindToJsonPayload {
+   @Inject
+   public BindCreateClientOptionsToJsonPayload(Json jsonBinder) {
+      super(jsonBinder);
+   }
 
-    @Override
-    public <R extends HttpRequest> R bindToRequest(R request, Map<String, Object> postParams) {
-        checkArgument(checkNotNull(request, "request") instanceof GeneratedHttpRequest,
+   @Override
+   public <R extends HttpRequest> R bindToRequest(R request, Map<String, Object> postParams) {
+      checkArgument(checkNotNull(request, "request") instanceof GeneratedHttpRequest,
             "this binder is only valid for GeneratedHttpRequests");
-        GeneratedHttpRequest gRequest = (GeneratedHttpRequest) request;
-        checkState(gRequest.getInvocation().getArgs() != null, "args should be initialized at this point");
-        
-        String name = checkNotNull(postParams.remove("name"), "name").toString();
-        CreateClientOptions options = (CreateClientOptions) Iterables.find(gRequest.getInvocation().getArgs(), 
+      GeneratedHttpRequest gRequest = (GeneratedHttpRequest) request;
+      checkState(gRequest.getInvocation().getArgs() != null, "args should be initialized at this point");
+
+      String name = checkNotNull(postParams.remove("name"), "name").toString();
+      CreateClientOptions options = (CreateClientOptions) Iterables.find(gRequest.getInvocation().getArgs(),
             Predicates.instanceOf(CreateClientOptions.class));
-        
-        return bindToRequest(request, new CreateClientParams(name, options));
-    }
-    
-    @SuppressWarnings("unused")
-    private static class CreateClientParams
-    {
-        private String name;
-        
-        private boolean admin;
-        
-        public CreateClientParams(String name, CreateClientOptions options) {
-            this.name = name;
-            this.admin = options.isAdmin();
-        }
-    }
+
+      return bindToRequest(request, new CreateClientParams(name, options));
+   }
+
+   @SuppressWarnings("unused")
+   private static class CreateClientParams {
+      private String name;
+
+      private boolean admin;
+
+      public CreateClientParams(String name, CreateClientOptions options) {
+         this.name = name;
+         this.admin = options.isAdmin();
+      }
+   }
 
 }

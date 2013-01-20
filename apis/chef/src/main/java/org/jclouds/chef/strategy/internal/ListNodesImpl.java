@@ -60,7 +60,7 @@ public class ListNodesImpl implements ListNodes {
 
    @Inject
    ListNodesImpl(@Named(Constants.PROPERTY_USER_THREADS) ListeningExecutorService userExecutor, ChefApi getAllNode,
-            ChefAsyncApi ablobstore) {
+         ChefAsyncApi ablobstore) {
       this.userExecutor = userExecutor;
       this.chefAsyncApi = ablobstore;
       this.chefApi = getAllNode;

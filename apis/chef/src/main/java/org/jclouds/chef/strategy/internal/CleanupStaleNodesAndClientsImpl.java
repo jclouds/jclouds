@@ -63,7 +63,7 @@ public class CleanupStaleNodesAndClientsImpl implements CleanupStaleNodesAndClie
 
    @Inject
    public CleanupStaleNodesAndClientsImpl(DeleteAllNodesInList nodeDeleter, DeleteAllClientsInList clientDeleter,
-            ListNodes nodeLister) {
+         ListNodes nodeLister) {
       this.nodeLister = checkNotNull(nodeLister, "nodeLister");
       this.nodeDeleter = checkNotNull(nodeDeleter, "nodeDeleter");
       this.clientDeleter = checkNotNull(clientDeleter, "clientDeleter");

@@ -38,29 +38,29 @@ import com.google.inject.Injector;
 public class ParseCookbookDefinitionCheckingChefVersionTest {
 
    public void testParserFor09() {
-       Injector injector = Guice.createInjector(new AbstractModule() {
-           @Override
-           protected void configure()
-           {
-               bind(String.class).annotatedWith(ApiVersion.class).toInstance("0.9.8");
-           }
-       }, new ChefParserModule(), new GsonModule());
-       
-       ParseCookbookDefinitionCheckingChefVersion parser = injector.getInstance(ParseCookbookDefinitionCheckingChefVersion.class);
-       assertTrue(parser.parser instanceof ParseKeySetFromJson);
+      Injector injector = Guice.createInjector(new AbstractModule() {
+         @Override
+         protected void configure() {
+            bind(String.class).annotatedWith(ApiVersion.class).toInstance("0.9.8");
+         }
+      }, new ChefParserModule(), new GsonModule());
+
+      ParseCookbookDefinitionCheckingChefVersion parser = injector
+            .getInstance(ParseCookbookDefinitionCheckingChefVersion.class);
+      assertTrue(parser.parser instanceof ParseKeySetFromJson);
    }
-   
+
    public void testParserFor010() {
-       Injector injector = Guice.createInjector(new AbstractModule() {
-           @Override
-           protected void configure()
-           {
-               bind(String.class).annotatedWith(ApiVersion.class).toInstance("0.10.8");
-           }
-       }, new ChefParserModule(), new GsonModule());
-       
-       ParseCookbookDefinitionCheckingChefVersion parser = injector.getInstance(ParseCookbookDefinitionCheckingChefVersion.class);
-       assertTrue(parser.parser instanceof ParseCookbookDefinitionFromJson);
+      Injector injector = Guice.createInjector(new AbstractModule() {
+         @Override
+         protected void configure() {
+            bind(String.class).annotatedWith(ApiVersion.class).toInstance("0.10.8");
+         }
+      }, new ChefParserModule(), new GsonModule());
+
+      ParseCookbookDefinitionCheckingChefVersion parser = injector
+            .getInstance(ParseCookbookDefinitionCheckingChefVersion.class);
+      assertTrue(parser.parser instanceof ParseCookbookDefinitionFromJson);
    }
 
 }

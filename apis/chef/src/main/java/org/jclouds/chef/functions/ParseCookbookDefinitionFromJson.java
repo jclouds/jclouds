@@ -31,7 +31,8 @@ import org.jclouds.http.functions.ParseJson;
 import com.google.common.base.Function;
 
 /**
- * Parses a cookbook definition from a Json response, assuming a Chef Server >= 0.10.8.
+ * Parses a cookbook definition from a Json response, assuming a Chef Server >=
+ * 0.10.8.
  * 
  * @author Ignasi Barrera
  */
@@ -48,6 +49,6 @@ public class ParseCookbookDefinitionFromJson implements Function<HttpResponse, S
 
    @Override
    public Set<String> apply(HttpResponse response) {
-       return parser.apply(response).keySet();
+      return parser.apply(response).keySet();
    }
 }

@@ -32,6 +32,7 @@ import com.google.common.collect.Iterables;
 
 /**
  * Parses the cookbook versions in a Chef Server <= 0.9.8.
+ * 
  * @author Ignasi Barrera
  */
 @Singleton

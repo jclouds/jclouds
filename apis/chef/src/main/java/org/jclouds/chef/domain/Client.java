@@ -71,7 +71,7 @@ public class Client {
    @Override
    public String toString() {
       return "[name=" + name + ", clientname=" + clientname + ", orgname=" + orgname + ", isValidator=" + validator
-               + ", certificate=" + certificate + ", privateKey=" + (privateKey != null) + "]";
+            + ", certificate=" + certificate + ", privateKey=" + (privateKey != null) + "]";
    }
 
    @Override
@@ -127,7 +127,7 @@ public class Client {
    }
 
    public Client(X509Certificate certificate, String orgname, String clientname, String name, boolean isValidator,
-            @Nullable PrivateKey privateKey) {
+         @Nullable PrivateKey privateKey) {
       this.certificate = certificate;
       this.orgname = orgname;
       this.clientname = clientname;

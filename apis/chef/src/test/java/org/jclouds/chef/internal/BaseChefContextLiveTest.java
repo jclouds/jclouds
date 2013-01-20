@@ -41,34 +41,34 @@ public abstract class BaseChefContextLiveTest<C extends Context> extends BaseCon
    public BaseChefContextLiveTest() {
       provider = "chef";
    }
-   
+
    protected abstract ChefApi getChefApi(C context);
-   
+
    /**
     * the credential is a path to the pem file.
     */
    @Override
    protected Properties setupProperties() {
-       Properties overrides = super.setupProperties();
-       credential = setCredentialFromPemFile(overrides, identity, provider + ".credential");
-       return overrides;
+      Properties overrides = super.setupProperties();
+      credential = setCredentialFromPemFile(overrides, identity, provider + ".credential");
+      return overrides;
    }
-   
+
    protected String setCredentialFromPemFile(Properties overrides, String identity, String key) {
-       String val = null;
-       String credentialFromFile = null;
-       if (System.getProperties().containsKey("test." + key)) {
-          val = System.getProperty("test." + key);
-       } else {
-          val = System.getProperty("user.home") + "/.chef/" + identity + ".pem";
-       }
-       try {
-           credentialFromFile = Files.toString(new File(val), Charsets.UTF_8);
-       } catch (IOException e) {
-           throw Throwables.propagate(e);
-       }
-       overrides.setProperty(key, credentialFromFile);
-       return credentialFromFile;
+      String val = null;
+      String credentialFromFile = null;
+      if (System.getProperties().containsKey("test." + key)) {
+         val = System.getProperty("test." + key);
+      } else {
+         val = System.getProperty("user.home") + "/.chef/" + identity + ".pem";
+      }
+      try {
+         credentialFromFile = Files.toString(new File(val), Charsets.UTF_8);
+      } catch (IOException e) {
+         throw Throwables.propagate(e);
+      }
+      overrides.setProperty(key, credentialFromFile);
+      return credentialFromFile;
    }
 
 }

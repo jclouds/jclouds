@@ -88,23 +88,23 @@ public class BaseChefService implements ChefService {
 
    @Inject
    protected BaseChefService(ChefContext chefContext, CleanupStaleNodesAndClients cleanupStaleNodesAndClients,
-            CreateNodeAndPopulateAutomaticAttributes createNodeAndPopulateAutomaticAttributes,
-            DeleteAllNodesInList deleteAllNodesInList, ListNodes listNodes,
-            DeleteAllClientsInList deleteAllClientsInList, ListClients listClients,
-            ListCookbookVersions listCookbookVersions, UpdateAutomaticAttributesOnNode updateAutomaticAttributesOnNode,
-            Supplier<PrivateKey> privateKey, @Named(CHEF_BOOTSTRAP_DATABAG) String databag,
-            GroupToBootScript groupToBootScript, RunListForGroup runListForGroup) {
+         CreateNodeAndPopulateAutomaticAttributes createNodeAndPopulateAutomaticAttributes,
+         DeleteAllNodesInList deleteAllNodesInList, ListNodes listNodes, DeleteAllClientsInList deleteAllClientsInList,
+         ListClients listClients, ListCookbookVersions listCookbookVersions,
+         UpdateAutomaticAttributesOnNode updateAutomaticAttributesOnNode, Supplier<PrivateKey> privateKey,
+         @Named(CHEF_BOOTSTRAP_DATABAG) String databag, GroupToBootScript groupToBootScript,
+         RunListForGroup runListForGroup) {
       this.chefContext = checkNotNull(chefContext, "chefContext");
       this.cleanupStaleNodesAndClients = checkNotNull(cleanupStaleNodesAndClients, "cleanupStaleNodesAndClients");
       this.createNodeAndPopulateAutomaticAttributes = checkNotNull(createNodeAndPopulateAutomaticAttributes,
-               "createNodeAndPopulateAutomaticAttributes");
+            "createNodeAndPopulateAutomaticAttributes");
       this.deleteAllNodesInList = checkNotNull(deleteAllNodesInList, "deleteAllNodesInList");
       this.listNodes = checkNotNull(listNodes, "listNodes");
       this.deleteAllClientsInList = checkNotNull(deleteAllClientsInList, "deleteAllClientsInList");
       this.listClients = checkNotNull(listClients, "listClients");
       this.listCookbookVersions = checkNotNull(listCookbookVersions, "listCookbookVersions");
       this.updateAutomaticAttributesOnNode = checkNotNull(updateAutomaticAttributesOnNode,
-               "updateAutomaticAttributesOnNode");
+            "updateAutomaticAttributesOnNode");
       this.privateKey = checkNotNull(privateKey, "privateKey");
       this.groupToBootScript = checkNotNull(groupToBootScript, "groupToBootScript");
       this.databag = checkNotNull(databag, "databag");
@@ -176,7 +176,6 @@ public class BaseChefService implements ChefService {
       return listCookbookVersions.execute(names);
    }
 
-   
    @Override
    public void updateAutomaticAttributesOnNode(String nodeName) {
       updateAutomaticAttributesOnNode.execute(nodeName);
@@ -199,15 +198,17 @@ public class BaseChefService implements ChefService {
       } catch (IllegalStateException e) {
 
       }
-      
-      DatabagItem runlist = new DatabagItem(group, chefContext.utils().json().toJson(
-    		  ImmutableMap.<String, List<String>> of("run_list", Lists.newArrayList(runList)),
-    		  RunListForGroup.RUN_LIST_TYPE));
-      
+
+      DatabagItem runlist = new DatabagItem(group, chefContext
+            .utils()
+            .json()
+            .toJson(ImmutableMap.<String, List<String>> of("run_list", Lists.newArrayList(runList)),
+                  RunListForGroup.RUN_LIST_TYPE));
+
       if (chefContext.getApi().getDatabagItem(databag, group) == null) {
-    	  chefContext.getApi().createDatabagItem(databag, runlist);
+         chefContext.getApi().createDatabagItem(databag, runlist);
       } else {
-    	  chefContext.getApi().updateDatabagItem(databag, runlist);
+         chefContext.getApi().updateDatabagItem(databag, runlist);
       }
    }
 
@@ -219,13 +220,13 @@ public class BaseChefService implements ChefService {
    @Override
    public byte[] decrypt(InputSupplier<? extends InputStream> supplier) throws IOException {
       return ByteStreams.toByteArray(new RSADecryptingPayload(Payloads.newPayload(supplier.getInput()), privateKey
-               .get()));
+            .get()));
    }
 
    @Override
    public byte[] encrypt(InputSupplier<? extends InputStream> supplier) throws IOException {
       return ByteStreams.toByteArray(new RSAEncryptingPayload(Payloads.newPayload(supplier.getInput()), privateKey
-               .get()));
+            .get()));
    }
 
 }

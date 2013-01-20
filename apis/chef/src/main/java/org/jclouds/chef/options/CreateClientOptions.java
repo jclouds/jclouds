@@ -18,54 +18,51 @@
  */
 package org.jclouds.chef.options;
 
-
 /**
  * Options for the create client method.
  * 
  * @author Ignasi Barrera
  */
-public class CreateClientOptions implements Cloneable
-{
-    /** Administrator flag. This flag will be ignored in Opscode Hosted Chef. */
-    private boolean admin;
+public class CreateClientOptions implements Cloneable {
+   /** Administrator flag. This flag will be ignored in Opscode Hosted Chef. */
+   private boolean admin;
 
-    public CreateClientOptions() {
-    }
+   public CreateClientOptions() {
+   }
 
-    CreateClientOptions(final boolean admin) {
-        super();
-        this.admin = admin;
-    }
+   CreateClientOptions(final boolean admin) {
+      super();
+      this.admin = admin;
+   }
 
-    public boolean isAdmin() {
-        return admin;
-    }
+   public boolean isAdmin() {
+      return admin;
+   }
 
-    public CreateClientOptions admin() {
-        this.admin = true;
-        return this;
-    }
+   public CreateClientOptions admin() {
+      this.admin = true;
+      return this;
+   }
 
-    @Override
-    protected Object clone() throws CloneNotSupportedException {
-        return new CreateClientOptions(admin);
-    }
+   @Override
+   protected Object clone() throws CloneNotSupportedException {
+      return new CreateClientOptions(admin);
+   }
 
-    @Override
-    public String toString() {
-        return "[admin=" + admin + "]";
-    }
+   @Override
+   public String toString() {
+      return "[admin=" + admin + "]";
+   }
 
-    public static class Builder
-    {
-        /**
-         * @see CreateClientOptions#admin()
-         */
-        public static CreateClientOptions admin() {
-            CreateClientOptions options = new CreateClientOptions();
-            return options.admin();
-        }
+   public static class Builder {
+      /**
+       * @see CreateClientOptions#admin()
+       */
+      public static CreateClientOptions admin() {
+         CreateClientOptions options = new CreateClientOptions();
+         return options.admin();
+      }
 
-    }
+   }
 
 }

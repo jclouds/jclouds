@@ -83,7 +83,6 @@ public class SignedHeaderAuth implements HttpRequestFilter {
    @Named(Constants.LOGGER_SIGNATURE)
    Logger signatureLog = Logger.NULL;
 
-
    @Inject
    public SignedHeaderAuth(SignatureWire signatureWire, @org.jclouds.location.Provider Supplier<Credentials> creds,
          Supplier<PrivateKey> supplyKey, @TimeStamp Provider<String> timeStampProvider, HttpUtils utils) {
@@ -95,24 +94,24 @@ public class SignedHeaderAuth implements HttpRequestFilter {
       this.utils = utils;
    }
 
-   public HttpRequest filter( HttpRequest request ) throws HttpException {
+   public HttpRequest filter(HttpRequest request) throws HttpException {
       String contentHash = hashBody(request.getPayload());
       Multimap<String, String> headers = ArrayListMultimap.create();
-      headers.put( "X-Ops-Content-Hash", contentHash );
+      headers.put("X-Ops-Content-Hash", contentHash);
       String timestamp = timeStampProvider.get();
       String toSign = createStringToSign(request.getMethod(), hashPath(request.getEndpoint().getPath()), contentHash,
-               timestamp);
+            timestamp);
       headers.put("X-Ops-Userid", creds.get().identity);
-      headers.put( "X-Ops-Sign", SIGNING_DESCRIPTION );
-      request = calculateAndReplaceAuthorizationHeaders( request, toSign );
-      headers.put( "X-Ops-Timestamp", timestamp );
-      utils.logRequest( signatureLog, request, "<<" );
+      headers.put("X-Ops-Sign", SIGNING_DESCRIPTION);
+      request = calculateAndReplaceAuthorizationHeaders(request, toSign);
+      headers.put("X-Ops-Timestamp", timestamp);
+      utils.logRequest(signatureLog, request, "<<");
 
       return request.toBuilder().replaceHeaders(headers).build();
    }
 
    @VisibleForTesting
-   HttpRequest calculateAndReplaceAuthorizationHeaders( HttpRequest request, String toSign ) throws HttpException {
+   HttpRequest calculateAndReplaceAuthorizationHeaders(HttpRequest request, String toSign) throws HttpException {
       String signature = sign(toSign);
       if (signatureWire.enabled())
          signatureWire.input(Strings2.toInputStream(signature));
@@ -145,8 +144,8 @@ public class SignedHeaderAuth implements HttpRequestFilter {
    }
 
    /**
-    * Build the canonicalized path, which collapses multiple slashes (/) and removes a trailing
-    * slash unless the path is only "/"
+    * Build the canonicalized path, which collapses multiple slashes (/) and
+    * removes a trailing slash unless the path is only "/"
     */
    @VisibleForTesting
    String canonicalPath(String path) {

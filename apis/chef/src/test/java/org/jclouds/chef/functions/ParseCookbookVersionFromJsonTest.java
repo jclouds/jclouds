@@ -60,14 +60,13 @@ public class ParseCookbookVersionFromJsonTest {
 
    @BeforeTest
    protected void setUpInjector() throws IOException {
-       injector = Guice.createInjector(new AbstractModule() {
-           @Override
-           protected void configure()
-           {
-               bind(String.class).annotatedWith(ApiVersion.class).toInstance(ChefAsyncApi.VERSION);
-           }
-       }, new ChefParserModule(), new GsonModule());
-   
+      injector = Guice.createInjector(new AbstractModule() {
+         @Override
+         protected void configure() {
+            bind(String.class).annotatedWith(ApiVersion.class).toInstance(ChefAsyncApi.VERSION);
+         }
+      }, new ChefParserModule(), new GsonModule());
+
       json = injector.getInstance(Json.class);
       handler = injector.getInstance(Key.get(new TypeLiteral<ParseJson<CookbookVersion>>() {
       }));
@@ -75,88 +74,69 @@ public class ParseCookbookVersionFromJsonTest {
 
    @Test(enabled = false)
    public void testBrew() throws IOException {
-      CookbookVersion cookbook = handler.apply(HttpResponse.builder()
-               .statusCode(200)
-               .message("ok")
-               .payload(ParseCookbookVersionFromJsonTest.class.getResourceAsStream("/brew-cookbook.json")).build());
+      CookbookVersion cookbook = handler.apply(HttpResponse.builder().statusCode(200).message("ok")
+            .payload(ParseCookbookVersionFromJsonTest.class.getResourceAsStream("/brew-cookbook.json")).build());
 
-      assertEquals(cookbook, handler.apply(HttpResponse.builder()
-               .statusCode(200)
-               .message("ok")
-               .payload(json
-               .toJson(cookbook)).build()));
+      assertEquals(cookbook,
+            handler.apply(HttpResponse.builder().statusCode(200).message("ok").payload(json.toJson(cookbook)).build()));
    }
 
    @Test(enabled = false)
    public void testTomcat() {
-      CookbookVersion cookbook = handler.apply(HttpResponse.builder()
-               .statusCode(200)
-               .message("ok")
-               .payload(ParseCookbookVersionFromJsonTest.class.getResourceAsStream("/tomcat-cookbook.json")).build());
+      CookbookVersion cookbook = handler.apply(HttpResponse.builder().statusCode(200).message("ok")
+            .payload(ParseCookbookVersionFromJsonTest.class.getResourceAsStream("/tomcat-cookbook.json")).build());
 
-      assertEquals(cookbook, handler.apply(HttpResponse.builder()
-               .statusCode(200)
-               .message("ok")
-               .payload(json
-               .toJson(cookbook)).build()));
+      assertEquals(cookbook,
+            handler.apply(HttpResponse.builder().statusCode(200).message("ok").payload(json.toJson(cookbook)).build()));
    }
 
    @Test(enabled = false)
    public void testMysql() throws IOException {
-      CookbookVersion cookbook = handler.apply(HttpResponse.builder()
-               .statusCode(200)
-               .message("ok")
-               .payload(ParseCookbookVersionFromJsonTest.class.getResourceAsStream("/mysql-cookbook.json")).build());
+      CookbookVersion cookbook = handler.apply(HttpResponse.builder().statusCode(200).message("ok")
+            .payload(ParseCookbookVersionFromJsonTest.class.getResourceAsStream("/mysql-cookbook.json")).build());
 
-      assertEquals(cookbook, handler.apply(HttpResponse.builder()
-               .statusCode(200)
-               .message("ok")
-               .payload(json
-               .toJson(cookbook)).build()));
+      assertEquals(cookbook,
+            handler.apply(HttpResponse.builder().statusCode(200).message("ok").payload(json.toJson(cookbook)).build()));
    }
 
    @Test(enabled = false)
    public void testApache() {
 
       assertEquals(
-               handler.apply(HttpResponse.builder()
-                        .statusCode(200)
-                        .message("ok")
-                        .payload(ParseCookbookVersionFromJsonTest.class
-                        .getResourceAsStream("/apache-chef-demo-cookbook.json")).build()),
-               new CookbookVersion(
-                        "apache-chef-demo-0.0.0",
-                        ImmutableSet.<Resource> of(),
-                        ImmutableSet.<Attribute> of(),
-                        ImmutableSet.<Resource> of(),
-                        new Metadata("Apache v2.0", "Your Name", ImmutableMap.<String, String> of(), ImmutableMap
-                                 .<String, String> of(), "youremail@example.com", ImmutableMap
-                                 .<String, String> of(), "A fabulous new cookbook", ImmutableMap
-                                 .<String, String> of(), ImmutableMap.<String, String> of(), "0.0.0",
-                                 ImmutableMap.<String, String> of(), ImmutableMap.<String, String> of(),
-                                 "apache-chef-demo", ImmutableMap.<String, String> of(), "", ImmutableMap
-                                          .<String, Attribute> of(), ImmutableMap.<String, String> of()),
-                        ImmutableSet.<Resource> of(),
-                        "apache-chef-demo",
-                        ImmutableSet.<Resource> of(),
-                        ImmutableSet.<Resource> of(),
-                        ImmutableSet.<Resource> of(),
-                        "0.0.0",
-                        ImmutableSet.<Resource> of(),
-                        ImmutableSet
-                                 .<Resource> of(
-                                          new Resource(
-                                                   "README",
-                                                   URI
-                                                            .create("https://s3.amazonaws.com/opscode-platform-production-data/organization-486ca3ac66264fea926aa0b4ff74341c/checksum-11637f98942eafbf49c71b7f2f048b78?AWSAccessKeyId=AKIAJOZTD2N26S7W6APA&Expires=1277766181&Signature=zgpNl6wSxjTNovqZu2nJq0JztU8%3D"),
-                                                   base16().lowerCase().decode("11637f98942eafbf49c71b7f2f048b78"), "README",
-                                                   "default"),
-                                          new Resource(
-                                                   "Rakefile",
-                                                   URI
-                                                            .create("https://s3.amazonaws.com/opscode-platform-production-data/organization-486ca3ac66264fea926aa0b4ff74341c/checksum-ebcf925a1651b4e04b9cd8aac2bc54eb?AWSAccessKeyId=AKIAJOZTD2N26S7W6APA&Expires=1277766181&Signature=EFzzDSKKytTl7b%2FxrCeNLh05zj4%3D"),
-                                                   base16().lowerCase().decode("ebcf925a1651b4e04b9cd8aac2bc54eb"), "Rakefile",
-                                                   "default"))));
+            handler.apply(HttpResponse
+                  .builder()
+                  .statusCode(200)
+                  .message("ok")
+                  .payload(
+                        ParseCookbookVersionFromJsonTest.class.getResourceAsStream("/apache-chef-demo-cookbook.json"))
+                  .build()),
+            new CookbookVersion(
+                  "apache-chef-demo-0.0.0",
+                  ImmutableSet.<Resource> of(),
+                  ImmutableSet.<Attribute> of(),
+                  ImmutableSet.<Resource> of(),
+                  new Metadata("Apache v2.0", "Your Name", ImmutableMap.<String, String> of(), ImmutableMap
+                        .<String, String> of(), "youremail@example.com", ImmutableMap.<String, String> of(),
+                        "A fabulous new cookbook", ImmutableMap.<String, String> of(), ImmutableMap
+                              .<String, String> of(), "0.0.0", ImmutableMap.<String, String> of(), ImmutableMap
+                              .<String, String> of(), "apache-chef-demo", ImmutableMap.<String, String> of(), "",
+                        ImmutableMap.<String, Attribute> of(), ImmutableMap.<String, String> of()),
+                  ImmutableSet.<Resource> of(),
+                  "apache-chef-demo",
+                  ImmutableSet.<Resource> of(),
+                  ImmutableSet.<Resource> of(),
+                  ImmutableSet.<Resource> of(),
+                  "0.0.0",
+                  ImmutableSet.<Resource> of(),
+                  ImmutableSet.<Resource> of(
+                        new Resource(
+                              "README",
+                              URI.create("https://s3.amazonaws.com/opscode-platform-production-data/organization-486ca3ac66264fea926aa0b4ff74341c/checksum-11637f98942eafbf49c71b7f2f048b78?AWSAccessKeyId=AKIAJOZTD2N26S7W6APA&Expires=1277766181&Signature=zgpNl6wSxjTNovqZu2nJq0JztU8%3D"),
+                              base16().lowerCase().decode("11637f98942eafbf49c71b7f2f048b78"), "README", "default"),
+                        new Resource(
+                              "Rakefile",
+                              URI.create("https://s3.amazonaws.com/opscode-platform-production-data/organization-486ca3ac66264fea926aa0b4ff74341c/checksum-ebcf925a1651b4e04b9cd8aac2bc54eb?AWSAccessKeyId=AKIAJOZTD2N26S7W6APA&Expires=1277766181&Signature=EFzzDSKKytTl7b%2FxrCeNLh05zj4%3D"),
+                              base16().lowerCase().decode("ebcf925a1651b4e04b9cd8aac2bc54eb"), "Rakefile", "default"))));
 
    }
 }

@@ -63,8 +63,8 @@ public interface ChefService {
     * 
     * @param group
     *           corresponds to a configured
-    *           {@link org.jclouds.chef.config.ChefProperties#CHEF_BOOTSTRAP_DATABAG databag}
-    *           where run_list and other information are stored
+    *           {@link org.jclouds.chef.config.ChefProperties#CHEF_BOOTSTRAP_DATABAG
+    *           databag} where run_list and other information are stored
     * @return boot script
     * @see #updateRunListForTag
     */
@@ -74,13 +74,13 @@ public interface ChefService {
     * assigns a run list to all nodes bootstrapped with a certain group
     * 
     * @param runList
-    *           list of recipes or roles to assign. syntax is {@code recipe[name]} and {@code
-    *           role[name]}
+    *           list of recipes or roles to assign. syntax is
+    *           {@code recipe[name]} and {@code role[name]}
     * 
     * @param group
     *           corresponds to a configured
-    *           {@link org.jclouds.chef.config.ChefProperties#CHEF_BOOTSTRAP_DATABAG databag}
-    *           where run_list and other information are stored
+    *           {@link org.jclouds.chef.config.ChefProperties#CHEF_BOOTSTRAP_DATABAG
+    *           databag} where run_list and other information are stored
     * @see #makeChefApiBootstrapScriptForTag
     */
    void updateRunListForGroup(Iterable<String> runList, String group);
@@ -88,8 +88,8 @@ public interface ChefService {
    /**
     * @param group
     *           corresponds to a configured
-    *           {@link org.jclouds.chef.config.ChefProperties#CHEF_BOOTSTRAP_DATABAG databag}
-    *           where run_list and other information are stored
+    *           {@link org.jclouds.chef.config.ChefProperties#CHEF_BOOTSTRAP_DATABAG
+    *           databag} where run_list and other information are stored
     * @return run list for all nodes bootstrapped with a certain group
     * @see #updateRunListForTag
     */

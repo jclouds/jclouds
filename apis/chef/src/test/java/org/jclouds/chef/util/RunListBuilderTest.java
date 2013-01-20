@@ -35,39 +35,41 @@ public class RunListBuilderTest {
    public void testRecipeAndRole() {
       RunListBuilder options = new RunListBuilder();
       options.addRecipe("recipe").addRole("role");
-      assertEquals(options.build(),ImmutableList.of("recipe[recipe]","role[role]"));
+      assertEquals(options.build(), ImmutableList.of("recipe[recipe]", "role[role]"));
    }
 
    @Test
    public void testRecipe() {
       RunListBuilder options = new RunListBuilder();
       options.addRecipe("test");
-      assertEquals(options.build(),ImmutableList.of("recipe[test]"));
+      assertEquals(options.build(), ImmutableList.of("recipe[test]"));
    }
+
    @Test
    public void testRecipes() {
       RunListBuilder options = new RunListBuilder();
       options.addRecipes("test", "test2");
-      assertEquals(options.build(),ImmutableList.of("recipe[test]","recipe[test2]"));
+      assertEquals(options.build(), ImmutableList.of("recipe[test]", "recipe[test2]"));
    }
 
    @Test
    public void testRole() {
       RunListBuilder options = new RunListBuilder();
       options.addRole("test");
-      assertEquals(options.build(),ImmutableList.of("role[test]"));
+      assertEquals(options.build(), ImmutableList.of("role[test]"));
    }
+
    @Test
    public void testRoles() {
       RunListBuilder options = new RunListBuilder();
       options.addRoles("test", "test2");
-      assertEquals(options.build(),ImmutableList.of("role[test]","role[test2]"));
+      assertEquals(options.build(), ImmutableList.of("role[test]", "role[test2]"));
    }
 
    @Test
    public void testNoneRecipe() {
       RunListBuilder options = new RunListBuilder();
-      assertEquals(options.build(), ImmutableList.<String>of());
+      assertEquals(options.build(), ImmutableList.<String> of());
    }
 
 }

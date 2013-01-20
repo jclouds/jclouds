@@ -51,10 +51,10 @@ public class Metadata {
    private Map<String, String> recommendations = Maps.newLinkedHashMap();
 
    public Metadata(String license, String maintainer, Map<String, String> suggestions,
-         Map<String, String> dependencies, String maintainerEmail, Map<String, String> conflicting,
-         String description, Map<String,String> providing, Map<String, String> platforms, String version,
-         Map<String, String> recipes, Map<String, String> replacing, String name, Map<String, String> groupings,
-         String longDescription, Map<String, Attribute> attributes, Map<String, String> recommendations) {
+         Map<String, String> dependencies, String maintainerEmail, Map<String, String> conflicting, String description,
+         Map<String, String> providing, Map<String, String> platforms, String version, Map<String, String> recipes,
+         Map<String, String> replacing, String name, Map<String, String> groupings, String longDescription,
+         Map<String, Attribute> attributes, Map<String, String> recommendations) {
       this.license = license;
       this.maintainer = maintainer;
       this.suggestions.putAll(suggestions);

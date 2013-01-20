@@ -40,7 +40,7 @@ import com.google.common.reflect.TypeToken;
  */
 @Test(groups = "live", testName = "GetNodesImplLiveTest")
 public class GetNodesImplLiveTest extends BaseChefContextLiveTest<ChefContext> {
-   
+
    private ListNodesImpl strategy;
    private CreateNodeAndPopulateAutomaticAttributesImpl creater;
    private ChefApi chef;
@@ -85,17 +85,15 @@ public class GetNodesImplLiveTest extends BaseChefContextLiveTest<ChefContext> {
    public void testExecuteIterableOfString() {
       assertEquals(size(strategy.execute(ImmutableSet.of(prefix, prefix + 1))), 2);
    }
-   
+
    @Override
-   protected ChefApi getChefApi(ChefContext context)
-   {
-       return context.getApi();
+   protected ChefApi getChefApi(ChefContext context) {
+      return context.getApi();
    }
-   
+
    @Override
-   protected TypeToken<ChefContext> contextType()
-   {
-       return typeToken(ChefContext.class);
+   protected TypeToken<ChefContext> contextType() {
+      return typeToken(ChefContext.class);
    }
 
 }

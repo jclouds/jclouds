@@ -48,7 +48,7 @@ import com.google.inject.Module;
 @Test(groups = "live")
 @Deprecated
 public class BaseStubbedOhaiLiveTest extends BaseChefContextLiveTest<ChefContext> {
-   
+
    @ConfiguresOhai
    static class TestOhaiModule extends OhaiModule {
 
@@ -60,19 +60,20 @@ public class BaseStubbedOhaiLiveTest extends BaseChefContextLiveTest<ChefContext
 
    @Override
    protected ApiMetadata createApiMetadata() {
-      return new ChefApiMetadata().toBuilder().defaultModules(
-               ImmutableSet.<Class<? extends Module>> of(ChefRestClientModule.class, ChefParserModule.class, TestOhaiModule.class)).build();
+      return new ChefApiMetadata()
+            .toBuilder()
+            .defaultModules(
+                  ImmutableSet.<Class<? extends Module>> of(ChefRestClientModule.class, ChefParserModule.class,
+                        TestOhaiModule.class)).build();
    }
 
-    @Override
-    protected ChefApi getChefApi(ChefContext context)
-    {
-        return context.getApi();
-    }
-    
-    @Override
-    protected TypeToken<ChefContext> contextType()
-    {
-        return typeToken(ChefContext.class);
-    }
+   @Override
+   protected ChefApi getChefApi(ChefContext context) {
+      return context.getApi();
+   }
+
+   @Override
+   protected TypeToken<ChefContext> contextType() {
+      return typeToken(ChefContext.class);
+   }
 }

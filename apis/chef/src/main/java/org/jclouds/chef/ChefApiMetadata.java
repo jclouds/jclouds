@@ -73,22 +73,24 @@ public class ChefApiMetadata extends BaseRestApiMetadata {
    }
 
    public static abstract class Builder<T extends Builder<T>> extends BaseRestApiMetadata.Builder<T> {
-      protected Builder(){
+      protected Builder() {
          this(ChefApi.class, ChefAsyncApi.class);
       }
 
       protected Builder(Class<?> api, Class<?> asyncApi) {
          super(api, asyncApi);
          id("chef")
-         .name("OpsCode Chef Api")
-         .identityName("User")
-         .credentialName("Certificate")
-         .version(ChefAsyncApi.VERSION)
-         .documentation(URI.create("http://wiki.opscode.com/display/chef/Server+API"))
-         .defaultEndpoint("http://localhost:4000")
-         .defaultProperties(ChefApiMetadata.defaultProperties())
-         .context(typeToken(ChefContext.class))
-         .defaultModules(ImmutableSet.<Class<? extends Module>>of(ChefRestClientModule.class, ChefParserModule.class, JMXOhaiModule.class));
+               .name("OpsCode Chef Api")
+               .identityName("User")
+               .credentialName("Certificate")
+               .version(ChefAsyncApi.VERSION)
+               .documentation(URI.create("http://wiki.opscode.com/display/chef/Server+API"))
+               .defaultEndpoint("http://localhost:4000")
+               .defaultProperties(ChefApiMetadata.defaultProperties())
+               .context(typeToken(ChefContext.class))
+               .defaultModules(
+                     ImmutableSet.<Class<? extends Module>> of(ChefRestClientModule.class, ChefParserModule.class,
+                           JMXOhaiModule.class));
       }
 
       @Override
@@ -96,7 +98,7 @@ public class ChefApiMetadata extends BaseRestApiMetadata {
          return new ChefApiMetadata(this);
       }
    }
-   
+
    private static class ConcreteBuilder extends Builder<ConcreteBuilder> {
       @Override
       protected ConcreteBuilder self() {

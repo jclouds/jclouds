@@ -91,11 +91,15 @@ public class ChefApiErrorRetryHandlerTest {
       BackoffLimitedRetryHandler retry = createMock(BackoffLimitedRetryHandler.class);
 
       HttpRequest request = HttpRequest.builder().method("PUT")
-                                       .endpoint("https://api.opscode.com/organizations/jclouds/sandboxes/bfd68d4052f44053b2e593a33b5e1cd5").build();
-      HttpResponse response = HttpResponse.builder()
-                                          .statusCode(400)
-                                          .message("400 Bad Request")
-                                          .payload("{\"error\":[\"Cannot update sandbox bfd68d4052f44053b2e593a33b5e1cd5: checksum 9b7c23369f4b576451216c39f214af6c was not uploaded\"]}").build();
+            .endpoint("https://api.opscode.com/organizations/jclouds/sandboxes/bfd68d4052f44053b2e593a33b5e1cd5")
+            .build();
+      HttpResponse response = HttpResponse
+            .builder()
+            .statusCode(400)
+            .message("400 Bad Request")
+            .payload(
+                  "{\"error\":[\"Cannot update sandbox bfd68d4052f44053b2e593a33b5e1cd5: checksum 9b7c23369f4b576451216c39f214af6c was not uploaded\"]}")
+            .build();
 
       expect(command.getFailureCount()).andReturn(0);
       expect(command.getCurrentRequest()).andReturn(request).atLeastOnce();

@@ -35,22 +35,20 @@ import com.google.common.reflect.TypeToken;
 @Test(groups = { "live" })
 public class ChefApiLiveTest extends BaseChefApiLiveTest<ChefContext> {
 
-    @Test
-    public void testListCookbookVersionsWithChefService() throws Exception {
-       Iterable<? extends CookbookVersion> cookbooks = context.getChefService().listCookbookVersions();
-       assertNotNull(cookbooks);
-    }
+   @Test
+   public void testListCookbookVersionsWithChefService() throws Exception {
+      Iterable<? extends CookbookVersion> cookbooks = context.getChefService().listCookbookVersions();
+      assertNotNull(cookbooks);
+   }
 
-    @Override
-    protected ChefApi getChefApi(ChefContext context)
-    {
-        return context.getApi();
-    }
+   @Override
+   protected ChefApi getChefApi(ChefContext context) {
+      return context.getApi();
+   }
 
-    @Override
-    protected TypeToken<ChefContext> contextType()
-    {
-        return typeToken(ChefContext.class);
-    }
-    
+   @Override
+   protected TypeToken<ChefContext> contextType() {
+      return typeToken(ChefContext.class);
+   }
+
 }

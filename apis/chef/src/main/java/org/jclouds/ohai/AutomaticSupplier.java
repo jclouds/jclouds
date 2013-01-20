@@ -38,11 +38,11 @@ import com.google.common.collect.Multimap;
  */
 @Singleton
 public class AutomaticSupplier implements Supplier<Map<String, JsonBall>> {
-   private final Multimap<String,Supplier<JsonBall>> autoAttrs;
+   private final Multimap<String, Supplier<JsonBall>> autoAttrs;
    private final NestSlashKeys nester;
 
    @Inject
-   AutomaticSupplier(@Automatic Multimap<String,Supplier<JsonBall>> autoAttrs, NestSlashKeys nester) {
+   AutomaticSupplier(@Automatic Multimap<String, Supplier<JsonBall>> autoAttrs, NestSlashKeys nester) {
       this.autoAttrs = checkNotNull(autoAttrs, "autoAttrs");
       this.nester = checkNotNull(nester, "nester");
    }

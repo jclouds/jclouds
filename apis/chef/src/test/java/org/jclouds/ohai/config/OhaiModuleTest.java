@@ -63,12 +63,11 @@ public class OhaiModuleTest {
       sysProperties.setProperty("user.name", "user");
 
       Injector injector = Guice.createInjector(new AbstractModule() {
-          @Override
-          protected void configure()
-          {
-              bind(String.class).annotatedWith(ApiVersion.class).toInstance(ChefAsyncApi.VERSION);
-          }
-       }, new ChefParserModule(), new GsonModule(), new OhaiModule() {
+         @Override
+         protected void configure() {
+            bind(String.class).annotatedWith(ApiVersion.class).toInstance(ChefAsyncApi.VERSION);
+         }
+      }, new ChefParserModule(), new GsonModule(), new OhaiModule() {
          @Override
          protected Long millis() {
             return 127999291932529l;
@@ -98,12 +97,11 @@ public class OhaiModuleTest {
       sysProperties.setProperty("user.name", "user");
 
       Injector injector = Guice.createInjector(new AbstractModule() {
-          @Override
-          protected void configure()
-          {
-              bind(String.class).annotatedWith(ApiVersion.class).toInstance(ChefAsyncApi.VERSION);
-          }
-       }, new ChefParserModule(), new GsonModule(), new OhaiModule() {
+         @Override
+         protected void configure() {
+            bind(String.class).annotatedWith(ApiVersion.class).toInstance(ChefAsyncApi.VERSION);
+         }
+      }, new ChefParserModule(), new GsonModule(), new OhaiModule() {
          @Override
          protected Long millis() {
             return 1279992919l;

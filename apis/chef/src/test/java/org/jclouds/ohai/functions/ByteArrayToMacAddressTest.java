@@ -32,7 +32,6 @@ import org.testng.annotations.Test;
 public class ByteArrayToMacAddressTest {
 
    public void test() {
-      assertEquals(new ByteArrayToMacAddress().apply(base16().lowerCase().decode("0026bb09e6c4")),
-          "00:26:bb:09:e6:c4");
+      assertEquals(new ByteArrayToMacAddress().apply(base16().lowerCase().decode("0026bb09e6c4")), "00:26:bb:09:e6:c4");
    }
 }

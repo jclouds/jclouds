@@ -47,34 +47,26 @@ public class ParseCookbookVersionsV10FromJsonTest {
 
    @BeforeTest
    protected void setUpInjector() throws IOException {
-       Injector injector = Guice.createInjector(new AbstractModule() {
-           @Override
-           protected void configure()
-           {
-               bind(String.class).annotatedWith(ApiVersion.class).toInstance(ChefAsyncApi.VERSION);
-           }
-       }, new ChefParserModule(), new GsonModule());
-   
+      Injector injector = Guice.createInjector(new AbstractModule() {
+         @Override
+         protected void configure() {
+            bind(String.class).annotatedWith(ApiVersion.class).toInstance(ChefAsyncApi.VERSION);
+         }
+      }, new ChefParserModule(), new GsonModule());
+
       handler = injector.getInstance(ParseCookbookVersionsV10FromJson.class);
    }
 
    public void testRegex() {
-       assertEquals(
-           handler
-                 .apply(HttpResponse.builder()
-                          .statusCode(200)
-                          .message("ok")
-                          .payload("{" +
-                                 "\"apache2\" => {" +
-                                     "\"url\" => \"http://localhost:4000/cookbooks/apache2\"," +
-                                     "\"versions\" => [" +
-                                         "{\"url\" => \"http://localhost:4000/cookbooks/apache2/5.1.0\"," +
-                                         "\"version\" => \"5.1.0\"}," +
-                                         "{\"url\" => \"http://localhost:4000/cookbooks/apache2/4.2.0\"," +
-                                         "\"version\" => \"4.2.0\"}" +
-                                     "]" +
-                                 "}" +
-                             "}").build()),
-            ImmutableSet.of("5.1.0", "4.2.0"));
+      assertEquals(handler.apply(HttpResponse
+            .builder()
+            .statusCode(200)
+            .message("ok")
+            .payload(
+                  "{" + "\"apache2\" => {" + "\"url\" => \"http://localhost:4000/cookbooks/apache2\","
+                        + "\"versions\" => [" + "{\"url\" => \"http://localhost:4000/cookbooks/apache2/5.1.0\","
+                        + "\"version\" => \"5.1.0\"},"
+                        + "{\"url\" => \"http://localhost:4000/cookbooks/apache2/4.2.0\","
+                        + "\"version\" => \"4.2.0\"}" + "]" + "}" + "}").build()), ImmutableSet.of("5.1.0", "4.2.0"));
    }
 }

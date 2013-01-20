@@ -65,14 +65,13 @@ public class ParseClientFromJsonTest {
 
    @BeforeTest
    protected void setUpInjector() throws IOException, CertificateException, InvalidKeySpecException {
-       Injector injector = Guice.createInjector(new AbstractModule() {
-           @Override
-           protected void configure()
-           {
-               bind(String.class).annotatedWith(ApiVersion.class).toInstance(ChefAsyncApi.VERSION);
-           }
-       }, new ChefParserModule(), new GsonModule());
-   
+      Injector injector = Guice.createInjector(new AbstractModule() {
+         @Override
+         protected void configure() {
+            bind(String.class).annotatedWith(ApiVersion.class).toInstance(ChefAsyncApi.VERSION);
+         }
+      }, new ChefParserModule(), new GsonModule());
+
       handler = injector.getInstance(Key.get(new TypeLiteral<ParseJson<Client>>() {
       }));
       crypto = injector.getInstance(Crypto.class);
@@ -83,15 +82,17 @@ public class ParseClientFromJsonTest {
    public void test() throws IOException {
 
       Client user = new Client(certificate, "jclouds", "adriancole-jcloudstest", "adriancole-jcloudstest", false,
-               privateKey);
+            privateKey);
 
       byte[] encrypted = ByteStreams.toByteArray(new RSAEncryptingPayload(Payloads.newPayload("fooya"), user
-               .getCertificate().getPublicKey()));
+            .getCertificate().getPublicKey()));
 
-      assertEquals(ByteStreams.toByteArray(new RSADecryptingPayload(Payloads.newPayload(encrypted), user
-               .getPrivateKey())), "fooya".getBytes());
+      assertEquals(
+            ByteStreams.toByteArray(new RSADecryptingPayload(Payloads.newPayload(encrypted), user.getPrivateKey())),
+            "fooya".getBytes());
 
-      assertEquals(handler.apply(HttpResponse.builder().statusCode(200).message("ok").payload(ParseClientFromJsonTest.class
-               .getResourceAsStream("/client.json")).build()), user);
+      assertEquals(
+            handler.apply(HttpResponse.builder().statusCode(200).message("ok")
+                  .payload(ParseClientFromJsonTest.class.getResourceAsStream("/client.json")).build()), user);
    }
 }

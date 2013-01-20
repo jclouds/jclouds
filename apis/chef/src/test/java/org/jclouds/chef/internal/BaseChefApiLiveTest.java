@@ -354,22 +354,21 @@ public abstract class BaseChefApiLiveTest<C extends Context> extends BaseChefCon
 
    @Test(dependsOnMethods = { "testListSearchIndexes", "testCreateNode" })
    public void testSearchNodesWithOptions() throws Exception {
-      Predicate<SearchOptions> waitForIndex = retry(
-            new Predicate<SearchOptions>() {
-               @Override
-               public boolean apply(SearchOptions input) {
-                  SearchResult<? extends Node> results = chefApi.searchNodes(input);
-                  assertNotNull(results);
-                  if (results.size() > 0) {
-                     assertEquals(results.size(), 1);
-                     assertEquals(results.iterator().next().getName(), PREFIX);
-                     return true;
-                  } else {
-                     // The index may still not be populated
-                     return false;
-                  }
-               }
-            }, maxWaitForIndexInMs, 5000L, MILLISECONDS);
+      Predicate<SearchOptions> waitForIndex = retry(new Predicate<SearchOptions>() {
+         @Override
+         public boolean apply(SearchOptions input) {
+            SearchResult<? extends Node> results = chefApi.searchNodes(input);
+            assertNotNull(results);
+            if (results.size() > 0) {
+               assertEquals(results.size(), 1);
+               assertEquals(results.iterator().next().getName(), PREFIX);
+               return true;
+            } else {
+               // The index may still not be populated
+               return false;
+            }
+         }
+      }, maxWaitForIndexInMs, 5000L, MILLISECONDS);
 
       SearchOptions options = SearchOptions.Builder.query("name:" + PREFIX);
       assertTrue(waitForIndex.apply(options));
@@ -383,22 +382,21 @@ public abstract class BaseChefApiLiveTest<C extends Context> extends BaseChefCon
 
    @Test(dependsOnMethods = { "testListSearchIndexes", "testCreateClient" })
    public void testSearchClientsWithOptions() throws Exception {
-      Predicate<SearchOptions> waitForIndex = retry(
-            new Predicate<SearchOptions>() {
-               @Override
-               public boolean apply(SearchOptions input) {
-                  SearchResult<? extends Client> results = chefApi.searchClients(input);
-                  assertNotNull(results);
-                  if (results.size() > 0) {
-                     assertEquals(results.size(), 1);
-                     assertEquals(results.iterator().next().getName(), PREFIX);
-                     return true;
-                  } else {
-                     // The index may still not be populated
-                     return false;
-                  }
-               }
-            }, maxWaitForIndexInMs, 5000L, MILLISECONDS);
+      Predicate<SearchOptions> waitForIndex = retry(new Predicate<SearchOptions>() {
+         @Override
+         public boolean apply(SearchOptions input) {
+            SearchResult<? extends Client> results = chefApi.searchClients(input);
+            assertNotNull(results);
+            if (results.size() > 0) {
+               assertEquals(results.size(), 1);
+               assertEquals(results.iterator().next().getName(), PREFIX);
+               return true;
+            } else {
+               // The index may still not be populated
+               return false;
+            }
+         }
+      }, maxWaitForIndexInMs, 5000L, MILLISECONDS);
 
       SearchOptions options = SearchOptions.Builder.query("name:" + PREFIX);
       assertTrue(waitForIndex.apply(options));
@@ -412,22 +410,21 @@ public abstract class BaseChefApiLiveTest<C extends Context> extends BaseChefCon
 
    @Test(dependsOnMethods = { "testListSearchIndexes", "testCreateRole" })
    public void testSearchRolesWithOptions() throws Exception {
-      Predicate<SearchOptions> waitForIndex = retry(
-            new Predicate<SearchOptions>() {
-               @Override
-               public boolean apply(SearchOptions input) {
-                  SearchResult<? extends Role> results = chefApi.searchRoles(input);
-                  assertNotNull(results);
-                  if (results.size() > 0) {
-                     assertEquals(results.size(), 1);
-                     assertEquals(results.iterator().next().getName(), PREFIX);
-                     return true;
-                  } else {
-                     // The index may still not be populated
-                     return false;
-                  }
-               }
-            }, maxWaitForIndexInMs, 5000L, MILLISECONDS);
+      Predicate<SearchOptions> waitForIndex = retry(new Predicate<SearchOptions>() {
+         @Override
+         public boolean apply(SearchOptions input) {
+            SearchResult<? extends Role> results = chefApi.searchRoles(input);
+            assertNotNull(results);
+            if (results.size() > 0) {
+               assertEquals(results.size(), 1);
+               assertEquals(results.iterator().next().getName(), PREFIX);
+               return true;
+            } else {
+               // The index may still not be populated
+               return false;
+            }
+         }
+      }, maxWaitForIndexInMs, 5000L, MILLISECONDS);
 
       SearchOptions options = SearchOptions.Builder.query("name:" + PREFIX);
       assertTrue(waitForIndex.apply(options));
@@ -441,22 +438,21 @@ public abstract class BaseChefApiLiveTest<C extends Context> extends BaseChefCon
 
    @Test(dependsOnMethods = { "testListSearchIndexes", "testDatabagItemExists" })
    public void testSearchDatabagWithOptions() throws Exception {
-      Predicate<SearchOptions> waitForIndex = retry(
-            new Predicate<SearchOptions>() {
-               @Override
-               public boolean apply(SearchOptions input) {
-                  SearchResult<? extends DatabagItem> results = chefApi.searchDatabag(PREFIX, input);
-                  assertNotNull(results);
-                  if (results.size() > 0) {
-                     assertEquals(results.size(), 1);
-                     assertEquals(results.iterator().next().getId(), databagItem.getId());
-                     return true;
-                  } else {
-                     // The index may still not be populated
-                     return false;
-                  }
-               }
-            }, maxWaitForIndexInMs, 5000L, MILLISECONDS);
+      Predicate<SearchOptions> waitForIndex = retry(new Predicate<SearchOptions>() {
+         @Override
+         public boolean apply(SearchOptions input) {
+            SearchResult<? extends DatabagItem> results = chefApi.searchDatabag(PREFIX, input);
+            assertNotNull(results);
+            if (results.size() > 0) {
+               assertEquals(results.size(), 1);
+               assertEquals(results.iterator().next().getId(), databagItem.getId());
+               return true;
+            } else {
+               // The index may still not be populated
+               return false;
+            }
+         }
+      }, maxWaitForIndexInMs, 5000L, MILLISECONDS);
 
       SearchOptions options = SearchOptions.Builder.query("id:" + databagItem.getId());
       assertTrue(waitForIndex.apply(options));

@@ -35,13 +35,14 @@ import com.google.common.collect.Sets;
 
 /**
  * Parses the cookbook versions in a Chef Server >= 0.10.8.
+ * 
  * @author Ignasi Barrera
  */
 @Singleton
 public class ParseCookbookVersionsV10FromJson implements Function<HttpResponse, Set<String>> {
 
-    /** Parser for responses from chef server >= 0.10.8 */
-    private final ParseJson<Map<String, CookbookDefinition>> parser;
+   /** Parser for responses from chef server >= 0.10.8 */
+   private final ParseJson<Map<String, CookbookDefinition>> parser;
 
    @Inject
    ParseCookbookVersionsV10FromJson(ParseJson<Map<String, CookbookDefinition>> parser) {
@@ -52,11 +53,10 @@ public class ParseCookbookVersionsV10FromJson implements Function<HttpResponse, 
    public Set<String> apply(HttpResponse response) {
       CookbookDefinition def = Iterables.getFirst(parser.apply(response).values(), null);
       return Sets.newLinkedHashSet(Iterables.transform(def.getVersions(), new Function<Version, String>() {
-            @Override
-            public String apply(Version input)
-            {
-                return input.getVersion();
-            }})
-          );
+         @Override
+         public String apply(Version input) {
+            return input.getVersion();
+         }
+      }));
    }
 }

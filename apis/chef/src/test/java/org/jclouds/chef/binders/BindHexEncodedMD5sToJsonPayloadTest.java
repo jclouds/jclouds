@@ -44,13 +44,12 @@ import com.google.inject.Injector;
 public class BindHexEncodedMD5sToJsonPayloadTest {
 
    Injector injector = Guice.createInjector(new AbstractModule() {
-           @Override
-           protected void configure()
-           {
-               bind(String.class).annotatedWith(ApiVersion.class).toInstance(ChefAsyncApi.VERSION);
-           }
-       }, new ChefParserModule(), new GsonModule());
-   
+      @Override
+      protected void configure() {
+         bind(String.class).annotatedWith(ApiVersion.class).toInstance(ChefAsyncApi.VERSION);
+      }
+   }, new ChefParserModule(), new GsonModule());
+
    BindChecksumsToJsonPayload binder = injector.getInstance(BindChecksumsToJsonPayload.class);
 
    @Test(expectedExceptions = IllegalArgumentException.class)
@@ -62,7 +61,8 @@ public class BindHexEncodedMD5sToJsonPayloadTest {
    @Test(enabled = false)
    public void testCorrect() {
       HttpRequest request = HttpRequest.builder().method(HttpMethod.POST).endpoint("http://localhost").build();
-      binder.bindToRequest(request, ImmutableSet.of(base16().lowerCase().decode("abddef"), base16().lowerCase().decode("1234")));
+      binder.bindToRequest(request,
+            ImmutableSet.of(base16().lowerCase().decode("abddef"), base16().lowerCase().decode("1234")));
       assertEquals(request.getPayload().getRawContent(), "{\"checksums\":{\"abddef\":null,\"1234\":null}}");
    }
 

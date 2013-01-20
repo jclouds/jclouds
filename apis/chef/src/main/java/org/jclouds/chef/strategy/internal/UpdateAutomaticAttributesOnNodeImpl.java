@@ -54,8 +54,7 @@ public class UpdateAutomaticAttributesOnNodeImpl implements UpdateAutomaticAttri
    private final Supplier<Map<String, JsonBall>> automaticSupplier;
 
    @Inject
-   public UpdateAutomaticAttributesOnNodeImpl(ChefApi chef,
-         @Automatic Supplier<Map<String, JsonBall>> automaticSupplier) {
+   public UpdateAutomaticAttributesOnNodeImpl(ChefApi chef, @Automatic Supplier<Map<String, JsonBall>> automaticSupplier) {
       this.chef = checkNotNull(chef, "chef");
       this.automaticSupplier = checkNotNull(automaticSupplier, "automaticSupplier");
    }

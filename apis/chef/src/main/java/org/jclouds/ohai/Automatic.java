@@ -33,7 +33,7 @@ import javax.inject.Qualifier;
  * @author Adrian Cole
  */
 @Retention(RUNTIME)
-@Target( { TYPE, METHOD, PARAMETER })
+@Target({ TYPE, METHOD, PARAMETER })
 @Qualifier
 public @interface Automatic {
 }

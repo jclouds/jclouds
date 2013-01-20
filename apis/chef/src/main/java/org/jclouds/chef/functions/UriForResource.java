@@ -37,11 +37,11 @@ import com.google.common.base.Function;
  */
 @Singleton
 public class UriForResource implements Function<Object, URI> {
-    
-    @Override
-    public URI apply(Object input) {
-        checkArgument(checkNotNull(input, "input") instanceof Resource,
+
+   @Override
+   public URI apply(Object input) {
+      checkArgument(checkNotNull(input, "input") instanceof Resource,
             "This function can only be applied to Resource objects");
-        return ((Resource) input).getUrl();
-    }
+      return ((Resource) input).getUrl();
+   }
 }

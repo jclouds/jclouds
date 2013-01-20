@@ -37,45 +37,45 @@ import com.google.gson.annotations.SerializedName;
 /**
  * Parses the search result into a {@link DatabagItem} object.
  * <p>
- * When searching databags, the items are contained inside the <code>raw_data</code> list.
+ * When searching databags, the items are contained inside the
+ * <code>raw_data</code> list.
  * 
  * @author Adrian Cole
  */
 @Singleton
 public class ParseSearchDatabagFromJson implements Function<HttpResponse, SearchResult<DatabagItem>> {
 
-	private final ParseJson<Response> responseParser;
-	
-	private final Json json;
+   private final ParseJson<Response> responseParser;
 
-	static class Row {
-		@SerializedName("raw_data")
-		JsonBall rawData;
-	}
+   private final Json json;
 
-	static class Response {
-		long start;
-		List<Row> rows;
-	}
+   static class Row {
+      @SerializedName("raw_data")
+      JsonBall rawData;
+   }
 
-	@Inject
-	ParseSearchDatabagFromJson(ParseJson<Response> responseParser, Json json) {
-		this.responseParser = responseParser;
-		this.json = json;
-	}
+   static class Response {
+      long start;
+      List<Row> rows;
+   }
 
-	@Override
-	public SearchResult<DatabagItem> apply(HttpResponse arg0) {
-		Response returnVal = responseParser.apply(arg0);
-		Iterable<DatabagItem> items = 
-			Iterables.transform(returnVal.rows, new Function<Row, DatabagItem>() {
-				@Override
-				public DatabagItem apply(Row input) {
-					return json.fromJson(input.rawData.toString(), DatabagItem.class);
-				}
-			});
+   @Inject
+   ParseSearchDatabagFromJson(ParseJson<Response> responseParser, Json json) {
+      this.responseParser = responseParser;
+      this.json = json;
+   }
 
-		return new SearchResult<DatabagItem>(returnVal.start, items);
-	}
+   @Override
+   public SearchResult<DatabagItem> apply(HttpResponse arg0) {
+      Response returnVal = responseParser.apply(arg0);
+      Iterable<DatabagItem> items = Iterables.transform(returnVal.rows, new Function<Row, DatabagItem>() {
+         @Override
+         public DatabagItem apply(Row input) {
+            return json.fromJson(input.rawData.toString(), DatabagItem.class);
+         }
+      });
+
+      return new SearchResult<DatabagItem>(returnVal.start, items);
+   }
 
 }

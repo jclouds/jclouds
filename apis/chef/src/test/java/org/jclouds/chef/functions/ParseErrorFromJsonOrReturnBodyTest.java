@@ -37,14 +37,10 @@ public class ParseErrorFromJsonOrReturnBodyTest {
    @Test
    public void testApplyInputStreamDetails() throws UnknownHostException {
       InputStream is = Strings2
-               .toInputStream("{\"error\":[\"invalid tarball: tarball root must contain java-bytearray\"]}");
+            .toInputStream("{\"error\":[\"invalid tarball: tarball root must contain java-bytearray\"]}");
 
-      ParseErrorFromJsonOrReturnBody parser = new ParseErrorFromJsonOrReturnBody(
-               new ReturnStringIf2xx());
-      String response = parser.apply(HttpResponse.builder()
-               .statusCode(200)
-               .message("ok")
-               .payload(is).build());
+      ParseErrorFromJsonOrReturnBody parser = new ParseErrorFromJsonOrReturnBody(new ReturnStringIf2xx());
+      String response = parser.apply(HttpResponse.builder().statusCode(200).message("ok").payload(is).build());
       assertEquals(response, "invalid tarball: tarball root must contain java-bytearray");
    }
 

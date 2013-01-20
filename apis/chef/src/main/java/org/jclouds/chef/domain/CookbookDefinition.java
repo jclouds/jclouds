@@ -29,129 +29,120 @@ import com.google.common.collect.Sets;
  * @author Ignasi Barrera
  */
 public class CookbookDefinition {
-    
-    private URI url;
-    private Set<Version> versions = Sets.newLinkedHashSet();
-    
-    // only for deserialization
-    CookbookDefinition() {
 
-    }
-    
-    public CookbookDefinition(URI url, Set<Version> versions) {
-        this.url = url;
-        this.versions = versions;
-    }
-    
-    public URI getUrl() {
-        return url;
-    }
+   private URI url;
+   private Set<Version> versions = Sets.newLinkedHashSet();
 
-    public Set<Version> getVersions() {
-        return versions;
-    }
-    
-    @Override
-    public int hashCode() {
-        final int prime = 31;
-        int result = 1;
-        result = prime * result + ((url == null) ? 0 : url.hashCode());
-        result = prime * result + ((versions == null) ? 0 : versions.hashCode());
-        return result;
-    }
+   // only for deserialization
+   CookbookDefinition() {
 
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj)
+   }
+
+   public CookbookDefinition(URI url, Set<Version> versions) {
+      this.url = url;
+      this.versions = versions;
+   }
+
+   public URI getUrl() {
+      return url;
+   }
+
+   public Set<Version> getVersions() {
+      return versions;
+   }
+
+   @Override
+   public int hashCode() {
+      final int prime = 31;
+      int result = 1;
+      result = prime * result + ((url == null) ? 0 : url.hashCode());
+      result = prime * result + ((versions == null) ? 0 : versions.hashCode());
+      return result;
+   }
+
+   @Override
+   public boolean equals(Object obj) {
+      if (this == obj)
+         return true;
+      if (obj == null)
+         return false;
+      if (getClass() != obj.getClass())
+         return false;
+      CookbookDefinition other = (CookbookDefinition) obj;
+      if (url == null) {
+         if (other.url != null)
+            return false;
+      } else if (!url.equals(other.url))
+         return false;
+      if (versions == null) {
+         if (other.versions != null)
+            return false;
+      } else if (!versions.equals(other.versions))
+         return false;
+      return true;
+   }
+
+   @Override
+   public String toString() {
+      return "CookbookDefinition [url=" + url + ", versions=" + versions + "]";
+   }
+
+   public static class Version {
+      private URI url;
+      private String version;
+
+      // only for deserialization
+      Version() {
+
+      }
+
+      public Version(URI url, String version) {
+         this.url = url;
+         this.version = version;
+      }
+
+      public URI getUrl() {
+         return url;
+      }
+
+      public String getVersion() {
+         return version;
+      }
+
+      @Override
+      public int hashCode() {
+         final int prime = 31;
+         int result = 1;
+         result = prime * result + ((url == null) ? 0 : url.hashCode());
+         result = prime * result + ((version == null) ? 0 : version.hashCode());
+         return result;
+      }
+
+      @Override
+      public boolean equals(Object obj) {
+         if (this == obj)
             return true;
-        if (obj == null)
+         if (obj == null)
             return false;
-        if (getClass() != obj.getClass())
+         if (getClass() != obj.getClass())
             return false;
-        CookbookDefinition other = (CookbookDefinition) obj;
-        if (url == null)
-        {
+         Version other = (Version) obj;
+         if (url == null) {
             if (other.url != null)
-                return false;
-        }
-        else if (!url.equals(other.url))
+               return false;
+         } else if (!url.equals(other.url))
             return false;
-        if (versions == null)
-        {
-            if (other.versions != null)
-                return false;
-        }
-        else if (!versions.equals(other.versions))
+         if (version == null) {
+            if (other.version != null)
+               return false;
+         } else if (!version.equals(other.version))
             return false;
-        return true;
-    }
+         return true;
+      }
 
-    @Override
-    public String toString() {
-        return "CookbookDefinition [url=" + url + ", versions=" + versions + "]";
-    }
-
-
-    public static class Version {
-        private URI url;
-        private String version;
-        
-        // only for deserialization
-        Version() {
-
-        }
-
-        public Version(URI url, String version) {
-            this.url = url;
-            this.version = version;
-        }
-
-        public URI getUrl() {
-            return url;
-        }
-
-        public String getVersion() {
-            return version;
-        }
-
-        @Override
-        public int hashCode() {
-            final int prime = 31;
-            int result = 1;
-            result = prime * result + ((url == null) ? 0 : url.hashCode());
-            result = prime * result + ((version == null) ? 0 : version.hashCode());
-            return result;
-        }
-
-        @Override
-        public boolean equals(Object obj) {
-            if (this == obj)
-                return true;
-            if (obj == null)
-                return false;
-            if (getClass() != obj.getClass())
-                return false;
-            Version other = (Version) obj;
-            if (url == null)
-            {
-                if (other.url != null)
-                    return false;
-            }
-            else if (!url.equals(other.url))
-                return false;
-            if (version == null)
-            {
-                if (other.version != null)
-                    return false;
-            }
-            else if (!version.equals(other.version))
-                return false;
-            return true;
-        }
-
-        @Override
-        public String toString() {
-            return "Version [url=" + url + ", version=" + version + "]";
-        }
-    }
+      @Override
+      public String toString() {
+         return "Version [url=" + url + ", version=" + version + "]";
+      }
+   }
 }

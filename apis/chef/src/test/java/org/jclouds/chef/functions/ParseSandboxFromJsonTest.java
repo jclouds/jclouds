@@ -53,26 +53,24 @@ public class ParseSandboxFromJsonTest {
 
    @BeforeTest
    protected void setUpInjector() throws IOException {
-       Injector injector = Guice.createInjector(new AbstractModule() {
-           @Override
-           protected void configure()
-           {
-               bind(String.class).annotatedWith(ApiVersion.class).toInstance(ChefAsyncApi.VERSION);
-           }
-       }, new ChefParserModule(), new GsonModule());
-   
+      Injector injector = Guice.createInjector(new AbstractModule() {
+         @Override
+         protected void configure() {
+            bind(String.class).annotatedWith(ApiVersion.class).toInstance(ChefAsyncApi.VERSION);
+         }
+      }, new ChefParserModule(), new GsonModule());
+
       handler = injector.getInstance(Key.get(new TypeLiteral<ParseJson<Sandbox>>() {
       }));
       dateService = injector.getInstance(DateService.class);
    }
 
    public void test() {
-      assertEquals(handler.apply(HttpResponse.builder()
-               .statusCode(200)
-               .message("ok")
-               .payload(ParseSandboxFromJsonTest.class
-            .getResourceAsStream("/sandbox.json")).build()), new Sandbox("1-8c27b0ea4c2b7aaedbb44cfbdfcc11b2", false,
-            dateService.iso8601SecondsDateParse("2010-07-07T03:36:00+00:00"), ImmutableSet.<String> of(),
-            "f9d6d9b72bae465890aae87969f98a9c", "f9d6d9b72bae465890aae87969f98a9c"));
+      assertEquals(
+            handler.apply(HttpResponse.builder().statusCode(200).message("ok")
+                  .payload(ParseSandboxFromJsonTest.class.getResourceAsStream("/sandbox.json")).build()),
+            new Sandbox("1-8c27b0ea4c2b7aaedbb44cfbdfcc11b2", false, dateService
+                  .iso8601SecondsDateParse("2010-07-07T03:36:00+00:00"), ImmutableSet.<String> of(),
+                  "f9d6d9b72bae465890aae87969f98a9c", "f9d6d9b72bae465890aae87969f98a9c"));
    }
 }

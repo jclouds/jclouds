@@ -75,8 +75,8 @@ import com.google.inject.util.Types;
  * </pre>
  * 
  * <p>
- * In addition to binding {@code Map<K, V>}, a mapbinder will also bind {@code
- * Map<K, Provider<V>>} for lazy value provision:
+ * In addition to binding {@code Map<K, V>}, a mapbinder will also bind
+ * {@code Map<K, Provider<V>>} for lazy value provision:
  * 
  * <pre>
  * <code>
@@ -131,20 +131,21 @@ public abstract class MapBinder<K, V> {
    }
 
    /**
-    * Returns a new mapbinder that collects entries of {@code keyType}/{@code
-    * valueType} in a {@link Map} that is itself bound with no binding
+    * Returns a new mapbinder that collects entries of {@code keyType}/
+    * {@code valueType} in a {@link Map} that is itself bound with no binding
     * annotation.
     */
    public static <K, V> MapBinder<K, V> newMapBinder(Binder binder, TypeLiteral<K> keyType, TypeLiteral<V> valueType) {
       binder = binder.skipSources(MapBinder.class, RealMapBinder.class);
-      return newMapBinder(binder, valueType, Key.get(mapOf(keyType, valueType)), Key.get(mapOfProviderOf(keyType,
-            valueType)), Key.get(mapOf(keyType, setOf(valueType))), Key.get(mapOfSetOfProviderOf(keyType, valueType)),
+      return newMapBinder(binder, valueType, Key.get(mapOf(keyType, valueType)),
+            Key.get(mapOfProviderOf(keyType, valueType)), Key.get(mapOf(keyType, setOf(valueType))),
+            Key.get(mapOfSetOfProviderOf(keyType, valueType)),
             Multibinder.newSetBinder(binder, entryOfProviderOf(keyType, valueType)));
    }
 
    /**
-    * Returns a new mapbinder that collects entries of {@code keyType}/{@code
-    * valueType} in a {@link Map} that is itself bound with no binding
+    * Returns a new mapbinder that collects entries of {@code keyType}/
+    * {@code valueType} in a {@link Map} that is itself bound with no binding
     * annotation.
     */
    public static <K, V> MapBinder<K, V> newMapBinder(Binder binder, Class<K> keyType, Class<V> valueType) {
@@ -152,21 +153,24 @@ public abstract class MapBinder<K, V> {
    }
 
    /**
-    * Returns a new mapbinder that collects entries of {@code keyType}/{@code
-    * valueType} in a {@link Map} that is itself bound with {@code annotation}.
+    * Returns a new mapbinder that collects entries of {@code keyType}/
+    * {@code valueType} in a {@link Map} that is itself bound with
+    * {@code annotation}.
     */
    public static <K, V> MapBinder<K, V> newMapBinder(Binder binder, TypeLiteral<K> keyType, TypeLiteral<V> valueType,
          Annotation annotation) {
       binder = binder.skipSources(MapBinder.class, RealMapBinder.class);
-      return newMapBinder(binder, valueType, Key.get(mapOf(keyType, valueType), annotation), Key.get(mapOfProviderOf(
-            keyType, valueType), annotation), Key.get(mapOf(keyType, setOf(valueType)), annotation), Key.get(
-            mapOfSetOfProviderOf(keyType, valueType), annotation), Multibinder.newSetBinder(binder, entryOfProviderOf(
-            keyType, valueType), annotation));
+      return newMapBinder(binder, valueType, Key.get(mapOf(keyType, valueType), annotation),
+            Key.get(mapOfProviderOf(keyType, valueType), annotation),
+            Key.get(mapOf(keyType, setOf(valueType)), annotation),
+            Key.get(mapOfSetOfProviderOf(keyType, valueType), annotation),
+            Multibinder.newSetBinder(binder, entryOfProviderOf(keyType, valueType), annotation));
    }
 
    /**
-    * Returns a new mapbinder that collects entries of {@code keyType}/{@code
-    * valueType} in a {@link Map} that is itself bound with {@code annotation}.
+    * Returns a new mapbinder that collects entries of {@code keyType}/
+    * {@code valueType} in a {@link Map} that is itself bound with
+    * {@code annotation}.
     */
    public static <K, V> MapBinder<K, V> newMapBinder(Binder binder, Class<K> keyType, Class<V> valueType,
          Annotation annotation) {
@@ -174,23 +178,24 @@ public abstract class MapBinder<K, V> {
    }
 
    /**
-    * Returns a new mapbinder that collects entries of {@code keyType}/{@code
-    * valueType} in a {@link Map} that is itself bound with {@code
-    * annotationType}.
+    * Returns a new mapbinder that collects entries of {@code keyType}/
+    * {@code valueType} in a {@link Map} that is itself bound with
+    * {@code annotationType}.
     */
    public static <K, V> MapBinder<K, V> newMapBinder(Binder binder, TypeLiteral<K> keyType, TypeLiteral<V> valueType,
          Class<? extends Annotation> annotationType) {
       binder = binder.skipSources(MapBinder.class, RealMapBinder.class);
-      return newMapBinder(binder, valueType, Key.get(mapOf(keyType, valueType), annotationType), Key.get(
-            mapOfProviderOf(keyType, valueType), annotationType), Key.get(mapOf(keyType, setOf(valueType)),
-            annotationType), Key.get(mapOfSetOfProviderOf(keyType, valueType), annotationType), Multibinder
-            .newSetBinder(binder, entryOfProviderOf(keyType, valueType), annotationType));
+      return newMapBinder(binder, valueType, Key.get(mapOf(keyType, valueType), annotationType),
+            Key.get(mapOfProviderOf(keyType, valueType), annotationType),
+            Key.get(mapOf(keyType, setOf(valueType)), annotationType),
+            Key.get(mapOfSetOfProviderOf(keyType, valueType), annotationType),
+            Multibinder.newSetBinder(binder, entryOfProviderOf(keyType, valueType), annotationType));
    }
 
    /**
-    * Returns a new mapbinder that collects entries of {@code keyType}/{@code
-    * valueType} in a {@link Map} that is itself bound with {@code
-    * annotationType}.
+    * Returns a new mapbinder that collects entries of {@code keyType}/
+    * {@code valueType} in a {@link Map} that is itself bound with
+    * {@code annotationType}.
     */
    public static <K, V> MapBinder<K, V> newMapBinder(Binder binder, Class<K> keyType, Class<V> valueType,
          Class<? extends Annotation> annotationType) {
@@ -207,16 +212,16 @@ public abstract class MapBinder<K, V> {
    // a provider map <K, V> is safely a Map<K, Provider<V>>
    private static <K, V> TypeLiteral<Map<K, Provider<V>>> mapOfProviderOf(TypeLiteral<K> keyType,
          TypeLiteral<V> valueType) {
-      return (TypeLiteral<Map<K, Provider<V>>>) TypeLiteral.get(Types.mapOf(keyType.getType(), Types
-            .providerOf(valueType.getType())));
+      return (TypeLiteral<Map<K, Provider<V>>>) TypeLiteral.get(Types.mapOf(keyType.getType(),
+            Types.providerOf(valueType.getType())));
    }
 
    @SuppressWarnings("unchecked")
    // a provider map <K, Set<V>> is safely a Map<K, Set<Provider<V>>>
    private static <K, V> TypeLiteral<Map<K, Set<Provider<V>>>> mapOfSetOfProviderOf(TypeLiteral<K> keyType,
          TypeLiteral<V> valueType) {
-      return (TypeLiteral<Map<K, Set<Provider<V>>>>) TypeLiteral.get(Types.mapOf(keyType.getType(), Types.setOf(Types
-            .providerOf(valueType.getType()))));
+      return (TypeLiteral<Map<K, Set<Provider<V>>>>) TypeLiteral.get(Types.mapOf(keyType.getType(),
+            Types.setOf(Types.providerOf(valueType.getType()))));
    }
 
    @SuppressWarnings("unchecked")
@@ -260,8 +265,8 @@ public abstract class MapBinder<K, V> {
     * time the map is injected.
     * 
     * <p>
-    * It is an error to call this method without also calling one of the {@code
-    * to} methods on the returned binding builder.
+    * It is an error to call this method without also calling one of the
+    * {@code to} methods on the returned binding builder.
     * 
     * <p>
     * Scoping elements independently is supported. Use the {@code in} method to
