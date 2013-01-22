@@ -80,7 +80,7 @@ public class NestSlashKeysTest {
             json.toJson(converter.apply(ImmutableMultimap.<String, Supplier<JsonBall>> of("java",
                   Suppliers.ofInstance(new JsonBall("{\"time\":\"time\"}")), "java/system",
                   Suppliers.ofInstance(new JsonBall("system"))))),
-            "{\"java\":{\"time\":\"time\",\"system\":\"system\"}}");
+            "{\"java\":{\"system\":\"system\",\"time\":\"time\"}}");
    }
 
    @Test
@@ -89,7 +89,7 @@ public class NestSlashKeysTest {
             json.toJson(converter.apply(ImmutableMultimap.<String, Supplier<JsonBall>> of("java",
                   Suppliers.ofInstance(new JsonBall("{\"time\":\"time\"}")), "java",
                   Suppliers.ofInstance(new JsonBall("{\"system\":\"system\"}"))))),
-            "{\"java\":{\"time\":\"time\",\"system\":\"system\"}}");
+            "{\"java\":{\"system\":\"system\",\"time\":\"time\"}}");
    }
 
    @Test
@@ -98,7 +98,7 @@ public class NestSlashKeysTest {
             json.toJson(converter.apply(ImmutableMultimap.<String, Supplier<JsonBall>> of("java",
                   Suppliers.ofInstance(new JsonBall("{\"time\":{\"1\":\"hello\"}}")), "java/time",
                   Suppliers.ofInstance(new JsonBall("{\"2\":\"goodbye\"}"))))),
-            "{\"java\":{\"time\":{\"1\":\"hello\",\"2\":\"goodbye\"}}}");
+            "{\"java\":{\"time\":{\"2\":\"goodbye\",\"1\":\"hello\"}}}");
    }
 
    @Test
@@ -107,7 +107,7 @@ public class NestSlashKeysTest {
             json.toJson(converter.apply(ImmutableMultimap.<String, Supplier<JsonBall>> of("java",
                   Suppliers.ofInstance(new JsonBall("{\"time\":{\"1\":\"hello\"}}")), "java",
                   Suppliers.ofInstance(new JsonBall("{\"time\":{\"2\":\"goodbye\"}}"))))),
-            "{\"java\":{\"time\":{\"1\":\"hello\",\"2\":\"goodbye\"}}}");
+            "{\"java\":{\"time\":{\"2\":\"goodbye\",\"1\":\"hello\"}}}");
    }
 
    @Test

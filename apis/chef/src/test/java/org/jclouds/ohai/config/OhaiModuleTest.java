@@ -137,7 +137,7 @@ public class OhaiModuleTest {
       assertEquals(
             json.toJson(ohai.ohai.get(), new TypeLiteral<Map<String, JsonBall>>() {
             }.getType()),
-            "{\"ohai_time\":1279992919,\"platform\":\"macosx\",\"platform_version\":\"10.3.0\",\"current_user\":\"user\",\"test\":{\"prop1\":\"test1\",\"prop2\":\"test2\"},\"jvm\":{\"system\":{\"user.name\":\"user\",\"os.version\":\"10.3.0\",\"os.name\":\"Mac OS X\"}}}");
+            "{\"ohai_time\":1279992919,\"platform\":\"macosx\",\"platform_version\":\"10.3.0\",\"current_user\":\"user\",\"test\":{\"prop2\":\"test2\",\"prop1\":\"test1\"},\"jvm\":{\"system\":{\"user.name\":\"user\",\"os.version\":\"10.3.0\",\"os.name\":\"Mac OS X\"}}}");
    }
 
    static class Ohai {
