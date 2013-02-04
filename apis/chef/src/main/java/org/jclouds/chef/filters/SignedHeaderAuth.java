@@ -94,7 +94,8 @@ public class SignedHeaderAuth implements HttpRequestFilter {
       this.utils = utils;
    }
 
-   public HttpRequest filter(HttpRequest request) throws HttpException {
+   public HttpRequest filter(HttpRequest input) throws HttpException {
+      HttpRequest request = input.toBuilder().endpoint(input.getEndpoint().toString().replace("%3F", "?")).build();
       String contentHash = hashBody(request.getPayload());
       Multimap<String, String> headers = ArrayListMultimap.create();
       headers.put("X-Ops-Content-Hash", contentHash);

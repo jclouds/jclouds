@@ -67,6 +67,7 @@ public class ChefApiMetadata extends BaseRestApiMetadata {
       properties.setProperty(PROPERTY_TIMEOUTS_PREFIX + "ChefApi.updateNode", MINUTES.toMillis(10) + "");
       properties.setProperty(PROPERTY_TIMEOUTS_PREFIX + "ChefApi.createRole", MINUTES.toMillis(2) + "");
       properties.setProperty(PROPERTY_TIMEOUTS_PREFIX + "ChefApi.updateRole", MINUTES.toMillis(10) + "");
+      properties.setProperty(PROPERTY_TIMEOUTS_PREFIX + "ChefApi.createEnvironment", MINUTES.toMillis(2) + "");
       properties.setProperty(PROPERTY_SESSION_INTERVAL, "1");
       properties.setProperty(CHEF_BOOTSTRAP_DATABAG, "bootstrap");
       return properties;

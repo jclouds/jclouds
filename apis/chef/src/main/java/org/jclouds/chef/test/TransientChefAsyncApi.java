@@ -18,46 +18,37 @@
  */
 package org.jclouds.chef.test;
 
-import static com.google.common.base.Preconditions.checkNotNull;
-import static com.google.common.base.Throwables.propagate;
-import static com.google.common.collect.Iterables.transform;
-import static com.google.common.collect.Sets.newLinkedHashSet;
-import static com.google.common.util.concurrent.Futures.immediateFuture;
-import static com.google.common.util.concurrent.Futures.transform;
-
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.URI;
-import java.util.List;
-import java.util.Set;
-
-import javax.inject.Inject;
-import javax.inject.Named;
-import javax.inject.Singleton;
-
+import com.google.common.base.Function;
+import com.google.common.util.concurrent.ListenableFuture;
+import com.google.common.util.concurrent.ListeningExecutorService;
 import org.jclouds.Constants;
 import org.jclouds.blobstore.LocalAsyncBlobStore;
 import org.jclouds.blobstore.domain.Blob;
 import org.jclouds.blobstore.domain.PageSet;
 import org.jclouds.blobstore.domain.StorageMetadata;
 import org.jclouds.chef.ChefAsyncApi;
-import org.jclouds.chef.domain.Client;
-import org.jclouds.chef.domain.CookbookVersion;
-import org.jclouds.chef.domain.DatabagItem;
-import org.jclouds.chef.domain.Node;
-import org.jclouds.chef.domain.Resource;
-import org.jclouds.chef.domain.Role;
-import org.jclouds.chef.domain.Sandbox;
-import org.jclouds.chef.domain.SearchResult;
-import org.jclouds.chef.domain.UploadSandbox;
+import org.jclouds.chef.domain.*;
 import org.jclouds.chef.options.CreateClientOptions;
 import org.jclouds.chef.options.SearchOptions;
 import org.jclouds.io.Payload;
 import org.jclouds.util.Strings2;
 
-import com.google.common.base.Function;
-import com.google.common.util.concurrent.ListenableFuture;
-import com.google.common.util.concurrent.ListeningExecutorService;
+import javax.inject.Inject;
+import javax.inject.Named;
+import javax.inject.Singleton;
+import javax.ws.rs.PathParam;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URI;
+import java.util.List;
+import java.util.Set;
+
+import static com.google.common.base.Preconditions.checkNotNull;
+import static com.google.common.base.Throwables.propagate;
+import static com.google.common.collect.Iterables.transform;
+import static com.google.common.collect.Sets.newLinkedHashSet;
+import static com.google.common.util.concurrent.Futures.immediateFuture;
+import static com.google.common.util.concurrent.Futures.transform;
 
 /**
  * In-memory chef simulator.
@@ -352,4 +343,58 @@ public class TransientChefAsyncApi implements ChefAsyncApi {
       throw new UnsupportedOperationException();
    }
 
+    @Override
+    public ListenableFuture<Set<String>> listEnvironments() {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public ListenableFuture<Void> createEnvironment(Environment environment) {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public ListenableFuture<Environment> deleteEnvironment(String environmentname) {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public ListenableFuture<Environment> getEnvironment(String environmentname) {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public ListenableFuture<Environment> updateEnvironment(Environment environment) {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public ListenableFuture<Set<CookbookDefinition>> listEnvironmentCookbooks(String environmentname) {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public ListenableFuture<Set<CookbookDefinition>> listEnvironmentCookbooks(String environmentname, String numversions) {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public ListenableFuture<CookbookDefinition> getEnvironmentCookbook(String environmentname, String cookbookname) {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public ListenableFuture<CookbookDefinition> getEnvironmentCookbook(String environmentname, String cookbookname, String numversions) {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public ListenableFuture<? extends SearchResult<? extends Environment>> searchEnvironments() {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public ListenableFuture<? extends SearchResult<? extends Environment>> searchEnvironments(SearchOptions options) {
+        throw new UnsupportedOperationException();
+    }
 }
