@@ -83,10 +83,26 @@ public interface ChefService {
     *           {@link org.jclouds.chef.config.ChefProperties#CHEF_BOOTSTRAP_DATABAG
     *           databag} where run_list and other information are stored
     * @deprecated use
-    *             {@link ChefService#updateBootstrapConfigForGroup(Iterable, JsonBall, String)}
+    *             {@link ChefService#updateBootstrapConfigForGroup(Iterable, String)
+
     */
    @Deprecated
    void updateRunListForGroup(Iterable<String> runList, String group);
+
+   /**
+    * assigns a run list to all nodes bootstrapped with a certain group
+    * 
+    * @param runList
+    *           list of recipes or roles to assign. syntax is
+    *           {@code recipe[name]} and {@code role[name]}
+    * 
+    * @param group
+    *           corresponds to a configured
+    *           {@link org.jclouds.chef.config.ChefProperties#CHEF_BOOTSTRAP_DATABAG
+    *           databag} where run_list and other information are stored
+    * @see #makeChefApiBootstrapScriptForTag
+    */
+   public void updateBootstrapConfigForGroup(Iterable<String> runList, String group);
 
    /**
     * assigns a run list to all nodes bootstrapped with a certain group, and

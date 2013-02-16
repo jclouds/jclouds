@@ -203,6 +203,11 @@ public class BaseChefService implements ChefService {
    @Override
    @Deprecated
    public void updateRunListForGroup(Iterable<String> runList, String group) {
+      updateBootstrapConfigForGroup(runList, group);
+   }
+
+   @Override
+   public void updateBootstrapConfigForGroup(Iterable<String> runList, String group) {
       updateBootstrapConfigForGroup(runList, null, group);
    }
 
