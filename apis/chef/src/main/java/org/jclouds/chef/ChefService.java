@@ -24,9 +24,11 @@ import java.util.List;
 
 import org.jclouds.chef.domain.Client;
 import org.jclouds.chef.domain.CookbookVersion;
+import org.jclouds.chef.domain.Environment;
 import org.jclouds.chef.domain.Node;
 import org.jclouds.chef.internal.BaseChefService;
 import org.jclouds.domain.JsonBall;
+import org.jclouds.rest.annotations.SinceApiVersion;
 import org.jclouds.scriptbuilder.domain.Statement;
 
 import com.google.common.base.Predicate;
@@ -170,4 +172,13 @@ public interface ChefService {
    Iterable<? extends CookbookVersion> listCookbookVersionsNamed(Iterable<String> cookbookNames);
 
    void updateAutomaticAttributesOnNode(String nodeName);
+
+   @SinceApiVersion("0.10.0")
+   Iterable<? extends Environment> listEnvironments();
+
+   @SinceApiVersion("0.10.0")
+   Iterable<? extends Environment> listEnvironmentsMatching(Predicate<String> environmentNameSelector);
+
+   @SinceApiVersion("0.10.0")
+   Iterable<? extends Environment> listEnvironmentsNamed(Iterable<String> names);
 }

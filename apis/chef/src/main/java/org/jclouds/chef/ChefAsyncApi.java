@@ -18,23 +18,7 @@
  */
 package org.jclouds.chef;
 
-import java.io.InputStream;
-import java.net.URI;
-import java.util.List;
-import java.util.Set;
-
-import javax.inject.Named;
-import javax.ws.rs.Consumes;
-import javax.ws.rs.DELETE;
-import javax.ws.rs.GET;
-import javax.ws.rs.HEAD;
-import javax.ws.rs.POST;
-import javax.ws.rs.PUT;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
-import javax.ws.rs.core.MediaType;
-
+import com.google.common.util.concurrent.ListenableFuture;
 import org.jclouds.Constants;
 import org.jclouds.Fallbacks.EmptySetOnNotFoundOr404;
 import org.jclouds.Fallbacks.FalseOnNotFoundOr404;
@@ -46,11 +30,14 @@ import org.jclouds.chef.binders.BindGenerateKeyForClientToJsonPayload;
 import org.jclouds.chef.binders.BindIsCompletedToJsonPayload;
 import org.jclouds.chef.binders.BindNameToJsonPayload;
 import org.jclouds.chef.binders.DatabagItemId;
+import org.jclouds.chef.binders.EnvironmentName;
 import org.jclouds.chef.binders.NodeName;
 import org.jclouds.chef.binders.RoleName;
 import org.jclouds.chef.domain.Client;
+import org.jclouds.chef.domain.CookbookDefinition;
 import org.jclouds.chef.domain.CookbookVersion;
 import org.jclouds.chef.domain.DatabagItem;
+import org.jclouds.chef.domain.Environment;
 import org.jclouds.chef.domain.Node;
 import org.jclouds.chef.domain.Resource;
 import org.jclouds.chef.domain.Role;
@@ -58,11 +45,14 @@ import org.jclouds.chef.domain.Sandbox;
 import org.jclouds.chef.domain.SearchResult;
 import org.jclouds.chef.domain.UploadSandbox;
 import org.jclouds.chef.filters.SignedHeaderAuth;
+import org.jclouds.chef.functions.ParseCookbookDefinitionFromJsonv10;
+import org.jclouds.chef.functions.ParseCookbookDefinitionListFromJsonv10;
 import org.jclouds.chef.functions.ParseCookbookDefinitionCheckingChefVersion;
 import org.jclouds.chef.functions.ParseCookbookVersionsCheckingChefVersion;
 import org.jclouds.chef.functions.ParseKeySetFromJson;
 import org.jclouds.chef.functions.ParseSearchClientsFromJson;
 import org.jclouds.chef.functions.ParseSearchDatabagFromJson;
+import org.jclouds.chef.functions.ParseSearchEnvironmentsFromJson;
 import org.jclouds.chef.functions.ParseSearchNodesFromJson;
 import org.jclouds.chef.functions.ParseSearchRolesFromJson;
 import org.jclouds.chef.functions.UriForResource;
@@ -78,9 +68,24 @@ import org.jclouds.rest.annotations.ParamParser;
 import org.jclouds.rest.annotations.PayloadParam;
 import org.jclouds.rest.annotations.RequestFilters;
 import org.jclouds.rest.annotations.ResponseParser;
+import org.jclouds.rest.annotations.SinceApiVersion;
 import org.jclouds.rest.binders.BindToJsonPayload;
 
-import com.google.common.util.concurrent.ListenableFuture;
+import javax.inject.Named;
+import javax.ws.rs.Consumes;
+import javax.ws.rs.DELETE;
+import javax.ws.rs.GET;
+import javax.ws.rs.HEAD;
+import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
+import javax.ws.rs.core.MediaType;
+import java.io.InputStream;
+import java.net.URI;
+import java.util.List;
+import java.util.Set;
 
 /**
  * Provides asynchronous access to Chef via their REST API.
@@ -270,7 +275,7 @@ public interface ChefAsyncApi {
    ListenableFuture<Node> getNode(@PathParam("nodename") String nodename);
 
    /**
-    * @see ChefNode#deleteNode
+    * @see ChefApi#deleteNode
     */
    @Named("node:delete")
    @DELETE
@@ -522,10 +527,126 @@ public interface ChefAsyncApi {
          @PathParam("databagName") String databagName, SearchOptions options);
 
    /**
+    * @see ChefApi#searchEnvironments() ()
+    */
+   @Named("search:environments")
+   @GET
+   @SinceApiVersion("0.10.0")
+   @Path("/search/environment")
+   @ResponseParser(ParseSearchEnvironmentsFromJson.class)
+   ListenableFuture<? extends SearchResult<? extends Environment>> searchEnvironments();
+
+   /**
+    * @see ChefApi#searchEnvironments(SearchOptions)
+    */
+   @Named("search:environments")
+   @GET
+   @SinceApiVersion("0.10.0")
+   @Path("/search/environment")
+   @ResponseParser(ParseSearchEnvironmentsFromJson.class)
+   ListenableFuture<? extends SearchResult<? extends Environment>> searchEnvironments(SearchOptions options);
+
+   /**
     * @see ChefApi#getResourceContents(Resource)
     */
    @Named("content:get")
    @GET
    @Fallback(NullOnNotFoundOr404.class)
    ListenableFuture<InputStream> getResourceContents(@EndpointParam(parser = UriForResource.class) Resource resource);
+
+   /**
+    * @see org.jclouds.chef.ChefApi#listEnvironments()
+    */
+   @Named("environment:list")
+   @GET
+   @SinceApiVersion("0.10.0")
+   @Path("/environments")
+   @ResponseParser(ParseKeySetFromJson.class)
+   @Fallback(EmptySetOnNotFoundOr404.class)
+   ListenableFuture<Set<String>> listEnvironments();
+
+   /**
+    * @see ChefApi#createEnvironment(Environment)
+    */
+   @Named("environment:create")
+   @POST
+   @SinceApiVersion("0.10.0")
+   @Path("/environments")
+   ListenableFuture<Void> createEnvironment(@BinderParam(BindToJsonPayload.class) Environment environment);
+
+   /**
+    * @see ChefApi#updateEnvironment(Environment)
+    */
+   @Named("environment:update")
+   @PUT
+   @SinceApiVersion("0.10.0")
+   @Path("/environments/{environmentname}")
+   ListenableFuture<Environment> updateEnvironment(@PathParam("environmentname") @ParamParser(EnvironmentName.class)
+                                                   @BinderParam(BindToJsonPayload.class) Environment environment);
+
+   /**
+    * @see ChefApi#getEnvironment(String)
+    */
+   @Named("environment:get")
+   @GET
+   @SinceApiVersion("0.10.0")
+   @Path("/environments/{environmentname}")
+   @Fallback(NullOnNotFoundOr404.class)
+   ListenableFuture<Environment> getEnvironment(@PathParam("environmentname") String environmentname);
+
+   /**
+    * @see ChefApi#deleteEnvironment(String)
+    */
+   @Named("environment:delete")
+   @DELETE
+   @SinceApiVersion("0.10.0")
+   @Path("/environments/{environmentname}")
+   @Fallback(NullOnNotFoundOr404.class)
+   ListenableFuture<Environment> deleteEnvironment(@PathParam("environmentname") String environmentname);
+
+   /**
+    * @see ChefApi#listEnvironmentCookbooks(String)
+    */
+   @Named("environment:cookbooklist")
+   @GET
+   @ResponseParser(ParseCookbookDefinitionListFromJsonv10.class)
+   @SinceApiVersion("0.10.0")
+   @Path("/environments/{environmentname}/cookbooks")
+   @Fallback(NullOnNotFoundOr404.class)
+   ListenableFuture<Set<CookbookDefinition>> listEnvironmentCookbooks(@PathParam("environmentname") String environmentname);
+
+   /**
+    * @see ChefApi#listEnvironmentCookbooks(String)
+    */
+   @Named("environment:cookbooklist")
+   @GET
+   @ResponseParser(ParseCookbookDefinitionListFromJsonv10.class)
+   @SinceApiVersion("0.10.0")
+   @Path("/environments/{environmentname}/cookbooks?num_versions={numversions}")
+   @Fallback(NullOnNotFoundOr404.class)
+   ListenableFuture<Set<CookbookDefinition>> listEnvironmentCookbooks(@PathParam("environmentname") String environmentname,
+                                                                      @PathParam("numversions") String numversions);
+
+   /**
+    * @see ChefApi#getEnvironmentCookbook(String, String)
+    */
+   @Named("environment:cookbook")
+   @GET
+   @ResponseParser(ParseCookbookDefinitionFromJsonv10.class)
+   @SinceApiVersion("0.10.0")
+   @Path("/environments/{environmentname}/cookbooks/{cookbookname}")
+   ListenableFuture<CookbookDefinition> getEnvironmentCookbook(@PathParam("environmentname") String environmentname,
+                                                               @PathParam("cookbookname") String cookbookname);
+
+   /**
+    * @see ChefApi#getEnvironmentCookbook(String, String, String)
+    */
+   @Named("environment:cookbook")
+   @GET
+   @ResponseParser(ParseCookbookDefinitionFromJsonv10.class)
+   @SinceApiVersion("0.10.0")
+   @Path("/environments/{environmentname}/cookbooks/{cookbookname}?num_versions={numversions}")
+   ListenableFuture<CookbookDefinition> getEnvironmentCookbook(@PathParam("environmentname") String environmentname,
+                                                               @PathParam("cookbookname") String cookbookname,
+                                                               @PathParam("numversions") String numversions);
 }

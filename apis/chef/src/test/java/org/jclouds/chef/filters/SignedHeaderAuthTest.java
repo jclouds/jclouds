@@ -20,6 +20,7 @@ package org.jclouds.chef.filters;
 
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertEqualsNoOrder;
+import static org.testng.Assert.assertTrue;
 
 import java.io.IOException;
 import java.security.PrivateKey;
@@ -171,6 +172,16 @@ public class SignedHeaderAuthTest {
             .endpoint("http://localhost/" + path.toString()).payload(BODY).build();
 
       signing_obj.filter(request);
+   }
+
+   @Test
+   void shouldReplacePercentage3FWithQuestionMarkAtUrl() {
+      StringBuilder path = new StringBuilder("nodes/");
+      path.append("test/cookbooks/myCookBook%3Fnum_versions=5");
+      HttpRequest request = HttpRequest.builder().method(HttpMethod.GET)
+            .endpoint("http://localhost/" + path.toString()).payload(BODY).build();
+      request = signing_obj.filter(request);
+      assertTrue(request.getRequestLine().contains("?num_versions=5"));
    }
 
    private SignedHeaderAuth signing_obj;

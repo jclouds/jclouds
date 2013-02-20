@@ -42,6 +42,7 @@ import org.jclouds.chef.domain.ChecksumStatus;
 import org.jclouds.chef.domain.Client;
 import org.jclouds.chef.domain.CookbookVersion;
 import org.jclouds.chef.domain.DatabagItem;
+import org.jclouds.chef.domain.Environment;
 import org.jclouds.chef.domain.Node;
 import org.jclouds.chef.domain.Resource;
 import org.jclouds.chef.domain.Role;
@@ -202,18 +203,21 @@ public abstract class BaseChefApiLiveTest<C extends Context> extends BaseChefCon
 
    @Test
    public void testValidatorCreateClient() throws Exception {
+      chefApi.deleteClient(VALIDATOR_PREFIX);
       String credential = Pems.pem(validatorClient.createClient(VALIDATOR_PREFIX).getPrivateKey());
       assertClientCreated(VALIDATOR_PREFIX, credential);
    }
 
    @Test
    public void testCreateClient() throws Exception {
+      chefApi.deleteClient(PREFIX);
       String credential = Pems.pem(chefApi.createClient(PREFIX).getPrivateKey());
       assertClientCreated(PREFIX, credential);
    }
 
    @Test
    public void testCreateAdminClient() throws Exception {
+      chefApi.deleteClient(ADMIN_PREFIX);
       String credential = Pems.pem(chefApi.createClient(ADMIN_PREFIX, CreateClientOptions.Builder.admin())
             .getPrivateKey());
       assertClientCreated(ADMIN_PREFIX, credential);
@@ -464,6 +468,51 @@ public abstract class BaseChefApiLiveTest<C extends Context> extends BaseChefCon
       assertNotNull(results);
    }
 
+   @Test
+   public void testCreateEnvironment() {
+      chefApi.deleteEnvironment(PREFIX);
+      chefApi.createEnvironment(new Environment(PREFIX, PREFIX));
+      Environment env = chefApi.getEnvironment(PREFIX);
+      assertNotNull(env);
+      assertEquals(env.getName(), PREFIX);
+      assertEquals(env.getDescription(), PREFIX);
+   }
+
+   @Test(dependsOnMethods = "testCreateEnvironment")
+   public void testListEnvironment() {
+      Set<String> envList = chefApi.listEnvironments();
+      assertNotNull(envList);
+      assertTrue(envList.contains(PREFIX));
+   }
+
+   @Test(dependsOnMethods = "testCreateEnvironment")
+   public void testSearchEnvironments() throws Exception {
+      SearchResult<? extends Environment> results = chefApi.searchEnvironments();
+      assertNotNull(results);
+   }
+
+   @Test(dependsOnMethods = {"testListSearchIndexes", "testCreateEnvironment"})
+   public void testSearchEnvironmentsWithOptions() throws Exception {
+      Predicate<SearchOptions> waitForIndex = retry(new Predicate<SearchOptions>() {
+         @Override
+         public boolean apply(SearchOptions input) {
+            SearchResult<? extends Environment> results = chefApi.searchEnvironments(input);
+            assertNotNull(results);
+            if (results.size() > 0) {
+               assertEquals(results.size(), 1);
+               assertEquals(results.iterator().next().getName(), PREFIX);
+               return true;
+            } else {
+               // The index may still not be populated
+               return false;
+            }
+         }
+      }, maxWaitForIndexInMs, 5000L, MILLISECONDS);
+
+      SearchOptions options = SearchOptions.Builder.query("name:" + PREFIX);
+      assertTrue(waitForIndex.apply(options));
+   }
+
    @AfterClass(groups = { "live", "integration" })
    @Override
    public void tearDownContext() {
@@ -473,6 +522,7 @@ public abstract class BaseChefApiLiveTest<C extends Context> extends BaseChefCon
       chefApi.deleteNode(PREFIX);
       chefApi.deleteRole(PREFIX);
       chefApi.deleteDatabag(PREFIX);
+      chefApi.deleteEnvironment(PREFIX);
       try {
          Closeables.close(validatorContext, true);
       } catch (IOException e) {
