@@ -18,13 +18,11 @@
  */
 package org.jclouds.chef;
 
-import java.io.InputStream;
-import java.net.URI;
-import java.util.List;
-import java.util.Set;
 import org.jclouds.chef.domain.Client;
+import org.jclouds.chef.domain.CookbookDefinition;
 import org.jclouds.chef.domain.CookbookVersion;
 import org.jclouds.chef.domain.DatabagItem;
+import org.jclouds.chef.domain.Environment;
 import org.jclouds.chef.domain.Node;
 import org.jclouds.chef.domain.Resource;
 import org.jclouds.chef.domain.Role;
@@ -37,33 +35,36 @@ import org.jclouds.http.HttpResponseException;
 import org.jclouds.io.Payload;
 import org.jclouds.rest.AuthorizationException;
 import org.jclouds.rest.annotations.BinderParam;
+import org.jclouds.rest.annotations.SinceApiVersion;
 import org.jclouds.rest.binders.BindToJsonPayload;
+
+import java.io.InputStream;
+import java.net.URI;
+import java.util.List;
+import java.util.Set;
 
 /**
  * Provides synchronous access to Chef.
  * <p/>
- * 
+ *
+ * @author Adrian Cole
  * @see ChefAsyncApi
  * @see <a href="TODO: insert URL of Chef documentation" />
- * @author Adrian Cole
  */
 public interface ChefApi {
    /**
-    * 
     * Creates a new sandbox. It accepts a list of checksums as input and returns
     * the URLs against which to PUT files that need to be uploaded.
-    * 
-    * @param md5s
-    *           raw md5s; uses {@code Bytes.asList()} and
-    *           {@code Bytes.toByteArray()} as necessary
+    *
+    * @param md5s raw md5s; uses {@code Bytes.asList()} and
+    *             {@code Bytes.toByteArray()} as necessary
     * @return The URLs against which to PUT files that need to be uploaded.
     */
    UploadSandbox getUploadSandboxForChecksums(Set<List<Byte>> md5s);
 
    /**
-    * 
     * Uploads the given content to the sandbox at the given URI.
-    * <p>
+    * <p/>
     * The URI must be obtained, after uploading a sandbox, from the
     * {@link UploadSandbox#getUri()}.
     */
@@ -71,422 +72,365 @@ public interface ChefApi {
 
    /**
     * Confirms if the sandbox is completed or not.
-    * <p>
+    * <p/>
     * This method should be used after uploading contents to the sandbox.
-    * 
+    *
     * @return The sandbox
     */
    Sandbox commitSandbox(String id, boolean isCompleted);
 
    /**
-    * 
     * @return a list of all the cookbook names
-    * @throws AuthorizationException
-    *            <p/>
-    *            "401 Unauthorized" if the caller is not a recognized user.
-    *            <p/>
-    *            "403 Forbidden" if you do not have permission to see the
-    *            cookbook list.
+    * @throws AuthorizationException <p/>
+    *                                "401 Unauthorized" if the caller is not a recognized user.
+    *                                <p/>
+    *                                "403 Forbidden" if you do not have permission to see the
+    *                                cookbook list.
     */
    Set<String> listCookbooks();
 
    /**
     * Creates or updates (uploads) a cookbook //TODO document
-    * 
+    *
     * @param cookbookName
-    * @throws HttpResponseException
-    *            "409 Conflict" if the cookbook already exists
+    * @throws HttpResponseException "409 Conflict" if the cookbook already exists
     */
    CookbookVersion updateCookbook(String cookbookName, String version, CookbookVersion cookbook);
 
    /**
     * deletes an existing cookbook.
-    * 
+    *
     * @return last state of the api you deleted or null, if not found
-    * @throws AuthorizationException
-    *            <p/>
-    *            "401 Unauthorized" if you are not a recognized user.
-    *            <p/>
-    *            "403 Forbidden" if you do not have Delete rights on the
-    *            cookbook.
+    * @throws AuthorizationException <p/>
+    *                                "401 Unauthorized" if you are not a recognized user.
+    *                                <p/>
+    *                                "403 Forbidden" if you do not have Delete rights on the
+    *                                cookbook.
     */
    CookbookVersion deleteCookbook(String cookbookName, String version);
 
    /**
-    * 
     * @return the versions of a cookbook or null, if not found
-    * 
-    * @throws AuthorizationException
-    *            <p/>
-    *            "401 Unauthorized" if the caller is not a recognized user.
-    *            <p/>
-    *            "403 Forbidden" if the caller is not authorized to view the
-    *            cookbook.
+    * @throws AuthorizationException <p/>
+    *                                "401 Unauthorized" if the caller is not a recognized user.
+    *                                <p/>
+    *                                "403 Forbidden" if the caller is not authorized to view the
+    *                                cookbook.
     */
    Set<String> getVersionsOfCookbook(String cookbookName);
 
    /**
     * Returns a description of the cookbook, with links to all of its component
     * parts, and the metadata.
-    * 
+    *
     * @return the cookbook or null, if not found
-    * 
-    * @throws AuthorizationException
-    *            <p/>
-    *            "401 Unauthorized" if the caller is not a recognized user.
-    *            <p/>
-    *            "403 Forbidden" if the caller is not authorized to view the
-    *            cookbook.
+    * @throws AuthorizationException <p/>
+    *                                "401 Unauthorized" if the caller is not a recognized user.
+    *                                <p/>
+    *                                "403 Forbidden" if the caller is not authorized to view the
+    *                                cookbook.
     */
    CookbookVersion getCookbook(String cookbookName, String version);
 
    /**
     * creates a new client
-    * 
+    *
     * @return the private key of the client. You can then use this client name
     *         and private key to access the Opscode API.
-    * @throws AuthorizationException
-    *            <p/>
-    *            "401 Unauthorized" if the caller is not a recognized user.
-    *            <p/>
-    *            "403 Forbidden" if the caller is not authorized to create a
-    *            client.
-    * @throws HttpResponseException
-    *            "409 Conflict" if the client already exists
+    * @throws AuthorizationException <p/>
+    *                                "401 Unauthorized" if the caller is not a recognized user.
+    *                                <p/>
+    *                                "403 Forbidden" if the caller is not authorized to create a
+    *                                client.
+    * @throws HttpResponseException  "409 Conflict" if the client already exists
     */
    Client createClient(String name);
 
    /**
     * creates a new administrator client
-    * 
+    *
     * @return the private key of the client. You can then use this client name
     *         and private key to access the Opscode API.
-    * @throws AuthorizationException
-    *            <p/>
-    *            "401 Unauthorized" if the caller is not a recognized user.
-    *            <p/>
-    *            "403 Forbidden" if the caller is not authorized to create a
-    *            client.
-    * @throws HttpResponseException
-    *            "409 Conflict" if the client already exists
+    * @throws AuthorizationException <p/>
+    *                                "401 Unauthorized" if the caller is not a recognized user.
+    *                                <p/>
+    *                                "403 Forbidden" if the caller is not authorized to create a
+    *                                client.
+    * @throws HttpResponseException  "409 Conflict" if the client already exists
     */
    Client createClient(String name, CreateClientOptions options);
 
    /**
     * generate a new key-pair for this client, and return the new private key in
     * the response body.
-    * 
+    *
     * @return the new private key
-    * 
-    * @throws AuthorizationException
-    *            <p/>
-    *            "401 Unauthorized" if the caller is not a recognized user.
-    *            <p/>
-    *            "403 Forbidden" if the caller is not authorized to modify the
-    *            client.
+    * @throws AuthorizationException <p/>
+    *                                "401 Unauthorized" if the caller is not a recognized user.
+    *                                <p/>
+    *                                "403 Forbidden" if the caller is not authorized to modify the
+    *                                client.
     */
    Client generateKeyForClient(String name);
 
    /**
     * @return list of client names.
-    * 
-    * @throws AuthorizationException
-    *            <p/>
-    *            "401 Unauthorized" if you are not a recognized user.
-    *            <p/>
-    *            "403 Forbidden" if you do not have rights to list clients.
+    * @throws AuthorizationException <p/>
+    *                                "401 Unauthorized" if you are not a recognized user.
+    *                                <p/>
+    *                                "403 Forbidden" if you do not have rights to list clients.
     */
    Set<String> listClients();
 
    /**
-    * 
     * @return true if the specified client name exists.
-    * 
-    * @throws AuthorizationException
-    *            <p/>
-    *            "401 Unauthorized" if you are not a recognized user.
-    *            <p/>
-    *            "403 Forbidden" if you do not have rights to view the client.
+    * @throws AuthorizationException <p/>
+    *                                "401 Unauthorized" if you are not a recognized user.
+    *                                <p/>
+    *                                "403 Forbidden" if you do not have rights to view the client.
     */
    boolean clientExists(String name);
 
    /**
     * deletes an existing client.
-    * 
+    *
     * @return last state of the client you deleted or null, if not found
-    * 
-    * @throws AuthorizationException
-    *            <p/>
-    *            "401 Unauthorized" if you are not a recognized user.
-    *            <p/>
-    *            "403 Forbidden" if you do not have Delete rights on the client.
+    * @throws AuthorizationException <p/>
+    *                                "401 Unauthorized" if you are not a recognized user.
+    *                                <p/>
+    *                                "403 Forbidden" if you do not have Delete rights on the client.
     */
    Client deleteClient(String name);
 
    /**
     * gets an existing client.
-    * 
-    * @throws AuthorizationException
-    *            <p/>
-    *            "401 Unauthorized" if you are not a recognized user.
-    *            <p/>
-    *            "403 Forbidden" if you do not have view rights on the client.
+    *
+    * @throws AuthorizationException <p/>
+    *                                "401 Unauthorized" if you are not a recognized user.
+    *                                <p/>
+    *                                "403 Forbidden" if you do not have view rights on the client.
     */
    Client getClient(String name);
 
    /**
     * creates a new node
-    * 
+    *
     * @return //TODO
-    * @throws AuthorizationException
-    *            <p/>
-    *            "401 Unauthorized" if the caller is not a recognized user.
-    *            <p/>
-    *            "403 Forbidden" if the caller is not authorized to create a
-    *            node.
-    * @throws HttpResponseException
-    *            "409 Conflict" if the node already exists
+    * @throws AuthorizationException <p/>
+    *                                "401 Unauthorized" if the caller is not a recognized user.
+    *                                <p/>
+    *                                "403 Forbidden" if the caller is not authorized to create a
+    *                                node.
+    * @throws HttpResponseException  "409 Conflict" if the node already exists
     */
    void createNode(Node node);
 
    /**
     * Creates or updates (uploads) a node //TODO document
-    * 
-    * @param nodeName
-    * @throws HttpResponseException
-    *            "409 Conflict" if the node already exists
+    *
+    * @param node updated node
+    * @throws HttpResponseException "409 Conflict" if the node already exists
     */
    Node updateNode(Node node);
 
    /**
     * @return list of node names.
-    * 
-    * @throws AuthorizationException
-    *            <p/>
-    *            "401 Unauthorized" if you are not a recognized user.
-    *            <p/>
-    *            "403 Forbidden" if you do not have rights to list nodes.
+    * @throws AuthorizationException <p/>
+    *                                "401 Unauthorized" if you are not a recognized user.
+    *                                <p/>
+    *                                "403 Forbidden" if you do not have rights to list nodes.
     */
    Set<String> listNodes();
 
    /**
-    * 
     * @return true if the specified node name exists.
-    * 
-    * @throws AuthorizationException
-    *            <p/>
-    *            "401 Unauthorized" if you are not a recognized user.
-    *            <p/>
-    *            "403 Forbidden" if you do not have rights to view the node.
+    * @throws AuthorizationException <p/>
+    *                                "401 Unauthorized" if you are not a recognized user.
+    *                                <p/>
+    *                                "403 Forbidden" if you do not have rights to view the node.
     */
    boolean nodeExists(String name);
 
    /**
     * deletes an existing node.
-    * 
+    *
     * @return last state of the node you deleted or null, if not found
-    * 
-    * @throws AuthorizationException
-    *            <p/>
-    *            "401 Unauthorized" if you are not a recognized user.
-    *            <p/>
-    *            "403 Forbidden" if you do not have Delete rights on the node.
+    * @throws AuthorizationException <p/>
+    *                                "401 Unauthorized" if you are not a recognized user.
+    *                                <p/>
+    *                                "403 Forbidden" if you do not have Delete rights on the node.
     */
    Node deleteNode(String name);
 
    /**
     * gets an existing node.
-    * 
-    * @throws AuthorizationException
-    *            <p/>
-    *            "401 Unauthorized" if you are not a recognized user.
-    *            <p/>
-    *            "403 Forbidden" if you do not have view rights on the node.
+    *
+    * @throws AuthorizationException <p/>
+    *                                "401 Unauthorized" if you are not a recognized user.
+    *                                <p/>
+    *                                "403 Forbidden" if you do not have view rights on the node.
     */
    Node getNode(String name);
 
    /**
     * creates a new role
-    * 
+    *
     * @return //TODO
-    * @throws AuthorizationException
-    *            <p/>
-    *            "401 Unauthorized" if the caller is not a recognized user.
-    *            <p/>
-    *            "403 Forbidden" if the caller is not authorized to create a
-    *            role.
-    * @throws HttpResponseException
-    *            "409 Conflict" if the role already exists
+    * @throws AuthorizationException <p/>
+    *                                "401 Unauthorized" if the caller is not a recognized user.
+    *                                <p/>
+    *                                "403 Forbidden" if the caller is not authorized to create a
+    *                                role.
+    * @throws HttpResponseException  "409 Conflict" if the role already exists
     */
    void createRole(Role role);
 
    /**
     * Creates or updates (uploads) a role //TODO document
-    * 
+    *
     * @param roleName
-    * @throws HttpResponseException
-    *            "409 Conflict" if the role already exists
+    * @throws HttpResponseException "409 Conflict" if the role already exists
     */
    Role updateRole(Role role);
 
    /**
     * @return list of role names.
-    * 
-    * @throws AuthorizationException
-    *            <p/>
-    *            "401 Unauthorized" if you are not a recognized user.
-    *            <p/>
-    *            "403 Forbidden" if you do not have rights to list roles.
+    * @throws AuthorizationException <p/>
+    *                                "401 Unauthorized" if you are not a recognized user.
+    *                                <p/>
+    *                                "403 Forbidden" if you do not have rights to list roles.
     */
    Set<String> listRoles();
 
    /**
-    * 
     * @return true if the specified role name exists.
-    * 
-    * @throws AuthorizationException
-    *            <p/>
-    *            "401 Unauthorized" if you are not a recognized user.
-    *            <p/>
-    *            "403 Forbidden" if you do not have rights to view the role.
+    * @throws AuthorizationException <p/>
+    *                                "401 Unauthorized" if you are not a recognized user.
+    *                                <p/>
+    *                                "403 Forbidden" if you do not have rights to view the role.
     */
    boolean roleExists(String name);
 
    /**
     * deletes an existing role.
-    * 
+    *
     * @return last state of the role you deleted or null, if not found
-    * 
-    * @throws AuthorizationException
-    *            <p/>
-    *            "401 Unauthorized" if you are not a recognized user.
-    *            <p/>
-    *            "403 Forbidden" if you do not have Delete rights on the role.
+    * @throws AuthorizationException <p/>
+    *                                "401 Unauthorized" if you are not a recognized user.
+    *                                <p/>
+    *                                "403 Forbidden" if you do not have Delete rights on the role.
     */
    Role deleteRole(String name);
 
    /**
     * gets an existing role.
-    * 
-    * @throws AuthorizationException
-    *            <p/>
-    *            "401 Unauthorized" if you are not a recognized user.
-    *            <p/>
-    *            "403 Forbidden" if you do not have view rights on the role.
+    *
+    * @throws AuthorizationException <p/>
+    *                                "401 Unauthorized" if you are not a recognized user.
+    *                                <p/>
+    *                                "403 Forbidden" if you do not have view rights on the role.
     */
    Role getRole(String name);
 
    /**
     * lists databags available to the api
-    * 
-    * @throws AuthorizationException
-    *            <p/>
-    *            "401 Unauthorized" if you are not a recognized user.
-    *            <p/>
-    *            "403 Forbidden" if you do not have view rights on the databag.
+    *
+    * @throws AuthorizationException <p/>
+    *                                "401 Unauthorized" if you are not a recognized user.
+    *                                <p/>
+    *                                "403 Forbidden" if you do not have view rights on the databag.
     */
    Set<String> listDatabags();
 
    /**
     * creates a databag.
-    * 
-    * @throws AuthorizationException
-    *            <p/>
-    *            "401 Unauthorized" if you are not a recognized user.
-    *            <p/>
-    *            "403 Forbidden" if you do not have view rights on the databag.
+    *
+    * @throws AuthorizationException <p/>
+    *                                "401 Unauthorized" if you are not a recognized user.
+    *                                <p/>
+    *                                "403 Forbidden" if you do not have view rights on the databag.
     */
    void createDatabag(String databagName);
 
    /**
     * true is a databag exists
-    * 
-    * @throws AuthorizationException
-    *            <p/>
-    *            "401 Unauthorized" if you are not a recognized user.
-    *            <p/>
-    *            "403 Forbidden" if you do not have view rights on the databag.
+    *
+    * @throws AuthorizationException <p/>
+    *                                "401 Unauthorized" if you are not a recognized user.
+    *                                <p/>
+    *                                "403 Forbidden" if you do not have view rights on the databag.
     */
    boolean databagExists(String databagName);
 
    /**
     * Delete a data bag, including its items
-    * 
-    * @throws AuthorizationException
-    *            <p/>
-    *            "401 Unauthorized" if you are not a recognized user.
-    *            <p/>
-    *            "403 Forbidden" if you do not have view rights on the databag.
+    *
+    * @throws AuthorizationException <p/>
+    *                                "401 Unauthorized" if you are not a recognized user.
+    *                                <p/>
+    *                                "403 Forbidden" if you do not have view rights on the databag.
     */
    void deleteDatabag(String databagName);
 
    /**
     * Show the items in a data bag.
-    * 
-    * @throws AuthorizationException
-    *            <p/>
-    *            "401 Unauthorized" if you are not a recognized user.
-    *            <p/>
-    *            "403 Forbidden" if you do not have view rights on the databag.
+    *
+    * @throws AuthorizationException <p/>
+    *                                "401 Unauthorized" if you are not a recognized user.
+    *                                <p/>
+    *                                "403 Forbidden" if you do not have view rights on the databag.
     */
    Set<String> listDatabagItems(String databagName);
 
    /**
     * Create a data bag item in the data bag
-    * 
-    * @throws AuthorizationException
-    *            <p/>
-    *            "401 Unauthorized" if you are not a recognized user.
-    *            <p/>
-    *            "403 Forbidden" if you do not have view rights on the databag.
-    *            <p/>
-    * @throws IllegalStateException
-    *            if the item already exists
-    * 
+    *
+    * @throws AuthorizationException <p/>
+    *                                "401 Unauthorized" if you are not a recognized user.
+    *                                <p/>
+    *                                "403 Forbidden" if you do not have view rights on the databag.
+    *                                <p/>
+    * @throws IllegalStateException  if the item already exists
     */
    DatabagItem createDatabagItem(String databagName, @BinderParam(BindToJsonPayload.class) DatabagItem node);
 
    /**
     * Update (or create if not exists) a data bag item
-    * 
-    * @throws AuthorizationException
-    *            <p/>
-    *            "401 Unauthorized" if you are not a recognized user.
-    *            <p/>
-    *            "403 Forbidden" if you do not have view rights on the databag.
+    *
+    * @throws AuthorizationException <p/>
+    *                                "401 Unauthorized" if you are not a recognized user.
+    *                                <p/>
+    *                                "403 Forbidden" if you do not have view rights on the databag.
     */
    DatabagItem updateDatabagItem(String databagName, DatabagItem item);
 
    /**
     * determines if a databag item exists
-    * 
-    * @throws AuthorizationException
-    *            <p/>
-    *            "401 Unauthorized" if you are not a recognized user.
-    *            <p/>
-    *            "403 Forbidden" if you do not have view rights on the databag.
+    *
+    * @throws AuthorizationException <p/>
+    *                                "401 Unauthorized" if you are not a recognized user.
+    *                                <p/>
+    *                                "403 Forbidden" if you do not have view rights on the databag.
     */
    boolean databagItemExists(String databagName, String databagItemId);
 
    /**
     * gets an existing databag item.
-    * 
-    * @throws AuthorizationException
-    *            <p/>
-    *            "401 Unauthorized" if you are not a recognized user.
-    *            <p/>
-    *            "403 Forbidden" if you do not have view rights on the databag.
+    *
+    * @throws AuthorizationException <p/>
+    *                                "401 Unauthorized" if you are not a recognized user.
+    *                                <p/>
+    *                                "403 Forbidden" if you do not have view rights on the databag.
     */
    DatabagItem getDatabagItem(String databagName, String databagItemId);
 
    /**
     * Delete a data bag item
-    * 
-    * @throws AuthorizationException
-    *            <p/>
-    *            "401 Unauthorized" if you are not a recognized user.
-    *            <p/>
-    *            "403 Forbidden" if you do not have view rights on the databag.
+    *
+    * @throws AuthorizationException <p/>
+    *                                "401 Unauthorized" if you are not a recognized user.
+    *                                <p/>
+    *                                "403 Forbidden" if you do not have view rights on the databag.
     */
    DatabagItem deleteDatabagItem(String databagName, String databagItemId);
 
@@ -499,12 +443,11 @@ public interface ChefApi {
     * least 10 seconds at any given time - so if you need to write data and
     * immediately query it, you likely need to produce an artificial delay (or
     * simply retry until the data is available.)
-    * 
-    * @throws AuthorizationException
-    *            <p/>
-    *            "401 Unauthorized" if you are not a recognized user.
-    *            <p/>
-    *            "403 Forbidden" if you do not have view rights on the databag.
+    *
+    * @throws AuthorizationException <p/>
+    *                                "401 Unauthorized" if you are not a recognized user.
+    *                                <p/>
+    *                                "403 Forbidden" if you do not have view rights on the databag.
     */
    Set<String> listSearchIndexes();
 
@@ -513,7 +456,7 @@ public interface ChefApi {
     * <p/>
     * Note that without any request parameters this will return all of the data
     * within the index.
-    * 
+    *
     * @return The response contains the total number of rows that matched your
     *         request, the position this result set returns (useful for paging)
     *         and the rows themselves.
@@ -522,7 +465,7 @@ public interface ChefApi {
 
    /**
     * search all roles that match the given options.
-    * 
+    *
     * @return The response contains the total number of rows that matched your
     *         request, the position this result set returns (useful for paging)
     *         and the rows themselves.
@@ -534,7 +477,7 @@ public interface ChefApi {
     * <p/>
     * Note that without any request parameters this will return all of the data
     * within the index.
-    * 
+    *
     * @return The response contains the total number of rows that matched your
     *         request, the position this result set returns (useful for paging)
     *         and the rows themselves.
@@ -543,7 +486,7 @@ public interface ChefApi {
 
    /**
     * search all clients that match the given options.
-    * 
+    *
     * @return The response contains the total number of rows that matched your
     *         request, the position this result set returns (useful for paging)
     *         and the rows themselves.
@@ -555,7 +498,7 @@ public interface ChefApi {
     * <p/>
     * Note that without any request parameters this will return all of the data
     * within the index.
-    * 
+    *
     * @return The response contains the total number of rows that matched your
     *         request, the position this result set returns (useful for paging)
     *         and the rows themselves.
@@ -564,7 +507,7 @@ public interface ChefApi {
 
    /**
     * search all nodes that match the given options.
-    * 
+    *
     * @return The response contains the total number of rows that matched your
     *         request, the position this result set returns (useful for paging)
     *         and the rows themselves.
@@ -576,7 +519,7 @@ public interface ChefApi {
     * <p/>
     * Note that without any request parameters this will return all of the data
     * within the index.
-    * 
+    *
     * @return The response contains the total number of rows that matched your
     *         request, the position this result set returns (useful for paging)
     *         and the rows themselves.
@@ -585,7 +528,7 @@ public interface ChefApi {
 
    /**
     * search all items in a databag that match the given options.
-    * 
+    *
     * @return The response contains the total number of rows that matched your
     *         request, the position this result set returns (useful for paging)
     *         and the rows themselves.
@@ -593,11 +536,121 @@ public interface ChefApi {
    SearchResult<? extends DatabagItem> searchDatabag(String databagName, SearchOptions options);
 
    /**
+    * search all items in a environment that match the given options.
+    *
+    * @return The response contains the total number of rows that matched your
+    *         request, the position this result set returns (useful for paging)
+    *         and the rows themselves.
+    */
+   @SinceApiVersion("0.10.0")
+   SearchResult<? extends Environment> searchEnvironments();
+
+   /**
+    * search all environments that match the given options.
+    *
+    * @return The response contains the total number of rows that matched your
+    *         request, the position this result set returns (useful for paging)
+    *         and the rows themselves.
+    */
+   @SinceApiVersion("0.10.0")
+   SearchResult<? extends Environment> searchEnvironments(SearchOptions options);
+
+
+   /**
     * Get the contents of the given resource.
-    * 
-    * @param resource
-    *           The resource to get.
+    *
+    * @param resource The resource to get.
     * @return An input stream for the content of the requested resource.
     */
    InputStream getResourceContents(Resource resource);
+
+   /**
+    * @return list of environments names.
+    * @throws AuthorizationException <p/>
+    *                                "401 Unauthorized" if you are not a recognized user.
+    *                                <p/>
+    *                                "403 Forbidden" if you do not have rights to list environments.
+    */
+   @SinceApiVersion("0.10.0")
+   Set<String> listEnvironments();
+
+   /**
+    * creates a new environment
+    *
+    * @throws AuthorizationException <p/>
+    *                                "401 Unauthorized" if the caller is not a recognized user.
+    *                                <p/>
+    *                                "403 Forbidden" if the caller is not authorized to create a
+    *                                client.
+    * @throws HttpResponseException  "409 Conflict" if the client already exists
+    */
+   @SinceApiVersion("0.10.0")
+   void createEnvironment(Environment environment);
+
+   /**
+    * Creates or updates (uploads) a environment//TODO document
+    *
+    * @param environment
+    * @throws HttpResponseException "409 Conflict" if the node already exists
+    */
+   @SinceApiVersion("0.10.0")
+   Environment updateEnvironment(Environment environment);
+
+   /**
+    * deletes an existing environment.
+    *
+    * @return last state of the environment you deleted or null, if not found
+    * @throws AuthorizationException <p/>
+    *                                "401 Unauthorized" if you are not a recognized user.
+    *                                <p/>
+    *                                "403 Forbidden" if you do not have Delete rights on the node.
+    */
+   @SinceApiVersion("0.10.0")
+   Environment deleteEnvironment(String name);
+
+   /**
+    * gets an existing environment.
+    *
+    * @throws AuthorizationException <p/>
+    *                                "401 Unauthorized" if you are not a recognized user.
+    *                                <p/>
+    *                                "403 Forbidden" if you do not have view rights on the node.
+    */
+   @SinceApiVersion("0.10.0")
+   Environment getEnvironment(String name);
+
+   /**
+    * gets an environment cookbook list, show only latest cookbook version
+    *
+    * @return List of environment cookbooks
+    * @throws AuthorizationException <p/>
+    *                                "401 Unauthorized" if you are not a recognized user.
+    *                                <p/>
+    *                                "403 Forbidden" if you do not have view rights on the node.
+    */
+   @SinceApiVersion("0.10.0")
+   Set<CookbookDefinition> listEnvironmentCookbooks(String environmentName);
+
+   /**
+    * gets an environment cookbook list
+    *
+    * @param environmentname environment name that you looking for
+    * @param numversions     how many versions you want to see:
+    *                        3 returns 3 latest versions, in descending order (high to low);
+    *                        all returns all available versions in this environment, in descending order (high to low);
+    *                        0 is a valid input that returns an empty array for the versions of each cookbooks.up
+    * @return List of environment cookbooks
+    * @throws AuthorizationException <p/>
+    *                                "401 Unauthorized" if you are not a recognized user.
+    *                                <p/>
+    *                                "403 Forbidden" if you do not have view rights on the node.
+    */
+   @SinceApiVersion("0.10.0")
+   Set<CookbookDefinition> listEnvironmentCookbooks(String environmentname, String numversions);
+
+   @SinceApiVersion("0.10.0")
+   CookbookDefinition getEnvironmentCookbook(String environmentname, String cookbookname);
+
+   @SinceApiVersion("0.10.0")
+   CookbookDefinition getEnvironmentCookbook(String environmentname, String cookbookname, String numversions);
 }

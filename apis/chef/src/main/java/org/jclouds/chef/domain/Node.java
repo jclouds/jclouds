@@ -18,16 +18,15 @@
  */
 package org.jclouds.chef.domain;
 
-import java.util.List;
-import java.util.Map;
-
-import org.jclouds.domain.JsonBall;
-import org.jclouds.javax.annotation.Nullable;
-
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.gson.annotations.SerializedName;
+import org.jclouds.domain.JsonBall;
+import org.jclouds.javax.annotation.Nullable;
+
+import java.util.List;
+import java.util.Map;
 
 /**
  * Sandbox object.
@@ -56,6 +55,10 @@ public class Node {
    @SerializedName("json_class")
    private String _jsonClass = "Chef::Node";
 
+
+    @SerializedName("chef_type")
+    private String _chefType = "node";
+
    public Node(String name, Map<String, JsonBall> normal, Map<String, JsonBall> override,
          Map<String, JsonBall> defaultA, Map<String, JsonBall> automatic, Iterable<String> runList) {
       this(name, normal, override, defaultA, automatic, runList, null);
@@ -79,7 +82,7 @@ public class Node {
    @Override
    public String toString() {
       return "Node [name=" + name + ", runList=" + runList + ", normal=" + normal + ", default=" + defaultA
-            + ", override=" + override + ", automatic=" + automatic + "]";
+            + ", override=" + override + ", chefEnvironment=" + chefEnvironment + ", automatic=" + automatic + "]";
    }
 
    public Node(String name, Iterable<String> runList) {
@@ -130,9 +133,6 @@ public class Node {
    public String getChefEnvironment() {
       return chefEnvironment;
    }
-
-   @SerializedName("chef_type")
-   private String _chefType = "node";
 
    @Override
    public int hashCode() {

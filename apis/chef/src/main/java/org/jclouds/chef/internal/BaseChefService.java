@@ -18,26 +18,21 @@
  */
 package org.jclouds.chef.internal;
 
-import static com.google.common.base.Preconditions.checkNotNull;
-import static org.jclouds.chef.config.ChefProperties.CHEF_BOOTSTRAP_DATABAG;
-
-import java.io.IOException;
-import java.io.InputStream;
-import java.security.PrivateKey;
-import java.util.List;
-import java.util.Map;
-
-import javax.annotation.Resource;
-import javax.inject.Inject;
-import javax.inject.Named;
-import javax.inject.Singleton;
-
+import com.google.common.annotations.VisibleForTesting;
+import com.google.common.base.Optional;
+import com.google.common.base.Predicate;
+import com.google.common.base.Supplier;
+import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
+import com.google.common.io.ByteStreams;
+import com.google.common.io.InputSupplier;
 import org.jclouds.chef.ChefContext;
 import org.jclouds.chef.ChefService;
 import org.jclouds.chef.config.ChefProperties;
 import org.jclouds.chef.domain.Client;
 import org.jclouds.chef.domain.CookbookVersion;
 import org.jclouds.chef.domain.DatabagItem;
+import org.jclouds.chef.domain.Environment;
 import org.jclouds.chef.domain.Node;
 import org.jclouds.chef.functions.BootstrapConfigForGroup;
 import org.jclouds.chef.functions.GroupToBootScript;
@@ -48,6 +43,7 @@ import org.jclouds.chef.strategy.DeleteAllClientsInList;
 import org.jclouds.chef.strategy.DeleteAllNodesInList;
 import org.jclouds.chef.strategy.ListClients;
 import org.jclouds.chef.strategy.ListCookbookVersions;
+import org.jclouds.chef.strategy.ListEnvironments;
 import org.jclouds.chef.strategy.ListNodes;
 import org.jclouds.chef.strategy.UpdateAutomaticAttributesOnNode;
 import org.jclouds.domain.JsonBall;
@@ -59,25 +55,24 @@ import org.jclouds.json.Json;
 import org.jclouds.logging.Logger;
 import org.jclouds.scriptbuilder.domain.Statement;
 
-import com.google.common.annotations.VisibleForTesting;
-import com.google.common.base.Optional;
-import com.google.common.base.Predicate;
-import com.google.common.base.Supplier;
-import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
-import com.google.common.io.ByteStreams;
-import com.google.common.io.InputSupplier;
+import javax.annotation.Resource;
+import javax.inject.Inject;
+import javax.inject.Named;
+import javax.inject.Singleton;
+import java.io.IOException;
+import java.io.InputStream;
+import java.security.PrivateKey;
+import java.util.List;
+import java.util.Map;
+
+import static com.google.common.base.Preconditions.checkNotNull;
+import static org.jclouds.chef.config.ChefProperties.CHEF_BOOTSTRAP_DATABAG;
 
 /**
- * 
  * @author Adrian Cole
  */
 @Singleton
 public class BaseChefService implements ChefService {
-
-   @Resource
-   @Named(ChefProperties.CHEF_LOGGER)
-   protected Logger logger = Logger.NULL;
 
    private final ChefContext chefContext;
    private final CleanupStaleNodesAndClients cleanupStaleNodesAndClients;
@@ -93,15 +88,20 @@ public class BaseChefService implements ChefService {
    private final BootstrapConfigForGroup bootstrapConfigForGroup;
    private final RunListForGroup runListForGroup;
    private final ListCookbookVersions listCookbookVersions;
+   private final ListEnvironments listEnvironments;
+   @Resource
+   @Named(ChefProperties.CHEF_LOGGER)
+   protected Logger logger = Logger.NULL;
 
    @Inject
    protected BaseChefService(ChefContext chefContext, CleanupStaleNodesAndClients cleanupStaleNodesAndClients,
-         CreateNodeAndPopulateAutomaticAttributes createNodeAndPopulateAutomaticAttributes,
-         DeleteAllNodesInList deleteAllNodesInList, ListNodes listNodes, DeleteAllClientsInList deleteAllClientsInList,
-         ListClients listClients, ListCookbookVersions listCookbookVersions,
-         UpdateAutomaticAttributesOnNode updateAutomaticAttributesOnNode, Supplier<PrivateKey> privateKey,
-         @Named(CHEF_BOOTSTRAP_DATABAG) String databag, GroupToBootScript groupToBootScript,
-         BootstrapConfigForGroup bootstrapConfigForGroup, RunListForGroup runListForGroup) {
+                             CreateNodeAndPopulateAutomaticAttributes createNodeAndPopulateAutomaticAttributes,
+                             DeleteAllNodesInList deleteAllNodesInList, ListNodes listNodes, DeleteAllClientsInList deleteAllClientsInList,
+                             ListClients listClients, ListCookbookVersions listCookbookVersions,
+                             UpdateAutomaticAttributesOnNode updateAutomaticAttributesOnNode, Supplier<PrivateKey> privateKey,
+                             @Named(CHEF_BOOTSTRAP_DATABAG) String databag, GroupToBootScript groupToBootScript,
+                             BootstrapConfigForGroup bootstrapConfigForGroup, RunListForGroup runListForGroup,
+                             ListEnvironments listEnvironments) {
       this.chefContext = checkNotNull(chefContext, "chefContext");
       this.cleanupStaleNodesAndClients = checkNotNull(cleanupStaleNodesAndClients, "cleanupStaleNodesAndClients");
       this.createNodeAndPopulateAutomaticAttributes = checkNotNull(createNodeAndPopulateAutomaticAttributes,
@@ -118,6 +118,7 @@ public class BaseChefService implements ChefService {
       this.databag = checkNotNull(databag, "databag");
       this.bootstrapConfigForGroup = checkNotNull(bootstrapConfigForGroup, "bootstrapConfigForGroup");
       this.runListForGroup = checkNotNull(runListForGroup, "runListForGroup");
+      this.listEnvironments = checkNotNull(listEnvironments, "listEnvironments");
    }
 
    @Override
@@ -267,4 +268,18 @@ public class BaseChefService implements ChefService {
       return json.toJson(bootstrapConfig);
    }
 
+   @Override
+   public Iterable<? extends Environment> listEnvironments() {
+      return listEnvironments.execute();
+   }
+
+   @Override
+   public Iterable<? extends Environment> listEnvironmentsMatching(Predicate<String> environmentNameSelector) {
+      return listEnvironments.execute(environmentNameSelector);
+   }
+
+   @Override
+   public Iterable<? extends Environment> listEnvironmentsNamed(Iterable<String> names) {
+      return listEnvironments.execute(names);
+   }
 }
