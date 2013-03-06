@@ -32,12 +32,9 @@ import org.jclouds.chef.functions.ClientForGroup;
 import org.jclouds.chef.functions.RunListForGroup;
 import org.jclouds.domain.JsonBall;
 import org.jclouds.rest.ConfiguresRestClient;
-import org.jclouds.scriptbuilder.domain.Statement;
-import org.jclouds.scriptbuilder.statements.chef.InstallChefGems;
 
 import com.google.common.cache.CacheLoader;
 import com.google.inject.Provides;
-import com.google.inject.name.Names;
 
 /**
  * Configures the Chef connection.
@@ -67,12 +64,6 @@ public class ChefRestClientModule extends BaseChefRestClientModule<ChefApi, Chef
    @Singleton
    CacheLoader<String, Client> groupToClient(ClientForGroup clientForGroup) {
       return CacheLoader.from(clientForGroup);
-   }
-
-   @Override
-   protected void configure() {
-      bind(Statement.class).annotatedWith(Names.named("installChefGems")).to(InstallChefGems.class);
-      super.configure();
    }
 
 }

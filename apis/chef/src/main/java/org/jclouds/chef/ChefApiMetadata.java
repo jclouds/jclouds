@@ -23,12 +23,15 @@ import static java.util.concurrent.TimeUnit.SECONDS;
 import static org.jclouds.Constants.PROPERTY_SESSION_INTERVAL;
 import static org.jclouds.Constants.PROPERTY_TIMEOUTS_PREFIX;
 import static org.jclouds.chef.config.ChefProperties.CHEF_BOOTSTRAP_DATABAG;
+import static org.jclouds.chef.config.ChefProperties.CHEF_UPDATE_GEMS;
+import static org.jclouds.chef.config.ChefProperties.CHEF_UPDATE_GEM_SYSTEM;
 import static org.jclouds.reflect.Reflection2.typeToken;
 
 import java.net.URI;
 import java.util.Properties;
 
 import org.jclouds.apis.ApiMetadata;
+import org.jclouds.chef.config.ChefBootstrapModule;
 import org.jclouds.chef.config.ChefParserModule;
 import org.jclouds.chef.config.ChefRestClientModule;
 import org.jclouds.ohai.config.JMXOhaiModule;
@@ -70,6 +73,8 @@ public class ChefApiMetadata extends BaseRestApiMetadata {
       properties.setProperty(PROPERTY_TIMEOUTS_PREFIX + "ChefApi.createEnvironment", MINUTES.toMillis(2) + "");
       properties.setProperty(PROPERTY_SESSION_INTERVAL, "1");
       properties.setProperty(CHEF_BOOTSTRAP_DATABAG, "bootstrap");
+      properties.setProperty(CHEF_UPDATE_GEM_SYSTEM, "false");
+      properties.setProperty(CHEF_UPDATE_GEMS, "false");
       return properties;
    }
 
@@ -91,7 +96,7 @@ public class ChefApiMetadata extends BaseRestApiMetadata {
                .context(typeToken(ChefContext.class))
                .defaultModules(
                      ImmutableSet.<Class<? extends Module>> of(ChefRestClientModule.class, ChefParserModule.class,
-                           JMXOhaiModule.class));
+                           ChefBootstrapModule.class, JMXOhaiModule.class));
       }
 
       @Override
