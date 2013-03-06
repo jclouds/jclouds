@@ -22,6 +22,8 @@ import static org.easymock.EasyMock.createMock;
 import static org.easymock.EasyMock.expect;
 import static org.easymock.EasyMock.replay;
 import static org.easymock.EasyMock.verify;
+import static org.jclouds.chef.config.ChefProperties.CHEF_UPDATE_GEMS;
+import static org.jclouds.chef.config.ChefProperties.CHEF_UPDATE_GEM_SYSTEM;
 import static org.testng.Assert.assertEquals;
 
 import java.io.IOException;
@@ -29,6 +31,7 @@ import java.net.URI;
 import java.security.PrivateKey;
 
 import org.jclouds.chef.ChefAsyncApi;
+import org.jclouds.chef.config.ChefBootstrapModule;
 import org.jclouds.chef.config.ChefParserModule;
 import org.jclouds.chef.domain.DatabagItem;
 import org.jclouds.crypto.PemsTest;
@@ -39,7 +42,6 @@ import org.jclouds.rest.annotations.ApiVersion;
 import org.jclouds.scriptbuilder.domain.OsFamily;
 import org.jclouds.scriptbuilder.domain.ShellToken;
 import org.jclouds.scriptbuilder.domain.Statement;
-import org.jclouds.scriptbuilder.statements.chef.InstallChefGems;
 import org.testng.annotations.Test;
 
 import com.google.common.base.Charsets;
@@ -52,6 +54,8 @@ import com.google.common.io.Resources;
 import com.google.inject.AbstractModule;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
+import com.google.inject.Key;
+import com.google.inject.name.Names;
 
 /**
  * @author Adrian Cole
@@ -63,11 +67,13 @@ public class GroupToBootScriptTest {
       @Override
       protected void configure() {
          bind(String.class).annotatedWith(ApiVersion.class).toInstance(ChefAsyncApi.VERSION);
+         bind(String.class).annotatedWith(Names.named(CHEF_UPDATE_GEM_SYSTEM)).toInstance("true");
+         bind(String.class).annotatedWith(Names.named(CHEF_UPDATE_GEMS)).toInstance("true");
       }
-   }, new ChefParserModule(), new GsonModule());
+   }, new ChefParserModule(), new GsonModule(), new ChefBootstrapModule());
 
    Json json = injector.getInstance(Json.class);
-   Statement installChefGems = new InstallChefGems();
+   Statement installChefGems = injector.getInstance(Key.get(Statement.class, Names.named("installChefGems")));
    Optional<String> validatorName = Optional.<String> of("chef-validator");
    Optional<PrivateKey> validatorCredential = Optional.<PrivateKey> of(createMock(PrivateKey.class));
 
@@ -117,6 +123,9 @@ public class GroupToBootScriptTest {
             fn.apply("foo").render(OsFamily.UNIX),
             Resources.toString(Resources.getResource("test_install_ruby." + ShellToken.SH.to(OsFamily.UNIX)),
                   Charsets.UTF_8)
+                  + Resources.toString(
+                        Resources.getResource("test_install_rubygems." + ShellToken.SH.to(OsFamily.UNIX)),
+                        Charsets.UTF_8)
                   + "gem install chef --no-rdoc --no-ri\n"
                   + Resources.toString(Resources.getResource("bootstrap.sh"), Charsets.UTF_8));
 

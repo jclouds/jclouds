@@ -63,4 +63,47 @@ public interface ChefProperties {
     */
    public static final String CHEF_VALIDATOR_CREDENTIAL = "chef.validator-credential";
 
+   /**
+    * The version of the Chef gem to install when bootstrapping nodes.
+    * <p>
+    * If this property is not set, by default the latest available Chef gem will
+    * be installed. The values can be fixed versions such as '0.10.8' or
+    * constrained values such as '>= 0.10.8'.
+    * <p>
+    * This property must be set prior to running the
+    * {@link ChefService#createBootstrapScriptForGroup(String)} method.
+    */
+   public static final String CHEF_VERSION = "chef.version";
+
+   /**
+    * Boolean property. Default (false).
+    * <p>
+    * When bootstrapping a node, forces a gem system update before installing
+    * the Chef gems.
+    * <p>
+    * This property must be set prior to running the
+    * {@link ChefService#createBootstrapScriptForGroup(String)} method.
+    */
+   public static final String CHEF_UPDATE_GEM_SYSTEM = "chef.update-gem-system";
+
+   /**
+    * To be used in conjunction with {@link #CHEF_UPDATE_GEM_SYSTEM}. This
+    * property will force the version of RubyGems to update the system to.
+    * <p>
+    * This property must be set prior to running the
+    * {@link ChefService#createBootstrapScriptForGroup(String)} method.
+    */
+   public static final String CHEF_GEM_SYSTEM_VERSION = "chef.gem-system-version";
+
+   /**
+    * Boolean property. Default (false).
+    * <p>
+    * When bootstrapping a node, updates teh existing gems before installing
+    * Chef.
+    * <p>
+    * This property must be set prior to running the
+    * {@link ChefService#createBootstrapScriptForGroup(String)} method.
+    */
+   public static final String CHEF_UPDATE_GEMS = "chef.update-gems";
+
 }
