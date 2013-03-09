@@ -63,8 +63,9 @@ public class UpdateAutomaticAttributesOnNodeImpl implements UpdateAutomaticAttri
    public void execute(String nodeName) {
       logger.trace("updating node %s", nodeName);
       Node node = chef.getNode(nodeName);
-      node.getAutomatic().putAll(automaticSupplier.get());
-      chef.updateNode(node);
+      Node mutable = new Node(node.getName(), node.getNormal(), node.getOverride(), node.getDefault(),
+            automaticSupplier.get(), node.getRunList(), node.getChefEnvironment());
+      chef.updateNode(mutable);
       logger.debug("updated node %s", nodeName);
    }
 }

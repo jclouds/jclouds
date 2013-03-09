@@ -35,8 +35,8 @@ import org.jclouds.chef.ChefApi;
 import org.jclouds.chef.ChefAsyncApi;
 import org.jclouds.chef.config.Validator;
 import org.jclouds.chef.domain.Client;
-import org.jclouds.chef.functions.ClientForGroup;
 import org.jclouds.chef.functions.BootstrapConfigForGroup;
+import org.jclouds.chef.functions.ClientForGroup;
 import org.jclouds.chef.functions.RunListForGroup;
 import org.jclouds.chef.test.TransientChefApi;
 import org.jclouds.chef.test.TransientChefAsyncApi;
@@ -45,10 +45,9 @@ import org.jclouds.crypto.Crypto;
 import org.jclouds.domain.JsonBall;
 import org.jclouds.rest.ConfiguresRestClient;
 import org.jclouds.rest.config.RestModule;
-import org.jclouds.scriptbuilder.domain.Statement;
-import org.jclouds.scriptbuilder.statements.chef.InstallChefGems;
 
 import com.google.common.base.Optional;
+import com.google.common.base.Supplier;
 import com.google.common.cache.CacheLoader;
 import com.google.common.collect.ImmutableSet;
 import com.google.inject.AbstractModule;
@@ -80,7 +79,17 @@ public class TransientChefApiModule extends AbstractModule {
                         .modules(
                               ImmutableSet.<Module> of(new ExecutorServiceModule(sameThreadExecutor(),
                                     sameThreadExecutor()))).buildInjector().getInstance(LocalAsyncBlobStore.class));
-      bind(Statement.class).annotatedWith(Names.named("installChefGems")).to(InstallChefGems.class);
+   }
+
+   @Provides
+   @Singleton
+   public Supplier<PrivateKey> supplyKey() {
+      return new Supplier<PrivateKey>() {
+         @Override
+         public PrivateKey get() {
+            return null;
+         }
+      };
    }
 
    @Provides

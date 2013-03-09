@@ -26,6 +26,7 @@ import org.jclouds.apis.ApiMetadata;
 import org.jclouds.chef.ChefApi;
 import org.jclouds.chef.ChefApiMetadata;
 import org.jclouds.chef.ChefContext;
+import org.jclouds.chef.config.ChefBootstrapModule;
 import org.jclouds.chef.config.ChefParserModule;
 import org.jclouds.chef.config.ChefRestClientModule;
 import org.jclouds.domain.JsonBall;
@@ -64,7 +65,7 @@ public class BaseStubbedOhaiLiveTest extends BaseChefContextLiveTest<ChefContext
             .toBuilder()
             .defaultModules(
                   ImmutableSet.<Class<? extends Module>> of(ChefRestClientModule.class, ChefParserModule.class,
-                        TestOhaiModule.class)).build();
+                        ChefBootstrapModule.class, TestOhaiModule.class)).build();
    }
 
    @Override
