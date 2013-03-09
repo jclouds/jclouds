@@ -20,6 +20,7 @@ package org.jclouds.chef.test;
 
 import org.jclouds.apis.ApiMetadata;
 import org.jclouds.chef.ChefApiMetadata;
+import org.jclouds.chef.config.ChefBootstrapModule;
 import org.jclouds.chef.config.ChefParserModule;
 import org.jclouds.chef.test.config.TransientChefApiModule;
 import org.jclouds.ohai.config.JMXOhaiModule;
@@ -59,7 +60,7 @@ public class TransientChefApiMetadata extends ChefApiMetadata {
                .defaultEndpoint("transientchef")
                .defaultModules(
                      ImmutableSet.<Class<? extends Module>> of(TransientChefApiModule.class, ChefParserModule.class,
-                           JMXOhaiModule.class));
+                           ChefBootstrapModule.class, JMXOhaiModule.class));
       }
 
       @Override
