@@ -57,7 +57,7 @@ public class ChefBootstrapModule extends AbstractModule {
 
       Statement installChef = InstallChefGems.builder().version(bootstrapProperties.chefVersion().orNull()).build();
 
-      return new StatementList(new InstallRuby(), installRubyGems, installChef);
+      return new StatementList(InstallRuby.builder().build(), installRubyGems, installChef);
    }
 
    @Singleton
