@@ -48,17 +48,18 @@ import org.jclouds.http.HttpRetryHandler;
 import org.jclouds.http.annotation.ClientError;
 import org.jclouds.http.annotation.Redirection;
 import org.jclouds.http.annotation.ServerError;
-import org.jclouds.io.InputSuppliers;
 import org.jclouds.rest.ConfiguresRestClient;
 import org.jclouds.rest.config.RestClientModule;
 
 import com.google.common.annotations.VisibleForTesting;
+import com.google.common.base.Charsets;
 import com.google.common.base.Function;
 import com.google.common.base.Optional;
 import com.google.common.base.Supplier;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
+import com.google.common.io.ByteStreams;
 import com.google.common.reflect.TypeToken;
 import com.google.inject.ConfigurationException;
 import com.google.inject.Injector;
@@ -96,6 +97,7 @@ public class BaseChefRestClientModule<S, A> extends RestClientModule<S, A> {
    @TimeStamp
    Supplier<String> provideTimeStampCache(@Named(PROPERTY_SESSION_INTERVAL) long seconds, final DateService dateService) {
       return memoizeWithExpiration(new Supplier<String>() {
+         @Override
          public String get() {
             return dateService.iso8601SecondsDateFormat();
          }
@@ -108,6 +110,7 @@ public class BaseChefRestClientModule<S, A> extends RestClientModule<S, A> {
    public Supplier<PrivateKey> supplyKey(final LoadingCache<Credentials, PrivateKey> keyCache,
          @org.jclouds.location.Provider final Supplier<Credentials> creds) {
       return compose(new Function<Credentials, PrivateKey>() {
+         @Override
          public PrivateKey apply(Credentials in) {
             return keyCache.getUnchecked(in);
          }
@@ -139,7 +142,8 @@ public class BaseChefRestClientModule<S, A> extends RestClientModule<S, A> {
       @Override
       public PrivateKey load(Credentials in) {
          try {
-            return crypto.rsaKeyFactory().generatePrivate(privateKeySpec(InputSuppliers.of(in.credential)));
+            return crypto.rsaKeyFactory().generatePrivate(
+                  privateKeySpec(ByteStreams.newInputStreamSupplier(in.credential.getBytes(Charsets.UTF_8))));
          } catch (InvalidKeySpecException e) {
             throw propagate(e);
          } catch (IOException e) {
@@ -173,7 +177,7 @@ public class BaseChefRestClientModule<S, A> extends RestClientModule<S, A> {
       try {
          String validatorCredential = injector.getInstance(key);
          PrivateKey validatorKey = crypto.rsaKeyFactory().generatePrivate(
-               Pems.privateKeySpec(InputSuppliers.of(validatorCredential)));
+               Pems.privateKeySpec(ByteStreams.newInputStreamSupplier(validatorCredential.getBytes(Charsets.UTF_8))));
          return Optional.<PrivateKey> of(validatorKey);
       } catch (ConfigurationException ex) {
          return Optional.<PrivateKey> absent();
