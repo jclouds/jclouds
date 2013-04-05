@@ -45,15 +45,16 @@ import org.jclouds.chef.functions.ParseKeySetFromJson;
 import org.jclouds.crypto.Crypto;
 import org.jclouds.crypto.Pems;
 import org.jclouds.http.HttpResponse;
-import org.jclouds.io.InputSuppliers;
 import org.jclouds.json.config.GsonModule.DateAdapter;
 import org.jclouds.json.config.GsonModule.Iso8601DateAdapter;
 import org.jclouds.json.internal.NullHackJsonLiteralAdapter;
 import org.jclouds.rest.annotations.ApiVersion;
 
+import com.google.common.base.Charsets;
 import com.google.common.base.Function;
 import com.google.common.base.Throwables;
 import com.google.common.collect.ImmutableMap;
+import com.google.common.io.ByteStreams;
 import com.google.gson.Gson;
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonDeserializer;
@@ -89,7 +90,8 @@ public class ChefParserModule extends AbstractModule {
             throws JsonParseException {
          String keyText = json.getAsString().replaceAll("\\n", "\n");
          try {
-            return crypto.rsaKeyFactory().generatePrivate(Pems.privateKeySpec(InputSuppliers.of(keyText)));
+            return crypto.rsaKeyFactory().generatePrivate(
+                  Pems.privateKeySpec(ByteStreams.newInputStreamSupplier(keyText.getBytes(Charsets.UTF_8))));
          } catch (UnsupportedEncodingException e) {
             Throwables.propagate(e);
             return null;
@@ -122,7 +124,8 @@ public class ChefParserModule extends AbstractModule {
             throws JsonParseException {
          String keyText = json.getAsString().replaceAll("\\n", "\n");
          try {
-            return crypto.rsaKeyFactory().generatePublic(Pems.publicKeySpec(InputSuppliers.of(keyText)));
+            return crypto.rsaKeyFactory().generatePublic(
+                  Pems.publicKeySpec(ByteStreams.newInputStreamSupplier(keyText.getBytes(Charsets.UTF_8))));
          } catch (UnsupportedEncodingException e) {
             Throwables.propagate(e);
             return null;
@@ -155,7 +158,8 @@ public class ChefParserModule extends AbstractModule {
             throws JsonParseException {
          String keyText = json.getAsString().replaceAll("\\n", "\n");
          try {
-            return Pems.x509Certificate(InputSuppliers.of(keyText), crypto.certFactory());
+            return Pems.x509Certificate(ByteStreams.newInputStreamSupplier(keyText.getBytes(Charsets.UTF_8)),
+                  crypto.certFactory());
          } catch (UnsupportedEncodingException e) {
             Throwables.propagate(e);
             return null;
@@ -191,11 +195,12 @@ public class ChefParserModule extends AbstractModule {
 
          try {
             IdHolder idHolder = gson.fromJson(text, IdHolder.class);
-            if (idHolder.id == null)
+            if (idHolder.id == null) {
                text = text.replaceFirst("\\{", String.format("{\"id\":\"%s\",", value.getId()));
-            else
+            } else {
                checkArgument(value.getId().equals(idHolder.id),
                      "incorrect id in databagItem text, should be %s: was %s", value.getId(), idHolder.id);
+            }
          } catch (JsonSyntaxException e) {
             throw new IllegalArgumentException(e);
          }
