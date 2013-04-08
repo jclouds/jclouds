@@ -38,6 +38,7 @@ import org.jclouds.rest.annotations.BinderParam;
 import org.jclouds.rest.annotations.SinceApiVersion;
 import org.jclouds.rest.binders.BindToJsonPayload;
 
+import java.io.Closeable;
 import java.io.InputStream;
 import java.net.URI;
 import java.util.List;
@@ -51,7 +52,7 @@ import java.util.Set;
  * @see ChefAsyncApi
  * @see <a href="TODO: insert URL of Chef documentation" />
  */
-public interface ChefApi {
+public interface ChefApi extends Closeable {
    /**
     * Creates a new sandbox. It accepts a list of checksums as input and returns
     * the URLs against which to PUT files that need to be uploaded.
