@@ -29,6 +29,7 @@ import static org.jclouds.crypto.Pems.privateKeySpec;
 import java.io.IOException;
 import java.security.PrivateKey;
 import java.security.spec.InvalidKeySpecException;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
@@ -36,6 +37,10 @@ import javax.inject.Inject;
 import javax.inject.Named;
 import javax.inject.Singleton;
 
+import org.jclouds.chef.domain.Client;
+import org.jclouds.chef.functions.BootstrapConfigForGroup;
+import org.jclouds.chef.functions.ClientForGroup;
+import org.jclouds.chef.functions.RunListForGroup;
 import org.jclouds.chef.handlers.ChefApiErrorRetryHandler;
 import org.jclouds.chef.handlers.ChefErrorHandler;
 import org.jclouds.crypto.Crypto;
@@ -43,6 +48,7 @@ import org.jclouds.crypto.Pems;
 import org.jclouds.date.DateService;
 import org.jclouds.date.TimeStamp;
 import org.jclouds.domain.Credentials;
+import org.jclouds.domain.JsonBall;
 import org.jclouds.http.HttpErrorHandler;
 import org.jclouds.http.HttpRetryHandler;
 import org.jclouds.http.annotation.ClientError;
@@ -182,6 +188,24 @@ public class BaseChefRestClientModule<S, A> extends RestClientModule<S, A> {
       } catch (ConfigurationException ex) {
          return Optional.<PrivateKey> absent();
       }
+   }
+
+   @Provides
+   @Singleton
+   CacheLoader<String, List<String>> runListForGroup(RunListForGroup runListForGroup) {
+      return CacheLoader.from(runListForGroup);
+   }
+
+   @Provides
+   @Singleton
+   CacheLoader<String, ? extends JsonBall> bootstrapConfigForGroup(BootstrapConfigForGroup bootstrapConfigForGroup) {
+      return CacheLoader.from(bootstrapConfigForGroup);
+   }
+
+   @Provides
+   @Singleton
+   CacheLoader<String, Client> groupToClient(ClientForGroup clientForGroup) {
+      return CacheLoader.from(clientForGroup);
    }
 
    @Override
