@@ -20,21 +20,9 @@ package org.jclouds.chef.config;
 
 import static org.jclouds.reflect.Reflection2.typeToken;
 
-import java.util.List;
-
-import javax.inject.Singleton;
-
 import org.jclouds.chef.ChefApi;
 import org.jclouds.chef.ChefAsyncApi;
-import org.jclouds.chef.domain.Client;
-import org.jclouds.chef.functions.BootstrapConfigForGroup;
-import org.jclouds.chef.functions.ClientForGroup;
-import org.jclouds.chef.functions.RunListForGroup;
-import org.jclouds.domain.JsonBall;
 import org.jclouds.rest.ConfiguresRestClient;
-
-import com.google.common.cache.CacheLoader;
-import com.google.inject.Provides;
 
 /**
  * Configures the Chef connection.
@@ -46,24 +34,6 @@ public class ChefRestClientModule extends BaseChefRestClientModule<ChefApi, Chef
 
    public ChefRestClientModule() {
       super(typeToken(ChefApi.class), typeToken(ChefAsyncApi.class));
-   }
-
-   @Provides
-   @Singleton
-   CacheLoader<String, List<String>> runListForGroup(RunListForGroup runListForGroup) {
-      return CacheLoader.from(runListForGroup);
-   }
-
-   @Provides
-   @Singleton
-   CacheLoader<String, ? extends JsonBall> bootstrapConfigForGroup(BootstrapConfigForGroup bootstrapConfigForGroup) {
-      return CacheLoader.from(bootstrapConfigForGroup);
-   }
-
-   @Provides
-   @Singleton
-   CacheLoader<String, Client> groupToClient(ClientForGroup clientForGroup) {
-      return CacheLoader.from(clientForGroup);
    }
 
 }

@@ -19,7 +19,7 @@
 package org.jclouds.chef.test.config;
 
 import static com.google.common.util.concurrent.MoreExecutors.sameThreadExecutor;
-import static org.jclouds.rest.config.BinderUtils.bindBlockingApi;
+import static org.jclouds.rest.config.BinderUtils.bindSyncToAsyncApi;
 
 import java.io.IOException;
 import java.security.PrivateKey;
@@ -44,6 +44,7 @@ import org.jclouds.concurrent.config.ExecutorServiceModule;
 import org.jclouds.crypto.Crypto;
 import org.jclouds.domain.JsonBall;
 import org.jclouds.rest.ConfiguresRestClient;
+import org.jclouds.rest.config.SyncToAsyncHttpInvocationModule;
 import org.jclouds.rest.config.RestModule;
 
 import com.google.common.base.Optional;
@@ -66,10 +67,11 @@ public class TransientChefApiModule extends AbstractModule {
    @Override
    protected void configure() {
       install(new RestModule());
+      install(new SyncToAsyncHttpInvocationModule());
       bind(ChefAsyncApi.class).to(TransientChefAsyncApi.class).asEagerSingleton();
       // forward all requests from TransientChefApi to ChefAsyncApi. needs above
       // binding as cannot proxy a class
-      bindBlockingApi(binder(), TransientChefApi.class, ChefAsyncApi.class);
+      bindSyncToAsyncApi(binder(), TransientChefApi.class, ChefAsyncApi.class);
       bind(ChefApi.class).to(TransientChefApi.class);
 
       bind(LocalAsyncBlobStore.class).annotatedWith(Names.named("databags"))
