@@ -257,7 +257,7 @@ public class BaseChefService implements ChefService {
       checkNotNull(runList, "runList must not be null");
       checkNotNull(jsonAttributes, "jsonAttributes must not be null");
 
-      Json json = chefContext.utils().getJson();
+      Json json = chefContext.utils().json();
       Map<String, Object> bootstrapConfig = Maps.newHashMap();
       bootstrapConfig.put("run_list", Lists.newArrayList(runList));
       if (jsonAttributes.isPresent()) {
