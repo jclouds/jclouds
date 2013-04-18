@@ -19,6 +19,7 @@ package org.jclouds.http.handlers;
 import static org.jclouds.http.HttpUtils.releasePayload;
 
 import java.io.IOException;
+import java.util.Random;
 
 import javax.annotation.Resource;
 import javax.inject.Named;
@@ -126,6 +127,9 @@ public class BackoffLimitedRetryHandler implements HttpRetryHandler, IOException
    public void imposeBackoffExponentialDelay(long period, long maxPeriod, int pow, int failureCount, int max,
             String commandDescription) {
       long delayMs = (long) (period * Math.pow(failureCount, pow));
+      // Add random delay to avoid thundering herd problem when multiple
+      // simultaneous failed requests retry after sleeping for the same delay.
+      delayMs += new Random().nextInt((int) (delayMs / 10));
       delayMs = delayMs > maxPeriod ? maxPeriod : delayMs;
       logger.debug("Retry %d/%d: delaying for %d ms: %s", failureCount, max, delayMs, commandDescription);
       try {
