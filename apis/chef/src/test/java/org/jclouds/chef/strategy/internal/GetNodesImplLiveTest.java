@@ -19,19 +19,15 @@
 package org.jclouds.chef.strategy.internal;
 
 import static com.google.common.collect.Iterables.size;
-import static org.jclouds.reflect.Reflection2.typeToken;
 import static org.testng.Assert.assertEquals;
 
 import org.jclouds.chef.ChefApi;
-import org.jclouds.chef.ChefContext;
-import org.jclouds.chef.internal.BaseChefContextLiveTest;
+import org.jclouds.chef.internal.BaseChefLiveTest;
 import org.testng.annotations.AfterClass;
-import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
 import com.google.common.base.Predicate;
 import com.google.common.collect.ImmutableSet;
-import com.google.common.reflect.TypeToken;
 
 /**
  * Tests behavior of {@code GetNodesImpl} strategies
@@ -39,29 +35,26 @@ import com.google.common.reflect.TypeToken;
  * @author Adrian Cole
  */
 @Test(groups = "live", testName = "GetNodesImplLiveTest")
-public class GetNodesImplLiveTest extends BaseChefContextLiveTest<ChefContext> {
+public class GetNodesImplLiveTest extends BaseChefLiveTest<ChefApi> {
 
    private ListNodesImpl strategy;
    private CreateNodeAndPopulateAutomaticAttributesImpl creater;
-   private ChefApi chef;
 
-   @BeforeClass(groups = { "integration", "live" })
    @Override
-   public void setupContext() {
-      super.setupContext();
-      this.creater = context.utils().injector().getInstance(CreateNodeAndPopulateAutomaticAttributesImpl.class);
-      this.strategy = context.utils().injector().getInstance(ListNodesImpl.class);
-      this.chef = context.getApi();
+   public void initialize() {
+      super.initialize();
+      this.creater = injector.getInstance(CreateNodeAndPopulateAutomaticAttributesImpl.class);
+      this.strategy = injector.getInstance(ListNodesImpl.class);
       creater.execute(prefix, ImmutableSet.<String> of());
       creater.execute(prefix + 1, ImmutableSet.<String> of());
    }
 
    @AfterClass(groups = { "integration", "live" })
    @Override
-   protected void tearDownContext() {
-      chef.deleteNode(prefix);
-      chef.deleteNode(prefix + 1);
-      super.tearDownContext();
+   protected void tearDown() {
+      api.deleteNode(prefix);
+      api.deleteNode(prefix + 1);
+      super.tearDown();
    }
 
    @Test
@@ -84,16 +77,6 @@ public class GetNodesImplLiveTest extends BaseChefContextLiveTest<ChefContext> {
    @Test
    public void testExecuteIterableOfString() {
       assertEquals(size(strategy.execute(ImmutableSet.of(prefix, prefix + 1))), 2);
-   }
-
-   @Override
-   protected ChefApi getChefApi(ChefContext context) {
-      return context.getApi();
-   }
-
-   @Override
-   protected TypeToken<ChefContext> contextType() {
-      return typeToken(ChefContext.class);
    }
 
 }

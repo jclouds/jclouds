@@ -39,8 +39,6 @@
         <test.chef.build-version />
         <test.chef.identity>chef-webui</test.chef.identity>
         <test.chef.credential>${user.home}/.chef/webui.pem</test.chef.credential>
-        <test.chef.validator.identity>chef-validator</test.chef.validator.identity>
-        <test.chef.validator.credential>${user.home}/.chef/validation.pem</test.chef.validator.credential>
         <jclouds.osgi.import>
           org.jclouds;version=${project.version},
           org.jclouds*;version=${project.version},
@@ -119,8 +117,7 @@
                                         <test.chef.api-version>${test.chef.api-version}</test.chef.api-version>
                                         <test.chef.build-version>${test.chef.build-version}</test.chef.build-version>
                                         <test.chef.identity>${test.chef.identity}</test.chef.identity>
-                                        <test.chef.validator.identity>${test.chef.validator.identity}</test.chef.validator.identity>
-                                        <test.chef.validator.credential>${test.chef.validator.credential}</test.chef.validator.credential>
+                                        <test.chef.credential>${test.chef.credential}</test.chef.credential>
                                     </systemPropertyVariables>
                                 </configuration>
                             </execution>

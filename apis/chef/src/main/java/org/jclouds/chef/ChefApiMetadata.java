@@ -25,7 +25,6 @@ import static org.jclouds.Constants.PROPERTY_TIMEOUTS_PREFIX;
 import static org.jclouds.chef.config.ChefProperties.CHEF_BOOTSTRAP_DATABAG;
 import static org.jclouds.chef.config.ChefProperties.CHEF_UPDATE_GEMS;
 import static org.jclouds.chef.config.ChefProperties.CHEF_UPDATE_GEM_SYSTEM;
-import static org.jclouds.reflect.Reflection2.typeToken;
 
 import java.net.URI;
 import java.util.Properties;
@@ -93,7 +92,7 @@ public class ChefApiMetadata extends BaseRestApiMetadata {
                .documentation(URI.create("http://wiki.opscode.com/display/chef/Server+API"))
                .defaultEndpoint("http://localhost:4000")
                .defaultProperties(ChefApiMetadata.defaultProperties())
-               .context(typeToken(ChefContext.class))
+               .view(ChefContext.class)
                .defaultModules(
                      ImmutableSet.<Class<? extends Module>> of(ChefRestClientModule.class, ChefParserModule.class,
                            ChefBootstrapModule.class, JMXOhaiModule.class));

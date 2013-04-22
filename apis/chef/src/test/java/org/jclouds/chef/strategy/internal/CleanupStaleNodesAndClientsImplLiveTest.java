@@ -18,16 +18,14 @@
  */
 package org.jclouds.chef.strategy.internal;
 
-import static org.jclouds.reflect.Reflection2.typeToken;
+import static org.testng.Assert.assertNotNull;
+import static org.testng.Assert.assertNull;
 
 import org.jclouds.chef.ChefApi;
-import org.jclouds.chef.ChefContext;
-import org.jclouds.chef.internal.BaseChefContextLiveTest;
-import org.testng.annotations.BeforeClass;
+import org.jclouds.chef.internal.BaseChefLiveTest;
 import org.testng.annotations.Test;
 
 import com.google.common.collect.ImmutableSet;
-import com.google.common.reflect.TypeToken;
 
 /**
  * Tests behavior of {@code CleanupStaleNodesAndClientsImpl} strategies
@@ -35,17 +33,16 @@ import com.google.common.reflect.TypeToken;
  * @author Adrian Cole
  */
 @Test(groups = "live", testName = "CleanupStaleNodesAndClientsImplLiveTest")
-public class CleanupStaleNodesAndClientsImplLiveTest extends BaseChefContextLiveTest<ChefContext> {
+public class CleanupStaleNodesAndClientsImplLiveTest extends BaseChefLiveTest<ChefApi> {
 
    private CreateNodeAndPopulateAutomaticAttributesImpl creater;
    private CleanupStaleNodesAndClientsImpl strategy;
 
-   @BeforeClass(groups = { "integration", "live" })
    @Override
-   public void setupContext() {
-      super.setupContext();
-      this.creater = context.utils().injector().getInstance(CreateNodeAndPopulateAutomaticAttributesImpl.class);
-      this.strategy = context.utils().injector().getInstance(CleanupStaleNodesAndClientsImpl.class);
+   public void initialize() {
+      super.initialize();
+      this.creater = injector.getInstance(CreateNodeAndPopulateAutomaticAttributesImpl.class);
+      this.strategy = injector.getInstance(CleanupStaleNodesAndClientsImpl.class);
    }
 
    @Test
@@ -54,25 +51,15 @@ public class CleanupStaleNodesAndClientsImplLiveTest extends BaseChefContextLive
          creater.execute(prefix, ImmutableSet.<String> of());
          // http://tickets.corp.opscode.com/browse/PL-522
          // assert chef.nodeExists(prefix);
-         assert context.getApi().getNode(prefix) != null;
+         assertNotNull(api.getNode(prefix));
          strategy.execute(prefix, 10);
-         assert context.getApi().getNode(prefix) != null;
+         assertNotNull(api.getNode(prefix));
          Thread.sleep(1000);
          strategy.execute(prefix, 1);
-         assert context.getApi().getNode(prefix) == null;
+         assertNull(api.getNode(prefix));
       } finally {
-         context.getApi().deleteNode(prefix);
+         api.deleteNode(prefix);
       }
-   }
-
-   @Override
-   protected ChefApi getChefApi(ChefContext context) {
-      return context.getApi();
-   }
-
-   @Override
-   protected TypeToken<ChefContext> contextType() {
-      return typeToken(ChefContext.class);
    }
 
 }

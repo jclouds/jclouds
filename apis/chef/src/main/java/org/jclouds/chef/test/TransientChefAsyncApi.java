@@ -66,8 +66,9 @@ import com.google.common.util.concurrent.ListeningExecutorService;
  * In-memory chef simulator.
  * 
  * @author Adrian Cole
+ * @deprecated {@link TransientChefAsyncApi} interface will be removed in jclouds 1.7.
  */
-
+@Deprecated
 public class TransientChefAsyncApi implements ChefAsyncApi {
    @Singleton
    private static class StorageMetadataToName implements Function<PageSet<? extends StorageMetadata>, Set<String>> {
