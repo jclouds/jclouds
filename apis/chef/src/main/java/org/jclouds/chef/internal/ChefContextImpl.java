@@ -18,43 +18,43 @@
  */
 package org.jclouds.chef.internal;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+
+import java.io.IOException;
+
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
-import org.jclouds.annotations.Name;
-import org.jclouds.chef.ChefApi;
-import org.jclouds.chef.ChefAsyncApi;
+import org.jclouds.Context;
 import org.jclouds.chef.ChefContext;
 import org.jclouds.chef.ChefService;
-import org.jclouds.domain.Credentials;
-import org.jclouds.lifecycle.Closer;
+import org.jclouds.internal.BaseView;
 import org.jclouds.location.Provider;
-import org.jclouds.providers.ProviderMetadata;
-import org.jclouds.rest.Utils;
-import org.jclouds.rest.internal.RestContextImpl;
 
-import com.google.common.base.Supplier;
-import com.google.inject.Injector;
-import com.google.inject.TypeLiteral;
+import com.google.common.reflect.TypeToken;
 
 /**
  * @author Adrian Cole
  */
 @Singleton
-public class ChefContextImpl extends RestContextImpl<ChefApi, ChefAsyncApi> implements ChefContext {
+public class ChefContextImpl extends BaseView implements ChefContext {
    private final ChefService chefService;
 
    @Inject
-   protected ChefContextImpl(@Name String name, ProviderMetadata providerMetadata,
-         @Provider Supplier<Credentials> creds, Utils utils, Closer closer, Injector injector, ChefService chefService) {
-      super(name, providerMetadata, creds, utils, closer, injector, TypeLiteral.get(ChefApi.class), TypeLiteral
-            .get(ChefAsyncApi.class));
-      this.chefService = chefService;
+   protected ChefContextImpl(@Provider Context backend, @Provider TypeToken<? extends Context> backendType,
+         ChefService chefService) {
+      super(backend, backendType);
+      this.chefService = checkNotNull(chefService, "checkNotNull");
    }
 
    @Override
    public ChefService getChefService() {
       return chefService;
+   }
+
+   @Override
+   public void close() throws IOException {
+      delegate().close();
    }
 
 }

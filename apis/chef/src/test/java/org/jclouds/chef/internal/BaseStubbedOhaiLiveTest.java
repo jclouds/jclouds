@@ -18,14 +18,11 @@
  */
 package org.jclouds.chef.internal;
 
-import static org.jclouds.reflect.Reflection2.typeToken;
-
 import java.util.Map;
 
 import org.jclouds.apis.ApiMetadata;
 import org.jclouds.chef.ChefApi;
 import org.jclouds.chef.ChefApiMetadata;
-import org.jclouds.chef.ChefContext;
 import org.jclouds.chef.config.ChefBootstrapModule;
 import org.jclouds.chef.config.ChefParserModule;
 import org.jclouds.chef.config.ChefRestClientModule;
@@ -39,7 +36,6 @@ import com.google.common.base.Supplier;
 import com.google.common.base.Suppliers;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
-import com.google.common.reflect.TypeToken;
 import com.google.inject.Module;
 
 /**
@@ -48,7 +44,7 @@ import com.google.inject.Module;
  */
 @Test(groups = "live")
 @Deprecated
-public class BaseStubbedOhaiLiveTest extends BaseChefContextLiveTest<ChefContext> {
+public class BaseStubbedOhaiLiveTest extends BaseChefLiveTest<ChefApi> {
 
    @ConfiguresOhai
    static class TestOhaiModule extends OhaiModule {
@@ -66,15 +62,5 @@ public class BaseStubbedOhaiLiveTest extends BaseChefContextLiveTest<ChefContext
             .defaultModules(
                   ImmutableSet.<Class<? extends Module>> of(ChefRestClientModule.class, ChefParserModule.class,
                         ChefBootstrapModule.class, TestOhaiModule.class)).build();
-   }
-
-   @Override
-   protected ChefApi getChefApi(ChefContext context) {
-      return context.getApi();
-   }
-
-   @Override
-   protected TypeToken<ChefContext> contextType() {
-      return typeToken(ChefContext.class);
    }
 }

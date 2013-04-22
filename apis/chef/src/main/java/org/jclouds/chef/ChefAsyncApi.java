@@ -95,7 +95,10 @@ import java.util.Set;
  * 
  * @see ChefApi
  * @author Adrian Cole
+ * @deprecated please use {@code org.jclouds.ContextBuilder#buildApi(ChefApi.class)} as
+ *             {@link ChefAsyncApi} interface will be removed in jclouds 1.7.
  */
+@Deprecated
 @RequestFilters(SignedHeaderAuth.class)
 @Headers(keys = "X-Chef-Version", values = "{" + Constants.PROPERTY_API_VERSION + "}")
 @Consumes(MediaType.APPLICATION_JSON)

@@ -18,23 +18,15 @@
  */
 package org.jclouds.chef.test;
 
-import static com.google.common.base.Throwables.propagate;
-import static org.jclouds.reflect.Reflection2.typeToken;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
 
-import java.io.IOException;
 import java.util.Properties;
 
 import org.jclouds.chef.ChefApi;
-import org.jclouds.chef.ChefContext;
 import org.jclouds.chef.domain.DatabagItem;
-import org.jclouds.chef.internal.BaseChefContextLiveTest;
-import org.testng.annotations.AfterClass;
+import org.jclouds.chef.internal.BaseChefLiveTest;
 import org.testng.annotations.Test;
-
-import com.google.common.io.Closeables;
-import com.google.common.reflect.TypeToken;
 
 /**
  * Tests behavior of {@code TransientChefApi}
@@ -42,7 +34,7 @@ import com.google.common.reflect.TypeToken;
  * @author Adrian Cole
  */
 @Test(groups = { "integration" })
-public class TransientChefApiIntegrationTest extends BaseChefContextLiveTest<ChefContext> {
+public class TransientChefApiIntegrationTest extends BaseChefLiveTest<ChefApi> {
    public static final String PREFIX = System.getProperty("user.name") + "-jcloudstest";
    private DatabagItem databagItem;
 
@@ -55,57 +47,37 @@ public class TransientChefApiIntegrationTest extends BaseChefContextLiveTest<Che
       return new Properties();
    }
 
-   @AfterClass(groups = { "integration", "live" })
-   @Override
-   public void tearDownContext() {
-      try {
-         Closeables.close(context, true);
-      } catch (IOException e) {
-         throw propagate(e);
-      }
-   }
-
    public void testCreateDatabag() {
-      context.getApi().deleteDatabag(PREFIX);
-      context.getApi().createDatabag(PREFIX);
+      api.deleteDatabag(PREFIX);
+      api.createDatabag(PREFIX);
    }
 
    @Test(dependsOnMethods = "testCreateDatabag")
    public void testDatabagExists() {
-      assertNotNull(context.getApi().databagExists(PREFIX));
+      assertNotNull(api.databagExists(PREFIX));
    }
 
    @Test(dependsOnMethods = { "testDatabagExists" })
    public void testCreateDatabagItem() {
       Properties config = new Properties();
       config.setProperty("foo", "bar");
-      databagItem = context.getApi().createDatabagItem(PREFIX,
-            new DatabagItem("config", context.utils().json().toJson(config)));
+      databagItem = api.createDatabagItem(PREFIX, new DatabagItem("config", json.toJson(config)));
       assertNotNull(databagItem);
       assertEquals(databagItem.getId(), "config");
-      assertEquals(config, context.utils().json().fromJson(databagItem.toString(), Properties.class));
+      assertEquals(config, json.fromJson(databagItem.toString(), Properties.class));
    }
 
    @Test(dependsOnMethods = "testCreateDatabagItem")
    public void testDatabagItemExists() {
-      assertNotNull(context.getApi().databagItemExists(PREFIX, PREFIX));
+      assertNotNull(api.databagItemExists(PREFIX, PREFIX));
    }
 
    @Test(dependsOnMethods = "testDatabagItemExists")
    public void testUpdateDatabagItem() {
-      for (String databagItemId : context.getApi().listDatabagItems(PREFIX)) {
-         DatabagItem databagItem = context.getApi().getDatabagItem(PREFIX, databagItemId);
-         context.getApi().updateDatabagItem(PREFIX, databagItem);
+      for (String databagItemId : api.listDatabagItems(PREFIX)) {
+         DatabagItem databagItem = api.getDatabagItem(PREFIX, databagItemId);
+         api.updateDatabagItem(PREFIX, databagItem);
       }
    }
 
-   @Override
-   protected ChefApi getChefApi(ChefContext context) {
-      return context.getApi();
-   }
-
-   @Override
-   protected TypeToken<ChefContext> contextType() {
-      return typeToken(ChefContext.class);
-   }
 }

@@ -18,14 +18,21 @@
  */
 package org.jclouds.chef.internal;
 
-import com.google.common.annotations.VisibleForTesting;
-import com.google.common.base.Optional;
-import com.google.common.base.Predicate;
-import com.google.common.base.Supplier;
-import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
-import com.google.common.io.ByteStreams;
-import com.google.common.io.InputSupplier;
+import static com.google.common.base.Preconditions.checkNotNull;
+import static org.jclouds.chef.config.ChefProperties.CHEF_BOOTSTRAP_DATABAG;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.security.PrivateKey;
+import java.util.List;
+import java.util.Map;
+
+import javax.annotation.Resource;
+import javax.inject.Inject;
+import javax.inject.Named;
+import javax.inject.Singleton;
+
+import org.jclouds.chef.ChefApi;
 import org.jclouds.chef.ChefContext;
 import org.jclouds.chef.ChefService;
 import org.jclouds.chef.config.ChefProperties;
@@ -55,18 +62,14 @@ import org.jclouds.json.Json;
 import org.jclouds.logging.Logger;
 import org.jclouds.scriptbuilder.domain.Statement;
 
-import javax.annotation.Resource;
-import javax.inject.Inject;
-import javax.inject.Named;
-import javax.inject.Singleton;
-import java.io.IOException;
-import java.io.InputStream;
-import java.security.PrivateKey;
-import java.util.List;
-import java.util.Map;
-
-import static com.google.common.base.Preconditions.checkNotNull;
-import static org.jclouds.chef.config.ChefProperties.CHEF_BOOTSTRAP_DATABAG;
+import com.google.common.annotations.VisibleForTesting;
+import com.google.common.base.Optional;
+import com.google.common.base.Predicate;
+import com.google.common.base.Supplier;
+import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
+import com.google.common.io.ByteStreams;
+import com.google.common.io.InputSupplier;
 
 /**
  * @author Adrian Cole
@@ -75,6 +78,7 @@ import static org.jclouds.chef.config.ChefProperties.CHEF_BOOTSTRAP_DATABAG;
 public class BaseChefService implements ChefService {
 
    private final ChefContext chefContext;
+   private final ChefApi api;
    private final CleanupStaleNodesAndClients cleanupStaleNodesAndClients;
    private final CreateNodeAndPopulateAutomaticAttributes createNodeAndPopulateAutomaticAttributes;
    private final DeleteAllNodesInList deleteAllNodesInList;
@@ -89,20 +93,23 @@ public class BaseChefService implements ChefService {
    private final RunListForGroup runListForGroup;
    private final ListCookbookVersions listCookbookVersions;
    private final ListEnvironments listEnvironments;
+   private final Json json;
    @Resource
    @Named(ChefProperties.CHEF_LOGGER)
    protected Logger logger = Logger.NULL;
 
    @Inject
-   protected BaseChefService(ChefContext chefContext, CleanupStaleNodesAndClients cleanupStaleNodesAndClients,
-                             CreateNodeAndPopulateAutomaticAttributes createNodeAndPopulateAutomaticAttributes,
-                             DeleteAllNodesInList deleteAllNodesInList, ListNodes listNodes, DeleteAllClientsInList deleteAllClientsInList,
-                             ListClients listClients, ListCookbookVersions listCookbookVersions,
-                             UpdateAutomaticAttributesOnNode updateAutomaticAttributesOnNode, Supplier<PrivateKey> privateKey,
-                             @Named(CHEF_BOOTSTRAP_DATABAG) String databag, GroupToBootScript groupToBootScript,
-                             BootstrapConfigForGroup bootstrapConfigForGroup, RunListForGroup runListForGroup,
-                             ListEnvironments listEnvironments) {
+   protected BaseChefService(ChefContext chefContext, ChefApi api,
+         CleanupStaleNodesAndClients cleanupStaleNodesAndClients,
+         CreateNodeAndPopulateAutomaticAttributes createNodeAndPopulateAutomaticAttributes,
+         DeleteAllNodesInList deleteAllNodesInList, ListNodes listNodes, DeleteAllClientsInList deleteAllClientsInList,
+         ListClients listClients, ListCookbookVersions listCookbookVersions,
+         UpdateAutomaticAttributesOnNode updateAutomaticAttributesOnNode, Supplier<PrivateKey> privateKey,
+         @Named(CHEF_BOOTSTRAP_DATABAG) String databag, GroupToBootScript groupToBootScript,
+         BootstrapConfigForGroup bootstrapConfigForGroup, RunListForGroup runListForGroup,
+         ListEnvironments listEnvironments, Json json) {
       this.chefContext = checkNotNull(chefContext, "chefContext");
+      this.api = checkNotNull(api, "api");
       this.cleanupStaleNodesAndClients = checkNotNull(cleanupStaleNodesAndClients, "cleanupStaleNodesAndClients");
       this.createNodeAndPopulateAutomaticAttributes = checkNotNull(createNodeAndPopulateAutomaticAttributes,
             "createNodeAndPopulateAutomaticAttributes");
@@ -119,6 +126,7 @@ public class BaseChefService implements ChefService {
       this.bootstrapConfigForGroup = checkNotNull(bootstrapConfigForGroup, "bootstrapConfigForGroup");
       this.runListForGroup = checkNotNull(runListForGroup, "runListForGroup");
       this.listEnvironments = checkNotNull(listEnvironments, "listEnvironments");
+      this.json = checkNotNull(json, "json");
    }
 
    @Override
@@ -215,7 +223,7 @@ public class BaseChefService implements ChefService {
    @Override
    public void updateBootstrapConfigForGroup(Iterable<String> runList, @Nullable JsonBall jsonAttributes, String group) {
       try {
-         chefContext.getApi().createDatabag(databag);
+         api.createDatabag(databag);
       } catch (IllegalStateException e) {
 
       }
@@ -223,10 +231,10 @@ public class BaseChefService implements ChefService {
       String bootstrapConfig = buildBootstrapConfiguration(runList, Optional.fromNullable(jsonAttributes));
       DatabagItem runlist = new DatabagItem(group, bootstrapConfig);
 
-      if (chefContext.getApi().getDatabagItem(databag, group) == null) {
-         chefContext.getApi().createDatabagItem(databag, runlist);
+      if (api.getDatabagItem(databag, group) == null) {
+         api.createDatabagItem(databag, runlist);
       } else {
-         chefContext.getApi().updateDatabagItem(databag, runlist);
+         api.updateDatabagItem(databag, runlist);
       }
    }
 
@@ -257,7 +265,6 @@ public class BaseChefService implements ChefService {
       checkNotNull(runList, "runList must not be null");
       checkNotNull(jsonAttributes, "jsonAttributes must not be null");
 
-      Json json = chefContext.utils().json();
       Map<String, Object> bootstrapConfig = Maps.newHashMap();
       bootstrapConfig.put("run_list", Lists.newArrayList(runList));
       if (jsonAttributes.isPresent()) {

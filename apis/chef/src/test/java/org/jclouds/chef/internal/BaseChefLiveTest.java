@@ -18,31 +18,35 @@
  */
 package org.jclouds.chef.internal;
 
+import static org.jclouds.reflect.Types2.checkBound;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.Properties;
 
-import org.jclouds.Context;
-import org.jclouds.apis.BaseContextLiveTest;
+import org.jclouds.apis.BaseApiLiveTest;
 import org.jclouds.chef.ChefApi;
+import org.jclouds.chef.ChefService;
+import org.jclouds.json.Json;
 import org.testng.annotations.Test;
 
 import com.google.common.base.Charsets;
 import com.google.common.base.Throwables;
 import com.google.common.io.Files;
+import com.google.common.reflect.TypeToken;
+import com.google.inject.Injector;
+import com.google.inject.Module;
 
 /**
  * 
  * @author Adrian Cole
  */
 @Test(groups = "live")
-public abstract class BaseChefContextLiveTest<C extends Context> extends BaseContextLiveTest<C> {
+public abstract class BaseChefLiveTest<A extends ChefApi> extends BaseApiLiveTest<A> {
 
-   public BaseChefContextLiveTest() {
-      provider = "chef";
-   }
-
-   protected abstract ChefApi getChefApi(C context);
+   protected Injector injector;
+   protected ChefService chefService;
+   protected Json json;
 
    /**
     * the credential is a path to the pem file.
@@ -52,6 +56,19 @@ public abstract class BaseChefContextLiveTest<C extends Context> extends BaseCon
       Properties overrides = super.setupProperties();
       credential = setCredentialFromPemFile(overrides, identity, provider + ".credential");
       return overrides;
+   }
+
+   @Override
+   protected void initialize() {
+      super.initialize();
+      chefService = injector.getInstance(ChefService.class);
+      json = injector.getInstance(Json.class);
+   }
+
+   @Override
+   protected A create(Properties props, Iterable<Module> modules) {
+      injector = newBuilder().modules(modules).overrides(props).buildInjector();
+      return injector.getInstance(resolveApiClass());
    }
 
    protected String setCredentialFromPemFile(Properties overrides, String identity, String key) {
@@ -69,6 +86,13 @@ public abstract class BaseChefContextLiveTest<C extends Context> extends BaseCon
       }
       overrides.setProperty(key, credentialFromFile);
       return credentialFromFile;
+   }
+
+   @SuppressWarnings("unchecked")
+   private Class<A> resolveApiClass() {
+      return Class.class.cast(checkBound(new TypeToken<A>(getClass()) {
+         private static final long serialVersionUID = 1L;
+      }).getRawType());
    }
 
 }
