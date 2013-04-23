@@ -19,7 +19,7 @@
 package org.jclouds.chef;
 
 import org.jclouds.View;
-import org.jclouds.rest.internal.BaseRestApiMetadataTest;
+import org.jclouds.rest.internal.BaseHttpApiMetadataTest;
 import org.testng.annotations.Test;
 
 import com.google.common.collect.ImmutableSet;
@@ -30,7 +30,7 @@ import com.google.common.reflect.TypeToken;
  * @author Adrian Cole
  */
 @Test(groups = "unit", testName = "ChefApiMetadataTest")
-public class ChefApiMetadataTest extends BaseRestApiMetadataTest {
+public class ChefApiMetadataTest extends BaseHttpApiMetadataTest {
 
    // no config management abstraction, yet
    public ChefApiMetadataTest() {

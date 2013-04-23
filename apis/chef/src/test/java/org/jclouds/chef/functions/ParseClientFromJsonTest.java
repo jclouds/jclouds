@@ -26,7 +26,7 @@ import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
 import java.security.spec.InvalidKeySpecException;
 
-import org.jclouds.chef.ChefAsyncApi;
+import org.jclouds.chef.ChefApi;
 import org.jclouds.chef.config.ChefParserModule;
 import org.jclouds.chef.domain.Client;
 import org.jclouds.crypto.Crypto;
@@ -68,7 +68,7 @@ public class ParseClientFromJsonTest {
       Injector injector = Guice.createInjector(new AbstractModule() {
          @Override
          protected void configure() {
-            bind(String.class).annotatedWith(ApiVersion.class).toInstance(ChefAsyncApi.VERSION);
+            bind(String.class).annotatedWith(ApiVersion.class).toInstance(ChefApi.VERSION);
          }
       }, new ChefParserModule(), new GsonModule());
 

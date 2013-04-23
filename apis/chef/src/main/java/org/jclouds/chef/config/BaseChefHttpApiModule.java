@@ -30,7 +30,6 @@ import java.io.IOException;
 import java.security.PrivateKey;
 import java.security.spec.InvalidKeySpecException;
 import java.util.List;
-import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 import javax.inject.Inject;
@@ -54,8 +53,8 @@ import org.jclouds.http.HttpRetryHandler;
 import org.jclouds.http.annotation.ClientError;
 import org.jclouds.http.annotation.Redirection;
 import org.jclouds.http.annotation.ServerError;
-import org.jclouds.rest.ConfiguresRestClient;
-import org.jclouds.rest.config.RestClientModule;
+import org.jclouds.rest.ConfiguresHttpApi;
+import org.jclouds.rest.config.HttpApiModule;
 
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Charsets;
@@ -66,7 +65,6 @@ import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
 import com.google.common.io.ByteStreams;
-import com.google.common.reflect.TypeToken;
 import com.google.inject.ConfigurationException;
 import com.google.inject.Injector;
 import com.google.inject.Key;
@@ -77,18 +75,10 @@ import com.google.inject.name.Names;
  * Configures the Chef connection.
  * 
  * @author Adrian Cole
+ * @author Ignasi Barrera
  */
-@ConfiguresRestClient
-public class BaseChefRestClientModule<S, A> extends RestClientModule<S, A> {
-
-   protected BaseChefRestClientModule(TypeToken<S> syncApiType, TypeToken<A> asyncApiType) {
-      super(syncApiType, asyncApiType);
-   }
-
-   protected BaseChefRestClientModule(TypeToken<S> syncApiType, TypeToken<A> asyncApiType,
-         Map<Class<?>, Class<?>> delegates) {
-      super(syncApiType, asyncApiType, delegates);
-   }
+@ConfiguresHttpApi
+public abstract class BaseChefHttpApiModule<S> extends HttpApiModule<S> {
 
    @Provides
    @TimeStamp

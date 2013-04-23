@@ -31,6 +31,6 @@ import com.google.inject.ImplementedBy;
 @ImplementedBy(CleanupStaleNodesAndClientsImpl.class)
 public interface CleanupStaleNodesAndClients {
 
-   void execute(String prefix, int secondsStale);
+   public void execute(String prefix, int secondsStale);
 
 }

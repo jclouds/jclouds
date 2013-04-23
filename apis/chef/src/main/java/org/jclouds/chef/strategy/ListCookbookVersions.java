@@ -22,6 +22,7 @@ import org.jclouds.chef.domain.CookbookVersion;
 import org.jclouds.chef.strategy.internal.ListCookbookVersionsImpl;
 
 import com.google.common.base.Predicate;
+import com.google.common.util.concurrent.ListeningExecutorService;
 import com.google.inject.ImplementedBy;
 
 /**
@@ -32,9 +33,16 @@ import com.google.inject.ImplementedBy;
 @ImplementedBy(ListCookbookVersionsImpl.class)
 public interface ListCookbookVersions {
 
-   Iterable<? extends CookbookVersion> execute();
+   public Iterable<? extends CookbookVersion> execute();
 
-   Iterable<? extends CookbookVersion> execute(Predicate<String> cookbookNameSelector);
+   public Iterable<? extends CookbookVersion> execute(Predicate<String> cookbookNameSelector);
 
-   Iterable<? extends CookbookVersion> execute(Iterable<String> cookbookNames);
+   public Iterable<? extends CookbookVersion> execute(Iterable<String> cookbookNames);
+
+   public Iterable<? extends CookbookVersion> execute(ListeningExecutorService executor);
+
+   public Iterable<? extends CookbookVersion> execute(ListeningExecutorService executor,
+         Predicate<String> cookbookNameSelector);
+
+   public Iterable<? extends CookbookVersion> execute(ListeningExecutorService executor, Iterable<String> cookbookNames);
 }

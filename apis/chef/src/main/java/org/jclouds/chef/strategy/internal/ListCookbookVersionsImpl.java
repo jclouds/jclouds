@@ -18,10 +18,17 @@
  */
 package org.jclouds.chef.strategy.internal;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+import static com.google.common.base.Throwables.propagate;
 import static com.google.common.collect.Iterables.concat;
 import static com.google.common.collect.Iterables.filter;
 import static com.google.common.collect.Iterables.transform;
-import static org.jclouds.concurrent.FutureIterables.transformParallel;
+import static com.google.common.util.concurrent.Futures.allAsList;
+
+import java.util.List;
+import java.util.Set;
+import java.util.concurrent.Callable;
+import java.util.concurrent.TimeUnit;
 
 import javax.annotation.Resource;
 import javax.inject.Named;
@@ -29,7 +36,6 @@ import javax.inject.Singleton;
 
 import org.jclouds.Constants;
 import org.jclouds.chef.ChefApi;
-import org.jclouds.chef.ChefAsyncApi;
 import org.jclouds.chef.config.ChefProperties;
 import org.jclouds.chef.domain.CookbookVersion;
 import org.jclouds.chef.strategy.ListCookbookVersions;
@@ -49,8 +55,7 @@ import com.google.inject.Inject;
 @Singleton
 public class ListCookbookVersionsImpl implements ListCookbookVersions {
 
-   protected final ChefApi chefApi;
-   protected final ChefAsyncApi chefAsyncApi;
+   protected final ChefApi api;
    protected final ListeningExecutorService userExecutor;
    @Resource
    @Named(ChefProperties.CHEF_LOGGER)
@@ -61,39 +66,66 @@ public class ListCookbookVersionsImpl implements ListCookbookVersions {
    protected Long maxTime;
 
    @Inject
-   ListCookbookVersionsImpl(@Named(Constants.PROPERTY_USER_THREADS) ListeningExecutorService userExecutor,
-         ChefApi getAllCookbookVersion, ChefAsyncApi ablobstore) {
-      this.userExecutor = userExecutor;
-      this.chefAsyncApi = ablobstore;
-      this.chefApi = getAllCookbookVersion;
+   ListCookbookVersionsImpl(@Named(Constants.PROPERTY_USER_THREADS) ListeningExecutorService userExecutor, ChefApi api) {
+      this.userExecutor = checkNotNull(userExecutor, "userExecuor");
+      this.api = checkNotNull(api, "api");
    }
 
    @Override
    public Iterable<? extends CookbookVersion> execute() {
-      return execute(chefApi.listCookbooks());
+      return execute(userExecutor);
    }
 
    @Override
    public Iterable<? extends CookbookVersion> execute(Predicate<String> cookbookNameSelector) {
-      return execute(filter(chefApi.listCookbooks(), cookbookNameSelector));
+      return execute(userExecutor, cookbookNameSelector);
    }
 
    @Override
    public Iterable<? extends CookbookVersion> execute(Iterable<String> toGet) {
-      return concat(transform(toGet, new Function<String, Iterable<? extends CookbookVersion>>() {
+      return execute(userExecutor, toGet);
+   }
+
+   @Override
+   public Iterable<? extends CookbookVersion> execute(ListeningExecutorService executor) {
+      return execute(executor, api.listCookbooks());
+   }
+
+   @Override
+   public Iterable<? extends CookbookVersion> execute(ListeningExecutorService executor,
+         Predicate<String> cookbookNameSelector) {
+      return execute(executor, filter(api.listCookbooks(), cookbookNameSelector));
+   }
+
+   @Override
+   public Iterable<? extends CookbookVersion> execute(final ListeningExecutorService executor,
+         Iterable<String> cookbookNames) {
+      return concat(transform(cookbookNames, new Function<String, Iterable<? extends CookbookVersion>>() {
 
          @Override
          public Iterable<? extends CookbookVersion> apply(final String cookbook) {
             // TODO getting each version could also go parallel
-            return transformParallel(chefApi.getVersionsOfCookbook(cookbook),
-                  new Function<String, ListenableFuture<? extends CookbookVersion>>() {
-                     public ListenableFuture<CookbookVersion> apply(String version) {
-                        return chefAsyncApi.getCookbook(cookbook, version);
+            Set<String> cookbookVersions = api.getVersionsOfCookbook(cookbook);
+            ListenableFuture<List<CookbookVersion>> futures = allAsList(transform(cookbookVersions,
+                  new Function<String, ListenableFuture<CookbookVersion>>() {
+                     @Override
+                     public ListenableFuture<CookbookVersion> apply(final String version) {
+                        return executor.submit(new Callable<CookbookVersion>() {
+                           @Override
+                           public CookbookVersion call() throws Exception {
+                              return api.getCookbook(cookbook, version);
+                           }
+                        });
                      }
-                  }, userExecutor, maxTime, logger, "getting versions of cookbook " + cookbook);
-         }
+                  }));
 
+            try {
+               logger.trace(String.format("getting versions of cookbook: " + cookbook));
+               return futures.get(maxTime, TimeUnit.MILLISECONDS);
+            } catch (Exception e) {
+               throw propagate(e);
+            }
+         }
       }));
    }
-
 }

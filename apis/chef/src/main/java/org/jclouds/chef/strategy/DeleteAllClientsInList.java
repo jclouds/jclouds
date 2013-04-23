@@ -20,16 +20,20 @@ package org.jclouds.chef.strategy;
 
 import org.jclouds.chef.strategy.internal.DeleteAllClientsInListImpl;
 
+import com.google.common.util.concurrent.ListeningExecutorService;
 import com.google.inject.ImplementedBy;
 
 /**
- * 
+ * Deletes all clients in a given list.
  * 
  * @author Adrian Cole
+ * @author Ignasi Barrera
  */
 @ImplementedBy(DeleteAllClientsInListImpl.class)
 public interface DeleteAllClientsInList {
 
    public void execute(Iterable<String> names);
+
+   public void execute(ListeningExecutorService executor, Iterable<String> names);
 
 }

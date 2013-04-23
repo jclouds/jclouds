@@ -30,7 +30,7 @@ import java.io.IOException;
 import java.net.URI;
 import java.security.PrivateKey;
 
-import org.jclouds.chef.ChefAsyncApi;
+import org.jclouds.chef.ChefApi;
 import org.jclouds.chef.config.ChefBootstrapModule;
 import org.jclouds.chef.config.ChefParserModule;
 import org.jclouds.chef.domain.DatabagItem;
@@ -66,7 +66,7 @@ public class GroupToBootScriptTest {
    Injector injector = Guice.createInjector(new AbstractModule() {
       @Override
       protected void configure() {
-         bind(String.class).annotatedWith(ApiVersion.class).toInstance(ChefAsyncApi.VERSION);
+         bind(String.class).annotatedWith(ApiVersion.class).toInstance(ChefApi.VERSION);
          bind(String.class).annotatedWith(Names.named(CHEF_UPDATE_GEM_SYSTEM)).toInstance("true");
          bind(String.class).annotatedWith(Names.named(CHEF_UPDATE_GEMS)).toInstance("true");
       }

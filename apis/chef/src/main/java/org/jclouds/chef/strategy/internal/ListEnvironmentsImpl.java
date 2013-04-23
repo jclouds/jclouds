@@ -18,30 +18,38 @@
  */
 package org.jclouds.chef.strategy.internal;
 
-import com.google.common.base.Function;
-import com.google.common.base.Predicate;
-import com.google.common.util.concurrent.ListenableFuture;
-import com.google.common.util.concurrent.ListeningExecutorService;
-import com.google.inject.Inject;
+import static com.google.common.base.Preconditions.checkNotNull;
+import static com.google.common.base.Throwables.propagate;
+import static com.google.common.collect.Iterables.filter;
+import static com.google.common.collect.Iterables.transform;
+import static com.google.common.util.concurrent.Futures.allAsList;
+
+import java.util.List;
+import java.util.concurrent.Callable;
+import java.util.concurrent.TimeUnit;
+
+import javax.annotation.Resource;
+import javax.inject.Named;
+import javax.inject.Singleton;
+
 import org.jclouds.Constants;
 import org.jclouds.chef.ChefApi;
-import org.jclouds.chef.ChefAsyncApi;
 import org.jclouds.chef.config.ChefProperties;
 import org.jclouds.chef.domain.Environment;
 import org.jclouds.chef.strategy.ListEnvironments;
 import org.jclouds.logging.Logger;
 
-import javax.annotation.Resource;
-import javax.inject.Named;
+import com.google.common.base.Function;
+import com.google.common.base.Joiner;
+import com.google.common.base.Predicate;
+import com.google.common.util.concurrent.ListenableFuture;
+import com.google.common.util.concurrent.ListeningExecutorService;
+import com.google.inject.Inject;
 
-import static com.google.common.collect.Iterables.filter;
-import static org.jclouds.concurrent.FutureIterables.transformParallel;
-
-
+@Singleton
 public class ListEnvironmentsImpl implements ListEnvironments {
 
-   protected final ChefApi chefApi;
-   protected final ChefAsyncApi chefAsyncApi;
+   protected final ChefApi api;
    protected final ListeningExecutorService userExecutor;
    @Resource
    @Named(ChefProperties.CHEF_LOGGER)
@@ -51,30 +59,57 @@ public class ListEnvironmentsImpl implements ListEnvironments {
    protected Long maxTime;
 
    @Inject
-   ListEnvironmentsImpl(@Named(Constants.PROPERTY_USER_THREADS) ListeningExecutorService userExecutor, ChefApi getAllNode,
-                        ChefAsyncApi ablobstore) {
-      this.userExecutor = userExecutor;
-      this.chefAsyncApi = ablobstore;
-      this.chefApi = getAllNode;
+   ListEnvironmentsImpl(@Named(Constants.PROPERTY_USER_THREADS) ListeningExecutorService userExecutor, ChefApi api) {
+      this.userExecutor = checkNotNull(userExecutor, "userExecuor");
+      this.api = checkNotNull(api, "api");
    }
 
    @Override
    public Iterable<? extends Environment> execute() {
-      return execute(chefApi.listEnvironments());
+      return execute(userExecutor);
    }
 
    @Override
    public Iterable<? extends Environment> execute(Predicate<String> environmentNameSelector) {
-      return execute(filter(chefApi.listEnvironments(), environmentNameSelector));
+      return execute(userExecutor, environmentNameSelector);
    }
 
    @Override
    public Iterable<? extends Environment> execute(Iterable<String> toGet) {
-      return transformParallel(toGet, new Function<String, ListenableFuture<? extends Environment>>() {
-         @Override
-         public ListenableFuture<? extends Environment> apply(String from) {
-            return chefAsyncApi.getEnvironment(from);
-         }
-      }, userExecutor, maxTime, logger, "getting environments");
+      return execute(userExecutor, toGet);
+   }
+
+   @Override
+   public Iterable<? extends Environment> execute(ListeningExecutorService executor) {
+      return execute(executor, api.listEnvironments());
+   }
+
+   @Override
+   public Iterable<? extends Environment> execute(ListeningExecutorService executor,
+         Predicate<String> environmentNameSelector) {
+      return execute(executor, filter(api.listEnvironments(), environmentNameSelector));
+   }
+
+   @Override
+   public Iterable<? extends Environment> execute(final ListeningExecutorService executor, Iterable<String> toGet) {
+      ListenableFuture<List<Environment>> futures = allAsList(transform(toGet,
+            new Function<String, ListenableFuture<Environment>>() {
+               @Override
+               public ListenableFuture<Environment> apply(final String input) {
+                  return executor.submit(new Callable<Environment>() {
+                     @Override
+                     public Environment call() throws Exception {
+                        return api.getEnvironment(input);
+                     }
+                  });
+               }
+            }));
+
+      try {
+         logger.trace(String.format("deleting environments: %s", Joiner.on(',').join(toGet)));
+         return futures.get(maxTime, TimeUnit.MILLISECONDS);
+      } catch (Exception e) {
+         throw propagate(e);
+      }
    }
 }

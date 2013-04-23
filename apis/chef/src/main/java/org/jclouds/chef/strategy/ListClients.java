@@ -22,6 +22,7 @@ import org.jclouds.chef.domain.Client;
 import org.jclouds.chef.strategy.internal.ListClientsImpl;
 
 import com.google.common.base.Predicate;
+import com.google.common.util.concurrent.ListeningExecutorService;
 import com.google.inject.ImplementedBy;
 
 /**
@@ -32,9 +33,15 @@ import com.google.inject.ImplementedBy;
 @ImplementedBy(ListClientsImpl.class)
 public interface ListClients {
 
-   Iterable<? extends Client> execute();
+   public Iterable<? extends Client> execute();
 
-   Iterable<? extends Client> execute(Predicate<String> clientNameSelector);
+   public Iterable<? extends Client> execute(Predicate<String> clientNameSelector);
 
-   Iterable<? extends Client> execute(Iterable<String> toGet);
+   public Iterable<? extends Client> execute(Iterable<String> toGet);
+
+   public Iterable<? extends Client> execute(ListeningExecutorService executor);
+
+   public Iterable<? extends Client> execute(ListeningExecutorService executor, Predicate<String> clientNameSelector);
+
+   public Iterable<? extends Client> execute(ListeningExecutorService executor, Iterable<String> toGet);
 }

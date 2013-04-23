@@ -26,14 +26,21 @@ import org.jclouds.chef.internal.ChefContextImpl;
 import com.google.inject.ImplementedBy;
 
 /**
+ * Provides an entry point to Chef features.
  * 
- * 
- * @author Adrian Cole
- * 
+ * @author Ignasi Barrera
  */
 @ImplementedBy(ChefContextImpl.class)
 public interface ChefContext extends View, Closeable {
 
+   /**
+    * Provides access to high level Chef features.
+    */
    ChefService getChefService();
+
+   /**
+    * Provides access to the underlying Chef api.
+    */
+   <A extends ChefApi> A getApi(Class<A> apiClass);
 
 }

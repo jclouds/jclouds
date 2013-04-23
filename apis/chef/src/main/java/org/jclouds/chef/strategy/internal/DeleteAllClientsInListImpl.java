@@ -18,12 +18,14 @@
  */
 package org.jclouds.chef.strategy.internal;
 
+import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.base.Throwables.propagate;
-import static com.google.common.collect.Maps.newHashMap;
-import static org.jclouds.concurrent.FutureIterables.awaitCompletion;
+import static com.google.common.collect.Iterables.transform;
+import static com.google.common.util.concurrent.Futures.allAsList;
 
-import java.util.Map;
-import java.util.concurrent.TimeoutException;
+import java.util.List;
+import java.util.concurrent.Callable;
+import java.util.concurrent.TimeUnit;
 
 import javax.annotation.Resource;
 import javax.inject.Named;
@@ -31,25 +33,27 @@ import javax.inject.Singleton;
 
 import org.jclouds.Constants;
 import org.jclouds.chef.ChefApi;
-import org.jclouds.chef.ChefAsyncApi;
 import org.jclouds.chef.config.ChefProperties;
+import org.jclouds.chef.domain.Client;
 import org.jclouds.chef.strategy.DeleteAllClientsInList;
 import org.jclouds.logging.Logger;
 
+import com.google.common.base.Function;
+import com.google.common.base.Joiner;
 import com.google.common.util.concurrent.ListenableFuture;
 import com.google.common.util.concurrent.ListeningExecutorService;
 import com.google.inject.Inject;
 
 /**
- * 
+ * Concurrently delete all given clients.
  * 
  * @author Adrian Cole
+ * @author Ignasi Barrera
  */
 @Singleton
 public class DeleteAllClientsInListImpl implements DeleteAllClientsInList {
 
-   protected final ChefApi chefApi;
-   protected final ChefAsyncApi chefAsyncApi;
+   protected final ChefApi api;
    protected final ListeningExecutorService userExecutor;
    @Resource
    @Named(ChefProperties.CHEF_LOGGER)
@@ -60,27 +64,36 @@ public class DeleteAllClientsInListImpl implements DeleteAllClientsInList {
    protected Long maxTime;
 
    @Inject
-   DeleteAllClientsInListImpl(@Named(Constants.PROPERTY_USER_THREADS) ListeningExecutorService userExecutor,
-         ChefApi getAllApi, ChefAsyncApi ablobstore) {
-      this.userExecutor = userExecutor;
-      this.chefAsyncApi = ablobstore;
-      this.chefApi = getAllApi;
+   DeleteAllClientsInListImpl(@Named(Constants.PROPERTY_USER_THREADS) ListeningExecutorService userExecutor, ChefApi api) {
+      this.userExecutor = checkNotNull(userExecutor, "userExecuor");
+      this.api = checkNotNull(api, "api");
    }
 
    @Override
    public void execute(Iterable<String> names) {
-      Map<String, Exception> exceptions = newHashMap();
-      Map<String, ListenableFuture<?>> responses = newHashMap();
-      for (String name : names) {
-         responses.put(name, chefAsyncApi.deleteClient(name));
-      }
+      execute(userExecutor, names);
+   }
+
+   @Override
+   public void execute(final ListeningExecutorService executor, Iterable<String> names) {
+      ListenableFuture<List<Client>> futures = allAsList(transform(names,
+            new Function<String, ListenableFuture<Client>>() {
+               @Override
+               public ListenableFuture<Client> apply(final String input) {
+                  return executor.submit(new Callable<Client>() {
+                     @Override
+                     public Client call() throws Exception {
+                        return api.deleteClient(input);
+                     }
+                  });
+               }
+            }));
+
       try {
-         exceptions = awaitCompletion(responses, userExecutor, maxTime, logger,
-               String.format("deleting apis: %s", names));
-      } catch (TimeoutException e) {
-         propagate(e);
+         logger.trace(String.format("deleting clients: %s", Joiner.on(',').join(names)));
+         futures.get(maxTime, TimeUnit.MILLISECONDS);
+      } catch (Exception e) {
+         throw propagate(e);
       }
-      if (exceptions.size() > 0)
-         throw new RuntimeException(String.format("errors deleting clients: %s: %s", names, exceptions));
    }
 }
