@@ -18,8 +18,15 @@
  */
 package org.jclouds.chef.strategy.internal;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+import static com.google.common.base.Throwables.propagate;
 import static com.google.common.collect.Iterables.filter;
-import static org.jclouds.concurrent.FutureIterables.transformParallel;
+import static com.google.common.collect.Iterables.transform;
+import static com.google.common.util.concurrent.Futures.allAsList;
+
+import java.util.List;
+import java.util.concurrent.Callable;
+import java.util.concurrent.TimeUnit;
 
 import javax.annotation.Resource;
 import javax.inject.Named;
@@ -27,13 +34,13 @@ import javax.inject.Singleton;
 
 import org.jclouds.Constants;
 import org.jclouds.chef.ChefApi;
-import org.jclouds.chef.ChefAsyncApi;
 import org.jclouds.chef.config.ChefProperties;
 import org.jclouds.chef.domain.Client;
 import org.jclouds.chef.strategy.ListClients;
 import org.jclouds.logging.Logger;
 
 import com.google.common.base.Function;
+import com.google.common.base.Joiner;
 import com.google.common.base.Predicate;
 import com.google.common.util.concurrent.ListenableFuture;
 import com.google.common.util.concurrent.ListeningExecutorService;
@@ -47,8 +54,7 @@ import com.google.inject.Inject;
 @Singleton
 public class ListClientsImpl implements ListClients {
 
-   protected final ChefApi chefApi;
-   protected final ChefAsyncApi chefAsyncApi;
+   protected final ChefApi api;
    protected final ListeningExecutorService userExecutor;
    @Resource
    @Named(ChefProperties.CHEF_LOGGER)
@@ -59,31 +65,57 @@ public class ListClientsImpl implements ListClients {
    protected Long maxTime;
 
    @Inject
-   ListClientsImpl(@Named(Constants.PROPERTY_USER_THREADS) ListeningExecutorService userExecutor, ChefApi getAllApi,
-         ChefAsyncApi ablobstore) {
-      this.userExecutor = userExecutor;
-      this.chefAsyncApi = ablobstore;
-      this.chefApi = getAllApi;
+   ListClientsImpl(@Named(Constants.PROPERTY_USER_THREADS) ListeningExecutorService userExecutor, ChefApi api) {
+      this.userExecutor = checkNotNull(userExecutor, "userExecuor");
+      this.api = checkNotNull(api, "api");
    }
 
    @Override
    public Iterable<? extends Client> execute() {
-      return execute(chefApi.listClients());
+      return execute(userExecutor);
    }
 
    @Override
    public Iterable<? extends Client> execute(Predicate<String> clientNameSelector) {
-      return execute(filter(chefApi.listClients(), clientNameSelector));
+      return execute(userExecutor, clientNameSelector);
    }
 
    @Override
    public Iterable<? extends Client> execute(Iterable<String> toGet) {
-      return transformParallel(toGet, new Function<String, ListenableFuture<? extends Client>>() {
-         public ListenableFuture<Client> apply(String from) {
-            return chefAsyncApi.getClient(from);
-         }
-      }, userExecutor, maxTime, logger, "getting apis");
+      return execute(userExecutor, toGet);
+   }
 
+   @Override
+   public Iterable<? extends Client> execute(ListeningExecutorService executor) {
+      return execute(executor, api.listClients());
+   }
+
+   @Override
+   public Iterable<? extends Client> execute(ListeningExecutorService executor, Predicate<String> clientNameSelector) {
+      return execute(executor, filter(api.listClients(), clientNameSelector));
+   }
+
+   @Override
+   public Iterable<? extends Client> execute(final ListeningExecutorService executor, Iterable<String> toGet) {
+      ListenableFuture<List<Client>> futures = allAsList(transform(toGet,
+            new Function<String, ListenableFuture<Client>>() {
+               @Override
+               public ListenableFuture<Client> apply(final String input) {
+                  return executor.submit(new Callable<Client>() {
+                     @Override
+                     public Client call() throws Exception {
+                        return api.getClient(input);
+                     }
+                  });
+               }
+            }));
+
+      try {
+         logger.trace(String.format("getting clients: %s", Joiner.on(',').join(toGet)));
+         return futures.get(maxTime, TimeUnit.MILLISECONDS);
+      } catch (Exception e) {
+         throw propagate(e);
+      }
    }
 
 }

@@ -26,7 +26,7 @@ import java.io.IOException;
 import java.net.URI;
 import java.util.List;
 
-import org.jclouds.chef.ChefAsyncApi;
+import org.jclouds.chef.ChefApi;
 import org.jclouds.chef.config.ChefParserModule;
 import org.jclouds.chef.domain.ChecksumStatus;
 import org.jclouds.chef.domain.UploadSandbox;
@@ -60,7 +60,7 @@ public class ParseUploadSandboxFromJsonTest {
       injector = Guice.createInjector(new AbstractModule() {
          @Override
          protected void configure() {
-            bind(String.class).annotatedWith(ApiVersion.class).toInstance(ChefAsyncApi.VERSION);
+            bind(String.class).annotatedWith(ApiVersion.class).toInstance(ChefApi.VERSION);
          }
       }, new ChefParserModule(), new GsonModule());
 

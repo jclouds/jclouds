@@ -18,17 +18,26 @@
  */
 package org.jclouds.chef.strategy;
 
-import com.google.common.base.Predicate;
-import com.google.inject.ImplementedBy;
 import org.jclouds.chef.domain.Environment;
 import org.jclouds.chef.strategy.internal.ListEnvironmentsImpl;
+
+import com.google.common.base.Predicate;
+import com.google.common.util.concurrent.ListeningExecutorService;
+import com.google.inject.ImplementedBy;
 
 @ImplementedBy(ListEnvironmentsImpl.class)
 public interface ListEnvironments {
 
-   Iterable<? extends Environment> execute();
+   public Iterable<? extends Environment> execute();
 
-   Iterable<? extends Environment> execute(Predicate<String> environmentNameSelector);
+   public Iterable<? extends Environment> execute(Predicate<String> environmentNameSelector);
 
-   Iterable<? extends Environment> execute(Iterable<String> toGet);
+   public Iterable<? extends Environment> execute(Iterable<String> toGet);
+
+   public Iterable<? extends Environment> execute(ListeningExecutorService executor);
+
+   public Iterable<? extends Environment> execute(ListeningExecutorService executor,
+         Predicate<String> environmentNameSelector);
+
+   public Iterable<? extends Environment> execute(ListeningExecutorService executor, Iterable<String> toGet);
 }

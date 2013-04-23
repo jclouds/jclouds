@@ -18,11 +18,13 @@
  */
 package org.jclouds.chef.functions;
 
-import com.google.common.collect.ImmutableSet;
-import com.google.inject.AbstractModule;
-import com.google.inject.Guice;
-import com.google.inject.Injector;
-import org.jclouds.chef.ChefAsyncApi;
+import static org.testng.Assert.assertEquals;
+
+import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
+
+import org.jclouds.chef.ChefApi;
 import org.jclouds.chef.config.ChefParserModule;
 import org.jclouds.chef.domain.CookbookDefinition;
 import org.jclouds.http.HttpResponse;
@@ -31,11 +33,10 @@ import org.jclouds.rest.annotations.ApiVersion;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
 
-import java.io.IOException;
-import java.net.URI;
-import java.net.URISyntaxException;
-
-import static org.testng.Assert.assertEquals;
+import com.google.common.collect.ImmutableSet;
+import com.google.inject.AbstractModule;
+import com.google.inject.Guice;
+import com.google.inject.Injector;
 
 @Test(groups = {"unit"}, singleThreaded = true)
 public class ParseCookbookDefinitionFromJsonv10Test {
@@ -47,7 +48,7 @@ public class ParseCookbookDefinitionFromJsonv10Test {
       Injector injector = Guice.createInjector(new AbstractModule() {
          @Override
          protected void configure() {
-            bind(String.class).annotatedWith(ApiVersion.class).toInstance(ChefAsyncApi.VERSION);
+            bind(String.class).annotatedWith(ApiVersion.class).toInstance(ChefApi.VERSION);
          }
       }, new ChefParserModule(), new GsonModule());
 

@@ -25,7 +25,7 @@ import org.jclouds.chef.ChefApi;
 import org.jclouds.chef.ChefApiMetadata;
 import org.jclouds.chef.config.ChefBootstrapModule;
 import org.jclouds.chef.config.ChefParserModule;
-import org.jclouds.chef.config.ChefRestClientModule;
+import org.jclouds.chef.config.ChefHttpApiModule;
 import org.jclouds.domain.JsonBall;
 import org.jclouds.ohai.AutomaticSupplier;
 import org.jclouds.ohai.config.ConfiguresOhai;
@@ -60,7 +60,7 @@ public class BaseStubbedOhaiLiveTest extends BaseChefLiveTest<ChefApi> {
       return new ChefApiMetadata()
             .toBuilder()
             .defaultModules(
-                  ImmutableSet.<Class<? extends Module>> of(ChefRestClientModule.class, ChefParserModule.class,
+                  ImmutableSet.<Class<? extends Module>> of(ChefHttpApiModule.class, ChefParserModule.class,
                         ChefBootstrapModule.class, TestOhaiModule.class)).build();
    }
 }

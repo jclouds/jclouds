@@ -20,6 +20,7 @@ package org.jclouds.chef.strategy;
 
 import org.jclouds.chef.strategy.internal.DeleteAllNodesInListImpl;
 
+import com.google.common.util.concurrent.ListeningExecutorService;
 import com.google.inject.ImplementedBy;
 
 /**
@@ -31,5 +32,7 @@ import com.google.inject.ImplementedBy;
 public interface DeleteAllNodesInList {
 
    public void execute(Iterable<String> names);
+
+   public void execute(ListeningExecutorService executor, Iterable<String> names);
 
 }

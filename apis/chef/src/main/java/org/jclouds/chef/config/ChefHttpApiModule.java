@@ -18,22 +18,16 @@
  */
 package org.jclouds.chef.config;
 
-import static org.jclouds.reflect.Reflection2.typeToken;
-
 import org.jclouds.chef.ChefApi;
-import org.jclouds.chef.ChefAsyncApi;
-import org.jclouds.rest.ConfiguresRestClient;
+import org.jclouds.rest.ConfiguresHttpApi;
 
 /**
  * Configures the Chef connection.
  * 
  * @author Adrian Cole
+ * @author Ignasi Barrera
  */
-@ConfiguresRestClient
-public class ChefRestClientModule extends BaseChefRestClientModule<ChefApi, ChefAsyncApi> {
-
-   public ChefRestClientModule() {
-      super(typeToken(ChefApi.class), typeToken(ChefAsyncApi.class));
-   }
+@ConfiguresHttpApi
+public class ChefHttpApiModule extends BaseChefHttpApiModule<ChefApi> {
 
 }

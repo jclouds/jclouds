@@ -18,9 +18,9 @@
  */
 package org.jclouds.ohai.config;
 
+import static org.easymock.EasyMock.createMock;
 import static org.easymock.EasyMock.expect;
-import static org.easymock.classextension.EasyMock.createMock;
-import static org.easymock.classextension.EasyMock.replay;
+import static org.easymock.EasyMock.replay;
 import static org.testng.Assert.assertEquals;
 
 import java.lang.management.RuntimeMXBean;
@@ -28,13 +28,12 @@ import java.util.Map;
 
 import javax.inject.Inject;
 
-import org.jclouds.chef.ChefAsyncApi;
+import org.jclouds.chef.ChefApi;
 import org.jclouds.chef.config.ChefParserModule;
 import org.jclouds.domain.JsonBall;
 import org.jclouds.json.Json;
 import org.jclouds.json.config.GsonModule;
 import org.jclouds.ohai.Automatic;
-import org.jclouds.ohai.config.JMXOhaiModule;
 import org.jclouds.rest.annotations.ApiVersion;
 import org.testng.annotations.Test;
 
@@ -63,7 +62,7 @@ public class JMXTest {
       Injector injector = Guice.createInjector(new AbstractModule() {
          @Override
          protected void configure() {
-            bind(String.class).annotatedWith(ApiVersion.class).toInstance(ChefAsyncApi.VERSION);
+            bind(String.class).annotatedWith(ApiVersion.class).toInstance(ChefApi.VERSION);
          }
       }, new ChefParserModule(), new GsonModule(), new JMXOhaiModule() {
          @Override

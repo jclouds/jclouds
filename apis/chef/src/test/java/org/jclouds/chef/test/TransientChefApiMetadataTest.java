@@ -19,7 +19,7 @@
 package org.jclouds.chef.test;
 
 import org.jclouds.View;
-import org.jclouds.rest.internal.BaseRestApiMetadataTest;
+import org.jclouds.rest.internal.BaseHttpApiMetadataTest;
 import org.testng.annotations.Test;
 
 import com.google.common.collect.ImmutableSet;
@@ -30,7 +30,7 @@ import com.google.common.reflect.TypeToken;
  * @author Adrian Cole
  */
 @Test(groups = "unit", testName = "TransientChefApiMetadataTest")
-public class TransientChefApiMetadataTest extends BaseRestApiMetadataTest {
+public class TransientChefApiMetadataTest extends BaseHttpApiMetadataTest {
 
    // no config management abstraction, yet
    public TransientChefApiMetadataTest() {
