@@ -48,7 +48,7 @@ public class ChefContextImpl extends BaseView implements ChefContext {
    protected ChefContextImpl(@Provider Context backend, @Provider TypeToken<? extends Context> backendType,
          ChefService chefService) {
       super(backend, backendType);
-      this.chefService = checkNotNull(chefService, "checkNotNull");
+      this.chefService = checkNotNull(chefService, "chefService");
    }
 
    @Override
