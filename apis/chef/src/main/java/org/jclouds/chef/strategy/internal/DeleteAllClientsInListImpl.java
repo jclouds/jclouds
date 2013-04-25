@@ -19,13 +19,12 @@
 package org.jclouds.chef.strategy.internal;
 
 import static com.google.common.base.Preconditions.checkNotNull;
-import static com.google.common.base.Throwables.propagate;
 import static com.google.common.collect.Iterables.transform;
 import static com.google.common.util.concurrent.Futures.allAsList;
+import static com.google.common.util.concurrent.Futures.getUnchecked;
 
 import java.util.List;
 import java.util.concurrent.Callable;
-import java.util.concurrent.TimeUnit;
 
 import javax.annotation.Resource;
 import javax.inject.Named;
@@ -59,10 +58,6 @@ public class DeleteAllClientsInListImpl implements DeleteAllClientsInList {
    @Named(ChefProperties.CHEF_LOGGER)
    protected Logger logger = Logger.NULL;
 
-   @Inject(optional = true)
-   @Named(Constants.PROPERTY_REQUEST_TIMEOUT)
-   protected Long maxTime;
-
    @Inject
    DeleteAllClientsInListImpl(@Named(Constants.PROPERTY_USER_THREADS) ListeningExecutorService userExecutor, ChefApi api) {
       this.userExecutor = checkNotNull(userExecutor, "userExecuor");
@@ -89,11 +84,7 @@ public class DeleteAllClientsInListImpl implements DeleteAllClientsInList {
                }
             }));
 
-      try {
-         logger.trace(String.format("deleting clients: %s", Joiner.on(',').join(names)));
-         futures.get(maxTime, TimeUnit.MILLISECONDS);
-      } catch (Exception e) {
-         throw propagate(e);
-      }
+      logger.trace(String.format("deleting clients: %s", Joiner.on(',').join(names)));
+      getUnchecked(futures);
    }
 }
