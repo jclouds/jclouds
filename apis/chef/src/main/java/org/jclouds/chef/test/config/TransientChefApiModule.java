@@ -41,12 +41,14 @@ import org.jclouds.concurrent.config.ExecutorServiceModule;
 import org.jclouds.crypto.Crypto;
 import org.jclouds.domain.JsonBall;
 import org.jclouds.rest.ConfiguresHttpApi;
-import org.jclouds.rest.config.HttpApiModule;
+import org.jclouds.rest.config.RestModule;
+import org.jclouds.rest.config.SyncToAsyncHttpInvocationModule;
 
 import com.google.common.base.Optional;
 import com.google.common.base.Supplier;
 import com.google.common.cache.CacheLoader;
 import com.google.common.collect.ImmutableSet;
+import com.google.inject.AbstractModule;
 import com.google.inject.Injector;
 import com.google.inject.Module;
 import com.google.inject.Provides;
@@ -57,10 +59,12 @@ import com.google.inject.name.Names;
  * @author Adrian Cole
  */
 @ConfiguresHttpApi
-public class TransientChefApiModule extends HttpApiModule<TransientChefApi> {
+public class TransientChefApiModule extends AbstractModule {
 
    @Override
    protected void configure() {
+      install(new RestModule());
+      install(new SyncToAsyncHttpInvocationModule());
       bind(ChefApi.class).to(TransientChefApi.class);
       bind(LocalBlobStore.class).annotatedWith(Names.named("databags"))
             .toInstance(
