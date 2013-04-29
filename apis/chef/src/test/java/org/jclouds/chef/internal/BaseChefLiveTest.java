@@ -48,6 +48,10 @@ public abstract class BaseChefLiveTest<A extends ChefApi> extends BaseApiLiveTes
    protected ChefService chefService;
    protected Json json;
 
+   protected BaseChefLiveTest() {
+      provider = "chef";
+   }
+
    /**
     * the credential is a path to the pem file.
     */
