@@ -42,7 +42,7 @@ public class UpdateAutomaticAttributesOnNodeImplLiveTest extends BaseChefLiveTes
    private UpdateAutomaticAttributesOnNodeImpl strategy;
 
    @Override
-   public void initialize() {
+   protected void initialize() {
       super.initialize();
       this.currentUserProvider = injector.getInstance(CurrentUserProvider.class);
       this.strategy = injector.getInstance(UpdateAutomaticAttributesOnNodeImpl.class);

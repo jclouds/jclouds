@@ -43,7 +43,7 @@ public class CreateNodeAndPopulateAutomaticAttributesImplLiveTest extends BaseCh
    private CreateNodeAndPopulateAutomaticAttributesImpl strategy;
 
    @Override
-   public void initialize() {
+   protected void initialize() {
       super.initialize();
       this.currentUserProvider = injector.getInstance(CurrentUserProvider.class);
       this.strategy = injector.getInstance(CreateNodeAndPopulateAutomaticAttributesImpl.class);

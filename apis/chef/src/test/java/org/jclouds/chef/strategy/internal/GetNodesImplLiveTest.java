@@ -41,7 +41,7 @@ public class GetNodesImplLiveTest extends BaseChefLiveTest<ChefApi> {
    private CreateNodeAndPopulateAutomaticAttributesImpl creater;
 
    @Override
-   public void initialize() {
+   protected void initialize() {
       super.initialize();
       this.creater = injector.getInstance(CreateNodeAndPopulateAutomaticAttributesImpl.class);
       this.strategy = injector.getInstance(ListNodesImpl.class);

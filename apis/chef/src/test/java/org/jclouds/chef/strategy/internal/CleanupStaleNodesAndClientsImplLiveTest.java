@@ -39,7 +39,7 @@ public class CleanupStaleNodesAndClientsImplLiveTest extends BaseChefLiveTest<Ch
    private CleanupStaleNodesAndClientsImpl strategy;
 
    @Override
-   public void initialize() {
+   protected void initialize() {
       super.initialize();
       this.creater = injector.getInstance(CreateNodeAndPopulateAutomaticAttributesImpl.class);
       this.strategy = injector.getInstance(CleanupStaleNodesAndClientsImpl.class);
