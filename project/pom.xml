@@ -545,7 +545,7 @@ under the License.
             </goals>
             <configuration>
               <resourceBundles>
-                <resourceBundle>org.jclouds:jclouds-resources:${project.version}</resourceBundle>
+                <resourceBundle>org.apache.jclouds:jclouds-resources:${project.version}</resourceBundle>
               </resourceBundles>
             </configuration>
           </execution>          
