@@ -26,7 +26,7 @@
         <artifactId>oss-parent</artifactId>
         <version>4</version>
     </parent>
-    <groupId>org.jclouds</groupId>
+    <groupId>org.apache.jclouds</groupId>
     <artifactId>jclouds-project</artifactId>
     <version>1.6.1-SNAPSHOT</version>
     <packaging>pom</packaging>
@@ -339,17 +339,17 @@
                             <!-- CloudSigma bundles conflict between api and providers-->
                             <conflictingDependencies>
                                 <dependency>
-                                    <groupId>org.jclouds.api</groupId>
+                                    <groupId>org.apache.jclouds.api</groupId>
                                     <artifactId>cloudsigma</artifactId>
                                     <version>${project.version}</version>
                                 </dependency>
                                 <dependency>
-                                    <groupId>org.jclouds.provider</groupId>
+                                    <groupId>org.apache.jclouds.provider</groupId>
                                     <artifactId>cloudsigma-lvs</artifactId>
                                     <version>${project.version}</version>
                                 </dependency>
                                 <dependency>
-                                    <groupId>org.jclouds.provider</groupId>
+                                    <groupId>org.apache.jclouds.provider</groupId>
                                     <artifactId>cloudsigma-zrh</artifactId>
                                     <version>${project.version}</version>
                                 </dependency>
@@ -846,7 +846,7 @@ pageTracker._trackPageview();
                         </executions>
                         <dependencies>
                             <dependency>
-                                <groupId>org.jclouds</groupId>
+                                <groupId>org.apache.jclouds</groupId>
                                 <artifactId>jclouds-assemblies</artifactId>
                                 <version>${project.version}</version>
                             </dependency>
