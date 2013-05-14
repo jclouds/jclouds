@@ -42,6 +42,7 @@ import org.jclouds.rest.annotations.ApiVersion;
 import org.jclouds.scriptbuilder.domain.OsFamily;
 import org.jclouds.scriptbuilder.domain.ShellToken;
 import org.jclouds.scriptbuilder.domain.Statement;
+import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
 import com.google.common.base.Charsets;
@@ -63,22 +64,29 @@ import com.google.inject.name.Names;
 @Test(groups = "unit", testName = "GroupToBootScriptTest")
 public class GroupToBootScriptTest {
 
-   Injector injector = Guice.createInjector(new AbstractModule() {
-      @Override
-      protected void configure() {
-         bind(String.class).annotatedWith(ApiVersion.class).toInstance(ChefApi.VERSION);
-         bind(String.class).annotatedWith(Names.named(CHEF_UPDATE_GEM_SYSTEM)).toInstance("true");
-         bind(String.class).annotatedWith(Names.named(CHEF_UPDATE_GEMS)).toInstance("true");
-      }
-   }, new ChefParserModule(), new GsonModule(), new ChefBootstrapModule());
+   private Json json;
+   private Statement installChefGems;
+   private Optional<String> validatorName;
 
-   Json json = injector.getInstance(Json.class);
-   Statement installChefGems = injector.getInstance(Key.get(Statement.class, Names.named("installChefGems")));
-   Optional<String> validatorName = Optional.<String> of("chef-validator");
-   Optional<PrivateKey> validatorCredential = Optional.<PrivateKey> of(createMock(PrivateKey.class));
+   @BeforeClass
+   public void setup() {
+      Injector injector = Guice.createInjector(new AbstractModule() {
+         @Override
+         protected void configure() {
+            bind(String.class).annotatedWith(ApiVersion.class).toInstance(ChefApi.VERSION);
+            bind(String.class).annotatedWith(Names.named(CHEF_UPDATE_GEM_SYSTEM)).toInstance("true");
+            bind(String.class).annotatedWith(Names.named(CHEF_UPDATE_GEMS)).toInstance("true");
+         }
+      }, new ChefParserModule(), new GsonModule(), new ChefBootstrapModule());
+
+      json = injector.getInstance(Json.class);
+      installChefGems = injector.getInstance(Key.get(Statement.class, Names.named("installChefGems")));
+      validatorName = Optional.<String> of("chef-validator");
+   }
 
    @Test(expectedExceptions = IllegalStateException.class)
    public void testMustHaveValidatorName() {
+      Optional<PrivateKey> validatorCredential = Optional.of(createMock(PrivateKey.class));
       GroupToBootScript fn = new GroupToBootScript(Suppliers.ofInstance(URI.create("http://localhost:4000")), json,
             CacheLoader.from(Functions.forMap(ImmutableMap.<String, DatabagItem> of())), installChefGems,
             Optional.<String> absent(), validatorCredential);
@@ -95,6 +103,7 @@ public class GroupToBootScriptTest {
 
    @Test(expectedExceptions = IllegalArgumentException.class, expectedExceptionsMessageRegExp = "Key 'foo' not present in map")
    public void testMustHaveRunScriptsName() {
+      Optional<PrivateKey> validatorCredential = Optional.of(createMock(PrivateKey.class));
       GroupToBootScript fn = new GroupToBootScript(Suppliers.ofInstance(URI.create("http://localhost:4000")), json,
             CacheLoader.from(Functions.forMap(ImmutableMap.<String, DatabagItem> of())), installChefGems,
             validatorName, validatorCredential);
@@ -103,6 +112,7 @@ public class GroupToBootScriptTest {
 
    @Test(expectedExceptions = NullPointerException.class, expectedExceptionsMessageRegExp = "null value in entry: foo=null")
    public void testMustHaveRunScriptsValue() {
+      Optional<PrivateKey> validatorCredential = Optional.of(createMock(PrivateKey.class));
       GroupToBootScript fn = new GroupToBootScript(Suppliers.ofInstance(URI.create("http://localhost:4000")), json,
             CacheLoader.from(Functions.forMap(ImmutableMap.<String, DatabagItem> of("foo", (DatabagItem) null))),
             installChefGems, validatorName, validatorCredential);
@@ -110,6 +120,7 @@ public class GroupToBootScriptTest {
    }
 
    public void testOneRecipe() throws IOException {
+      Optional<PrivateKey> validatorCredential = Optional.of(createMock(PrivateKey.class));
       GroupToBootScript fn = new GroupToBootScript(Suppliers.ofInstance(URI.create("http://localhost:4000")), json,
             CacheLoader.from(Functions.forMap(ImmutableMap.<String, JsonBall> of("foo", new JsonBall(
                   "{\"tomcat6\":{\"ssl_port\":8433},\"run_list\":[\"recipe[apache2]\",\"role[webserver]\"]}")))),
@@ -128,6 +139,31 @@ public class GroupToBootScriptTest {
                         Charsets.UTF_8)
                   + "gem install chef --no-rdoc --no-ri\n"
                   + Resources.toString(Resources.getResource("bootstrap.sh"), Charsets.UTF_8));
+
+      verify(validatorKey);
+   }
+
+   public void testOneRecipeAndEnvironment() throws IOException {
+      Optional<PrivateKey> validatorCredential = Optional.of(createMock(PrivateKey.class));
+      GroupToBootScript fn = new GroupToBootScript(Suppliers.ofInstance(URI.create("http://localhost:4000")), json,
+            CacheLoader.from(Functions.forMap(ImmutableMap.<String, JsonBall> of("foo", new JsonBall(
+                  "{\"tomcat6\":{\"ssl_port\":8433},\"environment\":\"env\","
+                        + "\"run_list\":[\"recipe[apache2]\",\"role[webserver]\"]}")))), installChefGems,
+            validatorName, validatorCredential);
+
+      PrivateKey validatorKey = validatorCredential.get();
+      expect(validatorKey.getEncoded()).andReturn(PemsTest.PRIVATE_KEY.getBytes());
+      replay(validatorKey);
+
+      assertEquals(
+            fn.apply("foo").render(OsFamily.UNIX),
+            Resources.toString(Resources.getResource("test_install_ruby." + ShellToken.SH.to(OsFamily.UNIX)),
+                  Charsets.UTF_8)
+                  + Resources.toString(
+                        Resources.getResource("test_install_rubygems." + ShellToken.SH.to(OsFamily.UNIX)),
+                        Charsets.UTF_8)
+                  + "gem install chef --no-rdoc --no-ri\n"
+                  + Resources.toString(Resources.getResource("bootstrap-env.sh"), Charsets.UTF_8));
 
       verify(validatorKey);
    }

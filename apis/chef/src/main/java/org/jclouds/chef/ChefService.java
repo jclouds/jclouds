@@ -22,6 +22,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
 
+import org.jclouds.chef.domain.BootstrapConfig;
 import org.jclouds.chef.domain.Client;
 import org.jclouds.chef.domain.CookbookVersion;
 import org.jclouds.chef.domain.Environment;
@@ -74,22 +75,15 @@ public interface ChefService {
    Statement createBootstrapScriptForGroup(String group);
 
    /**
-    * assigns a run list to all nodes bootstrapped with a certain group
-    * 
-    * @param runList
-    *           list of recipes or roles to assign. syntax is
-    *           {@code recipe[name]} and {@code role[name]}
+    * Configures how the nodes of a certain group will be bootstrapped
     * 
     * @param group
-    *           corresponds to a configured
-    *           {@link org.jclouds.chef.config.ChefProperties#CHEF_BOOTSTRAP_DATABAG
-    *           databag} where run_list and other information are stored
-    * @deprecated use
-    *             {@link ChefService#updateBootstrapConfigForGroup(Iterable, String)
-
+    *           The group where the given bootstrap configuration will be
+    *           applied.
+    * @param bootstrapConfig
+    *           The configuration to be applied to the nodes in the group.
     */
-   @Deprecated
-   void updateRunListForGroup(Iterable<String> runList, String group);
+   void updateBootstrapConfigForGroup(String group, BootstrapConfig bootstrapConfig);
 
    /**
     * assigns a run list to all nodes bootstrapped with a certain group
@@ -102,9 +96,11 @@ public interface ChefService {
     *           corresponds to a configured
     *           {@link org.jclouds.chef.config.ChefProperties#CHEF_BOOTSTRAP_DATABAG
     *           databag} where run_list and other information are stored
-    * @see #makeChefApiBootstrapScriptForTag
+    * @deprecated Use {link
+    *             {@link #updateBootstrapConfigForGroup(String, BootstrapConfig)}
     */
-   public void updateBootstrapConfigForGroup(Iterable<String> runList, String group);
+   @Deprecated
+   void updateBootstrapConfigForGroup(Iterable<String> runList, String group);
 
    /**
     * assigns a run list to all nodes bootstrapped with a certain group, and
@@ -123,9 +119,11 @@ public interface ChefService {
     *           corresponds to a configured
     *           {@link org.jclouds.chef.config.ChefProperties#CHEF_BOOTSTRAP_DATABAG
     *           databag} where run_list and other information are stored
-    * @see #makeChefApiBootstrapScriptForTag
+    * @deprecated Use {link
+    *             {@link #updateBootstrapConfigForGroup(String, BootstrapConfig)}
     */
-   public void updateBootstrapConfigForGroup(Iterable<String> runList, JsonBall jsonAttributes, String group);
+   @Deprecated
+   void updateBootstrapConfigForGroup(Iterable<String> runList, JsonBall jsonAttributes, String group);
 
    /**
     * @param group

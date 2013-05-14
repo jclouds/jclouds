@@ -36,6 +36,7 @@ import org.jclouds.chef.ChefApi;
 import org.jclouds.chef.ChefContext;
 import org.jclouds.chef.ChefService;
 import org.jclouds.chef.config.ChefProperties;
+import org.jclouds.chef.domain.BootstrapConfig;
 import org.jclouds.chef.domain.Client;
 import org.jclouds.chef.domain.CookbookVersion;
 import org.jclouds.chef.domain.DatabagItem;
@@ -63,10 +64,8 @@ import org.jclouds.logging.Logger;
 import org.jclouds.scriptbuilder.domain.Statement;
 
 import com.google.common.annotations.VisibleForTesting;
-import com.google.common.base.Optional;
 import com.google.common.base.Predicate;
 import com.google.common.base.Supplier;
-import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.io.ByteStreams;
 import com.google.common.io.InputSupplier;
@@ -210,32 +209,34 @@ public class BaseChefService implements ChefService {
    }
 
    @Override
-   @Deprecated
-   public void updateRunListForGroup(Iterable<String> runList, String group) {
-      updateBootstrapConfigForGroup(runList, group);
-   }
-
-   @Override
-   public void updateBootstrapConfigForGroup(Iterable<String> runList, String group) {
-      updateBootstrapConfigForGroup(runList, null, group);
-   }
-
-   @Override
-   public void updateBootstrapConfigForGroup(Iterable<String> runList, @Nullable JsonBall jsonAttributes, String group) {
+   public void updateBootstrapConfigForGroup(String group, BootstrapConfig bootstrapConfig) {
       try {
          api.createDatabag(databag);
       } catch (IllegalStateException e) {
 
       }
 
-      String bootstrapConfig = buildBootstrapConfiguration(runList, Optional.fromNullable(jsonAttributes));
-      DatabagItem runlist = new DatabagItem(group, bootstrapConfig);
+      String jsonConfig = buildBootstrapConfiguration(bootstrapConfig);
+      DatabagItem runlist = new DatabagItem(group, jsonConfig);
 
       if (api.getDatabagItem(databag, group) == null) {
          api.createDatabagItem(databag, runlist);
       } else {
          api.updateDatabagItem(databag, runlist);
       }
+   }
+
+   @Override
+   @Deprecated
+   public void updateBootstrapConfigForGroup(Iterable<String> runList, String group) {
+      updateBootstrapConfigForGroup(runList, null, group);
+   }
+
+   @Override
+   @Deprecated
+   public void updateBootstrapConfigForGroup(Iterable<String> runList, @Nullable JsonBall jsonAttributes, String group) {
+      updateBootstrapConfigForGroup(group, BootstrapConfig.builder().runList(runList).attributes(jsonAttributes)
+            .build());
    }
 
    @Override
@@ -261,18 +262,23 @@ public class BaseChefService implements ChefService {
    }
 
    @VisibleForTesting
-   String buildBootstrapConfiguration(Iterable<String> runList, Optional<JsonBall> jsonAttributes) {
-      checkNotNull(runList, "runList must not be null");
-      checkNotNull(jsonAttributes, "jsonAttributes must not be null");
+   String buildBootstrapConfiguration(BootstrapConfig bootstrapConfig) {
+      checkNotNull(bootstrapConfig, "bootstrapConfig must not be null");
 
-      Map<String, Object> bootstrapConfig = Maps.newHashMap();
-      bootstrapConfig.put("run_list", Lists.newArrayList(runList));
-      if (jsonAttributes.isPresent()) {
-         Map<String, Object> attributes = json.fromJson(jsonAttributes.get().toString(),
-               BootstrapConfigForGroup.BOOTSTRAP_CONFIG_TYPE);
-         bootstrapConfig.putAll(attributes);
+      Map<String, Object> configMap = Maps.newHashMap();
+      configMap.put("run_list", bootstrapConfig.getRunList());
+
+      if (bootstrapConfig.getEnvironment().isPresent()) {
+         configMap.put("environment", bootstrapConfig.getEnvironment().get());
       }
-      return json.toJson(bootstrapConfig);
+
+      if (bootstrapConfig.getAttribtues().isPresent()) {
+         Map<String, Object> attributes = json.fromJson(bootstrapConfig.getAttribtues().get().toString(),
+               BootstrapConfigForGroup.BOOTSTRAP_CONFIG_TYPE);
+         configMap.putAll(attributes);
+      }
+
+      return json.toJson(configMap);
    }
 
    @Override
@@ -289,4 +295,5 @@ public class BaseChefService implements ChefService {
    public Iterable<? extends Environment> listEnvironmentsNamed(Iterable<String> names) {
       return listEnvironments.execute(names);
    }
+
 }
