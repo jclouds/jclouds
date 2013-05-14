@@ -44,11 +44,13 @@ import org.jclouds.scriptbuilder.domain.Statement;
 
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Function;
+import com.google.common.base.Joiner;
 import com.google.common.base.Optional;
 import com.google.common.base.Splitter;
 import com.google.common.base.Supplier;
 import com.google.common.cache.CacheLoader;
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableMap;
 import com.google.inject.TypeLiteral;
 
 /**
@@ -82,6 +84,7 @@ public class GroupToBootScript implements Function<String, Statement> {
       this.validatorCredential = checkNotNull(validatorCredential, validatorCredential);
    }
 
+   @Override
    public Statement apply(String group) {
       checkNotNull(group, "group");
       String validatorClientName = validatorName.get();
@@ -93,6 +96,10 @@ public class GroupToBootScript implements Function<String, Statement> {
       } catch (Exception e) {
          throw propagate(e);
       }
+
+      Map<String, JsonBall> config = json.fromJson(bootstrapConfig.toString(),
+            BootstrapConfigForGroup.BOOTSTRAP_CONFIG_TYPE);
+      Optional<JsonBall> environment = Optional.fromNullable(config.get("environment"));
 
       String chefConfigDir = "{root}etc{fs}chef";
       Statement createChefConfigDir = exec("{md} " + chefConfigDir);
@@ -106,10 +113,15 @@ public class GroupToBootScript implements Function<String, Statement> {
             Splitter.on('\n').split(Pems.pem(validatorKey)));
 
       String chefBootFile = chefConfigDir + "{fs}first-boot.json";
-
       Statement createFirstBoot = appendFile(chefBootFile, Collections.singleton(json.toJson(bootstrapConfig)));
 
-      Statement runChef = exec("chef-client -j " + chefBootFile);
+      ImmutableMap.Builder<String, String> options = ImmutableMap.builder();
+      options.put("-j", chefBootFile);
+      if (environment.isPresent()) {
+         options.put("-E", environment.get().toString());
+      }
+      String strOptions = Joiner.on(' ').withKeyValueSeparator(" ").join(options.build());
+      Statement runChef = exec("chef-client " + strOptions);
 
       return newStatementList(installChefGems, createChefConfigDir, createClientRb, createValidationPem,
             createFirstBoot, runChef);
