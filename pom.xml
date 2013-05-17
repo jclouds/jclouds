@@ -114,6 +114,7 @@
             <exclude>.git/**</exclude>
             <exclude>**/.gitignore</exclude>
             <exclude>**/.gitattributes</exclude>
+            <exclude>.repository/**</exclude>
           </excludes>
         </configuration>
       </plugin>
