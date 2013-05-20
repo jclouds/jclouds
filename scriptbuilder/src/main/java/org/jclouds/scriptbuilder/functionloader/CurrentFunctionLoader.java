@@ -18,6 +18,8 @@ package org.jclouds.scriptbuilder.functionloader;
 
 import java.util.concurrent.atomic.AtomicReference;
 
+import org.jclouds.scriptbuilder.functionloader.filters.LicenseHeaderFilter;
+
 /**
  * Means to access the current {@link FunctionLoader} instance;
  */
@@ -27,7 +29,8 @@ public class CurrentFunctionLoader {
             BasicFunctionLoader.INSTANCE);
 
    public static FunctionLoader get() {
-      return ref.get();
+      // Filter out license headers in function scripts
+      return new LicenseHeaderFilter(ref.get());
    }
 
    public static FunctionLoader set(FunctionLoader loader) {
