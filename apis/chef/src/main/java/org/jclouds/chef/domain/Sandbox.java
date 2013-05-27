@@ -41,11 +41,9 @@ public class Sandbox {
    private String guid;
 
    // internal
-   @SuppressWarnings("unused")
    @SerializedName("json_class")
    private String _jsonClass = "Chef::Sandbox";
    @SerializedName("chef_type")
-   @SuppressWarnings("unused")
    private String _chefType = "sandbox";
 
    public Sandbox(String rev, boolean isCompleted, Date createTime, Iterable<String> checksums, String name, String guid) {

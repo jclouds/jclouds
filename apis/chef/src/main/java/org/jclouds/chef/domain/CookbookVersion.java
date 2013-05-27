@@ -46,11 +46,9 @@ public class CookbookVersion {
    private Set<Resource> rootFiles = Sets.newLinkedHashSet();
 
    // internal
-   @SuppressWarnings("unused")
    @SerializedName("json_class")
    private String _jsonClass = "Chef::CookbookVersion";
    @SerializedName("chef_type")
-   @SuppressWarnings("unused")
    private String _chefType = "cookbook_version";
 
    public CookbookVersion(String cookbookName, String version) {

@@ -36,9 +36,4 @@ public interface ChefContext extends View, Closeable {
     */
    ChefService getChefService();
 
-   /**
-    * Provides access to the underlying Chef api.
-    */
-   <A extends ChefApi> A getApi(Class<A> apiClass);
-
 }

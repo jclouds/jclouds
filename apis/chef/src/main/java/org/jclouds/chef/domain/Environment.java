@@ -33,10 +33,8 @@ public class Environment {
    @SerializedName("cookbook_versions")
    private Map<String, String> cookbookVersions = Maps.newLinkedHashMap();
    // internal
-   @SuppressWarnings("unused")
    @SerializedName("json_class")
    private String _jsonClass = "Chef::Environment";
-   @SuppressWarnings("unused")
    @SerializedName("chef_type")
    private String _chefType = "environment";
 
