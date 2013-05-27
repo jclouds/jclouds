@@ -24,14 +24,11 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import org.jclouds.Context;
-import org.jclouds.chef.ChefApi;
 import org.jclouds.chef.ChefContext;
 import org.jclouds.chef.ChefService;
 import org.jclouds.internal.BaseView;
 import org.jclouds.location.Provider;
-import org.jclouds.rest.ApiContext;
 
-import com.google.common.reflect.TypeParameter;
 import com.google.common.reflect.TypeToken;
 
 /**
@@ -52,15 +49,6 @@ public class ChefContextImpl extends BaseView implements ChefContext {
    @Override
    public ChefService getChefService() {
       return chefService;
-   }
-
-   @Override
-   public <A extends ChefApi> A getApi(Class<A> apiClass) {
-      TypeToken<ApiContext<A>> contextToken = new TypeToken<ApiContext<A>>(delegate().getClass()) {
-         private static final long serialVersionUID = 1L;
-      }.where(new TypeParameter<A>() {
-      }, TypeToken.of(apiClass));
-      return unwrap(contextToken).getApi();
    }
 
    @Override
