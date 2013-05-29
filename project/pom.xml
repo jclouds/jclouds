@@ -627,7 +627,6 @@
         <version>1.3</version>
         <executions>             
           <execution>
-            <id>process-remote-resources</id>
             <goals>
               <goal>process</goal>
             </goals>
@@ -980,7 +979,6 @@
             <artifactId>maven-remote-resources-plugin</artifactId>
             <executions>
               <execution>
-                <id>process-remote-resources</id>
                 <goals>
                   <goal>process</goal>
                 </goals>
