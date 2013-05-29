@@ -62,7 +62,6 @@
             </configuration>                        
           </execution>
           <execution>
-            <id>process-remote-resources</id>
             <goals>
               <goal>process</goal>
             </goals>
