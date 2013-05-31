@@ -181,11 +181,11 @@ public class CloudStackComputeServiceAdapter implements
       VirtualMachine vm = blockUntilJobCompletesAndReturnResult.<VirtualMachine>apply(job);
       logger.debug("--- virtualmachine: %s", vm);
       LoginCredentials credentials = null;
-      if (vm.isPasswordEnabled()) {
+      if (!vm.isPasswordEnabled() || templateOptions.getKeyPair() != null) {
+         credentials = LoginCredentials.fromCredentials(credentialStore.get("keypair#" + templateOptions.getKeyPair()));
+      } else {
          assert vm.getPassword() != null : vm;
          credentials = LoginCredentials.builder().password(vm.getPassword()).build();
-      } else {
-         credentials = LoginCredentials.fromCredentials(credentialStore.get("keypair#" + templateOptions.getKeyPair()));
       }
       if (templateOptions.shouldSetupStaticNat()) {
          Capabilities capabilities = client.getConfigurationClient().listCapabilities();
