@@ -622,22 +622,6 @@
           </instructions>
         </configuration>
       </plugin>
-      <plugin>      
-        <artifactId>maven-remote-resources-plugin</artifactId>
-        <version>1.3</version>
-        <executions>             
-          <execution>
-            <goals>
-              <goal>process</goal>
-            </goals>
-            <configuration>
-              <resourceBundles>
-                <resourceBundle>org.apache.jclouds:jclouds-resources:${project.version}</resourceBundle>
-              </resourceBundles>
-            </configuration>
-          </execution>          
-        </executions>
-      </plugin>
     </plugins>
     <pluginManagement>
       <plugins>
