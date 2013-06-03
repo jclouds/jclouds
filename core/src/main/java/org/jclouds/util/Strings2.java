@@ -113,12 +113,14 @@ public class Strings2 {
       }
    }
 
+   @Deprecated
    public static String replaceAll(String returnVal, Pattern pattern, String replace) {
       Matcher m = pattern.matcher(returnVal);
       returnVal = m.replaceAll(replace);
       return returnVal;
    }
 
+   @Deprecated
    public static String replaceAll(String input, char match, String replacement) {
       if (input.indexOf(match) != -1) {
          try {
