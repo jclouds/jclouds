@@ -22,11 +22,11 @@ import java.lang.management.RuntimeMXBean;
 import javax.inject.Singleton;
 
 import org.jclouds.domain.JsonBall;
-import org.jclouds.ohai.config.multibindings.MapBinder;
 import org.jclouds.ohai.suppliers.UptimeSecondsSupplier;
 
 import com.google.common.base.Supplier;
 import com.google.inject.Provides;
+import com.google.inject.multibindings.MapBinder;
 
 /**
  * Wires the components needed to parse ohai data from a JVM
