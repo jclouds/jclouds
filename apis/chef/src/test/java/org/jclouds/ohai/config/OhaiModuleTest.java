@@ -31,7 +31,6 @@ import org.jclouds.domain.JsonBall;
 import org.jclouds.json.Json;
 import org.jclouds.json.config.GsonModule;
 import org.jclouds.ohai.Automatic;
-import org.jclouds.ohai.config.multibindings.MapBinder;
 import org.jclouds.rest.annotations.ApiVersion;
 import org.testng.annotations.Test;
 
@@ -41,6 +40,7 @@ import com.google.inject.AbstractModule;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 import com.google.inject.TypeLiteral;
+import com.google.inject.multibindings.MapBinder;
 import com.google.inject.util.Providers;
 
 /**

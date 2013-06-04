@@ -25,13 +25,13 @@ import java.util.regex.Pattern;
 
 import org.jclouds.domain.JsonBall;
 import org.jclouds.ohai.Automatic;
-import org.jclouds.ohai.config.multibindings.MapBinder;
 
 import com.google.common.base.Predicate;
 import com.google.common.base.Supplier;
 import com.google.common.collect.Iterables;
 import com.google.inject.Binder;
 import com.google.inject.TypeLiteral;
+import com.google.inject.multibindings.MapBinder;
 
 /**
  * 

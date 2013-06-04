@@ -32,7 +32,6 @@ import org.jclouds.domain.JsonBall;
 import org.jclouds.json.Json;
 import org.jclouds.ohai.Automatic;
 import org.jclouds.ohai.AutomaticSupplier;
-import org.jclouds.ohai.config.multibindings.MapBinder;
 import org.jclouds.ohai.functions.ByteArrayToMacAddress;
 import org.jclouds.ohai.functions.MapSetToMultimap;
 
@@ -42,6 +41,7 @@ import com.google.common.collect.Multimap;
 import com.google.inject.AbstractModule;
 import com.google.inject.Provides;
 import com.google.inject.TypeLiteral;
+import com.google.inject.multibindings.MapBinder;
 
 /**
  * Wires the components needed to parse ohai data
