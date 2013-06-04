@@ -30,11 +30,6 @@ public interface ChefProperties {
     */
    public static final String CHEF_LOGGER = "jclouds.chef";
 
-   public static final String CHEF_SERVICE_CLIENT = "chef.service-api";
-   public static final String CHEF_NODE = "chef.node";
-   public static final String CHEF_NODE_PATTERN = "chef.node-pattern";
-   public static final String CHEF_RUN_LIST = "chef.run-list";
-
    /**
     * Ddatabag that holds chef bootstrap hints, should be a json ball in the
     * following format:
