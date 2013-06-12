@@ -57,7 +57,7 @@ BlobStore Example (Java):
 BlobStore Example (Clojure):
 
 	(use 'org.jclouds.blobstore2)
-	(def *blobstore* (blobstore "azureblob" account encodedkey))
+	(def ^:dynamic *blobstore* (blobstore "azureblob" account encodedkey))
 	(create-container *blobstore* "mycontainer")
 	(put-blob *blobstore* "mycontainer" (blob "test" :payload "testdata"))
 
