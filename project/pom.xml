@@ -358,6 +358,7 @@
             <exclude>**/src/test/resources/**/*.txt</exclude>
             <exclude>**/src/test/resources/**/*.gz</exclude>
             <exclude>**/src/test/resources/**/*.xml</exclude>
+            <exclude>**/src/test/resources/**/*.iso</exclude>
             
             <!-- META-INF/services files -->
             <exclude>**/services/*LoggingModule</exclude>
