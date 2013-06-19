@@ -44,11 +44,6 @@ public class BlobNameTest {
       assertEquals(fn.apply(blob), "foo");
    }
 
-   @Test(expectedExceptions = IllegalArgumentException.class)
-   public void testMustBeBlob() {
-      fn.apply(new File("foo"));
-   }
-
    @Test(expectedExceptions = { NullPointerException.class, IllegalStateException.class })
    public void testNullIsBad() {
       fn.apply(null);

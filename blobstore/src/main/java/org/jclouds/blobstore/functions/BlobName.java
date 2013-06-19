@@ -16,7 +16,6 @@
  */
 package org.jclouds.blobstore.functions;
 
-import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 import javax.inject.Singleton;
@@ -30,12 +29,10 @@ import com.google.common.base.Function;
  * @author Adrian Cole
  */
 @Singleton
-public class BlobName implements Function<Object, String> {
+public final class BlobName implements Function<Blob, String> {
 
-   public String apply(Object input) {
-      checkArgument(checkNotNull(input, "input") instanceof Blob, "this function is only valid for Blobs!");
-
-      return checkNotNull(Blob.class.cast(input).getMetadata().getName(), "blobName");
+   public String apply(Blob input) {
+      return checkNotNull(checkNotNull(input, "input").getMetadata().getName(), "blobName");
    }
 
 }
