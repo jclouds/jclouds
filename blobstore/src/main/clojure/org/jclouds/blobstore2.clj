@@ -303,13 +303,15 @@ Options can also be specified for extension modules
            blob-builder (if content-length ;; Special case, arg is prim.
                           (.contentLength blob-builder content-length)
                           blob-builder)
+           blob-builder (if content-type
+                          (.contentType blob-builder content-type)
+                          blob-builder)
            blob-builder (if calculate-md5 ;; Only do calculateMD5 OR contentMD5.
                           (.calculateMD5 blob-builder)
                           (if content-md5
                             (.contentMD5 blob-builder content-md5)
                             blob-builder))]
        (doto blob-builder
-         (.contentType content-type)
          (.contentDisposition content-disposition)
          (.contentEncoding content-encoding)
          (.contentLanguage content-language)

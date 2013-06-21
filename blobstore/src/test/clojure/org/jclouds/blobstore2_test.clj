@@ -123,7 +123,7 @@
     (is (= "http://localhost/container/path" (str (.getEndpoint request))))
     (is (= "PUT" (.getMethod request)))
     (is (= "10" (first (.get (.getHeaders request) "Content-Length"))))
-    (is (nil?
+    (is (= "application/unknown"
          (first (.get (.getHeaders request) "Content-Type"))))))
 
 (deftest sign-put-with-headers-test

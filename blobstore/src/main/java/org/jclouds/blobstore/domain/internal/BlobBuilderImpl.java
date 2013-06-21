@@ -36,6 +36,7 @@ import org.jclouds.io.payloads.PhantomPayload;
 
 import com.google.common.collect.Maps;
 import com.google.common.io.ByteSource;
+import com.google.common.net.MediaType;
 
 /**
  * @author Adrian Cole
@@ -203,6 +204,11 @@ public class BlobBuilderImpl implements BlobBuilder {
       public PayloadBlobBuilder contentMD5(byte[] md5) {
          payload.getContentMetadata().setContentMD5(md5);
          return this;
+      }
+
+      @Override
+      public PayloadBlobBuilder contentType(MediaType contentType) {
+         return contentType(checkNotNull(contentType, "contentType").toString());
       }
 
       @Override
