@@ -30,6 +30,7 @@ import org.jclouds.compute.domain.Image;
 import org.jclouds.compute.domain.NodeMetadata;
 import org.jclouds.compute.domain.TemplateBuilder;
 import org.jclouds.compute.extensions.ImageExtension;
+import org.jclouds.compute.extensions.SecurityGroupExtension;
 import org.jclouds.compute.functions.GroupNamingConvention;
 import org.jclouds.compute.internal.BaseComputeService;
 import org.jclouds.compute.internal.PersistNodeCredentials;
@@ -111,6 +112,7 @@ public class GoogleComputeEngineService extends BaseComputeService {
                                         ComputeServiceConstants.Timeouts timeouts,
                                         @Named(Constants.PROPERTY_USER_THREADS) ListeningExecutorService userExecutor,
                                         Optional<ImageExtension> imageExtension,
+                                        Optional<SecurityGroupExtension> securityGroupExtension,
                                         Function<Set<? extends NodeMetadata>, Set<String>> findOrphanedGroups,
                                         GroupNamingConvention.Factory namingConvention,
                                         GoogleComputeEngineApi api,
@@ -123,7 +125,7 @@ public class GoogleComputeEngineService extends BaseComputeService {
               getNodeMetadataStrategy, runNodesAndAddToSetStrategy, rebootNodeStrategy, destroyNodeStrategy,
               resumeNodeStrategy, suspendNodeStrategy, templateBuilderProvider, templateOptionsProvider, nodeRunning,
               nodeTerminated, nodeSuspended, initScriptRunnerFactory, initAdminAccess, runScriptOnNodeFactory,
-              persistNodeCredentials, timeouts, userExecutor, imageExtension);
+              persistNodeCredentials, timeouts, userExecutor, imageExtension, securityGroupExtension);
       this.findOrphanedGroups = checkNotNull(findOrphanedGroups, "find orphaned groups function");
       this.namingConvention = checkNotNull(namingConvention, "naming convention factory");
       this.api = checkNotNull(api, "google compute api");
