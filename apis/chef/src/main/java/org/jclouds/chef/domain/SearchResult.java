@@ -47,3 +47,4 @@ public class SearchResult<T> extends LinkedHashSet<T> {
    }
 
 }
+
