@@ -22,9 +22,23 @@ import java.util.Map;
 
 import javax.inject.Singleton;
 
+import org.jclouds.ec2.EC2Api;
+import org.jclouds.ec2.EC2AsyncApi;
 import org.jclouds.ec2.EC2AsyncClient;
 import org.jclouds.ec2.EC2Client;
 import org.jclouds.ec2.config.EC2RestClientModule;
+import org.jclouds.ec2.features.AMIAsyncApi;
+import org.jclouds.ec2.features.AMIApi;
+import org.jclouds.ec2.features.AvailabilityZoneAndRegionAsyncApi;
+import org.jclouds.ec2.features.AvailabilityZoneAndRegionApi;
+import org.jclouds.ec2.features.ElasticBlockStoreAsyncApi;
+import org.jclouds.ec2.features.ElasticBlockStoreApi;
+import org.jclouds.ec2.features.ElasticIPAddressAsyncApi;
+import org.jclouds.ec2.features.ElasticIPAddressApi;
+import org.jclouds.ec2.features.InstanceAsyncApi;
+import org.jclouds.ec2.features.InstanceApi;
+import org.jclouds.ec2.features.SecurityGroupAsyncApi;
+import org.jclouds.ec2.features.SecurityGroupApi;
 import org.jclouds.ec2.features.SubnetApi;
 import org.jclouds.ec2.features.SubnetAsyncApi;
 import org.jclouds.ec2.features.TagApi;
@@ -52,8 +66,12 @@ import org.jclouds.location.config.LocationModule;
 import org.jclouds.location.suppliers.RegionIdToZoneIdsSupplier;
 import org.jclouds.location.suppliers.ZoneIdsSupplier;
 import org.jclouds.location.suppliers.derived.ZoneIdsFromRegionIdToZoneIdsValues;
+import org.jclouds.openstack.nova.ec2.NovaEC2Api;
+import org.jclouds.openstack.nova.ec2.NovaEC2AsyncApi;
 import org.jclouds.openstack.nova.ec2.NovaEC2AsyncClient;
 import org.jclouds.openstack.nova.ec2.NovaEC2Client;
+import org.jclouds.openstack.nova.ec2.features.NovaEC2KeyPairApi;
+import org.jclouds.openstack.nova.ec2.features.NovaEC2KeyPairAsyncApi;
 import org.jclouds.openstack.nova.ec2.services.NovaEC2KeyPairAsyncClient;
 import org.jclouds.openstack.nova.ec2.services.NovaEC2KeyPairClient;
 import org.jclouds.openstack.nova.ec2.xml.NovaCreateVolumeResponseHandler;
@@ -71,18 +89,25 @@ import com.google.inject.Scopes;
  */
 @ConfiguresRestClient
 public class NovaEC2RestClientModule extends EC2RestClientModule<NovaEC2Client, NovaEC2AsyncClient> {
-   public static final Map<Class<?>, Class<?>> DELEGATE_MAP = ImmutableMap.<Class<?>, Class<?>> builder()//
-         .put(AMIClient.class, AMIAsyncClient.class)//
-         .put(ElasticIPAddressClient.class, ElasticIPAddressAsyncClient.class)//
-         .put(InstanceClient.class, InstanceAsyncClient.class)//
-         .put(NovaEC2KeyPairClient.class, NovaEC2KeyPairAsyncClient.class)//
-         .put(SecurityGroupClient.class, SecurityGroupAsyncClient.class)//
-         .put(WindowsClient.class, WindowsAsyncClient.class)//
-         .put(AvailabilityZoneAndRegionClient.class, AvailabilityZoneAndRegionAsyncClient.class)//
-         .put(ElasticBlockStoreClient.class, ElasticBlockStoreAsyncClient.class)//
-         .put(WindowsApi.class, WindowsAsyncApi.class)//
-         .put(TagApi.class, TagAsyncApi.class)//
-         .put(SubnetApi.class, SubnetAsyncApi.class)//
+   public static final Map<Class<?>, Class<?>> DELEGATE_MAP = ImmutableMap.<Class<?>, Class<?>> builder()
+         .put(AMIClient.class, AMIAsyncClient.class)
+         .put(ElasticIPAddressClient.class, ElasticIPAddressAsyncClient.class)
+         .put(InstanceClient.class, InstanceAsyncClient.class)
+         .put(NovaEC2KeyPairClient.class, NovaEC2KeyPairAsyncClient.class)
+         .put(SecurityGroupClient.class, SecurityGroupAsyncClient.class)
+         .put(WindowsClient.class, WindowsAsyncClient.class)
+         .put(AvailabilityZoneAndRegionClient.class, AvailabilityZoneAndRegionAsyncClient.class)
+         .put(ElasticBlockStoreClient.class, ElasticBlockStoreAsyncClient.class)
+         .put(AMIApi.class, AMIAsyncApi.class)
+         .put(ElasticIPAddressApi.class, ElasticIPAddressAsyncApi.class)
+         .put(InstanceApi.class, InstanceAsyncApi.class)
+         .put(NovaEC2KeyPairApi.class, NovaEC2KeyPairAsyncApi.class)
+         .put(SecurityGroupApi.class, SecurityGroupAsyncApi.class)
+         .put(AvailabilityZoneAndRegionApi.class, AvailabilityZoneAndRegionAsyncApi.class)
+         .put(ElasticBlockStoreApi.class, ElasticBlockStoreAsyncApi.class)
+         .put(WindowsApi.class, WindowsAsyncApi.class)
+         .put(TagApi.class, TagAsyncApi.class)
+         .put(SubnetApi.class, SubnetAsyncApi.class)
          .build();
 
    public NovaEC2RestClientModule() {

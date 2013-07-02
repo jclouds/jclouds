@@ -26,6 +26,7 @@ import javax.ws.rs.Path;
 import org.jclouds.Fallbacks.NullOnNotFoundOr404;
 import org.jclouds.aws.filters.FormSigner;
 import org.jclouds.ec2.domain.PasswordData;
+import org.jclouds.ec2.services.WindowsAsyncClient;
 import org.jclouds.ec2.xml.GetPasswordDataResponseHandler;
 import org.jclouds.rest.annotations.Fallback;
 import org.jclouds.rest.annotations.FormParams;
@@ -41,6 +42,8 @@ import com.google.common.util.concurrent.ListenableFuture;
  * Provides access to EC2 Windows Features via the Query API
  * <p/>
  * 
+ * Note that this class is transitionary and will fully replace its parent in 1.7.
+ * 
  * @see <a href="http://docs.amazonwebservices.com/AWSEC2/latest/APIReference" >doc</a>
  * @see WindowsAsyncApi
  * @author Adrian Cole
@@ -49,7 +52,7 @@ import com.google.common.util.concurrent.ListenableFuture;
 @VirtualHost
 @Beta
 @SinceApiVersion("2008-08-08")
-public interface WindowsAsyncApi {
+public interface WindowsAsyncApi extends WindowsAsyncClient {
 
    /**
     * @see WindowsApi#getPasswordDataForInstance

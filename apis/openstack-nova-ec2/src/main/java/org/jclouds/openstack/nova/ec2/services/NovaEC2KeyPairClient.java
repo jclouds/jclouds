@@ -22,8 +22,10 @@ import org.jclouds.javax.annotation.Nullable;
 
 /**
  * 
+ * @deprecated This class is being moved in 1.7. Please use NovaEC2KeyPairApi via NovaEC2Api instead.
  * @author Adrian Cole
  */
+@Deprecated
 public interface NovaEC2KeyPairClient extends KeyPairClient {
 
    /**

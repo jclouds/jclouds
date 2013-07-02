@@ -29,8 +29,10 @@ import org.jclouds.rest.annotations.Delegate;
 /**
  * Provides synchronous access to EC2 services.
  * 
+ * @deprecated This class's functionality is being moved in 1.7.0. Please use AWSEC2Api instead.
  * @author Adrian Cole
  */
+@Deprecated
 public interface AWSEC2Client extends EC2Client {
 
    /**

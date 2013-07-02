@@ -19,6 +19,13 @@ package org.jclouds.ec2;
 import java.io.Closeable;
 import java.util.Set;
 
+import org.jclouds.ec2.features.AMIAsyncApi;
+import org.jclouds.ec2.features.AvailabilityZoneAndRegionAsyncApi;
+import org.jclouds.ec2.features.ElasticBlockStoreAsyncApi;
+import org.jclouds.ec2.features.ElasticIPAddressAsyncApi;
+import org.jclouds.ec2.features.InstanceAsyncApi;
+import org.jclouds.ec2.features.KeyPairAsyncApi;
+import org.jclouds.ec2.features.SecurityGroupAsyncApi;
 import org.jclouds.ec2.features.SubnetAsyncApi;
 import org.jclouds.ec2.features.TagAsyncApi;
 import org.jclouds.ec2.features.WindowsAsyncApi;
@@ -74,5 +81,75 @@ public interface EC2AsyncApi extends Closeable {
 
    @Delegate
    Optional<? extends SubnetAsyncApi> getSubnetApiForRegion(
+            @EndpointParam(parser = RegionToEndpointOrProviderIfNull.class) @Nullable String region);
+
+   /**
+    * Provides asynchronous access to AMI features.
+    */
+   @Delegate
+   Optional<? extends AMIAsyncApi> getAMIApi();
+
+   @Delegate
+   Optional<? extends AMIAsyncApi> getAMIApiForRegion(
+            @EndpointParam(parser = RegionToEndpointOrProviderIfNull.class) @Nullable String region);
+
+   /**
+    * Provides asynchronous access to Availability Zones and Regions services.
+    */
+   @Delegate
+   Optional<? extends AvailabilityZoneAndRegionAsyncApi> getAvailabilityZoneAndRegionApi();
+
+   @Delegate
+   Optional<? extends AvailabilityZoneAndRegionAsyncApi> getAvailabilityZoneAndRegionApiForRegion(
+            @EndpointParam(parser = RegionToEndpointOrProviderIfNull.class) @Nullable String region);
+
+   /**
+    * Provides asynchronous access to Elastic Block Store services.
+    */
+   @Delegate
+   Optional<? extends ElasticBlockStoreAsyncApi> getElasticBlockStoreApi();
+
+   @Delegate
+   Optional<? extends ElasticBlockStoreAsyncApi> getElasticBlockStoreApiForRegion(
+            @EndpointParam(parser = RegionToEndpointOrProviderIfNull.class) @Nullable String region);
+
+   /**
+    * Provides asynchronous access to Elastic IP services.
+    */
+   @Delegate
+   Optional<? extends ElasticIPAddressAsyncApi> getElasticIPAddressApi();
+
+   @Delegate
+   Optional<? extends ElasticIPAddressAsyncApi> getElasticIPAddressApiForRegion(
+            @EndpointParam(parser = RegionToEndpointOrProviderIfNull.class) @Nullable String region);
+
+   /**
+    * Provides asynchronous access to Instance services.
+    */
+   @Delegate
+   Optional<? extends InstanceAsyncApi> getInstanceApi();
+
+   @Delegate
+   Optional<? extends InstanceAsyncApi> getInstanceApiForRegion(
+            @EndpointParam(parser = RegionToEndpointOrProviderIfNull.class) @Nullable String region);
+
+  /**
+    * Provides asynchronous access to KeyPair services.
+    */
+   @Delegate
+   Optional<? extends KeyPairAsyncApi> getKeyPairApi();
+
+   @Delegate
+   Optional<? extends KeyPairAsyncApi> getKeyPairApiForRegion(
+            @EndpointParam(parser = RegionToEndpointOrProviderIfNull.class) @Nullable String region);
+
+  /**
+    * Provides asynchronous access to SecurityGroup services.
+    */
+   @Delegate
+   Optional<? extends SecurityGroupAsyncApi> getSecurityGroupApi();
+
+   @Delegate
+   Optional<? extends SecurityGroupAsyncApi> getSecurityGroupApiForRegion(
             @EndpointParam(parser = RegionToEndpointOrProviderIfNull.class) @Nullable String region);
 }

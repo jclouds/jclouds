@@ -27,8 +27,10 @@ import org.jclouds.javax.annotation.Nullable;
  * Provides access to EC2 via their REST API.
  * <p/>
  * 
+ * @deprecated This class is being moved in 1.7. Please use AWSInstanceApi via AWSEC2Api instead.
  * @author Adrian Cole
  */
+@Deprecated
 public interface AWSInstanceClient extends InstanceClient {
 
    @Override

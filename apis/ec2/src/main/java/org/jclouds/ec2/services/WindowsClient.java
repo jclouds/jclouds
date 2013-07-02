@@ -27,8 +27,10 @@ import org.jclouds.javax.annotation.Nullable;
  * EC2 Developer Guide.
  * <p/>
  * 
+ * @deprecated This class is being moved in 1.7. Please use SecurityGroupApi via EC2Api instead.
  * @author Adrian Cole
  */
+@Deprecated
 public interface WindowsClient {
    /**
     * Bundles the Windows instance. This procedure is not applicable for Linux

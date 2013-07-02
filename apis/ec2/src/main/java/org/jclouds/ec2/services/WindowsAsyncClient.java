@@ -51,8 +51,11 @@ import com.google.common.util.concurrent.ListenableFuture;
  * Provides access to EC2 Windows via their REST API.
  * <p/>
  * 
+ * @deprecated Async interfaces are being removed in 1.7.
+ *          Please use WindowsApi via EC2Api instead.
  * @author Adrian Cole
  */
+@Deprecated
 @RequestFilters(FormSigner.class)
 @VirtualHost
 public interface WindowsAsyncClient {

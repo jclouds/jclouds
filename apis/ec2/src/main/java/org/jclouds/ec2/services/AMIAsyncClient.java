@@ -57,8 +57,10 @@ import com.google.common.util.concurrent.ListenableFuture;
  * Provides access to AMI Services.
  * <p/>
  * 
+ * @deprecated Async interfaces are being removed in 1.7. Please use AMIApi via EC2Api instead.
  * @author Adrian Cole
  */
+@Deprecated
 @RequestFilters(FormSigner.class)
 @VirtualHost
 public interface AMIAsyncClient {

@@ -44,8 +44,11 @@ import com.google.common.util.concurrent.ListenableFuture;
  * Provides access to EC2 Monitoring Services via their REST API.
  * <p/>
  * 
+ * @deprecated Async interfaces are being removed in 1.7.
+ *          Please use MonitoringApi via AWSEC2Api instead.
  * @author Adrian Cole
  */
+@Deprecated
 @RequestFilters(FormSigner.class)
 @VirtualHost
 public interface MonitoringAsyncClient {

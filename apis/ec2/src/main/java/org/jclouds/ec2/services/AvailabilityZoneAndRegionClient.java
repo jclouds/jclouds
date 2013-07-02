@@ -28,8 +28,10 @@ import org.jclouds.javax.annotation.Nullable;
  * Provides EC2 Availability Zones and Regions services for EC2.
  * <p/>
  * 
+ * @deprecated This class is being moved in 1.7. Please use AvailabilityZoneAndRegionApi via EC2Api instead.
  * @author Adrian Cole
  */
+@Deprecated
 public interface AvailabilityZoneAndRegionClient {
 
    /**

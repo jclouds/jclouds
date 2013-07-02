@@ -29,8 +29,10 @@ import com.google.common.annotations.Beta;
  * Provides access to EC2 via their REST API.
  * <p/>
  * 
+ * @deprecated This class is being moved in 1.7. Please use AWSSecurityGroupApi via AWSEC2Api instead.
  * @author Adrian Cole
  */
+@Deprecated
 @Beta
 public interface AWSSecurityGroupClient extends SecurityGroupClient {
    

@@ -40,8 +40,11 @@ import org.jclouds.rest.annotations.XMLResponseParser;
 import com.google.common.util.concurrent.ListenableFuture;
 
 /**
+ * @deprecated Async interfaces are being removed in 1.7.
+ *          Please use NovaKeyPairApi via NovaEC2Api instead.
  * @author Adrian Cole
  */
+@Deprecated
 @RequestFilters(FormSigner.class)
 @VirtualHost
 public interface NovaEC2KeyPairAsyncClient extends KeyPairAsyncClient {

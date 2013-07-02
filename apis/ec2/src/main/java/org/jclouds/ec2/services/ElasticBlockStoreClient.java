@@ -30,8 +30,10 @@ import org.jclouds.javax.annotation.Nullable;
  * Provides access to EC2 Elastic Block Store services.
  * <p/>
  * 
+ * @deprecated This class is being moved in 1.7. Please use ElasticBlockStoreApi via EC2Api instead.
  * @author Adrian Cole
  */
+@Deprecated
 public interface ElasticBlockStoreClient {
 
    /**

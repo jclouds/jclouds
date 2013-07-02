@@ -27,6 +27,20 @@ import org.jclouds.ec2.EC2Api;
 import org.jclouds.ec2.EC2AsyncApi;
 import org.jclouds.ec2.EC2AsyncClient;
 import org.jclouds.ec2.EC2Client;
+import org.jclouds.ec2.features.AMIApi;
+import org.jclouds.ec2.features.AMIAsyncApi;
+import org.jclouds.ec2.features.AvailabilityZoneAndRegionApi;
+import org.jclouds.ec2.features.AvailabilityZoneAndRegionAsyncApi;
+import org.jclouds.ec2.features.ElasticBlockStoreApi;
+import org.jclouds.ec2.features.ElasticBlockStoreAsyncApi;
+import org.jclouds.ec2.features.ElasticIPAddressApi;
+import org.jclouds.ec2.features.ElasticIPAddressAsyncApi;
+import org.jclouds.ec2.features.InstanceApi;
+import org.jclouds.ec2.features.InstanceAsyncApi;
+import org.jclouds.ec2.features.KeyPairApi;
+import org.jclouds.ec2.features.KeyPairAsyncApi;
+import org.jclouds.ec2.features.SecurityGroupApi;
+import org.jclouds.ec2.features.SecurityGroupAsyncApi;
 import org.jclouds.ec2.features.SubnetApi;
 import org.jclouds.ec2.features.SubnetAsyncApi;
 import org.jclouds.ec2.features.TagApi;
@@ -77,17 +91,24 @@ import com.google.inject.Scopes;
 public class EC2RestClientModule<S extends EC2Api, A extends EC2AsyncApi> extends
          WithZonesFormSigningRestClientModule<S, A> {
    public static final Map<Class<?>, Class<?>> DELEGATE_MAP = ImmutableMap.<Class<?>, Class<?>> builder()//
-                        .put(AMIClient.class, AMIAsyncClient.class)//
-                        .put(ElasticIPAddressClient.class, ElasticIPAddressAsyncClient.class)//
-                        .put(InstanceClient.class, InstanceAsyncClient.class)//
-                        .put(KeyPairClient.class, KeyPairAsyncClient.class)//
-                        .put(SecurityGroupClient.class, SecurityGroupAsyncClient.class)//
-                        .put(WindowsClient.class, WindowsAsyncClient.class)//
-                        .put(AvailabilityZoneAndRegionClient.class, AvailabilityZoneAndRegionAsyncClient.class)//
-                        .put(ElasticBlockStoreClient.class, ElasticBlockStoreAsyncClient.class)//
-                        .put(WindowsApi.class, WindowsAsyncApi.class)//
-                        .put(TagApi.class, TagAsyncApi.class)//
-                        .put(SubnetApi.class, SubnetAsyncApi.class)//
+                        .put(AMIClient.class, AMIAsyncClient.class)
+                        .put(ElasticIPAddressClient.class, ElasticIPAddressAsyncClient.class)
+                        .put(InstanceClient.class, InstanceAsyncClient.class)
+                        .put(KeyPairClient.class, KeyPairAsyncClient.class)
+                        .put(SecurityGroupClient.class, SecurityGroupAsyncClient.class)
+                        .put(WindowsClient.class, WindowsAsyncClient.class)
+                        .put(AvailabilityZoneAndRegionClient.class, AvailabilityZoneAndRegionAsyncClient.class)
+                        .put(ElasticBlockStoreClient.class, ElasticBlockStoreAsyncClient.class)
+                        .put(WindowsApi.class, WindowsAsyncApi.class)
+                        .put(TagApi.class, TagAsyncApi.class)
+                        .put(SubnetApi.class, SubnetAsyncApi.class)
+                        .put(AMIApi.class, AMIAsyncApi.class)
+                        .put(AvailabilityZoneAndRegionApi.class, AvailabilityZoneAndRegionAsyncApi.class)
+                        .put(ElasticBlockStoreApi.class, ElasticBlockStoreAsyncApi.class)
+                        .put(ElasticIPAddressApi.class, ElasticIPAddressAsyncApi.class)
+                        .put(InstanceApi.class, InstanceAsyncApi.class)
+                        .put(KeyPairApi.class, KeyPairAsyncApi.class)
+                        .put(SecurityGroupApi.class, SecurityGroupAsyncApi.class)
                         .build();
    
    @SuppressWarnings("unchecked")

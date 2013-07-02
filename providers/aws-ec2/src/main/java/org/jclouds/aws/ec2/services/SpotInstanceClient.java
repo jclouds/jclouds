@@ -29,8 +29,10 @@ import org.jclouds.javax.annotation.Nullable;
  * Guide.
  * <p/>
  * 
+ * @deprecated This class is being moved in 1.7. Please use SpotInstanceApi via AWSEC2Api instead.
  * @author Adrian Cole
  */
+@Deprecated
 public interface SpotInstanceClient {
    /**
     * Describes Spot Instance requests. Spot Instances are instances that Amazon EC2 starts on your

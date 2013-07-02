@@ -58,8 +58,9 @@ import com.google.inject.Module;
 public class EC2ApiMetadata extends BaseRestApiMetadata {
 
    /**
-    * @deprecated please use {@code org.jclouds.ContextBuilder#buildApi(EC2Client.class)} as
-    *             {@link EC2AsyncClient} interface will be removed in jclouds 1.7.
+    * @deprecated please use {@code org.jclouds.ContextBuilder#buildApi(EC2Api.class)} as
+    *             {@link EC2AsyncClient} interface will be removed and {@link EC2Client} will be
+    *             moved into {@link EC2Api} in jclouds 1.7
     */
    @Deprecated
    public static final TypeToken<org.jclouds.rest.RestContext<? extends EC2Client, ? extends EC2AsyncClient>> CONTEXT_TOKEN = new TypeToken<org.jclouds.rest.RestContext<? extends EC2Client, ? extends EC2AsyncClient>>() {

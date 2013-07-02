@@ -25,8 +25,10 @@ import org.jclouds.javax.annotation.Nullable;
  * Developer Guide.
  * <p/>
  * 
+ * @deprecated This class is being moved in 1.7. Please use MonitoringApi via AWSEC2Api instead.
  * @author Adrian Cole
  */
+@Deprecated
 public interface MonitoringClient {
 
    /**

@@ -23,8 +23,10 @@ import org.jclouds.rest.annotations.Delegate;
 /**
  * Provides synchronous access to EC2 services.
  * 
+ * @deprecated This class's functionality is being moved in 1.7.0. Please use NovaEC2Api instead.
  * @author Adam Lowe
  */
+@Deprecated
 public interface NovaEC2Client extends EC2Client {
 
    /**

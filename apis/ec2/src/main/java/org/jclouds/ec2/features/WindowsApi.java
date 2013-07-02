@@ -17,6 +17,7 @@
 package org.jclouds.ec2.features;
 
 import org.jclouds.ec2.domain.PasswordData;
+import org.jclouds.ec2.services.WindowsClient;
 import org.jclouds.rest.annotations.SinceApiVersion;
 
 import com.google.common.annotations.Beta;
@@ -25,13 +26,15 @@ import com.google.common.annotations.Beta;
  * Provides access to EC2 Windows Features via the Query API
  * <p/>
  * 
+ * Note that this class is transitionary and will fully replace its parent in 1.7.
+ * 
  * @see <a href="http://docs.amazonwebservices.com/AWSEC2/latest/APIReference" >doc</a>
  * @see WindowsAsyncApi
  * @author Adrian Cole
  */
 @Beta
 @SinceApiVersion("2008-08-08")
-public interface WindowsApi {
+public interface WindowsApi extends WindowsClient {
 
    /**
     * 

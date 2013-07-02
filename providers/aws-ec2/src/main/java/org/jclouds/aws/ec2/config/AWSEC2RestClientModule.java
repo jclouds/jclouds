@@ -21,10 +21,26 @@ import java.util.Map;
 
 import javax.inject.Singleton;
 
+import org.jclouds.aws.ec2.AWSEC2Api;
+import org.jclouds.aws.ec2.AWSEC2AsyncApi;
 import org.jclouds.aws.ec2.AWSEC2AsyncClient;
 import org.jclouds.aws.ec2.AWSEC2Client;
 import org.jclouds.aws.ec2.domain.AWSRunningInstance;
 import org.jclouds.aws.ec2.domain.SpotInstanceRequest;
+import org.jclouds.aws.ec2.features.AWSAMIAsyncApi;
+import org.jclouds.aws.ec2.features.AWSAMIApi;
+import org.jclouds.aws.ec2.features.AWSInstanceAsyncApi;
+import org.jclouds.aws.ec2.features.AWSInstanceApi;
+import org.jclouds.aws.ec2.features.AWSKeyPairAsyncApi;
+import org.jclouds.aws.ec2.features.AWSKeyPairApi;
+import org.jclouds.aws.ec2.features.AWSSecurityGroupAsyncApi;
+import org.jclouds.aws.ec2.features.AWSSecurityGroupApi;
+import org.jclouds.aws.ec2.features.MonitoringAsyncApi;
+import org.jclouds.aws.ec2.features.MonitoringApi;
+import org.jclouds.aws.ec2.features.PlacementGroupAsyncApi;
+import org.jclouds.aws.ec2.features.PlacementGroupApi;
+import org.jclouds.aws.ec2.features.SpotInstanceAsyncApi;
+import org.jclouds.aws.ec2.features.SpotInstanceApi;
 import org.jclouds.aws.ec2.functions.SpotInstanceRequestToAWSRunningInstance;
 import org.jclouds.aws.ec2.options.AWSRunInstancesOptions;
 import org.jclouds.aws.ec2.services.AWSAMIAsyncClient;
@@ -41,9 +57,23 @@ import org.jclouds.aws.ec2.services.PlacementGroupAsyncClient;
 import org.jclouds.aws.ec2.services.PlacementGroupClient;
 import org.jclouds.aws.ec2.services.SpotInstanceAsyncClient;
 import org.jclouds.aws.ec2.services.SpotInstanceClient;
+import org.jclouds.ec2.EC2Api;
+import org.jclouds.ec2.EC2AsyncApi;
 import org.jclouds.ec2.EC2AsyncClient;
 import org.jclouds.ec2.EC2Client;
 import org.jclouds.ec2.config.EC2RestClientModule;
+import org.jclouds.ec2.features.AMIAsyncApi;
+import org.jclouds.ec2.features.AMIApi;
+import org.jclouds.ec2.features.AvailabilityZoneAndRegionAsyncApi;
+import org.jclouds.ec2.features.AvailabilityZoneAndRegionApi;
+import org.jclouds.ec2.features.ElasticBlockStoreAsyncApi;
+import org.jclouds.ec2.features.ElasticBlockStoreApi;
+import org.jclouds.ec2.features.ElasticIPAddressAsyncApi;
+import org.jclouds.ec2.features.ElasticIPAddressApi;
+import org.jclouds.ec2.features.InstanceAsyncApi;
+import org.jclouds.ec2.features.InstanceApi;
+import org.jclouds.ec2.features.SecurityGroupAsyncApi;
+import org.jclouds.ec2.features.SecurityGroupApi;
 import org.jclouds.ec2.features.SubnetApi;
 import org.jclouds.ec2.features.SubnetAsyncApi;
 import org.jclouds.ec2.features.TagApi;
@@ -80,21 +110,31 @@ import com.google.inject.TypeLiteral;
 @ConfiguresRestClient
 public class AWSEC2RestClientModule extends EC2RestClientModule<AWSEC2Client, AWSEC2AsyncClient> {
 
-   public static final Map<Class<?>, Class<?>> DELEGATE_MAP = ImmutableMap.<Class<?>, Class<?>> builder()//
-         .put(AWSAMIClient.class, AWSAMIAsyncClient.class)//
-         .put(ElasticIPAddressClient.class, ElasticIPAddressAsyncClient.class)//
-         .put(AWSInstanceClient.class, AWSInstanceAsyncClient.class)//
-         .put(AWSKeyPairClient.class, AWSKeyPairAsyncClient.class)//
-         .put(AWSSecurityGroupClient.class, AWSSecurityGroupAsyncClient.class)//
-         .put(PlacementGroupClient.class, PlacementGroupAsyncClient.class)//
-         .put(MonitoringClient.class, MonitoringAsyncClient.class)//
-         .put(WindowsClient.class, WindowsAsyncClient.class)//
-         .put(AvailabilityZoneAndRegionClient.class, AvailabilityZoneAndRegionAsyncClient.class)//
-         .put(ElasticBlockStoreClient.class, ElasticBlockStoreAsyncClient.class)//
-         .put(SpotInstanceClient.class, SpotInstanceAsyncClient.class)//
-         .put(WindowsApi.class, WindowsAsyncApi.class)//
-         .put(TagApi.class, TagAsyncApi.class)//
-         .put(SubnetApi.class, SubnetAsyncApi.class)//
+   public static final Map<Class<?>, Class<?>> DELEGATE_MAP = ImmutableMap.<Class<?>, Class<?>> builder()
+         .put(AWSAMIClient.class, AWSAMIAsyncClient.class)
+         .put(ElasticIPAddressClient.class, ElasticIPAddressAsyncClient.class)
+         .put(AWSInstanceClient.class, AWSInstanceAsyncClient.class)
+         .put(AWSKeyPairClient.class, AWSKeyPairAsyncClient.class)
+         .put(AWSSecurityGroupClient.class, AWSSecurityGroupAsyncClient.class)
+         .put(PlacementGroupClient.class, PlacementGroupAsyncClient.class)
+         .put(MonitoringClient.class, MonitoringAsyncClient.class)
+         .put(WindowsClient.class, WindowsAsyncClient.class)
+         .put(AvailabilityZoneAndRegionClient.class, AvailabilityZoneAndRegionAsyncClient.class)
+         .put(ElasticBlockStoreClient.class, ElasticBlockStoreAsyncClient.class)
+         .put(SpotInstanceClient.class, SpotInstanceAsyncClient.class)
+         .put(AWSAMIApi.class, AWSAMIAsyncApi.class)
+         .put(ElasticIPAddressApi.class, ElasticIPAddressAsyncApi.class)
+         .put(AWSInstanceApi.class, AWSInstanceAsyncApi.class)
+         .put(AWSKeyPairApi.class, AWSKeyPairAsyncApi.class)
+         .put(AWSSecurityGroupApi.class, AWSSecurityGroupAsyncApi.class)
+         .put(PlacementGroupApi.class, PlacementGroupAsyncApi.class)
+         .put(MonitoringApi.class, MonitoringAsyncApi.class)
+         .put(AvailabilityZoneAndRegionApi.class, AvailabilityZoneAndRegionAsyncApi.class)
+         .put(ElasticBlockStoreApi.class, ElasticBlockStoreAsyncApi.class)
+         .put(SpotInstanceApi.class, SpotInstanceAsyncApi.class)
+         .put(WindowsApi.class, WindowsAsyncApi.class)
+         .put(TagApi.class, TagAsyncApi.class)
+         .put(SubnetApi.class, SubnetAsyncApi.class)
          .build();
 
    public AWSEC2RestClientModule() {
