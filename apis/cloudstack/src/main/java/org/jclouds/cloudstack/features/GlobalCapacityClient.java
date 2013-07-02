@@ -24,11 +24,13 @@ import org.jclouds.cloudstack.options.ListCapacityOptions;
  * Provides synchronous access to CloudStack Capacities features available to Global
  * Admin users.
  * 
+ * @deprecated  The *Client classes will be replaced with the *Api classes in jclouds 1.7.
  * @author Richard Downer
  * @see <a href=
  *      "http://download.cloud.com/releases/2.2.0/api_2.2.12/TOC_Global_Admin.html"
  *      />
  */
+@Deprecated
 public interface GlobalCapacityClient {
 
    /**

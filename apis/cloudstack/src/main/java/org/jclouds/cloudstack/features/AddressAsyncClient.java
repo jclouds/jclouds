@@ -45,10 +45,12 @@ import com.google.common.util.concurrent.ListenableFuture;
  * Provides asynchronous access to cloudstack via their REST API.
  * <p/>
  * 
+ * @deprecated  The async interface will be removed in jclouds 1.7.
  * @see AddressClient
  * @see <a href="http://download.cloud.com/releases/2.2.0/api_2.2.12/TOC_User.html" />
  * @author Adrian Cole
  */
+@Deprecated
 @RequestFilters(AuthenticationFilter.class)
 @QueryParams(keys = "response", values = "json")
 public interface AddressAsyncClient {

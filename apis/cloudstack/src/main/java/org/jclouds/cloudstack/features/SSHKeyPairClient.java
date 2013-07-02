@@ -23,11 +23,13 @@ import org.jclouds.cloudstack.options.ListSSHKeyPairsOptions;
 /**
  * Provides synchronous access to CloudStack SSHKeyPair features.
  *
+ * @deprecated  The *Client classes will be replaced with the *Api classes in jclouds 1.7.
  * @author Vijay Kiran
  * @see <a
  *      href="http://download.cloud.com/releases/2.2.0/api_2.2.8/TOC_User.html"
  *      />
  */
+@Deprecated
 public interface SSHKeyPairClient {
    /**
     * Returns a list of {@link SshKeyPair}s registered by current user.

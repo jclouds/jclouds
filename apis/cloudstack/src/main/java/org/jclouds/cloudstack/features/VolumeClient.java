@@ -25,9 +25,11 @@ import org.jclouds.cloudstack.options.ListVolumesOptions;
  * Provides synchronous access to CloudStack Event features.
  * <p/>
  *
+ * @deprecated  The *Client classes will be replaced with the *Api classes in jclouds 1.7.
  * @author Vijay Kiran
  * @see <a href="http://download.cloud.com/releases/2.2.0/api_2.2.12/TOC_User.html" />
  */
+@Deprecated
 public interface VolumeClient {
 
    /**

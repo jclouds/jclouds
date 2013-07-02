@@ -32,10 +32,12 @@ import org.jclouds.cloudstack.options.UpdateHostOptions;
  * Provides synchronous access to CloudStack host features.
  * <p/>
  *
+ * @deprecated  The *Client classes will be replaced with the *Api classes in jclouds 1.7.
  * @see org.jclouds.cloudstack.features.GlobalOfferingAsyncClient
  * @see <a href="http://download.cloud.com/releases/2.2.0/api_2.2.12/TOC_Global_Admin.html" />
  * @author Andrei Savu
  */
+@Deprecated
 public interface GlobalHostClient {
 
    /**

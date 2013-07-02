@@ -45,10 +45,12 @@ import org.jclouds.rest.annotations.Delegate;
  * Provides synchronous access to CloudStack.
  * <p/>
  *
+ * @deprecated  The *Client classes will be replaced with the *Api classes in jclouds 1.7.
  * @author Adrian Cole
  * @see CloudStackAsyncClient
  * @see <a href="http://download.cloud.com/releases/2.2.0/api_2.2.12/TOC_User.html" />
  */
+@Deprecated
 public interface CloudStackClient {
    /**
     * Provides synchronous access to Zone features.

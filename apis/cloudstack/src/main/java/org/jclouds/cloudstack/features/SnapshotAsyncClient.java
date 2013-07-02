@@ -51,10 +51,12 @@ import com.google.common.util.concurrent.ListenableFuture;
  * Provides synchronous access to CloudStack Snapshot features.
  * <p/>
  * 
+ * @deprecated  The async interface will be removed in jclouds 1.7.
  * @see SnapshotClient
  * @see http://download.cloud.com/releases/2.2.0/api/TOC_User.html
  * @author Richard Downer
  */
+@Deprecated
 @RequestFilters(AuthenticationFilter.class)
 @QueryParams(keys = "response", values = "json")
 public interface SnapshotAsyncClient {

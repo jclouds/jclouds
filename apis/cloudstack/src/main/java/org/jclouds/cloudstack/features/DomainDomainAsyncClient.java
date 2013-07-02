@@ -42,11 +42,13 @@ import com.google.common.util.concurrent.ListenableFuture;
  * Provides asynchronous access to CloudStack Domain features available to Domain
  * Admin users.
  *
+ * @deprecated  The async interface will be removed in jclouds 1.7.
  * @author Andrei Savu
  * @see <a href=
  *      "http://download.cloud.com/releases/2.2.0/api_2.2.12/TOC_Domain_Admin.html"
  *      />
  */
+@Deprecated
 @RequestFilters(AuthenticationFilter.class)
 @QueryParams(keys = "response", values = "json")
 public interface DomainDomainAsyncClient {

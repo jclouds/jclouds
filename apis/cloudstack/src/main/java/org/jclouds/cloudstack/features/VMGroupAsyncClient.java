@@ -44,10 +44,12 @@ import com.google.common.util.concurrent.ListenableFuture;
  * Provides asynchronous access to CloudStack VM group features.
  * <p/>
  *
+ * @deprecated  The async interface will be removed in jclouds 1.7.
  * @author Richard Downer
  * @see VMGroupClient
  * @see <a href="http://download.cloud.com/releases/2.2.0/api_2.2.12/TOC_User.html" />
  */
+@Deprecated
 @RequestFilters(AuthenticationFilter.class)
 @QueryParams(keys = "response", values = "json")
 public interface VMGroupAsyncClient {

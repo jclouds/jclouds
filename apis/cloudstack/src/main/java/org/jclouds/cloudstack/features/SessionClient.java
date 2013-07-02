@@ -22,9 +22,11 @@ import org.jclouds.cloudstack.domain.LoginResponse;
  * Provides synchronous access to CloudStack Sessions
  * <p/>
  * 
+ * @deprecated  The *Client classes will be replaced with the *Api classes in jclouds 1.7.
  * @see <a href="http://download.cloud.com/releases/2.2.0/api_2.2.12/TOC_User.html" />
  * @author Andrei Savu
  */
+@Deprecated
 public interface SessionClient {
 
    /**

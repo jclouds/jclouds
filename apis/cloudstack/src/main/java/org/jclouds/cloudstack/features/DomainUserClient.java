@@ -25,11 +25,13 @@ import org.jclouds.cloudstack.options.ListUsersOptions;
  * Provides synchronous access to CloudStack User features available to Domain
  * Admin users.
  * 
+ * @deprecated  The *Client classes will be replaced with the *Api classes in jclouds 1.7.
  * @author Andrei Savu
  * @see <a href=
  *      "http://download.cloud.com/releases/2.2.0/api_2.2.12/TOC_Domain_Admin.html"
  *      />
  */
+@Deprecated
 public interface DomainUserClient {
 
    /**

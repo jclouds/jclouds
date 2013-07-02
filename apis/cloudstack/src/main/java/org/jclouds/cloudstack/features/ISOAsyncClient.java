@@ -51,10 +51,12 @@ import com.google.common.util.concurrent.ListenableFuture;
  * 
  * <p/>
  * 
+ * @deprecated  The async interface will be removed in jclouds 1.7.
  * @see ISOClient
  * @see http://download.cloud.com/releases/2.2.12/api/TOC_User.html
  * @author Richard Downer
  */
+@Deprecated
 @RequestFilters(AuthenticationFilter.class)
 @QueryParams(keys = "response", values = "json")
 public interface ISOAsyncClient {

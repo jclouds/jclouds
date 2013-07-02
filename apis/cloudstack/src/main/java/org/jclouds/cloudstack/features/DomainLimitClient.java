@@ -22,11 +22,13 @@ import org.jclouds.cloudstack.domain.ResourceLimit;
  * Provides synchronous access to CloudStack Limit features available to Domain
  * Admin users.
  * 
+ * @deprecated  The *Client classes will be replaced with the *Api classes in jclouds 1.7.
  * @author Adrian Cole
  * @see <a href=
  *      "http://download.cloud.com/releases/2.2.0/api_2.2.12/TOC_Domain_Admin.html"
  *      />
  */
+@Deprecated
 public interface DomainLimitClient extends LimitClient {
    /**
     * Updates resource limits for an account in a domain.

@@ -21,10 +21,12 @@ import java.util.Set;
  * Provides synchronous access to CloudStack Operating System features.
  * <p/>
  * 
+ * @deprecated  The *Client classes will be replaced with the *Api classes in jclouds 1.7.
  * @see GuestOSAsyncClient
  * @see <a href="http://download.cloud.com/releases/2.2.0/api_2.2.12/TOC_User.html" />
  * @author Adrian Cole
  */
+@Deprecated
 public interface HypervisorClient {
    /**
     * Lists all supported hypervisors for this cloud.

@@ -23,11 +23,13 @@ import org.jclouds.cloudstack.options.ListResourceLimitsOptions;
 /**
  * Provides synchronous access to CloudStack resource limit API.
  *
+ * @deprecated  The *Client classes will be replaced with the *Api classes in jclouds 1.7.
  * @author Vijay Kiran
  * @see <a
  *      href="http://download.cloud.com/releases/2.2.0/api_2.2.12/TOC_User.html"
  *      />
  */
+@Deprecated
 public interface LimitClient {
    /**
     * List the resource limits.

@@ -24,11 +24,13 @@ import org.jclouds.cloudstack.options.UpdateAccountOptions;
  * Provides synchronous access to CloudStack Account features available to Global
  * Admin users.
  * 
+ * @deprecated  The *Client classes will be replaced with the *Api classes in jclouds 1.7.
  * @author Adrian Cole, Andrei Savu
  * @see <a href=
  *      "http://download.cloud.com/releases/2.2.0/api_2.2.12/TOC_Global_Admin.html"
  *      />
  */
+@Deprecated
 public interface GlobalAccountClient extends DomainAccountClient {
 
    /**

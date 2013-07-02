@@ -29,10 +29,12 @@ import org.jclouds.cloudstack.options.ListSnapshotsOptions;
  * Provides synchronous access to CloudStack Snapshot features.
  * <p/>
  * 
+ * @deprecated  The *Client classes will be replaced with the *Api classes in jclouds 1.7.
  * @see SnapshotAsyncClient
  * @see http://download.cloud.com/releases/2.2.0/api/TOC_User.html
  * @author Richard Downer
  */
+@Deprecated
 public interface SnapshotClient {
 
    /**
