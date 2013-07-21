@@ -130,4 +130,55 @@ public interface FirewallClient {
     *           the id of the forwarding rule
     */
    Void deletePortForwardingRule(String id);
+
+   /**
+    * List the egress firewall rules
+    *
+    * @param options
+    *          if present, how to constrain the list.
+    * @return
+    *          set of egress firewall rules or empty set if no rules are found
+    */
+   Set<FirewallRule> listEgressFirewallRules(ListFirewallRulesOptions... options);
+
+   /**
+    * Get an egress firewall rule by ID
+    *
+    * @param id
+    *          the ID of the egress firewall rule
+    * @return
+    *          egress firewall rule instance or null
+    */
+   FirewallRule getEgressFirewallRule(String id);
+
+   /**
+    * Create new egress firewall rule for a specific IP address
+    *
+    * @param ipAddressId
+    *          the IP address id of the egress firewall rule
+    * @param protocol
+    *          the protocol for the egress firewall rule. Valid values are TCP/UDP/ICMP
+    * @param options
+    *          optional arguments for egress firewall rule creation
+    * @return
+    */
+   AsyncCreateResponse createEgressFirewallRuleForIpAndProtocol(String ipAddressId,
+                                                                FirewallRule.Protocol protocol,
+                                                                CreateFirewallRuleOptions... options);
+
+
+   AsyncCreateResponse createEgressFirewallRuleForIpProtocolAndPort(String ipAddressId,
+                                                                    FirewallRule.Protocol protocol,
+                                                                    int startPort,
+                                                                    int endPort);
+
+
+   /**
+    * Deletes an egress firewall rule
+    *
+    * @param id
+    *       the ID of the egress firewall rule
+    */
+   Void deleteEgressFirewallRule(String id);
+
 }

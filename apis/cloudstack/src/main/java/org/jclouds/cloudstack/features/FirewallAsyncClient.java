@@ -159,4 +159,62 @@ public interface FirewallAsyncClient {
    @Fallback(VoidOnNotFoundOr404.class)
    ListenableFuture<Void> deletePortForwardingRule(@QueryParam("id") String id);
 
+   /**
+    * @see FirewallClient#listEgressFirewallRules
+    */
+   @Named("listEgressFirewallRules")
+   @GET
+   @QueryParams(keys = { "command", "listAll" }, values = { "listEgressFirewallRules", "true" })
+   @SelectJson("firewallrule")
+   @Consumes(MediaType.APPLICATION_JSON)
+   @Fallback(EmptySetOnNotFoundOr404.class)
+   ListenableFuture<Set<FirewallRule>> listEgressFirewallRules(ListFirewallRulesOptions... options);
+
+   /**
+    * @see FirewallClient#getEgressFirewallRule
+    */
+   @Named("listEgressFirewallRules")
+   @GET
+   @QueryParams(keys = { "command", "listAll" }, values = { "listEgressFirewallRules", "true" })
+   @SelectJson("firewallrule")
+   @OnlyElement
+   @Consumes(MediaType.APPLICATION_JSON)
+   @Fallback(NullOnNotFoundOr404.class)
+   ListenableFuture<FirewallRule> getEgressFirewallRule(@QueryParam("id") String id);
+
+   /**
+    * @see FirewallClient#createEgressFirewallRuleForIpAndProtocol
+    */
+   @Named("createEgressFirewallRule")
+   @GET
+   @QueryParams(keys = "command", values = "createEgressFirewallRule")
+   @Unwrap
+   @Consumes(MediaType.APPLICATION_JSON)
+   ListenableFuture<AsyncCreateResponse> createEgressFirewallRuleForIpAndProtocol(@QueryParam("ipaddressid") String ipAddressId,
+                                                                                  @QueryParam("protocol") FirewallRule.Protocol protocol,
+                                                                                  CreateFirewallRuleOptions... options);
+
+   /**
+    * @see FirewallClient#createEgressFirewallRuleForIpProtocolAndPort
+    */
+   @Named("createEgressFirewallRule")
+   @GET
+   @QueryParams(keys = "command", values = "createEgressFirewallRule")
+   @Unwrap
+   @Consumes(MediaType.APPLICATION_JSON)
+   ListenableFuture<AsyncCreateResponse> createEgressFirewallRuleForIpProtocolAndPort(@QueryParam("ipaddressid") String ipAddressId,
+                                                                                      @QueryParam("protocol") FirewallRule.Protocol protocol,
+                                                                                      @QueryParam("startPort") int startPort,
+                                                                                      @QueryParam("endPort") int endPort);
+
+
+   /**
+    * @see FirewallClient#deleteEgressFirewallRule
+    */
+   @Named("deleteEgressFirewallRule")
+   @GET
+   @QueryParams(keys = "command", values = "deleteEgressFirewallRule")
+   @Fallback(VoidOnNotFoundOr404.class)
+   ListenableFuture<Void> deleteEgressFirewallRule(@QueryParam("id") String id);
+
 }
