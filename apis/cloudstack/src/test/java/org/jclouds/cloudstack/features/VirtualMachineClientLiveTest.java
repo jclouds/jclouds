@@ -181,7 +181,7 @@ public class VirtualMachineClientLiveTest extends BaseCloudStackClientLiveTest {
       if (vm.getPassword() != null) {
          conditionallyCheckSSH();
       }
-      assert in(ImmutableSet.of("NetworkFilesystem", "IscsiLUN", "VMFS", "PreSetup"))
+      assert in(ImmutableSet.of("NetworkFilesystem", "IscsiLUN", "VMFS", "PreSetup", "ROOT"))
          .apply(vm.getRootDeviceType()) : vm;
       checkVm(vm);
    }
@@ -349,7 +349,6 @@ public class VirtualMachineClientLiveTest extends BaseCloudStackClientLiveTest {
       assertEquals(vm.getId(), client.getVirtualMachineClient().getVirtualMachine(vm.getId()).getId());
       assert vm.getId() != null : vm;
       assert vm.getName() != null : vm;
-      assert vm.getDisplayName() != null : vm;
       assert vm.getAccount() != null : vm;
       assert vm.getDomain() != null : vm;
       assert vm.getDomainId() != null : vm;

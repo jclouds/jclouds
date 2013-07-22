@@ -53,7 +53,7 @@ public class GlobalConfigurationClientLiveTest extends BaseCloudStackClientLiveT
          categories.add(entry.getCategory());
       }
 
-      assert categories.containsAll(ImmutableSet.<Object>of("Network", "Advanced", "Premium",
+      assert categories.containsAll(ImmutableSet.<Object>of("Network", "Advanced",
          "Storage", "Usage", "Snapshots", "Account Defaults", "Console Proxy", "Alert"));
    }
 
@@ -82,7 +82,6 @@ public class GlobalConfigurationClientLiveTest extends BaseCloudStackClientLiveT
       assertEquals(entry, getEntryByName(globalAdminClient.getConfigurationClient()
          .listConfigurationEntries(name(entry.getName())), entry.getName()));
       assert entry.getCategory() != null : entry;
-      assert entry.getDescription() != null : entry;
       assert entry.getName() != null : entry;
    }
 

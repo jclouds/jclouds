@@ -46,7 +46,7 @@ public class DomainAccountClientLiveTest extends BaseCloudStackClientLiveTest {
          AsyncCreateResponse response = domainAdminClient.getAccountClient()
             .disableAccount(testAccount.getName(), testAccount.getDomainId(), false);
          assertNotNull(response);
-         assertTrue(jobComplete.apply(response.getJobId()));
+         assertTrue(adminJobComplete.apply(response.getJobId()));
 
          AsyncJob<Account> job = domainAdminClient.getAsyncJobClient().getAsyncJob(response.getJobId());
          assertEquals(job.getResult().getState(), Account.State.DISABLED);

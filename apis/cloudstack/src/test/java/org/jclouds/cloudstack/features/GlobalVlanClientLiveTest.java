@@ -91,32 +91,34 @@ public class GlobalVlanClientLiveTest extends BaseCloudStackClientLiveTest {
       final Zone zone = Iterables.find(client.getZoneClient().listZones(), ZonePredicates.supportsAdvancedNetworks());
       final NetworkOffering offering = find(client.getOfferingClient().listNetworkOfferings(),
          NetworkOfferingPredicates.supportsGuestVirtualNetworks());
-      
-      Set<Network> suitableNetworks = Sets.filter(client.getNetworkClient().listNetworks(
-            zoneId(zone.getId()).isSystem(false).trafficType(TrafficType.GUEST)),
-         new Predicate<Network>() {
+
+      if (offering != null) {
+         Set<Network> suitableNetworks = Sets.filter(client.getNetworkClient().listNetworks(
+                 zoneId(zone.getId()).isSystem(false).trafficType(TrafficType.GUEST)),
+                 new Predicate<Network>() {
             @Override
             public boolean apply(Network network) {
                return network.getNetworkOfferingId().equals(offering.getId());
             }
          });
 
-      if (suitableNetworks.size() > 0) {
-         network = Iterables.get(suitableNetworks, 0);
-         usingExistingNetwork = true;
-         
-      } else if (network == null) {
-         network = client.getNetworkClient().createNetworkInZone(zone.getId(),
-            offering.getId(), "net-" + prefix, "jclouds test " + prefix);
-         usingExistingNetwork = false;
-      }
+         if (suitableNetworks.size() > 0) {
+            network = Iterables.get(suitableNetworks, 0);
+            usingExistingNetwork = true;
 
-      range = globalAdminClient.getVlanClient().createVlanIPRange("172.19.1.1", "172.19.1.199", CreateVlanIPRangeOptions.Builder
-         .accountInDomain(user.getAccount(), user.getDomainId())
-         .forVirtualNetwork(true)
-         .vlan(1001)
-         .networkId(network.getId())
-      );
+         } else if (network == null) {
+            network = client.getNetworkClient().createNetworkInZone(zone.getId(),
+                    offering.getId(), "net-" + prefix, "jclouds test " + prefix);
+            usingExistingNetwork = false;
+         }
+
+         range = globalAdminClient.getVlanClient().createVlanIPRange("172.19.1.1", "172.19.1.199", CreateVlanIPRangeOptions.Builder
+                 .accountInDomain(user.getAccount(), user.getDomainId())
+                 .forVirtualNetwork(true)
+                 .vlan(1001)
+                 .networkId(network.getId())
+         );
+      }
    }
 
    @AfterGroups(groups = "live")
