@@ -31,15 +31,15 @@ import org.jclouds.softlayer.domain.ProductPackage;
 public interface AccountClient {
 
    /**
-    * 
-    * @return Gets all the active packages.
-    * This will give you a basic description of the packages that are currently
-    * active and from which you can order a server or additional services.
-    *
-    * Calling ProductPackage.getItems() will return an empty set.
-    * Use ProductPackageClient.getProductPackage(long id) to obtain items data.
-    * @see ProductPackageClient#getProductPackage
+    * @return return all the active packages.
     */
    Set<ProductPackage> getActivePackages();
+
+
+   /**
+    * @return return all the active packages's id and name.
+    * @see #getActivePackages()
+    */
+   Set<ProductPackage> getReducedActivePackages();
 
 }

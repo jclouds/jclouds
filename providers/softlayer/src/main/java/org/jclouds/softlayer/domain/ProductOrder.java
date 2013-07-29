@@ -140,7 +140,7 @@ public class ProductOrder {
    private final boolean useHourlyPricing;
 
    @ConstructorProperties({
-         "packageId", "location", "prices", "virtualGuest", "quantity", "useHourlyPricing"
+      "packageId", "location", "prices", "virtualGuests", "quantity", "useHourlyPricing"
    })
    protected ProductOrder(int packageId, @Nullable String location, @Nullable Set<ProductItemPrice> prices, @Nullable Set<VirtualGuest> virtualGuests, int quantity, boolean useHourlyPricing) {
       this.packageId = packageId;

@@ -101,7 +101,7 @@ public class SoftLayerComputeServiceContextModule extends
                   public ProductPackage get() {
                      AccountClient accountClient = client.getAccountClient();
                      ProductPackageClient productPackageClient = client.getProductPackageClient();
-                     ProductPackage p = find(accountClient.getActivePackages(), named(virtualGuestPackageName));
+                     ProductPackage p = find(accountClient.getReducedActivePackages(), named(virtualGuestPackageName));
                      return productPackageClient.getProductPackage(p.getId());
                   }
                   

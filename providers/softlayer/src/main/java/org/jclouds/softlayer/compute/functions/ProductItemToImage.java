@@ -16,15 +16,8 @@
  */
 package org.jclouds.softlayer.compute.functions;
 
-import static com.google.common.base.Preconditions.checkNotNull;
-
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
-import javax.annotation.Resource;
-import javax.inject.Named;
-import javax.inject.Singleton;
-
+import com.google.common.base.Function;
+import com.google.common.base.Objects;
 import org.jclouds.compute.domain.Image;
 import org.jclouds.compute.domain.ImageBuilder;
 import org.jclouds.compute.domain.OperatingSystem;
@@ -34,8 +27,13 @@ import org.jclouds.logging.Logger;
 import org.jclouds.softlayer.domain.ProductItem;
 import org.jclouds.softlayer.domain.ProductItemPrice;
 
-import com.google.common.base.Function;
-import com.google.common.base.Objects;
+import javax.annotation.Resource;
+import javax.inject.Named;
+import javax.inject.Singleton;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * @author Jason King
@@ -162,7 +160,6 @@ public class ProductItemToImage implements Function<ProductItem, Image> {
                   return Integer.parseInt(m.group(1));
                }
             }
-
             return null;
          }
       };
@@ -179,7 +176,7 @@ public class ProductItemToImage implements Function<ProductItem, Image> {
          public String apply(ProductItem productItem) {
             checkNotNull(productItem, "productItem");
             ProductItemPrice price = ProductItems.price().apply(productItem);
-            return "" + price.getId();
+            return String.valueOf(checkNotNull(price, "price").getId());
          }
       };
    }

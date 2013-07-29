@@ -16,6 +16,9 @@
  */
 package org.jclouds.softlayer.features;
 
+import static com.google.common.base.Predicates.and;
+import static com.google.common.collect.Iterables.find;
+import static com.google.common.collect.Iterables.get;
 import static org.jclouds.softlayer.predicates.ProductItemPredicates.capacity;
 import static org.jclouds.softlayer.predicates.ProductItemPredicates.categoryCode;
 import static org.jclouds.softlayer.predicates.ProductItemPredicates.units;
@@ -29,6 +32,9 @@ import java.util.Properties;
 import java.util.Random;
 import java.util.Set;
 
+import com.google.common.base.Splitter;
+import org.jclouds.compute.domain.Template;
+import org.jclouds.compute.domain.TemplateBuilder;
 import org.jclouds.softlayer.SoftLayerClient;
 import org.jclouds.softlayer.compute.functions.ProductItems;
 import org.jclouds.softlayer.domain.ProductItem;
@@ -51,13 +57,14 @@ import com.google.inject.TypeLiteral;
 
 /**
  * Tests behavior of {@code VirtualGuestClient}
- * 
+ *
  * @author Adrian Cole
  */
 @Test(groups = "live")
 public class VirtualGuestClientLiveTest extends BaseSoftLayerClientLiveTest {
 
    private static final String TEST_HOSTNAME_PREFIX = "livetest";
+   private TemplateBuilder templateBuilder;
 
    @Test
    public void testListVirtualGuests() throws Exception {
@@ -71,11 +78,8 @@ public class VirtualGuestClientLiveTest extends BaseSoftLayerClientLiveTest {
       }
    }
 
-   @Test(enabled = false, groups = "live")
+   @Test(groups = "live")
    public void testCancelAndPlaceOrder() {
-
-      // This method was not working needs testing out.
-
       // TODO: Should also check if there are active transactions before trying to cancel.
       // objectMask: virtualGuests.activeTransaction
       for (VirtualGuest guest : api().listVirtualGuests()) {
@@ -90,43 +94,22 @@ public class VirtualGuestClientLiveTest extends BaseSoftLayerClientLiveTest {
                named(ProductPackageClientLiveTest.CLOUD_SERVER_PACKAGE_NAME)).getId();
       ProductPackage productPackage = api.getProductPackageClient().getProductPackage(pkgId);
 
-      Iterable<ProductItem> ramItems = Iterables.filter(productPackage.getItems(), Predicates.and(categoryCode("ram"),
-               capacity(2.0f)));
-
-      Map<Float, ProductItem> ramToProductItem = Maps.uniqueIndex(ramItems, ProductItems.capacity());
-
-      ProductItemPrice ramPrice = ProductItems.price().apply(ramToProductItem.get(2.0f));
-
-      Iterable<ProductItem> cpuItems = Iterables.filter(productPackage.getItems(), Predicates.and(
-               units("PRIVATE_CORE"), capacity(2.0f)));
-      Map<Float, ProductItem> coresToProductItem = Maps.uniqueIndex(cpuItems, ProductItems.capacity());
-
-      ProductItemPrice cpuPrice = ProductItems.price().apply(coresToProductItem.get(2.0f));
-
-      Iterable<ProductItem> operatingSystems = Iterables.filter(productPackage.getItems(), categoryCode("os"));
-      Map<String, ProductItem> osToProductItem = Maps.uniqueIndex(operatingSystems, ProductItems.description());
-      ProductItemPrice osPrice = ProductItems.price().apply(
-               osToProductItem.get("Ubuntu Linux 8 LTS Hardy Heron - Minimal Install (64 bit)"));
-
-      Builder<ProductItemPrice> prices = ImmutableSet.builder();
-      prices.addAll(defaultPrices);
-      prices.add(ramPrice);
-      prices.add(cpuPrice);
-      prices.add(osPrice);
-
       VirtualGuest guest = VirtualGuest.builder().domain("jclouds.org").hostname(
                TEST_HOSTNAME_PREFIX + new Random().nextInt()).build();
 
-      ProductOrder order = ProductOrder.builder().packageId(pkgId).quantity(1).useHourlyPricing(true).prices(
-               prices.build()).virtualGuests(guest).build();
+      Template template = templateBuilder.build();
+
+      ProductOrder order = ProductOrder.builder()
+              .packageId(productPackage.getId())
+              .quantity(1)
+              .location(template.getLocation().getId())
+              .useHourlyPricing(true)
+              .prices(getPrices(template, productPackage))
+              .virtualGuests(guest).build();
 
       ProductOrderReceipt receipt = api().orderVirtualGuest(order);
       ProductOrder order2 = receipt.getOrderDetails();
-      VirtualGuest result = Iterables.get(order2.getVirtualGuests(), 0);
-
-      ProductOrder order3 = api().getOrderTemplate(result.getId());
-
-      assertEquals(order.getPrices(), order3.getPrices());
+      assertEquals(order.getPrices(), order2.getPrices());
       assertNotNull(receipt);
    }
 
@@ -135,6 +118,7 @@ public class VirtualGuestClientLiveTest extends BaseSoftLayerClientLiveTest {
    @Override
    protected SoftLayerClient create(Properties props, Iterable<Module> modules) {
       Injector injector = newBuilder().modules(modules).overrides(props).buildInjector();
+      templateBuilder = injector.getInstance(TemplateBuilder.class);
       defaultPrices = injector.getInstance(Key.get(new TypeLiteral<Iterable<ProductItemPrice>>() {
       }));
       return injector.getInstance(SoftLayerClient.class);
@@ -157,8 +141,6 @@ public class VirtualGuestClientLiveTest extends BaseSoftLayerClientLiveTest {
       assert vg.getMaxCpu() > 0 : vg;
       assert vg.getMaxCpuUnits() != null : vg;
       assert vg.getMaxMemory() > 0 : vg;
-      assert vg.getMetricPollDate() != null : vg;
-      assert vg.getModifyDate() != null : vg;
       assert vg.getStartCpus() > 0 : vg;
       assert vg.getStatusId() >= 0 : vg;
       assert vg.getUuid() != null : vg;
@@ -166,4 +148,22 @@ public class VirtualGuestClientLiveTest extends BaseSoftLayerClientLiveTest {
       assert vg.getPrimaryIpAddress() != null : vg;
    }
 
+   private Iterable<ProductItemPrice> getPrices(Template template, ProductPackage productPackage) {
+      Builder<ProductItemPrice> result = ImmutableSet.builder();
+
+      int imageId = Integer.parseInt(template.getImage().getId());
+      result.add(ProductItemPrice.builder().id(imageId).build());
+
+      Iterable<String> hardwareIds = Splitter.on(",").split(template.getHardware().getId());
+      for (String hardwareId : hardwareIds) {
+         int id = Integer.parseInt(hardwareId);
+         result.add(ProductItemPrice.builder().id(id).build());
+      }
+      float portSpeed = 10f;
+      ProductItem uplinkItem = find(productPackage.getItems(),
+              and(capacity(portSpeed), categoryCode("port_speed")));
+      result.add(get(uplinkItem.getPrices(), 0));
+      result.addAll(defaultPrices);
+      return result.build();
+   }
 }

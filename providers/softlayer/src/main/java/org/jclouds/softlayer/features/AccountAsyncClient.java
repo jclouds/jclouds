@@ -26,6 +26,7 @@ import javax.ws.rs.core.MediaType;
 import org.jclouds.Fallbacks.NullOnNotFoundOr404;
 import org.jclouds.http.filters.BasicAuthentication;
 import org.jclouds.rest.annotations.Fallback;
+import org.jclouds.rest.annotations.QueryParams;
 import org.jclouds.rest.annotations.RequestFilters;
 import org.jclouds.softlayer.domain.ProductPackage;
 
@@ -34,7 +35,7 @@ import com.google.common.util.concurrent.ListenableFuture;
 /**
  * Provides asynchronous access to Account via their REST API.
  * <p/>
- * 
+ *
  * @see AccountClient
  * @see <a href="http://sldn.softlayer.com/article/REST" />
  * @author Jason King
@@ -46,6 +47,16 @@ import com.google.common.util.concurrent.ListenableFuture;
 public interface AccountAsyncClient {
 
    /**
+    * @see AccountClient#getReducedActivePackages()
+    */
+   @GET
+   @Path("/SoftLayer_Account/ActivePackages.json")
+   @Consumes(MediaType.APPLICATION_JSON)
+   @Fallback(NullOnNotFoundOr404.class)
+   @QueryParams(keys = "objectMask", values = "id;name")
+   ListenableFuture<Set<ProductPackage>> getReducedActivePackages();
+
+    /**
     * @see AccountClient#getActivePackages()
     */
    @GET
@@ -53,6 +64,5 @@ public interface AccountAsyncClient {
    @Consumes(MediaType.APPLICATION_JSON)
    @Fallback(NullOnNotFoundOr404.class)
    ListenableFuture<Set<ProductPackage>> getActivePackages();
-
 
 }

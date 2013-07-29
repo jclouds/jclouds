@@ -21,9 +21,12 @@ import static org.testng.Assert.assertFalse;
 
 import java.util.Properties;
 import java.util.Random;
+import java.util.concurrent.TimeUnit;
 
+import com.google.common.base.Stopwatch;
 import org.jclouds.compute.ComputeServiceAdapter.NodeAndInitialCredentials;
 import org.jclouds.compute.domain.ExecResponse;
+import org.jclouds.compute.domain.OsFamily;
 import org.jclouds.compute.domain.Template;
 import org.jclouds.compute.domain.TemplateBuilder;
 import org.jclouds.compute.functions.DefaultCredentialsFromImageOrOverridingCredentials;
@@ -67,7 +70,7 @@ public class SoftLayerComputeServiceAdapterLiveTest extends BaseSoftLayerClientL
 
    @Test
    public void testListLocations() {
-      assertFalse(Iterables.isEmpty(adapter.listLocations()));
+      assertFalse(Iterables.isEmpty(adapter.listLocations()), "locations must not be empty");
    }
 
    private static final PrioritizeCredentialsFromTemplate prioritizeCredentialsFromTemplate = new PrioritizeCredentialsFromTemplate(
@@ -127,5 +130,12 @@ public class SoftLayerComputeServiceAdapterLiveTest extends BaseSoftLayerClientL
    @Override
    protected Iterable<Module> setupModules() {
       return ImmutableSet.<Module> of(getLoggingModule(), new SshjSshClientModule());
+   }
+
+   @Override
+   protected Properties setupProperties() {
+      Properties properties = super.setupProperties();
+      properties.setProperty("jclouds.ssh.max-retries", "10");
+      return properties;
    }
 }

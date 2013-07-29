@@ -20,6 +20,7 @@ import static org.testng.Assert.assertTrue;
 
 import java.util.Set;
 
+import org.jclouds.softlayer.domain.ProductItem;
 import org.jclouds.softlayer.domain.ProductPackage;
 import org.testng.annotations.Test;
 
@@ -37,11 +38,14 @@ public class AccountClientLiveTest extends BaseSoftLayerClientLiveTest {
       assert null != response;
 
       assertTrue(response.size() >= 0);
-      for (ProductPackage productPackage: response) {
+      for (ProductPackage p : response) {
+          ProductPackage productPackage = api.getProductPackageClient().getProductPackage(p.getId());
           assert productPackage.getId() > 0 : response;
           assert productPackage.getName() != null : response;
-          assert productPackage.getDescription() != null : response;
-          assertTrue(productPackage.getItems().isEmpty());
+
+          for (ProductItem item : productPackage.getItems()) {
+              checkProductItem(item);
+          }
       }
    }
 }

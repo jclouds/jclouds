@@ -47,6 +47,8 @@ import com.google.common.collect.ImmutableSet;
 @Test(groups = "live")
 public class SoftLayerTemplateBuilderLiveTest extends BaseTemplateBuilderLiveTest {
 
+   public static final int MAX_RAM = 48 * 1024;
+
    public SoftLayerTemplateBuilderLiveTest() {
       provider = "softlayer";
    }
@@ -141,7 +143,7 @@ public class SoftLayerTemplateBuilderLiveTest extends BaseTemplateBuilderLiveTes
 
          Template template = context.getComputeService().templateBuilder().biggest().build();
          assertEquals(getCores(template.getHardware()), 16.0d);
-         assertEquals(template.getHardware().getRam(), 16*1024);
+         assertEquals(template.getHardware().getRam(), MAX_RAM);
          assertEquals(getSpace(template.getHardware()), 100.0d);
          assertEquals(template.getHardware().getVolumes().get(0).getType(), Volume.Type.SAN);
       } finally {
@@ -181,7 +183,7 @@ public class SoftLayerTemplateBuilderLiveTest extends BaseTemplateBuilderLiveTes
          
          Template template = context.getComputeService().templateBuilder().biggest().build();
          assertEquals(getCores(template.getHardware()), 8.0d);
-         assertEquals(template.getHardware().getRam(), 16*1024);
+         assertEquals(template.getHardware().getRam(), MAX_RAM);
          assertEquals(getSpace(template.getHardware()), 100.0d);
          assertEquals(template.getHardware().getVolumes().get(0).getType(), Volume.Type.LOCAL);
       } finally {
@@ -203,14 +205,14 @@ public class SoftLayerTemplateBuilderLiveTest extends BaseTemplateBuilderLiveTes
    public void testBiggestTemplateBuilder() throws IOException {
       Template template = view.getComputeService().templateBuilder().biggest().build();
       assertEquals(getCores(template.getHardware()), 16.0d);
-      assertEquals(template.getHardware().getRam(), 16*1024);
+      assertEquals(template.getHardware().getRam(), MAX_RAM);
       assertEquals(getSpace(template.getHardware()), 100.0d);
       assertEquals(template.getHardware().getVolumes().get(0).getType(), Volume.Type.LOCAL);
    }
 
    @Override
    protected Set<String> getIso3166Codes() {
-      return ImmutableSet.<String> of("SG", "US-CA", "US-TX", "US-VA", "US-WA", "NL");
+      return ImmutableSet.<String> of("SG", "US-CA", "US-TX", "US-VA", "US-WA", "NL", "NSFTW-IL");
    }
 
 }

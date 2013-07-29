@@ -54,19 +54,16 @@ public class DatacenterClientLiveTest extends BaseSoftLayerClientLiveTest {
       Builder<Datacenter> builder = ImmutableSet.builder();
       builder.add(Datacenter.builder().id(265592).name("ams01").longName("Amsterdam 1").build());
       builder.add(Datacenter.builder().id(3).name("dal01").longName("Dallas").build());
+      builder.add(Datacenter.builder().id(154770).name("dal02").longName("Dallas 2").build());
+      builder.add(Datacenter.builder().id(167092).name("dal04").longName("Dallas 4").build());
+      builder.add(Datacenter.builder().id(138124).name("dal05").longName("Dallas 5").build());
+      builder.add(Datacenter.builder().id(154820).name("dal06").longName("Dallas 6").build());
+      builder.add(Datacenter.builder().id(142776).name("dal07").longName("Dallas 7").build());
+      builder.add(Datacenter.builder().id(142775).name("hou02").longName("Houston 2").build());
       builder.add(Datacenter.builder().id(18171).name("sea01").longName("Seattle").build());
       builder.add(Datacenter.builder().id(168642).name("sjc01").longName("San Jose 1").build());
-      builder.add(Datacenter.builder().id(2).name("dal00").longName("Corporate HQ").build());
-      builder.add(Datacenter.builder().id(37473).name("wdc01").longName("Washington, DC").build());
-      builder.add(Datacenter.builder().id(154770).name("dal02").longName("Dallas 2").build());
-      builder.add(Datacenter.builder().id(138124).name("dal05").longName("Dallas 5").build());
-      builder.add(Datacenter.builder().id(167093).name("hou01").longName("Houston 1").build());
-      builder.add(Datacenter.builder().id(167094).name("lon01").longName("London 1").build());
-      builder.add(Datacenter.builder().id(167092).name("dal04").longName("Dallas 4").build());
       builder.add(Datacenter.builder().id(224092).name("sng01").longName("Singapore 1").build());
-      builder.add(Datacenter.builder().id(142775).name("hou02").longName("Houston 2").build());
-      builder.add(Datacenter.builder().id(142776).name("dal07").longName("Dallas 7").build());
-      builder.add(Datacenter.builder().id(154820).name("dal06").longName("Dallas 6").build());
+      builder.add(Datacenter.builder().id(37473).name("wdc01").longName("Washington, DC").build());
       Set<Datacenter> response = api().listDatacenters();
       Set<Datacenter> expected = builder.build();
 

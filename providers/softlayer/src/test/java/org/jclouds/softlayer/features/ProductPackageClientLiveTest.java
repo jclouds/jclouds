@@ -79,22 +79,18 @@ public class ProductPackageClientLiveTest extends BaseSoftLayerClientLiveTest {
 
    @Test
    public void testGetProductPackage() {
-      for (ProductPackage productPackage : accountClient.getActivePackages()) {
+      for (ProductPackage productPackage : accountClient.getReducedActivePackages()) {
          ProductPackage response = client.getProductPackage(productPackage.getId());
 
          assert null != response;
          assert response.getId() > 0 : response;
          assert response.getName() != null : response;
-         assert response.getDescription() != null : response;
 
          assertTrue(response.getItems().size() >= 0);
          for (ProductItem item : response.getItems()) {
-            // ProductItem newDetails = client.getProductItem(item.getId());
-            // assertEquals(item.getId(), newDetails.getId());
             checkProductItem(item);
          }
 
-         assertTrue(response.getDatacenters().size() > 0);
          for (Datacenter datacenter : response.getDatacenters()) {
             checkDatacenter(datacenter);
          }
@@ -127,8 +123,6 @@ public class ProductPackageClientLiveTest extends BaseSoftLayerClientLiveTest {
 
    @Test
    public void testGetOneGBRamPrice() {
-      // Predicate p =
-      // Predicates.and(ProductItemPredicates.categoryCode("ram"),ProductItemPredicates.capacity(1.0f));
       Iterable<ProductItem> ramItems = Iterables.filter(cloudServerProductPackage.getItems(),
             Predicates.and(categoryCode("ram"), capacity(1.0f)));
 
@@ -166,28 +160,6 @@ public class ProductPackageClientLiveTest extends BaseSoftLayerClientLiveTest {
       assert Integer.valueOf(1693).equals(price.getId());
    }
 
-   private void checkProductItem(ProductItem item) {
-      assert item.getId() > 0 : item;
-      assert item.getDescription() != null : item;
-      checkCategories(item.getCategories());
-      // units and capacity may be null
-
-      assertTrue(item.getPrices().size() >= 0);
-
-      for (ProductItemPrice price : item.getPrices()) {
-         // ProductItemPrice newDetails =
-         // client.getProductItemPrice(prices.getId());
-         // assertEquals(item.getId(), newDetails.getId());
-         checkPrice(price);
-      }
-   }
-
-   private void checkPrice(ProductItemPrice price) {
-      assert price.getId() > 0 : price;
-      assert price.getItemId() > 0 : price;
-      assert price.getRecurringFee() != null || price.getHourlyRecurringFee() != null : price;
-   }
-
    private void checkDatacenter(Datacenter datacenter) {
       assert datacenter.getId() > 0 : datacenter;
       assert datacenter.getName() != null : datacenter;
@@ -206,13 +178,5 @@ public class ProductPackageClientLiveTest extends BaseSoftLayerClientLiveTest {
       assert address.getCountry() != null : address;
       if (!ImmutableSet.of("SG", "NL").contains(address.getCountry()))
          assert address.getState() != null : address;
-   }
-
-   private void checkCategories(Set<ProductItemCategory> categories) {
-      for (ProductItemCategory category : categories) {
-         assert category.getId() > 0 : category;
-         assert category.getName() != null : category;
-         assert category.getCategoryCode() != null : category;
-      }
    }
 }

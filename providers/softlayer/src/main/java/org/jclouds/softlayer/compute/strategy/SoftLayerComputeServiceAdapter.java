@@ -65,7 +65,6 @@ import com.google.common.base.Splitter;
 import com.google.common.base.Supplier;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.ImmutableSet.Builder;
-import com.google.common.collect.Iterables;
 
 /**
  * defines the connection between the {@link SoftLayerClient} implementation and
