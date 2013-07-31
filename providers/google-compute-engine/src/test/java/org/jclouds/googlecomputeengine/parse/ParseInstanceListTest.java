@@ -16,15 +16,17 @@
  */
 package org.jclouds.googlecomputeengine.parse;
 
-import com.google.common.collect.ImmutableSet;
+import java.net.URI;
+
+import javax.ws.rs.Consumes;
+import javax.ws.rs.core.MediaType;
+
 import org.jclouds.googlecomputeengine.domain.Instance;
 import org.jclouds.googlecomputeengine.domain.ListPage;
 import org.jclouds.googlecomputeengine.domain.Resource;
 import org.jclouds.googlecomputeengine.internal.BaseGoogleComputeEngineParseTest;
 
-import javax.ws.rs.Consumes;
-import javax.ws.rs.core.MediaType;
-import java.net.URI;
+import com.google.common.collect.ImmutableSet;
 
 /**
  * @author David Alves
@@ -41,8 +43,8 @@ public class ParseInstanceListTest extends BaseGoogleComputeEngineParseTest<List
    public ListPage<Instance> expected() {
       return ListPage.<Instance>builder()
               .kind(Resource.Kind.INSTANCE_LIST)
-              .id("projects/myproject/instances")
-              .selfLink(URI.create("https://www.googleapis.com/compute/v1beta13/projects/myproject/instances"))
+              .id("projects/myproject/zones/us-central1-a/instances")
+              .selfLink(URI.create("https://www.googleapis.com/compute/v1beta15/projects/myproject/zones/us-central1-a/instances"))
               .items(ImmutableSet.of(new ParseInstanceTest().expected()))
               .build();
    }

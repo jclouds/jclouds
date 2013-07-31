@@ -16,18 +16,18 @@
  */
 package org.jclouds.googlecomputeengine.domain;
 
-import com.google.common.base.Objects;
-import com.google.common.collect.ImmutableSet;
-import com.google.common.collect.Maps;
-import com.google.common.collect.Sets;
+import static com.google.common.base.Objects.equal;
+import static com.google.common.base.Preconditions.checkNotNull;
+import static org.jclouds.googlecomputeengine.domain.Instance.NetworkInterface.AccessConfig.Type;
 
 import java.net.URI;
 import java.util.Map;
 import java.util.Set;
 
-import static com.google.common.base.Objects.equal;
-import static com.google.common.base.Preconditions.checkNotNull;
-import static org.jclouds.googlecomputeengine.domain.Instance.NetworkInterface.AccessConfig.Type;
+import com.google.common.base.Objects;
+import com.google.common.collect.ImmutableSet;
+import com.google.common.collect.Maps;
+import com.google.common.collect.Sets;
 
 /**
  * Optional information for creating an instance.
@@ -39,16 +39,13 @@ public class InstanceTemplate {
    protected String name;
    protected String description;
    protected URI machineType;
-   protected URI zone;
    protected URI image;
-   protected Set<String> tags = Sets.newLinkedHashSet();
    protected Set<Instance.ServiceAccount> serviceAccounts = Sets.newLinkedHashSet();
 
    protected transient Set<PersistentDisk> disks = Sets.newLinkedHashSet();
    protected transient Set<NetworkInterface> networkInterfaces = Sets.newLinkedHashSet();
    protected transient Map<String, String> metadata = Maps.newLinkedHashMap();
    protected transient String machineTypeName;
-   protected transient String zoneName;
 
 
    protected InstanceTemplate(URI machineType) {
@@ -100,39 +97,6 @@ public class InstanceTemplate {
    }
 
    /**
-    * @see org.jclouds.googlecomputeengine.domain.Instance#getZone()
-    */
-   public InstanceTemplate zone(String zoneName) {
-      this.zoneName = zoneName;
-      return this;
-   }
-
-   /**
-    * @see org.jclouds.googlecomputeengine.domain.Instance#getZone()
-    */
-   public InstanceTemplate zone(URI zone) {
-      this.zone = zone;
-      return this;
-   }
-
-   /**
-    * @see org.jclouds.googlecomputeengine.domain.Instance#getTags()
-    */
-   public InstanceTemplate addTag(String tag) {
-      this.tags.add(checkNotNull(tag, "tag"));
-      return this;
-   }
-
-   /**
-    * @see org.jclouds.googlecomputeengine.domain.Instance#getTags()
-    */
-   public InstanceTemplate tags(Set<String> tags) {
-      this.tags = Sets.newLinkedHashSet();
-      this.tags.addAll(checkNotNull(tags, "tags"));
-      return this;
-   }
-
-   /**
     * @see org.jclouds.googlecomputeengine.domain.Instance#getDisks()
     */
    public InstanceTemplate addDisk(PersistentDisk.Mode mode, URI source) {
@@ -161,7 +125,7 @@ public class InstanceTemplate {
     * @see org.jclouds.googlecomputeengine.domain.Instance#getNetworkInterfaces()
     */
    public InstanceTemplate addNetworkInterface(URI network) {
-      this.networkInterfaces.add(new NetworkInterface(checkNotNull(network, "network"), null,null));
+      this.networkInterfaces.add(new NetworkInterface(checkNotNull(network, "network"), null, null));
       return this;
    }
 
@@ -281,31 +245,10 @@ public class InstanceTemplate {
    }
 
    /**
-    * @see org.jclouds.googlecomputeengine.domain.Instance#getTags()
-    */
-   public Set<String> getTags() {
-      return tags;
-   }
-
-   /**
     * @see org.jclouds.googlecomputeengine.domain.Instance#getName()
     */
    public String getName() {
       return name;
-   }
-
-   /**
-    * @see org.jclouds.googlecomputeengine.domain.Instance#getZone()
-    */
-   public URI getZone() {
-      return zone;
-   }
-
-   /**
-    * @see org.jclouds.googlecomputeengine.domain.Instance#getZone()
-    */
-   public String getZoneName() {
-      return zoneName;
    }
 
    public static Builder builder() {
@@ -332,9 +275,7 @@ public class InstanceTemplate {
                  .networkInterfaces(instanceTemplate.getNetworkInterfaces())
                  .name(instanceTemplate.getName())
                  .description(instanceTemplate.getDescription())
-                 .zone(instanceTemplate.getZone())
                  .image(instanceTemplate.getImage())
-                 .tags(instanceTemplate.getTags())
                  .disks(instanceTemplate.getDisks())
                  .metadata(instanceTemplate.getMetadata())
                  .serviceAccounts(instanceTemplate.getServiceAccounts());
@@ -431,7 +372,6 @@ public class InstanceTemplate {
       if (object instanceof InstanceTemplate) {
          final InstanceTemplate other = InstanceTemplate.class.cast(object);
          return equal(description, other.description)
-                 && equal(tags, other.tags)
                  && equal(image, other.image)
                  && equal(disks, other.disks)
                  && equal(networkInterfaces, other.networkInterfaces)
@@ -447,7 +387,7 @@ public class InstanceTemplate {
     */
    @Override
    public int hashCode() {
-      return Objects.hashCode(description, tags, image, disks, networkInterfaces, metadata, serviceAccounts);
+      return Objects.hashCode(description, image, disks, networkInterfaces, metadata, serviceAccounts);
    }
 
    /**
@@ -457,8 +397,6 @@ public class InstanceTemplate {
       Objects.ToStringHelper toString = Objects.toStringHelper("")
               .omitNullValues();
       toString.add("description", description);
-      if (tags.size() > 0)
-         toString.add("tags", tags);
       if (disks.size() > 0)
          toString.add("disks", disks);
       if (metadata.size() > 0)

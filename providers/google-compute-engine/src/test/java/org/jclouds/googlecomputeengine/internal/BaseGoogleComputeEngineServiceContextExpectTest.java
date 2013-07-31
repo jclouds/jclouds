@@ -16,15 +16,16 @@
  */
 package org.jclouds.googlecomputeengine.internal;
 
-import com.google.common.base.Function;
-import com.google.inject.Module;
+import java.util.Properties;
+
 import org.jclouds.apis.ApiMetadata;
 import org.jclouds.compute.ComputeServiceContext;
 import org.jclouds.googlecomputeengine.GoogleComputeEngineApiMetadata;
 import org.jclouds.http.HttpRequest;
 import org.jclouds.http.HttpResponse;
 
-import java.util.Properties;
+import com.google.common.base.Function;
+import com.google.inject.Module;
 
 /**
  * @author David Alves

@@ -55,7 +55,7 @@ import org.jclouds.rest.binders.BindToJsonPayload;
  * Provides access to Networks via their REST API.
  *
  * @author David Alves
- * @see <a href="https://developers.google.com/compute/docs/reference/v1beta13/networks"/>
+ * @see <a href="https://developers.google.com/compute/docs/reference/v1beta15/networks"/>
  */
 @SkipEncoding({'/', '='})
 @RequestFilters(OAuthAuthenticator.class)
@@ -70,7 +70,7 @@ public interface NetworkApi {
    @Named("Networks:get")
    @GET
    @Consumes(MediaType.APPLICATION_JSON)
-   @Path("/networks/{network}")
+   @Path("/global/networks/{network}")
    @OAuthScopes(COMPUTE_READONLY_SCOPE)
    @Fallback(NullOnNotFoundOr404.class)
    Network get(@PathParam("network") String networkName);
@@ -87,11 +87,11 @@ public interface NetworkApi {
    @POST
    @Consumes(MediaType.APPLICATION_JSON)
    @Produces(MediaType.APPLICATION_JSON)
-   @Path("/networks")
+   @Path("/global/networks")
    @OAuthScopes({COMPUTE_SCOPE})
    @MapBinder(BindToJsonPayload.class)
    Operation createInIPv4Range(@PayloadParam("name") String networkName,
-                                                 @PayloadParam("IPv4Range") String IPv4Range);
+                               @PayloadParam("IPv4Range") String IPv4Range);
 
    /**
     * Creates a persistent network resource in the specified project with the specified range and specified gateway.
@@ -106,12 +106,12 @@ public interface NetworkApi {
    @POST
    @Consumes(MediaType.APPLICATION_JSON)
    @Produces(MediaType.APPLICATION_JSON)
-   @Path("/networks")
+   @Path("/global/networks")
    @OAuthScopes({COMPUTE_SCOPE})
    @MapBinder(BindToJsonPayload.class)
    Operation createInIPv4RangeWithGateway(@PayloadParam("name") String networkName,
-                                                            @PayloadParam("IPv4Range") String IPv4Range,
-                                                            @PayloadParam("gatewayIPv4") String gatewayIPv4);
+                                          @PayloadParam("IPv4Range") String IPv4Range,
+                                          @PayloadParam("gatewayIPv4") String gatewayIPv4);
 
    /**
     * Deletes the specified persistent network resource.
@@ -123,7 +123,7 @@ public interface NetworkApi {
    @Named("Networks:delete")
    @DELETE
    @Consumes(MediaType.APPLICATION_JSON)
-   @Path("/networks/{network}")
+   @Path("/global/networks/{network}")
    @OAuthScopes(COMPUTE_SCOPE)
    @Fallback(NullOnNotFoundOr404.class)
    Operation delete(@PathParam("network") String networkName);
@@ -134,7 +134,7 @@ public interface NetworkApi {
    @Named("Networks:list")
    @GET
    @Consumes(MediaType.APPLICATION_JSON)
-   @Path("/networks")
+   @Path("/global/networks")
    @OAuthScopes(COMPUTE_READONLY_SCOPE)
    @ResponseParser(ParseNetworks.class)
    @Fallback(EmptyIterableWithMarkerOnNotFoundOr404.class)
@@ -146,7 +146,7 @@ public interface NetworkApi {
    @Named("Networks:list")
    @GET
    @Consumes(MediaType.APPLICATION_JSON)
-   @Path("/networks")
+   @Path("/global/networks")
    @OAuthScopes(COMPUTE_READONLY_SCOPE)
    @ResponseParser(ParseNetworks.class)
    @Fallback(EmptyIterableWithMarkerOnNotFoundOr404.class)
@@ -157,7 +157,6 @@ public interface NetworkApi {
     * By default the list as a maximum size of 100, if no options are provided or ListOptions#getMaxResults() has not
     * been set.
     *
-    *
     * @param marker      marks the beginning of the next list page
     * @param listOptions listing options
     * @return a page of the list
@@ -167,12 +166,12 @@ public interface NetworkApi {
    @Named("Networks:list")
    @GET
    @Consumes(MediaType.APPLICATION_JSON)
-   @Path("/networks")
+   @Path("/global/networks")
    @OAuthScopes(COMPUTE_READONLY_SCOPE)
    @ResponseParser(ParseNetworks.class)
    @Fallback(EmptyIterableWithMarkerOnNotFoundOr404.class)
    ListPage<Network> listAtMarker(@QueryParam("pageToken") @Nullable String marker,
-                                                    ListOptions options);
+                                  ListOptions options);
 
    /**
     * @see NetworkApi#list(org.jclouds.googlecomputeengine.options.ListOptions)
@@ -180,7 +179,7 @@ public interface NetworkApi {
    @Named("Networks:list")
    @GET
    @Consumes(MediaType.APPLICATION_JSON)
-   @Path("/networks")
+   @Path("/global/networks")
    @OAuthScopes(COMPUTE_READONLY_SCOPE)
    @ResponseParser(ParseNetworks.class)
    @Transform(ParseNetworks.ToPagedIterable.class)
@@ -197,7 +196,7 @@ public interface NetworkApi {
    @Named("Networks:list")
    @GET
    @Consumes(MediaType.APPLICATION_JSON)
-   @Path("/networks")
+   @Path("/global/networks")
    @OAuthScopes(COMPUTE_READONLY_SCOPE)
    @ResponseParser(ParseNetworks.class)
    @Transform(ParseNetworks.ToPagedIterable.class)

@@ -16,11 +16,12 @@
  */
 package org.jclouds.googlecomputeengine;
 
-import com.google.common.collect.ImmutableSet;
-import com.google.common.reflect.TypeToken;
 import org.jclouds.View;
 import org.jclouds.apis.internal.BaseApiMetadataTest;
 import org.testng.annotations.Test;
+
+import com.google.common.collect.ImmutableSet;
+import com.google.common.reflect.TypeToken;
 
 /**
  * Tests that GoogleComputeApiMetadata is properly registered in ServiceLoader

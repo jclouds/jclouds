@@ -16,12 +16,12 @@
  */
 package org.jclouds.googlecomputeengine.parse;
 
+import javax.ws.rs.Consumes;
+import javax.ws.rs.core.MediaType;
+
 import org.jclouds.googlecomputeengine.domain.Project;
 import org.jclouds.googlecomputeengine.internal.BaseGoogleComputeEngineParseTest;
 import org.testng.annotations.Test;
-
-import javax.ws.rs.Consumes;
-import javax.ws.rs.core.MediaType;
 
 /**
  * @author David Alves

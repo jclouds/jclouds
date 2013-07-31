@@ -16,14 +16,16 @@
  */
 package org.jclouds.googlecomputeengine.compute.functions;
 
-import com.google.common.base.Function;
-import com.google.common.base.Predicate;
-import com.google.common.collect.Sets;
-import org.jclouds.compute.domain.NodeMetadata;
+import java.util.Set;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
-import java.util.Set;
+
+import org.jclouds.compute.domain.NodeMetadata;
+
+import com.google.common.base.Function;
+import com.google.common.base.Predicate;
+import com.google.common.collect.Sets;
 
 /**
  * @author David Alves

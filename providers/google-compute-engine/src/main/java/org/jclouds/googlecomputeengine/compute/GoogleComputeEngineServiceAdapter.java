@@ -16,38 +16,6 @@
  */
 package org.jclouds.googlecomputeengine.compute;
 
-import com.google.common.base.Function;
-import com.google.common.base.Objects;
-import com.google.common.base.Predicate;
-import com.google.common.base.Supplier;
-import com.google.common.collect.ImmutableMap;
-import com.google.common.collect.ImmutableSet;
-import com.google.common.util.concurrent.UncheckedTimeoutException;
-import com.google.inject.Inject;
-import org.jclouds.compute.ComputeServiceAdapter;
-import org.jclouds.compute.domain.Hardware;
-import org.jclouds.compute.domain.Template;
-import org.jclouds.compute.options.TemplateOptions;
-import org.jclouds.compute.reference.ComputeServiceConstants;
-import org.jclouds.domain.LoginCredentials;
-import org.jclouds.googlecomputeengine.GoogleComputeEngineApi;
-import org.jclouds.googlecomputeengine.compute.options.GoogleComputeEngineTemplateOptions;
-import org.jclouds.googlecomputeengine.config.UserProject;
-import org.jclouds.googlecomputeengine.domain.Image;
-import org.jclouds.googlecomputeengine.domain.Instance;
-import org.jclouds.googlecomputeengine.domain.InstanceTemplate;
-import org.jclouds.googlecomputeengine.domain.MachineType;
-import org.jclouds.googlecomputeengine.domain.Operation;
-import org.jclouds.googlecomputeengine.domain.Zone;
-import org.jclouds.http.HttpResponse;
-import org.jclouds.logging.Logger;
-
-import javax.annotation.Resource;
-import javax.inject.Named;
-import java.net.URI;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.atomic.AtomicReference;
-
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.base.Preconditions.checkState;
 import static com.google.common.collect.Iterables.contains;
@@ -59,10 +27,51 @@ import static org.jclouds.googlecomputeengine.GoogleComputeEngineConstants.OPERA
 import static org.jclouds.googlecomputeengine.domain.Instance.NetworkInterface.AccessConfig.Type;
 import static org.jclouds.util.Predicates2.retry;
 
+import java.net.URI;
+import java.util.Map;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicReference;
+
+import javax.annotation.Resource;
+import javax.inject.Named;
+
+import org.jclouds.collect.Memoized;
+import org.jclouds.compute.ComputeServiceAdapter;
+import org.jclouds.compute.domain.Hardware;
+import org.jclouds.compute.domain.Template;
+import org.jclouds.compute.options.TemplateOptions;
+import org.jclouds.compute.reference.ComputeServiceConstants;
+import org.jclouds.domain.Location;
+import org.jclouds.domain.LoginCredentials;
+import org.jclouds.googlecomputeengine.GoogleComputeEngineApi;
+import org.jclouds.googlecomputeengine.compute.options.GoogleComputeEngineTemplateOptions;
+import org.jclouds.googlecomputeengine.config.UserProject;
+import org.jclouds.googlecomputeengine.domain.Image;
+import org.jclouds.googlecomputeengine.domain.Instance;
+import org.jclouds.googlecomputeengine.domain.InstanceInZone;
+import org.jclouds.googlecomputeengine.domain.InstanceTemplate;
+import org.jclouds.googlecomputeengine.domain.MachineType;
+import org.jclouds.googlecomputeengine.domain.MachineTypeInZone;
+import org.jclouds.googlecomputeengine.domain.Operation;
+import org.jclouds.googlecomputeengine.domain.SlashEncodedIds;
+import org.jclouds.googlecomputeengine.domain.Zone;
+import org.jclouds.http.HttpResponse;
+import org.jclouds.logging.Logger;
+
+import com.google.common.base.Function;
+import com.google.common.base.Objects;
+import com.google.common.base.Predicate;
+import com.google.common.base.Supplier;
+import com.google.common.collect.FluentIterable;
+import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.ImmutableSet;
+import com.google.common.util.concurrent.UncheckedTimeoutException;
+import com.google.inject.Inject;
+
 /**
  * @author David Alves
  */
-public class GoogleComputeEngineServiceAdapter implements ComputeServiceAdapter<Instance, MachineType, Image, Zone> {
+public class GoogleComputeEngineServiceAdapter implements ComputeServiceAdapter<InstanceInZone, MachineTypeInZone, Image, Zone> {
 
    @Resource
    @Named(ComputeServiceConstants.COMPUTE_LOGGER)
@@ -70,6 +79,8 @@ public class GoogleComputeEngineServiceAdapter implements ComputeServiceAdapter<
 
    private final GoogleComputeEngineApi api;
    private final Supplier<String> userProject;
+   private final Supplier<Map<URI, ? extends Location>> zones;
+   private final Supplier<Map<URI, ? extends Hardware>> hardwareMap;
    private final Function<TemplateOptions, ImmutableMap.Builder<String, String>> metatadaFromTemplateOptions;
    private final Predicate<AtomicReference<Operation>> retryOperationDonePredicate;
    private final long operationCompleteCheckInterval;
@@ -80,9 +91,11 @@ public class GoogleComputeEngineServiceAdapter implements ComputeServiceAdapter<
                                             @UserProject Supplier<String> userProject,
                                             Function<TemplateOptions,
                                                     ImmutableMap.Builder<String, String>> metatadaFromTemplateOptions,
-                                            Predicate<AtomicReference<Operation>> operationDonePredicate,
+                                            @Named("zone") Predicate<AtomicReference<Operation>> operationDonePredicate,
                                             @Named(OPERATION_COMPLETE_INTERVAL) Long operationCompleteCheckInterval,
-                                            @Named(OPERATION_COMPLETE_TIMEOUT) Long operationCompleteCheckTimeout) {
+                                            @Named(OPERATION_COMPLETE_TIMEOUT) Long operationCompleteCheckTimeout,
+                                            @Memoized Supplier<Map<URI, ? extends Location>> zones,
+                                            @Memoized Supplier<Map<URI, ? extends Hardware>> hardwareMap) {
       this.api = checkNotNull(api, "google compute api");
       this.userProject = checkNotNull(userProject, "user project name");
       this.metatadaFromTemplateOptions = checkNotNull(metatadaFromTemplateOptions,
@@ -93,21 +106,24 @@ public class GoogleComputeEngineServiceAdapter implements ComputeServiceAdapter<
               "operation completed check timeout");
       this.retryOperationDonePredicate = retry(operationDonePredicate, operationCompleteCheckTimeout,
               operationCompleteCheckInterval, TimeUnit.MILLISECONDS);
+      this.zones = checkNotNull(zones, "zones");
+      this.hardwareMap = checkNotNull(hardwareMap, "hardwareMap");
    }
 
    @Override
-   public NodeAndInitialCredentials<Instance> createNodeWithGroupEncodedIntoName(
-           final String group, final String name, Template template) {
+   public NodeAndInitialCredentials<InstanceInZone> createNodeWithGroupEncodedIntoName(
+           final String group, final String name, final Template template) {
 
       checkNotNull(template, "template");
 
       GoogleComputeEngineTemplateOptions options = GoogleComputeEngineTemplateOptions.class.cast(template.getOptions()).clone();
       checkState(options.getNetwork().isPresent(), "network was not present in template options");
       Hardware hardware = checkNotNull(template.getHardware(), "hardware must be set");
-      URI machineType = checkNotNull(hardware.getUri(), "hardware uri must be set");
+
+      checkNotNull(hardware.getUri(), "hardware must have a URI");
 
       InstanceTemplate instanceTemplate = InstanceTemplate.builder()
-              .forMachineType(machineType);
+              .forMachineType(hardware.getUri());
 
       if (options.isEnableNat()) {
          instanceTemplate.addNetworkInterface(options.getNetwork().get(), Type.ONE_TO_ONE_NAT);
@@ -119,12 +135,11 @@ public class GoogleComputeEngineServiceAdapter implements ComputeServiceAdapter<
 
       ImmutableMap.Builder<String, String> metadataBuilder = metatadaFromTemplateOptions.apply(options);
       instanceTemplate.metadata(metadataBuilder.build());
-      instanceTemplate.tags(options.getTags());
       instanceTemplate.serviceAccounts(options.getServiceAccounts());
       instanceTemplate.image(checkNotNull(template.getImage().getUri(), "image URI is null"));
 
       Operation operation = api.getInstanceApiForProject(userProject.get())
-              .createInZone(name, instanceTemplate, template.getLocation().getId());
+              .createInZone(name, template.getLocation().getId(), instanceTemplate);
 
       if (options.shouldBlockUntilRunning()) {
          waitOperationDone(operation);
@@ -136,18 +151,52 @@ public class GoogleComputeEngineServiceAdapter implements ComputeServiceAdapter<
       retry(new Predicate<AtomicReference<Instance>>() {
          @Override
          public boolean apply(AtomicReference<Instance> input) {
-            input.set(api.getInstanceApiForProject(userProject.get()).get(name));
+            input.set(api.getInstanceApiForProject(userProject.get()).getInZone(template.getLocation().getId(),
+                    name));
             return input.get() != null;
          }
       }, operationCompleteCheckTimeout, operationCompleteCheckInterval, MILLISECONDS).apply(instance);
 
-      return new NodeAndInitialCredentials<Instance>(instance.get(), name, credentials);
+      if (options.getTags().size() > 0) {
+         Operation tagsOperation = api.getInstanceApiForProject(userProject.get()).setTagsInZone(template.getLocation().getId(),
+                 name, options.getTags(), instance.get().getTags().getFingerprint());
+
+         waitOperationDone(tagsOperation);
+
+         retry(new Predicate<AtomicReference<Instance>>() {
+            @Override
+            public boolean apply(AtomicReference<Instance> input) {
+               input.set(api.getInstanceApiForProject(userProject.get()).getInZone(template.getLocation().getId(),
+                       name));
+               return input.get() != null;
+            }
+         }, operationCompleteCheckTimeout, operationCompleteCheckInterval, MILLISECONDS).apply(instance);
+      }
+
+      InstanceInZone instanceInZone = new InstanceInZone(instance.get(), template.getLocation().getId());
+
+      return new NodeAndInitialCredentials<InstanceInZone>(instanceInZone, instanceInZone.slashEncode(), credentials);
    }
 
 
    @Override
-   public Iterable<MachineType> listHardwareProfiles() {
-      return api.getMachineTypeApiForProject(userProject.get()).list().concat();
+   public Iterable<MachineTypeInZone> listHardwareProfiles() {
+      ImmutableSet.Builder<MachineTypeInZone> builder = ImmutableSet.builder();
+
+      for (final Location zone : zones.get().values()) {
+         builder.addAll(api.getMachineTypeApiForProject(userProject.get())
+                 .listInZone(zone.getId())
+                 .concat()
+                 .transform(new Function<MachineType, MachineTypeInZone>() {
+
+                    @Override
+                    public MachineTypeInZone apply(MachineType arg0) {
+                       return new MachineTypeInZone(arg0, arg0.getZone());
+                    }
+                 }));
+      }
+
+      return builder.build();
    }
 
    @Override
@@ -170,34 +219,57 @@ public class GoogleComputeEngineServiceAdapter implements ComputeServiceAdapter<
    }
 
    @Override
-   public Instance getNode(String name) {
-      return api.getInstanceApiForProject(userProject.get()).get(name);
+   public InstanceInZone getNode(String name) {
+      SlashEncodedIds slashEncodedIds = SlashEncodedIds.fromSlashEncoded(name);
+
+      Instance instance= api.getInstanceApiForProject(userProject.get()).getInZone(slashEncodedIds.getFirstId(),
+              slashEncodedIds.getSecondId());
+
+      return instance == null ?  null : new InstanceInZone(instance, slashEncodedIds.getFirstId());
    }
 
    @Override
-   public Iterable<Instance> listNodes() {
-      return api.getInstanceApiForProject(userProject.get()).list().concat();
+   public Iterable<InstanceInZone> listNodes() {
+      return FluentIterable.from(zones.get().values()).transformAndConcat(new Function<Location, ImmutableSet<InstanceInZone>>() {
+         @Override
+         public ImmutableSet<InstanceInZone> apply(final Location input) {
+            return api.getInstanceApiForProject(userProject.get()).listInZone(input.getId()).concat()
+                    .transform(new Function<Instance, InstanceInZone>() {
+
+                       @Override
+                       public InstanceInZone apply(Instance arg0) {
+                          return new InstanceInZone(arg0, input.getId());
+                       }
+                    }).toSet();
+         }
+      }).toSet();
    }
 
    @Override
-   public Iterable<Instance> listNodesByIds(final Iterable<String> ids) {
-      return filter(listNodes(), new Predicate<Instance>() {
+   public Iterable<InstanceInZone> listNodesByIds(final Iterable<String> ids) {
+      return filter(listNodes(), new Predicate<InstanceInZone>() {
 
          @Override
-         public boolean apply(Instance instance) {
-            return contains(ids, instance.getName());
+         public boolean apply(InstanceInZone instanceInZone) {
+            return contains(ids, instanceInZone.getInstance().getName());
          }
       });
    }
 
    @Override
    public void destroyNode(final String name) {
-      waitOperationDone(api.getInstanceApiForProject(userProject.get()).delete(name));
+      SlashEncodedIds slashEncodedIds = SlashEncodedIds.fromSlashEncoded(name);
+
+      waitOperationDone(api.getInstanceApiForProject(userProject.get()).deleteInZone(slashEncodedIds.getFirstId(),
+              slashEncodedIds.getSecondId()));
    }
 
    @Override
-   public void rebootNode(String name) {
-      throw new UnsupportedOperationException("reboot is not supported by GCE");
+   public void rebootNode(final String name) {
+      SlashEncodedIds slashEncodedIds = SlashEncodedIds.fromSlashEncoded(name);
+
+      waitOperationDone(api.getInstanceApiForProject(userProject.get()).resetInZone(slashEncodedIds.getFirstId(),
+              slashEncodedIds.getSecondId()));
    }
 
    @Override

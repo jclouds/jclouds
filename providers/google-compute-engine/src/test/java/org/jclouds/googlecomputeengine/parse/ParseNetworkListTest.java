@@ -16,15 +16,17 @@
  */
 package org.jclouds.googlecomputeengine.parse;
 
-import com.google.common.collect.ImmutableSet;
+import java.net.URI;
+
+import javax.ws.rs.Consumes;
+import javax.ws.rs.core.MediaType;
+
 import org.jclouds.googlecomputeengine.domain.ListPage;
 import org.jclouds.googlecomputeengine.domain.Network;
 import org.jclouds.googlecomputeengine.domain.Resource;
 import org.jclouds.googlecomputeengine.internal.BaseGoogleComputeEngineParseTest;
 
-import javax.ws.rs.Consumes;
-import javax.ws.rs.core.MediaType;
-import java.net.URI;
+import com.google.common.collect.ImmutableSet;
 
 /**
  * @author David Alves
@@ -42,7 +44,7 @@ public class ParseNetworkListTest extends BaseGoogleComputeEngineParseTest<ListP
       return ListPage.<Network>builder()
               .kind(Resource.Kind.NETWORK_LIST)
               .id("projects/myproject/networks")
-              .selfLink(URI.create("https://www.googleapis.com/compute/v1beta13/projects/myproject/networks"))
+              .selfLink(URI.create("https://www.googleapis.com/compute/v1beta15/projects/myproject/networks"))
               .items(ImmutableSet.of(new ParseNetworkTest().expected()))
               .build();
 

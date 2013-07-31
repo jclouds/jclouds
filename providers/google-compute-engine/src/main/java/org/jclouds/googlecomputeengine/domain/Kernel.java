@@ -16,26 +16,40 @@
  */
 package org.jclouds.googlecomputeengine.domain;
 
-import com.google.common.annotations.Beta;
+import static com.google.common.base.Optional.fromNullable;
+import static com.google.common.base.Preconditions.checkNotNull;
 
 import java.beans.ConstructorProperties;
 import java.net.URI;
 import java.util.Date;
 
+import com.google.common.annotations.Beta;
+import com.google.common.base.Optional;
+
 /**
  * Represents a kernel.
  *
  * @author David Alves
- * @see <a href="https://developers.google.com/compute/docs/reference/v1beta13/kernels"/>
+ * @see <a href="https://developers.google.com/compute/docs/reference/v1beta15/kernels"/>
  */
 @Beta
 public final class Kernel extends Resource {
+   private final Optional<Deprecated> deprecated;
 
    @ConstructorProperties({
-           "id", "creationTimestamp", "selfLink", "name", "description"
+           "id", "creationTimestamp", "selfLink", "name", "description", "deprecated"
    })
-   private Kernel(String id, Date creationTimestamp, URI selfLink, String name, String description) {
+   private Kernel(String id, Date creationTimestamp, URI selfLink, String name, String description,
+                  Deprecated deprecated) {
       super(Kind.KERNEL, id, creationTimestamp, selfLink, name, description);
+      this.deprecated = fromNullable(deprecated);
+   }
+
+   /**
+    * @return the deprecation information for this kernel
+    */
+   public Optional<Deprecated> getDeprecated() {
+      return deprecated;
    }
 
    public static Builder builder() {
@@ -48,6 +62,16 @@ public final class Kernel extends Resource {
 
    public static final class Builder extends Resource.Builder<Builder> {
 
+      private Deprecated deprecated;
+
+      /**
+       * @see Kernel#getDeprecated()
+       */
+      public Builder deprecated(Deprecated deprecated) {
+         this.deprecated = checkNotNull(deprecated, "deprecated");
+         return this;
+      }
+
       @Override
       protected Builder self() {
          return this;
@@ -55,11 +79,12 @@ public final class Kernel extends Resource {
 
       public Kernel build() {
          return new Kernel(super.id, super.creationTimestamp, super.selfLink, super.name,
-                 super.description);
+                 super.description, deprecated);
       }
 
       public Builder fromKernel(Kernel in) {
-         return super.fromResource(in);
+         return super.fromResource(in)
+                 .deprecated(in.getDeprecated().orNull());
       }
    }
 

@@ -16,26 +16,24 @@
  */
 package org.jclouds.googlecomputeengine.domain;
 
-import com.google.common.annotations.Beta;
-import com.google.common.base.Objects;
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableSet;
+import static com.google.common.base.Objects.equal;
+import static com.google.common.base.Objects.toStringHelper;
+import static com.google.common.base.Preconditions.checkNotNull;
 
 import java.beans.ConstructorProperties;
 import java.net.URI;
 import java.util.Date;
 import java.util.List;
-import java.util.Set;
 
-import static com.google.common.base.Objects.equal;
-import static com.google.common.base.Objects.toStringHelper;
-import static com.google.common.base.Preconditions.checkNotNull;
+import com.google.common.annotations.Beta;
+import com.google.common.base.Objects;
+import com.google.common.collect.ImmutableList;
 
 /**
  * Represents a machine type used to host an instance.
  *
  * @author David Alves
- * @see <a href="https://developers.google.com/compute/docs/reference/v1beta13/machineTypes"/>
+ * @see <a href="https://developers.google.com/compute/docs/reference/v1beta15/machineTypes"/>
  */
 @Beta
 public final class MachineType extends Resource {
@@ -43,26 +41,26 @@ public final class MachineType extends Resource {
    private final Integer guestCpus;
    private final Integer memoryMb;
    private final Integer imageSpaceGb;
-   private final List<EphemeralDisk> ephemeralDisks;
+   private final List<ScratchDisk> scratchDisks;
    private final Integer maximumPersistentDisks;
    private final Long maximumPersistentDisksSizeGb;
-   private final Set<String> availableZone;
+   private final String zone;
 
    @ConstructorProperties({
            "id", "creationTimestamp", "selfLink", "name", "description", "guestCpus", "memoryMb",
-           "imageSpaceGb", "ephemeralDisks", "maximumPersistentDisks", "maximumPersistentDisksSizeGb", "availableZone"
+           "imageSpaceGb", "scratchDisks", "maximumPersistentDisks", "maximumPersistentDisksSizeGb", "zone"
    })
    private MachineType(String id, Date creationTimestamp, URI selfLink, String name, String description,
-                       int guestCpus, int memoryMb, int imageSpaceGb, List<EphemeralDisk> ephemeralDisks,
-                       int maximumPersistentDisks, long maximumPersistentDisksSizeGb, Set<String> availableZone) {
+                       int guestCpus, int memoryMb, int imageSpaceGb, List<ScratchDisk> scratchDisks,
+                       int maximumPersistentDisks, long maximumPersistentDisksSizeGb, String zone) {
       super(Kind.MACHINE_TYPE, id, creationTimestamp, selfLink, name, description);
       this.guestCpus = checkNotNull(guestCpus, "guestCpus of %s", name);
       this.memoryMb = checkNotNull(memoryMb, "memoryMb of %s", name);
       this.imageSpaceGb = checkNotNull(imageSpaceGb, "imageSpaceGb of %s", name);
-      this.ephemeralDisks = ephemeralDisks == null ? ImmutableList.<EphemeralDisk>of() : ephemeralDisks;
+      this.scratchDisks = scratchDisks == null ? ImmutableList.<ScratchDisk>of() : scratchDisks;
       this.maximumPersistentDisks = checkNotNull(maximumPersistentDisks, "maximumPersistentDisks of %s", name);
       this.maximumPersistentDisksSizeGb = maximumPersistentDisksSizeGb;
-      this.availableZone = availableZone == null ? ImmutableSet.<String>of() : availableZone;
+      this.zone = checkNotNull(zone, "zone of %s", name);
    }
 
    /**
@@ -87,10 +85,10 @@ public final class MachineType extends Resource {
    }
 
    /**
-    * @return extended ephemeral disks assigned to the instance.
+    * @return extended scratch disks assigned to the instance.
     */
-   public List<EphemeralDisk> getEphemeralDisks() {
-      return ephemeralDisks;
+   public List<ScratchDisk> getScratchDisks() {
+      return scratchDisks;
    }
 
    /**
@@ -110,8 +108,21 @@ public final class MachineType extends Resource {
    /**
     * @return the zones that this machine type can run in.
     */
-   public Set<String> getAvailableZone() {
-      return availableZone;
+   public String getZone() {
+      return zone;
+   }
+
+   /**
+    * {@inheritDoc}
+    */
+   @Override
+   public boolean equals(Object obj) {
+      if (this == obj) return true;
+      if (obj == null || getClass() != obj.getClass()) return false;
+      MachineType that = MachineType.class.cast(obj);
+      return equal(this.kind, that.kind)
+              && equal(this.name, that.name)
+              && equal(this.zone, that.zone);
    }
 
    /**
@@ -122,10 +133,10 @@ public final class MachineType extends Resource {
               .add("guestCpus", guestCpus)
               .add("memoryMb", memoryMb)
               .add("imageSpaceGb", imageSpaceGb)
-              .add("ephemeralDisks", ephemeralDisks)
+              .add("scratchDisks", scratchDisks)
               .add("maximumPersistentDisks", maximumPersistentDisks)
               .add("maximumPersistentDisksSizeGb", maximumPersistentDisksSizeGb)
-              .add("availableZone", availableZone);
+              .add("zone", zone);
    }
 
    /**
@@ -149,10 +160,10 @@ public final class MachineType extends Resource {
       private Integer guestCpus;
       private Integer memoryMb;
       private Integer imageSpaceGb;
-      private ImmutableList.Builder<EphemeralDisk> ephemeralDisks = ImmutableList.builder();
+      private ImmutableList.Builder<ScratchDisk> scratchDisks = ImmutableList.builder();
       private Integer maximumPersistentDisks;
       private Long maximumPersistentDisksSizeGb;
-      private ImmutableSet.Builder<String> availableZone = ImmutableSet.builder();
+      private String zone;
 
       /**
        * @see MachineType#getGuestCpus()
@@ -179,18 +190,18 @@ public final class MachineType extends Resource {
       }
 
       /**
-       * @see MachineType#getEphemeralDisks()
+       * @see MachineType#getScratchDisks()
        */
-      public Builder addEphemeralDisk(int diskGb) {
-         this.ephemeralDisks.add(EphemeralDisk.builder().diskGb(diskGb).build());
+      public Builder addScratchDisk(int diskGb) {
+         this.scratchDisks.add(ScratchDisk.builder().diskGb(diskGb).build());
          return this;
       }
 
       /**
-       * @see MachineType#getEphemeralDisks()
+       * @see MachineType#getScratchDisks()
        */
-      public Builder ephemeralDisks(List<EphemeralDisk> ephemeralDisks) {
-         this.ephemeralDisks.addAll(ephemeralDisks);
+      public Builder scratchDisks(List<ScratchDisk> scratchDisks) {
+         this.scratchDisks.addAll(scratchDisks);
          return this;
       }
 
@@ -211,18 +222,10 @@ public final class MachineType extends Resource {
       }
 
       /**
-       * @see MachineType#getAvailableZone()
+       * @see MachineType#getZone()
        */
-      public Builder addAvailableZone(String availableZone) {
-         this.availableZone.add(availableZone);
-         return this;
-      }
-
-      /**
-       * @see MachineType#getAvailableZone()
-       */
-      public Builder availableZones(Set<String> availableZone) {
-         this.availableZone.addAll(availableZone);
+      public Builder zone(String zone) {
+         this.zone = zone;
          return this;
       }
 
@@ -233,35 +236,35 @@ public final class MachineType extends Resource {
 
       public MachineType build() {
          return new MachineType(id, creationTimestamp, selfLink, name, description, guestCpus, memoryMb,
-                 imageSpaceGb, ephemeralDisks.build(), maximumPersistentDisks, maximumPersistentDisksSizeGb,
-                 availableZone.build());
+                 imageSpaceGb, scratchDisks.build(), maximumPersistentDisks, maximumPersistentDisksSizeGb,
+                 zone);
       }
 
 
       public Builder fromMachineType(MachineType in) {
-         return super.fromResource(in).memoryMb(in.getMemoryMb()).imageSpaceGb(in.getImageSpaceGb()).ephemeralDisks(in
-                 .getEphemeralDisks()).maximumPersistentDisks(in.getMaximumPersistentDisks())
-                 .maximumPersistentDisksSizeGb(in.getMaximumPersistentDisksSizeGb()).availableZones(in
-                         .getAvailableZone());
+         return super.fromResource(in).memoryMb(in.getMemoryMb()).imageSpaceGb(in.getImageSpaceGb()).scratchDisks(in
+                 .getScratchDisks()).maximumPersistentDisks(in.getMaximumPersistentDisks())
+                 .maximumPersistentDisksSizeGb(in.getMaximumPersistentDisksSizeGb()).zone(in
+                         .getZone());
       }
    }
 
    /**
-    * An ephemeral disk of a MachineType
+    * An scratch disk of a MachineType
     */
-   public static final class EphemeralDisk {
+   public static final class ScratchDisk {
 
       private final int diskGb;
 
       @ConstructorProperties({
               "diskGb"
       })
-      private EphemeralDisk(int diskGb) {
+      private ScratchDisk(int diskGb) {
          this.diskGb = diskGb;
       }
 
       /**
-       * @return size of the ephemeral disk, defined in GB.
+       * @return size of the scratch disk, defined in GB.
        */
       public int getDiskGb() {
          return diskGb;
@@ -282,7 +285,7 @@ public final class MachineType extends Resource {
       public boolean equals(Object obj) {
          if (this == obj) return true;
          if (obj == null || getClass() != obj.getClass()) return false;
-         EphemeralDisk that = EphemeralDisk.class.cast(obj);
+         ScratchDisk that = ScratchDisk.class.cast(obj);
          return equal(this.diskGb, that.diskGb);
       }
 
@@ -307,7 +310,7 @@ public final class MachineType extends Resource {
       }
 
       public Builder toBuilder() {
-         return builder().fromEphemeralDisk(this);
+         return builder().fromScratchDisk(this);
       }
 
       public static class Builder {
@@ -315,18 +318,18 @@ public final class MachineType extends Resource {
          private int diskGb;
 
          /**
-          * @see org.jclouds.googlecomputeengine.domain.MachineType.EphemeralDisk#getDiskGb()
+          * @see org.jclouds.googlecomputeengine.domain.MachineType.ScratchDisk#getDiskGb()
           */
          public Builder diskGb(int diskGb) {
             this.diskGb = diskGb;
             return this;
          }
 
-         public EphemeralDisk build() {
-            return new EphemeralDisk(diskGb);
+         public ScratchDisk build() {
+            return new ScratchDisk(diskGb);
          }
 
-         public Builder fromEphemeralDisk(EphemeralDisk in) {
+         public Builder fromScratchDisk(ScratchDisk in) {
             return new Builder().diskGb(in.getDiskGb());
          }
       }

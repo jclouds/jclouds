@@ -16,28 +16,47 @@
  */
 package org.jclouds.googlecomputeengine.handlers;
 
-import org.jclouds.googlecomputeengine.config.GoogleComputeEngineParserModule;
-import org.jclouds.http.HttpRequest;
-import org.jclouds.rest.Binder;
-import org.jclouds.rest.binders.BindToJsonPayload;
+import static com.google.common.base.Preconditions.checkNotNull;
 
-import javax.inject.Inject;
 import java.util.Map;
 
-import static com.google.common.base.Preconditions.checkNotNull;
+import javax.inject.Inject;
+
+import org.jclouds.googlecomputeengine.domain.Metadata;
+import org.jclouds.http.HttpRequest;
+import org.jclouds.rest.MapBinder;
+import org.jclouds.rest.binders.BindToJsonPayload;
+
+import com.google.common.collect.ImmutableMap;
 
 /**
  * @author David Alves
  */
-public class MetadataBinder implements Binder {
+public class MetadataBinder implements MapBinder {
 
    @Inject
    private BindToJsonPayload jsonBinder;
 
+   /**
+    * {@inheritDoc}
+    */
    @Override
-   @SuppressWarnings("unchecked")
-   public <R extends HttpRequest> R bindToRequest(R request, Object input) {
-      Map<String, String> metadataEntries = (Map<String, String>) checkNotNull(input, "input metadata");
-      return jsonBinder.bindToRequest(request, new GoogleComputeEngineParserModule.Metadata(metadataEntries));
+   public <R extends HttpRequest> R bindToRequest(R request, Map<String, Object> postParams) {
+      Map<String, String> items = ImmutableMap.copyOf((Map<String,String>)checkNotNull(postParams.get("items"), "item"));
+      String fingerprint = (String) checkNotNull(postParams.get("fingerprint"), "fingerprint");
+      Metadata metadata = Metadata.builder()
+              .fingerprint(fingerprint)
+              .items(items)
+              .build();
+      return bindToRequest(request, metadata);
    }
+
+   /**
+    * {@inheritDoc}
+    */
+   @Override
+   public <R extends HttpRequest> R bindToRequest(R request, Object input) {
+      return jsonBinder.bindToRequest(request, input);
+   }
+
 }

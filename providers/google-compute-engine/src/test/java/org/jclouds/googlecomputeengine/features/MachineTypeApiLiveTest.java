@@ -16,8 +16,14 @@
  */
 package org.jclouds.googlecomputeengine.features;
 
-import com.google.common.collect.Iterables;
-import com.google.common.collect.Lists;
+import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertNotNull;
+import static org.testng.Assert.assertSame;
+import static org.testng.Assert.assertTrue;
+
+import java.util.Iterator;
+import java.util.List;
+
 import org.jclouds.collect.IterableWithMarker;
 import org.jclouds.collect.PagedIterable;
 import org.jclouds.googlecomputeengine.domain.MachineType;
@@ -25,13 +31,8 @@ import org.jclouds.googlecomputeengine.internal.BaseGoogleComputeEngineApiLiveTe
 import org.jclouds.googlecomputeengine.options.ListOptions;
 import org.testng.annotations.Test;
 
-import java.util.Iterator;
-import java.util.List;
-
-import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertNotNull;
-import static org.testng.Assert.assertSame;
-import static org.testng.Assert.assertTrue;
+import com.google.common.collect.Iterables;
+import com.google.common.collect.Lists;
 
 /**
  * @author David Alves
@@ -47,7 +48,7 @@ public class MachineTypeApiLiveTest extends BaseGoogleComputeEngineApiLiveTest {
    @Test(groups = "live")
    public void testListMachineType() {
 
-      PagedIterable<MachineType> machineTypes = api().list(new ListOptions.Builder()
+      PagedIterable<MachineType> machineTypes = api().listInZone(DEFAULT_ZONE_NAME, new ListOptions.Builder()
               .maxResults(1));
 
       Iterator<IterableWithMarker<MachineType>> pageIterator = machineTypes.iterator();
@@ -64,7 +65,7 @@ public class MachineTypeApiLiveTest extends BaseGoogleComputeEngineApiLiveTest {
 
    @Test(groups = "live", dependsOnMethods = "testListMachineType")
    public void testGetMachineType() {
-      MachineType machineType = api().get(this.machineType.getName());
+      MachineType machineType = api().getInZone(DEFAULT_ZONE_NAME, this.machineType.getName());
       assertNotNull(machineType);
       assertMachineTypeEquals(machineType, this.machineType);
    }

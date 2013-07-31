@@ -41,7 +41,7 @@ import com.google.common.collect.ImmutableSet;
 import com.google.inject.Module;
 
 /**
- * Implementation of {@link ApiMetadata} for GoogleCompute v1beta13 API
+ * Implementation of {@link ApiMetadata} for GoogleCompute v1beta15 API
  *
  * @author David Alves
  */
@@ -77,21 +77,21 @@ public class GoogleComputeEngineApiMetadata extends BaseHttpApiMetadata<GoogleCo
 
       protected Builder() {
          id(GCE_PROVIDER_NAME)
-        .name("Google Compute Engine Api")
-        .identityName("Email associated with the Google API client_id")
-        .credentialName("Private key literal associated with the Google API client_id")
-        .documentation(URI.create("https://developers.google.com/compute/docs"))
-        .version("v1beta13")
-        .defaultEndpoint("https://www.googleapis.com/compute/v1beta13")
-        .defaultProperties(GoogleComputeEngineApiMetadata.defaultProperties())
-        .view(typeToken(ComputeServiceContext.class))
-        .defaultModules(ImmutableSet.<Class<? extends Module>>builder()
-                .add(GoogleComputeEngineHttpApiModule.class)
-                .add(GoogleComputeEngineParserModule.class)
-                .add(OAuthAuthenticationModule.class)
-                .add(OAuthModuleWithoutTypeAdapters.class)
-                .add(GoogleComputeEngineServiceContextModule.class)
-                .build());
+                 .name("Google Compute Engine Api")
+                 .identityName("Email associated with the Google API client_id")
+                 .credentialName("Private key literal associated with the Google API client_id")
+                 .documentation(URI.create("https://developers.google.com/compute/docs"))
+                 .version("v1beta15")
+                 .defaultEndpoint("https://www.googleapis.com/compute/v1beta15")
+                 .defaultProperties(GoogleComputeEngineApiMetadata.defaultProperties())
+                 .view(typeToken(ComputeServiceContext.class))
+                 .defaultModules(ImmutableSet.<Class<? extends Module>>builder()
+                         .add(GoogleComputeEngineHttpApiModule.class)
+                         .add(GoogleComputeEngineParserModule.class)
+                         .add(OAuthAuthenticationModule.class)
+                         .add(OAuthModuleWithoutTypeAdapters.class)
+                         .add(GoogleComputeEngineServiceContextModule.class)
+                         .build());
       }
 
       @Override

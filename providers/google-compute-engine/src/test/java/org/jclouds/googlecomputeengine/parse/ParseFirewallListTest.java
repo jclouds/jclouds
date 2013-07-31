@@ -16,7 +16,11 @@
  */
 package org.jclouds.googlecomputeengine.parse;
 
-import com.google.common.collect.ImmutableSet;
+import java.net.URI;
+
+import javax.ws.rs.Consumes;
+import javax.ws.rs.core.MediaType;
+
 import org.jclouds.date.internal.SimpleDateFormatDateService;
 import org.jclouds.googlecomputeengine.domain.Firewall;
 import org.jclouds.googlecomputeengine.domain.ListPage;
@@ -24,9 +28,7 @@ import org.jclouds.googlecomputeengine.domain.Resource;
 import org.jclouds.googlecomputeengine.internal.BaseGoogleComputeEngineParseTest;
 import org.testng.annotations.Test;
 
-import javax.ws.rs.Consumes;
-import javax.ws.rs.core.MediaType;
-import java.net.URI;
+import com.google.common.collect.ImmutableSet;
 
 /**
  * @author David Alves
@@ -45,18 +47,18 @@ public class ParseFirewallListTest extends BaseGoogleComputeEngineParseTest<List
       return ListPage.<Firewall>builder()
               .kind(Resource.Kind.FIREWALL_LIST)
               .id("projects/google/firewalls")
-              .selfLink(URI.create("https://www.googleapis.com/compute/v1beta13/projects/google/firewalls"))
+              .selfLink(URI.create("https://www.googleapis.com/compute/v1beta15/projects/google/global/firewalls"))
               .items(ImmutableSet.of(
                       new ParseFirewallTest().expected()
                       , Firewall.builder()
                       .id("12862241067393040785")
                       .creationTimestamp(new SimpleDateFormatDateService().iso8601DateParse("2012-04-13T03:05:04.365"))
                       .selfLink(URI.create("https://www.googleapis" +
-                              ".com/compute/v1beta13/projects/google/firewalls/default-ssh"))
+                              ".com/compute/v1beta15/projects/google/global/firewalls/default-ssh"))
                       .name("default-ssh")
                       .description("SSH allowed from anywhere")
                       .network(URI.create("https://www.googleapis" +
-                              ".com/compute/v1beta13/projects/google/networks/default"))
+                              ".com/compute/v1beta15/projects/google/global/networks/default"))
                       .addSourceRange("0.0.0.0/0")
                       .addAllowed(Firewall.Rule.builder()
                               .IPProtocol(Firewall.Rule.IPProtocol.TCP)

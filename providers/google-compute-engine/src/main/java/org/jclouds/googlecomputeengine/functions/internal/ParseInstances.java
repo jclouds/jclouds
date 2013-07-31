@@ -16,8 +16,10 @@
  */
 package org.jclouds.googlecomputeengine.functions.internal;
 
-import com.google.common.base.Function;
-import com.google.inject.TypeLiteral;
+import static com.google.common.base.Preconditions.checkNotNull;
+
+import javax.inject.Inject;
+
 import org.jclouds.collect.IterableWithMarker;
 import org.jclouds.googlecomputeengine.GoogleComputeEngineApi;
 import org.jclouds.googlecomputeengine.domain.Instance;
@@ -26,9 +28,8 @@ import org.jclouds.googlecomputeengine.options.ListOptions;
 import org.jclouds.http.functions.ParseJson;
 import org.jclouds.json.Json;
 
-import javax.inject.Inject;
-
-import static com.google.common.base.Preconditions.checkNotNull;
+import com.google.common.base.Function;
+import com.google.inject.TypeLiteral;
 
 /**
  * @author David Alves
@@ -37,10 +38,11 @@ public class ParseInstances extends ParseJson<ListPage<Instance>> {
 
    @Inject
    public ParseInstances(Json json) {
-      super(json, new TypeLiteral<ListPage<Instance>>() {});
+      super(json, new TypeLiteral<ListPage<Instance>>() {
+      });
    }
 
-   public static class ToPagedIterable extends BaseToPagedIterable<Instance, ToPagedIterable> {
+   public static class ToPagedIterable extends BaseWithZoneToPagedIterable<Instance, ToPagedIterable> {
 
       private final GoogleComputeEngineApi api;
 
@@ -50,13 +52,15 @@ public class ParseInstances extends ParseJson<ListPage<Instance>> {
       }
 
       @Override
-      protected Function<Object, IterableWithMarker<Instance>> fetchNextPage(final String projectName,
+      protected Function<Object, IterableWithMarker<Instance>> fetchNextPage(final String project,
+                                                                             final String zone,
                                                                              final ListOptions options) {
          return new Function<Object, IterableWithMarker<Instance>>() {
 
             @Override
             public IterableWithMarker<Instance> apply(Object input) {
-               return api.getInstanceApiForProject(projectName).listAtMarker(input.toString(), options);
+               return api.getInstanceApiForProject(project)
+                       .listAtMarkerInZone(zone, input.toString(), options);
             }
          };
       }

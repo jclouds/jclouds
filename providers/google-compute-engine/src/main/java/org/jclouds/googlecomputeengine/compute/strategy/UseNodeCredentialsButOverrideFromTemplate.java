@@ -16,15 +16,16 @@
  */
 package org.jclouds.googlecomputeengine.compute.strategy;
 
-import com.google.common.base.Function;
-import com.google.inject.Inject;
-import com.google.inject.Singleton;
+import static com.google.common.base.Preconditions.checkNotNull;
+
 import org.jclouds.compute.domain.Template;
 import org.jclouds.compute.options.RunScriptOptions;
 import org.jclouds.compute.strategy.PrioritizeCredentialsFromTemplate;
 import org.jclouds.domain.LoginCredentials;
 
-import static com.google.common.base.Preconditions.checkNotNull;
+import com.google.common.base.Function;
+import com.google.inject.Inject;
+import com.google.inject.Singleton;
 
 /**
  * GCE needs the credentials to create the node so the node credentials already take the Image credentials into account,

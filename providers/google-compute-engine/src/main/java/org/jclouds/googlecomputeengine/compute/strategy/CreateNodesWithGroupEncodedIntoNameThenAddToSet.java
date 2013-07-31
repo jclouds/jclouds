@@ -16,12 +16,21 @@
  */
 package org.jclouds.googlecomputeengine.compute.strategy;
 
-import com.google.common.base.Predicate;
-import com.google.common.base.Supplier;
-import com.google.common.collect.ImmutableSet;
-import com.google.common.collect.Multimap;
-import com.google.common.util.concurrent.ListenableFuture;
-import com.google.common.util.concurrent.ListeningExecutorService;
+import static com.google.common.base.Preconditions.checkNotNull;
+import static com.google.common.base.Preconditions.checkState;
+import static com.google.common.collect.ImmutableSet.of;
+import static java.util.concurrent.TimeUnit.MILLISECONDS;
+import static org.jclouds.googlecomputeengine.GoogleComputeEngineConstants.OPERATION_COMPLETE_INTERVAL;
+import static org.jclouds.googlecomputeengine.GoogleComputeEngineConstants.OPERATION_COMPLETE_TIMEOUT;
+import static org.jclouds.util.Predicates2.retry;
+
+import java.util.Map;
+import java.util.Set;
+import java.util.concurrent.atomic.AtomicReference;
+
+import javax.inject.Inject;
+import javax.inject.Named;
+
 import org.jclouds.Constants;
 import org.jclouds.compute.config.CustomizationResponse;
 import org.jclouds.compute.domain.NodeMetadata;
@@ -38,19 +47,12 @@ import org.jclouds.googlecomputeengine.domain.Network;
 import org.jclouds.googlecomputeengine.domain.Operation;
 import org.jclouds.googlecomputeengine.options.FirewallOptions;
 
-import javax.inject.Inject;
-import javax.inject.Named;
-import java.util.Map;
-import java.util.Set;
-import java.util.concurrent.atomic.AtomicReference;
-
-import static com.google.common.base.Preconditions.checkNotNull;
-import static com.google.common.base.Preconditions.checkState;
-import static com.google.common.collect.ImmutableSet.of;
-import static java.util.concurrent.TimeUnit.MILLISECONDS;
-import static org.jclouds.googlecomputeengine.GoogleComputeEngineConstants.OPERATION_COMPLETE_INTERVAL;
-import static org.jclouds.googlecomputeengine.GoogleComputeEngineConstants.OPERATION_COMPLETE_TIMEOUT;
-import static org.jclouds.util.Predicates2.retry;
+import com.google.common.base.Predicate;
+import com.google.common.base.Supplier;
+import com.google.common.collect.ImmutableSet;
+import com.google.common.collect.Multimap;
+import com.google.common.util.concurrent.ListenableFuture;
+import com.google.common.util.concurrent.ListeningExecutorService;
 
 /**
  * @author David Alves
@@ -78,7 +80,7 @@ public class CreateNodesWithGroupEncodedIntoNameThenAddToSet extends
                    customizeNodeAndAddToGoodMapOrPutExceptionIntoBadMapFactory,
            GoogleComputeEngineApi api,
            @UserProject Supplier<String> userProject,
-           Predicate<AtomicReference<Operation>> operationDonePredicate,
+           @Named("global") Predicate<AtomicReference<Operation>> operationDonePredicate,
            @Named(OPERATION_COMPLETE_INTERVAL) Long operationCompleteCheckInterval,
            @Named(OPERATION_COMPLETE_TIMEOUT) Long operationCompleteCheckTimeout) {
       super(addNodeWithGroupStrategy, listNodesStrategy, namingConvention, userExecutor,
@@ -127,7 +129,7 @@ public class CreateNodesWithGroupEncodedIntoNameThenAddToSet extends
       if (network != null) {
          return network;
       } else if (templateOptions.getNetwork().isPresent()) {
-         throw new IllegalArgumentException("requested network " + networkName + " does not exist"); 
+         throw new IllegalArgumentException("requested network " + networkName + " does not exist");
       }
 
       AtomicReference<Operation> operation = new AtomicReference<Operation>(api.getNetworkApiForProject(userProject
@@ -135,7 +137,7 @@ public class CreateNodesWithGroupEncodedIntoNameThenAddToSet extends
       retry(operationDonePredicate, operationCompleteCheckTimeout, operationCompleteCheckInterval,
               MILLISECONDS).apply(operation);
 
-      checkState(!operation.get().getHttpError().isPresent(),"Could not create network, operation failed" + operation);
+      checkState(!operation.get().getHttpError().isPresent(), "Could not create network, operation failed" + operation);
 
       return checkNotNull(api.getNetworkApiForProject(userProject.get()).get(sharedResourceName),
               "no network with name %s was found", sharedResourceName);
@@ -186,7 +188,7 @@ public class CreateNodesWithGroupEncodedIntoNameThenAddToSet extends
       retry(operationDonePredicate, operationCompleteCheckTimeout, operationCompleteCheckInterval,
               MILLISECONDS).apply(operation);
 
-      checkState(!operation.get().getHttpError().isPresent(),"Could not create firewall, operation failed" + operation);
+      checkState(!operation.get().getHttpError().isPresent(), "Could not create firewall, operation failed" + operation);
    }
 
 

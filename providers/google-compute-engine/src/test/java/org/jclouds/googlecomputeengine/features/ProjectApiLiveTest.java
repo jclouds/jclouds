@@ -20,13 +20,6 @@ package org.jclouds.googlecomputeengine.features;
  * @author David Alves
  */
 
-import com.google.common.collect.ImmutableMap;
-import com.google.common.collect.Maps;
-import org.jclouds.googlecomputeengine.domain.Operation;
-import org.jclouds.googlecomputeengine.domain.Project;
-import org.jclouds.googlecomputeengine.internal.BaseGoogleComputeEngineApiLiveTest;
-import org.testng.annotations.Test;
-
 import static com.google.common.base.Predicates.equalTo;
 import static com.google.common.base.Predicates.not;
 import static org.testng.Assert.assertEquals;
@@ -35,6 +28,14 @@ import static org.testng.Assert.assertNotNull;
 import static org.testng.Assert.assertNull;
 import static org.testng.Assert.assertSame;
 import static org.testng.Assert.assertTrue;
+
+import org.jclouds.googlecomputeengine.domain.Operation;
+import org.jclouds.googlecomputeengine.domain.Project;
+import org.jclouds.googlecomputeengine.internal.BaseGoogleComputeEngineApiLiveTest;
+import org.testng.annotations.Test;
+
+import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.Maps;
 
 /**
  * @author David Alves
@@ -50,6 +51,7 @@ public class ProjectApiLiveTest extends BaseGoogleComputeEngineApiLiveTest {
 
    private Project project;
    private int initialMetadataSize;
+   private String initialFingerprint;
 
    @Test(groups = "live")
    public void testGetProjectWhenExists() {
@@ -67,24 +69,27 @@ public class ProjectApiLiveTest extends BaseGoogleComputeEngineApiLiveTest {
 
    @Test(groups = "live", dependsOnMethods = "testGetProjectWhenExists")
    public void addItemToMetadata() {
-      this.initialMetadataSize = project.getCommonInstanceMetadata().size();
-      assertOperationDoneSucessfully(addItemToMetadata(projectApi(), userProject.get(), METADATA_ITEM_KEY,
+      this.initialMetadataSize = project.getCommonInstanceMetadata().getItems().size();
+      this.initialFingerprint = this.project.getCommonInstanceMetadata().getFingerprint();
+      assertGlobalOperationDoneSucessfully(addItemToMetadata(projectApi(), userProject.get(), METADATA_ITEM_KEY,
               METADATA_ITEM_VALUE), 20);
       this.project = projectApi().get(userProject.get());
       assertNotNull(project);
-      assertTrue(this.project.getCommonInstanceMetadata().containsKey(METADATA_ITEM_KEY),
+      assertTrue(this.project.getCommonInstanceMetadata().getItems().containsKey(METADATA_ITEM_KEY),
               this.project.toString());
-      assertEquals(this.project.getCommonInstanceMetadata().get(METADATA_ITEM_KEY),
+      assertEquals(this.project.getCommonInstanceMetadata().getItems().get(METADATA_ITEM_KEY),
               METADATA_ITEM_VALUE);
+      assertNotNull(this.project.getCommonInstanceMetadata().getFingerprint());
    }
 
    @Test(groups = "live", dependsOnMethods = "addItemToMetadata")
    public void testDeleteItemFromMetadata() {
-      assertOperationDoneSucessfully(deleteItemFromMetadata(projectApi(), userProject.get(), METADATA_ITEM_KEY), 20);
+      assertGlobalOperationDoneSucessfully(deleteItemFromMetadata(projectApi(), userProject.get(), METADATA_ITEM_KEY), 20);
       this.project = projectApi().get(userProject.get());
       assertNotNull(project);
-      assertFalse(project.getCommonInstanceMetadata().containsKey(METADATA_ITEM_KEY));
-      assertSame(this.project.getCommonInstanceMetadata().size(), initialMetadataSize);
+      assertFalse(project.getCommonInstanceMetadata().getItems().containsKey(METADATA_ITEM_KEY));
+      assertSame(this.project.getCommonInstanceMetadata().getItems().size(), initialMetadataSize);
+      assertEquals(this.project.getCommonInstanceMetadata().getFingerprint(), initialFingerprint);
    }
 
    /**
@@ -97,9 +102,10 @@ public class ProjectApiLiveTest extends BaseGoogleComputeEngineApiLiveTest {
       Project project = projectApi.get(projectName);
       assertNotNull(project);
       ImmutableMap.Builder<String, String> metadataBuilder = ImmutableMap.builder();
-      metadataBuilder.putAll(project.getCommonInstanceMetadata());
+      metadataBuilder.putAll(project.getCommonInstanceMetadata().getItems());
       metadataBuilder.put(key, value);
-      return projectApi.setCommonInstanceMetadata(projectName, metadataBuilder.build());
+      return projectApi.setCommonInstanceMetadata(projectName, metadataBuilder.build(),
+              project.getCommonInstanceMetadata().getFingerprint());
    }
 
    /**
@@ -112,8 +118,9 @@ public class ProjectApiLiveTest extends BaseGoogleComputeEngineApiLiveTest {
       Project project = projectApi.get(projectName);
       assertNotNull(project);
       ImmutableMap.Builder<String, String> metadataBuilder = ImmutableMap.builder();
-      metadataBuilder.putAll(Maps.filterKeys(project.getCommonInstanceMetadata(), not(equalTo(key))));
-      return projectApi.setCommonInstanceMetadata(projectName, metadataBuilder.build());
+      metadataBuilder.putAll(Maps.filterKeys(project.getCommonInstanceMetadata().getItems(), not(equalTo(key))));
+      return projectApi.setCommonInstanceMetadata(projectName, metadataBuilder.build(),
+              project.getCommonInstanceMetadata().getFingerprint());
    }
 
 

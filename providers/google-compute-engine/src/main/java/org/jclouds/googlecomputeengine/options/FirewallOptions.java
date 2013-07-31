@@ -16,17 +16,18 @@
  */
 package org.jclouds.googlecomputeengine.options;
 
-import com.google.common.collect.ImmutableSet;
-import org.jclouds.googlecomputeengine.domain.Firewall;
-
 import java.net.URI;
 import java.util.Set;
+
+import org.jclouds.googlecomputeengine.domain.Firewall;
+
+import com.google.common.collect.ImmutableSet;
 
 /**
  * Options to create a firewall.
  *
- * @see Firewall
  * @author David Alves
+ * @see Firewall
  */
 public class FirewallOptions {
 
@@ -135,6 +136,7 @@ public class FirewallOptions {
     */
    public FirewallOptions sourceTags(Set<String> sourceTags) {
       this.sourceTags = ImmutableSet.builder();
+      this.sourceTags.addAll(sourceTags);
       return this;
    }
 

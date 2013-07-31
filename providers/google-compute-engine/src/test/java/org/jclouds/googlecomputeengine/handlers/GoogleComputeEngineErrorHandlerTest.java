@@ -16,19 +16,19 @@
  */
 package org.jclouds.googlecomputeengine.handlers;
 
-import org.easymock.IArgumentMatcher;
-import org.jclouds.http.HttpCommand;
-import org.jclouds.http.HttpRequest;
-import org.jclouds.http.HttpResponse;
-import org.testng.annotations.Test;
-
-import java.net.URI;
-
 import static org.easymock.EasyMock.createMock;
 import static org.easymock.EasyMock.expect;
 import static org.easymock.EasyMock.replay;
 import static org.easymock.EasyMock.reportMatcher;
 import static org.easymock.EasyMock.verify;
+
+import java.net.URI;
+
+import org.easymock.IArgumentMatcher;
+import org.jclouds.http.HttpCommand;
+import org.jclouds.http.HttpRequest;
+import org.jclouds.http.HttpResponse;
+import org.testng.annotations.Test;
 
 /**
  * @author Adrian Cole
@@ -40,7 +40,7 @@ public class GoogleComputeEngineErrorHandlerTest {
    public void test409MakesIllegalStateException() {
       assertCodeMakes(
               "POST",
-              URI.create("https://www.googleapis.com/compute/v1beta13"),
+              URI.create("https://www.googleapis.com/compute/v1beta15"),
               409,
               "HTTP/1.1 409 Conflict",
               "\"{\"code\":\"InvalidState\",\"message\":\"An incompatible transition has already been queued for this" +

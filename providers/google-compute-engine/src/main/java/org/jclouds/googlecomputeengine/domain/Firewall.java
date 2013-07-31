@@ -16,17 +16,6 @@
  */
 package org.jclouds.googlecomputeengine.domain;
 
-import com.google.common.annotations.Beta;
-import com.google.common.base.Objects;
-import com.google.common.collect.ImmutableSet;
-import com.google.common.collect.RangeSet;
-import com.google.common.collect.TreeRangeSet;
-
-import java.beans.ConstructorProperties;
-import java.net.URI;
-import java.util.Date;
-import java.util.Set;
-
 import static com.google.common.base.Objects.equal;
 import static com.google.common.base.Objects.toStringHelper;
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -34,11 +23,22 @@ import static com.google.common.base.Preconditions.checkState;
 import static com.google.common.collect.Range.closed;
 import static com.google.common.collect.Range.singleton;
 
+import java.beans.ConstructorProperties;
+import java.net.URI;
+import java.util.Date;
+import java.util.Set;
+
+import com.google.common.annotations.Beta;
+import com.google.common.base.Objects;
+import com.google.common.collect.ImmutableSet;
+import com.google.common.collect.RangeSet;
+import com.google.common.collect.TreeRangeSet;
+
 /**
  * Represents a network firewall
  *
  * @author David Alves
- * @see <a href="https://developers.google.com/compute/docs/reference/v1beta13/firewalls"/>
+ * @see <a href="https://developers.google.com/compute/docs/reference/v1beta15/firewalls"/>
  * @see <a href="https://developers.google.com/compute/docs/networking#firewalls"/>
  */
 @Beta
@@ -83,7 +83,7 @@ public final class Firewall extends Resource {
    }
 
    /**
-    * @return a list of instance tags which this rule applies to. One or both of sourceRanges and sourceTags may be
+    * @return a list of instance items which this rule applies to. One or both of sourceRanges and sourceTags may be
     *         set; an inbound connection is allowed if either the range or the tag of the source matches.
     */
    public Set<String> getSourceTags() {
@@ -93,7 +93,7 @@ public final class Firewall extends Resource {
    /**
     * If no targetTags are specified, the firewall rule applies to all instances on the specified network.
     *
-    * @return a list of instance tags indicating sets of instances located on network which may make network
+    * @return a list of instance items indicating sets of instances located on network which may make network
     *         connections as specified in allowed.
     */
    public Set<String> getTargetTags() {
@@ -241,7 +241,7 @@ public final class Firewall extends Resource {
     * permitted connection.
     *
     * @author David Alves
-    * @see <a href="https://developers.google.com/compute/docs/reference/v1beta13/firewalls"/>
+    * @see <a href="https://developers.google.com/compute/docs/reference/v1beta15/firewalls"/>
     */
    public static final class Rule {
 

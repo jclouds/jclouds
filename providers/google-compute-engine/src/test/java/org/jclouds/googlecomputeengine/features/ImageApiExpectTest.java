@@ -16,6 +16,12 @@
  */
 package org.jclouds.googlecomputeengine.features;
 
+import static org.jclouds.googlecomputeengine.GoogleComputeEngineConstants.COMPUTE_READONLY_SCOPE;
+import static org.jclouds.googlecomputeengine.GoogleComputeEngineConstants.COMPUTE_SCOPE;
+import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertTrue;
+import static org.testng.AssertJUnit.assertNull;
+
 import org.jclouds.googlecomputeengine.internal.BaseGoogleComputeEngineApiExpectTest;
 import org.jclouds.googlecomputeengine.parse.ParseImageListTest;
 import org.jclouds.googlecomputeengine.parse.ParseImageTest;
@@ -23,12 +29,6 @@ import org.jclouds.googlecomputeengine.parse.ParseOperationTest;
 import org.jclouds.http.HttpRequest;
 import org.jclouds.http.HttpResponse;
 import org.testng.annotations.Test;
-
-import static org.jclouds.googlecomputeengine.GoogleComputeEngineConstants.COMPUTE_READONLY_SCOPE;
-import static org.jclouds.googlecomputeengine.GoogleComputeEngineConstants.COMPUTE_SCOPE;
-import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertTrue;
-import static org.testng.AssertJUnit.assertNull;
 
 /**
  * @author David Alves
@@ -40,19 +40,30 @@ public class ImageApiExpectTest extends BaseGoogleComputeEngineApiExpectTest {
            .builder()
            .method("GET")
            .endpoint("https://www.googleapis" +
-                   ".com/compute/v1beta13/projects/myproject/images")
+                   ".com/compute/v1beta15/projects/myproject/global/images")
            .addHeader("Accept", "application/json")
            .addHeader("Authorization", "Bearer " + TOKEN).build();
 
    public static final HttpResponse LIST_PROJECT_IMAGES_RESPONSE = HttpResponse.builder().statusCode(200)
            .payload(staticPayloadFromResource("/image_list.json")).build();
 
+   public static final HttpRequest LIST_GOOGLE_IMAGES_REQUEST = HttpRequest
+           .builder()
+           .method("GET")
+           .endpoint("https://www.googleapis.com/compute/v1beta15/projects/google/global/images")
+           .addHeader("Accept", "application/json")
+           .addHeader("Authorization", "Bearer " + TOKEN).build();
+
+   public static final HttpResponse LIST_GOOGLE_IMAGES_RESPONSE = HttpResponse.builder().statusCode(200)
+           .payload(staticPayloadFromResource("/image_list_single_page.json")).build();
+
+
    public void testGetImageResponseIs2xx() throws Exception {
       HttpRequest get = HttpRequest
               .builder()
               .method("GET")
               .endpoint("https://www.googleapis" +
-                      ".com/compute/v1beta13/projects/google/images/centos-6-2-v20120326")
+                      ".com/compute/v1beta15/projects/google/global/images/centos-6-2-v20120326")
               .addHeader("Accept", "application/json")
               .addHeader("Authorization", "Bearer " + TOKEN).build();
 
@@ -71,7 +82,7 @@ public class ImageApiExpectTest extends BaseGoogleComputeEngineApiExpectTest {
               .builder()
               .method("GET")
               .endpoint("https://www.googleapis" +
-                      ".com/compute/v1beta13/projects/google/images/centos-6-2-v20120326")
+                      ".com/compute/v1beta15/projects/google/global/images/centos-6-2-v20120326")
               .addHeader("Accept", "application/json")
               .addHeader("Authorization", "Bearer " + TOKEN).build();
 
@@ -88,7 +99,7 @@ public class ImageApiExpectTest extends BaseGoogleComputeEngineApiExpectTest {
               .builder()
               .method("DELETE")
               .endpoint("https://www.googleapis" +
-                      ".com/compute/v1beta13/projects/myproject/images/centos-6-2-v20120326")
+                      ".com/compute/v1beta15/projects/myproject/global/images/centos-6-2-v20120326")
               .addHeader("Accept", "application/json")
               .addHeader("Authorization", "Bearer " + TOKEN).build();
 
@@ -107,7 +118,7 @@ public class ImageApiExpectTest extends BaseGoogleComputeEngineApiExpectTest {
               .builder()
               .method("DELETE")
               .endpoint("https://www.googleapis" +
-                      ".com/compute/v1beta13/projects/myproject/images/centos-6-2-v20120326")
+                      ".com/compute/v1beta15/projects/myproject/global/images/centos-6-2-v20120326")
               .addHeader("Accept", "application/json")
               .addHeader("Authorization", "Bearer " + TOKEN).build();
 

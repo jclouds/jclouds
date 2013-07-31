@@ -16,7 +16,11 @@
  */
 package org.jclouds.googlecomputeengine.parse;
 
-import com.google.common.collect.ImmutableSet;
+import java.net.URI;
+
+import javax.ws.rs.Consumes;
+import javax.ws.rs.core.MediaType;
+
 import org.jclouds.date.internal.SimpleDateFormatDateService;
 import org.jclouds.googlecomputeengine.domain.ListPage;
 import org.jclouds.googlecomputeengine.domain.Resource;
@@ -24,9 +28,7 @@ import org.jclouds.googlecomputeengine.domain.Zone;
 import org.jclouds.googlecomputeengine.internal.BaseGoogleComputeEngineParseTest;
 import org.testng.annotations.Test;
 
-import javax.ws.rs.Consumes;
-import javax.ws.rs.core.MediaType;
-import java.net.URI;
+import com.google.common.collect.ImmutableSet;
 
 /**
  * @author David Alves
@@ -45,7 +47,7 @@ public class ParseZoneListTest extends BaseGoogleComputeEngineParseTest<ListPage
       return ListPage.<Zone>builder()
               .kind(Resource.Kind.ZONE_LIST)
               .id("projects/myproject/zones")
-              .selfLink(URI.create("https://www.googleapis.com/compute/v1beta13/projects/myproject/zones"))
+              .selfLink(URI.create("https://www.googleapis.com/compute/v1beta15/projects/myproject/zones"))
               .items(ImmutableSet.of(
                       new ParseZoneTest().expected()
                       , Zone.builder()
@@ -53,9 +55,9 @@ public class ParseZoneListTest extends BaseGoogleComputeEngineParseTest<ListPage
                       .creationTimestamp(new SimpleDateFormatDateService().iso8601DateParse
                               ("2012-10-24T20:13:19.271"))
                       .selfLink(URI.create("https://www.googleapis" +
-                              ".com/compute/v1beta13/projects/myproject/zones/us-east1-a"))
-                      .name("us-east1-a")
-                      .description("us-east1-a")
+                              ".com/compute/v1beta15/projects/myproject/zones/us-central1-b"))
+                      .name("us-central1-b")
+                      .description("us-central1-b")
                       .status(Zone.Status.UP)
                       .addMaintenanceWindow(Zone.MaintenanceWindow.builder()
                               .name("2013-02-17-planned-outage")

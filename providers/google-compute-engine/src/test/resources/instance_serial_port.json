@@ -1,4 +1,4 @@
 {
- "kind": "compute#serialPortOutput",
- "contents": "console output"
+   "kind": "compute#serialPortOutput",
+   "contents": "console output"
 }

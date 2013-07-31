@@ -16,19 +16,20 @@
  */
 package org.jclouds.googlecomputeengine.compute.options;
 
-import com.google.common.base.Optional;
-import com.google.common.collect.Sets;
-import org.jclouds.compute.options.TemplateOptions;
-import org.jclouds.domain.LoginCredentials;
-import org.jclouds.googlecomputeengine.domain.Instance;
-import org.jclouds.scriptbuilder.domain.Statement;
+import static com.google.common.base.Optional.fromNullable;
+import static org.jclouds.googlecomputeengine.domain.Instance.ServiceAccount;
 
 import java.net.URI;
 import java.util.Map;
 import java.util.Set;
 
-import static com.google.common.base.Optional.fromNullable;
-import static org.jclouds.googlecomputeengine.domain.Instance.ServiceAccount;
+import org.jclouds.compute.options.TemplateOptions;
+import org.jclouds.domain.LoginCredentials;
+import org.jclouds.googlecomputeengine.domain.Instance;
+import org.jclouds.scriptbuilder.domain.Statement;
+
+import com.google.common.base.Optional;
+import com.google.common.collect.Sets;
 
 /**
  * Instance options specific to Google Compute Engine.

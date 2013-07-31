@@ -19,7 +19,6 @@ package org.jclouds.googlecomputeengine.features;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
 
-import java.net.URI;
 import java.util.List;
 
 import org.jclouds.collect.PagedIterable;
@@ -37,11 +36,9 @@ import com.google.common.collect.Lists;
  */
 public class DiskApiLiveTest extends BaseGoogleComputeEngineApiLiveTest {
 
-   private static final String DISK_NAME = "disk-api-live-test-disk";
-   private static final int TIME_WAIT = 10;
-
-   private URI zoneUrl;
-   private int sizeGb = 1;
+   public static final String DISK_NAME = "disk-api-live-test-disk";
+   public static final int TIME_WAIT = 30;
+   public static final int sizeGb = 1;
 
    private DiskApi api() {
       return api.getDiskApiForProject(userProject.get());
@@ -50,15 +47,14 @@ public class DiskApiLiveTest extends BaseGoogleComputeEngineApiLiveTest {
    @Test(groups = "live")
    public void testInsertDisk() {
       Project project = api.getProjectApi().get(userProject.get());
-      zoneUrl = getDefaultZoneUrl(project.getName());
-      assertOperationDoneSucessfully(api().createInZone(DISK_NAME, sizeGb, zoneUrl), TIME_WAIT);
+      assertZoneOperationDoneSucessfully(api().createInZone(DISK_NAME, sizeGb, DEFAULT_ZONE_NAME), TIME_WAIT);
 
    }
 
    @Test(groups = "live", dependsOnMethods = "testInsertDisk")
    public void testGetDisk() {
 
-      Disk disk = api().get(DISK_NAME);
+      Disk disk = api().getInZone(DEFAULT_ZONE_NAME, DISK_NAME);
       assertNotNull(disk);
       assertDiskEquals(disk);
    }
@@ -66,7 +62,7 @@ public class DiskApiLiveTest extends BaseGoogleComputeEngineApiLiveTest {
    @Test(groups = "live", dependsOnMethods = "testGetDisk")
    public void testListDisk() {
 
-      PagedIterable<Disk> disks = api().list(new ListOptions.Builder()
+      PagedIterable<Disk> disks = api().listInZone(DEFAULT_ZONE_NAME, new ListOptions.Builder()
               .filter("name eq " + DISK_NAME));
 
       List<Disk> disksAsList = Lists.newArrayList(disks.concat());
@@ -80,13 +76,13 @@ public class DiskApiLiveTest extends BaseGoogleComputeEngineApiLiveTest {
    @Test(groups = "live", dependsOnMethods = "testListDisk")
    public void testDeleteDisk() {
 
-      assertOperationDoneSucessfully(api().delete(DISK_NAME), TIME_WAIT);
+      assertZoneOperationDoneSucessfully(api().deleteInZone(DEFAULT_ZONE_NAME, DISK_NAME), TIME_WAIT);
    }
 
    private void assertDiskEquals(Disk result) {
       assertEquals(result.getName(), DISK_NAME);
       assertEquals(result.getSizeGb(), sizeGb);
-      assertEquals(result.getZone(), zoneUrl);
+      assertEquals(result.getZone(), getDefaultZoneUrl(userProject.get()));
    }
 
 }

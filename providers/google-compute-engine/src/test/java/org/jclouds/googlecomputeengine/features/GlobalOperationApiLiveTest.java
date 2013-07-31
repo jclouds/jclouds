@@ -16,8 +16,13 @@
  */
 package org.jclouds.googlecomputeengine.features;
 
-import com.google.common.base.Predicate;
-import com.google.common.collect.Iterables;
+import static org.jclouds.googlecomputeengine.features.ProjectApiLiveTest.addItemToMetadata;
+import static org.jclouds.googlecomputeengine.features.ProjectApiLiveTest.deleteItemFromMetadata;
+import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertNotNull;
+
+import java.util.concurrent.atomic.AtomicInteger;
+
 import org.jclouds.collect.IterableWithMarker;
 import org.jclouds.collect.PagedIterable;
 import org.jclouds.googlecomputeengine.domain.Operation;
@@ -25,25 +30,21 @@ import org.jclouds.googlecomputeengine.internal.BaseGoogleComputeEngineApiLiveTe
 import org.jclouds.googlecomputeengine.options.ListOptions;
 import org.testng.annotations.Test;
 
-import java.util.concurrent.atomic.AtomicInteger;
-
-import static org.jclouds.googlecomputeengine.features.ProjectApiLiveTest.addItemToMetadata;
-import static org.jclouds.googlecomputeengine.features.ProjectApiLiveTest.deleteItemFromMetadata;
-import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertNotNull;
+import com.google.common.base.Predicate;
+import com.google.common.collect.Iterables;
 
 /**
  * @author David Alves
  */
-public class OperationApiLiveTest extends BaseGoogleComputeEngineApiLiveTest {
+public class GlobalOperationApiLiveTest extends BaseGoogleComputeEngineApiLiveTest {
 
    private static final String METADATA_ITEM_KEY = "operationLiveTestTestProp";
    private static final String METADATA_ITEM_VALUE = "operationLiveTestTestValue";
    private Operation addOperation;
    private Operation deleteOperation;
 
-   private OperationApi api() {
-      return api.getOperationApiForProject(userProject.get());
+   private GlobalOperationApi api() {
+      return api.getGlobalOperationApiForProject(userProject.get());
    }
 
 
@@ -51,9 +52,9 @@ public class OperationApiLiveTest extends BaseGoogleComputeEngineApiLiveTest {
    public void testCreateOperations() {
       //create some operations by adding and deleting metadata items
       // this will make sure there is stuff to listFirstPage
-      addOperation = assertOperationDoneSucessfully(addItemToMetadata(api.getProjectApi(),
+      addOperation = assertGlobalOperationDoneSucessfully(addItemToMetadata(api.getProjectApi(),
               userProject.get(), METADATA_ITEM_KEY, METADATA_ITEM_VALUE), 20);
-      deleteOperation = assertOperationDoneSucessfully(deleteItemFromMetadata(api
+      deleteOperation = assertGlobalOperationDoneSucessfully(deleteItemFromMetadata(api
               .getProjectApi(), userProject.get(), METADATA_ITEM_KEY), 20);
 
       assertNotNull(addOperation);

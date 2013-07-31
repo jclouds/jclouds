@@ -16,15 +16,16 @@
  */
 package org.jclouds.googlecomputeengine.compute.functions;
 
-import com.google.common.base.Function;
-import com.google.common.collect.ImmutableMap;
+import static com.google.common.base.Preconditions.checkNotNull;
+import static org.jclouds.googlecomputeengine.GoogleComputeEngineConstants.GOOGLE_PROVIDER_LOCATION;
+
 import org.jclouds.domain.Location;
 import org.jclouds.domain.LocationBuilder;
 import org.jclouds.domain.LocationScope;
 import org.jclouds.googlecomputeengine.domain.Zone;
 
-import static com.google.common.base.Preconditions.checkNotNull;
-import static org.jclouds.googlecomputeengine.GoogleComputeEngineConstants.GOOGLE_PROVIDER_LOCATION;
+import com.google.common.base.Function;
+import com.google.common.collect.ImmutableMap;
 
 /**
  * Transforms a google compute domain specific zone to a generic Zone object.

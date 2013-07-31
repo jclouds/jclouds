@@ -16,13 +16,14 @@
  */
 package org.jclouds.googlecomputeengine.parse;
 
-import org.jclouds.date.internal.SimpleDateFormatDateService;
-import org.jclouds.googlecomputeengine.domain.MachineType;
-import org.jclouds.googlecomputeengine.internal.BaseGoogleComputeEngineParseTest;
+import java.net.URI;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.core.MediaType;
-import java.net.URI;
+
+import org.jclouds.date.internal.SimpleDateFormatDateService;
+import org.jclouds.googlecomputeengine.domain.MachineType;
+import org.jclouds.googlecomputeengine.internal.BaseGoogleComputeEngineParseTest;
 
 /**
  * @author David Alves
@@ -42,15 +43,16 @@ public class ParseMachineTypeTest extends BaseGoogleComputeEngineParseTest<Machi
       return MachineType.builder()
               .id("12907738072351752276")
               .creationTimestamp(dateService.iso8601DateParse("2012-06-07T20:48:14.670"))
-              .selfLink(URI.create("https://www.googleapis.com/compute/v1beta13/projects/myproject/machineTypes/n1" +
+              .selfLink(URI.create("https://www.googleapis.com/compute/v1beta15/projects/myproject/zones/us-central1-a/machineTypes/n1" +
                       "-standard-1"))
+              .zone("us-central1-a")
               .name("n1-standard-1")
               .description("1 vCPU, 3.75 GB RAM, and a 10 GB ephemeral root disk")
               .guestCpus(1)
               .memoryMb(3840)
               .imageSpaceGb(10)
-              .addEphemeralDisk(1770)
-              .addEphemeralDisk(1770)
+              .addScratchDisk(1770)
+              .addScratchDisk(1770)
               .maximumPersistentDisks(16)
               .maximumPersistentDisksSizeGb(128)
               .build();

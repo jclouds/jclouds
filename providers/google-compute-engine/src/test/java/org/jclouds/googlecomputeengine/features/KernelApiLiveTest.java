@@ -16,8 +16,14 @@
  */
 package org.jclouds.googlecomputeengine.features;
 
-import com.google.common.collect.Iterables;
-import com.google.common.collect.Lists;
+import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertNotNull;
+import static org.testng.Assert.assertSame;
+import static org.testng.Assert.assertTrue;
+
+import java.util.Iterator;
+import java.util.List;
+
 import org.jclouds.collect.IterableWithMarker;
 import org.jclouds.collect.PagedIterable;
 import org.jclouds.googlecomputeengine.domain.Kernel;
@@ -25,13 +31,8 @@ import org.jclouds.googlecomputeengine.internal.BaseGoogleComputeEngineApiLiveTe
 import org.jclouds.googlecomputeengine.options.ListOptions;
 import org.testng.annotations.Test;
 
-import java.util.Iterator;
-import java.util.List;
-
-import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertNotNull;
-import static org.testng.Assert.assertSame;
-import static org.testng.Assert.assertTrue;
+import com.google.common.collect.Iterables;
+import com.google.common.collect.Lists;
 
 /**
  * @author David Alves

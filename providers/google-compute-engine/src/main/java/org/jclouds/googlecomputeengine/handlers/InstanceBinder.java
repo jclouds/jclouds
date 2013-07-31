@@ -16,18 +16,20 @@
  */
 package org.jclouds.googlecomputeengine.handlers;
 
-import com.google.common.base.Function;
+import static com.google.common.base.Preconditions.checkNotNull;
+
+import java.net.URI;
+import java.util.Map;
+
+import javax.inject.Inject;
+import javax.inject.Named;
+
 import org.jclouds.googlecomputeengine.domain.InstanceTemplate;
 import org.jclouds.http.HttpRequest;
 import org.jclouds.rest.MapBinder;
 import org.jclouds.rest.binders.BindToJsonPayload;
 
-import javax.inject.Inject;
-import javax.inject.Named;
-import java.net.URI;
-import java.util.Map;
-
-import static com.google.common.base.Preconditions.checkNotNull;
+import com.google.common.base.Function;
 
 /**
  * @author David Alves
@@ -38,12 +40,8 @@ public class InstanceBinder implements MapBinder {
    private BindToJsonPayload jsonBinder;
 
    @Inject
-   @Named("machineTypes")
+   @Named("machineTypeToURI")
    Function<String, URI> machineTypesToURI;
-
-   @Inject
-   @Named("zones")
-   Function<String, URI> zonesToURI;
 
    /**
     * {@inheritDoc}
@@ -52,12 +50,10 @@ public class InstanceBinder implements MapBinder {
    public <R extends HttpRequest> R bindToRequest(R request, Map<String, Object> postParams) {
       InstanceTemplate template = (InstanceTemplate) checkNotNull(postParams.get("template"), "template");
       template.name(checkNotNull(postParams.get("name"), "name").toString());
-      template.zone(zonesToURI.apply((String) checkNotNull(postParams.get("zone"), "zone")));
 
       if (template.getMachineTypeName() != null) {
          template.machineType(machineTypesToURI.apply(template.getMachineTypeName()));
       }
-      template.zone((String) null);
       template.machineType((String) null);
       return bindToRequest(request, template);
    }

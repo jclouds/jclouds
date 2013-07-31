@@ -16,27 +16,28 @@
  */
 package org.jclouds.googlecomputeengine.domain;
 
-import com.google.common.annotations.Beta;
-import com.google.common.base.Objects;
-import com.google.common.base.Optional;
-import com.google.common.collect.ImmutableSet;
-import org.jclouds.javax.annotation.Nullable;
+import static com.google.common.base.Objects.equal;
+import static com.google.common.base.Objects.toStringHelper;
+import static com.google.common.base.Optional.fromNullable;
+import static com.google.common.base.Preconditions.checkNotNull;
 
 import java.beans.ConstructorProperties;
 import java.net.URI;
 import java.util.Date;
 import java.util.Set;
 
-import static com.google.common.base.Objects.equal;
-import static com.google.common.base.Objects.toStringHelper;
-import static com.google.common.base.Optional.fromNullable;
-import static com.google.common.base.Preconditions.checkNotNull;
+import org.jclouds.javax.annotation.Nullable;
+
+import com.google.common.annotations.Beta;
+import com.google.common.base.Objects;
+import com.google.common.base.Optional;
+import com.google.common.collect.ImmutableSet;
 
 /**
  * Represents a zone resource.
  *
  * @author David Alves
- * @see <a href="https://developers.google.com/compute/docs/reference/v1beta13/zones"/>
+ * @see <a href="https://developers.google.com/compute/docs/reference/v1beta15/zones"/>
  */
 @Beta
 public final class Zone extends Resource {
@@ -181,7 +182,7 @@ public final class Zone extends Resource {
     * Scheduled maintenance windows for the zone. When the zone is in a maintenance window,
     * all resources which reside in the zone will be unavailable.
     *
-    * @see <a href="https://developers.google.com/compute/docs/reference/v1beta13/zones"/>
+    * @see <a href="https://developers.google.com/compute/docs/reference/v1beta15/zones"/>
     */
    public static final class MaintenanceWindow {
 

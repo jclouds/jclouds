@@ -16,16 +16,17 @@
  */
 package org.jclouds.googlecomputeengine.handlers;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+
+import java.net.URI;
+import java.util.Map;
+
+import javax.inject.Inject;
+
 import org.jclouds.googlecomputeengine.options.FirewallOptions;
 import org.jclouds.http.HttpRequest;
 import org.jclouds.rest.MapBinder;
 import org.jclouds.rest.binders.BindToJsonPayload;
-
-import javax.inject.Inject;
-import java.net.URI;
-import java.util.Map;
-
-import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * @author David Alves

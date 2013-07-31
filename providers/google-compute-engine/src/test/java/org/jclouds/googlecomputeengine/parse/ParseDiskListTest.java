@@ -16,7 +16,11 @@
  */
 package org.jclouds.googlecomputeengine.parse;
 
-import com.google.common.collect.ImmutableSet;
+import java.net.URI;
+
+import javax.ws.rs.Consumes;
+import javax.ws.rs.core.MediaType;
+
 import org.jclouds.date.internal.SimpleDateFormatDateService;
 import org.jclouds.googlecomputeengine.domain.Disk;
 import org.jclouds.googlecomputeengine.domain.ListPage;
@@ -24,9 +28,7 @@ import org.jclouds.googlecomputeengine.domain.Resource;
 import org.jclouds.googlecomputeengine.internal.BaseGoogleComputeEngineParseTest;
 import org.testng.annotations.Test;
 
-import javax.ws.rs.Consumes;
-import javax.ws.rs.core.MediaType;
-import java.net.URI;
+import com.google.common.collect.ImmutableSet;
 
 /**
  * @author David Alves
@@ -44,17 +46,17 @@ public class ParseDiskListTest extends BaseGoogleComputeEngineParseTest<ListPage
    public ListPage<Disk> expected() {
       return ListPage.<Disk>builder()
               .kind(Resource.Kind.DISK_LIST)
-              .id("projects/myproject/disks")
-              .selfLink(URI.create("https://www.googleapis.com/compute/v1beta13/projects/myproject/disks"))
+              .id("projects/myproject/zones/us-central1-a/disks")
+              .selfLink(URI.create("https://www.googleapis.com/compute/v1beta15/projects/myproject/zones/us-central1-a/disks"))
               .items(ImmutableSet.of(Disk.builder()
                       .id("13050421646334304115")
                       .creationTimestamp(new SimpleDateFormatDateService().iso8601DateParse("2012-11-25T01:38:48.306"))
                       .selfLink(URI.create("https://www.googleapis" +
-                              ".com/compute/v1beta13/projects/myproject/disks/testimage1"))
+                              ".com/compute/v1beta15/projects/myproject/zones/us-central1-a/disks/testimage1"))
                       .name("testimage1")
                       .sizeGb(1)
                       .zone(URI.create("https://www.googleapis" +
-                              ".com/compute/v1beta13/projects/myproject/zones/us-central1-a"))
+                              ".com/compute/v1beta15/projects/myproject/zones/us-central1-a"))
                       .status("READY")
                       .build())
               ).build();

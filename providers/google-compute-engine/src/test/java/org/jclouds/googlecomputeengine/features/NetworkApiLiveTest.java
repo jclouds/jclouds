@@ -46,7 +46,7 @@ public class NetworkApiLiveTest extends BaseGoogleComputeEngineApiLiveTest {
    @Test(groups = "live")
    public void testInsertNetwork() {
 
-      assertOperationDoneSucessfully(api().createInIPv4Range(NETWORK_NAME, IPV4_RANGE), TIME_WAIT);
+      assertGlobalOperationDoneSucessfully(api().createInIPv4Range(NETWORK_NAME, IPV4_RANGE), TIME_WAIT);
 
    }
 
@@ -75,7 +75,7 @@ public class NetworkApiLiveTest extends BaseGoogleComputeEngineApiLiveTest {
    @Test(groups = "live", dependsOnMethods = "testListNetwork")
    public void testDeleteNetwork() {
 
-      assertOperationDoneSucessfully(api().delete(NETWORK_NAME), TIME_WAIT);
+      assertGlobalOperationDoneSucessfully(api().delete(NETWORK_NAME), TIME_WAIT);
    }
 
    private void assertNetworkEquals(Network result) {

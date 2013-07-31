@@ -18,8 +18,11 @@ package org.jclouds.googlecomputeengine.config;
 
 import static com.google.common.base.Preconditions.checkState;
 import static com.google.common.base.Suppliers.compose;
+import static com.google.inject.name.Names.named;
+import static org.jclouds.Constants.PROPERTY_SESSION_INTERVAL;
 
 import java.net.URI;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicReference;
 
 import javax.inject.Named;
@@ -28,8 +31,12 @@ import javax.inject.Singleton;
 import org.jclouds.domain.Credentials;
 import org.jclouds.googlecomputeengine.GoogleComputeEngineApi;
 import org.jclouds.googlecomputeengine.domain.Operation;
+import org.jclouds.googlecomputeengine.domain.Project;
+import org.jclouds.googlecomputeengine.domain.SlashEncodedIds;
 import org.jclouds.googlecomputeengine.handlers.GoogleComputeEngineErrorHandler;
-import org.jclouds.googlecomputeengine.predicates.OperationDonePredicate;
+import org.jclouds.googlecomputeengine.predicates.GlobalOperationDonePredicate;
+import org.jclouds.googlecomputeengine.predicates.RegionOperationDonePredicate;
+import org.jclouds.googlecomputeengine.predicates.ZoneOperationDonePredicate;
 import org.jclouds.http.HttpErrorHandler;
 import org.jclouds.http.Uris;
 import org.jclouds.http.annotation.ClientError;
@@ -38,8 +45,12 @@ import org.jclouds.http.annotation.ServerError;
 import org.jclouds.json.config.GsonModule.DateAdapter;
 import org.jclouds.json.config.GsonModule.Iso8601DateAdapter;
 import org.jclouds.location.Provider;
+import org.jclouds.location.suppliers.ImplicitLocationSupplier;
+import org.jclouds.location.suppliers.implicit.FirstZone;
+import org.jclouds.rest.AuthorizationException;
 import org.jclouds.rest.ConfiguresHttpApi;
 import org.jclouds.rest.config.HttpApiModule;
+import org.jclouds.rest.suppliers.MemoizedRetryOnTimeOutButNotOnAuthorizationExceptionSupplier;
 
 import com.google.common.base.Function;
 import com.google.common.base.Predicate;
@@ -47,6 +58,7 @@ import com.google.common.base.Splitter;
 import com.google.common.base.Supplier;
 import com.google.common.collect.Iterables;
 import com.google.inject.Provides;
+import com.google.inject.Scopes;
 import com.google.inject.TypeLiteral;
 
 /**
@@ -62,7 +74,13 @@ public class GoogleComputeEngineHttpApiModule extends HttpApiModule<GoogleComput
    @Override
    protected void configure() {
       bind(DateAdapter.class).to(Iso8601DateAdapter.class);
-      bind(new TypeLiteral<Predicate<AtomicReference<Operation>>>() {}).to(OperationDonePredicate.class);
+      bind(new TypeLiteral<Predicate<AtomicReference<Operation>>>() {
+      }).annotatedWith(named("global")).to(GlobalOperationDonePredicate.class);
+      bind(new TypeLiteral<Predicate<AtomicReference<Operation>>>() {
+      }).annotatedWith(named("region")).to(RegionOperationDonePredicate.class);
+      bind(new TypeLiteral<Predicate<AtomicReference<Operation>>>() {
+      }).annotatedWith(named("zone")).to(ZoneOperationDonePredicate.class);
+      bind(ImplicitLocationSupplier.class).to(FirstZone.class).in(Scopes.SINGLETON);
       super.configure();
    }
 
@@ -76,54 +94,76 @@ public class GoogleComputeEngineHttpApiModule extends HttpApiModule<GoogleComput
    @Provides
    @Singleton
    @UserProject
-   public Supplier<String> supplyProject(@org.jclouds.location.Provider final Supplier<Credentials> creds) {
-      return compose(new Function<Credentials, String>() {
-         public String apply(Credentials in) {
-            checkState(in.identity.indexOf("@") != 1, "identity should be in project_id@developer.gserviceaccount.com" +
-                    " format");
-            return Iterables.get(Splitter.on("@").split(in.identity), 0);
-         }
-      }, creds);
+   public Supplier<String> supplyProject(@Provider final Supplier<Credentials> creds,
+                                         final GoogleComputeEngineApi api,
+                                         AtomicReference<AuthorizationException> authException,
+                                         @Named(PROPERTY_SESSION_INTERVAL) long seconds) {
+      return MemoizedRetryOnTimeOutButNotOnAuthorizationExceptionSupplier.create(authException,
+              compose(new Function<Credentials, String>() {
+                 public String apply(Credentials in) {
+                    checkState(in.identity.indexOf("@") != 1,
+                            "identity should be in project_id@developer.gserviceaccount.com format");
+
+                    Project project = api.getProjectApi().get(Iterables.get(Splitter.on("@").split(in.identity), 0));
+                    return project.getName();
+                 }
+              }, creds), seconds, TimeUnit.SECONDS);
    }
 
    @Provides
    @Singleton
-   @Named("machineTypes")
+   @Named("machineTypeToURI")
    public Function<String, URI> provideMachineTypeNameToURIFunction(final @Provider Supplier<URI> endpoint,
                                                                     final @UserProject Supplier<String> userProject) {
       return new Function<String, URI>() {
          @Override
          public URI apply(String input) {
-            return Uris.uriBuilder(endpoint.get()).appendPath("/projects/").appendPath(userProject.get()).appendPath
-                    ("/machineTypes/").appendPath(input).build();
+            SlashEncodedIds slashEncodedIds = SlashEncodedIds.fromSlashEncoded(input);
+            return Uris.uriBuilder(endpoint.get()).appendPath("/projects/").appendPath(userProject.get())
+                    .appendPath("/zones/").appendPath(slashEncodedIds.getFirstId())
+                    .appendPath("/machineTypes/").appendPath(slashEncodedIds.getSecondId()).build();
          }
       };
    }
 
    @Provides
    @Singleton
-   @Named("networks")
+   @Named("networkToURI")
    public Function<String, URI> provideNetworkNameToURIFunction(final @Provider Supplier<URI> endpoint,
                                                                 final @UserProject Supplier<String> userProject) {
       return new Function<String, URI>() {
          @Override
          public URI apply(String input) {
-            return Uris.uriBuilder(endpoint.get()).appendPath("/projects/").appendPath(userProject.get()).appendPath
-                    ("/networks/").appendPath(input).build();
+            return Uris.uriBuilder(endpoint.get()).appendPath("/projects/").appendPath(userProject.get())
+                    .appendPath("/global/networks/").appendPath(input).build();
          }
       };
    }
 
    @Provides
    @Singleton
-   @Named("zones")
+   @Named("zoneToURI")
    public Function<String, URI> provideZoneNameToURIFunction(final @Provider Supplier<URI> endpoint,
                                                              final @UserProject Supplier<String> userProject) {
       return new Function<String, URI>() {
          @Override
          public URI apply(String input) {
-            return Uris.uriBuilder(endpoint.get()).appendPath("/projects/").appendPath(userProject.get()).appendPath
-                    ("/zones/").appendPath(input).build();
+            return Uris.uriBuilder(endpoint.get()).appendPath("/projects/").appendPath(userProject.get())
+                    .appendPath("/zones/").appendPath(input).build();
+         }
+      };
+   }
+
+   @Provides
+   @Singleton
+   @Named("regionToURI")
+   public Function<String, URI> provideRegionNameToURIFunction(final @Provider Supplier<URI> endpoint,
+                                                               final @UserProject Supplier<String> userProject) {
+      return new Function<String, URI>() {
+         @Override
+         public URI apply(String input) {
+            return Uris.uriBuilder(endpoint.get()).appendPath("/projects/").appendPath(userProject.get())
+                    .appendPath("/regions/").appendPath(input).build();
          }
       };
    }

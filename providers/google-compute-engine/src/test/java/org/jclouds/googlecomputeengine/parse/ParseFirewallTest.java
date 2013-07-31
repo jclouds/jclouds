@@ -16,16 +16,17 @@
  */
 package org.jclouds.googlecomputeengine.parse;
 
+import static org.jclouds.googlecomputeengine.domain.Firewall.Rule.IPProtocol;
+
+import java.net.URI;
+
+import javax.ws.rs.Consumes;
+import javax.ws.rs.core.MediaType;
+
 import org.jclouds.date.internal.SimpleDateFormatDateService;
 import org.jclouds.googlecomputeengine.domain.Firewall;
 import org.jclouds.googlecomputeengine.internal.BaseGoogleComputeEngineParseTest;
 import org.testng.annotations.Test;
-
-import javax.ws.rs.Consumes;
-import javax.ws.rs.core.MediaType;
-import java.net.URI;
-
-import static org.jclouds.googlecomputeengine.domain.Firewall.Rule.IPProtocol;
 
 /**
  * @author David Alves
@@ -44,10 +45,10 @@ public class ParseFirewallTest extends BaseGoogleComputeEngineParseTest<Firewall
       return Firewall.builder()
               .id("12862241031274216284")
               .creationTimestamp(new SimpleDateFormatDateService().iso8601DateParse("2012-04-13T03:05:02.855"))
-              .selfLink(URI.create("https://www.googleapis.com/compute/v1beta13/projects/myproject/firewalls/jclouds-test"))
+              .selfLink(URI.create("https://www.googleapis.com/compute/v1beta15/projects/myproject/global/firewalls/jclouds-test"))
               .name("jclouds-test")
               .description("Internal traffic from default allowed")
-              .network(URI.create("https://www.googleapis.com/compute/v1beta13/projects/myproject/networks/jclouds-test"))
+              .network(URI.create("https://www.googleapis.com/compute/v1beta15/projects/myproject/global/networks/jclouds-test"))
               .addSourceRange("10.0.0.0/8")
               .addAllowed(Firewall.Rule.builder()
                       .IPProtocol(IPProtocol.TCP)

@@ -16,11 +16,12 @@
  */
 package org.jclouds.googlecomputeengine.internal;
 
-import com.google.inject.Guice;
-import com.google.inject.Injector;
 import org.jclouds.googlecomputeengine.config.GoogleComputeEngineParserModule;
 import org.jclouds.json.BaseItemParserTest;
 import org.jclouds.json.config.GsonModule;
+
+import com.google.inject.Guice;
+import com.google.inject.Injector;
 
 /**
  * @author David Alves

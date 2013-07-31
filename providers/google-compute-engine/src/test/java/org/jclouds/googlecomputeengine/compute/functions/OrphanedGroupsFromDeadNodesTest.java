@@ -16,10 +16,14 @@
  */
 package org.jclouds.googlecomputeengine.compute.functions;
 
-import com.google.common.base.Predicate;
-import com.google.common.collect.ImmutableMap;
-import com.google.common.collect.ImmutableSet;
-import com.google.common.collect.Sets;
+import static org.easymock.EasyMock.createMock;
+import static org.easymock.EasyMock.expect;
+import static org.easymock.EasyMock.replay;
+import static org.testng.Assert.assertSame;
+import static org.testng.Assert.assertTrue;
+
+import java.util.Set;
+
 import org.easymock.EasyMock;
 import org.jclouds.compute.ComputeService;
 import org.jclouds.compute.domain.ComputeMetadata;
@@ -28,13 +32,10 @@ import org.jclouds.compute.domain.internal.NodeMetadataImpl;
 import org.jclouds.googlecomputeengine.compute.predicates.AllNodesInGroupTerminated;
 import org.testng.annotations.Test;
 
-import java.util.Set;
-
-import static org.easymock.EasyMock.createMock;
-import static org.easymock.EasyMock.expect;
-import static org.easymock.EasyMock.replay;
-import static org.testng.Assert.assertSame;
-import static org.testng.Assert.assertTrue;
+import com.google.common.base.Predicate;
+import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.ImmutableSet;
+import com.google.common.collect.Sets;
 
 /**
  * @author David Alves

@@ -16,14 +16,15 @@
  */
 package org.jclouds.googlecomputeengine.parse;
 
+import java.net.URI;
+
+import javax.ws.rs.Consumes;
+import javax.ws.rs.core.MediaType;
+
 import org.jclouds.date.internal.SimpleDateFormatDateService;
 import org.jclouds.googlecomputeengine.domain.Zone;
 import org.jclouds.googlecomputeengine.internal.BaseGoogleComputeEngineParseTest;
 import org.testng.annotations.Test;
-
-import javax.ws.rs.Consumes;
-import javax.ws.rs.core.MediaType;
-import java.net.URI;
 
 /**
  * @author David Alves
@@ -42,7 +43,7 @@ public class ParseZoneTest extends BaseGoogleComputeEngineParseTest<Zone> {
       return Zone.builder()
               .id("13020128040171887099")
               .creationTimestamp(new SimpleDateFormatDateService().iso8601DateParse("2012-10-19T16:42:54.131"))
-              .selfLink(URI.create("https://www.googleapis.com/compute/v1beta13/projects/myproject/zones/us-central1-a"))
+              .selfLink(URI.create("https://www.googleapis.com/compute/v1beta15/projects/myproject/zones/us-central1-a"))
               .name("us-central1-a")
               .description("us-central1-a")
               .status(Zone.Status.DOWN)

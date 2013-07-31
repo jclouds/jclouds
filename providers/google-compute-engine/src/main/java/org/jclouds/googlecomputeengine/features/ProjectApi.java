@@ -36,8 +36,9 @@ import org.jclouds.googlecomputeengine.domain.Project;
 import org.jclouds.googlecomputeengine.handlers.MetadataBinder;
 import org.jclouds.oauth.v2.config.OAuthScopes;
 import org.jclouds.oauth.v2.filters.OAuthAuthenticator;
-import org.jclouds.rest.annotations.BinderParam;
 import org.jclouds.rest.annotations.Fallback;
+import org.jclouds.rest.annotations.MapBinder;
+import org.jclouds.rest.annotations.PayloadParam;
 import org.jclouds.rest.annotations.RequestFilters;
 import org.jclouds.rest.annotations.SkipEncoding;
 
@@ -45,7 +46,7 @@ import org.jclouds.rest.annotations.SkipEncoding;
  * Provides access to Projects via their REST API.
  *
  * @author David Alves
- * @see <a href="https://developers.google.com/compute/docs/reference/v1beta13/projects"/>
+ * @see <a href="https://developers.google.com/compute/docs/reference/v1beta15/projects"/>
  */
 @SkipEncoding({'/', '='})
 @RequestFilters(OAuthAuthenticator.class)
@@ -78,7 +79,8 @@ public interface ProjectApi {
     * </tt></pre>
     *
     * @param projectName            name of the project to return
-    * @param commonInstanceMetadata the metadata to set
+    * @param metadata the metadata to set
+    * @param fingerprint  The current fingerprint for the metadata
     * @return an Operations resource. To check on the status of an operation, poll the Operations resource returned
     *         to you, and look for the status field.
     */
@@ -88,7 +90,8 @@ public interface ProjectApi {
    @OAuthScopes(COMPUTE_SCOPE)
    @Consumes(MediaType.APPLICATION_JSON)
    @Produces(MediaType.APPLICATION_JSON)
+   @MapBinder(MetadataBinder.class)
    Operation setCommonInstanceMetadata(@PathParam("project") String projectName,
-                                                         @BinderParam(MetadataBinder.class)
-                                                         Map<String, String> commonInstanceMetadata);
+                                       @PayloadParam("items") Map<String, String> metadata,
+                                       @PayloadParam("fingerprint") String fingerprint);
 }

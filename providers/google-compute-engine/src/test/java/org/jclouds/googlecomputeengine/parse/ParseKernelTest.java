@@ -16,14 +16,15 @@
  */
 package org.jclouds.googlecomputeengine.parse;
 
+import java.net.URI;
+
+import javax.ws.rs.Consumes;
+import javax.ws.rs.core.MediaType;
+
 import org.jclouds.date.internal.SimpleDateFormatDateService;
 import org.jclouds.googlecomputeengine.domain.Kernel;
 import org.jclouds.googlecomputeengine.internal.BaseGoogleComputeEngineParseTest;
 import org.testng.annotations.Test;
-
-import javax.ws.rs.Consumes;
-import javax.ws.rs.core.MediaType;
-import java.net.URI;
 
 /**
  * @author David Alves
@@ -42,7 +43,7 @@ public class ParseKernelTest extends BaseGoogleComputeEngineParseTest<Kernel> {
       return Kernel.builder()
               .id("12941177846308850718")
               .creationTimestamp(new SimpleDateFormatDateService().iso8601DateParse("2012-07-16T21:42:16.950"))
-              .selfLink(URI.create("https://www.googleapis.com/compute/v1beta13/projects/google/kernels/gce-20110524"))
+              .selfLink(URI.create("https://www.googleapis.com/compute/v1beta15/projects/google/global/kernels/gce-20110524"))
               .name("gce-20110524")
               .description("DEPRECATED. Created Tue, 24 May 2011 00:48:22 +0000")
               .build();

@@ -16,14 +16,15 @@
  */
 package org.jclouds.googlecomputeengine.parse;
 
+import java.net.URI;
+
+import javax.ws.rs.Consumes;
+import javax.ws.rs.core.MediaType;
+
 import org.jclouds.date.internal.SimpleDateFormatDateService;
 import org.jclouds.googlecomputeengine.domain.Image;
 import org.jclouds.googlecomputeengine.internal.BaseGoogleComputeEngineParseTest;
 import org.testng.annotations.Test;
-
-import javax.ws.rs.Consumes;
-import javax.ws.rs.core.MediaType;
-import java.net.URI;
 
 /**
  * @author David Alves
@@ -42,13 +43,13 @@ public class ParseImageTest extends BaseGoogleComputeEngineParseTest<Image> {
       return Image.builder()
               .id("12941197498378735318")
               .creationTimestamp(new SimpleDateFormatDateService().iso8601DateParse("2012-07-16T22:16:13.468"))
-              .selfLink(URI.create("https://www.googleapis.com/compute/v1beta13/projects/google/images/centos-6-2" +
+              .selfLink(URI.create("https://www.googleapis.com/compute/v1beta15/projects/google/global/images/centos-6-2" +
                       "-v20120326"))
               .name("centos-6-2-v20120326")
               .description("DEPRECATED. CentOS 6.2 image; Created Mon, 26 Mar 2012 21:19:09 +0000")
               .sourceType("RAW")
               .preferredKernel(URI.create("https://www.googleapis" +
-                      ".com/compute/v1beta13/projects/google/kernels/gce-20120326"))
+                      ".com/compute/v1beta15/projects/google/kernels/gce-20120326"))
               .rawDisk(
                       Image.RawDisk.builder()
                               .source("")

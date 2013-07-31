@@ -1,0 +1,31 @@
+{
+    "kind": "compute#addressList",
+    "selfLink": "https://www.googleapis.com/compute/v1beta15/projects/myproject/regions/us-central1/addresses",
+    "id": "projects/myproject/regions/us-central1/addresses",
+    "items": [
+        {
+
+            "kind": "compute#address",
+            "id": "4439373783165447583",
+            "creationTimestamp": "2013-07-26T13:57:20.204-07:00",
+            "status": "RESERVED",
+            "region": "https://www.googleapis.com/compute/v1beta15/projects/myproject/regions/us-central1",
+            "name": "test-ip1",
+            "description": "",
+            "address": "173.255.115.190",
+            "selfLink": "https://www.googleapis.com/compute/v1beta15/projects/myproject/regions/us-central1/addresses/test-ip1"
+        },
+        {
+
+            "kind": "compute#address",
+            "id": "4881363978908129158",
+            "creationTimestamp": "2013-07-26T14:08:21.552-07:00",
+            "status": "RESERVED",
+            "region": "https://www.googleapis.com/compute/v1beta15/projects/myproject/regions/us-central1",
+            "name": "test-ip2",
+            "description": "",
+            "address": "173.255.118.115",
+            "selfLink": "https://www.googleapis.com/compute/v1beta15/projects/myproject/regions/us-central1/addresses/test-ip2"
+        }
+    ]
+}

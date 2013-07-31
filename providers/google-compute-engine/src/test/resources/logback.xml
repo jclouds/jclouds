@@ -34,23 +34,50 @@
         </encoder>
     </appender>
 
+    <appender name="COMPUTEFILE" class="ch.qos.logback.core.FileAppender">
+        <file>target/test-data/jclouds-compute.log</file>
+
+        <encoder>
+            <Pattern>%d %-5p [%c] [%thread] %m%n</Pattern>
+        </encoder>
+    </appender>
+
+    <appender name="SSHFILE" class="ch.qos.logback.core.FileAppender">
+        <file>target/test-data/jclouds-ssh.log</file>
+
+        <encoder>
+            <Pattern>%d %-5p [%c] [%thread] %m%n</Pattern>
+        </encoder>
+    </appender>
+
     <root>
-        <level value="warn"/>
+        <level value="warn" />
     </root>
 
     <logger name="org.jclouds">
-        <level value="DEBUG"/>
-        <appender-ref ref="FILE"/>
+        <level value="TRACE" />
+        <appender-ref ref="FILE" />
     </logger>
 
     <logger name="jclouds.wire">
-        <level value="DEBUG"/>
-        <appender-ref ref="WIREFILE"/>
+        <level value="TRACE" />
+        <appender-ref ref="WIREFILE" />
     </logger>
 
     <logger name="jclouds.headers">
-        <level value="DEBUG"/>
-        <appender-ref ref="WIREFILE"/>
+        <level value="TRACE" />
+        <appender-ref ref="WIREFILE" />
+    </logger>
+
+    <logger name="jclouds.compute">
+        <level value="TRACE" />
+        <appender-ref ref="COMPUTEFILE" />
+    </logger>
+
+    <logger name="jclouds.ssh">
+        <level value="TRACE" />
+        <appender-ref ref="SSHFILE" />
     </logger>
 
 </configuration>
+

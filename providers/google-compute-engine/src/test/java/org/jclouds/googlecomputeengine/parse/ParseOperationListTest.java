@@ -16,14 +16,15 @@
  */
 package org.jclouds.googlecomputeengine.parse;
 
+import java.net.URI;
+
+import javax.ws.rs.Consumes;
+import javax.ws.rs.core.MediaType;
+
 import org.jclouds.googlecomputeengine.domain.ListPage;
 import org.jclouds.googlecomputeengine.domain.Operation;
 import org.jclouds.googlecomputeengine.domain.Resource;
 import org.jclouds.googlecomputeengine.internal.BaseGoogleComputeEngineParseTest;
-
-import javax.ws.rs.Consumes;
-import javax.ws.rs.core.MediaType;
-import java.net.URI;
 
 /**
  * @author David Alves
@@ -32,7 +33,7 @@ public class ParseOperationListTest extends BaseGoogleComputeEngineParseTest<Lis
 
    @Override
    public String resource() {
-      return "/operation_list.json";
+      return "/global_operation_list.json";
    }
 
    @Override
@@ -40,8 +41,8 @@ public class ParseOperationListTest extends BaseGoogleComputeEngineParseTest<Lis
    public ListPage<Operation> expected() {
       return ListPage.<Operation>builder()
               .kind(Resource.Kind.OPERATION_LIST)
-              .id("projects/myproject/operations")
-              .selfLink(URI.create("https://www.googleapis.com/compute/v1beta13/projects/myproject/operations"))
+              .id("projects/myproject/global/operations")
+              .selfLink(URI.create("https://www.googleapis.com/compute/v1beta15/projects/myproject/global/operations"))
               .addItem(new ParseOperationTest().expected())
               .build();
    }

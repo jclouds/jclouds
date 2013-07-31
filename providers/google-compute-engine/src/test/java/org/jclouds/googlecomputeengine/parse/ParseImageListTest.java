@@ -16,17 +16,20 @@
  */
 package org.jclouds.googlecomputeengine.parse;
 
-import com.google.common.collect.ImmutableSet;
+import java.net.URI;
+
+import javax.ws.rs.Consumes;
+import javax.ws.rs.core.MediaType;
+
 import org.jclouds.date.internal.SimpleDateFormatDateService;
+import org.jclouds.googlecomputeengine.domain.Deprecated;
 import org.jclouds.googlecomputeengine.domain.Image;
 import org.jclouds.googlecomputeengine.domain.ListPage;
 import org.jclouds.googlecomputeengine.domain.Resource;
 import org.jclouds.googlecomputeengine.internal.BaseGoogleComputeEngineParseTest;
 import org.testng.annotations.Test;
 
-import javax.ws.rs.Consumes;
-import javax.ws.rs.core.MediaType;
-import java.net.URI;
+import com.google.common.collect.ImmutableSet;
 
 /**
  * @author David Alves
@@ -44,18 +47,22 @@ public class ParseImageListTest extends BaseGoogleComputeEngineParseTest<ListPag
    public ListPage<Image> expected() {
       return ListPage.<Image>builder()
               .kind(Resource.Kind.IMAGE_LIST)
-              .id("projects/google/images")
-              .selfLink(URI.create("https://www.googleapis.com/compute/v1beta13/projects/google/images"))
+              .id("projects/google/global/images")
+              .selfLink(URI.create("https://www.googleapis.com/compute/v1beta15/projects/google/global/images"))
               .items(ImmutableSet.of(Image.builder()
                       .id("12941197498378735318")
                       .creationTimestamp(new SimpleDateFormatDateService().iso8601DateParse("2012-07-16T22:16:13.468"))
                       .selfLink(URI.create("https://www.googleapis" +
-                              ".com/compute/v1beta13/projects/google/images/centos-6-2-v20120326"))
+                              ".com/compute/v1beta15/projects/google/global/images/centos-6-2-v20120326"))
                       .name("centos-6-2-v20120326")
                       .description("DEPRECATED. CentOS 6.2 image; Created Mon, 26 Mar 2012 21:19:09 +0000")
                       .sourceType("RAW")
                       .preferredKernel(URI.create("https://www.googleapis" +
-                              ".com/compute/v1beta13/projects/google/kernels/gce-20120326"))
+                              ".com/compute/v1beta15/projects/google/kernels/gce-20120326"))
+                      .deprecated(Deprecated.builder()
+                              .state("DEPRECATED")
+                              .replacement(URI.create("https://www.googleapis.com/compute/v1beta15/projects/google/global/images/centos-6-v20130104"))
+                              .build())
                       .rawDisk(
                               Image.RawDisk.builder()
                                       .source("")

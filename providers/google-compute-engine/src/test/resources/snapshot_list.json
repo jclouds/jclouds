@@ -1,0 +1,33 @@
+{
+    "kind": "compute#snapshotList",
+    "selfLink": "https://www.googleapis.com/compute/v1beta15/projects/myproject/global/snapshots",
+    "id": "projects/myproject/global/snapshots",
+    "items": [
+        {
+
+            "kind": "compute#snapshot",
+            "selfLink": "https://www.googleapis.com/compute/v1beta15/projects/myproject/global/snapshots/test-snap",
+            "id": "9734455566806191190",
+            "creationTimestamp": "2013-07-26T12:54:23.173-07:00",
+            "status": "READY",
+            "diskSizeGb": "10",
+            "sourceDisk": "https://www.googleapis.com/compute/v1beta15/projects/myproject/zones/us-central1-a/disks/testimage1",
+            "name": "test-snap",
+            "description": "",
+            "sourceDiskId": "8243603669926824540"
+        },
+        {
+
+            "kind": "compute#snapshot",
+            "selfLink": "https://www.googleapis.com/compute/v1beta15/projects/myproject/global/snapshots/test-snap2",
+            "id": "13895715048576107883",
+            "creationTimestamp": "2013-07-26T12:57:01.927-07:00",
+            "status": "READY",
+            "diskSizeGb": "10",
+            "sourceDisk": "https://www.googleapis.com/compute/v1beta15/projects/myproject/zones/us-central1-a/disks/testimage1",
+            "name": "test-snap2",
+            "description": "",
+            "sourceDiskId": "8243603669926824540"
+        }
+    ]
+}

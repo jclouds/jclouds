@@ -1,0 +1,32 @@
+{
+    "kind": "compute#regionList",
+    "selfLink": "https://www.googleapis.com/compute/v1beta15/projects/myproject/regions",
+    "id": "projects/myproject/regions",
+    "items": [
+        {
+            "kind": "compute#region",
+            "selfLink": "https://www.googleapis.com/compute/v1beta15/projects/myproject/regions/us-central1",
+            "id": "12912210600542709766",
+            "creationTimestamp": "2013-07-08T14:40:37.939-07:00",
+            "name": "us-central1",
+            "description": "us-central1",
+            "status": "UP",
+            "zones": [
+                "https://www.googleapis.com/compute/v1beta15/zones/us-central1-a",
+                "https://www.googleapis.com/compute/v1beta15/zones/us-central1-b"
+            ]
+        },
+        {
+            "kind": "compute#region",
+            "selfLink": "https://www.googleapis.com/compute/v1beta15/projects/myproject/regions/us-central2",
+            "id": "6396763663251190992",
+            "creationTimestamp": "2013-07-08T14:40:37.939-07:00",
+            "name": "us-central2",
+            "description": "us-central2",
+            "status": "UP",
+            "zones": [
+                "https://www.googleapis.com/compute/v1beta15/zones/us-central2-a"
+            ]
+        }
+    ]
+}

@@ -16,18 +16,19 @@
  */
 package org.jclouds.googlecomputeengine.compute.predicates;
 
-import com.google.common.base.Predicate;
-import org.jclouds.compute.ComputeService;
-
-import javax.inject.Inject;
-import javax.inject.Singleton;
-
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.collect.Iterables.all;
 import static com.google.common.collect.Sets.filter;
 import static org.jclouds.compute.predicates.NodePredicates.TERMINATED;
 import static org.jclouds.compute.predicates.NodePredicates.all;
 import static org.jclouds.compute.predicates.NodePredicates.inGroup;
+
+import javax.inject.Inject;
+import javax.inject.Singleton;
+
+import org.jclouds.compute.ComputeService;
+
+import com.google.common.base.Predicate;
 
 /**
  * @author David Alves

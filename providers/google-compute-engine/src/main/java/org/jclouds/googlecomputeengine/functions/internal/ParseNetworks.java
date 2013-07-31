@@ -16,8 +16,10 @@
  */
 package org.jclouds.googlecomputeengine.functions.internal;
 
-import com.google.common.base.Function;
-import com.google.inject.TypeLiteral;
+import static com.google.common.base.Preconditions.checkNotNull;
+
+import javax.inject.Inject;
+
 import org.jclouds.collect.IterableWithMarker;
 import org.jclouds.googlecomputeengine.GoogleComputeEngineApi;
 import org.jclouds.googlecomputeengine.domain.ListPage;
@@ -26,9 +28,8 @@ import org.jclouds.googlecomputeengine.options.ListOptions;
 import org.jclouds.http.functions.ParseJson;
 import org.jclouds.json.Json;
 
-import javax.inject.Inject;
-
-import static com.google.common.base.Preconditions.checkNotNull;
+import com.google.common.base.Function;
+import com.google.inject.TypeLiteral;
 
 /**
  * @author David Alves
@@ -37,7 +38,8 @@ public class ParseNetworks extends ParseJson<ListPage<Network>> {
 
    @Inject
    public ParseNetworks(Json json) {
-      super(json, new TypeLiteral<ListPage<Network>>() {});
+      super(json, new TypeLiteral<ListPage<Network>>() {
+      });
    }
 
    public static class ToPagedIterable extends BaseToPagedIterable<Network, ToPagedIterable> {

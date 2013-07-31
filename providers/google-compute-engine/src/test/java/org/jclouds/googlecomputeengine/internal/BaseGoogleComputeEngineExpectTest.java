@@ -16,25 +16,19 @@
  */
 package org.jclouds.googlecomputeengine.internal;
 
-import com.google.common.base.Joiner;
-import com.google.common.base.Supplier;
-import com.google.common.base.Ticker;
-import com.google.inject.Binder;
-import com.google.inject.Module;
-import com.google.inject.TypeLiteral;
-import org.jclouds.collect.PagedIterable;
-import org.jclouds.collect.PagedIterables;
-import org.jclouds.crypto.Crypto;
-import org.jclouds.googlecomputeengine.domain.ListPage;
-import org.jclouds.http.HttpRequest;
-import org.jclouds.http.HttpResponse;
-import org.jclouds.io.Payload;
-import org.jclouds.oauth.v2.OAuthConstants;
-import org.jclouds.rest.internal.BaseRestApiExpectTest;
-import org.jclouds.ssh.SshKeys;
-import org.jclouds.util.Strings2;
+import static com.google.common.base.Charsets.UTF_8;
+import static com.google.common.base.Throwables.propagate;
+import static com.google.common.io.BaseEncoding.base64Url;
+import static org.easymock.EasyMock.createMock;
+import static org.easymock.EasyMock.expect;
+import static org.easymock.EasyMock.expectLastCall;
+import static org.easymock.EasyMock.replay;
+import static org.jclouds.crypto.Pems.privateKeySpec;
+import static org.jclouds.crypto.Pems.publicKeySpec;
+import static org.jclouds.crypto.PemsTest.PRIVATE_KEY;
+import static org.jclouds.crypto.PemsTest.PUBLIC_KEY;
+import static org.jclouds.io.Payloads.newStringPayload;
 
-import javax.ws.rs.core.MediaType;
 import java.io.IOException;
 import java.net.URI;
 import java.security.KeyFactory;
@@ -49,18 +43,26 @@ import java.security.spec.InvalidKeySpecException;
 import java.util.Properties;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import static com.google.common.base.Charsets.UTF_8;
-import static com.google.common.base.Throwables.propagate;
-import static com.google.common.io.BaseEncoding.base64Url;
-import static org.easymock.EasyMock.createMock;
-import static org.easymock.EasyMock.expect;
-import static org.easymock.EasyMock.expectLastCall;
-import static org.easymock.EasyMock.replay;
-import static org.jclouds.crypto.Pems.privateKeySpec;
-import static org.jclouds.crypto.Pems.publicKeySpec;
-import static org.jclouds.crypto.PemsTest.PRIVATE_KEY;
-import static org.jclouds.crypto.PemsTest.PUBLIC_KEY;
-import static org.jclouds.io.Payloads.newStringPayload;
+import javax.ws.rs.core.MediaType;
+
+import org.jclouds.collect.PagedIterable;
+import org.jclouds.collect.PagedIterables;
+import org.jclouds.crypto.Crypto;
+import org.jclouds.googlecomputeengine.domain.ListPage;
+import org.jclouds.http.HttpRequest;
+import org.jclouds.http.HttpResponse;
+import org.jclouds.io.Payload;
+import org.jclouds.oauth.v2.OAuthConstants;
+import org.jclouds.rest.internal.BaseRestApiExpectTest;
+import org.jclouds.ssh.SshKeys;
+import org.jclouds.util.Strings2;
+
+import com.google.common.base.Joiner;
+import com.google.common.base.Supplier;
+import com.google.common.base.Ticker;
+import com.google.inject.Binder;
+import com.google.inject.Module;
+import com.google.inject.TypeLiteral;
 
 /**
  * @author Adrian Cole
@@ -149,6 +151,17 @@ public class BaseGoogleComputeEngineExpectTest<T> extends BaseRestApiExpectTest<
       // use no sig algorithm for expect tests (means no credential is required either)
       props.put("jclouds.oauth.signature-or-mac-algorithm", OAuthConstants.NO_ALGORITHM);
       return props;
+   }
+
+   @Override
+   protected HttpRequestComparisonType compareHttpRequestAsType(HttpRequest input) {
+      HttpRequestComparisonType reqType = HttpRequestComparisonType.DEFAULT;
+      if (input.getPayload() != null) {
+         if (input.getPayload().getContentMetadata().getContentType().equals(MediaType.APPLICATION_JSON)) {
+            reqType = HttpRequestComparisonType.JSON;
+         }
+      }
+      return reqType;
    }
 
    protected HttpRequest requestForScopes(String... scopes) {

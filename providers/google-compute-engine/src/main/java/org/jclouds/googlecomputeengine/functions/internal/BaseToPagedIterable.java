@@ -16,9 +16,9 @@
  */
 package org.jclouds.googlecomputeengine.functions.internal;
 
-import com.google.common.annotations.Beta;
-import com.google.common.base.Function;
-import com.google.common.base.Optional;
+import static com.google.common.base.Predicates.instanceOf;
+import static com.google.common.collect.Iterables.tryFind;
+
 import org.jclouds.collect.IterableWithMarker;
 import org.jclouds.collect.PagedIterable;
 import org.jclouds.collect.PagedIterables;
@@ -28,15 +28,16 @@ import org.jclouds.http.HttpRequest;
 import org.jclouds.rest.InvocationContext;
 import org.jclouds.rest.internal.GeneratedHttpRequest;
 
-import static com.google.common.base.Predicates.instanceOf;
-import static com.google.common.collect.Iterables.tryFind;
+import com.google.common.annotations.Beta;
+import com.google.common.base.Function;
+import com.google.common.base.Optional;
 
 /**
  * @author Adrian Cole
  */
 @Beta
 public abstract class BaseToPagedIterable<T, I extends BaseToPagedIterable<T, I>> implements
-      Function<ListPage<T>, PagedIterable<T>>, InvocationContext<I> {
+        Function<ListPage<T>, PagedIterable<T>>, InvocationContext<I> {
 
    private GeneratedHttpRequest request;
 
@@ -50,7 +51,7 @@ public abstract class BaseToPagedIterable<T, I extends BaseToPagedIterable<T, I>
       Optional<Object> listOptions = tryFind(request.getInvocation().getArgs(), instanceOf(ListOptions.class));
 
       assert project.isPresent() : String.format("programming error, method %s should have a string param for the "
-            + "project", request.getCaller().get().getInvokable());
+              + "project", request.getCaller().get().getInvokable());
 
       return PagedIterables.advance(
               input, fetchNextPage(project.get().toString(), (ListOptions) listOptions.orNull()));

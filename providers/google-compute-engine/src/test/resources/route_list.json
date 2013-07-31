@@ -1,0 +1,34 @@
+{
+    "kind": "compute#routeList",
+    "selfLink": "https://www.googleapis.com/compute/v1beta15/projects/myproject/global/routes",
+    "id": "projects/myproject/global/routes",
+    "items": [
+        {
+
+            "kind": "compute#route",
+            "selfLink": "https://www.googleapis.com/compute/v1beta15/projects/myproject/global/routes/default-route-c99ebfbed0e1f375",
+            "id": "7241926205630356071",
+            "creationTimestamp": "2013-07-08T14:40:38.502-07:00",
+            "name": "default-route-c99ebfbed0e1f375",
+            "description": "Default route to the virtual network.",
+            "network": "https://www.googleapis.com/compute/v1beta15/projects/myproject/global/networks/default",
+            "destRange": "10.240.0.0/16",
+            "priority": 1000,
+            "nextHopNetwork": "https://www.googleapis.com/compute/v1beta15/projects/myproject/global/networks/default",
+            "tags": [ "fooTag", "barTag" ]
+        },
+        {
+
+            "kind": "compute#route",
+            "selfLink": "https://www.googleapis.com/compute/v1beta15/projects/myproject/global/routes/default-route-fc92a41ecb5a8d17",
+            "id": "507025480040058551",
+            "creationTimestamp": "2013-07-08T14:40:38.502-07:00",
+            "name": "default-route-fc92a41ecb5a8d17",
+            "description": "Default route to the Internet.",
+            "network": "https://www.googleapis.com/compute/v1beta15/projects/myproject/global/networks/default",
+            "destRange": "0.0.0.0/0",
+            "priority": 1000,
+            "nextHopGateway": "https://www.googleapis.com/compute/v1beta15/projects/myproject/global/gateways/default-internet-gateway"
+        }
+    ]
+}

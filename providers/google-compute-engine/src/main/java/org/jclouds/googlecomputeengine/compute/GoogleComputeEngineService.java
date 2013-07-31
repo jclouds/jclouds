@@ -16,11 +16,23 @@
  */
 package org.jclouds.googlecomputeengine.compute;
 
-import com.google.common.base.Function;
-import com.google.common.base.Optional;
-import com.google.common.base.Predicate;
-import com.google.common.base.Supplier;
-import com.google.common.util.concurrent.ListeningExecutorService;
+import static com.google.common.base.Preconditions.checkNotNull;
+import static java.util.concurrent.TimeUnit.MILLISECONDS;
+import static org.jclouds.compute.config.ComputeServiceProperties.TIMEOUT_NODE_RUNNING;
+import static org.jclouds.compute.config.ComputeServiceProperties.TIMEOUT_NODE_SUSPENDED;
+import static org.jclouds.compute.config.ComputeServiceProperties.TIMEOUT_NODE_TERMINATED;
+import static org.jclouds.googlecomputeengine.GoogleComputeEngineConstants.OPERATION_COMPLETE_INTERVAL;
+import static org.jclouds.googlecomputeengine.GoogleComputeEngineConstants.OPERATION_COMPLETE_TIMEOUT;
+import static org.jclouds.util.Predicates2.retry;
+
+import java.util.Map;
+import java.util.Set;
+import java.util.concurrent.atomic.AtomicReference;
+
+import javax.inject.Inject;
+import javax.inject.Named;
+import javax.inject.Provider;
+
 import org.jclouds.Constants;
 import org.jclouds.collect.Memoized;
 import org.jclouds.compute.ComputeServiceContext;
@@ -54,21 +66,11 @@ import org.jclouds.googlecomputeengine.domain.Operation;
 import org.jclouds.http.HttpResponse;
 import org.jclouds.scriptbuilder.functions.InitAdminAccess;
 
-import javax.inject.Inject;
-import javax.inject.Named;
-import javax.inject.Provider;
-import java.util.Map;
-import java.util.Set;
-import java.util.concurrent.atomic.AtomicReference;
-
-import static com.google.common.base.Preconditions.checkNotNull;
-import static java.util.concurrent.TimeUnit.MILLISECONDS;
-import static org.jclouds.compute.config.ComputeServiceProperties.TIMEOUT_NODE_RUNNING;
-import static org.jclouds.compute.config.ComputeServiceProperties.TIMEOUT_NODE_SUSPENDED;
-import static org.jclouds.compute.config.ComputeServiceProperties.TIMEOUT_NODE_TERMINATED;
-import static org.jclouds.googlecomputeengine.GoogleComputeEngineConstants.OPERATION_COMPLETE_INTERVAL;
-import static org.jclouds.googlecomputeengine.GoogleComputeEngineConstants.OPERATION_COMPLETE_TIMEOUT;
-import static org.jclouds.util.Predicates2.retry;
+import com.google.common.base.Function;
+import com.google.common.base.Optional;
+import com.google.common.base.Predicate;
+import com.google.common.base.Supplier;
+import com.google.common.util.concurrent.ListeningExecutorService;
 
 /**
  * @author David Alves
@@ -117,7 +119,7 @@ public class GoogleComputeEngineService extends BaseComputeService {
                                         GroupNamingConvention.Factory namingConvention,
                                         GoogleComputeEngineApi api,
                                         @UserProject Supplier<String> project,
-                                        Predicate<AtomicReference<Operation>> operationDonePredicate,
+                                        @Named("global") Predicate<AtomicReference<Operation>> operationDonePredicate,
                                         @Named(OPERATION_COMPLETE_INTERVAL) Long operationCompleteCheckInterval,
                                         @Named(OPERATION_COMPLETE_TIMEOUT) Long operationCompleteCheckTimeout) {
 

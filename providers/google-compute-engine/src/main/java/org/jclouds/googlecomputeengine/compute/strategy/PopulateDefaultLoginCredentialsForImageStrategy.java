@@ -16,19 +16,21 @@
  */
 package org.jclouds.googlecomputeengine.compute.strategy;
 
-import com.google.inject.Inject;
-import org.jclouds.compute.domain.TemplateBuilderSpec;
-import org.jclouds.domain.LoginCredentials;
-import org.jclouds.ssh.internal.RsaSshKeyPairGenerator;
+import static com.google.common.base.Preconditions.checkNotNull;
+import static org.jclouds.compute.config.ComputeServiceProperties.TEMPLATE;
+
+import java.security.NoSuchAlgorithmException;
+import java.util.Map;
 
 import javax.annotation.PostConstruct;
 import javax.inject.Named;
 import javax.inject.Singleton;
-import java.security.NoSuchAlgorithmException;
-import java.util.Map;
 
-import static com.google.common.base.Preconditions.checkNotNull;
-import static org.jclouds.compute.config.ComputeServiceProperties.TEMPLATE;
+import org.jclouds.compute.domain.TemplateBuilderSpec;
+import org.jclouds.domain.LoginCredentials;
+import org.jclouds.ssh.internal.RsaSshKeyPairGenerator;
+
+import com.google.inject.Inject;
 
 /**
  * @author David Alves

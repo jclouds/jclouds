@@ -16,6 +16,12 @@
  */
 package org.jclouds.googlecomputeengine.features;
 
+import static org.jclouds.googlecomputeengine.GoogleComputeEngineConstants.COMPUTE_READONLY_SCOPE;
+import static org.jclouds.googlecomputeengine.GoogleComputeEngineConstants.COMPUTE_SCOPE;
+import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertNull;
+import static org.testng.Assert.assertTrue;
+
 import org.jclouds.googlecomputeengine.internal.BaseGoogleComputeEngineApiExpectTest;
 import org.jclouds.googlecomputeengine.options.ListOptions;
 import org.jclouds.googlecomputeengine.parse.ParseOperationListTest;
@@ -24,35 +30,29 @@ import org.jclouds.http.HttpRequest;
 import org.jclouds.http.HttpResponse;
 import org.testng.annotations.Test;
 
-import static org.jclouds.googlecomputeengine.GoogleComputeEngineConstants.COMPUTE_READONLY_SCOPE;
-import static org.jclouds.googlecomputeengine.GoogleComputeEngineConstants.COMPUTE_SCOPE;
-import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertNull;
-import static org.testng.Assert.assertTrue;
-
 /**
  * @author David Alves
  */
 @Test(groups = "unit")
-public class OperationApiExpectTest extends BaseGoogleComputeEngineApiExpectTest {
+public class GlobalOperationApiExpectTest extends BaseGoogleComputeEngineApiExpectTest {
 
    private static final String OPERATIONS_URL_PREFIX = "https://www.googleapis" +
-           ".com/compute/v1beta13/projects/myproject/operations";
+           ".com/compute/v1beta15/projects/myproject/global/operations";
 
-   public static final HttpRequest GET_OPERATION_REQUEST = HttpRequest
+   public static final HttpRequest GET_GLOBAL_OPERATION_REQUEST = HttpRequest
            .builder()
            .method("GET")
            .endpoint(OPERATIONS_URL_PREFIX + "/operation-1354084865060-4cf88735faeb8-bbbb12cb")
            .addHeader("Accept", "application/json")
            .addHeader("Authorization", "Bearer " + TOKEN).build();
 
-   public static final HttpResponse GET_OPERATION_RESPONSE = HttpResponse.builder().statusCode(200)
-           .payload(staticPayloadFromResource("/operation.json")).build();
+   public static final HttpResponse GET_GLOBAL_OPERATION_RESPONSE = HttpResponse.builder().statusCode(200)
+           .payload(staticPayloadFromResource("/global_operation.json")).build();
 
    public void testGetOperationResponseIs2xx() throws Exception {
 
-      OperationApi operationApi = requestsSendResponses(requestForScopes(COMPUTE_READONLY_SCOPE),
-              TOKEN_RESPONSE, GET_OPERATION_REQUEST, GET_OPERATION_RESPONSE).getOperationApiForProject("myproject");
+      GlobalOperationApi operationApi = requestsSendResponses(requestForScopes(COMPUTE_READONLY_SCOPE),
+              TOKEN_RESPONSE, GET_GLOBAL_OPERATION_REQUEST, GET_GLOBAL_OPERATION_RESPONSE).getGlobalOperationApiForProject("myproject");
 
       assertEquals(operationApi.get("operation-1354084865060-4cf88735faeb8-bbbb12cb"),
               new ParseOperationTest().expected());
@@ -62,10 +62,10 @@ public class OperationApiExpectTest extends BaseGoogleComputeEngineApiExpectTest
 
       HttpResponse operationResponse = HttpResponse.builder().statusCode(404).build();
 
-      OperationApi operationApi = requestsSendResponses(requestForScopes(COMPUTE_READONLY_SCOPE),
-              TOKEN_RESPONSE, GET_OPERATION_REQUEST, operationResponse).getOperationApiForProject("myproject");
+      GlobalOperationApi globalOperationApi = requestsSendResponses(requestForScopes(COMPUTE_READONLY_SCOPE),
+              TOKEN_RESPONSE, GET_GLOBAL_OPERATION_REQUEST, operationResponse).getGlobalOperationApiForProject("myproject");
 
-      assertNull(operationApi.get("operation-1354084865060-4cf88735faeb8-bbbb12cb"));
+      assertNull(globalOperationApi.get("operation-1354084865060-4cf88735faeb8-bbbb12cb"));
    }
 
    public void testDeleteOperationResponseIs2xx() throws Exception {
@@ -77,10 +77,10 @@ public class OperationApiExpectTest extends BaseGoogleComputeEngineApiExpectTest
 
       HttpResponse operationResponse = HttpResponse.builder().statusCode(204).build();
 
-      OperationApi operationApi = requestsSendResponses(requestForScopes(COMPUTE_SCOPE),
-              TOKEN_RESPONSE, delete, operationResponse).getOperationApiForProject("myproject");
+      GlobalOperationApi globalOperationApi = requestsSendResponses(requestForScopes(COMPUTE_SCOPE),
+              TOKEN_RESPONSE, delete, operationResponse).getGlobalOperationApiForProject("myproject");
 
-      operationApi.delete("operation-1352178598164-4cdcc9d031510-4aa46279");
+      globalOperationApi.delete("operation-1352178598164-4cdcc9d031510-4aa46279");
    }
 
    public void testDeleteOperationResponseIs4xx() throws Exception {
@@ -92,10 +92,10 @@ public class OperationApiExpectTest extends BaseGoogleComputeEngineApiExpectTest
 
       HttpResponse operationResponse = HttpResponse.builder().statusCode(404).build();
 
-      OperationApi operationApi = requestsSendResponses(requestForScopes(COMPUTE_SCOPE),
-              TOKEN_RESPONSE, delete, operationResponse).getOperationApiForProject("myproject");
+      GlobalOperationApi globalOperationApi = requestsSendResponses(requestForScopes(COMPUTE_SCOPE),
+              TOKEN_RESPONSE, delete, operationResponse).getGlobalOperationApiForProject("myproject");
 
-      operationApi.delete("operation-1352178598164-4cdcc9d031510-4aa46279");
+      globalOperationApi.delete("operation-1352178598164-4cdcc9d031510-4aa46279");
    }
 
    public void testLisOperationWithNoOptionsResponseIs2xx() {
@@ -107,12 +107,12 @@ public class OperationApiExpectTest extends BaseGoogleComputeEngineApiExpectTest
               .addHeader("Authorization", "Bearer " + TOKEN).build();
 
       HttpResponse operationResponse = HttpResponse.builder().statusCode(200)
-              .payload(payloadFromResource("/operation_list.json")).build();
+              .payload(payloadFromResource("/global_operation_list.json")).build();
 
-      OperationApi operationApi = requestsSendResponses(requestForScopes(COMPUTE_READONLY_SCOPE),
-              TOKEN_RESPONSE, get, operationResponse).getOperationApiForProject("myproject");
+      GlobalOperationApi globalOperationApi = requestsSendResponses(requestForScopes(COMPUTE_READONLY_SCOPE),
+              TOKEN_RESPONSE, get, operationResponse).getGlobalOperationApiForProject("myproject");
 
-      assertEquals(operationApi.listFirstPage().toString(),
+      assertEquals(globalOperationApi.listFirstPage().toString(),
               new ParseOperationListTest().expected().toString());
    }
 
@@ -130,12 +130,12 @@ public class OperationApiExpectTest extends BaseGoogleComputeEngineApiExpectTest
               .addHeader("Authorization", "Bearer " + TOKEN).build();
 
       HttpResponse operationResponse = HttpResponse.builder().statusCode(200)
-              .payload(payloadFromResource("/operation_list.json")).build();
+              .payload(payloadFromResource("/global_operation_list.json")).build();
 
-      OperationApi operationApi = requestsSendResponses(requestForScopes(COMPUTE_READONLY_SCOPE),
-              TOKEN_RESPONSE, get, operationResponse).getOperationApiForProject("myproject");
+      GlobalOperationApi globalOperationApi = requestsSendResponses(requestForScopes(COMPUTE_READONLY_SCOPE),
+              TOKEN_RESPONSE, get, operationResponse).getGlobalOperationApiForProject("myproject");
 
-      assertEquals(operationApi.listAtMarker("CglPUEVSQVRJT04SOzU5MDQyMTQ4Nzg1Mi5vcGVyYXRpb24tMTM1Mj" +
+      assertEquals(globalOperationApi.listAtMarker("CglPUEVSQVRJT04SOzU5MDQyMTQ4Nzg1Mi5vcGVyYXRpb24tMTM1Mj" +
               "I0NDI1ODAzMC00Y2RkYmU2YTJkNmIwLWVkMzIyMzQz",
               new ListOptions.Builder().filter("status eq done").maxResults(3)).toString(),
               new ParseOperationListTest().expected().toString());
@@ -151,10 +151,10 @@ public class OperationApiExpectTest extends BaseGoogleComputeEngineApiExpectTest
 
       HttpResponse operationResponse = HttpResponse.builder().statusCode(404).build();
 
-      OperationApi operationApi = requestsSendResponses(requestForScopes(COMPUTE_READONLY_SCOPE),
-              TOKEN_RESPONSE, get, operationResponse).getOperationApiForProject("myproject");
+      GlobalOperationApi globalOperationApi = requestsSendResponses(requestForScopes(COMPUTE_READONLY_SCOPE),
+              TOKEN_RESPONSE, get, operationResponse).getGlobalOperationApiForProject("myproject");
 
-      assertTrue(operationApi.list().concat().isEmpty());
+      assertTrue(globalOperationApi.list().concat().isEmpty());
    }
 
 

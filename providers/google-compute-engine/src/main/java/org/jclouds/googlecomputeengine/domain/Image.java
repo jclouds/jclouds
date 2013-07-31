@@ -16,24 +16,24 @@
  */
 package org.jclouds.googlecomputeengine.domain;
 
-import com.google.common.annotations.Beta;
-import com.google.common.base.Objects;
-import com.google.common.base.Optional;
-
-import java.beans.ConstructorProperties;
-import java.net.URI;
-import java.util.Date;
-
 import static com.google.common.base.Objects.equal;
 import static com.google.common.base.Objects.toStringHelper;
 import static com.google.common.base.Optional.fromNullable;
 import static com.google.common.base.Preconditions.checkNotNull;
 
+import java.beans.ConstructorProperties;
+import java.net.URI;
+import java.util.Date;
+
+import com.google.common.annotations.Beta;
+import com.google.common.base.Objects;
+import com.google.common.base.Optional;
+
 /**
  * Represents a disk image to use on an instance.
  *
  * @author David Alves
- * @see <a href="https://developers.google.com/compute/docs/reference/v1beta13/images"/>
+ * @see <a href="https://developers.google.com/compute/docs/reference/v1beta15/images"/>
  */
 @Beta
 public final class Image extends Resource {
@@ -41,17 +41,19 @@ public final class Image extends Resource {
    private final String sourceType;
    private final Optional<URI> preferredKernel;
    private final RawDisk rawDisk;
+   private final Optional<Deprecated> deprecated;
 
    @ConstructorProperties({
            "id", "creationTimestamp", "selfLink", "name", "description", "sourceType", "preferredKernel",
-           "rawDisk"
+           "rawDisk", "deprecated"
    })
    protected Image(String id, Date creationTimestamp, URI selfLink, String name, String description,
-                   String sourceType, URI preferredKernel, RawDisk rawDisk) {
+                   String sourceType, URI preferredKernel, RawDisk rawDisk, Deprecated deprecated) {
       super(Kind.IMAGE, id, creationTimestamp, selfLink, name, description);
       this.sourceType = checkNotNull(sourceType, "sourceType of %s", name);
       this.preferredKernel = fromNullable(preferredKernel);
-      this.rawDisk = checkNotNull(rawDisk, "rawDisk of %s", name); ;
+      this.rawDisk = checkNotNull(rawDisk, "rawDisk of %s", name);
+      this.deprecated = fromNullable(deprecated);
    }
 
    /**
@@ -76,6 +78,13 @@ public final class Image extends Resource {
    }
 
    /**
+    * @return the deprecation information for this image
+    */
+   public Optional<Deprecated> getDeprecated() {
+      return deprecated;
+   }
+
+   /**
     * {@inheritDoc}
     */
    protected Objects.ToStringHelper string() {
@@ -83,7 +92,8 @@ public final class Image extends Resource {
               .omitNullValues()
               .add("sourceType", sourceType)
               .add("preferredKernel", preferredKernel.orNull())
-              .add("rawDisk", rawDisk);
+              .add("rawDisk", rawDisk)
+              .add("deprecated", deprecated.orNull());
    }
 
    /**
@@ -107,6 +117,7 @@ public final class Image extends Resource {
       private String sourceType;
       private URI preferredKernel;
       private RawDisk rawDisk;
+      private Deprecated deprecated;
 
       /**
        * @see Image#getSourceType()
@@ -125,6 +136,14 @@ public final class Image extends Resource {
       }
 
       /**
+       * @see Image#getDeprecated()
+       */
+      public Builder deprecated(Deprecated deprecated) {
+         this.deprecated = checkNotNull(deprecated, "deprecated");
+         return this;
+      }
+
+      /**
        * @see Image#getRawDisk()
        */
       public Builder rawDisk(RawDisk rawDisk) {
@@ -139,14 +158,15 @@ public final class Image extends Resource {
 
       public Image build() {
          return new Image(super.id, super.creationTimestamp, super.selfLink, super.name,
-                 super.description, sourceType, preferredKernel, rawDisk);
+                 super.description, sourceType, preferredKernel, rawDisk, deprecated);
       }
 
       public Builder fromImage(Image in) {
          return super.fromResource(in)
                  .sourceType(in.getSourceType())
                  .preferredKernel(in.getPreferredKernel().orNull())
-                 .rawDisk(in.getRawDisk());
+                 .rawDisk(in.getRawDisk())
+                 .deprecated(in.getDeprecated().orNull());
       }
 
    }
@@ -155,7 +175,7 @@ public final class Image extends Resource {
     * A raw disk image, usually the base for an image.
     *
     * @author David Alves
-    * @see <a href="https://developers.google.com/compute/docs/reference/v1beta13/images"/>
+    * @see <a href="https://developers.google.com/compute/docs/reference/v1beta15/images"/>
     */
    public static class RawDisk {
 

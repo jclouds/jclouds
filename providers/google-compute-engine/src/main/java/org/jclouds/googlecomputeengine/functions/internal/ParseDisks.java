@@ -16,8 +16,11 @@
  */
 package org.jclouds.googlecomputeengine.functions.internal;
 
-import com.google.common.base.Function;
-import com.google.inject.TypeLiteral;
+import static com.google.common.base.Preconditions.checkNotNull;
+
+import javax.inject.Inject;
+import javax.inject.Singleton;
+
 import org.jclouds.collect.IterableWithMarker;
 import org.jclouds.googlecomputeengine.GoogleComputeEngineApi;
 import org.jclouds.googlecomputeengine.domain.Disk;
@@ -26,10 +29,8 @@ import org.jclouds.googlecomputeengine.options.ListOptions;
 import org.jclouds.http.functions.ParseJson;
 import org.jclouds.json.Json;
 
-import javax.inject.Inject;
-import javax.inject.Singleton;
-
-import static com.google.common.base.Preconditions.checkNotNull;
+import com.google.common.base.Function;
+import com.google.inject.TypeLiteral;
 
 /**
  * @author David Alves
@@ -39,10 +40,11 @@ public class ParseDisks extends ParseJson<ListPage<Disk>> {
 
    @Inject
    public ParseDisks(Json json) {
-      super(json, new TypeLiteral<ListPage<Disk>>() {});
+      super(json, new TypeLiteral<ListPage<Disk>>() {
+      });
    }
 
-   public static class ToPagedIterable extends BaseToPagedIterable<Disk, ToPagedIterable> {
+   public static class ToPagedIterable extends BaseWithZoneToPagedIterable<Disk, ToPagedIterable> {
 
       private final GoogleComputeEngineApi api;
 
@@ -53,12 +55,14 @@ public class ParseDisks extends ParseJson<ListPage<Disk>> {
 
       @Override
       protected Function<Object, IterableWithMarker<Disk>> fetchNextPage(final String projectName,
+                                                                         final String zoneName,
                                                                          final ListOptions options) {
          return new Function<Object, IterableWithMarker<Disk>>() {
 
             @Override
             public IterableWithMarker<Disk> apply(Object input) {
-               return api.getDiskApiForProject(projectName).listAtMarker(input.toString(), options);
+               return api.getDiskApiForProject(projectName)
+                       .listAtMarkerInZone(zoneName, input.toString(), options);
             }
          };
       }

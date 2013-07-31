@@ -16,29 +16,28 @@
  */
 package org.jclouds.googlecomputeengine.domain;
 
-import com.google.common.annotations.Beta;
-import com.google.common.base.Objects;
-import com.google.common.base.Optional;
-import com.google.common.collect.ImmutableMap;
-import com.google.common.collect.ImmutableSet;
-import org.jclouds.javax.annotation.Nullable;
-
-import java.beans.ConstructorProperties;
-import java.net.URI;
-import java.util.Date;
-import java.util.Map;
-import java.util.Set;
-
 import static com.google.common.base.Objects.equal;
 import static com.google.common.base.Objects.toStringHelper;
 import static com.google.common.base.Optional.fromNullable;
 import static com.google.common.base.Preconditions.checkNotNull;
 
+import java.beans.ConstructorProperties;
+import java.net.URI;
+import java.util.Date;
+import java.util.Set;
+
+import org.jclouds.javax.annotation.Nullable;
+
+import com.google.common.annotations.Beta;
+import com.google.common.base.Objects;
+import com.google.common.base.Optional;
+import com.google.common.collect.ImmutableSet;
+
 /**
  * Represents a virtual machine.
  *
  * @author David Alves
- * @see <a href="https://developers.google.com/compute/docs/reference/v1beta13/instances"/>
+ * @see <a href="https://developers.google.com/compute/docs/reference/v1beta15/instances"/>
  */
 @Beta
 public class Instance extends Resource {
@@ -52,7 +51,7 @@ public class Instance extends Resource {
       TERMINATED
    }
 
-   protected final Set<String> tags;
+   protected final Tags tags;
    protected final URI image;
    protected final URI machineType;
    protected final Status status;
@@ -60,15 +59,15 @@ public class Instance extends Resource {
    protected final URI zone;
    protected final Set<NetworkInterface> networkInterfaces;
    protected final Set<AttachedDisk> disks;
-   protected final Map<String, String> metadata;
+   protected final Metadata metadata;
    protected final Set<ServiceAccount> serviceAccounts;
 
    protected Instance(String id, Date creationTimestamp, URI selfLink, String name, String description,
-                      Set<String> tags, URI image, URI machineType, Status status, String statusMessage,
+                      Tags tags, URI image, URI machineType, Status status, String statusMessage,
                       URI zone, Set<NetworkInterface> networkInterfaces, Set<AttachedDisk> disks,
-                      Map<String, String> metadata, Set<ServiceAccount> serviceAccounts) {
+                      Metadata metadata, Set<ServiceAccount> serviceAccounts) {
       super(Kind.INSTANCE, id, creationTimestamp, selfLink, name, description);
-      this.tags = tags == null ? ImmutableSet.<String>of() : tags;
+      this.tags = checkNotNull(tags, "tags");
       this.image = checkNotNull(image, "image");
       this.machineType = checkNotNull(machineType, "machineType of %s", name);
       this.status = checkNotNull(status, "status");
@@ -76,7 +75,7 @@ public class Instance extends Resource {
       this.zone = checkNotNull(zone, "zone of %s", name);
       this.networkInterfaces = networkInterfaces == null ? ImmutableSet.<NetworkInterface>of() : networkInterfaces;
       this.disks = disks == null ? ImmutableSet.<AttachedDisk>of() : disks;
-      this.metadata = metadata == null ? ImmutableMap.<String, String>of() : metadata;
+      this.metadata = checkNotNull(metadata, "metadata");
       this.serviceAccounts = serviceAccounts == null ? ImmutableSet.<ServiceAccount>of() : serviceAccounts;
    }
 
@@ -84,9 +83,9 @@ public class Instance extends Resource {
     * Used to identify valid sources or targets for network firewalls. Provided by the client when the instance is
     * created. Each tag must be unique, must be 1-63 characters long, and comply with RFC1035.
     *
-    * @return an optional set of tags applied to this instance.
+    * @return an optional set of items applied to this instance.
     */
-   public Set<String> getTags() {
+   public Tags getTags() {
       return tags;
    }
 
@@ -147,7 +146,7 @@ public class Instance extends Resource {
    /**
     * @return metadata for this instance
     */
-   public Map<String, String> getMetadata() {
+   public Metadata getMetadata() {
       return metadata;
    }
 
@@ -162,10 +161,23 @@ public class Instance extends Resource {
    /**
     * {@inheritDoc}
     */
+   @Override
+   public boolean equals(Object obj) {
+      if (this == obj) return true;
+      if (obj == null || getClass() != obj.getClass()) return false;
+      Instance that = Instance.class.cast(obj);
+      return equal(this.kind, that.kind)
+              && equal(this.name, that.name)
+              && equal(this.zone, that.zone);
+   }
+
+   /**
+    * {@inheritDoc}
+    */
    protected Objects.ToStringHelper string() {
       return super.string()
               .omitNullValues()
-              .add("tags", tags)
+              .add("items", tags)
               .add("image", image)
               .add("machineType", machineType)
               .add("status", status)
@@ -195,30 +207,23 @@ public class Instance extends Resource {
 
    public static final class Builder extends Resource.Builder<Builder> {
 
-      private ImmutableSet.Builder<String> tags = ImmutableSet.builder();
+      private Tags tags;
       private URI image;
       private URI machineType;
       private Status status;
       private String statusMessage;
       private URI zone;
+      private Metadata metadata;
       private ImmutableSet.Builder<NetworkInterface> networkInterfaces = ImmutableSet.builder();
       private ImmutableSet.Builder<AttachedDisk> disks = ImmutableSet.builder();
-      private ImmutableMap.Builder<String, String> metadata = ImmutableMap.builder();
       private ImmutableSet.Builder<ServiceAccount> serviceAccounts = ImmutableSet.builder();
 
-      /**
-       * @see Instance#getTags()
-       */
-      public Builder addTag(String tag) {
-         this.tags.add(tag);
-         return this;
-      }
 
       /**
        * @see Instance#getTags()
        */
-      public Builder tags(Set<String> tags) {
-         this.tags.addAll(tags);
+      public Builder tags(Tags tags) {
+         this.tags = tags;
          return this;
       }
 
@@ -297,16 +302,8 @@ public class Instance extends Resource {
       /**
        * @see Instance#getMetadata()
        */
-      public Builder metadata(Map<String, String> metadata) {
-         this.metadata = new ImmutableMap.Builder<String, String>().putAll(metadata);
-         return this;
-      }
-
-      /**
-       * @see Instance#getMetadata()
-       */
-      public Builder addMetadata(String key, String value) {
-         this.metadata.put(checkNotNull(key, "key"), checkNotNull(value, "value of %s", key));
+      public Builder metadata(Metadata metadata) {
+         this.metadata = metadata;
          return this;
       }
 
@@ -321,7 +318,7 @@ public class Instance extends Resource {
       /**
        * @see Instance#getServiceAccounts()
        */
-      public Builder serviceAccoutns(Set<ServiceAccount> serviceAccounts) {
+      public Builder serviceAccounts(Set<ServiceAccount> serviceAccounts) {
          this.serviceAccounts.addAll(serviceAccounts);
          return this;
       }
@@ -334,8 +331,8 @@ public class Instance extends Resource {
 
       public Instance build() {
          return new Instance(super.id, super.creationTimestamp, super.selfLink, super.name,
-                 super.description, tags.build(), image, machineType, status, statusMessage, zone,
-                 networkInterfaces.build(), disks.build(), metadata.build(), serviceAccounts.build());
+                 super.description, tags, image, machineType, status, statusMessage, zone,
+                 networkInterfaces.build(), disks.build(), metadata, serviceAccounts.build());
       }
 
       public Builder fromInstance(Instance in) {
@@ -349,14 +346,130 @@ public class Instance extends Resource {
                  .networkInterfaces(in.getNetworkInterfaces())
                  .disks(in.getDisks())
                  .metadata(in.getMetadata())
-                 .serviceAccoutns(in.getServiceAccounts());
+                 .serviceAccounts(in.getServiceAccounts());
+      }
+   }
+
+
+
+
+   /**
+    * Tags for an instance, with their fingerprint.
+    */
+   public static class Tags {
+      private final String fingerprint;
+      private final Set<String> items;
+
+      @ConstructorProperties({"fingerprint", "items"})
+      public Tags(String fingerprint, @Nullable Set<String> items) {
+         this.fingerprint = checkNotNull(fingerprint);
+         this.items = items == null ? ImmutableSet.<String>of() : items;
+      }
+
+      /**
+       * Used to identify valid sources or targets for network firewalls. Provided by the client when the instance is
+       * created. Each tag must be unique, must be 1-63 characters long, and comply with RFC1035.
+       *
+       * @return an optional set of items applied to this instance.
+       */
+      public Set<String> getItems() {
+         return items;
+      }
+
+      /**
+       * Gets the fingerprint for the items - needed for updating them.
+       *
+       * @return the fingerprint string for the items.
+       */
+      public String getFingerprint() {
+         return fingerprint;
+      }
+
+      /**
+       * {@inheritDoc}
+       */
+      @Override
+      public int hashCode() {
+         return Objects.hashCode(fingerprint, items);
+      }
+
+      /**
+       * {@inheritDoc}
+       */
+      @Override
+      public boolean equals(Object obj) {
+         if (this == obj) return true;
+         if (obj == null || getClass() != obj.getClass()) return false;
+         Tags that = Tags.class.cast(obj);
+         return equal(this.items, that.items)
+                 && equal(this.fingerprint, that.fingerprint);
+      }
+
+      /**
+       * {@inheritDoc}
+       */
+      protected Objects.ToStringHelper string() {
+         return toStringHelper(this)
+                 .add("items", items)
+                 .add("fingerprint", fingerprint);
+      }
+
+      public static Builder builder() {
+         return new Builder();
+      }
+
+      /**
+       * {@inheritDoc}
+       */
+      @Override
+      public String toString() {
+         return string().toString();
+      }
+
+      public static final class Builder {
+
+         private ImmutableSet.Builder<String> items = ImmutableSet.builder();
+         private String fingerprint;
+
+         /**
+          * @see Tags#getItems()
+          */
+         public Builder addItem(String item) {
+            this.items.add(item);
+            return this;
+         }
+
+         /**
+          * @see Tags#getItems()
+          */
+         public Builder items(Set<String> items) {
+            this.items.addAll(items);
+            return this;
+         }
+
+         /**
+          * @see org.jclouds.googlecomputeengine.domain.Instance.Tags#getFingerprint()
+          */
+         public Builder fingerprint(String fingerprint) {
+            this.fingerprint = fingerprint;
+            return this;
+         }
+
+         public Tags build() {
+            return new Tags(this.fingerprint, this.items.build());
+         }
+
+         public Builder fromTags(Tags in) {
+            return this.fingerprint(in.getFingerprint())
+                    .items(in.getItems());
+         }
       }
    }
 
    /**
     * A disk attached to an Instance.
     *
-    * @see <a href="https://developers.google.com/compute/docs/reference/v1beta13/instances"/>
+    * @see <a href="https://developers.google.com/compute/docs/reference/v1beta15/instances"/>
     */
    public static class AttachedDisk {
 
@@ -419,10 +532,9 @@ public class Instance extends Resource {
    }
 
    public static class PersistentAttachedDisk extends AttachedDisk {
-
       public enum Mode {
          READ_WRITE,
-         READ_ONLY
+         READ_ONLY;
       }
 
       @ConstructorProperties({"mode", "source", "deviceName", "index", "deleteOnTerminate"})
@@ -546,7 +658,7 @@ public class Instance extends Resource {
    /**
     * A network interface for an Instance.
     *
-    * @see <a href="https://developers.google.com/compute/docs/reference/v1beta13/instances"/>
+    * @see <a href="https://developers.google.com/compute/docs/reference/v1beta15/instances"/>
     */
    public static final class NetworkInterface {
 
@@ -840,7 +952,7 @@ public class Instance extends Resource {
     * The output of an instance's serial port;
     *
     * @author David Alves
-    * @see <a href="https://developers.google.com/compute/docs/reference/v1beta13/instances/serialPort"/>
+    * @see <a href="https://developers.google.com/compute/docs/reference/v1beta15/instances/serialPort"/>
     */
    public static final class SerialPortOutput {
 
@@ -948,7 +1060,7 @@ public class Instance extends Resource {
     * A service account for which access tokens are to be made available to the instance through metadata queries.
     *
     * @author David Alves
-    * @see <a href="https://developers.google.com/compute/docs/reference/v1beta13/instances"/>
+    * @see <a href="https://developers.google.com/compute/docs/reference/v1beta15/instances"/>
     */
    public static final class ServiceAccount {
 

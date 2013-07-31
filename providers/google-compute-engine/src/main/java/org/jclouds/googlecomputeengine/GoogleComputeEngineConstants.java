@@ -16,10 +16,11 @@
  */
 package org.jclouds.googlecomputeengine;
 
-import com.google.common.annotations.Beta;
 import org.jclouds.domain.Location;
 import org.jclouds.domain.LocationBuilder;
 import org.jclouds.domain.LocationScope;
+
+import com.google.common.annotations.Beta;
 
 /**
  * @author David Alves
@@ -36,6 +37,11 @@ public interface GoogleComputeEngineConstants {
    public static final String COMPUTE_SCOPE = "https://www.googleapis.com/auth/compute";
 
    public static final String COMPUTE_READONLY_SCOPE = "https://www.googleapis.com/auth/compute.readonly";
+
+   public static final String STORAGE_READONLY_SCOPE = "https://www.googleapis.com/auth/devstorage.read_only";
+
+   public static final String STORAGE_WRITEONLY_SCOPE = "https://www.googleapis.com/auth/devstorage.write_only";
+
 
    /**
     * The total time, in msecs, to wait for an operation to complete.

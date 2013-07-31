@@ -16,17 +16,17 @@
  */
 package org.jclouds.googlecomputeengine.parse;
 
-import com.google.common.collect.ImmutableSet;
-import org.jclouds.date.internal.SimpleDateFormatDateService;
-import org.jclouds.googlecomputeengine.domain.Kernel;
-import org.jclouds.googlecomputeengine.domain.ListPage;
-import org.jclouds.googlecomputeengine.domain.Resource;
-import org.jclouds.googlecomputeengine.internal.BaseGoogleComputeEngineParseTest;
-import org.testng.annotations.Test;
+import java.net.URI;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.core.MediaType;
-import java.net.URI;
+
+import org.jclouds.date.internal.SimpleDateFormatDateService;
+import org.jclouds.googlecomputeengine.domain.*;
+import org.jclouds.googlecomputeengine.internal.BaseGoogleComputeEngineParseTest;
+import org.testng.annotations.Test;
+
+import com.google.common.collect.ImmutableSet;
 
 /**
  * @author David Alves
@@ -44,15 +44,15 @@ public class ParseKernelListTest extends BaseGoogleComputeEngineParseTest<ListPa
    public ListPage<Kernel> expected() {
       return ListPage.<Kernel>builder()
               .kind(Resource.Kind.KERNEL_LIST)
-              .id("projects/google/kernels")
-              .selfLink(URI.create("https://www.googleapis.com/compute/v1beta13/projects/google/kernels"))
+              .id("projects/google/global/kernels")
+              .selfLink(URI.create("https://www.googleapis.com/compute/v1beta15/projects/google/global/kernels"))
               .items(ImmutableSet.of(
                       Kernel.builder()
                               .id("12941177846308850718")
                               .creationTimestamp(new SimpleDateFormatDateService().iso8601DateParse
                                       ("2012-07-16T21:42:16.950"))
                               .selfLink(URI.create("https://www.googleapis" +
-                                      ".com/compute/v1beta13/projects/google/kernels/gce-20110524"))
+                                      ".com/compute/v1beta15/projects/google/global/kernels/gce-20110524"))
                               .name("gce-20110524")
                               .description("DEPRECATED. Created Tue, 24 May 2011 00:48:22 +0000").build(),
                       Kernel.builder()
@@ -60,9 +60,14 @@ public class ParseKernelListTest extends BaseGoogleComputeEngineParseTest<ListPa
                               .creationTimestamp(new SimpleDateFormatDateService().iso8601DateParse
                                       ("2012-07-16T21:42:31.166"))
                               .selfLink(URI.create("https://www.googleapis" +
-                                      ".com/compute/v1beta13/projects/google/kernels/gce-20110728"))
+                                      ".com/compute/v1beta15/projects/google/global/kernels/gce-20110728"))
                               .name("gce-20110728")
-                              .description("DEPRECATED. Created Thu, 28 Jul 2011 16:44:38 +0000").build()
+                              .description("DEPRECATED. Created Thu, 28 Jul 2011 16:44:38 +0000")
+                              .deprecated(org.jclouds.googlecomputeengine.domain.Deprecated.builder()
+                                      .state("OBSOLETE")
+                                      .replacement(URI.create("https://www.googleapis.com/compute/v1beta15/projects/google/global/kernels/gce-v20130603"))
+                                      .build())
+                              .build()
               )).build();
    }
 }

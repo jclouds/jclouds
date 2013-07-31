@@ -16,16 +16,16 @@
  */
 package org.jclouds.googlecomputeengine.handlers;
 
+import static org.jclouds.http.HttpUtils.closeClientButKeepContentStream;
+
+import javax.inject.Singleton;
+
 import org.jclouds.http.HttpCommand;
 import org.jclouds.http.HttpErrorHandler;
 import org.jclouds.http.HttpResponse;
 import org.jclouds.http.HttpResponseException;
 import org.jclouds.rest.AuthorizationException;
 import org.jclouds.rest.ResourceNotFoundException;
-
-import javax.inject.Singleton;
-
-import static org.jclouds.http.HttpUtils.closeClientButKeepContentStream;
 
 /**
  * This will parse and set an appropriate exception on the command object.

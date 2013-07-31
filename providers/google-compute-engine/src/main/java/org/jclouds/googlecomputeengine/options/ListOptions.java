@@ -16,15 +16,15 @@
  */
 package org.jclouds.googlecomputeengine.options;
 
-import org.jclouds.http.options.BaseHttpRequestOptions;
-
 import static com.google.common.base.Preconditions.checkNotNull;
+
+import org.jclouds.http.options.BaseHttpRequestOptions;
 
 /**
  * Allows to optionally specify a filter, max results and a page token for <code>listFirstPage()</code> REST methods.
  *
  * @author David Alves
- * @see <a href="https://developers.google.com/compute/docs/reference/v1beta13/operations/listFirstPage"/>
+ * @see <a href="https://developers.google.com/compute/docs/reference/v1beta15/operations/listFirstPage"/>
  */
 public class ListOptions extends BaseHttpRequestOptions {
 
@@ -65,7 +65,7 @@ public class ListOptions extends BaseHttpRequestOptions {
    }
 
    /**
-    * Sets Maximum count of results to be returned. Maximum and default value is 100. Acceptable values are 0 to
+    * Sets Maximum count of results to be returned. Maximum and default value is 100. Acceptable items are 0 to
     * 100, inclusive. (Default: 100)
     */
    public ListOptions maxResults(Integer maxResults) {

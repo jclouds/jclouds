@@ -16,7 +16,31 @@
  */
 package org.jclouds.googlecomputeengine.config;
 
-import com.google.common.collect.ForwardingMap;
+import static org.jclouds.googlecomputeengine.domain.Firewall.Rule;
+
+import java.beans.ConstructorProperties;
+import java.lang.reflect.Type;
+import java.net.URI;
+import java.util.Date;
+import java.util.Map;
+import java.util.Set;
+
+import javax.inject.Singleton;
+
+import org.jclouds.googlecomputeengine.domain.Firewall;
+import org.jclouds.googlecomputeengine.domain.Instance;
+import org.jclouds.googlecomputeengine.domain.InstanceTemplate;
+import org.jclouds.googlecomputeengine.domain.Metadata;
+import org.jclouds.googlecomputeengine.domain.Operation;
+import org.jclouds.googlecomputeengine.domain.Project;
+import org.jclouds.googlecomputeengine.options.FirewallOptions;
+import org.jclouds.googlecomputeengine.options.RouteOptions;
+import org.jclouds.json.config.GsonModule;
+import org.jclouds.oauth.v2.domain.ClaimSet;
+import org.jclouds.oauth.v2.domain.Header;
+import org.jclouds.oauth.v2.json.ClaimSetTypeAdapter;
+import org.jclouds.oauth.v2.json.HeaderTypeAdapter;
+
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Range;
 import com.google.gson.JsonArray;
@@ -30,27 +54,6 @@ import com.google.gson.JsonSerializationContext;
 import com.google.gson.JsonSerializer;
 import com.google.inject.AbstractModule;
 import com.google.inject.Provides;
-import org.jclouds.googlecomputeengine.domain.Firewall;
-import org.jclouds.googlecomputeengine.domain.Instance;
-import org.jclouds.googlecomputeengine.domain.InstanceTemplate;
-import org.jclouds.googlecomputeengine.domain.Operation;
-import org.jclouds.googlecomputeengine.domain.Project;
-import org.jclouds.googlecomputeengine.options.FirewallOptions;
-import org.jclouds.json.config.GsonModule;
-import org.jclouds.oauth.v2.domain.ClaimSet;
-import org.jclouds.oauth.v2.domain.Header;
-import org.jclouds.oauth.v2.json.ClaimSetTypeAdapter;
-import org.jclouds.oauth.v2.json.HeaderTypeAdapter;
-
-import javax.inject.Singleton;
-import java.beans.ConstructorProperties;
-import java.lang.reflect.Type;
-import java.net.URI;
-import java.util.Date;
-import java.util.Map;
-import java.util.Set;
-
-import static org.jclouds.googlecomputeengine.domain.Firewall.Rule;
 
 /**
  * @author David Alves
@@ -74,6 +77,7 @@ public class GoogleComputeEngineParserModule extends AbstractModule {
               .put(Instance.class, new InstanceTypeAdapter())
               .put(InstanceTemplate.class, new InstanceTemplateTypeAdapter())
               .put(FirewallOptions.class, new FirewallOptionsTypeAdapter())
+              .put(RouteOptions.class, new RouteOptionsTypeAdapter())
               .put(Rule.class, new RuleTypeAdapter())
               .build();
    }
@@ -81,7 +85,7 @@ public class GoogleComputeEngineParserModule extends AbstractModule {
    /**
     * Parser for operations that unwraps errors avoiding an extra intermediate object.
     *
-    * @see <a href="https://developers.google.com/compute/docs/reference/v1beta13/operations"/>
+    * @see <a href="https://developers.google.com/compute/docs/reference/v1beta15/operations"/>
     */
    @Singleton
    private static class OperationTypeAdapter implements JsonDeserializer<Operation> {
@@ -107,16 +111,16 @@ public class GoogleComputeEngineParserModule extends AbstractModule {
          @ConstructorProperties({
                  "id", "creationTimestamp", "selfLink", "name", "description", "targetLink", "targetId",
                  "clientOperationId", "status", "statusMessage", "user", "progress", "insertTime", "startTime",
-                 "endTime", "httpErrorStatusCode", "httpErrorMessage", "operationType"
+                 "endTime", "httpErrorStatusCode", "httpErrorMessage", "operationType", "region", "zone"
          })
          private OperationInternal(String id, Date creationTimestamp, URI selfLink, String name,
                                    String description, URI targetLink, String targetId, String clientOperationId,
                                    Status status, String statusMessage, String user, int progress, Date insertTime,
                                    Date startTime, Date endTime, int httpErrorStatusCode, String httpErrorMessage,
-                                   String operationType) {
+                                   String operationType, URI region, URI zone) {
             super(id, creationTimestamp, selfLink, name, description, targetLink, targetId, clientOperationId,
                     status, statusMessage, user, progress, insertTime, startTime, endTime, httpErrorStatusCode,
-                    httpErrorMessage, operationType, null);
+                    httpErrorMessage, operationType, null, region, zone);
          }
       }
    }
@@ -149,8 +153,11 @@ public class GoogleComputeEngineParserModule extends AbstractModule {
 
          // deal with metadata
          if (src.getMetadata() != null && !src.getMetadata().isEmpty()) {
-            JsonObject metadata = (JsonObject) context.serialize(new Metadata(src.getMetadata()));
-            instance.add("metadata", metadata);
+            Metadata metadata = Metadata.builder()
+                    .items(src.getMetadata())
+                    .build();
+            JsonObject metadataJson = (JsonObject) context.serialize(metadata);
+            instance.add("metadata", metadataJson);
             return instance;
          }
 
@@ -162,9 +169,7 @@ public class GoogleComputeEngineParserModule extends AbstractModule {
             super(template.getMachineType());
             name(template.getName());
             description(template.getDescription());
-            zone(template.getZone());
             image(template.getImage());
-            tags(template.getTags());
             serviceAccounts(template.getServiceAccounts());
             networkInterfaces(template.getNetworkInterfaces());
          }
@@ -205,7 +210,7 @@ public class GoogleComputeEngineParserModule extends AbstractModule {
                  "status", "statusMessage", "zone", "networkInterfaces", "metadata", "serviceAccounts"
          })
          private InstanceInternal(String id, Date creationTimestamp, URI selfLink, String name, String description,
-                                  Set<String> tags, URI image, URI machineType, Status status, String statusMessage,
+                                  Tags tags, URI image, URI machineType, Status status, String statusMessage,
                                   URI zone, Set<NetworkInterface> networkInterfaces, Metadata metadata,
                                   Set<ServiceAccount> serviceAccounts) {
             super(id, creationTimestamp, selfLink, name, description, tags, image, machineType,
@@ -233,7 +238,11 @@ public class GoogleComputeEngineParserModule extends AbstractModule {
                builder.put(object.get("key").getAsString(), object.get("value").getAsString());
             }
          }
-         return new Metadata(builder.build());
+         String fingerprint = null;
+         if (metadata.getAsJsonPrimitive("fingerprint") != null) {
+            fingerprint = metadata.getAsJsonPrimitive("fingerprint").getAsString();
+         }
+         return new Metadata(fingerprint, builder.build());
       }
 
       @Override
@@ -241,30 +250,21 @@ public class GoogleComputeEngineParserModule extends AbstractModule {
          JsonObject metadataObject = new JsonObject();
          metadataObject.add("kind", new JsonPrimitive("compute#metadata"));
          JsonArray items = new JsonArray();
-         for (Map.Entry<String, String> entry : src.entrySet()) {
+         for (Map.Entry<String, String> entry : src.getItems().entrySet()) {
             JsonObject object = new JsonObject();
             object.addProperty("key", entry.getKey());
             object.addProperty("value", entry.getValue());
             items.add(object);
          }
          metadataObject.add("items", items);
+         if (src.getFingerprint() != null) {
+            metadataObject.addProperty("fingerprint", src.getFingerprint());
+         }
          return metadataObject;
       }
    }
 
-   public static class Metadata extends ForwardingMap<String, String> {
 
-      private final Map<String, String> delegate;
-
-      public Metadata(Map<String, String> delegate) {
-         this.delegate = delegate;
-      }
-
-      @Override
-      protected Map<String, String> delegate() {
-         return delegate;
-      }
-   }
 
    @Singleton
    private static class ProjectTypeAdapter implements JsonDeserializer<Project> {
@@ -319,6 +319,46 @@ public class GoogleComputeEngineParserModule extends AbstractModule {
             firewall.add("allowed", rules);
          }
          return firewall;
+      }
+   }
+
+   @Singleton
+   private static class RouteOptionsTypeAdapter implements JsonSerializer<RouteOptions> {
+
+      @Override
+      public JsonElement serialize(RouteOptions src, Type typeOfSrc, JsonSerializationContext context) {
+         JsonObject route = new JsonObject();
+         if (src.getName() != null) {
+            route.addProperty("name", src.getName());
+         }
+         if (src.getNetwork() != null) {
+            route.addProperty("network", src.getNetwork().toString());
+         }
+         if (src.getNextHopGateway() != null) {
+            route.addProperty("nextHopGateway", src.getNextHopGateway().toString());
+         }
+         if (src.getNextHopInstance() != null) {
+            route.addProperty("nextHopInstance", src.getNextHopInstance().toString());
+         }
+         if (src.getNextHopNetwork() != null) {
+            route.addProperty("nextHopNetwork", src.getNextHopNetwork().toString());
+         }
+         if (src.getDestRange() != null) {
+            route.addProperty("destRange", src.getDestRange());
+         }
+         if (src.getDescription() != null) {
+            route.addProperty("description", src.getDescription());
+         }
+         if (src.getPriority() != null) {
+            route.addProperty("priority", src.getPriority());
+         }
+         if (src.getNextHopIp() != null) {
+            route.addProperty("nextHopIp", src.getNextHopIp());
+         }
+         if (!src.getTags().isEmpty()) {
+            route.add("tags", buildArrayOfStrings(src.getTags()));
+         }
+         return route;
       }
    }
 

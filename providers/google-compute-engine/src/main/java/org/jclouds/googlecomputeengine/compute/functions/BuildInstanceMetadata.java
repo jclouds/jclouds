@@ -16,14 +16,15 @@
  */
 package org.jclouds.googlecomputeengine.compute.functions;
 
-import com.google.common.base.Function;
-import com.google.common.collect.ImmutableMap;
-import org.jclouds.compute.options.TemplateOptions;
+import static com.google.common.base.Preconditions.checkNotNull;
+import static java.lang.String.format;
 
 import javax.inject.Singleton;
 
-import static com.google.common.base.Preconditions.checkNotNull;
-import static java.lang.String.format;
+import org.jclouds.compute.options.TemplateOptions;
+
+import com.google.common.base.Function;
+import com.google.common.collect.ImmutableMap;
 
 /**
  * Prepares metadata from the provided TemplateOptions

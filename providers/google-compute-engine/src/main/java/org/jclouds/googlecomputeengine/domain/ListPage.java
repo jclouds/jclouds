@@ -16,19 +16,20 @@
  */
 package org.jclouds.googlecomputeengine.domain;
 
-import com.google.common.base.Objects;
-import com.google.common.base.Optional;
-import com.google.common.collect.ImmutableSet;
-import org.jclouds.collect.IterableWithMarker;
+import static com.google.common.base.Objects.equal;
+import static com.google.common.base.Objects.toStringHelper;
+import static com.google.common.base.Preconditions.checkNotNull;
+import static org.jclouds.googlecomputeengine.domain.Resource.Kind;
 
 import java.beans.ConstructorProperties;
 import java.net.URI;
 import java.util.Iterator;
 
-import static com.google.common.base.Objects.equal;
-import static com.google.common.base.Objects.toStringHelper;
-import static com.google.common.base.Preconditions.checkNotNull;
-import static org.jclouds.googlecomputeengine.domain.Resource.Kind;
+import org.jclouds.collect.IterableWithMarker;
+
+import com.google.common.base.Objects;
+import com.google.common.base.Optional;
+import com.google.common.collect.ImmutableSet;
 
 /**
  * The collection returned from any <code>listFirstPage()</code> method.

@@ -16,6 +16,18 @@
  */
 package org.jclouds.googlecomputeengine.domain;
 
+import static com.google.common.base.Objects.ToStringHelper;
+import static com.google.common.base.Objects.equal;
+import static com.google.common.base.Objects.toStringHelper;
+import static com.google.common.base.Optional.fromNullable;
+import static com.google.common.base.Preconditions.checkNotNull;
+
+import java.beans.ConstructorProperties;
+import java.net.URI;
+import java.util.Date;
+
+import org.jclouds.javax.annotation.Nullable;
+
 import com.google.common.annotations.Beta;
 import com.google.common.base.CaseFormat;
 import com.google.common.base.Joiner;
@@ -23,17 +35,6 @@ import com.google.common.base.Objects;
 import com.google.common.base.Optional;
 import com.google.common.base.Splitter;
 import com.google.common.collect.Iterables;
-import org.jclouds.javax.annotation.Nullable;
-
-import java.beans.ConstructorProperties;
-import java.net.URI;
-import java.util.Date;
-
-import static com.google.common.base.Objects.ToStringHelper;
-import static com.google.common.base.Objects.equal;
-import static com.google.common.base.Objects.toStringHelper;
-import static com.google.common.base.Optional.fromNullable;
-import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * Base class for Google Compute Engine resources.
@@ -44,6 +45,8 @@ import static com.google.common.base.Preconditions.checkNotNull;
 public class Resource {
 
    public enum Kind {
+      ADDRESS,
+      ADDRESS_LIST,
       DISK,
       DISK_LIST,
       FIREWALL,
@@ -61,6 +64,12 @@ public class Resource {
       PROJECT,
       NETWORK,
       NETWORK_LIST,
+      REGION,
+      REGION_LIST,
+      ROUTE,
+      ROUTE_LIST,
+      SNAPSHOT,
+      SNAPSHOT_LIST,
       ZONE,
       ZONE_LIST;
 
