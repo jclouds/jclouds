@@ -23,6 +23,7 @@ import org.jclouds.gogrid.options.GetIpListOptions;
 
 /**
  * @author Oleksiy Yarmula
+ * @deprecated This will be renamed to GridIpApi in 1.7.0.
  */
 public interface GridIpClient {
 

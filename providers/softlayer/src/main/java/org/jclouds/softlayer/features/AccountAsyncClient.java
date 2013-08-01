@@ -38,7 +38,9 @@ import com.google.common.util.concurrent.ListenableFuture;
  * @see AccountClient
  * @see <a href="http://sldn.softlayer.com/article/REST" />
  * @author Jason King
+ * @deprecated Async interfaces will be removed in 1.7.0.
  */
+@Deprecated
 @RequestFilters(BasicAuthentication.class)
 @Path("/v{jclouds.api-version}")
 public interface AccountAsyncClient {

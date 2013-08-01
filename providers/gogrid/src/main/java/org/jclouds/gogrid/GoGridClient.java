@@ -27,7 +27,9 @@ import org.jclouds.rest.annotations.Delegate;
 
 /**
  * @author Oleksiy Yarmula
+ * @deprecated Renamed to GoGridApi in 1.7.0
  */
+@Deprecated
 public interface GoGridClient extends Closeable {
 
    /**

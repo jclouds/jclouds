@@ -26,6 +26,7 @@ import org.jclouds.gogrid.options.GetJobListOptions;
  * @see <a href="http://wiki.gogrid.com/wiki/index.php/API#Job_Methods" />
  * 
  * @author Oleksiy Yarmula
+ * @deprecated This will be renamed to GridJobApi in 1.7.0.
  */
 public interface GridJobClient {
 

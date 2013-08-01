@@ -14,34 +14,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.jclouds.softlayer.features;
 
-import java.util.Set;
-import org.jclouds.softlayer.domain.Datacenter;
+package org.jclouds.cloudsigma;
 
 /**
- * Provides synchronous access to LocationDatacenter.
+ * Provides synchronous access to CloudSigma.
  * <p/>
- * 
- * @see DatacenterAsyncClient
- * @see <a href="http://sldn.softlayer.com/article/REST" />
+ *
+ * @see <a href="http://cloudsigma.com/en/platform-details/the-api" />
  * @author Adrian Cole
- * @deprecated This will be renamed to DatacenterApi in 1.7.0.
  */
-public interface DatacenterClient {
-
-   /**
-    * 
-    * @return an account's associated datacenter objects.
-    */
-   Set<Datacenter> listDatacenters();
-
-   /**
-    * 
-    * @param id
-    *           id of the datacenter
-    * @return datacenter or null if not found
-    */
-   Datacenter getDatacenter(long id);
-
+public interface CloudSigmaApi extends CloudSigmaClient {
 }

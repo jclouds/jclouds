@@ -26,6 +26,7 @@ import org.jclouds.softlayer.domain.ProductPackage;
  * @see AccountAsyncClient
  * @see <a href="http://sldn.softlayer.com/article/REST" />
  * @author Jason King
+ * @deprecated This will be renamed to AccountApi in 1.7.0.
  */
 public interface AccountClient {
 

@@ -48,7 +48,9 @@ import com.google.common.util.concurrent.ListenableFuture;
  * @see VirtualGuestClient
  * @see <a href="http://sldn.softlayer.com/article/REST" />
  * @author Adrian Cole
+ * @deprecated Async interfaces will be removed in 1.7.0
  */
+@Deprecated
 @RequestFilters(BasicAuthentication.class)
 @Path("/v{jclouds.api-version}")
 public interface VirtualGuestAsyncClient {

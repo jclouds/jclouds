@@ -25,6 +25,7 @@ import org.jclouds.gogrid.options.AddLoadBalancerOptions;
 
 /**
  * @author Oleksiy Yarmula
+ * @deprecated This will be renamed to GridLoadBalancerApi in 1.7.0.
  */
 public interface GridLoadBalancerClient {
 

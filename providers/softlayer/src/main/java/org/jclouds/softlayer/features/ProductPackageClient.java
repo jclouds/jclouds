@@ -25,6 +25,7 @@ import org.jclouds.softlayer.domain.ProductPackage;
  * @see ProductPackageAsyncClient
  * @see <a href="http://sldn.softlayer.com/article/REST" />
  * @author Adrian Cole
+ * @deprecated This will be renamed to ProductPackageApi in 1.7.0.
  */
 public interface ProductPackageClient {
 

@@ -34,6 +34,7 @@ import org.jclouds.gogrid.options.GetServerListOptions;
  * 
  * @author Adrian Cole
  * @author Oleksiy Yarmula
+ * @deprecated This will be renamed to GridServerApi in 1.7.0.
  */
 public interface GridServerClient {
 

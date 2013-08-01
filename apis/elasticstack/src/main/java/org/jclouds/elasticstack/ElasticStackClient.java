@@ -31,9 +31,12 @@ import org.jclouds.io.Payload;
  * <p/>
  * 
  * @see ElasticStackAsyncClient
+ * @see ElasticStackApi
  * @see <a href="TODO: insert URL of elasticstack documentation" />
  * @author Adrian Cole
+ * @deprecated Will be renamed to ElasticStackApi in 1.7.0
  */
+@Deprecated
 public interface ElasticStackClient extends Closeable {
    /**
     * list of server uuids in your account

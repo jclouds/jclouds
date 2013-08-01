@@ -28,6 +28,7 @@ import org.jclouds.gogrid.options.SaveImageOptions;
  * @see <a
  *      href="http://wiki.gogrid.com/wiki/index.php/API#Server_Image_Methods"/>
  * @author Oleksiy Yarmula
+ * @deprecated This will be renamed to GridImageApi in 1.7.0.
  */
 public interface GridImageClient {
    /**

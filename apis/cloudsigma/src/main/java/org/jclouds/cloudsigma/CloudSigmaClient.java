@@ -34,9 +34,12 @@ import org.jclouds.cloudsigma.options.CloneDriveOptions;
  * <p/>
  * 
  * @see CloudSigmaAsyncClient
- * @see <a href="TODO: insert URL of cloudsigma documentation" />
+ * @see CloudSigmaApi
+ * @see <a href="https://lvs.cloudsigma.com/docs/" />
  * @author Adrian Cole
+ * @deprecated Will be renamed to CloudSigmaApi in 1.7.0.
  */
+@Deprecated
 public interface CloudSigmaClient extends Closeable {
 
    /**

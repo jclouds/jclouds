@@ -51,6 +51,7 @@ import com.google.common.util.concurrent.ListenableFuture;
 
 /**
  * @author Oleksiy Yarmula
+ * @deprecated Async interfaces will be removed in 1.7.0.
  */
 @RequestFilters(SharedKeyLiteAuthentication.class)
 @QueryParams(keys = VERSION, values = "{jclouds.api-version}")

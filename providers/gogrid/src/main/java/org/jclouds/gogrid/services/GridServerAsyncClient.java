@@ -65,7 +65,9 @@ import com.google.common.util.concurrent.ListenableFuture;
  * @see <a href="http://wiki.gogrid.com/wiki/index.php/API" />
  * @author Adrian Cole
  * @author Oleksiy Yarmula
+ * @deprecated Async interfaces will be removed in 1.7.0.
  */
+@Deprecated
 @RequestFilters(SharedKeyLiteAuthentication.class)
 @QueryParams(keys = VERSION, values = "1.6")
 public interface GridServerAsyncClient {

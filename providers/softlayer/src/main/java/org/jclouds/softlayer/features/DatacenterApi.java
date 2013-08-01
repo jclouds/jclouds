@@ -16,32 +16,5 @@
  */
 package org.jclouds.softlayer.features;
 
-import java.util.Set;
-import org.jclouds.softlayer.domain.Datacenter;
-
-/**
- * Provides synchronous access to LocationDatacenter.
- * <p/>
- * 
- * @see DatacenterAsyncClient
- * @see <a href="http://sldn.softlayer.com/article/REST" />
- * @author Adrian Cole
- * @deprecated This will be renamed to DatacenterApi in 1.7.0.
- */
-public interface DatacenterClient {
-
-   /**
-    * 
-    * @return an account's associated datacenter objects.
-    */
-   Set<Datacenter> listDatacenters();
-
-   /**
-    * 
-    * @param id
-    *           id of the datacenter
-    * @return datacenter or null if not found
-    */
-   Datacenter getDatacenter(long id);
-
+public interface DatacenterApi extends DatacenterClient {
 }

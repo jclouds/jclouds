@@ -42,7 +42,9 @@ import com.google.common.util.concurrent.ListenableFuture;
  * @see org.jclouds.gogrid.services.GridImageClient
  * 
  * @author Oleksiy Yarmula
+ * @deprecated Async interfaces will be removed in 1.7.0.
  */
+@Deprecated
 @RequestFilters(SharedKeyLiteAuthentication.class)
 @QueryParams(keys = VERSION, values = "{jclouds.api-version}")
 public interface GridIpAsyncClient {

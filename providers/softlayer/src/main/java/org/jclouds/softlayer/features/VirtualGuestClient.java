@@ -28,6 +28,7 @@ import org.jclouds.softlayer.domain.VirtualGuest;
  * @see VirtualGuestAsyncClient
  * @see <a href="http://sldn.softlayer.com/article/REST" />
  * @author Adrian Cole
+ * @deprecated This will be renamed to VirtualGuestApi in 1.7.0.
  */
 public interface VirtualGuestClient {
 
