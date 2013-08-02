@@ -22,7 +22,7 @@
   <parent>
     <groupId>org.apache.jclouds</groupId>
     <artifactId>jclouds-project</artifactId>
-    <version>1.6.2-incubating</version>
+    <version>1.6.3-SNAPSHOT</version>
     <relativePath>../project/pom.xml</relativePath>
   </parent>
   <artifactId>jclouds-blobstore</artifactId>
@@ -34,7 +34,7 @@
     <connection>scm:svn:http://jclouds.googlecode.com/svn/trunk/blobstore</connection>
     <developerConnection>scm:svn:https://jclouds.googlecode.com/svn/trunk/blobstore</developerConnection>
     <url>http://jclouds.googlecode.com/svn/trunk/blobstore</url>
-    <tag>jclouds-1.6.2-incubating-rc0</tag>
+    <tag>HEAD</tag>
   </scm>
 
   <properties>
