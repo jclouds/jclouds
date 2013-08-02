@@ -22,7 +22,7 @@
   <parent>
     <artifactId>jclouds-project</artifactId>
     <groupId>org.apache.jclouds</groupId>
-    <version>1.6.2-SNAPSHOT</version>
+    <version>1.6.2-incubating</version>
     <relativePath>../project/pom.xml</relativePath>
   </parent>
   <artifactId>jclouds-drivers-project</artifactId>
