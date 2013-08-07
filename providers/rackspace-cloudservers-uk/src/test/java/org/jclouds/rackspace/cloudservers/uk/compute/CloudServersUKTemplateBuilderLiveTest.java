@@ -52,13 +52,12 @@ public class CloudServersUKTemplateBuilderLiveTest extends BaseTemplateBuilderLi
          public boolean apply(OsFamilyVersion64Bit input) {
             switch (input.family) {
                case UBUNTU:
-                  return (input.version.equals("") || (input.version.matches("^1[012].*") && !input.version
-                           .equals("10.10")))
+                  return (input.version.equals("") || input.version.matches("(10.04)|(12.04)|(12.10)|(13.04)"))
                            && input.is64Bit;
                case DEBIAN:
                   return input.is64Bit && !input.version.equals("5.0");
                case CENTOS:
-                  return (input.version.equals("") || input.version.equals("5.6") || input.version.equals("6.0"))
+                  return (input.version.equals("") || input.version.matches("(5.0)|(5.6)|(5.8)|(5.9)|(6.0)|(6.2)|(6.3)|(6.4)"))
                            && input.is64Bit;
                case WINDOWS:
                   return input.is64Bit && input.version.equals("");
@@ -74,9 +73,9 @@ public class CloudServersUKTemplateBuilderLiveTest extends BaseTemplateBuilderLi
    public void testTemplateBuilder() {
       Template defaultTemplate = this.view.getComputeService().templateBuilder().build();
       assertEquals(defaultTemplate.getImage().getOperatingSystem().is64Bit(), true);
-      assertEquals(defaultTemplate.getImage().getOperatingSystem().getVersion(), "12.04");
+      assertEquals(defaultTemplate.getImage().getOperatingSystem().getVersion(), "12.10");
       assertEquals(defaultTemplate.getImage().getOperatingSystem().getFamily(), OsFamily.UBUNTU);
-      assertEquals(defaultTemplate.getImage().getName(), "Ubuntu 12.04 LTS (Precise Pangolin)");
+      assertEquals(defaultTemplate.getImage().getName(), "Ubuntu 12.10 (Quantal Quetzal)");
       assertEquals(defaultTemplate.getImage().getDefaultCredentials().getUser(), "root");
       assertEquals(defaultTemplate.getLocation().getId(), "LON");
       assertEquals(defaultTemplate.getImage().getLocation().getId(), "LON");
@@ -84,7 +83,7 @@ public class CloudServersUKTemplateBuilderLiveTest extends BaseTemplateBuilderLi
       assertEquals(defaultTemplate.getOptions().as(NovaTemplateOptions.class).shouldAutoAssignFloatingIp(), false);
       assertNull(defaultTemplate.getOptions().as(NovaTemplateOptions.class).getDiskConfig());
       assertEquals(getCores(defaultTemplate.getHardware()), 1.0d);
-   }
+   }   
 
    @Override
    protected Set<String> getIso3166Codes() {

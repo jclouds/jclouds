@@ -50,12 +50,12 @@ public class CloudServersUSTemplateBuilderLiveTest extends BaseTemplateBuilderLi
          public boolean apply(OsFamilyVersion64Bit input) {
             switch (input.family) {
                case UBUNTU:
-                  return (input.version.equals("") || input.version.matches("1[012].04") || input.version.startsWith("11"))
+                  return (input.version.equals("") || input.version.matches("(10.04)|(12.04)|(12.10)|(13.04)"))
                            && input.is64Bit;
                case DEBIAN:
                   return input.is64Bit && !input.version.equals("5.0");
                case CENTOS:
-                  return (input.version.equals("") || input.version.matches("5.[60]") || input.version.equals("6.0"))
+                  return (input.version.equals("") || input.version.matches("(5.6)|(5.8)|(5.9)|(6.0)|(6.2)|(6.3)|(6.4)"))
                            && input.is64Bit;
                case WINDOWS:
                   return input.version.equals("2008 SP2") || input.version.equals("")
@@ -80,6 +80,6 @@ public class CloudServersUSTemplateBuilderLiveTest extends BaseTemplateBuilderLi
 
    @Override
    protected Set<String> getIso3166Codes() {
-      return ImmutableSet.<String> of("US-IL", "US-TX");
+      return ImmutableSet.<String> of("US-IL", "US-TX", "AU-NSW");
    }
 }

@@ -33,6 +33,6 @@ public class CloudFilesUSServiceIntegrationLiveTest extends CloudFilesServiceInt
    }
    @Override
    protected Set<String> getIso3166Codes() {
-      return ImmutableSet.<String> of("US-IL", "US-TX");
+      return ImmutableSet.<String> of("US-IL", "US-TX", "AU-NSW");
    }
 }

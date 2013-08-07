@@ -64,7 +64,7 @@ public class CloudServersUSProviderMetadata extends BaseProviderMetadata {
          .homepage(URI.create("http://www.rackspace.com/cloud/cloud_hosting_products/servers"))
          .console(URI.create("https://manage.rackspacecloud.com"))
          .linkedServices("cloudloadbalancers-us", "cloudservers-us", "cloudfiles-us")
-         .iso3166Codes("US-IL", "US-TX");
+         .iso3166Codes("US-IL", "US-TX", "AU-NSW");
       }
 
       @Override
