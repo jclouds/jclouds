@@ -19,6 +19,8 @@ package org.jclouds.openstack.keystone.v2_0.handlers;
 import static org.jclouds.http.HttpUtils.closeClientButKeepContentStream;
 import static org.jclouds.http.HttpUtils.releasePayload;
 
+import java.util.concurrent.TimeUnit;
+
 import javax.annotation.Resource;
 
 import org.jclouds.domain.Credentials;
@@ -27,9 +29,14 @@ import org.jclouds.http.HttpResponse;
 import org.jclouds.http.HttpRetryHandler;
 import org.jclouds.logging.Logger;
 import org.jclouds.openstack.keystone.v2_0.domain.Access;
+import org.jclouds.openstack.v2_0.reference.AuthHeaders;
 
+import com.google.common.annotations.VisibleForTesting;
+import com.google.common.cache.Cache;
+import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.LoadingCache;
 import com.google.common.collect.Multimap;
+import com.google.common.util.concurrent.Uninterruptibles;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
@@ -37,12 +44,15 @@ import com.google.inject.Singleton;
  * This will parse and set an appropriate exception on the command object.
  * 
  * @author Adrian Cole
- * 
+ * @author Zack Shoylev
  */
 @Singleton
 public class RetryOnRenew implements HttpRetryHandler {
    @Resource
    protected Logger logger = Logger.NULL;
+
+   @VisibleForTesting
+   final static int NUM_RETRIES = 5;
 
    private final LoadingCache<Credentials, Access> authenticationResponseCache;
 
@@ -51,32 +61,56 @@ public class RetryOnRenew implements HttpRetryHandler {
       this.authenticationResponseCache = authenticationResponseCache;
    }
 
+   /*
+    * The reason retries need to be tracked is that it is possible that a token
+    * can be expired at any time. The reason we track by request is that only
+    * some requests might return a 401 (such as temporary URLs). However
+    * consistent failures of the magnitude this code tracks should indicate a
+    * problem.
+    */
+   private static final Cache<HttpCommand, Integer> retryCountMap = CacheBuilder.newBuilder()
+         .expireAfterWrite(5, TimeUnit.MINUTES).build();
+
    @Override
    public boolean shouldRetryRequest(HttpCommand command, HttpResponse response) {
-      boolean retry = false; // default
       try {
          switch (response.getStatusCode()) {
             case 401:
                // Do not retry on 401 from authentication request
                Multimap<String, String> headers = command.getCurrentRequest().getHeaders();
-               if (headers != null && headers.containsKey("X-Auth-User")
-                        && headers.containsKey("X-Auth-Key") && !headers.containsKey("X-Auth-Token")) {
-                  retry = false;
+               if (headers != null && headers.containsKey(AuthHeaders.AUTH_USER)
+                     && headers.containsKey(AuthHeaders.AUTH_KEY) && !headers.containsKey(AuthHeaders.AUTH_TOKEN)) {
+                  return false;
                } else {
-                  byte[] content = closeClientButKeepContentStream(response);
-                  //TODO: what is the error when the session token expires??
-                  if (content != null && new String(content).contains("lease renew")) {
-                     logger.debug("invalidating authentication token");
+                  closeClientButKeepContentStream(response);
+                  // This is not an authentication request returning 401
+                  // Check if we already had seen this request
+                  Integer count = retryCountMap.getIfPresent(command);
+
+                  if (count == null) {
+                     // First time this non-authentication request failed
+                     logger.debug("invalidating authentication token - first time for %s", command);
+                     retryCountMap.put(command, 1);
                      authenticationResponseCache.invalidateAll();
-                     retry = true;
+                     return true;
                   } else {
-                     retry = false;
+                     // This request has failed before
+                     if (count + 1 >= NUM_RETRIES) {
+                        logger.debug("too many 401s - giving up after: %s for %s", count, command);
+                        return false;
+                     } else {
+                        // Retry just in case
+                        logger.debug("invalidating authentication token - retry %s for %s", count, command);
+                        retryCountMap.put(command, count + 1);
+                        // Wait between retries
+                        authenticationResponseCache.invalidateAll();
+                        Uninterruptibles.sleepUninterruptibly(5, TimeUnit.SECONDS);
+                        return true;
+                     }
                   }
                }
-               break;
          }
-         return retry;
-
+         return false;
       } finally {
          releasePayload(response);
       }

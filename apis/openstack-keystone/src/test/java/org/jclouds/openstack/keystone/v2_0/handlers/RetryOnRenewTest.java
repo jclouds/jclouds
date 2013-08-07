@@ -21,6 +21,7 @@ import static org.easymock.EasyMock.expect;
 import static org.easymock.EasyMock.expectLastCall;
 import static org.easymock.EasyMock.replay;
 import static org.easymock.EasyMock.verify;
+import static org.testng.Assert.assertFalse;
 import static org.testng.Assert.assertTrue;
 
 import org.jclouds.domain.Credentials;
@@ -53,7 +54,7 @@ public class RetryOnRenewTest {
       cache.invalidateAll();
       expectLastCall();
 
-      expect(response.getPayload()).andReturn(Payloads.newStringPayload("token expired, please renew")).anyTimes();
+      expect(response.getPayload()).andReturn(Payloads.newStringPayload("")).anyTimes();
       expect(response.getStatusCode()).andReturn(401).atLeastOnce();
 
       replay(command);
@@ -67,5 +68,35 @@ public class RetryOnRenewTest {
       verify(command);
       verify(response);
       verify(cache);
+   }
+   @Test
+   public void test401ShouldRetry4Times() {
+      HttpCommand command = createMock(HttpCommand.class);
+      HttpRequest request = createMock(HttpRequest.class);
+      HttpResponse response = createMock(HttpResponse.class);
+
+      @SuppressWarnings("unchecked")
+      LoadingCache<Credentials, Access> cache = createMock(LoadingCache.class);
+
+      expect(command.getCurrentRequest()).andReturn(request).anyTimes();
+      expect(request.getHeaders()).andStubReturn(null);
+
+      cache.invalidateAll();
+      expectLastCall().anyTimes();
+
+      expect(response.getPayload()).andReturn(Payloads.newStringPayload("")).anyTimes();
+      expect(response.getStatusCode()).andReturn(401).anyTimes();
+
+      replay(command, request, response, cache);
+
+      RetryOnRenew retry = new RetryOnRenew(cache);
+
+      for (int i = 0; i < RetryOnRenew.NUM_RETRIES - 1; ++i) {
+         assertTrue(retry.shouldRetryRequest(command, response), "Expected retry to succeed");
+      }
+
+      assertFalse(retry.shouldRetryRequest(command, response), "Expected retry to fail on attempt " + RetryOnRenew.NUM_RETRIES);
+
+      verify(command, response, cache);
    }
 }
