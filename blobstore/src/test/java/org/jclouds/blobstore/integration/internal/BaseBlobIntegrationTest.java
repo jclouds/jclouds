@@ -44,6 +44,7 @@ import java.util.Map;
 import java.util.Random;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.zip.GZIPInputStream;
@@ -86,6 +87,7 @@ import com.google.common.io.Files;
 import com.google.common.io.InputSupplier;
 import com.google.common.util.concurrent.Futures;
 import com.google.common.util.concurrent.ListenableFuture;
+import com.google.common.util.concurrent.Uninterruptibles;
 
 /**
  * @author Adrian Cole
@@ -147,7 +149,7 @@ public class BaseBlobIntegrationTest extends BaseBlobStoreIntegrationTest {
       final String container = getContainerName();
       try {
          Map<Integer, ListenableFuture<?>> responses = Maps.newHashMap();
-         for (int i = 0; i < 10; i++) {
+         for (int i = 0; i < 3; i++) {
 
             responses.put(i, this.exec.submit(new Callable<Void>() {
 
@@ -325,10 +327,11 @@ public class BaseBlobIntegrationTest extends BaseBlobStoreIntegrationTest {
 
          String name = "apples";
 
-         Date before = new Date(System.currentTimeMillis() - 1000);
+         Date before = new Date(System.currentTimeMillis() - 5000);
          addObjectAndValidateContent(container, name);
-         Date after = new Date(System.currentTimeMillis() + 1000);
+         Date after = new Date(System.currentTimeMillis() + 5000);
 
+         Uninterruptibles.sleepUninterruptibly(5, TimeUnit.SECONDS);
          view.getBlobStore().getBlob(container, name, ifUnmodifiedSince(after));
          validateContent(container, name);
 
