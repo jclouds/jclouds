@@ -1,0 +1,14 @@
+{
+  "actors" : [ "abiquo",
+      "nacx",
+      "pivotal"
+    ],
+  "clients" : [ "abiquo" ],
+  "groupname" : "admins",
+  "groups" : [ "billing-admins" ],
+  "name" : "admins",
+  "orgname" : "nacx",
+  "users" : [ "nacx",
+      "pivotal"
+  ]
+}
