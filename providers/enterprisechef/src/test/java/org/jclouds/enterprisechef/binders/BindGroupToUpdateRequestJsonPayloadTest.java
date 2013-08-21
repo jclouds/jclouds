@@ -23,7 +23,6 @@ import java.net.URI;
 
 import org.jclouds.chef.ChefApi;
 import org.jclouds.chef.config.ChefParserModule;
-import org.jclouds.enterprisechef.binders.BindGroupToUpdateRequestJsonPayload;
 import org.jclouds.enterprisechef.domain.Group;
 import org.jclouds.http.HttpRequest;
 import org.jclouds.json.config.GsonModule;
@@ -31,7 +30,6 @@ import org.jclouds.rest.annotations.ApiVersion;
 import org.jclouds.util.Strings2;
 import org.testng.annotations.Test;
 
-import com.google.common.collect.ImmutableSet;
 import com.google.inject.AbstractModule;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
@@ -67,17 +65,14 @@ public class BindGroupToUpdateRequestJsonPayloadTest {
 
    public void testBindOnlyName() throws IOException {
       HttpRequest request = HttpRequest.builder().method("POST").endpoint(URI.create("http://localhost")).build();
-      HttpRequest newRequest = binder.bindToRequest(request, new Group("foo"));
+      HttpRequest newRequest = binder.bindToRequest(request, Group.builder("foo").build());
 
       String payload = Strings2.toStringAndClose(newRequest.getPayload().getInput());
       assertEquals(payload, "{\"groupname\":\"foo\",\"actors\":{\"clients\":[],\"groups\":[],\"users\":[]}}");
    }
 
    public void testBindNameAndLists() throws IOException {
-      Group group = new Group("foo");
-      group.setClients(ImmutableSet.of("nacx-validator"));
-      group.setGroups(ImmutableSet.of("admins"));
-      group.setUsers(ImmutableSet.of("nacx"));
+      Group group = Group.builder("foo").client("nacx-validator").group("admins").user("nacx").build();
 
       HttpRequest request = HttpRequest.builder().method("POST").endpoint(URI.create("http://localhost")).build();
       HttpRequest newRequest = binder.bindToRequest(request, group);

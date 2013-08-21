@@ -16,11 +16,15 @@
  */
 package org.jclouds.enterprisechef.domain;
 
+import static org.jclouds.chef.util.CollectionUtils.copyOfOrEmpty;
 import static com.google.common.base.Preconditions.checkNotNull;
 
+import java.beans.ConstructorProperties;
 import java.util.Set;
 
-import com.google.common.collect.Sets;
+import org.jclouds.javax.annotation.Nullable;
+
+import com.google.common.collect.ImmutableSet;
 
 /**
  * Group object.
@@ -28,22 +32,102 @@ import com.google.common.collect.Sets;
  * @author Ignasi Barrera
  */
 public class Group {
-   private String name;
-   private String groupname;
-   private String orgname;
-   private Set<String> actors = Sets.newHashSet();
-   private Set<String> clients = Sets.newHashSet();
-   private Set<String> groups = Sets.newHashSet();
-   private Set<String> users = Sets.newHashSet();
-
-   // When creating groups, only the group name property is considered
-   public Group(String groupname) {
-      this.groupname = checkNotNull(groupname, "groupname");
+   public static Builder builder(String groupname) {
+      return new Builder(groupname);
    }
 
-   // Only for deserialization
-   Group() {
+   public static class Builder {
+      private String name;
+      private String groupname;
+      private String orgname;
+      private ImmutableSet.Builder<String> actors = ImmutableSet.builder();
+      private ImmutableSet.Builder<String> clients = ImmutableSet.builder();
+      private ImmutableSet.Builder<String> groups = ImmutableSet.builder();
+      private ImmutableSet.Builder<String> users = ImmutableSet.builder();
 
+      public Builder(String groupname) {
+         this.groupname = groupname;
+      }
+
+      public Builder name(String name) {
+         this.name = checkNotNull(name, "name");
+         return this;
+      }
+
+      public Builder groupname(String groupname) {
+         this.groupname = checkNotNull(groupname, "groupname");
+         return this;
+      }
+
+      public Builder orgname(String orgname) {
+         this.orgname = checkNotNull(orgname, "orgname");
+         return this;
+      }
+
+      public Builder actor(String actor) {
+         this.actors.add(checkNotNull(actor, "actor"));
+         return this;
+      }
+
+      public Builder actors(Iterable<String> actors) {
+         this.actors.addAll(checkNotNull(actors, "actors"));
+         return this;
+      }
+
+      public Builder client(String client) {
+         this.clients.add(checkNotNull(client, "client"));
+         return this;
+      }
+
+      public Builder clients(Iterable<String> clients) {
+         this.clients.addAll(checkNotNull(clients, "clients"));
+         return this;
+      }
+
+      public Builder group(String group) {
+         this.groups.add(checkNotNull(group, "group"));
+         return this;
+      }
+
+      public Builder groups(Iterable<String> groups) {
+         this.groups.addAll(checkNotNull(groups, "groups"));
+         return this;
+      }
+
+      public Builder user(String user) {
+         this.users.add(checkNotNull(user, "user"));
+         return this;
+      }
+
+      public Builder users(Iterable<String> users) {
+         this.users.addAll(checkNotNull(users, "users"));
+         return this;
+      }
+
+      public Group build() {
+         return new Group(name, checkNotNull(groupname, "groupname"), orgname, actors.build(), clients.build(),
+               groups.build(), users.build());
+      }
+   }
+
+   private final String name;
+   private final String groupname;
+   private final String orgname;
+   private final Set<String> actors;
+   private final Set<String> clients;
+   private final Set<String> groups;
+   private final Set<String> users;
+
+   @ConstructorProperties({ "name", "groupname", "orgname", "actors", "clients", "groups", "users" })
+   public Group(String name, String groupname, String orgname, @Nullable Set<String> actors,
+         @Nullable Set<String> clients, @Nullable Set<String> groups, @Nullable Set<String> users) {
+      this.name = name;
+      this.groupname = groupname;
+      this.orgname = orgname;
+      this.actors = copyOfOrEmpty(actors);
+      this.clients = copyOfOrEmpty(clients);
+      this.groups = copyOfOrEmpty(groups);
+      this.users = copyOfOrEmpty(users);
    }
 
    public String getName() {
@@ -72,18 +156,6 @@ public class Group {
 
    public Set<String> getUsers() {
       return users;
-   }
-
-   public void setClients(Set<String> clients) {
-      this.clients = clients;
-   }
-
-   public void setGroups(Set<String> groups) {
-      this.groups = groups;
-   }
-
-   public void setUsers(Set<String> users) {
-      this.users = users;
    }
 
    @Override

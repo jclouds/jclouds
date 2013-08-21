@@ -27,8 +27,6 @@ import javax.ws.rs.core.MediaType;
 import org.jclouds.chef.BaseChefApiExpectTest;
 import org.jclouds.chef.ChefApi;
 import org.jclouds.date.TimeStamp;
-import org.jclouds.enterprisechef.EnterpriseChefApi;
-import org.jclouds.enterprisechef.EnterpriseChefProviderMetadata;
 import org.jclouds.enterprisechef.config.EnterpriseChefHttpApiModule;
 import org.jclouds.enterprisechef.domain.Group;
 import org.jclouds.enterprisechef.domain.User;
@@ -40,7 +38,6 @@ import org.jclouds.rest.ResourceNotFoundException;
 import org.testng.annotations.Test;
 
 import com.google.common.base.Supplier;
-import com.google.common.collect.ImmutableSet;
 import com.google.inject.Module;
 
 /**
@@ -174,11 +171,7 @@ public class EnterpriseChefApiExpectTest extends BaseChefApiExpectTest<Enterpris
             .build()), //
             HttpResponse.builder().statusCode(200).build());
 
-      Group group = new Group("admins");
-      group.setClients(ImmutableSet.of("abiquo"));
-      group.setGroups(ImmutableSet.of("admins"));
-      group.setUsers(ImmutableSet.of("nacx"));
-
+      Group group = Group.builder("admins").client("abiquo").group("admins").user("nacx").build();
       api.updateGroup(group);
    }
 
@@ -193,11 +186,7 @@ public class EnterpriseChefApiExpectTest extends BaseChefApiExpectTest<Enterpris
             .build()), //
             HttpResponse.builder().statusCode(404).build());
 
-      Group group = new Group("admins");
-      group.setClients(ImmutableSet.of("abiquo"));
-      group.setGroups(ImmutableSet.of("admins"));
-      group.setUsers(ImmutableSet.of("nacx"));
-
+      Group group = Group.builder("admins").client("abiquo").group("admins").user("nacx").build();
       api.updateGroup(group);
    }
 

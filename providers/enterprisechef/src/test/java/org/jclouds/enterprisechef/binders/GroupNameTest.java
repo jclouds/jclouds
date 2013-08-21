@@ -38,6 +38,6 @@ public class GroupNameTest {
    }
 
    public void testApplyGroupName() throws IOException {
-      assertEquals(new GroupName().apply(new Group("foo")), "foo");
+      assertEquals(new GroupName().apply(Group.builder("foo").build()), "foo");
    }
 }

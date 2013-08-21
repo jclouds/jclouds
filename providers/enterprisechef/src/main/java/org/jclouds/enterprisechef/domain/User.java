@@ -16,6 +16,9 @@
  */
 package org.jclouds.enterprisechef.domain;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+
+import java.beans.ConstructorProperties;
 import java.security.PublicKey;
 
 import com.google.gson.annotations.SerializedName;
@@ -26,24 +29,110 @@ import com.google.gson.annotations.SerializedName;
  * @author Ignasi Barrera
  */
 public class User {
-   private String username;
+   public static Builder builder() {
+      return new Builder();
+   }
+
+   public static class Builder {
+      private String username;
+      private String firstName;
+      private String middleName;
+      private String lastName;
+      private String displayName;
+      private String email;
+      private PublicKey publicKey;
+
+      public Builder username(String username) {
+         this.username = checkNotNull(username, "username");
+         return this;
+      }
+
+      public Builder firstName(String firstName) {
+         this.firstName = checkNotNull(firstName, "firstName");
+         return this;
+      }
+
+      public Builder middleName(String middleName) {
+         this.middleName = checkNotNull(middleName, "middleName");
+         return this;
+      }
+
+      public Builder lastName(String lastName) {
+         this.lastName = checkNotNull(lastName, "lastName");
+         return this;
+      }
+
+      public Builder displayName(String displayName) {
+         this.displayName = checkNotNull(displayName, "displayName");
+         return this;
+      }
+
+      public Builder email(String email) {
+         this.email = checkNotNull(email, "email");
+         return this;
+      }
+
+      public Builder publicKey(PublicKey publicKey) {
+         this.publicKey = checkNotNull(publicKey, "publicKey");
+         return this;
+      }
+
+      public User build() {
+         return new User(username, firstName, middleName, lastName, displayName, email, publicKey);
+      }
+   }
+
+   private final String username;
    @SerializedName("first_name")
-   private String firstName;
+   private final String firstName;
    @SerializedName("middle_name")
-   private String middleName;
+   private final String middleName;
    @SerializedName("last_name")
-   private String lastName;
+   private final String lastName;
    @SerializedName("display_name")
-   private String displayName;
-   private String email;
+   private final String displayName;
+   private final String email;
    @SerializedName("public_key")
-   private PublicKey publicKey;
+   private final PublicKey publicKey;
 
-   // TODO: Add a constructor to allow creating users. Need an Enterprise Chef instance!
+   @ConstructorProperties({ "username", "first_name", "middle_name", "last_name", "display_name", "email", "public_key" })
+   protected User(String username, String firstName, String middleName, String lastName, String displayName,
+         String email, PublicKey publicKey) {
+      this.username = username;
+      this.firstName = firstName;
+      this.middleName = middleName;
+      this.lastName = lastName;
+      this.displayName = displayName;
+      this.email = email;
+      this.publicKey = publicKey;
+   }
 
-   // Only for deserialization
-   User() {
+   public String getUsername() {
+      return username;
+   }
 
+   public String getFirstName() {
+      return firstName;
+   }
+
+   public String getMiddleName() {
+      return middleName;
+   }
+
+   public String getLastName() {
+      return lastName;
+   }
+
+   public String getDisplayName() {
+      return displayName;
+   }
+
+   public String getEmail() {
+      return email;
+   }
+
+   public PublicKey getPublicKey() {
+      return publicKey;
    }
 
    @Override
@@ -122,34 +211,6 @@ public class User {
          return false;
       }
       return true;
-   }
-
-   public String getUsername() {
-      return username;
-   }
-
-   public String getFirstName() {
-      return firstName;
-   }
-
-   public String getMiddleName() {
-      return middleName;
-   }
-
-   public String getLastName() {
-      return lastName;
-   }
-
-   public String getDisplayName() {
-      return displayName;
-   }
-
-   public String getEmail() {
-      return email;
-   }
-
-   public PublicKey getPublicKey() {
-      return publicKey;
    }
 
    @Override

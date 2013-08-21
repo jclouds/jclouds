@@ -29,7 +29,6 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.core.MediaType;
 
 import org.jclouds.Constants;
-import org.jclouds.Fallbacks.FalseOnNotFoundOr404;
 import org.jclouds.Fallbacks.NullOnNotFoundOr404;
 import org.jclouds.chef.ChefApi;
 import org.jclouds.chef.filters.SignedHeaderAuth;
@@ -56,20 +55,6 @@ import org.jclouds.rest.annotations.ResponseParser;
 @Headers(keys = "X-Chef-Version", values = "{" + Constants.PROPERTY_API_VERSION + "}")
 public interface EnterpriseChefApi extends ChefApi
 {
-
-    /**
-     * Check if there exists a node with the given name.
-     * 
-     * @return <code>true</code> if the specified node name exists.
-     */
-    @Override
-    // Use get instead of HEAD
-    @Named("node:exists")
-    @GET
-    @Path("/nodes/{nodename}")
-    @Fallback(FalseOnNotFoundOr404.class)
-    boolean nodeExists(@PathParam("nodename") String nodename);
-
     /**
      * Retrieves an existing user.
      * 
