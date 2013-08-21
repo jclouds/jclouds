@@ -82,7 +82,7 @@ public class CleanupStaleNodesAndClientsImpl implements CleanupStaleNodesAndClie
       }), and(notNull(), new Predicate<Node>() {
          @Override
          public boolean apply(Node input) {
-            JsonBall dateLong = input.getAutomatic().get("ohai_time");
+            JsonBall dateLong = input.getAutomaticAttributes().get("ohai_time");
             if (dateLong == null)
                return true;
             Calendar nodeUpdate = Calendar.getInstance();

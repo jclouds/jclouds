@@ -49,7 +49,12 @@ public class ClientForGroup implements Function<String, Client> {
       String clientName = findNextClientName(chefApi.listClients(), from + "-client-%02d");
       Client client = chefApi.createClient(clientName);
       // response from create only includes the key
-      return new Client(null, null, clientName, clientName, false, client.getPrivateKey());
+      return Client.builder() //
+            .clientname(clientName) //
+            .name(clientName) //
+            .isValidator(false) //
+            .privateKey(client.getPrivateKey()) //
+            .build();
    }
 
    private static String findNextClientName(Set<String> clients, String pattern) {

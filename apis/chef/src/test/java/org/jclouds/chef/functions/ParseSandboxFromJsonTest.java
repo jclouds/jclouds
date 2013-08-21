@@ -31,7 +31,6 @@ import org.jclouds.rest.annotations.ApiVersion;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
 
-import com.google.common.collect.ImmutableSet;
 import com.google.inject.AbstractModule;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
@@ -67,8 +66,8 @@ public class ParseSandboxFromJsonTest {
       assertEquals(
             handler.apply(HttpResponse.builder().statusCode(200).message("ok")
                   .payload(ParseSandboxFromJsonTest.class.getResourceAsStream("/sandbox.json")).build()),
-            new Sandbox("1-8c27b0ea4c2b7aaedbb44cfbdfcc11b2", false, dateService
-                  .iso8601SecondsDateParse("2010-07-07T03:36:00+00:00"), ImmutableSet.<String> of(),
-                  "f9d6d9b72bae465890aae87969f98a9c", "f9d6d9b72bae465890aae87969f98a9c"));
+            Sandbox.builder().rev("1-8c27b0ea4c2b7aaedbb44cfbdfcc11b2").isCompleted(false)
+                  .createTime(dateService.iso8601SecondsDateParse("2010-07-07T03:36:00+00:00"))
+                  .name("f9d6d9b72bae465890aae87969f98a9c").guid("f9d6d9b72bae465890aae87969f98a9c").build());
    }
 }

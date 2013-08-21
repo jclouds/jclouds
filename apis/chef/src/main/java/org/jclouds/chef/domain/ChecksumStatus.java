@@ -16,26 +16,50 @@
  */
 package org.jclouds.chef.domain;
 
+import static com.google.common.base.Preconditions.*;
+import java.beans.ConstructorProperties;
 import java.net.URI;
 
 import com.google.gson.annotations.SerializedName;
 
 /**
+ * The checksum of an uploaded resource.
  * 
  * @author Adrian Cole
+ * @author Ignasi Barrera
  */
 public class ChecksumStatus {
-   private URI url;
-   @SerializedName("needs_upload")
-   private boolean needsUpload;
-
-   public ChecksumStatus(URI url, boolean needsUpload) {
-      this.url = url;
-      this.needsUpload = needsUpload;
+   public static Builder builder() {
+      return new Builder();
    }
 
-   public ChecksumStatus() {
+   public static class Builder {
+      private URI url;
+      private boolean needsUpload;
 
+      public Builder url(URI url) {
+         this.url = checkNotNull(url, "url");
+         return this;
+      }
+
+      public Builder needsUpload(boolean needsUpload) {
+         this.needsUpload = needsUpload;
+         return this;
+      }
+
+      public ChecksumStatus build() {
+         return new ChecksumStatus(url, needsUpload);
+      }
+   }
+
+   private final URI url;
+   @SerializedName("needs_upload")
+   private final boolean needsUpload;
+
+   @ConstructorProperties({ "url", "needs_upload" })
+   protected ChecksumStatus(URI url, boolean needsUpload) {
+      this.url = url;
+      this.needsUpload = needsUpload;
    }
 
    public URI getUrl() {
@@ -44,11 +68,6 @@ public class ChecksumStatus {
 
    public boolean needsUpload() {
       return needsUpload;
-   }
-
-   @Override
-   public String toString() {
-      return "ChecksumStatus [needsUpload=" + needsUpload + ", url=" + url + "]";
    }
 
    @Override
@@ -78,5 +97,9 @@ public class ChecksumStatus {
          return false;
       return true;
    }
-}
 
+   @Override
+   public String toString() {
+      return "ChecksumStatus [needsUpload=" + needsUpload + ", url=" + url + "]";
+   }
+}

@@ -31,12 +31,11 @@ import org.jclouds.rest.annotations.ApiVersion;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
 
-import com.google.common.collect.ImmutableSet;
 import com.google.inject.AbstractModule;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 
-@Test(groups = {"unit"}, singleThreaded = true)
+@Test(groups = { "unit" }, singleThreaded = true)
 public class ParseCookbookDefinitionFromJsonv10Test {
 
    private ParseCookbookDefinitionFromJsonv10 handler;
@@ -54,6 +53,13 @@ public class ParseCookbookDefinitionFromJsonv10Test {
    }
 
    public void testCookbokDefinitionParsing() throws URISyntaxException {
+      CookbookDefinition.Version v510 = CookbookDefinition.Version.builder()
+            .url(new URI("http://localhost:4000/cookbooks/apache2/5.1.0")).version("5.1.0").build();
+      CookbookDefinition.Version v420 = CookbookDefinition.Version.builder()
+            .url(new URI("http://localhost:4000/cookbooks/apache2/4.2.0")).version("4.2.0").build();
+      CookbookDefinition definition = CookbookDefinition.builder()
+            .url(new URI("http://localhost:4000/cookbooks/apache2")).version(v510).version(v420).build();
+
       assertEquals(handler.apply(HttpResponse
             .builder()
             .statusCode(200)
@@ -63,9 +69,6 @@ public class ParseCookbookDefinitionFromJsonv10Test {
                         + "\"versions\" => [" + "{\"url\" => \"http://localhost:4000/cookbooks/apache2/5.1.0\","
                         + "\"version\" => \"5.1.0\"},"
                         + "{\"url\" => \"http://localhost:4000/cookbooks/apache2/4.2.0\","
-                        + "\"version\" => \"4.2.0\"}" + "]" + "}" + "}").build()),
-            new CookbookDefinition(new URI("http://localhost:4000/cookbooks/apache2"),
-                  ImmutableSet.of(new CookbookDefinition.Version(new URI("http://localhost:4000/cookbooks/apache2/5.1.0"), "5.1.0"),
-                        new CookbookDefinition.Version(new URI("http://localhost:4000/cookbooks/apache2/4.2.0"), "4.2.0"))));
+                        + "\"version\" => \"4.2.0\"}" + "]" + "}" + "}").build()), definition);
    }
 }

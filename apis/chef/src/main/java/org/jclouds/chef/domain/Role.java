@@ -16,55 +16,106 @@
  */
 package org.jclouds.chef.domain;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+import static org.jclouds.chef.util.CollectionUtils.copyOfOrEmpty;
+
+import java.beans.ConstructorProperties;
 import java.util.List;
 import java.util.Map;
 
 import org.jclouds.domain.JsonBall;
+import org.jclouds.javax.annotation.Nullable;
 
-import com.google.common.collect.Iterables;
-import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableMap;
 import com.google.gson.annotations.SerializedName;
 
 /**
- * Sandbox object.
+ * Role object.
  * 
  * @author Adrian Cole
+ * @author Ignasi Barrera
  */
 public class Role {
+   public static Builder builder() {
+      return new Builder();
+   }
 
-   private String name;
-   private String description;
+   public static class Builder {
+      private String name;
+      private String description;
+      private ImmutableMap.Builder<String, JsonBall> overrideAttributes = ImmutableMap.builder();
+      private ImmutableMap.Builder<String, JsonBall> defaultAttributes = ImmutableMap.builder();
+      private ImmutableList.Builder<String> runList = ImmutableList.builder();
+
+      public Builder name(String name) {
+         this.name = checkNotNull(name, "name");
+         return this;
+      }
+
+      public Builder description(String description) {
+         this.description = checkNotNull(description, "description");
+         return this;
+      }
+
+      public Builder overrideAttribute(String key, JsonBall value) {
+         this.overrideAttributes.put(checkNotNull(key, "key"), checkNotNull(value, "value"));
+         return this;
+      }
+
+      public Builder overrideAttributes(Map<String, JsonBall> overrideAttributes) {
+         this.overrideAttributes.putAll(checkNotNull(overrideAttributes, "overrideAttributes"));
+         return this;
+      }
+
+      public Builder defaultAttribute(String key, JsonBall value) {
+         this.defaultAttributes.put(checkNotNull(key, "key"), checkNotNull(value, "value"));
+         return this;
+      }
+
+      public Builder defaultAttributes(Map<String, JsonBall> defaultAttributes) {
+         this.defaultAttributes.putAll(checkNotNull(defaultAttributes, "defaultAttributes"));
+         return this;
+      }
+
+      public Builder runListElement(String element) {
+         this.runList.add(checkNotNull(element, "element"));
+         return this;
+      }
+
+      public Builder runList(Iterable<String> runList) {
+         this.runList.addAll(checkNotNull(runList, "runList"));
+         return this;
+      }
+
+      public Role build() {
+         return new Role(name, description, defaultAttributes.build(), runList.build(), overrideAttributes.build());
+      }
+   }
+
+   private final String name;
+   private final String description;
    @SerializedName("override_attributes")
-   private Map<String, JsonBall> override = Maps.newLinkedHashMap();
+   private final Map<String, JsonBall> overrideAttributes;
    @SerializedName("default_attributes")
-   private Map<String, JsonBall> defaultA = Maps.newLinkedHashMap();
+   private final Map<String, JsonBall> defaultAttributes;
    @SerializedName("run_list")
-   private List<String> runList = Lists.newArrayList();
+   private final List<String> runList;
 
    // internal
    @SerializedName("json_class")
-   private String _jsonClass = "Chef::Role";
+   private final String _jsonClass = "Chef::Role";
    @SerializedName("chef_type")
-   private String _chefType = "role";
+   private final String _chefType = "role";
 
-   public Role(String name, String description, Map<String, JsonBall> defaultA, List<String> runList,
-         Map<String, JsonBall> override) {
+   @ConstructorProperties({ "name", "description", "default_attributes", "run_list", "override_attributes" })
+   protected Role(String name, String description, @Nullable Map<String, JsonBall> defaultAttributes,
+         @Nullable List<String> runList, @Nullable Map<String, JsonBall> overrideAttributes) {
       this.name = name;
       this.description = description;
-      this.defaultA = defaultA;
-      this.runList = runList;
-      this.override = override;
-   }
-
-   public Role(String name, Iterable<String> runList) {
-      this.name = name;
-      Iterables.addAll(this.runList, runList);
-   }
-
-   // hidden but needs to be here for json deserialization to work
-   Role() {
-
+      this.defaultAttributes = copyOfOrEmpty(defaultAttributes);
+      this.runList = copyOfOrEmpty(runList);
+      this.overrideAttributes = copyOfOrEmpty(overrideAttributes);
    }
 
    public String getName() {
@@ -75,12 +126,12 @@ public class Role {
       return description;
    }
 
-   public Map<String, JsonBall> getOverride() {
-      return override;
+   public Map<String, JsonBall> getOverrideAttributes() {
+      return overrideAttributes;
    }
 
-   public Map<String, JsonBall> getDefault() {
-      return defaultA;
+   public Map<String, JsonBall> getDefaultAttributes() {
+      return defaultAttributes;
    }
 
    public List<String> getRunList() {
@@ -93,10 +144,10 @@ public class Role {
       int result = 1;
       result = prime * result + ((_chefType == null) ? 0 : _chefType.hashCode());
       result = prime * result + ((_jsonClass == null) ? 0 : _jsonClass.hashCode());
-      result = prime * result + ((defaultA == null) ? 0 : defaultA.hashCode());
+      result = prime * result + ((defaultAttributes == null) ? 0 : defaultAttributes.hashCode());
       result = prime * result + ((description == null) ? 0 : description.hashCode());
       result = prime * result + ((name == null) ? 0 : name.hashCode());
-      result = prime * result + ((override == null) ? 0 : override.hashCode());
+      result = prime * result + ((overrideAttributes == null) ? 0 : overrideAttributes.hashCode());
       result = prime * result + ((runList == null) ? 0 : runList.hashCode());
       return result;
    }
@@ -120,10 +171,10 @@ public class Role {
             return false;
       } else if (!_jsonClass.equals(other._jsonClass))
          return false;
-      if (defaultA == null) {
-         if (other.defaultA != null)
+      if (defaultAttributes == null) {
+         if (other.defaultAttributes != null)
             return false;
-      } else if (!defaultA.equals(other.defaultA))
+      } else if (!defaultAttributes.equals(other.defaultAttributes))
          return false;
       if (description == null) {
          if (other.description != null)
@@ -135,10 +186,10 @@ public class Role {
             return false;
       } else if (!name.equals(other.name))
          return false;
-      if (override == null) {
-         if (other.override != null)
+      if (overrideAttributes == null) {
+         if (other.overrideAttributes != null)
             return false;
-      } else if (!override.equals(other.override))
+      } else if (!overrideAttributes.equals(other.overrideAttributes))
          return false;
       if (runList == null) {
          if (other.runList != null)
@@ -150,8 +201,8 @@ public class Role {
 
    @Override
    public String toString() {
-      return "[name=" + name + ", description=" + description + ", defaultA=" + defaultA + ", override=" + override
-            + ", runList=" + runList + "]";
+      return "Role [name=" + name + ", description=" + description + ", defaultAttributes=" + defaultAttributes
+            + ", overrideAttributes=" + overrideAttributes + ", runList=" + runList + "]";
    }
 
 }

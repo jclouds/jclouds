@@ -79,8 +79,8 @@ public class ParseClientFromJsonTest {
 
    public void test() throws IOException {
 
-      Client user = new Client(certificate, "jclouds", "adriancole-jcloudstest", "adriancole-jcloudstest", false,
-            privateKey);
+      Client user = Client.builder().certificate(certificate).orgname("jclouds").clientname("adriancole-jcloudstest")
+            .name("adriancole-jcloudstest").isValidator(false).privateKey(privateKey).build();
 
       byte[] encrypted = ByteStreams.toByteArray(new RSAEncryptingPayload(Payloads.newPayload("fooya"), user
             .getCertificate().getPublicKey()));

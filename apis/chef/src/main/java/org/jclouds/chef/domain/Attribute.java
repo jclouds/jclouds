@@ -16,46 +16,120 @@
  */
 package org.jclouds.chef.domain;
 
+import static org.jclouds.chef.util.CollectionUtils.*;
+import static com.google.common.base.Preconditions.checkNotNull;
+
+import java.beans.ConstructorProperties;
 import java.util.List;
 import java.util.Set;
 
 import org.jclouds.domain.JsonBall;
+import org.jclouds.javax.annotation.Nullable;
 
-import com.google.common.collect.Iterables;
-import com.google.common.collect.Lists;
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableSet;
 import com.google.gson.annotations.SerializedName;
 
 /**
- * Cookbook object.
+ * An attribute in a cookbook metadata.
  * 
  * @author Adrian Cole
+ * @author Ignasi Barrera
  */
 public class Attribute {
-
-   private String required;
-   private boolean calculated;
-   private List<String> choice = Lists.newArrayList();
-   @SerializedName("default")
-   private JsonBall defaultValue;
-   private String type;
-   private List<String> recipes = Lists.newArrayList();
-   @SerializedName("display_name")
-   private String displayName;
-   private String description;
-
-   public Attribute(String required, boolean calculated, Set<String> choice, JsonBall defaultValue, String type,
-         List<String> recipes, String displayName, String description) {
-      this.required = required;
-      this.calculated = calculated;
-      Iterables.addAll(this.choice, choice);
-      this.defaultValue = defaultValue;
-      this.type = type;
-      Iterables.addAll(this.recipes, recipes);
-      this.displayName = displayName;
-      this.description = description;
+   public static Builder builder() {
+      return new Builder();
    }
 
-   public Attribute() {
+   public static class Builder {
+      private String required;
+      private boolean calculated;
+      private ImmutableSet.Builder<String> choice = ImmutableSet.builder();
+      private JsonBall defaultValue;
+      private String type;
+      private ImmutableList.Builder<String> recipes = ImmutableList.builder();
+      private String displayName;
+      private String description;
+
+      public Builder required(String required) {
+         this.required = checkNotNull(required, "required");
+         return this;
+      }
+
+      public Builder calculated(boolean calculated) {
+         this.calculated = calculated;
+         return this;
+      }
+
+      public Builder choice(String choice) {
+         this.choice.add(checkNotNull(choice, "choice"));
+         return this;
+      }
+
+      public Builder choices(Iterable<String> choices) {
+         this.choice.addAll(checkNotNull(choices, "choices"));
+         return this;
+      }
+
+      public Builder defaultValue(JsonBall defaultValue) {
+         this.defaultValue = checkNotNull(defaultValue, "defaultValue");
+         return this;
+      }
+
+      public Builder type(String type) {
+         this.type = checkNotNull(type, "type");
+         return this;
+      }
+
+      public Builder recipe(String recipe) {
+         this.recipes.add(checkNotNull(recipe, "recipe"));
+         return this;
+      }
+
+      public Builder recipes(Iterable<String> recipes) {
+         this.recipes.addAll(checkNotNull(recipes, "recipes"));
+         return this;
+      }
+
+      public Builder displayName(String displayName) {
+         this.displayName = checkNotNull(displayName, "displayName");
+         return this;
+      }
+
+      public Builder description(String description) {
+         this.description = checkNotNull(description, "description");
+         return this;
+      }
+
+      public Attribute build() {
+         return new Attribute(required, calculated, choice.build(), defaultValue, type, recipes.build(), displayName,
+               description);
+      }
+   }
+
+   private final String required;
+   private final boolean calculated;
+   private final Set<String> choice;
+   @SerializedName("default")
+   private final JsonBall defaultValue;
+   private final String type;
+   private final List<String> recipes;
+   @SerializedName("display_name")
+   private final String displayName;
+   private final String description;
+
+   @ConstructorProperties({ "required", "calculated", "choice", "default", "type", "recipes", "display_name",
+         "description" })
+   protected Attribute(String required, boolean calculated, @Nullable Set<String> choice, JsonBall defaultValue,
+         String type, @Nullable List<String> recipes, String displayName, String description) {
+      this.required = required;
+      this.calculated = calculated;
+      this.choice = copyOfOrEmpty(choice);
+      this.defaultValue = defaultValue;
+      this.type = type;
+      this.recipes = copyOfOrEmpty(recipes);
+      this.displayName = displayName;
+      this.description = description;
    }
 
    public String getRequired() {
@@ -66,7 +140,7 @@ public class Attribute {
       return calculated;
    }
 
-   public List<String> getChoice() {
+   public Set<String> getChoice() {
       return choice;
    }
 
@@ -162,4 +236,3 @@ public class Attribute {
    }
 
 }
-

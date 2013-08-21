@@ -17,14 +17,13 @@
 package org.jclouds.chef.domain;
 
 import static com.google.common.base.Preconditions.checkNotNull;
-import static com.google.common.collect.Iterables.addAll;
 
 import java.util.List;
 
 import org.jclouds.domain.JsonBall;
 
 import com.google.common.base.Optional;
-import com.google.common.collect.Lists;
+import com.google.common.collect.ImmutableList;
 
 /**
  * Configures how the nodes in a group will bootstrap.
@@ -33,13 +32,12 @@ import com.google.common.collect.Lists;
  * @since 1.7
  */
 public class BootstrapConfig {
-
    public static Builder builder() {
       return new Builder();
    }
 
    public static class Builder {
-      private List<String> runList = Lists.newArrayList();
+      private ImmutableList.Builder<String> runList = ImmutableList.builder();
       private String environment;
       private JsonBall attribtues;
 
@@ -47,7 +45,7 @@ public class BootstrapConfig {
        * Sets the run list that will be executed in the nodes of the group.
        */
       public Builder runList(Iterable<String> runList) {
-         addAll(this.runList, checkNotNull(runList, "runList"));
+         this.runList.addAll(checkNotNull(runList, "runList"));
          return this;
       }
 
@@ -68,13 +66,14 @@ public class BootstrapConfig {
       }
 
       public BootstrapConfig build() {
-         return new BootstrapConfig(runList, Optional.fromNullable(environment), Optional.fromNullable(attribtues));
+         return new BootstrapConfig(runList.build(), Optional.fromNullable(environment),
+               Optional.fromNullable(attribtues));
       }
    }
 
-   private List<String> runList = Lists.newArrayList();
-   private Optional<String> environment;
-   private Optional<JsonBall> attribtues;
+   private final List<String> runList;
+   private final Optional<String> environment;
+   private final Optional<JsonBall> attribtues;
 
    protected BootstrapConfig(List<String> runList, Optional<String> environment, Optional<JsonBall> attribtues) {
       this.runList = checkNotNull(runList, "runList");

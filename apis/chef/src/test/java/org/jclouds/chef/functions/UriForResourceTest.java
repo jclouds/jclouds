@@ -48,7 +48,7 @@ public class UriForResourceTest {
    @Test
    public void testWithValidResource() {
       Function<Object, URI> function = new UriForResource();
-      Resource res = new Resource("test", URI.create("http://foo/bar"), null, null, null);
+      Resource res = Resource.builder().name("test").url(URI.create("http://foo/bar")).build();
       URI result = function.apply(res);
       assertEquals(res.getUrl().toString(), result.toString());
    }

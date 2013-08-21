@@ -50,12 +50,12 @@ public class UpdateAutomaticAttributesOnNodeImplLiveTest extends BaseChefLiveTes
    public void testExecute() {
       Set<String> runList = ImmutableSet.of("role[" + prefix + "]");
       try {
-         api.createNode(new Node(prefix, runList, "_default"));
+         api.createNode(Node.builder().name(prefix).runList(runList).environment("_default").build());
          strategy.execute(prefix);
          Node node = api.getNode(prefix);
          assertEquals(node.getName(), prefix);
          assertEquals(node.getRunList(), runList);
-         assertEquals(node.getAutomatic().get("current_user").toString(), currentUserProvider.get().toString());
+         assertEquals(node.getAutomaticAttributes().get("current_user").toString(), currentUserProvider.get().toString());
       } finally {
          api.deleteNode(prefix);
       }

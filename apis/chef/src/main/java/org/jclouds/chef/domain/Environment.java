@@ -16,48 +16,105 @@
  */
 package org.jclouds.chef.domain;
 
-import com.google.common.collect.Maps;
-import com.google.gson.annotations.SerializedName;
-import org.jclouds.domain.JsonBall;
+import static com.google.common.base.Preconditions.checkNotNull;
+import static org.jclouds.chef.util.CollectionUtils.copyOfOrEmpty;
 
+import java.beans.ConstructorProperties;
 import java.util.Map;
 
-public class Environment {
+import org.jclouds.domain.JsonBall;
+import org.jclouds.javax.annotation.Nullable;
 
-   private String name;
-    @SerializedName("default_attributes")
-   private Map<String, JsonBall> attributes = Maps.newLinkedHashMap();
+import com.google.common.collect.ImmutableMap;
+import com.google.gson.annotations.SerializedName;
+
+/**
+ * An environment.
+ * 
+ * @author Ignasi Barrera
+ */
+public class Environment {
+   public static Builder builder() {
+      return new Builder();
+   }
+
+   public static class Builder {
+      private String name;
+      private ImmutableMap.Builder<String, JsonBall> attributes = ImmutableMap.builder();
+      private ImmutableMap.Builder<String, JsonBall> overrideAttributes = ImmutableMap.builder();
+      private String description = "";
+      private ImmutableMap.Builder<String, String> cookbookVersions = ImmutableMap.builder();
+
+      public Builder name(String name) {
+         this.name = checkNotNull(name, "name");
+         return this;
+      }
+
+      public Builder attribute(String key, JsonBall value) {
+         this.attributes.put(checkNotNull(key, "key"), checkNotNull(value, "value"));
+         return this;
+      }
+
+      public Builder attributes(Map<String, JsonBall> attributes) {
+         this.attributes.putAll(checkNotNull(attributes, "attributes"));
+         return this;
+      }
+
+      public Builder overrideAttribute(String key, JsonBall value) {
+         this.overrideAttributes.put(checkNotNull(key, "key"), checkNotNull(value, "value"));
+         return this;
+      }
+
+      public Builder overrideAttributes(Map<String, JsonBall> overrideAttributes) {
+         this.overrideAttributes.putAll(checkNotNull(overrideAttributes, "overrideAttributes"));
+         return this;
+      }
+
+      public Builder cookbookVersion(String key, String version) {
+         this.cookbookVersions.put(checkNotNull(key, "key"), checkNotNull(version, "version"));
+         return this;
+      }
+
+      public Builder cookbookVersions(Map<String, String> cookbookVersions) {
+         this.cookbookVersions.putAll(checkNotNull(cookbookVersions, "cookbookVersions"));
+         return this;
+      }
+
+      public Builder description(String description) {
+         this.description = checkNotNull(description, "description");
+         return this;
+      }
+
+      public Environment build() {
+         return new Environment(name, attributes.build(), overrideAttributes.build(), description,
+               cookbookVersions.build());
+      }
+   }
+
+   private final String name;
+   @SerializedName("default_attributes")
+   private final Map<String, JsonBall> attributes;
    @SerializedName("override_attributes")
-   private Map<String, JsonBall> overrideAttributes = Maps.newLinkedHashMap();
-   private String description = "";
+   private final Map<String, JsonBall> overrideAttributes;
+   private final String description;
    @SerializedName("cookbook_versions")
-   private Map<String, String> cookbookVersions = Maps.newLinkedHashMap();
+   private final Map<String, String> cookbookVersions;
+
    // internal
    @SerializedName("json_class")
-   private String _jsonClass = "Chef::Environment";
+   private final String _jsonClass = "Chef::Environment";
    @SerializedName("chef_type")
-   private String _chefType = "environment";
+   private final String _chefType = "environment";
 
-   public Environment(String name, Map<String, JsonBall> attributes, Map<String, JsonBall> overrideAttributes,
-                      String description, Map<String, String> cookbookVersions) {
+   @ConstructorProperties({ "name", "default_attributes", "override_attributes", "description", "cookbook_versions" })
+   protected Environment(String name, @Nullable Map<String, JsonBall> attributes,
+         @Nullable Map<String, JsonBall> overrideAttributes, String description,
+         @Nullable Map<String, String> cookbookVersions) {
       this.name = name;
-      this.attributes.putAll(attributes);
-      this.overrideAttributes.putAll(overrideAttributes);
+      this.attributes = copyOfOrEmpty(attributes);
+      this.overrideAttributes = copyOfOrEmpty(overrideAttributes);
       this.description = description;
-      this.cookbookVersions.putAll(cookbookVersions);
-   }
-
-   public Environment(String name, String description) {
-      this.name = name;
-      this.description = description;
-   }
-
-   public Environment(String name) {
-      this(name, null);
-   }
-
-   // hidden but needs to be here for json deserialization to work
-   Environment() {
+      this.cookbookVersions = copyOfOrEmpty(cookbookVersions);
    }
 
    public String getName() {
@@ -82,17 +139,23 @@ public class Environment {
 
    @Override
    public boolean equals(Object o) {
-      if (this == o) return true;
-      if (o == null || getClass() != o.getClass()) return false;
+      if (this == o)
+         return true;
+      if (o == null || getClass() != o.getClass())
+         return false;
 
       Environment that = (Environment) o;
 
-      if (attributes != null ? !attributes.equals(that.attributes) : that.attributes != null) return false;
+      if (attributes != null ? !attributes.equals(that.attributes) : that.attributes != null)
+         return false;
       if (cookbookVersions != null ? !cookbookVersions.equals(that.cookbookVersions) : that.cookbookVersions != null)
          return false;
-      if (description != null ? !description.equals(that.description) : that.description != null) return false;
-      if (!name.equals(that.name)) return false;
-      if (overrideAttributes != null ? !overrideAttributes.equals(that.overrideAttributes) : that.overrideAttributes != null)
+      if (description != null ? !description.equals(that.description) : that.description != null)
+         return false;
+      if (!name.equals(that.name))
+         return false;
+      if (overrideAttributes != null ? !overrideAttributes.equals(that.overrideAttributes)
+            : that.overrideAttributes != null)
          return false;
 
       return true;
@@ -110,12 +173,8 @@ public class Environment {
 
    @Override
    public String toString() {
-      return "[" +
-            "name='" + name + '\'' +
-            ", attributes=" + attributes +
-            ", overrideAttributes=" + overrideAttributes +
-            ", description='" + description + '\'' +
-            ", cookbookVersions=" + cookbookVersions +
-            ']';
+      return "Environment [" + "name='" + name + '\'' + ", attributes=" + attributes + ", overrideAttributes="
+            + overrideAttributes + ", description='" + description + '\'' + ", cookbookVersions=" + cookbookVersions
+            + ']';
    }
 }

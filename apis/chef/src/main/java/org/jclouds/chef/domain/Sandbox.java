@@ -16,47 +16,102 @@
  */
 package org.jclouds.chef.domain;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+import static org.jclouds.chef.util.CollectionUtils.copyOfOrEmpty;
+
+import java.beans.ConstructorProperties;
 import java.util.Date;
 import java.util.Set;
 
-import com.google.common.collect.Iterables;
-import com.google.common.collect.Sets;
+import org.jclouds.javax.annotation.Nullable;
+
+import com.google.common.collect.ImmutableSet;
 import com.google.gson.annotations.SerializedName;
 
 /**
  * Sandbox object.
  * 
  * @author Adrian Cole
+ * @author Ignasi Barrera
  */
 public class Sandbox {
+   public static Builder builder() {
+      return new Builder();
+   }
+
+   public static class Builder {
+      private String rev;
+      private boolean isCompleted;
+      private Date createTime;
+      private ImmutableSet.Builder<String> checksums = ImmutableSet.builder();
+      private String name;
+      private String guid;
+
+      public Builder rev(String rev) {
+         this.rev = checkNotNull(rev, "rev");
+         return this;
+      }
+
+      public Builder isCompleted(boolean isCompleted) {
+         this.isCompleted = isCompleted;
+         return this;
+      }
+
+      public Builder createTime(Date createTime) {
+         this.createTime = createTime;
+         return this;
+      }
+
+      public Builder checksum(String checksum) {
+         this.checksums.add(checkNotNull(checksum, "checksum"));
+         return this;
+      }
+
+      public Builder checksums(Iterable<String> checksums) {
+         this.checksums.addAll(checkNotNull(checksums, "checksums"));
+         return this;
+      }
+
+      public Builder name(String name) {
+         this.name = checkNotNull(name, "name");
+         return this;
+      }
+
+      public Builder guid(String guid) {
+         this.guid = checkNotNull(guid, "guid");
+         return this;
+      }
+
+      public Sandbox build() {
+         return new Sandbox(rev, isCompleted, createTime, checksums.build(), name, guid);
+      }
+   }
 
    @SerializedName("_rev")
-   private String rev;
+   private final String rev;
    @SerializedName("is_completed")
-   private boolean isCompleted;
+   private final boolean isCompleted;
    @SerializedName("create_time")
-   private Date createTime;
-   private Set<String> checksums = Sets.newLinkedHashSet();
-   private String name;
-   private String guid;
+   private final Date createTime;
+   private final Set<String> checksums;
+   private final String name;
+   private final String guid;
 
    // internal
    @SerializedName("json_class")
-   private String _jsonClass = "Chef::Sandbox";
+   private final String _jsonClass = "Chef::Sandbox";
    @SerializedName("chef_type")
-   private String _chefType = "sandbox";
+   private final String _chefType = "sandbox";
 
-   public Sandbox(String rev, boolean isCompleted, Date createTime, Iterable<String> checksums, String name, String guid) {
+   @ConstructorProperties({ "_rev", "is_completed", "create_time", "checksums", "name", "guid" })
+   protected Sandbox(String rev, boolean isCompleted, Date createTime, @Nullable Set<String> checksums, String name,
+         String guid) {
       this.rev = rev;
       this.isCompleted = isCompleted;
       this.createTime = createTime;
-      Iterables.addAll(this.checksums, checksums);
+      this.checksums = copyOfOrEmpty(checksums);
       this.name = name;
       this.guid = guid;
-   }
-
-   public Sandbox() {
-
    }
 
    public String getRev() {
@@ -141,4 +196,3 @@ public class Sandbox {
             + isCompleted + ", name=" + name + ", rev=" + rev + "]";
    }
 }
-

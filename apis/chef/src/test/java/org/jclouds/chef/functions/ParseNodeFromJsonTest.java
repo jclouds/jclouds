@@ -19,7 +19,6 @@ package org.jclouds.chef.functions;
 import static org.testng.Assert.assertEquals;
 
 import java.io.IOException;
-import java.util.Collections;
 
 import org.jclouds.chef.ChefApi;
 import org.jclouds.chef.config.ChefParserModule;
@@ -32,7 +31,6 @@ import org.jclouds.rest.annotations.ApiVersion;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
 
-import com.google.common.collect.ImmutableMap;
 import com.google.inject.AbstractModule;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
@@ -63,10 +61,12 @@ public class ParseNodeFromJsonTest {
    }
 
    public void test() {
-
-      Node node = new Node("adrian-jcloudstest", ImmutableMap.<String, JsonBall> of("tomcat6", new JsonBall(
-            "{\"ssl_port\":8433}")), ImmutableMap.<String, JsonBall> of(), ImmutableMap.<String, JsonBall> of(),
-            ImmutableMap.<String, JsonBall> of(), Collections.singleton("recipe[java]"), "prod");
+      Node node = Node.builder() //
+            .name("adrian-jcloudstest") //
+            .normalAttribute("tomcat6", new JsonBall("{\"ssl_port\":8433}")) //
+            .runListElement("recipe[java]") //
+            .environment("prod") //
+            .build();
 
       assertEquals(
             handler.apply(HttpResponse.builder().statusCode(200).message("ok")
