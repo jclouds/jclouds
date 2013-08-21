@@ -16,63 +16,236 @@
  */
 package org.jclouds.chef.domain;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+import static org.jclouds.chef.util.CollectionUtils.copyOfOrEmpty;
+
+import java.beans.ConstructorProperties;
 import java.util.Map;
 
-import com.google.common.collect.Maps;
+import org.jclouds.javax.annotation.Nullable;
+
+import com.google.common.collect.ImmutableMap;
 import com.google.gson.annotations.SerializedName;
 
 /**
- * Cookbook object.
+ * A metadata object.
  * 
  * @author Adrian Cole
+ * @author Ignasi Barrera
  */
 public class Metadata {
-
-   private String license;
-   private String maintainer;
-   private Map<String, String> suggestions = Maps.newLinkedHashMap();
-   private Map<String, String> dependencies = Maps.newLinkedHashMap();
-   @SerializedName("maintainer_email")
-   private String maintainerEmail;
-   private Map<String, String> conflicting = Maps.newLinkedHashMap();
-   private String description;
-   private Map<String, String> providing = Maps.newLinkedHashMap();
-   private Map<String, String> platforms = Maps.newLinkedHashMap();
-   private String version;
-   private Map<String, String> recipes = Maps.newLinkedHashMap();
-   private Map<String, String> replacing = Maps.newLinkedHashMap();
-   private String name;
-   private Map<String, String> groupings = Maps.newLinkedHashMap();
-   @SerializedName("long_description")
-   private String longDescription;
-   private Map<String, Attribute> attributes = Maps.newLinkedHashMap();
-   private Map<String, String> recommendations = Maps.newLinkedHashMap();
-
-   public Metadata(String license, String maintainer, Map<String, String> suggestions,
-         Map<String, String> dependencies, String maintainerEmail, Map<String, String> conflicting, String description,
-         Map<String, String> providing, Map<String, String> platforms, String version, Map<String, String> recipes,
-         Map<String, String> replacing, String name, Map<String, String> groupings, String longDescription,
-         Map<String, Attribute> attributes, Map<String, String> recommendations) {
-      this.license = license;
-      this.maintainer = maintainer;
-      this.suggestions.putAll(suggestions);
-      this.dependencies.putAll(dependencies);
-      this.maintainerEmail = maintainerEmail;
-      this.conflicting.putAll(conflicting);
-      this.description = description;
-      this.providing.putAll(providing);
-      this.platforms.putAll(platforms);
-      this.version = version;
-      this.recipes.putAll(recipes);
-      this.replacing.putAll(replacing);
-      this.name = name;
-      this.groupings.putAll(groupings);
-      this.longDescription = longDescription;
-      this.attributes.putAll(attributes);
-      this.recommendations.putAll(recommendations);
+   public static Builder builder() {
+      return new Builder();
    }
 
-   public Metadata() {
+   public static class Builder {
+      private String license;
+      private String maintainer;
+      private ImmutableMap.Builder<String, String> suggestions = ImmutableMap.builder();
+      private ImmutableMap.Builder<String, String> dependencies = ImmutableMap.builder();
+      private String maintainerEmail;
+      private ImmutableMap.Builder<String, String> conflicting = ImmutableMap.builder();
+      private String description;
+      private ImmutableMap.Builder<String, String> providing = ImmutableMap.builder();
+      private ImmutableMap.Builder<String, String> platforms = ImmutableMap.builder();
+      private String version;
+      private ImmutableMap.Builder<String, String> recipes = ImmutableMap.builder();
+      private ImmutableMap.Builder<String, String> replacing = ImmutableMap.builder();
+      private String name;
+      private ImmutableMap.Builder<String, String> groupings = ImmutableMap.builder();
+      private String longDescription;
+      private ImmutableMap.Builder<String, Attribute> attributes = ImmutableMap.builder();
+      private ImmutableMap.Builder<String, String> recommendations = ImmutableMap.builder();
+
+      public Builder license(String license) {
+         this.license = checkNotNull(license, "license");
+         return this;
+      }
+
+      public Builder maintainer(String maintainer) {
+         this.maintainer = checkNotNull(maintainer, "maintainer");
+         return this;
+      }
+
+      public Builder suggestion(String key, String value) {
+         this.suggestions.put(checkNotNull(key, "key"), checkNotNull(value, "value"));
+         return this;
+      }
+
+      public Builder suggestions(Map<String, String> suggestions) {
+         this.suggestions.putAll(checkNotNull(suggestions, "suggestions"));
+         return this;
+      }
+
+      public Builder dependency(String key, String value) {
+         this.dependencies.put(checkNotNull(key, "key"), checkNotNull(value, "value"));
+         return this;
+      }
+
+      public Builder dependencies(Map<String, String> dependencies) {
+         this.dependencies.putAll(checkNotNull(dependencies, "dependencies"));
+         return this;
+      }
+
+      public Builder maintainerEmail(String maintainerEmail) {
+         this.maintainerEmail = checkNotNull(maintainerEmail, "maintainerEmail");
+         return this;
+      }
+
+      public Builder conflicting(String key, String value) {
+         this.conflicting.put(checkNotNull(key, "key"), checkNotNull(value, "value"));
+         return this;
+      }
+
+      public Builder conflicting(Map<String, String> conflicting) {
+         this.conflicting.putAll(checkNotNull(conflicting, "conflicting"));
+         return this;
+      }
+
+      public Builder description(String description) {
+         this.description = checkNotNull(description, "description");
+         return this;
+      }
+
+      public Builder providing(String key, String value) {
+         this.providing.put(checkNotNull(key, "key"), checkNotNull(value, "value"));
+         return this;
+      }
+
+      public Builder providing(Map<String, String> providing) {
+         this.providing.putAll(checkNotNull(providing, "providing"));
+         return this;
+      }
+
+      public Builder platform(String key, String value) {
+         this.platforms.put(checkNotNull(key, "key"), checkNotNull(value, "value"));
+         return this;
+      }
+
+      public Builder platforms(Map<String, String> platforms) {
+         this.platforms.putAll(checkNotNull(platforms, "platforms"));
+         return this;
+      }
+
+      public Builder version(String version) {
+         this.version = checkNotNull(version, "version");
+         return this;
+      }
+
+      public Builder recipe(String key, String value) {
+         this.recipes.put(checkNotNull(key, "key"), checkNotNull(value, "value"));
+         return this;
+      }
+
+      public Builder recipes(Map<String, String> recipes) {
+         this.recipes.putAll(checkNotNull(recipes, "recipes"));
+         return this;
+      }
+
+      public Builder replacing(String key, String value) {
+         this.replacing.put(checkNotNull(key, "key"), checkNotNull(value, "value"));
+         return this;
+      }
+
+      public Builder replacing(Map<String, String> replacing) {
+         this.replacing.putAll(checkNotNull(replacing, "replacing"));
+         return this;
+      }
+
+      public Builder name(String name) {
+         this.name = checkNotNull(name, "name");
+         return this;
+      }
+
+      public Builder grouping(String key, String value) {
+         this.groupings.put(checkNotNull(key, "key"), checkNotNull(value, "value"));
+         return this;
+      }
+
+      public Builder grouping(Map<String, String> groupings) {
+         this.groupings.putAll(checkNotNull(groupings, "groupings"));
+         return this;
+      }
+
+      public Builder longDescription(String longDescription) {
+         this.longDescription = checkNotNull(longDescription, "longDescription");
+         return this;
+      }
+
+      public Builder attribute(String key, Attribute value) {
+         this.attributes.put(checkNotNull(key, "key"), checkNotNull(value, "value"));
+         return this;
+      }
+
+      public Builder attributes(Map<String, Attribute> attributes) {
+         this.attributes.putAll(checkNotNull(attributes, "attributes"));
+         return this;
+      }
+
+      public Builder recommendation(String key, String value) {
+         this.recommendations.put(checkNotNull(key, "key"), checkNotNull(value, "value"));
+         return this;
+      }
+
+      public Builder recommendations(Map<String, String> recommendations) {
+         this.recommendations.putAll(checkNotNull(recommendations, "recommendations"));
+         return this;
+      }
+
+      public Metadata build() {
+         return new Metadata(license, maintainer, suggestions.build(), dependencies.build(), maintainerEmail,
+               conflicting.build(), description, providing.build(), platforms.build(), version, recipes.build(),
+               replacing.build(), name, groupings.build(), longDescription, attributes.build(), recommendations.build());
+      }
+
+   }
+
+   private final String license;
+   private final String maintainer;
+   private final Map<String, String> suggestions;
+   private final Map<String, String> dependencies;
+   @SerializedName("maintainer_email")
+   private final String maintainerEmail;
+   private final Map<String, String> conflicting;
+   private final String description;
+   private final Map<String, String> providing;
+   private final Map<String, String> platforms;
+   private final String version;
+   private final Map<String, String> recipes;
+   private final Map<String, String> replacing;
+   private final String name;
+   private final Map<String, String> groupings;
+   @SerializedName("long_description")
+   private final String longDescription;
+   private final Map<String, Attribute> attributes;
+   private final Map<String, String> recommendations;
+
+   @ConstructorProperties({ "license", "maintainer", "suggestions", "dependencies", "maintainer_email", "conflicting",
+         "description", "providing", "platforms", "version", "recipes", "replacing", "name", "groupings",
+         "long_description", "attributes", "recommendations" })
+   protected Metadata(String license, String maintainer, @Nullable Map<String, String> suggestions,
+         @Nullable Map<String, String> dependencies, String maintainerEmail, @Nullable Map<String, String> conflicting,
+         String description, @Nullable Map<String, String> providing, @Nullable Map<String, String> platforms,
+         String version, @Nullable Map<String, String> recipes, @Nullable Map<String, String> replacing, String name,
+         @Nullable Map<String, String> groupings, String longDescription, @Nullable Map<String, Attribute> attributes,
+         @Nullable Map<String, String> recommendations) {
+      this.license = license;
+      this.maintainer = maintainer;
+      this.suggestions = copyOfOrEmpty(suggestions);
+      this.dependencies = copyOfOrEmpty(dependencies);
+      this.maintainerEmail = maintainerEmail;
+      this.conflicting = copyOfOrEmpty(conflicting);
+      this.description = description;
+      this.providing = copyOfOrEmpty(providing);
+      this.platforms = copyOfOrEmpty(platforms);
+      this.version = version;
+      this.recipes = copyOfOrEmpty(recipes);
+      this.replacing = copyOfOrEmpty(replacing);
+      this.name = name;
+      this.groupings = copyOfOrEmpty(groupings);
+      this.longDescription = longDescription;
+      this.attributes = copyOfOrEmpty(attributes);
+      this.recommendations = copyOfOrEmpty(recommendations);
    }
 
    public String getLicense() {
@@ -275,4 +448,3 @@ public class Metadata {
    }
 
 }
-

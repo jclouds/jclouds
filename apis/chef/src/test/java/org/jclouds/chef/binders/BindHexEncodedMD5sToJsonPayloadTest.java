@@ -17,6 +17,7 @@
 package org.jclouds.chef.binders;
 
 import static com.google.common.io.BaseEncoding.base16;
+import static com.google.common.primitives.Bytes.asList;
 import static org.testng.Assert.assertEquals;
 
 import java.io.File;
@@ -56,11 +57,10 @@ public class BindHexEncodedMD5sToJsonPayloadTest {
       binder.bindToRequest(request, new File("foo"));
    }
 
-   @Test(enabled = false)
    public void testCorrect() {
       HttpRequest request = HttpRequest.builder().method(HttpMethod.POST).endpoint("http://localhost").build();
       binder.bindToRequest(request,
-            ImmutableSet.of(base16().lowerCase().decode("abddef"), base16().lowerCase().decode("1234")));
+            ImmutableSet.of(asList(base16().lowerCase().decode("abddef")), asList(base16().lowerCase().decode("1234"))));
       assertEquals(request.getPayload().getRawContent(), "{\"checksums\":{\"abddef\":null,\"1234\":null}}");
    }
 

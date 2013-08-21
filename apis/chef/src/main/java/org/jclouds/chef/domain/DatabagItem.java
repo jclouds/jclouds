@@ -21,8 +21,10 @@ import static com.google.common.base.Preconditions.checkNotNull;
 import org.jclouds.domain.JsonBall;
 
 /**
+ * An item in a data bag.
  * 
  * @author Adrian Cole
+ * @author Ignasi Barrera
  */
 public class DatabagItem extends JsonBall {
 
@@ -62,4 +64,3 @@ public class DatabagItem extends JsonBall {
       return id;
    }
 }
-

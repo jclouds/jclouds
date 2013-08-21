@@ -104,11 +104,6 @@ public class TransientChefApi implements ChefApi {
    }
 
    @Override
-   public boolean clientExists(String clientname) {
-      throw new UnsupportedOperationException();
-   }
-
-   @Override
    public Sandbox commitSandbox(String id, boolean isCompleted) {
       throw new UnsupportedOperationException();
    }
@@ -143,16 +138,6 @@ public class TransientChefApi implements ChefApi {
    @Override
    public void createRole(Role role) {
       throw new UnsupportedOperationException();
-   }
-
-   @Override
-   public boolean databagExists(String databagName) {
-      return databags.containerExists(databagName);
-   }
-
-   @Override
-   public boolean databagItemExists(String databagName, String databagItemId) {
-      return databags.blobExists(databagName, databagItemId);
    }
 
    @Override
@@ -259,16 +244,6 @@ public class TransientChefApi implements ChefApi {
 
    @Override
    public Set<String> listSearchIndexes() {
-      throw new UnsupportedOperationException();
-   }
-
-   @Override
-   public boolean nodeExists(String nodename) {
-      throw new UnsupportedOperationException();
-   }
-
-   @Override
-   public boolean roleExists(String rolename) {
       throw new UnsupportedOperationException();
    }
 

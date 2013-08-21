@@ -50,12 +50,7 @@ public class TransientChefApiIntegrationTest extends BaseChefLiveTest<ChefApi> {
       api.createDatabag(PREFIX);
    }
 
-   @Test(dependsOnMethods = "testCreateDatabag")
-   public void testDatabagExists() {
-      assertNotNull(api.databagExists(PREFIX));
-   }
-
-   @Test(dependsOnMethods = { "testDatabagExists" })
+   @Test(dependsOnMethods = { "testCreateDatabag" })
    public void testCreateDatabagItem() {
       Properties config = new Properties();
       config.setProperty("foo", "bar");
@@ -66,11 +61,6 @@ public class TransientChefApiIntegrationTest extends BaseChefLiveTest<ChefApi> {
    }
 
    @Test(dependsOnMethods = "testCreateDatabagItem")
-   public void testDatabagItemExists() {
-      assertNotNull(api.databagItemExists(PREFIX, PREFIX));
-   }
-
-   @Test(dependsOnMethods = "testDatabagItemExists")
    public void testUpdateDatabagItem() {
       for (String databagItemId : api.listDatabagItems(PREFIX)) {
          DatabagItem databagItem = api.getDatabagItem(PREFIX, databagItemId);

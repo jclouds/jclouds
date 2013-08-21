@@ -54,6 +54,20 @@ public class ParseCookbookDefinitionListFromJsonv10Test {
    }
 
    public void testCookbokDefinitionListParsing() throws URISyntaxException {
+      CookbookDefinition.Version v510 = CookbookDefinition.Version.builder()
+            .url(new URI("http://localhost:4000/cookbooks/apache2/5.1.0")).version("5.1.0").build();
+      CookbookDefinition.Version v420 = CookbookDefinition.Version.builder()
+            .url(new URI("http://localhost:4000/cookbooks/apache2/4.2.0")).version("4.2.0").build();
+      CookbookDefinition apache2 = CookbookDefinition.builder()
+            .url(new URI("http://localhost:4000/cookbooks/apache2")).version(v510).version(v420).build();
+      
+      CookbookDefinition.Version v100 = CookbookDefinition.Version.builder()
+            .url(new URI("http://localhost:4000/cookbooks/nginx/1.0.0")).version("1.0.0").build();
+      CookbookDefinition.Version v130 = CookbookDefinition.Version.builder()
+            .url(new URI("http://localhost:4000/cookbooks/nginx/0.3.0")).version("0.3.0").build();
+      CookbookDefinition nginx = CookbookDefinition.builder()
+            .url(new URI("http://localhost:4000/cookbooks/nginx")).version(v100).version(v130).build();
+      
       assertEquals(handler.apply(HttpResponse
             .builder()
             .statusCode(200)
@@ -73,11 +87,6 @@ public class ParseCookbookDefinitionListFromJsonv10Test {
                         + "\"version\" => \"0.3.0\"}"
                         + "]}" +
                         "}").build()),
-            ImmutableSet.of(new CookbookDefinition(new URI("http://localhost:4000/cookbooks/apache2"),
-                  ImmutableSet.of(new CookbookDefinition.Version(new URI("http://localhost:4000/cookbooks/apache2/5.1.0"), "5.1.0"),
-                        new CookbookDefinition.Version(new URI("http://localhost:4000/cookbooks/apache2/4.2.0"), "4.2.0"))),
-                  new CookbookDefinition(new URI("http://localhost:4000/cookbooks/nginx"),
-                        ImmutableSet.of(new CookbookDefinition.Version(new URI("http://localhost:4000/cookbooks/nginx/1.0.0"), "1.0.0"),
-                              new CookbookDefinition.Version(new URI("http://localhost:4000/cookbooks/nginx/0.3.0"), "0.3.0")))));
+            ImmutableSet.of(apache2, nginx));
    }
 }

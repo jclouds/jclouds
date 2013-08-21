@@ -28,7 +28,6 @@ import java.util.Set;
 
 import org.jclouds.Constants;
 import org.jclouds.Fallbacks.EmptySetOnNotFoundOr404;
-import org.jclouds.Fallbacks.FalseOnNotFoundOr404;
 import org.jclouds.Fallbacks.NullOnNotFoundOr404;
 import org.jclouds.Fallbacks.VoidOnNotFoundOr404;
 import org.jclouds.apis.ApiMetadata;
@@ -55,7 +54,6 @@ import org.jclouds.http.HttpRequest;
 import org.jclouds.http.functions.ParseJson;
 import org.jclouds.http.functions.ReleasePayloadAndReturn;
 import org.jclouds.http.functions.ReturnInputStream;
-import org.jclouds.http.functions.ReturnTrueIf2xx;
 import org.jclouds.io.Payload;
 import org.jclouds.io.payloads.StringPayload;
 import org.jclouds.reflect.Invocation;
@@ -172,7 +170,7 @@ public class ChefApiTest extends BaseAsyncApiTest<ChefApi> {
       Invokable<?, ?> method = method(ChefApi.class, "updateCookbook", String.class, String.class,
             CookbookVersion.class);
       GeneratedHttpRequest httpRequest = processor.apply(Invocation.create(method,
-            ImmutableList.<Object> of("cookbook", "1.0.1", new CookbookVersion("cookbook", "1.0.1"))));
+            ImmutableList.<Object> of("cookbook", "1.0.1", CookbookVersion.builder("cookbook", "1.0.1").build())));
 
       assertRequestLineEquals(httpRequest, "PUT http://localhost:4000/cookbooks/cookbook/1.0.1 HTTP/1.1");
       assertNonPayloadHeadersEqual(httpRequest, "Accept: application/json\nX-Chef-Version: " + ChefApi.VERSION
@@ -224,22 +222,6 @@ public class ChefApiTest extends BaseAsyncApiTest<ChefApi> {
       assertResponseParserClassEquals(method, httpRequest, ParseCookbookVersionsCheckingChefVersion.class);
       assertSaxResponseParserClassEquals(method, null);
       assertFallbackClassEquals(method, EmptySetOnNotFoundOr404.class);
-
-      checkFilters(httpRequest);
-
-   }
-
-   public void testApiExists() throws SecurityException, NoSuchMethodException, IOException {
-      Invokable<?, ?> method = method(ChefApi.class, "clientExists", String.class);
-      GeneratedHttpRequest httpRequest = processor.apply(Invocation.create(method, ImmutableList.<Object> of("api")));
-      assertRequestLineEquals(httpRequest, "HEAD http://localhost:4000/clients/api HTTP/1.1");
-      assertNonPayloadHeadersEqual(httpRequest, "Accept: application/json\nX-Chef-Version: " + ChefApi.VERSION
-            + "-test\n");
-      assertPayloadEquals(httpRequest, null, null, false);
-
-      assertResponseParserClassEquals(method, httpRequest, ReturnTrueIf2xx.class);
-      assertSaxResponseParserClassEquals(method, null);
-      assertFallbackClassEquals(method, FalseOnNotFoundOr404.class);
 
       checkFilters(httpRequest);
 
@@ -331,21 +313,6 @@ public class ChefApiTest extends BaseAsyncApiTest<ChefApi> {
 
    }
 
-   public void testNodeExists() throws SecurityException, NoSuchMethodException, IOException {
-      Invokable<?, ?> method = method(ChefApi.class, "nodeExists", String.class);
-      GeneratedHttpRequest httpRequest = processor.apply(Invocation.create(method, ImmutableList.<Object> of("node")));
-      assertNonPayloadHeadersEqual(httpRequest, "Accept: application/json\nX-Chef-Version: " + ChefApi.VERSION
-            + "-test\n");
-      assertPayloadEquals(httpRequest, null, null, false);
-
-      assertResponseParserClassEquals(method, httpRequest, ReturnTrueIf2xx.class);
-      assertSaxResponseParserClassEquals(method, null);
-      assertFallbackClassEquals(method, FalseOnNotFoundOr404.class);
-
-      checkFilters(httpRequest);
-
-   }
-
    public void testDeleteNode() throws SecurityException, NoSuchMethodException, IOException {
       Invokable<?, ?> method = method(ChefApi.class, "deleteNode", String.class);
       GeneratedHttpRequest httpRequest = processor.apply(Invocation.create(method, ImmutableList.<Object> of("node")));
@@ -364,8 +331,10 @@ public class ChefApiTest extends BaseAsyncApiTest<ChefApi> {
 
    public void testCreateNode() throws SecurityException, NoSuchMethodException, IOException {
       Invokable<?, ?> method = method(ChefApi.class, "createNode", Node.class);
-      GeneratedHttpRequest httpRequest = processor.apply(Invocation.create(method,
-            ImmutableList.<Object> of(new Node("testnode", ImmutableSet.of("recipe[java]"), "_default"))));
+      GeneratedHttpRequest httpRequest = processor.apply(Invocation.create(
+            method,
+            ImmutableList.<Object> of(Node.builder().name("testnode").runListElement("recipe[java]")
+                  .environment("_default").build())));
 
       assertRequestLineEquals(httpRequest, "POST http://localhost:4000/nodes HTTP/1.1");
       assertNonPayloadHeadersEqual(httpRequest, "Accept: application/json\nX-Chef-Version: " + ChefApi.VERSION
@@ -385,8 +354,10 @@ public class ChefApiTest extends BaseAsyncApiTest<ChefApi> {
 
    public void testUpdateNode() throws SecurityException, NoSuchMethodException, IOException {
       Invokable<?, ?> method = method(ChefApi.class, "updateNode", Node.class);
-      GeneratedHttpRequest httpRequest = processor.apply(Invocation.create(method,
-            ImmutableList.<Object> of(new Node("testnode", ImmutableSet.of("recipe[java]"), "_default"))));
+      GeneratedHttpRequest httpRequest = processor.apply(Invocation.create(
+            method,
+            ImmutableList.<Object> of(Node.builder().name("testnode").runListElement("recipe[java]")
+                  .environment("_default").build())));
 
       assertRequestLineEquals(httpRequest, "PUT http://localhost:4000/nodes/testnode HTTP/1.1");
       assertNonPayloadHeadersEqual(httpRequest, "Accept: application/json\nX-Chef-Version: " + ChefApi.VERSION
@@ -421,22 +392,6 @@ public class ChefApiTest extends BaseAsyncApiTest<ChefApi> {
 
    }
 
-   public void testRoleExists() throws SecurityException, NoSuchMethodException, IOException {
-      Invokable<?, ?> method = method(ChefApi.class, "roleExists", String.class);
-      GeneratedHttpRequest httpRequest = processor.apply(Invocation.create(method, ImmutableList.<Object> of("role")));
-      assertRequestLineEquals(httpRequest, "HEAD http://localhost:4000/roles/role HTTP/1.1");
-      assertNonPayloadHeadersEqual(httpRequest, "Accept: application/json\nX-Chef-Version: " + ChefApi.VERSION
-            + "-test\n");
-      assertPayloadEquals(httpRequest, null, null, false);
-
-      assertResponseParserClassEquals(method, httpRequest, ReturnTrueIf2xx.class);
-      assertSaxResponseParserClassEquals(method, null);
-      assertFallbackClassEquals(method, FalseOnNotFoundOr404.class);
-
-      checkFilters(httpRequest);
-
-   }
-
    public void testDeleteRole() throws SecurityException, NoSuchMethodException, IOException {
       Invokable<?, ?> method = method(ChefApi.class, "deleteRole", String.class);
       GeneratedHttpRequest httpRequest = processor.apply(Invocation.create(method, ImmutableList.<Object> of("role")));
@@ -456,7 +411,7 @@ public class ChefApiTest extends BaseAsyncApiTest<ChefApi> {
    public void testCreateRole() throws SecurityException, NoSuchMethodException, IOException {
       Invokable<?, ?> method = method(ChefApi.class, "createRole", Role.class);
       GeneratedHttpRequest httpRequest = processor.apply(Invocation.create(method,
-            ImmutableList.<Object> of(new Role("testrole", ImmutableSet.of("recipe[java]")))));
+            ImmutableList.<Object> of(Role.builder().name("testrole").runListElement("recipe[java]").build())));
 
       assertRequestLineEquals(httpRequest, "POST http://localhost:4000/roles HTTP/1.1");
       assertNonPayloadHeadersEqual(httpRequest, "Accept: application/json\nX-Chef-Version: " + ChefApi.VERSION
@@ -476,7 +431,7 @@ public class ChefApiTest extends BaseAsyncApiTest<ChefApi> {
    public void testUpdateRole() throws SecurityException, NoSuchMethodException, IOException {
       Invokable<?, ?> method = method(ChefApi.class, "updateRole", Role.class);
       GeneratedHttpRequest httpRequest = processor.apply(Invocation.create(method,
-            ImmutableList.<Object> of(new Role("testrole", ImmutableSet.of("recipe[java]")))));
+            ImmutableList.<Object> of(Role.builder().name("testrole").runListElement("recipe[java]").build())));
 
       assertRequestLineEquals(httpRequest, "PUT http://localhost:4000/roles/testrole HTTP/1.1");
       assertNonPayloadHeadersEqual(httpRequest, "Accept: application/json\nX-Chef-Version: " + ChefApi.VERSION
@@ -505,23 +460,6 @@ public class ChefApiTest extends BaseAsyncApiTest<ChefApi> {
       assertResponseParserClassEquals(method, httpRequest, ParseKeySetFromJson.class);
       assertSaxResponseParserClassEquals(method, null);
       assertFallbackClassEquals(method, EmptySetOnNotFoundOr404.class);
-
-      checkFilters(httpRequest);
-
-   }
-
-   public void testDatabagExists() throws SecurityException, NoSuchMethodException, IOException {
-      Invokable<?, ?> method = method(ChefApi.class, "databagExists", String.class);
-      GeneratedHttpRequest httpRequest = processor
-            .apply(Invocation.create(method, ImmutableList.<Object> of("databag")));
-      assertRequestLineEquals(httpRequest, "HEAD http://localhost:4000/data/databag HTTP/1.1");
-      assertNonPayloadHeadersEqual(httpRequest, "Accept: application/json\nX-Chef-Version: " + ChefApi.VERSION
-            + "-test\n");
-      assertPayloadEquals(httpRequest, null, null, false);
-
-      assertResponseParserClassEquals(method, httpRequest, ReturnTrueIf2xx.class);
-      assertSaxResponseParserClassEquals(method, null);
-      assertFallbackClassEquals(method, FalseOnNotFoundOr404.class);
 
       checkFilters(httpRequest);
 
@@ -573,23 +511,6 @@ public class ChefApiTest extends BaseAsyncApiTest<ChefApi> {
       assertResponseParserClassEquals(method, httpRequest, ParseKeySetFromJson.class);
       assertSaxResponseParserClassEquals(method, null);
       assertFallbackClassEquals(method, EmptySetOnNotFoundOr404.class);
-
-      checkFilters(httpRequest);
-
-   }
-
-   public void testDatabagItemExists() throws SecurityException, NoSuchMethodException, IOException {
-      Invokable<?, ?> method = method(ChefApi.class, "databagItemExists", String.class, String.class);
-      GeneratedHttpRequest httpRequest = processor.apply(Invocation.create(method,
-            ImmutableList.<Object> of("name", "databagItem")));
-      assertRequestLineEquals(httpRequest, "HEAD http://localhost:4000/data/name/databagItem HTTP/1.1");
-      assertNonPayloadHeadersEqual(httpRequest, "Accept: application/json\nX-Chef-Version: " + ChefApi.VERSION
-            + "-test\n");
-      assertPayloadEquals(httpRequest, null, null, false);
-
-      assertResponseParserClassEquals(method, httpRequest, ReturnTrueIf2xx.class);
-      assertSaxResponseParserClassEquals(method, null);
-      assertFallbackClassEquals(method, FalseOnNotFoundOr404.class);
 
       checkFilters(httpRequest);
 
@@ -891,7 +812,7 @@ public class ChefApiTest extends BaseAsyncApiTest<ChefApi> {
    public void testGetResourceContents() throws SecurityException, NoSuchMethodException, IOException {
       Invokable<?, ?> method = method(ChefApi.class, "getResourceContents", Resource.class);
       GeneratedHttpRequest httpRequest = processor.apply(Invocation.create(method,
-            ImmutableList.<Object> of(new Resource("test", URI.create("http://foo/bar"), new byte[] {}, null, null))));
+            ImmutableList.<Object> of(Resource.builder().name("test").url(URI.create("http://foo/bar")).build())));
 
       assertRequestLineEquals(httpRequest, "GET http://foo/bar HTTP/1.1");
       assertNonPayloadHeadersEqual(httpRequest, "Accept: application/json\nX-Chef-Version: " + ChefApi.VERSION

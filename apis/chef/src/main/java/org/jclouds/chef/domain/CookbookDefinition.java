@@ -16,10 +16,16 @@
  */
 package org.jclouds.chef.domain;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+import static org.jclouds.chef.util.CollectionUtils.copyOfOrEmpty;
+
+import java.beans.ConstructorProperties;
 import java.net.URI;
 import java.util.Set;
 
-import com.google.common.collect.Sets;
+import org.jclouds.javax.annotation.Nullable;
+
+import com.google.common.collect.ImmutableSet;
 
 /**
  * Cookbook definition as returned by the Chef server >= 0.10.8.
@@ -27,18 +33,41 @@ import com.google.common.collect.Sets;
  * @author Ignasi Barrera
  */
 public class CookbookDefinition {
-
-   private URI url;
-   private Set<Version> versions = Sets.newLinkedHashSet();
-
-   // only for deserialization
-   CookbookDefinition() {
-
+   public static Builder builder() {
+      return new Builder();
    }
 
-   public CookbookDefinition(URI url, Set<Version> versions) {
+   public static class Builder {
+      private URI url;
+      private ImmutableSet.Builder<Version> versions = ImmutableSet.builder();
+
+      public Builder url(URI url) {
+         this.url = checkNotNull(url, "url");
+         return this;
+      }
+
+      public Builder version(Version version) {
+         this.versions.add(checkNotNull(version, "version"));
+         return this;
+      }
+
+      public Builder versions(Iterable<Version> versions) {
+         this.versions.addAll(checkNotNull(versions, "versions"));
+         return this;
+      }
+
+      public CookbookDefinition build() {
+         return new CookbookDefinition(url, versions.build());
+      }
+   }
+
+   private final URI url;
+   private final Set<Version> versions;
+
+   @ConstructorProperties({ "url", "versions" })
+   protected CookbookDefinition(URI url, @Nullable Set<Version> versions) {
       this.url = url;
-      this.versions = versions;
+      this.versions = copyOfOrEmpty(versions);
    }
 
    public URI getUrl() {
@@ -86,15 +115,34 @@ public class CookbookDefinition {
    }
 
    public static class Version {
-      private URI url;
-      private String version;
-
-      // only for deserialization
-      Version() {
-
+      public static Builder builder() {
+         return new Builder();
       }
 
-      public Version(URI url, String version) {
+      public static class Builder {
+         private URI url;
+         private String version;
+
+         public Builder url(URI url) {
+            this.url = checkNotNull(url, "url");
+            return this;
+         }
+
+         public Builder version(String version) {
+            this.version = checkNotNull(version, "version");
+            return this;
+         }
+
+         public Version build() {
+            return new Version(url, version);
+         }
+      }
+
+      private final URI url;
+      private final String version;
+
+      @ConstructorProperties({ "url", "version" })
+      protected Version(URI url, String version) {
          this.url = url;
          this.version = version;
       }

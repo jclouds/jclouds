@@ -16,10 +16,10 @@
  */
 package org.jclouds.chef.strategy.internal;
 
+import static org.easymock.EasyMock.createMock;
 import static org.easymock.EasyMock.expect;
-import static org.easymock.classextension.EasyMock.createMock;
-import static org.easymock.classextension.EasyMock.replay;
-import static org.easymock.classextension.EasyMock.verify;
+import static org.easymock.EasyMock.replay;
+import static org.easymock.EasyMock.verify;
 
 import java.util.Map;
 
@@ -31,7 +31,6 @@ import org.testng.annotations.Test;
 import com.google.common.base.Supplier;
 import com.google.common.base.Suppliers;
 import com.google.common.collect.ImmutableMap;
-import com.google.common.collect.ImmutableSet;
 
 /**
  * Tests behavior of {@code UpdateAutomaticAttributesOnNodeImpl}
@@ -46,17 +45,13 @@ public class UpdateAutomaticAttributesOnNodeImplTest {
       ChefApi chef = createMock(ChefApi.class);
 
       Map<String, JsonBall> automatic = ImmutableMap.<String, JsonBall> of();
-
-      Node node = new Node("name", ImmutableSet.<String> of(), "_default");
-
       Supplier<Map<String, JsonBall>> automaticSupplier = Suppliers.<Map<String, JsonBall>> ofInstance(automatic);
 
-      Node nodeWithAutomatic = new Node("name", ImmutableMap.<String, JsonBall> of(),
-            ImmutableMap.<String, JsonBall> of(), ImmutableMap.<String, JsonBall> of(), automatic,
-            ImmutableSet.<String> of(), "_default");
+      Node node = Node.builder().name("name").environment("_default").build();
+      Node nodeWithAutomatic = Node.builder().name("name").environment("_default").automaticAttributes(automatic)
+            .build();
 
       expect(chef.getNode("name")).andReturn(node);
-      node.getAutomatic().putAll(automaticSupplier.get());
       expect(chef.updateNode(nodeWithAutomatic)).andReturn(null);
 
       replay(chef);

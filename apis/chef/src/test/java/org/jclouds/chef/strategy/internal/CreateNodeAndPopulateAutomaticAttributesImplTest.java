@@ -44,17 +44,11 @@ public class CreateNodeAndPopulateAutomaticAttributesImplTest {
    public void testWithNoRunlist() {
       ChefApi chef = createMock(ChefApi.class);
 
-      Map<String, JsonBall> automatic = ImmutableMap.<String, JsonBall> of();
+      Supplier<Map<String, JsonBall>> automaticSupplier = Suppliers.<Map<String, JsonBall>> ofInstance(ImmutableMap.<String, JsonBall> of());
 
-      Node node = new Node("name", ImmutableSet.<String> of(), "_default");
+      Node nodeWithAutomatic = Node.builder().name("name").environment("_default")
+            .automaticAttributes(automaticSupplier.get()).build();
 
-      Supplier<Map<String, JsonBall>> automaticSupplier = Suppliers.<Map<String, JsonBall>> ofInstance(automatic);
-
-      Node nodeWithAutomatic = new Node("name", ImmutableMap.<String, JsonBall> of(),
-            ImmutableMap.<String, JsonBall> of(), ImmutableMap.<String, JsonBall> of(), automatic,
-            ImmutableSet.<String> of(), "_default");
-
-      node.getAutomatic().putAll(automaticSupplier.get());
       chef.createNode(nodeWithAutomatic);
 
       replay(chef);

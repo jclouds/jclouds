@@ -16,6 +16,9 @@
  */
 package org.jclouds.chef.domain;
 
+import static com.google.common.base.Preconditions.*;
+
+import java.beans.ConstructorProperties;
 import java.net.URI;
 import java.util.Arrays;
 
@@ -24,37 +27,74 @@ import org.jclouds.io.payloads.FilePayload;
 import com.google.common.primitives.Bytes;
 
 /**
- * Cookbook object.
+ * Resource object.
  * 
  * @author Adrian Cole
+ * @author Ignasi Barrera
  */
 public class Resource {
-
-   private String name;
-   private URI url;
-   private byte[] checksum;
-   private String path;
-   private String specificity;
-
-   public Resource(FilePayload payload) {
-      this(payload.getRawContent().getName(), null, payload.getContentMetadata().getContentMD5(), payload
-            .getRawContent().getPath(), "default");
+   public static Builder builder() {
+      return new Builder();
    }
 
-   public Resource(String name, byte[] checksum, String path) {
-      this(name, null, checksum, path, "default");
+   public static class Builder {
+      private String name;
+      private URI url;
+      private byte[] checksum;
+      private String path;
+      private String specificity = "default";
+
+      public Builder name(String name) {
+         this.name = checkNotNull(name, "name");
+         return this;
+      }
+
+      public Builder url(URI url) {
+         this.url = checkNotNull(url, "url");
+         return this;
+      }
+
+      public Builder checksum(byte[] checksum) {
+         this.checksum = checkNotNull(checksum, "checksum");
+         return this;
+      }
+
+      public Builder path(String path) {
+         this.path = checkNotNull(path, "path");
+         return this;
+      }
+
+      public Builder specificity(String specificity) {
+         this.specificity = checkNotNull(specificity, "specificity");
+         return this;
+      }
+
+      public Builder fromPayload(FilePayload payload) {
+         checkNotNull(payload, "payload");
+         this.name(payload.getRawContent().getName());
+         this.checksum(payload.getContentMetadata().getContentMD5());
+         this.path(payload.getRawContent().getPath());
+         return this;
+      }
+
+      public Resource build() {
+         return new Resource(name, url, checksum, path, specificity);
+      }
    }
 
-   public Resource(String name, URI url, byte[] checksum, String path, String specificity) {
+   private final String name;
+   private final URI url;
+   private final byte[] checksum;
+   private final String path;
+   private final String specificity;
+
+   @ConstructorProperties({ "name", "url", "checksum", "path", "specificity" })
+   protected Resource(String name, URI url, byte[] checksum, String path, String specificity) {
       this.name = name;
       this.url = url;
       this.checksum = checksum;
       this.path = path;
       this.specificity = specificity;
-   }
-
-   // hidden but needs to be here for json deserialization to work
-   Resource() {
    }
 
    public String getName() {
@@ -130,4 +170,3 @@ public class Resource {
    }
 
 }
-

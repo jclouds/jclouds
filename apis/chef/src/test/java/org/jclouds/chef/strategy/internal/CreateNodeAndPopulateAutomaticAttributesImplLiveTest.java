@@ -55,7 +55,7 @@ public class CreateNodeAndPopulateAutomaticAttributesImplLiveTest extends BaseCh
          Node node = api.getNode(prefix);
          assertEquals(node.getName(), prefix);
          assertEquals(node.getRunList(), runList);
-         assertEquals(node.getAutomatic().get("current_user").toString(), currentUserProvider.get().toString());
+         assertEquals(node.getAutomaticAttributes().get("current_user").toString(), currentUserProvider.get().toString());
       } finally {
          api.deleteNode(prefix);
       }

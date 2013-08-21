@@ -61,14 +61,25 @@ public class CreateNodeAndPopulateAutomaticAttributesImpl implements CreateNodeA
    @Override
    public Node execute(Node node) {
       logger.trace("creating node %s", node.getName());
-      node.getAutomatic().putAll(automaticSupplier.get());
-      chef.createNode(node);
-      logger.debug("created node %s", node.getName());
+      Node withAutomatic = Node.builder() //
+            .name(node.getName()) //
+            .normalAttributes(node.getNormalAttributes()) //
+            .overrideAttributes(node.getOverrideAttributes()) //
+            .defaultAttributes(node.getDefaultAttributes()) //
+            .automaticAttributes(node.getAutomaticAttributes()) //
+            .automaticAttributes(automaticSupplier.get()) //
+            .runList(node.getRunList()) //
+            .environment(node.getEnvironment()) //
+            .build();
+      
+      
+      chef.createNode(withAutomatic);
+      logger.debug("created node %s", withAutomatic.getName());
       return node;
    }
 
    @Override
    public Node execute(String nodeName, Iterable<String> runList) {
-      return execute(new Node(nodeName, runList, "_default"));
+      return execute(Node.builder().name(nodeName).runList(runList).environment("_default").build());
    }
 }

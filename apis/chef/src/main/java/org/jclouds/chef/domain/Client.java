@@ -16,6 +16,9 @@
  */
 package org.jclouds.chef.domain;
 
+import static com.google.common.base.Preconditions.*;
+
+import java.beans.ConstructorProperties;
 import java.security.PrivateKey;
 import java.security.cert.X509Certificate;
 
@@ -27,19 +30,73 @@ import com.google.gson.annotations.SerializedName;
  * Client object.
  * 
  * @author Adrian Cole
+ * @author Ignasi Barrera
  */
 public class Client {
-   private X509Certificate certificate;
+   public static Builder builder() {
+      return new Builder();
+   }
+
+   public static class Builder {
+      private X509Certificate certificate;
+      private PrivateKey privateKey;
+      private String orgname;
+      private String clientname;
+      private String name;
+      private boolean validator;
+
+      public Builder certificate(X509Certificate certificate) {
+         this.certificate = checkNotNull(certificate, "certificate");
+         return this;
+      }
+
+      public Builder privateKey(PrivateKey privateKey) {
+         this.privateKey = checkNotNull(privateKey, "privateKey");
+         return this;
+      }
+
+      public Builder orgname(String orgname) {
+         this.orgname = checkNotNull(orgname, "orgname");
+         return this;
+      }
+
+      public Builder clientname(String clientname) {
+         this.clientname = checkNotNull(clientname, "clientname");
+         return this;
+      }
+
+      public Builder name(String name) {
+         this.name = checkNotNull(name, "name");
+         return this;
+      }
+
+      public Builder isValidator(boolean validator) {
+         this.validator = validator;
+         return this;
+      }
+
+      public Client build() {
+         return new Client(certificate, orgname, clientname, name, validator, privateKey);
+      }
+   }
+
+   private final X509Certificate certificate;
    @SerializedName("private_key")
-   private PrivateKey privateKey;
-   private String orgname;
-   private String clientname;
-   private String name;
-   private boolean validator;
+   private final PrivateKey privateKey;
+   private final String orgname;
+   private final String clientname;
+   private final String name;
+   private final boolean validator;
 
-   // only for deserialization
-   Client() {
-
+   @ConstructorProperties({ "certificate", "orgname", "clientname", "name", "validator", "private_key" })
+   protected Client(X509Certificate certificate, String orgname, String clientname, String name, boolean validator,
+         @Nullable PrivateKey privateKey) {
+      this.certificate = certificate;
+      this.orgname = orgname;
+      this.clientname = clientname;
+      this.name = name;
+      this.validator = validator;
+      this.privateKey = privateKey;
    }
 
    public PrivateKey getPrivateKey() {
@@ -64,12 +121,6 @@ public class Client {
 
    public boolean isValidator() {
       return validator;
-   }
-
-   @Override
-   public String toString() {
-      return "[name=" + name + ", clientname=" + clientname + ", orgname=" + orgname + ", isValidator=" + validator
-            + ", certificate=" + certificate + ", privateKey=" + (privateKey != null) + "]";
    }
 
    @Override
@@ -124,14 +175,11 @@ public class Client {
       return true;
    }
 
-   public Client(X509Certificate certificate, String orgname, String clientname, String name, boolean isValidator,
-         @Nullable PrivateKey privateKey) {
-      this.certificate = certificate;
-      this.orgname = orgname;
-      this.clientname = clientname;
-      this.name = name;
-      this.validator = isValidator;
-      this.privateKey = privateKey;
+   @Override
+   public String toString() {
+      return "Client [name=" + name + ", clientname=" + clientname + ", orgname=" + orgname + ", isValidator="
+            + validator + ", certificate=" + certificate + ", privateKey=" + (privateKey == null ? "not " : "")
+            + "present]";
    }
 
 }

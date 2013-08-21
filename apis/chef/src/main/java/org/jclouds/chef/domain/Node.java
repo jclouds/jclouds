@@ -16,109 +16,160 @@
  */
 package org.jclouds.chef.domain;
 
-import com.google.common.collect.Iterables;
-import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
-import com.google.gson.annotations.SerializedName;
-import org.jclouds.domain.JsonBall;
-import org.jclouds.javax.annotation.Nullable;
+import static com.google.common.base.Preconditions.checkNotNull;
+import static org.jclouds.chef.util.CollectionUtils.copyOfOrEmpty;
 
+import java.beans.ConstructorProperties;
 import java.util.List;
 import java.util.Map;
 
+import org.jclouds.domain.JsonBall;
+import org.jclouds.javax.annotation.Nullable;
+
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableMap;
+import com.google.gson.annotations.SerializedName;
+
 /**
- * Sandbox object.
+ * Node object.
  * 
  * @author Adrian Cole
+ * @author Ignasi Barrera
  */
 public class Node {
+   public static Builder builder() {
+      return new Builder();
+   }
 
-   private String name;
-   private Map<String, JsonBall> normal = Maps.newLinkedHashMap();
-   private Map<String, JsonBall> override = Maps.newLinkedHashMap();
+   public static class Builder {
+      private String name;
+      private ImmutableMap.Builder<String, JsonBall> normalAttributes = ImmutableMap.builder();
+      private ImmutableMap.Builder<String, JsonBall> overrideAttributes = ImmutableMap.builder();
+      private ImmutableMap.Builder<String, JsonBall> defaultAttributes = ImmutableMap.builder();
+      private ImmutableMap.Builder<String, JsonBall> automaticAttributes = ImmutableMap.builder();
+      private ImmutableList.Builder<String> runList = ImmutableList.builder();
+      private String environment;
+
+      public Builder name(String name) {
+         this.name = checkNotNull(name, "name");
+         return this;
+      }
+
+      public Builder normalAttribute(String key, JsonBall value) {
+         this.normalAttributes.put(checkNotNull(key, "key"), checkNotNull(value, "value"));
+         return this;
+      }
+
+      public Builder normalAttributes(Map<String, JsonBall> normalAttributes) {
+         this.normalAttributes.putAll(checkNotNull(normalAttributes, "normalAttributes"));
+         return this;
+      }
+
+      public Builder overrideAttribute(String key, JsonBall value) {
+         this.overrideAttributes.put(checkNotNull(key, "key"), checkNotNull(value, "value"));
+         return this;
+      }
+
+      public Builder overrideAttributes(Map<String, JsonBall> overrideAttributes) {
+         this.overrideAttributes.putAll(checkNotNull(overrideAttributes, "overrideAttributes"));
+         return this;
+      }
+
+      public Builder defaultAttribute(String key, JsonBall value) {
+         this.defaultAttributes.put(checkNotNull(key, "key"), checkNotNull(value, "value"));
+         return this;
+      }
+
+      public Builder defaultAttributes(Map<String, JsonBall> defaultAttributes) {
+         this.defaultAttributes.putAll(checkNotNull(defaultAttributes, "defaultAttributes"));
+         return this;
+      }
+
+      public Builder automaticAttribute(String key, JsonBall value) {
+         this.automaticAttributes.put(checkNotNull(key, "key"), checkNotNull(value, "value"));
+         return this;
+      }
+
+      public Builder automaticAttributes(Map<String, JsonBall> automaticAttribute) {
+         this.automaticAttributes.putAll(checkNotNull(automaticAttribute, "automaticAttribute"));
+         return this;
+      }
+
+      public Builder runListElement(String element) {
+         this.runList.add(checkNotNull(element, "element"));
+         return this;
+      }
+
+      public Builder runList(Iterable<String> runList) {
+         this.runList.addAll(checkNotNull(runList, "runList"));
+         return this;
+      }
+
+      /**
+       * @since Chef 0.10
+       */
+      public Builder environment(String environment) {
+         this.environment = checkNotNull(environment, "environment");
+         return this;
+      }
+
+      public Node build() {
+         return new Node(name, normalAttributes.build(), overrideAttributes.build(), defaultAttributes.build(),
+               automaticAttributes.build(), runList.build(), environment);
+      }
+   }
+
+   private final String name;
+   @SerializedName("normal")
+   private final Map<String, JsonBall> normalAttributes;
+   @SerializedName("override")
+   private final Map<String, JsonBall> overrideAttributes;
    @SerializedName("default")
-   private Map<String, JsonBall> defaultA = Maps.newLinkedHashMap();
-   private Map<String, JsonBall> automatic = Maps.newLinkedHashMap();
+   private final Map<String, JsonBall> defaultAttributes;
+   @SerializedName("automatic")
+   private final Map<String, JsonBall> automaticAttributes;
    @SerializedName("run_list")
-   private List<String> runList = Lists.newArrayList();
-
-   /**
-    * @since chef 0.10
-    */
+   private final List<String> runList;
    @SerializedName("chef_environment")
-   @Nullable
-   private String chefEnvironment;
+   private final String environment;
 
    // internal
    @SerializedName("json_class")
-   private String _jsonClass = "Chef::Node";
+   private final String _jsonClass = "Chef::Node";
+   @SerializedName("chef_type")
+   private final String _chefType = "node";
 
-
-    @SerializedName("chef_type")
-    private String _chefType = "node";
-
-   public Node(String name, Map<String, JsonBall> normal, Map<String, JsonBall> override,
-         Map<String, JsonBall> defaultA, Map<String, JsonBall> automatic, Iterable<String> runList) {
-      this(name, normal, override, defaultA, automatic, runList, null);
-   }
-
-   /**
-    * @since chef 0.10
-    */
-   public Node(String name, Map<String, JsonBall> normal, Map<String, JsonBall> override,
-         Map<String, JsonBall> defaultA, Map<String, JsonBall> automatic, Iterable<String> runList,
-         String chefEnvironment) {
+   @ConstructorProperties({ "name", "normal", "override", "default", "automatic", "run_list", "chef_environment" })
+   protected Node(String name, @Nullable Map<String, JsonBall> normalAttributes,
+         @Nullable Map<String, JsonBall> overrideAttributes, @Nullable Map<String, JsonBall> defaultAttributes,
+         @Nullable Map<String, JsonBall> automaticAttributes, List<String> runList, @Nullable String environment) {
       this.name = name;
-      this.chefEnvironment = chefEnvironment;
-      this.normal.putAll(normal);
-      this.override.putAll(override);
-      this.defaultA.putAll(defaultA);
-      this.automatic.putAll(automatic);
-      Iterables.addAll(this.runList, runList);
-   }
-
-   @Override
-   public String toString() {
-      return "Node [name=" + name + ", runList=" + runList + ", normal=" + normal + ", default=" + defaultA
-            + ", override=" + override + ", chefEnvironment=" + chefEnvironment + ", automatic=" + automatic + "]";
-   }
-
-   public Node(String name, Iterable<String> runList) {
-      this(name, runList, "_default");
-   }
-
-   /**
-    * @since chef 0.10
-    */
-   public Node(String name, Iterable<String> runList, String chefEnvironment) {
-      this.name = name;
-      this.chefEnvironment = chefEnvironment;
-      Iterables.addAll(this.runList, runList);
-   }
-
-   // hidden but needs to be here for json deserialization to work
-   Node() {
-
+      this.environment = environment;
+      this.normalAttributes = copyOfOrEmpty(normalAttributes);
+      this.overrideAttributes = copyOfOrEmpty(overrideAttributes);
+      this.defaultAttributes = copyOfOrEmpty(defaultAttributes);
+      this.automaticAttributes = copyOfOrEmpty(automaticAttributes);
+      this.runList = copyOfOrEmpty(runList);
    }
 
    public String getName() {
       return name;
    }
 
-   public Map<String, JsonBall> getNormal() {
-      return normal;
+   public Map<String, JsonBall> getNormalAttributes() {
+      return normalAttributes;
    }
 
-   public Map<String, JsonBall> getOverride() {
-      return override;
+   public Map<String, JsonBall> getOverrideAttributes() {
+      return overrideAttributes;
    }
 
-   public Map<String, JsonBall> getDefault() {
-      return defaultA;
+   public Map<String, JsonBall> getDefaultAttributes() {
+      return defaultAttributes;
    }
 
-   public Map<String, JsonBall> getAutomatic() {
-      return automatic;
+   public Map<String, JsonBall> getAutomaticAttributes() {
+      return automaticAttributes;
    }
 
    public List<String> getRunList() {
@@ -126,10 +177,10 @@ public class Node {
    }
 
    /**
-    * @since chef 0.10
+    * @since Chef 0.10
     */
-   public String getChefEnvironment() {
-      return chefEnvironment;
+   public String getEnvironment() {
+      return environment;
    }
 
    @Override
@@ -138,13 +189,13 @@ public class Node {
       int result = 1;
       result = prime * result + ((_chefType == null) ? 0 : _chefType.hashCode());
       result = prime * result + ((_jsonClass == null) ? 0 : _jsonClass.hashCode());
-      result = prime * result + ((automatic == null) ? 0 : automatic.hashCode());
-      result = prime * result + ((defaultA == null) ? 0 : defaultA.hashCode());
+      result = prime * result + ((automaticAttributes == null) ? 0 : automaticAttributes.hashCode());
+      result = prime * result + ((defaultAttributes == null) ? 0 : defaultAttributes.hashCode());
       result = prime * result + ((name == null) ? 0 : name.hashCode());
-      result = prime * result + ((normal == null) ? 0 : normal.hashCode());
-      result = prime * result + ((override == null) ? 0 : override.hashCode());
+      result = prime * result + ((normalAttributes == null) ? 0 : normalAttributes.hashCode());
+      result = prime * result + ((overrideAttributes == null) ? 0 : overrideAttributes.hashCode());
       result = prime * result + ((runList == null) ? 0 : runList.hashCode());
-      result = prime * result + ((chefEnvironment == null) ? 0 : chefEnvironment.hashCode());
+      result = prime * result + ((environment == null) ? 0 : environment.hashCode());
       return result;
    }
 
@@ -167,42 +218,49 @@ public class Node {
             return false;
       } else if (!_jsonClass.equals(other._jsonClass))
          return false;
-      if (automatic == null) {
-         if (other.automatic != null)
+      if (automaticAttributes == null) {
+         if (other.automaticAttributes != null)
             return false;
-      } else if (!automatic.equals(other.automatic))
+      } else if (!automaticAttributes.equals(other.automaticAttributes))
          return false;
-      if (defaultA == null) {
-         if (other.defaultA != null)
+      if (defaultAttributes == null) {
+         if (other.defaultAttributes != null)
             return false;
-      } else if (!defaultA.equals(other.defaultA))
+      } else if (!defaultAttributes.equals(other.defaultAttributes))
          return false;
       if (name == null) {
          if (other.name != null)
             return false;
       } else if (!name.equals(other.name))
          return false;
-      if (normal == null) {
-         if (other.normal != null)
+      if (normalAttributes == null) {
+         if (other.normalAttributes != null)
             return false;
-      } else if (!normal.equals(other.normal))
+      } else if (!normalAttributes.equals(other.normalAttributes))
          return false;
-      if (override == null) {
-         if (other.override != null)
+      if (overrideAttributes == null) {
+         if (other.overrideAttributes != null)
             return false;
-      } else if (!override.equals(other.override))
+      } else if (!overrideAttributes.equals(other.overrideAttributes))
          return false;
       if (runList == null) {
          if (other.runList != null)
             return false;
       } else if (!runList.equals(other.runList))
          return false;
-      if (chefEnvironment == null) {
-         if (other.chefEnvironment != null)
+      if (environment == null) {
+         if (other.environment != null)
             return false;
-      } else if (!chefEnvironment.equals(other.chefEnvironment))
+      } else if (!environment.equals(other.environment))
          return false;
       return true;
+   }
+
+   @Override
+   public String toString() {
+      return "Node [name=" + name + ", runList=" + runList + ", normalAttributes=" + normalAttributes
+            + ", defaultAttributes=" + defaultAttributes + ", overrideAttributes=" + overrideAttributes
+            + ", chefEnvironment=" + environment + ", automaticAttributes=" + automaticAttributes + "]";
    }
 
 }
