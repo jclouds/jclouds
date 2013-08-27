@@ -27,10 +27,12 @@ import org.jclouds.trmk.vcloud_0_8.domain.DataCenter;
  * operations (i.e. uploading a catalog item). The data centers for an
  * organization are those data centers that contain at least one of the
  * organization's environments.
- * 
+ *
+ * @deprecated *Client classes will be moved to *Api in jclouds 1.7.0.
  * @see DataCenterOperationsAsyncClient
  * @author Adrian Cole
  */
+@Deprecated
 public interface DataCenterOperationsClient {
 
    /**

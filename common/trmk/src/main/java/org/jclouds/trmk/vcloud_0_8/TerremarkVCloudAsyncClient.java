@@ -116,12 +116,14 @@ import com.google.inject.Provides;
 /**
  * Provides access to VCloud resources via their REST API.
  * <p/>
- * 
+ *
+ * @deprecated  The async interface will be removed in jclouds 1.7.
  * @see <a href=
  *      "https://community.vcloudexpress.terremark.com/en-us/discussion_forums/f/60.aspx"
  *      />
  * @author Adrian Cole
  */
+@Deprecated
 @RequestFilters(SetVCloudTokenCookie.class)
 public interface TerremarkVCloudAsyncClient extends Closeable {
 

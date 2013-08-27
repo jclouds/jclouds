@@ -41,9 +41,11 @@ import com.google.common.util.concurrent.ListenableFuture;
 /**
  * Provides access to Network functionality in vCloud
  * <p/>
- * 
+ *
+ * @deprecated  The async interface will be removed in jclouds 1.7.
  * @author Adrian Cole
  */
+@Deprecated
 @RequestFilters(AddVCloudAuthorizationAndCookieToRequest.class)
 public interface NetworkAsyncClient {
 

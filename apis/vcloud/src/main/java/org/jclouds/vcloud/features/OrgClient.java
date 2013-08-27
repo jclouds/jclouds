@@ -25,9 +25,11 @@ import org.jclouds.vcloud.domain.ReferenceType;
 /**
  * Provides access to Org functionality in vCloud
  * <p/>
- * 
+ *
+ * @deprecated *Client classes will be moved to *Api in jclouds 1.7.0.
  * @author Adrian Cole
  */
+@Deprecated
 public interface OrgClient {
 
    /**

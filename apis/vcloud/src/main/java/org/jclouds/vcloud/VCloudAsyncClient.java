@@ -37,7 +37,7 @@ import org.jclouds.vcloud.filters.AddVCloudAuthorizationAndCookieToRequest;
  * @see <a href= "https://community.vcloudexpress.terremark.com/en-us/discussion_forums/f/60.aspx"
  *      />
  * @author Adrian Cole
- * @deprecated please use {@code org.jclouds.ContextBuilder#buildApi(VCloudClient.class)} as
+ * @deprecated please use {@code org.jclouds.ContextBuilder#buildApi(VCloudApi.class)} as
  *             {@link VCloudAsyncClient} interface will be removed in jclouds 1.7.
  */
 @Deprecated

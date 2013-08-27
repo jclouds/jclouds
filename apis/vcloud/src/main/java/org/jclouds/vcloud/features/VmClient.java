@@ -26,9 +26,11 @@ import org.jclouds.vcloud.domain.Vm;
 /**
  * Provides access to VM functionality in vCloud
  * <p/>
- * 
+ *
+ * @deprecated *Client classes will be moved to *Api in jclouds 1.7.0.
  * @author Adrian Cole
  */
+@Deprecated
 public interface VmClient {
 
    Vm getVm(URI vApp);

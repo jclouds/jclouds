@@ -29,10 +29,12 @@ import org.jclouds.vcloud.options.InstantiateVAppTemplateOptions;
 /**
  * Provides access to VApp Template functionality in vCloud
  * <p/>
- * 
+ *
+ * @deprecated *Client classes will be moved to *Api in jclouds 1.7.0.
  * @see <a href="http://communities.vmware.com/community/developer/forums/vcloudapi" />
  * @author Adrian Cole
  */
+@Deprecated
 public interface VAppTemplateClient {
    /**
     * returns the vapp template corresponding to a catalog item in the catalog associated with the

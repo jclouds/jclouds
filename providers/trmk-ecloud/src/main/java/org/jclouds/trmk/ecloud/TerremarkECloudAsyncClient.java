@@ -84,7 +84,8 @@ import com.google.common.util.concurrent.ListenableFuture;
 /**
  * Provides access to eCloud resources via their REST API.
  * <p/>
- * 
+ *
+ * @deprecated  The async interface will be removed in jclouds 1.7.
  * @see <a href=
  *      "http://support.theenterprisecloud.com/kb/default.asp?id=645&Lang=1&SID="
  *      />

@@ -25,10 +25,12 @@ import org.jclouds.vcloud.options.CloneVAppOptions;
 /**
  * Provides access to VApp functionality in vCloud
  * <p/>
- * 
+ *
+ * @deprecated *Client classes will be moved to *Api in jclouds 1.7.0.
  * @see <a href="http://communities.vmware.com/community/developer/forums/vcloudapi" />
  * @author Adrian Cole
  */
+@Deprecated
 public interface VAppClient {
    VApp findVAppInOrgVDCNamed(@Nullable String orgName, @Nullable String catalogName, String vAppName);
 

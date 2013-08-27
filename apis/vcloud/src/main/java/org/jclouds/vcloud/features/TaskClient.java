@@ -23,9 +23,11 @@ import org.jclouds.vcloud.domain.TasksList;
 /**
  * Provides access to Task functionality in vCloud
  * <p/>
- * 
+ *
+ * @deprecated *Client classes will be moved to *Api in jclouds 1.7.0.
  * @author Adrian Cole
  */
+@Deprecated
 public interface TaskClient {
 
    TasksList getTasksList(URI tasksListId);

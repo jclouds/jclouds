@@ -58,10 +58,11 @@ import com.google.common.util.concurrent.ListenableFuture;
 /**
  * Provides access to VCloud resources via their REST API.
  * <p/>
- * 
+ *
+ * @deprecated  The async interface will be removed in jclouds 1.7.
  * @see <a href="https://community.vcloudexpress.terremark.com/en-us/discussion_forums/f/60.aspx" />
  * @author Adrian Cole
- * @deprecated please use {@code org.jclouds.ContextBuilder#buildApi(TerremarkVCloudExpressClient.class)} as
+ * @deprecated please use {@code org.jclouds.ContextBuilder#buildApi(TerremarkVCloudExpressApi.class)} as
  *             {@link TerremarkVCloudExpressAsyncClient} interface will be removed in jclouds 1.7.
  */
 @Deprecated

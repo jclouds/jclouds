@@ -25,10 +25,12 @@ import org.jclouds.vcloud.options.CatalogItemOptions;
 /**
  * Provides access to Catalog functionality in vCloud
  * <p/>
- * 
+ *
+ * @deprecated *Client classes will be moved to *Api in jclouds 1.7.0.
  * @see <a href="http://communities.vmware.com/community/developer/forums/vcloudapi" />
  * @author Adrian Cole
  */
+@Deprecated
 public interface CatalogClient {
 
    Catalog getCatalog(URI catalogId);

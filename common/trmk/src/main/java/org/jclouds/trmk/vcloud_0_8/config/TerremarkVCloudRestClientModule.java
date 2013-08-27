@@ -72,8 +72,12 @@ import org.jclouds.trmk.vcloud_0_8.functions.OrgsForLocations;
 import org.jclouds.trmk.vcloud_0_8.functions.OrgsForNames;
 import org.jclouds.trmk.vcloud_0_8.functions.VAppTemplatesForCatalogItems;
 import org.jclouds.trmk.vcloud_0_8.handlers.ParseTerremarkVCloudErrorFromHttpResponse;
+import org.jclouds.trmk.vcloud_0_8.internal.TerremarkVCloudLoginApi;
+import org.jclouds.trmk.vcloud_0_8.internal.TerremarkVCloudLoginAsyncApi;
 import org.jclouds.trmk.vcloud_0_8.internal.TerremarkVCloudLoginAsyncClient;
 import org.jclouds.trmk.vcloud_0_8.internal.TerremarkVCloudLoginClient;
+import org.jclouds.trmk.vcloud_0_8.internal.TerremarkVCloudVersionsApi;
+import org.jclouds.trmk.vcloud_0_8.internal.TerremarkVCloudVersionsAsyncApi;
 import org.jclouds.trmk.vcloud_0_8.internal.TerremarkVCloudVersionsAsyncClient;
 import org.jclouds.trmk.vcloud_0_8.internal.TerremarkVCloudVersionsClient;
 import org.jclouds.trmk.vcloud_0_8.location.DefaultVDC;
@@ -134,6 +138,8 @@ public class TerremarkVCloudRestClientModule<S, A> extends RestClientModule<S, A
       });
       bindSyncToAsyncHttpApi(binder(), TerremarkVCloudVersionsClient.class, TerremarkVCloudVersionsAsyncClient.class);
       bindSyncToAsyncHttpApi(binder(), TerremarkVCloudLoginClient.class, TerremarkVCloudLoginAsyncClient.class);
+      bindSyncToAsyncHttpApi(binder(), TerremarkVCloudVersionsApi.class, TerremarkVCloudVersionsAsyncApi.class);
+      bindSyncToAsyncHttpApi(binder(), TerremarkVCloudLoginApi.class, TerremarkVCloudLoginAsyncApi.class);
    }
 
    @Provides

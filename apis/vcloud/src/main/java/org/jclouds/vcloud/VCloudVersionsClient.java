@@ -19,6 +19,11 @@ package org.jclouds.vcloud;
 import java.io.Closeable;
 import java.net.URI;
 import java.util.SortedMap;
+
+/**
+ * @deprecated *Client classes will be moved to *Api in jclouds 1.7.0.
+ */
+@Deprecated
 public interface VCloudVersionsClient extends Closeable {
 
    SortedMap<String, URI> getSupportedVersions();

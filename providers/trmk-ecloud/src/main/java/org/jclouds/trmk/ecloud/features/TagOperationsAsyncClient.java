@@ -37,7 +37,8 @@ import org.jclouds.trmk.vcloud_0_8.filters.SetVCloudTokenCookie;
 import com.google.common.util.concurrent.ListenableFuture;
 
 /**
- * 
+ *
+ * @deprecated  The async interface will be removed in jclouds 1.7.
  * @see <a href=
  *      "http://support.theenterprisecloud.com/kb/default.asp?id=954&Lang=1&SID="
  *      />
@@ -45,6 +46,7 @@ import com.google.common.util.concurrent.ListenableFuture;
  * 
  * @author Adrian Cole
  */
+@Deprecated
 @RequestFilters(SetVCloudTokenCookie.class)
 public interface TagOperationsAsyncClient {
 

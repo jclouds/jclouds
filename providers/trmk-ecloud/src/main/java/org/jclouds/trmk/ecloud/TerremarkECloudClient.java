@@ -33,12 +33,14 @@ import org.jclouds.trmk.vcloud_0_8.domain.VAppExtendedInfo;
 /**
  * Provides access to VCloud resources via their REST API.
  * <p/>
- * 
+ *
+ * @deprecated *Client classes will be moved to *Api in jclouds 1.7.0.
  * @see <a href=
  *      "http://support.theenterprisecloud.com/kb/default.asp?id=645&Lang=1&SID="
  *      />
  * @author Adrian Cole
  */
+@Deprecated
 public interface TerremarkECloudClient extends TerremarkVCloudClient {
    /**
     * Provides synchronous access to Data Center Operations.

@@ -25,11 +25,13 @@ import org.jclouds.trmk.vcloud_0_8.options.AddInternetServiceOptions;
 /**
  * Provides access to VCloud resources via their REST API.
  * <p/>
- * 
+ *
+ * @deprecated *Client classes will be moved to *Api in jclouds 1.7.0.
  * @see <a href="https://community.vcloudexpress.terremark.com/en-us/discussion_forums/f/60.aspx"
  *      />
  * @author Adrian Cole
  */
+@Deprecated
 public interface TerremarkVCloudExpressClient extends TerremarkVCloudClient {
 
    InternetService addInternetServiceToVDC(URI vDCId, String serviceName, Protocol protocol, int port,

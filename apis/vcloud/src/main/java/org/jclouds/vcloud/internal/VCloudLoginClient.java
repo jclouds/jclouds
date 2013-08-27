@@ -20,6 +20,10 @@ import java.io.Closeable;
 
 import org.jclouds.vcloud.domain.VCloudSession;
 
+/**
+ * @deprecated *Client classes will be moved to *Api in jclouds 1.7.0.
+ */
+@Deprecated
 public interface VCloudLoginClient extends Closeable {
 
    VCloudSession login();

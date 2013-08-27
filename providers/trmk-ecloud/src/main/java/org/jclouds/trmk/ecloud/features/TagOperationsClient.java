@@ -21,10 +21,12 @@ import java.util.Map;
 /**
  * Tag Based Operations
  * <p/>
- * 
+ *
+ * @deprecated *Client classes will be moved to *Api in jclouds 1.7.0.
  * @see TagOperationsAsyncClient
  * @author Adrian Cole
  */
+@Deprecated
 public interface TagOperationsClient {
 
    /**

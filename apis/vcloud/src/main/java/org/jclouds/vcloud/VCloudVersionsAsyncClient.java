@@ -31,10 +31,12 @@ import com.google.common.util.concurrent.ListenableFuture;
 /**
  * Establishes a context with a VCloud endpoint.
  * <p/>
- * 
+ *
+ * @deprecated  The async interface will be removed in jclouds 1.7.
  * @see <a href="https://community.vcloudexpress.terremark.com/en-us/discussion_forums/f/60.aspx" />
  * @author Adrian Cole
  */
+@Deprecated
 public interface VCloudVersionsAsyncClient extends Closeable {
 
    /**

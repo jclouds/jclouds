@@ -26,8 +26,12 @@ import javax.inject.Singleton;
 import org.jclouds.rest.ConfiguresRestClient;
 import org.jclouds.trmk.ecloud.TerremarkECloudAsyncClient;
 import org.jclouds.trmk.ecloud.TerremarkECloudClient;
+import org.jclouds.trmk.ecloud.features.DataCenterOperationsApi;
+import org.jclouds.trmk.ecloud.features.DataCenterOperationsAsyncApi;
 import org.jclouds.trmk.ecloud.features.DataCenterOperationsAsyncClient;
 import org.jclouds.trmk.ecloud.features.DataCenterOperationsClient;
+import org.jclouds.trmk.ecloud.features.TagOperationsApi;
+import org.jclouds.trmk.ecloud.features.TagOperationsAsyncApi;
 import org.jclouds.trmk.ecloud.features.TagOperationsAsyncClient;
 import org.jclouds.trmk.ecloud.features.TagOperationsClient;
 import org.jclouds.trmk.vcloud_0_8.TerremarkVCloudAsyncClient;
@@ -54,8 +58,10 @@ public class TerremarkECloudRestClientModule extends
       TerremarkVCloudRestClientModule<TerremarkECloudClient, TerremarkECloudAsyncClient> {
 
    public static final Map<Class<?>, Class<?>> DELEGATE_MAP = ImmutableMap.<Class<?>, Class<?>> builder()//
-         .put(DataCenterOperationsClient.class, DataCenterOperationsAsyncClient.class)//
-         .put(TagOperationsClient.class, TagOperationsAsyncClient.class)//
+           .put(DataCenterOperationsClient.class, DataCenterOperationsAsyncClient.class)//
+           .put(TagOperationsClient.class, TagOperationsAsyncClient.class)//
+           .put(DataCenterOperationsApi.class, DataCenterOperationsAsyncApi.class)//
+           .put(TagOperationsApi.class, TagOperationsAsyncApi.class)//
          .build();
 
    public TerremarkECloudRestClientModule() {

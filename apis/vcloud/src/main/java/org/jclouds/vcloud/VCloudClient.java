@@ -31,10 +31,12 @@ import org.jclouds.vcloud.features.VmClient;
 /**
  * Provides access to VCloud resources via their REST API.
  * <p/>
- * 
+ *
+ * @deprecated *Client classes will be moved to *Api in jclouds 1.7.0.
  * @see <a href="http://communities.vmware.com/community/developer/forums/vcloudapi" />
  * @author Adrian Cole
  */
+@Deprecated
 public interface VCloudClient extends Closeable {
    /**
     * Provides asynchronous access to VApp Template features.

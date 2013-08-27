@@ -20,6 +20,11 @@ import java.io.Closeable;
 
 import org.jclouds.trmk.vcloud_0_8.domain.VCloudSession;
 
+/**
+ * @deprecated *Client classes will be moved to *Api in jclouds 1.7.0.
+ *
+ */
+@Deprecated
 public interface TerremarkVCloudLoginClient extends Closeable {
 
    VCloudSession login();
