@@ -33,7 +33,6 @@ import org.jclouds.Fallbacks.NullOnNotFoundOr404;
 import org.jclouds.chef.ChefApi;
 import org.jclouds.chef.filters.SignedHeaderAuth;
 import org.jclouds.chef.functions.ParseKeySetFromJson;
-import org.jclouds.enterprisechef.binders.BindGroupNameToJsonPayload;
 import org.jclouds.enterprisechef.binders.BindGroupToUpdateRequestJsonPayload;
 import org.jclouds.enterprisechef.binders.GroupName;
 import org.jclouds.enterprisechef.domain.Group;
@@ -44,6 +43,7 @@ import org.jclouds.rest.annotations.Headers;
 import org.jclouds.rest.annotations.ParamParser;
 import org.jclouds.rest.annotations.RequestFilters;
 import org.jclouds.rest.annotations.ResponseParser;
+import org.jclouds.rest.annotations.WrapWith;
 
 /**
  * Provides synchronous access to the Enterprise Chef Api.
@@ -98,7 +98,7 @@ public interface EnterpriseChefApi extends ChefApi
     @Named("group:create")
     @POST
     @Path("/groups")
-    void createGroup(@BinderParam(BindGroupNameToJsonPayload.class) String name);
+    void createGroup(@WrapWith("groupname") String name);
 
     /**
      * Updates a group.
