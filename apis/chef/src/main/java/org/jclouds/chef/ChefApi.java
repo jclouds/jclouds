@@ -923,4 +923,19 @@ public interface ChefApi extends Closeable {
    @Path("/environments/{environmentname}/cookbooks/{cookbookname}?num_versions={numversions}")
    CookbookDefinition getEnvironmentCookbook(@PathParam("environmentname") String environmentname,
          @PathParam("cookbookname") String cookbookname, @PathParam("numversions") String numversions);
+  
+   /**
+    * @return List of environment recipes.
+    * @throws AuthorizationException
+    *            <p/>
+    *            "401 Unauthorized" if you are not a recognized user.
+    *            <p/>
+    *            "403 Forbidden" if you do not have rights to list environment recipes.
+    */
+   @SinceApiVersion("0.10.0")
+   @Named("environment:recipelist")
+   @GET
+   @Path("/environments/{environmentname}/recipes")
+   @Fallback(EmptySetOnNotFoundOr404.class)
+   Set<String> listEnvironmentRecipes(@PathParam("environmentname") String environmentname);
 }

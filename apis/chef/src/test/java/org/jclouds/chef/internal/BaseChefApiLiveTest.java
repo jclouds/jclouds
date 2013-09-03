@@ -464,6 +464,12 @@ public abstract class BaseChefApiLiveTest<A extends ChefApi> extends BaseChefLiv
       assertTrue(waitForIndex.apply(options));
    }
 
+   @Test(dependsOnMethods = "testCreateEnvironment")
+   public void testListEnvironmentRecipes() {
+      Set<String> recipeList = api.listEnvironmentRecipes(PREFIX);
+      assertTrue(!recipeList.isEmpty());
+   }
+
    @AfterClass(groups = { "live", "integration" })
    @Override
    public void tearDown() {
