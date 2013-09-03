@@ -40,8 +40,6 @@ import org.jclouds.Fallbacks.VoidOnNotFoundOr404;
 import org.jclouds.chef.binders.BindChecksumsToJsonPayload;
 import org.jclouds.chef.binders.BindCreateClientOptionsToJsonPayload;
 import org.jclouds.chef.binders.BindGenerateKeyForClientToJsonPayload;
-import org.jclouds.chef.binders.BindIsCompletedToJsonPayload;
-import org.jclouds.chef.binders.BindNameToJsonPayload;
 import org.jclouds.chef.binders.DatabagItemId;
 import org.jclouds.chef.binders.EnvironmentName;
 import org.jclouds.chef.binders.NodeName;
@@ -85,6 +83,7 @@ import org.jclouds.rest.annotations.RequestFilters;
 import org.jclouds.rest.annotations.ResponseParser;
 import org.jclouds.rest.annotations.SinceApiVersion;
 import org.jclouds.rest.annotations.SkipEncoding;
+import org.jclouds.rest.annotations.WrapWith;
 import org.jclouds.rest.binders.BindToJsonPayload;
 
 /**
@@ -137,8 +136,7 @@ public interface ChefApi extends Closeable {
    @Named("sandbox:commit")
    @PUT
    @Path("/sandboxes/{id}")
-   Sandbox commitSandbox(@PathParam("id") String id,
-         @BinderParam(BindIsCompletedToJsonPayload.class) boolean isCompleted);
+   Sandbox commitSandbox(@PathParam("id") String id, @WrapWith("is_completed") boolean isCompleted);
 
    /**
     * @return a list of all the cookbook names
@@ -503,7 +501,7 @@ public interface ChefApi extends Closeable {
    @Named("databag:create")
    @POST
    @Path("/data")
-   void createDatabag(@BinderParam(BindNameToJsonPayload.class) String databagName);
+   void createDatabag(@WrapWith("name") String databagName);
 
    /**
     * Delete a data bag, including its items
@@ -779,7 +777,7 @@ public interface ChefApi extends Closeable {
    @Named("content:get")
    @GET
    @Fallback(NullOnNotFoundOr404.class)
-   @SkipEncoding({'+', ' ', '/', '=', ':', ';'})
+   @SkipEncoding({ '+', ' ', '/', '=', ':', ';' })
    InputStream getResourceContents(@EndpointParam(parser = UriForResource.class) Resource resource);
 
    /**
