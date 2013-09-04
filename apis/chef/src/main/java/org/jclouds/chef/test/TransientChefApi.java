@@ -378,6 +378,11 @@ public class TransientChefApi implements ChefApi {
    }
 
    @Override
+   public Set<String> listEnvironmentNodes(String environmentname) {
+      throw new UnsupportedOperationException();
+   }
+  
+   @Override
    public void close() throws IOException {
       closer.close();
    }
