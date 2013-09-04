@@ -74,6 +74,34 @@ public class ChefApiExpectTest extends BaseChefApiExpectTest<ChefApi> {
       assertTrue(api.listEnvironmentRecipes("dev").isEmpty());
    }
 
+   public void testListEnvironmentNodesReturns2xx() {
+      ChefApi api = requestSendsResponse(
+            signed(HttpRequest.builder() //
+                  .method("GET") //
+                  .endpoint("http://localhost:4000/environments/dev/nodes") //
+                  .addHeader("X-Chef-Version", ChefApi.VERSION) //
+                  .addHeader("Accept", MediaType.APPLICATION_JSON).build()), //
+            HttpResponse.builder().statusCode(200)
+                  .payload(payloadFromResourceWithContentType("/environment_nodes.json", MediaType.APPLICATION_JSON)) //
+                  .build());
+      Set<String> nodes = api.listEnvironmentNodes("dev");
+      assertEquals(nodes.size(), 3);
+      assertTrue(nodes.contains("blah"));
+   }
+
+   public void testListEnvironmentNodesReturns404() {
+      ChefApi api = requestSendsResponse(
+            signed(HttpRequest.builder() //
+                  .method("GET") //
+                  .endpoint("http://localhost:4000/environments/dev/nodes") //
+                  .addHeader("X-Chef-Version", ChefApi.VERSION) //
+                  .addHeader("Accept", MediaType.APPLICATION_JSON).build()), //
+            HttpResponse.builder().statusCode(404)
+                  .build());
+
+      assertTrue(api.listEnvironmentNodes("dev").isEmpty());
+   }
+
    @Override
    protected Module createModule() {
       return new TestChefRestClientModule();

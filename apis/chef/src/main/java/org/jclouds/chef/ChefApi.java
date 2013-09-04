@@ -938,4 +938,20 @@ public interface ChefApi extends Closeable {
    @Path("/environments/{environmentname}/recipes")
    @Fallback(EmptySetOnNotFoundOr404.class)
    Set<String> listEnvironmentRecipes(@PathParam("environmentname") String environmentname);
+
+   /**
+    * @return List of environment nodes.
+    * @throws AuthorizationException
+    *            <p/>
+    *            "401 Unauthorized" if you are not a recognized user.
+    *            <p/>
+    *            "403 Forbidden" if you do not have rights to list environment nodes.
+    */
+   @SinceApiVersion("0.10.0")
+   @Named("environment:nodelist")
+   @GET
+   @Path("/environments/{environmentname}/nodes")
+   @ResponseParser(ParseKeySetFromJson.class)   
+   @Fallback(EmptySetOnNotFoundOr404.class)
+   Set<String> listEnvironmentNodes(@PathParam("environmentname") String environmentname);  
 }

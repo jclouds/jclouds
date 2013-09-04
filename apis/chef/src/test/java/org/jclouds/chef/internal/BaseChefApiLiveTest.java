@@ -72,6 +72,7 @@ import com.google.common.primitives.Bytes;
 public abstract class BaseChefApiLiveTest<A extends ChefApi> extends BaseChefLiveTest<A> {
    public static final String PREFIX = "jcloudstest-" + System.getProperty("user.name");
    public static final String ADMIN_PREFIX = "jcloudstest-adm-" + System.getProperty("user.name");
+   public static final String ENV_NODE = PREFIX + "-env-node";
 
    // It may take a bit until the search index is populated
    protected int maxWaitForIndexInMs = 60000;
@@ -470,12 +471,23 @@ public abstract class BaseChefApiLiveTest<A extends ChefApi> extends BaseChefLiv
       assertTrue(!recipeList.isEmpty());
    }
 
+   @Test(dependsOnMethods = "testCreateEnvironment")
+   public void testListEnvironmentNodes() {
+      api.deleteNode(ENV_NODE);
+      api.createNode(Node.builder().name(ENV_NODE).runListElement("role[" + PREFIX + "]").environment(PREFIX).build());
+      node = api.getNode(ENV_NODE);
+      assertNotNull(node, "Created node should not be null");
+      Set<String> nodeList = api.listEnvironmentNodes(PREFIX);
+      assertTrue(!nodeList.isEmpty());
+   }
+
    @AfterClass(groups = { "live", "integration" })
    @Override
    public void tearDown() {
       api.deleteClient(PREFIX);
       api.deleteClient(ADMIN_PREFIX);
       api.deleteNode(PREFIX);
+      api.deleteNode(ENV_NODE);
       api.deleteRole(PREFIX);
       api.deleteDatabag(PREFIX);
       api.deleteEnvironment(PREFIX);
