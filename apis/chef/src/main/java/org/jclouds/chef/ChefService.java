@@ -177,4 +177,7 @@ public interface ChefService {
 
    @SinceApiVersion("0.10.0")
    Iterable<? extends Environment> listEnvironmentsNamed(Iterable<String> names);
+
+   @SinceApiVersion("0.10.0")
+   Iterable<? extends Node> listEnvironmentNodes(String environmentName);
 }
