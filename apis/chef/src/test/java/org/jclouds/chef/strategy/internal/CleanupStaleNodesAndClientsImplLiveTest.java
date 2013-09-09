@@ -33,20 +33,20 @@ import com.google.common.collect.ImmutableSet;
 @Test(groups = "live", testName = "CleanupStaleNodesAndClientsImplLiveTest")
 public class CleanupStaleNodesAndClientsImplLiveTest extends BaseChefLiveTest<ChefApi> {
 
-   private CreateNodeAndPopulateAutomaticAttributesImpl creater;
+   private CreateNodeAndPopulateAutomaticAttributesImpl creator;
    private CleanupStaleNodesAndClientsImpl strategy;
 
    @Override
    protected void initialize() {
       super.initialize();
-      this.creater = injector.getInstance(CreateNodeAndPopulateAutomaticAttributesImpl.class);
+      this.creator = injector.getInstance(CreateNodeAndPopulateAutomaticAttributesImpl.class);
       this.strategy = injector.getInstance(CleanupStaleNodesAndClientsImpl.class);
    }
 
    @Test
    public void testExecute() throws InterruptedException {
       try {
-         creater.execute(prefix, ImmutableSet.<String> of());
+         creator.execute(prefix, ImmutableSet.<String> of());
          // http://tickets.corp.opscode.com/browse/PL-522
          // assert chef.nodeExists(prefix);
          assertNotNull(api.getNode(prefix));
