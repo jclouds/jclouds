@@ -18,6 +18,7 @@ package org.jclouds.chef.strategy.internal;
 
 import static com.google.common.collect.Iterables.size;
 import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertTrue;
 
 import org.jclouds.chef.ChefApi;
 import org.jclouds.chef.internal.BaseChefLiveTest;
@@ -57,7 +58,7 @@ public class GetNodesImplLiveTest extends BaseChefLiveTest<ChefApi> {
 
    @Test
    public void testExecute() {
-      assert size(strategy.execute()) > 0;
+      assertTrue(size(strategy.execute()) > 0, "Expected one or more elements");
    }
 
    @Test
