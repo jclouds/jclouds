@@ -34,20 +34,20 @@ import com.google.common.collect.ImmutableSet;
 public class DeleteAllApisAndNodesInListImplLiveTest extends BaseChefLiveTest<ChefApi> {
 
    private DeleteAllNodesInListImpl strategy;
-   private CreateNodeAndPopulateAutomaticAttributesImpl creater;
+   private CreateNodeAndPopulateAutomaticAttributesImpl creator;
 
    @Override
    protected void initialize() {
       super.initialize();
-      this.creater = injector.getInstance(CreateNodeAndPopulateAutomaticAttributesImpl.class);
+      this.creator = injector.getInstance(CreateNodeAndPopulateAutomaticAttributesImpl.class);
       this.strategy = injector.getInstance(DeleteAllNodesInListImpl.class);
    }
 
    @Test
    public void testExecute() throws InterruptedException {
       try {
-         creater.execute(prefix, ImmutableSet.<String> of());
-         creater.execute(prefix + 1, ImmutableSet.<String> of());
+         creator.execute(prefix, ImmutableSet.<String> of());
+         creator.execute(prefix + 1, ImmutableSet.<String> of());
 
          // http://tickets.corp.opscode.com/browse/PL-522
          // assert api.nodeExists(prefix);

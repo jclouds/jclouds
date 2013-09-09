@@ -36,15 +36,15 @@ import com.google.common.collect.ImmutableSet;
 public class GetNodesImplLiveTest extends BaseChefLiveTest<ChefApi> {
 
    private ListNodesImpl strategy;
-   private CreateNodeAndPopulateAutomaticAttributesImpl creater;
+   private CreateNodeAndPopulateAutomaticAttributesImpl creator;
 
    @Override
    protected void initialize() {
       super.initialize();
-      this.creater = injector.getInstance(CreateNodeAndPopulateAutomaticAttributesImpl.class);
+      this.creator = injector.getInstance(CreateNodeAndPopulateAutomaticAttributesImpl.class);
       this.strategy = injector.getInstance(ListNodesImpl.class);
-      creater.execute(prefix, ImmutableSet.<String> of());
-      creater.execute(prefix + 1, ImmutableSet.<String> of());
+      creator.execute(prefix, ImmutableSet.<String> of());
+      creator.execute(prefix + 1, ImmutableSet.<String> of());
    }
 
    @AfterClass(groups = { "integration", "live" })
