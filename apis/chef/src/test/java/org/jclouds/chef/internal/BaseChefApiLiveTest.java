@@ -46,6 +46,7 @@ import org.jclouds.chef.domain.Metadata;
 import org.jclouds.chef.domain.Node;
 import org.jclouds.chef.domain.Resource;
 import org.jclouds.chef.domain.Role;
+import org.jclouds.chef.domain.Sandbox;
 import org.jclouds.chef.domain.SearchResult;
 import org.jclouds.chef.domain.UploadSandbox;
 import org.jclouds.chef.options.CreateClientOptions;
@@ -76,10 +77,9 @@ public abstract class BaseChefApiLiveTest<A extends ChefApi> extends BaseChefLiv
 
    // It may take a bit until the search index is populated
    protected int maxWaitForIndexInMs = 60000;
-
-   private Node node;
-   private Role role;
-   protected DatabagItem databagItem;
+   
+   // The id of the data bag item used in search tests
+   private String databagitemId;
 
    public void testCreateNewCookbook() throws Exception {
       // Define the file you want in the cookbook
@@ -103,7 +103,8 @@ public abstract class BaseChefApiLiveTest<A extends ChefApi> extends BaseChefLiv
          if (status.needsUpload()) {
             api.uploadContent(status.getUrl(), content);
          }
-         api.commitSandbox(site.getSandboxId(), true);
+         Sandbox sandbox = api.commitSandbox(site.getSandboxId(), true);
+         assertTrue(sandbox.isCompleted(), "Sandbox should be completed after uploading");
       } catch (RuntimeException e) {
          api.commitSandbox(site.getSandboxId(), false);
          fail("Could not upload content");
@@ -210,7 +211,7 @@ public abstract class BaseChefApiLiveTest<A extends ChefApi> extends BaseChefLiv
    public void testCreateNode() throws Exception {
       api.deleteNode(PREFIX);
       api.createNode(Node.builder().name(PREFIX).runListElement("role[" + PREFIX + "]").environment("_default").build());
-      node = api.getNode(PREFIX);
+      Node node = api.getNode(PREFIX);
       // TODO check recipes
       assertNotNull(node, "Created node should not be null");
       Set<String> nodes = api.listNodes();
@@ -235,7 +236,7 @@ public abstract class BaseChefApiLiveTest<A extends ChefApi> extends BaseChefLiv
    public void testCreateRole() throws Exception {
       api.deleteRole(PREFIX);
       api.createRole(Role.builder().name(PREFIX).runListElement("recipe[java]").build());
-      role = api.getRole(PREFIX);
+      Role role = api.getRole(PREFIX);
       assertNotNull(role, "Created role should not be null");
       assertEquals(role.getName(), PREFIX);
       assertEquals(role.getRunList(), Collections.singleton("recipe[java]"));
@@ -272,7 +273,8 @@ public abstract class BaseChefApiLiveTest<A extends ChefApi> extends BaseChefLiv
       Properties config = new Properties();
       config.setProperty("foo", "bar");
       api.deleteDatabagItem(PREFIX, PREFIX);
-      databagItem = api.createDatabagItem(PREFIX, new DatabagItem("config", json.toJson(config)));
+      DatabagItem databagItem = api.createDatabagItem(PREFIX, new DatabagItem("config", json.toJson(config)));
+      databagitemId = databagItem.getId();
       assertNotNull(databagItem, "Created data bag item should not be null");
       assertEquals(databagItem.getId(), "config");
 
@@ -401,7 +403,7 @@ public abstract class BaseChefApiLiveTest<A extends ChefApi> extends BaseChefLiv
             assertNotNull(results);
             if (results.size() > 0) {
                assertEquals(results.size(), 1);
-               assertEquals(results.iterator().next().getId(), databagItem.getId());
+               assertEquals(results.iterator().next().getId(), databagitemId);
                return true;
             } else {
                // The index may still not be populated
@@ -410,7 +412,7 @@ public abstract class BaseChefApiLiveTest<A extends ChefApi> extends BaseChefLiv
          }
       }, maxWaitForIndexInMs, 5000L, MILLISECONDS);
 
-      SearchOptions options = SearchOptions.Builder.query("id:" + databagItem.getId());
+      SearchOptions options = SearchOptions.Builder.query("id:" + databagitemId);
       assertTrue(waitForIndex.apply(options));
    }
 
@@ -475,7 +477,7 @@ public abstract class BaseChefApiLiveTest<A extends ChefApi> extends BaseChefLiv
    public void testListEnvironmentNodes() {
       api.deleteNode(ENV_NODE);
       api.createNode(Node.builder().name(ENV_NODE).runListElement("role[" + PREFIX + "]").environment(PREFIX).build());
-      node = api.getNode(ENV_NODE);
+      Node node = api.getNode(ENV_NODE);
       assertNotNull(node, "Created node should not be null");
       Set<String> nodeList = api.listEnvironmentNodes(PREFIX);
       assertTrue(!nodeList.isEmpty());
