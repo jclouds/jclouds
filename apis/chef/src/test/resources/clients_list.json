@@ -1,0 +1,5 @@
+{
+  "chef-webui": "http://localhost:4000/clients/chef-webui",
+  "chef-validator": "http://localhost:4000/clients/chef-validator",
+  "adam": "http://localhost:4000/clients/adam"
+}

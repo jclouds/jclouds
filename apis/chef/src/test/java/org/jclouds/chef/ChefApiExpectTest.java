@@ -44,7 +44,63 @@ public class ChefApiExpectTest extends BaseChefApiExpectTest<ChefApi> {
      provider = "chef";
    }
 
-   public void testListEnvironmentRecipesReturns2xx() {
+   public void testListClientsReturns2xx() {
+      ChefApi api = requestSendsResponse(
+            signed(HttpRequest.builder() //
+                  .method("GET") //
+                  .endpoint("http://localhost:4000/clients") //
+                  .addHeader("X-Chef-Version", ChefApiMetadata.DEFAULT_API_VERSION) //
+                  .addHeader("Accept", MediaType.APPLICATION_JSON).build()), //
+            HttpResponse.builder().statusCode(200)
+                  .payload(payloadFromResourceWithContentType("/clients_list.json", MediaType.APPLICATION_JSON)) //
+                  .build());
+      Set<String> nodes = api.listClients();
+      assertEquals(nodes.size(), 3);
+      assertTrue(nodes.contains("adam"), String.format("Expected nodes to contain 'adam' but was: %s", nodes));
+   }
+
+   public void testListClientsReturns404() {
+      ChefApi api = requestSendsResponse(
+            signed(HttpRequest.builder() //
+                  .method("GET") //
+                  .endpoint("http://localhost:4000/clients") //
+                  .addHeader("X-Chef-Version", ChefApiMetadata.DEFAULT_API_VERSION) //
+                  .addHeader("Accept", MediaType.APPLICATION_JSON).build()), //
+            HttpResponse.builder().statusCode(404)
+                  .build());
+      Set<String> clients = api.listClients();
+      assertTrue(clients.isEmpty(), String.format("Expected clients to be empty but was: %s", clients));
+   }
+
+   public void testListNodesReturns2xx() {
+      ChefApi api = requestSendsResponse(
+            signed(HttpRequest.builder() //
+                  .method("GET") //
+                  .endpoint("http://localhost:4000/nodes") //
+                  .addHeader("X-Chef-Version", ChefApiMetadata.DEFAULT_API_VERSION) //
+                  .addHeader("Accept", MediaType.APPLICATION_JSON).build()), //
+            HttpResponse.builder().statusCode(200)
+                  .payload(payloadFromResourceWithContentType("/nodes_list.json", MediaType.APPLICATION_JSON)) //
+                  .build());
+      Set<String> nodes = api.listNodes();
+      assertEquals(nodes.size(), 3);
+      assertTrue(nodes.contains("blah"), String.format("Expected nodes to contain 'blah' but was: %s", nodes));
+   }
+
+   public void testListNodesReturns404() {
+      ChefApi api = requestSendsResponse(
+            signed(HttpRequest.builder() //
+                  .method("GET") //
+                  .endpoint("http://localhost:4000/nodes") //
+                  .addHeader("X-Chef-Version", ChefApiMetadata.DEFAULT_API_VERSION) //
+                  .addHeader("Accept", MediaType.APPLICATION_JSON).build()), //
+            HttpResponse.builder().statusCode(404)
+                  .build());
+      Set<String> nodes = api.listNodes();
+      assertTrue(nodes.isEmpty(), String.format("Expected nodes to be empty but was: %s", nodes));
+   }
+   
+   public void testListRecipesInEnvironmentReturns2xx() {
       ChefApi api = requestSendsResponse(
             signed(HttpRequest.builder() //
                   .method("GET") //
@@ -56,10 +112,10 @@ public class ChefApiExpectTest extends BaseChefApiExpectTest<ChefApi> {
                   .build());
       Set<String> recipes = api.listRecipesInEnvironment("dev");
       assertEquals(recipes.size(), 3);
-      assertTrue(recipes.contains("apache2"));
+      assertTrue(recipes.contains("apache2"), String.format("Expected recipes to contain 'apache2' but was: %s", recipes));
    }
 
-   public void testListEnvironmentRecipesReturns404() {
+   public void testListRecipesInEnvironmentReturns404() {
       ChefApi api = requestSendsResponse(
             signed(HttpRequest.builder() //
                   .method("GET") //
@@ -68,11 +124,11 @@ public class ChefApiExpectTest extends BaseChefApiExpectTest<ChefApi> {
                   .addHeader("Accept", MediaType.APPLICATION_JSON).build()), //
             HttpResponse.builder().statusCode(404)
                   .build());
-
-      assertTrue(api.listRecipesInEnvironment("dev").isEmpty());
+      Set<String> recipes = api.listRecipesInEnvironment("dev");
+      assertTrue(recipes.isEmpty(), String.format("Expected recipes to be empty but was: %s", recipes));
    }
 
-   public void testListEnvironmentNodesReturns2xx() {
+   public void testListNodesInEnvironmentReturns2xx() {
       ChefApi api = requestSendsResponse(
             signed(HttpRequest.builder() //
                   .method("GET") //
@@ -80,14 +136,14 @@ public class ChefApiExpectTest extends BaseChefApiExpectTest<ChefApi> {
                   .addHeader("X-Chef-Version", ChefApiMetadata.DEFAULT_API_VERSION) //
                   .addHeader("Accept", MediaType.APPLICATION_JSON).build()), //
             HttpResponse.builder().statusCode(200)
-                  .payload(payloadFromResourceWithContentType("/environment_nodes.json", MediaType.APPLICATION_JSON)) //
+                  .payload(payloadFromResourceWithContentType("/nodes_list.json", MediaType.APPLICATION_JSON)) //
                   .build());
       Set<String> nodes = api.listNodesInEnvironment("dev");
       assertEquals(nodes.size(), 3);
-      assertTrue(nodes.contains("blah"));
+      assertTrue(nodes.contains("blah"), String.format("Expected nodes to contain 'blah' but was: %s", nodes));
    }
 
-   public void testListEnvironmentNodesReturns404() {
+   public void testListNodesInEnvironmentReturns404() {
       ChefApi api = requestSendsResponse(
             signed(HttpRequest.builder() //
                   .method("GET") //
@@ -96,8 +152,8 @@ public class ChefApiExpectTest extends BaseChefApiExpectTest<ChefApi> {
                   .addHeader("Accept", MediaType.APPLICATION_JSON).build()), //
             HttpResponse.builder().statusCode(404)
                   .build());
-
-      assertTrue(api.listNodesInEnvironment("dev").isEmpty());
+      Set<String> nodes = api.listNodesInEnvironment("dev");
+      assertTrue(nodes.isEmpty(), String.format("Expected nodes to be empty but was: %s", nodes));
    }
 
    @Override

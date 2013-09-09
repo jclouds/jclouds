@@ -279,23 +279,6 @@ public class ChefApiTest extends BaseAsyncApiTest<ChefApi> {
 
    }
 
-   public void testListClients() throws SecurityException, NoSuchMethodException, IOException {
-      Invokable<?, ?> method = method(ChefApi.class, "listClients");
-      GeneratedHttpRequest httpRequest = processor.apply(Invocation.create(method, ImmutableList.of()));
-
-      assertRequestLineEquals(httpRequest, "GET http://localhost:4000/clients HTTP/1.1");
-      assertNonPayloadHeadersEqual(httpRequest, "Accept: application/json\nX-Chef-Version: " + ChefApiMetadata.DEFAULT_API_VERSION
-            + "-test\n");
-      assertPayloadEquals(httpRequest, null, null, false);
-
-      assertResponseParserClassEquals(method, httpRequest, ParseKeySetFromJson.class);
-      assertSaxResponseParserClassEquals(method, null);
-      assertFallbackClassEquals(method, EmptySetOnNotFoundOr404.class);
-
-      checkFilters(httpRequest);
-
-   }
-
    public void testGenerateKeyForClient() throws SecurityException, NoSuchMethodException, IOException {
       Invokable<?, ?> method = method(ChefApi.class, "generateKeyForClient", String.class);
       GeneratedHttpRequest httpRequest = processor
@@ -370,23 +353,6 @@ public class ChefApiTest extends BaseAsyncApiTest<ChefApi> {
       assertResponseParserClassEquals(method, httpRequest, ParseJson.class);
       assertSaxResponseParserClassEquals(method, null);
       assertFallbackClassEquals(method, null);
-
-      checkFilters(httpRequest);
-
-   }
-
-   public void testListNodes() throws SecurityException, NoSuchMethodException, IOException {
-      Invokable<?, ?> method = method(ChefApi.class, "listNodes");
-      GeneratedHttpRequest httpRequest = processor.apply(Invocation.create(method, ImmutableList.of()));
-
-      assertRequestLineEquals(httpRequest, "GET http://localhost:4000/nodes HTTP/1.1");
-      assertNonPayloadHeadersEqual(httpRequest, "Accept: application/json\nX-Chef-Version: " + ChefApiMetadata.DEFAULT_API_VERSION
-            + "-test\n");
-      assertPayloadEquals(httpRequest, null, null, false);
-
-      assertResponseParserClassEquals(method, httpRequest, ParseKeySetFromJson.class);
-      assertSaxResponseParserClassEquals(method, null);
-      assertFallbackClassEquals(method, EmptySetOnNotFoundOr404.class);
 
       checkFilters(httpRequest);
 
