@@ -31,8 +31,6 @@ import java.security.cert.X509Certificate;
 import java.security.spec.InvalidKeySpecException;
 import java.util.Map;
 import java.util.Set;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -42,6 +40,7 @@ import org.jclouds.chef.functions.ParseCookbookDefinitionFromJson;
 import org.jclouds.chef.functions.ParseCookbookVersionsV09FromJson;
 import org.jclouds.chef.functions.ParseCookbookVersionsV10FromJson;
 import org.jclouds.chef.functions.ParseKeySetFromJson;
+import org.jclouds.chef.suppliers.ChefVersionSupplier;
 import org.jclouds.crypto.Crypto;
 import org.jclouds.crypto.Pems;
 import org.jclouds.http.HttpResponse;
@@ -49,7 +48,6 @@ import org.jclouds.json.config.GsonModule.DateAdapter;
 import org.jclouds.json.config.GsonModule.Iso8601DateAdapter;
 import org.jclouds.json.internal.NullFilteringTypeAdapterFactories.MapTypeAdapterFactory;
 import org.jclouds.json.internal.NullHackJsonLiteralAdapter;
-import org.jclouds.rest.annotations.ApiVersion;
 
 import com.google.common.base.Charsets;
 import com.google.common.base.Function;
@@ -307,31 +305,17 @@ public class ChefParserModule extends AbstractModule {
    @Provides
    @Singleton
    @CookbookParser
-   public Function<HttpResponse, Set<String>> provideCookbookDefinitionAdapter(@ApiVersion String apiVersion,
+   public Function<HttpResponse, Set<String>> provideCookbookDefinitionAdapter(ChefVersionSupplier chefVersionSupplier,
          ParseCookbookDefinitionFromJson v10parser, ParseKeySetFromJson v09parser) {
-      Pattern versionPattern = Pattern.compile("\\d\\.(\\d)\\.\\d");
-      Matcher m = versionPattern.matcher(apiVersion);
-      if (m.matches()) {
-         return Integer.valueOf(m.group(1)) > 9 ? v10parser : v09parser;
-      } else {
-         // Default to the latest version of the parser
-         return v10parser;
-      }
+      return chefVersionSupplier.get() >= 10 ? v10parser : v09parser;
    }
 
    @Provides
    @Singleton
    @CookbookVersionsParser
-   public Function<HttpResponse, Set<String>> provideCookbookDefinitionAdapter(@ApiVersion String apiVersion,
+   public Function<HttpResponse, Set<String>> provideCookbookDefinitionAdapter(ChefVersionSupplier chefVersionSupplier,
          ParseCookbookVersionsV10FromJson v10parser, ParseCookbookVersionsV09FromJson v09parser) {
-      Pattern versionPattern = Pattern.compile("\\d\\.(\\d)\\.\\d");
-      Matcher m = versionPattern.matcher(apiVersion);
-      if (m.matches()) {
-         return Integer.valueOf(m.group(1)) > 9 ? v10parser : v09parser;
-      } else {
-         // Default to the latest version of the parser
-         return v10parser;
-      }
+      return chefVersionSupplier.get() >= 10 ? v10parser : v09parser;
    }
 
    @Override
