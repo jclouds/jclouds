@@ -105,4 +105,9 @@ public class SwiftBlobIntegrationLiveTest extends BaseBlobIntegrationTest {
            returnContainer(containerName);
        }
    }
+
+   @Override
+   protected int getIncorrectContentMD5StatusCode() {
+      return 422;
+   }
 }
