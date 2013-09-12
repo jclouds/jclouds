@@ -20,7 +20,7 @@ import static org.testng.Assert.assertEquals;
 
 import java.io.IOException;
 
-import org.jclouds.chef.ChefApi;
+import org.jclouds.chef.ChefApiMetadata;
 import org.jclouds.chef.config.ChefParserModule;
 import org.jclouds.chef.domain.DatabagItem;
 import org.jclouds.chef.domain.SearchResult;
@@ -46,7 +46,7 @@ public class ParseSearchDataBagItemFromJsonTest {
       Injector injector = Guice.createInjector(new AbstractModule() {
          @Override
          protected void configure() {
-            bind(String.class).annotatedWith(ApiVersion.class).toInstance(ChefApi.VERSION);
+            bind(String.class).annotatedWith(ApiVersion.class).toInstance(ChefApiMetadata.DEFAULT_VERSION);
          }
       }, new ChefParserModule(), new GsonModule());
 

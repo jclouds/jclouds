@@ -98,7 +98,7 @@ public class ListCookbookVersionsImpl implements ListCookbookVersions {
          @Override
          public Iterable<? extends CookbookVersion> apply(final String cookbook) {
             // TODO getting each version could also go parallel
-            Set<String> cookbookVersions = api.getVersionsOfCookbook(cookbook);
+            Set<String> cookbookVersions = api.listVersionsOfCookbook(cookbook);
             ListenableFuture<List<CookbookVersion>> futures = allAsList(transform(cookbookVersions,
                   new Function<String, ListenableFuture<CookbookVersion>>() {
                      @Override

@@ -20,116 +20,84 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
 
+import org.jclouds.chef.config.ChefProperties;
 import org.jclouds.chef.domain.BootstrapConfig;
 import org.jclouds.chef.domain.Client;
 import org.jclouds.chef.domain.CookbookVersion;
 import org.jclouds.chef.domain.Environment;
 import org.jclouds.chef.domain.Node;
 import org.jclouds.chef.internal.BaseChefService;
+import org.jclouds.chef.util.ChefUtils;
 import org.jclouds.domain.JsonBall;
+import org.jclouds.ohai.config.OhaiModule;
 import org.jclouds.rest.annotations.SinceApiVersion;
 import org.jclouds.scriptbuilder.domain.Statement;
 
-import com.google.common.base.Predicate;
 import com.google.common.io.InputSupplier;
 import com.google.inject.ImplementedBy;
 
 /**
- * Provides high level chef operations
+ * Provides high level Chef operations.
  * 
  * @author Adrian Cole
  */
 @ImplementedBy(BaseChefService.class)
 public interface ChefService {
+
    /**
-    * @return a reference to the context that created this.
+    * Get the context that created this service.
+    * 
+    * @return The context that created the service.
     */
    ChefContext getContext();
 
+   // Crypto
+
+   /**
+    * Encrypt the given input stream.
+    * 
+    * @param supplier The input stream to encrypt.
+    * @return The encrypted bytes for the given input stream.
+    * @throws IOException If there is an error reading from the input stream.
+    */
    byte[] encrypt(InputSupplier<? extends InputStream> supplier) throws IOException;
 
+   /**
+    * Decrypt the given input stream.
+    * 
+    * @param supplier The input stream to decrypt.
+    * @return The decrypted bytes for the given input stream.
+    * @throws IOException If there is an error reading from the input stream.
+    */
    byte[] decrypt(InputSupplier<? extends InputStream> supplier) throws IOException;
 
-   void cleanupStaleNodesAndClients(String prefix, int secondsStale);
+   // Bootstrap
 
    /**
+    * Creates all steps necessary to bootstrap the node.
     * 
-    * @param nodeName
-    * @param runList
-    * @return node sent to the server containing the automatic attributes
-    */
-   Node createNodeAndPopulateAutomaticAttributes(String nodeName, Iterable<String> runList);
-
-   /**
-    * Creates all steps necessary to bootstrap and run the chef api.
-    * 
-    * @param group
-    *           corresponds to a configured
-    *           {@link org.jclouds.chef.config.ChefProperties#CHEF_BOOTSTRAP_DATABAG
-    *           databag} where run_list and other information are stored
-    * @return boot script
-    * @see #updateRunListForTag
+    * @param group corresponds to a configured
+    *        {@link ChefProperties#CHEF_BOOTSTRAP_DATABAG} data bag where
+    *        run_list and other information are stored.
+    * @return The script used to bootstrap the node.
     */
    Statement createBootstrapScriptForGroup(String group);
 
    /**
     * Configures how the nodes of a certain group will be bootstrapped
     * 
-    * @param group
-    *           The group where the given bootstrap configuration will be
-    *           applied.
-    * @param bootstrapConfig
-    *           The configuration to be applied to the nodes in the group.
+    * @param group The group where the given bootstrap configuration will be
+    *        applied.
+    * @param bootstrapConfig The configuration to be applied to the nodes in the
+    *        group.
     */
    void updateBootstrapConfigForGroup(String group, BootstrapConfig bootstrapConfig);
 
    /**
-    * assigns a run list to all nodes bootstrapped with a certain group
+    * Get the run list for the given group.
     * 
-    * @param runList
-    *           list of recipes or roles to assign. syntax is
-    *           {@code recipe[name]} and {@code role[name]}
-    * 
-    * @param group
-    *           corresponds to a configured
-    *           {@link org.jclouds.chef.config.ChefProperties#CHEF_BOOTSTRAP_DATABAG
-    *           databag} where run_list and other information are stored
-    * @deprecated Use {link
-    *             {@link #updateBootstrapConfigForGroup(String, BootstrapConfig)}
-    */
-   @Deprecated
-   void updateBootstrapConfigForGroup(Iterable<String> runList, String group);
-
-   /**
-    * assigns a run list to all nodes bootstrapped with a certain group, and
-    * configures the chef run to use the given json attributes.
-    * 
-    * @param runList
-    *           list of recipes or roles to assign. syntax is
-    *           {@code recipe[name]} and {@code role[name]}
-    * 
-    * @param jsonAttributes
-    *           A json string with the attributes to be populated. Since each
-    *           cookbook may define its own attribute structure, a simple Map or
-    *           Properties object may not be convenient.
-    * 
-    * @param group
-    *           corresponds to a configured
-    *           {@link org.jclouds.chef.config.ChefProperties#CHEF_BOOTSTRAP_DATABAG
-    *           databag} where run_list and other information are stored
-    * @deprecated Use {link
-    *             {@link #updateBootstrapConfigForGroup(String, BootstrapConfig)}
-    */
-   @Deprecated
-   void updateBootstrapConfigForGroup(Iterable<String> runList, JsonBall jsonAttributes, String group);
-
-   /**
-    * @param group
-    *           corresponds to a configured
-    *           {@link org.jclouds.chef.config.ChefProperties#CHEF_BOOTSTRAP_DATABAG
-    *           databag} where run_list and other information are stored
+    * @param The group to get the configured run list for.
     * @return run list for all nodes bootstrapped with a certain group
-    * @see #updateRunListForTag
     */
    List<String> getRunListForGroup(String group);
 
@@ -139,45 +107,91 @@ public interface ChefService {
     * The bootstrap configuration is a Json object containing the run list and
     * the configured attributes.
     * 
-    * @param group
-    *           The name of the group.
+    * @param group The name of the group.
     * @return The bootstrap configuration for the given group.
     */
    public JsonBall getBootstrapConfigForGroup(String group);
 
-   void deleteAllNodesInList(Iterable<String> names);
+   // Nodes
 
-   Iterable<? extends Node> listNodes();
+   /**
+    * Creates a new node and populates the automatic attributes.
+    * 
+    * @param nodeName The name of the node to create.
+    * @param runList The run list for the created node.
+    * @return The created node with the automatic attributes populated.
+    * @see OhaiModule
+    * @see ChefUtils#ohaiAutomaticAttributeBinder(com.google.inject.Binder)
+    */
+   Node createNodeAndPopulateAutomaticAttributes(String nodeName, Iterable<String> runList);
 
-   Iterable<? extends Node> listNodesMatching(Predicate<String> nodeNameSelector);
-
-   Iterable<? extends Node> listNodesNamed(Iterable<String> names);
-
-   void deleteAllClientsInList(Iterable<String> names);
-
-   Iterable<? extends Client> listClientsDetails();
-
-   Iterable<? extends Client> listClientsDetailsMatching(Predicate<String> clientNameSelector);
-
-   Iterable<? extends Client> listClientsNamed(Iterable<String> names);
-
-   Iterable<? extends CookbookVersion> listCookbookVersions();
-
-   Iterable<? extends CookbookVersion> listCookbookVersionsMatching(Predicate<String> cookbookNameSelector);
-
-   Iterable<? extends CookbookVersion> listCookbookVersionsNamed(Iterable<String> cookbookNames);
-
+   /**
+    * Update and populate the automatic attributes of the given node.
+    * 
+    * @param nodeName The node to update.
+    */
    void updateAutomaticAttributesOnNode(String nodeName);
 
+   /**
+    * Remove the nodes and clients that have been inactive for a given amount of
+    * time.
+    * 
+    * @param prefix The prefix for the nodes and clients to delete.
+    * @param secondsStale The seconds of inactivity to consider a node and
+    *        client obsolete.
+    */
+   void cleanupStaleNodesAndClients(String prefix, int secondsStale);
+
+   /**
+    * Delete the given nodes.
+    * 
+    * @param names The names of the nodes to delete.
+    */
+   void deleteAllNodesInList(Iterable<String> names);
+
+   /**
+    * Delete the given clients.
+    * 
+    * @param names The names of the client to delete.
+    */
+   void deleteAllClientsInList(Iterable<String> names);
+
+   /**
+    * List the details of all existing nodes.
+    * 
+    * @return The details of all existing nodes.
+    */
+   Iterable<? extends Node> listNodes();
+
+   /**
+    * List the details of all existing nodes in the given environment.
+    * 
+    * @param environmentName The name fo the environment.
+    * @return The details of all existing nodes in the given environment.
+    */
+   @SinceApiVersion("0.10.0")
+   Iterable<? extends Node> listNodesInEnvironment(String environmentName);
+
+   /**
+    * List the details of all existing clients.
+    * 
+    * @return The details of all existing clients.
+    */
+   Iterable<? extends Client> listClients();
+
+   /**
+    * List the details of all existing cookbooks.
+    * 
+    * @return The details of all existing cookbooks.
+    */
+   Iterable<? extends CookbookVersion> listCookbookVersions();
+
+   /**
+    * List the details of all existing environments.
+    * 
+    * @return The details of all existing environments.
+    */
    @SinceApiVersion("0.10.0")
    Iterable<? extends Environment> listEnvironments();
 
-   @SinceApiVersion("0.10.0")
-   Iterable<? extends Environment> listEnvironmentsMatching(Predicate<String> environmentNameSelector);
-
-   @SinceApiVersion("0.10.0")
-   Iterable<? extends Environment> listEnvironmentsNamed(Iterable<String> names);
-
-   @SinceApiVersion("0.10.0")
-   Iterable<? extends Node> listEnvironmentNodes(String environmentName);
 }

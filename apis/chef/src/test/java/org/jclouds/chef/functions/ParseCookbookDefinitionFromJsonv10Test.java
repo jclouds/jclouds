@@ -22,7 +22,7 @@ import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 
-import org.jclouds.chef.ChefApi;
+import org.jclouds.chef.ChefApiMetadata;
 import org.jclouds.chef.config.ChefParserModule;
 import org.jclouds.chef.domain.CookbookDefinition;
 import org.jclouds.http.HttpResponse;
@@ -45,7 +45,7 @@ public class ParseCookbookDefinitionFromJsonv10Test {
       Injector injector = Guice.createInjector(new AbstractModule() {
          @Override
          protected void configure() {
-            bind(String.class).annotatedWith(ApiVersion.class).toInstance(ChefApi.VERSION);
+            bind(String.class).annotatedWith(ApiVersion.class).toInstance(ChefApiMetadata.DEFAULT_VERSION);
          }
       }, new ChefParserModule(), new GsonModule());
 

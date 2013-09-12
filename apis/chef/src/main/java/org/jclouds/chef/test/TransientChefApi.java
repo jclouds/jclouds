@@ -203,12 +203,12 @@ public class TransientChefApi implements ChefApi {
    }
 
    @Override
-   public UploadSandbox getUploadSandboxForChecksums(Set<List<Byte>> md5s) {
+   public UploadSandbox createUploadSandboxForChecksums(Set<List<Byte>> md5s) {
       throw new UnsupportedOperationException();
    }
 
    @Override
-   public Set<String> getVersionsOfCookbook(String cookbookName) {
+   public Set<String> listVersionsOfCookbook(String cookbookName) {
       throw new UnsupportedOperationException();
    }
 
@@ -258,12 +258,12 @@ public class TransientChefApi implements ChefApi {
    }
 
    @Override
-   public SearchResult<? extends DatabagItem> searchDatabag(String databagName) {
+   public SearchResult<? extends DatabagItem> searchDatabagItems(String databagName) {
       throw new UnsupportedOperationException();
    }
 
    @Override
-   public SearchResult<? extends DatabagItem> searchDatabag(String databagName, SearchOptions options) {
+   public SearchResult<? extends DatabagItem> searchDatabagItems(String databagName, SearchOptions options) {
       throw new UnsupportedOperationException();
    }
 
@@ -343,22 +343,22 @@ public class TransientChefApi implements ChefApi {
    }
 
    @Override
-   public Set<CookbookDefinition> listEnvironmentCookbooks(String environmentname) {
+   public Set<CookbookDefinition> listCookbooksInEnvironment(String environmentname) {
       throw new UnsupportedOperationException();
    }
 
    @Override
-   public Set<CookbookDefinition> listEnvironmentCookbooks(String environmentname, String numversions) {
+   public Set<CookbookDefinition> listCookbooksInEnvironment(String environmentname, String numversions) {
       throw new UnsupportedOperationException();
    }
 
    @Override
-   public CookbookDefinition getEnvironmentCookbook(String environmentname, String cookbookname) {
+   public CookbookDefinition getCookbookInEnvironment(String environmentname, String cookbookname) {
       throw new UnsupportedOperationException();
    }
 
    @Override
-   public CookbookDefinition getEnvironmentCookbook(String environmentname, String cookbookname, String numversions) {
+   public CookbookDefinition getCookbookInEnvironment(String environmentname, String cookbookname, String numversions) {
       throw new UnsupportedOperationException();
    }
 
@@ -373,12 +373,12 @@ public class TransientChefApi implements ChefApi {
    }
 
    @Override
-   public Set<String> listEnvironmentRecipes(String environmentname) {
+   public Set<String> listRecipesInEnvironment(String environmentname) {
       throw new UnsupportedOperationException();
    }
 
    @Override
-   public Set<String> listEnvironmentNodes(String environmentname) {
+   public Set<String> listNodesInEnvironment(String environmentname) {
       throw new UnsupportedOperationException();
    }
   

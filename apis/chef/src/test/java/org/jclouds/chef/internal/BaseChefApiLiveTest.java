@@ -77,7 +77,7 @@ public abstract class BaseChefApiLiveTest<A extends ChefApi> extends BaseChefLiv
 
    // It may take a bit until the search index is populated
    protected int maxWaitForIndexInMs = 60000;
-   
+
    // The id of the data bag item used in search tests
    private String databagitemId;
 
@@ -94,7 +94,7 @@ public abstract class BaseChefApiLiveTest<A extends ChefApi> extends BaseChefLiv
       List<Byte> md5 = Bytes.asList(content.getContentMetadata().getContentMD5());
 
       // Request an upload site for this file
-      UploadSandbox site = api.getUploadSandboxForChecksums(ImmutableSet.of(md5));
+      UploadSandbox site = api.createUploadSandboxForChecksums(ImmutableSet.of(md5));
       assertTrue(site.getChecksums().containsKey(md5), md5 + " not in " + site.getChecksums());
 
       try {
@@ -135,10 +135,10 @@ public abstract class BaseChefApiLiveTest<A extends ChefApi> extends BaseChefLiv
       assertFalse(cookbookNames.isEmpty(), "No cookbooks were found");
 
       for (String cookbookName : cookbookNames) {
-         Set<String> versions = api.getVersionsOfCookbook(cookbookName);
+         Set<String> versions = api.listVersionsOfCookbook(cookbookName);
          assertFalse(versions.isEmpty(), "There are no versions of the cookbook: " + cookbookName);
 
-         for (String version : api.getVersionsOfCookbook(cookbookName)) {
+         for (String version : api.listVersionsOfCookbook(cookbookName)) {
             CookbookVersion cookbook = api.getCookbook(cookbookName, version);
             assertNotNull(cookbook, "Could not get cookbook: " + cookbookName);
          }
@@ -390,7 +390,7 @@ public abstract class BaseChefApiLiveTest<A extends ChefApi> extends BaseChefLiv
 
    @Test(dependsOnMethods = { "testListSearchIndexes", "testCreateDatabagItem" })
    public void testSearchDatabag() throws Exception {
-      SearchResult<? extends DatabagItem> results = api.searchDatabag(PREFIX);
+      SearchResult<? extends DatabagItem> results = api.searchDatabagItems(PREFIX);
       assertNotNull(results, "Data bag item result list should not be null");
    }
 
@@ -399,7 +399,7 @@ public abstract class BaseChefApiLiveTest<A extends ChefApi> extends BaseChefLiv
       Predicate<SearchOptions> waitForIndex = retry(new Predicate<SearchOptions>() {
          @Override
          public boolean apply(SearchOptions input) {
-            SearchResult<? extends DatabagItem> results = api.searchDatabag(PREFIX, input);
+            SearchResult<? extends DatabagItem> results = api.searchDatabagItems(PREFIX, input);
             assertNotNull(results);
             if (results.size() > 0) {
                assertEquals(results.size(), 1);
@@ -418,7 +418,7 @@ public abstract class BaseChefApiLiveTest<A extends ChefApi> extends BaseChefLiv
 
    @Test(expectedExceptions = ResourceNotFoundException.class, dependsOnMethods = "testListSearchIndexes")
    public void testSearchDatabagNotFound() throws Exception {
-      SearchResult<? extends DatabagItem> results = api.searchDatabag("whoopie");
+      SearchResult<? extends DatabagItem> results = api.searchDatabagItems("whoopie");
       assertNotNull(results, "Data bag item result list should not be null");
    }
 
@@ -469,7 +469,7 @@ public abstract class BaseChefApiLiveTest<A extends ChefApi> extends BaseChefLiv
 
    @Test(dependsOnMethods = "testCreateEnvironment")
    public void testListEnvironmentRecipes() {
-      Set<String> recipeList = api.listEnvironmentRecipes(PREFIX);
+      Set<String> recipeList = api.listRecipesInEnvironment(PREFIX);
       assertTrue(!recipeList.isEmpty());
    }
 
@@ -479,7 +479,7 @@ public abstract class BaseChefApiLiveTest<A extends ChefApi> extends BaseChefLiv
       api.createNode(Node.builder().name(ENV_NODE).runListElement("role[" + PREFIX + "]").environment(PREFIX).build());
       Node node = api.getNode(ENV_NODE);
       assertNotNull(node, "Created node should not be null");
-      Set<String> nodeList = api.listEnvironmentNodes(PREFIX);
+      Set<String> nodeList = api.listNodesInEnvironment(PREFIX);
       assertTrue(!nodeList.isEmpty());
    }
 

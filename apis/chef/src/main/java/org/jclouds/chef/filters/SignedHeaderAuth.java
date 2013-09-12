@@ -20,7 +20,6 @@ import static com.google.common.base.Charsets.UTF_8;
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.hash.Hashing.sha1;
 import static com.google.common.io.BaseEncoding.base64;
-import static com.google.common.io.ByteStreams.asByteSource;
 import static com.google.common.io.ByteStreams.toByteArray;
 
 import java.io.IOException;
@@ -58,6 +57,7 @@ import com.google.common.base.Throwables;
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Multimap;
+import com.google.common.io.ByteSource;
 
 /**
  * Ported from mixlib-authentication in order to sign Chef requests.
@@ -135,7 +135,7 @@ public class SignedHeaderAuth implements HttpRequestFilter {
    @VisibleForTesting
    String hashPath(String path) {
       try {
-         return base64().encode(asByteSource(canonicalPath(path).getBytes(UTF_8)).hash(sha1()).asBytes());
+         return base64().encode(ByteSource.wrap(canonicalPath(path).getBytes(UTF_8)).hash(sha1()).asBytes());
       } catch (Exception e) {
          Throwables.propagateIfPossible(e);
          throw new HttpException("error creating sigature for path: " + path, e);

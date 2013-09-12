@@ -22,7 +22,7 @@ import static org.testng.Assert.assertEquals;
 import java.io.IOException;
 import java.net.URI;
 
-import org.jclouds.chef.ChefApi;
+import org.jclouds.chef.ChefApiMetadata;
 import org.jclouds.chef.config.ChefParserModule;
 import org.jclouds.chef.domain.CookbookVersion;
 import org.jclouds.chef.domain.Metadata;
@@ -59,7 +59,7 @@ public class ParseCookbookVersionFromJsonTest {
       injector = Guice.createInjector(new AbstractModule() {
          @Override
          protected void configure() {
-            bind(String.class).annotatedWith(ApiVersion.class).toInstance(ChefApi.VERSION);
+            bind(String.class).annotatedWith(ApiVersion.class).toInstance(ChefApiMetadata.DEFAULT_VERSION);
          }
       }, new ChefParserModule(), new GsonModule());
 
