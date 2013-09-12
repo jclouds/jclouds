@@ -20,7 +20,6 @@ import java.net.URI;
 import java.util.Properties;
 
 import org.jclouds.apis.ApiMetadata;
-import org.jclouds.chef.ChefApi;
 import org.jclouds.chef.ChefApiMetadata;
 import org.jclouds.chef.ChefContext;
 import org.jclouds.chef.config.ChefBootstrapModule;
@@ -63,7 +62,7 @@ public class EnterpriseChefApiMetadata extends BaseHttpApiMetadata<EnterpriseChe
                .name("Enterprise Chef Api")
                .identityName("User")
                .credentialName("Certificate")
-               .version(ChefApi.VERSION)
+               .version(ChefApiMetadata.DEFAULT_VERSION)
                .documentation(URI.create("http://www.opscode.com/support"))
                .defaultEndpoint("https://api.opscode.com")
                .view(ChefContext.class)

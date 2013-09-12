@@ -20,7 +20,6 @@ import static org.testng.Assert.assertEquals;
 
 import java.io.IOException;
 
-import org.jclouds.enterprisechef.binders.GroupName;
 import org.jclouds.enterprisechef.domain.Group;
 import org.testng.annotations.Test;
 

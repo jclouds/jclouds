@@ -16,8 +16,6 @@
  */
 package org.jclouds.enterprisechef;
 
-import org.jclouds.enterprisechef.EnterpriseChefApiMetadata;
-import org.jclouds.enterprisechef.EnterpriseChefProviderMetadata;
 import org.jclouds.providers.internal.BaseProviderMetadataTest;
 import org.testng.annotations.Test;
 
