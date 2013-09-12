@@ -49,21 +49,19 @@ import org.jclouds.chef.strategy.DeleteAllClientsInList;
 import org.jclouds.chef.strategy.DeleteAllNodesInList;
 import org.jclouds.chef.strategy.ListClients;
 import org.jclouds.chef.strategy.ListCookbookVersions;
-import org.jclouds.chef.strategy.ListEnvironments;
 import org.jclouds.chef.strategy.ListEnvironmentNodes;
+import org.jclouds.chef.strategy.ListEnvironments;
 import org.jclouds.chef.strategy.ListNodes;
 import org.jclouds.chef.strategy.UpdateAutomaticAttributesOnNode;
 import org.jclouds.domain.JsonBall;
 import org.jclouds.io.Payloads;
 import org.jclouds.io.payloads.RSADecryptingPayload;
 import org.jclouds.io.payloads.RSAEncryptingPayload;
-import org.jclouds.javax.annotation.Nullable;
 import org.jclouds.json.Json;
 import org.jclouds.logging.Logger;
 import org.jclouds.scriptbuilder.domain.Statement;
 
 import com.google.common.annotations.VisibleForTesting;
-import com.google.common.base.Predicate;
 import com.google.common.base.Supplier;
 import com.google.common.collect.Maps;
 import com.google.common.io.ByteStreams;
@@ -130,78 +128,40 @@ public class BaseChefService implements ChefService {
    }
 
    @Override
-   public void cleanupStaleNodesAndClients(String prefix, int secondsStale) {
-      cleanupStaleNodesAndClients.execute(prefix, secondsStale);
-   }
-
-   @Override
-   public Node createNodeAndPopulateAutomaticAttributes(String nodeName, Iterable<String> runList) {
-      return createNodeAndPopulateAutomaticAttributes.execute(nodeName, runList);
-   }
-
-   @Override
-   public void deleteAllNodesInList(Iterable<String> names) {
-      deleteAllNodesInList.execute(names);
-   }
-
-   @Override
-   public Iterable<? extends Node> listNodes() {
-      return listNodes.execute();
-   }
-
-   @Override
-   public Iterable<? extends Node> listNodesMatching(Predicate<String> nodeNameSelector) {
-      return listNodes.execute(nodeNameSelector);
-   }
-
-   @Override
-   public Iterable<? extends Node> listNodesNamed(Iterable<String> names) {
-      return listNodes.execute(names);
-   }
-
-   @Override
-   public void deleteAllClientsInList(Iterable<String> names) {
-      deleteAllClientsInList.execute(names);
-   }
-
-   @Override
-   public Iterable<? extends Client> listClientsDetails() {
-      return listClients.execute();
-   }
-
-   @Override
-   public Iterable<? extends Client> listClientsDetailsMatching(Predicate<String> clientNameSelector) {
-      return listClients.execute(clientNameSelector);
-   }
-
-   @Override
-   public Iterable<? extends Client> listClientsNamed(Iterable<String> names) {
-      return listClients.execute(names);
-   }
-
-   @Override
-   public Iterable<? extends CookbookVersion> listCookbookVersions() {
-      return listCookbookVersions.execute();
-   }
-
-   @Override
-   public Iterable<? extends CookbookVersion> listCookbookVersionsMatching(Predicate<String> cookbookNameSelector) {
-      return listCookbookVersions.execute(cookbookNameSelector);
-   }
-
-   @Override
-   public Iterable<? extends CookbookVersion> listCookbookVersionsNamed(Iterable<String> names) {
-      return listCookbookVersions.execute(names);
-   }
-
-   @Override
-   public void updateAutomaticAttributesOnNode(String nodeName) {
-      updateAutomaticAttributesOnNode.execute(nodeName);
-   }
-
-   @Override
    public ChefContext getContext() {
       return chefContext;
+   }
+
+   @Override
+   public byte[] encrypt(InputSupplier<? extends InputStream> supplier) throws IOException {
+      return ByteStreams.toByteArray(new RSAEncryptingPayload(Payloads.newPayload(supplier.getInput()), privateKey
+            .get()));
+   }
+
+   @Override
+   public byte[] decrypt(InputSupplier<? extends InputStream> supplier) throws IOException {
+      return ByteStreams.toByteArray(new RSADecryptingPayload(Payloads.newPayload(supplier.getInput()), privateKey
+            .get()));
+   }
+
+   @VisibleForTesting
+   String buildBootstrapConfiguration(BootstrapConfig bootstrapConfig) {
+      checkNotNull(bootstrapConfig, "bootstrapConfig must not be null");
+
+      Map<String, Object> configMap = Maps.newHashMap();
+      configMap.put("run_list", bootstrapConfig.getRunList());
+
+      if (bootstrapConfig.getEnvironment().isPresent()) {
+         configMap.put("environment", bootstrapConfig.getEnvironment().get());
+      }
+
+      if (bootstrapConfig.getAttribtues().isPresent()) {
+         Map<String, Object> attributes = json.fromJson(bootstrapConfig.getAttribtues().get().toString(),
+               BootstrapConfigForGroup.BOOTSTRAP_CONFIG_TYPE);
+         configMap.putAll(attributes);
+      }
+
+      return json.toJson(configMap);
    }
 
    @Override
@@ -228,19 +188,6 @@ public class BaseChefService implements ChefService {
    }
 
    @Override
-   @Deprecated
-   public void updateBootstrapConfigForGroup(Iterable<String> runList, String group) {
-      updateBootstrapConfigForGroup(runList, null, group);
-   }
-
-   @Override
-   @Deprecated
-   public void updateBootstrapConfigForGroup(Iterable<String> runList, @Nullable JsonBall jsonAttributes, String group) {
-      updateBootstrapConfigForGroup(group, BootstrapConfig.builder().runList(runList).attributes(jsonAttributes)
-            .build());
-   }
-
-   @Override
    public List<String> getRunListForGroup(String group) {
       return runListForGroup.apply(group);
    }
@@ -251,35 +198,43 @@ public class BaseChefService implements ChefService {
    }
 
    @Override
-   public byte[] decrypt(InputSupplier<? extends InputStream> supplier) throws IOException {
-      return ByteStreams.toByteArray(new RSADecryptingPayload(Payloads.newPayload(supplier.getInput()), privateKey
-            .get()));
+   public void cleanupStaleNodesAndClients(String prefix, int secondsStale) {
+      cleanupStaleNodesAndClients.execute(prefix, secondsStale);
    }
 
    @Override
-   public byte[] encrypt(InputSupplier<? extends InputStream> supplier) throws IOException {
-      return ByteStreams.toByteArray(new RSAEncryptingPayload(Payloads.newPayload(supplier.getInput()), privateKey
-            .get()));
+   public Node createNodeAndPopulateAutomaticAttributes(String nodeName, Iterable<String> runList) {
+      return createNodeAndPopulateAutomaticAttributes.execute(nodeName, runList);
    }
 
-   @VisibleForTesting
-   String buildBootstrapConfiguration(BootstrapConfig bootstrapConfig) {
-      checkNotNull(bootstrapConfig, "bootstrapConfig must not be null");
+   @Override
+   public void updateAutomaticAttributesOnNode(String nodeName) {
+      updateAutomaticAttributesOnNode.execute(nodeName);
+   }
 
-      Map<String, Object> configMap = Maps.newHashMap();
-      configMap.put("run_list", bootstrapConfig.getRunList());
+   @Override
+   public void deleteAllNodesInList(Iterable<String> names) {
+      deleteAllNodesInList.execute(names);
+   }
 
-      if (bootstrapConfig.getEnvironment().isPresent()) {
-         configMap.put("environment", bootstrapConfig.getEnvironment().get());
-      }
+   @Override
+   public void deleteAllClientsInList(Iterable<String> names) {
+      deleteAllClientsInList.execute(names);
+   }
 
-      if (bootstrapConfig.getAttribtues().isPresent()) {
-         Map<String, Object> attributes = json.fromJson(bootstrapConfig.getAttribtues().get().toString(),
-               BootstrapConfigForGroup.BOOTSTRAP_CONFIG_TYPE);
-         configMap.putAll(attributes);
-      }
+   @Override
+   public Iterable<? extends Node> listNodes() {
+      return listNodes.execute();
+   }
 
-      return json.toJson(configMap);
+   @Override
+   public Iterable<? extends Client> listClients() {
+      return listClients.execute();
+   }
+
+   @Override
+   public Iterable<? extends CookbookVersion> listCookbookVersions() {
+      return listCookbookVersions.execute();
    }
 
    @Override
@@ -288,17 +243,7 @@ public class BaseChefService implements ChefService {
    }
 
    @Override
-   public Iterable<? extends Environment> listEnvironmentsMatching(Predicate<String> environmentNameSelector) {
-      return listEnvironments.execute(environmentNameSelector);
-   }
-
-   @Override
-   public Iterable<? extends Environment> listEnvironmentsNamed(Iterable<String> names) {
-      return listEnvironments.execute(names);
-   }
-
-   @Override
-   public Iterable<? extends Node> listEnvironmentNodes(String environmentName) {
+   public Iterable<? extends Node> listNodesInEnvironment(String environmentName) {
       return listEnvironmentNodes.execute(environmentName);
    }
 

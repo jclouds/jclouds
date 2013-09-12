@@ -69,9 +69,7 @@ import org.jclouds.chef.functions.ParseSearchRolesFromJson;
 import org.jclouds.chef.functions.UriForResource;
 import org.jclouds.chef.options.CreateClientOptions;
 import org.jclouds.chef.options.SearchOptions;
-import org.jclouds.http.HttpResponseException;
 import org.jclouds.io.Payload;
-import org.jclouds.rest.AuthorizationException;
 import org.jclouds.rest.annotations.BinderParam;
 import org.jclouds.rest.annotations.EndpointParam;
 import org.jclouds.rest.annotations.Fallback;
@@ -96,193 +94,13 @@ import org.jclouds.rest.binders.BindToJsonPayload;
 @Headers(keys = "X-Chef-Version", values = "{" + Constants.PROPERTY_API_VERSION + "}")
 @Consumes(MediaType.APPLICATION_JSON)
 public interface ChefApi extends Closeable {
-   /**
-    * The target Chef Server version.
-    */
-   public static final String VERSION = "0.10.8";
+
+   // Clients
 
    /**
-    * Creates a new sandbox. It accepts a list of checksums as input and returns
-    * the URLs against which to PUT files that need to be uploaded.
+    * List the names of the existing clients.
     * 
-    * @param md5s
-    *           raw md5s; uses {@code Bytes.asList()} and
-    *           {@code Bytes.toByteArray()} as necessary
-    * @return The URLs against which to PUT files that need to be uploaded.
-    */
-   @Named("sandbox:upload")
-   @POST
-   @Path("/sandboxes")
-   UploadSandbox getUploadSandboxForChecksums(@BinderParam(BindChecksumsToJsonPayload.class) Set<List<Byte>> md5s);
-
-   /**
-    * Uploads the given content to the sandbox at the given URI.
-    * <p/>
-    * The URI must be obtained, after uploading a sandbox, from the
-    * {@link UploadSandbox#getUri()}.
-    */
-   @Named("content:upload")
-   @PUT
-   @Produces("application/x-binary")
-   void uploadContent(@EndpointParam URI location, Payload content);
-
-   /**
-    * Confirms if the sandbox is completed or not.
-    * <p/>
-    * This method should be used after uploading contents to the sandbox.
-    * 
-    * @return The sandbox
-    */
-   @Named("sandbox:commit")
-   @PUT
-   @Path("/sandboxes/{id}")
-   Sandbox commitSandbox(@PathParam("id") String id, @WrapWith("is_completed") boolean isCompleted);
-
-   /**
-    * @return a list of all the cookbook names
-    * @throws AuthorizationException
-    *            <p/>
-    *            "401 Unauthorized" if the caller is not a recognized user.
-    *            <p/>
-    *            "403 Forbidden" if you do not have permission to see the
-    *            cookbook list.
-    */
-   @Named("cookbook:list")
-   @GET
-   @Path("/cookbooks")
-   @ResponseParser(ParseCookbookDefinitionCheckingChefVersion.class)
-   @Fallback(EmptySetOnNotFoundOr404.class)
-   Set<String> listCookbooks();
-
-   /**
-    * Creates or updates (uploads) a cookbook
-    * 
-    * @param cookbookName
-    * @throws HttpResponseException
-    *            "409 Conflict" if the cookbook already exists
-    */
-   @Named("cookbook:update")
-   @PUT
-   @Path("/cookbooks/{cookbookname}/{version}")
-   CookbookVersion updateCookbook(@PathParam("cookbookname") String cookbookName, @PathParam("version") String version,
-         @BinderParam(BindToJsonPayload.class) CookbookVersion cookbook);
-
-   /**
-    * deletes an existing cookbook.
-    * 
-    * @return last state of the api you deleted or null, if not found
-    * @throws AuthorizationException
-    *            <p/>
-    *            "401 Unauthorized" if you are not a recognized user.
-    *            <p/>
-    *            "403 Forbidden" if you do not have Delete rights on the
-    *            cookbook.
-    */
-   @Named("cookbook:delete")
-   @DELETE
-   @Path("/cookbooks/{cookbookname}/{version}")
-   @Fallback(NullOnNotFoundOr404.class)
-   CookbookVersion deleteCookbook(@PathParam("cookbookname") String cookbookName, @PathParam("version") String version);
-
-   /**
-    * @return the versions of a cookbook or null, if not found
-    * @throws AuthorizationException
-    *            <p/>
-    *            "401 Unauthorized" if the caller is not a recognized user.
-    *            <p/>
-    *            "403 Forbidden" if the caller is not authorized to view the
-    *            cookbook.
-    */
-   @Named("cookbook:versions")
-   @GET
-   @Path("/cookbooks/{cookbookname}")
-   @ResponseParser(ParseCookbookVersionsCheckingChefVersion.class)
-   @Fallback(EmptySetOnNotFoundOr404.class)
-   Set<String> getVersionsOfCookbook(@PathParam("cookbookname") String cookbookName);
-
-   /**
-    * Returns a description of the cookbook, with links to all of its component
-    * parts, and the metadata.
-    * 
-    * @return the cookbook or null, if not found
-    * @throws AuthorizationException
-    *            <p/>
-    *            "401 Unauthorized" if the caller is not a recognized user.
-    *            <p/>
-    *            "403 Forbidden" if the caller is not authorized to view the
-    *            cookbook.
-    */
-   @Named("cookbook:get")
-   @GET
-   @Path("/cookbooks/{cookbookname}/{version}")
-   @Fallback(NullOnNotFoundOr404.class)
-   CookbookVersion getCookbook(@PathParam("cookbookname") String cookbookName, @PathParam("version") String version);
-
-   /**
-    * creates a new client
-    * 
-    * @return the private key of the client. You can then use this client name
-    *         and private key to access the Opscode API.
-    * @throws AuthorizationException
-    *            <p/>
-    *            "401 Unauthorized" if the caller is not a recognized user.
-    *            <p/>
-    *            "403 Forbidden" if the caller is not authorized to create a
-    *            client.
-    * @throws HttpResponseException
-    *            "409 Conflict" if the client already exists
-    */
-   @Named("client:create")
-   @POST
-   @Path("/clients")
-   @MapBinder(BindToJsonPayload.class)
-   Client createClient(@PayloadParam("name") String clientname);
-
-   /**
-    * creates a new administrator client
-    * 
-    * @return the private key of the client. You can then use this client name
-    *         and private key to access the Opscode API.
-    * @throws AuthorizationException
-    *            <p/>
-    *            "401 Unauthorized" if the caller is not a recognized user.
-    *            <p/>
-    *            "403 Forbidden" if the caller is not authorized to create a
-    *            client.
-    * @throws HttpResponseException
-    *            "409 Conflict" if the client already exists
-    */
-   @Named("client:create")
-   @POST
-   @Path("/clients")
-   @MapBinder(BindCreateClientOptionsToJsonPayload.class)
-   Client createClient(@PayloadParam("name") String clientname, CreateClientOptions options);
-
-   /**
-    * generate a new key-pair for this client, and return the new private key in
-    * the response body.
-    * 
-    * @return the new private key
-    * @throws AuthorizationException
-    *            <p/>
-    *            "401 Unauthorized" if the caller is not a recognized user.
-    *            <p/>
-    *            "403 Forbidden" if the caller is not authorized to modify the
-    *            client.
-    */
-   @Named("client:generatekey")
-   @PUT
-   @Path("/clients/{clientname}")
-   Client generateKeyForClient(
-         @PathParam("clientname") @BinderParam(BindGenerateKeyForClientToJsonPayload.class) String clientname);
-
-   /**
-    * @return list of client names.
-    * @throws AuthorizationException
-    *            <p/>
-    *            "401 Unauthorized" if you are not a recognized user.
-    *            <p/>
-    *            "403 Forbidden" if you do not have rights to list clients.
+    * @return The names of the existing clients.
     */
    @Named("client:list")
    @GET
@@ -292,29 +110,10 @@ public interface ChefApi extends Closeable {
    Set<String> listClients();
 
    /**
-    * deletes an existing client.
+    * Get the details of existing client.
     * 
-    * @return last state of the client you deleted or null, if not found
-    * @throws AuthorizationException
-    *            <p/>
-    *            "401 Unauthorized" if you are not a recognized user.
-    *            <p/>
-    *            "403 Forbidden" if you do not have Delete rights on the client.
-    */
-   @Named("client:delete")
-   @DELETE
-   @Path("/clients/{clientname}")
-   @Fallback(NullOnNotFoundOr404.class)
-   Client deleteClient(@PathParam("clientname") String clientname);
-
-   /**
-    * gets an existing client.
-    * 
-    * @throws AuthorizationException
-    *            <p/>
-    *            "401 Unauthorized" if you are not a recognized user.
-    *            <p/>
-    *            "403 Forbidden" if you do not have view rights on the client.
+    * @param clientname The name of the client to get.
+    * @return The details of the given client.
     */
    @Named("client:get")
    @GET
@@ -323,164 +122,213 @@ public interface ChefApi extends Closeable {
    Client getClient(@PathParam("clientname") String clientname);
 
    /**
-    * creates a new node
+    * Creates a new client.
     * 
-    * @throws AuthorizationException
-    *            <p/>
-    *            "401 Unauthorized" if the caller is not a recognized user.
-    *            <p/>
-    *            "403 Forbidden" if the caller is not authorized to create a
-    *            node.
-    * @throws HttpResponseException
-    *            "409 Conflict" if the node already exists
+    * @param clientname The name of the new client
+    * @return The client with the generated private key. This key should be
+    *         stored so client can be properly authenticated .
     */
-   @Named("node:create")
+   @Named("client:create")
    @POST
-   @Path("/nodes")
-   void createNode(@BinderParam(BindToJsonPayload.class) Node node);
+   @Path("/clients")
+   @MapBinder(BindToJsonPayload.class)
+   Client createClient(@PayloadParam("name") String clientname);
 
    /**
-    * Creates or updates (uploads) a node
+    * Creates a new client with custom options.
     * 
-    * @param node
-    *           updated node
-    * @throws HttpResponseException
-    *            "409 Conflict" if the node already exists
+    * @param clientname The name of the new client
+    * @param options The options to customize the client creation.
+    * @return The client with the generated private key. This key should be
+    *         stored so client can be properly authenticated .
     */
-   @Named("node:update")
-   @PUT
-   @Path("/nodes/{nodename}")
-   Node updateNode(@PathParam("nodename") @ParamParser(NodeName.class) @BinderParam(BindToJsonPayload.class) Node node);
-
-   /**
-    * @return list of node names.
-    * @throws AuthorizationException
-    *            <p/>
-    *            "401 Unauthorized" if you are not a recognized user.
-    *            <p/>
-    *            "403 Forbidden" if you do not have rights to list nodes.
-    */
-   @Named("node:list")
-   @GET
-   @Path("/nodes")
-   @ResponseParser(ParseKeySetFromJson.class)
-   @Fallback(EmptySetOnNotFoundOr404.class)
-   Set<String> listNodes();
-
-   /**
-    * deletes an existing node.
-    * 
-    * @return last state of the node you deleted or null, if not found
-    * @throws AuthorizationException
-    *            <p/>
-    *            "401 Unauthorized" if you are not a recognized user.
-    *            <p/>
-    *            "403 Forbidden" if you do not have Delete rights on the node.
-    */
-   @Named("node:delete")
-   @DELETE
-   @Path("/nodes/{nodename}")
-   @Fallback(NullOnNotFoundOr404.class)
-   Node deleteNode(@PathParam("nodename") String nodename);
-
-   /**
-    * gets an existing node.
-    * 
-    * @throws AuthorizationException
-    *            <p/>
-    *            "401 Unauthorized" if you are not a recognized user.
-    *            <p/>
-    *            "403 Forbidden" if you do not have view rights on the node.
-    */
-   @Named("node:get")
-   @GET
-   @Path("/nodes/{nodename}")
-   @Fallback(NullOnNotFoundOr404.class)
-   Node getNode(@PathParam("nodename") String nodename);
-
-   /**
-    * creates a new role
-    * 
-    * @throws AuthorizationException
-    *            <p/>
-    *            "401 Unauthorized" if the caller is not a recognized user.
-    *            <p/>
-    *            "403 Forbidden" if the caller is not authorized to create a
-    *            role.
-    * @throws HttpResponseException
-    *            "409 Conflict" if the role already exists
-    */
-   @Named("role:create")
+   @Named("client:create")
    @POST
-   @Path("/roles")
-   void createRole(@BinderParam(BindToJsonPayload.class) Role role);
+   @Path("/clients")
+   @MapBinder(BindCreateClientOptionsToJsonPayload.class)
+   Client createClient(@PayloadParam("name") String clientname, CreateClientOptions options);
 
    /**
-    * Creates or updates (uploads) a role
+    * Generate a new key-pair for this client, and return the new private key in
+    * the response body.
     * 
-    * @param roleName
-    * @throws HttpResponseException
-    *            "409 Conflict" if the role already exists
+    * @param clientname The name of the client.
+    * @return The details of the client with the new private key.
     */
-   @Named("role:update")
+   @Named("client:generatekey")
    @PUT
-   @Path("/roles/{rolename}")
-   Role updateRole(@PathParam("rolename") @ParamParser(RoleName.class) @BinderParam(BindToJsonPayload.class) Role role);
+   @Path("/clients/{clientname}")
+   Client generateKeyForClient(
+         @PathParam("clientname") @BinderParam(BindGenerateKeyForClientToJsonPayload.class) String clientname);
 
    /**
-    * @return list of role names.
-    * @throws AuthorizationException
-    *            <p/>
-    *            "401 Unauthorized" if you are not a recognized user.
-    *            <p/>
-    *            "403 Forbidden" if you do not have rights to list roles.
-    */
-   @Named("role:list")
-   @GET
-   @Path("/roles")
-   @ResponseParser(ParseKeySetFromJson.class)
-   @Fallback(EmptySetOnNotFoundOr404.class)
-   Set<String> listRoles();
-
-   /**
-    * deletes an existing role.
+    * Deletes the given client.
     * 
-    * @return last state of the role you deleted or null, if not found
-    * @throws AuthorizationException
-    *            <p/>
-    *            "401 Unauthorized" if you are not a recognized user.
-    *            <p/>
-    *            "403 Forbidden" if you do not have Delete rights on the role.
+    * @param clientname The name of the client to delete.
+    * @return The deleted client.
     */
-   @Named("role:delete")
+   @Named("client:delete")
    @DELETE
-   @Path("/roles/{rolename}")
+   @Path("/clients/{clientname}")
    @Fallback(NullOnNotFoundOr404.class)
-   Role deleteRole(@PathParam("rolename") String rolename);
+   Client deleteClient(@PathParam("clientname") String clientname);
+
+   // Cookbooks
 
    /**
-    * gets an existing role.
+    * List the names of the existing cookbooks.
     * 
-    * @throws AuthorizationException
-    *            <p/>
-    *            "401 Unauthorized" if you are not a recognized user.
-    *            <p/>
-    *            "403 Forbidden" if you do not have view rights on the role.
+    * @return The names of the exsisting cookbooks.
     */
-   @Named("role:get")
+   @Named("cookbook:list")
    @GET
-   @Path("/roles/{rolename}")
-   @Fallback(NullOnNotFoundOr404.class)
-   Role getRole(@PathParam("rolename") String rolename);
+   @Path("/cookbooks")
+   @ResponseParser(ParseCookbookDefinitionCheckingChefVersion.class)
+   @Fallback(EmptySetOnNotFoundOr404.class)
+   Set<String> listCookbooks();
 
    /**
-    * lists databags available to the api
+    * List the cookbooks that are available in the given environment.
     * 
-    * @throws AuthorizationException
-    *            <p/>
-    *            "401 Unauthorized" if you are not a recognized user.
-    *            <p/>
-    *            "403 Forbidden" if you do not have view rights on the databag.
+    * @param environmentname The name of the environment to get the cookbooks
+    *        from.
+    * @return The definitions of the cookbooks (URL and versions) available in
+    *         the given environment.
+    */
+   @SinceApiVersion("0.10.0")
+   @Named("cookbook:list")
+   @GET
+   @ResponseParser(ParseCookbookDefinitionListFromJsonv10.class)
+   @Path("/environments/{environmentname}/cookbooks")
+   @Fallback(NullOnNotFoundOr404.class)
+   Set<CookbookDefinition> listCookbooksInEnvironment(@PathParam("environmentname") String environmentname);
+
+   /**
+    * List the cookbooks that are available in the given environment, limiting
+    * the number of versions returned for each cookbook.
+    * 
+    * @param environmentname The name of the environment.
+    * @param numversions The number of cookbook versions to include in the
+    *        response, where n is the number of cookbook versions.
+    * @return The definitions of the cookbooks (URL and versions) available in
+    *         the given environment.
+    */
+   @SinceApiVersion("0.10.0")
+   @Named("cookbook:list")
+   @GET
+   @ResponseParser(ParseCookbookDefinitionListFromJsonv10.class)
+   @Path("/environments/{environmentname}/cookbooks?num_versions={numversions}")
+   @Fallback(NullOnNotFoundOr404.class)
+   Set<CookbookDefinition> listCookbooksInEnvironment(@PathParam("environmentname") String environmentname,
+         @PathParam("numversions") String numversions);
+
+   /**
+    * List the available versions of the given cookbook.
+    * 
+    * @param cookbookName The name of the cookbook.
+    * @return The available versions of the given cookbook.
+    */
+   @Named("cookbook:versions")
+   @GET
+   @Path("/cookbooks/{cookbookname}")
+   @ResponseParser(ParseCookbookVersionsCheckingChefVersion.class)
+   @Fallback(EmptySetOnNotFoundOr404.class)
+   Set<String> listVersionsOfCookbook(@PathParam("cookbookname") String cookbookName);
+
+   /**
+    * Get the details of the given cookbook, with the links to each resource
+    * such as recipe files, attributes, etc.
+    * 
+    * @param cookbookName The name of the cookbook.
+    * @param version The version of the cookbook to get.
+    * @return The details of the given cookbook.
+    */
+   @Named("cookbook:get")
+   @GET
+   @Path("/cookbooks/{cookbookname}/{version}")
+   @Fallback(NullOnNotFoundOr404.class)
+   CookbookVersion getCookbook(@PathParam("cookbookname") String cookbookName, @PathParam("version") String version);
+
+   /**
+    * Get the definition of the cookbook in the given environment.
+    * 
+    * @param environmentname The name of the environment.
+    * @param cookbookname The name of the cookbook.
+    * @return The definition of the cookbook (URL and versions) of the cookbook
+    *         in the given environment.
+    */
+   @SinceApiVersion("0.10.0")
+   @Named("environment:cookbook")
+   @GET
+   @ResponseParser(ParseCookbookDefinitionFromJsonv10.class)
+   @Path("/environments/{environmentname}/cookbooks/{cookbookname}")
+   CookbookDefinition getCookbookInEnvironment(@PathParam("environmentname") String environmentname,
+         @PathParam("cookbookname") String cookbookname);
+
+   /**
+    * Get the definition of the cookbook in the given environment.
+    * 
+    * @param environmentname The name of the environment.
+    * @param cookbookname The name of the cookbook.
+    * @param numversions The number of cookbook versions to include in the
+    *        response, where n is the number of cookbook versions.
+    * @return The definition of the cookbook (URL and versions) of the cookbook
+    *         in the given environment.
+    */
+   @SinceApiVersion("0.10.0")
+   @Named("environment:cookbook")
+   @GET
+   @ResponseParser(ParseCookbookDefinitionFromJsonv10.class)
+   @Path("/environments/{environmentname}/cookbooks/{cookbookname}?num_versions={numversions}")
+   CookbookDefinition getCookbookInEnvironment(@PathParam("environmentname") String environmentname,
+         @PathParam("cookbookname") String cookbookname, @PathParam("numversions") String numversions);
+
+   /**
+    * List the names of the recipes in the given environment.
+    * 
+    * @param environmentname The name of the environment.
+    * @return The names of the recipes in the given environment.
+    */
+   @SinceApiVersion("0.10.0")
+   @Named("environment:recipelist")
+   @GET
+   @Path("/environments/{environmentname}/recipes")
+   @Fallback(EmptySetOnNotFoundOr404.class)
+   Set<String> listRecipesInEnvironment(@PathParam("environmentname") String environmentname);
+
+   /**
+    * Creates or updates the given cookbook.
+    * 
+    * @param cookbookName The name of the cookbook to create or update.
+    * @param version The version of the cookbook to create or update.
+    * @param cookbook The contents of the cookbook to create or update.
+    * @return The details of the created or updated cookbook.
+    */
+   @Named("cookbook:update")
+   @PUT
+   @Path("/cookbooks/{cookbookname}/{version}")
+   CookbookVersion updateCookbook(@PathParam("cookbookname") String cookbookName, @PathParam("version") String version,
+         @BinderParam(BindToJsonPayload.class) CookbookVersion cookbook);
+
+   /**
+    * Delete the given cookbook.
+    * 
+    * @param cookbookName The name of the cookbook to delete.
+    * @param version The version of the cookbook to delete.
+    * @return The details of the deleted cookbook.
+    */
+   @Named("cookbook:delete")
+   @DELETE
+   @Path("/cookbooks/{cookbookname}/{version}")
+   @Fallback(NullOnNotFoundOr404.class)
+   CookbookVersion deleteCookbook(@PathParam("cookbookname") String cookbookName, @PathParam("version") String version);
+
+   // Data bags
+
+   /**
+    * List the names of the existing data bags.
+    * 
+    * @return The names of the existing data bags.
     */
    @Named("databag:list")
    @GET
@@ -490,13 +338,9 @@ public interface ChefApi extends Closeable {
    Set<String> listDatabags();
 
    /**
-    * creates a databag.
+    * Creates a new data bag.
     * 
-    * @throws AuthorizationException
-    *            <p/>
-    *            "401 Unauthorized" if you are not a recognized user.
-    *            <p/>
-    *            "403 Forbidden" if you do not have view rights on the databag.
+    * @param databagName The name for the new data bag.
     */
    @Named("databag:create")
    @POST
@@ -504,13 +348,9 @@ public interface ChefApi extends Closeable {
    void createDatabag(@WrapWith("name") String databagName);
 
    /**
-    * Delete a data bag, including its items
+    * Deletes a data bag, including its items.
     * 
-    * @throws AuthorizationException
-    *            <p/>
-    *            "401 Unauthorized" if you are not a recognized user.
-    *            <p/>
-    *            "403 Forbidden" if you do not have view rights on the databag.
+    * @param databagName The name of the data bag to delete.
     */
    @Named("databag:delete")
    @DELETE
@@ -519,13 +359,10 @@ public interface ChefApi extends Closeable {
    void deleteDatabag(@PathParam("name") String databagName);
 
    /**
-    * Show the items in a data bag.
+    * List the names of the items in a data bag.
     * 
-    * @throws AuthorizationException
-    *            <p/>
-    *            "401 Unauthorized" if you are not a recognized user.
-    *            <p/>
-    *            "403 Forbidden" if you do not have view rights on the databag.
+    * @param databagName The name of the data bag.
+    * @return The names of the items in the given data bag.
     */
    @Named("databag:listitems")
    @GET
@@ -535,47 +372,11 @@ public interface ChefApi extends Closeable {
    Set<String> listDatabagItems(@PathParam("name") String databagName);
 
    /**
-    * Create a data bag item in the data bag
+    * Get an item in a data bag.
     * 
-    * @throws AuthorizationException
-    *            <p/>
-    *            "401 Unauthorized" if you are not a recognized user.
-    *            <p/>
-    *            "403 Forbidden" if you do not have view rights on the databag.
-    *            <p/>
-    * @throws IllegalStateException
-    *            if the item already exists
-    */
-   @Named("databag:createitem")
-   @POST
-   @Path("/data/{databagName}")
-   DatabagItem createDatabagItem(@PathParam("databagName") String databagName,
-         @BinderParam(BindToJsonPayload.class) DatabagItem databagItem);
-
-   /**
-    * Update (or create if not exists) a data bag item
-    * 
-    * @throws AuthorizationException
-    *            <p/>
-    *            "401 Unauthorized" if you are not a recognized user.
-    *            <p/>
-    *            "403 Forbidden" if you do not have view rights on the databag.
-    */
-   @Named("databag:updateitem")
-   @PUT
-   @Path("/data/{databagName}/{databagItemId}")
-   DatabagItem updateDatabagItem(
-         @PathParam("databagName") String databagName,
-         @PathParam("databagItemId") @ParamParser(DatabagItemId.class) @BinderParam(BindToJsonPayload.class) DatabagItem item);
-
-   /**
-    * gets an existing databag item.
-    * 
-    * @throws AuthorizationException
-    *            <p/>
-    *            "401 Unauthorized" if you are not a recognized user.
-    *            <p/>
-    *            "403 Forbidden" if you do not have view rights on the databag.
+    * @param databagName The name of the data bag.
+    * @param databagItemId The identifier of the item to get.
+    * @return The details of the item in the given data bag.
     */
    @Named("databag:getitem")
    @GET
@@ -585,13 +386,38 @@ public interface ChefApi extends Closeable {
          @PathParam("databagItemId") String databagItemId);
 
    /**
-    * Delete a data bag item
+    * Adds an item in a data bag.
     * 
-    * @throws AuthorizationException
-    *            <p/>
-    *            "401 Unauthorized" if you are not a recognized user.
-    *            <p/>
-    *            "403 Forbidden" if you do not have view rights on the databag.
+    * @param databagName The name of the data bag.
+    * @param The item to add to the data bag.
+    * @param The item just added to the data bag.
+    */
+   @Named("databag:createitem")
+   @POST
+   @Path("/data/{databagName}")
+   DatabagItem createDatabagItem(@PathParam("databagName") String databagName,
+         @BinderParam(BindToJsonPayload.class) DatabagItem databagItem);
+
+   /**
+    * Update an item in a data bag.
+    * 
+    * @param databagName The name of the data bag.
+    * @param item The new contents for the item in the data bag.
+    * @return The details for the updated item in the data bag.
+    */
+   @Named("databag:updateitem")
+   @PUT
+   @Path("/data/{databagName}/{databagItemId}")
+   DatabagItem updateDatabagItem(
+         @PathParam("databagName") String databagName,
+         @PathParam("databagItemId") @ParamParser(DatabagItemId.class) @BinderParam(BindToJsonPayload.class) DatabagItem item);
+
+   /**
+    * Delete an item from a data bag.
+    * 
+    * @param databagName The name of the data bag.
+    * @param databagItemId The identifier of the item to delete.
+    * @return The item deleted from the data bag.
     */
    @Named("databag:deleteitem")
    @DELETE
@@ -600,21 +426,274 @@ public interface ChefApi extends Closeable {
    DatabagItem deleteDatabagItem(@PathParam("databagName") String databagName,
          @PathParam("databagItemId") String databagItemId);
 
+   // Environments
+
    /**
-    * Show indexes you can search on
-    * <p/>
+    * List the names of the existing environments.
+    * 
+    * @return The names of the existing environments.
+    */
+   @SinceApiVersion("0.10.0")
+   @Named("environment:list")
+   @GET
+   @Path("/environments")
+   @ResponseParser(ParseKeySetFromJson.class)
+   @Fallback(EmptySetOnNotFoundOr404.class)
+   Set<String> listEnvironments();
+
+   /**
+    * Get the details of an existing environment.
+    * 
+    * @param environmentname The name of the environment to get.
+    * @return The details of the given environment.
+    */
+   @SinceApiVersion("0.10.0")
+   @Named("environment:get")
+   @GET
+   @Path("/environments/{environmentname}")
+   @Fallback(NullOnNotFoundOr404.class)
+   Environment getEnvironment(@PathParam("environmentname") String environmentname);
+
+   /**
+    * Create a new environment.
+    * 
+    * @param environment The environment to create.
+    */
+   @SinceApiVersion("0.10.0")
+   @Named("environment:create")
+   @POST
+   @Path("/environments")
+   void createEnvironment(@BinderParam(BindToJsonPayload.class) Environment environment);
+
+   /**
+    * Updated the given environment.
+    * 
+    * @param environment The new details for the environment.
+    * @return The details of the updated environment.
+    */
+   @SinceApiVersion("0.10.0")
+   @Named("environment:update")
+   @PUT
+   @Path("/environments/{environmentname}")
+   Environment updateEnvironment(
+         @PathParam("environmentname") @ParamParser(EnvironmentName.class) @BinderParam(BindToJsonPayload.class) Environment environment);
+
+   /**
+    * Delete the given environment.
+    * 
+    * @param environmentname The name of the environment to delete.
+    * @return The details of the deleted environment.
+    */
+   @SinceApiVersion("0.10.0")
+   @Named("environment:delete")
+   @DELETE
+   @Path("/environments/{environmentname}")
+   @Fallback(NullOnNotFoundOr404.class)
+   Environment deleteEnvironment(@PathParam("environmentname") String environmentname);
+
+   // Nodes
+
+   /**
+    * List the names of the existing nodes.
+    * 
+    * @return The names of the existing nodes.
+    */
+   @Named("node:list")
+   @GET
+   @Path("/nodes")
+   @ResponseParser(ParseKeySetFromJson.class)
+   @Fallback(EmptySetOnNotFoundOr404.class)
+   Set<String> listNodes();
+
+   /**
+    * List the names of the nodes in the given environment.
+    * 
+    * @param environmentname The name of the environment.
+    * @return The names of the existing nodes in the given environment.
+    */
+   @SinceApiVersion("0.10.0")
+   @Named("environment:nodelist")
+   @GET
+   @Path("/environments/{environmentname}/nodes")
+   @ResponseParser(ParseKeySetFromJson.class)
+   @Fallback(EmptySetOnNotFoundOr404.class)
+   Set<String> listNodesInEnvironment(@PathParam("environmentname") String environmentname);
+
+   /**
+    * Get the details of the given node.
+    * 
+    * @param nodename The name of the node to get.
+    * @return The details of the given node.
+    */
+   @Named("node:get")
+   @GET
+   @Path("/nodes/{nodename}")
+   @Fallback(NullOnNotFoundOr404.class)
+   Node getNode(@PathParam("nodename") String nodename);
+
+   /**
+    * Create a new node.
+    * 
+    * @param node The details of the node to create.
+    */
+   @Named("node:create")
+   @POST
+   @Path("/nodes")
+   void createNode(@BinderParam(BindToJsonPayload.class) Node node);
+
+   /**
+    * Update an existing node.
+    * 
+    * @param node The new details for the node.
+    * @return The details of the updated node.
+    */
+   @Named("node:update")
+   @PUT
+   @Path("/nodes/{nodename}")
+   Node updateNode(@PathParam("nodename") @ParamParser(NodeName.class) @BinderParam(BindToJsonPayload.class) Node node);
+
+   /**
+    * Delete the given node.
+    * 
+    * @param nodename The name of the node to delete.
+    * @return The details of the deleted node.
+    */
+   @Named("node:delete")
+   @DELETE
+   @Path("/nodes/{nodename}")
+   @Fallback(NullOnNotFoundOr404.class)
+   Node deleteNode(@PathParam("nodename") String nodename);
+
+   // Roles
+
+   /**
+    * List the names of the existing roles.
+    * 
+    * @return The names of the existing roles.
+    */
+   @Named("role:list")
+   @GET
+   @Path("/roles")
+   @ResponseParser(ParseKeySetFromJson.class)
+   @Fallback(EmptySetOnNotFoundOr404.class)
+   Set<String> listRoles();
+
+   /**
+    * Get the details of the given role.
+    * 
+    * @param rolename The name of the role to get.
+    * @return The details of the given role.
+    */
+   @Named("role:get")
+   @GET
+   @Path("/roles/{rolename}")
+   @Fallback(NullOnNotFoundOr404.class)
+   Role getRole(@PathParam("rolename") String rolename);
+
+   /**
+    * Create a new role.
+    * 
+    * @param role The details for the new role.
+    */
+   @Named("role:create")
+   @POST
+   @Path("/roles")
+   void createRole(@BinderParam(BindToJsonPayload.class) Role role);
+
+   /**
+    * Update the given role.
+    * 
+    * @param role The new details for the role.
+    * @return The details of the updated role.
+    */
+   @Named("role:update")
+   @PUT
+   @Path("/roles/{rolename}")
+   Role updateRole(@PathParam("rolename") @ParamParser(RoleName.class) @BinderParam(BindToJsonPayload.class) Role role);
+
+   /**
+    * Delete the given role.
+    * 
+    * @param rolename The name of the role to delete.
+    * @return The details of the deleted role.
+    */
+   @Named("role:delete")
+   @DELETE
+   @Path("/roles/{rolename}")
+   @Fallback(NullOnNotFoundOr404.class)
+   Role deleteRole(@PathParam("rolename") String rolename);
+
+   // Sandboxes
+
+   /**
+    * Creates a new sandbox.
+    * <p>
+    * It accepts a list of checksums as input and returns the URLs against which
+    * to PUT files that need to be uploaded.
+    * 
+    * @param md5s The raw md5 sums. Uses {@code Bytes.asList()} and
+    *        {@code Bytes.toByteArray()} as necessary
+    * @return The upload sandbox with the URLs against which to PUT files that
+    *         need to be uploaded.
+    */
+   @Named("sandbox:upload")
+   @POST
+   @Path("/sandboxes")
+   UploadSandbox createUploadSandboxForChecksums(@BinderParam(BindChecksumsToJsonPayload.class) Set<List<Byte>> md5s);
+
+   /**
+    * Uploads the given content to the sandbox at the given URI.
+    * <p>
+    * The URI must be obtained, after uploading a sandbox, from the
+    * {@link UploadSandbox#getUri()}.
+    * 
+    * @param location The URI where the upload must be performed.
+    * @param content The contents to upload.
+    */
+   @Named("content:upload")
+   @PUT
+   @Produces("application/x-binary")
+   void uploadContent(@EndpointParam URI location, Payload content);
+
+   /**
+    * Get the contents of the given resource.
+    * 
+    * @param resource The resource to get.
+    * @return An input stream for the content of the requested resource.
+    */
+   @Named("content:get")
+   @GET
+   @Fallback(NullOnNotFoundOr404.class)
+   @SkipEncoding({ '+', ' ', '/', '=', ':', ';' })
+   InputStream getResourceContents(@EndpointParam(parser = UriForResource.class) Resource resource);
+
+   /**
+    * Confirms if the sandbox is completed or not.
+    * <p>
+    * This method should be used after uploading contents to the sandbox.
+    * 
+    * @param id The id of the sandbox to commit.
+    * @param isCompleted Flag to set if the sandbox is completed or not.
+    * @return The details of the sandbox.
+    */
+   @Named("sandbox:commit")
+   @PUT
+   @Path("/sandboxes/{id}")
+   Sandbox commitSandbox(@PathParam("id") String id, @WrapWith("is_completed") boolean isCompleted);
+
+   // Search
+
+   /**
+    * List the names of the available search indexes.
+    * <p>
     * By default, the "role", "node" and "api" indexes will always be available.
-    * <p/>
+    * <p>
     * Note that the search indexes may lag behind the most current data by at
     * least 10 seconds at any given time - so if you need to write data and
     * immediately query it, you likely need to produce an artificial delay (or
-    * simply retry until the data is available.)
+    * simply retry until the data is available).
     * 
-    * @throws AuthorizationException
-    *            <p/>
-    *            "401 Unauthorized" if you are not a recognized user.
-    *            <p/>
-    *            "403 Forbidden" if you do not have view rights on the databag.
+    * @return The names of the available search indexes.
     */
    @Named("search:indexes")
    @GET
@@ -624,41 +703,12 @@ public interface ChefApi extends Closeable {
    Set<String> listSearchIndexes();
 
    /**
-    * search all roles.
-    * <p/>
+    * Search all clients.
+    * <p>
     * Note that without any request parameters this will return all of the data
     * within the index.
     * 
-    * @return The response contains the total number of rows that matched your
-    *         request, the position this result set returns (useful for paging)
-    *         and the rows themselves.
-    */
-   @Named("search:roles")
-   @GET
-   @Path("/search/role")
-   @ResponseParser(ParseSearchRolesFromJson.class)
-   SearchResult<? extends Role> searchRoles();
-
-   /**
-    * search all roles that match the given options.
-    * 
-    * @return The response contains the total number of rows that matched your
-    *         request, the position this result set returns (useful for paging)
-    *         and the rows themselves.
-    */
-   @Named("search:roles")
-   @GET
-   @Path("/search/role")
-   @ResponseParser(ParseSearchRolesFromJson.class)
-   SearchResult<? extends Role> searchRoles(SearchOptions options);
-
-   /**
-    * search all clients.
-    * <p/>
-    * Note that without any request parameters this will return all of the data
-    * within the index.
-    * 
-    * @return The response contains the total number of rows that matched your
+    * @return The response contains the total number of rows that matched the
     *         request, the position this result set returns (useful for paging)
     *         and the rows themselves.
     */
@@ -669,9 +719,9 @@ public interface ChefApi extends Closeable {
    SearchResult<? extends Client> searchClients();
 
    /**
-    * search all clients that match the given options.
+    * Search all clients that match the given options.
     * 
-    * @return The response contains the total number of rows that matched your
+    * @return The response contains the total number of rows that matched the
     *         request, the position this result set returns (useful for paging)
     *         and the rows themselves.
     */
@@ -682,41 +732,12 @@ public interface ChefApi extends Closeable {
    SearchResult<? extends Client> searchClients(SearchOptions options);
 
    /**
-    * search all nodes.
-    * <p/>
+    * Search all items in a data bag.
+    * <p>
     * Note that without any request parameters this will return all of the data
     * within the index.
     * 
-    * @return The response contains the total number of rows that matched your
-    *         request, the position this result set returns (useful for paging)
-    *         and the rows themselves.
-    */
-   @Named("search:nodes")
-   @GET
-   @Path("/search/node")
-   @ResponseParser(ParseSearchNodesFromJson.class)
-   SearchResult<? extends Node> searchNodes();
-
-   /**
-    * search all nodes that match the given options.
-    * 
-    * @return The response contains the total number of rows that matched your
-    *         request, the position this result set returns (useful for paging)
-    *         and the rows themselves.
-    */
-   @Named("search:nodes")
-   @GET
-   @Path("/search/node")
-   @ResponseParser(ParseSearchNodesFromJson.class)
-   SearchResult<? extends Node> searchNodes(SearchOptions options);
-
-   /**
-    * search all items in a databag.
-    * <p/>
-    * Note that without any request parameters this will return all of the data
-    * within the index.
-    * 
-    * @return The response contains the total number of rows that matched your
+    * @return The response contains the total number of rows that matched the
     *         request, the position this result set returns (useful for paging)
     *         and the rows themselves.
     */
@@ -724,12 +745,12 @@ public interface ChefApi extends Closeable {
    @GET
    @Path("/search/{databagName}")
    @ResponseParser(ParseSearchDatabagFromJson.class)
-   SearchResult<? extends DatabagItem> searchDatabag(@PathParam("databagName") String databagName);
+   SearchResult<? extends DatabagItem> searchDatabagItems(@PathParam("databagName") String databagName);
 
    /**
-    * search all items in a databag that match the given options.
+    * Search all items in a data bag that match the given options.
     * 
-    * @return The response contains the total number of rows that matched your
+    * @return The response contains the total number of rows that matched the
     *         request, the position this result set returns (useful for paging)
     *         and the rows themselves.
     */
@@ -737,12 +758,16 @@ public interface ChefApi extends Closeable {
    @GET
    @Path("/search/{databagName}")
    @ResponseParser(ParseSearchDatabagFromJson.class)
-   SearchResult<? extends DatabagItem> searchDatabag(@PathParam("databagName") String databagName, SearchOptions options);
+   SearchResult<? extends DatabagItem> searchDatabagItems(@PathParam("databagName") String databagName,
+         SearchOptions options);
 
    /**
-    * search all items in a environment that match the given options.
+    * Search all environments.
+    * <p>
+    * Note that without any request parameters this will return all of the data
+    * within the index.
     * 
-    * @return The response contains the total number of rows that matched your
+    * @return The response contains the total number of rows that matched the
     *         request, the position this result set returns (useful for paging)
     *         and the rows themselves.
     */
@@ -754,9 +779,9 @@ public interface ChefApi extends Closeable {
    SearchResult<? extends Environment> searchEnvironments();
 
    /**
-    * search all environments that match the given options.
+    * Search all environments that match the given options.
     * 
-    * @return The response contains the total number of rows that matched your
+    * @return The response contains the total number of rows that matched the
     *         request, the position this result set returns (useful for paging)
     *         and the rows themselves.
     */
@@ -768,188 +793,61 @@ public interface ChefApi extends Closeable {
    SearchResult<? extends Environment> searchEnvironments(SearchOptions options);
 
    /**
-    * Get the contents of the given resource.
+    * Search all nodes.
+    * <p>
+    * Note that without any request parameters this will return all of the data
+    * within the index.
     * 
-    * @param resource
-    *           The resource to get.
-    * @return An input stream for the content of the requested resource.
+    * @return The response contains the total number of rows that matched the
+    *         request, the position this result set returns (useful for paging)
+    *         and the rows themselves.
     */
-   @Named("content:get")
+   @Named("search:nodes")
    @GET
-   @Fallback(NullOnNotFoundOr404.class)
-   @SkipEncoding({ '+', ' ', '/', '=', ':', ';' })
-   InputStream getResourceContents(@EndpointParam(parser = UriForResource.class) Resource resource);
+   @Path("/search/node")
+   @ResponseParser(ParseSearchNodesFromJson.class)
+   SearchResult<? extends Node> searchNodes();
 
    /**
-    * @return list of environments names.
-    * @throws AuthorizationException
-    *            <p/>
-    *            "401 Unauthorized" if you are not a recognized user.
-    *            <p/>
-    *            "403 Forbidden" if you do not have rights to list environments.
-    */
-   @SinceApiVersion("0.10.0")
-   @Named("environment:list")
-   @GET
-   @Path("/environments")
-   @ResponseParser(ParseKeySetFromJson.class)
-   @Fallback(EmptySetOnNotFoundOr404.class)
-   Set<String> listEnvironments();
-
-   /**
-    * creates a new environment
+    * Search all nodes that match the given options.
     * 
-    * @throws AuthorizationException
-    *            <p/>
-    *            "401 Unauthorized" if the caller is not a recognized user.
-    *            <p/>
-    *            "403 Forbidden" if the caller is not authorized to create a
-    *            client.
-    * @throws HttpResponseException
-    *            "409 Conflict" if the client already exists
+    * @return The response contains the total number of rows that matched the
+    *         request, the position this result set returns (useful for paging)
+    *         and the rows themselves.
     */
-   @SinceApiVersion("0.10.0")
-   @Named("environment:create")
-   @POST
-   @Path("/environments")
-   void createEnvironment(@BinderParam(BindToJsonPayload.class) Environment environment);
+   @Named("search:nodes")
+   @GET
+   @Path("/search/node")
+   @ResponseParser(ParseSearchNodesFromJson.class)
+   SearchResult<? extends Node> searchNodes(SearchOptions options);
 
    /**
-    * Creates or updates (uploads) a environment
+    * Search all roles.
+    * <p>
+    * Note that without any request parameters this will return all of the data
+    * within the index.
     * 
-    * @param environment
-    * @throws HttpResponseException
-    *            "409 Conflict" if the node already exists
+    * @return The response contains the total number of rows that matched the
+    *         request, the position this result set returns (useful for paging)
+    *         and the rows themselves.
     */
-   @SinceApiVersion("0.10.0")
-   @Named("environment:update")
-   @PUT
-   @Path("/environments/{environmentname}")
-   Environment updateEnvironment(
-         @PathParam("environmentname") @ParamParser(EnvironmentName.class) @BinderParam(BindToJsonPayload.class) Environment environment);
+   @Named("search:roles")
+   @GET
+   @Path("/search/role")
+   @ResponseParser(ParseSearchRolesFromJson.class)
+   SearchResult<? extends Role> searchRoles();
 
    /**
-    * deletes an existing environment.
+    * Search all roles that match the given options.
     * 
-    * @return last state of the environment you deleted or null, if not found
-    * @throws AuthorizationException
-    *            <p/>
-    *            "401 Unauthorized" if you are not a recognized user.
-    *            <p/>
-    *            "403 Forbidden" if you do not have Delete rights on the node.
+    * @return The response contains the total number of rows that matched the
+    *         request, the position this result set returns (useful for paging)
+    *         and the rows themselves.
     */
-   @SinceApiVersion("0.10.0")
-   @Named("environment:delete")
-   @DELETE
-   @Path("/environments/{environmentname}")
-   @Fallback(NullOnNotFoundOr404.class)
-   Environment deleteEnvironment(@PathParam("environmentname") String environmentname);
+   @Named("search:roles")
+   @GET
+   @Path("/search/role")
+   @ResponseParser(ParseSearchRolesFromJson.class)
+   SearchResult<? extends Role> searchRoles(SearchOptions options);
 
-   /**
-    * gets an existing environment.
-    * 
-    * @throws AuthorizationException
-    *            <p/>
-    *            "401 Unauthorized" if you are not a recognized user.
-    *            <p/>
-    *            "403 Forbidden" if you do not have view rights on the node.
-    */
-   @SinceApiVersion("0.10.0")
-   @Named("environment:get")
-   @GET
-   @Path("/environments/{environmentname}")
-   @Fallback(NullOnNotFoundOr404.class)
-   Environment getEnvironment(@PathParam("environmentname") String environmentname);
-
-   /**
-    * gets an environment cookbook list, show only latest cookbook version
-    * 
-    * @return List of environment cookbooks
-    * @throws AuthorizationException
-    *            <p/>
-    *            "401 Unauthorized" if you are not a recognized user.
-    *            <p/>
-    *            "403 Forbidden" if you do not have view rights on the node.
-    */
-   @SinceApiVersion("0.10.0")
-   @Named("environment:cookbooklist")
-   @GET
-   @ResponseParser(ParseCookbookDefinitionListFromJsonv10.class)
-   @Path("/environments/{environmentname}/cookbooks")
-   @Fallback(NullOnNotFoundOr404.class)
-   Set<CookbookDefinition> listEnvironmentCookbooks(@PathParam("environmentname") String environmentname);
-
-   /**
-    * gets an environment cookbook list
-    * 
-    * @param environmentname
-    *           environment name that you looking for
-    * @param numversions
-    *           how many versions you want to see: 3 returns 3 latest versions,
-    *           in descending order (high to low); all returns all available
-    *           versions in this environment, in descending order (high to low);
-    *           0 is a valid input that returns an empty array for the versions
-    *           of each cookbooks.up
-    * @return List of environment cookbooks
-    * @throws AuthorizationException
-    *            <p/>
-    *            "401 Unauthorized" if you are not a recognized user.
-    *            <p/>
-    *            "403 Forbidden" if you do not have view rights on the node.
-    */
-   @SinceApiVersion("0.10.0")
-   @Named("environment:cookbooklist")
-   @GET
-   @ResponseParser(ParseCookbookDefinitionListFromJsonv10.class)
-   @Path("/environments/{environmentname}/cookbooks?num_versions={numversions}")
-   @Fallback(NullOnNotFoundOr404.class)
-   Set<CookbookDefinition> listEnvironmentCookbooks(@PathParam("environmentname") String environmentname,
-         @PathParam("numversions") String numversions);
-
-   @SinceApiVersion("0.10.0")
-   @Named("environment:cookbook")
-   @GET
-   @ResponseParser(ParseCookbookDefinitionFromJsonv10.class)
-   @Path("/environments/{environmentname}/cookbooks/{cookbookname}")
-   CookbookDefinition getEnvironmentCookbook(@PathParam("environmentname") String environmentname,
-         @PathParam("cookbookname") String cookbookname);
-
-   @SinceApiVersion("0.10.0")
-   @Named("environment:cookbook")
-   @GET
-   @ResponseParser(ParseCookbookDefinitionFromJsonv10.class)
-   @Path("/environments/{environmentname}/cookbooks/{cookbookname}?num_versions={numversions}")
-   CookbookDefinition getEnvironmentCookbook(@PathParam("environmentname") String environmentname,
-         @PathParam("cookbookname") String cookbookname, @PathParam("numversions") String numversions);
-  
-   /**
-    * @return List of environment recipes.
-    * @throws AuthorizationException
-    *            <p/>
-    *            "401 Unauthorized" if you are not a recognized user.
-    *            <p/>
-    *            "403 Forbidden" if you do not have rights to list environment recipes.
-    */
-   @SinceApiVersion("0.10.0")
-   @Named("environment:recipelist")
-   @GET
-   @Path("/environments/{environmentname}/recipes")
-   @Fallback(EmptySetOnNotFoundOr404.class)
-   Set<String> listEnvironmentRecipes(@PathParam("environmentname") String environmentname);
-
-   /**
-    * @return List of environment nodes.
-    * @throws AuthorizationException
-    *            <p/>
-    *            "401 Unauthorized" if you are not a recognized user.
-    *            <p/>
-    *            "403 Forbidden" if you do not have rights to list environment nodes.
-    */
-   @SinceApiVersion("0.10.0")
-   @Named("environment:nodelist")
-   @GET
-   @Path("/environments/{environmentname}/nodes")
-   @ResponseParser(ParseKeySetFromJson.class)   
-   @Fallback(EmptySetOnNotFoundOr404.class)
-   Set<String> listEnvironmentNodes(@PathParam("environmentname") String environmentname);  
 }

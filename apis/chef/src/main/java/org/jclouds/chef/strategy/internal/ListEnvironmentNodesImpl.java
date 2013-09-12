@@ -80,12 +80,12 @@ public class ListEnvironmentNodesImpl implements ListEnvironmentNodes {
 
    @Override
    public Iterable<? extends Node> execute(ListeningExecutorService executor, String environmentName) {
-      return execute(executor, environmentName, api.listEnvironmentNodes(environmentName));
+      return execute(executor, environmentName, api.listNodesInEnvironment(environmentName));
    }
 
    @Override
    public Iterable<? extends Node> execute(ListeningExecutorService executor, String environmentName, Predicate<String> nodeNameSelector) {
-      return execute(executor, environmentName, filter(api.listEnvironmentNodes(environmentName), nodeNameSelector));
+      return execute(executor, environmentName, filter(api.listNodesInEnvironment(environmentName), nodeNameSelector));
    }
 
    @Override

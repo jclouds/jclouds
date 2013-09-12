@@ -23,10 +23,8 @@ import java.util.Set;
 
 import javax.ws.rs.core.MediaType;
 
-import org.jclouds.chef.BaseChefApiExpectTest;
-import org.jclouds.chef.ChefApi;
-import org.jclouds.date.TimeStamp;
 import org.jclouds.chef.config.ChefHttpApiModule;
+import org.jclouds.date.TimeStamp;
 import org.jclouds.http.HttpRequest;
 import org.jclouds.http.HttpResponse;
 import org.jclouds.rest.ConfiguresRestClient;
@@ -51,12 +49,12 @@ public class ChefApiExpectTest extends BaseChefApiExpectTest<ChefApi> {
             signed(HttpRequest.builder() //
                   .method("GET") //
                   .endpoint("http://localhost:4000/environments/dev/recipes") //
-                  .addHeader("X-Chef-Version", ChefApi.VERSION) //
+                  .addHeader("X-Chef-Version", ChefApiMetadata.DEFAULT_VERSION) //
                   .addHeader("Accept", MediaType.APPLICATION_JSON).build()), //
             HttpResponse.builder().statusCode(200)
                   .payload(payloadFromResourceWithContentType("/environment_recipes.json", MediaType.APPLICATION_JSON)) //
                   .build());
-      Set<String> recipes = api.listEnvironmentRecipes("dev");
+      Set<String> recipes = api.listRecipesInEnvironment("dev");
       assertEquals(recipes.size(), 3);
       assertTrue(recipes.contains("apache2"));
    }
@@ -66,12 +64,12 @@ public class ChefApiExpectTest extends BaseChefApiExpectTest<ChefApi> {
             signed(HttpRequest.builder() //
                   .method("GET") //
                   .endpoint("http://localhost:4000/environments/dev/recipes") //
-                  .addHeader("X-Chef-Version", ChefApi.VERSION) //
+                  .addHeader("X-Chef-Version", ChefApiMetadata.DEFAULT_VERSION) //
                   .addHeader("Accept", MediaType.APPLICATION_JSON).build()), //
             HttpResponse.builder().statusCode(404)
                   .build());
 
-      assertTrue(api.listEnvironmentRecipes("dev").isEmpty());
+      assertTrue(api.listRecipesInEnvironment("dev").isEmpty());
    }
 
    public void testListEnvironmentNodesReturns2xx() {
@@ -79,12 +77,12 @@ public class ChefApiExpectTest extends BaseChefApiExpectTest<ChefApi> {
             signed(HttpRequest.builder() //
                   .method("GET") //
                   .endpoint("http://localhost:4000/environments/dev/nodes") //
-                  .addHeader("X-Chef-Version", ChefApi.VERSION) //
+                  .addHeader("X-Chef-Version", ChefApiMetadata.DEFAULT_VERSION) //
                   .addHeader("Accept", MediaType.APPLICATION_JSON).build()), //
             HttpResponse.builder().statusCode(200)
                   .payload(payloadFromResourceWithContentType("/environment_nodes.json", MediaType.APPLICATION_JSON)) //
                   .build());
-      Set<String> nodes = api.listEnvironmentNodes("dev");
+      Set<String> nodes = api.listNodesInEnvironment("dev");
       assertEquals(nodes.size(), 3);
       assertTrue(nodes.contains("blah"));
    }
@@ -94,12 +92,12 @@ public class ChefApiExpectTest extends BaseChefApiExpectTest<ChefApi> {
             signed(HttpRequest.builder() //
                   .method("GET") //
                   .endpoint("http://localhost:4000/environments/dev/nodes") //
-                  .addHeader("X-Chef-Version", ChefApi.VERSION) //
+                  .addHeader("X-Chef-Version", ChefApiMetadata.DEFAULT_VERSION) //
                   .addHeader("Accept", MediaType.APPLICATION_JSON).build()), //
             HttpResponse.builder().statusCode(404)
                   .build());
 
-      assertTrue(api.listEnvironmentNodes("dev").isEmpty());
+      assertTrue(api.listNodesInEnvironment("dev").isEmpty());
    }
 
    @Override
