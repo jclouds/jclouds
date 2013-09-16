@@ -56,7 +56,7 @@ public class EnterpriseChefApiExpectTest extends BaseChefApiExpectTest<Enterpris
             signed(HttpRequest.builder() //
                   .method("GET") //
                   .endpoint("https://api.opscode.com/users/nacx") //
-                  .addHeader("X-Chef-Version", ChefApiMetadata.DEFAULT_VERSION) //
+                  .addHeader("X-Chef-Version", ChefApiMetadata.DEFAULT_API_VERSION) //
                   .addHeader("Accept", MediaType.APPLICATION_JSON).build()), //
             HttpResponse.builder().statusCode(200)
                   .payload(payloadFromResourceWithContentType("/user.json", MediaType.APPLICATION_JSON)) //
@@ -71,7 +71,7 @@ public class EnterpriseChefApiExpectTest extends BaseChefApiExpectTest<Enterpris
       EnterpriseChefApi api = requestSendsResponse(signed(HttpRequest.builder() //
             .method("GET") //
             .endpoint("https://api.opscode.com/users/foo") //
-            .addHeader("X-Chef-Version", ChefApiMetadata.DEFAULT_VERSION) //
+            .addHeader("X-Chef-Version", ChefApiMetadata.DEFAULT_API_VERSION) //
             .addHeader("Accept", MediaType.APPLICATION_JSON) //
             .build()), //
             HttpResponse.builder().statusCode(404).build());
@@ -84,7 +84,7 @@ public class EnterpriseChefApiExpectTest extends BaseChefApiExpectTest<Enterpris
             signed(HttpRequest.builder() //
                   .method("GET") //
                   .endpoint("https://api.opscode.com/groups") //
-                  .addHeader("X-Chef-Version", ChefApiMetadata.DEFAULT_VERSION) //
+                  .addHeader("X-Chef-Version", ChefApiMetadata.DEFAULT_API_VERSION) //
                   .addHeader("Accept", MediaType.APPLICATION_JSON).build()), //
             HttpResponse.builder().statusCode(200)
                   .payload(payloadFromResourceWithContentType("/groups.json", MediaType.APPLICATION_JSON)) //
@@ -100,7 +100,7 @@ public class EnterpriseChefApiExpectTest extends BaseChefApiExpectTest<Enterpris
             signed(HttpRequest.builder() //
                   .method("GET") //
                   .endpoint("https://api.opscode.com/groups/admins") //
-                  .addHeader("X-Chef-Version", ChefApiMetadata.DEFAULT_VERSION) //
+                  .addHeader("X-Chef-Version", ChefApiMetadata.DEFAULT_API_VERSION) //
                   .addHeader("Accept", MediaType.APPLICATION_JSON).build()), //
             HttpResponse.builder().statusCode(200)
                   .payload(payloadFromResourceWithContentType("/group.json", MediaType.APPLICATION_JSON)) //
@@ -115,7 +115,7 @@ public class EnterpriseChefApiExpectTest extends BaseChefApiExpectTest<Enterpris
       EnterpriseChefApi api = requestSendsResponse(signed(HttpRequest.builder() //
             .method("GET") //
             .endpoint("https://api.opscode.com/groups/foo") //
-            .addHeader("X-Chef-Version", ChefApiMetadata.DEFAULT_VERSION) //
+            .addHeader("X-Chef-Version", ChefApiMetadata.DEFAULT_API_VERSION) //
             .addHeader("Accept", MediaType.APPLICATION_JSON) //
             .build()), //
             HttpResponse.builder().statusCode(404).build());
@@ -127,7 +127,7 @@ public class EnterpriseChefApiExpectTest extends BaseChefApiExpectTest<Enterpris
       EnterpriseChefApi api = requestSendsResponse(signed(HttpRequest.builder() //
             .method("POST") //
             .endpoint("https://api.opscode.com/groups") //
-            .addHeader("X-Chef-Version", ChefApiMetadata.DEFAULT_VERSION) //
+            .addHeader("X-Chef-Version", ChefApiMetadata.DEFAULT_API_VERSION) //
             .addHeader("Accept", MediaType.APPLICATION_JSON) //
             .payload(payloadFromStringWithContentType("{\"groupname\":\"foo\"}", MediaType.APPLICATION_JSON)) //
             .build()), //
@@ -140,7 +140,7 @@ public class EnterpriseChefApiExpectTest extends BaseChefApiExpectTest<Enterpris
       EnterpriseChefApi api = requestSendsResponse(signed(HttpRequest.builder() //
             .method("DELETE") //
             .endpoint("https://api.opscode.com/groups/foo") //
-            .addHeader("X-Chef-Version", ChefApiMetadata.DEFAULT_VERSION) //
+            .addHeader("X-Chef-Version", ChefApiMetadata.DEFAULT_API_VERSION) //
             .addHeader("Accept", MediaType.APPLICATION_JSON) //
             .build()), //
             HttpResponse.builder().statusCode(200).build());
@@ -153,7 +153,7 @@ public class EnterpriseChefApiExpectTest extends BaseChefApiExpectTest<Enterpris
       EnterpriseChefApi api = requestSendsResponse(signed(HttpRequest.builder() //
             .method("DELETE") //
             .endpoint("https://api.opscode.com/groups/foo") //
-            .addHeader("X-Chef-Version", ChefApiMetadata.DEFAULT_VERSION) //
+            .addHeader("X-Chef-Version", ChefApiMetadata.DEFAULT_API_VERSION) //
             .addHeader("Accept", MediaType.APPLICATION_JSON) //
             .build()), //
             HttpResponse.builder().statusCode(404).build());
@@ -165,7 +165,7 @@ public class EnterpriseChefApiExpectTest extends BaseChefApiExpectTest<Enterpris
       EnterpriseChefApi api = requestSendsResponse(signed(HttpRequest.builder() //
             .method("PUT") //
             .endpoint("https://api.opscode.com/groups/admins") //
-            .addHeader("X-Chef-Version", ChefApiMetadata.DEFAULT_VERSION) //
+            .addHeader("X-Chef-Version", ChefApiMetadata.DEFAULT_API_VERSION) //
             .addHeader("Accept", MediaType.APPLICATION_JSON) //
             .payload(payloadFromResourceWithContentType("/group-update.json", MediaType.APPLICATION_JSON)) //
             .build()), //
@@ -180,7 +180,7 @@ public class EnterpriseChefApiExpectTest extends BaseChefApiExpectTest<Enterpris
       EnterpriseChefApi api = requestSendsResponse(signed(HttpRequest.builder() //
             .method("PUT") //
             .endpoint("https://api.opscode.com/groups/admins") //
-            .addHeader("X-Chef-Version", ChefApiMetadata.DEFAULT_VERSION) //
+            .addHeader("X-Chef-Version", ChefApiMetadata.DEFAULT_API_VERSION) //
             .addHeader("Accept", MediaType.APPLICATION_JSON) //
             .payload(payloadFromResourceWithContentType("/group-update.json", MediaType.APPLICATION_JSON)) //
             .build()), //

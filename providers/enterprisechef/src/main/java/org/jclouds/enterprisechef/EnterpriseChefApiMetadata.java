@@ -62,7 +62,7 @@ public class EnterpriseChefApiMetadata extends BaseHttpApiMetadata<EnterpriseChe
                .name("Enterprise Chef Api")
                .identityName("User")
                .credentialName("Certificate")
-               .version(ChefApiMetadata.DEFAULT_VERSION)
+               .version(ChefApiMetadata.DEFAULT_API_VERSION)
                .documentation(URI.create("http://www.opscode.com/support"))
                .defaultEndpoint("https://api.opscode.com")
                .view(ChefContext.class)
