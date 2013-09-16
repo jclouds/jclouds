@@ -468,13 +468,13 @@ public abstract class BaseChefApiLiveTest<A extends ChefApi> extends BaseChefLiv
    }
 
    @Test(dependsOnMethods = "testCreateEnvironment")
-   public void testListEnvironmentRecipes() {
+   public void testListRecipesInEnvironment() {
       Set<String> recipeList = api.listRecipesInEnvironment(PREFIX);
       assertTrue(!recipeList.isEmpty());
    }
 
    @Test(dependsOnMethods = "testCreateEnvironment")
-   public void testListEnvironmentNodes() {
+   public void testListNodesInEnvironment() {
       api.deleteNode(ENV_NODE);
       api.createNode(Node.builder().name(ENV_NODE).runListElement("role[" + PREFIX + "]").environment(PREFIX).build());
       Node node = api.getNode(ENV_NODE);
