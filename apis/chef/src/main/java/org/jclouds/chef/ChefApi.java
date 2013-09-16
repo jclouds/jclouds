@@ -98,7 +98,7 @@ public interface ChefApi extends Closeable {
    // Clients
 
    /**
-    * List the names of the existing clients.
+    * Lists the names of the existing clients.
     * 
     * @return The names of the existing clients.
     */
@@ -110,7 +110,7 @@ public interface ChefApi extends Closeable {
    Set<String> listClients();
 
    /**
-    * Get the details of existing client.
+    * Gets the details of existing client.
     * 
     * @param clientname The name of the client to get.
     * @return The details of the given client.
@@ -119,7 +119,7 @@ public interface ChefApi extends Closeable {
    @GET
    @Path("/clients/{clientname}")
    @Fallback(NullOnNotFoundOr404.class)
-   Client getClient(@PathParam("clientname") String clientname);
+   Client getClient(@PathParam("clientname") String clientName);
 
    /**
     * Creates a new client.
@@ -132,7 +132,7 @@ public interface ChefApi extends Closeable {
    @POST
    @Path("/clients")
    @MapBinder(BindToJsonPayload.class)
-   Client createClient(@PayloadParam("name") String clientname);
+   Client createClient(@PayloadParam("name") String clientName);
 
    /**
     * Creates a new client with custom options.
@@ -146,10 +146,10 @@ public interface ChefApi extends Closeable {
    @POST
    @Path("/clients")
    @MapBinder(BindCreateClientOptionsToJsonPayload.class)
-   Client createClient(@PayloadParam("name") String clientname, CreateClientOptions options);
+   Client createClient(@PayloadParam("name") String clientName, CreateClientOptions options);
 
    /**
-    * Generate a new key-pair for this client, and return the new private key in
+    * Generates a new key-pair for this client, and return the new private key in
     * the response body.
     * 
     * @param clientname The name of the client.
@@ -159,7 +159,7 @@ public interface ChefApi extends Closeable {
    @PUT
    @Path("/clients/{clientname}")
    Client generateKeyForClient(
-         @PathParam("clientname") @BinderParam(BindGenerateKeyForClientToJsonPayload.class) String clientname);
+         @PathParam("clientname") @BinderParam(BindGenerateKeyForClientToJsonPayload.class) String clientName);
 
    /**
     * Deletes the given client.
@@ -171,12 +171,12 @@ public interface ChefApi extends Closeable {
    @DELETE
    @Path("/clients/{clientname}")
    @Fallback(NullOnNotFoundOr404.class)
-   Client deleteClient(@PathParam("clientname") String clientname);
+   Client deleteClient(@PathParam("clientname") String clientName);
 
    // Cookbooks
 
    /**
-    * List the names of the existing cookbooks.
+    * Lists the names of the existing cookbooks.
     * 
     * @return The names of the exsisting cookbooks.
     */
@@ -188,7 +188,7 @@ public interface ChefApi extends Closeable {
    Set<String> listCookbooks();
 
    /**
-    * List the cookbooks that are available in the given environment.
+    * Lists the cookbooks that are available in the given environment.
     * 
     * @param environmentname The name of the environment to get the cookbooks
     *        from.
@@ -201,10 +201,10 @@ public interface ChefApi extends Closeable {
    @ResponseParser(ParseCookbookDefinitionListFromJsonv10.class)
    @Path("/environments/{environmentname}/cookbooks")
    @Fallback(NullOnNotFoundOr404.class)
-   Set<CookbookDefinition> listCookbooksInEnvironment(@PathParam("environmentname") String environmentname);
+   Set<CookbookDefinition> listCookbooksInEnvironment(@PathParam("environmentname") String environmentName);
 
    /**
-    * List the cookbooks that are available in the given environment, limiting
+    * Lists the cookbooks that are available in the given environment, limiting
     * the number of versions returned for each cookbook.
     * 
     * @param environmentname The name of the environment.
@@ -219,11 +219,11 @@ public interface ChefApi extends Closeable {
    @ResponseParser(ParseCookbookDefinitionListFromJsonv10.class)
    @Path("/environments/{environmentname}/cookbooks?num_versions={numversions}")
    @Fallback(NullOnNotFoundOr404.class)
-   Set<CookbookDefinition> listCookbooksInEnvironment(@PathParam("environmentname") String environmentname,
-         @PathParam("numversions") String numversions);
+   Set<CookbookDefinition> listCookbooksInEnvironment(@PathParam("environmentname") String environmentName,
+         @PathParam("numversions") String numVersions);
 
    /**
-    * List the available versions of the given cookbook.
+    * Lists the available versions of the given cookbook.
     * 
     * @param cookbookName The name of the cookbook.
     * @return The available versions of the given cookbook.
@@ -236,7 +236,7 @@ public interface ChefApi extends Closeable {
    Set<String> listVersionsOfCookbook(@PathParam("cookbookname") String cookbookName);
 
    /**
-    * Get the details of the given cookbook, with the links to each resource
+    * Gets the details of the given cookbook, with the links to each resource
     * such as recipe files, attributes, etc.
     * 
     * @param cookbookName The name of the cookbook.
@@ -250,7 +250,7 @@ public interface ChefApi extends Closeable {
    CookbookVersion getCookbook(@PathParam("cookbookname") String cookbookName, @PathParam("version") String version);
 
    /**
-    * Get the definition of the cookbook in the given environment.
+    * Gets the definition of the cookbook in the given environment.
     * 
     * @param environmentname The name of the environment.
     * @param cookbookname The name of the cookbook.
@@ -262,11 +262,11 @@ public interface ChefApi extends Closeable {
    @GET
    @ResponseParser(ParseCookbookDefinitionFromJsonv10.class)
    @Path("/environments/{environmentname}/cookbooks/{cookbookname}")
-   CookbookDefinition getCookbookInEnvironment(@PathParam("environmentname") String environmentname,
-         @PathParam("cookbookname") String cookbookname);
+   CookbookDefinition getCookbookInEnvironment(@PathParam("environmentname") String environmentName,
+         @PathParam("cookbookname") String cookbookName);
 
    /**
-    * Get the definition of the cookbook in the given environment.
+    * Gets the definition of the cookbook in the given environment.
     * 
     * @param environmentname The name of the environment.
     * @param cookbookname The name of the cookbook.
@@ -280,11 +280,11 @@ public interface ChefApi extends Closeable {
    @GET
    @ResponseParser(ParseCookbookDefinitionFromJsonv10.class)
    @Path("/environments/{environmentname}/cookbooks/{cookbookname}?num_versions={numversions}")
-   CookbookDefinition getCookbookInEnvironment(@PathParam("environmentname") String environmentname,
-         @PathParam("cookbookname") String cookbookname, @PathParam("numversions") String numversions);
+   CookbookDefinition getCookbookInEnvironment(@PathParam("environmentname") String environmentName,
+         @PathParam("cookbookname") String cookbookName, @PathParam("numversions") String numVersions);
 
    /**
-    * List the names of the recipes in the given environment.
+    * Lists the names of the recipes in the given environment.
     * 
     * @param environmentname The name of the environment.
     * @return The names of the recipes in the given environment.
@@ -294,7 +294,7 @@ public interface ChefApi extends Closeable {
    @GET
    @Path("/environments/{environmentname}/recipes")
    @Fallback(EmptySetOnNotFoundOr404.class)
-   Set<String> listRecipesInEnvironment(@PathParam("environmentname") String environmentname);
+   Set<String> listRecipesInEnvironment(@PathParam("environmentname") String environmentName);
 
    /**
     * Creates or updates the given cookbook.
@@ -311,7 +311,7 @@ public interface ChefApi extends Closeable {
          @BinderParam(BindToJsonPayload.class) CookbookVersion cookbook);
 
    /**
-    * Delete the given cookbook.
+    * Deletes the given cookbook.
     * 
     * @param cookbookName The name of the cookbook to delete.
     * @param version The version of the cookbook to delete.
@@ -326,7 +326,7 @@ public interface ChefApi extends Closeable {
    // Data bags
 
    /**
-    * List the names of the existing data bags.
+    * Lists the names of the existing data bags.
     * 
     * @return The names of the existing data bags.
     */
@@ -359,7 +359,7 @@ public interface ChefApi extends Closeable {
    void deleteDatabag(@PathParam("name") String databagName);
 
    /**
-    * List the names of the items in a data bag.
+    * Lists the names of the items in a data bag.
     * 
     * @param databagName The name of the data bag.
     * @return The names of the items in the given data bag.
@@ -372,7 +372,7 @@ public interface ChefApi extends Closeable {
    Set<String> listDatabagItems(@PathParam("name") String databagName);
 
    /**
-    * Get an item in a data bag.
+    * Gets an item in a data bag.
     * 
     * @param databagName The name of the data bag.
     * @param databagItemId The identifier of the item to get.
@@ -399,7 +399,7 @@ public interface ChefApi extends Closeable {
          @BinderParam(BindToJsonPayload.class) DatabagItem databagItem);
 
    /**
-    * Update an item in a data bag.
+    * Updates an item in a data bag.
     * 
     * @param databagName The name of the data bag.
     * @param item The new contents for the item in the data bag.
@@ -413,7 +413,7 @@ public interface ChefApi extends Closeable {
          @PathParam("databagItemId") @ParamParser(DatabagItemId.class) @BinderParam(BindToJsonPayload.class) DatabagItem item);
 
    /**
-    * Delete an item from a data bag.
+    * Deletes an item from a data bag.
     * 
     * @param databagName The name of the data bag.
     * @param databagItemId The identifier of the item to delete.
@@ -429,7 +429,7 @@ public interface ChefApi extends Closeable {
    // Environments
 
    /**
-    * List the names of the existing environments.
+    * Lists the names of the existing environments.
     * 
     * @return The names of the existing environments.
     */
@@ -442,7 +442,7 @@ public interface ChefApi extends Closeable {
    Set<String> listEnvironments();
 
    /**
-    * Get the details of an existing environment.
+    * Gets the details of an existing environment.
     * 
     * @param environmentname The name of the environment to get.
     * @return The details of the given environment.
@@ -452,10 +452,10 @@ public interface ChefApi extends Closeable {
    @GET
    @Path("/environments/{environmentname}")
    @Fallback(NullOnNotFoundOr404.class)
-   Environment getEnvironment(@PathParam("environmentname") String environmentname);
+   Environment getEnvironment(@PathParam("environmentname") String environmentName);
 
    /**
-    * Create a new environment.
+    * Creates a new environment.
     * 
     * @param environment The environment to create.
     */
@@ -466,7 +466,7 @@ public interface ChefApi extends Closeable {
    void createEnvironment(@BinderParam(BindToJsonPayload.class) Environment environment);
 
    /**
-    * Updated the given environment.
+    * Updates the given environment.
     * 
     * @param environment The new details for the environment.
     * @return The details of the updated environment.
@@ -479,7 +479,7 @@ public interface ChefApi extends Closeable {
          @PathParam("environmentname") @ParamParser(EnvironmentName.class) @BinderParam(BindToJsonPayload.class) Environment environment);
 
    /**
-    * Delete the given environment.
+    * Deletes the given environment.
     * 
     * @param environmentname The name of the environment to delete.
     * @return The details of the deleted environment.
@@ -489,12 +489,12 @@ public interface ChefApi extends Closeable {
    @DELETE
    @Path("/environments/{environmentname}")
    @Fallback(NullOnNotFoundOr404.class)
-   Environment deleteEnvironment(@PathParam("environmentname") String environmentname);
+   Environment deleteEnvironment(@PathParam("environmentname") String environmentName);
 
    // Nodes
 
    /**
-    * List the names of the existing nodes.
+    * Lists the names of the existing nodes.
     * 
     * @return The names of the existing nodes.
     */
@@ -506,7 +506,7 @@ public interface ChefApi extends Closeable {
    Set<String> listNodes();
 
    /**
-    * List the names of the nodes in the given environment.
+    * Lists the names of the nodes in the given environment.
     * 
     * @param environmentname The name of the environment.
     * @return The names of the existing nodes in the given environment.
@@ -517,10 +517,10 @@ public interface ChefApi extends Closeable {
    @Path("/environments/{environmentname}/nodes")
    @ResponseParser(ParseKeySetFromJson.class)
    @Fallback(EmptySetOnNotFoundOr404.class)
-   Set<String> listNodesInEnvironment(@PathParam("environmentname") String environmentname);
+   Set<String> listNodesInEnvironment(@PathParam("environmentname") String environmentName);
 
    /**
-    * Get the details of the given node.
+    * Gets the details of the given node.
     * 
     * @param nodename The name of the node to get.
     * @return The details of the given node.
@@ -529,10 +529,10 @@ public interface ChefApi extends Closeable {
    @GET
    @Path("/nodes/{nodename}")
    @Fallback(NullOnNotFoundOr404.class)
-   Node getNode(@PathParam("nodename") String nodename);
+   Node getNode(@PathParam("nodename") String nodeName);
 
    /**
-    * Create a new node.
+    * Creates a new node.
     * 
     * @param node The details of the node to create.
     */
@@ -542,7 +542,7 @@ public interface ChefApi extends Closeable {
    void createNode(@BinderParam(BindToJsonPayload.class) Node node);
 
    /**
-    * Update an existing node.
+    * Updates an existing node.
     * 
     * @param node The new details for the node.
     * @return The details of the updated node.
@@ -553,7 +553,7 @@ public interface ChefApi extends Closeable {
    Node updateNode(@PathParam("nodename") @ParamParser(NodeName.class) @BinderParam(BindToJsonPayload.class) Node node);
 
    /**
-    * Delete the given node.
+    * Deletes the given node.
     * 
     * @param nodename The name of the node to delete.
     * @return The details of the deleted node.
@@ -562,12 +562,12 @@ public interface ChefApi extends Closeable {
    @DELETE
    @Path("/nodes/{nodename}")
    @Fallback(NullOnNotFoundOr404.class)
-   Node deleteNode(@PathParam("nodename") String nodename);
+   Node deleteNode(@PathParam("nodename") String nodeName);
 
    // Roles
 
    /**
-    * List the names of the existing roles.
+    * Lists the names of the existing roles.
     * 
     * @return The names of the existing roles.
     */
@@ -579,7 +579,7 @@ public interface ChefApi extends Closeable {
    Set<String> listRoles();
 
    /**
-    * Get the details of the given role.
+    * Gets the details of the given role.
     * 
     * @param rolename The name of the role to get.
     * @return The details of the given role.
@@ -588,10 +588,10 @@ public interface ChefApi extends Closeable {
    @GET
    @Path("/roles/{rolename}")
    @Fallback(NullOnNotFoundOr404.class)
-   Role getRole(@PathParam("rolename") String rolename);
+   Role getRole(@PathParam("rolename") String roleName);
 
    /**
-    * Create a new role.
+    * Creates a new role.
     * 
     * @param role The details for the new role.
     */
@@ -601,7 +601,7 @@ public interface ChefApi extends Closeable {
    void createRole(@BinderParam(BindToJsonPayload.class) Role role);
 
    /**
-    * Update the given role.
+    * Updates the given role.
     * 
     * @param role The new details for the role.
     * @return The details of the updated role.
@@ -612,7 +612,7 @@ public interface ChefApi extends Closeable {
    Role updateRole(@PathParam("rolename") @ParamParser(RoleName.class) @BinderParam(BindToJsonPayload.class) Role role);
 
    /**
-    * Delete the given role.
+    * Deletes the given role.
     * 
     * @param rolename The name of the role to delete.
     * @return The details of the deleted role.
@@ -621,7 +621,7 @@ public interface ChefApi extends Closeable {
    @DELETE
    @Path("/roles/{rolename}")
    @Fallback(NullOnNotFoundOr404.class)
-   Role deleteRole(@PathParam("rolename") String rolename);
+   Role deleteRole(@PathParam("rolename") String roleName);
 
    // Sandboxes
 
@@ -656,7 +656,7 @@ public interface ChefApi extends Closeable {
    void uploadContent(@EndpointParam URI location, Payload content);
 
    /**
-    * Get the contents of the given resource.
+    * Gets the contents of the given resource.
     * 
     * @param resource The resource to get.
     * @return An input stream for the content of the requested resource.
@@ -684,7 +684,7 @@ public interface ChefApi extends Closeable {
    // Search
 
    /**
-    * List the names of the available search indexes.
+    * Lists the names of the available search indexes.
     * <p>
     * By default, the "role", "node" and "api" indexes will always be available.
     * <p>
@@ -703,7 +703,7 @@ public interface ChefApi extends Closeable {
    Set<String> listSearchIndexes();
 
    /**
-    * Search all clients.
+    * Searches all clients.
     * <p>
     * Note that without any request parameters this will return all of the data
     * within the index.
@@ -719,7 +719,7 @@ public interface ChefApi extends Closeable {
    SearchResult<? extends Client> searchClients();
 
    /**
-    * Search all clients that match the given options.
+    * Searches all clients that match the given options.
     * 
     * @return The response contains the total number of rows that matched the
     *         request, the position this result set returns (useful for paging)
@@ -732,7 +732,7 @@ public interface ChefApi extends Closeable {
    SearchResult<? extends Client> searchClients(SearchOptions options);
 
    /**
-    * Search all items in a data bag.
+    * Searches all items in a data bag.
     * <p>
     * Note that without any request parameters this will return all of the data
     * within the index.
@@ -748,7 +748,7 @@ public interface ChefApi extends Closeable {
    SearchResult<? extends DatabagItem> searchDatabagItems(@PathParam("databagName") String databagName);
 
    /**
-    * Search all items in a data bag that match the given options.
+    * Searches all items in a data bag that match the given options.
     * 
     * @return The response contains the total number of rows that matched the
     *         request, the position this result set returns (useful for paging)
@@ -762,7 +762,7 @@ public interface ChefApi extends Closeable {
          SearchOptions options);
 
    /**
-    * Search all environments.
+    * Searches all environments.
     * <p>
     * Note that without any request parameters this will return all of the data
     * within the index.
@@ -779,7 +779,7 @@ public interface ChefApi extends Closeable {
    SearchResult<? extends Environment> searchEnvironments();
 
    /**
-    * Search all environments that match the given options.
+    * Searches all environments that match the given options.
     * 
     * @return The response contains the total number of rows that matched the
     *         request, the position this result set returns (useful for paging)
@@ -793,7 +793,7 @@ public interface ChefApi extends Closeable {
    SearchResult<? extends Environment> searchEnvironments(SearchOptions options);
 
    /**
-    * Search all nodes.
+    * Searches all nodes.
     * <p>
     * Note that without any request parameters this will return all of the data
     * within the index.
@@ -809,7 +809,7 @@ public interface ChefApi extends Closeable {
    SearchResult<? extends Node> searchNodes();
 
    /**
-    * Search all nodes that match the given options.
+    * Searches all nodes that match the given options.
     * 
     * @return The response contains the total number of rows that matched the
     *         request, the position this result set returns (useful for paging)
@@ -822,7 +822,7 @@ public interface ChefApi extends Closeable {
    SearchResult<? extends Node> searchNodes(SearchOptions options);
 
    /**
-    * Search all roles.
+    * Searches all roles.
     * <p>
     * Note that without any request parameters this will return all of the data
     * within the index.
@@ -838,7 +838,7 @@ public interface ChefApi extends Closeable {
    SearchResult<? extends Role> searchRoles();
 
    /**
-    * Search all roles that match the given options.
+    * Searches all roles that match the given options.
     * 
     * @return The response contains the total number of rows that matched the
     *         request, the position this result set returns (useful for paging)

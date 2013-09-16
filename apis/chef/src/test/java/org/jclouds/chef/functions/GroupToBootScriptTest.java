@@ -71,7 +71,7 @@ public class GroupToBootScriptTest {
       Injector injector = Guice.createInjector(new AbstractModule() {
          @Override
          protected void configure() {
-            bind(String.class).annotatedWith(ApiVersion.class).toInstance(ChefApiMetadata.DEFAULT_VERSION);
+            bind(String.class).annotatedWith(ApiVersion.class).toInstance(ChefApiMetadata.DEFAULT_API_VERSION);
             bind(String.class).annotatedWith(Names.named(CHEF_UPDATE_GEM_SYSTEM)).toInstance("true");
             bind(String.class).annotatedWith(Names.named(CHEF_UPDATE_GEMS)).toInstance("true");
          }

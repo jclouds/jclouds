@@ -48,7 +48,7 @@ public class ChefApiMetadata extends BaseHttpApiMetadata<ChefApi> {
    /**
     * The default Chef Server API version to use.
     */
-   public static final String DEFAULT_VERSION = "0.10.8";
+   public static final String DEFAULT_API_VERSION = "0.10.8";
 
    @Override
    public Builder toBuilder() {
@@ -88,7 +88,7 @@ public class ChefApiMetadata extends BaseHttpApiMetadata<ChefApi> {
                .name("OpsCode Chef Api")
                .identityName("User")
                .credentialName("Certificate")
-               .version(DEFAULT_VERSION)
+               .version(DEFAULT_API_VERSION)
                .documentation(URI.create("http://wiki.opscode.com/display/chef/Server+API"))
                .defaultEndpoint("http://localhost:4000")
                .defaultProperties(ChefApiMetadata.defaultProperties())

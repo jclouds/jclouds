@@ -83,7 +83,7 @@ public class ChefApiTest extends BaseAsyncApiTest<ChefApi> {
             ImmutableList.<Object> of("0189e76ccc476701d6b374e5a1a27347", true)));
       assertRequestLineEquals(httpRequest,
             "PUT http://localhost:4000/sandboxes/0189e76ccc476701d6b374e5a1a27347 HTTP/1.1");
-      assertNonPayloadHeadersEqual(httpRequest, "Accept: application/json\nX-Chef-Version: " + ChefApiMetadata.DEFAULT_VERSION
+      assertNonPayloadHeadersEqual(httpRequest, "Accept: application/json\nX-Chef-Version: " + ChefApiMetadata.DEFAULT_API_VERSION
             + "-test\n");
       assertPayloadEquals(httpRequest, "{\"is_completed\":true}", "application/json", false);
 
@@ -102,7 +102,7 @@ public class ChefApiTest extends BaseAsyncApiTest<ChefApi> {
                   asList(base16().lowerCase().decode("0c5ecd7788cf4f6c7de2a57193897a6c")), asList(base16().lowerCase()
                         .decode("1dda05ed139664f1f89b9dec482b77c0"))))));
       assertRequestLineEquals(httpRequest, "POST http://localhost:4000/sandboxes HTTP/1.1");
-      assertNonPayloadHeadersEqual(httpRequest, "Accept: application/json\nX-Chef-Version: " + ChefApiMetadata.DEFAULT_VERSION
+      assertNonPayloadHeadersEqual(httpRequest, "Accept: application/json\nX-Chef-Version: " + ChefApiMetadata.DEFAULT_API_VERSION
             + "-test\n");
       assertPayloadEquals(httpRequest,
             "{\"checksums\":{\"0189e76ccc476701d6b374e5a1a27347\":null,\"0c5ecd7788cf4f6c7de2a57193897a6c\":null,"
@@ -120,7 +120,7 @@ public class ChefApiTest extends BaseAsyncApiTest<ChefApi> {
       GeneratedHttpRequest httpRequest = processor.apply(Invocation.create(method,
             ImmutableList.<Object> of(URI.create("http://foo/bar"), new StringPayload("{\"foo\": \"bar\"}"))));
       assertRequestLineEquals(httpRequest, "PUT http://foo/bar HTTP/1.1");
-      assertNonPayloadHeadersEqual(httpRequest, "Accept: application/json\nX-Chef-Version: " + ChefApiMetadata.DEFAULT_VERSION
+      assertNonPayloadHeadersEqual(httpRequest, "Accept: application/json\nX-Chef-Version: " + ChefApiMetadata.DEFAULT_API_VERSION
             + "-test\n");
       assertPayloadEquals(httpRequest, "{\"foo\": \"bar\"}", "application/x-binary", false);
 
@@ -137,7 +137,7 @@ public class ChefApiTest extends BaseAsyncApiTest<ChefApi> {
       GeneratedHttpRequest httpRequest = processor.apply(Invocation.create(method,
             ImmutableList.<Object> of("cookbook", "1.0.0")));
       assertRequestLineEquals(httpRequest, "GET http://localhost:4000/cookbooks/cookbook/1.0.0 HTTP/1.1");
-      assertNonPayloadHeadersEqual(httpRequest, "Accept: application/json\nX-Chef-Version: " + ChefApiMetadata.DEFAULT_VERSION
+      assertNonPayloadHeadersEqual(httpRequest, "Accept: application/json\nX-Chef-Version: " + ChefApiMetadata.DEFAULT_API_VERSION
             + "-test\n");
       assertPayloadEquals(httpRequest, null, null, false);
 
@@ -154,7 +154,7 @@ public class ChefApiTest extends BaseAsyncApiTest<ChefApi> {
       GeneratedHttpRequest httpRequest = processor.apply(Invocation.create(method,
             ImmutableList.<Object> of("cookbook", "1.0.0")));
       assertRequestLineEquals(httpRequest, "DELETE http://localhost:4000/cookbooks/cookbook/1.0.0 HTTP/1.1");
-      assertNonPayloadHeadersEqual(httpRequest, "Accept: application/json\nX-Chef-Version: " + ChefApiMetadata.DEFAULT_VERSION
+      assertNonPayloadHeadersEqual(httpRequest, "Accept: application/json\nX-Chef-Version: " + ChefApiMetadata.DEFAULT_API_VERSION
             + "-test\n");
       assertPayloadEquals(httpRequest, null, null, false);
 
@@ -173,7 +173,7 @@ public class ChefApiTest extends BaseAsyncApiTest<ChefApi> {
             ImmutableList.<Object> of("cookbook", "1.0.1", CookbookVersion.builder("cookbook", "1.0.1").build())));
 
       assertRequestLineEquals(httpRequest, "PUT http://localhost:4000/cookbooks/cookbook/1.0.1 HTTP/1.1");
-      assertNonPayloadHeadersEqual(httpRequest, "Accept: application/json\nX-Chef-Version: " + ChefApiMetadata.DEFAULT_VERSION
+      assertNonPayloadHeadersEqual(httpRequest, "Accept: application/json\nX-Chef-Version: " + ChefApiMetadata.DEFAULT_API_VERSION
             + "-test\n");
       assertPayloadEquals(httpRequest,
             "{\"name\":\"cookbook-1.0.1\",\"definitions\":[],\"attributes\":[],\"files\":[],"
@@ -197,7 +197,7 @@ public class ChefApiTest extends BaseAsyncApiTest<ChefApi> {
       GeneratedHttpRequest httpRequest = processor.apply(Invocation.create(method, ImmutableList.of()));
 
       assertRequestLineEquals(httpRequest, "GET http://localhost:4000/cookbooks HTTP/1.1");
-      assertNonPayloadHeadersEqual(httpRequest, "Accept: application/json\nX-Chef-Version: " + ChefApiMetadata.DEFAULT_VERSION
+      assertNonPayloadHeadersEqual(httpRequest, "Accept: application/json\nX-Chef-Version: " + ChefApiMetadata.DEFAULT_API_VERSION
             + "-test\n");
       assertPayloadEquals(httpRequest, null, null, false);
 
@@ -215,7 +215,7 @@ public class ChefApiTest extends BaseAsyncApiTest<ChefApi> {
             .apply(Invocation.create(method, ImmutableList.<Object> of("apache2")));
 
       assertRequestLineEquals(httpRequest, "GET http://localhost:4000/cookbooks/apache2 HTTP/1.1");
-      assertNonPayloadHeadersEqual(httpRequest, "Accept: application/json\nX-Chef-Version: " + ChefApiMetadata.DEFAULT_VERSION
+      assertNonPayloadHeadersEqual(httpRequest, "Accept: application/json\nX-Chef-Version: " + ChefApiMetadata.DEFAULT_API_VERSION
             + "-test\n");
       assertPayloadEquals(httpRequest, null, null, false);
 
@@ -232,7 +232,7 @@ public class ChefApiTest extends BaseAsyncApiTest<ChefApi> {
       GeneratedHttpRequest httpRequest = processor
             .apply(Invocation.create(method, ImmutableList.<Object> of("client")));
       assertRequestLineEquals(httpRequest, "DELETE http://localhost:4000/clients/client HTTP/1.1");
-      assertNonPayloadHeadersEqual(httpRequest, "Accept: application/json\nX-Chef-Version: " + ChefApiMetadata.DEFAULT_VERSION
+      assertNonPayloadHeadersEqual(httpRequest, "Accept: application/json\nX-Chef-Version: " + ChefApiMetadata.DEFAULT_API_VERSION
             + "-test\n");
       assertPayloadEquals(httpRequest, null, null, false);
 
@@ -249,7 +249,7 @@ public class ChefApiTest extends BaseAsyncApiTest<ChefApi> {
       GeneratedHttpRequest httpRequest = processor.apply(Invocation.create(method, ImmutableList.<Object> of("api")));
 
       assertRequestLineEquals(httpRequest, "POST http://localhost:4000/clients HTTP/1.1");
-      assertNonPayloadHeadersEqual(httpRequest, "Accept: application/json\nX-Chef-Version: " + ChefApiMetadata.DEFAULT_VERSION
+      assertNonPayloadHeadersEqual(httpRequest, "Accept: application/json\nX-Chef-Version: " + ChefApiMetadata.DEFAULT_API_VERSION
             + "-test\n");
       assertPayloadEquals(httpRequest, "{\"name\":\"api\"}", "application/json", false);
 
@@ -267,7 +267,7 @@ public class ChefApiTest extends BaseAsyncApiTest<ChefApi> {
             ImmutableList.<Object> of("api", CreateClientOptions.Builder.admin())));
 
       assertRequestLineEquals(httpRequest, "POST http://localhost:4000/clients HTTP/1.1");
-      assertNonPayloadHeadersEqual(httpRequest, "Accept: application/json\nX-Chef-Version: " + ChefApiMetadata.DEFAULT_VERSION
+      assertNonPayloadHeadersEqual(httpRequest, "Accept: application/json\nX-Chef-Version: " + ChefApiMetadata.DEFAULT_API_VERSION
             + "-test\n");
       assertPayloadEquals(httpRequest, "{\"name\":\"api\",\"admin\":true}", "application/json", false);
 
@@ -284,7 +284,7 @@ public class ChefApiTest extends BaseAsyncApiTest<ChefApi> {
       GeneratedHttpRequest httpRequest = processor.apply(Invocation.create(method, ImmutableList.of()));
 
       assertRequestLineEquals(httpRequest, "GET http://localhost:4000/clients HTTP/1.1");
-      assertNonPayloadHeadersEqual(httpRequest, "Accept: application/json\nX-Chef-Version: " + ChefApiMetadata.DEFAULT_VERSION
+      assertNonPayloadHeadersEqual(httpRequest, "Accept: application/json\nX-Chef-Version: " + ChefApiMetadata.DEFAULT_API_VERSION
             + "-test\n");
       assertPayloadEquals(httpRequest, null, null, false);
 
@@ -301,7 +301,7 @@ public class ChefApiTest extends BaseAsyncApiTest<ChefApi> {
       GeneratedHttpRequest httpRequest = processor
             .apply(Invocation.create(method, ImmutableList.<Object> of("client")));
       assertRequestLineEquals(httpRequest, "PUT http://localhost:4000/clients/client HTTP/1.1");
-      assertNonPayloadHeadersEqual(httpRequest, "Accept: application/json\nX-Chef-Version: " + ChefApiMetadata.DEFAULT_VERSION
+      assertNonPayloadHeadersEqual(httpRequest, "Accept: application/json\nX-Chef-Version: " + ChefApiMetadata.DEFAULT_API_VERSION
             + "-test\n");
       assertPayloadEquals(httpRequest, "{\"name\":\"client\", \"private_key\": true}", "application/json", false);
 
@@ -317,7 +317,7 @@ public class ChefApiTest extends BaseAsyncApiTest<ChefApi> {
       Invokable<?, ?> method = method(ChefApi.class, "deleteNode", String.class);
       GeneratedHttpRequest httpRequest = processor.apply(Invocation.create(method, ImmutableList.<Object> of("node")));
       assertRequestLineEquals(httpRequest, "DELETE http://localhost:4000/nodes/node HTTP/1.1");
-      assertNonPayloadHeadersEqual(httpRequest, "Accept: application/json\nX-Chef-Version: " + ChefApiMetadata.DEFAULT_VERSION
+      assertNonPayloadHeadersEqual(httpRequest, "Accept: application/json\nX-Chef-Version: " + ChefApiMetadata.DEFAULT_API_VERSION
             + "-test\n");
       assertPayloadEquals(httpRequest, null, null, false);
 
@@ -337,7 +337,7 @@ public class ChefApiTest extends BaseAsyncApiTest<ChefApi> {
                   .environment("_default").build())));
 
       assertRequestLineEquals(httpRequest, "POST http://localhost:4000/nodes HTTP/1.1");
-      assertNonPayloadHeadersEqual(httpRequest, "Accept: application/json\nX-Chef-Version: " + ChefApiMetadata.DEFAULT_VERSION
+      assertNonPayloadHeadersEqual(httpRequest, "Accept: application/json\nX-Chef-Version: " + ChefApiMetadata.DEFAULT_API_VERSION
             + "-test\n");
       assertPayloadEquals(httpRequest,
             "{\"name\":\"testnode\",\"normal\":{},\"override\":{},\"default\":{},\"automatic\":{},"
@@ -360,7 +360,7 @@ public class ChefApiTest extends BaseAsyncApiTest<ChefApi> {
                   .environment("_default").build())));
 
       assertRequestLineEquals(httpRequest, "PUT http://localhost:4000/nodes/testnode HTTP/1.1");
-      assertNonPayloadHeadersEqual(httpRequest, "Accept: application/json\nX-Chef-Version: " + ChefApiMetadata.DEFAULT_VERSION
+      assertNonPayloadHeadersEqual(httpRequest, "Accept: application/json\nX-Chef-Version: " + ChefApiMetadata.DEFAULT_API_VERSION
             + "-test\n");
       assertPayloadEquals(httpRequest,
             "{\"name\":\"testnode\",\"normal\":{},\"override\":{},\"default\":{},\"automatic\":{},"
@@ -380,7 +380,7 @@ public class ChefApiTest extends BaseAsyncApiTest<ChefApi> {
       GeneratedHttpRequest httpRequest = processor.apply(Invocation.create(method, ImmutableList.of()));
 
       assertRequestLineEquals(httpRequest, "GET http://localhost:4000/nodes HTTP/1.1");
-      assertNonPayloadHeadersEqual(httpRequest, "Accept: application/json\nX-Chef-Version: " + ChefApiMetadata.DEFAULT_VERSION
+      assertNonPayloadHeadersEqual(httpRequest, "Accept: application/json\nX-Chef-Version: " + ChefApiMetadata.DEFAULT_API_VERSION
             + "-test\n");
       assertPayloadEquals(httpRequest, null, null, false);
 
@@ -396,7 +396,7 @@ public class ChefApiTest extends BaseAsyncApiTest<ChefApi> {
       Invokable<?, ?> method = method(ChefApi.class, "deleteRole", String.class);
       GeneratedHttpRequest httpRequest = processor.apply(Invocation.create(method, ImmutableList.<Object> of("role")));
       assertRequestLineEquals(httpRequest, "DELETE http://localhost:4000/roles/role HTTP/1.1");
-      assertNonPayloadHeadersEqual(httpRequest, "Accept: application/json\nX-Chef-Version: " + ChefApiMetadata.DEFAULT_VERSION
+      assertNonPayloadHeadersEqual(httpRequest, "Accept: application/json\nX-Chef-Version: " + ChefApiMetadata.DEFAULT_API_VERSION
             + "-test\n");
       assertPayloadEquals(httpRequest, null, null, false);
 
@@ -414,7 +414,7 @@ public class ChefApiTest extends BaseAsyncApiTest<ChefApi> {
             ImmutableList.<Object> of(Role.builder().name("testrole").runListElement("recipe[java]").build())));
 
       assertRequestLineEquals(httpRequest, "POST http://localhost:4000/roles HTTP/1.1");
-      assertNonPayloadHeadersEqual(httpRequest, "Accept: application/json\nX-Chef-Version: " + ChefApiMetadata.DEFAULT_VERSION
+      assertNonPayloadHeadersEqual(httpRequest, "Accept: application/json\nX-Chef-Version: " + ChefApiMetadata.DEFAULT_API_VERSION
             + "-test\n");
       assertPayloadEquals(httpRequest, "{\"name\":\"testrole\",\"override_attributes\":{},\"default_attributes\":{},"
             + "\"run_list\":[\"recipe[java]\"],\"json_class\":\"Chef::Role\",\"chef_type\":\"role\"}",
@@ -434,7 +434,7 @@ public class ChefApiTest extends BaseAsyncApiTest<ChefApi> {
             ImmutableList.<Object> of(Role.builder().name("testrole").runListElement("recipe[java]").build())));
 
       assertRequestLineEquals(httpRequest, "PUT http://localhost:4000/roles/testrole HTTP/1.1");
-      assertNonPayloadHeadersEqual(httpRequest, "Accept: application/json\nX-Chef-Version: " + ChefApiMetadata.DEFAULT_VERSION
+      assertNonPayloadHeadersEqual(httpRequest, "Accept: application/json\nX-Chef-Version: " + ChefApiMetadata.DEFAULT_API_VERSION
             + "-test\n");
       assertPayloadEquals(httpRequest, "{\"name\":\"testrole\",\"override_attributes\":{},\"default_attributes\":{},"
             + "\"run_list\":[\"recipe[java]\"],\"json_class\":\"Chef::Role\",\"chef_type\":\"role\"}",
@@ -453,7 +453,7 @@ public class ChefApiTest extends BaseAsyncApiTest<ChefApi> {
       GeneratedHttpRequest httpRequest = processor.apply(Invocation.create(method, ImmutableList.of()));
 
       assertRequestLineEquals(httpRequest, "GET http://localhost:4000/roles HTTP/1.1");
-      assertNonPayloadHeadersEqual(httpRequest, "Accept: application/json\nX-Chef-Version: " + ChefApiMetadata.DEFAULT_VERSION
+      assertNonPayloadHeadersEqual(httpRequest, "Accept: application/json\nX-Chef-Version: " + ChefApiMetadata.DEFAULT_API_VERSION
             + "-test\n");
       assertPayloadEquals(httpRequest, null, null, false);
 
@@ -470,7 +470,7 @@ public class ChefApiTest extends BaseAsyncApiTest<ChefApi> {
       GeneratedHttpRequest httpRequest = processor
             .apply(Invocation.create(method, ImmutableList.<Object> of("databag")));
       assertRequestLineEquals(httpRequest, "DELETE http://localhost:4000/data/databag HTTP/1.1");
-      assertNonPayloadHeadersEqual(httpRequest, "Accept: application/json\nX-Chef-Version: " + ChefApiMetadata.DEFAULT_VERSION
+      assertNonPayloadHeadersEqual(httpRequest, "Accept: application/json\nX-Chef-Version: " + ChefApiMetadata.DEFAULT_API_VERSION
             + "-test\n");
       assertPayloadEquals(httpRequest, null, null, false);
 
@@ -487,7 +487,7 @@ public class ChefApiTest extends BaseAsyncApiTest<ChefApi> {
       GeneratedHttpRequest httpRequest = processor.apply(Invocation.create(method, ImmutableList.<Object> of("name")));
 
       assertRequestLineEquals(httpRequest, "POST http://localhost:4000/data HTTP/1.1");
-      assertNonPayloadHeadersEqual(httpRequest, "Accept: application/json\nX-Chef-Version: " + ChefApiMetadata.DEFAULT_VERSION
+      assertNonPayloadHeadersEqual(httpRequest, "Accept: application/json\nX-Chef-Version: " + ChefApiMetadata.DEFAULT_API_VERSION
             + "-test\n");
       assertPayloadEquals(httpRequest, "{\"name\":\"name\"}", "application/json", false);
 
@@ -504,7 +504,7 @@ public class ChefApiTest extends BaseAsyncApiTest<ChefApi> {
       GeneratedHttpRequest httpRequest = processor.apply(Invocation.create(method, ImmutableList.of()));
 
       assertRequestLineEquals(httpRequest, "GET http://localhost:4000/data HTTP/1.1");
-      assertNonPayloadHeadersEqual(httpRequest, "Accept: application/json\nX-Chef-Version: " + ChefApiMetadata.DEFAULT_VERSION
+      assertNonPayloadHeadersEqual(httpRequest, "Accept: application/json\nX-Chef-Version: " + ChefApiMetadata.DEFAULT_API_VERSION
             + "-test\n");
       assertPayloadEquals(httpRequest, null, null, false);
 
@@ -520,7 +520,7 @@ public class ChefApiTest extends BaseAsyncApiTest<ChefApi> {
       Invokable<?, ?> method = method(ChefApi.class, "deleteDatabagItem", String.class, String.class);
       GeneratedHttpRequest httpRequest = processor.apply(Invocation.create(method,
             ImmutableList.<Object> of("name", "databagItem")));
-      assertNonPayloadHeadersEqual(httpRequest, "Accept: application/json\nX-Chef-Version: " + ChefApiMetadata.DEFAULT_VERSION
+      assertNonPayloadHeadersEqual(httpRequest, "Accept: application/json\nX-Chef-Version: " + ChefApiMetadata.DEFAULT_API_VERSION
             + "-test\n");
       assertPayloadEquals(httpRequest, null, null, false);
 
@@ -540,7 +540,7 @@ public class ChefApiTest extends BaseAsyncApiTest<ChefApi> {
             ImmutableList.<Object> of("name", new DatabagItem("id", "100"))));
 
       assertRequestLineEquals(httpRequest, "POST http://localhost:4000/data/name HTTP/1.1");
-      assertNonPayloadHeadersEqual(httpRequest, "Accept: application/json\nX-Chef-Version: " + ChefApiMetadata.DEFAULT_VERSION
+      assertNonPayloadHeadersEqual(httpRequest, "Accept: application/json\nX-Chef-Version: " + ChefApiMetadata.DEFAULT_API_VERSION
             + "-test\n");
       assertPayloadEquals(
             httpRequest,
@@ -564,7 +564,7 @@ public class ChefApiTest extends BaseAsyncApiTest<ChefApi> {
             ImmutableList.<Object> of("name", new DatabagItem("id", "{\"id\": \"item1\",\"my_key\": \"my_data\"}"))));
 
       assertRequestLineEquals(httpRequest, "POST http://localhost:4000/data/name HTTP/1.1");
-      assertNonPayloadHeadersEqual(httpRequest, "Accept: application/json\nX-Chef-Version: " + ChefApiMetadata.DEFAULT_VERSION
+      assertNonPayloadHeadersEqual(httpRequest, "Accept: application/json\nX-Chef-Version: " + ChefApiMetadata.DEFAULT_API_VERSION
             + "-test\n");
       assertPayloadEquals(
             httpRequest,
@@ -586,7 +586,7 @@ public class ChefApiTest extends BaseAsyncApiTest<ChefApi> {
             ImmutableList.<Object> of("name", new DatabagItem("id", "{\"id\": \"id\",\"my_key\": \"my_data\"}"))));
 
       assertRequestLineEquals(httpRequest, "POST http://localhost:4000/data/name HTTP/1.1");
-      assertNonPayloadHeadersEqual(httpRequest, "Accept: application/json\nX-Chef-Version: " + ChefApiMetadata.DEFAULT_VERSION
+      assertNonPayloadHeadersEqual(httpRequest, "Accept: application/json\nX-Chef-Version: " + ChefApiMetadata.DEFAULT_API_VERSION
             + "-test\n");
       assertPayloadEquals(httpRequest, "{\"id\": \"id\",\"my_key\": \"my_data\"}", "application/json", false);
 
@@ -604,7 +604,7 @@ public class ChefApiTest extends BaseAsyncApiTest<ChefApi> {
             ImmutableList.<Object> of("name", new DatabagItem("id", "{\"my_key\": \"my_data\"}"))));
 
       assertRequestLineEquals(httpRequest, "POST http://localhost:4000/data/name HTTP/1.1");
-      assertNonPayloadHeadersEqual(httpRequest, "Accept: application/json\nX-Chef-Version: " + ChefApiMetadata.DEFAULT_VERSION
+      assertNonPayloadHeadersEqual(httpRequest, "Accept: application/json\nX-Chef-Version: " + ChefApiMetadata.DEFAULT_API_VERSION
             + "-test\n");
       assertPayloadEquals(httpRequest, "{\"id\":\"id\",\"my_key\": \"my_data\"}", "application/json", false);
 
@@ -622,7 +622,7 @@ public class ChefApiTest extends BaseAsyncApiTest<ChefApi> {
             ImmutableList.<Object> of("name", new DatabagItem("id", "{\"my_key\": \"my_data\"}"))));
 
       assertRequestLineEquals(httpRequest, "PUT http://localhost:4000/data/name/id HTTP/1.1");
-      assertNonPayloadHeadersEqual(httpRequest, "Accept: application/json\nX-Chef-Version: " + ChefApiMetadata.DEFAULT_VERSION
+      assertNonPayloadHeadersEqual(httpRequest, "Accept: application/json\nX-Chef-Version: " + ChefApiMetadata.DEFAULT_API_VERSION
             + "-test\n");
 
       assertPayloadEquals(httpRequest, "{\"id\":\"id\",\"my_key\": \"my_data\"}", "application/json", false);
@@ -640,7 +640,7 @@ public class ChefApiTest extends BaseAsyncApiTest<ChefApi> {
       GeneratedHttpRequest httpRequest = processor.apply(Invocation.create(method, ImmutableList.<Object> of("name")));
 
       assertRequestLineEquals(httpRequest, "GET http://localhost:4000/data/name HTTP/1.1");
-      assertNonPayloadHeadersEqual(httpRequest, "Accept: application/json\nX-Chef-Version: " + ChefApiMetadata.DEFAULT_VERSION
+      assertNonPayloadHeadersEqual(httpRequest, "Accept: application/json\nX-Chef-Version: " + ChefApiMetadata.DEFAULT_API_VERSION
             + "-test\n");
       assertPayloadEquals(httpRequest, null, null, false);
 
@@ -657,7 +657,7 @@ public class ChefApiTest extends BaseAsyncApiTest<ChefApi> {
       GeneratedHttpRequest httpRequest = processor.apply(Invocation.create(method, ImmutableList.of()));
 
       assertRequestLineEquals(httpRequest, "GET http://localhost:4000/search HTTP/1.1");
-      assertNonPayloadHeadersEqual(httpRequest, "Accept: application/json\nX-Chef-Version: " + ChefApiMetadata.DEFAULT_VERSION
+      assertNonPayloadHeadersEqual(httpRequest, "Accept: application/json\nX-Chef-Version: " + ChefApiMetadata.DEFAULT_API_VERSION
             + "-test\n");
       assertPayloadEquals(httpRequest, null, null, false);
 
@@ -674,7 +674,7 @@ public class ChefApiTest extends BaseAsyncApiTest<ChefApi> {
       GeneratedHttpRequest httpRequest = processor.apply(Invocation.create(method, ImmutableList.of()));
 
       assertRequestLineEquals(httpRequest, "GET http://localhost:4000/search/role HTTP/1.1");
-      assertNonPayloadHeadersEqual(httpRequest, "Accept: application/json\nX-Chef-Version: " + ChefApiMetadata.DEFAULT_VERSION
+      assertNonPayloadHeadersEqual(httpRequest, "Accept: application/json\nX-Chef-Version: " + ChefApiMetadata.DEFAULT_API_VERSION
             + "-test\n");
       assertPayloadEquals(httpRequest, null, null, false);
 
@@ -692,7 +692,7 @@ public class ChefApiTest extends BaseAsyncApiTest<ChefApi> {
             ImmutableList.<Object> of(SearchOptions.Builder.query("text"))));
 
       assertRequestLineEquals(httpRequest, "GET http://localhost:4000/search/role?q=text HTTP/1.1");
-      assertNonPayloadHeadersEqual(httpRequest, "Accept: application/json\nX-Chef-Version: " + ChefApiMetadata.DEFAULT_VERSION
+      assertNonPayloadHeadersEqual(httpRequest, "Accept: application/json\nX-Chef-Version: " + ChefApiMetadata.DEFAULT_API_VERSION
             + "-test\n");
       assertPayloadEquals(httpRequest, null, null, false);
 
@@ -709,7 +709,7 @@ public class ChefApiTest extends BaseAsyncApiTest<ChefApi> {
       GeneratedHttpRequest httpRequest = processor.apply(Invocation.create(method, ImmutableList.of()));
 
       assertRequestLineEquals(httpRequest, "GET http://localhost:4000/search/client HTTP/1.1");
-      assertNonPayloadHeadersEqual(httpRequest, "Accept: application/json\nX-Chef-Version: " + ChefApiMetadata.DEFAULT_VERSION
+      assertNonPayloadHeadersEqual(httpRequest, "Accept: application/json\nX-Chef-Version: " + ChefApiMetadata.DEFAULT_API_VERSION
             + "-test\n");
       assertPayloadEquals(httpRequest, null, null, false);
 
@@ -727,7 +727,7 @@ public class ChefApiTest extends BaseAsyncApiTest<ChefApi> {
             ImmutableList.<Object> of(SearchOptions.Builder.query("text").rows(5))));
 
       assertRequestLineEquals(httpRequest, "GET http://localhost:4000/search/client?q=text&rows=5 HTTP/1.1");
-      assertNonPayloadHeadersEqual(httpRequest, "Accept: application/json\nX-Chef-Version: " + ChefApiMetadata.DEFAULT_VERSION
+      assertNonPayloadHeadersEqual(httpRequest, "Accept: application/json\nX-Chef-Version: " + ChefApiMetadata.DEFAULT_API_VERSION
             + "-test\n");
       assertPayloadEquals(httpRequest, null, null, false);
 
@@ -744,7 +744,7 @@ public class ChefApiTest extends BaseAsyncApiTest<ChefApi> {
       GeneratedHttpRequest httpRequest = processor.apply(Invocation.create(method, ImmutableList.of()));
 
       assertRequestLineEquals(httpRequest, "GET http://localhost:4000/search/node HTTP/1.1");
-      assertNonPayloadHeadersEqual(httpRequest, "Accept: application/json\nX-Chef-Version: " + ChefApiMetadata.DEFAULT_VERSION
+      assertNonPayloadHeadersEqual(httpRequest, "Accept: application/json\nX-Chef-Version: " + ChefApiMetadata.DEFAULT_API_VERSION
             + "-test\n");
       assertPayloadEquals(httpRequest, null, null, false);
 
@@ -762,7 +762,7 @@ public class ChefApiTest extends BaseAsyncApiTest<ChefApi> {
             ImmutableList.<Object> of(SearchOptions.Builder.query("foo:foo").start(3))));
 
       assertRequestLineEquals(httpRequest, "GET http://localhost:4000/search/node?q=foo%3Afoo&start=3 HTTP/1.1");
-      assertNonPayloadHeadersEqual(httpRequest, "Accept: application/json\nX-Chef-Version: " + ChefApiMetadata.DEFAULT_VERSION
+      assertNonPayloadHeadersEqual(httpRequest, "Accept: application/json\nX-Chef-Version: " + ChefApiMetadata.DEFAULT_API_VERSION
             + "-test\n");
       assertPayloadEquals(httpRequest, null, null, false);
 
@@ -779,7 +779,7 @@ public class ChefApiTest extends BaseAsyncApiTest<ChefApi> {
       GeneratedHttpRequest httpRequest = processor.apply(Invocation.create(method, ImmutableList.<Object> of("foo")));
 
       assertRequestLineEquals(httpRequest, "GET http://localhost:4000/search/foo HTTP/1.1");
-      assertNonPayloadHeadersEqual(httpRequest, "Accept: application/json\nX-Chef-Version: " + ChefApiMetadata.DEFAULT_VERSION
+      assertNonPayloadHeadersEqual(httpRequest, "Accept: application/json\nX-Chef-Version: " + ChefApiMetadata.DEFAULT_API_VERSION
             + "-test\n");
       assertPayloadEquals(httpRequest, null, null, false);
 
@@ -797,7 +797,7 @@ public class ChefApiTest extends BaseAsyncApiTest<ChefApi> {
             ImmutableList.<Object> of("foo", SearchOptions.Builder.query("bar").sort("name DESC"))));
 
       assertRequestLineEquals(httpRequest, "GET http://localhost:4000/search/foo?q=bar&sort=name%20DESC HTTP/1.1");
-      assertNonPayloadHeadersEqual(httpRequest, "Accept: application/json\nX-Chef-Version: " + ChefApiMetadata.DEFAULT_VERSION
+      assertNonPayloadHeadersEqual(httpRequest, "Accept: application/json\nX-Chef-Version: " + ChefApiMetadata.DEFAULT_API_VERSION
             + "-test\n");
       assertPayloadEquals(httpRequest, null, null, false);
 
@@ -815,7 +815,7 @@ public class ChefApiTest extends BaseAsyncApiTest<ChefApi> {
             ImmutableList.<Object> of(Resource.builder().name("test").url(URI.create("http://foo/bar")).build())));
 
       assertRequestLineEquals(httpRequest, "GET http://foo/bar HTTP/1.1");
-      assertNonPayloadHeadersEqual(httpRequest, "Accept: application/json\nX-Chef-Version: " + ChefApiMetadata.DEFAULT_VERSION
+      assertNonPayloadHeadersEqual(httpRequest, "Accept: application/json\nX-Chef-Version: " + ChefApiMetadata.DEFAULT_API_VERSION
             + "-test\n");
       assertPayloadEquals(httpRequest, null, null, false);
 
@@ -841,7 +841,7 @@ public class ChefApiTest extends BaseAsyncApiTest<ChefApi> {
    @Override
    protected Properties setupProperties() {
       Properties props = super.setupProperties();
-      props.put(Constants.PROPERTY_API_VERSION, ChefApiMetadata.DEFAULT_VERSION + "-test");
+      props.put(Constants.PROPERTY_API_VERSION, ChefApiMetadata.DEFAULT_API_VERSION + "-test");
       return props;
    }
 

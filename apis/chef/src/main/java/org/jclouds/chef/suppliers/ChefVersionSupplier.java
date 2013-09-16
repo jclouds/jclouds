@@ -42,7 +42,7 @@ import com.google.common.base.Supplier;
 public class ChefVersionSupplier implements Supplier<Integer> {
 
    /** The default version to assume in case we can not parse it. */
-   public static final Integer DEFAULT_VERSION = 10;
+   public static final Integer FALLBACK_VERSION = 10;
 
    @Resource
    @Named(ChefProperties.CHEF_LOGGER)
@@ -65,8 +65,8 @@ public class ChefVersionSupplier implements Supplier<Integer> {
       Matcher m = versionPattern.matcher(apiVersion);
       if (!m.matches()) {
          logger.warn("Configured version does not match the standard version pattern. Assuming version %s",
-               DEFAULT_VERSION);
-         return DEFAULT_VERSION;
+               FALLBACK_VERSION);
+         return FALLBACK_VERSION;
       }
 
       return Integer.valueOf(firstNonNull(m.group(1), m.group(2)));

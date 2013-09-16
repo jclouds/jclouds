@@ -16,7 +16,7 @@
  */
 package org.jclouds.chef.suppliers;
 
-import static org.jclouds.chef.suppliers.ChefVersionSupplier.DEFAULT_VERSION;
+import static org.jclouds.chef.suppliers.ChefVersionSupplier.FALLBACK_VERSION;
 import static org.testng.Assert.assertEquals;
 
 import org.testng.annotations.Test;
@@ -30,9 +30,9 @@ import org.testng.annotations.Test;
 public class ChefVersionSupplierTest {
 
    public void testReturnsDefaultVersion() {
-      assertEquals(new ChefVersionSupplier("15").get(), DEFAULT_VERSION);
-      assertEquals(new ChefVersionSupplier("0").get(), DEFAULT_VERSION);
-      assertEquals(new ChefVersionSupplier("0.").get(), DEFAULT_VERSION);
+      assertEquals(new ChefVersionSupplier("15").get(), FALLBACK_VERSION);
+      assertEquals(new ChefVersionSupplier("0").get(), FALLBACK_VERSION);
+      assertEquals(new ChefVersionSupplier("0.").get(), FALLBACK_VERSION);
    }
 
    public void testReturnsMajorVersionIfNotZero() {

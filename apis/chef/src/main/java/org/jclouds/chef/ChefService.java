@@ -45,7 +45,7 @@ import com.google.inject.ImplementedBy;
 public interface ChefService {
 
    /**
-    * Get the context that created this service.
+    * Gets the context that created this service.
     * 
     * @return The context that created the service.
     */
@@ -54,7 +54,7 @@ public interface ChefService {
    // Crypto
 
    /**
-    * Encrypt the given input stream.
+    * Encrypts the given input stream.
     * 
     * @param supplier The input stream to encrypt.
     * @return The encrypted bytes for the given input stream.
@@ -63,7 +63,7 @@ public interface ChefService {
    byte[] encrypt(InputSupplier<? extends InputStream> supplier) throws IOException;
 
    /**
-    * Decrypt the given input stream.
+    * Decrypts the given input stream.
     * 
     * @param supplier The input stream to decrypt.
     * @return The decrypted bytes for the given input stream.
@@ -94,7 +94,7 @@ public interface ChefService {
    void updateBootstrapConfigForGroup(String group, BootstrapConfig bootstrapConfig);
 
    /**
-    * Get the run list for the given group.
+    * Gets the run list for the given group.
     * 
     * @param The group to get the configured run list for.
     * @return run list for all nodes bootstrapped with a certain group
@@ -102,7 +102,7 @@ public interface ChefService {
    List<String> getRunListForGroup(String group);
 
    /**
-    * Get the bootstrap configuration for a given group.
+    * Gets the bootstrap configuration for a given group.
     * <p>
     * The bootstrap configuration is a Json object containing the run list and
     * the configured attributes.
@@ -112,7 +112,7 @@ public interface ChefService {
     */
    public JsonBall getBootstrapConfigForGroup(String group);
 
-   // Nodes
+   // Nodes / Clients
 
    /**
     * Creates a new node and populates the automatic attributes.
@@ -126,14 +126,14 @@ public interface ChefService {
    Node createNodeAndPopulateAutomaticAttributes(String nodeName, Iterable<String> runList);
 
    /**
-    * Update and populate the automatic attributes of the given node.
+    * Updates and populate the automatic attributes of the given node.
     * 
     * @param nodeName The node to update.
     */
    void updateAutomaticAttributesOnNode(String nodeName);
 
    /**
-    * Remove the nodes and clients that have been inactive for a given amount of
+    * Removes the nodes and clients that have been inactive for a given amount of
     * time.
     * 
     * @param prefix The prefix for the nodes and clients to delete.
@@ -143,28 +143,28 @@ public interface ChefService {
    void cleanupStaleNodesAndClients(String prefix, int secondsStale);
 
    /**
-    * Delete the given nodes.
+    * Deletes the given nodes.
     * 
     * @param names The names of the nodes to delete.
     */
    void deleteAllNodesInList(Iterable<String> names);
 
    /**
-    * Delete the given clients.
+    * Deletes the given clients.
     * 
     * @param names The names of the client to delete.
     */
    void deleteAllClientsInList(Iterable<String> names);
 
    /**
-    * List the details of all existing nodes.
+    * Lists the details of all existing nodes.
     * 
     * @return The details of all existing nodes.
     */
    Iterable<? extends Node> listNodes();
 
    /**
-    * List the details of all existing nodes in the given environment.
+    * Lists the details of all existing nodes in the given environment.
     * 
     * @param environmentName The name fo the environment.
     * @return The details of all existing nodes in the given environment.
@@ -173,21 +173,21 @@ public interface ChefService {
    Iterable<? extends Node> listNodesInEnvironment(String environmentName);
 
    /**
-    * List the details of all existing clients.
+    * Lists the details of all existing clients.
     * 
     * @return The details of all existing clients.
     */
    Iterable<? extends Client> listClients();
 
    /**
-    * List the details of all existing cookbooks.
+    * Lists the details of all existing cookbooks.
     * 
     * @return The details of all existing cookbooks.
     */
    Iterable<? extends CookbookVersion> listCookbookVersions();
 
    /**
-    * List the details of all existing environments.
+    * Lists the details of all existing environments.
     * 
     * @return The details of all existing environments.
     */
