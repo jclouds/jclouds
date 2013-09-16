@@ -49,7 +49,7 @@ public class ChefApiExpectTest extends BaseChefApiExpectTest<ChefApi> {
             signed(HttpRequest.builder() //
                   .method("GET") //
                   .endpoint("http://localhost:4000/environments/dev/recipes") //
-                  .addHeader("X-Chef-Version", ChefApiMetadata.DEFAULT_VERSION) //
+                  .addHeader("X-Chef-Version", ChefApiMetadata.DEFAULT_API_VERSION) //
                   .addHeader("Accept", MediaType.APPLICATION_JSON).build()), //
             HttpResponse.builder().statusCode(200)
                   .payload(payloadFromResourceWithContentType("/environment_recipes.json", MediaType.APPLICATION_JSON)) //
@@ -64,7 +64,7 @@ public class ChefApiExpectTest extends BaseChefApiExpectTest<ChefApi> {
             signed(HttpRequest.builder() //
                   .method("GET") //
                   .endpoint("http://localhost:4000/environments/dev/recipes") //
-                  .addHeader("X-Chef-Version", ChefApiMetadata.DEFAULT_VERSION) //
+                  .addHeader("X-Chef-Version", ChefApiMetadata.DEFAULT_API_VERSION) //
                   .addHeader("Accept", MediaType.APPLICATION_JSON).build()), //
             HttpResponse.builder().statusCode(404)
                   .build());
@@ -77,7 +77,7 @@ public class ChefApiExpectTest extends BaseChefApiExpectTest<ChefApi> {
             signed(HttpRequest.builder() //
                   .method("GET") //
                   .endpoint("http://localhost:4000/environments/dev/nodes") //
-                  .addHeader("X-Chef-Version", ChefApiMetadata.DEFAULT_VERSION) //
+                  .addHeader("X-Chef-Version", ChefApiMetadata.DEFAULT_API_VERSION) //
                   .addHeader("Accept", MediaType.APPLICATION_JSON).build()), //
             HttpResponse.builder().statusCode(200)
                   .payload(payloadFromResourceWithContentType("/environment_nodes.json", MediaType.APPLICATION_JSON)) //
@@ -92,7 +92,7 @@ public class ChefApiExpectTest extends BaseChefApiExpectTest<ChefApi> {
             signed(HttpRequest.builder() //
                   .method("GET") //
                   .endpoint("http://localhost:4000/environments/dev/nodes") //
-                  .addHeader("X-Chef-Version", ChefApiMetadata.DEFAULT_VERSION) //
+                  .addHeader("X-Chef-Version", ChefApiMetadata.DEFAULT_API_VERSION) //
                   .addHeader("Accept", MediaType.APPLICATION_JSON).build()), //
             HttpResponse.builder().statusCode(404)
                   .build());

@@ -50,7 +50,7 @@ public class ParseDataBagItemFromJsonTest {
       Injector injector = Guice.createInjector(new AbstractModule() {
          @Override
          protected void configure() {
-            bind(String.class).annotatedWith(ApiVersion.class).toInstance(ChefApiMetadata.DEFAULT_VERSION);
+            bind(String.class).annotatedWith(ApiVersion.class).toInstance(ChefApiMetadata.DEFAULT_API_VERSION);
          }
       }, new ChefParserModule(), new GsonModule());
 

@@ -109,12 +109,12 @@ public class TransientChefApi implements ChefApi {
    }
 
    @Override
-   public Client createClient(String clientname) {
+   public Client createClient(String clientName) {
       throw new UnsupportedOperationException();
    }
 
    @Override
-   public Client createClient(String clientname, CreateClientOptions options) {
+   public Client createClient(String clientName, CreateClientOptions options) {
       throw new UnsupportedOperationException();
    }
 
@@ -141,7 +141,7 @@ public class TransientChefApi implements ChefApi {
    }
 
    @Override
-   public Client deleteClient(String clientname) {
+   public Client deleteClient(String clientName) {
       throw new UnsupportedOperationException();
    }
 
@@ -163,7 +163,7 @@ public class TransientChefApi implements ChefApi {
    }
 
    @Override
-   public Node deleteNode(String nodename) {
+   public Node deleteNode(String nodeName) {
       throw new UnsupportedOperationException();
    }
 
@@ -173,12 +173,12 @@ public class TransientChefApi implements ChefApi {
    }
 
    @Override
-   public Client generateKeyForClient(String clientname) {
+   public Client generateKeyForClient(String clientName) {
       throw new UnsupportedOperationException();
    }
 
    @Override
-   public Client getClient(String clientname) {
+   public Client getClient(String clientName) {
       throw new UnsupportedOperationException();
    }
 
@@ -193,12 +193,12 @@ public class TransientChefApi implements ChefApi {
    }
 
    @Override
-   public Node getNode(String nodename) {
+   public Node getNode(String nodeName) {
       throw new UnsupportedOperationException();
    }
 
    @Override
-   public Role getRole(String rolename) {
+   public Role getRole(String roleName) {
       throw new UnsupportedOperationException();
    }
 
@@ -328,12 +328,12 @@ public class TransientChefApi implements ChefApi {
    }
 
    @Override
-   public Environment deleteEnvironment(String environmentname) {
+   public Environment deleteEnvironment(String environmentName) {
       throw new UnsupportedOperationException();
    }
 
    @Override
-   public Environment getEnvironment(String environmentname) {
+   public Environment getEnvironment(String environmentName) {
       throw new UnsupportedOperationException();
    }
 
@@ -343,22 +343,22 @@ public class TransientChefApi implements ChefApi {
    }
 
    @Override
-   public Set<CookbookDefinition> listCookbooksInEnvironment(String environmentname) {
+   public Set<CookbookDefinition> listCookbooksInEnvironment(String environmentName) {
       throw new UnsupportedOperationException();
    }
 
    @Override
-   public Set<CookbookDefinition> listCookbooksInEnvironment(String environmentname, String numversions) {
+   public Set<CookbookDefinition> listCookbooksInEnvironment(String environmentName, String numVersions) {
       throw new UnsupportedOperationException();
    }
 
    @Override
-   public CookbookDefinition getCookbookInEnvironment(String environmentname, String cookbookname) {
+   public CookbookDefinition getCookbookInEnvironment(String environmentName, String cookbookName) {
       throw new UnsupportedOperationException();
    }
 
    @Override
-   public CookbookDefinition getCookbookInEnvironment(String environmentname, String cookbookname, String numversions) {
+   public CookbookDefinition getCookbookInEnvironment(String environmentName, String cookbookName, String numVersions) {
       throw new UnsupportedOperationException();
    }
 
@@ -373,12 +373,12 @@ public class TransientChefApi implements ChefApi {
    }
 
    @Override
-   public Set<String> listRecipesInEnvironment(String environmentname) {
+   public Set<String> listRecipesInEnvironment(String environmentName) {
       throw new UnsupportedOperationException();
    }
 
    @Override
-   public Set<String> listNodesInEnvironment(String environmentname) {
+   public Set<String> listNodesInEnvironment(String environmentName) {
       throw new UnsupportedOperationException();
    }
   
