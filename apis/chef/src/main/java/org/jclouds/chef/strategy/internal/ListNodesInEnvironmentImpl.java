@@ -33,7 +33,7 @@ import org.jclouds.Constants;
 import org.jclouds.chef.ChefApi;
 import org.jclouds.chef.config.ChefProperties;
 import org.jclouds.chef.domain.Node;
-import org.jclouds.chef.strategy.ListEnvironmentNodes;
+import org.jclouds.chef.strategy.ListNodesInEnvironment;
 import org.jclouds.logging.Logger;
 
 import com.google.common.base.Function;
@@ -49,7 +49,7 @@ import com.google.inject.Inject;
  * @author Noorul Islam K M
  */
 @Singleton
-public class ListEnvironmentNodesImpl implements ListEnvironmentNodes {
+public class ListNodesInEnvironmentImpl implements ListNodesInEnvironment {
 
    protected final ChefApi api;
    protected final ListeningExecutorService userExecutor;
@@ -58,7 +58,7 @@ public class ListEnvironmentNodesImpl implements ListEnvironmentNodes {
    protected Logger logger = Logger.NULL;
 
    @Inject
-   ListEnvironmentNodesImpl(@Named(Constants.PROPERTY_USER_THREADS) ListeningExecutorService userExecutor, ChefApi api) {
+   ListNodesInEnvironmentImpl(@Named(Constants.PROPERTY_USER_THREADS) ListeningExecutorService userExecutor, ChefApi api) {
       this.userExecutor = checkNotNull(userExecutor, "userExecuor");
       this.api = checkNotNull(api, "api");
    }
