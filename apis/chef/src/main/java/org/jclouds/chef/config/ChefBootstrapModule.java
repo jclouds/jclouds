@@ -19,6 +19,7 @@ package org.jclouds.chef.config;
 import static org.jclouds.chef.config.ChefProperties.CHEF_GEM_SYSTEM_VERSION;
 import static org.jclouds.chef.config.ChefProperties.CHEF_UPDATE_GEMS;
 import static org.jclouds.chef.config.ChefProperties.CHEF_UPDATE_GEM_SYSTEM;
+import static org.jclouds.chef.config.ChefProperties.CHEF_USE_OMNIBUS;
 import static org.jclouds.chef.config.ChefProperties.CHEF_VERSION;
 
 import javax.inject.Named;
@@ -27,6 +28,7 @@ import javax.inject.Singleton;
 import org.jclouds.scriptbuilder.domain.Statement;
 import org.jclouds.scriptbuilder.domain.StatementList;
 import org.jclouds.scriptbuilder.statements.chef.InstallChefGems;
+import org.jclouds.scriptbuilder.statements.chef.InstallChefUsingOmnibus;
 import org.jclouds.scriptbuilder.statements.ruby.InstallRuby;
 import org.jclouds.scriptbuilder.statements.ruby.InstallRubyGems;
 
@@ -45,8 +47,7 @@ public class ChefBootstrapModule extends AbstractModule {
    @Provides
    @Named("installChefGems")
    @Singleton
-   Statement installChef(BootstrapProperties bootstrapProperties) {
-
+   Statement installChefGems(BootstrapProperties bootstrapProperties) {
       InstallRubyGems installRubyGems = InstallRubyGems.builder()
             .version(bootstrapProperties.gemSystemVersion().orNull())
             .updateSystem(bootstrapProperties.updateGemSystem(), bootstrapProperties.gemSystemVersion().orNull())
@@ -56,6 +57,21 @@ public class ChefBootstrapModule extends AbstractModule {
       Statement installChef = InstallChefGems.builder().version(bootstrapProperties.chefVersion().orNull()).build();
 
       return new StatementList(InstallRuby.builder().build(), installRubyGems, installChef);
+   }
+
+   @Provides
+   @Named("installChefOmnibus")
+   @Singleton
+   Statement installChefUsingOmnibus() {
+      return new InstallChefUsingOmnibus();
+   }
+
+   @Provides
+   @InstallChef
+   @Singleton
+   Statement installChef(BootstrapProperties bootstrapProperties, @Named("installChefGems") Statement installChefGems,
+         @Named("installChefOmnibus") Statement installChefOmnibus) {
+      return bootstrapProperties.useOmnibus() ? installChefOmnibus : installChefGems;
    }
 
    @Singleton
@@ -76,6 +92,10 @@ public class ChefBootstrapModule extends AbstractModule {
       @Inject
       private String updateGemsProperty;
 
+      @Named(CHEF_USE_OMNIBUS)
+      @Inject
+      private String useOmnibus;
+
       public Optional<String> chefVersion() {
          return Optional.fromNullable(chefVersionProperty);
       }
@@ -90,6 +110,10 @@ public class ChefBootstrapModule extends AbstractModule {
 
       public boolean updateGems() {
          return Boolean.parseBoolean(updateGemsProperty);
+      }
+
+      public boolean useOmnibus() {
+         return Boolean.parseBoolean(useOmnibus);
       }
    }
 

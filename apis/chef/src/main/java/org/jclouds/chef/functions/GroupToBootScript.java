@@ -34,11 +34,13 @@ import javax.inject.Inject;
 import javax.inject.Named;
 import javax.inject.Singleton;
 
+import org.jclouds.chef.config.InstallChef;
 import org.jclouds.chef.config.Validator;
 import org.jclouds.crypto.Pems;
 import org.jclouds.domain.JsonBall;
 import org.jclouds.json.Json;
 import org.jclouds.location.Provider;
+import org.jclouds.scriptbuilder.ExitInsteadOfReturn;
 import org.jclouds.scriptbuilder.domain.Statement;
 
 import com.google.common.annotations.VisibleForTesting;
@@ -68,19 +70,19 @@ public class GroupToBootScript implements Function<String, Statement> {
    private final Supplier<URI> endpoint;
    private final Json json;
    private final CacheLoader<String, ? extends JsonBall> bootstrapConfigForGroup;
-   private final Statement installChefGems;
+   private final Statement installChef;
    private final Optional<String> validatorName;
    private final Optional<PrivateKey> validatorCredential;
 
    @Inject
    public GroupToBootScript(@Provider Supplier<URI> endpoint, Json json,
          CacheLoader<String, ? extends JsonBall> bootstrapConfigForGroup,
-         @Named("installChefGems") Statement installChefGems, @Validator Optional<String> validatorName,
+         @InstallChef Statement installChef, @Validator Optional<String> validatorName,
          @Validator Optional<PrivateKey> validatorCredential) {
       this.endpoint = checkNotNull(endpoint, "endpoint");
       this.json = checkNotNull(json, "json");
       this.bootstrapConfigForGroup = checkNotNull(bootstrapConfigForGroup, "bootstrapConfigForGroup");
-      this.installChefGems = checkNotNull(installChefGems, "installChefGems");
+      this.installChef = checkNotNull(installChef, "installChef");
       this.validatorName = checkNotNull(validatorName, "validatorName");
       this.validatorCredential = checkNotNull(validatorCredential, validatorCredential);
    }
@@ -124,7 +126,7 @@ public class GroupToBootScript implements Function<String, Statement> {
       String strOptions = Joiner.on(' ').withKeyValueSeparator(" ").join(options.build());
       Statement runChef = exec("chef-client " + strOptions);
 
-      return newStatementList(installChefGems, createChefConfigDir, createClientRb, createValidationPem,
+      return newStatementList(new ExitInsteadOfReturn(installChef), createChefConfigDir, createClientRb, createValidationPem,
             createFirstBoot, runChef);
    }
 

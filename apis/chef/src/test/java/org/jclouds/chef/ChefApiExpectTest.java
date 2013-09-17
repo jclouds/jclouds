@@ -45,7 +45,7 @@ public class ChefApiExpectTest extends BaseChefApiExpectTest<ChefApi> {
      provider = "chef";
    }
 
-   private HttpRequest.Builder getHttpRequestBuilder(String method, String endPoint) {
+   private HttpRequest.Builder<?> getHttpRequestBuilder(String method, String endPoint) {
       return HttpRequest.builder() //
                   .method(method) //
                   .endpoint("http://localhost:4000" + endPoint) //
