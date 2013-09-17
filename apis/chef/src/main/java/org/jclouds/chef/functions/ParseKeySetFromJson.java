@@ -41,8 +41,8 @@ public class ParseKeySetFromJson implements Function<HttpResponse, Set<String>> 
    }
 
    @Override
-   public Set<String> apply(HttpResponse arg0) {
-      return json.apply(arg0).keySet();
+   public Set<String> apply(HttpResponse response) {
+      return json.apply(response).keySet();
 
    }
 }
