@@ -38,8 +38,14 @@ public class CookbookDefinition {
    }
 
    public static class Builder {
+      private String name;
       private URI url;
       private ImmutableSet.Builder<Version> versions = ImmutableSet.builder();
+
+      public Builder name(String name) {
+         this.name = checkNotNull(name, "name");
+         return this;
+      }
 
       public Builder url(URI url) {
          this.url = checkNotNull(url, "url");
@@ -56,18 +62,31 @@ public class CookbookDefinition {
          return this;
       }
 
+      public Builder from(CookbookDefinition def) {
+         this.url = checkNotNull(def.getUrl(), "url");
+         this.versions.addAll(checkNotNull(def.getVersions(), "versions"));
+         this.name = def.getName();
+         return this;
+      }
+
       public CookbookDefinition build() {
-         return new CookbookDefinition(url, versions.build());
+         return new CookbookDefinition(name, url, versions.build());
       }
    }
 
+   private final String name;
    private final URI url;
    private final Set<Version> versions;
 
-   @ConstructorProperties({ "url", "versions" })
-   protected CookbookDefinition(URI url, @Nullable Set<Version> versions) {
+   @ConstructorProperties({"name", "url", "versions" })
+   protected CookbookDefinition(String name, URI url, @Nullable Set<Version> versions) {
+      this.name = name;
       this.url = url;
       this.versions = copyOfOrEmpty(versions);
+   }
+
+   public String getName() {
+      return name;
    }
 
    public URI getUrl() {
@@ -82,6 +101,7 @@ public class CookbookDefinition {
    public int hashCode() {
       final int prime = 31;
       int result = 1;
+      result = prime * result + ((name == null) ? 0 : name.hashCode());
       result = prime * result + ((url == null) ? 0 : url.hashCode());
       result = prime * result + ((versions == null) ? 0 : versions.hashCode());
       return result;
@@ -96,6 +116,11 @@ public class CookbookDefinition {
       if (getClass() != obj.getClass())
          return false;
       CookbookDefinition other = (CookbookDefinition) obj;
+      if (name == null) {
+         if (other.name != null)
+            return false;
+      } else if (!name.equals(other.name))
+         return false;
       if (url == null) {
          if (other.url != null)
             return false;
@@ -111,7 +136,7 @@ public class CookbookDefinition {
 
    @Override
    public String toString() {
-      return "CookbookDefinition [url=" + url + ", versions=" + versions + "]";
+      return "CookbookDefinition [name=" + name + ", url=" + url + ", versions=" + versions + "]";
    }
 
    public static class Version {

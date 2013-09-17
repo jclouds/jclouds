@@ -59,14 +59,14 @@ public class ParseCookbookDefinitionListFromJsonv10Test {
       CookbookDefinition.Version v420 = CookbookDefinition.Version.builder()
             .url(new URI("http://localhost:4000/cookbooks/apache2/4.2.0")).version("4.2.0").build();
       CookbookDefinition apache2 = CookbookDefinition.builder()
-            .url(new URI("http://localhost:4000/cookbooks/apache2")).version(v510).version(v420).build();
+            .name("apache2").url(new URI("http://localhost:4000/cookbooks/apache2")).version(v510).version(v420).build();
       
       CookbookDefinition.Version v100 = CookbookDefinition.Version.builder()
             .url(new URI("http://localhost:4000/cookbooks/nginx/1.0.0")).version("1.0.0").build();
-      CookbookDefinition.Version v130 = CookbookDefinition.Version.builder()
+      CookbookDefinition.Version v030 = CookbookDefinition.Version.builder()
             .url(new URI("http://localhost:4000/cookbooks/nginx/0.3.0")).version("0.3.0").build();
       CookbookDefinition nginx = CookbookDefinition.builder()
-            .url(new URI("http://localhost:4000/cookbooks/nginx")).version(v100).version(v130).build();
+            .name("nginx").url(new URI("http://localhost:4000/cookbooks/nginx")).version(v100).version(v030).build();
       
       assertEquals(handler.apply(HttpResponse
             .builder()

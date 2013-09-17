@@ -39,6 +39,7 @@ import java.util.Set;
 import org.jclouds.chef.ChefApi;
 import org.jclouds.chef.domain.ChecksumStatus;
 import org.jclouds.chef.domain.Client;
+import org.jclouds.chef.domain.CookbookDefinition;
 import org.jclouds.chef.domain.CookbookVersion;
 import org.jclouds.chef.domain.DatabagItem;
 import org.jclouds.chef.domain.Environment;
@@ -63,6 +64,9 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.io.Closeables;
 import com.google.common.primitives.Bytes;
+
+import static com.google.common.collect.Iterables.any;
+import static com.google.common.collect.Iterables.all;
 
 /**
  * Tests behavior of {@code ChefApi}
@@ -481,6 +485,16 @@ public abstract class BaseChefApiLiveTest<A extends ChefApi> extends BaseChefLiv
       assertNotNull(node, "Created node should not be null");
       Set<String> nodeList = api.listNodesInEnvironment(PREFIX);
       assertTrue(!nodeList.isEmpty());
+   }
+
+   @Test(dependsOnMethods = "testCreateNewCookbook")
+   public void testListCookbooksInEnvironment() throws Exception {
+      Set<CookbookDefinition> cookbooks = api.listCookbooksInEnvironment("_default");
+      assertTrue(any(cookbooks, new Predicate<CookbookDefinition>() {
+         @Override
+         public boolean apply(CookbookDefinition input) {
+            return PREFIX.equals(input.getName());
+         }}), String.format("Cookbook %s not in %s", PREFIX, cookbooks));
    }
 
    @AfterClass(groups = { "live", "integration" })

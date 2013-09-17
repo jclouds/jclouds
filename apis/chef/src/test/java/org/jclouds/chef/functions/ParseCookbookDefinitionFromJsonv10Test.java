@@ -58,7 +58,7 @@ public class ParseCookbookDefinitionFromJsonv10Test {
       CookbookDefinition.Version v420 = CookbookDefinition.Version.builder()
             .url(new URI("http://localhost:4000/cookbooks/apache2/4.2.0")).version("4.2.0").build();
       CookbookDefinition definition = CookbookDefinition.builder()
-            .url(new URI("http://localhost:4000/cookbooks/apache2")).version(v510).version(v420).build();
+            .name("apache2").url(new URI("http://localhost:4000/cookbooks/apache2")).version(v510).version(v420).build();
 
       assertEquals(handler.apply(HttpResponse
             .builder()
