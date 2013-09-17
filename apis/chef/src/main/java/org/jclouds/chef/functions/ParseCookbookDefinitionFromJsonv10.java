@@ -43,6 +43,12 @@ public class ParseCookbookDefinitionFromJsonv10 implements Function<HttpResponse
 
    @Override
    public CookbookDefinition apply(HttpResponse response) {
-      return parser.apply(response).values().iterator().next();
+      Map<String, CookbookDefinition> result = parser.apply(response);
+      String cookbookName = result.keySet().iterator().next();
+      CookbookDefinition def = result.values().iterator().next();
+      return CookbookDefinition.builder() //
+             .from(def) //
+             .name(cookbookName) //
+             .build();
    }
 }

@@ -24,6 +24,7 @@ import java.util.Set;
 import javax.ws.rs.core.MediaType;
 
 import org.jclouds.chef.config.ChefHttpApiModule;
+import org.jclouds.chef.domain.CookbookDefinition;
 import org.jclouds.date.TimeStamp;
 import org.jclouds.http.HttpRequest;
 import org.jclouds.http.HttpResponse;
@@ -154,6 +155,20 @@ public class ChefApiExpectTest extends BaseChefApiExpectTest<ChefApi> {
                   .build());
       Set<String> nodes = api.listNodesInEnvironment("dev");
       assertTrue(nodes.isEmpty(), String.format("Expected nodes to be empty but was: %s", nodes));
+   }
+
+   public void testListCookbooksInEnvironmentReturnsValidSet() {
+      ChefApi api = requestSendsResponse(
+            signed(HttpRequest.builder() //
+                  .method("GET") //
+                  .endpoint("http://localhost:4000/environments/dev/cookbooks") //
+                  .addHeader("X-Chef-Version", ChefApiMetadata.DEFAULT_API_VERSION) //
+                  .addHeader("Accept", MediaType.APPLICATION_JSON).build()), //
+            HttpResponse.builder().statusCode(200)
+                  .payload(payloadFromResourceWithContentType("/env_cookbooks.json", MediaType.APPLICATION_JSON)) //
+                  .build());
+      Set<CookbookDefinition> cookbooks = api.listCookbooksInEnvironment("dev");
+      assertEquals(cookbooks.size(), 2);
    }
 
    @Override
