@@ -29,21 +29,21 @@ import com.google.common.base.Predicate;
 import com.google.common.collect.ImmutableSet;
 
 /**
- * Tests behavior of {@code GetNodesImpl} strategies
- * 
- * @author Adrian Cole
+ * Tests behavior of {@code ListNodesInEnvironmentImpl} strategies
+ *
+ * @author Noorul Islam K M
  */
-@Test(groups = "live", testName = "GetNodesImplLiveTest")
-public class GetNodesImplLiveTest extends BaseChefLiveTest<ChefApi> {
+@Test(groups = "live", testName = "ListNodesInEnvironmentImplLiveTest")
+public class ListNodesInEnvironmentImplLiveTest extends BaseChefLiveTest<ChefApi> {
 
-   private ListNodesImpl strategy;
+   private ListNodesInEnvironmentImpl strategy;
    private CreateNodeAndPopulateAutomaticAttributesImpl creator;
 
    @Override
    protected void initialize() {
       super.initialize();
       this.creator = injector.getInstance(CreateNodeAndPopulateAutomaticAttributesImpl.class);
-      this.strategy = injector.getInstance(ListNodesImpl.class);
+      this.strategy = injector.getInstance(ListNodesInEnvironmentImpl.class);
       creator.execute(prefix, ImmutableSet.<String> of());
       creator.execute(prefix + 1, ImmutableSet.<String> of());
    }
@@ -58,12 +58,12 @@ public class GetNodesImplLiveTest extends BaseChefLiveTest<ChefApi> {
 
    @Test
    public void testExecute() {
-      assertTrue(size(strategy.execute()) > 0, "Expected one or more elements");
+      assertTrue(size(strategy.execute("_default")) > 0, "Expected one or more elements");
    }
 
    @Test
    public void testExecutePredicateOfString() {
-      assertEquals(size(strategy.execute(new Predicate<String>() {
+      assertEquals(size(strategy.execute("_default", new Predicate<String>() {
 
          @Override
          public boolean apply(String input) {
@@ -75,7 +75,7 @@ public class GetNodesImplLiveTest extends BaseChefLiveTest<ChefApi> {
 
    @Test
    public void testExecuteIterableOfString() {
-      assertEquals(size(strategy.execute(ImmutableSet.of(prefix, prefix + 1))), 2);
+      assertEquals(size(strategy.execute("_default", ImmutableSet.of(prefix, prefix + 1))), 2);
    }
 
 }

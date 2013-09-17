@@ -17,7 +17,7 @@
 package org.jclouds.chef.strategy;
 
 import org.jclouds.chef.domain.Node;
-import org.jclouds.chef.strategy.internal.ListEnvironmentNodesImpl;
+import org.jclouds.chef.strategy.internal.ListNodesInEnvironmentImpl;
 
 import com.google.common.base.Predicate;
 import com.google.common.util.concurrent.ListeningExecutorService;
@@ -28,8 +28,8 @@ import com.google.inject.ImplementedBy;
  * 
  * @author Noorul Islam K M
  */
-@ImplementedBy(ListEnvironmentNodesImpl.class)
-public interface ListEnvironmentNodes {
+@ImplementedBy(ListNodesInEnvironmentImpl.class)
+public interface ListNodesInEnvironment {
 
    public Iterable<? extends Node> execute(String environmentName);
 

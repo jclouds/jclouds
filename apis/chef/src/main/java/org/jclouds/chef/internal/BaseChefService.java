@@ -49,7 +49,7 @@ import org.jclouds.chef.strategy.DeleteAllClientsInList;
 import org.jclouds.chef.strategy.DeleteAllNodesInList;
 import org.jclouds.chef.strategy.ListClients;
 import org.jclouds.chef.strategy.ListCookbookVersions;
-import org.jclouds.chef.strategy.ListEnvironmentNodes;
+import org.jclouds.chef.strategy.ListNodesInEnvironment;
 import org.jclouds.chef.strategy.ListEnvironments;
 import org.jclouds.chef.strategy.ListNodes;
 import org.jclouds.chef.strategy.UpdateAutomaticAttributesOnNode;
@@ -89,7 +89,7 @@ public class BaseChefService implements ChefService {
    private final RunListForGroup runListForGroup;
    private final ListCookbookVersions listCookbookVersions;
    private final ListEnvironments listEnvironments;
-   private final ListEnvironmentNodes listEnvironmentNodes;
+   private final ListNodesInEnvironment listNodesInEnvironment;
    private final Json json;
    @Resource
    @Named(ChefProperties.CHEF_LOGGER)
@@ -104,7 +104,7 @@ public class BaseChefService implements ChefService {
          UpdateAutomaticAttributesOnNode updateAutomaticAttributesOnNode, Supplier<PrivateKey> privateKey,
          @Named(CHEF_BOOTSTRAP_DATABAG) String databag, GroupToBootScript groupToBootScript,
          BootstrapConfigForGroup bootstrapConfigForGroup, RunListForGroup runListForGroup,
-         ListEnvironments listEnvironments, ListEnvironmentNodes listEnvironmentNodes, Json json) {
+         ListEnvironments listEnvironments, ListNodesInEnvironment listNodesInEnvironment, Json json) {
       this.chefContext = checkNotNull(chefContext, "chefContext");
       this.api = checkNotNull(api, "api");
       this.cleanupStaleNodesAndClients = checkNotNull(cleanupStaleNodesAndClients, "cleanupStaleNodesAndClients");
@@ -123,7 +123,7 @@ public class BaseChefService implements ChefService {
       this.bootstrapConfigForGroup = checkNotNull(bootstrapConfigForGroup, "bootstrapConfigForGroup");
       this.runListForGroup = checkNotNull(runListForGroup, "runListForGroup");
       this.listEnvironments = checkNotNull(listEnvironments, "listEnvironments");
-      this.listEnvironmentNodes = checkNotNull(listEnvironmentNodes, "listEnvironmentNodes");
+      this.listNodesInEnvironment = checkNotNull(listNodesInEnvironment, "listNodesInEnvironment");
       this.json = checkNotNull(json, "json");
    }
 
@@ -244,7 +244,7 @@ public class BaseChefService implements ChefService {
 
    @Override
    public Iterable<? extends Node> listNodesInEnvironment(String environmentName) {
-      return listEnvironmentNodes.execute(environmentName);
+      return listNodesInEnvironment.execute(environmentName);
    }
 
 }
