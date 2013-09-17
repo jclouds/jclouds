@@ -31,7 +31,7 @@ public interface ChefProperties {
    public static final String CHEF_LOGGER = "jclouds.chef";
 
    /**
-    * Ddatabag that holds chef bootstrap hints, should be a json ball in the
+    * Databag that holds chef bootstrap hints, should be a json ball in the
     * following format:
     * <p>
     * {"tag":{"run_list":["recipe[apache2]"]}}
@@ -91,12 +91,23 @@ public interface ChefProperties {
    /**
     * Boolean property. Default (false).
     * <p>
-    * When bootstrapping a node, updates teh existing gems before installing
+    * When bootstrapping a node, updates the existing gems before installing
     * Chef.
     * <p>
     * This property must be set prior to running the
     * {@link ChefService#createBootstrapScriptForGroup(String)} method.
     */
    public static final String CHEF_UPDATE_GEMS = "chef.update-gems";
+
+   /**
+    * Boolean property. Default (true).
+    * <p>
+    * When bootstrapping a node, install the Chef client using the Omnibus
+    * installer.
+    * <p>
+    * This property must be set prior to running the
+    * {@link ChefService#createBootstrapScriptForGroup(String)} method.
+    */
+   public static final String CHEF_USE_OMNIBUS = "chef.use-omnibus";
 
 }

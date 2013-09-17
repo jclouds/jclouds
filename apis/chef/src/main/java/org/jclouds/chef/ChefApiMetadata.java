@@ -23,6 +23,7 @@ import static org.jclouds.Constants.PROPERTY_TIMEOUTS_PREFIX;
 import static org.jclouds.chef.config.ChefProperties.CHEF_BOOTSTRAP_DATABAG;
 import static org.jclouds.chef.config.ChefProperties.CHEF_UPDATE_GEMS;
 import static org.jclouds.chef.config.ChefProperties.CHEF_UPDATE_GEM_SYSTEM;
+import static org.jclouds.chef.config.ChefProperties.CHEF_USE_OMNIBUS;
 
 import java.net.URI;
 import java.util.Properties;
@@ -44,7 +45,7 @@ import com.google.inject.Module;
  * @author Ignasi Barrera
  */
 public class ChefApiMetadata extends BaseHttpApiMetadata<ChefApi> {
-   
+
    /**
     * The default Chef Server API version to use.
     */
@@ -78,6 +79,7 @@ public class ChefApiMetadata extends BaseHttpApiMetadata<ChefApi> {
       properties.setProperty(CHEF_BOOTSTRAP_DATABAG, "bootstrap");
       properties.setProperty(CHEF_UPDATE_GEM_SYSTEM, "false");
       properties.setProperty(CHEF_UPDATE_GEMS, "false");
+      properties.setProperty(CHEF_USE_OMNIBUS, "true");
       return properties;
    }
 
