@@ -635,40 +635,6 @@ public class ChefApiTest extends BaseAsyncApiTest<ChefApi> {
 
    }
 
-   public void testSearchRoles() throws SecurityException, NoSuchMethodException, IOException {
-      Invokable<?, ?> method = method(ChefApi.class, "searchRoles");
-      GeneratedHttpRequest httpRequest = processor.apply(Invocation.create(method, ImmutableList.of()));
-
-      assertRequestLineEquals(httpRequest, "GET http://localhost:4000/search/role HTTP/1.1");
-      assertNonPayloadHeadersEqual(httpRequest, "Accept: application/json\nX-Chef-Version: " + ChefApiMetadata.DEFAULT_API_VERSION
-            + "-test\n");
-      assertPayloadEquals(httpRequest, null, null, false);
-
-      assertResponseParserClassEquals(method, httpRequest, ParseSearchRolesFromJson.class);
-      assertSaxResponseParserClassEquals(method, null);
-      assertFallbackClassEquals(method, MapHttp4xxCodesToExceptions.class);
-
-      checkFilters(httpRequest);
-
-   }
-
-   public void testSearchRolesWithOptions() throws SecurityException, NoSuchMethodException, IOException {
-      Invokable<?, ?> method = method(ChefApi.class, "searchRoles", SearchOptions.class);
-      GeneratedHttpRequest httpRequest = processor.apply(Invocation.create(method,
-            ImmutableList.<Object> of(SearchOptions.Builder.query("text"))));
-
-      assertRequestLineEquals(httpRequest, "GET http://localhost:4000/search/role?q=text HTTP/1.1");
-      assertNonPayloadHeadersEqual(httpRequest, "Accept: application/json\nX-Chef-Version: " + ChefApiMetadata.DEFAULT_API_VERSION
-            + "-test\n");
-      assertPayloadEquals(httpRequest, null, null, false);
-
-      assertResponseParserClassEquals(method, httpRequest, ParseSearchRolesFromJson.class);
-      assertSaxResponseParserClassEquals(method, null);
-      assertFallbackClassEquals(method, MapHttp4xxCodesToExceptions.class);
-
-      checkFilters(httpRequest);
-
-   }
 
    public void testSearchClients() throws SecurityException, NoSuchMethodException, IOException {
       Invokable<?, ?> method = method(ChefApi.class, "searchClients");
