@@ -46,8 +46,8 @@ public class ParseSearchResultFromJson<T> implements Function<HttpResponse, Sear
    }
 
    @Override
-   public SearchResult<T> apply(HttpResponse arg0) {
-      Response<T> returnVal = json.apply(arg0);
+   public SearchResult<T> apply(HttpResponse response) {
+      Response<T> returnVal = json.apply(response);
       return new SearchResult<T>(returnVal.start, returnVal.rows);
    }
 }

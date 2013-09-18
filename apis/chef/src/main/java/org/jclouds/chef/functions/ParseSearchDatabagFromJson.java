@@ -29,8 +29,8 @@ import org.jclouds.http.functions.ParseJson;
 import org.jclouds.json.Json;
 
 import com.google.common.base.Function;
-import com.google.common.collect.Iterables;
 import com.google.gson.annotations.SerializedName;
+import static com.google.common.collect.Iterables.transform;
 
 /**
  * Parses the search result into a {@link DatabagItem} object.
@@ -64,9 +64,9 @@ public class ParseSearchDatabagFromJson implements Function<HttpResponse, Search
    }
 
    @Override
-   public SearchResult<DatabagItem> apply(HttpResponse arg0) {
-      Response returnVal = responseParser.apply(arg0);
-      Iterable<DatabagItem> items = Iterables.transform(returnVal.rows, new Function<Row, DatabagItem>() {
+   public SearchResult<DatabagItem> apply(HttpResponse response) {
+      Response returnVal = responseParser.apply(response);
+      Iterable<DatabagItem> items = transform(returnVal.rows, new Function<Row, DatabagItem>() {
          @Override
          public DatabagItem apply(Row input) {
             return json.fromJson(input.rawData.toString(), DatabagItem.class);

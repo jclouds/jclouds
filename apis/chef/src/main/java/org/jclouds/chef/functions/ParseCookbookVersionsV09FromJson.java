@@ -26,7 +26,7 @@ import org.jclouds.http.HttpResponse;
 import org.jclouds.http.functions.ParseJson;
 
 import com.google.common.base.Function;
-import com.google.common.collect.Iterables;
+import static com.google.common.collect.Iterables.getFirst;
 
 /**
  * Parses the cookbook versions in a Chef Server <= 0.9.8.
@@ -44,8 +44,8 @@ public class ParseCookbookVersionsV09FromJson implements Function<HttpResponse, 
    }
 
    @Override
-   public Set<String> apply(HttpResponse arg0) {
-      return Iterables.getFirst(json.apply(arg0).values(), null);
+   public Set<String> apply(HttpResponse response) {
+      return getFirst(json.apply(response).values(), null);
 
    }
 }

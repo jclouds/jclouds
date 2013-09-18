@@ -28,8 +28,9 @@ import org.jclouds.http.HttpResponse;
 import org.jclouds.http.functions.ParseJson;
 
 import com.google.common.base.Function;
-import com.google.common.collect.Iterables;
-import com.google.common.collect.Sets;
+import static com.google.common.collect.Iterables.getFirst;
+import static com.google.common.collect.Iterables.transform;
+import static com.google.common.collect.Sets.newLinkedHashSet;
 
 /**
  * Parses the cookbook versions in a Chef Server >= 0.10.8.
@@ -49,8 +50,8 @@ public class ParseCookbookVersionsV10FromJson implements Function<HttpResponse, 
 
    @Override
    public Set<String> apply(HttpResponse response) {
-      CookbookDefinition def = Iterables.getFirst(parser.apply(response).values(), null);
-      return Sets.newLinkedHashSet(Iterables.transform(def.getVersions(), new Function<Version, String>() {
+      CookbookDefinition def = getFirst(parser.apply(response).values(), null);
+      return newLinkedHashSet(transform(def.getVersions(), new Function<Version, String>() {
          @Override
          public String apply(Version input) {
             return input.getVersion();
