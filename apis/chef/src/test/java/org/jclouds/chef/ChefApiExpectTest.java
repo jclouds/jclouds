@@ -25,6 +25,9 @@ import javax.ws.rs.core.MediaType;
 
 import org.jclouds.chef.config.ChefHttpApiModule;
 import org.jclouds.chef.domain.CookbookDefinition;
+import org.jclouds.chef.domain.Role;
+import org.jclouds.chef.domain.SearchResult;
+import org.jclouds.chef.options.SearchOptions;
 import org.jclouds.date.TimeStamp;
 import org.jclouds.http.HttpRequest;
 import org.jclouds.http.HttpResponse;
@@ -36,7 +39,7 @@ import com.google.inject.Module;
 
 /**
  * Expect tests for the {@link ChefApi} class.
- * 
+ *
  * @author Noorul Islam K M
  */
 @Test(groups = "unit", testName = "ChefApiExpectTest")
@@ -91,7 +94,7 @@ public class ChefApiExpectTest extends BaseChefApiExpectTest<ChefApi> {
       Set<String> nodes = api.listNodes();
       assertTrue(nodes.isEmpty(), String.format("Expected nodes to be empty but was: %s", nodes));
    }
-   
+
    public void testListRecipesInEnvironmentReturnsValidSet() {
       ChefApi api = requestSendsResponse(
             signed(getHttpRequestBuilder("GET", "/environments/dev/recipes").build()),
@@ -156,6 +159,50 @@ public class ChefApiExpectTest extends BaseChefApiExpectTest<ChefApi> {
       assertTrue(cookbooks.isEmpty(), String.format("Expected cookbooks to be empty but was: %s", cookbooks));
    }
 
+   public void testSearchRolesReturnsValidResult() {
+      ChefApi api = requestSendsResponse(
+            signed(getHttpRequestBuilder("GET", "/search/role").build()),
+            HttpResponse.builder().statusCode(200)
+                  .payload(payloadFromResourceWithContentType("/search_role.json", MediaType.APPLICATION_JSON)) //
+                  .build());
+      SearchResult<? extends Role> result = api.searchRoles();
+      assertEquals(result.size(), 1);
+      assertEquals(result.iterator().next().getName(), "webserver");
+   }
+
+   public void testSearchRolesReturnsEmptyResult() {
+      ChefApi api = requestSendsResponse(
+            signed(getHttpRequestBuilder("GET", "/search/role").build()),
+            HttpResponse.builder().statusCode(200)
+                  .payload(payloadFromResourceWithContentType("/search_role_empty.json", MediaType.APPLICATION_JSON)) //
+                  .build());
+      SearchResult<? extends Role> result = api.searchRoles();
+      assertTrue(result.isEmpty(), String.format("Expected search result to be empty but was: %s", result));
+   }
+
+   public void testSearchRolesWithOptionsReturnsValidResult() {
+      ChefApi api = requestSendsResponse(
+            signed(getHttpRequestBuilder("GET", "/search/role").addQueryParam("q", "name:webserver").build()),
+            HttpResponse.builder().statusCode(200)
+                  .payload(payloadFromResourceWithContentType("/search_role.json", MediaType.APPLICATION_JSON)) //
+                  .build());
+      SearchOptions options = SearchOptions.Builder.query("name:webserver");
+      SearchResult<? extends Role> result = api.searchRoles(options);
+      assertEquals(result.size(), 1);
+      assertEquals(result.iterator().next().getName(), "webserver");
+   }
+
+   public void testSearchRolesWithOptionsReturnsEmptyResult() {
+      ChefApi api = requestSendsResponse(
+            signed(getHttpRequestBuilder("GET", "/search/role").addQueryParam("q", "name:dummy").build()),
+            HttpResponse.builder().statusCode(200)
+                  .payload(payloadFromResourceWithContentType("/search_role_empty.json", MediaType.APPLICATION_JSON)) //
+                  .build());
+      SearchOptions options = SearchOptions.Builder.query("name:dummy");
+      SearchResult<? extends Role> result = api.searchRoles(options);
+      assertTrue(result.isEmpty(), String.format("Expected search result to be empty but was: %s", result));
+   }
+
    @Override
    protected Module createModule() {
       return new TestChefRestClientModule();
@@ -173,5 +220,5 @@ public class ChefApiExpectTest extends BaseChefApiExpectTest<ChefApi> {
    protected ChefApiMetadata createApiMetadata() {
       return new ChefApiMetadata();
    }
-   
+
 }
