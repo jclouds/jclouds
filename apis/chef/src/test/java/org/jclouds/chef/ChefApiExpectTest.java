@@ -45,16 +45,20 @@ public class ChefApiExpectTest extends BaseChefApiExpectTest<ChefApi> {
      provider = "chef";
    }
 
+   private HttpRequest.Builder getHttpRequestBuilder(String method, String endPoint) {
+      return HttpRequest.builder() //
+                  .method(method) //
+                  .endpoint("http://localhost:4000" + endPoint) //
+                  .addHeader("X-Chef-Version", ChefApiMetadata.DEFAULT_API_VERSION) //
+                  .addHeader("Accept", MediaType.APPLICATION_JSON);
+   }
+
    public void testListClientsReturns2xx() {
       ChefApi api = requestSendsResponse(
-            signed(HttpRequest.builder() //
-                  .method("GET") //
-                  .endpoint("http://localhost:4000/clients") //
-                  .addHeader("X-Chef-Version", ChefApiMetadata.DEFAULT_API_VERSION) //
-                  .addHeader("Accept", MediaType.APPLICATION_JSON).build()), //
-            HttpResponse.builder().statusCode(200)
-                  .payload(payloadFromResourceWithContentType("/clients_list.json", MediaType.APPLICATION_JSON)) //
-                  .build());
+            signed(getHttpRequestBuilder("GET", "/clients").build()),
+            HttpResponse.builder().statusCode(200) //
+                        .payload(payloadFromResourceWithContentType("/clients_list.json", MediaType.APPLICATION_JSON)) //
+                        .build());
       Set<String> nodes = api.listClients();
       assertEquals(nodes.size(), 3);
       assertTrue(nodes.contains("adam"), String.format("Expected nodes to contain 'adam' but was: %s", nodes));
@@ -62,11 +66,7 @@ public class ChefApiExpectTest extends BaseChefApiExpectTest<ChefApi> {
 
    public void testListClientsReturns404() {
       ChefApi api = requestSendsResponse(
-            signed(HttpRequest.builder() //
-                  .method("GET") //
-                  .endpoint("http://localhost:4000/clients") //
-                  .addHeader("X-Chef-Version", ChefApiMetadata.DEFAULT_API_VERSION) //
-                  .addHeader("Accept", MediaType.APPLICATION_JSON).build()), //
+            signed(getHttpRequestBuilder("GET", "/clients").build()),
             HttpResponse.builder().statusCode(404)
                   .build());
       Set<String> clients = api.listClients();
@@ -75,11 +75,7 @@ public class ChefApiExpectTest extends BaseChefApiExpectTest<ChefApi> {
 
    public void testListNodesReturns2xx() {
       ChefApi api = requestSendsResponse(
-            signed(HttpRequest.builder() //
-                  .method("GET") //
-                  .endpoint("http://localhost:4000/nodes") //
-                  .addHeader("X-Chef-Version", ChefApiMetadata.DEFAULT_API_VERSION) //
-                  .addHeader("Accept", MediaType.APPLICATION_JSON).build()), //
+            signed(getHttpRequestBuilder("GET", "/nodes").build()),
             HttpResponse.builder().statusCode(200)
                   .payload(payloadFromResourceWithContentType("/nodes_list.json", MediaType.APPLICATION_JSON)) //
                   .build());
@@ -90,24 +86,15 @@ public class ChefApiExpectTest extends BaseChefApiExpectTest<ChefApi> {
 
    public void testListNodesReturns404() {
       ChefApi api = requestSendsResponse(
-            signed(HttpRequest.builder() //
-                  .method("GET") //
-                  .endpoint("http://localhost:4000/nodes") //
-                  .addHeader("X-Chef-Version", ChefApiMetadata.DEFAULT_API_VERSION) //
-                  .addHeader("Accept", MediaType.APPLICATION_JSON).build()), //
-            HttpResponse.builder().statusCode(404)
-                  .build());
+            signed(getHttpRequestBuilder("GET", "/nodes").build()),
+            HttpResponse.builder().statusCode(404).build());
       Set<String> nodes = api.listNodes();
       assertTrue(nodes.isEmpty(), String.format("Expected nodes to be empty but was: %s", nodes));
    }
    
    public void testListRecipesInEnvironmentReturns2xx() {
       ChefApi api = requestSendsResponse(
-            signed(HttpRequest.builder() //
-                  .method("GET") //
-                  .endpoint("http://localhost:4000/environments/dev/recipes") //
-                  .addHeader("X-Chef-Version", ChefApiMetadata.DEFAULT_API_VERSION) //
-                  .addHeader("Accept", MediaType.APPLICATION_JSON).build()), //
+            signed(getHttpRequestBuilder("GET", "/environments/dev/recipes").build()),
             HttpResponse.builder().statusCode(200)
                   .payload(payloadFromResourceWithContentType("/environment_recipes.json", MediaType.APPLICATION_JSON)) //
                   .build());
@@ -118,24 +105,15 @@ public class ChefApiExpectTest extends BaseChefApiExpectTest<ChefApi> {
 
    public void testListRecipesInEnvironmentReturns404() {
       ChefApi api = requestSendsResponse(
-            signed(HttpRequest.builder() //
-                  .method("GET") //
-                  .endpoint("http://localhost:4000/environments/dev/recipes") //
-                  .addHeader("X-Chef-Version", ChefApiMetadata.DEFAULT_API_VERSION) //
-                  .addHeader("Accept", MediaType.APPLICATION_JSON).build()), //
-            HttpResponse.builder().statusCode(404)
-                  .build());
+            signed(getHttpRequestBuilder("GET", "/environments/dev/recipes").build()),
+            HttpResponse.builder().statusCode(404).build());
       Set<String> recipes = api.listRecipesInEnvironment("dev");
       assertTrue(recipes.isEmpty(), String.format("Expected recipes to be empty but was: %s", recipes));
    }
 
    public void testListNodesInEnvironmentReturns2xx() {
       ChefApi api = requestSendsResponse(
-            signed(HttpRequest.builder() //
-                  .method("GET") //
-                  .endpoint("http://localhost:4000/environments/dev/nodes") //
-                  .addHeader("X-Chef-Version", ChefApiMetadata.DEFAULT_API_VERSION) //
-                  .addHeader("Accept", MediaType.APPLICATION_JSON).build()), //
+            signed(getHttpRequestBuilder("GET", "/environments/dev/nodes").build()),
             HttpResponse.builder().statusCode(200)
                   .payload(payloadFromResourceWithContentType("/nodes_list.json", MediaType.APPLICATION_JSON)) //
                   .build());
@@ -146,29 +124,36 @@ public class ChefApiExpectTest extends BaseChefApiExpectTest<ChefApi> {
 
    public void testListNodesInEnvironmentReturns404() {
       ChefApi api = requestSendsResponse(
-            signed(HttpRequest.builder() //
-                  .method("GET") //
-                  .endpoint("http://localhost:4000/environments/dev/nodes") //
-                  .addHeader("X-Chef-Version", ChefApiMetadata.DEFAULT_API_VERSION) //
-                  .addHeader("Accept", MediaType.APPLICATION_JSON).build()), //
-            HttpResponse.builder().statusCode(404)
-                  .build());
+            signed(getHttpRequestBuilder("GET", "/environments/dev/nodes").build()),
+            HttpResponse.builder().statusCode(404).build());
       Set<String> nodes = api.listNodesInEnvironment("dev");
       assertTrue(nodes.isEmpty(), String.format("Expected nodes to be empty but was: %s", nodes));
    }
 
    public void testListCookbooksInEnvironmentReturnsValidSet() {
       ChefApi api = requestSendsResponse(
-            signed(HttpRequest.builder() //
-                  .method("GET") //
-                  .endpoint("http://localhost:4000/environments/dev/cookbooks") //
-                  .addHeader("X-Chef-Version", ChefApiMetadata.DEFAULT_API_VERSION) //
-                  .addHeader("Accept", MediaType.APPLICATION_JSON).build()), //
+            signed(getHttpRequestBuilder("GET", "/environments/dev/cookbooks").build()),
             HttpResponse.builder().statusCode(200)
                   .payload(payloadFromResourceWithContentType("/env_cookbooks.json", MediaType.APPLICATION_JSON)) //
                   .build());
       Set<CookbookDefinition> cookbooks = api.listCookbooksInEnvironment("dev");
       assertEquals(cookbooks.size(), 2);
+   }
+
+   public void testListCookbooksInEnvironmentReturnsEmptySetOn404() {
+      ChefApi api = requestSendsResponse(
+            signed(getHttpRequestBuilder("GET", "/environments/dev/cookbooks").build()),
+            HttpResponse.builder().statusCode(404).build());
+      Set<CookbookDefinition> cookbooks = api.listCookbooksInEnvironment("dev");
+      assertTrue(cookbooks.isEmpty(), String.format("Expected cookbooks to be empty but was: %s", cookbooks));
+   }
+
+   public void testListCookbooksInEnvironmentWithNumVersionReturnsEmptySetOn404() {
+      ChefApi api = requestSendsResponse(
+            signed(getHttpRequestBuilder("GET", "/environments/dev/cookbooks").addQueryParam("num_versions", "2").build()),
+            HttpResponse.builder().statusCode(404).build());
+      Set<CookbookDefinition> cookbooks = api.listCookbooksInEnvironment("dev", "2");
+      assertTrue(cookbooks.isEmpty(), String.format("Expected cookbooks to be empty but was: %s", cookbooks));
    }
 
    @Override

@@ -192,7 +192,7 @@ public interface ChefApi extends Closeable {
     * 
     * @param environmentname The name of the environment to get the cookbooks
     *        from.
-    * @return The definitions of the cookbooks (URL and versions) available in
+    * @return The definitions of the cookbooks (name, URL and versions) available in
     *         the given environment.
     */
    @SinceApiVersion("0.10.0")
@@ -200,17 +200,18 @@ public interface ChefApi extends Closeable {
    @GET
    @ResponseParser(ParseCookbookDefinitionListFromJsonv10.class)
    @Path("/environments/{environmentname}/cookbooks")
-   @Fallback(NullOnNotFoundOr404.class)
+   @Fallback(EmptySetOnNotFoundOr404.class)
    Set<CookbookDefinition> listCookbooksInEnvironment(@PathParam("environmentname") String environmentName);
 
    /**
     * Lists the cookbooks that are available in the given environment, limiting
     * the number of versions returned for each cookbook.
     * 
-    * @param environmentname The name of the environment.
+    * @param environmentname The name of the environment to get the cookbooks
+    *        from.
     * @param numversions The number of cookbook versions to include in the
     *        response, where n is the number of cookbook versions.
-    * @return The definitions of the cookbooks (URL and versions) available in
+    * @return The definitions of the cookbooks (name, URL and versions) available in
     *         the given environment.
     */
    @SinceApiVersion("0.10.0")
@@ -218,7 +219,7 @@ public interface ChefApi extends Closeable {
    @GET
    @ResponseParser(ParseCookbookDefinitionListFromJsonv10.class)
    @Path("/environments/{environmentname}/cookbooks?num_versions={numversions}")
-   @Fallback(NullOnNotFoundOr404.class)
+   @Fallback(EmptySetOnNotFoundOr404.class)
    Set<CookbookDefinition> listCookbooksInEnvironment(@PathParam("environmentname") String environmentName,
          @PathParam("numversions") String numVersions);
 
