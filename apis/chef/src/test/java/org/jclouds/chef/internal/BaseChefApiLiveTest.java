@@ -17,6 +17,7 @@
 package org.jclouds.chef.internal;
 
 import static com.google.common.base.Throwables.propagate;
+import static com.google.common.collect.Iterables.any;
 import static com.google.common.collect.Iterables.isEmpty;
 import static com.google.common.hash.Hashing.md5;
 import static java.util.concurrent.TimeUnit.MILLISECONDS;
@@ -64,9 +65,6 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.io.Closeables;
 import com.google.common.primitives.Bytes;
-
-import static com.google.common.collect.Iterables.any;
-import static com.google.common.collect.Iterables.all;
 
 /**
  * Tests behavior of {@code ChefApi}
