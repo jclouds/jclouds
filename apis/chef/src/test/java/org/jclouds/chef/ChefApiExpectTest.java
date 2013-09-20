@@ -53,7 +53,7 @@ public class ChefApiExpectTest extends BaseChefApiExpectTest<ChefApi> {
                   .addHeader("Accept", MediaType.APPLICATION_JSON);
    }
 
-   public void testListClientsReturns2xx() {
+   public void testListClientsReturnsValidSet() {
       ChefApi api = requestSendsResponse(
             signed(getHttpRequestBuilder("GET", "/clients").build()),
             HttpResponse.builder().statusCode(200) //
@@ -64,7 +64,7 @@ public class ChefApiExpectTest extends BaseChefApiExpectTest<ChefApi> {
       assertTrue(nodes.contains("adam"), String.format("Expected nodes to contain 'adam' but was: %s", nodes));
    }
 
-   public void testListClientsReturns404() {
+   public void testListClientsReturnsEmptySetOn404() {
       ChefApi api = requestSendsResponse(
             signed(getHttpRequestBuilder("GET", "/clients").build()),
             HttpResponse.builder().statusCode(404)
@@ -73,7 +73,7 @@ public class ChefApiExpectTest extends BaseChefApiExpectTest<ChefApi> {
       assertTrue(clients.isEmpty(), String.format("Expected clients to be empty but was: %s", clients));
    }
 
-   public void testListNodesReturns2xx() {
+   public void testListNodesReturnsValidSet() {
       ChefApi api = requestSendsResponse(
             signed(getHttpRequestBuilder("GET", "/nodes").build()),
             HttpResponse.builder().statusCode(200)
@@ -84,7 +84,7 @@ public class ChefApiExpectTest extends BaseChefApiExpectTest<ChefApi> {
       assertTrue(nodes.contains("blah"), String.format("Expected nodes to contain 'blah' but was: %s", nodes));
    }
 
-   public void testListNodesReturns404() {
+   public void testListNodesReturnsEmptySetOn404() {
       ChefApi api = requestSendsResponse(
             signed(getHttpRequestBuilder("GET", "/nodes").build()),
             HttpResponse.builder().statusCode(404).build());
@@ -92,7 +92,7 @@ public class ChefApiExpectTest extends BaseChefApiExpectTest<ChefApi> {
       assertTrue(nodes.isEmpty(), String.format("Expected nodes to be empty but was: %s", nodes));
    }
    
-   public void testListRecipesInEnvironmentReturns2xx() {
+   public void testListRecipesInEnvironmentReturnsValidSet() {
       ChefApi api = requestSendsResponse(
             signed(getHttpRequestBuilder("GET", "/environments/dev/recipes").build()),
             HttpResponse.builder().statusCode(200)
@@ -103,7 +103,7 @@ public class ChefApiExpectTest extends BaseChefApiExpectTest<ChefApi> {
       assertTrue(recipes.contains("apache2"), String.format("Expected recipes to contain 'apache2' but was: %s", recipes));
    }
 
-   public void testListRecipesInEnvironmentReturns404() {
+   public void testListRecipesInEnvironmentReturnsEmptySetOn404() {
       ChefApi api = requestSendsResponse(
             signed(getHttpRequestBuilder("GET", "/environments/dev/recipes").build()),
             HttpResponse.builder().statusCode(404).build());
@@ -111,7 +111,7 @@ public class ChefApiExpectTest extends BaseChefApiExpectTest<ChefApi> {
       assertTrue(recipes.isEmpty(), String.format("Expected recipes to be empty but was: %s", recipes));
    }
 
-   public void testListNodesInEnvironmentReturns2xx() {
+   public void testListNodesInEnvironmentReturnsValidSet() {
       ChefApi api = requestSendsResponse(
             signed(getHttpRequestBuilder("GET", "/environments/dev/nodes").build()),
             HttpResponse.builder().statusCode(200)
@@ -122,7 +122,7 @@ public class ChefApiExpectTest extends BaseChefApiExpectTest<ChefApi> {
       assertTrue(nodes.contains("blah"), String.format("Expected nodes to contain 'blah' but was: %s", nodes));
    }
 
-   public void testListNodesInEnvironmentReturns404() {
+   public void testListNodesInEnvironmentReturnsEmptySetOn404() {
       ChefApi api = requestSendsResponse(
             signed(getHttpRequestBuilder("GET", "/environments/dev/nodes").build()),
             HttpResponse.builder().statusCode(404).build());
