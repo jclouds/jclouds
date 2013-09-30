@@ -36,6 +36,7 @@ import org.jclouds.googlecomputeengine.domain.Project;
 import org.jclouds.googlecomputeengine.options.FirewallOptions;
 import org.jclouds.googlecomputeengine.options.RouteOptions;
 import org.jclouds.json.config.GsonModule;
+import org.jclouds.net.domain.IpProtocol;
 import org.jclouds.oauth.v2.domain.ClaimSet;
 import org.jclouds.oauth.v2.domain.Header;
 import org.jclouds.oauth.v2.json.ClaimSetTypeAdapter;
@@ -380,7 +381,7 @@ public class GoogleComputeEngineParserModule extends AbstractModule {
               JsonParseException {
          JsonObject rule = json.getAsJsonObject();
          Rule.Builder builder = Rule.builder();
-         builder.IPProtocol(Rule.IPProtocol.fromValue(rule.get("IPProtocol").getAsString()));
+         builder.IpProtocol(IpProtocol.fromValue(rule.get("IPProtocol").getAsString()));
          if (rule.get("ports") != null) {
             JsonArray ports = (JsonArray) rule.get("ports");
             for (JsonElement port : ports) {
@@ -399,7 +400,7 @@ public class GoogleComputeEngineParserModule extends AbstractModule {
       @Override
       public JsonElement serialize(Firewall.Rule src, Type typeOfSrc, JsonSerializationContext context) {
          JsonObject ruleObject = new JsonObject();
-         ruleObject.addProperty("IPProtocol", src.getIPProtocol().value());
+         ruleObject.addProperty("IPProtocol", src.getIpProtocol().value());
          if (src.getPorts() != null && !src.getPorts().isEmpty()) {
             JsonArray ports = new JsonArray();
             for (Range<Integer> range : src.getPorts().asRanges()) {

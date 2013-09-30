@@ -39,7 +39,7 @@ public class GlobalOperationDonePredicate implements Predicate<AtomicReference<O
    private final Supplier<String> project;
 
    @Inject
-   GlobalOperationDonePredicate(GoogleComputeEngineApi api, @UserProject Supplier<String> project) {
+   public GlobalOperationDonePredicate(GoogleComputeEngineApi api, @UserProject Supplier<String> project) {
       this.api = api;
       this.project = project;
    }

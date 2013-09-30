@@ -26,6 +26,7 @@ import org.jclouds.googlecomputeengine.domain.Firewall;
 import org.jclouds.googlecomputeengine.domain.ListPage;
 import org.jclouds.googlecomputeengine.domain.Resource;
 import org.jclouds.googlecomputeengine.internal.BaseGoogleComputeEngineParseTest;
+import org.jclouds.net.domain.IpProtocol;
 import org.testng.annotations.Test;
 
 import com.google.common.collect.ImmutableSet;
@@ -61,7 +62,7 @@ public class ParseFirewallListTest extends BaseGoogleComputeEngineParseTest<List
                               ".com/compute/v1beta15/projects/google/global/networks/default"))
                       .addSourceRange("0.0.0.0/0")
                       .addAllowed(Firewall.Rule.builder()
-                              .IPProtocol(Firewall.Rule.IPProtocol.TCP)
+                              .IpProtocol(IpProtocol.TCP)
                               .addPort(22).build())
                       .build()
               ))

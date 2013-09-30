@@ -178,7 +178,7 @@ public class Project extends Resource {
               "metric", "usage", "limit"
       })
       protected Quota(String metric, Double usage, Double limit) {
-         this.metric = checkNotNull(metric, "metric");
+         this.metric = metric != null ? metric : "undefined";
          this.usage = checkNotNull(usage, "usage");
          this.limit = checkNotNull(limit, "limit");
       }

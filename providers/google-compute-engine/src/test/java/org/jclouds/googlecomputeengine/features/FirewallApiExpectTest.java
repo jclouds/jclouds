@@ -21,7 +21,6 @@ import static com.google.common.collect.Iterables.transform;
 import static java.lang.String.format;
 import static org.jclouds.googlecomputeengine.GoogleComputeEngineConstants.COMPUTE_READONLY_SCOPE;
 import static org.jclouds.googlecomputeengine.GoogleComputeEngineConstants.COMPUTE_SCOPE;
-import static org.jclouds.googlecomputeengine.domain.Firewall.Rule.IPProtocol;
 import static org.jclouds.io.Payloads.newStringPayload;
 import static org.jclouds.util.Strings2.toStringAndClose;
 import static org.testng.Assert.assertEquals;
@@ -43,6 +42,7 @@ import org.jclouds.googlecomputeengine.parse.ParseOperationTest;
 import org.jclouds.http.HttpRequest;
 import org.jclouds.http.HttpResponse;
 import org.jclouds.io.Payload;
+import org.jclouds.net.domain.IpProtocol;
 import org.testng.annotations.Test;
 
 import com.google.common.base.Function;
@@ -147,7 +147,7 @@ public class FirewallApiExpectTest extends BaseGoogleComputeEngineApiExpectTest 
               ".com/compute/v1beta15/projects/myproject/global/networks/default"),
               new FirewallOptions()
                       .addAllowedRule(Firewall.Rule.builder()
-                              .IPProtocol(IPProtocol.TCP)
+                              .IpProtocol(IpProtocol.TCP)
                               .addPort(22)
                               .addPortRange(23, 24).build())
                       .addSourceTag("tag1")
@@ -185,7 +185,7 @@ public class FirewallApiExpectTest extends BaseGoogleComputeEngineApiExpectTest 
                       .network(URI.create("https://www.googleapis" +
                               ".com/compute/v1beta15/projects/myproject/global/networks/default"))
                       .addAllowedRule(Firewall.Rule.builder()
-                              .IPProtocol(IPProtocol.TCP)
+                              .IpProtocol(IpProtocol.TCP)
                               .addPort(22)
                               .addPortRange(23, 24).build())
                       .addSourceTag("tag1")
@@ -222,7 +222,7 @@ public class FirewallApiExpectTest extends BaseGoogleComputeEngineApiExpectTest 
                       .network(URI.create("https://www.googleapis" +
                               ".com/compute/v1beta15/projects/myproject/global/networks/default"))
                       .addAllowedRule(Firewall.Rule.builder()
-                              .IPProtocol(IPProtocol.TCP)
+                              .IpProtocol(IpProtocol.TCP)
                               .addPort(22)
                               .addPortRange(23, 24).build())
                       .addSourceTag("tag1")

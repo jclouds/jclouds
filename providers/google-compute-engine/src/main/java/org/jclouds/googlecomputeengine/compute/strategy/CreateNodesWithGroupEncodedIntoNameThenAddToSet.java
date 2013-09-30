@@ -45,10 +45,13 @@ import org.jclouds.googlecomputeengine.config.UserProject;
 import org.jclouds.googlecomputeengine.domain.Firewall;
 import org.jclouds.googlecomputeengine.domain.Network;
 import org.jclouds.googlecomputeengine.domain.Operation;
+import org.jclouds.googlecomputeengine.domain.internal.NetworkAndAddressRange;
 import org.jclouds.googlecomputeengine.options.FirewallOptions;
+import org.jclouds.net.domain.IpProtocol;
 
 import com.google.common.base.Predicate;
 import com.google.common.base.Supplier;
+import com.google.common.cache.LoadingCache;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Multimap;
 import com.google.common.util.concurrent.ListenableFuture;
@@ -65,6 +68,7 @@ public class CreateNodesWithGroupEncodedIntoNameThenAddToSet extends
 
    private final GoogleComputeEngineApi api;
    private final Supplier<String> userProject;
+   private final LoadingCache<NetworkAndAddressRange, Network> networkMap;
    private final Predicate<AtomicReference<Operation>> operationDonePredicate;
    private final long operationCompleteCheckInterval;
    private final long operationCompleteCheckTimeout;
@@ -82,7 +86,8 @@ public class CreateNodesWithGroupEncodedIntoNameThenAddToSet extends
            @UserProject Supplier<String> userProject,
            @Named("global") Predicate<AtomicReference<Operation>> operationDonePredicate,
            @Named(OPERATION_COMPLETE_INTERVAL) Long operationCompleteCheckInterval,
-           @Named(OPERATION_COMPLETE_TIMEOUT) Long operationCompleteCheckTimeout) {
+           @Named(OPERATION_COMPLETE_TIMEOUT) Long operationCompleteCheckTimeout,
+           LoadingCache<NetworkAndAddressRange, Network> networkMap) {
       super(addNodeWithGroupStrategy, listNodesStrategy, namingConvention, userExecutor,
               customizeNodeAndAddToGoodMapOrPutExceptionIntoBadMapFactory);
 
@@ -93,6 +98,7 @@ public class CreateNodesWithGroupEncodedIntoNameThenAddToSet extends
       this.operationCompleteCheckTimeout = checkNotNull(operationCompleteCheckTimeout,
               "operation completed check timeout");
       this.operationDonePredicate = operationDonePredicate;
+      this.networkMap = checkNotNull(networkMap, "networkMap");
    }
 
    @Override
@@ -123,31 +129,13 @@ public class CreateNodesWithGroupEncodedIntoNameThenAddToSet extends
 
       String networkName = templateOptions.getNetworkName().or(sharedResourceName);
 
-      // check if the network was previously created (cache???)
-      Network network = api.getNetworkApiForProject(userProject.get()).get(networkName);
-
-      if (network != null) {
-         return network;
-      } else if (templateOptions.getNetwork().isPresent()) {
-         throw new IllegalArgumentException("requested network " + networkName + " does not exist");
-      }
-
-      AtomicReference<Operation> operation = new AtomicReference<Operation>(api.getNetworkApiForProject(userProject
-              .get()).createInIPv4Range(sharedResourceName, DEFAULT_INTERNAL_NETWORK_RANGE));
-      retry(operationDonePredicate, operationCompleteCheckTimeout, operationCompleteCheckInterval,
-              MILLISECONDS).apply(operation);
-
-      checkState(!operation.get().getHttpError().isPresent(), "Could not create network, operation failed" + operation);
-
-      return checkNotNull(api.getNetworkApiForProject(userProject.get()).get(sharedResourceName),
-              "no network with name %s was found", sharedResourceName);
-
+      return networkMap.apply(new NetworkAndAddressRange(networkName, DEFAULT_INTERNAL_NETWORK_RANGE, null));
    }
 
    /**
     * Tries to find if a firewall already exists for this group, if not it creates one.
     *
-    * @see org.jclouds.googlecomputeengine.features.FirewallAsyncApi#patch(String, org.jclouds.googlecomputeengine.options.FirewallOptions)
+    * @see org.jclouds.googlecomputeengine.features.FirewallApi#patch(String, org.jclouds.googlecomputeengine.options.FirewallOptions)
     */
    private void getOrCreateFirewall(GoogleComputeEngineTemplateOptions templateOptions, Network network,
                                     String sharedResourceName) {
@@ -161,9 +149,9 @@ public class CreateNodesWithGroupEncodedIntoNameThenAddToSet extends
       ImmutableSet.Builder<Firewall.Rule> rules = ImmutableSet.builder();
 
       Firewall.Rule.Builder tcpRule = Firewall.Rule.builder();
-      tcpRule.IPProtocol(Firewall.Rule.IPProtocol.TCP);
+      tcpRule.IpProtocol(IpProtocol.TCP);
       Firewall.Rule.Builder udpRule = Firewall.Rule.builder();
-      udpRule.IPProtocol(Firewall.Rule.IPProtocol.UDP);
+      udpRule.IpProtocol(IpProtocol.UDP);
       for (Integer port : templateOptions.getInboundPorts()) {
          tcpRule.addPort(port);
          udpRule.addPort(port);

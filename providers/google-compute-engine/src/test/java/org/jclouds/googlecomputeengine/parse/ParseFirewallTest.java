@@ -16,8 +16,6 @@
  */
 package org.jclouds.googlecomputeengine.parse;
 
-import static org.jclouds.googlecomputeengine.domain.Firewall.Rule.IPProtocol;
-
 import java.net.URI;
 
 import javax.ws.rs.Consumes;
@@ -26,6 +24,7 @@ import javax.ws.rs.core.MediaType;
 import org.jclouds.date.internal.SimpleDateFormatDateService;
 import org.jclouds.googlecomputeengine.domain.Firewall;
 import org.jclouds.googlecomputeengine.internal.BaseGoogleComputeEngineParseTest;
+import org.jclouds.net.domain.IpProtocol;
 import org.testng.annotations.Test;
 
 /**
@@ -51,13 +50,13 @@ public class ParseFirewallTest extends BaseGoogleComputeEngineParseTest<Firewall
               .network(URI.create("https://www.googleapis.com/compute/v1beta15/projects/myproject/global/networks/jclouds-test"))
               .addSourceRange("10.0.0.0/8")
               .addAllowed(Firewall.Rule.builder()
-                      .IPProtocol(IPProtocol.TCP)
+                      .IpProtocol(IpProtocol.TCP)
                       .addPortRange(1, 65535).build())
               .addAllowed(Firewall.Rule.builder()
-                      .IPProtocol(IPProtocol.UDP)
+                      .IpProtocol(IpProtocol.UDP)
                       .addPortRange(1, 65535).build())
               .addAllowed(Firewall.Rule.builder()
-                      .IPProtocol(IPProtocol.ICMP).build())
+                      .IpProtocol(IpProtocol.ICMP).build())
               .build();
 
    }

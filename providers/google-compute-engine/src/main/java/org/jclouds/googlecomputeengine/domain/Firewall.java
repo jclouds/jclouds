@@ -28,6 +28,8 @@ import java.net.URI;
 import java.util.Date;
 import java.util.Set;
 
+import org.jclouds.net.domain.IpProtocol;
+
 import com.google.common.annotations.Beta;
 import com.google.common.base.Objects;
 import com.google.common.collect.ImmutableSet;
@@ -245,32 +247,14 @@ public final class Firewall extends Resource {
     */
    public static final class Rule {
 
-      public enum IPProtocol {
-
-         TCP, UDP, ICMP, UNKNOWN;
-
-         public String value() {
-            return name().toLowerCase();
-         }
-
-         @Override
-         public String toString() {
-            return value();
-         }
-
-         public static IPProtocol fromValue(String protocol) {
-            return valueOf(protocol.toUpperCase());
-         }
-      }
-
-      private final IPProtocol ipProtocol;
+      private final IpProtocol ipProtocol;
       private final RangeSet<Integer> ports;
 
       @ConstructorProperties({
-              "IPProtocol", "ports"
+              "IpProtocol", "ports"
       })
-      private Rule(IPProtocol IPProtocol, RangeSet<Integer> ports) {
-         this.ipProtocol = checkNotNull(IPProtocol);
+      private Rule(IpProtocol IpProtocol, RangeSet<Integer> ports) {
+         this.ipProtocol = checkNotNull(IpProtocol);
          this.ports = ports == null ? TreeRangeSet.<Integer>create() : ports;
       }
 
@@ -279,7 +263,7 @@ public final class Firewall extends Resource {
        *
        * @return this is the IP protocol that is allowed for this rule.
        */
-      public IPProtocol getIPProtocol() {
+      public IpProtocol getIpProtocol() {
          return ipProtocol;
       }
 
@@ -320,7 +304,7 @@ public final class Firewall extends Resource {
        */
       public Objects.ToStringHelper string() {
          return toStringHelper(this)
-                 .add("IPProtocol", ipProtocol).add("ports", ports);
+                 .add("IpProtocol", ipProtocol).add("ports", ports);
       }
 
       /**
@@ -341,14 +325,14 @@ public final class Firewall extends Resource {
 
       public static final class Builder {
 
-         private IPProtocol ipProtocol;
+         private IpProtocol ipProtocol;
          private RangeSet<Integer> ports = TreeRangeSet.create();
 
          /**
-          * @see org.jclouds.googlecomputeengine.domain.Firewall.Rule#getIPProtocol()
+          * @see org.jclouds.googlecomputeengine.domain.Firewall.Rule#getIpProtocol()
           */
-         public Builder IPProtocol(IPProtocol IPProtocol) {
-            this.ipProtocol = IPProtocol;
+         public Builder IpProtocol(IpProtocol IpProtocol) {
+            this.ipProtocol = IpProtocol;
             return this;
          }
 
@@ -384,7 +368,7 @@ public final class Firewall extends Resource {
          }
 
          public Builder fromFirewallRule(Rule firewallRule) {
-            return new Builder().IPProtocol(firewallRule.getIPProtocol()).ports(firewallRule.getPorts());
+            return new Builder().IpProtocol(firewallRule.getIpProtocol()).ports(firewallRule.getPorts());
          }
       }
 

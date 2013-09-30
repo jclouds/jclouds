@@ -114,6 +114,9 @@
                                     <goal>test</goal>
                                 </goals>
                                 <configuration>
+                                  <includes>
+                                    <include>**/GoogleComputeEngineSecurityGroupExtensionLiveTest.java</include>
+                                  </includes>
                                     <systemPropertyVariables>
                                         <test.google-compute-engine.identity>${test.google-compute-engine.identity}
                                         </test.google-compute-engine.identity>

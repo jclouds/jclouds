@@ -17,7 +17,6 @@
 package org.jclouds.googlecomputeengine.features;
 
 import static com.google.common.collect.Iterables.getOnlyElement;
-import static org.jclouds.googlecomputeengine.domain.Firewall.Rule.IPProtocol;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
 
@@ -28,6 +27,7 @@ import org.jclouds.googlecomputeengine.domain.Firewall;
 import org.jclouds.googlecomputeengine.internal.BaseGoogleComputeEngineApiLiveTest;
 import org.jclouds.googlecomputeengine.options.FirewallOptions;
 import org.jclouds.googlecomputeengine.options.ListOptions;
+import org.jclouds.net.domain.IpProtocol;
 import org.testng.annotations.Test;
 
 import com.google.common.collect.ImmutableSet;
@@ -57,7 +57,7 @@ public class FirewallApiLiveTest extends BaseGoogleComputeEngineApiLiveTest {
       FirewallOptions firewall = new FirewallOptions()
               .addAllowedRule(
                       Firewall.Rule.builder()
-                              .IPProtocol(IPProtocol.TCP)
+                              .IpProtocol(IpProtocol.TCP)
                               .addPort(22).build())
               .addSourceRange("10.0.0.0/8")
               .addSourceTag("tag1")
@@ -79,7 +79,7 @@ public class FirewallApiLiveTest extends BaseGoogleComputeEngineApiLiveTest {
               .addTargetTag("tag2")
               .allowedRules(ImmutableSet.of(
                       Firewall.Rule.builder()
-                              .IPProtocol(IPProtocol.TCP)
+                              .IpProtocol(IpProtocol.TCP)
                               .addPort(23)
                               .build()));
 
@@ -96,11 +96,11 @@ public class FirewallApiLiveTest extends BaseGoogleComputeEngineApiLiveTest {
               .network(getNetworkUrl(userProject.get(), FIREWALL_NETWORK_NAME))
               .allowedRules(ImmutableSet.of(
                       Firewall.Rule.builder()
-                              .IPProtocol(IPProtocol.TCP)
+                              .IpProtocol(IpProtocol.TCP)
                               .addPort(22)
                               .build(),
                       Firewall.Rule.builder()
-                              .IPProtocol(IPProtocol.TCP)
+                              .IpProtocol(IpProtocol.TCP)
                               .addPort(23)
                               .build()))
               .addSourceRange("10.0.0.0/8")
@@ -119,11 +119,11 @@ public class FirewallApiLiveTest extends BaseGoogleComputeEngineApiLiveTest {
               .network(getNetworkUrl(userProject.get(), FIREWALL_NETWORK_NAME))
               .allowedRules(ImmutableSet.of(
                       Firewall.Rule.builder()
-                              .IPProtocol(IPProtocol.TCP)
+                              .IpProtocol(IpProtocol.TCP)
                               .addPort(22)
                               .build(),
                       Firewall.Rule.builder()
-                              .IPProtocol(IPProtocol.TCP)
+                              .IpProtocol(IpProtocol.TCP)
                               .addPort(23)
                               .build()))
               .addSourceRange("10.0.0.0/8")

@@ -35,32 +35,43 @@ import org.jclouds.compute.ComputeServiceAdapter;
 import org.jclouds.compute.config.ComputeServiceAdapterContextModule;
 import org.jclouds.compute.domain.Hardware;
 import org.jclouds.compute.domain.NodeMetadata;
+import org.jclouds.compute.domain.SecurityGroup;
 import org.jclouds.compute.extensions.ImageExtension;
+import org.jclouds.compute.extensions.SecurityGroupExtension;
 import org.jclouds.compute.options.TemplateOptions;
 import org.jclouds.compute.strategy.PrioritizeCredentialsFromTemplate;
 import org.jclouds.domain.Location;
 import org.jclouds.googlecomputeengine.GoogleComputeEngineApi;
 import org.jclouds.googlecomputeengine.compute.GoogleComputeEngineService;
 import org.jclouds.googlecomputeengine.compute.GoogleComputeEngineServiceAdapter;
+import org.jclouds.googlecomputeengine.compute.extensions.GoogleComputeEngineSecurityGroupExtension;
 import org.jclouds.googlecomputeengine.compute.functions.BuildInstanceMetadata;
+import org.jclouds.googlecomputeengine.compute.functions.FirewallToIpPermission;
 import org.jclouds.googlecomputeengine.compute.functions.GoogleComputeEngineImageToImage;
 import org.jclouds.googlecomputeengine.compute.functions.InstanceInZoneToNodeMetadata;
 import org.jclouds.googlecomputeengine.compute.functions.MachineTypeInZoneToHardware;
+import org.jclouds.googlecomputeengine.compute.functions.NetworkToSecurityGroup;
 import org.jclouds.googlecomputeengine.compute.functions.OrphanedGroupsFromDeadNodes;
 import org.jclouds.googlecomputeengine.compute.functions.RegionToLocation;
 import org.jclouds.googlecomputeengine.compute.functions.ZoneToLocation;
+import org.jclouds.googlecomputeengine.compute.loaders.FindNetworkOrCreate;
 import org.jclouds.googlecomputeengine.compute.options.GoogleComputeEngineTemplateOptions;
 import org.jclouds.googlecomputeengine.compute.predicates.AllNodesInGroupTerminated;
 import org.jclouds.googlecomputeengine.compute.strategy.CreateNodesWithGroupEncodedIntoNameThenAddToSet;
 import org.jclouds.googlecomputeengine.compute.strategy.PopulateDefaultLoginCredentialsForImageStrategy;
 import org.jclouds.googlecomputeengine.compute.strategy.UseNodeCredentialsButOverrideFromTemplate;
 import org.jclouds.googlecomputeengine.config.UserProject;
+import org.jclouds.googlecomputeengine.domain.Firewall;
 import org.jclouds.googlecomputeengine.domain.Image;
 import org.jclouds.googlecomputeengine.domain.Instance;
 import org.jclouds.googlecomputeengine.domain.InstanceInZone;
 import org.jclouds.googlecomputeengine.domain.MachineTypeInZone;
+import org.jclouds.googlecomputeengine.domain.Network;
 import org.jclouds.googlecomputeengine.domain.Region;
 import org.jclouds.googlecomputeengine.domain.Zone;
+import org.jclouds.googlecomputeengine.domain.internal.NetworkAndAddressRange;
+import org.jclouds.googlecomputeengine.functions.CreateNetworkIfNeeded;
+import org.jclouds.net.domain.IpPermission;
 import org.jclouds.rest.AuthorizationException;
 import org.jclouds.rest.suppliers.MemoizedRetryOnTimeOutButNotOnAuthorizationExceptionSupplier;
 
@@ -69,6 +80,9 @@ import com.google.common.base.Function;
 import com.google.common.base.Optional;
 import com.google.common.base.Predicate;
 import com.google.common.base.Supplier;
+import com.google.common.cache.CacheBuilder;
+import com.google.common.cache.CacheLoader;
+import com.google.common.cache.LoadingCache;
 import com.google.common.collect.ImmutableMap;
 import com.google.inject.Injector;
 import com.google.inject.Provides;
@@ -105,6 +119,12 @@ public class GoogleComputeEngineServiceContextModule
       bind(new TypeLiteral<Function<Zone, Location>>() {})
               .to(ZoneToLocation.class);
 
+      bind(new TypeLiteral<Function<Firewall, Iterable<IpPermission>>>() {})
+              .to(FirewallToIpPermission.class);
+
+      bind(new TypeLiteral<Function<Network, SecurityGroup>>() {})
+              .to(NetworkToSecurityGroup.class);
+
       bind(new TypeLiteral<Function<TemplateOptions, ImmutableMap.Builder<String, String>>>() {})
               .to(BuildInstanceMetadata.class);
 
@@ -121,6 +141,15 @@ public class GoogleComputeEngineServiceContextModule
 
       bind(new TypeLiteral<Predicate<String>>() {}).to(AllNodesInGroupTerminated.class);
 
+      bind(new TypeLiteral<Function<NetworkAndAddressRange, Network>>() {})
+              .to(CreateNetworkIfNeeded.class);
+
+      bind(new TypeLiteral<CacheLoader<NetworkAndAddressRange, Network>>() {})
+              .to(FindNetworkOrCreate.class);
+
+      bind(new TypeLiteral<SecurityGroupExtension>() {})
+              .to(GoogleComputeEngineSecurityGroupExtension.class);
+
       bind(PrioritizeCredentialsFromTemplate.class).to(UseNodeCredentialsButOverrideFromTemplate.class);
 
       install(new LocationsFromComputeServiceAdapterModule<InstanceInZone, MachineTypeInZone, Image, Zone>() {});
@@ -131,7 +160,7 @@ public class GoogleComputeEngineServiceContextModule
    @Singleton
    @Memoized
    public Supplier<Map<URI, ? extends org.jclouds.compute.domain.Image>> provideImagesMap(
-           AtomicReference<AuthorizationException> authException,
+           AtomicReference <AuthorizationException> authException,
            final Supplier<Set<? extends org.jclouds.compute.domain.Image>> images,
            @Named(PROPERTY_SESSION_INTERVAL) long seconds) {
       return MemoizedRetryOnTimeOutButNotOnAuthorizationExceptionSupplier.create(authException,
@@ -219,9 +248,21 @@ public class GoogleComputeEngineServiceContextModule
               seconds, TimeUnit.SECONDS);
    }
 
+   @Provides
+   @Singleton
+   protected LoadingCache<NetworkAndAddressRange, Network> networkMap(
+           CacheLoader<NetworkAndAddressRange, Network> in) {
+      return CacheBuilder.newBuilder().build(in);
+   }
+
    @Override
    protected Optional<ImageExtension> provideImageExtension(Injector i) {
       return Optional.absent();
+   }
+
+   @Override
+   protected Optional<SecurityGroupExtension> provideSecurityGroupExtension(Injector i) {
+      return Optional.of(i.getInstance(SecurityGroupExtension.class));
    }
 
    @VisibleForTesting
