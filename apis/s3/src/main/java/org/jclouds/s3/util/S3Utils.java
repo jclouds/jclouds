@@ -22,15 +22,16 @@ import static com.google.common.collect.Iterables.any;
 
 import java.lang.annotation.Annotation;
 import java.util.Arrays;
+import java.util.List;
 import java.util.regex.Pattern;
 
 import org.jclouds.http.HttpRequest;
+import org.jclouds.reflect.Reflection2;
 import org.jclouds.rest.internal.GeneratedHttpRequest;
 import org.jclouds.s3.Bucket;
 import org.jclouds.s3.S3Client;
 
 import com.google.common.base.Predicate;
-import com.google.common.collect.ImmutableList;
 import com.google.common.reflect.Parameter;
 
 /**
@@ -77,7 +78,7 @@ public class S3Utils {
 
       String bucketName = null;
 
-      ImmutableList<Parameter> parameters = request.getInvocation().getInvokable().getParameters();
+      List<Parameter> parameters = Reflection2.getInvokableParameters(request.getInvocation().getInvokable());
       for (int i = 0; i < parameters.size(); i++) {
          if (any(Arrays.asList(parameters.get(i).getAnnotations()), ANNOTATIONTYPE_BUCKET)) {
             bucketName = (String) request.getInvocation().getArgs().get(i);

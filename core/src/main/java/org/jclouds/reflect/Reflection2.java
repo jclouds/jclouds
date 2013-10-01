@@ -195,6 +195,24 @@ public class Reflection2 {
             }
          });
 
+   private static final LoadingCache<Invokable<?, ?>, ImmutableList<Parameter>> invokableParamsCache =
+      CacheBuilder.newBuilder().maximumSize(100).build(new CacheLoader<Invokable<?, ?>, ImmutableList<Parameter>>() {
+            @Override
+            public ImmutableList<Parameter> load(Invokable<?, ?> invokable) {
+               return invokable.getParameters();
+            }
+         });
+
+   /**
+    * Returns the {@link Parameter}s associated with the given {@link Invokable}. This function is backed by a cache.
+    * 
+    * @param invokable
+    *           The {@link Invokable} we want to get Parameters from
+    */
+   public static List<Parameter> getInvokableParameters(final Invokable<?, ?> invokable) {
+      return invokableParamsCache.getUnchecked(invokable);
+   }
+
    private static class TypeTokenAndParameterTypes {
 
       protected TypeToken<?> type;

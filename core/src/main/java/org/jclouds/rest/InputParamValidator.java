@@ -26,7 +26,6 @@ import org.jclouds.predicates.Validator;
 import org.jclouds.reflect.Invocation;
 import org.jclouds.rest.annotations.ParamValidators;
 
-import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 import com.google.common.reflect.Parameter;
@@ -67,7 +66,7 @@ public class InputParamValidator {
     * @throws IllegalStateException
     *            if validation failed
     */
-   public void validateMethodParametersOrThrow(Invocation invocation, ImmutableList<Parameter> parameters) {
+   public void validateMethodParametersOrThrow(Invocation invocation, List<Parameter> parameters) {
       try {
          performMethodValidation(checkNotNull(invocation, "invocation"));
          performParameterValidation(invocation, checkNotNull(parameters, "parameters"));
@@ -105,7 +104,7 @@ public class InputParamValidator {
     * @param args
     *           arguments that correspond to the array of annotations
     */
-   private void performParameterValidation(Invocation invocation, ImmutableList<Parameter> parameters) {
+   private void performParameterValidation(Invocation invocation, List<Parameter> parameters) {
       for (Parameter param : parameters) {
          ParamValidators annotation = param.getAnnotation(ParamValidators.class);
          if (annotation == null)

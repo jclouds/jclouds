@@ -38,6 +38,7 @@ import static org.jclouds.http.HttpUtils.filterOutContentHeaders;
 import static org.jclouds.http.HttpUtils.tryFindHttpMethod;
 import static org.jclouds.http.Uris.uriBuilder;
 import static org.jclouds.io.Payloads.newPayload;
+import static org.jclouds.reflect.Reflection2.getInvokableParameters;
 import static org.jclouds.util.Strings2.replaceTokens;
 
 import java.lang.annotation.Annotation;
@@ -150,13 +151,6 @@ public class RestAnnotationProcessor implements Function<Invocation, HttpRequest
    private final GetAcceptHeaders getAcceptHeaders;
    private final Invocation caller;
    private final boolean stripExpectHeader;
-   private static final LoadingCache<Invokable<?, ?>, ImmutableList<Parameter>> invokableParamsCache =
-       CacheBuilder.newBuilder().maximumSize(100).build(new CacheLoader<Invokable<?, ?>, ImmutableList<Parameter>>() {
-               @Override
-               public ImmutableList<Parameter> load(Invokable<?, ?> invokable) {
-                   return invokable.getParameters();
-               }
-           });
 
    @Inject
    private RestAnnotationProcessor(Injector injector, @ApiVersion String apiVersion, @BuildVersion String buildVersion,
@@ -186,7 +180,7 @@ public class RestAnnotationProcessor implements Function<Invocation, HttpRequest
    @Override
    public GeneratedHttpRequest apply(Invocation invocation) {
       checkNotNull(invocation, "invocation");
-      inputParamValidator.validateMethodParametersOrThrow(invocation, invokableParamsCache.getUnchecked(invocation.getInvokable()));
+      inputParamValidator.validateMethodParametersOrThrow(invocation, getInvokableParameters(invocation.getInvokable()));
 
       Optional<URI> endpoint = Optional.absent();
       HttpRequest r = findOrNull(invocation.getArgs(), HttpRequest.class);
@@ -506,7 +500,7 @@ public class RestAnnotationProcessor implements Function<Invocation, HttpRequest
 
    private static Collection<Parameter> parametersWithAnnotation(Invokable<?, ?> invokable,
          final Class<? extends Annotation> annotationType) {
-      return filter(invokableParamsCache.getUnchecked(invokable), new Predicate<Parameter>() {
+      return filter(getInvokableParameters(invokable), new Predicate<Parameter>() {
          public boolean apply(Parameter in) {
             return in.isAnnotationPresent(annotationType);
          }
@@ -609,7 +603,7 @@ public class RestAnnotationProcessor implements Function<Invocation, HttpRequest
             if (!argType.isArray() && parameterType.isArray()) {// TODO: &&
                                                                 // invocation.getInvokable().isVarArgs())
                                                                 // {
-               int arrayLength = args.size() - invocation.getInvokable().getParameters().size() + 1;
+               int arrayLength = args.size() - getInvokableParameters(invocation.getInvokable()).size() + 1;
                if (arrayLength == 0)
                   break OUTER;
                arg = (Object[]) Array.newInstance(arg.getClass(), arrayLength);
@@ -631,7 +625,7 @@ public class RestAnnotationProcessor implements Function<Invocation, HttpRequest
             if (shouldBreak)
                break OUTER;
          } else {
-            if (position + 1 == invocation.getInvokable().getParameters().size() && entry.getType().isArray())// TODO:
+            if (position + 1 == getInvokableParameters(invocation.getInvokable()).size() && entry.getType().isArray())// TODO:
                                                                                                               // &&
                                                                                                               // invocation.getInvokable().isVarArgs())
                continue OUTER;
@@ -650,7 +644,7 @@ public class RestAnnotationProcessor implements Function<Invocation, HttpRequest
             @Override
             public Set<Integer> load(Invokable<?, ?> invokable) {
                Builder<Integer> toReturn = ImmutableSet.builder();
-               for (Parameter param : invokable.getParameters()) {
+               for (Parameter param : getInvokableParameters(invokable)) {
                   Class<?> type = param.getType().getRawType();
                   if (HttpRequestOptions.class.isAssignableFrom(type)
                         || HttpRequestOptions[].class.isAssignableFrom(type))
@@ -776,7 +770,7 @@ public class RestAnnotationProcessor implements Function<Invocation, HttpRequest
    }
 
    private boolean checkPresentOrNullable(Invocation invocation, String paramKey, int argIndex, Object arg) {
-      if (arg == null && !invocation.getInvokable().getParameters().get(argIndex).isAnnotationPresent(Nullable.class))
+      if (arg == null && !getInvokableParameters(invocation.getInvokable()).get(argIndex).isAnnotationPresent(Nullable.class))
          throw new NullPointerException(format("param{%s} for invocation %s.%s", paramKey, invocation.getInvokable()
                .getOwnerType().getRawType().getSimpleName(), invocation.getInvokable().getName()));
       return true;
