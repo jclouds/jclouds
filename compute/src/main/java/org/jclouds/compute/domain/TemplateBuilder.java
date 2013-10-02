@@ -16,10 +16,13 @@
  */
 package org.jclouds.compute.domain;
 
+import java.util.NoSuchElementException;
+
 import org.jclouds.compute.domain.internal.TemplateBuilderImpl;
 import org.jclouds.compute.options.TemplateOptions;
 
 import com.google.common.annotations.Beta;
+import com.google.common.base.Function;
 import com.google.common.base.Predicate;
 import com.google.inject.ImplementedBy;
 
@@ -157,7 +160,7 @@ public interface TemplateBuilder {
    TemplateBuilder imageDescriptionMatches(String imageDescriptionRegex);
 
    /**
-    * Configure this template to have an image description that matches the supplied condition
+    * Configure this template to have an image that matches the supplied condition
     * 
     * ex. 
     * 
@@ -167,6 +170,15 @@ public interface TemplateBuilder {
     */
    TemplateBuilder imageMatches(Predicate<Image> condition);
 
+   /**
+    * Configure this template with a specific preference function which operates on
+    * images which match the other criteria.
+    * <p>
+    * If no function is supplied, jclouds will select one according to an internal strategy.
+    * This strategy may change from version to version.
+    */
+   TemplateBuilder imageChooser(Function<Iterable<? extends Image>,Image> imageChooser);
+ 
    /**
     * Configure this template to require the minimum cores below
     */
