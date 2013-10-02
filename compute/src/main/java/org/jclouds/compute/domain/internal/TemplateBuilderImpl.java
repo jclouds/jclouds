@@ -115,6 +115,8 @@ public class TemplateBuilderImpl implements TemplateBuilder {
    @VisibleForTesting
    protected Predicate<Image> imagePredicate;
    @VisibleForTesting
+   protected Function<Iterable<? extends Image>, Image> imageChooser;
+   @VisibleForTesting
    protected double minCores;
    @VisibleForTesting
    protected int minRam;
@@ -482,6 +484,13 @@ public class TemplateBuilderImpl implements TemplateBuilder {
    };
    static final Ordering<Image> DEFAULT_IMAGE_ORDERING = new Ordering<Image>() {
       public int compare(Image left, Image right) {
+         /* This currently, and for some time, has *preferred* images whose fields are null,
+          * and prefers those which come last alphabetically.
+          * It seems preferable to take images whose fields are *not* null, ie nullsFirst;
+          * and to use something like the AlphaNum Algorithm then take the last
+          * (so "Ubuntu 13.04" would be preferred over "Ubuntu 9.10").
+          * However not changing it now as people may be surprised if the images they get back start changing.
+          */
          return ComparisonChain.start()
                .compare(left.getName(), right.getName(), Ordering.<String> natural().nullsLast())
                .compare(left.getVersion(), right.getVersion(), Ordering.<String> natural().nullsLast())
@@ -496,6 +505,25 @@ public class TemplateBuilderImpl implements TemplateBuilder {
                      Ordering.<String> natural().nullsLast()).result();
       }
    };
+   
+   @VisibleForTesting
+   // non-static for logging
+   final Function<Iterable<? extends Image>, Image> imageChooserFromOrdering(final Ordering<Image> ordering) {
+      return new Function<Iterable<? extends Image>, Image>() {
+         @Override
+         public Image apply(Iterable<? extends Image> input) {
+            List<? extends Image> maxImages = multiMax(ordering, input);
+            if (logger.isTraceEnabled())
+               logger.trace("<<   best images(%s)", transform(maxImages, imageToId));
+            return maxImages.get(maxImages.size() - 1);
+         }
+      };
+   }
+
+   @VisibleForTesting
+   Function<Iterable<? extends Image>, Image> defaultImageChooser() {
+       return imageChooserFromOrdering(DEFAULT_IMAGE_ORDERING);
+   }
 
    /**
     * {@inheritDoc}
@@ -765,6 +793,11 @@ public class TemplateBuilderImpl implements TemplateBuilder {
       return hardware;
    }
 
+   protected Function<Iterable<? extends Image>, Image> imageChooser() {
+      if (imageChooser != null) return imageChooser;
+      return defaultImageChooser();
+   }
+
    protected Ordering<Hardware> hardwareSorter() {
       Ordering<Hardware> hardwareOrdering = DEFAULT_SIZE_ORDERING;
       if (!biggest)
@@ -799,10 +832,7 @@ public class TemplateBuilderImpl implements TemplateBuilder {
          Iterable<? extends Image> matchingImages = filter(supportedImages, imagePredicate);
          if (logger.isTraceEnabled())
             logger.trace("<<   matched images(%s)", transform(matchingImages, imageToId));
-         List<? extends Image> maxImages = multiMax(DEFAULT_IMAGE_ORDERING, matchingImages);
-         if (logger.isTraceEnabled())
-            logger.trace("<<   best images(%s)", transform(maxImages, imageToId));
-         return maxImages.get(maxImages.size() - 1);
+         return imageChooser().apply(matchingImages);
       } catch (NoSuchElementException exception) {
          throwNoSuchElementExceptionAfterLoggingImageIds(format("no image matched params: %s", toString()),
                   supportedImages);
@@ -945,6 +975,15 @@ public class TemplateBuilderImpl implements TemplateBuilder {
     * {@inheritDoc}
     */
    @Override
+   public TemplateBuilderImpl imageChooser(Function<Iterable<? extends Image>,Image> imageChooser) {
+      this.imageChooser = imageChooser;
+      return this;
+   }
+
+   /**
+    * {@inheritDoc}
+    */
+   @Override
    public TemplateBuilder imageVersionMatches(String imageVersionRegex) {
       this.imageVersion = imageVersionRegex;
       return this;
@@ -1045,9 +1084,9 @@ public class TemplateBuilderImpl implements TemplateBuilder {
    @VisibleForTesting
    boolean nothingChangedExceptOptions() {
       return osFamily == null && location == null && imageId == null && hardwareId == null && hypervisor == null
-            && osName == null && imagePredicate == null && osDescription == null && imageVersion == null
-            && osVersion == null && osArch == null && os64Bit == null && imageName == null && imageDescription == null
-            && minCores == 0 && minRam == 0 && minDisk == 0 && !biggest && !fastest;
+            && osName == null && imagePredicate == null && imageChooser == null && osDescription == null 
+            && imageVersion == null && osVersion == null && osArch == null && os64Bit == null && imageName == null 
+            && imageDescription == null && minCores == 0 && minRam == 0 && minDisk == 0 && !biggest && !fastest;
    }
 
    /**
@@ -1076,6 +1115,7 @@ public class TemplateBuilderImpl implements TemplateBuilder {
       toString.add("imageDescription", imageDescription);
       toString.add("imageId", imageId);
       toString.add("imagePredicate", imagePredicate);
+      toString.add("imageChooser", imageChooser);
       toString.add("imageVersion", imageVersion);
       if (location != null)
          toString.add("locationId", location.getId());

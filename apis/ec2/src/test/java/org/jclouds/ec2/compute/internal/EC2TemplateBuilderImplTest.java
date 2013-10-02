@@ -90,8 +90,13 @@ public class EC2TemplateBuilderImplTest extends TemplateBuilderImplTest {
       return new EC2TemplateBuilderImpl(locations, images, sizes, Suppliers.ofInstance(defaultLocation),
             optionsProvider, templateBuilderProvider, Suppliers.<LoadingCache<RegionAndName, ? extends Image>>ofInstance(imageMap));
    }
-   
 
+   @Override
+   protected String getProviderFormatId(String uniqueLabel) {
+       return "us-east-1/"+uniqueLabel;
+   }
+   
+   
    @Override
    @Test
    public void testHardwareWithImageIdPredicateOnlyAcceptsImageWhenLocationNull() {
