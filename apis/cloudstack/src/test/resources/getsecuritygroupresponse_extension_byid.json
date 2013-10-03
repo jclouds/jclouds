@@ -1,0 +1,1 @@
+{ "listsecuritygroupsresponse" : { "securitygroup" : [  {"id":13,"name":"default","description":"description","account":"adrian","domainid":1,"domain":"ROOT","ingressrule":[{"ruleid":5,"protocol":"tcp","startport":22,"endport":22,"securitygroupname":"adriancole","account":"adrian"},{"ruleid":6,"protocol":"udp","startport":11,"endport":11,"cidr":"1.1.1.1/24"}]} ] } }

@@ -286,7 +286,7 @@ public class SecurityGroupApiTest extends BaseCloudStackApiTest<SecurityGroupApi
 
       assertRequestLineEquals(httpRequest,
             "GET http://localhost:8080/client/api?response=json&command=deleteSecurityGroup&id=5 HTTP/1.1");
-      assertNonPayloadHeadersEqual(httpRequest, "");
+      assertNonPayloadHeadersEqual(httpRequest, "Accept: application/json\n");
       assertPayloadEquals(httpRequest, null, null, false);
 
       assertResponseParserClassEquals(method, httpRequest, ReleasePayloadAndReturn.class);

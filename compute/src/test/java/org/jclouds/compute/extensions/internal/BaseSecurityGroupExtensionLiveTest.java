@@ -36,6 +36,7 @@ import org.jclouds.domain.Location;
 import org.jclouds.logging.Logger;
 import org.jclouds.net.domain.IpPermission;
 import org.jclouds.net.domain.IpProtocol;
+import org.testng.SkipException;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.Test;
 
@@ -65,6 +66,8 @@ public abstract class BaseSecurityGroupExtensionLiveTest extends BaseComputeServ
 
    protected String groupId;
 
+   protected boolean securityGroupsSupported = true;
+
    /**
     * Returns the template for the base node, override to test different templates.
     *
@@ -74,8 +77,15 @@ public abstract class BaseSecurityGroupExtensionLiveTest extends BaseComputeServ
       return view.getComputeService().templateBuilder().build();
    }
 
+   protected void skipIfSecurityGroupsNotSupported() {
+      if (!securityGroupsSupported) {
+         throw new SkipException("Test cannot run without security groups available.");
+      }
+   }
+
    @Test(groups = { "integration", "live" }, singleThreaded = true)
    public void testCreateSecurityGroup() throws RunNodesException, InterruptedException, ExecutionException {
+      skipIfSecurityGroupsNotSupported();
 
       ComputeService computeService = view.getComputeService();
 
@@ -96,6 +106,7 @@ public abstract class BaseSecurityGroupExtensionLiveTest extends BaseComputeServ
 
    @Test(groups = { "integration", "live" }, singleThreaded = true, dependsOnMethods = "testCreateSecurityGroup")
    public void testGetSecurityGroupById() throws RunNodesException, InterruptedException, ExecutionException {
+      skipIfSecurityGroupsNotSupported();
 
       ComputeService computeService = view.getComputeService();
 
@@ -114,6 +125,7 @@ public abstract class BaseSecurityGroupExtensionLiveTest extends BaseComputeServ
 
    @Test(groups = { "integration", "live" }, singleThreaded = true, dependsOnMethods = "testGetSecurityGroupById")
    public void testAddIpPermission() {
+      skipIfSecurityGroupsNotSupported();
 
       ComputeService computeService = view.getComputeService();
 
@@ -143,6 +155,7 @@ public abstract class BaseSecurityGroupExtensionLiveTest extends BaseComputeServ
    
    @Test(groups = { "integration", "live" }, singleThreaded = true, dependsOnMethods = "testAddIpPermission")
    public void testRemoveIpPermission() {
+      skipIfSecurityGroupsNotSupported();
 
       ComputeService computeService = view.getComputeService();
 
@@ -172,6 +185,7 @@ public abstract class BaseSecurityGroupExtensionLiveTest extends BaseComputeServ
 
    @Test(groups = { "integration", "live" }, singleThreaded = true, dependsOnMethods = "testRemoveIpPermission")
    public void testAddIpPermissionsFromSpec() {
+      skipIfSecurityGroupsNotSupported();
 
       ComputeService computeService = view.getComputeService();
 
@@ -274,6 +288,7 @@ public abstract class BaseSecurityGroupExtensionLiveTest extends BaseComputeServ
    /*
    @Test(groups = { "integration", "live" }, singleThreaded = true, dependsOnMethods = "testAddIpPermissionsFromSpec")
    public void testCreateNodeWithSecurityGroup() throws RunNodesException, InterruptedException, ExecutionException {
+      skipIfSecurityGroupsNotSupported();
 
       ComputeService computeService = view.getComputeService();
 
@@ -310,6 +325,7 @@ public abstract class BaseSecurityGroupExtensionLiveTest extends BaseComputeServ
    // instance is still floating around in EC2. - abayer, 6/14/13
    @Test(groups = { "integration", "live" }, singleThreaded = true, dependsOnMethods = "testAddIpPermissionsFromSpec")
    public void testDeleteSecurityGroup() {
+      skipIfSecurityGroupsNotSupported();
 
       ComputeService computeService = view.getComputeService();
 
@@ -343,17 +359,17 @@ public abstract class BaseSecurityGroupExtensionLiveTest extends BaseComputeServ
 
 
    private void cleanup() {
-      ComputeService computeService = view.getComputeService();
+      if (securityGroupsSupported) {
+         ComputeService computeService = view.getComputeService();
 
-      Location location = getNodeTemplate().getLocation();
+         Optional<SecurityGroupExtension> securityGroupExtension = computeService.getSecurityGroupExtension();
 
-      Optional<SecurityGroupExtension> securityGroupExtension = computeService.getSecurityGroupExtension();
+         if (securityGroupExtension.isPresent()) {
+            Optional<SecurityGroup> group = getGroup(securityGroupExtension.get());
 
-      if (securityGroupExtension.isPresent()) {
-         Optional<SecurityGroup> group = getGroup(securityGroupExtension.get());
-
-         if (group.isPresent()) {
-            securityGroupExtension.get().removeSecurityGroup(group.get().getId());
+            if (group.isPresent()) {
+               securityGroupExtension.get().removeSecurityGroup(group.get().getId());
+            }
          }
       }
    }

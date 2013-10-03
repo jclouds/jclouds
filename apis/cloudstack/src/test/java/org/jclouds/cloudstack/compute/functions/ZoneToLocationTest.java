@@ -41,12 +41,12 @@ import com.google.common.collect.Iterables;
 @Test(singleThreaded = true, groups = "unit")
 public class ZoneToLocationTest {
 
-   static JustProvider justProvider = new JustProvider("cloudstack", Suppliers.ofInstance(URI.create("foo")),
+   public static final JustProvider justProvider = new JustProvider("cloudstack", Suppliers.ofInstance(URI.create("foo")),
             ImmutableSet.<String> of());
-   static ZoneToLocation function = new ZoneToLocation(justProvider);
-   static Location one = new LocationBuilder().parent(Iterables.get(justProvider.get(), 0)).scope(LocationScope.ZONE)
+   public static final ZoneToLocation function = new ZoneToLocation(justProvider);
+   public static final Location one = new LocationBuilder().parent(Iterables.get(justProvider.get(), 0)).scope(LocationScope.ZONE)
          .description("San Jose 1").id("1").build();
-   static Location two = new LocationBuilder().parent(Iterables.get(justProvider.get(), 0)).scope(LocationScope.ZONE)
+   public static final Location two = new LocationBuilder().parent(Iterables.get(justProvider.get(), 0)).scope(LocationScope.ZONE)
          .description("Chicago").id("2").build();
 
    @Test

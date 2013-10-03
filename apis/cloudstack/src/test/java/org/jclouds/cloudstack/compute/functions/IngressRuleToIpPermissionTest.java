@@ -55,7 +55,7 @@ public class IngressRuleToIpPermissionTest {
       assertEquals(convertedPerm.getFromPort(), ruleToConvert.getStartPort());
       assertEquals(convertedPerm.getToPort(), ruleToConvert.getEndPort());
       assertEquals(convertedPerm.getCidrBlocks(), ImmutableSet.of("0.0.0.0/0"));
-      assertTrue(convertedPerm.getTenantIdGroupNamePairs().size() == 0);
+      assertTrue(convertedPerm.getTenantIdGroupNamePairs().size() == 1);
       assertTrue(convertedPerm.getGroupIds().size() == 0);
    }
 }

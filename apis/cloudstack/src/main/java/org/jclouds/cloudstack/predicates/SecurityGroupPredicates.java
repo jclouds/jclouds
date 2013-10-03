@@ -19,11 +19,14 @@ package org.jclouds.cloudstack.predicates;
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.base.Predicates.alwaysTrue;
 
+import java.util.Set;
+
 import org.jclouds.cloudstack.domain.IngressRule;
 import org.jclouds.cloudstack.domain.SecurityGroup;
 
 import com.google.common.base.Predicate;
 import com.google.common.collect.Iterables;
+import com.google.common.collect.Multimap;
 
 /**
  * 
@@ -155,6 +158,82 @@ public class SecurityGroupPredicates {
          @Override
          public String toString() {
             return "nameMatches(" + name + ")";
+         }
+      };
+   }
+
+   /**
+    * matches IngressRules with the given protocol, start and end port, and
+    * any of the given CIDRs.
+    *
+    * @param protocol
+    * @param startPort
+    * @param endPort
+    * @param cidrs
+    *
+    * @return predicate that matches as described
+    */
+   public static Predicate<IngressRule> ruleCidrMatches(final String protocol,
+                                                        final int startPort,
+                                                        final int endPort,
+                                                        final Set<String> cidrs) {
+      checkNotNull(protocol, "protocol");
+      checkNotNull(cidrs, "cidrs");
+
+      return new Predicate<IngressRule>() {
+         @Override
+         public boolean apply(IngressRule rule) {
+            return protocol.equals(rule.getProtocol())
+                    && startPort == rule.getStartPort()
+                    && endPort == rule.getEndPort()
+                    && cidrs.contains(rule.getCIDR());
+         }
+
+         @Override
+         public String toString() {
+            return "ruleCidrMatches(" + protocol
+                    + "," + startPort
+                    + "," + endPort
+                    + ",[" + cidrs
+                    + "])";
+         }
+      };
+   }
+
+   /**
+    * matches IngressRules with the given protocol, start and end port, and
+    * any of the given account/security group name pairs.
+    *
+    * @param protocol
+    * @param startPort
+    * @param endPort
+    * @param accountGroupNames
+    *
+    * @return predicate that matches as described
+    */
+   public static Predicate<IngressRule> ruleGroupMatches(final String protocol,
+                                                         final int startPort,
+                                                         final int endPort,
+                                                         final Multimap<String,String> accountGroupNames) {
+      checkNotNull(protocol, "protocol");
+      checkNotNull(accountGroupNames, "accountGroupNames");
+
+      return new Predicate<IngressRule>() {
+         @Override
+         public boolean apply(IngressRule rule) {
+            return protocol.equals(rule.getProtocol())
+                    && startPort == rule.getStartPort()
+                    && endPort == rule.getEndPort()
+                    && accountGroupNames.containsEntry(rule.getAccount(), rule.getSecurityGroupName());
+         }
+
+         @Override
+         public String toString() {
+            return "ruleGroupMatches(" + protocol
+                    + "," + startPort
+                    + "," + endPort
+                    + ",[" + accountGroupNames
+                    + "])";
          }
       };
    }

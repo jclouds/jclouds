@@ -16,22 +16,22 @@
  */
 package org.jclouds.cloudstack.predicates;
 
-import static org.jclouds.cloudstack.predicates.SecurityGroupPredicates.portInRange;
 import static org.jclouds.cloudstack.predicates.SecurityGroupPredicates.hasCidr;
-import static org.jclouds.cloudstack.predicates.SecurityGroupPredicates.portInRangeForCidr;
 import static org.jclouds.cloudstack.predicates.SecurityGroupPredicates.nameEquals;
-import static org.testng.Assert.assertEquals;
+import static org.jclouds.cloudstack.predicates.SecurityGroupPredicates.portInRange;
+import static org.jclouds.cloudstack.predicates.SecurityGroupPredicates.portInRangeForCidr;
+import static org.jclouds.cloudstack.predicates.SecurityGroupPredicates.ruleCidrMatches;
+import static org.jclouds.cloudstack.predicates.SecurityGroupPredicates.ruleGroupMatches;
 import static org.testng.Assert.assertFalse;
 import static org.testng.Assert.assertTrue;
 
-import java.util.Set;
-
 import org.jclouds.cloudstack.domain.IngressRule;
 import org.jclouds.cloudstack.domain.SecurityGroup;
-import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
+import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.ImmutableSet;
+import com.google.common.collect.Iterables;
 
 /**
  * @author Andrew Bayer
@@ -86,5 +86,25 @@ public class SecurityGroupPredicatesTest {
       assertTrue(nameEquals("default").apply(group()));
       assertFalse(nameEquals("not-default").apply(group()));
    }
-   
+
+   @Test
+   public void testRuleCidrMatches() {
+      assertTrue(Iterables.any(group().getIngressRules(),
+              ruleCidrMatches("tcp", 40, 50, ImmutableSet.of("1.1.1.1/24"))));
+      assertFalse(Iterables.any(group().getIngressRules(),
+              ruleCidrMatches("tcp", 40, 50, ImmutableSet.of("2.2.2.2/24"))));
+   }
+
+   @Test
+   public void testRuleGroupMatches() {
+      assertTrue(Iterables.any(group().getIngressRules(),
+              ruleGroupMatches("tcp", 22, 22,
+                      ImmutableMultimap.<String,String>builder().put("adrian", "adriancole").build())));
+      assertFalse(Iterables.any(group().getIngressRules(),
+              ruleGroupMatches("tcp", 22, 22,
+                      ImmutableMultimap.<String,String>builder().put("adrian", "somegroup").build())));
+      assertFalse(Iterables.any(group().getIngressRules(),
+              ruleGroupMatches("tcp", 22, 22,
+                      ImmutableMultimap.<String,String>builder().put("someuser", "adriancole").build())));
+   }
 }

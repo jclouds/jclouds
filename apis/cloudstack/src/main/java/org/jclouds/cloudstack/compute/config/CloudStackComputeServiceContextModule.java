@@ -30,8 +30,8 @@ import javax.inject.Named;
 import javax.inject.Singleton;
 
 import org.jclouds.cloudstack.CloudStackApi;
-import org.jclouds.cloudstack.compute.CloudStackComputeService;
 import org.jclouds.cloudstack.compute.extensions.CloudStackImageExtension;
+import org.jclouds.cloudstack.compute.extensions.CloudStackSecurityGroupExtension;
 import org.jclouds.cloudstack.compute.functions.CloudStackSecurityGroupToSecurityGroup;
 import org.jclouds.cloudstack.compute.functions.IngressRuleToIpPermission;
 import org.jclouds.cloudstack.compute.functions.OrphanedGroupsByZoneId;
@@ -48,8 +48,8 @@ import org.jclouds.cloudstack.compute.strategy.BasicNetworkOptionsConverter;
 import org.jclouds.cloudstack.compute.strategy.CloudStackComputeServiceAdapter;
 import org.jclouds.cloudstack.compute.strategy.OptionsConverter;
 import org.jclouds.cloudstack.domain.FirewallRule;
-import org.jclouds.cloudstack.domain.IngressRule;
 import org.jclouds.cloudstack.domain.IPForwardingRule;
+import org.jclouds.cloudstack.domain.IngressRule;
 import org.jclouds.cloudstack.domain.Network;
 import org.jclouds.cloudstack.domain.NetworkType;
 import org.jclouds.cloudstack.domain.OSType;
@@ -78,6 +78,7 @@ import org.jclouds.compute.config.ComputeServiceAdapterContextModule;
 import org.jclouds.compute.domain.NodeMetadata;
 import org.jclouds.compute.domain.OperatingSystem;
 import org.jclouds.compute.extensions.ImageExtension;
+import org.jclouds.compute.extensions.SecurityGroupExtension;
 import org.jclouds.compute.options.TemplateOptions;
 import org.jclouds.domain.Location;
 import org.jclouds.net.domain.IpPermission;
@@ -99,8 +100,8 @@ import com.google.inject.Injector;
 import com.google.inject.Key;
 import com.google.inject.Provides;
 import com.google.inject.TypeLiteral;
-import com.google.inject.name.Names;
 import com.google.inject.assistedinject.FactoryModuleBuilder;
+import com.google.inject.name.Names;
 
 /**
  * 
@@ -150,8 +151,12 @@ public class CloudStackComputeServiceContextModule extends
       bind(new TypeLiteral<ImageExtension>() {
       }).to(CloudStackImageExtension.class);
 
+      bind(new TypeLiteral<SecurityGroupExtension>() {
+      }).to(CloudStackSecurityGroupExtension.class);
+
       // to have the compute service adapter override default locations
-      install(new LocationsFromComputeServiceAdapterModule<VirtualMachine, ServiceOffering, Template, Zone>(){});
+      install(new LocationsFromComputeServiceAdapterModule<VirtualMachine, ServiceOffering, Template, Zone>() {
+      });
    }
    
 
@@ -272,4 +277,8 @@ public class CloudStackComputeServiceContextModule extends
       return Optional.of(i.getInstance(ImageExtension.class));
    }
 
+   @Override
+   protected Optional<SecurityGroupExtension> provideSecurityGroupExtension(Injector i) {
+      return Optional.of(i.getInstance(SecurityGroupExtension.class));
+   }
 }

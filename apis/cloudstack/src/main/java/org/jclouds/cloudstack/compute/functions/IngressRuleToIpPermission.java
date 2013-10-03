@@ -48,8 +48,13 @@ public class IngressRuleToIpPermission implements Function<IngressRule, IpPermis
       builder.ipProtocol(IpProtocol.fromValue(rule.getProtocol()));
       builder.fromPort(rule.getStartPort());
       builder.toPort(rule.getEndPort());
-      builder.cidrBlock(rule.getCIDR());
-      
+      if (rule.getCIDR() != null) {
+         builder.cidrBlock(rule.getCIDR());
+      }
+      if (rule.getSecurityGroupName() != null
+              && rule.getAccount() != null) {
+         builder.tenantIdGroupNamePair(rule.getAccount(), rule.getSecurityGroupName());
+      }
       return builder.build();
    }
 }
