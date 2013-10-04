@@ -41,10 +41,10 @@ import org.testng.annotations.Test;
 public class RegionOperationApiExpectTest extends BaseGoogleComputeEngineApiExpectTest {
 
    private static final String OPERATIONS_URL_PREFIX = "https://www.googleapis" +
-           ".com/compute/v1beta15/projects/myproject/regions/us-central1/operations";
+           ".com/compute/v1beta16/projects/myproject/regions/us-central1/operations";
 
    private static final String DELETE_OPERATIONS_URL_PREFIX = "https://www.googleapis" +
-           ".com/compute/v1beta15/projects/myproject/regions/us-central1/operations";
+           ".com/compute/v1beta16/projects/myproject/regions/us-central1/operations";
 
    public static final HttpRequest GET_OPERATION_REQUEST = HttpRequest
            .builder()
@@ -60,11 +60,11 @@ public class RegionOperationApiExpectTest extends BaseGoogleComputeEngineApiExpe
       SimpleDateFormatDateService dateService = new SimpleDateFormatDateService();
       return Operation.builder().id("13053095055850848306")
               .selfLink(URI.create("https://www.googleapis" +
-                      ".com/compute/v1beta15/projects/myproject/regions/us-central1/operations/operation-1354084865060-4cf88735faeb8" +
+                      ".com/compute/v1beta16/projects/myproject/regions/us-central1/operations/operation-1354084865060-4cf88735faeb8" +
                       "-bbbb12cb"))
               .name("operation-1354084865060-4cf88735faeb8-bbbb12cb")
               .targetLink(URI.create("https://www.googleapis" +
-                      ".com/compute/v1beta15/projects/myproject/regions/us-central1/addresses/test-address"))
+                      ".com/compute/v1beta16/projects/myproject/regions/us-central1/addresses/test-address"))
               .targetId("13053094017547040099")
               .status(Operation.Status.DONE)
               .user("user@developer.gserviceaccount.com")
@@ -73,7 +73,7 @@ public class RegionOperationApiExpectTest extends BaseGoogleComputeEngineApiExpe
               .startTime(dateService.iso8601DateParse("2012-11-28T06:41:05.142"))
               .endTime(dateService.iso8601DateParse("2012-11-28T06:41:06.142"))
               .operationType("insert")
-              .region(URI.create("https://www.googleapis.com/compute/v1beta15/projects/myproject/regions/us-central1"))
+              .region(URI.create("https://www.googleapis.com/compute/v1beta16/projects/myproject/regions/us-central1"))
               .build();
    }
 
@@ -81,7 +81,7 @@ public class RegionOperationApiExpectTest extends BaseGoogleComputeEngineApiExpe
       return ListPage.<Operation>builder()
               .kind(Resource.Kind.OPERATION_LIST)
               .id("projects/myproject/regions/us-central1/operations")
-              .selfLink(URI.create("https://www.googleapis.com/compute/v1beta15/projects/myproject/regions/us-central1/operations"))
+              .selfLink(URI.create("https://www.googleapis.com/compute/v1beta16/projects/myproject/regions/us-central1/operations"))
               .addItem(expected())
               .build();
    }

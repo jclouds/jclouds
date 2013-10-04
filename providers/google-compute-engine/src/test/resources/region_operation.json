@@ -1,9 +1,9 @@
 {
    "kind": "compute#operation",
    "id": "13053095055850848306",
-   "selfLink": "https://www.googleapis.com/compute/v1beta15/projects/myproject/regions/us-central1/operations/operation-1354084865060-4cf88735faeb8-bbbb12cb",
+   "selfLink": "https://www.googleapis.com/compute/v1beta16/projects/myproject/regions/us-central1/operations/operation-1354084865060-4cf88735faeb8-bbbb12cb",
    "name": "operation-1354084865060-4cf88735faeb8-bbbb12cb",
-   "targetLink": "https://www.googleapis.com/compute/v1beta15/projects/myproject/regions/us-central1/addresses/test-address",
+   "targetLink": "https://www.googleapis.com/compute/v1beta16/projects/myproject/regions/us-central1/addresses/test-address",
    "targetId": "13053094017547040099",
    "status": "DONE",
    "user": "user@developer.gserviceaccount.com",
@@ -12,5 +12,5 @@
    "startTime": "2012-11-28T06:41:05.142",
    "endTime": "2012-11-28T06:41:06.142",
    "operationType": "insert",
-   "region": "https://www.googleapis.com/compute/v1beta15/projects/myproject/regions/us-central1"
+   "region": "https://www.googleapis.com/compute/v1beta16/projects/myproject/regions/us-central1"
 }

@@ -44,7 +44,7 @@ import com.google.inject.name.Names;
  */
 public class BaseGoogleComputeEngineApiLiveTest extends BaseApiLiveTest<GoogleComputeEngineApi> {
 
-   protected static final String API_URL_PREFIX = "https://www.googleapis.com/compute/v1beta15/projects/";
+   protected static final String API_URL_PREFIX = "https://www.googleapis.com/compute/v1beta16/projects/";
    protected static final String ZONE_API_URL_SUFFIX = "/zones/";
    protected static final String DEFAULT_ZONE_NAME = "us-central1-a";
 

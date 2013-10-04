@@ -45,21 +45,21 @@ public class ParseInstanceTest extends BaseGoogleComputeEngineParseTest<Instance
               .id("13051190678907570425")
               .creationTimestamp(new SimpleDateFormatDateService().iso8601DateParse("2012-11-25T23:48:20.758"))
               .selfLink(URI.create("https://www.googleapis" +
-                      ".com/compute/v1beta15/projects/myproject/zones/us-central1-a/instances/test-0"))
+                      ".com/compute/v1beta16/projects/myproject/zones/us-central1-a/instances/test-0"))
               .description("desc")
               .name("test-0")
               .image(URI.create("https://www.googleapis" +
-                      ".com/compute/v1beta15/projects/google/global/images/gcel-12-04-v20121106"))
-              .machineType(URI.create("https://www.googleapis.com/compute/v1beta15/projects/myproject/zones/us-central1-a/machineTypes/n1" +
+                      ".com/compute/v1beta16/projects/google/global/images/gcel-12-04-v20121106"))
+              .machineType(URI.create("https://www.googleapis.com/compute/v1beta16/projects/myproject/zones/us-central1-a/machineTypes/n1" +
                       "-standard-1"))
               .status(Instance.Status.RUNNING)
-              .zone(URI.create("https://www.googleapis.com/compute/v1beta15/projects/myproject/zones/us-central1-a"))
+              .zone(URI.create("https://www.googleapis.com/compute/v1beta16/projects/myproject/zones/us-central1-a"))
               .addNetworkInterface(
                       Instance.NetworkInterface.builder()
                               .name("nic0")
                               .networkIP("10.240.121.115")
                               .network(URI.create("https://www.googleapis" +
-                                      ".com/compute/v1beta15/projects/myproject/global/networks/default"))
+                                      ".com/compute/v1beta16/projects/myproject/global/networks/default"))
                               .build()
               )
               .addDisk(
@@ -68,7 +68,7 @@ public class ParseInstanceTest extends BaseGoogleComputeEngineParseTest<Instance
                               .mode(Instance.PersistentAttachedDisk.Mode.READ_WRITE)
                               .deviceName("test")
                               .source(URI.create("https://www.googleapis" +
-                                      ".com/compute/v1beta15/projects/myproject/zones/us-central1-a/disks/test"))
+                                      ".com/compute/v1beta16/projects/myproject/zones/us-central1-a/disks/test"))
                               .build()
               )
               .tags(Instance.Tags.builder().fingerprint("abcd").addItem("aTag").build())

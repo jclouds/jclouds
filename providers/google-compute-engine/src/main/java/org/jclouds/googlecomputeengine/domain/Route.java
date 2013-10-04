@@ -37,7 +37,7 @@ import com.google.common.collect.ImmutableSet;
  * Represents a route resource.
  *
  * @author Andrew Bayer
- * @see <a href="https://developers.google.com/compute/docs/reference/v1beta15/routes"/>
+ * @see <a href="https://developers.google.com/compute/docs/reference/v1beta16/routes"/>
  */
 @Beta
 public final class Route extends Resource {

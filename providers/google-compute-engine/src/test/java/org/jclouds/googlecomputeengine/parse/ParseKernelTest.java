@@ -43,7 +43,7 @@ public class ParseKernelTest extends BaseGoogleComputeEngineParseTest<Kernel> {
       return Kernel.builder()
               .id("12941177846308850718")
               .creationTimestamp(new SimpleDateFormatDateService().iso8601DateParse("2012-07-16T21:42:16.950"))
-              .selfLink(URI.create("https://www.googleapis.com/compute/v1beta15/projects/google/global/kernels/gce-20110524"))
+              .selfLink(URI.create("https://www.googleapis.com/compute/v1beta16/projects/google/global/kernels/gce-20110524"))
               .name("gce-20110524")
               .description("DEPRECATED. Created Tue, 24 May 2011 00:48:22 +0000")
               .build();

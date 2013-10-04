@@ -45,14 +45,14 @@ public class ParseKernelListTest extends BaseGoogleComputeEngineParseTest<ListPa
       return ListPage.<Kernel>builder()
               .kind(Resource.Kind.KERNEL_LIST)
               .id("projects/google/global/kernels")
-              .selfLink(URI.create("https://www.googleapis.com/compute/v1beta15/projects/google/global/kernels"))
+              .selfLink(URI.create("https://www.googleapis.com/compute/v1beta16/projects/google/global/kernels"))
               .items(ImmutableSet.of(
                       Kernel.builder()
                               .id("12941177846308850718")
                               .creationTimestamp(new SimpleDateFormatDateService().iso8601DateParse
                                       ("2012-07-16T21:42:16.950"))
                               .selfLink(URI.create("https://www.googleapis" +
-                                      ".com/compute/v1beta15/projects/google/global/kernels/gce-20110524"))
+                                      ".com/compute/v1beta16/projects/google/global/kernels/gce-20110524"))
                               .name("gce-20110524")
                               .description("DEPRECATED. Created Tue, 24 May 2011 00:48:22 +0000").build(),
                       Kernel.builder()
@@ -60,12 +60,12 @@ public class ParseKernelListTest extends BaseGoogleComputeEngineParseTest<ListPa
                               .creationTimestamp(new SimpleDateFormatDateService().iso8601DateParse
                                       ("2012-07-16T21:42:31.166"))
                               .selfLink(URI.create("https://www.googleapis" +
-                                      ".com/compute/v1beta15/projects/google/global/kernels/gce-20110728"))
+                                      ".com/compute/v1beta16/projects/google/global/kernels/gce-20110728"))
                               .name("gce-20110728")
                               .description("DEPRECATED. Created Thu, 28 Jul 2011 16:44:38 +0000")
                               .deprecated(org.jclouds.googlecomputeengine.domain.Deprecated.builder()
                                       .state("OBSOLETE")
-                                      .replacement(URI.create("https://www.googleapis.com/compute/v1beta15/projects/google/global/kernels/gce-v20130603"))
+                                      .replacement(URI.create("https://www.googleapis.com/compute/v1beta16/projects/google/global/kernels/gce-v20130603"))
                                       .build())
                               .build()
               )).build();

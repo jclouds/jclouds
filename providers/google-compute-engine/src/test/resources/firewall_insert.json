@@ -1,1 +1,1 @@
-{"name":"%s","network":"https://www.googleapis.com/compute/v1beta15/projects/myproject/global/networks/%s","sourceRanges":[%s],"sourceTags":[%s],"targetTags":[%s],"allowed":[{"IPProtocol":"tcp","ports":[%s]}]}
+{"name":"%s","network":"https://www.googleapis.com/compute/v1beta16/projects/myproject/global/networks/%s","sourceRanges":[%s],"sourceTags":[%s],"targetTags":[%s],"allowed":[{"IPProtocol":"tcp","ports":[%s]}]}

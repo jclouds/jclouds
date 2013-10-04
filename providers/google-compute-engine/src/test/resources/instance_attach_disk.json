@@ -1,6 +1,6 @@
 {
     "type": "PERSISTENT",
     "mode": "READ_ONLY",
-    "source": "https://www.googleapis.com/compute/v1beta15/projects/myproject/zones/us-central1-a/disks/testimage1",
+    "source": "https://www.googleapis.com/compute/v1beta16/projects/myproject/zones/us-central1-a/disks/testimage1",
     "boot": false
 }

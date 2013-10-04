@@ -43,7 +43,7 @@ public class ParseZoneTest extends BaseGoogleComputeEngineParseTest<Zone> {
       return Zone.builder()
               .id("13020128040171887099")
               .creationTimestamp(new SimpleDateFormatDateService().iso8601DateParse("2012-10-19T16:42:54.131"))
-              .selfLink(URI.create("https://www.googleapis.com/compute/v1beta15/projects/myproject/zones/us-central1-a"))
+              .selfLink(URI.create("https://www.googleapis.com/compute/v1beta16/projects/myproject/zones/us-central1-a"))
               .name("us-central1-a")
               .description("us-central1-a")
               .status(Zone.Status.DOWN)

@@ -50,7 +50,7 @@ public class CreateNetworkIfNeededTest {
 
       Network network = Network.builder().IPv4Range("0.0.0.0/0")
               .id("abcd").name("this-network")
-              .selfLink(URI.create("https://www.googleapis.com/compute/v1beta15/projects/myproject/global/networks/this-network"))
+              .selfLink(URI.create("https://www.googleapis.com/compute/v1beta16/projects/myproject/global/networks/this-network"))
               .build();
 
       Operation createOp = createMock(Operation.class);
@@ -94,7 +94,7 @@ public class CreateNetworkIfNeededTest {
 
       Network network = Network.builder().IPv4Range("0.0.0.0/0")
               .id("abcd").name("this-network").gatewayIPv4("1.2.3.4")
-              .selfLink(URI.create("https://www.googleapis.com/compute/v1beta15/projects/myproject/global/networks/this-network"))
+              .selfLink(URI.create("https://www.googleapis.com/compute/v1beta16/projects/myproject/global/networks/this-network"))
               .build();
 
       Operation createOp = createMock(Operation.class);

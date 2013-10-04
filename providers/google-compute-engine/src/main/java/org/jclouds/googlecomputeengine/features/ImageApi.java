@@ -51,7 +51,7 @@ import org.jclouds.rest.annotations.Transform;
  * <p/>
  *
  * @author David Alves
- * @see <a href="https://developers.google.com/compute/docs/reference/v1beta15/images"/>
+ * @see <a href="https://developers.google.com/compute/docs/reference/v1beta16/images"/>
  */
 @SkipEncoding({'/', '='})
 @RequestFilters(OAuthAuthenticator.class)

@@ -43,7 +43,7 @@ public class ParseMachineTypeTest extends BaseGoogleComputeEngineParseTest<Machi
       return MachineType.builder()
               .id("12907738072351752276")
               .creationTimestamp(dateService.iso8601DateParse("2012-06-07T20:48:14.670"))
-              .selfLink(URI.create("https://www.googleapis.com/compute/v1beta15/projects/myproject/zones/us-central1-a/machineTypes/n1" +
+              .selfLink(URI.create("https://www.googleapis.com/compute/v1beta16/projects/myproject/zones/us-central1-a/machineTypes/n1" +
                       "-standard-1"))
               .zone("us-central1-a")
               .name("n1-standard-1")

@@ -33,7 +33,7 @@ import com.google.common.collect.ImmutableSet;
  * Represents a region resource.
  *
  * @author David Alves
- * @see <a href="https://developers.google.com/compute/docs/reference/v1beta15/regions"/>
+ * @see <a href="https://developers.google.com/compute/docs/reference/v1beta16/regions"/>
  */
 @Beta
 public final class Region extends Resource {
@@ -45,17 +45,19 @@ public final class Region extends Resource {
 
    private final Status status;
    private final Set<URI> zones;
+   private final Set<Quota> quotas;
 
    @ConstructorProperties({
            "id", "creationTimestamp", "selfLink", "name", "description", "status",
-           "zones"
+           "zones", "quotas"
    })
    private Region(String id, Date creationTimestamp, URI selfLink, String name, String description,
-                  Status status, Set<URI> zones) {
+                  Status status, Set<URI> zones, Set<Quota> quotas) {
       super(Kind.REGION, id, creationTimestamp, selfLink, name, description);
       this.status = checkNotNull(status, "status of %name", name);
       this.zones = zones == null ? ImmutableSet.<URI>of() : ImmutableSet
               .copyOf(zones);
+      this.quotas = quotas == null ? ImmutableSet.<Quota>of() : ImmutableSet.copyOf(quotas);
    }
 
    /**
@@ -74,12 +76,21 @@ public final class Region extends Resource {
    }
 
    /**
+    * @return quotas assigned to this project.
+    */
+   public Set<Quota> getQuotas() {
+      return quotas;
+   }
+
+
+   /**
     * {@inheritDoc}
     */
    protected Objects.ToStringHelper string() {
       return super.string()
               .add("status", status)
-              .add("zones", zones);
+              .add("zones", zones)
+              .add("quotas", quotas);
    }
 
    /**
@@ -102,6 +113,7 @@ public final class Region extends Resource {
 
       private Status status;
       private ImmutableSet.Builder<URI> zones = ImmutableSet.builder();
+      private ImmutableSet.Builder<Quota> quotas = ImmutableSet.builder();
 
       /**
        * @see org.jclouds.googlecomputeengine.domain.Region#getStatus()
@@ -127,6 +139,22 @@ public final class Region extends Resource {
          return this;
       }
 
+      /**
+       * @see Region#getQuotas()
+       */
+      public Builder addQuota(String metric, double usage, double limit) {
+         this.quotas.add(Quota.builder().metric(metric).usage(usage).limit(limit).build());
+         return this;
+      }
+
+      /**
+       * @see Region#getQuotas()
+       */
+      public Builder quotas(Set<Quota> quotas) {
+         this.quotas.addAll(checkNotNull(quotas));
+         return this;
+      }
+
       @Override
       protected Builder self() {
          return this;
@@ -134,13 +162,14 @@ public final class Region extends Resource {
 
       public Region build() {
          return new Region(super.id, super.creationTimestamp, super.selfLink, super.name,
-                 super.description, status, zones.build());
+                 super.description, status, zones.build(), quotas.build());
       }
 
       public Builder fromRegion(Region in) {
          return super.fromResource(in)
                  .status(in.getStatus())
-                 .zones(in.getZones());
+                 .zones(in.getZones())
+                 .quotas(in.getQuotas());
       }
    }
 

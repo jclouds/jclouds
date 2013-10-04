@@ -32,7 +32,7 @@ import com.google.common.base.Optional;
  * Represents an Address resource.
  *
  * @author Andrew Bayer
- * @see <a href="https://developers.google.com/compute/docs/reference/v1beta15/addresses"/>
+ * @see <a href="https://developers.google.com/compute/docs/reference/v1beta16/addresses"/>
  */
 @Beta
 public final class Address extends Resource {

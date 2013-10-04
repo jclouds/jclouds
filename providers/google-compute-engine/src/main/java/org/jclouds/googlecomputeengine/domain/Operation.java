@@ -38,7 +38,7 @@ import com.google.common.collect.ImmutableList;
  * Describes an operation being executed on some Resource
  *
  * @author David Alves
- * @see <a href="https://developers.google.com/compute/docs/reference/v1beta15/operations"/>
+ * @see <a href="https://developers.google.com/compute/docs/reference/v1beta16/operations"/>
  */
 @Beta
 public class Operation extends Resource {

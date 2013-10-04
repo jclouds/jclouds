@@ -40,7 +40,7 @@ public class ImageApiExpectTest extends BaseGoogleComputeEngineApiExpectTest {
            .builder()
            .method("GET")
            .endpoint("https://www.googleapis" +
-                   ".com/compute/v1beta15/projects/myproject/global/images")
+                   ".com/compute/v1beta16/projects/myproject/global/images")
            .addHeader("Accept", "application/json")
            .addHeader("Authorization", "Bearer " + TOKEN).build();
 
@@ -50,7 +50,7 @@ public class ImageApiExpectTest extends BaseGoogleComputeEngineApiExpectTest {
    public static final HttpRequest LIST_GOOGLE_IMAGES_REQUEST = HttpRequest
            .builder()
            .method("GET")
-           .endpoint("https://www.googleapis.com/compute/v1beta15/projects/google/global/images")
+           .endpoint("https://www.googleapis.com/compute/v1beta16/projects/google/global/images")
            .addHeader("Accept", "application/json")
            .addHeader("Authorization", "Bearer " + TOKEN).build();
 
@@ -63,7 +63,7 @@ public class ImageApiExpectTest extends BaseGoogleComputeEngineApiExpectTest {
               .builder()
               .method("GET")
               .endpoint("https://www.googleapis" +
-                      ".com/compute/v1beta15/projects/google/global/images/centos-6-2-v20120326")
+                      ".com/compute/v1beta16/projects/google/global/images/centos-6-2-v20120326")
               .addHeader("Accept", "application/json")
               .addHeader("Authorization", "Bearer " + TOKEN).build();
 
@@ -82,7 +82,7 @@ public class ImageApiExpectTest extends BaseGoogleComputeEngineApiExpectTest {
               .builder()
               .method("GET")
               .endpoint("https://www.googleapis" +
-                      ".com/compute/v1beta15/projects/google/global/images/centos-6-2-v20120326")
+                      ".com/compute/v1beta16/projects/google/global/images/centos-6-2-v20120326")
               .addHeader("Accept", "application/json")
               .addHeader("Authorization", "Bearer " + TOKEN).build();
 
@@ -99,7 +99,7 @@ public class ImageApiExpectTest extends BaseGoogleComputeEngineApiExpectTest {
               .builder()
               .method("DELETE")
               .endpoint("https://www.googleapis" +
-                      ".com/compute/v1beta15/projects/myproject/global/images/centos-6-2-v20120326")
+                      ".com/compute/v1beta16/projects/myproject/global/images/centos-6-2-v20120326")
               .addHeader("Accept", "application/json")
               .addHeader("Authorization", "Bearer " + TOKEN).build();
 
@@ -118,7 +118,7 @@ public class ImageApiExpectTest extends BaseGoogleComputeEngineApiExpectTest {
               .builder()
               .method("DELETE")
               .endpoint("https://www.googleapis" +
-                      ".com/compute/v1beta15/projects/myproject/global/images/centos-6-2-v20120326")
+                      ".com/compute/v1beta16/projects/myproject/global/images/centos-6-2-v20120326")
               .addHeader("Accept", "application/json")
               .addHeader("Authorization", "Bearer " + TOKEN).build();
 

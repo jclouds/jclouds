@@ -83,7 +83,7 @@ public class GoogleComputeEngineServiceExpectTest extends BaseGoogleComputeEngin
    private HttpRequest INSERT_NETWORK_REQUEST = HttpRequest
            .builder()
            .method("POST")
-           .endpoint("https://www.googleapis.com/compute/v1beta15/projects/myproject/global/networks")
+           .endpoint("https://www.googleapis.com/compute/v1beta16/projects/myproject/global/networks")
            .addHeader("Accept", "application/json")
            .addHeader("Authorization", "Bearer " + TOKEN)
            .payload(payloadFromStringWithContentType("{\"name\":\"jclouds-test\",\"IPv4Range\":\"10.0.0.0/8\"}",
@@ -93,11 +93,11 @@ public class GoogleComputeEngineServiceExpectTest extends BaseGoogleComputeEngin
    private HttpRequest INSERT_FIREWALL_REQUEST = HttpRequest
            .builder()
            .method("POST")
-           .endpoint("https://www.googleapis.com/compute/v1beta15/projects/myproject/global/firewalls")
+           .endpoint("https://www.googleapis.com/compute/v1beta16/projects/myproject/global/firewalls")
            .addHeader("Accept", "application/json")
            .addHeader("Authorization", "Bearer " + TOKEN)
            .payload(payloadFromStringWithContentType("{\"name\":\"jclouds-test\",\"network\":\"https://www.googleapis" +
-                   ".com/compute/v1beta15/projects/myproject/global/networks/jclouds-test\"," +
+                   ".com/compute/v1beta16/projects/myproject/global/networks/jclouds-test\"," +
                    "\"sourceRanges\":[\"10.0.0.0/8\",\"0.0.0.0/0\"],\"sourceTags\":[\"aTag\"],\"allowed\":[{\"IPProtocol\":\"tcp\"," +
                    "\"ports\":[\"22\"]}," +
                    "{\"IPProtocol\":\"udp\",\"ports\":[\"22\"]}]}",
@@ -110,7 +110,7 @@ public class GoogleComputeEngineServiceExpectTest extends BaseGoogleComputeEngin
                    " \"id\": \"13024414170909937976\",\n" +
                    " \"creationTimestamp\": \"2012-10-24T20:13:19.967\",\n" +
                    " \"selfLink\": \"https://www.googleapis" +
-                   ".com/compute/v1beta15/projects/myproject/global/networks/jclouds-test\",\n" +
+                   ".com/compute/v1beta16/projects/myproject/global/networks/jclouds-test\",\n" +
                    " \"name\": \"jclouds-test\",\n" +
                    " \"description\": \"test network\",\n" +
                    " \"IPv4Range\": \"10.0.0.0/8\",\n" +
@@ -122,7 +122,7 @@ public class GoogleComputeEngineServiceExpectTest extends BaseGoogleComputeEngin
 
    private HttpRequest SET_TAGS_REQUEST = HttpRequest.builder()
            .method("POST")
-           .endpoint("https://www.googleapis.com/compute/v1beta15/projects/myproject/zones/us-central1-a/instances/test-1/setTags")
+           .endpoint("https://www.googleapis.com/compute/v1beta16/projects/myproject/zones/us-central1-a/instances/test-1/setTags")
            .addHeader("Accept", "application/json")
            .addHeader("Authorization", "Bearer " + TOKEN)
            .payload(payloadFromStringWithContentType("{\"items\":[\"aTag\"],\"fingerprint\":\"abcd\"}",
@@ -166,17 +166,17 @@ public class GoogleComputeEngineServiceExpectTest extends BaseGoogleComputeEngin
       return HttpRequest
               .builder()
               .method("POST")
-              .endpoint("https://www.googleapis.com/compute/v1beta15/projects/myproject/zones/us-central1-a/instances")
+              .endpoint("https://www.googleapis.com/compute/v1beta16/projects/myproject/zones/us-central1-a/instances")
               .addHeader("Accept", "application/json")
               .addHeader("Authorization", "Bearer " + TOKEN)
               .payload(payloadFromStringWithContentType("{\"name\":\"" + instanceName + "\"," +
                       "\"machineType\":\"https://www.googleapis" +
-                      ".com/compute/v1beta15/projects/myproject/zones/us-central1-a/machineTypes/n1-standard-1\"," +
+                      ".com/compute/v1beta16/projects/myproject/zones/us-central1-a/machineTypes/n1-standard-1\"," +
                       "\"image\":\"https://www.googleapis" +
-                      ".com/compute/v1beta15/projects/google/global/images/gcel-12-04-v20121106\"," +
+                      ".com/compute/v1beta16/projects/google/global/images/gcel-12-04-v20121106\"," +
                       "\"serviceAccounts\":[]," +
                       "\"networkInterfaces\":[{\"network\":\"https://www.googleapis" +
-                      ".com/compute/v1beta15/projects/myproject/global/networks/" + networkName + "\"," +
+                      ".com/compute/v1beta16/projects/myproject/global/networks/" + networkName + "\"," +
                       "\"accessConfigs\":[{\"type\":\"ONE_TO_ONE_NAT\"}]}]," +
                       "\"metadata\":{\"kind\":\"compute#metadata\",\"items\":[{\"key\":\"sshKeys\"," +
                       "\"value\":\"jclouds:" +
@@ -189,7 +189,7 @@ public class GoogleComputeEngineServiceExpectTest extends BaseGoogleComputeEngin
               .builder()
               .method("GET")
               .endpoint("https://www.googleapis" +
-                      ".com/compute/v1beta15/projects/myproject/zones/us-central1-a/instances/" + instanceName)
+                      ".com/compute/v1beta16/projects/myproject/zones/us-central1-a/instances/" + instanceName)
               .addHeader("Accept", "application/json")
               .addHeader("Authorization", "Bearer " + TOKEN).build();
    }
@@ -258,21 +258,21 @@ public class GoogleComputeEngineServiceExpectTest extends BaseGoogleComputeEngin
       HttpRequest deleteNodeRequest = HttpRequest.builder()
               .method("DELETE")
               .endpoint("https://www.googleapis" +
-                      ".com/compute/v1beta15/projects/myproject/zones/us-central1-a/instances/test-delete-networks")
+                      ".com/compute/v1beta16/projects/myproject/zones/us-central1-a/instances/test-delete-networks")
               .addHeader("Accept", "application/json")
               .addHeader("Authorization", "Bearer " + TOKEN).build();
 
       HttpRequest deleteFirewallRequest = HttpRequest.builder()
               .method("DELETE")
               .endpoint("https://www.googleapis" +
-                      ".com/compute/v1beta15/projects/myproject/global/firewalls/jclouds-test-delete")
+                      ".com/compute/v1beta16/projects/myproject/global/firewalls/jclouds-test-delete")
               .addHeader("Accept", "application/json")
               .addHeader("Authorization", "Bearer " + TOKEN).build();
 
       HttpRequest deleteNetworkReqquest = HttpRequest.builder()
               .method("DELETE")
               .endpoint("https://www.googleapis" +
-                      ".com/compute/v1beta15/projects/myproject/global/networks/jclouds-test-delete")
+                      ".com/compute/v1beta16/projects/myproject/global/networks/jclouds-test-delete")
               .addHeader("Accept", "application/json")
               .addHeader("Authorization", "Bearer " + TOKEN).build();
 

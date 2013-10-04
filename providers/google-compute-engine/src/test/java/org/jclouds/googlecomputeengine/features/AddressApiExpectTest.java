@@ -42,7 +42,7 @@ public class AddressApiExpectTest extends BaseGoogleComputeEngineApiExpectTest {
       HttpRequest get = HttpRequest
               .builder()
               .method("GET")
-              .endpoint("https://www.googleapis.com/compute/v1beta15/projects/myproject/regions/us-central1/addresses/test-ip1")
+              .endpoint("https://www.googleapis.com/compute/v1beta16/projects/myproject/regions/us-central1/addresses/test-ip1")
               .addHeader("Accept", "application/json")
               .addHeader("Authorization", "Bearer " + TOKEN).build();
 
@@ -60,7 +60,7 @@ public class AddressApiExpectTest extends BaseGoogleComputeEngineApiExpectTest {
       HttpRequest get = HttpRequest
               .builder()
               .method("GET")
-              .endpoint("https://www.googleapis.com/compute/v1beta15/projects/myproject/regions/us-central1/addresses/test-ip1")
+              .endpoint("https://www.googleapis.com/compute/v1beta16/projects/myproject/regions/us-central1/addresses/test-ip1")
               .addHeader("Accept", "application/json")
               .addHeader("Authorization", "Bearer " + TOKEN).build();
 
@@ -76,7 +76,7 @@ public class AddressApiExpectTest extends BaseGoogleComputeEngineApiExpectTest {
       HttpRequest insert = HttpRequest
               .builder()
               .method("POST")
-              .endpoint("https://www.googleapis.com/compute/v1beta15/projects/myproject/regions/us-central1/addresses")
+              .endpoint("https://www.googleapis.com/compute/v1beta16/projects/myproject/regions/us-central1/addresses")
               .addHeader("Accept", "application/json")
               .addHeader("Authorization", "Bearer " + TOKEN)
               .payload(payloadFromResourceWithContentType("/address_insert.json", MediaType.APPLICATION_JSON))
@@ -97,7 +97,7 @@ public class AddressApiExpectTest extends BaseGoogleComputeEngineApiExpectTest {
               .builder()
               .method("DELETE")
               .endpoint("https://www.googleapis" +
-                      ".com/compute/v1beta15/projects/myproject/regions/us-central1/addresses/test-ip1")
+                      ".com/compute/v1beta16/projects/myproject/regions/us-central1/addresses/test-ip1")
               .addHeader("Accept", "application/json")
               .addHeader("Authorization", "Bearer " + TOKEN).build();
 
@@ -116,7 +116,7 @@ public class AddressApiExpectTest extends BaseGoogleComputeEngineApiExpectTest {
               .builder()
               .method("DELETE")
               .endpoint("https://www.googleapis" +
-                      ".com/compute/v1beta15/projects/myproject/regions/us-central1/addresses/test-ip1")
+                      ".com/compute/v1beta16/projects/myproject/regions/us-central1/addresses/test-ip1")
               .addHeader("Accept", "application/json")
               .addHeader("Authorization", "Bearer " + TOKEN).build();
 
@@ -133,7 +133,7 @@ public class AddressApiExpectTest extends BaseGoogleComputeEngineApiExpectTest {
               .builder()
               .method("GET")
               .endpoint("https://www.googleapis" +
-                      ".com/compute/v1beta15/projects/myproject/regions/us-central1/addresses")
+                      ".com/compute/v1beta16/projects/myproject/regions/us-central1/addresses")
               .addHeader("Accept", "application/json")
               .addHeader("Authorization", "Bearer " + TOKEN).build();
 
@@ -152,7 +152,7 @@ public class AddressApiExpectTest extends BaseGoogleComputeEngineApiExpectTest {
               .builder()
               .method("GET")
               .endpoint("https://www.googleapis" +
-                      ".com/compute/v1beta15/projects/myproject/regions/us-central1/addresses")
+                      ".com/compute/v1beta16/projects/myproject/regions/us-central1/addresses")
               .addHeader("Accept", "application/json")
               .addHeader("Authorization", "Bearer " + TOKEN).build();
 

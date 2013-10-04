@@ -1,14 +1,14 @@
 {
    "kind": "compute#operationList",
    "id": "projects/myproject/global/operations",
-   "selfLink": "https://www.googleapis.com/compute/v1beta15/projects/myproject/global/operations",
+   "selfLink": "https://www.googleapis.com/compute/v1beta16/projects/myproject/global/operations",
    "items": [
       {
          "kind": "compute#operation",
          "id": "13053095055850848306",
-         "selfLink": "https://www.googleapis.com/compute/v1beta15/projects/myproject/global/operations/operation-1354084865060-4cf88735faeb8-bbbb12cb",
+         "selfLink": "https://www.googleapis.com/compute/v1beta16/projects/myproject/global/operations/operation-1354084865060-4cf88735faeb8-bbbb12cb",
          "name": "operation-1354084865060-4cf88735faeb8-bbbb12cb",
-         "targetLink": "https://www.googleapis.com/compute/v1beta15/projects/myproject/global/firewalls/jclouds-test-delete",
+         "targetLink": "https://www.googleapis.com/compute/v1beta16/projects/myproject/global/firewalls/jclouds-test-delete",
          "targetId": "13053094017547040099",
          "status": "DONE",
          "user": "user@developer.gserviceaccount.com",

@@ -37,7 +37,7 @@ import org.testng.annotations.Test;
 public class GlobalOperationApiExpectTest extends BaseGoogleComputeEngineApiExpectTest {
 
    private static final String OPERATIONS_URL_PREFIX = "https://www.googleapis" +
-           ".com/compute/v1beta15/projects/myproject/global/operations";
+           ".com/compute/v1beta16/projects/myproject/global/operations";
 
    public static final HttpRequest GET_GLOBAL_OPERATION_REQUEST = HttpRequest
            .builder()

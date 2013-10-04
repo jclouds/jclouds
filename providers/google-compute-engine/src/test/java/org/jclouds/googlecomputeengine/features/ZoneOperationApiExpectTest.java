@@ -41,7 +41,7 @@ import org.testng.annotations.Test;
 public class ZoneOperationApiExpectTest extends BaseGoogleComputeEngineApiExpectTest {
 
    private static final String OPERATIONS_URL_PREFIX = "https://www.googleapis" +
-           ".com/compute/v1beta15/projects/myproject/zones/us-central1-a/operations";
+           ".com/compute/v1beta16/projects/myproject/zones/us-central1-a/operations";
 
    public static final HttpRequest GET_ZONE_OPERATION_REQUEST = HttpRequest
            .builder()
@@ -57,11 +57,11 @@ public class ZoneOperationApiExpectTest extends BaseGoogleComputeEngineApiExpect
       SimpleDateFormatDateService dateService = new SimpleDateFormatDateService();
       return Operation.builder().id("13053095055850848306")
               .selfLink(URI.create("https://www.googleapis" +
-                      ".com/compute/v1beta15/projects/myproject/zones/us-central1-a/operations/operation-1354084865060-4cf88735faeb8" +
+                      ".com/compute/v1beta16/projects/myproject/zones/us-central1-a/operations/operation-1354084865060-4cf88735faeb8" +
                       "-bbbb12cb"))
               .name("operation-1354084865060-4cf88735faeb8-bbbb12cb")
               .targetLink(URI.create("https://www.googleapis" +
-                      ".com/compute/v1beta15/projects/myproject/zones/us-central1-a/instances/instance-api-live-test-instance"))
+                      ".com/compute/v1beta16/projects/myproject/zones/us-central1-a/instances/instance-api-live-test-instance"))
               .targetId("13053094017547040099")
               .status(Operation.Status.DONE)
               .user("user@developer.gserviceaccount.com")
@@ -70,7 +70,7 @@ public class ZoneOperationApiExpectTest extends BaseGoogleComputeEngineApiExpect
               .startTime(dateService.iso8601DateParse("2012-11-28T06:41:05.142"))
               .endTime(dateService.iso8601DateParse("2012-11-28T06:41:06.142"))
               .operationType("insert")
-              .zone(URI.create("https://www.googleapis.com/compute/v1beta15/projects/myproject/zones/us-central1-a"))
+              .zone(URI.create("https://www.googleapis.com/compute/v1beta16/projects/myproject/zones/us-central1-a"))
               .build();
    }
 
@@ -78,7 +78,7 @@ public class ZoneOperationApiExpectTest extends BaseGoogleComputeEngineApiExpect
       return ListPage.<Operation>builder()
               .kind(Resource.Kind.OPERATION_LIST)
               .id("projects/myproject/zones/us-central1-a/operations")
-              .selfLink(URI.create("https://www.googleapis.com/compute/v1beta15/projects/myproject/zones/us-central1-a/operations"))
+              .selfLink(URI.create("https://www.googleapis.com/compute/v1beta16/projects/myproject/zones/us-central1-a/operations"))
               .addItem(expected())
               .build();
    }

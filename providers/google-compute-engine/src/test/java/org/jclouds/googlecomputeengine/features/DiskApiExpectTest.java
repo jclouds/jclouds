@@ -42,7 +42,7 @@ public class DiskApiExpectTest extends BaseGoogleComputeEngineApiExpectTest {
       HttpRequest get = HttpRequest
               .builder()
               .method("GET")
-              .endpoint("https://www.googleapis.com/compute/v1beta15/projects/myproject/zones/us-central1-a/disks/testimage1")
+              .endpoint("https://www.googleapis.com/compute/v1beta16/projects/myproject/zones/us-central1-a/disks/testimage1")
               .addHeader("Accept", "application/json")
               .addHeader("Authorization", "Bearer " + TOKEN).build();
 
@@ -60,7 +60,7 @@ public class DiskApiExpectTest extends BaseGoogleComputeEngineApiExpectTest {
       HttpRequest get = HttpRequest
               .builder()
               .method("GET")
-              .endpoint("https://www.googleapis.com/compute/v1beta15/projects/myproject/zones/us-central1-a/disks/testimage1")
+              .endpoint("https://www.googleapis.com/compute/v1beta16/projects/myproject/zones/us-central1-a/disks/testimage1")
               .addHeader("Accept", "application/json")
               .addHeader("Authorization", "Bearer " + TOKEN).build();
 
@@ -76,7 +76,7 @@ public class DiskApiExpectTest extends BaseGoogleComputeEngineApiExpectTest {
       HttpRequest insert = HttpRequest
               .builder()
               .method("POST")
-              .endpoint("https://www.googleapis.com/compute/v1beta15/projects/myproject/zones/us-central1-a/disks")
+              .endpoint("https://www.googleapis.com/compute/v1beta16/projects/myproject/zones/us-central1-a/disks")
               .addHeader("Accept", "application/json")
               .addHeader("Authorization", "Bearer " + TOKEN)
               .payload(payloadFromResourceWithContentType("/disk_insert.json", MediaType.APPLICATION_JSON))
@@ -96,7 +96,7 @@ public class DiskApiExpectTest extends BaseGoogleComputeEngineApiExpectTest {
       HttpRequest createSnapshotRequest = HttpRequest
               .builder()
               .method("POST")
-              .endpoint("https://www.googleapis.com/compute/v1beta15/projects/myproject/zones/us-central1-a/disks"
+              .endpoint("https://www.googleapis.com/compute/v1beta16/projects/myproject/zones/us-central1-a/disks"
                       + "/testimage1/createSnapshot")
               .addHeader("Accept", "application/json")
               .addHeader("Authorization", "Bearer " + TOKEN)
@@ -117,7 +117,7 @@ public class DiskApiExpectTest extends BaseGoogleComputeEngineApiExpectTest {
       HttpRequest createSnapshotRequest = HttpRequest
               .builder()
               .method("POST")
-              .endpoint("https://www.googleapis.com/compute/v1beta15/projects/myproject/zones/us-central1-a/disks"
+              .endpoint("https://www.googleapis.com/compute/v1beta16/projects/myproject/zones/us-central1-a/disks"
                       + "/testimage1/createSnapshot")
               .addHeader("Accept", "application/json")
               .addHeader("Authorization", "Bearer " + TOKEN)
@@ -138,7 +138,7 @@ public class DiskApiExpectTest extends BaseGoogleComputeEngineApiExpectTest {
               .builder()
               .method("DELETE")
               .endpoint("https://www.googleapis" +
-                      ".com/compute/v1beta15/projects/myproject/zones/us-central1-a/disks/testimage1")
+                      ".com/compute/v1beta16/projects/myproject/zones/us-central1-a/disks/testimage1")
               .addHeader("Accept", "application/json")
               .addHeader("Authorization", "Bearer " + TOKEN).build();
 
@@ -157,7 +157,7 @@ public class DiskApiExpectTest extends BaseGoogleComputeEngineApiExpectTest {
               .builder()
               .method("DELETE")
               .endpoint("https://www.googleapis" +
-                      ".com/compute/v1beta15/projects/myproject/zones/us-central1-a/disks/testimage1")
+                      ".com/compute/v1beta16/projects/myproject/zones/us-central1-a/disks/testimage1")
               .addHeader("Accept", "application/json")
               .addHeader("Authorization", "Bearer " + TOKEN).build();
 
@@ -174,7 +174,7 @@ public class DiskApiExpectTest extends BaseGoogleComputeEngineApiExpectTest {
               .builder()
               .method("GET")
               .endpoint("https://www.googleapis" +
-                      ".com/compute/v1beta15/projects/myproject/zones/us-central1-a/disks")
+                      ".com/compute/v1beta16/projects/myproject/zones/us-central1-a/disks")
               .addHeader("Accept", "application/json")
               .addHeader("Authorization", "Bearer " + TOKEN).build();
 
@@ -193,7 +193,7 @@ public class DiskApiExpectTest extends BaseGoogleComputeEngineApiExpectTest {
               .builder()
               .method("GET")
               .endpoint("https://www.googleapis" +
-                      ".com/compute/v1beta15/projects/myproject/zones/us-central1-a/disks")
+                      ".com/compute/v1beta16/projects/myproject/zones/us-central1-a/disks")
               .addHeader("Accept", "application/json")
               .addHeader("Authorization", "Bearer " + TOKEN).build();
 

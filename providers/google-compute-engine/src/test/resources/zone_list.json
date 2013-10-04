@@ -1,13 +1,13 @@
 {
    "kind": "compute#zoneList",
    "id": "projects/myproject/zones",
-   "selfLink": "https://www.googleapis.com/compute/v1beta15/projects/myproject/zones",
+   "selfLink": "https://www.googleapis.com/compute/v1beta16/projects/myproject/zones",
    "items": [
       {
          "kind": "compute#zone",
          "id": "13020128040171887099",
          "creationTimestamp": "2012-10-19T16:42:54.131",
-         "selfLink": "https://www.googleapis.com/compute/v1beta15/projects/myproject/zones/us-central1-a",
+         "selfLink": "https://www.googleapis.com/compute/v1beta16/projects/myproject/zones/us-central1-a",
          "name": "us-central1-a",
          "description": "us-central1-a",
          "status": "DOWN",
@@ -24,7 +24,7 @@
          "kind": "compute#zone",
          "id": "13024414164050619686",
          "creationTimestamp": "2012-10-24T20:13:19.271",
-         "selfLink": "https://www.googleapis.com/compute/v1beta15/projects/myproject/zones/us-central1-b",
+         "selfLink": "https://www.googleapis.com/compute/v1beta16/projects/myproject/zones/us-central1-b",
          "name": "us-central1-b",
          "description": "us-central1-b",
          "status": "UP",

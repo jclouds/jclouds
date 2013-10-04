@@ -1,31 +1,125 @@
 {
     "kind": "compute#regionList",
-    "selfLink": "https://www.googleapis.com/compute/v1beta15/projects/myproject/regions",
+    "selfLink": "https://www.googleapis.com/compute/v1beta16/projects/myproject/regions",
     "id": "projects/myproject/regions",
     "items": [
         {
             "kind": "compute#region",
-            "selfLink": "https://www.googleapis.com/compute/v1beta15/projects/myproject/regions/us-central1",
+            "selfLink": "https://www.googleapis.com/compute/v1beta16/projects/myproject/regions/us-central1",
             "id": "12912210600542709766",
             "creationTimestamp": "2013-07-08T14:40:37.939-07:00",
             "name": "us-central1",
             "description": "us-central1",
             "status": "UP",
             "zones": [
-                "https://www.googleapis.com/compute/v1beta15/zones/us-central1-a",
-                "https://www.googleapis.com/compute/v1beta15/zones/us-central1-b"
+                "https://www.googleapis.com/compute/v1beta16/zones/us-central1-a",
+                "https://www.googleapis.com/compute/v1beta16/zones/us-central1-b"
+            ],
+            "quotas": [
+                {
+                    "metric": "INSTANCES",
+                    "usage": 0,
+                    "limit": 8
+                },
+                {
+                    "metric": "CPUS",
+                    "usage": 0,
+                    "limit": 8
+                },
+                {
+                    "metric": "EPHEMERAL_ADDRESSES",
+                    "usage": 0,
+                    "limit": 8
+                },
+                {
+                    "metric": "DISKS",
+                    "usage": 0,
+                    "limit": 8
+                },
+                {
+                    "metric": "DISKS_TOTAL_GB",
+                    "usage": 0,
+                    "limit": 100
+                },
+                {
+                    "metric": "SNAPSHOTS",
+                    "usage": 0,
+                    "limit": 1000
+                },
+                {
+                    "metric": "NETWORKS",
+                    "usage": 1,
+                    "limit": 5
+                },
+                {
+                    "metric": "FIREWALLS",
+                    "usage": 2,
+                    "limit": 100
+                },
+                {
+                    "metric": "IMAGES",
+                    "usage": 0,
+                    "limit": 100
+                }
             ]
         },
         {
             "kind": "compute#region",
-            "selfLink": "https://www.googleapis.com/compute/v1beta15/projects/myproject/regions/us-central2",
+            "selfLink": "https://www.googleapis.com/compute/v1beta16/projects/myproject/regions/us-central2",
             "id": "6396763663251190992",
             "creationTimestamp": "2013-07-08T14:40:37.939-07:00",
             "name": "us-central2",
             "description": "us-central2",
             "status": "UP",
             "zones": [
-                "https://www.googleapis.com/compute/v1beta15/zones/us-central2-a"
+                "https://www.googleapis.com/compute/v1beta16/zones/us-central2-a"
+            ],
+            "quotas": [
+                {
+                    "metric": "INSTANCES",
+                    "usage": 0,
+                    "limit": 8
+                },
+                {
+                    "metric": "CPUS",
+                    "usage": 0,
+                    "limit": 8
+                },
+                {
+                    "metric": "EPHEMERAL_ADDRESSES",
+                    "usage": 0,
+                    "limit": 8
+                },
+                {
+                    "metric": "DISKS",
+                    "usage": 0,
+                    "limit": 8
+                },
+                {
+                    "metric": "DISKS_TOTAL_GB",
+                    "usage": 0,
+                    "limit": 100
+                },
+                {
+                    "metric": "SNAPSHOTS",
+                    "usage": 0,
+                    "limit": 1000
+                },
+                {
+                    "metric": "NETWORKS",
+                    "usage": 1,
+                    "limit": 5
+                },
+                {
+                    "metric": "FIREWALLS",
+                    "usage": 2,
+                    "limit": 100
+                },
+                {
+                    "metric": "IMAGES",
+                    "usage": 0,
+                    "limit": 100
+                }
             ]
         }
     ]

@@ -40,7 +40,7 @@ public class GoogleComputeEngineErrorHandlerTest {
    public void test409MakesIllegalStateException() {
       assertCodeMakes(
               "POST",
-              URI.create("https://www.googleapis.com/compute/v1beta15"),
+              URI.create("https://www.googleapis.com/compute/v1beta16"),
               409,
               "HTTP/1.1 409 Conflict",
               "\"{\"code\":\"InvalidState\",\"message\":\"An incompatible transition has already been queued for this" +

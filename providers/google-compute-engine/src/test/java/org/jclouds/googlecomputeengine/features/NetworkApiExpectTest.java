@@ -41,7 +41,7 @@ public class NetworkApiExpectTest extends BaseGoogleComputeEngineApiExpectTest {
    public static final HttpRequest GET_NETWORK_REQUEST = HttpRequest
            .builder()
            .method("GET")
-           .endpoint("https://www.googleapis.com/compute/v1beta15/projects/myproject/global/networks/jclouds-test")
+           .endpoint("https://www.googleapis.com/compute/v1beta16/projects/myproject/global/networks/jclouds-test")
            .addHeader("Accept", "application/json")
            .addHeader("Authorization", "Bearer " + TOKEN).build();
 
@@ -61,7 +61,7 @@ public class NetworkApiExpectTest extends BaseGoogleComputeEngineApiExpectTest {
       HttpRequest get = HttpRequest
               .builder()
               .method("GET")
-              .endpoint("https://www.googleapis.com/compute/v1beta15/projects/myproject/global/networks/jclouds-test")
+              .endpoint("https://www.googleapis.com/compute/v1beta16/projects/myproject/global/networks/jclouds-test")
               .addHeader("Accept", "application/json")
               .addHeader("Authorization", "Bearer " + TOKEN).build();
 
@@ -77,7 +77,7 @@ public class NetworkApiExpectTest extends BaseGoogleComputeEngineApiExpectTest {
       HttpRequest insert = HttpRequest
               .builder()
               .method("POST")
-              .endpoint("https://www.googleapis.com/compute/v1beta15/projects/myproject/global/networks")
+              .endpoint("https://www.googleapis.com/compute/v1beta16/projects/myproject/global/networks")
               .addHeader("Accept", "application/json")
               .addHeader("Authorization", "Bearer " + TOKEN)
               .payload(payloadFromResourceWithContentType("/network_insert.json", MediaType.APPLICATION_JSON))
@@ -98,7 +98,7 @@ public class NetworkApiExpectTest extends BaseGoogleComputeEngineApiExpectTest {
               .builder()
               .method("DELETE")
               .endpoint("https://www.googleapis" +
-                      ".com/compute/v1beta15/projects/myproject/global/networks/jclouds-test")
+                      ".com/compute/v1beta16/projects/myproject/global/networks/jclouds-test")
               .addHeader("Accept", "application/json")
               .addHeader("Authorization", "Bearer " + TOKEN).build();
 
@@ -117,7 +117,7 @@ public class NetworkApiExpectTest extends BaseGoogleComputeEngineApiExpectTest {
               .builder()
               .method("DELETE")
               .endpoint("https://www.googleapis" +
-                      ".com/compute/v1beta15/projects/myproject/global/networks/jclouds-test")
+                      ".com/compute/v1beta16/projects/myproject/global/networks/jclouds-test")
               .addHeader("Accept", "application/json")
               .addHeader("Authorization", "Bearer " + TOKEN).build();
 
@@ -134,7 +134,7 @@ public class NetworkApiExpectTest extends BaseGoogleComputeEngineApiExpectTest {
               .builder()
               .method("GET")
               .endpoint("https://www.googleapis" +
-                      ".com/compute/v1beta15/projects/myproject/global/networks")
+                      ".com/compute/v1beta16/projects/myproject/global/networks")
               .addHeader("Accept", "application/json")
               .addHeader("Authorization", "Bearer " + TOKEN).build();
 
@@ -153,7 +153,7 @@ public class NetworkApiExpectTest extends BaseGoogleComputeEngineApiExpectTest {
               .builder()
               .method("GET")
               .endpoint("https://www.googleapis" +
-                      ".com/compute/v1beta15/projects/myproject/global/networks")
+                      ".com/compute/v1beta16/projects/myproject/global/networks")
               .addHeader("Accept", "application/json")
               .addHeader("Authorization", "Bearer " + TOKEN).build();
 

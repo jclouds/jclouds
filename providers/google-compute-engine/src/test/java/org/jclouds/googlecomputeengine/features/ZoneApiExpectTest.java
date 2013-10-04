@@ -34,7 +34,7 @@ import org.testng.annotations.Test;
 @Test(groups = "unit")
 public class ZoneApiExpectTest extends BaseGoogleComputeEngineApiExpectTest {
 
-   public static final String ZONES_URL_PREFIX = "https://www.googleapis.com/compute/v1beta15/projects/myproject/zones";
+   public static final String ZONES_URL_PREFIX = "https://www.googleapis.com/compute/v1beta16/projects/myproject/zones";
 
    public static final HttpRequest GET_ZONE_REQ = HttpRequest
            .builder()

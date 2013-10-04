@@ -1,13 +1,13 @@
 {
    "kind": "compute#machineTypeList",
-   "selfLink": "https://www.googleapis.com/compute/v1beta15/projects/abayer-jclouds-test1/zones/us-central1-b/machineTypes",
+   "selfLink": "https://www.googleapis.com/compute/v1beta16/projects/abayer-jclouds-test1/zones/us-central1-b/machineTypes",
    "id": "projects/abayer-jclouds-test1/zones/us-central1-b/machineTypes",
    "items": [
       {
          "kind": "compute#machineType",
          "id": "12907738072351752276",
          "creationTimestamp": "2012-06-07T20:48:14.670",
-         "selfLink": "https://www.googleapis.com/compute/v1beta15/projects/myproject/zones/us-central1-b/machineTypes/n1-standard-0",
+         "selfLink": "https://www.googleapis.com/compute/v1beta16/projects/myproject/zones/us-central1-b/machineTypes/n1-standard-0",
          "name": "n1-standard-0",
          "description": "1 vCPU, 3.75 GB RAM, and a 10 GB ephemeral root disk",
          "guestCpus": 1,
@@ -21,7 +21,7 @@
          "kind": "compute#machineType",
          "id": "12908560709887590691",
          "creationTimestamp": "2012-06-07T20:51:19.936",
-         "selfLink": "https://www.googleapis.com/compute/v1beta15/projects/myproject/zones/us-central1-b/machineTypes/n1-standard-8-d",
+         "selfLink": "https://www.googleapis.com/compute/v1beta16/projects/myproject/zones/us-central1-b/machineTypes/n1-standard-8-d",
          "name": "n1-standard-8-d",
          "description": "8 vCPUs, 30 GB RAM, a 10 GB ephemeral root disk, and 2 extra 1770 GB ephemeral disks",
          "guestCpus": 8,

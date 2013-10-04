@@ -49,7 +49,7 @@ import org.jclouds.rest.annotations.Transform;
  * Provides access to Operations via their REST API.
  *
  * @author David Alves
- * @see <a href="https://developers.google.com/compute/docs/reference/v1beta15/operations"/>
+ * @see <a href="https://developers.google.com/compute/docs/reference/v1beta16/operations"/>
  */
 @SkipEncoding({'/', '='})
 @RequestFilters(OAuthAuthenticator.class)

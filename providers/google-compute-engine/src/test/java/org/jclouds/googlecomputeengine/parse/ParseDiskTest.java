@@ -43,10 +43,10 @@ public class ParseDiskTest extends BaseGoogleComputeEngineParseTest<Disk> {
       return Disk.builder()
               .id("13050421646334304115")
               .creationTimestamp(new SimpleDateFormatDateService().iso8601DateParse("2012-11-25T01:38:48.306"))
-              .selfLink(URI.create("https://www.googleapis.com/compute/v1beta15/projects/myproject/zones/us-central1-a/disks/testimage1"))
+              .selfLink(URI.create("https://www.googleapis.com/compute/v1beta16/projects/myproject/zones/us-central1-a/disks/testimage1"))
               .name("testimage1")
               .sizeGb(1)
-              .zone(URI.create("https://www.googleapis.com/compute/v1beta15/projects/myproject/zones/us-central1-a"))
+              .zone(URI.create("https://www.googleapis.com/compute/v1beta16/projects/myproject/zones/us-central1-a"))
               .status("READY")
               .build();
    }

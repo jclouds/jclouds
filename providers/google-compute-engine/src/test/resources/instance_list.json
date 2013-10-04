@@ -1,25 +1,25 @@
 {
    "kind": "compute#instanceList",
    "id": "projects/myproject/zones/us-central1-a/instances",
-   "selfLink": "https://www.googleapis.com/compute/v1beta15/projects/myproject/zones/us-central1-a/instances",
+   "selfLink": "https://www.googleapis.com/compute/v1beta16/projects/myproject/zones/us-central1-a/instances",
    "items": [
       {
          "kind": "compute#instance",
          "id": "13051190678907570425",
          "description": "desc",
          "creationTimestamp": "2012-11-25T23:48:20.758",
-         "selfLink": "https://www.googleapis.com/compute/v1beta15/projects/myproject/zones/us-central1-a/instances/test-0",
+         "selfLink": "https://www.googleapis.com/compute/v1beta16/projects/myproject/zones/us-central1-a/instances/test-0",
          "name": "test-0",
-         "image": "https://www.googleapis.com/compute/v1beta15/projects/google/global/images/gcel-12-04-v20121106",
-         "machineType": "https://www.googleapis.com/compute/v1beta15/projects/myproject/zones/us-central1-a/machineTypes/n1-standard-1",
+         "image": "https://www.googleapis.com/compute/v1beta16/projects/google/global/images/gcel-12-04-v20121106",
+         "machineType": "https://www.googleapis.com/compute/v1beta16/projects/myproject/zones/us-central1-a/machineTypes/n1-standard-1",
          "status": "RUNNING",
-         "zone": "https://www.googleapis.com/compute/v1beta15/projects/myproject/zones/us-central1-a",
+         "zone": "https://www.googleapis.com/compute/v1beta16/projects/myproject/zones/us-central1-a",
          "networkInterfaces": [
             {
                "kind": "compute#instanceNetworkInterface",
                "name": "nic0",
                "networkIP": "10.240.121.115",
-               "network": "https://www.googleapis.com/compute/v1beta15/projects/myproject/global/networks/default"
+               "network": "https://www.googleapis.com/compute/v1beta16/projects/myproject/global/networks/default"
             }
          ],
          "disks": [
@@ -28,7 +28,7 @@
                "type": "PERSISTENT",
                "mode": "READ_WRITE",
                "deviceName": "test",
-               "source": "https://www.googleapis.com/compute/v1beta15/projects/myproject/zones/us-central1-a/disks/test",
+               "source": "https://www.googleapis.com/compute/v1beta16/projects/myproject/zones/us-central1-a/disks/test",
                "index": 0
             }
          ],

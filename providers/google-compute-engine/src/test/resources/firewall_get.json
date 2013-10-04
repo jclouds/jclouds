@@ -3,10 +3,10 @@
    "kind": "compute#firewall",
    "id": "12862241031274216284",
    "creationTimestamp": "2012-04-13T03:05:02.855",
-   "selfLink": "https://www.googleapis.com/compute/v1beta15/projects/myproject/global/firewalls/jclouds-test",
+   "selfLink": "https://www.googleapis.com/compute/v1beta16/projects/myproject/global/firewalls/jclouds-test",
    "name": "jclouds-test",
    "description": "Internal traffic from default allowed",
-   "network": "https://www.googleapis.com/compute/v1beta15/projects/myproject/global/networks/jclouds-test",
+   "network": "https://www.googleapis.com/compute/v1beta16/projects/myproject/global/networks/jclouds-test",
    "sourceRanges": [
       "10.0.0.0/8"
    ],

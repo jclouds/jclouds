@@ -1,17 +1,17 @@
 {
    "kind": "compute#firewallList",
    "id": "projects/google/firewalls",
-   "selfLink": "https://www.googleapis.com/compute/v1beta15/projects/google/global/firewalls",
+   "selfLink": "https://www.googleapis.com/compute/v1beta16/projects/google/global/firewalls",
    "items": [
       {
 
          "kind": "compute#firewall",
          "id": "12862241031274216284",
          "creationTimestamp": "2012-04-13T03:05:02.855",
-         "selfLink": "https://www.googleapis.com/compute/v1beta15/projects/myproject/global/firewalls/jclouds-test",
+         "selfLink": "https://www.googleapis.com/compute/v1beta16/projects/myproject/global/firewalls/jclouds-test",
          "name": "jclouds-test",
          "description": "Internal traffic from default allowed",
-         "network": "https://www.googleapis.com/compute/v1beta15/projects/myproject/global/networks/jclouds-test",
+         "network": "https://www.googleapis.com/compute/v1beta16/projects/myproject/global/networks/jclouds-test",
          "sourceRanges": [
             "10.0.0.0/8"
          ],
@@ -38,10 +38,10 @@
          "kind": "compute#firewall",
          "id": "12862241067393040785",
          "creationTimestamp": "2012-04-13T03:05:04.365",
-         "selfLink": "https://www.googleapis.com/compute/v1beta15/projects/google/global/firewalls/default-ssh",
+         "selfLink": "https://www.googleapis.com/compute/v1beta16/projects/google/global/firewalls/default-ssh",
          "name": "default-ssh",
          "description": "SSH allowed from anywhere",
-         "network": "https://www.googleapis.com/compute/v1beta15/projects/google/global/networks/default",
+         "network": "https://www.googleapis.com/compute/v1beta16/projects/google/global/networks/default",
          "sourceRanges": [
             "0.0.0.0/0"
          ],

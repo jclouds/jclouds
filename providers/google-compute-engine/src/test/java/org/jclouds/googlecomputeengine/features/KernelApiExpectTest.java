@@ -39,7 +39,7 @@ public class KernelApiExpectTest extends BaseGoogleComputeEngineApiExpectTest {
               .builder()
               .method("GET")
               .endpoint("https://www.googleapis" +
-                      ".com/compute/v1beta15/projects/myproject/global/kernels/12941177846308850718")
+                      ".com/compute/v1beta16/projects/myproject/global/kernels/12941177846308850718")
               .addHeader("Accept", "application/json")
               .addHeader("Authorization", "Bearer " + TOKEN).build();
 
@@ -58,7 +58,7 @@ public class KernelApiExpectTest extends BaseGoogleComputeEngineApiExpectTest {
               .builder()
               .method("GET")
               .endpoint("https://www.googleapis" +
-                      ".com/compute/v1beta15/projects/myproject/global/kernels/12941177846308850718")
+                      ".com/compute/v1beta16/projects/myproject/global/kernels/12941177846308850718")
               .addHeader("Accept", "application/json")
               .addHeader("Authorization", "Bearer " + TOKEN).build();
 
@@ -75,7 +75,7 @@ public class KernelApiExpectTest extends BaseGoogleComputeEngineApiExpectTest {
               .builder()
               .method("GET")
               .endpoint("https://www.googleapis" +
-                      ".com/compute/v1beta15/projects/myproject/global/kernels")
+                      ".com/compute/v1beta16/projects/myproject/global/kernels")
               .addHeader("Accept", "application/json")
               .addHeader("Authorization", "Bearer " + TOKEN).build();
 
@@ -94,7 +94,7 @@ public class KernelApiExpectTest extends BaseGoogleComputeEngineApiExpectTest {
               .builder()
               .method("GET")
               .endpoint("https://www.googleapis" +
-                      ".com/compute/v1beta15/projects/myproject/global/kernels")
+                      ".com/compute/v1beta16/projects/myproject/global/kernels")
               .addHeader("Accept", "application/json")
               .addHeader("Authorization", "Bearer " + TOKEN).build();
 

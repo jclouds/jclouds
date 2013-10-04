@@ -55,7 +55,7 @@ import org.jclouds.rest.binders.BindToJsonPayload;
  * Provides access to Disks via their REST API.
  *
  * @author David Alves
- * @see <a href="https://developers.google.com/compute/docs/reference/v1beta15/disks"/>
+ * @see <a href="https://developers.google.com/compute/docs/reference/v1beta16/disks"/>
  */
 @SkipEncoding({'/', '='})
 @RequestFilters(OAuthAuthenticator.class)

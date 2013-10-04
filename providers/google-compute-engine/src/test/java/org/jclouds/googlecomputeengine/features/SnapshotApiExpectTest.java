@@ -34,7 +34,7 @@ import org.testng.annotations.Test;
 @Test(groups = "unit")
 public class SnapshotApiExpectTest extends BaseGoogleComputeEngineApiExpectTest {
 
-   public static final String SNAPSHOT_URL_PREFIX = "https://www.googleapis.com/compute/v1beta15/projects/myproject/global/snapshots";
+   public static final String SNAPSHOT_URL_PREFIX = "https://www.googleapis.com/compute/v1beta16/projects/myproject/global/snapshots";
 
    public static final HttpRequest GET_SNAPSHOT_REQ = HttpRequest
            .builder()

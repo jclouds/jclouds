@@ -1,4 +1,4 @@
-POST https://www.googleapis.com/compute/v1beta15/projects/jclouds-gce/zones/us-central1-a/instances/test-instance/addAccessConfig?network_interface=nic0&key={YOUR_API_KEY}
+POST https://www.googleapis.com/compute/v1beta16/projects/jclouds-gce/zones/us-central1-a/instances/test-instance/addAccessConfig?network_interface=nic0&key={YOUR_API_KEY}
 
 Content-Type:  application/json
 Authorization:  Bearer ya29.AHES6ZRyNKVHwnMPUvZitAuA8mR8b0lcWh1bMI5UQ5bgsJ4j

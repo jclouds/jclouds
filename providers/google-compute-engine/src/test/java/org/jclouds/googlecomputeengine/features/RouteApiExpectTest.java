@@ -45,7 +45,7 @@ public class RouteApiExpectTest extends BaseGoogleComputeEngineApiExpectTest {
       HttpRequest get = HttpRequest
               .builder()
               .method("GET")
-              .endpoint("https://www.googleapis.com/compute/v1beta15/projects/myproject/global/routes/default-route-c99ebfbed0e1f375")
+              .endpoint("https://www.googleapis.com/compute/v1beta16/projects/myproject/global/routes/default-route-c99ebfbed0e1f375")
               .addHeader("Accept", "application/json")
               .addHeader("Authorization", "Bearer " + TOKEN).build();
 
@@ -63,7 +63,7 @@ public class RouteApiExpectTest extends BaseGoogleComputeEngineApiExpectTest {
       HttpRequest get = HttpRequest
               .builder()
               .method("GET")
-              .endpoint("https://www.googleapis.com/compute/v1beta15/projects/myproject/global/routes/default-route-c99ebfbed0e1f375")
+              .endpoint("https://www.googleapis.com/compute/v1beta16/projects/myproject/global/routes/default-route-c99ebfbed0e1f375")
               .addHeader("Accept", "application/json")
               .addHeader("Authorization", "Bearer " + TOKEN).build();
 
@@ -80,7 +80,7 @@ public class RouteApiExpectTest extends BaseGoogleComputeEngineApiExpectTest {
               .builder()
 
               .method("POST")
-              .endpoint("https://www.googleapis.com/compute/v1beta15/projects/myproject/global/routes")
+              .endpoint("https://www.googleapis.com/compute/v1beta16/projects/myproject/global/routes")
               .addHeader("Accept", "application/json")
               .addHeader("Authorization", "Bearer " + TOKEN)
               .payload(payloadFromResourceWithContentType("/route_insert.json", MediaType.APPLICATION_JSON))
@@ -94,13 +94,13 @@ public class RouteApiExpectTest extends BaseGoogleComputeEngineApiExpectTest {
               insertRouteResponse).getRouteApiForProject("myproject");
 
       assertEquals(api.createInNetwork("default-route-c99ebfbed0e1f375",
-              URI.create("https://www.googleapis.com/compute/v1beta15/projects/myproject/global/networks/default"),
+              URI.create("https://www.googleapis.com/compute/v1beta16/projects/myproject/global/networks/default"),
               new RouteOptions().addTag("fooTag")
                       .addTag("barTag")
                       .description("Default route to the virtual network.")
               .destRange("10.240.0.0/16")
               .priority(1000)
-              .nextHopNetwork(URI.create("https://www.googleapis.com/compute/v1beta15/projects/myproject/global/networks/default"))
+              .nextHopNetwork(URI.create("https://www.googleapis.com/compute/v1beta16/projects/myproject/global/networks/default"))
       ), new ParseOperationTest().expected());
    }
 
@@ -109,7 +109,7 @@ public class RouteApiExpectTest extends BaseGoogleComputeEngineApiExpectTest {
               .builder()
               .method("DELETE")
               .endpoint("https://www.googleapis" +
-                      ".com/compute/v1beta15/projects/myproject/global/routes/default-route-c99ebfbed0e1f375")
+                      ".com/compute/v1beta16/projects/myproject/global/routes/default-route-c99ebfbed0e1f375")
               .addHeader("Accept", "application/json")
               .addHeader("Authorization", "Bearer " + TOKEN).build();
 
@@ -128,7 +128,7 @@ public class RouteApiExpectTest extends BaseGoogleComputeEngineApiExpectTest {
               .builder()
               .method("DELETE")
               .endpoint("https://www.googleapis" +
-                      ".com/compute/v1beta15/projects/myproject/global/routes/default-route-c99ebfbed0e1f375")
+                      ".com/compute/v1beta16/projects/myproject/global/routes/default-route-c99ebfbed0e1f375")
               .addHeader("Accept", "application/json")
               .addHeader("Authorization", "Bearer " + TOKEN).build();
 
@@ -145,7 +145,7 @@ public class RouteApiExpectTest extends BaseGoogleComputeEngineApiExpectTest {
               .builder()
               .method("GET")
               .endpoint("https://www.googleapis" +
-                      ".com/compute/v1beta15/projects/myproject/global/routes")
+                      ".com/compute/v1beta16/projects/myproject/global/routes")
               .addHeader("Accept", "application/json")
               .addHeader("Authorization", "Bearer " + TOKEN).build();
 
@@ -164,7 +164,7 @@ public class RouteApiExpectTest extends BaseGoogleComputeEngineApiExpectTest {
               .builder()
               .method("GET")
               .endpoint("https://www.googleapis" +
-                      ".com/compute/v1beta15/projects/myproject/global/routes")
+                      ".com/compute/v1beta16/projects/myproject/global/routes")
               .addHeader("Accept", "application/json")
               .addHeader("Authorization", "Bearer " + TOKEN).build();
 

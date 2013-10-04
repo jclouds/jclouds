@@ -43,7 +43,7 @@ public class PageSystemExpectTest extends BaseGoogleComputeEngineApiExpectTest {
               .builder()
               .method("GET")
               .endpoint("https://www.googleapis" +
-                      ".com/compute/v1beta15/projects/myproject/global/images")
+                      ".com/compute/v1beta16/projects/myproject/global/images")
               .addHeader("Accept", "application/json")
               .addHeader("Authorization", "Bearer " + TOKEN).build();
 
@@ -66,7 +66,7 @@ public class PageSystemExpectTest extends BaseGoogleComputeEngineApiExpectTest {
               .builder()
               .method("GET")
               .endpoint("https://www.googleapis" +
-                      ".com/compute/v1beta15/projects/myproject/global/images?maxResults=3")
+                      ".com/compute/v1beta16/projects/myproject/global/images?maxResults=3")
               .addHeader("Accept", "application/json")
               .addHeader("Authorization", "Bearer " + TOKEN).build();
 
@@ -74,7 +74,7 @@ public class PageSystemExpectTest extends BaseGoogleComputeEngineApiExpectTest {
               .builder()
               .method("GET")
               .endpoint("https://www.googleapis" +
-                      ".com/compute/v1beta15/projects/myproject/global/images?pageToken" +
+                      ".com/compute/v1beta16/projects/myproject/global/images?pageToken" +
                       "=CgVJTUFHRRIbZ29vZ2xlLmNlbnRvcy02LTItdjIwMTIwNjIx&maxResults=3")
               .addHeader("Accept", "application/json")
               .addHeader("Authorization", "Bearer " + TOKEN).build();
@@ -83,7 +83,7 @@ public class PageSystemExpectTest extends BaseGoogleComputeEngineApiExpectTest {
               .builder()
               .method("GET")
               .endpoint("https://www.googleapis" +
-                      ".com/compute/v1beta15/projects/myproject/global/images?pageToken" +
+                      ".com/compute/v1beta16/projects/myproject/global/images?pageToken" +
                       "=CgVJTUFHRRIbZ29vZ2xlLmdjZWwtMTAtMDQtdjIwMTIxMTA2&maxResults=3")
               .addHeader("Accept", "application/json")
               .addHeader("Authorization", "Bearer " + TOKEN).build();

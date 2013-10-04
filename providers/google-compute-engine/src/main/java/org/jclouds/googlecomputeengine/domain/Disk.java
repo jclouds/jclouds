@@ -30,7 +30,7 @@ import com.google.common.base.Objects;
  * A persistent disk resource
  *
  * @author David Alves
- * @see <a href="https://developers.google.com/compute/docs/reference/v1beta15/disks"/>
+ * @see <a href="https://developers.google.com/compute/docs/reference/v1beta16/disks"/>
  */
 @Beta
 public final class Disk extends AbstractDisk {

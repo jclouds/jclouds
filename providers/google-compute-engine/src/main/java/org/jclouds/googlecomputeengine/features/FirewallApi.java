@@ -63,7 +63,7 @@ import org.jclouds.rest.binders.BindToJsonPayload;
  * <p/>
  *
  * @author David Alves
- * @see <a href="https://developers.google.com/compute/docs/reference/v1beta15/firewalls"/>
+ * @see <a href="https://developers.google.com/compute/docs/reference/v1beta16/firewalls"/>
  */
 @SkipEncoding({'/', '='})
 @RequestFilters(OAuthAuthenticator.class)

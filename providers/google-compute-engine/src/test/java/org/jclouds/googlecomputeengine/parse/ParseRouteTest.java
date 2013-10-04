@@ -43,15 +43,15 @@ public class ParseRouteTest extends BaseGoogleComputeEngineParseTest<Route> {
    @Consumes(MediaType.APPLICATION_JSON)
    public Route expected() {
       return Route.builder()
-              .selfLink(URI.create("https://www.googleapis.com/compute/v1beta15/projects/myproject/global/routes/default-route-c99ebfbed0e1f375"))
+              .selfLink(URI.create("https://www.googleapis.com/compute/v1beta16/projects/myproject/global/routes/default-route-c99ebfbed0e1f375"))
               .id("7241926205630356071")
               .name("default-route-c99ebfbed0e1f375")
               .creationTimestamp(new SimpleDateFormatDateService().iso8601DateParse("2013-07-08T14:40:38.502-07:00"))
               .description("Default route to the virtual network.")
-              .network(URI.create("https://www.googleapis.com/compute/v1beta15/projects/myproject/global/networks/default"))
+              .network(URI.create("https://www.googleapis.com/compute/v1beta16/projects/myproject/global/networks/default"))
               .destRange("10.240.0.0/16")
               .priority(1000)
-              .nextHopNetwork(URI.create("https://www.googleapis.com/compute/v1beta15/projects/myproject/global/networks/default"))
+              .nextHopNetwork(URI.create("https://www.googleapis.com/compute/v1beta16/projects/myproject/global/networks/default"))
               .tags(ImmutableSet.of("fooTag", "barTag"))
               .build();
 

@@ -37,7 +37,7 @@ import com.google.common.collect.ImmutableSet;
  * Represents a zone resource.
  *
  * @author David Alves
- * @see <a href="https://developers.google.com/compute/docs/reference/v1beta15/zones"/>
+ * @see <a href="https://developers.google.com/compute/docs/reference/v1beta16/zones"/>
  */
 @Beta
 public final class Zone extends Resource {
@@ -182,7 +182,7 @@ public final class Zone extends Resource {
     * Scheduled maintenance windows for the zone. When the zone is in a maintenance window,
     * all resources which reside in the zone will be unavailable.
     *
-    * @see <a href="https://developers.google.com/compute/docs/reference/v1beta15/zones"/>
+    * @see <a href="https://developers.google.com/compute/docs/reference/v1beta16/zones"/>
     */
    public static final class MaintenanceWindow {
 

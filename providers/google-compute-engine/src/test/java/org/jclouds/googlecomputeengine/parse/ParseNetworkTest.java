@@ -41,7 +41,7 @@ public class ParseNetworkTest extends BaseGoogleComputeEngineParseTest<Network> 
       return Network.builder()
               .id("13024414170909937976")
               .creationTimestamp(new SimpleDateFormatDateService().iso8601DateParse("2012-10-24T20:13:19.967"))
-              .selfLink(URI.create("https://www.googleapis.com/compute/v1beta15/projects/myproject/networks/jclouds-test"))
+              .selfLink(URI.create("https://www.googleapis.com/compute/v1beta16/projects/myproject/networks/jclouds-test"))
               .name("default")
               .description("Default network for the project")
               .IPv4Range("10.0.0.0/8")

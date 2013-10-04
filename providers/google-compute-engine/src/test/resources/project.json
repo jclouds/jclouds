@@ -2,7 +2,7 @@
    "kind": "compute#project",
    "id": "13024414184846275913",
    "creationTimestamp": "2012-10-24T20:13:16.252",
-   "selfLink": "https://www.googleapis.com/compute/v1beta15/projects/myproject",
+   "selfLink": "https://www.googleapis.com/compute/v1beta16/projects/myproject",
    "name": "myproject",
    "description": "",
    "commonInstanceMetadata": {

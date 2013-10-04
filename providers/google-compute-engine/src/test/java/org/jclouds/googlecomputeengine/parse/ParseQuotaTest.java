@@ -19,7 +19,7 @@ package org.jclouds.googlecomputeengine.parse;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.core.MediaType;
 
-import org.jclouds.googlecomputeengine.domain.Project;
+import org.jclouds.googlecomputeengine.domain.Quota;
 import org.jclouds.googlecomputeengine.internal.BaseGoogleComputeEngineParseTest;
 import org.testng.annotations.Test;
 
@@ -27,7 +27,7 @@ import org.testng.annotations.Test;
  * @author David Alves
  */
 @Test(groups = "unit")
-public class ParseQuotaTest extends BaseGoogleComputeEngineParseTest<Project.Quota> {
+public class ParseQuotaTest extends BaseGoogleComputeEngineParseTest<Quota> {
 
    @Override
    public String resource() {
@@ -36,7 +36,7 @@ public class ParseQuotaTest extends BaseGoogleComputeEngineParseTest<Project.Quo
 
    @Override
    @Consumes(MediaType.APPLICATION_JSON)
-   public Project.Quota expected() {
-      return Project.Quota.builder().metric("INSTANCES").usage(0.0).limit(8.0).build();
+   public Quota expected() {
+      return Quota.builder().metric("INSTANCES").usage(0.0).limit(8.0).build();
    }
 }

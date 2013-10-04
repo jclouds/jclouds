@@ -45,12 +45,21 @@ public class ParseRegionTest extends BaseGoogleComputeEngineParseTest<Region> {
       return Region.builder()
               .id("12912210600542709766")
               .creationTimestamp(new SimpleDateFormatDateService().iso8601DateParse("2013-07-08T14:40:37.939-07:00"))
-              .selfLink(URI.create("https://www.googleapis.com/compute/v1beta15/projects/myproject/regions/us-central1"))
+              .selfLink(URI.create("https://www.googleapis.com/compute/v1beta16/projects/myproject/regions/us-central1"))
               .name("us-central1")
               .description("us-central1")
               .status(Region.Status.UP)
-              .zones(ImmutableSet.of(URI.create("https://www.googleapis.com/compute/v1beta15/zones/us-central1-a"),
-                      URI.create("https://www.googleapis.com/compute/v1beta15/zones/us-central1-b")))
+              .zones(ImmutableSet.of(URI.create("https://www.googleapis.com/compute/v1beta16/zones/us-central1-a"),
+                      URI.create("https://www.googleapis.com/compute/v1beta16/zones/us-central1-b")))
+              .addQuota("INSTANCES", 0, 8)
+              .addQuota("CPUS", 0, 8)
+              .addQuota("EPHEMERAL_ADDRESSES", 0, 8)
+              .addQuota("DISKS", 0, 8)
+              .addQuota("DISKS_TOTAL_GB", 0, 100)
+              .addQuota("SNAPSHOTS", 0, 1000)
+              .addQuota("NETWORKS", 1, 5)
+              .addQuota("FIREWALLS", 2, 100)
+              .addQuota("IMAGES", 0, 100)
               .build();
    }
 }

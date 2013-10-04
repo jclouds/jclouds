@@ -33,6 +33,7 @@ import org.jclouds.googlecomputeengine.domain.InstanceTemplate;
 import org.jclouds.googlecomputeengine.domain.Metadata;
 import org.jclouds.googlecomputeengine.domain.Operation;
 import org.jclouds.googlecomputeengine.domain.Project;
+import org.jclouds.googlecomputeengine.domain.Quota;
 import org.jclouds.googlecomputeengine.options.FirewallOptions;
 import org.jclouds.googlecomputeengine.options.RouteOptions;
 import org.jclouds.json.config.GsonModule;
@@ -86,7 +87,7 @@ public class GoogleComputeEngineParserModule extends AbstractModule {
    /**
     * Parser for operations that unwraps errors avoiding an extra intermediate object.
     *
-    * @see <a href="https://developers.google.com/compute/docs/reference/v1beta15/operations"/>
+    * @see <a href="https://developers.google.com/compute/docs/reference/v1beta16/operations"/>
     */
    @Singleton
    private static class OperationTypeAdapter implements JsonDeserializer<Operation> {

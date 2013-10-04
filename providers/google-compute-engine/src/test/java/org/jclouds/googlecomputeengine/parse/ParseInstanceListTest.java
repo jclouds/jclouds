@@ -44,7 +44,7 @@ public class ParseInstanceListTest extends BaseGoogleComputeEngineParseTest<List
       return ListPage.<Instance>builder()
               .kind(Resource.Kind.INSTANCE_LIST)
               .id("projects/myproject/zones/us-central1-a/instances")
-              .selfLink(URI.create("https://www.googleapis.com/compute/v1beta15/projects/myproject/zones/us-central1-a/instances"))
+              .selfLink(URI.create("https://www.googleapis.com/compute/v1beta16/projects/myproject/zones/us-central1-a/instances"))
               .items(ImmutableSet.of(new ParseInstanceTest().expected()))
               .build();
    }

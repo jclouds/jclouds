@@ -44,7 +44,7 @@ public class ParseNetworkListTest extends BaseGoogleComputeEngineParseTest<ListP
       return ListPage.<Network>builder()
               .kind(Resource.Kind.NETWORK_LIST)
               .id("projects/myproject/networks")
-              .selfLink(URI.create("https://www.googleapis.com/compute/v1beta15/projects/myproject/networks"))
+              .selfLink(URI.create("https://www.googleapis.com/compute/v1beta16/projects/myproject/networks"))
               .items(ImmutableSet.of(new ParseNetworkTest().expected()))
               .build();
 

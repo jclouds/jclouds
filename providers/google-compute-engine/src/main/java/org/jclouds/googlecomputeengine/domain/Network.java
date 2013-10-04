@@ -32,7 +32,7 @@ import com.google.common.base.Optional;
  * Represents a network used to enable instance communication.
  *
  * @author David Alves
- * @see <a href="https://developers.google.com/compute/docs/reference/v1beta15/networks"/>
+ * @see <a href="https://developers.google.com/compute/docs/reference/v1beta16/networks"/>
  */
 @Beta
 public final class Network extends Resource {

@@ -1,21 +1,21 @@
 {
    "kind": "compute#imageList",
    "id": "projects/google/global/images",
-   "selfLink": "https://www.googleapis.com/compute/v1beta15/projects/google/global/images",
+   "selfLink": "https://www.googleapis.com/compute/v1beta16/projects/google/global/images",
    "nextPageToken": "CgVJTUFHRRIbZ29vZ2xlLmNlbnRvcy02LTItdjIwMTIwNjIx",
    "items": [
       {
          "kind": "compute#image",
          "id": "12941197498378735318",
          "creationTimestamp": "2012-07-16T15:16:13.468-07:00",
-         "selfLink": "https://www.googleapis.com/compute/v1beta15/projects/google/global/images/centos-6-2-v20120326",
+         "selfLink": "https://www.googleapis.com/compute/v1beta16/projects/google/global/images/centos-6-2-v20120326",
          "name": "centos-6-2-v20120326",
          "description": "DEPRECATED. CentOS 6.2 image; Created Mon, 26 Mar 2012 21:19:09 +0000",
          "sourceType": "RAW",
-         "preferredKernel": "https://www.googleapis.com/compute/v1beta15/projects/google/kernels/gce-20120326",
+         "preferredKernel": "https://www.googleapis.com/compute/v1beta16/projects/google/kernels/gce-20120326",
          "deprecated": {
             "state": "DELETED",
-            "replacement": "https://www.googleapis.com/compute/v1beta15/projects/google/global/images/centos-6-v20130104"
+            "replacement": "https://www.googleapis.com/compute/v1beta16/projects/google/global/images/centos-6-v20130104"
          },
          "rawDisk": {
             "source": "",
@@ -26,11 +26,11 @@
          "kind": "compute#image",
          "id": "12894486577628239762",
          "creationTimestamp": "2012-05-21T13:15:37.215-07:00",
-         "selfLink": "https://www.googleapis.com/compute/v1beta15/projects/google/global/images/centos-6-2-v20120503",
+         "selfLink": "https://www.googleapis.com/compute/v1beta16/projects/google/global/images/centos-6-2-v20120503",
          "name": "centos-6-2-v20120503",
          "description": "CentOS 6.2; Created Wed, 09 May 2012 11:55:54 +0000",
          "sourceType": "RAW",
-         "preferredKernel": "https://www.googleapis.com/compute/v1beta15/projects/google/kernels/gce-20120326",
+         "preferredKernel": "https://www.googleapis.com/compute/v1beta16/projects/google/kernels/gce-20120326",
          "rawDisk": {
             "source": "",
             "containerType": "TAR"
@@ -40,14 +40,14 @@
          "kind": "compute#image",
          "id": "12917726455664967299",
          "creationTimestamp": "2012-06-18T11:05:30.664-07:00",
-         "selfLink": "https://www.googleapis.com/compute/v1beta15/projects/google/global/images/centos-6-2-v20120611",
+         "selfLink": "https://www.googleapis.com/compute/v1beta16/projects/google/global/images/centos-6-2-v20120611",
          "name": "centos-6-2-v20120611",
          "description": "CentOS 6.2; Created Mon, 11 Jun 2012 13:15:44 +0000",
          "sourceType": "RAW",
-         "preferredKernel": "https://www.googleapis.com/compute/v1beta15/projects/google/kernels/gce-20120611",
+         "preferredKernel": "https://www.googleapis.com/compute/v1beta16/projects/google/kernels/gce-20120611",
          "deprecated": {
             "state": "DEPRECATED",
-            "replacement": "https://www.googleapis.com/compute/v1beta15/projects/debian-cloud/global/images/debian-7-wheezy-20130509"
+            "replacement": "https://www.googleapis.com/compute/v1beta16/projects/debian-cloud/global/images/debian-7-wheezy-20130509"
          },
          "rawDisk": {
             "source": "",
