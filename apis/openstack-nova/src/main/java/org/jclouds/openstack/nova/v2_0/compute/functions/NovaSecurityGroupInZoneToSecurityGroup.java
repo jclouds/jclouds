@@ -68,6 +68,8 @@ public class NovaSecurityGroupInZoneToSecurityGroup implements Function<Security
 
       builder.location(zone);
 
+      builder.id(group.getZone() + "/" + group.getSecurityGroup().getId());
+
       return builder.build();
    }
 }

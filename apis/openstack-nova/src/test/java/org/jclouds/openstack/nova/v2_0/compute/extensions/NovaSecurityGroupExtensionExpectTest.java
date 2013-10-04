@@ -52,6 +52,13 @@ import com.google.common.collect.Sets;
 public class NovaSecurityGroupExtensionExpectTest extends BaseNovaComputeServiceExpectTest {
 
    protected String zone = "az-1.region-a.geo-1";
+   protected HttpRequest list = HttpRequest.builder().method("GET").endpoint(
+           URI.create("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v1.1/3456/os-security-groups")).headers(
+           ImmutableMultimap.<String, String> builder().put("Accept", "application/json").put("X-Auth-Token",
+                   authToken).build()).build();
+
+   protected HttpResponse listResponse = HttpResponse.builder().statusCode(200).payload(
+           payloadFromResource("/securitygroup_list_extension.json")).build();
 
    @Override
    protected Properties setupProperties() {
@@ -61,13 +68,6 @@ public class NovaSecurityGroupExtensionExpectTest extends BaseNovaComputeService
    }
 
    public void testListSecurityGroups() {
-      HttpRequest list = HttpRequest.builder().method("GET").endpoint(
-              URI.create("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v1.1/3456/os-security-groups")).headers(
-              ImmutableMultimap.<String, String> builder().put("Accept", "application/json").put("X-Auth-Token",
-                      authToken).build()).build();
-
-      HttpResponse listResponse = HttpResponse.builder().statusCode(200).payload(
-              payloadFromResource("/securitygroup_list.json")).build();
 
 
       Builder<HttpRequest, HttpResponse> requestResponseMap = ImmutableMap.<HttpRequest, HttpResponse> builder();
@@ -149,15 +149,24 @@ public class NovaSecurityGroupExtensionExpectTest extends BaseNovaComputeService
       Builder<HttpRequest, HttpResponse> requestResponseMap = ImmutableMap.<HttpRequest, HttpResponse> builder();
       requestResponseMap.put(keystoneAuthWithUsernameAndPasswordAndTenantName, responseWithKeystoneAccess);
       requestResponseMap.put(extensionsOfNovaRequest, extensionsOfNovaResponse);
-      requestResponseMap.put(getSecurityGroup, getSecurityGroupResponse).build();
+      requestResponseMap.put(getSecurityGroup, getSecurityGroupResponse);
+      requestResponseMap.put(list, listResponse).build();
 
       SecurityGroupExtension extension = requestsSendResponses(requestResponseMap.build()).getSecurityGroupExtension().get();
 
       SecurityGroup group = extension.getSecurityGroupById(zone + "/160");
-      assertEquals(group.getId(), "160");
+      assertEquals(group.getId(), zone + "/160");
    }
 
    public void testCreateSecurityGroup() {
+      HttpRequest getSecurityGroup = HttpRequest.builder().method("GET").endpoint(
+              URI.create("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v1.1/3456/os-security-groups/160")).headers(
+              ImmutableMultimap.<String, String> builder().put("Accept", "application/json").put("X-Auth-Token",
+                      authToken).build()).build();
+
+      HttpResponse getSecurityGroupResponse = HttpResponse.builder().statusCode(200).payload(
+              payloadFromResource("/securitygroup_details_extension.json")).build();
+
       HttpRequest create = HttpRequest.builder().method("POST").endpoint(
               URI.create("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v1.1/3456/os-security-groups")).headers(
               ImmutableMultimap.<String, String> builder().put("Accept", "application/json").put("X-Auth-Token",
@@ -182,7 +191,8 @@ public class NovaSecurityGroupExtensionExpectTest extends BaseNovaComputeService
       requestResponseMap.put(keystoneAuthWithUsernameAndPasswordAndTenantName, responseWithKeystoneAccess);
       requestResponseMap.put(extensionsOfNovaRequest, extensionsOfNovaResponse);
       requestResponseMap.put(create, createResponse);
-      requestResponseMap.put(list, listResponse).build();
+      requestResponseMap.put(list, listResponse);
+      requestResponseMap.put(getSecurityGroup, getSecurityGroupResponse).build();
 
       SecurityGroupExtension extension = requestsSendResponses(requestResponseMap.build()).getSecurityGroupExtension().get();
 
@@ -191,7 +201,7 @@ public class NovaSecurityGroupExtensionExpectTest extends BaseNovaComputeService
               .id(zone)
               .description("zone")
               .build());
-      assertEquals(group.getId(), "160");
+      assertEquals(group.getId(), zone + "/160");
    }
 
    public void testRemoveSecurityGroup() {
@@ -250,9 +260,9 @@ public class NovaSecurityGroupExtensionExpectTest extends BaseNovaComputeService
 
 
       SecurityGroupExtension extension = orderedRequestsSendResponses(ImmutableList.of(keystoneAuthWithUsernameAndPasswordAndTenantName,
-              extensionsOfNovaRequest, getSecurityGroup, createRule, getSecurityGroup),
+              extensionsOfNovaRequest, getSecurityGroup, createRule, getSecurityGroup, list, list),
               ImmutableList.of(responseWithKeystoneAccess, extensionsOfNovaResponse, getSecurityGroupNoRulesResponse,
-                      createRuleResponse, getSecurityGroupResponse)).getSecurityGroupExtension().get();
+                      createRuleResponse, getSecurityGroupResponse, listResponse, listResponse)).getSecurityGroupExtension().get();
 
       IpPermission.Builder builder = IpPermission.builder();
 
@@ -299,9 +309,9 @@ public class NovaSecurityGroupExtensionExpectTest extends BaseNovaComputeService
 
 
       SecurityGroupExtension extension = orderedRequestsSendResponses(ImmutableList.of(keystoneAuthWithUsernameAndPasswordAndTenantName,
-              extensionsOfNovaRequest, getSecurityGroup, createRule, getSecurityGroup),
+              extensionsOfNovaRequest, getSecurityGroup, createRule, getSecurityGroup, list, list),
               ImmutableList.of(responseWithKeystoneAccess, extensionsOfNovaResponse, getSecurityGroupNoRulesResponse,
-                      createRuleResponse, getSecurityGroupResponse)).getSecurityGroupExtension().get();
+                      createRuleResponse, getSecurityGroupResponse, listResponse, listResponse)).getSecurityGroupExtension().get();
 
       SecurityGroup origGroup = extension.getSecurityGroupById(zone + "/160");
 
@@ -345,9 +355,9 @@ public class NovaSecurityGroupExtensionExpectTest extends BaseNovaComputeService
 
 
       SecurityGroupExtension extension = orderedRequestsSendResponses(ImmutableList.of(keystoneAuthWithUsernameAndPasswordAndTenantName,
-              extensionsOfNovaRequest, getSecurityGroup, createRule, getSecurityGroup),
+              extensionsOfNovaRequest, getSecurityGroup, createRule, getSecurityGroup, list, list),
               ImmutableList.of(responseWithKeystoneAccess, extensionsOfNovaResponse, getSecurityGroupNoRulesResponse,
-                      createRuleResponse, getSecurityGroupResponse)).getSecurityGroupExtension().get();
+                      createRuleResponse, getSecurityGroupResponse, listResponse, listResponse)).getSecurityGroupExtension().get();
 
       IpPermission.Builder builder = IpPermission.builder();
 
@@ -394,9 +404,9 @@ public class NovaSecurityGroupExtensionExpectTest extends BaseNovaComputeService
 
 
       SecurityGroupExtension extension = orderedRequestsSendResponses(ImmutableList.of(keystoneAuthWithUsernameAndPasswordAndTenantName,
-              extensionsOfNovaRequest, getSecurityGroup, createRule, getSecurityGroup),
+              extensionsOfNovaRequest, getSecurityGroup, createRule, getSecurityGroup, list, list),
               ImmutableList.of(responseWithKeystoneAccess, extensionsOfNovaResponse, getSecurityGroupNoRulesResponse,
-                      createRuleResponse, getSecurityGroupResponse)).getSecurityGroupExtension().get();
+                      createRuleResponse, getSecurityGroupResponse, listResponse, listResponse)).getSecurityGroupExtension().get();
 
       SecurityGroup origGroup = extension.getSecurityGroupById(zone + "/160");
 

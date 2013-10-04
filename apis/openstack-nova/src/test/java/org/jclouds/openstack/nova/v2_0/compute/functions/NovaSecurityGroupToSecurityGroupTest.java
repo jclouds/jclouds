@@ -19,12 +19,29 @@ package org.jclouds.openstack.nova.v2_0.compute.functions;
 import static com.google.common.collect.Iterables.transform;
 import static org.testng.Assert.assertEquals;
 
+import java.util.Map;
+import java.util.concurrent.atomic.AtomicReference;
+
 import org.jclouds.compute.domain.SecurityGroup;
+import org.jclouds.domain.Location;
+import org.jclouds.domain.LocationBuilder;
+import org.jclouds.domain.LocationScope;
 import org.jclouds.net.domain.IpProtocol;
 import org.jclouds.openstack.nova.v2_0.domain.SecurityGroupRule;
 import org.jclouds.openstack.nova.v2_0.domain.TenantIdAndName;
+import org.jclouds.openstack.nova.v2_0.domain.zonescoped.SecurityGroupInZone;
+import org.jclouds.openstack.nova.v2_0.domain.zonescoped.ZoneAndName;
 import org.testng.annotations.Test;
 
+import com.google.common.base.Functions;
+import com.google.common.base.Predicate;
+import com.google.common.base.Predicates;
+import com.google.common.base.Supplier;
+import com.google.common.base.Suppliers;
+import com.google.common.cache.CacheBuilder;
+import com.google.common.cache.CacheLoader;
+import com.google.common.cache.LoadingCache;
+import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 
 /**
@@ -33,10 +50,29 @@ import com.google.common.collect.ImmutableSet;
 @Test(groups = "unit", testName = "NovaSecurityGroupToSecurityGroupTest")
 public class NovaSecurityGroupToSecurityGroupTest {
 
-   private static final SecurityGroupRuleToIpPermission ruleConverter = new SecurityGroupRuleToIpPermission();
+   private static final Location provider = new LocationBuilder().scope(LocationScope.PROVIDER).id("openstack-nova")
+           .description("openstack-nova").build();
+   private static final Location zone = new LocationBuilder().id("az-1.region-a.geo-1").description("az-1.region-a.geo-1")
+           .scope(LocationScope.ZONE).parent(provider).build();
+   private static final Supplier<Map<String, Location>> locationIndex = Suppliers.<Map<String, Location>> ofInstance(ImmutableMap
+           .<String, Location>of("az-1.region-a.geo-1", zone));
+
+
+   private static final Predicate<AtomicReference<ZoneAndName>> returnSecurityGroupExistsInZone = Predicates.alwaysTrue();
+
+   private static final Map<ZoneAndName, SecurityGroupInZone> groupMap = ImmutableMap.of(
+           ZoneAndName.fromZoneAndName("az-1.region-a.geo-1", "some-group"), new SecurityGroupInZone(securityGroupWithGroup(), "az-1.region-a.geo-1"),
+           ZoneAndName.fromZoneAndName("az-1.region-a.geo-1", "some-other-group"), new SecurityGroupInZone(securityGroupWithCidr(), "az-1.region-a.geo-1"));
+
+   // weird compilation error means have to declare extra generics for call to build() - see https://bugs.eclipse.org/bugs/show_bug.cgi?id=365818
+   private static final Supplier <LoadingCache<ZoneAndName, SecurityGroupInZone>> groupCache = Suppliers.<LoadingCache<ZoneAndName,SecurityGroupInZone>> ofInstance(
+           CacheBuilder.newBuilder().<ZoneAndName, SecurityGroupInZone>build(CacheLoader.from(Functions.forMap(groupMap))));
+
+   public static final SecurityGroupRuleToIpPermission ruleConverter = new SecurityGroupRuleToIpPermission(returnSecurityGroupExistsInZone, locationIndex,
+           groupCache.get());
 
    public static org.jclouds.openstack.nova.v2_0.domain.SecurityGroup securityGroupWithGroup() {
-      TenantIdAndName group = TenantIdAndName.builder().tenantId("tenant").name("name").build();
+      TenantIdAndName group = TenantIdAndName.builder().tenantId("tenant").name("some-other-group").build();
 
       SecurityGroupRule ruleToConvert = SecurityGroupRule.builder()
               .id("some-id")
@@ -71,7 +107,7 @@ public class NovaSecurityGroupToSecurityGroupTest {
       org.jclouds.openstack.nova.v2_0.domain.SecurityGroup origGroup = org.jclouds.openstack.nova.v2_0.domain.SecurityGroup.builder()
               .tenantId("tenant")
               .id("some-id")
-              .name("some-group")
+              .name("some-other-group")
               .description("some-description")
               .rules(ruleToConvert)
               .build();

@@ -59,7 +59,6 @@ import com.google.common.base.Optional;
 import com.google.common.base.Supplier;
 import com.google.common.cache.LoadingCache;
 import com.google.common.collect.ImmutableSet;
-import com.google.common.collect.Iterables;
 import com.google.common.collect.Multimap;
 import com.google.common.util.concurrent.ListeningExecutorService;
 
@@ -204,8 +203,8 @@ public class NovaSecurityGroupExtension implements SecurityGroupExtension {
    @Override
    public SecurityGroup addIpPermission(IpPermission ipPermission, SecurityGroup group) {
       String zone = group.getLocation().getId();
-      String id = group.getId();
-
+      ZoneAndId groupZoneAndId = ZoneAndId.fromSlashEncoded(group.getId());
+      String id = groupZoneAndId.getId();
       Optional<? extends SecurityGroupApi> sgApi = api.getSecurityGroupExtensionForZone(zone);
 
       if (!sgApi.isPresent()) {
@@ -246,48 +245,22 @@ public class NovaSecurityGroupExtension implements SecurityGroupExtension {
                                         Multimap<String, String> tenantIdGroupNamePairs,
                                         Iterable<String> ipRanges,
                                         Iterable<String> groupIds, SecurityGroup group) {
-      String zone = group.getLocation().getId();
-      String id = group.getId();
+      IpPermission.Builder permBuilder = IpPermission.builder();
+      permBuilder.ipProtocol(protocol);
+      permBuilder.fromPort(startPort);
+      permBuilder.toPort(endPort);
+      permBuilder.tenantIdGroupNamePairs(tenantIdGroupNamePairs);
+      permBuilder.cidrBlocks(ipRanges);
+      permBuilder.groupIds(groupIds);
 
-      Optional<? extends SecurityGroupApi> sgApi = api.getSecurityGroupExtensionForZone(zone);
-
-      if (!sgApi.isPresent()) {
-         return null;
-      }
-
-      if (Iterables.size(ipRanges) > 0) {
-         for (String cidr : ipRanges) {
-            sgApi.get().createRuleAllowingCidrBlock(id,
-                    Ingress.builder()
-                            .ipProtocol(protocol)
-                            .fromPort(startPort)
-                            .toPort(endPort)
-                            .build(),
-                    cidr);
-         }
-      }
-
-      if (Iterables.size(groupIds) > 0) {
-         for (String zoneAndGroupRaw : groupIds) {
-            ZoneAndId zoneAndId = ZoneAndId.fromSlashEncoded(zoneAndGroupRaw);
-            String groupId = zoneAndId.getId();
-            sgApi.get().createRuleAllowingSecurityGroupId(id,
-                    Ingress.builder()
-                            .ipProtocol(protocol)
-                            .fromPort(startPort)
-                            .toPort(endPort)
-                            .build(),
-                    groupId);
-         }
-      }
-
-      return getSecurityGroupById(ZoneAndId.fromZoneAndId(zone, id).slashEncode());
+      return addIpPermission(permBuilder.build(), group);
    }
 
    @Override
    public SecurityGroup removeIpPermission(IpPermission ipPermission, SecurityGroup group) {
       String zone = group.getLocation().getId();
-      String id = group.getId();
+      ZoneAndId groupZoneAndId = ZoneAndId.fromSlashEncoded(group.getId());
+      String id = groupZoneAndId.getId();
 
       Optional<? extends SecurityGroupApi> sgApi = api.getSecurityGroupExtensionForZone(zone);
 
@@ -328,42 +301,15 @@ public class NovaSecurityGroupExtension implements SecurityGroupExtension {
                                            Multimap<String, String> tenantIdGroupNamePairs,
                                            Iterable<String> ipRanges,
                                            Iterable<String> groupIds, SecurityGroup group) {
-      String zone = group.getLocation().getId();
-      String id = group.getId();
+      IpPermission.Builder permBuilder = IpPermission.builder();
+      permBuilder.ipProtocol(protocol);
+      permBuilder.fromPort(startPort);
+      permBuilder.toPort(endPort);
+      permBuilder.tenantIdGroupNamePairs(tenantIdGroupNamePairs);
+      permBuilder.cidrBlocks(ipRanges);
+      permBuilder.groupIds(groupIds);
 
-      Optional<? extends SecurityGroupApi> sgApi = api.getSecurityGroupExtensionForZone(zone);
-
-      if (!sgApi.isPresent()) {
-         return null;
-      }
-
-      org.jclouds.openstack.nova.v2_0.domain.SecurityGroup securityGroup = sgApi.get().get(id);
-
-      if (Iterables.size(ipRanges) > 0) {
-         for (String cidr : ipRanges) {
-            for (SecurityGroupRule rule : filter(securityGroup.getRules(),
-                    and(ruleCidr(cidr),
-                            ruleProtocol(protocol),
-                            ruleStartPort(startPort),
-                            ruleEndPort(endPort)))) {
-               sgApi.get().deleteRule(rule.getId());
-            }
-         }
-      }
-
-      if (Iterables.size(groupIds) > 0) {
-         for (String groupId : groupIds) {
-            for (SecurityGroupRule rule : filter(securityGroup.getRules(),
-                    and(ruleGroup(groupId),
-                            ruleProtocol(protocol),
-                            ruleStartPort(startPort),
-                            ruleEndPort(endPort)))) {
-               sgApi.get().deleteRule(rule.getId());
-            }
-         }
-      }
-
-      return getSecurityGroupById(ZoneAndId.fromZoneAndId(zone, id).slashEncode());
+      return removeIpPermission(permBuilder.build(), group);
    }
 
    @Override

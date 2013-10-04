@@ -39,7 +39,7 @@ public class SecurityGroupRuleToIpPermissionTest {
    @Test
    public void testApplyWithGroup() {
 
-      TenantIdAndName group = TenantIdAndName.builder().tenantId("tenant").name("name").build();
+      TenantIdAndName group = TenantIdAndName.builder().tenantId("tenant").name("some-group").build();
       
       SecurityGroupRule ruleToConvert = SecurityGroupRule.builder()
          .id("some-id")
@@ -50,15 +50,12 @@ public class SecurityGroupRuleToIpPermissionTest {
          .parentGroupId("some-other-id")
          .build();
 
-      SecurityGroupRuleToIpPermission converter = new SecurityGroupRuleToIpPermission();
-
-      IpPermission convertedPerm = converter.apply(ruleToConvert);
+      IpPermission convertedPerm = NovaSecurityGroupToSecurityGroupTest.ruleConverter.apply(ruleToConvert);
 
       assertEquals(convertedPerm.getIpProtocol(), ruleToConvert.getIpProtocol());
       assertEquals(convertedPerm.getFromPort(), ruleToConvert.getFromPort());
       assertEquals(convertedPerm.getToPort(), ruleToConvert.getToPort());
-      assertTrue(convertedPerm.getTenantIdGroupNamePairs().containsKey(group.getTenantId()));
-      assertTrue(convertedPerm.getTenantIdGroupNamePairs().containsValue(group.getName()));
+      assertTrue(convertedPerm.getGroupIds().contains("az-1.region-a.geo-1/some-id"));
       assertTrue(convertedPerm.getCidrBlocks().size() == 0);
    }
 
@@ -73,9 +70,7 @@ public class SecurityGroupRuleToIpPermissionTest {
          .parentGroupId("some-other-id")
          .build();
 
-      SecurityGroupRuleToIpPermission converter = new SecurityGroupRuleToIpPermission();
-
-      IpPermission convertedPerm = converter.apply(ruleToConvert);
+      IpPermission convertedPerm = NovaSecurityGroupToSecurityGroupTest.ruleConverter.apply(ruleToConvert);
 
       assertEquals(convertedPerm.getIpProtocol(), ruleToConvert.getIpProtocol());
       assertEquals(convertedPerm.getFromPort(), ruleToConvert.getFromPort());

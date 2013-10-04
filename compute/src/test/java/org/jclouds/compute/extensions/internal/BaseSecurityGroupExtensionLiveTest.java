@@ -244,8 +244,9 @@ public abstract class BaseSecurityGroupExtensionLiveTest extends BaseComputeServ
                                                                                      emptyStringSet(),
                                                                                      ImmutableSet.of(group.getId()),
                                                                                      newGroup);
-         
-         assertTrue(secondNewGroup.getIpPermissions().contains(secondPerm)); 
+
+         assertTrue(secondNewGroup.getIpPermissions().contains(secondPerm), "permissions for second group should contain "
+                 + secondPerm + " but do not: " + secondNewGroup.getIpPermissions());
       }
 
       if (securityGroupExtension.get().supportsTenantIdGroupNamePairs()

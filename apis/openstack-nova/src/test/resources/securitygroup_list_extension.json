@@ -42,10 +42,10 @@
           "id":119
         }
       ],
-      "tenant_id":"dev_16767499955063",
-      "id":160,
-      "name":"jclouds-test",
-      "description":"jclouds-test"
+        "tenant_id": "tenant0",
+        "id": 160,
+        "name": "name0",
+        "description": "description0"
     }
   ]
 }
