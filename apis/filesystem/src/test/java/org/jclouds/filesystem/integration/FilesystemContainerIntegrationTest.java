@@ -21,6 +21,8 @@ import static org.testng.Assert.assertEquals;
 
 import java.io.IOException;
 import java.util.Properties;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeoutException;
 
 import javax.ws.rs.core.MediaType;
 
@@ -32,6 +34,7 @@ import org.jclouds.blobstore.integration.internal.BaseBlobStoreIntegrationTest;
 import org.jclouds.blobstore.integration.internal.BaseContainerIntegrationTest;
 import org.jclouds.filesystem.reference.FilesystemConstants;
 import org.jclouds.filesystem.utils.TestUtils;
+import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 import org.testng.SkipException;
 
@@ -55,12 +58,13 @@ public class FilesystemContainerIntegrationTest extends BaseContainerIntegration
       props.setProperty(FilesystemConstants.PROPERTY_BASEDIR, TestUtils.TARGET_BASE_DIR);
       return props;
    }
-   @Test(groups = { "integration", "live" })
-   public void testNotWithDetails() throws InterruptedException {
 
+   @Test(dataProvider = "ignoreOnWindows", groups = { "integration", "live" })
+   public void testNotWithDetails() throws InterruptedException {
       String key = "hello";
 
-      // NOTE all metadata in jclouds comes out as lowercase, in an effort to normalize the
+      // NOTE all metadata in jclouds comes out as lowercase, in an effort to
+      // normalize the
       // providers.
       Blob object = view.getBlobStore().blobBuilder(key).userMetadata(ImmutableMap.of("Adrian", "powderpuff"))
             .payload(TEST_STRING).contentType(MediaType.TEXT_PLAIN).build();
@@ -72,7 +76,8 @@ public class FilesystemContainerIntegrationTest extends BaseContainerIntegration
          PageSet<? extends StorageMetadata> container = view.getBlobStore().list(containerName, maxResults(1));
 
          BlobMetadata metadata = (BlobMetadata) Iterables.getOnlyElement(container);
-         // transient container should be lenient and not return metadata on undetailed listing.
+         // transient container should be lenient and not return metadata on
+         // undetailed listing.
 
          assertEquals(metadata.getUserMetadata().size(), 0);
 
@@ -94,5 +99,65 @@ public class FilesystemContainerIntegrationTest extends BaseContainerIntegration
    @Override
    public void testWithDetails() throws InterruptedException, IOException {
       throw new SkipException("not yet implemented");
+   }
+
+   @Override
+   @Test(dataProvider = "ignoreOnWindows")
+   public void containerExists() throws InterruptedException {
+      super.containerExists();
+   }
+
+   @Override
+   @Test(dataProvider = "ignoreOnWindows")
+   public void deleteContainerWithContents() throws InterruptedException {
+      super.deleteContainerWithContents();
+   }
+
+   @Override
+   @Test(dataProvider = "ignoreOnWindows")
+   public void testListContainer() throws InterruptedException, ExecutionException, TimeoutException {
+      super.testListContainer();
+   }
+
+   @Override
+   @Test(dataProvider = "ignoreOnWindows")
+   public void testListContainerMarker() throws InterruptedException {
+      super.testListContainerMarker();
+   }
+
+   @Override
+   @Test(dataProvider = "ignoreOnWindows")
+   public void testListContainerPrefix() throws InterruptedException {
+      super.testListContainerPrefix();
+   }
+
+   @Override
+   @Test(dataProvider = "ignoreOnWindows")
+   public void testListRootUsesDelimiter() throws InterruptedException {
+      super.testListRootUsesDelimiter();
+   }
+
+   @Override
+   @Test(dataProvider = "ignoreOnWindows")
+   public void testPutTwiceIsOkAndDoesntOverwrite() throws InterruptedException {
+      super.testPutTwiceIsOkAndDoesntOverwrite();
+   }
+
+   @Override
+   @Test(dataProvider = "ignoreOnWindows")
+   public void deleteContainerIfEmpty() throws InterruptedException {
+      super.deleteContainerIfEmpty();
+   }
+
+   @Override
+   @Test(dataProvider = "ignoreOnWindows")
+   public void testListContainerMaxResults() throws InterruptedException {
+      super.testListContainerMaxResults();
+   }
+
+   @DataProvider
+   public Object[][] ignoreOnWindows() {
+      return (TestUtils.isWindowsOs() ? TestUtils.NO_INVOCATIONS
+            : TestUtils.SINGLE_NO_ARG_INVOCATION);
    }
 }
