@@ -454,8 +454,12 @@ public class BaseBlobIntegrationTest extends BaseBlobStoreIntegrationTest {
 
    @DataProvider(name = "delete")
    public Object[][] createData() {
-      return new Object[][] { { "normal" }, { "sp ace" }, { "qu?stion" }, { "unic₪de" }, { "path/foo" }, { "colon:" },
+      if (System.getProperty("os.name").toLowerCase().contains("windows")) {
+         return new Object[][] { { "normal" }, { "sp ace" } };
+      } else {
+         return new Object[][] { { "normal" }, { "sp ace" }, { "qu?stion" }, { "unic₪de" }, { "path/foo" }, { "colon:" },
                { "asteri*k" }, { "quote\"" }, { "{great<r}" }, { "lesst>en" }, { "p|pe" } };
+      }
    }
 
    @Test(groups = { "integration", "live" }, dataProvider = "delete")
