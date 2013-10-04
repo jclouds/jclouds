@@ -49,6 +49,7 @@ import org.jclouds.chef.strategy.DeleteAllClientsInList;
 import org.jclouds.chef.strategy.DeleteAllNodesInList;
 import org.jclouds.chef.strategy.ListClients;
 import org.jclouds.chef.strategy.ListCookbookVersions;
+import org.jclouds.chef.strategy.ListCookbookVersionsInEnvironment;
 import org.jclouds.chef.strategy.ListNodesInEnvironment;
 import org.jclouds.chef.strategy.ListEnvironments;
 import org.jclouds.chef.strategy.ListNodes;
@@ -88,6 +89,7 @@ public class BaseChefService implements ChefService {
    private final BootstrapConfigForGroup bootstrapConfigForGroup;
    private final RunListForGroup runListForGroup;
    private final ListCookbookVersions listCookbookVersions;
+   private final ListCookbookVersionsInEnvironment listCookbookVersionsInEnvironment;
    private final ListEnvironments listEnvironments;
    private final ListNodesInEnvironment listNodesInEnvironment;
    private final Json json;
@@ -104,7 +106,8 @@ public class BaseChefService implements ChefService {
          UpdateAutomaticAttributesOnNode updateAutomaticAttributesOnNode, Supplier<PrivateKey> privateKey,
          @Named(CHEF_BOOTSTRAP_DATABAG) String databag, GroupToBootScript groupToBootScript,
          BootstrapConfigForGroup bootstrapConfigForGroup, RunListForGroup runListForGroup,
-         ListEnvironments listEnvironments, ListNodesInEnvironment listNodesInEnvironment, Json json) {
+         ListEnvironments listEnvironments, ListNodesInEnvironment listNodesInEnvironment,
+         ListCookbookVersionsInEnvironment listCookbookVersionsInEnvironment, Json json) {
       this.chefContext = checkNotNull(chefContext, "chefContext");
       this.api = checkNotNull(api, "api");
       this.cleanupStaleNodesAndClients = checkNotNull(cleanupStaleNodesAndClients, "cleanupStaleNodesAndClients");
@@ -124,6 +127,7 @@ public class BaseChefService implements ChefService {
       this.runListForGroup = checkNotNull(runListForGroup, "runListForGroup");
       this.listEnvironments = checkNotNull(listEnvironments, "listEnvironments");
       this.listNodesInEnvironment = checkNotNull(listNodesInEnvironment, "listNodesInEnvironment");
+      this.listCookbookVersionsInEnvironment = checkNotNull(listCookbookVersionsInEnvironment, "listCookbookVersionsInEnvironment");
       this.json = checkNotNull(json, "json");
    }
 
@@ -235,6 +239,16 @@ public class BaseChefService implements ChefService {
    @Override
    public Iterable<? extends CookbookVersion> listCookbookVersions() {
       return listCookbookVersions.execute();
+   }
+
+   @Override
+   public Iterable<? extends CookbookVersion> listCookbookVersionsInEnvironment(String environmentName) {
+      return listCookbookVersionsInEnvironment.execute(environmentName);
+   }
+
+   @Override
+   public Iterable<? extends CookbookVersion> listCookbookVersionsInEnvironment(String environmentName, String numVersions) {
+      return listCookbookVersionsInEnvironment.execute(environmentName, numVersions);
    }
 
    @Override
