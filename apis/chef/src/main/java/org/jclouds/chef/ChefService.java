@@ -187,6 +187,25 @@ public interface ChefService {
    Iterable<? extends CookbookVersion> listCookbookVersions();
 
    /**
+    * Lists the details of all existing cookbooks in an environment.
+    *
+    * @param environmentName The environment name.
+    * @return The details of all existing cookbooks in an environment.
+    */
+   Iterable<? extends CookbookVersion> listCookbookVersionsInEnvironment(String environmentName);
+
+   /**
+    * Lists the details of all existing cookbooks in an environment
+    * limiting number of versions.
+    *
+    * @param environmentName The environment name.
+    * @param numVersions The number of cookbook versions to include.
+    *                    Use 'all' to return all cookbook versions.
+    * @return The details of all existing cookbooks in environment.
+    */
+   Iterable<? extends CookbookVersion> listCookbookVersionsInEnvironment(String environmentName, String numVersions);
+
+   /**
     * Lists the details of all existing environments.
     * 
     * @return The details of all existing environments.
