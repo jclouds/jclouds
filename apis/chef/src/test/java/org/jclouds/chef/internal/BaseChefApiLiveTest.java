@@ -26,6 +26,7 @@ import static org.jclouds.util.Predicates2.retry;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertFalse;
 import static org.testng.Assert.assertNotNull;
+import static org.testng.Assert.assertNull;
 import static org.testng.Assert.assertTrue;
 import static org.testng.Assert.fail;
 
@@ -294,6 +295,16 @@ public abstract class BaseChefApiLiveTest<A extends ChefApi> extends BaseChefLiv
       for (String databagItemId : api.listDatabagItems(PREFIX)) {
          DatabagItem databagItem = api.getDatabagItem(PREFIX, databagItemId);
          api.updateDatabagItem(PREFIX, databagItem);
+      }
+   }
+
+   @Test(dependsOnMethods = "testSearchDatabagWithOptions")
+   public void testDeleteDatabagItem() throws Exception {
+      for (String databagItemId : api.listDatabagItems(PREFIX)) {
+         DatabagItem databagItem = api.deleteDatabagItem(PREFIX, databagItemId);
+         assertNotNull(databagItem, "Deleted data bag item should not be null");
+         assertEquals(databagItem.getId(), databagItemId, "Deleted data bag item id must match the original id");
+         assertNull(api.getDatabagItem(PREFIX, databagItemId), "Data bag item should not exist");
       }
    }
 

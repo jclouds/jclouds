@@ -79,6 +79,7 @@ import org.jclouds.rest.annotations.ParamParser;
 import org.jclouds.rest.annotations.PayloadParam;
 import org.jclouds.rest.annotations.RequestFilters;
 import org.jclouds.rest.annotations.ResponseParser;
+import org.jclouds.rest.annotations.SelectJson;
 import org.jclouds.rest.annotations.SinceApiVersion;
 import org.jclouds.rest.annotations.SkipEncoding;
 import org.jclouds.rest.annotations.WrapWith;
@@ -424,6 +425,7 @@ public interface ChefApi extends Closeable {
    @DELETE
    @Path("/data/{databagName}/{databagItemId}")
    @Fallback(NullOnNotFoundOr404.class)
+   @SelectJson("raw_data")
    DatabagItem deleteDatabagItem(@PathParam("databagName") String databagName,
          @PathParam("databagItemId") String databagItemId);
 
