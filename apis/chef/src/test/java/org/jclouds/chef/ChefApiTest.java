@@ -45,12 +45,12 @@ import org.jclouds.chef.functions.ParseKeySetFromJson;
 import org.jclouds.chef.functions.ParseSearchClientsFromJson;
 import org.jclouds.chef.functions.ParseSearchDatabagFromJson;
 import org.jclouds.chef.functions.ParseSearchNodesFromJson;
-import org.jclouds.chef.functions.ParseSearchRolesFromJson;
 import org.jclouds.chef.options.CreateClientOptions;
 import org.jclouds.chef.options.SearchOptions;
 import org.jclouds.date.TimeStamp;
 import org.jclouds.fallbacks.MapHttp4xxCodesToExceptions;
 import org.jclouds.http.HttpRequest;
+import org.jclouds.http.functions.ParseFirstJsonValueNamed;
 import org.jclouds.http.functions.ParseJson;
 import org.jclouds.http.functions.ReleasePayloadAndReturn;
 import org.jclouds.http.functions.ReturnInputStream;
@@ -490,7 +490,7 @@ public class ChefApiTest extends BaseAsyncApiTest<ChefApi> {
             + "-test\n");
       assertPayloadEquals(httpRequest, null, null, false);
 
-      assertResponseParserClassEquals(method, httpRequest, ParseJson.class);
+      assertResponseParserClassEquals(method, httpRequest, ParseFirstJsonValueNamed.class);
       assertSaxResponseParserClassEquals(method, null);
       assertFallbackClassEquals(method, NullOnNotFoundOr404.class);
 
