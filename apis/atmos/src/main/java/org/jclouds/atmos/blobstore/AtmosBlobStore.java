@@ -118,8 +118,7 @@ public class AtmosBlobStore extends BaseBlobStore {
     */
    @Override
    public boolean createContainerInLocation(Location location, String container) {
-      sync.createDirectory(container);
-      return true;
+      return sync.createDirectory(container) != null;
    }
 
    /**
@@ -240,8 +239,7 @@ public class AtmosBlobStore extends BaseBlobStore {
    @Override
    public boolean createContainerInLocation(Location location, String container, CreateContainerOptions options) {
       if (options.isPublicRead()) {
-         sync.createDirectory(container, publicRead());
-         return true;
+         return sync.createDirectory(container, publicRead()) != null;
       }
       return createContainerInLocation(location, container);
    }
