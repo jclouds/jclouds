@@ -131,7 +131,7 @@ public class AtmosAsyncBlobStore extends BaseAsyncBlobStore {
    public ListenableFuture<Boolean> createContainerInLocation(Location location, String container) {
       return transform(async.createDirectory(container), new Function<URI, Boolean>() {
          public Boolean apply(URI from) {
-            return true;
+            return from != null;
          }
       }, userExecutor);
    }
@@ -277,7 +277,7 @@ public class AtmosAsyncBlobStore extends BaseAsyncBlobStore {
          return transform(async.createDirectory(container, publicRead()), new Function<URI, Boolean>() {
 
             public Boolean apply(URI from) {
-               return true;
+               return from != null;
             }
 
          }, userExecutor);

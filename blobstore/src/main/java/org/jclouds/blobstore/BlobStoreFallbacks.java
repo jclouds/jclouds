@@ -106,4 +106,17 @@ public final class BlobStoreFallbacks {
          throw propagate(t);
       }
    }
+
+   public static final class NullOnKeyAlreadyExists implements Fallback<Object> {
+      public ListenableFuture<Object> create(Throwable t) throws Exception {
+         return immediateFuture(createOrPropagate(t));
+      }
+
+      public Object createOrPropagate(Throwable t) throws Exception {
+         if (checkNotNull(t, "throwable") instanceof KeyAlreadyExistsException) {
+            return null;
+         }
+         throw propagate(t);
+      }
+   }
 }

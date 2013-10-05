@@ -42,7 +42,6 @@ import org.jclouds.atmos.domain.BoundedSet;
 import org.jclouds.atmos.domain.DirectoryEntry;
 import org.jclouds.atmos.domain.SystemMetadata;
 import org.jclouds.atmos.domain.UserMetadata;
-import org.jclouds.atmos.fallbacks.EndpointIfAlreadyExists;
 import org.jclouds.atmos.filters.SignRequest;
 import org.jclouds.atmos.functions.AtmosObjectName;
 import org.jclouds.atmos.functions.ParseDirectoryListFromContentAndHeaders;
@@ -52,6 +51,7 @@ import org.jclouds.atmos.functions.ParseUserMetadataFromHeaders;
 import org.jclouds.atmos.functions.ReturnTrueIfGroupACLIsOtherRead;
 import org.jclouds.atmos.options.ListOptions;
 import org.jclouds.atmos.options.PutOptions;
+import org.jclouds.blobstore.BlobStoreFallbacks.NullOnKeyAlreadyExists;
 import org.jclouds.blobstore.BlobStoreFallbacks.ThrowContainerNotFoundOn404;
 import org.jclouds.blobstore.BlobStoreFallbacks.ThrowKeyNotFoundOn404;
 import org.jclouds.http.options.GetOptions;
@@ -115,7 +115,7 @@ public interface AtmosAsyncClient extends Closeable {
    @Named("CreateDirectory")
    @POST
    @Path("/{directoryName}/")
-   @Fallback(EndpointIfAlreadyExists.class)
+   @Fallback(NullOnKeyAlreadyExists.class)
    @Produces(MediaType.APPLICATION_OCTET_STREAM)
    @Consumes(MediaType.WILDCARD)
    ListenableFuture<URI> createDirectory(@PathParam("directoryName") String directoryName, PutOptions... options);

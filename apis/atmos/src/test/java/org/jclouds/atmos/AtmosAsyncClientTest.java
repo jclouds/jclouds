@@ -38,6 +38,7 @@ import org.jclouds.atmos.functions.ParseSystemMetadataFromHeaders;
 import org.jclouds.atmos.functions.ReturnTrueIfGroupACLIsOtherRead;
 import org.jclouds.atmos.options.ListOptions;
 import org.jclouds.atmos.options.PutOptions;
+import org.jclouds.blobstore.BlobStoreFallbacks.NullOnKeyAlreadyExists;
 import org.jclouds.blobstore.BlobStoreFallbacks.ThrowContainerNotFoundOn404;
 import org.jclouds.blobstore.BlobStoreFallbacks.ThrowKeyNotFoundOn404;
 import org.jclouds.blobstore.binders.BindBlobToMultipartFormTest;
@@ -137,7 +138,7 @@ public class AtmosAsyncClientTest extends BaseAsyncClientTest<AtmosAsyncClient> 
 
       assertResponseParserClassEquals(method, request, ParseURIFromListOrLocationHeaderIf20x.class);
       assertSaxResponseParserClassEquals(method, null);
-      assertFallbackClassEquals(method, EndpointIfAlreadyExists.class);
+      assertFallbackClassEquals(method, NullOnKeyAlreadyExists.class);
 
       checkFilters(request);
    }
@@ -153,7 +154,7 @@ public class AtmosAsyncClientTest extends BaseAsyncClientTest<AtmosAsyncClient> 
 
       assertResponseParserClassEquals(method, request, ParseURIFromListOrLocationHeaderIf20x.class);
       assertSaxResponseParserClassEquals(method, null);
-      assertFallbackClassEquals(method, EndpointIfAlreadyExists.class);
+      assertFallbackClassEquals(method, NullOnKeyAlreadyExists.class);
 
       checkFilters(request);
    }

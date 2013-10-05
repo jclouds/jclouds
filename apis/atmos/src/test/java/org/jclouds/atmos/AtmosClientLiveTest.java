@@ -19,6 +19,7 @@ package org.jclouds.atmos;
 import static com.google.common.base.Preconditions.checkState;
 import static org.jclouds.util.Predicates2.retry;
 import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertNull;
 import static org.testng.Assert.fail;
 
 import java.io.IOException;
@@ -140,6 +141,8 @@ public class AtmosClientLiveTest extends BaseBlobStoreIntegrationTest {
          BoundedSet<? extends DirectoryEntry> r2 = getApi().listDirectory(id.getObjectName());
          assert r2 != null;
       }
+      // subsequent creation should fail
+      assertNull(getApi().createDirectory(privateDirectory));
    }
 
    @Test(timeOut = 5 * 60 * 1000, dependsOnMethods = { "testCreateDirectory" })
