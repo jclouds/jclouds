@@ -41,6 +41,7 @@ import org.jclouds.blobstore.BlobStoreFallbacks.NullOnKeyNotFound;
 import org.jclouds.blobstore.binders.BindMapToHeadersWithPrefix;
 import org.jclouds.blobstore.domain.PageSet;
 import org.jclouds.http.functions.ParseETagHeader;
+import org.jclouds.http.functions.ReturnTrueIf201;
 import org.jclouds.http.options.GetOptions;
 import org.jclouds.openstack.swift.SwiftFallbacks.TrueOn404FalseOn409;
 import org.jclouds.openstack.swift.binders.BindIterableToHeadersWithContainerDeleteMetadataPrefix;
@@ -142,6 +143,7 @@ public interface CommonSwiftAsyncClient extends Closeable {
     */
    @Named("CreateContainer")
    @PUT
+   @ResponseParser(ReturnTrueIf201.class)
    @Path("/{container}")
    ListenableFuture<Boolean> createContainer(@PathParam("container") String container,
                                              CreateContainerOptions... options);
@@ -161,6 +163,7 @@ public interface CommonSwiftAsyncClient extends Closeable {
     */
    @Named("CreateContainer")
    @PUT
+   @ResponseParser(ReturnTrueIf201.class)
    @Path("/{container}")
    ListenableFuture<Boolean> createContainer(@PathParam("container") String container);
 
