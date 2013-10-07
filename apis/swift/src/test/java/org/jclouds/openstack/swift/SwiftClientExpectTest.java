@@ -55,6 +55,37 @@ public class SwiftClientExpectTest extends BaseSwiftExpectTest<SwiftClient> {
    }
 
    @Test
+   public void testCreateContainerReturnStatus() {
+      String containerName = "foo";
+      HttpRequest createContainerRequest = HttpRequest.builder()
+            .method("PUT")
+            .endpoint(swiftEndpointWithHostReplaced + "/" + containerName)
+            .addHeader("X-Auth-Token", authToken).build();
+      HttpResponse createContainerResponse = HttpResponse.builder()
+            .statusCode(201)
+            .build();
+
+      SwiftClient clientWhenNonExistingContainer = requestsSendResponses(
+            authRequest, authResponse, createContainerRequest,
+            createContainerResponse);
+
+      assertTrue(clientWhenNonExistingContainer.createContainer(
+            containerName));
+
+      // Try creating the same container again. This should return a status
+      // code of 202 as per the following:
+      // http://docs.openstack.org/api/openstack-object-storage/1.0/content/create-container.html
+      // http://docs.rackspace.com/files/api/v1/cf-devguide/content/Create_Container-d1e1694.html
+
+      createContainerResponse = HttpResponse.builder().statusCode(202)
+            .build();
+      SwiftClient clientWhenExistingContainer = requestsSendResponses(
+            authRequest, authResponse, createContainerRequest,
+            createContainerResponse);
+      assertFalse(clientWhenExistingContainer.createContainer(containerName));
+   }
+
+   @Test
    public void testContainerExistsWhenResponseIs404ReturnsFalse() {
       HttpRequest headContainer = HttpRequest.builder()
             .method("HEAD")
