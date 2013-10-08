@@ -45,6 +45,7 @@ import org.jclouds.atmos.domain.UserMetadata;
 import org.jclouds.atmos.filters.SignRequest;
 import org.jclouds.atmos.functions.AtmosObjectName;
 import org.jclouds.atmos.functions.ParseDirectoryListFromContentAndHeaders;
+import org.jclouds.atmos.functions.ParseNullableURIFromListOrLocationHeaderIf20x;
 import org.jclouds.atmos.functions.ParseObjectFromHeadersAndHttpContent;
 import org.jclouds.atmos.functions.ParseSystemMetadataFromHeaders;
 import org.jclouds.atmos.functions.ParseUserMetadataFromHeaders;
@@ -55,6 +56,7 @@ import org.jclouds.blobstore.BlobStoreFallbacks.NullOnKeyAlreadyExists;
 import org.jclouds.blobstore.BlobStoreFallbacks.ThrowContainerNotFoundOn404;
 import org.jclouds.blobstore.BlobStoreFallbacks.ThrowKeyNotFoundOn404;
 import org.jclouds.http.options.GetOptions;
+import org.jclouds.javax.annotation.Nullable;
 import org.jclouds.rest.annotations.BinderParam;
 import org.jclouds.rest.annotations.Fallback;
 import org.jclouds.rest.annotations.Headers;
@@ -123,10 +125,12 @@ public interface AtmosAsyncClient extends Closeable {
    /**
     * @see AtmosClient#createFile
     */
+   @Nullable
    @Named("CreateObject")
    @POST
    @Path("/{parent}/{name}")
    @Headers(keys = EXPECT, values = "100-continue")
+   @ResponseParser(ParseNullableURIFromListOrLocationHeaderIf20x.class)
    @Consumes(MediaType.WILDCARD)
    ListenableFuture<URI> createFile(
             @PathParam("parent") String parent,

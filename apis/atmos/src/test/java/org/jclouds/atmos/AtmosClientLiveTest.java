@@ -188,6 +188,16 @@ public class AtmosClientLiveTest extends BaseBlobStoreIntegrationTest {
       }
    }
 
+   @Test(timeOut = 5 * 60 * 1000, dependsOnMethods = { "testFileOperations" })
+   public void testPutZeroLengthBlob() throws Exception {
+      AtmosObject object = getApi().newObject();
+      object.getContentMetadata().setName("object");
+      byte[] payload = new byte[0];
+      object.setPayload(Payloads.newPayload(payload));
+      object.getContentMetadata().setContentLength(Long.valueOf(payload.length));
+      replaceObject(object);
+   }
+
    private void createOrUpdateWithErrorLoop(boolean stream, String data, String metadataValue) throws Exception {
       createOrReplaceObject("object", makeData(data, stream), metadataValue);
       assertEventuallyObjectMatches("object", data, metadataValue);

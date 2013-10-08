@@ -26,6 +26,7 @@ import org.jclouds.atmos.domain.UserMetadata;
 import org.jclouds.atmos.options.ListOptions;
 import org.jclouds.atmos.options.PutOptions;
 import org.jclouds.http.options.GetOptions;
+import org.jclouds.javax.annotation.Nullable;
 
 import com.google.inject.Provides;
 
@@ -50,6 +51,7 @@ public interface AtmosClient extends Closeable {
 
    URI createDirectory(String directoryName, PutOptions... options);
 
+   @Nullable
    URI createFile(String parent, AtmosObject object, PutOptions... options);
 
    void updateFile(String parent, AtmosObject object, PutOptions... options);
