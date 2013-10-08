@@ -33,6 +33,7 @@ import org.jclouds.atmos.domain.AtmosObject;
 import org.jclouds.atmos.fallbacks.EndpointIfAlreadyExists;
 import org.jclouds.atmos.filters.SignRequest;
 import org.jclouds.atmos.functions.ParseDirectoryListFromContentAndHeaders;
+import org.jclouds.atmos.functions.ParseNullableURIFromListOrLocationHeaderIf20x;
 import org.jclouds.atmos.functions.ParseObjectFromHeadersAndHttpContent;
 import org.jclouds.atmos.functions.ParseSystemMetadataFromHeaders;
 import org.jclouds.atmos.functions.ReturnTrueIfGroupACLIsOtherRead;
@@ -169,7 +170,7 @@ public class AtmosAsyncClientTest extends BaseAsyncClientTest<AtmosAsyncClient> 
       assertNonPayloadHeadersEqual(request, HttpHeaders.ACCEPT + ": */*\nExpect: 100-continue\n");
       assertPayloadEquals(request, "hello", "text/plain", false);
 
-      assertResponseParserClassEquals(method, request, ParseURIFromListOrLocationHeaderIf20x.class);
+      assertResponseParserClassEquals(method, request, ParseNullableURIFromListOrLocationHeaderIf20x.class);
       assertSaxResponseParserClassEquals(method, null);
       assertFallbackClassEquals(method, null);
 
@@ -187,7 +188,7 @@ public class AtmosAsyncClientTest extends BaseAsyncClientTest<AtmosAsyncClient> 
                + ": */*\nExpect: 100-continue\nx-emc-groupacl: other=READ\nx-emc-useracl: root=FULL_CONTROL\n");
       assertPayloadEquals(request, "hello", "text/plain", false);
 
-      assertResponseParserClassEquals(method, request, ParseURIFromListOrLocationHeaderIf20x.class);
+      assertResponseParserClassEquals(method, request, ParseNullableURIFromListOrLocationHeaderIf20x.class);
       assertSaxResponseParserClassEquals(method, null);
       assertFallbackClassEquals(method, null);
 

@@ -42,7 +42,7 @@ import com.google.common.base.Function;
 public class ParseURIFromListOrLocationHeaderIf20x implements Function<HttpResponse, URI>,
       InvocationContext<ParseURIFromListOrLocationHeaderIf20x> {
 
-   private HttpRequest request;
+   protected HttpRequest request;
 
    public URI apply(HttpResponse from) {
       if (from.getStatusCode() > 206)
