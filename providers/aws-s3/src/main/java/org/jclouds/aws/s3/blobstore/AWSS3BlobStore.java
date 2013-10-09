@@ -23,6 +23,7 @@ import java.util.Set;
 import javax.inject.Inject;
 import javax.inject.Provider;
 
+import org.jclouds.aws.domain.Region;
 import org.jclouds.aws.s3.AWSS3ApiMetadata;
 import org.jclouds.aws.s3.AWSS3Client;
 import org.jclouds.aws.s3.blobstore.options.AWSS3PutObjectOptions;
@@ -33,6 +34,7 @@ import org.jclouds.blobstore.domain.Blob;
 import org.jclouds.blobstore.domain.PageSet;
 import org.jclouds.blobstore.domain.StorageMetadata;
 import org.jclouds.blobstore.functions.BlobToHttpGetOptions;
+import org.jclouds.blobstore.options.CreateContainerOptions;
 import org.jclouds.blobstore.options.PutOptions;
 import org.jclouds.blobstore.strategy.internal.FetchBlobMetadata;
 import org.jclouds.blobstore.util.BlobUtils;
@@ -53,6 +55,8 @@ import com.google.common.base.Function;
 import com.google.common.base.Supplier;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
+import com.google.common.util.concurrent.Futures;
+import com.google.common.util.concurrent.ListenableFuture;
 
 /**
  * Provide AWS S3 specific extensions.
@@ -112,5 +116,18 @@ public class AWSS3BlobStore extends S3BlobStore {
       }
       return getContext().unwrap(AWSS3ApiMetadata.CONTEXT_TOKEN).getApi().putObject(container, blob2Object.apply(blob),
                options);
+   }
+
+   @Override
+   public boolean createContainerInLocation(Location location, String container,
+                                            CreateContainerOptions options) {
+      if ((location == null || location.getId().equals(Region.US_STANDARD)) &&
+           containerExists(container)) {
+         // AWS-S3 returns the incorrect creation status when a container
+         // already exists in the us-standard (or default) region.  See
+         // JCLOUDS-334 for details.
+         return false;
+      }
+      return super.createContainerInLocation(location, container, options);
    }
 }
