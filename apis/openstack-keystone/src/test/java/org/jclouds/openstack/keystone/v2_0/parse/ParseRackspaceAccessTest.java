@@ -118,6 +118,17 @@ public class ParseRackspaceAccessTest extends BaseItemParserTest<Access> {
                                    .endpoint(Endpoint.builder()
                                                      .tenantId("MossoCloudFS_dc1f419c-5059-4c87-a389-3f2e33a77b22")
                                                      .publicURL("https://cdn1.clouddrive.com/v1/MossoCloudFS_dc1f419c-5059-4c87-a389-3f2e33a77b22")
-                                                     .region("DFW").build()).build()).build();
+                                                     .region("DFW").build()).build())
+                   .service(Service.builder().name("cloudQueues").type("rax:queues")
+                                   .endpoint(Endpoint.builder()
+                                                     .tenantId("40806637803162")
+                                                     .publicURL("https://dfw.queues.api.rackspacecloud.com/v1/40806637803162")
+                                                     .internalURL("https://snet-dfw.queues.api.rackspacecloud.com/v1/40806637803162")
+                                                     .region("DFW").build())
+                                    .endpoint(Endpoint.builder()
+                                                     .tenantId("40806637803162")
+                                                     .publicURL("https://ord.queues.api.rackspacecloud.com/v1/40806637803162")
+                                                     .internalURL("https://snet-ord.queues.api.rackspacecloud.com/v1/40806637803162")
+                                                     .region("ORD").build()).build()).build();
    }
 }

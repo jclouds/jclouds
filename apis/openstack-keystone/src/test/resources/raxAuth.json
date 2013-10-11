@@ -96,6 +96,20 @@
             }],
             "name": "cloudFilesCDN",
             "type": "rax:object-cdn"
+        }, {
+            "endpoints": [{
+                "internalURL": "https:\/\/snet-dfw.queues.api.rackspacecloud.com/v1/40806637803162",
+                "publicURL": "https:\/\/dfw.queues.api.rackspacecloud.com\/v1\/40806637803162",
+                "tenantId": "40806637803162",
+                "region": "DFW"
+            }, {
+                "internalURL": "https:\/\/snet-ord.queues.api.rackspacecloud.com/v1/40806637803162",
+                "publicURL": "https:\/\/ord.queues.api.rackspacecloud.com\/v1\/40806637803162",
+                "tenantId": "40806637803162",
+                "region": "ORD"
+            }],
+            "type": "rax:queues",
+            "name": "cloudQueues"
         }],
         "user": {
             "id": "54321",

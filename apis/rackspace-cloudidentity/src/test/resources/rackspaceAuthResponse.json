@@ -149,6 +149,24 @@
             "region": "DFW"
           }
         ]
+      },
+      {
+        "type": "rax:queues",
+        "name": "cloudQueues",
+        "endpoints": [
+          {
+            "internalURL": "https://snet-ord.queues.api.rackspacecloud.com/v1/123123",
+            "publicURL": "https://ord.queues.api.rackspacecloud.com/v1/123123",
+            "tenantId": "123123",
+            "region": "ORD"
+          },
+          {
+            "internalURL": "https://snet-dfw.queues.api.rackspacecloud.com/v1/123123",
+            "publicURL": "https://dfw.queues.api.rackspacecloud.com/v1/123123",
+            "tenantId": "123123",
+            "region": "DFW"
+          }
+        ]
       }
     ],
     "token": {

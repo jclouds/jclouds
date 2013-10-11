@@ -166,6 +166,20 @@
                 ]
             },
             {
+                "type": "queuing",
+                "name": "marconi",
+                "endpoints": [
+                    {
+                        "adminURL": "http://10.0.2.15:8888",
+                        "region": "RegionOne",
+                        "internalURL": "http://10.0.2.15:8888",
+                        "id": "3456789",
+                        "publicURL": "http://172.16.0.1:8888"
+                    }
+                ],
+                "endpoints_links": []
+            },
+            {
                 "type": "dns",
                 "name": "dns",
                 "endpoints": [

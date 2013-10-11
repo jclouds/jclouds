@@ -29,7 +29,12 @@ public interface ServiceType {
    public static final String LOAD_BALANCERS = "rax:load-balancer";
 
    /**
-    * Cloud Load DNS
+    * Cloud DNS
     */
    public static final String DNS = "rax:dns";
+
+   /**
+    * Cloud Queues
+    */
+   public static final String QUEUES = "rax:queues";
 }

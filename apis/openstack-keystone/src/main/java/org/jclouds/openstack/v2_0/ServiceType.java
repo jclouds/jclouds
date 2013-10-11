@@ -47,7 +47,7 @@ public interface ServiceType {
    public static final String IDENTITY = "identity";
    
    /**
-    * Network Service (Quantum)
+    * Network Service (Neutron)
     */
    public static final String NETWORK = "network";
    
@@ -57,7 +57,12 @@ public interface ServiceType {
    public static final String BLOCK_STORAGE = "volume";
    
    /**
-    * Database Service (RedDwarf)
+    * Database Service (Trove)
     */
    public static final String DATABASE_SERVICE = "databases";
+
+   /**
+    * Queues Service (Marconi)
+    */
+   public static final String QUEUES = "queuing";
 }
