@@ -55,8 +55,6 @@ public class SwiftContainerIntegrationLiveTest extends BaseContainerIntegrationT
 
       String containerName = getContainerName();
       
-      assertTrue(swift.createContainer(containerName));
-      
       ImmutableMap<String, String> metadata = ImmutableMap.<String, String> of(
             "key1", "value1",
             "key2", "value2"); 
@@ -80,8 +78,6 @@ public class SwiftContainerIntegrationLiveTest extends BaseContainerIntegrationT
             "key1", "value1",
             "key2", "value2",
             "key3", "value3")); 
-
-      assertTrue(swift.createContainer(containerName, options));
       
       ContainerMetadata containerMetadata = swift.getContainerMetadata(containerName);
       
