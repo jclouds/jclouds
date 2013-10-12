@@ -71,7 +71,6 @@ public class SwiftContainerIntegrationLiveTest extends BaseContainerIntegrationT
    public void testCreateDeleteContainerMetadata() throws InterruptedException {
       CommonSwiftClient swift = view.utils().injector().getInstance(CommonSwiftClient.class);
 
-      String containerName = getContainerName();
       CreateContainerOptions options = CreateContainerOptions.Builder
          .withPublicAccess()
          .withMetadata(ImmutableMap.<String, String> of(
@@ -79,18 +78,25 @@ public class SwiftContainerIntegrationLiveTest extends BaseContainerIntegrationT
             "key2", "value2",
             "key3", "value3")); 
       
-      ContainerMetadata containerMetadata = swift.getContainerMetadata(containerName);
-      
-      assertEquals(containerMetadata.getMetadata().size(), 3);
-      assertEquals(containerMetadata.getMetadata().get("key1"), "value1");
-      assertEquals(containerMetadata.getMetadata().get("key2"), "value2");
-      assertEquals(containerMetadata.getMetadata().get("key3"), "value3");
+      String containerName = getScratchContainerName();
+      assertTrue(swift.createContainer(containerName, options));
 
-      assertTrue(swift.deleteContainerMetadata(containerName, ImmutableList.<String> of("key2","key3")));
+      try {
+         ContainerMetadata containerMetadata = swift.getContainerMetadata(containerName);
 
-      containerMetadata = swift.getContainerMetadata(containerName);
-      
-      assertEquals(containerMetadata.getMetadata().size(), 1);
-      assertEquals(containerMetadata.getMetadata().get("key1"), "value1");
+         assertEquals(containerMetadata.getMetadata().size(), 3);
+         assertEquals(containerMetadata.getMetadata().get("key1"), "value1");
+         assertEquals(containerMetadata.getMetadata().get("key2"), "value2");
+         assertEquals(containerMetadata.getMetadata().get("key3"), "value3");
+
+         assertTrue(swift.deleteContainerMetadata(containerName, ImmutableList.<String> of("key2","key3")));
+
+         containerMetadata = swift.getContainerMetadata(containerName);
+
+         assertEquals(containerMetadata.getMetadata().size(), 1);
+         assertEquals(containerMetadata.getMetadata().get("key1"), "value1");
+      } finally {
+         returnContainer(containerName);
+      }
    }
 }
