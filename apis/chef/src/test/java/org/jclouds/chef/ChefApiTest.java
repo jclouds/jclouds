@@ -192,23 +192,6 @@ public class ChefApiTest extends BaseAsyncApiTest<ChefApi> {
 
    }
 
-   public void testListCookbooks() throws SecurityException, NoSuchMethodException, IOException {
-      Invokable<?, ?> method = method(ChefApi.class, "listCookbooks");
-      GeneratedHttpRequest httpRequest = processor.apply(Invocation.create(method, ImmutableList.of()));
-
-      assertRequestLineEquals(httpRequest, "GET http://localhost:4000/cookbooks HTTP/1.1");
-      assertNonPayloadHeadersEqual(httpRequest, "Accept: application/json\nX-Chef-Version: " + ChefApiMetadata.DEFAULT_API_VERSION
-            + "-test\n");
-      assertPayloadEquals(httpRequest, null, null, false);
-
-      assertResponseParserClassEquals(method, httpRequest, ParseCookbookDefinitionCheckingChefVersion.class);
-      assertSaxResponseParserClassEquals(method, null);
-      assertFallbackClassEquals(method, EmptySetOnNotFoundOr404.class);
-
-      checkFilters(httpRequest);
-
-   }
-
    public void testListVersionsOfCookbook() throws SecurityException, NoSuchMethodException, IOException {
       Invokable<?, ?> method = method(ChefApi.class, "listVersionsOfCookbook", String.class);
       GeneratedHttpRequest httpRequest = processor
@@ -414,23 +397,6 @@ public class ChefApiTest extends BaseAsyncApiTest<ChefApi> {
 
    }
 
-   public void testListRoles() throws SecurityException, NoSuchMethodException, IOException {
-      Invokable<?, ?> method = method(ChefApi.class, "listRoles");
-      GeneratedHttpRequest httpRequest = processor.apply(Invocation.create(method, ImmutableList.of()));
-
-      assertRequestLineEquals(httpRequest, "GET http://localhost:4000/roles HTTP/1.1");
-      assertNonPayloadHeadersEqual(httpRequest, "Accept: application/json\nX-Chef-Version: " + ChefApiMetadata.DEFAULT_API_VERSION
-            + "-test\n");
-      assertPayloadEquals(httpRequest, null, null, false);
-
-      assertResponseParserClassEquals(method, httpRequest, ParseKeySetFromJson.class);
-      assertSaxResponseParserClassEquals(method, null);
-      assertFallbackClassEquals(method, EmptySetOnNotFoundOr404.class);
-
-      checkFilters(httpRequest);
-
-   }
-
    public void testDeleteDatabag() throws SecurityException, NoSuchMethodException, IOException {
       Invokable<?, ?> method = method(ChefApi.class, "deleteDatabag", String.class);
       GeneratedHttpRequest httpRequest = processor
@@ -460,23 +426,6 @@ public class ChefApiTest extends BaseAsyncApiTest<ChefApi> {
       assertResponseParserClassEquals(method, httpRequest, ReleasePayloadAndReturn.class);
       assertSaxResponseParserClassEquals(method, null);
       assertFallbackClassEquals(method, null);
-
-      checkFilters(httpRequest);
-
-   }
-
-   public void testListDatabags() throws SecurityException, NoSuchMethodException, IOException {
-      Invokable<?, ?> method = method(ChefApi.class, "listDatabags");
-      GeneratedHttpRequest httpRequest = processor.apply(Invocation.create(method, ImmutableList.of()));
-
-      assertRequestLineEquals(httpRequest, "GET http://localhost:4000/data HTTP/1.1");
-      assertNonPayloadHeadersEqual(httpRequest, "Accept: application/json\nX-Chef-Version: " + ChefApiMetadata.DEFAULT_API_VERSION
-            + "-test\n");
-      assertPayloadEquals(httpRequest, null, null, false);
-
-      assertResponseParserClassEquals(method, httpRequest, ParseKeySetFromJson.class);
-      assertSaxResponseParserClassEquals(method, null);
-      assertFallbackClassEquals(method, EmptySetOnNotFoundOr404.class);
 
       checkFilters(httpRequest);
 

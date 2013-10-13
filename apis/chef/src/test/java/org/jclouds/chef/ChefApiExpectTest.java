@@ -133,6 +133,25 @@ public class ChefApiExpectTest extends BaseChefApiExpectTest<ChefApi> {
       assertTrue(nodes.isEmpty(), String.format("Expected nodes to be empty but was: %s", nodes));
    }
 
+   public void testListCookbooksReturnsValidSet() {
+      ChefApi api = requestSendsResponse(
+            signed(getHttpRequestBuilder("GET", "/cookbooks").build()),
+            HttpResponse.builder().statusCode(200)
+                  .payload(payloadFromResourceWithContentType("/env_cookbooks.json", MediaType.APPLICATION_JSON)) //
+                  .build());
+      Set<String> cookbooks = api.listCookbooks();
+      assertEquals(cookbooks.size(), 2);
+      assertTrue(cookbooks.contains("apache2"), String.format("Expected cookbooks to contain 'apache2' but was: %s", cookbooks));
+   }
+
+   public void testListCookbooksReturnsEmptySetOn404() {
+      ChefApi api = requestSendsResponse(
+            signed(getHttpRequestBuilder("GET", "/cookbooks").build()),
+            HttpResponse.builder().statusCode(404).build());
+      Set<String> cookbooks = api.listCookbooks();
+      assertTrue(cookbooks.isEmpty(), String.format("Expected cookbooks to be empty but was: %s", cookbooks));
+   }
+
    public void testListCookbooksInEnvironmentReturnsValidSet() {
       ChefApi api = requestSendsResponse(
             signed(getHttpRequestBuilder("GET", "/environments/dev/cookbooks").build()),
@@ -201,6 +220,44 @@ public class ChefApiExpectTest extends BaseChefApiExpectTest<ChefApi> {
       SearchOptions options = SearchOptions.Builder.query("name:dummy");
       SearchResult<? extends Role> result = api.searchRoles(options);
       assertTrue(result.isEmpty(), String.format("Expected search result to be empty but was: %s", result));
+   }
+
+   public void testListRolesReturnsValidSet() {
+      ChefApi api = requestSendsResponse(
+            signed(getHttpRequestBuilder("GET", "/roles").build()),
+            HttpResponse.builder().statusCode(200)
+                  .payload(payloadFromResourceWithContentType("/roles_list.json", MediaType.APPLICATION_JSON)) //
+                  .build());
+      Set<String> roles = api.listRoles();
+      assertEquals(roles.size(), 2);
+      assertTrue(roles.contains("webserver"), String.format("Expected roles to contain 'websever' but was: %s", roles));
+   }
+
+   public void testListRolesReturnsEmptySetOn404() {
+      ChefApi api = requestSendsResponse(
+            signed(getHttpRequestBuilder("GET", "/roles").build()),
+            HttpResponse.builder().statusCode(404).build());
+      Set<String> roles = api.listRoles();
+      assertTrue(roles.isEmpty(), String.format("Expected roles to be empty but was: %s", roles));
+   }
+
+   public void testListDatabagsReturnsValidSet() {
+      ChefApi api = requestSendsResponse(
+            signed(getHttpRequestBuilder("GET", "/data").build()),
+            HttpResponse.builder().statusCode(200)
+                  .payload(payloadFromResourceWithContentType("/data_list.json", MediaType.APPLICATION_JSON)) //
+                  .build());
+      Set<String> databags = api.listDatabags();
+      assertEquals(databags.size(), 2);
+      assertTrue(databags.contains("applications"), String.format("Expected databags to contain 'applications' but was: %s", databags));
+   }
+
+   public void testListDatabagsReturnsEmptySetOn404() {
+      ChefApi api = requestSendsResponse(
+            signed(getHttpRequestBuilder("GET", "/data").build()),
+            HttpResponse.builder().statusCode(404).build());
+      Set<String> databags = api.listDatabags();
+      assertTrue(databags.isEmpty(), String.format("Expected databags to be empty but was: %s", databags));
    }
 
    @Override
