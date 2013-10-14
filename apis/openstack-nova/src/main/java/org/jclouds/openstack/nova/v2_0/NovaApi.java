@@ -21,6 +21,7 @@ import java.util.Set;
 import org.jclouds.javax.annotation.Nullable;
 import org.jclouds.location.Zone;
 import org.jclouds.location.functions.ZoneToEndpoint;
+import org.jclouds.openstack.nova.v2_0.extensions.AvailabilityZoneAPI;
 import org.jclouds.openstack.nova.v2_0.extensions.FlavorExtraSpecsApi;
 import org.jclouds.openstack.nova.v2_0.extensions.FloatingIPApi;
 import org.jclouds.openstack.nova.v2_0.extensions.HostAdministrationApi;
@@ -49,7 +50,7 @@ import com.google.inject.Provides;
 /**
  * Provides synchronous access to Nova.
  * <p/>
- * 
+ *
  * @see NovaAsyncApi
  * @see <a href="http://docs.openstack.org/api/openstack-compute/1.1/content/"
  *      />
@@ -57,12 +58,19 @@ import com.google.inject.Provides;
  */
 public interface NovaApi extends Closeable {
    /**
-    * 
+    *
     * @return the Zone codes configured
     */
    @Provides
    @Zone
    Set<String> getConfiguredZones();
+
+   /**
+    * Provides synchronous access to availability zone features
+    */
+   @Delegate
+   AvailabilityZoneAPI getAvailabilityZoneApi(
+         @EndpointParam(parser = ZoneToEndpoint.class) @Nullable String zone);
 
    /**
     * Provides synchronous access to Server features.
@@ -147,7 +155,7 @@ public interface NovaApi extends Closeable {
    @Delegate
    Optional<? extends ServerAdminApi> getServerAdminExtensionForZone(
          @EndpointParam(parser = ZoneToEndpoint.class) @Nullable String zone);
- 
+
    /**
     * Provides synchronous access to Aggregate features.
     */

@@ -1,0 +1,11 @@
+{
+    "availabilityZoneInfo": [
+        {
+            "zoneState": {
+                "available": true
+            },
+            "hosts": null,
+            "zoneName": "nova"
+        }
+    ]
+}

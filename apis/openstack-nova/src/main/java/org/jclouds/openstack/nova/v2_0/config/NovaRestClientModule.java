@@ -31,6 +31,8 @@ import org.jclouds.http.annotation.Redirection;
 import org.jclouds.http.annotation.ServerError;
 import org.jclouds.openstack.nova.v2_0.NovaApi;
 import org.jclouds.openstack.nova.v2_0.NovaAsyncApi;
+import org.jclouds.openstack.nova.v2_0.extensions.AvailabilityZoneAPI;
+import org.jclouds.openstack.nova.v2_0.extensions.AvailabilityZoneAsyncApi;
 import org.jclouds.openstack.nova.v2_0.extensions.ExtensionNamespaces;
 import org.jclouds.openstack.nova.v2_0.extensions.FlavorExtraSpecsApi;
 import org.jclouds.openstack.nova.v2_0.extensions.FlavorExtraSpecsAsyncApi;
@@ -100,6 +102,7 @@ public class NovaRestClientModule<S extends NovaApi, A extends NovaAsyncApi> ext
          .put(ImageApi.class, ImageAsyncApi.class)
          .put(ExtensionApi.class, ExtensionAsyncApi.class)
          .put(FloatingIPApi.class, FloatingIPAsyncApi.class)
+         .put(AvailabilityZoneAPI.class, AvailabilityZoneAsyncApi.class)
          .put(SecurityGroupApi.class, SecurityGroupAsyncApi.class)
          .put(KeyPairApi.class, KeyPairAsyncApi.class)
          .put(HostAdministrationApi.class, HostAdministrationAsyncApi.class)
