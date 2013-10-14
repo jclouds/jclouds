@@ -66,7 +66,6 @@ public class BindSwiftObjectMetadataToRequest implements Binder {
       byte[] contentMD5 = object.getInfo().getHash();
       if (contentMD5 != null) {
          // Swizzle hash to ETag
-         object.getInfo().setHash(null);
          request = (R) request.toBuilder()
                .addHeader(HttpHeaders.ETAG,
                      BaseEncoding.base16().lowerCase().encode(contentMD5))
