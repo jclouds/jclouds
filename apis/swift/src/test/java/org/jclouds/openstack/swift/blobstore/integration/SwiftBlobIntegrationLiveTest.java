@@ -29,6 +29,7 @@ import org.jclouds.blobstore.options.PutOptions;
 import org.jclouds.openstack.keystone.v2_0.config.KeystoneProperties;
 import org.jclouds.openstack.swift.blobstore.strategy.MultipartUpload;
 import org.testng.ITestContext;
+import org.testng.SkipException;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
@@ -70,6 +71,12 @@ public class SwiftBlobIntegrationLiveTest extends BaseBlobIntegrationTest {
    @Test(enabled = false)
    public void testGetTwoRanges() {
       // not supported in swift
+   }
+
+   @Override
+   @Test
+   public void testCreateBlobWithExpiry() throws InterruptedException {
+      throw new SkipException("not yet implemented");
    }
 
     @BeforeClass(groups = { "integration", "live" }, dependsOnMethods = "setupContext")
