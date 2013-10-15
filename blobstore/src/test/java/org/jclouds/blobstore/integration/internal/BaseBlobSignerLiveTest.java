@@ -16,6 +16,7 @@
  */
 package org.jclouds.blobstore.integration.internal;
 
+import static com.google.common.net.HttpHeaders.EXPECT;
 import static org.jclouds.blobstore.options.GetOptions.Builder.range;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.fail;
@@ -130,6 +131,10 @@ public class BaseBlobSignerLiveTest extends BaseBlobStoreIntegrationTest {
       String container = getContainerName();
       try {
          HttpRequest request = view.getSigner().signPutBlob(container, blob, 3 /* seconds */);
+         // Strip Expect: 100-continue since Java 7+ will throw a
+         // ProtocolException instead of setting the response code:
+         // http://www.docjar.com/html/api/sun/net/www/protocol/http/HttpURLConnection.java.html#1021
+         request = request.toBuilder().removeHeader(EXPECT).build();
          assertEquals(request.getFilters().size(), 0);
 
          Strings2.toString(view.utils().http().invoke(request).getPayload());
