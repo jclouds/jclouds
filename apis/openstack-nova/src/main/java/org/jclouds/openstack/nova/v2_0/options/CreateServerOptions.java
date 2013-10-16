@@ -16,28 +16,6 @@
  */
 package org.jclouds.openstack.nova.v2_0.options;
 
-import static com.google.common.base.Objects.equal;
-import static com.google.common.base.Objects.toStringHelper;
-import static com.google.common.base.Preconditions.checkArgument;
-import static com.google.common.base.Preconditions.checkNotNull;
-import static com.google.common.base.Preconditions.checkState;
-import static com.google.common.base.Strings.emptyToNull;
-import static com.google.common.io.BaseEncoding.base64;
-
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Set;
-
-import javax.inject.Inject;
-import javax.inject.Named;
-
-import org.jclouds.http.HttpRequest;
-import org.jclouds.openstack.nova.v2_0.NovaApi;
-import org.jclouds.openstack.nova.v2_0.domain.Server;
-import org.jclouds.rest.MapBinder;
-import org.jclouds.rest.binders.BindToJsonPayload;
-
 import com.google.common.base.Objects;
 import com.google.common.base.Objects.ToStringHelper;
 import com.google.common.base.Optional;
@@ -46,11 +24,30 @@ import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
+import org.jclouds.http.HttpRequest;
+import org.jclouds.openstack.nova.v2_0.NovaApi;
+import org.jclouds.openstack.nova.v2_0.domain.Server;
+import org.jclouds.rest.MapBinder;
+import org.jclouds.rest.binders.BindToJsonPayload;
+
+import javax.inject.Inject;
+import javax.inject.Named;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
+
+import static com.google.common.base.Objects.equal;
+import static com.google.common.base.Objects.toStringHelper;
+import static com.google.common.base.Preconditions.checkArgument;
+import static com.google.common.base.Preconditions.checkNotNull;
+import static com.google.common.base.Preconditions.checkState;
+import static com.google.common.base.Strings.emptyToNull;
+import static com.google.common.io.BaseEncoding.base64;
 
 /**
- * 
  * @author Adrian Cole
- * 
+ * @author Inbar Stolberg
  */
 public class CreateServerOptions implements MapBinder {
    @Inject
@@ -78,7 +75,7 @@ public class CreateServerOptions implements MapBinder {
       public String getPath() {
          return path;
       }
-      
+
       @Override
       public boolean equals(Object object) {
          if (this == object) {
@@ -112,6 +109,7 @@ public class CreateServerOptions implements MapBinder {
    private byte[] userData;
    private String diskConfig;
    private Set<String> networks = ImmutableSet.of();
+   private String availabilityZone;
 
    @Override
    public boolean equals(Object object) {
@@ -121,9 +119,10 @@ public class CreateServerOptions implements MapBinder {
       if (object instanceof CreateServerOptions) {
          final CreateServerOptions other = CreateServerOptions.class.cast(object);
          return equal(keyName, other.keyName) && equal(securityGroupNames, other.securityGroupNames)
-                  && equal(metadata, other.metadata) && equal(personality, other.personality)
-                  && equal(adminPass, other.adminPass) && equal(diskConfig, other.diskConfig)
-                  && equal(adminPass, other.adminPass) && equal(networks, other.networks);
+               && equal(metadata, other.metadata) && equal(personality, other.personality)
+               && equal(adminPass, other.adminPass) && equal(diskConfig, other.diskConfig)
+               && equal(adminPass, other.adminPass) && equal(networks, other.networks)
+               && equal(availabilityZone, other.availabilityZone);
       } else {
          return false;
       }
@@ -131,7 +130,7 @@ public class CreateServerOptions implements MapBinder {
 
    @Override
    public int hashCode() {
-      return Objects.hashCode(keyName, securityGroupNames, metadata, personality, adminPass, networks);
+      return Objects.hashCode(keyName, securityGroupNames, metadata, personality, adminPass, networks, availabilityZone);
    }
 
    protected ToStringHelper string() {
@@ -150,6 +149,7 @@ public class CreateServerOptions implements MapBinder {
       toString.add("userData", userData == null ? null : new String(userData));
       if (!networks.isEmpty())
          toString.add("networks", networks);
+      toString.add("availability_zone", availabilityZone == null ? null : availabilityZone);
       return toString;
    }
 
@@ -162,6 +162,8 @@ public class CreateServerOptions implements MapBinder {
       final String name;
       final String imageRef;
       final String flavorRef;
+      @Named("availability_zone")
+      String availabilityZone;
       String adminPass;
       Map<String, String> metadata;
       List<File> personality;
@@ -192,6 +194,8 @@ public class CreateServerOptions implements MapBinder {
          server.personality = personality;
       if (keyName != null)
          server.key_name = keyName;
+      if (availabilityZone != null)
+         server.availabilityZone = availabilityZone;
       if (userData != null)
          server.user_data = base64().encode(userData);
       if (securityGroupNames.size() > 0) {
@@ -291,8 +295,8 @@ public class CreateServerOptions implements MapBinder {
     * by instance scripts.
     */
    public CreateServerOptions userData(byte[] userData) {
-       this.userData = userData;
-       return this;
+      this.userData = userData;
+      return this;
    }
 
    /**
@@ -302,7 +306,11 @@ public class CreateServerOptions implements MapBinder {
    public String getKeyPairName() {
       return keyName;
    }
-   
+
+   public String getAvailabilityZone() {
+      return availabilityZone;
+   }
+
    /**
     * @see #getKeyPairName()
     */
@@ -310,33 +318,38 @@ public class CreateServerOptions implements MapBinder {
       this.keyName = keyName;
       return this;
    }
-   
+
    /**
-    * 
+    * @see #getAvailabilityZone()
+    */
+   public CreateServerOptions availabilityZone(String availabilityZone) {
+      this.availabilityZone = availabilityZone;
+      return this;
+   }
+
+   /**
     * Security groups the user specified to run servers with.
-    * 
+    * <p/>
     * <h3>Note</h3>
-    * 
+    * <p/>
     * This requires that {@link NovaApi#getSecurityGroupExtensionForZone(String)} to return
     * {@link Optional#isPresent present}
     */
    public Set<String> getSecurityGroupNames() {
       return securityGroupNames;
    }
-   
+
    /**
-    * 
     * Get custom networks specified for the server.
+    *
     * @return A set of uuids defined by Neutron (previously Quantum)
     * @see <a href="https://wiki.openstack.org/wiki/Neutron/APIv2-specification#Network">Neutron Networks<a/>
-    *
     */
    public Set<String> getNetworks() {
       return networks;
    }
 
    /**
-    *
     * @see #getSecurityGroupNames
     */
    public CreateServerOptions securityGroupNames(String... securityGroupNames) {
@@ -354,12 +367,12 @@ public class CreateServerOptions implements MapBinder {
    }
 
    /**
-    * When you create a server from an image with the diskConfig value set to 
-    * {@link Server#DISK_CONFIG_AUTO}, the server is built with a single partition that is expanded to 
-    * the disk size of the flavor selected. When you set the diskConfig attribute to 
-    * {@link Server#DISK_CONFIG_MANUAL}, the server is built by using the partition scheme and file 
+    * When you create a server from an image with the diskConfig value set to
+    * {@link Server#DISK_CONFIG_AUTO}, the server is built with a single partition that is expanded to
+    * the disk size of the flavor selected. When you set the diskConfig attribute to
+    * {@link Server#DISK_CONFIG_MANUAL}, the server is built by using the partition scheme and file
     * system that is in the source image.
-    * <p/> 
+    * <p/>
     * If the target flavor disk is larger, remaining disk space is left unpartitioned. A server inherits the diskConfig
     * attribute from the image from which it is created. However, you can override the diskConfig value when you create
     * a server. This field is only present if the Disk Config extension is installed in your OpenStack deployment.
@@ -367,7 +380,7 @@ public class CreateServerOptions implements MapBinder {
    public String getDiskConfig() {
       return diskConfig;
    }
-   
+
    /**
     * @see #getDiskConfig
     */
@@ -375,9 +388,8 @@ public class CreateServerOptions implements MapBinder {
       this.diskConfig = diskConfig;
       return this;
    }
-   
+
    /**
-    *
     * @see #getNetworks
     */
    public CreateServerOptions networks(String... networks) {
@@ -399,7 +411,7 @@ public class CreateServerOptions implements MapBinder {
       /**
        * @see CreateServerOptions#writeFileToPath
        */
-      public static CreateServerOptions writeFileToPath(byte[] contents,String path) {
+      public static CreateServerOptions writeFileToPath(byte[] contents, String path) {
          CreateServerOptions options = new CreateServerOptions();
          return options.writeFileToPath(contents, path);
       }
@@ -424,7 +436,7 @@ public class CreateServerOptions implements MapBinder {
          CreateServerOptions options = new CreateServerOptions();
          return options.keyPairName(keyName);
       }
-      
+
       /**
        * @see CreateServerOptions#getSecurityGroupNames
        */
@@ -463,6 +475,14 @@ public class CreateServerOptions implements MapBinder {
       public static CreateServerOptions networks(Iterable<String> networks) {
          CreateServerOptions options = new CreateServerOptions();
          return CreateServerOptions.class.cast(options.networks(networks));
+      }
+
+      /**
+       * @see org.jclouds.openstack.nova.v2_0.options.CreateServerOptions#getAvailabilityZone()
+       */
+      public static CreateServerOptions availabilityZone(String availabilityZone) {
+         CreateServerOptions options = new CreateServerOptions();
+         return options.availabilityZone(availabilityZone);
       }
    }
 

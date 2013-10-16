@@ -103,6 +103,30 @@ public class ServerApiExpectTest extends BaseNovaApiExpectTest {
               new ParseCreatedServerTest().expected().toString());
    }
 
+   public void testCreateServerInAvailabilityZoneWhenResponseIs202() throws Exception {
+      HttpRequest createServer = HttpRequest
+            .builder()
+            .method("POST")
+            .endpoint("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v1.1/3456/servers")
+            .addHeader("Accept", "application/json")
+            .addHeader("X-Auth-Token", authToken)
+            .payload(payloadFromStringWithContentType(
+                  "{\"server\":{\"name\":\"test-e92\",\"imageRef\":\"1241\",\"flavorRef\":\"100\",\"availability_zone\":\"nova\"}}","application/json"))
+            .build();
+
+
+      HttpResponse createServerResponse = HttpResponse.builder().statusCode(202).message("HTTP/1.1 202 Accepted")
+            .payload(payloadFromResourceWithContentType("/new_server_in_zone.json","application/json; charset=UTF-8")).build();
+
+      NovaApi apiWithNewServer = requestsSendResponses(keystoneAuthWithUsernameAndPasswordAndTenantName,
+            responseWithKeystoneAccess, createServer, createServerResponse);
+
+      CreateServerOptions options = new CreateServerOptions().availabilityZone("nova");
+
+      assertEquals(apiWithNewServer.getServerApiForZone("az-1.region-a.geo-1").create("test-e92", "1241", "100", options).toString(),
+            new ParseCreatedServerTest().expected().toString());
+   }
+
    public void testCreateServerWithSecurityGroupsWhenResponseIs202() throws Exception {
 
       HttpRequest createServer = HttpRequest

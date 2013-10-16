@@ -22,7 +22,9 @@ import static org.testng.Assert.assertNotNull;
 import static org.testng.Assert.assertTrue;
 
 import org.jclouds.openstack.nova.v2_0.domain.Server;
+import org.jclouds.openstack.nova.v2_0.domain.ServerCreated;
 import org.jclouds.openstack.nova.v2_0.internal.BaseNovaApiLiveTest;
+import org.jclouds.openstack.nova.v2_0.options.CreateServerOptions;
 import org.jclouds.openstack.v2_0.domain.Link.Relation;
 import org.jclouds.openstack.v2_0.domain.Resource;
 import org.jclouds.openstack.v2_0.predicates.LinkPredicates;
@@ -34,6 +36,7 @@ import com.google.common.collect.Iterables;
  * Tests behavior of {@link ServerApi}
  * 
  * @author Adrian Cole
+ * @author Inbar Stolberg
  */
 @Test(groups = "live", testName = "ServerApiLiveTest")
 public class ServerApiLiveTest extends BaseNovaApiLiveTest {
@@ -70,6 +73,45 @@ public class ServerApiLiveTest extends BaseNovaApiLiveTest {
              checkServer(details);
           }
        }
+    }
+
+    @Test
+    public void testCreateInAvailabilityZone() {
+        String serverId = null;
+        for (String zoneId : zones) {
+            ServerApi serverApi = api.getServerApiForZone(zoneId);
+            try {
+                serverId = createServer(zoneId, "nova", Server.Status.ACTIVE).getId();
+                Server server = serverApi.get(serverId);
+                assertEquals(server.getStatus(), Server.Status.ACTIVE);
+            } finally {
+                serverApi.delete(serverId);
+            }
+        }
+    }
+
+    @Test
+    public void testCreateInWrongAvailabilityZone() {
+        String serverId = null;
+        for (String zoneId : zones) {
+            ServerApi serverApi = api.getServerApiForZone(zoneId);
+            try {
+                serverId = createServer(zoneId, "err", Server.Status.ERROR).getId();
+                Server server = serverApi.get(serverId);
+                assertEquals(server.getStatus(), Server.Status.ERROR);
+            } finally {
+                serverApi.delete(serverId);
+            }
+        }
+    }
+
+    private Server createServer(String regionId, String availabilityZoneId, Server.Status serverStatus) {
+        ServerApi serverApi = api.getServerApiForZone(regionId);
+        CreateServerOptions options = new CreateServerOptions();
+        options = options.availabilityZone(availabilityZoneId);
+        ServerCreated server = serverApi.create(hostName, imageIdForZone(regionId), flavorRefForZone(regionId), options);
+        blockUntilServerInState(server.getId(), serverApi, serverStatus);
+        return serverApi.get(server.getId());
     }
 
     private void checkResource(Resource resource) {
