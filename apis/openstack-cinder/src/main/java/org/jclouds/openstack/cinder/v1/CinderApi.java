@@ -21,6 +21,7 @@ import java.util.Set;
 import org.jclouds.javax.annotation.Nullable;
 import org.jclouds.location.Zone;
 import org.jclouds.location.functions.ZoneToEndpoint;
+import org.jclouds.openstack.cinder.v1.features.QuotaApi;
 import org.jclouds.openstack.cinder.v1.features.SnapshotApi;
 import org.jclouds.openstack.cinder.v1.features.VolumeApi;
 import org.jclouds.openstack.cinder.v1.features.VolumeTypeApi;
@@ -32,8 +33,7 @@ import com.google.inject.Provides;
 
 /**
  * Provides synchronous access to Cinder.
- *  
- * @see CinderAsyncApi
+ *
  * @see <a href="http://api.openstack.org/">API Doc</a>
  * @author Everett Toews
  */
@@ -72,4 +72,12 @@ public interface CinderApi extends Closeable {
    @Delegate
    SnapshotApi getSnapshotApiForZone(
          @EndpointParam(parser = ZoneToEndpoint.class) @Nullable String zone);
+
+   /**
+    * Provides synchronous access to quotas features.
+    */
+   @Delegate
+   QuotaApi getQuotaApi(
+         @EndpointParam(parser = ZoneToEndpoint.class) @Nullable String zone);
+
 }
