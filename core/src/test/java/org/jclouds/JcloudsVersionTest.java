@@ -54,6 +54,12 @@ public class JcloudsVersionTest {
     }
 
     @Test(expectedExceptions = { IllegalArgumentException.class })
+    public void testFailsIfIncubating() {
+        // no longer supported after graduation from the Apache Incubator
+        new JcloudsVersion("1.2.3-incubating");
+    }
+
+    @Test(expectedExceptions = { IllegalArgumentException.class })
     public void testFailsIfAlphaSnapshot() {
         new JcloudsVersion("1.2.3-alpha.5-SNAPSHOT");
     }
@@ -107,18 +113,6 @@ public class JcloudsVersionTest {
     @Test
     public void testSupportsReleaseVersion() {
         JcloudsVersion version = new JcloudsVersion("1.2.3");
-        assertFalse(version.alpha, "Expected non-alpha");
-        assertFalse(version.beta, "Expected non-beta");
-        assertFalse(version.releaseCandidate, "Expected non-release candidate");
-        assertNull(version.alphaVersion);
-        assertNull(version.betaVersion);
-        assertNull(version.releaseCandidateVersion);
-    }
-
-    @Test
-    public void testSupportsIncubatingReleaseVersion() {
-        // *not* a semver-compliant release version!
-        JcloudsVersion version = new JcloudsVersion("1.2.3-incubating");
         assertFalse(version.alpha, "Expected non-alpha");
         assertFalse(version.beta, "Expected non-beta");
         assertFalse(version.releaseCandidate, "Expected non-release candidate");
