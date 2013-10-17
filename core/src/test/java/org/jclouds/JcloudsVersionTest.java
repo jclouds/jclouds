@@ -59,7 +59,7 @@ public class JcloudsVersionTest {
     }
 
     @Test(expectedExceptions = { IllegalArgumentException.class })
-    public void testFailsIfBetSanapshot() {
+    public void testFailsIfBetaSnapshot() {
         new JcloudsVersion("1.2.3-beta.5-SNAPSHOT");
     }
 
