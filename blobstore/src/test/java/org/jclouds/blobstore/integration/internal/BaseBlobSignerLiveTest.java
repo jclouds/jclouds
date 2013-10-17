@@ -131,12 +131,12 @@ public class BaseBlobSignerLiveTest extends BaseBlobStoreIntegrationTest {
       String container = getContainerName();
       try {
          HttpRequest request = view.getSigner().signPutBlob(container, blob, 3 /* seconds */);
-         // Strip Expect: 100-continue since Java 7+ will throw a
-         // ProtocolException instead of setting the response code:
-         // http://www.docjar.com/html/api/sun/net/www/protocol/http/HttpURLConnection.java.html#1021
-         request = request.toBuilder().removeHeader(EXPECT).build();
          assertEquals(request.getFilters().size(), 0);
 
+         // Strip Expect: 100-continue to make actual responses visible, since
+         // Java 7+ will throw a ProtocolException instead of setting the response code:
+         // http://www.docjar.com/html/api/sun/net/www/protocol/http/HttpURLConnection.java.html#1021
+         request = request.toBuilder().removeHeader(EXPECT).build();
          Strings2.toString(view.utils().http().invoke(request).getPayload());
          assertConsistencyAwareContainerSize(container, 1);
 
