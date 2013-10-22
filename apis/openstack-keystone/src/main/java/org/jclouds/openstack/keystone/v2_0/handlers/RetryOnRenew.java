@@ -52,7 +52,7 @@ public class RetryOnRenew implements HttpRetryHandler {
    protected Logger logger = Logger.NULL;
 
    @VisibleForTesting
-   final static int NUM_RETRIES = 5;
+   static final int NUM_RETRIES = 5;
 
    private final LoadingCache<Credentials, Access> authenticationResponseCache;
 
