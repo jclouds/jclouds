@@ -25,6 +25,7 @@ import org.jclouds.openstack.nova.v2_0.domain.Server;
 import org.jclouds.openstack.nova.v2_0.domain.ServerCreated;
 import org.jclouds.openstack.nova.v2_0.internal.BaseNovaApiLiveTest;
 import org.jclouds.openstack.nova.v2_0.options.CreateServerOptions;
+import org.jclouds.openstack.nova.v2_0.options.RebuildServerOptions;
 import org.jclouds.openstack.v2_0.domain.Link.Relation;
 import org.jclouds.openstack.v2_0.domain.Resource;
 import org.jclouds.openstack.v2_0.predicates.LinkPredicates;
@@ -103,6 +104,51 @@ public class ServerApiLiveTest extends BaseNovaApiLiveTest {
                 serverApi.delete(serverId);
             }
         }
+    }
+
+    @Test
+    public void testRebuildServer() {
+
+        String serverId = null;
+
+        for (String zoneId : zones) {
+            ServerApi serverApi = api.getServerApiForZone(zoneId);
+            try {
+                serverId = createServer(zoneId, Server.Status.ACTIVE).getId();
+
+                Server server = serverApi.get(serverId);
+
+                assertEquals(server.getStatus(), Server.Status.ACTIVE);
+
+                RebuildServerOptions options = new RebuildServerOptions().
+                        withImage(server.getImage().getId()).
+                        name("newName").
+                        adminPass("password").
+                        ipv4Address("1.1.1.1").
+                        ipv6Address("fe80::100");
+
+                serverApi.rebuild(serverId, options);
+
+                Server rebuiltServer = serverApi.get(serverId);
+
+                assertEquals("newName", rebuiltServer.getName());
+                assertEquals("1.1.1.1", rebuiltServer.getAccessIPv4());
+                assertEquals("fe80::100", rebuiltServer.getAccessIPv6());
+
+            } finally {
+                serverApi.delete(serverId);
+            }
+        }
+    }
+
+    private Server createServer(String regionId, Server.Status serverStatus) {
+        ServerApi serverApi = api.getServerApiForZone(regionId);
+        CreateServerOptions options = new CreateServerOptions();
+        ServerCreated server = serverApi.create(hostName, imageIdForZone(regionId), flavorRefForZone(regionId), options);
+
+        blockUntilServerInState(server.getId(), serverApi, serverStatus);
+
+        return serverApi.get(server.getId());
     }
 
     private Server createServer(String regionId, String availabilityZoneId, Server.Status serverStatus) {

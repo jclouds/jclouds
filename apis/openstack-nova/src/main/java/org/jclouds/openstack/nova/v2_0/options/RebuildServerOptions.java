@@ -31,21 +31,33 @@ import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Maps;
 
 /**
- * 
- * 
  * @author Adrian Cole
- * 
+ * @author Inbar Stolberg
  */
 public class RebuildServerOptions implements MapBinder {
    @Inject
    private BindToJsonPayload jsonBinder;
    String imageRef;
+   String name;
+   String adminPass;
+   String accessIPv4;
+   String accessIPv6;
 
    @Override
    public <R extends HttpRequest> R bindToRequest(R request, Map<String, Object> postParams) {
       Map<String, String> image = Maps.newHashMap();
       if (imageRef != null)
          image.put("imageRef", imageRef);
+      if (name != null)
+         image.put("name", name);
+      if (adminPass != null)
+         image.put("adminPass", adminPass);
+      if (accessIPv4 != null)
+         image.put("accessIPv4", accessIPv4);
+      if (accessIPv6 != null)
+         image.put("accessIPv6", accessIPv6);
+
+
       return jsonBinder.bindToRequest(request, ImmutableMap.of("rebuild", image));
    }
 
@@ -65,6 +77,26 @@ public class RebuildServerOptions implements MapBinder {
       return this;
    }
 
+   public RebuildServerOptions name(String name) {
+      this.name = name;
+      return this;
+   }
+
+   public RebuildServerOptions adminPass(String adminPass) {
+      this.adminPass = adminPass;
+      return this;
+   }
+
+   public RebuildServerOptions ipv4Address(String ipv4Address) {
+      this.accessIPv4 = ipv4Address;
+      return this;
+   }
+
+   public RebuildServerOptions ipv6Address(String iPv6Address) {
+      this.accessIPv6 = iPv6Address;
+      return this;
+   }
+
    public static class Builder {
 
       /**
@@ -73,6 +105,38 @@ public class RebuildServerOptions implements MapBinder {
       public static RebuildServerOptions withImage(String ref) {
          RebuildServerOptions options = new RebuildServerOptions();
          return options.withImage(ref);
+      }
+
+      /**
+       * @see RebuildServerOptions#name(String)
+       */
+      public static RebuildServerOptions name(String name) {
+         RebuildServerOptions options = new RebuildServerOptions();
+         return options.name(name);
+      }
+
+      /**
+       * @see RebuildServerOptions#adminPass(String)
+       */
+      public static RebuildServerOptions adminPass(String adminPass) {
+         RebuildServerOptions options = new RebuildServerOptions();
+         return options.adminPass(adminPass);
+      }
+
+      /**
+       * @see RebuildServerOptions#ipv4Address(String)
+       */
+      public static RebuildServerOptions ipv4Address(String ipv4Address) {
+         RebuildServerOptions options = new RebuildServerOptions();
+         return options.ipv4Address(ipv4Address);
+      }
+
+      /**
+       * @see RebuildServerOptions#ipv6Address(String)
+       */
+      public static RebuildServerOptions ipv6Address(String ipv6Address) {
+         RebuildServerOptions options = new RebuildServerOptions();
+         return options.ipv6Address(ipv6Address);
       }
    }
 }

@@ -26,6 +26,7 @@ import org.jclouds.openstack.nova.v2_0.NovaApi;
 import org.jclouds.openstack.nova.v2_0.domain.Server;
 import org.jclouds.openstack.nova.v2_0.internal.BaseNovaApiExpectTest;
 import org.jclouds.openstack.nova.v2_0.options.CreateServerOptions;
+import org.jclouds.openstack.nova.v2_0.options.RebuildServerOptions;
 import org.jclouds.openstack.nova.v2_0.parse.ParseCreatedServerTest;
 import org.jclouds.openstack.nova.v2_0.parse.ParseMetadataListTest;
 import org.jclouds.openstack.nova.v2_0.parse.ParseMetadataUpdateTest;
@@ -227,6 +228,28 @@ public class ServerApiExpectTest extends BaseNovaApiExpectTest {
       assertEquals(apiWithNewServer.getServerApiForZone("az-1.region-a.geo-1").create("test-e92", "1241",
                "100", new CreateServerOptions().diskConfig(Server.DISK_CONFIG_MANUAL)).toString(),
               new ParseCreatedServerTest().expectedWithDiskConfig(Server.DISK_CONFIG_MANUAL).toString());
+   }
+
+   public void testRebuildServerWhenResponseIs202() throws Exception {
+      String serverId = "52415800-8b69-11e0-9b19-734f565bc83b";
+      HttpRequest rebuildServer = HttpRequest
+            .builder()
+            .method("POST")
+            .endpoint("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v1.1/3456/servers/" + serverId +"/action")
+            .addHeader("Accept", "*/*")
+            .addHeader("X-Auth-Token", authToken)
+            .payload(payloadFromStringWithContentType(
+                  "{\"rebuild\":{\"adminPass\":\"password\",\"imageRef\":\"1234\",\"name\":\"newName\",\"accessIPv4\":\"1.1.1.1\",\"accessIPv6\":\"fe80::100\"}}","application/json"))
+            .build();
+
+      HttpResponse rebuildServerResponse = HttpResponse.builder().statusCode(202).build();
+
+      NovaApi apiRebuildServer = requestsSendResponses(keystoneAuthWithUsernameAndPasswordAndTenantName,
+            responseWithKeystoneAccess, rebuildServer, rebuildServerResponse);
+
+      RebuildServerOptions options = new RebuildServerOptions().withImage("1234").name("newName").adminPass("password").ipv4Address("1.1.1.1").ipv6Address("fe80::100");
+
+      apiRebuildServer.getServerApiForZone("az-1.region-a.geo-1").rebuild(serverId, options);
    }
 
    public void testCreateImageWhenResponseIs2xx() throws Exception {
