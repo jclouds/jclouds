@@ -77,9 +77,4 @@ public class FilesystemBlobIntegrationTest extends BaseBlobIntegrationTest {
    public void testPutObjectStream() throws InterruptedException, IOException, ExecutionException {
       throw new SkipException("not yet implemented");
    }
-
-   @Override
-   public void testPutIncorrectContentMD5() throws InterruptedException, IOException {
-      throw new SkipException("not yet implemented");
-   }
 }

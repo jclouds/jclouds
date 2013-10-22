@@ -27,9 +27,4 @@ public class TransientBlobIntegrationTest extends BaseBlobIntegrationTest {
    public TransientBlobIntegrationTest() {
       provider = "transient";
    }
-
-   @Override
-   public void testPutIncorrectContentMD5() throws InterruptedException, IOException {
-      throw new SkipException("not yet implemented");
-   }
 }

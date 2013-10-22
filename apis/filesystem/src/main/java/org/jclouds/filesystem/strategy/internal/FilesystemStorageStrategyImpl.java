@@ -47,6 +47,7 @@ import com.google.common.base.Throwables;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Sets;
+import com.google.common.hash.HashCode;
 import com.google.common.hash.Hashing;
 import com.google.common.hash.HashingInputStream;
 import com.google.common.io.ByteSource;
@@ -201,9 +202,15 @@ public class FilesystemStorageStrategyImpl implements LocalStorageStrategy {
          Files.createParentDirs(outputFile);
          his = new HashingInputStream(Hashing.md5(), payload.openStream());
          Files.asByteSink(outputFile).writeFrom(his);
-         payload.getContentMetadata().setContentMD5(his.hash());
-         String eTag = base16().lowerCase().encode(payload.getContentMetadata().getContentMD5());
-         return eTag;
+         HashCode actualHashCode = his.hash();
+         HashCode expectedHashCode = payload.getContentMetadata().getContentMD5AsHashCode();
+         if (expectedHashCode != null && !actualHashCode.equals(expectedHashCode)) {
+            throw new IOException("MD5 hash code mismatch, actual: " + actualHashCode +
+                  " expected: " + expectedHashCode);
+         }
+         payload.getContentMetadata().setContentMD5(actualHashCode);
+         // TODO: store metadata in extended attributes when moving to Java 7
+         return base16().lowerCase().encode(actualHashCode.asBytes());
       } catch (IOException ex) {
          if (outputFile != null) {
             if (!outputFile.delete()) {

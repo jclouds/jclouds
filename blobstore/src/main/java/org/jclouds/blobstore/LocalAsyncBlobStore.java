@@ -392,6 +392,11 @@ public class LocalAsyncBlobStore extends BaseAsyncBlobStore {
       try {
          return immediateFuture(storageStrategy.putBlob(containerName, blob));
       } catch (IOException e) {
+         if (e.getMessage().startsWith("MD5 hash code mismatch")) {
+            HttpResponseException exception = returnResponseException(400);
+            exception.initCause(e);
+            throw exception;
+         }
          logger.error(e, "An error occurred storing the new blob with name [%s] to container [%s].", blobKey,
                containerName);
          throw Throwables.propagate(e);

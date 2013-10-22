@@ -39,14 +39,15 @@ import org.jclouds.io.ContentMetadataCodec;
 import org.jclouds.io.MutableContentMetadata;
 import org.jclouds.io.Payload;
 import org.jclouds.io.Payloads;
-import org.jclouds.io.payloads.ByteArrayPayload;
-import org.jclouds.io.payloads.DelegatingPayload;
+import org.jclouds.util.Closeables2;
 
 import com.google.common.base.Supplier;
-import com.google.common.base.Throwables;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Multimaps;
+import com.google.common.hash.HashCode;
 import com.google.common.hash.Hashing;
+import com.google.common.hash.HashingInputStream;
+import com.google.common.io.ByteSource;
 import com.google.common.io.ByteStreams;
 import com.google.common.net.HttpHeaders;
 
@@ -123,10 +124,25 @@ public class TransientStorageStrategy implements LocalStorageStrategy {
 
    @Override
    public String putBlob(final String containerName, final Blob blob) throws IOException {
-      Blob newBlob = createUpdatedCopyOfBlobInContainer(containerName, blob);
+      byte[] payload;
+      HashCode actualHashCode;
+      HashingInputStream input = new HashingInputStream(Hashing.md5(), blob.getPayload().openStream());
+      try {
+         payload = ByteStreams.toByteArray(input);
+         actualHashCode = input.hash();
+         HashCode expectedHashCode = blob.getPayload().getContentMetadata().getContentMD5AsHashCode();
+         if (expectedHashCode != null && !actualHashCode.equals(expectedHashCode)) {
+            throw new IOException("MD5 hash code mismatch, actual: " + actualHashCode +
+                  " expected: " + expectedHashCode);
+         }
+      } finally {
+         Closeables2.closeQuietly(input);
+      }
+
+      Blob newBlob = createUpdatedCopyOfBlobInContainer(containerName, blob, payload, actualHashCode);
       Map<String, Blob> map = containerToBlobs.get(containerName);
       map.put(newBlob.getMetadata().getName(), newBlob);
-      return base16().lowerCase().encode(newBlob.getPayload().getContentMetadata().getContentMD5());
+      return base16().lowerCase().encode(actualHashCode.asBytes());
    }
 
    @Override
@@ -146,37 +162,22 @@ public class TransientStorageStrategy implements LocalStorageStrategy {
       return "/";
    }
 
-   private Blob createUpdatedCopyOfBlobInContainer(String containerName, Blob in) {
+   private Blob createUpdatedCopyOfBlobInContainer(String containerName, Blob in, byte[] input, HashCode contentMd5) {
+      checkNotNull(containerName, "containerName");
       checkNotNull(in, "blob");
-      checkNotNull(in.getPayload(), "blob.payload");
-      ByteArrayPayload payload = (in.getPayload() instanceof ByteArrayPayload) ? ByteArrayPayload.class.cast(in
-               .getPayload()) : null;
-      if (payload == null)
-         payload = (in.getPayload() instanceof DelegatingPayload) ? (DelegatingPayload.class.cast(in.getPayload())
-                  .getDelegate() instanceof ByteArrayPayload) ? ByteArrayPayload.class.cast(DelegatingPayload.class
-                  .cast(in.getPayload()).getDelegate()) : null : null;
-      try {
-         if (payload == null || !(payload instanceof ByteArrayPayload)) {
-            MutableContentMetadata oldMd = in.getPayload().getContentMetadata();
-            byte[] out = ByteStreams.toByteArray(in.getPayload());
-            payload = Payloads.newByteArrayPayload(out);
-            HttpUtils.copy(oldMd, payload.getContentMetadata());
-            payload.getContentMetadata().setContentMD5(Hashing.md5().hashBytes(out));
-         } else {
-            if (payload.getContentMetadata().getContentMD5() == null) {
-               payload.getContentMetadata().setContentMD5(ByteStreams.hash(payload, Hashing.md5()));
-            }
-         }
-      } catch (IOException e) {
-         Throwables.propagate(e);
-      }
+      checkNotNull(input, "input");
+      checkNotNull(contentMd5, "contentMd5");
+      Payload payload = Payloads.newByteSourcePayload(ByteSource.wrap(input));
+      MutableContentMetadata oldMd = in.getPayload().getContentMetadata();
+      HttpUtils.copy(oldMd, payload.getContentMetadata());
+      payload.getContentMetadata().setContentMD5(contentMd5);
       Blob blob = blobFactory.create(BlobStoreUtils.copy(in.getMetadata()));
       blob.setPayload(payload);
       blob.getMetadata().setContainer(containerName);
       blob.getMetadata().setUri(
             uriBuilder(new StringBuilder("mem://").append(containerName)).path(in.getMetadata().getName()).build());
       blob.getMetadata().setLastModified(new Date());
-      String eTag = base16().lowerCase().encode(payload.getContentMetadata().getContentMD5());
+      String eTag = base16().lowerCase().encode(contentMd5.asBytes());
       blob.getMetadata().setETag(eTag);
       // Set HTTP headers to match metadata
       blob.getAllHeaders().replaceValues(HttpHeaders.LAST_MODIFIED,
