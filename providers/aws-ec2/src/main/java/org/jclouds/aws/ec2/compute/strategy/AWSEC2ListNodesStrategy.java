@@ -79,9 +79,7 @@ public class AWSEC2ListNodesStrategy extends EC2ListNodesStrategy {
                                                                                        spotInstancesByIdInRegion(idsByRegions))),
 
                                                                       spotConverter), notNull());
-      System.err.println("spots: " + spots);
       Iterable<? extends RunningInstance> superInsts = super.pollRunningInstancesByRegionsAndIds(idsByRegions);
-      System.err.println("superInsts: " + superInsts);
       return concat(superInsts, spots);
    }
 
