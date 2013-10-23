@@ -21,7 +21,7 @@ package org.jclouds.openstack.neutron.v2_0.features;
 import com.google.common.collect.FluentIterable;
 import org.jclouds.Fallbacks;
 import org.jclouds.collect.PagedIterable;
-import org.jclouds.openstack.keystone.v2_0.domain.PaginatedCollection;
+import org.jclouds.openstack.v2_0.domain.PaginatedCollection;
 import org.jclouds.openstack.keystone.v2_0.filters.AuthenticateRequest;
 import org.jclouds.openstack.neutron.v2_0.domain.ReferenceWithName;
 import org.jclouds.openstack.neutron.v2_0.domain.Subnet;

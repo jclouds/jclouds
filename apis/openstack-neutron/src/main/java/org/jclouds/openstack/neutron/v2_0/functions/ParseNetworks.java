@@ -24,19 +24,19 @@ import org.jclouds.collect.IterableWithMarker;
 import org.jclouds.collect.internal.Arg0ToPagedIterable;
 import org.jclouds.http.functions.ParseJson;
 import org.jclouds.json.Json;
-import org.jclouds.openstack.keystone.v2_0.domain.PaginatedCollection;
+import org.jclouds.openstack.v2_0.domain.PaginatedCollection;
 import org.jclouds.openstack.neutron.v2_0.NeutronApi;
 import org.jclouds.openstack.neutron.v2_0.domain.ReferenceWithName;
 import org.jclouds.openstack.neutron.v2_0.features.NetworkApi;
 import org.jclouds.openstack.neutron.v2_0.functions.ParseNetworks.Networks;
 import org.jclouds.openstack.v2_0.domain.Link;
+import org.jclouds.openstack.v2_0.options.PaginationOptions;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.beans.ConstructorProperties;
 
 import static com.google.common.base.Preconditions.checkNotNull;
-import static org.jclouds.openstack.v2_0.options.PaginationOptions.Builder.marker;
 
 /**
  * @author Nick Livens
@@ -76,7 +76,8 @@ public class ParseNetworks extends ParseJson<Networks> {
             @SuppressWarnings("unchecked")
             @Override
             public IterableWithMarker<ReferenceWithName> apply(Object input) {
-               return IterableWithMarker.class.cast(networkApi.list(marker(input.toString())));
+               PaginationOptions paginationOptions = PaginationOptions.class.cast(input);
+               return IterableWithMarker.class.cast(networkApi.list(paginationOptions));
             }
 
             @Override

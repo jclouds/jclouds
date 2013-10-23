@@ -24,19 +24,19 @@ import org.jclouds.collect.IterableWithMarker;
 import org.jclouds.collect.internal.Arg0ToPagedIterable;
 import org.jclouds.http.functions.ParseJson;
 import org.jclouds.json.Json;
-import org.jclouds.openstack.keystone.v2_0.domain.PaginatedCollection;
+import org.jclouds.openstack.v2_0.domain.PaginatedCollection;
 import org.jclouds.openstack.neutron.v2_0.NeutronApi;
 import org.jclouds.openstack.neutron.v2_0.domain.Subnet;
 import org.jclouds.openstack.neutron.v2_0.features.SubnetApi;
 import org.jclouds.openstack.neutron.v2_0.functions.ParseSubnetDetails.Subnets;
 import org.jclouds.openstack.v2_0.domain.Link;
+import org.jclouds.openstack.v2_0.options.PaginationOptions;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.beans.ConstructorProperties;
 
 import static com.google.common.base.Preconditions.checkNotNull;
-import static org.jclouds.openstack.v2_0.options.PaginationOptions.Builder.marker;
 
 /**
  * @author Nick Livens
@@ -76,7 +76,8 @@ public class ParseSubnetDetails extends ParseJson<Subnets> {
             @SuppressWarnings("unchecked")
             @Override
             public IterableWithMarker<Subnet> apply(Object input) {
-               return IterableWithMarker.class.cast(subnetApi.listInDetail(marker(input.toString())));
+               PaginationOptions paginationOptions = PaginationOptions.class.cast(input);
+               return IterableWithMarker.class.cast(subnetApi.listInDetail(paginationOptions));
             }
 
             @Override
