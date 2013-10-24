@@ -17,19 +17,19 @@
 package org.jclouds.openstack.keystone.v2_0.functions.internal;
 
 import static com.google.common.base.Preconditions.checkNotNull;
-import static org.jclouds.openstack.v2_0.options.PaginationOptions.Builder.marker;
 
 import java.beans.ConstructorProperties;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
+import com.google.common.base.Optional;
 import org.jclouds.collect.IterableWithMarker;
-import org.jclouds.collect.internal.CallerArg0ToPagedIterable;
+import org.jclouds.collect.internal.Arg0ToPagedIterable;
 import org.jclouds.http.functions.ParseJson;
 import org.jclouds.json.Json;
 import org.jclouds.openstack.keystone.v2_0.KeystoneApi;
-import org.jclouds.openstack.keystone.v2_0.domain.PaginatedCollection;
+import org.jclouds.openstack.v2_0.domain.PaginatedCollection;
 import org.jclouds.openstack.keystone.v2_0.domain.Tenant;
 import org.jclouds.openstack.keystone.v2_0.features.TenantApi;
 import org.jclouds.openstack.keystone.v2_0.functions.internal.ParseTenants.Tenants;
@@ -38,6 +38,7 @@ import org.jclouds.openstack.v2_0.domain.Link;
 import com.google.common.annotations.Beta;
 import com.google.common.base.Function;
 import com.google.inject.TypeLiteral;
+import org.jclouds.openstack.v2_0.options.PaginationOptions;
 
 /**
  * boiler plate until we determine a better way
@@ -61,7 +62,7 @@ public class ParseTenants extends ParseJson<Tenants> {
       super(json, TypeLiteral.get(Tenants.class));
    }
 
-   public static class ToPagedIterable extends CallerArg0ToPagedIterable<Tenant, ToPagedIterable> {
+   public static class ToPagedIterable extends Arg0ToPagedIterable.FromCaller<Tenant, ToPagedIterable> {
 
       private final KeystoneApi api;
 
@@ -71,14 +72,15 @@ public class ParseTenants extends ParseJson<Tenants> {
       }
 
       @Override
-      protected Function<Object, IterableWithMarker<Tenant>> markerToNextForCallingArg0(final String ignored) {
+      protected Function<Object, IterableWithMarker<Tenant>> markerToNextForArg0(Optional<Object> ignored) {
          final TenantApi tenantApi = api.getTenantApi().get();
          return new Function<Object, IterableWithMarker<Tenant>>() {
 
             @SuppressWarnings("unchecked")
             @Override
             public IterableWithMarker<Tenant> apply(Object input) {
-               return IterableWithMarker.class.cast(tenantApi.list(marker(input.toString())));
+               PaginationOptions paginationOptions = PaginationOptions.class.cast(input);
+               return IterableWithMarker.class.cast(tenantApi.list(paginationOptions));
             }
 
             @Override

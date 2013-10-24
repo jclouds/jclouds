@@ -20,7 +20,7 @@ import com.google.common.base.Optional;
 import java.util.Map;
 import org.jclouds.collect.PagedIterable;
 import org.jclouds.javax.annotation.Nullable;
-import org.jclouds.openstack.keystone.v2_0.domain.PaginatedCollection;
+import org.jclouds.openstack.v2_0.domain.PaginatedCollection;
 import org.jclouds.openstack.nova.v2_0.domain.RebootType;
 import org.jclouds.openstack.nova.v2_0.domain.Server;
 import org.jclouds.openstack.nova.v2_0.domain.ServerCreated;

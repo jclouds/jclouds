@@ -35,7 +35,10 @@ import org.jclouds.Fallbacks.NullOnNotFoundOr404;
 import org.jclouds.Fallbacks.VoidOnNotFoundOr404;
 import org.jclouds.collect.PagedIterable;
 import org.jclouds.javax.annotation.Nullable;
+import org.jclouds.openstack.keystone.v2_0.KeystoneFallbacks;
 import org.jclouds.openstack.keystone.v2_0.filters.AuthenticateRequest;
+import org.jclouds.openstack.v2_0.domain.PaginatedCollection;
+import org.jclouds.openstack.v2_0.options.PaginationOptions;
 import org.jclouds.rackspace.clouddns.v1.CloudDNSApi;
 import org.jclouds.rackspace.clouddns.v1.binders.UpdateRecordsToJSON;
 import org.jclouds.rackspace.clouddns.v1.config.CloudDNS;
@@ -48,9 +51,6 @@ import org.jclouds.rackspace.clouddns.v1.functions.ParseRecord;
 import org.jclouds.rackspace.clouddns.v1.functions.ParseRecords;
 import org.jclouds.rackspace.clouddns.v1.functions.RecordsToPagedIterable;
 import org.jclouds.rackspace.clouddns.v1.predicates.JobPredicates;
-import org.jclouds.rackspace.cloudidentity.v2_0.CloudIdentityFallbacks.EmptyPaginatedCollectionOnNotFoundOr404;
-import org.jclouds.rackspace.cloudidentity.v2_0.domain.PaginatedCollection;
-import org.jclouds.rackspace.cloudidentity.v2_0.options.PaginationOptions;
 import org.jclouds.rest.annotations.BinderParam;
 import org.jclouds.rest.annotations.Endpoint;
 import org.jclouds.rest.annotations.Fallback;
@@ -142,7 +142,7 @@ public interface RecordApi {
    @GET
    @ResponseParser(ParseRecords.class)
    @Consumes(MediaType.APPLICATION_JSON)
-   @Fallback(EmptyPaginatedCollectionOnNotFoundOr404.class)
+   @Fallback(KeystoneFallbacks.EmptyPaginatedCollectionOnNotFoundOr404.class)
    @Path("/records")
    PaginatedCollection<RecordDetail> list(PaginationOptions options);
 

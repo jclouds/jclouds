@@ -26,9 +26,9 @@ import javax.inject.Inject;
 import org.jclouds.http.HttpResponse;
 import org.jclouds.http.functions.ParseJson;
 import org.jclouds.openstack.v2_0.domain.Link;
+import org.jclouds.openstack.v2_0.domain.PaginatedCollection;
 import org.jclouds.rackspace.clouddns.v1.domain.RecordDetail;
 import org.jclouds.rackspace.clouddns.v1.functions.ParseRecord.RawRecord;
-import org.jclouds.rackspace.cloudidentity.v2_0.domain.PaginatedCollection;
 
 import com.google.common.base.Function;
 
@@ -49,7 +49,7 @@ public class ParseRecords implements Function<HttpResponse, PaginatedCollection<
       RawRecords rawRecords = json.apply(response);
       Iterable<RecordDetail> records = rawRecords.transform(toRecordDetails);
 
-      return new Records(records, rawRecords.getLinks(), rawRecords.getTotalEntries());
+      return new Records(records, rawRecords.getLinks(), rawRecords.getTotalEntries().get());
    }
 
    private static class RawRecords extends PaginatedCollection<RawRecord> {

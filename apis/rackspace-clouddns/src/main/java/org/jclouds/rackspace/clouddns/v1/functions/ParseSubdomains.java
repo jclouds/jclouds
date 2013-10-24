@@ -26,8 +26,8 @@ import org.jclouds.http.HttpRequest;
 import org.jclouds.http.HttpResponse;
 import org.jclouds.http.functions.ParseJson;
 import org.jclouds.openstack.v2_0.domain.Link;
+import org.jclouds.openstack.v2_0.domain.PaginatedCollection;
 import org.jclouds.rackspace.clouddns.v1.domain.Subdomain;
-import org.jclouds.rackspace.cloudidentity.v2_0.domain.PaginatedCollection;
 import org.jclouds.rest.InvocationContext;
 
 import com.google.common.base.Function;

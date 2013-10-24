@@ -19,7 +19,7 @@ package org.jclouds.openstack.nova.v2_0.features;
 import java.util.Map;
 import org.jclouds.collect.PagedIterable;
 import org.jclouds.javax.annotation.Nullable;
-import org.jclouds.openstack.keystone.v2_0.domain.PaginatedCollection;
+import org.jclouds.openstack.v2_0.domain.PaginatedCollection;
 import org.jclouds.openstack.nova.v2_0.domain.Image;
 import org.jclouds.openstack.v2_0.domain.Resource;
 import org.jclouds.openstack.v2_0.options.PaginationOptions;

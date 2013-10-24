@@ -22,11 +22,11 @@ import javax.inject.Inject;
 
 import org.jclouds.collect.IterableWithMarker;
 import org.jclouds.collect.internal.Arg0ToPagedIterable;
+import org.jclouds.openstack.v2_0.domain.PaginatedCollection;
+import org.jclouds.openstack.v2_0.options.PaginationOptions;
 import org.jclouds.rackspace.clouddns.v1.CloudDNSApi;
 import org.jclouds.rackspace.clouddns.v1.domain.RecordDetail;
 import org.jclouds.rackspace.clouddns.v1.features.RecordApi;
-import org.jclouds.rackspace.cloudidentity.v2_0.domain.PaginatedCollection;
-import org.jclouds.rackspace.cloudidentity.v2_0.options.PaginationOptions;
 
 import com.google.common.annotations.Beta;
 import com.google.common.base.Function;

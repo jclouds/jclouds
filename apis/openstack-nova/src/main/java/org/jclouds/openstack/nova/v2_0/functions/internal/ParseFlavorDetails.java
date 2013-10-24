@@ -17,18 +17,18 @@
 package org.jclouds.openstack.nova.v2_0.functions.internal;
 
 import static com.google.common.base.Preconditions.checkNotNull;
-import static org.jclouds.openstack.v2_0.options.PaginationOptions.Builder.marker;
 
 import java.beans.ConstructorProperties;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
+import com.google.common.base.Optional;
 import org.jclouds.collect.IterableWithMarker;
-import org.jclouds.collect.internal.CallerArg0ToPagedIterable;
+import org.jclouds.collect.internal.Arg0ToPagedIterable;
 import org.jclouds.http.functions.ParseJson;
 import org.jclouds.json.Json;
-import org.jclouds.openstack.keystone.v2_0.domain.PaginatedCollection;
+import org.jclouds.openstack.v2_0.domain.PaginatedCollection;
 import org.jclouds.openstack.nova.v2_0.NovaApi;
 import org.jclouds.openstack.nova.v2_0.domain.Flavor;
 import org.jclouds.openstack.nova.v2_0.features.FlavorApi;
@@ -38,6 +38,7 @@ import org.jclouds.openstack.v2_0.domain.Link;
 import com.google.common.annotations.Beta;
 import com.google.common.base.Function;
 import com.google.inject.TypeLiteral;
+import org.jclouds.openstack.v2_0.options.PaginationOptions;
 
 /**
  * boiler plate until we determine a better way
@@ -61,7 +62,7 @@ public class ParseFlavorDetails extends ParseJson<Flavors> {
       super(json, TypeLiteral.get(Flavors.class));
    }
 
-   public static class ToPagedIterable extends CallerArg0ToPagedIterable<Flavor, ToPagedIterable> {
+   public static class ToPagedIterable extends Arg0ToPagedIterable.FromCaller<Flavor, ToPagedIterable> {
 
       private final NovaApi api;
 
@@ -71,14 +72,16 @@ public class ParseFlavorDetails extends ParseJson<Flavors> {
       }
 
       @Override
-      protected Function<Object, IterableWithMarker<Flavor>> markerToNextForCallingArg0(final String zone) {
+      protected Function<Object, IterableWithMarker<Flavor>> markerToNextForArg0(Optional<Object> arg0) {
+         String zone = arg0.get().toString();
          final FlavorApi flavorApi = api.getFlavorApiForZone(zone);
          return new Function<Object, IterableWithMarker<Flavor>>() {
 
             @SuppressWarnings("unchecked")
             @Override
             public IterableWithMarker<Flavor> apply(Object input) {
-               return IterableWithMarker.class.cast(flavorApi.listInDetail(marker(input.toString())));
+               PaginationOptions paginationOptions = PaginationOptions.class.cast(input);
+               return IterableWithMarker.class.cast(flavorApi.listInDetail(paginationOptions));
             }
 
             @Override
@@ -87,7 +90,5 @@ public class ParseFlavorDetails extends ParseJson<Flavors> {
             }
          };
       }
-
    }
-
 }

@@ -20,7 +20,7 @@ import static com.google.common.util.concurrent.Futures.immediateFuture;
 import static org.jclouds.Fallbacks.valOnNotFoundOr404;
 
 import org.jclouds.Fallback;
-import org.jclouds.openstack.keystone.v2_0.domain.PaginatedCollection;
+import org.jclouds.openstack.v2_0.domain.PaginatedCollection;
 import org.jclouds.openstack.v2_0.domain.Link;
 
 import com.google.common.collect.ImmutableSet;

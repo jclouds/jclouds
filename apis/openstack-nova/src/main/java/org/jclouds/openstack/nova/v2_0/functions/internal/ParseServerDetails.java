@@ -17,18 +17,18 @@
 package org.jclouds.openstack.nova.v2_0.functions.internal;
 
 import static com.google.common.base.Preconditions.checkNotNull;
-import static org.jclouds.openstack.v2_0.options.PaginationOptions.Builder.marker;
 
 import java.beans.ConstructorProperties;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
+import com.google.common.base.Optional;
 import org.jclouds.collect.IterableWithMarker;
-import org.jclouds.collect.internal.CallerArg0ToPagedIterable;
+import org.jclouds.collect.internal.Arg0ToPagedIterable;
 import org.jclouds.http.functions.ParseJson;
 import org.jclouds.json.Json;
-import org.jclouds.openstack.keystone.v2_0.domain.PaginatedCollection;
+import org.jclouds.openstack.v2_0.domain.PaginatedCollection;
 import org.jclouds.openstack.nova.v2_0.NovaApi;
 import org.jclouds.openstack.nova.v2_0.domain.Server;
 import org.jclouds.openstack.nova.v2_0.features.ServerApi;
@@ -38,6 +38,7 @@ import org.jclouds.openstack.v2_0.domain.Link;
 import com.google.common.annotations.Beta;
 import com.google.common.base.Function;
 import com.google.inject.TypeLiteral;
+import org.jclouds.openstack.v2_0.options.PaginationOptions;
 
 /**
  * boiler plate until we determine a better way
@@ -61,7 +62,7 @@ public class ParseServerDetails extends ParseJson<Servers> {
       super(json, TypeLiteral.get(Servers.class));
    }
 
-   public static class ToPagedIterable extends CallerArg0ToPagedIterable<Server, ToPagedIterable> {
+   public static class ToPagedIterable extends Arg0ToPagedIterable.FromCaller<Server, ToPagedIterable> {
 
       private final NovaApi api;
 
@@ -71,14 +72,16 @@ public class ParseServerDetails extends ParseJson<Servers> {
       }
 
       @Override
-      protected Function<Object, IterableWithMarker<Server>> markerToNextForCallingArg0(final String zone) {
+      protected Function<Object, IterableWithMarker<Server>> markerToNextForArg0(Optional<Object> arg0) {
+         String zone = arg0.get().toString();
          final ServerApi serverApi = api.getServerApiForZone(zone);
          return new Function<Object, IterableWithMarker<Server>>() {
 
             @SuppressWarnings("unchecked")
             @Override
             public IterableWithMarker<Server> apply(Object input) {
-               return IterableWithMarker.class.cast(serverApi.listInDetail(marker(input.toString())));
+               PaginationOptions paginationOptions = PaginationOptions.class.cast(input);
+               return IterableWithMarker.class.cast(serverApi.listInDetail(paginationOptions));
             }
 
             @Override
@@ -87,7 +90,5 @@ public class ParseServerDetails extends ParseJson<Servers> {
             }
          };
       }
-
    }
-
 }

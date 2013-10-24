@@ -37,7 +37,10 @@ import org.jclouds.Fallbacks.NullOnNotFoundOr404;
 import org.jclouds.Fallbacks.VoidOnNotFoundOr404;
 import org.jclouds.collect.PagedIterable;
 import org.jclouds.javax.annotation.Nullable;
+import org.jclouds.openstack.keystone.v2_0.KeystoneFallbacks;
 import org.jclouds.openstack.keystone.v2_0.filters.AuthenticateRequest;
+import org.jclouds.openstack.v2_0.domain.PaginatedCollection;
+import org.jclouds.openstack.v2_0.options.PaginationOptions;
 import org.jclouds.rackspace.clouddns.v1.CloudDNSApi;
 import org.jclouds.rackspace.clouddns.v1.binders.FormatAndContentsToJSON;
 import org.jclouds.rackspace.clouddns.v1.binders.UpdateDomainsToJSON;
@@ -55,10 +58,8 @@ import org.jclouds.rackspace.clouddns.v1.functions.ParseJob;
 import org.jclouds.rackspace.clouddns.v1.functions.ParseSubdomains;
 import org.jclouds.rackspace.clouddns.v1.functions.SubdomainsToPagedIterable;
 import org.jclouds.rackspace.clouddns.v1.predicates.JobPredicates;
-import org.jclouds.rackspace.cloudidentity.v2_0.CloudIdentityFallbacks.EmptyPaginatedCollectionOnNotFoundOr404;
-import org.jclouds.rackspace.cloudidentity.v2_0.domain.PaginatedCollection;
 import org.jclouds.rackspace.cloudidentity.v2_0.functions.DateParser;
-import org.jclouds.rackspace.cloudidentity.v2_0.options.PaginationOptions;
+
 import org.jclouds.rest.annotations.BinderParam;
 import org.jclouds.rest.annotations.Endpoint;
 import org.jclouds.rest.annotations.Fallback;
@@ -144,7 +145,7 @@ public interface DomainApi {
    @GET
    @ResponseParser(ParseDomains.class)
    @Consumes(MediaType.APPLICATION_JSON)
-   @Fallback(EmptyPaginatedCollectionOnNotFoundOr404.class)
+   @Fallback(KeystoneFallbacks.EmptyPaginatedCollectionOnNotFoundOr404.class)
    @Path("/domains")
    PaginatedCollection<Domain> list(PaginationOptions options);
 
@@ -168,7 +169,7 @@ public interface DomainApi {
    @GET
    @ResponseParser(ParseSubdomains.class)
    @Consumes(MediaType.APPLICATION_JSON)
-   @Fallback(EmptyPaginatedCollectionOnNotFoundOr404.class)
+   @Fallback(KeystoneFallbacks.EmptyPaginatedCollectionOnNotFoundOr404.class)
    @Path("/domains/{domainId}/subdomains")
    PaginatedCollection<Subdomain> listSubdomains(@PathParam("domainId") int domainId,
          PaginationOptions options);

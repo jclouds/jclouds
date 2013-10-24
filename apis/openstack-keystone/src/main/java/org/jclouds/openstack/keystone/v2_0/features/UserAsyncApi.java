@@ -31,7 +31,7 @@ import org.jclouds.Fallbacks.EmptySetOnNotFoundOr404;
 import org.jclouds.Fallbacks.NullOnNotFoundOr404;
 import org.jclouds.collect.PagedIterable;
 import org.jclouds.openstack.keystone.v2_0.KeystoneFallbacks.EmptyPaginatedCollectionOnNotFoundOr404;
-import org.jclouds.openstack.keystone.v2_0.domain.PaginatedCollection;
+import org.jclouds.openstack.v2_0.domain.PaginatedCollection;
 import org.jclouds.openstack.keystone.v2_0.domain.Role;
 import org.jclouds.openstack.keystone.v2_0.domain.User;
 import org.jclouds.openstack.keystone.v2_0.filters.AuthenticateRequest;

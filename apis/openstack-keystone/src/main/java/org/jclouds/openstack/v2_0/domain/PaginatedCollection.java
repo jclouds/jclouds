@@ -14,37 +14,40 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.jclouds.rackspace.cloudidentity.v2_0.domain;
+package org.jclouds.openstack.v2_0.domain;
 
-import static org.jclouds.http.utils.Queries.queryParser;
-
-import java.util.Iterator;
-
-import org.jclouds.collect.IterableWithMarker;
-import org.jclouds.javax.annotation.Nullable;
-import org.jclouds.openstack.v2_0.domain.Link;
-import org.jclouds.rackspace.cloudidentity.v2_0.options.PaginationOptions;
-
-import com.google.common.annotations.Beta;
 import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Multimap;
+import org.jclouds.collect.IterableWithMarker;
+import org.jclouds.javax.annotation.Nullable;
+import org.jclouds.openstack.v2_0.options.PaginationOptions;
+
+import java.util.Iterator;
+
+import static org.jclouds.http.utils.Queries.queryParser;
 
 /**
- * Base class for a paginated collection in Rackspace.
- * 
+ * Base class for a paginated collection in OpenStack.
+ *
+ * @see <a
+ *      href="http://docs.openstack.org/api/openstack-identity-service/2.0/content/Paginated_Collections-d1e325.html">
+ *      docs</a>
  * @author Everett Toews
  */
-@Beta
 public class PaginatedCollection<T> extends IterableWithMarker<T> {
-   private Iterable<T> resources;
-   private Iterable<Link> links;
-   private int totalEntries;
+   private final Iterable<T> resources;
+   private final Iterable<Link> links;
+   private final Integer totalEntries;
 
-   protected PaginatedCollection(@Nullable Iterable<T> resources, @Nullable Iterable<Link> links, int totalEntries) {
+   protected PaginatedCollection(Iterable<T> resources, Iterable<Link> links, @Nullable Integer totalEntries) {
       this.resources = resources != null ? resources : ImmutableSet.<T> of();
       this.links = links != null ? links : ImmutableSet.<Link> of();
       this.totalEntries = totalEntries;
+   }
+
+   protected PaginatedCollection(Iterable<T> resources, Iterable<Link> links) {
+      this(resources, links, null);
    }
 
    @Override
@@ -59,8 +62,11 @@ public class PaginatedCollection<T> extends IterableWithMarker<T> {
       return links;
    }
 
-   public int getTotalEntries() {
-      return totalEntries;
+   /**
+    * @return The total number of entries in this collection, if that information is present.
+    */
+   public Optional<Integer> getTotalEntries() {
+      return Optional.fromNullable(totalEntries);
    }
 
    public PaginationOptions nextPaginationOptions() {
@@ -71,7 +77,7 @@ public class PaginatedCollection<T> extends IterableWithMarker<T> {
    public Optional<Object> nextMarker() {
       for (Link link: getLinks()) {
          if (Link.Relation.NEXT == link.getRelation()) {
-            return Optional.<Object> of(toPaginationOptions(link));
+            return Optional.of(toPaginationOptions(link));
          }
       }
 

@@ -25,8 +25,8 @@ import javax.inject.Inject;
 import org.jclouds.http.HttpResponse;
 import org.jclouds.http.functions.ParseJson;
 import org.jclouds.openstack.v2_0.domain.Link;
+import org.jclouds.openstack.v2_0.domain.PaginatedCollection;
 import org.jclouds.rackspace.clouddns.v1.domain.Domain;
-import org.jclouds.rackspace.cloudidentity.v2_0.domain.PaginatedCollection;
 
 import com.google.common.base.Function;
 

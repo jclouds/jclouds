@@ -38,7 +38,7 @@ import org.jclouds.Fallbacks.VoidOnNotFoundOr404;
 import org.jclouds.collect.PagedIterable;
 import org.jclouds.fallbacks.MapHttp4xxCodesToExceptions;
 import org.jclouds.openstack.keystone.v2_0.KeystoneFallbacks.EmptyPaginatedCollectionOnNotFoundOr404;
-import org.jclouds.openstack.keystone.v2_0.domain.PaginatedCollection;
+import org.jclouds.openstack.v2_0.domain.PaginatedCollection;
 import org.jclouds.openstack.keystone.v2_0.filters.AuthenticateRequest;
 import org.jclouds.openstack.nova.v2_0.binders.BindMetadataToJsonPayload;
 import org.jclouds.openstack.nova.v2_0.domain.RebootType;

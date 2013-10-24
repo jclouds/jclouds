@@ -17,7 +17,6 @@
 package org.jclouds.rackspace.cloudloadbalancers.v1.functions;
 
 import static com.google.common.base.Preconditions.checkNotNull;
-import static org.jclouds.openstack.v2_0.options.PaginationOptions.Builder.marker;
 
 import java.beans.ConstructorProperties;
 
@@ -29,8 +28,9 @@ import org.jclouds.collect.internal.Arg0ToPagedIterable;
 import org.jclouds.http.HttpRequest;
 import org.jclouds.http.functions.ParseJson;
 import org.jclouds.json.Json;
-import org.jclouds.openstack.keystone.v2_0.domain.PaginatedCollection;
+import org.jclouds.openstack.v2_0.domain.PaginatedCollection;
 import org.jclouds.openstack.v2_0.domain.Link;
+import org.jclouds.openstack.v2_0.options.PaginationOptions;
 import org.jclouds.rackspace.cloudloadbalancers.v1.CloudLoadBalancersApi;
 import org.jclouds.rackspace.cloudloadbalancers.v1.domain.Node;
 import org.jclouds.rackspace.cloudloadbalancers.v1.features.NodeApi;
@@ -86,14 +86,15 @@ public class ParseNodes extends ParseJson<Nodes> {
 
       @Override
       protected Function<Object, IterableWithMarker<Node>> markerToNextForArg0(Optional<Object> arg0) {
-         String zone = arg0.isPresent() ? arg0.get().toString() : null;
+         String zone = arg0.get().toString();
          final NodeApi nodeApi = api.getNodeApiForZoneAndLoadBalancer(zone, lbId);
          
          return new Function<Object, IterableWithMarker<Node>>() {
 
             @Override
             public IterableWithMarker<Node> apply(Object input) {
-               IterableWithMarker<Node> list = nodeApi.list(marker(input.toString()));
+               PaginationOptions paginationOptions = PaginationOptions.class.cast(input);
+               IterableWithMarker<Node> list = nodeApi.list(paginationOptions);
                return list;
             }
 

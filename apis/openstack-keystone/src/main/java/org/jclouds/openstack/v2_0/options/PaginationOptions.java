@@ -21,6 +21,7 @@ import static com.google.common.base.Preconditions.checkState;
 
 import java.util.Date;
 
+import com.google.common.collect.Multimap;
 import org.jclouds.http.options.BaseHttpRequestOptions;
 
 /**
@@ -32,6 +33,16 @@ import org.jclouds.http.options.BaseHttpRequestOptions;
  * @author Adrian Cole
  */
 public class PaginationOptions extends BaseHttpRequestOptions {
+   /**
+    * Many OpenStack interfaces take different params for pagination. Using queryParams allows you to make
+    * use of them all if necessary.
+    */
+   public PaginationOptions queryParameters(Multimap<String, String> queryParams) {
+      checkNotNull(queryParams, "queryParams");
+      queryParameters.putAll(queryParams);
+      return this;
+   }
+
    /**
     * Only return objects changed since this time.
     */
@@ -65,6 +76,13 @@ public class PaginationOptions extends BaseHttpRequestOptions {
    }
 
    public static class Builder {
+      /**
+       * @see PaginationOptions#queryParameters(Multimap)
+       */
+      public static PaginationOptions queryParameters(Multimap<String, String> queryParams) {
+         PaginationOptions options = new PaginationOptions();
+         return options.queryParameters(queryParams);
+      }
 
       /**
        * @see PaginationOptions#marker(String)

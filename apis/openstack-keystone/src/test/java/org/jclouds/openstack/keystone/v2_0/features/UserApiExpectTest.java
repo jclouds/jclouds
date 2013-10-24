@@ -28,7 +28,7 @@ import java.util.Set;
 import org.jclouds.http.HttpResponse;
 import org.jclouds.http.HttpResponseException;
 import org.jclouds.openstack.keystone.v2_0.KeystoneApi;
-import org.jclouds.openstack.keystone.v2_0.domain.PaginatedCollection;
+import org.jclouds.openstack.v2_0.domain.PaginatedCollection;
 import org.jclouds.openstack.keystone.v2_0.domain.Role;
 import org.jclouds.openstack.keystone.v2_0.domain.User;
 import org.jclouds.openstack.keystone.v2_0.internal.BaseKeystoneRestApiExpectTest;
