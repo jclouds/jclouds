@@ -16,12 +16,17 @@
  */
 package org.jclouds.openstack.swift.blobstore.integration;
 
+import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertNotEquals;
+import static org.testng.Assert.assertTrue;
+
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
 
-import com.google.common.io.ByteStreams;
 import org.jclouds.blobstore.BlobStore;
 import org.jclouds.blobstore.domain.Blob;
 import org.jclouds.blobstore.integration.internal.BaseBlobIntegrationTest;
@@ -34,11 +39,10 @@ import org.testng.annotations.BeforeClass;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
+import com.google.common.hash.Hashing;
+import com.google.common.io.ByteStreams;
 import com.google.common.io.Files;
 import com.google.common.io.InputSupplier;
-
-import static org.testng.Assert.assertNotEquals;
-import static org.testng.Assert.assertTrue;
 
 /**
  * 
@@ -125,6 +129,32 @@ public class SwiftBlobIntegrationLiveTest extends BaseBlobIntegrationTest {
                     "there was only 1 extra blob but there should be one manifest blob and multiple chunk blobs");
       } finally {
           returnContainer(containerName);
+      }
+   }
+
+   // InputStreamPayloads are handled differently than File; Test InputStreams too
+   @Test(groups = { "integration", "live" })
+   public void testMultipartChunkedInputStream() throws InterruptedException, IOException {
+      String container = getContainerName();
+      try {
+         BlobStore blobStore = view.getBlobStore();
+
+         blobStore.createContainerInLocation(null, container);
+
+         File inFile = createFileBiggerThan(PART_SIZE);
+         File outFile = new File("target/lots-of-const-readback.txt");
+
+         InputStream contentToUpload = new FileInputStream(inFile);
+         Blob write = blobStore.blobBuilder("const.txt").payload(contentToUpload).contentLength(inFile.length()).build();
+         blobStore.putBlob(container, write, PutOptions.Builder.multipart());
+
+         Blob read = blobStore.getBlob(container, "const.txt");
+         read.getPayload().writeTo(new FileOutputStream(outFile));
+
+         assertEquals(Files.hash(outFile, Hashing.md5()), Files.hash(inFile, Hashing.md5()));
+
+      } finally {
+         returnContainer(container);
       }
    }
 

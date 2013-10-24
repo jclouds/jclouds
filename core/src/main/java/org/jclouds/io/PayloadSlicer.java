@@ -41,4 +41,16 @@ public interface PayloadSlicer {
     *            if offset or length are negative
     */
    Payload slice(Payload input, long offset, long length);
+
+   /**
+    * Returns an {@link Iterable} of {@link Payload} instances that are no larger than
+    * <code>size</code> bytes in length.
+    *
+    * @param input
+    *           the {@link Payload} to be sliced
+    * @param size
+    *           the maximum size of each slice
+    * @return an {@link Iterable} of {@link Payload} instances
+    */
+   Iterable<Payload> slice(Payload input, long size);
 }

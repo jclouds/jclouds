@@ -66,22 +66,13 @@ public class SequentialMultipartUploadStrategy implements MultipartUploadStrateg
       long chunkSize = algorithm.calculateChunkSize(length);
       int partCount = algorithm.getParts();
       if (partCount > 0) {
-         int part;
-         while ((part = algorithm.getNextPart()) <= partCount) {
-            Payload chunkedPart = slicer.slice(payload, algorithm.getNextChunkOffset(), chunkSize);
+         for (Payload part : slicer.slice(payload, chunkSize)) {
+            int partNum = algorithm.getNextPart();
             Blob blobPart = blobBuilders.get()
-                                        .name(key + PART_SEPARATOR + part)
-                                        .payload(chunkedPart)
-                                        .contentDisposition(key + PART_SEPARATOR + part).build();
-            client.putObject(container, blob2Object.apply(blobPart));
-         }
-         long remaining = algorithm.getRemaining();
-         if (remaining > 0) {
-            Payload chunkedPart = slicer.slice(payload, algorithm.getNextChunkOffset(), remaining);
-            Blob blobPart = blobBuilders.get()
-                                        .name(key + PART_SEPARATOR + part)
-                                        .payload(chunkedPart)
-                                        .contentDisposition(key + PART_SEPARATOR + part).build();
+                                        .name(key + PART_SEPARATOR + partNum)
+                                        .payload(part)
+                                        .contentDisposition(key + PART_SEPARATOR + partNum)
+                                        .build();
             client.putObject(container, blob2Object.apply(blobPart));
          }
          return client.putObjectManifest(container, key);
