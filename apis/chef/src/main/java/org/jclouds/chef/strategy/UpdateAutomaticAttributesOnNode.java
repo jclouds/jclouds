@@ -29,5 +29,5 @@ import com.google.inject.ImplementedBy;
 @ImplementedBy(UpdateAutomaticAttributesOnNodeImpl.class)
 public interface UpdateAutomaticAttributesOnNode {
 
-   public void execute(String nodeName);
+   void execute(String nodeName);
 }

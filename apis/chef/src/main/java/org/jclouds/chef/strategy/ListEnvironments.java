@@ -26,16 +26,15 @@ import com.google.inject.ImplementedBy;
 @ImplementedBy(ListEnvironmentsImpl.class)
 public interface ListEnvironments {
 
-   public Iterable<? extends Environment> execute();
+   Iterable<? extends Environment> execute();
 
-   public Iterable<? extends Environment> execute(Predicate<String> environmentNameSelector);
+   Iterable<? extends Environment> execute(Predicate<String> environmentNameSelector);
 
-   public Iterable<? extends Environment> execute(Iterable<String> toGet);
+   Iterable<? extends Environment> execute(Iterable<String> toGet);
 
-   public Iterable<? extends Environment> execute(ListeningExecutorService executor);
+   Iterable<? extends Environment> execute(ListeningExecutorService executor);
 
-   public Iterable<? extends Environment> execute(ListeningExecutorService executor,
-         Predicate<String> environmentNameSelector);
+   Iterable<? extends Environment> execute(ListeningExecutorService executor, Predicate<String> environmentNameSelector);
 
-   public Iterable<? extends Environment> execute(ListeningExecutorService executor, Iterable<String> toGet);
+   Iterable<? extends Environment> execute(ListeningExecutorService executor, Iterable<String> toGet);
 }
