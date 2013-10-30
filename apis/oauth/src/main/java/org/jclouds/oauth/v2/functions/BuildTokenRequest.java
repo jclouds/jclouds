@@ -23,7 +23,6 @@ import static org.jclouds.oauth.v2.config.OAuthProperties.SCOPES;
 import static org.jclouds.oauth.v2.config.OAuthProperties.SIGNATURE_OR_MAC_ALGORITHM;
 
 import java.util.Map;
-import java.util.concurrent.TimeUnit;
 
 import javax.inject.Singleton;
 
@@ -39,7 +38,6 @@ import org.jclouds.rest.internal.GeneratedHttpRequest;
 import com.google.common.base.Function;
 import com.google.common.base.Joiner;
 import com.google.common.base.Supplier;
-import com.google.common.base.Ticker;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.reflect.Invokable;
 import com.google.inject.Inject;
@@ -71,10 +69,15 @@ public class BuildTokenRequest implements Function<GeneratedHttpRequest, TokenRe
    @Named(SCOPES)
    protected String globalScopes = null;
 
+   // injectable so expect tests can override with a predictable value
    @Inject(optional = true)
-   public Ticker ticker = Ticker.systemTicker();
-
-
+   protected Supplier<Long> timeSourceMillisSinceEpoch = new Supplier<Long>() {
+      @Override
+      public Long get() {
+         return System.currentTimeMillis();
+      }
+   };
+   
    @Inject
    public BuildTokenRequest(@Named(AUDIENCE) String assertionTargetDescription,
                             @Named(SIGNATURE_OR_MAC_ALGORITHM) String signatureAlgorithm,
@@ -89,7 +92,7 @@ public class BuildTokenRequest implements Function<GeneratedHttpRequest, TokenRe
 
    @Override
    public TokenRequest apply(GeneratedHttpRequest request) {
-      long now = TimeUnit.SECONDS.convert(ticker.read(), TimeUnit.NANOSECONDS);
+      long now = timeSourceMillisSinceEpoch.get() / 1000;
 
       // fetch the token
       Header header = new Header.Builder()
