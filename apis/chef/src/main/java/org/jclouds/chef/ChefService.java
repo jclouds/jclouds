@@ -110,7 +110,7 @@ public interface ChefService {
     * @param group The name of the group.
     * @return The bootstrap configuration for the given group.
     */
-   public JsonBall getBootstrapConfigForGroup(String group);
+   JsonBall getBootstrapConfigForGroup(String group);
 
    // Nodes / Clients
 
