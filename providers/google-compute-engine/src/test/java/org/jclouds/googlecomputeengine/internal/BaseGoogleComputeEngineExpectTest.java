@@ -53,13 +53,14 @@ import org.jclouds.http.HttpRequest;
 import org.jclouds.http.HttpResponse;
 import org.jclouds.io.Payload;
 import org.jclouds.oauth.v2.OAuthConstants;
+import org.jclouds.oauth.v2.config.OAuthProperties;
 import org.jclouds.rest.internal.BaseRestApiExpectTest;
 import org.jclouds.ssh.SshKeys;
 import org.jclouds.util.Strings2;
 
 import com.google.common.base.Joiner;
 import com.google.common.base.Supplier;
-import com.google.common.base.Ticker;
+import com.google.common.base.Suppliers;
 import com.google.inject.Binder;
 import com.google.inject.Module;
 import com.google.inject.TypeLiteral;
@@ -101,13 +102,8 @@ public class BaseGoogleComputeEngineExpectTest<T> extends BaseRestApiExpectTest<
       return new Module() {
          @Override
          public void configure(Binder binder) {
-            // predictable time
-            binder.bind(Ticker.class).toInstance(new Ticker() {
-               @Override
-               public long read() {
-                  return 0;
-               }
-            });
+            // Predicatable time
+            binder.bind(new TypeLiteral<Supplier<Long>>() {}).toInstance(Suppliers.ofInstance(0L));
             try {
                KeyFactory keyfactory = KeyFactory.getInstance("RSA");
                PrivateKey privateKey = keyfactory.generatePrivate(privateKeySpec(newStringPayload
@@ -149,7 +145,7 @@ public class BaseGoogleComputeEngineExpectTest<T> extends BaseRestApiExpectTest<
    protected Properties setupProperties() {
       Properties props = super.setupProperties();
       // use no sig algorithm for expect tests (means no credential is required either)
-      props.put("jclouds.oauth.signature-or-mac-algorithm", OAuthConstants.NO_ALGORITHM);
+      props.put(OAuthProperties.SIGNATURE_OR_MAC_ALGORITHM, OAuthConstants.NO_ALGORITHM);
       return props;
    }
 
