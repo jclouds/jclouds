@@ -33,8 +33,8 @@ public interface DateCodec {
     * @throws IllegalArgumentException
     *            if the input is invalid
     */
-   public Date toDate(String date) throws IllegalArgumentException;
+   Date toDate(String date) throws IllegalArgumentException;
 
-   public String toString(Date date);
+   String toString(Date date);
 
 }

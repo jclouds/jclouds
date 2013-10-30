@@ -141,7 +141,7 @@ public class GsonModule extends AbstractModule {
    }
 
    @ImplementedBy(NoExclusions.class)
-   public static interface DefaultExclusionStrategy extends ExclusionStrategy {
+   public interface DefaultExclusionStrategy extends ExclusionStrategy {
    }
 
    public static class NoExclusions implements DefaultExclusionStrategy {

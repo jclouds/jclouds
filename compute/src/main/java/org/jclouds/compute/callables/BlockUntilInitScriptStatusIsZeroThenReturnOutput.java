@@ -54,7 +54,7 @@ import com.google.inject.name.Named;
  */
 public class BlockUntilInitScriptStatusIsZeroThenReturnOutput extends AbstractFuture<ExecResponse> implements Runnable {
 
-   public static interface Factory {
+   public interface Factory {
       BlockUntilInitScriptStatusIsZeroThenReturnOutput create(SudoAwareInitManager commandRunner);
    }
 

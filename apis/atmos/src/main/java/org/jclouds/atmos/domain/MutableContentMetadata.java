@@ -30,15 +30,15 @@ import com.google.inject.ImplementedBy;
 @ImplementedBy(DelegatingMutableContentMetadata.class)
 public interface MutableContentMetadata extends org.jclouds.io.MutableContentMetadata {
 
-   public String getName();
+   String getName();
 
-   public void setName(String name);
+   void setName(String name);
 
-   public URI getUri();
+   URI getUri();
 
-   public void setUri(URI uri);
+   void setUri(URI uri);
 
-   public String getPath();
+   String getPath();
 
-   public void setPath(String path);
+   void setPath(String path);
 }

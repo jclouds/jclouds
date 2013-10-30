@@ -30,21 +30,21 @@ import com.google.inject.ImplementedBy;
 @ImplementedBy(JAXBParser.class)
 public interface XMLParser {
    /** The default xml header. */
-   public static final String DEFAULT_XML_HEADER = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>";
+   static final String DEFAULT_XML_HEADER = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>";
 
    /**
     * Serialize the object into xml.
     */
-   public String toXML(Object src) throws IOException;
+   String toXML(Object src) throws IOException;
 
    /**
     * Serialize the object into xml, as the declared type.
     */
-   public <T> String toXML(Object src, Class<T> type) throws IOException;
+   <T> String toXML(Object src, Class<T> type) throws IOException;
 
    /**
     * Deserialize the object from xml.
     */
-   public <T> T fromXML(String xml, Class<T> type) throws IOException;
+   <T> T fromXML(String xml, Class<T> type) throws IOException;
 
 }

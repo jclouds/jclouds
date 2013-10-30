@@ -38,7 +38,7 @@ public class Tag {
    /**
     * Describes the well-known resource types that can be tagged.
     */
-   public static interface ResourceType {
+   public interface ResourceType {
       public static final String CUSTOMER_GATEWAY = "customer-gateway";
       public static final String DHCP_OPTIONS = "dhcp-options";
       public static final String IMAGE = "image";

@@ -44,7 +44,7 @@ import org.jclouds.io.Payload;
  */
 public interface AzureBlobClient {
    @Provides
-   public AzureBlob newBlob();
+   AzureBlob newBlob();
 
    /**
     * The List Containers operation returns a list of the containers under the specified identity.

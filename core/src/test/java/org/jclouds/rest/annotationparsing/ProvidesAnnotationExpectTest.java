@@ -49,7 +49,7 @@ import com.google.inject.name.Names;
 @Test(groups = "unit", testName = "ProvidesAnnotationExpectTest")
 public class ProvidesAnnotationExpectTest extends BaseRestClientExpectTest<ProvidesAnnotationExpectTest.ProvidingApi> {
 
-   static interface ProvidingApi extends Closeable {
+   interface ProvidingApi extends Closeable {
       @Provides
       Set<String> set();
 
@@ -66,7 +66,7 @@ public class ProvidesAnnotationExpectTest extends BaseRestClientExpectTest<Provi
       Set<String> noSuchElementException();
    }
 
-   static interface ProvidingAsyncApi extends Closeable {
+   interface ProvidingAsyncApi extends Closeable {
       @Provides
       Set<String> set();
 

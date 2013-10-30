@@ -177,21 +177,21 @@ public class RestAnnotationProcessorTest extends BaseRestApiTest {
    }
 
    @Path("/client/{jclouds.api-version}")
-   public static interface AsyncCallee extends Closeable {
+   public interface AsyncCallee extends Closeable {
       @GET
       @Path("/{path}")
       ListenableFuture<Void> onePath(@PathParam("path") String path);
    }
 
    @Path("/client/{jclouds.api-version}")
-   public static interface AsyncCallee2 {
+   public interface AsyncCallee2 {
       @GET
       @Path("/{path}/2")
       ListenableFuture<Void> onePath(@PathParam("path") String path);
    }
 
    @Endpoint(Localhost2.class)
-   public static interface Caller extends Closeable {
+   public interface Caller extends Closeable {
 
       // tests that we can pull from suppliers
       @Provides
@@ -215,15 +215,15 @@ public class RestAnnotationProcessorTest extends BaseRestApiTest {
       public Callee getCalleeWithPath(@EndpointParam URI endpoint, @PathParam("wibble") String wibble);
    }
 
-   public static interface Callee extends Closeable {
+   public interface Callee extends Closeable {
       void onePath(String path);
    }
 
-   public static interface Callee2 {
+   public interface Callee2 {
       void onePath(String path);
    }
 
-   public static interface AsyncCaller extends Closeable {
+   public interface AsyncCaller extends Closeable {
       @Provides
       @Localhost2
       URI getURI();
@@ -920,7 +920,7 @@ public class RestAnnotationProcessorTest extends BaseRestApiTest {
       assertPayloadEquals(request, "name data", "text/plain", false);
    }
 
-   static interface TestMultipartForm {
+   interface TestMultipartForm {
       @POST
       void withStringPart(@PartParam(name = "fooble") String path);
 
@@ -1357,7 +1357,7 @@ public class RestAnnotationProcessorTest extends BaseRestApiTest {
    }
 
    @RequestFilters(TestRequestFilter1.class)
-   static interface TestRequestFilter {
+   interface TestRequestFilter {
       @GET
       @RequestFilters(TestRequestFilter2.class)
       public void get();

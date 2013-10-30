@@ -80,7 +80,7 @@ public class AdminAccess implements Statement {
       return new Builder().build();
    }
 
-   public static interface Configuration {
+   public interface Configuration {
       Supplier<String> defaultAdminUsername();
 
       Supplier<Map<String, String>> defaultAdminSshKeys();

@@ -41,7 +41,7 @@ import com.google.inject.Injector;
 @Test(groups = "unit")
 public class InputParamValidatorTest {
 
-   private static interface InputParamValidatorForm {
+   private interface InputParamValidatorForm {
       @POST
       @ParamValidators(AllLowerCaseValidator.class)
       void allParamsValidated(@PathParam("param1") String param1, @PathParam("param2") String param2);
@@ -91,7 +91,7 @@ public class InputParamValidatorTest {
       new AllLowerCaseValidator().validate(null);
    }
 
-   private static interface WrongValidator {
+   private interface WrongValidator {
       @POST
       @ParamValidators(AllLowerCaseValidator.class)
       void method(@PathParam("param1") Integer param1);

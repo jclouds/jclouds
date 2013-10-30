@@ -54,7 +54,7 @@ import com.google.inject.assistedinject.Assisted;
 @Singleton
 public class LocationIdToURIFromAccessForTypeAndVersion implements Supplier<Map<String, Supplier<URI>>> {
 
-   public static interface Factory {
+   public interface Factory {
       /**
        *
        * @param apiType

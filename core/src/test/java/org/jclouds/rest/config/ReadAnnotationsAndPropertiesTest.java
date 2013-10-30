@@ -47,13 +47,13 @@ import com.google.inject.name.Names;
 @Test(groups = "unit", singleThreaded = true)
 public class ReadAnnotationsAndPropertiesTest {
 
-   public static interface ThingApi {
+   public interface ThingApi {
       HttpResponse get();
 
       HttpResponse namedGet();
    }
 
-   public static interface ThingAsyncApi {
+   public interface ThingAsyncApi {
       ListenableFuture<HttpResponse> get();
 
       @Named("ns:get")

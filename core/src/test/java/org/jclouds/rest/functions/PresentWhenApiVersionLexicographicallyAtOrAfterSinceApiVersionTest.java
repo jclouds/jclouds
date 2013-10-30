@@ -45,21 +45,21 @@ import com.google.common.collect.ImmutableList;
 public class PresentWhenApiVersionLexicographicallyAtOrAfterSinceApiVersionTest {
 
    // feature present in base api
-   static interface KeyPairAsyncApi {
+   interface KeyPairAsyncApi {
 
    }
 
    @SinceApiVersion("2010-08-31")
-   static interface TagAsyncApi {
+   interface TagAsyncApi {
 
    }
 
    @SinceApiVersion("2011-01-01")
-   static interface VpcAsyncApi {
+   interface VpcAsyncApi {
 
    }
 
-   static interface EC2AsyncApi {
+   interface EC2AsyncApi {
 
       @Delegate
       Optional<TagAsyncApi> getTagApiForRegion(String region);

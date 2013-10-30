@@ -327,7 +327,7 @@ public class Sha512Crypt {
       }
    }
 
-   private static final String b64_from_24bit(byte B2, byte B1, byte B0, int size) {
+   private static String b64_from_24bit(byte B2, byte B1, byte B0, int size) {
       int v = ((((int) B2) & 0xFF) << 16) | ((((int) B1) & 0xFF) << 8) | ((int) B0 & 0xff);
 
       StringBuilder result = new StringBuilder();

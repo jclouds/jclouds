@@ -248,7 +248,7 @@ public class AccessControlList {
    // Class and Enum declarations to represent Grants, Grantees and Permissions //
    // /////////////////////////////////////////////////////////////////////////////
 
-   public static interface Permission {
+   public interface Permission {
       public static final String READ = "READ";
       public static final String WRITE = "WRITE";
       public static final String READ_ACP = "READ_ACP";

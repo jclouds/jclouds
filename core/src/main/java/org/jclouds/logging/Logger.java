@@ -79,7 +79,7 @@ public interface Logger {
     * @author Adrian Cole
     * 
     */
-   public static interface LoggerFactory {
+   public interface LoggerFactory {
       Logger getLogger(String category);
    }
 }

@@ -59,11 +59,11 @@ import com.google.common.util.concurrent.TimeLimiter;
 @Test(groups = "unit", singleThreaded = true)
 public class InvokeMappedHttpMethodTest {
 
-   public static interface ThingApi {
+   public interface ThingApi {
       HttpResponse get();
    }
 
-   public static interface ThingAsyncApi {
+   public interface ThingAsyncApi {
       @Named("ns:get")
       ListenableFuture<HttpResponse> get();
    }

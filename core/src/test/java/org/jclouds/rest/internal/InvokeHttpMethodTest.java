@@ -54,7 +54,7 @@ import com.google.common.util.concurrent.TimeLimiter;
 @Test(groups = "unit", singleThreaded = true)
 public class InvokeHttpMethodTest {
 
-   public static interface ThingApi {
+   public interface ThingApi {
       @Named("ns:get")
       HttpResponse get();
    }

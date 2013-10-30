@@ -27,6 +27,6 @@ public interface ImageTemplate {
    /**
     * @return the name of the new image
     */
-   public String getName();
+   String getName();
 
 }

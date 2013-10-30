@@ -108,7 +108,7 @@ import com.google.inject.ImplementedBy;
 public interface GroupNamingConvention {
 
    @ImplementedBy(FormatSharedNamesAndAppendUniqueStringToThoseWhichRepeat.Factory.class)
-   public static interface Factory {
+   public interface Factory {
 
       GroupNamingConvention create();
 

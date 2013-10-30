@@ -172,7 +172,7 @@ public class SshjSshClient implements SshClient {
                .format("(%s) ssh not connected!", toString()));
    }
 
-   public static interface Connection<T> {
+   public interface Connection<T> {
       void clear() throws Exception;
 
       T create() throws Exception;

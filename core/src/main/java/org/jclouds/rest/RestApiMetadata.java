@@ -33,7 +33,7 @@ import com.google.common.util.concurrent.ListenableFuture;
 @Beta
 public interface RestApiMetadata extends ApiMetadata {
 
-   public static interface Builder<T extends Builder<T>> extends ApiMetadata.Builder<T> {
+   public interface Builder<T extends Builder<T>> extends ApiMetadata.Builder<T> {
 
       /**
        * @see ApiMetadata#getApi()

@@ -125,7 +125,7 @@ public abstract class BaseComputeServiceContextModule extends AbstractModule {
    @Singleton
    public static class RunScriptOnNodeFactoryImpl implements RunScriptOnNode.Factory {
 
-      static interface Factory {
+      interface Factory {
 
          @Named("direct")
          RunScriptOnNodeUsingSsh exec(NodeMetadata node, Statement script, RunScriptOptions options);

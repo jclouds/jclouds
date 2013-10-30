@@ -44,10 +44,10 @@ import com.google.inject.Module;
 @Test(groups = "unit", testName = "ClosableApiTest")
 public class ClosableApiTest {
 
-   static interface DelegatingApi extends Closeable {
+   interface DelegatingApi extends Closeable {
    }
 
-   static interface DelegatingAsyncApi extends Closeable {
+   interface DelegatingAsyncApi extends Closeable {
    }
 
    ProviderMetadata provider = forClientMappedToAsyncClientOnEndpoint(DelegatingApi.class, DelegatingAsyncApi.class,

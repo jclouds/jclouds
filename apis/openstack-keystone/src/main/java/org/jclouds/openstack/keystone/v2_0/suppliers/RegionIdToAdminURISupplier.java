@@ -31,7 +31,7 @@ import com.google.inject.assistedinject.Assisted;
  */
 @ImplementedBy(RegionIdToAdminURIFromAccessForTypeAndVersion.class)
 public interface RegionIdToAdminURISupplier extends Supplier<Map<String, Supplier<URI>>> {
-   static interface Factory {
+   interface Factory {
       /**
        * 
        * @param apiType

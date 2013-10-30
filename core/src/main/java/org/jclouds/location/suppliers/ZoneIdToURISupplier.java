@@ -33,7 +33,7 @@ import com.google.inject.assistedinject.Assisted;
  */
 @ImplementedBy(ZoneIdToURIFromConfigurationOrDefaultToProvider.class)
 public interface ZoneIdToURISupplier extends Supplier<Map<String, Supplier<URI>>> {
-   static interface Factory {
+   interface Factory {
       /**
        * 
        * @param apiType

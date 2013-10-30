@@ -49,18 +49,18 @@ public interface ContentMetadataCodec {
    /**
     * Generates standard HTTP headers for the give metadata.
     */
-   public Multimap<String, String> toHeaders(ContentMetadata md);
+   Multimap<String, String> toHeaders(ContentMetadata md);
 
    /**
     * Sets properties related to the http headers listed in {@link ContentMetadata#HTTP_HEADERS}
     */
-   public void fromHeaders(MutableContentMetadata contentMetadata, Multimap<String, String> headers);
+   void fromHeaders(MutableContentMetadata contentMetadata, Multimap<String, String> headers);
 
    /**
     * Parses the 'Expires' header.
     * If invalid, returns a date in the past (in accordance with HTTP 1.1 client spec).
     */
-   public Date parseExpires(String expires);
+   Date parseExpires(String expires);
 
    /**
     * Default implementation, in accordance with HTTP 1.1 spec.

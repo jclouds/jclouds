@@ -31,7 +31,7 @@ import com.google.common.reflect.Invokable;
 @Test
 public class Optionals2Test {
 
-   public static interface Test {
+   public interface Test {
       Optional<String> getOptional();
 
       String getNotOptional();

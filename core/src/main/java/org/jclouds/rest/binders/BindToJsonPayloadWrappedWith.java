@@ -35,7 +35,7 @@ import com.google.inject.assistedinject.Assisted;
  */
 public class BindToJsonPayloadWrappedWith implements MapBinder {
 
-   public static interface Factory {
+   public interface Factory {
       BindToJsonPayloadWrappedWith create(String envelope);
    }
 

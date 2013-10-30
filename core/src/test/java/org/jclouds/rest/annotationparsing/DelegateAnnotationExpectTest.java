@@ -50,7 +50,7 @@ import com.google.inject.Module;
 @Test(groups = "unit", testName = "DelegateAnnotationExpectTest")
 public class DelegateAnnotationExpectTest extends BaseRestClientExpectTest<DelegateAnnotationExpectTest.DelegatingApi> {
 
-   static interface DelegatingApi {
+   interface DelegatingApi {
       @Delegate
       DiskApi getDiskApiForProjectForm(@FormParam("project") String projectName);
 
@@ -59,7 +59,7 @@ public class DelegateAnnotationExpectTest extends BaseRestClientExpectTest<Deleg
       DiskApi getDiskApiForProject(@PayloadParam("project") @PathParam("project") String projectName);
    }
 
-   static interface DelegatingAsyncApi {
+   interface DelegatingAsyncApi {
       @Delegate
       DiskAsyncApi getDiskApiForProjectForm(@FormParam("project") String projectName);
 
@@ -68,7 +68,7 @@ public class DelegateAnnotationExpectTest extends BaseRestClientExpectTest<Deleg
       DiskAsyncApi getDiskApiForProject(@PayloadParam("project") @PathParam("project") String projectName);
    }
 
-   static interface DiskApi {
+   interface DiskApi {
       void form();
 
       void syncAll();
@@ -76,7 +76,7 @@ public class DelegateAnnotationExpectTest extends BaseRestClientExpectTest<Deleg
       boolean exists(@PathParam("disk") String diskName);
    }
 
-   static interface DiskAsyncApi {
+   interface DiskAsyncApi {
       @POST
       ListenableFuture<Void> form();
 

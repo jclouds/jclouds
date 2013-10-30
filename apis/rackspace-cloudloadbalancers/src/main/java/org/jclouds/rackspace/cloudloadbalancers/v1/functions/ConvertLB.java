@@ -39,7 +39,7 @@ import com.google.inject.assistedinject.Assisted;
 public class ConvertLB implements Function<LB, LoadBalancer> {
    private static final String LOAD_BALANCERS = "loadbalancers";
 
-   public static interface Factory {
+   public interface Factory {
       ConvertLB createForEndpointAndRegion(URI endpoint, String region);
    }
 

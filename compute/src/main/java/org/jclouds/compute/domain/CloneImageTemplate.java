@@ -23,6 +23,6 @@ package org.jclouds.compute.domain;
  */
 public interface CloneImageTemplate extends ImageTemplate {
 
-   public String getSourceNodeId();
+   String getSourceNodeId();
 
 }

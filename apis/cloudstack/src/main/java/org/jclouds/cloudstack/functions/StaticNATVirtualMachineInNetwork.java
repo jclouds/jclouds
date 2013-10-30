@@ -39,7 +39,7 @@ import com.google.inject.assistedinject.Assisted;
  */
 @Singleton
 public class StaticNATVirtualMachineInNetwork implements Function<VirtualMachine, PublicIPAddress> {
-   public static interface Factory {
+   public interface Factory {
       StaticNATVirtualMachineInNetwork create(Network in);
    }
 

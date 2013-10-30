@@ -38,7 +38,7 @@ public interface ProviderMetadata {
     * @author Adrian Cole
     * @since 1.5
     */
-   public static interface Builder {
+   public interface Builder {
       /**
        * @see ProviderMetadata#getId()
        */
@@ -120,26 +120,26 @@ public interface ProviderMetadata {
     * 
     * @return the provider's unique identifier (ex. aws-ec2, rackspace-cloudservers-us)
     */
-   public String getId();
+   String getId();
 
    /**
     * 
     * @return the name (display name) of the provider (ex. GoGrid)
     */
-   public String getName();
+   String getName();
 
    /**
     * 
     * @return the provider's api
     * @since 1.5
     */
-   public ApiMetadata getApiMetadata();
+   ApiMetadata getApiMetadata();
 
    /**
     * @see ApiMetadata#getEndpoint
     * @return the url for the provider's api
     */
-   public String getEndpoint();
+   String getEndpoint();
 
    /**
     * Configuration Properties used when creating connections to this provider.

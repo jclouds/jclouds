@@ -28,7 +28,7 @@ public interface ComputeMetadataIncludingStatus<S extends Enum<S>> extends Compu
     * 
     * @since 1.5
     */
-   public S getStatus();
+   S getStatus();
 
    /**
     * status of the resource, as supplied literally from the backend api.
@@ -37,5 +37,5 @@ public interface ComputeMetadataIncludingStatus<S extends Enum<S>> extends Compu
     * @since 1.5
     */
    @Nullable
-   public String getBackendStatus();
+   String getBackendStatus();
 }

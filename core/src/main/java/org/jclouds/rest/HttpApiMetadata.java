@@ -29,7 +29,7 @@ import com.google.common.annotations.Beta;
 @Beta
 public interface HttpApiMetadata<A> extends ApiMetadata {
 
-   public static interface Builder<A, T extends Builder<A, T>> extends ApiMetadata.Builder<T> {
+   public interface Builder<A, T extends Builder<A, T>> extends ApiMetadata.Builder<T> {
 
       /**
        * @see ApiMetadata#getApi()

@@ -40,7 +40,7 @@ import com.google.common.reflect.Invokable;
  */
 @Test(groups = "unit")
 public class BindMapToStringPayloadTest {
-   static interface TestPayload {
+   interface TestPayload {
       @org.jclouds.rest.annotations.Payload("name {fooble}")
       void testPayload(@PathParam("foo") String path);
 

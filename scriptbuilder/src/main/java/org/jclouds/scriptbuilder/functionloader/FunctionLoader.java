@@ -30,6 +30,6 @@ public interface FunctionLoader {
    * @return         The function as {@link String}.
    * @throws FunctionNotFoundException
    */
-  public String loadFunction(String function, OsFamily family) throws FunctionNotFoundException;
+  String loadFunction(String function, OsFamily family) throws FunctionNotFoundException;
 
 }

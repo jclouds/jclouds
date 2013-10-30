@@ -28,7 +28,7 @@ import com.google.inject.assistedinject.Assisted;
 
 @Singleton
 public class URIFromAuthenticationResponseForService implements Supplier<URI> {
-   public static interface Factory {
+   public interface Factory {
       URIFromAuthenticationResponseForService create(String service);
    }
 

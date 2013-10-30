@@ -57,7 +57,7 @@ public class PresentWhenExtensionAnnotationNamespaceEqualsAnyNamespaceInExtensio
             "Keypair Support").build();
 
    @org.jclouds.openstack.v2_0.services.Extension(of = ServiceType.COMPUTE, namespace = "http://docs.openstack.org/ext/keypairs/api/v1.1")
-   static interface KeyPairAsyncApi {
+   interface KeyPairAsyncApi {
 
    }
 
@@ -67,11 +67,11 @@ public class PresentWhenExtensionAnnotationNamespaceEqualsAnyNamespaceInExtensio
             "Floating IPs support").build();
 
    @org.jclouds.openstack.v2_0.services.Extension(of = ServiceType.COMPUTE, namespace = "http://docs.openstack.org/ext/floating_ips/api/v1.1")
-   static interface FloatingIPAsyncApi {
+   interface FloatingIPAsyncApi {
 
    }
 
-   static interface NovaAsyncApi {
+   interface NovaAsyncApi {
 
       @Delegate
       Optional<FloatingIPAsyncApi> getFloatingIPExtensionForZone(String zone);

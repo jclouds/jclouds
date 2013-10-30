@@ -145,7 +145,7 @@ public final class Subnet {
       return string().toString();
    }
 
-   private final ToStringHelper string() {
+   private ToStringHelper string() {
       return Objects.toStringHelper(this).omitNullValues().add("subnetId", subnetId).add("subnetState", subnetState)
             .add("vpcId", vpcId).add("cidrBlock", cidrBlock).add("availableIpAddressCount", availableIpAddressCount)
             .add("availabilityZone", availabilityZone).add("tags", tags);

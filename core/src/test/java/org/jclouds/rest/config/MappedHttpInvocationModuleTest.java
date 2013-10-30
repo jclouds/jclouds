@@ -42,11 +42,11 @@ import com.google.common.util.concurrent.ListenableFuture;
  */
 @Test(groups = "unit")
 public class MappedHttpInvocationModuleTest {
-   static interface Sync {
+   interface Sync {
       String get();
    }
 
-   private static interface Async {
+   private interface Async {
       ListenableFuture<String> get();
    }
 
@@ -69,7 +69,7 @@ public class MappedHttpInvocationModuleTest {
       });
    }
 
-   private static interface AsyncWithException {
+   private interface AsyncWithException {
       ListenableFuture<String> get() throws IOException;
    }
 
@@ -79,7 +79,7 @@ public class MappedHttpInvocationModuleTest {
       SyncToAsyncHttpInvocationModule.putInvokables(Sync.class, AsyncWithException.class, cache);
    }
 
-   private static interface AsyncWithMisnamedMethod {
+   private interface AsyncWithMisnamedMethod {
       ListenableFuture<String> got();
    }
 

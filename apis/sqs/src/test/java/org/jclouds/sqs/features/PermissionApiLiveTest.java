@@ -61,11 +61,11 @@ public class PermissionApiLiveTest extends BaseSQSApiLiveTest {
       recreateQueueInRegion(prefix, null);
    }
 
-   static interface AnonymousAttributesApi extends Closeable {
+   interface AnonymousAttributesApi extends Closeable {
       String getQueueArn();
    }
 
-   static interface AnonymousAttributesAsyncApi extends Closeable {
+   interface AnonymousAttributesAsyncApi extends Closeable {
       @POST
       @Path("/")
       @FormParams(keys = { ACTION, "AttributeName.1" }, values = { "GetQueueAttributes", "QueueArn" })

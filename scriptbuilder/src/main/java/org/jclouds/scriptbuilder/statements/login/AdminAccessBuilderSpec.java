@@ -80,7 +80,7 @@ import com.google.common.collect.ImmutableMap;
 public class AdminAccessBuilderSpec {
 
    /** Parses a single value. */
-   protected static interface ValueParser {
+   protected interface ValueParser {
       void parse(AdminAccessBuilderSpec spec, String key, @Nullable String value);
    }
 

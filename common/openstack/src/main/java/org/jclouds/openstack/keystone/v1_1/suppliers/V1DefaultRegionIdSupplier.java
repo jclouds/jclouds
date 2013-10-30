@@ -37,7 +37,7 @@ import com.google.inject.assistedinject.Assisted;
 @Singleton
 public class V1DefaultRegionIdSupplier implements ImplicitRegionIdSupplier {
 
-   public static interface Factory {
+   public interface Factory {
       /**
        * 
        * @param apiType

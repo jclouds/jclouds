@@ -53,7 +53,7 @@ import com.google.inject.assistedinject.AssistedInject;
 public class CustomizeNodeAndAddToGoodMapOrPutExceptionIntoBadMap implements Callable<Void>,
       Function<AtomicReference<NodeMetadata>, Void> {
 
-   public static interface Factory {
+   public interface Factory {
       Callable<Void> create(TemplateOptions options, AtomicReference<NodeMetadata> node, Set<NodeMetadata> goodNodes,
             Map<NodeMetadata, Exception> badNodes, Multimap<NodeMetadata, CustomizationResponse> customizationResponses);
 

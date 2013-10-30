@@ -54,7 +54,7 @@ public interface S3Client extends Closeable {
     * Creates a default implementation of S3Object
     */
    @Provides
-   public S3Object newS3Object();
+   S3Object newS3Object();
 
    /**
     * Retrieves the S3Object associated with the Key or KeyNotFoundException if not available;

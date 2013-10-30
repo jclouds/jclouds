@@ -99,7 +99,7 @@ import com.google.inject.Provides;
 @Path("/")
 public interface AzureBlobAsyncClient {
    @Provides
-   public org.jclouds.azureblob.domain.AzureBlob newBlob();
+   org.jclouds.azureblob.domain.AzureBlob newBlob();
 
    /**
     * @see AzureBlobClient#listContainers

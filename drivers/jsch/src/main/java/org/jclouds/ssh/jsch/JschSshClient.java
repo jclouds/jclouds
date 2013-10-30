@@ -155,13 +155,13 @@ public class JschSshClient implements SshClient {
                "(%s) Session not connected!", toString()));
    }
 
-   public static interface Connection<T> {
+   public interface Connection<T> {
       void clear();
 
       T create() throws Exception;
    }
 
-   public static interface ConnectionWithStreams<T> extends Connection<T> {
+   public interface ConnectionWithStreams<T> extends Connection<T> {
       InputStream getInputStream();
       InputStream getErrStream();
    }

@@ -119,7 +119,7 @@ import com.google.common.collect.ImmutableMap;
 public class TemplateBuilderSpec {
 
    /** Parses a single value. */
-   protected static interface ValueParser {
+   protected interface ValueParser {
       void parse(TemplateBuilderSpec spec, String key, @Nullable String value);
    }
 

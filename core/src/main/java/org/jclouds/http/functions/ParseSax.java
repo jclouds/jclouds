@@ -58,7 +58,7 @@ public class ParseSax<T> implements Function<HttpResponse, T>, InvocationContext
    private final HandlerWithResult<T> handler;
    private HttpRequest request;
 
-   public static interface Factory {
+   public interface Factory {
       <T> ParseSax<T> create(HandlerWithResult<T> handler);
    }
 

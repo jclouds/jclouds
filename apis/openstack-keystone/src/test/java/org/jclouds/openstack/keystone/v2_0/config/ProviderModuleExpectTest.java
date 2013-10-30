@@ -91,7 +91,7 @@ public class ProviderModuleExpectTest extends BaseRestApiExpectTest<ProviderModu
    }
 
    @org.jclouds.rest.annotations.Endpoint(DNS.class)
-   static interface DNSApi extends Closeable {
+   interface DNSApi extends Closeable {
       @HEAD
       @Path("/zones/{zoneName}")
       @Fallback(FalseOnNotFoundOr404.class)
