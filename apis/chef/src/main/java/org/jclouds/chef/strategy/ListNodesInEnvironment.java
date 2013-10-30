@@ -31,15 +31,15 @@ import com.google.inject.ImplementedBy;
 @ImplementedBy(ListNodesInEnvironmentImpl.class)
 public interface ListNodesInEnvironment {
 
-   public Iterable<? extends Node> execute(String environmentName);
+   Iterable<? extends Node> execute(String environmentName);
 
-   public Iterable<? extends Node> execute(String environmentName, Predicate<String> nodeNameSelector);
+   Iterable<? extends Node> execute(String environmentName, Predicate<String> nodeNameSelector);
 
-   public Iterable<? extends Node> execute(String environmentName, Iterable<String> toGet);
+   Iterable<? extends Node> execute(String environmentName, Iterable<String> toGet);
 
-   public Iterable<? extends Node> execute(ListeningExecutorService executor, String environmentName);
+   Iterable<? extends Node> execute(ListeningExecutorService executor, String environmentName);
 
-   public Iterable<? extends Node> execute(ListeningExecutorService executor, String environmentName, Predicate<String> nodeNameSelector);
+   Iterable<? extends Node> execute(ListeningExecutorService executor, String environmentName, Predicate<String> nodeNameSelector);
 
-   public Iterable<? extends Node> execute(ListeningExecutorService executor, String environmentName, Iterable<String> toGet);
+   Iterable<? extends Node> execute(ListeningExecutorService executor, String environmentName, Iterable<String> toGet);
 }

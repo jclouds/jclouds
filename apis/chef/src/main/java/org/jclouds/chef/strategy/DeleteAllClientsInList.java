@@ -30,8 +30,8 @@ import com.google.inject.ImplementedBy;
 @ImplementedBy(DeleteAllClientsInListImpl.class)
 public interface DeleteAllClientsInList {
 
-   public void execute(Iterable<String> names);
+   void execute(Iterable<String> names);
 
-   public void execute(ListeningExecutorService executor, Iterable<String> names);
+   void execute(ListeningExecutorService executor, Iterable<String> names);
 
 }

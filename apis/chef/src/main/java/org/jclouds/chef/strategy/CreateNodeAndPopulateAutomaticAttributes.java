@@ -29,7 +29,7 @@ import com.google.inject.ImplementedBy;
  */
 @ImplementedBy(CreateNodeAndPopulateAutomaticAttributesImpl.class)
 public interface CreateNodeAndPopulateAutomaticAttributes {
-   public Node execute(Node node);
+   Node execute(Node node);
 
-   public Node execute(String nodeName, Iterable<String> runList);
+   Node execute(String nodeName, Iterable<String> runList);
 }

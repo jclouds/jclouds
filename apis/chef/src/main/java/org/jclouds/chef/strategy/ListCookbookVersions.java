@@ -31,16 +31,15 @@ import com.google.inject.ImplementedBy;
 @ImplementedBy(ListCookbookVersionsImpl.class)
 public interface ListCookbookVersions {
 
-   public Iterable<? extends CookbookVersion> execute();
+   Iterable<? extends CookbookVersion> execute();
 
-   public Iterable<? extends CookbookVersion> execute(Predicate<String> cookbookNameSelector);
+   Iterable<? extends CookbookVersion> execute(Predicate<String> cookbookNameSelector);
 
-   public Iterable<? extends CookbookVersion> execute(Iterable<String> cookbookNames);
+   Iterable<? extends CookbookVersion> execute(Iterable<String> cookbookNames);
 
-   public Iterable<? extends CookbookVersion> execute(ListeningExecutorService executor);
+   Iterable<? extends CookbookVersion> execute(ListeningExecutorService executor);
 
-   public Iterable<? extends CookbookVersion> execute(ListeningExecutorService executor,
-         Predicate<String> cookbookNameSelector);
+   Iterable<? extends CookbookVersion> execute(ListeningExecutorService executor, Predicate<String> cookbookNameSelector);
 
-   public Iterable<? extends CookbookVersion> execute(ListeningExecutorService executor, Iterable<String> cookbookNames);
+   Iterable<? extends CookbookVersion> execute(ListeningExecutorService executor, Iterable<String> cookbookNames);
 }

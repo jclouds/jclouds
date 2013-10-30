@@ -31,15 +31,15 @@ import com.google.inject.ImplementedBy;
 @ImplementedBy(ListClientsImpl.class)
 public interface ListClients {
 
-   public Iterable<? extends Client> execute();
+   Iterable<? extends Client> execute();
 
-   public Iterable<? extends Client> execute(Predicate<String> clientNameSelector);
+   Iterable<? extends Client> execute(Predicate<String> clientNameSelector);
 
-   public Iterable<? extends Client> execute(Iterable<String> toGet);
+   Iterable<? extends Client> execute(Iterable<String> toGet);
 
-   public Iterable<? extends Client> execute(ListeningExecutorService executor);
+   Iterable<? extends Client> execute(ListeningExecutorService executor);
 
-   public Iterable<? extends Client> execute(ListeningExecutorService executor, Predicate<String> clientNameSelector);
+   Iterable<? extends Client> execute(ListeningExecutorService executor, Predicate<String> clientNameSelector);
 
-   public Iterable<? extends Client> execute(ListeningExecutorService executor, Iterable<String> toGet);
+   Iterable<? extends Client> execute(ListeningExecutorService executor, Iterable<String> toGet);
 }

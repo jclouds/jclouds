@@ -29,8 +29,8 @@ import com.google.inject.ImplementedBy;
 @ImplementedBy(DeleteAllNodesInListImpl.class)
 public interface DeleteAllNodesInList {
 
-   public void execute(Iterable<String> names);
+   void execute(Iterable<String> names);
 
-   public void execute(ListeningExecutorService executor, Iterable<String> names);
+   void execute(ListeningExecutorService executor, Iterable<String> names);
 
 }
