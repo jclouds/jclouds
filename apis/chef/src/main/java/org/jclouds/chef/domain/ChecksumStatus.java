@@ -16,7 +16,7 @@
  */
 package org.jclouds.chef.domain;
 
-import static com.google.common.base.Preconditions.*;
+import static com.google.common.base.Preconditions.checkNotNull;
 import java.beans.ConstructorProperties;
 import java.net.URI;
 

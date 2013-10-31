@@ -77,7 +77,7 @@ import com.google.inject.Provides;
  */
 public class ChefParserModule extends AbstractModule {
    @ImplementedBy(PrivateKeyAdapterImpl.class)
-   public static interface PrivateKeyAdapter extends JsonDeserializer<PrivateKey> {
+   public interface PrivateKeyAdapter extends JsonDeserializer<PrivateKey> {
 
    }
 
@@ -111,7 +111,7 @@ public class ChefParserModule extends AbstractModule {
    }
 
    @ImplementedBy(PublicKeyAdapterImpl.class)
-   public static interface PublicKeyAdapter extends JsonDeserializer<PublicKey> {
+   public interface PublicKeyAdapter extends JsonDeserializer<PublicKey> {
 
    }
 
@@ -145,7 +145,7 @@ public class ChefParserModule extends AbstractModule {
    }
 
    @ImplementedBy(X509CertificateAdapterImpl.class)
-   public static interface X509CertificateAdapter extends JsonDeserializer<X509Certificate> {
+   public interface X509CertificateAdapter extends JsonDeserializer<X509Certificate> {
 
    }
 
