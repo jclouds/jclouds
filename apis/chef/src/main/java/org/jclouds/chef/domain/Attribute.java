@@ -16,7 +16,7 @@
  */
 package org.jclouds.chef.domain;
 
-import static org.jclouds.chef.util.CollectionUtils.*;
+import static org.jclouds.chef.util.CollectionUtils.copyOfOrEmpty;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 import java.beans.ConstructorProperties;
