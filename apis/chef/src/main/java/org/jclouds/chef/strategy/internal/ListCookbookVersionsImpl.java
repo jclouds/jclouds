@@ -18,7 +18,6 @@ package org.jclouds.chef.strategy.internal;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.collect.Iterables.concat;
-import static com.google.common.collect.Iterables.filter;
 import static com.google.common.collect.Iterables.transform;
 import static com.google.common.util.concurrent.Futures.allAsList;
 import static com.google.common.util.concurrent.Futures.getUnchecked;
@@ -39,13 +38,11 @@ import org.jclouds.chef.strategy.ListCookbookVersions;
 import org.jclouds.logging.Logger;
 
 import com.google.common.base.Function;
-import com.google.common.base.Predicate;
 import com.google.common.util.concurrent.ListenableFuture;
 import com.google.common.util.concurrent.ListeningExecutorService;
 import com.google.inject.Inject;
 
 /**
- * 
  * 
  * @author Adrian Cole
  */
@@ -70,28 +67,11 @@ public class ListCookbookVersionsImpl implements ListCookbookVersions {
    }
 
    @Override
-   public Iterable<? extends CookbookVersion> execute(Predicate<String> cookbookNameSelector) {
-      return execute(userExecutor, cookbookNameSelector);
-   }
-
-   @Override
-   public Iterable<? extends CookbookVersion> execute(Iterable<String> toGet) {
-      return execute(userExecutor, toGet);
-   }
-
-   @Override
    public Iterable<? extends CookbookVersion> execute(ListeningExecutorService executor) {
       return execute(executor, api.listCookbooks());
    }
 
-   @Override
-   public Iterable<? extends CookbookVersion> execute(ListeningExecutorService executor,
-         Predicate<String> cookbookNameSelector) {
-      return execute(executor, filter(api.listCookbooks(), cookbookNameSelector));
-   }
-
-   @Override
-   public Iterable<? extends CookbookVersion> execute(final ListeningExecutorService executor,
+   private Iterable<? extends CookbookVersion> execute(final ListeningExecutorService executor,
          Iterable<String> cookbookNames) {
       return concat(transform(cookbookNames, new Function<String, Iterable<? extends CookbookVersion>>() {
 
@@ -112,7 +92,7 @@ public class ListCookbookVersionsImpl implements ListCookbookVersions {
                      }
                   }));
 
-            logger.trace(String.format("getting versions of cookbook: " + cookbook));
+            logger.trace(String.format("getting versions of cookbook: %s", cookbook));
             return getUnchecked(futures);
          }
       }));

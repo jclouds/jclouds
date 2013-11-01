@@ -19,12 +19,10 @@ package org.jclouds.chef.strategy;
 import org.jclouds.chef.domain.Node;
 import org.jclouds.chef.strategy.internal.ListNodesImpl;
 
-import com.google.common.base.Predicate;
 import com.google.common.util.concurrent.ListeningExecutorService;
 import com.google.inject.ImplementedBy;
 
 /**
- * 
  * 
  * @author Adrian Cole
  */
@@ -33,13 +31,5 @@ public interface ListNodes {
 
    Iterable<? extends Node> execute();
 
-   Iterable<? extends Node> execute(Predicate<String> nodeNameSelector);
-
-   Iterable<? extends Node> execute(Iterable<String> toGet);
-
    Iterable<? extends Node> execute(ListeningExecutorService executor);
-
-   Iterable<? extends Node> execute(ListeningExecutorService executor, Predicate<String> nodeNameSelector);
-
-   Iterable<? extends Node> execute(ListeningExecutorService executor, Iterable<String> toGet);
 }

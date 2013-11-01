@@ -17,7 +17,6 @@
 package org.jclouds.chef.strategy.internal;
 
 import static com.google.common.base.Preconditions.checkNotNull;
-import static com.google.common.collect.Iterables.filter;
 import static com.google.common.collect.Iterables.transform;
 import static com.google.common.util.concurrent.Futures.allAsList;
 import static com.google.common.util.concurrent.Futures.getUnchecked;
@@ -38,7 +37,6 @@ import org.jclouds.logging.Logger;
 
 import com.google.common.base.Function;
 import com.google.common.base.Joiner;
-import com.google.common.base.Predicate;
 import com.google.common.util.concurrent.ListenableFuture;
 import com.google.common.util.concurrent.ListeningExecutorService;
 import com.google.inject.Inject;
@@ -64,28 +62,11 @@ public class ListEnvironmentsImpl implements ListEnvironments {
    }
 
    @Override
-   public Iterable<? extends Environment> execute(Predicate<String> environmentNameSelector) {
-      return execute(userExecutor, environmentNameSelector);
-   }
-
-   @Override
-   public Iterable<? extends Environment> execute(Iterable<String> toGet) {
-      return execute(userExecutor, toGet);
-   }
-
-   @Override
    public Iterable<? extends Environment> execute(ListeningExecutorService executor) {
       return execute(executor, api.listEnvironments());
    }
 
-   @Override
-   public Iterable<? extends Environment> execute(ListeningExecutorService executor,
-         Predicate<String> environmentNameSelector) {
-      return execute(executor, filter(api.listEnvironments(), environmentNameSelector));
-   }
-
-   @Override
-   public Iterable<? extends Environment> execute(final ListeningExecutorService executor, Iterable<String> toGet) {
+   private Iterable<? extends Environment> execute(final ListeningExecutorService executor, Iterable<String> toGet) {
       ListenableFuture<List<Environment>> futures = allAsList(transform(toGet,
             new Function<String, ListenableFuture<Environment>>() {
                @Override

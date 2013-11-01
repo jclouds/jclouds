@@ -17,7 +17,6 @@
 package org.jclouds.chef.strategy.internal;
 
 import static com.google.common.collect.Iterables.size;
-import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertTrue;
 
 import org.jclouds.chef.ChefApi;
@@ -25,7 +24,6 @@ import org.jclouds.chef.internal.BaseChefLiveTest;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.Test;
 
-import com.google.common.base.Predicate;
 import com.google.common.collect.ImmutableSet;
 
 /**
@@ -60,22 +58,4 @@ public class ListNodesImplLiveTest extends BaseChefLiveTest<ChefApi> {
    public void testExecute() {
       assertTrue(size(strategy.execute()) > 0, "Expected one or more elements");
    }
-
-   @Test
-   public void testExecutePredicateOfString() {
-      assertEquals(size(strategy.execute(new Predicate<String>() {
-
-         @Override
-         public boolean apply(String input) {
-            return input.startsWith(prefix);
-         }
-
-      })), 2);
-   }
-
-   @Test
-   public void testExecuteIterableOfString() {
-      assertEquals(size(strategy.execute(ImmutableSet.of(prefix, prefix + 1))), 2);
-   }
-
 }
