@@ -17,7 +17,6 @@
 package org.jclouds.chef.strategy.internal;
 
 import static com.google.common.base.Preconditions.checkNotNull;
-import static com.google.common.collect.Iterables.filter;
 import static com.google.common.collect.Iterables.transform;
 import static com.google.common.util.concurrent.Futures.allAsList;
 import static com.google.common.util.concurrent.Futures.getUnchecked;
@@ -38,13 +37,11 @@ import org.jclouds.logging.Logger;
 
 import com.google.common.base.Function;
 import com.google.common.base.Joiner;
-import com.google.common.base.Predicate;
 import com.google.common.util.concurrent.ListenableFuture;
 import com.google.common.util.concurrent.ListeningExecutorService;
 import com.google.inject.Inject;
 
 /**
- * 
  * 
  * @author Noorul Islam K M
  */
@@ -69,27 +66,11 @@ public class ListNodesInEnvironmentImpl implements ListNodesInEnvironment {
    }
 
    @Override
-   public Iterable<? extends Node> execute(String environmentName, Predicate<String> nodeNameSelector) {
-      return execute(userExecutor, environmentName, nodeNameSelector);
-   }
-
-   @Override
-   public Iterable<? extends Node> execute(String environmentName, Iterable<String> toGet) {
-      return execute(userExecutor, environmentName, toGet);
-   }
-
-   @Override
    public Iterable<? extends Node> execute(ListeningExecutorService executor, String environmentName) {
       return execute(executor, environmentName, api.listNodesInEnvironment(environmentName));
    }
 
-   @Override
-   public Iterable<? extends Node> execute(ListeningExecutorService executor, String environmentName, Predicate<String> nodeNameSelector) {
-      return execute(executor, environmentName, filter(api.listNodesInEnvironment(environmentName), nodeNameSelector));
-   }
-
-   @Override
-   public Iterable<? extends Node> execute(final ListeningExecutorService executor, String environmentName, Iterable<String> toGet) {
+   private Iterable<? extends Node> execute(final ListeningExecutorService executor, String environmentName, Iterable<String> toGet) {
       ListenableFuture<List<Node>> futures = allAsList(transform(toGet, new Function<String, ListenableFuture<Node>>() {
          @Override
          public ListenableFuture<Node> apply(final String input) {

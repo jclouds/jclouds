@@ -17,7 +17,6 @@
 package org.jclouds.chef.strategy.internal;
 
 import static com.google.common.base.Preconditions.checkNotNull;
-import static com.google.common.collect.Iterables.filter;
 import static com.google.common.collect.Iterables.transform;
 import static com.google.common.util.concurrent.Futures.allAsList;
 import static com.google.common.util.concurrent.Futures.getUnchecked;
@@ -38,13 +37,11 @@ import org.jclouds.logging.Logger;
 
 import com.google.common.base.Function;
 import com.google.common.base.Joiner;
-import com.google.common.base.Predicate;
 import com.google.common.util.concurrent.ListenableFuture;
 import com.google.common.util.concurrent.ListeningExecutorService;
 import com.google.inject.Inject;
 
 /**
- * 
  * 
  * @author Adrian Cole
  */
@@ -69,27 +66,11 @@ public class ListClientsImpl implements ListClients {
    }
 
    @Override
-   public Iterable<? extends Client> execute(Predicate<String> clientNameSelector) {
-      return execute(userExecutor, clientNameSelector);
-   }
-
-   @Override
-   public Iterable<? extends Client> execute(Iterable<String> toGet) {
-      return execute(userExecutor, toGet);
-   }
-
-   @Override
    public Iterable<? extends Client> execute(ListeningExecutorService executor) {
       return execute(executor, api.listClients());
    }
 
-   @Override
-   public Iterable<? extends Client> execute(ListeningExecutorService executor, Predicate<String> clientNameSelector) {
-      return execute(executor, filter(api.listClients(), clientNameSelector));
-   }
-
-   @Override
-   public Iterable<? extends Client> execute(final ListeningExecutorService executor, Iterable<String> toGet) {
+   private Iterable<? extends Client> execute(final ListeningExecutorService executor, Iterable<String> toGet) {
       ListenableFuture<List<Client>> futures = allAsList(transform(toGet,
             new Function<String, ListenableFuture<Client>>() {
                @Override

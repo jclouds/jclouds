@@ -72,25 +72,24 @@ public class CleanupStaleNodesAndClientsImpl implements CleanupStaleNodesAndClie
       final Calendar expired = Calendar.getInstance();
       expired.setTime(new Date());
       expired.add(Calendar.SECOND, -secondsStale);
-      Iterable<? extends Node> staleNodes = filter(nodeLister.execute(new Predicate<String>() {
-
-         @Override
-         public boolean apply(String input) {
-            return input.startsWith(prefix);
-         }
-
-      }), and(notNull(), new Predicate<Node>() {
-         @Override
-         public boolean apply(Node input) {
-            JsonBall dateLong = input.getAutomaticAttributes().get("ohai_time");
-            if (dateLong == null)
-               return true;
-            Calendar nodeUpdate = Calendar.getInstance();
-            nodeUpdate.setTime(fromOhaiTime(dateLong));
-            return expired.after(nodeUpdate);
-         }
-
-      }));
+      Iterable<? extends Node> staleNodes = filter(
+         nodeLister.execute(), and(notNull(), new Predicate<Node>() {
+               @Override
+               public boolean apply(Node input) {
+                  return input.getName().startsWith(prefix);
+               }
+         },
+         new Predicate<Node>() {
+             @Override
+             public boolean apply(Node input) {
+                JsonBall dateLong = input.getAutomaticAttributes().get("ohai_time");
+                if (dateLong == null)
+                   return true;
+                Calendar nodeUpdate = Calendar.getInstance();
+                nodeUpdate.setTime(fromOhaiTime(dateLong));
+                return expired.after(nodeUpdate);
+             }
+         }));
       Iterable<String> nodeNames = transform(staleNodes, new Function<Node, String>() {
 
          @Override

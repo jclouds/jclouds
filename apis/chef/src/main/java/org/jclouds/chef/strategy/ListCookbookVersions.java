@@ -19,12 +19,10 @@ package org.jclouds.chef.strategy;
 import org.jclouds.chef.domain.CookbookVersion;
 import org.jclouds.chef.strategy.internal.ListCookbookVersionsImpl;
 
-import com.google.common.base.Predicate;
 import com.google.common.util.concurrent.ListeningExecutorService;
 import com.google.inject.ImplementedBy;
 
 /**
- * 
  * 
  * @author Adrian Cole
  */
@@ -33,13 +31,5 @@ public interface ListCookbookVersions {
 
    Iterable<? extends CookbookVersion> execute();
 
-   Iterable<? extends CookbookVersion> execute(Predicate<String> cookbookNameSelector);
-
-   Iterable<? extends CookbookVersion> execute(Iterable<String> cookbookNames);
-
    Iterable<? extends CookbookVersion> execute(ListeningExecutorService executor);
-
-   Iterable<? extends CookbookVersion> execute(ListeningExecutorService executor, Predicate<String> cookbookNameSelector);
-
-   Iterable<? extends CookbookVersion> execute(ListeningExecutorService executor, Iterable<String> cookbookNames);
 }
