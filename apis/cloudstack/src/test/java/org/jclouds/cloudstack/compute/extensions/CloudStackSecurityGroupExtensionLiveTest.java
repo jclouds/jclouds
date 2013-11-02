@@ -24,8 +24,6 @@ import org.jclouds.sshj.config.SshjSshClientModule;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
-import com.google.common.base.Predicate;
-import com.google.common.collect.Iterables;
 import com.google.inject.Module;
 
 /**
@@ -48,14 +46,13 @@ public class CloudStackSecurityGroupExtensionLiveTest extends BaseSecurityGroupE
       super.setupContext();
 
       CloudStackApi api = view.unwrapApi(CloudStackApi.class);
-      zone = Iterables.find(api.getZoneApi().listZones(), new Predicate<Zone>() {
-
-         @Override
-         public boolean apply(Zone arg0) {
-            return arg0.isSecurityGroupsEnabled();
+      for (Zone z: api.getZoneApi().listZones()) {
+         if (z.isSecurityGroupsEnabled()) {
+            zone = z;
+            break;
          }
+      }
 
-      });
       if (zone == null)
          securityGroupsSupported = false;
    }

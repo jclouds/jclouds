@@ -191,10 +191,10 @@ public class SecurityGroupPredicates {
 
          @Override
          public String toString() {
-            return "ruleCidrMatches(" + protocol
-                    + "," + startPort
-                    + "," + endPort
-                    + ",[" + cidrs
+            return "ruleCidrMatches(protocol:" + protocol
+                    + ",startPort:" + startPort
+                    + ",endPort:" + endPort
+                    + ",cidrs:[" + cidrs
                     + "])";
          }
       };
@@ -229,10 +229,10 @@ public class SecurityGroupPredicates {
 
          @Override
          public String toString() {
-            return "ruleGroupMatches(" + protocol
-                    + "," + startPort
-                    + "," + endPort
-                    + ",[" + accountGroupNames
+            return "ruleGroupMatches(protocol:" + protocol
+                    + ",startPort:" + startPort
+                    + ",endPort:" + endPort
+                    + ",accountGroupNames:[" + accountGroupNames
                     + "])";
          }
       };

@@ -151,31 +151,34 @@ public class CloudStackSecurityGroupExtension implements SecurityGroupExtension 
       org.jclouds.cloudstack.domain.SecurityGroup group =
               api.getSecurityGroupApi().getSecurityGroup(id);
 
-      if (group != null) {
-         for (IngressRule rule : group.getIngressRules()) {
-            jobComplete.apply(api.getSecurityGroupApi().revokeIngressRule(rule.getId()));
-         }
-
-         api.getSecurityGroupApi().deleteSecurityGroup(id);
-         // TODO find something better here maybe - hard to map zones to groups
-         for (Location location : locations.get()) {
-            groupCreator.invalidate(ZoneSecurityGroupNamePortsCidrs.builder()
-                    .zone(location.getId())
-                    .name(group.getName())
-                    .build());
-         }
-
-         return true;
+      if (group == null) {
+         return false;
       }
 
-      return false;
+      for (IngressRule rule : group.getIngressRules()) {
+         jobComplete.apply(api.getSecurityGroupApi().revokeIngressRule(rule.getId()));
+      }
+
+      api.getSecurityGroupApi().deleteSecurityGroup(id);
+
+      // TODO find something better here maybe - hard to map zones to groups
+      for (Location location : locations.get()) {
+         groupCreator.invalidate(ZoneSecurityGroupNamePortsCidrs.builder()
+                 .zone(location.getId())
+                 .name(group.getName())
+                 .build());
+      }
+
+      return true;
    }
 
    @Override
    public SecurityGroup addIpPermission(IpPermission ipPermission, SecurityGroup group) {
+      checkNotNull(group, "group");
+      checkNotNull(ipPermission, "ipPermission");
       String id = checkNotNull(group.getId(), "group.getId()");
 
-      if (ipPermission.getCidrBlocks().size() > 0) {
+      if (!ipPermission.getCidrBlocks().isEmpty()) {
          jobComplete.apply(api.getSecurityGroupApi().authorizeIngressPortsToCIDRs(id,
                  ipPermission.getIpProtocol().toString().toUpperCase(),
                  ipPermission.getFromPort(),
@@ -183,7 +186,7 @@ public class CloudStackSecurityGroupExtension implements SecurityGroupExtension 
                  ipPermission.getCidrBlocks()));
       }
 
-      if (ipPermission.getTenantIdGroupNamePairs().size() > 0) {
+      if (!ipPermission.getTenantIdGroupNamePairs().isEmpty()) {
          jobComplete.apply(api.getSecurityGroupApi().authorizeIngressPortsToSecurityGroups(id,
                  ipPermission.getIpProtocol().toString().toUpperCase(),
                  ipPermission.getFromPort(),
@@ -212,12 +215,14 @@ public class CloudStackSecurityGroupExtension implements SecurityGroupExtension 
 
    @Override
    public SecurityGroup removeIpPermission(IpPermission ipPermission, SecurityGroup group) {
+      checkNotNull(group, "group");
+      checkNotNull(ipPermission, "ipPermission");
       String id = checkNotNull(group.getId(), "group.getId()");
 
       org.jclouds.cloudstack.domain.SecurityGroup rawGroup = api.getSecurityGroupApi()
               .getSecurityGroup(id);
 
-      if (ipPermission.getCidrBlocks().size() > 0) {
+      if (!ipPermission.getCidrBlocks().isEmpty()) {
          for (IngressRule rule : filter(rawGroup.getIngressRules(),
                  ruleCidrMatches(ipPermission.getIpProtocol().toString(),
                          ipPermission.getFromPort(),
@@ -227,7 +232,7 @@ public class CloudStackSecurityGroupExtension implements SecurityGroupExtension 
          }
       }
 
-      if (ipPermission.getTenantIdGroupNamePairs().size() > 0) {
+      if (!ipPermission.getTenantIdGroupNamePairs().isEmpty()) {
          for (IngressRule rule : filter(rawGroup.getIngressRules(),
                  ruleGroupMatches(ipPermission.getIpProtocol().toString(),
                          ipPermission.getFromPort(),
@@ -274,10 +279,6 @@ public class CloudStackSecurityGroupExtension implements SecurityGroupExtension 
    @Override
    public boolean supportsPortRangesForGroups() {
       return false;
-   }
-
-   protected Iterable<? extends org.jclouds.cloudstack.domain.SecurityGroup> pollSecurityGroups() {
-      return api.getSecurityGroupApi().listSecurityGroups();
    }
 
 }
