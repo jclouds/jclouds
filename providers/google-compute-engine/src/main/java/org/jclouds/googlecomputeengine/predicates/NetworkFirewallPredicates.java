@@ -16,16 +16,12 @@
  */
 package org.jclouds.googlecomputeengine.predicates;
 
-import static com.google.common.collect.Collections2.transform;
-
 import org.jclouds.googlecomputeengine.domain.Firewall;
 import org.jclouds.googlecomputeengine.domain.Firewall.Rule;
 import org.jclouds.net.domain.IpPermission;
 import org.jclouds.net.domain.IpProtocol;
 
-import com.google.common.base.Function;
 import com.google.common.base.Predicate;
-import com.google.common.base.Predicates;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Range;
 import com.google.common.collect.Sets;
@@ -37,13 +33,13 @@ public class NetworkFirewallPredicates {
 
          @Override
          public boolean apply(Firewall fw) {
-            return Predicates.in(transform(fw.getAllowed(), new Function<Rule, IpProtocol>() {
-               @Override
-               public IpProtocol apply(Rule input) {
-                  return input.getIpProtocol();
+            for (Rule rule: fw.getAllowed()) {
+               if (rule.getIpProtocol().equals(protocol)) {
+                  return true;
                }
-            })).apply(protocol);
+            }
 
+            return false;
          }
       };
    }
@@ -97,13 +93,15 @@ public class NetworkFirewallPredicates {
       return new Predicate<Firewall>() {
          @Override
          public boolean apply(Firewall input) {
-            return ((permission.getGroupIds().size() == 0 && input.getSourceTags().size() == 0)
-                       || Sets.intersection(permission.getGroupIds(), input.getSourceTags()).size() > 0)
-                      && ((permission.getCidrBlocks().size() == 0 && input.getSourceRanges().size() == 0)
-                             || Sets.intersection(permission.getCidrBlocks(), input.getSourceRanges()).size() > 0)
-                      && hasProtocol(permission.getIpProtocol()).apply(input)
-                      && ((permission.getFromPort() == 0 && permission.getToPort() == 0)
-                             || hasPortRange(Range.closed(permission.getFromPort(), permission.getToPort())).apply(input));
+            boolean groupsMatchTags = (permission.getGroupIds().isEmpty() && input.getSourceTags().isEmpty())
+                    || !Sets.intersection(permission.getGroupIds(), input.getSourceTags()).isEmpty();
+            boolean cidrsMatchRanges =(permission.getCidrBlocks().isEmpty() && input.getSourceRanges().isEmpty())
+                    || !Sets.intersection(permission.getCidrBlocks(), input.getSourceRanges()).isEmpty();
+            boolean firewallHasPorts = hasProtocol(permission.getIpProtocol()).apply(input)
+                    && ((permission.getFromPort() == 0 && permission.getToPort() == 0)
+                    || hasPortRange(Range.closed(permission.getFromPort(), permission.getToPort())).apply(input));
+
+            return groupsMatchTags && cidrsMatchRanges && firewallHasPorts;
          }
       };
    }

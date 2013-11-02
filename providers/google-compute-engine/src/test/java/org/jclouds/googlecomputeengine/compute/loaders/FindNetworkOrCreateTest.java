@@ -113,7 +113,7 @@ public class FindNetworkOrCreateTest {
               .andReturn(createOp);
       expect(globalApi.get("create-op")).andReturn(createOp);
       // pre-creation
-      expect(nwApi.get("this-network")).andReturn(null);
+      expect(nwApi.get("this-network")).andReturn(null).times(2);
       // post-creation
       expect(nwApi.get("this-network")).andReturn(network);
 

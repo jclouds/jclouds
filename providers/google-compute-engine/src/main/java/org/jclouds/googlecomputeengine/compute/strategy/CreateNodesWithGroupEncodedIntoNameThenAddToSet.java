@@ -97,7 +97,7 @@ public class CreateNodesWithGroupEncodedIntoNameThenAddToSet extends
               "operation completed check interval");
       this.operationCompleteCheckTimeout = checkNotNull(operationCompleteCheckTimeout,
               "operation completed check timeout");
-      this.operationDonePredicate = operationDonePredicate;
+      this.operationDonePredicate = checkNotNull(operationDonePredicate, "operationDonePredicate");
       this.networkMap = checkNotNull(networkMap, "networkMap");
    }
 

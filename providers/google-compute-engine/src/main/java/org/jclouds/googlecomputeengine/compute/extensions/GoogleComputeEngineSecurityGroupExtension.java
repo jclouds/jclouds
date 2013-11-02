@@ -96,7 +96,7 @@ public class GoogleComputeEngineSecurityGroupExtension implements SecurityGroupE
               "operation completed check interval");
       this.operationCompleteCheckTimeout = checkNotNull(operationCompleteCheckTimeout,
               "operation completed check timeout");
-      this.operationDonePredicate = operationDonePredicate;
+      this.operationDonePredicate = checkNotNull(operationDonePredicate, "operationDonePredicate");
    }
 
    @Override
@@ -197,11 +197,10 @@ public class GoogleComputeEngineSecurityGroupExtension implements SecurityGroupE
 
    @Override
    public SecurityGroup addIpPermission(IpPermission ipPermission, SecurityGroup group) {
+      checkNotNull(group, "group");
+      checkNotNull(ipPermission, "ipPermission");
 
-      if (api.getNetworkApiForProject(userProject.get()).get(group.getId()) == null) {
-         // Network corresponding to security group does not exist.
-         return null;
-      }
+      checkNotNull(api.getNetworkApiForProject(userProject.get()).get(group.getId()) == null, "network for group is null");
 
       ListOptions options = new ListOptions.Builder().filter("network eq .*/" + group.getName());
 
@@ -214,10 +213,10 @@ public class GoogleComputeEngineSecurityGroupExtension implements SecurityGroupE
       String uniqueFwName = namingConvention.createWithoutPrefix().uniqueNameForGroup(group.getName());
       fwOptions.name(uniqueFwName);
       fwOptions.network(group.getUri());
-      if (ipPermission.getGroupIds().size() > 0) {
+      if (!ipPermission.getGroupIds().isEmpty()) {
          fwOptions.sourceTags(ipPermission.getGroupIds());
       }
-      if (ipPermission.getCidrBlocks().size() > 0) {
+      if (!ipPermission.getCidrBlocks().isEmpty()) {
          fwOptions.sourceRanges(ipPermission.getCidrBlocks());
       }
       Firewall.Rule.Builder ruleBuilder = Firewall.Rule.builder();
@@ -242,16 +241,16 @@ public class GoogleComputeEngineSecurityGroupExtension implements SecurityGroupE
    }
 
    @Override
-   public SecurityGroup addIpPermission(IpProtocol protocol, int startPort, int endPort,
-           Multimap<String,String> tenantIdGroupNamePairs, Iterable<String> ipRanges,
+   public SecurityGroup addIpPermission(IpProtocol protocol, int fromPort, int toPort,
+           Multimap<String,String> tenantIdGroupNamePairs, Iterable<String> cidrBlocks,
            Iterable<String> groupIds, SecurityGroup group) {
 
       IpPermission.Builder permBuilder = IpPermission.builder();
       permBuilder.ipProtocol(protocol);
-      permBuilder.fromPort(startPort);
-      permBuilder.toPort(endPort);
+      permBuilder.fromPort(fromPort);
+      permBuilder.toPort(toPort);
       permBuilder.groupIds(groupIds);
-      permBuilder.cidrBlocks(ipRanges);
+      permBuilder.cidrBlocks(cidrBlocks);
 
       return addIpPermission(permBuilder.build(), group);
 
@@ -259,10 +258,10 @@ public class GoogleComputeEngineSecurityGroupExtension implements SecurityGroupE
 
    @Override
    public SecurityGroup removeIpPermission(IpPermission ipPermission, SecurityGroup group) {
-      if (api.getNetworkApiForProject(userProject.get()).get(group.getId()) == null) {
-         // Network corresponding to security group does not exist.
-         return null;
-      }
+      checkNotNull(group, "group");
+      checkNotNull(ipPermission, "ipPermission");
+
+      checkNotNull(api.getNetworkApiForProject(userProject.get()).get(group.getId()) == null, "network for group is null");
 
       ListOptions options = new ListOptions.Builder().filter("network eq .*/" + group.getName());
 
@@ -284,16 +283,16 @@ public class GoogleComputeEngineSecurityGroupExtension implements SecurityGroupE
    }
 
    @Override
-   public SecurityGroup removeIpPermission(IpProtocol protocol, int startPort, int endPort,
-                                        Multimap<String,String> tenantIdGroupNamePairs, Iterable<String> ipRanges,
+   public SecurityGroup removeIpPermission(IpProtocol protocol, int fromPort, int toPort,
+                                        Multimap<String,String> tenantIdGroupNamePairs, Iterable<String> cidrBlocks,
                                         Iterable<String> groupIds, SecurityGroup group) {
 
       IpPermission.Builder permBuilder = IpPermission.builder();
       permBuilder.ipProtocol(protocol);
-      permBuilder.fromPort(startPort);
-      permBuilder.toPort(endPort);
+      permBuilder.fromPort(fromPort);
+      permBuilder.toPort(toPort);
       permBuilder.groupIds(groupIds);
-      permBuilder.cidrBlocks(ipRanges);
+      permBuilder.cidrBlocks(cidrBlocks);
 
       return removeIpPermission(permBuilder.build(), group);
 
@@ -331,10 +330,10 @@ public class GoogleComputeEngineSecurityGroupExtension implements SecurityGroupE
                  }
               }).toSet();
 
-      if (fws.size() > 0) {
-         return groupConverter.apply(nw);
+      if (fws.isEmpty()) {
+         return null;
       }
 
-      return null;
+      return groupConverter.apply(nw);
    }
 }

@@ -69,33 +69,34 @@ public class CreateNetworkIfNeeded implements Function<NetworkAndAddressRange, N
               "operation completed check interval");
       this.operationCompleteCheckTimeout = checkNotNull(operationCompleteCheckTimeout,
               "operation completed check timeout");
-      this.operationDonePredicate = operationDonePredicate;
+      this.operationDonePredicate = checkNotNull(operationDonePredicate, "operationDonePredicate");
    }
 
    @Override
    public Network apply(NetworkAndAddressRange input) {
       checkNotNull(input, "input");
 
-      try {
-         if (input.getGateway().isPresent()) {
-            AtomicReference<Operation> operation = new AtomicReference<Operation>(api.getNetworkApiForProject(userProject
-                    .get()).createInIPv4RangeWithGateway(input.getName(), input.getIpV4Range(), input.getGateway().get()));
-            retry(operationDonePredicate, operationCompleteCheckTimeout, operationCompleteCheckInterval,
-                    MILLISECONDS).apply(operation);
-
-            checkState(!operation.get().getHttpError().isPresent(), "Could not create network, operation failed" + operation);
-         } else {
-            AtomicReference<Operation> operation = new AtomicReference<Operation>(api.getNetworkApiForProject(userProject
-                    .get()).createInIPv4Range(input.getName(), input.getIpV4Range()));
-            retry(operationDonePredicate, operationCompleteCheckTimeout, operationCompleteCheckInterval,
-                    MILLISECONDS).apply(operation);
-
-            checkState(!operation.get().getHttpError().isPresent(), "Could not create network, operation failed" + operation);
-         }
-         return checkNotNull(api.getNetworkApiForProject(userProject.get()).get(input.getName()),
-                 "no network with name %s was found", input.getName());
-      } catch (IllegalStateException e) {
-         return api.getNetworkApiForProject(userProject.get()).get(input.getName());
+      Network nw = api.getNetworkApiForProject(userProject.get()).get(input.getName());
+      if (nw != null) {
+         return nw;
       }
+
+      if (input.getGateway().isPresent()) {
+         AtomicReference<Operation> operation = new AtomicReference<Operation>(api.getNetworkApiForProject(userProject
+                 .get()).createInIPv4RangeWithGateway(input.getName(), input.getIpV4Range(), input.getGateway().get()));
+         retry(operationDonePredicate, operationCompleteCheckTimeout, operationCompleteCheckInterval,
+                 MILLISECONDS).apply(operation);
+
+         checkState(!operation.get().getHttpError().isPresent(), "Could not create network, operation failed" + operation);
+      } else {
+         AtomicReference<Operation> operation = new AtomicReference<Operation>(api.getNetworkApiForProject(userProject
+                 .get()).createInIPv4Range(input.getName(), input.getIpV4Range()));
+         retry(operationDonePredicate, operationCompleteCheckTimeout, operationCompleteCheckInterval,
+                 MILLISECONDS).apply(operation);
+
+         checkState(!operation.get().getHttpError().isPresent(), "Could not create network, operation failed" + operation);
+      }
+      return checkNotNull(api.getNetworkApiForProject(userProject.get()).get(input.getName()),
+                 "no network with name %s was found", input.getName());
    }
 }

@@ -160,7 +160,7 @@ public class GoogleComputeEngineServiceContextModule
    @Singleton
    @Memoized
    public Supplier<Map<URI, ? extends org.jclouds.compute.domain.Image>> provideImagesMap(
-           AtomicReference <AuthorizationException> authException,
+           AtomicReference<AuthorizationException> authException,
            final Supplier<Set<? extends org.jclouds.compute.domain.Image>> images,
            @Named(PROPERTY_SESSION_INTERVAL) long seconds) {
       return MemoizedRetryOnTimeOutButNotOnAuthorizationExceptionSupplier.create(authException,

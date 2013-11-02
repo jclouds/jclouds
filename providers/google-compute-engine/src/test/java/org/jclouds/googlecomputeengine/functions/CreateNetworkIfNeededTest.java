@@ -68,6 +68,7 @@ public class CreateNetworkIfNeededTest {
       expect(nwApi.createInIPv4Range("this-network", "0.0.0.0/0"))
               .andReturn(createOp);
       expect(globalApi.get("create-op")).andReturn(createOp);
+      expect(nwApi.get("this-network")).andReturn(null);
       expect(nwApi.get("this-network")).andReturn(network);
 
       expect(createOp.getName()).andReturn("create-op");
@@ -112,6 +113,7 @@ public class CreateNetworkIfNeededTest {
       expect(nwApi.createInIPv4RangeWithGateway("this-network", "0.0.0.0/0", "1.2.3.4"))
               .andReturn(createOp);
       expect(globalApi.get("create-op")).andReturn(createOp);
+      expect(nwApi.get("this-network")).andReturn(null);
       expect(nwApi.get("this-network")).andReturn(network);
 
       expect(createOp.getName()).andReturn("create-op");
