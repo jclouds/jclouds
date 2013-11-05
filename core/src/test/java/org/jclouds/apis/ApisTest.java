@@ -43,7 +43,7 @@ public class ApisTest {
          apiMetadata = Apis.withId("fake-id");
          fail("Looking for a api with an id that doesn't exist should " + "throw an exception.");
       } catch (NoSuchElementException nsee) {
-         ; // Expected
+         // expected
       }
 
       apiMetadata = Apis.withId(testBlobstoreApi.getId());

@@ -153,7 +153,7 @@ public class ImageApiExpectTest extends BaseNovaApiExpectTest {
          apiWhenServerExists.getImageApiForZone("az-1.region-a.geo-1").getMetadata(imageId);
          fail("Expected an exception.");
          } catch (Exception e) {
-            ;
+            // expected
          }
    }
 
@@ -208,7 +208,7 @@ public class ImageApiExpectTest extends BaseNovaApiExpectTest {
     	 apiWhenServerExists.getImageApiForZone("az-1.region-a.geo-1").setMetadata(imageId, metadata);
          fail("Expected an exception.");
       } catch (Exception e) {
-         ;
+         // expected
       }
    }
 
@@ -264,7 +264,7 @@ public class ImageApiExpectTest extends BaseNovaApiExpectTest {
     	 apiWhenServerExists.getImageApiForZone("az-1.region-a.geo-1").setMetadata(imageId, metadata);
          fail("Expected an exception.");
       } catch (Exception e) {
-         ;
+         // expected
       }
    }
 

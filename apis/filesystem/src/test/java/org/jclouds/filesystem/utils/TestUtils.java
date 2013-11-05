@@ -103,7 +103,7 @@ public class TestUtils {
         File file = new File(TARGET_BASE_DIR, containerName);
         if (!file.mkdirs()) {
             throw new IOException("Could not mkdir: " + file);
-        };
+        }
     }
 
     /**

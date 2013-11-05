@@ -81,7 +81,7 @@ public class BindBlobToMultipartFormTest {
    @Test(expectedExceptions = IllegalArgumentException.class)
    public void testMustBeBlob() {
       BindBlobToMultipartForm binder = new BindBlobToMultipartForm();
-      HttpRequest request = HttpRequest.builder().method("POST").endpoint("http://localhost").build();;
+      HttpRequest request = HttpRequest.builder().method("POST").endpoint("http://localhost").build();
       binder.bindToRequest(request, new File("foo"));
    }
 

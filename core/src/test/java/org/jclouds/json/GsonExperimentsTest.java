@@ -175,8 +175,8 @@ public class GsonExperimentsTest {
    protected <T> T parseThingFromReaderOrNull(String toFind, JsonReader reader, Type type) throws IOException {
       AtomicReference<String> name = Atomics.newReference();
       JsonToken token = reader.peek();
-      for (; token != JsonToken.END_DOCUMENT && nnn(toFind, reader, token, name); token = skipAndPeek(token, reader))
-         ;
+      for (; token != JsonToken.END_DOCUMENT && nnn(toFind, reader, token, name); token = skipAndPeek(token, reader)) {
+      }
       T val = gson.<T> fromJson(reader, type);
       reader.close();
       return val;

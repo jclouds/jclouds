@@ -47,7 +47,7 @@ public class RebuildServerOptionsTest {
 
    private HttpRequest buildRequest(RebuildServerOptions options) {
       injector.injectMembers(options);
-      HttpRequest request = HttpRequest.builder().method("POST").endpoint("http://localhost").build();;
+      HttpRequest request = HttpRequest.builder().method("POST").endpoint("http://localhost").build();
       options.bindToRequest(request, new HashMap<String, Object>());
       return request;
    }

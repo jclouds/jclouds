@@ -302,7 +302,7 @@ public class ServerApiExpectTest extends BaseNovaApiExpectTest {
          apiWhenServerDoesNotExist.getServerApiForZone("az-1.region-a.geo-1").createImageFromServer(imageName, serverId);
          fail("Expected an exception.");
       } catch (Exception e) {
-         ;
+         // expected
       }
    }
    
@@ -348,7 +348,7 @@ public class ServerApiExpectTest extends BaseNovaApiExpectTest {
          apiWhenServerExists.getServerApiForZone("az-1.region-a.geo-1").stop(serverId);
          fail("Expected an exception.");
       } catch (Exception e) {
-         ;
+         // expected
       }
    }
    
@@ -394,7 +394,7 @@ public class ServerApiExpectTest extends BaseNovaApiExpectTest {
          apiWhenServerExists.getServerApiForZone("az-1.region-a.geo-1").start(serverId);
          fail("Expected an exception.");
       } catch (Exception e) {
-         ;
+         // expected
       }
    }
 
@@ -438,7 +438,7 @@ public class ServerApiExpectTest extends BaseNovaApiExpectTest {
     	 apiWhenServerExists.getServerApiForZone("az-1.region-a.geo-1").getMetadata(serverId);
          fail("Expected an exception.");
       } catch (Exception e) {
-         ;
+         // expected
       }
    }
 
@@ -493,7 +493,7 @@ public class ServerApiExpectTest extends BaseNovaApiExpectTest {
     	 apiWhenServerExists.getServerApiForZone("az-1.region-a.geo-1").setMetadata(serverId, metadata);
          fail("Expected an exception.");
       } catch (Exception e) {
-         ;
+         // expected
       }
    }
 
@@ -549,7 +549,7 @@ public class ServerApiExpectTest extends BaseNovaApiExpectTest {
     	 apiWhenServerExists.getServerApiForZone("az-1.region-a.geo-1").setMetadata(serverId, metadata);
          fail("Expected an exception.");
       } catch (Exception e) {
-         ;
+         // expected
       }
    }
 
@@ -600,7 +600,7 @@ public class ServerApiExpectTest extends BaseNovaApiExpectTest {
     	 apiWhenServerExists.getServerApiForZone("az-1.region-a.geo-1").setMetadata(serverId, metadata);
          fail("Expected an exception.");
       } catch (Exception e) {
-         ;
+         // expected
       }
    }
 
@@ -656,7 +656,7 @@ public class ServerApiExpectTest extends BaseNovaApiExpectTest {
     	 apiWhenServerExists.getServerApiForZone("az-1.region-a.geo-1").setMetadata(serverId, metadata);
          fail("Expected an exception.");
       } catch (Exception e) {
-         ;
+         // expected
       }
    }
 

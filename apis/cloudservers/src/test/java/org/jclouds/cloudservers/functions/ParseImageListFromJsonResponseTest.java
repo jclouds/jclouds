@@ -89,7 +89,7 @@ public class ParseImageListFromJsonResponseTest {
       assertEquals(response.get(1).getId(), 743);
       assertEquals(response.get(1).getName(), "My Server Backup");
       assertEquals(response.get(1).getCreated(), dateService.iso8601SecondsDateParse("2009-07-07T09:56:16-05:00"));
-      ;
+
       assertEquals(response.get(1).getProgress(), Integer.valueOf(80));
       assertEquals(response.get(1).getServerId(), Integer.valueOf(12));
       assertEquals(response.get(1).getStatus(), ImageStatus.SAVING);

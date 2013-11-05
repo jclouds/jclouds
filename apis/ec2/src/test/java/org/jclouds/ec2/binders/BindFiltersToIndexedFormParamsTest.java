@@ -51,7 +51,7 @@ public class BindFiltersToIndexedFormParamsTest {
 
    @Test(expectedExceptions = IllegalArgumentException.class)
    public void testMustBeMultimap() {
-      HttpRequest request = HttpRequest.builder().method("POST").endpoint("http://localhost").build();;
+      HttpRequest request = HttpRequest.builder().method("POST").endpoint("http://localhost").build();
       binder.bindToRequest(request, new File("foo"));
    }
 

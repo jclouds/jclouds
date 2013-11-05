@@ -56,7 +56,7 @@ public class BindUserMetadataToHeadersWithPrefixTest {
    public void testMustBeBlob() {
       BindUserMetadataToHeadersWithPrefix binder = new BindUserMetadataToHeadersWithPrefix(
             new BindMapToHeadersWithPrefix("prefix:"));
-      HttpRequest request = HttpRequest.builder().method("POST").endpoint("http://localhost").build();;
+      HttpRequest request = HttpRequest.builder().method("POST").endpoint("http://localhost").build();
       binder.bindToRequest(request, new File("foo"));
    }
 

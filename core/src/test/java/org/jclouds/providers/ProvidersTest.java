@@ -49,7 +49,7 @@ public class ProvidersTest {
          providerMetadata = Providers.withId("fake-id");
          fail("Looking for a provider with an id that doesn't exist should " + "throw an exception.");
       } catch (NoSuchElementException nsee) {
-         ; // Expected
+         // expected
       }
 
       providerMetadata = Providers.withId(testBlobstoreProvider.getId());

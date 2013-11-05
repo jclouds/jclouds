@@ -116,7 +116,7 @@ public class BindAzureBlobMetadataToRequestTest extends BaseAsyncClientTest<Azur
 
    @Test(expectedExceptions = IllegalArgumentException.class)
    public void testMustBeAzureBlob() {
-      HttpRequest request = HttpRequest.builder().method("POST").endpoint("http://localhost").build();;
+      HttpRequest request = HttpRequest.builder().method("POST").endpoint("http://localhost").build();
       injector.getInstance(BindAzureBlobMetadataToRequest.class).bindToRequest(request, new File("foo"));
    }
 

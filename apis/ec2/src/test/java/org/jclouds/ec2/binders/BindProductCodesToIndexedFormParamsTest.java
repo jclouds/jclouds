@@ -46,7 +46,7 @@ public class BindProductCodesToIndexedFormParamsTest {
 
    @Test(expectedExceptions = IllegalArgumentException.class)
    public void testMustBeIterable() {
-      HttpRequest request = HttpRequest.builder().method("POST").endpoint("http://localhost").build();;
+      HttpRequest request = HttpRequest.builder().method("POST").endpoint("http://localhost").build();
       binder.bindToRequest(request, new File("foo"));
    }
 

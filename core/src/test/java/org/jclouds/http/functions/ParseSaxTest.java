@@ -135,7 +135,7 @@ public class ParseSaxTest extends BaseHandlerTest {
 
       ParseSax<String> parser = createParser();
       HttpRequest request = HttpRequest.builder().method("GET").endpoint("http://foohost").build();
-      HttpResponse response = HttpResponse.builder().statusCode(304).message("Not Modified").build();;
+      HttpResponse response = HttpResponse.builder().statusCode(304).message("Not Modified").build();
       Locator locator = createMock(Locator.class);
       expect(locator.getColumnNumber()).andReturn(1);
       expect(locator.getLineNumber()).andReturn(1);

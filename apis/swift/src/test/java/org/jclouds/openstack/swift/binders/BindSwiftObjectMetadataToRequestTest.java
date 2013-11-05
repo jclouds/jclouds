@@ -111,7 +111,7 @@ public class BindSwiftObjectMetadataToRequestTest extends CommonSwiftClientTest 
 
    @Test(expectedExceptions = IllegalArgumentException.class)
    public void testMustBeSwiftObject() {
-      HttpRequest request = HttpRequest.builder().method("POST").endpoint("http://localhost").build();;
+      HttpRequest request = HttpRequest.builder().method("POST").endpoint("http://localhost").build();
       injector.getInstance(BindSwiftObjectMetadataToRequest.class).bindToRequest(request, new File("foo"));
    }
 

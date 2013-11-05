@@ -51,7 +51,7 @@ public class BindTagsToIndexedFormParamsTest {
 
    @Test(expectedExceptions = IllegalArgumentException.class)
    public void testMustBeArray() {
-      HttpRequest request = HttpRequest.builder().method("POST").endpoint("http://localhost").build();;
+      HttpRequest request = HttpRequest.builder().method("POST").endpoint("http://localhost").build();
       binder.bindToRequest(request, new File("foo"));
    }
 

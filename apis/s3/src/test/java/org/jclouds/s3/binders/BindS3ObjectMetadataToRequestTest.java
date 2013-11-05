@@ -115,7 +115,7 @@ public class BindS3ObjectMetadataToRequestTest extends BaseS3AsyncClientTest<S3A
 
    @Test(expectedExceptions = IllegalArgumentException.class)
    public void testMustBeS3Object() {
-      HttpRequest request = HttpRequest.builder().method("POST").endpoint("http://localhost").build();;
+      HttpRequest request = HttpRequest.builder().method("POST").endpoint("http://localhost").build();
       injector.getInstance(BindS3ObjectMetadataToRequest.class).bindToRequest(request, new File("foo"));
    }
 

@@ -49,7 +49,7 @@ public class BindMapToHeadersWithPrefixTest {
    @Test(expectedExceptions = IllegalArgumentException.class)
    public void testMustBeMap() {
       BindMapToHeadersWithPrefix binder = new BindMapToHeadersWithPrefix("prefix:");
-      HttpRequest request = HttpRequest.builder().method("POST").endpoint("http://localhost").build();;
+      HttpRequest request = HttpRequest.builder().method("POST").endpoint("http://localhost").build();
       binder.bindToRequest(request, new File("foo"));
    }
 
