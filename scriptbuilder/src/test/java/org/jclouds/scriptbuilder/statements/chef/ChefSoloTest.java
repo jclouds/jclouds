@@ -323,70 +323,56 @@ public class ChefSoloTest {
 
    public void testChefWoloWithDefaultConfiguration() throws IOException {
       String script = ChefSolo.builder().build().render(OsFamily.UNIX);
-      assertEquals(script, installChefGems() + createConfigFile() + createNodeFile()
+      assertEquals(script, checkSoloExists() + createConfigFile() + createNodeFile()
             + "chef-solo -c /var/chef/solo.rb -j /var/chef/node.json -N `hostname`\n");
    }
 
    public void testChefWoloWithNodeName() throws IOException {
       String script = ChefSolo.builder().nodeName("foo").build().render(OsFamily.UNIX);
-      assertEquals(script, installChefGems() + createConfigFile() + createNodeFile()
+      assertEquals(script, checkSoloExists() + createConfigFile() + createNodeFile()
             + "chef-solo -c /var/chef/solo.rb -j /var/chef/node.json -N foo\n");
    }
 
    public void testChefSoloWithGroup() throws IOException {
       String script = ChefSolo.builder().group("foo").build().render(OsFamily.UNIX);
-      assertEquals(script, installChefGems() + createConfigFile() + createNodeFile()
+      assertEquals(script, checkSoloExists() + createConfigFile() + createNodeFile()
             + "chef-solo -c /var/chef/solo.rb -j /var/chef/node.json -N `hostname` -g foo\n");
    }
 
    public void testChefSoloWithInterval() throws IOException {
       String script = ChefSolo.builder().interval(15).build().render(OsFamily.UNIX);
-      assertEquals(script, installChefGems() + createConfigFile() + createNodeFile()
+      assertEquals(script, checkSoloExists() + createConfigFile() + createNodeFile()
             + "chef-solo -c /var/chef/solo.rb -j /var/chef/node.json -N `hostname` -i 15\n");
    }
 
    public void testChefSoloWithLogLevel() throws IOException {
       String script = ChefSolo.builder().logLevel("debug").build().render(OsFamily.UNIX);
-      assertEquals(script, installChefGems() + createConfigFile() + createNodeFile()
+      assertEquals(script, checkSoloExists() + createConfigFile() + createNodeFile()
             + "chef-solo -c /var/chef/solo.rb -j /var/chef/node.json -N `hostname` -l debug\n");
    }
 
    public void testChefSoloWithLogFile() throws IOException {
       String script = ChefSolo.builder().logFile("/var/log/solo.log").build().render(OsFamily.UNIX);
-      assertEquals(script, installChefGems() + createConfigFile() + createNodeFile()
+      assertEquals(script, checkSoloExists() + createConfigFile() + createNodeFile()
             + "chef-solo -c /var/chef/solo.rb -j /var/chef/node.json -N `hostname` -L /var/log/solo.log\n");
    }
 
    public void testChefSoloWithCookbooksLocation() throws IOException {
       String script = ChefSolo.builder().cookbooksArchiveLocation("/tmp/cookbooks").build().render(OsFamily.UNIX);
-      assertEquals(script, installChefGems() + createConfigFile() + createNodeFile()
+      assertEquals(script, checkSoloExists() + createConfigFile() + createNodeFile()
             + "chef-solo -c /var/chef/solo.rb -j /var/chef/node.json -N `hostname` -r /tmp/cookbooks\n");
    }
 
    public void testChefSoloWithSplay() throws IOException {
       String script = ChefSolo.builder().splay(15).build().render(OsFamily.UNIX);
-      assertEquals(script, installChefGems() + createConfigFile() + createNodeFile()
+      assertEquals(script, checkSoloExists() + createConfigFile() + createNodeFile()
             + "chef-solo -c /var/chef/solo.rb -j /var/chef/node.json -N `hostname` -s 15\n");
    }
 
    public void testChefSoloWithUser() throws IOException {
       String script = ChefSolo.builder().user("foo").build().render(OsFamily.UNIX);
-      assertEquals(script, installChefGems() + createConfigFile() + createNodeFile()
+      assertEquals(script, checkSoloExists() + createConfigFile() + createNodeFile()
             + "chef-solo -c /var/chef/solo.rb -j /var/chef/node.json -N `hostname` -u foo\n");
-   }
-
-   public void testChefSoloWithChefGemVersion() throws IOException {
-      String script = ChefSolo.builder().chefVersion(">= 0.10.8").build().render(OsFamily.UNIX);
-      assertEquals(script, installChefGems(">= 0.10.8") + createConfigFile() + createNodeFile()
-            + "chef-solo -c /var/chef/solo.rb -j /var/chef/node.json -N `hostname`\n");
-   }
-
-   private static String installChefGems() throws IOException {
-      return "gem install chef --no-rdoc --no-ri\n";
-   }
-
-   private static String installChefGems(String version) throws IOException {
-      return "gem install chef -v '" + version + "' --no-rdoc --no-ri\n";
    }
 
    private static String createConfigFile() {
@@ -397,6 +383,10 @@ public class ChefSoloTest {
 
    private static String createNodeFile() {
       return "cat > /var/chef/node.json <<-'END_OF_JCLOUDS_FILE'\n\t{\"run_list\":[]}\nEND_OF_JCLOUDS_FILE\n";
+   }
+
+   private static String checkSoloExists() {
+      return "if ! hash chef-solo 2>/dev/null; then\necho 'chef-solo not found. Please, install Chef first'\nexit 1\nfi\n";
    }
 
 }
