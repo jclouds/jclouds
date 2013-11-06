@@ -177,7 +177,7 @@ public interface TemplateBuilder {
     * If no function is supplied, jclouds will select one according to an internal strategy.
     * This strategy may change from version to version.
     */
-   TemplateBuilderImpl imageChooser(Function<Iterable<? extends Image>,Image> imageChooser);
+   TemplateBuilder imageChooser(Function<Iterable<? extends Image>,Image> imageChooser);
        
    /**
     * Configure this template to require the minimum cores below
