@@ -19,14 +19,12 @@ package org.jclouds.openstack.functions;
 import java.net.URI;
 
 import javax.inject.Inject;
-import javax.inject.Singleton;
 
 import org.jclouds.openstack.domain.AuthenticationResponse;
 
 import com.google.common.base.Supplier;
 import com.google.inject.assistedinject.Assisted;
 
-@Singleton
 public class URIFromAuthenticationResponseForService implements Supplier<URI> {
    public interface Factory {
       URIFromAuthenticationResponseForService create(String service);

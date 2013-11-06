@@ -24,7 +24,6 @@ import java.util.Set;
 
 import javax.annotation.Resource;
 import javax.inject.Inject;
-import javax.inject.Singleton;
 
 import org.jclouds.config.ValueOfConfigurationKeyOrNull;
 import org.jclouds.location.Provider;
@@ -36,7 +35,6 @@ import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableMap.Builder;
 import com.google.inject.assistedinject.Assisted;
 
-@Singleton
 public class LocationIdToURIFromConfigurationOrDefaultToProvider implements Supplier<Map<String, Supplier<URI>>> {
 
    @Resource

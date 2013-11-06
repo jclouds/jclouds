@@ -29,7 +29,6 @@ import java.util.Map;
 import java.util.NoSuchElementException;
 
 import javax.annotation.Resource;
-import javax.inject.Singleton;
 
 import org.jclouds.javax.annotation.Nullable;
 import org.jclouds.logging.Logger;
@@ -52,7 +51,6 @@ import com.google.common.collect.Multimap;
 import com.google.inject.Inject;
 import com.google.inject.assistedinject.Assisted;
 
-@Singleton
 public class LocationIdToURIFromAccessForTypeAndVersion implements Supplier<Map<String, Supplier<URI>>> {
 
    public interface Factory {

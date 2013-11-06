@@ -21,7 +21,6 @@ import static com.google.common.base.Preconditions.checkNotNull;
 import javax.annotation.Resource;
 import javax.inject.Inject;
 import javax.inject.Named;
-import javax.inject.Singleton;
 
 import org.jclouds.cloudstack.CloudStackApi;
 import org.jclouds.cloudstack.domain.Network;
@@ -33,7 +32,6 @@ import org.jclouds.logging.Logger;
 import com.google.common.base.Function;
 import com.google.inject.assistedinject.Assisted;
 
-@Singleton
 public class StaticNATVirtualMachineInNetwork implements Function<VirtualMachine, PublicIPAddress> {
    public interface Factory {
       StaticNATVirtualMachineInNetwork create(Network in);

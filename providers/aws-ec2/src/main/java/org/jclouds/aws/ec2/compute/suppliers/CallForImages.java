@@ -26,7 +26,6 @@ import java.util.concurrent.Callable;
 import javax.annotation.Resource;
 import javax.inject.Inject;
 import javax.inject.Named;
-import javax.inject.Singleton;
 
 import org.jclouds.compute.domain.Image;
 import org.jclouds.compute.reference.ComputeServiceConstants;
@@ -42,7 +41,6 @@ import com.google.common.collect.Multimap;
 import com.google.common.collect.ImmutableMap.Builder;
 import com.google.inject.assistedinject.Assisted;
 
-@Singleton
 public class CallForImages implements Callable<Iterable<Image>> {
    public interface Factory {
       CallForImages parseImagesFromRegionsUsingFilter(Iterable<String> regions, Multimap<String, String> filter);

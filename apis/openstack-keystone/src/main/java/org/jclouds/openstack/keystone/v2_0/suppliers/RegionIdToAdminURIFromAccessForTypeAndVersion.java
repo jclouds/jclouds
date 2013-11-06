@@ -17,7 +17,6 @@
 package org.jclouds.openstack.keystone.v2_0.suppliers;
 
 import javax.inject.Inject;
-import javax.inject.Singleton;
 
 import org.jclouds.javax.annotation.Nullable;
 import org.jclouds.openstack.keystone.v2_0.domain.Access;
@@ -27,7 +26,6 @@ import org.jclouds.openstack.keystone.v2_0.functions.EndpointToSupplierAdminURI;
 import com.google.common.base.Supplier;
 import com.google.inject.assistedinject.Assisted;
 
-@Singleton
 public class RegionIdToAdminURIFromAccessForTypeAndVersion extends LocationIdToURIFromAccessForTypeAndVersion implements
          RegionIdToAdminURISupplier {
    @Inject

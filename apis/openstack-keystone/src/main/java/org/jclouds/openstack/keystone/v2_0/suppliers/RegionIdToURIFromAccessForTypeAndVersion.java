@@ -17,7 +17,6 @@
 package org.jclouds.openstack.keystone.v2_0.suppliers;
 
 import javax.inject.Inject;
-import javax.inject.Singleton;
 
 import org.jclouds.javax.annotation.Nullable;
 import org.jclouds.location.suppliers.RegionIdToURISupplier;
@@ -28,7 +27,6 @@ import org.jclouds.openstack.keystone.v2_0.functions.EndpointToSupplierURI;
 import com.google.common.base.Supplier;
 import com.google.inject.assistedinject.Assisted;
 
-@Singleton
 public class RegionIdToURIFromAccessForTypeAndVersion extends LocationIdToURIFromAccessForTypeAndVersion implements
          RegionIdToURISupplier {
 

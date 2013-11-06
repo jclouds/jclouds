@@ -21,7 +21,6 @@ import java.util.Collection;
 import java.util.Map;
 
 import javax.inject.Inject;
-import javax.inject.Singleton;
 
 import org.jclouds.javax.annotation.Nullable;
 import org.jclouds.location.suppliers.RegionIdToURISupplier;
@@ -34,7 +33,6 @@ import com.google.common.base.Supplier;
 import com.google.common.collect.Maps;
 import com.google.inject.assistedinject.Assisted;
 
-@Singleton
 public class RegionIdToURIFromAuthForServiceSupplier implements RegionIdToURISupplier {
 
    private final Supplier<Auth> auth;

@@ -21,7 +21,6 @@ import static com.google.common.collect.Iterables.tryFind;
 import java.util.NoSuchElementException;
 
 import javax.inject.Inject;
-import javax.inject.Singleton;
 
 import org.jclouds.location.suppliers.ImplicitRegionIdSupplier;
 import org.jclouds.openstack.keystone.v1_1.domain.Auth;
@@ -34,7 +33,6 @@ import com.google.common.base.Supplier;
 import com.google.common.collect.Iterables;
 import com.google.inject.assistedinject.Assisted;
 
-@Singleton
 public class V1DefaultRegionIdSupplier implements ImplicitRegionIdSupplier {
 
    public interface Factory {
