@@ -147,7 +147,9 @@ public class IpScope {
       IpScope that = IpScope.class.cast(o);
       return equal(this.inherited, that.inherited) && equal(this.gateway, that.gateway)
             && equal(this.netmask, that.netmask) && equal(this.dns1, that.dns1) && equal(this.dns2, that.dns2)
-            && equal(this.dnsSuffix, that.dnsSuffix) && equal(this.ipRanges, ipRanges) && equal(this.allocatedIpAddresses, allocatedIpAddresses);
+            && equal(this.dnsSuffix, that.dnsSuffix)
+            && equal(this.ipRanges, that.ipRanges)
+            && equal(this.allocatedIpAddresses, that.allocatedIpAddresses);
    }
 
    @Override
