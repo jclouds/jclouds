@@ -229,4 +229,17 @@ public class InstanceType {
     * </ul>
     */
    public static final String HS1_8XLARGE = "hs1.8xlarge";
+
+   /**
+    * GPU Instance Double Extra Large
+    * <ul>
+    * <li>15 GiB of memory</li>
+    * <li>26 EC2 Compute Units (8 virtual cores*), 1xNVIDIA GRID GPU (Kepler GK104)</li>
+    * <li>60 GB instance storage</li>
+    * <li>64-bit platform</li>
+    * <li>I/O Performance: High</li>
+    * </ul>
+    */
+   public static final String G2_2XLARGE = "g2.2xlarge";
+
 }

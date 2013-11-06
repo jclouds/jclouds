@@ -368,6 +368,19 @@ public class EC2HardwareBuilder extends HardwareBuilder {
             .virtualizationType(VirtualizationType.HVM);
    }
 
+   /**
+    * @see InstanceType#G2_2XLARGE
+    */
+   public static EC2HardwareBuilder g2_2xlarge() {
+      return new EC2HardwareBuilder(InstanceType.G2_2XLARGE)
+	    .ram(15*1024)
+            .processors(ImmutableList.of(new Processor(8.0, 3.25)))
+            .volumes(
+                  ImmutableList.<Volume> of(new VolumeImpl(10.0f, "/dev/sda1", true, false), new VolumeImpl(60.0f,
+                        "/dev/sdb", false, false)))
+            .virtualizationType(VirtualizationType.HVM);
+   }
+
    public static EC2HardwareBuilder hi1_4xlarge() {
       return new EC2HardwareBuilder(InstanceType.HI1_4XLARGE)
             .ram(60 * 1024 + 512)
