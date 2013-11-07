@@ -16,7 +16,9 @@
  */
 package org.jclouds.openstack.neutron.v2_0.features;
 
+import com.google.common.base.Predicate;
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.Sets;
 import org.jclouds.openstack.neutron.v2_0.domain.BulkNetwork;
 import org.jclouds.openstack.neutron.v2_0.domain.Network;
 import org.jclouds.openstack.neutron.v2_0.domain.NetworkType;
@@ -25,6 +27,8 @@ import org.jclouds.openstack.neutron.v2_0.internal.BaseNeutronApiLiveTest;
 import org.jclouds.openstack.neutron.v2_0.options.CreateNetworkBulkOptions;
 import org.jclouds.openstack.neutron.v2_0.options.CreateNetworkOptions;
 import org.jclouds.openstack.neutron.v2_0.options.UpdateNetworkOptions;
+import org.jclouds.openstack.neutron.v2_0.util.PredicateUtil;
+import org.testng.annotations.Test;
 
 import java.util.Set;
 
@@ -37,6 +41,7 @@ import static org.testng.Assert.assertTrue;
  *
  * @author Nick Livens
  */
+@Test(groups = "live", testName = "NetworkApiLiveTest")
 public class NetworkApiLiveTest extends BaseNeutronApiLiveTest {
 
    public void testGetAndListNetworks() {
@@ -107,7 +112,8 @@ public class NetworkApiLiveTest extends BaseNeutronApiLiveTest {
          assertEquals(nets.size(), 3);
 
          for (Network net : nets) {
-            assertTrue(existingNets.contains(net));
+            Predicate<Network> idEqualsPredicate = PredicateUtil.createIdEqualsPredicate(net.getId());
+            assertEquals(1, Sets.filter(existingNets, idEqualsPredicate).size());
             assertTrue(networkApi.delete(net.getId()));
          }
       }

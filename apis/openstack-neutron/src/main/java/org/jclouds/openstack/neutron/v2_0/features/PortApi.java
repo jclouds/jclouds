@@ -21,7 +21,7 @@ package org.jclouds.openstack.neutron.v2_0.features;
 import com.google.common.collect.FluentIterable;
 import org.jclouds.Fallbacks;
 import org.jclouds.collect.PagedIterable;
-import org.jclouds.openstack.v2_0.domain.PaginatedCollection;
+import org.jclouds.javax.annotation.Nullable;
 import org.jclouds.openstack.keystone.v2_0.filters.AuthenticateRequest;
 import org.jclouds.openstack.neutron.v2_0.domain.Port;
 import org.jclouds.openstack.neutron.v2_0.domain.ReferenceWithName;
@@ -84,12 +84,15 @@ public interface PortApi {
    @QueryParams(keys = {"fields", "fields", "fields"}, values = {"id", "tenant_id", "name"})
    PagedIterable<? extends ReferenceWithName> list();
 
+   /**
+    * @see <a href="http://docs.openstack.org/api/openstack-network/2.0/content/pagination.html">api doc</a>
+    */
    @Named("port:list")
    @GET
    @ResponseParser(ParsePorts.class)
    @Fallback(EmptyPaginatedCollectionOnNotFoundOr404.class)
    @QueryParams(keys = {"fields", "fields", "fields"}, values = {"id", "tenant_id", "name"})
-   PaginatedCollection<? extends ReferenceWithName> list(PaginationOptions options);
+   PagedIterable<? extends ReferenceWithName> list(PaginationOptions options);
 
    /**
     * Returns the set of ports currently defined in Neutron for the requested network.
@@ -103,11 +106,14 @@ public interface PortApi {
    @Fallback(EmptyPagedIterableOnNotFoundOr404.class)
    PagedIterable<? extends Port> listInDetail();
 
+   /**
+    * @see <a href="http://docs.openstack.org/api/openstack-network/2.0/content/pagination.html">api doc</a>
+    */
    @Named("port:list")
    @GET
    @ResponseParser(ParsePortDetails.class)
    @Fallback(EmptyPaginatedCollectionOnNotFoundOr404.class)
-   PaginatedCollection<? extends Port> listInDetail(PaginationOptions options);
+   PagedIterable<? extends Port> listInDetail(PaginationOptions options);
 
    /**
     * Returns the specific port
@@ -120,6 +126,7 @@ public interface PortApi {
    @Path("/{id}")
    @SelectJson("port")
    @Fallback(Fallbacks.NullOnNotFoundOr404.class)
+   @Nullable
    Port get(@PathParam("id") String id);
 
    /**

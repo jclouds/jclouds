@@ -126,6 +126,7 @@
                     <test.openstack-neutron.credential>${test.openstack-neutron.credential}</test.openstack-neutron.credential>
                     <test.jclouds.keystone.credential-type>${test.jclouds.keystone.credential-type}</test.jclouds.keystone.credential-type>
                   </systemPropertyVariables>
+                  <parallel>classes</parallel>
                 </configuration>
               </execution>
             </executions>

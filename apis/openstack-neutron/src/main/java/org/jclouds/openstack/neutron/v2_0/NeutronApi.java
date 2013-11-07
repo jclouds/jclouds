@@ -18,10 +18,12 @@
  */
 package org.jclouds.openstack.neutron.v2_0;
 
+import com.google.common.base.Optional;
 import com.google.inject.Provides;
 import org.jclouds.javax.annotation.Nullable;
 import org.jclouds.location.Zone;
 import org.jclouds.location.functions.ZoneToEndpoint;
+import org.jclouds.openstack.neutron.v2_0.extensions.RouterApi;
 import org.jclouds.openstack.neutron.v2_0.features.NetworkApi;
 import org.jclouds.openstack.neutron.v2_0.features.PortApi;
 import org.jclouds.openstack.neutron.v2_0.features.SubnetApi;
@@ -71,4 +73,10 @@ public interface NeutronApi extends Closeable {
     */
    @Delegate
    PortApi getPortApiForZone(@EndpointParam(parser = ZoneToEndpoint.class) @Nullable String zone);
+
+   /**
+    * Provides synchronous access to Router features.
+    */
+   @Delegate
+   Optional<? extends RouterApi> getRouterExtensionForZone(@EndpointParam(parser = ZoneToEndpoint.class) @Nullable String zone);
 }

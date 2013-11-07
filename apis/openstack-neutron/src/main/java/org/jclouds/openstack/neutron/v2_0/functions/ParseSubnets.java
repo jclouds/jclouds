@@ -47,8 +47,8 @@ public class ParseSubnets extends ParseJson<Subnets> {
    static class Subnets extends PaginatedCollection<ReferenceWithName> {
 
       @ConstructorProperties({ "subnets", "subnets_links" })
-      protected Subnets(Iterable<ReferenceWithName> subnets, Iterable<Link> subnets_links) {
-         super(subnets, subnets_links);
+      protected Subnets(Iterable<ReferenceWithName> subnets, Iterable<Link> subnetsLinks) {
+         super(subnets, subnetsLinks);
       }
 
    }
@@ -82,7 +82,7 @@ public class ParseSubnets extends ParseJson<Subnets> {
 
             @Override
             public String toString() {
-               return "list()";
+               return "listSubnets()";
             }
          };
       }

@@ -47,8 +47,8 @@ public class ParseNetworks extends ParseJson<Networks> {
    static class Networks extends PaginatedCollection<ReferenceWithName> {
 
       @ConstructorProperties({ "networks", "networks_links" })
-      protected Networks(Iterable<ReferenceWithName> networks, Iterable<Link> networks_links) {
-         super(networks, networks_links);
+      protected Networks(Iterable<ReferenceWithName> networks, Iterable<Link> networksLinks) {
+         super(networks, networksLinks);
       }
 
    }
@@ -82,7 +82,7 @@ public class ParseNetworks extends ParseJson<Networks> {
 
             @Override
             public String toString() {
-               return "list()";
+               return "listNetworks()";
             }
          };
       }

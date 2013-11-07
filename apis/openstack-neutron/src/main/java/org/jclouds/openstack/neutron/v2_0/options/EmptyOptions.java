@@ -1,4 +1,4 @@
-/*
+/**
  * Licensed to jclouds, Inc. (jclouds) under one or more
  * contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -16,27 +16,33 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.jclouds.openstack.neutron.v2_0.domain;
+package org.jclouds.openstack.neutron.v2_0.options;
+
+import com.google.inject.Inject;
+import org.jclouds.http.HttpRequest;
+import org.jclouds.rest.MapBinder;
+import org.jclouds.rest.binders.BindToJsonPayload;
+
+import java.util.Map;
 
 /**
- * The type of Network
+ * This class is used for methods who don't need a wrapper around their JSON body
  *
  * @author Nick Livens
  */
-public enum NetworkType {
-   LOCAL("local"), FLAT("flat"), VLAN("vlan"), GRE("gre");
+public class EmptyOptions implements MapBinder {
 
-   private String value;
+   @Inject
+   private BindToJsonPayload jsonBinder;
 
-   private NetworkType(String value) {
-      this.value = value;
+   @Override
+   public <R extends HttpRequest> R bindToRequest(R request, Map<String, Object> postParams) {
+      return bindToRequest(request, (Object) postParams);
    }
 
-   public String getValue() {
-      return value;
+   @Override
+   public <R extends HttpRequest> R bindToRequest(R request, Object input) {
+      return jsonBinder.bindToRequest(request, input);
    }
 
-   public static NetworkType fromValue(String value) {
-      return NetworkType.valueOf(value.toUpperCase());
-   }
 }

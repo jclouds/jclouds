@@ -16,8 +16,12 @@
  */
 package org.jclouds.openstack.neutron.v2_0.features;
 
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableSet;
+import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertNotNull;
+import static org.testng.Assert.assertTrue;
+
+import java.util.Set;
+
 import org.jclouds.openstack.neutron.v2_0.domain.AllocationPool;
 import org.jclouds.openstack.neutron.v2_0.domain.BulkSubnet;
 import org.jclouds.openstack.neutron.v2_0.domain.HostRoute;
@@ -29,18 +33,20 @@ import org.jclouds.openstack.neutron.v2_0.options.CreateNetworkOptions;
 import org.jclouds.openstack.neutron.v2_0.options.CreateSubnetBulkOptions;
 import org.jclouds.openstack.neutron.v2_0.options.CreateSubnetOptions;
 import org.jclouds.openstack.neutron.v2_0.options.UpdateSubnetOptions;
+import org.jclouds.openstack.neutron.v2_0.util.PredicateUtil;
+import org.testng.annotations.Test;
 
-import java.util.Set;
-
-import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertNotNull;
-import static org.testng.Assert.assertTrue;
+import com.google.common.base.Predicate;
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableSet;
+import com.google.common.collect.Sets;
 
 /**
  * Tests subnet api in combination with the network api
  *
  * @author Nick Livens
  */
+@Test(groups = "live", testName = "SubnetApiLiveTest")
 public class SubnetApiLiveTest extends BaseNeutronApiLiveTest {
 
    public void testGetAndListSubnets() {
@@ -124,7 +130,8 @@ public class SubnetApiLiveTest extends BaseNeutronApiLiveTest {
          assertEquals(subnets.size(), 3);
 
          for (Subnet net : subnets) {
-            assertTrue(existingSubnets.contains(net));
+            Predicate<Subnet> idEqualsPredicate = PredicateUtil.createIdEqualsPredicate(net.getId());
+            assertEquals(1, Sets.filter(existingSubnets, idEqualsPredicate).size());
             assertTrue(subnetApi.delete(net.getId()));
          }
          assertTrue(networkApi.delete(networkId));

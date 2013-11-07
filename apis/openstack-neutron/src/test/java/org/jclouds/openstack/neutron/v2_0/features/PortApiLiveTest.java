@@ -16,31 +16,37 @@
  */
 package org.jclouds.openstack.neutron.v2_0.features;
 
-import com.google.common.collect.ImmutableSet;
+import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertFalse;
+import static org.testng.Assert.assertNotNull;
+import static org.testng.Assert.assertTrue;
+
+import java.util.Set;
+
 import org.jclouds.openstack.neutron.v2_0.domain.BulkPort;
 import org.jclouds.openstack.neutron.v2_0.domain.IP;
 import org.jclouds.openstack.neutron.v2_0.domain.NetworkType;
-import org.jclouds.openstack.neutron.v2_0.domain.ReferenceWithName;
 import org.jclouds.openstack.neutron.v2_0.domain.Port;
+import org.jclouds.openstack.neutron.v2_0.domain.ReferenceWithName;
 import org.jclouds.openstack.neutron.v2_0.internal.BaseNeutronApiLiveTest;
 import org.jclouds.openstack.neutron.v2_0.options.CreateNetworkOptions;
 import org.jclouds.openstack.neutron.v2_0.options.CreatePortBulkOptions;
 import org.jclouds.openstack.neutron.v2_0.options.CreatePortOptions;
 import org.jclouds.openstack.neutron.v2_0.options.CreateSubnetOptions;
 import org.jclouds.openstack.neutron.v2_0.options.UpdatePortOptions;
+import org.jclouds.openstack.neutron.v2_0.util.PredicateUtil;
+import org.testng.annotations.Test;
 
-import java.util.Set;
-
-import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertFalse;
-import static org.testng.Assert.assertNotNull;
-import static org.testng.Assert.assertTrue;
+import com.google.common.base.Predicate;
+import com.google.common.collect.ImmutableSet;
+import com.google.common.collect.Sets;
 
 /**
  * Tests PortApi in combination with the Network & SubnetApi
  *
  * @author Nick Livens
  */
+@Test(groups = "live", testName = "PortApiLiveTest")
 public class PortApiLiveTest extends BaseNeutronApiLiveTest {
 
    public void testGetAndListPorts() {
@@ -134,7 +140,8 @@ public class PortApiLiveTest extends BaseNeutronApiLiveTest {
          assertEquals(ports.size(), 4);
 
          for (Port port : ports) {
-            assertTrue(existingPorts.contains(port));
+            Predicate<Port> idEqualsPredicate = PredicateUtil.createIdEqualsPredicate(port.getId());
+            assertEquals(1, Sets.filter(existingPorts, idEqualsPredicate).size());
             assertTrue(portApi.delete(port.getId()));
          }
          assertTrue(subnetApi.delete(ipv4SubnetId));

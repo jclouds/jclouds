@@ -48,8 +48,8 @@ public class ParsePortDetails extends ParseJson<Ports> {
    static class Ports extends PaginatedCollection<Port> {
 
       @ConstructorProperties({ "ports", "ports_links" })
-      protected Ports(Iterable<Port> ports, Iterable<Link> ports_links) {
-         super(ports, ports_links);
+      protected Ports(Iterable<Port> ports, Iterable<Link> portsLinks) {
+         super(ports, portsLinks);
       }
 
    }
@@ -83,7 +83,7 @@ public class ParsePortDetails extends ParseJson<Ports> {
 
             @Override
             public String toString() {
-               return "list()";
+               return "listPortsInDetail()";
             }
          };
       }

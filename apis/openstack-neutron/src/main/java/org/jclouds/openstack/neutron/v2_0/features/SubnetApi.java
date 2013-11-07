@@ -21,7 +21,7 @@ package org.jclouds.openstack.neutron.v2_0.features;
 import com.google.common.collect.FluentIterable;
 import org.jclouds.Fallbacks;
 import org.jclouds.collect.PagedIterable;
-import org.jclouds.openstack.v2_0.domain.PaginatedCollection;
+import org.jclouds.javax.annotation.Nullable;
 import org.jclouds.openstack.keystone.v2_0.filters.AuthenticateRequest;
 import org.jclouds.openstack.neutron.v2_0.domain.ReferenceWithName;
 import org.jclouds.openstack.neutron.v2_0.domain.Subnet;
@@ -80,12 +80,15 @@ public interface SubnetApi {
    @QueryParams(keys = {"fields", "fields", "fields"}, values = {"id", "tenant_id", "name"})
    PagedIterable<? extends ReferenceWithName> list();
 
+   /**
+    * @see <a href="http://docs.openstack.org/api/openstack-network/2.0/content/pagination.html">api doc</a>
+    */
    @Named("subnet:list")
    @GET
    @ResponseParser(ParseSubnets.class)
    @Fallback(EmptyPaginatedCollectionOnNotFoundOr404.class)
    @QueryParams(keys = {"fields", "fields", "fields"}, values = {"id", "tenant_id", "name"})
-   PaginatedCollection<? extends ReferenceWithName> list(PaginationOptions options);
+   PagedIterable<? extends ReferenceWithName> list(PaginationOptions options);
 
    /**
     * Returns all subnets currently defined in Neutron for the current tenant.
@@ -99,11 +102,14 @@ public interface SubnetApi {
    @Fallback(EmptyPagedIterableOnNotFoundOr404.class)
    PagedIterable<? extends Subnet> listInDetail();
 
+   /**
+    * @see <a href="http://docs.openstack.org/api/openstack-network/2.0/content/pagination.html">api doc</a>
+    */
    @Named("subnet:list")
    @GET
    @ResponseParser(ParseSubnetDetails.class)
    @Fallback(EmptyPaginatedCollectionOnNotFoundOr404.class)
-   PaginatedCollection<? extends Subnet> listInDetail(PaginationOptions options);
+   PagedIterable<? extends Subnet> listInDetail(PaginationOptions options);
 
    /**
     * Returns the specific Subnet.
@@ -116,6 +122,7 @@ public interface SubnetApi {
    @Path("/{id}")
    @SelectJson("subnet")
    @Fallback(Fallbacks.NullOnNotFoundOr404.class)
+   @Nullable
    Subnet get(@PathParam("id") String id);
 
    /**

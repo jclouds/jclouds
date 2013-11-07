@@ -1,4 +1,4 @@
-/*
+/**
  * Licensed to jclouds, Inc. (jclouds) under one or more
  * contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -16,27 +16,28 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.jclouds.openstack.neutron.v2_0.domain;
+package org.jclouds.openstack.neutron.v2_0.util;
+
+import java.lang.reflect.Field;
 
 /**
- * The type of Network
- *
  * @author Nick Livens
  */
-public enum NetworkType {
-   LOCAL("local"), FLAT("flat"), VLAN("vlan"), GRE("gre");
+public class ClassUtil {
 
-   private String value;
+    public static Field findField(Class clazz, String fieldName) {
+        Field fieldToFind = null;
+        if (clazz.getSuperclass() != null)
+            fieldToFind = findField(clazz.getSuperclass(), fieldName);
 
-   private NetworkType(String value) {
-      this.value = value;
-   }
+        if (fieldToFind != null)
+            return fieldToFind;
 
-   public String getValue() {
-      return value;
-   }
+        for (Field field : clazz.getDeclaredFields()) {
+            if (field.getName().equals(fieldName))
+                return field;
+        }
+        return null;
+    }
 
-   public static NetworkType fromValue(String value) {
-      return NetworkType.valueOf(value.toUpperCase());
-   }
 }

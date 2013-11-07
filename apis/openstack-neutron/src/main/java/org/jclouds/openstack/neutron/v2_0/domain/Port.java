@@ -23,6 +23,8 @@ import com.google.common.base.Objects;
 import java.beans.ConstructorProperties;
 import java.util.Set;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+
 /**
  * A Neutron port
  *
@@ -47,7 +49,7 @@ public class Port extends ReferenceWithName {
       super(id, tenantId, name);
       this.adminStateUp = adminStateUp;
       this.state = state;
-      this.networkId = networkId;
+      this.networkId = checkNotNull(networkId, "networkId");
       this.deviceId = deviceId;
       this.deviceOwner = deviceOwner;
       this.fixedIps = fixedIps;

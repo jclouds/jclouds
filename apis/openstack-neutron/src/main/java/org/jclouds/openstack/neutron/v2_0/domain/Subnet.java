@@ -26,8 +26,10 @@ import java.beans.ConstructorProperties;
 import java.util.Collection;
 import java.util.Set;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+
 /**
- * A Neutron network
+ * A Neutron subnet
  *
  * @author Nick Livens
  * @see <a href="http://docs.openstack.org/api/openstack-network/2.0/content/Subnets.html">api doc</a>
@@ -50,10 +52,10 @@ public class Subnet extends ReferenceWithName {
                     String gatewayIp, Integer ipVersion, String cidr, Set<AllocationPool> allocationPools,
                     Boolean enableDhcp, Set<String> dnsNameServers, Set<HostRoute> hostRoutes) {
       super(id, tenantId, name);
-      this.networkId = networkId;
+      this.networkId = checkNotNull(networkId, "networkId");
       this.gatewayIp = gatewayIp;
-      this.ipVersion = ipVersion;
-      this.cidr = cidr;
+      this.ipVersion = checkNotNull(ipVersion, "ipVersion");
+      this.cidr = checkNotNull(cidr, "cidr");
       this.allocationPools = allocationPools != null ? ImmutableSet.copyOf(allocationPools) : ImmutableSet.<AllocationPool>of();
       this.enableDhcp = enableDhcp;
       this.dnsNameServers = dnsNameServers != null ? ImmutableSet.copyOf(dnsNameServers) : ImmutableSet.<String>of();

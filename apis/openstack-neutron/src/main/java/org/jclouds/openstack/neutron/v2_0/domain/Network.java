@@ -54,7 +54,7 @@ public class Network extends ReferenceWithName {
       this.adminStateUp = adminStateUp;
       this.shared = shared;
       this.external = external;
-      this.networkType = NetworkType.fromValue(networkType);
+      this.networkType = networkType != null ? NetworkType.fromValue(networkType) : null;
       this.physicalNetworkName = physicalNetworkName;
       this.segmentationId = segmentationId;
    }
