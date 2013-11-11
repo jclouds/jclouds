@@ -250,6 +250,11 @@ public final class Firewall extends Resource {
       private final IpProtocol ipProtocol;
       private final RangeSet<Integer> ports;
 
+      /* Some handy shortcuts */
+      public static Rule permitTcpRule(Integer start, Integer end) { return Rule.builder().IpProtocol(IpProtocol.TCP).addPortRange(start, end).build(); }
+      public static Rule permitTcpRule(Integer port) { return Rule.builder().IpProtocol(IpProtocol.TCP).addPort(port).build(); }
+      public static Rule permitUdpRule(Integer start, Integer end) { return Rule.builder().IpProtocol(IpProtocol.UDP).addPortRange(start, end).build(); }
+      public static Rule permitUdpRule(Integer port) { return Rule.builder().IpProtocol(IpProtocol.UDP).addPort(port).build(); }
       @ConstructorProperties({
               "IpProtocol", "ports"
       })

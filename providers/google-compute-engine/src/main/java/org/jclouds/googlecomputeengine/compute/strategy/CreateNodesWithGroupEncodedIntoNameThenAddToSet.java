@@ -31,6 +31,7 @@ import java.util.concurrent.atomic.AtomicReference;
 import javax.inject.Inject;
 import javax.inject.Named;
 
+import com.google.common.collect.Sets;
 import org.jclouds.Constants;
 import org.jclouds.compute.config.CustomizationResponse;
 import org.jclouds.compute.domain.NodeMetadata;
@@ -40,11 +41,13 @@ import org.jclouds.compute.strategy.CreateNodeWithGroupEncodedIntoName;
 import org.jclouds.compute.strategy.CustomizeNodeAndAddToGoodMapOrPutExceptionIntoBadMap;
 import org.jclouds.compute.strategy.ListNodesStrategy;
 import org.jclouds.googlecomputeengine.GoogleComputeEngineApi;
+import org.jclouds.googlecomputeengine.compute.functions.FirewallTagNamingConvention;
 import org.jclouds.googlecomputeengine.compute.options.GoogleComputeEngineTemplateOptions;
 import org.jclouds.googlecomputeengine.config.UserProject;
 import org.jclouds.googlecomputeengine.domain.Firewall;
 import org.jclouds.googlecomputeengine.domain.Network;
 import org.jclouds.googlecomputeengine.domain.Operation;
+import org.jclouds.googlecomputeengine.features.FirewallApi;
 import org.jclouds.googlecomputeengine.domain.internal.NetworkAndAddressRange;
 import org.jclouds.googlecomputeengine.options.FirewallOptions;
 import org.jclouds.net.domain.IpProtocol;
@@ -72,6 +75,7 @@ public class CreateNodesWithGroupEncodedIntoNameThenAddToSet extends
    private final Predicate<AtomicReference<Operation>> operationDonePredicate;
    private final long operationCompleteCheckInterval;
    private final long operationCompleteCheckTimeout;
+   private final FirewallTagNamingConvention.Factory firewallTagNamingConvention;
 
    @Inject
    protected CreateNodesWithGroupEncodedIntoNameThenAddToSet(
@@ -87,7 +91,8 @@ public class CreateNodesWithGroupEncodedIntoNameThenAddToSet extends
            @Named("global") Predicate<AtomicReference<Operation>> operationDonePredicate,
            @Named(OPERATION_COMPLETE_INTERVAL) Long operationCompleteCheckInterval,
            @Named(OPERATION_COMPLETE_TIMEOUT) Long operationCompleteCheckTimeout,
-           LoadingCache<NetworkAndAddressRange, Network> networkMap) {
+           LoadingCache<NetworkAndAddressRange, Network> networkMap,
+           FirewallTagNamingConvention.Factory firewallTagNamingConvention) {
       super(addNodeWithGroupStrategy, listNodesStrategy, namingConvention, userExecutor,
               customizeNodeAndAddToGoodMapOrPutExceptionIntoBadMapFactory);
 
@@ -99,6 +104,7 @@ public class CreateNodesWithGroupEncodedIntoNameThenAddToSet extends
               "operation completed check timeout");
       this.operationDonePredicate = checkNotNull(operationDonePredicate, "operationDonePredicate");
       this.networkMap = checkNotNull(networkMap, "networkMap");
+      this.firewallTagNamingConvention = checkNotNull(firewallTagNamingConvention, "firewallTagNamingConvention");
    }
 
    @Override
@@ -116,7 +122,7 @@ public class CreateNodesWithGroupEncodedIntoNameThenAddToSet extends
 
       // get or create the network and create a firewall with the users configuration
       Network network = getOrCreateNetwork(templateOptions, sharedResourceName);
-      getOrCreateFirewall(templateOptions, network, sharedResourceName);
+      getOrCreateFirewalls(templateOptions, network, firewallTagNamingConvention.get(group));
       templateOptions.network(network.getSelfLink());
 
       return super.execute(group, count, mutableTemplate, goodNodes, badNodes, customizationResponses);
@@ -133,51 +139,45 @@ public class CreateNodesWithGroupEncodedIntoNameThenAddToSet extends
    }
 
    /**
-    * Tries to find if a firewall already exists for this group, if not it creates one.
-    *
+    * Ensures that a firewall exists for every inbound port that the instance requests.
+    * <p>
+    * For each port, there must be a firewall with a name following the {@link FirewallTagNamingConvention},
+    * with a target tag also following the {@link FirewallTagNamingConvention}, which opens the requested port
+    * for all sources on both TCP and UDP protocols.
     * @see org.jclouds.googlecomputeengine.features.FirewallApi#patch(String, org.jclouds.googlecomputeengine.options.FirewallOptions)
     */
-   private void getOrCreateFirewall(GoogleComputeEngineTemplateOptions templateOptions, Network network,
-                                    String sharedResourceName) {
+   private void getOrCreateFirewalls(GoogleComputeEngineTemplateOptions templateOptions, Network network,
+                                     FirewallTagNamingConvention naming) {
 
-      Firewall firewall = api.getFirewallApiForProject(userProject.get()).get(sharedResourceName);
+      String projectName = userProject.get();
+      FirewallApi firewallApi = api.getFirewallApiForProject(projectName);
+      Set<AtomicReference<Operation>> operations = Sets.newHashSet();
 
-      if (firewall != null) {
-         return;
-      }
-
-      ImmutableSet.Builder<Firewall.Rule> rules = ImmutableSet.builder();
-
-      Firewall.Rule.Builder tcpRule = Firewall.Rule.builder();
-      tcpRule.IpProtocol(IpProtocol.TCP);
-      Firewall.Rule.Builder udpRule = Firewall.Rule.builder();
-      udpRule.IpProtocol(IpProtocol.UDP);
       for (Integer port : templateOptions.getInboundPorts()) {
-         tcpRule.addPort(port);
-         udpRule.addPort(port);
+         String name = naming.name(port);
+         Firewall firewall = firewallApi.get(name);
+         if (firewall == null) {
+            ImmutableSet<Firewall.Rule> rules = ImmutableSet.of(Firewall.Rule.permitTcpRule(port), Firewall.Rule.permitUdpRule(port));
+            FirewallOptions firewallOptions = new FirewallOptions()
+                    .name(name)
+                    .network(network.getSelfLink())
+                    .allowedRules(rules)
+                    .sourceTags(templateOptions.getTags())
+                    .sourceRanges(of(DEFAULT_INTERNAL_NETWORK_RANGE, EXTERIOR_RANGE))
+                    .targetTags(ImmutableSet.of(name));
+            AtomicReference<Operation> operation = new AtomicReference<Operation>(firewallApi.createInNetwork(
+                    firewallOptions.getName(),
+                    network.getSelfLink(),
+                    firewallOptions));
+            operations.add(operation);
+         }
       }
-      rules.add(tcpRule.build());
-      rules.add(udpRule.build());
 
-
-      FirewallOptions options = new FirewallOptions()
-              .name(sharedResourceName)
-              .network(network.getSelfLink())
-              .sourceTags(templateOptions.getTags())
-              .allowedRules(rules.build())
-              .sourceRanges(of(DEFAULT_INTERNAL_NETWORK_RANGE, EXTERIOR_RANGE));
-
-      AtomicReference<Operation> operation = new AtomicReference<Operation>(api.getFirewallApiForProject(userProject
-              .get()).createInNetwork(
-              sharedResourceName,
-              network.getSelfLink(),
-              options));
-
-      retry(operationDonePredicate, operationCompleteCheckTimeout, operationCompleteCheckInterval,
-              MILLISECONDS).apply(operation);
-
-      checkState(!operation.get().getHttpError().isPresent(), "Could not create firewall, operation failed" + operation);
+      for (AtomicReference<Operation> operation : operations) {
+         retry(operationDonePredicate, operationCompleteCheckTimeout, operationCompleteCheckInterval,
+                 MILLISECONDS).apply(operation);
+         checkState(!operation.get().getHttpError().isPresent(),"Could not create firewall, operation failed" + operation);
+      }
    }
-
 
 }

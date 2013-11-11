@@ -269,6 +269,26 @@ public class GoogleComputeEngineServiceExpectTest extends BaseGoogleComputeEngin
               .addHeader("Accept", "application/json")
               .addHeader("Authorization", "Bearer " + TOKEN).build();
 
+      HttpRequest getNetworkRequest = HttpRequest.builder()
+              .method("GET")
+              .endpoint("https://www.googleapis" +
+                      ".com/compute/v1beta16/projects/myproject/global/networks/jclouds-test-delete")
+              .addHeader("Accept", "application/json")
+              .addHeader("Authorization", "Bearer " + TOKEN).build();
+
+      HttpResponse getNetworkResponse = HttpResponse.builder().statusCode(200)
+              .payload(staticPayloadFromResource("/GoogleComputeEngineServiceExpectTest/network_get.json")).build();
+
+      HttpRequest listFirewallsRequest = HttpRequest.builder()
+              .method("GET")
+              .endpoint("https://www.googleapis" +
+                      ".com/compute/v1beta16/projects/myproject/global/firewalls")
+              .addHeader("Accept", "application/json")
+              .addHeader("Authorization", "Bearer " + TOKEN).build();
+
+      HttpResponse listFirewallsResponse = HttpResponse.builder().statusCode(200)
+              .payload(staticPayloadFromResource("/GoogleComputeEngineServiceExpectTest/firewall_list.json")).build();
+
       HttpRequest deleteNetworkReqquest = HttpRequest.builder()
               .method("DELETE")
               .endpoint("https://www.googleapis" +
@@ -289,6 +309,8 @@ public class GoogleComputeEngineServiceExpectTest extends BaseGoogleComputeEngin
               .add(GET_ZONE_OPERATION_REQUEST)
               .add(getInstanceRequestForInstance("test-delete-networks"))
               .add(LIST_INSTANCES_REQUEST)
+              .add(getNetworkRequest)
+              .add(listFirewallsRequest)
               .add(deleteFirewallRequest)
               .add(GET_GLOBAL_OPERATION_REQUEST)
               .add(deleteNetworkReqquest)
@@ -313,6 +335,8 @@ public class GoogleComputeEngineServiceExpectTest extends BaseGoogleComputeEngin
               .add(getListInstancesResponseForSingleInstanceAndNetworkAndStatus("test-delete-networks",
                       "test-network", Instance
                       .Status.TERMINATED.name()))
+              .add(getNetworkResponse)
+              .add(listFirewallsResponse)
               .add(SUCESSFULL_OPERATION_RESPONSE)
               .add(GET_GLOBAL_OPERATION_RESPONSE)
               .add(SUCESSFULL_OPERATION_RESPONSE)
@@ -363,6 +387,38 @@ public class GoogleComputeEngineServiceExpectTest extends BaseGoogleComputeEngin
       HttpResponse getInstanceResponse = HttpResponse.builder().statusCode(200)
               .payload(payloadFromStringWithContentType(payload, "application/json")).build();
 
+      HttpRequest getFirewallRequest = HttpRequest
+                 .builder()
+                 .method("GET")
+                 .endpoint("https://www.googleapis" +
+                         ".com/compute/v1beta16/projects/myproject/global/firewalls/jclouds-test-port-22")
+                 .addHeader("Accept", "application/json")
+                 .addHeader("Authorization", "Bearer " + TOKEN).build();
+
+      HttpRequest insertFirewallRequest = HttpRequest
+                 .builder()
+                 .method("POST")
+                 .endpoint("https://www.googleapis.com/compute/v1beta16/projects/myproject/global/firewalls")
+                 .addHeader("Accept", "application/json")
+                 .addHeader("Authorization", "Bearer " + TOKEN)
+                 .payload(payloadFromStringWithContentType("{\"name\":\"jclouds-test-port-22\",\"network\":\"https://www.googleapis" +
+                         ".com/compute/v1beta16/projects/myproject/global/networks/jclouds-test\"," +
+                         "\"sourceRanges\":[\"10.0.0.0/8\",\"0.0.0.0/0\"],\"sourceTags\":[\"aTag\"],\"targetTags\":[\"jclouds-test-port-22\"],\"allowed\":[{\"IPProtocol\":\"tcp\"," +
+                         "\"ports\":[\"22\"]}," +
+                         "{\"IPProtocol\":\"udp\",\"ports\":[\"22\"]}]}",
+                         MediaType.APPLICATION_JSON))
+                 .build();
+
+      HttpRequest setTagsRequest = HttpRequest
+                 .builder()
+                 .method("POST")
+                 .endpoint("https://www.googleapis.com/compute/v1beta16/projects/myproject/zones/us-central1-a/instances/test-1/setTags")
+                 .addHeader("Accept", "application/json")
+                 .addHeader("Authorization", "Bearer " + TOKEN)
+                 .payload(payloadFromStringWithContentType("{\"items\":[\"jclouds-test-port-22\"],\"fingerprint\":\"abcd\"}",
+                         MediaType.APPLICATION_JSON))
+                 .build();
+
       List<HttpRequest> orderedRequests = ImmutableList.<HttpRequest>builder()
               .add(requestForScopes(COMPUTE_READONLY_SCOPE))
               .add(GET_PROJECT_REQUEST)
@@ -377,8 +433,8 @@ public class GoogleComputeEngineServiceExpectTest extends BaseGoogleComputeEngin
               .add(INSERT_NETWORK_REQUEST)
               .add(GET_GLOBAL_OPERATION_REQUEST)
               .add(GET_NETWORK_REQUEST)
-              .add(GET_FIREWALL_REQUEST)
-              .add(INSERT_FIREWALL_REQUEST)
+              .add(getFirewallRequest)
+              .add(insertFirewallRequest)
               .add(GET_GLOBAL_OPERATION_REQUEST)
               .add(LIST_INSTANCES_REQUEST)
               .add(LIST_PROJECT_IMAGES_REQUEST)
@@ -390,6 +446,8 @@ public class GoogleComputeEngineServiceExpectTest extends BaseGoogleComputeEngin
               .add(SET_TAGS_REQUEST)
               .add(GET_ZONE_OPERATION_REQUEST)
               .add(getInstanceRequestForInstance("test-1"))
+              .add(setTagsRequest)
+              .add(setTagsRequest)
               .build();
 
       List<HttpResponse> orderedResponses = ImmutableList.<HttpResponse>builder()
@@ -419,6 +477,8 @@ public class GoogleComputeEngineServiceExpectTest extends BaseGoogleComputeEngin
               .add(SET_TAGS_RESPONSE)
               .add(GET_ZONE_OPERATION_RESPONSE)
               .add(getInstanceResponse)
+              .add(SUCESSFULL_OPERATION_RESPONSE)
+              .add(SUCESSFULL_OPERATION_RESPONSE)
               .build();
 
 

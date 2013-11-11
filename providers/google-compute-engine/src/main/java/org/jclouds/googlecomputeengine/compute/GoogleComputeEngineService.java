@@ -62,7 +62,10 @@ import org.jclouds.domain.Location;
 import org.jclouds.googlecomputeengine.GoogleComputeEngineApi;
 import org.jclouds.googlecomputeengine.compute.options.GoogleComputeEngineTemplateOptions;
 import org.jclouds.googlecomputeengine.config.UserProject;
+import org.jclouds.googlecomputeengine.domain.Firewall;
+import org.jclouds.googlecomputeengine.domain.Network;
 import org.jclouds.googlecomputeengine.domain.Operation;
+import org.jclouds.googlecomputeengine.features.FirewallApi;
 import org.jclouds.http.HttpResponse;
 import org.jclouds.scriptbuilder.functions.InitAdminAccess;
 
@@ -70,6 +73,7 @@ import com.google.common.base.Function;
 import com.google.common.base.Optional;
 import com.google.common.base.Predicate;
 import com.google.common.base.Supplier;
+import com.google.common.collect.Sets;
 import com.google.common.util.concurrent.ListeningExecutorService;
 
 /**
@@ -148,21 +152,34 @@ public class GoogleComputeEngineService extends BaseComputeService {
    }
 
 
-   protected void cleanUpNetworksAndFirewallsForGroup(String groupName) {
+   protected void cleanUpNetworksAndFirewallsForGroup(final String groupName) {
       String resourceName = namingConvention.create().sharedNameForGroup(groupName);
-      AtomicReference<Operation> operation = new AtomicReference<Operation>(api.getFirewallApiForProject(project.get())
-              .delete(resourceName));
+      final Network network = api.getNetworkApiForProject(project.get()).get(resourceName);
+      FirewallApi firewallApi = api.getFirewallApiForProject(project.get());
+      Predicate<Firewall> firewallBelongsToNetwork = new Predicate<Firewall>() {
+         @Override
+         public boolean apply(Firewall input) {
+            return input != null && input.getNetwork().equals(network.getSelfLink());
+         }
+      };
 
-      retry(operationDonePredicate, operationCompleteCheckTimeout, operationCompleteCheckInterval,
-              MILLISECONDS).apply(operation);
-
-      if (operation.get().getHttpError().isPresent()) {
-         HttpResponse response = operation.get().getHttpError().get();
-         logger.warn("delete orphaned firewall failed. Http Error Code: " + response.getStatusCode() +
-                 " HttpError: " + response.getMessage());
+      Set<AtomicReference<Operation>> operations = Sets.newHashSet();
+      for (Firewall firewall : firewallApi.list().concat().filter(firewallBelongsToNetwork)) {
+         operations.add(new AtomicReference<Operation>(firewallApi.delete(firewall.getName())));
       }
 
-      operation = new AtomicReference<Operation>(api.getNetworkApiForProject(project.get()).delete(resourceName));
+      for (AtomicReference<Operation> operation : operations) {
+         retry(operationDonePredicate, operationCompleteCheckTimeout, operationCompleteCheckInterval,
+                 MILLISECONDS).apply(operation);
+
+         if (operation.get().getHttpError().isPresent()) {
+            HttpResponse response = operation.get().getHttpError().get();
+            logger.warn("delete orphaned firewall %s failed. Http Error Code: %d HttpError: %s",
+                    operation.get().getTargetId(), response.getStatusCode(), response.getMessage());
+         }
+      }
+
+      AtomicReference<Operation> operation = new AtomicReference<Operation>(api.getNetworkApiForProject(project.get()).delete(resourceName));
 
       retry(operationDonePredicate, operationCompleteCheckTimeout, operationCompleteCheckInterval,
               MILLISECONDS).apply(operation);

@@ -36,7 +36,9 @@ import org.jclouds.googlecomputeengine.domain.InstanceInZone;
 import org.jclouds.googlecomputeengine.domain.SlashEncodedIds;
 
 import com.google.common.base.Function;
+import com.google.common.base.Predicates;
 import com.google.common.base.Supplier;
+import com.google.common.collect.FluentIterable;
 import com.google.common.collect.ImmutableSet;
 
 /**
@@ -51,18 +53,21 @@ public class InstanceInZoneToNodeMetadata implements Function<InstanceInZone, No
    private final Supplier<Map<URI, ? extends Image>> images;
    private final Supplier<Map<URI, ? extends Hardware>> hardwares;
    private final Supplier<Map<URI, ? extends Location>> locations;
+   private final FirewallTagNamingConvention.Factory firewallTagNamingConvention;
 
    @Inject
    public InstanceInZoneToNodeMetadata(Map<Instance.Status, NodeMetadata.Status> toPortableNodeStatus,
                                  GroupNamingConvention.Factory namingConvention,
                                  @Memoized Supplier<Map<URI, ? extends Image>> images,
                                  @Memoized Supplier<Map<URI, ? extends Hardware>> hardwares,
-                                 @Memoized Supplier<Map<URI, ? extends Location>> locations) {
+                                 @Memoized Supplier<Map<URI, ? extends Location>> locations,
+                                 FirewallTagNamingConvention.Factory firewallTagNamingConvention) {
       this.toPortableNodeStatus = toPortableNodeStatus;
       this.nodeNamingConvention = namingConvention.createWithoutPrefix();
       this.images = images;
       this.hardwares = hardwares;
       this.locations = locations;
+      this.firewallTagNamingConvention = checkNotNull(firewallTagNamingConvention, "firewallTagNamingConvention");
    }
 
    @Override
@@ -71,6 +76,10 @@ public class InstanceInZoneToNodeMetadata implements Function<InstanceInZone, No
       Map<URI, ? extends Image> imagesMap = images.get();
       Image image = checkNotNull(imagesMap.get(checkNotNull(input.getImage(), "image")),
               "no image for %s. images: %s", input.getImage(), imagesMap.values());
+
+      String group = nodeNamingConvention.groupInUniqueNameOrNull(input.getName());
+      FluentIterable<String> tags = FluentIterable.from(input.getTags().getItems())
+              .filter(Predicates.not(firewallTagNamingConvention.get(group).isFirewallTag()));
 
       return new NodeMetadataBuilder()
               .id(SlashEncodedIds.fromTwoIds(checkNotNull(locations.get().get(input.getZone()), "location for %s", input.getZone()).getId(),
@@ -84,10 +93,10 @@ public class InstanceInZoneToNodeMetadata implements Function<InstanceInZone, No
                       input.getMachineType().toString()))
               .operatingSystem(image.getOperatingSystem())
               .status(toPortableNodeStatus.get(input.getStatus()))
-              .tags(input.getTags().getItems())
+              .tags(tags)
               .uri(input.getSelfLink())
               .userMetadata(input.getMetadata().getItems())
-              .group(nodeNamingConvention.groupInUniqueNameOrNull(input.getName()))
+              .group(group)
               .privateAddresses(collectPrivateAddresses(input))
               .publicAddresses(collectPublicAddresses(input))
               .build();

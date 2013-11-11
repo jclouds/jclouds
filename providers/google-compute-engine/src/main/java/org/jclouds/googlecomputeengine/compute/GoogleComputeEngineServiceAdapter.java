@@ -29,12 +29,14 @@ import static org.jclouds.util.Predicates2.retry;
 
 import java.net.URI;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicReference;
 
 import javax.annotation.Resource;
 import javax.inject.Named;
 
+import com.google.common.primitives.Ints;
 import org.jclouds.collect.Memoized;
 import org.jclouds.compute.ComputeServiceAdapter;
 import org.jclouds.compute.domain.Hardware;
@@ -44,6 +46,7 @@ import org.jclouds.compute.reference.ComputeServiceConstants;
 import org.jclouds.domain.Location;
 import org.jclouds.domain.LoginCredentials;
 import org.jclouds.googlecomputeengine.GoogleComputeEngineApi;
+import org.jclouds.googlecomputeengine.compute.functions.FirewallTagNamingConvention;
 import org.jclouds.googlecomputeengine.compute.options.GoogleComputeEngineTemplateOptions;
 import org.jclouds.googlecomputeengine.config.UserProject;
 import org.jclouds.googlecomputeengine.domain.Image;
@@ -55,6 +58,7 @@ import org.jclouds.googlecomputeengine.domain.MachineTypeInZone;
 import org.jclouds.googlecomputeengine.domain.Operation;
 import org.jclouds.googlecomputeengine.domain.SlashEncodedIds;
 import org.jclouds.googlecomputeengine.domain.Zone;
+import org.jclouds.googlecomputeengine.features.InstanceApi;
 import org.jclouds.http.HttpResponse;
 import org.jclouds.logging.Logger;
 
@@ -85,6 +89,7 @@ public class GoogleComputeEngineServiceAdapter implements ComputeServiceAdapter<
    private final Predicate<AtomicReference<Operation>> retryOperationDonePredicate;
    private final long operationCompleteCheckInterval;
    private final long operationCompleteCheckTimeout;
+   private final FirewallTagNamingConvention.Factory firewallTagNamingConvention;
 
    @Inject
    public GoogleComputeEngineServiceAdapter(GoogleComputeEngineApi api,
@@ -95,7 +100,8 @@ public class GoogleComputeEngineServiceAdapter implements ComputeServiceAdapter<
                                             @Named(OPERATION_COMPLETE_INTERVAL) Long operationCompleteCheckInterval,
                                             @Named(OPERATION_COMPLETE_TIMEOUT) Long operationCompleteCheckTimeout,
                                             @Memoized Supplier<Map<URI, ? extends Location>> zones,
-                                            @Memoized Supplier<Map<URI, ? extends Hardware>> hardwareMap) {
+                                            @Memoized Supplier<Map<URI, ? extends Hardware>> hardwareMap,
+                                            FirewallTagNamingConvention.Factory firewallTagNamingConvention) {
       this.api = checkNotNull(api, "google compute api");
       this.userProject = checkNotNull(userProject, "user project name");
       this.metatadaFromTemplateOptions = checkNotNull(metatadaFromTemplateOptions,
@@ -108,6 +114,7 @@ public class GoogleComputeEngineServiceAdapter implements ComputeServiceAdapter<
               operationCompleteCheckInterval, TimeUnit.MILLISECONDS);
       this.zones = checkNotNull(zones, "zones");
       this.hardwareMap = checkNotNull(hardwareMap, "hardwareMap");
+      this.firewallTagNamingConvention = checkNotNull(firewallTagNamingConvention, "firewallTagNamingConvention");
    }
 
    @Override
@@ -138,8 +145,9 @@ public class GoogleComputeEngineServiceAdapter implements ComputeServiceAdapter<
       instanceTemplate.serviceAccounts(options.getServiceAccounts());
       instanceTemplate.image(checkNotNull(template.getImage().getUri(), "image URI is null"));
 
-      Operation operation = api.getInstanceApiForProject(userProject.get())
-              .createInZone(name, template.getLocation().getId(), instanceTemplate);
+      final InstanceApi instanceApi = api.getInstanceApiForProject(userProject.get());
+      final String zone = template.getLocation().getId();
+      Operation operation = instanceApi.createInZone(name, zone, instanceTemplate);
 
       if (options.shouldBlockUntilRunning()) {
          waitOperationDone(operation);
@@ -151,14 +159,13 @@ public class GoogleComputeEngineServiceAdapter implements ComputeServiceAdapter<
       retry(new Predicate<AtomicReference<Instance>>() {
          @Override
          public boolean apply(AtomicReference<Instance> input) {
-            input.set(api.getInstanceApiForProject(userProject.get()).getInZone(template.getLocation().getId(),
-                    name));
+            input.set(instanceApi.getInZone(zone, name));
             return input.get() != null;
          }
       }, operationCompleteCheckTimeout, operationCompleteCheckInterval, MILLISECONDS).apply(instance);
 
-      if (options.getTags().size() > 0) {
-         Operation tagsOperation = api.getInstanceApiForProject(userProject.get()).setTagsInZone(template.getLocation().getId(),
+      if (!options.getTags().isEmpty()) {
+         Operation tagsOperation = instanceApi.setTagsInZone(zone,
                  name, options.getTags(), instance.get().getTags().getFingerprint());
 
          waitOperationDone(tagsOperation);
@@ -166,14 +173,27 @@ public class GoogleComputeEngineServiceAdapter implements ComputeServiceAdapter<
          retry(new Predicate<AtomicReference<Instance>>() {
             @Override
             public boolean apply(AtomicReference<Instance> input) {
-               input.set(api.getInstanceApiForProject(userProject.get()).getInZone(template.getLocation().getId(),
-                       name));
+               input.set(instanceApi.getInZone(zone, name));
                return input.get() != null;
             }
          }, operationCompleteCheckTimeout, operationCompleteCheckInterval, MILLISECONDS).apply(instance);
       }
 
-      InstanceInZone instanceInZone = new InstanceInZone(instance.get(), template.getLocation().getId());
+      // Add tags for security groups
+      final FirewallTagNamingConvention naming = firewallTagNamingConvention.get(group);
+      Set<String> tags = FluentIterable.from(Ints.asList(options.getInboundPorts()))
+              .transform(new Function<Integer, String>(){
+                       @Override
+                       public String apply(Integer input) {
+                          return input != null
+                                  ? naming.name(input)
+                                  : null;
+                       }
+                    })
+              .toSet();
+      instanceApi.setTagsInZone(zone, instance.get().getName(), tags, instance.get().getTags().getFingerprint());
+
+      InstanceInZone instanceInZone = new InstanceInZone(instance.get(), zone);
 
       return new NodeAndInitialCredentials<InstanceInZone>(instanceInZone, instanceInZone.slashEncode(), credentials);
    }

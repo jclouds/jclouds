@@ -29,6 +29,7 @@ import java.util.concurrent.atomic.AtomicReference;
 import javax.inject.Named;
 import javax.inject.Singleton;
 
+import com.google.inject.Scopes;
 import org.jclouds.collect.Memoized;
 import org.jclouds.compute.ComputeService;
 import org.jclouds.compute.ComputeServiceAdapter;
@@ -46,6 +47,7 @@ import org.jclouds.googlecomputeengine.compute.GoogleComputeEngineService;
 import org.jclouds.googlecomputeengine.compute.GoogleComputeEngineServiceAdapter;
 import org.jclouds.googlecomputeengine.compute.extensions.GoogleComputeEngineSecurityGroupExtension;
 import org.jclouds.googlecomputeengine.compute.functions.BuildInstanceMetadata;
+import org.jclouds.googlecomputeengine.compute.functions.FirewallTagNamingConvention;
 import org.jclouds.googlecomputeengine.compute.functions.FirewallToIpPermission;
 import org.jclouds.googlecomputeengine.compute.functions.GoogleComputeEngineImageToImage;
 import org.jclouds.googlecomputeengine.compute.functions.InstanceInZoneToNodeMetadata;
@@ -154,6 +156,7 @@ public class GoogleComputeEngineServiceContextModule
 
       install(new LocationsFromComputeServiceAdapterModule<InstanceInZone, MachineTypeInZone, Image, Zone>() {});
 
+      bind(FirewallTagNamingConvention.Factory.class).in(Scopes.SINGLETON);
    }
 
    @Provides
