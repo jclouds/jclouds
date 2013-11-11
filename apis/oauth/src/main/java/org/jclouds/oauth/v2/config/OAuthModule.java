@@ -66,9 +66,12 @@ public class OAuthModule extends AbstractModule {
    }
 
    /**
-    * Provides a cache for tokens. Cache is time based and expires after 59 minutes (the maximum time a token is
-    * valid is 60 minutes)
+    * Provides a cache for tokens. Cache is time based and by default expires after 59 minutes 
+    * (the maximum time a token is valid is 60 minutes).
+    * This cache and expiry period is system-wide and does not attend to per-instance expiry time
+    * (e.g. "expires_in" from Google Compute -- which is set to the standard 3600 seconds).
     */
+   // NB: If per-instance expiry time is required, significant refactoring will be needed.
    @Provides
    @Singleton
    public LoadingCache<TokenRequest, Token> provideAccessCache(Function<TokenRequest, Token> getAccess,
@@ -78,7 +81,7 @@ public class OAuthModule extends AbstractModule {
       // bit before the deadline to make sure there aren't session expiration exceptions
       sessionIntervalInSeconds = sessionIntervalInSeconds > 30 ? sessionIntervalInSeconds - 30 :
               sessionIntervalInSeconds;
-      return CacheBuilder.newBuilder().expireAfterWrite(sessionIntervalInSeconds, TimeUnit.MINUTES).build(CacheLoader
+      return CacheBuilder.newBuilder().expireAfterWrite(sessionIntervalInSeconds, TimeUnit.SECONDS).build(CacheLoader
               .from(getAccess));
    }
 
