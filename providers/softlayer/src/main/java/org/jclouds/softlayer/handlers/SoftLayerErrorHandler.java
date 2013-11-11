@@ -26,6 +26,7 @@ import org.jclouds.http.HttpResponse;
 import org.jclouds.http.HttpResponseException;
 import org.jclouds.rest.AuthorizationException;
 import org.jclouds.rest.ResourceNotFoundException;
+import org.jclouds.softlayer.exceptions.SoftLayerOrderItemDuplicateException;
 import org.jclouds.util.Strings2;
 
 import com.google.common.base.Throwables;
@@ -64,6 +65,8 @@ public class SoftLayerErrorHandler implements HttpErrorHandler {
                      exception = new ResourceNotFoundException(message, exception);
                   } else if (message.indexOf("currently an active transaction") != -1) {
                      exception = new IllegalStateException(message, exception);
+                  } else if (message.indexOf("SoftLayer_Exception_Order_Item_Duplicate") != -1) {
+                     exception = new SoftLayerOrderItemDuplicateException(message, exception);
                   }
                }
          }
