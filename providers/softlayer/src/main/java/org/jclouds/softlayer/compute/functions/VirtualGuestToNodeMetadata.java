@@ -22,9 +22,7 @@ import static com.google.common.collect.FluentIterable.from;
 import java.util.Map;
 import java.util.Set;
 
-import javax.annotation.Resource;
 import javax.inject.Inject;
-import javax.inject.Named;
 import javax.inject.Singleton;
 
 import org.jclouds.collect.Memoized;
@@ -34,15 +32,12 @@ import org.jclouds.compute.domain.NodeMetadata;
 import org.jclouds.compute.domain.NodeMetadata.Status;
 import org.jclouds.compute.domain.NodeMetadataBuilder;
 import org.jclouds.compute.functions.GroupNamingConvention;
-import org.jclouds.compute.reference.ComputeServiceConstants;
 import org.jclouds.domain.Location;
 import org.jclouds.location.predicates.LocationPredicates;
-import org.jclouds.logging.Logger;
 import org.jclouds.softlayer.SoftLayerApi;
 import org.jclouds.softlayer.domain.ProductItem;
 import org.jclouds.softlayer.domain.ProductOrder;
 import org.jclouds.softlayer.domain.VirtualGuest;
-import org.jclouds.softlayer.exceptions.SoftLayerOrderItemDuplicateException;
 import org.jclouds.softlayer.predicates.ProductItemPredicates;
 
 import com.google.common.base.Function;
@@ -136,10 +131,6 @@ public class VirtualGuestToNodeMetadata implements Function<VirtualGuest, NodeMe
    @Singleton
    public static class GetImageForVirtualGuest {
 
-      @Resource
-      @Named(ComputeServiceConstants.COMPUTE_LOGGER)
-      protected Logger logger = Logger.NULL;
-
       private SoftLayerApi api;
 
       @Inject
@@ -148,16 +139,10 @@ public class VirtualGuestToNodeMetadata implements Function<VirtualGuest, NodeMe
       }
 
       public Image getImage(VirtualGuest guest) {
-         ProductOrder order = null;
          // 'bad' orders have no start cpu's and cause the order lookup to fail.
          if (guest.getStartCpus() < 1)
             return null;
-         try {
-            order = api.getVirtualGuestApi().getOrderTemplate(guest.getId());
-         } catch (SoftLayerOrderItemDuplicateException e) {
-            // this is a workaround because SoftLayer throws sometimes 500 internal server errors for the above method call
-            logger.warn(e, "Cannot get order template for virtualGuestId(%s)", guest.getId());
-         }
+         ProductOrder order = api.getVirtualGuestApi().getOrderTemplate(guest.getId());
          if (order == null)
             return null;
          Iterable<ProductItem> items = Iterables.transform(order.getPrices(), ProductItems.item());
