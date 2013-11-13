@@ -66,7 +66,7 @@ public class SoftLayerErrorHandler implements HttpErrorHandler {
                   } else if (message.indexOf("currently an active transaction") != -1) {
                      exception = new IllegalStateException(message, exception);
                   } else if (message.indexOf("SoftLayer_Exception_Order_Item_Duplicate") != -1) {
-                     exception = new SoftLayerOrderItemDuplicateException(message, exception);
+                     exception = new SoftLayerOrderItemDuplicateException(command, response, message);
                   }
                }
          }
