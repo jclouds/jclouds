@@ -16,10 +16,14 @@
  */
 package org.jclouds.softlayer.exceptions;
 
-public class SoftLayerOrderItemDuplicateException extends RuntimeException {
+import org.jclouds.http.HttpCommand;
+import org.jclouds.http.HttpResponse;
+import org.jclouds.http.HttpResponseException;
 
-   public SoftLayerOrderItemDuplicateException(String message, Exception exception) {
-      super(message, exception);
+public class SoftLayerOrderItemDuplicateException extends HttpResponseException {
+
+   public SoftLayerOrderItemDuplicateException(HttpCommand command, HttpResponse response, String message) {
+      super(command, response, message);
    }
 
 }
