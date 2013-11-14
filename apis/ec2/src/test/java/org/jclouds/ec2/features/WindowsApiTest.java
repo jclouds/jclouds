@@ -45,7 +45,7 @@ public class WindowsApiTest extends BaseEC2ApiTest<WindowsApi> {
                                                    .addHeader("Host", "ec2.us-east-1.amazonaws.com")
                                                    .addFormParam("Action", "BundleInstance")
                                                    .addFormParam("InstanceId", "i-e468cd8d")
-                                                   .addFormParam("Signature", "Uw5gH4eN3H8KXeFfIVLDDt88ApYn8L4pkf31hpojpcM%3D")
+                                                   .addFormParam("Signature", "78A6SjliGJg%2BKzaICB9I4bqEXFoNa4FKonuIwAj9hik%3D")
                                                    .addFormParam("SignatureMethod", "HmacSHA256")
                                                    .addFormParam("SignatureVersion", "2")
                                                    .addFormParam("Storage.S3.Bucket", "my-bucket")
@@ -53,7 +53,7 @@ public class WindowsApiTest extends BaseEC2ApiTest<WindowsApi> {
                                                    .addFormParam("Storage.S3.UploadPolicy", "eyJleHBpcmF0aW9uIjogIjIwMDgtMDgtMzBUMDg6NDk6MDlaIiwiY29uZGl0aW9ucyI6IFt7ImJ1Y2tldCI6ICJteS1idWNrZXQifSxbInN0YXJ0cy13aXRoIiwgIiRrZXkiLCAibXktbmV3LWltYWdlIl1dfQ%3D%3D")
                                                    .addFormParam("Storage.S3.UploadPolicySignature", "ih/iohGe0A7y4QVRbKaq6BZShzUsmBEJEa9AdFbxM6Y%3D")
                                                    .addFormParam("Timestamp", "2009-11-08T15%3A54%3A08.897Z")
-                                                   .addFormParam("Version", "2010-06-15")
+                                                   .addFormParam("Version", "2010-08-31")
                                                    .addFormParam("AWSAccessKeyId", "identity").build();
 
    public void testBundleInstanceInRegion() throws SecurityException, NoSuchMethodException, IOException {
@@ -88,7 +88,7 @@ public class WindowsApiTest extends BaseEC2ApiTest<WindowsApi> {
                                                           .addHeader("Host", "ec2.us-east-1.amazonaws.com")
                                                           .addFormParam("Action", "BundleInstance")
                                                           .addFormParam("InstanceId","i-e468cd8d")
-                                                          .addFormParam("Signature", "ahFjX9Tv/DGMFq9EFdF1mWSAnTKyQyyIj7dWJxBOhaE%3D")
+                                                          .addFormParam("Signature", "9UbWwb%2BnO2vHn2O59K9FpmaK445RwX7vXsruHRznwik%3D")
                                                           .addFormParam("SignatureMethod", "HmacSHA256")
                                                           .addFormParam("SignatureVersion", "2")
                                                           .addFormParam("Storage.S3.AWSAccessKeyId", "10QMXFEV71ZS32XQFTR2")
@@ -97,7 +97,7 @@ public class WindowsApiTest extends BaseEC2ApiTest<WindowsApi> {
                                                           .addFormParam("Storage.S3.UploadPolicy", "eyJleHBpcmF0aW9uIjogIjIwMDgtMDgtMzBUMDg6NDk6MDlaIiwiY29uZGl0aW9ucyI6IFt7ImJ1Y2tldCI6ICJteS1idWNrZXQifSxbInN0YXJ0cy13aXRoIiwgIiRrZXkiLCAibXktbmV3LWltYWdlIl1dfQ%3D%3D")
                                                           .addFormParam("Storage.S3.UploadPolicySignature", "ih/iohGe0A7y4QVRbKaq6BZShzUsmBEJEa9AdFbxM6Y%3D")
                                                           .addFormParam("Timestamp", "2009-11-08T15%3A54%3A08.897Z")
-                                                          .addFormParam("Version", "2010-06-15")
+                                                          .addFormParam("Version", "2010-08-31")
                                                           .addFormParam("AWSAccessKeyId", "identity").build();
 
    public void testBundleInstanceInRegionOptions() throws SecurityException, NoSuchMethodException, IOException {

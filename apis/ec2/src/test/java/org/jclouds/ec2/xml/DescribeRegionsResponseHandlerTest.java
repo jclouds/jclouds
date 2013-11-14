@@ -85,7 +85,7 @@ public class DescribeRegionsResponseHandlerTest extends BaseHandlerTest {
    public void testEuc() {
 
       InputStream is = Strings2
-            .toInputStream("<DescribeRegionsResponse xmlns=\"http://ec2.amazonaws.com/doc/2010-06-15/\"><requestId>6a3b36f9-9ff4-47cf-87e3-285b08fbe5e5</requestId><regionInfo><item><regionName>Eucalyptus</regionName><regionEndpoint>http://173.205.188.130:8773/services/Eucalyptus</regionEndpoint></item><item><regionName>Walrus</regionName><regionEndpoint>http://173.205.188.130:8773/services/Walrus</regionEndpoint></item></regionInfo></DescribeRegionsResponse>");
+            .toInputStream("<DescribeRegionsResponse xmlns=\"http://ec2.amazonaws.com/doc/2010-08-31/\"><requestId>6a3b36f9-9ff4-47cf-87e3-285b08fbe5e5</requestId><regionInfo><item><regionName>Eucalyptus</regionName><regionEndpoint>http://173.205.188.130:8773/services/Eucalyptus</regionEndpoint></item><item><regionName>Walrus</regionName><regionEndpoint>http://173.205.188.130:8773/services/Walrus</regionEndpoint></item></regionInfo></DescribeRegionsResponse>");
 
       Map<String, URI> expected = ImmutableMap.<String, URI> of("Eucalyptus",
             URI.create("http://173.205.188.130:8773/services/Eucalyptus"));

@@ -28,6 +28,7 @@ import javax.ws.rs.Path;
 
 import org.jclouds.Fallbacks.EmptySetOnNotFoundOr404;
 import org.jclouds.aws.filters.FormSigner;
+import org.jclouds.ec2.binders.BindFiltersToIndexedFormParams;
 import org.jclouds.ec2.binders.BindUserGroupsToIndexedFormParams;
 import org.jclouds.ec2.binders.BindUserIdsToIndexedFormParams;
 import org.jclouds.ec2.domain.Image;
@@ -50,6 +51,8 @@ import org.jclouds.rest.annotations.FormParams;
 import org.jclouds.rest.annotations.RequestFilters;
 import org.jclouds.rest.annotations.VirtualHost;
 import org.jclouds.rest.annotations.XMLResponseParser;
+
+import com.google.common.collect.Multimap;
 
 /**
  * Provides access to AMI Services.
@@ -84,6 +87,33 @@ public interface AMIApi {
    Set<? extends Image> describeImagesInRegion(
             @EndpointParam(parser = RegionToEndpointOrProviderIfNull.class) @Nullable String region,
             DescribeImagesOptions... options);
+
+   /**
+    * Returns information about AMIs, AKIs, and ARIs. This includes image type, product codes,
+    * architecture, and kernel and RAM disk IDs. Images available to you include public images,
+    * private images that you own, and private images owned by other users for which you have
+    * explicit launch permissions.
+    *
+    * @param region
+    *           AMIs are tied to the Region where its files are located within Amazon S3.
+    * @param filter
+    *           Multimap of filter key/values.
+    * @see InstanceApi#describeInstances
+    * @see #describeImageAttribute
+    * @see <a href="http://docs.amazonwebservices.com/AWSEC2/latest/APIReference/ApiReference-query-DescribeImages.html"
+    *      />
+    * @see DescribeImagesOptions
+    */
+   @Named("DescribeImages")
+   @POST
+   @Path("/")
+   @FormParams(keys = ACTION, values = "DescribeImages")
+   @XMLResponseParser(DescribeImagesResponseHandler.class)
+   @Fallback(EmptySetOnNotFoundOr404.class)
+   Set<? extends Image> describeImagesInRegionWithFilter(
+           @EndpointParam(parser = RegionToEndpointOrProviderIfNull.class) @Nullable String region,
+           @BinderParam(BindFiltersToIndexedFormParams.class) Multimap<String, String> filter,
+           DescribeImagesOptions... options);
 
    /**
     * Creates an AMI that uses an Amazon EBS root device from a "running" or "stopped" instance.

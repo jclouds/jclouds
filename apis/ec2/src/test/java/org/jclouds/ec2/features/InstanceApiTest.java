@@ -351,12 +351,12 @@ public class InstanceApiTest extends BaseEC2ApiTest<InstanceApi> {
                                                    .addFormParam("Action", "ModifyInstanceAttribute")
                                                    .addFormParam("Attribute", "userData")
                                                    .addFormParam("InstanceId", "1")
-                                                   .addFormParam("Signature", "LfUmzLM5DsACR5nQcEfGF5FPdznOwwhJ7tjhBWfHtGs%3D")
+                                                   .addFormParam("Signature", "SfxT/1i/WokibleyEHo0zHizHisLzbDzzRxfOdnr1vY%3D")
                                                    .addFormParam("SignatureMethod", "HmacSHA256")
                                                    .addFormParam("SignatureVersion", "2")
                                                    .addFormParam("Timestamp", "2009-11-08T15%3A54%3A08.897Z")
                                                    .addFormParam("Value", "dGVzdA%3D%3D")
-                                                   .addFormParam("Version", "2010-06-15")
+                                                   .addFormParam("Version", "2010-08-31")
                                                    .addFormParam("AWSAccessKeyId", "identity").build();
 
    public void testSetUserDataForInstanceInRegion() throws SecurityException, NoSuchMethodException, IOException {
@@ -384,12 +384,12 @@ public class InstanceApiTest extends BaseEC2ApiTest<InstanceApi> {
                                                   .addFormParam("Action", "ModifyInstanceAttribute")
                                                   .addFormParam("Attribute", "ramdisk")
                                                   .addFormParam("InstanceId", "1")
-                                                  .addFormParam("Signature", "qx6NeVbihiYrKvi5Oe5LzMsGHTjS7%2BqoNhh2abt275g%3D")
+                                                  .addFormParam("Signature", "aMQzFsknmQt1OA8Rb8aIzZoFXGK23UvrMIy8imNVUeQ%3D")
                                                   .addFormParam("SignatureMethod", "HmacSHA256")
                                                   .addFormParam("SignatureVersion", "2")
                                                   .addFormParam("Timestamp", "2009-11-08T15%3A54%3A08.897Z")
                                                   .addFormParam("Value", "test")
-                                                  .addFormParam("Version", "2010-06-15")
+                                                  .addFormParam("Version", "2010-08-31")
                                                   .addFormParam("AWSAccessKeyId", "identity").build();
 
    public void testSetRamdiskForInstanceInRegion() throws SecurityException, NoSuchMethodException, IOException {
@@ -417,12 +417,12 @@ public class InstanceApiTest extends BaseEC2ApiTest<InstanceApi> {
                                                  .addFormParam("Action", "ModifyInstanceAttribute")
                                                  .addFormParam("Attribute", "kernel")
                                                  .addFormParam("InstanceId", "1")
-                                                 .addFormParam("Signature", "juSiuoiXJzTxj3q0LUW2528HzDyP4JAcKin%2BI4AuIT0%3D")
+                                                 .addFormParam("Signature", "GaQ9sC0uXHlN5JAMWQpYx%2Bc3XaF38qZgJex/kyqdR1E%3D")
                                                  .addFormParam("SignatureMethod", "HmacSHA256")
                                                  .addFormParam("SignatureVersion", "2")
                                                  .addFormParam("Timestamp", "2009-11-08T15%3A54%3A08.897Z")
                                                  .addFormParam("Value", "test")
-                                                 .addFormParam("Version", "2010-06-15")
+                                                 .addFormParam("Version", "2010-08-31")
                                                  .addFormParam("AWSAccessKeyId", "identity").build();
 
    public void testSetKernelForInstanceInRegion() throws SecurityException, NoSuchMethodException, IOException {
@@ -450,12 +450,12 @@ public class InstanceApiTest extends BaseEC2ApiTest<InstanceApi> {
                                                       .addFormParam("Action", "ModifyInstanceAttribute")
                                                       .addFormParam("Attribute", "disableApiTermination")
                                                       .addFormParam("InstanceId", "1")
-                                                      .addFormParam("Signature", "tiBMWWTi22BWeAjsRfuzVom0tQgsOBeYTkatMuWRrbg%3D")
+                                                      .addFormParam("Signature", "hErzi%2Bf4jBADviJ%2BLVTTGhlHWhMR/pyPUSBZgaHC79I%3D")
                                                       .addFormParam("SignatureMethod", "HmacSHA256")
                                                       .addFormParam("SignatureVersion", "2")
                                                       .addFormParam("Timestamp", "2009-11-08T15%3A54%3A08.897Z")
                                                       .addFormParam("Value", "true")
-                                                      .addFormParam("Version", "2010-06-15")
+                                                      .addFormParam("Version", "2010-08-31")
                                                       .addFormParam("AWSAccessKeyId", "identity").build();
 
    public void testSetApiTerminationDisabledForInstanceInRegion() throws SecurityException, NoSuchMethodException,
@@ -484,12 +484,12 @@ public class InstanceApiTest extends BaseEC2ApiTest<InstanceApi> {
                                                     .addFormParam("Action", "ModifyInstanceAttribute")
                                                     .addFormParam("Attribute", "instanceType")
                                                     .addFormParam("InstanceId", "1")
-                                                    .addFormParam("Signature", "XK%2BzQmQ0S57gXIgVRMqUkKunURN9TaCJD1YWiYMAOHo%3D")
+                                                    .addFormParam("Signature", "OYJQ1w79NoxkcrawNK6U71k3Wl78kqz2ikzTXmQCX2E%3D")
                                                     .addFormParam("SignatureMethod", "HmacSHA256")
                                                     .addFormParam("SignatureVersion", "2")
                                                     .addFormParam("Timestamp", "2009-11-08T15%3A54%3A08.897Z")
                                                     .addFormParam("Value", "c1.medium")
-                                                    .addFormParam("Version", "2010-06-15")
+                                                    .addFormParam("Version", "2010-08-31")
                                                     .addFormParam("AWSAccessKeyId", "identity").build();
 
    public void testSetInstanceTypeForInstanceInRegion() throws SecurityException, NoSuchMethodException, IOException {
@@ -517,12 +517,12 @@ public class InstanceApiTest extends BaseEC2ApiTest<InstanceApi> {
                                                                  .addFormParam("Action", "ModifyInstanceAttribute")
                                                                  .addFormParam("Attribute", "instanceInitiatedShutdownBehavior")
                                                                  .addFormParam("InstanceId", "1")
-                                                                 .addFormParam("Signature", "s5xBMLd%2BXNVp44x7C6qVE58qBov//f6yvxoM757KcZU%3D")
+                                                                 .addFormParam("Signature", "2Tgi9M9AcCv5Y%2BEXwq0SD6g8bBGtPPEgjdTtfdGZQlI%3D")
                                                                  .addFormParam("SignatureMethod", "HmacSHA256")
                                                                  .addFormParam("SignatureVersion", "2")
                                                                  .addFormParam("Timestamp", "2009-11-08T15%3A54%3A08.897Z")
                                                                  .addFormParam("Value", "terminate")
-                                                                 .addFormParam("Version", "2010-06-15")
+                                                                 .addFormParam("Version", "2010-08-31")
                                                                  .addFormParam("AWSAccessKeyId", "identity").build();
 
    public void testSetInstanceInitiatedShutdownBehaviorForInstanceInRegion() throws SecurityException,

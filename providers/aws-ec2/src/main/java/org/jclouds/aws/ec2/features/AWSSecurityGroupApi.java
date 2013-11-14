@@ -31,6 +31,7 @@ import org.jclouds.aws.ec2.options.CreateSecurityGroupOptions;
 import org.jclouds.aws.ec2.xml.AWSEC2DescribeSecurityGroupsResponseHandler;
 import org.jclouds.aws.ec2.xml.CreateSecurityGroupResponseHandler;
 import org.jclouds.aws.filters.FormSigner;
+import org.jclouds.ec2.binders.BindFiltersToIndexedFormParams;
 import org.jclouds.ec2.binders.BindGroupIdsToIndexedFormParams;
 import org.jclouds.ec2.binders.BindGroupNamesToIndexedFormParams;
 import org.jclouds.ec2.binders.BindIpPermissionToIndexedFormParams;
@@ -49,6 +50,7 @@ import org.jclouds.rest.annotations.VirtualHost;
 import org.jclouds.rest.annotations.XMLResponseParser;
 
 import com.google.common.annotations.Beta;
+import com.google.common.collect.Multimap;
 
 /**
  * Provides access to EC2 SecurityGroup Services via their REST API.
@@ -132,4 +134,14 @@ public interface AWSSecurityGroupApi extends SecurityGroupApi {
    Set<SecurityGroup> describeSecurityGroupsInRegion(
            @EndpointParam(parser = RegionToEndpointOrProviderIfNull.class) @Nullable String region,
            @BinderParam(BindGroupNamesToIndexedFormParams.class) String... securityGroupNames);
+
+   @Named("DescribeSecurityGroups")
+   @POST
+   @Path("/")
+   @FormParams(keys = ACTION, values = "DescribeSecurityGroups")
+   @XMLResponseParser(AWSEC2DescribeSecurityGroupsResponseHandler.class)
+   @Fallback(EmptySetOnNotFoundOr404.class)
+   Set<SecurityGroup> describeSecurityGroupsInRegionWithFilter(
+           @EndpointParam(parser = RegionToEndpointOrProviderIfNull.class) @Nullable String region,
+           @BinderParam(BindFiltersToIndexedFormParams.class) Multimap<String, String> filter);
 }

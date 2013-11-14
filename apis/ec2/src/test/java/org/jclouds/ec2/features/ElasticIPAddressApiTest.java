@@ -63,11 +63,11 @@ public class ElasticIPAddressApiTest extends BaseEC2ApiTest<ElasticIPAddressApi>
                                              .addFormParam("Action", "AssociateAddress")
                                              .addFormParam("InstanceId", "me")
                                              .addFormParam("PublicIp", "127.0.0.1")
-                                             .addFormParam("Signature", "YmPyvEljuFw0INSUbQx5xAhC/1GQ4a1Ht6TdoXeMc9Y%3D")
+                                             .addFormParam("Signature", "nLU6xGLqXtT/dmyAvkN4BdL/3CxQlDWJYeskikhl54k%3D")
                                              .addFormParam("SignatureMethod", "HmacSHA256")
                                              .addFormParam("SignatureVersion", "2")
                                              .addFormParam("Timestamp", "2009-11-08T15%3A54%3A08.897Z")
-                                             .addFormParam("Version", "2010-06-15")
+                                             .addFormParam("Version", "2010-08-31")
                                              .addFormParam("AWSAccessKeyId", "identity").build();
 
    public void testAssociateAddress() throws SecurityException, NoSuchMethodException, IOException {

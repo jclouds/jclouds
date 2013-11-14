@@ -59,6 +59,8 @@ public abstract class BaseEC2ComputeServiceExpectTest extends BaseEC2ComputeServ
    protected HttpRequest describeInstanceMultiIdsRequest;
    protected HttpResponse describeInstanceMultiIdsResponse;
    protected HttpRequest describeImageRequest;
+   protected HttpRequest createTagsRequest;
+   protected HttpResponse createTagsResponse;
 
    public BaseEC2ComputeServiceExpectTest() {
       region = "us-east-1";
@@ -211,6 +213,29 @@ public abstract class BaseEC2ComputeServiceExpectTest extends BaseEC2ComputeServ
                           .addHeader("Host", "ec2." + region + ".amazonaws.com")
                           .addFormParam("ImageId.1", "ami-aecd60c7")
                           .addFormParam("Action", "DescribeImages").build());
+
+      createTagsRequest =
+              formSigner.filter(HttpRequest.builder()
+                      .method("POST")
+                      .endpoint("https://ec2.us-east-1.amazonaws.com/")
+                      .addHeader("Host", "ec2.us-east-1.amazonaws.com")
+                      .payload(
+                              payloadFromStringWithContentType(
+                                      "Action=CreateTags" +
+                                              "&ResourceId.1=i-2baa5550" +
+                                              "&Signature=Trp5e5%2BMqeBeBZbLYa9s9gxahQ9nkx6ETfsGl82IV8Y%3D" +
+                                              "&SignatureMethod=HmacSHA256" +
+                                              "&SignatureVersion=2" +
+                                              "&Tag.1.Key=Name" +
+                                              "&Tag.1.Value=test-2baa5550" +
+                                              "&Timestamp=2012-04-16T15%3A54%3A08.897Z" +
+                                              "&Version=2010-08-31" +
+                                              "&AWSAccessKeyId=identity",
+                                      "application/x-www-form-urlencoded"))
+                      .build());
+
+      createTagsResponse = HttpResponse.builder().statusCode(200).build();
+
    }
 
    @Override

@@ -27,9 +27,9 @@ import static org.testng.Assert.assertTrue;
 
 import java.util.Set;
 
+import org.jclouds.aws.AWSResponseException;
 import org.jclouds.compute.internal.BaseComputeServiceContextLiveTest;
 import org.jclouds.ec2.EC2Api;
-import org.jclouds.ec2.EC2ApiMetadata;
 import org.jclouds.ec2.domain.SecurityGroup;
 import org.jclouds.ec2.domain.UserIdGroupPair;
 import org.jclouds.net.domain.IpPermission;
@@ -70,20 +70,66 @@ public class SecurityGroupApiLiveTest extends BaseComputeServiceContextLiveTest 
       for (String region : ec2Api.getConfiguredRegions()) {
          Set<SecurityGroup> allResults = client.describeSecurityGroupsInRegion(region);
          assertNotNull(allResults);
-         if (allResults.size() >= 1) {
+         if (!allResults.isEmpty()) {
             final SecurityGroup group = getLast(allResults);
             // in case there are multiple groups with the same name, which is the case with VPC
             ImmutableSet<SecurityGroup> expected = FluentIterable.from(allResults)
-                  .filter(new Predicate<SecurityGroup>() {
-                     @Override
-                     public boolean apply(SecurityGroup in) {
-                        return group.getName().equals(in.getName());
-                     }
-                  }).toSet();
+                    .filter(new Predicate<SecurityGroup>() {
+                       @Override
+                       public boolean apply(SecurityGroup in) {
+                          return group.getName().equals(in.getName());
+                       }
+                    }).toSet();
             ImmutableSet<SecurityGroup> result = ImmutableSet.copyOf(client.describeSecurityGroupsInRegion(region,
-                  group.getName()));
+                    group.getName()));
             // the above command has a chance of returning less groups than the original
-            assertTrue(expected.containsAll(result));
+            assertTrue(expected.containsAll(result), "group(s) for name not found");
+         }
+      }
+   }
+
+   @Test
+   void testFilter() {
+      for (String region : ec2Api.getConfiguredRegions()) {
+         Set<SecurityGroup> allResults = client.describeSecurityGroupsInRegion(region);
+         assertNotNull(allResults);
+         if (!allResults.isEmpty()) {
+            final SecurityGroup group = getLast(allResults);
+            // in case there are multiple groups with the same name, which is the case with VPC
+            ImmutableSet<SecurityGroup> expected = FluentIterable.from(allResults)
+                    .filter(new Predicate<SecurityGroup>() {
+                       @Override
+                       public boolean apply(SecurityGroup in) {
+                          return group.getName().equals(in.getName());
+                       }
+                    }).toSet();
+            ImmutableSet<SecurityGroup> result = ImmutableSet.copyOf(client.describeSecurityGroupsInRegionWithFilter(region,
+                    ImmutableMultimap.<String, String>builder()
+                            .put("group-name", group.getName()).build()));
+            // the above command has a chance of returning less groups than the original
+            assertTrue(expected.containsAll(result), "group(s) for name not found");
+         }
+      }
+   }
+
+   @Test(expectedExceptions = AWSResponseException.class)
+   void testFilterInvalid() {
+      for (String region : ec2Api.getConfiguredRegions()) {
+         Set<SecurityGroup> allResults = client.describeSecurityGroupsInRegion(region);
+         assertNotNull(allResults);
+         if (!allResults.isEmpty()) {
+            final SecurityGroup group = getLast(allResults);
+            // in case there are multiple groups with the same name, which is the case with VPC
+            ImmutableSet<SecurityGroup> expected = FluentIterable.from(allResults)
+                    .filter(new Predicate<SecurityGroup>() {
+                       @Override
+                       public boolean apply(SecurityGroup in) {
+                          return group.getName().equals(in.getName());
+                       }
+                    }).toSet();
+            ImmutableSet<SecurityGroup> result = ImmutableSet.copyOf(client.describeSecurityGroupsInRegionWithFilter(region,
+                    ImmutableMultimap.<String, String>builder()
+                            .put("invalid-filter", group.getName()).build()));
          }
       }
    }

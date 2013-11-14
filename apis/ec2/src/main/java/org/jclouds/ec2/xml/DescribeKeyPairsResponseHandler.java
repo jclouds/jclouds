@@ -32,7 +32,7 @@ import com.google.common.base.Supplier;
 import com.google.common.collect.Sets;
 
 /**
- * Parses: DescribeKeyPairsResponse xmlns="http://ec2.amazonaws.com/doc/2010-06-15/"
+ * Parses: DescribeKeyPairsResponse xmlns="http://ec2.amazonaws.com/doc/2010-08-31/"
  * 
  * @see <a href="http://docs.amazonwebservices.com/AWSEC2/latest/APIReference/ApiReference-query-DescribeKeyPairs.html"
  *      />

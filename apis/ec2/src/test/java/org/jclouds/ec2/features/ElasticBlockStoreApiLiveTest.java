@@ -20,11 +20,13 @@ import static java.util.concurrent.TimeUnit.SECONDS;
 import static org.jclouds.ec2.options.DescribeSnapshotsOptions.Builder.snapshotIds;
 import static org.jclouds.util.Predicates2.retry;
 import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertFalse;
 import static org.testng.Assert.assertNotNull;
 
 import java.util.Set;
 import java.util.SortedSet;
 
+import org.jclouds.aws.AWSResponseException;
 import org.jclouds.compute.internal.BaseComputeServiceContextLiveTest;
 import org.jclouds.ec2.EC2Api;
 import org.jclouds.ec2.domain.AvailabilityZoneInfo;
@@ -38,6 +40,7 @@ import org.testng.annotations.Test;
 
 import com.google.common.base.Predicate;
 import com.google.common.base.Strings;
+import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Sets;
 
@@ -75,17 +78,42 @@ public class ElasticBlockStoreApiLiveTest extends BaseComputeServiceContextLiveT
 
    @Test
    void testDescribeVolumes() {
-      for (String region : ec2Api.getConfiguredRegions()) {
-         SortedSet<Volume> allResults = Sets.newTreeSet(client.describeVolumesInRegion(region));
-         assertNotNull(allResults);
-         if (allResults.size() >= 1) {
-            Volume volume = allResults.last();
-            SortedSet<Volume> result = Sets.newTreeSet(client.describeVolumesInRegion(region, volume.getId()));
-            assertNotNull(result);
-            Volume compare = result.last();
-            assertEquals(compare, volume);
-         }
-      }
+      String region = defaultRegion;
+      SortedSet<Volume> allResults = Sets.newTreeSet(client.describeVolumesInRegion(region));
+      assertNotNull(allResults);
+      assertFalse(allResults.isEmpty());
+      Volume volume = allResults.last();
+      SortedSet<Volume> result = Sets.newTreeSet(client.describeVolumesInRegion(region, volume.getId()));
+      assertNotNull(result);
+      Volume compare = result.last();
+      assertEquals(compare, volume);
+   }
+
+   @Test
+   void testDescribeVolumesWithFilter() {
+      String region = defaultRegion;
+      SortedSet<Volume> allResults = Sets.newTreeSet(client.describeVolumesInRegion(region));
+      assertNotNull(allResults);
+      assertFalse(allResults.isEmpty());
+      Volume volume = allResults.last();
+      SortedSet<Volume> result = Sets.newTreeSet(client.describeVolumesInRegionWithFilter(region,
+              ImmutableMultimap.<String, String>builder()
+                      .put("volume-id", volume.getId()).build()));
+      assertNotNull(result);
+      Volume compare = result.last();
+      assertEquals(compare, volume);
+   }
+
+   @Test(expectedExceptions = AWSResponseException.class)
+   void testDescribeVolumesWithInvalidFilter() {
+      String region = defaultRegion;
+      SortedSet<Volume> allResults = Sets.newTreeSet(client.describeVolumesInRegion(region));
+      assertNotNull(allResults);
+      assertFalse(allResults.isEmpty());
+      Volume volume = allResults.last();
+      SortedSet<Volume> result = Sets.newTreeSet(client.describeVolumesInRegionWithFilter(region,
+              ImmutableMultimap.<String, String>builder()
+                      .put("invalid-filter", volume.getId()).build()));
    }
 
    @Test
@@ -163,16 +191,43 @@ public class ElasticBlockStoreApiLiveTest extends BaseComputeServiceContextLiveT
 
    @Test
    void testDescribeSnapshots() {
-      for (String region : ec2Api.getConfiguredRegions()) {
-         SortedSet<Snapshot> allResults = Sets.newTreeSet(client.describeSnapshotsInRegion(region));
-         assertNotNull(allResults);
-         if (allResults.size() >= 1) {
-            Snapshot snapshot = allResults.last();
-            Snapshot result = Iterables.getOnlyElement(client.describeSnapshotsInRegion(region,
-                  snapshotIds(snapshot.getId())));
-            assertNotNull(result);
-            assertEquals(result, snapshot);
-         }
+      String region = defaultRegion;
+      SortedSet<Snapshot> allResults = Sets.newTreeSet(client.describeSnapshotsInRegion(region));
+      assertNotNull(allResults);
+      if (!allResults.isEmpty()) {
+         Snapshot snapshot = allResults.last();
+         Snapshot result = Iterables.getOnlyElement(client.describeSnapshotsInRegion(region,
+                 snapshotIds(snapshot.getId())));
+         assertNotNull(result);
+         assertEquals(result, snapshot);
+      }
+   }
+
+   @Test
+   void testDescribeSnapshotsWithFilter() {
+      String region = defaultRegion;
+      SortedSet<Snapshot> allResults = Sets.newTreeSet(client.describeSnapshotsInRegion(region));
+      assertNotNull(allResults);
+      if (!allResults.isEmpty()) {
+         Snapshot snapshot = allResults.last();
+         Snapshot result = Iterables.getOnlyElement(client.describeSnapshotsInRegionWithFilter(region,
+                 ImmutableMultimap.<String, String>builder()
+                         .put("snapshot-id", snapshot.getId()).build()));
+         assertNotNull(result);
+         assertEquals(result, snapshot);
+      }
+   }
+
+   @Test(expectedExceptions = AWSResponseException.class)
+   void testDescribeSnapshotsWithFilterInvalid() {
+      String region = defaultRegion;
+      SortedSet<Snapshot> allResults = Sets.newTreeSet(client.describeSnapshotsInRegion(region));
+      assertNotNull(allResults);
+      if (!allResults.isEmpty()) {
+         Snapshot snapshot = allResults.last();
+         Snapshot result = Iterables.getOnlyElement(client.describeSnapshotsInRegionWithFilter(region,
+                 ImmutableMultimap.<String, String>builder()
+                         .put("invalid-filter", snapshot.getId()).build()));
       }
    }
 

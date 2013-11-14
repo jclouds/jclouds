@@ -29,6 +29,7 @@ import org.jclouds.Fallbacks.EmptySetOnNotFoundOr404;
 import org.jclouds.Fallbacks.NullOnNotFoundOr404;
 import org.jclouds.aws.filters.FormSigner;
 import org.jclouds.ec2.binders.BindBundleIdsToIndexedFormParams;
+import org.jclouds.ec2.binders.BindFiltersToIndexedFormParams;
 import org.jclouds.ec2.binders.BindS3UploadPolicyAndSignature;
 import org.jclouds.ec2.domain.BundleTask;
 import org.jclouds.ec2.domain.PasswordData;
@@ -46,6 +47,8 @@ import org.jclouds.rest.annotations.RequestFilters;
 import org.jclouds.rest.annotations.SinceApiVersion;
 import org.jclouds.rest.annotations.VirtualHost;
 import org.jclouds.rest.annotations.XMLResponseParser;
+
+import com.google.common.collect.Multimap;
 
 /**
  * Provides access to EC2 Windows Features via the Query API
@@ -136,12 +139,12 @@ public interface WindowsApi {
             @FormParam("BundleId") String bundleId);
 
    /**
-    * 
+    *
     * Describes current bundling tasks.
-    * 
+    *
     * @param region
     *           The bundleTask ID is tied to the Region.
-    * 
+    *
     * @see #cancelBundleTaskInRegion
     * @see #bundleInstanceInRegion
     * @see <a href="http://docs.amazonwebservices.com/AWSEC2/latest/APIReference/ApiReference-query-DescribeBundleTasks.html"
@@ -154,8 +157,32 @@ public interface WindowsApi {
    @XMLResponseParser(DescribeBundleTasksResponseHandler.class)
    @Fallback(EmptySetOnNotFoundOr404.class)
    Set<BundleTask> describeBundleTasksInRegion(
-            @EndpointParam(parser = RegionToEndpointOrProviderIfNull.class) @Nullable String region,
-            @BinderParam(BindBundleIdsToIndexedFormParams.class) String... bundleTaskIds);
+           @EndpointParam(parser = RegionToEndpointOrProviderIfNull.class) @Nullable String region,
+           @BinderParam(BindBundleIdsToIndexedFormParams.class) String... bundleTaskIds);
+
+   /**
+    *
+    * Describes current bundling tasks.
+    *
+    * @param region
+    *           The bundleTask ID is tied to the Region.
+    * @param filter
+    *           Filter multimap
+    *
+    * @see #cancelBundleTaskInRegion
+    * @see #bundleInstanceInRegion
+    * @see <a href="http://docs.amazonwebservices.com/AWSEC2/latest/APIReference/ApiReference-query-DescribeBundleTasks.html"
+    *      />
+    */
+   @Named("DescribeBundleTasks")
+   @POST
+   @Path("/")
+   @FormParams(keys = ACTION, values = "DescribeBundleTasks")
+   @XMLResponseParser(DescribeBundleTasksResponseHandler.class)
+   @Fallback(EmptySetOnNotFoundOr404.class)
+   Set<BundleTask> describeBundleTasksInRegionWithFilter(
+           @EndpointParam(parser = RegionToEndpointOrProviderIfNull.class) @Nullable String region,
+           @BinderParam(BindFiltersToIndexedFormParams.class) Multimap<String, String> filter);
 
    /**
     *

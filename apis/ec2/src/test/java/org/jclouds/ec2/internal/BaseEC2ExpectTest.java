@@ -72,7 +72,7 @@ public abstract class BaseEC2ExpectTest<T> extends BaseRestClientExpectTest<T> {
                           .endpoint("https://ec2." + region + ".amazonaws.com/")
                           .addHeader("Host", "ec2." + region + ".amazonaws.com")
                           .payload(payloadFromStringWithContentType(
-                                 "Action=DescribeAvailabilityZones&Version=2010-06-15",
+                                 "Action=DescribeAvailabilityZones&Version=2010-08-31",
                                  MediaType.APPLICATION_FORM_URLENCODED)).build()),
                HttpResponse.builder().statusCode(200)
                            .payload(payloadFromResourceWithContentType(

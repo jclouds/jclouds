@@ -72,7 +72,7 @@ public final class EC2ApiMetadata extends BaseHttpApiMetadata<EC2Api> {
          .credentialName("Secret Access Key")
          .defaultEndpoint("https://ec2.us-east-1.amazonaws.com")
          .documentation(URI.create("http://docs.amazonwebservices.com/AWSEC2/latest/APIReference"))
-         .version("2010-06-15")
+         .version("2010-08-31")
          .defaultProperties(EC2ApiMetadata.defaultProperties())
          .view(EC2ComputeServiceContext.class)
          .defaultModules(ImmutableSet.<Class<? extends Module>>of(EC2HttpApiModule.class, EC2ResolveImagesModule.class, EC2ComputeServiceContextModule.class));

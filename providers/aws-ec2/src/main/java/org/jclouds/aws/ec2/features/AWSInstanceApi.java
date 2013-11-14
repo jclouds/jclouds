@@ -30,11 +30,12 @@ import org.jclouds.aws.ec2.domain.AWSRunningInstance;
 import org.jclouds.aws.ec2.xml.AWSDescribeInstancesResponseHandler;
 import org.jclouds.aws.ec2.xml.AWSRunInstancesResponseHandler;
 import org.jclouds.aws.filters.FormSigner;
+import org.jclouds.ec2.binders.BindFiltersToIndexedFormParams;
 import org.jclouds.ec2.binders.BindInstanceIdsToIndexedFormParams;
 import org.jclouds.ec2.binders.IfNotNullBindAvailabilityZoneToFormParam;
 import org.jclouds.ec2.domain.Reservation;
-import org.jclouds.ec2.options.RunInstancesOptions;
 import org.jclouds.ec2.features.InstanceApi;
+import org.jclouds.ec2.options.RunInstancesOptions;
 import org.jclouds.javax.annotation.Nullable;
 import org.jclouds.location.functions.RegionToEndpointOrProviderIfNull;
 import org.jclouds.rest.annotations.BinderParam;
@@ -44,6 +45,8 @@ import org.jclouds.rest.annotations.FormParams;
 import org.jclouds.rest.annotations.RequestFilters;
 import org.jclouds.rest.annotations.VirtualHost;
 import org.jclouds.rest.annotations.XMLResponseParser;
+
+import com.google.common.collect.Multimap;
 
 /**
  * Provides access to EC2 Instance Services via their REST API.
@@ -65,6 +68,16 @@ public interface AWSInstanceApi extends InstanceApi {
    Set<? extends Reservation<? extends AWSRunningInstance>> describeInstancesInRegion(
             @EndpointParam(parser = RegionToEndpointOrProviderIfNull.class) @Nullable String region,
             @BinderParam(BindInstanceIdsToIndexedFormParams.class) String... instanceIds);
+
+   @Named("DescribeInstances")
+   @POST
+   @Path("/")
+   @FormParams(keys = ACTION, values = "DescribeInstances")
+   @XMLResponseParser(AWSDescribeInstancesResponseHandler.class)
+   @Fallback(EmptySetOnNotFoundOr404.class)
+   Set<? extends Reservation<? extends AWSRunningInstance>> describeInstancesInRegionWithFilter(
+           @EndpointParam(parser = RegionToEndpointOrProviderIfNull.class) @Nullable String region,
+           @BinderParam(BindFiltersToIndexedFormParams.class) Multimap<String, String> filter);
 
    @Named("RunInstances")
    @Override

@@ -22,6 +22,7 @@ import static org.testng.Assert.assertNotNull;
 import java.util.Set;
 import java.util.SortedSet;
 
+import org.jclouds.aws.AWSResponseException;
 import org.jclouds.compute.internal.BaseComputeServiceContextLiveTest;
 import org.jclouds.ec2.EC2Api;
 import org.jclouds.ec2.domain.KeyPair;
@@ -29,6 +30,7 @@ import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
+import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.Sets;
 
 /**
@@ -58,12 +60,43 @@ public class KeyPairApiLiveTest extends BaseComputeServiceContextLiveTest {
       for (String region : ec2Api.getConfiguredRegions()) {
          SortedSet<KeyPair> allResults = Sets.newTreeSet(client.describeKeyPairsInRegion(region));
          assertNotNull(allResults);
-         if (allResults.size() >= 1) {
+         if (!allResults.isEmpty()) {
             KeyPair pair = allResults.last();
             SortedSet<KeyPair> result = Sets.newTreeSet(client.describeKeyPairsInRegion(region, pair.getKeyName()));
             assertNotNull(result);
             KeyPair compare = result.last();
             assertEquals(compare, pair);
+         }
+      }
+   }
+
+   @Test
+   void testDescribeKeyPairsWithFilter() {
+      for (String region : ec2Api.getConfiguredRegions()) {
+         SortedSet<KeyPair> allResults = Sets.newTreeSet(client.describeKeyPairsInRegion(region));
+         assertNotNull(allResults);
+         if (!allResults.isEmpty()) {
+            KeyPair pair = allResults.last();
+            SortedSet<KeyPair> result = Sets.newTreeSet(client.describeKeyPairsInRegionWithFilter(region,
+                    ImmutableMultimap.<String, String>builder()
+                            .put("key-name", pair.getKeyName()).build()));
+            assertNotNull(result);
+            KeyPair compare = result.last();
+            assertEquals(compare, pair);
+         }
+      }
+   }
+
+   @Test(expectedExceptions = AWSResponseException.class)
+   void testDescribeKeyPairsWithInvalidFilter() {
+      for (String region : ec2Api.getConfiguredRegions()) {
+         SortedSet<KeyPair> allResults = Sets.newTreeSet(client.describeKeyPairsInRegion(region));
+         assertNotNull(allResults);
+         if (!allResults.isEmpty()) {
+            KeyPair pair = allResults.last();
+            SortedSet<KeyPair> result = Sets.newTreeSet(client.describeKeyPairsInRegionWithFilter(region,
+                    ImmutableMultimap.<String, String>builder()
+                            .put("invalid-filter", pair.getKeyName()).build()));
          }
       }
    }

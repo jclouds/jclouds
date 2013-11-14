@@ -29,6 +29,7 @@ import java.util.ArrayList;
 import java.util.Set;
 import java.util.SortedSet;
 
+import org.jclouds.aws.AWSResponseException;
 import org.jclouds.aws.domain.Region;
 import org.jclouds.aws.ec2.AWSEC2Api;
 import org.jclouds.aws.ec2.domain.PlacementGroup;
@@ -53,6 +54,7 @@ import org.testng.annotations.Test;
 
 import com.google.common.base.Predicate;
 import com.google.common.base.Throwables;
+import com.google.common.collect.ImmutableMultimap;
 import com.google.inject.Module;
 
 /**
@@ -84,7 +86,7 @@ public class PlacementGroupApiLiveTest extends BaseComputeServiceContextLiveTest
    }
 
    @Test
-   void testDescribe() {
+   public void testDescribe() {
       for (String region : supportedRegions) {
          SortedSet<PlacementGroup> allResults = newTreeSet(client.getPlacementGroupApi().get()
                   .describePlacementGroupsInRegion(region));
@@ -110,7 +112,42 @@ public class PlacementGroupApiLiveTest extends BaseComputeServiceContextLiveTest
    }
 
    @Test
-   void testCreatePlacementGroup() {
+   public void testFilter() {
+      for (String region : supportedRegions) {
+         SortedSet<PlacementGroup> allResults = newTreeSet(client.getPlacementGroupApi().get()
+                 .describePlacementGroupsInRegion(region));
+         assertNotNull(allResults);
+         if (allResults.size() >= 1) {
+            PlacementGroup group = allResults.last();
+            SortedSet<PlacementGroup> result = newTreeSet(client.getPlacementGroupApi().get()
+                    .describePlacementGroupsInRegionWithFilter(region,
+                            ImmutableMultimap.<String, String>builder()
+                            .put("group-name", group.getName()).build()));
+            assertNotNull(result);
+            PlacementGroup compare = result.last();
+            assertEquals(compare, group);
+         }
+      }
+   }
+
+   @Test(expectedExceptions = AWSResponseException.class)
+   public void testFilterInvalid() {
+      for (String region : supportedRegions) {
+         SortedSet<PlacementGroup> allResults = newTreeSet(client.getPlacementGroupApi().get()
+                 .describePlacementGroupsInRegion(region));
+         assertNotNull(allResults);
+         if (allResults.size() >= 1) {
+            PlacementGroup group = allResults.last();
+            SortedSet<PlacementGroup> result = newTreeSet(client.getPlacementGroupApi().get()
+                    .describePlacementGroupsInRegionWithFilter(region,
+                            ImmutableMultimap.<String, String>builder()
+                                    .put("invalid-filter", group.getName()).build()));
+         }
+      }
+   }
+
+   @Test
+   public void testCreatePlacementGroup() {
       String groupName = PREFIX + "1";
       for (String region : supportedRegions) {
 

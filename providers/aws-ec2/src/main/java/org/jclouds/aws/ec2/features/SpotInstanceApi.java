@@ -38,6 +38,7 @@ import org.jclouds.aws.ec2.xml.DescribeSpotPriceHistoryResponseHandler;
 import org.jclouds.aws.ec2.xml.SpotInstanceHandler;
 import org.jclouds.aws.ec2.xml.SpotInstancesHandler;
 import org.jclouds.aws.filters.FormSigner;
+import org.jclouds.ec2.binders.BindFiltersToIndexedFormParams;
 import org.jclouds.javax.annotation.Nullable;
 import org.jclouds.location.functions.RegionToEndpointOrProviderIfNull;
 import org.jclouds.rest.annotations.BinderParam;
@@ -47,6 +48,8 @@ import org.jclouds.rest.annotations.FormParams;
 import org.jclouds.rest.annotations.RequestFilters;
 import org.jclouds.rest.annotations.VirtualHost;
 import org.jclouds.rest.annotations.XMLResponseParser;
+
+import com.google.common.collect.Multimap;
 
 /**
  * Provides access to EC2 Spot Instances via their REST API.
@@ -87,6 +90,36 @@ public interface SpotInstanceApi {
    Set<SpotInstanceRequest> describeSpotInstanceRequestsInRegion(
          @EndpointParam(parser = RegionToEndpointOrProviderIfNull.class) @Nullable String region,
          @BinderParam(BindSpotInstanceRequestIdsToIndexedFormParams.class) String... requestIds);
+
+   /**
+    * Describes Spot Instance requests. Spot Instances are instances that Amazon EC2 starts on your
+    * behalf when the maximum price that you specify exceeds the current Spot Price. Amazon EC2
+    * periodically sets the Spot Price based on available Spot Instance capacity and current spot
+    * instance requests. For conceptual information about Spot Instances, refer to the Amazon
+    * Elastic Compute Cloud Developer Guide or Amazon Elastic Compute Cloud User Guide.
+    *
+    * @param region
+    *           Region where the spot instance service is running
+    * @param filter
+    *           Mulitmap of filter key/values.
+    *
+    * @see #requestSpotInstancesInRegion
+    * @see #cancelSpotInstanceRequestsInRegion
+    * @see #describeSpotPriceHistoryInRegion
+    * @see <a href=
+    *      "http://docs.amazonwebservices.com/AWSEC2/latest/APIReference/ApiReference-query-DescribeSpotInstanceRequests.html"
+    *      />
+    * @return TODO
+    */
+   @Named("DescribeSpotInstanceRequests")
+   @POST
+   @Path("/")
+   @FormParams(keys = ACTION, values = "DescribeSpotInstanceRequests")
+   @Fallback(EmptySetOnNotFoundOr404.class)
+   @XMLResponseParser(SpotInstancesHandler.class)
+   Set<SpotInstanceRequest> describeSpotInstanceRequestsInRegionWithFilter(
+           @EndpointParam(parser = RegionToEndpointOrProviderIfNull.class) @Nullable String region,
+           @BinderParam(BindFiltersToIndexedFormParams.class) Multimap<String, String> filter);
 
    /**
     * request a single spot instance

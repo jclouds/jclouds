@@ -28,6 +28,7 @@ import javax.ws.rs.Path;
 import org.jclouds.Fallbacks.EmptySetOnNotFoundOr404;
 import org.jclouds.aws.filters.FormSigner;
 import org.jclouds.ec2.EC2Fallbacks.VoidOnVolumeAvailable;
+import org.jclouds.ec2.binders.BindFiltersToIndexedFormParams;
 import org.jclouds.ec2.binders.BindUserGroupsToIndexedFormParams;
 import org.jclouds.ec2.binders.BindUserIdsToIndexedFormParams;
 import org.jclouds.ec2.binders.BindVolumeIdsToIndexedFormParams;
@@ -54,6 +55,8 @@ import org.jclouds.rest.annotations.FormParams;
 import org.jclouds.rest.annotations.RequestFilters;
 import org.jclouds.rest.annotations.VirtualHost;
 import org.jclouds.rest.annotations.XMLResponseParser;
+
+import com.google.common.collect.Multimap;
 
 /**
  * Provides access to EC2 Elastic Block Store services via their REST API.
@@ -168,25 +171,50 @@ public interface ElasticBlockStoreApi {
     * volume IDs, Amazon EBS describes all volumes that you own. For more information about Amazon
     * EBS, go to the Amazon Elastic Compute Cloud Developer Guide or Amazon Elastic Compute Cloud
     * User Guide.
-    * 
+    *
     * @param region
     *           region where the volume is defined
     * @param volumeIds
     *           The ID of the volume to list. Defaults to describe all volumes that you own.
-    * 
+    *
     * @see #createSnapshotInRegion
     * @see #describeSnapshotInRegion
     * @see <a href="http://docs.amazonwebservices.com/AWSEC2/latest/APIReference/ApiReference-query-DescribeVolumes.html"
     *      />
     */
    @POST
-   @Named("DescribeVolumes")   
+   @Named("DescribeVolumes")
    @Path("/")
    @FormParams(keys = ACTION, values = "DescribeVolumes")
    @XMLResponseParser(DescribeVolumesResponseHandler.class)
    Set<Volume> describeVolumesInRegion(
-            @EndpointParam(parser = RegionToEndpointOrProviderIfNull.class) @Nullable String region,
-            @BinderParam(BindVolumeIdsToIndexedFormParams.class) String... volumeIds);
+           @EndpointParam(parser = RegionToEndpointOrProviderIfNull.class) @Nullable String region,
+           @BinderParam(BindVolumeIdsToIndexedFormParams.class) String... volumeIds);
+
+   /**
+    * Describes the specified Amazon EBS volumes that you own and match the given filters. If you
+    * do not specify any filters, Amazon EBS describes all volumes that you own. For more
+    * information about Amazon EBS, go to the Amazon Elastic Compute Cloud Developer Guide or
+    * Amazon Elastic Compute Cloud User Guide.
+    *
+    * @param region
+    *           region where the volume is defined
+    * @param filter
+    *           Multimap of filter key/values
+    *
+    * @see #createSnapshotInRegion
+    * @see #describeSnapshotInRegion
+    * @see <a href="http://docs.amazonwebservices.com/AWSEC2/latest/APIReference/ApiReference-query-DescribeVolumes.html"
+    *      />
+    */
+   @POST
+   @Named("DescribeVolumes")
+   @Path("/")
+   @FormParams(keys = ACTION, values = "DescribeVolumes")
+   @XMLResponseParser(DescribeVolumesResponseHandler.class)
+   Set<Volume> describeVolumesInRegionWithFilter(
+           @EndpointParam(parser = RegionToEndpointOrProviderIfNull.class) @Nullable String region,
+           @BinderParam(BindFiltersToIndexedFormParams.class) Multimap<String, String> filter);
 
    /**
     * Deletes an Amazon EBS volume that you own. For more information about Amazon EBS, go to the
@@ -412,6 +440,35 @@ public interface ElasticBlockStoreApi {
    Set<Snapshot> describeSnapshotsInRegion(
             @EndpointParam(parser = RegionToEndpointOrProviderIfNull.class) @Nullable String region,
             DescribeSnapshotsOptions... options);
+
+   /**
+    * Returns information about EBS snapshots matching the given filters.
+    *
+    * @param region
+    *           Snapshots are tied to Regions and can only be used for volumes within the same
+    *           Region.
+    * @param filter
+    *           Multimap of filter key/values.
+    * @param options
+    *           specify the snapshot ids or other parameters to clarify the list.
+    * @return matching snapshots.
+    *
+    * @see #describeSnapshotsInRegion
+    * @see #createSnapshotsInRegion
+    * @see #deleteSnapshotInRegion
+    * @see <a href="http://docs.amazonwebservices.com/AWSEC2/latest/APIReference/ApiReference-query-DescribeSnapshots.html"
+    *      />
+    */
+   @Named("DescribeSnapshots")
+   @POST
+   @Path("/")
+   @FormParams(keys = ACTION, values = "DescribeSnapshots")
+   @XMLResponseParser(DescribeSnapshotsResponseHandler.class)
+   @Fallback(EmptySetOnNotFoundOr404.class)
+   Set<Snapshot> describeSnapshotsInRegionWithFilter(
+           @EndpointParam(parser = RegionToEndpointOrProviderIfNull.class) @Nullable String region,
+           @BinderParam(BindFiltersToIndexedFormParams.class) Multimap<String, String> filter,
+           DescribeSnapshotsOptions... options);
 
    /**
     * Deletes a snapshot of an Amazon EBS volume that you own. For more information, go to the

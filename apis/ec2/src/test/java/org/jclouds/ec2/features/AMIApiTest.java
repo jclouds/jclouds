@@ -54,11 +54,11 @@ public class AMIApiTest extends BaseEC2ApiTest<AMIApi> {
                                         .addFormParam("Action", "CreateImage")
                                         .addFormParam("InstanceId", "instanceId")
                                         .addFormParam("Name", "name")
-                                        .addFormParam("Signature", "hBIUf4IUOiCKGQKehaNwwbZUjRN4NC4RSNfJ%2B8kvJdY%3D")
+                                        .addFormParam("Signature", "MuMtOMs697BLVks2RUZUNeLdVCo6NXPHuDhh0nmNtvc%3D")
                                         .addFormParam("SignatureMethod", "HmacSHA256")
                                         .addFormParam("SignatureVersion", "2")
                                         .addFormParam("Timestamp", "2009-11-08T15%3A54%3A08.897Z")
-                                        .addFormParam("Version", "2010-06-15")
+                                        .addFormParam("Version", "2010-08-31")
                                         .addFormParam("AWSAccessKeyId", "identity").build();
 
    public void testCreateImage() throws SecurityException, NoSuchMethodException, IOException {
@@ -87,11 +87,11 @@ public class AMIApiTest extends BaseEC2ApiTest<AMIApi> {
                                                .addFormParam("InstanceId", "instanceId")
                                                .addFormParam("Name", "name")
                                                .addFormParam("NoReboot", "true")
-                                               .addFormParam("Signature", "fz3KW27JxlSq9ivmVOl4IujcHXXw1cOhdig80I7wR6o%3D")
+                                               .addFormParam("Signature", "8SgbaWihxOICMXDLvwk3ahy/99nhZvTvbno%2B8dMyvJg%3D")
                                                .addFormParam("SignatureMethod", "HmacSHA256")
                                                .addFormParam("SignatureVersion", "2")
                                                .addFormParam("Timestamp", "2009-11-08T15%3A54%3A08.897Z")
-                                               .addFormParam("Version", "2010-06-15")
+                                               .addFormParam("Version", "2010-08-31")
                                                .addFormParam("AWSAccessKeyId", "identity").build();
 
    public void testCreateImageOptions() throws SecurityException, NoSuchMethodException, IOException {
@@ -118,11 +118,11 @@ public class AMIApiTest extends BaseEC2ApiTest<AMIApi> {
                                            .endpoint("https://ec2.us-east-1.amazonaws.com/")
                                            .addHeader("Host", "ec2.us-east-1.amazonaws.com")
                                            .addFormParam("Action", "DescribeImages")
-                                           .addFormParam("Signature", "qE4vexSFJqS0UWK%2BccV3s%2BP9woL3M5HI5bTBoM7s/LY%3D")
+                                           .addFormParam("Signature", "hQxNAaRVX6OvXV0IKgx1vV0FoNbRyuHQ2fhRhaPJnS8%3D")
                                            .addFormParam("SignatureMethod", "HmacSHA256")
                                            .addFormParam("SignatureVersion", "2")
                                            .addFormParam("Timestamp", "2009-11-08T15%3A54%3A08.897Z")
-                                           .addFormParam("Version", "2010-06-15")
+                                           .addFormParam("Version", "2010-08-31")
                                            .addFormParam("AWSAccessKeyId", "identity").build();
 
    public void testDescribeImages() throws SecurityException, NoSuchMethodException, IOException {
@@ -153,11 +153,11 @@ public class AMIApiTest extends BaseEC2ApiTest<AMIApi> {
                                                   .addFormParam("ImageId.2", "2")
                                                   .addFormParam("Owner.1", "fred")
                                                   .addFormParam("Owner.2", "nancy")
-                                                  .addFormParam("Signature", "%2BE9wji7oFnNUaGmOBggYNNp6v%2BL8OzSGjuI4nx1l2Jw%3D")
+                                                  .addFormParam("Signature", "cIft3g1fwMu52NgB0En9NtHyXjVhmeSx7TBP7YR%2BTvI%3D")
                                                   .addFormParam("SignatureMethod", "HmacSHA256")
                                                   .addFormParam("SignatureVersion", "2")
                                                   .addFormParam("Timestamp", "2009-11-08T15%3A54%3A08.897Z")
-                                                  .addFormParam("Version", "2010-06-15")
+                                                  .addFormParam("Version", "2010-08-31")
                                                   .addFormParam("AWSAccessKeyId", "identity").build();
 
    public void testDescribeImagesOptions() throws SecurityException, NoSuchMethodException, IOException {
@@ -185,11 +185,11 @@ public class AMIApiTest extends BaseEC2ApiTest<AMIApi> {
                                             .addHeader("Host", "ec2.us-east-1.amazonaws.com")
                                             .addFormParam("Action", "DeregisterImage")
                                             .addFormParam("ImageId", "imageId")
-                                            .addFormParam("Signature", "3sk9LAJAIr2lG04OMuI0qtzCoBtCU1Ac9I6TTmAWjyA%3D")
+                                            .addFormParam("Signature", "tm6nGoPPJh7xt5TSdV5Ov0DJvcGTAW%2BYSfXL7j%2BTkOA%3D")
                                             .addFormParam("SignatureMethod", "HmacSHA256")
                                             .addFormParam("SignatureVersion", "2")
                                             .addFormParam("Timestamp", "2009-11-08T15%3A54%3A08.897Z")
-                                            .addFormParam("Version", "2010-06-15")
+                                            .addFormParam("Version", "2010-08-31")
                                             .addFormParam("AWSAccessKeyId", "identity").build();
 
    public void testDeregisterImage() throws SecurityException, NoSuchMethodException, IOException {
@@ -216,11 +216,11 @@ public class AMIApiTest extends BaseEC2ApiTest<AMIApi> {
                                                       .addFormParam("Action", "RegisterImage")
                                                       .addFormParam("ImageLocation", "pathToManifest")
                                                       .addFormParam("Name", "name")
-                                                      .addFormParam("Signature", "alGqfUiV/bpmpCAj/YzG9VxdTeCwOYyoPjNfwYhm7os%3D")
+                                                      .addFormParam("Signature", "Ie7k7w4Bdki3uCGeSFGdJ5EKrp/ohkHvWwivbIaVLEM%3D")
                                                       .addFormParam("SignatureMethod", "HmacSHA256")
                                                       .addFormParam("SignatureVersion", "2")
                                                       .addFormParam("Timestamp", "2009-11-08T15%3A54%3A08.897Z")
-                                                      .addFormParam("Version", "2010-06-15")
+                                                      .addFormParam("Version", "2010-08-31")
                                                       .addFormParam("AWSAccessKeyId", "identity").build();
 
    public void testRegisterImageFromManifest() throws SecurityException, NoSuchMethodException, IOException {
@@ -248,11 +248,11 @@ public class AMIApiTest extends BaseEC2ApiTest<AMIApi> {
                                                              .addFormParam("Description", "description")
                                                              .addFormParam("ImageLocation", "pathToManifest")
                                                              .addFormParam("Name", "name")
-                                                             .addFormParam("Signature", "p77vQLVlPoak6cP/8eoM%2Bz6zkSXx9e2iSlGgLvIwP7I%3D")
+                                                             .addFormParam("Signature", "ilWV1eAWW6kTK/jHliQ%2BIkzJR4DRNy4ye%2BSKtnUjjDs%3D")
                                                              .addFormParam("SignatureMethod", "HmacSHA256")
                                                              .addFormParam("SignatureVersion", "2")
                                                              .addFormParam("Timestamp", "2009-11-08T15%3A54%3A08.897Z")
-                                                             .addFormParam("Version", "2010-06-15")
+                                                             .addFormParam("Version", "2010-08-31")
                                                              .addFormParam("AWSAccessKeyId", "identity").build();
 
    public void testRegisterImageFromManifestOptions() throws SecurityException, NoSuchMethodException, IOException {
@@ -283,11 +283,11 @@ public class AMIApiTest extends BaseEC2ApiTest<AMIApi> {
                                                      .addFormParam("BlockDeviceMapping.0.Ebs.SnapshotId", "snapshotId")
                                                      .addFormParam("Name", "imageName")
                                                      .addFormParam("RootDeviceName", "/dev/sda1")
-                                                     .addFormParam("Signature", "KGqYXGpJ/UQVTM172Y2TwU4tlG21JXd3Qrx5nSLBVuA%3D")
+                                                     .addFormParam("Signature", "ZbZcY6uwxPbD65jFmiNZXoWeHY/2zqRuGuDmTfkt84A%3D")
                                                      .addFormParam("SignatureMethod", "HmacSHA256")
                                                      .addFormParam("SignatureVersion", "2")
                                                      .addFormParam("Timestamp", "2009-11-08T15%3A54%3A08.897Z")
-                                                     .addFormParam("Version", "2010-06-15")
+                                                     .addFormParam("Version", "2010-08-31")
                                                      .addFormParam("AWSAccessKeyId", "identity").build();
 
    public void testRegisterImageBackedByEBS() throws SecurityException, NoSuchMethodException, IOException {
@@ -324,11 +324,11 @@ public class AMIApiTest extends BaseEC2ApiTest<AMIApi> {
                                                             .addFormParam("Description", "description")
                                                             .addFormParam("Name", "imageName")
                                                             .addFormParam("RootDeviceName", "/dev/sda1")
-                                                            .addFormParam("Signature", "xuWi0w8iODQrg4E0azwqNm2lz/Rf4hBa7m%2BunDTZvVI%3D")
+                                                            .addFormParam("Signature", "DrNujyZMGrKvuw73A7ObFTThXvc/MRfNqjvIy8gey5g%3D")
                                                             .addFormParam("SignatureMethod", "HmacSHA256")
                                                             .addFormParam("SignatureVersion", "2")
                                                             .addFormParam("Timestamp", "2009-11-08T15%3A54%3A08.897Z")
-                                                            .addFormParam("Version", "2010-06-15")
+                                                            .addFormParam("Version", "2010-08-31")
                                                             .addFormParam("AWSAccessKeyId", "identity").build();
 
    public void testRegisterImageBackedByEBSOptions() throws SecurityException, NoSuchMethodException, IOException {
@@ -358,11 +358,11 @@ public class AMIApiTest extends BaseEC2ApiTest<AMIApi> {
                                                            .addFormParam("Action", "DescribeImageAttribute")
                                                            .addFormParam("Attribute", "blockDeviceMapping")
                                                            .addFormParam("ImageId", "imageId")
-                                                           .addFormParam("Signature", "puwfzm8BlfeKiEZ9CNn5ax86weZ6SQ2xyZhN6etu4gA%3D")
+                                                           .addFormParam("Signature", "MJCIc1roG%2BnIWxRSUqV9KP9Wc4AWuuiNkxeDSih5/mI%3D")
                                                            .addFormParam("SignatureMethod", "HmacSHA256")
                                                            .addFormParam("SignatureVersion", "2")
                                                            .addFormParam("Timestamp", "2009-11-08T15%3A54%3A08.897Z")
-                                                           .addFormParam("Version", "2010-06-15")
+                                                           .addFormParam("Version", "2010-08-31")
                                                            .addFormParam("AWSAccessKeyId", "identity").build();
 
    public void testGetBlockDeviceMappingsForImage() throws SecurityException, NoSuchMethodException, IOException {
@@ -390,11 +390,11 @@ public class AMIApiTest extends BaseEC2ApiTest<AMIApi> {
                                                         .addFormParam("Action", "DescribeImageAttribute")
                                                         .addFormParam("Attribute", "launchPermission")
                                                         .addFormParam("ImageId", "imageId")
-                                                        .addFormParam("Signature", "ocCMlLh3Kpg6HwIcPKlrwoPPg9C5rt5nD0dl717mOq8%3D")
+                                                        .addFormParam("Signature", "iN7JbsAhM1NAES3o%2BOw8BaaFJ%2B1g9imBjcU4mFCyrxM%3D")
                                                         .addFormParam("SignatureMethod", "HmacSHA256")
                                                         .addFormParam("SignatureVersion", "2")
                                                         .addFormParam("Timestamp", "2009-11-08T15%3A54%3A08.897Z")
-                                                        .addFormParam("Version", "2010-06-15")
+                                                        .addFormParam("Version", "2010-08-31")
                                                         .addFormParam("AWSAccessKeyId", "identity").build();
 
    public void testGetLaunchPermissionForImage() throws SecurityException, NoSuchMethodException, IOException {
@@ -422,14 +422,14 @@ public class AMIApiTest extends BaseEC2ApiTest<AMIApi> {
                                                           .addFormParam("Attribute", "launchPermission")
                                                           .addFormParam("ImageId", "imageId")
                                                           .addFormParam("OperationType", "add")
-                                                          .addFormParam("Signature", "WZzNWOC1KHbuySvXEuLTiBA%2BVUfKpSBN2Lud6MrhlCQ%3D")
+                                                          .addFormParam("Signature", "ZuMuzW/iQDRURhUJaBzvoAdNJrE454y6X0jM24lcxxk%3D")
                                                           .addFormParam("SignatureMethod", "HmacSHA256")
                                                           .addFormParam("SignatureVersion", "2")
                                                           .addFormParam("Timestamp", "2009-11-08T15%3A54%3A08.897Z")
                                                           .addFormParam("UserGroup.1", "all")
                                                           .addFormParam("UserId.1", "bob")
                                                           .addFormParam("UserId.2", "sue")
-                                                          .addFormParam("Version", "2010-06-15")
+                                                          .addFormParam("Version", "2010-08-31")
                                                           .addFormParam("AWSAccessKeyId", "identity").build();
 
    public void testAddLaunchPermissionsToImage() throws SecurityException, NoSuchMethodException, IOException {
@@ -459,14 +459,14 @@ public class AMIApiTest extends BaseEC2ApiTest<AMIApi> {
                                                    .addFormParam("Attribute", "launchPermission")
                                                    .addFormParam("ImageId", "imageId")
                                                    .addFormParam("OperationType", "remove")
-                                                   .addFormParam("Signature", "z8OYGQBAwu4HwXV6VF/vuOZlBtptxLxtCQiLXY7UvMU%3D")
+                                                   .addFormParam("Signature", "HreSEawbVaUp/UMicCJbhrx%2BmoX01f2pEphJCPz8/5g%3D")
                                                    .addFormParam("SignatureMethod", "HmacSHA256")
                                                    .addFormParam("SignatureVersion", "2")
                                                    .addFormParam("Timestamp", "2009-11-08T15%3A54%3A08.897Z")
                                                    .addFormParam("UserGroup.1", "all")
                                                    .addFormParam("UserId.1", "bob")
                                                    .addFormParam("UserId.2", "sue")
-                                                   .addFormParam("Version", "2010-06-15")
+                                                   .addFormParam("Version", "2010-08-31")
                                                    .addFormParam("AWSAccessKeyId", "identity").build();
 
    public void testRemoveLaunchPermissionsFromImage() throws SecurityException, NoSuchMethodException, IOException {
@@ -494,11 +494,11 @@ public class AMIApiTest extends BaseEC2ApiTest<AMIApi> {
                                                           .addFormParam("Action", "ResetImageAttribute")
                                                           .addFormParam("Attribute", "launchPermission")
                                                           .addFormParam("ImageId", "imageId")
-                                                          .addFormParam("Signature", "mOVwrqAzidhz%2B4E1dqOJAzG9G9ZX7eDpi8BobN4dA%2BE%3D")
+                                                          .addFormParam("Signature", "fVCR9aGYvNX/Jt1/uqBGcUQRLrHwxtcvmNYKzpul1P4%3D")
                                                           .addFormParam("SignatureMethod", "HmacSHA256")
                                                           .addFormParam("SignatureVersion", "2")
                                                           .addFormParam("Timestamp", "2009-11-08T15%3A54%3A08.897Z")
-                                                          .addFormParam("Version", "2010-06-15")
+                                                          .addFormParam("Version", "2010-08-31")
                                                           .addFormParam("AWSAccessKeyId", "identity").build();
 
    public void testResetLaunchPermissionsOnImage() throws SecurityException, NoSuchMethodException, IOException {

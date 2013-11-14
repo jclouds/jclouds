@@ -28,6 +28,7 @@ import javax.ws.rs.Path;
 import org.jclouds.Fallbacks.EmptySetOnNotFoundOr404;
 import org.jclouds.Fallbacks.VoidOnNotFoundOr404;
 import org.jclouds.aws.filters.FormSigner;
+import org.jclouds.ec2.binders.BindFiltersToIndexedFormParams;
 import org.jclouds.ec2.binders.BindGroupNamesToIndexedFormParams;
 import org.jclouds.ec2.binders.BindUserIdGroupPairToSourceSecurityGroupFormParams;
 import org.jclouds.ec2.domain.SecurityGroup;
@@ -43,6 +44,8 @@ import org.jclouds.rest.annotations.FormParams;
 import org.jclouds.rest.annotations.RequestFilters;
 import org.jclouds.rest.annotations.VirtualHost;
 import org.jclouds.rest.annotations.XMLResponseParser;
+
+import com.google.common.collect.Multimap;
 
 /**
  * Provides access to EC2 via their REST API.
@@ -113,19 +116,19 @@ public interface SecurityGroupApi {
 
    /**
     * Returns information about security groups that you own.
-    * 
+    *
     * @param region
     *           Security groups are not copied across Regions. Instances within the Region cannot
     *           communicate with instances outside the Region using group-based firewall rules.
     *           Traffic from instances in another Region is seen as WAN bandwidth.
     * @param securityGroupNames
     *           Name of the security groups
-    * 
+    *
     * @see #createSecurityGroup
     * @see #authorizeSecurityGroupIngress
     * @see #revokeSecurityGroupIngress
     * @see #deleteSecurityGroup
-    * 
+    *
     * @see <a href="http://docs.amazonwebservices.com/AWSEC2/latest/APIReference/ApiReference-query-DescribeSecurityGroups.html"
     *      />
     */
@@ -136,8 +139,36 @@ public interface SecurityGroupApi {
    @XMLResponseParser(DescribeSecurityGroupsResponseHandler.class)
    @Fallback(EmptySetOnNotFoundOr404.class)
    Set<SecurityGroup> describeSecurityGroupsInRegion(
-            @EndpointParam(parser = RegionToEndpointOrProviderIfNull.class) @Nullable String region,
-            @BinderParam(BindGroupNamesToIndexedFormParams.class) String... securityGroupNames);
+           @EndpointParam(parser = RegionToEndpointOrProviderIfNull.class) @Nullable String region,
+           @BinderParam(BindGroupNamesToIndexedFormParams.class) String... securityGroupNames);
+
+   /**
+    * Returns information about security groups that you own.
+    *
+    * @param region
+    *           Security groups are not copied across Regions. Instances within the Region cannot
+    *           communicate with instances outside the Region using group-based firewall rules.
+    *           Traffic from instances in another Region is seen as WAN bandwidth.
+    * @param filter
+    *           Multimap of filter key/values.
+    *
+    * @see #createSecurityGroup
+    * @see #authorizeSecurityGroupIngress
+    * @see #revokeSecurityGroupIngress
+    * @see #deleteSecurityGroup
+    *
+    * @see <a href="http://docs.amazonwebservices.com/AWSEC2/latest/APIReference/ApiReference-query-DescribeSecurityGroups.html"
+    *      />
+    */
+   @Named("DescribeSecurityGroups")
+   @POST
+   @Path("/")
+   @FormParams(keys = ACTION, values = "DescribeSecurityGroups")
+   @XMLResponseParser(DescribeSecurityGroupsResponseHandler.class)
+   @Fallback(EmptySetOnNotFoundOr404.class)
+   Set<SecurityGroup> describeSecurityGroupsInRegionWithFilter(
+           @EndpointParam(parser = RegionToEndpointOrProviderIfNull.class) @Nullable String region,
+           @BinderParam(BindFiltersToIndexedFormParams.class) Multimap<String, String> filter);
 
    /**
     * 

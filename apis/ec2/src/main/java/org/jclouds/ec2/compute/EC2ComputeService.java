@@ -15,10 +15,10 @@
  * limitations under the License.
  */
 package org.jclouds.ec2.compute;
+
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.base.Strings.emptyToNull;
 import static com.google.common.collect.Iterables.concat;
-import static com.google.common.collect.Iterables.filter;
 import static com.google.common.collect.Iterables.transform;
 import static java.util.concurrent.TimeUnit.MILLISECONDS;
 import static java.util.concurrent.TimeUnit.SECONDS;
@@ -77,11 +77,13 @@ import org.jclouds.ec2.EC2Api;
 import org.jclouds.ec2.compute.domain.RegionAndName;
 import org.jclouds.ec2.compute.domain.RegionNameAndIngressRules;
 import org.jclouds.ec2.compute.options.EC2TemplateOptions;
+import org.jclouds.ec2.domain.InstanceState;
 import org.jclouds.ec2.domain.KeyPair;
 import org.jclouds.ec2.domain.RunningInstance;
 import org.jclouds.ec2.domain.Tag;
 import org.jclouds.ec2.util.TagFilterBuilder;
 import org.jclouds.scriptbuilder.functions.InitAdminAccess;
+import org.jclouds.util.Strings2;
 
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Function;
@@ -224,15 +226,23 @@ public class EC2ComputeService extends BaseComputeService {
 
    @VisibleForTesting
    void deleteKeyPair(String region, String group) {
-      for (KeyPair keyPair : client.getKeyPairApi().get().describeKeyPairsInRegion(region)) {
+      for (KeyPair keyPair : client.getKeyPairApi().get().describeKeyPairsInRegionWithFilter(region,
+              ImmutableMultimap.<String, String>builder()
+                      .put("key-name", Strings2.urlEncode(
+                              String.format("jclouds#%s#%s*", group, region).replace('#', delimiter)))
+                      .build())) {
          String keyName = keyPair.getKeyName();
          Predicate<String> keyNameMatcher = namingConvention.create().containsGroup(group);
          String oldKeyNameRegex = String.format("jclouds#%s#%s#%s", group, region, "[0-9a-f]+").replace('#', delimiter);
          // old keypair pattern too verbose as it has an unnecessary region qualifier
          
          if (keyNameMatcher.apply(keyName) || keyName.matches(oldKeyNameRegex)) {
-            Set<String> instancesUsingKeyPair = extractIdsFromInstances(filter(concat(client.getInstanceApi().get()
-                  .describeInstancesInRegion(region)), usingKeyPairAndNotDead(keyPair)));
+            Set<String> instancesUsingKeyPair = extractIdsFromInstances(concat(client.getInstanceApi().get()
+                  .describeInstancesInRegionWithFilter(region, ImmutableMultimap.<String, String>builder()
+                          .put("instance-state-name", InstanceState.TERMINATED.toString())
+                          .put("instance-state-name", InstanceState.SHUTTING_DOWN.toString())
+                          .put("key-name", keyPair.getKeyName()).build())));
+
             if (instancesUsingKeyPair.size() > 0) {
                logger.debug("<< inUse keyPair(%s), by (%s)", keyPair.getKeyName(), instancesUsingKeyPair);
             } else {
@@ -256,20 +266,6 @@ public class EC2ComputeService extends BaseComputeService {
          }
 
       }));
-   }
-
-   protected Predicate<RunningInstance> usingKeyPairAndNotDead(final KeyPair keyPair) {
-      return new Predicate<RunningInstance>() {
-         @Override
-         public boolean apply(RunningInstance input) {
-            switch (input.getInstanceState()) {
-            case TERMINATED:
-            case SHUTTING_DOWN:
-               return false;
-            }
-            return keyPair.getKeyName().equals(input.getKeyName());
-         }
-      };
    }
 
    /**

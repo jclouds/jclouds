@@ -1,6 +1,6 @@
 <?xml version="1.0" ?>
 <DescribeSecurityGroupsResponse
-	xmlns="http://ec2.amazonaws.com/doc/2010-06-15/">
+	xmlns="http://ec2.amazonaws.com/doc/2010-08-31/">
 	<requestId>L6EFIZVPJS76T3K5-0UV</requestId>
 	<securityGroupInfo>
 		<item>

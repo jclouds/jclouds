@@ -34,7 +34,7 @@ import com.google.common.collect.ImmutableSet.Builder;
 
 /**
  * Parses: DescribeSecurityGroupsResponse
- * xmlns="http://ec2.amazonaws.com/doc/2010-06-15/"
+ * xmlns="http://ec2.amazonaws.com/doc/2010-08-31/"
  *
  * @see <a href=
  *      "http://docs.amazonwebservices.com/AWSEC2/latest/APIReference/index.html?ApiReference-query-DescribesecurityGroupInfo.html"

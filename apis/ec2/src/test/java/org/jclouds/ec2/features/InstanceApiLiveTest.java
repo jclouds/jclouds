@@ -16,22 +16,26 @@
  */
 package org.jclouds.ec2.features;
 
+import static com.google.common.collect.Iterables.getFirst;
 import static org.testng.Assert.assertNotNull;
+import static org.testng.Assert.assertTrue;
 
 import java.util.Set;
 
+import org.jclouds.aws.AWSResponseException;
 import org.jclouds.compute.internal.BaseComputeServiceContextLiveTest;
 import org.jclouds.ec2.EC2Api;
-import org.jclouds.ec2.EC2ApiMetadata;
 import org.jclouds.ec2.domain.Reservation;
 import org.jclouds.ec2.domain.RunningInstance;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
+import com.google.common.collect.ImmutableMultimap;
+
 /**
  * Tests behavior of {@code EC2Api}
  * 
- * @author Adrian Cole
+ * @author Adrian Cole, Andrew Bayer
  */
 @Test(groups = "live", singleThreaded = true, testName = "InstanceApiLiveTest")
 public class InstanceApiLiveTest extends BaseComputeServiceContextLiveTest {
@@ -55,7 +59,39 @@ public class InstanceApiLiveTest extends BaseComputeServiceContextLiveTest {
       for (String region : ec2Api.getConfiguredRegions()) {
          Set<? extends Reservation<? extends RunningInstance>> allResults = client.describeInstancesInRegion(region);
          assertNotNull(allResults);
-         assert allResults.size() >= 0 : allResults.size();
       }
    }
-}
+
+   @Test
+   void testFilterInstances() {
+      for (String region : view.unwrapApi(EC2Api.class).getAvailabilityZoneAndRegionApi().get().describeRegions().keySet()) {
+         Set<? extends Reservation<? extends RunningInstance>> allResults = client.describeInstancesInRegion(region);
+         assertNotNull(allResults);
+
+         if (!allResults.isEmpty())  {
+            RunningInstance instance = getFirst(getFirst(allResults, null), null);
+
+            assertNotNull(instance);
+
+            Set<? extends Reservation<? extends RunningInstance>> filterResults = client.describeInstancesInRegionWithFilter(region,
+                    ImmutableMultimap.<String, String>builder()
+                            .put("key-name", instance.getKeyName())
+                            .build());
+
+            assertNotNull(filterResults);
+            assertTrue(!filterResults.isEmpty(), "No results found for filter, but there should be.");
+
+         }
+      }
+   }
+
+   @Test(expectedExceptions = AWSResponseException.class)
+   void testInvalidFilterInstances() {
+      for (String region : view.unwrapApi(EC2Api.class).getAvailabilityZoneAndRegionApi().get().describeRegions().keySet()) {
+         Set<? extends Reservation<? extends RunningInstance>> filterResults = client.describeInstancesInRegionWithFilter(region,
+                 ImmutableMultimap.<String, String>builder()
+                         .put("invalid-key", "some-value")
+                         .build());
+
+      }
+   }}

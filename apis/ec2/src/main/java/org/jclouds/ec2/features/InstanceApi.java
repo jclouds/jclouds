@@ -29,6 +29,7 @@ import javax.ws.rs.Path;
 import org.jclouds.Fallbacks.EmptySetOnNotFoundOr404;
 import org.jclouds.aws.filters.FormSigner;
 import org.jclouds.ec2.binders.BindBlockDeviceMappingToIndexedFormParams;
+import org.jclouds.ec2.binders.BindFiltersToIndexedFormParams;
 import org.jclouds.ec2.binders.BindInstanceIdsToIndexedFormParams;
 import org.jclouds.ec2.binders.IfNotNullBindAvailabilityZoneToFormParam;
 import org.jclouds.ec2.domain.BlockDevice;
@@ -56,8 +57,11 @@ import org.jclouds.rest.annotations.Fallback;
 import org.jclouds.rest.annotations.FormParams;
 import org.jclouds.rest.annotations.ParamParser;
 import org.jclouds.rest.annotations.RequestFilters;
+import org.jclouds.rest.annotations.SinceApiVersion;
 import org.jclouds.rest.annotations.VirtualHost;
 import org.jclouds.rest.annotations.XMLResponseParser;
+
+import com.google.common.collect.Multimap;
 
 /**
  * Provides access to EC2 Instance Services via their REST API.
@@ -100,6 +104,40 @@ public interface InstanceApi {
    Set<? extends Reservation<? extends RunningInstance>> describeInstancesInRegion(
          @EndpointParam(parser = RegionToEndpointOrProviderIfNull.class) @Nullable String region,
          @BinderParam(BindInstanceIdsToIndexedFormParams.class) String... instanceIds);
+
+   /**
+    * Returns information about instances that you own.
+    * <p/>
+    *
+    * If you specify one or filters, Amazon EC2 returns information for instances
+    * matching those filters. If you do not specify any filters, Amazon EC2
+    * returns information for all relevant instances. If you specify an invalid
+    * filter, a fault is returned. Only instances you own will be included in the
+    * results.
+    * <p/>
+    * Recently terminated instances might appear in the returned results. This
+    * interval is usually less than one hour.
+    *
+    * @param region
+    *           Instances are tied to Availability Zones. However, the instance
+    *           ID is tied to the Region.
+    * @param filter
+    *
+    * @see #runInstancesInRegion
+    * @see #terminateInstancesInRegion
+    * @see <a href="http://docs.amazonwebservices.com/AWSEC2/latest/APIReference/ApiReference-query-DescribeInstances.html"
+    *      />
+    */
+   @SinceApiVersion("2010-08-31")
+   @Named("DescribeInstances")
+   @POST
+   @Path("/")
+   @FormParams(keys = ACTION, values = "DescribeInstances")
+   @XMLResponseParser(DescribeInstancesResponseHandler.class)
+   @Fallback(EmptySetOnNotFoundOr404.class)
+   Set<? extends Reservation<? extends RunningInstance>> describeInstancesInRegionWithFilter(
+           @EndpointParam(parser = RegionToEndpointOrProviderIfNull.class) @Nullable String region,
+           @BinderParam(BindFiltersToIndexedFormParams.class) Multimap<String, String> filter);
 
    /**
     * Launches a specified number of instances of an AMI for which you have

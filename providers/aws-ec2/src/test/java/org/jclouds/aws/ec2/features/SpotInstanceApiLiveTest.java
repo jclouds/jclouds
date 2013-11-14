@@ -30,6 +30,7 @@ import java.util.Set;
 import java.util.SortedSet;
 import java.util.concurrent.TimeUnit;
 
+import org.jclouds.aws.AWSResponseException;
 import org.jclouds.aws.domain.Region;
 import org.jclouds.aws.ec2.AWSEC2Api;
 import org.jclouds.aws.ec2.domain.AWSRunningInstance;
@@ -44,6 +45,7 @@ import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
 import com.google.common.base.Predicate;
+import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.ImmutableSortedSet;
 
@@ -74,7 +76,7 @@ public class SpotInstanceApiLiveTest  extends BaseComputeServiceContextLiveTest 
    }
 
    @Test
-   void testDescribeSpotRequestsInRegion() {
+   public void testDescribeSpotRequestsInRegion() {
       for (String region : Region.DEFAULT_REGIONS) {
          SortedSet<SpotInstanceRequest> allResults = ImmutableSortedSet.copyOf(client.getSpotInstanceApi().get()
                   .describeSpotInstanceRequestsInRegion(region));
@@ -92,7 +94,45 @@ public class SpotInstanceApiLiveTest  extends BaseComputeServiceContextLiveTest 
    }
 
    @Test
-   void testDescribeSpotPriceHistoryInRegion() {
+   public void testDescribeSpotRequestsInRegionFilter() {
+      for (String region : Region.DEFAULT_REGIONS) {
+         SortedSet<SpotInstanceRequest> allResults = ImmutableSortedSet.copyOf(client.getSpotInstanceApi().get()
+                 .describeSpotInstanceRequestsInRegion(region));
+         assertNotNull(allResults);
+         if (allResults.size() >= 1) {
+            SpotInstanceRequest request = allResults.last();
+            SortedSet<SpotInstanceRequest> result = ImmutableSortedSet.copyOf(client.getSpotInstanceApi().get()
+                    .describeSpotInstanceRequestsInRegionWithFilter(region,
+                            ImmutableMultimap.<String, String>builder()
+                                    .put("spot-instance-request-id", request.getId()).build()));
+
+            assertNotNull(result);
+            SpotInstanceRequest compare = result.last();
+            assertEquals(compare, request);
+         }
+      }
+
+   }
+
+   @Test(expectedExceptions = AWSResponseException.class)
+   public void testDescribeSpotRequestsInRegionFilterInvalid() {
+      for (String region : Region.DEFAULT_REGIONS) {
+         SortedSet<SpotInstanceRequest> allResults = ImmutableSortedSet.copyOf(client.getSpotInstanceApi().get()
+                 .describeSpotInstanceRequestsInRegion(region));
+         assertNotNull(allResults);
+         if (allResults.size() >= 1) {
+            SpotInstanceRequest request = allResults.last();
+            SortedSet<SpotInstanceRequest> result = ImmutableSortedSet.copyOf(client.getSpotInstanceApi().get()
+                    .describeSpotInstanceRequestsInRegionWithFilter(region,
+                            ImmutableMultimap.<String, String>builder()
+                                    .put("invalid-filter", request.getId()).build()));
+         }
+      }
+
+   }
+
+   @Test
+   public void testDescribeSpotPriceHistoryInRegion() {
       for (String region : Region.DEFAULT_REGIONS) {
          Set<Spot> spots = client.getSpotInstanceApi().get().describeSpotPriceHistoryInRegion(region, from(new Date()));
          assertNotNull(spots);
@@ -115,7 +155,7 @@ public class SpotInstanceApiLiveTest  extends BaseComputeServiceContextLiveTest 
    }
 
    @Test(enabled = true)
-   void testCreateSpotInstance() {
+   public void testCreateSpotInstance() {
       String launchGroup = PREFIX + "1";
       for (String region : Region.DEFAULT_REGIONS)
          for (SpotInstanceRequest request : client.getSpotInstanceApi().get().describeSpotInstanceRequestsInRegion(

@@ -30,6 +30,7 @@ import org.jclouds.Fallbacks.VoidOnNotFoundOr404;
 import org.jclouds.aws.ec2.domain.PlacementGroup;
 import org.jclouds.aws.ec2.xml.DescribePlacementGroupsResponseHandler;
 import org.jclouds.aws.filters.FormSigner;
+import org.jclouds.ec2.binders.BindFiltersToIndexedFormParams;
 import org.jclouds.ec2.binders.BindGroupNamesToIndexedFormParams;
 import org.jclouds.javax.annotation.Nullable;
 import org.jclouds.location.functions.RegionToEndpointOrProviderIfNull;
@@ -40,6 +41,8 @@ import org.jclouds.rest.annotations.FormParams;
 import org.jclouds.rest.annotations.RequestFilters;
 import org.jclouds.rest.annotations.VirtualHost;
 import org.jclouds.rest.annotations.XMLResponseParser;
+
+import com.google.common.collect.Multimap;
 
 /**
  * Provides access to EC2 Placement Groups via their REST API.
@@ -133,4 +136,27 @@ public interface PlacementGroupApi {
             @EndpointParam(parser = RegionToEndpointOrProviderIfNull.class) @Nullable String region,
             @BinderParam(BindGroupNamesToIndexedFormParams.class) String... placementGroupIds);
 
+   /**
+    *
+    * Returns information about one or more placement groups in your account.
+    *
+    * @param region
+    *           The bundleTask ID is tied to the Region.
+    * @param filter
+    *           Multimap of filter key/values
+    *
+    * @see #deletePlacementGroupInRegion
+    * @see #createPlacementGroupInRegion
+    * @see <a href="http://docs.amazonwebservices.com/AWSEC2/latest/APIReference/ApiReference-query-DescribePlacementGroups.html"
+    *      />
+    */
+   @Named("DescribePlacementGroups")
+   @POST
+   @Path("/")
+   @FormParams(keys = ACTION, values = "DescribePlacementGroups")
+   @XMLResponseParser(DescribePlacementGroupsResponseHandler.class)
+   @Fallback(EmptySetOnNotFoundOr404.class)
+   Set<PlacementGroup> describePlacementGroupsInRegionWithFilter(
+           @EndpointParam(parser = RegionToEndpointOrProviderIfNull.class) @Nullable String region,
+           @BinderParam(BindFiltersToIndexedFormParams.class) Multimap<String, String> filter);
 }

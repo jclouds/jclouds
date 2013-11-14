@@ -18,6 +18,7 @@ package org.jclouds.ec2.features;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.collect.Iterables.concat;
+import static com.google.common.collect.Iterables.getFirst;
 import static com.google.common.collect.Iterables.getOnlyElement;
 import static com.google.common.collect.Sets.newHashSet;
 import static java.util.concurrent.TimeUnit.SECONDS;
@@ -32,12 +33,12 @@ import java.util.Iterator;
 import java.util.Properties;
 import java.util.Set;
 
+import org.jclouds.aws.AWSResponseException;
 import org.jclouds.compute.RunNodesException;
 import org.jclouds.compute.domain.Template;
 import org.jclouds.compute.domain.TemplateBuilderSpec;
 import org.jclouds.compute.internal.BaseComputeServiceContextLiveTest;
 import org.jclouds.ec2.EC2Api;
-import org.jclouds.ec2.EC2ApiMetadata;
 import org.jclouds.ec2.domain.BlockDevice;
 import org.jclouds.ec2.domain.Image;
 import org.jclouds.ec2.domain.Image.ImageType;
@@ -51,6 +52,7 @@ import org.testng.annotations.Test;
 
 import com.google.common.base.Predicate;
 import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.ImmutableMultimap;
 
 /**
  * Tests behavior of {@code AMIApi}
@@ -98,7 +100,9 @@ public class AMIApiLiveTest extends BaseComputeServiceContextLiveTest {
          Template template = view.getComputeService().templateBuilder().from(ebsTemplate).build();
          regionId = template.getLocation().getId();
          imageId = template.getImage().getProviderId();
-         for (Image image : client.describeImagesInRegion(regionId)) {
+         for (Image image : client.describeImagesInRegionWithFilter(regionId,
+                 ImmutableMultimap.<String, String>builder()
+                         .put("name", ebsBackedImageName).build())) {
             if (ebsBackedImageName.equals(image.getName()))
                client.deregisterImageInRegion(regionId, image.getId());
          }
@@ -115,20 +119,58 @@ public class AMIApiLiveTest extends BaseComputeServiceContextLiveTest {
    }
 
    public void testDescribeImages() {
-      for (String region : ec2Api.getConfiguredRegions()) {
-         Set<? extends Image> allResults = client.describeImagesInRegion(region);
-         assertNotNull(allResults);
-         assert allResults.size() >= 2 : allResults.size();
-         Iterator<? extends Image> iterator = allResults.iterator();
-         String id1 = iterator.next().getId();
-         String id2 = iterator.next().getId();
-         Set<? extends Image> twoResults = client.describeImagesInRegion(region, imageIds(id1, id2));
-         assertNotNull(twoResults);
-         assertEquals(twoResults.size(), 2);
-         iterator = twoResults.iterator();
-         assertEquals(iterator.next().getId(), id1);
-         assertEquals(iterator.next().getId(), id2);
-      }
+      // Just run in the first region - no need to take the time on all of them.
+      String region = getFirst(ec2Api.getConfiguredRegions(), null);
+      assertNotNull(region, "region should not be null");
+      Set<? extends Image> allResults = client.describeImagesInRegion(region);
+      assertNotNull(allResults);
+      assertTrue(allResults.size() >= 2);
+      Iterator<? extends Image> iterator = allResults.iterator();
+      String id1 = iterator.next().getId();
+      String id2 = iterator.next().getId();
+      Set<? extends Image> twoResults = client.describeImagesInRegion(region, imageIds(id1, id2));
+      assertNotNull(twoResults);
+      assertEquals(twoResults.size(), 2);
+      iterator = twoResults.iterator();
+      assertEquals(iterator.next().getId(), id1);
+      assertEquals(iterator.next().getId(), id2);
+   }
+
+   @Test
+   public void testDescribeImagesWithFilter() {
+      // Just run in the first region - no need to take the time on all of them.
+      String region = getFirst(ec2Api.getConfiguredRegions(), null);
+      assertNotNull(region, "region should not be null");
+      Set<? extends Image> allResults = client.describeImagesInRegion(region);
+      assertNotNull(allResults);
+      assertTrue(allResults.size() >= 2);
+      String id1 = allResults.iterator().next().getId();
+      Set<? extends Image> filterResult = client.describeImagesInRegionWithFilter(region,
+              ImmutableMultimap.<String, String>builder()
+                      .put("image-id", id1)
+                      .build());
+      assertNotNull(filterResult);
+      assertEquals(filterResult.size(), 1);
+      assertEquals(filterResult.iterator().next().getId(), id1);
+   }
+
+   @Test(expectedExceptions = AWSResponseException.class)
+   public void testDescribeImagesWithInvalidFilter() {
+      // Just run in the first region - no need to take the time on all of them.
+      String region = getFirst(ec2Api.getConfiguredRegions(), null);
+      assertNotNull(region, "region should not be null");
+
+      Set<? extends Image> allResults = client.describeImagesInRegion(region);
+      assertNotNull(allResults);
+      assertTrue(allResults.size() >= 2);
+      String id1 = allResults.iterator().next().getId();
+      Set<? extends Image> filterResult = client.describeImagesInRegionWithFilter(region,
+              ImmutableMultimap.<String, String>builder()
+                      .put("invalid-filter-id", id1)
+                      .build());
+      assertNotNull(filterResult);
+      assertEquals(filterResult.size(), 1);
+      assertEquals(filterResult.iterator().next().getId(), id1);
    }
 
    @Test
@@ -136,7 +178,9 @@ public class AMIApiLiveTest extends BaseComputeServiceContextLiveTest {
       Snapshot snapshot = createSnapshot();
 
       // List of images before...
-      int sizeBefore = client.describeImagesInRegion(regionId).size();
+      int sizeBefore = client.describeImagesInRegionWithFilter(regionId,
+              ImmutableMultimap.<String, String>builder()
+                      .put("name", ebsBackedImageName).build()).size();
 
       // Register a new image...
       ebsBackedImageId = client.registerUnixImageBackedByEbsInRegion(regionId, ebsBackedImageName, snapshot.getId(),
@@ -154,7 +198,10 @@ public class AMIApiLiveTest extends BaseComputeServiceContextLiveTest {
                   "/dev/sda2", new Image.EbsBlockDevice(null, 1, false)).entrySet());
 
       // List of images after - should be one larger than before
-      int after = client.describeImagesInRegion(regionId).size();
+      int after = client.describeImagesInRegionWithFilter(regionId,
+              ImmutableMultimap.<String, String>builder()
+                      .put("name", ebsBackedImageName).build()).size();
+
       assertEquals(after, sizeBefore + 1);
    }
 

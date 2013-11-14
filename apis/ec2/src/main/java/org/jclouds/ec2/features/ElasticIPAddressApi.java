@@ -27,6 +27,7 @@ import javax.ws.rs.Path;
 
 import org.jclouds.Fallbacks.EmptySetOnNotFoundOr404;
 import org.jclouds.aws.filters.FormSigner;
+import org.jclouds.ec2.binders.BindFiltersToIndexedFormParams;
 import org.jclouds.ec2.binders.BindPublicIpsToIndexedFormParams;
 import org.jclouds.ec2.domain.PublicIpInstanceIdPair;
 import org.jclouds.ec2.xml.AllocateAddressResponseHandler;
@@ -38,8 +39,11 @@ import org.jclouds.rest.annotations.EndpointParam;
 import org.jclouds.rest.annotations.Fallback;
 import org.jclouds.rest.annotations.FormParams;
 import org.jclouds.rest.annotations.RequestFilters;
+import org.jclouds.rest.annotations.SinceApiVersion;
 import org.jclouds.rest.annotations.VirtualHost;
 import org.jclouds.rest.annotations.XMLResponseParser;
+
+import com.google.common.collect.Multimap;
 
 /**
  * Provides access to EC2 Elastic IP Addresses via REST API.
@@ -168,4 +172,29 @@ public interface ElasticIPAddressApi {
             @EndpointParam(parser = RegionToEndpointOrProviderIfNull.class) @Nullable String region,
             @BinderParam(BindPublicIpsToIndexedFormParams.class) String... publicIps);
 
+   /**
+    * Lists elastic IP addresses assigned to your identity or provides information on addresses
+    * matching a given filter.
+    *
+    * @param region
+    *           Elastic IP addresses are tied to a Region and cannot be mapped across Regions.
+    * @param filter
+    *
+    * @throws AWSResponseException
+    *            if the requested publicIp is not found
+    * @see #allocateAddress
+    * @see #releaseAddress
+    * @see <a href="http://docs.amazonwebservices.com/AWSEC2/latest/APIReference/ApiReference-query-DescribeAddresses.html"
+    *      />
+    */
+   @SinceApiVersion("2010-08-31")
+   @Named("DescribeAddresses")
+   @POST
+   @Path("/")
+   @FormParams(keys = ACTION, values = "DescribeAddresses")
+   @XMLResponseParser(DescribeAddressesResponseHandler.class)
+   @Fallback(EmptySetOnNotFoundOr404.class)
+   Set<PublicIpInstanceIdPair> describeAddressesInRegionWithFilter(
+           @EndpointParam(parser = RegionToEndpointOrProviderIfNull.class) @Nullable String region,
+           @BinderParam(BindFiltersToIndexedFormParams.class) Multimap<String, String> filter);
 }

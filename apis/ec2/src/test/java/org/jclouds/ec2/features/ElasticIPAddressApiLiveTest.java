@@ -23,12 +23,11 @@ import java.util.SortedSet;
 
 import org.jclouds.compute.internal.BaseComputeServiceContextLiveTest;
 import org.jclouds.ec2.EC2Api;
-import org.jclouds.ec2.EC2ApiMetadata;
-import org.jclouds.ec2.compute.EC2ComputeServiceContext;
 import org.jclouds.ec2.domain.PublicIpInstanceIdPair;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
+import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.Sets;
 
 /**
@@ -58,13 +57,19 @@ public class ElasticIPAddressApiLiveTest extends BaseComputeServiceContextLiveTe
       for (String region : ec2Api.getConfiguredRegions()) {
          SortedSet<PublicIpInstanceIdPair> allResults = Sets.newTreeSet(client.describeAddressesInRegion(region));
          assertNotNull(allResults);
-         if (allResults.size() >= 1) {
+         if (!allResults.isEmpty()) {
             PublicIpInstanceIdPair pair = allResults.last();
             SortedSet<PublicIpInstanceIdPair> result = Sets.newTreeSet(client.describeAddressesInRegion(region, pair
                      .getPublicIp()));
             assertNotNull(result);
             PublicIpInstanceIdPair compare = result.last();
             assertEquals(compare, pair);
+
+            SortedSet<PublicIpInstanceIdPair> filterResult = Sets.newTreeSet(client.describeAddressesInRegionWithFilter(
+                    region, ImmutableMultimap.<String, String>builder().put("public-ip", pair.getPublicIp()).build()));
+            assertNotNull(filterResult);
+            PublicIpInstanceIdPair filterCompare = filterResult.last();
+            assertEquals(filterCompare, pair);
          }
       }
    }

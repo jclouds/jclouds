@@ -70,11 +70,11 @@ public class ElasticBlockStoreApiTest extends BaseEC2ApiTest<ElasticBlockStoreAp
                                             .endpoint("https://ec2.us-east-1.amazonaws.com/")
                                             .addHeader("Host", "ec2.us-east-1.amazonaws.com")
                                             .addFormParam("Action", "DescribeVolumes")
-                                            .addFormParam("Signature", "hNuorhZQS%2BThX5dWXOvBkvnmTpgp6SvwHmgzjjfKyG8%3D")
+                                            .addFormParam("Signature", "nNxWg5dwYZEQu1QCzCtNp7iDmPR8wXXdKhWmLEKFLGI%3D")
                                             .addFormParam("SignatureMethod", "HmacSHA256")
                                             .addFormParam("SignatureVersion", "2")
                                             .addFormParam("Timestamp", "2009-11-08T15%3A54%3A08.897Z")
-                                            .addFormParam("Version", "2010-06-15")
+                                            .addFormParam("Version", "2010-08-31")
                                             .addFormParam("AWSAccessKeyId", "identity").build();
 
    public void testDescribeVolumes() throws SecurityException, NoSuchMethodException, IOException {
@@ -119,11 +119,11 @@ public class ElasticBlockStoreApiTest extends BaseEC2ApiTest<ElasticBlockStoreAp
                                          .addFormParam("Action", "AttachVolume")
                                          .addFormParam("Device", "/device")
                                          .addFormParam("InstanceId", "instanceId")
-                                         .addFormParam("Signature", "LaOppR61eWpdNgMYJ3ccfo9vzbmUyJf9Ars%2Bbcu4OGI%3D")
+                                         .addFormParam("Signature", "0%2BUY5oCQzoJapEHq4Dl2R/0nAA8uXEHqvHbnnNI5NcA%3D")
                                          .addFormParam("SignatureMethod", "HmacSHA256")
                                          .addFormParam("SignatureVersion", "2")
                                          .addFormParam("Timestamp", "2009-11-08T15%3A54%3A08.897Z")
-                                         .addFormParam("Version", "2010-06-15")
+                                         .addFormParam("Version", "2010-08-31")
                                          .addFormParam("VolumeId", "id")
                                          .addFormParam("AWSAccessKeyId", "identity").build();
 
@@ -151,11 +151,11 @@ public class ElasticBlockStoreApiTest extends BaseEC2ApiTest<ElasticBlockStoreAp
                                          .addHeader("Host", "ec2.us-east-1.amazonaws.com")
                                          .addFormParam("Action", "DetachVolume")
                                          .addFormParam("Force", "false")
-                                         .addFormParam("Signature", "4c6EmHwCYbe%2BifuUV0PNXpKfReoZvJXyme37mKtnLk8%3D")
+                                         .addFormParam("Signature", "tfNB1g2WVqb3EwvBJlk4duU1H1fDOa1SBstsm1elpbg%3D")
                                          .addFormParam("SignatureMethod", "HmacSHA256")
                                          .addFormParam("SignatureVersion", "2")
                                          .addFormParam("Timestamp", "2009-11-08T15%3A54%3A08.897Z")
-                                         .addFormParam("Version", "2010-06-15")
+                                         .addFormParam("Version", "2010-08-31")
                                          .addFormParam("VolumeId", "id")
                                          .addFormParam("AWSAccessKeyId", "identity").build();
 
@@ -185,11 +185,11 @@ public class ElasticBlockStoreApiTest extends BaseEC2ApiTest<ElasticBlockStoreAp
                                                 .addFormParam("Device", "/device")
                                                 .addFormParam("Force", "true")
                                                 .addFormParam("InstanceId", "instanceId")
-                                                .addFormParam("Signature", "GrUGXc6H5W%2BNF8zcXU8gSRbt1ELt%2BTcCDEvbY1a88NE%3D")
+                                                .addFormParam("Signature", "VFhgwdkKBKXr/dEn2gvk6Vqq3JIunw4zZgM2Tt/ouME%3D")
                                                 .addFormParam("SignatureMethod", "HmacSHA256")
                                                 .addFormParam("SignatureVersion", "2")
                                                 .addFormParam("Timestamp", "2009-11-08T15%3A54%3A08.897Z")
-                                                .addFormParam("Version", "2010-06-15")
+                                                .addFormParam("Version", "2010-08-31")
                                                 .addFormParam("VolumeId", "id")
                                                 .addFormParam("AWSAccessKeyId", "identity").build();
 
@@ -311,7 +311,7 @@ public class ElasticBlockStoreApiTest extends BaseEC2ApiTest<ElasticBlockStoreAp
                                                                  .addFormParam("Action", "ModifySnapshotAttribute")
                                                                  .addFormParam("Attribute", "createVolumePermission")
                                                                  .addFormParam("OperationType", "add")
-                                                                 .addFormParam("Signature", "AizV1N1rCCXi%2BbzXX/Vz7shFq9yAJAwcmAGyRQMH%2Bjs%3D")
+                                                                 .addFormParam("Signature", "s8m8DqQRXmecWguuRjxfl3Ibd%2B1AjjktGzTlJLUTcPc%3D")
                                                                  .addFormParam("SignatureMethod", "HmacSHA256")
                                                                  .addFormParam("SignatureVersion", "2")
                                                                  .addFormParam("SnapshotId", "snapshotId")
@@ -319,7 +319,7 @@ public class ElasticBlockStoreApiTest extends BaseEC2ApiTest<ElasticBlockStoreAp
                                                                  .addFormParam("UserGroup.1", "all")
                                                                  .addFormParam("UserId.1", "bob")
                                                                  .addFormParam("UserId.2", "sue")
-                                                                 .addFormParam("Version", "2010-06-15")
+                                                                 .addFormParam("Version", "2010-08-31")
                                                                  .addFormParam("AWSAccessKeyId", "identity").build();
 
    public void testAddCreateVolumePermissionsToSnapshot() throws SecurityException, NoSuchMethodException, IOException {
@@ -348,7 +348,7 @@ public class ElasticBlockStoreApiTest extends BaseEC2ApiTest<ElasticBlockStoreAp
                                                                       .addFormParam("Action", "ModifySnapshotAttribute")
                                                                       .addFormParam("Attribute", "createVolumePermission")
                                                                       .addFormParam("OperationType", "remove")
-                                                                      .addFormParam("Signature", "Lmlt2daM%2BJ4kIoU9HmCempwVGZP1fC6V%2Br9o8MQjYy8%3D")
+                                                                      .addFormParam("Signature", "RzxHUIWV80cyhQDtrMiHDWUosS1g8cn1%2B7ONLJCe1dg%3D")
                                                                       .addFormParam("SignatureMethod", "HmacSHA256")
                                                                       .addFormParam("SignatureVersion", "2")
                                                                       .addFormParam("SnapshotId", "snapshotId")
@@ -356,7 +356,7 @@ public class ElasticBlockStoreApiTest extends BaseEC2ApiTest<ElasticBlockStoreAp
                                                                       .addFormParam("UserGroup.1", "all")
                                                                       .addFormParam("UserId.1", "bob")
                                                                       .addFormParam("UserId.2", "sue")
-                                                                      .addFormParam("Version", "2010-06-15")
+                                                                      .addFormParam("Version", "2010-08-31")
                                                                       .addFormParam("AWSAccessKeyId", "identity").build();
 
    public void testRemoveCreateVolumePermissionsFromSnapshot() throws SecurityException, NoSuchMethodException,

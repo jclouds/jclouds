@@ -62,7 +62,7 @@ public class AvailabilityZoneAndRegionApiLiveTest extends BaseComputeServiceCont
       for (String region : ec2Api.getConfiguredRegions()) {
          Set<AvailabilityZoneInfo> allResults = client.describeAvailabilityZonesInRegion(region);
          assertNotNull(allResults);
-         assert allResults.size() >= 1 : allResults.size();
+         assert !allResults.isEmpty() : allResults.size();
          Iterator<AvailabilityZoneInfo> iterator = allResults.iterator();
          String id1 = iterator.next().getZone();
          Set<AvailabilityZoneInfo> oneResult = client.describeAvailabilityZonesInRegion(region,
@@ -78,7 +78,7 @@ public class AvailabilityZoneAndRegionApiLiveTest extends BaseComputeServiceCont
       SortedMap<String, URI> allResults = Maps.newTreeMap();
       allResults.putAll(client.describeRegions());
       assertNotNull(allResults);
-      assert allResults.size() >= 1 : allResults.size();
+      assert !allResults.isEmpty() : allResults.size();
       Iterator<Entry<String, URI>> iterator = allResults.entrySet().iterator();
       String r1 = iterator.next().getKey();
       SortedMap<String, URI> oneResult = Maps.newTreeMap();

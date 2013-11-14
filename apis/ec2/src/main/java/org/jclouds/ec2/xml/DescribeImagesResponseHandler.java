@@ -46,7 +46,7 @@ import com.google.common.collect.Sets;
 /**
  * Parses the following XML document:
  * <p/>
- * DescribeImagesResponse xmlns="http://ec2.amazonaws.com/doc/2010-06-15/"
+ * DescribeImagesResponse xmlns="http://ec2.amazonaws.com/doc/2010-08-31/"
  * 
  * @author Adrian Cole
  * @see <a href="http://docs.amazonwebservices.com/AWSEC2/latest/APIReference/ApiReference-query-DescribeImages.html"

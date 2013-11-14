@@ -65,11 +65,11 @@ public class SecurityGroupApiTest extends BaseEC2ApiTest<SecurityGroupApi> {
                                                 .addFormParam("Action", "CreateSecurityGroup")
                                                 .addFormParam("GroupDescription", "description")
                                                 .addFormParam("GroupName", "name")
-                                                .addFormParam("Signature", "F3o0gnZcX9sWrtDUhVwi3k5GY2JKLP0Dhi6CcEqK2vE%3D")
+                                                .addFormParam("Signature", "msp9zFJLrRXYsVu/vbSZE8tQVS/TEvF0Cu/ldYVFdcA%3D")
                                                 .addFormParam("SignatureMethod", "HmacSHA256")
                                                 .addFormParam("SignatureVersion", "2")
                                                 .addFormParam("Timestamp", "2009-11-08T15%3A54%3A08.897Z")
-                                                .addFormParam("Version", "2010-06-15")
+                                                .addFormParam("Version", "2010-08-31")
                                                 .addFormParam("AWSAccessKeyId", "identity").build();
 
    public void testCreateSecurityGroup() throws SecurityException, NoSuchMethodException, IOException {
@@ -153,12 +153,12 @@ public class SecurityGroupApiTest extends BaseEC2ApiTest<SecurityGroupApi> {
                                                               .addFormParam("FromPort", "6000")
                                                               .addFormParam("GroupName", "group")
                                                               .addFormParam("IpProtocol", "tcp")
-                                                              .addFormParam("Signature", "6NQega9YUGDxdwk3Y0Hv71u/lHi%2B0D6qMCJLpJVD/aI%3D")
+                                                              .addFormParam("Signature", "xeaZpQ1Lvhp%2BqETpEzOPGHW6isAWYwgtBdCnTqWzkAw%3D")
                                                               .addFormParam("SignatureMethod", "HmacSHA256")
                                                               .addFormParam("SignatureVersion", "2")
                                                               .addFormParam("Timestamp", "2009-11-08T15%3A54%3A08.897Z")
                                                               .addFormParam("ToPort", "7000")
-                                                              .addFormParam("Version", "2010-06-15")
+                                                              .addFormParam("Version", "2010-08-31")
                                                               .addFormParam("AWSAccessKeyId", "identity").build();
 
    public void testAuthorizeSecurityGroupIngressCidr() throws SecurityException, NoSuchMethodException, IOException {
@@ -207,12 +207,12 @@ public class SecurityGroupApiTest extends BaseEC2ApiTest<SecurityGroupApi> {
                                                            .addFormParam("FromPort", "6000")
                                                            .addFormParam("GroupName", "group")
                                                            .addFormParam("IpProtocol", "tcp")
-                                                           .addFormParam("Signature", "WPlDYXI8P6Ip4F2JIEP3lWrVlP/7gxbZvlshKYlrvxk%3D")
+                                                           .addFormParam("Signature", "P5lxCXMwz6FE8Wo79nEMh8clgLDK3rZxCPRTOKssKKQ%3D")
                                                            .addFormParam("SignatureMethod", "HmacSHA256")
                                                            .addFormParam("SignatureVersion", "2")
                                                            .addFormParam("Timestamp", "2009-11-08T15%3A54%3A08.897Z")
                                                            .addFormParam("ToPort", "7000")
-                                                           .addFormParam("Version", "2010-06-15")
+                                                           .addFormParam("Version", "2010-08-31")
                                                            .addFormParam("AWSAccessKeyId", "identity").build();
 
    public void testRevokeSecurityGroupIngressCidr() throws SecurityException, NoSuchMethodException, IOException {

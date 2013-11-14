@@ -52,6 +52,7 @@ public class EC2ComputeServiceExpectTest extends BaseEC2ComputeServiceExpectTest
       requestResponseMap.put(describeInstanceRequest, describeInstanceResponse);
       requestResponseMap.put(describeInstanceMultiIdsRequest, describeInstanceMultiIdsResponse);
       requestResponseMap.put(describeImageRequest, describeImagesResponse);
+      requestResponseMap.put(createTagsRequest, createTagsResponse);
 
       ComputeService apiThatCreatesNode = requestsSendResponses(requestResponseMap.build());
 
@@ -78,6 +79,7 @@ public class EC2ComputeServiceExpectTest extends BaseEC2ComputeServiceExpectTest
       requestResponseMap.put(describeInstanceRequest, describeInstanceResponse);
       requestResponseMap.put(describeInstanceMultiIdsRequest, describeInstanceMultiIdsResponse);
       requestResponseMap.put(describeImageRequest, describeImagesResponse);
+      requestResponseMap.put(createTagsRequest, createTagsResponse);
 
       ComputeService apiThatCreatesNode = requestsSendResponses(requestResponseMap.build());
 
