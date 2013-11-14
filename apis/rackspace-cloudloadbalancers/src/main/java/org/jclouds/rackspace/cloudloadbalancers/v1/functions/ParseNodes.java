@@ -94,8 +94,7 @@ public class ParseNodes extends ParseJson<Nodes> {
             @Override
             public IterableWithMarker<Node> apply(Object input) {
                PaginationOptions paginationOptions = PaginationOptions.class.cast(input);
-               IterableWithMarker<Node> list = nodeApi.list(paginationOptions);
-               return list;
+               return nodeApi.list(paginationOptions);
             }
 
             @Override

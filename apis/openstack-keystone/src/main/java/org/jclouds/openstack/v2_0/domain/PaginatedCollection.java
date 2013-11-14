@@ -40,7 +40,8 @@ public class PaginatedCollection<T> extends IterableWithMarker<T> {
    private final Iterable<Link> links;
    private final Integer totalEntries;
 
-   protected PaginatedCollection(Iterable<T> resources, Iterable<Link> links, @Nullable Integer totalEntries) {
+   protected PaginatedCollection(@Nullable Iterable<T> resources, @Nullable Iterable<Link> links,
+                                 @Nullable Integer totalEntries) {
       this.resources = resources != null ? resources : ImmutableSet.<T> of();
       this.links = links != null ? links : ImmutableSet.<Link> of();
       this.totalEntries = totalEntries;

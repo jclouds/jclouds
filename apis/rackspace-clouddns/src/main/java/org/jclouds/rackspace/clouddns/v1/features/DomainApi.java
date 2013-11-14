@@ -37,7 +37,6 @@ import org.jclouds.Fallbacks.NullOnNotFoundOr404;
 import org.jclouds.Fallbacks.VoidOnNotFoundOr404;
 import org.jclouds.collect.PagedIterable;
 import org.jclouds.javax.annotation.Nullable;
-import org.jclouds.openstack.keystone.v2_0.KeystoneFallbacks;
 import org.jclouds.openstack.keystone.v2_0.filters.AuthenticateRequest;
 import org.jclouds.openstack.v2_0.domain.PaginatedCollection;
 import org.jclouds.openstack.v2_0.options.PaginationOptions;
@@ -72,6 +71,8 @@ import org.jclouds.rest.annotations.ResponseParser;
 import org.jclouds.rest.annotations.Transform;
 import org.jclouds.rest.annotations.WrapWith;
 import org.jclouds.rest.binders.BindToJsonPayload;
+
+import static org.jclouds.openstack.keystone.v2_0.KeystoneFallbacks.EmptyPaginatedCollectionOnNotFoundOr404;
 
 /**
  * @author Everett Toews
@@ -145,7 +146,7 @@ public interface DomainApi {
    @GET
    @ResponseParser(ParseDomains.class)
    @Consumes(MediaType.APPLICATION_JSON)
-   @Fallback(KeystoneFallbacks.EmptyPaginatedCollectionOnNotFoundOr404.class)
+   @Fallback(EmptyPaginatedCollectionOnNotFoundOr404.class)
    @Path("/domains")
    PaginatedCollection<Domain> list(PaginationOptions options);
 
@@ -169,7 +170,7 @@ public interface DomainApi {
    @GET
    @ResponseParser(ParseSubdomains.class)
    @Consumes(MediaType.APPLICATION_JSON)
-   @Fallback(KeystoneFallbacks.EmptyPaginatedCollectionOnNotFoundOr404.class)
+   @Fallback(EmptyPaginatedCollectionOnNotFoundOr404.class)
    @Path("/domains/{domainId}/subdomains")
    PaginatedCollection<Subdomain> listSubdomains(@PathParam("domainId") int domainId,
          PaginationOptions options);

@@ -114,8 +114,7 @@ public class ParseLoadBalancers implements Function<HttpResponse, IterableWithMa
             @Override
             public IterableWithMarker<LoadBalancer> apply(Object input) {
                PaginationOptions paginationOptions = PaginationOptions.class.cast(input);
-               IterableWithMarker<LoadBalancer> list = loadBalancerApi.list(paginationOptions);
-               return list;
+               return loadBalancerApi.list(paginationOptions);
             }
 
             @Override
