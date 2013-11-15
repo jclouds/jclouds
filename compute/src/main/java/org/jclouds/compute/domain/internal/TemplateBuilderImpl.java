@@ -975,7 +975,7 @@ public class TemplateBuilderImpl implements TemplateBuilder {
     * {@inheritDoc}
     */
    @Override
-   public TemplateBuilderImpl imageChooser(Function<Iterable<? extends Image>,Image> imageChooser) {
+   public TemplateBuilderImpl imageChooser(Function<Iterable<? extends Image>, Image> imageChooser) {
       this.imageChooser = imageChooser;
       return this;
    }

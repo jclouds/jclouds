@@ -146,9 +146,16 @@ public class TemplateBuilderImplTest {
       verify(defaultTemplate, optionsProvider, templateBuilderProvider);
    }
    
+   /**
+    * Resolves images using a default TemplateBuilder, optionally applying a customizer to that
+    * TemplateBuilder where the customizer may e.g. apply an imageChooser
+    */
    @SuppressWarnings("unchecked")
-   protected void doTestResolveImages(Supplier<Set<? extends Image>> images, Image expectedBest, 
-           Function<TemplateBuilderImpl, TemplateBuilderImpl> builderCustomisation) {
+   protected void doTestResolveImagesWithTemplateBuilderCustomizer(
+         Supplier<Set<? extends Image>> inputImages,
+         Function<TemplateBuilderImpl, TemplateBuilderImpl> templateBuilderPerTestCustomizer,
+         Image expectedBest) {
+
       Hardware hardware = new HardwareBuilder().id("hardwareId").build();
 
       Supplier<Set<? extends Location>> locations = Suppliers.<Set<? extends Location>> ofInstance(ImmutableSet
@@ -161,30 +168,40 @@ public class TemplateBuilderImplTest {
 
       replay(defaultTemplate, optionsProvider, templateBuilderProvider);
 
-      TemplateBuilderImpl template = createTemplateBuilder(null, locations, images, hardwares, region,
+      TemplateBuilderImpl template = createTemplateBuilder(null, locations, inputImages, hardwares, region,
                optionsProvider, templateBuilderProvider);
-      template = builderCustomisation.apply(template);
+      template = templateBuilderPerTestCustomizer.apply(template);
 
-      assertEquals(template.resolveImage(hardware, images.get()), expectedBest);
+      assertEquals(template.resolveImage(hardware, inputImages.get()), expectedBest);
 
       verify(defaultTemplate, optionsProvider, templateBuilderProvider);
    }
 
+   protected void doTestResolveImages(Supplier<Set<? extends Image>> inputImages, Image expectedBest) {
+       doTestResolveImagesWithTemplateBuilderCustomizer(
+             inputImages,
+             Functions.<TemplateBuilderImpl>identity(),
+             expectedBest);
+   }
+
    public void testResolveImagesSimple() {
-      doTestResolveImages(Suppliers.<Set<? extends Image>> ofInstance(ImmutableSet.<Image> of(
-                   image, image64bit)),
-               image64bit, Functions.<TemplateBuilderImpl>identity());
+      doTestResolveImages(
+            Suppliers.<Set<? extends Image>> ofInstance(ImmutableSet.<Image> of(image, image64bit)),
+            image64bit);
    }
    
    public void testResolveImagesPrefersNull() {
       // preferring null has been the default behaviour; not sure if this is ideal
       // (would make more sense to prefer nonNull) but don't change behaviour by default
-      doTestResolveImages(Suppliers.<Set<? extends Image>> ofInstance(ImmutableSet.<Image> of(
-                   image, imageArchNull, image64bit)), 
-               imageArchNull, Functions.<TemplateBuilderImpl>identity());
+      doTestResolveImages(
+            Suppliers.<Set<? extends Image>> ofInstance(ImmutableSet.<Image> of(image, imageArchNull, image64bit)),
+            imageArchNull);
    }
 
    public void testResolveImagesCustomSorterPreferringNonNull() {
+      // preferring null has been the default behaviour;
+      // see comments in TemplateBuilderImpl.DEFAULT_IMAGE_ORDERING
+
       final Ordering<Image> sorterPreferringNonNullArch = new Ordering<Image>() {
          @Override
          public int compare(Image left, Image right) {
@@ -198,67 +215,68 @@ public class TemplateBuilderImplTest {
       assertTrue(TemplateBuilderImpl.DEFAULT_IMAGE_ORDERING.compare(image64bit, imageArchNull) < 0, "wrong default image ordering");
       assertTrue(sorterPreferringNonNullArch.compare(image64bit, imageArchNull) > 0, "wrong custom image ordering");
       
-      // preferring null has been the default behaviour; 
-      // see comments in TemplateBuilderImpl.DEFAULT_IMAGE_ORDERING
-      doTestResolveImages(Suppliers.<Set<? extends Image>> ofInstance(ImmutableSet.<Image> of(
-                image, imageArchNull, image64bit)),
-             image64bit, new Function<TemplateBuilderImpl,TemplateBuilderImpl>() {
-                @Override
-                public TemplateBuilderImpl apply(TemplateBuilderImpl input) {
-                    return input.imageChooser(input.imageChooserFromOrdering(sorterPreferringNonNullArch));
-                }
-             });
+      Function<TemplateBuilderImpl, TemplateBuilderImpl> tbCustomiser = new Function<TemplateBuilderImpl, TemplateBuilderImpl>() {
+         @Override
+         public TemplateBuilderImpl apply(TemplateBuilderImpl input) {
+            return input.imageChooser(input.imageChooserFromOrdering(sorterPreferringNonNullArch));
+         }
+      };
+
+      doTestResolveImagesWithTemplateBuilderCustomizer(
+            Suppliers.<Set<? extends Image>> ofInstance(ImmutableSet.<Image> of(image, imageArchNull, image64bit)),
+            tbCustomiser, image64bit);
    }
 
    public void testResolveImagesPrefersImageBecauseNameIsLastAlphabetically() {
       // preferring that which comes later alphabetically is the default behaviour;
       // see comments in TemplateBuilderImpl.DEFAULT_IMAGE_ORDERING
-      doTestResolveImages(Suppliers.<Set<? extends Image>> ofInstance(ImmutableSet.<Image> of(
-                   imageNameAlt, image)),
-               image, Functions.<TemplateBuilderImpl>identity());
+      doTestResolveImages(
+            Suppliers.<Set<? extends Image>> ofInstance(ImmutableSet.<Image> of(imageNameAlt, image)),
+            image);
    }
 
    public void testResolveImagesCustomSorterPreferringAltImage() {
-      doTestResolveImages(Suppliers.<Set<? extends Image>> ofInstance(ImmutableSet.<Image> of(
-                imageNameAlt, image, imageArchNull, image64bit)),
-             imageNameAlt, new Function<TemplateBuilderImpl,TemplateBuilderImpl>() {
-                @Override
-                public TemplateBuilderImpl apply(TemplateBuilderImpl input) {
-                    return input.imageChooser(input.imageChooserFromOrdering(new Ordering<Image>() {
-                        private int score(Image img) {
-                            if (img.getName().contains("alternate")) return 10;
-                            return 0;
-                        }
-                        @Override
-                        public int compare(Image left, Image right) {
-                            return score(left) - score(right);
-                        }
-                    }));
-                }
-             });
+      Function<TemplateBuilderImpl, TemplateBuilderImpl> tbSortWithAlternate = new Function<TemplateBuilderImpl, TemplateBuilderImpl>() {
+         @Override
+         public TemplateBuilderImpl apply(TemplateBuilderImpl input) {
+            return input.imageChooser(input.imageChooserFromOrdering(new Ordering<Image>() {
+               private int score(Image img) {
+                  if (img.getName().contains("alternate")) return 10;
+                  return 0;
+               }
+               @Override
+               public int compare(Image left, Image right) {
+                  return score(left) - score(right);
+               }
+            }));
+         }
+      };
+      doTestResolveImagesWithTemplateBuilderCustomizer(
+            Suppliers.<Set<? extends Image>> ofInstance(ImmutableSet.<Image> of(imageNameAlt, image, imageArchNull, image64bit)),
+            tbSortWithAlternate, imageNameAlt);
    }
 
    public void testResolveImagesCustomChooserPreferringAltImage() {
-      doTestResolveImages(Suppliers.<Set<? extends Image>> ofInstance(ImmutableSet.<Image> of(
-                 imageNameAlt, image, imageArchNull, image64bit)),
-              imageNameAlt, new Function<TemplateBuilderImpl,TemplateBuilderImpl>() {
-                 @Override
-                 public TemplateBuilderImpl apply(TemplateBuilderImpl input) {
-                    return input.imageChooser(new Function<Iterable<? extends Image>, Image>() {
-                       @Override
-                       public Image apply(Iterable<? extends Image> input) {
-                          return Iterables.find(input, new Predicate<Image>() {
-                             @Override
-                             public boolean apply(Image input) {
-                                return input.getName()!=null && input.getName().contains("alternate");
-                             }
-                          });
-                       }
-                    });
-                 }
-              });
-    }
-
+      Function<TemplateBuilderImpl, TemplateBuilderImpl> tbChooseAlternate = new Function<TemplateBuilderImpl, TemplateBuilderImpl>() {
+         @Override
+         public TemplateBuilderImpl apply(TemplateBuilderImpl input) {
+            return input.imageChooser(new Function<Iterable<? extends Image>, Image>() {
+               @Override
+               public Image apply(Iterable<? extends Image> input) {
+                  return Iterables.find(input, new Predicate<Image>() {
+                     @Override
+                     public boolean apply(Image input) {
+                        return input.getName() != null && input.getName().contains("alternate");
+                     }
+                  });
+               }
+            });
+         }
+      };
+      doTestResolveImagesWithTemplateBuilderCustomizer(
+            Suppliers.<Set<? extends Image>> ofInstance(ImmutableSet.<Image> of(imageNameAlt, image, imageArchNull, image64bit)),
+            tbChooseAlternate, imageNameAlt);
+   }
 
    @SuppressWarnings("unchecked")
    @Test

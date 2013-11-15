@@ -96,7 +96,6 @@ public class EC2TemplateBuilderImplTest extends TemplateBuilderImplTest {
        return "us-east-1/"+uniqueLabel;
    }
    
-   
    @Override
    @Test
    public void testHardwareWithImageIdPredicateOnlyAcceptsImageWhenLocationNull() {
