@@ -223,6 +223,14 @@ public class VCloudTemplateOptions extends TemplateOptions implements Cloneable 
          return VCloudTemplateOptions.class.cast(options.userMetadata(key, value));
       }
 
+      /**
+       * @see TemplateOptions#nodeNames(Iterable)
+       */
+      public static VCloudTemplateOptions nodeNames(Iterable<String> nodeNames) {
+         VCloudTemplateOptions options = new VCloudTemplateOptions();
+         return VCloudTemplateOptions.class.cast(options.nodeNames(nodeNames));
+      }
+
    }
 
    /**
@@ -314,6 +322,14 @@ public class VCloudTemplateOptions extends TemplateOptions implements Cloneable 
    @Override
    public VCloudTemplateOptions userMetadata(String key, String value) {
       return VCloudTemplateOptions.class.cast(super.userMetadata(key, value));
+   }
+
+   /**
+    * {@inheritDoc}
+    */
+   @Override
+   public VCloudTemplateOptions nodeNames(Iterable<String> nodeNames) {
+      return VCloudTemplateOptions.class.cast(super.nodeNames(nodeNames));
    }
 
 }

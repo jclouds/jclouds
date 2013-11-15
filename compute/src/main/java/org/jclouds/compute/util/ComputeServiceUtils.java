@@ -40,12 +40,13 @@ import org.jclouds.compute.domain.NodeMetadataBuilder;
 import org.jclouds.compute.domain.OsFamily;
 import org.jclouds.compute.domain.Processor;
 import org.jclouds.compute.domain.Volume;
+import org.jclouds.compute.functions.GroupNamingConvention;
 import org.jclouds.compute.options.TemplateOptions;
+import org.jclouds.compute.reference.ComputeServiceConstants;
 import org.jclouds.http.HttpRequest;
 import org.jclouds.scriptbuilder.domain.Statement;
 import org.jclouds.scriptbuilder.domain.Statements;
 
-import com.google.common.base.Function;
 import com.google.common.base.Joiner;
 import com.google.common.base.Predicate;
 import com.google.common.base.Splitter;
@@ -281,5 +282,13 @@ public class ComputeServiceUtils {
       }
 
       return portRanges;
+   }
+
+   public static String groupFromMapOrName(Map<String, String> metadataMap, String nodeName, GroupNamingConvention namingConvention) {
+      if (metadataMap.get(ComputeServiceConstants.NODE_GROUP_KEY) != null) {
+         return metadataMap.get(ComputeServiceConstants.NODE_GROUP_KEY);
+      } else {
+         return namingConvention.groupInUniqueNameOrNull(nodeName);
+      }
    }
 }

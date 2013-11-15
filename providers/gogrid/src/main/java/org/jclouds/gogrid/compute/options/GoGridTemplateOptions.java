@@ -97,6 +97,14 @@ public class GoGridTemplateOptions extends TemplateOptions implements Cloneable 
          GoGridTemplateOptions options = new GoGridTemplateOptions();
          return GoGridTemplateOptions.class.cast(options.userMetadata(key, value));
       }
+
+      /**
+       * @see TemplateOptions#nodeNames(Iterable)
+       */
+      public static GoGridTemplateOptions nodeNames(Iterable<String> nodeNames) {
+         GoGridTemplateOptions options = new GoGridTemplateOptions();
+         return GoGridTemplateOptions.class.cast(options.nodeNames(nodeNames));
+      }
    }
 
    // methods that only facilitate returning the correct object type
@@ -147,5 +155,13 @@ public class GoGridTemplateOptions extends TemplateOptions implements Cloneable 
    @Override
    public GoGridTemplateOptions userMetadata(String key, String value) {
       return GoGridTemplateOptions.class.cast(super.userMetadata(key, value));
+   }
+
+   /**
+    * {@inheritDoc}
+    */
+   @Override
+   public GoGridTemplateOptions nodeNames(Iterable<String> nodeNames) {
+      return GoGridTemplateOptions.class.cast(super.nodeNames(nodeNames));
    }
 }

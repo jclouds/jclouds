@@ -106,6 +106,14 @@ public class CloudSigmaTemplateOptions extends TemplateOptions implements Clonea
          return CloudSigmaTemplateOptions.class.cast(options.userMetadata(userMetadata));
       }
 
+      /**
+       * @see TemplateOptions#nodeNames(Iterable)
+       */
+      public static CloudSigmaTemplateOptions nodeNames(Iterable<String> nodeNames) {
+         CloudSigmaTemplateOptions options = new CloudSigmaTemplateOptions();
+         return CloudSigmaTemplateOptions.class.cast(options.nodeNames(nodeNames));
+      }
+
       public static CloudSigmaTemplateOptions overrideLoginUser(String user) {
          CloudSigmaTemplateOptions options = new CloudSigmaTemplateOptions();
          return options.overrideLoginUser(user);
@@ -260,6 +268,14 @@ public class CloudSigmaTemplateOptions extends TemplateOptions implements Clonea
    @Override
    public CloudSigmaTemplateOptions userMetadata(String key, String value) {
       return CloudSigmaTemplateOptions.class.cast(super.userMetadata(key, value));
+   }
+
+   /**
+    * {@inheritDoc}
+    */
+   @Override
+   public CloudSigmaTemplateOptions nodeNames(Iterable<String> nodeNames) {
+      return CloudSigmaTemplateOptions.class.cast(super.nodeNames(nodeNames));
    }
 
    @Override

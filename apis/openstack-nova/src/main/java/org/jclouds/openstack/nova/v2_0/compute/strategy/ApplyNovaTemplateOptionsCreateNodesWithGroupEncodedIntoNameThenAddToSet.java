@@ -35,6 +35,7 @@ import org.jclouds.compute.config.CustomizationResponse;
 import org.jclouds.compute.domain.NodeMetadata;
 import org.jclouds.compute.domain.Template;
 import org.jclouds.compute.functions.GroupNamingConvention;
+import org.jclouds.compute.reference.ComputeServiceConstants;
 import org.jclouds.compute.strategy.CreateNodeWithGroupEncodedIntoName;
 import org.jclouds.compute.strategy.CustomizeNodeAndAddToGoodMapOrPutExceptionIntoBadMap;
 import org.jclouds.compute.strategy.ListNodesStrategy;
@@ -142,6 +143,7 @@ public class ApplyNovaTemplateOptionsCreateNodesWithGroupEncodedIntoNameThenAddT
             templateOptions.securityGroupNames(securityGroupName);
          }
       }
+      templateOptions.userMetadata(ComputeServiceConstants.NODE_GROUP_KEY, group);
 
       return super.execute(group, count, mutableTemplate, goodNodes, badNodes, customizationResponses);
    }

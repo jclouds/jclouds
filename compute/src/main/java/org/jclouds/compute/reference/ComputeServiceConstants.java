@@ -48,10 +48,10 @@ public interface ComputeServiceConstants {
 
    public static final String COMPUTE_LOGGER = "jclouds.compute";
    public static final String LOCAL_PARTITION_GB_PATTERN = "disk_drive/%s/gb";
+   public static final String NODE_GROUP_KEY = "jclouds-group";
 
    @Singleton
    public static class NamingConvention {
-
       @Inject(optional = true)
       public final Supplier<String> randomSuffix = new Supplier<String>() {
          final SecureRandom random = new SecureRandom();

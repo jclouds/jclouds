@@ -111,6 +111,7 @@ public class GleSYSComputeServiceAdapter implements ComputeServiceAdapter<Server
 
       CreateServerOptions createServerOptions = new CreateServerOptions();
       createServerOptions.ip(templateOptions.getIp());
+      template.getOptions().userMetadata(ComputeServiceConstants.NODE_GROUP_KEY, group);
 
       Map<String, String> md = metadataAndTagsAsCommaDelimitedValue(template.getOptions());
       if (md.size() > 0) {

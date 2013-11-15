@@ -485,6 +485,12 @@ public class StubComputeServiceIntegrationTest extends BaseComputeServiceLiveTes
    }
 
    @Test(enabled = true, dependsOnMethods = "testCreateAnotherNodeWithANewContextToEnsureSharedMemIsntRequired")
+   public void testCreateTwoNodesWithOneSpecifiedName() throws Exception {
+      super.testCreateTwoNodesWithOneSpecifiedName();
+   }
+
+
+   @Test(enabled = true, dependsOnMethods = "testCreateAnotherNodeWithANewContextToEnsureSharedMemIsntRequired")
    public void testCredentialsCache() throws Exception {
       super.testCredentialsCache();
    }

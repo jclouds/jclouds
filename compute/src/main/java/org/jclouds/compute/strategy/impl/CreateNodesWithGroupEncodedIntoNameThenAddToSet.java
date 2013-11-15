@@ -48,6 +48,8 @@ import org.jclouds.compute.strategy.ListNodesStrategy;
 import org.jclouds.logging.Logger;
 
 import com.google.common.base.Predicate;
+import com.google.common.collect.ImmutableSet;
+import com.google.common.collect.Iterables;
 import com.google.common.collect.Multimap;
 import com.google.common.util.concurrent.Futures;
 import com.google.common.util.concurrent.ListenableFuture;
@@ -169,9 +171,13 @@ public class CreateNodesWithGroupEncodedIntoNameThenAddToSet implements CreateNo
    }
 
    /**
-    * Find the next node names that can be used. These will be derived from the group and the
-    * template. We will pre-allocate a specified quantity, and attempt to verify that there is no
-    * name conflict with the current service.
+    * Find the next node names that can be used. If the nodeNames template option is not specified
+    * or is empty, these will be derived from the group and the template. We will pre-allocate a
+    * specified quantity, and attempt to verify that there is no name conflict with the current
+    * service. If the nodeNames option is specified, names from that will be used instead, without
+    * any check for name conflicts.
+    * If there are insufficient names in nodeNames, subsequent names will be generated in the
+    * default format.
     * 
     * @param group
     * @param count
@@ -180,6 +186,12 @@ public class CreateNodesWithGroupEncodedIntoNameThenAddToSet implements CreateNo
     */
    protected Set<String> getNextNames(final String group, final Template template, int count) {
       Set<String> names = newLinkedHashSet();
+      Set<String> nodeNames = template.getOptions().getNodeNames();
+      if (nodeNames.size() >= count) {
+         return ImmutableSet.copyOf(Iterables.limit(nodeNames, count));
+      } else {
+         names.addAll(nodeNames);
+      }
       Iterable<? extends ComputeMetadata> currentNodes = listNodesStrategy.listNodes();
       int maxTries = 100;
       int currentTries = 0;

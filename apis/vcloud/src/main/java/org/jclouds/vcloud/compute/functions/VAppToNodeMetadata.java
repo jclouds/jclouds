@@ -21,6 +21,7 @@ import static com.google.common.base.Predicates.not;
 import static com.google.common.base.Strings.isNullOrEmpty;
 import static com.google.common.collect.Iterables.filter;
 import static org.jclouds.compute.util.ComputeServiceUtils.addMetadataAndParseTagsFromCommaDelimitedValue;
+import static org.jclouds.compute.util.ComputeServiceUtils.groupFromMapOrName;
 import static org.jclouds.vcloud.compute.util.VCloudComputeUtils.getCredentialsFrom;
 import static org.jclouds.vcloud.compute.util.VCloudComputeUtils.getIpsFromVApp;
 import static org.jclouds.vcloud.compute.util.VCloudComputeUtils.toComputeOs;
@@ -44,6 +45,7 @@ import org.jclouds.vcloud.domain.VApp;
 
 import com.google.common.base.Function;
 import com.google.common.base.Splitter;
+import com.google.common.collect.ImmutableMap;
 
 /** @author Adrian Cole */
 @Singleton
@@ -73,19 +75,26 @@ public class VAppToNodeMetadata implements Function<VApp, NodeMetadata> {
       builder.ids(from.getHref().toASCIIString());
       builder.uri(from.getHref());
       builder.name(from.getName());
+      String groupName = "";
+      Map<String, String> metadataMap;
+
       if (!isNullOrEmpty(from.getDescription())
          && from.getDescription().indexOf('=') != -1
          && from.getDescription().indexOf('\n') != -1) {
          try {
-            addMetadataAndParseTagsFromCommaDelimitedValue(builder,
-               Splitter.on('\n').withKeyValueSeparator("=").split(from.getDescription()));
+            metadataMap = Splitter.on('\n').withKeyValueSeparator("=").split(from.getDescription());
+
+            addMetadataAndParseTagsFromCommaDelimitedValue(builder, metadataMap);
          } catch (IllegalArgumentException iae) {
             // no op
+            metadataMap = ImmutableMap.of();
          }
+      } else {
+         metadataMap = ImmutableMap.of();
       }
       builder.hostname(from.getName());
       builder.location(findLocationForResourceInVDC.apply(from.getVDC()));
-      builder.group(nodeNamingConvention.groupInUniqueNameOrNull(from.getName()));
+      builder.group(groupFromMapOrName(metadataMap, from.getName(), nodeNamingConvention));
       builder.operatingSystem(toComputeOs(from, null));
       builder.hardware(hardwareForVApp.apply(from));
       builder.status(vAppStatusToNodeStatus.get(from.getStatus()));

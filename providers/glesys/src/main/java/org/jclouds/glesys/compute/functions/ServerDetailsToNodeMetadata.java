@@ -22,6 +22,7 @@ import static com.google.common.base.Preconditions.checkState;
 import static com.google.common.base.Strings.isNullOrEmpty;
 import static com.google.common.io.BaseEncoding.base16;
 import static org.jclouds.compute.util.ComputeServiceUtils.addMetadataAndParseTagsFromCommaDelimitedValue;
+import static org.jclouds.compute.util.ComputeServiceUtils.groupFromMapOrName;
 import static org.jclouds.location.predicates.LocationPredicates.idEquals;
 
 import java.util.Map;
@@ -109,15 +110,18 @@ public class ServerDetailsToNodeMetadata implements Function<ServerDetails, Node
       builder.hostname(from.getHostname());
       Location location = FluentIterable.from(locations.get()).firstMatch(idEquals(from.getDatacenter())).orNull();
       checkState(location != null, "no location matched ServerDetails %s", from);
-      builder.group(nodeNamingConvention.groupInUniqueNameOrNull(from.getHostname()));
-      
+
+      Map<String, String> metadataMap;
+
       // TODO: get glesys to stop stripping out equals and commas!
       if (!isNullOrEmpty(from.getDescription()) && from.getDescription().matches("^[0-9A-Fa-f]+$")) {
          String decoded = new String(base16().lowerCase().decode(from.getDescription()), UTF_8);
-         addMetadataAndParseTagsFromCommaDelimitedValue(builder,
-                  Splitter.on('\n').withKeyValueSeparator("=").split(decoded));
+         metadataMap = Splitter.on('\n').withKeyValueSeparator("=").split(decoded);
+         addMetadataAndParseTagsFromCommaDelimitedValue(builder, metadataMap);
+      } else {
+         metadataMap = ImmutableMap.of();
       }
-
+      builder.group(groupFromMapOrName(metadataMap, from.getHostname(), nodeNamingConvention));
       builder.imageId(from.getTemplateName() + "");
       builder.operatingSystem(parseOperatingSystem(from));
       builder.hardware(new HardwareBuilder().ids(from.getId() + "").ram(from.getMemorySizeMB())

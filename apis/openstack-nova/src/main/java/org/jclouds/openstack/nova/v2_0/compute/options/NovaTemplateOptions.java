@@ -300,6 +300,14 @@ public class NovaTemplateOptions extends TemplateOptions implements Cloneable {
       }
 
       /**
+       * @see TemplateOptions#nodeNames(Iterable)
+       */
+      public static NovaTemplateOptions nodeNames(Iterable<String> nodeNames) {
+         NovaTemplateOptions options = new NovaTemplateOptions();
+         return NovaTemplateOptions.class.cast(options.nodeNames(nodeNames));
+      }
+
+      /**
        * @see TemplateOptions#overrideLoginUser
        */
       public static NovaTemplateOptions overrideLoginUser(String user) {
@@ -493,6 +501,15 @@ public class NovaTemplateOptions extends TemplateOptions implements Cloneable {
    public NovaTemplateOptions userMetadata(String key, String value) {
       return NovaTemplateOptions.class.cast(super.userMetadata(key, value));
    }
+
+   /**
+    * {@inheritDoc}
+    */
+   @Override
+   public NovaTemplateOptions nodeNames(Iterable<String> nodeNames) {
+      return NovaTemplateOptions.class.cast(super.nodeNames(nodeNames));
+   }
+
 
    /**
     * User data as bytes (not base64-encoded)

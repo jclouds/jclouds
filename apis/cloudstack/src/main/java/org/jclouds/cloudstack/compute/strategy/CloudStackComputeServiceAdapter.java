@@ -165,6 +165,8 @@ public class CloudStackComputeServiceAdapter implements
       OptionsConverter optionsConverter = optionsConverters.get(zone.getNetworkType());
       options = optionsConverter.apply(templateOptions, networks, zoneId, options);
 
+      options.group(group);
+
       if (templateOptions.getIpOnDefaultNetwork() != null) {
          options.ipOnDefaultNetwork(templateOptions.getIpOnDefaultNetwork());
       }

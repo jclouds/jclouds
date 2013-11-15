@@ -22,6 +22,7 @@ import static com.google.common.collect.Iterables.filter;
 import static com.google.common.collect.Iterables.find;
 import static com.google.common.collect.Iterables.transform;
 import static org.jclouds.compute.util.ComputeServiceUtils.addMetadataAndParseTagsFromCommaDelimitedValue;
+import static org.jclouds.compute.util.ComputeServiceUtils.groupFromMapOrName;
 
 import java.net.Inet4Address;
 import java.util.Map;
@@ -100,8 +101,8 @@ public class ServerInZoneToNodeMetadata implements Function<ServerInZone, NodeMe
       builder.hostname(from.getName());
       builder.location(from.getHostId() != null ? new LocationBuilder().scope(LocationScope.HOST).id(from.getHostId())
             .description(from.getHostId()).parent(zone).build() : zone);
+      builder.group(groupFromMapOrName(from.getMetadata(), from.getName(), nodeNamingConvention));
       addMetadataAndParseTagsFromCommaDelimitedValue(builder, from.getMetadata());
-      builder.group(nodeNamingConvention.groupInUniqueNameOrNull(from.getName()));
       builder.imageId(ZoneAndId.fromZoneAndId(serverInZone.getZone(), from.getImage().getId()).slashEncode());
       builder.operatingSystem(findOperatingSystemForServerOrNull(serverInZone));
       builder.hardware(findHardwareForServerOrNull(serverInZone));

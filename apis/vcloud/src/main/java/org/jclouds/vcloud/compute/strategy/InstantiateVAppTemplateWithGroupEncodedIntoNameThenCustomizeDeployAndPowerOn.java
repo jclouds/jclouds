@@ -124,6 +124,7 @@ public class InstantiateVAppTemplateWithGroupEncodedIntoNameThenCustomizeDeployA
       // per above check, we know there is only a single VM
       Vm vm = get(vAppResponse.getChildren(), 0);
 
+      template.getOptions().userMetadata(ComputeServiceConstants.NODE_GROUP_KEY, group);
       VCloudTemplateOptions vOptions = VCloudTemplateOptions.class.cast(template.getOptions());
 
       // note we cannot do tasks in parallel or VCD will throw "is busy" errors

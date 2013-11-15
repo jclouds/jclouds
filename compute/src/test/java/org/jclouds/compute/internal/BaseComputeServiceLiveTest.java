@@ -35,6 +35,7 @@ import static java.util.logging.Logger.getAnonymousLogger;
 import static org.jclouds.compute.options.RunScriptOptions.Builder.nameTask;
 import static org.jclouds.compute.options.RunScriptOptions.Builder.wrapInInitScript;
 import static org.jclouds.compute.options.TemplateOptions.Builder.inboundPorts;
+import static org.jclouds.compute.options.TemplateOptions.Builder.nodeNames;
 import static org.jclouds.compute.options.TemplateOptions.Builder.overrideLoginCredentials;
 import static org.jclouds.compute.options.TemplateOptions.Builder.runAsRoot;
 import static org.jclouds.compute.predicates.NodePredicates.TERMINATED;
@@ -44,6 +45,7 @@ import static org.jclouds.compute.predicates.NodePredicates.runningInGroup;
 import static org.jclouds.compute.util.ComputeServiceUtils.getCores;
 import static org.jclouds.util.Predicates2.retry;
 import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertFalse;
 import static org.testng.Assert.assertNotNull;
 import static org.testng.Assert.assertTrue;
 import static org.testng.Assert.fail;
@@ -362,6 +364,30 @@ public abstract class BaseComputeServiceLiveTest extends BaseComputeServiceConte
       checkOsMatchesTemplate(node2);
    }
 
+   @Test(enabled = true, dependsOnMethods = "testCreateTwoNodesWithRunScript")
+   public void testCreateTwoNodesWithOneSpecifiedName() throws Exception {
+      Set<? extends NodeMetadata> nodes;
+      try {
+         nodes = newTreeSet(client.createNodesInGroup(group, 2, nodeNames(ImmutableSet.of("first-node"))));
+      } catch (RunNodesException e) {
+         nodes = newTreeSet(concat(e.getSuccessfulNodes(), e.getNodeErrors().keySet()));
+         throw e;
+      }
+
+      assertEquals(nodes.size(), 2, "expected two nodes but was " + nodes);
+      NodeMetadata node1 = Iterables.getFirst(nodes, null);
+      NodeMetadata node2 = Iterables.getLast(nodes, null);
+      // credentials aren't always the same
+      // assertEquals(node1.getCredentials(), node2.getCredentials());
+
+      assertTrue(node1.getName().equals("first-node") || node2.getName().equals("first-node"),
+              "one node should be named 'first-node'");
+      assertFalse(node1.getName().equals("first-node") && node2.getName().equals("first-node"),
+              "one node should be named something other than 'first-node");
+
+      this.nodes.addAll(nodes);
+   }
+
    private Template refreshTemplate() {
       return template = addRunScriptToTemplate(buildTemplate(client.templateBuilder()));
    }
@@ -391,7 +417,7 @@ public abstract class BaseComputeServiceLiveTest extends BaseComputeServiceConte
       }
    }
 
-   @Test(enabled = true, dependsOnMethods = "testCreateTwoNodesWithRunScript")
+   @Test(enabled = true, dependsOnMethods = "testCreateTwoNodesWithOneSpecifiedName")
    public void testCreateAnotherNodeWithANewContextToEnsureSharedMemIsntRequired() throws Exception {
       initializeContext();
 

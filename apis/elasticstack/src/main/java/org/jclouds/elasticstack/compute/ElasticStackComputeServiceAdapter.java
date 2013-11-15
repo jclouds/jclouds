@@ -120,6 +120,8 @@ public class ElasticStackComputeServiceAdapter implements
          throw new IllegalStateException("could not image drive in time!");
       }
 
+      template.getOptions().userMetadata(ComputeServiceConstants.NODE_GROUP_KEY, tag);
+
       Server toCreate = small(name, drive.getUuid(), defaultVncPassword).mem(template.getHardware().getRam())
                .cpu((int) (template.getHardware().getProcessors().get(0).getSpeed()))
                .tags(template.getOptions().getTags()).userMetadata(template.getOptions().getUserMetadata()).build();

@@ -324,6 +324,14 @@ public class EC2TemplateOptions extends TemplateOptions implements Cloneable {
          EC2TemplateOptions options = new EC2TemplateOptions();
          return EC2TemplateOptions.class.cast(options.userMetadata(userMetadata));
       }
+
+      /**
+       * @see TemplateOptions#nodeNames(Iterable)
+       */
+      public static EC2TemplateOptions nodeNames(Iterable<String> nodeNames) {
+         EC2TemplateOptions options = new EC2TemplateOptions();
+         return EC2TemplateOptions.class.cast(options.nodeNames(nodeNames));
+      }
       
       public static EC2TemplateOptions overrideLoginUser(String user) {
          EC2TemplateOptions options = new EC2TemplateOptions();
@@ -519,6 +527,14 @@ public class EC2TemplateOptions extends TemplateOptions implements Cloneable {
    @Override
    public EC2TemplateOptions userMetadata(String key, String value) {
       return EC2TemplateOptions.class.cast(super.userMetadata(key, value));
+   }
+
+   /**
+    * {@inheritDoc}
+    */
+   @Override
+   public EC2TemplateOptions nodeNames(Iterable<String> nodeNames) {
+      return EC2TemplateOptions.class.cast(super.nodeNames(nodeNames));
    }
 
    /**

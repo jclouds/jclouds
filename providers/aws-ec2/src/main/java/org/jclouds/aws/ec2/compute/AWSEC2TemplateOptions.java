@@ -480,6 +480,14 @@ public class AWSEC2TemplateOptions extends EC2TemplateOptions implements Cloneab
          AWSEC2TemplateOptions options = new AWSEC2TemplateOptions();
          return options.blockUntilRunning(blockUntilRunning);
       }
+
+      /**
+       * @see TemplateOptions#nodeNames(Iterable)
+       */
+      public static AWSEC2TemplateOptions nodeNames(Iterable<String> nodeNames) {
+         AWSEC2TemplateOptions options = new AWSEC2TemplateOptions();
+         return AWSEC2TemplateOptions.class.cast(options.nodeNames(nodeNames));
+      }
    }
 
    // methods that only facilitate returning the correct object type
@@ -506,6 +514,14 @@ public class AWSEC2TemplateOptions extends EC2TemplateOptions implements Cloneab
    @Override
    public AWSEC2TemplateOptions userMetadata(String key, String value) {
       return AWSEC2TemplateOptions.class.cast(super.userMetadata(key, value));
+   }
+
+   /**
+    * {@inheritDoc}
+    */
+   @Override
+   public AWSEC2TemplateOptions nodeNames(Iterable<String> nodeNames) {
+      return AWSEC2TemplateOptions.class.cast(super.nodeNames(nodeNames));
    }
 
    /**

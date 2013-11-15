@@ -401,6 +401,14 @@ public class CloudStackTemplateOptions extends TemplateOptions implements Clonea
          CloudStackTemplateOptions options = new CloudStackTemplateOptions();
          return CloudStackTemplateOptions.class.cast(options.userMetadata(key, value));
       }
+
+      /**
+       * @see TemplateOptions#nodeNames(Iterable)
+       */
+      public static CloudStackTemplateOptions nodeNames(Iterable<String> nodeNames) {
+         CloudStackTemplateOptions options = new CloudStackTemplateOptions();
+         return CloudStackTemplateOptions.class.cast(options.nodeNames(nodeNames));
+      }
    }
 
    // methods that only facilitate returning the correct object type
@@ -451,5 +459,13 @@ public class CloudStackTemplateOptions extends TemplateOptions implements Clonea
    @Override
    public CloudStackTemplateOptions userMetadata(String key, String value) {
       return CloudStackTemplateOptions.class.cast(super.userMetadata(key, value));
+   }
+
+   /**
+    * {@inheritDoc}
+    */
+   @Override
+   public CloudStackTemplateOptions nodeNames(Iterable<String> nodeNames) {
+      return CloudStackTemplateOptions.class.cast(super.nodeNames(nodeNames));
    }
 }

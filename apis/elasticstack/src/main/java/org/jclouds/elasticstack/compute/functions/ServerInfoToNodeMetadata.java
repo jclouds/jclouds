@@ -18,6 +18,7 @@ package org.jclouds.elasticstack.compute.functions;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 import static org.jclouds.compute.predicates.ImagePredicates.idEquals;
+import static org.jclouds.compute.util.ComputeServiceUtils.groupFromMapOrName;
 
 import java.util.Map;
 import java.util.Set;
@@ -92,7 +93,7 @@ public class ServerInfoToNodeMetadata implements Function<ServerInfo, NodeMetada
       builder.ids(from.getUuid());
       builder.name(from.getName());
       builder.location(locationSupplier.get());
-      builder.group(nodeNamingConvention.groupInUniqueNameOrNull(from.getName()));
+      builder.group(groupFromMapOrName(from.getUserMetadata(), from.getName(), nodeNamingConvention));
       builder.tags(from.getTags());
       builder.userMetadata(from.getUserMetadata());
       String imageId = getImageIdFromServer.apply(from);

@@ -18,6 +18,7 @@ package org.jclouds.cloudservers.compute.functions;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 import static org.jclouds.compute.util.ComputeServiceUtils.addMetadataAndParseTagsFromCommaDelimitedValue;
+import static org.jclouds.compute.util.ComputeServiceUtils.groupFromMapOrName;
 
 import java.util.Map;
 import java.util.NoSuchElementException;
@@ -111,7 +112,7 @@ public class ServerToNodeMetadata implements Function<Server, NodeMetadata> {
       builder.location(new LocationBuilder().scope(LocationScope.HOST).id(from.getHostId()).description(
                from.getHostId()).parent(location.get()).build());
       addMetadataAndParseTagsFromCommaDelimitedValue(builder, from.getMetadata());
-      builder.group(nodeNamingConvention.groupInUniqueNameOrNull(from.getName()));
+      builder.group(groupFromMapOrName(from.getMetadata(), from.getName(), nodeNamingConvention));
       builder.imageId(from.getImageId() + "");
       builder.operatingSystem(parseOperatingSystem(from));
       builder.hardware(parseHardware(from));
