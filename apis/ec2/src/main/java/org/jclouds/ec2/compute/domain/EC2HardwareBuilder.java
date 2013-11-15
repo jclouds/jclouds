@@ -337,6 +337,76 @@ public class EC2HardwareBuilder extends HardwareBuilder {
             .is64Bit(true);
    }
 
+   /**
+    * @see InstanceType#C3_LARGE
+    */
+   public static EC2HardwareBuilder c3_large() {
+      return new EC2HardwareBuilder(InstanceType.C3_LARGE)
+              .ram(3750)
+              .processors(ImmutableList.of(new Processor(2.0, 3.5)))
+              .volumes(
+                      ImmutableList.<Volume> of(new VolumeImpl(10.0f, "/dev/sda1", true, false),
+                              new VolumeImpl(16.0f, "/dev/sdb", false, false),
+                              new VolumeImpl(16.0f, "/dev/sdc", false, false)))
+              .is64Bit(true);
+   }
+
+   /**
+    * @see InstanceType#C3_XLARGE
+    */
+   public static EC2HardwareBuilder c3_xlarge() {
+      return new EC2HardwareBuilder(InstanceType.C3_XLARGE)
+              .ram(7168)
+              .processors(ImmutableList.of(new Processor(4.0, 3.5)))
+              .volumes(
+                      ImmutableList.<Volume> of(new VolumeImpl(10.0f, "/dev/sda1", true, false),
+                              new VolumeImpl(40.0f, "/dev/sdb", false, false),
+                              new VolumeImpl(40.0f, "/dev/sdc", false, false)))
+              .is64Bit(true);
+   }
+
+   /**
+    * @see InstanceType#C3_2XLARGE
+    */
+   public static EC2HardwareBuilder c3_2xlarge() {
+      return new EC2HardwareBuilder(InstanceType.C3_2XLARGE)
+              .ram(15360)
+              .processors(ImmutableList.of(new Processor(8.0, 3.5)))
+              .volumes(
+                      ImmutableList.<Volume> of(new VolumeImpl(10.0f, "/dev/sda1", true, false),
+                              new VolumeImpl(80.0f, "/dev/sdb", false, false),
+                              new VolumeImpl(80.0f, "/dev/sdc", false, false)))
+              .is64Bit(true);
+   }
+
+   /**
+    * @see InstanceType#C3_4XLARGE
+    */
+   public static EC2HardwareBuilder c3_4xlarge() {
+      return new EC2HardwareBuilder(InstanceType.C3_4XLARGE)
+              .ram(30720)
+              .processors(ImmutableList.of(new Processor(16.0, 3.4375)))
+              .volumes(
+                      ImmutableList.<Volume> of(new VolumeImpl(10.0f, "/dev/sda1", true, false),
+                              new VolumeImpl(160.0f, "/dev/sdb", false, false),
+                              new VolumeImpl(160.0f, "/dev/sdc", false, false)))
+              .is64Bit(true);
+   }
+
+   /**
+    * @see InstanceType#C3_8XLARGE
+    */
+   public static EC2HardwareBuilder c3_8xlarge() {
+      return new EC2HardwareBuilder(InstanceType.C3_8XLARGE)
+              .ram(61440)
+              .processors(ImmutableList.of(new Processor(32.0, 3.375)))
+              .volumes(
+                      ImmutableList.<Volume> of(new VolumeImpl(10.0f, "/dev/sda1", true, false),
+                              new VolumeImpl(320.0f, "/dev/sdb", false, false),
+                              new VolumeImpl(320.0f, "/dev/sdc", false, false)))
+              .is64Bit(true);
+   }
+
    public static EC2HardwareBuilder cg1_4xlarge() {
       return new EC2HardwareBuilder(InstanceType.CG1_4XLARGE)
             .ram(22 * 1024)
