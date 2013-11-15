@@ -242,4 +242,63 @@ public class InstanceType {
     */
    public static final String G2_2XLARGE = "g2.2xlarge";
 
+   /**
+    * C3 High-CPU Large
+    * <ul>
+    *    <li>3.75 GiB of memory</li>
+    *    <li>7 EC2 Compute Units (2 virtual cores)</li>
+    *    <li>2 SSD-based volumes each with 16 GiB of instance storage</li>
+    *    <li>64-bit platform</li>
+    *    <li>I/O Performance: Moderate</li>
+    * </ul>
+    */
+   public static final String C3_LARGE = "c3.large";
+
+   /**
+    * C3 High-CPU Extra Large
+    * <ul>
+    *    <li>7 GiB of memory</li>
+    *    <li>14 EC2 Compute Units (4 virtual cores)</li>
+    *    <li>2 SSD-based volumes each with 40 GiB of instance storage</li>
+    *    <li>64-bit platform</li>
+    *    <li>I/O Performance: High</li>
+    * </ul>
+    */
+   public static final String C3_XLARGE = "c3.xlarge";
+
+   /**
+    * C3 High-CPU Double Extra Large
+    * <ul>
+    *    <li>15 GiB of memory</li>
+    *    <li>28 EC2 Compute Units (8 virtual cores)</li>
+    *    <li>2 SSD-based volumes each with 80 GiB of instance storage</li>
+    *    <li>64-bit platform</li>
+    *    <li>I/O Performance: High</li>
+    * </ul>
+    */
+   public static final String C3_2XLARGE = "c3.2xlarge";
+
+   /**
+    * C3 High-CPU Quadruple Extra Large
+    * <ul>
+    *    <li>30 GiB of memory</li>
+    *    <li>55 EC2 Compute Units (16 virtual cores)</li>
+    *    <li>2 SSD-based volumes each with 160 GiB of instance storage</li>
+    *    <li>64-bit platform</li>
+    *    <li>I/O Performance: High</li>
+    * </ul>
+    */
+   public static final String C3_4XLARGE = "c3.4xlarge";
+
+   /**
+    * C3 High-CPU Octuple Extra Large
+    * <ul>
+    *    <li>60 GiB of memory</li>
+    *    <li>108 EC2 Compute Units (32 virtual cores)</li>
+    *    <li>2 SSD-based volumes each with 320 GiB of instance storage</li>
+    *    <li>64-bit platform</li>
+    *    <li>I/O Performance: High</li>
+    * </ul>
+    */
+   public static final String C3_8XLARGE = "c3.8xlarge";
 }
