@@ -29,8 +29,6 @@ import org.jclouds.apis.BaseApiLiveTest;
 import org.jclouds.oauth.v2.OAuthApi;
 import org.testng.annotations.Test;
 
-import com.google.common.base.Ticker;
-
 
 /**
  * @author David Alves
@@ -54,7 +52,7 @@ public class BaseOAuthApiLiveTest extends BaseApiLiveTest<OAuthApi> {
    }
 
    protected long nowInSeconds() {
-      return TimeUnit.SECONDS.convert(Ticker.systemTicker().read(), TimeUnit.NANOSECONDS);
+      return TimeUnit.SECONDS.convert(System.currentTimeMillis(), TimeUnit.MILLISECONDS);
    }
 
 }

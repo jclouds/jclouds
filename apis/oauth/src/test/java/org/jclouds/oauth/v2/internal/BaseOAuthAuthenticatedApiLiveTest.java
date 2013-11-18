@@ -17,7 +17,7 @@
 package org.jclouds.oauth.v2.internal;
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.base.Preconditions.checkState;
-import static java.util.concurrent.TimeUnit.NANOSECONDS;
+import static java.util.concurrent.TimeUnit.MILLISECONDS;
 import static java.util.concurrent.TimeUnit.SECONDS;
 import static org.jclouds.oauth.v2.config.OAuthProperties.AUDIENCE;
 import static org.jclouds.oauth.v2.config.OAuthProperties.SIGNATURE_OR_MAC_ALGORITHM;
@@ -37,7 +37,6 @@ import org.jclouds.oauth.v2.domain.TokenRequest;
 import org.testng.annotations.Test;
 
 import com.google.common.base.Function;
-import com.google.common.base.Ticker;
 import com.google.common.reflect.TypeToken;
 import com.google.inject.Injector;
 import com.google.inject.Key;
@@ -80,7 +79,7 @@ public abstract class BaseOAuthAuthenticatedApiLiveTest<A extends Closeable> ext
 
       Header header = Header.builder().signerAlgorithm(signatureAlgorithm).type("JWT").build();
 
-      long now = SECONDS.convert(Ticker.systemTicker().read(), NANOSECONDS);
+      long now = SECONDS.convert(System.currentTimeMillis(), MILLISECONDS);
 
       ClaimSet claimSet = ClaimSet.builder()
                                   .addClaim("aud", audience)
