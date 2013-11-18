@@ -236,6 +236,14 @@ public class GoogleComputeEngineTemplateOptions extends TemplateOptions {
     * {@inheritDoc}
     */
    @Override
+   public GoogleComputeEngineTemplateOptions nodeNames(Iterable<String> nodeNames) {
+      return GoogleComputeEngineTemplateOptions.class.cast(super.nodeNames(nodeNames));
+   }
+
+   /**
+    * {@inheritDoc}
+    */
+   @Override
    public GoogleComputeEngineTemplateOptions tags(Iterable<String> tags) {
       return GoogleComputeEngineTemplateOptions.class.cast(super.tags(tags));
    }

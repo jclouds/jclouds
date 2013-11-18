@@ -19,7 +19,6 @@ package org.jclouds.googlecomputeengine.compute;
 import static com.google.common.collect.Iterables.getOnlyElement;
 import static org.jclouds.googlecomputeengine.GoogleComputeEngineConstants.COMPUTE_READONLY_SCOPE;
 import static org.jclouds.googlecomputeengine.GoogleComputeEngineConstants.COMPUTE_SCOPE;
-import static org.jclouds.googlecomputeengine.features.FirewallApiExpectTest.GET_FIREWALL_REQUEST;
 import static org.jclouds.googlecomputeengine.features.GlobalOperationApiExpectTest.GET_GLOBAL_OPERATION_REQUEST;
 import static org.jclouds.googlecomputeengine.features.GlobalOperationApiExpectTest.GET_GLOBAL_OPERATION_RESPONSE;
 import static org.jclouds.googlecomputeengine.features.ImageApiExpectTest.LIST_GOOGLE_IMAGES_REQUEST;
@@ -162,7 +161,8 @@ public class GoogleComputeEngineServiceExpectTest extends BaseGoogleComputeEngin
       }
    }
 
-   private HttpRequest createInstanceRequestForInstance(String instanceName, String networkName, String publicKey) {
+   private HttpRequest createInstanceRequestForInstance(String instanceName, String groupName,
+                                                        String networkName, String publicKey) {
       return HttpRequest
               .builder()
               .method("POST")
@@ -180,7 +180,8 @@ public class GoogleComputeEngineServiceExpectTest extends BaseGoogleComputeEngin
                       "\"accessConfigs\":[{\"type\":\"ONE_TO_ONE_NAT\"}]}]," +
                       "\"metadata\":{\"kind\":\"compute#metadata\",\"items\":[{\"key\":\"sshKeys\"," +
                       "\"value\":\"jclouds:" +
-                      publicKey + " jclouds@localhost\"}]}}",
+                      publicKey + " jclouds@localhost\"},{\"key\":\"jclouds-group\"," +
+                      "\"value\":\"" + groupName + "\"}]}}",
                       MediaType.APPLICATION_JSON)).build();
    }
 
@@ -440,7 +441,7 @@ public class GoogleComputeEngineServiceExpectTest extends BaseGoogleComputeEngin
               .add(LIST_PROJECT_IMAGES_REQUEST)
               .add(LIST_GOOGLE_IMAGES_REQUEST)
               .add(LIST_MACHINE_TYPES_REQUEST)
-              .add(createInstanceRequestForInstance("test-1", "jclouds-test", openSshKey))
+              .add(createInstanceRequestForInstance("test-1", "test", "jclouds-test", openSshKey))
               .add(GET_ZONE_OPERATION_REQUEST)
               .add(getInstanceRequestForInstance("test-1"))
               .add(SET_TAGS_REQUEST)

@@ -31,12 +31,12 @@ import java.util.concurrent.atomic.AtomicReference;
 import javax.inject.Inject;
 import javax.inject.Named;
 
-import com.google.common.collect.Sets;
 import org.jclouds.Constants;
 import org.jclouds.compute.config.CustomizationResponse;
 import org.jclouds.compute.domain.NodeMetadata;
 import org.jclouds.compute.domain.Template;
 import org.jclouds.compute.functions.GroupNamingConvention;
+import org.jclouds.compute.reference.ComputeServiceConstants;
 import org.jclouds.compute.strategy.CreateNodeWithGroupEncodedIntoName;
 import org.jclouds.compute.strategy.CustomizeNodeAndAddToGoodMapOrPutExceptionIntoBadMap;
 import org.jclouds.compute.strategy.ListNodesStrategy;
@@ -47,16 +47,16 @@ import org.jclouds.googlecomputeengine.config.UserProject;
 import org.jclouds.googlecomputeengine.domain.Firewall;
 import org.jclouds.googlecomputeengine.domain.Network;
 import org.jclouds.googlecomputeengine.domain.Operation;
-import org.jclouds.googlecomputeengine.features.FirewallApi;
 import org.jclouds.googlecomputeengine.domain.internal.NetworkAndAddressRange;
+import org.jclouds.googlecomputeengine.features.FirewallApi;
 import org.jclouds.googlecomputeengine.options.FirewallOptions;
-import org.jclouds.net.domain.IpProtocol;
 
 import com.google.common.base.Predicate;
 import com.google.common.base.Supplier;
 import com.google.common.cache.LoadingCache;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Multimap;
+import com.google.common.collect.Sets;
 import com.google.common.util.concurrent.ListenableFuture;
 import com.google.common.util.concurrent.ListeningExecutorService;
 
@@ -124,6 +124,7 @@ public class CreateNodesWithGroupEncodedIntoNameThenAddToSet extends
       Network network = getOrCreateNetwork(templateOptions, sharedResourceName);
       getOrCreateFirewalls(templateOptions, network, firewallTagNamingConvention.get(group));
       templateOptions.network(network.getSelfLink());
+      templateOptions.userMetadata(ComputeServiceConstants.NODE_GROUP_KEY, group);
 
       return super.execute(group, count, mutableTemplate, goodNodes, badNodes, customizationResponses);
    }

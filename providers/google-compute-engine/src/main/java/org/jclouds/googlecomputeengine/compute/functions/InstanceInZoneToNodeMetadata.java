@@ -17,6 +17,7 @@
 package org.jclouds.googlecomputeengine.compute.functions;
 
 import static com.google.common.base.Preconditions.checkNotNull;
+import static org.jclouds.compute.util.ComputeServiceUtils.groupFromMapOrName;
 
 import java.net.URI;
 import java.util.Map;
@@ -77,7 +78,9 @@ public class InstanceInZoneToNodeMetadata implements Function<InstanceInZone, No
       Image image = checkNotNull(imagesMap.get(checkNotNull(input.getImage(), "image")),
               "no image for %s. images: %s", input.getImage(), imagesMap.values());
 
-      String group = nodeNamingConvention.groupInUniqueNameOrNull(input.getName());
+      String group = groupFromMapOrName(input.getMetadata().getItems(),
+              input.getName(), nodeNamingConvention);
+
       FluentIterable<String> tags = FluentIterable.from(input.getTags().getItems())
               .filter(Predicates.not(firewallTagNamingConvention.get(group).isFirewallTag()));
 
