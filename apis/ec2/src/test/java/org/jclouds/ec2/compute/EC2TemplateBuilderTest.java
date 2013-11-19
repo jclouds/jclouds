@@ -86,7 +86,7 @@ public class EC2TemplateBuilderTest {
          .parent(provider).build();
 
    public static final Hardware CC1_4XLARGE = cc1_4xlarge().supportsImageIds(ImmutableSet.of("us-east-1/cc-image"))
-            .build();
+         .build();
 
    /**
     * Verifies that {@link TemplateBuilderImpl} would choose the correct size of the instance, based

@@ -505,7 +505,7 @@ public class TemplateBuilderImpl implements TemplateBuilder {
                      Ordering.<String> natural().nullsLast()).result();
       }
    };
-   
+
    @VisibleForTesting
    // non-static for logging
    final Function<Iterable<? extends Image>, Image> imageChooserFromOrdering(final Ordering<Image> ordering) {

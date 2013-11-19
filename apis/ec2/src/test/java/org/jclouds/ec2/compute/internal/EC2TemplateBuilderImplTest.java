@@ -95,7 +95,7 @@ public class EC2TemplateBuilderImplTest extends TemplateBuilderImplTest {
    protected String getProviderFormatId(String uniqueLabel) {
        return "us-east-1/"+uniqueLabel;
    }
-   
+
    @Override
    @Test
    public void testHardwareWithImageIdPredicateOnlyAcceptsImageWhenLocationNull() {

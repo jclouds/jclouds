@@ -178,7 +178,7 @@ public interface TemplateBuilder {
     * This strategy may change from version to version.
     */
    TemplateBuilder imageChooser(Function<Iterable<? extends Image>, Image> imageChooser);
-       
+
    /**
     * Configure this template to require the minimum cores below
     */
