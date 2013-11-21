@@ -33,14 +33,6 @@
   <build>
     <resources>
       <resource>
-        <targetPath>META-INF</targetPath>
-        <directory>${project.basedir}</directory>
-        <includes>
-          <include>LICENSE.txt</include>
-          <include>NOTICE.txt</include>
-        </includes>
-      </resource>
-      <resource>
         <targetPath>resources</targetPath>
         <directory>${project.basedir}</directory>
         <includes>
@@ -48,35 +40,5 @@
         </includes>
       </resource>
     </resources>
-    <plugins>
-      <plugin>      
-        <artifactId>maven-remote-resources-plugin</artifactId>
-        <executions>              
-          <execution>
-            <id>bundle-remote-resources</id>
-            <goals>
-              <goal>bundle</goal>
-            </goals>
-            <!-- run *after* copying resources to the output directory -->
-            <phase>process-resources</phase>
-            <configuration>
-              <resourcesDirectory>${project.build.outputDirectory}</resourcesDirectory>
-              <includes>
-                <include>META-INF/LICENSE.txt</include>
-                <include>META-INF/NOTICE.txt</include>
-              </includes>
-            </configuration>                        
-          </execution>
-          <execution>
-            <goals>
-              <goal>process</goal>
-            </goals>
-            <configuration>
-              <skip>true</skip>
-            </configuration>
-          </execution>
-        </executions>
-      </plugin>        
-    </plugins>
   </build>
 </project>
