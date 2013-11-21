@@ -28,9 +28,9 @@
   <artifactId>jclouds-project</artifactId>
   <version>1.7.0-SNAPSHOT</version>
   <packaging>pom</packaging>
-  <name>Apache jclouds (incubating)  Project</name>
-  <url>http://jclouds.incubator.apache.org/</url>
-  <description>Apache jclouds (incubating): Concurrent API for Cloud Services</description>
+  <name>Apache jclouds Project</name>
+  <url>http://jclouds.apache.org/</url>
+  <description>Apache jclouds: Concurrent API for Cloud Services</description>
   <inceptionYear>2009</inceptionYear>
 
   <licenses>
@@ -78,9 +78,9 @@
   </mailingLists>
 
   <scm>
-    <connection>scm:git:https://git-wip-us.apache.org/repos/asf/incubator-jclouds.git</connection>
-    <developerConnection>scm:git:https://git-wip-us.apache.org/repos/asf/incubator-jclouds.git</developerConnection>
-    <url>https://git-wip-us.apache.org/repos/asf?p=incubator-jclouds.git</url>
+    <connection>scm:git:https://git-wip-us.apache.org/repos/asf/jclouds.git</connection>
+    <developerConnection>scm:git:https://git-wip-us.apache.org/repos/asf/jclouds.git</developerConnection>
+    <url>https://git-wip-us.apache.org/repos/asf?p=jclouds.git</url>
     <tag>HEAD</tag>
   </scm>
   
@@ -121,12 +121,10 @@
       <name>Adrian Cole</name>
       <id>adriancole</id>
       <email>adrian -at- jclouds -dot- org</email>
-      <organization>jclouds</organization>
       <roles>
         <role>Committer</role>
-        <role>PPMC Member</role>
+        <role>PMC Member</role>
       </roles>
-      <url>http://jclouds.incubator.apache.org</url>
       <timezone>-8</timezone>
     </developer>
     <developer>
@@ -135,7 +133,7 @@
       <email>abayer -at- apache -dot- org</email>
       <roles>
         <role>Committer</role>
-        <role>PPMC Member</role>
+        <role>PMC Member</role>
       </roles>
     </developer>
     <developer>
@@ -143,7 +141,7 @@
       <id>gaul</id>
       <roles>
         <role>Committer</role>
-        <role>PPMC Member</role>
+        <role>PMC Member</role>
       </roles>
     </developer>
     <developer>
@@ -152,7 +150,7 @@
       <email>aphillips -at- qrmedia -dot- com</email>
       <roles>
         <role>Committer</role>
-        <role>PPMC Member</role>
+        <role>PMC Member</role>
       </roles>
       <timezone>+1</timezone>
     </developer>
@@ -161,7 +159,7 @@
       <id>silkysun</id>
       <roles>
         <role>Committer</role>
-        <role>PPMC Member</role>
+        <role>PMC Member</role>
       </roles>
     </developer>
     <developer>
@@ -169,7 +167,7 @@
       <id>everett</id>
       <roles>
         <role>Committer</role>
-        <role>PPMC Member</role>
+        <role>PMC Member</role>
       </roles>
     </developer>
     <developer>
@@ -177,7 +175,7 @@
       <id>nacx</id>
       <roles>
         <role>Committer</role>
-        <role>PPMC Member</role>
+        <role>PMC Member</role>
       </roles>
     </developer>
     <developer>
@@ -185,7 +183,7 @@
       <id>iocanel</id>
       <roles>
         <role>Committer</role>
-        <role>PPMC Member</role>
+        <role>PMC Member</role>
       </roles>
     </developer>
     <developer>
@@ -193,7 +191,7 @@
       <id>mattstep</id>
       <roles>
         <role>Committer</role>
-        <role>PPMC Member</role>
+        <role>PMC Member</role>
       </roles>
     </developer>
   </developers>
