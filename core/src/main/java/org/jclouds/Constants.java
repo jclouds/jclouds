@@ -299,4 +299,9 @@ public interface Constants {
     * providers that don't properly support Expect headers. Defaults to false.
     */
    public static final String PROPERTY_STRIP_EXPECT_HEADER = "jclouds.strip-expect-header";
+
+   /**
+    * The maximum number of blob deletes happening in parallel at any point in time.
+    */
+   public static final String PROPERTY_MAX_PARALLEL_DELETES = "jclouds.max-parallel-deletes";
 }

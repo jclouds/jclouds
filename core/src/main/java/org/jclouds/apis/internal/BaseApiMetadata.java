@@ -24,6 +24,7 @@ import static org.jclouds.Constants.PROPERTY_ISO3166_CODES;
 import static org.jclouds.Constants.PROPERTY_MAX_CONNECTIONS_PER_CONTEXT;
 import static org.jclouds.Constants.PROPERTY_MAX_CONNECTIONS_PER_HOST;
 import static org.jclouds.Constants.PROPERTY_MAX_CONNECTION_REUSE;
+import static org.jclouds.Constants.PROPERTY_MAX_PARALLEL_DELETES;
 import static org.jclouds.Constants.PROPERTY_MAX_SESSION_FAILURES;
 import static org.jclouds.Constants.PROPERTY_PRETTY_PRINT_PAYLOADS;
 import static org.jclouds.Constants.PROPERTY_SCHEDULER_THREADS;
@@ -60,6 +61,8 @@ public abstract class BaseApiMetadata implements ApiMetadata {
    public static Properties defaultProperties() {
       Properties props = new Properties();
       // TODO: move this to ApiMetadata
+      final int numUserThreads = 50;
+
       props.setProperty(PROPERTY_ISO3166_CODES, "");
       props.setProperty(PROPERTY_MAX_CONNECTIONS_PER_CONTEXT, 20 + "");
       props.setProperty(PROPERTY_MAX_CONNECTIONS_PER_HOST, 0 + "");
@@ -67,16 +70,20 @@ public abstract class BaseApiMetadata implements ApiMetadata {
       props.setProperty(PROPERTY_CONNECTION_TIMEOUT, 60000 + "");
       props.setProperty(PROPERTY_IO_WORKER_THREADS, 20 + "");
       // Successfully tested 50 user threads with BlobStore.clearContainer.
-      props.setProperty(PROPERTY_USER_THREADS, 50 + "");
+      props.setProperty(PROPERTY_USER_THREADS, numUserThreads + "");
       props.setProperty(PROPERTY_SCHEDULER_THREADS, 10 + "");
       props.setProperty(PROPERTY_MAX_CONNECTION_REUSE, 75 + "");
       props.setProperty(PROPERTY_MAX_SESSION_FAILURES, 2 + "");
       props.setProperty(PROPERTY_SESSION_INTERVAL, 60 + "");
       props.setProperty(PROPERTY_PRETTY_PRINT_PAYLOADS, "true");
       props.setProperty(PROPERTY_STRIP_EXPECT_HEADER, "false");
+
+      // By default, we allow maximum parallel deletes to be equal to the number
+      // of user threads since one thread is used to delete on blob.
+      props.setProperty(PROPERTY_MAX_PARALLEL_DELETES, numUserThreads + "");
       return props;
    }
-   
+
    public abstract static class Builder<T extends Builder<T>> implements ApiMetadata.Builder<T> {
       protected abstract T self();
 
