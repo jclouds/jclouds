@@ -18,6 +18,9 @@ package org.jclouds.filesystem.util;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.concurrent.TimeUnit;
+
+import com.google.common.util.concurrent.Uninterruptibles;
 
 /**
  * Utilities for the filesystem blobstore.
@@ -41,7 +44,11 @@ public class Utils {
          }
       }
       if (!file.delete()) {
-         throw new IOException("Could not delete: " + file);
+         // On windows, often the directory does not register as empty right away.
+         Uninterruptibles.sleepUninterruptibly(5, TimeUnit.SECONDS);
+         if(!file.delete()) {
+            throw new IOException("Could not delete: " + file);
+         }
       }
    }
 }
