@@ -32,6 +32,7 @@ import org.jclouds.cloudstack.features.LoadBalancerApi;
 import org.jclouds.cloudstack.features.NATApi;
 import org.jclouds.cloudstack.features.NetworkApi;
 import org.jclouds.cloudstack.features.OfferingApi;
+import org.jclouds.cloudstack.features.ProjectApi;
 import org.jclouds.cloudstack.features.SSHKeyPairApi;
 import org.jclouds.cloudstack.features.SecurityGroupApi;
 import org.jclouds.cloudstack.features.SessionApi;
@@ -189,4 +190,10 @@ public interface CloudStackApi extends Closeable {
     */
    @Delegate
    SessionApi getSessionApi();
+
+   /**
+    * Provides synchronous access to Projects
+    */
+   @Delegate
+   ProjectApi getProjectApi();
 }

@@ -47,7 +47,22 @@ public abstract class BaseCloudStackComputeServiceContextExpectTest<T> extends B
    protected final HttpResponse listTemplatesResponse = HttpResponse.builder().statusCode(200)
       .payload(payloadFromResource("/listtemplatesresponse.json"))
       .build();
-   
+
+   protected final HttpRequest listProjects = HttpRequest.builder().method("GET")
+           .endpoint("http://localhost:8080/client/api")
+           .addQueryParam("response", "json")
+           .addQueryParam("command", "listProjects")
+           .addQueryParam("listAll", "true")
+           .addQueryParam("account", "jclouds")
+           .addQueryParam("domainid", "457")
+           .addQueryParam("apiKey", "APIKEY")
+           .addQueryParam("signature", "yAx1XbtjeEhdBQCNP0OLyWWAFCw%3D")
+           .addHeader("Accept", "application/json")
+           .build();
+
+   protected final HttpResponse listProjectsResponse = HttpResponse.builder().statusCode(200)
+           .build();
+
    protected final HttpRequest listOsTypes = HttpRequest.builder().method("GET")
       .endpoint("http://localhost:8080/client/api")
       .addQueryParam("response", "json")

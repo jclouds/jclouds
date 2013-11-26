@@ -53,6 +53,7 @@ import org.jclouds.cloudstack.domain.IngressRule;
 import org.jclouds.cloudstack.domain.Network;
 import org.jclouds.cloudstack.domain.NetworkType;
 import org.jclouds.cloudstack.domain.OSType;
+import org.jclouds.cloudstack.domain.Project;
 import org.jclouds.cloudstack.domain.SecurityGroup;
 import org.jclouds.cloudstack.domain.ServiceOffering;
 import org.jclouds.cloudstack.domain.SshKeyPair;
@@ -71,6 +72,7 @@ import org.jclouds.cloudstack.functions.ZoneIdToZone;
 import org.jclouds.cloudstack.predicates.JobComplete;
 import org.jclouds.cloudstack.suppliers.GetCurrentUser;
 import org.jclouds.cloudstack.suppliers.NetworksForCurrentUser;
+import org.jclouds.cloudstack.suppliers.ProjectsForCurrentUser;
 import org.jclouds.cloudstack.suppliers.ZoneIdToZoneSupplier;
 import org.jclouds.collect.Memoized;
 import org.jclouds.compute.ComputeServiceAdapter;
@@ -218,6 +220,15 @@ public class CloudStackComputeServiceContextModule extends
          final NetworksForCurrentUser networksForCurrentUser) {
       return MemoizedRetryOnTimeOutButNotOnAuthorizationExceptionSupplier.create(authException, networksForCurrentUser,
                seconds, TimeUnit.SECONDS);
+   }
+
+   @Provides
+   @Singleton
+   @Memoized
+   public Supplier<Map<String, Project>> listProjects(AtomicReference<AuthorizationException> authException, @Named(PROPERTY_SESSION_INTERVAL) long seconds,
+                                                      final ProjectsForCurrentUser projectsForCurrentUser) {
+      return MemoizedRetryOnTimeOutButNotOnAuthorizationExceptionSupplier.create(authException, projectsForCurrentUser,
+              seconds, TimeUnit.SECONDS);
    }
 
    @Provides

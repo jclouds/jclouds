@@ -19,9 +19,11 @@ package org.jclouds.cloudstack.compute.strategy;
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.base.Preconditions.checkState;
+import static com.google.common.collect.Iterables.concat;
 import static com.google.common.collect.Iterables.contains;
 import static com.google.common.collect.Iterables.filter;
 import static com.google.common.collect.Iterables.get;
+import static com.google.common.collect.Iterables.transform;
 import static org.jclouds.cloudstack.options.DeployVirtualMachineOptions.Builder.displayName;
 import static org.jclouds.cloudstack.options.ListTemplatesOptions.Builder.id;
 import static org.jclouds.cloudstack.predicates.TemplatePredicates.isReady;
@@ -31,7 +33,6 @@ import static org.jclouds.ssh.SshKeys.fingerprintPrivateKey;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.concurrent.ExecutionException;
 
 import javax.annotation.Resource;
 import javax.inject.Inject;
@@ -46,6 +47,7 @@ import org.jclouds.cloudstack.domain.FirewallRule;
 import org.jclouds.cloudstack.domain.IPForwardingRule;
 import org.jclouds.cloudstack.domain.Network;
 import org.jclouds.cloudstack.domain.NetworkType;
+import org.jclouds.cloudstack.domain.Project;
 import org.jclouds.cloudstack.domain.PublicIPAddress;
 import org.jclouds.cloudstack.domain.SecurityGroup;
 import org.jclouds.cloudstack.domain.ServiceOffering;
@@ -55,12 +57,14 @@ import org.jclouds.cloudstack.domain.VirtualMachine;
 import org.jclouds.cloudstack.domain.Zone;
 import org.jclouds.cloudstack.domain.ZoneAndName;
 import org.jclouds.cloudstack.domain.ZoneSecurityGroupNamePortsCidrs;
+import org.jclouds.cloudstack.features.TemplateApi;
 import org.jclouds.cloudstack.functions.CreateFirewallRulesForIP;
 import org.jclouds.cloudstack.functions.CreatePortForwardingRulesForIP;
 import org.jclouds.cloudstack.functions.StaticNATVirtualMachineInNetwork;
 import org.jclouds.cloudstack.functions.StaticNATVirtualMachineInNetwork.Factory;
 import org.jclouds.cloudstack.options.DeployVirtualMachineOptions;
 import org.jclouds.cloudstack.options.ListFirewallRulesOptions;
+import org.jclouds.cloudstack.options.ListTemplatesOptions;
 import org.jclouds.cloudstack.strategy.BlockUntilJobCompletesAndReturnResult;
 import org.jclouds.collect.Memoized;
 import org.jclouds.compute.ComputeServiceAdapter;
@@ -70,14 +74,13 @@ import org.jclouds.domain.Credentials;
 import org.jclouds.domain.LoginCredentials;
 import org.jclouds.logging.Logger;
 
+import com.google.common.base.Function;
 import com.google.common.base.Predicate;
 import com.google.common.base.Supplier;
-import com.google.common.base.Throwables;
 import com.google.common.cache.LoadingCache;
 import com.google.common.collect.ImmutableSet;
-import com.google.common.collect.Iterables;
-import com.google.common.collect.Sets;
 import com.google.common.collect.ImmutableSet.Builder;
+import com.google.common.collect.Sets;
 import com.google.common.primitives.Ints;
 
 /**
@@ -95,6 +98,7 @@ public class CloudStackComputeServiceAdapter implements
    private final CloudStackApi client;
    private final Predicate<String> jobComplete;
    private final Supplier<Map<String, Network>> networkSupplier;
+   private final Supplier<Map<String, Project>> projectSupplier;
    private final BlockUntilJobCompletesAndReturnResult blockUntilJobCompletesAndReturnResult;
    private final Factory staticNATVMInNetwork;
    private final CreatePortForwardingRulesForIP setupPortForwardingRulesForIP;
@@ -110,6 +114,7 @@ public class CloudStackComputeServiceAdapter implements
    @Inject
    public CloudStackComputeServiceAdapter(CloudStackApi client, Predicate<String> jobComplete,
                                           @Memoized Supplier<Map<String, Network>> networkSupplier,
+                                          @Memoized Supplier<Map<String, Project>> projectSupplier,
                                           BlockUntilJobCompletesAndReturnResult blockUntilJobCompletesAndReturnResult,
                                           StaticNATVirtualMachineInNetwork.Factory staticNATVMInNetwork,
                                           CreatePortForwardingRulesForIP setupPortForwardingRulesForIP,
@@ -124,6 +129,7 @@ public class CloudStackComputeServiceAdapter implements
       this.client = checkNotNull(client, "client");
       this.jobComplete = checkNotNull(jobComplete, "jobComplete");
       this.networkSupplier = checkNotNull(networkSupplier, "networkSupplier");
+      this.projectSupplier = checkNotNull(projectSupplier, "projectSupplier");
       this.blockUntilJobCompletesAndReturnResult = checkNotNull(blockUntilJobCompletesAndReturnResult,
          "blockUntilJobCompletesAndReturnResult");
       this.staticNATVMInNetwork = checkNotNull(staticNATVMInNetwork, "staticNATVMInNetwork");
@@ -270,9 +276,14 @@ public class CloudStackComputeServiceAdapter implements
 
    @Override
    public Iterable<Template> listImages() {
-      // TODO: we may need to filter these further
-      // we may also want to see if we can work with ssh keys
-      return filter(client.getTemplateApi().listTemplates(), isReady());
+      TemplateApi templateApi = client.getTemplateApi();
+      ImmutableSet.Builder<Template> templates = ImmutableSet.builder();
+      templates.addAll(templateApi.listTemplates());
+      for (String project : projectSupplier.get().keySet()) {
+         templates.addAll(templateApi.listTemplates(ListTemplatesOptions.Builder.projectId(project)));
+      }
+
+      return filter(templates.build(), isReady());
    }
 
    @Override

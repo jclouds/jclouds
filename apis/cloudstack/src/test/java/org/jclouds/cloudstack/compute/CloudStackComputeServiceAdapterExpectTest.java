@@ -110,17 +110,18 @@ public class CloudStackComputeServiceAdapterExpectTest extends BaseCloudStackCom
               .build();
   
       Map<HttpRequest, HttpResponse> requestResponseMap = ImmutableMap.<HttpRequest, HttpResponse> builder()
-            .put(listTemplates, listTemplatesResponse)
-            .put(listOsTypes, listOsTypesResponse)
-            .put(listOsCategories, listOsCategoriesResponse)
-            .put(listZones, listZonesResponse)
-            .put(listServiceOfferings, listServiceOfferingsResponse)
-            .put(listAccounts, listAccountsResponse)
-            .put(listNetworks, listNetworksResponse)
-            .put(getZone, getZoneResponse)
-            .put(deployVM, deployVMResponse)
-            .put(queryAsyncJobResult, queryAsyncJobResultResponse)
-            .build();
+              .put(listProjects, listProjectsResponse)
+              .put(listTemplates, listTemplatesResponse)
+              .put(listOsTypes, listOsTypesResponse)
+              .put(listOsCategories, listOsCategoriesResponse)
+              .put(listZones, listZonesResponse)
+              .put(listServiceOfferings, listServiceOfferingsResponse)
+              .put(listAccounts, listAccountsResponse)
+              .put(listNetworks, listNetworksResponse)
+              .put(getZone, getZoneResponse)
+              .put(deployVM, deployVMResponse)
+              .put(queryAsyncJobResult, queryAsyncJobResultResponse)
+              .build();
 
       Injector forNode = requestsSendResponses(requestResponseMap);
 
@@ -154,17 +155,18 @@ public class CloudStackComputeServiceAdapterExpectTest extends BaseCloudStackCom
               .build();
   
       Map<HttpRequest, HttpResponse> requestResponseMap = ImmutableMap.<HttpRequest, HttpResponse> builder()
-            .put(listTemplates, listTemplatesResponse)
-            .put(listOsTypes, listOsTypesResponse)
-            .put(listOsCategories, listOsCategoriesResponse)
-            .put(listZones, listZonesResponse)
-            .put(listServiceOfferings, listServiceOfferingsResponse)
-            .put(listAccounts, listAccountsResponse)
-            .put(listNetworks, listNetworksResponse)
-            .put(getZone, getZoneResponse)
-            .put(deployVM, deployVMResponse)
-            .put(queryAsyncJobResult, queryAsyncJobResultResponse)
-            .build();
+              .put(listProjects, listProjectsResponse)
+              .put(listTemplates, listTemplatesResponse)
+              .put(listOsTypes, listOsTypesResponse)
+              .put(listOsCategories, listOsCategoriesResponse)
+              .put(listZones, listZonesResponse)
+              .put(listServiceOfferings, listServiceOfferingsResponse)
+              .put(listAccounts, listAccountsResponse)
+              .put(listNetworks, listNetworksResponse)
+              .put(getZone, getZoneResponse)
+              .put(deployVM, deployVMResponse)
+              .put(queryAsyncJobResult, queryAsyncJobResultResponse)
+              .build();
 
       Injector forKeyPair = requestsSendResponses(requestResponseMap);
 
@@ -201,18 +203,19 @@ public class CloudStackComputeServiceAdapterExpectTest extends BaseCloudStackCom
               .build();
   
       Map<HttpRequest, HttpResponse> requestResponseMap = ImmutableMap.<HttpRequest, HttpResponse> builder()
-            .put(listTemplates, listTemplatesResponse)
-            .put(listOsTypes, listOsTypesResponse)
-            .put(listOsCategories, listOsCategoriesResponse)
-            .put(listZones, listZonesResponse)
-            .put(listServiceOfferings, listServiceOfferingsResponse)
-            .put(listAccounts, listAccountsResponse)
-            .put(listNetworks, listNetworksResponse)
-            .put(getZone, getZoneResponse)
-            .put(deployVM, deployVMResponse)
-            .put(createSSHKeyPair, createSSHKeyPairResponse)
-            .put(queryAsyncJobResult, queryAsyncJobResultResponse)
-            .build();
+              .put(listProjects, listProjectsResponse)
+              .put(listTemplates, listTemplatesResponse)
+              .put(listOsTypes, listOsTypesResponse)
+              .put(listOsCategories, listOsCategoriesResponse)
+              .put(listZones, listZonesResponse)
+              .put(listServiceOfferings, listServiceOfferingsResponse)
+              .put(listAccounts, listAccountsResponse)
+              .put(listNetworks, listNetworksResponse)
+              .put(getZone, getZoneResponse)
+              .put(deployVM, deployVMResponse)
+              .put(createSSHKeyPair, createSSHKeyPairResponse)
+              .put(queryAsyncJobResult, queryAsyncJobResultResponse)
+              .build();
 
       Injector forKeyPair = requestsSendResponses(requestResponseMap);
 
@@ -247,17 +250,18 @@ public class CloudStackComputeServiceAdapterExpectTest extends BaseCloudStackCom
               .build();
   
       Map<HttpRequest, HttpResponse> requestResponseMap = ImmutableMap.<HttpRequest, HttpResponse> builder()
-            .put(listTemplates, listTemplatesResponse)
-            .put(listOsTypes, listOsTypesResponse)
-            .put(listOsCategories, listOsCategoriesResponse)
-            .put(listZones, listZonesResponse)
-            .put(listServiceOfferings, listServiceOfferingsResponse)
-            .put(listAccounts, listAccountsResponse)
-            .put(listNetworks, listNetworksWithSecurityGroupsResponse)
-            .put(getZoneWithSecurityGroups, getZoneWithSecurityGroupsResponse)
-            .put(deployVM, deployVMResponse)
-            .put(queryAsyncJobResult, queryAsyncJobResultResponse)
-            .build();
+              .put(listProjects, listProjectsResponse)
+              .put(listTemplates, listTemplatesResponse)
+              .put(listOsTypes, listOsTypesResponse)
+              .put(listOsCategories, listOsCategoriesResponse)
+              .put(listZones, listZonesResponse)
+              .put(listServiceOfferings, listServiceOfferingsResponse)
+              .put(listAccounts, listAccountsResponse)
+              .put(listNetworks, listNetworksWithSecurityGroupsResponse)
+              .put(getZoneWithSecurityGroups, getZoneWithSecurityGroupsResponse)
+              .put(deployVM, deployVMResponse)
+              .put(queryAsyncJobResult, queryAsyncJobResultResponse)
+              .build();
 
       Injector forKeyPair = requestsSendResponses(requestResponseMap);
 
@@ -299,6 +303,7 @@ public class CloudStackComputeServiceAdapterExpectTest extends BaseCloudStackCom
               .build();
 
       Map<HttpRequest, HttpResponse> requestResponseMap = ImmutableMap.<HttpRequest, HttpResponse> builder()
+              .put(listProjects, listProjectsResponse)
               .put(listTemplates, listTemplatesResponse)
               .put(listOsTypes, listOsTypesResponse)
               .put(listOsCategories, listOsCategoriesResponse)
@@ -353,21 +358,22 @@ public class CloudStackComputeServiceAdapterExpectTest extends BaseCloudStackCom
               .build();
   
       Map<HttpRequest, HttpResponse> requestResponseMap = ImmutableMap.<HttpRequest, HttpResponse> builder()
-            .put(listTemplates, listTemplatesResponse)
-            .put(listOsTypes, listOsTypesResponse)
-            .put(listOsCategories, listOsCategoriesResponse)
-            .put(listZones, listZonesResponse)
-            .put(listServiceOfferings, listServiceOfferingsResponse)
-            .put(listAccounts, listAccountsResponse)
-            .put(listNetworks, listNetworksWithSecurityGroupsResponse)
-            .put(getZoneWithSecurityGroups, getZoneWithSecurityGroupsResponse)
-            .put(deployVM, deployVMResponse)
-            .put(queryAsyncJobResult, queryAsyncJobResultSecurityGroupResponse)
-            .put(queryAsyncJobResultAuthorizeIngress, queryAsyncJobResultAuthorizeIngressResponse)
-            .put(getSecurityGroup, getSecurityGroupResponse)
-            .put(createSecurityGroup, createSecurityGroupResponse)
-            .put(authorizeIngress, authorizeIngressResponse)
-            .build();
+              .put(listProjects, listProjectsResponse)
+              .put(listTemplates, listTemplatesResponse)
+              .put(listOsTypes, listOsTypesResponse)
+              .put(listOsCategories, listOsCategoriesResponse)
+              .put(listZones, listZonesResponse)
+              .put(listServiceOfferings, listServiceOfferingsResponse)
+              .put(listAccounts, listAccountsResponse)
+              .put(listNetworks, listNetworksWithSecurityGroupsResponse)
+              .put(getZoneWithSecurityGroups, getZoneWithSecurityGroupsResponse)
+              .put(deployVM, deployVMResponse)
+              .put(queryAsyncJobResult, queryAsyncJobResultSecurityGroupResponse)
+              .put(queryAsyncJobResultAuthorizeIngress, queryAsyncJobResultAuthorizeIngressResponse)
+              .put(getSecurityGroup, getSecurityGroupResponse)
+              .put(createSecurityGroup, createSecurityGroupResponse)
+              .put(authorizeIngress, authorizeIngressResponse)
+              .build();
 
       Injector forKeyPair = requestsSendResponses(requestResponseMap);
 
@@ -411,17 +417,18 @@ public class CloudStackComputeServiceAdapterExpectTest extends BaseCloudStackCom
               .build();
 
       Map<HttpRequest, HttpResponse> requestResponseMap = ImmutableMap.<HttpRequest, HttpResponse> builder()
-            .put(listTemplates, listTemplatesResponse)
-            .put(listOsTypes, listOsTypesResponse)
-            .put(listOsCategories, listOsCategoriesResponse)
-            .put(listZones, listZonesResponse)
-            .put(listServiceOfferings, listServiceOfferingsResponse)
-            .put(listAccounts, listAccountsResponse)
-            .put(listNetworks, listNetworksResponse)
-            .put(getZone, getZoneResponse)
-            .put(deployVM, deployVMResponse)
-            .put(queryAsyncJobResult, queryAsyncJobResultResponse)
-            .build();
+              .put(listProjects, listProjectsResponse)
+              .put(listTemplates, listTemplatesResponse)
+              .put(listOsTypes, listOsTypesResponse)
+              .put(listOsCategories, listOsCategoriesResponse)
+              .put(listZones, listZonesResponse)
+              .put(listServiceOfferings, listServiceOfferingsResponse)
+              .put(listAccounts, listAccountsResponse)
+              .put(listNetworks, listNetworksResponse)
+              .put(getZone, getZoneResponse)
+              .put(deployVM, deployVMResponse)
+              .put(queryAsyncJobResult, queryAsyncJobResultResponse)
+              .build();
 
       Injector forKeyPair = requestsSendResponses(requestResponseMap);
 
