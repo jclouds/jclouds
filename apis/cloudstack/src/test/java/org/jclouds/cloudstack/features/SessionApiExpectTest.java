@@ -47,14 +47,14 @@ public class SessionApiExpectTest extends BaseCloudStackExpectTest<SessionApi> {
                                   .endpoint("http://localhost:8080/client/api")
                                   .addQueryParam("response", "json")
                                   .addQueryParam("command", "login")
-                                  .addQueryParam("username", "jcloud")
-                                  .addQueryParam("domain", "Partners/jCloud")
+                                  .addQueryParam("username", "jclouds")
+                                  .addQueryParam("domain", "Partners/jclouds")
                                   .addQueryParam("password", "30e14b3727225d833aad2206acea1275")
                                   .addHeader("Accept", "application/json").build();
 
    public void testLoginWhenResponseIs2xxIncludesJSessionId() throws IOException {
-      String domain = "Partners/jCloud";
-      String user = "jcloud";
+      String domain = "Partners/jclouds";
+      String user = "jclouds";
       String password = "jcl0ud";
       String md5password = base16().lowerCase().encode(md5().hashString(password, UTF_8).asBytes());
 
@@ -70,9 +70,9 @@ public class SessionApiExpectTest extends BaseCloudStackExpectTest<SessionApi> {
             .build());
 
       assertEquals(client.loginUserInDomainWithHashOfPassword(user, domain, md5password).toString(),
-         LoginResponse.builder().timeout(1800).lastName("Kiran").registered(false).username("jcloud").firstName("Vijay")
+         LoginResponse.builder().timeout(1800).lastName("Kiran").registered(false).username("jclouds").firstName("Vijay")
             .domainId("11").accountType(Account.Type.DOMAIN_ADMIN).userId("19").sessionKey(
-            "uYT4/MNiglgAKiZRQkvV8QP8gn0=").jSessionId(jSessionId).accountName("jcloud").build().toString());
+            "uYT4/MNiglgAKiZRQkvV8QP8gn0=").jSessionId(jSessionId).accountName("jclouds").build().toString());
    }
 
    public void testLogout() throws IOException {
