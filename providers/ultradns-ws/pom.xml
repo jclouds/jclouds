@@ -27,7 +27,7 @@
   </parent>
   <groupId>org.apache.jclouds.provider</groupId>
   <artifactId>ultradns-ws</artifactId>
-  <name>jcloud ultradns-ws provider</name>
+  <name>jclouds ultradns-ws provider</name>
   <description>jclouds components to access UltraDNS Web Services API</description>
   <packaging>bundle</packaging>
 

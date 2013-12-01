@@ -27,7 +27,7 @@
   </parent>
   <groupId>org.apache.jclouds.api</groupId>
   <artifactId>cloudfiles</artifactId>
-  <name>jcloud cloudfiles api</name>
+  <name>jclouds cloudfiles api</name>
   <description>jclouds components to access an implementation of CloudFiles</description>
   <packaging>bundle</packaging>
 

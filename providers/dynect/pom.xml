@@ -27,7 +27,7 @@
   </parent>
   <groupId>org.apache.jclouds.provider</groupId>
   <artifactId>dynect</artifactId>
-  <name>jcloud dynect api</name>
+  <name>jclouds dynect api</name>
   <description>jclouds components for DynECT Managed DNS</description>
   <packaging>bundle</packaging>
 

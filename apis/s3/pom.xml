@@ -27,7 +27,7 @@
   </parent>
   <groupId>org.apache.jclouds.api</groupId>
   <artifactId>s3</artifactId>
-  <name>jcloud s3 api</name>
+  <name>jclouds s3 api</name>
   <description>jclouds components to access an implementation of S3</description>
   <packaging>bundle</packaging>
 

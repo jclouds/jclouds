@@ -28,7 +28,7 @@
 
   <groupId>org.apache.jclouds.api</groupId>
   <artifactId>cloudservers</artifactId>
-  <name>jcloud cloudservers api</name>
+  <name>jclouds cloudservers api</name>
   <description>jclouds components to access an implementation of CloudServers</description>
   <packaging>bundle</packaging>
 
