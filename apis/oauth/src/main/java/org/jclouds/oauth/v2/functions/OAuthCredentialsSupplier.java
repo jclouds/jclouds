@@ -115,7 +115,7 @@ public class OAuthCredentialsSupplier implements Supplier<OAuthCredentials> {
       } catch (UncheckedExecutionException e) {
          Throwable authorizationException = getFirstThrowableOfType(e, AuthorizationException.class);
          if (authorizationException != null) {
-            throw ((AuthorizationException) authorizationException);
+            throw (AuthorizationException) authorizationException;
          }
          throw propagate(e);
       }

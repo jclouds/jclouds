@@ -33,15 +33,15 @@ public interface TokenRequestFormat {
    /**
     * Transforms the provided HttpRequest into a particular token request with a specific format.
     */
-   public <R extends HttpRequest> R formatRequest(R httpRequest, TokenRequest tokenRequest);
+   <R extends HttpRequest> R formatRequest(R httpRequest, TokenRequest tokenRequest);
 
    /**
     * The name of the type of the token request, e.g., "JWT"
     */
-   public String getTypeName();
+   String getTypeName();
 
    /**
     * The claims that must be present in the token request for it to be valid.
     */
-   public Set<String> requiredClaims();
+   Set<String> requiredClaims();
 }
