@@ -123,8 +123,8 @@ public class GoogleComputeEngineHttpApiModule extends HttpApiModule<GoogleComput
    @Provides
    @Singleton
    @Named("machineTypeToURI")
-   public Function<String, URI> provideMachineTypeNameToURIFunction(final @Provider Supplier<URI> endpoint,
-                                                                    final @UserProject Supplier<String> userProject) {
+   public Function<String, URI> provideMachineTypeNameToURIFunction(@Provider final Supplier<URI> endpoint,
+                                                                    @UserProject final Supplier<String> userProject) {
       return new Function<String, URI>() {
          @Override
          public URI apply(String input) {
@@ -139,8 +139,8 @@ public class GoogleComputeEngineHttpApiModule extends HttpApiModule<GoogleComput
    @Provides
    @Singleton
    @Named("networkToURI")
-   public Function<String, URI> provideNetworkNameToURIFunction(final @Provider Supplier<URI> endpoint,
-                                                                final @UserProject Supplier<String> userProject) {
+   public Function<String, URI> provideNetworkNameToURIFunction(@Provider final Supplier<URI> endpoint,
+                                                                @UserProject final Supplier<String> userProject) {
       return new Function<String, URI>() {
          @Override
          public URI apply(String input) {
@@ -153,8 +153,8 @@ public class GoogleComputeEngineHttpApiModule extends HttpApiModule<GoogleComput
    @Provides
    @Singleton
    @Named("zoneToURI")
-   public Function<String, URI> provideZoneNameToURIFunction(final @Provider Supplier<URI> endpoint,
-                                                             final @UserProject Supplier<String> userProject) {
+   public Function<String, URI> provideZoneNameToURIFunction(@Provider final Supplier<URI> endpoint,
+                                                             @UserProject final Supplier<String> userProject) {
       return new Function<String, URI>() {
          @Override
          public URI apply(String input) {
@@ -167,8 +167,8 @@ public class GoogleComputeEngineHttpApiModule extends HttpApiModule<GoogleComput
    @Provides
    @Singleton
    @Named("regionToURI")
-   public Function<String, URI> provideRegionNameToURIFunction(final @Provider Supplier<URI> endpoint,
-                                                               final @UserProject Supplier<String> userProject) {
+   public Function<String, URI> provideRegionNameToURIFunction(@Provider final Supplier<URI> endpoint,
+                                                               @UserProject final Supplier<String> userProject) {
       return new Function<String, URI>() {
          @Override
          public URI apply(String input) {

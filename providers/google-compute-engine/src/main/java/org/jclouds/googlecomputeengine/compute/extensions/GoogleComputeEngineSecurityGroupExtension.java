@@ -60,6 +60,7 @@ import com.google.common.collect.FluentIterable;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Multimap;
+import com.google.common.util.concurrent.Atomics;
 
 /**
  * An extension to compute service to allow for the manipulation of {@link org.jclouds.compute.domain.SecurityGroup}s. Implementation
@@ -175,7 +176,7 @@ public class GoogleComputeEngineSecurityGroupExtension implements SecurityGroupE
       FluentIterable<Firewall> fws = api.getFirewallApiForProject(userProject.get()).list(options).concat();
 
       for (Firewall fw : fws) {
-         AtomicReference<Operation> operation = new AtomicReference<Operation>(api.getFirewallApiForProject(userProject.get())
+         AtomicReference<Operation> operation = Atomics.newReference(api.getFirewallApiForProject(userProject.get())
                  .delete(fw.getName()));
 
          retry(operationDonePredicate, operationCompleteCheckTimeout, operationCompleteCheckInterval,
@@ -184,7 +185,7 @@ public class GoogleComputeEngineSecurityGroupExtension implements SecurityGroupE
          checkState(!operation.get().getHttpError().isPresent(), "Could not delete firewall, operation failed" + operation);
       }
 
-      AtomicReference<Operation> operation = new AtomicReference<Operation>(
+      AtomicReference<Operation> operation = Atomics.newReference(
               api.getNetworkApiForProject(userProject.get()).delete(id));
 
       retry(operationDonePredicate, operationCompleteCheckTimeout, operationCompleteCheckInterval,
@@ -226,7 +227,7 @@ public class GoogleComputeEngineSecurityGroupExtension implements SecurityGroupE
       }
       fwOptions.addAllowedRule(ruleBuilder.build());
 
-      AtomicReference<Operation> operation = new AtomicReference<Operation>(api.getFirewallApiForProject(userProject
+      AtomicReference<Operation> operation = Atomics.newReference(api.getFirewallApiForProject(userProject
               .get()).createInNetwork(
               uniqueFwName,
               group.getUri(),
@@ -269,7 +270,7 @@ public class GoogleComputeEngineSecurityGroupExtension implements SecurityGroupE
 
       for (Firewall fw : fws) {
          if (equalsIpPermission(ipPermission).apply(fw)) {
-            AtomicReference<Operation> operation = new AtomicReference<Operation>(api.getFirewallApiForProject(userProject.get())
+            AtomicReference<Operation> operation = Atomics.newReference(api.getFirewallApiForProject(userProject.get())
                     .delete(fw.getName()));
 
             retry(operationDonePredicate, operationCompleteCheckTimeout, operationCompleteCheckInterval,

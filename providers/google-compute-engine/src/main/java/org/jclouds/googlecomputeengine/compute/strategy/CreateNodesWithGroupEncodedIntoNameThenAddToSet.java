@@ -57,6 +57,7 @@ import com.google.common.cache.LoadingCache;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Multimap;
 import com.google.common.collect.Sets;
+import com.google.common.util.concurrent.Atomics;
 import com.google.common.util.concurrent.ListenableFuture;
 import com.google.common.util.concurrent.ListeningExecutorService;
 
@@ -166,7 +167,7 @@ public class CreateNodesWithGroupEncodedIntoNameThenAddToSet extends
                     .sourceTags(templateOptions.getTags())
                     .sourceRanges(of(DEFAULT_INTERNAL_NETWORK_RANGE, EXTERIOR_RANGE))
                     .targetTags(ImmutableSet.of(name));
-            AtomicReference<Operation> operation = new AtomicReference<Operation>(firewallApi.createInNetwork(
+            AtomicReference<Operation> operation = Atomics.newReference(firewallApi.createInNetwork(
                     firewallOptions.getName(),
                     network.getSelfLink(),
                     firewallOptions));

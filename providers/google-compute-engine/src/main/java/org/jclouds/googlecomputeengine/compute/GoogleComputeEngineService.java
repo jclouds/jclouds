@@ -74,6 +74,7 @@ import com.google.common.base.Optional;
 import com.google.common.base.Predicate;
 import com.google.common.base.Supplier;
 import com.google.common.collect.Sets;
+import com.google.common.util.concurrent.Atomics;
 import com.google.common.util.concurrent.ListeningExecutorService;
 
 /**
@@ -179,7 +180,7 @@ public class GoogleComputeEngineService extends BaseComputeService {
          }
       }
 
-      AtomicReference<Operation> operation = new AtomicReference<Operation>(api.getNetworkApiForProject(project.get()).delete(resourceName));
+      AtomicReference<Operation> operation = Atomics.newReference(api.getNetworkApiForProject(project.get()).delete(resourceName));
 
       retry(operationDonePredicate, operationCompleteCheckTimeout, operationCompleteCheckInterval,
               MILLISECONDS).apply(operation);

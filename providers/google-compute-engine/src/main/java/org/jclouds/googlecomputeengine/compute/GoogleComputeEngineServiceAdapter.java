@@ -69,6 +69,7 @@ import com.google.common.base.Supplier;
 import com.google.common.collect.FluentIterable;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
+import com.google.common.util.concurrent.Atomics;
 import com.google.common.util.concurrent.UncheckedTimeoutException;
 import com.google.inject.Inject;
 
@@ -154,7 +155,7 @@ public class GoogleComputeEngineServiceAdapter implements ComputeServiceAdapter<
       }
 
       // some times the newly created instances are not immediately returned
-      AtomicReference<Instance> instance = new AtomicReference<Instance>();
+      AtomicReference<Instance> instance = Atomics.newReference();
 
       retry(new Predicate<AtomicReference<Instance>>() {
          @Override
@@ -336,7 +337,7 @@ public class GoogleComputeEngineServiceAdapter implements ComputeServiceAdapter<
    }
 
    private void waitOperationDone(Operation operation) {
-      AtomicReference<Operation> operationRef = new AtomicReference<Operation>(operation);
+      AtomicReference<Operation> operationRef = Atomics.newReference(operation);
 
       // wait for the operation to complete
       if (!retryOperationDonePredicate.apply(operationRef)) {

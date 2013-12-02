@@ -41,6 +41,7 @@ import org.jclouds.logging.Logger;
 import com.google.common.base.Function;
 import com.google.common.base.Predicate;
 import com.google.common.base.Supplier;
+import com.google.common.util.concurrent.Atomics;
 
 /**
  * @author Andrew Bayer
@@ -82,14 +83,14 @@ public class CreateNetworkIfNeeded implements Function<NetworkAndAddressRange, N
       }
 
       if (input.getGateway().isPresent()) {
-         AtomicReference<Operation> operation = new AtomicReference<Operation>(api.getNetworkApiForProject(userProject
+         AtomicReference<Operation> operation = Atomics.newReference(api.getNetworkApiForProject(userProject
                  .get()).createInIPv4RangeWithGateway(input.getName(), input.getIpV4Range(), input.getGateway().get()));
          retry(operationDonePredicate, operationCompleteCheckTimeout, operationCompleteCheckInterval,
                  MILLISECONDS).apply(operation);
 
          checkState(!operation.get().getHttpError().isPresent(), "Could not create network, operation failed" + operation);
       } else {
-         AtomicReference<Operation> operation = new AtomicReference<Operation>(api.getNetworkApiForProject(userProject
+         AtomicReference<Operation> operation = Atomics.newReference(api.getNetworkApiForProject(userProject
                  .get()).createInIPv4Range(input.getName(), input.getIpV4Range()));
          retry(operationDonePredicate, operationCompleteCheckTimeout, operationCompleteCheckInterval,
                  MILLISECONDS).apply(operation);

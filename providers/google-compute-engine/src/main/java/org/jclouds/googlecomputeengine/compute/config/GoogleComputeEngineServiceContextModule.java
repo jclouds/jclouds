@@ -209,7 +209,7 @@ public class GoogleComputeEngineServiceContextModule
    public Supplier<Map<URI, ? extends Location>> provideZones(
            AtomicReference<AuthorizationException> authException,
            final GoogleComputeEngineApi api, final Function<Zone, Location> zoneToLocation,
-           final @UserProject Supplier<String> userProject,
+           @UserProject final Supplier<String> userProject,
            @Named(PROPERTY_SESSION_INTERVAL) long seconds) {
       return MemoizedRetryOnTimeOutButNotOnAuthorizationExceptionSupplier.create(authException,
               new Supplier<Map<URI, ? extends Location>>() {
@@ -233,7 +233,7 @@ public class GoogleComputeEngineServiceContextModule
    public Supplier<Map<URI, Region>> provideRegions(
            AtomicReference<AuthorizationException> authException,
            final GoogleComputeEngineApi api,
-           final @UserProject Supplier<String> userProject,
+           @UserProject final Supplier<String> userProject,
            @Named(PROPERTY_SESSION_INTERVAL) long seconds) {
       return MemoizedRetryOnTimeOutButNotOnAuthorizationExceptionSupplier.create(authException,
               new Supplier<Map<URI, Region>>() {
