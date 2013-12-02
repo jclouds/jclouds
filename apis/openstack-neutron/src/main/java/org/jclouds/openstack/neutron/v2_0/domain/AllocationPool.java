@@ -86,7 +86,7 @@ public class AllocationPool {
       return new ConcreteBuilder().fromAllocationPool(this);
    }
 
-   public static abstract class Builder {
+   public abstract static class Builder {
       protected abstract Builder self();
 
       protected String start;

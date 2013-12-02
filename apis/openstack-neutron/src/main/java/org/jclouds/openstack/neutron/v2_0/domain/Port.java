@@ -142,7 +142,7 @@ public class Port extends ReferenceWithName {
       return new ConcreteBuilder().fromPort(this);
    }
 
-   public static abstract class Builder<T extends Builder<T>> extends ReferenceWithName.Builder<T> {
+   public abstract static class Builder<T extends Builder<T>> extends ReferenceWithName.Builder<T> {
       protected String networkId;
       protected String deviceId;
       protected String deviceOwner;

@@ -156,7 +156,7 @@ public class Network extends ReferenceWithName {
       return new ConcreteBuilder().fromNetwork(this);
    }
 
-   public static abstract class Builder<T extends Builder<T>> extends ReferenceWithName.Builder<T> {
+   public abstract static class Builder<T extends Builder<T>> extends ReferenceWithName.Builder<T> {
       protected State state;
       protected Set<String> subnets;
       protected Boolean adminStateUp;

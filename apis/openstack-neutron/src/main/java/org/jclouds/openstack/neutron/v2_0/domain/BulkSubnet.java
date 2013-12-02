@@ -164,7 +164,7 @@ public class BulkSubnet {
       return new ConcreteBuilder().fromBulkSubnet(this);
    }
 
-   public static abstract class Builder {
+   public abstract static class Builder {
       protected abstract Builder self();
 
       protected String name;
