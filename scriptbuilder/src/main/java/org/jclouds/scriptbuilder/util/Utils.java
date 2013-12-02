@@ -24,13 +24,14 @@ import java.util.regex.Pattern;
 import org.jclouds.scriptbuilder.domain.OsFamily;
 import org.jclouds.scriptbuilder.domain.ShellToken;
 import org.jclouds.scriptbuilder.functionloader.CurrentFunctionLoader;
-import org.jclouds.util.Maps2;
 
 import com.google.common.base.CaseFormat;
 import com.google.common.base.Function;
 import com.google.common.base.Joiner;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Iterables;
+
+import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * Utilities used to build init scripts.
@@ -112,7 +113,7 @@ public class Utils {
     * @see VariableNameForOsFamily
     */
    public static String writeVariableExporters(Map<String, String> exports, final OsFamily family) {
-      exports = Maps2.transformKeys(exports, new VariableNameForOsFamily(family));
+      exports = transformKeys(exports, new VariableNameForOsFamily(family));
       return replaceTokens(writeVariableExporters(exports), ShellToken.tokenValueMap(family));
    }
 
@@ -207,4 +208,23 @@ public class Utils {
    public static String writeComment(String comment, OsFamily family) {
       return String.format("%s%s%s", ShellToken.REM.to(family), comment, ShellToken.LF.to(family));
    }
+
+    /**
+     * change the keys but keep the values in-tact.
+     *
+     * @param <K1> input key type
+     * @param <K2> output key type
+     * @param <V>  value type
+     * @param in   input map to transform
+     * @param fn   how to transform the values
+     * @return immutableMap with the new keys.
+     */
+    public static <K1, K2, V> Map<K2, V> transformKeys(Map<K1, V> in, Function<K1, K2> fn) {
+        checkNotNull(in, "input map");
+        checkNotNull(fn, "function");
+        ImmutableMap.Builder<K2, V> returnVal = ImmutableMap.builder();
+        for (Entry<K1, V> entry : in.entrySet())
+            returnVal.put(fn.apply(entry.getKey()), entry.getValue());
+        return returnVal.build();
+    }
 }

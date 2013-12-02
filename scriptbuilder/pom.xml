@@ -34,8 +34,20 @@
     <jclouds.test.listener />
 
     <jclouds.osgi.activator>org.jclouds.scriptbuilder.functionloader.osgi.Activator</jclouds.osgi.activator>
-    <jclouds.osgi.export>org.jclouds.scriptbuilder*;version="${project.version}"</jclouds.osgi.export>
-    <jclouds.osgi.import>org.jclouds*;version="${project.version}",*</jclouds.osgi.import>
+    <jclouds.osgi.export>org.jclouds.scriptbuilder*;version="${project.version}";-noimport:=true</jclouds.osgi.export>
+    <!--
+      The following classes are only needed when using chef or other compute stuff:
+      i) org.jclouds.javax.annotation.Nullable
+      ii) org.jclouds.domain.Credentials
+      iii) java.inject.Inject
+    -->
+    <jclouds.osgi.import>
+        javax.inject*;resolution:=optional,
+        org.jclouds.domain*;version="${project.version}";resolution:=optional,
+        org.jclouds.javax.annotation*;version="${project.version}";resolution:=optional,
+        org.jclouds*;version="${project.version}",
+        *
+    </jclouds.osgi.import>
   </properties>
 
   <dependencies>
