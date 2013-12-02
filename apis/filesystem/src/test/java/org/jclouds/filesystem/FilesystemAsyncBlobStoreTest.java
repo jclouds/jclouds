@@ -26,7 +26,6 @@ import static org.testng.Assert.assertTrue;
 import static org.testng.Assert.fail;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.net.URI;
 import java.util.Iterator;
@@ -60,9 +59,9 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import com.google.common.collect.Sets;
+import com.google.common.io.ByteSource;
 import com.google.common.io.ByteStreams;
 import com.google.common.io.Files;
-import com.google.common.io.InputSupplier;
 import com.google.inject.CreationException;
 
 /**
@@ -585,9 +584,7 @@ public class FilesystemAsyncBlobStoreTest {
 
         assertNotNull(resultBlob, "Blob exists");
         // checks file content
-        InputSupplier<FileInputStream> expectedFile =
-                Files.newInputStreamSupplier(new File(
-                TARGET_CONTAINER_NAME, blobKey));
+        ByteSource expectedFile = Files.asByteSource(new File(TARGET_CONTAINER_NAME, blobKey));
         assertTrue(ByteStreams.equal(expectedFile, resultBlob.getPayload()),
                 "Blob payload differs from file content");
         // metadata are verified in the test for blobMetadata, so no need to

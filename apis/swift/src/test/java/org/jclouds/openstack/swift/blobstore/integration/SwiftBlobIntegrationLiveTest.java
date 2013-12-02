@@ -40,9 +40,8 @@ import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
 import com.google.common.hash.Hashing;
-import com.google.common.io.ByteStreams;
+import com.google.common.io.ByteSource;
 import com.google.common.io.Files;
-import com.google.common.io.InputSupplier;
 
 /**
  * 
@@ -65,7 +64,7 @@ public class SwiftBlobIntegrationLiveTest extends BaseBlobIntegrationTest {
       return props;
    }
    
-   private InputSupplier<InputStream> oneHundredOneConstitutions;
+   private ByteSource oneHundredOneConstitutions;
 
    public SwiftBlobIntegrationLiveTest() {
       provider = System.getProperty("test.swift.provider", "swift");
@@ -178,10 +177,10 @@ public class SwiftBlobIntegrationLiveTest extends BaseBlobIntegrationTest {
    private File createFileBiggerThan(long partSize) throws IOException {
       long copiesNeeded = (partSize / getOneHundredOneConstitutionsLength()) + 1;
 
-      InputSupplier<InputStream> temp = ByteStreams.join(oneHundredOneConstitutions);
+      ByteSource temp = ByteSource.concat(oneHundredOneConstitutions);
 
       for (int i = 0; i < copiesNeeded; i++) {
-         temp = ByteStreams.join(temp, oneHundredOneConstitutions);
+         temp = ByteSource.concat(temp, oneHundredOneConstitutions);
       }
 
       File fileToUpload = new File("target/lots-of-const.txt");

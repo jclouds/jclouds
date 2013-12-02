@@ -29,7 +29,6 @@ import static org.testng.Assert.assertNotNull;
 import static org.testng.Assert.assertNull;
 import static org.testng.Assert.fail;
 
-import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -80,6 +79,7 @@ import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Maps;
 import com.google.common.hash.HashCode;
+import com.google.common.io.ByteSource;
 import com.google.common.io.ByteStreams;
 import com.google.common.io.Files;
 import com.google.common.io.InputSupplier;
@@ -91,7 +91,7 @@ import com.google.common.util.concurrent.Uninterruptibles;
  * @author Adrian Cole
  */
 public class BaseBlobIntegrationTest extends BaseBlobStoreIntegrationTest {
-   private InputSupplier<InputStream> oneHundredOneConstitutions;
+   private ByteSource oneHundredOneConstitutions;
    private byte[] oneHundredOneConstitutionsMD5;
    private static long oneHundredOneConstitutionsLength;
 
@@ -100,23 +100,23 @@ public class BaseBlobIntegrationTest extends BaseBlobStoreIntegrationTest {
    public void setUpResourcesOnThisThread(ITestContext testContext) throws Exception {
       super.setUpResourcesOnThisThread(testContext);
       oneHundredOneConstitutions = getTestDataSupplier();
-      oneHundredOneConstitutionsMD5 = md5Supplier(oneHundredOneConstitutions);
+      oneHundredOneConstitutionsMD5 = oneHundredOneConstitutions.hash(md5()).asBytes();
    }
 
-   protected static byte[] md5Supplier(InputSupplier<? extends InputStream> supplier) throws IOException {
+   private static byte[] md5Supplier(InputSupplier<? extends InputStream> supplier) throws IOException {
       return ByteStreams.hash(supplier, md5()).asBytes();
    }
 
    @SuppressWarnings("unchecked")
-   public static InputSupplier<InputStream> getTestDataSupplier() throws IOException {
+   public static ByteSource getTestDataSupplier() throws IOException {
       byte[] oneConstitution = ByteStreams.toByteArray(new GZIPInputStream(BaseJettyTest.class
                .getResourceAsStream("/const.txt.gz")));
-      InputSupplier<ByteArrayInputStream> constitutionSupplier = ByteStreams.newInputStreamSupplier(oneConstitution);
+      ByteSource constitutionSupplier = ByteSource.wrap(oneConstitution);
 
-      InputSupplier<InputStream> temp = ByteStreams.join(constitutionSupplier);
+      ByteSource temp = ByteSource.concat(constitutionSupplier);
 
       for (int i = 0; i < 100; i++) {
-         temp = ByteStreams.join(temp, constitutionSupplier);
+         temp = ByteSource.concat(temp, constitutionSupplier);
       }
       oneHundredOneConstitutionsLength = oneConstitution.length * 101l;
       return temp;
@@ -181,7 +181,7 @@ public class BaseBlobIntegrationTest extends BaseBlobStoreIntegrationTest {
 
    @Test(groups = { "integration", "live" })
    public void testFileGetParallel() throws Exception {
-      final InputSupplier<? extends InputStream> supplier = createTestInput(32 * 1024);
+      final ByteSource supplier = createTestInput(32 * 1024);
       final String expectedContentDisposition = "attachment; filename=constit.txt";
       final String container = getContainerName();
       try {
@@ -198,7 +198,7 @@ public class BaseBlobIntegrationTest extends BaseBlobStoreIntegrationTest {
                         public Void apply(Blob from) {
                            try {
                               validateMetadata(from.getMetadata(), container, name);
-                              assertEquals(md5Supplier(from.getPayload()), md5Supplier(supplier));
+                              assertEquals(md5Supplier(from.getPayload()), supplier.hash(md5()).asBytes());
                               checkContentDisposition(from, expectedContentDisposition);
                            } catch (IOException e) {
                               Throwables.propagate(e);
@@ -221,12 +221,12 @@ public class BaseBlobIntegrationTest extends BaseBlobStoreIntegrationTest {
    }
 
    private void uploadInputSupplier(String container, String name, String contentDisposition,
-         InputSupplier<? extends InputStream> supplier) throws IOException {
+         ByteSource supplier) throws IOException {
       BlobStore blobStore = view.getBlobStore();
       blobStore.putBlob(container, blobStore.blobBuilder(name)
             .payload(new InputStreamSupplierPayload(supplier))
             .contentType("text/plain")
-            .contentMD5(md5Supplier(supplier))
+            .contentMD5(supplier.hash(md5()).asBytes())
             .contentLength(ByteStreams.length(supplier))
             .contentDisposition(contentDisposition)
             .build());
@@ -667,12 +667,12 @@ public class BaseBlobIntegrationTest extends BaseBlobStoreIntegrationTest {
       assertEquals(metadata.getContentMetadata().getContentMD5(), md5().hashString(TEST_STRING, UTF_8).asBytes());
    }
 
-   /** @return InputSupplier containing a random length 0..length of random bytes. */
+   /** @return ByteSource containing a random length 0..length of random bytes. */
    @SuppressWarnings("unchecked")
-   private static InputSupplier<? extends InputStream> createTestInput(int length) {
+   private static ByteSource createTestInput(int length) {
       Random random = new Random();
       byte[] buffer = new byte[random.nextInt(length)];
       random.nextBytes(buffer);
-      return ByteStreams.newInputStreamSupplier(buffer);
+      return ByteSource.wrap(buffer);
    }
 }

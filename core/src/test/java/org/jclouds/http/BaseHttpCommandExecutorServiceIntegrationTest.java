@@ -18,8 +18,6 @@ package org.jclouds.http;
 
 import static com.google.common.hash.Hashing.md5;
 import static com.google.common.io.BaseEncoding.base64;
-import static com.google.common.io.ByteStreams.join;
-import static com.google.common.io.ByteStreams.newInputStreamSupplier;
 import static com.google.common.io.ByteStreams.toByteArray;
 import static com.google.common.io.Closeables.close;
 import static com.google.common.io.Files.asByteSource;
@@ -31,7 +29,6 @@ import static org.testng.Assert.assertFalse;
 import static org.testng.Assert.assertTrue;
 import static org.testng.Assert.fail;
 
-import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -55,7 +52,6 @@ import com.google.common.collect.Multimap;
 import com.google.common.io.ByteSource;
 import com.google.common.io.CharSink;
 import com.google.common.io.Files;
-import com.google.common.io.InputSupplier;
 import com.squareup.okhttp.mockwebserver.Dispatcher;
 import com.squareup.okhttp.mockwebserver.MockResponse;
 import com.squareup.okhttp.mockwebserver.MockWebServer;
@@ -77,12 +73,12 @@ public abstract class BaseHttpCommandExecutorServiceIntegrationTest extends Base
 
    private String constitutionsMd5;
    private long constitutionsLength;
-   private InputSupplier<InputStream> oneHundredOneConstitutions;
+   private ByteSource oneHundredOneConstitutions;
 
    @BeforeClass(groups = "integration")
    public void setup() throws IOException {
       oneHundredOneConstitutions = getTestDataSupplier();
-      constitutionsMd5 = base64().encode(asByteSource(oneHundredOneConstitutions.getInput()).hash(md5()).asBytes());
+      constitutionsMd5 = base64().encode(oneHundredOneConstitutions.hash(md5()).asBytes());
    }
 
    protected IntegrationTestClient client(String url) {
@@ -647,13 +643,13 @@ public abstract class BaseHttpCommandExecutorServiceIntegrationTest extends Base
    }
 
    @SuppressWarnings("unchecked")
-   private InputSupplier<InputStream> getTestDataSupplier() throws IOException {
+   private ByteSource getTestDataSupplier() throws IOException {
       byte[] oneConstitution = toByteArray(new GZIPInputStream(
             BaseHttpCommandExecutorServiceIntegrationTest.class.getResourceAsStream("/const.txt.gz")));
-      InputSupplier<ByteArrayInputStream> constitutionSupplier = newInputStreamSupplier(oneConstitution);
-      InputSupplier<InputStream> temp = join(constitutionSupplier);
+      ByteSource constitutionSupplier = ByteSource.wrap(oneConstitution);
+      ByteSource temp = ByteSource.concat(constitutionSupplier);
       for (int i = 0; i < 100; i++) {
-         temp = join(temp, constitutionSupplier);
+         temp = ByteSource.concat(temp, constitutionSupplier);
       }
       constitutionsLength = oneConstitution.length * 101;
       return temp;

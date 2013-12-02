@@ -20,8 +20,6 @@ import static com.google.common.base.Throwables.getStackTraceAsString;
 import static com.google.common.hash.Hashing.md5;
 import static com.google.common.io.BaseEncoding.base64;
 import static com.google.common.io.ByteStreams.copy;
-import static com.google.common.io.ByteStreams.join;
-import static com.google.common.io.ByteStreams.newInputStreamSupplier;
 import static com.google.common.io.ByteStreams.toByteArray;
 import static com.google.common.net.HttpHeaders.CONTENT_DISPOSITION;
 import static com.google.common.net.HttpHeaders.CONTENT_ENCODING;
@@ -35,7 +33,6 @@ import static org.jclouds.io.ByteSources.asByteSource;
 import static org.jclouds.util.Closeables2.closeQuietly;
 import static org.jclouds.util.Strings2.toStringAndClose;
 
-import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Enumeration;
@@ -70,8 +67,7 @@ import com.google.common.collect.ImmutableMap.Builder;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.LinkedHashMultimap;
 import com.google.common.collect.Multimap;
-import com.google.common.io.ByteStreams;
-import com.google.common.io.InputSupplier;
+import com.google.common.io.ByteSource;
 import com.google.inject.Injector;
 import com.google.inject.Module;
 
@@ -94,8 +90,8 @@ public abstract class BaseJettyTest {
    public void setUpJetty(@Optional("8123") final int testPort) throws Exception {
       this.testPort = testPort;
 
-      final InputSupplier<InputStream> oneHundredOneConstitutions = getTestDataSupplier();
-      md5 = base64().encode(ByteStreams.hash(oneHundredOneConstitutions, md5()).asBytes());
+      final ByteSource oneHundredOneConstitutions = getTestDataSupplier();
+      md5 = base64().encode(oneHundredOneConstitutions.hash(md5()).asBytes());
 
       Handler server1Handler = new AbstractHandler() {
          public void handle(String target, Request baseRequest, HttpServletRequest request, HttpServletResponse response)
@@ -251,14 +247,14 @@ public abstract class BaseJettyTest {
    }
 
    @SuppressWarnings("unchecked")
-   public static InputSupplier<InputStream> getTestDataSupplier() throws IOException {
+   public static ByteSource getTestDataSupplier() throws IOException {
       byte[] oneConstitution = toByteArray(new GZIPInputStream(BaseJettyTest.class.getResourceAsStream("/const.txt.gz")));
-      InputSupplier<ByteArrayInputStream> constitutionSupplier = newInputStreamSupplier(oneConstitution);
+      ByteSource constitutionSupplier = ByteSource.wrap(oneConstitution);
 
-      InputSupplier<InputStream> temp = join(constitutionSupplier);
+      ByteSource temp = ByteSource.concat(constitutionSupplier);
 
       for (int i = 0; i < 100; i++) {
-         temp = join(temp, constitutionSupplier);
+         temp = ByteSource.concat(temp, constitutionSupplier);
       }
       return temp;
    }

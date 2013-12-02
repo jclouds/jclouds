@@ -18,13 +18,11 @@ package org.jclouds.azureblob.blobstore.integration;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
-import java.util.Arrays;
 import java.util.concurrent.ExecutionException;
 
-import com.google.common.io.ByteStreams;
+import com.google.common.collect.Iterables;
+import com.google.common.io.ByteSource;
 import com.google.common.io.Files;
-import com.google.common.io.InputSupplier;
 import org.jclouds.azureblob.blobstore.strategy.MultipartUploadStrategy;
 import org.jclouds.blobstore.BlobStore;
 import org.jclouds.blobstore.domain.Blob;
@@ -42,7 +40,7 @@ import static com.google.common.hash.Hashing.md5;
  */
 @Test(groups = "live")
 public class AzureBlobIntegrationLiveTest extends BaseBlobIntegrationTest {
-    private InputSupplier<InputStream> oneHundredOneConstitutions;
+    private ByteSource oneHundredOneConstitutions;
     private byte[] oneHundredOneConstitutionsMD5;
 
    public AzureBlobIntegrationLiveTest() {
@@ -81,7 +79,7 @@ public class AzureBlobIntegrationLiveTest extends BaseBlobIntegrationTest {
     */
    public void testMultipartChunkedFileStream() throws IOException, InterruptedException {
       oneHundredOneConstitutions = getTestDataSupplier();
-      oneHundredOneConstitutionsMD5 = ByteStreams.hash(oneHundredOneConstitutions, md5()).asBytes();
+      oneHundredOneConstitutionsMD5 = oneHundredOneConstitutions.hash(md5()).asBytes();
       File file = new File("target/const.txt");
       Files.copy(oneHundredOneConstitutions, file);
       String containerName = getContainerName();
@@ -100,12 +98,7 @@ public class AzureBlobIntegrationLiveTest extends BaseBlobIntegrationTest {
 
    public void testMultipartChunkedFileStreamPowerOfTwoSize() throws IOException, InterruptedException {
       final long limit = MultipartUploadStrategy.MAX_BLOCK_SIZE;
-      InputSupplier<InputStream> input = new InputSupplier<InputStream>() {
-         @Override
-         public InputStream getInput() throws IOException {
-            return ByteStreams.limit(ZERO_INPUT_STREAM, limit);
-         }
-      };
+      ByteSource input = repeatingArrayByteSource(new byte[1024]).slice(0, limit);
       File file = new File("target/const.txt");
       Files.copy(input, file);
       String containerName = getContainerName();
@@ -122,28 +115,7 @@ public class AzureBlobIntegrationLiveTest extends BaseBlobIntegrationTest {
       }
    }
 
-   /** An infinite-length zero byte InputStream. */
-   // Guava feature request:
-   // https://code.google.com/p/guava-libraries/issues/detail?id=1370
-   private static final InputStream ZERO_INPUT_STREAM = new InputStream() {
-      @Override
-      public int read() {
-         return 0;
-      }
-
-      @Override
-      public int read(final byte[] b) {
-         return read(b, 0, b.length);
-      }
-
-      @Override
-      public int read(final byte[] b, final int off, final int len) {
-         if (off < 0 || len < 0 || len > b.length - off) {
-            throw new IndexOutOfBoundsException();
-         }
-         int length = Math.min(len, b.length - off);
-         Arrays.fill(b, off, length, (byte) 0);
-         return length;
-      }
-   };
+   private static ByteSource repeatingArrayByteSource(final byte[] input) {
+      return ByteSource.concat(Iterables.cycle(ByteSource.wrap(input)));
+   }
 }
