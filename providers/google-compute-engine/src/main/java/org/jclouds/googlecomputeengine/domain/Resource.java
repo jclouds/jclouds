@@ -57,8 +57,6 @@ public class Resource {
       OPERATION_LIST,
       INSTANCE,
       INSTANCE_LIST,
-      KERNEL,
-      KERNEL_LIST,
       MACHINE_TYPE,
       MACHINE_TYPE_LIST,
       PROJECT,

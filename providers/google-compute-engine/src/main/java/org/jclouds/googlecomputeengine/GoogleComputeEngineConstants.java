@@ -34,6 +34,10 @@ public interface GoogleComputeEngineConstants {
     */
    public static final String GOOGLE_PROJECT = "google";
 
+   public static final String CENTOS_PROJECT = "centos-cloud";
+
+   public static final String DEBIAN_PROJECT = "debian-cloud";
+
    public static final String COMPUTE_SCOPE = "https://www.googleapis.com/auth/compute";
 
    public static final String COMPUTE_READONLY_SCOPE = "https://www.googleapis.com/auth/compute.readonly";
@@ -58,4 +62,19 @@ public interface GoogleComputeEngineConstants {
    public static final Location GOOGLE_PROVIDER_LOCATION = new LocationBuilder().scope(LocationScope.PROVIDER).id
            (GCE_PROVIDER_NAME).description(GCE_PROVIDER_NAME).build();
 
+
+   /**
+    * The key we look for in instance metadata for the URI for the image the instance was created from.
+    */
+   public static final String GCE_IMAGE_METADATA_KEY = "jclouds-image";
+
+   /**
+    * Metadata key to check for whether we should delete an instance's boot disk when we delete the instance.
+    */
+   public static final String GCE_DELETE_BOOT_DISK_METADATA_KEY = "jclouds-delete-boot-disk";
+
+   /**
+    * The suffix we append to auto-created boot disk names.
+    */
+   public static final String GCE_BOOT_DISK_SUFFIX = "boot-disk";
 }

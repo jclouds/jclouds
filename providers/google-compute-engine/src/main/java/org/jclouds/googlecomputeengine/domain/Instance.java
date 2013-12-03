@@ -20,6 +20,7 @@ import static com.google.common.base.Objects.equal;
 import static com.google.common.base.Objects.toStringHelper;
 import static com.google.common.base.Optional.fromNullable;
 import static com.google.common.base.Preconditions.checkNotNull;
+import static com.google.common.collect.Iterables.getLast;
 
 import java.beans.ConstructorProperties;
 import java.net.URI;
@@ -31,13 +32,14 @@ import org.jclouds.javax.annotation.Nullable;
 import com.google.common.annotations.Beta;
 import com.google.common.base.Objects;
 import com.google.common.base.Optional;
+import com.google.common.base.Splitter;
 import com.google.common.collect.ImmutableSet;
 
 /**
  * Represents a virtual machine.
  *
  * @author David Alves
- * @see <a href="https://developers.google.com/compute/docs/reference/v1beta16/instances"/>
+ * @see <a href="https://developers.google.com/compute/docs/reference/v1/instances"/>
  */
 @Beta
 public class Instance extends Resource {
@@ -52,7 +54,6 @@ public class Instance extends Resource {
    }
 
    protected final Tags tags;
-   protected final URI image;
    protected final URI machineType;
    protected final Status status;
    protected final Optional<String> statusMessage;
@@ -63,12 +64,11 @@ public class Instance extends Resource {
    protected final Set<ServiceAccount> serviceAccounts;
 
    protected Instance(String id, Date creationTimestamp, URI selfLink, String name, String description,
-                      Tags tags, URI image, URI machineType, Status status, String statusMessage,
+                      Tags tags, URI machineType, Status status, String statusMessage,
                       URI zone, Set<NetworkInterface> networkInterfaces, Set<AttachedDisk> disks,
                       Metadata metadata, Set<ServiceAccount> serviceAccounts) {
       super(Kind.INSTANCE, id, creationTimestamp, selfLink, name, description);
       this.tags = checkNotNull(tags, "tags");
-      this.image = checkNotNull(image, "image");
       this.machineType = checkNotNull(machineType, "machineType of %s", name);
       this.status = checkNotNull(status, "status");
       this.statusMessage = fromNullable(statusMessage);
@@ -87,13 +87,6 @@ public class Instance extends Resource {
     */
    public Tags getTags() {
       return tags;
-   }
-
-   /**
-    * @return the URL of the disk image resource to be to be installed on this instance.
-    */
-   public URI getImage() {
-      return image;
    }
 
    /**
@@ -178,7 +171,6 @@ public class Instance extends Resource {
       return super.string()
               .omitNullValues()
               .add("items", tags)
-              .add("image", image)
               .add("machineType", machineType)
               .add("status", status)
               .add("statusMessage", statusMessage.orNull())
@@ -208,7 +200,6 @@ public class Instance extends Resource {
    public static final class Builder extends Resource.Builder<Builder> {
 
       private Tags tags;
-      private URI image;
       private URI machineType;
       private Status status;
       private String statusMessage;
@@ -224,14 +215,6 @@ public class Instance extends Resource {
        */
       public Builder tags(Tags tags) {
          this.tags = tags;
-         return this;
-      }
-
-      /**
-       * @see Instance#getImage()
-       */
-      public Builder image(URI image) {
-         this.image = image;
          return this;
       }
 
@@ -331,14 +314,13 @@ public class Instance extends Resource {
 
       public Instance build() {
          return new Instance(super.id, super.creationTimestamp, super.selfLink, super.name,
-                 super.description, tags, image, machineType, status, statusMessage, zone,
+                 super.description, tags, machineType, status, statusMessage, zone,
                  networkInterfaces.build(), disks.build(), metadata, serviceAccounts.build());
       }
 
       public Builder fromInstance(Instance in) {
          return super.fromResource(in)
                  .tags(in.getTags())
-                 .image(in.getImage())
                  .machineType(in.getMachineType())
                  .status(in.getStatus())
                  .statusMessage(in.getStatusMessage().orNull())
@@ -469,7 +451,7 @@ public class Instance extends Resource {
    /**
     * A disk attached to an Instance.
     *
-    * @see <a href="https://developers.google.com/compute/docs/reference/v1beta16/instances"/>
+    * @see <a href="https://developers.google.com/compute/docs/reference/v1/instances"/>
     */
    public static class AttachedDisk {
 
@@ -537,20 +519,23 @@ public class Instance extends Resource {
          READ_ONLY;
       }
 
-      @ConstructorProperties({"mode", "source", "deviceName", "index", "deleteOnTerminate"})
+      @ConstructorProperties({"mode", "source", "deviceName", "index", "deleteOnTerminate",
+              "boot"})
       public PersistentAttachedDisk(Mode mode, URI source, String deviceName, Integer index,
-                                    boolean deleteOnTerminate) {
+                                    boolean deleteOnTerminate, boolean boot) {
          super(index);
          this.mode = checkNotNull(mode, "mode");
          this.source = checkNotNull(source, "source");
          this.deviceName = fromNullable(deviceName);
          this.deleteOnTerminate = deleteOnTerminate;
+         this.boot = boot;
       }
 
       private final Mode mode;
       private final URI source;
       private final boolean deleteOnTerminate;
       private final Optional<String> deviceName;
+      private final boolean boot;
 
       @Override
       public boolean isPersistent() {
@@ -572,6 +557,13 @@ public class Instance extends Resource {
       }
 
       /**
+       * @return the Name of the persistent disk resource
+       */
+      public String getSourceDiskName() {
+         return getLast(Splitter.on("/").split(source.toString()), null);
+      }
+
+      /**
        * @return Must be unique within the instance when specified. This represents a unique
        *         device name that is reflected into the /dev/ tree of a Linux operating system running within the
        *         instance. If not specified, a default will be chosen by the system.
@@ -588,9 +580,24 @@ public class Instance extends Resource {
          return deleteOnTerminate;
       }
 
+      /**
+       * @return If true, this is the boot disk for this instance.
+       */
+      public boolean isBoot() {
+         return boot;
+      }
+
       public static Builder builder() {
          return new Builder();
       }
+
+      /**
+       * {@inheritDoc}
+       */
+      protected Objects.ToStringHelper string() {
+         return toStringHelper(this).add("boot", boot);
+      }
+
 
       public static final class Builder {
 
@@ -599,6 +606,7 @@ public class Instance extends Resource {
          private String deviceName;
          private Integer index;
          private boolean deleteOnTerminate;
+         private boolean boot;
 
          /**
           * @see org.jclouds.googlecomputeengine.domain.Instance.PersistentAttachedDisk#getMode()
@@ -640,9 +648,17 @@ public class Instance extends Resource {
             return this;
          }
 
+         /**
+          * @see org.jclouds.googlecomputeengine.domain.Instance.PersistentAttachedDisk#isBoot()
+          */
+         public Builder boot(Boolean boot) {
+            this.boot = boot;
+            return this;
+         }
+
          public PersistentAttachedDisk build() {
             return new PersistentAttachedDisk(this.mode, this.source, this.deviceName, this.index,
-                    this.deleteOnTerminate);
+                    this.deleteOnTerminate, this.boot);
          }
 
          public Builder fromPersistentAttachedDisk(PersistentAttachedDisk in) {
@@ -650,7 +666,8 @@ public class Instance extends Resource {
                     .source(in.getSource())
                     .deviceName(in.getDeviceName().orNull())
                     .index(in.getIndex())
-                    .deleteOnTerminate(in.isDeleteOnTerminate());
+                    .deleteOnTerminate(in.isDeleteOnTerminate())
+                    .boot(in.isBoot());
          }
       }
    }
@@ -658,7 +675,7 @@ public class Instance extends Resource {
    /**
     * A network interface for an Instance.
     *
-    * @see <a href="https://developers.google.com/compute/docs/reference/v1beta16/instances"/>
+    * @see <a href="https://developers.google.com/compute/docs/reference/v1/instances"/>
     */
    public static final class NetworkInterface {
 
@@ -952,7 +969,7 @@ public class Instance extends Resource {
     * The output of an instance's serial port;
     *
     * @author David Alves
-    * @see <a href="https://developers.google.com/compute/docs/reference/v1beta16/instances/serialPort"/>
+    * @see <a href="https://developers.google.com/compute/docs/reference/v1/instances/serialPort"/>
     */
    public static final class SerialPortOutput {
 
@@ -1060,7 +1077,7 @@ public class Instance extends Resource {
     * A service account for which access tokens are to be made available to the instance through metadata queries.
     *
     * @author David Alves
-    * @see <a href="https://developers.google.com/compute/docs/reference/v1beta16/instances"/>
+    * @see <a href="https://developers.google.com/compute/docs/reference/v1/instances"/>
     */
    public static final class ServiceAccount {
 

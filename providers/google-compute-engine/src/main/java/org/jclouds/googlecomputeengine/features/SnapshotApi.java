@@ -50,7 +50,7 @@ import org.jclouds.rest.annotations.Transform;
  * Provides access to Snapshots via their REST API.
  *
  * @author Andrew Bayer
- * @see <a href="https://developers.google.com/compute/docs/reference/v1beta16/snapshots"/>
+ * @see <a href="https://developers.google.com/compute/docs/reference/v1/snapshots"/>
  */
 @SkipEncoding({'/', '='})
 @RequestFilters(OAuthAuthenticator.class)

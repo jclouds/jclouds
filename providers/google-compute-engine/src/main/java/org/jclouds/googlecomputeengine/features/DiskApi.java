@@ -55,7 +55,7 @@ import org.jclouds.rest.binders.BindToJsonPayload;
  * Provides access to Disks via their REST API.
  *
  * @author David Alves
- * @see <a href="https://developers.google.com/compute/docs/reference/v1beta16/disks"/>
+ * @see <a href="https://developers.google.com/compute/docs/reference/v1/disks"/>
  */
 @SkipEncoding({'/', '='})
 @RequestFilters(OAuthAuthenticator.class)
@@ -96,6 +96,50 @@ public interface DiskApi {
    Operation createInZone(@PayloadParam("name") String diskName,
                           @PayloadParam("sizeGb") int sizeGb,
                           @PathParam("zone") String zone);
+
+   /**
+    * Creates a persistent disk resource from the specified image, in the specified project,
+    * specifying the size of the disk.
+    *
+    * @param sourceImage fully qualified URL for the image to be copied.
+    * @param diskName the name of disk.
+    * @param sizeGb   the size of the disk
+    * @param zone     the name of the zone where the disk is to be created.
+    * @return an Operation resource. To check on the status of an operation, poll the Operations resource returned to
+    *         you, and look for the status field.
+    */
+   @Named("Disks:insert")
+   @POST
+   @Consumes(MediaType.APPLICATION_JSON)
+   @Produces(MediaType.APPLICATION_JSON)
+   @Path("/zones/{zone}/disks")
+   @OAuthScopes({COMPUTE_SCOPE})
+   @MapBinder(BindToJsonPayload.class)
+   Operation createFromImageWithSizeInZone(@QueryParam("sourceImage") String sourceImage,
+                                           @PayloadParam("name") String diskName,
+                                           @PayloadParam("sizeGb") int sizeGb,
+                                           @PathParam("zone") String zone);
+
+   /**
+    * Creates a persistent disk resource from the specified image, in the specified project,
+    * with the default disk size.
+    *
+    * @param sourceImage fully qualified URL for the image to be copied.
+    * @param diskName the name of disk.
+    * @param zone     the name of the zone where the disk is to be created.
+    * @return an Operation resource. To check on the status of an operation, poll the Operations resource returned to
+    *         you, and look for the status field.
+    */
+   @Named("Disks:insert")
+   @POST
+   @Consumes(MediaType.APPLICATION_JSON)
+   @Produces(MediaType.APPLICATION_JSON)
+   @Path("/zones/{zone}/disks")
+   @OAuthScopes({COMPUTE_SCOPE})
+   @MapBinder(BindToJsonPayload.class)
+   Operation createFromImageInZone(@QueryParam("sourceImage") String sourceImage,
+                                   @PayloadParam("name") String diskName,
+                                   @PathParam("zone") String zone);
 
    /**
     * Deletes the specified persistent disk resource.

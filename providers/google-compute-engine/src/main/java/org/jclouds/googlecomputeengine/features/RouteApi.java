@@ -57,7 +57,7 @@ import org.jclouds.rest.annotations.Transform;
  * Provides access to Routes via their REST API.
  *
  * @author Andrew Bayer
- * @see <a href="https://developers.google.com/compute/docs/reference/v1beta16/routess"/>
+ * @see <a href="https://developers.google.com/compute/docs/reference/v1/routess"/>
  */
 @SkipEncoding({'/', '='})
 @RequestFilters(OAuthAuthenticator.class)

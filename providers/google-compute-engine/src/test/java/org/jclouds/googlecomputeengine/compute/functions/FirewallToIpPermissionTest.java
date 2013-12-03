@@ -62,8 +62,8 @@ public class FirewallToIpPermissionTest {
               .addPort(33).build());
       builder.addAllowed(Firewall.Rule.builder().IpProtocol(IpProtocol.ICMP).build());
       builder.id("abcd");
-      builder.selfLink(URI.create("https://www.googleapis.com/compute/v1beta16/projects/myproject/global/firewalls/jclouds-test"));
-      builder.network(URI.create("https://www.googleapis.com/compute/v1beta16/projects/myproject/global/networks/jclouds-test"));
+      builder.selfLink(URI.create("https://www.googleapis.com/compute/v1/projects/myproject/global/firewalls/jclouds-test"));
+      builder.network(URI.create("https://www.googleapis.com/compute/v1/projects/myproject/global/networks/jclouds-test"));
       builder.creationTimestamp(new Date());
       builder.name("jclouds-test");
 

@@ -26,6 +26,7 @@ import java.util.Set;
 import org.jclouds.compute.options.TemplateOptions;
 import org.jclouds.domain.LoginCredentials;
 import org.jclouds.googlecomputeengine.domain.Instance;
+import org.jclouds.googlecomputeengine.domain.InstanceTemplate.PersistentDisk;
 import org.jclouds.scriptbuilder.domain.Statement;
 
 import com.google.common.base.Optional;
@@ -42,6 +43,9 @@ public class GoogleComputeEngineTemplateOptions extends TemplateOptions {
    private Optional<String> networkName = Optional.absent();
    private Set<Instance.ServiceAccount> serviceAccounts = Sets.newLinkedHashSet();
    private boolean enableNat = true;
+   private Set<PersistentDisk> disks = Sets.newLinkedHashSet();
+   private Optional<Long> bootDiskSize = Optional.absent();
+   private boolean keepBootDisk = false;
 
    @Override
    public GoogleComputeEngineTemplateOptions clone() {
@@ -59,6 +63,8 @@ public class GoogleComputeEngineTemplateOptions extends TemplateOptions {
          eTo.network(getNetworkName().orNull());
          eTo.serviceAccounts(getServiceAccounts());
          eTo.enableNat(isEnableNat());
+         eTo.disks(getDisks());
+         eTo.keepBootDisk(shouldKeepBootDisk());
       }
    }
 
@@ -97,10 +103,44 @@ public class GoogleComputeEngineTemplateOptions extends TemplateOptions {
    }
 
    /**
+    * @see #getDisks()
+    * @see org.jclouds.googlecomputeengine.domain.InstanceTemplate.PersistentDisk
+    */
+   public GoogleComputeEngineTemplateOptions addDisk(PersistentDisk disk) {
+      this.disks.add(disk);
+      return this;
+   }
+
+   /**
+    * @see #getDisks()
+    * @see org.jclouds.googlecomputeengine.domain.InstanceTemplate.PersistentDisk
+    */
+   public GoogleComputeEngineTemplateOptions disks(Set<PersistentDisk> disks) {
+      this.disks = Sets.newLinkedHashSet(disks);
+      return this;
+   }
+
+   /**
     * @see #isEnableNat()
     */
    public GoogleComputeEngineTemplateOptions enableNat(boolean enableNat) {
       this.enableNat = enableNat;
+      return this;
+   }
+
+   /**
+    * @see #getBootDiskSize()
+    */
+   public GoogleComputeEngineTemplateOptions bootDiskSize(Long bootDiskSize) {
+      this.bootDiskSize = fromNullable(bootDiskSize);
+      return this;
+   }
+
+   /**
+    * @see #shouldKeepBootDisk()
+    */
+   public GoogleComputeEngineTemplateOptions keepBootDisk(boolean keepBootDisk) {
+      this.keepBootDisk = keepBootDisk;
       return this;
    }
 
@@ -280,6 +320,13 @@ public class GoogleComputeEngineTemplateOptions extends TemplateOptions {
    }
 
    /**
+    * @return the PersistentDisks for this instance.
+    */
+   public Set<PersistentDisk> getDisks() {
+      return disks;
+   }
+
+   /**
     * @return the URI of an existing network the instances will be attached to. If no network URI or network name are
     *         provided a new network will be created for the project.
     */
@@ -301,5 +348,19 @@ public class GoogleComputeEngineTemplateOptions extends TemplateOptions {
     */
    public boolean isEnableNat() {
       return enableNat;
+   }
+
+   /**
+    * @return the boot disk size, if specified. Defaults to 10gb.
+    */
+   public Optional<Long> getBootDiskSize() {
+      return bootDiskSize;
+   }
+
+   /**
+    * @return whether we should keep the boot disk around when deleting the instance. Defaults to false.
+    */
+   public boolean shouldKeepBootDisk() {
+      return keepBootDisk;
    }
 }

@@ -38,7 +38,7 @@ import org.testng.annotations.Test;
 @Test(groups = "unit")
 public class ProjectApiExpectTest extends BaseGoogleComputeEngineApiExpectTest {
 
-   public static final String PROJECTS_URL_PREFIX = "https://www.googleapis.com/compute/v1beta16/projects";
+   public static final String PROJECTS_URL_PREFIX = "https://www.googleapis.com/compute/v1/projects";
 
    public static final HttpRequest GET_PROJECT_REQUEST = HttpRequest
            .builder()

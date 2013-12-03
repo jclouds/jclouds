@@ -52,7 +52,7 @@ public class FindNetworkOrCreateTest {
 
       Network network = Network.builder().IPv4Range("0.0.0.0/0")
               .id("abcd").name("this-network")
-              .selfLink(URI.create("https://www.googleapis.com/compute/v1beta16/projects/myproject/global/networks/this-network"))
+              .selfLink(URI.create("https://www.googleapis.com/compute/v1/projects/myproject/global/networks/this-network"))
               .build();
 
       final Supplier<String> userProject = new Supplier<String>() {
@@ -94,7 +94,7 @@ public class FindNetworkOrCreateTest {
 
       Network network = Network.builder().IPv4Range("0.0.0.0/0")
               .id("abcd").name("this-network")
-              .selfLink(URI.create("https://www.googleapis.com/compute/v1beta16/projects/myproject/global/networks/this-network"))
+              .selfLink(URI.create("https://www.googleapis.com/compute/v1/projects/myproject/global/networks/this-network"))
               .build();
 
       Operation createOp = createMock(Operation.class);

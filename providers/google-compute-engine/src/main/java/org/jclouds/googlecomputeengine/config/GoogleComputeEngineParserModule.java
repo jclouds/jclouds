@@ -87,7 +87,7 @@ public class GoogleComputeEngineParserModule extends AbstractModule {
    /**
     * Parser for operations that unwraps errors avoiding an extra intermediate object.
     *
-    * @see <a href="https://developers.google.com/compute/docs/reference/v1beta16/operations"/>
+    * @see <a href="https://developers.google.com/compute/docs/reference/v1/operations"/>
     */
    @Singleton
    private static class OperationTypeAdapter implements JsonDeserializer<Operation> {
@@ -208,14 +208,14 @@ public class GoogleComputeEngineParserModule extends AbstractModule {
 
       private static class InstanceInternal extends Instance {
          @ConstructorProperties({
-                 "id", "creationTimestamp", "selfLink", "name", "description", "tags", "image", "machineType",
+                 "id", "creationTimestamp", "selfLink", "name", "description", "tags", "machineType",
                  "status", "statusMessage", "zone", "networkInterfaces", "metadata", "serviceAccounts"
          })
          private InstanceInternal(String id, Date creationTimestamp, URI selfLink, String name, String description,
-                                  Tags tags, URI image, URI machineType, Status status, String statusMessage,
+                                  Tags tags, URI machineType, Status status, String statusMessage,
                                   URI zone, Set<NetworkInterface> networkInterfaces, Metadata metadata,
                                   Set<ServiceAccount> serviceAccounts) {
-            super(id, creationTimestamp, selfLink, name, description, tags, image, machineType,
+            super(id, creationTimestamp, selfLink, name, description, tags, machineType,
                     status, statusMessage, zone, networkInterfaces, null, metadata, serviceAccounts);
          }
       }

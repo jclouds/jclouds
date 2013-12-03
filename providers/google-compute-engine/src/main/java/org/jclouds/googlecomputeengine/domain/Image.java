@@ -33,25 +33,23 @@ import com.google.common.base.Optional;
  * Represents a disk image to use on an instance.
  *
  * @author David Alves
- * @see <a href="https://developers.google.com/compute/docs/reference/v1beta16/images"/>
+ * @see <a href="https://developers.google.com/compute/docs/reference/v1/images"/>
  */
 @Beta
 public final class Image extends Resource {
 
    private final String sourceType;
-   private final Optional<URI> preferredKernel;
    private final RawDisk rawDisk;
    private final Optional<Deprecated> deprecated;
 
    @ConstructorProperties({
-           "id", "creationTimestamp", "selfLink", "name", "description", "sourceType", "preferredKernel",
+           "id", "creationTimestamp", "selfLink", "name", "description", "sourceType",
            "rawDisk", "deprecated"
    })
    protected Image(String id, Date creationTimestamp, URI selfLink, String name, String description,
-                   String sourceType, URI preferredKernel, RawDisk rawDisk, Deprecated deprecated) {
+                   String sourceType, RawDisk rawDisk, Deprecated deprecated) {
       super(Kind.IMAGE, id, creationTimestamp, selfLink, name, description);
       this.sourceType = checkNotNull(sourceType, "sourceType of %s", name);
-      this.preferredKernel = fromNullable(preferredKernel);
       this.rawDisk = checkNotNull(rawDisk, "rawDisk of %s", name);
       this.deprecated = fromNullable(deprecated);
    }
@@ -61,13 +59,6 @@ public final class Image extends Resource {
     */
    public String getSourceType() {
       return sourceType;
-   }
-
-   /**
-    * @return An optional URL of the preferred kernel for use with this disk image.
-    */
-   public Optional<URI> getPreferredKernel() {
-      return preferredKernel;
    }
 
    /**
@@ -91,7 +82,6 @@ public final class Image extends Resource {
       return super.string()
               .omitNullValues()
               .add("sourceType", sourceType)
-              .add("preferredKernel", preferredKernel.orNull())
               .add("rawDisk", rawDisk)
               .add("deprecated", deprecated.orNull());
    }
@@ -115,7 +105,6 @@ public final class Image extends Resource {
    public static final class Builder extends Resource.Builder<Builder> {
 
       private String sourceType;
-      private URI preferredKernel;
       private RawDisk rawDisk;
       private Deprecated deprecated;
 
@@ -124,14 +113,6 @@ public final class Image extends Resource {
        */
       public Builder sourceType(String sourceType) {
          this.sourceType = checkNotNull(sourceType, "sourceType");
-         return this;
-      }
-
-      /**
-       * @see Image#getPreferredKernel()
-       */
-      public Builder preferredKernel(URI preferredKernel) {
-         this.preferredKernel = preferredKernel;
          return this;
       }
 
@@ -158,13 +139,12 @@ public final class Image extends Resource {
 
       public Image build() {
          return new Image(super.id, super.creationTimestamp, super.selfLink, super.name,
-                 super.description, sourceType, preferredKernel, rawDisk, deprecated);
+                 super.description, sourceType, rawDisk, deprecated);
       }
 
       public Builder fromImage(Image in) {
          return super.fromResource(in)
                  .sourceType(in.getSourceType())
-                 .preferredKernel(in.getPreferredKernel().orNull())
                  .rawDisk(in.getRawDisk())
                  .deprecated(in.getDeprecated().orNull());
       }
@@ -175,7 +155,7 @@ public final class Image extends Resource {
     * A raw disk image, usually the base for an image.
     *
     * @author David Alves
-    * @see <a href="https://developers.google.com/compute/docs/reference/v1beta16/images"/>
+    * @see <a href="https://developers.google.com/compute/docs/reference/v1/images"/>
     */
    public static class RawDisk {
 

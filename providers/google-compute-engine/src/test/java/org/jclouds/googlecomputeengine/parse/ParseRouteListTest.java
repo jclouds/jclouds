@@ -47,18 +47,18 @@ public class ParseRouteListTest extends BaseGoogleComputeEngineParseTest<ListPag
       return ListPage.<Route>builder()
               .kind(Kind.ROUTE_LIST)
               .id("projects/myproject/global/routes")
-              .selfLink(URI.create("https://www.googleapis.com/compute/v1beta16/projects/myproject/global/routes"))
+              .selfLink(URI.create("https://www.googleapis.com/compute/v1/projects/myproject/global/routes"))
               .items(ImmutableSet.of(new ParseRouteTest().expected(),
                       Route.builder()
-                              .selfLink(URI.create("https://www.googleapis.com/compute/v1beta16/projects/myproject/global/routes/default-route-fc92a41ecb5a8d17"))
+                              .selfLink(URI.create("https://www.googleapis.com/compute/v1/projects/myproject/global/routes/default-route-fc92a41ecb5a8d17"))
                               .id("507025480040058551")
                               .creationTimestamp(new SimpleDateFormatDateService().iso8601DateParse("2013-07-08T14:40:38.502-07:00"))
                               .name("default-route-fc92a41ecb5a8d17")
                               .description("Default route to the Internet.")
-                              .network(URI.create("https://www.googleapis.com/compute/v1beta16/projects/myproject/global/networks/default"))
+                              .network(URI.create("https://www.googleapis.com/compute/v1/projects/myproject/global/networks/default"))
                               .destRange("0.0.0.0/0")
                               .priority(1000)
-                              .nextHopGateway(URI.create("https://www.googleapis.com/compute/v1beta16/projects/myproject/global/gateways/default-internet-gateway"))
+                              .nextHopGateway(URI.create("https://www.googleapis.com/compute/v1/projects/myproject/global/gateways/default-internet-gateway"))
                               .build())
               ).build();
    }

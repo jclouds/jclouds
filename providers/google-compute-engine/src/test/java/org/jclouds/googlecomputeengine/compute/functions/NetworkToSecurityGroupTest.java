@@ -68,7 +68,7 @@ public class NetworkToSecurityGroupTest {
       Network.Builder builder = Network.builder();
 
       builder.id("abcd");
-      builder.selfLink(URI.create("https://www.googleapis.com/compute/v1beta16/projects/myproject/global/networks/jclouds-test"));
+      builder.selfLink(URI.create("https://www.googleapis.com/compute/v1/projects/myproject/global/networks/jclouds-test"));
       builder.creationTimestamp(new Date());
       builder.description("some description");
       builder.gatewayIPv4("1.2.3.4");
@@ -82,7 +82,7 @@ public class NetworkToSecurityGroupTest {
       SecurityGroup group = netToSg.apply(network);
 
       assertEquals(group.getId(), "jclouds-test");
-      assertEquals(group.getUri(), URI.create("https://www.googleapis.com/compute/v1beta16/projects/myproject/global/networks/jclouds-test"));
+      assertEquals(group.getUri(), URI.create("https://www.googleapis.com/compute/v1/projects/myproject/global/networks/jclouds-test"));
       assertEquals(group.getIpPermissions().size(), 3);
       assertTrue(Iterables.any(group.getIpPermissions(), Predicates.and(hasProtocol(IpProtocol.TCP),
               hasStartAndEndPort(1, 10))), "No permission found for TCP, ports 1-10");

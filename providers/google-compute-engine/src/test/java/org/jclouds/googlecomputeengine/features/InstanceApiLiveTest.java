@@ -36,6 +36,7 @@ import org.jclouds.googlecomputeengine.options.AttachDiskOptions;
 import org.jclouds.googlecomputeengine.options.AttachDiskOptions.DiskMode;
 import org.jclouds.googlecomputeengine.options.AttachDiskOptions.DiskType;
 import org.jclouds.googlecomputeengine.options.ListOptions;
+import org.testng.annotations.AfterClass;
 import org.testng.annotations.Test;
 
 import com.google.common.base.Predicate;
@@ -51,6 +52,7 @@ public class InstanceApiLiveTest extends BaseGoogleComputeEngineApiLiveTest {
 
    private static final String INSTANCE_NETWORK_NAME = "instance-api-live-test-network";
    private static final String INSTANCE_NAME = "instance-api-live-test-instance";
+   private static final String BOOT_DISK_NAME = INSTANCE_NAME + "-boot-disk";
    private static final String DISK_NAME = "instance-live-test-disk";
    private static final String IPV4_RANGE = "10.0.0.0/8";
    private static final String METADATA_ITEM_KEY = "instanceLiveTestTestProp";
@@ -65,29 +67,27 @@ public class InstanceApiLiveTest extends BaseGoogleComputeEngineApiLiveTest {
    @Override
    protected GoogleComputeEngineApi create(Properties props, Iterable<Module> modules) {
       GoogleComputeEngineApi api = super.create(props, modules);
-      URI imageUri = api.getImageApiForProject("google")
-              .list(new ListOptions.Builder().filter("name eq gcel.*"))
-              .concat()
-              .filter(new Predicate<Image>() {
-                 @Override
-                 public boolean apply(Image input) {
-                    // filter out only images with deprecation state other than "DEPRECATED"
-                    if (input.getDeprecated().isPresent() && input.getDeprecated().get().getState().isPresent()) {
-                       return input.getDeprecated().get().getState().get().equals("DEPRECATED");
-                    }
-                    return true;
-
-                 }
-              })
-              .first()
-              .get()
-              .getSelfLink();
+      URI imageUri = api.getImageApiForProject("centos-cloud")
+                        .list(new ListOptions.Builder().filter("name eq centos.*"))
+                        .concat()
+                        .filter(new Predicate<Image>() {
+                           @Override
+                           public boolean apply(Image input) {
+                              // filter out all deprecated images
+                              return !(input.getDeprecated().isPresent() && input.getDeprecated().get().getState().isPresent());
+                           }
+                        })
+                        .first()
+                        .get()
+                        .getSelfLink();
       instance = InstanceTemplate.builder()
               .forMachineType(getDefaultMachineTypeUrl(userProject.get()))
               .addNetworkInterface(getNetworkUrl(userProject.get(), INSTANCE_NETWORK_NAME),
-                      Instance.NetworkInterface.AccessConfig.Type.ONE_TO_ONE_NAT)
+                                   Instance.NetworkInterface.AccessConfig.Type.ONE_TO_ONE_NAT)
               .addMetadata("mykey", "myvalue")
               .description("a description")
+              .addDisk(InstanceTemplate.PersistentDisk.Mode.READ_WRITE, getDiskUrl(userProject.get(), BOOT_DISK_NAME),
+                       null, true, true)
               .addDisk(InstanceTemplate.PersistentDisk.Mode.READ_WRITE, getDiskUrl(userProject.get(), DISK_NAME))
               .image(imageUri);
 
@@ -108,6 +108,14 @@ public class InstanceApiLiveTest extends BaseGoogleComputeEngineApiLiveTest {
       // need to create the network first
       assertGlobalOperationDoneSucessfully(api.getNetworkApiForProject(userProject.get()).createInIPv4Range
               (INSTANCE_NETWORK_NAME, IPV4_RANGE), TIME_WAIT);
+
+
+      assertZoneOperationDoneSucessfully(api.getDiskApiForProject(userProject.get())
+                                        .createFromImageInZone(instance.getImage().toString(),
+                                                               BOOT_DISK_NAME,
+                                                               DEFAULT_ZONE_NAME),
+                                         TIME_WAIT);
+
 
       assertZoneOperationDoneSucessfully(diskApi().createInZone
               ("instance-live-test-disk", 10, DEFAULT_ZONE_NAME), TIME_WAIT);
@@ -161,7 +169,8 @@ public class InstanceApiLiveTest extends BaseGoogleComputeEngineApiLiveTest {
          @Override
          public boolean apply(AttachedDisk disk) {
             return disk instanceof PersistentAttachedDisk &&
-                    ((PersistentAttachedDisk) disk).getDeviceName().orNull().equals(ATTACH_DISK_DEVICE_NAME);
+                   ((PersistentAttachedDisk) disk).getDeviceName().isPresent() &&
+                   ((PersistentAttachedDisk) disk).getDeviceName().get().equals(ATTACH_DISK_DEVICE_NAME);
          }
       }));
    }
@@ -205,6 +214,8 @@ public class InstanceApiLiveTest extends BaseGoogleComputeEngineApiLiveTest {
       assertZoneOperationDoneSucessfully(api().deleteInZone(DEFAULT_ZONE_NAME, INSTANCE_NAME), TIME_WAIT);
       assertZoneOperationDoneSucessfully(api.getDiskApiForProject(userProject.get()).deleteInZone(DEFAULT_ZONE_NAME, DISK_NAME),
               TIME_WAIT);
+      assertZoneOperationDoneSucessfully(api.getDiskApiForProject(userProject.get()).deleteInZone(DEFAULT_ZONE_NAME, BOOT_DISK_NAME),
+                                         TIME_WAIT);
       assertGlobalOperationDoneSucessfully(api.getNetworkApiForProject(userProject.get()).delete
               (INSTANCE_NETWORK_NAME), TIME_WAIT);
    }
@@ -213,4 +224,20 @@ public class InstanceApiLiveTest extends BaseGoogleComputeEngineApiLiveTest {
       assertEquals(result.getName(), expected.getName());
       assertEquals(result.getMetadata().getItems(), expected.getMetadata());
    }
+
+   @AfterClass(groups = { "integration", "live" })
+   protected void tearDownContext() {
+      try {
+         waitZoneOperationDone(api().deleteInZone(DEFAULT_ZONE_NAME, INSTANCE_NAME), TIME_WAIT);
+         waitZoneOperationDone(api.getDiskApiForProject(userProject.get()).deleteInZone(DEFAULT_ZONE_NAME, DISK_NAME),
+                               TIME_WAIT);
+         waitZoneOperationDone(api.getDiskApiForProject(userProject.get()).deleteInZone(DEFAULT_ZONE_NAME, BOOT_DISK_NAME),
+                               TIME_WAIT);
+         waitGlobalOperationDone(api.getNetworkApiForProject(userProject.get()).delete
+                                                                                (INSTANCE_NETWORK_NAME), TIME_WAIT);
+      } catch (Exception e) {
+         // we don't really care about any exception here, so just delete away.
+       }
+   }
+
 }

@@ -44,11 +44,11 @@ public class ParseAddressTest extends BaseGoogleComputeEngineParseTest<Address> 
               .id("4439373783165447583")
               .creationTimestamp(new SimpleDateFormatDateService().iso8601DateParse("2013-07-26T13:57:20.204-07:00"))
               .status("RESERVED")
-              .region(URI.create("https://www.googleapis.com/compute/v1beta16/projects/myproject/regions/us-central1"))
+              .region(URI.create("https://www.googleapis.com/compute/v1/projects/myproject/regions/us-central1"))
               .name("test-ip1")
               .description("")
               .address("173.255.115.190")
-              .selfLink(URI.create("https://www.googleapis.com/compute/v1beta16/projects/myproject/regions/us-central1/addresses/test-ip1"))
+              .selfLink(URI.create("https://www.googleapis.com/compute/v1/projects/myproject/regions/us-central1/addresses/test-ip1"))
               .build();
    }
 }

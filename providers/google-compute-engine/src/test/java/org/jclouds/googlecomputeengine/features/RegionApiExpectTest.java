@@ -34,7 +34,7 @@ import org.testng.annotations.Test;
 @Test(groups = "unit")
 public class RegionApiExpectTest extends BaseGoogleComputeEngineApiExpectTest {
 
-   public static final String REGIONS_URL_PREFIX = "https://www.googleapis.com/compute/v1beta16/projects/myproject/regions";
+   public static final String REGIONS_URL_PREFIX = "https://www.googleapis.com/compute/v1/projects/myproject/regions";
 
    public static final HttpRequest GET_REGION_REQ = HttpRequest
            .builder()

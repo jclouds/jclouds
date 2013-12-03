@@ -40,7 +40,7 @@ import com.google.common.collect.ImmutableSet;
 import com.google.inject.Module;
 
 /**
- * Implementation of {@link ApiMetadata} for GoogleCompute v1beta16 API
+ * Implementation of {@link ApiMetadata} for GoogleCompute v1 API
  *
  * @author David Alves
  */
@@ -80,8 +80,8 @@ public class GoogleComputeEngineApiMetadata extends BaseHttpApiMetadata<GoogleCo
                  .identityName("Email associated with the Google API client_id")
                  .credentialName("Private key literal associated with the Google API client_id")
                  .documentation(URI.create("https://developers.google.com/compute/docs"))
-                 .version("v1beta16")
-                 .defaultEndpoint("https://www.googleapis.com/compute/v1beta16")
+                 .version("v1")
+                 .defaultEndpoint("https://www.googleapis.com/compute/v1")
                  .defaultProperties(GoogleComputeEngineApiMetadata.defaultProperties())
                  .view(typeToken(ComputeServiceContext.class))
                  .defaultModules(ImmutableSet.<Class<? extends Module>>builder()

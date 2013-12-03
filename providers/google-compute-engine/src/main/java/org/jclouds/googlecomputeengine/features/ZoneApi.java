@@ -45,7 +45,7 @@ import org.jclouds.rest.annotations.Transform;
  * Provides access to Zones via their REST API.
  *
  * @author David Alves
- * @see <a href="https://developers.google.com/compute/docs/reference/v1beta16/zones"/>
+ * @see <a href="https://developers.google.com/compute/docs/reference/v1/zones"/>
  */
 @SkipEncoding({'/', '='})
 @RequestFilters(OAuthAuthenticator.class)

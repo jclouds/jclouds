@@ -47,21 +47,19 @@ public class ParseImageListTest extends BaseGoogleComputeEngineParseTest<ListPag
    public ListPage<Image> expected() {
       return ListPage.<Image>builder()
               .kind(Resource.Kind.IMAGE_LIST)
-              .id("projects/google/global/images")
-              .selfLink(URI.create("https://www.googleapis.com/compute/v1beta16/projects/google/global/images"))
+              .id("projects/centos-cloud/global/images")
+              .selfLink(URI.create("https://www.googleapis.com/compute/v1/projects/centos-cloud/global/images"))
               .items(ImmutableSet.of(Image.builder()
                       .id("12941197498378735318")
                       .creationTimestamp(new SimpleDateFormatDateService().iso8601DateParse("2012-07-16T22:16:13.468"))
                       .selfLink(URI.create("https://www.googleapis" +
-                              ".com/compute/v1beta16/projects/google/global/images/centos-6-2-v20120326"))
+                              ".com/compute/v1/projects/centos-cloud/global/images/centos-6-2-v20120326"))
                       .name("centos-6-2-v20120326")
                       .description("DEPRECATED. CentOS 6.2 image; Created Mon, 26 Mar 2012 21:19:09 +0000")
                       .sourceType("RAW")
-                      .preferredKernel(URI.create("https://www.googleapis" +
-                              ".com/compute/v1beta16/projects/google/kernels/gce-20120326"))
                       .deprecated(Deprecated.builder()
                               .state("DEPRECATED")
-                              .replacement(URI.create("https://www.googleapis.com/compute/v1beta16/projects/google/global/images/centos-6-v20130104"))
+                              .replacement(URI.create("https://www.googleapis.com/compute/v1/projects/centos-cloud/global/images/centos-6-v20130104"))
                               .build())
                       .rawDisk(
                               Image.RawDisk.builder()

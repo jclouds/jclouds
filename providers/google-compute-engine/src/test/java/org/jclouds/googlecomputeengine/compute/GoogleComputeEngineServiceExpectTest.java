@@ -19,10 +19,13 @@ package org.jclouds.googlecomputeengine.compute;
 import static com.google.common.collect.Iterables.getOnlyElement;
 import static org.jclouds.googlecomputeengine.GoogleComputeEngineConstants.COMPUTE_READONLY_SCOPE;
 import static org.jclouds.googlecomputeengine.GoogleComputeEngineConstants.COMPUTE_SCOPE;
+import static org.jclouds.googlecomputeengine.GoogleComputeEngineConstants.GCE_BOOT_DISK_SUFFIX;
 import static org.jclouds.googlecomputeengine.features.GlobalOperationApiExpectTest.GET_GLOBAL_OPERATION_REQUEST;
 import static org.jclouds.googlecomputeengine.features.GlobalOperationApiExpectTest.GET_GLOBAL_OPERATION_RESPONSE;
-import static org.jclouds.googlecomputeengine.features.ImageApiExpectTest.LIST_GOOGLE_IMAGES_REQUEST;
-import static org.jclouds.googlecomputeengine.features.ImageApiExpectTest.LIST_GOOGLE_IMAGES_RESPONSE;
+import static org.jclouds.googlecomputeengine.features.ImageApiExpectTest.LIST_DEBIAN_IMAGES_REQUEST;
+import static org.jclouds.googlecomputeengine.features.ImageApiExpectTest.LIST_DEBIAN_IMAGES_RESPONSE;
+import static org.jclouds.googlecomputeengine.features.ImageApiExpectTest.LIST_CENTOS_IMAGES_REQUEST;
+import static org.jclouds.googlecomputeengine.features.ImageApiExpectTest.LIST_CENTOS_IMAGES_RESPONSE;
 import static org.jclouds.googlecomputeengine.features.ImageApiExpectTest.LIST_PROJECT_IMAGES_REQUEST;
 import static org.jclouds.googlecomputeengine.features.ImageApiExpectTest.LIST_PROJECT_IMAGES_RESPONSE;
 import static org.jclouds.googlecomputeengine.features.InstanceApiExpectTest.LIST_CENTRAL1B_INSTANCES_REQUEST;
@@ -55,6 +58,7 @@ import javax.ws.rs.core.MediaType;
 import org.jclouds.compute.ComputeService;
 import org.jclouds.compute.RunNodesException;
 import org.jclouds.compute.domain.Hardware;
+import org.jclouds.compute.domain.NodeMetadata;
 import org.jclouds.compute.domain.Template;
 import org.jclouds.domain.Location;
 import org.jclouds.googlecomputeengine.compute.options.GoogleComputeEngineTemplateOptions;
@@ -82,7 +86,7 @@ public class GoogleComputeEngineServiceExpectTest extends BaseGoogleComputeEngin
    private HttpRequest INSERT_NETWORK_REQUEST = HttpRequest
            .builder()
            .method("POST")
-           .endpoint("https://www.googleapis.com/compute/v1beta16/projects/myproject/global/networks")
+           .endpoint("https://www.googleapis.com/compute/v1/projects/myproject/global/networks")
            .addHeader("Accept", "application/json")
            .addHeader("Authorization", "Bearer " + TOKEN)
            .payload(payloadFromStringWithContentType("{\"name\":\"jclouds-test\",\"IPv4Range\":\"10.0.0.0/8\"}",
@@ -92,11 +96,11 @@ public class GoogleComputeEngineServiceExpectTest extends BaseGoogleComputeEngin
    private HttpRequest INSERT_FIREWALL_REQUEST = HttpRequest
            .builder()
            .method("POST")
-           .endpoint("https://www.googleapis.com/compute/v1beta16/projects/myproject/global/firewalls")
+           .endpoint("https://www.googleapis.com/compute/v1/projects/myproject/global/firewalls")
            .addHeader("Accept", "application/json")
            .addHeader("Authorization", "Bearer " + TOKEN)
            .payload(payloadFromStringWithContentType("{\"name\":\"jclouds-test\",\"network\":\"https://www.googleapis" +
-                   ".com/compute/v1beta16/projects/myproject/global/networks/jclouds-test\"," +
+                   ".com/compute/v1/projects/myproject/global/networks/jclouds-test\"," +
                    "\"sourceRanges\":[\"10.0.0.0/8\",\"0.0.0.0/0\"],\"sourceTags\":[\"aTag\"],\"allowed\":[{\"IPProtocol\":\"tcp\"," +
                    "\"ports\":[\"22\"]}," +
                    "{\"IPProtocol\":\"udp\",\"ports\":[\"22\"]}]}",
@@ -109,7 +113,7 @@ public class GoogleComputeEngineServiceExpectTest extends BaseGoogleComputeEngin
                    " \"id\": \"13024414170909937976\",\n" +
                    " \"creationTimestamp\": \"2012-10-24T20:13:19.967\",\n" +
                    " \"selfLink\": \"https://www.googleapis" +
-                   ".com/compute/v1beta16/projects/myproject/global/networks/jclouds-test\",\n" +
+                   ".com/compute/v1/projects/myproject/global/networks/jclouds-test\",\n" +
                    " \"name\": \"jclouds-test\",\n" +
                    " \"description\": \"test network\",\n" +
                    " \"IPv4Range\": \"10.0.0.0/8\",\n" +
@@ -121,7 +125,7 @@ public class GoogleComputeEngineServiceExpectTest extends BaseGoogleComputeEngin
 
    private HttpRequest SET_TAGS_REQUEST = HttpRequest.builder()
            .method("POST")
-           .endpoint("https://www.googleapis.com/compute/v1beta16/projects/myproject/zones/us-central1-a/instances/test-1/setTags")
+           .endpoint("https://www.googleapis.com/compute/v1/projects/myproject/zones/us-central1-a/instances/test-1/setTags")
            .addHeader("Accept", "application/json")
            .addHeader("Authorization", "Bearer " + TOKEN)
            .payload(payloadFromStringWithContentType("{\"items\":[\"aTag\"],\"fingerprint\":\"abcd\"}",
@@ -151,38 +155,83 @@ public class GoogleComputeEngineServiceExpectTest extends BaseGoogleComputeEngin
                       "application/json")).build();
    }
 
-   private String replaceInstanceNameNetworkAndStatusOnResource(String resourceName, String instanceName,
-                                                                String networkName, String status) {
+   private HttpResponse getDiskResponseForInstance(String instanceName) {
+      return HttpResponse.builder().statusCode(200)
+                         .payload(payloadFromStringWithContentType(
+                         replaceDiskNameOnResource("/disk_get.json", instanceName + "-" + GCE_BOOT_DISK_SUFFIX),
+                         "application/json")).build();
+   }
+
+   private String replaceDiskNameOnResource(String resourceName, String diskName) {
       try {
-         return Strings2.toStringAndClose(this.getClass().getResourceAsStream(resourceName)).replace("test-0",
-                 instanceName).replace("default", networkName).replace("RUNNING", status);
+         return Strings2.toStringAndClose(this.getClass().getResourceAsStream(resourceName))
+                        .replace("testimage1", diskName);
       } catch (IOException e) {
          throw Throwables.propagate(e);
       }
    }
+
+   private String replaceInstanceNameNetworkAndStatusOnResource(String resourceName, String instanceName,
+                                                                String networkName, String status) {
+      try {
+         return Strings2.toStringAndClose(this.getClass().getResourceAsStream(resourceName)).replace("test-0",
+                                                                                                     instanceName).replace("default", networkName).replace("RUNNING", status);
+      } catch (IOException e) {
+         throw Throwables.propagate(e);
+      }
+   }
+
+   private HttpRequest createDiskRequestForInstance(String instanceName) {
+      return HttpRequest
+              .builder()
+              .method("POST")
+              .endpoint("https://www.googleapis.com/compute/v1/projects/myproject/zones/us-central1-a/disks"
+                                + "?sourceImage=https%3A//www.googleapis.com/compute/v1/projects/centos-cloud/global/images/gcel-12-04-v20121106")
+              .addHeader("Accept", "application/json")
+              .addHeader("Authorization", "Bearer " + TOKEN)
+              .payload(payloadFromStringWithContentType("{\"name\":\"" + instanceName + "-" + GCE_BOOT_DISK_SUFFIX + "\","
+                                                        + "\"sizeGb\":10}",
+                                                        MediaType.APPLICATION_JSON)).build();
+   }
+
+   private HttpRequest getDiskRequestForInstance(String instanceName) {
+      return HttpRequest
+              .builder()
+              .method("GET")
+              .endpoint("https://www.googleapis" +
+                        ".com/compute/v1/projects/myproject/zones/us-central1-a/disks/"
+                        + instanceName + "-" + GCE_BOOT_DISK_SUFFIX)
+              .addHeader("Accept", "application/json")
+              .addHeader("Authorization", "Bearer " + TOKEN).build();
+   }
+
+
 
    private HttpRequest createInstanceRequestForInstance(String instanceName, String groupName,
                                                         String networkName, String publicKey) {
       return HttpRequest
               .builder()
               .method("POST")
-              .endpoint("https://www.googleapis.com/compute/v1beta16/projects/myproject/zones/us-central1-a/instances")
+              .endpoint("https://www.googleapis.com/compute/v1/projects/myproject/zones/us-central1-a/instances")
               .addHeader("Accept", "application/json")
               .addHeader("Authorization", "Bearer " + TOKEN)
               .payload(payloadFromStringWithContentType("{\"name\":\"" + instanceName + "\"," +
-                      "\"machineType\":\"https://www.googleapis" +
-                      ".com/compute/v1beta16/projects/myproject/zones/us-central1-a/machineTypes/n1-standard-1\"," +
-                      "\"image\":\"https://www.googleapis" +
-                      ".com/compute/v1beta16/projects/google/global/images/gcel-12-04-v20121106\"," +
-                      "\"serviceAccounts\":[]," +
-                      "\"networkInterfaces\":[{\"network\":\"https://www.googleapis" +
-                      ".com/compute/v1beta16/projects/myproject/global/networks/" + networkName + "\"," +
-                      "\"accessConfigs\":[{\"type\":\"ONE_TO_ONE_NAT\"}]}]," +
-                      "\"metadata\":{\"kind\":\"compute#metadata\",\"items\":[{\"key\":\"sshKeys\"," +
-                      "\"value\":\"jclouds:" +
-                      publicKey + " jclouds@localhost\"},{\"key\":\"jclouds-group\"," +
-                      "\"value\":\"" + groupName + "\"}]}}",
-                      MediaType.APPLICATION_JSON)).build();
+                                                        "\"machineType\":\"https://www.googleapis" +
+                                                        ".com/compute/v1/projects/myproject/zones/us-central1-a/machineTypes/n1-standard-1\"," +
+                                                        "\"serviceAccounts\":[]," +
+                                                        "\"networkInterfaces\":[{\"network\":\"https://www.googleapis" +
+                                                        ".com/compute/v1/projects/myproject/global/networks/" + networkName + "\"," +
+                                                        "\"accessConfigs\":[{\"type\":\"ONE_TO_ONE_NAT\"}]}]," +
+                                                        "\"disks\":[{\"mode\":\"READ_WRITE\",\"source\":\"https://www.googleapis.com/" +
+                                                        "compute/v1/projects/myproject/zones/us-central1-a/disks/" + instanceName +
+                                                        "-" + GCE_BOOT_DISK_SUFFIX + "\",\"deleteOnTerminate\":true,\"boot\":true,\"type\":\"PERSISTENT\"}]," +
+                                                        "\"metadata\":{\"kind\":\"compute#metadata\",\"items\":[{\"key\":\"sshKeys\"," +
+                                                        "\"value\":\"jclouds:" +
+                                                        publicKey + " jclouds@localhost\"},{\"key\":\"jclouds-group\"," +
+                                                        "\"value\":\"" + groupName + "\"},{\"key\":\"jclouds-image\",\"value\":\"https://www.googleapis" +
+                                                        ".com/compute/v1/projects/centos-cloud/global/images/gcel-12-04-v20121106\"}," +
+                                                        "{\"key\":\"jclouds-delete-boot-disk\",\"value\":\"true\"}]}}",
+                                                        MediaType.APPLICATION_JSON)).build();
    }
 
    private HttpRequest getInstanceRequestForInstance(String instanceName) {
@@ -190,7 +239,7 @@ public class GoogleComputeEngineServiceExpectTest extends BaseGoogleComputeEngin
               .builder()
               .method("GET")
               .endpoint("https://www.googleapis" +
-                      ".com/compute/v1beta16/projects/myproject/zones/us-central1-a/instances/" + instanceName)
+                      ".com/compute/v1/projects/myproject/zones/us-central1-a/instances/" + instanceName)
               .addHeader("Accept", "application/json")
               .addHeader("Authorization", "Bearer " + TOKEN).build();
    }
@@ -230,7 +279,8 @@ public class GoogleComputeEngineServiceExpectTest extends BaseGoogleComputeEngin
               .put(GET_PROJECT_REQUEST, GET_PROJECT_RESPONSE)
               .put(LIST_ZONES_REQ, LIST_ZONES_RESPONSE)
               .put(LIST_PROJECT_IMAGES_REQUEST, LIST_PROJECT_IMAGES_RESPONSE)
-              .put(LIST_GOOGLE_IMAGES_REQUEST, LIST_GOOGLE_IMAGES_RESPONSE)
+              .put(LIST_DEBIAN_IMAGES_REQUEST, LIST_DEBIAN_IMAGES_RESPONSE)
+              .put(LIST_CENTOS_IMAGES_REQUEST, LIST_CENTOS_IMAGES_RESPONSE)
               .put(LIST_MACHINE_TYPES_REQUEST, LIST_MACHINE_TYPES_RESPONSE)
               .put(LIST_CENTRAL1B_MACHINE_TYPES_REQUEST, LIST_CENTRAL1B_MACHINE_TYPES_RESPONSE)
               .build();
@@ -259,21 +309,21 @@ public class GoogleComputeEngineServiceExpectTest extends BaseGoogleComputeEngin
       HttpRequest deleteNodeRequest = HttpRequest.builder()
               .method("DELETE")
               .endpoint("https://www.googleapis" +
-                      ".com/compute/v1beta16/projects/myproject/zones/us-central1-a/instances/test-delete-networks")
+                      ".com/compute/v1/projects/myproject/zones/us-central1-a/instances/test-delete-networks")
               .addHeader("Accept", "application/json")
               .addHeader("Authorization", "Bearer " + TOKEN).build();
 
       HttpRequest deleteFirewallRequest = HttpRequest.builder()
               .method("DELETE")
               .endpoint("https://www.googleapis" +
-                      ".com/compute/v1beta16/projects/myproject/global/firewalls/jclouds-test-delete")
+                      ".com/compute/v1/projects/myproject/global/firewalls/jclouds-test-delete")
               .addHeader("Accept", "application/json")
               .addHeader("Authorization", "Bearer " + TOKEN).build();
 
       HttpRequest getNetworkRequest = HttpRequest.builder()
               .method("GET")
               .endpoint("https://www.googleapis" +
-                      ".com/compute/v1beta16/projects/myproject/global/networks/jclouds-test-delete")
+                      ".com/compute/v1/projects/myproject/global/networks/jclouds-test-delete")
               .addHeader("Accept", "application/json")
               .addHeader("Authorization", "Bearer " + TOKEN).build();
 
@@ -283,7 +333,7 @@ public class GoogleComputeEngineServiceExpectTest extends BaseGoogleComputeEngin
       HttpRequest listFirewallsRequest = HttpRequest.builder()
               .method("GET")
               .endpoint("https://www.googleapis" +
-                      ".com/compute/v1beta16/projects/myproject/global/firewalls")
+                        ".com/compute/v1/projects/myproject/global/firewalls")
               .addHeader("Accept", "application/json")
               .addHeader("Authorization", "Bearer " + TOKEN).build();
 
@@ -293,20 +343,31 @@ public class GoogleComputeEngineServiceExpectTest extends BaseGoogleComputeEngin
       HttpRequest deleteNetworkReqquest = HttpRequest.builder()
               .method("DELETE")
               .endpoint("https://www.googleapis" +
-                      ".com/compute/v1beta16/projects/myproject/global/networks/jclouds-test-delete")
+                        ".com/compute/v1/projects/myproject/global/networks/jclouds-test-delete")
               .addHeader("Accept", "application/json")
               .addHeader("Authorization", "Bearer " + TOKEN).build();
+
+      HttpRequest deleteDiskRequest= HttpRequest.builder()
+                                                .method("DELETE")
+                                                .endpoint("https://www.googleapis" +
+                                                          ".com/compute/v1/projects/myproject/zones/us-central1-a/disks/test")
+                                                .addHeader("Accept", "application/json")
+                                                .addHeader("Authorization", "Bearer " + TOKEN).build();
 
       List<HttpRequest> orderedRequests = ImmutableList.<HttpRequest>builder()
               .add(requestForScopes(COMPUTE_READONLY_SCOPE))
               .add(GET_PROJECT_REQUEST)
               .add(getInstanceRequestForInstance("test-delete-networks"))
-              .add(LIST_PROJECT_IMAGES_REQUEST)
-              .add(LIST_GOOGLE_IMAGES_REQUEST)
               .add(LIST_ZONES_REQ)
               .add(LIST_MACHINE_TYPES_REQUEST)
+              .add(LIST_PROJECT_IMAGES_REQUEST)
+              .add(LIST_DEBIAN_IMAGES_REQUEST)
+              .add(LIST_CENTOS_IMAGES_REQUEST)
+              .add(getInstanceRequestForInstance("test-delete-networks"))
               .add(requestForScopes(COMPUTE_SCOPE))
               .add(deleteNodeRequest)
+              .add(GET_ZONE_OPERATION_REQUEST)
+              .add(deleteDiskRequest)
               .add(GET_ZONE_OPERATION_REQUEST)
               .add(getInstanceRequestForInstance("test-delete-networks"))
               .add(LIST_INSTANCES_REQUEST)
@@ -324,11 +385,16 @@ public class GoogleComputeEngineServiceExpectTest extends BaseGoogleComputeEngin
               .add(GET_PROJECT_RESPONSE)
               .add(getInstanceResponseForInstanceAndNetworkAndStatus("test-delete-networks", "test-network", Instance
                       .Status.RUNNING.name()))
-              .add(LIST_PROJECT_IMAGES_RESPONSE)
-              .add(LIST_GOOGLE_IMAGES_RESPONSE)
               .add(LIST_ZONES_SHORT_RESPONSE)
               .add(LIST_MACHINE_TYPES_RESPONSE)
+              .add(LIST_PROJECT_IMAGES_RESPONSE)
+              .add(LIST_DEBIAN_IMAGES_RESPONSE)
+              .add(LIST_CENTOS_IMAGES_RESPONSE)
+              .add(getInstanceResponseForInstanceAndNetworkAndStatus("test-delete-networks", "test-network", Instance
+                                                                                                             .Status.RUNNING.name()))
               .add(TOKEN_RESPONSE)
+              .add(SUCESSFULL_OPERATION_RESPONSE)
+              .add(GET_ZONE_OPERATION_RESPONSE)
               .add(SUCESSFULL_OPERATION_RESPONSE)
               .add(GET_ZONE_OPERATION_RESPONSE)
               .add(getInstanceResponseForInstanceAndNetworkAndStatus("test-delete-networks", "test-network", Instance
@@ -359,7 +425,8 @@ public class GoogleComputeEngineServiceExpectTest extends BaseGoogleComputeEngin
               .put(LIST_INSTANCES_REQUEST, LIST_INSTANCES_RESPONSE)
               .put(LIST_CENTRAL1B_INSTANCES_REQUEST, LIST_CENTRAL1B_INSTANCES_RESPONSE)
               .put(LIST_PROJECT_IMAGES_REQUEST, LIST_PROJECT_IMAGES_RESPONSE)
-              .put(LIST_GOOGLE_IMAGES_REQUEST, LIST_GOOGLE_IMAGES_RESPONSE)
+              .put(LIST_DEBIAN_IMAGES_REQUEST, LIST_DEBIAN_IMAGES_RESPONSE)
+              .put(LIST_CENTOS_IMAGES_REQUEST, LIST_CENTOS_IMAGES_RESPONSE)
               .put(LIST_MACHINE_TYPES_REQUEST, LIST_MACHINE_TYPES_RESPONSE)
               .put(LIST_CENTRAL1B_MACHINE_TYPES_REQUEST, LIST_CENTRAL1B_MACHINE_TYPES_RESPONSE)
               .build();
@@ -392,18 +459,18 @@ public class GoogleComputeEngineServiceExpectTest extends BaseGoogleComputeEngin
                  .builder()
                  .method("GET")
                  .endpoint("https://www.googleapis" +
-                         ".com/compute/v1beta16/projects/myproject/global/firewalls/jclouds-test-port-22")
+                         ".com/compute/v1/projects/myproject/global/firewalls/jclouds-test-port-22")
                  .addHeader("Accept", "application/json")
                  .addHeader("Authorization", "Bearer " + TOKEN).build();
 
       HttpRequest insertFirewallRequest = HttpRequest
                  .builder()
                  .method("POST")
-                 .endpoint("https://www.googleapis.com/compute/v1beta16/projects/myproject/global/firewalls")
+                 .endpoint("https://www.googleapis.com/compute/v1/projects/myproject/global/firewalls")
                  .addHeader("Accept", "application/json")
                  .addHeader("Authorization", "Bearer " + TOKEN)
                  .payload(payloadFromStringWithContentType("{\"name\":\"jclouds-test-port-22\",\"network\":\"https://www.googleapis" +
-                         ".com/compute/v1beta16/projects/myproject/global/networks/jclouds-test\"," +
+                         ".com/compute/v1/projects/myproject/global/networks/jclouds-test\"," +
                          "\"sourceRanges\":[\"10.0.0.0/8\",\"0.0.0.0/0\"],\"sourceTags\":[\"aTag\"],\"targetTags\":[\"jclouds-test-port-22\"],\"allowed\":[{\"IPProtocol\":\"tcp\"," +
                          "\"ports\":[\"22\"]}," +
                          "{\"IPProtocol\":\"udp\",\"ports\":[\"22\"]}]}",
@@ -413,7 +480,7 @@ public class GoogleComputeEngineServiceExpectTest extends BaseGoogleComputeEngin
       HttpRequest setTagsRequest = HttpRequest
                  .builder()
                  .method("POST")
-                 .endpoint("https://www.googleapis.com/compute/v1beta16/projects/myproject/zones/us-central1-a/instances/test-1/setTags")
+                 .endpoint("https://www.googleapis.com/compute/v1/projects/myproject/zones/us-central1-a/instances/test-1/setTags")
                  .addHeader("Accept", "application/json")
                  .addHeader("Authorization", "Bearer " + TOKEN)
                  .payload(payloadFromStringWithContentType("{\"items\":[\"jclouds-test-port-22\"],\"fingerprint\":\"abcd\"}",
@@ -425,7 +492,8 @@ public class GoogleComputeEngineServiceExpectTest extends BaseGoogleComputeEngin
               .add(GET_PROJECT_REQUEST)
               .add(LIST_ZONES_REQ)
               .add(LIST_PROJECT_IMAGES_REQUEST)
-              .add(LIST_GOOGLE_IMAGES_REQUEST)
+              .add(LIST_DEBIAN_IMAGES_REQUEST)
+              .add(LIST_CENTOS_IMAGES_REQUEST)
               .add(LIST_ZONES_REQ)
               .add(LIST_MACHINE_TYPES_REQUEST)
               .add(GET_NETWORK_REQUEST)
@@ -438,9 +506,13 @@ public class GoogleComputeEngineServiceExpectTest extends BaseGoogleComputeEngin
               .add(insertFirewallRequest)
               .add(GET_GLOBAL_OPERATION_REQUEST)
               .add(LIST_INSTANCES_REQUEST)
-              .add(LIST_PROJECT_IMAGES_REQUEST)
-              .add(LIST_GOOGLE_IMAGES_REQUEST)
               .add(LIST_MACHINE_TYPES_REQUEST)
+              .add(LIST_PROJECT_IMAGES_REQUEST)
+              .add(LIST_DEBIAN_IMAGES_REQUEST)
+              .add(LIST_CENTOS_IMAGES_REQUEST)
+              .add(createDiskRequestForInstance("test-1"))
+              .add(GET_ZONE_OPERATION_REQUEST)
+              .add(getDiskRequestForInstance("test-1"))
               .add(createInstanceRequestForInstance("test-1", "test", "jclouds-test", openSshKey))
               .add(GET_ZONE_OPERATION_REQUEST)
               .add(getInstanceRequestForInstance("test-1"))
@@ -448,6 +520,9 @@ public class GoogleComputeEngineServiceExpectTest extends BaseGoogleComputeEngin
               .add(GET_ZONE_OPERATION_REQUEST)
               .add(getInstanceRequestForInstance("test-1"))
               .add(setTagsRequest)
+              .add(LIST_PROJECT_IMAGES_REQUEST)
+              .add(LIST_DEBIAN_IMAGES_REQUEST)
+              .add(LIST_CENTOS_IMAGES_REQUEST)
               .add(setTagsRequest)
               .build();
 
@@ -456,7 +531,8 @@ public class GoogleComputeEngineServiceExpectTest extends BaseGoogleComputeEngin
               .add(GET_PROJECT_RESPONSE)
               .add(LIST_ZONES_SHORT_RESPONSE)
               .add(LIST_PROJECT_IMAGES_RESPONSE)
-              .add(LIST_GOOGLE_IMAGES_RESPONSE)
+              .add(LIST_DEBIAN_IMAGES_RESPONSE)
+              .add(LIST_CENTOS_IMAGES_RESPONSE)
               .add(LIST_ZONES_SHORT_RESPONSE)
               .add(LIST_MACHINE_TYPES_RESPONSE)
               .add(HttpResponse.builder().statusCode(404).build())
@@ -469,9 +545,13 @@ public class GoogleComputeEngineServiceExpectTest extends BaseGoogleComputeEngin
               .add(SUCESSFULL_OPERATION_RESPONSE)
               .add(GET_GLOBAL_OPERATION_RESPONSE)
               .add(LIST_INSTANCES_RESPONSE)
-              .add(LIST_PROJECT_IMAGES_RESPONSE)
-              .add(LIST_GOOGLE_IMAGES_RESPONSE)
               .add(LIST_MACHINE_TYPES_RESPONSE)
+              .add(LIST_PROJECT_IMAGES_RESPONSE)
+              .add(LIST_DEBIAN_IMAGES_RESPONSE)
+              .add(LIST_CENTOS_IMAGES_RESPONSE)
+              .add(SUCESSFULL_OPERATION_RESPONSE)
+              .add(GET_ZONE_OPERATION_RESPONSE)
+              .add(getDiskResponseForInstance("test-1"))
               .add(SUCESSFULL_OPERATION_RESPONSE)
               .add(GET_ZONE_OPERATION_RESPONSE)
               .add(getInstanceResponse)
@@ -479,6 +559,9 @@ public class GoogleComputeEngineServiceExpectTest extends BaseGoogleComputeEngin
               .add(GET_ZONE_OPERATION_RESPONSE)
               .add(getInstanceResponse)
               .add(SUCESSFULL_OPERATION_RESPONSE)
+              .add(LIST_PROJECT_IMAGES_RESPONSE)
+              .add(LIST_DEBIAN_IMAGES_RESPONSE)
+              .add(LIST_CENTOS_IMAGES_RESPONSE)
               .add(SUCESSFULL_OPERATION_RESPONSE)
               .build();
 
@@ -487,7 +570,8 @@ public class GoogleComputeEngineServiceExpectTest extends BaseGoogleComputeEngin
 
       GoogleComputeEngineTemplateOptions options = computeService.templateOptions().as(GoogleComputeEngineTemplateOptions.class);
       options.tags(ImmutableSet.of("aTag"));
-      getOnlyElement(computeService.createNodesInGroup("test", 1, options));
+      NodeMetadata node = getOnlyElement(computeService.createNodesInGroup("test", 1, options));
+      assertEquals(node.getImageId(), "gcel-12-04-v20121106");
    }
 }
 

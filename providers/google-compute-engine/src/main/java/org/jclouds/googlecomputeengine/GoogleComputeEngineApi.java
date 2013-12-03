@@ -27,7 +27,6 @@ import org.jclouds.googlecomputeengine.features.FirewallApi;
 import org.jclouds.googlecomputeengine.features.GlobalOperationApi;
 import org.jclouds.googlecomputeengine.features.ImageApi;
 import org.jclouds.googlecomputeengine.features.InstanceApi;
-import org.jclouds.googlecomputeengine.features.KernelApi;
 import org.jclouds.googlecomputeengine.features.MachineTypeApi;
 import org.jclouds.googlecomputeengine.features.NetworkApi;
 import org.jclouds.googlecomputeengine.features.ProjectApi;
@@ -47,7 +46,7 @@ import com.google.common.annotations.Beta;
  * <p/>
  *
  * @author David Alves
- * @see <a href="https://developers.google.com/compute/docs/reference/v1beta16">api doc</a>
+ * @see <a href="https://developers.google.com/compute/docs/reference/v1">api doc</a>
  */
 @Beta
 public interface GoogleComputeEngineApi extends Closeable {
@@ -105,15 +104,6 @@ public interface GoogleComputeEngineApi extends Closeable {
    @Delegate
    @Path("/projects/{project}")
    InstanceApi getInstanceApiForProject(@PathParam("project") String projectName);
-
-   /**
-    * Provides access to Kernel features
-    *
-    * @param projectName the name of the project
-    */
-   @Delegate
-   @Path("/projects/{project}")
-   KernelApi getKernelApiForProject(@PathParam("project") String projectName);
 
    /**
     * Provides access to MachineType features

@@ -46,7 +46,7 @@ public class ParseProjectTest extends BaseGoogleComputeEngineParseTest<Project> 
       return Project.builder()
               .id("13024414184846275913")
               .creationTimestamp(new Date(Long.parseLong("1351109596252")))
-              .selfLink(URI.create("https://www.googleapis.com/compute/v1beta16/projects/myproject"))
+              .selfLink(URI.create("https://www.googleapis.com/compute/v1/projects/myproject"))
               .name("myproject")
               .description("")
               .commonInstanceMetadata(Metadata.builder()

@@ -18,6 +18,7 @@ package org.jclouds.googlecomputeengine.compute.functions;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 import static org.jclouds.compute.util.ComputeServiceUtils.groupFromMapOrName;
+import static org.jclouds.googlecomputeengine.GoogleComputeEngineConstants.GCE_IMAGE_METADATA_KEY;
 
 import java.net.URI;
 import java.util.Map;
@@ -32,6 +33,8 @@ import org.jclouds.compute.domain.NodeMetadata;
 import org.jclouds.compute.domain.NodeMetadataBuilder;
 import org.jclouds.compute.functions.GroupNamingConvention;
 import org.jclouds.domain.Location;
+import org.jclouds.googlecomputeengine.GoogleComputeEngineApi;
+import org.jclouds.googlecomputeengine.config.UserProject;
 import org.jclouds.googlecomputeengine.domain.Instance;
 import org.jclouds.googlecomputeengine.domain.InstanceInZone;
 import org.jclouds.googlecomputeengine.domain.SlashEncodedIds;
@@ -55,6 +58,8 @@ public class InstanceInZoneToNodeMetadata implements Function<InstanceInZone, No
    private final Supplier<Map<URI, ? extends Hardware>> hardwares;
    private final Supplier<Map<URI, ? extends Location>> locations;
    private final FirewallTagNamingConvention.Factory firewallTagNamingConvention;
+   private final GoogleComputeEngineApi api;
+   private final Supplier<String> userProject;
 
    @Inject
    public InstanceInZoneToNodeMetadata(Map<Instance.Status, NodeMetadata.Status> toPortableNodeStatus,
@@ -62,47 +67,64 @@ public class InstanceInZoneToNodeMetadata implements Function<InstanceInZone, No
                                  @Memoized Supplier<Map<URI, ? extends Image>> images,
                                  @Memoized Supplier<Map<URI, ? extends Hardware>> hardwares,
                                  @Memoized Supplier<Map<URI, ? extends Location>> locations,
-                                 FirewallTagNamingConvention.Factory firewallTagNamingConvention) {
+                                 FirewallTagNamingConvention.Factory firewallTagNamingConvention,
+                                 GoogleComputeEngineApi api,
+                                 @UserProject Supplier<String> userProject) {
       this.toPortableNodeStatus = toPortableNodeStatus;
       this.nodeNamingConvention = namingConvention.createWithoutPrefix();
       this.images = images;
       this.hardwares = hardwares;
       this.locations = locations;
       this.firewallTagNamingConvention = checkNotNull(firewallTagNamingConvention, "firewallTagNamingConvention");
+      this.api = checkNotNull(api, "api");
+      this.userProject = checkNotNull(userProject, "userProject");
    }
 
    @Override
    public NodeMetadata apply(InstanceInZone instanceInZone) {
       Instance input = instanceInZone.getInstance();
-      Map<URI, ? extends Image> imagesMap = images.get();
-      Image image = checkNotNull(imagesMap.get(checkNotNull(input.getImage(), "image")),
-              "no image for %s. images: %s", input.getImage(), imagesMap.values());
 
       String group = groupFromMapOrName(input.getMetadata().getItems(),
-              input.getName(), nodeNamingConvention);
-
+                                               input.getName(), nodeNamingConvention);
       FluentIterable<String> tags = FluentIterable.from(input.getTags().getItems())
-              .filter(Predicates.not(firewallTagNamingConvention.get(group).isFirewallTag()));
+                                            .filter(Predicates.not(firewallTagNamingConvention.get(group).isFirewallTag()));
 
-      return new NodeMetadataBuilder()
-              .id(SlashEncodedIds.fromTwoIds(checkNotNull(locations.get().get(input.getZone()), "location for %s", input.getZone()).getId(),
-                      input.getName()).slashEncode())
+      NodeMetadataBuilder builder = new NodeMetadataBuilder();
+
+      builder.id(SlashEncodedIds.fromTwoIds(checkNotNull(locations.get().get(input.getZone()),
+                                                                "location for %s", input.getZone())
+                                                    .getId(), input.getName()).slashEncode())
               .name(input.getName())
               .providerId(input.getId())
               .hostname(input.getName())
-              .imageId(image.getId())
               .location(checkNotNull(locations.get().get(input.getZone()), "location for %s", input.getZone()))
               .hardware(checkNotNull(hardwares.get().get(input.getMachineType()), "hardware type for %s",
-                      input.getMachineType().toString()))
-              .operatingSystem(image.getOperatingSystem())
+                                            input.getMachineType().toString()))
               .status(toPortableNodeStatus.get(input.getStatus()))
               .tags(tags)
               .uri(input.getSelfLink())
               .userMetadata(input.getMetadata().getItems())
               .group(group)
               .privateAddresses(collectPrivateAddresses(input))
-              .publicAddresses(collectPublicAddresses(input))
-              .build();
+              .publicAddresses(collectPublicAddresses(input));
+
+      if (input.getMetadata().getItems().containsKey(GCE_IMAGE_METADATA_KEY)) {
+         try {
+            URI imageUri = URI.create(input.getMetadata().getItems()
+                                              .get(GCE_IMAGE_METADATA_KEY));
+
+            Map<URI, ? extends Image> imagesMap = images.get();
+
+            Image image = checkNotNull(imagesMap.get(imageUri),
+                                       "no image for %s. images: %s", imageUri,
+                                       imagesMap.values());
+            builder.imageId(image.getId());
+         } catch (IllegalArgumentException e) {
+            // Swallow any exception here - it just means we don't actually have a valid image URI, so we skip it.
+         }
+      }
+
+      return builder.build();
    }
 
    private Set<String> collectPrivateAddresses(Instance input) {

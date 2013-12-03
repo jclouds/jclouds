@@ -55,7 +55,7 @@ public class InstanceApiExpectTest extends BaseGoogleComputeEngineApiExpectTest 
            .builder()
            .method("GET")
            .endpoint("https://www.googleapis" +
-                   ".com/compute/v1beta16/projects/myproject/zones/us-central1-a/instances/test-1")
+                   ".com/compute/v1/projects/myproject/zones/us-central1-a/instances/test-1")
            .addHeader("Accept", "application/json")
            .addHeader("Authorization", "Bearer " + TOKEN).build();
 
@@ -67,7 +67,7 @@ public class InstanceApiExpectTest extends BaseGoogleComputeEngineApiExpectTest 
            .builder()
            .method("GET")
            .endpoint("https://www.googleapis" +
-                   ".com/compute/v1beta16/projects/myproject/zones/us-central1-a/instances")
+                   ".com/compute/v1/projects/myproject/zones/us-central1-a/instances")
            .addHeader("Accept", "application/json")
            .addHeader("Authorization", "Bearer " + TOKEN).build();
 
@@ -78,7 +78,7 @@ public class InstanceApiExpectTest extends BaseGoogleComputeEngineApiExpectTest 
            .builder()
            .method("GET")
            .endpoint("https://www.googleapis" +
-                   ".com/compute/v1beta16/projects/myproject/zones/us-central1-b/instances")
+                   ".com/compute/v1/projects/myproject/zones/us-central1-b/instances")
            .addHeader("Accept", "application/json")
            .addHeader("Authorization", "Bearer " + TOKEN).build();
 
@@ -113,7 +113,7 @@ public class InstanceApiExpectTest extends BaseGoogleComputeEngineApiExpectTest 
               .builder()
               .method("GET")
               .endpoint("https://www.googleapis" +
-                      ".com/compute/v1beta16/projects/myproject/zones/us-central1-a/instances/test-1/serialPort")
+                      ".com/compute/v1/projects/myproject/zones/us-central1-a/instances/test-1/serialPort")
               .addHeader("Accept", "application/json")
               .addHeader("Authorization", "Bearer " + TOKEN).build();
 
@@ -131,7 +131,7 @@ public class InstanceApiExpectTest extends BaseGoogleComputeEngineApiExpectTest 
       HttpRequest insert = HttpRequest
               .builder()
               .method("POST")
-              .endpoint("https://www.googleapis.com/compute/v1beta16/projects/myproject/zones/us-central1-a/instances")
+              .endpoint("https://www.googleapis.com/compute/v1/projects/myproject/zones/us-central1-a/instances")
               .addHeader("Accept", "application/json")
               .addHeader("Authorization", "Bearer " + TOKEN)
               .payload(payloadFromResourceWithContentType("/instance_insert_simple.json", MediaType.APPLICATION_JSON))
@@ -144,9 +144,8 @@ public class InstanceApiExpectTest extends BaseGoogleComputeEngineApiExpectTest 
               CREATE_INSTANCE_RESPONSE)).getInstanceApiForProject("myproject");
 
       InstanceTemplate options = InstanceTemplate.builder().forMachineType("us-central1-a/n1-standard-1")
-              .image(URI.create("https://www.googleapis.com/compute/v1beta16/projects/google/global/images/gcel-12-04-v20121106"))
               .addNetworkInterface(URI.create("https://www.googleapis" +
-                      ".com/compute/v1beta16/projects/myproject/global/networks/default"));
+                      ".com/compute/v1/projects/myproject/global/networks/default"));
 
       assertEquals(api.createInZone("test-1", "us-central1-a", options), new ParseOperationTest().expected());
    }
@@ -155,7 +154,7 @@ public class InstanceApiExpectTest extends BaseGoogleComputeEngineApiExpectTest 
       HttpRequest insert = HttpRequest
               .builder()
               .method("POST")
-              .endpoint("https://www.googleapis.com/compute/v1beta16/projects/myproject/zones/us-central1-a/instances")
+              .endpoint("https://www.googleapis.com/compute/v1/projects/myproject/zones/us-central1-a/instances")
               .addHeader("Accept", "application/json")
               .addHeader("Authorization", "Bearer " + TOKEN)
               .payload(payloadFromResourceWithContentType("/instance_insert.json", MediaType.APPLICATION_JSON))
@@ -171,12 +170,11 @@ public class InstanceApiExpectTest extends BaseGoogleComputeEngineApiExpectTest 
 
       InstanceTemplate options = InstanceTemplate.builder().forMachineType("us-central1-a/n1-standard-1")
               .addNetworkInterface(URI.create("https://www.googleapis" +
-                      ".com/compute/v1beta16/projects/myproject/global/networks/default"), Instance.NetworkInterface.AccessConfig.Type.ONE_TO_ONE_NAT)
+                      ".com/compute/v1/projects/myproject/global/networks/default"), Instance.NetworkInterface.AccessConfig.Type.ONE_TO_ONE_NAT)
               .description("desc")
-              .image(URI.create("https://www.googleapis" +
-                      ".com/compute/v1beta16/projects/google/global/images/gcel-12-04-v20121106"))
               .addDisk(InstanceTemplate.PersistentDisk.Mode.READ_WRITE,
-                      create("https://www.googleapis.com/compute/v1beta16/projects/myproject/zones/us-central1-a/disks/test"))
+                      create("https://www.googleapis.com/compute/v1/projects/myproject/zones/us-central1-a/disks/test"),
+                      true)
               .addServiceAccount(Instance.ServiceAccount.builder().email("default").addScopes("myscope").build())
               .addMetadata("aKey", "aValue");
 
@@ -189,7 +187,7 @@ public class InstanceApiExpectTest extends BaseGoogleComputeEngineApiExpectTest 
               .builder()
               .method("DELETE")
               .endpoint("https://www.googleapis" +
-                      ".com/compute/v1beta16/projects/myproject/zones/us-central1-a/instances/test-1")
+                      ".com/compute/v1/projects/myproject/zones/us-central1-a/instances/test-1")
               .addHeader("Accept", "application/json")
               .addHeader("Authorization", "Bearer " + TOKEN).build();
 
@@ -208,7 +206,7 @@ public class InstanceApiExpectTest extends BaseGoogleComputeEngineApiExpectTest 
               .builder()
               .method("DELETE")
               .endpoint("https://www.googleapis" +
-                      ".com/compute/v1beta16/projects/myproject/zones/us-central1-a/instances/test-1")
+                      ".com/compute/v1/projects/myproject/zones/us-central1-a/instances/test-1")
               .addHeader("Accept", "application/json")
               .addHeader("Authorization", "Bearer " + TOKEN).build();
 
@@ -235,7 +233,7 @@ public class InstanceApiExpectTest extends BaseGoogleComputeEngineApiExpectTest 
               .builder()
               .method("GET")
               .endpoint("https://www.googleapis" +
-                      ".com/compute/v1beta16/projects/myproject/zones/us-central1-a/instances")
+                      ".com/compute/v1/projects/myproject/zones/us-central1-a/instances")
               .addHeader("Accept", "application/json")
               .addHeader("Authorization", "Bearer " + TOKEN).build();
 
@@ -252,7 +250,7 @@ public class InstanceApiExpectTest extends BaseGoogleComputeEngineApiExpectTest 
               .builder()
               .method("POST")
               .endpoint("https://www.googleapis" +
-                      ".com/compute/v1beta16/projects/myproject/zones/us-central1-a/instances/test-1/setMetadata")
+                      ".com/compute/v1/projects/myproject/zones/us-central1-a/instances/test-1/setMetadata")
               .addHeader("Accept", "application/json")
               .addHeader("Authorization", "Bearer " + TOKEN)
               .payload(payloadFromResourceWithContentType("/instance_set_metadata.json", MediaType.APPLICATION_JSON))
@@ -273,7 +271,7 @@ public class InstanceApiExpectTest extends BaseGoogleComputeEngineApiExpectTest 
               .builder()
               .method("POST")
               .endpoint("https://www.googleapis" +
-                      ".com/compute/v1beta16/projects/myproject/zones/us-central1-a/instances/test-1/setMetadata")
+                      ".com/compute/v1/projects/myproject/zones/us-central1-a/instances/test-1/setMetadata")
               .addHeader("Accept", "application/json")
               .addHeader("Authorization", "Bearer " + TOKEN)
               .payload(payloadFromResourceWithContentType("/instance_set_metadata.json", MediaType.APPLICATION_JSON))
@@ -292,7 +290,7 @@ public class InstanceApiExpectTest extends BaseGoogleComputeEngineApiExpectTest 
               .builder()
               .method("POST")
               .endpoint("https://www.googleapis" +
-                      ".com/compute/v1beta16/projects/myproject/zones/us-central1-a/instances/test-1/reset")
+                      ".com/compute/v1/projects/myproject/zones/us-central1-a/instances/test-1/reset")
               .addHeader("Accept", "application/json")
               .addHeader("Authorization", "Bearer " + TOKEN).build();
 
@@ -311,7 +309,7 @@ public class InstanceApiExpectTest extends BaseGoogleComputeEngineApiExpectTest 
               .builder()
               .method("POST")
               .endpoint("https://www.googleapis" +
-                      ".com/compute/v1beta16/projects/myproject/zones/us-central1-a/instances/test-1/reset")
+                      ".com/compute/v1/projects/myproject/zones/us-central1-a/instances/test-1/reset")
               .addHeader("Accept", "application/json")
               .addHeader("Authorization", "Bearer " + TOKEN).build();
 
@@ -328,7 +326,7 @@ public class InstanceApiExpectTest extends BaseGoogleComputeEngineApiExpectTest 
               .builder()
               .method("POST")
               .endpoint("https://www.googleapis" +
-                      ".com/compute/v1beta16/projects/myproject/zones/us-central1-a/instances/test-1/attachDisk")
+                      ".com/compute/v1/projects/myproject/zones/us-central1-a/instances/test-1/attachDisk")
               .addHeader("Accept", "application/json")
               .addHeader("Authorization", "Bearer " + TOKEN)
               .payload(payloadFromResourceWithContentType("/instance_attach_disk.json", MediaType.APPLICATION_JSON))
@@ -343,7 +341,7 @@ public class InstanceApiExpectTest extends BaseGoogleComputeEngineApiExpectTest 
       assertEquals(api.attachDiskInZone("us-central1-a", "test-1",
               new AttachDiskOptions()
                       .mode(DiskMode.READ_ONLY)
-                      .source(URI.create("https://www.googleapis.com/compute/v1beta16/projects/myproject/zones/us-central1-a/disks/testimage1"))
+                      .source(URI.create("https://www.googleapis.com/compute/v1/projects/myproject/zones/us-central1-a/disks/testimage1"))
                       .type(DiskType.PERSISTENT)),
               new ParseOperationTest().expected());
    }
@@ -353,7 +351,7 @@ public class InstanceApiExpectTest extends BaseGoogleComputeEngineApiExpectTest 
               .builder()
               .method("POST")
               .endpoint("https://www.googleapis" +
-                      ".com/compute/v1beta16/projects/myproject/zones/us-central1-a/instances/test-1/attachDisk")
+                      ".com/compute/v1/projects/myproject/zones/us-central1-a/instances/test-1/attachDisk")
               .addHeader("Accept", "application/json")
               .addHeader("Authorization", "Bearer " + TOKEN)
               .payload(payloadFromResourceWithContentType("/instance_attach_disk.json", MediaType.APPLICATION_JSON))
@@ -367,7 +365,7 @@ public class InstanceApiExpectTest extends BaseGoogleComputeEngineApiExpectTest 
       assertNull(api.attachDiskInZone("us-central1-a", "test-1",
               new AttachDiskOptions()
                       .mode(DiskMode.READ_ONLY)
-                      .source(URI.create("https://www.googleapis.com/compute/v1beta16/projects/myproject/zones/us-central1-a/disks/testimage1"))
+                      .source(URI.create("https://www.googleapis.com/compute/v1/projects/myproject/zones/us-central1-a/disks/testimage1"))
                       .type(DiskType.PERSISTENT)));
 
    }
@@ -377,7 +375,7 @@ public class InstanceApiExpectTest extends BaseGoogleComputeEngineApiExpectTest 
               .builder()
               .method("POST")
               .endpoint("https://www.googleapis" +
-                      ".com/compute/v1beta16/projects/myproject/zones/us-central1-a/instances/test-1/detachDisk" +
+                      ".com/compute/v1/projects/myproject/zones/us-central1-a/instances/test-1/detachDisk" +
                       "?deviceName=test-disk-1")
               .addHeader("Accept", "application/json")
               .addHeader("Authorization", "Bearer " + TOKEN)
@@ -398,7 +396,7 @@ public class InstanceApiExpectTest extends BaseGoogleComputeEngineApiExpectTest 
               .builder()
               .method("POST")
               .endpoint("https://www.googleapis" +
-                      ".com/compute/v1beta16/projects/myproject/zones/us-central1-a/instances/test-1/detachDisk" +
+                      ".com/compute/v1/projects/myproject/zones/us-central1-a/instances/test-1/detachDisk" +
                       "?deviceName=test-disk-1")
               .addHeader("Accept", "application/json")
               .addHeader("Authorization", "Bearer " + TOKEN)

@@ -42,8 +42,8 @@ public class NetworkFirewallPredicatesTest {
    public static Firewall getFwForTestSourceTags() {
       Firewall.Builder builder = Firewall.builder();
 
-      builder.network(URI.create("https://www.googleapis.com/compute/v1beta16/projects/myproject/global/networks/jclouds-test"));
-      builder.selfLink(URI.create("https://www.googleapis.com/compute/v1beta16/projects/myproject/global/firewalls/jclouds-test"));
+      builder.network(URI.create("https://www.googleapis.com/compute/v1/projects/myproject/global/networks/jclouds-test"));
+      builder.selfLink(URI.create("https://www.googleapis.com/compute/v1/projects/myproject/global/firewalls/jclouds-test"));
       builder.addSourceTag("tag-1");
       builder.addAllowed(Firewall.Rule.builder().IpProtocol(IpProtocol.TCP)
               .addPortRange(1, 10).build());
@@ -60,8 +60,8 @@ public class NetworkFirewallPredicatesTest {
    public static Firewall getFwForTestSourceTagsExact() {
       Firewall.Builder builder = Firewall.builder();
 
-      builder.network(URI.create("https://www.googleapis.com/compute/v1beta16/projects/myproject/global/networks/jclouds-test"));
-      builder.selfLink(URI.create("https://www.googleapis.com/compute/v1beta16/projects/myproject/global/firewalls/jclouds-test"));
+      builder.network(URI.create("https://www.googleapis.com/compute/v1/projects/myproject/global/networks/jclouds-test"));
+      builder.selfLink(URI.create("https://www.googleapis.com/compute/v1/projects/myproject/global/firewalls/jclouds-test"));
       builder.addSourceTag("tag-1");
       builder.addAllowed(Firewall.Rule.builder().IpProtocol(IpProtocol.TCP)
               .addPortRange(1, 10).build());

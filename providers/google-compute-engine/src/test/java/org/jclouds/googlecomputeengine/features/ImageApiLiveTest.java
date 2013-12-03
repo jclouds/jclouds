@@ -42,7 +42,7 @@ public class ImageApiLiveTest extends BaseGoogleComputeEngineApiLiveTest {
    private Image image;
 
    private ImageApi api() {
-      return api.getImageApiForProject("google");
+      return api.getImageApiForProject("centos-cloud");
    }
 
    @Test(groups = "live")

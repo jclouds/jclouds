@@ -47,7 +47,7 @@ public class ParseRegionListTest extends BaseGoogleComputeEngineParseTest<ListPa
       return ListPage.<Region>builder()
               .kind(Resource.Kind.REGION_LIST)
               .id("projects/myproject/regions")
-              .selfLink(URI.create("https://www.googleapis.com/compute/v1beta16/projects/myproject/regions"))
+              .selfLink(URI.create("https://www.googleapis.com/compute/v1/projects/myproject/regions"))
               .items(ImmutableSet.of(
                       new ParseRegionTest().expected(),
                       Region.builder()
@@ -55,11 +55,11 @@ public class ParseRegionListTest extends BaseGoogleComputeEngineParseTest<ListPa
                               .creationTimestamp(new SimpleDateFormatDateService().iso8601DateParse
                                       ("2013-07-08T14:40:37.939-07:00"))
                               .selfLink(URI.create("https://www.googleapis" +
-                                      ".com/compute/v1beta16/projects/myproject/regions/us-central2"))
+                                      ".com/compute/v1/projects/myproject/regions/us-central2"))
                               .name("us-central2")
                               .description("us-central2")
                               .status(Region.Status.UP)
-                              .zone(URI.create("https://www.googleapis.com/compute/v1beta16/zones/us-central2-a"))
+                              .zone(URI.create("https://www.googleapis.com/compute/v1/zones/us-central2-a"))
                               .addQuota("INSTANCES", 0, 8)
                               .addQuota("CPUS", 0, 8)
                               .addQuota("EPHEMERAL_ADDRESSES", 0, 8)
