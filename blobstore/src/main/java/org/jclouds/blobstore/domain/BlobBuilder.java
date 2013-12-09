@@ -130,9 +130,11 @@ public interface BlobBuilder {
       PayloadBlobBuilder expires(Date expires);
 
       /**
-       * 
+       * @deprecated Callers should instead call BlobBuilder.contentMD5,
+       * usually with the results from Guava Hashing.md5().
        * @see Payloads#calculateMD5
        */
+      @Deprecated
       PayloadBlobBuilder calculateMD5() throws IOException;
 
    }

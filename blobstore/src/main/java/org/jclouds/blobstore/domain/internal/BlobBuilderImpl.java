@@ -152,6 +152,11 @@ public class BlobBuilderImpl implements BlobBuilder {
          return builder.payload(payload);
       }
 
+      /**
+       * @deprecated Callers should instead call BlobBuilder.contentMD5,
+       * usually with the results from Guava Hashing.md5().
+       */
+      @Deprecated
       @Override
       public PayloadBlobBuilder calculateMD5() throws IOException {
          return builder.payload(Payloads.calculateMD5(payload));
