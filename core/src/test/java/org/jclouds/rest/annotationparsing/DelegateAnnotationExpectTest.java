@@ -87,7 +87,7 @@ public class DelegateAnnotationExpectTest extends BaseRestClientExpectTest<Deleg
       @HEAD
       @Path("/disks/{disk}")
       @Fallback(FalseOnNotFoundOr404.class)
-      public ListenableFuture<Boolean> exists(@PathParam("disk") String diskName);
+      ListenableFuture<Boolean> exists(@PathParam("disk") String diskName);
    }
 
    public void testDelegatingCallTakesIntoConsiderationAndCalleeFormParam() {

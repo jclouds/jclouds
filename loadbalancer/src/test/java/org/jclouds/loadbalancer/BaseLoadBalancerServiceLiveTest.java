@@ -134,7 +134,7 @@ public abstract class BaseLoadBalancerServiceLiveTest extends BaseViewLiveTest<L
       socketTester = retry(socketOpen, 60, 1, SECONDS);
    }
 
-   abstract protected Module getSshModule();
+   protected abstract Module getSshModule();
 
    @BeforeClass(groups = { "integration", "live" }, dependsOnMethods = "setupContext")
    public void createNodes() throws RunNodesException {

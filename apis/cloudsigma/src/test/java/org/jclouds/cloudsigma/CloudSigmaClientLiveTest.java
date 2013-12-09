@@ -343,8 +343,8 @@ public class CloudSigmaClientLiveTest extends BaseComputeServiceContextLiveTest 
       // behavior on shutdown depends on how your server OS is set up to respond
       // to an ACPI power
       // button signal
-      assert (client.getServerInfo(server.getUuid()).getStatus() == ServerStatus.ACTIVE || client.getServerInfo(
-            server.getUuid()).getStatus() == ServerStatus.STOPPED);
+      assert client.getServerInfo(server.getUuid()).getStatus() == ServerStatus.ACTIVE || client.getServerInfo(
+            server.getUuid()).getStatus() == ServerStatus.STOPPED;
    }
 
    @Test(dependsOnMethods = "testLifeCycle")

@@ -309,14 +309,14 @@ public class S3ClientLiveTest extends BaseBlobStoreIntegrationTest {
    }
 
    protected void assertCacheControl(S3Object newObject, String string) {
-      assert (newObject.getMetadata().getCacheControl().indexOf(string) != -1) : newObject.getMetadata()
+      assert newObject.getMetadata().getCacheControl().indexOf(string) != -1 : newObject.getMetadata()
                .getCacheControl();
    }
 
    protected void assertContentEncoding(S3Object newObject, String string) {
-      assert (newObject.getPayload().getContentMetadata().getContentEncoding().indexOf(string) != -1) : newObject
+      assert newObject.getPayload().getContentMetadata().getContentEncoding().indexOf(string) != -1 : newObject
                .getPayload().getContentMetadata().getContentEncoding();
-      assert (newObject.getMetadata().getContentMetadata().getContentEncoding().indexOf(string) != -1) : newObject
+      assert newObject.getMetadata().getContentMetadata().getContentEncoding().indexOf(string) != -1 : newObject
                .getMetadata().getContentMetadata().getContentEncoding();
    }
 

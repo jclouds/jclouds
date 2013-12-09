@@ -21,7 +21,6 @@ import static org.jclouds.rackspace.cloudloadbalancers.v1.predicates.LoadBalance
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertTrue;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -38,6 +37,7 @@ import org.testng.annotations.Test;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Iterables;
+import com.google.common.collect.Maps;
 
 /**
  * @author Everett Toews
@@ -62,7 +62,7 @@ public class AccessRuleApiLiveTest extends BaseCloudLoadBalancersApiLiveTest {
       accessRule3 = AccessRule.deny("206.160.163.22");
       accessRule4 = AccessRule.deny("206.160.168.22");
       
-      accessRules = new HashMap<String, AccessRule>();
+      accessRules = Maps.newHashMap();
       accessRules.put(accessRule1.getAddress(), accessRule1);
       accessRules.put(accessRule2.getAddress(), accessRule2);
       accessRules.put(accessRule3.getAddress(), accessRule3);
@@ -120,7 +120,7 @@ public class AccessRuleApiLiveTest extends BaseCloudLoadBalancersApiLiveTest {
       assertTrue(api.getAccessRuleApiForZoneAndLoadBalancer(zone, lb.getId()).deleteAll());
       assertTrue(awaitAvailable(api.getLoadBalancerApiForZone(zone)).apply(lb));
       
-      assertExpectedAccessRules(new HashMap<String, AccessRule>());
+      assertExpectedAccessRules(Maps.<String, AccessRule>newHashMap());
    }
    
    private void assertExpectedAccessRules(Map<String, AccessRule> expectedAccessList) {

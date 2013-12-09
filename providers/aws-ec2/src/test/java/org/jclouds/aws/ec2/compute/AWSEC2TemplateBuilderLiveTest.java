@@ -104,7 +104,7 @@ public class AWSEC2TemplateBuilderLiveTest extends EC2TemplateBuilderLiveTest {
             // http://www.regular-expressions.info/lookaround.html
             .imageDescriptionMatches("^(?!.*(daily|testing)).*ubuntu-images.*$").osFamily(OsFamily.UBUNTU).build();
 
-      assert (template.getImage().getProviderId().startsWith("ami-")) : template;
+      assert template.getImage().getProviderId().startsWith("ami-") : template;
       assert template.getImage().getDescription().indexOf("test") == -1 : template;
       assert template.getImage().getDescription().indexOf("daily") == -1 : template;
       assertEquals(template.getImage().getVersion(), "20100224");
@@ -131,7 +131,7 @@ public class AWSEC2TemplateBuilderLiveTest extends EC2TemplateBuilderLiveTest {
             // http://www.regular-expressions.info/lookaround.html
             .imageDescriptionMatches("^(?!.*(daily|testing)).*ubuntu-images.*$").osFamily(OsFamily.UBUNTU).build();
 
-      assert (template.getImage().getProviderId().startsWith("ami-")) : template;
+      assert template.getImage().getProviderId().startsWith("ami-") : template;
       assert template.getImage().getDescription().indexOf("test") == -1 : template;
       assert template.getImage().getDescription().indexOf("daily") == -1 : template;
       assertEquals(template.getImage().getOperatingSystem().getVersion(), "10.04");
@@ -150,7 +150,7 @@ public class AWSEC2TemplateBuilderLiveTest extends EC2TemplateBuilderLiveTest {
       Template template = view.getComputeService().templateBuilder().imageId("us-east-1/ami-ccb35ea5")
             .hardwareId(InstanceType.M2_2XLARGE).locationId("us-east-1a").build();
 
-      assert (template.getImage().getProviderId().startsWith("ami-")) : template;
+      assert template.getImage().getProviderId().startsWith("ami-") : template;
       assertEquals(template.getImage().getOperatingSystem().getVersion(), "5.4");
       assertEquals(template.getImage().getOperatingSystem().is64Bit(), true);
       assertEquals(template.getImage().getOperatingSystem().getFamily(), OsFamily.CENTOS);
@@ -166,7 +166,7 @@ public class AWSEC2TemplateBuilderLiveTest extends EC2TemplateBuilderLiveTest {
    @Test
    public void testDefaultTemplateBuilder() throws IOException {
       Template defaultTemplate = view.getComputeService().templateBuilder().build();
-      assert (defaultTemplate.getImage().getProviderId().startsWith("ami-")) : defaultTemplate;
+      assert defaultTemplate.getImage().getProviderId().startsWith("ami-") : defaultTemplate;
       assertTrue(defaultTemplate.getImage().getOperatingSystem().getVersion().contains("pv-201"),
               "Default template version should include 'pv-201' but is "
                       + defaultTemplate.getImage().getOperatingSystem().getVersion());
@@ -183,7 +183,7 @@ public class AWSEC2TemplateBuilderLiveTest extends EC2TemplateBuilderLiveTest {
 
       Template defaultTemplate = view.getComputeService().templateBuilder().osFamily(OsFamily.AMZN_LINUX)
             .imageMatches(EC2ImagePredicates.rootDeviceType(RootDeviceType.INSTANCE_STORE)).build();
-      assert (defaultTemplate.getImage().getProviderId().startsWith("ami-")) : defaultTemplate;
+      assert defaultTemplate.getImage().getProviderId().startsWith("ami-") : defaultTemplate;
       assertEquals(defaultTemplate.getImage().getOperatingSystem().getVersion(), "pv-2013.09.rc-1");
       assertEquals(defaultTemplate.getImage().getOperatingSystem().is64Bit(), true);
       assertEquals(defaultTemplate.getImage().getOperatingSystem().getFamily(), OsFamily.AMZN_LINUX);
@@ -197,7 +197,7 @@ public class AWSEC2TemplateBuilderLiveTest extends EC2TemplateBuilderLiveTest {
    public void testFastestTemplateBuilder() throws IOException {
       Template fastestTemplate = view.getComputeService().templateBuilder().fastest().osFamily(OsFamily.AMZN_LINUX)
             .build();
-      assert (fastestTemplate.getImage().getProviderId().startsWith("ami-")) : fastestTemplate;
+      assert fastestTemplate.getImage().getProviderId().startsWith("ami-") : fastestTemplate;
       assertEquals(fastestTemplate.getHardware().getProviderId(), InstanceType.CC2_8XLARGE);
       assertEquals(fastestTemplate.getImage().getOperatingSystem().getVersion(), "2011.09.2");
       assertEquals(fastestTemplate.getImage().getOperatingSystem().is64Bit(), true);
@@ -214,7 +214,7 @@ public class AWSEC2TemplateBuilderLiveTest extends EC2TemplateBuilderLiveTest {
       Template microTemplate = view.getComputeService().templateBuilder().hardwareId(InstanceType.T1_MICRO)
             .osFamily(OsFamily.UBUNTU).osVersionMatches("10.10").os64Bit(true).build();
 
-      assert (microTemplate.getImage().getProviderId().startsWith("ami-")) : microTemplate;
+      assert microTemplate.getImage().getProviderId().startsWith("ami-") : microTemplate;
       assertEquals(microTemplate.getImage().getOperatingSystem().getVersion(), "10.10");
       assertEquals(microTemplate.getImage().getOperatingSystem().is64Bit(), true);
       assertEquals(microTemplate.getImage().getOperatingSystem().getFamily(), OsFamily.UBUNTU);
@@ -238,7 +238,7 @@ public class AWSEC2TemplateBuilderLiveTest extends EC2TemplateBuilderLiveTest {
          assertEquals(context.getComputeService().listImages().size(), 0);
 
          Template template = context.getComputeService().templateBuilder().imageId("us-east-1/ami-ccb35ea5").build();
-         assert (template.getImage().getProviderId().startsWith("ami-")) : template;
+         assert template.getImage().getProviderId().startsWith("ami-") : template;
          assertEquals(template.getImage().getOperatingSystem().getVersion(), "5.4");
          assertEquals(template.getImage().getOperatingSystem().is64Bit(), true);
          assertEquals(template.getImage().getOperatingSystem().getFamily(), OsFamily.CENTOS);
@@ -271,7 +271,7 @@ public class AWSEC2TemplateBuilderLiveTest extends EC2TemplateBuilderLiveTest {
          assertEquals(context.getComputeService().listImages().size(), 0);
 
          Template template = context.getComputeService().templateBuilder().imageId("us-east-1/ami-ccb35ea5").build();
-         assert (template.getImage().getProviderId().startsWith("ami-")) : template;
+         assert template.getImage().getProviderId().startsWith("ami-") : template;
          assertEquals(template.getImage().getOperatingSystem().getVersion(), "5.4");
          assertEquals(template.getImage().getOperatingSystem().is64Bit(), true);
          assertEquals(template.getImage().getOperatingSystem().getFamily(), OsFamily.CENTOS);
@@ -316,7 +316,7 @@ public class AWSEC2TemplateBuilderLiveTest extends EC2TemplateBuilderLiveTest {
          assert context.getComputeService().listImages().size() < this.view.getComputeService().listImages().size();
 
          Template template = context.getComputeService().templateBuilder().imageId("eu-west-1/ami-a33b06d7").build();
-         assert (template.getImage().getProviderId().startsWith("ami-")) : template;
+         assert template.getImage().getProviderId().startsWith("ami-") : template;
          assertEquals(template.getImage().getOperatingSystem().getVersion(), "2011.09.2");
          assertEquals(template.getImage().getOperatingSystem().is64Bit(), true);
          assertEquals(template.getImage().getOperatingSystem().getFamily(), OsFamily.AMZN_LINUX);
@@ -349,7 +349,7 @@ public class AWSEC2TemplateBuilderLiveTest extends EC2TemplateBuilderLiveTest {
       String imageId = "us-east-1/ami-44d02f2d";
       Template defaultTemplate = view.getComputeService().templateBuilder().imageId(imageId)
             .imageMatches(EC2ImagePredicates.rootDeviceType(RootDeviceType.INSTANCE_STORE)).build();
-      assert (defaultTemplate.getImage().getProviderId().startsWith("ami-")) : defaultTemplate;
+      assert defaultTemplate.getImage().getProviderId().startsWith("ami-") : defaultTemplate;
       assertEquals(defaultTemplate.getImage().getId(), imageId);
    }
    

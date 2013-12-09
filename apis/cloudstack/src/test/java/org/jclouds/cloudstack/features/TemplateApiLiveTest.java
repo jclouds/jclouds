@@ -86,8 +86,8 @@ public class TemplateApiLiveTest extends BaseCloudStackApiLiveTest {
          assert template.getAccount() != null : template;
          assert template.getZone() != null : template;
          assert template.getZoneId() != null : template;
-         assert (template.getStatus() == null ||
-            template.getStatus() == Template.Status.DOWNLOADED) : template;
+         assert template.getStatus() == null ||
+            template.getStatus() == Template.Status.DOWNLOADED : template;
          assert template.getType() != null && template.getType() != Template.Type.UNRECOGNIZED : template;
          assert template.getHypervisor() != null : template;
          assert template.getDomain() != null : template;

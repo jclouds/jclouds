@@ -64,7 +64,7 @@ public class ParseImageFromJsonResponseTest {
       assertEquals(response.getProgress(), Integer.valueOf(80));
       assertEquals(response.getServerId(), Integer.valueOf(12));
       assertEquals(response.getStatus(), ImageStatus.SAVING);
-      assertEquals(response.getUpdated(), dateService.iso8601SecondsDateParse(("2010-10-10T12:00:00Z")));
+      assertEquals(response.getUpdated(), dateService.iso8601SecondsDateParse("2010-10-10T12:00:00Z"));
 
    }
 

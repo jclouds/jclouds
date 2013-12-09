@@ -31,7 +31,8 @@ public class MpuGraphData {
    }
 
    private static void foreach(long from, long to1, long to2, long to3, MultipartUploadSlicingAlgorithm algorithm) {
-      long i = 0L, step = 1L;
+      long i = 0L;
+      long step = 1L;
       System.out.println("=== {" + from + "," + to1 + "} ===");
       for (; i < to1 - from; step += i, i += step) {
          calculate(i + from, algorithm);

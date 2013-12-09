@@ -57,12 +57,12 @@ public class ParseSaxTest extends BaseHandlerTest {
    
    @DataProvider
    public Object[][] runUnderJava7() {
-       return (TestUtils.isJava7() ? SINGLE_NO_ARG_INVOCATION : NO_INVOCATIONS);
+       return TestUtils.isJava7() ? SINGLE_NO_ARG_INVOCATION : NO_INVOCATIONS;
    }
 
    @DataProvider
    public Object[][] ignoreUnderJava7() {
-       return (TestUtils.isJava7() ? NO_INVOCATIONS : SINGLE_NO_ARG_INVOCATION);
+       return TestUtils.isJava7() ? NO_INVOCATIONS : SINGLE_NO_ARG_INVOCATION;
    }
    
    @Test

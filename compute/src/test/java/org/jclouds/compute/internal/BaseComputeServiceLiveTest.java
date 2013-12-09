@@ -486,7 +486,7 @@ public abstract class BaseComputeServiceLiveTest extends BaseComputeServiceConte
    public void testCredentialsCache() throws Exception {
       initializeContext();
       for (NodeMetadata node : nodes)
-         assert (view.utils().credentialStore().get("node#" + node.getId()) != null) : "credentials for " + node.getId();
+         assert view.utils().credentialStore().get("node#" + node.getId()) != null : "credentials for " + node.getId();
    }
 
    protected Map<? extends NodeMetadata, ExecResponse> runScriptWithCreds(final String group, OperatingSystem os,
@@ -537,7 +537,7 @@ public abstract class BaseComputeServiceLiveTest extends BaseComputeServiceConte
          assertLocationSameOrChild(checkNotNull(metadata.getLocation(), "location of %s", metadata), template.getLocation());
          checkImageIdMatchesTemplate(metadata);
          checkOsMatchesTemplate(metadata);
-         assert (metadata.getStatus() == Status.RUNNING) : metadata;
+         assert metadata.getStatus() == Status.RUNNING : metadata;
          // due to DHCP the addresses can actually change in-between runs.
          assertEquals(metadata.getPrivateAddresses().size(), node.getPrivateAddresses().size(), format(
                "[%s] didn't match: [%s]", metadata.getPrivateAddresses(), node.getPrivateAddresses().size()));

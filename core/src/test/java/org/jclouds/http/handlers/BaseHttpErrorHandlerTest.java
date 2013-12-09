@@ -39,7 +39,7 @@ import com.google.inject.Guice;
  */
 @Test(groups = { "unit" })
 public abstract class BaseHttpErrorHandlerTest<T extends HttpErrorHandler> {
-   abstract protected Class<T> getClassToTest();
+   protected abstract Class<T> getClassToTest();
 
    protected void assertCodeMakes(String method, URI uri, int statusCode, String message, String content,
             Class<? extends Exception> expected, String exceptionMessage) {

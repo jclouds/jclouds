@@ -599,9 +599,9 @@ public class BaseBlobIntegrationTest extends BaseBlobStoreIntegrationTest {
    }
 
    protected void checkContentEncoding(Blob blob, String contentEncoding) {
-      assert (blob.getPayload().getContentMetadata().getContentEncoding().indexOf(contentEncoding) != -1) : blob
+      assert blob.getPayload().getContentMetadata().getContentEncoding().indexOf(contentEncoding) != -1 : blob
                .getPayload().getContentMetadata().getContentEncoding();
-      assert (blob.getMetadata().getContentMetadata().getContentEncoding().indexOf(contentEncoding) != -1) : blob
+      assert blob.getMetadata().getContentMetadata().getContentEncoding().indexOf(contentEncoding) != -1 : blob
                .getMetadata().getContentMetadata().getContentEncoding();
    }
 
@@ -612,7 +612,7 @@ public class BaseBlobIntegrationTest extends BaseBlobStoreIntegrationTest {
                .getMetadata().getContentMetadata().getContentLanguage();
    }
 
-   protected volatile static Crypto crypto;
+   protected static volatile Crypto crypto;
    static {
       try {
          crypto = new JCECrypto();

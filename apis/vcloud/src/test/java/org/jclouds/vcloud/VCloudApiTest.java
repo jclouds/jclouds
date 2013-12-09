@@ -57,8 +57,8 @@ public class VCloudApiTest extends BaseVCloudApiTest<VCloudApi> {
 
    @DataProvider
    public Object[][] ignoreOnWindows() {
-      return (TestUtils.isWindowsOs() ? TestUtils.NO_INVOCATIONS 
-                                      : TestUtils.SINGLE_NO_ARG_INVOCATION);
+      return TestUtils.isWindowsOs() ? TestUtils.NO_INVOCATIONS
+                                     : TestUtils.SINGLE_NO_ARG_INVOCATION;
    }
    
 }

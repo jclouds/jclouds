@@ -36,7 +36,7 @@ import org.testng.annotations.Test;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.ImmutableSet;
-import org.jclouds.openstack.nova.v2_0.parse.*;
+import org.jclouds.openstack.nova.v2_0.parse.ParseServerDiagnostics;
 
 /**
  * Tests annotation parsing of {@code ServerAsyncApi}

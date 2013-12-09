@@ -49,20 +49,20 @@ public class UnitTestStatusListener implements ITestListener {
       threadTestStart.set(System.currentTimeMillis());
    }
 
-   synchronized public void onTestSuccess(ITestResult arg0) {
+   public synchronized void onTestSuccess(ITestResult arg0) {
       System.out.println(getThreadId() + " Test " + getTestDesc(arg0) + " succeeded: "
                + (System.currentTimeMillis() - threadTestStart.get()) + "ms");
       succeded.incrementAndGet();
       printStatus();
    }
 
-   synchronized public void onTestFailure(ITestResult arg0) {
+   public synchronized void onTestFailure(ITestResult arg0) {
       System.out.println(getThreadId() + " Test " + getTestDesc(arg0) + " failed.");
       failed.incrementAndGet();
       printStatus();
    }
 
-   synchronized public void onTestSkipped(ITestResult arg0) {
+   public synchronized void onTestSkipped(ITestResult arg0) {
       System.out.println(getThreadId() + " Test " + getTestDesc(arg0) + " skipped.");
       skipped.incrementAndGet();
       printStatus();

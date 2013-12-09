@@ -53,6 +53,6 @@ public class AWSAMIApiLiveTest extends AMIApiLiveTest {
                   .put("root-device-type", "ebs")//
                   .build()).ownedBy("137112412989", "099720109477"));
       assertNotNull(ccResults);
-      assert (ccResults.size() >= 34) : ccResults;
+      assert ccResults.size() >= 34 : ccResults;
    }
 }

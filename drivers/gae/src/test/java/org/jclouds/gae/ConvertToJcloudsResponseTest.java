@@ -53,7 +53,7 @@ public class ConvertToJcloudsResponseTest {
    ConvertToJcloudsResponse req;
    URI endPoint;
 
-   protected volatile static Crypto crypto;
+   protected static volatile Crypto crypto;
    static {
       try {
          crypto = new JCECrypto();

@@ -99,7 +99,7 @@ public class Reflection2OverriddenMethodTest {
       return new SimpleForwardingLoadingCache<TypeToken<?>, Set<Invokable<?, ?>>>(originalMethodsForTypeToken) {
          @Override
          public Set<Invokable<?, ?>> get(TypeToken<?> key) throws ExecutionException {
-            return (key.equals(overriddenKey) ? value : super.get(key));
+            return key.equals(overriddenKey) ? value : super.get(key);
          }
       };
    }

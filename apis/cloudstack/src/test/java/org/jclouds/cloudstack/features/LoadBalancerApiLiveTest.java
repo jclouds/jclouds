@@ -115,7 +115,7 @@ public class LoadBalancerApiLiveTest extends BaseCloudStackApiLiveTest {
          }
       }
       assertNotNull(rule, "Failed to get a load balancer rule after " + attempts + " attempts");
-      assert (rule.getPublicIPId() == ip.getId()) : rule;
+      assert rule.getPublicIPId() == ip.getId() : rule;
       assertEquals(rule.getPublicPort(), 22);
       assertEquals(rule.getPrivatePort(), 22);
       assertEquals(rule.getAlgorithm(), Algorithm.LEASTCONN);

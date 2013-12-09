@@ -199,20 +199,20 @@ public class RestAnnotationProcessorTest extends BaseRestApiTest {
       URI getURI();
 
       @Delegate
-      public Callee getCallee();
+      Callee getCallee();
 
       @Delegate
-      public Callee2 getCallee2();
+      Callee2 getCallee2();
 
       @Delegate
-      public Callee getCallee(@EndpointParam URI endpoint);
+      Callee getCallee(@EndpointParam URI endpoint);
 
       @Delegate
-      public Optional<Callee> getOptionalCallee(@EndpointParam URI endpoint);
+      Optional<Callee> getOptionalCallee(@EndpointParam URI endpoint);
 
       @Delegate
       @Path("/testing/testing/{wibble}")
-      public Callee getCalleeWithPath(@EndpointParam URI endpoint, @PathParam("wibble") String wibble);
+      Callee getCalleeWithPath(@EndpointParam URI endpoint, @PathParam("wibble") String wibble);
    }
 
    public interface Callee extends Closeable {
@@ -229,20 +229,20 @@ public class RestAnnotationProcessorTest extends BaseRestApiTest {
       URI getURI();
 
       @Delegate
-      public AsyncCallee getCallee();
+      AsyncCallee getCallee();
 
       @Delegate
-      public AsyncCallee2 getCallee2();
+      AsyncCallee2 getCallee2();
 
       @Delegate
-      public AsyncCallee getCallee(@EndpointParam URI endpoint);
+      AsyncCallee getCallee(@EndpointParam URI endpoint);
 
       @Delegate
-      public Optional<AsyncCallee> getOptionalCallee(@EndpointParam URI endpoint);
+      Optional<AsyncCallee> getOptionalCallee(@EndpointParam URI endpoint);
 
       @Delegate
       @Path("/testing/testing/{wibble}")
-      public AsyncCallee getCalleeWithPath(@EndpointParam URI endpoint, @PathParam("wibble") String wibble);
+      AsyncCallee getCalleeWithPath(@EndpointParam URI endpoint, @PathParam("wibble") String wibble);
    }
 
    public void testAsyncDelegateIsLazyLoadedAndRequestIncludesVersionAndPath() throws InterruptedException,
@@ -620,21 +620,21 @@ public class RestAnnotationProcessorTest extends BaseRestApiTest {
 
    public interface TestPayloadParamVarargs {
       @POST
-      public void varargs(HttpRequestOptions... options);
+      void varargs(HttpRequestOptions... options);
 
       @POST
-      public void varargsWithReq(String required, HttpRequestOptions... options);
+      void varargsWithReq(String required, HttpRequestOptions... options);
 
       @POST
-      public void post(HttpRequestOptions options);
-
-      @POST
-      @Produces(MediaType.APPLICATION_OCTET_STREAM)
-      public void post();
+      void post(HttpRequestOptions options);
 
       @POST
       @Produces(MediaType.APPLICATION_OCTET_STREAM)
-      public void post(Payload payload);
+      void post();
+
+      @POST
+      @Produces(MediaType.APPLICATION_OCTET_STREAM)
+      void post(Payload payload);
    }
 
    public void testHttpRequestOptionsNoPayloadParam() throws SecurityException, NoSuchMethodException, IOException {
@@ -737,7 +737,7 @@ public class RestAnnotationProcessorTest extends BaseRestApiTest {
    }
 
    public interface Parent {
-      public void foo();
+      void foo();
    }
 
    public class TestOverridden implements Parent {
@@ -793,29 +793,29 @@ public class RestAnnotationProcessorTest extends BaseRestApiTest {
       void postNonnull(@BinderParam(BindToStringPayload.class) String content);
 
       @POST
-      public void postAsJson(@BinderParam(BindToJsonPayload.class) String content);
+      void postAsJson(@BinderParam(BindToJsonPayload.class) String content);
 
       @POST
       @Path("/{foo}")
-      public void postWithPath(@PathParam("foo") @PayloadParam("fooble") String path, MapBinder content);
+      void postWithPath(@PathParam("foo") @PayloadParam("fooble") String path, MapBinder content);
 
       @POST
       @Path("/{foo}")
       @MapBinder(BindToJsonPayload.class)
-      public void postWithMethodBinder(@PathParam("foo") @PayloadParam("fooble") String path);
+      void postWithMethodBinder(@PathParam("foo") @PayloadParam("fooble") String path);
 
       @POST
       @Path("/{foo}")
       @PayloadParams(keys = "rat", values = "atat")
       @MapBinder(BindToJsonPayload.class)
-      public void postWithMethodBinderAndDefaults(@PathParam("foo") @PayloadParam("fooble") String path);
+      void postWithMethodBinderAndDefaults(@PathParam("foo") @PayloadParam("fooble") String path);
 
       @POST
       @Path("/{foo}")
       @PayloadParams(keys = "rat", values = "atat")
       @org.jclouds.rest.annotations.Payload("name {fooble}")
       @Produces(MediaType.TEXT_PLAIN)
-      public void testPayload(@PathParam("foo") @PayloadParam("fooble") String path);
+      void testPayload(@PathParam("foo") @PayloadParam("fooble") String path);
    }
 
    public void testCreatePostRequest() throws SecurityException, NoSuchMethodException, IOException {
@@ -1148,7 +1148,7 @@ public class RestAnnotationProcessorTest extends BaseRestApiTest {
       @Target({ ElementType.METHOD })
       @Retention(RetentionPolicy.RUNTIME)
       @HttpMethod("ROWDY")
-      public @interface ROWDY {
+      @interface ROWDY {
       }
 
       @ROWDY
@@ -1360,19 +1360,19 @@ public class RestAnnotationProcessorTest extends BaseRestApiTest {
    interface TestRequestFilter {
       @GET
       @RequestFilters(TestRequestFilter2.class)
-      public void get();
+      void get();
 
       @GET
       @OverrideRequestFilters
       @RequestFilters(TestRequestFilter2.class)
-      public void getOverride();
+      void getOverride();
 
       @OverrideRequestFilters
       @RequestFilters(TestRequestFilter2.class)
-      public void getOverride(HttpRequest request);
+      void getOverride(HttpRequest request);
 
       @POST
-      public void post();
+      void post();
    }
 
    @Test
@@ -1468,7 +1468,7 @@ public class RestAnnotationProcessorTest extends BaseRestApiTest {
 
       @GET
       @Path("/{path1}/{path2}")
-      public void twoPaths(@PathParam("path1") String path, @PathParam("path2") String path2);
+      void twoPaths(@PathParam("path1") String path, @PathParam("path2") String path2);
    }
 
    @Test(enabled = false)
@@ -2308,15 +2308,15 @@ public class RestAnnotationProcessorTest extends BaseRestApiTest {
 
    public interface TestPayload {
       @PUT
-      public void put(@BinderParam(BindToStringPayload.class) String content);
+      void put(@BinderParam(BindToStringPayload.class) String content);
 
       @PUT
       @Path("/{foo}")
-      public ListenableFuture<Void> putWithPath(@PathParam("foo") String path,
+      ListenableFuture<Void> putWithPath(@PathParam("foo") String path,
             @BinderParam(BindToStringPayload.class) String content);
 
       @PUT
-      public void twoEntities(@BinderParam(BindToStringPayload.class) String payload1,
+      void twoEntities(@BinderParam(BindToStringPayload.class) String payload1,
             @BinderParam(BindToStringPayload.class) String payload2);
    }
 

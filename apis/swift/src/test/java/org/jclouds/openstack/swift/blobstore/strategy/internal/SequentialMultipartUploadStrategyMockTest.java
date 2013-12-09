@@ -37,6 +37,7 @@ import org.testng.annotations.Test;
 
 import com.google.common.base.Charsets;
 import com.google.common.collect.ImmutableSet;
+import com.google.common.util.concurrent.Atomics;
 import com.google.inject.Module;
 import com.google.mockwebserver.MockResponse;
 import com.google.mockwebserver.MockWebServer;
@@ -121,7 +122,7 @@ public class SequentialMultipartUploadStrategyMockTest {
     * this method, which allows us to send back links to the mock server.
     */
    private AtomicReference<URL> setURLReplacingDispatcher(MockWebServer server) {
-      final AtomicReference<URL> url = new AtomicReference<URL>();
+      final AtomicReference<URL> url = Atomics.newReference();
 
       final QueueDispatcher dispatcher = new QueueDispatcher() {
          protected final BlockingQueue<MockResponse> responseQueue = new LinkedBlockingQueue<MockResponse>();

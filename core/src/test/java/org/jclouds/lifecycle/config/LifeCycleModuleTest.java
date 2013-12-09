@@ -26,7 +26,10 @@ import java.util.concurrent.CountDownLatch;
 
 import javax.annotation.PostConstruct;
 
-import static org.easymock.EasyMock.*;
+import static org.easymock.EasyMock.createStrictMock;
+import static org.easymock.EasyMock.expectLastCall;
+import static org.easymock.EasyMock.replay;
+import static org.easymock.EasyMock.verify;
 import org.jclouds.concurrent.config.ExecutorServiceModule;
 import org.jclouds.lifecycle.Closer;
 import org.testng.annotations.Test;

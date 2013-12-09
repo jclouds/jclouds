@@ -90,7 +90,7 @@ public class BaseBlobStoreIntegrationTest extends BaseViewLiveTest<BlobStoreCont
    /**
     * two test groups integration and live.
     */
-   private volatile static BlockingQueue<String> containerNames = new ArrayBlockingQueue<String>(containerCount);
+   private static volatile BlockingQueue<String> containerNames = new ArrayBlockingQueue<String>(containerCount);
 
    /**
     * There are a lot of retries here mainly from experience running inside amazon EC2.

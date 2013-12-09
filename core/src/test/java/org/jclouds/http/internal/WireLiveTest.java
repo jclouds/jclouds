@@ -120,14 +120,14 @@ public class WireLiveTest {
    public static HttpWire setUp() throws Exception {
       BufferLogger bufferLogger = new BufferLogger();
       HttpWire wire = new HttpWire();
-      wire.wireLog = (bufferLogger);
+      wire.wireLog = bufferLogger;
       return wire;
    }
 
    public HttpWire setUpSynch() throws Exception {
       BufferLogger bufferLogger = new BufferLogger();
       HttpWire wire = new HttpWire();
-      wire.wireLog = (bufferLogger);
+      wire.wireLog = bufferLogger;
       return wire;
    }
 

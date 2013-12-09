@@ -66,7 +66,7 @@ public class EC2TemplateBuilderImplTest extends TemplateBuilderImplTest {
 
    @Override
    protected EC2TemplateBuilderImpl createTemplateBuilder(final Image knownImage,
-         @Memoized Supplier<Set<? extends Location>> locations, final @Memoized Supplier<Set<? extends Image>> images,
+         @Memoized Supplier<Set<? extends Location>> locations, @Memoized final Supplier<Set<? extends Image>> images,
          @Memoized Supplier<Set<? extends Hardware>> sizes, Location defaultLocation,
          Provider<TemplateOptions> optionsProvider, Provider<TemplateBuilder> templateBuilderProvider) {
 

@@ -26,8 +26,9 @@ import org.testng.annotations.Test;
 import static org.testng.Assert.assertEquals;
 
 import java.io.InputStream;
-import java.util.LinkedList;
 import java.util.List;
+
+import com.google.common.collect.Lists;
 
 /**
  * Test XML Parsing of the Blob Block List
@@ -44,7 +45,7 @@ public class BlobBlocksResultsHandlerTest extends BaseHandlerTest {
    public void testGetResult() throws Exception {
       InputStream is = getClass().getResourceAsStream("/test_list_blob_blocks.xml");
 
-      List<BlobBlockProperties> blocks = new LinkedList<BlobBlockProperties>();
+      List<BlobBlockProperties> blocks = Lists.newLinkedList();
       blocks.add(new BlobBlockPropertiesImpl("blockIdA", 1234, true));
       blocks.add(new BlobBlockPropertiesImpl("blockIdB", 4321, true));
       blocks.add(new BlobBlockPropertiesImpl("blockIdC", 5678, false));

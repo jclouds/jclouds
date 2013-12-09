@@ -69,36 +69,36 @@ public class JAXBResponseParserAnnotationExpectTest extends
    }
 
    public interface TestJAXBApi extends Closeable {
-      public TestJAXBDomain jaxbGetWithAnnotation();
+      TestJAXBDomain jaxbGetWithAnnotation();
 
-      public Object jaxbGetWithAnnotationAndCustomClass();
+      Object jaxbGetWithAnnotationAndCustomClass();
 
-      public TestJAXBDomain jaxbGetWithAcceptHeader();
+      TestJAXBDomain jaxbGetWithAcceptHeader();
 
-      public String jaxbGetWithTransformer();
+      String jaxbGetWithTransformer();
    }
 
    public interface TestJAXBAsyncApi extends Closeable {
       @GET
       @Path("/jaxb/annotation")
       @JAXBResponseParser
-      public ListenableFuture<TestJAXBDomain> jaxbGetWithAnnotation();
+      ListenableFuture<TestJAXBDomain> jaxbGetWithAnnotation();
 
       @GET
       @Path("/jaxb/custom")
       @JAXBResponseParser(TestJAXBDomain.class)
-      public ListenableFuture<Object> jaxbGetWithAnnotationAndCustomClass();
+      ListenableFuture<Object> jaxbGetWithAnnotationAndCustomClass();
 
       @GET
       @Path("/jaxb/header")
       @Consumes(MediaType.APPLICATION_XML)
-      public ListenableFuture<TestJAXBDomain> jaxbGetWithAcceptHeader();
+      ListenableFuture<TestJAXBDomain> jaxbGetWithAcceptHeader();
 
       @GET
       @Path("/jaxb/transformer")
       @JAXBResponseParser(TestJAXBDomain.class)
       @Transform(ToString.class)
-      public ListenableFuture<String> jaxbGetWithTransformer();
+      ListenableFuture<String> jaxbGetWithTransformer();
    }
 
    private static class ToString implements Function<Object, String> {

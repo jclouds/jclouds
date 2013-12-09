@@ -145,13 +145,13 @@ public class GoGridLiveTestDisabled extends BaseApiLiveTest<GoGridApi> {
 
       // get server by name
       Set<Server> response = api.getServerServices().getServersByName(nameOfServer);
-      assert (response.size() == 1);
+      assert response.size() == 1;
 
       // restart the server
       api.getServerServices().power(nameOfServer, PowerCommand.RESTART);
 
       Set<Job> jobs = api.getJobServices().getJobsForObjectName(nameOfServer);
-      assert ("RestartVirtualServer".equals(Iterables.getLast(jobs).getCommand().getName()));
+      assert "RestartVirtualServer".equals(Iterables.getLast(jobs).getCommand().getName());
 
       assert serverLatestJobCompleted.apply(createdServer);
 
@@ -162,7 +162,7 @@ public class GoGridLiveTestDisabled extends BaseApiLiveTest<GoGridApi> {
       api.getServerServices().deleteByName(nameOfServer);
 
       jobs = api.getJobServices().getJobsForObjectName(nameOfServer);
-      assert ("DeleteVirtualServer".equals(Iterables.getLast(jobs).getCommand().getName()));
+      assert "DeleteVirtualServer".equals(Iterables.getLast(jobs).getCommand().getName());
 
       assert serverLatestJobCompleted.apply(createdServer);
 
@@ -249,7 +249,7 @@ public class GoGridLiveTestDisabled extends BaseApiLiveTest<GoGridApi> {
 
       // get load balancer by name
       Set<LoadBalancer> response = api.getLoadBalancerServices().getLoadBalancersByName(nameOfLoadBalancer);
-      assert (response.size() == 1);
+      assert response.size() == 1;
       createdLoadBalancer = Iterables.getOnlyElement(response);
       assertNotNull(createdLoadBalancer.getRealIpList());
       assertEquals(createdLoadBalancer.getRealIpList().size(), 2);
@@ -270,7 +270,7 @@ public class GoGridLiveTestDisabled extends BaseApiLiveTest<GoGridApi> {
       api.getLoadBalancerServices().deleteByName(nameOfLoadBalancer);
 
       Set<Job> jobs = api.getJobServices().getJobsForObjectName(nameOfLoadBalancer);
-      assert ("DeleteLoadBalancer".equals(Iterables.getLast(jobs).getCommand().getName()));
+      assert "DeleteLoadBalancer".equals(Iterables.getLast(jobs).getCommand().getName());
 
       assert loadBalancerLatestJobCompleted.apply(createdLoadBalancer);
 
@@ -325,7 +325,7 @@ public class GoGridLiveTestDisabled extends BaseApiLiveTest<GoGridApi> {
 
       // get server by name
       Set<Server> response = api.getServerServices().getServersByName(nameOfServer);
-      assert (response.size() == 1);
+      assert response.size() == 1;
       createdServer = Iterables.getOnlyElement(response);
 
       Map<String, Credentials> credsMap = api.getServerServices().getServerCredentialsList();

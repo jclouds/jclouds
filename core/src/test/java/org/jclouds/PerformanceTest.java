@@ -112,7 +112,7 @@ public abstract class PerformanceTest {
       }
       if (performanceTestName != null) {
          System.out.printf("TIMING: Multi-threaded %s took %.3fms for %d threads\n",
-                  performanceTestName, ((double) endTime / 1000000), THREAD_COUNT);
+                  performanceTestName, (double) endTime / 1000000, THREAD_COUNT);
       }
    }
 

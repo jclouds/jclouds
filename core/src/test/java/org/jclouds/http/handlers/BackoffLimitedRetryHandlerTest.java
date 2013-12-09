@@ -50,31 +50,31 @@ public class BackoffLimitedRetryHandlerTest {
       long startTime = System.nanoTime();
       handler.imposeBackoffExponentialDelay(period, 2, 1, 5, "TEST FAILURE: 1");
       long elapsedTime = (System.nanoTime() - startTime) / 1000000;
-      assert (elapsedTime >= period - 1) : elapsedTime;
+      assert elapsedTime >= period - 1 : elapsedTime;
       assertTrue(elapsedTime < period + acceptableDelay);
 
       startTime = System.nanoTime();
       handler.imposeBackoffExponentialDelay(period, 2, 2, 5, "TEST FAILURE: 2");
       elapsedTime = (System.nanoTime() - startTime) / 1000000;
-      assert (elapsedTime >= period * 4 - 1) : elapsedTime;
+      assert elapsedTime >= period * 4 - 1 : elapsedTime;
       assertTrue(elapsedTime < period * 9);
 
       startTime = System.nanoTime();
       handler.imposeBackoffExponentialDelay(period, 2, 3, 5, "TEST FAILURE: 3");
       elapsedTime = (System.nanoTime() - startTime) / 1000000;
-      assert (elapsedTime >= period * 9 - 1) : elapsedTime;
+      assert elapsedTime >= period * 9 - 1 : elapsedTime;
       assertTrue(elapsedTime < period * 10);
 
       startTime = System.nanoTime();
       handler.imposeBackoffExponentialDelay(period, 2, 4, 5, "TEST FAILURE: 4");
       elapsedTime = (System.nanoTime() - startTime) / 1000000;
-      assert (elapsedTime >= period * 10 - 1) : elapsedTime;
+      assert elapsedTime >= period * 10 - 1 : elapsedTime;
       assertTrue(elapsedTime < period * 11);
 
       startTime = System.nanoTime();
       handler.imposeBackoffExponentialDelay(period, 2, 5, 5, "TEST FAILURE: 5");
       elapsedTime = (System.nanoTime() - startTime) / 1000000;
-      assert (elapsedTime >= period * 10 - 1) : elapsedTime;
+      assert elapsedTime >= period * 10 - 1 : elapsedTime;
       assertTrue(elapsedTime < period * 11);
 
    }

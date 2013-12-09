@@ -324,7 +324,7 @@ public class AzureBlobClientLiveTest extends BaseBlobStoreIntegrationTest {
                GetOptions.Builder.ifETagDoesntMatch(newEtag));
       } catch (Exception e) {
          HttpResponseException httpEx = Throwables2.getFirstThrowableOfType(e, HttpResponseException.class);
-         assert (httpEx != null) : "expected http exception, not " + e;
+         assert httpEx != null : "expected http exception, not " + e;
          assertEquals(httpEx.getResponse().getStatusCode(), 304);
       }
 

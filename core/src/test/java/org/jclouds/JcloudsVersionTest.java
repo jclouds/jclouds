@@ -168,9 +168,9 @@ public class JcloudsVersionTest {
 
         @Override
         public InputStream getResourceAsStream(String name) {
-            return (Iterables.contains(resourcesToHide, name)
+            return Iterables.contains(resourcesToHide, name)
                     ? null
-                    : delegate.getResourceAsStream(name));
+                    : delegate.getResourceAsStream(name);
         }
     }
 }

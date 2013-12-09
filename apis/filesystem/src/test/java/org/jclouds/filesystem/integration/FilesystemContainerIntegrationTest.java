@@ -157,7 +157,7 @@ public class FilesystemContainerIntegrationTest extends BaseContainerIntegration
 
    @DataProvider
    public Object[][] ignoreOnWindows() {
-      return (TestUtils.isWindowsOs() ? TestUtils.NO_INVOCATIONS
-            : TestUtils.SINGLE_NO_ARG_INVOCATION);
+      return TestUtils.isWindowsOs() ? TestUtils.NO_INVOCATIONS
+            : TestUtils.SINGLE_NO_ARG_INVOCATION;
    }
 }

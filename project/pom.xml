@@ -673,6 +673,7 @@
           <!-- jclouds-resources has the checkstyle config in the classpath -->
           <configLocation>resources/checkstyle.xml</configLocation>
           <violationSeverity>warning</violationSeverity>
+          <includeTestSourceDirectory>true</includeTestSourceDirectory>
         </configuration>
       </plugin>
     </plugins>

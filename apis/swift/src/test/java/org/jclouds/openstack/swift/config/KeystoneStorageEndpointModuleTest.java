@@ -39,6 +39,7 @@ import org.testng.annotations.Test;
 
 import com.google.common.base.Supplier;
 import com.google.common.base.Suppliers;
+import com.google.common.collect.Maps;
 
 @Test(groups = "unit")
 public class KeystoneStorageEndpointModuleTest {
@@ -53,7 +54,7 @@ public class KeystoneStorageEndpointModuleTest {
     */
    @BeforeTest
    public void setup() {
-      Map<String, Supplier<URI>> endpoints = new HashMap<String, Supplier<URI>>();
+      Map<String, Supplier<URI>> endpoints = Maps.newHashMap();
 
       try {
          endpoints.put("region1", Suppliers.ofInstance(new URI("http://region1.example.org/")));
