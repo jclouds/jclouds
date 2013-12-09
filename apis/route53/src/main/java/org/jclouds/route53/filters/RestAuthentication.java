@@ -19,20 +19,18 @@ package org.jclouds.route53.filters;
 import static com.google.common.base.Charsets.UTF_8;
 import static com.google.common.base.Throwables.propagate;
 import static com.google.common.io.BaseEncoding.base64;
-import static com.google.common.io.ByteStreams.readBytes;
 import static javax.ws.rs.core.HttpHeaders.DATE;
-import static org.jclouds.crypto.Macs.asByteProcessor;
-import static org.jclouds.util.Strings2.toInputStream;
 
-import java.io.IOException;
 import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
 
+import javax.crypto.Mac;
+import javax.crypto.spec.SecretKeySpec;
 import javax.inject.Inject;
 import javax.inject.Provider;
 import javax.inject.Singleton;
 
 import org.jclouds.aws.domain.SessionCredentials;
-import org.jclouds.crypto.Crypto;
 import org.jclouds.date.TimeStamp;
 import org.jclouds.domain.Credentials;
 import org.jclouds.http.HttpException;
@@ -41,7 +39,6 @@ import org.jclouds.http.HttpRequestFilter;
 import org.jclouds.rest.RequestSigner;
 
 import com.google.common.base.Supplier;
-import com.google.common.io.ByteProcessor;
 
 /**
  * Signs the Route53 request.
@@ -57,14 +54,12 @@ public class RestAuthentication implements HttpRequestFilter, RequestSigner {
 
    private final Supplier<Credentials> creds;
    private final Provider<String> timeStampProvider;
-   private final Crypto crypto;
 
    @Inject
    public RestAuthentication(@org.jclouds.location.Provider Supplier<Credentials> creds,
-         @TimeStamp Provider<String> timeStampProvider, Crypto crypto) {
+         @TimeStamp Provider<String> timeStampProvider) {
       this.creds = creds;
       this.timeStampProvider = timeStampProvider;
-      this.crypto = crypto;
    }
 
    public HttpRequest filter(HttpRequest request) throws HttpException {
@@ -90,15 +85,27 @@ public class RestAuthentication implements HttpRequestFilter, RequestSigner {
    public String createStringToSign(HttpRequest input) {
       return input.getFirstHeaderOrNull(DATE);
    }
-   
+
+   /**
+    * signs {@code toSign} using {@code HmacSHA256} initialized with
+    * {@link Credentials#credential}.
+    *
+    * @param toSign
+    *           string to sign in UTF-8 encoding
+    *
+    * @return base-64 encoded signature.
+    */
    @Override
    public String sign(String toSign) {
       try {
-         ByteProcessor<byte[]> hmacSHA256 = asByteProcessor(crypto.hmacSHA256(creds.get().credential.getBytes(UTF_8)));
-         return base64().encode(readBytes(toInputStream(toSign), hmacSHA256));
+         SecretKeySpec keySpec = new SecretKeySpec(creds.get().credential.getBytes(UTF_8), "HmacSHA256");
+         Mac mac = Mac.getInstance("HmacSHA256");
+         mac.init(keySpec);
+         byte[] result = mac.doFinal(toSign.getBytes(UTF_8));
+         return base64().encode(result);
       } catch (InvalidKeyException e) {
          throw propagate(e);
-      } catch (IOException e) {
+      } catch (NoSuchAlgorithmException e) {
          throw propagate(e);
       }
    }
