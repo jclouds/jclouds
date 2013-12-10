@@ -181,6 +181,22 @@ public class RestAnnotationProcessorTest extends BaseRestApiTest {
       @GET
       @Path("/{path}")
       ListenableFuture<Void> onePath(@PathParam("path") String path);
+
+      @POST
+      ListenableFuture<Void> testWithoutProducesAndConsumes();
+
+      @POST
+      @Produces(MediaType.APPLICATION_XML)
+      @Consumes(MediaType.APPLICATION_XML)
+      ListenableFuture<Void> testProducesAndConsumesOnMethod();
+   }
+
+   @Path("/client/{jclouds.api-version}")
+   @Produces(MediaType.APPLICATION_XML)
+   @Consumes(MediaType.APPLICATION_XML)
+   public interface AsyncCalleeWithProducesAndConsumesOnClass extends Closeable {
+      @POST
+      ListenableFuture<Void> testProducesAndConsumesOnClass();
    }
 
    @Path("/client/{jclouds.api-version}")
@@ -213,10 +229,28 @@ public class RestAnnotationProcessorTest extends BaseRestApiTest {
       @Delegate
       @Path("/testing/testing/{wibble}")
       Callee getCalleeWithPath(@EndpointParam URI endpoint, @PathParam("wibble") String wibble);
+
+      @Delegate
+      Callee getCalleeWithHeader(@EndpointParam URI endpoint, @HeaderParam("header") String header);
+
+      @Delegate
+      Callee getCalleeWithoutProducesAndConsumes();
+
+      @Delegate
+      Callee getCalleeWithProducesAndConsumesOnMethod();
+
+      @Delegate
+      CalleeWithProducesAndConsumesOnClass getCalleeWithProducesAndConsumesOnClass();
    }
 
    public interface Callee extends Closeable {
       void onePath(String path);
+      void testWithoutProducesAndConsumes();
+      void testProducesAndConsumesOnMethod();
+   }
+
+   public interface CalleeWithProducesAndConsumesOnClass extends Closeable {
+      void testProducesAndConsumesOnClass();
    }
 
    public interface Callee2 {
@@ -243,6 +277,24 @@ public class RestAnnotationProcessorTest extends BaseRestApiTest {
       @Delegate
       @Path("/testing/testing/{wibble}")
       AsyncCallee getCalleeWithPath(@EndpointParam URI endpoint, @PathParam("wibble") String wibble);
+
+      @Delegate
+      AsyncCallee getCalleeWithHeader(@EndpointParam URI endpoint, @HeaderParam("header") String header);
+
+      @Delegate
+      @Produces(MediaType.APPLICATION_JSON)
+      @Consumes(MediaType.APPLICATION_JSON)
+      AsyncCallee getCalleeWithoutProducesAndConsumes();
+
+      @Delegate
+      @Produces(MediaType.APPLICATION_JSON)
+      @Consumes(MediaType.APPLICATION_JSON)
+      AsyncCallee getCalleeWithProducesAndConsumesOnMethod();
+
+      @Delegate
+      @Produces(MediaType.APPLICATION_JSON)
+      @Consumes(MediaType.APPLICATION_JSON)
+      AsyncCalleeWithProducesAndConsumesOnClass getCalleeWithProducesAndConsumesOnClass();
    }
 
    public void testAsyncDelegateIsLazyLoadedAndRequestIncludesVersionAndPath() throws InterruptedException,
@@ -369,6 +421,127 @@ public class RestAnnotationProcessorTest extends BaseRestApiTest {
             .onePath("foo").get();
 
       assertEquals(child.getInstance(AsyncCaller.class).getURI(), URI.create("http://localhost:1111"));
+   }
+
+   public void testAsyncDelegateWithHeaderParamIsLazyLoadedAndRequestIncludesEndpointVersionAndHeader()
+         throws InterruptedException, ExecutionException {
+      Injector child = injectorForCaller(new HttpCommandExecutorService() {
+
+         @Override
+         public ListenableFuture<HttpResponse> submit(HttpCommand command) {
+            return Futures.immediateFuture(invoke(command));
+         }
+
+         @Override
+         public HttpResponse invoke(HttpCommand command) {
+            assertEquals(command.getCurrentRequest().getFirstHeaderOrNull("header"), "theheaderparam");
+            return HttpResponse.builder().build();
+         }
+
+      });
+
+      try {
+         child.getInstance(AsyncCallee.class);
+         fail("Callee shouldn't be bound yet");
+      } catch (ConfigurationException e) {
+
+      }
+
+      child.getInstance(AsyncCaller.class).getCalleeWithHeader(URI.create("http://howdyboys"), "theheaderparam")
+            .onePath("foo").get();
+   }
+
+   public void testAsyncDelegateWithoutProducesAndConsumes()
+         throws InterruptedException, ExecutionException {
+      Injector child = injectorForCaller(new HttpCommandExecutorService() {
+
+         @Override
+         public ListenableFuture<HttpResponse> submit(HttpCommand command) {
+            return Futures.immediateFuture(invoke(command));
+         }
+
+         @Override
+         public HttpResponse invoke(HttpCommand command) {
+            assertEquals(
+                  command.getCurrentRequest().getPayload().getContentMetadata().getContentType(),
+                  MediaType.APPLICATION_JSON);
+            assertTrue(command.getCurrentRequest().getHeaders().get("Accept").contains(MediaType.APPLICATION_JSON));
+            return HttpResponse.builder().build();
+         }
+
+      });
+
+      try {
+         child.getInstance(AsyncCallee.class);
+         fail("Callee shouldn't be bound yet");
+      } catch (ConfigurationException e) {
+
+      }
+
+      child.getInstance(AsyncCaller.class).getCalleeWithoutProducesAndConsumes()
+            .testWithoutProducesAndConsumes().get();
+   }
+
+   public void testAsyncDelegateWithProducesAndConsumesOnMethodIsLazyLoaded()
+         throws InterruptedException, ExecutionException {
+      Injector child = injectorForCaller(new HttpCommandExecutorService() {
+
+         @Override
+         public ListenableFuture<HttpResponse> submit(HttpCommand command) {
+            return Futures.immediateFuture(invoke(command));
+         }
+
+         @Override
+         public HttpResponse invoke(HttpCommand command) {
+            assertEquals(
+                  command.getCurrentRequest().getPayload().getContentMetadata().getContentType(),
+                  MediaType.APPLICATION_XML);
+            assertTrue(command.getCurrentRequest().getHeaders().get("Accept").contains(MediaType.APPLICATION_XML));
+            return HttpResponse.builder().build();
+         }
+
+      });
+
+      try {
+         child.getInstance(AsyncCallee.class);
+         fail("Callee shouldn't be bound yet");
+      } catch (ConfigurationException e) {
+
+      }
+
+      child.getInstance(AsyncCaller.class).getCalleeWithProducesAndConsumesOnMethod()
+            .testProducesAndConsumesOnMethod().get();
+   }
+
+   public void testAsyncDelegateWithProducesAndConsumesOnClassIsLazyLoaded()
+         throws InterruptedException, ExecutionException {
+      Injector child = injectorForCaller(new HttpCommandExecutorService() {
+
+         @Override
+         public ListenableFuture<HttpResponse> submit(HttpCommand command) {
+            return Futures.immediateFuture(invoke(command));
+         }
+
+         @Override
+         public HttpResponse invoke(HttpCommand command) {
+            assertEquals(
+                  command.getCurrentRequest().getPayload().getContentMetadata().getContentType(),
+                  MediaType.APPLICATION_XML);
+            assertTrue(command.getCurrentRequest().getHeaders().get("Accept").contains(MediaType.APPLICATION_XML));
+            return HttpResponse.builder().build();
+         }
+
+      });
+
+      try {
+         child.getInstance(AsyncCallee.class);
+         fail("Callee shouldn't be bound yet");
+      } catch (ConfigurationException e) {
+
+      }
+
+      child.getInstance(AsyncCaller.class).getCalleeWithProducesAndConsumesOnClass()
+            .testProducesAndConsumesOnClass().get();
    }
 
    public void testAsyncDelegateIsLazyLoadedAndRequestIncludesEndpointVersionAndPathOptionalPresent()
