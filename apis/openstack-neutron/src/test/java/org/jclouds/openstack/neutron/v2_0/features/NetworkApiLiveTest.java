@@ -28,7 +28,9 @@ import org.jclouds.openstack.neutron.v2_0.options.UpdateNetworkOptions;
 
 import java.util.Set;
 
-import static org.testng.Assert.*;
+import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertNotNull;
+import static org.testng.Assert.assertTrue;
 
 /**
  * Tests parsing and Guice wiring of NetworkApi

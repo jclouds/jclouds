@@ -17,13 +17,24 @@
 package org.jclouds.openstack.neutron.v2_0.features;
 
 import com.google.common.collect.ImmutableSet;
-import org.jclouds.openstack.neutron.v2_0.domain.*;
+import org.jclouds.openstack.neutron.v2_0.domain.BulkPort;
+import org.jclouds.openstack.neutron.v2_0.domain.IP;
+import org.jclouds.openstack.neutron.v2_0.domain.NetworkType;
+import org.jclouds.openstack.neutron.v2_0.domain.ReferenceWithName;
+import org.jclouds.openstack.neutron.v2_0.domain.Port;
 import org.jclouds.openstack.neutron.v2_0.internal.BaseNeutronApiLiveTest;
-import org.jclouds.openstack.neutron.v2_0.options.*;
+import org.jclouds.openstack.neutron.v2_0.options.CreateNetworkOptions;
+import org.jclouds.openstack.neutron.v2_0.options.CreatePortBulkOptions;
+import org.jclouds.openstack.neutron.v2_0.options.CreatePortOptions;
+import org.jclouds.openstack.neutron.v2_0.options.CreateSubnetOptions;
+import org.jclouds.openstack.neutron.v2_0.options.UpdatePortOptions;
 
 import java.util.Set;
 
-import static org.testng.Assert.*;
+import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertFalse;
+import static org.testng.Assert.assertNotNull;
+import static org.testng.Assert.assertTrue;
 
 /**
  * Tests PortApi in combination with the Network & SubnetApi

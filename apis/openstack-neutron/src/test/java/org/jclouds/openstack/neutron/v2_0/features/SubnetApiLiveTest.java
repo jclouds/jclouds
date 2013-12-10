@@ -18,7 +18,12 @@ package org.jclouds.openstack.neutron.v2_0.features;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
-import org.jclouds.openstack.neutron.v2_0.domain.*;
+import org.jclouds.openstack.neutron.v2_0.domain.AllocationPool;
+import org.jclouds.openstack.neutron.v2_0.domain.BulkSubnet;
+import org.jclouds.openstack.neutron.v2_0.domain.HostRoute;
+import org.jclouds.openstack.neutron.v2_0.domain.NetworkType;
+import org.jclouds.openstack.neutron.v2_0.domain.ReferenceWithName;
+import org.jclouds.openstack.neutron.v2_0.domain.Subnet;
 import org.jclouds.openstack.neutron.v2_0.internal.BaseNeutronApiLiveTest;
 import org.jclouds.openstack.neutron.v2_0.options.CreateNetworkOptions;
 import org.jclouds.openstack.neutron.v2_0.options.CreateSubnetBulkOptions;
@@ -27,7 +32,9 @@ import org.jclouds.openstack.neutron.v2_0.options.UpdateSubnetOptions;
 
 import java.util.Set;
 
-import static org.testng.Assert.*;
+import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertNotNull;
+import static org.testng.Assert.assertTrue;
 
 /**
  * Tests subnet api in combination with the network api
