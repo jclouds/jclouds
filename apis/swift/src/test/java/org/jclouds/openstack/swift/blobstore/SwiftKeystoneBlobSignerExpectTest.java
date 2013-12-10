@@ -73,7 +73,9 @@ public class SwiftKeystoneBlobSignerExpectTest extends BaseBlobSignerExpectTest 
             .endpoint("https://objects.jclouds.org/v1.0/40806637803162/container/name")
             .addHeader("ETag", "00020408")
             .addHeader("Expect", "100-continue")
-            .addHeader("X-Auth-Token", "Auth_4f173437e4b013bee56d1007").build();
+            .addHeader("X-Auth-Token", "Auth_4f173437e4b013bee56d1007")
+            .addHeader("X-Delete-At", "1")
+            .build();
    }
 
    @Override

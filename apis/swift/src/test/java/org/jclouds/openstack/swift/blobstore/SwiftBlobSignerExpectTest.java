@@ -78,7 +78,9 @@ public class SwiftBlobSignerExpectTest extends BaseBlobSignerExpectTest {
             .endpoint("http://storage/container/name")
             .addHeader("ETag", "00020408")
             .addHeader("Expect", "100-continue")
-            .addHeader("X-Auth-Token", "testtoken").build();
+            .addHeader("X-Auth-Token", "testtoken")
+            .addHeader("X-Delete-At", "1")
+            .build();
    }
 
    @Override

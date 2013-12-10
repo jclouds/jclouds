@@ -16,9 +16,11 @@
  */
 package org.jclouds.openstack.swift.binders;
 
+import static java.util.concurrent.TimeUnit.MILLISECONDS;
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 
+import java.util.Date;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import javax.ws.rs.core.MediaType;
@@ -69,6 +71,15 @@ public class BindSwiftObjectMetadataToRequest implements Binder {
          request = (R) request.toBuilder()
                .addHeader(HttpHeaders.ETAG,
                      BaseEncoding.base16().lowerCase().encode(contentMD5))
+               .build();
+      }
+
+      Date expires = object.getPayload().getContentMetadata().getExpires();
+      if (expires != null) {
+         // Swizzle Expires to X-Delete-At
+         request = (R) request.toBuilder()
+               .addHeader("X-Delete-At", String.valueOf(
+                     MILLISECONDS.toSeconds(expires.getTime())))
                .build();
       }
 

@@ -16,10 +16,12 @@
  */
 package org.jclouds.openstack.swift.binders;
 
+import static java.util.concurrent.TimeUnit.MILLISECONDS;
 import static org.testng.Assert.assertEquals;
 
 import java.io.File;
 import java.net.URI;
+import java.util.Date;
 
 import org.jclouds.http.HttpRequest;
 import org.jclouds.io.Payload;
@@ -59,6 +61,8 @@ public class BindSwiftObjectMetadataToRequestTest extends CommonSwiftClientTest 
       SwiftObject object = injector.getInstance(SwiftObject.Factory.class).create(null);
       Payload payload = Payloads.newStringPayload("");
       payload.getContentMetadata().setContentLength(5 * 1024 * 1024 * 1024l);
+      long expiresMillis = 1000;
+      payload.getContentMetadata().setExpires(new Date(expiresMillis));
       object.setPayload(payload);
       object.getInfo().setName("foo");
       object.getInfo().getMetadata().putAll(ImmutableMap.of("foo", "bar"));
@@ -67,6 +71,8 @@ public class BindSwiftObjectMetadataToRequestTest extends CommonSwiftClientTest 
       BindSwiftObjectMetadataToRequest binder = injector.getInstance(BindSwiftObjectMetadataToRequest.class);
 
       assertEquals(binder.bindToRequest(request, object), HttpRequest.builder().method("PUT")
+               .addHeader("X-Delete-At", String.valueOf(
+                     MILLISECONDS.toSeconds(expiresMillis)))
                .endpoint("http://localhost").addHeader("X-Object-Meta-foo", "bar").build());
    }
 
