@@ -32,6 +32,7 @@ import org.jclouds.cloudstack.domain.FirewallRule;
 import org.jclouds.cloudstack.domain.PortForwardingRule;
 import org.jclouds.cloudstack.filters.AuthenticationFilter;
 import org.jclouds.cloudstack.options.CreateFirewallRuleOptions;
+import org.jclouds.cloudstack.options.ListEgressFirewallRulesOptions;
 import org.jclouds.cloudstack.options.ListFirewallRulesOptions;
 import org.jclouds.cloudstack.options.ListPortForwardingRulesOptions;
 import org.jclouds.rest.annotations.Fallback;
@@ -118,7 +119,7 @@ public interface FirewallApi {
    @SelectJson("firewallrule")
    @Consumes(MediaType.APPLICATION_JSON)
    @Fallback(EmptySetOnNotFoundOr404.class)
-   Set<FirewallRule> listEgressFirewallRules(ListFirewallRulesOptions... options);
+   Set<FirewallRule> listEgressFirewallRules(ListEgressFirewallRulesOptions... options);
 
    /**
     * @see FirewallApi#getEgressFirewallRule
@@ -133,26 +134,26 @@ public interface FirewallApi {
    FirewallRule getEgressFirewallRule(@QueryParam("id") String id);
 
    /**
-    * @see FirewallApi#createEgressFirewallRuleForIpAndProtocol
+    * @see FirewallApi#createEgressFirewallRuleForNetworkAndProtocol
     */
    @Named("createEgressFirewallRule")
    @GET
    @QueryParams(keys = "command", values = "createEgressFirewallRule")
    @Unwrap
    @Consumes(MediaType.APPLICATION_JSON)
-   AsyncCreateResponse createEgressFirewallRuleForIpAndProtocol(@QueryParam("ipaddressid") String ipAddressId,
+   AsyncCreateResponse createEgressFirewallRuleForNetworkAndProtocol(@QueryParam("networkid") String networkId,
                                                                 @QueryParam("protocol") FirewallRule.Protocol protocol,
                                                                 CreateFirewallRuleOptions... options);
 
    /**
-    * @see FirewallApi#createEgressFirewallRuleForIpProtocolAndPort
+    * @see FirewallApi#createEgressFirewallRuleForNetworkProtocolAndPort
     */
    @Named("createEgressFirewallRule")
    @GET
    @QueryParams(keys = "command", values = "createEgressFirewallRule")
    @Unwrap
    @Consumes(MediaType.APPLICATION_JSON)
-   AsyncCreateResponse createEgressFirewallRuleForIpProtocolAndPort(@QueryParam("ipaddressid") String ipAddressId,
+   AsyncCreateResponse createEgressFirewallRuleForNetworkProtocolAndPort(@QueryParam("networkId") String networkId,
                                                                     @QueryParam("protocol") FirewallRule.Protocol protocol,
                                                                     @QueryParam("startPort") int startPort,
                                                                     @QueryParam("endPort") int endPort);

@@ -363,13 +363,13 @@ public class FirewallApiExpectTest extends BaseCloudStackExpectTest<FirewallApi>
       assertNull(client.getEgressFirewallRule("4"));
    }
 
-   public void testCreateEgressFirewallRuleForIpAndProtocol() {
+   public void testCreateEgressFirewallRuleForNetworkAndProtocol() {
       FirewallApi client = requestSendsResponse(
               HttpRequest.builder()
                       .method("GET")
                       .endpoint(
                               URI.create("http://localhost:8080/client/api?response=json&command=createEgressFirewallRule&" +
-                                      "ipaddressid=2&protocol=TCP&apiKey=identity&signature=%2BlfEJ5zB7lxqRAn0rY0Rcfg9buw%3D"))
+                                      "networkid=2&protocol=TCP&apiKey=identity&signature=I/OJEqiLp8ZHlZskKUiT5uTRE3M%3D"))
                       .addHeader("Accept", "application/json")
                       .build(),
               HttpResponse.builder()
@@ -377,7 +377,7 @@ public class FirewallApiExpectTest extends BaseCloudStackExpectTest<FirewallApi>
                       .payload(payloadFromResource("/createegressfirewallrulesresponse.json"))
                       .build());
 
-      AsyncCreateResponse response = client.createEgressFirewallRuleForIpAndProtocol("2", FirewallRule.Protocol.TCP);
+      AsyncCreateResponse response = client.createEgressFirewallRuleForNetworkAndProtocol("2", FirewallRule.Protocol.TCP);
       assertEquals(response.getJobId(), "2036");
       assertEquals(response.getId(), "2017");
    }

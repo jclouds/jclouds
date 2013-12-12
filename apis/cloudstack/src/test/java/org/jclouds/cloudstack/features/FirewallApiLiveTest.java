@@ -157,8 +157,8 @@ public class FirewallApiLiveTest extends BaseCloudStackApiLiveTest {
       if (networksDisabled)
          return;
 
-      AsyncCreateResponse job = client.getFirewallApi().createEgressFirewallRuleForIpAndProtocol(
-              ip.getId(), FirewallRule.Protocol.TCP, CreateFirewallRuleOptions.Builder.startPort(30).endPort(35));
+      AsyncCreateResponse job = client.getFirewallApi().createEgressFirewallRuleForNetworkAndProtocol(
+              network.getId(), FirewallRule.Protocol.TCP, CreateFirewallRuleOptions.Builder.startPort(30).endPort(35));
       assertTrue(jobComplete.apply(job.getJobId()));
       egressFirewallRule = client.getFirewallApi().getEgressFirewallRule(job.getId());
 
