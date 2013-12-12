@@ -1,0 +1,14 @@
+{
+   "user": {
+      "name": "example.user",
+      "host": "192.168.64.64",
+      "databases": [
+         {
+            "name": "databaseA"
+         },
+         {
+            "name": "databaseB"
+         }
+      ]
+   }
+}

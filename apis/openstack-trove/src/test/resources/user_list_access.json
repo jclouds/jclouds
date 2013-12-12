@@ -1,0 +1,10 @@
+{
+   "databases": [
+      {
+         "name": "databaseA"
+      },
+      {
+         "name": "databaseB"
+      }
+   ]
+}

@@ -1,0 +1,35 @@
+{
+    "users": [
+        {
+            "databases": [],
+            "host": "%", 
+            "name": "dbuser1"
+        }, 
+        {
+            "databases": [
+                {
+                    "name": "databaseB"
+                }, 
+                {
+                    "name": "databaseC"
+                }
+            ],
+            "host": "%",
+            "name": "dbuser2"
+        }, 
+        {
+            "databases": [], 
+            "name": "dbuser3",
+            "host": "%"
+        }, 
+        {
+            "databases": [
+                {
+                    "name": "sampledb"
+                }
+            ],
+            "host": "%",
+            "name": "demouser"
+        }
+    ]
+}

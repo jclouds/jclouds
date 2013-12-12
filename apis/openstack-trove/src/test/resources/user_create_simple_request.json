@@ -1,0 +1,13 @@
+{
+    "users":[
+        {
+            "databases":[
+                {
+                    "name":"databaseA"
+                }
+            ],
+            "name":"dbuser1",
+            "password":"password"
+        }
+    ]
+}

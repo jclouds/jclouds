@@ -1,0 +1,94 @@
+{
+    "flavors":[
+        {
+            "ram":512,
+            "id":1,
+            "links":[
+                {
+                    "href":"https://localhost:8778/v1.0/811050/flavors/1",
+                    "rel":"self"
+                },
+                {
+                    "href":"https://localhost:8778/flavors/1",
+                    "rel":"bookmark"
+                }
+            ],
+            "name":"512MB Instance"
+        },
+        {
+            "ram":1024,
+            "id":2,
+            "links":[
+                {
+                    "href":"https://localhost:8778/v1.0/811050/flavors/2",
+                    "rel":"self"
+                },
+                {
+                    "href":"https://localhost:8778/flavors/2",
+                    "rel":"bookmark"
+                }
+            ],
+            "name":"1GB Instance"
+        },
+        {
+            "ram":2048,
+            "id":3,
+            "links":[
+                {
+                    "href":"https://localhost:8778/v1.0/811050/flavors/3",
+                    "rel":"self"
+                },
+                {
+                    "href":"https://localhost:8778/flavors/3",
+                    "rel":"bookmark"
+                }
+            ],
+            "name":"2GB Instance"
+        },
+        {
+            "ram":4096,
+            "id":4,
+            "links":[
+                {
+                    "href":"https://localhost:8778/v1.0/811050/flavors/4",
+                    "rel":"self"
+                },
+                {
+                    "href":"https://localhost:8778/flavors/4",
+                    "rel":"bookmark"
+                }
+            ],
+            "name":"4GB Instance"
+        },
+        {
+            "ram":8192,
+            "id":5,
+            "links":[
+                {
+                    "href":"https://localhost:8778/v1.0/811050/flavors/5",
+                    "rel":"self"
+                },
+                {
+                    "href":"https://localhost:8778/flavors/5",
+                    "rel":"bookmark"
+                }
+            ],
+            "name":"8GB Instance"
+        },
+        {
+            "ram":16384,
+            "id":6,
+            "links":[
+                {
+                    "href":"https://localhost:8778/v1.0/811050/flavors/6",
+                    "rel":"self"
+                },
+                {
+                    "href":"https://localhost:8778/flavors/6",
+                    "rel":"bookmark"
+                }
+            ],
+            "name":"16GB Instance"
+        }
+    ]
+}

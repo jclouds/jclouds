@@ -61,6 +61,8 @@
     <module>cloudfiles-uk</module>
     <module>rackspace-clouddns-us</module>
     <module>rackspace-clouddns-uk</module>
+    <module>rackspace-clouddatabases-us</module>
+    <module>rackspace-clouddatabases-uk</module>
     <module>rackspace-cloudloadbalancers-us</module>
     <module>rackspace-cloudloadbalancers-uk</module>
     <module>rackspace-cloudservers-us</module>

@@ -1,0 +1,9 @@
+{
+    "instance":{
+        "name":"json_rack_instance",
+        "volume":{
+            "size":2
+        },
+        "flavorRef":"1"
+    }
+}

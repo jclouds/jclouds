@@ -1,0 +1,37 @@
+{
+    "instance": {
+        "created": "2013-03-18T19:09:17", 
+        "flavor": {
+            "id": "1", 
+            "links": [
+                {
+                    "href": "https://ord.databases.api.rackspacecloud.com/v1.0/1234/flavors/1", 
+                    "rel": "self"
+                }, 
+                {
+                    "href": "https://ord.databases.api.rackspacecloud.com/flavors/1", 
+                    "rel": "bookmark"
+                }
+            ]
+        }, 
+        "hostname": "e09ad9a3f73309469cf1f43d11e79549caf9acf2.rackspaceclouddb.com",
+        "id": "44b277eb-39be-4921-be31-3d61b43651d7", 
+        "links": [
+            {
+                "href": "https://ord.databases.api.rackspacecloud.com/v1.0/1234/instances/44b277eb-39be-4921-be31-3d61b43651d7", 
+                "rel": "self"
+            }, 
+            {
+                "href": "https://ord.databases.api.rackspacecloud.com/instances/44b277eb-39be-4921-be31-3d61b43651d7", 
+                "rel": "bookmark"
+            }
+        ], 
+        "name": "json_rack_instance", 
+        "status": "ERROR", 
+        "updated": "2013-03-18T19:09:17", 
+        "volume": {
+            "size": 2, 
+            "used": 0.16368598397821188
+        }
+    }
+}

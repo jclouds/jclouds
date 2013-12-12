@@ -1,0 +1,14 @@
+{
+    "users":[
+        {
+            "databases":[
+                {
+                    "name":"databaseA"
+                }
+            ],
+            "name":"dbuser1",
+            "password":"password",
+            "host":"192.168.64.64"
+        }
+    ]
+}

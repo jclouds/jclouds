@@ -1,0 +1,35 @@
+{
+    "users":[
+        {
+            "databases":[
+                {
+                    "name":"databaseA"
+                }
+            ],
+            "name":"dbuser1",
+            "password":"password"
+        },
+        {
+            "databases":[
+                {
+                    "name":"databaseB"
+                },
+                {
+                    "name":"databaseC"
+                }
+            ],
+            "name":"dbuser2",
+            "password":"password"
+        },
+        {
+            "databases":[
+                {
+                    "name":"databaseD"
+                }
+            ],
+            "name":"dbuser3",
+            "host":"192.168.64.64",
+            "password":"password"
+        }
+    ]
+}
