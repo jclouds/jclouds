@@ -22,7 +22,6 @@ import static org.jclouds.oauth.v2.config.OAuthProperties.SIGNATURE_OR_MAC_ALGOR
 import java.net.URI;
 import java.util.Properties;
 
-import org.jclouds.apis.ApiMetadata;
 import org.jclouds.oauth.v2.config.OAuthHttpApiModule;
 import org.jclouds.oauth.v2.config.OAuthModule;
 import org.jclouds.rest.internal.BaseHttpApiMetadata;
