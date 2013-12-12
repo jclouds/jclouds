@@ -79,7 +79,6 @@ public class JavaUrlHttpCommandExecutorService extends BaseHttpCommandExecutorSe
    private final Supplier<SSLContext> untrustedSSLContextProvider;
    private final Function<URI, Proxy> proxyForURI;
    private final HostnameVerifier verifier;
-   private final Field methodField;
    @Inject(optional = true)
    Supplier<SSLContext> sslContextSupplier;
 
@@ -96,8 +95,6 @@ public class JavaUrlHttpCommandExecutorService extends BaseHttpCommandExecutorSe
       this.untrustedSSLContextProvider = checkNotNull(untrustedSSLContextProvider, "untrustedSSLContextProvider");
       this.verifier = checkNotNull(verifier, "verifier");
       this.proxyForURI = checkNotNull(proxyForURI, "proxyForURI");
-      this.methodField = HttpURLConnection.class.getDeclaredField("method");
-      this.methodField.setAccessible(true);
    }
 
    @Override
@@ -175,16 +172,8 @@ public class JavaUrlHttpCommandExecutorService extends BaseHttpCommandExecutorSe
       // ex. Caused by: java.io.IOException: HTTPS hostname wrong: should be
       // <adriancole.s3int0.s3-external-3.amazonaws.com>
       connection.setInstanceFollowRedirects(false);
-      try {
-         connection.setRequestMethod(request.getMethod());
-      } catch (ProtocolException e) {
-         try {
-            methodField.set(connection, request.getMethod());
-         } catch (IllegalAccessException e1) {
-            logger.error(e, "could not set request method: ", request.getMethod());
-            propagate(e1);
-         }
-      }
+
+      setRequestMethodBypassingJREMethodLimitation(connection, request.getMethod());
 
       for (Map.Entry<String, String> entry : request.getHeaders().entries()) {
          connection.setRequestProperty(entry.getKey(), entry.getValue());
@@ -226,6 +215,56 @@ public class JavaUrlHttpCommandExecutorService extends BaseHttpCommandExecutorSe
          writeNothing(connection);
       }
       return connection;
+   }
+
+   /**
+    * Workaround for a bug in <code>HttpURLConnection.setRequestMethod(String)</code>
+    * The implementation of Sun Microsystems is throwing a <code>ProtocolException</code>
+    * when the method is other than the HTTP/1.1 default methods. So
+    * to use PATCH and others, we must apply this workaround.
+    *
+    * See issue http://java.net/jira/browse/JERSEY-639
+    */
+   private void setRequestMethodBypassingJREMethodLimitation(final HttpURLConnection httpURLConnection, final String method) {
+      try {
+         httpURLConnection.setRequestMethod(method);
+         // If the JRE does not support the given method, set it using reflection
+      } catch (final ProtocolException pe) {
+         Class<?> connectionClass = httpURLConnection.getClass();
+         Field delegateField = null;
+         try {
+            // SSL connections may have the HttpURLConnection wrapped inside
+            delegateField = connectionClass.getDeclaredField("delegate");
+            delegateField.setAccessible(true);
+            HttpURLConnection delegateConnection = (HttpURLConnection) delegateField.get(httpURLConnection);
+            setRequestMethodBypassingJREMethodLimitation(delegateConnection, method);
+         } catch (NoSuchFieldException e) {
+            // Ignore for now, keep going
+         } catch (IllegalArgumentException e) {
+            logger.error(e, "could not set request method: ", method);
+            propagate(e);
+         } catch (IllegalAccessException e) {
+            logger.error(e, "could not set request method: ", method);
+            propagate(e);
+         }
+         try {
+            Field methodField = null;
+            while (connectionClass != null) {
+               try {
+                  methodField = connectionClass.getDeclaredField("method");
+               } catch (NoSuchFieldException e) {
+                  connectionClass = connectionClass.getSuperclass();
+                  continue;
+               }
+               methodField.setAccessible(true);
+               methodField.set(httpURLConnection, method);
+               break;
+            }
+         } catch (final Exception e) {
+            logger.error(e, "could not set request method: ", method);
+            propagate(e);
+         }
+      }
    }
 
    protected void writeNothing(HttpURLConnection connection) {
