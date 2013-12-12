@@ -18,7 +18,6 @@ package org.jclouds.chef.test;
 
 import java.net.URI;
 
-import org.jclouds.apis.ApiMetadata;
 import org.jclouds.chef.ChefApiMetadata;
 import org.jclouds.chef.config.ChefBootstrapModule;
 import org.jclouds.chef.config.ChefParserModule;
