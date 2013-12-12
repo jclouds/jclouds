@@ -34,7 +34,6 @@ import org.jclouds.ultradns.ws.binders.DirectionalGroupCoordinatesToXML;
 import org.jclouds.ultradns.ws.domain.AccountLevelGroup;
 import org.jclouds.ultradns.ws.domain.DirectionalGroup;
 import org.jclouds.ultradns.ws.domain.DirectionalGroupCoordinates;
-import org.jclouds.ultradns.ws.domain.DirectionalPool.RecordType;
 import org.jclouds.ultradns.ws.domain.DirectionalPoolRecordDetail;
 import org.jclouds.ultradns.ws.filters.SOAPWrapWithPasswordAuth;
 import org.jclouds.ultradns.ws.xml.AccountLevelGroupsHandler;

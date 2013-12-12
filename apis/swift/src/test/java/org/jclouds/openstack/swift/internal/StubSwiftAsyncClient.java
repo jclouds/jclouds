@@ -41,7 +41,6 @@ import org.jclouds.blobstore.options.ListContainerOptions;
 import org.jclouds.http.options.GetOptions;
 import org.jclouds.lifecycle.Closer;
 import org.jclouds.openstack.swift.CommonSwiftAsyncClient;
-import org.jclouds.openstack.swift.SwiftAsyncClient;
 import org.jclouds.openstack.swift.blobstore.functions.BlobToObject;
 import org.jclouds.openstack.swift.blobstore.functions.ListContainerOptionsToBlobStoreListContainerOptions;
 import org.jclouds.openstack.swift.blobstore.functions.ObjectToBlob;

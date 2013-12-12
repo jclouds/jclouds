@@ -27,7 +27,6 @@ import java.util.concurrent.ExecutorCompletionService;
 import java.util.concurrent.ExecutorService;
 
 import org.jclouds.concurrent.DynamicExecutors;
-import org.jclouds.date.DateService;
 import org.testng.annotations.AfterTest;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;

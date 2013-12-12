@@ -22,7 +22,6 @@ import org.jclouds.http.HttpRequest;
 import org.jclouds.http.HttpResponse;
 import org.jclouds.openstack.cinder.v1.CinderApi;
 import org.jclouds.openstack.cinder.v1.internal.BaseCinderApiExpectTest;
-import org.jclouds.rackspace.cloudblockstorage.uk.CloudBlockStorageUKProviderMetadata;
 import org.testng.annotations.Test;
 
 import com.google.common.collect.ImmutableSet;

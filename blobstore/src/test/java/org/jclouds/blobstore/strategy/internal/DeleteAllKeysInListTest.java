@@ -16,29 +16,17 @@
  */
 package org.jclouds.blobstore.strategy.internal;
 
-import static org.easymock.EasyMock.anyLong;
-import static org.easymock.EasyMock.anyObject;
-import static org.easymock.EasyMock.createMock;
-import static org.easymock.EasyMock.expect;
-import static org.easymock.EasyMock.replay;
 import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.fail;
 
-import java.util.concurrent.TimeoutException;
-import java.util.concurrent.TimeUnit;
 
 import org.jclouds.ContextBuilder;
 import org.jclouds.blobstore.BlobStore;
 import org.jclouds.blobstore.options.ListContainerOptions;
-import org.jclouds.blobstore.domain.PageSet;
-import org.jclouds.blobstore.domain.StorageMetadata;
-import org.jclouds.util.Throwables2;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import com.google.common.io.Closeables;
-import com.google.common.util.concurrent.ListenableFuture;
 import com.google.inject.Injector;
 
 /**

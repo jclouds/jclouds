@@ -35,7 +35,6 @@ import org.jclouds.dynect.v3.domain.CreatePrimaryZone;
 import org.jclouds.dynect.v3.domain.CreatePrimaryZone.ToFQDN;
 import org.jclouds.dynect.v3.domain.Job;
 import org.jclouds.dynect.v3.domain.Zone;
-import org.jclouds.dynect.v3.domain.Zone.SerialStyle;
 import org.jclouds.dynect.v3.filters.AlwaysAddContentType;
 import org.jclouds.dynect.v3.filters.SessionManager;
 import org.jclouds.dynect.v3.functions.ExtractLastPathComponent;

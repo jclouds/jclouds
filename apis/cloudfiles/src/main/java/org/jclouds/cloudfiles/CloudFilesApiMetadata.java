@@ -19,7 +19,6 @@ package org.jclouds.cloudfiles;
 import java.net.URI;
 import java.util.Properties;
 
-import org.jclouds.apis.ApiMetadata;
 import org.jclouds.blobstore.BlobRequestSigner;
 import org.jclouds.cloudfiles.blobstore.config.CloudFilesBlobStoreContextModule;
 import org.jclouds.cloudfiles.config.CloudFilesRestClientModule;

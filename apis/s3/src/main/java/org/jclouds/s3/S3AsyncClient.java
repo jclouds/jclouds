@@ -21,7 +21,6 @@ import static org.jclouds.blobstore.attr.BlobScopes.CONTAINER;
 
 import java.io.Closeable;
 import java.util.Set;
-import java.util.concurrent.ExecutionException;
 
 import javax.inject.Named;
 import javax.ws.rs.DELETE;

@@ -21,7 +21,6 @@ import org.jclouds.reflect.Invocation;
 
 import com.google.common.annotations.Beta;
 import com.google.common.base.Optional;
-import com.google.common.util.concurrent.UncheckedTimeoutException;
 import com.google.inject.ImplementedBy;
 
 /**

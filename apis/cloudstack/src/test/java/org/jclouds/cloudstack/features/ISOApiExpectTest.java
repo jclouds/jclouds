@@ -20,7 +20,6 @@ import static org.jclouds.cloudstack.options.ListISOsOptions.Builder.accountInDo
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNull;
 
-import org.jclouds.cloudstack.CloudStackApiMetadata;
 import org.jclouds.cloudstack.CloudStackContext;
 import org.jclouds.cloudstack.domain.ISO;
 import org.jclouds.cloudstack.internal.BaseCloudStackExpectTest;

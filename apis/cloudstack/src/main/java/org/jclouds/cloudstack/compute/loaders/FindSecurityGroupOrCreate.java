@@ -18,7 +18,6 @@ package org.jclouds.cloudstack.compute.loaders;
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.base.Preconditions.checkState;
 
-import java.util.concurrent.atomic.AtomicReference;
 
 import javax.annotation.Resource;
 import javax.inject.Inject;
@@ -28,14 +27,11 @@ import org.jclouds.compute.reference.ComputeServiceConstants;
 import org.jclouds.logging.Logger;
 import org.jclouds.cloudstack.CloudStackApi;
 import org.jclouds.cloudstack.domain.SecurityGroup;
-import org.jclouds.cloudstack.domain.Zone;
 import org.jclouds.cloudstack.domain.ZoneAndName;
 import org.jclouds.cloudstack.domain.ZoneSecurityGroupNamePortsCidrs;
 
 import com.google.common.base.Function;
-import com.google.common.base.Predicate;
 import com.google.common.cache.CacheLoader;
-import com.google.common.util.concurrent.Atomics;
 
 /**
  * 

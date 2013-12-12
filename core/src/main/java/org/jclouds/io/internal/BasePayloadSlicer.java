@@ -69,7 +69,7 @@ public class BasePayloadSlicer implements PayloadSlicer {
 
       @Override
       public boolean hasNext() {
-         return (nextPayload != null);
+         return nextPayload != null;
       }
 
       @Override

@@ -19,7 +19,6 @@ package org.jclouds.ultradns.ws;
 import java.net.URI;
 import java.util.Properties;
 
-import org.jclouds.apis.ApiMetadata;
 import org.jclouds.rest.internal.BaseHttpApiMetadata;
 import org.jclouds.ultradns.ws.config.UltraDNSWSHttpApiModule;
 

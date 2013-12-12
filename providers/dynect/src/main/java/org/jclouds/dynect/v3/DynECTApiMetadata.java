@@ -19,7 +19,6 @@ package org.jclouds.dynect.v3;
 import java.net.URI;
 import java.util.Properties;
 
-import org.jclouds.apis.ApiMetadata;
 import org.jclouds.dynect.v3.config.DynECTParserModule;
 import org.jclouds.dynect.v3.config.DynECTHttpApiModule;
 import org.jclouds.rest.internal.BaseHttpApiMetadata;

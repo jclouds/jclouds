@@ -31,7 +31,6 @@ import javax.inject.Singleton;
 import org.jclouds.Constants;
 import org.jclouds.JcloudsVersion;
 import org.jclouds.http.HttpCommand;
-import org.jclouds.http.HttpCommandExecutorService;
 import org.jclouds.http.HttpRequest;
 import org.jclouds.http.HttpRequestFilter;
 import org.jclouds.http.HttpResponse;

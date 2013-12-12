@@ -28,7 +28,6 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.eclipse.jetty.server.Request;
 import org.jclouds.http.config.JavaUrlHttpCommandExecutorServiceModule;
-import org.jclouds.http.handlers.BackoffLimitedRetryHandler;
 import org.testng.annotations.Test;
 
 import com.google.inject.Module;

@@ -22,7 +22,6 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import org.jclouds.reflect.Invocation;
-import org.jclouds.rest.internal.DelegatesToInvocationFunction;
 import org.jclouds.rest.internal.DelegatesToPotentiallySyncToAsyncInvocationFunction;
 
 import com.google.common.base.Function;

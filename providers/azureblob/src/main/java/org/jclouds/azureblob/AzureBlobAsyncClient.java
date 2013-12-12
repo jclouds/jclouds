@@ -20,7 +20,6 @@ import static com.google.common.net.HttpHeaders.EXPECT;
 
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.ExecutionException;
 
 import javax.inject.Named;
 import javax.ws.rs.DELETE;

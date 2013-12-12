@@ -26,7 +26,6 @@ import org.jclouds.cloudservers.CloudServersApiMetadata;
 import org.jclouds.cloudservers.CloudServersClient;
 import org.jclouds.cloudservers.config.CloudServersRestClientModule;
 import org.jclouds.date.internal.SimpleDateFormatDateService;
-import org.jclouds.openstack.filters.AddTimestampQuery;
 import org.jclouds.openstack.keystone.v1_1.internal.BaseKeystoneRestClientExpectTest;
 import org.jclouds.rest.ConfiguresRestClient;
 

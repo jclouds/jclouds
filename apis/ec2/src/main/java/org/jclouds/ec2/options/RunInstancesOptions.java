@@ -23,7 +23,6 @@ import static com.google.common.io.BaseEncoding.base64;
 import java.util.Set;
 
 import org.jclouds.ec2.domain.BlockDeviceMapping;
-import org.jclouds.ec2.domain.InstanceType;
 import org.jclouds.ec2.options.internal.BaseEC2RequestOptions;
 
 /**

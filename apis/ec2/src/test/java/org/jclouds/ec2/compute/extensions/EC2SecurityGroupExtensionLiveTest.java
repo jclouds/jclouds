@@ -16,12 +16,9 @@
  */
 package org.jclouds.ec2.compute.extensions;
 
-import org.jclouds.compute.extensions.SecurityGroupExtension;
 import org.jclouds.compute.extensions.internal.BaseSecurityGroupExtensionLiveTest;
-import org.jclouds.sshj.config.SshjSshClientModule;
 import org.testng.annotations.Test;
 
-import com.google.inject.Module;
 
 /**
  * Live test for ec2 {@link SecurityGroupExtension} implementation

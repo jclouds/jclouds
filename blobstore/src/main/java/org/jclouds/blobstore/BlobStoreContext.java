@@ -21,7 +21,6 @@ import java.io.Closeable;
 import org.jclouds.View;
 import org.jclouds.blobstore.attr.ConsistencyModel;
 import org.jclouds.blobstore.internal.BlobStoreContextImpl;
-import org.jclouds.blobstore.options.ListContainerOptions;
 import org.jclouds.rest.Utils;
 
 import com.google.inject.ImplementedBy;

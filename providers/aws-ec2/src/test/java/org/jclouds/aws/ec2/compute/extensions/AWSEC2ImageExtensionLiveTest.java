@@ -21,7 +21,6 @@ import static com.google.common.collect.Iterables.transform;
 import org.jclouds.aws.ec2.AWSEC2Api;
 import org.jclouds.aws.util.AWSUtils;
 import org.jclouds.compute.domain.Image;
-import org.jclouds.compute.extensions.ImageExtension;
 import org.jclouds.compute.extensions.internal.BaseImageExtensionLiveTest;
 import org.jclouds.ec2.compute.functions.EC2ImageParser;
 import org.jclouds.ec2.options.DescribeImagesOptions;

@@ -16,13 +16,10 @@
  */
 package org.jclouds.aws.ec2.compute.extensions;
 
-import static com.google.common.collect.Iterables.transform;
 
-import org.jclouds.compute.extensions.SecurityGroupExtension;
 import org.jclouds.compute.extensions.internal.BaseSecurityGroupExtensionLiveTest;
 import org.testng.annotations.Test;
 
-import com.google.inject.Module;
 
 /**
  * Live test for aws-ec2 {@link SecurityGroupExtension} implementation

@@ -16,7 +16,6 @@
  */
 package org.jclouds.compute.domain;
 
-import java.util.NoSuchElementException;
 
 import org.jclouds.compute.domain.internal.TemplateBuilderImpl;
 import org.jclouds.compute.options.TemplateOptions;

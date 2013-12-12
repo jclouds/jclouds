@@ -31,9 +31,6 @@ import javax.inject.Singleton;
 import org.jclouds.reflect.Invocation;
 import org.jclouds.rest.HttpAsyncClient;
 import org.jclouds.rest.HttpClient;
-import org.jclouds.rest.internal.DelegatesToInvocationFunction;
-import org.jclouds.rest.internal.DelegatesToPotentiallySyncToAsyncInvocationFunction;
-import org.jclouds.rest.internal.InvokeAndCallGetOnFutures;
 import org.jclouds.rest.internal.InvokeSyncToAsyncHttpMethod;
 
 import com.google.common.annotations.VisibleForTesting;

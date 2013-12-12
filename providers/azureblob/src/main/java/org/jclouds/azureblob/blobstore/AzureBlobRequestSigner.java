@@ -32,7 +32,6 @@ import org.jclouds.blobstore.functions.BlobToHttpGetOptions;
 import org.jclouds.http.HttpRequest;
 import org.jclouds.http.options.GetOptions;
 import org.jclouds.reflect.Invocation;
-import org.jclouds.rest.internal.GeneratedHttpRequest;
 
 import com.google.common.base.Function;
 import com.google.common.collect.ImmutableList;

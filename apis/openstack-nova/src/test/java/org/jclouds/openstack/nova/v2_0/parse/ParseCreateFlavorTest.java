@@ -23,7 +23,6 @@ import org.jclouds.json.BaseItemParserTest;
 import org.jclouds.json.config.GsonModule;
 import org.jclouds.openstack.nova.v2_0.config.NovaParserModule;
 import org.jclouds.openstack.nova.v2_0.domain.Flavor;
-import org.jclouds.openstack.nova.v2_0.features.FlavorApiExpectTest;
 import org.jclouds.rest.annotations.SelectJson;
 import org.testng.annotations.Test;
 

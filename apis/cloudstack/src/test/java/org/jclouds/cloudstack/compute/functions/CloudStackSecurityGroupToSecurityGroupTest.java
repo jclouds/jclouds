@@ -18,18 +18,13 @@ package org.jclouds.cloudstack.compute.functions;
 
 import static com.google.common.collect.Iterables.transform;
 import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertTrue;
 
-import java.util.Set;
 
 import org.jclouds.compute.domain.SecurityGroup;
-import org.jclouds.compute.reference.ComputeServiceConstants;
-import org.jclouds.net.domain.IpPermission;
 import org.jclouds.net.domain.IpProtocol;
 import org.jclouds.cloudstack.domain.IngressRule;
 import org.testng.annotations.Test;
 
-import com.google.common.base.Supplier;
 import com.google.common.collect.ImmutableSet;
 
 /**

@@ -18,7 +18,6 @@ package org.jclouds.cloudfiles;
 
 import java.net.URI;
 import java.util.Set;
-import java.util.concurrent.ExecutionException;
 
 import javax.inject.Named;
 import javax.ws.rs.Consumes;

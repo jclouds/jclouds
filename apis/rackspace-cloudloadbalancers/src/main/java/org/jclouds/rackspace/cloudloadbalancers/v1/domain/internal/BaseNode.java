@@ -19,7 +19,6 @@ package org.jclouds.rackspace.cloudloadbalancers.v1.domain.internal;
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 
-import org.jclouds.rackspace.cloudloadbalancers.v1.domain.internal.BaseLoadBalancer.Algorithm;
 
 import com.google.common.base.Objects;
 import com.google.common.base.Objects.ToStringHelper;

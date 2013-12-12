@@ -31,7 +31,6 @@ import org.jclouds.http.annotation.ClientError;
 import org.jclouds.http.annotation.Redirection;
 import org.jclouds.http.annotation.ServerError;
 import org.jclouds.rest.ConfiguresRestClient;
-import org.jclouds.rest.config.HttpApiModule;
 import org.jclouds.rest.config.RestClientModule;
 
 import com.google.common.collect.ImmutableSet;

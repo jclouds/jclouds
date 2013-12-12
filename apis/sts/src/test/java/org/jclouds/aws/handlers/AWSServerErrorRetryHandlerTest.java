@@ -33,7 +33,6 @@ import org.jclouds.aws.util.AWSUtils;
 import org.jclouds.http.HttpCommand;
 import org.jclouds.http.HttpRequest;
 import org.jclouds.http.HttpResponse;
-import org.jclouds.http.handlers.BackoffLimitedRetryHandler;
 import org.jclouds.io.Payloads;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;

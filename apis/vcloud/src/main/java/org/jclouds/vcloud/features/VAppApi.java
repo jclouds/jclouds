@@ -52,7 +52,6 @@ import org.jclouds.vcloud.options.CloneVAppOptions;
 import org.jclouds.vcloud.xml.TaskHandler;
 import org.jclouds.vcloud.xml.VAppHandler;
 
-import com.google.common.util.concurrent.ListenableFuture;
 
 /**
  * Provides access to VApp functionality in vCloud

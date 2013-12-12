@@ -22,7 +22,6 @@ import static org.jclouds.Constants.PROPERTY_USER_THREADS;
 import javax.inject.Named;
 import javax.inject.Singleton;
 
-import org.jclouds.concurrent.config.ExecutorServiceModule;
 import org.jclouds.events.config.annotations.AsyncBus;
 import org.jclouds.events.handlers.DeadEventLoggingHandler;
 

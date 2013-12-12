@@ -35,7 +35,6 @@ import org.jclouds.azureblob.blobstore.functions.ContainerToResourceMetadata;
 import org.jclouds.azureblob.blobstore.functions.ListBlobsResponseToResourceList;
 import org.jclouds.azureblob.blobstore.functions.ListOptionsToListBlobsOptions;
 import org.jclouds.azureblob.blobstore.strategy.MultipartUploadStrategy;
-import org.jclouds.azureblob.domain.AzureBlob;
 import org.jclouds.azureblob.domain.ContainerProperties;
 import org.jclouds.azureblob.domain.ListBlobBlocksResponse;
 import org.jclouds.azureblob.domain.PublicAccess;

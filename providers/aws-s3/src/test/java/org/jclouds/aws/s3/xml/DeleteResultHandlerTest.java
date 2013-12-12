@@ -16,8 +16,6 @@
  */
 package org.jclouds.aws.s3.xml;
 
-import com.google.common.collect.ImmutableMap;
-import com.google.common.collect.ImmutableSet;
 import org.jclouds.aws.s3.domain.DeleteResult;
 import org.jclouds.http.functions.BaseHandlerTest;
 import org.testng.annotations.Test;

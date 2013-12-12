@@ -22,7 +22,6 @@ import static org.jclouds.reflect.Reflection2.typeToken;
 import java.net.URI;
 import java.util.Properties;
 
-import org.jclouds.apis.ApiMetadata;
 import org.jclouds.cloudsigma.compute.config.CloudSigmaComputeServiceContextModule;
 import org.jclouds.cloudsigma.config.CloudSigmaRestClientModule;
 import org.jclouds.compute.ComputeServiceContext;

@@ -21,7 +21,6 @@ import static org.jclouds.reflect.Reflection2.typeToken;
 import java.net.URI;
 import java.util.Properties;
 
-import org.jclouds.apis.ApiMetadata;
 import org.jclouds.compute.ComputeServiceContext;
 import org.jclouds.glesys.compute.config.GleSYSComputeServiceContextModule;
 import org.jclouds.glesys.config.GleSYSHttpApiModule;

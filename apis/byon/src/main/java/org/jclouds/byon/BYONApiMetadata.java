@@ -19,7 +19,6 @@ package org.jclouds.byon;
 import java.net.URI;
 
 import org.jclouds.JcloudsVersion;
-import org.jclouds.apis.ApiMetadata;
 import org.jclouds.apis.internal.BaseApiMetadata;
 import org.jclouds.byon.config.BYONComputeServiceContextModule;
 import org.jclouds.byon.config.YamlNodeStoreModule;

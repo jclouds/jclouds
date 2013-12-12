@@ -17,7 +17,6 @@
 package org.jclouds.rackspace.cloudloadbalancers.v1.domain;
 
 import org.jclouds.javax.annotation.Nullable;
-import org.jclouds.rackspace.cloudloadbalancers.v1.domain.internal.BaseLoadBalancer;
 import org.jclouds.rackspace.cloudloadbalancers.v1.domain.internal.BaseLoadBalancer.Algorithm;
 
 import com.google.common.base.Objects;

@@ -22,7 +22,6 @@ import static org.jclouds.scriptbuilder.domain.Statements.pipeHttpResponseToBash
 import java.net.URI;
 
 import org.jclouds.scriptbuilder.domain.StatementList;
-import org.jclouds.scriptbuilder.statements.ruby.InstallRuby;
 
 import com.google.common.collect.ImmutableMultimap;
 

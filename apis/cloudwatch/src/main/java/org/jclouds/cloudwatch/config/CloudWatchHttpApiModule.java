@@ -16,20 +16,15 @@
  */
 package org.jclouds.cloudwatch.config;
 
-import com.google.common.collect.ImmutableMap;
 import org.jclouds.aws.config.FormSigningHttpApiModule;
 import org.jclouds.cloudwatch.CloudWatchApi;
-import org.jclouds.cloudwatch.features.AlarmApi;
-import org.jclouds.cloudwatch.features.MetricApi;
 import org.jclouds.cloudwatch.handlers.CloudWatchErrorHandler;
 import org.jclouds.http.HttpErrorHandler;
 import org.jclouds.http.annotation.ClientError;
 import org.jclouds.http.annotation.ServerError;
 import org.jclouds.rest.ConfiguresHttpApi;
 
-import java.util.Map;
 
-import static org.jclouds.reflect.Reflection2.typeToken;
 
 /**
  * Configures the Monitoring connection.

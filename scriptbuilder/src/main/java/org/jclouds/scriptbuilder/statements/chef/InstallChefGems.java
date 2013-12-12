@@ -21,8 +21,6 @@ import static org.jclouds.scriptbuilder.domain.Statements.exec;
 import org.jclouds.javax.annotation.Nullable;
 import org.jclouds.scriptbuilder.domain.OsFamily;
 import org.jclouds.scriptbuilder.domain.Statement;
-import org.jclouds.scriptbuilder.statements.ruby.InstallRuby;
-import org.jclouds.scriptbuilder.statements.ruby.InstallRubyGems;
 
 import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableSet;

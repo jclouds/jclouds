@@ -21,7 +21,6 @@ import static org.jclouds.s3.reference.S3Constants.PROPERTY_S3_VIRTUAL_HOST_BUCK
 
 import java.util.Properties;
 
-import org.jclouds.apis.ApiMetadata;
 import org.jclouds.aws.s3.blobstore.AWSS3BlobStoreContext;
 import org.jclouds.aws.s3.blobstore.config.AWSS3BlobStoreContextModule;
 import org.jclouds.aws.s3.config.AWSS3RestClientModule;

@@ -16,10 +16,8 @@
  */
 package org.jclouds.hpcloud.objectstorage.blobstore.integration;
 
-import java.io.IOException;
 
 import org.jclouds.openstack.swift.blobstore.integration.SwiftBlobSignerLiveTest;
-import org.jclouds.rest.AuthorizationException;
 import org.testng.annotations.Test;
 
 /**

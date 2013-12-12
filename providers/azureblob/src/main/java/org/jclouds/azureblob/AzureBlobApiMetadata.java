@@ -22,7 +22,6 @@ import static org.jclouds.reflect.Reflection2.typeToken;
 import java.net.URI;
 import java.util.Properties;
 
-import org.jclouds.apis.ApiMetadata;
 import org.jclouds.azureblob.blobstore.config.AzureBlobStoreContextModule;
 import org.jclouds.azureblob.config.AzureBlobRestClientModule;
 import org.jclouds.blobstore.BlobStoreContext;

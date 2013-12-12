@@ -16,7 +16,6 @@
  */
 package org.jclouds.cloudstack.features;
 
-import org.jclouds.cloudstack.CloudStackApiMetadata;
 import org.jclouds.cloudstack.CloudStackContext;
 import org.jclouds.cloudstack.domain.AsyncCreateResponse;
 import org.jclouds.cloudstack.internal.BaseCloudStackExpectTest;

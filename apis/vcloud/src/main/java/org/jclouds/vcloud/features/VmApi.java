@@ -56,7 +56,6 @@ import org.jclouds.vcloud.filters.AddVCloudAuthorizationAndCookieToRequest;
 import org.jclouds.vcloud.xml.TaskHandler;
 import org.jclouds.vcloud.xml.VmHandler;
 
-import com.google.common.util.concurrent.ListenableFuture;
 
 /**
  * Provides access to VM functionality in vCloud

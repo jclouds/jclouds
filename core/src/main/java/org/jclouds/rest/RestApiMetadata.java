@@ -19,7 +19,6 @@ package org.jclouds.rest;
 import org.jclouds.apis.ApiMetadata;
 
 import com.google.common.annotations.Beta;
-import com.google.common.util.concurrent.ListenableFuture;
 
 /**
  * 

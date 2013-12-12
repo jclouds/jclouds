@@ -30,7 +30,6 @@ import org.jclouds.apis.ApiMetadata;
 import org.jclouds.atmos.blobstore.functions.BlobToObject;
 import org.jclouds.atmos.config.AtmosRestClientModule;
 import org.jclouds.atmos.domain.AtmosObject;
-import org.jclouds.atmos.fallbacks.EndpointIfAlreadyExists;
 import org.jclouds.atmos.filters.SignRequest;
 import org.jclouds.atmos.functions.ParseDirectoryListFromContentAndHeaders;
 import org.jclouds.atmos.functions.ParseNullableURIFromListOrLocationHeaderIf20x;

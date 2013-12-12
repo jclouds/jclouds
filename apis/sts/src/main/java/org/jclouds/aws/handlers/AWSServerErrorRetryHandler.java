@@ -24,7 +24,6 @@ import org.jclouds.aws.domain.AWSError;
 import org.jclouds.aws.util.AWSUtils;
 import org.jclouds.http.HttpCommand;
 import org.jclouds.http.HttpResponse;
-import org.jclouds.http.HttpRetryHandler;
 import org.jclouds.http.annotation.ServerError;
 import org.jclouds.http.handlers.BackoffLimitedRetryHandler;
 

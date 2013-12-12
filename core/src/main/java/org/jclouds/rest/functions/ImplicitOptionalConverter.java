@@ -17,9 +17,6 @@
 package org.jclouds.rest.functions;
 
 import org.jclouds.reflect.InvocationSuccess;
-import org.jclouds.rest.annotations.ApiVersion;
-import org.jclouds.rest.annotations.SinceApiVersion;
-import org.jclouds.rest.config.RestClientModule;
 
 import com.google.common.annotations.Beta;
 import com.google.common.base.Function;

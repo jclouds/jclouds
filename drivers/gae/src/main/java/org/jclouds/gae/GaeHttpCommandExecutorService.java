@@ -25,7 +25,6 @@ import javax.inject.Singleton;
 import org.jclouds.Constants;
 import org.jclouds.JcloudsVersion;
 import org.jclouds.concurrent.SingleThreaded;
-import org.jclouds.http.HttpCommandExecutorService;
 import org.jclouds.http.HttpRequest;
 import org.jclouds.http.HttpResponse;
 import org.jclouds.http.HttpUtils;

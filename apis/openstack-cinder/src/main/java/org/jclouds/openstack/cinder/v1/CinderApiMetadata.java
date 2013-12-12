@@ -22,7 +22,6 @@ import static org.jclouds.openstack.keystone.v2_0.config.KeystoneProperties.SERV
 import java.net.URI;
 import java.util.Properties;
 
-import org.jclouds.apis.ApiMetadata;
 import org.jclouds.openstack.cinder.v1.config.CinderHttpApiModule;
 import org.jclouds.openstack.cinder.v1.config.CinderParserModule;
 import org.jclouds.openstack.keystone.v2_0.config.AuthenticationApiModule;

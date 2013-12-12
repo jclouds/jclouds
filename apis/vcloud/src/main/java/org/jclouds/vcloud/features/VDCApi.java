@@ -36,7 +36,6 @@ import org.jclouds.vcloud.domain.VDC;
 import org.jclouds.vcloud.filters.AddVCloudAuthorizationAndCookieToRequest;
 import org.jclouds.vcloud.xml.VDCHandler;
 
-import com.google.common.util.concurrent.ListenableFuture;
 
 /**
  * Provides access to VDC functionality in vCloud

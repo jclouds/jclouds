@@ -15,9 +15,7 @@
  * limitations under the License.
  */
 package org.jclouds.aws.ec2.config;
-import static org.jclouds.reflect.Reflection2.typeToken;
 
-import java.util.Map;
 
 import javax.inject.Singleton;
 
@@ -26,29 +24,15 @@ import org.jclouds.aws.ec2.domain.AWSRunningInstance;
 import org.jclouds.aws.ec2.domain.SpotInstanceRequest;
 import org.jclouds.aws.ec2.functions.SpotInstanceRequestToAWSRunningInstance;
 import org.jclouds.aws.ec2.options.AWSRunInstancesOptions;
-import org.jclouds.aws.ec2.features.AWSAMIApi;
-import org.jclouds.aws.ec2.features.AWSInstanceApi;
-import org.jclouds.aws.ec2.features.AWSKeyPairApi;
-import org.jclouds.aws.ec2.features.AWSSecurityGroupApi;
-import org.jclouds.aws.ec2.features.MonitoringApi;
-import org.jclouds.aws.ec2.features.PlacementGroupApi;
-import org.jclouds.aws.ec2.features.SpotInstanceApi;
 import org.jclouds.ec2.EC2Api;
 import org.jclouds.ec2.config.BaseEC2HttpApiModule;
-import org.jclouds.ec2.features.SubnetApi;
-import org.jclouds.ec2.features.TagApi;
-import org.jclouds.ec2.features.WindowsApi;
 import org.jclouds.ec2.options.RunInstancesOptions;
 import org.jclouds.ec2.features.AMIApi;
-import org.jclouds.ec2.features.AvailabilityZoneAndRegionApi;
-import org.jclouds.ec2.features.ElasticBlockStoreApi;
-import org.jclouds.ec2.features.ElasticIPAddressApi;
 import org.jclouds.ec2.features.InstanceApi;
 import org.jclouds.ec2.features.SecurityGroupApi;
 import org.jclouds.rest.ConfiguresHttpApi;
 
 import com.google.common.base.Function;
-import com.google.common.collect.ImmutableMap;
 import com.google.inject.Provides;
 import com.google.inject.TypeLiteral;
 

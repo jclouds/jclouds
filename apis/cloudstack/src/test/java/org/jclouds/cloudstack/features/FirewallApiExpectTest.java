@@ -22,7 +22,6 @@ import static org.testng.Assert.assertNull;
 import java.net.URI;
 import java.util.Set;
 
-import org.jclouds.cloudstack.CloudStackApiMetadata;
 import org.jclouds.cloudstack.CloudStackContext;
 import org.jclouds.cloudstack.domain.AsyncCreateResponse;
 import org.jclouds.cloudstack.domain.FirewallRule;

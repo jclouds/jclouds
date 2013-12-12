@@ -22,7 +22,6 @@ import static org.jclouds.reflect.Reflection2.typeToken;
 import java.net.URI;
 import java.util.Properties;
 
-import org.jclouds.apis.ApiMetadata;
 import org.jclouds.atmos.blobstore.config.AtmosBlobStoreContextModule;
 import org.jclouds.atmos.config.AtmosRestClientModule;
 import org.jclouds.blobstore.BlobStoreContext;

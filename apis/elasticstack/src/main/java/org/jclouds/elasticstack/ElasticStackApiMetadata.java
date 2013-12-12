@@ -22,7 +22,6 @@ import static org.jclouds.reflect.Reflection2.typeToken;
 import java.net.URI;
 import java.util.Properties;
 
-import org.jclouds.apis.ApiMetadata;
 import org.jclouds.compute.ComputeServiceContext;
 import org.jclouds.elasticstack.compute.config.ElasticStackComputeServiceContextModule;
 import org.jclouds.elasticstack.config.ElasticStackHttpApiModule;

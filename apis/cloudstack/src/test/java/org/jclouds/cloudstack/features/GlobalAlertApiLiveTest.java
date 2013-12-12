@@ -24,7 +24,6 @@ import java.util.Set;
 
 import org.jclouds.cloudstack.domain.Alert;
 import org.jclouds.cloudstack.internal.BaseCloudStackApiLiveTest;
-import org.jclouds.cloudstack.options.ListAlertsOptions;
 import org.testng.annotations.Test;
 
 /**

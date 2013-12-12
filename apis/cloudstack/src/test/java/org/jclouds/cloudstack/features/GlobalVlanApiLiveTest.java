@@ -16,7 +16,6 @@
  */
 package org.jclouds.cloudstack.features;
 
-import static com.google.common.collect.Iterables.find;
 import static org.jclouds.cloudstack.options.ListNetworksOptions.Builder.zoneId;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertFalse;

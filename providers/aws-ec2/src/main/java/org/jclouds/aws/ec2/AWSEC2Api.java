@@ -25,7 +25,6 @@ import org.jclouds.aws.ec2.features.PlacementGroupApi;
 import org.jclouds.aws.ec2.features.SpotInstanceApi;
 import org.jclouds.ec2.EC2Api;
 import org.jclouds.javax.annotation.Nullable;
-import org.jclouds.location.Region;
 import org.jclouds.location.functions.RegionToEndpointOrProviderIfNull;
 import org.jclouds.rest.annotations.Delegate;
 import org.jclouds.rest.annotations.EndpointParam;

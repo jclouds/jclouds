@@ -24,7 +24,6 @@ import java.lang.annotation.Target;
 
 import javax.lang.model.type.NullType;
 
-import org.jclouds.http.functions.ParseXMLWithJAXB;
 
 /**
  * Shows the transformer type used to parse XML with the

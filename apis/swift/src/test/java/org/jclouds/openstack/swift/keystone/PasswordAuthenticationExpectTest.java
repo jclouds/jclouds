@@ -24,7 +24,6 @@ import javax.ws.rs.core.MediaType;
 
 import org.jclouds.http.HttpRequest;
 import org.jclouds.http.HttpResponse;
-import org.jclouds.openstack.keystone.v2_0.config.KeystoneProperties;
 import org.jclouds.openstack.swift.SwiftKeystoneClient;
 import org.jclouds.openstack.swift.internal.BaseSwiftKeystoneExpectTest;
 import org.testng.annotations.Test;

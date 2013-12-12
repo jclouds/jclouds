@@ -24,7 +24,6 @@ import org.jclouds.net.domain.IpPermission;
 import org.jclouds.net.domain.IpProtocol;
 
 import com.google.common.collect.Multimap;
-import com.google.common.util.concurrent.ListenableFuture;
 
 /**
  * An extension to compute service to allow for the manipulation of {@link SecurityGroup}s. Implementation

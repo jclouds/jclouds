@@ -18,7 +18,6 @@ package org.jclouds;
 
 import java.io.Closeable;
 
-import org.jclouds.apis.ApiMetadata;
 import org.jclouds.domain.Location;
 import org.jclouds.internal.ContextImpl;
 import org.jclouds.providers.ProviderMetadata;

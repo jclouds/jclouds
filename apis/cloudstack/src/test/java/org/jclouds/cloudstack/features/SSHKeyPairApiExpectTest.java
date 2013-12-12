@@ -22,7 +22,6 @@ import static org.testng.Assert.assertTrue;
 import java.io.UnsupportedEncodingException;
 import java.net.URI;
 
-import org.jclouds.cloudstack.CloudStackApiMetadata;
 import org.jclouds.cloudstack.CloudStackContext;
 import org.jclouds.cloudstack.domain.SshKeyPair;
 import org.jclouds.cloudstack.internal.BaseCloudStackExpectTest;

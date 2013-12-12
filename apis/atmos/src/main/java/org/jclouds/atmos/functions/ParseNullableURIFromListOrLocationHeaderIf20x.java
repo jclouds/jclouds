@@ -16,7 +16,6 @@
  */
 package org.jclouds.atmos.functions;
 
-import static com.google.common.net.HttpHeaders.CONTENT_LENGTH;
 import static org.jclouds.http.HttpUtils.releasePayload;
 
 import java.net.URI;

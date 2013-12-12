@@ -23,7 +23,6 @@ import static org.jclouds.openstack.keystone.v2_0.config.KeystoneProperties.CRED
 import java.net.URI;
 import java.util.Properties;
 
-import org.jclouds.apis.ApiMetadata;
 import org.jclouds.openstack.keystone.v2_0.KeystoneApi;
 import org.jclouds.openstack.keystone.v2_0.KeystoneApiMetadata;
 import org.jclouds.openstack.keystone.v2_0.KeystoneAsyncApi;

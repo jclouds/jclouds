@@ -24,7 +24,6 @@ import static org.jclouds.Constants.PROPERTY_USER_THREADS;
 import java.util.Properties;
 
 import org.jclouds.http.config.JavaUrlHttpCommandExecutorServiceModule;
-import org.jclouds.http.internal.JavaUrlHttpCommandExecutorService;
 import org.testng.annotations.Test;
 
 import com.google.inject.Module;

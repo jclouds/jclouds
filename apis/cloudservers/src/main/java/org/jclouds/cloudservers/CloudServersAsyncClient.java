@@ -18,7 +18,6 @@ package org.jclouds.cloudservers;
 
 import java.io.Closeable;
 import java.util.Set;
-import java.util.concurrent.ExecutionException;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;

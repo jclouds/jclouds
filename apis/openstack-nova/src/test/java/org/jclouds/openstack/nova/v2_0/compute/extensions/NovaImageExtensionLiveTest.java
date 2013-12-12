@@ -16,7 +16,6 @@
  */
 package org.jclouds.openstack.nova.v2_0.compute.extensions;
 
-import org.jclouds.compute.extensions.ImageExtension;
 import org.jclouds.compute.extensions.internal.BaseImageExtensionLiveTest;
 import org.jclouds.sshj.config.SshjSshClientModule;
 import org.testng.annotations.Test;

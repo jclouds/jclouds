@@ -39,7 +39,6 @@ import org.jclouds.rest.annotations.Transform;
 import org.jclouds.rest.annotations.VirtualHost;
 import org.jclouds.rest.annotations.XMLResponseParser;
 import org.jclouds.route53.domain.Change;
-import org.jclouds.route53.domain.Change.Status;
 import org.jclouds.route53.domain.HostedZone;
 import org.jclouds.route53.domain.HostedZoneAndNameServers;
 import org.jclouds.route53.domain.NewHostedZone;

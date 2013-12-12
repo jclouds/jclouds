@@ -36,7 +36,6 @@ import org.jclouds.rackspace.clouddns.v1.features.LimitApi;
 import org.jclouds.rackspace.clouddns.v1.features.RecordApi;
 import org.jclouds.rackspace.clouddns.v1.features.ReverseDNSApi;
 import org.jclouds.rackspace.clouddns.v1.functions.ParseJob;
-import org.jclouds.rackspace.clouddns.v1.predicates.JobPredicates;
 import org.jclouds.rest.annotations.Delegate;
 import org.jclouds.rest.annotations.Endpoint;
 import org.jclouds.rest.annotations.Fallback;

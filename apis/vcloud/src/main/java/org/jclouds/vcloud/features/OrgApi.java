@@ -40,7 +40,6 @@ import org.jclouds.vcloud.functions.OrgNameToEndpoint;
 import org.jclouds.vcloud.xml.OrgHandler;
 import org.jclouds.vcloud.xml.OrgListHandler;
 
-import com.google.common.util.concurrent.ListenableFuture;
 
 /**
  * Provides access to Org functionality in vCloud

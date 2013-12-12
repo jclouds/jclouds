@@ -19,7 +19,6 @@ package org.jclouds.sshj.config;
 import javax.inject.Named;
 
 import org.jclouds.Constants;
-import org.jclouds.domain.Credentials;
 import org.jclouds.domain.LoginCredentials;
 import org.jclouds.http.handlers.BackoffLimitedRetryHandler;
 import org.jclouds.ssh.SshClient;

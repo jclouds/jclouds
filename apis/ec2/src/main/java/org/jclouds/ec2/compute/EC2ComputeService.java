@@ -32,7 +32,6 @@ import static org.jclouds.ec2.reference.EC2Constants.PROPERTY_EC2_GENERATE_INSTA
 import static org.jclouds.ec2.util.Tags.resourceToTagsAsMap;
 import static org.jclouds.util.Predicates2.retry;
 
-import java.util.Iterator;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;

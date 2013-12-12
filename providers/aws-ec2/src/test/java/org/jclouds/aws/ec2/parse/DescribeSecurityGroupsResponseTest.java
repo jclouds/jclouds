@@ -16,10 +16,6 @@
  */
 package org.jclouds.aws.ec2.parse;
 
-import static com.google.common.base.Throwables.propagate;
-import static org.easymock.EasyMock.createMock;
-import static org.easymock.EasyMock.expect;
-import static org.easymock.EasyMock.replay;
 import static org.testng.Assert.assertEquals;
 
 import java.io.InputStream;
@@ -31,12 +27,9 @@ import org.jclouds.ec2.xml.DescribeSecurityGroupsResponseHandler;
 import org.jclouds.http.functions.ParseSax;
 import org.jclouds.net.domain.IpPermission;
 import org.jclouds.net.domain.IpProtocol;
-import org.jclouds.reflect.Invocation;
-import org.jclouds.rest.internal.GeneratedHttpRequest;
 import org.testng.annotations.Test;
 
 import com.google.common.collect.ImmutableSet;
-import com.google.common.reflect.Invokable;
 
 /**
  *

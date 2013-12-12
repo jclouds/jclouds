@@ -39,7 +39,6 @@ import org.jclouds.cloudsigma.domain.ServerInfo;
 import org.jclouds.cloudsigma.options.CloneDriveOptions;
 import org.jclouds.cloudsigma.reference.CloudSigmaConstants;
 import org.jclouds.cloudsigma.util.Servers;
-import org.jclouds.compute.ComputeService;
 import org.jclouds.compute.ComputeServiceAdapter;
 import org.jclouds.compute.domain.Hardware;
 import org.jclouds.compute.domain.HardwareBuilder;

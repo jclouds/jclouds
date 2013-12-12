@@ -51,7 +51,6 @@ import org.jclouds.http.options.GetOptions;
 import org.jclouds.javax.annotation.Nullable;
 import org.jclouds.lifecycle.Closer;
 import org.jclouds.s3.S3AsyncClient;
-import org.jclouds.s3.blobstore.S3AsyncBlobStore;
 import org.jclouds.s3.blobstore.functions.BlobToObject;
 import org.jclouds.s3.blobstore.functions.BlobToObjectMetadata;
 import org.jclouds.s3.blobstore.functions.BucketToContainerListOptions;

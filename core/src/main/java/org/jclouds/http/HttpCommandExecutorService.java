@@ -16,7 +16,6 @@
  */
 package org.jclouds.http;
 
-import java.util.concurrent.Future;
 
 import com.google.common.util.concurrent.ListenableFuture;
 

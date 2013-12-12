@@ -18,7 +18,6 @@ package org.jclouds.compute.stub.extensions;
 
 import java.util.Properties;
 
-import org.jclouds.compute.extensions.SecurityGroupExtension;
 import org.jclouds.compute.extensions.internal.BaseSecurityGroupExtensionLiveTest;
 import org.testng.annotations.Test;
 

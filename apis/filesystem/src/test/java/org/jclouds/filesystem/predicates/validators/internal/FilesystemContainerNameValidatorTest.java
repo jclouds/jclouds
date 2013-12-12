@@ -21,7 +21,6 @@ import static org.testng.Assert.fail;
 import java.io.File;
 
 import org.jclouds.filesystem.predicates.validators.FilesystemBlobKeyValidator;
-import org.jclouds.filesystem.predicates.validators.FilesystemContainerNameValidator;
 import org.testng.annotations.Test;
 
 

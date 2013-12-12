@@ -18,7 +18,6 @@ package org.jclouds.rest.config;
 
 import com.google.common.reflect.TypeParameter;
 import com.google.common.reflect.TypeToken;
-import com.google.common.util.concurrent.ListenableFuture;
 import com.google.inject.Binder;
 import com.google.inject.TypeLiteral;
 

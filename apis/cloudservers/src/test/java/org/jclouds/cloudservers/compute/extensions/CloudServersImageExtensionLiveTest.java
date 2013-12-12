@@ -16,7 +16,6 @@
  */
 package org.jclouds.cloudservers.compute.extensions;
 
-import org.jclouds.compute.extensions.ImageExtension;
 import org.jclouds.compute.extensions.internal.BaseImageExtensionLiveTest;
 import org.jclouds.sshj.config.SshjSshClientModule;
 import org.testng.annotations.Test;

@@ -53,7 +53,6 @@ import org.jclouds.s3.domain.AccessControlList;
 import org.jclouds.s3.domain.BucketMetadata;
 import org.jclouds.s3.domain.CannedAccessPolicy;
 import org.jclouds.s3.domain.ObjectMetadata;
-import org.jclouds.s3.options.PutBucketOptions;
 
 import com.google.common.base.Function;
 import com.google.common.base.Supplier;

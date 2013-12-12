@@ -18,7 +18,6 @@ package org.jclouds.rest;
 
 import java.net.URI;
 
-import org.jclouds.rest.internal.BaseHttpApiMetadata;
 import org.jclouds.rest.internal.BaseRestApiMetadata;
 
 import com.google.common.annotations.Beta;

@@ -40,7 +40,6 @@ import javax.inject.Inject;
 import javax.inject.Named;
 
 import org.jclouds.Constants;
-import org.jclouds.blobstore.config.LocalBlobStore;
 import org.jclouds.blobstore.domain.Blob;
 import org.jclouds.blobstore.domain.Blob.Factory;
 import org.jclouds.blobstore.domain.BlobMetadata;

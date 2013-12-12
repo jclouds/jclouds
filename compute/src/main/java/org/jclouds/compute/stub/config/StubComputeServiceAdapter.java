@@ -42,7 +42,6 @@ import org.jclouds.compute.domain.NodeMetadataBuilder;
 import org.jclouds.compute.domain.OperatingSystem;
 import org.jclouds.compute.domain.OsFamily;
 import org.jclouds.compute.domain.SecurityGroup;
-import org.jclouds.compute.domain.SecurityGroupBuilder;
 import org.jclouds.compute.domain.Template;
 import org.jclouds.compute.extensions.SecurityGroupExtension;
 import org.jclouds.compute.predicates.ImagePredicates;
@@ -59,9 +58,7 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableList.Builder;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Iterables;
-import com.google.common.collect.Maps;
 import com.google.common.collect.Multimap;
-import com.google.common.collect.Sets;
 import com.google.common.util.concurrent.ListeningExecutorService;
 
 /**

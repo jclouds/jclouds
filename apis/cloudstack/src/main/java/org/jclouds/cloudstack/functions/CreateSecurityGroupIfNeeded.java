@@ -20,13 +20,10 @@ package org.jclouds.cloudstack.functions;
 
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
-import static com.google.common.collect.Iterables.find;
-import static org.jclouds.cloudstack.predicates.SecurityGroupPredicates.nameEquals;
 import static org.jclouds.cloudstack.predicates.SecurityGroupPredicates.portInRangeForCidr;
 import static org.jclouds.cloudstack.predicates.ZonePredicates.supportsSecurityGroups;
 
 import java.util.Set;
-import java.util.concurrent.ExecutionException;
 
 import javax.annotation.Resource;
 import javax.inject.Inject;
@@ -36,16 +33,13 @@ import javax.inject.Singleton;
 import org.jclouds.compute.reference.ComputeServiceConstants;
 import org.jclouds.logging.Logger;
 import org.jclouds.cloudstack.CloudStackApi;
-import org.jclouds.cloudstack.domain.IngressRule;
 import org.jclouds.cloudstack.domain.SecurityGroup;
 import org.jclouds.cloudstack.domain.Zone;
 import org.jclouds.cloudstack.domain.ZoneSecurityGroupNamePortsCidrs;
 
 import com.google.common.base.Function;
-import com.google.common.base.Optional;
 import com.google.common.base.Predicate;
 import com.google.common.base.Supplier;
-import com.google.common.base.Throwables;
 import com.google.common.cache.LoadingCache;
 import com.google.common.collect.ImmutableSet;
 

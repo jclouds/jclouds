@@ -28,7 +28,6 @@ import static org.testng.Assert.assertNotNull;
 import java.util.Properties;
 import java.util.Set;
 
-import org.jclouds.cloudstack.CloudStackApiMetadata;
 import org.jclouds.cloudstack.CloudStackApi;
 import org.jclouds.cloudstack.CloudStackContext;
 import org.jclouds.cloudstack.CloudStackGlobalApi;

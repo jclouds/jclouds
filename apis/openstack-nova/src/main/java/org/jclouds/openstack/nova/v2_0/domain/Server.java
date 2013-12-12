@@ -25,7 +25,6 @@ import java.util.Map;
 import javax.inject.Named;
 
 import org.jclouds.javax.annotation.Nullable;
-import org.jclouds.openstack.nova.v2_0.options.CreateServerOptions;
 import org.jclouds.openstack.v2_0.domain.Link;
 import org.jclouds.openstack.v2_0.domain.Resource;
 

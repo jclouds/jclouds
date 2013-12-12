@@ -19,7 +19,6 @@
 package org.jclouds.openstack.nova.v2_0.domain.zonescoped;
 
 import com.google.common.base.Objects;
-import java.beans.ConstructorProperties;
 
 /**
  * @author Inbar Stolberg

@@ -25,13 +25,10 @@ import java.util.Set;
 import org.jclouds.compute.domain.ComputeType;
 import org.jclouds.compute.domain.internal.ComputeMetadataImpl;
 import org.jclouds.domain.Location;
-import org.jclouds.domain.ResourceMetadata;
 import org.jclouds.javax.annotation.Nullable;
 import org.jclouds.net.domain.IpPermission;
 
 import com.google.common.base.Objects.ToStringHelper;
-import com.google.common.base.Predicate;
-import com.google.common.collect.ComparisonChain;
 import com.google.common.collect.ImmutableSet;
 
 /**

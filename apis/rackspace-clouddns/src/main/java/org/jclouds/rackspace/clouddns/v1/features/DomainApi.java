@@ -40,7 +40,6 @@ import org.jclouds.javax.annotation.Nullable;
 import org.jclouds.openstack.keystone.v2_0.filters.AuthenticateRequest;
 import org.jclouds.openstack.v2_0.domain.PaginatedCollection;
 import org.jclouds.openstack.v2_0.options.PaginationOptions;
-import org.jclouds.rackspace.clouddns.v1.CloudDNSApi;
 import org.jclouds.rackspace.clouddns.v1.binders.FormatAndContentsToJSON;
 import org.jclouds.rackspace.clouddns.v1.binders.UpdateDomainsToJSON;
 import org.jclouds.rackspace.clouddns.v1.config.CloudDNS;
@@ -56,7 +55,6 @@ import org.jclouds.rackspace.clouddns.v1.functions.ParseDomains;
 import org.jclouds.rackspace.clouddns.v1.functions.ParseJob;
 import org.jclouds.rackspace.clouddns.v1.functions.ParseSubdomains;
 import org.jclouds.rackspace.clouddns.v1.functions.SubdomainsToPagedIterable;
-import org.jclouds.rackspace.clouddns.v1.predicates.JobPredicates;
 import org.jclouds.rackspace.cloudidentity.v2_0.functions.DateParser;
 
 import org.jclouds.rest.annotations.BinderParam;

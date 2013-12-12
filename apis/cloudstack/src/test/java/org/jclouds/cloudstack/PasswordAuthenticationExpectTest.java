@@ -20,7 +20,6 @@ import static org.testng.Assert.assertNotNull;
 
 import java.util.Properties;
 
-import org.jclouds.cloudstack.config.CloudStackProperties;
 import org.jclouds.cloudstack.features.AccountApi;
 import org.jclouds.cloudstack.internal.BaseCloudStackExpectTest;
 import org.jclouds.http.HttpRequest;

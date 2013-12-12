@@ -18,8 +18,6 @@ package org.jclouds.s3;
 
 import java.io.Closeable;
 import java.util.Set;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.Future;
 
 import org.jclouds.http.options.GetOptions;
 import org.jclouds.javax.annotation.Nullable;

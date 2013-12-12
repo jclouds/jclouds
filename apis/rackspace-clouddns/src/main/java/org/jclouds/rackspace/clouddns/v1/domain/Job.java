@@ -21,7 +21,6 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 import java.beans.ConstructorProperties;
 
-import org.jclouds.rackspace.clouddns.v1.CloudDNSApi;
 
 import com.google.common.base.Optional;
 

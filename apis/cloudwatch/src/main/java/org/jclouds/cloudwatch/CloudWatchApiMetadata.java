@@ -22,8 +22,6 @@ import static org.jclouds.aws.reference.AWSConstants.PROPERTY_HEADER_TAG;
 import java.net.URI;
 import java.util.Properties;
 
-import com.google.common.reflect.TypeToken;
-import org.jclouds.apis.ApiMetadata;
 import org.jclouds.cloudwatch.config.CloudWatchHttpApiModule;
 import org.jclouds.rest.internal.BaseHttpApiMetadata;
 

@@ -22,10 +22,8 @@ import java.util.Map;
 import java.util.Properties;
 
 import org.jclouds.cloudstack.CloudStackContext;
-import org.jclouds.cloudstack.compute.CloudStackComputeService;
 import org.jclouds.cloudstack.internal.BaseCloudStackComputeServiceContextExpectTest;
 import org.jclouds.compute.ComputeService;
-import org.jclouds.compute.ComputeServiceContext;
 import org.jclouds.compute.domain.Image;
 import org.jclouds.compute.domain.ImageTemplate;
 import org.jclouds.compute.extensions.ImageExtension;
@@ -35,9 +33,7 @@ import org.testng.annotations.Test;
 
 import com.google.common.base.Function;
 import com.google.common.collect.ImmutableMap;
-import com.google.common.collect.ImmutableMap.Builder;
 import com.google.common.util.concurrent.Futures;
-import com.google.inject.Injector;
 import com.google.inject.Module;
 
 /**

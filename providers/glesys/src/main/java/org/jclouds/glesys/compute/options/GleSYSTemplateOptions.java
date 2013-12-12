@@ -22,7 +22,6 @@ import static com.google.common.base.Preconditions.checkNotNull;
 import java.util.Map;
 
 import org.jclouds.compute.options.TemplateOptions;
-import org.jclouds.glesys.domain.ServerSpec;
 
 import com.google.common.base.Objects.ToStringHelper;
 import com.google.common.net.InetAddresses;

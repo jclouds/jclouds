@@ -19,7 +19,6 @@ package org.jclouds.aws.s3.blobstore.strategy.internal;
 import static org.testng.Assert.assertEquals;
 
 import org.jclouds.aws.s3.blobstore.strategy.MultipartUpload;
-import org.jclouds.aws.s3.blobstore.strategy.MultipartUploadStrategy;
 import org.testng.annotations.Test;
 
 /**

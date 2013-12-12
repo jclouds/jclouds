@@ -26,7 +26,6 @@ import static java.util.concurrent.TimeUnit.NANOSECONDS;
 import static org.jclouds.Constants.PROPERTY_USER_THREADS;
 
 import java.util.concurrent.Callable;
-import java.util.concurrent.TimeUnit;
 
 import javax.annotation.Resource;
 import javax.inject.Inject;
@@ -49,7 +48,6 @@ import com.google.common.reflect.Invokable;
 import com.google.common.util.concurrent.ListenableFuture;
 import com.google.common.util.concurrent.ListeningExecutorService;
 import com.google.common.util.concurrent.TimeLimiter;
-import com.google.common.util.concurrent.UncheckedTimeoutException;
 
 /**
  * @author Adrian Cole

@@ -46,7 +46,6 @@ import org.jclouds.vcloud.options.CatalogItemOptions;
 import org.jclouds.vcloud.xml.CatalogHandler;
 import org.jclouds.vcloud.xml.CatalogItemHandler;
 
-import com.google.common.util.concurrent.ListenableFuture;
 
 /**
  * Provides access to Catalog functionality in vCloud

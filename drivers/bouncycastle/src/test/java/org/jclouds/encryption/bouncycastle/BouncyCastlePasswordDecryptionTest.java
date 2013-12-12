@@ -40,7 +40,6 @@ import org.jclouds.encryption.internal.JCECrypto;
 import org.testng.annotations.Test;
 
 import com.google.common.base.Charsets;
-import com.google.inject.Guice;
 
 /**
  * @author Barak Merimovich.

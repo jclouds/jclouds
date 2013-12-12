@@ -24,7 +24,6 @@ import static org.jclouds.rackspace.cloudidentity.v2_0.config.CloudIdentityCrede
 import java.net.URI;
 import java.util.Properties;
 
-import org.jclouds.apis.ApiMetadata;
 import org.jclouds.openstack.keystone.v2_0.config.KeystoneAuthenticationModule.ProviderModule;
 import org.jclouds.rackspace.clouddns.v1.config.CloudDNSHttpApiModule;
 import org.jclouds.rackspace.cloudidentity.v2_0.config.CloudIdentityAuthenticationApiModule;

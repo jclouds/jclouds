@@ -27,7 +27,6 @@ import static com.google.common.collect.Iterables.transform;
 import static com.google.common.collect.Multimaps.filterKeys;
 import static com.google.common.collect.Multimaps.index;
 import static com.google.common.collect.Multimaps.transformValues;
-import static org.jclouds.concurrent.FutureIterables.transformParallel;
 
 import java.util.Set;
 
@@ -52,9 +51,7 @@ import com.google.common.base.Function;
 import com.google.common.base.Predicate;
 import com.google.common.base.Supplier;
 import com.google.common.collect.ImmutableSet;
-import com.google.common.collect.Iterables;
 import com.google.common.collect.Multimap;
-import com.google.common.util.concurrent.ListenableFuture;
 import com.google.common.util.concurrent.ListeningExecutorService;
 import com.google.inject.Inject;
 

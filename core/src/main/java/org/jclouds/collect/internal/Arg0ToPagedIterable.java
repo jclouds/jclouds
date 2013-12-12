@@ -19,7 +19,6 @@ package org.jclouds.collect.internal;
 import java.util.List;
 
 import org.jclouds.collect.IterableWithMarker;
-import org.jclouds.collect.PagedIterable;
 import org.jclouds.rest.internal.GeneratedHttpRequest;
 
 import com.google.common.annotations.Beta;

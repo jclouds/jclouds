@@ -16,87 +16,34 @@
  */
 package org.jclouds.cloudstack.compute;
 import static com.google.common.collect.Iterables.getFirst;
-import static com.google.inject.name.Names.bindProperties;
-import static java.util.concurrent.TimeUnit.SECONDS;
-import static org.jclouds.Constants.PROPERTY_SESSION_INTERVAL;
-import static org.jclouds.util.Predicates2.retry;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertFalse;
 
 import java.util.Map;
 import java.util.Random;
-import java.util.Set;
 
-import javax.inject.Singleton;
 
-import org.jclouds.cloudstack.CloudStackApi;
-import org.jclouds.cloudstack.compute.config.CloudStackComputeServiceContextModule;
-import org.jclouds.cloudstack.compute.functions.OrphanedGroupsByZoneId;
-import org.jclouds.cloudstack.compute.loaders.CreateUniqueKeyPair;
-import org.jclouds.cloudstack.compute.loaders.FindSecurityGroupOrCreate;
 import org.jclouds.cloudstack.compute.options.CloudStackTemplateOptions;
 import org.jclouds.cloudstack.compute.strategy.CloudStackComputeServiceAdapter;
-import org.jclouds.cloudstack.compute.strategy.OptionsConverter;
-import org.jclouds.cloudstack.config.CloudStackParserModule;
-import org.jclouds.cloudstack.config.CloudStackHttpApiModule;
-import org.jclouds.cloudstack.domain.FirewallRule;
 import org.jclouds.cloudstack.domain.IPForwardingRule;
-import org.jclouds.cloudstack.domain.Network;
-import org.jclouds.cloudstack.domain.NetworkType;
-import org.jclouds.cloudstack.domain.SecurityGroup;
 import org.jclouds.cloudstack.domain.ServiceOffering;
-import org.jclouds.cloudstack.domain.SshKeyPair;
-import org.jclouds.cloudstack.domain.User;
 import org.jclouds.cloudstack.domain.VirtualMachine;
-import org.jclouds.cloudstack.domain.Zone;
-import org.jclouds.cloudstack.domain.ZoneAndName;
-import org.jclouds.cloudstack.domain.ZoneSecurityGroupNamePortsCidrs;
-import org.jclouds.cloudstack.functions.CreateSecurityGroupIfNeeded;
-import org.jclouds.cloudstack.functions.GetFirewallRulesByVirtualMachine;
-import org.jclouds.cloudstack.functions.GetIPForwardingRulesByVirtualMachine;
-import org.jclouds.cloudstack.functions.StaticNATVirtualMachineInNetwork;
-import org.jclouds.cloudstack.functions.ZoneIdToZone;
 import org.jclouds.cloudstack.internal.BaseCloudStackApiLiveTest;
-import org.jclouds.cloudstack.predicates.JobComplete;
 import org.jclouds.cloudstack.predicates.TemplatePredicates;
-import org.jclouds.cloudstack.suppliers.GetCurrentUser;
-import org.jclouds.cloudstack.suppliers.NetworksForCurrentUser;
-import org.jclouds.cloudstack.suppliers.ZoneIdToZoneSupplier;
-import org.jclouds.collect.Memoized;
 import org.jclouds.compute.ComputeServiceAdapter.NodeAndInitialCredentials;
-import org.jclouds.compute.config.ComputeServiceAdapterContextModule;
-import org.jclouds.compute.domain.NodeMetadata;
 import org.jclouds.compute.domain.Template;
 import org.jclouds.compute.functions.DefaultCredentialsFromImageOrOverridingCredentials;
 import org.jclouds.compute.strategy.PrioritizeCredentialsFromTemplate;
 import org.jclouds.domain.Credentials;
-import org.jclouds.location.Provider;
-import org.jclouds.logging.slf4j.config.SLF4JLoggingModule;
 import org.jclouds.ssh.SshKeys;
 import org.testng.annotations.AfterGroups;
 import org.testng.annotations.BeforeGroups;
 import org.testng.annotations.Test;
 
-import com.google.common.base.Function;
-import com.google.common.base.Predicate;
-import com.google.common.base.Supplier;
-import com.google.common.base.Suppliers;
-import com.google.common.cache.CacheBuilder;
-import com.google.common.cache.CacheLoader;
-import com.google.common.cache.LoadingCache;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Maps;
-import com.google.common.collect.Multimap;
 import com.google.common.net.HostAndPort;
 import com.google.common.net.InetAddresses;
-import com.google.inject.AbstractModule;
-import com.google.inject.Guice;
-import com.google.inject.Module;
-import com.google.inject.Provides;
-import com.google.inject.Scopes;
-import com.google.inject.TypeLiteral;
-import com.google.inject.assistedinject.FactoryModuleBuilder;
-import com.google.inject.name.Names;
 
 @Test(groups = "live", singleThreaded = true, testName = "CloudStackComputeServiceAdapterLiveTest")
 public class CloudStackComputeServiceAdapterLiveTest extends BaseCloudStackApiLiveTest {

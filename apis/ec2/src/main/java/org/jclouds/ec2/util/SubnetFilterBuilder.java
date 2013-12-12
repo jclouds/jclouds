@@ -20,7 +20,6 @@ import java.util.Comparator;
 import java.util.Map.Entry;
 
 import org.jclouds.ec2.domain.Subnet;
-import org.jclouds.ec2.features.SubnetApi;
 
 import com.google.common.annotations.Beta;
 import com.google.common.collect.ImmutableMultimap;

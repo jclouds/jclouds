@@ -16,9 +16,7 @@
  */
 package org.jclouds;
 
-import java.net.Proxy;
 
-import org.jclouds.domain.Location;
 import org.jclouds.location.reference.LocationConstants;
 
 /**

@@ -27,7 +27,6 @@ import org.jclouds.rackspace.cloudloadbalancers.v1.domain.ConnectionThrottle;
 import org.jclouds.rackspace.cloudloadbalancers.v1.domain.HealthMonitor;
 import org.jclouds.rackspace.cloudloadbalancers.v1.domain.LoadBalancer;
 import org.jclouds.rackspace.cloudloadbalancers.v1.domain.SessionPersistence;
-import org.jclouds.rackspace.cloudloadbalancers.v1.features.ReportApi;
 
 import com.google.common.base.Objects;
 import com.google.common.base.Objects.ToStringHelper;

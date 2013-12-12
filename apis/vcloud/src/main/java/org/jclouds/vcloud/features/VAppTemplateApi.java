@@ -58,7 +58,6 @@ import org.jclouds.vcloud.xml.TaskHandler;
 import org.jclouds.vcloud.xml.VAppHandler;
 import org.jclouds.vcloud.xml.VAppTemplateHandler;
 
-import com.google.common.util.concurrent.ListenableFuture;
 
 /**
  * Provides access to VApp Template functionality in vCloud

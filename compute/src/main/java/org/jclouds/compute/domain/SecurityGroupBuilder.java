@@ -20,15 +20,11 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 import java.net.URI;
 import java.util.Map;
-import java.util.Set;
 
 import org.jclouds.domain.Location;
-import org.jclouds.domain.LoginCredentials;
-import org.jclouds.javax.annotation.Nullable;
 import org.jclouds.net.domain.IpPermission;
 
 import com.google.common.collect.ImmutableSet;
-import com.google.common.collect.Sets;
 
 /**
  * @author Andrew Bayer

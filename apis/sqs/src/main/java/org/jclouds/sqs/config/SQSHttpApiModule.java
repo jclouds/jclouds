@@ -17,9 +17,7 @@
 package org.jclouds.sqs.config;
 
 
-import static org.jclouds.reflect.Reflection2.typeToken;
 
-import java.util.Map;
 
 import org.jclouds.aws.config.FormSigningHttpApiModule;
 import org.jclouds.aws.handlers.AWSServerErrorRetryHandler;
@@ -30,13 +28,9 @@ import org.jclouds.http.annotation.Redirection;
 import org.jclouds.http.annotation.ServerError;
 import org.jclouds.rest.ConfiguresHttpApi;
 import org.jclouds.sqs.SQSApi;
-import org.jclouds.sqs.features.MessageApi;
-import org.jclouds.sqs.features.PermissionApi;
-import org.jclouds.sqs.features.QueueApi;
 import org.jclouds.sqs.handlers.ParseSQSErrorFromXmlContent;
 import org.jclouds.sqs.handlers.SQSErrorRetryHandler;
 
-import com.google.common.collect.ImmutableMap;
 
 /**
  * Configures the SQS connection.

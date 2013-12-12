@@ -24,12 +24,10 @@ import static org.jclouds.sqs.config.SQSProperties.CREATE_QUEUE_RETRY_INTERVAL;
 import java.net.URI;
 import java.util.Properties;
 
-import org.jclouds.apis.ApiMetadata;
 import org.jclouds.rest.internal.BaseHttpApiMetadata;
 import org.jclouds.sqs.config.SQSHttpApiModule;
 
 import com.google.common.collect.ImmutableSet;
-import com.google.common.reflect.TypeToken;
 import com.google.inject.Module;
 
 /**

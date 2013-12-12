@@ -28,7 +28,6 @@ import static org.testng.Assert.fail;
 
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.HashMap;
 import java.util.Map;
 
 import org.jclouds.location.suppliers.RegionIdToURISupplier;

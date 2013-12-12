@@ -21,7 +21,6 @@ import static org.testng.Assert.assertEquals;
 import java.util.Map;
 
 import org.jclouds.aws.ec2.AWSEC2Api;
-import org.jclouds.aws.ec2.AWSEC2ApiMetadata;
 import org.jclouds.aws.ec2.domain.MonitoringState;
 import org.jclouds.compute.internal.BaseComputeServiceContextLiveTest;
 import org.testng.annotations.BeforeClass;

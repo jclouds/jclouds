@@ -25,7 +25,6 @@ import org.jclouds.ec2.internal.BaseEC2ApiExpectTest;
 import org.jclouds.ec2.parse.DescribeSubnetsResponseTest;
 import org.jclouds.http.HttpRequest;
 import org.jclouds.http.HttpResponse;
-import org.jclouds.rest.annotations.SinceApiVersion;
 import org.testng.annotations.Test;
 
 import com.google.common.collect.ImmutableMultimap;

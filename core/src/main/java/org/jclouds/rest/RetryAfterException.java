@@ -16,7 +16,6 @@
  */
 package org.jclouds.rest;
 
-import com.google.common.net.HttpHeaders;
 import com.google.common.primitives.Ints;
 
 /**
