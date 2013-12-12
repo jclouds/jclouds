@@ -19,7 +19,6 @@ package org.jclouds.enterprisechef;
 import java.net.URI;
 import java.util.Properties;
 
-import org.jclouds.apis.ApiMetadata;
 import org.jclouds.chef.ChefApiMetadata;
 import org.jclouds.chef.ChefContext;
 import org.jclouds.chef.config.ChefBootstrapModule;
