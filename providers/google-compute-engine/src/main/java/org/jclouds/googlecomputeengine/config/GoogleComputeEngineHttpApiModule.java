@@ -16,7 +16,6 @@
  */
 package org.jclouds.googlecomputeengine.config;
 
-import static com.google.common.base.Preconditions.checkState;
 import static com.google.common.base.Suppliers.compose;
 import static com.google.inject.name.Names.named;
 import static org.jclouds.Constants.PROPERTY_SESSION_INTERVAL;

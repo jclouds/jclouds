@@ -32,6 +32,7 @@ import org.jclouds.googlecomputeengine.domain.Operation;
 
 import com.google.common.base.Predicate;
 import com.google.common.base.Supplier;
+import com.google.common.util.concurrent.Atomics;
 import com.google.inject.Injector;
 import com.google.inject.Key;
 import com.google.inject.Module;
@@ -154,7 +155,7 @@ public class BaseGoogleComputeEngineApiLiveTest extends BaseApiLiveTest<GoogleCo
 
    protected static Operation waitOperationDone(Predicate<AtomicReference<Operation>> operationDonePredicate,
                                                 Operation operation, long maxWaitSeconds) {
-      AtomicReference<Operation> operationReference = new AtomicReference<Operation>(operation);
+      AtomicReference<Operation> operationReference = Atomics.newReference(operation);
       retry(operationDonePredicate, maxWaitSeconds, 1, SECONDS).apply(operationReference);
       return operationReference.get();
    }
