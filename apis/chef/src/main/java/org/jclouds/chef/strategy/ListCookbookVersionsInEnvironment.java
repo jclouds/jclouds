@@ -16,11 +16,9 @@
  */
 package org.jclouds.chef.strategy;
 
-import org.jclouds.chef.domain.CookbookDefinition;
 import org.jclouds.chef.domain.CookbookVersion;
 import org.jclouds.chef.strategy.internal.ListCookbookVersionsInEnvironmentImpl;
 
-import com.google.common.base.Predicate;
 import com.google.common.util.concurrent.ListeningExecutorService;
 import com.google.inject.ImplementedBy;
 

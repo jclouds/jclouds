@@ -28,7 +28,6 @@ import static org.jclouds.chef.config.ChefProperties.CHEF_USE_OMNIBUS;
 import java.net.URI;
 import java.util.Properties;
 
-import org.jclouds.apis.ApiMetadata;
 import org.jclouds.chef.config.ChefBootstrapModule;
 import org.jclouds.chef.config.ChefHttpApiModule;
 import org.jclouds.chef.config.ChefParserModule;

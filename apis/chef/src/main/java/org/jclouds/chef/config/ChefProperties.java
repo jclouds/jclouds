@@ -16,7 +16,6 @@
  */
 package org.jclouds.chef.config;
 
-import org.jclouds.chef.ChefService;
 
 /**
  * Configuration properties and constants used in Chef connections.
