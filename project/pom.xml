@@ -997,10 +997,11 @@
           <plugin>
             <!-- When building jclouds-project, override the config to use the local file -->
             <artifactId>maven-checkstyle-plugin</artifactId>
-            <version>2.9.1</version>
+            <version>2.11</version>
             <configuration>
               <configLocation>../resources/checkstyle.xml</configLocation>
               <violationSeverity>warning</violationSeverity>
+              <includeTestSourceDirectory>true</includeTestSourceDirectory>
             </configuration>
           </plugin>
         </plugins>            
