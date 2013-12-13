@@ -198,6 +198,10 @@ public interface IntegrationTestClient extends Closeable {
    @PUT
    @Path("/objects/{id}")
    void putNothing(@PathParam("id") String id);
+   
+   @POST
+   @Path("/objects/{id}")
+   void postNothing(@PathParam("id") String id);
 
    @Provides
    StringBuilder newStringBuilder();

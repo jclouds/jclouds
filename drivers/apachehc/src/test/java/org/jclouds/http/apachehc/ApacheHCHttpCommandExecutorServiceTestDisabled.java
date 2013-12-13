@@ -46,7 +46,7 @@ public class ApacheHCHttpCommandExecutorServiceTestDisabled extends BaseHttpComm
       return new ApacheHCHttpCommandExecutorServiceModule();
    }
 
-   protected void addConnectionProperties(Properties props) {
+   protected void addOverrideProperties(Properties props) {
       props.setProperty(PROPERTY_MAX_CONNECTIONS_PER_CONTEXT, 20 + "");
       props.setProperty(PROPERTY_MAX_CONNECTIONS_PER_HOST, 0 + "");
       props.setProperty(PROPERTY_CONNECTION_TIMEOUT, 100 + "");

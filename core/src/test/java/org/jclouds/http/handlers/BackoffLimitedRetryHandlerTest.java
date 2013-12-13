@@ -21,14 +21,15 @@ import static org.testng.Assert.assertTrue;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.Properties;
 
-import org.jclouds.http.BaseJettyTest;
+import org.jclouds.ContextBuilder;
 import org.jclouds.http.HttpCommand;
 import org.jclouds.http.HttpRequest;
 import org.jclouds.http.HttpResponse;
 import org.jclouds.http.IntegrationTestAsyncClient;
+import org.jclouds.http.IntegrationTestClient;
 import org.jclouds.io.Payloads;
+import org.jclouds.providers.AnonymousProviderMetadata;
 import org.jclouds.reflect.Invocation;
 import org.jclouds.rest.internal.RestAnnotationProcessor;
 import org.testng.annotations.Test;
@@ -122,8 +123,10 @@ public class BackoffLimitedRetryHandlerTest {
       assertEquals(response.getPayload().getInput().read(), -1);
    }
 
-   private final Function<Invocation, HttpRequest> processor = BaseJettyTest.newBuilder(8100, new Properties()).buildInjector()
-         .getInstance(RestAnnotationProcessor.class);
+   private final Function<Invocation, HttpRequest> processor = ContextBuilder
+         .newBuilder(AnonymousProviderMetadata.forApiOnEndpoint(IntegrationTestClient.class, "http://localhost"))
+         .buildInjector().getInstance(RestAnnotationProcessor.class);
+   
 
    private HttpCommand createCommand() throws SecurityException, NoSuchMethodException {
       Invokable<IntegrationTestAsyncClient, String> method = method(IntegrationTestAsyncClient.class, "download", String.class);
