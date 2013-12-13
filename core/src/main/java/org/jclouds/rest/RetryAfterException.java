@@ -16,8 +16,6 @@
  */
 package org.jclouds.rest;
 
-import com.google.common.primitives.Ints;
-
 /**
  * This exception is raised when an http endpoint returns with a response
  * telling the caller to make the same request after a certain period of time.
@@ -44,7 +42,7 @@ public class RetryAfterException extends RuntimeException {
     */
    public RetryAfterException(String message, int seconds) {
       super(message);
-      this.seconds = Ints.max(seconds, 0);
+      this.seconds = Math.max(seconds, 0);
    }
 
    /**
@@ -56,7 +54,7 @@ public class RetryAfterException extends RuntimeException {
     *           retry after delta. Negative values are converted to zero
     */
    public RetryAfterException(Throwable cause, int seconds) {
-      super(defaultMessage(seconds = Ints.max(seconds, 0)), cause);
+      super(defaultMessage(seconds = Math.max(seconds, 0)), cause);
       this.seconds = seconds;
    }
    
@@ -83,7 +81,7 @@ public class RetryAfterException extends RuntimeException {
     */
    public RetryAfterException(String message, Throwable cause, int seconds) {
       super(message, cause);
-      this.seconds = Ints.max(seconds, 0);
+      this.seconds = Math.max(seconds, 0);
    }
 
    /**
