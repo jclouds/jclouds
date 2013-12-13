@@ -19,7 +19,6 @@ package org.jclouds.aws.ec2.features;
 import static org.jclouds.ec2.domain.Tag.ResourceType.SECURITY_GROUP;
 
 import org.jclouds.aws.ec2.AWSEC2Api;
-import org.jclouds.aws.ec2.features.AWSSecurityGroupApi;
 import org.jclouds.ec2.features.internal.BaseTagApiLiveTest;
 import org.testng.annotations.Test;
 

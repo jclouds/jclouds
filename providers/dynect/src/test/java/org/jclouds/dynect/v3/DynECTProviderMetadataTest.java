@@ -16,8 +16,6 @@
  */
 package org.jclouds.dynect.v3;
 
-import org.jclouds.dynect.v3.DynECTApiMetadata;
-import org.jclouds.dynect.v3.DynECTProviderMetadata;
 import org.jclouds.providers.internal.BaseProviderMetadataTest;
 import org.testng.annotations.Test;
 

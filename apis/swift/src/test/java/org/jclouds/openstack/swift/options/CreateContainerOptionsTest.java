@@ -18,7 +18,6 @@ package org.jclouds.openstack.swift.options;
 
 import static org.testng.Assert.assertEquals;
 
-import org.jclouds.openstack.swift.options.CreateContainerOptions;
 import org.jclouds.openstack.swift.reference.SwiftHeaders;
 import org.testng.annotations.Test;
 

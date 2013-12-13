@@ -17,7 +17,6 @@
 package org.jclouds.rackspace.cloudidentity.v2_0;
 
 import org.jclouds.View;
-import org.jclouds.rackspace.cloudidentity.v2_0.CloudIdentityApiMetadata;
 import org.jclouds.rest.internal.BaseRestApiMetadataTest;
 import org.testng.annotations.Test;
 

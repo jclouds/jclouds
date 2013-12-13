@@ -18,7 +18,6 @@ package org.jclouds.compute.functions;
 
 import static org.testng.Assert.assertEquals;
 
-import org.jclouds.compute.functions.Sha512Crypt;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 

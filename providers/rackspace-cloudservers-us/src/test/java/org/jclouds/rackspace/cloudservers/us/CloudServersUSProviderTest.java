@@ -35,7 +35,6 @@ package org.jclouds.rackspace.cloudservers.us;
 
 import org.jclouds.openstack.nova.v2_0.NovaApiMetadata;
 import org.jclouds.providers.internal.BaseProviderMetadataTest;
-import org.jclouds.rackspace.cloudservers.us.CloudServersUSProviderMetadata;
 import org.testng.annotations.Test;
 
 /**

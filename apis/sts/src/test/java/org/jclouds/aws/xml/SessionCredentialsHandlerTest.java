@@ -21,7 +21,6 @@ import static org.testng.Assert.assertEquals;
 import java.io.InputStream;
 
 import org.jclouds.aws.domain.SessionCredentials;
-import org.jclouds.aws.xml.SessionCredentialsHandler;
 import org.jclouds.date.internal.SimpleDateFormatDateService;
 import org.jclouds.http.functions.BaseHandlerTest;
 import org.testng.annotations.Test;

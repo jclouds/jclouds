@@ -16,7 +16,6 @@
  */
 package org.jclouds.aws.route53;
 
-import org.jclouds.aws.route53.AWSRoute53ProviderMetadata;
 import org.jclouds.route53.Route53ApiMetadata;
 import org.jclouds.providers.internal.BaseProviderMetadataTest;
 import org.testng.annotations.Test;

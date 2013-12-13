@@ -35,6 +35,7 @@
 -->
         <module name="ModifierOrder"/>
         <module name="MultipleVariableDeclarations"/>
+        <module name="RedundantImport"/>
         <module name="RedundantModifier">
             <!-- VARIABLE_DEF disabled -->
             <property name="tokens" value="METHOD_DEF, ANNOTATION_FIELD_DEF, INTERFACE_DEF"/>

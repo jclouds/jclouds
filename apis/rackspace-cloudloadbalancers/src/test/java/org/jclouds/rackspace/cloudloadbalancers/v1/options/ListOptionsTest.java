@@ -20,7 +20,6 @@ import static org.jclouds.rackspace.cloudloadbalancers.v1.options.ListOptions.Bu
 import static org.jclouds.rackspace.cloudloadbalancers.v1.options.ListOptions.Builder.marker;
 import static org.testng.Assert.assertEquals;
 
-import org.jclouds.rackspace.cloudloadbalancers.v1.options.ListOptions;
 import org.testng.annotations.Test;
 
 import com.google.common.collect.ImmutableList;

@@ -23,8 +23,6 @@ import org.jclouds.http.HttpResponse;
 import org.jclouds.json.BaseItemParserTest;
 import org.jclouds.rackspace.cloudloadbalancers.v1.domain.LoadBalancer;
 import org.jclouds.rackspace.cloudloadbalancers.v1.domain.LoadBalancer.Status;
-import org.jclouds.rackspace.cloudloadbalancers.v1.functions.ConvertLB;
-import org.jclouds.rackspace.cloudloadbalancers.v1.functions.ParseLoadBalancer;
 import org.testng.annotations.Test;
 
 import com.google.common.base.Function;

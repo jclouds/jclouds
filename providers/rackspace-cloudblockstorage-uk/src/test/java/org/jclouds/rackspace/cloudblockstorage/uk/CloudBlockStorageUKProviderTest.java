@@ -18,7 +18,6 @@ package org.jclouds.rackspace.cloudblockstorage.uk;
 
 import org.jclouds.openstack.cinder.v1.CinderApiMetadata;
 import org.jclouds.providers.internal.BaseProviderMetadataTest;
-import org.jclouds.rackspace.cloudblockstorage.uk.CloudBlockStorageUKProviderMetadata;
 import org.testng.annotations.Test;
 
 /**

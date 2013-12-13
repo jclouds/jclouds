@@ -29,8 +29,6 @@ import org.jclouds.rackspace.cloudloadbalancers.v1.domain.VirtualIP;
 import org.jclouds.rackspace.cloudloadbalancers.v1.domain.VirtualIPWithId;
 import org.jclouds.rackspace.cloudloadbalancers.v1.domain.LoadBalancer.Status;
 import org.jclouds.rackspace.cloudloadbalancers.v1.domain.internal.BaseLoadBalancer.Algorithm;
-import org.jclouds.rackspace.cloudloadbalancers.v1.functions.ConvertLB;
-import org.jclouds.rackspace.cloudloadbalancers.v1.functions.ParseLoadBalancers;
 import org.testng.annotations.Test;
 
 import com.google.common.base.Function;

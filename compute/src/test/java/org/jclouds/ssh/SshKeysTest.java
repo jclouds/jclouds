@@ -35,7 +35,6 @@ import java.util.Map;
 
 import org.jclouds.crypto.Pems;
 import org.jclouds.io.Payloads;
-import org.jclouds.ssh.SshKeys;
 import org.jclouds.util.Strings2;
 import org.testng.annotations.Test;
 

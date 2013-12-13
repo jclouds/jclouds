@@ -37,7 +37,6 @@ import org.jclouds.cloudstack.domain.ZoneSecurityGroupNamePortsCidrs;
 import org.jclouds.cloudstack.features.AsyncJobApi;
 import org.jclouds.cloudstack.features.SecurityGroupApi;
 import org.jclouds.cloudstack.features.ZoneApi;
-import org.jclouds.cloudstack.functions.ZoneIdToZone;
 import org.jclouds.cloudstack.predicates.JobComplete;
 import org.jclouds.cloudstack.suppliers.ZoneIdToZoneSupplier;
 import org.testng.annotations.Test;
