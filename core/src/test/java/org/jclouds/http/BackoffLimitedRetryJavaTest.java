@@ -16,38 +16,37 @@
  */
 package org.jclouds.http;
 
+import static com.google.common.io.Closeables.close;
+import static org.jclouds.Constants.PROPERTY_MAX_RETRIES;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.fail;
 
-import java.io.IOException;
 import java.util.Properties;
-import java.util.concurrent.ExecutionException;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import org.eclipse.jetty.server.Request;
 import org.jclouds.http.config.JavaUrlHttpCommandExecutorServiceModule;
+import org.jclouds.http.handlers.BackoffLimitedRetryHandler;
 import org.testng.annotations.Test;
 
 import com.google.inject.Module;
+import com.squareup.okhttp.mockwebserver.MockResponse;
+import com.squareup.okhttp.mockwebserver.MockWebServer;
 
 /**
  * Tests the retry behavior of the default {@link RetryHandler} implementation
- * {@link BackoffLimitedRetryHandler} to ensure that retries up to the default limit succeed.
- * 
- * TODO: Should either explicitly set retry limit or get it from Guice, rather than assuming it's 5.
+ * {@link BackoffLimitedRetryHandler} to ensure that retries up to the default
+ * limit succeed.
  * 
  * @author James Murty
+ * @author Ignasi Barrera
  */
-@Test(sequential = true)
-public class BackoffLimitedRetryJavaTest extends BaseJettyTest {
-   private int beginToFailOnRequestNumber = 0;
-   private int endFailuresOnRequestNumber = 0;
-   private int requestCount = 0;
+@Test(groups = "integration")
+public class BackoffLimitedRetryJavaTest extends BaseMockWebServerTest {
+
+   private final int maxRetries = 5;
 
    @Override
-   protected void addConnectionProperties(Properties props) {
+   protected void addOverrideProperties(Properties props) {
+      props.setProperty(PROPERTY_MAX_RETRIES, "" + maxRetries);
    }
 
    @Override
@@ -55,84 +54,98 @@ public class BackoffLimitedRetryJavaTest extends BaseJettyTest {
       return new JavaUrlHttpCommandExecutorServiceModule();
    }
 
-   @Override
-   protected boolean failEveryTenRequests(HttpServletRequest request, HttpServletResponse response)
-            throws IOException {
-      requestCount++;
-      boolean shouldFail = requestCount >= beginToFailOnRequestNumber
-               && requestCount <= endFailuresOnRequestNumber;
-      if (shouldFail) {
-         response.sendError(500);
-         ((Request) request).setHandled(true);
-         return true;
-      } else {
-         return false;
-      }
-   }
-
-   protected String submitGetRequest() throws InterruptedException, ExecutionException {
-      return client.download("");
+   protected IntegrationTestClient client(String url) {
+      return api(IntegrationTestClient.class, url);
    }
 
    @Test
-   public void testNoRetriesSuccessful() throws InterruptedException, ExecutionException {
-      beginToFailOnRequestNumber = 1;
-      endFailuresOnRequestNumber = 1;
-      requestCount = 0;
-
-      assertEquals(submitGetRequest().trim(), XML);
-   }
-
-   @Test
-   public void testSingleRetrySuccessful() throws InterruptedException, ExecutionException {
-      beginToFailOnRequestNumber = 0;
-      endFailuresOnRequestNumber = 1;
-      requestCount = 0;
-
-      assertEquals(submitGetRequest().trim(), XML);
-   }
-
-   @Test
-   public void testMaximumRetriesSuccessful() throws InterruptedException, ExecutionException {
-      beginToFailOnRequestNumber = 0;
-      endFailuresOnRequestNumber = 5;
-      requestCount = 0;
-
-      assertEquals(submitGetRequest().trim(), XML);
-   }
-
-   @Test
-   public void testMaximumRetriesExceeded() throws InterruptedException, ExecutionException {
-      beginToFailOnRequestNumber = 0;
-      endFailuresOnRequestNumber = 6;
-      requestCount = 0;
-
+   public void testNoRetriesSuccessful() throws Exception {
+      MockWebServer server = mockWebServer(new MockResponse());
+      IntegrationTestClient client = client(server.getUrl("/").toString());
       try {
-         submitGetRequest();
-         fail("Request should not succeed within " + endFailuresOnRequestNumber + " requests");
-      } catch (HttpResponseException e) {
-         assertEquals(e.getResponse().getStatusCode(), 500);
+         client.download("");
+         assertEquals(server.getRequestCount(), 1);
+      } finally {
+         close(client, true);
+         server.shutdown();
       }
    }
 
    @Test
-   public void testInterleavedSuccessesAndFailures() throws InterruptedException,
-            ExecutionException {
-      beginToFailOnRequestNumber = 3;
-      endFailuresOnRequestNumber = 3 + 5; // Force third request to fail completely
-      requestCount = 0;
-
-      assertEquals(submitGetRequest().trim(), XML);
-      assertEquals(submitGetRequest().trim(), XML);
-
+   public void testSingleRetrySuccessful() throws Exception {
+      MockWebServer server = mockWebServer(new MockResponse().setResponseCode(500), new MockResponse());
+      IntegrationTestClient client = client(server.getUrl("/").toString());
       try {
-         submitGetRequest();
-         fail("Third request should not succeed by attempt number " + requestCount);
-      } catch (HttpResponseException e) {
-         assertEquals(e.getResponse().getStatusCode(), 500);
+         client.download("");
+         assertEquals(server.getRequestCount(), 2);
+      } finally {
+         close(client, true);
+         server.shutdown();
+      }
+   }
+
+   @Test
+   public void testMaximumRetriesSuccessful() throws Exception {
+      MockWebServer server = mockWebServer();
+      for (int i = 0; i < maxRetries - 1; i++) {
+         server.enqueue(new MockResponse().setResponseCode(500));
+      }
+      server.enqueue(new MockResponse());
+
+      IntegrationTestClient client = client(server.getUrl("/").toString());
+      try {
+         client.download("");
+         assertEquals(server.getRequestCount(), maxRetries);
+      } finally {
+         close(client, true);
+         server.shutdown();
+      }
+   }
+
+   @Test
+   public void testMaximumRetriesExceeded() throws Exception {
+      MockWebServer server = mockWebServer();
+      for (int i = 0; i <= maxRetries; i++) {
+         server.enqueue(new MockResponse().setResponseCode(500));
       }
 
-      assertEquals(submitGetRequest().trim(), XML);
+      IntegrationTestClient client = client(server.getUrl("/").toString());
+      try {
+
+         client.download("");
+         fail("Request should not succeed within " + maxRetries + " requests");
+      } catch (HttpResponseException ex) {
+         assertEquals(ex.getResponse().getStatusCode(), 500);
+         assertEquals(server.getRequestCount(), maxRetries + 1);
+      } finally {
+         close(client, true);
+         server.shutdown();
+      }
+   }
+
+   @Test
+   public void testInterleavedSuccessesAndFailures() throws Exception {
+      MockWebServer server = mockWebServer(new MockResponse(), new MockResponse());
+      for (int i = 0; i <= maxRetries; i++) {
+         server.enqueue(new MockResponse().setResponseCode(500));
+      }
+
+      IntegrationTestClient client = client(server.getUrl("/").toString());
+      try {
+         client.download("");
+         client.download("");
+
+         try {
+            client.download("");
+            fail("Request should not succeed within " + maxRetries + " requests");
+         } catch (HttpResponseException ex) {
+            assertEquals(ex.getResponse().getStatusCode(), 500);
+            assertEquals(server.getRequestCount(), maxRetries + 3);
+         }
+      } finally {
+         close(client, true);
+         server.shutdown();
+      }
    }
 
 }

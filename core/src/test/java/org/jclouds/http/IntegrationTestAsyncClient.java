@@ -196,6 +196,10 @@ public interface IntegrationTestAsyncClient extends Closeable {
 
    }
 
+   @POST
+   @Path("/objects/{id}")
+   ListenableFuture<Void> postNothing(@PathParam("id") String id);
+   
    @PUT
    @Path("/objects/{id}")
    ListenableFuture<Void> putNothing(@PathParam("id") String id);

@@ -19,12 +19,12 @@ import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.base.Throwables.propagate;
 import static com.google.common.io.ByteStreams.toByteArray;
+import static com.google.common.io.Closeables.close;
 import static com.google.common.net.HttpHeaders.CONTENT_LENGTH;
 import static com.google.common.net.HttpHeaders.HOST;
 import static com.google.common.net.HttpHeaders.USER_AGENT;
 import static org.jclouds.http.HttpUtils.filterOutContentHeaders;
 import static org.jclouds.io.Payloads.newInputStreamPayload;
-import static org.jclouds.util.Closeables2.closeQuietly;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -46,6 +46,7 @@ import javax.net.ssl.SSLContext;
 
 import org.jclouds.Constants;
 import org.jclouds.JcloudsVersion;
+import org.jclouds.http.HttpCommandExecutorService;
 import org.jclouds.http.HttpRequest;
 import org.jclouds.http.HttpResponse;
 import org.jclouds.http.HttpUtils;
@@ -75,11 +76,11 @@ public class JavaUrlHttpCommandExecutorService extends BaseHttpCommandExecutorSe
    public static final String DEFAULT_USER_AGENT = String.format("jclouds/%s java/%s", JcloudsVersion.get(), System
             .getProperty("java.version"));
 
-   private final Supplier<SSLContext> untrustedSSLContextProvider;
-   private final Function<URI, Proxy> proxyForURI;
-   private final HostnameVerifier verifier;
+   protected final Supplier<SSLContext> untrustedSSLContextProvider;
+   protected final Function<URI, Proxy> proxyForURI;
+   protected final HostnameVerifier verifier;
    @Inject(optional = true)
-   Supplier<SSLContext> sslContextSupplier;
+   protected Supplier<SSLContext> sslContextSupplier;
 
    @Inject
    public JavaUrlHttpCommandExecutorService(HttpUtils utils, ContentMetadataCodec contentMetadataCodec,
@@ -105,13 +106,13 @@ public class JavaUrlHttpCommandExecutorService extends BaseHttpCommandExecutorSe
       } catch (IOException e) {
          in = bufferAndCloseStream(connection.getErrorStream());
       } catch (RuntimeException e) {
-         closeQuietly(in);
+         close(in, true);
          throw propagate(e);
       }
 
       int responseCode = connection.getResponseCode();
       if (responseCode == 204) {
-         closeQuietly(in);
+         close(in, true);
          in = null;
       }
       builder.statusCode(responseCode);
@@ -141,7 +142,7 @@ public class JavaUrlHttpCommandExecutorService extends BaseHttpCommandExecutorSe
             in = new ByteArrayInputStream(toByteArray(inputStream));
          }
       } finally {
-         closeQuietly(inputStream);
+         close(inputStream, true);
       }
       return in;
    }
@@ -149,21 +150,8 @@ public class JavaUrlHttpCommandExecutorService extends BaseHttpCommandExecutorSe
    @Override
    protected HttpURLConnection convert(HttpRequest request) throws IOException, InterruptedException {
       boolean chunked = "chunked".equals(request.getFirstHeaderOrNull("Transfer-Encoding"));
-      URL url = request.getEndpoint().toURL();
 
-      HttpURLConnection connection = (HttpURLConnection) url.openConnection(proxyForURI.apply(request.getEndpoint()));
-      if (connection instanceof HttpsURLConnection) {
-         HttpsURLConnection sslCon = (HttpsURLConnection) connection;
-         if (utils.relaxHostname())
-            sslCon.setHostnameVerifier(verifier);
-         if (sslContextSupplier != null) {
-             // used for providers which e.g. use certs for authentication (like FGCP)
-             // Provider provides SSLContext impl (which inits context with key manager)
-             sslCon.setSSLSocketFactory(sslContextSupplier.get().getSocketFactory());
-         } else if (utils.trustAllCerts()) {
-             sslCon.setSSLSocketFactory(untrustedSSLContextProvider.get().getSocketFactory());
-         }
-      }
+      HttpURLConnection connection = initConnection(request);
       connection.setConnectTimeout(utils.getConnectionTimeout());
       connection.setReadTimeout(utils.getSocketOpenTimeout());
       connection.setAllowUserInteraction(false);
@@ -173,10 +161,7 @@ public class JavaUrlHttpCommandExecutorService extends BaseHttpCommandExecutorSe
       connection.setInstanceFollowRedirects(false);
 
       setRequestMethodBypassingJREMethodLimitation(connection, request.getMethod());
-
-      for (Map.Entry<String, String> entry : request.getHeaders().entries()) {
-         connection.setRequestProperty(entry.getKey(), entry.getValue());
-      }
+      configureRequestHeaders(connection, request);
 
       String host = request.getEndpoint().getHost();
       if (request.getEndpoint().getPort() != -1) {
@@ -214,6 +199,36 @@ public class JavaUrlHttpCommandExecutorService extends BaseHttpCommandExecutorSe
          writeNothing(connection);
       }
       return connection;
+   }
+
+   /**
+    * Creates and initializes the connection.
+    */
+   protected HttpURLConnection initConnection(HttpRequest request) throws IOException {
+      URL url = request.getEndpoint().toURL();
+      HttpURLConnection connection = (HttpURLConnection) url.openConnection(proxyForURI.apply(request.getEndpoint()));
+      if (connection instanceof HttpsURLConnection) {
+         HttpsURLConnection sslCon = (HttpsURLConnection) connection;
+         if (utils.relaxHostname())
+            sslCon.setHostnameVerifier(verifier);
+         if (sslContextSupplier != null) {
+             // used for providers which e.g. use certs for authentication (like FGCP)
+             // Provider provides SSLContext impl (which inits context with key manager)
+             sslCon.setSSLSocketFactory(sslContextSupplier.get().getSocketFactory());
+         } else if (utils.trustAllCerts()) {
+             sslCon.setSSLSocketFactory(untrustedSSLContextProvider.get().getSocketFactory());
+         }
+      }
+      return connection;
+   }
+
+   /**
+    * Configure the HTTP request headers in the connection.
+    */
+   protected void configureRequestHeaders(HttpURLConnection connection, HttpRequest request) {
+      for (Map.Entry<String, String> entry : request.getHeaders().entries()) {
+         connection.setRequestProperty(entry.getKey(), entry.getValue());
+      }
    }
 
    /**
