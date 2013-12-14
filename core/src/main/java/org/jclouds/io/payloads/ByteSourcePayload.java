@@ -16,35 +16,41 @@
  */
 package org.jclouds.io.payloads;
 
-import static com.google.common.base.Preconditions.checkArgument;
-import static com.google.common.base.Preconditions.checkNotNull;
+import static com.google.common.io.Closeables.closeQuietly;
 
-import java.io.ByteArrayInputStream;
+import java.io.IOException;
 import java.io.InputStream;
 
+import com.google.common.io.ByteSource;
+import com.google.common.io.Closer;
+
 /**
- * @author Adrian Cole
- * @deprecated see ByteSourcePayload
+ * A repeatable, ByteSource-backed Payload.
+ *
+ * @author Andrew Gaul
  */
-@Deprecated
-public class ByteArrayPayload extends BasePayload<byte[]> {
-   public ByteArrayPayload(byte[] content) {
-      this(content, null);
+public class ByteSourcePayload extends BasePayload<ByteSource> {
+   private final Closer closer = Closer.create();
+
+   public ByteSourcePayload(ByteSource content) {
+      super(content);
    }
 
-   public ByteArrayPayload(byte[] content, byte[] md5) {
-      super(content);
-      getContentMetadata().setContentLength(Long.valueOf(checkNotNull(content, "content").length));
-      getContentMetadata().setContentMD5(md5);
-      checkArgument(content.length >= 0, "length cannot me negative");
+   @Override
+   public InputStream openStream() throws IOException {
+      return closer.register(content.openStream());
+   }
+
+   @Override
+   public boolean isRepeatable() {
+      return true;
    }
 
    /**
-    * {@inheritDoc}
+    * if we created the stream, then it is already consumed on close.
     */
    @Override
-   public InputStream openStream() {
-      return new ByteArrayInputStream(content);
+   public void release() {
+      closeQuietly(closer);
    }
-
 }

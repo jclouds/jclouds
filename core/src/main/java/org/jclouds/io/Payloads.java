@@ -24,6 +24,7 @@ import java.io.IOException;
 import java.io.InputStream;
 
 import org.jclouds.io.payloads.ByteArrayPayload;
+import org.jclouds.io.payloads.ByteSourcePayload;
 import org.jclouds.io.payloads.FilePayload;
 import org.jclouds.io.payloads.InputStreamPayload;
 import org.jclouds.io.payloads.StringPayload;
@@ -31,6 +32,7 @@ import org.jclouds.io.payloads.UrlEncodedFormPayload;
 
 import com.google.common.collect.Multimap;
 import com.google.common.io.ByteStreams;
+import com.google.common.io.ByteSource;
 
 /**
  * 
@@ -40,6 +42,10 @@ public class Payloads {
    private Payloads() {
    }
 
+   /**
+    * @deprecated see newPayload(ByteSource) or newPayload(InputStream)
+    */
+   @Deprecated
    public static Payload newPayload(Object data) {
       checkNotNull(data, "data");
       if (data instanceof Payload) {
@@ -48,6 +54,8 @@ public class Payloads {
          return newInputStreamPayload((InputStream) data);
       } else if (data instanceof byte[]) {
          return newByteArrayPayload((byte[]) data);
+      } else if (data instanceof ByteSource) {
+         return newByteSourcePayload((ByteSource) data);
       } else if (data instanceof String) {
          return newStringPayload((String) data);
       } else if (data instanceof File) {
@@ -61,14 +69,30 @@ public class Payloads {
       return new InputStreamPayload(checkNotNull(data, "data"));
    }
 
+   /**
+    * @deprecated see newPayload(ByteSource)
+    */
+   @Deprecated
    public static ByteArrayPayload newByteArrayPayload(byte[] data) {
       return new ByteArrayPayload(checkNotNull(data, "data"));
    }
 
+   public static ByteSourcePayload newByteSourcePayload(ByteSource data) {
+      return new ByteSourcePayload(checkNotNull(data, "data"));
+   }
+
+   /**
+    * @deprecated see newPayload(ByteSource)
+    */
+   @Deprecated
    public static StringPayload newStringPayload(String data) {
       return new StringPayload(checkNotNull(data, "data"));
    }
 
+   /**
+    * @deprecated see newPayload(ByteSource)
+    */
+   @Deprecated
    public static FilePayload newFilePayload(File data) {
       return new FilePayload(checkNotNull(data, "data"));
    }

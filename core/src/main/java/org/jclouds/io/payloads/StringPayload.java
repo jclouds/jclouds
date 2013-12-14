@@ -26,7 +26,9 @@ import com.google.common.base.Charsets;
  * a different encoding, please use {@link ByteArrayPayload}.
  * 
  * @author Adrian Cole
+ * @deprecated see ByteSourcePayload
  */
+@Deprecated
 public class StringPayload extends BasePayload<String> {
 
    private final byte[] bytes;

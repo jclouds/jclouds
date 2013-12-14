@@ -26,7 +26,9 @@ import java.io.IOException;
 
 /**
  * @author Adrian Cole
+ * @deprecated see ByteSourcePayload
  */
+@Deprecated
 public class FilePayload extends BasePayload<File> {
 
    public FilePayload(File content) {

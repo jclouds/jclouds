@@ -33,6 +33,7 @@ import com.google.common.base.Objects;
 import com.google.common.base.Objects.ToStringHelper;
 import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.Multimap;
+import com.google.common.io.ByteSource;
 
 /**
  * Represents a request that can be executed within {@link HttpCommandExecutorService}
@@ -65,15 +66,28 @@ public class HttpMessage extends PayloadEnclosingImpl {
       
       /**
        * @see HttpMessage#getPayload()
+       * @deprecated see payload(ByteSource.wrap(byte[]))
        */
+      @Deprecated
       public T payload(byte [] payload) {
          this.payload = Payloads.newByteArrayPayload(checkNotNull(payload, "payload"));
+         return self();
+      }
+
+      /**
+       * @see HttpMessage#getPayload()
+       */
+      @Deprecated
+      public T payload(ByteSource payload) {
+         this.payload = Payloads.newByteSourcePayload(checkNotNull(payload, "payload"));
          return self();
       }
       
       /**
        * @see HttpMessage#getPayload()
+       * @deprecated see payload(Files.asByteSource(File))
        */
+      @Deprecated
       public T payload(File payload) {
          this.payload = Payloads.newFilePayload(checkNotNull(payload, "payload"));
          return self();
@@ -89,7 +103,9 @@ public class HttpMessage extends PayloadEnclosingImpl {
       
       /**
        * @see HttpMessage#getPayload()
+       * @deprecated see payload(ByteSource.wrap(String.getBytes()))
        */
+      @Deprecated
       public T payload(String payload) {
          this.payload = Payloads.newStringPayload(checkNotNull(payload, "payload"));
          return self();

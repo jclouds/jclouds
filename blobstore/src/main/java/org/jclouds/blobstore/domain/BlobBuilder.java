@@ -25,6 +25,7 @@ import java.util.Map;
 import org.jclouds.blobstore.domain.internal.BlobBuilderImpl;
 import org.jclouds.io.Payload;
 
+import com.google.common.io.ByteSource;
 import com.google.inject.ImplementedBy;
 
 /**
@@ -77,21 +78,32 @@ public interface BlobBuilder {
     * 
     * @param payload
     *           payload you wish to construct the {@link Blob} with.
+    * @deprecated see payload(ByteSource.wrap(byte[])
     */
+   @Deprecated
    PayloadBlobBuilder payload(byte[] payload);
+
+   /**
+    * @param payload payload you wish to construct the {@link Blob} with.
+    */
+   PayloadBlobBuilder payload(ByteSource byteSource);
 
    /**
     * 
     * @param payload
     *           payload you wish to construct the {@link Blob} with.
+    * @deprecated see payload(ByteSource.wrap(String.getBytes()))
     */
+   @Deprecated
    PayloadBlobBuilder payload(String payload);
 
    /**
     * 
     * @param payload
     *           payload you wish to construct the {@link Blob} with.
+    * @deprecated see payload(Files.asByteSource(File))
     */
+   @Deprecated
    PayloadBlobBuilder payload(File payload);
 
    /**
