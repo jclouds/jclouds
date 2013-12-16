@@ -29,7 +29,6 @@ import static org.jclouds.openstack.nova.v2_0.domain.Address.createV4;
 import static org.jclouds.openstack.nova.v2_0.domain.Address.createV6;
 
 import java.net.Inet4Address;
-import java.util.Collection;
 import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Set;
@@ -38,7 +37,6 @@ import javax.annotation.Resource;
 import javax.inject.Inject;
 import javax.inject.Named;
 
-import com.google.common.collect.Sets;
 import org.jclouds.collect.Memoized;
 import org.jclouds.compute.domain.ComputeMetadata;
 import org.jclouds.compute.domain.Hardware;
@@ -62,7 +60,6 @@ import org.jclouds.util.InetAddresses2;
 
 import com.google.common.base.Function;
 import com.google.common.base.Predicate;
-import com.google.common.base.Predicates;
 import com.google.common.base.Supplier;
 import com.google.common.net.InetAddresses;
 
