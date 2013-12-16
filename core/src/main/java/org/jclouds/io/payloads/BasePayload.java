@@ -25,6 +25,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
+import com.google.common.base.Throwables;
+
 import org.jclouds.io.MutableContentMetadata;
 import org.jclouds.io.Payload;
 
@@ -43,6 +45,15 @@ public abstract class BasePayload<V> implements Payload {
    protected BasePayload(V content, MutableContentMetadata contentMetadata) {
       this.content = checkNotNull(content, "content");
       this.contentMetadata = checkNotNull(contentMetadata, "contentMetadata");
+   }
+
+   @Override
+   public InputStream getInput() {
+      try {
+         return openStream();
+      } catch (IOException ioe) {
+         throw Throwables.propagate(ioe);
+      }
    }
 
    /**

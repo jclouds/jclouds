@@ -20,10 +20,9 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.InputStream;
+import java.io.IOException;
 
-import com.google.common.base.Throwables;
 
 /**
  * @author Adrian Cole
@@ -40,12 +39,8 @@ public class FilePayload extends BasePayload<File> {
     * {@inheritDoc}
     */
    @Override
-   public InputStream getInput() {
-      try {
-         return new FileInputStream(content);
-      } catch (FileNotFoundException e) {
-         throw Throwables.propagate(e);
-      }
+   public InputStream openStream() throws IOException {
+      return new FileInputStream(content);
    }
 
 }

@@ -22,7 +22,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
 
-import com.google.common.base.Throwables;
 import com.google.common.collect.Lists;
 import com.google.common.io.InputSupplier;
 
@@ -40,14 +39,10 @@ public class InputStreamSupplierPayload extends BasePayload<InputSupplier<? exte
     * {@inheritDoc}
     */
    @Override
-   public InputStream getInput() {
-      try {
-         InputStream returnVal = content.getInput();
-         toClose.add(returnVal);
-         return returnVal;
-      } catch (IOException e) {
-         throw Throwables.propagate(e);
-      }
+   public InputStream openStream() throws IOException {
+      InputStream returnVal = content.getInput();
+      toClose.add(returnVal);
+      return returnVal;
    }
 
    /**

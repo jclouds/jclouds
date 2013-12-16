@@ -46,7 +46,7 @@ public class PhantomPayload extends BasePayload<Object> {
     * {@inheritDoc}
     */
    @Override
-   public InputStream getInput() {
+   public InputStream openStream() {
       throw new UnsupportedOperationException();
    }
 

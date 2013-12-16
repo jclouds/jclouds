@@ -61,6 +61,15 @@ public class StreamingPayload implements Payload {
     *            this payload is for streaming writes only
     */
    @Override
+   public InputStream openStream() {
+      throw new UnsupportedOperationException("this payload is for streaming writes only");
+   }
+
+   /**
+    * @throws UnsupportedOperationException
+    *            this payload is for streaming writes only
+    */
+   @Override
    public InputStream getInput() {
       throw new UnsupportedOperationException("this payload is for streaming writes only");
    }

@@ -33,7 +33,7 @@ public class InputStreamPayload extends BasePayload<InputStream> {
     * {@inheritDoc}
     */
    @Override
-   public InputStream getInput() {
+   public InputStream openStream() {
       return content;
    }
 

@@ -178,15 +178,12 @@ public class ApacheHCUtils {
       }
 
       @Override
-      public InputStream getInput() {
+      public InputStream openStream() throws IOException {
          try {
             return content.getContent();
          } catch (IllegalStateException e) {
-            Throwables.propagate(e);
-         } catch (IOException e) {
-            Throwables.propagate(e);
+            throw Throwables.propagate(e);
          }
-         return null;
       }
 
       @Override

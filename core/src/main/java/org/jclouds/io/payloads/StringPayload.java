@@ -43,7 +43,7 @@ public class StringPayload extends BasePayload<String> {
     * {@inheritDoc}
     */
    @Override
-   public InputStream getInput() {
+   public InputStream openStream() {
       return new ByteArrayInputStream(bytes);
    }
 

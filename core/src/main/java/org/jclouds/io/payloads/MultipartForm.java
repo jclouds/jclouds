@@ -16,7 +16,6 @@
  */
 package org.jclouds.io.payloads;
 
-import static com.google.common.base.Throwables.propagate;
 import static com.google.common.collect.Lists.newArrayList;
 import static com.google.common.io.ByteStreams.join;
 import static com.google.common.io.ByteStreams.newInputStreamSupplier;
@@ -89,13 +88,8 @@ public class MultipartForm extends BasePayload<Iterable<? extends Part>> {
    }
 
    @Override
-   public InputStream getInput() {
-      try {
-         return chain.getInput();
-      } catch (IOException e) {
-         propagate(e);
-         return null;
-      }
+   public InputStream openStream() throws IOException {
+      return chain.getInput();
    }
 
    @Override

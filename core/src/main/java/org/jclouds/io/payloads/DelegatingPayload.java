@@ -41,6 +41,14 @@ public class DelegatingPayload implements Payload {
     * {@inheritDoc}
     */
    @Override
+   public InputStream openStream() throws IOException {
+      return delegate.openStream();
+   }
+
+   /**
+    * {@inheritDoc}
+    */
+   @Override
    public InputStream getInput() {
       return delegate.getInput();
    }

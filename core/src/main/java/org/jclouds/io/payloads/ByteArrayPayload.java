@@ -41,7 +41,7 @@ public class ByteArrayPayload extends BasePayload<byte[]> {
     * {@inheritDoc}
     */
    @Override
-   public InputStream getInput() {
+   public InputStream openStream() {
       return new ByteArrayInputStream(content);
    }
 

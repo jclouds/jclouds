@@ -37,7 +37,7 @@ public class UrlEncodedFormPayload extends BasePayload<String> {
     * {@inheritDoc}
     */
    @Override
-   public InputStream getInput() {
+   public InputStream openStream() {
       return toInputStream(content);
    }
 
