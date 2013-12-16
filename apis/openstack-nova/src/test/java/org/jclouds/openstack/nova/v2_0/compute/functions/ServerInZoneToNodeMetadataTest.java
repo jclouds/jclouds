@@ -94,7 +94,109 @@ public class ServerInZoneToNodeMetadataTest {
             existingImage.getOperatingSystem(), existingImage);
    }
 
-   // TODO: clean up this syntax
+   @Test
+   public void testNullAccessIPs() {
+      Hardware existingHardware = new HardwareBuilder().id("az-1.region-a.geo-1/52415800-8b69-11e0-9b19-734f216543fd")
+            .providerId("52415800-8b69-11e0-9b19-734f216543fd").location(zone).build();
+      Image existingImage = new ImageBuilder().id("az-1.region-a.geo-1/52415800-8b69-11e0-9b19-734f6f006e54")
+            .operatingSystem(OperatingSystem.builder().family(OsFamily.LINUX).description("foobuntu").build())
+            .providerId("52415800-8b69-11e0-9b19-734f6f006e54").description("foobuntu").status(Image.Status.AVAILABLE)
+            .location(zone).build();
+
+      Set<Image> images = existingImage == null ? ImmutableSet.<Image> of() : ImmutableSet.of(existingImage);
+      Set<Hardware> hardwares = existingHardware == null ? ImmutableSet.<Hardware> of() : ImmutableSet
+            .of(existingHardware);
+      Server serverToConvert = new ParseServerTest().expected().toBuilder()
+            .accessIPv4(null)
+            .accessIPv6(null)
+            .build();
+
+      ServerInZone serverInZoneToConvert = new ServerInZone(serverToConvert, "az-1.region-a.geo-1");
+
+      ServerInZoneToNodeMetadata converter = new ServerInZoneToNodeMetadata(
+            NovaComputeServiceContextModule.toPortableNodeStatus, locationIndex, Suppliers
+            .<Set<? extends Image>> ofInstance(images), Suppliers
+            .<Set<? extends Hardware>> ofInstance(hardwares), namingConvention);
+
+      NodeMetadata convertedNodeMetadata = converter.apply(serverInZoneToConvert);
+
+      assertNotNull(convertedNodeMetadata.getPrivateAddresses());
+      assertEquals(convertedNodeMetadata.getPrivateAddresses(), ImmutableSet.of("10.176.42.16"));
+
+      assertNotNull(convertedNodeMetadata.getPublicAddresses());
+      // note jclouds doesn't yet support ipv6 b/c not tested yet
+      assertEquals(convertedNodeMetadata.getPublicAddresses(), ImmutableSet.of("67.23.10.132", "67.23.10.131"));
+   }
+
+   @Test
+   public void testDuplicateAccessIPs() {
+      Hardware existingHardware = new HardwareBuilder().id("az-1.region-a.geo-1/52415800-8b69-11e0-9b19-734f216543fd")
+            .providerId("52415800-8b69-11e0-9b19-734f216543fd").location(zone).build();
+      Image existingImage = new ImageBuilder().id("az-1.region-a.geo-1/52415800-8b69-11e0-9b19-734f6f006e54")
+            .operatingSystem(OperatingSystem.builder().family(OsFamily.LINUX).description("foobuntu").build())
+            .providerId("52415800-8b69-11e0-9b19-734f6f006e54").description("foobuntu").status(Image.Status.AVAILABLE)
+            .location(zone).build();
+
+      Set<Image> images = existingImage == null ? ImmutableSet.<Image> of() : ImmutableSet.of(existingImage);
+      Set<Hardware> hardwares = existingHardware == null ? ImmutableSet.<Hardware> of() : ImmutableSet
+            .of(existingHardware);
+      Server serverToConvert = new ParseServerTest().expected().toBuilder()
+            .accessIPv4("67.23.10.132")
+            .accessIPv6("::babe:67.23.10.132")
+            .build();
+
+      ServerInZone serverInZoneToConvert = new ServerInZone(serverToConvert, "az-1.region-a.geo-1");
+
+      ServerInZoneToNodeMetadata converter = new ServerInZoneToNodeMetadata(
+            NovaComputeServiceContextModule.toPortableNodeStatus, locationIndex, Suppliers
+            .<Set<? extends Image>> ofInstance(images), Suppliers
+            .<Set<? extends Hardware>> ofInstance(hardwares), namingConvention);
+
+      NodeMetadata convertedNodeMetadata = converter.apply(serverInZoneToConvert);
+
+      assertNotNull(convertedNodeMetadata.getPrivateAddresses());
+      assertEquals(convertedNodeMetadata.getPrivateAddresses(), ImmutableSet.of("10.176.42.16"));
+
+      assertNotNull(convertedNodeMetadata.getPublicAddresses());
+      // note jclouds doesn't yet support ipv6 b/c not tested yet
+      assertEquals(convertedNodeMetadata.getPublicAddresses(), ImmutableSet.of("67.23.10.132", "67.23.10.131"));
+   }
+
+   @Test
+   public void testAlternateAccessIPs() {
+      Hardware existingHardware = new HardwareBuilder().id("az-1.region-a.geo-1/52415800-8b69-11e0-9b19-734f216543fd")
+            .providerId("52415800-8b69-11e0-9b19-734f216543fd").location(zone).build();
+      Image existingImage = new ImageBuilder().id("az-1.region-a.geo-1/52415800-8b69-11e0-9b19-734f6f006e54")
+            .operatingSystem(OperatingSystem.builder().family(OsFamily.LINUX).description("foobuntu").build())
+            .providerId("52415800-8b69-11e0-9b19-734f6f006e54").description("foobuntu").status(Image.Status.AVAILABLE)
+            .location(zone).build();
+
+      Set<Image> images = existingImage == null ? ImmutableSet.<Image> of() : ImmutableSet.of(existingImage);
+      Set<Hardware> hardwares = existingHardware == null ? ImmutableSet.<Hardware> of() : ImmutableSet
+            .of(existingHardware);
+      Server serverToConvert = new ParseServerTest().expected().toBuilder()
+            .accessIPv4("76.32.1.231")
+            .accessIPv6("::babe:76.32.1.231")
+            .build();
+
+      ServerInZone serverInZoneToConvert = new ServerInZone(serverToConvert, "az-1.region-a.geo-1");
+
+      ServerInZoneToNodeMetadata converter = new ServerInZoneToNodeMetadata(
+            NovaComputeServiceContextModule.toPortableNodeStatus, locationIndex, Suppliers
+            .<Set<? extends Image>> ofInstance(images), Suppliers
+            .<Set<? extends Hardware>> ofInstance(hardwares), namingConvention);
+
+      NodeMetadata convertedNodeMetadata = converter.apply(serverInZoneToConvert);
+
+      assertNotNull(convertedNodeMetadata.getPrivateAddresses());
+      assertEquals(convertedNodeMetadata.getPrivateAddresses(), ImmutableSet.of("10.176.42.16"));
+
+      assertNotNull(convertedNodeMetadata.getPublicAddresses());
+      // note jclouds doesn't yet support ipv6 b/c not tested yet
+      assertEquals(convertedNodeMetadata.getPublicAddresses(), ImmutableSet.of("67.23.10.132", "67.23.10.131", "76.32.1.231"));
+   }
+
+      // TODO: clean up this syntax
    private void checkHardwareAndImageStatus(Hardware expectedHardware, Hardware existingHardware,
          String expectedImageId, OperatingSystem expectedOs, Image existingImage) {
 

@@ -18,13 +18,18 @@ package org.jclouds.openstack.nova.v2_0.compute.functions;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.base.Preconditions.checkState;
+import static com.google.common.base.Predicates.not;
 import static com.google.common.collect.Iterables.filter;
 import static com.google.common.collect.Iterables.find;
 import static com.google.common.collect.Iterables.transform;
+import static com.google.common.collect.Sets.newHashSet;
 import static org.jclouds.compute.util.ComputeServiceUtils.addMetadataAndParseTagsFromCommaDelimitedValue;
 import static org.jclouds.compute.util.ComputeServiceUtils.groupFromMapOrName;
+import static org.jclouds.openstack.nova.v2_0.domain.Address.createV4;
+import static org.jclouds.openstack.nova.v2_0.domain.Address.createV6;
 
 import java.net.Inet4Address;
+import java.util.Collection;
 import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Set;
@@ -33,6 +38,7 @@ import javax.annotation.Resource;
 import javax.inject.Inject;
 import javax.inject.Named;
 
+import com.google.common.collect.Sets;
 import org.jclouds.collect.Memoized;
 import org.jclouds.compute.domain.ComputeMetadata;
 import org.jclouds.compute.domain.Hardware;
@@ -107,12 +113,29 @@ public class ServerInZoneToNodeMetadata implements Function<ServerInZone, NodeMe
       builder.operatingSystem(findOperatingSystemForServerOrNull(serverInZone));
       builder.hardware(findHardwareForServerOrNull(serverInZone));
       builder.status(toPortableNodeStatus.get(from.getStatus()));
-      builder.publicAddresses(filter(
-            transform(filter(from.getAddresses().values(), Predicates.not(isPrivateAddress)),
-                  AddressToStringTransformationFunction.INSTANCE), isInet4Address));
-      builder.privateAddresses(filter(
-            transform(filter(from.getAddresses().values(), isPrivateAddress), AddressToStringTransformationFunction.INSTANCE), isInet4Address));
-      
+
+      Set<Address> addresses = newHashSet(from.getAddresses().values());
+      if (from.getAccessIPv4() != null) {
+         addresses.add(createV4(from.getAccessIPv4()));
+      }
+      if (from.getAccessIPv6() != null) {
+         addresses.add(createV6(from.getAccessIPv6()));
+      }
+
+      builder.publicAddresses(
+            filter(
+                  transform(
+                        filter(addresses, not(isPrivateAddress)),
+                        AddressToStringTransformationFunction.INSTANCE),
+                  isInet4Address));
+
+      builder.privateAddresses(
+            filter(
+                  transform(
+                        filter(addresses, isPrivateAddress),
+                        AddressToStringTransformationFunction.INSTANCE),
+                  isInet4Address));
+
       for (Link link: from.getLinks()) {
          if (link.getRelation().equals(Link.Relation.SELF)) {
             builder.uri(link.getHref());

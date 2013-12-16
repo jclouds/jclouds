@@ -39,6 +39,9 @@ import com.google.common.collect.ImmutableMultimap;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 
+import static org.jclouds.openstack.nova.v2_0.domain.Address.createV4;
+import static org.jclouds.openstack.nova.v2_0.domain.Address.createV6;
+
 /**
  * @author Adrian Cole
  */
@@ -97,9 +100,8 @@ public class ParseServerTest extends BaseItemParserTest<Server> {
                   new ImmutableMap.Builder<String, String>().put("Server Label", "Web Head 1")
                         .put("Image Version", "2.1").build())
             .addresses(ImmutableMultimap.<String, Address>builder()
-                  .putAll("public", Address.createV4("67.23.10.132"), Address.createV6("::babe:67.23.10.132"),
-                  Address.createV4("67.23.10.131"), Address.createV6("::babe:4317:0A83"))
-                  .putAll("private", Address.createV4("10.176.42.16"), Address.createV6("::babe:10.176.42.16"))
+                  .putAll("public", createV4("67.23.10.132"), createV6("::babe:67.23.10.132"), createV4("67.23.10.131"), createV6("::babe:4317:0A83"))
+                  .putAll("private", createV4("10.176.42.16"), createV6("::babe:10.176.42.16"))
                   .build())
             .links(Link.create(
                         Relation.SELF, URI.create("http://servers.api.openstack.org/v1.1/1234/servers/52415800-8b69-11e0-9b19-734f6f006e54")),
