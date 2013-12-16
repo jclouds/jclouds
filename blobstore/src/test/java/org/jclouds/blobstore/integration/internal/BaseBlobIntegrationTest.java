@@ -24,7 +24,6 @@ import static org.jclouds.blobstore.options.GetOptions.Builder.ifModifiedSince;
 import static org.jclouds.blobstore.options.GetOptions.Builder.ifUnmodifiedSince;
 import static org.jclouds.blobstore.options.GetOptions.Builder.range;
 import static org.jclouds.concurrent.FutureIterables.awaitCompletion;
-import static org.jclouds.io.ByteSources.asByteSource;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
 import static org.testng.Assert.assertNull;
@@ -105,7 +104,7 @@ public class BaseBlobIntegrationTest extends BaseBlobStoreIntegrationTest {
    }
 
    protected static byte[] md5Supplier(InputSupplier<? extends InputStream> supplier) throws IOException {
-      return asByteSource(supplier.getInput()).hash(md5()).asBytes();
+      return ByteStreams.hash(supplier, md5()).asBytes();
    }
 
    @SuppressWarnings("unchecked")

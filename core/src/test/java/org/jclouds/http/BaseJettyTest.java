@@ -70,6 +70,7 @@ import com.google.common.collect.ImmutableMap.Builder;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.LinkedHashMultimap;
 import com.google.common.collect.Multimap;
+import com.google.common.io.ByteStreams;
 import com.google.common.io.InputSupplier;
 import com.google.inject.Injector;
 import com.google.inject.Module;
@@ -94,7 +95,7 @@ public abstract class BaseJettyTest {
       this.testPort = testPort;
 
       final InputSupplier<InputStream> oneHundredOneConstitutions = getTestDataSupplier();
-      md5 = base64().encode(asByteSource(oneHundredOneConstitutions.getInput()).hash(md5()).asBytes());
+      md5 = base64().encode(ByteStreams.hash(oneHundredOneConstitutions, md5()).asBytes());
 
       Handler server1Handler = new AbstractHandler() {
          public void handle(String target, Request baseRequest, HttpServletRequest request, HttpServletResponse response)

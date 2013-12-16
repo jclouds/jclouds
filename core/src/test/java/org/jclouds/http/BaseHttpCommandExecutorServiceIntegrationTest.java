@@ -21,6 +21,7 @@ import static com.google.common.io.BaseEncoding.base64;
 import static com.google.common.io.Closeables.closeQuietly;
 import static java.lang.String.format;
 import static org.jclouds.http.options.GetOptions.Builder.tail;
+import static org.jclouds.io.ByteSources.asByteSource;
 import static org.jclouds.io.Payloads.newFilePayload;
 import static org.jclouds.io.Payloads.newStringPayload;
 import static org.jclouds.util.Throwables2.getFirstThrowableOfType;
@@ -45,7 +46,6 @@ import org.testng.annotations.Test;
 import com.google.common.base.Charsets;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Multimap;
-import com.google.common.io.ByteSource;
 import com.google.common.io.CharSink;
 import com.google.common.io.Files;
 
@@ -131,12 +131,7 @@ public abstract class BaseHttpCommandExecutorServiceIntegrationTest extends Base
    }
 
    private void assertValidMd5(final InputStream input) throws IOException {
-      assertEquals(base64().encode(new ByteSource() {
-         @Override
-         public InputStream openStream() {
-            return input;
-         }
-      }.hash(md5()).asBytes()), md5);
+      assertEquals(base64().encode(asByteSource(input).hash(md5()).asBytes()), md5);
    }
 
    private InputStream getConsitution() throws MalformedURLException, IOException {

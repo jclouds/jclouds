@@ -21,7 +21,6 @@ import static com.google.common.io.ByteStreams.join;
 import static com.google.common.io.ByteStreams.newInputStreamSupplier;
 import static com.google.common.io.ByteStreams.toByteArray;
 import static org.jclouds.aws.s3.blobstore.options.AWSS3PutOptions.Builder.storageClass;
-import static org.jclouds.io.ByteSources.asByteSource;
 import static org.jclouds.io.Payloads.newByteArrayPayload;
 import static org.jclouds.s3.options.ListBucketOptions.Builder.withPrefix;
 import static org.testng.Assert.assertEquals;
@@ -62,6 +61,7 @@ import org.testng.annotations.Test;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
+import com.google.common.io.ByteStreams;
 import com.google.common.io.Files;
 import com.google.common.io.InputSupplier;
 
@@ -89,7 +89,7 @@ public class AWSS3ClientLiveTest extends S3ClientLiveTest {
    public void setUpResourcesOnThisThread(ITestContext testContext) throws Exception {
       super.setUpResourcesOnThisThread(testContext);
       oneHundredOneConstitutions = getTestDataSupplier();
-      oneHundredOneConstitutionsMD5 = asByteSource(oneHundredOneConstitutions.getInput()).hash(md5()).asBytes();
+      oneHundredOneConstitutionsMD5 = ByteStreams.hash(oneHundredOneConstitutions, md5()).asBytes();
    }
 
    @SuppressWarnings("unchecked")

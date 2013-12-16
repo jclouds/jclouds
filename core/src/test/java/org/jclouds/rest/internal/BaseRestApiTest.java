@@ -23,7 +23,6 @@ import static org.easymock.EasyMock.createMock;
 import static org.eclipse.jetty.http.HttpHeaders.TRANSFER_ENCODING;
 import static org.jclouds.Constants.PROPERTY_IO_WORKER_THREADS;
 import static org.jclouds.Constants.PROPERTY_USER_THREADS;
-import static org.jclouds.io.ByteSources.asByteSource;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNull;
 
@@ -50,6 +49,7 @@ import org.testng.annotations.Test;
 import com.google.common.collect.Multimap;
 import com.google.common.collect.SortedSetMultimap;
 import com.google.common.collect.TreeMultimap;
+import com.google.common.io.ByteStreams;
 import com.google.common.reflect.Invokable;
 import com.google.common.util.concurrent.ListeningExecutorService;
 import com.google.common.util.concurrent.SimpleTimeLimiter;
@@ -125,7 +125,7 @@ public abstract class BaseRestApiTest {
          Long length = Long.valueOf(payload.getBytes().length);
          try {
             assertContentHeadersEqual(request, contentType, contentDispositon, contentEncoding, contentLanguage,
-                  length, contentMD5 ? asByteSource(request.getPayload().getInput()).hash(md5()).asBytes() : null, expires);
+                  length, contentMD5 ? ByteStreams.hash(request.getPayload(), md5()).asBytes() : null, expires);
          } catch (IOException e) {
             propagate(e);
          }

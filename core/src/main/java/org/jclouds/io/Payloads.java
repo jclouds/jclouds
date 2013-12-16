@@ -18,7 +18,6 @@ package org.jclouds.io;
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.hash.Hashing.md5;
 import static com.google.common.io.ByteStreams.toByteArray;
-import static org.jclouds.io.ByteSources.asByteSource;
 
 import java.io.File;
 import java.io.IOException;
@@ -31,6 +30,7 @@ import org.jclouds.io.payloads.StringPayload;
 import org.jclouds.io.payloads.UrlEncodedFormPayload;
 
 import com.google.common.collect.Multimap;
+import com.google.common.io.ByteStreams;
 
 /**
  * 
@@ -102,7 +102,7 @@ public class Payloads {
          oldContentMetadata.setContentMD5(payload.getContentMetadata().getContentMD5());
          payload.setContentMetadata(oldContentMetadata);
       }
-      payload.getContentMetadata().setContentMD5(asByteSource(payload.getInput()).hash(md5()).asBytes());
+      payload.getContentMetadata().setContentMD5(ByteStreams.hash(payload, md5()).asBytes());
       return payload;
    }
    

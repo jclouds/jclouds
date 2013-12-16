@@ -35,7 +35,6 @@ import org.testng.annotations.Test;
 import static org.testng.Assert.assertEquals;
 
 import static com.google.common.hash.Hashing.md5;
-import static org.jclouds.io.ByteSources.asByteSource;
 
 /**
  * 
@@ -82,7 +81,7 @@ public class AzureBlobIntegrationLiveTest extends BaseBlobIntegrationTest {
     */
    public void testMultipartChunkedFileStream() throws IOException, InterruptedException {
       oneHundredOneConstitutions = getTestDataSupplier();
-      oneHundredOneConstitutionsMD5 = asByteSource(oneHundredOneConstitutions.getInput()).hash(md5()).asBytes();
+      oneHundredOneConstitutionsMD5 = ByteStreams.hash(oneHundredOneConstitutions, md5()).asBytes();
       File file = new File("target/const.txt");
       Files.copy(oneHundredOneConstitutions, file);
       String containerName = getContainerName();
