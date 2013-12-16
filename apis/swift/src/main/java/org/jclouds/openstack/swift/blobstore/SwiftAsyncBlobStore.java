@@ -67,8 +67,8 @@ import com.google.common.util.concurrent.ListeningExecutorService;
 /**
  * 
  * @author Adrian Cole
- * @deprecated will be removed in jclouds 1.7, as async interfaces are no longer
- *             supported. Please use {@link SwiftBlobStore}
+ * @deprecated This class will be removed in jclouds 2.0, as async interfaces are no longer
+ *             supported. Please use {@link SwiftBlobStore}.
  */
 @Deprecated
 @Singleton
