@@ -20,7 +20,8 @@ package org.jclouds.openstack.swift;
  * Functionality that's in Swift, and not in CloudFiles.
  * 
  * @author Adrian Cole
+ * @deprecated This interface will be removed in jclouds 2.0.
  */
+@Deprecated
 public interface SwiftKeystoneClient extends SwiftClient {
-
 }

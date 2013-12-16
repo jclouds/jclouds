@@ -45,7 +45,7 @@ public class SwiftKeystoneApiMetadata extends SwiftApiMetadata {
 
    /**
     * @deprecated please use {@code org.jclouds.ContextBuilder#buildApi(SwiftKeystoneClient.class)} as
-    *             {@link SwiftKeystoneAsyncClient} interface will be removed in jclouds 1.7.
+    *             {@link SwiftKeystoneAsyncClient} interface will be removed in jclouds 2.0.
     */
    @Deprecated
    public static final TypeToken<org.jclouds.rest.RestContext<SwiftKeystoneClient, SwiftKeystoneAsyncClient>> CONTEXT_TOKEN = new TypeToken<org.jclouds.rest.RestContext<SwiftKeystoneClient, SwiftKeystoneAsyncClient>>() {

@@ -73,13 +73,14 @@ import com.google.common.util.concurrent.ListenableFuture;
 import com.google.inject.Provides;
 
 /**
- * Common features between OpenStack Swift and CloudFiles
+ * Common features in OpenStack Swift.
  * 
  * @see CommonSwiftClient
- * @see <a href="http://www.rackspacecloud.com/cf-devguide-20090812.pdf" />
+ * 
  * @author Adrian Cole
- * @deprecated please use {@code org.jclouds.ContextBuilder#buildApi(CommonSwiftClient.class)} as
- *             {@link CommonSwiftAsyncClient} interface will be removed in jclouds 1.7.
+ * 
+ * @deprecated Please use {@code org.jclouds.ContextBuilder#buildApi(CommonSwiftClient.class)} as
+ *             {@link CommonSwiftAsyncClient} will be removed in jclouds 2.0.
  */
 @Deprecated
 public interface CommonSwiftAsyncClient extends Closeable {

@@ -44,7 +44,7 @@ public class SwiftApiMetadata extends BaseRestApiMetadata {
 
    /**
     * @deprecated please use {@code org.jclouds.ContextBuilder#buildApi(SwiftClient.class)} as
-    *             {@link SwiftAsyncClient} interface will be removed in jclouds 1.7.
+    *             {@link SwiftAsyncClient} interface will be removed in jclouds 2.0.
     */
    @Deprecated
    public static final TypeToken<org.jclouds.rest.RestContext<? extends SwiftClient, ? extends SwiftAsyncClient>> CONTEXT_TOKEN = new TypeToken<org.jclouds.rest.RestContext<? extends SwiftClient, ? extends SwiftAsyncClient>>() {
