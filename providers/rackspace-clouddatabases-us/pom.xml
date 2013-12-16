@@ -54,7 +54,7 @@
       <version>${project.version}</version>
     </dependency>
     <dependency>
-      <groupId>org.apache.jclouds.labs</groupId>
+      <groupId>org.apache.jclouds.api</groupId>
       <artifactId>openstack-trove</artifactId>
       <version>${project.version}</version>
     </dependency>
@@ -76,7 +76,7 @@
       <scope>test</scope>
     </dependency>
     <dependency>
-      <groupId>org.apache.jclouds.labs</groupId>
+      <groupId>org.apache.jclouds.api</groupId>
       <artifactId>openstack-trove</artifactId>
       <version>${project.version}</version>
       <type>test-jar</type>
