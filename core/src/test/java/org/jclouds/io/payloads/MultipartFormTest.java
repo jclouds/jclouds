@@ -74,8 +74,8 @@ public class MultipartFormTest {
       }
 
       @Override
-      public InputStream getInput() {
-         return realPayload.getInput();
+      public InputStream openStream() throws IOException {
+         return realPayload.openStream();
       }
 
       @Override

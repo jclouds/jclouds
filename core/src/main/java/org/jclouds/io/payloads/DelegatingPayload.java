@@ -22,6 +22,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
+import com.google.common.base.Throwables;
+
 import org.jclouds.io.MutableContentMetadata;
 import org.jclouds.io.Payload;
 
@@ -50,7 +52,11 @@ public class DelegatingPayload implements Payload {
     */
    @Override
    public InputStream getInput() {
-      return delegate.getInput();
+      try {
+         return openStream();
+      } catch (IOException ioe) {
+         throw Throwables.propagate(ioe);
+      }
    }
 
    /**

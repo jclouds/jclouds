@@ -44,8 +44,8 @@ public abstract class BaseCipherPayload extends DelegatingPayload {
    public abstract Cipher initializeCipher(Key key);
 
    @Override
-   public CipherInputStream openStream() {
-      return new CipherInputStream(super.getInput(), initializeCipher(key));
+   public CipherInputStream openStream() throws IOException {
+      return new CipherInputStream(super.openStream(), initializeCipher(key));
    }
 
    @Override
