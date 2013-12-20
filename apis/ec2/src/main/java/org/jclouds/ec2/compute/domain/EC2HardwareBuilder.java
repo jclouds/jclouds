@@ -451,6 +451,65 @@ public class EC2HardwareBuilder extends HardwareBuilder {
             .virtualizationType(VirtualizationType.HVM);
    }
 
+   /**
+    * @see InstanceType#I2_XLARGE
+    */
+   public static EC2HardwareBuilder i2_xlarge() {
+      return new EC2HardwareBuilder(InstanceType.I2_XLARGE)
+              .ram(30 * 1024 + 512)
+              .processors(ImmutableList.of(new Processor(4.0, 3.5)))
+              .volumes(ImmutableList.<Volume> of(new VolumeImpl(10.0f, "/dev/sda1", true, false),
+                      new VolumeImpl(800.0f, "/dev/sdb", false, false)))
+              .virtualizationType(VirtualizationType.HVM);
+   }
+
+   /**
+    * @see InstanceType#I2_2XLARGE
+    */
+   public static EC2HardwareBuilder i2_2xlarge() {
+      return new EC2HardwareBuilder(InstanceType.I2_2XLARGE)
+              .ram(61 * 1024)
+              .processors(ImmutableList.of(new Processor(8.0, 3.375)))
+              .volumes(ImmutableList.<Volume> of(new VolumeImpl(10.0f, "/dev/sda1", true, false),
+                      new VolumeImpl(800.0f, "/dev/sdb", false, false),
+                      new VolumeImpl(800.0f, "/dev/sdc", false, false)))
+              .virtualizationType(VirtualizationType.HVM);
+   }
+
+   /**
+    * @see InstanceType#I2_4XLARGE
+    */
+   public static EC2HardwareBuilder i2_4xlarge() {
+      return new EC2HardwareBuilder(InstanceType.I2_4XLARGE)
+              .ram(122 * 1024)
+              .processors(ImmutableList.of(new Processor(16.0, 3.3125)))
+              .volumes(ImmutableList.<Volume> of(new VolumeImpl(10.0f, "/dev/sda1", true, false),
+                      new VolumeImpl(800.0f, "/dev/sdb", false, false),
+                      new VolumeImpl(800.0f, "/dev/sdc", false, false),
+                      new VolumeImpl(800.0f, "/dev/sdd", false, false),
+                      new VolumeImpl(800.0f, "/dev/sde", false, false)))
+              .virtualizationType(VirtualizationType.HVM);
+   }
+
+   /**
+    * @see InstanceType#I2_8XLARGE
+    */
+   public static EC2HardwareBuilder i2_8xlarge() {
+      return new EC2HardwareBuilder(InstanceType.I2_8XLARGE)
+              .ram(244 * 1024)
+              .processors(ImmutableList.of(new Processor(32.0, 3.25)))
+              .volumes(ImmutableList.<Volume> of(new VolumeImpl(10.0f, "/dev/sda1", true, false),
+                      new VolumeImpl(800.0f, "/dev/sdb", false, false),
+                      new VolumeImpl(800.0f, "/dev/sdc", false, false),
+                      new VolumeImpl(800.0f, "/dev/sdd", false, false),
+                      new VolumeImpl(800.0f, "/dev/sde", false, false),
+                      new VolumeImpl(800.0f, "/dev/sdf", false, false),
+                      new VolumeImpl(800.0f, "/dev/sdg", false, false),
+                      new VolumeImpl(800.0f, "/dev/sdh", false, false),
+                      new VolumeImpl(800.0f, "/dev/sdi", false, false)))
+              .virtualizationType(VirtualizationType.HVM);
+   }
+
    public static EC2HardwareBuilder hi1_4xlarge() {
       return new EC2HardwareBuilder(InstanceType.HI1_4XLARGE)
             .ram(60 * 1024 + 512)
