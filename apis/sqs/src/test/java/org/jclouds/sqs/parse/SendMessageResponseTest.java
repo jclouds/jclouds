@@ -27,7 +27,7 @@ import org.jclouds.sqs.domain.MessageIdAndMD5;
 import org.jclouds.sqs.xml.RegexMessageIdAndMD5Handler;
 import org.testng.annotations.Test;
 
-import com.google.common.hash.HashCodes;
+import com.google.common.hash.HashCode;
 
 /**
  * @author Adrian Cole
@@ -51,6 +51,6 @@ public class SendMessageResponseTest {
 
    public MessageIdAndMD5 expected() {
       return MessageIdAndMD5.builder().id("c332b2b0-b61f-42d3-8832-d03ebd89f68d")
-            .md5(HashCodes.fromBytes(base16().lowerCase().decode("e32aedf2b2b25355d04b1507055532e6"))).build();
+            .md5(HashCode.fromBytes(base16().lowerCase().decode("e32aedf2b2b25355d04b1507055532e6"))).build();
    }
 }

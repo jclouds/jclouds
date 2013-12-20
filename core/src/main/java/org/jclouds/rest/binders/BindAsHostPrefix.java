@@ -42,6 +42,6 @@ public class BindAsHostPrefix implements Binder {
       checkNotNull(payload, "hostprefix");
       checkArgument(isValid(request.getEndpoint().getHost()), "this is only valid for hostnames: " + request);
       InternetDomainName name = from(request.getEndpoint().getHost()).child(payload.toString());
-      return (R) request.toBuilder().endpoint(uriBuilder(request.getEndpoint()).host(name.name()).build()).build();
+      return (R) request.toBuilder().endpoint(uriBuilder(request.getEndpoint()).host(name.toString()).build()).build();
    }
 }
