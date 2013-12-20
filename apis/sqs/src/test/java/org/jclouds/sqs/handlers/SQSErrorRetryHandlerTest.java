@@ -63,7 +63,7 @@ public class SQSErrorRetryHandlerTest {
       assertTrue(retry.shouldRetryRequestOnError(command, response, error));
       assertEquals(command.getFailureCount(), 60);
       // allow for slightly inaccurate system timers
-      assertTrue(watch.stop().elapsedTime(TimeUnit.MILLISECONDS) >= 98);
+      assertTrue(watch.stop().elapsed(TimeUnit.MILLISECONDS) >= 98);
    }
    
 
@@ -78,7 +78,7 @@ public class SQSErrorRetryHandlerTest {
       Stopwatch watch = new Stopwatch().start();
       assertFalse(retry.shouldRetryRequestOnError(command, response, error));
       assertEquals(command.getFailureCount(), 61);
-      assertTrue(watch.stop().elapsedTime(TimeUnit.MILLISECONDS) < 100);
+      assertTrue(watch.stop().elapsed(TimeUnit.MILLISECONDS) < 100);
    }
    
    HttpCommand createHttpCommandForFailureCount(final int failureCount) {

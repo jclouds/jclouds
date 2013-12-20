@@ -27,7 +27,7 @@ import org.jclouds.sqs.domain.MessageIdAndMD5;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Iterables;
-import com.google.common.hash.HashCodes;
+import com.google.common.hash.HashCode;
 
 /**
  * @see <a href=
@@ -59,7 +59,7 @@ public class SendMessageBatchResultEntryHandler extends
       } else if (qName.equals("MessageId")) {
          builder.id(currentOrNull(currentText));
       } else if (qName.equals("MD5OfMessageBody")) {
-         builder.md5(HashCodes.fromBytes(base16().lowerCase().decode(currentOrNull(currentText))));
+         builder.md5(HashCode.fromBytes(base16().lowerCase().decode(currentOrNull(currentText))));
       }
       currentText = new StringBuilder();
    }

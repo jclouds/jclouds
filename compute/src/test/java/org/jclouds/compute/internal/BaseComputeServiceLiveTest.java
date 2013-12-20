@@ -660,7 +660,7 @@ public abstract class BaseComputeServiceLiveTest extends BaseComputeServiceConte
       ServiceStats stats = new ServiceStats();
       Stopwatch watch = new Stopwatch().start();
       ExecResponse exec = client.runScriptOnNode(node.getId(), process, runAsRoot(false).wrapInInitScript(false));
-      stats.backgroundProcessMilliseconds = watch.elapsedTime(TimeUnit.MILLISECONDS);
+      stats.backgroundProcessMilliseconds = watch.elapsed(TimeUnit.MILLISECONDS);
       watch.reset().start();
       
       HostAndPort socket = null;
@@ -670,7 +670,7 @@ public abstract class BaseComputeServiceLiveTest extends BaseComputeServiceConte
          throw new NoSuchElementException(format("%s%n%s%s", e.getMessage(), exec.getOutput(), exec.getError()));
       }
 
-      stats.socketOpenMilliseconds = watch.elapsedTime(TimeUnit.MILLISECONDS);
+      stats.socketOpenMilliseconds = watch.elapsed(TimeUnit.MILLISECONDS);
 
       getAnonymousLogger().info(format("<< %s on node(%s)[%s] %s", processName, node.getId(), socket, stats));
       return stats;
@@ -702,7 +702,7 @@ public abstract class BaseComputeServiceLiveTest extends BaseComputeServiceConte
       Stopwatch watch = new Stopwatch().start();
       NodeMetadata node = getOnlyElement(client.createNodesInGroup(group, 1,
             inboundPorts(22, 8080).blockOnPort(22, 300).userMetadata(userMetadata).tags(tags)));
-      long createSeconds = watch.elapsedTime(TimeUnit.SECONDS);
+      long createSeconds = watch.elapsed(TimeUnit.SECONDS);
 
       final String nodeId = node.getId();
 
@@ -716,7 +716,7 @@ public abstract class BaseComputeServiceLiveTest extends BaseComputeServiceConte
 
       client.runScriptOnNode(nodeId, JettyStatements.install(), nameTask("configure-jetty"));
 
-      long configureSeconds = watch.elapsedTime(TimeUnit.SECONDS);
+      long configureSeconds = watch.elapsed(TimeUnit.SECONDS);
 
       getAnonymousLogger().info(
             format(

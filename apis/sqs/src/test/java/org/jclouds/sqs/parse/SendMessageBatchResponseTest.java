@@ -27,7 +27,7 @@ import org.jclouds.sqs.domain.MessageIdAndMD5;
 import org.jclouds.sqs.xml.SendMessageBatchResponseHandler;
 import org.testng.annotations.Test;
 
-import com.google.common.hash.HashCodes;
+import com.google.common.hash.HashCode;
 
 /**
  * @author Adrian Cole
@@ -54,10 +54,10 @@ public class SendMessageBatchResponseTest extends BaseHandlerTest {
             .<MessageIdAndMD5> builder()
             .put("test_msg_001",
                   MessageIdAndMD5.builder().id("0a5231c7-8bff-4955-be2e-8dc7c50a25fa")
-                        .md5(HashCodes.fromBytes(base16().lowerCase().decode("0e024d309850c78cba5eabbeff7cae71"))).build())
+                        .md5(HashCode.fromBytes(base16().lowerCase().decode("0e024d309850c78cba5eabbeff7cae71"))).build())
             .put("test_msg_002",
                   MessageIdAndMD5.builder().id("15ee1ed3-87e7-40c1-bdaa-2e49968ea7e9")
-                        .md5(HashCodes.fromBytes(base16().lowerCase().decode("7fb8146a82f95e0af155278f406862c2"))).build())
+                        .md5(HashCode.fromBytes(base16().lowerCase().decode("7fb8146a82f95e0af155278f406862c2"))).build())
             .build();
    }
 }

@@ -93,9 +93,9 @@ public abstract class Wire {
          long bytesRead = ByteStreams.copy(instream, out);
          if (bytesRead >= limit)
             logger.debug("over limit %d/%d: wrote temp file", bytesRead, limit);
-         wire(header, out.getSupplier().getInput());
+         wire(header, out.asByteSource().getInput());
          // we must call FileBackedOutputStream.reset to remove temporary file
-         return new FilterInputStream(out.getSupplier().getInput()) {
+         return new FilterInputStream(out.asByteSource().getInput()) {
             @Override
             public void close() throws IOException {
                super.close();

@@ -28,7 +28,7 @@ import org.jclouds.http.functions.ReturnStringIf2xx;
 import org.jclouds.sqs.domain.MessageIdAndMD5;
 
 import com.google.common.base.Function;
-import com.google.common.hash.HashCodes;
+import com.google.common.hash.HashCode;
 import com.google.inject.Singleton;
 
 /**
@@ -55,7 +55,7 @@ public class RegexMessageIdAndMD5Handler implements Function<HttpResponse, Messa
          if (matcher.find()) {
             return MessageIdAndMD5.builder()
                                   .id(matcher.group(1))
-                                  .md5(HashCodes.fromBytes(base16().lowerCase().decode(matcher.group(2))))
+                                  .md5(HashCode.fromBytes(base16().lowerCase().decode(matcher.group(2))))
                                   .build();
          }
       }

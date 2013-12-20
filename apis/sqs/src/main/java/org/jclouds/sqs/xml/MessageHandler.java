@@ -22,7 +22,7 @@ import static org.jclouds.util.SaxUtils.currentOrNull;
 import org.jclouds.http.functions.ParseSax;
 import org.jclouds.sqs.domain.Message;
 
-import com.google.common.hash.HashCodes;
+import com.google.common.hash.HashCode;
 
 /**
  * @see <a href=
@@ -55,7 +55,7 @@ public class MessageHandler extends ParseSax.HandlerForGeneratedRequestWithResul
       } else if (qName.equals("ReceiptHandle")) {
          builder.receiptHandle(currentOrNull(currentText));
       } else if (qName.equals("MD5OfBody")) {
-         builder.md5(HashCodes.fromBytes(base16().lowerCase().decode(currentOrNull(currentText))));
+         builder.md5(HashCode.fromBytes(base16().lowerCase().decode(currentOrNull(currentText))));
       } else if (qName.equals("Body")) {
          builder.body(currentOrNull(currentText));
       } else if (qName.equals("Name")) {
