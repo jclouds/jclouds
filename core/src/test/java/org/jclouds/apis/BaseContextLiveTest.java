@@ -29,11 +29,11 @@ import org.jclouds.logging.LoggingModules;
 import org.jclouds.logging.config.LoggingModule;
 import org.jclouds.providers.ProviderMetadata;
 import org.jclouds.providers.Providers;
+import org.jclouds.util.Closeables2;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 
 import com.google.common.collect.ImmutableSet;
-import com.google.common.io.Closeables;
 import com.google.common.reflect.TypeToken;
 import com.google.inject.Module;
 
@@ -79,7 +79,7 @@ public abstract class BaseContextLiveTest<C extends Context> {
    }
 
    protected void initializeContext() {
-      Closeables.closeQuietly(context);
+      Closeables2.closeQuietly(context);
       context = createContext(setupProperties(), setupModules());
    }
 
@@ -140,6 +140,6 @@ public abstract class BaseContextLiveTest<C extends Context> {
    
    @AfterClass(groups = { "integration", "live" })
    protected void tearDownContext() {
-      Closeables.closeQuietly(context);
+      Closeables2.closeQuietly(context);
    }
 }

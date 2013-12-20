@@ -16,7 +16,7 @@
  */
 package org.jclouds.io.payloads;
 
-import static com.google.common.io.Closeables.closeQuietly;
+import static org.jclouds.util.Closeables2.closeQuietly;
 
 import java.io.IOException;
 import java.io.InputStream;

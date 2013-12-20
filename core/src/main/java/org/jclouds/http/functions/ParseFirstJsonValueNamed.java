@@ -30,12 +30,12 @@ import javax.annotation.Resource;
 import org.jclouds.http.HttpResponse;
 import org.jclouds.json.internal.GsonWrapper;
 import org.jclouds.logging.Logger;
+import org.jclouds.util.Closeables2;
 
 import com.google.common.base.Function;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
-import com.google.common.io.Closeables;
 import com.google.common.util.concurrent.Atomics;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonToken;
@@ -88,7 +88,7 @@ public class ParseFirstJsonValueNamed<T> implements Function<HttpResponse, T> {
          throw new RuntimeException(String.format(
                "error reading from stream, parsing object named %s from http response %s", nameChoices, arg0), e);
       } finally {
-         Closeables.closeQuietly(reader);
+         Closeables2.closeQuietly(reader);
          arg0.getPayload().release();
       }
    }

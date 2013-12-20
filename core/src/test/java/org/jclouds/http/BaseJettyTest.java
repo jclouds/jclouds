@@ -23,7 +23,6 @@ import static com.google.common.io.ByteStreams.copy;
 import static com.google.common.io.ByteStreams.join;
 import static com.google.common.io.ByteStreams.newInputStreamSupplier;
 import static com.google.common.io.ByteStreams.toByteArray;
-import static com.google.common.io.Closeables.closeQuietly;
 import static com.google.common.net.HttpHeaders.CONTENT_DISPOSITION;
 import static com.google.common.net.HttpHeaders.CONTENT_ENCODING;
 import static com.google.common.net.HttpHeaders.CONTENT_LANGUAGE;
@@ -33,6 +32,7 @@ import static javax.servlet.http.HttpServletResponse.SC_OK;
 import static org.jclouds.Constants.PROPERTY_RELAX_HOSTNAME;
 import static org.jclouds.Constants.PROPERTY_TRUST_ALL_CERTS;
 import static org.jclouds.io.ByteSources.asByteSource;
+import static org.jclouds.util.Closeables2.closeQuietly;
 import static org.jclouds.util.Strings2.toStringAndClose;
 
 import java.io.ByteArrayInputStream;

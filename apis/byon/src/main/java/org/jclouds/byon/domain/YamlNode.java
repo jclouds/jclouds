@@ -22,6 +22,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.jclouds.byon.Node;
+import org.jclouds.util.Closeables2;
 import org.jclouds.util.Strings2;
 import org.yaml.snakeyaml.DumperOptions;
 import org.yaml.snakeyaml.Loader;
@@ -34,7 +35,6 @@ import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.collect.ImmutableMap.Builder;
-import com.google.common.io.Closeables;
 
 /**
  * Serializes to the following
@@ -114,7 +114,7 @@ public class YamlNode {
          try {
             return (YamlNode) new Yaml(new Loader(new Constructor(YamlNode.class))).load(in);
          } finally {
-            Closeables.closeQuietly(in);
+            Closeables2.closeQuietly(in);
          }
       }
    };

@@ -22,11 +22,11 @@ import java.io.InputStream;
 import javax.annotation.Resource;
 
 import org.jclouds.logging.Logger;
+import org.jclouds.util.Closeables2;
 
 import com.google.common.annotations.Beta;
 import com.google.common.base.Function;
 import com.google.common.io.ByteStreams;
-import com.google.common.io.Closeables;
 import com.google.common.io.InputSupplier;
 
 /**
@@ -56,7 +56,7 @@ public class CopyInputStreamIntoSupplier implements Function<InputStream, InputS
          logger.warn(e, "ignoring problem retrieving credentials");
          return null;
       } finally {
-         Closeables.closeQuietly(from);
+         Closeables2.closeQuietly(from);
       }
    }
 }

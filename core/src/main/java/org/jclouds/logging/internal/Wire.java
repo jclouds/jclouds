@@ -17,8 +17,8 @@
 package org.jclouds.logging.internal;
 
 import static com.google.common.base.Preconditions.checkNotNull;
-import static com.google.common.io.Closeables.closeQuietly;
 import static org.jclouds.io.Payloads.newPayload;
+import static org.jclouds.util.Closeables2.closeQuietly;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;

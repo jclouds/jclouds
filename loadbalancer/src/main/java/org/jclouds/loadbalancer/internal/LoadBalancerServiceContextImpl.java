@@ -27,8 +27,8 @@ import org.jclouds.loadbalancer.LoadBalancerService;
 import org.jclouds.loadbalancer.LoadBalancerServiceContext;
 import org.jclouds.location.Provider;
 import org.jclouds.rest.Utils;
+import org.jclouds.util.Closeables2;
 
-import com.google.common.io.Closeables;
 import com.google.common.reflect.TypeToken;
 
 /**
@@ -59,7 +59,7 @@ public class LoadBalancerServiceContextImpl extends BaseView implements LoadBala
 
    @Override
    public void close() {
-      Closeables.closeQuietly(delegate());
+      Closeables2.closeQuietly(delegate());
    }
 
    public int hashCode() {

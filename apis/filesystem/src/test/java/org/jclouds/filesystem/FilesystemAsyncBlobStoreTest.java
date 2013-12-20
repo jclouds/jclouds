@@ -53,6 +53,7 @@ import org.jclouds.http.HttpRequest;
 import org.jclouds.io.Payload;
 import org.jclouds.io.payloads.PhantomPayload;
 import org.jclouds.io.payloads.StringPayload;
+import org.jclouds.util.Closeables2;
 import org.jclouds.util.Strings2;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
@@ -60,7 +61,6 @@ import org.testng.annotations.Test;
 
 import com.google.common.collect.Sets;
 import com.google.common.io.ByteStreams;
-import com.google.common.io.Closeables;
 import com.google.common.io.Files;
 import com.google.common.io.InputSupplier;
 import com.google.inject.CreationException;
@@ -710,7 +710,7 @@ public class FilesystemAsyncBlobStoreTest {
         try {
             assertEquals(input.substring(1), Strings2.toString(payload));
         } finally {
-            Closeables.closeQuietly(payload);
+            Closeables2.closeQuietly(payload);
         }
 
         GetOptions getOptionsRangeTail = new GetOptions();
@@ -720,7 +720,7 @@ public class FilesystemAsyncBlobStoreTest {
         try {
             assertEquals(input.substring(5), Strings2.toString(payload));
         } finally {
-            Closeables.closeQuietly(payload);
+            Closeables2.closeQuietly(payload);
         }
 
         GetOptions getOptionsFragment = new GetOptions();
@@ -730,7 +730,7 @@ public class FilesystemAsyncBlobStoreTest {
         try {
             assertEquals(input.substring(4, 7), Strings2.toString(payload));
         } finally {
-            Closeables.closeQuietly(payload);
+            Closeables2.closeQuietly(payload);
         }
     }
 

@@ -17,7 +17,7 @@
 package org.jclouds.util;
 
 import static com.google.common.base.Preconditions.checkNotNull;
-import static com.google.common.io.Closeables.closeQuietly;
+import static org.jclouds.util.Closeables2.closeQuietly;
 import static org.jclouds.util.Patterns.TOKEN_TO_PATTERN;
 
 import java.io.ByteArrayInputStream;

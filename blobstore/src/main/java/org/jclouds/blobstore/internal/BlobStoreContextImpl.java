@@ -30,8 +30,8 @@ import org.jclouds.blobstore.attr.ConsistencyModel;
 import org.jclouds.internal.BaseView;
 import org.jclouds.location.Provider;
 import org.jclouds.rest.Utils;
+import org.jclouds.util.Closeables2;
 
-import com.google.common.io.Closeables;
 import com.google.common.reflect.TypeToken;
 
 /**
@@ -85,7 +85,7 @@ public class BlobStoreContextImpl extends BaseView implements BlobStoreContext {
 
    @Override
    public void close() {
-      Closeables.closeQuietly(delegate());
+      Closeables2.closeQuietly(delegate());
    }
 
    public int hashCode() {

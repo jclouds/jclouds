@@ -30,7 +30,6 @@ import static com.google.common.collect.Iterables.size;
 import static com.google.common.collect.Multimaps.filterKeys;
 import static com.google.common.io.BaseEncoding.base64;
 import static com.google.common.io.ByteStreams.toByteArray;
-import static com.google.common.io.Closeables.closeQuietly;
 import static com.google.common.net.HttpHeaders.CONTENT_DISPOSITION;
 import static com.google.common.net.HttpHeaders.CONTENT_ENCODING;
 import static com.google.common.net.HttpHeaders.CONTENT_LANGUAGE;
@@ -38,6 +37,7 @@ import static com.google.common.net.HttpHeaders.CONTENT_LENGTH;
 import static com.google.common.net.HttpHeaders.CONTENT_MD5;
 import static com.google.common.net.HttpHeaders.CONTENT_TYPE;
 import static com.google.common.net.HttpHeaders.EXPIRES;
+import static org.jclouds.util.Closeables2.closeQuietly;
 
 import java.io.IOException;
 import java.io.InputStream;

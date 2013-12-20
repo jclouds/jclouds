@@ -22,12 +22,12 @@ import org.jclouds.ContextBuilder;
 import org.jclouds.blobstore.BlobStore;
 import org.jclouds.blobstore.domain.StorageMetadata;
 import org.jclouds.blobstore.options.ListContainerOptions;
+import org.jclouds.util.Closeables2;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
 import com.google.common.collect.Iterables;
-import com.google.common.io.Closeables;
 import com.google.inject.Injector;
 
 /**
@@ -75,6 +75,6 @@ public class ConcatenateContainerListsTest {
    @AfterClass
    void close() {
       if (blobstore != null)
-         Closeables.closeQuietly(blobstore.getContext());
+         Closeables2.closeQuietly(blobstore.getContext());
    }
 }

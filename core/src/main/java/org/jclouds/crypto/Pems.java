@@ -26,10 +26,10 @@ import static com.google.common.base.Throwables.propagate;
 import static com.google.common.base.Throwables.propagateIfInstanceOf;
 import static com.google.common.io.BaseEncoding.base64;
 import static com.google.common.io.ByteStreams.readBytes;
-import static com.google.common.io.Closeables.closeQuietly;
 import static org.jclouds.crypto.ASN1Codec.decodeRSAPrivateKey;
 import static org.jclouds.crypto.ASN1Codec.decodeRSAPublicKey;
 import static org.jclouds.crypto.ASN1Codec.encode;
+import static org.jclouds.util.Closeables2.closeQuietly;
 
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;

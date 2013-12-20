@@ -17,9 +17,9 @@
 package org.jclouds.apis;
 
 import static com.google.common.base.Preconditions.checkNotNull;
-import static com.google.common.io.Closeables.closeQuietly;
 import static org.jclouds.Constants.PROPERTY_RELAX_HOSTNAME;
 import static org.jclouds.Constants.PROPERTY_TRUST_ALL_CERTS;
+import static org.jclouds.util.Closeables2.closeQuietly;
 
 import java.io.Closeable;
 import java.util.NoSuchElementException;
