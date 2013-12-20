@@ -301,4 +301,52 @@ public class InstanceType {
     * </ul>
     */
    public static final String C3_8XLARGE = "c3.8xlarge";
+
+   /**
+    * I2 Extra Large
+    * <ul>
+    *    <li>30.5 GiB of memory</li>
+    *    <li>14 EC2 Compute Units (4 virtual cores)</li>
+    *    <li>1 SSD-based volume with 800 GiB of instance storage</li>
+    *    <li>64-bit platform</li>
+    *    <li>I/O Performance: High</li>
+    * </ul>
+    */
+   public static final String I2_XLARGE = "i2.xlarge";
+
+   /**
+    * I2 Double Extra Large
+    * <ul>
+    *    <li>61 GiB of memory</li>
+    *    <li>27 EC2 Compute Units (8 virtual cores)</li>
+    *    <li>2 SSD-based volumes each with 800 GiB of instance storage</li>
+    *    <li>64-bit platform</li>
+    *    <li>I/O Performance: High</li>
+    * </ul>
+    */
+   public static final String I2_2XLARGE = "i2.2xlarge";
+
+   /**
+    * I2 Quadruple Extra Large
+    * <ul>
+    *    <li>122 GiB of memory</li>
+    *    <li>53 EC2 Compute Units (16 virtual cores)</li>
+    *    <li>4 SSD-based volumes each with 800 GiB of instance storage</li>
+    *    <li>64-bit platform</li>
+    *    <li>I/O Performance: High</li>
+    * </ul>
+    */
+   public static final String I2_4XLARGE = "i2.4xlarge";
+
+   /**
+    * I2 Octuple Extra Large
+    * <ul>
+    *    <li>244 GiB of memory</li>
+    *    <li>104 EC2 Compute Units (32 virtual cores)</li>
+    *    <li>8 SSD-based volumes each with 800 GiB of instance storage</li>
+    *    <li>64-bit platform</li>
+    *    <li>I/O Performance: High</li>
+    * </ul>
+    */
+   public static final String I2_8XLARGE = "i2.8xlarge";
 }
