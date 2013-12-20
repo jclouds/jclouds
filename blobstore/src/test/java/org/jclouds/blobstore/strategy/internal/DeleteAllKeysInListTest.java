@@ -22,11 +22,11 @@ import static org.testng.Assert.assertEquals;
 import org.jclouds.ContextBuilder;
 import org.jclouds.blobstore.BlobStore;
 import org.jclouds.blobstore.options.ListContainerOptions;
+import org.jclouds.util.Closeables2;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-import com.google.common.io.Closeables;
 import com.google.inject.Injector;
 
 /**
@@ -50,7 +50,7 @@ public class DeleteAllKeysInListTest {
 
    @AfterMethod
    void close() {
-      Closeables.closeQuietly(blobstore.getContext());
+      Closeables2.closeQuietly(blobstore.getContext());
    }
 
    public void testExecuteWithoutOptionsClearsRecursively() {

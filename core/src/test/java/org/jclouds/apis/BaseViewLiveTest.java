@@ -22,8 +22,8 @@ import java.util.Properties;
 
 import org.jclouds.Context;
 import org.jclouds.View;
+import org.jclouds.util.Closeables2;
 
-import com.google.common.io.Closeables;
 import com.google.common.reflect.TypeToken;
 import com.google.inject.Module;
 
@@ -37,7 +37,7 @@ public abstract class BaseViewLiveTest<V extends View> extends BaseContextLiveTe
 
    @Override
    protected void initializeContext() {
-      Closeables.closeQuietly(context);
+      Closeables2.closeQuietly(context);
       view = createView(setupProperties(), setupModules());
       context = view.unwrap();
    }

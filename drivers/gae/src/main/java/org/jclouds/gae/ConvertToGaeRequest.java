@@ -34,6 +34,7 @@ import org.jclouds.http.HttpRequest;
 import org.jclouds.http.HttpUtils;
 import org.jclouds.io.ContentMetadataCodec;
 import org.jclouds.io.Payload;
+import org.jclouds.util.Closeables2;
 
 import com.google.appengine.api.urlfetch.FetchOptions;
 import com.google.appengine.api.urlfetch.HTTPHeader;
@@ -42,7 +43,6 @@ import com.google.appengine.api.urlfetch.HTTPRequest;
 import com.google.appengine.repackaged.com.google.common.base.Throwables;
 import com.google.common.base.Function;
 import com.google.common.collect.ImmutableSet;
-import com.google.common.io.Closeables;
 
 /**
  * 
@@ -113,7 +113,7 @@ public class ConvertToGaeRequest implements Function<HttpRequest, HTTPRequest> {
          } catch (IOException e) {
             Throwables.propagate(e);
          } finally {
-            Closeables.closeQuietly(input);
+            Closeables2.closeQuietly(input);
          }
 
          for (Entry<String, String> header : contentMetadataCodec.toHeaders(

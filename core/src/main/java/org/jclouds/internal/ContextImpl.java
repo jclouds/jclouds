@@ -19,9 +19,9 @@ package org.jclouds.internal;
 import static com.google.common.base.Objects.equal;
 import static com.google.common.base.Objects.toStringHelper;
 import static com.google.common.base.Preconditions.checkNotNull;
-import static com.google.common.io.Closeables.closeQuietly;
 
 import static org.jclouds.lifecycle.Closer.State.AVAILABLE;
+import static org.jclouds.util.Closeables2.closeQuietly;
 
 import java.net.URI;
 import java.util.Map;

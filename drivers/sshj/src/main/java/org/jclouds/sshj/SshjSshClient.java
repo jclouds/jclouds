@@ -64,6 +64,7 @@ import org.jclouds.logging.Logger;
 import org.jclouds.rest.AuthorizationException;
 import org.jclouds.ssh.SshClient;
 import org.jclouds.ssh.SshException;
+import org.jclouds.util.Closeables2;
 import org.jclouds.util.Throwables2;
 
 import com.google.common.annotations.VisibleForTesting;
@@ -73,7 +74,6 @@ import com.google.common.base.Splitter;
 import com.google.common.base.Supplier;
 import com.google.common.base.Throwables;
 import com.google.common.collect.ImmutableMap;
-import com.google.common.io.Closeables;
 import com.google.common.net.HostAndPort;
 import com.google.inject.Inject;
 
@@ -475,7 +475,7 @@ public class SshjSshClient implements SshClient {
             if (session != null)
                session.close();
             if (sshClientConnection != null)
-               Closeables.closeQuietly(sshClientConnection);
+               Closeables2.closeQuietly(sshClientConnection);
          }
 
          @Override
@@ -505,8 +505,8 @@ public class SshjSshClient implements SshClient {
 
       @Override
       public void clear() {
-         Closeables.closeQuietly(output);
-         Closeables.closeQuietly(session);
+         Closeables2.closeQuietly(output);
+         Closeables2.closeQuietly(session);
       }
 
       @Override

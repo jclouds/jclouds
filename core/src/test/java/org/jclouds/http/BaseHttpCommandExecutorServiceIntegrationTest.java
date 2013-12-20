@@ -18,12 +18,12 @@ package org.jclouds.http;
 
 import static com.google.common.hash.Hashing.md5;
 import static com.google.common.io.BaseEncoding.base64;
-import static com.google.common.io.Closeables.closeQuietly;
 import static java.lang.String.format;
 import static org.jclouds.http.options.GetOptions.Builder.tail;
 import static org.jclouds.io.ByteSources.asByteSource;
 import static org.jclouds.io.Payloads.newFilePayload;
 import static org.jclouds.io.Payloads.newStringPayload;
+import static org.jclouds.util.Closeables2.closeQuietly;
 import static org.jclouds.util.Throwables2.getFirstThrowableOfType;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertTrue;

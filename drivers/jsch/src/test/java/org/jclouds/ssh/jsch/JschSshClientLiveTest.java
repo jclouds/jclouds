@@ -41,6 +41,7 @@ import org.jclouds.io.Payloads;
 import org.jclouds.logging.slf4j.config.SLF4JLoggingModule;
 import org.jclouds.ssh.SshClient;
 import org.jclouds.ssh.jsch.config.JschSshClientModule;
+import org.jclouds.util.Closeables2;
 import org.jclouds.util.Strings2;
 import org.testng.annotations.BeforeGroups;
 import org.testng.annotations.Test;
@@ -49,7 +50,6 @@ import com.google.common.base.Charsets;
 import com.google.common.base.Strings;
 import com.google.common.base.Suppliers;
 import com.google.common.collect.Lists;
-import com.google.common.io.Closeables;
 import com.google.common.io.Files;
 import com.google.common.net.HostAndPort;
 import com.google.common.util.concurrent.Futures;
@@ -273,7 +273,7 @@ public class JschSshClientLiveTest {
          assertEquals(Strings2.toStringAndClose(response.getError()), "");
          assertEquals(Strings2.toStringAndClose(response.getOutput()), "");
       } finally {
-         Closeables.closeQuietly(response);
+         Closeables2.closeQuietly(response);
       }
       assertEquals(response.getExitStatus().get(), Integer.valueOf(0));
    }

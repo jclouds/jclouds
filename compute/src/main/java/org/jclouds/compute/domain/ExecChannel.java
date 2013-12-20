@@ -23,8 +23,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
+import org.jclouds.util.Closeables2;
+
 import com.google.common.base.Supplier;
-import com.google.common.io.Closeables;
 
 /**
  * A current connection to an exec'd command.  Please ensure you call {@link ExecChannel#close}
@@ -86,9 +87,9 @@ public class ExecChannel implements Closeable {
     */
    @Override
    public void close() throws IOException {
-      Closeables.closeQuietly(input);
-      Closeables.closeQuietly(output);
-      Closeables.closeQuietly(error);
+      Closeables2.closeQuietly(input);
+      Closeables2.closeQuietly(output);
+      Closeables2.closeQuietly(error);
       closer.close();
    }
 }

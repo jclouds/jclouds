@@ -19,12 +19,12 @@ import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.base.Throwables.propagate;
 import static com.google.common.io.ByteStreams.toByteArray;
-import static com.google.common.io.Closeables.closeQuietly;
 import static com.google.common.net.HttpHeaders.CONTENT_LENGTH;
 import static com.google.common.net.HttpHeaders.HOST;
 import static com.google.common.net.HttpHeaders.USER_AGENT;
 import static org.jclouds.http.HttpUtils.filterOutContentHeaders;
 import static org.jclouds.io.Payloads.newInputStreamPayload;
+import static org.jclouds.util.Closeables2.closeQuietly;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;

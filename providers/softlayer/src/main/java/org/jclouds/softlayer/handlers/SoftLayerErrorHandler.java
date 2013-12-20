@@ -27,10 +27,10 @@ import org.jclouds.http.HttpResponseException;
 import org.jclouds.rest.AuthorizationException;
 import org.jclouds.rest.ResourceNotFoundException;
 import org.jclouds.softlayer.exceptions.SoftLayerOrderItemDuplicateException;
+import org.jclouds.util.Closeables2;
 import org.jclouds.util.Strings2;
 
 import com.google.common.base.Throwables;
-import com.google.common.io.Closeables;
 
 /**
  * This will parse and set an appropriate exception on the command object.
@@ -71,7 +71,7 @@ public class SoftLayerErrorHandler implements HttpErrorHandler {
                }
          }
       } finally {
-         Closeables.closeQuietly(response.getPayload());
+         Closeables2.closeQuietly(response.getPayload());
          command.setException(exception);
       }
    }

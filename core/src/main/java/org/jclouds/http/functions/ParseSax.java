@@ -18,8 +18,8 @@ package org.jclouds.http.functions;
 
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
-import static com.google.common.io.Closeables.closeQuietly;
 import static org.jclouds.http.HttpUtils.closeClientButKeepContentStream;
+import static org.jclouds.util.Closeables2.closeQuietly;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -41,7 +41,7 @@ import org.xml.sax.helpers.DefaultHandler;
 
 import com.google.common.base.Function;
 import com.google.common.base.Throwables;
-import com.google.common.io.Closeables;
+import org.jclouds.util.Closeables2;
 
 /**
  * This object will parse the body of an HttpResponse and return the result of type <T> back to the
@@ -85,7 +85,7 @@ public class ParseSax<T> implements Function<HttpResponse, T>, InvocationContext
       } catch (RuntimeException e) {
          return addDetailsAndPropagate(from, e);
       } finally {
-         Closeables.closeQuietly(is);
+         Closeables2.closeQuietly(is);
          from.getPayload().release();
       }
    }

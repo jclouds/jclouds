@@ -14,43 +14,34 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.jclouds.io.payloads;
 
-import static org.jclouds.util.Closeables2.closeQuietly;
+package org.jclouds.util;
 
-import java.io.InputStream;
+import java.io.Closeable;
+import java.io.IOException;
 
-/**
- * @author Adrian Cole
- */
-public class InputStreamPayload extends BasePayload<InputStream> {
+import com.google.common.base.Throwables;
+import com.google.common.io.Closeables;
 
-   public InputStreamPayload(InputStream content) {
-      super(content);
+import org.jclouds.javax.annotation.Nullable;
+
+@Deprecated
+public class Closeables2 {
+   private Closeables2() {
    }
 
    /**
-    * {@inheritDoc}
+    * Equivalent to calling {@code Closeables.close(closeable, true)}, but with no IOException in the signature.
+    *
+    * @param closeable the {@code Closeable} object to be closed, or null, in which case this method
+    *     does nothing
     */
-   @Override
-   public InputStream openStream() {
-      return content;
+   @Deprecated
+   public static void closeQuietly(@Nullable Closeable closeable) {
+      try {
+         Closeables.close(closeable, true);
+      } catch (IOException e) {
+         throw Throwables.propagate(e);
+      }
    }
-
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   public boolean isRepeatable() {
-      return false;
-   }
-
-   /**
-    * if we created the stream, then it is already consumed on close.
-    */
-   @Override
-   public void release() {
-      closeQuietly(content);
-   }
-
 }

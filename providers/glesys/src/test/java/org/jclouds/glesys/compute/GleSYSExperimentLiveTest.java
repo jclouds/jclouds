@@ -22,9 +22,8 @@ import org.jclouds.ContextBuilder;
 import org.jclouds.compute.ComputeServiceContext;
 import org.jclouds.compute.internal.BaseComputeServiceContextLiveTest;
 import org.jclouds.glesys.GleSYSProviderMetadata;
+import org.jclouds.util.Closeables2;
 import org.testng.annotations.Test;
-
-import com.google.common.io.Closeables;
 
 /**
  * 
@@ -50,7 +49,7 @@ public class GleSYSExperimentLiveTest extends BaseComputeServiceContextLiveTest 
          assertEquals(context.getComputeService().listAssignableLocations().size(), 4);
 
       } finally {
-         Closeables.closeQuietly(context);
+         Closeables2.closeQuietly(context);
       }
    }
 
