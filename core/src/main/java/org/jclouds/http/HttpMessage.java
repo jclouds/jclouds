@@ -77,7 +77,6 @@ public class HttpMessage extends PayloadEnclosingImpl {
       /**
        * @see HttpMessage#getPayload()
        */
-      @Deprecated
       public T payload(ByteSource payload) {
          this.payload = Payloads.newByteSourcePayload(checkNotNull(payload, "payload"));
          return self();
