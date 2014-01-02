@@ -100,7 +100,7 @@ public class JavaUrlHttpCommandExecutorService extends BaseHttpCommandExecutorSe
       HttpResponse.Builder<?> builder = HttpResponse.builder();
       InputStream in = null;
       try {
-         in = consumeOnClose(connection.getInputStream());
+         in = connection.getInputStream();
       } catch (IOException e) {
          in = bufferAndCloseStream(connection.getErrorStream());
       } catch (RuntimeException e) {

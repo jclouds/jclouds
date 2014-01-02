@@ -83,7 +83,7 @@ public class ApacheHCHttpCommandExecutorService extends BaseHttpCommandExecutorS
       Payload payload = null;
       if (apacheResponse.getEntity() != null)
          try {
-            payload = Payloads.newInputStreamPayload(consumeOnClose(apacheResponse.getEntity().getContent()));
+            payload = Payloads.newInputStreamPayload(apacheResponse.getEntity().getContent());
             if (apacheResponse.getEntity().getContentLength() >= 0)
                payload.getContentMetadata().setContentLength(apacheResponse.getEntity().getContentLength());
             if (apacheResponse.getEntity().getContentType() != null)

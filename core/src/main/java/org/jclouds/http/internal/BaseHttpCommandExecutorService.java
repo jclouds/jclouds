@@ -18,15 +18,11 @@ package org.jclouds.http.internal;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.base.Throwables.propagate;
-import static com.google.common.io.ByteStreams.copy;
-import static com.google.common.io.ByteStreams.nullOutputStream;
 import static org.jclouds.http.HttpUtils.checkRequestHasContentLengthOrChunkedEncoding;
 import static org.jclouds.http.HttpUtils.wirePayloadIfEnabled;
 import static org.jclouds.util.Throwables2.getFirstThrowableOfType;
 
-import java.io.FilterInputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.concurrent.Callable;
 
 import javax.annotation.Resource;
@@ -79,43 +75,6 @@ public abstract class BaseHttpCommandExecutorService<Q> implements HttpCommandEx
       this.errorHandler = checkNotNull(errorHandler, "errorHandler");
       this.ioExecutor = checkNotNull(ioExecutor, "ioExecutor");
       this.wire = checkNotNull(wire, "wire");
-   }
-
-   public static InputStream consumeOnClose(InputStream in) {
-      return new ConsumeOnCloseInputStream(in);
-   }
-
-   /**
-    * Ensures the content is always flushed.
-    * 
-    */
-   static class ConsumeOnCloseInputStream extends FilterInputStream {
-
-      protected ConsumeOnCloseInputStream(InputStream in) {
-         super(in);
-      }
-
-      boolean closed;
-
-      @Override
-      public void close() throws IOException {
-         if (!closed) {
-            try {
-               copy(this, nullOutputStream());
-            } catch (IOException e) {
-            } finally {
-               closed = true;
-               super.close();
-            }
-         }
-      }
-
-      @Override
-      protected void finalize() throws Throwable {
-         close();
-         super.finalize();
-      }
-
    }
 
    @Override
