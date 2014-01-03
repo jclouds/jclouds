@@ -70,6 +70,16 @@
     </dependency>
     <dependency>
       <groupId>org.apache.jclouds.provider</groupId>
+      <artifactId>rackspace-clouddatabases-us</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.jclouds.provider</groupId>
+      <artifactId>rackspace-clouddatabases-uk</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.jclouds.provider</groupId>
       <artifactId>aws-sqs</artifactId>
       <version>${project.version}</version>
     </dependency>
