@@ -237,8 +237,7 @@ public class SwiftAsyncBlobStore extends BaseAsyncBlobStore {
 
    @Override
    protected boolean deleteAndVerifyContainerGone(String container) {
-      sync.deleteContainerIfEmpty(container);
-      return !sync.containerExists(container);
+      return sync.deleteContainerIfEmpty(container);
    }
 
    @Override
