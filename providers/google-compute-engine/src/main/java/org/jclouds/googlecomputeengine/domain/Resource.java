@@ -16,17 +16,9 @@
  */
 package org.jclouds.googlecomputeengine.domain;
 
-import static com.google.common.base.Objects.ToStringHelper;
 import static com.google.common.base.Objects.equal;
-import static com.google.common.base.Objects.toStringHelper;
 import static com.google.common.base.Optional.fromNullable;
 import static com.google.common.base.Preconditions.checkNotNull;
-
-import java.beans.ConstructorProperties;
-import java.net.URI;
-import java.util.Date;
-
-import org.jclouds.javax.annotation.Nullable;
 
 import com.google.common.annotations.Beta;
 import com.google.common.base.CaseFormat;
@@ -35,6 +27,12 @@ import com.google.common.base.Objects;
 import com.google.common.base.Optional;
 import com.google.common.base.Splitter;
 import com.google.common.collect.Iterables;
+
+import org.jclouds.javax.annotation.Nullable;
+
+import java.beans.ConstructorProperties;
+import java.net.URI;
+import java.util.Date;
 
 /**
  * Base class for Google Compute Engine resources.
@@ -51,6 +49,10 @@ public class Resource {
       DISK_TYPE_LIST,
       FIREWALL,
       FIREWALL_LIST,
+      FORWARDING_RULE,
+      FORWARDING_RULE_LIST,
+      HTTP_HEALTH_CHECK,
+      HTTP_HEALTH_CHECK_LIST,
       IMAGE,
       IMAGE_LIST,
       OPERATION,
@@ -68,6 +70,8 @@ public class Resource {
       ROUTE_LIST,
       SNAPSHOT,
       SNAPSHOT_LIST,
+      TARGET_POOL,
+      TARGET_POOL_LIST,
       ZONE,
       ZONE_LIST;
 
@@ -171,8 +175,9 @@ public class Resource {
               && equal(this.name, that.name);
    }
 
-   protected ToStringHelper string() {
-      return toStringHelper(this)
+   @SuppressWarnings("deprecation")
+   protected Objects.ToStringHelper string() {
+      return Objects.toStringHelper(this)
               .omitNullValues()
               .add("kind", kind)
               .add("id", id)

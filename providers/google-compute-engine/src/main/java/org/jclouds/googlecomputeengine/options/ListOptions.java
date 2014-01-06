@@ -22,8 +22,6 @@ import org.jclouds.http.options.BaseHttpRequestOptions;
 
 /**
  * Allows to optionally specify a filter, max results and a page token for <code>listFirstPage()</code> REST methods.
- *
- * @see <a href="https://developers.google.com/compute/docs/reference/v1/operations/listFirstPage"/>
  */
 public class ListOptions extends BaseHttpRequestOptions {
 
@@ -72,6 +70,14 @@ public class ListOptions extends BaseHttpRequestOptions {
       return this;
    }
 
+   /**
+    * Marks the beginning of the next list page
+    */
+   public ListOptions marker(String marker) {
+      this.queryParameters.put("pageToken", checkNotNull(marker, "marker"));
+      return this;
+   }
+
    public static class Builder {
 
       /**
@@ -86,6 +92,13 @@ public class ListOptions extends BaseHttpRequestOptions {
        */
       public ListOptions maxResults(Integer maxResults) {
          return new ListOptions().maxResults(maxResults);
+      }
+
+      /**
+       * @see ListOptions#marker(String)
+       */
+      public ListOptions marker(String marker) {
+         return new ListOptions().marker(marker);
       }
    }
 }

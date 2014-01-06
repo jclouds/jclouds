@@ -50,7 +50,7 @@ public class RouteApiExpectTest extends BaseGoogleComputeEngineApiExpectTest {
               .payload(payloadFromResource("/route_get.json")).build();
 
       RouteApi api = requestsSendResponses(requestForScopes(COMPUTE_READONLY_SCOPE),
-              TOKEN_RESPONSE, get, operationResponse).getRouteApiForProject("myproject");
+              TOKEN_RESPONSE, get, operationResponse).getRouteApi("myproject");
 
       assertEquals(api.get("default-route-c99ebfbed0e1f375"),
               new ParseRouteTest().expected());
@@ -67,7 +67,7 @@ public class RouteApiExpectTest extends BaseGoogleComputeEngineApiExpectTest {
       HttpResponse operationResponse = HttpResponse.builder().statusCode(404).build();
 
       RouteApi api = requestsSendResponses(requestForScopes(COMPUTE_READONLY_SCOPE),
-              TOKEN_RESPONSE, get, operationResponse).getRouteApiForProject("myproject");
+              TOKEN_RESPONSE, get, operationResponse).getRouteApi("myproject");
 
       assertNull(api.get("default-route-c99ebfbed0e1f375"));
    }
@@ -88,7 +88,7 @@ public class RouteApiExpectTest extends BaseGoogleComputeEngineApiExpectTest {
 
       RouteApi api = requestsSendResponses(requestForScopes(COMPUTE_SCOPE),
               TOKEN_RESPONSE, insert,
-              insertRouteResponse).getRouteApiForProject("myproject");
+              insertRouteResponse).getRouteApi("myproject");
 
       assertEquals(api.createInNetwork("default-route-c99ebfbed0e1f375",
               URI.create("https://www.googleapis.com/compute/v1/projects/myproject/global/networks/default"),
@@ -114,7 +114,7 @@ public class RouteApiExpectTest extends BaseGoogleComputeEngineApiExpectTest {
               .payload(payloadFromResource("/global_operation.json")).build();
 
       RouteApi api = requestsSendResponses(requestForScopes(COMPUTE_SCOPE),
-              TOKEN_RESPONSE, delete, deleteResponse).getRouteApiForProject("myproject");
+              TOKEN_RESPONSE, delete, deleteResponse).getRouteApi("myproject");
 
       assertEquals(api.delete("default-route-c99ebfbed0e1f375"),
               new ParseOperationTest().expected());
@@ -132,7 +132,7 @@ public class RouteApiExpectTest extends BaseGoogleComputeEngineApiExpectTest {
       HttpResponse deleteResponse = HttpResponse.builder().statusCode(404).build();
 
       RouteApi api = requestsSendResponses(requestForScopes(COMPUTE_SCOPE),
-              TOKEN_RESPONSE, delete, deleteResponse).getRouteApiForProject("myproject");
+              TOKEN_RESPONSE, delete, deleteResponse).getRouteApi("myproject");
 
       assertNull(api.delete("default-route-c99ebfbed0e1f375"));
    }
@@ -150,7 +150,7 @@ public class RouteApiExpectTest extends BaseGoogleComputeEngineApiExpectTest {
               .payload(payloadFromResource("/route_list.json")).build();
 
       RouteApi api = requestsSendResponses(requestForScopes(COMPUTE_READONLY_SCOPE),
-              TOKEN_RESPONSE, list, operationResponse).getRouteApiForProject("myproject");
+              TOKEN_RESPONSE, list, operationResponse).getRouteApi("myproject");
 
       assertEquals(api.listFirstPage().toString(),
               new ParseRouteListTest().expected().toString());
@@ -168,7 +168,7 @@ public class RouteApiExpectTest extends BaseGoogleComputeEngineApiExpectTest {
       HttpResponse operationResponse = HttpResponse.builder().statusCode(404).build();
 
       RouteApi api = requestsSendResponses(requestForScopes(COMPUTE_READONLY_SCOPE),
-              TOKEN_RESPONSE, list, operationResponse).getRouteApiForProject("myproject");
+              TOKEN_RESPONSE, list, operationResponse).getRouteApi("myproject");
 
       assertTrue(api.list().concat().isEmpty());
    }

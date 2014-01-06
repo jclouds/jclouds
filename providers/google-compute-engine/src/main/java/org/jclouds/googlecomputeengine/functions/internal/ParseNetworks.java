@@ -55,7 +55,7 @@ public class ParseNetworks extends ParseJson<ListPage<Network>> {
 
             @Override
             public IterableWithMarker<Network> apply(Object input) {
-               return api.getNetworkApiForProject(projectName).listAtMarker(input.toString(), options);
+               return api.getNetworkApi(projectName).listAtMarker(input.toString(), options);
             }
          };
       }

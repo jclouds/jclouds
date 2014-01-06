@@ -40,7 +40,7 @@ public class DiskApiLiveTest extends BaseGoogleComputeEngineApiLiveTest {
    public static final int sizeGb = 1;
 
    private DiskApi api() {
-      return api.getDiskApiForProject(userProject.get());
+      return api.getDiskApi(userProject.get());
    }
 
    @Test(groups = "live")

@@ -84,7 +84,7 @@ public class RegionOperationApiExpectTest extends BaseGoogleComputeEngineApiExpe
    public void testGetOperationResponseIs2xx() throws Exception {
 
       RegionOperationApi regionOperationApi = requestsSendResponses(requestForScopes(COMPUTE_READONLY_SCOPE),
-              TOKEN_RESPONSE, GET_OPERATION_REQUEST, GET_OPERATION_RESPONSE).getRegionOperationApiForProject("myproject");
+              TOKEN_RESPONSE, GET_OPERATION_REQUEST, GET_OPERATION_RESPONSE).getRegionOperationApi("myproject");
 
       assertEquals(regionOperationApi.getInRegion("us-central1", "operation-1354084865060-4cf88735faeb8-bbbb12cb"),
               expected());
@@ -95,7 +95,7 @@ public class RegionOperationApiExpectTest extends BaseGoogleComputeEngineApiExpe
       HttpResponse operationResponse = HttpResponse.builder().statusCode(404).build();
 
       RegionOperationApi regionOperationApi = requestsSendResponses(requestForScopes(COMPUTE_READONLY_SCOPE),
-              TOKEN_RESPONSE, GET_OPERATION_REQUEST, operationResponse).getRegionOperationApiForProject("myproject");
+              TOKEN_RESPONSE, GET_OPERATION_REQUEST, operationResponse).getRegionOperationApi("myproject");
 
       assertNull(regionOperationApi.getInRegion("us-central1", "operation-1354084865060-4cf88735faeb8-bbbb12cb"));
    }
@@ -110,7 +110,7 @@ public class RegionOperationApiExpectTest extends BaseGoogleComputeEngineApiExpe
       HttpResponse operationResponse = HttpResponse.builder().statusCode(204).build();
 
       RegionOperationApi regionOperationApi = requestsSendResponses(requestForScopes(COMPUTE_SCOPE),
-              TOKEN_RESPONSE, delete, operationResponse).getRegionOperationApiForProject("myproject");
+              TOKEN_RESPONSE, delete, operationResponse).getRegionOperationApi("myproject");
 
       regionOperationApi.deleteInRegion("us-central1", "operation-1352178598164-4cdcc9d031510-4aa46279");
    }
@@ -125,7 +125,7 @@ public class RegionOperationApiExpectTest extends BaseGoogleComputeEngineApiExpe
       HttpResponse operationResponse = HttpResponse.builder().statusCode(404).build();
 
       RegionOperationApi regionOperationApi = requestsSendResponses(requestForScopes(COMPUTE_SCOPE),
-              TOKEN_RESPONSE, delete, operationResponse).getRegionOperationApiForProject("myproject");
+              TOKEN_RESPONSE, delete, operationResponse).getRegionOperationApi("myproject");
 
       regionOperationApi.deleteInRegion("us-central1", "operation-1352178598164-4cdcc9d031510-4aa46279");
    }
@@ -142,7 +142,7 @@ public class RegionOperationApiExpectTest extends BaseGoogleComputeEngineApiExpe
               .payload(payloadFromResource("/region_operation_list.json")).build();
 
       RegionOperationApi regionOperationApi = requestsSendResponses(requestForScopes(COMPUTE_READONLY_SCOPE),
-              TOKEN_RESPONSE, get, operationResponse).getRegionOperationApiForProject("myproject");
+              TOKEN_RESPONSE, get, operationResponse).getRegionOperationApi("myproject");
 
       assertEquals(regionOperationApi.listFirstPageInRegion("us-central1").toString(),
               expectedList().toString());
@@ -165,7 +165,7 @@ public class RegionOperationApiExpectTest extends BaseGoogleComputeEngineApiExpe
               .payload(payloadFromResource("/region_operation_list.json")).build();
 
       RegionOperationApi regionOperationApi = requestsSendResponses(requestForScopes(COMPUTE_READONLY_SCOPE),
-              TOKEN_RESPONSE, get, operationResponse).getRegionOperationApiForProject("myproject");
+              TOKEN_RESPONSE, get, operationResponse).getRegionOperationApi("myproject");
 
       assertEquals(regionOperationApi.listAtMarkerInRegion("us-central1", "CglPUEVSQVRJT04SOzU5MDQyMTQ4Nzg1Mi5vcGVyYXRpb24tMTM1Mj" +
               "I0NDI1ODAzMC00Y2RkYmU2YTJkNmIwLWVkMzIyMzQz",
@@ -184,7 +184,7 @@ public class RegionOperationApiExpectTest extends BaseGoogleComputeEngineApiExpe
       HttpResponse operationResponse = HttpResponse.builder().statusCode(404).build();
 
       RegionOperationApi regionOperationApi = requestsSendResponses(requestForScopes(COMPUTE_READONLY_SCOPE),
-              TOKEN_RESPONSE, get, operationResponse).getRegionOperationApiForProject("myproject");
+              TOKEN_RESPONSE, get, operationResponse).getRegionOperationApi("myproject");
 
       assertTrue(regionOperationApi.listInRegion("us-central1").concat().isEmpty());
    }

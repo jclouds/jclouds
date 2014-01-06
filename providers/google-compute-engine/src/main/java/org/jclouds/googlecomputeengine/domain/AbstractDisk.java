@@ -26,8 +26,6 @@ import com.google.common.base.Objects;
 
 /**
  * A persistent disk resource
- *
- * @see <a href="https://developers.google.com/compute/docs/reference/v1/disks"/>
  */
 @Beta
 public abstract class AbstractDisk extends Resource {

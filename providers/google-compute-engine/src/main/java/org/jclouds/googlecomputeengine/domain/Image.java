@@ -31,8 +31,6 @@ import com.google.common.base.Optional;
 
 /**
  * Represents a disk image to use on an instance.
- *
- * @see <a href="https://developers.google.com/compute/docs/reference/v1/images"/>
  */
 @Beta
 public final class Image extends Resource {

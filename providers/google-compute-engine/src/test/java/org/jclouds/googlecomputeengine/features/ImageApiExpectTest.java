@@ -79,7 +79,7 @@ public class ImageApiExpectTest extends BaseGoogleComputeEngineApiExpectTest {
               .payload(payloadFromResource("/image_get.json")).build();
 
       ImageApi imageApi = requestsSendResponses(requestForScopes(COMPUTE_READONLY_SCOPE),
-              TOKEN_RESPONSE, get, operationResponse).getImageApiForProject("centos-cloud");
+              TOKEN_RESPONSE, get, operationResponse).getImageApi("centos-cloud");
 
       assertEquals(imageApi.get("centos-6-2-v20120326"),
               new ParseImageTest().expected());
@@ -97,7 +97,7 @@ public class ImageApiExpectTest extends BaseGoogleComputeEngineApiExpectTest {
       HttpResponse operationResponse = HttpResponse.builder().statusCode(404).build();
 
       ImageApi imageApi = requestsSendResponses(requestForScopes(COMPUTE_READONLY_SCOPE),
-              TOKEN_RESPONSE, get, operationResponse).getImageApiForProject("centos-cloud");
+              TOKEN_RESPONSE, get, operationResponse).getImageApi("centos-cloud");
 
       assertNull(imageApi.get("centos-6-2-v20120326"));
    }
@@ -115,7 +115,7 @@ public class ImageApiExpectTest extends BaseGoogleComputeEngineApiExpectTest {
               .payload(payloadFromResource("/operation.json")).build();
 
       ImageApi imageApi = requestsSendResponses(requestForScopes(COMPUTE_SCOPE),
-              TOKEN_RESPONSE, delete, deleteResponse).getImageApiForProject("myproject");
+              TOKEN_RESPONSE, delete, deleteResponse).getImageApi("myproject");
 
       assertEquals(imageApi.delete("centos-6-2-v20120326"),
               new ParseOperationTest().expected());
@@ -133,7 +133,7 @@ public class ImageApiExpectTest extends BaseGoogleComputeEngineApiExpectTest {
       HttpResponse deleteResponse = HttpResponse.builder().statusCode(404).build();
 
       ImageApi imageApi = requestsSendResponses(requestForScopes(COMPUTE_SCOPE),
-              TOKEN_RESPONSE, delete, deleteResponse).getImageApiForProject("myproject");
+              TOKEN_RESPONSE, delete, deleteResponse).getImageApi("myproject");
 
       assertNull(imageApi.delete("centos-6-2-v20120326"));
    }
@@ -141,7 +141,7 @@ public class ImageApiExpectTest extends BaseGoogleComputeEngineApiExpectTest {
    public void testListImagesResponseIs2xx() {
 
       ImageApi imageApi = requestsSendResponses(requestForScopes(COMPUTE_READONLY_SCOPE),
-              TOKEN_RESPONSE, LIST_PROJECT_IMAGES_REQUEST, LIST_PROJECT_IMAGES_RESPONSE).getImageApiForProject
+              TOKEN_RESPONSE, LIST_PROJECT_IMAGES_REQUEST, LIST_PROJECT_IMAGES_RESPONSE).getImageApi
               ("myproject");
 
       assertEquals(imageApi.listFirstPage().toString(),
@@ -153,7 +153,7 @@ public class ImageApiExpectTest extends BaseGoogleComputeEngineApiExpectTest {
       HttpResponse operationResponse = HttpResponse.builder().statusCode(404).build();
 
       ImageApi imageApi = requestsSendResponses(requestForScopes(COMPUTE_READONLY_SCOPE),
-              TOKEN_RESPONSE, LIST_PROJECT_IMAGES_REQUEST, operationResponse).getImageApiForProject("myproject");
+              TOKEN_RESPONSE, LIST_PROJECT_IMAGES_REQUEST, operationResponse).getImageApi("myproject");
 
       assertTrue(imageApi.list().concat().isEmpty());
    }
@@ -173,7 +173,7 @@ public class ImageApiExpectTest extends BaseGoogleComputeEngineApiExpectTest {
                                   .payload(payloadFromResource("/operation.json")).build();
 
       ImageApi imageApi = requestsSendResponses(requestForScopes(COMPUTE_SCOPE),
-            TOKEN_RESPONSE, createImage, createImageResponse).getImageApiForProject("myproject");
+            TOKEN_RESPONSE, createImage, createImageResponse).getImageApi("myproject");
 
       assertEquals(imageApi.createImageFromPD("my-image", "https://www.googleapis.com/" +
             "compute/v1/projects/myproject/zones/us-central1-a/disks/mydisk"),
@@ -195,7 +195,7 @@ public class ImageApiExpectTest extends BaseGoogleComputeEngineApiExpectTest {
       HttpResponse createImageResponse = HttpResponse.builder().statusCode(404).build();
 
       ImageApi imageApi = requestsSendResponses(requestForScopes(COMPUTE_SCOPE),
-              TOKEN_RESPONSE, createImage, createImageResponse).getImageApiForProject("myproject");
+              TOKEN_RESPONSE, createImage, createImageResponse).getImageApi("myproject");
 
       imageApi.createImageFromPD("my-image", "https://www.googleapis.com/" +
                   "compute/v1/projects/myproject/zones/us-central1-a/disks/mydisk");

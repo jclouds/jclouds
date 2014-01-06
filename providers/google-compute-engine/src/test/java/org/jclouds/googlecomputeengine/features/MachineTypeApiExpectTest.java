@@ -68,7 +68,7 @@ public class MachineTypeApiExpectTest extends BaseGoogleComputeEngineApiExpectTe
               .payload(payloadFromResource("/machinetype.json")).build();
 
       MachineTypeApi machineTypeApi = requestsSendResponses(requestForScopes(COMPUTE_READONLY_SCOPE),
-              TOKEN_RESPONSE, get, operationResponse).getMachineTypeApiForProject("myproject");
+              TOKEN_RESPONSE, get, operationResponse).getMachineTypeApi("myproject");
 
       assertEquals(machineTypeApi.getInZone("us-central1-a", "n1-standard-1"),
               new ParseMachineTypeTest().expected());
@@ -86,7 +86,7 @@ public class MachineTypeApiExpectTest extends BaseGoogleComputeEngineApiExpectTe
       HttpResponse operationResponse = HttpResponse.builder().statusCode(404).build();
 
       MachineTypeApi machineTypeApi = requestsSendResponses(requestForScopes(COMPUTE_READONLY_SCOPE),
-              TOKEN_RESPONSE, get, operationResponse).getMachineTypeApiForProject("myproject");
+              TOKEN_RESPONSE, get, operationResponse).getMachineTypeApi("myproject");
 
       assertNull(machineTypeApi.getInZone("us-central1-a", "n1-standard-1"));
    }
@@ -94,7 +94,7 @@ public class MachineTypeApiExpectTest extends BaseGoogleComputeEngineApiExpectTe
    public void testListMachineTypeNoOptionsResponseIs2xx() throws Exception {
 
       MachineTypeApi machineTypeApi = requestsSendResponses(requestForScopes(COMPUTE_READONLY_SCOPE),
-              TOKEN_RESPONSE, LIST_MACHINE_TYPES_REQUEST, LIST_MACHINE_TYPES_RESPONSE).getMachineTypeApiForProject
+              TOKEN_RESPONSE, LIST_MACHINE_TYPES_REQUEST, LIST_MACHINE_TYPES_RESPONSE).getMachineTypeApi
               ("myproject");
 
       assertEquals(machineTypeApi.listFirstPageInZone("us-central1-a").toString(),
@@ -106,7 +106,7 @@ public class MachineTypeApiExpectTest extends BaseGoogleComputeEngineApiExpectTe
       HttpResponse operationResponse = HttpResponse.builder().statusCode(404).build();
 
       MachineTypeApi machineTypeApi = requestsSendResponses(requestForScopes(COMPUTE_READONLY_SCOPE),
-              TOKEN_RESPONSE, LIST_MACHINE_TYPES_REQUEST, operationResponse).getMachineTypeApiForProject("myproject");
+              TOKEN_RESPONSE, LIST_MACHINE_TYPES_REQUEST, operationResponse).getMachineTypeApi("myproject");
 
       assertTrue(machineTypeApi.listInZone("us-central1-a").concat().isEmpty());
    }

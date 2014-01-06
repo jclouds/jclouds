@@ -56,7 +56,7 @@ public class ParseZoneOperations extends ParseJson<ListPage<Operation>> {
 
             @Override
             public IterableWithMarker<Operation> apply(Object input) {
-               return api.getZoneOperationApiForProject(projectName)
+               return api.getZoneOperationApi(projectName)
                        .listAtMarkerInZone(zoneName, input.toString(), options);
             }
          };

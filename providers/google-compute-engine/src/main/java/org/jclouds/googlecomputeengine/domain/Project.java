@@ -30,8 +30,6 @@ import com.google.common.collect.ImmutableSet;
 
 /**
  * A Project resource is the root collection and settings resource for all Google Compute Engine resources.
- *
- * @see <a href="https://developers.google.com/compute/docs/projects"/>
  */
 @Beta
 public class Project extends Resource {

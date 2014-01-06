@@ -52,7 +52,7 @@ public class FindNetworkOrCreate extends CacheLoader<NetworkAndAddressRange, Net
 
    @Override
    public Network load(NetworkAndAddressRange in) {
-      Network network = api.getNetworkApiForProject(userProject.get()).get(in.getName());
+      Network network = api.getNetworkApi(userProject.get()).get(in.getName());
       if (network != null) {
          return network;
       } else {

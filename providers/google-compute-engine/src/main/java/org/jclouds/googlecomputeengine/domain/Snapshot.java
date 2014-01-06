@@ -29,8 +29,6 @@ import com.google.common.base.Optional;
 
 /**
  * A Persistent Disk Snapshot resource.
- *
- * @see <a href="https://developers.google.com/compute/docs/reference/v1/snapshots"/>
  */
 @Beta
 public final class Snapshot extends AbstractDisk {
@@ -50,7 +48,7 @@ public final class Snapshot extends AbstractDisk {
    }
 
    /**
-    * @return The source disk used to create this snapshot. Once the source disk
+    * @return The source disk used to insert this snapshot. Once the source disk
     *   has been deleted from the system, this field will be cleared, and will
     *   not be set even if a disk with the same name has been re-created (output only).
     */
@@ -59,7 +57,7 @@ public final class Snapshot extends AbstractDisk {
    }
 
    /**
-    * @return The ID value of the disk used to create this snapshot. This value
+    * @return The ID value of the disk used to insert this snapshot. This value
     *   may be used to determine whether the snapshot was taken from the current
     *   or a previous instance of a given disk name.
     */

@@ -70,7 +70,7 @@ public class InstanceApiLiveTest extends BaseGoogleComputeEngineApiLiveTest {
    @Override
    protected GoogleComputeEngineApi create(Properties props, Iterable<Module> modules) {
       GoogleComputeEngineApi api = super.create(props, modules);
-      URI imageUri = api.getImageApiForProject("centos-cloud")
+      URI imageUri = api.getImageApi("centos-cloud")
                         .list(new ListOptions.Builder().filter("name eq centos.*"))
                         .concat()
                         .filter(new Predicate<Image>() {
@@ -98,22 +98,22 @@ public class InstanceApiLiveTest extends BaseGoogleComputeEngineApiLiveTest {
    }
 
    private InstanceApi api() {
-      return api.getInstanceApiForProject(userProject.get());
+      return api.getInstanceApi(userProject.get());
    }
 
    private DiskApi diskApi() {
-      return api.getDiskApiForProject(userProject.get());
+      return api.getDiskApi(userProject.get());
    }
 
    @Test(groups = "live")
    public void testInsertInstance() {
 
-      // need to create the network first
-      assertGlobalOperationDoneSucessfully(api.getNetworkApiForProject(userProject.get()).createInIPv4Range
+      // need to insert the network first
+      assertGlobalOperationDoneSucessfully(api.getNetworkApi(userProject.get()).createInIPv4Range
               (INSTANCE_NETWORK_NAME, IPV4_RANGE), TIME_WAIT);
 
       DiskCreationOptions diskCreationOptions = new DiskCreationOptions().sourceImage(instance.getImage());
-      assertZoneOperationDoneSucessfully(api.getDiskApiForProject(userProject.get())
+      assertZoneOperationDoneSucessfully(api.getDiskApi(userProject.get())
                                         .createInZone(BOOT_DISK_NAME, DEFAULT_DISK_SIZE_GB, DEFAULT_ZONE_NAME, diskCreationOptions),
                                          TIME_WAIT);
 
@@ -225,11 +225,11 @@ public class InstanceApiLiveTest extends BaseGoogleComputeEngineApiLiveTest {
    public void testDeleteInstance() {
 
       assertZoneOperationDoneSucessfully(api().deleteInZone(DEFAULT_ZONE_NAME, INSTANCE_NAME), TIME_WAIT);
-      assertZoneOperationDoneSucessfully(api.getDiskApiForProject(userProject.get()).deleteInZone(DEFAULT_ZONE_NAME, DISK_NAME),
+      assertZoneOperationDoneSucessfully(api.getDiskApi(userProject.get()).deleteInZone(DEFAULT_ZONE_NAME, DISK_NAME),
               TIME_WAIT);
-      assertZoneOperationDoneSucessfully(api.getDiskApiForProject(userProject.get()).deleteInZone(DEFAULT_ZONE_NAME, BOOT_DISK_NAME),
+      assertZoneOperationDoneSucessfully(api.getDiskApi(userProject.get()).deleteInZone(DEFAULT_ZONE_NAME, BOOT_DISK_NAME),
                                          TIME_WAIT);
-      assertGlobalOperationDoneSucessfully(api.getNetworkApiForProject(userProject.get()).delete
+      assertGlobalOperationDoneSucessfully(api.getNetworkApi(userProject.get()).delete
               (INSTANCE_NETWORK_NAME), TIME_WAIT);
    }
 
@@ -242,11 +242,11 @@ public class InstanceApiLiveTest extends BaseGoogleComputeEngineApiLiveTest {
    protected void tearDownContext() {
       try {
          waitZoneOperationDone(api().deleteInZone(DEFAULT_ZONE_NAME, INSTANCE_NAME), TIME_WAIT);
-         waitZoneOperationDone(api.getDiskApiForProject(userProject.get()).deleteInZone(DEFAULT_ZONE_NAME, DISK_NAME),
+         waitZoneOperationDone(api.getDiskApi(userProject.get()).deleteInZone(DEFAULT_ZONE_NAME, DISK_NAME),
                                TIME_WAIT);
-         waitZoneOperationDone(api.getDiskApiForProject(userProject.get()).deleteInZone(DEFAULT_ZONE_NAME, BOOT_DISK_NAME),
+         waitZoneOperationDone(api.getDiskApi(userProject.get()).deleteInZone(DEFAULT_ZONE_NAME, BOOT_DISK_NAME),
                                TIME_WAIT);
-         waitGlobalOperationDone(api.getNetworkApiForProject(userProject.get()).delete
+         waitGlobalOperationDone(api.getNetworkApi(userProject.get()).delete
                                                                                 (INSTANCE_NETWORK_NAME), TIME_WAIT);
       } catch (Exception e) {
          // we don't really care about any exception here, so just delete away.

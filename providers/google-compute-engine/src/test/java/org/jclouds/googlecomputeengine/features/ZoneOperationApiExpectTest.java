@@ -81,7 +81,7 @@ public class ZoneOperationApiExpectTest extends BaseGoogleComputeEngineApiExpect
    public void testGetOperationResponseIs2xx() throws Exception {
 
       ZoneOperationApi zoneOperationApi = requestsSendResponses(requestForScopes(COMPUTE_READONLY_SCOPE),
-              TOKEN_RESPONSE, GET_ZONE_OPERATION_REQUEST, GET_ZONE_OPERATION_RESPONSE).getZoneOperationApiForProject("myproject");
+              TOKEN_RESPONSE, GET_ZONE_OPERATION_REQUEST, GET_ZONE_OPERATION_RESPONSE).getZoneOperationApi("myproject");
 
       assertEquals(zoneOperationApi.getInZone("us-central1-a", "operation-1354084865060-4cf88735faeb8-bbbb12cb"),
               expected());
@@ -92,7 +92,7 @@ public class ZoneOperationApiExpectTest extends BaseGoogleComputeEngineApiExpect
       HttpResponse operationResponse = HttpResponse.builder().statusCode(404).build();
 
       ZoneOperationApi zoneOperationApi = requestsSendResponses(requestForScopes(COMPUTE_READONLY_SCOPE),
-              TOKEN_RESPONSE, GET_ZONE_OPERATION_REQUEST, operationResponse).getZoneOperationApiForProject("myproject");
+              TOKEN_RESPONSE, GET_ZONE_OPERATION_REQUEST, operationResponse).getZoneOperationApi("myproject");
 
       assertNull(zoneOperationApi.getInZone("us-central1-a", "operation-1354084865060-4cf88735faeb8-bbbb12cb"));
    }
@@ -107,7 +107,7 @@ public class ZoneOperationApiExpectTest extends BaseGoogleComputeEngineApiExpect
       HttpResponse operationResponse = HttpResponse.builder().statusCode(204).build();
 
       ZoneOperationApi zoneOperationApi = requestsSendResponses(requestForScopes(COMPUTE_SCOPE),
-              TOKEN_RESPONSE, delete, operationResponse).getZoneOperationApiForProject("myproject");
+              TOKEN_RESPONSE, delete, operationResponse).getZoneOperationApi("myproject");
 
       zoneOperationApi.deleteInZone("us-central1-a", "operation-1352178598164-4cdcc9d031510-4aa46279");
    }
@@ -122,7 +122,7 @@ public class ZoneOperationApiExpectTest extends BaseGoogleComputeEngineApiExpect
       HttpResponse operationResponse = HttpResponse.builder().statusCode(404).build();
 
       ZoneOperationApi zoneOperationApi = requestsSendResponses(requestForScopes(COMPUTE_SCOPE),
-              TOKEN_RESPONSE, delete, operationResponse).getZoneOperationApiForProject("myproject");
+              TOKEN_RESPONSE, delete, operationResponse).getZoneOperationApi("myproject");
 
       zoneOperationApi.deleteInZone("us-central1-a", "operation-1352178598164-4cdcc9d031510-4aa46279");
    }
@@ -139,7 +139,7 @@ public class ZoneOperationApiExpectTest extends BaseGoogleComputeEngineApiExpect
               .payload(payloadFromResource("/zone_operation_list.json")).build();
 
       ZoneOperationApi zoneOperationApi = requestsSendResponses(requestForScopes(COMPUTE_READONLY_SCOPE),
-              TOKEN_RESPONSE, get, operationResponse).getZoneOperationApiForProject("myproject");
+              TOKEN_RESPONSE, get, operationResponse).getZoneOperationApi("myproject");
 
       assertEquals(zoneOperationApi.listFirstPageInZone("us-central1-a").toString(),
               expectedList().toString());
@@ -162,7 +162,7 @@ public class ZoneOperationApiExpectTest extends BaseGoogleComputeEngineApiExpect
               .payload(payloadFromResource("/zone_operation_list.json")).build();
 
       ZoneOperationApi zoneOperationApi = requestsSendResponses(requestForScopes(COMPUTE_READONLY_SCOPE),
-              TOKEN_RESPONSE, get, operationResponse).getZoneOperationApiForProject("myproject");
+              TOKEN_RESPONSE, get, operationResponse).getZoneOperationApi("myproject");
 
       assertEquals(zoneOperationApi.listAtMarkerInZone("us-central1-a",
               "CglPUEVSQVRJT04SOzU5MDQyMTQ4Nzg1Mi5vcGVyYXRpb24tMTM1Mj" +
@@ -182,7 +182,7 @@ public class ZoneOperationApiExpectTest extends BaseGoogleComputeEngineApiExpect
       HttpResponse operationResponse = HttpResponse.builder().statusCode(404).build();
 
       ZoneOperationApi zoneOperationApi = requestsSendResponses(requestForScopes(COMPUTE_READONLY_SCOPE),
-              TOKEN_RESPONSE, get, operationResponse).getZoneOperationApiForProject("myproject");
+              TOKEN_RESPONSE, get, operationResponse).getZoneOperationApi("myproject");
 
       assertTrue(zoneOperationApi.listInZone("us-central1-a").concat().isEmpty());
    }

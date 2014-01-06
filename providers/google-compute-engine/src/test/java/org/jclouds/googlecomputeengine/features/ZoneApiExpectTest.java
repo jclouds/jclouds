@@ -60,7 +60,7 @@ public class ZoneApiExpectTest extends BaseGoogleComputeEngineApiExpectTest {
               .payload(payloadFromResource("/zone_get.json")).build();
 
       ZoneApi api = requestsSendResponses(requestForScopes(COMPUTE_READONLY_SCOPE),
-              TOKEN_RESPONSE, GET_ZONE_REQ, operationResponse).getZoneApiForProject("myproject");
+              TOKEN_RESPONSE, GET_ZONE_REQ, operationResponse).getZoneApi("myproject");
 
       assertEquals(api.get("us-central1-a"),
               new ParseZoneTest().expected());
@@ -71,7 +71,7 @@ public class ZoneApiExpectTest extends BaseGoogleComputeEngineApiExpectTest {
       HttpResponse operationResponse = HttpResponse.builder().statusCode(404).build();
 
       ZoneApi api = requestsSendResponses(requestForScopes(COMPUTE_READONLY_SCOPE),
-              TOKEN_RESPONSE, GET_ZONE_REQ, operationResponse).getZoneApiForProject("myproject");
+              TOKEN_RESPONSE, GET_ZONE_REQ, operationResponse).getZoneApi("myproject");
 
       assertNull(api.get("us-central1-a"));
    }
@@ -79,7 +79,7 @@ public class ZoneApiExpectTest extends BaseGoogleComputeEngineApiExpectTest {
    public void testListZoneNoOptionsResponseIs2xx() throws Exception {
 
       ZoneApi api = requestsSendResponses(requestForScopes(COMPUTE_READONLY_SCOPE),
-              TOKEN_RESPONSE, LIST_ZONES_REQ, LIST_ZONES_RESPONSE).getZoneApiForProject("myproject");
+              TOKEN_RESPONSE, LIST_ZONES_REQ, LIST_ZONES_RESPONSE).getZoneApi("myproject");
 
       assertEquals(api.listFirstPage().toString(),
               new ParseZoneListTest().expected().toString());
@@ -90,7 +90,7 @@ public class ZoneApiExpectTest extends BaseGoogleComputeEngineApiExpectTest {
       HttpResponse operationResponse = HttpResponse.builder().statusCode(404).build();
 
       ZoneApi api = requestsSendResponses(requestForScopes(COMPUTE_READONLY_SCOPE),
-              TOKEN_RESPONSE, LIST_ZONES_REQ, operationResponse).getZoneApiForProject("myproject");
+              TOKEN_RESPONSE, LIST_ZONES_REQ, operationResponse).getZoneApi("myproject");
 
       assertTrue(api.list().concat().isEmpty());
    }

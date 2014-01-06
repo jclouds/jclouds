@@ -45,8 +45,6 @@ import org.jclouds.rest.annotations.Transform;
 
 /**
  * Provides access to MachineTypes via their REST API.
- *
- * @see <a href="https://developers.google.com/compute/docs/reference/v1/machineTypes"/>
  */
 @SkipEncoding({'/', '='})
 @RequestFilters(OAuthAuthenticationFilter.class)

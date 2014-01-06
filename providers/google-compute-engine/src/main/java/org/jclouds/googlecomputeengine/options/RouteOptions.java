@@ -22,7 +22,7 @@ import java.util.Set;
 import com.google.common.collect.ImmutableSet;
 
 /**
- * Options to create a route.
+ * Options to insert a route.
  *
  * @see org.jclouds.googlecomputeengine.domain.Route
  */

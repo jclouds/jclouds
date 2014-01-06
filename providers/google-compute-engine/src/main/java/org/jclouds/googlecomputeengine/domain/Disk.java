@@ -32,8 +32,6 @@ import com.google.common.base.Optional;
 
 /**
  * A persistent disk resource
- *
- * @see <a href="https://developers.google.com/compute/docs/reference/v1/disks"/>
  */
 @Beta
 public final class Disk extends AbstractDisk {

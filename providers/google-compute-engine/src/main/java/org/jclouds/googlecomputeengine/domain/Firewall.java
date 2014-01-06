@@ -38,9 +38,6 @@ import com.google.common.collect.TreeRangeSet;
 
 /**
  * Represents a network firewall
- *
- * @see <a href="https://developers.google.com/compute/docs/reference/v1/firewalls"/>
- * @see <a href="https://developers.google.com/compute/docs/networking#firewalls"/>
  */
 @Beta
 public final class Firewall extends Resource {

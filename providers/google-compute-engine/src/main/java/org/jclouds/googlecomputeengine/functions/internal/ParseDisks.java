@@ -58,7 +58,7 @@ public class ParseDisks extends ParseJson<ListPage<Disk>> {
 
             @Override
             public IterableWithMarker<Disk> apply(Object input) {
-               return api.getDiskApiForProject(projectName)
+               return api.getDiskApi(projectName)
                        .listAtMarkerInZone(zoneName, input.toString(), options);
             }
          };

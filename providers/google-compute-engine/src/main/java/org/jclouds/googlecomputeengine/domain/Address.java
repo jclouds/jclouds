@@ -16,10 +16,6 @@
  */
 package org.jclouds.googlecomputeengine.domain;
 
-import static com.google.common.base.Objects.equal;
-import static com.google.common.base.Optional.fromNullable;
-import static com.google.common.base.Preconditions.checkNotNull;
-
 import java.beans.ConstructorProperties;
 import java.net.URI;
 import java.util.Date;
@@ -28,10 +24,12 @@ import com.google.common.annotations.Beta;
 import com.google.common.base.Objects;
 import com.google.common.base.Optional;
 
+import static com.google.common.base.Objects.equal;
+import static com.google.common.base.Optional.fromNullable;
+import static com.google.common.base.Preconditions.checkNotNull;
+
 /**
  * Represents an Address resource.
- *
- * @see <a href="https://developers.google.com/compute/docs/reference/v1/addresses"/>
  */
 @Beta
 public final class Address extends Resource {
@@ -100,6 +98,7 @@ public final class Address extends Resource {
    /**
     * {@inheritDoc}
     */
+   @SuppressWarnings("deprecation")
    @Override
    protected Objects.ToStringHelper string() {
       return super.string()

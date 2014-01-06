@@ -70,7 +70,7 @@ public class NetworkToSecurityGroup implements Function<Network, SecurityGroup> 
 
       ListOptions options = new ListOptions.Builder().filter("network eq .*/" + network.getName());
 
-      for (Firewall fw : api.getFirewallApiForProject(project.get()).list(options).concat()) {
+      for (Firewall fw : api.getFirewallApi(project.get()).list(options).concat()) {
          permBuilder.addAll(firewallToPerms.apply(fw));
       }
 

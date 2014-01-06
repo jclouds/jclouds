@@ -60,7 +60,7 @@ public class NetworkToSecurityGroupTest {
       FirewallApi fwApi = createMock(FirewallApi.class);
 
       ListOptions options = new Builder().filter("network eq .*/jclouds-test");
-      expect(api.getFirewallApiForProject(projectSupplier.get()))
+      expect(api.getFirewallApi(projectSupplier.get()))
               .andReturn(fwApi);
       expect(fwApi.list(options)).andReturn(PagedIterables.of(IterableWithMarkers.from(ImmutableSet.of(FirewallToIpPermissionTest.fwForTest()))));
 

@@ -48,7 +48,7 @@ public class NetworkApiExpectTest extends BaseGoogleComputeEngineApiExpectTest {
    public void testGetNetworkResponseIs2xx() throws Exception {
 
       NetworkApi api = requestsSendResponses(requestForScopes(COMPUTE_READONLY_SCOPE),
-              TOKEN_RESPONSE, GET_NETWORK_REQUEST, GET_NETWORK_RESPONSE).getNetworkApiForProject("myproject");
+              TOKEN_RESPONSE, GET_NETWORK_REQUEST, GET_NETWORK_RESPONSE).getNetworkApi("myproject");
 
       assertEquals(api.get("jclouds-test"),
               new ParseNetworkTest().expected());
@@ -65,7 +65,7 @@ public class NetworkApiExpectTest extends BaseGoogleComputeEngineApiExpectTest {
       HttpResponse operationResponse = HttpResponse.builder().statusCode(404).build();
 
       NetworkApi api = requestsSendResponses(requestForScopes(COMPUTE_READONLY_SCOPE),
-              TOKEN_RESPONSE, get, operationResponse).getNetworkApiForProject("myproject");
+              TOKEN_RESPONSE, get, operationResponse).getNetworkApi("myproject");
 
       assertNull(api.get("jclouds-test"));
    }
@@ -85,7 +85,7 @@ public class NetworkApiExpectTest extends BaseGoogleComputeEngineApiExpectTest {
 
       NetworkApi api = requestsSendResponses(requestForScopes(COMPUTE_SCOPE),
               TOKEN_RESPONSE, insert,
-              insertNetworkResponse).getNetworkApiForProject("myproject");
+              insertNetworkResponse).getNetworkApi("myproject");
 
       assertEquals(api.createInIPv4Range("test-network", "10.0.0.0/8"), new ParseOperationTest().expected());
    }
@@ -103,7 +103,7 @@ public class NetworkApiExpectTest extends BaseGoogleComputeEngineApiExpectTest {
               .payload(payloadFromResource("/operation.json")).build();
 
       NetworkApi api = requestsSendResponses(requestForScopes(COMPUTE_SCOPE),
-              TOKEN_RESPONSE, delete, deleteResponse).getNetworkApiForProject("myproject");
+              TOKEN_RESPONSE, delete, deleteResponse).getNetworkApi("myproject");
 
       assertEquals(api.delete("jclouds-test"),
               new ParseOperationTest().expected());
@@ -121,7 +121,7 @@ public class NetworkApiExpectTest extends BaseGoogleComputeEngineApiExpectTest {
       HttpResponse deleteResponse = HttpResponse.builder().statusCode(404).build();
 
       NetworkApi api = requestsSendResponses(requestForScopes(COMPUTE_SCOPE),
-              TOKEN_RESPONSE, delete, deleteResponse).getNetworkApiForProject("myproject");
+              TOKEN_RESPONSE, delete, deleteResponse).getNetworkApi("myproject");
 
       assertNull(api.delete("jclouds-test"));
    }
@@ -139,7 +139,7 @@ public class NetworkApiExpectTest extends BaseGoogleComputeEngineApiExpectTest {
               .payload(payloadFromResource("/network_list.json")).build();
 
       NetworkApi api = requestsSendResponses(requestForScopes(COMPUTE_READONLY_SCOPE),
-              TOKEN_RESPONSE, list, operationResponse).getNetworkApiForProject("myproject");
+              TOKEN_RESPONSE, list, operationResponse).getNetworkApi("myproject");
 
       assertEquals(api.listFirstPage().toString(),
               new ParseNetworkListTest().expected().toString());
@@ -157,7 +157,7 @@ public class NetworkApiExpectTest extends BaseGoogleComputeEngineApiExpectTest {
       HttpResponse operationResponse = HttpResponse.builder().statusCode(404).build();
 
       NetworkApi api = requestsSendResponses(requestForScopes(COMPUTE_READONLY_SCOPE),
-              TOKEN_RESPONSE, list, operationResponse).getNetworkApiForProject("myproject");
+              TOKEN_RESPONSE, list, operationResponse).getNetworkApi("myproject");
 
       assertTrue(api.list().concat().isEmpty());
    }

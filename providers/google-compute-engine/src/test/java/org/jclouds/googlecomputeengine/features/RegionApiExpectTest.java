@@ -57,7 +57,7 @@ public class RegionApiExpectTest extends BaseGoogleComputeEngineApiExpectTest {
               .payload(payloadFromResource("/region_get.json")).build();
 
       RegionApi api = requestsSendResponses(requestForScopes(COMPUTE_READONLY_SCOPE),
-              TOKEN_RESPONSE, GET_REGION_REQ, operationResponse).getRegionApiForProject("myproject");
+              TOKEN_RESPONSE, GET_REGION_REQ, operationResponse).getRegionApi("myproject");
 
       assertEquals(api.get("us-central1"),
               new ParseRegionTest().expected());
@@ -68,7 +68,7 @@ public class RegionApiExpectTest extends BaseGoogleComputeEngineApiExpectTest {
       HttpResponse operationResponse = HttpResponse.builder().statusCode(404).build();
 
       RegionApi api = requestsSendResponses(requestForScopes(COMPUTE_READONLY_SCOPE),
-              TOKEN_RESPONSE, GET_REGION_REQ, operationResponse).getRegionApiForProject("myproject");
+              TOKEN_RESPONSE, GET_REGION_REQ, operationResponse).getRegionApi("myproject");
 
       assertNull(api.get("us-central1"));
    }
@@ -76,7 +76,7 @@ public class RegionApiExpectTest extends BaseGoogleComputeEngineApiExpectTest {
    public void testListRegionNoOptionsResponseIs2xx() throws Exception {
 
       RegionApi api = requestsSendResponses(requestForScopes(COMPUTE_READONLY_SCOPE),
-              TOKEN_RESPONSE, LIST_REGIONS_REQ, LIST_REGIONS_RESPONSE).getRegionApiForProject("myproject");
+              TOKEN_RESPONSE, LIST_REGIONS_REQ, LIST_REGIONS_RESPONSE).getRegionApi("myproject");
 
       assertEquals(api.listFirstPage().toString(),
               new ParseRegionListTest().expected().toString());
@@ -87,7 +87,7 @@ public class RegionApiExpectTest extends BaseGoogleComputeEngineApiExpectTest {
       HttpResponse operationResponse = HttpResponse.builder().statusCode(404).build();
 
       RegionApi api = requestsSendResponses(requestForScopes(COMPUTE_READONLY_SCOPE),
-              TOKEN_RESPONSE, LIST_REGIONS_REQ, operationResponse).getRegionApiForProject("myproject");
+              TOKEN_RESPONSE, LIST_REGIONS_REQ, operationResponse).getRegionApi("myproject");
 
       assertTrue(api.list().concat().isEmpty());
    }

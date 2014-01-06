@@ -42,14 +42,14 @@ public class FirewallApiLiveTest extends BaseGoogleComputeEngineApiLiveTest {
    private static final int TIME_WAIT = 30;
 
    private FirewallApi api() {
-      return api.getFirewallApiForProject(userProject.get());
+      return api.getFirewallApi(userProject.get());
    }
 
    @Test(groups = "live")
    public void testInsertFirewall() {
 
-      // need to create the network first
-      assertGlobalOperationDoneSucessfully(api.getNetworkApiForProject(userProject.get()).createInIPv4Range
+      // need to insert the network first
+      assertGlobalOperationDoneSucessfully(api.getNetworkApi(userProject.get()).createInIPv4Range
               (FIREWALL_NETWORK_NAME, IPV4_RANGE), TIME_WAIT);
 
       FirewallOptions firewall = new FirewallOptions()
@@ -149,7 +149,7 @@ public class FirewallApiLiveTest extends BaseGoogleComputeEngineApiLiveTest {
    public void testDeleteFirewall() {
 
       assertGlobalOperationDoneSucessfully(api().delete(FIREWALL_NAME), TIME_WAIT);
-      assertGlobalOperationDoneSucessfully(api.getNetworkApiForProject(userProject.get()).delete
+      assertGlobalOperationDoneSucessfully(api.getNetworkApi(userProject.get()).delete
               (FIREWALL_NETWORK_NAME), TIME_WAIT);
    }
 

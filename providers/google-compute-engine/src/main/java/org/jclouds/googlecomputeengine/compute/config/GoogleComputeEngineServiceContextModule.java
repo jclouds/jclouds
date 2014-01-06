@@ -212,7 +212,7 @@ public class GoogleComputeEngineServiceContextModule
               new Supplier<Map<URI, ? extends Location>>() {
                  @Override
                  public Map<URI, ? extends Location> get() {
-                    return uniqueIndex(transform(api.getZoneApiForProject(userProject.get()).list().concat(), zoneToLocation),
+                    return uniqueIndex(transform(api.getZoneApi(userProject.get()).list().concat(), zoneToLocation),
                             new Function<Location, URI>() {
                                @Override
                                public URI apply(Location input) {
@@ -236,7 +236,7 @@ public class GoogleComputeEngineServiceContextModule
               new Supplier<Map<URI, Region>>() {
                  @Override
                  public Map<URI, Region> get() {
-                    return uniqueIndex(api.getRegionApiForProject(userProject.get()).list().concat(),
+                    return uniqueIndex(api.getRegionApi(userProject.get()).list().concat(),
                             new Function<Region, URI>() {
                                @Override
                                public URI apply(Region input) {

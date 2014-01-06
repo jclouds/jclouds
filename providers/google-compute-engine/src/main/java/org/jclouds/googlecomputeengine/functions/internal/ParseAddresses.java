@@ -58,7 +58,7 @@ public class ParseAddresses extends ParseJson<ListPage<Address>> {
 
             @Override
             public IterableWithMarker<Address> apply(Object input) {
-               return api.getAddressApiForProject(projectName)
+               return api.getAddressApi(projectName)
                        .listAtMarkerInRegion(regionName, input.toString(), options);
             }
          };

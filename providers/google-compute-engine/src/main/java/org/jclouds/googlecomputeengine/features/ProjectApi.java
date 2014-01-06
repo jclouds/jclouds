@@ -44,8 +44,6 @@ import org.jclouds.rest.annotations.SkipEncoding;
 
 /**
  * Provides access to Projects via their REST API.
- *
- * @see <a href="https://developers.google.com/compute/docs/reference/v1/projects"/>
  */
 @SkipEncoding({'/', '='})
 @RequestFilters(OAuthAuthenticationFilter.class)

@@ -74,27 +74,27 @@ public class CreateNetworkIfNeeded implements Function<NetworkAndAddressRange, N
    public Network apply(NetworkAndAddressRange input) {
       checkNotNull(input, "input");
 
-      Network nw = api.getNetworkApiForProject(userProject.get()).get(input.getName());
+      Network nw = api.getNetworkApi(userProject.get()).get(input.getName());
       if (nw != null) {
          return nw;
       }
 
       if (input.getGateway().isPresent()) {
-         AtomicReference<Operation> operation = Atomics.newReference(api.getNetworkApiForProject(userProject
+         AtomicReference<Operation> operation = Atomics.newReference(api.getNetworkApi(userProject
                  .get()).createInIPv4RangeWithGateway(input.getName(), input.getIpV4Range(), input.getGateway().get()));
          retry(operationDonePredicate, operationCompleteCheckTimeout, operationCompleteCheckInterval,
                  MILLISECONDS).apply(operation);
 
-         checkState(!operation.get().getHttpError().isPresent(), "Could not create network, operation failed" + operation);
+         checkState(!operation.get().getHttpError().isPresent(), "Could not insert network, operation failed" + operation);
       } else {
-         AtomicReference<Operation> operation = Atomics.newReference(api.getNetworkApiForProject(userProject
+         AtomicReference<Operation> operation = Atomics.newReference(api.getNetworkApi(userProject
                  .get()).createInIPv4Range(input.getName(), input.getIpV4Range()));
          retry(operationDonePredicate, operationCompleteCheckTimeout, operationCompleteCheckInterval,
                  MILLISECONDS).apply(operation);
 
-         checkState(!operation.get().getHttpError().isPresent(), "Could not create network, operation failed" + operation);
+         checkState(!operation.get().getHttpError().isPresent(), "Could not insert network, operation failed" + operation);
       }
-      return checkNotNull(api.getNetworkApiForProject(userProject.get()).get(input.getName()),
+      return checkNotNull(api.getNetworkApi(userProject.get()).get(input.getName()),
                  "no network with name %s was found", input.getName());
    }
 }

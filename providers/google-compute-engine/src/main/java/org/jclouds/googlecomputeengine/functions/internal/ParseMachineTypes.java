@@ -55,7 +55,7 @@ public class ParseMachineTypes extends ParseJson<ListPage<MachineType>> {
 
             @Override
             public IterableWithMarker<MachineType> apply(Object input) {
-               return api.getMachineTypeApiForProject(project)
+               return api.getMachineTypeApi(project)
                        .listAtMarkerInZone(zone, input.toString(), options);
             }
          };

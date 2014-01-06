@@ -38,7 +38,7 @@ public class NetworkApiLiveTest extends BaseGoogleComputeEngineApiLiveTest {
    private static final int TIME_WAIT = 10;
 
    private NetworkApi api() {
-      return api.getNetworkApiForProject(userProject.get());
+      return api.getNetworkApi(userProject.get());
    }
 
    @Test(groups = "live")

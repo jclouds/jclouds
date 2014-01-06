@@ -57,7 +57,7 @@ public class ParseSnapshots extends ParseJson<ListPage<Snapshot>> {
 
             @Override
             public IterableWithMarker<Snapshot> apply(Object input) {
-               return api.getSnapshotApiForProject(projectName)
+               return api.getSnapshotApi(projectName)
                        .listAtMarker(input.toString(), options);
             }
          };

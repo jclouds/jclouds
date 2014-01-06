@@ -52,7 +52,7 @@ public class ZoneOperationDonePredicate implements Predicate<AtomicReference<Ope
    @Override
    public boolean apply(AtomicReference<Operation> input) {
       checkNotNull(input, "input");
-      Operation current = api.getZoneOperationApiForProject(project.get())
+      Operation current = api.getZoneOperationApi(project.get())
               .getInZone(zones.get().get(input.get().getZone().get()).getId(),
                       input.get().getName());
       switch (current.getStatus()) {

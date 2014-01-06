@@ -37,8 +37,6 @@ import com.google.common.collect.ImmutableSet;
 
 /**
  * Represents a virtual machine.
- *
- * @see <a href="https://developers.google.com/compute/docs/reference/v1/instances"/>
  */
 @Beta
 public class Instance extends Resource {

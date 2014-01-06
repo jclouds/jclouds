@@ -35,7 +35,7 @@ public class AddressApiLiveTest extends BaseGoogleComputeEngineApiLiveTest {
    private static final int TIME_WAIT = 30;
 
    private AddressApi api() {
-      return api.getAddressApiForProject(userProject.get());
+      return api.getAddressApi(userProject.get());
    }
 
    @Test(groups = "live")

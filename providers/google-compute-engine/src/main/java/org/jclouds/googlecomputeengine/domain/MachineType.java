@@ -35,8 +35,6 @@ import com.google.common.collect.ImmutableList;
 
 /**
  * Represents a machine type used to host an instance.
- *
- * @see <a href="https://developers.google.com/compute/docs/reference/v1/machineTypes"/>
  */
 @Beta
 public final class MachineType extends Resource {

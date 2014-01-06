@@ -59,7 +59,7 @@ public class FindNetworkOrCreateTest {
          }
       };
 
-      expect(api.getNetworkApiForProject(userProject.get())).andReturn(nwApi).atLeastOnce();
+      expect(api.getNetworkApi(userProject.get())).andReturn(nwApi).atLeastOnce();
 
       expect(nwApi.get("this-network")).andReturn(network);
 
@@ -103,18 +103,18 @@ public class FindNetworkOrCreateTest {
          }
       };
 
-      expect(api.getNetworkApiForProject(userProject.get())).andReturn(nwApi).atLeastOnce();
-      expect(api.getGlobalOperationApiForProject(userProject.get())).andReturn(globalApi).atLeastOnce();
+      expect(api.getNetworkApi(userProject.get())).andReturn(nwApi).atLeastOnce();
+      expect(api.getGlobalOperationApi(userProject.get())).andReturn(globalApi).atLeastOnce();
 
       expect(nwApi.createInIPv4Range("this-network", "0.0.0.0/0"))
               .andReturn(createOp);
-      expect(globalApi.get("create-op")).andReturn(createOp);
+      expect(globalApi.get("insert-op")).andReturn(createOp);
       // pre-creation
       expect(nwApi.get("this-network")).andReturn(null).times(2);
       // post-creation
       expect(nwApi.get("this-network")).andReturn(network);
 
-      expect(createOp.getName()).andReturn("create-op");
+      expect(createOp.getName()).andReturn("insert-op");
       expect(createOp.getStatus()).andReturn(Operation.Status.DONE);
       expect(createOp.getHttpError()).andReturn(fromNullable((HttpResponse)null));
       replay(api, nwApi, createOp, globalApi);

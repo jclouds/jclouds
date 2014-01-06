@@ -35,8 +35,6 @@ import com.google.common.collect.ImmutableSet;
 
 /**
  * Represents a zone resource.
- *
- * @see <a href="https://developers.google.com/compute/docs/reference/v1/zones"/>
  */
 @Beta
 public final class Zone extends Resource {

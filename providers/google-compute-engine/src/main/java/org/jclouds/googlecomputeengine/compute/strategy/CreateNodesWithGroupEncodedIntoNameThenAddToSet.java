@@ -118,7 +118,7 @@ public class CreateNodesWithGroupEncodedIntoNameThenAddToSet extends
               .getOptions());
       assert template.getOptions().equals(templateOptions) : "options didn't clone properly";
 
-      // get or create the network and create a firewall with the users configuration
+      // get or insert the network and insert a firewall with the users configuration
       Network network = getOrCreateNetwork(templateOptions, sharedResourceName);
       getOrCreateFirewalls(templateOptions, network, firewallTagNamingConvention.get(group));
       templateOptions.network(network.getSelfLink());
@@ -149,8 +149,9 @@ public class CreateNodesWithGroupEncodedIntoNameThenAddToSet extends
                                      FirewallTagNamingConvention naming) {
 
       String projectName = userProject.get();
-      FirewallApi firewallApi = api.getFirewallApiForProject(projectName);
+      FirewallApi firewallApi = api.getFirewallApi(projectName);
       Set<AtomicReference<Operation>> operations = Sets.newLinkedHashSet();
+
 
       for (Integer port : templateOptions.getInboundPorts()) {
          String name = naming.name(port);
@@ -176,7 +177,7 @@ public class CreateNodesWithGroupEncodedIntoNameThenAddToSet extends
          retry(operationDonePredicate, operationCompleteCheckTimeout, operationCompleteCheckInterval,
                  MILLISECONDS).apply(operation);
          checkState(!operation.get().getHttpError().isPresent(),
-               "Could not create firewall, operation failed" + operation);
+               "Could not insert firewall, operation failed" + operation);
       }
    }
 

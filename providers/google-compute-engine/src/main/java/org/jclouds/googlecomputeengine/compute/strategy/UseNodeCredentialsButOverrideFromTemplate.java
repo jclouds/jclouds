@@ -28,7 +28,7 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
 /**
- * GCE needs the credentials to create the node so the node credentials already take the Image credentials into account,
+ * GCE needs the credentials to insert the node so the node credentials already take the Image credentials into account,
  * as such only overriding the TemplateOptions credentials is required.
  */
 @Singleton

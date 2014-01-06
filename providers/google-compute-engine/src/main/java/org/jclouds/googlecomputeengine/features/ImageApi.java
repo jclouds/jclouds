@@ -53,9 +53,6 @@ import org.jclouds.rest.binders.BindToJsonPayload;
 
 /**
  * Provides access to Images via their REST API.
- * <p/>
- *
- * @see <a href="https://developers.google.com/compute/docs/reference/v1/images"/>
  */
 @SkipEncoding({'/', '='})
 @RequestFilters(OAuthAuthenticationFilter.class)

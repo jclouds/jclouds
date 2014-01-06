@@ -45,7 +45,7 @@ public class GlobalOperationDonePredicate implements Predicate<AtomicReference<O
    @Override
    public boolean apply(AtomicReference<Operation> input) {
       checkNotNull(input, "input");
-      Operation current = api.getGlobalOperationApiForProject(project.get()).get(input.get().getName());
+      Operation current = api.getGlobalOperationApi(project.get()).get(input.get().getName());
       switch (current.getStatus()) {
          case DONE:
             input.set(current);

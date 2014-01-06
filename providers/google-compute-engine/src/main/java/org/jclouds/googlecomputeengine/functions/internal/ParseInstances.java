@@ -56,7 +56,7 @@ public class ParseInstances extends ParseJson<ListPage<Instance>> {
 
             @Override
             public IterableWithMarker<Instance> apply(Object input) {
-               return api.getInstanceApiForProject(project)
+               return api.getInstanceApi(project)
                        .listAtMarkerInZone(zone, input.toString(), options);
             }
          };

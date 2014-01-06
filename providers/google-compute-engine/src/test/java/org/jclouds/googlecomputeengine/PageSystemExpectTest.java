@@ -49,7 +49,7 @@ public class PageSystemExpectTest extends BaseGoogleComputeEngineApiExpectTest {
               .payload(payloadFromResource("/image_list_single_page.json")).build();
 
       ImageApi imageApi = requestsSendResponses(requestForScopes(COMPUTE_READONLY_SCOPE),
-              TOKEN_RESPONSE, list, operationResponse).getImageApiForProject("myproject");
+              TOKEN_RESPONSE, list, operationResponse).getImageApi("myproject");
 
       PagedIterable<Image> images = imageApi.list();
 
@@ -98,7 +98,7 @@ public class PageSystemExpectTest extends BaseGoogleComputeEngineApiExpectTest {
 
       ImageApi imageApi = orderedRequestsSendResponses(requestForScopes(COMPUTE_READONLY_SCOPE),
               TOKEN_RESPONSE, list1, list1response, list2, list2Response, list3, list3Response)
-              .getImageApiForProject("myproject");
+              .getImageApi("myproject");
 
       PagedIterable<Image> images = imageApi.list(new ListOptions.Builder().maxResults(3));
 

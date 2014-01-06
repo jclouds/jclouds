@@ -49,7 +49,7 @@ public class GlobalOperationApiExpectTest extends BaseGoogleComputeEngineApiExpe
    public void testGetOperationResponseIs2xx() throws Exception {
 
       GlobalOperationApi operationApi = requestsSendResponses(requestForScopes(COMPUTE_READONLY_SCOPE),
-              TOKEN_RESPONSE, GET_GLOBAL_OPERATION_REQUEST, GET_GLOBAL_OPERATION_RESPONSE).getGlobalOperationApiForProject("myproject");
+              TOKEN_RESPONSE, GET_GLOBAL_OPERATION_REQUEST, GET_GLOBAL_OPERATION_RESPONSE).getGlobalOperationApi("myproject");
 
       assertEquals(operationApi.get("operation-1354084865060-4cf88735faeb8-bbbb12cb"),
               new ParseOperationTest().expected());
@@ -60,7 +60,7 @@ public class GlobalOperationApiExpectTest extends BaseGoogleComputeEngineApiExpe
       HttpResponse operationResponse = HttpResponse.builder().statusCode(404).build();
 
       GlobalOperationApi globalOperationApi = requestsSendResponses(requestForScopes(COMPUTE_READONLY_SCOPE),
-              TOKEN_RESPONSE, GET_GLOBAL_OPERATION_REQUEST, operationResponse).getGlobalOperationApiForProject("myproject");
+              TOKEN_RESPONSE, GET_GLOBAL_OPERATION_REQUEST, operationResponse).getGlobalOperationApi("myproject");
 
       assertNull(globalOperationApi.get("operation-1354084865060-4cf88735faeb8-bbbb12cb"));
    }
@@ -75,7 +75,7 @@ public class GlobalOperationApiExpectTest extends BaseGoogleComputeEngineApiExpe
       HttpResponse operationResponse = HttpResponse.builder().statusCode(204).build();
 
       GlobalOperationApi globalOperationApi = requestsSendResponses(requestForScopes(COMPUTE_SCOPE),
-              TOKEN_RESPONSE, delete, operationResponse).getGlobalOperationApiForProject("myproject");
+              TOKEN_RESPONSE, delete, operationResponse).getGlobalOperationApi("myproject");
 
       globalOperationApi.delete("operation-1352178598164-4cdcc9d031510-4aa46279");
    }
@@ -90,7 +90,7 @@ public class GlobalOperationApiExpectTest extends BaseGoogleComputeEngineApiExpe
       HttpResponse operationResponse = HttpResponse.builder().statusCode(404).build();
 
       GlobalOperationApi globalOperationApi = requestsSendResponses(requestForScopes(COMPUTE_SCOPE),
-              TOKEN_RESPONSE, delete, operationResponse).getGlobalOperationApiForProject("myproject");
+              TOKEN_RESPONSE, delete, operationResponse).getGlobalOperationApi("myproject");
 
       globalOperationApi.delete("operation-1352178598164-4cdcc9d031510-4aa46279");
    }
@@ -107,7 +107,7 @@ public class GlobalOperationApiExpectTest extends BaseGoogleComputeEngineApiExpe
               .payload(payloadFromResource("/global_operation_list.json")).build();
 
       GlobalOperationApi globalOperationApi = requestsSendResponses(requestForScopes(COMPUTE_READONLY_SCOPE),
-              TOKEN_RESPONSE, get, operationResponse).getGlobalOperationApiForProject("myproject");
+              TOKEN_RESPONSE, get, operationResponse).getGlobalOperationApi("myproject");
 
       assertEquals(globalOperationApi.listFirstPage().toString(),
               new ParseOperationListTest().expected().toString());
@@ -130,7 +130,7 @@ public class GlobalOperationApiExpectTest extends BaseGoogleComputeEngineApiExpe
               .payload(payloadFromResource("/global_operation_list.json")).build();
 
       GlobalOperationApi globalOperationApi = requestsSendResponses(requestForScopes(COMPUTE_READONLY_SCOPE),
-              TOKEN_RESPONSE, get, operationResponse).getGlobalOperationApiForProject("myproject");
+              TOKEN_RESPONSE, get, operationResponse).getGlobalOperationApi("myproject");
 
       assertEquals(globalOperationApi.listAtMarker("CglPUEVSQVRJT04SOzU5MDQyMTQ4Nzg1Mi5vcGVyYXRpb24tMTM1Mj" +
               "I0NDI1ODAzMC00Y2RkYmU2YTJkNmIwLWVkMzIyMzQz",
@@ -149,7 +149,7 @@ public class GlobalOperationApiExpectTest extends BaseGoogleComputeEngineApiExpe
       HttpResponse operationResponse = HttpResponse.builder().statusCode(404).build();
 
       GlobalOperationApi globalOperationApi = requestsSendResponses(requestForScopes(COMPUTE_READONLY_SCOPE),
-              TOKEN_RESPONSE, get, operationResponse).getGlobalOperationApiForProject("myproject");
+              TOKEN_RESPONSE, get, operationResponse).getGlobalOperationApi("myproject");
 
       assertTrue(globalOperationApi.list().concat().isEmpty());
    }

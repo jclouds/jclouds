@@ -57,7 +57,7 @@ public class SnapshotApiExpectTest extends BaseGoogleComputeEngineApiExpectTest 
               .payload(payloadFromResource("/snapshot_get.json")).build();
 
       SnapshotApi api = requestsSendResponses(requestForScopes(COMPUTE_READONLY_SCOPE),
-              TOKEN_RESPONSE, GET_SNAPSHOT_REQ, operationResponse).getSnapshotApiForProject("myproject");
+              TOKEN_RESPONSE, GET_SNAPSHOT_REQ, operationResponse).getSnapshotApi("myproject");
 
       assertEquals(api.get("test-snap"),
               new ParseSnapshotTest().expected());
@@ -68,7 +68,7 @@ public class SnapshotApiExpectTest extends BaseGoogleComputeEngineApiExpectTest 
       HttpResponse operationResponse = HttpResponse.builder().statusCode(404).build();
 
       SnapshotApi api = requestsSendResponses(requestForScopes(COMPUTE_READONLY_SCOPE),
-              TOKEN_RESPONSE, GET_SNAPSHOT_REQ, operationResponse).getSnapshotApiForProject("myproject");
+              TOKEN_RESPONSE, GET_SNAPSHOT_REQ, operationResponse).getSnapshotApi("myproject");
 
       assertNull(api.get("test-snap"));
    }
@@ -76,7 +76,7 @@ public class SnapshotApiExpectTest extends BaseGoogleComputeEngineApiExpectTest 
    public void testListSnapshotNoOptionsResponseIs2xx() throws Exception {
 
       SnapshotApi api = requestsSendResponses(requestForScopes(COMPUTE_READONLY_SCOPE),
-              TOKEN_RESPONSE, LIST_SNAPSHOTS_REQ, LIST_SNAPSHOTS_RESPONSE).getSnapshotApiForProject("myproject");
+              TOKEN_RESPONSE, LIST_SNAPSHOTS_REQ, LIST_SNAPSHOTS_RESPONSE).getSnapshotApi("myproject");
 
       assertEquals(api.listFirstPage().toString(),
               new ParseSnapshotListTest().expected().toString());
@@ -87,7 +87,7 @@ public class SnapshotApiExpectTest extends BaseGoogleComputeEngineApiExpectTest 
       HttpResponse operationResponse = HttpResponse.builder().statusCode(404).build();
 
       SnapshotApi api = requestsSendResponses(requestForScopes(COMPUTE_READONLY_SCOPE),
-              TOKEN_RESPONSE, LIST_SNAPSHOTS_REQ, operationResponse).getSnapshotApiForProject("myproject");
+              TOKEN_RESPONSE, LIST_SNAPSHOTS_REQ, operationResponse).getSnapshotApi("myproject");
 
       assertTrue(api.list().concat().isEmpty());
    }

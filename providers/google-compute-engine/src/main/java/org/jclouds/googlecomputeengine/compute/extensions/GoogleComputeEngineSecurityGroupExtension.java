@@ -100,7 +100,7 @@ public class GoogleComputeEngineSecurityGroupExtension implements SecurityGroupE
 
    @Override
    public Set<SecurityGroup> listSecurityGroups() {
-      return api.getNetworkApiForProject(userProject.get()).list().concat().transform(groupConverter).toSet();
+      return api.getNetworkApi(userProject.get()).list().concat().transform(groupConverter).toSet();
    }
 
    @Override
@@ -112,7 +112,7 @@ public class GoogleComputeEngineSecurityGroupExtension implements SecurityGroupE
    public Set<SecurityGroup> listSecurityGroupsForNode(String id) {
       SlashEncodedIds slashEncodedIds = SlashEncodedIds.fromSlashEncoded(id);
 
-      Instance instance = api.getInstanceApiForProject(userProject.get()).getInZone(slashEncodedIds.getFirstId(),
+      Instance instance = api.getInstanceApi(userProject.get()).getInZone(slashEncodedIds.getFirstId(),
               slashEncodedIds.getSecondId());
 
       if (instance == null) {
@@ -124,7 +124,7 @@ public class GoogleComputeEngineSecurityGroupExtension implements SecurityGroupE
 
       for (NetworkInterface nwInterface : instance.getNetworkInterfaces()) {
          String networkUrl = nwInterface.getNetwork().getPath();
-         Network nw = api.getNetworkApiForProject(userProject.get()).get(networkUrl.substring(networkUrl.lastIndexOf('/') + 1));
+         Network nw = api.getNetworkApi(userProject.get()).get(networkUrl.substring(networkUrl.lastIndexOf('/') + 1));
 
          SecurityGroup grp = groupForTagsInNetwork(nw, instance.getTags().getItems());
          if (grp != null) {
@@ -138,7 +138,7 @@ public class GoogleComputeEngineSecurityGroupExtension implements SecurityGroupE
    @Override
    public SecurityGroup getSecurityGroupById(String id) {
       checkNotNull(id, "id");
-      Network network = api.getNetworkApiForProject(userProject.get()).get(id);
+      Network network = api.getNetworkApi(userProject.get()).get(id);
 
       if (network == null) {
          return null;
@@ -165,16 +165,16 @@ public class GoogleComputeEngineSecurityGroupExtension implements SecurityGroupE
    @Override
    public boolean removeSecurityGroup(String id) {
       checkNotNull(id, "id");
-      if (api.getNetworkApiForProject(userProject.get()).get(id) == null) {
+      if (api.getNetworkApi(userProject.get()).get(id) == null) {
          return false;
       }
 
       ListOptions options = new ListOptions.Builder().filter("network eq .*/" + id);
 
-      FluentIterable<Firewall> fws = api.getFirewallApiForProject(userProject.get()).list(options).concat();
+      FluentIterable<Firewall> fws = api.getFirewallApi(userProject.get()).list(options).concat();
 
       for (Firewall fw : fws) {
-         AtomicReference<Operation> operation = Atomics.newReference(api.getFirewallApiForProject(userProject.get())
+         AtomicReference<Operation> operation = Atomics.newReference(api.getFirewallApi(userProject.get())
                  .delete(fw.getName()));
 
          retry(operationDonePredicate, operationCompleteCheckTimeout, operationCompleteCheckInterval,
@@ -184,12 +184,12 @@ public class GoogleComputeEngineSecurityGroupExtension implements SecurityGroupE
       }
 
       AtomicReference<Operation> operation = Atomics.newReference(
-              api.getNetworkApiForProject(userProject.get()).delete(id));
+              api.getNetworkApi(userProject.get()).delete(id));
 
       retry(operationDonePredicate, operationCompleteCheckTimeout, operationCompleteCheckInterval,
                  MILLISECONDS).apply(operation);
 
-      checkState(!operation.get().getHttpError().isPresent(), "Could not create network, operation failed" + operation);
+      checkState(!operation.get().getHttpError().isPresent(), "Could not insert network, operation failed" + operation);
 
       return true;
    }
@@ -199,11 +199,11 @@ public class GoogleComputeEngineSecurityGroupExtension implements SecurityGroupE
       checkNotNull(group, "group");
       checkNotNull(ipPermission, "ipPermission");
 
-      checkNotNull(api.getNetworkApiForProject(userProject.get()).get(group.getId()) == null, "network for group is null");
+      checkNotNull(api.getNetworkApi(userProject.get()).get(group.getId()) == null, "network for group is null");
 
       ListOptions options = new ListOptions.Builder().filter("network eq .*/" + group.getName());
 
-      if (api.getFirewallApiForProject(userProject.get()).list(options).concat().anyMatch(providesIpPermission(ipPermission))) {
+      if (api.getFirewallApi(userProject.get()).list(options).concat().anyMatch(providesIpPermission(ipPermission))) {
          // Permission already exists.
          return group;
       }
@@ -229,7 +229,7 @@ public class GoogleComputeEngineSecurityGroupExtension implements SecurityGroupE
       }
       fwOptions.addAllowedRule(ruleBuilder.build());
 
-      AtomicReference<Operation> operation = Atomics.newReference(api.getFirewallApiForProject(userProject
+      AtomicReference<Operation> operation = Atomics.newReference(api.getFirewallApi(userProject
               .get()).createInNetwork(
               uniqueFwName,
               group.getUri(),
@@ -238,7 +238,7 @@ public class GoogleComputeEngineSecurityGroupExtension implements SecurityGroupE
       retry(operationDonePredicate, operationCompleteCheckTimeout, operationCompleteCheckInterval,
               MILLISECONDS).apply(operation);
 
-      checkState(!operation.get().getHttpError().isPresent(), "Could not create firewall, operation failed" + operation);
+      checkState(!operation.get().getHttpError().isPresent(), "Could not insert firewall, operation failed" + operation);
 
       return getSecurityGroupById(group.getId());
    }
@@ -264,15 +264,15 @@ public class GoogleComputeEngineSecurityGroupExtension implements SecurityGroupE
       checkNotNull(group, "group");
       checkNotNull(ipPermission, "ipPermission");
 
-      checkNotNull(api.getNetworkApiForProject(userProject.get()).get(group.getId()) == null, "network for group is null");
+      checkNotNull(api.getNetworkApi(userProject.get()).get(group.getId()) == null, "network for group is null");
 
       ListOptions options = new ListOptions.Builder().filter("network eq .*/" + group.getName());
 
-      FluentIterable<Firewall> fws = api.getFirewallApiForProject(userProject.get()).list(options).concat();
+      FluentIterable<Firewall> fws = api.getFirewallApi(userProject.get()).list(options).concat();
 
       for (Firewall fw : fws) {
          if (equalsIpPermission(ipPermission).apply(fw)) {
-            AtomicReference<Operation> operation = Atomics.newReference(api.getFirewallApiForProject(userProject.get())
+            AtomicReference<Operation> operation = Atomics.newReference(api.getFirewallApi(userProject.get())
                     .delete(fw.getName()));
 
             retry(operationDonePredicate, operationCompleteCheckTimeout, operationCompleteCheckInterval,
@@ -328,7 +328,7 @@ public class GoogleComputeEngineSecurityGroupExtension implements SecurityGroupE
 
    private SecurityGroup groupForTagsInNetwork(Network nw, final Set <String> tags) {
       ListOptions opts = new Builder().filter("network eq .*/" + nw.getName());
-      Set<Firewall> fws = api.getFirewallApiForProject(userProject.get()).list(opts).concat()
+      Set<Firewall> fws = api.getFirewallApi(userProject.get()).list(opts).concat()
               .filter(new Predicate<Firewall>() {
                  @Override
                  public boolean apply(final Firewall input) {

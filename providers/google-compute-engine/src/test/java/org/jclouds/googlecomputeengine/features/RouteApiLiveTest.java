@@ -41,12 +41,12 @@ public class RouteApiLiveTest extends BaseGoogleComputeEngineApiLiveTest {
    public static final int TIME_WAIT = 30;
 
    private RouteApi api() {
-      return api.getRouteApiForProject(userProject.get());
+      return api.getRouteApi(userProject.get());
    }
 
    @Test(groups = "live")
    public void testInsertRoute() {
-      assertGlobalOperationDoneSucessfully(api.getNetworkApiForProject(userProject.get()).createInIPv4Range
+      assertGlobalOperationDoneSucessfully(api.getNetworkApi(userProject.get()).createInIPv4Range
               (ROUTE_NETWORK_NAME, IPV4_RANGE), TIME_WAIT);
       assertGlobalOperationDoneSucessfully(api().createInNetwork(ROUTE_NAME,
               getNetworkUrl(userProject.get(), ROUTE_NETWORK_NAME),
@@ -84,7 +84,7 @@ public class RouteApiLiveTest extends BaseGoogleComputeEngineApiLiveTest {
    @Test(groups = "live", dependsOnMethods = "testListRoute")
    public void testDeleteRoute() {
       assertGlobalOperationDoneSucessfully(api().delete(ROUTE_NAME), TIME_WAIT);
-      assertGlobalOperationDoneSucessfully(api.getNetworkApiForProject(userProject.get())
+      assertGlobalOperationDoneSucessfully(api.getNetworkApi(userProject.get())
               .delete(ROUTE_NETWORK_NAME), TIME_WAIT);
    }
 

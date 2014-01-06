@@ -43,8 +43,6 @@ import org.jclouds.rest.annotations.Transform;
 
 /**
  * Provides access to Regions via their REST API.
- *
- * @see <a href="https://developers.google.com/compute/docs/reference/v1/regions"/>
  */
 @SkipEncoding({'/', '='})
 @RequestFilters(OAuthAuthenticationFilter.class)

@@ -47,8 +47,6 @@ import org.jclouds.rest.annotations.Transform;
 
 /**
  * Provides access to Operations via their REST API.
- *
- * @see <a href="https://developers.google.com/compute/docs/reference/v1/operations"/>
  */
 @SkipEncoding({'/', '='})
 @RequestFilters(OAuthAuthenticationFilter.class)
@@ -144,7 +142,7 @@ public interface RegionOperationApi {
    PagedIterable<Operation> listInRegion(@PathParam("region") String region);
 
    /**
-    * A paged version of RegionOperationApi#listFirstPageInRegion(String)
+    * A paged version of RegionOperationApi#listFirstPage(String)
     *
     * @return a Paged, Fluent Iterable that is able to fetch additional pages when required
     * @see org.jclouds.collect.PagedIterable

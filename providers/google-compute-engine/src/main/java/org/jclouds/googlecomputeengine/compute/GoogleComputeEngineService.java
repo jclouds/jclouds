@@ -152,8 +152,8 @@ public class GoogleComputeEngineService extends BaseComputeService {
 
    protected void cleanUpNetworksAndFirewallsForGroup(final String groupName) {
       String resourceName = namingConvention.create().sharedNameForGroup(groupName);
-      final Network network = api.getNetworkApiForProject(project.get()).get(resourceName);
-      FirewallApi firewallApi = api.getFirewallApiForProject(project.get());
+      final Network network = api.getNetworkApi(project.get()).get(resourceName);
+      FirewallApi firewallApi = api.getFirewallApi(project.get());
       Predicate<Firewall> firewallBelongsToNetwork = new Predicate<Firewall>() {
          @Override
          public boolean apply(Firewall input) {
@@ -177,7 +177,7 @@ public class GoogleComputeEngineService extends BaseComputeService {
          }
       }
 
-      AtomicReference<Operation> operation = Atomics.newReference(api.getNetworkApiForProject(project.get()).delete(resourceName));
+      AtomicReference<Operation> operation = Atomics.newReference(api.getNetworkApi(project.get()).delete(resourceName));
 
       retry(operationDonePredicate, operationCompleteCheckTimeout, operationCompleteCheckInterval,
               MILLISECONDS).apply(operation);

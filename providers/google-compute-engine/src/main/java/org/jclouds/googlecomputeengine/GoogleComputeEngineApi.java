@@ -16,16 +16,14 @@
  */
 package org.jclouds.googlecomputeengine;
 
-import java.io.Closeable;
-
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-
+import com.google.common.annotations.Beta;
 import org.jclouds.googlecomputeengine.features.AddressApi;
 import org.jclouds.googlecomputeengine.features.DiskApi;
 import org.jclouds.googlecomputeengine.features.DiskTypeApi;
 import org.jclouds.googlecomputeengine.features.FirewallApi;
+import org.jclouds.googlecomputeengine.features.ForwardingRuleApi;
 import org.jclouds.googlecomputeengine.features.GlobalOperationApi;
+import org.jclouds.googlecomputeengine.features.HttpHealthCheckApi;
 import org.jclouds.googlecomputeengine.features.ImageApi;
 import org.jclouds.googlecomputeengine.features.InstanceApi;
 import org.jclouds.googlecomputeengine.features.MachineTypeApi;
@@ -35,11 +33,14 @@ import org.jclouds.googlecomputeengine.features.RegionApi;
 import org.jclouds.googlecomputeengine.features.RegionOperationApi;
 import org.jclouds.googlecomputeengine.features.RouteApi;
 import org.jclouds.googlecomputeengine.features.SnapshotApi;
+import org.jclouds.googlecomputeengine.features.TargetPoolApi;
 import org.jclouds.googlecomputeengine.features.ZoneApi;
 import org.jclouds.googlecomputeengine.features.ZoneOperationApi;
 import org.jclouds.rest.annotations.Delegate;
 
-import com.google.common.annotations.Beta;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import java.io.Closeable;
 
 
 /**
@@ -58,7 +59,7 @@ public interface GoogleComputeEngineApi extends Closeable {
     */
    @Delegate
    @Path("/projects/{project}")
-   AddressApi getAddressApiForProject(@PathParam("project") String projectName);
+   AddressApi getAddressApi(@PathParam("project") String projectName);
 
    /**
     * Provides access to Disk features
@@ -67,7 +68,7 @@ public interface GoogleComputeEngineApi extends Closeable {
     */
    @Delegate
    @Path("/projects/{project}")
-   DiskApi getDiskApiForProject(@PathParam("project") String projectName);
+   DiskApi getDiskApi(@PathParam("project") String projectName);
 
    /**
     * Provides access to DiskType features
@@ -85,7 +86,17 @@ public interface GoogleComputeEngineApi extends Closeable {
     */
    @Delegate
    @Path("/projects/{project}")
-   FirewallApi getFirewallApiForProject(@PathParam("project") String projectName);
+   FirewallApi getFirewallApi(@PathParam("project") String projectName);
+
+   /**
+    * Provides access to ForwardingRule features
+    *
+    * @param projectName the name of the project
+    * @param region     the name of the region scoping this request.
+    */
+   @Delegate
+   @Path("/projects/{project}/regions/{region}")
+   ForwardingRuleApi getForwardingRuleApi(@PathParam("project") String projectName, @PathParam("region") String region);
 
    /**
     * Provides access to Global Operation features
@@ -94,7 +105,16 @@ public interface GoogleComputeEngineApi extends Closeable {
     */
    @Delegate
    @Path("/projects/{project}")
-   GlobalOperationApi getGlobalOperationApiForProject(@PathParam("project") String projectName);
+   GlobalOperationApi getGlobalOperationApi(@PathParam("project") String projectName);
+
+   /**
+    * Provides access to HttpHealthCheck features
+    *
+    * @param projectName the name of the project
+    */
+   @Delegate
+   @Path("/projects/{project}/global/httpHealthChecks")
+   HttpHealthCheckApi getHttpHealthCheckApi(@PathParam("project") String projectName);
 
    /**
     * Provides access to Image features
@@ -103,7 +123,7 @@ public interface GoogleComputeEngineApi extends Closeable {
     */
    @Delegate
    @Path("/projects/{project}")
-   ImageApi getImageApiForProject(@PathParam("project") String projectName);
+   ImageApi getImageApi(@PathParam("project") String projectName);
 
    /**
     * Provides access to Instance features
@@ -112,7 +132,7 @@ public interface GoogleComputeEngineApi extends Closeable {
     */
    @Delegate
    @Path("/projects/{project}")
-   InstanceApi getInstanceApiForProject(@PathParam("project") String projectName);
+   InstanceApi getInstanceApi(@PathParam("project") String projectName);
 
    /**
     * Provides access to MachineType features
@@ -121,7 +141,7 @@ public interface GoogleComputeEngineApi extends Closeable {
     */
    @Delegate
    @Path("/projects/{project}")
-   MachineTypeApi getMachineTypeApiForProject(@PathParam("project") String projectName);
+   MachineTypeApi getMachineTypeApi(@PathParam("project") String projectName);
 
    /**
     * Provides access to Network features
@@ -130,7 +150,7 @@ public interface GoogleComputeEngineApi extends Closeable {
     */
    @Delegate
    @Path("/projects/{project}")
-   NetworkApi getNetworkApiForProject(@PathParam("project") String projectName);
+   NetworkApi getNetworkApi(@PathParam("project") String projectName);
 
    /**
     * Provides access to Project features
@@ -145,7 +165,7 @@ public interface GoogleComputeEngineApi extends Closeable {
     */
    @Delegate
    @Path("/projects/{project}")
-   RegionApi getRegionApiForProject(@PathParam("project") String projectName);
+   RegionApi getRegionApi(@PathParam("project") String projectName);
 
    /**
     * Provides access to Region Operation features
@@ -154,7 +174,7 @@ public interface GoogleComputeEngineApi extends Closeable {
     */
    @Delegate
    @Path("/projects/{project}")
-   RegionOperationApi getRegionOperationApiForProject(@PathParam("project") String projectName);
+   RegionOperationApi getRegionOperationApi(@PathParam("project") String projectName);
 
    /**
     * Provides access to Route features
@@ -163,7 +183,7 @@ public interface GoogleComputeEngineApi extends Closeable {
     */
    @Delegate
    @Path("/projects/{project}")
-   RouteApi getRouteApiForProject(@PathParam("project") String projectName);
+   RouteApi getRouteApi(@PathParam("project") String projectName);
 
    /**
     * Provides access to Snapshot features
@@ -172,7 +192,17 @@ public interface GoogleComputeEngineApi extends Closeable {
     */
    @Delegate
    @Path("/projects/{project}")
-   SnapshotApi getSnapshotApiForProject(@PathParam("project") String projectName);
+   SnapshotApi getSnapshotApi(@PathParam("project") String projectName);
+
+   /**
+    * Provides access to TargetPool features
+    *
+    * @param projectName the name of the project
+    * @param region     the name of the region scoping this request.
+   */
+   @Delegate
+   @Path("/projects/{project}/regions/{region}")
+   TargetPoolApi getTargetPoolApi(@PathParam("project") String projectName, @PathParam("region") String region);
 
    /**
     * Provides access to Zone features
@@ -181,7 +211,7 @@ public interface GoogleComputeEngineApi extends Closeable {
     */
    @Delegate
    @Path("/projects/{project}")
-   ZoneApi getZoneApiForProject(@PathParam("project") String projectName);
+   ZoneApi getZoneApi(@PathParam("project") String projectName);
 
    /**
     * Provides access to Zone Operation features
@@ -190,6 +220,6 @@ public interface GoogleComputeEngineApi extends Closeable {
     */
    @Delegate
    @Path("/projects/{project}")
-   ZoneOperationApi getZoneOperationApiForProject(@PathParam("project") String projectName);
+   ZoneOperationApi getZoneOperationApi(@PathParam("project") String projectName);
 
 }

@@ -24,7 +24,7 @@ import org.jclouds.googlecomputeengine.domain.Firewall;
 import com.google.common.collect.ImmutableSet;
 
 /**
- * Options to create a firewall.
+ * Options to insert a firewall.
  *
  * @see Firewall
  */

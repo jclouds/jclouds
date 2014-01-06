@@ -179,7 +179,7 @@ public class GoogleComputeEngineServiceAdapter implements ComputeServiceAdapter<
       instanceTemplate.metadata(metadataBuilder.build());
       instanceTemplate.serviceAccounts(options.getServiceAccounts());
 
-      final InstanceApi instanceApi = api.getInstanceApiForProject(userProject.get());
+      final InstanceApi instanceApi = api.getInstanceApi(userProject.get());
       final String zone = template.getLocation().getId();
       Operation operation = instanceApi.createInZone(name, zone, instanceTemplate);
 
@@ -242,7 +242,7 @@ public class GoogleComputeEngineServiceAdapter implements ComputeServiceAdapter<
       String diskName = instanceName + "-" + GCE_BOOT_DISK_SUFFIX;
 
       DiskCreationOptions diskCreationOptions = new DiskCreationOptions().sourceImage(imageUri);
-      Operation diskOperation = api.getDiskApiForProject(userProject.get())
+      Operation diskOperation = api.getDiskApi(userProject.get())
                                    .createInZone(diskName,
                                                  diskSize,
                                                  template.getLocation().getId(),
@@ -250,7 +250,7 @@ public class GoogleComputeEngineServiceAdapter implements ComputeServiceAdapter<
 
       waitOperationDone(diskOperation);
 
-      return api.getDiskApiForProject(userProject.get()).getInZone(template.getLocation().getId(),
+      return api.getDiskApi(userProject.get()).getInZone(template.getLocation().getId(),
                                                                    diskName);
    }
 
@@ -259,7 +259,7 @@ public class GoogleComputeEngineServiceAdapter implements ComputeServiceAdapter<
       ImmutableSet.Builder<MachineTypeInZone> builder = ImmutableSet.builder();
 
       for (final Location zone : zones.get().values()) {
-         builder.addAll(api.getMachineTypeApiForProject(userProject.get())
+         builder.addAll(api.getMachineTypeApi(userProject.get())
                  .listInZone(zone.getId())
                  .concat()
                  .filter(new Predicate<MachineType>() {
@@ -283,30 +283,31 @@ public class GoogleComputeEngineServiceAdapter implements ComputeServiceAdapter<
    @Override
    public Iterable<Image> listImages() {
       return ImmutableSet.<Image>builder()
-              .addAll(api.getImageApiForProject(userProject.get()).list().concat())
-              .addAll(api.getImageApiForProject(DEBIAN_PROJECT).list().concat())
-              .addAll(api.getImageApiForProject(CENTOS_PROJECT).list().concat())
+              .addAll(api.getImageApi(userProject.get()).list().concat())
+              .addAll(api.getImageApi(DEBIAN_PROJECT).list().concat())
+              .addAll(api.getImageApi(CENTOS_PROJECT).list().concat())
               .build();
    }
 
-   @Override
+   @SuppressWarnings("deprecation")
+@Override
    public Image getImage(String id) {
-      return Objects.firstNonNull(api.getImageApiForProject(userProject.get()).get(id),
-                                  Objects.firstNonNull(api.getImageApiForProject(DEBIAN_PROJECT).get(id),
-                                          api.getImageApiForProject(CENTOS_PROJECT).get(id)));
+      return Objects.firstNonNull(api.getImageApi(userProject.get()).get(id),
+                                  Objects.firstNonNull(api.getImageApi(DEBIAN_PROJECT).get(id),
+                                          api.getImageApi(CENTOS_PROJECT).get(id)));
 
    }
 
    @Override
    public Iterable<Zone> listLocations() {
-      return api.getZoneApiForProject(userProject.get()).list().concat();
+      return api.getZoneApi(userProject.get()).list().concat();
    }
 
    @Override
    public InstanceInZone getNode(String name) {
       SlashEncodedIds slashEncodedIds = SlashEncodedIds.fromSlashEncoded(name);
 
-      Instance instance = api.getInstanceApiForProject(userProject.get()).getInZone(slashEncodedIds.getFirstId(),
+      Instance instance = api.getInstanceApi(userProject.get()).getInZone(slashEncodedIds.getFirstId(),
               slashEncodedIds.getSecondId());
 
       return instance == null ?  null : new InstanceInZone(instance, slashEncodedIds.getFirstId());
@@ -317,7 +318,7 @@ public class GoogleComputeEngineServiceAdapter implements ComputeServiceAdapter<
       return FluentIterable.from(zones.get().values()).transformAndConcat(new Function<Location, ImmutableSet<InstanceInZone>>() {
          @Override
          public ImmutableSet<InstanceInZone> apply(final Location input) {
-            return api.getInstanceApiForProject(userProject.get()).listInZone(input.getId()).concat()
+            return api.getInstanceApi(userProject.get()).listInZone(input.getId()).concat()
                     .transform(new Function<Instance, InstanceInZone>() {
 
                        @Override
@@ -345,7 +346,7 @@ public class GoogleComputeEngineServiceAdapter implements ComputeServiceAdapter<
       SlashEncodedIds slashEncodedIds = SlashEncodedIds.fromSlashEncoded(name);
       String diskName = null;
       try {
-         Instance instance = api.getInstanceApiForProject(userProject.get()).getInZone(slashEncodedIds.getFirstId(),
+         Instance instance = api.getInstanceApi(userProject.get()).getInZone(slashEncodedIds.getFirstId(),
                                                                               slashEncodedIds.getSecondId());
          if (instance.getMetadata().getItems().get(GCE_DELETE_BOOT_DISK_METADATA_KEY).equals("true")) {
             Optional<AttachedDisk> disk = tryFind(instance.getDisks(), new Predicate<AttachedDisk>() {
@@ -362,11 +363,11 @@ public class GoogleComputeEngineServiceAdapter implements ComputeServiceAdapter<
       } catch (Exception e) {
          // TODO: what exception actually gets thrown here if the instance doesn't really exist?
       }
-      waitOperationDone(api.getInstanceApiForProject(userProject.get()).deleteInZone(slashEncodedIds.getFirstId(),
+      waitOperationDone(api.getInstanceApi(userProject.get()).deleteInZone(slashEncodedIds.getFirstId(),
               slashEncodedIds.getSecondId()));
 
       if (diskName != null) {
-         waitOperationDone(api.getDiskApiForProject(userProject.get()).deleteInZone(slashEncodedIds.getFirstId(),
+         waitOperationDone(api.getDiskApi(userProject.get()).deleteInZone(slashEncodedIds.getFirstId(),
                                                                                     diskName));
       }
 
@@ -376,7 +377,7 @@ public class GoogleComputeEngineServiceAdapter implements ComputeServiceAdapter<
    public void rebootNode(final String name) {
       SlashEncodedIds slashEncodedIds = SlashEncodedIds.fromSlashEncoded(name);
 
-      waitOperationDone(api.getInstanceApiForProject(userProject.get()).resetInZone(slashEncodedIds.getFirstId(),
+      waitOperationDone(api.getInstanceApi(userProject.get()).resetInZone(slashEncodedIds.getFirstId(),
               slashEncodedIds.getSecondId()));
    }
 
