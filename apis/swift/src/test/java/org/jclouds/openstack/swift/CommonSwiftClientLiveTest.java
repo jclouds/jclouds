@@ -65,8 +65,30 @@ public abstract class CommonSwiftClientLiveTest<C extends CommonSwiftClient> ext
     * this method overrides containerName to ensure it isn't found
     */
    @Test(groups = { "integration", "live" })
-   public void deleteContainerIfEmptyNotFound() throws Exception {
-      assert getApi().deleteContainerIfEmpty("dbienf");
+   public void testDeleteContainerIfEmptyContainerNotFound() throws Exception {
+      assertTrue(getApi().deleteContainerIfEmpty("dbienf"));
+   }
+
+   @Test
+   public void testDeleteContainerIfEmptyContainerFoundAndEmpty() throws Exception {
+      String containerName = getContainerName();
+      try {
+         assertTrue(getApi().deleteContainerIfEmpty(containerName));
+      } finally {
+         recycleContainer(containerName);
+      }
+   }
+
+   @Test
+   public void testDeleteContainerIfEmptyContainerFoundAndNotEmpty() throws Exception {
+      String containerName = getContainerName();
+      try {
+         String data = "foo";
+         getApi().putObject(containerName, newSwiftObject(data, "foo"));
+         assertFalse(getApi().deleteContainerIfEmpty(containerName));
+      } finally {
+         returnContainer(containerName);
+      }
    }
 
    @Test
