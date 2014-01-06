@@ -25,6 +25,7 @@ import org.jclouds.Constants;
 import org.jclouds.atmos.AtmosAsyncClient;
 import org.jclouds.atmos.AtmosClient;
 import org.jclouds.atmos.handlers.AtmosClientErrorRetryHandler;
+import org.jclouds.atmos.handlers.AtmosServerErrorRetryHandler;
 import org.jclouds.atmos.handlers.ParseAtmosErrorFromXmlContent;
 import org.jclouds.date.DateService;
 import org.jclouds.date.TimeStamp;
@@ -92,6 +93,7 @@ public class AtmosRestClientModule extends RestClientModule<AtmosClient, AtmosAs
    @Override
    protected void bindRetryHandlers() {
       bind(HttpRetryHandler.class).annotatedWith(ClientError.class).to(AtmosClientErrorRetryHandler.class);
+      bind(HttpRetryHandler.class).annotatedWith(ServerError.class).to(AtmosServerErrorRetryHandler.class);
    }
 
 }
