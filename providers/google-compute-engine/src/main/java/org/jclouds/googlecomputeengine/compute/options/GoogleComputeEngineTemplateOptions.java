@@ -30,6 +30,7 @@ import org.jclouds.googlecomputeengine.domain.InstanceTemplate.PersistentDisk;
 import org.jclouds.scriptbuilder.domain.Statement;
 
 import com.google.common.base.Optional;
+import com.google.common.collect.Iterables;
 import com.google.common.collect.Sets;
 
 /**
@@ -60,7 +61,6 @@ public class GoogleComputeEngineTemplateOptions extends TemplateOptions {
       if (to instanceof GoogleComputeEngineTemplateOptions) {
          GoogleComputeEngineTemplateOptions eTo = GoogleComputeEngineTemplateOptions.class.cast(to);
          eTo.network(getNetwork().orNull());
-         eTo.network(getNetworkName().orNull());
          eTo.serviceAccounts(getServiceAccounts());
          eTo.enableNat(isEnableNat());
          eTo.disks(getDisks());
@@ -69,11 +69,12 @@ public class GoogleComputeEngineTemplateOptions extends TemplateOptions {
    }
 
    /**
+    * @deprecated See TemplateOptions#networks
     * @see #getNetworkName()
     */
+   @Deprecated
    public GoogleComputeEngineTemplateOptions network(String networkName) {
-      this.networkName = fromNullable(networkName);
-      return this;
+      return this.networks(networkName);
    }
 
    /**
@@ -284,6 +285,22 @@ public class GoogleComputeEngineTemplateOptions extends TemplateOptions {
     * {@inheritDoc}
     */
    @Override
+   public GoogleComputeEngineTemplateOptions networks(Iterable<String> networks) {
+      return GoogleComputeEngineTemplateOptions.class.cast(super.networks(networks));
+   }
+
+   /**
+    * {@inheritDoc}
+    */
+   @Override
+   public GoogleComputeEngineTemplateOptions networks(String... networks) {
+      return GoogleComputeEngineTemplateOptions.class.cast(super.networks(networks));
+   }
+
+   /**
+    * {@inheritDoc}
+    */
+   @Override
    public GoogleComputeEngineTemplateOptions tags(Iterable<String> tags) {
       return GoogleComputeEngineTemplateOptions.class.cast(super.tags(tags));
    }
@@ -337,9 +354,10 @@ public class GoogleComputeEngineTemplateOptions extends TemplateOptions {
    /**
     * @return the name of an existing network the instances will be attached to, the network is assumed to belong to
     *         user's project. If no network URI network name are provided a new network will be created for the project.
+    *         <b>Note that this is now pulling from the first element in the networks field from TemplateOptions.</b>
     */
    public Optional<String> getNetworkName() {
-      return networkName;
+      return fromNullable(Iterables.getFirst(getNetworks(), null));
    }
 
    /**
