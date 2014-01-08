@@ -16,19 +16,18 @@
  */
 package org.jclouds.cloudstack.compute.strategy;
 
-import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertTrue;
-
-import java.util.Map;
-
+import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.ImmutableSet;
 import org.jclouds.cloudstack.compute.options.CloudStackTemplateOptions;
 import org.jclouds.cloudstack.domain.Network;
 import org.jclouds.cloudstack.domain.NetworkService;
 import org.jclouds.cloudstack.options.DeployVirtualMachineOptions;
 import org.testng.annotations.Test;
 
-import com.google.common.collect.ImmutableMap;
-import com.google.common.collect.ImmutableSet;
+import java.util.Map;
+
+import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertTrue;
 
 @Test(singleThreaded = true, testName="OptionsConverterTest")
 public class OptionsConverterTest {
@@ -42,7 +41,7 @@ public class OptionsConverterTest {
    public void testBasicNetworkOptionsConverter() {
       BasicNetworkOptionsConverter converter = new BasicNetworkOptionsConverter();
 
-      CloudStackTemplateOptions optionsIn = CloudStackTemplateOptions.Builder.securityGroupId("42").networkId("46");
+      CloudStackTemplateOptions optionsIn = CloudStackTemplateOptions.Builder.securityGroupId("42").networks("46");
       DeployVirtualMachineOptions optionsOut = new DeployVirtualMachineOptions();
 
       DeployVirtualMachineOptions optionsOut2 = converter.apply(optionsIn, EMPTY_NETWORKS_MAP, ZONE_ID, optionsOut);
@@ -70,7 +69,7 @@ public class OptionsConverterTest {
    @Test
    public void testAdvancedExplicitNetworkSelection() {
       AdvancedNetworkOptionsConverter converter = new AdvancedNetworkOptionsConverter();
-      DeployVirtualMachineOptions optionsActual = converter.apply(CloudStackTemplateOptions.Builder.networkId("42"),
+      DeployVirtualMachineOptions optionsActual = converter.apply(CloudStackTemplateOptions.Builder.networks("42"),
          EMPTY_NETWORKS_MAP, ZONE_ID, DeployVirtualMachineOptions.NONE);
       DeployVirtualMachineOptions optionsExpected = DeployVirtualMachineOptions.Builder.networkId("42");
       assertEquals(optionsActual, optionsExpected);

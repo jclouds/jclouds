@@ -488,6 +488,14 @@ public class AWSEC2TemplateOptions extends EC2TemplateOptions implements Cloneab
          AWSEC2TemplateOptions options = new AWSEC2TemplateOptions();
          return AWSEC2TemplateOptions.class.cast(options.nodeNames(nodeNames));
       }
+
+      /**
+       * @see TemplateOptions#networks(Iterable)
+       */
+      public static AWSEC2TemplateOptions networks(Iterable<String> networks) {
+         AWSEC2TemplateOptions options = new AWSEC2TemplateOptions();
+         return AWSEC2TemplateOptions.class.cast(options.networks(networks));
+      }
    }
 
    // methods that only facilitate returning the correct object type
@@ -522,6 +530,14 @@ public class AWSEC2TemplateOptions extends EC2TemplateOptions implements Cloneab
    @Override
    public AWSEC2TemplateOptions nodeNames(Iterable<String> nodeNames) {
       return AWSEC2TemplateOptions.class.cast(super.nodeNames(nodeNames));
+   }
+
+   /**
+    * {@inheritDoc}
+    */
+   @Override
+   public AWSEC2TemplateOptions networks(Iterable<String> networks) {
+      return AWSEC2TemplateOptions.class.cast(super.networks(networks));
    }
 
    /**

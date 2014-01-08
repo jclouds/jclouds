@@ -216,6 +216,14 @@ public class GleSYSTemplateOptions extends TemplateOptions implements Cloneable 
          GleSYSTemplateOptions options = new GleSYSTemplateOptions();
          return GleSYSTemplateOptions.class.cast(options.nodeNames(nodeNames));
       }
+
+      /**
+       * @see TemplateOptions#networks(Iterable)
+       */
+      public static GleSYSTemplateOptions networks(Iterable<String> networks) {
+         GleSYSTemplateOptions options = new GleSYSTemplateOptions();
+         return GleSYSTemplateOptions.class.cast(options.networks(networks));
+      }
    }
 
    // methods that only facilitate returning the correct object type
@@ -274,6 +282,14 @@ public class GleSYSTemplateOptions extends TemplateOptions implements Cloneable 
    @Override
    public GleSYSTemplateOptions nodeNames(Iterable<String> nodeNames) {
       return GleSYSTemplateOptions.class.cast(super.nodeNames(nodeNames));
+   }
+
+   /**
+    * {@inheritDoc}
+    */
+   @Override
+   public GleSYSTemplateOptions networks(Iterable<String> networks) {
+      return GleSYSTemplateOptions.class.cast(super.networks(networks));
    }
 
    @Override

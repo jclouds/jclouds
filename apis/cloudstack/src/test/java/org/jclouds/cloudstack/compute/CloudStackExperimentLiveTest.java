@@ -16,17 +16,6 @@
  */
 package org.jclouds.cloudstack.compute;
 
-import static com.google.common.collect.Iterables.concat;
-import static com.google.common.collect.Iterables.get;
-import static com.google.common.collect.Sets.newTreeSet;
-import static org.jclouds.cloudstack.options.CreateNetworkOptions.Builder.vlan;
-import static org.jclouds.cloudstack.options.ListNetworkOfferingsOptions.Builder.specifyVLAN;
-
-import java.net.URI;
-import java.util.Set;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
 import org.jclouds.cloudstack.compute.options.CloudStackTemplateOptions;
 import org.jclouds.cloudstack.domain.Network;
 import org.jclouds.cloudstack.domain.TrafficType;
@@ -37,6 +26,17 @@ import org.jclouds.compute.domain.NodeMetadata;
 import org.jclouds.compute.domain.Template;
 import org.jclouds.compute.predicates.NodePredicates;
 import org.testng.annotations.Test;
+
+import java.net.URI;
+import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+import static com.google.common.collect.Iterables.concat;
+import static com.google.common.collect.Iterables.get;
+import static com.google.common.collect.Sets.newTreeSet;
+import static org.jclouds.cloudstack.options.CreateNetworkOptions.Builder.vlan;
+import static org.jclouds.cloudstack.options.ListNetworkOfferingsOptions.Builder.specifyVLAN;
 
 /**
  * @author Adrian Cole
@@ -101,7 +101,7 @@ public class CloudStackExperimentLiveTest extends BaseCloudStackApiLiveTest {
                vlan(vlanId).startIP("192.168.1.2").netmask("255.255.255.0").gateway("192.168.1.1"));
 
          // set options to specify this network id
-         template.getOptions().as(CloudStackTemplateOptions.class).networkId(network.getId());
+         template.getOptions().as(CloudStackTemplateOptions.class).networks(network.getId());
 
          // launch the VM
          nodes = view.getComputeService().createNodesInGroup(group, 1, template);

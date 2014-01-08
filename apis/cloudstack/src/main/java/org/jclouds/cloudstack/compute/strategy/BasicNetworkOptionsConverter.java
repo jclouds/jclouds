@@ -16,11 +16,11 @@
  */
 package org.jclouds.cloudstack.compute.strategy;
 
-import java.util.Map;
-
 import org.jclouds.cloudstack.compute.options.CloudStackTemplateOptions;
 import org.jclouds.cloudstack.domain.Network;
 import org.jclouds.cloudstack.options.DeployVirtualMachineOptions;
+
+import java.util.Map;
 
 /**
  * Convert template options into DeployVirtualMachineOptions, when the target zone has basic networking.
@@ -32,11 +32,11 @@ public class BasicNetworkOptionsConverter implements OptionsConverter {
    public DeployVirtualMachineOptions apply(CloudStackTemplateOptions templateOptions, Map<String, Network> networks, String zoneId, DeployVirtualMachineOptions options) {
       // both security groups and networks are optional, and CloudStack will
       // use the zone/user's default network/security group if none given
-      if (templateOptions.getSecurityGroupIds().size() > 0) {
+      if (!templateOptions.getSecurityGroupIds().isEmpty()) {
          options.securityGroupIds(templateOptions.getSecurityGroupIds());
       }
-      if (templateOptions.getNetworkIds().size() > 0) {
-         options.networkIds(templateOptions.getNetworkIds());
+      if (!templateOptions.getNetworks().isEmpty()) {
+         options.networkIds(templateOptions.getNetworks());
       }
       return options;
    }
