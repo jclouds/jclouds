@@ -119,7 +119,7 @@ public class CloudSigmaTemplateOptions extends TemplateOptions implements Clonea
        */
       public static CloudSigmaTemplateOptions networks(Iterable<String> networks) {
          CloudSigmaTemplateOptions options = new CloudSigmaTemplateOptions();
-         return CloudSigmaTemplateOptions.class.cast(options.nodeNames(networks));
+         return CloudSigmaTemplateOptions.class.cast(options.networks(networks));
       }
 
       public static CloudSigmaTemplateOptions overrideLoginUser(String user) {
