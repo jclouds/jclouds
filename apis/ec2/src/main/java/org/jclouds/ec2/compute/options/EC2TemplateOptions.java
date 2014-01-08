@@ -335,7 +335,7 @@ public class EC2TemplateOptions extends TemplateOptions implements Cloneable {
        */
       public static EC2TemplateOptions networks(Iterable<String> networks) {
          EC2TemplateOptions options = new EC2TemplateOptions();
-         return EC2TemplateOptions.class.cast(options.nodeNames(networks));
+         return EC2TemplateOptions.class.cast(options.networks(networks));
       }
 
       public static EC2TemplateOptions overrideLoginUser(String user) {
