@@ -16,12 +16,12 @@
  */
 package org.jclouds.cloudsigma.compute.options;
 
-import java.util.Map;
-
 import org.jclouds.cloudsigma.domain.AffinityType;
 import org.jclouds.compute.options.TemplateOptions;
 import org.jclouds.domain.LoginCredentials;
 import org.jclouds.scriptbuilder.domain.Statement;
+
+import java.util.Map;
 
 public class CloudSigmaTemplateOptions extends TemplateOptions implements Cloneable {
 
@@ -112,6 +112,14 @@ public class CloudSigmaTemplateOptions extends TemplateOptions implements Clonea
       public static CloudSigmaTemplateOptions nodeNames(Iterable<String> nodeNames) {
          CloudSigmaTemplateOptions options = new CloudSigmaTemplateOptions();
          return CloudSigmaTemplateOptions.class.cast(options.nodeNames(nodeNames));
+      }
+
+      /**
+       * @see TemplateOptions#nodeNames(Iterable)
+       */
+      public static CloudSigmaTemplateOptions networks(Iterable<String> networks) {
+         CloudSigmaTemplateOptions options = new CloudSigmaTemplateOptions();
+         return CloudSigmaTemplateOptions.class.cast(options.networks(networks));
       }
 
       public static CloudSigmaTemplateOptions overrideLoginUser(String user) {
@@ -276,6 +284,14 @@ public class CloudSigmaTemplateOptions extends TemplateOptions implements Clonea
    @Override
    public CloudSigmaTemplateOptions nodeNames(Iterable<String> nodeNames) {
       return CloudSigmaTemplateOptions.class.cast(super.nodeNames(nodeNames));
+   }
+
+   /**
+    * {@inheritDoc}
+    */
+   @Override
+   public CloudSigmaTemplateOptions networks(Iterable<String> networks) {
+      return CloudSigmaTemplateOptions.class.cast(super.networks(networks));
    }
 
    @Override

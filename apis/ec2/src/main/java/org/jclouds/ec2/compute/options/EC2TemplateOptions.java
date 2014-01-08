@@ -16,16 +16,12 @@
  */
 package org.jclouds.ec2.compute.options;
 
-import static com.google.common.base.Objects.equal;
-import static com.google.common.base.Preconditions.checkArgument;
-import static com.google.common.base.Preconditions.checkNotNull;
-import static com.google.common.base.Preconditions.checkState;
-import static com.google.common.base.Strings.emptyToNull;
-
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
+import com.google.common.base.Objects;
+import com.google.common.base.Objects.ToStringHelper;
+import com.google.common.collect.ImmutableSet;
+import com.google.common.collect.Iterables;
+import com.google.common.hash.Hashing;
+import com.google.common.primitives.Bytes;
 import org.jclouds.compute.options.TemplateOptions;
 import org.jclouds.domain.LoginCredentials;
 import org.jclouds.ec2.domain.BlockDeviceMapping;
@@ -36,12 +32,13 @@ import org.jclouds.ec2.domain.BlockDeviceMapping.UnmapDeviceNamed;
 import org.jclouds.javax.annotation.Nullable;
 import org.jclouds.scriptbuilder.domain.Statement;
 
-import com.google.common.base.Objects;
-import com.google.common.base.Objects.ToStringHelper;
-import com.google.common.collect.ImmutableSet;
-import com.google.common.collect.Iterables;
-import com.google.common.hash.Hashing;
-import com.google.common.primitives.Bytes;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
+import static com.google.common.base.Objects.equal;
+import static com.google.common.base.Preconditions.*;
+import static com.google.common.base.Strings.emptyToNull;
 
 /**
  * Contains options supported in the {@code ComputeService#runNode} operation on
@@ -332,7 +329,15 @@ public class EC2TemplateOptions extends TemplateOptions implements Cloneable {
          EC2TemplateOptions options = new EC2TemplateOptions();
          return EC2TemplateOptions.class.cast(options.nodeNames(nodeNames));
       }
-      
+
+      /**
+       * @see TemplateOptions#networks(Iterable)
+       */
+      public static EC2TemplateOptions networks(Iterable<String> networks) {
+         EC2TemplateOptions options = new EC2TemplateOptions();
+         return EC2TemplateOptions.class.cast(options.networks(networks));
+      }
+
       public static EC2TemplateOptions overrideLoginUser(String user) {
          EC2TemplateOptions options = new EC2TemplateOptions();
          return options.overrideLoginUser(user);
@@ -535,6 +540,14 @@ public class EC2TemplateOptions extends TemplateOptions implements Cloneable {
    @Override
    public EC2TemplateOptions nodeNames(Iterable<String> nodeNames) {
       return EC2TemplateOptions.class.cast(super.nodeNames(nodeNames));
+   }
+
+   /**
+    * {@inheritDoc}
+    */
+   @Override
+   public EC2TemplateOptions networks(Iterable<String> networks) {
+      return EC2TemplateOptions.class.cast(super.networks(networks));
    }
 
    /**

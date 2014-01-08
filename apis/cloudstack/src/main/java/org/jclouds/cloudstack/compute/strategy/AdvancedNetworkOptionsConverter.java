@@ -16,20 +16,17 @@
  */
 package org.jclouds.cloudstack.compute.strategy;
 
-import static com.google.common.base.Preconditions.checkArgument;
-import static com.google.common.base.Predicates.and;
-import static com.google.common.collect.Iterables.filter;
-import static org.jclouds.cloudstack.predicates.NetworkPredicates.defaultNetworkInZone;
-import static org.jclouds.cloudstack.predicates.NetworkPredicates.isIsolatedNetwork;
-import static org.jclouds.cloudstack.predicates.NetworkPredicates.supportsStaticNAT;
-
-import java.util.Map;
-
+import com.google.common.collect.Iterables;
 import org.jclouds.cloudstack.compute.options.CloudStackTemplateOptions;
 import org.jclouds.cloudstack.domain.Network;
 import org.jclouds.cloudstack.options.DeployVirtualMachineOptions;
 
-import com.google.common.collect.Iterables;
+import java.util.Map;
+
+import static com.google.common.base.Preconditions.checkArgument;
+import static com.google.common.base.Predicates.and;
+import static com.google.common.collect.Iterables.filter;
+import static org.jclouds.cloudstack.predicates.NetworkPredicates.*;
 
 /**
  * Convert template options into DeployVirtualMachineOptions, when the target zone has advanced networking.
@@ -43,8 +40,8 @@ public class AdvancedNetworkOptionsConverter implements OptionsConverter {
       // at least one network must be given to CloudStack,
       // but jclouds will try to autodetect an appropriate network if none given.
       checkArgument(templateOptions.getSecurityGroupIds().isEmpty(), "security groups cannot be specified for locations (zones) that use advanced networking");
-      if (templateOptions.getNetworkIds().size() > 0) {
-         options.networkIds(templateOptions.getNetworkIds());
+      if (!templateOptions.getNetworks().isEmpty()) {
+         options.networkIds(templateOptions.getNetworks());
       } else if (templateOptions.getIpsToNetworks().isEmpty()) {
          checkArgument(!networks.isEmpty(), "please setup a network for zone: " + zoneId);
          Network defaultNetworkInZone = Iterables.getFirst(filter(networks.values(), and(defaultNetworkInZone(zoneId), supportsStaticNAT())), null);

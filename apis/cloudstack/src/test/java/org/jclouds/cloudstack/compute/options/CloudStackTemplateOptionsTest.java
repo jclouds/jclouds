@@ -16,32 +16,15 @@
  */
 package org.jclouds.cloudstack.compute.options;
 
-import static org.jclouds.cloudstack.compute.options.CloudStackTemplateOptions.Builder.account;
-import static org.jclouds.cloudstack.compute.options.CloudStackTemplateOptions.Builder.dataDiskSize;
-import static org.jclouds.cloudstack.compute.options.CloudStackTemplateOptions.Builder.diskOfferingId;
-import static org.jclouds.cloudstack.compute.options.CloudStackTemplateOptions.Builder.domainId;
-import static org.jclouds.cloudstack.compute.options.CloudStackTemplateOptions.Builder.generateKeyPair;
-import static org.jclouds.cloudstack.compute.options.CloudStackTemplateOptions.Builder.generateSecurityGroup;
-import static org.jclouds.cloudstack.compute.options.CloudStackTemplateOptions.Builder.ipOnDefaultNetwork;
-import static org.jclouds.cloudstack.compute.options.CloudStackTemplateOptions.Builder.ipsToNetworks;
-import static org.jclouds.cloudstack.compute.options.CloudStackTemplateOptions.Builder.keyPair;
-import static org.jclouds.cloudstack.compute.options.CloudStackTemplateOptions.Builder.networkId;
-import static org.jclouds.cloudstack.compute.options.CloudStackTemplateOptions.Builder.networkIds;
-import static org.jclouds.cloudstack.compute.options.CloudStackTemplateOptions.Builder.securityGroupId;
-import static org.jclouds.cloudstack.compute.options.CloudStackTemplateOptions.Builder.securityGroupIds;
-import static org.jclouds.cloudstack.compute.options.CloudStackTemplateOptions.Builder.setupStaticNat;
-import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertFalse;
-import static org.testng.Assert.assertTrue;
-import static org.testng.Assert.fail;
-
-import java.util.Map;
-
+import com.google.common.collect.ImmutableSet;
 import org.jclouds.compute.options.TemplateOptions;
 import org.testng.annotations.Test;
 import org.testng.collections.Maps;
 
-import com.google.common.collect.ImmutableSet;
+import java.util.Map;
+
+import static org.jclouds.cloudstack.compute.options.CloudStackTemplateOptions.Builder.*;
+import static org.testng.Assert.*;
 
 /**
  * Tests possible uses of {@code CloudStackTemplateOptions} and
@@ -115,31 +98,31 @@ public class CloudStackTemplateOptionsTest {
    @Test
    public void testDefaultNetworkIds() {
       TemplateOptions options = new CloudStackTemplateOptions();
-      assertEquals(options.as(CloudStackTemplateOptions.class).getNetworkIds(), ImmutableSet.of());
+      assertEquals(options.as(CloudStackTemplateOptions.class).getNetworks(), ImmutableSet.of());
    }
 
    @Test
    public void testNetworkId() {
-      TemplateOptions options = new CloudStackTemplateOptions().networkId("3");
-      assertEquals(options.as(CloudStackTemplateOptions.class).getNetworkIds(), ImmutableSet.of("3"));
+      TemplateOptions options = new CloudStackTemplateOptions().networks("3");
+      assertEquals(options.as(CloudStackTemplateOptions.class).getNetworks(), ImmutableSet.of("3"));
    }
 
    @Test
    public void testNetworkIdStatic() {
-      TemplateOptions options = networkId("3");
-      assertEquals(options.as(CloudStackTemplateOptions.class).getNetworkIds(), ImmutableSet.of("3"));
+      TemplateOptions options = networks(ImmutableSet.of("3"));
+      assertEquals(options.as(CloudStackTemplateOptions.class).getNetworks(), ImmutableSet.of("3"));
    }
 
    @Test
    public void testNetworkIds() {
-      TemplateOptions options = new CloudStackTemplateOptions().networkIds(ImmutableSet.of("3"));
-      assertEquals(options.as(CloudStackTemplateOptions.class).getNetworkIds(), ImmutableSet.of("3"));
+      TemplateOptions options = new CloudStackTemplateOptions().networks(ImmutableSet.of("3"));
+      assertEquals(options.as(CloudStackTemplateOptions.class).getNetworks(), ImmutableSet.of("3"));
    }
 
    @Test
    public void testNetworkIdsStatic() {
-      TemplateOptions options = networkIds(ImmutableSet.of("3"));
-      assertEquals(options.as(CloudStackTemplateOptions.class).getNetworkIds(), ImmutableSet.of("3"));
+      TemplateOptions options = networks(ImmutableSet.of("3"));
+      assertEquals(options.as(CloudStackTemplateOptions.class).getNetworks(), ImmutableSet.of("3"));
    }
 
    @Test

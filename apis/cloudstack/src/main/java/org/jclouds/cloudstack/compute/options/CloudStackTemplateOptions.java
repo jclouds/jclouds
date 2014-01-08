@@ -51,7 +51,6 @@ import com.google.common.collect.Sets;
 public class CloudStackTemplateOptions extends TemplateOptions implements Cloneable {
 
    protected Set<String> securityGroupIds = Sets.<String> newLinkedHashSet();
-   protected Set<String> networkIds = Sets.<String> newLinkedHashSet();
    protected Map<String, String> ipsToNetworks = Maps.<String, String>newLinkedHashMap();
    protected String ipOnDefaultNetwork;
    protected String keyPair;
@@ -76,7 +75,6 @@ public class CloudStackTemplateOptions extends TemplateOptions implements Clonea
       if (to instanceof CloudStackTemplateOptions) {
          CloudStackTemplateOptions eTo = CloudStackTemplateOptions.class.cast(to);
          eTo.securityGroupIds(this.securityGroupIds);
-         eTo.networkIds(this.networkIds);
          eTo.ipsToNetworks(this.ipsToNetworks);
          eTo.ipOnDefaultNetwork(this.ipOnDefaultNetwork);
          eTo.keyPair(this.keyPair);
@@ -150,23 +148,31 @@ public class CloudStackTemplateOptions extends TemplateOptions implements Clonea
    }
 
    /**
+    * @deprecated See TemplateOptions#networks
     * @see DeployVirtualMachineOptions#networkId
     */
+   @Deprecated
    public CloudStackTemplateOptions networkId(String networkId) {
-      this.networkIds.add(networkId);
+      this.networks.add(networkId);
       return this;
    }
 
    /**
+    * @deprecated See TemplateOptions#networks
     * @see DeployVirtualMachineOptions#networkIds
     */
+   @Deprecated
    public CloudStackTemplateOptions networkIds(Iterable<String> networkIds) {
-      Iterables.addAll(this.networkIds, checkNotNull(networkIds, "networkIds was null"));
+      Iterables.addAll(this.networks, checkNotNull(networkIds, "networkIds was null"));
       return this;
    }
 
+   /**
+    * @deprecated See TemplateOptions#getNetworks
+    */
+   @Deprecated
    public Set<String> getNetworkIds() {
-      return networkIds;
+      return this.getNetworks();
    }
 
    public CloudStackTemplateOptions setupStaticNat(boolean setupStaticNat) {
@@ -298,19 +304,21 @@ public class CloudStackTemplateOptions extends TemplateOptions implements Clonea
       }
 
       /**
+       * @deprecated See TemplateOptions#networks
        * @see CloudStackTemplateOptions#networkId
        */
+      @Deprecated
       public static CloudStackTemplateOptions networkId(String id) {
-         CloudStackTemplateOptions options = new CloudStackTemplateOptions();
-         return options.networkId(id);
+         return networks(id);
       }
 
       /**
+       * @deprecated see TemplateOptions#networks
        * @see CloudStackTemplateOptions#networkIds
        */
+      @Deprecated
       public static CloudStackTemplateOptions networkIds(Iterable<String> networkIds) {
-         CloudStackTemplateOptions options = new CloudStackTemplateOptions();
-         return options.networkIds(networkIds);
+         return networks(networkIds);
       }
 
       /**
@@ -409,6 +417,22 @@ public class CloudStackTemplateOptions extends TemplateOptions implements Clonea
          CloudStackTemplateOptions options = new CloudStackTemplateOptions();
          return CloudStackTemplateOptions.class.cast(options.nodeNames(nodeNames));
       }
+
+      /**
+       * @see TemplateOptions#networks(Iterable)
+       */
+      public static CloudStackTemplateOptions networks(Iterable<String> networks) {
+         CloudStackTemplateOptions options = new CloudStackTemplateOptions();
+         return CloudStackTemplateOptions.class.cast(options.networks(networks));
+      }
+
+      /**
+       * @see TemplateOptions#networks(String...)
+       */
+      public static CloudStackTemplateOptions networks(String... networks) {
+         CloudStackTemplateOptions options = new CloudStackTemplateOptions();
+         return CloudStackTemplateOptions.class.cast(options.networks(networks));
+      }
    }
 
    // methods that only facilitate returning the correct object type
@@ -467,5 +491,21 @@ public class CloudStackTemplateOptions extends TemplateOptions implements Clonea
    @Override
    public CloudStackTemplateOptions nodeNames(Iterable<String> nodeNames) {
       return CloudStackTemplateOptions.class.cast(super.nodeNames(nodeNames));
+   }
+
+   /**
+    * {@inheritDoc}
+    */
+   @Override
+   public CloudStackTemplateOptions networks(Iterable<String> networks) {
+      return CloudStackTemplateOptions.class.cast(super.networks(networks));
+   }
+
+   /**
+    * {@inheritDoc}
+    */
+   @Override
+   public CloudStackTemplateOptions networks(String... networks) {
+      return CloudStackTemplateOptions.class.cast(super.networks(networks));
    }
 }

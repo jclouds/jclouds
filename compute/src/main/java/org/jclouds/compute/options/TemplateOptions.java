@@ -98,6 +98,8 @@ public class TemplateOptions extends RunScriptOptions implements Cloneable {
          to.overrideAuthenticateSudo(this.shouldAuthenticateSudo());
       if (this.getTaskName() != null)
          to.nameTask(this.getTaskName());
+      if (!this.getNetworks().isEmpty())
+         to.networks(this.getNetworks());
    }
 
    public static class ImmutableTemplateOptions extends TemplateOptions {
@@ -324,6 +326,16 @@ public class TemplateOptions extends RunScriptOptions implements Cloneable {
       }
 
       @Override
+      public TemplateOptions networks(Iterable<String> networks) {
+         throw new IllegalArgumentException("networks are immutable");
+      }
+
+      @Override
+      public TemplateOptions networks(String... networks) {
+         throw new IllegalArgumentException("networks are immutable");
+      }
+
+      @Override
       public TemplateOptions userMetadata(Map<String, String> userMetadata) {
          throw new IllegalArgumentException("userMetadata is immutable");
       }
@@ -362,6 +374,8 @@ public class TemplateOptions extends RunScriptOptions implements Cloneable {
 
    protected Set<String> nodeNames = ImmutableSet.of();
 
+   protected Set<String> networks = ImmutableSet.of();
+
    public boolean equals(Object o) {
       if (this == o)
          return true;
@@ -372,13 +386,13 @@ public class TemplateOptions extends RunScriptOptions implements Cloneable {
               && equal(this.publicKey, that.publicKey) && equal(this.privateKey, that.privateKey)
               && equal(this.blockUntilRunning, that.blockUntilRunning) && equal(this.tags, that.tags)
               && equal(this.securityGroups, that.securityGroups) && equal(this.userMetadata, that.userMetadata)
-              && equal(this.nodeNames, that.nodeNames);
+              && equal(this.nodeNames, that.nodeNames) && equal(this.networks, that.networks);
    }
 
    @Override
    public int hashCode() {
       return Objects.hashCode(super.hashCode(), inboundPorts, script, publicKey, privateKey, blockUntilRunning, tags,
-                              securityGroups, userMetadata, nodeNames);
+                              securityGroups, userMetadata, nodeNames, networks);
    }
 
    @Override
@@ -402,6 +416,8 @@ public class TemplateOptions extends RunScriptOptions implements Cloneable {
          toString.add("securityGroups", securityGroups);
       if (userMetadata.size() != 0)
          toString.add("userMetadata", userMetadata);
+      if (!networks.isEmpty())
+         toString.add("networks", networks);
       return toString;
    }
 
@@ -431,6 +447,10 @@ public class TemplateOptions extends RunScriptOptions implements Cloneable {
 
    public String getPublicKey() {
       return publicKey;
+   }
+
+   public Set<String> getNetworks() {
+      return networks;
    }
 
    /**
@@ -521,6 +541,21 @@ public class TemplateOptions extends RunScriptOptions implements Cloneable {
     */
    public TemplateOptions securityGroups(String... securityGroups) {
       return securityGroups(ImmutableSet.copyOf(securityGroups));
+   }
+
+   /**
+    * Assigns the created nodes to these networks
+    */
+   public TemplateOptions networks(Iterable<String> networks) {
+      this.networks = ImmutableSet.copyOf(checkNotNull(networks, "networks"));
+      return this;
+   }
+
+   /**
+    * @see TemplateOptions#networks(Iterable)
+    */
+   public TemplateOptions networks(String... networks) {
+      return networks(ImmutableSet.copyOf(networks));
    }
 
    /**
@@ -616,6 +651,22 @@ public class TemplateOptions extends RunScriptOptions implements Cloneable {
       public static TemplateOptions securityGroups(String... securityGroups) {
          TemplateOptions options = new TemplateOptions();
          return options.securityGroups(securityGroups);
+      }
+
+      /**
+       * @see TemplateOptions#networks
+       */
+      public static TemplateOptions networks(Iterable<String> networks) {
+         TemplateOptions options = new TemplateOptions();
+         return options.networks(networks);
+      }
+
+      /**
+       * @see TemplateOptions#networks
+       */
+      public static TemplateOptions networks(String... networks) {
+         TemplateOptions options = new TemplateOptions();
+         return options.networks(networks);
       }
 
       /**
