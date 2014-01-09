@@ -61,6 +61,41 @@ public class NovaComputeServiceAdapterExpectTest extends BaseNovaComputeServiceC
    HttpResponse serverDetailResponse = HttpResponse.builder().statusCode(200)
          .payload(payloadFromResource("/server_details.json")).build();
 
+   public void testCreateNodeWithGroupEncodedIntoNameWithNetworks() throws Exception {
+
+      HttpRequest createServer = HttpRequest
+         .builder()
+         .method("POST")
+         .endpoint("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v1.1/3456/servers")
+         .addHeader("Accept", "application/json")
+         .addHeader("X-Auth-Token", authToken)
+         .payload(payloadFromStringWithContentType(
+                  "{\"server\":{\"name\":\"test-e92\",\"imageRef\":\"1241\",\"flavorRef\":\"100\",\"networks\": [{\"uuid\": \"4ebd35cf-bfe7-4d93-b0d8-eb468ce2245a\"}]}}","application/json"))
+         .build();
+
+      HttpResponse createServerResponse = HttpResponse.builder().statusCode(202).message("HTTP/1.1 202 Accepted")
+         .payload(payloadFromResourceWithContentType("/new_server_networks_response.json","application/json; charset=UTF-8")).build();
+
+      Map<HttpRequest, HttpResponse> requestResponseMap = ImmutableMap.<HttpRequest, HttpResponse> builder()
+               .put(keystoneAuthWithUsernameAndPasswordAndTenantName, responseWithKeystoneAccess)
+               .put(extensionsOfNovaRequest, extensionsOfNovaResponse)
+               .put(listDetail, listDetailResponse)
+               .put(listFlavorsDetail, listFlavorsDetailResponse)
+               .put(createServer, createServerResponse)
+               .put(serverDetail, serverDetailResponse).build();
+
+      Injector forNetworks = requestsSendResponses(requestResponseMap);
+
+      Template template = forNetworks.getInstance(TemplateBuilder.class).build();
+      template.getOptions().as(NovaTemplateOptions.class).networks("4ebd35cf-bfe7-4d93-b0d8-eb468ce2245a");
+      
+      NovaComputeServiceAdapter adapter = forNetworks.getInstance(NovaComputeServiceAdapter.class);
+
+      NodeAndInitialCredentials<ServerInZone> server = adapter.createNodeWithGroupEncodedIntoName("test", "test-e92", template);
+      assertNotNull(server);
+      // Response irrelevant in this expect test - just verifying the request.
+   }
+   
    public void testCreateNodeWithGroupEncodedIntoNameWithDiskConfig() throws Exception {
 
       HttpRequest createServer = HttpRequest
