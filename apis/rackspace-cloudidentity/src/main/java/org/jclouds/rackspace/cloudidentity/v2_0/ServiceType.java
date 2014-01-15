@@ -37,4 +37,9 @@ public interface ServiceType {
     * Cloud Queues
     */
    public static final String QUEUES = "rax:queues";
+   
+   /**
+    * Cloud Files CDN
+    */
+   public static final String OBJECT_CDN = "rax:object-cdn";
 }
