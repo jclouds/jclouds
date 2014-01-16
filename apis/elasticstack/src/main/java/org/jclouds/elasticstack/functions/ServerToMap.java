@@ -89,7 +89,7 @@ public class ServerToMap implements Function<Server, Map<String, String>> {
       }
 
       if (from.getVnc().getPassword() != null)
-         builder.put("vnc:password", from.getVnc().getPassword());
+         builder.put("password", from.getVnc().getPassword());
       if (from.getVnc().isTls())
          builder.put("vnc:tls", "on");
       if (from.getTags().size() != 0)

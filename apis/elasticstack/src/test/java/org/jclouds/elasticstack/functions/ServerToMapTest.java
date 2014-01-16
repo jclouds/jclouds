@@ -58,7 +58,7 @@ public class ServerToMapTest {
                               "08c92dd5-70a0-4f51-83d2-835919d254df"))
                   .putAll(
                         ImmutableMap.of("ide:0:0:media", "disk", "nic:0:model", "e1000", "vnc:ip", "auto",
-                              "vnc:password", "XXXXXXXX")).build());
+                              "password", "XXXXXXXX")).build());
    }
 
    public void testWeDontSetMac() {
@@ -82,7 +82,7 @@ public class ServerToMapTest {
                               "08c92dd5-70a0-4f51-83d2-835919d254df"))
                   .putAll(
                         ImmutableMap.of("ide:0:0:media", "disk", "nic:0:model", "e1000", "vnc:ip", "auto",
-                              "vnc:password", "XXXXXXXX")).build());
+                              "password", "XXXXXXXX")).build());
    }
 
     public void testBasicsV2() {
@@ -105,7 +105,7 @@ public class ServerToMapTest {
                               "08c92dd5-70a0-4f51-83d2-835919d254df"))
                   .putAll(
                         ImmutableMap.of("ide:0:0:media", "disk", "nic:0:model", "e1000", "vnc", "auto",
-                              "vnc:password", "XXXXXXXX")).build());
+                              "password", "XXXXXXXX")).build());
    }
 
 }

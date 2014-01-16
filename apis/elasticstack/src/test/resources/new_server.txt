@@ -1,6 +1,6 @@
 ide:0:0:write:requests 0
 boot ide:0:0
-vnc:password XXXXXXXX
+password XXXXXXXX
 ide:0:0 403c9a86-0aab-4e47-aa95-e9768021c4c1
 ide:0:0:read:requests 0
 ide:0:0:read:bytes 0
