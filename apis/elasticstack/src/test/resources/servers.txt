@@ -1,6 +1,6 @@
 ide:0:0:write:requests 3698
 boot ide:0:0
-vnc:password HfHzVmLT
+password HfHzVmLT
 ide:0:0 4af85ed3-0caa-4736-8a26-a33d7de0a122
 ide:0:0:read:requests 11154
 ide:0:0:read:bytes 45686784
@@ -27,7 +27,7 @@ status stopped
 name Demo
 mem 1024
 boot ide:0:0
-vnc:password HWbjvrg2
+password HWbjvrg2
 persistent true
 server 0f962616-2071-4173-be79-7dd084271edf
 smp auto

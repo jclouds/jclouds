@@ -81,7 +81,7 @@ public class MapToServerInfo implements Function<Map<String, String>, ServerInfo
          builder.bootDeviceIds(Splitter.on(' ').split(from.get("boot")));
 
 
-      builder.vnc(new VNC(from.get("vnc:ip") == null ? "auto" : from.get("vnc:ip"), from.get("vnc:password"), from.containsKey("vnc:tls")
+      builder.vnc(new VNC(from.get("vnc:ip") == null ? "auto" : from.get("vnc:ip"), from.get("password"), from.containsKey("vnc:tls")
               && Boolean.valueOf(from.get("vnc:tls"))));
 
 
