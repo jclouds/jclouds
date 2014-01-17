@@ -22,6 +22,9 @@ import com.google.common.util.concurrent.ListenableFuture;
 import com.google.inject.Binder;
 import com.google.inject.TypeLiteral;
 
+import org.jclouds.util.TypeToken2;
+import org.jclouds.util.TypeToken2.TypeParameter2;
+
 /**
  * 
  * @author Adrian Cole
@@ -100,13 +103,13 @@ public class BinderUtils {
    @Deprecated
    @SuppressWarnings({ "unchecked", "serial" })
    private static <S, A> void bindHttpApiProvider(Binder binder, Class<S> sync, Class<A> async) {
-      TypeToken<SyncToAsyncHttpApiProvider<S, A>> token = new TypeToken<SyncToAsyncHttpApiProvider<S, A>>() {
-      }.where(new TypeParameter<S>() {
-      }, sync).where(new TypeParameter<A>() {
+      TypeToken<SyncToAsyncHttpApiProvider<S, A>> token = new TypeToken2<SyncToAsyncHttpApiProvider<S, A>>() {
+      }.where(new TypeParameter2<S>() {
+      }, sync, new TypeParameter2<A>() {
       }, async);
       binder.bind(sync).toProvider(TypeLiteral.class.cast(TypeLiteral.get(token.getType())));
    }
-   
+
    /**
     * adds an explicit binding for an interface which synchronously blocks on
     * similar calls to an {@code async} type.
@@ -140,9 +143,9 @@ public class BinderUtils {
    @Deprecated
    @SuppressWarnings({ "unchecked", "serial" })
    private static <S, A> void bindCallGetOnFutures(Binder binder, Class<S> sync, Class<A> async) {
-      TypeToken<CallGetOnFuturesProvider<S, A>> token = new TypeToken<CallGetOnFuturesProvider<S, A>>() {
-      }.where(new TypeParameter<S>() {
-      }, sync).where(new TypeParameter<A>() {
+      TypeToken<CallGetOnFuturesProvider<S, A>> token = new TypeToken2<CallGetOnFuturesProvider<S, A>>() {
+      }.where(new TypeParameter2<S>() {
+      }, sync, new TypeParameter2<A>() {
       }, async);
       binder.bind(sync).toProvider(TypeLiteral.class.cast(TypeLiteral.get(token.getType())));
    }
