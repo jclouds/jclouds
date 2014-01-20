@@ -54,6 +54,11 @@ public class ParseSaxTest extends BaseHandlerTest {
    ParseSax<String> createParser() {
       return factory.create(injector.getInstance(TestHandler.class));
    }
+
+   @DataProvider
+   public Object[][] runUnderJava6() {
+       return TestUtils.isJava6() ? SINGLE_NO_ARG_INVOCATION : NO_INVOCATIONS;
+   }
    
    @DataProvider
    public Object[][] runUnderJava7() {
@@ -61,8 +66,8 @@ public class ParseSaxTest extends BaseHandlerTest {
    }
 
    @DataProvider
-   public Object[][] ignoreUnderJava7() {
-       return TestUtils.isJava7() ? NO_INVOCATIONS : SINGLE_NO_ARG_INVOCATION;
+   public Object[][] runUnderJava8() {
+       return TestUtils.isJava8() ? SINGLE_NO_ARG_INVOCATION : NO_INVOCATIONS;
    }
    
    @Test
@@ -129,7 +134,7 @@ public class ParseSaxTest extends BaseHandlerTest {
       }
    }
 
-   @Test(dataProvider = "ignoreUnderJava7", description = "see http://code.google.com/p/jclouds/issues/detail?id=795")
+   @Test(dataProvider = "runUnderJava6")
    public void testAddDetailsAndPropagateOkWithValidRequestResponseWithSAXParseException() throws ExecutionException,
          InterruptedException, TimeoutException, IOException {
 
@@ -155,8 +160,34 @@ public class ParseSaxTest extends BaseHandlerTest {
       }
    }
 
-   @Test(dataProvider = "runUnderJava7", description = "see http://code.google.com/p/jclouds/issues/detail?id=795")
+   @Test(dataProvider = "runUnderJava7")
    public void testAddDetailsAndPropagateOkWithValidRequestResponseWithSAXParseException_java7() throws ExecutionException,
+         InterruptedException, TimeoutException, IOException {
+
+      ParseSax<String> parser = createParser();
+      HttpRequest request = HttpRequest.builder().method("GET").endpoint("http://foohost").build();
+      HttpResponse response = HttpResponse.builder().statusCode(304).message("Not Modified").build();
+      Locator locator = createMock(Locator.class);
+      expect(locator.getColumnNumber()).andReturn(1);
+      expect(locator.getLineNumber()).andReturn(1);
+      expect(locator.getPublicId()).andReturn("publicId");
+      expect(locator.getSystemId()).andReturn("systemId");
+      replay(locator);
+      Exception input = new SAXParseException("foo", locator);
+      verify(locator);
+
+      try {
+         parser.setContext(request);
+         parser.addDetailsAndPropagate(response, input);
+      } catch (RuntimeException e) {
+         assertEquals(e.getMessage(),
+               "request: GET http://foohost HTTP/1.1; response: HTTP/1.1 304 Not Modified; error at 1:1 in document systemId; cause: org.xml.sax.SAXParseExceptionpublicId: publicId; systemId: systemId; lineNumber: 1; columnNumber: 1; foo");
+         assertEquals(e.getCause(), input);
+      }
+   }
+
+   @Test(dataProvider = "runUnderJava8")
+   public void testAddDetailsAndPropagateOkWithValidRequestResponseWithSAXParseException_java8() throws ExecutionException,
          InterruptedException, TimeoutException, IOException {
 
       ParseSax<String> parser = createParser();

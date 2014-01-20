@@ -30,6 +30,7 @@ import java.util.SortedSet;
 import org.testng.annotations.Test;
 
 import com.google.common.base.Function;
+import com.google.common.base.Predicates;
 import com.google.common.collect.FluentIterable;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.reflect.Invokable;
@@ -92,23 +93,55 @@ public class Reflection2Test {
       assertEquals(methodInSuper.getParameters().get(0).getType().getRawType(), Object.class);
    }
 
-   ImmutableSet<String> setMethods = ImmutableSet.of("add", "equals", "hashCode", "clear", "isEmpty", "contains",
-         "addAll", "size", "toArray", "iterator", "remove", "removeAll", "containsAll", "retainAll");
+   ImmutableSet<String> SET_METHODS = ImmutableSet.of(
+         // Java 6 and 7 methods
+         "add",
+         "addAll",
+         "clear",
+         "contains",
+         "containsAll",
+         "equals",
+         "hashCode",
+         "isEmpty",
+         "iterator",
+         "remove",
+         "removeAll",
+         "retainAll",
+         "size",
+         "toArray",
+         // Java 8 methods
+         "forEach",
+         "parallelStream",
+         "removeIf",
+         "spliterator",
+         "stream");
+
+   ImmutableSet<String> SORTED_SET_METHODS = ImmutableSet.<String>builder()
+         .addAll(SET_METHODS)
+         .add("comparator")
+         .add("first")
+         .add("headSet")
+         .add("last")
+         .add("subSet")
+         .add("tailSet")
+         .build();
 
    public void testMethods() {
       Set<String> methodNames = FluentIterable.from(methods(Set.class)).transform(invokableToName)
-            .transform(toStringFunction()).toSet();
+            .transform(toStringFunction())
+            .filter(Predicates.not(Predicates.<String>in(SET_METHODS)))
+            .toSet();
 
-      assertEquals(methodNames, setMethods);
+      assertEquals(methodNames, ImmutableSet.<String>of());
    }
 
    public void testMethodsSubClass() {
       Set<String> methodNames = FluentIterable.from(methods(SortedSet.class)).transform(invokableToName)
-            .transform(toStringFunction()).toSet();
+            .transform(toStringFunction())
+            .filter(Predicates.not(Predicates.<String>in(SORTED_SET_METHODS)))
+            .toSet();
 
-      assertEquals(methodNames,
-            ImmutableSet.builder().add("comparator", "last", "first", "subSet", "headSet", "tailSet")
-                  .addAll(setMethods).build());
+      assertEquals(methodNames, ImmutableSet.<String>of());
    }
 
    static final Function<Invokable<?, ?>, String> invokableToName = new Function<Invokable<?, ?>, String>() {
