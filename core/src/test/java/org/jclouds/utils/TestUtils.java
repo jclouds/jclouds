@@ -26,8 +26,18 @@ public class TestUtils {
     public static final Object[][] NO_INVOCATIONS = new Object[0][0];
     public static final Object[][] SINGLE_NO_ARG_INVOCATION = { new Object[0] };
 
+    public static boolean isJava6() {
+        System.out.println(System.getProperty("java.version", "None??"));
+        return System.getProperty("java.version", "").contains("1.6.");
+    }
+
     public static boolean isJava7() {
         System.out.println(System.getProperty("java.version", "None??"));
         return System.getProperty("java.version", "").contains("1.7.");
+    }
+
+    public static boolean isJava8() {
+        System.out.println(System.getProperty("java.version", "None??"));
+        return System.getProperty("java.version", "").contains("1.8.");
     }
 }
