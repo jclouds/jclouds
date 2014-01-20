@@ -29,7 +29,6 @@ import java.util.Properties;
 import javax.net.ssl.SSLContext;
 
 import org.jclouds.ContextBuilder;
-import org.jclouds.http.config.JavaUrlHttpCommandExecutorServiceModule;
 import org.jclouds.providers.AnonymousProviderMetadata;
 import org.testng.annotations.BeforeClass;
 

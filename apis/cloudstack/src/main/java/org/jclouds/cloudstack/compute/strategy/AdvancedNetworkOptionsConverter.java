@@ -26,7 +26,9 @@ import java.util.Map;
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Predicates.and;
 import static com.google.common.collect.Iterables.filter;
-import static org.jclouds.cloudstack.predicates.NetworkPredicates.*;
+import static org.jclouds.cloudstack.predicates.NetworkPredicates.defaultNetworkInZone;
+import static org.jclouds.cloudstack.predicates.NetworkPredicates.isIsolatedNetwork;
+import static org.jclouds.cloudstack.predicates.NetworkPredicates.supportsStaticNAT;
 
 /**
  * Convert template options into DeployVirtualMachineOptions, when the target zone has advanced networking.

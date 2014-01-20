@@ -24,7 +24,6 @@ import static org.testng.Assert.fail;
 import java.util.Properties;
 
 import org.jclouds.http.config.JavaUrlHttpCommandExecutorServiceModule;
-import org.jclouds.http.handlers.BackoffLimitedRetryHandler;
 import org.testng.annotations.Test;
 
 import com.google.inject.Module;

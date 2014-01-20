@@ -22,7 +22,13 @@ import org.testng.annotations.Test;
 import java.io.IOException;
 import java.util.Set;
 
-import static org.jclouds.compute.options.TemplateOptions.Builder.*;
+import static org.jclouds.compute.options.TemplateOptions.Builder.authorizePublicKey;
+import static org.jclouds.compute.options.TemplateOptions.Builder.blockOnPort;
+import static org.jclouds.compute.options.TemplateOptions.Builder.blockUntilRunning;
+import static org.jclouds.compute.options.TemplateOptions.Builder.inboundPorts;
+import static org.jclouds.compute.options.TemplateOptions.Builder.installPrivateKey;
+import static org.jclouds.compute.options.TemplateOptions.Builder.networks;
+import static org.jclouds.compute.options.TemplateOptions.Builder.nodeNames;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertTrue;
 

@@ -46,7 +46,6 @@ import javax.net.ssl.SSLContext;
 
 import org.jclouds.Constants;
 import org.jclouds.JcloudsVersion;
-import org.jclouds.http.HttpCommandExecutorService;
 import org.jclouds.http.HttpRequest;
 import org.jclouds.http.HttpResponse;
 import org.jclouds.http.HttpUtils;

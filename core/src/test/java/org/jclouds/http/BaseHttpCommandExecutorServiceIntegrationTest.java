@@ -212,8 +212,8 @@ public abstract class BaseHttpCommandExecutorServiceIntegrationTest extends Base
    public void testGetStringRedirect() throws Exception {
       MockWebServer redirectTarget = mockWebServer(new MockResponse().setBody(XML2));
       redirectTarget.useHttps(sslContext.getSocketFactory(), false);
-      MockWebServer server = mockWebServer((new MockResponse().setResponseCode(302).setHeader("Location",
-            redirectTarget.getUrl("/").toString())));
+      MockWebServer server = mockWebServer(new MockResponse().setResponseCode(302).setHeader("Location",
+            redirectTarget.getUrl("/").toString()));
       IntegrationTestClient client = client(server.getUrl("/").toString());
       try {
          String result = client.download("redirect");
