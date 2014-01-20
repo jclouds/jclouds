@@ -23,8 +23,23 @@ import org.testng.collections.Maps;
 
 import java.util.Map;
 
-import static org.jclouds.cloudstack.compute.options.CloudStackTemplateOptions.Builder.*;
-import static org.testng.Assert.*;
+import static org.jclouds.cloudstack.compute.options.CloudStackTemplateOptions.Builder.account;
+import static org.jclouds.cloudstack.compute.options.CloudStackTemplateOptions.Builder.dataDiskSize;
+import static org.jclouds.cloudstack.compute.options.CloudStackTemplateOptions.Builder.diskOfferingId;
+import static org.jclouds.cloudstack.compute.options.CloudStackTemplateOptions.Builder.domainId;
+import static org.jclouds.cloudstack.compute.options.CloudStackTemplateOptions.Builder.generateKeyPair;
+import static org.jclouds.cloudstack.compute.options.CloudStackTemplateOptions.Builder.generateSecurityGroup;
+import static org.jclouds.cloudstack.compute.options.CloudStackTemplateOptions.Builder.ipOnDefaultNetwork;
+import static org.jclouds.cloudstack.compute.options.CloudStackTemplateOptions.Builder.ipsToNetworks;
+import static org.jclouds.cloudstack.compute.options.CloudStackTemplateOptions.Builder.keyPair;
+import static org.jclouds.cloudstack.compute.options.CloudStackTemplateOptions.Builder.networks;
+import static org.jclouds.cloudstack.compute.options.CloudStackTemplateOptions.Builder.securityGroupId;
+import static org.jclouds.cloudstack.compute.options.CloudStackTemplateOptions.Builder.securityGroupIds;
+import static org.jclouds.cloudstack.compute.options.CloudStackTemplateOptions.Builder.setupStaticNat;
+import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertFalse;
+import static org.testng.Assert.assertTrue;
+import static org.testng.Assert.fail;
 
 /**
  * Tests possible uses of {@code CloudStackTemplateOptions} and

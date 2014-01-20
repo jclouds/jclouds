@@ -18,8 +18,6 @@ package org.jclouds.blobstore.functions;
 
 import static org.testng.Assert.assertEquals;
 
-import java.io.File;
-
 import org.jclouds.ContextBuilder;
 import org.jclouds.blobstore.domain.Blob;
 import org.jclouds.blobstore.domain.Blob.Factory;
