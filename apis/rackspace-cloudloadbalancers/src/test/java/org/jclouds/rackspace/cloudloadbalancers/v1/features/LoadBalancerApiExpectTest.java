@@ -219,9 +219,9 @@ public class LoadBalancerApiExpectTest extends BaseCloudLoadBalancerApiExpectTes
 
    private Metadata getExpectedMetadata() {
       Metadata metadata = new Metadata();
+      metadata.put("os", "ubuntu");
       metadata.put("color", "red");
       metadata.put("label", "web-load-balancer");
-      metadata.put("os", "ubuntu");
 
       return metadata;
    }
