@@ -19,7 +19,7 @@ package org.jclouds.rackspace.cloudloadbalancers.v1.domain;
 import java.util.Map;
 
 import com.google.common.collect.ForwardingMap;
-import static com.google.common.collect.Maps.newHashMap;
+import static com.google.common.collect.Maps.newLinkedHashMap;
 import static com.google.common.collect.Sets.newHashSet;
 
 /**
@@ -30,8 +30,8 @@ import static com.google.common.collect.Sets.newHashSet;
  * @author Everett Toews
  */
 public class Metadata extends ForwardingMap<String, String> {
-   private final Map<String, String> metadata = newHashMap();
-   private final Map<String, Integer> keyToId = newHashMap();
+   private final Map<String, String> metadata = newLinkedHashMap(); // Implementing class must be sorted.
+   private final Map<String, Integer> keyToId = newLinkedHashMap();
    
    public Metadata(Metadata metadata) {
       super();
