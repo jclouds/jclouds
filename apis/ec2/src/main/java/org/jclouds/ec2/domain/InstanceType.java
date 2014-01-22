@@ -27,6 +27,7 @@ package org.jclouds.ec2.domain;
  * 
  */
 public class InstanceType {
+
    /**
     * Micro Instance
     * <ul>
@@ -37,6 +38,7 @@ public class InstanceType {
     * </ul>
     */
    public static final String T1_MICRO = "t1.micro";
+
    /**
     * Small Instance
     * <ul>
@@ -48,6 +50,7 @@ public class InstanceType {
     * </ul>
     */
    public static final String M1_SMALL = "m1.small";
+
    /**
     * Medium Instance
     * <ul>
@@ -59,6 +62,7 @@ public class InstanceType {
     * </ul>
     */
    public static final String M1_MEDIUM = "m1.medium";
+
    /**
     * Large Instance
     * <ul>
@@ -70,6 +74,7 @@ public class InstanceType {
     * </ul>
     */
    public static final String M1_LARGE = "m1.large";
+
    /**
     * Extra Large Instance
     * <ul>
@@ -81,6 +86,7 @@ public class InstanceType {
     * </ul>
     */
    public static final String M1_XLARGE = "m1.xlarge";
+
    /**
     * High-Memory Extra Large Instance
     * <ul>
@@ -93,6 +99,7 @@ public class InstanceType {
     * </ul>
     */
    public static final String M2_XLARGE = "m2.xlarge";
+
    /**
     * High-Memory Double Extra Large Instance
     * <ul>
@@ -105,6 +112,7 @@ public class InstanceType {
     * </ul>
     */
    public static final String M2_2XLARGE = "m2.2xlarge";
+
    /**
     * High-Memory Quadruple Extra Large Instance
     * <ul>
@@ -117,6 +125,31 @@ public class InstanceType {
     * </ul>
     */
    public static final String M2_4XLARGE = "m2.4xlarge";
+
+   /**
+    * M3 Medium Instance
+    * <ul>
+    * <li>3.75 GiB memory</li>
+    * <li>3 EC2 Compute Units (1 virtual core with 3 EC2 Compute Units)</li>
+    * <li>1 SSD-based volume with 4 GiB of instance storage</li>
+    * <li>32-bit or 64-bit platform</li>
+    * <li>I/O Performance: Moderate</li>
+    * </ul>
+    */
+   public static final String M3_MEDIUM = "m3.medium";
+
+   /**
+    * M3 Large Instance
+    * <ul>
+    * <li>7 GiB memory</li>
+    * <li>6.5 EC2 Compute Units (2 virtual cores with 3.25 EC2 Compute Units each)</li>
+    * <li>1 SSD-based volume with 32 GiB of instance storage</li>
+    * <li>32-bit or 64-bit platform</li>
+    * <li>I/O Performance: Moderate</li>
+    * </ul>
+    */
+   public static final String M3_LARGE = "m3.large";
+
    /**
     * M3 Extra Large Instance
     * <ul>
@@ -128,6 +161,7 @@ public class InstanceType {
     * </ul>
     */
    public static final String M3_XLARGE = "m3.xlarge";
+
    /**
     * M3 Double Extra Large Instance
     * <ul>
@@ -139,6 +173,7 @@ public class InstanceType {
     * </ul>
     */
    public static final String M3_2XLARGE = "m3.2xlarge";
+
    /**
     * High-CPU Medium Instance
     * <ul>
@@ -150,6 +185,7 @@ public class InstanceType {
     * </ul>
     */
    public static final String C1_MEDIUM = "c1.medium";
+
    /**
     * High-CPU Extra Large Instance
     * <ul>
