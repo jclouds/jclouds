@@ -18,12 +18,20 @@ package org.jclouds.aws.ec2.compute.suppliers;
 
 import static org.jclouds.ec2.compute.domain.EC2HardwareBuilder.c1_medium;
 import static org.jclouds.ec2.compute.domain.EC2HardwareBuilder.c1_xlarge;
+import static org.jclouds.ec2.compute.domain.EC2HardwareBuilder.c3_2xlarge;
+import static org.jclouds.ec2.compute.domain.EC2HardwareBuilder.c3_4xlarge;
+import static org.jclouds.ec2.compute.domain.EC2HardwareBuilder.c3_8xlarge;
+import static org.jclouds.ec2.compute.domain.EC2HardwareBuilder.c3_xlarge;
 import static org.jclouds.ec2.compute.domain.EC2HardwareBuilder.cc1_4xlarge;
 import static org.jclouds.ec2.compute.domain.EC2HardwareBuilder.cc2_8xlarge;
 import static org.jclouds.ec2.compute.domain.EC2HardwareBuilder.cg1_4xlarge;
 import static org.jclouds.ec2.compute.domain.EC2HardwareBuilder.g2_2xlarge;
 import static org.jclouds.ec2.compute.domain.EC2HardwareBuilder.hi1_4xlarge;
 import static org.jclouds.ec2.compute.domain.EC2HardwareBuilder.hs1_8xlarge;
+import static org.jclouds.ec2.compute.domain.EC2HardwareBuilder.i2_2xlarge;
+import static org.jclouds.ec2.compute.domain.EC2HardwareBuilder.i2_4xlarge;
+import static org.jclouds.ec2.compute.domain.EC2HardwareBuilder.i2_8xlarge;
+import static org.jclouds.ec2.compute.domain.EC2HardwareBuilder.i2_xlarge;
 import static org.jclouds.ec2.compute.domain.EC2HardwareBuilder.m1_large;
 import static org.jclouds.ec2.compute.domain.EC2HardwareBuilder.m1_medium;
 import static org.jclouds.ec2.compute.domain.EC2HardwareBuilder.m1_small;
@@ -31,8 +39,10 @@ import static org.jclouds.ec2.compute.domain.EC2HardwareBuilder.m1_xlarge;
 import static org.jclouds.ec2.compute.domain.EC2HardwareBuilder.m2_2xlarge;
 import static org.jclouds.ec2.compute.domain.EC2HardwareBuilder.m2_4xlarge;
 import static org.jclouds.ec2.compute.domain.EC2HardwareBuilder.m2_xlarge;
-import static org.jclouds.ec2.compute.domain.EC2HardwareBuilder.m3_xlarge;
 import static org.jclouds.ec2.compute.domain.EC2HardwareBuilder.m3_2xlarge;
+import static org.jclouds.ec2.compute.domain.EC2HardwareBuilder.m3_large;
+import static org.jclouds.ec2.compute.domain.EC2HardwareBuilder.m3_medium;
+import static org.jclouds.ec2.compute.domain.EC2HardwareBuilder.m3_xlarge;
 import static org.jclouds.ec2.compute.domain.EC2HardwareBuilder.t1_micro;
 
 import java.util.Set;
@@ -70,9 +80,30 @@ public class AWSEC2HardwareSupplier extends EC2HardwareSupplier {
       sizes.add(hi1_4xlarge().supportsImageIds(ccAmis).build());
       sizes.add(hs1_8xlarge().supportsImageIds(ccAmis).build());
       sizes.add(g2_2xlarge().supportsImageIds(ccAmis).build());
-      sizes.addAll(ImmutableSet.<Hardware> of(t1_micro().build(), c1_medium().build(), c1_xlarge().build(), m1_large()
-               .build(), m1_small().build(), m1_medium().build(), m1_xlarge().build(), m2_xlarge().build(), 
-               m2_2xlarge().build(), m2_4xlarge().build(), m3_xlarge().build(), m3_2xlarge().build()));
+
+      sizes.add(t1_micro().build());
+      sizes.add(c1_medium().build());
+      sizes.add(c1_xlarge().build());
+      sizes.add(c3_xlarge().build());
+      sizes.add(c3_2xlarge().build());
+      sizes.add(c3_4xlarge().build());
+      sizes.add(c3_8xlarge().build());
+      sizes.add(i2_xlarge().build());
+      sizes.add(i2_2xlarge().build());
+      sizes.add(i2_4xlarge().build());
+      sizes.add(i2_8xlarge().build());
+      sizes.add(m1_large().build());
+      sizes.add(m1_small().build());
+      sizes.add(m1_medium().build());
+      sizes.add(m1_xlarge().build());
+      sizes.add(m2_xlarge().build());
+      sizes.add(m2_2xlarge().build());
+      sizes.add(m2_4xlarge().build());
+      sizes.add(m3_medium().build());
+      sizes.add(m3_large().build());
+      sizes.add(m3_xlarge().build());
+      sizes.add(m3_2xlarge().build());
+
       return sizes.build();
    }
 }
