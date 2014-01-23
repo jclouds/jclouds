@@ -105,7 +105,7 @@ public class BaseViewTest {
          wine.unwrap(typeToken(PeanutButter.class));
          fail();
       } catch (IllegalArgumentException e) {
-         assertEquals(e.getMessage(), "backend type: org.jclouds.internal.BaseViewTest$Water not assignable from org.jclouds.internal.BaseViewTest$PeanutButter");
+         assertEquals(e.getMessage(), "backend type: org.jclouds.internal.BaseViewTest$Water not assignable to org.jclouds.internal.BaseViewTest$PeanutButter");
       }
    }
 

@@ -51,7 +51,7 @@ public abstract class BaseView extends ForwardingObject implements View {
    @SuppressWarnings("unchecked")
    @Override
    public <C extends Context> C unwrap(TypeToken<C> type) {
-      checkArgument(checkNotNull(type, "type").isAssignableFrom(backendType), "backend type: %s not assignable from %s", backendType, type);
+      checkArgument(checkNotNull(type, "type").isAssignableFrom(backendType), "backend type: %s not assignable to %s", backendType, type);
       return (C) backend;
    }
    
