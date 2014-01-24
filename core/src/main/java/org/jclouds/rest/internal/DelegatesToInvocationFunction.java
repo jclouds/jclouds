@@ -141,7 +141,7 @@ public class DelegatesToInvocationFunction<S, F extends Function<Invocation, Obj
 
    protected Object handle(Invocation invocation) {
       Invokable<?, ?> invokable = invocation.getInvokable();
-      if (CLOSE.equals(invokable)) {
+      if (isCloseMethod(invokable)) {
          try {
             injector.getInstance(Closer.class).close();
             return null;
@@ -155,6 +155,22 @@ public class DelegatesToInvocationFunction<S, F extends Function<Invocation, Obj
       } else {
          return methodInvoker.apply(invocation);
       }
+   }
+
+   private static boolean isCloseMethod(Invokable<?, ?> invokable) {
+      /*
+       * Tests equality according to the Javadoc for java.lang.reflect.Method:
+       *
+       * Two Methods are the same if they were declared by the same class
+       * and have the same name and formal parameter types and return type.
+       *
+       * Invokable now uses the *owning* class (not the declaring class) in
+       * its equals check.
+       */
+      return CLOSE.getDeclaringClass().equals(invokable.getDeclaringClass())
+              && CLOSE.getName().equals(invokable.getName())
+              && CLOSE.getParameters().equals(invokable.getParameters())
+              && CLOSE.getReturnType().equals(invokable.getReturnType());
    }
 
    protected final Injector injector;
