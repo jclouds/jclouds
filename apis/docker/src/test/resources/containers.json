@@ -1,0 +1,20 @@
+[
+  {
+    "Command": "/usr/sbin/sshd -D",
+    "Created": 1395472605,
+    "Id": "6d35806c1bd2b25cd92bba2d2c2c5169dc2156f53ab45c2b62d76e2d2fee14a9",
+    "Image": "jclouds/ubuntu:latest",
+    "Names": [
+      "/hopeful_mclean"
+    ],
+    "Ports": [
+      {
+        "IP": "0.0.0.0",
+        "PrivatePort": 22,
+        "PublicPort": 49231,
+        "Type": "tcp"
+      }
+    ],
+    "Status": "Up 55 seconds"
+  }
+]
