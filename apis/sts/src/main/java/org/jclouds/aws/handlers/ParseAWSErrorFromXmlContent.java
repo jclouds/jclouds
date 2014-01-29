@@ -35,6 +35,7 @@ import org.jclouds.http.HttpResponseException;
 import org.jclouds.logging.Logger;
 import org.jclouds.rest.AuthorizationException;
 import org.jclouds.rest.InsufficientResourcesException;
+import org.jclouds.rest.ResourceAlreadyExistsException;
 import org.jclouds.rest.ResourceNotFoundException;
 import org.jclouds.util.Strings2;
 
@@ -128,7 +129,12 @@ public class ParseAWSErrorFromXmlContent implements HttpErrorHandler {
             }
             break;
          case 409:
-            exception = new IllegalStateException(message, exception);
+            if ("BucketAlreadyExists".equals(errorCode)) {
+               exception = new ResourceAlreadyExistsException(exception);
+            } else {
+               exception = new IllegalStateException(message, exception);
+            }
+            break;
       }
       return exception;
    }

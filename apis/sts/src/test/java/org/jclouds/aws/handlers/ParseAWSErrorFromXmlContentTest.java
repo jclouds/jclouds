@@ -38,6 +38,7 @@ import org.jclouds.http.functions.config.SaxParserModule;
 import org.jclouds.rest.AuthorizationException;
 import org.jclouds.rest.InsufficientResourcesException;
 import org.jclouds.rest.RequestSigner;
+import org.jclouds.rest.ResourceAlreadyExistsException;
 import org.jclouds.rest.ResourceNotFoundException;
 import org.testng.annotations.Test;
 
@@ -108,6 +109,22 @@ public class ParseAWSErrorFromXmlContentTest {
                "",
                "<Response><Errors><Error><Code>TooManyBuckets</Code><Message>You have attempted to create more buckets than allowed</Message></Error></Errors><RequestID>c14f531a-cc35-4b48-8149-2655c7e6dc76</RequestID></Response>",
                InsufficientResourcesException.class);
+   }
+
+   @Test
+   public void test409WithBucketAlreadyExistsMakesResourceAlreadyExistsException() {
+      assertCodeMakes(
+               POST,
+               URI.create("https://ec2.us-east-1.amazonaws.com/"),
+               CONFLICT.getStatusCode(),
+               "",
+               "<Response><Errors><Error>" +
+               "<Code>BucketAlreadyExists</Code>" +
+               "<Message>The requested bucket name is not available." +
+               " The bucket namespace is shared by all users of the system." +
+               " Please select a different name and try again.</Message>" +
+               "</Error></Errors><RequestID>c14f531a-cc35-4b48-8149-2655c7e6dc76</RequestID></Response>",
+               ResourceAlreadyExistsException.class);
    }
 
    @Test
