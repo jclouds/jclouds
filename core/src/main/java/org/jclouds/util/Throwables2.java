@@ -27,10 +27,12 @@ import org.jclouds.concurrent.TransformParallelException;
 import org.jclouds.http.HttpResponseException;
 import org.jclouds.rest.AuthorizationException;
 import org.jclouds.rest.InsufficientResourcesException;
+import org.jclouds.rest.ResourceAlreadyExistsException;
 import org.jclouds.rest.ResourceNotFoundException;
 
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Predicate;
+import com.google.common.collect.ImmutableList;
 import com.google.common.reflect.TypeToken;
 import com.google.inject.CreationException;
 import com.google.inject.ProvisionException;
@@ -125,8 +127,19 @@ public class Throwables2 {
       return null;
    }
 
+   // Note that ordering matters to propagateIfPossible.
+   private static final ImmutableList<Class<? extends Throwable>> PROPAGATABLE_EXCEPTION_TYPES = ImmutableList.of(
+         IllegalStateException.class,
+         AssertionError.class,
+         UnsupportedOperationException.class,
+         IllegalArgumentException.class,
+         AuthorizationException.class,
+         ResourceAlreadyExistsException.class,
+         ResourceNotFoundException.class,
+         InsufficientResourcesException.class,
+         HttpResponseException.class);
+
    // Note this needs to be kept up-to-date with all top-level exceptions jclouds works against
-   @SuppressWarnings("unchecked")
    public static void propagateIfPossible(Throwable exception, Iterable<TypeToken<? extends Throwable>> throwables)
          throws Throwable {
       for (TypeToken<? extends Throwable> type : throwables) {
@@ -135,10 +148,7 @@ public class Throwables2 {
             throw throwable;
          }
       }
-      for (Class<Exception> propagatableExceptionType : new Class[] { IllegalStateException.class,
-            AssertionError.class, UnsupportedOperationException.class, IllegalArgumentException.class,
-            AuthorizationException.class, ResourceNotFoundException.class, InsufficientResourcesException.class,
-            HttpResponseException.class }) {
+      for (Class<? extends Throwable> propagatableExceptionType : PROPAGATABLE_EXCEPTION_TYPES) {
          Throwable throwable = Throwables2.getFirstThrowableOfType(exception, propagatableExceptionType);
          if (throwable != null) {
             throw throwable;
