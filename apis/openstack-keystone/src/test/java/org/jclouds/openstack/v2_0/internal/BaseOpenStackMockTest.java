@@ -150,6 +150,18 @@ public class BaseOpenStackMockTest<A extends Closeable> {
          Throwables.propagate(e);
       }
    }
+   
+   /**
+    * Ensures server received authentication request.
+    */
+   public void assertExtensions(MockWebServer server) {
+      assertTrue(server.getRequestCount() >= 1);
+      try {
+         assertEquals(server.takeRequest().getRequestLine(), "GET /extensions HTTP/1.1");
+      } catch (InterruptedException e) {
+         Throwables.propagate(e);
+      }
+   }
 
    /**
     * Ensures the request has a json header.

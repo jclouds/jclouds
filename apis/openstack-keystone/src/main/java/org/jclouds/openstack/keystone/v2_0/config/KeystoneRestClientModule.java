@@ -34,6 +34,14 @@ import org.jclouds.http.annotation.ServerError;
 import org.jclouds.location.Provider;
 import org.jclouds.openstack.keystone.v2_0.KeystoneApi;
 import org.jclouds.openstack.keystone.v2_0.KeystoneAsyncApi;
+import org.jclouds.openstack.keystone.v2_0.extensions.RoleAdminApi;
+import org.jclouds.openstack.keystone.v2_0.extensions.RoleAdminAsyncApi;
+import org.jclouds.openstack.keystone.v2_0.extensions.ServiceAdminApi;
+import org.jclouds.openstack.keystone.v2_0.extensions.ServiceAdminAsyncApi;
+import org.jclouds.openstack.keystone.v2_0.extensions.TenantAdminApi;
+import org.jclouds.openstack.keystone.v2_0.extensions.TenantAdminAsyncApi;
+import org.jclouds.openstack.keystone.v2_0.extensions.UserAdminApi;
+import org.jclouds.openstack.keystone.v2_0.extensions.UserAdminAsyncApi;
 import org.jclouds.openstack.keystone.v2_0.features.ServiceApi;
 import org.jclouds.openstack.keystone.v2_0.features.ServiceAsyncApi;
 import org.jclouds.openstack.keystone.v2_0.features.TenantApi;
@@ -85,6 +93,10 @@ public class KeystoneRestClientModule<S extends KeystoneApi, A extends KeystoneA
             .put(TokenApi.class, TokenAsyncApi.class)
             .put(UserApi.class, UserAsyncApi.class)
             .put(TenantApi.class, TenantAsyncApi.class)
+            .put(UserAdminApi.class, UserAdminAsyncApi.class)
+            .put(TenantAdminApi.class, TenantAdminAsyncApi.class)
+            .put(RoleAdminApi.class, RoleAdminAsyncApi.class)
+            .put(ServiceAdminApi.class, ServiceAdminAsyncApi.class)
             .build();
 
    @SuppressWarnings("unchecked")

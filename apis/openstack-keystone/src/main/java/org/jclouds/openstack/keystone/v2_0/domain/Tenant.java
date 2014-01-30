@@ -26,12 +26,14 @@ import com.google.common.base.Objects;
 import com.google.common.base.Objects.ToStringHelper;
 
 /**
- * A container used to group or isolate resources and/or identity objects. Depending on the service
- * operator, a tenant may map to a customer, account, organization, or project.
- *
+ * A container used to group or isolate resources and/or identity objects.
+ * Depending on the service operator, a tenant may map to a customer, account,
+ * organization, or project.
+ * 
  * @author Adrian Cole
- * @see <a href="http://docs.openstack.org/api/openstack-identity-service/2.0/content/Identity-Service-Concepts-e1362.html"
-/>
+ * @see <a href=
+ *      "http://docs.openstack.org/api/openstack-identity-service/2.0/content/Identity-Service-Concepts-e1362.html"
+ *      />
  */
 public class Tenant {
 
@@ -43,18 +45,27 @@ public class Tenant {
       return new ConcreteBuilder().fromTenant(this);
    }
 
-   public abstract static class Builder<T extends Builder<T>>  {
+   public abstract static class Builder<T extends Builder<T>> {
       protected abstract T self();
 
       protected String id;
       protected String name;
       protected String description;
+      protected Boolean enabled;
 
       /**
        * @see Tenant#getId()
        */
       public T id(String id) {
          this.id = id;
+         return self();
+      }
+
+      /**
+       * @see Tenant#isEnabled()
+       */
+      public T enabled(Boolean enabled) {
+         this.enabled = enabled;
          return self();
       }
 
@@ -75,14 +86,11 @@ public class Tenant {
       }
 
       public Tenant build() {
-         return new Tenant(id, name, description);
+         return new Tenant(id, name, description, enabled);
       }
 
       public T fromTenant(Tenant in) {
-         return this
-               .id(in.getId())
-               .name(in.getName())
-               .description(in.getDescription());
+         return this.id(in.getId()).name(in.getName()).description(in.getDescription());
       }
    }
 
@@ -96,19 +104,20 @@ public class Tenant {
    private final String id;
    private final String name;
    private final String description;
+   private final Boolean enabled;
 
-   @ConstructorProperties({
-         "id", "name", "description"
-   })
-   protected Tenant(String id, String name, @Nullable String description) {
+   @ConstructorProperties({ "id", "name", "description", "enabled" })
+   protected Tenant(String id, String name, @Nullable String description, @Nullable Boolean enabled) {
       this.id = checkNotNull(id, "id");
       this.name = checkNotNull(name, "name");
       this.description = description;
+      this.enabled = enabled;
    }
 
    /**
-    * When providing an ID, it is assumed that the tenant exists in the current OpenStack deployment
-    *
+    * When providing an ID, it is assumed that the tenant exists in the current
+    * OpenStack deployment
+    * 
     * @return the id of the tenant in the current OpenStack deployment
     */
    public String getId() {
@@ -130,6 +139,13 @@ public class Tenant {
       return this.description;
    }
 
+   /**
+    * @return if the tenant is enabled
+    */
+   public boolean isEnabled() {
+      return this.enabled;
+   }
+
    @Override
    public int hashCode() {
       return Objects.hashCode(id, name, description);
@@ -137,17 +153,18 @@ public class Tenant {
 
    @Override
    public boolean equals(Object obj) {
-      if (this == obj) return true;
-      if (obj == null || getClass() != obj.getClass()) return false;
+      if (this == obj)
+         return true;
+      if (obj == null || getClass() != obj.getClass())
+         return false;
       Tenant that = Tenant.class.cast(obj);
-      return Objects.equal(this.id, that.id)
-            && Objects.equal(this.name, that.name)
-            && Objects.equal(this.description, that.description);
+      return Objects.equal(this.id, that.id) && Objects.equal(this.name, that.name)
+            && Objects.equal(this.description, that.description) && Objects.equal(this.enabled, that.enabled);
    }
 
    protected ToStringHelper string() {
-      return Objects.toStringHelper(this).omitNullValues()
-            .add("id", id).add("name", name).add("description", description);
+      return Objects.toStringHelper(this).omitNullValues().add("id", id).add("name", name)
+            .add("description", description).add("enabled", enabled);
    }
 
    @Override

@@ -48,7 +48,8 @@ public class TenantApiExpectTest extends BaseKeystoneRestApiExpectTest<KeystoneA
    }
 
    Set<Tenant> expectedTenants = ImmutableSet.of(Tenant.builder().name("demo").id("05d1dc7af71646deba64cfc17b81bec0")
-            .build(), Tenant.builder().name("admin").id("7aa2e17ec29f44d193c48feaba0852cc").build());
+            .enabled(true).build(), Tenant.builder().name("admin").id("7aa2e17ec29f44d193c48feaba0852cc").enabled(true)
+            .build());
 
    public void testListTenants() {
       TenantApi api = requestsSendResponses(
@@ -114,7 +115,8 @@ public class TenantApiExpectTest extends BaseKeystoneRestApiExpectTest<KeystoneA
                .getTenantApi().get();
       Tenant tenant = api.get("013ba41150a14830bec85ffe93353bcc");
       assertNotNull(tenant);
-      assertEquals(tenant, Tenant.builder().id("013ba41150a14830bec85ffe93353bcc").name("admin").build());
+      assertEquals(tenant, Tenant.builder().id("013ba41150a14830bec85ffe93353bcc").name("admin").enabled(true).
+            build());
    }
 
    @Test(expectedExceptions = AuthorizationException.class)
@@ -135,7 +137,8 @@ public class TenantApiExpectTest extends BaseKeystoneRestApiExpectTest<KeystoneA
                .getTenantApi().get();
       Tenant tenant = api.getByName("admin");
       assertNotNull(tenant);
-      assertEquals(tenant, Tenant.builder().id("013ba41150a14830bec85ffe93353bcc").name("admin").build());
+      assertEquals(tenant, Tenant.builder().id("013ba41150a14830bec85ffe93353bcc").name("admin").enabled(true).
+            build());
    }
 
    public void testGetTenantByNameFailNotFound() {

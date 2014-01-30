@@ -19,6 +19,10 @@ package org.jclouds.openstack.keystone.v2_0;
 import java.io.Closeable;
 
 import org.jclouds.openstack.keystone.v2_0.domain.ApiMetadata;
+import org.jclouds.openstack.keystone.v2_0.extensions.RoleAdminApi;
+import org.jclouds.openstack.keystone.v2_0.extensions.ServiceAdminApi;
+import org.jclouds.openstack.keystone.v2_0.extensions.TenantAdminApi;
+import org.jclouds.openstack.keystone.v2_0.extensions.UserAdminApi;
 import org.jclouds.openstack.keystone.v2_0.features.ServiceApi;
 import org.jclouds.openstack.keystone.v2_0.features.TenantApi;
 import org.jclouds.openstack.keystone.v2_0.features.TokenApi;
@@ -74,4 +78,28 @@ public interface KeystoneApi extends Closeable {
     */
    @Delegate
    Optional<? extends TenantApi> getTenantApi();
+   
+   /** 
+    * Provides synchronous access to Admin user features 
+    */
+   @Delegate
+   Optional<? extends UserAdminApi> getUserAdminApi();
+   
+   /** 
+    * Provides synchronous access to Admin tenant features 
+    */
+   @Delegate
+   Optional<? extends TenantAdminApi> getTenantAdminApi();
+   
+   /** 
+    * Provides synchronous access to Admin role features 
+    */
+   @Delegate
+   Optional<? extends RoleAdminApi> getRoleAdminApi();
+   
+   /** 
+    * Provides synchronous access to Admin service features 
+    */
+   @Delegate
+   Optional<? extends ServiceAdminApi> getServiceAdminApi();
 }

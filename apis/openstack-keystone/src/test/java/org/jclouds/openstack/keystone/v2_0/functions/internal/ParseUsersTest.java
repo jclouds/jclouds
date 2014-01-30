@@ -49,10 +49,14 @@ public class ParseUsersTest {
    }.getType();
 
    Set<User> expectedUsers = ImmutableSet.of(
-         User.builder().name("nova").id("e021dfd758eb44a89f1c57c8ef3be8e2").build(),
-         User.builder().name("glance").id("3f6c1c9ba993495ead7d2eb2192e284f").build(),
-         User.builder().name("demo").id("667b2e1420604df8b67cd8ea57d4ee64").build(),
-         User.builder().name("admin").id("2b9b606181634ae9ac86fd95a8bc2cde").build());
+         User.builder().name("nova").id("e021dfd758eb44a89f1c57c8ef3be8e2").email("nova@example.com").enabled(true).
+         tenantId("ab1da202f5774cceb5da2aeff1f0aa87").build(),
+         User.builder().name("glance").id("3f6c1c9ba993495ead7d2eb2192e284f").email("glance@example.com").enabled(true).
+         tenantId("ab1da202f5774cceb5da2aeff1f0aa87").build(),
+         User.builder().name("demo").id("667b2e1420604df8b67cd8ea57d4ee64").email("demo@example.com").enabled(true).
+         tenantId(null).build(),
+         User.builder().name("admin").id("2b9b606181634ae9ac86fd95a8bc2cde").email("admin@example.com").enabled(true).
+         tenantId(null).build());
 
    public void testParseUsersInMap() throws JsonSyntaxException, IOException {
       String json = Strings2.toStringAndClose(getClass().getResourceAsStream("/user_list.json"));

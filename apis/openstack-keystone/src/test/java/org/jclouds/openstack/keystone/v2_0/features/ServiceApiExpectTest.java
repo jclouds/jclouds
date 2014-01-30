@@ -53,7 +53,8 @@ public class ServiceApiExpectTest extends BaseKeystoneRestApiExpectTest<Keystone
       assertFalse(tenants.isEmpty());
 
       Set<Tenant> expected = ImmutableSet.of(Tenant.builder().name("demo").id("05d1dc7af71646deba64cfc17b81bec0")
-               .build(), Tenant.builder().name("admin").id("7aa2e17ec29f44d193c48feaba0852cc").build());
+               .enabled(true).build(), Tenant.builder().name("admin").id("7aa2e17ec29f44d193c48feaba0852cc")
+               .enabled(true).build());
 
       assertEquals(tenants, expected);
    }

@@ -1,0 +1,1 @@
+{"OS-KSADM:service": {"id": "s1000", "type": "jclouds-service-type", "name": "jclouds-service-test", "description": "jclouds-service-description"}}

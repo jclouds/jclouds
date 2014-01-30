@@ -21,6 +21,8 @@ import static com.google.common.base.Preconditions.checkNotNull;
 import java.beans.ConstructorProperties;
 import java.util.Set;
 
+import org.jclouds.javax.annotation.Nullable;
+
 import com.google.common.base.Objects;
 import com.google.common.base.Objects.ToStringHelper;
 import com.google.common.collect.ForwardingSet;
@@ -48,9 +50,19 @@ public class Service extends ForwardingSet<Endpoint> {
    public abstract static class Builder<T extends Builder<T>>  {
       protected abstract T self();
 
+      protected String id;
       protected String type;
       protected String name;
+      protected String description;
       protected ImmutableSet.Builder<Endpoint> endpoints = ImmutableSet.<Endpoint>builder();
+      
+      /**
+       * @see Service#getId()
+       */
+      public T id(String id) {
+         this.id = id;
+         return self();
+      }
 
       /**
        * @see Service#getType()
@@ -65,6 +77,14 @@ public class Service extends ForwardingSet<Endpoint> {
        */
       public T name(String name) {
          this.name = name;
+         return self();
+      }
+      
+      /**
+       * @see Service#getDescription()
+       */
+      public T description(String description) {
+         this.description = description;
          return self();
       }
 
@@ -85,13 +105,15 @@ public class Service extends ForwardingSet<Endpoint> {
       }
 
       public Service build() {
-         return new Service(type, name, endpoints.build());
+         return new Service(id, type, name, description, endpoints.build());
       }
 
       public T fromService(Service in) {
          return this
+               .id(in.getId())
                .type(in.getType())
                .name(in.getName())
+               .description(in.getDescription())
                .endpoints(in);
       }
    }
@@ -102,17 +124,31 @@ public class Service extends ForwardingSet<Endpoint> {
       }
    }
 
+   private final String id;
    private final String type;
    private final String name;
+   private final String description;
    private final Set<Endpoint> endpoints;
 
    @ConstructorProperties({
-         "type", "name", "endpoints"
+         "id", "type", "name", "description", "endpoints"
    })
-   protected Service(String type, String name, Set<Endpoint> endpoints) {
+   protected Service(@Nullable String id, String type, String name, @Nullable String description, @Nullable Set<Endpoint> endpoints) {
+      this.id = id;
       this.type = checkNotNull(type, "type");
       this.name = checkNotNull(name, "name");
-      this.endpoints = ImmutableSet.copyOf(checkNotNull(endpoints, "endpoints"));
+      this.description = description;
+      this.endpoints = endpoints == null ? ImmutableSet.<Endpoint>of() : ImmutableSet.copyOf(endpoints);
+   }
+   
+   /**
+    * When providing an ID, it is assumed that the service exists in the current OpenStack deployment
+    *
+    * @return the id of the service in the current OpenStack deployment
+    */
+   @Nullable
+   public String getId() {
+      return this.id;
    }
 
    /**
@@ -130,10 +166,17 @@ public class Service extends ForwardingSet<Endpoint> {
    public String getName() {
       return this.name;
    }
+   
+   /**
+    * @return the description of the service
+    */
+   public String getDescription() {
+      return this.description;
+   }
 
    @Override
    public int hashCode() {
-      return Objects.hashCode(type, name, endpoints);
+      return Objects.hashCode(id, type, name, description, endpoints);
    }
 
    @Override
@@ -141,14 +184,17 @@ public class Service extends ForwardingSet<Endpoint> {
       if (this == obj) return true;
       if (obj == null || getClass() != obj.getClass()) return false;
       Service that = Service.class.cast(obj);
-      return Objects.equal(this.type, that.type)
+      return Objects.equal(this.id, that.id) 
+            && Objects.equal(this.type, that.type)
             && Objects.equal(this.name, that.name)
+            && Objects.equal(this.description, that.description)
             && Objects.equal(this.endpoints, that.endpoints);
    }
 
    protected ToStringHelper string() {
       return Objects.toStringHelper(this).omitNullValues()
-            .add("type", type).add("name", name).add("endpoints", endpoints);
+            .add("id", id).add("type", type).add("name", name)
+            .add("description", description).add("endpoints", endpoints);
    }
 
    @Override

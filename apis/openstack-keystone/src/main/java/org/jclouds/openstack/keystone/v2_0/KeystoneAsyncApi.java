@@ -24,6 +24,10 @@ import javax.ws.rs.core.MediaType;
 
 import org.jclouds.Fallbacks.NullOnNotFoundOr404;
 import org.jclouds.openstack.keystone.v2_0.domain.ApiMetadata;
+import org.jclouds.openstack.keystone.v2_0.extensions.RoleAdminAsyncApi;
+import org.jclouds.openstack.keystone.v2_0.extensions.ServiceAdminAsyncApi;
+import org.jclouds.openstack.keystone.v2_0.extensions.TenantAdminAsyncApi;
+import org.jclouds.openstack.keystone.v2_0.extensions.UserAdminAsyncApi;
 import org.jclouds.openstack.keystone.v2_0.features.ServiceAsyncApi;
 import org.jclouds.openstack.keystone.v2_0.features.TenantAsyncApi;
 import org.jclouds.openstack.keystone.v2_0.features.TokenAsyncApi;
@@ -87,4 +91,28 @@ public interface KeystoneAsyncApi extends Closeable {
     */
    @Delegate
    Optional<? extends TenantAsyncApi> getTenantApi();
+
+   /**
+    * @see KeystoneApi#getUserAdminApi()
+    */
+   @Delegate
+   Optional<? extends UserAdminAsyncApi> getUserAdminApi();
+   
+   /**
+    * @see KeystoneApi#getTenantAdminApi()
+    */
+   @Delegate
+   Optional<? extends TenantAdminAsyncApi> getTenantAdminApi();
+   
+   /**
+    * @see KeystoneApi#getRoleAdminApi()
+    */
+   @Delegate
+   Optional<? extends RoleAdminAsyncApi> getRoleAdminApi();
+   
+   /**
+    * @see KeystoneApi#getServiceAdminApi()
+    */
+   @Delegate
+   Optional<? extends ServiceAdminAsyncApi> getServiceAdminApi();
 }

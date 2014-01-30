@@ -53,7 +53,7 @@ public class ParseRandomEndpointVersionAccessTest extends BaseItemParserTest<Acc
                                .tenant(Tenant.builder()
                                               //  "enabled": true,
                                              .id("82d8d2f865484776a1daf1e2245d3317")
-                                             .name("demo").build()).build())
+                                             .name("demo").enabled(true).build()).build())
                     .service(Service.builder().type("compute").name("nova")
                                     .endpoint(Endpoint.builder()
                                                       .adminURL("http://10.10.10.10:8774/v2/82d8d2f865484776a1daf1e2245d3317")

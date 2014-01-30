@@ -66,7 +66,7 @@ public class TokenApiExpectTest extends BaseKeystoneRestApiExpectTest<KeystoneAp
       assertNotNull(token);
       assertEquals(token,
             Token.builder().id("167eccdc790946969ced473732e8109b").expires(dateService.iso8601SecondsDateParse("2012-04-28T12:42:50Z"))
-                  .tenant(Tenant.builder().id("4cea93f5464b4f1c921fb3e0461d72b5").name("demo").build()).build());
+                  .tenant(Tenant.builder().id("4cea93f5464b4f1c921fb3e0461d72b5").name("demo").enabled(true).build()).build());
    }
 
    public void testGetTokenFailNotFound() {
