@@ -23,13 +23,16 @@ import static org.easymock.EasyMock.replay;
 import static org.easymock.EasyMock.verify;
 import static org.testng.Assert.assertEquals;
 
+import javax.inject.Provider;
 import java.lang.reflect.Method;
 import java.util.Set;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.ExecutionException;
 
-import javax.inject.Provider;
-
+import com.google.common.base.Function;
+import com.google.common.cache.LoadingCache;
+import com.google.common.collect.ImmutableMultimap;
+import com.google.common.collect.ImmutableSet;
 import org.jclouds.aws.domain.Region;
 import org.jclouds.compute.domain.Hardware;
 import org.jclouds.compute.domain.Template;
@@ -45,11 +48,6 @@ import org.jclouds.ec2.domain.KeyPair;
 import org.jclouds.ec2.options.RunInstancesOptions;
 import org.jclouds.scriptbuilder.domain.Statements;
 import org.testng.annotations.Test;
-
-import com.google.common.base.Function;
-import com.google.common.cache.LoadingCache;
-import com.google.common.collect.ImmutableMultimap;
-import com.google.common.collect.ImmutableSet;
 
 /**
  * @author Adrian Cole
@@ -130,6 +128,7 @@ public class CreateKeyPairAndSecurityGroupsAsNeededAndReturnRunOptionsTest {
             systemGeneratedKeyPairName);
       expect(strategy.getSecurityGroupsForTagAndOptions(region, group, options)).andReturn(generatedGroups);
       expect(options.getUserData()).andReturn(null);
+      expect(options.getClientToken()).andReturn(null);
 
       // replay mocks
       replay(options);
@@ -181,6 +180,7 @@ public class CreateKeyPairAndSecurityGroupsAsNeededAndReturnRunOptionsTest {
       expect(template.getHardware()).andReturn(size).atLeastOnce();
       expect(template.getOptions()).andReturn(options).atLeastOnce();
       expect(options.getBlockDeviceMappings()).andReturn(ImmutableSet.<BlockDeviceMapping> of()).atLeastOnce();
+      expect(options.getClientToken()).andReturn("some-token");
       expect(strategy.createNewKeyPairUnlessUserSpecifiedOtherwise(region, group, options)).andReturn(
             systemGeneratedKeyPairName);
       expect(strategy.getSecurityGroupsForTagAndOptions(region, group, options)).andReturn(generatedGroups);
@@ -197,7 +197,8 @@ public class CreateKeyPairAndSecurityGroupsAsNeededAndReturnRunOptionsTest {
       assertEquals(
             customize.buildFormParameters().entries(),
             ImmutableMultimap.<String, String> of("InstanceType", size.getProviderId(), "SecurityGroup.1", "group",
-                  "KeyName", systemGeneratedKeyPairName, "UserData", base64().encode("hello".getBytes())).entries());
+                  "KeyName", systemGeneratedKeyPairName, "UserData", base64().encode("hello".getBytes()),
+                    "ClientToken", "some-token").entries());
 
       assertEquals(customize.buildRequestHeaders(), ImmutableMultimap.<String, String> of());
       assertEquals(customize.buildStringPayload(), null);

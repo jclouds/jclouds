@@ -18,6 +18,7 @@ package org.jclouds.ec2.options;
 
 import static org.jclouds.ec2.options.RunInstancesOptions.Builder.asType;
 import static org.jclouds.ec2.options.RunInstancesOptions.Builder.withBlockDeviceMappings;
+import static org.jclouds.ec2.options.RunInstancesOptions.Builder.withClientToken;
 import static org.jclouds.ec2.options.RunInstancesOptions.Builder.withKernelId;
 import static org.jclouds.ec2.options.RunInstancesOptions.Builder.withKeyName;
 import static org.jclouds.ec2.options.RunInstancesOptions.Builder.withRamdisk;
@@ -25,13 +26,12 @@ import static org.jclouds.ec2.options.RunInstancesOptions.Builder.withSecurityGr
 import static org.jclouds.ec2.options.RunInstancesOptions.Builder.withUserData;
 import static org.testng.Assert.assertEquals;
 
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableSet;
 import org.jclouds.ec2.domain.BlockDeviceMapping;
 import org.jclouds.ec2.domain.InstanceType;
 import org.jclouds.http.options.HttpRequestOptions;
 import org.testng.annotations.Test;
-
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableSet;
 
 /**
  * Tests possible uses of RunInstancesOptions and RunInstancesOptions.Builder.*
@@ -242,6 +242,17 @@ public class RunInstancesOptionsTest {
    @Test(expectedExceptions = NullPointerException.class)
    public void testWithBlockDeviceMappingNPE() {
       withBlockDeviceMappings(null);
+   }
+
+   @Test
+   public void testWithClientToken() {
+      RunInstancesOptions options = withClientToken("some-token");
+      assertEquals(options.buildFormParameters().get("ClientToken"), ImmutableList.of("some-token"));
+   }
+
+   @Test(expectedExceptions =  NullPointerException.class)
+   public void testWithClientTokenNPE() {
+      withClientToken(null);
    }
 
 }
