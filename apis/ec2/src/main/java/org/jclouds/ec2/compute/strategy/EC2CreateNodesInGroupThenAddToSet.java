@@ -26,15 +26,24 @@ import static org.jclouds.compute.config.ComputeServiceProperties.TIMEOUT_NODE_R
 import static org.jclouds.compute.functions.DefaultCredentialsFromImageOrOverridingCredentials.overrideDefaultCredentialsWithOptionsIfPresent;
 import static org.jclouds.ec2.compute.util.EC2ComputeUtils.getZoneFromLocationOrNull;
 
-import java.util.Map;
-import java.util.Set;
-import java.util.concurrent.atomic.AtomicReference;
-
 import javax.annotation.Resource;
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.inject.Singleton;
+import java.util.Map;
+import java.util.Set;
+import java.util.concurrent.atomic.AtomicReference;
 
+import com.google.common.annotations.VisibleForTesting;
+import com.google.common.base.Function;
+import com.google.common.base.Optional;
+import com.google.common.base.Predicate;
+import com.google.common.cache.LoadingCache;
+import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.ImmutableSet;
+import com.google.common.collect.Maps;
+import com.google.common.collect.Multimap;
+import com.google.common.util.concurrent.ListenableFuture;
 import org.jclouds.aws.util.AWSUtils;
 import org.jclouds.compute.config.CustomizationResponse;
 import org.jclouds.compute.domain.NodeMetadata;
@@ -48,21 +57,11 @@ import org.jclouds.domain.LoginCredentials;
 import org.jclouds.ec2.EC2Api;
 import org.jclouds.ec2.compute.domain.RegionAndName;
 import org.jclouds.ec2.compute.functions.PresentInstances;
+import org.jclouds.ec2.compute.options.EC2TemplateOptions;
 import org.jclouds.ec2.domain.RunningInstance;
 import org.jclouds.ec2.options.RunInstancesOptions;
 import org.jclouds.ec2.reference.EC2Constants;
 import org.jclouds.logging.Logger;
-
-import com.google.common.annotations.VisibleForTesting;
-import com.google.common.base.Function;
-import com.google.common.base.Optional;
-import com.google.common.base.Predicate;
-import com.google.common.cache.LoadingCache;
-import com.google.common.collect.ImmutableMap;
-import com.google.common.collect.ImmutableSet;
-import com.google.common.collect.Maps;
-import com.google.common.collect.Multimap;
-import com.google.common.util.concurrent.ListenableFuture;
 
 /**
  * creates futures that correlate to
@@ -218,11 +217,22 @@ public class EC2CreateNodesInGroupThenAddToSet implements CreateNodesInGroupThen
       return createNodesInRegionAndZone(region, zone, group, count, template, instanceOptions);
    }
 
-   protected Set<RunningInstance> createNodesInRegionAndZone(String region, String zone, String group, int count,
-         Template template, RunInstancesOptions instanceOptions) {
+   protected Set<RunningInstance> createNodesInRegionAndZone(String region, String zone, String group,
+                                                             int count, Template template,
+                                                             RunInstancesOptions instanceOptions) {
       int countStarted = 0;
       int tries = 0;
       Set<RunningInstance> started = ImmutableSet.<RunningInstance> of();
+
+      int maxCount = EC2TemplateOptions.class.cast(template.getOptions()).getMaxCount();
+      int countToProvision;
+
+      if (maxCount == 0) {
+         maxCount = count;
+         countToProvision = 1;
+      } else {
+         countToProvision = count;
+      }
 
       while (countStarted < count && tries++ < count) {
          if (logger.isDebugEnabled())
@@ -231,8 +241,8 @@ public class EC2CreateNodesInGroupThenAddToSet implements CreateNodesInGroupThen
 
          started = ImmutableSet.copyOf(concat(
                started,
-               client.getInstanceApi().get().runInstancesInRegion(region, zone, template.getImage().getProviderId(), 1,
-                     count - countStarted, instanceOptions)));
+               client.getInstanceApi().get().runInstancesInRegion(region, zone, template.getImage().getProviderId(),
+                       countToProvision, maxCount - countStarted, instanceOptions)));
 
          countStarted = size(started);
          if (countStarted < count)

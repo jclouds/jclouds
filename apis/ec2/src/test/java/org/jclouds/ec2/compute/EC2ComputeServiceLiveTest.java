@@ -20,6 +20,7 @@ import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertFalse;
 import static org.testng.Assert.assertTrue;
 
+import java.security.SecureRandom;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
@@ -111,6 +112,8 @@ public class EC2ComputeServiceLiveTest extends BaseComputeServiceLiveTest {
 
    @Test(enabled = true, dependsOnMethods = "testCompareSizes")
    public void testExtendedOptionsAndLogin() throws Exception {
+      final SecureRandom random = new SecureRandom();
+
       SecurityGroupApi securityGroupClient = view.unwrapApi(EC2Api.class)
                .getSecurityGroupApi().get();
 
@@ -125,6 +128,7 @@ public class EC2ComputeServiceLiveTest extends BaseComputeServiceLiveTest {
       TemplateOptions options = client.templateOptions();
 
       options.as(EC2TemplateOptions.class).securityGroups(group);
+      options.as(EC2TemplateOptions.class).clientToken(Integer.toHexString(random.nextInt(65536 * 1024)));
 
       String startedId = null;
       try {
@@ -151,6 +155,9 @@ public class EC2ComputeServiceLiveTest extends BaseComputeServiceLiveTest {
          assert first.getCredentials() != null : first;
          assert first.getCredentials().identity != null : first;
 
+         // Verify that the output of createNodesInGroup is the same.
+         assertEquals(client.createNodesInGroup(group, 1, options), nodes, "Idempotency failing - got different instances");
+         
          startedId = Iterables.getOnlyElement(nodes).getProviderId();
 
          RunningInstance instance = getInstance(instanceClient, startedId);

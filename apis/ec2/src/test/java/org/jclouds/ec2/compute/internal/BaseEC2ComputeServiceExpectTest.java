@@ -18,9 +18,8 @@ package org.jclouds.ec2.compute.internal;
 
 import static org.jclouds.location.reference.LocationConstants.PROPERTY_REGIONS;
 
-import java.util.Properties;
-
 import javax.ws.rs.core.MediaType;
+import java.util.Properties;
 
 import org.jclouds.compute.ComputeService;
 import org.jclouds.compute.ComputeServiceContext;
@@ -54,10 +53,15 @@ public abstract class BaseEC2ComputeServiceExpectTest extends BaseEC2ComputeServ
    protected HttpRequest authorizeSecurityGroupIngressRequestGroup;
    protected HttpRequest runInstancesRequest;
    protected HttpResponse runInstancesResponse;
+   protected HttpRequest runThreeInstancesRequest;
+   protected HttpRequest runThreeToFourInstancesRequest;
+   protected HttpResponse runThreeInstancesResponse;
    protected HttpRequest describeInstanceRequest;
    protected HttpResponse describeInstanceResponse;
    protected HttpRequest describeInstanceMultiIdsRequest;
    protected HttpResponse describeInstanceMultiIdsResponse;
+   protected HttpRequest describeInstanceThreeIdsRequest;
+   protected HttpResponse describeInstanceThreeIdsResponse;
    protected HttpRequest describeImageRequest;
    protected HttpRequest createTagsRequest;
    protected HttpResponse createTagsResponse;
@@ -177,14 +181,45 @@ public abstract class BaseEC2ComputeServiceExpectTest extends BaseEC2ComputeServ
                HttpResponse.builder().statusCode(200)
                            .payload(payloadFromResourceWithContentType(
                                  "/new_instance.xml", MediaType.APPLICATION_XML)).build();
-      
-      describeInstanceRequest = 
+
+      runThreeInstancesRequest =
+              formSigner.filter(HttpRequest.builder()
+                      .method("POST")
+                      .endpoint("https://ec2." + region + ".amazonaws.com/")
+                      .addHeader("Host", "ec2." + region + ".amazonaws.com")
+                      .addFormParam("Action", "RunInstances")
+                      .addFormParam("ImageId", "ami-be3adfd7")
+                      .addFormParam("InstanceType", "m1.small")
+                      .addFormParam("KeyName", "jclouds#test#0")
+                      .addFormParam("MaxCount", "3")
+                      .addFormParam("MinCount", "3")
+                      .addFormParam("SecurityGroup.1", "jclouds#test").build());
+
+      runThreeToFourInstancesRequest =
+              formSigner.filter(HttpRequest.builder()
+                      .method("POST")
+                      .endpoint("https://ec2." + region + ".amazonaws.com/")
+                      .addHeader("Host", "ec2." + region + ".amazonaws.com")
+                      .addFormParam("Action", "RunInstances")
+                      .addFormParam("ImageId", "ami-be3adfd7")
+                      .addFormParam("InstanceType", "m1.small")
+                      .addFormParam("KeyName", "jclouds#test#0")
+                      .addFormParam("MaxCount", "4")
+                      .addFormParam("MinCount", "3")
+                      .addFormParam("SecurityGroup.1", "jclouds#test").build());
+
+      runThreeInstancesResponse =
+              HttpResponse.builder().statusCode(200)
+                      .payload(payloadFromResourceWithContentType(
+                              "/run_instances_three.xml", MediaType.APPLICATION_XML)).build();
+
+      describeInstanceRequest =
                formSigner.filter(HttpRequest.builder()
-                          .method("POST")
-                          .endpoint("https://ec2." + region + ".amazonaws.com/")
-                          .addHeader("Host", "ec2." + region + ".amazonaws.com")
-                          .addFormParam("Action", "DescribeInstances")
-                          .addFormParam("InstanceId.1", "i-2baa5550").build());
+                       .method("POST")
+                       .endpoint("https://ec2." + region + ".amazonaws.com/")
+                       .addHeader("Host", "ec2." + region + ".amazonaws.com")
+                       .addFormParam("Action", "DescribeInstances")
+                       .addFormParam("InstanceId.1", "i-2baa5550").build());
       
       describeInstanceResponse = 
                HttpResponse.builder().statusCode(200)
@@ -204,6 +239,21 @@ public abstract class BaseEC2ComputeServiceExpectTest extends BaseEC2ComputeServ
                HttpResponse.builder().statusCode(200)
                            .payload(payloadFromResourceWithContentType(
                                  "/describe_instances_multiple.xml", MediaType.APPLICATION_XML)).build();
+
+      describeInstanceThreeIdsRequest =
+              formSigner.filter(HttpRequest.builder()
+                      .method("POST")
+                      .endpoint("https://ec2." + region + ".amazonaws.com/")
+                      .addHeader("Host", "ec2." + region + ".amazonaws.com")
+                      .addFormParam("Action", "DescribeInstances")
+                      .addFormParam("InstanceId.1", "i-2ba64342")
+                      .addFormParam("InstanceId.2", "i-2bc64242")
+                      .addFormParam("InstanceId.3", "i-2be64332").build());
+
+      describeInstanceThreeIdsResponse =
+              HttpResponse.builder().statusCode(200)
+                      .payload(payloadFromResourceWithContentType(
+                              "/describe_instances_multiple.xml", MediaType.APPLICATION_XML)).build();
 
       //TODO: duplicate.. shouldn't need this
       describeImageRequest = 

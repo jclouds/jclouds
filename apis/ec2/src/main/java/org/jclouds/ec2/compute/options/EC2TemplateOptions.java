@@ -16,6 +16,16 @@
  */
 package org.jclouds.ec2.compute.options;
 
+import static com.google.common.base.Objects.equal;
+import static com.google.common.base.Preconditions.checkArgument;
+import static com.google.common.base.Preconditions.checkNotNull;
+import static com.google.common.base.Preconditions.checkState;
+import static com.google.common.base.Strings.emptyToNull;
+
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
 import com.google.common.base.Objects;
 import com.google.common.base.Objects.ToStringHelper;
 import com.google.common.collect.ImmutableSet;
@@ -31,16 +41,6 @@ import org.jclouds.ec2.domain.BlockDeviceMapping.MapNewVolumeToDevice;
 import org.jclouds.ec2.domain.BlockDeviceMapping.UnmapDeviceNamed;
 import org.jclouds.javax.annotation.Nullable;
 import org.jclouds.scriptbuilder.domain.Statement;
-
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
-import static com.google.common.base.Objects.equal;
-import static com.google.common.base.Preconditions.checkArgument;
-import static com.google.common.base.Preconditions.checkNotNull;
-import static com.google.common.base.Preconditions.checkState;
-import static com.google.common.base.Strings.emptyToNull;
 
 /**
  * Contains options supported in the {@code ComputeService#runNode} operation on
@@ -82,6 +82,10 @@ public class EC2TemplateOptions extends TemplateOptions implements Cloneable {
             eTo.noKeyPair();
          if (getUserData() != null)
             eTo.userData(getUserData());
+         if (getMaxCount() > 0)
+            eTo.maxCount(getMaxCount());
+         if (getClientToken() != null)
+            eTo.clientToken(getClientToken());
       }
    }
 
@@ -90,6 +94,8 @@ public class EC2TemplateOptions extends TemplateOptions implements Cloneable {
    private boolean noKeyPair;
    private List<Byte> userData;
    private ImmutableSet.Builder<BlockDeviceMapping> blockDeviceMappings = ImmutableSet.builder();
+   private Integer maxCount;
+   private String clientToken = null;
 
    @Override
    public boolean equals(Object o) {
@@ -99,14 +105,17 @@ public class EC2TemplateOptions extends TemplateOptions implements Cloneable {
          return false;
       EC2TemplateOptions that = EC2TemplateOptions.class.cast(o);
       return super.equals(that) && equal(this.groupNames, that.groupNames) && equal(this.keyPair, that.keyPair)
-               && equal(this.noKeyPair, that.noKeyPair) && equal(this.userData, that.userData)
-               && equal(this.blockDeviceMappings, that.blockDeviceMappings);
+              && equal(this.noKeyPair, that.noKeyPair) && equal(this.userData, that.userData)
+              && equal(this.blockDeviceMappings, that.blockDeviceMappings)
+              && equal(this.maxCount, that.maxCount)
+              && equal(this.clientToken, that.clientToken);
    }
 
    @Override
    public int hashCode() {
       return Objects
-               .hashCode(super.hashCode(), groupNames, keyPair, noKeyPair, userData, userData, blockDeviceMappings);
+               .hashCode(super.hashCode(), groupNames, keyPair, noKeyPair, userData, userData, blockDeviceMappings,
+                       maxCount, clientToken);
    }
 
    @Override
@@ -122,6 +131,10 @@ public class EC2TemplateOptions extends TemplateOptions implements Cloneable {
       ImmutableSet<BlockDeviceMapping> mappings = blockDeviceMappings.build();
       if (mappings.size() != 0)
          toString.add("blockDeviceMappings", mappings);
+      if (maxCount != null && maxCount.intValue() > 0)
+         toString.add("maxCount", maxCount);
+      if (clientToken != null)
+         toString.add("clientToken", clientToken);
       return toString;
    }
 
@@ -197,6 +210,16 @@ public class EC2TemplateOptions extends TemplateOptions implements Cloneable {
 
    public EC2TemplateOptions blockDeviceMappings(Iterable<? extends BlockDeviceMapping> blockDeviceMappings) {
       this.blockDeviceMappings.addAll(checkNotNull(blockDeviceMappings, "blockDeviceMappings"));
+      return this;
+   }
+
+   public EC2TemplateOptions maxCount(Integer maxCount) {
+      this.maxCount = maxCount;
+      return this;
+   }
+
+   public EC2TemplateOptions clientToken(String clientToken) {
+      this.clientToken = checkNotNull(clientToken, "clientToken");
       return this;
    }
 
@@ -403,6 +426,16 @@ public class EC2TemplateOptions extends TemplateOptions implements Cloneable {
       public static EC2TemplateOptions blockOnComplete(boolean value) {
          EC2TemplateOptions options = new EC2TemplateOptions();
          return options.blockOnComplete(value);
+      }
+
+      public static EC2TemplateOptions maxCount(Integer maxCount) {
+         EC2TemplateOptions options = new EC2TemplateOptions();
+         return options.maxCount(maxCount);
+      }
+
+      public static EC2TemplateOptions clientToken(String clientToken) {
+         EC2TemplateOptions options = new EC2TemplateOptions();
+         return options.clientToken(clientToken);
       }
    }
 
@@ -619,6 +652,22 @@ public class EC2TemplateOptions extends TemplateOptions implements Cloneable {
     */
    public Set<BlockDeviceMapping> getBlockDeviceMappings() {
       return blockDeviceMappings.build();
+   }
+
+   /**
+    * @return the maximum number of instances to create
+    */
+   public int getMaxCount() {
+      return maxCount != null ? maxCount.intValue() : 0;
+   }
+
+   /**
+    * See <a href="http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/Run_Instance_Idempotency.html">here</a> for more information.
+    *
+    * @return the optional client token string, used for idempotency
+    */
+   public String getClientToken() {
+      return clientToken;
    }
 
 }

@@ -145,6 +145,15 @@ public class RunInstancesOptions extends BaseEC2RequestOptions {
       return this;
    }
 
+   /**
+    * Specifies the optional ClientToken field, which triggers idempotent RunInstances calls.
+    * See <a href="http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/Run_Instance_Idempotency.html">here</a> for more details.
+    */
+   public RunInstancesOptions withClientToken(String clientToken) {
+      formParameters.put("ClientToken", checkNotNull(clientToken, "clientToken"));
+      return this;
+   }
+
    public static class Builder {
       /**
        * @see RunInstancesOptions#withKeyName(String)
@@ -200,6 +209,14 @@ public class RunInstancesOptions extends BaseEC2RequestOptions {
       public static RunInstancesOptions withBlockDeviceMappings(Set<? extends BlockDeviceMapping> mappings) {
          RunInstancesOptions options = new RunInstancesOptions();
          return options.withBlockDeviceMappings(mappings);
+      }
+
+      /**
+       * @see RunInstancesOptions#withClientToken(String)
+       */
+      public static RunInstancesOptions withClientToken(String clientToken) {
+         RunInstancesOptions options = new RunInstancesOptions();
+         return options.withClientToken(clientToken);
       }
 
    }

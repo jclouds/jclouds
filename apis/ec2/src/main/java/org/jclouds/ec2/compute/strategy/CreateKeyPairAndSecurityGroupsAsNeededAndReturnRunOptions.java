@@ -22,13 +22,18 @@ import static com.google.common.base.Preconditions.checkState;
 import static org.jclouds.ssh.SshKeys.fingerprintPrivateKey;
 import static org.jclouds.ssh.SshKeys.sha1PrivateKey;
 
-import java.util.Set;
-import java.util.concurrent.ConcurrentMap;
-
 import javax.inject.Named;
 import javax.inject.Provider;
 import javax.inject.Singleton;
+import java.util.Set;
+import java.util.concurrent.ConcurrentMap;
 
+import com.google.common.annotations.VisibleForTesting;
+import com.google.common.base.Function;
+import com.google.common.cache.LoadingCache;
+import com.google.common.collect.ImmutableSet;
+import com.google.common.collect.ImmutableSet.Builder;
+import com.google.inject.Inject;
 import org.jclouds.compute.domain.Template;
 import org.jclouds.compute.functions.GroupNamingConvention;
 import org.jclouds.compute.functions.GroupNamingConvention.Factory;
@@ -40,13 +45,6 @@ import org.jclouds.ec2.domain.BlockDeviceMapping;
 import org.jclouds.ec2.domain.KeyPair;
 import org.jclouds.ec2.options.RunInstancesOptions;
 import org.jclouds.javax.annotation.Nullable;
-
-import com.google.common.annotations.VisibleForTesting;
-import com.google.common.base.Function;
-import com.google.common.cache.LoadingCache;
-import com.google.common.collect.ImmutableSet;
-import com.google.common.collect.ImmutableSet.Builder;
-import com.google.inject.Inject;
 
 /**
  * 
@@ -100,6 +98,12 @@ public class CreateKeyPairAndSecurityGroupsAsNeededAndReturnRunOptions {
             checkState("ebs".equals(template.getImage().getUserMetadata().get("rootDeviceType")),
                      "BlockDeviceMapping only available on ebs boot");
             instanceOptions.withBlockDeviceMappings(blockDeviceMappings);
+         }
+
+         String clientToken = EC2TemplateOptions.class.cast(template.getOptions()).getClientToken();
+
+         if (clientToken != null) {
+            instanceOptions.withClientToken(clientToken);
          }
       }
       return instanceOptions;
