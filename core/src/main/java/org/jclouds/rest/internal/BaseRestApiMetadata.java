@@ -24,11 +24,10 @@ import java.util.Properties;
 import org.jclouds.apis.ApiMetadata;
 import org.jclouds.apis.internal.BaseApiMetadata;
 import org.jclouds.rest.RestApiMetadata;
-import org.jclouds.util.TypeToken2;
-import org.jclouds.util.TypeToken2.TypeParameter2;
 
 import com.google.common.annotations.Beta;
 import com.google.common.base.Objects.ToStringHelper;
+import com.google.common.reflect.TypeParameter;
 import com.google.common.reflect.TypeToken;
 
 /**
@@ -57,10 +56,10 @@ public abstract class BaseRestApiMetadata extends BaseApiMetadata implements Res
    }
    
    public static <S, A> TypeToken<org.jclouds.rest.RestContext<S, A>> contextToken(TypeToken<S> apiToken, TypeToken<A> asyncApiToken) {
-      return new TypeToken2<org.jclouds.rest.RestContext<S, A>>() {
+      return new TypeToken<org.jclouds.rest.RestContext<S, A>>() {
          private static final long serialVersionUID = 1L;
-      }.where(new TypeParameter2<S>() {
-      }, apiToken, new TypeParameter2<A>() {
+      }.where(new TypeParameter<S>() {
+      }, apiToken).where(new TypeParameter<A>() {
       }, asyncApiToken);
    }
    

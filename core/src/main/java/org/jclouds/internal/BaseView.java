@@ -70,18 +70,11 @@ public abstract class BaseView extends ForwardingObject implements View {
    public <A extends Closeable> A unwrapApi(Class<A> apiClass) {
       checkArgument(ApiContext.class.isAssignableFrom(backendType.getRawType()),
             "backend type: %s should be an ApiContext", backendType);
-      /*
-       * Revert back to ApiContext<? extends A>...where(A, apiClass) as soon as
-       * https://code.google.com/p/guava-libraries/issues/detail?id=1635
-       * is resolved.
-       */
-      TypeToken<ApiContext<? extends Closeable>> contextToken = new TypeToken<ApiContext<? extends Closeable>>() {
+      TypeToken<ApiContext<? extends A>> contextToken = new TypeToken<ApiContext<? extends A>>(delegate().getClass()) {
          private static final long serialVersionUID = 1L;
-      };
-      Closeable api = unwrap(contextToken).getApi();
-      checkArgument(apiClass.isAssignableFrom(api.getClass()),
-            "API type: %s not assignable to %s", api.getClass(), apiClass);
-      return apiClass.cast(api);
+      }.where(new TypeParameter<A>() {
+      }, TypeToken.of(apiClass));
+      return unwrap(contextToken).getApi();
    }
 
    @Override
