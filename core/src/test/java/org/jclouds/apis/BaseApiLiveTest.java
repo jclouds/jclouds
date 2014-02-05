@@ -24,6 +24,7 @@ import static org.jclouds.util.Closeables2.closeQuietly;
 import java.io.Closeable;
 import java.util.NoSuchElementException;
 import java.util.Properties;
+import java.util.Set;
 import java.util.logging.Logger;
 
 import org.jclouds.ContextBuilder;
@@ -34,7 +35,9 @@ import org.jclouds.providers.Providers;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 
+import com.google.common.base.Splitter;
 import com.google.common.collect.ImmutableSet;
+import com.google.common.collect.Sets;
 import com.google.common.reflect.TypeToken;
 import com.google.inject.Module;
 
@@ -72,6 +75,20 @@ public abstract class BaseApiLiveTest<A extends Closeable> {
          return val;
       }
       return null;
+   }
+
+   /**
+    * This helps live testing against specific zones only.
+    * @param zones A list of zones, usually from getConfiguredZones()
+    * @return a set of zones in the given set that are also contained in the set specified by the test.live.zones system property
+    */
+   protected Set<String> filterZones(Set<String> zones) {
+      String zonesToList = System.getProperty("test.live.zones");
+      if(zonesToList == null) {
+         return zones; // no filter applied
+      }
+      Set<String> zoneFilter = Sets.newHashSet(Splitter.on(',').split(zonesToList));
+      return Sets.intersection(zones, zoneFilter);
    }
 
    @BeforeClass(groups = { "integration", "live" })
