@@ -68,7 +68,7 @@ public class TypeToken2<T> extends TypeToken<T> {
       return where(typeParam1, of(typeArg1), typeParam2, of(typeArg2));
    }
 
-   public static abstract class TypeParameter2<T> extends TypeParameter<T> {
+   public abstract static class TypeParameter2<T> extends TypeParameter<T> {
       TypeVariable<?> getTypeVariable() {
          // duplicated from TypeCapture, where it's package-private
          Type superclass = getClass().getGenericSuperclass();
