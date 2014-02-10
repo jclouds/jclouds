@@ -66,7 +66,8 @@ public abstract class BaseApiMetadata implements ApiMetadata {
       props.setProperty(PROPERTY_SO_TIMEOUT, 60000 + "");
       props.setProperty(PROPERTY_CONNECTION_TIMEOUT, 60000 + "");
       props.setProperty(PROPERTY_IO_WORKER_THREADS, 20 + "");
-      props.setProperty(PROPERTY_USER_THREADS, 0 + "");
+      // Successfully tested 50 user threads with BlobStore.clearContainer.
+      props.setProperty(PROPERTY_USER_THREADS, 50 + "");
       props.setProperty(PROPERTY_SCHEDULER_THREADS, 10 + "");
       props.setProperty(PROPERTY_MAX_CONNECTION_REUSE, 75 + "");
       props.setProperty(PROPERTY_MAX_SESSION_FAILURES, 2 + "");
