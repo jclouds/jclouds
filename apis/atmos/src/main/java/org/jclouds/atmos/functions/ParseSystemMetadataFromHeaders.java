@@ -31,7 +31,7 @@ import org.jclouds.date.DateService;
 import org.jclouds.http.HttpResponse;
 
 import com.google.common.base.Function;
-import com.google.common.collect.Maps;
+import com.google.common.base.Splitter;
 
 /**
  * @author Adrian Cole
@@ -48,12 +48,7 @@ public class ParseSystemMetadataFromHeaders implements Function<HttpResponse, Sy
    public SystemMetadata apply(HttpResponse from) {
       checkNotNull(from, "http response");
       String meta = checkNotNull(from.getFirstHeaderOrNull(AtmosHeaders.META), AtmosHeaders.META);
-      Map<String, String> metaMap = Maps.newHashMap();
-      String[] metas = meta.split(", ");
-      for (String entry : metas) {
-         String[] entrySplit = entry.split("=");
-         metaMap.put(entrySplit[0], entrySplit[1]);
-      }
+      Map<String, String> metaMap = Splitter.on(", ").withKeyValueSeparator('=').split(meta);
       assert metaMap.size() >= 12 : String.format("Should be 12 entries in %s", metaMap);
       byte[] md5 = metaMap.containsKey("content-md5") ? base16().lowerCase().decode(metaMap.get("content-md5")) : null;
       return new SystemMetadata(md5, dateService.iso8601SecondsDateParse(checkNotNull(metaMap.get("atime"), "atime")),
