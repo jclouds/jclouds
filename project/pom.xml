@@ -668,16 +668,8 @@
       <plugin>
         <artifactId>maven-checkstyle-plugin</artifactId>
         <version>2.11</version>
-        <dependencies>
-          <dependency>
-            <groupId>org.apache.jclouds</groupId>
-            <artifactId>jclouds-resources</artifactId>
-            <version>${project.version}</version>
-          </dependency>
-        </dependencies>
         <configuration>
-          <!-- jclouds-resources has the checkstyle config in the classpath -->
-          <configLocation>resources/checkstyle.xml</configLocation>
+          <!-- configLocation configured via profiles -->
           <violationSeverity>warning</violationSeverity>
           <includeTestSourceDirectory>true</includeTestSourceDirectory>
         </configuration>
@@ -1003,11 +995,35 @@
           <plugin>
             <!-- When building jclouds-project, override the config to use the local file -->
             <artifactId>maven-checkstyle-plugin</artifactId>
-            <version>2.11</version>
             <configuration>
               <configLocation>../resources/checkstyle.xml</configLocation>
-              <violationSeverity>warning</violationSeverity>
-              <includeTestSourceDirectory>true</includeTestSourceDirectory>
+            </configuration>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+    <profile>
+      <id>not-jclouds-project</id>
+      <activation>
+        <file>
+          <!-- only in the jclouds-project module -->
+          <missing>src/etc/header.txt</missing>
+        </file>
+      </activation>
+      <build>
+        <plugins>
+          <plugin>
+            <artifactId>maven-checkstyle-plugin</artifactId>
+            <dependencies>
+              <dependency>
+                <groupId>org.apache.jclouds</groupId>
+                <artifactId>jclouds-resources</artifactId>
+                <version>${project.version}</version>
+              </dependency>
+            </dependencies>
+            <configuration>
+              <!-- jclouds-resources has the checkstyle config in the classpath -->
+              <configLocation>resources/checkstyle.xml</configLocation>
             </configuration>
           </plugin>
         </plugins>            
