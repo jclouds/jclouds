@@ -20,10 +20,17 @@ import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
 import static org.testng.Assert.assertTrue;
 
+import javax.ws.rs.core.MediaType;
 import java.util.Set;
 
-import javax.ws.rs.core.MediaType;
-
+import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.ImmutableMap.Builder;
+import com.google.common.collect.ImmutableMultimap;
+import com.google.common.collect.ImmutableSet;
+import com.google.common.collect.Iterables;
+import com.google.common.collect.LinkedHashMultimap;
+import com.google.common.collect.Multimap;
+import com.google.common.collect.Sets;
 import org.jclouds.aws.ec2.compute.internal.BaseAWSEC2ComputeServiceExpectTest;
 import org.jclouds.compute.domain.SecurityGroup;
 import org.jclouds.compute.domain.SecurityGroupBuilder;
@@ -35,15 +42,6 @@ import org.jclouds.http.HttpResponse;
 import org.jclouds.net.domain.IpPermission;
 import org.jclouds.net.domain.IpProtocol;
 import org.testng.annotations.Test;
-
-import com.google.common.collect.ImmutableMap;
-import com.google.common.collect.ImmutableMap.Builder;
-import com.google.common.collect.ImmutableMultimap;
-import com.google.common.collect.ImmutableSet;
-import com.google.common.collect.Iterables;
-import com.google.common.collect.LinkedHashMultimap;
-import com.google.common.collect.Multimap;
-import com.google.common.collect.Sets;
 
 /**
  * 
@@ -354,6 +352,62 @@ public class AWSEC2SecurityGroupExtensionExpectTest extends BaseAWSEC2ComputeSer
       assertTrue(newPerm.getTenantIdGroupNamePairs().values().contains(origGroup.getProviderId()));
    }
 
+   public void testCreateSecurityGroup() {
+      HttpRequest createSecurityGroupExtRequest =
+              formSigner.filter(HttpRequest.builder()
+                      .method("POST")
+                      .endpoint("https://ec2." + region + ".amazonaws.com/")
+                      .addHeader("Host", "ec2." + region + ".amazonaws.com")
+                      .addFormParam("Action", "CreateSecurityGroup")
+                      .addFormParam("GroupDescription", "jclouds#some-group")
+                      .addFormParam("GroupName", "jclouds#some-group").build());
+
+      HttpRequest describeSecurityGroupsSingleRequest =
+              formSigner.filter(HttpRequest.builder()
+                      .method("POST")
+                      .endpoint("https://ec2." + region + ".amazonaws.com/")
+                      .addHeader("Host", "ec2." + region + ".amazonaws.com")
+                      .addFormParam("Action", "DescribeSecurityGroups")
+                      .addFormParam("GroupName.1", "jclouds#some-group").build());
+
+      HttpRequest describeSecurityGroupsByIdRequest =
+              formSigner.filter(HttpRequest.builder()
+                      .method("POST")
+                      .endpoint("https://ec2." + region + ".amazonaws.com/")
+                      .addHeader("Host", "ec2." + region + ".amazonaws.com")
+                      .addFormParam("Action", "DescribeSecurityGroups")
+                      .addFormParam("GroupId.1", "sg-3c6ef654").build());
+
+      HttpResponse describeSecurityGroupsSingleResponse =
+              HttpResponse.builder().statusCode(200)
+                      .payload(payloadFromResourceWithContentType(
+                              "/describe_securitygroups_extension_single.xml", MediaType.APPLICATION_XML)).build();
+
+
+      Builder<HttpRequest, HttpResponse> requestResponseMap = ImmutableMap.<HttpRequest, HttpResponse> builder();
+      requestResponseMap.put(describeRegionsRequest, describeRegionsResponse);
+      requestResponseMap.put(describeAvailabilityZonesRequest, describeAvailabilityZonesResponse);
+      requestResponseMap.put(describeSecurityGroupsSingleRequest, describeSecurityGroupsSingleResponse);
+      requestResponseMap.put(describeSecurityGroupsByIdRequest, describeSecurityGroupsSingleResponse);
+      requestResponseMap.put(createKeyPairRequest, createKeyPairResponse);
+      requestResponseMap.put(createSecurityGroupExtRequest, createSecurityGroupResponse);
+
+      requestResponseMap.put(authorizeSecurityGroupIngressRequest22, authorizeSecurityGroupIngressResponse);
+      requestResponseMap.put(authorizeSecurityGroupIngressRequestGroup, authorizeSecurityGroupIngressResponse);
+
+
+      SecurityGroupExtension extension = requestsSendResponses(requestResponseMap.build()).getSecurityGroupExtension().get();
+
+      SecurityGroup group = extension.createSecurityGroup("some-group", new LocationBuilder()
+              .scope(LocationScope.REGION)
+              .id(region)
+              .description("region")
+              .build());
+
+      assertEquals("sg-3c6ef654", group.getProviderId());
+      assertEquals(region + "/sg-3c6ef654", group.getId());
+   }
+   
    private Multimap<String, String> emptyMultimap() {
       return LinkedHashMultimap.create();
    }

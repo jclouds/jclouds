@@ -22,11 +22,16 @@ import static com.google.common.collect.Iterables.filter;
 import static com.google.common.collect.Iterables.getOnlyElement;
 import static com.google.common.collect.Iterables.transform;
 
-import java.util.Set;
-
 import javax.inject.Inject;
 import javax.inject.Named;
+import java.util.Set;
 
+import com.google.common.base.Function;
+import com.google.common.base.Supplier;
+import com.google.common.cache.LoadingCache;
+import com.google.common.collect.Iterables;
+import com.google.common.collect.Multimap;
+import com.google.common.util.concurrent.ListeningExecutorService;
 import org.jclouds.Constants;
 import org.jclouds.aws.ec2.AWSEC2Api;
 import org.jclouds.aws.util.AWSUtils;
@@ -40,13 +45,6 @@ import org.jclouds.ec2.compute.extensions.EC2SecurityGroupExtension;
 import org.jclouds.location.Region;
 import org.jclouds.net.domain.IpPermission;
 import org.jclouds.net.domain.IpProtocol;
-
-import com.google.common.base.Function;
-import com.google.common.base.Supplier;
-import com.google.common.cache.LoadingCache;
-import com.google.common.collect.Iterables;
-import com.google.common.collect.Multimap;
-import com.google.common.util.concurrent.ListeningExecutorService;
 
 /**
  * An extension to compute service to allow for the manipulation of {@link SecurityGroup}s. Implementation
@@ -79,7 +77,7 @@ public class AWSEC2SecurityGroupExtension extends EC2SecurityGroupExtension {
               false);
 
       groupCreator.getUnchecked(regionAndName);
-      String groupId = groupNameToId.apply(markerGroup);
+      String groupId = groupNameToId.apply(regionAndName.slashEncode());
       return getSecurityGroupById(regionAndName.getRegion() + "/" + groupId);
    }
 
