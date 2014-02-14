@@ -1,0 +1,98 @@
+[
+{
+  "accountId": 208938,
+  "createDate": "2013-07-31T11:02:09+01:00",
+  "id": 33352,
+  "name": "25G CentOS 6 32-bit",
+  "parentId": 10616,
+  "statusId": 1,
+  "transactionId": null,
+  "userRecordId": null,
+  "accountReferences": [],
+  "blockDevices": [
+    {
+      "device": "0",
+      "diskImageId": 1692629,
+      "diskSpace": 2597196288,
+      "groupId": 33352,
+      "id": 42678,
+      "units": "B",
+      "diskImage": {
+        "capacity": 25,
+        "createDate": "2013-07-31T11:02:09+01:00",
+        "description": "25G CentOS 6 32-bit",
+        "id": 1692629,
+        "modifyDate": null,
+        "name": "25G CentOS 6 32-bit",
+        "parentId": null,
+        "storageRepositoryId": 863078,
+        "typeId": 241,
+        "units": "GB",
+        "uuid": "3764c062-43d7-4488-8119-0cf847c3e4db",
+        "softwareReferences": [
+          {
+            "id": 1227351,
+            "softwareDescriptionId": 885,
+            "softwareDescription": {
+              "controlPanel": 0,
+              "id": 885,
+              "longDescription": "CentOS / CentOS / 6.0-32 Minimal for CCI",
+              "manufacturer": "CentOS",
+              "name": "CentOS",
+              "operatingSystem": 1,
+              "referenceCode": "CENTOS_6_32",
+              "upgradeSoftwareDescriptionId": null,
+              "upgradeSwDescId": null,
+              "version": "6.0-32 Minimal for CCI",
+              "virtualLicense": 0,
+              "virtualizationPlatform": 0,
+              "requiredUser": "root"
+            }
+          }
+        ],
+        "storageRepository": {
+          "description": "SL208938 Public",
+          "id": 863078,
+          "name": "SL208938 Public",
+          "publicFlag": 1,
+          "typeId": 181
+        }
+      }
+    },
+    {
+      "device": "1",
+      "diskImageId": 1692630,
+      "groupId": 33352,
+      "id": 42679,
+      "diskImage": {
+        "capacity": 2,
+        "createDate": "2013-07-31T11:02:09+01:00",
+        "description": "10617-SWAP",
+        "id": 1692630,
+        "modifyDate": null,
+        "name": "10617-SWAP",
+        "parentId": null,
+        "storageRepositoryId": 863078,
+        "typeId": 246,
+        "units": "GB",
+        "uuid": "ae3d12c3-f624-4c3a-80f5-ceeea2259c16",
+        "softwareReferences": [],
+        "storageRepository": {
+          "description": "SL208938 Public",
+          "id": 863078,
+          "name": "SL208938 Public",
+          "publicFlag": 1,
+          "typeId": 181
+        }
+      }
+    }
+  ],
+  "storageRepository": {
+    "description": "SL208938 Public",
+    "id": 863078,
+    "name": "SL208938 Public",
+    "publicFlag": 1,
+    "typeId": 181
+  }
+}
+]

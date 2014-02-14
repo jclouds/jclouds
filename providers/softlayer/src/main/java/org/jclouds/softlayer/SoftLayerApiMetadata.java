@@ -17,7 +17,7 @@
 package org.jclouds.softlayer;
 
 import static org.jclouds.reflect.Reflection2.typeToken;
-
+import static org.jclouds.softlayer.reference.SoftLayerConstants.SOFTLAYER_PROVIDER_NAME;
 import java.net.URI;
 import java.util.Properties;
 
@@ -30,10 +30,9 @@ import com.google.common.collect.ImmutableSet;
 import com.google.inject.Module;
 
 /**
- * Implementation of {@link ApiMetadata} for API
+ * Implementation of {@link org.jclouds.apis.ApiMetadata} for API
  */
 public class SoftLayerApiMetadata extends BaseHttpApiMetadata<SoftLayerApi> {
-
 
    @Override
    public Builder toBuilder() {
@@ -57,18 +56,18 @@ public class SoftLayerApiMetadata extends BaseHttpApiMetadata<SoftLayerApi> {
 
    public static class Builder extends BaseHttpApiMetadata.Builder<SoftLayerApi, Builder> {
 
-      @SuppressWarnings("deprecation")
       protected Builder() {
-         id("softlayer")
-         .name("SoftLayer API")
-         .identityName("API Username")
-         .credentialName("API Key")
-         .documentation(URI.create("http://sldn.softlayer.com/article/REST"))
-         .version("3")
-         .defaultEndpoint("https://api.softlayer.com/rest")
-         .defaultProperties(SoftLayerApiMetadata.defaultProperties())
-         .view(typeToken(ComputeServiceContext.class))
-         .defaultModules(ImmutableSet.<Class<? extends Module>>of(SoftLayerHttpApiModule.class, SoftLayerComputeServiceContextModule.class));
+         id(SOFTLAYER_PROVIDER_NAME)
+                 .name("SoftLayer API")
+                 .identityName("API Username")
+                 .credentialName("API Key")
+                 .documentation(URI.create("http://sldn.softlayer.com/article/REST"))
+                 .version("3")
+                 .defaultEndpoint("https://api.softlayer.com/rest")
+                 .defaultProperties(SoftLayerApiMetadata.defaultProperties())
+                 .view(typeToken(ComputeServiceContext.class))
+                 .defaultModules(ImmutableSet.<Class<? extends Module>>of(SoftLayerHttpApiModule.class,
+                         SoftLayerComputeServiceContextModule.class)).build();
       }
 
       @Override

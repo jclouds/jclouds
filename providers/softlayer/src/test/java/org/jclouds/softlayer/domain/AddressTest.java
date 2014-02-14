@@ -18,9 +18,6 @@ package org.jclouds.softlayer.domain;
 
 import org.testng.annotations.Test;
 
-/**
- * Tests {@code Address}
- */
 @Test(singleThreaded = true, groups = "unit")
 public class AddressTest {
 

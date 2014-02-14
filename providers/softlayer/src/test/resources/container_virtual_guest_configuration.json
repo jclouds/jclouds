@@ -1,0 +1,93 @@
+{
+  "blockDevices": [
+    {
+      "itemPrice": {
+        "hourlyRecurringFee": "0",
+        "recurringFee": "0",
+        "item": {
+          "description": "25 GB (SAN)"
+        }
+      },
+      "template": {
+        "blockDevices": [
+          {
+            "device": "0",
+            "diskImage": {
+              "capacity": 25
+            }
+          }
+        ],
+        "localDiskFlag": false
+      }
+    }
+  ],
+  "datacenters": [
+    {
+      "template": {
+        "datacenter": {
+          "name": "ams01"
+        }
+      }
+    }
+  ],
+  "memory": [
+    {
+      "itemPrice": {
+        "hourlyRecurringFee": ".02",
+        "recurringFee": "14",
+        "item": {
+          "description": "1 GB"
+        }
+      },
+      "template": {
+        "maxMemory": 1024
+      }
+    }
+  ],
+  "networkComponents": [
+    {
+      "itemPrice": {
+        "hourlyRecurringFee": "0",
+        "recurringFee": "0",
+        "item": {
+          "description": "10 Mbps Public & Private Networks"
+        }
+      },
+      "template": {
+        "networkComponents": [
+          {
+            "maxSpeed": 10
+          }
+        ]
+      }
+    }
+  ],
+  "operatingSystems": [
+    {
+      "itemPrice": {
+        "hourlyRecurringFee": "0",
+        "recurringFee": "0",
+        "item": {
+          "description": "CentOS 6.x - Minimal Install (64 bit)"
+        }
+      },
+      "template": {
+        "operatingSystemReferenceCode": "CENTOS_6_64"
+      }
+    }
+  ],
+  "processors": [
+    {
+      "itemPrice": {
+        "hourlyRecurringFee": ".022",
+        "recurringFee": "15",
+        "item": {
+          "description": "1 x 2.0 GHz Core"
+        }
+      },
+      "template": {
+        "startCpus": 1
+      }
+    }
+  ]
+}

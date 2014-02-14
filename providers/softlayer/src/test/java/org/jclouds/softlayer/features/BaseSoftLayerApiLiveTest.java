@@ -29,4 +29,5 @@ public class BaseSoftLayerApiLiveTest extends BaseApiLiveTest<SoftLayerApi> {
    public BaseSoftLayerApiLiveTest() {
       this.provider = "softlayer";
    }
+
 }

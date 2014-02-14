@@ -1,0 +1,30 @@
+{
+  "id": 265592,
+  "longName": "Amsterdam 1",
+  "name": "ams01",
+  "locationAddress": {
+    "accountId": 1,
+    "address1": "Paul van Vlissingenstraat 16",
+    "city": "Amsterdam",
+    "contactName": "SoftLayer",
+    "country": "NL",
+    "description": "Amsterdam - AMS01",
+    "id": 3322,
+    "isActive": 1,
+    "locationId": 265592,
+    "postalCode": "1096 BK",
+    "type": {
+      "createDate": "2010-04-06T04:49:15+01:00",
+      "id": 1,
+      "keyName": "SOFTLAYER_DATACENTER",
+      "name": "SoftLayer Datacenter (accepts customer DTS shipments)"
+    }
+  },
+  "regions": [
+    {
+      "description": "AMS01 - Amsterdam - Western Europe",
+      "keyname": "AMSTERDAM",
+      "sortOrder": 0
+    }
+  ]
+}

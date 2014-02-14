@@ -18,40 +18,29 @@ package org.jclouds.softlayer.reference;
 
 /**
  * Configuration properties and constants used in SoftLayer connections.
+ * 
+ * @author Adrian Cole
+ * @author Andrea Turli
  */
-public final class SoftLayerConstants {
+public interface SoftLayerConstants {
+
+   public static final String SOFTLAYER_PROVIDER_NAME = "softlayer";
 
    /**
-    * Name of the product package corresponding to cloud servers
+    * Number of milliseconds to wait for an order to arrive on the api.
     */
-   public static final String PROPERTY_SOFTLAYER_VIRTUALGUEST_PACKAGE_NAME = "jclouds.softlayer.virtualguest.package-name";
+   public static final String PROPERTY_SOFTLAYER_VIRTUALGUEST_LOGIN_DETAILS_DELAY = "jclouds.softlayer.virtualguest" +
+           ".login_details_delay";
 
    /**
-    * pattern where last group matches core speed
+    * Number of milliseconds to wait for a virtualguest to be without active transactions
     */
-   public static final String PROPERTY_SOFTLAYER_VIRTUALGUEST_CPU_REGEX = "jclouds.softlayer.virtualguest.cpu-regex";
+   public static final String PROPERTY_SOFTLAYER_VIRTUALGUEST_ACTIVE_TRANSACTIONS_DELAY = "jclouds.softlayer" +
+           ".virtualguest.active_transactions_delay";
 
    /**
-    * Uplink port speed for new guests (10, 100, 1000)
+    * By default, list images will now consider the public images
     */
-   public static final String PROPERTY_SOFTLAYER_VIRTUALGUEST_PORT_SPEED = "jclouds.softlayer.virtualguest.port-speed";
+   public static final String PROPERTY_SOFTLAYER_INCLUDE_PUBLIC_IMAGES = "jclouds.softlayer.include_public_images";
 
-   /**
-    * Default Boot Disk type (SAN, LOCAL)
-    */
-   public static final String PROPERTY_SOFTLAYER_VIRTUALGUEST_DISK0_TYPE = "jclouds.softlayer.virtualguest.disk0-type";
-
-   /**
-    * number of milliseconds to wait for an order to arrive on the api.
-    */
-   public static final String PROPERTY_SOFTLAYER_VIRTUALGUEST_LOGIN_DETAILS_DELAY = "jclouds.softlayer.virtualguest.order-delay";
-
-   /**
-    * standard prices for all new guests.
-    */
-   public static final String PROPERTY_SOFTLAYER_VIRTUALGUEST_PRICES = "jclouds.softlayer.virtualguest.prices";
-
-   private SoftLayerConstants() {
-      throw new AssertionError("intentionally unimplemented");
-   }
 }

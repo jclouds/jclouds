@@ -18,38 +18,29 @@ package org.jclouds.softlayer.compute.functions;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.collect.FluentIterable.from;
-
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import javax.annotation.Resource;
 import javax.inject.Inject;
-import javax.inject.Named;
 import javax.inject.Singleton;
 
 import org.jclouds.collect.Memoized;
-import org.jclouds.compute.domain.Hardware;
 import org.jclouds.compute.domain.Image;
 import org.jclouds.compute.domain.NodeMetadata;
 import org.jclouds.compute.domain.NodeMetadata.Status;
 import org.jclouds.compute.domain.NodeMetadataBuilder;
 import org.jclouds.compute.functions.GroupNamingConvention;
-import org.jclouds.compute.reference.ComputeServiceConstants;
 import org.jclouds.domain.Location;
 import org.jclouds.location.predicates.LocationPredicates;
-import org.jclouds.logging.Logger;
-import org.jclouds.softlayer.SoftLayerApi;
-import org.jclouds.softlayer.domain.ProductItem;
-import org.jclouds.softlayer.domain.ProductOrder;
+import org.jclouds.softlayer.domain.TagReference;
 import org.jclouds.softlayer.domain.VirtualGuest;
-import org.jclouds.softlayer.exceptions.SoftLayerOrderItemDuplicateException;
-import org.jclouds.softlayer.predicates.ProductItemPredicates;
 
 import com.google.common.base.Function;
 import com.google.common.base.Supplier;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
-import com.google.common.collect.Iterables;
+import com.google.common.collect.Lists;
 
 @Singleton
 public class VirtualGuestToNodeMetadata implements Function<VirtualGuest, NodeMetadata> {
@@ -60,107 +51,54 @@ public class VirtualGuestToNodeMetadata implements Function<VirtualGuest, NodeMe
          .put(VirtualGuest.State.UNRECOGNIZED, Status.UNRECOGNIZED).build();
 
    private final Supplier<Set<? extends Location>> locations;
-   private final GetHardwareForVirtualGuest hardware;
-   private final GetImageForVirtualGuest images;
    private final GroupNamingConvention nodeNamingConvention;
+   private final VirtualGuestToImage virtualGuestToImage;
+   private final VirtualGuestToHardware virtualGuestToHardware;
 
    @Inject
    VirtualGuestToNodeMetadata(@Memoized Supplier<Set<? extends Location>> locations,
-         GetHardwareForVirtualGuest hardware, GetImageForVirtualGuest images,
-         GroupNamingConvention.Factory namingConvention) {
+         GroupNamingConvention.Factory namingConvention, VirtualGuestToImage virtualGuestToImage,
+         VirtualGuestToHardware virtualGuestToHardware) {
       this.nodeNamingConvention = checkNotNull(namingConvention, "namingConvention").createWithoutPrefix();
       this.locations = checkNotNull(locations, "locations");
-      this.hardware = checkNotNull(hardware, "hardware");
-      this.images = checkNotNull(images, "images");
+      this.virtualGuestToImage = checkNotNull(virtualGuestToImage, "virtualGuestToImage");
+      this.virtualGuestToHardware = checkNotNull(virtualGuestToHardware, "virtualGuestToHardware");
    }
 
    @Override
    public NodeMetadata apply(VirtualGuest from) {
-      // convert the result object to a jclouds NodeMetadata
       NodeMetadataBuilder builder = new NodeMetadataBuilder();
       builder.ids(from.getId() + "");
       builder.name(from.getHostname());
-      builder.hostname(from.getHostname());
-      if (from.getDatacenter() != null)
+      builder.hostname(from.getHostname() + from.getDomain());
+      if (from.getDatacenter() != null) {
          builder.location(from(locations.get()).firstMatch(
-               LocationPredicates.idEquals(from.getDatacenter().getId() + "")).orNull());
+                 LocationPredicates.idEquals(from.getDatacenter().getId() + "")).orNull());
+      }
       builder.group(nodeNamingConvention.groupInUniqueNameOrNull(from.getHostname()));
-
-      Image image = images.getImage(from);
+      builder.hardware(virtualGuestToHardware.apply(from));
+      Image image = virtualGuestToImage.apply(from);
       if (image != null) {
          builder.imageId(image.getId());
          builder.operatingSystem(image.getOperatingSystem());
       }
-
-      builder.hardware(hardware.getHardware(from));
-
-      builder.status(serverStateToNodeStatus.get(from.getPowerState().getKeyName()));
-
-      // These are null for 'bad' guest orders in the HALTED state.
+      if (from.getPowerState() != null) {
+         builder.status(serverStateToNodeStatus.get(from.getPowerState().getKeyName()));
+      }
       if (from.getPrimaryIpAddress() != null)
-         builder.publicAddresses(ImmutableSet.<String> of(from.getPrimaryIpAddress()));
+         builder.publicAddresses(ImmutableSet.of(from.getPrimaryIpAddress()));
       if (from.getPrimaryBackendIpAddress() != null)
-         builder.privateAddresses(ImmutableSet.<String> of(from.getPrimaryBackendIpAddress()));
-      return builder.build();
-   }
-
-   @Singleton
-   public static class GetHardwareForVirtualGuest {
-
-      private final SoftLayerApi api;
-      private final Function<Iterable<ProductItem>, Hardware> productItemsToHardware;
-
-      @Inject
-      public GetHardwareForVirtualGuest(SoftLayerApi api,
-            Function<Iterable<ProductItem>, Hardware> productItemsToHardware) {
-         this.api = checkNotNull(api, "api");
-         this.productItemsToHardware = checkNotNull(productItemsToHardware, "productItemsToHardware");
-
-      }
-
-      public Hardware getHardware(VirtualGuest guest) {
-         // 'bad' orders have no start cpu's and cause the order lookup to fail.
-         if (guest.getStartCpus() < 1)
-            return null;
-         ProductOrder order = api.getVirtualGuestApi().getOrderTemplate(guest.getId());
-         if (order == null)
-            return null;
-         Iterable<ProductItem> items = Iterables.transform(order.getPrices(), ProductItems.item());
-         return productItemsToHardware.apply(items);
-      }
-   }
-
-   @Singleton
-   public static class GetImageForVirtualGuest {
-
-      @Resource
-      @Named(ComputeServiceConstants.COMPUTE_LOGGER)
-      protected Logger logger = Logger.NULL;
-
-      private SoftLayerApi api;
-
-      @Inject
-      public GetImageForVirtualGuest(SoftLayerApi api) {
-         this.api = api;
-      }
-
-      public Image getImage(VirtualGuest guest) {
-         ProductOrder order = null;
-         // 'bad' orders have no start cpu's and cause the order lookup to fail.
-         if (guest.getStartCpus() < 1)
-            return null;
-         try {
-            order = api.getVirtualGuestApi().getOrderTemplate(guest.getId());
-         } catch (SoftLayerOrderItemDuplicateException e) {
-            // this is a workaround because SoftLayer throws sometimes 500 internal server errors for the above method call
-            logger.warn(e, "Cannot get order template for virtualGuestId(%s)", guest.getId());
+         builder.privateAddresses(ImmutableSet.of(from.getPrimaryBackendIpAddress()));
+      if (from.getTagReferences() != null && !from.getTagReferences().isEmpty()) {
+         List<String> tags = Lists.newArrayList();
+         for (TagReference tagReference : from.getTagReferences()) {
+            if (tagReference != null) {
+               tags.add(tagReference.getTag().getName());
+            }
          }
-         if (order == null)
-            return null;
-         Iterable<ProductItem> items = Iterables.transform(order.getPrices(), ProductItems.item());
-         ProductItem os = Iterables.find(items, ProductItemPredicates.categoryCode("os"));
-         return new ProductItemToImage().apply(os);
+         builder.tags(tags);
       }
+      return builder.build();
    }
 
 }

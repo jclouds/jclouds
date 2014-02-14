@@ -25,7 +25,7 @@ import org.jclouds.http.handlers.BackoffLimitedRetryHandler;
 import org.jclouds.location.config.LocationModule;
 import org.jclouds.location.suppliers.ImplicitLocationSupplier;
 import org.jclouds.location.suppliers.implicit.OnlyLocationOrFirstZone;
-import org.jclouds.rest.ConfiguresRestClient;
+import org.jclouds.rest.ConfiguresHttpApi;
 import org.jclouds.rest.config.HttpApiModule;
 import org.jclouds.softlayer.SoftLayerApi;
 import org.jclouds.softlayer.handlers.SoftLayerErrorHandler;
@@ -35,7 +35,7 @@ import com.google.inject.Scopes;
 /**
  * Configures the SoftLayer connection.
  */
-@ConfiguresRestClient
+@ConfiguresHttpApi
 public class SoftLayerHttpApiModule extends HttpApiModule<SoftLayerApi> {
 
    @Override

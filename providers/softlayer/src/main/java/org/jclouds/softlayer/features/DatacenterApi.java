@@ -32,37 +32,32 @@ import org.jclouds.rest.annotations.RequestFilters;
 import org.jclouds.softlayer.domain.Datacenter;
 
 /**
- * Provides synchronous access to LocationDatacenter.
+ * Provides access to LocationDatacenter via their REST API.
  * <p/>
- * 
  * @see <a href="http://sldn.softlayer.com/article/REST" />
  */
 @RequestFilters(BasicAuthentication.class)
 @Path("/v{jclouds.api-version}")
+@Consumes(MediaType.APPLICATION_JSON)
 public interface DatacenterApi {
 
    /**
-    * 
     * @return an account's associated datacenter objects.
     */
    @GET
-   @Path("/SoftLayer_Location_Datacenter/Datacenters.json")
+   @Path("/SoftLayer_Location_Datacenter/Datacenters")
    @QueryParams(keys = "objectMask", values = "locationAddress;regions")
-   @Consumes(MediaType.APPLICATION_JSON)
    @Fallback(Fallbacks.EmptySetOnNotFoundOr404.class)
    Set<Datacenter> listDatacenters();
 
    /**
-    * 
     * @param id
     *           id of the datacenter
     * @return datacenter or null if not found
     */
    @GET
-   @Path("/SoftLayer_Location_Datacenter/{id}.json")
+   @Path("/SoftLayer_Location_Datacenter/{id}")
    @QueryParams(keys = "objectMask", values = "locationAddress;regions")
-   @Consumes(MediaType.APPLICATION_JSON)
    @Fallback(Fallbacks.NullOnNotFoundOr404.class)
    Datacenter getDatacenter(@PathParam("id") long id);
-
 }

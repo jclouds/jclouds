@@ -16,38 +16,30 @@
  */
 package org.jclouds.softlayer.features;
 
-import static org.jclouds.softlayer.predicates.ProductItemPredicates.capacity;
-import static org.jclouds.softlayer.predicates.ProductItemPredicates.categoryCode;
-import static org.jclouds.softlayer.predicates.ProductItemPredicates.units;
-import static org.jclouds.softlayer.predicates.ProductPackagePredicates.named;
+import static com.google.common.base.Preconditions.checkState;
+import static org.jclouds.softlayer.compute.strategy.SoftLayerComputeServiceAdapter.VirtualGuestHasLoginDetailsPresent;
+import static org.jclouds.util.Predicates2.retry;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
 import static org.testng.Assert.assertTrue;
-
-import java.util.Map;
 import java.util.Properties;
-import java.util.Random;
 import java.util.Set;
 
 import org.jclouds.softlayer.SoftLayerApi;
-import org.jclouds.softlayer.compute.functions.ProductItems;
-import org.jclouds.softlayer.domain.ProductItem;
-import org.jclouds.softlayer.domain.ProductItemPrice;
-import org.jclouds.softlayer.domain.ProductOrder;
-import org.jclouds.softlayer.domain.ProductOrderReceipt;
-import org.jclouds.softlayer.domain.ProductPackage;
+import org.jclouds.softlayer.domain.ContainerVirtualGuestConfiguration;
+import org.jclouds.softlayer.domain.Datacenter;
+import org.jclouds.softlayer.domain.OperatingSystem;
+import org.jclouds.softlayer.domain.TagReference;
 import org.jclouds.softlayer.domain.VirtualGuest;
+import org.testng.annotations.AfterClass;
+import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
-import com.google.common.base.Predicates;
+import com.google.common.base.Predicate;
 import com.google.common.collect.ImmutableSet;
-import com.google.common.collect.ImmutableSet.Builder;
 import com.google.common.collect.Iterables;
-import com.google.common.collect.Maps;
 import com.google.inject.Injector;
-import com.google.inject.Key;
 import com.google.inject.Module;
-import com.google.inject.TypeLiteral;
 
 /**
  * Tests behavior of {@code VirtualGuestApi}
@@ -55,87 +47,117 @@ import com.google.inject.TypeLiteral;
 @Test(groups = "live")
 public class VirtualGuestApiLiveTest extends BaseSoftLayerApiLiveTest {
 
-   private static final String TEST_HOSTNAME_PREFIX = "livetest";
+   public static final String DATACENTER = "dal05";
 
-   @Test
-   public void testListVirtualGuests() throws Exception {
-      Set<VirtualGuest> response = api().listVirtualGuests();
-      assert null != response;
-      assertTrue(response.size() >= 0);
-      for (VirtualGuest vg : response) {
-         VirtualGuest newDetails = api().getVirtualGuest(vg.getId());
-         assertEquals(vg.getId(), newDetails.getId());
-         checkVirtualGuest(vg);
-      }
+   private VirtualGuestApi virtualGuestApi;
+   private Predicate<VirtualGuest> loginDetailsTester;
+   private VirtualGuestHasLoginDetailsPresent virtualGuestHasLoginDetailsPresent;
+   private long guestLoginDelay = 60 * 60 * 1000;
+
+   private VirtualGuest virtualGuest = null;
+
+   @BeforeClass(groups = {"integration", "live"})
+   @Override
+   public void setup() {
+      super.setup();
+      virtualGuestApi = api.getVirtualGuestApi();
    }
 
-   @Test(enabled = false, groups = "live")
-   public void testCancelAndPlaceOrder() {
-
-      // This method was not working needs testing out.
-
-      // TODO: Should also check if there are active transactions before trying to cancel.
-      // objectMask: virtualGuests.activeTransaction
-      for (VirtualGuest guest : api().listVirtualGuests()) {
-         if (guest.getHostname().startsWith(TEST_HOSTNAME_PREFIX)) {
-            if (guest.getBillingItemId() != -1) {
-               api().cancelService(guest.getBillingItemId());
-            }
-         }
+   @AfterClass(groups = {"integration", "live"})
+   protected void tearDownContext() {
+      if (virtualGuest != null) {
+         destroyMachine(virtualGuest);
+         virtualGuest = null;
       }
-
-      int pkgId = Iterables.find(api.getAccountApi().getActivePackages(),
-               named(ProductPackageApiLiveTest.CLOUD_SERVER_PACKAGE_NAME)).getId();
-      ProductPackage productPackage = api.getProductPackageApi().getProductPackage(pkgId);
-
-      Iterable<ProductItem> ramItems = Iterables.filter(productPackage.getItems(), Predicates.and(categoryCode("ram"),
-               capacity(2.0f)));
-
-      Map<Float, ProductItem> ramToProductItem = Maps.uniqueIndex(ramItems, ProductItems.capacity());
-
-      ProductItemPrice ramPrice = ProductItems.price().apply(ramToProductItem.get(2.0f));
-
-      Iterable<ProductItem> cpuItems = Iterables.filter(productPackage.getItems(), Predicates.and(
-               units("PRIVATE_CORE"), capacity(2.0f)));
-      Map<Float, ProductItem> coresToProductItem = Maps.uniqueIndex(cpuItems, ProductItems.capacity());
-
-      ProductItemPrice cpuPrice = ProductItems.price().apply(coresToProductItem.get(2.0f));
-
-      Iterable<ProductItem> operatingSystems = Iterables.filter(productPackage.getItems(), categoryCode("os"));
-      Map<String, ProductItem> osToProductItem = Maps.uniqueIndex(operatingSystems, ProductItems.description());
-      ProductItemPrice osPrice = ProductItems.price().apply(
-               osToProductItem.get("Ubuntu Linux 8 LTS Hardy Heron - Minimal Install (64 bit)"));
-
-      Builder<ProductItemPrice> prices = ImmutableSet.builder();
-      prices.addAll(defaultPrices);
-      prices.add(ramPrice);
-      prices.add(cpuPrice);
-      prices.add(osPrice);
-
-      VirtualGuest guest = VirtualGuest.builder().domain("jclouds.org").hostname(
-               TEST_HOSTNAME_PREFIX + new Random().nextInt()).build();
-
-      ProductOrder order = ProductOrder.builder().packageId(pkgId).quantity(1).useHourlyPricing(true).prices(
-               prices.build()).virtualGuests(guest).build();
-
-      ProductOrderReceipt receipt = api().orderVirtualGuest(order);
-      ProductOrder order2 = receipt.getOrderDetails();
-      VirtualGuest result = Iterables.get(order2.getVirtualGuests(), 0);
-
-      ProductOrder order3 = api().getOrderTemplate(result.getId());
-
-      assertEquals(order.getPrices(), order3.getPrices());
-      assertNotNull(receipt);
    }
-
-   private Iterable<ProductItemPrice> defaultPrices;
 
    @Override
    protected SoftLayerApi create(Properties props, Iterable<Module> modules) {
       Injector injector = newBuilder().modules(modules).overrides(props).buildInjector();
-      defaultPrices = injector.getInstance(Key.get(new TypeLiteral<Iterable<ProductItemPrice>>() {
-      }));
+      virtualGuestHasLoginDetailsPresent = injector.getInstance(VirtualGuestHasLoginDetailsPresent.class);
+      loginDetailsTester = retry(virtualGuestHasLoginDetailsPresent, guestLoginDelay);
       return injector.getInstance(SoftLayerApi.class);
+   }
+
+   @Test
+   public void testGetCreateObjectOptions() {
+      ContainerVirtualGuestConfiguration configurationOption = api().getCreateObjectOptions();
+      assertNotNull(configurationOption);
+   }
+
+   @Test
+   public void testCreateVirtualGuest() throws Exception {
+      VirtualGuest virtualGuestRequest = VirtualGuest.builder()
+              .domain("jclouds.org")
+              .hostname("virtualGuestApiLiveTest")
+              .startCpus(1)
+              .maxMemory(1024)
+              .operatingSystem(OperatingSystem.builder().id("CENTOS_6_64").operatingSystemReferenceCode("CENTOS_6_64").build())
+              .datacenter(Datacenter.builder().name(DATACENTER).build())
+              .build();
+
+      virtualGuest = virtualGuestApi.createVirtualGuest(virtualGuestRequest);
+      boolean orderInSystem = loginDetailsTester.apply(virtualGuest);
+      checkState(orderInSystem, "order for guest %s doesn't have login details within %sms", virtualGuest,
+              Long.toString(guestLoginDelay));
+      virtualGuest = virtualGuestApi.getVirtualGuest(virtualGuest.getId());
+      checkVirtualGuest(virtualGuest);
+      assertNotNull(virtualGuest.getPrimaryIpAddress(), "primaryIpAddress must be not null");
+      assertNotNull(virtualGuest.getPrimaryBackendIpAddress(), "backendIpAddress must be not null");
+   }
+
+   @Test(dependsOnMethods = "testCreateVirtualGuest")
+   public void testGetVirtualGuest() throws Exception {
+      VirtualGuest found = virtualGuestApi.getVirtualGuest(virtualGuest.getId());
+      assertEquals(found, virtualGuest);
+   }
+
+   @Test(dependsOnMethods = "testGetVirtualGuest")
+   public void testSetTagsOnVirtualGuest() throws Exception {
+      ImmutableSet<String> tags = ImmutableSet.of("test", "jclouds");
+      assertTrue(virtualGuestApi.setTags(virtualGuest.getId(), tags));
+      VirtualGuest found = virtualGuestApi.getVirtualGuest(virtualGuest.getId());
+      Set<TagReference> tagReferences = found.getTagReferences();
+      assertNotNull(tagReferences);
+      for (String tag : tags) {
+         Iterables.contains(tagReferences, tag);
+      }
+   }
+
+   @Test(dependsOnMethods = "testSetTagsOnVirtualGuest")
+   public void testPauseVirtualGuest() throws Exception {
+      virtualGuestApi.pauseVirtualGuest(virtualGuest.getId());
+      checkState(retry(new Predicate<VirtualGuest>() {
+         public boolean apply(VirtualGuest guest) {
+            guest = api().getVirtualGuest(virtualGuest.getId());
+            return guest.getPowerState().getKeyName() == VirtualGuest.State.PAUSED;
+         }
+      }, 5*60*1000).apply(virtualGuest), "%s still not paused!", virtualGuest);
+      VirtualGuest found = virtualGuestApi.getVirtualGuest(virtualGuest.getId());
+      assertTrue(found.getPowerState().getKeyName() == VirtualGuest.State.PAUSED);
+   }
+
+   @Test(dependsOnMethods = "testPauseVirtualGuest")
+   public void testResumeVirtualGuest() throws Exception {
+      virtualGuestApi.resumeVirtualGuest(virtualGuest.getId());
+      checkState(retry(new Predicate<VirtualGuest>() {
+         public boolean apply(VirtualGuest guest) {
+            guest = api().getVirtualGuest(virtualGuest.getId());
+            return guest.getPowerState().getKeyName() == VirtualGuest.State.RUNNING;
+         }
+      }, 5*60*1000).apply(virtualGuest), "%s still not running!", virtualGuest);
+      VirtualGuest found = virtualGuestApi.getVirtualGuest(virtualGuest.getId());
+      assertTrue(found.getPowerState().getKeyName() == VirtualGuest.State.RUNNING);
+   }
+
+   private void destroyMachine(final VirtualGuest virtualGuest) {
+      checkState(retry(new Predicate<VirtualGuest>() {
+         public boolean apply(VirtualGuest guest) {
+            guest = api().getVirtualGuest(virtualGuest.getId());
+            return guest.getActiveTransactionCount() == 0;
+         }
+      }, 5*60*1000).apply(virtualGuest), "%s still has active transactions!", virtualGuest);
+      assertTrue(api().deleteVirtualGuest(virtualGuest.getId()));
    }
 
    private VirtualGuestApi api() {
@@ -143,25 +165,15 @@ public class VirtualGuestApiLiveTest extends BaseSoftLayerApiLiveTest {
    }
 
    private void checkVirtualGuest(VirtualGuest vg) {
-      if (vg.getBillingItemId() == -1)
-         return;// Quotes and shutting down guests
-
-      assert vg.getAccountId() > 0 : vg;
-      assert vg.getCreateDate() != null : vg;
-      assert vg.getDomain() != null : vg;
-      assert vg.getFullyQualifiedDomainName() != null : vg;
-      assert vg.getHostname() != null : vg;
-      assert vg.getId() > 0 : vg;
-      assert vg.getMaxCpu() > 0 : vg;
-      assert vg.getMaxCpuUnits() != null : vg;
-      assert vg.getMaxMemory() > 0 : vg;
-      assert vg.getMetricPollDate() != null : vg;
-      assert vg.getModifyDate() != null : vg;
-      assert vg.getStartCpus() > 0 : vg;
-      assert vg.getStatusId() >= 0 : vg;
-      assert vg.getUuid() != null : vg;
-      assert vg.getPrimaryBackendIpAddress() != null : vg;
-      assert vg.getPrimaryIpAddress() != null : vg;
+      if (vg.getActiveTransactionCount() == 0) {
+         assertNotNull(vg.getDomain(), "domain must be not null");
+         assertNotNull(vg.getFullyQualifiedDomainName(), "fullyQualifiedDomainName must be not null");
+         assertNotNull(vg.getHostname(), "hostname must be not null");
+         assertTrue(vg.getId() > 0, "id must be greater than 0");
+         assertTrue(vg.getMaxCpu() > 0, "maxCpu must be greater than 0");
+         assertTrue(vg.getMaxMemory() > 0, "maxMemory must be greater than 0");
+         assertTrue(vg.getStatusId() > 0, "statusId must be greater than 0");
+      }
    }
 
 }

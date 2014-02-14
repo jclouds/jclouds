@@ -1,0 +1,110 @@
+[
+  {
+    "accountId": 278184,
+    "createDate": "2014-01-30T13:00:23+00:00",
+    "id": 82898,
+    "name": "Backup template for disk migration of 'ljvsilauncher1.scic.ibm.com'.",
+    "note": "This is a backup template for the disk migration of 'ljvsilauncher1.scic.ibm.com' and is not required. This image may be removed at any time.",
+    "parentId": null,
+    "statusId": 1,
+    "transactionId": null,
+    "userRecordId": null,
+    "children": [
+      {
+        "accountId": 278184,
+        "createDate": "2014-01-30T13:00:53+00:00",
+        "id": 82900,
+        "name": "Backup template for disk migration of 'ljvsilauncher1.scic.ibm.com'.",
+        "note": "This is a backup template for the disk migration of 'ljvsilauncher1.scic.ibm.com' and is not required. This image may be removed at any time.",
+        "parentId": 82898,
+        "statusId": 1,
+        "transactionId": null,
+        "userRecordId": null,
+        "blockDevices": [
+          {
+            "device": "0",
+            "diskImageId": 2190750,
+            "diskSpace": 21832020480,
+            "groupId": 82900,
+            "id": 108100,
+            "units": "B",
+            "diskImage": {
+              "capacity": 25,
+              "checksum": "304a9bce56437af567444567e612506d",
+              "createDate": "2014-01-30T13:00:53+00:00",
+              "description": "ljvsilauncher1.scic.ibm.com",
+              "id": 2190750,
+              "modifyDate": "2014-01-30T13:14:09+00:00",
+              "name": "ljvsilauncher1.scic.ibm.com",
+              "parentId": null,
+              "storageRepositoryId": 906427,
+              "typeId": 241,
+              "units": "GB",
+              "uuid": "42423638-a54e-4d82-9b23-25af5fb13547",
+              "softwareReferences": [
+                {
+                  "id": 1498856,
+                  "softwareDescriptionId": 1076,
+                  "softwareDescription": {
+                    "controlPanel": 0,
+                    "id": 1076,
+                    "longDescription": "Microsoft / Windows 2012 FULL STD 64 bit / STD x64",
+                    "manufacturer": "Microsoft",
+                    "name": "Windows 2012 FULL STD 64 bit",
+                    "operatingSystem": 1,
+                    "referenceCode": "WIN_2012-STD_64",
+                    "upgradeSoftwareDescriptionId": null,
+                    "upgradeSwDescId": null,
+                    "version": "STD x64",
+                    "virtualLicense": 0,
+                    "virtualizationPlatform": 0,
+                    "requiredUser": "Administrator"
+                  }
+                },
+                {
+                  "id": 1498858,
+                  "softwareDescriptionId": 106,
+                  "softwareDescription": {
+                    "controlPanel": 0,
+                    "id": 106,
+                    "longDescription": "Microsoft / Windows Firewall / 1",
+                    "manufacturer": "Microsoft",
+                    "name": "Windows Firewall",
+                    "operatingSystem": 0,
+                    "upgradeSoftwareDescriptionId": null,
+                    "upgradeSwDescId": null,
+                    "version": "1",
+                    "virtualLicense": 0,
+                    "virtualizationPlatform": 0
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "device": "1",
+            "diskImageId": 2190752,
+            "groupId": 82900,
+            "id": 108102,
+            "diskImage": {
+              "capacity": 2,
+              "createDate": "2014-01-30T13:00:58+00:00",
+              "description": "3334230-SWAP",
+              "id": 2190752,
+              "modifyDate": null,
+              "name": "3334230-SWAP",
+              "parentId": null,
+              "storageRepositoryId": 906427,
+              "typeId": 246,
+              "units": "GB",
+              "uuid": "9f087bfb-3ed4-4985-a8b7-ac67bd8316e6",
+              "softwareReferences": []
+            }
+          }
+        ],
+        "children": []
+      }
+    ],
+    "globalIdentifier": "e4055a07-13f5-4fa9-ab46-b023b65c47d2"
+  }
+]

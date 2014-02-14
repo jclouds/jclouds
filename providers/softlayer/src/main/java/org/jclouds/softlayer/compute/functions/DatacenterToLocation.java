@@ -20,6 +20,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.base.Strings.nullToEmpty;
 
 import javax.inject.Inject;
+import javax.inject.Singleton;
 
 import org.jclouds.domain.Location;
 import org.jclouds.domain.LocationBuilder;
@@ -36,7 +37,8 @@ import com.google.common.collect.Iterables;
 /**
  * Converts an Datacenter into a Location.
  */
-public class DatacenterToLocation implements Function<Datacenter, Location> {
+@Singleton
+public class  DatacenterToLocation implements Function<Datacenter,Location> {
    private final JustProvider provider;
 
    // allow us to lazy discover the provider of a resource
@@ -47,12 +49,12 @@ public class DatacenterToLocation implements Function<Datacenter, Location> {
    
     @Override
     public Location apply(Datacenter datacenter) {
-        return new LocationBuilder().scope(LocationScope.ZONE)
-                                    .metadata(ImmutableMap.<String, Object>of())
+        return new LocationBuilder().id(datacenter.getName())
                                     .description(datacenter.getLongName())
-                                    .id(Long.toString(datacenter.getId()))
+                                    .scope(LocationScope.ZONE)
                                     .iso3166Codes(createIso3166Codes(datacenter.getLocationAddress()))
                                     .parent(Iterables.getOnlyElement(provider.get()))
+                                    .metadata(ImmutableMap.<String, Object>of("name", datacenter.getName()))
                                     .build();
    }
 

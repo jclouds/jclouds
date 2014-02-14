@@ -18,7 +18,6 @@ package org.jclouds.softlayer.domain;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.base.Strings.emptyToNull;
-
 import java.beans.ConstructorProperties;
 
 import org.jclouds.javax.annotation.Nullable;
@@ -115,8 +114,10 @@ public class Region implements Comparable<Region> {
 
    @Override
    public String toString() {
-      return "[keyname=" + keyname + ", description=" + description + "]";
+      return Objects.toStringHelper(this)
+              .add("sortOrder", sortOrder)
+              .add("keyname", keyname)
+              .add("description", description)
+              .toString();
    }
-
-
 }

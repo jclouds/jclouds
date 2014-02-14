@@ -16,6 +16,8 @@
  */
 package org.jclouds.softlayer.compute;
 
+import java.util.Properties;
+
 import org.jclouds.compute.domain.NodeMetadata;
 import org.jclouds.compute.internal.BaseComputeServiceLiveTest;
 import org.jclouds.sshj.config.SshjSshClientModule;
@@ -25,10 +27,10 @@ import com.google.common.collect.ImmutableMap;
 import com.google.inject.Module;
 
 /**
- * 
+ *
  * Generally disabled, as it incurs higher fees.
  */
-@Test(groups = "live", enabled = true, sequential = true)
+@Test(groups = "live", enabled = true, singleThreaded = true)
 public class SoftLayerComputeServiceLiveTest extends BaseComputeServiceLiveTest {
 
    public SoftLayerComputeServiceLiveTest() {
@@ -40,7 +42,7 @@ public class SoftLayerComputeServiceLiveTest extends BaseComputeServiceLiveTest 
    protected Module getSshModule() {
       return new SshjSshClientModule();
    }
-   
+
    // softlayer does not support metadata
    @Override
    protected void checkUserMetadataContains(NodeMetadata node, ImmutableMap<String, String> userMetadata) {
@@ -51,5 +53,12 @@ public class SoftLayerComputeServiceLiveTest extends BaseComputeServiceLiveTest 
    @Override
    public void testOptionToNotBlock() {
       // start call is blocking anyway.
+   }
+
+   @Override
+   protected Properties setupProperties() {
+      Properties properties = super.setupProperties();
+      properties.setProperty("jclouds.ssh.max-retries", "20");
+      return properties;
    }
 }

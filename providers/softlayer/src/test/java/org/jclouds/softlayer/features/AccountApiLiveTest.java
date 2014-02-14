@@ -16,12 +16,14 @@
  */
 package org.jclouds.softlayer.features;
 
-import static org.testng.Assert.assertTrue;
+import org.jclouds.softlayer.domain.VirtualGuest;
+import org.jclouds.softlayer.domain.VirtualGuestBlockDeviceTemplateGroup;
+import org.testng.annotations.Test;
 
 import java.util.Set;
 
-import org.jclouds.softlayer.domain.ProductPackage;
-import org.testng.annotations.Test;
+import static org.testng.Assert.assertNotNull;
+import static org.testng.Assert.assertTrue;
 
 /**
  * Tests behavior of {@code AccountApi}
@@ -30,16 +32,42 @@ import org.testng.annotations.Test;
 public class AccountApiLiveTest extends BaseSoftLayerApiLiveTest {
 
    @Test
-   public void testGetActivePackages() {
-      Set<ProductPackage> response = api.getAccountApi().getActivePackages();
-      assert null != response;
-
-      assertTrue(response.size() >= 0);
-      for (ProductPackage productPackage : response) {
-          assert productPackage.getId() > 0 : response;
-          assert productPackage.getName() != null : response;
-          assert productPackage.getDescription() != null : response;
-          assertTrue(productPackage.getItems().isEmpty());
+   public void testGetBlockDeviceTemplateGroups() {
+      Set<VirtualGuestBlockDeviceTemplateGroup> privateImages = api().getBlockDeviceTemplateGroups();
+      assertNotNull(privateImages);
+      for (VirtualGuestBlockDeviceTemplateGroup privateImage : privateImages) {
+         assertTrue(privateImage.getId() > 0, "id must be greater than 0");
+         assertTrue(privateImage.getStatusId() > 0, "status id must be greater than 0");
+         assertTrue(privateImage.getAccountId() > 0, "id must be greater than 0");
       }
    }
+
+   @Test
+   public void testListVirtualGuests() throws Exception {
+      Set<VirtualGuest> response = api().listVirtualGuests();
+      assertTrue(response.size() >= 0);
+      for (VirtualGuest vg : response) {
+         checkVirtualGuest(vg);
+      }
+   }
+
+   private AccountApi api() {
+      return api.getAccountApi();
+   }
+
+   private void checkVirtualGuest(VirtualGuest vg) {
+      if (vg.getActiveTransactionCount() == 0) {
+         assertNotNull(vg.getDomain(), "domain must be not null");
+         assertNotNull(vg.getFullyQualifiedDomainName(), "fullyQualifiedDomainName must be not null");
+         assertNotNull(vg.getHostname(), "hostname must be not null");
+         assertTrue(vg.getId() > 0, "id must be greater than 0");
+         assertTrue(vg.getMaxCpu() > 0, "maxCpu must be greater than 0");
+         assertNotNull(vg.getMaxCpuUnits(), "maxCpuUnits must be not null");
+         assertTrue(vg.getMaxMemory() > 0, "maxMemory must be greater than 0");
+         assertTrue(vg.getStartCpus() > 0, "startCpus must be greater than 0");
+         assertTrue(vg.getStatusId() > 0, "statusId must be greater than 0");
+         assertNotNull(vg.getUuid(), "uuid must be not null");
+      }
+   }
+
 }

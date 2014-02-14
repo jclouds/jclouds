@@ -16,8 +16,8 @@
  */
 package org.jclouds.softlayer.config;
 
-import org.jclouds.json.config.GsonModule.DateAdapter;
-import org.jclouds.json.config.GsonModule.Iso8601DateAdapter;
+import static org.jclouds.json.config.GsonModule.DateAdapter;
+import static org.jclouds.json.config.GsonModule.Iso8601DateAdapter;
 
 import com.google.inject.AbstractModule;
 

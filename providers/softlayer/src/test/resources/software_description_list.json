@@ -1,0 +1,21 @@
+[
+  {
+    "version": "6.0-64 LAMP for CCI",
+    "referenceCode": "CENTOS_6_64",
+    "operatingSystem": 1,
+    "longDescription": "CentOS / CentOS / 6.0-64 LAMP for CCI"
+  },
+
+  {
+    "version": "WEB 64 bit",
+    "referenceCode": "WIN_2008-WEB-R2_64",
+    "operatingSystem": 1,
+    "longDescription": "Microsoft / Windows 2008 FULL WEB 64 bit R2 / WEB 64 bit"
+  },
+  {
+    "version": "12.04-32 Minimal for CCI",
+    "referenceCode": "UBUNTU_12_32",
+    "operatingSystem": 1,
+    "longDescription": "Ubuntu / Ubuntu / 12.04-32 Minimal for CCI"
+  },
+]

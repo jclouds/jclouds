@@ -19,9 +19,8 @@ package org.jclouds.softlayer;
 import org.jclouds.providers.internal.BaseProviderMetadataTest;
 import org.testng.annotations.Test;
 
-@Test(groups = "unit", testName = "SoftLayerProviderTest")
+@Test(groups = "unit", testName = "SoftLayerApiMetadataTest")
 public class SoftLayerProviderTest extends BaseProviderMetadataTest {
-
    public SoftLayerProviderTest() {
       super(new SoftLayerProviderMetadata(), new SoftLayerApiMetadata());
    }

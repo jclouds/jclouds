@@ -1,0 +1,22 @@
+{
+    "primaryIpAddress": "174.37.252.118",
+    "primaryBackendIpAddress": "10.32.23.74",
+    "globalIdentifier": "da2b9f87-2319-4a12-91a5-f7f732061dcc",
+    "uuid": "92102aff-93c9-05f1-b3f2-50787e865344",
+    "lastPowerStateId": null,
+    "id": 3001812,
+    "hostname": "my",
+    "fullyQualifiedDomainName": "my.test.com",
+    "domain": "test.com",
+    "dedicatedAccountHostOnlyFlag": false,
+    "createDate": "2013-07-26T14:08:21.552-07:00",
+    "accountId": 278184,
+    "lastVerifiedDate": null,
+    "maxCpu": 1,
+    "maxCpuUnits": "CORE",
+    "maxMemory": 1024,
+    "metricPollDate": null,
+    "modifyDate": "2013-07-26T14:10:21.552-07:00",
+    "startCpus": 1,
+    "statusId": 1001
+}

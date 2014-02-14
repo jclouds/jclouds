@@ -16,198 +16,85 @@
  */
 package org.jclouds.softlayer.compute.functions;
 
-import static org.easymock.EasyMock.createNiceMock;
 import static org.testng.Assert.assertEquals;
-
+import static org.testng.Assert.assertNotNull;
+import static org.testng.Assert.assertTrue;
 import java.util.Set;
 
-import org.jclouds.compute.domain.Hardware;
-import org.jclouds.compute.domain.HardwareBuilder;
-import org.jclouds.compute.domain.Image;
-import org.jclouds.compute.domain.ImageBuilder;
 import org.jclouds.compute.domain.NodeMetadata;
-import org.jclouds.compute.domain.NodeMetadata.Status;
-import org.jclouds.compute.domain.NodeMetadataBuilder;
-import org.jclouds.compute.domain.OperatingSystem;
+import org.jclouds.compute.domain.OsFamily;
 import org.jclouds.compute.functions.GroupNamingConvention;
 import org.jclouds.domain.Location;
-import org.jclouds.softlayer.SoftLayerApi;
+import org.jclouds.domain.LocationBuilder;
+import org.jclouds.domain.LocationScope;
+import org.jclouds.softlayer.domain.Datacenter;
+import org.jclouds.softlayer.domain.OperatingSystem;
+import org.jclouds.softlayer.domain.PowerState;
+import org.jclouds.softlayer.domain.SoftwareDescription;
+import org.jclouds.softlayer.domain.SoftwareLicense;
 import org.jclouds.softlayer.domain.VirtualGuest;
-import org.jclouds.softlayer.parse.ParseBadVirtualGuest;
-import org.jclouds.softlayer.parse.ParseVirtualGuestHaltedTest;
-import org.jclouds.softlayer.parse.ParseVirtualGuestPausedTest;
-import org.jclouds.softlayer.parse.ParseVirtualGuestRunningTest;
-import org.jclouds.softlayer.parse.ParseVirtualGuestWithNoPasswordTest;
 import org.testng.annotations.Test;
 
-import com.google.common.base.Function;
 import com.google.common.base.Supplier;
 import com.google.common.base.Suppliers;
 import com.google.common.collect.ImmutableSet;
+import com.google.common.collect.Iterables;
 import com.google.inject.Guice;
 
-@Test(groups = "unit", testName = "VirtualGuestToNodeMetadataTest")
+/**
+ * Tests the function that transforms SoftLayer VirtualGuest to NodeMetadata.
+ */
+@Test(groups="unit", testName = "VirtualGuestToNodeMetadataTest")
 public class VirtualGuestToNodeMetadataTest {
+
+   VirtualGuestToImage virtualGuestToImage = Guice.createInjector().getInstance(VirtualGuestToImage.class);
+   VirtualGuestToHardware virtualGuestToHardware = Guice.createInjector().getInstance(VirtualGuestToHardware.class);
    GroupNamingConvention.Factory namingConvention = Guice.createInjector().getInstance(GroupNamingConvention.Factory.class);
 
-   @Test
-   public void testApplyWhereVirtualGuestWithNoPassword() {
-
-      // notice if we've already parsed this properly here, we can rely on it.
-      VirtualGuest guest = new ParseVirtualGuestWithNoPasswordTest().expected();
-
-      // setup so that we have an expected Location to be parsed from the guest.
-      Location expectedLocation = DatacenterToLocationTest.function.apply(guest.getDatacenter());
-      Supplier<Set<? extends Location>> locationSupplier = Suppliers.<Set<? extends Location>> ofInstance(ImmutableSet
-            .<Location> of(expectedLocation));
-
-      VirtualGuestToNodeMetadata parser = new VirtualGuestToNodeMetadata(
-            locationSupplier, new GetHardwareForVirtualGuestMock(), new GetImageForVirtualGuestMock(), namingConvention);
-
-      NodeMetadata node = parser.apply(guest);
-
-      assertEquals(
-            node,
-            new NodeMetadataBuilder().ids("416788").name("node1000360500").hostname("node1000360500")
-                  .location(expectedLocation).status(Status.PENDING)
-                  .publicAddresses(ImmutableSet.of("173.192.29.186"))
-                  .privateAddresses(ImmutableSet.of("10.37.102.194"))
-                  .hardware(new GetHardwareForVirtualGuestMock().getHardware(guest))
-                  .imageId(new GetImageForVirtualGuestMock().getImage(guest).getId())
-                  .operatingSystem(new GetImageForVirtualGuestMock().getImage(guest).getOperatingSystem()).build());
-
-   }
+   Location location = new LocationBuilder().id("123456789")
+                                            .description("example")
+                                            .scope(LocationScope.ZONE)
+                                            .build();
+   Supplier<Set<? extends Location>> locationSupplier = Suppliers.<Set<? extends Location>> ofInstance(ImmutableSet.of(location));
 
    @Test
-   public void testApplyWhereVirtualIsBad() {
+   public void testVirtualGuestToNodeMetadata() {
 
-      // notice if we've already parsed this properly here, we can rely on it.
-      VirtualGuest guest = new ParseBadVirtualGuest().expected();
-
-      // no location here
-      Supplier<Set<? extends Location>> locationSupplier = Suppliers.<Set<? extends Location>> ofInstance(ImmutableSet
-            .<Location> of());
-
-      VirtualGuestToNodeMetadata parser = new VirtualGuestToNodeMetadata(locationSupplier,
-            new GetHardwareForVirtualGuestMock(), new GetImageForVirtualGuestMock(), namingConvention);
-
-      NodeMetadata node = parser.apply(guest);
-
-      assertEquals(
-            node,
-            new NodeMetadataBuilder().ids("413348").name("foo-ef4").hostname("foo-ef4").group("foo")
-                  .status(Status.PENDING).hardware(new GetHardwareForVirtualGuestMock().getHardware(guest))
-                  .imageId(new GetImageForVirtualGuestMock().getImage(guest).getId())
-                  .operatingSystem(new GetImageForVirtualGuestMock().getImage(guest).getOperatingSystem()).build());
-
+      VirtualGuest virtualGuest = createVirtualGuest();
+      NodeMetadata nodeMetadata = new VirtualGuestToNodeMetadata(locationSupplier, namingConvention,
+              virtualGuestToImage, virtualGuestToHardware).apply(virtualGuest);
+      assertNotNull(nodeMetadata);
+      assertEquals(nodeMetadata.getName(), virtualGuest.getHostname());
+      assertEquals(nodeMetadata.getHostname(), virtualGuest.getHostname() + virtualGuest.getDomain());
+      assertEquals(nodeMetadata.getHardware().getRam(), virtualGuest.getMaxMemory());
+      assertTrue(nodeMetadata.getHardware().getProcessors().size() == 1);
+      assertEquals(Iterables.get(nodeMetadata.getHardware().getProcessors(), 0).getCores(), (double) virtualGuest.getStartCpus());
+      assertEquals(nodeMetadata.getOperatingSystem().getFamily(), OsFamily.UBUNTU);
+      assertEquals(nodeMetadata.getOperatingSystem().getVersion(), "12.04");
+      assertEquals(nodeMetadata.getOperatingSystem().is64Bit(), true);
    }
 
-   @Test
-   public void testApplyWhereVirtualGuestIsHalted() {
-
-      // notice if we've already parsed this properly here, we can rely on it.
-      VirtualGuest guest = new ParseVirtualGuestHaltedTest().expected();
-
-      // setup so that we have an expected Location to be parsed from the guest.
-      Location expectedLocation = DatacenterToLocationTest.function.apply(guest.getDatacenter());
-      Supplier<Set<? extends Location>> locationSupplier = Suppliers.<Set<? extends Location>> ofInstance(ImmutableSet
-            .<Location> of(expectedLocation));
-
-      VirtualGuestToNodeMetadata parser = new VirtualGuestToNodeMetadata(locationSupplier,
-            new GetHardwareForVirtualGuestMock(), new GetImageForVirtualGuestMock(), namingConvention);
-
-      NodeMetadata node = parser.apply(guest);
-
-      assertEquals(
-            node,
-            new NodeMetadataBuilder().ids("416700").name("node1703810489").hostname("node1703810489")
-                  .location(expectedLocation).status(Status.PENDING)
-                  .publicAddresses(ImmutableSet.of("173.192.29.187"))
-                  .privateAddresses(ImmutableSet.of("10.37.102.195"))
-                  .hardware(new GetHardwareForVirtualGuestMock().getHardware(guest))
-                  .imageId(new GetImageForVirtualGuestMock().getImage(guest).getId())
-                  .operatingSystem(new GetImageForVirtualGuestMock().getImage(guest).getOperatingSystem()).build());
-
+   private VirtualGuest createVirtualGuest() {
+      return VirtualGuest.builder()
+              .domain("example.com")
+              .hostname("host1")
+              .id(1301396)
+              .maxMemory(1024)
+              .startCpus(1)
+              .localDiskFlag(true)
+              .operatingSystem(OperatingSystem.builder().id("UBUNTU_LATEST")
+                      .operatingSystemReferenceCode("UBUNTU_LATEST")
+                      .softwareLicense(SoftwareLicense.builder()
+                              .softwareDescription(SoftwareDescription.builder()
+                                      .version("12.04-64 Minimal for CCI")
+                                      .referenceCode("UBUNTU_12_64")
+                                      .longDescription("Ubuntu Linux 12.04 LTS Precise Pangolin - Minimal Install (64 bit)")
+                                      .build())
+                              .build())
+                      .build())
+              .datacenter(Datacenter.builder().name("test").build())
+              .powerState(PowerState.builder().keyName(VirtualGuest.State.RUNNING).build())
+              .build();
    }
 
-   @Test
-   public void testApplyWhereVirtualGuestIsPaused() {
-
-      // notice if we've already parsed this properly here, we can rely on it.
-      VirtualGuest guest = new ParseVirtualGuestPausedTest().expected();
-
-      // setup so that we have an expected Location to be parsed from the guest.
-      Location expectedLocation = DatacenterToLocationTest.function.apply(guest.getDatacenter());
-      Supplier<Set<? extends Location>> locationSupplier = Suppliers.<Set<? extends Location>> ofInstance(ImmutableSet
-            .<Location> of(expectedLocation));
-
-      VirtualGuestToNodeMetadata parser = new VirtualGuestToNodeMetadata(locationSupplier,
-            new GetHardwareForVirtualGuestMock(), new GetImageForVirtualGuestMock(), namingConvention);
-
-      NodeMetadata node = parser.apply(guest);
-
-      assertEquals(
-            node,
-            new NodeMetadataBuilder().ids("416700").name("node1703810489").hostname("node1703810489")
-                  .location(expectedLocation).status(Status.SUSPENDED)
-                  .publicAddresses(ImmutableSet.of("173.192.29.187"))
-                  .privateAddresses(ImmutableSet.of("10.37.102.195"))
-                  .hardware(new GetHardwareForVirtualGuestMock().getHardware(guest))
-                  .imageId(new GetImageForVirtualGuestMock().getImage(guest).getId())
-                  .operatingSystem(new GetImageForVirtualGuestMock().getImage(guest).getOperatingSystem()).build());
-
-   }
-
-   @Test
-   public void testApplyWhereVirtualGuestIsRunning() {
-
-      // notice if we've already parsed this properly here, we can rely on it.
-      VirtualGuest guest = new ParseVirtualGuestRunningTest().expected();
-
-      // setup so that we have an expected Location to be parsed from the guest.
-      Location expectedLocation = DatacenterToLocationTest.function.apply(guest.getDatacenter());
-      Supplier<Set<? extends Location>> locationSupplier = Suppliers.<Set<? extends Location>> ofInstance(ImmutableSet
-            .<Location> of(expectedLocation));
-
-      VirtualGuestToNodeMetadata parser = new VirtualGuestToNodeMetadata(locationSupplier,
-            new GetHardwareForVirtualGuestMock(), new GetImageForVirtualGuestMock(), namingConvention);
-
-      NodeMetadata node = parser.apply(guest);
-
-      assertEquals(
-            node,
-            new NodeMetadataBuilder().ids("416700").name("node1703810489").hostname("node1703810489")
-                  .location(expectedLocation).status(Status.RUNNING)
-                  .publicAddresses(ImmutableSet.of("173.192.29.187"))
-                  .privateAddresses(ImmutableSet.of("10.37.102.195"))
-                  .hardware(new GetHardwareForVirtualGuestMock().getHardware(guest))
-                  .imageId(new GetImageForVirtualGuestMock().getImage(guest).getId())
-                  .operatingSystem(new GetImageForVirtualGuestMock().getImage(guest).getOperatingSystem()).build());
-
-   }
-
-   private static class GetHardwareForVirtualGuestMock extends VirtualGuestToNodeMetadata.GetHardwareForVirtualGuest {
-      @SuppressWarnings("unchecked")
-      public GetHardwareForVirtualGuestMock() {
-         super(createNiceMock(SoftLayerApi.class), createNiceMock(Function.class));
-      }
-
-      @Override
-      public Hardware getHardware(VirtualGuest guest) {
-         return new HardwareBuilder().ids("mocked hardware").build();
-      }
-   }
-
-   private static class GetImageForVirtualGuestMock extends VirtualGuestToNodeMetadata.GetImageForVirtualGuest {
-      public GetImageForVirtualGuestMock() {
-         super(null);
-      }
-
-      @Override
-      public Image getImage(VirtualGuest guest) {
-         return new ImageBuilder().ids("123").description("mocked image")
-               .operatingSystem(OperatingSystem.builder().description("foo os").build())
-               .status(Image.Status.AVAILABLE).build();
-      }
-   }
 }

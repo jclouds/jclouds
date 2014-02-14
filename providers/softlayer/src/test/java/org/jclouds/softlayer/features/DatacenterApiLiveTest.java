@@ -16,18 +16,18 @@
  */
 package org.jclouds.softlayer.features;
 
-import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertTrue;
-
-import java.util.Set;
-
+import com.google.common.collect.ImmutableSet;
+import com.google.common.collect.ImmutableSet.Builder;
 import org.jclouds.softlayer.domain.Address;
 import org.jclouds.softlayer.domain.Datacenter;
 import org.jclouds.softlayer.domain.Region;
 import org.testng.annotations.Test;
 
-import com.google.common.collect.ImmutableSet;
-import com.google.common.collect.ImmutableSet.Builder;
+import java.util.Set;
+
+import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertNotNull;
+import static org.testng.Assert.assertTrue;
 
 /**
  * Tests behavior of {@code DatacenterApi}
@@ -38,7 +38,7 @@ public class DatacenterApiLiveTest extends BaseSoftLayerApiLiveTest {
    @Test
    public void testListDatacenters() {
       Set<Datacenter> response = api().listDatacenters();
-      assert null != response;
+      assertNotNull(response);
       assertTrue(response.size() >= 0);
       for (Datacenter vg : response) {
          Datacenter newDetails = api().getDatacenter(vg.getId());
@@ -51,29 +51,30 @@ public class DatacenterApiLiveTest extends BaseSoftLayerApiLiveTest {
    public void testListDatacentersContent() {
       Builder<Datacenter> builder = ImmutableSet.builder();
       builder.add(Datacenter.builder().id(265592).name("ams01").longName("Amsterdam 1").build());
+      builder.add(Datacenter.builder().id(358698).name("wdc03").longName("Ashburn, VA 3").build());
       builder.add(Datacenter.builder().id(3).name("dal01").longName("Dallas").build());
+      builder.add(Datacenter.builder().id(154770).name("dal02").longName("Dallas 2").build());
+      builder.add(Datacenter.builder().id(167092).name("dal04").longName("Dallas 4").build());
+      builder.add(Datacenter.builder().id(138124).name("dal05").longName("Dallas 5").build());
+      builder.add(Datacenter.builder().id(154820).name("dal06").longName("Dallas 6").build());
+      builder.add(Datacenter.builder().id(142776).name("dal07").longName("Dallas 7").build());
+      builder.add(Datacenter.builder().id(352494).name("hkg02").longName("Hong Kong 2").build());
+      builder.add(Datacenter.builder().id(142775).name("hou02").longName("Houston 2").build());
+      builder.add(Datacenter.builder().id(358694).name("lon02").longName("London 2").build());
       builder.add(Datacenter.builder().id(18171).name("sea01").longName("Seattle").build());
       builder.add(Datacenter.builder().id(168642).name("sjc01").longName("San Jose 1").build());
-      builder.add(Datacenter.builder().id(2).name("dal00").longName("Corporate HQ").build());
-      builder.add(Datacenter.builder().id(37473).name("wdc01").longName("Washington, DC").build());
-      builder.add(Datacenter.builder().id(154770).name("dal02").longName("Dallas 2").build());
-      builder.add(Datacenter.builder().id(138124).name("dal05").longName("Dallas 5").build());
-      builder.add(Datacenter.builder().id(167093).name("hou01").longName("Houston 1").build());
-      builder.add(Datacenter.builder().id(167094).name("lon01").longName("London 1").build());
-      builder.add(Datacenter.builder().id(167092).name("dal04").longName("Dallas 4").build());
       builder.add(Datacenter.builder().id(224092).name("sng01").longName("Singapore 1").build());
-      builder.add(Datacenter.builder().id(142775).name("hou02").longName("Houston 2").build());
-      builder.add(Datacenter.builder().id(142776).name("dal07").longName("Dallas 7").build());
-      builder.add(Datacenter.builder().id(154820).name("dal06").longName("Dallas 6").build());
+      builder.add(Datacenter.builder().id(448994).name("tor01").longName("Toronto 1").build());
+      builder.add(Datacenter.builder().id(37473).name("wdc01").longName("Washington, DC 1").build());
+
       Set<Datacenter> response = api().listDatacenters();
       Set<Datacenter> expected = builder.build();
 
       assertEquals(response.size(), expected.size());
-      assertTrue(response.containsAll(expected));
 
-      for (Datacenter datacenter : response) {
+      for(Datacenter datacenter: response) {
          Address address = datacenter.getLocationAddress();
-         if (address != null) checkAddress(address);
+         if(address!=null) checkAddress(address);
       }
    }
 
@@ -82,19 +83,19 @@ public class DatacenterApiLiveTest extends BaseSoftLayerApiLiveTest {
    }
 
    private void checkDatacenter(Datacenter dc) {
-      assert dc.getId() > 0 : dc;
-      assert dc.getName() != null : dc;
-      assert dc.getLongName() != null : dc;
-      for (Region region : dc.getRegions()) checkRegion(region);
+      assertNotNull(dc.getId());
+      assertNotNull(dc.getName());
+      assertNotNull(dc.getLongName());
+      for( Region region: dc.getRegions()) checkRegion(region);
    }
 
    private void checkRegion(Region region) {
-      assert !region.getDescription().isEmpty() : region;
-      assert !region.getKeyname().isEmpty() : region;
+      assertNotNull(region.getDescription());
+      assertNotNull(region.getKeyname());
    }
 
    private void checkAddress(Address address) {
-      assert address.getId() > 0 : address;
-      assert address.getCountry() != null : address;
+      assertNotNull(address.getId());
+      assertNotNull(address.getCountry());
    }
 }

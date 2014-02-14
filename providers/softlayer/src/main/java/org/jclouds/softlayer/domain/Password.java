@@ -18,13 +18,11 @@ package org.jclouds.softlayer.domain;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.base.Strings.emptyToNull;
-
 import java.beans.ConstructorProperties;
 
 import org.jclouds.javax.annotation.Nullable;
 
 import com.google.common.base.Objects;
-import com.google.common.base.Objects.ToStringHelper;
 
 /**
  * Contains a password for a specific software component instance
@@ -99,7 +97,7 @@ public class Password {
    @ConstructorProperties({"id", "username", "password"})
    public Password(int id, String username, @Nullable String password) {
       this.id = id;
-      this.username = checkNotNull(emptyToNull(username), "username cannot be null or empty:" + username);
+      this.username = checkNotNull(emptyToNull(username),"username cannot be null or empty:"+username);
       this.password = password;
    }
 
@@ -139,13 +137,12 @@ public class Password {
       return Objects.equal(this.id, that.id);
    }
 
-   protected ToStringHelper string() {
-      return Objects.toStringHelper(this)
-            .add("id", id).add("username", username).add("password", password);
-   }
-
    @Override
    public String toString() {
-      return string().toString();
+      return Objects.toStringHelper(this)
+              .add("id", id)
+              .add("username", username)
+              .add("password", password)
+              .toString();
    }
 }
