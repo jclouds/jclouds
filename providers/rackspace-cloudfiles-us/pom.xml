@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one or more
+    contributor license agreements.  See the NOTICE file distributed with
+    this work for additional information regarding copyright ownership.
+    The ASF licenses this file to You under the Apache License, Version 2.0
+    (the "License"); you may not use this file except in compliance with
+    the License.  You may obtain a copy of the License at
+
+        http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+
+-->
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <groupId>org.apache.jclouds</groupId>
+    <artifactId>jclouds-project</artifactId>
+    <version>1.8.0-SNAPSHOT</version>
+  </parent>
+
+  <!-- TODO: when out of labs, switch to org.jclouds.provider -->
+  <groupId>org.apache.jclouds.labs</groupId>
+  <artifactId>rackspace-cloudfiles-us</artifactId>
+  <version>1.8.0-SNAPSHOT</version>
+  <name>jclouds Rackspace Cloud Files US provider</name>
+  <description>OpenStack Object Storage implementation targeted to Rackspace Cloud Files US</description>
+  <packaging>bundle</packaging>
+
+  <properties>
+    <!-- identity endpoint -->
+    <test.rackspace-cloudfiles-us.endpoint>https://identity.api.rackspacecloud.com/v2.0/</test.rackspace-cloudfiles-us.endpoint>
+    <test.rackspace-cloudfiles-us.api-version>1</test.rackspace-cloudfiles-us.api-version>
+    <test.rackspace-cloudfiles-us.build-version />
+    <test.rackspace-cloudfiles-us.identity>${test.rackspace-us.identity}</test.rackspace-cloudfiles-us.identity>
+    <test.rackspace-cloudfiles-us.credential>${test.rackspace-us.credential}</test.rackspace-cloudfiles-us.credential>    
+    <jclouds.osgi.export>org.jclouds.rackspace.cloudfiles.us*;version="${project.version}"</jclouds.osgi.export>
+    <jclouds.osgi.import>
+      org.jclouds.rest.internal;version="${jclouds.version}",
+      org.jclouds.labs*;version="${project.version}",
+      org.jclouds*;version="${jclouds.version}",
+      *
+    </jclouds.osgi.import>
+  </properties>
+
+  <repositories>
+    <repository>
+      <id>apache-snapshots</id>
+      <url>https://repository.apache.org/content/repositories/snapshots</url>
+      <releases>
+        <enabled>false</enabled>
+      </releases>
+      <snapshots>
+        <enabled>true</enabled>
+      </snapshots>
+    </repository>
+  </repositories>
+
+  <dependencies>
+    <dependency>
+      <groupId>org.apache.jclouds.labs</groupId>
+      <artifactId>openstack-swift</artifactId>
+      <version>${project.parent.version}</version>
+      <type>test-jar</type>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.jclouds.labs</groupId>
+      <artifactId>openstack-swift</artifactId>
+      <version>${project.parent.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.jclouds.labs</groupId>
+      <artifactId>rackspace-cloudfiles</artifactId>
+      <version>${project.parent.version}</version>
+      <type>test-jar</type>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.jclouds.labs</groupId>
+      <artifactId>rackspace-cloudfiles</artifactId>
+      <version>${project.parent.version}</version>
+    </dependency>
+    <dependency>    
+      <groupId>org.apache.jclouds.api</groupId>
+      <artifactId>openstack-keystone</artifactId>
+      <version>${project.parent.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.jclouds.api</groupId>
+      <artifactId>openstack-keystone</artifactId>
+      <version>${project.parent.version}</version>
+      <type>test-jar</type>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.jclouds</groupId>
+      <artifactId>jclouds-blobstore</artifactId>
+      <version>${project.parent.version}</version>
+      <type>test-jar</type>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.jclouds</groupId>
+      <artifactId>jclouds-core</artifactId>
+      <version>${project.parent.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.jclouds</groupId>
+      <artifactId>jclouds-core</artifactId>
+      <version>${project.parent.version}</version>
+      <type>test-jar</type>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.jclouds.driver</groupId>
+      <artifactId>jclouds-slf4j</artifactId>
+      <version>${project.parent.version}</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>ch.qos.logback</groupId>
+      <artifactId>logback-classic</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+    	<groupId>org.apache.jclouds.api</groupId>
+    	<artifactId>rackspace-cloudidentity</artifactId>
+    	<version>${project.parent.version}</version>
+    </dependency>
+  </dependencies>
+
+  <profiles>
+    <profile>
+      <id>live</id>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-surefire-plugin</artifactId>
+            <executions>
+              <execution>
+                <id>integration</id>
+                <phase>integration-test</phase>
+                <goals>
+                  <goal>test</goal>
+                </goals>
+                <configuration>
+                  <forkCount>5</forkCount>
+                  <reuseForks>true</reuseForks>
+                  <parallel>classes</parallel>
+                  <systemPropertyVariables>
+                    <test.rackspace-cloudfiles-us.endpoint>${test.rackspace-cloudfiles-us.endpoint}</test.rackspace-cloudfiles-us.endpoint>
+                    <test.rackspace-cloudfiles-us.api-version>${test.rackspace-cloudfiles-us.api-version}</test.rackspace-cloudfiles-us.api-version>
+                    <test.rackspace-cloudfiles-us.build-version>${test.rackspace-cloudfiles-us.build-version}</test.rackspace-cloudfiles-us.build-version>
+                    <test.rackspace-cloudfiles-us.identity>${test.rackspace-cloudfiles-us.identity}</test.rackspace-cloudfiles-us.identity>
+                    <test.rackspace-cloudfiles-us.credential>${test.rackspace-cloudfiles-us.credential}</test.rackspace-cloudfiles-us.credential>
+                    <jclouds.blobstore.httpstream.url>${jclouds.blobstore.httpstream.url}</jclouds.blobstore.httpstream.url>
+                    <jclouds.blobstore.httpstream.md5>${jclouds.blobstore.httpstream.md5}</jclouds.blobstore.httpstream.md5>
+                  </systemPropertyVariables>
+                </configuration>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+  </profiles>
+
+</project>
