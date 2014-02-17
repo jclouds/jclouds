@@ -31,28 +31,26 @@ import com.google.common.base.Objects.ToStringHelper;
  * A Floating IP is an IP address that can be created and associated with a
  * Server instance. Floating IPs can also be disassociated and deleted from a
  * Server instance.
- * 
- * @author Jeremy Daggett
- * @author chamerling
-*/
+ */
 public class FloatingIP implements Comparable<FloatingIP> {
 
-   public static Builder<?> builder() { 
+   public static Builder<?> builder() {
       return new ConcreteBuilder();
    }
-   
+
    public Builder<?> toBuilder() { 
       return new ConcreteBuilder().fromFloatingIP(this);
    }
 
-   public abstract static class Builder<T extends Builder<T>>  {
+   public abstract static class Builder<T extends Builder<T>> {
       protected abstract T self();
 
       protected String id;
       protected String ip;
       protected String fixedIp;
       protected String instanceId;
-   
+      protected String pool;
+
       /** 
        * @see FloatingIP#getId()
        */
@@ -85,8 +83,16 @@ public class FloatingIP implements Comparable<FloatingIP> {
          return self();
       }
 
+      /** 
+       * @see FloatingIP#getPool()
+       */
+      public T pool(String pool) {
+         this.pool = pool;
+         return self();
+      }
+
       public FloatingIP build() {
-         return new FloatingIP(id, ip, fixedIp, instanceId);
+         return new FloatingIP(id, ip, fixedIp, instanceId, pool);
       }
       
       public T fromFloatingIP(FloatingIP in) {
@@ -94,7 +100,8 @@ public class FloatingIP implements Comparable<FloatingIP> {
                   .id(in.getId())
                   .ip(in.getIp())
                   .fixedIp(in.getFixedIp())
-                  .instanceId(in.getInstanceId());
+                  .instanceId(in.getInstanceId())
+                  .pool(in.getPool());
       }
    }
 
@@ -111,15 +118,17 @@ public class FloatingIP implements Comparable<FloatingIP> {
    private final String fixedIp;
    @Named("instance_id")
    private final String instanceId;
+   private final String pool;
 
    @ConstructorProperties({
-      "id", "ip", "fixed_ip", "instance_id"
+      "id", "ip", "fixed_ip", "instance_id", "pool"
    })
-   protected FloatingIP(String id, String ip, @Nullable String fixedIp, @Nullable String instanceId) {
+   protected FloatingIP(String id, String ip, @Nullable String fixedIp, @Nullable String instanceId, @Nullable String pool) {
       this.id = checkNotNull(id, "id");
       this.ip = checkNotNull(ip, "ip");
       this.fixedIp = fixedIp;
       this.instanceId = instanceId;
+      this.pool = pool;
    }
 
    public String getId() {
@@ -140,9 +149,14 @@ public class FloatingIP implements Comparable<FloatingIP> {
       return this.instanceId;
    }
 
+   @Nullable
+   public String getPool() {
+      return this.pool;
+   }
+
    @Override
    public int hashCode() {
-      return Objects.hashCode(id, ip, fixedIp, instanceId);
+      return Objects.hashCode(id, ip, fixedIp, instanceId, pool);
    }
 
    @Override
@@ -153,14 +167,15 @@ public class FloatingIP implements Comparable<FloatingIP> {
       return Objects.equal(this.id, that.id)
                && Objects.equal(this.ip, that.ip)
                && Objects.equal(this.fixedIp, that.fixedIp)
-               && Objects.equal(this.instanceId, that.instanceId);
+               && Objects.equal(this.instanceId, that.instanceId)
+               && Objects.equal(this.pool, that.pool);
    }
-   
+
    protected ToStringHelper string() {
       return Objects.toStringHelper(this)
-            .add("id", id).add("ip", ip).add("fixedIp", fixedIp).add("instanceId", instanceId);
+            .add("id", id).add("ip", ip).add("fixedIp", fixedIp).add("instanceId", instanceId).add("pool", pool);
    }
-   
+
    @Override
    public String toString() {
       return string().toString();

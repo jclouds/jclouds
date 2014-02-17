@@ -33,8 +33,7 @@ import com.google.inject.Guice;
 import com.google.inject.Injector;
 
 /**
- * 
- * @author Michael Arnold
+ * Tests parsing of {@link FloatingIP} JSON data.
  */
 @Test(groups = "unit", testName = "ParseFloatingIPListTest")
 public class ParseFloatingIPListTest extends BaseSetParserTest<FloatingIP> {
@@ -48,8 +47,11 @@ public class ParseFloatingIPListTest extends BaseSetParserTest<FloatingIP> {
    @SelectJson("floating_ips")
    @Consumes(MediaType.APPLICATION_JSON)
    public Set<FloatingIP> expected() {
-      return ImmutableSet.of(FloatingIP.builder().id("1").instanceId("12").ip("10.0.0.3").fixedIp("11.0.0.1").build(),
-            FloatingIP.builder().id("2").instanceId(null).ip("10.0.0.5").fixedIp(null).build());
+      return ImmutableSet.of(
+            FloatingIP.builder().id("1").instanceId("12").ip("10.0.0.3").fixedIp("11.0.0.1").pool("nova").build(),
+            FloatingIP.builder().id("2").instanceId(null).ip("10.0.0.5").fixedIp(null).pool("nova").build(),
+            FloatingIP.builder().id("3").instanceId("13").ip("10.0.0.13").fixedIp("11.0.0.3").build(),
+            FloatingIP.builder().id("4").instanceId("14").ip("10.0.0.14").fixedIp("11.0.0.4").pool(null).build());
    }
 
    protected Injector injector() {
