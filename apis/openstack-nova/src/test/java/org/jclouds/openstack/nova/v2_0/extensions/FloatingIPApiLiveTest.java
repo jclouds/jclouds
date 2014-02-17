@@ -34,7 +34,7 @@ import com.google.common.base.Optional;
 import com.google.common.collect.Multimap;
 
 /**
- * Tests behavior of {@code ServerApi}
+ * Tests the behavior of the {@link FloatingIPApi}
  */
 @Test(groups = "live", testName = "FloatingIPApiLiveTest")
 public class FloatingIPApiLiveTest extends BaseNovaApiLiveTest {
@@ -58,7 +58,7 @@ public class FloatingIPApiLiveTest extends BaseNovaApiLiveTest {
             assertEquals(newDetails.getIp(), ip.getIp());
             assertEquals(newDetails.getFixedIp(), ip.getFixedIp());
             assertEquals(newDetails.getInstanceId(), ip.getInstanceId());
-
+            assertEquals(newDetails.getPool(), ip.getPool());
          }
       }
    }

@@ -29,6 +29,9 @@ import org.testng.annotations.Test;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 
+/**
+ * Test to parse a {@link FloatingIP}
+ */
 @Test(groups = "unit", testName = "ParseFloatingIPTest")
 public class ParseFloatingIPTest extends BaseItemParserTest<FloatingIP> {
 
@@ -41,7 +44,7 @@ public class ParseFloatingIPTest extends BaseItemParserTest<FloatingIP> {
    @SelectJson("floating_ip")
    @Consumes(MediaType.APPLICATION_JSON)
    public FloatingIP expected() {
-      return FloatingIP.builder().id("1").instanceId("123").fixedIp("10.0.0.2").ip("10.0.0.3").build();
+      return FloatingIP.builder().id("1").instanceId("123").fixedIp("10.0.0.2").ip("10.0.0.3").pool("nova").build();
    }
 
    protected Injector injector() {
