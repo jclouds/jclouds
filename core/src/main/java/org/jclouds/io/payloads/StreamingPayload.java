@@ -31,7 +31,9 @@ import org.jclouds.io.WriteTo;
  * streaming while Amazon S3 does not.
  * 
  * @author Adrian Cole
+ * @deprecated use ByteSourcePayload or InputStreamPayload instead (will be removed in jclouds 1.8)
  */
+@Deprecated
 public class StreamingPayload implements Payload {
 
    protected transient volatile boolean written;
