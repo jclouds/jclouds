@@ -22,7 +22,6 @@ import static org.testng.Assert.assertTrue;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
@@ -148,7 +147,7 @@ public class SwiftBlobIntegrationLiveTest extends BaseBlobIntegrationTest {
          blobStore.putBlob(container, write, PutOptions.Builder.multipart());
 
          Blob read = blobStore.getBlob(container, "const.txt");
-         read.getPayload().writeTo(new FileOutputStream(outFile));
+         Files.copy(read.getPayload(), outFile);
 
          assertEquals(Files.hash(outFile, Hashing.md5()), Files.hash(inFile, Hashing.md5()));
 

@@ -20,7 +20,6 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
 
 import com.google.common.base.Throwables;
 
@@ -73,14 +72,6 @@ public class DelegatingPayload implements Payload {
    @Override
    public boolean isRepeatable() {
       return delegate.isRepeatable();
-   }
-
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   public void writeTo(OutputStream outstream) throws IOException {
-      delegate.writeTo(outstream);
    }
 
    /**

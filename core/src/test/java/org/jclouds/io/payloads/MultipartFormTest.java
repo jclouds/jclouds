@@ -25,7 +25,6 @@ import static org.testng.Assert.assertEquals;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
 
 import org.jclouds.io.Payloads;
 import org.jclouds.io.payloads.Part.PartOptions;
@@ -82,12 +81,6 @@ public class MultipartFormTest {
       public boolean isRepeatable() {
          return realPayload.isRepeatable();
       }
-
-      @Override
-      public void writeTo(OutputStream outstream) throws IOException {
-         realPayload.writeTo(outstream);
-      }
-
    }
 
    private Part newPart(String data) {

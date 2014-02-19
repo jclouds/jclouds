@@ -18,9 +18,7 @@ package org.jclouds.io.payloads;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
-import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
 
 import org.jclouds.io.ContentMetadata;
 import org.jclouds.io.MutableContentMetadata;
@@ -49,10 +47,4 @@ public class PhantomPayload extends BasePayload<Object> {
    public InputStream openStream() {
       throw new UnsupportedOperationException();
    }
-
-   @Override
-   public void writeTo(OutputStream outstream) throws IOException {
-      throw new UnsupportedOperationException();
-   }
-
 }

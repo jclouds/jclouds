@@ -17,13 +17,9 @@
 package org.jclouds.io.payloads;
 
 import static com.google.common.base.Preconditions.checkNotNull;
-import static com.google.common.base.Preconditions.checkState;
-import static com.google.common.io.ByteStreams.copy;
-import static org.jclouds.util.Closeables2.closeQuietly;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
 
 import com.google.common.base.Throwables;
 
@@ -62,22 +58,6 @@ public abstract class BasePayload<V> implements Payload {
    @Override
    public V getRawContent() {
       return content;
-   }
-
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   public void writeTo(OutputStream outstream) throws IOException {
-      checkState(!written || isRepeatable(), "can only write to an outputStream once");
-      written = true;
-      InputStream in = getInput();
-      try {
-         copy(in, outstream);
-         outstream.flush();
-      } finally {
-         closeQuietly(in);
-      }
    }
 
    @Override

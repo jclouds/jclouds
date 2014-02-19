@@ -20,7 +20,6 @@ import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.io.BaseEncoding.base16;
 import static org.jclouds.http.Uris.uriBuilder;
 
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.Date;
 import java.util.Map;
@@ -48,6 +47,7 @@ import com.google.common.base.Supplier;
 import com.google.common.base.Throwables;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Multimaps;
+import com.google.common.io.ByteStreams;
 
 public class TransientStorageStrategy implements LocalStorageStrategy {
    private final ConcurrentMap<String, ConcurrentMap<String, Blob>> containerToBlobs = new ConcurrentHashMap<String, ConcurrentMap<String, Blob>>();
@@ -158,9 +158,8 @@ public class TransientStorageStrategy implements LocalStorageStrategy {
       try {
          if (payload == null || !(payload instanceof ByteArrayPayload)) {
             MutableContentMetadata oldMd = in.getPayload().getContentMetadata();
-            ByteArrayOutputStream out = new ByteArrayOutputStream();
-            in.getPayload().writeTo(out);
-            payload = (ByteArrayPayload) Payloads.calculateMD5(Payloads.newPayload(out.toByteArray()));
+            byte[] out = ByteStreams.toByteArray(in.getPayload());
+            payload = (ByteArrayPayload) Payloads.calculateMD5(Payloads.newPayload(out));
             HttpUtils.copy(oldMd, payload.getContentMetadata());
          } else {
             if (payload.getContentMetadata().getContentMD5() == null)

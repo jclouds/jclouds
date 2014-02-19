@@ -25,7 +25,7 @@ import com.google.common.io.InputSupplier;
 /**
  * @author Adrian Cole
  */
-public interface Payload extends InputSupplier<InputStream>, WriteTo, Closeable {
+public interface Payload extends InputSupplier<InputStream>, Closeable {
 
    /**
     * Creates a new InputStream object of the payload.
