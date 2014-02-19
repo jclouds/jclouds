@@ -52,7 +52,8 @@ See http://code.google.com/p/jclouds for details."
            [org.jclouds.io Payload Payloads payloads.StreamingPayload]
            java.util.Arrays
            [java.security DigestOutputStream MessageDigest]
-           com.google.common.collect.ImmutableSet))
+           com.google.common.collect.ImmutableSet
+           com.google.common.io.ByteSource))
 
 ;;
 ;; Payload support for creating Blobs.
@@ -72,6 +73,8 @@ See http://code.google.com/p/jclouds for details."
   (payload [s] (Payloads/newStringPayload s))
   java.io.File
   (payload [f] (Payloads/newFilePayload f))
+  ByteSource
+  (payload [bs] (Payloads/newByteSourcePayload bs))
   clojure.lang.IFn
   ;; This will let you pass a closure to payload that takes an OutputStream
   ;; as argument and writes to it when called from a StreamingPayload.

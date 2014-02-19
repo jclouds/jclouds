@@ -20,7 +20,8 @@
   (:use [clojure.test])
   (:import [java.io ByteArrayInputStream ByteArrayOutputStream
             StringBufferInputStream]
-           [org.jclouds.util Strings2]))
+           [org.jclouds.util Strings2]
+           com.google.common.io.ByteSource))
 
 (defn clean-stub-fixture
   "This should allow basic tests to easily be run with another service."
@@ -180,12 +181,21 @@
                            :payload (.getBytes "blob3")))
            (Strings2/toStringAndClose (get-blob-stream blobstore-stub
                                                        "container" "blob3")))))
+
   (is (= "blob4"
          (do
            (put-blob blobstore-stub "container"
                      (blob "blob4"
                            :payload #(.write % (.getBytes "blob4"))))
            (Strings2/toStringAndClose (get-blob-stream blobstore-stub
-                                                       "container" "blob4"))))))
+                                                       "container" "blob4")))))
+
+  (is (= "blob5"
+         (do
+           (put-blob blobstore-stub "container"
+                     (blob "blob5"
+                           :payload (ByteSource/wrap (.getBytes "blob5"))))
+           (Strings2/toStringAndClose (get-blob-stream blobstore-stub
+                                                       "container" "blob5"))))))
 
 ;; TODO: more tests involving blob-specific functions
