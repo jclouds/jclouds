@@ -186,7 +186,7 @@
          (do
            (put-blob blobstore-stub "container"
                      (blob "blob4"
-                           :payload #(.write % (.getBytes "blob4"))))
+                           :payload (ByteArrayInputStream. (.getBytes "blob4"))))
            (Strings2/toStringAndClose (get-blob-stream blobstore-stub
                                                        "container" "blob4")))))
 

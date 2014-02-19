@@ -32,7 +32,6 @@ import static org.testng.Assert.fail;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
 import java.security.NoSuchAlgorithmException;
 import java.security.cert.CertificateException;
 import java.util.Arrays;
@@ -62,9 +61,8 @@ import org.jclouds.http.BaseJettyTest;
 import org.jclouds.http.HttpResponseException;
 import org.jclouds.io.Payload;
 import org.jclouds.io.Payloads;
-import org.jclouds.io.WriteTo;
+import org.jclouds.io.payloads.ByteSourcePayload;
 import org.jclouds.io.payloads.InputStreamSupplierPayload;
-import org.jclouds.io.payloads.StreamingPayload;
 import org.jclouds.logging.Logger;
 import org.testng.ITestContext;
 import org.testng.annotations.BeforeClass;
@@ -540,12 +538,7 @@ public class BaseBlobIntegrationTest extends BaseBlobStoreIntegrationTest {
    @Test(groups = { "integration", "live" })
    public void testPutObjectStream() throws InterruptedException, IOException, ExecutionException {
       PayloadBlobBuilder blobBuilder = view.getBlobStore().blobBuilder("streaming").payload(
-               new StreamingPayload(new WriteTo() {
-                  @Override
-                  public void writeTo(OutputStream outstream) throws IOException {
-                     outstream.write("foo".getBytes());
-                  }
-               }));
+               new ByteSourcePayload(ByteSource.wrap("foo".getBytes())));
       addContentMetadata(blobBuilder);
 
       Blob blob = blobBuilder.build();
