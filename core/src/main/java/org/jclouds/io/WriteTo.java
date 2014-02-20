@@ -22,13 +22,22 @@ import java.io.OutputStream;
 /**
  * @author Adrian Cole
  */
+@Deprecated
 public interface WriteTo {
 
    /**
     * Writes the payload content to the output stream.
     * 
     * @throws IOException
+    * @deprecated use Payload.getInput with Guava helpers, e.g.,
+    *             Payload payload = blob.getPayload();
+    *             try {
+    *                 ByteStreams.copy(payload.getInput(), outstream);
+    *             } finally {
+    *                 payload.release();
+    *             }
     */
+   @Deprecated
    void writeTo(OutputStream outstream) throws IOException;
 
 }
