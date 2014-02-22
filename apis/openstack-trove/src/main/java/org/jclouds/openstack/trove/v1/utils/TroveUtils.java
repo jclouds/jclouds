@@ -16,6 +16,7 @@
  */
 package org.jclouds.openstack.trove.v1.utils;
 
+import java.util.Arrays;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
@@ -68,7 +69,7 @@ public class TroveUtils {
 
             Uninterruptibles.sleepUninterruptibly(15, TimeUnit.SECONDS);
 
-            logger.error(e.getStackTrace().toString());
+            logger.error(Arrays.toString(e.getStackTrace()));
             continue;
          }
 
