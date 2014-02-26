@@ -27,6 +27,7 @@ import org.jclouds.domain.Credentials;
 import org.jclouds.http.HttpCommand;
 import org.jclouds.http.HttpRequest;
 import org.jclouds.http.HttpResponse;
+import org.jclouds.http.handlers.BackoffLimitedRetryHandler;
 import org.jclouds.io.Payloads;
 import org.jclouds.openstack.keystone.v1_1.domain.Auth;
 import org.testng.annotations.Test;
@@ -47,6 +48,7 @@ public class RetryOnRenewTest {
       HttpResponse response = createMock(HttpResponse.class);
       @SuppressWarnings("unchecked")
       LoadingCache<Credentials, Auth> cache = createMock(LoadingCache.class);
+      BackoffLimitedRetryHandler backoffHandler = createMock(BackoffLimitedRetryHandler.class);
 
       expect(command.getCurrentRequest()).andReturn(request);
 
@@ -59,13 +61,71 @@ public class RetryOnRenewTest {
       replay(command);
       replay(response);
       replay(cache);
+      replay(backoffHandler);
 
-      RetryOnRenew retry = new RetryOnRenew(cache);
+      RetryOnRenew retry = new RetryOnRenew(cache, backoffHandler);
 
       assertTrue(retry.shouldRetryRequest(command, response));
 
       verify(command);
       verify(response);
       verify(cache);
+      verify(backoffHandler);
+   }
+
+   @Test
+   public void test408ShouldRetry() {
+      HttpCommand command = createMock(HttpCommand.class);
+      HttpRequest request = createMock(HttpRequest.class);
+      HttpResponse response = createMock(HttpResponse.class);
+      @SuppressWarnings("unchecked")
+      LoadingCache<Credentials, Auth> cache = createMock(LoadingCache.class);
+      BackoffLimitedRetryHandler backoffHandler = createMock(BackoffLimitedRetryHandler.class);
+
+      expect(response.getPayload()).andReturn(Payloads.newStringPayload(
+                  "The server has waited too long for the request to be sent by the client.")).times(2);
+      expect(backoffHandler.shouldRetryRequest(command, response)).andReturn(true).once();
+      expect(response.getStatusCode()).andReturn(408).once();
+
+      replay(command);
+      replay(response);
+      replay(cache);
+      replay(backoffHandler);
+
+      RetryOnRenew retry = new RetryOnRenew(cache, backoffHandler);
+
+      assertTrue(retry.shouldRetryRequest(command, response));
+
+      verify(command);
+      verify(response);
+      verify(cache);
+      verify(backoffHandler);
+   }
+
+   @Test
+   public void test404ShouldNotRetry() {
+      HttpCommand command = createMock(HttpCommand.class);
+      HttpRequest request = createMock(HttpRequest.class);
+      HttpResponse response = createMock(HttpResponse.class);
+      @SuppressWarnings("unchecked")
+      LoadingCache<Credentials, Auth> cache = createMock(LoadingCache.class);
+      BackoffLimitedRetryHandler backoffHandler = createMock(BackoffLimitedRetryHandler.class);
+
+      expect(response.getPayload()).andReturn(Payloads.newStringPayload("")).times(2);
+      expect(response.getStatusCode()).andReturn(404).once();
+
+      replay(command);
+      replay(response);
+      replay(cache);
+      replay(backoffHandler);
+
+      RetryOnRenew retry = new RetryOnRenew(cache, backoffHandler);
+
+      assertTrue(!retry.shouldRetryRequest(command, response));
+
+      verify(command);
+      verify(response);
+      verify(cache);
+      verify(backoffHandler);
    }
 }

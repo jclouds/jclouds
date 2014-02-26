@@ -20,11 +20,14 @@ import static org.jclouds.http.HttpUtils.closeClientButKeepContentStream;
 import static org.jclouds.http.HttpUtils.releasePayload;
 
 import javax.annotation.Resource;
+import javax.inject.Named;
 
+import org.jclouds.Constants;
 import org.jclouds.domain.Credentials;
 import org.jclouds.http.HttpCommand;
 import org.jclouds.http.HttpResponse;
 import org.jclouds.http.HttpRetryHandler;
+import org.jclouds.http.handlers.BackoffLimitedRetryHandler;
 import org.jclouds.logging.Logger;
 import org.jclouds.openstack.keystone.v1_1.domain.Auth;
 import org.jclouds.openstack.reference.AuthHeaders;
@@ -42,14 +45,22 @@ import com.google.inject.Singleton;
  */
 @Singleton
 public class RetryOnRenew implements HttpRetryHandler {
+   @Inject(optional = true)
+   @Named(Constants.PROPERTY_MAX_RETRIES)
+   private int retryCountLimit = 5;
+
    @Resource
    protected Logger logger = Logger.NULL;
 
    private final LoadingCache<Credentials, Auth> authenticationResponseCache;
 
+   private final BackoffLimitedRetryHandler backoffHandler;
+
    @Inject
-   protected RetryOnRenew(LoadingCache<Credentials, Auth> authenticationResponseCache) {
+   protected RetryOnRenew(LoadingCache<Credentials, Auth> authenticationResponseCache,
+           BackoffLimitedRetryHandler backoffHandler) {
       this.authenticationResponseCache = authenticationResponseCache;
+      this.backoffHandler = backoffHandler;
    }
 
    @Override
@@ -74,6 +85,8 @@ public class RetryOnRenew implements HttpRetryHandler {
                   }
                }
                break;
+            case 408:
+               return backoffHandler.shouldRetryRequest(command, response);
          }
          return retry;
 
