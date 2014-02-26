@@ -1,8 +1,8 @@
 jclouds
 ======
 jclouds allows provisioning and control of cloud resources, including blobstore
-and compute, from Java and Clojure.  Our API gives allows developers to use
-both portable abstractions and cloud-specific features.  We test support of dozens of
+and compute, from Java and Clojure. Our API allows developers to use
+both portable abstractions and cloud-specific features. We test support of dozens of
 cloud providers and cloud software stacks, including Amazon, Azure, GoGrid,
 Ninefold, OpenStack, and vCloud.  jclouds is licensed under the Apache License,
 Version 2.0
@@ -12,7 +12,7 @@ Features
 Even if you don't need the portable apis we provide, or could roll it your own, programming against cloud environments can be challenging. We focus on the following areas so that you can focus on using the cloud, rather than troubleshooting it!
 
 * SIMPLE INTERFACE
-Instead of creating new object types, we reuse concepts like maps so that the programming model is familiar. In this way, you can get started without dealing with REST-like apis or WS.
+Instead of creating new object types, we reuse concepts like maps so that the programming model is familiar. In this way, you can get started without dealing with the cloud providers' REST-like apis or WebServices directly.
 
 * RUNTIME PORTABILITY
 We have drivers that allow you to operate in restricted environments like Google App Engine. We have very few required dependencies, so we are unlikely to clash with your app.
