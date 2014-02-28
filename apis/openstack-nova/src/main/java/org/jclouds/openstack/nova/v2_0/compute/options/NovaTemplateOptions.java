@@ -69,11 +69,13 @@ public class NovaTemplateOptions extends TemplateOptions implements Cloneable {
          eTo.generateKeyPair(shouldGenerateKeyPair());
          eTo.keyPairName(getKeyPairName());
          if (getUserData() != null) {
-             eTo.userData(getUserData());
+            eTo.userData(getUserData());
          }
          if (getDiskConfig() != null) {
             eTo.diskConfig(getDiskConfig());
-        }
+         }
+
+         eTo.configDrive(getConfigDrive());
       }
    }
 
@@ -83,6 +85,7 @@ public class NovaTemplateOptions extends TemplateOptions implements Cloneable {
    protected String keyPairName;
    protected byte[] userData;
    protected String diskConfig;
+   protected boolean configDrive;
 
    @Override
    public boolean equals(Object o) {
@@ -96,12 +99,13 @@ public class NovaTemplateOptions extends TemplateOptions implements Cloneable {
             && equal(this.generateKeyPair, that.generateKeyPair)
             && equal(this.keyPairName, that.keyPairName)
             && Arrays.equals(this.userData, that.userData)
-            && equal(this.diskConfig, that.diskConfig);
+            && equal(this.diskConfig, that.diskConfig)
+            && equal(this.configDrive, that.configDrive);
    }
 
    @Override
    public int hashCode() {
-      return Objects.hashCode(super.hashCode(), autoAssignFloatingIp, securityGroupNames, generateKeyPair, keyPairName, userData, diskConfig);
+      return Objects.hashCode(super.hashCode(), autoAssignFloatingIp, securityGroupNames, generateKeyPair, keyPairName, userData, diskConfig, configDrive);
    }
 
    @Override
@@ -116,6 +120,7 @@ public class NovaTemplateOptions extends TemplateOptions implements Cloneable {
       toString.add("keyPairName", keyPairName);
       toString.add("userData", userData);
       toString.add("diskConfig", diskConfig);
+      toString.add("configDrive", configDrive);
       return toString;
    }
 
@@ -182,7 +187,7 @@ public class NovaTemplateOptions extends TemplateOptions implements Cloneable {
    public String getKeyPairName() {
       return keyPairName;
    }
-   
+
    /**
     * <h3>Note</h3>
     *
@@ -194,7 +199,7 @@ public class NovaTemplateOptions extends TemplateOptions implements Cloneable {
    public boolean shouldGenerateKeyPair() {
       return generateKeyPair;
    }
-   
+
    /**
     * if unset, generate a default group prefixed with {@link jclouds#} according
     * to {@link #getInboundPorts()}
@@ -206,15 +211,22 @@ public class NovaTemplateOptions extends TemplateOptions implements Cloneable {
    }
 
    public byte[] getUserData() {
-       return userData;
-    }
+      return userData;
+   }
 
    /**
     * @see CreateServerOptions#getDiskConfig()
     */
    public String getDiskConfig() {
-       return diskConfig;
-    }
+      return diskConfig;
+   }
+
+   /**
+    * @see CreateServerOptions#getConfigDrive()
+    */
+   public boolean getConfigDrive() {
+      return configDrive;
+   }
 
    public static class Builder {
 
@@ -238,7 +250,7 @@ public class NovaTemplateOptions extends TemplateOptions implements Cloneable {
       public static NovaTemplateOptions keyPairName(String keyPairName) {
          return new NovaTemplateOptions().keyPairName(keyPairName);
       }
-      
+
       /**
        * @see org.jclouds.openstack.nova.v2_0.options.CreateServerOptions#getSecurityGroupNames
        */
@@ -352,7 +364,7 @@ public class NovaTemplateOptions extends TemplateOptions implements Cloneable {
          NovaTemplateOptions options = new NovaTemplateOptions();
          return options.overrideLoginCredentials(credentials);
       }
-      
+
       /**
        * @see TemplateOptions#blockUntilRunning
        */
@@ -360,7 +372,7 @@ public class NovaTemplateOptions extends TemplateOptions implements Cloneable {
          NovaTemplateOptions options = new NovaTemplateOptions();
          return options.blockUntilRunning(blockUntilRunning);
       }
-      
+
       /**
        * @see NovaTemplateOptions#userData
        */
@@ -368,13 +380,21 @@ public class NovaTemplateOptions extends TemplateOptions implements Cloneable {
          NovaTemplateOptions options = new NovaTemplateOptions();
          return NovaTemplateOptions.class.cast(options.userData(userData));
       }
-      
+
       /**
        * @see org.jclouds.openstack.nova.v2_0.options.CreateServerOptions#getDiskConfig()
        */
       public static NovaTemplateOptions diskConfig(String diskConfig) {
          NovaTemplateOptions options = new NovaTemplateOptions();
          return NovaTemplateOptions.class.cast(options.diskConfig(diskConfig));
+      }
+
+      /**
+       * @see org.jclouds.openstack.nova.v2_0.options.CreateServerOptions#getConfigDrive()
+       */
+      public static NovaTemplateOptions configDrive(boolean configDrive) {
+         NovaTemplateOptions options = new NovaTemplateOptions();
+         return NovaTemplateOptions.class.cast(options.configDrive(configDrive));
       }
    }
 
@@ -528,11 +548,11 @@ public class NovaTemplateOptions extends TemplateOptions implements Cloneable {
     * User data as bytes (not base64-encoded)
     */
    public NovaTemplateOptions userData(byte[] userData) {
-       // This limit may not be needed for nova
-       checkArgument(checkNotNull(userData, "userData").length <= 16 * 1024,
-               "userData cannot be larger than 16kb");
-       this.userData = userData;
-       return this;
+      // This limit may not be needed for nova
+      checkArgument(checkNotNull(userData, "userData").length <= 16 * 1024,
+            "userData cannot be larger than 16kb");
+      this.userData = userData;
+      return this;
    }
 
    /**
@@ -541,5 +561,18 @@ public class NovaTemplateOptions extends TemplateOptions implements Cloneable {
    public NovaTemplateOptions diskConfig(String diskConfig) {
       this.diskConfig = diskConfig;
       return this;
-  }
+   }
+
+   /**
+    * OpenStack can be configured to write metadata to a special configuration drive that will be 
+    * attached to the instance when it boots. The instance can retrieve any information that would 
+    * normally be available through the metadata service by mounting this disk and reading files from it.
+    * To enable the config drive, set this parameter to "true".
+    * This has to be enabled for user data cases.
+    * @see CreateServerOptions#getConfigDrive()
+    */
+   public NovaTemplateOptions configDrive(boolean configDrive) {
+      this.configDrive = configDrive;
+      return this;
+   }
 }

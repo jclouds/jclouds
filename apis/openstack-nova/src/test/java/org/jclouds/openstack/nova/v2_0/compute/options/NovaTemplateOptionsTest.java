@@ -203,7 +203,7 @@ public class NovaTemplateOptionsTest {
        options.diskConfig(Server.DISK_CONFIG_AUTO);
        assertEquals(options.getDiskConfig(), Server.DISK_CONFIG_AUTO);
    }
-   
+
    @Test(expectedExceptions = IllegalArgumentException.class)
    public void testblockOnPortBadFormat() {
       NovaTemplateOptions options = new NovaTemplateOptions();
