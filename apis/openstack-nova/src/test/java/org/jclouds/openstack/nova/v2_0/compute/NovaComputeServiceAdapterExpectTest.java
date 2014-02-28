@@ -131,6 +131,40 @@ public class NovaComputeServiceAdapterExpectTest extends BaseNovaComputeServiceC
       assertEquals(server.getNode().getServer().getDiskConfig().orNull(), Server.DISK_CONFIG_AUTO);
    }
 
+   public void testCreateNodeWithGroupEncodedIntoNameWithConfigDrive() throws Exception {
+
+      HttpRequest createServer = HttpRequest
+         .builder()
+         .method("POST")
+         .endpoint("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v1.1/3456/servers")
+         .addHeader("Accept", "application/json")
+         .addHeader("X-Auth-Token", authToken)
+         .payload(payloadFromStringWithContentType(
+                  "{\"server\":{\"name\":\"test-e92\",\"imageRef\":\"1241\",\"flavorRef\":\"100\",\"config_drive\":\"true\"}}","application/json"))
+         .build();
+
+      HttpResponse createServerResponse = HttpResponse.builder().statusCode(202).message("HTTP/1.1 202 Accepted")
+         .payload(payloadFromResourceWithContentType("/new_server_config_drive.json","application/json; charset=UTF-8")).build();
+
+      Map<HttpRequest, HttpResponse> requestResponseMap = ImmutableMap.<HttpRequest, HttpResponse> builder()
+               .put(keystoneAuthWithUsernameAndPasswordAndTenantName, responseWithKeystoneAccess)
+               .put(extensionsOfNovaRequest, extensionsOfNovaResponse)
+               .put(listDetail, listDetailResponse)
+               .put(listFlavorsDetail, listFlavorsDetailResponse)
+               .put(createServer, createServerResponse)
+               .put(serverDetail, serverDetailResponse).build();
+
+      Injector forConfigDrive = requestsSendResponses(requestResponseMap);
+
+      Template template = forConfigDrive.getInstance(TemplateBuilder.class).build();
+      template.getOptions().as(NovaTemplateOptions.class).configDrive(true);
+
+      NovaComputeServiceAdapter adapter = forConfigDrive.getInstance(NovaComputeServiceAdapter.class);
+
+      NodeAndInitialCredentials<ServerInZone> server = adapter.createNodeWithGroupEncodedIntoName("test", "test-e92", template);
+      assertNotNull(server);
+   }
+
    public void testCreateNodeWithGroupEncodedIntoNameWhenSecurityGroupsArePresent() throws Exception {
 
       HttpRequest createServer = HttpRequest

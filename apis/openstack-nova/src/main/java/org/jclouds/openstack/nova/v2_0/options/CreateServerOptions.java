@@ -107,6 +107,7 @@ public class CreateServerOptions implements MapBinder {
    private String diskConfig;
    private Set<String> networks = ImmutableSet.of();
    private String availabilityZone;
+   private boolean configDrive;
 
    @Override
    public boolean equals(Object object) {
@@ -119,7 +120,8 @@ public class CreateServerOptions implements MapBinder {
                && equal(metadata, other.metadata) && equal(personality, other.personality)
                && equal(adminPass, other.adminPass) && equal(diskConfig, other.diskConfig)
                && equal(adminPass, other.adminPass) && equal(networks, other.networks)
-               && equal(availabilityZone, other.availabilityZone);
+               && equal(availabilityZone, other.availabilityZone)
+               && equal(configDrive, other.configDrive);
       } else {
          return false;
       }
@@ -127,7 +129,7 @@ public class CreateServerOptions implements MapBinder {
 
    @Override
    public int hashCode() {
-      return Objects.hashCode(keyName, securityGroupNames, metadata, personality, adminPass, networks, availabilityZone);
+      return Objects.hashCode(keyName, securityGroupNames, metadata, personality, adminPass, networks, availabilityZone, configDrive);
    }
 
    protected ToStringHelper string() {
@@ -147,6 +149,7 @@ public class CreateServerOptions implements MapBinder {
       if (!networks.isEmpty())
          toString.add("networks", networks);
       toString.add("availability_zone", availabilityZone == null ? null : availabilityZone);
+      toString.add("configDrive", configDrive);
       return toString;
    }
 
@@ -171,6 +174,8 @@ public class CreateServerOptions implements MapBinder {
       @Named("OS-DCF:diskConfig")
       String diskConfig;
       Set<Map<String, String>> networks;
+      @Named("config_drive")
+      String configDrive;
 
       private ServerRequest(String name, String imageRef, String flavorRef) {
          this.name = name;
@@ -195,6 +200,8 @@ public class CreateServerOptions implements MapBinder {
          server.availabilityZone = availabilityZone;
       if (userData != null)
          server.user_data = base64().encode(userData);
+      if (configDrive == true)
+         server.configDrive = "true";
       if (securityGroupNames.size() > 0) {
          server.securityGroupNames = Sets.newLinkedHashSet();
          for (String groupName : securityGroupNames) {
@@ -290,9 +297,21 @@ public class CreateServerOptions implements MapBinder {
     * Custom user-data can be also be supplied at launch time.
     * It is retrievable by the instance and is often used for launch-time configuration
     * by instance scripts.
+    * Pass userData unencdoed, as the value will be base64 encoded automatically.
     */
    public CreateServerOptions userData(byte[] userData) {
       this.userData = userData;
+      return this;
+   }
+
+   /**
+    * Set to true to use a config drive for metadata.
+    * This is a separate configuration drive that can be used separately from the metadata service.
+    * This needs to be set to "true" when trying to use user data for cloud-init.
+    * @see http://docs.openstack.org/grizzly/openstack-compute/admin/content/config-drive.html
+    */
+   public CreateServerOptions configDrive(boolean configDrive) {
+      this.configDrive = configDrive;
       return this;
    }
 
