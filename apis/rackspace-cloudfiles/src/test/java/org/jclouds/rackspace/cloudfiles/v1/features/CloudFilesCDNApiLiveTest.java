@@ -30,6 +30,8 @@ import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
 /**
+ * Tests the live behavior of the {@code CloudFilesCDNApi}.
+ * 
  * @author Jeremy Daggett
  */
 @Test(groups = "live", testName = "CloudFilesCDNApiLiveTest")
@@ -40,7 +42,7 @@ public class CloudFilesCDNApiLiveTest extends BaseCloudFilesApiLiveTest {
    public CloudFilesCDNApiLiveTest() {
       super();
    }
-   
+
    public void testList() throws Exception {
       for (String regionId : regions) {
          CDNApi cdnApi = api.cdnApiInRegion(regionId);

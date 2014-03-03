@@ -19,16 +19,24 @@ package org.jclouds.rackspace.cloudfiles.v1.features;
 import static org.testng.Assert.assertTrue;
 
 import org.jclouds.openstack.swift.v1.domain.Account;
+import org.jclouds.openstack.swift.v1.features.AccountApi;
 import org.jclouds.openstack.swift.v1.features.AccountApiLiveTest;
+import org.jclouds.rackspace.cloudfiles.v1.CloudFilesApi;
 import org.testng.annotations.Test;
 
+/**
+ * Tests the live behavior of the OpenStack Object Storage {@link AccountApi}
+ * via the {@link CloudFilesApi}.
+ * 
+ * @author Jeremy Daggett
+ */
 @Test(groups = "live", testName = "CloudFilesAccountApiLiveTest")
 public class CloudFilesAccountApiLiveTest extends AccountApiLiveTest {
-   
+
    public CloudFilesAccountApiLiveTest() {
       provider = "rackspace-cloudfiles";
    }
-   
+
    public void testUrlKeyExists() throws Exception {
       for (String regionId : regions) {
          Account account = api.accountApiInRegion(regionId).get();

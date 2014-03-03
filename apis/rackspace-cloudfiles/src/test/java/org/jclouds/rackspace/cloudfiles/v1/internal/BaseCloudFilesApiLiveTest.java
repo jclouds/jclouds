@@ -16,21 +16,17 @@
  */
 package org.jclouds.rackspace.cloudfiles.v1.internal;
 
-import static org.testng.Assert.assertNotNull;
-
-import org.jclouds.openstack.swift.v1.domain.Container;
 import org.jclouds.openstack.swift.v1.internal.BaseSwiftApiLiveTest;
 import org.jclouds.rackspace.cloudfiles.v1.CloudFilesApi;
 import org.testng.annotations.Test;
 
 /**
- * Base class for all Cloud Files API Live tests.
+ * Base class for all {@link CloudFilesApi} live tests.
  * 
  * @author Jeremy Daggett
  */
 @Test(groups = "live", testName = "BaseCloudFilesApiLiveTest")
 public abstract class BaseCloudFilesApiLiveTest extends BaseSwiftApiLiveTest<CloudFilesApi> {
-   
    protected BaseCloudFilesApiLiveTest() {
       provider = "rackspace-cloudfiles";
    }

@@ -20,11 +20,10 @@ import org.jclouds.rackspace.cloudfiles.v1.internal.BaseCloudFilesApiLiveTest;
 import org.testng.annotations.Test;
 
 /**
- * Tests behavior of {@code CloudFilesApi}
+ * Tests live behavior of {@code CloudFilesApi}.
  * 
  * @author Jeremy Daggett
  */
 @Test(groups = "live", testName = "CloudFilesApiLiveTest")
 public class CloudFilesApiLiveTest extends BaseCloudFilesApiLiveTest {
-
 }

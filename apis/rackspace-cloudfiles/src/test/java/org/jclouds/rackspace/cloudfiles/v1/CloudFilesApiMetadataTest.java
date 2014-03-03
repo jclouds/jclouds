@@ -1,4 +1,3 @@
-package org.jclouds.rackspace.cloudfiles.v1;
 /*
  * Licensed to the Apache Software Foundation (ASF) under one or more
  * contributor license agreements.  See the NOTICE file distributed with
@@ -15,6 +14,7 @@ package org.jclouds.rackspace.cloudfiles.v1;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package org.jclouds.rackspace.cloudfiles.v1;
 
 import org.jclouds.View;
 import org.jclouds.apis.internal.BaseApiMetadataTest;
@@ -24,6 +24,7 @@ import com.google.common.collect.ImmutableSet;
 import com.google.common.reflect.TypeToken;
 
 /**
+ * Tests the behavior of {@link CloudFilesApiMetadata}.
  * 
  * @author Jeremy Daggett
  */

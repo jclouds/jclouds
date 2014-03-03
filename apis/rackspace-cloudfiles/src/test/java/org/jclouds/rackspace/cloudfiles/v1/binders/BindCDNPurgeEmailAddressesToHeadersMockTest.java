@@ -24,13 +24,12 @@ import org.jclouds.http.HttpRequest;
 import org.jclouds.openstack.v2_0.internal.BaseOpenStackMockTest;
 import org.jclouds.rackspace.cloudfiles.v1.CloudFilesApi;
 import org.jclouds.rackspace.cloudfiles.v1.reference.CloudFilesHeaders;
-import org.testng.Assert;
 import org.testng.annotations.Test;
 
 import com.google.common.collect.ImmutableList;
 
 /**
- * Tests behavior of {@code BindCDNPurgeEmailAddressesToHeaders}
+ * Tests the behavior of {@code BindCDNPurgeEmailAddressesToHeaders}.
  * 
  * @author Jeremy Daggett
  */
@@ -50,7 +49,7 @@ public class BindCDNPurgeEmailAddressesToHeadersMockTest extends BaseOpenStackMo
             .method("DELETE")
             .endpoint("https://storage101.dfw1.clouddrive.com/v1/MossoCloudFS_XXXXXX/")
             .addHeader(CloudFilesHeaders.CDN_PURGE_OBJECT_EMAIL, "foo@bar.com, bar@foo.com")
-            .build(); 
+            .build();
       
       assertEquals(actualRequest, expectedRequest);
       

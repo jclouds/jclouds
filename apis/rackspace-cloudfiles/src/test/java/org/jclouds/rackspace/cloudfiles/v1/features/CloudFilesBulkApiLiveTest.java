@@ -17,11 +17,17 @@
 package org.jclouds.rackspace.cloudfiles.v1.features;
 
 import org.jclouds.openstack.swift.v1.features.BulkApiLiveTest;
+import org.jclouds.rackspace.cloudfiles.v1.CloudFilesApi;
 import org.testng.annotations.Test;
 
+/**
+ * Tests the live behavior of the OpenStack Object Storage {@link BulkApi}
+ * via the {@link CloudFilesApi}.
+ * 
+ * @author Jeremy Daggett
+ */
 @Test(groups = "live", testName = "CloudFilesBulkApiLiveTest")
 public class CloudFilesBulkApiLiveTest extends BulkApiLiveTest {
-
    public CloudFilesBulkApiLiveTest() {
       provider = "rackspace-cloudfiles";
    }

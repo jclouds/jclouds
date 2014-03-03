@@ -16,9 +16,17 @@
  */
 package org.jclouds.rackspace.cloudfiles.v1.features;
 
+import org.jclouds.openstack.swift.v1.features.ContainerApi;
 import org.jclouds.openstack.swift.v1.features.ContainerApiLiveTest;
+import org.jclouds.rackspace.cloudfiles.v1.CloudFilesApi;
 import org.testng.annotations.Test;
 
+/**
+ * Tests the live behavior of the OpenStack Object Storage {@link ContainerApi}
+ * via the {@link CloudFilesApi}.
+ * 
+ * @author Jeremy Daggett
+ */
 @Test(groups = "live", testName = "CloudFilesContainerApiLiveTest")
 public class CloudFilesContainerApiLiveTest extends ContainerApiLiveTest {
    public CloudFilesContainerApiLiveTest() {

@@ -14,22 +14,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.jclouds.rackspace.cloudfiles.v1.features;
+package org.jclouds.rackspace.cloudfiles.uk.blobstore.integration;
 
-import org.jclouds.openstack.swift.v1.features.ObjectApi;
-import org.jclouds.openstack.swift.v1.features.ObjectApiLiveTest;
-import org.jclouds.rackspace.cloudfiles.v1.CloudFilesApi;
+import java.util.Set;
+
+import org.jclouds.rackspace.cloudfiles.v1.blobstore.integration.CloudFilesServiceIntegrationLiveTest;
 import org.testng.annotations.Test;
 
-/**
- * Tests the live behavior of the OpenStack Object Storage {@link ObjectApi}
- * via the {@link CloudFilesApi}.
- * 
- * @author Jeremy Daggett
- */
-@Test(groups = "live", testName = "CloudFilesObjectApiLiveTest")
-public class CloudFilesObjectApiLiveTest extends ObjectApiLiveTest {
-   public CloudFilesObjectApiLiveTest() {
-      provider = "rackspace-cloudfiles";
+import com.google.common.collect.ImmutableSet;
+
+@Test(groups = "live", testName = "CloudFilesUKServiceIntegrationLiveTest")
+public class CloudFilesUKServiceIntegrationLiveTest extends CloudFilesServiceIntegrationLiveTest {
+   public CloudFilesUKServiceIntegrationLiveTest() {
+      provider = "rackspace-cloudfiles-uk";
+   }
+
+   @Override
+   protected Set<String> getIso3166Codes() {
+      return ImmutableSet.<String> of("GB-SLG");
    }
 }

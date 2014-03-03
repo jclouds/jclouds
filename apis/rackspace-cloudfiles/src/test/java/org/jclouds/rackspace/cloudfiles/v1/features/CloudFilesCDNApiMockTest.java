@@ -50,6 +50,11 @@ import com.google.common.collect.ImmutableList;
 import com.squareup.okhttp.mockwebserver.MockResponse;
 import com.squareup.okhttp.mockwebserver.MockWebServer;
 
+/**
+ * Tests the behavior of the {@link CloudFilesCDNApi}.
+ * 
+ * @author Jeremy Daggett
+ */
 @Test(groups = "unit", testName = "CloudFilesCDNApiMockTest")
 public class CloudFilesCDNApiMockTest extends BaseOpenStackMockTest<CloudFilesApi> {
 
