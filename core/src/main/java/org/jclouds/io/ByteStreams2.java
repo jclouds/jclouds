@@ -14,48 +14,27 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.jclouds.io.payloads;
 
-import static org.jclouds.util.Closeables2.closeQuietly;
+package org.jclouds.io;
+
+import static com.google.common.base.Preconditions.checkNotNull;
 
 import java.io.IOException;
 import java.io.InputStream;
-
-import com.google.common.io.Closer;
+import com.google.common.annotations.Beta;
+import com.google.common.io.ByteSource;
 import com.google.common.io.InputSupplier;
 
-/**
- * @deprecated see ByteSourcePayload
- */
-@Deprecated
-public class InputStreamSupplierPayload extends BasePayload<InputSupplier<? extends InputStream>> {
-   private final Closer closer = Closer.create();
-
-   public InputStreamSupplierPayload(InputSupplier<? extends InputStream> content) {
-      super(content);
-   }
-
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   public InputStream openStream() throws IOException {
-      return closer.register(content.getInput());
-   }
-
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   public boolean isRepeatable() {
-      return true;
-   }
-
-   /**
-    * if we created the stream, then it is already consumed on close.
-    */
-   @Override
-   public void release() {
-      closeQuietly(closer);
+@Beta
+public class ByteStreams2 {
+   @Deprecated
+   public static ByteSource asByteSource(final InputSupplier<? extends InputStream> supplier) {
+      checkNotNull(supplier, "supplier");
+      return new ByteSource() {
+         @Override
+         public InputStream openStream() throws IOException {
+            return supplier.getInput();
+         }
+      };
    }
 }

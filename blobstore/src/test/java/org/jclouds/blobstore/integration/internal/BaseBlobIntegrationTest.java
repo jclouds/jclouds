@@ -62,7 +62,6 @@ import org.jclouds.http.HttpResponseException;
 import org.jclouds.io.Payload;
 import org.jclouds.io.Payloads;
 import org.jclouds.io.payloads.ByteSourcePayload;
-import org.jclouds.io.payloads.InputStreamSupplierPayload;
 import org.jclouds.logging.Logger;
 import org.testng.ITestContext;
 import org.testng.annotations.BeforeClass;
@@ -182,7 +181,7 @@ public class BaseBlobIntegrationTest extends BaseBlobStoreIntegrationTest {
       try {
          final String name = "constitution.txt";
 
-         uploadInputSupplier(container, name, expectedContentDisposition, supplier);
+         uploadByteSource(container, name, expectedContentDisposition, supplier);
          Map<Integer, ListenableFuture<?>> responses = Maps.newHashMap();
          for (int i = 0; i < 10; i++) {
 
@@ -215,14 +214,14 @@ public class BaseBlobIntegrationTest extends BaseBlobStoreIntegrationTest {
 
    }
 
-   private void uploadInputSupplier(String container, String name, String contentDisposition,
-         ByteSource supplier) throws IOException {
+   private void uploadByteSource(String container, String name, String contentDisposition,
+         ByteSource byteSource) throws IOException {
       BlobStore blobStore = view.getBlobStore();
       blobStore.putBlob(container, blobStore.blobBuilder(name)
-            .payload(new InputStreamSupplierPayload(supplier))
+            .payload(new ByteSourcePayload(byteSource))
             .contentType("text/plain")
-            .contentMD5(supplier.hash(md5()))
-            .contentLength(supplier.size())
+            .contentMD5(byteSource.hash(md5()))
+            .contentLength(byteSource.size())
             .contentDisposition(contentDisposition)
             .build());
    }

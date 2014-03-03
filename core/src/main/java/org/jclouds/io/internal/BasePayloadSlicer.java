@@ -31,6 +31,7 @@ import java.util.NoSuchElementException;
 
 import javax.inject.Singleton;
 
+import org.jclouds.io.ByteStreams2;
 import org.jclouds.io.ContentMetadata;
 import org.jclouds.io.Payload;
 import org.jclouds.io.PayloadSlicer;
@@ -38,7 +39,6 @@ import org.jclouds.io.payloads.BaseMutableContentMetadata;
 import org.jclouds.io.payloads.ByteArrayPayload;
 import org.jclouds.io.payloads.ByteSourcePayload;
 import org.jclouds.io.payloads.InputStreamPayload;
-import org.jclouds.io.payloads.InputStreamSupplierPayload;
 
 import com.google.common.base.Charsets;
 import com.google.common.base.Throwables;
@@ -157,7 +157,7 @@ public class BasePayloadSlicer implements PayloadSlicer {
    }
 
    protected Payload doSlice(Payload content, long offset, long length) {
-      return doSlice((InputSupplier<? extends InputStream>) content, offset, length);
+      return doSlice(ByteStreams2.asByteSource(content), offset, length);
    }
 
    protected Payload doSlice(String content, long offset, long length) {
@@ -181,16 +181,17 @@ public class BasePayloadSlicer implements PayloadSlicer {
       return new ByteSourcePayload(content.slice(offset, length));
    }
 
+   /** @deprecated use doSlice(ByteSource) instead */
+   @Deprecated
    protected Payload doSlice(InputSupplier<? extends InputStream> content, long offset, long length) {
-      return new InputStreamSupplierPayload(ByteStreams.slice(content, offset, length));
+      return doSlice(ByteStreams2.asByteSource(content), offset, length);
    }
 
    protected Payload doSlice(byte[] content, long offset, long length) {
       Payload returnVal;
       checkArgument(offset <= Integer.MAX_VALUE, "offset is too big for an array");
       checkArgument(length <= Integer.MAX_VALUE, "length is too big for an array");
-      returnVal = new InputStreamSupplierPayload(
-            ByteSource.wrap(content).slice(offset, length));
+      returnVal = new ByteSourcePayload(ByteSource.wrap(content).slice(offset, length));
       return returnVal;
    }
 
