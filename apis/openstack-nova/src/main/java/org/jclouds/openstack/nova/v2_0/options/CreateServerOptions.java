@@ -200,7 +200,7 @@ public class CreateServerOptions implements MapBinder {
          server.availabilityZone = availabilityZone;
       if (userData != null)
          server.user_data = base64().encode(userData);
-      if (configDrive == true)
+      if (configDrive)
          server.configDrive = "true";
       if (securityGroupNames.size() > 0) {
          server.securityGroupNames = Sets.newLinkedHashSet();
