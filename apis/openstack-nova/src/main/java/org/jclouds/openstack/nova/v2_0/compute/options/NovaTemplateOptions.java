@@ -27,6 +27,8 @@ import java.util.Set;
 
 import org.jclouds.compute.options.TemplateOptions;
 import org.jclouds.domain.LoginCredentials;
+import org.jclouds.openstack.nova.v2_0.domain.Network;
+import org.jclouds.openstack.nova.v2_0.options.CreateServerOptions;
 import org.jclouds.scriptbuilder.domain.Statement;
 
 import com.google.common.base.Objects;
@@ -76,6 +78,7 @@ public class NovaTemplateOptions extends TemplateOptions implements Cloneable {
          }
 
          eTo.configDrive(getConfigDrive());
+         eTo.novaNetworks(getNovaNetworks());
       }
    }
 
@@ -86,6 +89,7 @@ public class NovaTemplateOptions extends TemplateOptions implements Cloneable {
    protected byte[] userData;
    protected String diskConfig;
    protected boolean configDrive;
+   protected Set<Network> novaNetworks;
 
    @Override
    public boolean equals(Object o) {
@@ -100,12 +104,13 @@ public class NovaTemplateOptions extends TemplateOptions implements Cloneable {
             && equal(this.keyPairName, that.keyPairName)
             && Arrays.equals(this.userData, that.userData)
             && equal(this.diskConfig, that.diskConfig)
-            && equal(this.configDrive, that.configDrive);
+            && equal(this.configDrive, that.configDrive)
+            && equal(this.novaNetworks, that.novaNetworks);
    }
 
    @Override
    public int hashCode() {
-      return Objects.hashCode(super.hashCode(), autoAssignFloatingIp, securityGroupNames, generateKeyPair, keyPairName, userData, diskConfig, configDrive);
+      return Objects.hashCode(super.hashCode(), autoAssignFloatingIp, securityGroupNames, generateKeyPair, keyPairName, userData, diskConfig, configDrive, novaNetworks);
    }
 
    @Override
@@ -121,6 +126,7 @@ public class NovaTemplateOptions extends TemplateOptions implements Cloneable {
       toString.add("userData", userData);
       toString.add("diskConfig", diskConfig);
       toString.add("configDrive", configDrive);
+      toString.add("novaNetworks", novaNetworks);
       return toString;
    }
 
@@ -226,6 +232,13 @@ public class NovaTemplateOptions extends TemplateOptions implements Cloneable {
     */
    public boolean getConfigDrive() {
       return configDrive;
+   }
+
+   /**
+    * @see CreateServerOptions#getNetworks()
+    */
+   public Set<Network> getNovaNetworks() {
+      return novaNetworks;
    }
 
    public static class Builder {
@@ -396,6 +409,14 @@ public class NovaTemplateOptions extends TemplateOptions implements Cloneable {
          NovaTemplateOptions options = new NovaTemplateOptions();
          return NovaTemplateOptions.class.cast(options.configDrive(configDrive));
       }
+
+      /**
+       * @see org.jclouds.openstack.nova.v2_0.options.CreateServerOptions#getNetworks()
+       */
+      public static NovaTemplateOptions novaNetworks(Set<Network> novaNetworks) {
+         NovaTemplateOptions options = new NovaTemplateOptions();
+         return NovaTemplateOptions.class.cast(options.novaNetworks(novaNetworks));
+      }
    }
 
    // methods that only facilitate returning the correct object type
@@ -537,10 +558,20 @@ public class NovaTemplateOptions extends TemplateOptions implements Cloneable {
    }
 
    /**
-    * {@inheritDoc}
+    * <br>Ensures NovaTemplateOptions can work with networks specified as Strings.
+    * Also provides for compatibility with the abstraction layer.
     */
    @Override
    public NovaTemplateOptions networks(Iterable<String> networks) {
+      return NovaTemplateOptions.class.cast(super.networks(networks));
+   }
+
+   /**
+    * <br>Ensures NovaTemplateOptions can work with networks specified as Strings.
+    * Also provides for compatibility with the abstraction layer.
+    */
+   @Override
+   public NovaTemplateOptions networks(String... networks) {
       return NovaTemplateOptions.class.cast(super.networks(networks));
    }
 
@@ -573,6 +604,17 @@ public class NovaTemplateOptions extends TemplateOptions implements Cloneable {
     */
    public NovaTemplateOptions configDrive(boolean configDrive) {
       this.configDrive = configDrive;
+      return this;
+   }
+
+   /**
+    * @param novaNetworks The list of network declarations.
+    * Nova-specific network declarations allow for specifying network UUIDs, port UUIDs, and fixed IPs.
+    * Unline {@link #networks(Iterable)} this supports setting additional network parameters and not just network UUIDs.
+    * @see CreateServerOptions#getNetworks()
+    */
+   public NovaTemplateOptions novaNetworks(Set<Network> novaNetworks) {
+      this.novaNetworks = novaNetworks;
       return this;
    }
 }

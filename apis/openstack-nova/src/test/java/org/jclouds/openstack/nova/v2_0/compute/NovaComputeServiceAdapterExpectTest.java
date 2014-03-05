@@ -32,6 +32,7 @@ import org.jclouds.http.HttpRequest;
 import org.jclouds.http.HttpResponse;
 import org.jclouds.openstack.nova.v2_0.compute.options.NovaTemplateOptions;
 import org.jclouds.openstack.nova.v2_0.domain.KeyPair;
+import org.jclouds.openstack.nova.v2_0.domain.Network;
 import org.jclouds.openstack.nova.v2_0.domain.Server;
 import org.jclouds.openstack.nova.v2_0.domain.zonescoped.ServerInZone;
 import org.jclouds.openstack.nova.v2_0.domain.zonescoped.ZoneAndName;
@@ -40,6 +41,7 @@ import org.testng.annotations.Test;
 
 import com.google.common.cache.LoadingCache;
 import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.ImmutableSet;
 import com.google.inject.Injector;
 import com.google.inject.Key;
 import com.google.inject.TypeLiteral;
@@ -160,6 +162,53 @@ public class NovaComputeServiceAdapterExpectTest extends BaseNovaComputeServiceC
       template.getOptions().as(NovaTemplateOptions.class).configDrive(true);
 
       NovaComputeServiceAdapter adapter = forConfigDrive.getInstance(NovaComputeServiceAdapter.class);
+
+      NodeAndInitialCredentials<ServerInZone> server = adapter.createNodeWithGroupEncodedIntoName("test", "test-e92", template);
+      assertNotNull(server);
+   }
+
+   public void testCreateNodeWithGroupEncodedIntoNameWithNovaNetworks() throws Exception {
+
+      HttpRequest createServer = HttpRequest
+         .builder()
+         .method("POST")
+         .endpoint("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v1.1/3456/servers")
+         .addHeader("Accept", "application/json")
+         .addHeader("X-Auth-Token", authToken)
+         .payload(payloadFromStringWithContentType(
+                  "{\"server\":{\"name\":\"test-e92\",\"imageRef\":\"1241\",\"flavorRef\":\"100\",\"networks\":[{\"uuid\":\"12345\", \"port\":\"67890\", \"fixed_ip\":\"192.168.0.1\"},{\"uuid\":\"54321\", \"port\":\"09876\", \"fixed_ip\":\"192.168.0.2\"},{\"uuid\":\"non-nova-uuid\"}]}}","application/json"))
+         .build();
+
+      HttpResponse createServerResponse = HttpResponse.builder().statusCode(202).message("HTTP/1.1 202 Accepted")
+         .payload(payloadFromResourceWithContentType("/new_server_nova_networks.json","application/json; charset=UTF-8")).build();
+
+      Map<HttpRequest, HttpResponse> requestResponseMap = ImmutableMap.<HttpRequest, HttpResponse> builder()
+               .put(keystoneAuthWithUsernameAndPasswordAndTenantName, responseWithKeystoneAccess)
+               .put(extensionsOfNovaRequest, extensionsOfNovaResponse)
+               .put(listDetail, listDetailResponse)
+               .put(listFlavorsDetail, listFlavorsDetailResponse)
+               .put(createServer, createServerResponse)
+               .put(serverDetail, serverDetailResponse).build();
+
+      Injector forNovaNetworks = requestsSendResponses(requestResponseMap);
+
+      Template template = forNovaNetworks.getInstance(TemplateBuilder.class).build();
+      template.getOptions().as(NovaTemplateOptions.class)
+         .networks("non-nova-uuid")
+         .novaNetworks(
+               ImmutableSet.of(
+                     Network.builder()
+                        .networkUuid("12345")
+                        .portUuid("67890")
+                        .fixedIp("192.168.0.1")
+                        .build(),
+                     Network.builder()
+                        .networkUuid("54321")
+                        .portUuid("09876")
+                        .fixedIp("192.168.0.2")
+                        .build()));
+
+      NovaComputeServiceAdapter adapter = forNovaNetworks.getInstance(NovaComputeServiceAdapter.class);
 
       NodeAndInitialCredentials<ServerInZone> server = adapter.createNodeWithGroupEncodedIntoName("test", "test-e92", template);
       assertNotNull(server);
