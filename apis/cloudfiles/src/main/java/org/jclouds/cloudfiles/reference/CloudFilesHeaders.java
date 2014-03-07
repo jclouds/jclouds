@@ -34,8 +34,7 @@ public interface CloudFilesHeaders extends SwiftHeaders {
    public static final String CDN_URI = "X-CDN-URI";
    public static final String CDN_SSL_URI = "X-Cdn-Ssl-Uri";
    public static final String CDN_STREAMING_URI = "X-Cdn-Streaming-Uri";
-   public static final String CDN_REFERRER_ACL = "X-Referrer-ACL ";
-   public static final String CDN_USER_AGENT_ACL = "X-User-Agent-ACL";
+   public static final String CDN_IOS_URI = "X-Cdn-Ios-Uri";
 
    public static final String CDN_CONTAINER_PURGE_OBJECT_EMAIL = "X-Purge-Email";
    public static final String CDN_WEBSITE_INDEX = "X-Container-Meta-Web-Index";

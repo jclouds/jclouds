@@ -16,7 +16,14 @@
  */
 package org.jclouds.cloudfiles.domain;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+
+import java.beans.ConstructorProperties;
 import java.net.URI;
+
+import javax.inject.Named;
+
+import org.jclouds.javax.annotation.Nullable;
 
 /**
  * 
@@ -26,23 +33,32 @@ import java.net.URI;
 public class ContainerCDNMetadata implements Comparable<ContainerCDNMetadata> {
 
    private String name;
-   private boolean cdn_enabled;
-   private boolean log_retention;
+   @Named("cdn_enabled")
+   private boolean cdnEnabled;
+   @Named("log_retention")
+   private boolean logRetention;
    private long ttl;
-   private URI cdn_uri;
-   private URI cdn_ssl_uri;
-   private URI cdn_streaming_uri;
-   private String referrer_acl;
-   private String useragent_acl;
+   @Named("cdn_uri")
+   private URI cdnUri;
+   @Named("cdn_ssl_uri")
+   private URI cdnSslUri;
+   @Named("cdn_streaming_uri")
+   private URI cdnStreamingUri;
+   @Named("cdn_ios_uri")
+   private URI cdnIosUri;
 
-   public ContainerCDNMetadata(String name, boolean cdnEnabled, boolean logRetention, long ttl, URI cdnUri, URI cdnSslUri, URI cdnStreamingUri) {
-      this.name = name;
-      this.cdn_enabled = cdnEnabled;
-      this.log_retention = logRetention;
-      this.ttl = ttl;
-      this.cdn_uri = cdnUri;
-      this.cdn_ssl_uri = cdnSslUri;
-      this.cdn_streaming_uri = cdnStreamingUri;
+   @ConstructorProperties({ "name", "cdn_enabled", "log_retention", "ttl", "cdn_uri", "cdn_ssl_uri",
+         "cdn_streaming_uri", "cdn_ios_uri"})
+   public ContainerCDNMetadata(String name, boolean cdnEnabled, boolean logRetention, long ttl,
+         @Nullable URI cdnUri, @Nullable URI cdnSslUri, @Nullable URI cdnStreamingUri, @Nullable URI cdnIosUri) {
+      this.name = checkNotNull(name, "name");
+      this.cdnEnabled = checkNotNull(cdnEnabled);
+      this.logRetention = checkNotNull(logRetention);
+      this.ttl = checkNotNull(ttl);
+      this.cdnUri = cdnUri;
+      this.cdnSslUri = cdnSslUri;
+      this.cdnStreamingUri = cdnStreamingUri;
+      this.cdnIosUri = cdnIosUri;
    }
 
    public ContainerCDNMetadata() {
@@ -57,11 +73,11 @@ public class ContainerCDNMetadata implements Comparable<ContainerCDNMetadata> {
    }
 
    public boolean isCDNEnabled() {
-      return cdn_enabled;
+      return cdnEnabled;
    }
 
    public boolean isLogRetention() {
-      return log_retention;
+      return logRetention;
    }
 
    public long getTTL() {
@@ -69,23 +85,19 @@ public class ContainerCDNMetadata implements Comparable<ContainerCDNMetadata> {
    }
 
    public URI getCDNUri() {
-      return cdn_uri;
+      return cdnUri;
    }
 
    public URI getCDNSslUri() {
-      return cdn_ssl_uri;
+      return cdnSslUri;
    }
 
    public URI getCDNStreamingUri() {
-      return cdn_streaming_uri;
+      return cdnStreamingUri;
    }
 
-   public String getReferrerACL() {
-      return referrer_acl;
-   }
-
-   public String getUseragentACL() {
-      return useragent_acl;
+   public URI getCDNIosUri() {
+      return cdnIosUri;
    }
 
    public int compareTo(ContainerCDNMetadata o) {
@@ -98,7 +110,7 @@ public class ContainerCDNMetadata implements Comparable<ContainerCDNMetadata> {
    public int hashCode() {
       final int prime = 31;
       int result = 1;
-      result = prime * result + ((cdn_uri == null) ? 0 : cdn_uri.hashCode());
+      result = prime * result + ((cdnUri == null) ? 0 : cdnUri.hashCode());
       return result;
    }
 
@@ -112,10 +124,10 @@ public class ContainerCDNMetadata implements Comparable<ContainerCDNMetadata> {
          return false;
       
       ContainerCDNMetadata other = (ContainerCDNMetadata) obj;
-      if (cdn_uri == null) {
-         if (other.cdn_uri != null)
+      if (cdnUri == null) {
+         if (other.cdnUri != null)
             return false;
-      } else if (!cdn_uri.equals(other.cdn_uri))
+      } else if (!cdnUri.equals(other.cdnUri))
          return false;
       
       return true;
@@ -124,7 +136,7 @@ public class ContainerCDNMetadata implements Comparable<ContainerCDNMetadata> {
    @Override
    public String toString() {
       return String.format(
-               "[name=%s, cdn_enabled=%s, log_retention=%s, ttl=%s, cdn_uri=%s, cdn_ssl_uri=%s, cdn_streaming_uri=%s, referrer_acl=%s, useragent_acl=%s]",
-                 name, cdn_enabled, log_retention, ttl, cdn_uri, cdn_ssl_uri, cdn_streaming_uri, referrer_acl, useragent_acl);
+               "[name=%s, cdnEnabled=%s, logRetention=%s, ttl=%s, cdnUri=%s, cdnSslUri=%s, cdnStreamingUri=%s, cdnIosUri=%s]",
+                 name, cdnEnabled, logRetention, ttl, cdnUri, cdnSslUri, cdnStreamingUri, cdnIosUri);
    }
 }
