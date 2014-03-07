@@ -16,9 +16,12 @@
  */
 package org.jclouds.cloudfiles.functions;
 
+import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
+import static com.google.common.collect.Lists.newArrayList;
 
 import java.net.URI;
+import java.util.List;
 
 import org.jclouds.cloudfiles.domain.ContainerCDNMetadata;
 import org.jclouds.cloudfiles.reference.CloudFilesHeaders;
@@ -27,11 +30,14 @@ import org.jclouds.http.HttpResponse;
 import org.jclouds.rest.InvocationContext;
 
 import com.google.common.base.Function;
+import com.google.common.base.Splitter;
+import com.google.common.collect.Iterables;
 
 /**
  * This parses {@link AccountMetadata} from HTTP headers.
  * 
  * @author James Murty
+ * @author Jeremy Daggett
  */
 public class ParseContainerCDNMetadataFromHeaders implements
          Function<HttpResponse, ContainerCDNMetadata>, InvocationContext<ParseContainerCDNMetadataFromHeaders> {
@@ -48,21 +54,20 @@ public class ParseContainerCDNMetadataFromHeaders implements
       String cdnUri = checkNotNull(from.getFirstHeaderOrNull(CloudFilesHeaders.CDN_URI), CloudFilesHeaders.CDN_URI);
       String cdnSslUri = checkNotNull(from.getFirstHeaderOrNull(CloudFilesHeaders.CDN_SSL_URI), CloudFilesHeaders.CDN_SSL_URI);
       String cdnStreamingUri = checkNotNull(from.getFirstHeaderOrNull(CloudFilesHeaders.CDN_STREAMING_URI), CloudFilesHeaders.CDN_STREAMING_URI);
-      
-      if (cdnUri == null) {
-         // CDN is not, and has never, been enabled for this container.
-         return null;
-      } 
-      else {
-         return new ContainerCDNMetadata(
-            request.getEndpoint().getPath(), 
-            Boolean.parseBoolean(cdnEnabled), 
-            Boolean.parseBoolean(cdnLogRetention), 
-            Long.parseLong(cdnTTL), 
-            URI.create(cdnUri),
-            URI.create(cdnSslUri),
-            URI.create(cdnStreamingUri));
-      }
+      String cdnIosUri = checkNotNull(from.getFirstHeaderOrNull(CloudFilesHeaders.CDN_IOS_URI), CloudFilesHeaders.CDN_IOS_URI);
+
+      List<String> parts = newArrayList(Splitter.on('/').split(request.getEndpoint().getPath()));
+      checkArgument(!parts.isEmpty(), "incorrect path: " + request.getEndpoint().getPath());
+
+      return new ContainerCDNMetadata(
+         Iterables.getLast(parts),
+         Boolean.parseBoolean(cdnEnabled),
+         Boolean.parseBoolean(cdnLogRetention),
+         Long.parseLong(cdnTTL),
+         URI.create(cdnUri),
+         URI.create(cdnSslUri),
+         URI.create(cdnStreamingUri),
+         URI.create(cdnIosUri));
    }
 
    @Override

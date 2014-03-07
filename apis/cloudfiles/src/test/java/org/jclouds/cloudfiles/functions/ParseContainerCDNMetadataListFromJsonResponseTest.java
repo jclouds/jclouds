@@ -56,7 +56,8 @@ public class ParseContainerCDNMetadataListFromJsonResponseTest {
             3600, 
             URI.create("http://c0354712.cdn.cloudfiles.rackspacecloud.com"), 
             URI.create("https://c0354712.cdn.ssl.cloudfiles.rackspacecloud.com"),
-            URI.create("http://c0354712.cdn.stream.cloudfiles.rackspacecloud.com")),
+            URI.create("http://c0354712.cdn.stream.cloudfiles.rackspacecloud.com"),
+            URI.create("http://c0354712.cdn.iosr.cloudfiles.rackspacecloud.com")),
          new ContainerCDNMetadata(
             "adriancole-blobstore5", 
             true, 
@@ -64,7 +65,8 @@ public class ParseContainerCDNMetadataListFromJsonResponseTest {
             28800, 
             URI.create("http://c0404671.cdn.cloudfiles.rackspacecloud.com"),
             URI.create("https://c0404671.cdn.ssl.cloudfiles.rackspacecloud.com"),
-            URI.create("http://c0404671.cdn.stream.cloudfiles.rackspacecloud.com")),
+            URI.create("http://c0404671.cdn.stream.cloudfiles.rackspacecloud.com"),
+            URI.create("http://c0404671.cdn.iosr.cloudfiles.rackspacecloud.com")),
          new ContainerCDNMetadata(
             "adriancole-cfcdnint.testCDNOperationsContainerWithCDN", 
             false, 
@@ -72,8 +74,8 @@ public class ParseContainerCDNMetadataListFromJsonResponseTest {
             3600, 
             URI.create("http://c0320431.cdn.cloudfiles.rackspacecloud.com"),
             URI.create("https://c0320431.cdn.ssl.cloudfiles.rackspacecloud.com"),
-            URI.create("http://c0320431.cdn.stream.cloudfiles.rackspacecloud.com"))
-      );
+            URI.create("http://c0320431.cdn.stream.cloudfiles.rackspacecloud.com"),
+            URI.create("http://c0320431.cdn.iosr.cloudfiles.rackspacecloud.com")));
       
       ParseJson<SortedSet<ContainerCDNMetadata>> parser = i.getInstance(Key
                .get(new TypeLiteral<ParseJson<SortedSet<ContainerCDNMetadata>>>() {

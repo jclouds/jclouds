@@ -109,11 +109,10 @@ public class CloudFilesClientLiveTest extends CommonSwiftClientLiveTest<CloudFil
          final long initialTTL = cdnMetadata.getTTL();
          final URI cdnSslUri = cdnMetadata.getCDNSslUri();
          final URI cdnStreamingUri = cdnMetadata.getCDNStreamingUri();
+         final URI cdnIosUri = cdnMetadata.getCDNIosUri();
          assertTrue(cdnMetadataList.contains(new ContainerCDNMetadata(
-            containerNameWithCDN, cdnEnabled, logRetention, initialTTL, cdnUri, cdnSslUri, cdnStreamingUri)));
+            containerNameWithCDN, cdnEnabled, logRetention, initialTTL, cdnUri, cdnSslUri, cdnStreamingUri, cdnIosUri)));
 
-         
-         
          // Test listing with options
          cdnMetadataList = getApi().listCDNContainers(ListCdnContainerOptions.Builder.enabledOnly());
          assertTrue(Iterables.all(cdnMetadataList, new Predicate<ContainerCDNMetadata>() {

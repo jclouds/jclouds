@@ -7,8 +7,7 @@
         "cdn_uri":"http://c0354712.cdn.cloudfiles.rackspacecloud.com",
         "cdn_ssl_uri":"https://c0354712.cdn.ssl.cloudfiles.rackspacecloud.com",
         "cdn_streaming_uri":"http://c0354712.cdn.stream.cloudfiles.rackspacecloud.com",
-        "referrer_acl":"",
-        "useragent_acl":""
+        "cdn_ios_uri":"http://c0354712.cdn.iosr.cloudfiles.rackspacecloud.com"
     },
     {
         "name":"adriancole-blobstore5",
@@ -18,8 +17,7 @@
         "cdn_uri":"http://c0404671.cdn.cloudfiles.rackspacecloud.com",
         "cdn_ssl_uri":"https://c0404671.cdn.ssl.cloudfiles.rackspacecloud.com",
         "cdn_streaming_uri":"http://c0404671.cdn.stream.cloudfiles.rackspacecloud.com",
-        "referrer_acl":"",
-        "useragent_acl":""
+        "cdn_ios_uri":"http://c0404671.cdn.iosr.cloudfiles.rackspacecloud.com"
     },
     {
         "name":"adriancole-cfcdnint.testCDNOperationsContainerWithCDN",
@@ -29,7 +27,6 @@
         "cdn_uri":"http://c0320431.cdn.cloudfiles.rackspacecloud.com",
         "cdn_ssl_uri":"https://c0320431.cdn.ssl.cloudfiles.rackspacecloud.com",
         "cdn_streaming_uri":"http://c0320431.cdn.stream.cloudfiles.rackspacecloud.com",
-        "referrer_acl":"",
-        "useragent_acl":""
+        "cdn_ios_uri":"http://c0320431.cdn.iosr.cloudfiles.rackspacecloud.com"
     }
 ]

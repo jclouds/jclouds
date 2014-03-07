@@ -33,13 +33,13 @@ import org.testng.annotations.Test;
 /**
  * 
  * @author Adrian Cole
+ * @author Jeremy Daggett
  */
 @Test(groups = "unit", testName = "CloudFilesClientExpectTest")
 public class CloudFilesClientExpectTest extends BaseCloudFilesRestClientExpectTest {
 
    @Test
    public void testDeleteContainerReturnsTrueOn200And404() {
-
       HttpRequest deleteContainer = HttpRequest
                .builder()
                .method("DELETE")
@@ -62,7 +62,7 @@ public class CloudFilesClientExpectTest extends BaseCloudFilesRestClientExpectTe
 
    @Test
    public void testGetCDNMetadataWhenResponseIs2xxReturnsContainerCDNMetadata() {
-	   HttpRequest cdnContainerRequest = HttpRequest.builder()
+      HttpRequest cdnContainerRequest = HttpRequest.builder()
             .method("HEAD")
             .endpoint("https://cdn3.clouddrive.com/v1/MossoCloudFS_83a9d536-2e25-4166-bd3b-a503a934f953/container")
             .addHeader("X-Auth-Token", authToken)
@@ -75,6 +75,7 @@ public class CloudFilesClientExpectTest extends BaseCloudFilesRestClientExpectTe
             .addHeader(CloudFilesHeaders.CDN_URI, "http://546406d62bf471d7435d-36c33e76d676c80251b3c13ecb603b67.r19.cf1.rackcdn.com")
             .addHeader(CloudFilesHeaders.CDN_SSL_URI, "https://e9f6fe92d217dc013369-36c33e76d676c80251b3c13ecb603b67.ssl.cf1.rackcdn.com")
             .addHeader(CloudFilesHeaders.CDN_STREAMING_URI, "http://0e79346bc0a2564dcc5e-36c33e76d676c80251b3c13ecb603b67.r19.stream.cf1.rackcdn.com")
+            .addHeader(CloudFilesHeaders.CDN_IOS_URI, "http://552e06d62bf471d7435d-36c33e76d676c80251b3c13ecb603b67.r11.iosr.cf1.rackcdn.com")
             .statusCode(204)
             .build();
 
@@ -88,11 +89,12 @@ public class CloudFilesClientExpectTest extends BaseCloudFilesRestClientExpectTe
       assertEquals(containerCDNMetadata.getCDNUri().toString(), "http://546406d62bf471d7435d-36c33e76d676c80251b3c13ecb603b67.r19.cf1.rackcdn.com");
       assertEquals(containerCDNMetadata.getCDNSslUri().toString(), "https://e9f6fe92d217dc013369-36c33e76d676c80251b3c13ecb603b67.ssl.cf1.rackcdn.com");
       assertEquals(containerCDNMetadata.getCDNStreamingUri().toString(), "http://0e79346bc0a2564dcc5e-36c33e76d676c80251b3c13ecb603b67.r19.stream.cf1.rackcdn.com");
+      assertEquals(containerCDNMetadata.getCDNIosUri().toString(), "http://552e06d62bf471d7435d-36c33e76d676c80251b3c13ecb603b67.r11.iosr.cf1.rackcdn.com");
    }
 
    @Test
    public void testGetCDNMetadataWhenResponseIs404ReturnsNull() {
-	   HttpRequest cdnContainerRequest = HttpRequest.builder()
+      HttpRequest cdnContainerRequest = HttpRequest.builder()
             .method("HEAD")
             .endpoint("https://cdn3.clouddrive.com/v1/MossoCloudFS_83a9d536-2e25-4166-bd3b-a503a934f953/container")
             .addHeader("X-Auth-Token", authToken)
@@ -110,7 +112,7 @@ public class CloudFilesClientExpectTest extends BaseCloudFilesRestClientExpectTe
 
    @Test
    public void testUpdateCDNMetadataWhenResponseIs2xxReturnsURI() {
-	   HttpRequest cdnContainerRequest = HttpRequest.builder()
+      HttpRequest cdnContainerRequest = HttpRequest.builder()
             .method("POST")
             .endpoint("https://cdn3.clouddrive.com/v1/MossoCloudFS_83a9d536-2e25-4166-bd3b-a503a934f953/container")
             .addHeader(CloudFilesHeaders.CDN_TTL, "259200")
@@ -125,6 +127,7 @@ public class CloudFilesClientExpectTest extends BaseCloudFilesRestClientExpectTe
             .addHeader(CloudFilesHeaders.CDN_URI, "http://546406d62bf471d7435d-36c33e76d676c80251b3c13ecb603b67.r19.cf1.rackcdn.com")
             .addHeader(CloudFilesHeaders.CDN_SSL_URI, "https://e9f6fe92d217dc013369-36c33e76d676c80251b3c13ecb603b67.ssl.cf1.rackcdn.com")
             .addHeader(CloudFilesHeaders.CDN_STREAMING_URI, "http://0e79346bc0a2564dcc5e-36c33e76d676c80251b3c13ecb603b67.r19.stream.cf1.rackcdn.com")
+            .addHeader(CloudFilesHeaders.CDN_IOS_URI, "http://552e06d62bf471d7435d-36c33e76d676c80251b3c13ecb603b67.r11.iosr.cf1.rackcdn.com")
             .statusCode(204)
             .build();
 
@@ -154,10 +157,10 @@ public class CloudFilesClientExpectTest extends BaseCloudFilesRestClientExpectTe
 
       cdnContainerClient.updateCDN("container", 259200, true);
    }
-   
+
    @Test
    public void testPurgeCDNObjectWhenResponseIs2xxReturnsTrue() {
-	   HttpRequest cdnContainerRequest = HttpRequest.builder()
+      HttpRequest cdnContainerRequest = HttpRequest.builder()
             .method("DELETE")
             .endpoint("https://cdn3.clouddrive.com/v1/MossoCloudFS_83a9d536-2e25-4166-bd3b-a503a934f953/container/foo.txt")
             .addHeader("X-Auth-Token", authToken)
@@ -175,7 +178,7 @@ public class CloudFilesClientExpectTest extends BaseCloudFilesRestClientExpectTe
 
    @Test
    public void testSetCDNStaticWebsiteIndexWhenResponseIs2xxReturnsTrue() {
-	   HttpRequest cdnContainerRequest = HttpRequest.builder()
+      HttpRequest cdnContainerRequest = HttpRequest.builder()
             .method("POST")
             .endpoint("https://storage101.lon3.clouddrive.com/v1/MossoCloudFS_83a9d536-2e25-4166-bd3b-a503a934f953/container")
             .addHeader(CloudFilesHeaders.CDN_WEBSITE_INDEX, "index.html")
@@ -194,7 +197,7 @@ public class CloudFilesClientExpectTest extends BaseCloudFilesRestClientExpectTe
 
    @Test(expectedExceptions = ContainerNotFoundException.class)
    public void testSetCDNStaticWebsiteIndexWhenResponseIs404ThrowsException() {
-	   HttpRequest cdnContainerRequest = HttpRequest.builder()
+      HttpRequest cdnContainerRequest = HttpRequest.builder()
             .method("POST")
             .endpoint("https://storage101.lon3.clouddrive.com/v1/MossoCloudFS_83a9d536-2e25-4166-bd3b-a503a934f953/container")
             .addHeader(CloudFilesHeaders.CDN_WEBSITE_INDEX, "index.html")
@@ -213,7 +216,7 @@ public class CloudFilesClientExpectTest extends BaseCloudFilesRestClientExpectTe
 
    @Test
    public void testSetCDNStaticWebsiteErrorWhenResponseIs2xxReturnsTrue() {
-	   HttpRequest cdnContainerRequest = HttpRequest.builder()
+      HttpRequest cdnContainerRequest = HttpRequest.builder()
             .method("POST")
             .endpoint("https://storage101.lon3.clouddrive.com/v1/MossoCloudFS_83a9d536-2e25-4166-bd3b-a503a934f953/container")
             .addHeader(CloudFilesHeaders.CDN_WEBSITE_ERROR, "error.html")
@@ -232,7 +235,7 @@ public class CloudFilesClientExpectTest extends BaseCloudFilesRestClientExpectTe
 
    @Test(expectedExceptions = ContainerNotFoundException.class)
    public void testSetCDNStaticWebsiteErrorWhenResponseIs404ThrowsException() {
-	   HttpRequest cdnContainerRequest = HttpRequest.builder()
+      HttpRequest cdnContainerRequest = HttpRequest.builder()
             .method("POST")
             .endpoint("https://storage101.lon3.clouddrive.com/v1/MossoCloudFS_83a9d536-2e25-4166-bd3b-a503a934f953/container")
             .addHeader(CloudFilesHeaders.CDN_WEBSITE_ERROR, "error.html")
