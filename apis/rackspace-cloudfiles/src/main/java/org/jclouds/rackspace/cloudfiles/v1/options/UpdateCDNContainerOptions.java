@@ -1,5 +1,4 @@
 /*
-
  * Licensed to the Apache Software Foundation (ASF) under one or more
  * contributor license agreements.  See the NOTICE file distributed with
  * this work for additional information regarding copyright ownership.
@@ -19,6 +18,11 @@ package org.jclouds.rackspace.cloudfiles.v1.options;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.base.Preconditions.checkState;
+import static org.jclouds.openstack.swift.v1.reference.SwiftHeaders.STATIC_WEB_DIRECTORY_TYPE;
+import static org.jclouds.openstack.swift.v1.reference.SwiftHeaders.STATIC_WEB_ERROR;
+import static org.jclouds.openstack.swift.v1.reference.SwiftHeaders.STATIC_WEB_INDEX;
+import static org.jclouds.openstack.swift.v1.reference.SwiftHeaders.STATIC_WEB_LISTINGS;
+import static org.jclouds.openstack.swift.v1.reference.SwiftHeaders.STATIC_WEB_LISTINGS_CSS;
 import static org.jclouds.rackspace.cloudfiles.v1.reference.CloudFilesHeaders.CDN_ENABLED;
 import static org.jclouds.rackspace.cloudfiles.v1.reference.CloudFilesHeaders.CDN_LOG_RETENTION;
 import static org.jclouds.rackspace.cloudfiles.v1.reference.CloudFilesHeaders.CDN_TTL;
@@ -27,13 +31,11 @@ import static org.jclouds.rackspace.cloudfiles.v1.reference.CloudFilesHeaders.CD
 
 import org.jclouds.http.options.BaseHttpRequestOptions;
 
+import com.google.common.net.MediaType;
+
 /**
- * Contains options supported in the REST API for updating CDN containers.
+ * Options supported for updating CDN containers.
  * 
- * <a href=
- *    "http://docs.rackspace.com/files/api/v1/cf-devguide/content/Update_CDN-Enabled_Container_Metadata-d1e2787.html">
- *    Update CDN container</a>.
- *
  * @author Jeremy Daggett
  */
 public class UpdateCDNContainerOptions extends BaseHttpRequestOptions {
@@ -59,19 +61,18 @@ public class UpdateCDNContainerOptions extends BaseHttpRequestOptions {
 
    /** 
     * Enables or disables the CDN Container
-    * API to enable disable - is this necessary?
     */
    public UpdateCDNContainerOptions enabled(boolean enabled) {
       headers.put(CDN_ENABLED, Boolean.toString(enabled));
       return this;
    }
-   
+
    /**
-    * Sets the index page for the Static Website.
+    * Sets the directory marker type for the Static Website.
     */
-   public UpdateCDNContainerOptions staticWebsiteIndexPage(String indexPage) {
-      checkNotNull(indexPage, "index page cannot be null");
-      headers.put("indexPage", indexPage);
+   public UpdateCDNContainerOptions staticWebsiteDirectoryType(MediaType directoryType) {
+      checkNotNull(directoryType, "directoryType cannot be null");
+      headers.put(STATIC_WEB_DIRECTORY_TYPE, directoryType.toString());
       return this;
    }
 
@@ -80,7 +81,16 @@ public class UpdateCDNContainerOptions extends BaseHttpRequestOptions {
     */
    public UpdateCDNContainerOptions staticWebsiteErrorPage(String errorPage) {
       checkNotNull(errorPage, "error page cannot be null");
-      headers.put("errorPage", errorPage);
+      headers.put(STATIC_WEB_ERROR, errorPage);
+      return this;
+   }
+
+   /**
+    * Sets the index page for the Static Website.
+    */
+   public UpdateCDNContainerOptions staticWebsiteIndexPage(String indexPage) {
+      checkNotNull(indexPage, "index page cannot be null");
+      headers.put(STATIC_WEB_INDEX, indexPage);
       return this;
    }
 
@@ -88,35 +98,37 @@ public class UpdateCDNContainerOptions extends BaseHttpRequestOptions {
     * Enables or disables listings for the Static Website.
     */
    public UpdateCDNContainerOptions staticWebsiteListings(boolean listings) {
-      headers.put("enableListings", Boolean.toString(listings));
+      headers.put(STATIC_WEB_LISTINGS, Boolean.toString(listings));
       return this;
    }
-   
+
    /**
-    * Sets the CSS pages for the Static Website.
+    * Sets the listings CSS page for the Static Website.
     */
    public UpdateCDNContainerOptions staticWebsiteListingsCSS(String listingsCSS) {
       checkNotNull(listingsCSS, "listingsCSS page cannot be null");
-      headers.put("limit", listingsCSS);
+      headers.put(STATIC_WEB_LISTINGS_CSS, listingsCSS);
       return this;
    }
 
    public static class Builder {
-      /** @see UpdateCDNContainerOptions#ttl */
+      /**
+       * @see UpdateCDNContainerOptions#ttl
+       */
       public static UpdateCDNContainerOptions ttl(int ttl) {
          UpdateCDNContainerOptions options = new UpdateCDNContainerOptions();
          return options.ttl(ttl);
       }
 
-      /** 
-       * @see UpdateCDNContainerOptions#logRetention 
+      /**
+       * @see UpdateCDNContainerOptions#logRetention
        */
       public static UpdateCDNContainerOptions logRetention(boolean logRetention) {
          UpdateCDNContainerOptions options = new UpdateCDNContainerOptions();
          return options.logRetention(logRetention);
       }
 
-      /** 
+      /**
        * @see UpdateCDNContainerOptions#enabled
        */
       public static UpdateCDNContainerOptions enabled(boolean enabled) {
@@ -124,40 +136,44 @@ public class UpdateCDNContainerOptions extends BaseHttpRequestOptions {
          return options.enabled(enabled);
       }
 
-      /** 
-       * @see UpdateCDNContainerOptions#staticWebsiteIndexPage 
+      /**
+       * @see UpdateCDNContainerOptions#staticWebsiteDirectoryType
        */
-      public static UpdateCDNContainerOptions staticWebsiteIndexPage(String indexPage) {
+      public static UpdateCDNContainerOptions staticWebsiteDirectoryType(MediaType directoryType) {
          UpdateCDNContainerOptions options = new UpdateCDNContainerOptions();
-         return options.staticWebsiteIndexPage(indexPage);
+         return options.staticWebsiteDirectoryType(directoryType);
       }
 
-      /** 
-       * @see UpdateCDNContainerOptions#staticWebsiteErrorPage 
+      /**
+       * @see UpdateCDNContainerOptions#staticWebsiteErrorPage
        */
       public static UpdateCDNContainerOptions staticWebsiteErrorPage(String errorPage) {
          UpdateCDNContainerOptions options = new UpdateCDNContainerOptions();
          return options.staticWebsiteErrorPage(errorPage);
       }
 
-      /** 
-       * @see UpdateCDNContainerOptions#staticWebsiteListings 
+      /**
+       * @see UpdateCDNContainerOptions#staticWebsiteIndexPage
+       */
+      public static UpdateCDNContainerOptions staticWebsiteIndexPage(String indexPage) {
+         UpdateCDNContainerOptions options = new UpdateCDNContainerOptions();
+         return options.staticWebsiteIndexPage(indexPage);
+      }
+
+      /**
+       * @see UpdateCDNContainerOptions#staticWebsiteListings
        */
       public static UpdateCDNContainerOptions staticWebsiteListings(boolean enabled) {
          UpdateCDNContainerOptions options = new UpdateCDNContainerOptions();
          return options.staticWebsiteListings(enabled);
       }
 
-      /** 
-       * @see UpdateCDNContainerOptions#staticWebsiteListingsCSS 
+      /**
+       * @see UpdateCDNContainerOptions#staticWebsiteListingsCSS
        */
       public static UpdateCDNContainerOptions staticWebsiteListingsCSS(String cssPage) {
          UpdateCDNContainerOptions options = new UpdateCDNContainerOptions();
          return options.staticWebsiteListingsCSS(cssPage);
       }
-   }
-
-   public static Builder builder() {
-      return new Builder();
    }
 }

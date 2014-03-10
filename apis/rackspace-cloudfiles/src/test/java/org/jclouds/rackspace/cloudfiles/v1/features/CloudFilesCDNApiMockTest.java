@@ -16,11 +16,8 @@
  */
 package org.jclouds.rackspace.cloudfiles.v1.features;
 
-import static com.google.common.base.Charsets.US_ASCII;
 import static javax.ws.rs.core.HttpHeaders.CONTENT_LENGTH;
 import static javax.ws.rs.core.HttpHeaders.CONTENT_TYPE;
-import static javax.ws.rs.core.HttpHeaders.ETAG;
-import static javax.ws.rs.core.HttpHeaders.LAST_MODIFIED;
 import static org.jclouds.rackspace.cloudfiles.v1.options.UpdateCDNContainerOptions.Builder.enabled;
 import static org.jclouds.rackspace.cloudfiles.v1.reference.CloudFilesHeaders.CDN_ENABLED;
 import static org.jclouds.rackspace.cloudfiles.v1.reference.CloudFilesHeaders.CDN_IOS_URI;
@@ -38,14 +35,13 @@ import static org.testng.Assert.assertTrue;
 import java.net.URI;
 import java.util.List;
 
-import org.jclouds.io.Payload;
-import org.jclouds.io.Payloads;
 import org.jclouds.openstack.swift.v1.options.ListContainerOptions;
 import org.jclouds.openstack.v2_0.internal.BaseOpenStackMockTest;
 import org.jclouds.rackspace.cloudfiles.v1.CloudFilesApi;
 import org.jclouds.rackspace.cloudfiles.v1.domain.CDNContainer;
 import org.testng.annotations.Test;
 
+import com.google.common.collect.FluentIterable;
 import com.google.common.collect.ImmutableList;
 import com.squareup.okhttp.mockwebserver.MockResponse;
 import com.squareup.okhttp.mockwebserver.MockWebServer;
@@ -81,6 +77,27 @@ public class CloudFilesCDNApiMockTest extends BaseOpenStackMockTest<CloudFilesAp
       }
    }
 
+   public void testListIsEmpty() throws Exception {
+      MockWebServer server = mockOpenStackServer();
+      server.enqueue(addCommonHeaders(new MockResponse().setBody(stringFromResource("/access.json"))));
+      server.enqueue(addCommonHeaders(new MockResponse().setResponseCode(404)));
+
+      try {
+         CloudFilesApi api = api(server.getUrl("/").toString(), "rackspace-cloudfiles");
+         CDNApi cdnApi = api.cdnApiInRegion("DFW");
+
+         List<CDNContainer> cdnContainers = cdnApi.list().toList();
+
+         assertEquals(server.getRequestCount(), 2);
+         assertAuthentication(server);
+         assertRequest(server.takeRequest(), "GET", "/v1/MossoCloudFS_5bcf396e-39dd-45ff-93a1-712b9aba90a9/?format=json&enabled_only=true");
+
+         assertTrue(cdnContainers.isEmpty());
+      } finally {
+         server.shutdown();
+      }
+   }
+
    public void testListWithOptions() throws Exception {
       MockWebServer server = mockOpenStackServer();
       server.enqueue(addCommonHeaders(new MockResponse().setBody(stringFromResource("/access.json"))));
@@ -90,11 +107,11 @@ public class CloudFilesCDNApiMockTest extends BaseOpenStackMockTest<CloudFilesAp
          CloudFilesApi api = api(server.getUrl("/").toString(), "rackspace-cloudfiles");
          ListContainerOptions options = ListContainerOptions.Builder.marker("cdn-container-3");
          ImmutableList<CDNContainer> containers = api.cdnApiInRegion("DFW").list(options).toList();
-         
+
          for(CDNContainer container : containers) {
-            checkCDNContainer(container);
+            assertCDNContainerNotNull(container);
          }
-         
+
          assertEquals(containers, mockContainers.subList(2, mockContainers.size()));
 
          assertEquals(server.getRequestCount(), 2);
@@ -105,34 +122,60 @@ public class CloudFilesCDNApiMockTest extends BaseOpenStackMockTest<CloudFilesAp
       }
    }
 
-   public void testEnableAndDisable() throws Exception {
+   public void testListWithOptionsIsEmpty() throws Exception {
+      MockWebServer server = mockOpenStackServer();
+      server.enqueue(addCommonHeaders(new MockResponse().setBody(stringFromResource("/access.json"))));
+      server.enqueue(addCommonHeaders(new MockResponse().setResponseCode(404)));
+
+      try {
+         CloudFilesApi api = api(server.getUrl("/").toString(), "rackspace-cloudfiles");
+         ListContainerOptions options = ListContainerOptions.Builder.marker("cdn-container-3");
+         FluentIterable<CDNContainer> containers = api.cdnApiInRegion("DFW").list(options);
+
+         assertEquals(server.getRequestCount(), 2);
+         assertAuthentication(server);
+         assertRequest(server.takeRequest(), "GET", "/v1/MossoCloudFS_5bcf396e-39dd-45ff-93a1-712b9aba90a9/?format=json&enabled_only=true&marker=cdn-container-3");
+
+         assertNotNull(containers);
+         assertTrue(containers.isEmpty());
+      } finally {
+         server.shutdown();
+      }
+   }
+
+   public void testEnable() throws Exception {
       MockWebServer server = mockOpenStackServer();
       server.enqueue(addCommonHeaders(new MockResponse().setBody(stringFromResource("/access.json"))));
       server.enqueue(addCommonHeaders(enabledResponse().setResponseCode(201)));
-      server.enqueue(addCommonHeaders(enabledResponse().setResponseCode(201)));
-      server.enqueue(addCommonHeaders(disabledResponse().setResponseCode(201)));
-      
+
       try {
          CloudFilesApi api = api(server.getUrl("/").toString(), "rackspace-cloudfiles");
-         CDNApi cdnApi = api.cdnApiInRegion("DFW");
-         
+
          // enable a CDN Container
-         URI enabledContainer = cdnApi.enable("container-1");
+         URI enabledContainer = api.cdnApiInRegion("DFW").enable("container-1");
          assertNotNull(enabledContainer);
-         
-         // ensure that it is disabled
-         assertTrue(cdnApi.disable("container-1"));
-         
-         // get the container from the CDN and  ensure that it is disabled
-         CDNContainer disabledContainer = cdnApi.get("container-1");
-         checkCDNContainer(disabledContainer);
-         assertFalse(disabledContainer.isEnabled());
-         
-         assertEquals(server.getRequestCount(), 4);
+
+         assertEquals(server.getRequestCount(), 2);
          assertAuthentication(server);
          assertRequest(server.takeRequest(), "PUT", "/v1/MossoCloudFS_5bcf396e-39dd-45ff-93a1-712b9aba90a9/container-1");
+      } finally {
+         server.shutdown();
+      }
+   }
+
+   public void testEnableFail() throws Exception {
+      MockWebServer server = mockOpenStackServer();
+      server.enqueue(addCommonHeaders(new MockResponse().setBody(stringFromResource("/access.json"))));
+      server.enqueue(addCommonHeaders(enabledResponse().setResponseCode(404)));
+ 
+      try {
+         CloudFilesApi api = api(server.getUrl("/").toString(), "rackspace-cloudfiles");
+         // enable a CDN Container
+         assertNull(api.cdnApiInRegion("DFW").enable("container-1"));
+
+         assertEquals(server.getRequestCount(), 2);
+         assertAuthentication(server);
          assertRequest(server.takeRequest(), "PUT", "/v1/MossoCloudFS_5bcf396e-39dd-45ff-93a1-712b9aba90a9/container-1");
-         assertRequest(server.takeRequest(), "HEAD", "/v1/MossoCloudFS_5bcf396e-39dd-45ff-93a1-712b9aba90a9/container-1");
       } finally {
          server.shutdown();
       }
@@ -142,14 +185,72 @@ public class CloudFilesCDNApiMockTest extends BaseOpenStackMockTest<CloudFilesAp
       MockWebServer server = mockOpenStackServer();
       server.enqueue(addCommonHeaders(new MockResponse().setBody(stringFromResource("/access.json"))));
       server.enqueue(addCommonHeaders(enabledResponse().setResponseCode(201)));
-      
+
       try {
          CloudFilesApi api = api(server.getUrl("/").toString(), "rackspace-cloudfiles");
-         CDNApi cdnApi = api.cdnApiInRegion("DFW");
-         
+
          // enable a CDN Container with a TTL
-         URI enabledContainer = cdnApi.enable("container-1", 777777);
+         URI enabledContainer = api.cdnApiInRegion("DFW").enable("container-1", 777777);
          assertNotNull(enabledContainer);
+
+         assertEquals(server.getRequestCount(), 2);
+         assertAuthentication(server);
+         assertRequest(server.takeRequest(), "PUT", "/v1/MossoCloudFS_5bcf396e-39dd-45ff-93a1-712b9aba90a9/container-1");
+      } finally {
+         server.shutdown();
+      }
+   }
+
+   public void testEnableWithTTLFail() throws Exception {
+      MockWebServer server = mockOpenStackServer();
+      server.enqueue(addCommonHeaders(new MockResponse().setBody(stringFromResource("/access.json"))));
+      server.enqueue(addCommonHeaders(enabledResponse().setResponseCode(404)));
+
+      try {
+         CloudFilesApi api = api(server.getUrl("/").toString(), "rackspace-cloudfiles");
+
+         // enable a CDN Container with a TTL
+         URI enabledContainer = api.cdnApiInRegion("DFW").enable("container-1", 777777);
+         assertNull(enabledContainer);
+
+         assertEquals(server.getRequestCount(), 2);
+         assertAuthentication(server);
+         assertRequest(server.takeRequest(), "PUT", "/v1/MossoCloudFS_5bcf396e-39dd-45ff-93a1-712b9aba90a9/container-1");
+      } finally {
+         server.shutdown();
+      }
+   }
+
+   public void testDisable() throws Exception {
+      MockWebServer server = mockOpenStackServer();
+      server.enqueue(addCommonHeaders(new MockResponse().setBody(stringFromResource("/access.json"))));
+      server.enqueue(addCommonHeaders(enabledResponse().setResponseCode(201)));
+
+      try {
+         CloudFilesApi api = api(server.getUrl("/").toString(), "rackspace-cloudfiles");
+
+         // disable a CDN Container
+         assertTrue(api.cdnApiInRegion("DFW").disable("container-1"));
+
+         assertEquals(server.getRequestCount(), 2);
+         assertAuthentication(server);
+         assertRequest(server.takeRequest(), "PUT", "/v1/MossoCloudFS_5bcf396e-39dd-45ff-93a1-712b9aba90a9/container-1");
+      } finally {
+         server.shutdown();
+      }
+   }
+
+   public void testDisableFail() throws Exception {
+      MockWebServer server = mockOpenStackServer();
+      server.enqueue(addCommonHeaders(new MockResponse().setBody(stringFromResource("/access.json"))));
+      server.enqueue(addCommonHeaders(enabledResponse().setResponseCode(404)));
+
+      try {
+         CloudFilesApi api = api(server.getUrl("/").toString(), "rackspace-cloudfiles");
+
+         // disable a CDN Container
+         boolean disbledContainer = api.cdnApiInRegion("DFW").disable("container-1");
+         assertFalse(disbledContainer);
 
          assertEquals(server.getRequestCount(), 2);
          assertAuthentication(server);
@@ -166,10 +267,9 @@ public class CloudFilesCDNApiMockTest extends BaseOpenStackMockTest<CloudFilesAp
       
       try {
          CloudFilesApi api = api(server.getUrl("/").toString(), "rackspace-cloudfiles");
-         CDNApi cdnApi = api.cdnApiInRegion("DFW");
 
-         CDNContainer cdnContainer = cdnApi.get("container-1");
-         checkCDNContainer(cdnContainer);
+         CDNContainer cdnContainer = api.cdnApiInRegion("DFW").get("container-1");
+         assertCDNContainerNotNull(cdnContainer);
          assertEquals(mockCDNContainer, cdnContainer);
 
          assertEquals(server.getRequestCount(), 2);
@@ -179,17 +279,16 @@ public class CloudFilesCDNApiMockTest extends BaseOpenStackMockTest<CloudFilesAp
          server.shutdown();
       }
    }
-   
+
    public void testGetFail() throws Exception {
       MockWebServer server = mockOpenStackServer();
       server.enqueue(addCommonHeaders(new MockResponse().setBody(stringFromResource("/access.json"))));
       server.enqueue(addCommonHeaders(new MockResponse().setResponseCode(404)));
-      
+
       try {
          CloudFilesApi api = api(server.getUrl("/").toString(), "rackspace-cloudfiles");
-         CDNApi cdnApi = api.cdnApiInRegion("DFW");
 
-         CDNContainer cdnContainer = cdnApi.get("container-1");
+         CDNContainer cdnContainer = api.cdnApiInRegion("DFW").get("container-1");
 
          assertAuthentication(server);
          assertRequest(server.takeRequest(), "HEAD", "/v1/MossoCloudFS_5bcf396e-39dd-45ff-93a1-712b9aba90a9/container-1");
@@ -203,14 +302,32 @@ public class CloudFilesCDNApiMockTest extends BaseOpenStackMockTest<CloudFilesAp
       MockWebServer server = mockOpenStackServer();
       server.enqueue(addCommonHeaders(new MockResponse().setBody(stringFromResource("/access.json"))));
       server.enqueue(addCommonHeaders(new MockResponse().setResponseCode(201)));
-      
+
       try {
          CloudFilesApi api = api(server.getUrl("/").toString(), "rackspace-cloudfiles");
-         CDNApi cdnApi = api.cdnApiInRegion("DFW");
-         
+
          // purge the object
-         assertTrue(cdnApi.purgeObject("myContainer", "myObject", emails));
-         
+         assertTrue(api.cdnApiInRegion("DFW").purgeObject("myContainer", "myObject", emails));
+
+         assertEquals(server.getRequestCount(), 2);
+         assertAuthentication(server);
+         assertRequest(server.takeRequest(), "DELETE", "/v1/MossoCloudFS_5bcf396e-39dd-45ff-93a1-712b9aba90a9/myContainer/myObject");
+      } finally {
+         server.shutdown();
+      }
+   }
+
+   public void testPurgeObjectFail() throws Exception {
+      MockWebServer server = mockOpenStackServer();
+      server.enqueue(addCommonHeaders(new MockResponse().setBody(stringFromResource("/access.json"))));
+      server.enqueue(addCommonHeaders(new MockResponse().setResponseCode(404)));
+
+      try {
+         CloudFilesApi api = api(server.getUrl("/").toString(), "rackspace-cloudfiles");
+
+         // purge the object
+         assertFalse(api.cdnApiInRegion("DFW").purgeObject("myContainer", "myObject", emails));
+
          assertEquals(server.getRequestCount(), 2);
          assertAuthentication(server);
          assertRequest(server.takeRequest(), "DELETE", "/v1/MossoCloudFS_5bcf396e-39dd-45ff-93a1-712b9aba90a9/myContainer/myObject");
@@ -221,24 +338,23 @@ public class CloudFilesCDNApiMockTest extends BaseOpenStackMockTest<CloudFilesAp
 
    public void testUpdate() throws Exception {
       MockWebServer server = mockOpenStackServer();
-      server.enqueue(addCommonHeaders(new MockResponse().setBody(stringFromResource("/access.json")).setResponseCode(200))); //POST
+      server.enqueue(addCommonHeaders(new MockResponse().setBody(stringFromResource("/access.json")).setResponseCode(200)));
       server.enqueue(addCommonHeaders(enabledResponse().setResponseCode(200)));
       server.enqueue(addCommonHeaders(updatedResponse().setResponseCode(204)));
       server.enqueue(addCommonHeaders(updatedResponse().setResponseCode(200)));
-      
+
       try {
          CloudFilesApi api = api(server.getUrl("/").toString(), "rackspace-cloudfiles");
-         CDNApi cdnApi = api.cdnApiInRegion("DFW"); 
-         
-         CDNContainer cdnContainer = cdnApi.get("container-1");
-         checkCDNContainer(cdnContainer);
-         
+
+         CDNContainer cdnContainer = api.cdnApiInRegion("DFW").get("container-1");
+         assertCDNContainerNotNull(cdnContainer);
+
          // update the CDN Container
-         assertTrue(cdnApi.update("container-1", enabled(false).logRetention(true).ttl(7654321)));
-         
-         cdnContainer = cdnApi.get("container-1");
-         checkCDNContainer(cdnContainer);
-         
+         assertTrue(api.cdnApiInRegion("DFW").update("container-1", enabled(false).logRetention(true).ttl(7654321)));
+
+         cdnContainer = api.cdnApiInRegion("DFW").get("container-1");
+         assertCDNContainerNotNull(cdnContainer);
+
          CDNContainer updatedContainer = CDNContainer.builder()
                .name("container-1")
                .enabled(false)
@@ -249,9 +365,9 @@ public class CloudFilesCDNApiMockTest extends BaseOpenStackMockTest<CloudFilesAp
                .streamingUri(URI.create("http://streaming-id-1.stream.rackspace.com"))
                .iosUri(URI.create("http://ios-id-1.iosr.rackspace.com"))
                .build();
-         
+
          assertEquals(updatedContainer, cdnContainer);
-         
+
          assertEquals(server.getRequestCount(), 4);
          assertAuthentication(server);
          assertRequest(server.takeRequest(), "HEAD", "/v1/MossoCloudFS_5bcf396e-39dd-45ff-93a1-712b9aba90a9/container-1");
@@ -262,15 +378,39 @@ public class CloudFilesCDNApiMockTest extends BaseOpenStackMockTest<CloudFilesAp
       }
    }
 
-   private static void checkCDNContainer(CDNContainer cdnContainer) {
-      assertNotNull(cdnContainer.getName());
-      assertNotNull(cdnContainer.isEnabled());
-      assertNotNull(cdnContainer.isLogRetentionEnabled());
-      assertNotNull(cdnContainer.getTtl());
-      assertNotNull(cdnContainer.getUri());
-      assertNotNull(cdnContainer.getSslUri());
-      assertNotNull(cdnContainer.getStreamingUri());
-      assertNotNull(cdnContainer.getIosUri());
+   public void testUpdateFail() throws Exception {
+      MockWebServer server = mockOpenStackServer();
+      server.enqueue(addCommonHeaders(new MockResponse().setBody(stringFromResource("/access.json")).setResponseCode(200)));
+      server.enqueue(addCommonHeaders(enabledResponse().setResponseCode(200)));
+      server.enqueue(addCommonHeaders(updatedResponse().setResponseCode(404)));
+
+      try {
+         CloudFilesApi api = api(server.getUrl("/").toString(), "rackspace-cloudfiles");
+
+         CDNContainer cdnContainer = api.cdnApiInRegion("DFW").get("container-1");
+         assertCDNContainerNotNull(cdnContainer);
+
+         // update the CDN Container
+         assertFalse(api.cdnApiInRegion("DFW").update("container-1", enabled(false).logRetention(true).ttl(7654321)));
+
+         assertEquals(server.getRequestCount(), 3);
+         assertAuthentication(server);
+         assertRequest(server.takeRequest(), "HEAD", "/v1/MossoCloudFS_5bcf396e-39dd-45ff-93a1-712b9aba90a9/container-1");
+         assertRequest(server.takeRequest(), "POST", "/v1/MossoCloudFS_5bcf396e-39dd-45ff-93a1-712b9aba90a9/container-1");
+      } finally {
+         server.shutdown();
+      }
+   }
+
+   private static final void assertCDNContainerNotNull(CDNContainer container) {
+      assertNotNull(container.getName());
+      assertNotNull(container.isEnabled());
+      assertNotNull(container.isLogRetentionEnabled());
+      assertNotNull(container.getTtl());
+      assertNotNull(container.getUri());
+      assertNotNull(container.getSslUri());
+      assertNotNull(container.getStreamingUri());
+      assertNotNull(container.getIosUri());
    }
 
    private static final CDNContainer mockCDNContainer = CDNContainer.builder()
@@ -287,19 +427,6 @@ public class CloudFilesCDNApiMockTest extends BaseOpenStackMockTest<CloudFilesAp
    private static MockResponse enabledResponse() {
       return new MockResponse()
             .addHeader(CDN_ENABLED, "true")
-            .addHeader(CDN_LOG_RETENTION, "false")
-            .addHeader(CDN_TTL, "777777")
-            .addHeader(CDN_URI,"http://id-1.cdn.rackspace.com")
-            .addHeader(CDN_SSL_URI, "https://ssl-id-1.ssl.rackspace.com")
-            .addHeader(CDN_STREAMING_URI, "http://streaming-id-1.stream.rackspace.com")
-            .addHeader(CDN_IOS_URI, "http://ios-id-1.iosr.rackspace.com")
-            .addHeader(CONTENT_LENGTH, "0")
-            .addHeader(CONTENT_TYPE, "text/plain; charset=UTF-8");
-   }
-   
-   private static MockResponse disabledResponse() {
-      return new MockResponse()
-            .addHeader(CDN_ENABLED, "false")
             .addHeader(CDN_LOG_RETENTION, "false")
             .addHeader(CDN_TTL, "777777")
             .addHeader(CDN_URI,"http://id-1.cdn.rackspace.com")
@@ -364,23 +491,4 @@ public class CloudFilesCDNApiMockTest extends BaseOpenStackMockTest<CloudFilesAp
                .streamingUri(URI.create("http://streaming-id-4.stream.rackspace.com"))
                .iosUri(URI.create("http://ios-id-4.iosr.rackspace.com"))
                .build());
-
-   private static MockResponse objectResponse() {
-      return new MockResponse()
-            .addHeader(LAST_MODIFIED, "Fri, 12 Jun 2010 13:40:18 GMT")
-            .addHeader(ETAG, "8a964ee2a5e88be344f36c22562a6486")
-            // TODO: MWS doesn't allow you to return content length w/o content
-            // on HEAD!
-            .setBody("ABCD".getBytes(US_ASCII))
-            .addHeader(CONTENT_LENGTH, "4").addHeader(CONTENT_TYPE, "text/plain; charset=UTF-8");
-   }
-
-   private static final byte[] NO_CONTENT = new byte[] {};
-   
-   private static Payload payload(long bytes, String contentType) {
-      Payload payload = Payloads.newByteArrayPayload(NO_CONTENT);
-      payload.getContentMetadata().setContentLength(bytes);
-      payload.getContentMetadata().setContentType(contentType);
-      return payload;
-   }
 }

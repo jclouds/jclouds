@@ -39,7 +39,7 @@ public interface CloudFilesHeaders extends SwiftHeaders {
    String CDN_SSL_URI = "X-Cdn-Ssl-Uri";
    String CDN_STREAMING_URI = "X-Cdn-Streaming-Uri";
    String CDN_IOS_URI = "X-Cdn-Ios-Uri";
-   
+
    // CDN TTL Limits
    int CDN_TTL_MIN = 900;
    int CDN_TTL_MAX = 31536000;
@@ -48,11 +48,4 @@ public interface CloudFilesHeaders extends SwiftHeaders {
    // CDN Purge
    String CDN_PURGE_OBJECT_EMAIL = "X-Purge-Email";
    String CDN_PURGE_OBJECT_FAILED = "X-Purge-Failed-Reason";
-   
-   // CDN Static Web
-   String STATIC_WEB_INDEX = CONTAINER_METADATA_PREFIX + "Web-Index";
-   String STATIC_WEB_DIRECTORY_TYPE = CONTAINER_METADATA_PREFIX + "Web-Directory-Type";
-   String STATIC_WEB_ERROR = CONTAINER_METADATA_PREFIX + "Web-Error";
-   String STATIC_WEB_LISTINGS = CONTAINER_METADATA_PREFIX + "Web-Listings";
-   String STATIC_WEB_LISTINGS_CSS = CONTAINER_METADATA_PREFIX + "Web-Listings-CSS";
 }

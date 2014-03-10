@@ -16,18 +16,31 @@
  */
 package org.jclouds.rackspace.cloudfiles.v1.features;
 
+import static org.testng.Assert.assertFalse;
+import static org.testng.Assert.assertNotEquals;
 import static org.testng.Assert.assertNotNull;
+import static org.testng.Assert.assertNull;
 import static org.testng.Assert.assertTrue;
 
 import java.util.List;
 
+import org.jclouds.http.options.GetOptions;
+import org.jclouds.io.Payload;
+import org.jclouds.io.Payloads;
+import org.jclouds.openstack.swift.v1.features.ObjectApi;
 import org.jclouds.openstack.swift.v1.options.CreateContainerOptions;
 import org.jclouds.openstack.swift.v1.options.ListContainerOptions;
 import org.jclouds.rackspace.cloudfiles.v1.domain.CDNContainer;
 import org.jclouds.rackspace.cloudfiles.v1.internal.BaseCloudFilesApiLiveTest;
+import org.jclouds.rackspace.cloudfiles.v1.options.UpdateCDNContainerOptions;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
+
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableMap;
+import com.google.common.io.ByteSource;
+
 
 /**
  * Tests the live behavior of the {@code CloudFilesCDNApi}.
@@ -43,21 +56,44 @@ public class CloudFilesCDNApiLiveTest extends BaseCloudFilesApiLiveTest {
       super();
    }
 
+   public void testEnable() throws Exception {
+      for (String regionId : regions) {
+         assertNotNull(api.cdnApiInRegion(regionId).enable(name));
+         
+         CDNContainer container = api.cdnApiInRegion(regionId).get(name);
+         assertCDNContainerNotNull(container);
+         assertTrue(container.isEnabled());
+      }
+   }
+
+   public void testEnableWithTTL() throws Exception {
+      for (String regionId : regions) {
+         assertNotNull(api.cdnApiInRegion(regionId).enable(name, 777777));
+
+         CDNContainer container = api.cdnApiInRegion(regionId).get(name);
+         assertCDNContainerNotNull(container);
+         assertTrue(container.isEnabled());
+         assertTrue(container.getTtl() == 777777);
+      }
+   }
+
+   public void testDisable() throws Exception {
+      for (String regionId : regions) {
+         assertTrue(api.cdnApiInRegion(regionId).disable(name));
+
+         CDNContainer container = api.cdnApiInRegion(regionId).get(name);
+         assertFalse(container.isEnabled());
+      }
+   }
+
    public void testList() throws Exception {
       for (String regionId : regions) {
-         CDNApi cdnApi = api.cdnApiInRegion(regionId);
-
-         List<CDNContainer> cdnResponse = cdnApi.list().toList();
+         List<CDNContainer> cdnResponse = api.cdnApiInRegion(regionId).list().toList();
          assertNotNull(cdnResponse);
+         
          for (CDNContainer cdnContainer : cdnResponse) {
-            assertNotNull(cdnContainer.getName());
+            assertCDNContainerNotNull(cdnContainer);
             assertTrue(cdnContainer.isEnabled());
-            assertNotNull(cdnContainer.isLogRetentionEnabled());
-            assertNotNull(cdnContainer.getTtl());
-            assertNotNull(cdnContainer.getUri());
-            assertNotNull(cdnContainer.getSslUri());
-            assertNotNull(cdnContainer.getStreamingUri());
-            assertNotNull(cdnContainer.getIosUri());
          }
       }
    }
@@ -66,24 +102,76 @@ public class CloudFilesCDNApiLiveTest extends BaseCloudFilesApiLiveTest {
       String lexicographicallyBeforeName = name.substring(0, name.length() - 1);
       for (String regionId : regions) {
          ListContainerOptions options = ListContainerOptions.Builder.marker(lexicographicallyBeforeName);
+          
          CDNContainer cdnContainer = api.cdnApiInRegion(regionId).list(options).get(0);
-         
-         assertNotNull(cdnContainer.getName());
+         assertCDNContainerNotNull(cdnContainer);
          assertTrue(cdnContainer.isEnabled());
-         assertNotNull(cdnContainer.isLogRetentionEnabled());
-         assertNotNull(cdnContainer.getTtl());
-         assertNotNull(cdnContainer.getUri());
-         assertNotNull(cdnContainer.getSslUri());
-         assertNotNull(cdnContainer.getStreamingUri());
-         assertNotNull(cdnContainer.getIosUri());
       }
    }
 
    public void testGet() throws Exception {
       for (String regionId : regions) {
-         CDNContainer cdnContainer = api.cdnApiInRegion(regionId).get(name);
-         assertNotNull(cdnContainer);
+         CDNContainer container = api.cdnApiInRegion(regionId).get(name);
+         assertCDNContainerNotNull(container);
+         assertTrue(container.isEnabled());
       }
+   }
+
+   public void testPurgeObject() throws Exception {
+      for (String regionId : regions) {
+         String objectName = "testPurge";
+         Payload payload = Payloads.newByteSourcePayload(ByteSource.wrap(new byte[] {1,2,3}));
+         ObjectApi objectApi = api.objectApiInRegionForContainer(regionId, name);
+         
+         // create a new object
+         objectApi.replace(objectName, payload, ImmutableMap.<String, String>of());
+         
+         CDNApi cdnApi = api.cdnApiInRegion(regionId);
+         assertTrue(cdnApi.purgeObject(name, "testPurge", ImmutableList.<String>of()));
+         
+         // delete the object
+         objectApi.delete(objectName);
+         assertNull(objectApi.get(objectName, GetOptions.NONE));
+      }
+   }
+
+   public void testUpdate() throws Exception {
+      for (String regionId : regions) {
+         // enable with a ttl
+         assertNotNull(api.cdnApiInRegion(regionId).enable(name, 777777));
+         
+         // now get the container
+         CDNContainer original = api.cdnApiInRegion(regionId).get(name);
+         assertTrue(original.isEnabled());
+         assertCDNContainerNotNull(original);
+
+         // update options
+         UpdateCDNContainerOptions opts = new UpdateCDNContainerOptions()
+                                                .ttl(1234567)
+                                                .logRetention(true)
+                                                .enabled(false);
+         // update the container
+         assertTrue(api.cdnApiInRegion(regionId).update(name, opts));
+         
+         // now get the updated container
+         CDNContainer updated = api.cdnApiInRegion(regionId).get(name);
+         assertFalse(updated.isEnabled());
+         assertCDNContainerNotNull(updated);
+         
+         assertNotEquals(original.getTtl(), updated.getTtl());
+         assertTrue(updated.isLogRetentionEnabled());
+      }
+   }
+
+   private static final void assertCDNContainerNotNull(CDNContainer container) {
+      assertNotNull(container);
+      assertNotNull(container.getName());
+      assertNotNull(container.getTtl());
+      assertNotNull(container.getUri());
+      assertNotNull(container.getIosUri());
+      assertNotNull(container.getSslUri());
+      assertNotNull(container.getStreamingUri());
+      assertNotNull(container.isLogRetentionEnabled());
    }
 
    @BeforeClass(groups = "live")
@@ -91,7 +179,6 @@ public class CloudFilesCDNApiLiveTest extends BaseCloudFilesApiLiveTest {
       super.setup();
       for (String regionId : regions) {
          api.containerApiInRegion(regionId).createIfAbsent(name, CreateContainerOptions.NONE);
-         api.cdnApiInRegion(regionId).enable(name);
       }
    }
 
