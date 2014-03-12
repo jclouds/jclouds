@@ -25,7 +25,7 @@ We handle this for you.
 Writing tests for cloud endpoints is difficult. We provide you with Stub connections that simulate a cloud without creating network connections. In this way, you can write your unit tests without mocking complexity or the brittleness of remote connections.
 
 * PERFORMANCE
-Writing tests for cloud endpoints is difficult. We provide you with Stub connections that simulate a cloud without creating network connections. In this way, you can write your unit tests without mocking complexity or the brittleness of remote connections.
+Customize configuration to match your performance needs. jclouds provides you with asynchronous commands and tunable http, date, encryption, and encryption modules.
 
 * LOCATION 
 All of our abstractions are location-aware. For example, you can get ISO-3166 codes to tell which country or province a cloud runs in.
