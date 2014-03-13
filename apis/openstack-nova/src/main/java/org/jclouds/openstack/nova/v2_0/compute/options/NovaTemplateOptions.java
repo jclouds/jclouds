@@ -28,7 +28,6 @@ import java.util.Set;
 import org.jclouds.compute.options.TemplateOptions;
 import org.jclouds.domain.LoginCredentials;
 import org.jclouds.openstack.nova.v2_0.domain.Network;
-import org.jclouds.openstack.nova.v2_0.options.CreateServerOptions;
 import org.jclouds.scriptbuilder.domain.Statement;
 
 import com.google.common.base.Objects;
