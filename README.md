@@ -12,27 +12,25 @@ Features
 Even if you don't need the portable apis we provide, or could roll it your own, programming against cloud environments can be challenging. We focus on the following areas so that you can focus on using the cloud, rather than troubleshooting it!
 
 * SIMPLE INTERFACE
-Instead of creating new object types, we reuse concepts like maps so that the programming model is familiar. In this way, you can get started without dealing with the cloud providers' REST-like apis or WebServices directly.
+Get started without dealing with REST-like APIs or WebServices. Instead of creating new object types, jclouds reuses concepts like maps so that the programming model is familiar.
 
 * RUNTIME PORTABILITY
-We have drivers that allow you to operate in restricted environments like Google App Engine. We have very few required dependencies, so we are unlikely to clash with your app.
+jclouds drivers enable you to operate in restricted environments like Google App Engine. There are very few required dependencies, so jclouds is unlikely to clash with your app.
 
 * DEAL WITH WEB COMPLEXITY
-Network based computing introduces issues such as transient failures and redirects.
-We handle this for you.
+jclouds handles issues such as transient failures and redirects that traditional network based computing introduces.
 
 * UNIT TESTABILITY
-Writing tests for cloud endpoints is difficult. We provide you with Stub connections that simulate a cloud without creating network connections. In this way, you can write your unit tests without mocking complexity or the brittleness of remote connections.
+Write your unit tests without mocking complexity or the brittleness of remote connections. Writing tests for cloud endpoints is difficult. jclouds provides you with Stub connections that simulate a cloud without creating network connections.
 
 * PERFORMANCE
-Customize configuration to match your performance needs. jclouds provides you with asynchronous commands and tunable http, date, encryption, and encryption modules.
+Customize configuration to match your performance needs. jclouds provides you with asynchronous commands, tunable http, date, and encryption modules.
 
 * LOCATION 
-All of our abstractions are location-aware. For example, you can get ISO-3166 codes to tell which country or province a cloud runs in.
+jclouds provides location-aware abstractions. For example, you can get ISO-3166 codes to tell which country or province a cloud runs in.
 
 * QUALITY 
-We test every provider with live scenarios before each release. If it doesn't pass, the provider goes into the sandbox.
-
+Every provider is tested with live scenarios before each release. If the provider doesn't pass, it goes back into the sandbox.
 
 BlobStore
 -----------
@@ -128,7 +126,6 @@ Resources
 * User group: http://groups.google.com/group/jclouds
 * Dev group: http://groups.google.com/group/jclouds-dev
 * Twitter: http://twitter.com/jclouds
-
 
 License
 -------
