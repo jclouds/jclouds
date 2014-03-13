@@ -23,6 +23,7 @@ import static org.easymock.EasyMock.expect;
 import static org.easymock.EasyMock.replay;
 import static org.easymock.EasyMock.verify;
 import static org.testng.Assert.assertFalse;
+import static org.testng.Assert.assertTrue;
 
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -112,4 +113,21 @@ public class AWSServerErrorRetryHandlerTest {
 
    }
 
+   @Test
+   public void test504DoesRetry() {
+      AWSUtils utils = createMock(AWSUtils.class);
+      HttpCommand command = createMock(HttpCommand.class);
+      expect(command.getFailureCount()).andReturn(1).anyTimes();
+      expect(command.incrementFailureCount()).andReturn(1);
+      expect(command.isReplayable()).andReturn(true);
+
+      replay(utils, command);
+
+      AWSServerErrorRetryHandler retry = new AWSServerErrorRetryHandler(utils,
+            ImmutableSet.<String> of());
+
+      assertTrue(retry.shouldRetryRequest(command, HttpResponse.builder().statusCode(504).build()));
+
+      verify(utils, command);
+   }
 }
