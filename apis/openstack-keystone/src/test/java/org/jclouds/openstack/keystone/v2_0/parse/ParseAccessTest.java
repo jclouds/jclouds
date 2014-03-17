@@ -84,7 +84,7 @@ public class ParseAccessTest extends BaseItemParserTest<Access> {
             .service(Service.builder().name("Image Management").type(IMAGE)
                   .endpoint(Endpoint.builder()
                         .tenantId("40806637803162")
-                        .publicURL("https://glance.jclouds.org:9292/v1.0")
+                        .publicURL("https://glance.jclouds.org:9292/")
                         .region("az-1.region-a.geo-1")
                         .id("1.0").build()).build())
             .service(Service.builder().name("Compute").type(COMPUTE)
