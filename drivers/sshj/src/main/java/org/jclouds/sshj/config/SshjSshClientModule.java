@@ -25,11 +25,15 @@ import org.jclouds.ssh.SshClient;
 import org.jclouds.ssh.config.ConfiguresSshClient;
 import org.jclouds.sshj.SshjSshClient;
 
+import com.google.common.base.Optional;
 import com.google.common.net.HostAndPort;
 import com.google.inject.AbstractModule;
 import com.google.inject.Inject;
 import com.google.inject.Injector;
 import com.google.inject.Scopes;
+import com.jcraft.jsch.agentproxy.AgentProxyException;
+import com.jcraft.jsch.agentproxy.Connector;
+import com.jcraft.jsch.agentproxy.ConnectorFactory;
 
 /**
  * 
@@ -42,10 +46,21 @@ public class SshjSshClientModule extends AbstractModule {
       bind(SshClient.Factory.class).to(Factory.class).in(Scopes.SINGLETON);
    }
 
+
    private static class Factory implements SshClient.Factory {
       @Named(Constants.PROPERTY_CONNECTION_TIMEOUT)
       @Inject(optional = true)
       int timeout = 60000;
+
+      Optional<Connector> agentConnector = getAgentConnector();
+
+      Optional<Connector> getAgentConnector() {
+         try {
+            return Optional.of(ConnectorFactory.getDefault().createConnector());
+         } catch (final AgentProxyException e) {
+            return Optional.absent();
+         }
+      }
 
       private final BackoffLimitedRetryHandler backoffLimitedRetryHandler;
       private final Injector injector;
@@ -58,9 +73,15 @@ public class SshjSshClientModule extends AbstractModule {
 
       @Override
       public SshClient create(HostAndPort socket, LoginCredentials credentials) {
-         SshClient client = new SshjSshClient(backoffLimitedRetryHandler, socket, credentials, timeout);
+         SshClient client = new SshjSshClient(backoffLimitedRetryHandler, socket, credentials, timeout, getAgentConnector());
          injector.injectMembers(client);// add logger
          return client;
       }
+
+      @Override
+      public boolean isAgentAvailable() {
+         return agentConnector.isPresent();
+      }
+
    }
 }

@@ -17,15 +17,19 @@
 package org.jclouds.sshj;
 
 import static com.google.common.base.Objects.equal;
+import static com.google.common.base.Preconditions.checkNotNull;
 
 import java.io.IOException;
+import java.util.List;
 
 import javax.annotation.Resource;
 import javax.inject.Named;
 
 import net.schmizz.sshj.SSHClient;
+import net.schmizz.sshj.common.Buffer.BufferException;
 import net.schmizz.sshj.transport.verification.PromiscuousVerifier;
 import net.schmizz.sshj.userauth.keyprovider.OpenSSHKeyFile;
+import net.schmizz.sshj.userauth.method.AuthMethod;
 
 import org.jclouds.domain.LoginCredentials;
 import org.jclouds.logging.Logger;
@@ -33,9 +37,18 @@ import org.jclouds.sshj.SshjSshClient.Connection;
 
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Objects;
+import com.google.common.base.Optional;
+import com.google.common.collect.ImmutableList;
 import com.google.common.net.HostAndPort;
 
+import com.jcraft.jsch.agentproxy.AgentProxy;
+import com.jcraft.jsch.agentproxy.Connector;
+import com.jcraft.jsch.agentproxy.Identity;
+import com.jcraft.jsch.agentproxy.sshj.AuthAgent;
+
 public class SSHClientConnection implements Connection<SSHClient> {
+   private Optional<Connector> agentConnector;
+
    public static Builder builder() {
       return new Builder();
    }
@@ -46,6 +59,7 @@ public class SSHClientConnection implements Connection<SSHClient> {
       protected LoginCredentials loginCredentials;
       protected int connectTimeout;
       protected int sessionTimeout;
+      protected Optional<Connector> agentConnector;
 
       /**
        * @see SSHClientConnection#getHostAndPort()
@@ -79,8 +93,16 @@ public class SSHClientConnection implements Connection<SSHClient> {
          return this;
       }
 
+      /**
+       * @see SSHClientConnection#getAgentConnector()
+       */
+      public Builder agentConnector(Optional<Connector> agentConnector) {
+         this.agentConnector = agentConnector;
+         return this;
+      }
+
       public SSHClientConnection build() {
-         return new SSHClientConnection(hostAndPort, loginCredentials, connectTimeout, sessionTimeout);
+         return new SSHClientConnection(hostAndPort, loginCredentials, connectTimeout, sessionTimeout, agentConnector);
       }
 
       protected Builder fromSSHClientConnection(SSHClientConnection in) {
@@ -90,11 +112,12 @@ public class SSHClientConnection implements Connection<SSHClient> {
    }
 
    private SSHClientConnection(HostAndPort hostAndPort, LoginCredentials loginCredentials, int connectTimeout,
-            int sessionTimeout) {
-      this.hostAndPort = hostAndPort;
-      this.loginCredentials = loginCredentials;
+            int sessionTimeout, Optional<Connector> agentConnector) {
+      this.hostAndPort = checkNotNull(hostAndPort, "hostAndPort");
+      this.loginCredentials = checkNotNull(loginCredentials, "loginCredentials for %", hostAndPort);
       this.connectTimeout = connectTimeout;
       this.sessionTimeout = sessionTimeout;
+      this.agentConnector = checkNotNull(agentConnector, "agentConnector for %", hostAndPort);
    }
    
    @Resource
@@ -136,10 +159,13 @@ public class SSHClientConnection implements Connection<SSHClient> {
       ssh.connect(hostAndPort.getHostText(), hostAndPort.getPortOrDefault(22));
       if (loginCredentials.getPassword() != null) {
          ssh.authPassword(loginCredentials.getUser(), loginCredentials.getPassword());
-      } else {
+      } else if (loginCredentials.hasUnencryptedPrivateKey()) {
          OpenSSHKeyFile key = new OpenSSHKeyFile();
          key.init(loginCredentials.getPrivateKey(), null);
          ssh.authPublickey(loginCredentials.getUser(), key);
+      } else if (agentConnector.isPresent()) {
+         AgentProxy proxy = new AgentProxy(agentConnector.get());
+         ssh.auth(loginCredentials.getUser(), getAuthMethods(proxy));
       }
       return ssh;
    }
@@ -176,6 +202,14 @@ public class SSHClientConnection implements Connection<SSHClient> {
    }
 
    /**
+    *
+    * @return Ssh agent connector
+    */
+   public Optional<Connector> getAgentConnector() {
+      return agentConnector;
+   }
+
+   /**
     * 
     * @return the current ssh or {@code null} if not connected
     */
@@ -204,6 +238,14 @@ public class SSHClientConnection implements Connection<SSHClient> {
       return Objects.toStringHelper("").add("hostAndPort", hostAndPort).add("loginUser", loginCredentials.getUser())
                .add("ssh", ssh != null ? ssh.hashCode() : null).add("connectTimeout", connectTimeout).add(
                         "sessionTimeout", sessionTimeout).toString();
+   }
+
+   private static List<AuthMethod> getAuthMethods(AgentProxy agent) throws BufferException  {
+      ImmutableList.Builder<AuthMethod> identities = ImmutableList.builder();
+      for (Identity identity : agent.getIdentities()) {
+         identities.add(new AuthAgent(agent, identity));
+      }
+      return identities.build();
    }
 
 }

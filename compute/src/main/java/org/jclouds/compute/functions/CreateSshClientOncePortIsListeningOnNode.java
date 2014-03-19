@@ -17,6 +17,7 @@
 package org.jclouds.compute.functions;
 
 import static com.google.common.base.Preconditions.checkNotNull;
+import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkState;
 
 import java.util.concurrent.TimeUnit;
@@ -49,7 +50,7 @@ public class CreateSshClientOncePortIsListeningOnNode implements Function<NodeMe
 
    @Inject(optional = true)
    SshClient.Factory sshFactory;
-   
+
    private final OpenSocketFinder openSocketFinder;
 
    private final long timeoutMs;
@@ -65,7 +66,7 @@ public class CreateSshClientOncePortIsListeningOnNode implements Function<NodeMe
       checkState(sshFactory != null, "ssh requested, but no SshModule configured");
       checkNotNull(node.getCredentials(), "no credentials found for node %s", node.getId());
       checkNotNull(node.getCredentials().identity, "no login identity found for node %s", node.getId());
-      checkNotNull(node.getCredentials().credential, "no credential found for %s on node %s", node
+      checkArgument(node.getCredentials().credential != null || sshFactory.isAgentAvailable(), "no credential or ssh agent found for %s on node %s", node
                .getCredentials().identity, node.getId());
       HostAndPort socket = openSocketFinder.findOpenSocketOnNode(node, node.getLoginPort(), 
                timeoutMs, TimeUnit.MILLISECONDS);

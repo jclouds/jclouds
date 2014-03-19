@@ -29,9 +29,8 @@ import com.google.common.net.HostAndPort;
 public interface SshClient {
 
    interface Factory {
-
       SshClient create(HostAndPort socket, LoginCredentials credentials);
-
+      boolean isAgentAvailable();
    }
 
    String getUsername();

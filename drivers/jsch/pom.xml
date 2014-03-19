@@ -86,6 +86,16 @@
       <artifactId>jsch</artifactId>
       <scope>compile</scope>
     </dependency>
+    <dependency>
+      <groupId>com.jcraft</groupId>
+      <artifactId>jsch.agentproxy.jsch</artifactId>
+      <version>0.0.7</version>
+    </dependency>
+    <dependency>
+      <groupId>com.jcraft</groupId>
+      <artifactId>jsch.agentproxy.connector-factory</artifactId>
+      <version>0.0.7</version>
+    </dependency>
   </dependencies>
 
   <profiles>

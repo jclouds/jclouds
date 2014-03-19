@@ -17,7 +17,6 @@
 package org.jclouds.ssh.jsch;
 
 import static com.google.common.base.Objects.equal;
-import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 import org.jclouds.domain.Credentials;
@@ -34,8 +33,13 @@ import com.jcraft.jsch.Proxy;
 import com.jcraft.jsch.ProxyHTTP;
 import com.jcraft.jsch.ProxySOCKS5;
 import com.jcraft.jsch.Session;
+import com.jcraft.jsch.agentproxy.Connector;
+import com.jcraft.jsch.agentproxy.RemoteIdentityRepository;
 
 public final class SessionConnection implements Connection<Session> {
+
+   private Optional<Connector> agentConnector;
+
    public static Builder builder() {
       return new Builder();
    }
@@ -47,6 +51,7 @@ public final class SessionConnection implements Connection<Session> {
       private Optional<Proxy> proxy = Optional.absent();
       private int connectTimeout;
       private int sessionTimeout;
+      private Optional<Connector> agentConnector;
 
       /**
        * @see SessionConnection#getHostAndPort()
@@ -114,7 +119,7 @@ public final class SessionConnection implements Connection<Session> {
       }
 
       public SessionConnection build() {
-         return new SessionConnection(hostAndPort, loginCredentials, proxy, connectTimeout, sessionTimeout);
+         return new SessionConnection(hostAndPort, loginCredentials, proxy, connectTimeout, sessionTimeout, agentConnector);
       }
 
       public Builder from(SessionConnection in) {
@@ -122,15 +127,21 @@ public final class SessionConnection implements Connection<Session> {
                .connectTimeout(in.connectTimeout).sessionTimeout(in.sessionTimeout);
       }
 
+      public Builder agentConnector(Optional<Connector> agentConnector) {
+         this.agentConnector = agentConnector;
+         return this;
+      }
+
    }
 
    private SessionConnection(HostAndPort hostAndPort, LoginCredentials loginCredentials, Optional<Proxy> proxy,
-         int connectTimeout, int sessionTimeout) {
+         int connectTimeout, int sessionTimeout, Optional<Connector> agentConnector) {
       this.hostAndPort = checkNotNull(hostAndPort, "hostAndPort");
       this.loginCredentials = checkNotNull(loginCredentials, "loginCredentials for %", hostAndPort);
       this.connectTimeout = connectTimeout;
       this.sessionTimeout = sessionTimeout;
       this.proxy = checkNotNull(proxy, "proxy for %", hostAndPort);
+      this.agentConnector = checkNotNull(agentConnector, "agentConnector for %", hostAndPort);
    }
 
    private static final byte[] emptyPassPhrase = new byte[0];
@@ -160,11 +171,12 @@ public final class SessionConnection implements Connection<Session> {
          session.setTimeout(sessionTimeout);
       if (loginCredentials.getPrivateKey() == null) {
          session.setPassword(loginCredentials.getPassword());
-      } else {
-         checkArgument(!loginCredentials.getPrivateKey().contains("Proc-Type: 4,ENCRYPTED"),
-               "JschSshClientModule does not support private keys that require a passphrase");
+      } else if (loginCredentials.hasUnencryptedPrivateKey()) {
          byte[] privateKey = loginCredentials.getPrivateKey().getBytes();
          jsch.addIdentity(loginCredentials.getUser(), privateKey, null, emptyPassPhrase);
+      } else if (agentConnector.isPresent()) {
+         JSch.setConfig("PreferredAuthentications", "publickey");
+         jsch.setIdentityRepository(new RemoteIdentityRepository(agentConnector.get()));
       }
       java.util.Properties config = new java.util.Properties();
       config.put("StrictHostKeyChecking", "no");
