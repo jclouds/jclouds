@@ -228,7 +228,6 @@ public abstract class BaseComputeServiceLiveTest extends BaseComputeServiceConte
          NodeMetadata node = get(nodes, 0);
          LoginCredentials good = node.getCredentials();
          assert good.identity != null : nodes;
-         assert good.credential != null : nodes;
 
          for (Entry<? extends NodeMetadata, ExecResponse> response : client.runScriptOnNodesMatching(
                runningInGroup(group), "hostname",
@@ -507,7 +506,6 @@ public abstract class BaseComputeServiceLiveTest extends BaseComputeServiceConte
          assertNotNull(node.getCredentials());
          if (node.getCredentials().identity != null) {
             assertNotNull(node.getCredentials().identity);
-            assertNotNull(node.getCredentials().credential);
             sshPing(node, taskName);
          }
       }

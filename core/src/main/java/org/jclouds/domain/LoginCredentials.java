@@ -19,6 +19,7 @@ package org.jclouds.domain;
 import static org.jclouds.crypto.Pems.PRIVATE_PKCS1_MARKER;
 import static org.jclouds.crypto.Pems.PRIVATE_PKCS8_MARKER;
 
+import org.jclouds.crypto.Pems;
 import org.jclouds.javax.annotation.Nullable;
 
 import com.google.common.base.Optional;
@@ -153,6 +154,15 @@ public class LoginCredentials extends Credentials {
    @Nullable
    public String getPrivateKey() {
       return (privateKey != null) ? privateKey.orNull() : null;
+   }
+
+   /**
+    * @return true if there is a private key attached that is not encrypted
+    */
+   public boolean hasUnencryptedPrivateKey() {
+      return getPrivateKey() != null
+         && !getPrivateKey().isEmpty()
+         && !getPrivateKey().contains(Pems.PROC_TYPE_ENCRYPTED);
    }
 
    /**

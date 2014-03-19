@@ -73,6 +73,7 @@ public class Pems {
    public static final String CERTIFICATE_X509_MARKER = "-----BEGIN CERTIFICATE-----";
    public static final String PUBLIC_X509_MARKER = "-----BEGIN PUBLIC KEY-----";
    public static final String PUBLIC_PKCS1_MARKER = "-----BEGIN RSA PUBLIC KEY-----";
+   public static final String PROC_TYPE_ENCRYPTED = "Proc-Type: 4,ENCRYPTED";
 
    private static class PemProcessor<T> implements ByteProcessor<T> {
       private interface ResultParser<T> {
