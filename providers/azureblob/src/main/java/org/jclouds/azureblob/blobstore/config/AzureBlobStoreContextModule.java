@@ -24,13 +24,11 @@ import org.jclouds.azureblob.AzureBlobClient;
 import org.jclouds.azureblob.blobstore.AzureAsyncBlobStore;
 import org.jclouds.azureblob.blobstore.AzureBlobRequestSigner;
 import org.jclouds.azureblob.blobstore.AzureBlobStore;
-import org.jclouds.azureblob.blobstore.strategy.FindMD5InBlobProperties;
 import org.jclouds.azureblob.domain.PublicAccess;
 import org.jclouds.blobstore.AsyncBlobStore;
 import org.jclouds.blobstore.BlobRequestSigner;
 import org.jclouds.blobstore.BlobStore;
 import org.jclouds.blobstore.attr.ConsistencyModel;
-import org.jclouds.blobstore.strategy.ContainsValueInListStrategy;
 
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
@@ -51,7 +49,6 @@ public class AzureBlobStoreContextModule extends AbstractModule {
       bind(ConsistencyModel.class).toInstance(ConsistencyModel.STRICT);
       bind(AsyncBlobStore.class).to(AzureAsyncBlobStore.class).in(Scopes.SINGLETON);
       bind(BlobStore.class).to(AzureBlobStore.class).in(Scopes.SINGLETON);
-      bind(ContainsValueInListStrategy.class).to(FindMD5InBlobProperties.class);
       bind(BlobRequestSigner.class).to(AzureBlobRequestSigner.class);
    }
 

@@ -24,12 +24,10 @@ import org.jclouds.atmos.AtmosClient;
 import org.jclouds.atmos.blobstore.AtmosAsyncBlobStore;
 import org.jclouds.atmos.blobstore.AtmosBlobRequestSigner;
 import org.jclouds.atmos.blobstore.AtmosBlobStore;
-import org.jclouds.atmos.blobstore.strategy.FindMD5InUserMetadata;
 import org.jclouds.blobstore.AsyncBlobStore;
 import org.jclouds.blobstore.BlobRequestSigner;
 import org.jclouds.blobstore.BlobStore;
 import org.jclouds.blobstore.attr.ConsistencyModel;
-import org.jclouds.blobstore.strategy.ContainsValueInListStrategy;
 
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
@@ -50,7 +48,6 @@ public class AtmosBlobStoreContextModule extends AbstractModule {
       bind(ConsistencyModel.class).toInstance(ConsistencyModel.EVENTUAL);
       bind(AsyncBlobStore.class).to(AtmosAsyncBlobStore.class).in(Scopes.SINGLETON);
       bind(BlobStore.class).to(AtmosBlobStore.class).in(Scopes.SINGLETON);
-      bind(ContainsValueInListStrategy.class).to(FindMD5InUserMetadata.class);
       bind(BlobRequestSigner.class).to(AtmosBlobRequestSigner.class);
    }
 
