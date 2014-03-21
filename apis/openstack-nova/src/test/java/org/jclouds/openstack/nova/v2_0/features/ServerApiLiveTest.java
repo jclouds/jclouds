@@ -88,7 +88,9 @@ public class ServerApiLiveTest extends BaseNovaApiLiveTest {
             Server server = serverApi.get(serverId);
             assertEquals(server.getStatus(), Server.Status.ACTIVE);
          } finally {
-            serverApi.delete(serverId);
+            if (serverId!=null) {
+               serverApi.delete(serverId);
+            }
          }
       }
    }
@@ -133,7 +135,9 @@ public class ServerApiLiveTest extends BaseNovaApiLiveTest {
             Server server = serverApi.get(serverId);
             assertEquals(server.getStatus(), Server.Status.ERROR);
          } finally {
-            serverApi.delete(serverId);
+            if (serverId!=null) {
+               serverApi.delete(serverId);
+            }
          }
       }
    }
@@ -168,7 +172,9 @@ public class ServerApiLiveTest extends BaseNovaApiLiveTest {
             assertEquals("fe80::100", rebuiltServer.getAccessIPv6());
 
          } finally {
-            serverApi.delete(serverId);
+            if (serverId!=null) {
+               serverApi.delete(serverId);
+            }
          }
       }
    }
