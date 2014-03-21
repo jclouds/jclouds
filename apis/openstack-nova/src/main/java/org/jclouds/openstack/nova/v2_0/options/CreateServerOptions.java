@@ -295,13 +295,10 @@ public class CreateServerOptions implements MapBinder {
     * Custom cloud server metadata can also be supplied at launch time. This
     * metadata is stored in the API system where it is retrievable by querying
     * the API for server status. The maximum size of the metadata key and value
-    * is each 255 bytes and the maximum number of key-value pairs that can be
-    * supplied per server is 5.
+    * is each 255 bytes.
     */
    public CreateServerOptions metadata(Map<String, String> metadata) {
       checkNotNull(metadata, "metadata");
-      checkArgument(metadata.size() <= 5,
-            "you cannot have more then 5 metadata values.  You specified: " + metadata.size());
       for (Entry<String, String> entry : metadata.entrySet()) {
          checkArgument(
                entry.getKey().getBytes().length < 255,
