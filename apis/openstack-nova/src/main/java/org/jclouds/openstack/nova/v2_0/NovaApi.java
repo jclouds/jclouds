@@ -18,6 +18,7 @@ package org.jclouds.openstack.nova.v2_0;
 
 import java.io.Closeable;
 import java.util.Set;
+
 import org.jclouds.javax.annotation.Nullable;
 import org.jclouds.location.Zone;
 import org.jclouds.location.functions.ZoneToEndpoint;
@@ -48,12 +49,9 @@ import com.google.common.base.Optional;
 import com.google.inject.Provides;
 
 /**
- * Provides synchronous access to Nova.
+ * Provides access to the OpenStack Compute (Nova) API.
  * <p/>
  *
- * @see NovaAsyncApi
- * @see <a href="http://docs.openstack.org/api/openstack-compute/1.1/content/"
- *      />
  */
 public interface NovaApi extends Closeable {
    /**
@@ -65,133 +63,133 @@ public interface NovaApi extends Closeable {
    Set<String> getConfiguredZones();
 
    /**
-    * Provides synchronous access to availability zone features
-    */
-   @Delegate
-   Optional<? extends AvailabilityZoneApi> getAvailabilityZoneApi(
-         @EndpointParam(parser = ZoneToEndpoint.class) @Nullable String zone);
-
-   /**
-    * Provides synchronous access to Server features.
+    * Provides access to Server features.
     */
    @Delegate
    ServerApi getServerApiForZone(
          @EndpointParam(parser = ZoneToEndpoint.class) @Nullable String zone);
 
    /**
-    * Provides synchronous access to Flavor features.
+    * Provides access to Flavor features.
     */
    @Delegate
    FlavorApi getFlavorApiForZone(
          @EndpointParam(parser = ZoneToEndpoint.class) @Nullable String zone);
 
    /**
-    * Provides synchronous access to Extension features.
+    * Provides access to Extension features.
     */
    @Delegate
    ExtensionApi getExtensionApiForZone(
          @EndpointParam(parser = ZoneToEndpoint.class) @Nullable String zone);
 
    /**
-    * Provides synchronous access to Image features.
+    * Provides access to Image features.
     */
    @Delegate
    ImageApi getImageApiForZone(
          @EndpointParam(parser = ZoneToEndpoint.class) @Nullable String zone);
 
    /**
-    * Provides synchronous access to Floating IP features.
+    * Provides access to availability zone features
+    */
+   @Delegate
+   Optional<? extends AvailabilityZoneApi> getAvailabilityZoneApi(
+         @EndpointParam(parser = ZoneToEndpoint.class) @Nullable String zone);
+
+   /**
+    * Provides access to Floating IP features.
     */
    @Delegate
    Optional<? extends FloatingIPApi> getFloatingIPExtensionForZone(
          @EndpointParam(parser = ZoneToEndpoint.class) @Nullable String zone);
 
    /**
-    * Provides synchronous access to Security Group features.
+    * Provides access to Security Group features.
     */
    @Delegate
    Optional<? extends SecurityGroupApi> getSecurityGroupExtensionForZone(
          @EndpointParam(parser = ZoneToEndpoint.class) @Nullable String zone);
 
    /**
-    * Provides synchronous access to Key Pair features.
+    * Provides access to Key Pair features.
     */
    @Delegate
    Optional<? extends KeyPairApi> getKeyPairExtensionForZone(
          @EndpointParam(parser = ZoneToEndpoint.class) @Nullable String zone);
 
    /**
-    * Provides synchronous access to Host Administration features.
+    * Provides access to Host Administration features.
     */
    @Delegate
    Optional<? extends HostAdministrationApi> getHostAdministrationExtensionForZone(
          @EndpointParam(parser = ZoneToEndpoint.class) @Nullable String zone);
 
    /**
-    * Provides synchronous access to Simple Tenant Usage features.
+    * Provides access to Simple Tenant Usage features.
     */
    @Delegate
    Optional<? extends SimpleTenantUsageApi> getSimpleTenantUsageExtensionForZone(
          @EndpointParam(parser = ZoneToEndpoint.class) @Nullable String zone);
 
    /**
-    * Provides synchronous access to Virtual Interface features.
+    * Provides access to Virtual Interface features.
     */
    @Delegate
    Optional<? extends VirtualInterfaceApi> getVirtualInterfaceExtensionForZone(
          @EndpointParam(parser = ZoneToEndpoint.class) @Nullable String zone);
 
    /**
-    * Provides synchronous access to Server Extra Data features.
+    * Provides access to Server Extra Data features.
     */
    @Delegate
    Optional<? extends ServerWithSecurityGroupsApi> getServerWithSecurityGroupsExtensionForZone(
          @EndpointParam(parser = ZoneToEndpoint.class) @Nullable String zone);
 
    /**
-    * Provides synchronous access to Server Admin Actions features.
+    * Provides access to Server Admin Actions features.
     */
    @Delegate
    Optional<? extends ServerAdminApi> getServerAdminExtensionForZone(
          @EndpointParam(parser = ZoneToEndpoint.class) @Nullable String zone);
 
    /**
-    * Provides synchronous access to Aggregate features.
+    * Provides access to Aggregate features.
     */
    @Delegate
    Optional<? extends HostAggregateApi> getHostAggregateExtensionForZone(
          @EndpointParam(parser = ZoneToEndpoint.class) @Nullable String zone);
 
    /**
-    * Provides synchronous access to Flavor extra specs features.
+    * Provides access to Flavor extra specs features.
     */
    @Delegate
    Optional<? extends FlavorExtraSpecsApi> getFlavorExtraSpecsExtensionForZone(
          @EndpointParam(parser = ZoneToEndpoint.class) @Nullable String zone);
 
    /**
-    * Provides synchronous access to Quota features.
+    * Provides access to Quota features.
     */
    @Delegate
    Optional<? extends QuotaApi> getQuotaExtensionForZone(
          @EndpointParam(parser = ZoneToEndpoint.class) @Nullable String zone);
 
    /**
-    * Provides synchronous access to Volume features.
+    * Provides access to Volume features.
     */
    @Delegate
    Optional<? extends VolumeApi> getVolumeExtensionForZone(
          @EndpointParam(parser = ZoneToEndpoint.class) @Nullable String zone);
 
    /**
-    * Provides synchronous access to Volume Attachment features.
+    * Provides access to Volume Attachment features.
     */
    @Delegate
    Optional<? extends VolumeAttachmentApi> getVolumeAttachmentExtensionForZone(
          @EndpointParam(parser = ZoneToEndpoint.class) @Nullable String zone);
 
    /**
-    * Provides synchronous access to Volume Type features.
+    * Provides access to Volume Type features.
     */
    @Delegate
    Optional<? extends VolumeTypeApi> getVolumeTypeExtensionForZone(
@@ -203,5 +201,4 @@ public interface NovaApi extends Closeable {
    @Delegate
    Optional<? extends ConsolesApi> getConsolesExtensionForZone(
          @EndpointParam(parser = ZoneToEndpoint.class) @Nullable String zone);
-
 }

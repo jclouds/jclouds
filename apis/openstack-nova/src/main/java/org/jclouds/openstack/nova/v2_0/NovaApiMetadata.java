@@ -28,33 +28,23 @@ import java.net.URI;
 import java.util.Properties;
 
 import org.jclouds.compute.ComputeServiceContext;
+import org.jclouds.openstack.keystone.v2_0.config.AuthenticationApiModule;
 import org.jclouds.openstack.keystone.v2_0.config.CredentialTypes;
 import org.jclouds.openstack.keystone.v2_0.config.KeystoneAuthenticationModule;
-import org.jclouds.openstack.keystone.v2_0.config.MappedAuthenticationApiModule;
 import org.jclouds.openstack.keystone.v2_0.config.KeystoneAuthenticationModule.ZoneModule;
 import org.jclouds.openstack.nova.v2_0.compute.config.NovaComputeServiceContextModule;
+import org.jclouds.openstack.nova.v2_0.config.NovaHttpApiModule;
 import org.jclouds.openstack.nova.v2_0.config.NovaParserModule;
-import org.jclouds.openstack.nova.v2_0.config.NovaRestClientModule;
 import org.jclouds.openstack.v2_0.ServiceType;
-import org.jclouds.rest.internal.BaseRestApiMetadata;
+import org.jclouds.rest.internal.BaseHttpApiMetadata;
 
 import com.google.common.collect.ImmutableSet;
-import com.google.common.reflect.TypeToken;
 import com.google.inject.Module;
 
 /**
- * Implementation of {@link ApiMetadata} for Nova 2.0 API
+ * Implementation of {@link org.jclouds.apis.ApiMetadata} for Nova 2.0 API
  */
-public class NovaApiMetadata extends BaseRestApiMetadata {
-
-   /**
-    * @deprecated please use {@code org.jclouds.ContextBuilder#buildApi(NovaApi.class)} as
-    *             {@link NovaAsyncApi} interface will be removed in jclouds 1.7.
-    */
-   @Deprecated
-   public static final TypeToken<org.jclouds.rest.RestContext<NovaApi, NovaAsyncApi>> CONTEXT_TOKEN = new TypeToken<org.jclouds.rest.RestContext<NovaApi, NovaAsyncApi>>() {
-      private static final long serialVersionUID = 1L;
-   };
+public class NovaApiMetadata extends BaseHttpApiMetadata<NovaApi>  {
 
    @Override
    public Builder toBuilder() {
@@ -70,7 +60,7 @@ public class NovaApiMetadata extends BaseRestApiMetadata {
    }
 
    public static Properties defaultProperties() {
-      Properties properties = BaseRestApiMetadata.defaultProperties();
+      Properties properties = BaseHttpApiMetadata.defaultProperties();
       // auth fail can happen while cloud-init applies keypair updates
       properties.setProperty("jclouds.ssh.max-retries", "7");
       properties.setProperty("jclouds.ssh.retry-auth", "true");
@@ -86,30 +76,28 @@ public class NovaApiMetadata extends BaseRestApiMetadata {
       return properties;
    }
 
-   public static class Builder extends BaseRestApiMetadata.Builder<Builder> {
+   public static class Builder extends BaseHttpApiMetadata.Builder<NovaApi, Builder> {
 
-      @SuppressWarnings("deprecation")
       protected Builder() {
-         super(NovaApi.class, NovaAsyncApi.class);
           id("openstack-nova")
          .name("OpenStack Nova Diablo+ API")
          .identityName("${tenantName}:${userName} or ${userName}, if your keystone supports a default tenant")
          .credentialName("${password}")
-         .endpointName("KeyStone base url ending in /v2.0/")
+         .endpointName("Keystone base url ending in /v2.0/")
          .documentation(URI.create("http://api.openstack.org/"))
          .version("1.1")
          .defaultEndpoint("http://localhost:5000/v2.0/")
          .defaultProperties(NovaApiMetadata.defaultProperties())
          .view(typeToken(ComputeServiceContext.class))
          .defaultModules(ImmutableSet.<Class<? extends Module>>builder()
-                                     .add(MappedAuthenticationApiModule.class)
+                                     .add(AuthenticationApiModule.class)
                                      .add(KeystoneAuthenticationModule.class)
                                      .add(ZoneModule.class)
                                      .add(NovaParserModule.class)
-                                     .add(NovaRestClientModule.class)
+                                     .add(NovaHttpApiModule.class)
                                      .add(NovaComputeServiceContextModule.class).build());
       }
-      
+
       @Override
       public NovaApiMetadata build() {
          return new NovaApiMetadata(this);

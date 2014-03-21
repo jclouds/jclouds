@@ -16,34 +16,57 @@
  */
 package org.jclouds.openstack.nova.v2_0.extensions;
 
+import javax.inject.Named;
+import javax.ws.rs.Consumes;
+import javax.ws.rs.GET;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.core.MediaType;
+
+import org.jclouds.Fallbacks.EmptyFluentIterableOnNotFoundOr404;
+import org.jclouds.Fallbacks.NullOnNotFoundOr404;
+import org.jclouds.javax.annotation.Nullable;
+import org.jclouds.openstack.keystone.v2_0.filters.AuthenticateRequest;
 import org.jclouds.openstack.nova.v2_0.domain.SimpleTenantUsage;
 import org.jclouds.openstack.v2_0.ServiceType;
 import org.jclouds.openstack.v2_0.services.Extension;
+import org.jclouds.rest.annotations.Fallback;
+import org.jclouds.rest.annotations.RequestFilters;
+import org.jclouds.rest.annotations.SelectJson;
 
 import com.google.common.annotations.Beta;
 import com.google.common.collect.FluentIterable;
 
 /**
- * Provides asynchronous access to Simple Tenant Usage via the REST API.
- * <p/>
- *
- * @see SimpleTenantUsageAsyncApi
+ * Provides access to the OpenStack Compute (Nova) Simple Tenant Usage extension API.
  */
 @Beta
 @Extension(of = ServiceType.COMPUTE, namespace = ExtensionNamespaces.SIMPLE_TENANT_USAGE)
+@RequestFilters(AuthenticateRequest.class)
+@Consumes(MediaType.APPLICATION_JSON)
+@Path("/os-simple-tenant-usage")
 public interface SimpleTenantUsageApi {
-
    /**
-    * Retrieve tenant_usage for all tenants
+    * Retrieve tenant usage for all tenants.
     *
     * @return the set of TenantUsage reports
     */
-   FluentIterable<? extends SimpleTenantUsage> list();
+   @Named("tenantUsage:list")
+   @GET
+   @SelectJson("tenant_usages")
+   @Fallback(EmptyFluentIterableOnNotFoundOr404.class)
+   FluentIterable<SimpleTenantUsage> list();
 
    /**
     * Retrieve tenant_usage for a specified tenant
     *
     * @return the requested tenant usage
     */
-   SimpleTenantUsage get(String tenantId);
+   @Named("tenantUsage:get")
+   @GET
+   @Path("/{id}")
+   @SelectJson("tenant_usage")
+   @Fallback(NullOnNotFoundOr404.class)
+   @Nullable
+   SimpleTenantUsage get(@PathParam("id") String tenantId);
 }

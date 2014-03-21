@@ -16,62 +16,121 @@
  */
 package org.jclouds.openstack.nova.v2_0.features;
 
+import javax.inject.Named;
+import javax.ws.rs.Consumes;
+import javax.ws.rs.DELETE;
+import javax.ws.rs.GET;
+import javax.ws.rs.POST;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
+import javax.ws.rs.core.MediaType;
+
+import org.jclouds.Fallbacks.EmptyPagedIterableOnNotFoundOr404;
+import org.jclouds.Fallbacks.NullOnNotFoundOr404;
+import org.jclouds.Fallbacks.VoidOnNotFoundOr404;
 import org.jclouds.collect.PagedIterable;
-import org.jclouds.openstack.v2_0.domain.PaginatedCollection;
+import org.jclouds.javax.annotation.Nullable;
+import org.jclouds.openstack.keystone.v2_0.KeystoneFallbacks.EmptyPaginatedCollectionOnNotFoundOr404;
+import org.jclouds.openstack.keystone.v2_0.filters.AuthenticateRequest;
 import org.jclouds.openstack.nova.v2_0.domain.Flavor;
+import org.jclouds.openstack.nova.v2_0.functions.internal.ParseFlavorDetails;
+import org.jclouds.openstack.nova.v2_0.functions.internal.ParseFlavors;
+import org.jclouds.openstack.v2_0.domain.PaginatedCollection;
 import org.jclouds.openstack.v2_0.domain.Resource;
 import org.jclouds.openstack.v2_0.options.PaginationOptions;
+import org.jclouds.rest.annotations.Fallback;
+import org.jclouds.rest.annotations.RequestFilters;
+import org.jclouds.rest.annotations.ResponseParser;
+import org.jclouds.rest.annotations.SelectJson;
+import org.jclouds.rest.annotations.Transform;
+import org.jclouds.rest.annotations.Unwrap;
+import org.jclouds.rest.annotations.WrapWith;
 
 /**
- * Provides asynchronous access to Flavors via their REST API.
+ * Provides access to the OpenStack Compute (Nova) Flavor API.
  * <p/>
- * 
- * @see FlavorAsyncApi
- * @see <a href=
- *      "http://docs.openstack.org/api/openstack-compute/2/content/List_Flavors-d1e4188.html"
- *      />
+ *
  */
+@RequestFilters(AuthenticateRequest.class)
+@Consumes(MediaType.APPLICATION_JSON)
+@Path("/flavors")
 public interface FlavorApi {
-
    /**
     * List all flavors (IDs, names, links)
-    * 
+    *
     * @return all flavors (IDs, names, links)
     */
-   PagedIterable<? extends Resource> list();
+   @Named("flavor:list")
+   @GET
+   @ResponseParser(ParseFlavors.class)
+   @Transform(ParseFlavors.ToPagedIterable.class)
+   @Fallback(EmptyPagedIterableOnNotFoundOr404.class)
+   PagedIterable<Resource> list();
 
-   PaginatedCollection<? extends Resource> list(PaginationOptions options);
+   @Named("flavor:list")
+   @GET
+   @ResponseParser(ParseFlavors.class)
+   @Fallback(EmptyPaginatedCollectionOnNotFoundOr404.class)
+   PaginatedCollection<Resource> list(PaginationOptions options);
 
    /**
     * List all flavors (all details)
-    * 
+    *
     * @return all flavors (all details)
     */
-   PagedIterable<? extends Flavor> listInDetail();
+   @Named("flavor:list")
+   @GET
+   @Path("/detail")
+   @ResponseParser(ParseFlavorDetails.class)
+   @Transform(ParseFlavorDetails.ToPagedIterable.class)
+   @Fallback(EmptyPagedIterableOnNotFoundOr404.class)
+   PagedIterable<Flavor> listInDetail();
 
-   PaginatedCollection<? extends Flavor> listInDetail(PaginationOptions options);
+   @Named("flavor:list")
+   @GET
+   @Path("/detail")
+   @ResponseParser(ParseFlavorDetails.class)
+   @Fallback(EmptyPaginatedCollectionOnNotFoundOr404.class)
+   PaginatedCollection<Flavor> listInDetail(PaginationOptions options);
 
    /**
     * List details of the specified flavor
-    * 
+    *
     * @param id
     *           id of the flavor
     * @return flavor or null if not found
     */
-   Flavor get(String id);
+   @Named("flavor:get")
+   @GET
+   @Path("/{id}")
+   @SelectJson("flavor")
+   @Fallback(NullOnNotFoundOr404.class)
+   @Nullable
+   Flavor get(@PathParam("id") String id);
 
-	/**
-	 * Create flavor according to the provided object
-	 * 
-	 * @param flavor - flavor object
-	 * @return newly created flavor
-	 */
-	Flavor create(Flavor flavor);
+   /**
+    * Create flavor according to the provided object
+    *
+    * @param flavor - flavor object
+    * @return newly created flavor
+    */
+   @Named("flavor:create")
+   @POST
+   @Unwrap
+   @Produces(MediaType.APPLICATION_JSON)
+   @Fallback(NullOnNotFoundOr404.class)
+   @Nullable
+   Flavor create(@WrapWith("flavor") Flavor flavor);
 
-	/**
-	 * Delete flavor with a given id
-	 * 
-	 * @param id - flavor id
-	 */
-	void delete(String id);
+   /**
+    * Delete flavor with a given id
+    *
+    * @param id - flavor id
+    */
+   @Named("flavor:delete")
+   @DELETE
+   @Path("/{id}")
+   @Fallback(VoidOnNotFoundOr404.class)
+   void delete(@PathParam("id") String id);
 }

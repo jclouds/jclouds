@@ -16,26 +16,51 @@
  */
 package org.jclouds.openstack.nova.v2_0.extensions;
 
+import javax.inject.Named;
+import javax.ws.rs.Consumes;
+import javax.ws.rs.POST;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
+import javax.ws.rs.core.MediaType;
+
+import org.jclouds.fallbacks.MapHttp4xxCodesToExceptions;
+import org.jclouds.openstack.keystone.v2_0.filters.AuthenticateRequest;
+import org.jclouds.openstack.nova.v2_0.binders.BindConsoleToJsonPayload;
 import org.jclouds.openstack.nova.v2_0.domain.Console;
 import org.jclouds.openstack.v2_0.ServiceType;
 import org.jclouds.openstack.v2_0.services.Extension;
+import org.jclouds.rest.annotations.Fallback;
+import org.jclouds.rest.annotations.MapBinder;
+import org.jclouds.rest.annotations.PayloadParam;
+import org.jclouds.rest.annotations.RequestFilters;
+import org.jclouds.rest.annotations.SelectJson;
 
 import com.google.common.annotations.Beta;
 
 /**
- * Provides synchronous access to Consoles.
+ * Provides access to the OpenStack Compute (Nova) Consoles Extension API.
  * <p/>
  *
- * @see ConsoleAsyncApi
  */
 @Beta
 @Extension(of = ServiceType.COMPUTE, namespace = ExtensionNamespaces.CONSOLES)
+@RequestFilters(AuthenticateRequest.class)
+@Consumes(MediaType.APPLICATION_JSON)
 public interface ConsolesApi {
    /**
-    * Get the Console
+    * Gets the specified server Console.
+    *
     * @param serverId Server id
     * @param type see {@link Console.Type}
     * @return a Console object containing the console url and type.
     */
-   Console getConsole(String serverId, Console.Type type);
+   @Named("consoles:getConsole")
+   @POST
+   @Path("/servers/{serverId}/action")
+   @SelectJson("console")
+   @Produces(MediaType.APPLICATION_JSON)
+   @Fallback(MapHttp4xxCodesToExceptions.class)
+   @MapBinder(BindConsoleToJsonPayload.class)
+   Console getConsole(@PathParam("serverId") String serverId, @PayloadParam("type") Console.Type type);
 }

@@ -16,27 +16,44 @@
  */
 package org.jclouds.openstack.nova.v2_0.extensions;
 
+import javax.inject.Named;
+import javax.ws.rs.Consumes;
+import javax.ws.rs.GET;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.core.MediaType;
+
+import org.jclouds.Fallbacks.EmptyFluentIterableOnNotFoundOr404;
+import org.jclouds.openstack.keystone.v2_0.filters.AuthenticateRequest;
 import org.jclouds.openstack.nova.v2_0.domain.VirtualInterface;
 import org.jclouds.openstack.v2_0.ServiceType;
 import org.jclouds.openstack.v2_0.services.Extension;
+import org.jclouds.rest.annotations.Fallback;
+import org.jclouds.rest.annotations.RequestFilters;
+import org.jclouds.rest.annotations.SelectJson;
 
 import com.google.common.annotations.Beta;
 import com.google.common.collect.FluentIterable;
 
 /**
- * Provides synchronous access to Virtual Interface features (VIFs).
- * 
- * @see VirtualInterfaceAsyncApi
+ * Provides access to the OpenStack Compute (Nova) Virtual Interface (VIFs) extension API.
  */
 @Beta
 @Extension(of = ServiceType.COMPUTE, namespace = ExtensionNamespaces.VIRTUAL_INTERFACES)
+@RequestFilters(AuthenticateRequest.class)
+@Consumes(MediaType.APPLICATION_JSON)
+@Path("/servers")
 public interface VirtualInterfaceApi {
-
    /**
     * Returns the list of Virtual Interfaces for a given instance.
     *
-    * @return the list of snapshots
+    * @return the list of virtual interfaces
     */
-   FluentIterable<? extends VirtualInterface> listOnServer(String serverId);   
-
+   @Named("virtualInterface:list")
+   @GET
+   @Path("/{id}/os-virtual-interfaces")
+   @SelectJson("virtual_interfaces")
+   @Consumes(MediaType.APPLICATION_JSON)
+   @Fallback(EmptyFluentIterableOnNotFoundOr404.class)
+   FluentIterable<VirtualInterface> listOnServer(@PathParam("id") String serverId);
 }

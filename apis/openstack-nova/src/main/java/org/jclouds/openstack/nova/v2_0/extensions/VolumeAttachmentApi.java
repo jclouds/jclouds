@@ -16,71 +16,117 @@
  */
 package org.jclouds.openstack.nova.v2_0.extensions;
 
+import javax.inject.Named;
+import javax.ws.rs.Consumes;
+import javax.ws.rs.DELETE;
+import javax.ws.rs.GET;
+import javax.ws.rs.POST;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
+import javax.ws.rs.core.MediaType;
+
+import org.jclouds.Fallbacks.EmptyFluentIterableOnNotFoundOr404;
+import org.jclouds.Fallbacks.FalseOnNotFoundOr404;
+import org.jclouds.Fallbacks.NullOnNotFoundOr404;
+import org.jclouds.javax.annotation.Nullable;
+import org.jclouds.openstack.keystone.v2_0.filters.AuthenticateRequest;
 import org.jclouds.openstack.nova.v2_0.domain.VolumeAttachment;
 import org.jclouds.openstack.v2_0.ServiceType;
 import org.jclouds.openstack.v2_0.services.Extension;
+import org.jclouds.rest.annotations.Fallback;
+import org.jclouds.rest.annotations.PayloadParam;
+import org.jclouds.rest.annotations.RequestFilters;
+import org.jclouds.rest.annotations.SelectJson;
+import org.jclouds.rest.annotations.WrapWith;
 
 import com.google.common.annotations.Beta;
 import com.google.common.collect.FluentIterable;
 
 /**
- * Provides synchronous access to Volume Attachments.
- * 
- * This API strictly handles attaching Volumes to Servers. To create and manage Volumes you need to use one of the 
+ * Provides access to the OpenStack Compute (Nova) Volume Attachments Extension API.
+ *
+ * This API strictly handles attaching Volumes to Servers. To create and manage Volumes you need to use one of the
  * following APIs:
- * 
+ *
  * 1. The Cinder API
  *    If your OpenStack deployment is Folsom or later and it supports the Cinder block storage service, use this API.
  *    @see org.jclouds.openstack.cinder.v1.features.VolumeApi
- *    
+ *
  * 2. The nova-volume API
  *    If your OpenStack deployment is Essex or earlier and it supports the nova-volume extension, use this API.
  *    @see org.jclouds.openstack.nova.v2_0.extensions.VolumeApi
- * 
- * @see VolumeAttachmentAsyncApi
+ *
  */
 @Beta
 @Extension(of = ServiceType.COMPUTE, namespace = ExtensionNamespaces.VOLUMES)
+@RequestFilters(AuthenticateRequest.class)
+@Consumes(MediaType.APPLICATION_JSON)
+@Path("/servers")
 public interface VolumeAttachmentApi {
    /**
     * List Volume Attachments for a given Server.
-    * 
+    *
     * @param serverId The ID of the Server
     * @return All VolumeAttachments for the Server
     */
-   FluentIterable<? extends VolumeAttachment> listAttachmentsOnServer(String serverId);
+   @Named("volumeAttachment:list")
+   @GET
+   @Path("/{serverId}/os-volume_attachments")
+   @SelectJson("volumeAttachments")
+   @Fallback(EmptyFluentIterableOnNotFoundOr404.class)
+   FluentIterable<VolumeAttachment> listAttachmentsOnServer(@PathParam("serverId") String serverId);
 
    /**
     * Get a specific Volume Attachment for a Volume and Server.
-    * 
+    *
     * @param volumeId The ID of the Volume
     * @param serverId The ID of the Server
     * @return The Volume Attachment.
     */
-   VolumeAttachment getAttachmentForVolumeOnServer(String volumeId, String serverId);
+   @Named("volumeAttachment:get")
+   @GET
+   @Path("/{serverId}/os-volume_attachments/{id}")
+   @SelectJson("volumeAttachment")
+   @Fallback(NullOnNotFoundOr404.class)
+   @Nullable
+   VolumeAttachment getAttachmentForVolumeOnServer(@PathParam("id") String volumeId,
+         @PathParam("serverId") String serverId);
 
    /**
     * Attach a Volume to a Server.
-    * 
-    * Note: If you are using KVM as your hypervisor then the actual device name in the Server will be different than 
+    *
+    * Note: If you are using KVM as your hypervisor then the actual device name in the Server will be different than
     * the one specified. When the Server sees a new device, it picks the next available name (which in most cases is
     * /dev/vdc) and the disk shows up there on the Server.
-    * 
+    *
     * @param serverId The ID of the Server
     * @param volumeId The ID of the Volume
-    * @param device The name of the device this Volume will be identified as in the Server (e.g. /dev/vdc) 
+    * @param device The name of the device this Volume will be identified as in the Server (e.g. /dev/vdc)
     * @return The Volume Attachment.
     */
-   VolumeAttachment attachVolumeToServerAsDevice(String volumeId, String serverId, String device);
+   @Named("volumeAttachment:attach")
+   @POST
+   @Path("/{serverId}/os-volume_attachments")
+   @SelectJson("volumeAttachment")
+   @Produces(MediaType.APPLICATION_JSON)
+   @WrapWith("volumeAttachment")
+   VolumeAttachment attachVolumeToServerAsDevice(@PayloadParam("volumeId") String volumeId,
+         @PathParam("serverId") String serverId, @PayloadParam("device") String device);
 
    /**
     * Detach a Volume from a server.
-    * 
+    *
     * Note: Make sure you've unmounted the volume first. Failure to do so could result in failure or data loss.
-    * 
+    *
     * @param volumeId The ID of the Volume
     * @param serverId The ID of the Server
     * @return true if successful
     */
-   boolean detachVolumeFromServer(String volumeId, String serverId);
+   @Named("volumeAttachment:detach")
+   @DELETE
+   @Path("/{serverId}/os-volume_attachments/{id}")
+   @Fallback(FalseOnNotFoundOr404.class)
+   boolean detachVolumeFromServer(@PathParam("id") String volumeId,
+         @PathParam("serverId") String serverId);
 }

@@ -32,7 +32,7 @@ import org.testng.annotations.Test;
 import com.google.common.collect.ImmutableSet;
 
 /**
- * Tests annotation parsing of {@code FloatingIPAsyncApi}
+ * Tests annotation parsing of {@code FloatingIPApi}
  */
 @Test(groups = "unit", testName = "FloatingIPApiExpectTest")
 public class FloatingIPApiExpectTest extends BaseNovaApiExpectTest {

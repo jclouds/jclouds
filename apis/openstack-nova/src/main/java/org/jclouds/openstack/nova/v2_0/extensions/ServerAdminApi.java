@@ -16,65 +16,116 @@
  */
 package org.jclouds.openstack.nova.v2_0.extensions;
 
+import javax.inject.Named;
+import javax.ws.rs.Consumes;
+import javax.ws.rs.POST;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
+import javax.ws.rs.core.MediaType;
+
+import org.jclouds.Fallbacks.FalseOnNotFoundOr404;
+import org.jclouds.fallbacks.MapHttp4xxCodesToExceptions;
+import org.jclouds.openstack.keystone.v2_0.filters.AuthenticateRequest;
 import org.jclouds.openstack.nova.v2_0.domain.BackupType;
+import org.jclouds.openstack.nova.v2_0.functions.ParseImageIdFromLocationHeader;
 import org.jclouds.openstack.nova.v2_0.options.CreateBackupOfServerOptions;
 import org.jclouds.openstack.v2_0.ServiceType;
 import org.jclouds.openstack.v2_0.services.Extension;
+import org.jclouds.rest.annotations.Fallback;
+import org.jclouds.rest.annotations.Payload;
+import org.jclouds.rest.annotations.PayloadParam;
+import org.jclouds.rest.annotations.RequestFilters;
+import org.jclouds.rest.annotations.ResponseParser;
+import org.jclouds.rest.annotations.WrapWith;
 
 import com.google.common.annotations.Beta;
 
 /**
+ * Provide access to the OpenStack Compute (Nova) Admin Server Actions Extension API.
+ *
  * Provide additional actions for servers:
  * 'suspend', 'resume', 'migrate', 'lock', 'unlock', 'resetNetwork', 'createBackup', 'pause', 'migrateLive',
  * 'injectNetworkInfo', 'unpause'
  *
- * @see org.jclouds.openstack.nova.v2_0.extensions.ServerAdminAsyncApi
  */
 @Beta
 @Extension(of = ServiceType.COMPUTE, namespace = ExtensionNamespaces.ADMIN_ACTIONS)
+@RequestFilters(AuthenticateRequest.class)
+@Consumes(MediaType.APPLICATION_JSON)
+@Path("/servers/{id}/action")
 public interface ServerAdminApi {
-
    /**
     * Suspend a server.
     *
     * @param id id of the server
     */
-   Boolean suspend(String id);
+   @Named("serverAdmin:suspend")
+   @POST
+   @Produces(MediaType.APPLICATION_JSON)
+   @Payload("{\"suspend\":null}")
+   @Fallback(FalseOnNotFoundOr404.class)
+   Boolean suspend(@PathParam("id") String id);
 
    /**
     * Resume a server.
     *
     * @param id id of the server
     */
-   Boolean resume(String id);
+   @Named("serverAdmin:resume")
+   @POST
+   @Produces(MediaType.APPLICATION_JSON)
+   @Payload("{\"resume\":null}")
+   @Fallback(FalseOnNotFoundOr404.class)
+   Boolean resume(@PathParam("id") String id);
 
    /**
     * Migrate a server.
     *
     * @param id id of the server
     */
-   Boolean migrate(String id);
+   @Named("serverAdmin:migrate")
+   @POST
+   @Produces(MediaType.APPLICATION_JSON)
+   @Payload("{\"migrate\":null}")
+   @Fallback(FalseOnNotFoundOr404.class)
+   Boolean migrate(@PathParam("id") String id);
 
    /**
     * Lock a server.
     *
     * @param id id of the server
     */
-   Boolean lock(String id);
+   @Named("serverAdmin:lock")
+   @POST
+   @Produces(MediaType.APPLICATION_JSON)
+   @Payload("{\"lock\":null}")
+   @Fallback(FalseOnNotFoundOr404.class)
+   Boolean lock(@PathParam("id") String id);
 
    /**
     * Unlock a server.
     *
     * @param id id of the server
     */
-   Boolean unlock(String id);
+   @Named("serverAdmin:unlock")
+   @POST
+   @Produces(MediaType.APPLICATION_JSON)
+   @Payload("{\"unlock\":null}")
+   @Fallback(FalseOnNotFoundOr404.class)
+   Boolean unlock(@PathParam("id") String id);
 
    /**
     * Reset network of a server.
     *
     * @param id id of the server
     */
-   Boolean resetNetwork(String id);
+   @Named("serverAdmin:resetNetwork")
+   @POST
+   @Produces(MediaType.APPLICATION_JSON)
+   @Payload("{\"resetNetwork\":null}")
+   @Fallback(FalseOnNotFoundOr404.class)
+   Boolean resetNetwork(@PathParam("id") String id);
 
    /**
     * Create backup of a server.
@@ -86,34 +137,63 @@ public interface ServerAdminApi {
     * @param options    optional rotation and/or metadata parameters
     * @return the id of the newly created image
     */
-   String createBackup(String id, String imageName, BackupType backupType, int rotation, CreateBackupOfServerOptions... options);
+   @Named("serverAdmin:createBackup")
+   @POST
+   @Produces(MediaType.APPLICATION_JSON)
+   @WrapWith("createBackup")
+   @ResponseParser(ParseImageIdFromLocationHeader.class)
+   @Fallback(MapHttp4xxCodesToExceptions.class)
+   String createBackup(@PathParam("id") String id, @PayloadParam("name") String imageName,
+         @PayloadParam("backup_type") BackupType backupType, @PayloadParam("rotation") int rotation,
+         CreateBackupOfServerOptions... options);
 
    /**
     * Pause a server.
     *
     * @param id id of the server
     */
-   Boolean pause(String id);
+   @Named("serverAdmin:pause")
+   @POST
+   @Produces(MediaType.APPLICATION_JSON)
+   @Payload("{\"pause\":null}")
+   @Fallback(FalseOnNotFoundOr404.class)
+   Boolean pause(@PathParam("id") String id);
 
    /**
     * Unpause a server.
     *
     * @param id id of the server
     */
-   Boolean unpause(String id);
-
+   @Named("serverAdmin:unpause")
+   @POST
+   @Produces(MediaType.APPLICATION_JSON)
+   @Payload("{\"unpause\":null}")
+   @Fallback(FalseOnNotFoundOr404.class)
+   Boolean unpause(@PathParam("id") String id);
 
    /**
     * Live migrate a server.
     *
     * @param id id of the server
     */
-   Boolean liveMigrate(String id, String host, boolean blockMigration, boolean diskOverCommit);
+   @Named("serverAdmin:liveMigrate")
+   @POST
+   @Produces(MediaType.APPLICATION_JSON)
+   @WrapWith("os-migrateLive")
+   @Fallback(FalseOnNotFoundOr404.class)
+   Boolean liveMigrate(@PathParam("id") String id, @PayloadParam("host") String host,
+         @PayloadParam("block_migration") boolean blockMigration,
+         @PayloadParam("disk_over_commit") boolean diskOverCommit);
 
    /**
     * Inject network info into a server.
     *
     * @param id id of the server
     */
-   Boolean injectNetworkInfo(String id);
+   @Named("serverAdmin:injectNetwork")
+   @POST
+   @Produces(MediaType.APPLICATION_JSON)
+   @Payload("{\"injectNetworkInfo\":null}")
+   @Fallback(FalseOnNotFoundOr404.class)
+   Boolean injectNetworkInfo(@PathParam("id") String id);
 }

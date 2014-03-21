@@ -26,13 +26,13 @@ import java.util.Properties;
 
 import org.jclouds.openstack.keystone.v2_0.config.KeystoneAuthenticationModule.ZoneModule;
 import org.jclouds.openstack.nova.v2_0.NovaApiMetadata;
+import org.jclouds.openstack.nova.v2_0.config.NovaHttpApiModule;
 import org.jclouds.openstack.nova.v2_0.config.NovaParserModule;
-import org.jclouds.openstack.nova.v2_0.config.NovaRestClientModule;
 import org.jclouds.providers.ProviderMetadata;
 import org.jclouds.providers.internal.BaseProviderMetadata;
+import org.jclouds.rackspace.cloudidentity.v2_0.config.CloudIdentityAuthenticationApiModule;
 import org.jclouds.rackspace.cloudidentity.v2_0.config.CloudIdentityAuthenticationModule;
 import org.jclouds.rackspace.cloudidentity.v2_0.config.CloudIdentityCredentialTypes;
-import org.jclouds.rackspace.cloudidentity.v2_0.config.SyncToAsyncCloudIdentityAuthenticationApiModule;
 import org.jclouds.rackspace.cloudservers.uk.config.CloudServersUKComputeServiceContextModule;
 
 import com.google.common.collect.ImmutableSet;
@@ -81,11 +81,11 @@ public class CloudServersUKProviderMetadata extends BaseProviderMetadata {
                   .endpointName("identity service url ending in /v2.0/")
                   .documentation(URI.create("http://docs.rackspace.com/servers/api/v2/cs-devguide/content/ch_preface.html#webhelp-currentid"))
                   .defaultModules(ImmutableSet.<Class<? extends Module>>builder()
-                                              .add(SyncToAsyncCloudIdentityAuthenticationApiModule.class)
+                                              .add(CloudIdentityAuthenticationApiModule.class)
                                               .add(CloudIdentityAuthenticationModule.class)
                                               .add(ZoneModule.class)
                                               .add(NovaParserModule.class)
-                                              .add(NovaRestClientModule.class)
+                                              .add(NovaHttpApiModule.class)
                                               .add(CloudServersUKComputeServiceContextModule.class).build())
                   .build())
          .homepage(URI.create("http://www.rackspace.co.uk/opencloud"))

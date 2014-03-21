@@ -27,13 +27,13 @@ import java.net.URI;
 import java.util.Properties;
 
 import org.jclouds.hpcloud.compute.config.HPCloudComputeServiceContextModule;
+import org.jclouds.openstack.keystone.v2_0.config.AuthenticationApiModule;
 import org.jclouds.openstack.keystone.v2_0.config.CredentialTypes;
 import org.jclouds.openstack.keystone.v2_0.config.KeystoneAuthenticationModule;
-import org.jclouds.openstack.keystone.v2_0.config.MappedAuthenticationApiModule;
 import org.jclouds.openstack.keystone.v2_0.config.KeystoneAuthenticationModule.ZoneModule;
 import org.jclouds.openstack.nova.v2_0.NovaApiMetadata;
+import org.jclouds.openstack.nova.v2_0.config.NovaHttpApiModule;
 import org.jclouds.openstack.nova.v2_0.config.NovaParserModule;
-import org.jclouds.openstack.nova.v2_0.config.NovaRestClientModule;
 import org.jclouds.providers.ProviderMetadata;
 import org.jclouds.providers.internal.BaseProviderMetadata;
 
@@ -89,11 +89,11 @@ public class HPCloudComputeProviderMetadata extends BaseProviderMetadata {
                   .endpointName("identity service url ending in /v2.0/")
                   .defaultEndpoint("https://region-a.geo-1.identity.hpcloudsvc.com:35357/v2.0/")
                   .defaultModules(ImmutableSet.<Class<? extends Module>>builder()
-                                              .add(MappedAuthenticationApiModule.class)
+                                              .add(AuthenticationApiModule.class)
                                               .add(KeystoneAuthenticationModule.class)
                                               .add(ZoneModule.class)
                                               .add(NovaParserModule.class)
-                                              .add(NovaRestClientModule.class)
+                                              .add(NovaHttpApiModule.class)
                                               .add(HPCloudComputeServiceContextModule.class).build())
                   .build())
          .homepage(URI.create("http://hpcloud.com"))

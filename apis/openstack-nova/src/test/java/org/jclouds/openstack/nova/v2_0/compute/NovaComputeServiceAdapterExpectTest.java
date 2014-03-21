@@ -89,14 +89,14 @@ public class NovaComputeServiceAdapterExpectTest extends BaseNovaComputeServiceC
 
       Template template = forNetworks.getInstance(TemplateBuilder.class).build();
       template.getOptions().as(NovaTemplateOptions.class).networks("4ebd35cf-bfe7-4d93-b0d8-eb468ce2245a");
-      
+
       NovaComputeServiceAdapter adapter = forNetworks.getInstance(NovaComputeServiceAdapter.class);
 
       NodeAndInitialCredentials<ServerInZone> server = adapter.createNodeWithGroupEncodedIntoName("test", "test-e92", template);
       assertNotNull(server);
       // Response irrelevant in this expect test - just verifying the request.
    }
-   
+
    public void testCreateNodeWithGroupEncodedIntoNameWithDiskConfig() throws Exception {
 
       HttpRequest createServer = HttpRequest
@@ -124,7 +124,7 @@ public class NovaComputeServiceAdapterExpectTest extends BaseNovaComputeServiceC
 
       Template template = forDiskConfig.getInstance(TemplateBuilder.class).build();
       template.getOptions().as(NovaTemplateOptions.class).diskConfig(Server.DISK_CONFIG_AUTO);
-      
+
       NovaComputeServiceAdapter adapter = forDiskConfig.getInstance(NovaComputeServiceAdapter.class);
 
       NodeAndInitialCredentials<ServerInZone> server = adapter.createNodeWithGroupEncodedIntoName("test", "test-e92", template);
@@ -240,7 +240,7 @@ public class NovaComputeServiceAdapterExpectTest extends BaseNovaComputeServiceC
 
       Template template = forSecurityGroups.getInstance(TemplateBuilder.class).build();
       template.getOptions().as(NovaTemplateOptions.class).securityGroupNames("group1", "group2");
-      
+
       NovaComputeServiceAdapter adapter = forSecurityGroups.getInstance(NovaComputeServiceAdapter.class);
 
       NodeAndInitialCredentials<ServerInZone> server = adapter.createNodeWithGroupEncodedIntoName("test", "test-e92",
@@ -255,7 +255,7 @@ public class NovaComputeServiceAdapterExpectTest extends BaseNovaComputeServiceC
     * authentication even be available.
     */
    public void testWhenKeyPairPresentWeUsePrivateKeyAsCredentialNotPassword() throws Exception {
-      
+
       HttpRequest createServer = HttpRequest
          .builder()
          .method("POST")
@@ -266,7 +266,7 @@ public class NovaComputeServiceAdapterExpectTest extends BaseNovaComputeServiceC
                   "{\"server\":{\"name\":\"test-e92\",\"imageRef\":\"1241\",\"flavorRef\":\"100\",\"key_name\":\"foo\"}}", "application/json"))
          .build();
 
-  
+
       HttpResponse createServerResponse = HttpResponse.builder().statusCode(202).message("HTTP/1.1 202 Accepted")
          .payload(payloadFromResourceWithContentType("/new_server_no_adminpass.json", "application/json; charset=UTF-8")).build();
 
@@ -282,16 +282,16 @@ public class NovaComputeServiceAdapterExpectTest extends BaseNovaComputeServiceC
 
       Template template = forSecurityGroups.getInstance(TemplateBuilder.class).build();
       template.getOptions().as(NovaTemplateOptions.class).keyPairName("foo");
-      
+
       NovaComputeServiceAdapter adapter = forSecurityGroups.getInstance(NovaComputeServiceAdapter.class);
-      
+
       // we expect to have already an entry in the cache for the key
       LoadingCache<ZoneAndName, KeyPair> keyPairCache = forSecurityGroups.getInstance(Key
                .get(new TypeLiteral<LoadingCache<ZoneAndName, KeyPair>>() {
                }));
       keyPairCache.put(ZoneAndName.fromZoneAndName("az-1.region-a.geo-1", "foo"), KeyPair.builder().name("foo")
                .privateKey("privateKey").build());
-      
+
       NodeAndInitialCredentials<ServerInZone> server = adapter.createNodeWithGroupEncodedIntoName("test", "test-e92",
                template);
       assertNotNull(server);
@@ -349,6 +349,7 @@ public class NovaComputeServiceAdapterExpectTest extends BaseNovaComputeServiceC
          .builder()
          .method("POST")
          .endpoint("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v1.1/3456/servers/71752/action")
+         .addHeader("Accept", "application/json")
          .addHeader("X-Auth-Token", authToken)
          .payload(payloadFromStringWithContentType(
                   "{\"suspend\":null}", "application/json"))
@@ -412,7 +413,7 @@ public class NovaComputeServiceAdapterExpectTest extends BaseNovaComputeServiceC
    public Injector apply(ComputeServiceContext input) {
       return input.utils().injector();
    }
-   
+
    @Override
    protected Properties setupProperties() {
       Properties overrides = super.setupProperties();

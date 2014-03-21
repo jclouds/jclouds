@@ -38,7 +38,7 @@ import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.ImmutableSet;
 
 /**
- * Tests annotation parsing of {@code SecurityGroupAsyncApi}
+ * Tests annotation parsing of {@code SecurityGroupApi}
  */
 @Test(groups = "unit", testName = "SecurityGroupApiExpectTest")
 public class SecurityGroupApiExpectTest extends BaseNovaApiExpectTest {
@@ -206,7 +206,7 @@ public class SecurityGroupApiExpectTest extends BaseNovaApiExpectTest {
       HttpRequest deleteRule = HttpRequest.builder().method("DELETE").endpoint(
                URI.create("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v1.1/3456/os-security-group-rules/161"))
                .headers(
-                        ImmutableMultimap.<String, String> builder().put("Accept", "*/*")
+                        ImmutableMultimap.<String, String> builder().put("Accept", "application/json")
                                  .put("X-Auth-Token", authToken).build()).build();
 
       HttpResponse deleteRuleResponse = HttpResponse.builder().statusCode(202).build();

@@ -86,7 +86,7 @@ public class NovaComputeServiceAdapter implements
       this.zoneIds = checkNotNull(zoneIds, "zoneIds");
       this.removeFloatingIpFromNodeAndDeallocate = checkNotNull(removeFloatingIpFromNodeAndDeallocate,
                "removeFloatingIpFromNodeAndDeallocate");
-      this.keyPairCache = checkNotNull(keyPairCache, "keyPairCache"); 
+      this.keyPairCache = checkNotNull(keyPairCache, "keyPairCache");
    }
 
    /**
@@ -117,7 +117,7 @@ public class NovaComputeServiceAdapter implements
 
       Optional<String> privateKey = Optional.absent();
       if (templateOptions.getKeyPairName() != null) {
-         options.keyPairName(templateOptions.getKeyPairName());        
+         options.keyPairName(templateOptions.getKeyPairName());
          KeyPair keyPair = keyPairCache.getIfPresent(ZoneAndName.fromZoneAndName(template.getLocation().getId(), templateOptions.getKeyPairName()));
          if (keyPair != null && keyPair.getPrivateKey() != null) {
             privateKey = Optional.of(keyPair.getPrivateKey());

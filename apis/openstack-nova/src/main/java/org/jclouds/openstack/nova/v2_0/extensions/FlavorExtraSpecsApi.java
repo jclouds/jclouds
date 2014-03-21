@@ -17,60 +17,114 @@
 package org.jclouds.openstack.nova.v2_0.extensions;
 
 import java.util.Map;
+
+import javax.inject.Named;
+import javax.ws.rs.Consumes;
+import javax.ws.rs.DELETE;
+import javax.ws.rs.GET;
+import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
+import javax.ws.rs.core.MediaType;
+
+import org.jclouds.Fallbacks.EmptyMapOnNotFoundOr404;
+import org.jclouds.Fallbacks.FalseOnNotFoundOr404;
+import org.jclouds.Fallbacks.NullOnNotFoundOr404;
+import org.jclouds.javax.annotation.Nullable;
+import org.jclouds.openstack.keystone.v2_0.filters.AuthenticateRequest;
 import org.jclouds.openstack.v2_0.ServiceType;
 import org.jclouds.openstack.v2_0.services.Extension;
+import org.jclouds.rest.annotations.Fallback;
+import org.jclouds.rest.annotations.MapBinder;
+import org.jclouds.rest.annotations.Payload;
+import org.jclouds.rest.annotations.PayloadParam;
+import org.jclouds.rest.annotations.RequestFilters;
+import org.jclouds.rest.annotations.SelectJson;
+import org.jclouds.rest.annotations.Unwrap;
+import org.jclouds.rest.binders.BindToJsonPayload;
 
 import com.google.common.annotations.Beta;
 
 /**
- * Provide access to extra metadata for Nova flavors.
+ * Provides access to the OpenStack Compute (Nova) Flavor Extra Specs Extension API.
  *
- * @see <a href="http://nova.openstack.org/api/nova.api.openstack.compute.contrib.flavorextraspecs.html"/>
  * @see org.jclouds.openstack.nova.v2_0.features.FlavorApi
- * @see org.jclouds.openstack.nova.v2_0.extensions.FlavorExtraSpecsAsyncApi
  */
 @Beta
 @Extension(of = ServiceType.COMPUTE, namespace = ExtensionNamespaces.FLAVOR_EXTRA_SPECS)
+@RequestFilters(AuthenticateRequest.class)
+@Consumes(MediaType.APPLICATION_JSON)
+@Path("/flavors")
 public interface FlavorExtraSpecsApi {
-
    /**
-    * Retrieve all extra specs for a flavor
+    * Retrieves all extra specs for a flavor
     *
     * @return the set of extra metadata for the flavor
     */
-   Map<String, String> getMetadata(String flavorId);
+   @Named("flavorExtraSpecs:getMetadata")
+   @GET
+   @Path("/{id}/os-extra_specs")
+   @SelectJson("extra_specs")
+   @Fallback(EmptyMapOnNotFoundOr404.class)
+   Map<String, String> getMetadata(@PathParam("id") String flavorId);
 
    /**
     * Creates or updates the extra specs for a given flavor
     *
-    * @param flavorId the id of the flavor to modify
-    * @param specs    the extra specs to apply
+    * @param flavorId   the id of the flavor to modify
+    * @param specs      the extra specs to apply
     */
-   Boolean updateMetadata(String flavorId, Map<String, String> specs);
+   @Named("flavorExtraSpecs:updateMetadata")
+   @POST
+   @Path("/{id}/os-extra_specs")
+   @Produces(MediaType.APPLICATION_JSON)
+   @MapBinder(BindToJsonPayload.class)
+   @Fallback(FalseOnNotFoundOr404.class)
+   Boolean updateMetadata(@PathParam("id") String flavorId,
+         @PayloadParam("extra_specs") Map<String, String> specs);
 
    /**
     * Return a single extra spec value
     *
-    * @param flavorId the id of the flavor to modify
-    * @param key      the extra spec key to retrieve
+    * @param id  the id of the flavor to modify
+    * @param key the extra spec key to retrieve
     */
-   String getMetadataKey(String flavorId, String key);
+   @Named("flavorExtraSpecs:getMetadataKey")
+   @GET
+   @Path("/{id}/os-extra_specs/{key}")
+   @Unwrap
+   @Fallback(NullOnNotFoundOr404.class)
+   @Nullable
+   String getMetadataKey(@PathParam("id") String flavorId, @PathParam("key") String key);
 
    /**
     * Creates or updates a single extra spec value
     *
-    * @param flavorId the id of the flavor to modify
-    * @param key      the extra spec key (when creating ensure this does not include whitespace or other difficult characters)
-    * @param value    the value to associate with the key
+    * @param id    the id of the flavor to modify
+    * @param key   the extra spec key (when creating ensure this does not include whitespace or
+    *              other difficult characters)
+    * @param value the value to associate with the key
     */
-   Boolean updateMetadataEntry(String flavorId, String key, String value);
+   @Named("flavorExtraSpecs:updateMetadataEntry")
+   @PUT
+   @Path("/{id}/os-extra_specs/{key}")
+   @Produces(MediaType.APPLICATION_JSON)
+   @Payload("%7B\"{key}\":\"{value}\"%7D")
+   @Fallback(FalseOnNotFoundOr404.class)
+   Boolean updateMetadataEntry(@PathParam("id") String flavorId,
+         @PathParam("key") @PayloadParam("key") String key, @PayloadParam("value") String value);
 
    /**
     * Deletes an extra spec
     *
-    * @param flavorId the id of the flavor to modify
-    * @param key      the extra spec key to delete
+    * @param id  the id of the flavor to modify
+    * @param key the extra spec key to delete
     */
-   Boolean deleteMetadataKey(String flavorId, String key);
-
+   @Named("flavorExtraSpecs:deleteMetadataKey")
+   @DELETE
+   @Path("/{id}/os-extra_specs/{key}")
+   @Fallback(FalseOnNotFoundOr404.class)
+   Boolean deleteMetadataKey(@PathParam("id") String flavorId, @PathParam("key") String key);
 }

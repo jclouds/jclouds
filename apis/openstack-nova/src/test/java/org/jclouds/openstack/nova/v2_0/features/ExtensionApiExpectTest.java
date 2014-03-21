@@ -31,18 +31,18 @@ import org.testng.annotations.Test;
 import com.google.common.collect.ImmutableSet;
 
 /**
- * Tests annotation parsing of {@code ExtensionAsyncApi}
+ * Tests annotation parsing of {@code ExtensionApi}
  */
 @Test(groups = "unit", testName = "ExtensionApiExpectTest")
 public class ExtensionApiExpectTest extends BaseNovaApiExpectTest {
 
    public void testListExtensionsWhenResponseIs2xx() throws Exception {
-      HttpRequest listExtensions = HttpRequest
-            .builder()
+      HttpRequest listExtensions = HttpRequest.builder()
             .method("GET")
             .endpoint("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v1.1/3456/extensions")
             .addHeader("Accept", "application/json")
-            .addHeader("X-Auth-Token", authToken).build();
+            .addHeader("X-Auth-Token", authToken)
+            .build();
 
       HttpResponse listExtensionsResponse = HttpResponse.builder().statusCode(200)
             .payload(payloadFromResource("/extension_list.json")).build();
@@ -57,12 +57,12 @@ public class ExtensionApiExpectTest extends BaseNovaApiExpectTest {
    }
 
    public void testListExtensionsWhenReponseIs404IsEmpty() throws Exception {
-      HttpRequest listExtensions = HttpRequest
-            .builder()
+      HttpRequest listExtensions = HttpRequest.builder()
             .method("GET")
             .endpoint("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v1.1/3456/extensions")
             .addHeader("Accept", "application/json")
-            .addHeader("X-Auth-Token", authToken).build();
+            .addHeader("X-Auth-Token", authToken)
+            .build();
 
       HttpResponse listExtensionsResponse = HttpResponse.builder().statusCode(404).build();
 
@@ -74,13 +74,12 @@ public class ExtensionApiExpectTest extends BaseNovaApiExpectTest {
 
    // TODO: gson deserializer for Multimap
    public void testGetExtensionByAliasWhenResponseIs2xx() throws Exception {
-
-      HttpRequest getExtension = HttpRequest
-            .builder()
+      HttpRequest getExtension = HttpRequest.builder()
             .method("GET")
             .endpoint("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v1.1/3456/extensions/RS-PIE")
             .addHeader("Accept", "application/json")
-            .addHeader("X-Auth-Token", authToken).build();
+            .addHeader("X-Auth-Token", authToken)
+            .build();
 
       HttpResponse getExtensionResponse = HttpResponse.builder().statusCode(200)
             .payload(payloadFromResource("/extension_details.json")).build();
@@ -93,12 +92,12 @@ public class ExtensionApiExpectTest extends BaseNovaApiExpectTest {
    }
 
    public void testGetExtensionByAliasWhenResponseIs404() throws Exception {
-      HttpRequest getExtension = HttpRequest
-            .builder()
+      HttpRequest getExtension = HttpRequest.builder()
             .method("GET")
             .endpoint("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v1.1/3456/extensions/RS-PIE")
             .addHeader("Accept", "application/json")
-            .addHeader("X-Auth-Token", authToken).build();
+            .addHeader("X-Auth-Token", authToken)
+            .build();
 
       HttpResponse getExtensionResponse = HttpResponse.builder().statusCode(404)
             .payload(payloadFromResource("/extension_details.json")).build();
@@ -107,7 +106,5 @@ public class ExtensionApiExpectTest extends BaseNovaApiExpectTest {
             responseWithKeystoneAccess, getExtension, getExtensionResponse);
 
       assertNull(apiWhenNoExtensionsExist.getExtensionApiForZone("az-1.region-a.geo-1").get("RS-PIE"));
-
    }
-
 }

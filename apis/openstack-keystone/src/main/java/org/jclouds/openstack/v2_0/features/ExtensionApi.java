@@ -17,25 +17,40 @@
 package org.jclouds.openstack.v2_0.features;
 
 import java.util.Set;
+
+import javax.inject.Named;
+import javax.ws.rs.Consumes;
+import javax.ws.rs.GET;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.core.MediaType;
+
+import org.jclouds.Fallbacks.EmptySetOnNotFoundOr404;
+import org.jclouds.Fallbacks.NullOnNotFoundOr404;
+import org.jclouds.openstack.keystone.v2_0.filters.AuthenticateRequest;
 import org.jclouds.openstack.v2_0.domain.Extension;
+import org.jclouds.rest.annotations.Fallback;
+import org.jclouds.rest.annotations.RequestFilters;
+import org.jclouds.rest.annotations.SelectJson;
 
 /**
  * Provides asynchronous access to Extensions via their REST API.
- * <p/>
- * 
- * @see ExtensionAsyncApi
- * @see <a href=
- *      "http://docs.openstack.org/api/openstack-compute/2/content/Extensions-d1e1444.html"
- *      />
  */
+@RequestFilters(AuthenticateRequest.class)
 public interface ExtensionApi {
 
    /**
-    * List all available extensions
+    * Lists all available extensions
     * 
     * @return all extensions
     */
-   Set<? extends Extension> list();
+   @Named("extension:list")
+   @GET
+   @SelectJson("extensions")
+   @Consumes(MediaType.APPLICATION_JSON)
+   @Path("/extensions")
+   @Fallback(EmptySetOnNotFoundOr404.class)
+   Set<Extension> list();
 
    /**
     * Extensions may also be queried individually by their unique alias.
@@ -44,6 +59,11 @@ public interface ExtensionApi {
     *           id of the extension
     * @return extension or null if not found
     */
-   Extension get(String alias);
-
+   @Named("extension:get")
+   @GET
+   @SelectJson("extension")
+   @Consumes(MediaType.APPLICATION_JSON)
+   @Path("/extensions/{alias}")
+   @Fallback(NullOnNotFoundOr404.class)
+   Extension get(@PathParam("alias") String id);
 }

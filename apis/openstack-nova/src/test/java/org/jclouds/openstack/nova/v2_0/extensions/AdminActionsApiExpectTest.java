@@ -341,6 +341,7 @@ public class AdminActionsApiExpectTest extends BaseNovaApiExpectTest {
       return HttpRequest.builder()
                         .method("POST")
                         .addHeader("X-Auth-Token", authToken)
+                        .addHeader("Accept", "application/json")
                         .payload(payloadFromStringWithContentType("{\"" + actionName + "\":null}", MediaType.APPLICATION_JSON))
                         .endpoint(endpoint);
    }

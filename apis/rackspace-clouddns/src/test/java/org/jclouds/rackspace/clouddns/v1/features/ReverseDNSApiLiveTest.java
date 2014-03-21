@@ -38,7 +38,6 @@ import org.jclouds.compute.config.ComputeServiceProperties;
 import org.jclouds.compute.domain.NodeMetadata;
 import org.jclouds.compute.domain.Template;
 import org.jclouds.openstack.nova.v2_0.NovaApi;
-import org.jclouds.openstack.nova.v2_0.NovaAsyncApi;
 import org.jclouds.openstack.nova.v2_0.domain.Server;
 import org.jclouds.openstack.nova.v2_0.features.ServerApi;
 import org.jclouds.rackspace.clouddns.v1.domain.CreateDomain;
@@ -46,7 +45,6 @@ import org.jclouds.rackspace.clouddns.v1.domain.Domain;
 import org.jclouds.rackspace.clouddns.v1.domain.Record;
 import org.jclouds.rackspace.clouddns.v1.domain.RecordDetail;
 import org.jclouds.rackspace.clouddns.v1.internal.BaseCloudDNSApiLiveTest;
-import org.jclouds.rest.RestContext;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.Test;
 
@@ -61,7 +59,7 @@ public class ReverseDNSApiLiveTest extends BaseCloudDNSApiLiveTest {
          + "-recordtest-jclouds.org";
 
    private ComputeService computeService;
-   private RestContext<NovaApi, NovaAsyncApi> nova;
+   private NovaApi nova;
    private String serverId;
    private URI serverURI;
    private String serverIPv4;
@@ -82,14 +80,14 @@ public class ReverseDNSApiLiveTest extends BaseCloudDNSApiLiveTest {
             .overrides(overrides)
             .buildView(ComputeServiceContext.class);
       computeService = context.getComputeService();
-      nova = context.unwrap();
+      nova = context.unwrapApi(NovaApi.class);
 
       Template template = computeService.templateBuilder().smallest().build();
       NodeMetadata nodeMetadata = computeService.createNodesInGroup("jclouds-reverse-dns-test", 1, template).iterator().next();
       serverId = nodeMetadata.getId();
       serverURI = nodeMetadata.getUri();
 
-      ServerApi serverApi = nova.getApi().getServerApiForZone(nodeMetadata.getLocation().getParent().getId());
+      ServerApi serverApi = nova.getServerApiForZone(nodeMetadata.getLocation().getParent().getId());
       Server server = serverApi.get(nodeMetadata.getProviderId());
       serverIPv4 = server.getAccessIPv4();
       serverIPv6 = server.getAccessIPv6();

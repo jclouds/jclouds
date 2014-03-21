@@ -94,7 +94,7 @@ public class AllocateAndAddFloatingIpToNodeExpectTest extends BaseNovaComputeSer
       HttpRequest addFloatingIPRequest = HttpRequest.builder().method("POST").endpoint(
                URI.create("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v1.1/3456/servers/71592/action"))
                .headers(
-                        ImmutableMultimap.<String, String> builder().put("Accept", "*/*")
+                        ImmutableMultimap.<String, String> builder().put("Accept", "application/json")
                                  .put("X-Auth-Token", authToken).build()).payload(
                         payloadFromStringWithContentType("{\"addFloatingIp\":{\"address\":\"" + address + "\"}}",
                                  "application/json")).build();

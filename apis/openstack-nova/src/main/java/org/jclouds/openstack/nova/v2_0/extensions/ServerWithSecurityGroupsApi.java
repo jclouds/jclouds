@@ -16,33 +16,53 @@
  */
 package org.jclouds.openstack.nova.v2_0.extensions;
 
+import javax.inject.Named;
+import javax.ws.rs.Consumes;
+import javax.ws.rs.GET;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.core.MediaType;
+
+import org.jclouds.Fallbacks.NullOnNotFoundOr404;
+import org.jclouds.javax.annotation.Nullable;
+import org.jclouds.openstack.keystone.v2_0.filters.AuthenticateRequest;
 import org.jclouds.openstack.nova.v2_0.domain.ServerWithSecurityGroups;
 import org.jclouds.openstack.v2_0.ServiceType;
 import org.jclouds.openstack.v2_0.services.Extension;
+import org.jclouds.rest.annotations.Fallback;
+import org.jclouds.rest.annotations.RequestFilters;
+import org.jclouds.rest.annotations.SelectJson;
 
 import com.google.common.annotations.Beta;
 
 /**
- * Provides synchronous access to Server details including security group, referred to as the CREATESERVEREXT extension
- * in the nova documentation
+ * Provides access to the OpenStack Compute (Nova) Create Server extension API.
+ *
+ * This provides details including the security groups associated with a Server.
  * <p/>
- * NOTE: the equivalent to listServersInDetail() isn't available at the other end, so not extending ServerApi at this
- * time.
+ *
+ * NOTE: the equivalent to listServersInDetail() isn't available at the other end, so not
+ * extending ServerApi at this time.
  *
  * @see org.jclouds.openstack.nova.v2_0.features.ServerApi
- * @see ServerWithSecurityGroupsAsyncApi
- * @see <a href="http://nova.openstack.org/api/nova.api.openstack.compute.contrib.createserverext.html"/>
  */
 @Beta
 @Extension(of = ServiceType.COMPUTE, namespace = ExtensionNamespaces.CREATESERVEREXT)
+@RequestFilters(AuthenticateRequest.class)
+@Consumes(MediaType.APPLICATION_JSON)
+@Path("/os-create-server-ext")
 public interface ServerWithSecurityGroupsApi {
-
    /**
     * Retrieve details of the specified server, including security groups
     *
     * @param id id of the server
     * @return server or null if not found
     */
-   ServerWithSecurityGroups get(String id);
-
+   @Named("server:get")
+   @GET
+   @SelectJson("server")
+   @Path("/{id}")
+   @Fallback(NullOnNotFoundOr404.class)
+   @Nullable
+   ServerWithSecurityGroups get(@PathParam("id") String id);
 }

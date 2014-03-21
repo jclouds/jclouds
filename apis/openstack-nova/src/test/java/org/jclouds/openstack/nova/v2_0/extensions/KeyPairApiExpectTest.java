@@ -31,7 +31,7 @@ import org.testng.annotations.Test;
 import com.google.common.collect.ImmutableSet;
 
 /**
- * Tests annotation parsing of {@code KeyPairAsyncApi}
+ * Tests annotation parsing of {@code KeyPairApi}
  */
 @Test(groups = "unit", testName = "KeyPairApiExpectTest")
 public class KeyPairApiExpectTest extends BaseNovaApiExpectTest {
@@ -128,7 +128,7 @@ public class KeyPairApiExpectTest extends BaseNovaApiExpectTest {
             .builder()
             .method("DELETE")
             .endpoint("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v1.1/3456/os-keypairs/testkeypair")
-            .addHeader("Accept", "*/*")
+            .addHeader("Accept", "application/json")
             .addHeader("X-Auth-Token", authToken).build();
 
       HttpResponse deleteResponse = HttpResponse.builder().statusCode(202).build();

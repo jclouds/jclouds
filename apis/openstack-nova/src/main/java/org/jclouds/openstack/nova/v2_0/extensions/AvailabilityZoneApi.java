@@ -16,19 +16,39 @@
  */
 package org.jclouds.openstack.nova.v2_0.extensions;
 
-import com.google.common.annotations.Beta;
-import com.google.common.collect.FluentIterable;
+import javax.inject.Named;
+import javax.ws.rs.Consumes;
+import javax.ws.rs.GET;
+import javax.ws.rs.Path;
+import javax.ws.rs.core.MediaType;
+
+import org.jclouds.Fallbacks.EmptyFluentIterableOnNotFoundOr404;
+import org.jclouds.openstack.keystone.v2_0.filters.AuthenticateRequest;
 import org.jclouds.openstack.nova.v2_0.domain.zonescoped.AvailabilityZone;
 import org.jclouds.openstack.v2_0.ServiceType;
 import org.jclouds.openstack.v2_0.services.Extension;
+import org.jclouds.rest.annotations.Fallback;
+import org.jclouds.rest.annotations.RequestFilters;
+import org.jclouds.rest.annotations.SelectJson;
 
+import com.google.common.annotations.Beta;
+import com.google.common.collect.FluentIterable;
+
+/**
+ * Provides access to the OpenStack Compute (Nova) Availability Zone Extension API.
+ */
 @Beta
 @Extension(of = ServiceType.COMPUTE, namespace = ExtensionNamespaces.AVAILABILITY_ZONE)
+@RequestFilters(AuthenticateRequest.class)
+@Consumes(MediaType.APPLICATION_JSON)
+@Path("/os-availability-zone")
 public interface AvailabilityZoneApi {
-
    /**
     * @return all availability zones
     */
-   FluentIterable<? extends AvailabilityZone> list();
-
+   @Named("availabilityZone:list")
+   @GET
+   @SelectJson("availabilityZoneInfo")
+   @Fallback(EmptyFluentIterableOnNotFoundOr404.class)
+   FluentIterable<AvailabilityZone> list();
 }

@@ -82,6 +82,7 @@ public class QuotaApiExpectTest extends BaseNovaApiExpectTest {
             responseWithKeystoneAccess, extensionsOfNovaRequest, extensionsOfNovaResponse,
             HttpRequest.builder().endpoint(endpoint).method("PUT")
                   .addHeader("X-Auth-Token", authToken)
+                  .addHeader("Accept", "application/json")
                   .payload(payloadFromResourceWithContentType("/quotas.json", MediaType.APPLICATION_JSON))
                   .build(),
             HttpResponse.builder().statusCode(200).build()).getQuotaExtensionForZone("az-1.region-a.geo-1").get();
@@ -96,6 +97,7 @@ public class QuotaApiExpectTest extends BaseNovaApiExpectTest {
             responseWithKeystoneAccess, extensionsOfNovaRequest, extensionsOfNovaResponse,
             HttpRequest.builder().endpoint(endpoint).method("PUT")
                   .addHeader("X-Auth-Token", authToken)
+                  .addHeader("Accept", "application/json")
                   .payload(payloadFromResourceWithContentType("/quotas.json", MediaType.APPLICATION_JSON))
                   .build(),
             HttpResponse.builder().statusCode(404).build()).getQuotaExtensionForZone("az-1.region-a.geo-1").get();

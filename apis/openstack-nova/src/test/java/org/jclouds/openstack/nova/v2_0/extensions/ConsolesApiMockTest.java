@@ -92,7 +92,6 @@ public class ConsolesApiMockTest extends BaseOpenStackMockTest<NovaApi> {
 
          String zoneId = getFirst(novaApi.getConfiguredZones(), "RegionTwo");
 
-         System.out.println("zoneId: " + zoneId);
          ConsolesApi consolesApi = novaApi.getConsolesExtensionForZone(zoneId).get();
 
          assertEquals(server.getRequestCount(), 2);
