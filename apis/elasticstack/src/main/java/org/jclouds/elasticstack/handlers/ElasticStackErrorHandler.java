@@ -16,6 +16,8 @@
  */
 package org.jclouds.elasticstack.handlers;
 
+import static org.jclouds.http.HttpUtils.releasePayload;
+
 import java.io.IOException;
 
 import javax.annotation.Resource;
@@ -28,10 +30,9 @@ import org.jclouds.http.HttpResponseException;
 import org.jclouds.logging.Logger;
 import org.jclouds.rest.AuthorizationException;
 import org.jclouds.rest.ResourceNotFoundException;
-import org.jclouds.util.Closeables2;
 import org.jclouds.util.Strings2;
 
-import com.google.common.base.Throwables;
+import com.google.common.io.Closeables;
 
 /**
  * This will parse and set an appropriate exception on the command object.
@@ -80,7 +81,11 @@ public class ElasticStackErrorHandler implements HttpErrorHandler {
             break;
          }
       } finally {
-         Closeables2.closeQuietly(response.getPayload());
+         try {
+            Closeables.close(response.getPayload(), true);
+         } catch (IOException e) {
+            // Unreachable code
+         }
          command.setException(exception);
       }
    }
@@ -93,11 +98,7 @@ public class ElasticStackErrorHandler implements HttpErrorHandler {
       } catch (IOException e) {
          throw new RuntimeException(e);
       } finally {
-         try {
-            response.getPayload().getInput().close();
-         } catch (IOException e) {
-            Throwables.propagate(e);
-         }
+         releasePayload(response);
       }
    }
 }

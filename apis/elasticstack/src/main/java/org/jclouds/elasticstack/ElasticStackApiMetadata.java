@@ -62,7 +62,6 @@ public class ElasticStackApiMetadata extends BaseHttpApiMetadata<ElasticStackApi
 
    public static class Builder extends BaseHttpApiMetadata.Builder<ElasticStackApi, Builder> {
 
-      @SuppressWarnings("deprecation")
       protected Builder() {
          id("elasticstack")
          .name("ElasticStack API")

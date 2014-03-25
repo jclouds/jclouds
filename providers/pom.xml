@@ -46,6 +46,10 @@
     <module>elastichosts-lon-b</module>
     <module>elastichosts-tor-p</module>
     <module>elastichosts-lax-p</module>
+    <module>elastichosts-ams-e</module>
+    <module>elastichosts-sjc-c</module>
+    <module>elastichosts-hkg-e</module>
+    <module>elastichosts-syd-v</module>
     <module>openhosting-east1</module>
     <module>serverlove-z1-man</module>
     <module>skalicloud-sdg-my</module>

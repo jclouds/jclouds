@@ -22,6 +22,10 @@ import java.util.Properties;
 import org.jclouds.elasticstack.ElasticStackApiMetadata;
 import org.jclouds.providers.ProviderMetadata;
 import org.jclouds.providers.internal.BaseProviderMetadata;
+import org.jclouds.serverlove.config.ServerloveImagesModule;
+
+import com.google.common.collect.ImmutableSet;
+import com.google.inject.Module;
 
 /**
  * Implementation of {@link org.jclouds.types.ProviderMetadata} for Serverlove Manchester.
@@ -52,19 +56,22 @@ public class ServerloveManchesterProviderMetadata extends BaseProviderMetadata {
       return properties;
    }
 
-   public static class Builder
-         extends
-         BaseProviderMetadata.Builder {
+   public static class Builder extends BaseProviderMetadata.Builder {
 
       protected Builder() {
-         id("serverlove-z1-man")
-         .name("Serverlove Manchester")
-         .apiMetadata(new ElasticStackApiMetadata().toBuilder().version("2.0").build())
-         .homepage(URI.create("http://www.serverlove.com"))
-         .console(URI.create("http://www.serverlove.com/accounts"))
-         .iso3166Codes("GB-MAN")
-         .endpoint("https://api.z1-man.serverlove.com")
-         .defaultProperties(ServerloveManchesterProviderMetadata.defaultProperties());
+         ElasticStackApiMetadata apiMedatada = new ElasticStackApiMetadata();
+
+         ImmutableSet.Builder<Class<? extends Module>> modules = ImmutableSet.builder();
+         modules.addAll(apiMedatada.getDefaultModules());
+         modules.add(ServerloveImagesModule.class); // Custom image supplier binding
+
+         id("serverlove-z1-man").name("Serverlove Manchester")
+               .apiMetadata(apiMedatada.toBuilder().version("2.0").defaultModules(modules.build()).build())
+               .homepage(URI.create("http://www.serverlove.com"))
+               .console(URI.create("http://www.serverlove.com/accounts"))
+               .iso3166Codes("GB-MAN")
+               .endpoint("https://api.z1-man.serverlove.com")
+               .defaultProperties(ServerloveManchesterProviderMetadata.defaultProperties());
       }
 
       @Override
@@ -73,8 +80,7 @@ public class ServerloveManchesterProviderMetadata extends BaseProviderMetadata {
       }
 
       @Override
-      public Builder fromProviderMetadata(
-            ProviderMetadata in) {
+      public Builder fromProviderMetadata(ProviderMetadata in) {
          super.fromProviderMetadata(in);
          return this;
       }

@@ -16,6 +16,8 @@
  */
 package org.jclouds.elastichosts;
 
+import static org.jclouds.compute.config.ComputeServiceProperties.TEMPLATE;
+
 import java.net.URI;
 import java.util.Properties;
 
@@ -49,6 +51,7 @@ public class ElasticHostsBlueSquareLondonProviderMetadata extends BaseProviderMe
 
    public static Properties defaultProperties() {
       Properties properties = new Properties();
+      properties.setProperty(TEMPLATE, "osFamily=UBUNTU,osVersionMatches=1[01234].[01][04].[0-9]*,os64Bit=true");
       return properties;
    }
 

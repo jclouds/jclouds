@@ -38,6 +38,8 @@ import org.jclouds.elasticstack.functions.ListOfKeyValuesDelimitedByBlankLinesTo
 import org.jclouds.elasticstack.functions.ListOfKeyValuesDelimitedByBlankLinesToServerInfoSet;
 import org.jclouds.elasticstack.functions.ReturnPayload;
 import org.jclouds.elasticstack.functions.SplitNewlines;
+import org.jclouds.elasticstack.suppliers.MockStandardDiskImageSupplier;
+import org.jclouds.elasticstack.suppliers.WellKnownImageSupplier;
 import org.jclouds.fallbacks.MapHttp4xxCodesToExceptions;
 import org.jclouds.http.HttpRequest;
 import org.jclouds.http.filters.BasicAuthentication;
@@ -51,6 +53,9 @@ import org.testng.annotations.Test;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Iterables;
 import com.google.common.reflect.Invokable;
+import com.google.inject.AbstractModule;
+import com.google.inject.Module;
+import com.google.inject.Scopes;
 /**
  * Tests behavior of {@code ElasticStackApi}
  * 
@@ -446,6 +451,16 @@ public class ElasticStackApiTest extends BaseAsyncClientTest<ElasticStackApi> {
    @Override
    protected ApiMetadata createApiMetadata() {
       return new ElasticStackApiMetadata();
+   }
+
+   @Override
+   protected Module createModule() {
+      return new AbstractModule() {
+         @Override
+         protected void configure() {
+            bind(WellKnownImageSupplier.class).to(MockStandardDiskImageSupplier.class).in(Scopes.SINGLETON);
+         }
+      };
    }
 
 }
