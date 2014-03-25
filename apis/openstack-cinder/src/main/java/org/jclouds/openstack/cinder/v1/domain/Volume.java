@@ -241,7 +241,7 @@ public class Volume {
       this.id = checkNotNull(id, "id");
       this.status = checkNotNull(status, "status");
       this.size = size;
-      this.zone = checkNotNull(zone, "zone");
+      this.zone = zone;
       this.created = checkNotNull(created, "created");
       this.attachments = attachments == null ? ImmutableSet.<VolumeAttachment>of() : ImmutableSet.copyOf(attachments);      
       this.volumeType = volumeType;
@@ -275,6 +275,7 @@ public class Volume {
    /**
     * @return the availabilityZone containing this volume
     */
+   @Nullable
    public String getZone() {
       return this.zone;
    }
