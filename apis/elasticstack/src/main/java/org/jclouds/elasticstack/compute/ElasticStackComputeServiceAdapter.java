@@ -32,6 +32,7 @@ import javax.inject.Named;
 import javax.inject.Singleton;
 
 import org.jclouds.Constants;
+import org.jclouds.collect.Memoized;
 import org.jclouds.compute.ComputeServiceAdapter;
 import org.jclouds.compute.domain.Hardware;
 import org.jclouds.compute.domain.HardwareBuilder;
@@ -57,6 +58,7 @@ import org.jclouds.logging.Logger;
 
 import com.google.common.base.Function;
 import com.google.common.base.Predicate;
+import com.google.common.base.Supplier;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
 import com.google.common.collect.FluentIterable;
@@ -70,7 +72,7 @@ import com.google.common.util.concurrent.UncheckedExecutionException;
 
 /**
  * defines the connection between the {@link org.jclouds.elasticstack.ElasticStackApi} implementation
- * and the jclouds {@link ComputeService}
+ * and the jclouds {@link org.jclouds.compute.ComputeService}
  * 
  */
 @Singleton
@@ -78,7 +80,7 @@ public class ElasticStackComputeServiceAdapter implements
       ComputeServiceAdapter<ServerInfo, Hardware, DriveInfo, Location> {
    private final ElasticStackApi client;
    private final Predicate<DriveInfo> driveNotClaimed;
-   private final Map<String, WellKnownImage> preinstalledImages;
+   private final Supplier<Map<String, WellKnownImage>> preinstalledImages;
    private final LoadingCache<String, DriveInfo> cache;
    private final String defaultVncPassword;
    private final ListeningExecutorService userExecutor;
@@ -89,7 +91,7 @@ public class ElasticStackComputeServiceAdapter implements
 
    @Inject
    public ElasticStackComputeServiceAdapter(ElasticStackApi client, Predicate<DriveInfo> driveNotClaimed,
-         Map<String, WellKnownImage> preinstalledImages, LoadingCache<String, DriveInfo> cache,
+         @Memoized Supplier<Map<String, WellKnownImage>> preinstalledImages, LoadingCache<String, DriveInfo> cache,
          @Named(ElasticStackConstants.PROPERTY_VNC_PASSWORD) String defaultVncPassword,
          @Named(Constants.PROPERTY_USER_THREADS) ListeningExecutorService userExecutor) {
       this.client = checkNotNull(client, "client");
@@ -108,16 +110,22 @@ public class ElasticStackComputeServiceAdapter implements
       logger.debug(">> creating boot drive bytes(%d)", bootSize);
       DriveInfo drive = client
             .createDrive(new Drive.Builder().name(template.getImage().getId()).size(bootSize).build());
-      logger.debug("<< drive(%s)", drive.getUuid());
+      logger.debug("<< drive (%s)", drive);
+
+      boolean success = driveNotClaimed.apply(drive);
+      if (!success) {
+         client.destroyDrive(drive.getUuid());
+         throw new IllegalStateException(String.format("could not create drive %s in time!", drive));
+      }
 
       logger.debug(">> imaging boot drive source(%s)", template.getImage().getId());
       client.imageDrive(template.getImage().getId(), drive.getUuid(), ImageConversionType.GUNZIP);
-      boolean success = driveNotClaimed.apply(drive);
-      logger.debug("<< imaged (%s)", success);
-      if (!success) {
+      boolean ready = driveNotClaimed.apply(drive);
+      if (!ready) {
          client.destroyDrive(drive.getUuid());
-         throw new IllegalStateException("could not image drive in time!");
+         throw new IllegalStateException(String.format("could not image drive %s in time!", drive));
       }
+      logger.debug("<< imaged (%s)", drive);
 
       template.getOptions().userMetadata(ComputeServiceConstants.NODE_GROUP_KEY, tag);
 
@@ -126,6 +134,7 @@ public class ElasticStackComputeServiceAdapter implements
                .tags(template.getOptions().getTags()).userMetadata(template.getOptions().getUserMetadata()).build();
 
       ServerInfo from = client.createServer(toCreate);
+
       client.startServer(from.getUuid());
       from = client.getServerInfo(from.getUuid());
       return new NodeAndInitialCredentials<ServerInfo>(from, from.getUuid(), LoginCredentials.builder()
@@ -164,7 +173,7 @@ public class ElasticStackComputeServiceAdapter implements
     */
    @Override
    public Iterable<DriveInfo> listImages() {
-      return FluentIterable.from(transformParallel(preinstalledImages.keySet(),
+      return FluentIterable.from(transformParallel(preinstalledImages.get().keySet(),
             new Function<String, ListenableFuture<? extends DriveInfo>>() {
 
                @Override
@@ -187,7 +196,6 @@ public class ElasticStackComputeServiceAdapter implements
             }, userExecutor, null, logger, "drives")).filter(notNull());
    }
 
-   @SuppressWarnings("unchecked")
    @Override
    public Iterable<ServerInfo> listNodes() {
       return (Iterable<ServerInfo>) client.listServerInfo();

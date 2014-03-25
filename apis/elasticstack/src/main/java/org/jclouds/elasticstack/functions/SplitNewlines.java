@@ -16,8 +16,6 @@
  */
 package org.jclouds.elasticstack.functions;
 
-import static com.google.common.collect.Sets.newTreeSet;
-
 import java.util.Set;
 
 import javax.inject.Inject;
@@ -28,6 +26,7 @@ import org.jclouds.http.functions.ReturnStringIf2xx;
 
 import com.google.common.base.Function;
 import com.google.common.base.Splitter;
+import com.google.common.collect.ImmutableSet;
 
 /**
  * 
@@ -44,6 +43,8 @@ public class SplitNewlines implements Function<HttpResponse, Set<String>> {
 
    @Override
    public Set<String> apply(HttpResponse response) {
-      return newTreeSet(Splitter.on('\n').omitEmptyStrings().split(returnStringIf200.apply(response)));
+      String payload = returnStringIf200.apply(response);
+      return payload == null ? ImmutableSet.<String> of() : ImmutableSet.copyOf(Splitter.on('\n').omitEmptyStrings()
+            .split(payload));
    }
 }

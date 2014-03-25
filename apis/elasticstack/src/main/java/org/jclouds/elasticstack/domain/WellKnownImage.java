@@ -16,7 +16,11 @@
  */
 package org.jclouds.elasticstack.domain;
 
+import static com.google.common.base.Objects.firstNonNull;
+import static com.google.common.base.Preconditions.checkNotNull;
+
 import org.jclouds.compute.domain.OsFamily;
+import org.jclouds.javax.annotation.Nullable;
 
 import com.google.common.base.Objects;
 
@@ -25,20 +29,80 @@ import com.google.common.base.Objects;
  * @author Adrian Cole
  */
 public class WellKnownImage {
-   private String loginUser = "toor";
-   private String uuid;
-   private String description;
-   private OsFamily osFamily;
-   private String osVersion;
-   private int size;
-   private boolean is64bit = true;
 
-   // intended only for serialization
-   WellKnownImage() {
-
+   public static Builder builder() {
+      return new Builder();
    }
 
-   // performance isn't a concern on a infrequent object like this, so using shortcuts;
+   public static class Builder {
+      private String loginUser;
+      private String uuid;
+      private String description;
+      private OsFamily osFamily;
+      private String osVersion;
+      private int size;
+      private boolean is64bit;
+
+      public Builder loginUser(String loginUser) {
+         this.loginUser = loginUser;
+         return this;
+      }
+
+      public Builder uuid(String uuid) {
+         this.uuid = uuid;
+         return this;
+      }
+
+      public Builder description(String description) {
+         this.description = description;
+         return this;
+      }
+
+      public Builder osFamily(OsFamily osFamily) {
+         this.osFamily = osFamily;
+         return this;
+      }
+
+      public Builder osVersion(String osVersion) {
+         this.osVersion = osVersion;
+         return this;
+      }
+
+      public Builder size(int size) {
+         this.size = size;
+         return this;
+      }
+
+      public Builder is64bit(boolean is64bit) {
+         this.is64bit = is64bit;
+         return this;
+      }
+
+      public WellKnownImage build() {
+         return new WellKnownImage(loginUser, uuid, description, osFamily, osVersion, size, is64bit);
+      }
+   }
+
+   public static final String DEFAULT_USER = "toor";
+
+   private final String loginUser;
+   private final String uuid;
+   private final String description;
+   private final OsFamily osFamily;
+   private final String osVersion;
+   private final int size;
+   private final boolean is64bit;
+
+   public WellKnownImage(@Nullable String loginUser, String uuid, String description, OsFamily osFamily,
+         @Nullable String osVersion, int size, @Nullable Boolean is64bit) {
+      this.loginUser = firstNonNull(loginUser, DEFAULT_USER);
+      this.uuid = checkNotNull(uuid, "uuid cannot be null");
+      this.description = checkNotNull(description, "description cannot be null");
+      this.osFamily = checkNotNull(osFamily, "osFamily cannot be null");
+      this.osVersion = osVersion;
+      this.size = size;
+      this.is64bit = firstNonNull(is64bit, Boolean.TRUE);
+   }
 
    public String getUuid() {
       return uuid;
@@ -82,9 +146,9 @@ public class WellKnownImage {
 
    @Override
    public String toString() {
-      return Objects.toStringHelper(this).add("uuid", uuid).add("description", description).add("osFamily", osFamily)
-               .add("osVersion", osVersion).add("size", size).add("is64bit", is64bit).add("loginUser", loginUser)
-               .toString();
+      return Objects.toStringHelper(this).omitNullValues().add("uuid", uuid).add("description", description)
+            .add("osFamily", osFamily).add("osVersion", osVersion).add("size", size).add("is64bit", is64bit)
+            .add("loginUser", loginUser).toString();
    }
 
 }

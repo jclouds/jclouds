@@ -18,6 +18,7 @@ package org.jclouds.elasticstack;
 import static java.util.concurrent.TimeUnit.SECONDS;
 import static org.jclouds.util.Predicates2.retry;
 import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertFalse;
 import static org.testng.Assert.assertNotNull;
 
 import java.io.IOException;
@@ -38,6 +39,7 @@ import org.jclouds.elasticstack.domain.Model;
 import org.jclouds.elasticstack.domain.Server;
 import org.jclouds.elasticstack.domain.ServerInfo;
 import org.jclouds.elasticstack.domain.ServerStatus;
+import org.jclouds.elasticstack.domain.StandardDrive;
 import org.jclouds.elasticstack.predicates.DriveClaimed;
 import org.jclouds.elasticstack.util.Servers;
 import org.jclouds.io.Payloads;
@@ -114,11 +116,25 @@ public class ElasticStackApiLiveTest extends BaseComputeServiceContextLiveTest {
       Set<String> drives = client.listDrives();
       assertNotNull(drives);
    }
+   
+   @Test
+   public void testListStandardDrives() throws Exception {
+      Set<String> drives = client.listStandardDrives();
+      assertNotNull(drives);
+      assertFalse(drives.isEmpty(), "standard drive list should not be empty");
+   }
 
    @Test
    public void testListDriveInfo() throws Exception {
       Set<? extends DriveInfo> drives = client.listDriveInfo();
       assertNotNull(drives);
+   }
+   
+   @Test
+   public void testListStandardDriveInfo() throws Exception {
+      Set<? extends StandardDrive> drives = client.listStandardDriveInfo();
+      assertNotNull(drives);
+      assertFalse(drives.isEmpty(), "standard drive list should not be empty");
    }
 
    @Test

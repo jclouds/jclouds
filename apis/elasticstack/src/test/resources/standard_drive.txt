@@ -1,0 +1,8 @@
+claim:type shared
+drive 11b84345-7169-4279-8038-18d6ba1a7712
+format gzip
+media disk
+name Windows Web Server 2008 R2
+rawsize 11811160064
+readers ffffffff-ffff-ffff-ffff-ffffffffffff
+size 4743757824

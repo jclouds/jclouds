@@ -73,7 +73,7 @@ public class MapToDriveInfo implements Function<Map<String, String>, DriveInfo> 
       try {
          return builder.build();
       } catch (NullPointerException e) {
-         logger.trace("entry missing data: %s; %s", e.getMessage(), from);
+         logger.warn("entry missing data: %s; %s", e.getMessage(), from);
          return null;
       }
    }

@@ -18,7 +18,9 @@ package org.jclouds.elastichosts.compute;
 
 import static org.jclouds.compute.util.ComputeServiceUtils.getCores;
 import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertTrue;
 
+import java.io.IOException;
 import java.util.Set;
 
 import org.jclouds.compute.domain.OsFamily;
@@ -32,7 +34,6 @@ import com.google.common.base.Predicates;
 import com.google.common.collect.ImmutableSet;
 
 /**
- * 
  * @author Adrian Cole
  */
 @Test(groups = "live")
@@ -47,18 +48,19 @@ public class ElasticHostsBlueSquareLondonTemplateBuilderLiveTest extends BaseTem
       return Predicates.not(new Predicate<OsFamilyVersion64Bit>() {
 
          @Override
-         public boolean apply(OsFamilyVersion64Bit input) {
+         public boolean apply(final OsFamilyVersion64Bit input) {
             switch (input.family) {
-            case UBUNTU:
-               return (input.version.equals("") || input.version.equals("10.04") || input.version.equals("11.10"))
-                     && input.is64Bit;
-            case DEBIAN:
-               return (input.version.equals("") || input.version.matches("6.0")) && input.is64Bit;
+               case UBUNTU:
+                  return (input.version.equals("") || input.version.equals("12.04.1") || input.version.equals("13.10") || input.version
+                        .equals("14.04")) && input.is64Bit;
+               case DEBIAN:
+                  return (input.version.equals("") || input.version.matches("7.4")) && input.is64Bit;
                case CENTOS:
-                  return (input.version.equals("") || input.version.equals("6.0")) && input.is64Bit;
+                  return (input.version.equals("") || input.version.equals("6.5")) && input.is64Bit;
                case WINDOWS:
-                  return (input.version.equals("") || input.version.equals("2008 R2") || input.version.equals("2008"))
-                           && input.is64Bit;
+                  return (input.version.equals("") || input.version.equals("2008 R2")
+                        || input.version.equals("2008 R2 + SQL") || input.version.equals("2012") || input.version
+                           .equals("2012 R2 + SQL")) && input.is64Bit;
                default:
                   return false;
             }
@@ -67,13 +69,12 @@ public class ElasticHostsBlueSquareLondonTemplateBuilderLiveTest extends BaseTem
       });
    }
 
-   @Test
-   public void testTemplateBuilder() {
-      Template defaultTemplate = this.view.getComputeService().templateBuilder().build();
+   @Override
+   public void testDefaultTemplateBuilder() throws IOException {
+      Template defaultTemplate = view.getComputeService().templateBuilder().build();
+      assertTrue(defaultTemplate.getImage().getOperatingSystem().getVersion().matches("1[01234].[01][04].[0-9]*"));
       assertEquals(defaultTemplate.getImage().getOperatingSystem().is64Bit(), true);
-      assertEquals(defaultTemplate.getImage().getOperatingSystem().getVersion(), "11.10");
       assertEquals(defaultTemplate.getImage().getOperatingSystem().getFamily(), OsFamily.UBUNTU);
-      assertEquals(defaultTemplate.getLocation().getId(), "elastichosts-lon-b");
       assertEquals(getCores(defaultTemplate.getHardware()), 1.0d);
    }
 

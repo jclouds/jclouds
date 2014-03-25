@@ -35,4 +35,17 @@ public class ServerloveManchesterApiLiveTest extends ElasticStackApiLiveTest {
    protected LoginCredentials getSshCredentials(Server server) {
       return LoginCredentials.builder().user("root").password(server.getVnc().getPassword()).build();
    }
+
+   @Override
+   @Test(enabled = false, description = "Standard drive API still not supported")
+   public void testListStandardDrives() throws Exception {
+
+   }
+
+   @Override
+   @Test(enabled = false, description = "Standard drive API still not supported")
+   public void testListStandardDriveInfo() throws Exception {
+
+   }
+
 }

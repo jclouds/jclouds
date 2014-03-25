@@ -16,16 +16,22 @@
  */
 package org.jclouds.elasticstack.compute.config;
 
+import static com.google.common.base.Suppliers.memoizeWithExpiration;
 import static java.util.concurrent.TimeUnit.MILLISECONDS;
+import static org.jclouds.Constants.PROPERTY_SESSION_INTERVAL;
 import static org.jclouds.util.Predicates2.retry;
 
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicReference;
 
 import javax.inject.Inject;
+import javax.inject.Named;
 import javax.inject.Singleton;
 
+import org.jclouds.collect.Memoized;
 import org.jclouds.compute.ComputeServiceAdapter;
 import org.jclouds.compute.config.ComputeServiceAdapterContextModule;
 import org.jclouds.compute.domain.Hardware;
@@ -39,21 +45,24 @@ import org.jclouds.elasticstack.compute.ElasticStackComputeServiceAdapter;
 import org.jclouds.elasticstack.compute.functions.ServerInfoToNodeMetadata;
 import org.jclouds.elasticstack.compute.functions.ServerInfoToNodeMetadata.DeviceToVolume;
 import org.jclouds.elasticstack.compute.functions.ServerInfoToNodeMetadata.GetImageIdFromServer;
+import org.jclouds.elasticstack.compute.functions.StandardDriveToWellKnownImage;
 import org.jclouds.elasticstack.compute.functions.WellKnownImageToImage;
 import org.jclouds.elasticstack.domain.Device;
 import org.jclouds.elasticstack.domain.DriveInfo;
 import org.jclouds.elasticstack.domain.Server;
 import org.jclouds.elasticstack.domain.ServerInfo;
+import org.jclouds.elasticstack.domain.StandardDrive;
 import org.jclouds.elasticstack.domain.WellKnownImage;
 import org.jclouds.elasticstack.predicates.DriveClaimed;
+import org.jclouds.elasticstack.suppliers.WellKnownImageSupplier;
 import org.jclouds.functions.IdentityFunction;
-import org.jclouds.json.Json;
-import org.jclouds.location.Provider;
-import org.jclouds.util.Strings2;
+import org.jclouds.rest.AuthorizationException;
+import org.jclouds.rest.suppliers.MemoizedRetryOnTimeOutButNotOnAuthorizationExceptionSupplier;
 
 import com.google.common.base.Function;
 import com.google.common.base.Predicate;
 import com.google.common.base.Predicates;
+import com.google.common.base.Supplier;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
@@ -66,7 +75,7 @@ import com.google.inject.TypeLiteral;
  * @author Adrian Cole
  */
 public class ElasticStackComputeServiceContextModule extends
-         ComputeServiceAdapterContextModule<ServerInfo, Hardware, DriveInfo, Location> {
+      ComputeServiceAdapterContextModule<ServerInfo, Hardware, DriveInfo, Location> {
 
    @SuppressWarnings("unchecked")
    @Override
@@ -88,8 +97,12 @@ public class ElasticStackComputeServiceContextModule extends
       }).to(GetImageIdFromServer.class);
       bind(new TypeLiteral<Function<DriveInfo, Image>>() {
       }).to(WellKnownImageToImage.class);
+      bind(new TypeLiteral<Function<StandardDrive, WellKnownImage>>() {
+      }).to(StandardDriveToWellKnownImage.class);
+      bind(new TypeLiteral<Supplier<List<WellKnownImage>>>() {
+      }).to(WellKnownImageSupplier.class);
    }
-   
+
    @Provides
    @Singleton
    protected LoadingCache<String, DriveInfo> cache(GetDrive getDrive) {
@@ -113,18 +126,33 @@ public class ElasticStackComputeServiceContextModule extends
 
    @Singleton
    @Provides
-   protected Map<String, WellKnownImage> provideImages(Json json, @Provider String providerName) throws IOException {
-      List<WellKnownImage> wellKnowns = json.fromJson(Strings2.toStringAndClose(getClass().getResourceAsStream(
-               "/" + providerName + "/preinstalled_images.json")), new TypeLiteral<List<WellKnownImage>>() {
-      }.getType());
-      return Maps.uniqueIndex(wellKnowns, new Function<WellKnownImage, String>() {
-
+   @Memoized
+   protected Supplier<Map<String, WellKnownImage>> provideImages(@Named(PROPERTY_SESSION_INTERVAL) long seconds,
+         @Memoized final Supplier<List<WellKnownImage>> wellKnownImageSupplier) throws IOException {
+      // The image map won't change. Memoize it during the session.
+      // This map can't be created directly as a singleton, as Guice needs it to construct the ElasticStackComputeServiceAdapter
+      // and a misconfiguration such as invalid credentials, etc would cause the Guice injection to fail
+      return memoizeWithExpiration(new Supplier<Map<String, WellKnownImage>>() {
          @Override
-         public String apply(WellKnownImage input) {
-            return input.getUuid();
+         public Map<String, WellKnownImage> get() {
+            return Maps.uniqueIndex(wellKnownImageSupplier.get(), new Function<WellKnownImage, String>() {
+               @Override
+               public String apply(WellKnownImage input) {
+                  return input.getUuid();
+               }
+            });
          }
-
-      });
+      }, seconds, TimeUnit.SECONDS);
+   }
+   
+   @Singleton
+   @Provides
+   @Memoized
+   protected Supplier<List<WellKnownImage>> provideWellKnownImageSupplier(AtomicReference<AuthorizationException> authException,
+         @Named(PROPERTY_SESSION_INTERVAL) long seconds, WellKnownImageSupplier uncached)
+         throws IOException {
+      return MemoizedRetryOnTimeOutButNotOnAuthorizationExceptionSupplier.create(authException, uncached, seconds,
+            TimeUnit.SECONDS);
    }
 
    @Provides

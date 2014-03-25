@@ -38,10 +38,12 @@ import org.jclouds.elasticstack.domain.DriveInfo;
 import org.jclouds.elasticstack.domain.ImageConversionType;
 import org.jclouds.elasticstack.domain.Server;
 import org.jclouds.elasticstack.domain.ServerInfo;
+import org.jclouds.elasticstack.domain.StandardDrive;
 import org.jclouds.elasticstack.functions.KeyValuesDelimitedByBlankLinesToDriveInfo;
 import org.jclouds.elasticstack.functions.KeyValuesDelimitedByBlankLinesToServerInfo;
 import org.jclouds.elasticstack.functions.ListOfKeyValuesDelimitedByBlankLinesToDriveInfoSet;
 import org.jclouds.elasticstack.functions.ListOfKeyValuesDelimitedByBlankLinesToServerInfoSet;
+import org.jclouds.elasticstack.functions.ListOfKeyValuesDelimitedByBlankLinesToStandardDriveSet;
 import org.jclouds.elasticstack.functions.ReturnPayload;
 import org.jclouds.elasticstack.functions.SplitNewlines;
 import org.jclouds.http.filters.BasicAuthentication;
@@ -201,6 +203,26 @@ public interface ElasticStackApi extends Closeable {
    @Path("/drives/info")
    @ResponseParser(ListOfKeyValuesDelimitedByBlankLinesToDriveInfoSet.class)
    Set<DriveInfo> listDriveInfo();
+   
+   /**
+    * Lists standard drive UUIDs in your account
+    *
+    * @return or empty set if no standard drives are found
+    */
+   @GET
+   @Path("/drives/list/standard")
+   @ResponseParser(SplitNewlines.class)
+   Set<String> listStandardDrives();
+
+   /**
+    * Gets information about all standard drives
+    *
+    * @return or empty set if no standard drives are found
+    */
+   @GET
+   @Path("/drives/info/standard")
+   @ResponseParser(ListOfKeyValuesDelimitedByBlankLinesToStandardDriveSet.class)
+   Set<StandardDrive> listStandardDriveInfo();
 
    /**
     * @param uuid

@@ -16,15 +16,18 @@
  */
 package org.jclouds.elasticstack.compute.functions;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+
 import java.util.Map;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
+import org.jclouds.collect.Memoized;
 import org.jclouds.compute.domain.Image;
+import org.jclouds.compute.domain.Image.Status;
 import org.jclouds.compute.domain.ImageBuilder;
 import org.jclouds.compute.domain.OperatingSystem;
-import org.jclouds.compute.domain.Image.Status;
 import org.jclouds.domain.Credentials;
 import org.jclouds.domain.Location;
 import org.jclouds.domain.LoginCredentials;
@@ -41,19 +44,20 @@ import com.google.common.collect.ImmutableMap;
 @Singleton
 public class WellKnownImageToImage implements Function<DriveInfo, Image> {
    private final Supplier<Location> locationSupplier;
-   private final Map<String, WellKnownImage> preinstalledImages;
+   private final Supplier<Map<String, WellKnownImage>> preinstalledImages;
    private final Map<String, Credentials> credentialStore;
 
    @Inject
-   public WellKnownImageToImage(Supplier<Location> locationSupplier, Map<String, WellKnownImage> preinstalledImages, Map<String, Credentials> credentialStore) {
-      this.locationSupplier = locationSupplier;
-      this.preinstalledImages = preinstalledImages;
-      this.credentialStore = credentialStore;
+   public WellKnownImageToImage(Supplier<Location> locationSupplier,
+         @Memoized Supplier<Map<String, WellKnownImage>> preinstalledImages, Map<String, Credentials> credentialStore) {
+      this.locationSupplier = checkNotNull(locationSupplier, "locationSupplier cannot be null");
+      this.preinstalledImages = checkNotNull(preinstalledImages, "preinstalledImages cannot be null");
+      this.credentialStore = checkNotNull(credentialStore, "credentialStore cannot be null");
    }
 
    @Override
    public Image apply(DriveInfo drive) {
-      WellKnownImage input = preinstalledImages.get(drive.getUuid());
+      WellKnownImage input = preinstalledImages.get().get(drive.getUuid());
       // set credentials in the store here, as opposed to directly modifying the image. we need to
       // set credentials on the image outside of this function so that they can be for example
       // overridden by properties
