@@ -30,6 +30,7 @@ import org.jclouds.openstack.nova.v2_0.options.RebuildServerOptions;
 import org.jclouds.openstack.nova.v2_0.parse.ParseCreatedServerTest;
 import org.jclouds.openstack.nova.v2_0.parse.ParseMetadataListTest;
 import org.jclouds.openstack.nova.v2_0.parse.ParseMetadataUpdateTest;
+import org.jclouds.openstack.nova.v2_0.parse.ParseServerDetailsStatesTest;
 import org.jclouds.openstack.nova.v2_0.parse.ParseServerListTest;
 import org.testng.annotations.Test;
 
@@ -80,6 +81,42 @@ public class ServerApiExpectTest extends BaseNovaApiExpectTest {
             responseWithKeystoneAccess, listServers, listServersResponse);
 
       assertTrue(apiWhenNoServersExist.getServerApiForZone("az-1.region-a.geo-1").list().concat().isEmpty());
+   }
+
+   public void testListInDetailServersWhenResponseIs2xx() throws Exception {
+      HttpRequest listServers = HttpRequest
+              .builder()
+              .method("GET")
+              .endpoint("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v1.1/3456/servers/detail")
+              .addHeader("Accept", "application/json")
+              .addHeader("X-Auth-Token", authToken).build();
+
+      HttpResponse listInDetailServersResponse = HttpResponse.builder().statusCode(200)
+              .payload(payloadFromResource("/server_list_details_states.json")).build();
+
+      NovaApi apiWhenServersExist = requestsSendResponses(keystoneAuthWithUsernameAndPasswordAndTenantName,
+              responseWithKeystoneAccess, listServers, listInDetailServersResponse);
+
+      assertEquals(apiWhenServersExist.getConfiguredZones(), ImmutableSet.of("az-1.region-a.geo-1", "az-2.region-a.geo-1", "az-3.region-a.geo-1"));
+
+      assertEquals(apiWhenServersExist.getServerApiForZone("az-1.region-a.geo-1").listInDetail().concat().toString(),
+              new ParseServerDetailsStatesTest().expected().toString());
+   }
+
+   public void testListInDetailServersWhenReponseIs404IsEmpty() throws Exception {
+      HttpRequest listServers = HttpRequest
+              .builder()
+              .method("GET")
+              .endpoint("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v1.1/3456/servers/detail")
+              .addHeader("Accept", "application/json")
+              .addHeader("X-Auth-Token", authToken).build();
+
+      HttpResponse listInDetailServersResponse = HttpResponse.builder().statusCode(404).build();
+
+      NovaApi apiWhenNoServersExist = requestsSendResponses(keystoneAuthWithUsernameAndPasswordAndTenantName,
+              responseWithKeystoneAccess, listServers, listInDetailServersResponse);
+
+      assertTrue(apiWhenNoServersExist.getServerApiForZone("az-1.region-a.geo-1").listInDetail().concat().isEmpty());
    }
 
    public void testCreateServerWhenResponseIs202() throws Exception {

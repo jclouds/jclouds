@@ -59,7 +59,15 @@ public class Server extends Resource {
     */
    public static enum Status {
 
-      ACTIVE, BUILD, REBUILD, SUSPENDED, PAUSED, RESIZE, VERIFY_RESIZE, REVERT_RESIZE, PASSWORD, REBOOT, HARD_REBOOT, DELETED, UNKNOWN, ERROR, STOPPED, UNRECOGNIZED;
+       ACTIVE, BUILD, REBUILD, SUSPENDED, PAUSED, RESIZE, VERIFY_RESIZE, REVERT_RESIZE, PASSWORD, REBOOT, HARD_REBOOT,
+       DELETED, UNKNOWN, ERROR,
+
+      /**
+       * @deprecated please use {@code Status.SHUTOFF} instead
+       */
+      @Deprecated STOPPED,
+
+      UNRECOGNIZED, MIGRATING, SHUTOFF, RESCUE, SOFT_DELETED, SHELVED, SHELVED_OFFLOADED;
 
       public String value() {
          return name();
