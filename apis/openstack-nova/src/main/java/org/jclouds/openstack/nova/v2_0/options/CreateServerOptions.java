@@ -16,8 +16,8 @@
  */
 package org.jclouds.openstack.nova.v2_0.options;
 
-import static com.google.common.base.Objects.equal;
 import static com.google.common.base.MoreObjects.toStringHelper;
+import static com.google.common.base.Objects.equal;
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.base.Preconditions.checkState;
@@ -33,6 +33,7 @@ import javax.inject.Inject;
 import javax.inject.Named;
 
 import org.jclouds.http.HttpRequest;
+import org.jclouds.openstack.nova.v2_0.domain.BlockDeviceMapping;
 import org.jclouds.openstack.nova.v2_0.domain.Network;
 import org.jclouds.rest.MapBinder;
 import org.jclouds.rest.binders.BindToJsonPayload;
@@ -109,6 +110,7 @@ public class CreateServerOptions implements MapBinder {
    private Set<Network> novaNetworks = ImmutableSet.of();
    private String availabilityZone;
    private boolean configDrive;
+   private Set<BlockDeviceMapping> blockDeviceMapping = ImmutableSet.of();
 
    @Override
    public boolean equals(Object object) {
@@ -151,6 +153,8 @@ public class CreateServerOptions implements MapBinder {
          toString.add("networks", networks);
       toString.add("availability_zone", availabilityZone == null ? null : availabilityZone);
       toString.add("configDrive", configDrive);
+      if (!blockDeviceMapping.isEmpty())
+         toString.add("blockDeviceMapping", blockDeviceMapping);
       return toString;
    }
 
@@ -177,6 +181,8 @@ public class CreateServerOptions implements MapBinder {
       Set<Map<String, String>> networks;
       @Named("config_drive")
       String configDrive;
+      @Named("block_device_mapping")
+      Set<BlockDeviceMapping> blockDeviceMapping;
 
       private ServerRequest(String name, String imageRef, String flavorRef) {
          this.name = name;
@@ -236,6 +242,10 @@ public class CreateServerOptions implements MapBinder {
          for (String network : networks) {
             server.networks.add(ImmutableMap.of("uuid", network));
          }
+      }
+
+      if (!blockDeviceMapping.isEmpty()) {
+         server.blockDeviceMapping = blockDeviceMapping;
       }
 
       return bindToRequest(request, ImmutableMap.of("server", server));
@@ -459,6 +469,23 @@ public class CreateServerOptions implements MapBinder {
       return networks(ImmutableSet.copyOf(networks));
    }
 
+   /**
+    * @see #getBlockDeviceMapping
+    */
+   public CreateServerOptions blockDeviceMapping(Set<BlockDeviceMapping> blockDeviceMapping) {
+      this.blockDeviceMapping = ImmutableSet.copyOf(blockDeviceMapping);
+      return this;
+   }
+
+   /**
+    * Block volumes that should be attached to the instance at boot time.
+    *
+    * @see  <a href="http://docs.openstack.org/trunk/openstack-ops/content/attach_block_storage.html">Attach Block Storage<a/>
+    */
+   public Set<BlockDeviceMapping> getBlockDeviceMapping() {
+      return blockDeviceMapping;
+   }
+
    public static class Builder {
 
       /**
@@ -544,6 +571,14 @@ public class CreateServerOptions implements MapBinder {
       public static CreateServerOptions availabilityZone(String availabilityZone) {
          CreateServerOptions options = new CreateServerOptions();
          return options.availabilityZone(availabilityZone);
+      }
+
+      /**
+       * @see org.jclouds.openstack.nova.v2_0.options.CreateServerOptions#getBlockDeviceMapping()
+       */
+      public static CreateServerOptions blockDeviceMapping (Set<BlockDeviceMapping> blockDeviceMapping) {
+         CreateServerOptions options = new CreateServerOptions();
+         return options.blockDeviceMapping(blockDeviceMapping);
       }
    }
 

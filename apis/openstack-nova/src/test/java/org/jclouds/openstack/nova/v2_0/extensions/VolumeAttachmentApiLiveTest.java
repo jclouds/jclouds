@@ -23,9 +23,11 @@ import static org.testng.Assert.assertTrue;
 
 import java.util.Set;
 
+import org.jclouds.openstack.nova.v2_0.domain.BlockDeviceMapping;
 import org.jclouds.openstack.nova.v2_0.domain.Volume;
 import org.jclouds.openstack.nova.v2_0.domain.VolumeAttachment;
 import org.jclouds.openstack.nova.v2_0.internal.BaseNovaApiLiveTest;
+import org.jclouds.openstack.nova.v2_0.options.CreateServerOptions;
 import org.jclouds.openstack.nova.v2_0.options.CreateVolumeOptions;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
@@ -34,6 +36,7 @@ import org.testng.annotations.Test;
 import com.google.common.base.Objects;
 import com.google.common.base.Optional;
 import com.google.common.base.Predicate;
+import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Iterables;
 
 /**
@@ -148,7 +151,42 @@ public class VolumeAttachmentApiLiveTest extends BaseNovaApiLiveTest {
             if (server_id != null)
                api.getServerApi(region).delete(server_id);
          }
+      }
+   }
 
+   @Test(dependsOnMethods = "testCreateVolume")
+   public void testAttachmentAtBoot() {
+      if (volumeApi.isPresent()) {
+         String server_id = null;
+         BlockDeviceMapping blockDeviceMapping = BlockDeviceMapping.createOptions(testVolume.getId(), "/dev/vdf").build();
+         try {
+            CreateServerOptions createServerOptions =
+               CreateServerOptions.Builder.blockDeviceMapping(ImmutableSet.of(blockDeviceMapping));
+            final String serverId = server_id = createServerInRegion(region, createServerOptions).getId();
+
+            Set<? extends VolumeAttachment> attachments = volumeAttachmentApi.get()
+                    .listAttachmentsOnServer(serverId).toSet();
+            VolumeAttachment attachment = Iterables.getOnlyElement(attachments);
+
+
+            VolumeAttachment details = volumeAttachmentApi.get()
+                    .getAttachmentForVolumeOnServer(attachment.getVolumeId(), serverId);
+            assertNotNull(details.getId()); // Probably same as volumeId? Not necessarily true though
+            assertEquals(details.getVolumeId(), testVolume.getId());
+            assertEquals(details.getDevice(), "/dev/vdf");
+            assertEquals(details.getServerId(), serverId);
+
+            assertEquals(volumeApi.get().get(testVolume.getId()).getStatus(), Volume.Status.IN_USE);
+
+            assertTrue(volumeAttachmentApi.get().detachVolumeFromServer(testVolume.getId(), serverId),
+               "Could not detach volume " + testVolume.getId() + " from server " + serverId);
+            assertEquals(volumeAttachmentApi.get().listAttachmentsOnServer(serverId).size(), 0,
+               "Number of volumes on server " + serverId + " was not zero.");
+         } finally {
+            if (server_id != null) {
+               api.getServerApi(region).delete(server_id);
+            }
+         }
       }
    }
 }
