@@ -1,0 +1,342 @@
+{
+    "servers": [
+        {
+            "OS-DCF:diskConfig": "MANUAL",
+            "OS-EXT-AZ:availability_zone": "nova",
+            "OS-EXT-SRV-ATTR:host": "rdohavana.localdomain",
+            "OS-EXT-SRV-ATTR:hypervisor_hostname": "rdohavana.localdomain",
+            "OS-EXT-SRV-ATTR:instance_name": "instance-0000000b",
+            "OS-EXT-STS:power_state": 0,
+            "OS-EXT-STS:task_state": "spawning",
+            "OS-EXT-STS:vm_state": "building",
+            "OS-SRV-USG:launched_at": null,
+            "OS-SRV-USG:terminated_at": null,
+            "accessIPv4": "",
+            "accessIPv6": "",
+            "addresses": {},
+            "config_drive": "",
+            "created": "2014-03-19T11:54:57Z",
+            "flavor": {
+                "id": "6",
+                "links": [
+                    {
+                        "href": "http://openstack:8774/4e1900cf21924a098709c23480e157c0/flavors/6",
+                        "rel": "bookmark"
+                    }
+                ]
+            },
+            "hostId": "0bc453b1c10348e9dc398fed7a5b06f996964ae1643fe460a85a23d8",
+            "id": "56d51a88-0066-4976-91b6-d1b453be603f",
+            "image": {
+                "id": "e3f84189-964e-4dc3-8ac6-832c2b7553d4",
+                "links": [
+                    {
+                        "href": "http://openstack:8774/4e1900cf21924a098709c23480e157c0/images/e3f84189-964e-4dc3-8ac6-832c2b7553d4",
+                        "rel": "bookmark"
+                    }
+                ]
+            },
+            "key_name": null,
+            "links": [
+                {
+                    "href": "http://openstack:8774/v2/4e1900cf21924a098709c23480e157c0/servers/56d51a88-0066-4976-91b6-d1b453be603f",
+                    "rel": "self"
+                },
+                {
+                    "href": "http://openstack:8774/4e1900cf21924a098709c23480e157c0/servers/56d51a88-0066-4976-91b6-d1b453be603f",
+                    "rel": "bookmark"
+                }
+            ],
+            "metadata": {},
+            "name": "machine_5",
+            "os-extended-volumes:volumes_attached": [],
+            "progress": 0,
+            "security_groups": [
+                {
+                    "name": "default"
+                }
+            ],
+            "status": "BUILD",
+            "tenant_id": "4e1900cf21924a098709c23480e157c0",
+            "updated": "2014-03-19T11:54:59Z",
+            "user_id": "08ba127f0d6842279f9db8e8bc6977e9"
+        },
+        {
+            "OS-DCF:diskConfig": "MANUAL",
+            "OS-EXT-AZ:availability_zone": "nova",
+            "OS-EXT-SRV-ATTR:host": "rdohavana.localdomain",
+            "OS-EXT-SRV-ATTR:hypervisor_hostname": "rdohavana.localdomain",
+            "OS-EXT-SRV-ATTR:instance_name": "instance-00000009",
+            "OS-EXT-STS:power_state": 1,
+            "OS-EXT-STS:task_state": null,
+            "OS-EXT-STS:vm_state": "active",
+            "OS-SRV-USG:launched_at": "2014-03-19T11:52:21.000000",
+            "OS-SRV-USG:terminated_at": null,
+            "accessIPv4": "",
+            "accessIPv6": "",
+            "addresses": {
+                "public": [
+                    {
+                        "OS-EXT-IPS-MAC:mac_addr": "fa:16:3e:df:22:1b",
+                        "OS-EXT-IPS:type": "fixed",
+                        "addr": "172.24.4.232",
+                        "version": 4
+                    }
+                ]
+            },
+            "config_drive": "",
+            "created": "2014-03-19T11:51:53Z",
+            "flavor": {
+                "id": "6",
+                "links": [
+                    {
+                        "href": "http://openstack:8774/4e1900cf21924a098709c23480e157c0/flavors/6",
+                        "rel": "bookmark"
+                    }
+                ]
+            },
+            "hostId": "0bc453b1c10348e9dc398fed7a5b06f996964ae1643fe460a85a23d8",
+            "id": "3bc8ab03-52e7-4d2b-ba88-73f9ecadf003",
+            "image": {
+                "id": "e3f84189-964e-4dc3-8ac6-832c2b7553d4",
+                "links": [
+                    {
+                        "href": "http://openstack:8774/4e1900cf21924a098709c23480e157c0/images/e3f84189-964e-4dc3-8ac6-832c2b7553d4",
+                        "rel": "bookmark"
+                    }
+                ]
+            },
+            "key_name": null,
+            "links": [
+                {
+                    "href": "http://openstack:8774/v2/4e1900cf21924a098709c23480e157c0/servers/3bc8ab03-52e7-4d2b-ba88-73f9ecadf003",
+                    "rel": "self"
+                },
+                {
+                    "href": "http://openstack:8774/4e1900cf21924a098709c23480e157c0/servers/3bc8ab03-52e7-4d2b-ba88-73f9ecadf003",
+                    "rel": "bookmark"
+                }
+            ],
+            "metadata": {},
+            "name": "machine_4",
+            "os-extended-volumes:volumes_attached": [],
+            "progress": 0,
+            "security_groups": [
+                {
+                    "name": "default"
+                }
+            ],
+            "status": "ACTIVE",
+            "tenant_id": "4e1900cf21924a098709c23480e157c0",
+            "updated": "2014-03-19T11:52:21Z",
+            "user_id": "08ba127f0d6842279f9db8e8bc6977e9"
+        },
+        {
+            "OS-DCF:diskConfig": "MANUAL",
+            "OS-EXT-AZ:availability_zone": "nova",
+            "OS-EXT-SRV-ATTR:host": null,
+            "OS-EXT-SRV-ATTR:hypervisor_hostname": null,
+            "OS-EXT-SRV-ATTR:instance_name": "instance-00000006",
+            "OS-EXT-STS:power_state": 4,
+            "OS-EXT-STS:task_state": null,
+            "OS-EXT-STS:vm_state": "shelved_offloaded",
+            "OS-SRV-USG:launched_at": "2014-03-19T11:33:52.000000",
+            "OS-SRV-USG:terminated_at": null,
+            "accessIPv4": "",
+            "accessIPv6": "",
+            "addresses": {
+                "public": [
+                    {
+                        "OS-EXT-IPS-MAC:mac_addr": "fa:16:3e:cb:56:d6",
+                        "OS-EXT-IPS:type": "fixed",
+                        "addr": "172.24.4.229",
+                        "version": 4
+                    }
+                ]
+            },
+            "config_drive": "",
+            "created": "2014-03-19T11:33:27Z",
+            "flavor": {
+                "id": "6",
+                "links": [
+                    {
+                        "href": "http://openstack:8774/4e1900cf21924a098709c23480e157c0/flavors/6",
+                        "rel": "bookmark"
+                    }
+                ]
+            },
+            "hostId": "",
+            "id": "cad76945-8851-489a-99e1-f1049e02c769",
+            "image": {
+                "id": "e3f84189-964e-4dc3-8ac6-832c2b7553d4",
+                "links": [
+                    {
+                        "href": "http://openstack:8774/4e1900cf21924a098709c23480e157c0/images/e3f84189-964e-4dc3-8ac6-832c2b7553d4",
+                        "rel": "bookmark"
+                    }
+                ]
+            },
+            "key_name": null,
+            "links": [
+                {
+                    "href": "http://openstack:8774/v2/4e1900cf21924a098709c23480e157c0/servers/cad76945-8851-489a-99e1-f1049e02c769",
+                    "rel": "self"
+                },
+                {
+                    "href": "http://openstack:8774/4e1900cf21924a098709c23480e157c0/servers/cad76945-8851-489a-99e1-f1049e02c769",
+                    "rel": "bookmark"
+                }
+            ],
+            "metadata": {},
+            "name": "machine_3",
+            "os-extended-volumes:volumes_attached": [],
+            "security_groups": [
+                {
+                    "name": "default"
+                }
+            ],
+            "status": "SHELVED_OFFLOADED",
+            "tenant_id": "4e1900cf21924a098709c23480e157c0",
+            "updated": "2014-03-19T11:38:05Z",
+            "user_id": "08ba127f0d6842279f9db8e8bc6977e9"
+        },
+        {
+            "OS-DCF:diskConfig": "MANUAL",
+            "OS-EXT-AZ:availability_zone": "nova",
+            "OS-EXT-SRV-ATTR:host": "rdohavana.localdomain",
+            "OS-EXT-SRV-ATTR:hypervisor_hostname": "rdohavana.localdomain",
+            "OS-EXT-SRV-ATTR:instance_name": "instance-00000005",
+            "OS-EXT-STS:power_state": 1,
+            "OS-EXT-STS:task_state": null,
+            "OS-EXT-STS:vm_state": "rescued",
+            "OS-SRV-USG:launched_at": "2014-03-19T11:36:05.000000",
+            "OS-SRV-USG:terminated_at": null,
+            "accessIPv4": "",
+            "accessIPv6": "",
+            "addresses": {
+                "public": [
+                    {
+                        "OS-EXT-IPS-MAC:mac_addr": "fa:16:3e:18:fe:c8",
+                        "OS-EXT-IPS:type": "fixed",
+                        "addr": "172.24.4.227",
+                        "version": 4
+                    }
+                ]
+            },
+            "config_drive": "",
+            "created": "2014-03-19T11:31:19Z",
+            "flavor": {
+                "id": "6",
+                "links": [
+                    {
+                        "href": "http://openstack:8774/4e1900cf21924a098709c23480e157c0/flavors/6",
+                        "rel": "bookmark"
+                    }
+                ]
+            },
+            "hostId": "0bc453b1c10348e9dc398fed7a5b06f996964ae1643fe460a85a23d8",
+            "id": "89142a4f-f58c-4205-8571-65f4a2be2bc9",
+            "image": {
+                "id": "e3f84189-964e-4dc3-8ac6-832c2b7553d4",
+                "links": [
+                    {
+                        "href": "http://openstack:8774/4e1900cf21924a098709c23480e157c0/images/e3f84189-964e-4dc3-8ac6-832c2b7553d4",
+                        "rel": "bookmark"
+                    }
+                ]
+            },
+            "key_name": null,
+            "links": [
+                {
+                    "href": "http://openstack:8774/v2/4e1900cf21924a098709c23480e157c0/servers/89142a4f-f58c-4205-8571-65f4a2be2bc9",
+                    "rel": "self"
+                },
+                {
+                    "href": "http://openstack:8774/4e1900cf21924a098709c23480e157c0/servers/89142a4f-f58c-4205-8571-65f4a2be2bc9",
+                    "rel": "bookmark"
+                }
+            ],
+            "metadata": {},
+            "name": "machine_2",
+            "os-extended-volumes:volumes_attached": [],
+            "security_groups": [
+                {
+                    "name": "default"
+                }
+            ],
+            "status": "RESCUE",
+            "tenant_id": "4e1900cf21924a098709c23480e157c0",
+            "updated": "2014-03-19T11:36:05Z",
+            "user_id": "08ba127f0d6842279f9db8e8bc6977e9"
+        },
+        {
+            "OS-DCF:diskConfig": "MANUAL",
+            "OS-EXT-AZ:availability_zone": "nova",
+            "OS-EXT-SRV-ATTR:host": "rdohavana.localdomain",
+            "OS-EXT-SRV-ATTR:hypervisor_hostname": "rdohavana.localdomain",
+            "OS-EXT-SRV-ATTR:instance_name": "instance-00000004",
+            "OS-EXT-STS:power_state": 4,
+            "OS-EXT-STS:task_state": null,
+            "OS-EXT-STS:vm_state": "stopped",
+            "OS-SRV-USG:launched_at": "2014-03-19T11:30:33.000000",
+            "OS-SRV-USG:terminated_at": null,
+            "accessIPv4": "",
+            "accessIPv6": "",
+            "addresses": {
+                "public": [
+                    {
+                        "OS-EXT-IPS-MAC:mac_addr": "fa:16:3e:64:1a:d5",
+                        "OS-EXT-IPS:type": "fixed",
+                        "addr": "172.24.4.228",
+                        "version": 4
+                    }
+                ]
+            },
+            "config_drive": "",
+            "created": "2014-03-19T11:28:56Z",
+            "flavor": {
+                "id": "6",
+                "links": [
+                    {
+                        "href": "http://openstack:8774/4e1900cf21924a098709c23480e157c0/flavors/6",
+                        "rel": "bookmark"
+                    }
+                ]
+            },
+            "hostId": "0bc453b1c10348e9dc398fed7a5b06f996964ae1643fe460a85a23d8",
+            "id": "fac50d26-bb38-455f-ad92-eba790187c00",
+            "image": {
+                "id": "e3f84189-964e-4dc3-8ac6-832c2b7553d4",
+                "links": [
+                    {
+                        "href": "http://openstack:8774/4e1900cf21924a098709c23480e157c0/images/e3f84189-964e-4dc3-8ac6-832c2b7553d4",
+                        "rel": "bookmark"
+                    }
+                ]
+            },
+            "key_name": null,
+            "links": [
+                {
+                    "href": "http://openstack:8774/v2/4e1900cf21924a098709c23480e157c0/servers/fac50d26-bb38-455f-ad92-eba790187c00",
+                    "rel": "self"
+                },
+                {
+                    "href": "http://openstack:8774/4e1900cf21924a098709c23480e157c0/servers/fac50d26-bb38-455f-ad92-eba790187c00",
+                    "rel": "bookmark"
+                }
+            ],
+            "metadata": {},
+            "name": "machine_1",
+            "os-extended-volumes:volumes_attached": [],
+            "security_groups": [
+                {
+                    "name": "default"
+                }
+            ],
+            "status": "SHUTOFF",
+            "tenant_id": "4e1900cf21924a098709c23480e157c0",
+            "updated": "2014-03-19T11:35:26Z",
+            "user_id": "08ba127f0d6842279f9db8e8bc6977e9"
+        }
+    ]
+}
