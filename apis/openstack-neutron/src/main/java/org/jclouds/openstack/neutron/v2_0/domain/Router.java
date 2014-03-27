@@ -99,7 +99,7 @@ public class Router extends ReferenceWithName {
       return new ConcreteBuilder().fromRouter(this);
    }
 
-   public static abstract class Builder<T extends Builder<T>> extends ReferenceWithName.Builder<T> {
+   public abstract static class Builder<T extends Builder<T>> extends ReferenceWithName.Builder<T> {
 
       protected Boolean adminStateUp;
       protected State state;
