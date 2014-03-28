@@ -23,7 +23,6 @@ import static org.jclouds.reflect.Reflection2.typeToken;
 import java.net.URI;
 import java.util.Properties;
 
-import org.jclouds.apis.ApiMetadata;
 import org.jclouds.openstack.keystone.v2_0.config.KeystoneAuthenticationModule.RegionModule;
 import org.jclouds.openstack.swift.v1.SwiftApiMetadata;
 import org.jclouds.openstack.swift.v1.blobstore.RegionScopedBlobStoreContext;

@@ -262,7 +262,7 @@ public class CloudFilesCDNApiMockTest extends BaseOpenStackMockTest<CloudFilesAp
       }
    }
 
-   private static final void checkCDNContainer(CDNContainer cdnContainer) {
+   private static void checkCDNContainer(CDNContainer cdnContainer) {
       assertNotNull(cdnContainer.getName());
       assertNotNull(cdnContainer.isEnabled());
       assertNotNull(cdnContainer.isLogRetentionEnabled());

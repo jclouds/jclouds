@@ -19,9 +19,7 @@ package org.jclouds.rackspace.cloudfiles.v1.features;
 import static org.testng.Assert.assertTrue;
 
 import org.jclouds.openstack.swift.v1.domain.Account;
-import org.jclouds.openstack.swift.v1.features.AccountApi;
 import org.jclouds.openstack.swift.v1.features.AccountApiLiveTest;
-import org.jclouds.rackspace.cloudfiles.v1.CloudFilesApi;
 import org.testng.annotations.Test;
 
 /**

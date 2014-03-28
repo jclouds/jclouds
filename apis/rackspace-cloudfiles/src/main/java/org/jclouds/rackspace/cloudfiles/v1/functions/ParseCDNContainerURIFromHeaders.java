@@ -21,7 +21,6 @@ import static com.google.common.base.Preconditions.checkNotNull;
 import java.net.URI;
 
 import org.jclouds.http.HttpResponse;
-import org.jclouds.rackspace.cloudfiles.v1.domain.CDNContainer;
 import org.jclouds.rackspace.cloudfiles.v1.reference.CloudFilesHeaders;
 
 import com.google.common.base.Function;

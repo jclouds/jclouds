@@ -17,7 +17,6 @@
 package org.jclouds.rackspace.cloudfiles.v1.features;
 
 import org.jclouds.openstack.swift.v1.features.BulkApiLiveTest;
-import org.jclouds.rackspace.cloudfiles.v1.CloudFilesApi;
 import org.testng.annotations.Test;
 
 /**

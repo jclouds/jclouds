@@ -67,7 +67,7 @@ public class BindCDNPurgeEmailAddressesToHeadersMockTest extends BaseOpenStackMo
       binder.bindToRequest(null, emails);
    }
    
-   private static final HttpRequest purgeRequest() {
+   private static HttpRequest purgeRequest() {
       return HttpRequest.builder()
                 .method("DELETE")
                 .endpoint("https://storage101.dfw1.clouddrive.com/v1/MossoCloudFS_XXXXXX/")

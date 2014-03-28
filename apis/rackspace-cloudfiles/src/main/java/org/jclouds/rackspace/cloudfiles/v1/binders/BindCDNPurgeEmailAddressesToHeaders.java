@@ -24,7 +24,6 @@ import java.util.List;
 import javax.inject.Singleton;
 
 import org.jclouds.http.HttpRequest;
-import org.jclouds.rackspace.cloudfiles.v1.features.CDNApi;
 import org.jclouds.rackspace.cloudfiles.v1.reference.CloudFilesHeaders;
 import org.jclouds.rest.Binder;
 

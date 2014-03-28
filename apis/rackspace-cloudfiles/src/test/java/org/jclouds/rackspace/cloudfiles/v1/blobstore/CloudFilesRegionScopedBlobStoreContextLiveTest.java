@@ -20,7 +20,6 @@ import static org.jclouds.rackspace.cloudidentity.v2_0.config.CloudIdentityCrede
 
 import java.util.Properties;
 
-import org.jclouds.openstack.swift.v1.blobstore.RegionScopedBlobStoreContext;
 import org.jclouds.openstack.swift.v1.blobstore.RegionScopedBlobStoreContextLiveTest;
 import org.testng.annotations.Test;
 

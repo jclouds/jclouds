@@ -26,10 +26,7 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import org.jclouds.javax.annotation.Nullable;
-import org.jclouds.location.functions.RegionToEndpoint;
 import org.jclouds.location.suppliers.RegionIdToURISupplier;
-import org.jclouds.rackspace.cloudfiles.v1.CloudFilesApi;
-import org.jclouds.rackspace.cloudfiles.v1.features.CDNApi;
 import org.jclouds.rackspace.cloudidentity.v2_0.ServiceType;
 import org.jclouds.rest.annotations.ApiVersion;
 

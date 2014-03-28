@@ -17,7 +17,6 @@
 package org.jclouds.rackspace.cloudfiles.us;
 
 import org.jclouds.providers.internal.BaseProviderMetadataTest;
-import org.jclouds.rackspace.cloudfiles.us.CloudFilesUSProviderMetadata;
 import org.jclouds.rackspace.cloudfiles.v1.CloudFilesApiMetadata;
 import org.testng.annotations.Test;
 
