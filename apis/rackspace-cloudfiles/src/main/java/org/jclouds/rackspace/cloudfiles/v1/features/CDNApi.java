@@ -53,6 +53,7 @@ import org.jclouds.rest.annotations.QueryParams;
 import org.jclouds.rest.annotations.RequestFilters;
 import org.jclouds.rest.annotations.ResponseParser;
 
+import com.google.common.annotations.Beta;
 import com.google.common.collect.FluentIterable;
 /**
  * Provides access to the Rackspace Cloud Files CDN API features.
@@ -67,6 +68,7 @@ import com.google.common.collect.FluentIterable;
  * 
  * @see {@link CloudFilesApi#cdnApiInRegion(String)}
  */
+@Beta
 @RequestFilters(AuthenticateRequest.class)
 @Consumes(APPLICATION_JSON)
 public interface CDNApi extends Closeable {

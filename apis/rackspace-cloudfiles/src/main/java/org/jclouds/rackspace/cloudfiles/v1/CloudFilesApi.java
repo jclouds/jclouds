@@ -23,6 +23,8 @@ import org.jclouds.rackspace.cloudfiles.v1.functions.RegionToCDNEndpoint;
 import org.jclouds.rest.annotations.Delegate;
 import org.jclouds.rest.annotations.EndpointParam;
 
+import com.google.common.annotations.Beta;
+
 /**
  * Rackspace Cloud Files is an affordable, redundant, scalable, and dynamic storage service
  * offering. The core storage system is designed to provide a secure, network-accessible way to
@@ -36,6 +38,7 @@ import org.jclouds.rest.annotations.EndpointParam;
  * @see CDNApi
  * @see SwiftApi
  */
+@Beta
 public interface CloudFilesApi extends SwiftApi {
 
    /**
