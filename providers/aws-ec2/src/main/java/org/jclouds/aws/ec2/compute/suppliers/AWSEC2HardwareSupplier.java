@@ -22,6 +22,7 @@ import static org.jclouds.ec2.compute.domain.EC2HardwareBuilder.c3_2xlarge;
 import static org.jclouds.ec2.compute.domain.EC2HardwareBuilder.c3_4xlarge;
 import static org.jclouds.ec2.compute.domain.EC2HardwareBuilder.c3_8xlarge;
 import static org.jclouds.ec2.compute.domain.EC2HardwareBuilder.c3_xlarge;
+import static org.jclouds.ec2.compute.domain.EC2HardwareBuilder.c3_large;
 import static org.jclouds.ec2.compute.domain.EC2HardwareBuilder.cc1_4xlarge;
 import static org.jclouds.ec2.compute.domain.EC2HardwareBuilder.cc2_8xlarge;
 import static org.jclouds.ec2.compute.domain.EC2HardwareBuilder.cg1_4xlarge;
@@ -84,6 +85,7 @@ public class AWSEC2HardwareSupplier extends EC2HardwareSupplier {
       sizes.add(t1_micro().build());
       sizes.add(c1_medium().build());
       sizes.add(c1_xlarge().build());
+      sizes.add(c3_large().build());
       sizes.add(c3_xlarge().build());
       sizes.add(c3_2xlarge().build());
       sizes.add(c3_4xlarge().build());
