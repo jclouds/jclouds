@@ -59,8 +59,8 @@ public class Server extends Resource {
     */
    public static enum Status {
 
-       ACTIVE, BUILD, REBUILD, SUSPENDED, PAUSED, RESIZE, VERIFY_RESIZE, REVERT_RESIZE, PASSWORD, REBOOT, HARD_REBOOT,
-       DELETED, UNKNOWN, ERROR,
+      ACTIVE, BUILD, REBUILD, SUSPENDED, PAUSED, RESIZE, VERIFY_RESIZE, REVERT_RESIZE, PASSWORD, REBOOT, HARD_REBOOT,
+      DELETED, UNKNOWN, ERROR,
 
       /**
        * @deprecated please use {@code Status.SHUTOFF} instead
