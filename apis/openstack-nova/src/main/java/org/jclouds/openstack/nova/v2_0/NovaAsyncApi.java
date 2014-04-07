@@ -23,6 +23,7 @@ import org.jclouds.javax.annotation.Nullable;
 import org.jclouds.location.Zone;
 import org.jclouds.location.functions.ZoneToEndpoint;
 import org.jclouds.openstack.nova.v2_0.extensions.AvailabilityZoneAsyncApi;
+import org.jclouds.openstack.nova.v2_0.extensions.ConsolesAsyncApi;
 import org.jclouds.openstack.nova.v2_0.extensions.FlavorExtraSpecsAsyncApi;
 import org.jclouds.openstack.nova.v2_0.extensions.FloatingIPAsyncApi;
 import org.jclouds.openstack.nova.v2_0.extensions.HostAdministrationAsyncApi;
@@ -209,6 +210,13 @@ public interface NovaAsyncApi extends Closeable {
     */
    @Delegate
    Optional<? extends VolumeTypeAsyncApi> getVolumeTypeExtensionForZone(
+         @EndpointParam(parser = ZoneToEndpoint.class) @Nullable String zone);
+
+   /**
+    * Provides asynchronous access to Volume Type features.
+    */
+   @Delegate
+   Optional<? extends ConsolesAsyncApi> getConsolesExtensionForZone(
          @EndpointParam(parser = ZoneToEndpoint.class) @Nullable String zone);
 
 }
