@@ -105,4 +105,9 @@ public interface ExtensionNamespaces {
     * Aggregates extension
     */
    public static final String AGGREGATES = "http://docs.openstack.org/ext/aggregates/api/v1.1";
+
+   /**
+    * Consoles extension
+    */
+   public static final String CONSOLES = "http://docs.openstack.org/compute/ext/os-consoles/api/v2";
 }

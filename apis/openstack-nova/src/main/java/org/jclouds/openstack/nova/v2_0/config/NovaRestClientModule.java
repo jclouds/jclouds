@@ -33,6 +33,8 @@ import org.jclouds.openstack.nova.v2_0.NovaApi;
 import org.jclouds.openstack.nova.v2_0.NovaAsyncApi;
 import org.jclouds.openstack.nova.v2_0.extensions.AvailabilityZoneApi;
 import org.jclouds.openstack.nova.v2_0.extensions.AvailabilityZoneAsyncApi;
+import org.jclouds.openstack.nova.v2_0.extensions.ConsolesApi;
+import org.jclouds.openstack.nova.v2_0.extensions.ConsolesAsyncApi;
 import org.jclouds.openstack.nova.v2_0.extensions.ExtensionNamespaces;
 import org.jclouds.openstack.nova.v2_0.extensions.FlavorExtraSpecsApi;
 import org.jclouds.openstack.nova.v2_0.extensions.FlavorExtraSpecsAsyncApi;
@@ -112,6 +114,7 @@ public class NovaRestClientModule<S extends NovaApi, A extends NovaAsyncApi> ext
          .put(VolumeApi.class, VolumeAsyncApi.class)
          .put(VolumeAttachmentApi.class, VolumeAttachmentAsyncApi.class)
          .put(VolumeTypeApi.class, VolumeTypeAsyncApi.class)
+         .put(ConsolesApi.class, ConsolesAsyncApi.class)
          .build();
 
    @SuppressWarnings("unchecked")

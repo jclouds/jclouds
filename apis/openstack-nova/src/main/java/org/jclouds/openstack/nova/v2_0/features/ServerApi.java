@@ -269,7 +269,6 @@ public interface ServerApi {
     * @return A Map containing the collected values organized by key - value.
     * @Beta
     */
-    Optional<Map<String, String>> getDiagnostics(String id);
-
+   Optional<Map<String, String>> getDiagnostics(String id);
 
 }

@@ -1,0 +1,7 @@
+{
+    "console": {
+        "type": "xvpvnc",
+        "url": "http://example.com:6081/console?token=2abbe0b2-dcf1-479d-8d58-88e82b477865"
+    }
+}
+
