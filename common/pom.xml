@@ -22,7 +22,7 @@
   <parent>
     <artifactId>jclouds-project</artifactId>
     <groupId>org.apache.jclouds</groupId>
-    <version>1.7.2-SNAPSHOT</version>
+    <version>1.7.2</version>
     <relativePath>../project/pom.xml</relativePath>
   </parent>
   <groupId>org.apache.jclouds.common</groupId>
