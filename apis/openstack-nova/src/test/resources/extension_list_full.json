@@ -192,14 +192,6 @@
     "description": "Start/Stop instance compute API support"
 },
 {
-    "updated": "2012-03-12T00:00:00+00:00",
-    "name": "QuotaClasses",
-    "links": [],
-    "namespace": "http://docs.openstack.org/compute/ext/quota-classes-sets/api/v1.1",
-    "alias": "os-quota-class-sets",
-    "description": "Quota classes management support"
-},
-{
     "updated": "2012-01-19T00:00:00+00:00",
     "name": "Certificates",
     "links": [],

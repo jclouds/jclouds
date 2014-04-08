@@ -46,8 +46,6 @@ import org.jclouds.openstack.nova.v2_0.extensions.KeyPairApi;
 import org.jclouds.openstack.nova.v2_0.extensions.KeyPairAsyncApi;
 import org.jclouds.openstack.nova.v2_0.extensions.QuotaApi;
 import org.jclouds.openstack.nova.v2_0.extensions.QuotaAsyncApi;
-import org.jclouds.openstack.nova.v2_0.extensions.QuotaClassApi;
-import org.jclouds.openstack.nova.v2_0.extensions.QuotaClassAsyncApi;
 import org.jclouds.openstack.nova.v2_0.extensions.SecurityGroupApi;
 import org.jclouds.openstack.nova.v2_0.extensions.SecurityGroupAsyncApi;
 import org.jclouds.openstack.nova.v2_0.extensions.ServerAdminApi;
@@ -90,7 +88,7 @@ import com.google.inject.Provides;
 
 /**
  * Configures the Nova connection.
- * 
+ *
  * @author Adrian Cole
  */
 @ConfiguresRestClient
@@ -113,12 +111,11 @@ public class NovaRestClientModule<S extends NovaApi, A extends NovaAsyncApi> ext
          .put(HostAggregateApi.class, HostAggregateAsyncApi.class)
          .put(FlavorExtraSpecsApi.class, FlavorExtraSpecsAsyncApi.class)
          .put(QuotaApi.class, QuotaAsyncApi.class)
-         .put(QuotaClassApi.class, QuotaClassAsyncApi.class)
          .put(VolumeApi.class, VolumeAsyncApi.class)
          .put(VolumeAttachmentApi.class, VolumeAttachmentAsyncApi.class)
          .put(VolumeTypeApi.class, VolumeTypeAsyncApi.class)
          .build();
-   
+
    @SuppressWarnings("unchecked")
    public NovaRestClientModule() {
       super(TypeToken.class.cast(typeToken(NovaApi.class)), TypeToken.class.cast(typeToken(NovaAsyncApi.class)), DELEGATE_MAP);
@@ -134,7 +131,7 @@ public class NovaRestClientModule<S extends NovaApi, A extends NovaAsyncApi> ext
       bind(ImplicitOptionalConverter.class).to(PresentWhenExtensionAnnotationNamespaceEqualsAnyNamespaceInExtensionsSet.class);
       super.configure();
    }
-   
+
    @Provides
    @Singleton
    public Multimap<URI, URI> aliases() {
@@ -163,8 +160,6 @@ public class NovaRestClientModule<S extends NovaApi, A extends NovaAsyncApi> ext
                URI.create("http://docs.openstack.org/compute/ext/flavor_extra_specs/api/v1.1"))
           .put(URI.create(ExtensionNamespaces.QUOTAS),
                URI.create("http://docs.openstack.org/compute/ext/quotas-sets/api/v1.1"))
-          .put(URI.create(ExtensionNamespaces.QUOTA_CLASSES),
-               URI.create("http://docs.openstack.org/compute/ext/quota-classes-sets/api/v1.1"))
           .put(URI.create(ExtensionNamespaces.VOLUME_TYPES),
                URI.create("http://docs.openstack.org/compute/ext/volume_types/api/v1.1"))
           .build();

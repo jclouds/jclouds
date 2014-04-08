@@ -28,7 +28,6 @@ import org.jclouds.openstack.nova.v2_0.extensions.HostAdministrationApi;
 import org.jclouds.openstack.nova.v2_0.extensions.HostAggregateApi;
 import org.jclouds.openstack.nova.v2_0.extensions.KeyPairApi;
 import org.jclouds.openstack.nova.v2_0.extensions.QuotaApi;
-import org.jclouds.openstack.nova.v2_0.extensions.QuotaClassApi;
 import org.jclouds.openstack.nova.v2_0.extensions.SecurityGroupApi;
 import org.jclouds.openstack.nova.v2_0.extensions.ServerAdminApi;
 import org.jclouds.openstack.nova.v2_0.extensions.ServerWithSecurityGroupsApi;
@@ -175,13 +174,6 @@ public interface NovaApi extends Closeable {
     */
    @Delegate
    Optional<? extends QuotaApi> getQuotaExtensionForZone(
-         @EndpointParam(parser = ZoneToEndpoint.class) @Nullable String zone);
-
-   /**
-    * Provides synchronous access to Quota Classes features.
-    */
-   @Delegate
-   Optional<? extends QuotaClassApi> getQuotaClassExtensionForZone(
          @EndpointParam(parser = ZoneToEndpoint.class) @Nullable String zone);
 
    /**
