@@ -36,7 +36,7 @@ public class SwiftBlobStoreContextModule extends AbstractModule {
 
    @Override
    protected void configure() {
-      bind(ConsistencyModel.class).toInstance(ConsistencyModel.STRICT);
+      bind(ConsistencyModel.class).toInstance(ConsistencyModel.EVENTUAL);
       bind(AsyncBlobStore.class).to(SwiftAsyncBlobStore.class).in(Scopes.SINGLETON);
       bind(BlobStore.class).to(SwiftBlobStore.class).in(Scopes.SINGLETON);
    }

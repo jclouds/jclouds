@@ -97,7 +97,7 @@ public class HPCloudObjectStorageBlobStoreContextModule extends SwiftBlobStoreCo
 
    @Override
    protected void configure() {
-      bind(ConsistencyModel.class).toInstance(ConsistencyModel.STRICT);
+      bind(ConsistencyModel.class).toInstance(ConsistencyModel.EVENTUAL);
       bind(AsyncBlobStore.class).to(HPCloudObjectStorageAsyncBlobStore.class);
       bind(BlobStore.class).to(HPCloudObjectStorageBlobStore.class);
       bind(ObjectToBlobMetadata.class).to(HPCloudObjectStorageObjectToBlobMetadata.class);
