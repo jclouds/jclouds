@@ -26,6 +26,7 @@ import static java.util.concurrent.TimeUnit.MILLISECONDS;
 import static org.jclouds.compute.domain.NodeMetadata.Status.RUNNING;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertTrue;
+import static org.testng.Assert.assertFalse;
 import static org.testng.Assert.fail;
 
 import java.util.Map;
@@ -36,6 +37,7 @@ import java.util.concurrent.atomic.AtomicReference;
 
 import org.jclouds.compute.domain.NodeMetadata;
 import org.jclouds.compute.domain.NodeMetadataBuilder;
+import org.jclouds.compute.util.ConcurrentOpenSocketFinder.AllowedInterfaces;
 import org.jclouds.predicates.SocketOpen;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
@@ -43,6 +45,7 @@ import org.testng.annotations.Test;
 
 import com.google.common.base.Predicate;
 import com.google.common.base.Stopwatch;
+import com.google.common.collect.FluentIterable;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.net.HostAndPort;
@@ -57,10 +60,13 @@ public class ConcurrentOpenSocketFinderTest {
    private static final long SLOW_GRACE = 700;
    private static final long EARLY_GRACE = 10;
 
+   private static final String PUBLIC_IP = "1.2.3.4";
+   private static final String PRIVATE_IP = "1.2.3.5";
+
    private final NodeMetadata node = new NodeMetadataBuilder().id("myid")
                                                               .status(RUNNING)
-                                                              .publicAddresses(ImmutableSet.of("1.2.3.4"))
-                                                              .privateAddresses(ImmutableSet.of("1.2.3.5")).build();
+                                                              .publicAddresses(ImmutableSet.of(PUBLIC_IP))
+                                                              .privateAddresses(ImmutableSet.of(PRIVATE_IP)).build();
 
    private final SocketOpen socketAlwaysClosed = new SocketOpen() {
       @Override
@@ -68,7 +74,12 @@ public class ConcurrentOpenSocketFinderTest {
          return false;
       }
    };
-
+   private final SocketOpen socketAlwaysOpen = new SocketOpen() {
+      @Override
+      public boolean apply(HostAndPort input) {
+         return true;
+      }
+   };
    private final Predicate<AtomicReference<NodeMetadata>> nodeRunning = alwaysTrue();
    private final Predicate<AtomicReference<NodeMetadata>> nodeNotRunning = alwaysFalse();
 
@@ -110,27 +121,27 @@ public class ConcurrentOpenSocketFinderTest {
       SocketOpen secondSocketOpen = new SocketOpen() {
          @Override
          public boolean apply(HostAndPort input) {
-            return HostAndPort.fromParts("1.2.3.5", 22).equals(input);
+            return HostAndPort.fromParts(PRIVATE_IP, 22).equals(input);
          }
       };
 
       OpenSocketFinder finder = new ConcurrentOpenSocketFinder(secondSocketOpen, nodeRunning, userExecutor);
 
       HostAndPort result = finder.findOpenSocketOnNode(node, 22, 2000, MILLISECONDS);
-      assertEquals(result, HostAndPort.fromParts("1.2.3.5", 22));
+      assertEquals(result, HostAndPort.fromParts(PRIVATE_IP, 22));
 
    }
 
    @Test
    public void testChecksSocketsConcurrently() throws Exception {
       ControllableSocketOpen socketTester = new ControllableSocketOpen(ImmutableMap.of(
-            HostAndPort.fromParts("1.2.3.4", 22), new SlowCallable<Boolean>(true, 1500),
-            HostAndPort.fromParts("1.2.3.5", 22), new SlowCallable<Boolean>(true, 1000)));
+            HostAndPort.fromParts(PUBLIC_IP, 22), new SlowCallable<Boolean>(true, 1500),
+            HostAndPort.fromParts(PRIVATE_IP, 22), new SlowCallable<Boolean>(true, 1000)));
 
       OpenSocketFinder finder = new ConcurrentOpenSocketFinder(socketTester, nodeRunning, userExecutor);
 
       HostAndPort result = finder.findOpenSocketOnNode(node, 22, 2000, MILLISECONDS);
-      assertEquals(result, HostAndPort.fromParts("1.2.3.5", 22));
+      assertEquals(result, HostAndPort.fromParts(PRIVATE_IP, 22));
    }
 
    @Test
@@ -162,6 +173,28 @@ public class ConcurrentOpenSocketFinderTest {
          // Note: don't get the "no longer running" message, because
          // logged+swallowed by RetryablePredicate
       }
+   }
+
+
+   @Test
+   public void testSocketFinderAllowedInterfacesAll() throws Exception {
+      FluentIterable<String> ips = ConcurrentOpenSocketFinder.checkNodeHasIps(node, AllowedInterfaces.ALL);
+      assertTrue(ips.contains(PUBLIC_IP));
+      assertTrue(ips.contains(PRIVATE_IP));
+   }
+
+   @Test
+   public void testSocketFinderAllowedInterfacesPrivate() throws Exception {
+      FluentIterable<String> ips = ConcurrentOpenSocketFinder.checkNodeHasIps(node, AllowedInterfaces.PRIVATE);
+      assertFalse(ips.contains(PUBLIC_IP));
+      assertTrue(ips.contains(PRIVATE_IP));
+   }
+
+   @Test
+   public void testSocketFinderAllowedInterfacesPublic() throws Exception {
+      FluentIterable<String> ips = ConcurrentOpenSocketFinder.checkNodeHasIps(node, AllowedInterfaces.PUBLIC);
+      assertTrue(ips.contains(PUBLIC_IP));
+      assertFalse(ips.contains(PRIVATE_IP));
    }
 
    private static class SlowCallable<T> implements Callable<T> {

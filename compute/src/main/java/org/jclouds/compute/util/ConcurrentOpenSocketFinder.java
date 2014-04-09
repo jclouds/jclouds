@@ -19,13 +19,12 @@ import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.base.Preconditions.checkState;
 import static com.google.common.base.Predicates.or;
 import static com.google.common.base.Throwables.propagate;
-import static com.google.common.collect.Iterables.concat;
-import static com.google.common.collect.Iterables.size;
 import static com.google.common.util.concurrent.Atomics.newReference;
 import static com.google.common.util.concurrent.MoreExecutors.listeningDecorator;
 import static java.lang.String.format;
 import static org.jclouds.Constants.PROPERTY_USER_THREADS;
 import static org.jclouds.compute.config.ComputeServiceProperties.TIMEOUT_NODE_RUNNING;
+import static org.jclouds.compute.config.ComputeServiceProperties.SOCKET_FINDER_ALLOWED_INTERFACES;
 import static org.jclouds.util.Predicates2.retry;
 
 import java.util.NoSuchElementException;
@@ -64,6 +63,10 @@ public class ConcurrentOpenSocketFinder implements OpenSocketFinder {
    private final Predicate<AtomicReference<NodeMetadata>> nodeRunning;
    private final ListeningExecutorService userExecutor;
 
+   @Inject(optional = true)
+   @Named(SOCKET_FINDER_ALLOWED_INTERFACES)
+   private AllowedInterfaces allowedInterfaces = AllowedInterfaces.ALL;
+
    @Inject
    @VisibleForTesting
    ConcurrentOpenSocketFinder(SocketOpen socketTester,
@@ -76,7 +79,7 @@ public class ConcurrentOpenSocketFinder implements OpenSocketFinder {
 
    @Override
    public HostAndPort findOpenSocketOnNode(NodeMetadata node, final int port, long timeout, TimeUnit timeUnits) {
-      ImmutableSet<HostAndPort> sockets = checkNodeHasIps(node).transform(new Function<String, HostAndPort>() {
+      ImmutableSet<HostAndPort> sockets = checkNodeHasIps(node, allowedInterfaces).transform(new Function<String, HostAndPort>() {
 
          @Override
          public HostAndPort apply(String from) {
@@ -175,10 +178,18 @@ public class ConcurrentOpenSocketFinder implements OpenSocketFinder {
       };
    }
 
-   private static FluentIterable<String> checkNodeHasIps(NodeMetadata node) {
-      FluentIterable<String> ips = FluentIterable.from(concat(node.getPublicAddresses(), node.getPrivateAddresses()));
-      checkState(size(ips) > 0, "node does not have IP addresses configured: " + node);
-      return ips;
+   @VisibleForTesting
+   static FluentIterable<String> checkNodeHasIps(NodeMetadata node, AllowedInterfaces allowedInterfaces) {
+      ImmutableSet.Builder<String> ipsBuilder = ImmutableSet.builder();
+      if (allowedInterfaces.scanPublic) {
+         ipsBuilder.addAll(node.getPublicAddresses());
+      }
+      if (allowedInterfaces.scanPrivate) {
+         ipsBuilder.addAll(node.getPrivateAddresses());
+      }
+      ImmutableSet<String> ips = ipsBuilder.build();
+      checkState(!ips.isEmpty(), "node does not have IP addresses configured: %s", node);
+      return FluentIterable.from(ips);
    }
 
    private static void blockOn(Iterable<ListenableFuture<?>> immutableList) {
@@ -191,4 +202,21 @@ public class ConcurrentOpenSocketFinder implements OpenSocketFinder {
          throw propagate(e);
       }
    }
+
+   @VisibleForTesting
+   enum AllowedInterfaces {
+      ALL(true, true),
+      PUBLIC(true, false),
+      PRIVATE(false, true);
+
+      private final boolean scanPublic;
+      private final boolean scanPrivate;
+
+      private AllowedInterfaces(boolean scanPublic, boolean scanPrivate) {
+         this.scanPublic = scanPublic;
+         this.scanPrivate = scanPrivate;
+      }
+
+   }
+
 }
