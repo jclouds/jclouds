@@ -196,7 +196,14 @@ public class ServerInZoneToNodeMetadataTest {
       assertEquals(convertedNodeMetadata.getPublicAddresses(), ImmutableSet.of("67.23.10.132", "67.23.10.131", "76.32.1.231"));
    }
 
-      // TODO: clean up this syntax
+   @Test
+   public void testPortableNodeStatusNotNull() {
+      for (Server.Status serverStatus: Server.Status.values()) {
+         assertNotNull(NovaComputeServiceContextModule.toPortableNodeStatus.get(serverStatus));
+      }
+   }
+
+    // TODO: clean up this syntax
    private void checkHardwareAndImageStatus(Hardware expectedHardware, Hardware existingHardware,
          String expectedImageId, OperatingSystem expectedOs, Image existingImage) {
 
