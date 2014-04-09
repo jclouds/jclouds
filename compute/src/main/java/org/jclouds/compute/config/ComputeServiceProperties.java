@@ -108,4 +108,9 @@ public interface ComputeServiceProperties {
     */
    public static final String OS_VERSION_MAP_JSON = "jclouds.compute.os-version-map-json";
 
+   /**
+    * can be set to either PRIVATE, PUBLIC, ALL (default) controls what interfaces will be used when scanning for an open connection
+    */
+   public static final String SOCKET_FINDER_ALLOWED_INTERFACES = "jclouds.compute.socket-finder-allowed-interfaces";
+
 }
