@@ -236,21 +236,30 @@ public class NovaComputeServiceContextModule extends
 
    @VisibleForTesting
    public static final Map<Server.Status, NodeMetadata.Status> toPortableNodeStatus = ImmutableMap
-            .<Server.Status, NodeMetadata.Status> builder().put(Server.Status.ACTIVE, NodeMetadata.Status.RUNNING)//
-            .put(Server.Status.SUSPENDED, NodeMetadata.Status.SUSPENDED)//
-            .put(Server.Status.DELETED, NodeMetadata.Status.TERMINATED)//
-            .put(Server.Status.PAUSED, NodeMetadata.Status.SUSPENDED)//
-            .put(Server.Status.RESIZE, NodeMetadata.Status.PENDING)//
-            .put(Server.Status.VERIFY_RESIZE, NodeMetadata.Status.PENDING)//
-            .put(Server.Status.REVERT_RESIZE, NodeMetadata.Status.PENDING)//
-            .put(Server.Status.BUILD, NodeMetadata.Status.PENDING)//
-            .put(Server.Status.PASSWORD, NodeMetadata.Status.PENDING)//
-            .put(Server.Status.REBUILD, NodeMetadata.Status.PENDING)//
-            .put(Server.Status.ERROR, NodeMetadata.Status.ERROR)//
-            .put(Server.Status.REBOOT, NodeMetadata.Status.PENDING)//
-            .put(Server.Status.HARD_REBOOT, NodeMetadata.Status.PENDING)//
-            .put(Server.Status.UNKNOWN, NodeMetadata.Status.UNRECOGNIZED)//
-            .put(Server.Status.UNRECOGNIZED, NodeMetadata.Status.UNRECOGNIZED).build();
+            .<Server.Status, NodeMetadata.Status> builder()
+            .put(Server.Status.ACTIVE, NodeMetadata.Status.RUNNING)
+            .put(Server.Status.BUILD, NodeMetadata.Status.PENDING)
+            .put(Server.Status.DELETED, NodeMetadata.Status.TERMINATED)
+            .put(Server.Status.ERROR, NodeMetadata.Status.ERROR)
+            .put(Server.Status.HARD_REBOOT, NodeMetadata.Status.PENDING)
+            .put(Server.Status.MIGRATING, NodeMetadata.Status.PENDING)
+            .put(Server.Status.PASSWORD, NodeMetadata.Status.PENDING)
+            .put(Server.Status.PAUSED, NodeMetadata.Status.SUSPENDED)
+            .put(Server.Status.REBOOT, NodeMetadata.Status.PENDING)
+            .put(Server.Status.REBUILD, NodeMetadata.Status.PENDING)
+            .put(Server.Status.RESCUE, NodeMetadata.Status.PENDING)
+            .put(Server.Status.RESIZE, NodeMetadata.Status.PENDING)
+            .put(Server.Status.REVERT_RESIZE, NodeMetadata.Status.PENDING)
+            .put(Server.Status.SHELVED, NodeMetadata.Status.SUSPENDED)
+            .put(Server.Status.SHELVED_OFFLOADED, NodeMetadata.Status.SUSPENDED)
+            .put(Server.Status.SHUTOFF, NodeMetadata.Status.SUSPENDED)
+            .put(Server.Status.SOFT_DELETED, NodeMetadata.Status.TERMINATED)
+            .put(Server.Status.STOPPED, NodeMetadata.Status.SUSPENDED)
+            .put(Server.Status.SUSPENDED, NodeMetadata.Status.SUSPENDED)
+            .put(Server.Status.UNKNOWN, NodeMetadata.Status.UNRECOGNIZED)
+            .put(Server.Status.UNRECOGNIZED, NodeMetadata.Status.UNRECOGNIZED)
+            .put(Server.Status.VERIFY_RESIZE, NodeMetadata.Status.PENDING)
+            .build();
 
    @Singleton
    @Provides
