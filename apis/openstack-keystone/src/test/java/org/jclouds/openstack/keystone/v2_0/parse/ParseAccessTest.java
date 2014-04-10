@@ -33,7 +33,7 @@ import javax.ws.rs.core.MediaType;
 
 import static org.jclouds.openstack.v2_0.ServiceType.BLOCK_STORAGE;
 import static org.jclouds.openstack.v2_0.ServiceType.COMPUTE;
-import static org.jclouds.openstack.v2_0.ServiceType.DATABASE_SERVICE;
+import static org.jclouds.openstack.v2_0.ServiceType.DATABASE;
 import static org.jclouds.openstack.v2_0.ServiceType.IDENTITY;
 import static org.jclouds.openstack.v2_0.ServiceType.IMAGE;
 import static org.jclouds.openstack.v2_0.ServiceType.NETWORK;
@@ -132,7 +132,7 @@ public class ParseAccessTest extends BaseItemParserTest<Access> {
                         .internalURL("http://10.0.2.15:8776/v1/50cdb4c60374463198695d9f798fa34d")
                         .adminURL("http://10.0.2.15:8776/v1/50cdb4c60374463198695d9f798fa34d")
                         .region("RegionOne").build()).build())
-            .service(Service.builder().name("reddwarf").type(DATABASE_SERVICE)
+            .service(Service.builder().name("trove").type(DATABASE)
                   .endpoint(Endpoint.builder()
                         .publicURL("http://172.16.0.1:8776/v1/3456")
                         .tenantId("123123")

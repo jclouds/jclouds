@@ -35,7 +35,7 @@ import com.google.common.collect.ImmutableSet;
 import com.google.inject.Module;
 
 /**
- * Implementation of {@link ApiMetadata} for Trove API
+ * Implementation of {@link org.jclouds.apis.ApiMetadata} for the OpenStack Trove v1 API.
  * 
  * @author Zack Shoylev
  */
@@ -56,7 +56,7 @@ public class TroveApiMetadata extends BaseHttpApiMetadata<TroveApi> {
 
    public static Properties defaultProperties() {
       Properties properties = BaseHttpApiMetadata.defaultProperties();
-      properties.setProperty(SERVICE_TYPE, ServiceType.DATABASE_SERVICE);      
+      properties.setProperty(SERVICE_TYPE, ServiceType.DATABASE);
       properties.setProperty(CREDENTIAL_TYPE, CredentialTypes.PASSWORD_CREDENTIALS);
       return properties;
    }
@@ -81,7 +81,7 @@ public class TroveApiMetadata extends BaseHttpApiMetadata<TroveApi> {
                                      .add(TroveHttpApiModule.class)
                                      .build());
       }
-      
+
       @Override
       public TroveApiMetadata build() {
          return new TroveApiMetadata(this);

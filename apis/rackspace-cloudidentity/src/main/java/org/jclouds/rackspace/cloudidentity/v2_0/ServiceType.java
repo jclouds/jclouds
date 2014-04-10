@@ -26,20 +26,45 @@ public interface ServiceType {
    /**
     * Cloud Load Balancers
     */
-   public static final String LOAD_BALANCERS = "rax:load-balancer";
+   String LOAD_BALANCERS = "rax:load-balancer";
 
    /**
     * Cloud DNS
     */
-   public static final String DNS = "rax:dns";
+   String DNS = "rax:dns";
 
    /**
     * Cloud Queues
     */
-   public static final String QUEUES = "rax:queues";
-   
+   String QUEUES = "rax:queues";
+
    /**
     * Cloud Files CDN
     */
-   public static final String OBJECT_CDN = "rax:object-cdn";
+   String OBJECT_CDN = "rax:object-cdn";
+
+   /**
+    * Auto Scale
+    */
+   String AUTO_SCALE = "rax:autoscale";
+
+   /**
+    * Cloud Backup
+    */
+   String BACKUP = "rax:backup";
+
+   /**
+    * Cloud Databases
+    */
+   String DATABASES = "rax:database";
+
+   /**
+    * Cloud Monitoring
+    */
+   String MONITORING = "rax:monitor";
+
+   /**
+    * Cloud Big Data
+    */
+   String BIG_DATA = "rax:bigdata";
 }
