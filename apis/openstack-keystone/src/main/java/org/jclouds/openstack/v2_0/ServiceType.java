@@ -22,47 +22,51 @@ package org.jclouds.openstack.v2_0;
  * (presumably useful) operations.
  * 
  * @author Adrian Cole
- * @see <a href="http://docs.openstack.org/api/openstack-typeentity-service/2.0/content/Identity-Service-Concepts-e1362.html"
- *      />
+ * @author Jeremy Daggett
  */
 public interface ServiceType {
    /**
     * Object Storage (Swift)
     */
-   public static final String OBJECT_STORE = "object-store";
-   
+   String OBJECT_STORE = "object-store";
+
    /**
     * Compute (Nova)
     */
-   public static final String COMPUTE = "compute";
-   
+   String COMPUTE = "compute";
+
    /**
     * Image Service (Glance)
     */
-   public static final String IMAGE = "image";
-   
+   String IMAGE = "image";
+
    /**
     * Identity Service (Keystone)
     */
-   public static final String IDENTITY = "identity";
-   
+   String IDENTITY = "identity";
+
    /**
     * Network Service (Neutron)
     */
-   public static final String NETWORK = "network";
-   
+   String NETWORK = "network";
+
    /**
     * Block Storage (Cinder)
     */
-   public static final String BLOCK_STORAGE = "volume";
-   
+   String BLOCK_STORAGE = "volume";
+
    /**
     * Database Service (Trove)
     */
-   public static final String DATABASE_SERVICE = "databases";
+   String DATABASE = "database";
 
    /**
     * Queues Service (Marconi)
     */
-   public static final String QUEUES = "queuing";
+   String QUEUES = "queuing";
+
+   /**
+    * Orchestration Service (Heat)
+    */
+   String ORCHESTRATION = "orchestration";
 }
