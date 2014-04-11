@@ -123,7 +123,7 @@ public class PresentWhenApiVersionLexicographicallyAtOrAfterSinceApiVersionTest 
    public void testCacheIsFasterWhenNoAnnotationPresent() {
       InvocationSuccess keyPairApi = getKeyPairApi();
       ImplicitOptionalConverter fn = forApiVersion("2011-07-15");
-      Stopwatch watch = new Stopwatch().start();
+      Stopwatch watch = Stopwatch.createStarted();
       fn.apply(keyPairApi);
       long first = watch.stop().elapsed(TimeUnit.MICROSECONDS);
       watch.reset().start();
@@ -137,7 +137,7 @@ public class PresentWhenApiVersionLexicographicallyAtOrAfterSinceApiVersionTest 
    public void testCacheIsFasterWhenAnnotationPresent() {
       InvocationSuccess floatingIpApi = getKeyPairApi();
       ImplicitOptionalConverter fn = forApiVersion("2011-07-15");
-      Stopwatch watch = new Stopwatch().start();
+      Stopwatch watch = Stopwatch.createStarted();
       fn.apply(floatingIpApi);
       long first = watch.stop().elapsed(TimeUnit.MICROSECONDS);
       watch.reset().start();

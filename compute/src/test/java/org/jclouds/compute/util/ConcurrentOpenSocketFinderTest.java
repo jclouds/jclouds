@@ -102,7 +102,7 @@ public class ConcurrentOpenSocketFinderTest {
 
       OpenSocketFinder finder = new ConcurrentOpenSocketFinder(socketAlwaysClosed, nodeRunning, userExecutor);
 
-      Stopwatch stopwatch = new Stopwatch();
+      Stopwatch stopwatch = Stopwatch.createUnstarted();
       stopwatch.start();
       try {
          finder.findOpenSocketOnNode(node, 22, timeoutMs, MILLISECONDS);

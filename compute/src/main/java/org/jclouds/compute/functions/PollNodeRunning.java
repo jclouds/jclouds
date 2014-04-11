@@ -62,7 +62,7 @@ public class PollNodeRunning implements Function<AtomicReference<NodeMetadata>, 
       String originalId = node.get().getId();
       NodeMetadata originalNode = node.get();
       try {
-         Stopwatch stopwatch = new Stopwatch().start();
+         Stopwatch stopwatch = Stopwatch.createStarted();
          if (!nodeRunning.apply(node)) {
             long timeWaited = stopwatch.elapsed(TimeUnit.MILLISECONDS);
             if (node.get() == null) {

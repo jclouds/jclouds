@@ -52,7 +52,7 @@ public class Predicates2Test {
 
    @BeforeMethod
    public void setUp() {
-      stopwatch = new Stopwatch();
+      stopwatch = Stopwatch.createUnstarted();
    }
    
    @Test
@@ -161,7 +161,7 @@ public class Predicates2Test {
       
       RepeatedAttemptsPredicate(int succeedOnAttempt) {
          this.succeedOnAttempt = succeedOnAttempt;
-         this.stopwatch = new Stopwatch();
+         this.stopwatch = Stopwatch.createUnstarted();
          stopwatch.start();
       }
       @Override

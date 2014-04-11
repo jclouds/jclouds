@@ -656,7 +656,7 @@ public abstract class BaseComputeServiceLiveTest extends BaseComputeServiceConte
 
    protected ServiceStats trackAvailabilityOfProcessOnNode(Statement process, String processName, NodeMetadata node) {
       ServiceStats stats = new ServiceStats();
-      Stopwatch watch = new Stopwatch().start();
+      Stopwatch watch = Stopwatch.createStarted();
       ExecResponse exec = client.runScriptOnNode(node.getId(), process, runAsRoot(false).wrapInInitScript(false));
       stats.backgroundProcessMilliseconds = watch.elapsed(TimeUnit.MILLISECONDS);
       watch.reset().start();
@@ -697,7 +697,7 @@ public abstract class BaseComputeServiceLiveTest extends BaseComputeServiceConte
       ImmutableMap<String, String> userMetadata = ImmutableMap.<String, String> of("test", group);
       
       ImmutableSet<String> tags = ImmutableSet. of(group);
-      Stopwatch watch = new Stopwatch().start();
+      Stopwatch watch = Stopwatch.createStarted();
       NodeMetadata node = getOnlyElement(client.createNodesInGroup(group, 1,
             inboundPorts(22, 8080).blockOnPort(22, 300).userMetadata(userMetadata).tags(tags)));
       long createSeconds = watch.elapsed(TimeUnit.SECONDS);
