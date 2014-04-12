@@ -81,7 +81,7 @@ public class AzureBlobIntegrationLiveTest extends BaseBlobIntegrationTest {
       oneHundredOneConstitutions = getTestDataSupplier();
       oneHundredOneConstitutionsMD5 = oneHundredOneConstitutions.hash(md5()).asBytes();
       File file = new File("target/const.txt");
-      Files.copy(oneHundredOneConstitutions, file);
+      oneHundredOneConstitutions.copyTo(Files.asByteSink(file));
       String containerName = getContainerName();
 
       try {
@@ -100,7 +100,7 @@ public class AzureBlobIntegrationLiveTest extends BaseBlobIntegrationTest {
       final long limit = MultipartUploadStrategy.MAX_BLOCK_SIZE;
       ByteSource input = repeatingArrayByteSource(new byte[1024]).slice(0, limit);
       File file = new File("target/const.txt");
-      Files.copy(input, file);
+      input.copyTo(Files.asByteSink(file));
       String containerName = getContainerName();
 
       try {

@@ -100,7 +100,7 @@ public abstract class Wire {
             is.close();
          }
          // we must call FileBackedOutputStream.reset to remove temporary file
-         return new FilterInputStream(out.asByteSource().getInput()) {
+         return new FilterInputStream(out.asByteSource().openStream()) {
             @Override
             public void close() throws IOException {
                super.close();

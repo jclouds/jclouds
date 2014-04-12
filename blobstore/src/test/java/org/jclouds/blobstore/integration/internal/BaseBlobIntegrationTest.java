@@ -135,7 +135,7 @@ public class BaseBlobIntegrationTest extends BaseBlobStoreIntegrationTest {
    public void testPutFileParallel() throws InterruptedException, IOException, TimeoutException {
 
       File payloadFile = File.createTempFile("testPutFileParallel", "png");
-      Files.copy(createTestInput(32 * 1024), payloadFile);
+      createTestInput(32 * 1024).copyTo(Files.asByteSink(payloadFile));
       
       final Payload testPayload = Payloads.newFilePayload(payloadFile);
       final byte[] md5 = md5Supplier(testPayload);
@@ -225,7 +225,7 @@ public class BaseBlobIntegrationTest extends BaseBlobStoreIntegrationTest {
             .payload(new InputStreamSupplierPayload(supplier))
             .contentType("text/plain")
             .contentMD5(supplier.hash(md5()).asBytes())
-            .contentLength(ByteStreams.length(supplier))
+            .contentLength(supplier.size())
             .contentDisposition(contentDisposition)
             .build());
    }
@@ -297,14 +297,14 @@ public class BaseBlobIntegrationTest extends BaseBlobStoreIntegrationTest {
 
    @Test(groups = { "integration", "live" })
    public void testPutCorrectContentMD5() throws InterruptedException, IOException {
-      byte[] payload = ByteStreams.toByteArray(createTestInput(1024));
+      byte[] payload = createTestInput(1024).read();
       HashCode contentMD5 = md5().hashBytes(payload);
       putBlobWithMd5(payload, contentMD5);
    }
 
    @Test(groups = { "integration", "live" })
    public void testPutIncorrectContentMD5() throws InterruptedException, IOException {
-      byte[] payload = ByteStreams.toByteArray(createTestInput(1024));
+      byte[] payload = createTestInput(1024).read();
       HashCode contentMD5 = md5().hashBytes(new byte[0]);
       try {
          putBlobWithMd5(payload, contentMD5);

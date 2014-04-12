@@ -149,7 +149,7 @@ public class AWSS3ClientLiveTest extends S3ClientLiveTest {
    public void testMultipartChunkedFileStream() throws IOException, InterruptedException {
       
       File file = new File("target/const.txt");
-      Files.copy(oneHundredOneConstitutions, file);
+      oneHundredOneConstitutions.copyTo(Files.asByteSink(file));
       String containerName = getContainerName();
       
       try {

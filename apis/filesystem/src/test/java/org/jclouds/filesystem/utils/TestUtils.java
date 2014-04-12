@@ -31,7 +31,7 @@ import org.jclouds.filesystem.util.Utils;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Iterators;
 import com.google.common.collect.Sets;
-import com.google.common.io.ByteStreams;
+import com.google.common.io.ByteSource;
 import com.google.common.io.Files;
 
 /**
@@ -218,7 +218,7 @@ public class TestUtils {
         for (File file : IMAGE_RESOURCES) {
             byte[] buffer = new byte[random.nextInt(2 * 1024 * 1024)];
             random.nextBytes(buffer);
-            Files.copy(ByteStreams.newInputStreamSupplier(buffer), file);
+            ByteSource.wrap(buffer).copyTo(Files.asByteSink(file));
         }
     }
 

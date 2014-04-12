@@ -19,7 +19,6 @@ package org.jclouds.http;
 import static com.google.common.base.Throwables.getStackTraceAsString;
 import static com.google.common.hash.Hashing.md5;
 import static com.google.common.io.BaseEncoding.base64;
-import static com.google.common.io.ByteStreams.copy;
 import static com.google.common.io.ByteStreams.toByteArray;
 import static com.google.common.net.HttpHeaders.CONTENT_DISPOSITION;
 import static com.google.common.net.HttpHeaders.CONTENT_ENCODING;
@@ -114,7 +113,7 @@ public abstract class BaseJettyTest {
                response.setContentType("text/plain");
                response.setHeader("Content-MD5", md5);
                response.setStatus(SC_OK);
-               copy(oneHundredOneConstitutions, response.getOutputStream());
+               oneHundredOneConstitutions.copyTo(response.getOutputStream());
             } else if (request.getMethod().equals("PUT")) {
                if (request.getContentLength() > 0) {
                   response.setStatus(SC_OK);

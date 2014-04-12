@@ -16,8 +16,6 @@
  */
 package org.jclouds.scriptbuilder.functionloader.filters;
 import static com.google.common.base.Preconditions.checkNotNull;
-import static com.google.common.io.CharStreams.newReaderSupplier;
-import static com.google.common.io.CharStreams.readLines;
 
 import java.io.IOException;
 
@@ -26,6 +24,7 @@ import org.jclouds.scriptbuilder.domain.ShellToken;
 import org.jclouds.scriptbuilder.functionloader.FunctionLoader;
 import org.jclouds.scriptbuilder.functionloader.FunctionNotFoundException;
 
+import com.google.common.io.CharSource;
 import com.google.common.io.LineProcessor;
 
 /**
@@ -55,7 +54,7 @@ public class LicenseHeaderFilter implements FunctionLoader {
     */
    public String filter(String lines, OsFamily family) {
       try {
-         return readLines(newReaderSupplier(checkNotNull(lines, "lines")),
+         return CharSource.wrap(checkNotNull(lines, "lines")).readLines(
                new LicenseHeaderProcessor(checkNotNull(family, "family")));
       } catch (IOException e) {
          // Don't fail; just return the original text with the comments

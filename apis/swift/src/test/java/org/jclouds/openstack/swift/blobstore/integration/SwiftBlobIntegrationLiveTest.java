@@ -183,7 +183,7 @@ public class SwiftBlobIntegrationLiveTest extends BaseBlobIntegrationTest {
       }
 
       File fileToUpload = new File("target/lots-of-const.txt");
-      Files.copy(temp, fileToUpload);
+      temp.copyTo(Files.asByteSink(fileToUpload));
 
       assertTrue(fileToUpload.length() > partSize);
       return fileToUpload;

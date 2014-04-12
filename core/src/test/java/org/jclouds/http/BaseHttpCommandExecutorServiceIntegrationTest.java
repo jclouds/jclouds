@@ -227,7 +227,7 @@ public abstract class BaseHttpCommandExecutorServiceIntegrationTest extends Base
    public void testGetBigFile() throws Exception {
       MockResponse response = new MockResponse().addHeader("Content-MD5", constitutionsMd5)
             .addHeader("Content-type", "text/plain")
-            .setBody(oneHundredOneConstitutions.getInput(), constitutionsLength);
+            .setBody(oneHundredOneConstitutions.openStream(), constitutionsLength);
 
       MockWebServer server = mockWebServer(response, response);
       InputStream input = server.getUrl("/101constitutions").openStream();

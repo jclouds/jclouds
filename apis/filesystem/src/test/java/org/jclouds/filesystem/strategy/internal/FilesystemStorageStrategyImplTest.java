@@ -48,7 +48,6 @@ import org.testng.annotations.Test;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import com.google.common.io.ByteSource;
-import com.google.common.io.ByteStreams;
 import com.google.common.io.Files;
 
 /**
@@ -356,7 +355,7 @@ public class FilesystemStorageStrategyImplTest {
       File blobFullPath = new File(TARGET_CONTAINER_NAME, blobKey);
       ByteSource expectedInput = Files.asByteSource(sourceFile);
       ByteSource actualInput = Files.asByteSource(blobFullPath);
-      assertTrue(ByteStreams.equal(expectedInput, actualInput),
+      assertTrue(expectedInput.contentEquals(actualInput),
             "Files are not equal");
    }
 
@@ -375,7 +374,7 @@ public class FilesystemStorageStrategyImplTest {
       File blobFullPath = new File(TARGET_CONTAINER_NAME, blobKey);
       ByteSource expectedInput = Files.asByteSource(sourceFile);
       ByteSource actualInput = Files.asByteSource(blobFullPath);
-      assertTrue(ByteStreams.equal(expectedInput, actualInput),
+      assertTrue(expectedInput.contentEquals(actualInput),
             "Files are not equal");
    }
 
