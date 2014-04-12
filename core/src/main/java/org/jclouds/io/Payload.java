@@ -20,9 +20,7 @@ import java.io.Closeable;
 import java.io.InputStream;
 import java.io.IOException;
 
-import com.google.common.io.InputSupplier;
-
-public interface Payload extends InputSupplier<InputStream>, Closeable {
+public interface Payload extends Closeable {
 
    /**
     * Creates a new InputStream object of the payload.

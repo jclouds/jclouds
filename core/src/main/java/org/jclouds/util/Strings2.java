@@ -41,7 +41,6 @@ import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
 import com.google.common.collect.Multimap;
 import com.google.common.io.CharStreams;
-import com.google.common.io.InputSupplier;
 import com.google.common.primitives.Chars;
 
 public class Strings2 {
@@ -120,13 +119,6 @@ public class Strings2 {
       } catch (UnsupportedEncodingException e) {
          throw new IllegalStateException("Bad encoding on input: " + in, e);
       }
-   }
-
-   /** @deprecated use CharSource.read() instead */
-   @Deprecated
-   public static String toString(InputSupplier<? extends InputStream> supplier)
-         throws IOException {
-      return toStringAndClose(supplier.getInput());
    }
 
    public static String toStringAndClose(InputStream input) throws IOException {
