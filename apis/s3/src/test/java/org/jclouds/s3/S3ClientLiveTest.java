@@ -278,7 +278,7 @@ public class S3ClientLiveTest extends BaseBlobStoreIntegrationTest {
       assertConsistencyAwareContainerSize(sourceContainer, 1);
       S3Object newObject = getApi().getObject(sourceContainer, key);
       assert newObject != null;
-      assertEquals(Strings2.toString(newObject.getPayload()), TEST_STRING);
+      assertEquals(Strings2.toStringAndClose(newObject.getPayload().openStream()), TEST_STRING);
       return newObject;
    }
 

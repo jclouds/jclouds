@@ -80,7 +80,7 @@ public class ParseCloudServersErrorFromHttpResponse implements HttpErrorHandler 
    String parseErrorFromContentOrNull(HttpCommand command, HttpResponse response) {
       if (response.getPayload() != null) {
          try {
-            return Strings2.toString(response.getPayload());
+            return Strings2.toStringAndClose(response.getPayload().openStream());
          } catch (IOException e) {
             logger.warn(e, "exception reading error from response", response);
          }

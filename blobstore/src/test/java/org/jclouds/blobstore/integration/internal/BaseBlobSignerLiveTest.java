@@ -51,7 +51,7 @@ public class BaseBlobSignerLiveTest extends BaseBlobStoreIntegrationTest {
          assertConsistencyAwareContainerSize(container, 1);
          HttpRequest request = view.getSigner().signGetBlob(container, name);
          assertEquals(request.getFilters().size(), 0);
-         assertEquals(Strings2.toString(view.utils().http().invoke(request).getPayload()), text);
+         assertEquals(Strings2.toStringAndClose(view.utils().http().invoke(request).getPayload().openStream()), text);
       } finally {
          returnContainer(container);
       }
@@ -69,7 +69,7 @@ public class BaseBlobSignerLiveTest extends BaseBlobStoreIntegrationTest {
          assertConsistencyAwareContainerSize(container, 1);
          HttpRequest request = view.getSigner().signGetBlob(container, name, range(0, 1));
          assertEquals(request.getFilters().size(), 0);
-         assertEquals(Strings2.toString(view.utils().http().invoke(request).getPayload()), "fo");
+         assertEquals(Strings2.toStringAndClose(view.utils().http().invoke(request).getPayload().openStream()), "fo");
       } finally {
          returnContainer(container);
       }
@@ -89,11 +89,11 @@ public class BaseBlobSignerLiveTest extends BaseBlobStoreIntegrationTest {
          HttpRequest request = view.getSigner().signGetBlob(container, name, timeout);
          
          assertEquals(request.getFilters().size(), 0);
-         assertEquals(Strings2.toString(view.utils().http().invoke(request).getPayload()), text);
+         assertEquals(Strings2.toStringAndClose(view.utils().http().invoke(request).getPayload().openStream()), text);
 
          TimeUnit.SECONDS.sleep(2 * timeout);
          try {
-            Strings2.toString(view.utils().http().invoke(request).getPayload());
+            Strings2.toStringAndClose(view.utils().http().invoke(request).getPayload().openStream());
             fail("Temporary URL did not expire as expected");
          } catch (AuthorizationException expected) {
          }
@@ -114,7 +114,7 @@ public class BaseBlobSignerLiveTest extends BaseBlobStoreIntegrationTest {
       try {
          HttpRequest request = view.getSigner().signPutBlob(container, blob);
          assertEquals(request.getFilters().size(), 0);
-         Strings2.toString(view.utils().http().invoke(request).getPayload());
+         Strings2.toStringAndClose(view.utils().http().invoke(request).getPayload().openStream());
          assertConsistencyAwareContainerSize(container, 1);
       } finally {
          returnContainer(container);
@@ -137,7 +137,7 @@ public class BaseBlobSignerLiveTest extends BaseBlobStoreIntegrationTest {
          // Java 7+ will throw a ProtocolException instead of setting the response code:
          // http://www.docjar.com/html/api/sun/net/www/protocol/http/HttpURLConnection.java.html#1021
          request = request.toBuilder().removeHeader(EXPECT).build();
-         Strings2.toString(view.utils().http().invoke(request).getPayload());
+         Strings2.toStringAndClose(view.utils().http().invoke(request).getPayload().openStream());
          assertConsistencyAwareContainerSize(container, 1);
 
          view.getBlobStore().removeBlob(container, name);
@@ -145,7 +145,7 @@ public class BaseBlobSignerLiveTest extends BaseBlobStoreIntegrationTest {
 
          TimeUnit.SECONDS.sleep(2 * timeout);
          try {
-            Strings2.toString(view.utils().http().invoke(request).getPayload());
+            Strings2.toStringAndClose(view.utils().http().invoke(request).getPayload().openStream());
             fail("Temporary URL did not expire as expected");
          } catch (AuthorizationException expected) {
          }

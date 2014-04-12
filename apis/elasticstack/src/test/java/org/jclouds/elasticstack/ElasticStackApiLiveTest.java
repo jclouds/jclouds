@@ -328,7 +328,7 @@ public class ElasticStackApiLiveTest extends BaseComputeServiceContextLiveTest {
    public void testWeCanReadAndWriteToDrive() throws IOException {
       drive2 = client.createDrive(new CreateDriveRequest.Builder().name(prefix + "2").size(1 * 1024 * 1024l).build());
       client.writeDrive(drive2.getUuid(), Payloads.newStringPayload("foo"));
-      assertEquals(Strings2.toString(client.readDrive(drive2.getUuid(), 0, 3)), "foo");
+      assertEquals(Strings2.toStringAndClose(client.readDrive(drive2.getUuid(), 0, 3).openStream()), "foo");
    }
 
    @Test(dependsOnMethods = "testWeCanReadAndWriteToDrive")
@@ -343,7 +343,7 @@ public class ElasticStackApiLiveTest extends BaseComputeServiceContextLiveTest {
          assert driveNotClaimed.apply(drive2) : client.getDriveInfo(drive2.getUuid());
          System.err.println("after image; drive 2" + client.getDriveInfo(drive2.getUuid()));
          System.err.println("after image; drive 3" + client.getDriveInfo(drive3.getUuid()));
-         assertEquals(Strings2.toString(client.readDrive(drive3.getUuid(), 0, 3)), "foo");
+         assertEquals(Strings2.toStringAndClose(client.readDrive(drive3.getUuid(), 0, 3).openStream()), "foo");
       } finally {
          client.destroyDrive(drive2.getUuid());
          client.destroyDrive(drive3.getUuid());

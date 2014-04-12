@@ -703,7 +703,7 @@ public class FilesystemAsyncBlobStoreTest {
         Blob blobRangeStartAt = blobStore.getBlob(CONTAINER_NAME, blob.getMetadata().getName(), getOptionsRangeStartAt);
         payload = blobRangeStartAt.getPayload();
         try {
-            assertEquals(input.substring(1), Strings2.toString(payload));
+            assertEquals(input.substring(1), Strings2.toStringAndClose(payload.openStream()));
         } finally {
             Closeables2.closeQuietly(payload);
         }
@@ -713,7 +713,7 @@ public class FilesystemAsyncBlobStoreTest {
         Blob blobRangeTail = blobStore.getBlob(CONTAINER_NAME, blob.getMetadata().getName(), getOptionsRangeTail);
         payload = blobRangeTail.getPayload();
         try {
-            assertEquals(input.substring(5), Strings2.toString(payload));
+            assertEquals(input.substring(5), Strings2.toStringAndClose(payload.openStream()));
         } finally {
             Closeables2.closeQuietly(payload);
         }
@@ -723,7 +723,7 @@ public class FilesystemAsyncBlobStoreTest {
         Blob blobFragment = blobStore.getBlob(CONTAINER_NAME, blob.getMetadata().getName(), getOptionsFragment);
         payload = blobFragment.getPayload();
         try {
-            assertEquals(input.substring(4, 7), Strings2.toString(payload));
+            assertEquals(input.substring(4, 7), Strings2.toStringAndClose(payload.openStream()));
         } finally {
             Closeables2.closeQuietly(payload);
         }

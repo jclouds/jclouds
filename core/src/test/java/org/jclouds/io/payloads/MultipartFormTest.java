@@ -48,7 +48,7 @@ public class MultipartFormTest {
 
       MultipartForm multipartForm = new MultipartForm(boundary, newPart("hello"));
 
-      assertEquals(Strings2.toString(multipartForm), expects);
+      assertEquals(Strings2.toStringAndClose(multipartForm.openStream()), expects);
       assertEquals(multipartForm.getContentMetadata().getContentLength(), Long.valueOf(199));
    }
 
@@ -108,11 +108,11 @@ public class MultipartFormTest {
 
       MultipartForm multipartForm = new MultipartForm(boundary, newPart("hello"), newPart("goodbye"));
 
-      assertEquals(Strings2.toString(multipartForm), expects);
+      assertEquals(Strings2.toStringAndClose(multipartForm.openStream()), expects);
 
       // test repeatable
       assert multipartForm.isRepeatable();
-      assertEquals(Strings2.toString(multipartForm), expects);
+      assertEquals(Strings2.toStringAndClose(multipartForm.openStream()), expects);
       assertEquals(multipartForm.getContentMetadata().getContentLength(), Long.valueOf(352));
    }
 

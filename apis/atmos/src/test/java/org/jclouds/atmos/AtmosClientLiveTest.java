@@ -261,14 +261,14 @@ public class AtmosClientLiveTest extends BaseBlobStoreIntegrationTest {
    private static void verifyHeadObject(AtmosClient connection, String path, String metadataValue)
             throws InterruptedException, ExecutionException, TimeoutException, IOException {
       AtmosObject getBlob = connection.headFile(path);
-      assertEquals(Strings2.toString(getBlob.getPayload()), "");
+      assertEquals(Strings2.toStringAndClose(getBlob.getPayload().openStream()), "");
       verifyMetadata(metadataValue, getBlob);
    }
 
    private static void verifyObject(AtmosClient connection, String path, String compare, String metadataValue)
             throws InterruptedException, ExecutionException, TimeoutException, IOException {
       AtmosObject getBlob = connection.readFile(path);
-      assertEquals(Strings2.toString(getBlob.getPayload()), compare);
+      assertEquals(Strings2.toStringAndClose(getBlob.getPayload().openStream()), compare);
       verifyMetadata(metadataValue, getBlob);
    }
 

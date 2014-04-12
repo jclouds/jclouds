@@ -265,7 +265,7 @@ public class AzureBlobClientLiveTest extends BaseBlobStoreIntegrationTest {
 
       // Test GET of object (including updated metadata)
       AzureBlob getBlob = getApi().getBlob(privateContainer, object.getProperties().getName());
-      assertEquals(Strings2.toString(getBlob.getPayload()), data);
+      assertEquals(Strings2.toStringAndClose(getBlob.getPayload().openStream()), data);
       // TODO assertEquals(getBlob.getName(), object.getProperties().getName());
       assertEquals(getBlob.getPayload().getContentMetadata().getContentLength(), Long.valueOf(data.length()));
       assertEquals(getBlob.getProperties().getContentMetadata().getContentType(), "text/plain");

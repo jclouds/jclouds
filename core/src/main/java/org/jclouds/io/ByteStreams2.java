@@ -28,7 +28,6 @@ import com.google.common.hash.HashingInputStream;
 import com.google.common.io.ByteSource;
 import com.google.common.io.ByteStreams;
 import com.google.common.io.Closeables;
-import com.google.common.io.InputSupplier;
 
 @Beta
 public class ByteStreams2 {
@@ -54,12 +53,12 @@ public class ByteStreams2 {
    }
 
    @Deprecated
-   public static ByteSource asByteSource(final InputSupplier<? extends InputStream> supplier) {
-      checkNotNull(supplier, "supplier");
+   public static ByteSource asByteSource(final Payload payload) {
+      checkNotNull(payload, "payload");
       return new ByteSource() {
          @Override
          public InputStream openStream() throws IOException {
-            return supplier.getInput();
+            return payload.openStream();
          }
       };
    }

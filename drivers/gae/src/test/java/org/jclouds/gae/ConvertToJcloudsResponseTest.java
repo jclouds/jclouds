@@ -97,7 +97,7 @@ public class ConvertToJcloudsResponseTest {
       replay(gaeResponse);
       HttpResponse response = req.apply(gaeResponse);
       assertEquals(response.getStatusCode(), 200);
-      assertEquals(Strings2.toString(response.getPayload()), "hello");
+      assertEquals(Strings2.toStringAndClose(response.getPayload().openStream()), "hello");
       assertEquals(response.getHeaders().size(), 0);
       assertEquals(response.getPayload().getContentMetadata().getContentType(), "text/xml");
    }

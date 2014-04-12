@@ -112,7 +112,7 @@ public abstract class BaseRestApiTest {
       } else {
          String payload = null;
          try {
-            payload = Strings2.toString(request.getPayload());
+            payload = Strings2.toStringAndClose(request.getPayload().openStream());
          } catch (IOException e) {
             propagate(e);
          }

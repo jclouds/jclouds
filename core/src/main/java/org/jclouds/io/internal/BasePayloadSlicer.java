@@ -46,7 +46,6 @@ import com.google.common.hash.HashCode;
 import com.google.common.io.ByteSource;
 import com.google.common.io.ByteStreams;
 import com.google.common.io.Files;
-import com.google.common.io.InputSupplier;
 
 @Singleton
 public class BasePayloadSlicer implements PayloadSlicer {
@@ -179,12 +178,6 @@ public class BasePayloadSlicer implements PayloadSlicer {
 
    protected Payload doSlice(ByteSource content, long offset, long length) {
       return new ByteSourcePayload(content.slice(offset, length));
-   }
-
-   /** @deprecated use doSlice(ByteSource) instead */
-   @Deprecated
-   protected Payload doSlice(InputSupplier<? extends InputStream> content, long offset, long length) {
-      return doSlice(ByteStreams2.asByteSource(content), offset, length);
    }
 
    protected Payload doSlice(byte[] content, long offset, long length) {

@@ -72,14 +72,14 @@ public class ParseAzureStorageErrorFromXmlContent implements HttpErrorHandler {
                   }
                } catch (RuntimeException e) {
                   try {
-                     message = Strings2.toString(response.getPayload());
+                     message = Strings2.toStringAndClose(response.getPayload().openStream());
                      exception = new HttpResponseException(command, response, message);
                   } catch (IOException e1) {
                   }
                }
             } else {
                try {
-                  message = Strings2.toString(response.getPayload());
+                  message = Strings2.toStringAndClose(response.getPayload().openStream());
                   exception = new HttpResponseException(command, response, message);
                } catch (IOException e) {
                }

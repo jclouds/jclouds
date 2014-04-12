@@ -145,7 +145,7 @@ public abstract class BaseHttpCommandExecutorServiceIntegrationTest extends Base
       try {
          HttpResponse getStringResponse = client.invoke(HttpRequest.builder().method("GET")
                .endpoint(server.getUrl("/objects").toString()).build());
-         assertEquals(Strings2.toString(getStringResponse.getPayload()).trim(), XML);
+         assertEquals(Strings2.toStringAndClose(getStringResponse.getPayload().openStream()).trim(), XML);
       } finally {
          close(client, true);
          server.shutdown();
