@@ -1,0 +1,18 @@
+{
+    "subnet": {
+        "name": "new_name",
+        "network_id": "ed2e3c10-2e43-4297-9006-2863a2d1abbc",
+        "tenant_id": "c1210485b2424d48804aad5d39c61b8f",
+        "allocation_pools": [
+            {
+                "start": "10.0.3.20",
+                "end": "10.0.3.150"
+            }
+        ],
+        "gateway_ip": "10.0.3.254",
+        "ip_version": 4,
+        "cidr": "10.0.3.0/24",
+        "enable_dhcp": true,
+        "id": "9436e561-47bf-436a-b1f1-fe23a926e031"
+    }
+}

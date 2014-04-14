@@ -16,11 +16,12 @@
  */
 package org.jclouds.openstack.neutron.v2_0.config;
 
-import java.net.URI;
-import java.util.Set;
-import java.util.concurrent.TimeUnit;
-import javax.inject.Provider;
-import javax.inject.Singleton;
+import com.google.common.cache.CacheBuilder;
+import com.google.common.cache.CacheLoader;
+import com.google.common.cache.LoadingCache;
+import com.google.common.collect.ImmutableMultimap;
+import com.google.common.collect.Multimap;
+import com.google.inject.Provides;
 import org.jclouds.http.HttpErrorHandler;
 import org.jclouds.http.annotation.ClientError;
 import org.jclouds.http.annotation.Redirection;
@@ -34,26 +35,27 @@ import org.jclouds.openstack.v2_0.functions.PresentWhenExtensionAnnotationNamesp
 import org.jclouds.rest.ConfiguresHttpApi;
 import org.jclouds.rest.config.HttpApiModule;
 import org.jclouds.rest.functions.ImplicitOptionalConverter;
-import com.google.common.cache.CacheBuilder;
-import com.google.common.cache.CacheLoader;
-import com.google.common.cache.LoadingCache;
-import com.google.common.collect.ImmutableMultimap;
-import com.google.common.collect.Multimap;
-import com.google.inject.Provides;
+
+import javax.inject.Provider;
+import javax.inject.Singleton;
+import java.net.URI;
+import java.util.Set;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Configures the Neutron connection.
  */
+@Deprecated
 @ConfiguresHttpApi
 public class NeutronHttpApiModule extends HttpApiModule<NeutronApi> {
-   
+
    @Override
    protected void configure() {
       bind(DateAdapter.class).to(Iso8601DateAdapter.class);
       bind(ImplicitOptionalConverter.class).to(PresentWhenExtensionAnnotationNamespaceEqualsAnyNamespaceInExtensionsSet.class);
       super.configure();
    }
-   
+
    @Provides
    @Singleton
    public Multimap<URI, URI> aliases() {
@@ -72,7 +74,7 @@ public class NeutronHttpApiModule extends HttpApiModule<NeutronApi> {
                }
             });
    }
-   
+
    @Override
    protected void bindErrorHandlers() {
       bind(HttpErrorHandler.class).annotatedWith(Redirection.class).to(NeutronErrorHandler.class);

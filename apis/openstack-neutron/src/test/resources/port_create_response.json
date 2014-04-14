@@ -1,0 +1,29 @@
+{
+    "port": {
+        "admin_state_up": true,
+        "device_id": "d6b4d3a5-c700-476f-b609-1493dd9dadc0",
+        "device_owner": "",
+        "allowed_address_pairs": [
+            {
+                "ip_address": "192.168.1.1",
+                "mac_address": "12:12"
+            },
+            {
+                "mac_address": "12:13",
+                "ip_address": "192.168.1.2"
+            }
+        ],
+        "fixed_ips": [
+            {
+                "ip_address": "192.168.111.4",
+                "subnet_id": "22b44fc2-4ffb-4de4-b0f9-69d58b37ae27"
+            }
+        ],
+        "id": "ebe69f1e-bc26-4db5-bed0-c0afb4afe3db",
+        "mac_address": "fa:16:3e:a6:50:c1",
+        "name": "port1",
+        "network_id": "6aeaf34a-c482-4bd3-9dc3-7faf36412f12",
+        "status": "ACTIVE",
+        "tenant_id": "cf1a5775e766426cb1968766d0191908"
+    }
+}

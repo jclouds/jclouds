@@ -1,0 +1,44 @@
+{
+    "ports": [
+        {
+            "admin_state_up": true,
+            "device_id": "257614cc-e178-4c92-9c61-3b28d40eca44_3",
+            "device_owner": "",
+            "fixed_ips": [
+                {
+                    "ip_address": "192.168.111.3",
+                    "subnet_id": "22b44fc2-4ffb-4de4-b0f9-69d58b37ae27"
+                }
+            ],
+            "id": "24e6637e-c521-45fc-8b8b-d7331aa3c99f-2_3",
+            "mac_address": "fa:16:3e:0f:3f:b5",
+            "name": "3",
+            "network_id": "6aeaf34a-c482-4bd3-9dc3-7faf36412f12",
+            "status": "ACTIVE",
+            "tenant_id": "cf1a5775e766426cb1968766d0191908"
+        },
+        {
+            "admin_state_up": true,
+            "device_id": "d266f9de-fe2c-4705-93b3-9da71168c93b",
+            "device_owner": "",
+            "fixed_ips": [
+                {
+                    "ip_address": "192.168.111.2",
+                    "subnet_id": "22b44fc2-4ffb-4de4-b0f9-69d58b37ae27"
+                }
+            ],
+            "id": "e54dfd9b-ce6e-47f7-af47-1609cfd1cdb0_4",
+            "mac_address": "fa:16:3e:f5:41:7f",
+            "name": "4",
+            "network_id": "6aeaf34a-c482-4bd3-9dc3-7faf36412f12",
+            "status": "ACTIVE",
+            "tenant_id": "cf1a5775e766426cb1968766d0191908"
+        }
+    ],
+    "ports_links": [
+        {
+            "href": "/v2.0/ports.json?marker=396f12f8-521e-4b91-8e21-2e003500433a&page_reverse=True",
+            "rel": "previous"
+        }
+    ]
+}

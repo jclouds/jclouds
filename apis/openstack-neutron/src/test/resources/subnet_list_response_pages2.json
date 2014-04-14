@@ -1,0 +1,26 @@
+{
+    "subnets": [
+        {
+            "ip_version": 4,
+            "cidr": "10.0.3.0/24",
+            "network_id": "1234567890",
+            "name": "jclouds-test",
+            "tenant_id": "1234567890",
+            "id": "6319ecad-6bff-48b2-9b53-02ede8cb7588"
+        },
+        {
+            "ip_version": 4,
+            "cidr": "10.0.3.0/24",
+            "network_id": "1234567890",
+            "name": "jclouds-test",
+            "tenant_id": "1234567890",
+            "id": "6ba4c788-661f-49ab-9bf8-5f10cbbb2f57"
+        }
+    ],
+    "subnets_links": [
+        {
+            "href": "/v2.0/subnets.json?marker=396f12f8-521e-4b91-8e21-2e003500433a&page_reverse=True",
+            "rel": "previous"
+        }
+    ]
+}

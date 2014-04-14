@@ -31,7 +31,7 @@ import java.util.Properties;
 public class BaseNeutronApiLiveTest extends BaseApiLiveTest<NeutronApi> {
 
    public BaseNeutronApiLiveTest() {
-      provider = "openstack-neutron";
+      provider = "openstack-neutron-legacy";
    }
 
    @Override

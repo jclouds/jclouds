@@ -58,7 +58,9 @@ import static org.jclouds.openstack.keystone.v2_0.KeystoneFallbacks.EmptyPaginat
 
  * @see <a href=
  *      "http://docs.openstack.org/api/openstack-network/2.0/content/Subnets.html">api doc</a>
+ * @deprecated Use v2 instead of v2_0
  */
+@Deprecated
 @Path("/v2.0/subnets")
 @RequestFilters(AuthenticateRequest.class)
 @Consumes(MediaType.APPLICATION_JSON)

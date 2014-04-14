@@ -38,7 +38,9 @@ import java.util.Set;
  * <p/>
  *
  * @see <a href="http://docs.openstack.org/api/openstack-network/2.0/content/">api doc</a>
+ * @deprecated Use v2 instead of v2_0
  */
+@Deprecated
 public interface NeutronApi extends Closeable {
    /**
     * @return the Zone codes configured

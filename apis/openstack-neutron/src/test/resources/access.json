@@ -1,0 +1,228 @@
+{
+    "access": {
+        "metadata": {
+            "roles": [
+                "9fe2ff9ee4384b1894a90878d3e92bab",
+                "b926cb0f4e2642678735f86c2b06205e",
+                "33484487e73d4da0918a19b9c7e1f8ae",
+                "f2e54c2105fb49e29479af047115cebc"
+            ],
+            "is_admin": 0
+        },
+        "user": {
+            "name": "joe",
+            "roles": [
+                {
+                    "name": "_member_"
+                },
+                {
+                    "name": "anotherrole"
+                },
+                {
+                    "name": "heat_stack_owner"
+                },
+                {
+                    "name": "Member"
+                }
+            ],
+            "id": "8fbf8e68d36e4ac7bcf912a26213bd49",
+            "roles_links": [],
+            "username": "joe"
+        },
+        "serviceCatalog": [
+            {
+                "name": "nova",
+                "type": "compute",
+                "endpoints_links": [],
+                "endpoints": [
+                    {
+                        "publicURL": "URL/v2/da0d12be20394afb851716e10a49e4a7",
+                        "id": "2122bcaa704343c19ad2578410d4961d",
+                        "internalURL": "URL/v2/da0d12be20394afb851716e10a49e4a7",
+                        "region": "RegionOne",
+                        "adminURL": "URL/v2/da0d12be20394afb851716e10a49e4a7"
+                    }
+                ]
+            },
+            {
+                "name": "neutron",
+                "type": "network",
+                "endpoints_links": [],
+                "endpoints": [
+                    {
+                        "publicURL": "URL/",
+                        "id": "65a4d3f13cfb49a6a57a04e205cc2158",
+                        "internalURL": "URL/",
+                        "region": "RegionOne",
+                        "adminURL": "URL/"
+                    }
+                ]
+            },
+            {
+                "name": "cinderv2",
+                "type": "volumev2",
+                "endpoints_links": [],
+                "endpoints": [
+                    {
+                        "publicURL": "URL/v2/da0d12be20394afb851716e10a49e4a7",
+                        "id": "31fe4d92eac44044b05be21c6f44cebc",
+                        "internalURL": "URL/v2/da0d12be20394afb851716e10a49e4a7",
+                        "region": "RegionOne",
+                        "adminURL": "URL/v2/da0d12be20394afb851716e10a49e4a7"
+                    }
+                ]
+            },
+            {
+                "name": "trove",
+                "type": "database",
+                "endpoints_links": [],
+                "endpoints": [
+                    {
+                        "publicURL": "URL/v1.0/da0d12be20394afb851716e10a49e4a7",
+                        "id": "06b7a7dbd25c4a01819c879700a9712a",
+                        "internalURL": "URL/v1.0/da0d12be20394afb851716e10a49e4a7",
+                        "region": "RegionOne",
+                        "adminURL": "URL/v1.0/da0d12be20394afb851716e10a49e4a7"
+                    }
+                ]
+            },
+            {
+                "name": "s3",
+                "type": "s3",
+                "endpoints_links": [],
+                "endpoints": [
+                    {
+                        "publicURL": "URL",
+                        "id": "93b0b67091324e8ba01b62ee0584994c",
+                        "internalURL": "URL",
+                        "region": "RegionOne",
+                        "adminURL": "URL"
+                    }
+                ]
+            },
+            {
+                "name": "glance",
+                "type": "image",
+                "endpoints_links": [],
+                "endpoints": [
+                    {
+                        "publicURL": "URL",
+                        "id": "a542e91bcfa046bfa1bf2397356d1414",
+                        "internalURL": "URL",
+                        "region": "RegionOne",
+                        "adminURL": "URL"
+                    }
+                ]
+            },
+            {
+                "name": "novav3",
+                "type": "computev3",
+                "endpoints_links": [],
+                "endpoints": [
+                    {
+                        "publicURL": "URL/v3",
+                        "id": "9c3e8abb576d483db93bcef70c67bc1d",
+                        "internalURL": "URL/v3",
+                        "region": "RegionOne",
+                        "adminURL": "URL/v3"
+                    }
+                ]
+            },
+            {
+                "name": "heat",
+                "type": "cloudformation",
+                "endpoints_links": [],
+                "endpoints": [
+                    {
+                        "publicURL": "URL/v1",
+                        "id": "6f4ca5ca9698425b85c300b3fc176c39",
+                        "internalURL": "URL/v1",
+                        "region": "RegionOne",
+                        "adminURL": "URL/v1"
+                    }
+                ]
+            },
+            {
+                "name": "cinder",
+                "type": "volume",
+                "endpoints_links": [],
+                "endpoints": [
+                    {
+                        "publicURL": "URL/v1/da0d12be20394afb851716e10a49e4a7",
+                        "id": "037039c676694a35aa28d34fce09e51d",
+                        "internalURL": "URL/v1/da0d12be20394afb851716e10a49e4a7",
+                        "region": "RegionOne",
+                        "adminURL": "URL/v1/da0d12be20394afb851716e10a49e4a7"
+                    }
+                ]
+            },
+            {
+                "name": "ec2",
+                "type": "ec2",
+                "endpoints_links": [],
+                "endpoints": [
+                    {
+                        "publicURL": "URL/services/Cloud",
+                        "id": "1d242631bccb4ff4ba7a395dbcb51648",
+                        "internalURL": "URL/services/Cloud",
+                        "region": "RegionOne",
+                        "adminURL": "URL/services/Admin"
+                    }
+                ]
+            },
+            {
+                "name": "heat",
+                "type": "orchestration",
+                "endpoints_links": [],
+                "endpoints": [
+                    {
+                        "publicURL": "URL/v1/da0d12be20394afb851716e10a49e4a7",
+                        "id": "199d00075e4a40308a6ad2aa8980d0cd",
+                        "internalURL": "URL/v1/da0d12be20394afb851716e10a49e4a7",
+                        "region": "RegionOne",
+                        "adminURL": "URL/v1/da0d12be20394afb851716e10a49e4a7"
+                    }
+                ]
+            },
+            {
+                "name": "swift",
+                "type": "object-store",
+                "endpoints_links": [],
+                "endpoints": [
+                    {
+                        "publicURL": "URL/v1/AUTH_da0d12be20394afb851716e10a49e4a7",
+                        "id": "26b2cb1efb044193b847fc3f2fb12e82",
+                        "internalURL": "URL/v1/AUTH_da0d12be20394afb851716e10a49e4a7",
+                        "region": "RegionOne",
+                        "adminURL": "URL"
+                    }
+                ]
+            },
+            {
+                "name": "keystone",
+                "type": "identity",
+                "endpoints_links": [],
+                "endpoints": [
+                    {
+                        "publicURL": "URL/v2.0",
+                        "id": "1bbfe80b50df4c4a84040aa782e42140",
+                        "internalURL": "URL/v2.0",
+                        "region": "RegionOne",
+                        "adminURL": "URL/v2.0"
+                    }
+                ]
+            }
+        ],
+        "token": {
+            "tenant": {
+                "name": "jclouds",
+                "id": "da0d12be20394afb851716e10a49e4a7",
+                "enabled": true,
+                "description": null
+            },
+            "id": "TOKEN",
+            "expires": "2014-04-28T22:48:24Z",
+            "issued_at": "2014-04-28T21:48:24.972896"
+        }
+    }
+}

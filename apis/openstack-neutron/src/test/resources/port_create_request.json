@@ -1,0 +1,14 @@
+{
+    "port": {
+        "admin_state_up": true,
+        "device_id": "d6b4d3a5-c700-476f-b609-1493dd9dadc0",
+        "name": "port1",
+        "network_id": "6aeaf34a-c482-4bd3-9dc3-7faf36412f12",
+        "allowed_address_pairs": [
+            {
+                "ip_address": "111.222.333.444",
+                "mac_address": "12"
+            }
+        ]
+    }
+}

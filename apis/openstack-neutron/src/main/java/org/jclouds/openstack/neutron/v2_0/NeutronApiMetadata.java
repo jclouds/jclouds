@@ -37,6 +37,7 @@ import static org.jclouds.openstack.keystone.v2_0.config.KeystoneProperties.SERV
 /**
  * Implementation of {@link org.jclouds.apis.ApiMetadata} for Neutron 2.0 API
  */
+@Deprecated
 public class NeutronApiMetadata extends BaseHttpApiMetadata<NeutronApi> {
 
    @Override
@@ -63,7 +64,7 @@ public class NeutronApiMetadata extends BaseHttpApiMetadata<NeutronApi> {
 
       protected Builder() {
          super(NeutronApi.class);
-         id("openstack-neutron")
+         id("openstack-neutron-legacy")
             .name("OpenStack Neutron API")
             .identityName("${tenantName}:${userName} or ${userName}, if your keystone supports a default tenant")
             .credentialName("${password}")

@@ -1,0 +1,6 @@
+{"subnet": {
+    "ip_version": 4,
+    "cidr": "10.0.3.0/24",
+    "network_id": "1234567890",
+    "name": "jclouds-wibble"
+}}

@@ -1,0 +1,12 @@
+{
+    "networks": [
+        {
+            "provider:network_type": "local",
+            "name": "jclouds-wibble"
+        },
+        {
+            "provider:network_type": "local",
+            "name": "jclouds-wibble2"
+        }
+    ]
+}

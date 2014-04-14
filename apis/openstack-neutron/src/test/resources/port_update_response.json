@@ -1,0 +1,23 @@
+{
+    "port": {
+        "admin_state_up": true,
+        "device_id": "24df1d04-d5cb-41e1-8de5-61ed77c558df",
+        "device_owner": "compute:None",
+        "fixed_ips": [
+            {
+                "ip_address": "10.0.0.3",
+                "subnet_id": "3b498f11-0a20-43ed-b992-0e4202d5f930"
+            }
+        ],
+        "id": "1d8591f4-7b62-428e-857d-e82a15e5a7f1",
+        "mac_address": "fa:16:3e:b6:da:54",
+        "name": "",
+        "network_id": "abaf2e70-4305-4e8d-ac70-3e4cc5f66a07",
+        "security_groups": [
+            "85cc3048-abc3-43cc-89b3-377341426ac5",
+            "c5ab5c29-2c99-44cb-a4b8-e70a88b77799"
+        ],
+        "status": "ACTIVE",
+        "tenant_id": "e4f50856753b4dc6afee5fa6b9b6c550"
+    }
+}

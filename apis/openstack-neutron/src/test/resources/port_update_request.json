@@ -1,0 +1,8 @@
+{
+    "port": {
+        "security_groups": [
+            "85cc3048-abc3-43cc-89b3-377341426ac5",
+            "c5ab5c29-2c99-44cb-a4b8-e70a88b77799"
+        ]
+    }
+}

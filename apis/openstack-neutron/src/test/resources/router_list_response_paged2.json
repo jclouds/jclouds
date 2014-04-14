@@ -1,0 +1,30 @@
+{
+    "routers": [
+        {
+            "status": "ACTIVE",
+            "external_gateway_info": {
+                "network_id": "3c5bcddd-6af9-4e6b-9c3e-c153e521cab8_3"
+            },
+            "name": "router3",
+            "admin_state_up": true,
+            "tenant_id": "33a40233088643acb66ff6eb0ebea679_3",
+            "id": "a9254bdb-2613-4a13-ac4c-adc581fba50d_3"
+        },
+        {
+            "status": "ACTIVE",
+            "external_gateway_info": {
+                "network_id": "3c5bcddd-6af9-4e6b-9c3e-c153e521cab8_4"
+            },
+            "name": "router4",
+            "admin_state_up": true,
+            "tenant_id": "33a40233088643acb66ff6eb0ebea679_4",
+            "id": "a9254bdb-2613-4a13-ac4c-adc581fba50d_4"
+        }
+    ],
+    "routers_links": [
+        {
+            "href": "/v2.0/routers.json?marker=396f12f8-521e-4b91-8e21-2e003500433a&page_reverse=True",
+            "rel": "previous"
+        }
+    ]
+}

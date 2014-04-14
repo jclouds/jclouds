@@ -16,3 +16,4 @@
 #
 
 org.jclouds.openstack.neutron.v2_0.NeutronApiMetadata
+org.jclouds.openstack.neutron.v2.NeutronApiMetadata

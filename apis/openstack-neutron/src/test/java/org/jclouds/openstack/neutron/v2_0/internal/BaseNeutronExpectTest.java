@@ -38,7 +38,7 @@ public class BaseNeutronExpectTest<T> extends BaseRestApiExpectTest<T> {
    protected String endpoint = "https://csnode.jclouds.org:9696/v2.0";
 
    public BaseNeutronExpectTest() {
-      provider = "openstack-neutron";
+      provider = "openstack-neutron-legacy";
       keystoneAuthWithUsernameAndPassword = KeystoneFixture.INSTANCE.initialAuthWithUsernameAndPassword(identity,
               credential);
       keystoneAuthWithUsernameAndPasswordAndTenantName = KeystoneFixture.INSTANCE.initialAuthWithUsernameAndPasswordAndTenantName(identity,

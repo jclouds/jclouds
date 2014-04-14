@@ -1,0 +1,18 @@
+{
+    "networks": [
+        {
+            "provider:network_type": "local",
+            "status": "ACTIVE",
+            "name": "jclouds-wibble",
+            "tenant_id": "1234567890",
+            "id": "624312ff-d14b-4ba3-9834-1c78d23d574d"
+        },
+        {
+            "provider:network_type": "local",
+            "status": "ACTIVE",
+            "name": "jclouds-wibble2",
+            "tenant_id": "1234567890",
+            "id": "624312ff-d14b-4ba3-9834-1c78d23d574e"
+        }
+    ]
+}
