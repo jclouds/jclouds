@@ -68,6 +68,6 @@ public class SoftLayerTemplateOptionsTest {
 
    @Test(expectedExceptions = IllegalArgumentException.class)
    public void testDomainNameIsInvalidThrowsIllegalArgument() {
-      new SoftLayerTemplateOptions().domainName("foo");
+      new SoftLayerTemplateOptions().domainName("notapublicsuffix");
    }
 }

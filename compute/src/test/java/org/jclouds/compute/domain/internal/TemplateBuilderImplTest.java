@@ -684,7 +684,7 @@ public class TemplateBuilderImplTest {
          fail("Expected NoSuchElementException");
       } catch (NoSuchElementException e) {
          // make sure big data is not in the exception message
-         assertEquals(e.getMessage(), "no image matched predicate: And(nullEqualToIsParentOrIsGrandparentOfCurrentLocation(),imageDescription(notDescription))");
+         assertEquals(e.getMessage(), "no image matched predicate: Predicates.and(nullEqualToIsParentOrIsGrandparentOfCurrentLocation(),imageDescription(notDescription))");
       }
 
       verify(defaultOptions, optionsProvider, templateBuilderProvider);
