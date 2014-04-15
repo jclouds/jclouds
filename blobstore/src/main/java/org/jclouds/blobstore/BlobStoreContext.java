@@ -57,11 +57,8 @@ public interface BlobStoreContext extends Closeable, View {
    BlobStore getBlobStore();
 
    /**
-    * 
     * @return best guess at the consistency model used in this BlobStore.
-    * @deprecated will be removed in jclouds 1.7, as almost never correct.
     */
-   @Deprecated
    ConsistencyModel getConsistencyModel();
 
    Utils utils();
