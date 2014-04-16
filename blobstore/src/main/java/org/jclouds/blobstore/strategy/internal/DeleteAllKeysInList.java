@@ -177,6 +177,25 @@ public class DeleteAllKeysInList implements ClearListStrategy, ClearContainerStr
       return listing;
    }
 
+   private ListenableFuture<Void> deleteDirectory(final ListContainerOptions options,
+         final String containerName, final String dirName) {
+      ListenableFuture<Void> blobDelFuture;
+
+      if (options.isRecursive()) {
+         blobDelFuture = executorService.submit(new Callable<Void>() {
+            @Override
+            public Void call() {
+               blobStore.deleteDirectory(containerName, dirName);
+               return null;
+            }
+         });
+      } else {
+         blobDelFuture = null;
+      }
+
+      return blobDelFuture;
+   }
+
    /**
     * Delete the blobs from a given PageSet. The PageSet may contain blobs or
     * directories. If there are directories, they are expected to be empty.
@@ -235,30 +254,11 @@ public class DeleteAllKeysInList implements ClearListStrategy, ClearContainerStr
             });
             break;
          case FOLDER:
-            if (options.isRecursive()) {
-               blobDelFuture = executorService.submit(new Callable<Void>() {
-                  @Override
-                  public Void call() {
-                     blobStore.deleteDirectory(containerName, fullPath);
-                     return null;
-                  }
-               });
-            } else {
-               blobDelFuture = null;
-            }
+            blobDelFuture = deleteDirectory(options, containerName, fullPath);
             break;
          case RELATIVE_PATH:
-            if (options.isRecursive()) {
-               blobDelFuture = executorService.submit(new Callable<Void>() {
-                  @Override
-                  public Void call() {
-                     blobStore.deleteDirectory(containerName, md.getName());
-                     return null;
-                  }
-               });
-            } else {
-               blobDelFuture = null;
-            }
+            blobDelFuture = deleteDirectory(options, containerName,
+                  md.getName());
             break;
          case CONTAINER:
             throw new IllegalArgumentException("Container type not supported");
