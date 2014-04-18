@@ -41,4 +41,15 @@ public class SwiftContainerLiveTest extends BaseContainerLiveTest {
    public void testPublicAccess() throws MalformedURLException, InterruptedException, IOException {
       super.testPublicAccess();
    }
+
+   @Test(dependsOnMethods = "testPublicAccess")
+   public void testPublicAccessInNonDefaultLocation() throws InterruptedException, MalformedURLException, IOException {
+      super.testPublicAccessInNonDefaultLocation();
+   }
+
+   @Test(dependsOnMethods = "testPublicAccess")
+   public void testPublicAccessInNonDefaultLocationWithBigBlob() throws InterruptedException, MalformedURLException,
+            IOException {
+      super.testPublicAccessInNonDefaultLocationWithBigBlob();
+   }
 }
