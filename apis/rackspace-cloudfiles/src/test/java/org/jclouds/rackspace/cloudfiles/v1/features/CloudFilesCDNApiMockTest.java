@@ -63,7 +63,7 @@ public class CloudFilesCDNApiMockTest extends BaseOpenStackMockTest<CloudFilesAp
 
       try {
          CloudFilesApi api = api(server.getUrl("/").toString(), "rackspace-cloudfiles");
-         CDNApi cdnApi = api.cdnApiInRegion("DFW");
+         CDNApi cdnApi = api.getCDNApiForRegion("DFW");
 
          ImmutableList<CDNContainer> cdnContainers = cdnApi.list().toList();
 
@@ -84,7 +84,7 @@ public class CloudFilesCDNApiMockTest extends BaseOpenStackMockTest<CloudFilesAp
 
       try {
          CloudFilesApi api = api(server.getUrl("/").toString(), "rackspace-cloudfiles");
-         CDNApi cdnApi = api.cdnApiInRegion("DFW");
+         CDNApi cdnApi = api.getCDNApiForRegion("DFW");
 
          List<CDNContainer> cdnContainers = cdnApi.list().toList();
 
@@ -106,7 +106,7 @@ public class CloudFilesCDNApiMockTest extends BaseOpenStackMockTest<CloudFilesAp
       try {
          CloudFilesApi api = api(server.getUrl("/").toString(), "rackspace-cloudfiles");
          ListContainerOptions options = ListContainerOptions.Builder.marker("cdn-container-3");
-         ImmutableList<CDNContainer> containers = api.cdnApiInRegion("DFW").list(options).toList();
+         ImmutableList<CDNContainer> containers = api.getCDNApiForRegion("DFW").list(options).toList();
 
          for (CDNContainer container : containers) {
             assertCDNContainerNotNull(container);
@@ -130,7 +130,7 @@ public class CloudFilesCDNApiMockTest extends BaseOpenStackMockTest<CloudFilesAp
       try {
          CloudFilesApi api = api(server.getUrl("/").toString(), "rackspace-cloudfiles");
          ListContainerOptions options = ListContainerOptions.Builder.marker("cdn-container-3");
-         FluentIterable<CDNContainer> containers = api.cdnApiInRegion("DFW").list(options);
+         FluentIterable<CDNContainer> containers = api.getCDNApiForRegion("DFW").list(options);
 
          assertEquals(server.getRequestCount(), 2);
          assertAuthentication(server);
@@ -152,7 +152,7 @@ public class CloudFilesCDNApiMockTest extends BaseOpenStackMockTest<CloudFilesAp
          CloudFilesApi api = api(server.getUrl("/").toString(), "rackspace-cloudfiles");
 
          // enable a CDN Container
-         URI enabledContainer = api.cdnApiInRegion("DFW").enable("container-1");
+         URI enabledContainer = api.getCDNApiForRegion("DFW").enable("container-1");
          assertNotNull(enabledContainer);
 
          assertEquals(server.getRequestCount(), 2);
@@ -171,7 +171,7 @@ public class CloudFilesCDNApiMockTest extends BaseOpenStackMockTest<CloudFilesAp
       try {
          CloudFilesApi api = api(server.getUrl("/").toString(), "rackspace-cloudfiles");
          // enable a CDN Container
-         assertNull(api.cdnApiInRegion("DFW").enable("container-1"));
+         assertNull(api.getCDNApiForRegion("DFW").enable("container-1"));
 
          assertEquals(server.getRequestCount(), 2);
          assertAuthentication(server);
@@ -190,7 +190,7 @@ public class CloudFilesCDNApiMockTest extends BaseOpenStackMockTest<CloudFilesAp
          CloudFilesApi api = api(server.getUrl("/").toString(), "rackspace-cloudfiles");
 
          // enable a CDN Container with a TTL
-         URI enabledContainer = api.cdnApiInRegion("DFW").enable("container-1", 777777);
+         URI enabledContainer = api.getCDNApiForRegion("DFW").enable("container-1", 777777);
          assertNotNull(enabledContainer);
 
          assertEquals(server.getRequestCount(), 2);
@@ -210,7 +210,7 @@ public class CloudFilesCDNApiMockTest extends BaseOpenStackMockTest<CloudFilesAp
          CloudFilesApi api = api(server.getUrl("/").toString(), "rackspace-cloudfiles");
 
          // enable a CDN Container with a TTL
-         URI enabledContainer = api.cdnApiInRegion("DFW").enable("container-1", 777777);
+         URI enabledContainer = api.getCDNApiForRegion("DFW").enable("container-1", 777777);
          assertNull(enabledContainer);
 
          assertEquals(server.getRequestCount(), 2);
@@ -230,7 +230,7 @@ public class CloudFilesCDNApiMockTest extends BaseOpenStackMockTest<CloudFilesAp
          CloudFilesApi api = api(server.getUrl("/").toString(), "rackspace-cloudfiles");
 
          // disable a CDN Container
-         assertTrue(api.cdnApiInRegion("DFW").disable("container-1"));
+         assertTrue(api.getCDNApiForRegion("DFW").disable("container-1"));
 
          assertEquals(server.getRequestCount(), 2);
          assertAuthentication(server);
@@ -249,7 +249,7 @@ public class CloudFilesCDNApiMockTest extends BaseOpenStackMockTest<CloudFilesAp
          CloudFilesApi api = api(server.getUrl("/").toString(), "rackspace-cloudfiles");
 
          // disable a CDN Container
-         boolean disbledContainer = api.cdnApiInRegion("DFW").disable("container-1");
+         boolean disbledContainer = api.getCDNApiForRegion("DFW").disable("container-1");
          assertFalse(disbledContainer);
 
          assertEquals(server.getRequestCount(), 2);
@@ -268,7 +268,7 @@ public class CloudFilesCDNApiMockTest extends BaseOpenStackMockTest<CloudFilesAp
       try {
          CloudFilesApi api = api(server.getUrl("/").toString(), "rackspace-cloudfiles");
 
-         CDNContainer cdnContainer = api.cdnApiInRegion("DFW").get("container-1");
+         CDNContainer cdnContainer = api.getCDNApiForRegion("DFW").get("container-1");
          assertCDNContainerNotNull(cdnContainer);
          assertEquals(mockCDNContainer, cdnContainer);
 
@@ -288,7 +288,7 @@ public class CloudFilesCDNApiMockTest extends BaseOpenStackMockTest<CloudFilesAp
       try {
          CloudFilesApi api = api(server.getUrl("/").toString(), "rackspace-cloudfiles");
 
-         CDNContainer cdnContainer = api.cdnApiInRegion("DFW").get("container-1");
+         CDNContainer cdnContainer = api.getCDNApiForRegion("DFW").get("container-1");
 
          assertAuthentication(server);
          assertRequest(server.takeRequest(), "HEAD", "/v1/MossoCloudFS_5bcf396e-39dd-45ff-93a1-712b9aba90a9/container-1");
@@ -307,7 +307,7 @@ public class CloudFilesCDNApiMockTest extends BaseOpenStackMockTest<CloudFilesAp
          CloudFilesApi api = api(server.getUrl("/").toString(), "rackspace-cloudfiles");
 
          // purge the object
-         assertTrue(api.cdnApiInRegion("DFW").purgeObject("myContainer", "myObject", emails));
+         assertTrue(api.getCDNApiForRegion("DFW").purgeObject("myContainer", "myObject", emails));
 
          assertEquals(server.getRequestCount(), 2);
          assertAuthentication(server);
@@ -326,7 +326,7 @@ public class CloudFilesCDNApiMockTest extends BaseOpenStackMockTest<CloudFilesAp
          CloudFilesApi api = api(server.getUrl("/").toString(), "rackspace-cloudfiles");
 
          // purge the object
-         assertFalse(api.cdnApiInRegion("DFW").purgeObject("myContainer", "myObject", emails));
+         assertFalse(api.getCDNApiForRegion("DFW").purgeObject("myContainer", "myObject", emails));
 
          assertEquals(server.getRequestCount(), 2);
          assertAuthentication(server);
@@ -346,13 +346,13 @@ public class CloudFilesCDNApiMockTest extends BaseOpenStackMockTest<CloudFilesAp
       try {
          CloudFilesApi api = api(server.getUrl("/").toString(), "rackspace-cloudfiles");
 
-         CDNContainer cdnContainer = api.cdnApiInRegion("DFW").get("container-1");
+         CDNContainer cdnContainer = api.getCDNApiForRegion("DFW").get("container-1");
          assertCDNContainerNotNull(cdnContainer);
 
          // update the CDN Container
-         assertTrue(api.cdnApiInRegion("DFW").update("container-1", enabled(false).logRetention(true).ttl(7654321)));
+         assertTrue(api.getCDNApiForRegion("DFW").update("container-1", enabled(false).logRetention(true).ttl(7654321)));
 
-         cdnContainer = api.cdnApiInRegion("DFW").get("container-1");
+         cdnContainer = api.getCDNApiForRegion("DFW").get("container-1");
          assertCDNContainerNotNull(cdnContainer);
 
          CDNContainer updatedContainer = CDNContainer.builder()
@@ -387,11 +387,11 @@ public class CloudFilesCDNApiMockTest extends BaseOpenStackMockTest<CloudFilesAp
       try {
          CloudFilesApi api = api(server.getUrl("/").toString(), "rackspace-cloudfiles");
 
-         CDNContainer cdnContainer = api.cdnApiInRegion("DFW").get("container-1");
+         CDNContainer cdnContainer = api.getCDNApiForRegion("DFW").get("container-1");
          assertCDNContainerNotNull(cdnContainer);
 
          // update the CDN Container
-         assertFalse(api.cdnApiInRegion("DFW").update("container-1", enabled(false).logRetention(true).ttl(7654321)));
+         assertFalse(api.getCDNApiForRegion("DFW").update("container-1", enabled(false).logRetention(true).ttl(7654321)));
 
          assertEquals(server.getRequestCount(), 3);
          assertAuthentication(server);

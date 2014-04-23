@@ -19,7 +19,9 @@ package org.jclouds.rackspace.cloudfiles.v1.features;
 import static org.testng.Assert.assertTrue;
 
 import org.jclouds.openstack.swift.v1.domain.Account;
+import org.jclouds.openstack.swift.v1.features.AccountApi;
 import org.jclouds.openstack.swift.v1.features.AccountApiLiveTest;
+import org.jclouds.rackspace.cloudfiles.v1.CloudFilesApi;
 import org.testng.annotations.Test;
 
 /**
@@ -37,7 +39,7 @@ public class CloudFilesAccountApiLiveTest extends AccountApiLiveTest {
 
    public void testUrlKeyExists() throws Exception {
       for (String regionId : regions) {
-         Account account = api.accountApiInRegion(regionId).get();
+         Account account = api.getAccountApiForRegion(regionId).get();
          assertTrue(account.getTemporaryUrlKey().isPresent());
       }
    }

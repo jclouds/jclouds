@@ -33,8 +33,6 @@ import com.google.common.annotations.Beta;
  * Additionally, Cloud Files provides a simple yet powerful way to publish and distribute content
  * behind a Content Distribution Network.
  * 
- * @author Jeremy Daggett
- * 
  * @see CDNApi
  * @see SwiftApi
  */
@@ -49,5 +47,5 @@ public interface CloudFilesApi extends SwiftApi {
     * @return the {@link CDNApi} for the specified region.
     */
    @Delegate
-   CDNApi cdnApiInRegion(@EndpointParam(parser = RegionToCDNEndpoint.class) @Nullable String region);
+   CDNApi getCDNApiForRegion(@EndpointParam(parser = RegionToCDNEndpoint.class) @Nullable String region);
 }
