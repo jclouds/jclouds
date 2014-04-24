@@ -207,7 +207,8 @@ public class LoginCredentials extends Credentials {
 
    @Override
    public String toString() {
-      return "[user=" + getUser() + ", passwordPresent=" + password.isPresent() + ", privateKeyPresent="
-            + privateKey.isPresent() + ", shouldAuthenticateSudo=" + authenticateSudo + "]";
+      return "[user=" + getUser() + ", passwordPresent=" + (password != null ? password.isPresent() : false)
+            + ", privateKeyPresent=" + (privateKey != null ? privateKey.isPresent() : false)
+            + ", shouldAuthenticateSudo=" + authenticateSudo + "]";
    }
 }
