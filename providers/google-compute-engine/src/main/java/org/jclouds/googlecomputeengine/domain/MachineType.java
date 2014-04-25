@@ -18,15 +18,18 @@ package org.jclouds.googlecomputeengine.domain;
 
 import static com.google.common.base.Objects.equal;
 import static com.google.common.base.Objects.toStringHelper;
+import static com.google.common.base.Optional.fromNullable;
 import static com.google.common.base.Preconditions.checkNotNull;
-
 import java.beans.ConstructorProperties;
 import java.net.URI;
 import java.util.Date;
 import java.util.List;
 
+import org.jclouds.javax.annotation.Nullable;
+
 import com.google.common.annotations.Beta;
 import com.google.common.base.Objects;
+import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableList;
 
 /**
@@ -44,14 +47,17 @@ public final class MachineType extends Resource {
    private final Integer maximumPersistentDisks;
    private final Long maximumPersistentDisksSizeGb;
    private final String zone;
+   private final Optional<Deprecated> deprecated;
 
    @ConstructorProperties({
            "id", "creationTimestamp", "selfLink", "name", "description", "guestCpus", "memoryMb",
-           "imageSpaceGb", "scratchDisks", "maximumPersistentDisks", "maximumPersistentDisksSizeGb", "zone"
+           "imageSpaceGb", "scratchDisks", "maximumPersistentDisks", "maximumPersistentDisksSizeGb", "zone",
+           "deprecated"
    })
    private MachineType(String id, Date creationTimestamp, URI selfLink, String name, String description,
                        int guestCpus, int memoryMb, int imageSpaceGb, List<ScratchDisk> scratchDisks,
-                       int maximumPersistentDisks, long maximumPersistentDisksSizeGb, String zone) {
+                       int maximumPersistentDisks, long maximumPersistentDisksSizeGb, String zone,
+                       @Nullable Deprecated deprecated) {
       super(Kind.MACHINE_TYPE, id, creationTimestamp, selfLink, name, description);
       this.guestCpus = checkNotNull(guestCpus, "guestCpus of %s", name);
       this.memoryMb = checkNotNull(memoryMb, "memoryMb of %s", name);
@@ -60,6 +66,7 @@ public final class MachineType extends Resource {
       this.maximumPersistentDisks = checkNotNull(maximumPersistentDisks, "maximumPersistentDisks of %s", name);
       this.maximumPersistentDisksSizeGb = maximumPersistentDisksSizeGb;
       this.zone = checkNotNull(zone, "zone of %s", name);
+      this.deprecated = fromNullable(deprecated);
    }
 
    /**
@@ -112,6 +119,13 @@ public final class MachineType extends Resource {
    }
 
    /**
+    * @return the deprecation information for this machine type
+    */
+   public Optional<Deprecated> getDeprecated() {
+      return deprecated;
+   }
+
+   /**
     * {@inheritDoc}
     */
    @Override
@@ -135,7 +149,8 @@ public final class MachineType extends Resource {
               .add("scratchDisks", scratchDisks)
               .add("maximumPersistentDisks", maximumPersistentDisks)
               .add("maximumPersistentDisksSizeGb", maximumPersistentDisksSizeGb)
-              .add("zone", zone);
+              .add("zone", zone)
+              .add("deprecated", deprecated.orNull());
    }
 
    /**
@@ -163,6 +178,7 @@ public final class MachineType extends Resource {
       private Integer maximumPersistentDisks;
       private Long maximumPersistentDisksSizeGb;
       private String zone;
+      private Deprecated deprecated;
 
       /**
        * @see MachineType#getGuestCpus()
@@ -228,6 +244,14 @@ public final class MachineType extends Resource {
          return this;
       }
 
+      /**
+       * @see MachineType#getDeprecated()
+       */
+      public Builder deprecated(Deprecated deprecated) {
+         this.deprecated = deprecated;
+         return this;
+      }
+
       @Override
       protected Builder self() {
          return this;
@@ -236,15 +260,15 @@ public final class MachineType extends Resource {
       public MachineType build() {
          return new MachineType(id, creationTimestamp, selfLink, name, description, guestCpus, memoryMb,
                  imageSpaceGb, scratchDisks.build(), maximumPersistentDisks, maximumPersistentDisksSizeGb,
-                 zone);
+                 zone, deprecated);
       }
 
 
       public Builder fromMachineType(MachineType in) {
          return super.fromResource(in).memoryMb(in.getMemoryMb()).imageSpaceGb(in.getImageSpaceGb()).scratchDisks(in
                  .getScratchDisks()).maximumPersistentDisks(in.getMaximumPersistentDisks())
-                 .maximumPersistentDisksSizeGb(in.getMaximumPersistentDisksSizeGb()).zone(in
-                         .getZone());
+                 .maximumPersistentDisksSizeGb(in.getMaximumPersistentDisksSizeGb()).zone(in.getZone())
+                 .deprecated(in.getDeprecated().orNull());
       }
    }
 

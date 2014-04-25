@@ -98,8 +98,7 @@ public class InstanceInZoneToNodeMetadata implements Function<InstanceInZone, No
               .providerId(input.getId())
               .hostname(input.getName())
               .location(checkNotNull(locations.get().get(input.getZone()), "location for %s", input.getZone()))
-              .hardware(checkNotNull(hardwares.get().get(input.getMachineType()), "hardware type for %s",
-                                            input.getMachineType().toString()))
+              .hardware(hardwares.get().get(input.getMachineType()))
               .status(toPortableNodeStatus.get(input.getStatus()))
               .tags(tags)
               .uri(input.getSelfLink())

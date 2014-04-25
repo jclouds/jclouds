@@ -32,7 +32,6 @@ import static org.jclouds.googlecomputeengine.GoogleComputeEngineConstants.OPERA
 import static org.jclouds.googlecomputeengine.domain.Instance.NetworkInterface.AccessConfig.Type;
 import static org.jclouds.googlecomputeengine.predicates.InstancePredicates.isBootDisk;
 import static org.jclouds.util.Predicates2.retry;
-
 import java.net.URI;
 import java.util.List;
 import java.util.Map;
@@ -260,6 +259,12 @@ public class GoogleComputeEngineServiceAdapter implements ComputeServiceAdapter<
          builder.addAll(api.getMachineTypeApiForProject(userProject.get())
                  .listInZone(zone.getId())
                  .concat()
+                 .filter(new Predicate<MachineType>() {
+                    @Override
+                    public boolean apply(MachineType input) {
+                       return !input.getDeprecated().isPresent();
+                    }
+                 })
                  .transform(new Function<MachineType, MachineTypeInZone>() {
 
                     @Override
@@ -285,7 +290,7 @@ public class GoogleComputeEngineServiceAdapter implements ComputeServiceAdapter<
    public Image getImage(String id) {
       return Objects.firstNonNull(api.getImageApiForProject(userProject.get()).get(id),
                                   Objects.firstNonNull(api.getImageApiForProject(DEBIAN_PROJECT).get(id),
-                                                       api.getImageApiForProject(CENTOS_PROJECT).get(id)));
+                                          api.getImageApiForProject(CENTOS_PROJECT).get(id)));
 
    }
 
