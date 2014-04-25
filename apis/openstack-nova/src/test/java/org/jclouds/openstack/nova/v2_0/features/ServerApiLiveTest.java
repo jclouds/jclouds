@@ -16,11 +16,14 @@
  */
 package org.jclouds.openstack.nova.v2_0.features;
 
+import static org.jclouds.openstack.nova.v2_0.domain.Server.Status.ACTIVE;
+import static org.jclouds.openstack.nova.v2_0.predicates.ServerPredicates.awaitActive;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertFalse;
 import static org.testng.Assert.assertNotNull;
 import static org.testng.Assert.assertTrue;
 
+import org.jclouds.http.HttpResponseException;
 import org.jclouds.openstack.nova.v2_0.domain.Network;
 import org.jclouds.openstack.nova.v2_0.domain.Server;
 import org.jclouds.openstack.nova.v2_0.domain.ServerCreated;
@@ -84,9 +87,9 @@ public class ServerApiLiveTest extends BaseNovaApiLiveTest {
       for (String zoneId : zones) {
          ServerApi serverApi = api.getServerApiForZone(zoneId);
          try {
-            serverId = createServer(zoneId, "nova", Server.Status.ACTIVE).getId();
+            serverId = createServer(zoneId, "nova").getId();
             Server server = serverApi.get(serverId);
-            assertEquals(server.getStatus(), Server.Status.ACTIVE);
+            assertEquals(server.getStatus(), ACTIVE);
          } finally {
             if (serverId!=null) {
                serverApi.delete(serverId);
@@ -114,9 +117,10 @@ public class ServerApiLiveTest extends BaseNovaApiLiveTest {
             ServerCreated server = serverApi.create(hostName, imageIdForZone(zoneId), "1", options);
             serverId = server.getId();
 
-            blockUntilServerInState(server.getId(), serverApi, Server.Status.ACTIVE);
+            awaitActive(serverApi).apply(server.getId());
+
             Server serverCheck = serverApi.get(serverId);
-            assertEquals(serverCheck.getStatus(), Server.Status.ACTIVE);
+            assertEquals(serverCheck.getStatus(), ACTIVE);
          } finally {
             if (serverId != null) {
                serverApi.delete(serverId);
@@ -131,9 +135,12 @@ public class ServerApiLiveTest extends BaseNovaApiLiveTest {
       for (String zoneId : zones) {
          ServerApi serverApi = api.getServerApiForZone(zoneId);
          try {
-            serverId = createServer(zoneId, "err", Server.Status.ERROR).getId();
-            Server server = serverApi.get(serverId);
-            assertEquals(server.getStatus(), Server.Status.ERROR);
+             serverId = createServer(zoneId, "err").getId();
+         } catch (HttpResponseException e) {
+            // Here is an implementation detail difference between OpenStack and some providers.
+            // Some providers accept a bad availability zone and create the server in the zoneId.
+            // Vanilla OpenStack will error out with a 400 Bad Request
+            assertEquals(e.getResponse().getStatusCode(), 400);
          } finally {
             if (serverId!=null) {
                serverApi.delete(serverId);
@@ -150,11 +157,11 @@ public class ServerApiLiveTest extends BaseNovaApiLiveTest {
       for (String zoneId : zones) {
          ServerApi serverApi = api.getServerApiForZone(zoneId);
          try {
-            serverId = createServer(zoneId, Server.Status.ACTIVE).getId();
+            serverId = createServer(zoneId, null).getId();
 
             Server server = serverApi.get(serverId);
 
-            assertEquals(server.getStatus(), Server.Status.ACTIVE);
+            assertEquals(server.getStatus(), ACTIVE);
 
             RebuildServerOptions options = new RebuildServerOptions().
                   withImage(server.getImage().getId()).
@@ -179,22 +186,18 @@ public class ServerApiLiveTest extends BaseNovaApiLiveTest {
       }
    }
 
-   private Server createServer(String regionId, Server.Status serverStatus) {
-      ServerApi serverApi = api.getServerApiForZone(regionId);
+   private Server createServer(String zoneId, String availabilityZoneId) {
+      ServerApi serverApi = api.getServerApiForZone(zoneId);
+
       CreateServerOptions options = new CreateServerOptions();
-      ServerCreated server = serverApi.create(hostName, imageIdForZone(regionId), flavorRefForZone(regionId), options);
+      if (availabilityZoneId != null) {
+          options = options.availabilityZone(availabilityZoneId);
+      }
 
-      blockUntilServerInState(server.getId(), serverApi, serverStatus);
+      ServerCreated server = serverApi.create(hostName, imageIdForZone(zoneId), flavorRefForZone(zoneId), options);
 
-      return serverApi.get(server.getId());
-   }
+      awaitActive(serverApi).apply(server.getId());
 
-   private Server createServer(String regionId, String availabilityZoneId, Server.Status serverStatus) {
-      ServerApi serverApi = api.getServerApiForZone(regionId);
-      CreateServerOptions options = new CreateServerOptions();
-      options = options.availabilityZone(availabilityZoneId);
-      ServerCreated server = serverApi.create(hostName, imageIdForZone(regionId), flavorRefForZone(regionId), options);
-      blockUntilServerInState(server.getId(), serverApi, serverStatus);
       return serverApi.get(server.getId());
    }
 
