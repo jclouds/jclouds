@@ -57,8 +57,8 @@ public class NeutronApiMetadata extends BaseHttpApiMetadata<NeutronApi> {
 
    public static Properties defaultProperties() {
       Properties properties = BaseHttpApiMetadata.defaultProperties();
-      properties.setProperty(SERVICE_TYPE, ServiceType.NETWORK);
       properties.setProperty(CREDENTIAL_TYPE, CredentialTypes.PASSWORD_CREDENTIALS);
+      properties.setProperty(SERVICE_TYPE, ServiceType.NETWORK);
       return properties;
    }
 
