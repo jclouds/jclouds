@@ -25,15 +25,16 @@ import static org.jclouds.openstack.keystone.v2_0.config.KeystoneProperties.SERV
 import java.net.URI;
 import java.util.Properties;
 
-import org.jclouds.openstack.trove.v1.TroveApiMetadata;
-import org.jclouds.openstack.trove.v1.config.TroveParserModule;
-import org.jclouds.openstack.trove.v1.config.TroveHttpApiModule;
 import org.jclouds.openstack.keystone.v2_0.config.KeystoneAuthenticationModule.ZoneModule;
+import org.jclouds.openstack.trove.v1.TroveApiMetadata;
+import org.jclouds.openstack.trove.v1.config.TroveHttpApiModule;
+import org.jclouds.openstack.trove.v1.config.TroveParserModule;
 import org.jclouds.providers.ProviderMetadata;
 import org.jclouds.providers.internal.BaseProviderMetadata;
+import org.jclouds.rackspace.cloudidentity.v2_0.ServiceType;
+import org.jclouds.rackspace.cloudidentity.v2_0.config.CloudIdentityAuthenticationApiModule;
 import org.jclouds.rackspace.cloudidentity.v2_0.config.CloudIdentityAuthenticationModule;
 import org.jclouds.rackspace.cloudidentity.v2_0.config.CloudIdentityCredentialTypes;
-import org.jclouds.rackspace.cloudidentity.v2_0.config.CloudIdentityAuthenticationApiModule;
 
 import com.google.common.collect.ImmutableSet;
 import com.google.inject.Module;
@@ -65,7 +66,7 @@ public class CloudDatabasesUSProviderMetadata extends BaseProviderMetadata {
    public static Properties defaultProperties() {
       Properties properties = new Properties();
       properties.setProperty(CREDENTIAL_TYPE, CloudIdentityCredentialTypes.API_KEY_CREDENTIALS);
-      properties.setProperty(SERVICE_TYPE, "rax:database"); 
+      properties.setProperty(SERVICE_TYPE, ServiceType.DATABASES);
       properties.setProperty(PROPERTY_ZONES, "ORD,DFW,IAD,SYD,HKG");
       properties.setProperty(PROPERTY_ZONE + ".ORD." + ISO3166_CODES, "US-IL");
       properties.setProperty(PROPERTY_ZONE + ".DFW." + ISO3166_CODES, "US-TX");
@@ -74,7 +75,7 @@ public class CloudDatabasesUSProviderMetadata extends BaseProviderMetadata {
       properties.setProperty(PROPERTY_ZONE + ".HKG." + ISO3166_CODES, "HK");
       return properties;
    }
-   
+
    public static class Builder extends BaseProviderMetadata.Builder {
 
       protected Builder(){
