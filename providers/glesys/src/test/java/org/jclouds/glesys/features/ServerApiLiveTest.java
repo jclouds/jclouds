@@ -84,7 +84,7 @@ public class ServerApiLiveTest extends BaseGleSYSApiWithAServerLiveTest {
    
    @Test
    public void testAllowedArguments() throws Exception {
-      Map<String,AllowedArgumentsForCreateServer> templates = serverApi.getAllowedArgumentsForCreateByPlatform();
+      Map<String, AllowedArgumentsForCreateServer> templates = serverApi.getAllowedArgumentsForCreateByPlatform();
       
       assertTrue(templates.containsKey("OpenVZ"));
       assertTrue(templates.containsKey("Xen"));

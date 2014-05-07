@@ -47,8 +47,8 @@ public class ChangeMessageVisibilityBatchResponseTest extends BaseHandlerTest {
 
    public BatchResult<String> expected() {
       return BatchResult.<String> builder()
-            .put("change_visibility_msg_2","change_visibility_msg_2")
-            .put("change_visibility_msg_3","change_visibility_msg_3")
+            .put("change_visibility_msg_2", "change_visibility_msg_2")
+            .put("change_visibility_msg_3", "change_visibility_msg_3")
             .build();
    }
 }

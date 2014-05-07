@@ -61,7 +61,7 @@ public class CreateUniqueKeyPairTest {
 
          @Override
          protected void configure() {
-            Names.bindProperties(binder(),new EC2ApiMetadata().getDefaultProperties());
+            Names.bindProperties(binder(), new EC2ApiMetadata().getDefaultProperties());
             bind(new TypeLiteral<Supplier<String>>() {
             }).toInstance(Suppliers.ofInstance("1"));
             bind(EC2Api.class).toInstance(client);
@@ -99,7 +99,7 @@ public class CreateUniqueKeyPairTest {
 
          @Override
          protected void configure() {
-            Names.bindProperties(binder(),new EC2ApiMetadata().getDefaultProperties());
+            Names.bindProperties(binder(), new EC2ApiMetadata().getDefaultProperties());
             bind(new TypeLiteral<Supplier<String>>() {
             }).toInstance(uniqueIdSupplier);
             bind(EC2Api.class).toInstance(client);

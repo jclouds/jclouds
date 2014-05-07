@@ -34,7 +34,7 @@ import com.google.common.base.Predicate;
  */
 @Test(groups = "live")
 public class BaseGleSYSApiLiveTest extends BaseApiLiveTest<GleSYSApi> {
-   protected String hostName = System.getProperty("user.name").replace('.','-').toLowerCase();
+   protected String hostName = System.getProperty("user.name").replace('.', '-').toLowerCase();
 
    public BaseGleSYSApiLiveTest() {
       provider = "glesys";

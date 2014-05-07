@@ -65,7 +65,7 @@ public class ObjectToBlobMetadata implements Function<AtmosObject, MutableBlobMe
       HttpUtils.copy(from.getContentMetadata(), to.getContentMetadata());
       to.setName(objectName.apply(from));
       to.setUri(from.getContentMetadata().getUri());
-      to.setContainer(Iterables.get(Splitter.on('/').split(from.getContentMetadata().getPath()),0));
+      to.setContainer(Iterables.get(Splitter.on('/').split(from.getContentMetadata().getPath()), 0));
       if (from.getAllHeaders().containsEntry("x-emc-groupacl", "other=READ"))
          to.setPublicUri(shareUrl.apply(from.getContentMetadata().getPath()));
       if (from.getSystemMetadata().getType() == FileType.DIRECTORY) {

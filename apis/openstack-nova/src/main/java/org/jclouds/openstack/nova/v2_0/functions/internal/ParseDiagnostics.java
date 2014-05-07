@@ -28,18 +28,18 @@ import java.util.Map;
 /**
  * @author Leander Beernaert
  */
-public class ParseDiagnostics implements Function<HttpResponse, Optional <Map<String,String>>> {
+public class ParseDiagnostics implements Function<HttpResponse, Optional <Map<String, String>>> {
 
 
-   private final ParseJson<Optional <Map<String,String>>> parser;
+   private final ParseJson<Optional <Map<String, String>>> parser;
    
    @Inject
-   public ParseDiagnostics(ParseJson<Optional <Map<String,String>>> parser) {
+   public ParseDiagnostics(ParseJson<Optional <Map<String, String>>> parser) {
       this.parser = parser;
    }
 
    @Override
-   public Optional <Map<String,String>> apply(HttpResponse response) {
+   public Optional <Map<String, String>> apply(HttpResponse response) {
       checkNotNull(response, "response");
       return parser.apply(response);
    }

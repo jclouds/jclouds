@@ -44,7 +44,7 @@ import com.google.common.collect.Maps;
 @Test(groups = "live", testName = "InstanceApiLiveTest")
 public class InstanceApiLiveTest extends BaseTroveApiLiveTest {
 
-    private static Map<String,List<Instance>> created = Maps.newHashMap();
+    private static Map<String, List<Instance>> created = Maps.newHashMap();
     
     @Override
     @BeforeClass(groups = { "integration", "live" })

@@ -61,7 +61,7 @@ public class TroveUtilsExpectTest extends BaseTroveApiExpectTest {
 
         TroveUtils utils = new TroveUtils(api);
         Instance instance = utils.getWorkingInstance("RegionOne", "json_rack_instance", "1", 2);
-        assertEquals(instance.getSize(),2);
+        assertEquals(instance.getSize(), 2);
         assertEquals(instance.getName(), "json_rack_instance");  
     }
 }

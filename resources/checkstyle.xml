@@ -43,6 +43,9 @@
         <module name="SimplifyBooleanExpression"/>
         <module name="UnnecessaryParentheses"/>
         <module name="UnusedImports"/>
+        <module name="WhitespaceAfter">
+            <property name="tokens" value="COMMA"/>
+        </module>
     </module>
     <module name="RegexpMultiline">
         <property name="format" value="=\s*new ArrayList&lt;[^&gt;]"/>

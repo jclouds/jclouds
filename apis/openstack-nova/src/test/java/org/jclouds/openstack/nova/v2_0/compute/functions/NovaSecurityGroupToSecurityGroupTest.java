@@ -65,7 +65,7 @@ public class NovaSecurityGroupToSecurityGroupTest {
            ZoneAndName.fromZoneAndName("az-1.region-a.geo-1", "some-other-group"), new SecurityGroupInZone(securityGroupWithCidr(), "az-1.region-a.geo-1"));
 
    // weird compilation error means have to declare extra generics for call to build() - see https://bugs.eclipse.org/bugs/show_bug.cgi?id=365818
-   private static final Supplier <LoadingCache<ZoneAndName, SecurityGroupInZone>> groupCache = Suppliers.<LoadingCache<ZoneAndName,SecurityGroupInZone>> ofInstance(
+   private static final Supplier <LoadingCache<ZoneAndName, SecurityGroupInZone>> groupCache = Suppliers.<LoadingCache<ZoneAndName, SecurityGroupInZone>> ofInstance(
            CacheBuilder.newBuilder().<ZoneAndName, SecurityGroupInZone>build(CacheLoader.from(Functions.forMap(groupMap))));
 
    public static final SecurityGroupRuleToIpPermission ruleConverter = new SecurityGroupRuleToIpPermission(returnSecurityGroupExistsInZone, locationIndex,

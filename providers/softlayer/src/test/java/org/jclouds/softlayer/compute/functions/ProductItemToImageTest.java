@@ -126,7 +126,7 @@ public class ProductItemToImageTest {
          OperatingSystem os = i.getOperatingSystem();
          assertNotNull(os);
          assertEquals(OsFamily.UBUNTU, os.getFamily());
-         assertEquals("10.04",os.getVersion());
+         assertEquals("10.04", os.getVersion());
          assertTrue(os.is64Bit());
    }
 
@@ -140,7 +140,7 @@ public class ProductItemToImageTest {
       OperatingSystem os = i.getOperatingSystem();
       assertNotNull(os);
       assertEquals(OsFamily.UBUNTU, os.getFamily());
-      assertEquals("10.04",os.getVersion());
+      assertEquals("10.04", os.getVersion());
       assertFalse(os.is64Bit());
    }
 
@@ -190,15 +190,15 @@ public class ProductItemToImageTest {
    public void testId() {
       ProductItemPrice price = ProductItemPrice.builder().id(1234).build();
       ProductItem item = ProductItem.builder().prices(price).build();
-      assertEquals("1234",imageId().apply(item));
+      assertEquals("1234", imageId().apply(item));
    }
 
    @Test
    public void testIdManyPrices() {
       ProductItemPrice price1 = ProductItemPrice.builder().id(1234).build();
       ProductItemPrice price2 = ProductItemPrice.builder().id(5678).build();
-      ProductItem item = ProductItem.builder().prices(ImmutableSet.of(price1,price2)).build();
-      assertEquals("1234",imageId().apply(item));
+      ProductItem item = ProductItem.builder().prices(ImmutableSet.of(price1, price2)).build();
+      assertEquals("1234", imageId().apply(item));
    }
 
    @Test(expectedExceptions = NoSuchElementException.class)
@@ -214,27 +214,27 @@ public class ProductItemToImageTest {
 
    @Test
    public void testOsFamily() {
-      assertEquals(OsFamily.UBUNTU,osFamily().apply("Ubuntu Linux os"));
+      assertEquals(OsFamily.UBUNTU, osFamily().apply("Ubuntu Linux os"));
    }
 
    @Test
    public void testOsFamilyUnrecognized() {
-      assertEquals(OsFamily.UNRECOGNIZED,osFamily().apply("not a known operating system"));
+      assertEquals(OsFamily.UNRECOGNIZED, osFamily().apply("not a known operating system"));
    }
    
    @Test
    public void testOsFamilyNull() {
-      assertEquals(OsFamily.UNRECOGNIZED,osFamily().apply(null));
+      assertEquals(OsFamily.UNRECOGNIZED, osFamily().apply(null));
    }
 
    @Test
    public void testOsBitsWithSpace() {
-      assertEquals(osBits().apply("a (32 bit) os"),Integer.valueOf(32));
+      assertEquals(osBits().apply("a (32 bit) os"), Integer.valueOf(32));
    }
 
    @Test
    public void testOsBitsNoSpace() {
-      assertEquals(osBits().apply("a (64bit) os"),Integer.valueOf(64));
+      assertEquals(osBits().apply("a (64bit) os"), Integer.valueOf(64));
    }
 
    @Test
@@ -249,7 +249,7 @@ public class ProductItemToImageTest {
 
    @Test
    public void testOsVersion() {
-      assertEquals("2099",osVersion().apply("Windows Server 2099 (256 bit)"));
+      assertEquals("2099", osVersion().apply("Windows Server 2099 (256 bit)"));
    }
 
    @Test

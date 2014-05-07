@@ -270,7 +270,7 @@ public class GetMetricStatistics {
        * the {@code Builder}.
        */
       public GetMetricStatistics build() {
-         return new GetMetricStatistics(dimensions, endTime, metricName,namespace, period, startTime,  statistics,
+         return new GetMetricStatistics(dimensions, endTime, metricName, namespace, period, startTime,  statistics,
                                         unit);
       }
 

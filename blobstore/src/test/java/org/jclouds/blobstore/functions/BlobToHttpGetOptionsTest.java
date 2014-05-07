@@ -91,11 +91,11 @@ public class BlobToHttpGetOptionsTest {
    @Test
    public void testRanges() {
       org.jclouds.blobstore.options.GetOptions in = new org.jclouds.blobstore.options.GetOptions();
-      in.range(0,1024);
+      in.range(0, 1024);
       in.startAt(2048);
       
       GetOptions expected = new GetOptions();
-      expected.range(0,1024);
+      expected.range(0, 1024);
       expected.startAt(2048);
 
       assertEquals(fn.apply(in), expected);

@@ -66,7 +66,7 @@ public class KeystoneStorageEndpointModuleTest {
       expect(mockSupplier.get())
          .andReturn(endpoints)
          .anyTimes();
-      expect(mockFactory.createForApiTypeAndVersion(ServiceType.OBJECT_STORE,apiVersion))
+      expect(mockFactory.createForApiTypeAndVersion(ServiceType.OBJECT_STORE, apiVersion))
          .andReturn(mockSupplier)
          .anyTimes();
 
@@ -81,7 +81,7 @@ public class KeystoneStorageEndpointModuleTest {
    public void testEmptyRegion() {
       final KeystoneStorageEndpointModule moduleToTest = new KeystoneStorageEndpointModule();
 
-      // Test with an empty Region - just ensure we get either a region 1,2 or 3
+      // Test with an empty Region - just ensure we get either a region 1, 2 or 3
       // URI
       Supplier<URI> resultingSupplier = moduleToTest.provideStorageUrl(mockFactory, apiVersion, "");
       assertNotNull(resultingSupplier);

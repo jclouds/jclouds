@@ -46,7 +46,7 @@ public class LoginWithPasswordCredentials extends CacheLoader<Credentials, Login
       // domain may be present
       if (username.indexOf('/') != -1) {
          // username may not end with slash!
-         domain = username.substring(0,username.lastIndexOf('/'));
+         domain = username.substring(0, username.lastIndexOf('/'));
          username = username.substring(username.lastIndexOf('/') + 1, username.length());
       }
       String hashedPassword = base16().lowerCase().encode(md5().hashString(input.credential, UTF_8).asBytes());

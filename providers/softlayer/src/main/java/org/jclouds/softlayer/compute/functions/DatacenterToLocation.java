@@ -36,7 +36,7 @@ import com.google.common.collect.Iterables;
 /**
  * Converts an Datacenter into a Location.
  */
-public class DatacenterToLocation implements Function<Datacenter,Location> {
+public class DatacenterToLocation implements Function<Datacenter, Location> {
    private final JustProvider provider;
 
    // allow us to lazy discover the provider of a resource

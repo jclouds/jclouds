@@ -79,12 +79,12 @@ public class ProductOrderToJsonTest {
                                        .location("loc456")
                                        .quantity(99)
                                        .useHourlyPricing(true)
-                                       .prices(ImmutableSet.of(price1,price2))
+                                       .prices(ImmutableSet.of(price1, price2))
                                        .virtualGuests(guest)
                                        .build();
       
-      String expected = String.format(FORMAT.replaceAll("'","\""),
-                                      123,"loc456",100,101,"myhost","mydomain",99,true);
+      String expected = String.format(FORMAT.replaceAll("'", "\""),
+                                      123, "loc456", 100, 101, "myhost", "mydomain", 99, true);
 
       HttpRequest req = binder.bindToRequest(request, order);
 

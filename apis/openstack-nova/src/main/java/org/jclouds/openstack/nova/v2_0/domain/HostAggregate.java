@@ -177,7 +177,7 @@ public class HostAggregate {
       this.state = checkNotNull(state, "state");
       this.created = checkNotNull(created, "created");
       this.updated = Optional.fromNullable(updated);
-      this.metadata = metadata == null ? ImmutableMap.<String,String>of() : ImmutableMap.copyOf(metadata);     
+      this.metadata = metadata == null ? ImmutableMap.<String, String>of() : ImmutableMap.copyOf(metadata);     
    }
 
    public String getId() {

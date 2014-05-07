@@ -27,7 +27,7 @@ import org.testng.annotations.Test;
  *
  * @author Jason King
  */
-@Test(sequential = true,groups = "unit")
+@Test(sequential = true, groups = "unit")
 public class ProductPackagePredicatesTest {
 
    @Test

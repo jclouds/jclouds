@@ -140,7 +140,7 @@ public class ProductItemsToHardwareTest {
             ProductItemPrice.builder().id(987).build()).categories(
             ProductItemCategory.builder().categoryCode("guest_disk1").build()).build();
 
-      Hardware hardware = toHardware.apply(ImmutableSet.of(cpuItem, ramItem, volumeItem,localVolumeItem));
+      Hardware hardware = toHardware.apply(ImmutableSet.of(cpuItem, ramItem, volumeItem, localVolumeItem));
 
       List<? extends Volume> volumes = hardware.getVolumes();
       assertEquals(2, volumes.size());

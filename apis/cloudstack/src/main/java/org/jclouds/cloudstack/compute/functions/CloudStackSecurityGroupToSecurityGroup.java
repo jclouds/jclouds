@@ -46,10 +46,10 @@ public class CloudStackSecurityGroupToSecurityGroup implements Function<org.jclo
    @Named(ComputeServiceConstants.COMPUTE_LOGGER)
    protected Logger logger = Logger.NULL;
 
-   protected final Function<IngressRule,IpPermission> ruleToPermission;
+   protected final Function<IngressRule, IpPermission> ruleToPermission;
    
    @Inject
-   public CloudStackSecurityGroupToSecurityGroup(Function<IngressRule,IpPermission> ruleToPermission) {
+   public CloudStackSecurityGroupToSecurityGroup(Function<IngressRule, IpPermission> ruleToPermission) {
       this.ruleToPermission = ruleToPermission;
    }
 

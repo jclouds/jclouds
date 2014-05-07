@@ -53,7 +53,7 @@ public class ParseImageListFromJsonResponseTest {
          bind(DateAdapter.class).to(Iso8601DateAdapter.class);
       }
 
-   },new GsonModule());
+   }, new GsonModule());
    DateService dateService = i.getInstance(DateService.class);
 
    public void testApplyInputStream() {

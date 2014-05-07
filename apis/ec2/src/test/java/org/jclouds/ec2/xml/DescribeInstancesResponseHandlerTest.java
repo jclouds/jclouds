@@ -99,7 +99,7 @@ public class DescribeInstancesResponseHandlerTest extends BaseEC2HandlerTest {
                         .availabilityZone("us-east-1b").virtualizationType("paravirtual").privateDnsName(
                                  "10-251-50-132.ec2.internal")// product codes
                         // ImmutableSet.of("774F4FF8")
-                        .tags(ImmutableMap.of("Name","ec2-o", "Empty",""))
+                        .tags(ImmutableMap.of("Name", "ec2-o", "Empty", ""))
                         .ramdiskId("ari-badbad00").rootDeviceType(RootDeviceType.INSTANCE_STORE).build(),
                         RunningInstance.builder().region(defaultRegion).groupName("default").amiLaunchIndex("23")
                                  .dnsName("ec2-72-44-33-6.compute-1.amazonaws.com").imageId("ami-6ea54007").instanceId(

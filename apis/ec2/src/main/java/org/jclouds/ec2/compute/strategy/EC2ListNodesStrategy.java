@@ -121,7 +121,7 @@ public class EC2ListNodesStrategy implements ListNodesStrategy {
       return concat(concat(reservations));
    }
 
-   protected Iterable<? extends RunningInstance> pollRunningInstancesByRegionsAndIds(final Multimap<String,String> idsByRegions) {
+   protected Iterable<? extends RunningInstance> pollRunningInstancesByRegionsAndIds(final Multimap<String, String> idsByRegions) {
       Iterable<? extends Set<? extends Reservation<? extends RunningInstance>>> reservations
          = transform(idsByRegions.keySet(), instancesByIdInRegion(idsByRegions));
       
@@ -150,7 +150,7 @@ public class EC2ListNodesStrategy implements ListNodesStrategy {
    }
 
    protected Function<String, Set<? extends Reservation<? extends RunningInstance>>>
-                                                                  instancesByIdInRegion(final Multimap<String,String> idsByRegions) {
+                                                                  instancesByIdInRegion(final Multimap<String, String> idsByRegions) {
       return new Function<String, Set<? extends Reservation<? extends RunningInstance>>>() {
                  
          @Override

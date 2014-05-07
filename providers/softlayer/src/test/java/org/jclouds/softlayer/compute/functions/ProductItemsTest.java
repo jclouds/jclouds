@@ -72,7 +72,7 @@ public class ProductItemsTest {
 
    @Test
    public void testDescription() {
-       assertEquals(description().apply(item),"an item");
+       assertEquals(description().apply(item), "an item");
    }
 
    @Test
@@ -83,14 +83,14 @@ public class ProductItemsTest {
 
    @Test
    public void testPrice() {
-      assertEquals(price().apply(item),price);
+      assertEquals(price().apply(item), price);
    }
 
    @Test
    public void testPriceMultiplePrices() {
        ImmutableSet<ProductItemPrice> prices = ImmutableSet.of(price, ProductItemPrice.builder().id(2).build());
        ProductItem item2 = ProductItem.builder().prices(prices).build();
-       assertEquals(price().apply(item2),price);
+       assertEquals(price().apply(item2), price);
    }
 
    @Test(expectedExceptions = NoSuchElementException.class)

@@ -30,8 +30,8 @@ public class UserIdGroupPair implements Comparable<UserIdGroupPair> {
    private final String groupName;
 
    public UserIdGroupPair(String userId, String groupName) {
-      this.userId = checkNotNull(userId,"userId");
-      this.groupName = checkNotNull(groupName,"groupName");
+      this.userId = checkNotNull(userId, "userId");
+      this.groupName = checkNotNull(groupName, "groupName");
    }
 
 

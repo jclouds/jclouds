@@ -60,7 +60,7 @@ public class AzureBlobProviderMetadata extends BaseProviderMetadata {
             .homepage(URI.create("http://www.microsoft.com/windowsazure/storage/"))
             .console(URI.create("https://windows.azure.com/default.aspx"))
             .linkedServices("azureblob", "azurequeue", "azuretable")
-            .iso3166Codes("US-TX","US-IL","IE-D","SG","NL-NH","HK")
+            .iso3166Codes("US-TX", "US-IL", "IE-D", "SG", "NL-NH", "HK")
             .defaultProperties(AzureBlobProviderMetadata.defaultProperties());
       }
 

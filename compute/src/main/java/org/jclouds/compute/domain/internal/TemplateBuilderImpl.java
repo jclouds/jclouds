@@ -495,13 +495,13 @@ public class TemplateBuilderImpl implements TemplateBuilder {
                .compare(left.getName(), right.getName(), Ordering.<String> natural().nullsLast())
                .compare(left.getVersion(), right.getVersion(), Ordering.<String> natural().nullsLast())
                .compare(left.getDescription(), right.getDescription(), Ordering.<String> natural().nullsLast())
-               .compare(left.getOperatingSystem().getName(), right.getOperatingSystem().getName(),//
+               .compare(left.getOperatingSystem().getName(), right.getOperatingSystem().getName(),
                      Ordering.<String> natural().nullsLast())
-               .compare(left.getOperatingSystem().getVersion(), right.getOperatingSystem().getVersion(),//
+               .compare(left.getOperatingSystem().getVersion(), right.getOperatingSystem().getVersion(),
                      Ordering.<String> natural().nullsLast())
-               .compare(left.getOperatingSystem().getDescription(), right.getOperatingSystem().getDescription(),//
+               .compare(left.getOperatingSystem().getDescription(), right.getOperatingSystem().getDescription(),
                      Ordering.<String> natural().nullsLast())
-               .compare(left.getOperatingSystem().getArch(), right.getOperatingSystem().getArch(),//
+               .compare(left.getOperatingSystem().getArch(), right.getOperatingSystem().getArch(),
                      Ordering.<String> natural().nullsLast()).result();
       }
    };

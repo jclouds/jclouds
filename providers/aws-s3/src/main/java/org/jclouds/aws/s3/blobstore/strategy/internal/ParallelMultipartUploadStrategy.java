@@ -243,7 +243,7 @@ public class ParallelMultipartUploadStrategy implements AsyncMultipartUploadStra
                      PutOptions nonMultipartOptions = PutOptions.Builder.multipart(false);
                      ListenableFuture<String> futureETag = ablobstore.putBlob(container, blob, nonMultipartOptions);
                      return maxTime != null ? 
-                           futureETag.get(maxTime,TimeUnit.SECONDS) : futureETag.get();
+                           futureETag.get(maxTime, TimeUnit.SECONDS) : futureETag.get();
                   }
                }
             });

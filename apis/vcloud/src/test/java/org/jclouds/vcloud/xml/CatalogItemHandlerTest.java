@@ -68,7 +68,7 @@ public class CatalogItemHandlerTest {
                URI.create("https://myvdc.carrenza.net/api/v1.0/catalogItem/ecd4d3a0-0d12-4195-a6d2-14cdf9f925a3"), 
                null, new ReferenceTypeImpl("ubuntu10.10x64", "application/vnd.vmware.vcloud.vAppTemplate+xml", 
                         URI.create("https://myvdc.carrenza.net/api/v1.0/vAppTemplate/vappTemplate-123766ea-2b55-482c-8adf-735ab1952834")),
-               ImmutableSortedMap.<String,String>of()));
+               ImmutableSortedMap.<String, String>of()));
    }
    
    public void testApplyInputStreamWithNamespaceUsingDefault() {
@@ -81,6 +81,6 @@ public class CatalogItemHandlerTest {
                URI.create("https://myvdc.carrenza.net/api/v1.0/catalogItem/ecd4d3a0-0d12-4195-a6d2-14cdf9f925a3"), 
                null, new ReferenceTypeImpl("ubuntu10.10x64", "application/vnd.vmware.vcloud.vAppTemplate+xml", 
                         URI.create("https://myvdc.carrenza.net/api/v1.0/vAppTemplate/vappTemplate-123766ea-2b55-482c-8adf-735ab1952834")),
-               ImmutableSortedMap.<String,String>of()));
+               ImmutableSortedMap.<String, String>of()));
    }
 }

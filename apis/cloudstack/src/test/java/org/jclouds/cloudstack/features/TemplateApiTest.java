@@ -194,7 +194,7 @@ public class TemplateApiTest extends BaseCloudStackApiTest<TemplateApi> {
       Invokable<?, ?> method = method(TemplateApi.class, "copyTemplateToZone", String.class, String.class, String.class);
       GeneratedHttpRequest httpRequest = processor.createRequest(method, ImmutableList.<Object> of(17, 18, 19));
 
-      assertRequestLineEquals(httpRequest,copyTemplate.getRequestLine());
+      assertRequestLineEquals(httpRequest, copyTemplate.getRequestLine());
       assertNonPayloadHeadersEqual(httpRequest, "Accept: application/json\n");
       assertPayloadEquals(httpRequest, null, null, false);
 

@@ -39,7 +39,7 @@ import com.google.common.collect.Maps;
 public class DatabaseApiLiveTest extends BaseTroveApiLiveTest {
 
    // zone to instance
-   private static Map<String,List<Instance>> instancesToDelete = Maps.newHashMap();
+   private static Map<String, List<Instance>> instancesToDelete = Maps.newHashMap();
    // not deleting databases. they will be deleted when instances are deleted
 
    @Override

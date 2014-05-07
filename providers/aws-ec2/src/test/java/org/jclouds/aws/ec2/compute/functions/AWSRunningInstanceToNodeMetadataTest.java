@@ -106,7 +106,7 @@ public class AWSRunningInstanceToNodeMetadataTest {
                .tag("Name", "foo")
                .tag("Empty", "")
                .hypervisor(Hypervisor.XEN)
-               .build(),//
+               .build(),
                new AWSRunningInstance.Builder()
                         .region(defaultRegion)
                         .instanceId("i-931444f2")
@@ -206,7 +206,7 @@ public class AWSRunningInstanceToNodeMetadataTest {
 
          @Override
          protected void configure() {
-            Names.bindProperties(binder(),new AWSEC2ApiMetadata().getDefaultProperties());
+            Names.bindProperties(binder(), new AWSEC2ApiMetadata().getDefaultProperties());
          }
 
       }).getInstance(GroupNamingConvention.Factory.class);

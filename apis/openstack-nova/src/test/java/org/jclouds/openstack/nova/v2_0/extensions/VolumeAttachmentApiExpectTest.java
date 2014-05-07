@@ -130,7 +130,7 @@ public class VolumeAttachmentApiExpectTest extends BaseNovaApiExpectTest {
             HttpResponse.builder().statusCode(404).build()
       ).getVolumeAttachmentExtensionForZone("az-1.region-a.geo-1").get();
 
-      api.attachVolumeToServerAsDevice("1", "instance-1","/dev/vdc");
+      api.attachVolumeToServerAsDevice("1", "instance-1", "/dev/vdc");
    }
 
    public void testDetachVolume() {

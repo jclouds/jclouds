@@ -43,7 +43,7 @@ import com.google.common.collect.Iterables;
  */
 @Test(groups = "live", testName = "VolumeApiLiveTest", singleThreaded = true)
 public class VolumeAndSnapshotApiLiveTest extends BaseCinderApiLiveTest {
-   private static final String name = System.getProperty("user.name").replace('.','-').toLowerCase();
+   private static final String name = System.getProperty("user.name").replace('.', '-').toLowerCase();
    
    private String zone;
 

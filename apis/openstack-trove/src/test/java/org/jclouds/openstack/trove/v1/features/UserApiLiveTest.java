@@ -48,7 +48,7 @@ import com.google.common.collect.Maps;
 public class UserApiLiveTest extends BaseTroveApiLiveTest {
 
    // zone to instance
-   private static Map<String,List<Instance>> instancesToDelete = Maps.newHashMap();
+   private static Map<String, List<Instance>> instancesToDelete = Maps.newHashMap();
    // not deleting users. they will be deleted when instances are deleted
 
    @Override

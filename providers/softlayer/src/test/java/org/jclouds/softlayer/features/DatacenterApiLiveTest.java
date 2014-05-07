@@ -70,7 +70,7 @@ public class DatacenterApiLiveTest extends BaseSoftLayerApiLiveTest {
       Set<Datacenter> response = api().listDatacenters();
       Set<Datacenter> expected = builder.build();
 
-      assertEquals(response.size(),expected.size());
+      assertEquals(response.size(), expected.size());
       assertTrue(response.containsAll(expected));
 
       for (Datacenter datacenter: response) {

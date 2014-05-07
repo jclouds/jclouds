@@ -89,7 +89,7 @@ public class SwiftContainerIntegrationLiveTest extends BaseContainerIntegrationT
          assertEquals(containerMetadata.getMetadata().get("key2"), "value2");
          assertEquals(containerMetadata.getMetadata().get("key3"), "value3");
 
-         assertTrue(swift.deleteContainerMetadata(containerName, ImmutableList.<String> of("key2","key3")));
+         assertTrue(swift.deleteContainerMetadata(containerName, ImmutableList.<String> of("key2", "key3")));
 
          containerMetadata = swift.getContainerMetadata(containerName);
 

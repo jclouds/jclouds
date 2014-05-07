@@ -284,7 +284,7 @@ public class RunningInstanceToNodeMetadataTest {
 
          @Override
          protected void configure() {
-            Names.bindProperties(binder(),new EC2ApiMetadata().getDefaultProperties());
+            Names.bindProperties(binder(), new EC2ApiMetadata().getDefaultProperties());
          }
 
       }).getInstance(GroupNamingConvention.Factory.class);

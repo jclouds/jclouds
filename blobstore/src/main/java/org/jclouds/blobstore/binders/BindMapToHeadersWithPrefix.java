@@ -64,7 +64,7 @@ public class BindMapToHeadersWithPrefix implements Binder {
    @SuppressWarnings("unchecked")
    @Override
    public <R extends HttpRequest> R bindToRequest(R request, Object input) {
-      checkArgument(checkNotNull(input, "input") instanceof Map<?,?>, "this binder is only valid for Maps!");
+      checkArgument(checkNotNull(input, "input") instanceof Map<?, ?>, "this binder is only valid for Maps!");
       checkNotNull(request, "request");
 
       Map<String, String> userMetadata = Maps2.transformKeys((Map<String, String>) input, FN);

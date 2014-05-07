@@ -159,7 +159,7 @@ public class ApacheHCUtils {
       // TODO Reproducing old behaviour exactly; ignoring Content-Type, Content-Length and Content-MD5
       Set<String> desiredHeaders = ImmutableSet.of("Content-Disposition", "Content-Encoding", "Content-Language", "Expires");
       MutableContentMetadata md = payload.getContentMetadata();
-      for (Map.Entry<String,String> entry : contentMetadataCodec.toHeaders(md).entries()) {
+      for (Map.Entry<String, String> entry : contentMetadataCodec.toHeaders(md).entries()) {
          if (desiredHeaders.contains(entry.getKey())) {
             apacheRequest.addHeader(entry.getKey(), entry.getValue());
          }

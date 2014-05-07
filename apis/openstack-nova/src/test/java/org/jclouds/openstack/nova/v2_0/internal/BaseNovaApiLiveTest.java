@@ -47,7 +47,7 @@ import com.google.common.base.Throwables;
  */
 @Test(groups = "live")
 public class BaseNovaApiLiveTest extends BaseApiLiveTest<NovaApi> {
-   protected String hostName = System.getProperty("user.name").replace('.','-').toLowerCase();
+   protected String hostName = System.getProperty("user.name").replace('.', '-').toLowerCase();
 
    public BaseNovaApiLiveTest() {
       provider = "openstack-nova";

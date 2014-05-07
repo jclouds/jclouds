@@ -53,7 +53,7 @@ public class VCloudComputeServiceAdapterTest extends BaseVCloudComputeServiceExp
 
       Iterable<VAppTemplate> hardwareProfiles = adapter.listHardwareProfiles();
       
-      Iterable<URI> hardwareProfileRefs = Iterables.transform(ImmutableList.copyOf(hardwareProfiles), new Function<VAppTemplate,URI>() {
+      Iterable<URI> hardwareProfileRefs = Iterables.transform(ImmutableList.copyOf(hardwareProfiles), new Function<VAppTemplate, URI>() {
          @Override public URI apply(VAppTemplate input) {
             return input.getHref();
          }

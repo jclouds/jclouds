@@ -39,7 +39,7 @@ public class ContainerPropertiesImpl implements ContainerProperties {
    private final String eTag;
    private final Map<String, String> metadata = Maps.newLinkedHashMap();
 
-   public ContainerPropertiesImpl(URI url, Date lastModified, String eTag,Map<String, String> metadata) {
+   public ContainerPropertiesImpl(URI url, Date lastModified, String eTag, Map<String, String> metadata) {
       this.url = checkNotNull(url, "url");
       this.name = checkNotNull(url.getPath(), "url.getPath()").replaceFirst("/", "");
       this.lastModified = checkNotNull(lastModified, "lastModified");

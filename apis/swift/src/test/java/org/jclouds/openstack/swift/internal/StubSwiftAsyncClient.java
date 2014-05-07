@@ -157,7 +157,7 @@ public class StubSwiftAsyncClient implements CommonSwiftAsyncClient {
       return immediateFuture(Sets.newHashSet(Iterables.transform(listing,
                new Function<StorageMetadata, ContainerMetadata>() {
                   public ContainerMetadata apply(StorageMetadata md) {
-                     return ContainerMetadata.builder().name(md.getName()).count(-1).bytes(-1).metadata(new HashMap<String,String>()).build();
+                     return ContainerMetadata.builder().name(md.getName()).count(-1).bytes(-1).metadata(new HashMap<String, String>()).build();
                   }
                })));
    }

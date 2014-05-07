@@ -83,7 +83,7 @@ public class AWSEC2ProviderMetadata extends BaseProviderMetadata {
          .homepage(URI.create("http://aws.amazon.com/ec2"))
          .console(URI.create("https://console.aws.amazon.com/ec2/home"))
          .defaultProperties(AWSEC2ProviderMetadata.defaultProperties())
-         .linkedServices("aws-ec2","aws-elb", "aws-cloudwatch", "aws-s3", "aws-simpledb")
+         .linkedServices("aws-ec2", "aws-elb", "aws-cloudwatch", "aws-s3", "aws-simpledb")
          .iso3166Codes("US-VA", "US-CA", "US-OR", "BR-SP", "IE", "SG", "AU-NSW", "JP-13");
       }
 

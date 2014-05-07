@@ -163,7 +163,7 @@ public class SnapshotApiTest extends BaseCloudStackApiTest<SnapshotApi> {
       Invokable<?, ?> method = method(SnapshotApi.class, "createSnapshotPolicy", SnapshotPolicySchedule.class, String.class, String.class, String.class);
       GeneratedHttpRequest httpRequest = processor.createRequest(method, ImmutableList.<Object> of(SnapshotPolicySchedules.monthly(5, 6, 7), 10, "UTC", 12));
 
-      assertRequestLineEquals(httpRequest,extractIso.getRequestLine());
+      assertRequestLineEquals(httpRequest, extractIso.getRequestLine());
       assertNonPayloadHeadersEqual(httpRequest, "Accept: application/json\n");
       assertPayloadEquals(httpRequest, null, null, false);
 

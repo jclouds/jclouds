@@ -98,7 +98,7 @@ public class CloudApplicationArchitecturesEC2ApiLiveTest extends BaseComputeServ
       Injector injector = view.utils().injector();
       client = injector.getInstance(EC2Api.class);
       sshFactory = injector.getInstance(SshClient.Factory.class);
-      runningTester = retry(new InstanceStateRunning(client), 180, 5,SECONDS);
+      runningTester = retry(new InstanceStateRunning(client), 180, 5, SECONDS);
       hasIpTester = retry(new InstanceHasIpAddress(client), 180, 5, SECONDS);
       SocketOpen socketOpen = injector.getInstance(SocketOpen.class);
       socketTester = retry(socketOpen, 180, 1, SECONDS);

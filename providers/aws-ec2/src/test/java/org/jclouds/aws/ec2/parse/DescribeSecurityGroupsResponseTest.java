@@ -62,7 +62,7 @@ public class DescribeSecurityGroupsResponseTest extends BaseEC2HandlerTest {
 //                                          .vpcId("vpc-99999999")
                                           .ipPermission(IpPermission.builder()
                                                                     .ipProtocol(IpProtocol.ALL)
-                                                                    .tenantIdGroupNamePair("123123123123","sg-11111111").build())
+                                                                    .tenantIdGroupNamePair("123123123123", "sg-11111111").build())
 //                                          .ipPermissionEgress(IpPermission.builder()
 //                                                                    .ipProtocol(IpProtocol.ALL)
 //                                                                    .ipRange("0.0.0.0/0").build())

@@ -72,7 +72,7 @@ public class BindMapToStringPayloadTest {
             .method("POST").endpoint("http://localhost").build();
 
       GeneratedHttpRequest newRequest = binder()
-            .bindToRequest(request, ImmutableMap.<String,Object>of("adminPass", "foo"));
+            .bindToRequest(request, ImmutableMap.<String, Object>of("adminPass", "foo"));
 
       assertEquals(newRequest.getRequestLine(), request.getRequestLine());
       assertEquals(newRequest.getPayload().getRawContent(), "{\"changePassword\":{\"adminPass\":\"foo\"}}");
@@ -84,7 +84,7 @@ public class BindMapToStringPayloadTest {
       GeneratedHttpRequest request = GeneratedHttpRequest.builder()
             .invocation(Invocation.create(noPayload, ImmutableList.<Object> of("robot")))
             .method("POST").endpoint("http://localhost").build();
-      binder().bindToRequest(request, ImmutableMap.<String,Object>of("fooble", "robot"));
+      binder().bindToRequest(request, ImmutableMap.<String, Object>of("fooble", "robot"));
    }
 
    @Test(expectedExceptions = IllegalArgumentException.class)

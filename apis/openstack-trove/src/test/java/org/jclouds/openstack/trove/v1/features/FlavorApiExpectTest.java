@@ -47,7 +47,7 @@ public class FlavorApiExpectTest extends BaseTroveApiExpectTest {
       ).getFlavorApiForZone("RegionOne");
 
       Set<? extends Flavor> flavors = api.list().toSet();
-      assertEquals(flavors.size(),6);
+      assertEquals(flavors.size(), 6);
       assertEquals(flavors.iterator().next().getRam(), 512);
    }
 

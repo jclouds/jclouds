@@ -145,7 +145,7 @@ public class GleSYSComputeServiceAdapter implements ComputeServiceAdapter<Server
     * @return a generated random password string
     */
    private String getRandomPassword() {
-      return UUID.randomUUID().toString().replace("-","");
+      return UUID.randomUUID().toString().replace("-", "");
    }
 
    @Override

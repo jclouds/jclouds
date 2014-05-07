@@ -127,12 +127,12 @@ public class ServerApiExpectTest extends BaseNovaApiExpectTest {
             .addHeader("Accept", "application/json")
             .addHeader("X-Auth-Token", authToken)
             .payload(payloadFromStringWithContentType(
-                     "{\"server\":{\"name\":\"test-e92\",\"imageRef\":\"1241\",\"flavorRef\":\"100\"}}","application/json"))
+                     "{\"server\":{\"name\":\"test-e92\",\"imageRef\":\"1241\",\"flavorRef\":\"100\"}}", "application/json"))
             .build();
 
 
       HttpResponse createServerResponse = HttpResponse.builder().statusCode(202).message("HTTP/1.1 202 Accepted")
-            .payload(payloadFromResourceWithContentType("/new_server.json","application/json; charset=UTF-8")).build();
+            .payload(payloadFromResourceWithContentType("/new_server.json", "application/json; charset=UTF-8")).build();
 
       NovaApi apiWithNewServer = requestsSendResponses(keystoneAuthWithUsernameAndPasswordAndTenantName,
             responseWithKeystoneAccess, createServer, createServerResponse);
@@ -149,12 +149,12 @@ public class ServerApiExpectTest extends BaseNovaApiExpectTest {
             .addHeader("Accept", "application/json")
             .addHeader("X-Auth-Token", authToken)
             .payload(payloadFromStringWithContentType(
-                  "{\"server\":{\"name\":\"test-e92\",\"imageRef\":\"1241\",\"flavorRef\":\"100\",\"availability_zone\":\"nova\"}}","application/json"))
+                  "{\"server\":{\"name\":\"test-e92\",\"imageRef\":\"1241\",\"flavorRef\":\"100\",\"availability_zone\":\"nova\"}}", "application/json"))
             .build();
 
 
       HttpResponse createServerResponse = HttpResponse.builder().statusCode(202).message("HTTP/1.1 202 Accepted")
-            .payload(payloadFromResourceWithContentType("/new_server_in_zone.json","application/json; charset=UTF-8")).build();
+            .payload(payloadFromResourceWithContentType("/new_server_in_zone.json", "application/json; charset=UTF-8")).build();
 
       NovaApi apiWithNewServer = requestsSendResponses(keystoneAuthWithUsernameAndPasswordAndTenantName,
             responseWithKeystoneAccess, createServer, createServerResponse);
@@ -174,12 +174,12 @@ public class ServerApiExpectTest extends BaseNovaApiExpectTest {
          .addHeader("Accept", "application/json")
          .addHeader("X-Auth-Token", authToken)
          .payload(payloadFromStringWithContentType(
-                  "{\"server\":{\"name\":\"test-e92\",\"imageRef\":\"1241\",\"flavorRef\":\"100\",\"security_groups\":[{\"name\":\"group1\"},{\"name\":\"group2\"}]}}","application/json"))
+                  "{\"server\":{\"name\":\"test-e92\",\"imageRef\":\"1241\",\"flavorRef\":\"100\",\"security_groups\":[{\"name\":\"group1\"},{\"name\":\"group2\"}]}}", "application/json"))
          .build();
 
 
       HttpResponse createServerResponse = HttpResponse.builder().statusCode(202).message("HTTP/1.1 202 Accepted")
-         .payload(payloadFromResourceWithContentType("/new_server.json","application/json; charset=UTF-8")).build();
+         .payload(payloadFromResourceWithContentType("/new_server.json", "application/json; charset=UTF-8")).build();
 
 
       NovaApi apiWithNewServer = requestsSendResponses(keystoneAuthWithUsernameAndPasswordAndTenantName,
@@ -199,12 +199,12 @@ public class ServerApiExpectTest extends BaseNovaApiExpectTest {
          .addHeader("Accept", "application/json")
          .addHeader("X-Auth-Token", authToken)
          .payload(payloadFromStringWithContentType(
-                  "{\"server\":{\"name\":\"test-e92\",\"imageRef\":\"1241\",\"flavorRef\":\"100\",\"networks\":[{\"uuid\":\"b3856ac0-f481-11e2-b778-0800200c9a66\"},{\"uuid\":\"bf0f0f90-f481-11e2-b778-0800200c9a66\"}]}}","application/json"))
+                  "{\"server\":{\"name\":\"test-e92\",\"imageRef\":\"1241\",\"flavorRef\":\"100\",\"networks\":[{\"uuid\":\"b3856ac0-f481-11e2-b778-0800200c9a66\"},{\"uuid\":\"bf0f0f90-f481-11e2-b778-0800200c9a66\"}]}}", "application/json"))
          .build();
 
 
       HttpResponse createServerResponse = HttpResponse.builder().statusCode(202).message("HTTP/1.1 202 Accepted")
-         .payload(payloadFromResourceWithContentType("/new_server.json","application/json; charset=UTF-8")).build();
+         .payload(payloadFromResourceWithContentType("/new_server.json", "application/json; charset=UTF-8")).build();
 
 
       NovaApi apiWithNewServer = requestsSendResponses(keystoneAuthWithUsernameAndPasswordAndTenantName,
@@ -224,12 +224,12 @@ public class ServerApiExpectTest extends BaseNovaApiExpectTest {
          .addHeader("Accept", "application/json")
          .addHeader("X-Auth-Token", authToken)
          .payload(payloadFromStringWithContentType(
-                  "{\"server\":{\"name\":\"test-e92\",\"imageRef\":\"1241\",\"flavorRef\":\"100\",\"OS-DCF:diskConfig\":\"AUTO\"}}","application/json"))
+                  "{\"server\":{\"name\":\"test-e92\",\"imageRef\":\"1241\",\"flavorRef\":\"100\",\"OS-DCF:diskConfig\":\"AUTO\"}}", "application/json"))
          .build();
 
 
       HttpResponse createServerResponse = HttpResponse.builder().statusCode(202).message("HTTP/1.1 202 Accepted")
-         .payload(payloadFromResourceWithContentType("/new_server_disk_config_auto.json","application/json; charset=UTF-8")).build();
+         .payload(payloadFromResourceWithContentType("/new_server_disk_config_auto.json", "application/json; charset=UTF-8")).build();
 
 
       NovaApi apiWithNewServer = requestsSendResponses(
@@ -250,12 +250,12 @@ public class ServerApiExpectTest extends BaseNovaApiExpectTest {
          .addHeader("Accept", "application/json")
          .addHeader("X-Auth-Token", authToken)
          .payload(payloadFromStringWithContentType(
-                  "{\"server\":{\"name\":\"test-e92\",\"imageRef\":\"1241\",\"flavorRef\":\"100\",\"OS-DCF:diskConfig\":\"MANUAL\"}}","application/json"))
+                  "{\"server\":{\"name\":\"test-e92\",\"imageRef\":\"1241\",\"flavorRef\":\"100\",\"OS-DCF:diskConfig\":\"MANUAL\"}}", "application/json"))
          .build();
 
 
       HttpResponse createServerResponse = HttpResponse.builder().statusCode(202).message("HTTP/1.1 202 Accepted")
-         .payload(payloadFromResourceWithContentType("/new_server_disk_config_manual.json","application/json; charset=UTF-8")).build();
+         .payload(payloadFromResourceWithContentType("/new_server_disk_config_manual.json", "application/json; charset=UTF-8")).build();
 
 
       NovaApi apiWithNewServer = requestsSendResponses(
@@ -276,7 +276,7 @@ public class ServerApiExpectTest extends BaseNovaApiExpectTest {
             .addHeader("Accept", "*/*")
             .addHeader("X-Auth-Token", authToken)
             .payload(payloadFromStringWithContentType(
-                  "{\"rebuild\":{\"adminPass\":\"password\",\"imageRef\":\"1234\",\"name\":\"newName\",\"accessIPv4\":\"1.1.1.1\",\"accessIPv6\":\"fe80::100\"}}","application/json"))
+                  "{\"rebuild\":{\"adminPass\":\"password\",\"imageRef\":\"1234\",\"name\":\"newName\",\"accessIPv4\":\"1.1.1.1\",\"accessIPv6\":\"fe80::100\"}}", "application/json"))
             .build();
 
       HttpResponse rebuildServerResponse = HttpResponse.builder().statusCode(202).build();
@@ -492,7 +492,7 @@ public class ServerApiExpectTest extends BaseNovaApiExpectTest {
             .endpoint("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v1.1/3456/servers/" + serverId + "/metadata")
             .addHeader("Accept", "application/json")
             .addHeader("X-Auth-Token", authToken)
-            .payload(payloadFromStringWithContentType("{\"metadata\":{\"Server Label\":\"Web Head 1\",\"Image Version\":\"2.1\"}}","application/json"))
+            .payload(payloadFromStringWithContentType("{\"metadata\":{\"Server Label\":\"Web Head 1\",\"Image Version\":\"2.1\"}}", "application/json"))
             .build();
 
       HttpResponse setMetadataResponse = HttpResponse.builder().statusCode(200)
@@ -518,7 +518,7 @@ public class ServerApiExpectTest extends BaseNovaApiExpectTest {
             .endpoint("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v1.1/3456/servers/" + serverId + "/metadata")
             .addHeader("Accept", "*/*")
             .addHeader("X-Auth-Token", authToken)
-            .payload(payloadFromStringWithContentType("{\"metadata\":{\"Server Label\":\"Web Head 1\",\"Image Version\":\"2.1\"}}","application/json"))
+            .payload(payloadFromStringWithContentType("{\"metadata\":{\"Server Label\":\"Web Head 1\",\"Image Version\":\"2.1\"}}", "application/json"))
             .build();
 
       HttpResponse setMetadataResponse = HttpResponse.builder().statusCode(404).build();
@@ -547,7 +547,7 @@ public class ServerApiExpectTest extends BaseNovaApiExpectTest {
             .endpoint("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v1.1/3456/servers/" + serverId + "/metadata")
             .addHeader("Accept", "application/json")
             .addHeader("X-Auth-Token", authToken)
-            .payload(payloadFromStringWithContentType("{\"metadata\":{\"Server Label\":\"Web Head 2\",\"Server Description\":\"Simple Server\"}}","application/json"))
+            .payload(payloadFromStringWithContentType("{\"metadata\":{\"Server Label\":\"Web Head 2\",\"Server Description\":\"Simple Server\"}}", "application/json"))
             .build();
 
       HttpResponse setMetadataResponse = HttpResponse.builder().statusCode(200)
@@ -573,7 +573,7 @@ public class ServerApiExpectTest extends BaseNovaApiExpectTest {
             .endpoint("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v1.1/3456/servers/" + serverId + "/metadata")
             .addHeader("Accept", "application/json")
             .addHeader("X-Auth-Token", authToken)
-            .payload(payloadFromStringWithContentType("{\"metadata\":{\"Server Label\":\"Web Head 2\",\"Server Description\":\"Simple Server\"}}","application/json"))
+            .payload(payloadFromStringWithContentType("{\"metadata\":{\"Server Label\":\"Web Head 2\",\"Server Description\":\"Simple Server\"}}", "application/json"))
             .build();
 
       HttpResponse setMetadataResponse = HttpResponse.builder().statusCode(404)
@@ -624,7 +624,7 @@ public class ServerApiExpectTest extends BaseNovaApiExpectTest {
             .endpoint("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v1.1/3456/servers/" + serverId + "/metadata")
             .addHeader("Accept", "application/json")
             .addHeader("X-Auth-Token", authToken)
-            .payload(payloadFromStringWithContentType("{\"metadata\":{\"Server Label\":\"Web Head 2\",\"Server Description\":\"Simple Server\"}}","application/json"))
+            .payload(payloadFromStringWithContentType("{\"metadata\":{\"Server Label\":\"Web Head 2\",\"Server Description\":\"Simple Server\"}}", "application/json"))
             .build();
 
       HttpResponse setMetadataResponse = HttpResponse.builder().statusCode(404)
@@ -654,7 +654,7 @@ public class ServerApiExpectTest extends BaseNovaApiExpectTest {
             .endpoint("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v1.1/3456/servers/" + serverId + "/metadata")
             .addHeader("Accept", "application/json")
             .addHeader("X-Auth-Token", authToken)
-            .payload(payloadFromStringWithContentType("{\"metadata\":{\"Server Label\":\"Web Head 2\",\"Server Description\":\"Simple Server\"}}","application/json"))
+            .payload(payloadFromStringWithContentType("{\"metadata\":{\"Server Label\":\"Web Head 2\",\"Server Description\":\"Simple Server\"}}", "application/json"))
             .build();
 
       HttpResponse setMetadataResponse = HttpResponse.builder().statusCode(200)
@@ -680,7 +680,7 @@ public class ServerApiExpectTest extends BaseNovaApiExpectTest {
             .endpoint("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v1.1/3456/servers/" + serverId + "/metadata")
             .addHeader("Accept", "application/json")
             .addHeader("X-Auth-Token", authToken)
-            .payload(payloadFromStringWithContentType("{\"metadata\":{\"Server Label\":\"Web Head 2\",\"Server Description\":\"Simple Server\"}}","application/json"))
+            .payload(payloadFromStringWithContentType("{\"metadata\":{\"Server Label\":\"Web Head 2\",\"Server Description\":\"Simple Server\"}}", "application/json"))
             .build();
 
       HttpResponse setMetadataResponse = HttpResponse.builder().statusCode(404)
@@ -752,7 +752,7 @@ public class ServerApiExpectTest extends BaseNovaApiExpectTest {
 
 
       HttpResponse serverDiagnosticsResponse = HttpResponse.builder().statusCode(202).message("HTTP/1.1 202 Accepted")
-            .payload(payloadFromResourceWithContentType("/server_diagnostics.json","application/json; charset=UTF-8")).build();
+            .payload(payloadFromResourceWithContentType("/server_diagnostics.json", "application/json; charset=UTF-8")).build();
 
       NovaApi apiWithNewServer = requestsSendResponses(keystoneAuthWithUsernameAndPasswordAndTenantName,
             responseWithKeystoneAccess, getDiagnostics, serverDiagnosticsResponse);

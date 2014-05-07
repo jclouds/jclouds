@@ -67,7 +67,7 @@ public class AzureBlobBlockUploadStrategyTest {
       expect(client.putBlockList(eq(container), eq(blobName), anyObject(List.class))).andReturn("Fake ETAG");
 
       AzureBlobBlockUploadStrategy strat = new AzureBlobBlockUploadStrategy(client, slicer);
-      replay(slicer,client);
+      replay(slicer, client);
       String etag = strat.execute(container, blob);
       assertEquals(etag, "Fake ETAG");
    }

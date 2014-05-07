@@ -37,12 +37,12 @@ public class User implements Comparable<User>{
    private final String name;
    private final String password;
    private final String host;
-   private final List<Map<String,String>> databases;
+   private final List<Map<String, String>> databases;
 
    @ConstructorProperties({
       "name", "password", "host", "databases"
    })
-   protected User(String name, String password, String host, List<Map<String,String>> databases) {
+   protected User(String name, String password, String host, List<Map<String, String>> databases) {
       this.name = checkNotNull(name, "name required");
       this.password = password;
       this.host = host;
@@ -64,11 +64,11 @@ public class User implements Comparable<User>{
          this.databases = Lists.newArrayList();
       }
       else {
-         // Using List<Map<String,String>> as the internal representation makes it easy to serialize properly
+         // Using List<Map<String, String>> as the internal representation makes it easy to serialize properly
          // with less code; this code is to present databases as List<String> to the user.
-         List<Map<String,String>> databaseList = Lists.newArrayList();
+         List<Map<String, String>> databaseList = Lists.newArrayList();
          for(String databaseName : databases) {
-            Map<String,String> singleDatabase = Maps.newHashMap();
+            Map<String, String> singleDatabase = Maps.newHashMap();
             singleDatabase.put("name", databaseName);
             databaseList.add(singleDatabase);
          }
@@ -117,7 +117,7 @@ public class User implements Comparable<User>{
     */
    public List<String> getDatabases() {
       List<String> databaseList = Lists.newArrayList();
-      for(Map<String,String> database : this.databases) {
+      for(Map<String, String> database : this.databases) {
          databaseList.add(database.get("name"));
       }
       return ImmutableList.copyOf(databaseList);

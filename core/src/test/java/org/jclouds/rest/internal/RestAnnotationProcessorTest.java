@@ -1119,7 +1119,7 @@ public class RestAnnotationProcessorTest extends BaseRestApiTest {
             ImmutableList.<Object> of("foobledata")));
       assertRequestLineEquals(httpRequest, "POST http://localhost:9999 HTTP/1.1");
       assertNonPayloadHeadersEqual(httpRequest, "");
-      assertPayloadEquals(httpRequest,//
+      assertPayloadEquals(httpRequest,
             "----JCLOUDS--\r\n" + //
                   "Content-Disposition: form-data; name=\"fooble\"\r\n" + //
                   "\r\n" + //
@@ -1140,7 +1140,7 @@ public class RestAnnotationProcessorTest extends BaseRestApiTest {
             ImmutableList.<Object> of("name", "foobledata")));
       assertRequestLineEquals(httpRequest, "POST http://localhost:9999 HTTP/1.1");
       assertNonPayloadHeadersEqual(httpRequest, "");
-      assertPayloadEquals(httpRequest,//
+      assertPayloadEquals(httpRequest,
             "----JCLOUDS--\r\n" + //
                   "Content-Disposition: form-data; name=\"name\"\r\n" + //
                   "\r\n" + //
@@ -1170,7 +1170,7 @@ public class RestAnnotationProcessorTest extends BaseRestApiTest {
             ImmutableList.<Object> of("name", file)));
       assertRequestLineEquals(httpRequest, "POST http://localhost:9999 HTTP/1.1");
       assertNonPayloadHeadersEqual(httpRequest, "");
-      assertPayloadEquals(httpRequest,//
+      assertPayloadEquals(httpRequest,
             "----JCLOUDS--\r\n" + //
                   "Content-Disposition: form-data; name=\"name\"\r\n" + //
                   "\r\n" + //
@@ -1189,7 +1189,7 @@ public class RestAnnotationProcessorTest extends BaseRestApiTest {
             ImmutableList.<Object> of("name", "goo".getBytes())));
       assertRequestLineEquals(httpRequest, "POST http://localhost:9999 HTTP/1.1");
       assertNonPayloadHeadersEqual(httpRequest, "");
-      assertPayloadEquals(httpRequest,//
+      assertPayloadEquals(httpRequest,
             "----JCLOUDS--\r\n" + //
                   "Content-Disposition: form-data; name=\"name\"\r\n" + //
                   "\r\n" + //
@@ -1213,7 +1213,7 @@ public class RestAnnotationProcessorTest extends BaseRestApiTest {
             ImmutableList.<Object> of("name", file)));
       assertRequestLineEquals(httpRequest, "POST http://localhost:9999 HTTP/1.1");
       assertNonPayloadHeadersEqual(httpRequest, "");
-      assertPayloadEquals(httpRequest,//
+      assertPayloadEquals(httpRequest,
             "----JCLOUDS--\r\n" + //
                   "Content-Disposition: form-data; name=\"name\"\r\n" + //
                   "\r\n" + //

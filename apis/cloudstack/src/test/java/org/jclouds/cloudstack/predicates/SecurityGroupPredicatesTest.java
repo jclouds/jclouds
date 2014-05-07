@@ -99,12 +99,12 @@ public class SecurityGroupPredicatesTest {
    public void testRuleGroupMatches() {
       assertTrue(Iterables.any(group().getIngressRules(),
               ruleGroupMatches("tcp", 22, 22,
-                      ImmutableMultimap.<String,String>builder().put("adrian", "adriancole").build())));
+                      ImmutableMultimap.<String, String>builder().put("adrian", "adriancole").build())));
       assertFalse(Iterables.any(group().getIngressRules(),
               ruleGroupMatches("tcp", 22, 22,
-                      ImmutableMultimap.<String,String>builder().put("adrian", "somegroup").build())));
+                      ImmutableMultimap.<String, String>builder().put("adrian", "somegroup").build())));
       assertFalse(Iterables.any(group().getIngressRules(),
               ruleGroupMatches("tcp", 22, 22,
-                      ImmutableMultimap.<String,String>builder().put("someuser", "adriancole").build())));
+                      ImmutableMultimap.<String, String>builder().put("someuser", "adriancole").build())));
    }
 }

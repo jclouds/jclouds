@@ -33,7 +33,7 @@ public class SshStatements {
     * lock sshd down so root cannot login, and password auth is disabled,
     */
    public static Statement lockSshd() {
-      return sshdConfig(ImmutableMap.of("PasswordAuthentication","no", "PermitRootLogin","no"));
+      return sshdConfig(ImmutableMap.of("PasswordAuthentication", "no", "PermitRootLogin", "no"));
    }
 
    public static Statement sshdConfig(Map<String, String> params) {

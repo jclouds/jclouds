@@ -170,7 +170,7 @@ public class ImageApiExpectTest extends BaseNovaApiExpectTest {
             .endpoint("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v1.1/3456/images/" + imageId + "/metadata")
             .addHeader("Accept", "application/json")
             .addHeader("X-Auth-Token", authToken)
-            .payload(payloadFromStringWithContentType("{\"metadata\":{\"Server Label\":\"Web Head 1\",\"Image Version\":\"2.1\"}}","application/json"))
+            .payload(payloadFromStringWithContentType("{\"metadata\":{\"Server Label\":\"Web Head 1\",\"Image Version\":\"2.1\"}}", "application/json"))
             .build();
 
       HttpResponse setMetadataResponse = HttpResponse.builder().statusCode(200)
@@ -196,7 +196,7 @@ public class ImageApiExpectTest extends BaseNovaApiExpectTest {
             .endpoint("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v1.1/3456/images/" +imageId + "/metadata")
             .addHeader("Accept", "*/*")
             .addHeader("X-Auth-Token", authToken)
-            .payload(payloadFromStringWithContentType("{\"metadata\":{\"Server Label\":\"Web Head 1\",\"Image Version\":\"2.1\"}}","application/json"))
+            .payload(payloadFromStringWithContentType("{\"metadata\":{\"Server Label\":\"Web Head 1\",\"Image Version\":\"2.1\"}}", "application/json"))
             .build();
 
       HttpResponse setMetadataResponse = HttpResponse.builder().statusCode(404).build();
@@ -225,7 +225,7 @@ public class ImageApiExpectTest extends BaseNovaApiExpectTest {
             .endpoint("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v1.1/3456/images/" + imageId + "/metadata")
             .addHeader("Accept", "application/json")
             .addHeader("X-Auth-Token", authToken)
-            .payload(payloadFromStringWithContentType("{\"metadata\":{\"Server Label\":\"Web Head 2\",\"Server Description\":\"Simple Server\"}}","application/json"))
+            .payload(payloadFromStringWithContentType("{\"metadata\":{\"Server Label\":\"Web Head 2\",\"Server Description\":\"Simple Server\"}}", "application/json"))
             .build();
 
       HttpResponse setMetadataResponse = HttpResponse.builder().statusCode(200)
@@ -251,7 +251,7 @@ public class ImageApiExpectTest extends BaseNovaApiExpectTest {
             .endpoint("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v1.1/3456/servers/" + imageId + "/metadata")
             .addHeader("Accept", "application/json")
             .addHeader("X-Auth-Token", authToken)
-            .payload(payloadFromStringWithContentType("{\"metadata\":{\"Server Label\":\"Web Head 2\",\"Server Description\":\"Simple Server\"}}","application/json"))
+            .payload(payloadFromStringWithContentType("{\"metadata\":{\"Server Label\":\"Web Head 2\",\"Server Description\":\"Simple Server\"}}", "application/json"))
             .build();
 
       HttpResponse setMetadataResponse = HttpResponse.builder().statusCode(404)

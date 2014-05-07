@@ -55,7 +55,7 @@ public class GetQueueAttributesResponseTest extends BaseHandlerTest {
             .put("ApproximateNumberOfMessagesDelayed", "0")
             .put("CreatedTimestamp", "1347566436")
             .put("LastModifiedTimestamp", "1347566436")
-            .put("VisibilityTimeout","30")
+            .put("VisibilityTimeout", "30")
             .put("MaximumMessageSize", "65536")
             .put("MessageRetentionPeriod", "345600")
             .put("DelaySeconds", "0")

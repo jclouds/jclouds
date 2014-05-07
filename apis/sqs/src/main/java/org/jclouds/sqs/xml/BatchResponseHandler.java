@@ -44,7 +44,7 @@ public class BatchResponseHandler<V> extends ParseSax.HandlerForGeneratedRequest
    private final ParseSax.HandlerForGeneratedRequestWithResult<Map.Entry<String, V>> resultHandler;
    private final BatchErrorHandler errorHandler;
 
-   private ImmutableMap.Builder<String, V> results = ImmutableMap.<String,V> builder();
+   private ImmutableMap.Builder<String, V> results = ImmutableMap.<String, V> builder();
    private Builder<BatchError> errors = ImmutableSet.<BatchError> builder();
 
    private boolean inResult;

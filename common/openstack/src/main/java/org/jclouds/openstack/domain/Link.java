@@ -83,7 +83,7 @@ public class Link {
       return new Link(relation, null, href);
    }
    
-   public static Link create(Relation relation,String type, URI href) {
+   public static Link create(Relation relation, String type, URI href) {
       return new Link(relation, type, href);
    }
    

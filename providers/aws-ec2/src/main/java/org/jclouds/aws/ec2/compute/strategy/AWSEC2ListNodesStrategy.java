@@ -74,7 +74,7 @@ public class AWSEC2ListNodesStrategy extends EC2ListNodesStrategy {
    }
 
    @Override
-   protected Iterable<? extends RunningInstance> pollRunningInstancesByRegionsAndIds(final Multimap<String,String> idsByRegions) {
+   protected Iterable<? extends RunningInstance> pollRunningInstancesByRegionsAndIds(final Multimap<String, String> idsByRegions) {
       Iterable<? extends AWSRunningInstance> spots = filter(transform(concat(transform(idsByRegions.keySet(),
                                                                                        spotInstancesByIdInRegion(idsByRegions))),
 
@@ -93,7 +93,7 @@ public class AWSEC2ListNodesStrategy extends EC2ListNodesStrategy {
       };
    }
 
-   protected Function<String, Set<SpotInstanceRequest>> spotInstancesByIdInRegion(final Multimap<String,String> idsByRegions) {
+   protected Function<String, Set<SpotInstanceRequest>> spotInstancesByIdInRegion(final Multimap<String, String> idsByRegions) {
       return new Function<String, Set<SpotInstanceRequest>>() {
 
          @Override

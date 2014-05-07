@@ -60,8 +60,8 @@ public class PasswordAuthenticationExpectTest extends BaseCloudStackExpectTest<A
          HttpResponse.builder()
             .statusCode(200)
             .payload(payloadFromResource("/listaccountsresponse.json"))
-            .build()
-            ,logout, logoutResponse);
+            .build(),
+            logout, logoutResponse);
       
       assertNotNull(client.listAccounts());
    }

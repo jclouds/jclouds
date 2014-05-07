@@ -214,7 +214,7 @@ public class SecurityGroupPredicates {
    public static Predicate<IngressRule> ruleGroupMatches(final String protocol,
                                                          final int startPort,
                                                          final int endPort,
-                                                         final Multimap<String,String> accountGroupNames) {
+                                                         final Multimap<String, String> accountGroupNames) {
       checkNotNull(protocol, "protocol");
       checkNotNull(accountGroupNames, "accountGroupNames");
 

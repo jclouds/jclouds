@@ -49,7 +49,7 @@ public class InstanceApiExpectTest extends BaseTroveApiExpectTest {
                 ).getInstanceApiForZone("RegionOne");
 
         Instance instance = api.create("1", 2, "json_rack_instance");
-        assertEquals(instance.getSize(),2);
+        assertEquals(instance.getSize(), 2);
         assertEquals(instance.getName(), "json_rack_instance");  
     }
     
@@ -104,7 +104,7 @@ public class InstanceApiExpectTest extends BaseTroveApiExpectTest {
       ).getInstanceApiForZone("RegionOne");
 
       Set<? extends Instance> instances = api.list().toSet();
-      assertEquals(instances.size(),2);
+      assertEquals(instances.size(), 2);
       assertEquals(instances.iterator().next().getSize(), 2);
    }
 

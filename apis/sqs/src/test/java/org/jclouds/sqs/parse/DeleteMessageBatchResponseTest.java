@@ -47,8 +47,8 @@ public class DeleteMessageBatchResponseTest extends BaseHandlerTest {
 
    public BatchResult<String> expected() {
       return BatchResult.<String> builder()
-            .put("msg1","msg1")
-            .put("msg2","msg2")
+            .put("msg1", "msg1")
+            .put("msg2", "msg2")
             .build();
    }
 }

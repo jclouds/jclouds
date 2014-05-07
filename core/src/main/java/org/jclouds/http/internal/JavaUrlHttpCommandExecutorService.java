@@ -174,7 +174,7 @@ public class JavaUrlHttpCommandExecutorService extends BaseHttpCommandExecutorSe
       Payload payload = request.getPayload();
       if (payload != null) {
          MutableContentMetadata md = payload.getContentMetadata();
-         for (Map.Entry<String,String> entry : contentMetadataCodec.toHeaders(md).entries()) {
+         for (Map.Entry<String, String> entry : contentMetadataCodec.toHeaders(md).entries()) {
             connection.setRequestProperty(entry.getKey(), entry.getValue());
          }
          if (chunked) {

@@ -31,7 +31,7 @@ import org.jclouds.rest.Binder;
 public class BindTagFiltersToIndexedFormParams implements Binder {
     @Override
     public <R extends HttpRequest> R bindToRequest(R request, Object input) {
-        checkArgument(checkNotNull(input, "input") instanceof Map<?,?>, "this binder is only valid for Map<?, Iterable<?>>");
+        checkArgument(checkNotNull(input, "input") instanceof Map<?, ?>, "this binder is only valid for Map<?, Iterable<?>>");
         return AWSUtils.indexMapOfIterableToFormValuesWithPrefix(request, "Filter", "Name", "Value", input);
     }
 }

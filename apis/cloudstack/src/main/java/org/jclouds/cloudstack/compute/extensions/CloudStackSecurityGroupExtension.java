@@ -56,7 +56,7 @@ import com.google.common.collect.Multimap;
  */
 public class CloudStackSecurityGroupExtension implements SecurityGroupExtension {
    protected final CloudStackApi api;
-   protected final Function<org.jclouds.cloudstack.domain.SecurityGroup,SecurityGroup> groupConverter;
+   protected final Function<org.jclouds.cloudstack.domain.SecurityGroup, SecurityGroup> groupConverter;
    protected final LoadingCache<ZoneAndName, org.jclouds.cloudstack.domain.SecurityGroup> groupCreator;
    protected final GroupNamingConvention.Factory namingConvention;
    protected final Supplier<Set<? extends Location>> locations;
@@ -65,7 +65,7 @@ public class CloudStackSecurityGroupExtension implements SecurityGroupExtension 
 
    @Inject
    public CloudStackSecurityGroupExtension(CloudStackApi api,
-                                           Function<org.jclouds.cloudstack.domain.SecurityGroup,SecurityGroup> groupConverter,
+                                           Function<org.jclouds.cloudstack.domain.SecurityGroup, SecurityGroup> groupConverter,
                                            LoadingCache<ZoneAndName, org.jclouds.cloudstack.domain.SecurityGroup> groupCreator,
                                            GroupNamingConvention.Factory namingConvention,
                                            @Memoized Supplier<Set<? extends Location>> locations,

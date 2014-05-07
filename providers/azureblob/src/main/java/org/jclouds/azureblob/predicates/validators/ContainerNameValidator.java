@@ -37,7 +37,7 @@ public class ContainerNameValidator extends DnsNameValidator {
 
    @Inject
    ContainerNameValidator() {
-      super(3,63);
+      super(3, 63);
    }
 
    public void validate(String containerName) {

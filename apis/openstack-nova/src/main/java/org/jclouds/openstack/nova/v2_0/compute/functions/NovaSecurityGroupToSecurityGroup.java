@@ -45,10 +45,10 @@ public class NovaSecurityGroupToSecurityGroup implements Function<org.jclouds.op
    @Named(ComputeServiceConstants.COMPUTE_LOGGER)
    protected Logger logger = Logger.NULL;
 
-   protected Function<SecurityGroupRule,IpPermission> ruleToPermission;
+   protected Function<SecurityGroupRule, IpPermission> ruleToPermission;
    
    @Inject
-   public NovaSecurityGroupToSecurityGroup(Function<SecurityGroupRule,IpPermission> ruleToPermission) {
+   public NovaSecurityGroupToSecurityGroup(Function<SecurityGroupRule, IpPermission> ruleToPermission) {
       this.ruleToPermission = ruleToPermission;
    }
 

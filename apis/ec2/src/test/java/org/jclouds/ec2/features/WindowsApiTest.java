@@ -87,7 +87,7 @@ public class WindowsApiTest extends BaseEC2ApiTest<WindowsApi> {
                                                           .endpoint("https://ec2.us-east-1.amazonaws.com/")
                                                           .addHeader("Host", "ec2.us-east-1.amazonaws.com")
                                                           .addFormParam("Action", "BundleInstance")
-                                                          .addFormParam("InstanceId","i-e468cd8d")
+                                                          .addFormParam("InstanceId", "i-e468cd8d")
                                                           .addFormParam("Signature", "9UbWwb%2BnO2vHn2O59K9FpmaK445RwX7vXsruHRznwik%3D")
                                                           .addFormParam("SignatureMethod", "HmacSHA256")
                                                           .addFormParam("SignatureVersion", "2")

@@ -69,7 +69,7 @@ public class GleSYSProviderMetadata extends BaseProviderMetadata {
          .apiMetadata(new GleSYSApiMetadata())
          .homepage(URI.create("http://www.glesys.com"))
          .console(URI.create("https://customer.glesys.com/cloud.php"))
-         .iso3166Codes("NL-NH","SE-N","US-NY","SE-AB")
+         .iso3166Codes("NL-NH", "SE-N", "US-NY", "SE-AB")
          .endpoint("https://api.glesys.com")
          .defaultProperties(GleSYSProviderMetadata.defaultProperties());
       }

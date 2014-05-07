@@ -45,9 +45,9 @@ public class BindGrantUserToJson implements MapBinder {
           databases = (List<String>) postParams.get("databases");
        }
        
-       List<Map<String,String>> databaseList = Lists.newArrayList();       
+       List<Map<String, String>> databaseList = Lists.newArrayList();       
        for(String databaseName : databases) {
-           Map<String,String> singleDatabase = Maps.newHashMap();
+           Map<String, String> singleDatabase = Maps.newHashMap();
            singleDatabase.put("name", databaseName);
            databaseList.add(singleDatabase);
        }

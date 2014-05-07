@@ -89,7 +89,7 @@ public class BaseGleSYSApiWithAServerLiveTest extends BaseGleSYSApiLiveTest {
       ServerDetails testServer = serverApi.createWithHostnameAndRootPassword(
             ServerSpec.builder().datacenter("Falkenberg").platform("OpenVZ").templateName("Ubuntu 10.04 LTS 32-bit")
                   .diskSizeGB(5).memorySizeMB(512).cpuCores(1).transferGB(50).build(), hostName, UUID.randomUUID()
-                  .toString().replace("-",""));
+                  .toString().replace("-", ""));
 
       assertNotNull(testServer.getId());
       assertEquals(testServer.getHostname(), hostName);

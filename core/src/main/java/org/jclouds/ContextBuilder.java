@@ -353,7 +353,7 @@ public class ContextBuilder {
    private Properties currentStateToUnexpandedProperties() {
       Properties defaults = new Properties();
       defaults.putAll(apiMetadata.getDefaultProperties());
-      defaults.setProperty(PROPERTY_PROVIDER,providerId);
+      defaults.setProperty(PROPERTY_PROVIDER, providerId);
       if (providerMetadata.isPresent()) {
          defaults.putAll(providerMetadata.get().getDefaultProperties());
          defaults.setProperty(PROPERTY_ISO3166_CODES, Joiner.on(',').join(providerMetadata.get().getIso3166Codes()));
@@ -409,7 +409,7 @@ public class ContextBuilder {
       for (String key : keys) {
          try {
             String scopedProperty = ImmutableList.copyOf(Splitter.on('.').split(key)).get(1);
-            mutable.setProperty(key, searchPropertiesForProviderScopedProperty(mutable, providerId,scopedProperty));
+            mutable.setProperty(key, searchPropertiesForProviderScopedProperty(mutable, providerId, scopedProperty));
          } catch (NoSuchElementException e) {
             if (!optionalKeys.contains(key))
                throw e;

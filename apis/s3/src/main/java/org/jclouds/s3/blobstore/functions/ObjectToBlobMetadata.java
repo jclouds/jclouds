@@ -45,7 +45,7 @@ public class ObjectToBlobMetadata implements Function<ObjectMetadata, MutableBlo
 
    @Inject
    public ObjectToBlobMetadata(IfDirectoryReturnNameStrategy ifDirectoryReturnName,
-            LoadingCache<String, AccessControlList> bucketAcls,Function<String, Location> locationOfBucket) {
+            LoadingCache<String, AccessControlList> bucketAcls, Function<String, Location> locationOfBucket) {
       this.ifDirectoryReturnName = ifDirectoryReturnName;
       this.bucketAcls = bucketAcls;
       this.locationOfBucket = locationOfBucket;
