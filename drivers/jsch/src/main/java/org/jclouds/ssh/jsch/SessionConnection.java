@@ -124,7 +124,7 @@ public final class SessionConnection implements Connection<Session> {
 
       public Builder from(SessionConnection in) {
          return hostAndPort(in.hostAndPort).loginCredentials(in.loginCredentials).proxy(in.proxy.orNull())
-               .connectTimeout(in.connectTimeout).sessionTimeout(in.sessionTimeout);
+               .connectTimeout(in.connectTimeout).sessionTimeout(in.sessionTimeout).agentConnector(in.agentConnector);
       }
 
       public Builder agentConnector(Optional<Connector> agentConnector) {
