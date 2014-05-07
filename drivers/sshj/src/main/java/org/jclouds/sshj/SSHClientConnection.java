@@ -107,7 +107,7 @@ public class SSHClientConnection implements Connection<SSHClient> {
 
       protected Builder fromSSHClientConnection(SSHClientConnection in) {
          return hostAndPort(in.getHostAndPort()).connectTimeout(in.getConnectTimeout()).loginCredentials(
-                  in.getLoginCredentials());
+                  in.getLoginCredentials()).sessionTimeout(in.getSessionTimeout()).agentConnector(in.getAgentConnector());
       }
    }
 
