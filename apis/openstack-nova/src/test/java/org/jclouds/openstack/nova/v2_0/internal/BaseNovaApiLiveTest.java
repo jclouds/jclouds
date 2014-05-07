@@ -19,7 +19,10 @@ package org.jclouds.openstack.nova.v2_0.internal;
 import java.util.Properties;
 import java.util.Set;
 
-import com.google.common.collect.*;
+import com.google.common.collect.ComparisonChain;
+import com.google.common.collect.ImmutableSet;
+import com.google.common.collect.Iterables;
+import com.google.common.collect.Ordering;
 import org.jclouds.apis.BaseApiLiveTest;
 import org.jclouds.openstack.keystone.v2_0.config.KeystoneProperties;
 import org.jclouds.openstack.nova.v2_0.NovaApi;

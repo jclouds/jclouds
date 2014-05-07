@@ -18,7 +18,6 @@ package org.jclouds.openstack.nova.v2_0.predicates;
 
 import com.google.common.base.Predicate;
 import org.jclouds.openstack.nova.v2_0.domain.Server;
-import org.jclouds.openstack.nova.v2_0.domain.ServerCreated;
 import org.jclouds.openstack.nova.v2_0.features.ServerApi;
 
 import static com.google.common.base.Preconditions.checkNotNull;
