@@ -484,7 +484,7 @@ public class EC2HardwareBuilder extends HardwareBuilder {
     */
    public static EC2HardwareBuilder g2_2xlarge() {
       return new EC2HardwareBuilder(InstanceType.G2_2XLARGE)
-	    .ram(15*1024)
+	    .ram(15 * 1024)
             .processors(ImmutableList.of(new Processor(8.0, 3.25)))
             .volumes(ImmutableList.<Volume> of(
                   new VolumeBuilder().type(LOCAL).size(10.0f).device("/dev/sda1").bootDevice(true).durable(false).build(),

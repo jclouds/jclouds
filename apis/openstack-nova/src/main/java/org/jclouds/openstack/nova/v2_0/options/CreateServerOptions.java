@@ -226,13 +226,13 @@ public class CreateServerOptions implements MapBinder {
          for (Network network : novaNetworks) {
             // Avoid serializing null values, which are common here.
             ImmutableMap.Builder<String, String> networkMap = new ImmutableMap.Builder<String, String>();
-            if(network.getNetworkUuid() != null) {
+            if (network.getNetworkUuid() != null) {
                networkMap.put("uuid", network.getNetworkUuid());
             }
-            if(network.getPortUuid() != null) {
+            if (network.getPortUuid() != null) {
                networkMap.put("port", network.getPortUuid());
             }
-            if(network.getFixedIp() != null) {
+            if (network.getFixedIp() != null) {
                networkMap.put("fixed_ip", network.getFixedIp());
             }
             server.networks.add(networkMap.build());

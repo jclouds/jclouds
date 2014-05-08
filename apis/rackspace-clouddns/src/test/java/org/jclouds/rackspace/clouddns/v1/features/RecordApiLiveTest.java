@@ -108,7 +108,7 @@ public class RecordApiLiveTest extends BaseCloudDNSApiLiveTest {
       RecordDetail aRecord = null;
       RecordDetail srvRecord = null;
       
-      for (RecordDetail record: records) {
+      for (RecordDetail record : records) {
          if (record.getType().equals("MX")) {
             mxRecord = record;
          } else if (record.getType().equals("A")) {
@@ -246,7 +246,7 @@ public class RecordApiLiveTest extends BaseCloudDNSApiLiveTest {
       
       recordDetails = api.getRecordApiForDomain(domainId).list().concat().toSet();
       
-      for (RecordDetail recordDetail: recordDetails) {
+      for (RecordDetail recordDetail : recordDetails) {
          assertEquals(recordDetail.getTTL(), 35813);
          assertEquals(recordDetail.getComment(), "New TTL");
       }

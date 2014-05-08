@@ -93,7 +93,7 @@ public class EC2TemplateBuilderImplTest extends TemplateBuilderImplTest {
 
    @Override
    protected String getProviderFormatId(String uniqueLabel) {
-       return "us-east-1/"+uniqueLabel;
+       return "us-east-1/" + uniqueLabel;
    }
 
    @Override

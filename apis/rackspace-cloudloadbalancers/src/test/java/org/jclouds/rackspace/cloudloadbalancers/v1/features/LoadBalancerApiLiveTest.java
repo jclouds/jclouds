@@ -52,7 +52,7 @@ public class LoadBalancerApiLiveTest extends BaseCloudLoadBalancersApiLiveTest {
    @Override
    @AfterGroups(groups = "live")
    protected void tearDown() {
-      for (LoadBalancer lb: lbs) {
+      for (LoadBalancer lb : lbs) {
          assertTrue(awaitAvailable(api.getLoadBalancerApiForZone(lb.getRegion())).apply(lb));
          api.getLoadBalancerApiForZone(lb.getRegion()).delete(lb.getId());
          assertTrue(awaitDeleted(api.getLoadBalancerApiForZone(lb.getRegion())).apply(lb));
@@ -61,7 +61,7 @@ public class LoadBalancerApiLiveTest extends BaseCloudLoadBalancersApiLiveTest {
    }
 
    public void testCreateLoadBalancer() throws Exception {
-      for (String zone: api.getConfiguredZones()) {
+      for (String zone : api.getConfiguredZones()) {
          Logger.getAnonymousLogger().info("starting lb in region " + zone);
          
          LoadBalancer lb = api.getLoadBalancerApiForZone(zone).create(
@@ -92,7 +92,7 @@ public class LoadBalancerApiLiveTest extends BaseCloudLoadBalancersApiLiveTest {
 
    @Test(dependsOnMethods = "testCreateLoadBalancer")
    public void testUpdateLoadBalancer() throws Exception {
-      for (LoadBalancer lb: lbs) {
+      for (LoadBalancer lb : lbs) {
          api.getLoadBalancerApiForZone(lb.getRegion()).update(lb.getId(),
                UpdateLoadBalancer.builder().name("foo" + "-" + lb.getRegion()).build());
          
@@ -107,14 +107,14 @@ public class LoadBalancerApiLiveTest extends BaseCloudLoadBalancersApiLiveTest {
 
    @Test(dependsOnMethods = "testUpdateLoadBalancer")
    public void testListLoadBalancers() throws Exception {
-      for (String zone: api.getConfiguredZones()) {
+      for (String zone : api.getConfiguredZones()) {
 
          Set<LoadBalancer> response = api.getLoadBalancerApiForZone(zone).list().concat().toSet();
          
          assertNotNull(response);
          assertTrue(response.size() >= 0);
          
-         for (LoadBalancer lb: response) {
+         for (LoadBalancer lb : response) {
             if (!lbs.contains(lb))
                continue;
             assert lb.getRegion() != null : lb;
@@ -152,7 +152,7 @@ public class LoadBalancerApiLiveTest extends BaseCloudLoadBalancersApiLiveTest {
    
    @Test(dependsOnMethods = "testListLoadBalancers")
    public void testLoadBalancerMetadata() throws Exception {
-      for (LoadBalancer lb: lbs) {
+      for (LoadBalancer lb : lbs) {
          Map<String, String> metadataMap = ImmutableMap.<String, String> of(
                "key1", "value1",
                "key2", "value2",

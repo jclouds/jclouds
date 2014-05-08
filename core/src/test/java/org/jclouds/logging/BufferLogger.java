@@ -65,16 +65,16 @@ public class BufferLogger extends BaseLogger {
     * otherwise returns a record which does satisfy the constraint 
     */
    public Record assertLogContains(String fragment) {
-      for (Record r: messages) {
+      for (Record r : messages) {
          if (r.getMessage() != null && r.getMessage().contains(fragment)) return r;
       }
-      throw new AssertionError("log did not contain expected '"+fragment+"'");
+      throw new AssertionError("log did not contain expected '" + fragment + "'");
    }
    /** fails if log _does_ contain the indicated fragment */
    public void assertLogDoesntContain(String fragment) {
-      for (Record r: messages) {
+      for (Record r : messages) {
          if (r.getMessage() != null && r.getMessage().contains(fragment))
-            throw new AssertionError("log contained unexpected '"+fragment+"'");
+            throw new AssertionError("log contained unexpected '" + fragment + "'");
       }
    }
 
@@ -82,7 +82,7 @@ public class BufferLogger extends BaseLogger {
     * otherwise returns a record which does satisfy the constraint 
     */
    public Record assertLogContains(Predicate<Record> test) {
-      for (Record r: messages) {
+      for (Record r : messages) {
          if (r.getMessage() != null && test.apply(r)) return r;
       }
       throw new AssertionError("log did not contain any records satisfying expected predicate");      

@@ -73,7 +73,7 @@ public class DatacenterApiLiveTest extends BaseSoftLayerApiLiveTest {
       assertEquals(response.size(), expected.size());
       assertTrue(response.containsAll(expected));
 
-      for (Datacenter datacenter: response) {
+      for (Datacenter datacenter : response) {
          Address address = datacenter.getLocationAddress();
          if (address != null) checkAddress(address);
       }
@@ -87,7 +87,7 @@ public class DatacenterApiLiveTest extends BaseSoftLayerApiLiveTest {
       assert dc.getId() > 0 : dc;
       assert dc.getName() != null : dc;
       assert dc.getLongName() != null : dc;
-      for ( Region region: dc.getRegions()) checkRegion(region);
+      for (Region region : dc.getRegions()) checkRegion(region);
    }
 
    private void checkRegion(Region region) {
@@ -96,7 +96,7 @@ public class DatacenterApiLiveTest extends BaseSoftLayerApiLiveTest {
    }
 
    private void checkAddress(Address address) {
-      assert address.getId() >0 : address;
+      assert address.getId() > 0 : address;
       assert address.getCountry() != null : address;
    }
 }

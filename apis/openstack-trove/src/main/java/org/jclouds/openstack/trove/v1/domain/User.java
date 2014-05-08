@@ -47,7 +47,7 @@ public class User implements Comparable<User>{
       this.password = password;
       this.host = host;
       // Set databases to an empty list instead of null
-      if(databases == null) {
+      if (databases == null) {
          this.databases = Lists.newArrayList();
       }
       else {
@@ -60,14 +60,14 @@ public class User implements Comparable<User>{
       this.password = password;
       this.host = host;
       // Set databases to an empty list instead of null
-      if(databases == null) {
+      if (databases == null) {
          this.databases = Lists.newArrayList();
       }
       else {
          // Using List<Map<String, String>> as the internal representation makes it easy to serialize properly
          // with less code; this code is to present databases as List<String> to the user.
          List<Map<String, String>> databaseList = Lists.newArrayList();
-         for(String databaseName : databases) {
+         for (String databaseName : databases) {
             Map<String, String> singleDatabase = Maps.newHashMap();
             singleDatabase.put("name", databaseName);
             databaseList.add(singleDatabase);
@@ -105,7 +105,7 @@ public class User implements Comparable<User>{
     * @return a unique identifier for this user. In most cases, this is just the name. If the user is restricted to connections from a specific host, the hostname must be appended to the user name with a "@".
     */
    public String getIdentifier() {
-      if(host==null || "%".equals(host))
+      if (host == null || "%".equals(host))
          return name;
       else 
          return name + "@" + host;
@@ -117,7 +117,7 @@ public class User implements Comparable<User>{
     */
    public List<String> getDatabases() {
       List<String> databaseList = Lists.newArrayList();
-      for(Map<String, String> database : this.databases) {
+      for (Map<String, String> database : this.databases) {
          databaseList.add(database.get("name"));
       }
       return ImmutableList.copyOf(databaseList);

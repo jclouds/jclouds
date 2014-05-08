@@ -31,13 +31,13 @@ public class InstallRSAPrivateKeyTest {
       assertEquals(
                new InstallRSAPrivateKey("-----BEGIN RSA PRIVATE KEY-----\n-----END RSA PRIVATE KEY-----\n")
                         .render(OsFamily.UNIX),
-                        "mkdir -p ~/.ssh\n"+
-                        "rm ~/.ssh/id_rsa\n"+
-                        "cat >> ~/.ssh/id_rsa <<-'END_OF_JCLOUDS_FILE'\n"+
-                        "\t-----BEGIN RSA PRIVATE KEY-----\n"+
-                        "\t-----END RSA PRIVATE KEY-----\n"+
-                        "\t\n"+
-                        "END_OF_JCLOUDS_FILE\n"+
+                        "mkdir -p ~/.ssh\n" +
+                        "rm ~/.ssh/id_rsa\n" +
+                        "cat >> ~/.ssh/id_rsa <<-'END_OF_JCLOUDS_FILE'\n" +
+                        "\t-----BEGIN RSA PRIVATE KEY-----\n" +
+                        "\t-----END RSA PRIVATE KEY-----\n" +
+                        "\t\n" +
+                        "END_OF_JCLOUDS_FILE\n" +
                         "chmod 600 ~/.ssh/id_rsa\n");                        
    }
 
@@ -45,13 +45,13 @@ public class InstallRSAPrivateKeyTest {
       assertEquals(
                new InstallRSAPrivateKey("/home/me/.ssh", "-----BEGIN RSA PRIVATE KEY-----\n-----END RSA PRIVATE KEY-----\n")
                         .render(OsFamily.UNIX),
-                        "mkdir -p /home/me/.ssh\n"+
-                        "rm /home/me/.ssh/id_rsa\n"+
-                        "cat >> /home/me/.ssh/id_rsa <<-'END_OF_JCLOUDS_FILE'\n"+
-                        "\t-----BEGIN RSA PRIVATE KEY-----\n"+
-                        "\t-----END RSA PRIVATE KEY-----\n"+
-                        "\t\n"+
-                        "END_OF_JCLOUDS_FILE\n"+
+                        "mkdir -p /home/me/.ssh\n" +
+                        "rm /home/me/.ssh/id_rsa\n" +
+                        "cat >> /home/me/.ssh/id_rsa <<-'END_OF_JCLOUDS_FILE'\n" +
+                        "\t-----BEGIN RSA PRIVATE KEY-----\n" +
+                        "\t-----END RSA PRIVATE KEY-----\n" +
+                        "\t\n" +
+                        "END_OF_JCLOUDS_FILE\n" +
                         "chmod 600 /home/me/.ssh/id_rsa\n");    }
 
    @Test(expectedExceptions = UnsupportedOperationException.class)

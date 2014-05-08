@@ -28,7 +28,7 @@ import com.google.common.base.Throwables;
  * 
  * @author Adrian Cole
  */
-@Test(groups = "live", testName="TestCanRecreateGroupLiveTest")
+@Test(groups = "live", testName = "TestCanRecreateGroupLiveTest")
 public class TestCanRecreateGroupLiveTest extends BaseComputeServiceContextLiveTest {
    public TestCanRecreateGroupLiveTest() {
       provider = "ec2";

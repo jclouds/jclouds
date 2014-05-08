@@ -91,7 +91,7 @@ public class ServerApiLiveTest extends BaseNovaApiLiveTest {
             Server server = serverApi.get(serverId);
             assertEquals(server.getStatus(), ACTIVE);
          } finally {
-            if (serverId!=null) {
+            if (serverId != null) {
                serverApi.delete(serverId);
             }
          }
@@ -142,7 +142,7 @@ public class ServerApiLiveTest extends BaseNovaApiLiveTest {
             // Vanilla OpenStack will error out with a 400 Bad Request
             assertEquals(e.getResponse().getStatusCode(), 400);
          } finally {
-            if (serverId!=null) {
+            if (serverId != null) {
                serverApi.delete(serverId);
             }
          }
@@ -179,7 +179,7 @@ public class ServerApiLiveTest extends BaseNovaApiLiveTest {
             assertEquals("fe80::100", rebuiltServer.getAccessIPv6());
 
          } finally {
-            if (serverId!=null) {
+            if (serverId != null) {
                serverApi.delete(serverId);
             }
          }

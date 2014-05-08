@@ -180,7 +180,7 @@ public class EC2TemplateBuilderTest {
       assertEquals(template.getImage().getId(), "us-east-1/cc-image");
    }
 
-   @Test(expectedExceptions={NoSuchElementException.class})
+   @Test(expectedExceptions = {NoSuchElementException.class})
    public void testNegativeTemplateChoiceForInstanceByImageId() throws Exception {
       newTemplateBuilder().imageId("wrongregion/wrongimageid").build();
    }

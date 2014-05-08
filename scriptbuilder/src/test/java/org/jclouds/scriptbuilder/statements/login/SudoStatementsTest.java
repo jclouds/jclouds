@@ -30,10 +30,10 @@ public class SudoStatementsTest {
    public void testCreateWheelUNIX() {
       assertEquals(
                SudoStatements.createWheel().render(OsFamily.UNIX),
-               "cat > /etc/sudoers <<-'END_OF_JCLOUDS_FILE'\n"+
-               "\troot ALL = (ALL) ALL\n"+
-               "\t%wheel ALL = (ALL) NOPASSWD:ALL\n"+
-               "END_OF_JCLOUDS_FILE\n"+
+               "cat > /etc/sudoers <<-'END_OF_JCLOUDS_FILE'\n" +
+               "\troot ALL = (ALL) ALL\n" +
+               "\t%wheel ALL = (ALL) NOPASSWD:ALL\n" +
+               "END_OF_JCLOUDS_FILE\n" +
                "chmod 0440 /etc/sudoers\n");
    }
 

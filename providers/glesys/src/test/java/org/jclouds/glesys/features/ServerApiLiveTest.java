@@ -236,7 +236,7 @@ public class ServerApiLiveTest extends BaseGleSYSApiWithAServerLiveTest {
    }
 
    // takes a few minutes and requires an extra server (used 1 already)
-   @Test(enabled=false)
+   @Test(enabled = false)
    public void testCloneServer() throws Exception {
       ServerDetails testServer2 = serverApi.clone(serverId, testHostName2, CloneServerOptions.Builder.cpucores(1));
 

@@ -205,7 +205,7 @@ public class ISOApiExpectTest extends BaseCloudStackExpectTest<ISOApi> {
                 .isExtractable(false).build());
    }
    
-   @Test(expectedExceptions=ResourceNotFoundException.class)
+   @Test(expectedExceptions = ResourceNotFoundException.class)
    public void testRegisterISOWhenResponseIs404() {
        ISOApi client = requestSendsResponse(registerIso,
           HttpResponse.builder()

@@ -37,7 +37,7 @@ public class AccountApiLiveTest extends BaseSoftLayerApiLiveTest {
       assert null != response;
 
       assertTrue(response.size() >= 0);
-      for (ProductPackage productPackage: response) {
+      for (ProductPackage productPackage : response) {
           assert productPackage.getId() > 0 : response;
           assert productPackage.getName() != null : response;
           assert productPackage.getDescription() != null : response;

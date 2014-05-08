@@ -61,7 +61,7 @@ public class BindIterableToHeadersWithContainerDeleteMetadataPrefix implements B
       Iterable<String> metadataKeys = Iterables.transform((Iterable<String>) input, FN);
       HashMultimap<String, String> headers = HashMultimap.create();
       
-      for (String metadataKey: metadataKeys) {
+      for (String metadataKey : metadataKeys) {
     	  headers.put(metadataKey, "");
       }
       

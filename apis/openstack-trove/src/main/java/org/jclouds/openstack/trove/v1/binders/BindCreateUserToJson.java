@@ -41,9 +41,9 @@ public class BindCreateUserToJson implements MapBinder {
    @Override    
    public <R extends HttpRequest> R bindToRequest(R request, Map<String, Object> postParams) {
       Set<User> users = Sets.newHashSet();
-      if( postParams.get("name") != null ) {
+      if (postParams.get("name") != null) {
          Set<String> databases = Sets.newHashSet();
-         if(postParams.get("databaseName")!=null)
+         if (postParams.get("databaseName") != null)
             databases.add((String) postParams.get("databaseName"));
          
          Builder builder = User.builder();
@@ -56,7 +56,7 @@ public class BindCreateUserToJson implements MapBinder {
          User user = builder.build();
          users.add(user);
       }
-      else if( postParams.get("users") != null ) {
+      else if (postParams.get("users") != null) {
          users = (Set<User>) postParams.get("users");
       }
       return jsonBinder.bindToRequest(request, ImmutableMap.of("users", users));

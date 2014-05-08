@@ -123,7 +123,7 @@ public class TemplateApiLiveTest extends BaseCloudStackApiLiveTest {
 
       // Create a template
       CreateTemplateOptions options = CreateTemplateOptions.Builder.volumeId(volume.getId());
-      AsyncCreateResponse response = client.getTemplateApi().createTemplate(TemplateMetadata.builder().name(prefix+"-createTemplate").osTypeId(vmForCreation.getGuestOSId()).displayText("jclouds live testCreateTemplate").build(), options);
+      AsyncCreateResponse response = client.getTemplateApi().createTemplate(TemplateMetadata.builder().name(prefix + "-createTemplate").osTypeId(vmForCreation.getGuestOSId()).displayText("jclouds live testCreateTemplate").build(), options);
       assertTrue(jobComplete.apply(response.getJobId()), vmForCreation.toString());
       createdTemplate = client.getTemplateApi().getTemplateInZone(response.getId(), vmForCreation.getZoneId());
 
@@ -168,7 +168,7 @@ public class TemplateApiLiveTest extends BaseCloudStackApiLiveTest {
 
       // Register a template
       RegisterTemplateOptions options = RegisterTemplateOptions.Builder.bits(32).isExtractable(true);
-      TemplateMetadata templateMetadata = TemplateMetadata.builder().name(prefix+"-registerTemplate").osTypeId(osType.getId()).displayText("jclouds live testRegisterTemplate").build();
+      TemplateMetadata templateMetadata = TemplateMetadata.builder().name(prefix + "-registerTemplate").osTypeId(osType.getId()).displayText("jclouds live testRegisterTemplate").build();
       Set<Template> templates = client.getTemplateApi().registerTemplate(templateMetadata, "VHD", "XenServer", IMPORT_VHD_URL, zone.getId(), options);
       registeredTemplate = Iterables.getOnlyElement(templates, null);
       assertNotNull(registeredTemplate);

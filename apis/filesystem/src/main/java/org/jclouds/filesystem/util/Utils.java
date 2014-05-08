@@ -46,7 +46,7 @@ public class Utils {
       if (!file.delete()) {
          // On windows, often the directory does not register as empty right away.
          Uninterruptibles.sleepUninterruptibly(5, TimeUnit.SECONDS);
-         if(!file.delete()) {
+         if (!file.delete()) {
             throw new IOException("Could not delete: " + file);
          }
       }

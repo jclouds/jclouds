@@ -131,7 +131,7 @@ public class DomainApiLiveTest extends BaseCloudDNSApiLiveTest {
       Subdomain devjclouds = null;
       Subdomain testjclouds = null;
       
-      for (Subdomain subdomain: jclouds.getSubdomains()) {
+      for (Subdomain subdomain : jclouds.getSubdomains()) {
          if (subdomain.getName().equals("dev." + JCLOUDS_EXAMPLE)) {
             devjclouds = subdomain;
          } else if (subdomain.getName().equals("test." + JCLOUDS_EXAMPLE)) {
@@ -158,7 +158,7 @@ public class DomainApiLiveTest extends BaseCloudDNSApiLiveTest {
       RecordDetail mxRecord = null;
       RecordDetail aRecord = null;
       
-      for (RecordDetail record: jclouds.getRecords()) {
+      for (RecordDetail record : jclouds.getRecords()) {
          if (record.getType().equals("MX")) {
             mxRecord = record;
          } else if (record.getType().equals("A")) {
@@ -252,7 +252,7 @@ public class DomainApiLiveTest extends BaseCloudDNSApiLiveTest {
       Subdomain devjclouds = null;
       Subdomain testjclouds = null;
       
-      for (Subdomain subdomain: jclouds.getSubdomains()) {
+      for (Subdomain subdomain : jclouds.getSubdomains()) {
          if (subdomain.getName().equals("dev." + JCLOUDS_EXAMPLE)) {
             devjclouds = subdomain;
          } else if (subdomain.getName().equals("test." + JCLOUDS_EXAMPLE)) {
@@ -280,7 +280,7 @@ public class DomainApiLiveTest extends BaseCloudDNSApiLiveTest {
       RecordDetail aRecord = null;
       RecordDetail nsRecord = null;
       
-      for (RecordDetail record: jclouds.getRecords()) {
+      for (RecordDetail record : jclouds.getRecords()) {
          if (record.getType().equals("MX")) {
             mxRecord = record;
          } else if (record.getType().equals("A")) {
@@ -390,7 +390,7 @@ public class DomainApiLiveTest extends BaseCloudDNSApiLiveTest {
    protected void tearDown() {
       List<Integer> domainIds = Lists.newArrayList();
       
-      for (Domain domain: testDomains.values()) {
+      for (Domain domain : testDomains.values()) {
          domainIds.add(domain.getId());
       }
 

@@ -42,7 +42,7 @@ public class ParsePasswordFromRootedInstance implements Function<HttpResponse, S
     */
    public String apply(HttpResponse from) {
       Map<String, Map<String, String>> result = json.apply(from);
-      if(result.get("user") == null) 
+      if (result.get("user") == null)
          return null;
       return result.get("user").get("password");
    }

@@ -133,7 +133,7 @@ public class ReverseDNSApiLiveTest extends BaseCloudDNSApiLiveTest {
       RecordDetail ptrRecordIPv4 = null;
       RecordDetail ptrRecordIPv6 = null;
 
-      for (RecordDetail record: records) {
+      for (RecordDetail record : records) {
          if (record.getData().equals(serverIPv4)) {
             ptrRecordIPv4 = record;
             ptrRecordIPv4Id = record.getId();

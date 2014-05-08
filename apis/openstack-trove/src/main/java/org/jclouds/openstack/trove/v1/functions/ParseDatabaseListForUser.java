@@ -46,7 +46,7 @@ public class ParseDatabaseListForUser implements Function<HttpResponse, FluentIt
    public FluentIterable<String> apply(HttpResponse from) {
       List<String> resultDatabases = Lists.newArrayList();
       Map<String, List<Map<String, String>>> result = json.apply(from);
-      for(Map<String, String> database : result.get("databases")) {
+      for (Map<String, String> database : result.get("databases")) {
          resultDatabases.add(database.get("name"));
       }
       return FluentIterable.from(resultDatabases);

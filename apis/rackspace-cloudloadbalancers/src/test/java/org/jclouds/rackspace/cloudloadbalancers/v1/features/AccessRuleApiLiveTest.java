@@ -72,7 +72,7 @@ public class AccessRuleApiLiveTest extends BaseCloudLoadBalancersApiLiveTest {
    public void testCreateLoadBalancer() {
       AddNode addNode = AddNode.builder().address("192.168.1.1").port(8080).build();
       CreateLoadBalancer createLB = CreateLoadBalancer.builder()
-            .name(prefix+"-jclouds").protocol("HTTP").port(80).virtualIPType(Type.PUBLIC).node(addNode).build(); 
+            .name(prefix + "-jclouds").protocol("HTTP").port(80).virtualIPType(Type.PUBLIC).node(addNode).build();
 
       zone = "ORD";//Iterables.getFirst(api.getConfiguredZones(), null);
       lb = api.getLoadBalancerApiForZone(zone).create(createLB);
@@ -126,7 +126,7 @@ public class AccessRuleApiLiveTest extends BaseCloudLoadBalancersApiLiveTest {
    private void assertExpectedAccessRules(Map<String, AccessRule> expectedAccessList) {
       Iterable<AccessRuleWithId> actualAccessList = api.getAccessRuleApiForZoneAndLoadBalancer(zone, lb.getId()).list();
       
-      for (AccessRule actualAccessRule: actualAccessList) {
+      for (AccessRule actualAccessRule : actualAccessList) {
          assertEquals(expectedAccessList.containsKey(actualAccessRule.getAddress()), true, 
                "The AccessRule " + actualAccessRule + " was not found in " + expectedAccessList);
       }

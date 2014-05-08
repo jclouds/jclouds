@@ -39,7 +39,7 @@ public class EncodeDotsForUserGet implements HttpRequestFilter {
    public HttpRequest filter(HttpRequest request) throws HttpException {
       String endpoint = request.getEndpoint().toString();      
       Matcher matcher = pattern.matcher(endpoint);
-      if(!matcher.find())
+      if (!matcher.find())
          return request; // do not modify if not found. This however is not expected to happen.
       String encodable = matcher.group();
       String encoded = encodable.replace(".", "%2e");

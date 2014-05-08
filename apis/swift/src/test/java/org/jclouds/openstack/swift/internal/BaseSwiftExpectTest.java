@@ -37,7 +37,7 @@ public class BaseSwiftExpectTest<T> extends BaseRestClientExpectTest<T> {
       credential = "testing";
       authRequest = HttpRequest.builder()
             .method("GET")
-            .endpoint(endpoint+ "/v1.0")
+            .endpoint(endpoint + "/v1.0")
             .addHeader("X-Auth-User", identity)
             .addHeader("X-Auth-Key", credential)
             .addHeader("Accept", "*/*")
@@ -62,7 +62,7 @@ public class BaseSwiftExpectTest<T> extends BaseRestClientExpectTest<T> {
    
    protected Properties setupProperties() {
       Properties props = super.setupProperties();
-      props.put(provider+".endpoint", endpoint);
+      props.put(provider + ".endpoint", endpoint);
       return props;
    }
 }

@@ -58,7 +58,7 @@ public abstract class BaseVCloudComputeServiceExpectTest extends BaseRestClientE
    // login response includes a cookie and also a vcloud extended header with the session token in it
    // NOTE: vCloud Director 1.5 returns ;version=1.0 on responses to requests made in 1.0 format.
    protected HttpResponse successfulVersion1_0LoginResponseFromVCD1_5WithSingleOrg = HttpResponse.builder().statusCode(200)
-            .message("HTTP/1.1 200 OK").payload(payloadFromResourceWithContentType("/orgList1.0-vcd15.xml",  VCloudMediaType.ORGLIST_XML +";version=1.0"))
+            .message("HTTP/1.1 200 OK").payload(payloadFromResourceWithContentType("/orgList1.0-vcd15.xml", VCloudMediaType.ORGLIST_XML + ";version=1.0"))
             .addHeader("x-vcloud-authorization", sessionToken)
             .addHeader(HttpHeaders.SET_COOKIE, String.format("vcloud-token=%s; Secure; Path=/", sessionToken)).build();
 
@@ -71,7 +71,7 @@ public abstract class BaseVCloudComputeServiceExpectTest extends BaseRestClientE
             .addHeader(HttpHeaders.COOKIE, "vcloud-token=" + sessionToken).build();
    
    protected HttpResponse successfulVersion1_0GetOrgResponseFromVCD1_5WithSingleTasksListVDCAndNetwork = HttpResponse.builder().statusCode(200)
-            .message("HTTP/1.1 200 OK").payload(payloadFromResourceWithContentType("/org1.0-vcd15.xml",  VCloudMediaType.ORG_XML +";version=1.0"))
+            .message("HTTP/1.1 200 OK").payload(payloadFromResourceWithContentType("/org1.0-vcd15.xml", VCloudMediaType.ORG_XML + ";version=1.0"))
             .build();
    
    protected String catalogId = "3155f393-1e1d-4572-8c9c-d76f72ddb658";
@@ -83,7 +83,7 @@ public abstract class BaseVCloudComputeServiceExpectTest extends BaseRestClientE
             .addHeader(HttpHeaders.COOKIE, "vcloud-token=" + sessionToken).build();
    
    protected HttpResponse successfulVersion1_0GetCatalogResponseFromVCD1_5WithSingleTemplate = HttpResponse.builder().statusCode(200)
-            .message("HTTP/1.1 200 OK").payload(payloadFromResourceWithContentType("/catalog1.0-vcd15.xml",  VCloudMediaType.CATALOG_XML +";version=1.0"))
+            .message("HTTP/1.1 200 OK").payload(payloadFromResourceWithContentType("/catalog1.0-vcd15.xml", VCloudMediaType.CATALOG_XML + ";version=1.0"))
             .build();   
    
    protected String catalogItemId = "ceb369f7-1d07-4e32-9dbd-ebb5aa6ca55c";
@@ -94,7 +94,7 @@ public abstract class BaseVCloudComputeServiceExpectTest extends BaseRestClientE
             .addHeader(HttpHeaders.COOKIE, "vcloud-token=" + sessionToken).build();
    
    protected HttpResponse successfulVersion1_0GetCatalogItemResponseFromVCD1_5ForTemplate = HttpResponse.builder().statusCode(200)
-            .message("HTTP/1.1 200 OK").payload(payloadFromResourceWithContentType("/catalogItem1.0-vcd15.xml",  VCloudMediaType.CATALOGITEM_XML +";version=1.0"))
+            .message("HTTP/1.1 200 OK").payload(payloadFromResourceWithContentType("/catalogItem1.0-vcd15.xml", VCloudMediaType.CATALOGITEM_XML + ";version=1.0"))
             .build();   
    
    // note vAppTemplate has a prefix in its id
@@ -106,7 +106,7 @@ public abstract class BaseVCloudComputeServiceExpectTest extends BaseRestClientE
             .addHeader(HttpHeaders.COOKIE, "vcloud-token=" + sessionToken).build();
             
    protected HttpResponse successfulVersion1_0GetVDCResponseFromVCD1_5WithSingleTemplateAndNetwork = HttpResponse.builder().statusCode(200)
-            .message("HTTP/1.1 200 OK").payload(payloadFromResourceWithContentType("/vdc1.0-vcd15.xml",  VCloudMediaType.VDC_XML +";version=1.0"))
+            .message("HTTP/1.1 200 OK").payload(payloadFromResourceWithContentType("/vdc1.0-vcd15.xml", VCloudMediaType.VDC_XML + ";version=1.0"))
             .build();   
    
    protected String networkId = "b466c0c5-8a5c-4335-b703-a2e2e6b5f3e1";
@@ -117,11 +117,11 @@ public abstract class BaseVCloudComputeServiceExpectTest extends BaseRestClientE
             .addHeader(HttpHeaders.COOKIE, "vcloud-token=" + sessionToken).build();
    
    protected HttpResponse successfulVersion1_0GetVAppTemplateResponseFromVCD1_5WithSingleVMAndVDCParent = HttpResponse.builder().statusCode(200)
-            .message("HTTP/1.1 200 OK").payload(payloadFromResourceWithContentType("/template1.0-vcd15.xml",  VCloudMediaType.VAPPTEMPLATE_XML +";version=1.0"))
+            .message("HTTP/1.1 200 OK").payload(payloadFromResourceWithContentType("/template1.0-vcd15.xml", VCloudMediaType.VAPPTEMPLATE_XML + ";version=1.0"))
             .build();   
 
    protected HttpResponse successfulVersion1_0GetVAppTemplateResponseFromVCD1_5WithMultipleVMsAndVDCParent = HttpResponse.builder().statusCode(200)
-            .message("HTTP/1.1 200 OK").payload(payloadFromResourceWithContentType("/template1.0-vcd15-multi-vm.xml",  VCloudMediaType.VAPPTEMPLATE_XML +";version=1.0"))
+            .message("HTTP/1.1 200 OK").payload(payloadFromResourceWithContentType("/template1.0-vcd15-multi-vm.xml", VCloudMediaType.VAPPTEMPLATE_XML + ";version=1.0"))
             .build();   
 
    protected HttpRequest version1_0GetOVFForVAppTemplateRequest = HttpRequest.builder().method("GET").endpoint(ENDPOINT + "/v1.0/vAppTemplate/" + templateId + "/ovf")
@@ -130,11 +130,11 @@ public abstract class BaseVCloudComputeServiceExpectTest extends BaseRestClientE
             .addHeader(HttpHeaders.COOKIE, "vcloud-token=" + sessionToken).build();
    
    protected HttpResponse successfulVersion1_0GetOVFForVAppTemplateResponseFromVCD1_5WithSingleVM = HttpResponse.builder().statusCode(200)
-            .message("HTTP/1.1 200 OK").payload(payloadFromResourceWithContentType("/ovf-ubuntu64.xml",  MediaType.TEXT_XML +";version=1.0"))
+            .message("HTTP/1.1 200 OK").payload(payloadFromResourceWithContentType("/ovf-ubuntu64.xml", MediaType.TEXT_XML + ";version=1.0"))
             .build();   
 
    protected HttpResponse successfulVersion1_0GetOVFForVAppTemplateResponseFromVCD1_5WithMultipleVMs = HttpResponse.builder().statusCode(200)
-            .message("HTTP/1.1 200 OK").payload(payloadFromResourceWithContentType("/ovf-multi-vm.xml",  MediaType.TEXT_XML +";version=1.0"))
+            .message("HTTP/1.1 200 OK").payload(payloadFromResourceWithContentType("/ovf-multi-vm.xml", MediaType.TEXT_XML + ";version=1.0"))
             .build();   
 
    public BaseVCloudComputeServiceExpectTest() {

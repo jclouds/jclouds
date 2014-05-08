@@ -180,7 +180,7 @@ public abstract class BaseRestApiTest {
 
    protected void assertSaxResponseParserClassEquals(Invokable<?, ?> method, @Nullable Class<?> parserClass) {
       XMLResponseParser annotation = method.getAnnotation(XMLResponseParser.class);
-      Class<?> expected =  (annotation != null) ? annotation.value() :null;
+      Class<?> expected =  (annotation != null) ? annotation.value() : null;
       assertEquals(expected, parserClass);
    }
 

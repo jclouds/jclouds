@@ -86,7 +86,7 @@ public class ServerPredicatesMockTest extends BaseOpenStackMockTest<NovaApi> {
       MockWebServer server = mockOpenStackServer();
       server.enqueue(new MockResponse().setBody(stringFromResource("/access.json")));
 
-      for (int i=0; i < 20; i++) {
+      for (int i = 0; i < 20; i++) {
          server.enqueue(new MockResponse().setBody(stringFromResource("/server_details.json")));
       }
 

@@ -29,7 +29,7 @@ import java.util.Map;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertTrue;
 
-@Test(singleThreaded = true, testName="OptionsConverterTest")
+@Test(singleThreaded = true, testName = "OptionsConverterTest")
 public class OptionsConverterTest {
 
    private static final Map<String, Network> EMPTY_NETWORKS_MAP = ImmutableMap.<String, Network>of();

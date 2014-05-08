@@ -193,7 +193,7 @@ public class ImageApiExpectTest extends BaseNovaApiExpectTest {
       HttpRequest setMetadata = HttpRequest
             .builder()
             .method("PUT")
-            .endpoint("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v1.1/3456/images/" +imageId + "/metadata")
+            .endpoint("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v1.1/3456/images/" + imageId + "/metadata")
             .addHeader("Accept", "*/*")
             .addHeader("X-Auth-Token", authToken)
             .payload(payloadFromStringWithContentType("{\"metadata\":{\"Server Label\":\"Web Head 1\",\"Image Version\":\"2.1\"}}", "application/json"))

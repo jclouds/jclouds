@@ -88,7 +88,7 @@ public class RecordApiExpectTest extends BaseCloudDNSApiExpectTest<CloudDNSApi> 
       RecordDetail mxRecord = null;
       RecordDetail aRecord = null;
       
-      for (RecordDetail record: records) {
+      for (RecordDetail record : records) {
          if (record.getType().equals("MX")) {
             mxRecord = record;
          } else if (record.getType().equals("A")) {
@@ -126,7 +126,7 @@ public class RecordApiExpectTest extends BaseCloudDNSApiExpectTest<CloudDNSApi> 
       ImmutableList<RecordDetail> records = api.list().concat().toList();
       assertEquals(records.size(), 4); // 2 created above + 2 nameserver (NS) records
       
-      for (RecordDetail record: records) {
+      for (RecordDetail record : records) {
          assertTrue(record.getName().contains(JCLOUDS_EXAMPLE));
       }
    }
@@ -146,7 +146,7 @@ public class RecordApiExpectTest extends BaseCloudDNSApiExpectTest<CloudDNSApi> 
       ImmutableList<RecordDetail> records = api.list().concat().toList();
       assertEquals(records.size(), 8);
       
-      for (RecordDetail record: records) {
+      for (RecordDetail record : records) {
          assertTrue(record.getName().contains(JCLOUDS_EXAMPLE));
       }
    }

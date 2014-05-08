@@ -120,7 +120,7 @@ public class Predicates2Test {
       stopwatch.start();
       predicate.apply("");
       long duration = stopwatch.elapsed(MILLISECONDS);
-      assertOrdered(3000-EARLY_RETURN_GRACE, duration, 3000+SLOW_BUILD_SERVER_GRACE);
+      assertOrdered(3000 - EARLY_RETURN_GRACE, duration, 3000 + SLOW_BUILD_SERVER_GRACE);
    }
 
    @Test
@@ -134,8 +134,8 @@ public class Predicates2Test {
       predicate.apply("");
       long duration = stopwatch.elapsed(MILLISECONDS);
       
-      assertOrdered(2500-EARLY_RETURN_GRACE, duration, 2500+SLOW_BUILD_SERVER_GRACE);
-      assertCallTimes(rawPredicate.callTimes, 0, 1000, 1000+1500);
+      assertOrdered(2500 - EARLY_RETURN_GRACE, duration, 2500 + SLOW_BUILD_SERVER_GRACE);
+      assertCallTimes(rawPredicate.callTimes, 0, 1000, 1000 + 1500);
    }
 
    @Test
@@ -149,7 +149,7 @@ public class Predicates2Test {
       predicate.apply("");
       long duration = stopwatch.elapsed(MILLISECONDS);
       
-      assertOrdered(2000-EARLY_RETURN_GRACE, duration, 2000+SLOW_BUILD_SERVER_GRACE);
+      assertOrdered(2000 - EARLY_RETURN_GRACE, duration, 2000 + SLOW_BUILD_SERVER_GRACE);
       assertCallTimes(rawPredicate.callTimes, 0, 1000, 2000);
    }
    
@@ -171,12 +171,12 @@ public class Predicates2Test {
       }
    }
    
-   @Test(enabled=false) // not a test, but picked up as such because public
+   @Test(enabled = false) // not a test, but picked up as such because public
    public static void assertCallTimes(List<Long> actual, Integer... expected) {
       Assert.assertEquals(actual.size(), expected.length);
       for (int i = 0; i < expected.length; i++) {
          long callTime = actual.get(i);
-         assertOrdered(expected[i]-EARLY_RETURN_GRACE, callTime, expected[i]+SLOW_BUILD_SERVER_GRACE);
+         assertOrdered(expected[i] - EARLY_RETURN_GRACE, callTime, expected[i] + SLOW_BUILD_SERVER_GRACE);
       }
    }
    

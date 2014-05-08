@@ -57,7 +57,7 @@ import com.google.inject.TypeLiteral;
  * 
  * @author Adrian Cole
  */
-@Test(groups = "unit", testName="ContextBuilderTest")
+@Test(groups = "unit", testName = "ContextBuilderTest")
 public class ContextBuilderTest {
 
    @ConfiguresHttpCommandExecutorService

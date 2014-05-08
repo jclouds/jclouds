@@ -92,7 +92,7 @@ public class ReverseDNSApiExpectTest extends BaseCloudDNSApiExpectTest<CloudDNSA
       RecordDetail ptrRecordIPv4 = null;
       RecordDetail ptrRecordIPv6 = null;
       
-      for (RecordDetail record: records) {
+      for (RecordDetail record : records) {
          if (record.getData().startsWith("166")) {
             ptrRecordIPv4 = record;
          } else if (record.getData().startsWith("2001")) {
@@ -133,7 +133,7 @@ public class ReverseDNSApiExpectTest extends BaseCloudDNSApiExpectTest<CloudDNSA
       ImmutableList<RecordDetail> records = api.list(SERVER_URI).concat().toList();
       assertEquals(records.size(), 2);
       
-      for (RecordDetail record: records) {
+      for (RecordDetail record : records) {
          assertTrue(record.getType().contains("PTR"));
          assertTrue(record.getName().contains(JCLOUDS_EXAMPLE));
       }

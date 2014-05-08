@@ -55,7 +55,7 @@ public class ParseAlgorithms implements Function<HttpResponse, List<String>>, In
       List<Map<String, String>> list = Iterables.get(map.values(), 0);
       List<String> algorithms = Lists.newArrayList();
       
-      for (Map<String, String> nameAlgorithmPair: list) {
+      for (Map<String, String> nameAlgorithmPair : list) {
          algorithms.add(Iterables.get(nameAlgorithmPair.values(), 0));
       }
       

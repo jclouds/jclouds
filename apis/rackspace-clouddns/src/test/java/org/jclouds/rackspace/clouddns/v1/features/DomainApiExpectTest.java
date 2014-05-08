@@ -139,7 +139,7 @@ public class DomainApiExpectTest extends BaseCloudDNSApiExpectTest<CloudDNSApi> 
       ImmutableList<Domain> domains = api.list().concat().toList();
       assertEquals(domains.size(), 4);
       
-      for (Domain domain: domains) {
+      for (Domain domain : domains) {
          assertTrue(domain.getName().contains(JCLOUDS_EXAMPLE));
       }
    }
@@ -159,7 +159,7 @@ public class DomainApiExpectTest extends BaseCloudDNSApiExpectTest<CloudDNSApi> 
       ImmutableList<Domain> domains = api.list().concat().toList();
       assertEquals(domains.size(), 8);
       
-      for (Domain domain: domains) {
+      for (Domain domain : domains) {
          assertTrue(domain.getName().contains(JCLOUDS_EXAMPLE));
       }
    }
@@ -176,7 +176,7 @@ public class DomainApiExpectTest extends BaseCloudDNSApiExpectTest<CloudDNSApi> 
       ImmutableList<Subdomain> subdomains = api.listSubdomains(3650908).concat().toList();
       assertEquals(subdomains.size(), 4);
       
-      for (Subdomain subdomain: subdomains) {
+      for (Subdomain subdomain : subdomains) {
          assertTrue(subdomain.getName().contains(JCLOUDS_EXAMPLE));
       }
    }
@@ -196,7 +196,7 @@ public class DomainApiExpectTest extends BaseCloudDNSApiExpectTest<CloudDNSApi> 
       ImmutableList<Subdomain> subdomains = api.listSubdomains(3650908).concat().toList();
       assertEquals(subdomains.size(), 8);
       
-      for (Subdomain subdomain: subdomains) {
+      for (Subdomain subdomain : subdomains) {
          assertTrue(subdomain.getName().contains(JCLOUDS_EXAMPLE));
       }
    }

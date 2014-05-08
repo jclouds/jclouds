@@ -59,7 +59,7 @@ import com.google.inject.Module;
  * 
  * @author Adrian Cole
  */
-@Test(groups = "live", testName="StubComputeServiceIntegrationTest")
+@Test(groups = "live", testName = "StubComputeServiceIntegrationTest")
 public class StubComputeServiceIntegrationTest extends BaseComputeServiceLiveTest {
 
    private static final ExecResponse EXEC_GOOD = new ExecResponse("", "", 0);

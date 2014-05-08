@@ -81,7 +81,7 @@ public class ParseDomain implements Function<HttpResponse, Domain> {
       private static Set<String> transform(Iterable<Map<String, String>> nameserversNasty) {
          Builder<String> nameservers = ImmutableSet.builder();
 
-         for (Map<String, String> nameToNameserver: nameserversNasty) {
+         for (Map<String, String> nameToNameserver : nameserversNasty) {
             nameservers.add(nameToNameserver.get("name"));
          }
 

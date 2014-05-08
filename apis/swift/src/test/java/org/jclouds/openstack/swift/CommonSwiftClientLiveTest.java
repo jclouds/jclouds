@@ -358,7 +358,7 @@ public abstract class CommonSwiftClientLiveTest<C extends CommonSwiftClient> ext
    
    protected void testGetObjectContentType(SwiftObject getBlob) {
        String contentType = getBlob.getPayload().getContentMetadata().getContentType();
-       assert contentType.startsWith("text/plain") || "application/x-www-form-urlencoded".equals(contentType): contentType;
+       assert contentType.startsWith("text/plain") || "application/x-www-form-urlencoded".equals(contentType) : contentType;
    }
 
    protected SwiftObject newSwiftObject(String data, String key) throws IOException {

@@ -222,7 +222,7 @@ public class BucketsLiveTest extends BaseBlobStoreIntegrationTest {
             public void run() {
                try {
                   BucketLogging newLogging = getApi().getBucketLogging(bucketName);
-                  assert newLogging !=null;
+                  assert newLogging != null;
                   AccessControlList acl = new AccessControlList();
                   for (Grant grant : newLogging.getTargetGrants()) { // TODO: add permission
                      // checking features to

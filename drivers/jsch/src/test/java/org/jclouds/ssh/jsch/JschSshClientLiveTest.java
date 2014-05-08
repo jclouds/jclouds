@@ -196,14 +196,14 @@ public class JschSshClientLiveTest {
          ExecResponse response = client.exec("thisCommandDoesNotExist");
          assertNotEquals(response.getExitStatus(), 0);
          assertTrue(response.getOutput().contains("not found") || response.getError().contains("not found"), 
-               "stdout="+response.getOutput()+"; stderr="+response.getError());
+               "stdout=" + response.getOutput() + "; stderr=" + response.getError());
       } finally {
          client.disconnect();
       }
    }
 
    // Added for issue #1016.
-   @Test(invocationCount=100)
+   @Test(invocationCount = 100)
    public void testExecHostnameRepeatedlyWithDifferentSessions() throws Exception {
       testExecHostname();
    }
@@ -219,7 +219,7 @@ public class JschSshClientLiveTest {
             assertEquals(response.getError(), "");
             assertEquals(response.getOutput().trim(), "localhost".equals(sshHost) ? InetAddress.getLocalHost().getHostName()
                      : sshHost);
-            //System.out.println("completed (sequentially) "+i);
+            //System.out.println("completed (sequentially) " + i);
          }
       } finally {
          client.disconnect();
@@ -241,7 +241,7 @@ public class JschSshClientLiveTest {
                @Override
                public ExecResponse call() {
                   ExecResponse response = client.exec("hostname");
-                  //System.out.println("completed (concurrently) "+count.incrementAndGet());
+                  //System.out.println("completed (concurrently) " + count.incrementAndGet());
                   return response;
                   
                }

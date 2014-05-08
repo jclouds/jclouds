@@ -59,6 +59,6 @@ public class AvailabilityZoneApiExpectTest extends BaseNovaApiExpectTest {
 
       assertTrue(zone.isPresent(), "Couldn't find zone");
       assertTrue(zone.get().getName().equals("nova"), "Expected zone name to be nova but it was: " + zone.get().getName());
-      assertTrue(zone.get().getState().available(), "Zone: "+ zone.get().getName() + " is not available.");
+      assertTrue(zone.get().getState().available(), "Zone: " + zone.get().getName() + " is not available.");
    }
 }

@@ -38,15 +38,15 @@ public class BindGrantUserToJson implements MapBinder {
     @Override    
     public <R extends HttpRequest> R bindToRequest(R request, Map<String, Object> postParams) {
        List<String> databases = Lists.newArrayList();
-       if( postParams.get("databaseName")!=null ) {
+       if (postParams.get("databaseName") != null) {
           databases.add((String)postParams.get("databaseName"));
        }
-       else if( postParams.get("databases")!=null ) {
+       else if (postParams.get("databases") != null) {
           databases = (List<String>) postParams.get("databases");
        }
        
-       List<Map<String, String>> databaseList = Lists.newArrayList();       
-       for(String databaseName : databases) {
+       List<Map<String, String>> databaseList = Lists.newArrayList();
+       for (String databaseName : databases) {
            Map<String, String> singleDatabase = Maps.newHashMap();
            singleDatabase.put("name", databaseName);
            databaseList.add(singleDatabase);

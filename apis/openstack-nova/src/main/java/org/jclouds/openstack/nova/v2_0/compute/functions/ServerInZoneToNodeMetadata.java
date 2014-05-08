@@ -133,7 +133,7 @@ public class ServerInZoneToNodeMetadata implements Function<ServerInZone, NodeMe
                         AddressToStringTransformationFunction.INSTANCE),
                   isInet4Address));
 
-      for (Link link: from.getLinks()) {
+      for (Link link : from.getLinks()) {
          if (link.getRelation().equals(Link.Relation.SELF)) {
             builder.uri(link.getHref());
          }

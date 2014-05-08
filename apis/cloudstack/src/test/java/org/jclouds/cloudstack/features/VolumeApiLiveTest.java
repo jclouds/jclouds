@@ -54,7 +54,7 @@ public class VolumeApiLiveTest extends BaseCloudStackApiLiveTest {
 
    @Resource Logger logger = Logger.NULL;
 
-   protected String prefix = System.getProperty("user.name")+"-"+getClass().getSimpleName();
+   protected String prefix = System.getProperty("user.name") + "-" + getClass().getSimpleName();
 
    private String zoneId;
 
@@ -132,7 +132,7 @@ public class VolumeApiLiveTest extends BaseCloudStackApiLiveTest {
    }
    protected Snapshot getPreferredSnapshot() {
       for (Snapshot candidate : client.getSnapshotApi().listSnapshots()) {
-         if (candidate.getState()==Snapshot.State.BACKED_UP)
+         if (candidate.getState() == Snapshot.State.BACKED_UP)
             return candidate;
       }
       throw new AssertionError("No suitable Snapshot found.");
@@ -141,7 +141,7 @@ public class VolumeApiLiveTest extends BaseCloudStackApiLiveTest {
    protected VirtualMachine getPreferredVirtualMachine() {
       for (VirtualMachine candidate : client.getVirtualMachineApi().listVirtualMachines()) {
 //         this is a guess::
-         if (candidate.getState()==VirtualMachine.State.RUNNING || candidate.getState()==VirtualMachine.State.STOPPED)
+         if (candidate.getState() == VirtualMachine.State.RUNNING || candidate.getState() == VirtualMachine.State.STOPPED)
             return candidate;
       }
       throw new AssertionError("No suitable VirtualMachine found.");
@@ -178,7 +178,7 @@ public class VolumeApiLiveTest extends BaseCloudStackApiLiveTest {
       AsyncCreateResponse job = client.getVolumeApi().createVolumeFromCustomDiskOfferingInZone(
                 prefix + "-jclouds-volume", offering.getId(), zoneId, size);
       assertTrue(jobComplete.apply(job.getJobId()));
-      logger.info("created volume "+job.getId());
+      logger.info("created volume " + job.getId());
       
       Volume volume = findVolumeWithId(job.getId());
       try {
@@ -245,9 +245,9 @@ public class VolumeApiLiveTest extends BaseCloudStackApiLiveTest {
    }
 
    static Volume findVolumeWithId(final CloudStackApi client, final String id) {
-      for (Volume v: client.getVolumeApi().listVolumes())
+      for (Volume v : client.getVolumeApi().listVolumes())
          if (v.getId().equals(id)) return v;
-      throw new NoSuchElementException("no volume with id "+id);
+      throw new NoSuchElementException("no volume with id " + id);
    }
 
 //   //uncomment to force a cleanup of volumes (since test failures can leave messes) 

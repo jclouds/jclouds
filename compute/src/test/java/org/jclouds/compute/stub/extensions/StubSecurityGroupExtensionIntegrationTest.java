@@ -28,7 +28,7 @@ import org.testng.annotations.Test;
  * @author Andrew Bayer
  * 
  */
-@Test(groups = { "integration", "live" }, singleThreaded = true, testName="StubSecurityGroupExtensionIntegrationTest")
+@Test(groups = { "integration", "live" }, singleThreaded = true, testName = "StubSecurityGroupExtensionIntegrationTest")
 public class StubSecurityGroupExtensionIntegrationTest extends BaseSecurityGroupExtensionLiveTest {
 
    public StubSecurityGroupExtensionIntegrationTest() {

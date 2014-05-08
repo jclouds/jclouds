@@ -44,7 +44,7 @@ public class SessionPersistenceApiLiveTest extends BaseCloudLoadBalancersApiLive
    public void testCreateLoadBalancer() {
       AddNode addNode = AddNode.builder().address("192.168.1.1").port(8080).build();
       CreateLoadBalancer createLB = CreateLoadBalancer.builder()
-            .name(prefix+"-jclouds").protocol("HTTP").port(80).virtualIPType(Type.PUBLIC).node(addNode).build(); 
+            .name(prefix + "-jclouds").protocol("HTTP").port(80).virtualIPType(Type.PUBLIC).node(addNode).build();
 
       zone = Iterables.getFirst(api.getConfiguredZones(), null);
       lb = api.getLoadBalancerApiForZone(zone).create(createLB);

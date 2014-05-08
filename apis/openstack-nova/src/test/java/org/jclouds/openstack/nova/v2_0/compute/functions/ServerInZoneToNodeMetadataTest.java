@@ -198,7 +198,7 @@ public class ServerInZoneToNodeMetadataTest {
 
    @Test
    public void testPortableNodeStatusNotNull() {
-      for (Server.Status serverStatus: Server.Status.values()) {
+      for (Server.Status serverStatus : Server.Status.values()) {
          assertNotNull(NovaComputeServiceContextModule.toPortableNodeStatus.get(serverStatus));
       }
    }

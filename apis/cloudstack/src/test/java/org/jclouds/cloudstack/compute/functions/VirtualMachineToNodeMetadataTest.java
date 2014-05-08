@@ -106,7 +106,7 @@ public class VirtualMachineToNodeMetadataTest {
                      }
                   }), namingConvention);
 
-      VirtualMachine guest =VirtualMachine.builder()
+      VirtualMachine guest = VirtualMachine.builder()
          .id("54")
          .name("i-3-54-VM")
          .displayName("i-3-54-VM")

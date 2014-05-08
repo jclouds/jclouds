@@ -35,7 +35,7 @@ import org.testng.annotations.Test;
  * 
  * @author Adrian Cole
  */
-@Test(groups="performance")
+@Test(groups = "performance")
 public abstract class PerformanceTest {
    protected static int LOOP_COUNT = 1000;
    protected static int THREAD_COUNT = 100;

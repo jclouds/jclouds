@@ -76,7 +76,7 @@ public class PaginatedCollection<T> extends IterableWithMarker<T> {
 
    @Override
    public Optional<Object> nextMarker() {
-      for (Link link: getLinks()) {
+      for (Link link : getLinks()) {
          if (Link.Relation.NEXT == link.getRelation()) {
             return Optional.of(toPaginationOptions(link));
          }

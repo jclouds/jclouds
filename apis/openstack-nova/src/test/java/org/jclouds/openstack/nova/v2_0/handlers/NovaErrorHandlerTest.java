@@ -74,7 +74,7 @@ public class NovaErrorHandlerTest {
    // should wait until ips are associated w/the server
    HttpResponse noFixedIps = HttpResponse.builder().statusCode(400)
          .message("HTTP/1.1 400 Bad Request")
-         .payload("{\"badRequest\": {\"message\": "+
+         .payload("{\"badRequest\": {\"message\": " +
                   "\"instance |71554| has no fixed_ips. unable to associate floating ip\", \"code\": 400}}")
          .build();
    

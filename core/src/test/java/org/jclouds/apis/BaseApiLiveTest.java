@@ -84,7 +84,7 @@ public abstract class BaseApiLiveTest<A extends Closeable> {
     */
    protected Set<String> filterZones(Set<String> zones) {
       String zonesToList = System.getProperty("test.live.zones");
-      if(zonesToList == null) {
+      if (zonesToList == null) {
          return zones; // no filter applied
       }
       Set<String> zoneFilter = Sets.newHashSet(Splitter.on(',').split(zonesToList));

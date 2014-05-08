@@ -67,7 +67,7 @@ public class ParseMetadata extends ParseJson<Metadata> {
    public static Metadata transformCLBMetadataToMetadata(List<CLBMetadata> clbMetadatum) {
       Metadata metadata = new Metadata();      
       
-      for (CLBMetadata clbMetadata: clbMetadatum) {
+      for (CLBMetadata clbMetadata : clbMetadatum) {
          metadata.put(clbMetadata.key, clbMetadata.value);
          metadata.putId(clbMetadata.key, clbMetadata.id);
       }

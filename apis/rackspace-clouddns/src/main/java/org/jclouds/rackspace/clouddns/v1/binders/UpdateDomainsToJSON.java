@@ -58,7 +58,7 @@ public class UpdateDomainsToJSON implements MapBinder {
    private String toJSON(Iterable<Integer> ids, String updateTemplate, String key, String value) {
       List<String> json = Lists.newArrayList();
 
-      for (Integer id: ids) {
+      for (Integer id : ids) {
          json.add(format(updateTemplate, id, key, value));
       }
       

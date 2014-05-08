@@ -46,7 +46,7 @@ public class CloudStackSecurityGroupExtensionLiveTest extends BaseSecurityGroupE
       super.setupContext();
 
       CloudStackApi api = view.unwrapApi(CloudStackApi.class);
-      for (Zone z: api.getZoneApi().listZones()) {
+      for (Zone z : api.getZoneApi().listZones()) {
          if (z.isSecurityGroupsEnabled()) {
             zone = z;
             break;
