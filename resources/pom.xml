@@ -36,7 +36,8 @@
         <targetPath>resources</targetPath>
         <directory>${project.basedir}</directory>
         <includes>
-            <include>checkstyle.xml</include>
+          <include>checkstyle.xml</include>
+          <include>copyright_header.txt</include>
         </includes>
       </resource>
     </resources>
