@@ -335,7 +335,12 @@ public class EC2HardwareBuilder extends HardwareBuilder {
     */
    public static EC2HardwareBuilder m3_xlarge() {
       return new EC2HardwareBuilder(InstanceType.M3_XLARGE).ram(15360)
-            .processors(ImmutableList.of(new Processor(4.0, 3.25))).rootDeviceType(RootDeviceType.EBS).is64Bit(true);
+              .processors(ImmutableList.of(new Processor(4.0, 3.25)))
+              .is64Bit(true)
+              .volumes(ImmutableList.<Volume> of(
+                      new VolumeBuilder().type(LOCAL).size(10.0f).device("/dev/sda1").bootDevice(true).durable(false).build(),
+                      new VolumeBuilder().type(LOCAL).size(40.0f).device("/dev/sdb").bootDevice(false).durable(false).build(),
+                      new VolumeBuilder().type(LOCAL).size(40.0f).device("/dev/sdc").bootDevice(false).durable(false).build()));
    }
 
    /**
@@ -343,7 +348,12 @@ public class EC2HardwareBuilder extends HardwareBuilder {
     */
    public static EC2HardwareBuilder m3_2xlarge() {
       return new EC2HardwareBuilder(InstanceType.M3_2XLARGE).ram(30720)
-            .processors(ImmutableList.of(new Processor(8.0, 3.25))).rootDeviceType(RootDeviceType.EBS).is64Bit(true);
+              .processors(ImmutableList.of(new Processor(8.0, 3.25)))
+              .is64Bit(true)
+              .volumes(ImmutableList.<Volume> of(
+                      new VolumeBuilder().type(LOCAL).size(10.0f).device("/dev/sda1").bootDevice(true).durable(false).build(),
+                      new VolumeBuilder().type(LOCAL).size(80.0f).device("/dev/sdb").bootDevice(false).durable(false).build(),
+                      new VolumeBuilder().type(LOCAL).size(80.0f).device("/dev/sdc").bootDevice(false).durable(false).build()));
    }
    
    /**
