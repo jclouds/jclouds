@@ -120,7 +120,7 @@ public class CloudFilesCDNApiLiveTest extends BaseCloudFilesApiLiveTest {
    public void testPurgeObject() throws Exception {
       for (String regionId : regions) {
          String objectName = "testPurge";
-         Payload payload = Payloads.newByteSourcePayload(ByteSource.wrap(new byte[] {1,2,3}));
+         Payload payload = Payloads.newByteSourcePayload(ByteSource.wrap(new byte[] {1, 2, 3}));
          ObjectApi objectApi = api.objectApiInRegionForContainer(regionId, name);
          
          // create a new object
@@ -163,7 +163,7 @@ public class CloudFilesCDNApiLiveTest extends BaseCloudFilesApiLiveTest {
       }
    }
 
-   private static final void assertCDNContainerNotNull(CDNContainer container) {
+   private static void assertCDNContainerNotNull(CDNContainer container) {
       assertNotNull(container);
       assertNotNull(container.getName());
       assertNotNull(container.getTtl());

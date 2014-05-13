@@ -108,7 +108,7 @@ public class CloudFilesCDNApiMockTest extends BaseOpenStackMockTest<CloudFilesAp
          ListContainerOptions options = ListContainerOptions.Builder.marker("cdn-container-3");
          ImmutableList<CDNContainer> containers = api.cdnApiInRegion("DFW").list(options).toList();
 
-         for(CDNContainer container : containers) {
+         for (CDNContainer container : containers) {
             assertCDNContainerNotNull(container);
          }
 
@@ -402,7 +402,7 @@ public class CloudFilesCDNApiMockTest extends BaseOpenStackMockTest<CloudFilesAp
       }
    }
 
-   private static final void assertCDNContainerNotNull(CDNContainer container) {
+   private static void assertCDNContainerNotNull(CDNContainer container) {
       assertNotNull(container.getName());
       assertNotNull(container.isEnabled());
       assertNotNull(container.isLogRetentionEnabled());
@@ -429,7 +429,7 @@ public class CloudFilesCDNApiMockTest extends BaseOpenStackMockTest<CloudFilesAp
             .addHeader(CDN_ENABLED, "true")
             .addHeader(CDN_LOG_RETENTION, "false")
             .addHeader(CDN_TTL, "777777")
-            .addHeader(CDN_URI,"http://id-1.cdn.rackspace.com")
+            .addHeader(CDN_URI, "http://id-1.cdn.rackspace.com")
             .addHeader(CDN_SSL_URI, "https://ssl-id-1.ssl.rackspace.com")
             .addHeader(CDN_STREAMING_URI, "http://streaming-id-1.stream.rackspace.com")
             .addHeader(CDN_IOS_URI, "http://ios-id-1.iosr.rackspace.com")
@@ -442,7 +442,7 @@ public class CloudFilesCDNApiMockTest extends BaseOpenStackMockTest<CloudFilesAp
             .addHeader(CDN_ENABLED, "false")
             .addHeader(CDN_LOG_RETENTION, "true")
             .addHeader(CDN_TTL, "7654321")
-            .addHeader(CDN_URI,"http://id-1.cdn.rackspace.com")
+            .addHeader(CDN_URI, "http://id-1.cdn.rackspace.com")
             .addHeader(CDN_SSL_URI, "https://ssl-id-1.ssl.rackspace.com")
             .addHeader(CDN_STREAMING_URI, "http://streaming-id-1.stream.rackspace.com")
             .addHeader(CDN_IOS_URI, "http://ios-id-1.iosr.rackspace.com")
