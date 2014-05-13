@@ -35,6 +35,8 @@ import org.jclouds.util.Strings2;
 
 import com.google.common.base.Throwables;
 import com.google.common.collect.ImmutableSet;
+import com.google.common.net.HttpHeaders;
+import com.google.common.net.MediaType;
 import com.google.common.reflect.TypeToken;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
@@ -120,7 +122,7 @@ public class BaseOpenStackMockTest<A extends Closeable> {
     * Ensure json headers are included
     * */
    public MockResponse addCommonHeaders(MockResponse mockResponse) {
-      mockResponse.addHeader("Accept:", "application/json").addHeader("Content-type", "application-json");
+      mockResponse.addHeader(HttpHeaders.ACCEPT, MediaType.JSON_UTF_8.withoutParameters());
       return mockResponse;
    }
 
