@@ -54,8 +54,7 @@ import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableMap.Builder;
 import com.google.common.hash.HashCode;
 import com.google.common.hash.Hashing;
-import com.google.common.io.ByteStreams;
-import com.google.common.io.InputSupplier;
+import com.google.common.io.ByteSource;
 
 /**
  * Utilities for ssh key pairs
@@ -69,16 +68,16 @@ import com.google.common.io.InputSupplier;
 public class SshKeys {
 
    /**
-    * Executes {@link Pems#publicKeySpecFromOpenSSH(InputSupplier)} on the string which was OpenSSH
+    * Executes {@link Pems#publicKeySpecFromOpenSSH(ByteSource)} on the string which was OpenSSH
     * Base64 Encoded {@code id_rsa.pub}
     * 
     * @param idRsaPub
     *           formatted {@code ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAAB...}
-    * @see Pems#publicKeySpecFromOpenSSH(InputSupplier)
+    * @see Pems#publicKeySpecFromOpenSSH(ByteSource)
     */
    public static RSAPublicKeySpec publicKeySpecFromOpenSSH(String idRsaPub) {
       try {
-         return publicKeySpecFromOpenSSH(ByteStreams.newInputStreamSupplier(
+         return publicKeySpecFromOpenSSH(ByteSource.wrap(
             idRsaPub.getBytes(Charsets.UTF_8)));
       } catch (IOException e) {
          throw propagate(e);
@@ -95,9 +94,9 @@ public class SshKeys {
     * @throws IOException
     *            if an I/O error occurs
     */
-   public static RSAPublicKeySpec publicKeySpecFromOpenSSH(InputSupplier<? extends InputStream> supplier)
+   public static RSAPublicKeySpec publicKeySpecFromOpenSSH(ByteSource supplier)
             throws IOException {
-      InputStream stream = supplier.getInput();
+      InputStream stream = supplier.openStream();
       Iterable<String> parts = Splitter.on(' ').split(toStringAndClose(stream).trim());
       checkArgument(size(parts) >= 2 && "ssh-rsa".equals(get(parts, 0)),
                "bad format, should be: ssh-rsa AAAAB3...");

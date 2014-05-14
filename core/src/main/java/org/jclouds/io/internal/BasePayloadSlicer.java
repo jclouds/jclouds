@@ -37,10 +37,12 @@ import org.jclouds.io.Payload;
 import org.jclouds.io.PayloadSlicer;
 import org.jclouds.io.payloads.BaseMutableContentMetadata;
 import org.jclouds.io.payloads.ByteArrayPayload;
+import org.jclouds.io.payloads.ByteSourcePayload;
 import org.jclouds.io.payloads.InputStreamPayload;
 import org.jclouds.io.payloads.InputStreamSupplierPayload;
 
 import com.google.common.base.Throwables;
+import com.google.common.io.ByteSource;
 import com.google.common.io.ByteStreams;
 import com.google.common.io.Files;
 import com.google.common.io.InputSupplier;
@@ -141,6 +143,8 @@ public class BasePayloadSlicer implements PayloadSlicer {
          returnVal = doSlice((byte[]) input.getRawContent(), offset, length);
       } else if (input.getRawContent() instanceof InputStream) {
          returnVal = doSlice((InputStream) input.getRawContent(), offset, length);
+      } else if (input.getRawContent() instanceof ByteSource) {
+         returnVal = doSlice((ByteSource) input.getRawContent(), offset, length);
       } else {
          returnVal = doSlice(input, offset, length);
       }
@@ -156,7 +160,7 @@ public class BasePayloadSlicer implements PayloadSlicer {
    }
 
    protected Payload doSlice(File content, long offset, long length) {
-      return doSlice(Files.newInputStreamSupplier(content), offset, length);
+      return doSlice(Files.asByteSource(content), offset, length);
    }
 
    protected Payload doSlice(InputStream content, long offset, long length) {
@@ -168,6 +172,10 @@ public class BasePayloadSlicer implements PayloadSlicer {
       return new InputStreamPayload(ByteStreams.limit(content, length));
    }
 
+   protected Payload doSlice(ByteSource content, long offset, long length) {
+      return new ByteSourcePayload(content.slice(offset, length));
+   }
+
    protected Payload doSlice(InputSupplier<? extends InputStream> content, long offset, long length) {
       return new InputStreamSupplierPayload(ByteStreams.slice(content, offset, length));
    }
@@ -177,7 +185,7 @@ public class BasePayloadSlicer implements PayloadSlicer {
       checkArgument(offset <= Integer.MAX_VALUE, "offset is too big for an array");
       checkArgument(length <= Integer.MAX_VALUE, "length is too big for an array");
       returnVal = new InputStreamSupplierPayload(
-            ByteStreams.newInputStreamSupplier(content, (int) offset, (int) length));
+            ByteSource.wrap(content).slice(offset, length));
       return returnVal;
    }
 

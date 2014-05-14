@@ -30,6 +30,9 @@ import java.security.spec.InvalidKeySpecException;
 import java.security.spec.KeySpec;
 import java.security.spec.RSAPublicKeySpec;
 
+import com.google.common.base.Charsets;
+import com.google.common.io.ByteSource;
+
 import org.jclouds.io.Payloads;
 import org.testng.annotations.Test;
 
@@ -58,38 +61,38 @@ public class PemsTest {
 
    @Test(expectedExceptions = IllegalStateException.class, expectedExceptionsMessageRegExp = "^Invalid PEM: no parsers for marker -----BEGIN FOO PRIVATE KEY----- .*")
    public void testPrivateKeySpecFromPemWithInvalidMarker() throws IOException {
-      Pems.privateKeySpec(Payloads.newStringPayload(INVALID_PRIVATE_KEY));
+      Pems.privateKeySpec(ByteSource.wrap(INVALID_PRIVATE_KEY.getBytes(Charsets.UTF_8)));
    }
 
    @Test(expectedExceptions = IllegalStateException.class, expectedExceptionsMessageRegExp = "^Invalid PEM: no parsers for marker -----BEGIN FOO PUBLIC KEY----- .*")
    public void testPublicKeySpecFromPemWithInvalidMarker() throws IOException {
-      Pems.publicKeySpec(Payloads.newStringPayload(INVALID_PUBLIC_KEY));
+      Pems.publicKeySpec(ByteSource.wrap(INVALID_PUBLIC_KEY.getBytes(Charsets.UTF_8)));
    }
 
    @Test
    public void testPrivateKeySpecFromPem() throws IOException {
-      Pems.privateKeySpec(Payloads.newStringPayload(PRIVATE_KEY));
+      Pems.privateKeySpec(ByteSource.wrap(PRIVATE_KEY.getBytes(Charsets.UTF_8)));
    }
 
    @Test
    public void testPublicKeySpecFromPem() throws IOException {
-      Pems.publicKeySpec(Payloads.newStringPayload(PUBLIC_KEY));
+      Pems.publicKeySpec(ByteSource.wrap(PUBLIC_KEY.getBytes(Charsets.UTF_8)));
    }
 
    @Test
    public void testX509CertificateFromPemDefault() throws IOException, CertificateException {
-      Pems.x509Certificate(Payloads.newStringPayload(CERTIFICATE), null);
+      Pems.x509Certificate(ByteSource.wrap(CERTIFICATE.getBytes(Charsets.UTF_8)), null);
    }
 
    @Test
    public void testX509CertificateFromPemSuppliedCertFactory() throws IOException, CertificateException {
-      Pems.x509Certificate(Payloads.newStringPayload(CERTIFICATE), CertificateFactory.getInstance("X.509"));
+      Pems.x509Certificate(ByteSource.wrap(CERTIFICATE.getBytes(Charsets.UTF_8)), CertificateFactory.getInstance("X.509"));
    }
 
    @Test
    public void testPrivateKeySpecPem() throws IOException, InvalidKeySpecException, NoSuchAlgorithmException {
       RSAPrivateCrtKey key = (RSAPrivateCrtKey) KeyFactory.getInstance("RSA").generatePrivate(
-            Pems.privateKeySpec(Payloads.newStringPayload(PRIVATE_KEY)));
+            Pems.privateKeySpec(ByteSource.wrap(PRIVATE_KEY.getBytes(Charsets.UTF_8))));
       String encoded = Pems.pem(key);
       assertEquals(encoded, PRIVATE_KEY.replaceAll("\n", ls));
    }
@@ -97,20 +100,20 @@ public class PemsTest {
    @Test
    public void testRSAPublicKeySpecPem() throws IOException, InvalidKeySpecException, NoSuchAlgorithmException {
       String encoded = Pems.pem(KeyFactory.getInstance("RSA").generatePublic(
-            Pems.publicKeySpec(Payloads.newStringPayload(PUBLIC_KEY))));
+            Pems.publicKeySpec(PUBLIC_KEY)));
       assertEquals(encoded, PUBLIC_KEY.replaceAll("PUBLIC", "RSA PUBLIC").replaceAll("\n", ls));
    }
 
    @Test
    public void testRSAPKCS1PublicKeySpecPem() throws IOException, InvalidKeySpecException, NoSuchAlgorithmException {
       String encoded = Pems.pem(KeyFactory.getInstance("RSA").generatePublic(
-            Pems.publicKeySpec(Payloads.newStringPayload(PUBLIC_KEY_PKCS1))));
+            Pems.publicKeySpec(PUBLIC_KEY_PKCS1)));
       assertEquals(encoded, PUBLIC_KEY_PKCS1.replaceAll("\n", ls));
    }
 
    @Test
    public void testRSAPKCS1RawPublicKeySpecPem() throws IOException, InvalidKeySpecException, NoSuchAlgorithmException {
-      KeySpec spec = Pems.publicKeySpec(Payloads.newStringPayload(PUBLIC_KEY_PKCS1_RAW));
+      KeySpec spec = Pems.publicKeySpec(PUBLIC_KEY_PKCS1_RAW);
       String encoded = Pems.pem(KeyFactory.getInstance("RSA").generatePublic(spec));
       KeySpec generatedSpec = Pems.publicKeySpec(encoded);
 
@@ -130,7 +133,7 @@ public class PemsTest {
 
    @Test
    public void testX509CertificatePem() throws IOException, CertificateException {
-      String encoded = Pems.pem(Pems.x509Certificate(Payloads.newStringPayload(CERTIFICATE),
+      String encoded = Pems.pem(Pems.x509Certificate(ByteSource.wrap(CERTIFICATE.getBytes(Charsets.UTF_8)),
             CertificateFactory.getInstance("X.509")));
       assertEquals(encoded, CERTIFICATE.replaceAll("\n", ls));
    }

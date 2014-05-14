@@ -43,7 +43,9 @@ import org.jclouds.ssh.internal.RsaSshKeyPairGenerator;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
+import com.google.common.base.Charsets;
 import com.google.common.collect.ImmutableMap;
+import com.google.common.io.ByteSource;
 import com.google.inject.AbstractModule;
 import com.google.inject.Guice;
 
@@ -60,9 +62,9 @@ public class RsaSshKeyPairGeneratorTest {
    @BeforeClass
    public void setup() throws InvalidKeySpecException, NoSuchAlgorithmException, IOException {
       KeyFactory keyfactory = KeyFactory.getInstance("RSA");
-      PrivateKey privateKey = keyfactory.generatePrivate(Pems.privateKeySpec(Payloads.newStringPayload(PRIVATE_KEY)));
+      PrivateKey privateKey = keyfactory.generatePrivate(Pems.privateKeySpec(ByteSource.wrap(PRIVATE_KEY.getBytes(Charsets.UTF_8))));
 
-      PublicKey publicKey = keyfactory.generatePublic(Pems.publicKeySpec(Payloads.newStringPayload(PUBLIC_KEY)));
+      PublicKey publicKey = keyfactory.generatePublic(Pems.publicKeySpec(ByteSource.wrap(PUBLIC_KEY.getBytes(Charsets.UTF_8))));
 
       keyPair = new KeyPair(publicKey, privateKey);
       openSshKey = SshKeys.encodeAsOpenSSH(RSAPublicKey.class.cast(publicKey));

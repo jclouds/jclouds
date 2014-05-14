@@ -18,12 +18,13 @@ package org.jclouds.io.payloads;
 
 import static com.google.common.collect.Lists.newArrayList;
 import static com.google.common.io.ByteStreams.join;
-import static com.google.common.io.ByteStreams.newInputStreamSupplier;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Map.Entry;
 
+import com.google.common.collect.ImmutableList;
+import com.google.common.io.ByteSource;
 import com.google.common.io.InputSupplier;
 
 /**
@@ -65,12 +66,12 @@ public class MultipartForm extends BasePayload<Iterable<? extends Part>> {
       this(BOUNDARY, parts);
    }
 
-   private InputSupplier<? extends InputStream> addLengthAndReturnRn() {
+   private ByteSource addLengthAndReturnRn() {
       getContentMetadata().setContentLength(getContentMetadata().getContentLength() + rn.length());
-      return newInputStreamSupplier(rn.getBytes());
+      return ByteSource.wrap(rn.getBytes());
    }
 
-   private InputSupplier<? extends InputStream> addLengthAndReturnHeaders(String boundaryrn, Part part) {
+   private ByteSource addLengthAndReturnHeaders(String boundaryrn, Part part) {
       StringBuilder builder = new StringBuilder(dd).append(boundaryrn);
       for (Entry<String, String> entry : part.getHeaders().entries()) {
          String header = String.format("%s: %s%s", entry.getKey(), entry.getValue(), rn);
@@ -78,13 +79,13 @@ public class MultipartForm extends BasePayload<Iterable<? extends Part>> {
       }
       builder.append(rn);
       getContentMetadata().setContentLength(getContentMetadata().getContentLength() + builder.length());
-      return newInputStreamSupplier(builder.toString().getBytes());
+      return ByteSource.wrap(builder.toString().getBytes());
    }
 
-   private InputSupplier<? extends InputStream> addLengthAndReturnFooter(String boundary) {
+   private ByteSource addLengthAndReturnFooter(String boundary) {
       String end = dd + boundary + dd + rn;
       getContentMetadata().setContentLength(getContentMetadata().getContentLength() + end.length());
-      return newInputStreamSupplier(end.getBytes());
+      return ByteSource.wrap(end.getBytes());
    }
 
    @Override
