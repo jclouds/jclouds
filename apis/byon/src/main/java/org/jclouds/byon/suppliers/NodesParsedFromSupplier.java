@@ -19,8 +19,6 @@ package org.jclouds.byon.suppliers;
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.base.Preconditions.checkState;
 
-import java.io.InputStream;
-
 import javax.annotation.Resource;
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -32,6 +30,7 @@ import org.jclouds.logging.Logger;
 import com.google.common.base.Function;
 import com.google.common.base.Supplier;
 import com.google.common.cache.LoadingCache;
+import com.google.common.io.ByteSource;
 
 /**
  * 
@@ -42,18 +41,18 @@ public class NodesParsedFromSupplier implements Supplier<LoadingCache<String, No
    @Resource
    protected Logger logger = Logger.NULL;
 
-   private final Supplier<InputStream> supplier;
-   private final Function<InputStream, LoadingCache<String, Node>> parser;
+   private final ByteSource supplier;
+   private final Function<ByteSource, LoadingCache<String, Node>> parser;
 
    @Inject
-   NodesParsedFromSupplier(@Provider Supplier<InputStream> supplier, Function<InputStream, LoadingCache<String, Node>> parser) {
+   NodesParsedFromSupplier(@Provider ByteSource supplier, Function<ByteSource, LoadingCache<String, Node>> parser) {
       this.supplier = checkNotNull(supplier, "supplier");
       this.parser = checkNotNull(parser, "parser");
    }
 
    @Override
    public LoadingCache<String, Node> get() {
-      LoadingCache<String, Node> nodes = parser.apply(supplier.get());
+      LoadingCache<String, Node> nodes = parser.apply(supplier);
       checkState(nodes != null && nodes.size() > 0, "no nodes parsed from supplier: %s", supplier);
       return nodes;
    }

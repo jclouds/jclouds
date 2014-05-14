@@ -20,6 +20,8 @@ import static org.testng.Assert.assertEquals;
 
 import java.net.URI;
 
+import com.google.common.base.Charsets;
+
 import org.jclouds.util.Strings2;
 import org.testng.annotations.Test;
 
@@ -36,7 +38,7 @@ public class SupplyFromProviderURIOrNodesPropertyTest {
       SupplyFromProviderURIOrNodesProperty supplier = new SupplyFromProviderURIOrNodesProperty(URI.create("file://"
                + path));
 
-      assertEquals(Strings2.toStringAndClose(supplier.get()), Strings2.toStringAndClose(getClass().getResourceAsStream(
+      assertEquals(supplier.asCharSource(Charsets.UTF_8).read(), Strings2.toStringAndClose(getClass().getResourceAsStream(
                "/test1.yaml")));
 
    }
@@ -47,7 +49,7 @@ public class SupplyFromProviderURIOrNodesPropertyTest {
       SupplyFromProviderURIOrNodesProperty supplier = new SupplyFromProviderURIOrNodesProperty(URI
                .create("classpath:///test1.yaml"));
 
-      assertEquals(Strings2.toStringAndClose(supplier.get()), Strings2.toStringAndClose(getClass().getResourceAsStream(
+      assertEquals(supplier.asCharSource(Charsets.UTF_8).read(), Strings2.toStringAndClose(getClass().getResourceAsStream(
                "/test1.yaml")));
 
    }
@@ -58,7 +60,7 @@ public class SupplyFromProviderURIOrNodesPropertyTest {
       SupplyFromProviderURIOrNodesProperty supplier = new SupplyFromProviderURIOrNodesProperty(URI.create("file://bar"));
       supplier.nodes = Strings2.toStringAndClose(getClass().getResourceAsStream("/test1.yaml"));
 
-      assertEquals(Strings2.toStringAndClose(supplier.get()), Strings2.toStringAndClose(getClass().getResourceAsStream(
+      assertEquals(supplier.asCharSource(Charsets.UTF_8).read(), Strings2.toStringAndClose(getClass().getResourceAsStream(
                "/test1.yaml")));
 
    }
@@ -69,7 +71,7 @@ public class SupplyFromProviderURIOrNodesPropertyTest {
       SupplyFromProviderURIOrNodesProperty supplier = new SupplyFromProviderURIOrNodesProperty(URI.create("file://"
                + path));
       for (int i = 0; i < 5; i++)
-         assertEquals(Strings2.toStringAndClose(supplier.get()), Strings2.toStringAndClose(getClass()
+         assertEquals(supplier.asCharSource(Charsets.UTF_8).read(), Strings2.toStringAndClose(getClass()
                   .getResourceAsStream("/test1.yaml")));
    }
 }

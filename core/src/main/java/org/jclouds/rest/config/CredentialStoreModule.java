@@ -18,7 +18,6 @@ package org.jclouds.rest.config;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
-import java.io.InputStream;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -29,15 +28,14 @@ import javax.inject.Singleton;
 import org.jclouds.collect.TransformingMap;
 import org.jclouds.domain.Credentials;
 import org.jclouds.domain.LoginCredentials;
-import org.jclouds.io.CopyInputStreamInputSupplierMap;
 import org.jclouds.json.Json;
 import org.jclouds.logging.Logger;
 import org.jclouds.rest.ConfiguresCredentialStore;
-import org.jclouds.util.Strings2;
 
 import com.google.common.annotations.Beta;
+import com.google.common.base.Charsets;
 import com.google.common.base.Function;
-import com.google.common.io.InputSupplier;
+import com.google.common.io.ByteSource;
 import com.google.inject.AbstractModule;
 import com.google.inject.Provides;
 import com.google.inject.TypeLiteral;
@@ -49,10 +47,10 @@ import com.google.inject.TypeLiteral;
 @Beta
 @ConfiguresCredentialStore
 public class CredentialStoreModule extends AbstractModule {
-   private static final Map<String, InputSupplier<InputStream>> BACKING = new ConcurrentHashMap<String, InputSupplier<InputStream>>();
-   private final Map<String, InputStream> backing;
+   private static final Map<String, ByteSource> BACKING = new ConcurrentHashMap<String, ByteSource>();
+   private final Map<String, ByteSource> backing;
 
-   public CredentialStoreModule(Map<String, InputStream> backing) {
+   public CredentialStoreModule(Map<String, ByteSource> backing) {
       this.backing = backing;
    }
 
@@ -62,33 +60,30 @@ public class CredentialStoreModule extends AbstractModule {
 
    @Override
    protected void configure() {
-      bind(new TypeLiteral<Function<Credentials, InputStream>>() {
-      }).to(CredentialsToJsonInputStream.class);
-      bind(new TypeLiteral<Function<InputStream, Credentials>>() {
-      }).to(CredentialsFromJsonInputStream.class);
+      bind(new TypeLiteral<Function<Credentials, ByteSource>>() {
+      }).to(CredentialsToJsonByteSource.class);
+      bind(new TypeLiteral<Function<ByteSource, Credentials>>() {
+      }).to(CredentialsFromJsonByteSource.class);
       if (backing != null) {
-         bind(new TypeLiteral<Map<String, InputStream>>() {
+         bind(new TypeLiteral<Map<String, ByteSource>>() {
          }).toInstance(backing);
       } else {
-         bind(new TypeLiteral<Map<String, InputSupplier<InputStream>>>() {
+         bind(new TypeLiteral<Map<String, ByteSource>>() {
          }).toInstance(BACKING);
-         bind(new TypeLiteral<Map<String, InputStream>>() {
-         }).to(new TypeLiteral<CopyInputStreamInputSupplierMap>() {
-         });
       }
    }
 
    @Singleton
-   public static class CredentialsToJsonInputStream implements Function<Credentials, InputStream> {
+   public static class CredentialsToJsonByteSource implements Function<Credentials, ByteSource> {
       private final Json json;
 
       @Inject
-      CredentialsToJsonInputStream(Json json) {
+      CredentialsToJsonByteSource(Json json) {
          this.json = json;
       }
 
       @Override
-      public InputStream apply(Credentials from) {
+      public ByteSource apply(Credentials from) {
          checkNotNull(from, "inputCredentials");
          if (from instanceof LoginCredentials) {
             LoginCredentials login = LoginCredentials.class.cast(from);
@@ -98,9 +93,9 @@ public class CredentialStoreModule extends AbstractModule {
             val.privateKey = login.getPrivateKey();
             if (login.shouldAuthenticateSudo())
                val.authenticateSudo = login.shouldAuthenticateSudo();
-            return Strings2.toInputStream(json.toJson(val));
+            return ByteSource.wrap(json.toJson(val).getBytes(Charsets.UTF_8));
          }
-         return Strings2.toInputStream(json.toJson(from));
+         return ByteSource.wrap(json.toJson(from).getBytes(Charsets.UTF_8));
       }
    }
 
@@ -112,21 +107,21 @@ public class CredentialStoreModule extends AbstractModule {
    }
 
    @Singleton
-   public static class CredentialsFromJsonInputStream implements Function<InputStream, Credentials> {
+   public static class CredentialsFromJsonByteSource implements Function<ByteSource, Credentials> {
       @Resource
       protected Logger logger = Logger.NULL;
 
       private final Json json;
 
       @Inject
-      CredentialsFromJsonInputStream(Json json) {
+      CredentialsFromJsonByteSource(Json json) {
          this.json = json;
       }
 
       @Override
-      public Credentials apply(InputStream from) {
+      public Credentials apply(ByteSource from) {
          try {
-            String creds = Strings2.toStringAndClose(checkNotNull(from));
+            String creds = (checkNotNull(from)).asCharSource(Charsets.UTF_8).read();
             if (creds.indexOf("\"user\":") == -1) {
                return json.fromJson(creds, Credentials.class);
             } else {
@@ -143,10 +138,10 @@ public class CredentialStoreModule extends AbstractModule {
 
    @Provides
    @Singleton
-   protected Map<String, Credentials> provideCredentialStore(Map<String, InputStream> backing,
-         Function<Credentials, InputStream> credentialsSerializer,
-         Function<InputStream, Credentials> credentialsDeserializer) {
-      return new TransformingMap<String, InputStream, Credentials>(backing, credentialsDeserializer,
+   protected Map<String, Credentials> provideCredentialStore(Map<String, ByteSource> backing,
+         Function<Credentials, ByteSource> credentialsSerializer,
+         Function<ByteSource, Credentials> credentialsDeserializer) {
+      return new TransformingMap<String, ByteSource, Credentials>(backing, credentialsDeserializer,
             credentialsSerializer);
    }
 }

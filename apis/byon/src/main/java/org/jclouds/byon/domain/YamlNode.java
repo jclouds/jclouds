@@ -16,6 +16,7 @@
  */
 package org.jclouds.byon.domain;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
 import java.util.List;
@@ -23,18 +24,20 @@ import java.util.Map;
 
 import org.jclouds.byon.Node;
 import org.jclouds.util.Closeables2;
-import org.jclouds.util.Strings2;
 import org.yaml.snakeyaml.DumperOptions;
 import org.yaml.snakeyaml.Loader;
 import org.yaml.snakeyaml.Yaml;
 import org.yaml.snakeyaml.constructor.Constructor;
 
+import com.google.common.base.Charsets;
 import com.google.common.base.Function;
+import com.google.common.base.Throwables;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.collect.ImmutableMap.Builder;
+import com.google.common.io.ByteSource;
 
 /**
  * Serializes to the following
@@ -104,28 +107,32 @@ public class YamlNode {
       return toNode.apply(this);
    }
 
-   public static final Function<InputStream, YamlNode> inputStreamToYamlNode = new Function<InputStream, YamlNode>() {
+   public static final Function<ByteSource, YamlNode> byteSourceToYamlNode = new Function<ByteSource, YamlNode>() {
       @Override
-      public YamlNode apply(InputStream in) {
-         if (in == null)
+      public YamlNode apply(ByteSource byteSource) {
+         if (byteSource == null)
             return null;
          // note that snakeyaml also throws nosuchmethod error when you use the non-deprecated
          // constructor
+         InputStream in = null;
          try {
+            in = byteSource.openStream();
             return (YamlNode) new Yaml(new Loader(new Constructor(YamlNode.class))).load(in);
+         } catch (IOException ioe) {
+            throw Throwables.propagate(ioe);
          } finally {
             Closeables2.closeQuietly(in);
          }
       }
    };
 
-   public static YamlNode fromYaml(InputStream in) {
-      return inputStreamToYamlNode.apply(in);
+   public static YamlNode fromYaml(ByteSource in) {
+      return byteSourceToYamlNode.apply(in);
    }
 
-   public static final Function<YamlNode, InputStream> yamlNodeToInputStream = new Function<YamlNode, InputStream>() {
+   public static final Function<YamlNode, ByteSource> yamlNodeToByteSource = new Function<YamlNode, ByteSource>() {
       @Override
-      public InputStream apply(YamlNode in) {
+      public ByteSource apply(YamlNode in) {
          if (in == null)
             return null;
          Builder<String, Object> prettier = ImmutableMap.builder();
@@ -167,12 +174,12 @@ public class YamlNode {
             prettier.put("sudo_password", in.sudo_password);
          DumperOptions options = new DumperOptions();
          options.setDefaultFlowStyle(DumperOptions.FlowStyle.BLOCK);
-         return Strings2.toInputStream(new Yaml(options).dump(prettier.build()));
+         return ByteSource.wrap(new Yaml(options).dump(prettier.build()).getBytes(Charsets.UTF_8));
       }
    };
 
-   public InputStream toYaml() {
-      return yamlNodeToInputStream.apply(this);
+   public ByteSource toYaml() {
+      return yamlNodeToByteSource.apply(this);
    }
 
    public static YamlNode fromNode(Node in) {

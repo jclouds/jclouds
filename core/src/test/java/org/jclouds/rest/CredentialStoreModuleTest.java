@@ -20,24 +20,21 @@ import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertFalse;
 import static org.testng.Assert.assertTrue;
 
-import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 import org.jclouds.crypto.PemsTest;
 import org.jclouds.domain.Credentials;
 import org.jclouds.domain.LoginCredentials;
-import org.jclouds.io.CopyInputStreamInputSupplierMap;
 import org.jclouds.json.Json;
 import org.jclouds.json.config.GsonModule;
 import org.jclouds.rest.config.CredentialStoreModule;
-import org.jclouds.util.Strings2;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
-import com.google.common.io.InputSupplier;
+import com.google.common.base.Charsets;
+import com.google.common.io.ByteSource;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 import com.google.inject.Key;
@@ -64,15 +61,14 @@ public class CredentialStoreModuleTest {
    @Test(dataProvider = "credentials")
    public void deleteObject(String identity, String credential) throws InterruptedException, IOException {
       Injector injector = createInjector();
-      Map<String, InputStream> map = getMap(injector);
+      Map<String, ByteSource> map = getMap(injector);
       check(map, getStore(injector), "i-20312", new Credentials(identity, credential));
    }
 
    public void testProvidedMapWithValue() throws IOException {
-      Map<String, InputStream> map = new CopyInputStreamInputSupplierMap(
-            new ConcurrentHashMap<String, InputSupplier<InputStream>>());
+      Map<String, ByteSource> map = new ConcurrentHashMap<String, ByteSource>();
 
-      map.put("test", new ByteArrayInputStream(json.toJson(new Credentials("user", "pass")).getBytes()));
+      map.put("test", ByteSource.wrap(json.toJson(new Credentials("user", "pass")).getBytes()));
       checkConsistent(map, getStore(createInjectorWithProvidedMap(map)), "test", new Credentials("user", "pass"));
       checkConsistent(map, getStore(createInjectorWithProvidedMap(map)), "test", new Credentials("user", "pass"));
       remove(map, getStore(createInjectorWithProvidedMap(map)), "test");
@@ -80,11 +76,10 @@ public class CredentialStoreModuleTest {
    }
 
    public void testProvidedConsistentAcrossRepeatedWrites() throws IOException {
-      Map<String, InputStream> map = new CopyInputStreamInputSupplierMap(
-            new ConcurrentHashMap<String, InputSupplier<InputStream>>());
+      Map<String, ByteSource> map = new ConcurrentHashMap<String, ByteSource>();
 
       Injector injector = createInjectorWithProvidedMap(map);
-      assertEquals(injector.getInstance(Key.get(new TypeLiteral<Map<String, InputStream>>() {
+      assertEquals(injector.getInstance(Key.get(new TypeLiteral<Map<String, ByteSource>>() {
       })), map);
       Map<String, Credentials> store = getStore(injector);
 
@@ -94,8 +89,7 @@ public class CredentialStoreModuleTest {
    }
 
    public void testProvidedConsistentAcrossMultipleInjectors() throws IOException {
-      Map<String, InputStream> map = new CopyInputStreamInputSupplierMap(
-            new ConcurrentHashMap<String, InputSupplier<InputStream>>());
+      Map<String, ByteSource> map = new ConcurrentHashMap<String, ByteSource>();
 
       put(map, getStore(createInjectorWithProvidedMap(map)), "test", new Credentials("user", "pass"));
       checkConsistent(map, getStore(createInjectorWithProvidedMap(map)), "test", new Credentials("user", "pass"));
@@ -105,7 +99,7 @@ public class CredentialStoreModuleTest {
    }
 
    public void testDefaultConsistentAcrossMultipleInjectors() throws IOException {
-      Map<String, InputStream> map = getMap(createInjector());
+      Map<String, ByteSource> map = getMap(createInjector());
 
       put(map, getStore(createInjector()), "test", new Credentials("user", "pass"));
       checkConsistent(map, getStore(createInjector()), "test", new Credentials("user", "pass"));
@@ -115,7 +109,7 @@ public class CredentialStoreModuleTest {
    }
 
    public void testLoginConsistentAcrossMultipleInjectorsAndLooksNice() throws IOException {
-      Map<String, InputStream> map = getMap(createInjector());
+      Map<String, ByteSource> map = getMap(createInjector());
       LoginCredentials creds = LoginCredentials.builder().user("user").password("pass").build();
       put(map, getStore(createInjector()), "test", creds);
       checkConsistent(map, getStore(createInjector()), "test", creds, "{\"user\":\"user\",\"password\":\"pass\"}");
@@ -124,7 +118,7 @@ public class CredentialStoreModuleTest {
    }
 
    public void testLoginConsistentAcrossMultipleInjectorsAndLooksNiceWithSudo() throws IOException {
-      Map<String, InputStream> map = getMap(createInjector());
+      Map<String, ByteSource> map = getMap(createInjector());
       LoginCredentials creds = LoginCredentials.builder().user("user").password("pass").authenticateSudo(true).build();
       put(map, getStore(createInjector()), "test", creds);
       checkConsistent(map, getStore(createInjector()), "test", creds,
@@ -139,12 +133,12 @@ public class CredentialStoreModuleTest {
       }));
    }
 
-   protected Map<String, InputStream> getMap(Injector injector) {
-      return injector.getInstance(Key.get(new TypeLiteral<Map<String, InputStream>>() {
+   protected Map<String, ByteSource> getMap(Injector injector) {
+      return injector.getInstance(Key.get(new TypeLiteral<Map<String, ByteSource>>() {
       }));
    }
 
-   protected Injector createInjectorWithProvidedMap(Map<String, InputStream> map) {
+   protected Injector createInjectorWithProvidedMap(Map<String, ByteSource> map) {
       return Guice.createInjector(new CredentialStoreModule(map), new GsonModule());
    }
 
@@ -152,14 +146,14 @@ public class CredentialStoreModuleTest {
       return Guice.createInjector(new CredentialStoreModule(), new GsonModule());
    }
 
-   protected void check(Map<String, InputStream> map, Map<String, Credentials> store, String key, Credentials creds)
+   protected void check(Map<String, ByteSource> map, Map<String, Credentials> store, String key, Credentials creds)
          throws IOException {
       put(map, store, key, creds);
       checkConsistent(map, store, key, creds);
       remove(map, store, key);
    }
 
-   protected void remove(Map<String, InputStream> map, Map<String, Credentials> store, String key) {
+   protected void remove(Map<String, ByteSource> map, Map<String, Credentials> store, String key) {
       store.remove(key);
       assertEquals(store.size(), 0);
       assertEquals(map.size(), 0);
@@ -167,12 +161,12 @@ public class CredentialStoreModuleTest {
       assertEquals(map.get(key), null);
    }
 
-   protected void checkConsistent(Map<String, InputStream> map, Map<String, Credentials> store, String key,
+   protected void checkConsistent(Map<String, ByteSource> map, Map<String, Credentials> store, String key,
          Credentials creds) throws IOException {
       checkConsistent(map, store, key, creds, json.toJson(creds));
    }
 
-   protected void checkConsistent(Map<String, InputStream> map, Map<String, Credentials> store, String key,
+   protected void checkConsistent(Map<String, ByteSource> map, Map<String, Credentials> store, String key,
          Credentials creds, String expected) throws IOException {
       assertEquals(store.size(), 1);
       assertEquals(map.size(), 1);
@@ -188,11 +182,11 @@ public class CredentialStoreModuleTest {
       checkToJson(map, key, expected);
    }
 
-   protected void checkToJson(Map<String, InputStream> map, String key, String expected) throws IOException {
-      assertEquals(Strings2.toStringAndClose(map.get(key)), expected);
+   protected void checkToJson(Map<String, ByteSource> map, String key, String expected) throws IOException {
+      assertEquals(map.get(key).asCharSource(Charsets.UTF_8).read(), expected);
    }
 
-   protected void put(Map<String, InputStream> map, Map<String, Credentials> store, String key, Credentials creds) {
+   protected void put(Map<String, ByteSource> map, Map<String, Credentials> store, String key, Credentials creds) {
       assertEquals(store.size(), 0);
       assertEquals(map.size(), 0);
       assertFalse(store.containsKey(key));

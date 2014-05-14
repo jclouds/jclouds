@@ -16,7 +16,6 @@
  */
 package org.jclouds.compute.internal;
 
-import java.io.InputStream;
 import java.util.Properties;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -25,13 +24,12 @@ import org.jclouds.compute.ComputeServiceContext;
 import org.jclouds.compute.domain.TemplateBuilderSpec;
 import org.jclouds.domain.LoginCredentials;
 import org.jclouds.domain.LoginCredentials.Builder;
-import org.jclouds.io.CopyInputStreamInputSupplierMap;
 import org.jclouds.rest.config.CredentialStoreModule;
 
 import com.google.common.base.Splitter;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Iterables;
-import com.google.common.io.InputSupplier;
+import com.google.common.io.ByteSource;
 import com.google.inject.Module;
 import com.google.inject.util.Modules;
 
@@ -44,8 +42,8 @@ public abstract class BaseGenericComputeServiceContextLiveTest<W extends Compute
    protected LoginCredentials loginCredentials = LoginCredentials.builder().user("root").build();
 
    // isolate tests from eachother, as default credentialStore is static
-   protected Module credentialStoreModule = new CredentialStoreModule(new CopyInputStreamInputSupplierMap(
-         new ConcurrentHashMap<String, InputSupplier<InputStream>>()));
+   protected Module credentialStoreModule = new CredentialStoreModule(
+         new ConcurrentHashMap<String, ByteSource>());
    
    @Override
    protected Properties setupProperties() {

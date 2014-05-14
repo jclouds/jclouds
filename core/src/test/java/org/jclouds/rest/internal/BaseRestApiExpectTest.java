@@ -25,7 +25,6 @@ import static org.jclouds.Constants.PROPERTY_USER_THREADS;
 import static org.testng.Assert.assertEquals;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -63,7 +62,6 @@ import org.jclouds.http.internal.BaseHttpCommandExecutorService;
 import org.jclouds.http.internal.HttpWire;
 import org.jclouds.io.ContentMetadataCodec;
 import org.jclouds.io.ContentMetadataCodec.DefaultContentMetadataCodec;
-import org.jclouds.io.CopyInputStreamInputSupplierMap;
 import org.jclouds.io.Payload;
 import org.jclouds.io.Payloads;
 import org.jclouds.logging.config.NullLoggingModule;
@@ -80,7 +78,7 @@ import com.google.common.base.Throwables;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
-import com.google.common.io.InputSupplier;
+import com.google.common.io.ByteSource;
 import com.google.common.util.concurrent.ListeningExecutorService;
 import com.google.common.util.concurrent.SimpleTimeLimiter;
 import com.google.common.util.concurrent.TimeLimiter;
@@ -566,9 +564,9 @@ public abstract class BaseRestApiExpectTest<S> {
          throw new UnsupportedOperationException("unsupported base type: " + am);
       }
       // isolate tests from eachother, as default credentialStore is static
-      return builder.credentials(identity, credential).modules(
-               ImmutableSet.of(new ExpectModule(fn), new NullLoggingModule(), new CredentialStoreModule(new CopyInputStreamInputSupplierMap(
-                     new ConcurrentHashMap<String, InputSupplier<InputStream>>())), module)).overrides(props)
+      return builder.credentials(identity, credential)
+               .modules(ImmutableSet.of(new ExpectModule(fn), new NullLoggingModule(), new CredentialStoreModule(new ConcurrentHashMap<String, ByteSource>()), module))
+               .overrides(props)
                .buildInjector();
    }
    

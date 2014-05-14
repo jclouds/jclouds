@@ -20,7 +20,6 @@ import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.fail;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.Map;
 
 import org.jclouds.byon.Node;
@@ -29,18 +28,18 @@ import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
 import com.google.common.base.Functions;
-import com.google.common.base.Supplier;
-import com.google.common.base.Suppliers;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
 import com.google.common.collect.Maps;
+import com.google.common.io.ByteSource;
 import com.google.common.util.concurrent.UncheckedExecutionException;
 import com.google.inject.AbstractModule;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 import com.google.inject.Key;
 import com.google.inject.TypeLiteral;
+import com.google.inject.util.Providers;
 
 /**
  * 
@@ -110,8 +109,7 @@ public class CacheNodeStoreModuleTest {
 
          @Override
          public void configure() {
-            bind(new TypeLiteral<Supplier<InputStream>>() {
-            }).annotatedWith(Provider.class).toInstance(Suppliers.<InputStream> ofInstance(null));
+            bind(ByteSource.class).annotatedWith(Provider.class).toProvider(Providers.<ByteSource>of(null));
          }
 
       });
@@ -122,8 +120,7 @@ public class CacheNodeStoreModuleTest {
 
          @Override
          public void configure() {
-            bind(new TypeLiteral<Supplier<InputStream>>() {
-            }).annotatedWith(Provider.class).toInstance(Suppliers.<InputStream> ofInstance(null));
+            bind(ByteSource.class).annotatedWith(Provider.class).toProvider(Providers.<ByteSource>of(null));
          }
 
       });

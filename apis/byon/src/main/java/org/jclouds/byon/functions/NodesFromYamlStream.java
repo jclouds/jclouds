@@ -19,6 +19,7 @@ package org.jclouds.byon.functions;
 import static com.google.common.base.Preconditions.checkState;
 
 import java.io.InputStream;
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
@@ -33,11 +34,14 @@ import org.yaml.snakeyaml.constructor.Constructor;
 
 import com.google.common.base.Function;
 import com.google.common.base.Functions;
+import com.google.common.base.Throwables;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Maps;
+import com.google.common.io.ByteSource;
+import com.google.common.io.Closeables;
 
 /**
  * Parses the following syntax.
@@ -67,7 +71,7 @@ import com.google.common.collect.Maps;
  * @author Adrian Cole
  */
 @Singleton
-public class NodesFromYamlStream implements Function<InputStream, LoadingCache<String, Node>> {
+public class NodesFromYamlStream implements Function<ByteSource, LoadingCache<String, Node>> {
 
    /**
     * Type-safe config class for YAML
@@ -78,7 +82,7 @@ public class NodesFromYamlStream implements Function<InputStream, LoadingCache<S
    }
 
    @Override
-   public LoadingCache<String, Node> apply(InputStream source) {
+   public LoadingCache<String, Node> apply(ByteSource source) {
 
       Constructor constructor = new Constructor(Config.class);
 
@@ -93,7 +97,16 @@ public class NodesFromYamlStream implements Function<InputStream, LoadingCache<S
       // non-deprecated
       // constructor
       Yaml yaml = new Yaml(new Loader(constructor));
-      Config config = (Config) yaml.load(source);
+      Config config;
+      InputStream in = null;
+      try {
+         in = source.openStream();
+         config = (Config) yaml.load(in);
+      } catch (IOException ioe) {
+         throw Throwables.propagate(ioe);
+      } finally {
+         Closeables.closeQuietly(in);
+      }
       checkState(config != null, "missing config: class");
       checkState(config.nodes != null, "missing nodes: collection");
 

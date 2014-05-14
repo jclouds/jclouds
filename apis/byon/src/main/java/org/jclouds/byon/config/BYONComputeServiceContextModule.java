@@ -30,7 +30,7 @@ import org.jclouds.domain.Location;
 import org.jclouds.location.Provider;
 
 import com.google.common.base.Function;
-import com.google.common.base.Supplier;
+import com.google.common.io.ByteSource;
 import com.google.inject.TypeLiteral;
 
 /**
@@ -49,8 +49,7 @@ public class BYONComputeServiceContextModule extends JCloudsNativeComputeService
       super.configure();
       bind(new TypeLiteral<Function<URI, InputStream>>() {
       }).to(SupplyFromProviderURIOrNodesProperty.class);
-      bind(new TypeLiteral<Supplier<InputStream>>() {
-      }).annotatedWith(Provider.class).to(SupplyFromProviderURIOrNodesProperty.class);
+      bind(ByteSource.class).annotatedWith(Provider.class).to(SupplyFromProviderURIOrNodesProperty.class);
       bind(new TypeLiteral<Function<URI, InputStream>>() {
       }).to(SupplyFromProviderURIOrNodesProperty.class);
       install(new LocationsFromComputeServiceAdapterModule<NodeMetadata, Hardware, Image, Location>() {

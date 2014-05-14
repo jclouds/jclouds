@@ -33,13 +33,14 @@ import com.google.common.base.Function;
 import com.google.common.base.Supplier;
 import com.google.common.base.Suppliers;
 import com.google.common.base.Throwables;
+import com.google.common.io.ByteSource;
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
 
 /**
  * @author Adrian Cole
  */
-public class SupplyFromProviderURIOrNodesProperty implements Supplier<InputStream>, Function<URI, InputStream> {
+public class SupplyFromProviderURIOrNodesProperty extends ByteSource implements Function<URI, InputStream> {
    @Resource
    protected Logger logger = Logger.NULL;
    private final Supplier<URI> url;
@@ -60,7 +61,7 @@ public class SupplyFromProviderURIOrNodesProperty implements Supplier<InputStrea
    }
 
    @Override
-   public InputStream get() {
+   public InputStream openStream() {
       if (nodes != null)
          return Strings2.toInputStream(nodes);
       return apply(url.get());

@@ -18,14 +18,13 @@ package org.jclouds.byon.functions;
 
 import static org.testng.Assert.assertEquals;
 
-import java.io.InputStream;
-
 import org.jclouds.byon.Node;
-import org.jclouds.util.Strings2;
 import org.testng.annotations.Test;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
+import com.google.common.io.ByteSource;
+import com.google.common.io.Resources;
 
 /**
  * 
@@ -53,33 +52,33 @@ public class NodesFromYamlTest {
    @Test
    public void testNodesParse() throws Exception {
 
-      InputStream is = getClass().getResourceAsStream("/test1.yaml");
+      ByteSource byteSource = Resources.asByteSource(Resources.getResource("test1.yaml"));
       NodesFromYamlStream parser = new NodesFromYamlStream();
 
-      assertEquals(parser.apply(is).asMap(), ImmutableMap.of(TEST1.getId(), TEST1));
+      assertEquals(parser.apply(byteSource).asMap(), ImmutableMap.of(TEST1.getId(), TEST1));
    }
 
    @Test
    public void testNodesParseLocation() throws Exception {
 
-      InputStream is = getClass().getResourceAsStream("/test_location.yaml");
+      ByteSource byteSource = Resources.asByteSource(Resources.getResource("test_location.yaml"));
       NodesFromYamlStream parser = new NodesFromYamlStream();
 
-      assertEquals(parser.apply(is).asMap(), ImmutableMap.of(TEST2.getId(), TEST2, TEST3.getId(), TEST3));
+      assertEquals(parser.apply(byteSource).asMap(), ImmutableMap.of(TEST2.getId(), TEST2, TEST3.getId(), TEST3));
    }
 
    @Test
    public void testNodesParseWhenCredentialInUrl() throws Exception {
 
-      InputStream is = getClass().getResourceAsStream("/test_with_url.yaml");
+      ByteSource byteSource = Resources.asByteSource(Resources.getResource("test_with_url.yaml"));
       NodesFromYamlStream parser = new NodesFromYamlStream();
 
-      assertEquals(parser.apply(is).asMap(), ImmutableMap.of(TEST1.getId(), TEST1));
+      assertEquals(parser.apply(byteSource).asMap(), ImmutableMap.of(TEST1.getId(), TEST1));
    }
 
    @Test(expectedExceptions = IllegalStateException.class)
    public void testMustParseSomething() throws Exception {
-      new NodesFromYamlStream().apply(Strings2.toInputStream(""));
+      new NodesFromYamlStream().apply(ByteSource.empty());
    }
 
 }

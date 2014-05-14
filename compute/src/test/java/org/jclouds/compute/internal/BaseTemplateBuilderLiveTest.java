@@ -20,7 +20,6 @@ import static org.jclouds.compute.util.ComputeServiceUtils.getCores;
 import static org.testng.Assert.assertEquals;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.NoSuchElementException;
@@ -39,7 +38,6 @@ import org.jclouds.compute.reference.ComputeServiceConstants;
 import org.jclouds.domain.Location;
 import org.jclouds.domain.LocationScope;
 import org.jclouds.domain.LoginCredentials;
-import org.jclouds.io.CopyInputStreamInputSupplierMap;
 import org.jclouds.json.Json;
 import org.jclouds.json.config.GsonModule;
 import org.jclouds.rest.config.CredentialStoreModule;
@@ -52,7 +50,7 @@ import com.google.common.base.Splitter;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Sets;
-import com.google.common.io.InputSupplier;
+import com.google.common.io.ByteSource;
 import com.google.inject.Guice;
 import com.google.inject.Module;
 
@@ -269,8 +267,8 @@ public abstract class BaseTemplateBuilderLiveTest extends BaseComputeServiceCont
 
    protected void tryOverrideUsingPropertyKey(String propertyKey) {
       // isolate tests from eachother, as default credentialStore is static
-      Module credentialStoreModule = new CredentialStoreModule(new CopyInputStreamInputSupplierMap(
-            new ConcurrentHashMap<String, InputSupplier<InputStream>>()));
+      Module credentialStoreModule = new CredentialStoreModule(
+            new ConcurrentHashMap<String, ByteSource>());
 
       ComputeServiceContext context = null;
       try {

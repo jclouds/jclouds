@@ -17,10 +17,10 @@
 package org.jclouds.byon.suppliers;
 
 import org.jclouds.byon.functions.NodesFromYamlStream;
-import org.jclouds.util.Strings2;
 import org.testng.annotations.Test;
 
-import com.google.common.base.Suppliers;
+import com.google.common.base.Charsets;
+import com.google.common.io.ByteSource;
 
 /**
  * 
@@ -31,7 +31,7 @@ public class NodesParsedFromSupplierTest {
    @Test(expectedExceptions = IllegalStateException.class)
    public void testMustParseSomething() throws Exception {
 
-      new NodesParsedFromSupplier(Suppliers.ofInstance(Strings2.toInputStream("nodes:\n")), new NodesFromYamlStream()).get();
+      new NodesParsedFromSupplier(ByteSource.wrap("nodes:\n".getBytes(Charsets.UTF_8)), new NodesFromYamlStream()).get();
 
    }
 }
