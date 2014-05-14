@@ -28,6 +28,7 @@ import org.jclouds.domain.Credentials;
 import org.jclouds.http.HttpCommand;
 import org.jclouds.http.HttpRequest;
 import org.jclouds.http.HttpResponse;
+import org.jclouds.http.handlers.BackoffLimitedRetryHandler;
 import org.jclouds.io.Payloads;
 import org.jclouds.openstack.keystone.v2_0.domain.Access;
 import org.testng.annotations.Test;
@@ -48,6 +49,7 @@ public class RetryOnRenewTest {
       HttpResponse response = createMock(HttpResponse.class);
       @SuppressWarnings("unchecked")
       LoadingCache<Credentials, Access> cache = createMock(LoadingCache.class);
+      BackoffLimitedRetryHandler backoffHandler = createMock(BackoffLimitedRetryHandler.class);
 
       expect(command.getCurrentRequest()).andReturn(request);
 
@@ -60,8 +62,9 @@ public class RetryOnRenewTest {
       replay(command);
       replay(response);
       replay(cache);
+      replay(backoffHandler);
 
-      RetryOnRenew retry = new RetryOnRenew(cache);
+      RetryOnRenew retry = new RetryOnRenew(cache, backoffHandler);
 
       assertTrue(retry.shouldRetryRequest(command, response));
 
@@ -69,6 +72,7 @@ public class RetryOnRenewTest {
       verify(response);
       verify(cache);
    }
+
    @Test
    public void test401ShouldRetry4Times() {
       HttpCommand command = createMock(HttpCommand.class);
@@ -77,6 +81,7 @@ public class RetryOnRenewTest {
 
       @SuppressWarnings("unchecked")
       LoadingCache<Credentials, Access> cache = createMock(LoadingCache.class);
+      BackoffLimitedRetryHandler backoffHandler = createMock(BackoffLimitedRetryHandler.class);
 
       expect(command.getCurrentRequest()).andReturn(request).anyTimes();
       expect(request.getHeaders()).andStubReturn(null);
@@ -89,7 +94,7 @@ public class RetryOnRenewTest {
 
       replay(command, request, response, cache);
 
-      RetryOnRenew retry = new RetryOnRenew(cache);
+      RetryOnRenew retry = new RetryOnRenew(cache, backoffHandler);
 
       for (int i = 0; i < RetryOnRenew.NUM_RETRIES - 1; ++i) {
          assertTrue(retry.shouldRetryRequest(command, response), "Expected retry to succeed");
@@ -98,5 +103,33 @@ public class RetryOnRenewTest {
       assertFalse(retry.shouldRetryRequest(command, response), "Expected retry to fail on attempt " + RetryOnRenew.NUM_RETRIES);
 
       verify(command, response, cache);
+   }
+
+   @Test
+   public void test408ShouldRetry() {
+      HttpCommand command = createMock(HttpCommand.class);
+      HttpResponse response = createMock(HttpResponse.class);
+      @SuppressWarnings("unchecked")
+      LoadingCache<Credentials, Access> cache = createMock(LoadingCache.class);
+      BackoffLimitedRetryHandler backoffHandler = createMock(BackoffLimitedRetryHandler.class);
+
+      expect(response.getPayload()).andReturn(Payloads.newStringPayload(
+                  "The server has waited too long for the request to be sent by the client.")).times(2);
+      expect(backoffHandler.shouldRetryRequest(command, response)).andReturn(true).once();
+      expect(response.getStatusCode()).andReturn(408).once();
+
+      replay(command);
+      replay(response);
+      replay(cache);
+      replay(backoffHandler);
+
+      RetryOnRenew retry = new RetryOnRenew(cache, backoffHandler);
+
+      assertTrue(retry.shouldRetryRequest(command, response));
+
+      verify(command);
+      verify(response);
+      verify(cache);
+      verify(backoffHandler);
    }
 }

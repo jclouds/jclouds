@@ -22,11 +22,14 @@ import static org.jclouds.http.HttpUtils.releasePayload;
 import java.util.concurrent.TimeUnit;
 
 import javax.annotation.Resource;
+import javax.inject.Named;
 
+import org.jclouds.Constants;
 import org.jclouds.domain.Credentials;
 import org.jclouds.http.HttpCommand;
 import org.jclouds.http.HttpResponse;
 import org.jclouds.http.HttpRetryHandler;
+import org.jclouds.http.handlers.BackoffLimitedRetryHandler;
 import org.jclouds.logging.Logger;
 import org.jclouds.openstack.keystone.v2_0.domain.Access;
 import org.jclouds.openstack.v2_0.reference.AuthHeaders;
@@ -43,8 +46,6 @@ import com.google.inject.Singleton;
 /**
  * This will parse and set an appropriate exception on the command object.
  * 
- * @author Adrian Cole
- * @author Zack Shoylev
  */
 @Singleton
 public class RetryOnRenew implements HttpRetryHandler {
@@ -52,13 +53,19 @@ public class RetryOnRenew implements HttpRetryHandler {
    protected Logger logger = Logger.NULL;
 
    @VisibleForTesting
+   @Inject(optional = true)
+   @Named(Constants.PROPERTY_MAX_RETRIES)
    static final int NUM_RETRIES = 5;
 
    private final LoadingCache<Credentials, Access> authenticationResponseCache;
 
+   private final BackoffLimitedRetryHandler backoffHandler;
+
    @Inject
-   protected RetryOnRenew(LoadingCache<Credentials, Access> authenticationResponseCache) {
+   protected RetryOnRenew(LoadingCache<Credentials, Access> authenticationResponseCache,
+         BackoffLimitedRetryHandler backoffHandler) {
       this.authenticationResponseCache = authenticationResponseCache;
+      this.backoffHandler = backoffHandler;
    }
 
    /*
@@ -73,6 +80,7 @@ public class RetryOnRenew implements HttpRetryHandler {
 
    @Override
    public boolean shouldRetryRequest(HttpCommand command, HttpResponse response) {
+      boolean retry = false; // default
       try {
          switch (response.getStatusCode()) {
             case 401:
@@ -80,7 +88,7 @@ public class RetryOnRenew implements HttpRetryHandler {
                Multimap<String, String> headers = command.getCurrentRequest().getHeaders();
                if (headers != null && headers.containsKey(AuthHeaders.AUTH_USER)
                      && headers.containsKey(AuthHeaders.AUTH_KEY) && !headers.containsKey(AuthHeaders.AUTH_TOKEN)) {
-                  return false;
+                  retry = false;
                } else {
                   closeClientButKeepContentStream(response);
                   // This is not an authentication request returning 401
@@ -92,12 +100,12 @@ public class RetryOnRenew implements HttpRetryHandler {
                      logger.debug("invalidating authentication token - first time for %s", command);
                      retryCountMap.put(command, 1);
                      authenticationResponseCache.invalidateAll();
-                     return true;
+                     retry = true;
                   } else {
                      // This request has failed before
                      if (count + 1 >= NUM_RETRIES) {
                         logger.debug("too many 401s - giving up after: %s for %s", count, command);
-                        return false;
+                        retry = false;
                      } else {
                         // Retry just in case
                         logger.debug("invalidating authentication token - retry %s for %s", count, command);
@@ -105,12 +113,15 @@ public class RetryOnRenew implements HttpRetryHandler {
                         // Wait between retries
                         authenticationResponseCache.invalidateAll();
                         Uninterruptibles.sleepUninterruptibly(5, TimeUnit.SECONDS);
-                        return true;
+                        retry = true;
                      }
                   }
                }
+               break;
+            case 408:
+               return backoffHandler.shouldRetryRequest(command, response);
          }
-         return false;
+         return retry;
       } finally {
          releasePayload(response);
       }
