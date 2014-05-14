@@ -64,7 +64,9 @@ public class BaseOpenStackMockTest<A extends Closeable> {
 
    @SuppressWarnings("serial")
    public A api(String uri, String provider, Properties overrides) {
-      overrides.setProperty(PROPERTY_MAX_RETRIES, "1");
+      if (!overrides.containsKey(PROPERTY_MAX_RETRIES)) {
+         overrides.setProperty(PROPERTY_MAX_RETRIES, "1");
+      }
 
       return ContextBuilder.newBuilder(provider)
             .credentials("jclouds:joe", "letmein")
