@@ -16,8 +16,8 @@
  */
 package org.jclouds.rackspace.cloudfiles.v1.features;
 
-import static javax.ws.rs.core.HttpHeaders.CONTENT_LENGTH;
-import static javax.ws.rs.core.HttpHeaders.CONTENT_TYPE;
+import static com.google.common.net.HttpHeaders.CONTENT_LENGTH;
+import static com.google.common.net.HttpHeaders.CONTENT_TYPE;
 import static org.jclouds.rackspace.cloudfiles.v1.options.UpdateCDNContainerOptions.Builder.enabled;
 import static org.jclouds.rackspace.cloudfiles.v1.reference.CloudFilesHeaders.CDN_ENABLED;
 import static org.jclouds.rackspace.cloudfiles.v1.reference.CloudFilesHeaders.CDN_IOS_URI;
