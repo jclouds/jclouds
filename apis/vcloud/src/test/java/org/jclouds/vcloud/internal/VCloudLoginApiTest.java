@@ -22,8 +22,6 @@ import static org.testng.Assert.assertEquals;
 import java.io.IOException;
 import java.net.URI;
 
-import javax.ws.rs.core.HttpHeaders;
-
 import org.jclouds.http.HttpRequest;
 import org.jclouds.http.filters.BasicAuthentication;
 import org.jclouds.location.Provider;
@@ -37,6 +35,7 @@ import org.testng.annotations.Test;
 
 import com.google.common.base.Supplier;
 import com.google.common.collect.ImmutableList;
+import com.google.common.net.HttpHeaders;
 import com.google.common.reflect.Invokable;
 import com.google.inject.Binder;
 import com.google.inject.Module;

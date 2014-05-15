@@ -21,7 +21,6 @@ import static org.testng.Assert.assertNull;
 import static org.testng.Assert.assertTrue;
 
 import javax.ws.rs.HttpMethod;
-import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 
 import org.jclouds.http.HttpRequest;
@@ -35,6 +34,7 @@ import org.jclouds.openstack.nova.v2_0.parse.ParseFlavorTest;
 import org.testng.annotations.Test;
 
 import com.google.common.collect.ImmutableSet;
+import com.google.common.net.HttpHeaders;
 
 /**
  * Tests annotation parsing of {@code FlavorAsyncApi}

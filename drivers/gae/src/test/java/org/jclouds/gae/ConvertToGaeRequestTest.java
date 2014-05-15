@@ -26,7 +26,6 @@ import java.security.cert.CertificateException;
 import java.util.Date;
 
 import javax.ws.rs.HttpMethod;
-import javax.ws.rs.core.HttpHeaders;
 
 import org.jclouds.crypto.Crypto;
 import org.jclouds.date.internal.DateServiceDateCodecFactory;
@@ -46,6 +45,7 @@ import com.google.appengine.api.urlfetch.HTTPRequest;
 import com.google.appengine.repackaged.com.google.common.base.Charsets;
 import com.google.common.base.Throwables;
 import com.google.common.io.Files;
+import com.google.common.net.HttpHeaders;
 
 /**
  * 

@@ -20,7 +20,6 @@ import static com.google.common.base.Preconditions.checkArgument;
 import static org.jclouds.http.HttpUtils.attemptToParseSizeAndRangeFromHeaders;
 
 import javax.inject.Inject;
-import javax.ws.rs.core.HttpHeaders;
 
 import org.jclouds.blobstore.domain.BlobMetadata;
 import org.jclouds.blobstore.functions.ParseSystemAndUserMetadataFromHeaders;
@@ -33,6 +32,7 @@ import org.jclouds.rest.InvocationContext;
 import org.jclouds.rest.internal.GeneratedHttpRequest;
 
 import com.google.common.base.Function;
+import com.google.common.net.HttpHeaders;
 
 /**
  * This parses @{link {@link MutableObjectInfoWithMetadata} from HTTP headers.

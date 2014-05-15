@@ -18,13 +18,12 @@ package org.jclouds.vcloud.filters;
 
 import static org.testng.Assert.assertEquals;
 
-import javax.ws.rs.core.HttpHeaders;
-
 import org.jclouds.http.HttpRequest;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
 
 import com.google.common.base.Supplier;
+import com.google.common.net.HttpHeaders;
 
 /**
  * @author Adrian Cole

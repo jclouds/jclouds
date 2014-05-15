@@ -17,11 +17,11 @@
 package org.jclouds.openstack.nova.v2_0.functions;
 
 import javax.inject.Singleton;
-import javax.ws.rs.core.HttpHeaders;
 
 import org.jclouds.http.HttpResponse;
 
 import com.google.common.base.Function;
+import com.google.common.net.HttpHeaders;
 
 /**
  * This parses {@link Image} from the body of the link in the Location header of the HTTPResponse.

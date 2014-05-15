@@ -26,7 +26,6 @@ import javax.inject.Named;
 import javax.inject.Singleton;
 import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.SSLContext;
-import javax.ws.rs.core.HttpHeaders;
 
 import org.jclouds.Constants;
 import org.jclouds.http.HttpRequest;
@@ -40,6 +39,7 @@ import org.jclouds.io.ContentMetadataCodec;
 
 import com.google.common.base.Function;
 import com.google.common.base.Supplier;
+import com.google.common.net.HttpHeaders;
 import com.google.common.util.concurrent.ListeningExecutorService;
 import com.google.inject.Inject;
 import com.squareup.okhttp.OkHttpClient;

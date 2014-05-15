@@ -26,7 +26,6 @@ import java.util.regex.Pattern;
 import javax.inject.Inject;
 import javax.inject.Provider;
 import javax.inject.Singleton;
-import javax.ws.rs.core.HttpHeaders;
 
 import org.jclouds.http.HttpResponse;
 import org.jclouds.http.HttpResponseException;
@@ -41,6 +40,7 @@ import org.jclouds.vcloud.xml.OrgListHandler;
 import com.google.common.base.Function;
 import com.google.common.base.Predicates;
 import com.google.common.collect.Iterables;
+import com.google.common.net.HttpHeaders;
 
 /**
  * This parses {@link VCloudSession} from HTTP headers.

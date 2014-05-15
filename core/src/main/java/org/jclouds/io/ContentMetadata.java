@@ -48,7 +48,7 @@ public interface ContentMetadata {
     * tail, range, or startAt.
     * 
     * @return the length in bytes that can be be obtained from {@link #getInput()}
-    * @see javax.ws.rs.core.HttpHeaders#CONTENT_LENGTH
+    * @see com.google.common.net.HttpHeaders#CONTENT_LENGTH
     * @see org.jclouds.http.options.GetOptions
     */
    @Nullable

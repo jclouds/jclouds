@@ -23,8 +23,6 @@ import static org.testng.Assert.assertEquals;
 import java.net.URI;
 import java.util.Properties;
 
-import javax.ws.rs.core.HttpHeaders;
-
 import org.jclouds.blobstore.binders.BindBlobToMultipartFormTest;
 import org.jclouds.http.HttpRequest;
 import org.jclouds.rest.internal.GeneratedHttpRequest;
@@ -41,6 +39,7 @@ import org.testng.annotations.Test;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.SortedSetMultimap;
 import com.google.common.collect.TreeMultimap;
+import com.google.common.net.HttpHeaders;
 /**
  * Tests behavior of {@code RequestAuthorizeSignature}
  * 

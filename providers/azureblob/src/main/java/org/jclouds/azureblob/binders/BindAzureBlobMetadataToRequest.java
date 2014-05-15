@@ -21,7 +21,6 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
-import javax.ws.rs.core.HttpHeaders;
 
 import org.jclouds.azureblob.blobstore.functions.AzureBlobToBlob;
 import org.jclouds.azureblob.domain.AzureBlob;
@@ -32,6 +31,7 @@ import org.jclouds.rest.Binder;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableMap.Builder;
 import com.google.common.collect.Multimaps;
+import com.google.common.net.HttpHeaders;
 
 @Singleton
 public class BindAzureBlobMetadataToRequest implements Binder {

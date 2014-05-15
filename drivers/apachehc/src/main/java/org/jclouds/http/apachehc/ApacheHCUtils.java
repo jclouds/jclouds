@@ -25,7 +25,6 @@ import java.util.Set;
 
 import javax.inject.Singleton;
 import javax.ws.rs.HttpMethod;
-import javax.ws.rs.core.HttpHeaders;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpEntityEnclosingRequest;
@@ -56,6 +55,7 @@ import org.jclouds.io.payloads.StringPayload;
 
 import com.google.common.base.Throwables;
 import com.google.common.collect.ImmutableSet;
+import com.google.common.net.HttpHeaders;
 
 /**
  * 

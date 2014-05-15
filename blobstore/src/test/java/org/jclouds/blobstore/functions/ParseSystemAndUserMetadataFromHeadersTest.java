@@ -19,7 +19,6 @@ package org.jclouds.blobstore.functions;
 import static org.testng.Assert.assertEquals;
 
 import javax.inject.Provider;
-import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 
 import org.jclouds.blobstore.domain.BlobMetadata;
@@ -30,6 +29,8 @@ import org.jclouds.http.HttpException;
 import org.jclouds.http.HttpResponse;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
+
+import com.google.common.net.HttpHeaders;
 
 /**
  * @author Adrian Cole

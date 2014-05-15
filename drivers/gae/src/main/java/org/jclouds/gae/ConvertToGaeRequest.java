@@ -27,7 +27,6 @@ import java.util.Set;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
-import javax.ws.rs.core.HttpHeaders;
 
 import org.jclouds.http.HttpRequest;
 import org.jclouds.http.HttpUtils;
@@ -43,6 +42,7 @@ import com.google.appengine.repackaged.com.google.common.base.Throwables;
 import com.google.common.base.Function;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.io.ByteStreams;
+import com.google.common.net.HttpHeaders;
 
 /**
  * 

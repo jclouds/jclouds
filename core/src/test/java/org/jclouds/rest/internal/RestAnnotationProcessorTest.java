@@ -62,7 +62,6 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 
-import org.eclipse.jetty.http.HttpHeaders;
 import org.jclouds.Constants;
 import org.jclouds.ContextBuilder;
 import org.jclouds.date.DateService;
@@ -142,6 +141,7 @@ import com.google.common.collect.ImmutableSortedSet;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Multimap;
 import com.google.common.io.Files;
+import com.google.common.net.HttpHeaders;
 import com.google.common.reflect.Invokable;
 import com.google.common.util.concurrent.Futures;
 import com.google.common.util.concurrent.ListenableFuture;

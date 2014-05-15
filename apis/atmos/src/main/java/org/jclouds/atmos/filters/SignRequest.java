@@ -30,7 +30,6 @@ import javax.inject.Inject;
 import javax.inject.Named;
 import javax.inject.Provider;
 import javax.inject.Singleton;
-import javax.ws.rs.core.HttpHeaders;
 
 import org.jclouds.atmos.reference.AtmosHeaders;
 import org.jclouds.crypto.Crypto;
@@ -52,6 +51,7 @@ import com.google.common.collect.ImmutableMap.Builder;
 import com.google.common.collect.Multimaps;
 import com.google.common.collect.Sets;
 import com.google.common.io.ByteProcessor;
+import com.google.common.net.HttpHeaders;
 
 /**
  * Signs the EMC Atmos Online Storage request.

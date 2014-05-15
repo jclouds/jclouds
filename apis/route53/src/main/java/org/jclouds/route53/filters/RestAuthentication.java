@@ -19,7 +19,7 @@ package org.jclouds.route53.filters;
 import static com.google.common.base.Charsets.UTF_8;
 import static com.google.common.base.Throwables.propagate;
 import static com.google.common.io.BaseEncoding.base64;
-import static javax.ws.rs.core.HttpHeaders.DATE;
+import static com.google.common.net.HttpHeaders.DATE;
 
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;

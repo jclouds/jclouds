@@ -23,7 +23,6 @@ import java.io.IOException;
 import java.net.URI;
 
 import javax.ws.rs.HttpMethod;
-import javax.ws.rs.core.HttpHeaders;
 
 import org.jclouds.ContextBuilder;
 import org.jclouds.azure.storage.config.AzureStorageRestClientModule;
@@ -38,6 +37,7 @@ import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
 import com.google.common.collect.ImmutableSet;
+import com.google.common.net.HttpHeaders;
 import com.google.inject.Injector;
 import com.google.inject.Module;
 

@@ -24,7 +24,6 @@ import java.util.regex.Pattern;
 
 import javax.inject.Inject;
 import javax.inject.Named;
-import javax.ws.rs.core.HttpHeaders;
 
 import org.jclouds.blobstore.domain.BlobMetadata;
 import org.jclouds.blobstore.functions.ParseSystemAndUserMetadataFromHeaders;
@@ -36,6 +35,7 @@ import org.jclouds.s3.domain.MutableObjectMetadata;
 
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Function;
+import com.google.common.net.HttpHeaders;
 
 /**
  * This parses @{link {@link org.jclouds.s3.domain.internal.MutableObjectMetadata} from HTTP

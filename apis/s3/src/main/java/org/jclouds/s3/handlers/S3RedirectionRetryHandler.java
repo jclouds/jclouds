@@ -23,7 +23,6 @@ import java.net.URI;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
-import javax.ws.rs.core.HttpHeaders;
 
 import org.jclouds.aws.domain.AWSError;
 import org.jclouds.aws.util.AWSUtils;
@@ -31,6 +30,8 @@ import org.jclouds.http.HttpCommand;
 import org.jclouds.http.HttpResponse;
 import org.jclouds.http.handlers.BackoffLimitedRetryHandler;
 import org.jclouds.http.handlers.RedirectionRetryHandler;
+
+import com.google.common.net.HttpHeaders;
 
 /**
  * Handles Retryable responses with error codes in the 3xx range

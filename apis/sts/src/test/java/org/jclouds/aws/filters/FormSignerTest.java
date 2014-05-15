@@ -20,8 +20,6 @@ import static javax.ws.rs.HttpMethod.GET;
 import static org.jclouds.aws.reference.AWSConstants.PROPERTY_HEADER_TAG;
 import static org.testng.Assert.assertEquals;
 
-import javax.ws.rs.core.HttpHeaders;
-
 import org.jclouds.ContextBuilder;
 import org.jclouds.aws.xml.SessionCredentialsHandlerTest;
 import org.jclouds.date.TimeStamp;
@@ -42,6 +40,7 @@ import com.google.inject.AbstractModule;
 import com.google.inject.Injector;
 import com.google.inject.Module;
 import com.google.inject.name.Names;
+import com.google.common.net.HttpHeaders;
 /**
  * Tests behavior of {@code FormSigner}
  * 

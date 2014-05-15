@@ -22,7 +22,6 @@ import static com.google.common.io.BaseEncoding.base64;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
-import javax.ws.rs.core.HttpHeaders;
 
 import org.jclouds.blobstore.binders.BindMapToHeadersWithPrefix;
 import org.jclouds.http.HttpRequest;
@@ -31,6 +30,7 @@ import org.jclouds.s3.domain.ObjectMetadata;
 
 import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.ImmutableMultimap.Builder;
+import com.google.common.net.HttpHeaders;
 
 /**
  * 

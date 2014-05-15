@@ -38,7 +38,6 @@ import javax.inject.Inject;
 import javax.inject.Named;
 import javax.inject.Provider;
 import javax.inject.Singleton;
-import javax.ws.rs.core.HttpHeaders;
 
 import org.jclouds.Constants;
 import org.jclouds.aws.domain.SessionCredentials;
@@ -64,6 +63,7 @@ import com.google.common.collect.Ordering;
 import com.google.common.collect.SortedSetMultimap;
 import com.google.common.collect.TreeMultimap;
 import com.google.common.io.ByteProcessor;
+import com.google.common.net.HttpHeaders;
 
 /**
  * Signs the S3 request.

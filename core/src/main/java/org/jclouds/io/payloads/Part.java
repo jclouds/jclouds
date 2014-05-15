@@ -18,14 +18,13 @@ package org.jclouds.io.payloads;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
-import javax.ws.rs.core.HttpHeaders;
-
 import org.jclouds.io.Payload;
 import org.jclouds.io.Payloads;
 import org.jclouds.javax.annotation.Nullable;
 
 import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.Multimap;
+import com.google.common.net.HttpHeaders;
 
 /**
  * 

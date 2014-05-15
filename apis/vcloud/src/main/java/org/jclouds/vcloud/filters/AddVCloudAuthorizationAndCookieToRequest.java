@@ -18,7 +18,6 @@ package org.jclouds.vcloud.filters;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
-import javax.ws.rs.core.HttpHeaders;
 
 import org.jclouds.http.HttpException;
 import org.jclouds.http.HttpRequest;
@@ -27,6 +26,7 @@ import org.jclouds.vcloud.VCloudToken;
 
 import com.google.common.base.Supplier;
 import com.google.common.collect.ImmutableMultimap;
+import com.google.common.net.HttpHeaders;
 
 /**
  * Adds the VCloud Token to the request as a cookie

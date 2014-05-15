@@ -22,7 +22,6 @@ import java.util.Map.Entry;
 
 import javax.inject.Inject;
 import javax.inject.Named;
-import javax.ws.rs.core.HttpHeaders;
 
 import org.jclouds.azureblob.domain.ContainerProperties;
 import org.jclouds.azureblob.domain.MutableContainerPropertiesWithMetadata;
@@ -37,6 +36,7 @@ import org.jclouds.rest.internal.GeneratedHttpRequest;
 
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Function;
+import com.google.common.net.HttpHeaders;
 
 /**
  * This parses @{link {@link org.jclouds.azureblob.domain.ListableContainerProperties} from

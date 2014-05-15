@@ -21,8 +21,6 @@ import static org.testng.Assert.assertEquals;
 
 import java.io.IOException;
 
-import javax.ws.rs.core.HttpHeaders;
-
 import org.jclouds.Fallbacks.FalseOnNotFoundOr404;
 import org.jclouds.Fallbacks.NullOnNotFoundOr404;
 import org.jclouds.Fallbacks.VoidOnNotFoundOr404;
@@ -55,6 +53,7 @@ import org.testng.annotations.Test;
 
 import com.google.common.base.Supplier;
 import com.google.common.collect.ImmutableList;
+import com.google.common.net.HttpHeaders;
 import com.google.common.reflect.Invokable;
 import com.google.inject.Module;
 /**
