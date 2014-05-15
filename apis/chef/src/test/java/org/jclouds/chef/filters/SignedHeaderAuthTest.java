@@ -25,7 +25,6 @@ import java.security.PrivateKey;
 
 import javax.inject.Provider;
 import javax.ws.rs.HttpMethod;
-import javax.ws.rs.core.HttpHeaders;
 
 import org.jclouds.ContextBuilder;
 import org.jclouds.chef.ChefApiMetadata;
@@ -47,6 +46,7 @@ import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.LinkedHashMultimap;
 import com.google.common.collect.Multimap;
+import com.google.common.net.HttpHeaders;
 import com.google.inject.Injector;
 import com.google.inject.Key;
 import com.google.inject.Module;
