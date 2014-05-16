@@ -25,7 +25,7 @@ import com.google.common.annotations.Beta;
 /**
  * @author David Alves
  */
-public interface GoogleComputeEngineConstants {
+public final class GoogleComputeEngineConstants {
 
    public static final String GCE_PROVIDER_NAME = "google-compute-engine";
 
@@ -77,4 +77,8 @@ public interface GoogleComputeEngineConstants {
     * The suffix we append to auto-created boot disk names.
     */
    public static final String GCE_BOOT_DISK_SUFFIX = "boot-disk";
+
+   private GoogleComputeEngineConstants() {
+      throw new AssertionError("intentionally unimplemented");
+   }
 }
