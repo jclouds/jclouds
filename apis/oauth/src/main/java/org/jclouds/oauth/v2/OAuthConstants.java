@@ -25,7 +25,7 @@ import java.util.Map;
  *
  * @author David Alves
  */
-public class OAuthConstants {
+public final class OAuthConstants {
 
    /**
     * Selected algorithm when a signature or mac isn't required.
@@ -73,4 +73,8 @@ public class OAuthConstants {
     * The (optional) set of additional claims to use, provided in Map<String,String> form
     */
    public static final String ADDITIONAL_CLAIMS = "jclouds.oauth.additional-claims";
+
+   private OAuthConstants() {
+      throw new AssertionError("intentionally unimplemented");
+   }
 }
