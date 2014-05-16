@@ -23,7 +23,7 @@ import org.jclouds.ec2.reference.EC2Constants;
  * 
  * @author Adrian Cole
  */
-public interface AWSEC2Constants extends EC2Constants {
+public final class AWSEC2Constants extends EC2Constants {
    /**
     * expression to find amis that work on the cluster instance type <br/>
     * ex. {@code
@@ -36,4 +36,7 @@ public interface AWSEC2Constants extends EC2Constants {
    public static final String PROPERTY_EC2_CC_REGIONS = "jclouds.ec2.cc-regions";
    public static final String PROPERTY_EC2_AMI_QUERY = "jclouds.ec2.ami-query";
 
+   private AWSEC2Constants() {
+      throw new AssertionError("intentionally unimplemented");
+   }
 }

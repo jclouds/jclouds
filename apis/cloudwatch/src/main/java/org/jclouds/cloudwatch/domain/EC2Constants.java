@@ -23,7 +23,7 @@ package org.jclouds.cloudwatch.domain;
  *
  * @author Jeremy Whitlock
  */
-public interface EC2Constants {
+public final class EC2Constants {
 
    public static class Dimension {
 
@@ -46,4 +46,7 @@ public interface EC2Constants {
 
    }
 
+   private EC2Constants() {
+      throw new AssertionError("intentionally unimplemented");
+   }
 }

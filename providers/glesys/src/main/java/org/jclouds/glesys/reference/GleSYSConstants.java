@@ -28,7 +28,7 @@ import org.jclouds.compute.domain.ComputeMetadata;
  * 
  * @author Adam Lowe
  */
-public class GleSYSConstants {
+public final class GleSYSConstants {
 
    public static final Pattern JCLOUDS_ID_TO_PLATFORM = Pattern.compile("([a-zA-Z]+) .*");
    
@@ -39,5 +39,9 @@ public class GleSYSConstants {
          throw new IllegalArgumentException(jcloudsObject.getId() + " not a GleSYS platform-based id!");
       }
       return matcher.group(1);
+   }
+
+   private GleSYSConstants() {
+      throw new AssertionError("intentionally unimplemented");
    }
 }

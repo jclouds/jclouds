@@ -23,7 +23,7 @@ package org.jclouds.cloudwatch.domain;
  *
  * @author Jeremy Whitlock
  */
-public interface ELBConstants {
+public final class ELBConstants {
 
    public static class Dimension {
 
@@ -47,4 +47,7 @@ public interface ELBConstants {
 
    }
 
+   private ELBConstants() {
+      throw new AssertionError("intentionally unimplemented");
+   }
 }

@@ -21,7 +21,7 @@ package org.jclouds.vcloud.reference;
  * 
  * @author Adrian Cole
  */
-public interface VCloudConstants {
+public final class VCloudConstants {
    public static final String PROPERTY_VCLOUD_VERSION_SCHEMA = "jclouds.vcloud.version.schema";
    /**
     * name of the default org that your vApp will join, if an org isn't
@@ -48,4 +48,7 @@ public interface VCloudConstants {
 
    public static final String PROPERTY_VCLOUD_TIMEOUT_TASK_COMPLETED = "jclouds.vcloud.timeout.task-complete";
 
+   private VCloudConstants() {
+      throw new AssertionError("intentionally unimplemented");
+   }
 }

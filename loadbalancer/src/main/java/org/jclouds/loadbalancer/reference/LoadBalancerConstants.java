@@ -20,8 +20,11 @@ package org.jclouds.loadbalancer.reference;
  * 
  * @author Adrian Cole
  */
-public interface LoadBalancerConstants {
+public final class LoadBalancerConstants {
 
    public static final String LOADBALANCER_LOGGER = "jclouds.loadbalancer";
 
+   private LoadBalancerConstants() {
+      throw new AssertionError("intentionally unimplemented");
+   }
 }

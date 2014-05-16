@@ -23,7 +23,7 @@ package org.jclouds.cloudwatch.domain;
  *
  * @author Jeremy Whitlock
  */
-public interface DynamoDBConstants {
+public final class DynamoDBConstants {
 
    public static class Dimension {
 
@@ -44,4 +44,7 @@ public interface DynamoDBConstants {
 
    }
 
+   private DynamoDBConstants() {
+      throw new AssertionError("intentionally unimplemented");
+   }
 }

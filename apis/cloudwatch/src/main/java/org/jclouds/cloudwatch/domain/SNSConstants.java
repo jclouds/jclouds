@@ -23,7 +23,7 @@ package org.jclouds.cloudwatch.domain;
  *
  * @author Jeremy Whitlock
  */
-public interface SNSConstants {
+public final class SNSConstants {
 
    public static class Dimension {
 
@@ -40,4 +40,7 @@ public interface SNSConstants {
 
    }
 
+   private SNSConstants() {
+      throw new AssertionError("intentionally unimplemented");
+   }
 }

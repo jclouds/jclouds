@@ -43,7 +43,7 @@ import com.google.inject.Inject;
  * 
  * @author Adrian Cole
  */
-public interface ComputeServiceConstants {
+public final class ComputeServiceConstants {
 
    public static final String COMPUTE_LOGGER = "jclouds.compute";
    public static final String LOCAL_PARTITION_GB_PATTERN = "disk_drive/%s/gb";
@@ -130,5 +130,9 @@ public interface ComputeServiceConstants {
       @Inject(optional = true)
       @Named(TIMEOUT_IMAGE_AVAILABLE)
       public long imageAvailable = TimeUnit.MINUTES.toMillis(45);
+   }
+
+   private ComputeServiceConstants() {
+      throw new AssertionError("intentionally unimplemented");
    }
 }

@@ -20,11 +20,14 @@ package org.jclouds.cloudsigma.reference;
  *
  * @author Adrian Cole
  */
-public class CloudSigmaConstants {
+public final class CloudSigmaConstants {
 
     /**
      * default VNC password used on new machines
      */
     public static final String PROPERTY_VNC_PASSWORD = "jclouds.cloudsigma.vnc-password";
-    
+
+    private CloudSigmaConstants() {
+        throw new AssertionError("intentionally unimplemented");
+    }
 }

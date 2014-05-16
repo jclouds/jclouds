@@ -21,7 +21,7 @@ package org.jclouds.s3.reference;
  * 
  * @author Adrian Cole
  */
-public interface S3Constants {
+public final class S3Constants {
 
    /**
     * S3 service's XML Namespace, as used in XML request and response documents.
@@ -34,4 +34,7 @@ public interface S3Constants {
    public static final String PROPERTY_S3_SERVICE_PATH = "jclouds.s3.service-path";
    public static final String PROPERTY_S3_VIRTUAL_HOST_BUCKETS = "jclouds.s3.virtual-host-buckets";
 
+   private S3Constants() {
+      throw new AssertionError("intentionally unimplemented");
+   }
 }

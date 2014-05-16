@@ -22,7 +22,7 @@ package org.jclouds.ec2.reference;
  * 
  * @author Adrian Cole
  */
-public interface EC2Constants {
+public class EC2Constants {
    /**
     * Listing the universe of amis is extremely expensive. set this to a comma separated value of
     * the ami owners you wish to use in {@link ComputeService}
@@ -46,4 +46,7 @@ public interface EC2Constants {
     */
    public static final String PROPERTY_EC2_GENERATE_INSTANCE_NAMES = "jclouds.ec2.generate-instance-names";
 
+   protected EC2Constants() {
+      throw new AssertionError("intentionally unimplemented");
+   }
 }

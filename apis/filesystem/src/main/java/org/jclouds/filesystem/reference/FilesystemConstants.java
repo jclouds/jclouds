@@ -21,9 +21,12 @@ package org.jclouds.filesystem.reference;
  *
  * @author Alfredo "Rainbowbreeze" Morresi
  */
-public class FilesystemConstants {
+public final class FilesystemConstants {
 
     /** Specify the base directory where provider starts its file operations - must exists */
     public static final String PROPERTY_BASEDIR = "jclouds.filesystem.basedir";
-    
+
+    private FilesystemConstants() {
+        throw new AssertionError("intentionally unimplemented");
+    }
 }

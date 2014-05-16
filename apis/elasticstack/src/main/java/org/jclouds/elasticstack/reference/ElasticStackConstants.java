@@ -21,11 +21,14 @@ package org.jclouds.elasticstack.reference;
  *
  * @author Adrian Cole
  */
-public class ElasticStackConstants {
+public final class ElasticStackConstants {
 
     /**
      * default VNC password used on new machines
      */
     public static final String PROPERTY_VNC_PASSWORD = "jclouds.elasticstack.vnc-password";
-    
+
+    private ElasticStackConstants() {
+        throw new AssertionError("intentionally unimplemented");
+    }
 }

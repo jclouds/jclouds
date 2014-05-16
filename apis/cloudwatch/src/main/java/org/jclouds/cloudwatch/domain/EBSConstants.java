@@ -23,7 +23,7 @@ package org.jclouds.cloudwatch.domain;
  *
  * @author Jeremy Whitlock
  */
-public interface EBSConstants {
+public final class EBSConstants {
 
    public static class Dimension {
 
@@ -44,4 +44,7 @@ public interface EBSConstants {
 
    }
 
+   private EBSConstants() {
+      throw new AssertionError("intentionally unimplemented");
+   }
 }

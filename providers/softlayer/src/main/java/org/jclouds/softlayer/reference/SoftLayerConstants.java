@@ -21,7 +21,7 @@ package org.jclouds.softlayer.reference;
  * 
  * @author Adrian Cole
  */
-public interface SoftLayerConstants {
+public final class SoftLayerConstants {
 
    /**
     * Name of the product package corresponding to cloud servers
@@ -53,4 +53,7 @@ public interface SoftLayerConstants {
     */
    public static final String PROPERTY_SOFTLAYER_VIRTUALGUEST_PRICES = "jclouds.softlayer.virtualguest.prices";
 
+   private SoftLayerConstants() {
+      throw new AssertionError("intentionally unimplemented");
+   }
 }

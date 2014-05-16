@@ -23,7 +23,7 @@ package org.jclouds.cloudwatch.domain;
  *
  * @author Jeremy Whitlock
  */
-public interface StorageGatewayConstants {
+public final class StorageGatewayConstants {
 
    public static class Dimension {
 
@@ -52,4 +52,7 @@ public interface StorageGatewayConstants {
 
    }
 
+   private StorageGatewayConstants() {
+      throw new AssertionError("intentionally unimplemented");
+   }
 }

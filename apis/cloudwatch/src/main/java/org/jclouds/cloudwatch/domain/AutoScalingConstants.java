@@ -23,7 +23,7 @@ package org.jclouds.cloudwatch.domain;
  *
  * @author Jeremy Whitlock
  */
-public interface AutoScalingConstants {
+public final class AutoScalingConstants {
 
    public static class Dimension {
 
@@ -43,4 +43,7 @@ public interface AutoScalingConstants {
 
    }
 
+   private AutoScalingConstants() {
+      throw new AssertionError("intentionally unimplemented");
+   }
 }

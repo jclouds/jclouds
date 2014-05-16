@@ -23,7 +23,7 @@ package org.jclouds.cloudwatch.domain;
  *
  * @author Jeremy Whitlock
  */
-public interface RDSConstants {
+public final class RDSConstants {
 
    public static class Dimension {
 
@@ -51,4 +51,7 @@ public interface RDSConstants {
 
    }
 
+   private RDSConstants() {
+      throw new AssertionError("intentionally unimplemented");
+   }
 }

@@ -24,7 +24,7 @@ import org.jclouds.location.reference.LocationConstants;
  * 
  * @author Adrian Cole
  */
-public interface Constants {
+public final class Constants {
    /**
     * Integer property. default (0)
     * <p/>
@@ -304,4 +304,8 @@ public interface Constants {
     * The maximum number of blob deletes happening in parallel at any point in time.
     */
    public static final String PROPERTY_MAX_PARALLEL_DELETES = "jclouds.max-parallel-deletes";
+
+   private Constants() {
+      throw new AssertionError("intentionally unimplemented");
+   }
 }

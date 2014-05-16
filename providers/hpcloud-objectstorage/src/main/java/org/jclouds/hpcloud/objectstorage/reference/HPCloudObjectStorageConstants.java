@@ -22,9 +22,13 @@ package org.jclouds.hpcloud.objectstorage.reference;
  * 
  * @author Jeremy Daggett
  */
-public interface HPCloudObjectStorageConstants {
+public final class HPCloudObjectStorageConstants {
    /**
     * The CDN Endpoint property
     */
    public static final String PROPERTY_CDN_ENDPOINT = "jclouds.hpcloud-objectstorage.cdn.endpoint";
+
+   private HPCloudObjectStorageConstants() {
+      throw new AssertionError("intentionally unimplemented");
+   }
 }

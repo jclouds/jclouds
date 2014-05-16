@@ -25,7 +25,7 @@ import com.google.common.collect.ImmutableList;
  * 
  * @author Adrian Cole
  */
-public interface BlobStoreConstants {
+public final class BlobStoreConstants {
    /**
     * <p/>
     * To interoperate with other S3 tools, we also accept the following:
@@ -57,4 +57,7 @@ public interface BlobStoreConstants {
 
    public static final String BLOBSTORE_LOGGER = "jclouds.blobstore";
 
+   private BlobStoreConstants() {
+      throw new AssertionError("intentionally unimplemented");
+   }
 }

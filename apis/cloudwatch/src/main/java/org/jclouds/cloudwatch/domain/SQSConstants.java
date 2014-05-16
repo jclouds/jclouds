@@ -23,7 +23,7 @@ package org.jclouds.cloudwatch.domain;
  *
  * @author Jeremy Whitlock
  */
-public interface SQSConstants {
+public final class SQSConstants {
 
    public static class Dimension {
 
@@ -44,4 +44,7 @@ public interface SQSConstants {
 
    }
 
+   private SQSConstants() {
+      throw new AssertionError("intentionally unimplemented");
+   }
 }

@@ -22,23 +22,26 @@ package org.jclouds.openstack.swift.reference;
  * 
  * @author Adrian Cole
  */
-public interface SwiftConstants {
+public final class SwiftConstants {
    /**
     * For an integer value N, limits the number of results to at most N values.
     */
-   String LIMIT = "limit";
+   public static final String LIMIT = "limit";
    /**
     * Given a string value X, return Object names greater in value than the specified marker.
     */
-   String MARKER = "marker";
+   public static final String MARKER = "marker";
    /**
     * For a string value X, causes the results to be limited to Object names beginning with the
     * substring X.
     */
-   String PREFIX = "prefix";
+   public static final String PREFIX = "prefix";
    /**
     * For a string value X, return the Object names nested in the pseudo path.
     */
-   String PATH = "path";
+   public static final String PATH = "path";
 
+   private SwiftConstants() {
+      throw new AssertionError("intentionally unimplemented");
+   }
 }

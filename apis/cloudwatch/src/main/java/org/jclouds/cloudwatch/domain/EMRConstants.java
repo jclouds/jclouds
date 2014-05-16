@@ -23,7 +23,7 @@ package org.jclouds.cloudwatch.domain;
  *
  * @author Jeremy Whitlock
  */
-public interface EMRConstants {
+public final class EMRConstants {
 
    public static class Dimension {
 
@@ -60,4 +60,7 @@ public interface EMRConstants {
 
    }
 
+   private EMRConstants() {
+      throw new AssertionError("intentionally unimplemented");
+   }
 }
