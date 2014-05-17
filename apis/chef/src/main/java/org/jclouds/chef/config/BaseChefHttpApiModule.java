@@ -62,7 +62,7 @@ import com.google.common.base.Supplier;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
-import com.google.common.io.ByteStreams;
+import com.google.common.io.ByteSource;
 import com.google.inject.ConfigurationException;
 import com.google.inject.Injector;
 import com.google.inject.Key;
@@ -137,7 +137,7 @@ public abstract class BaseChefHttpApiModule<S> extends HttpApiModule<S> {
       public PrivateKey load(Credentials in) {
          try {
             return crypto.rsaKeyFactory().generatePrivate(
-                  privateKeySpec(ByteStreams.newInputStreamSupplier(in.credential.getBytes(Charsets.UTF_8))));
+                  privateKeySpec(ByteSource.wrap(in.credential.getBytes(Charsets.UTF_8))));
          } catch (InvalidKeySpecException e) {
             throw propagate(e);
          } catch (IOException e) {
@@ -171,7 +171,7 @@ public abstract class BaseChefHttpApiModule<S> extends HttpApiModule<S> {
       try {
          String validatorCredential = injector.getInstance(key);
          PrivateKey validatorKey = crypto.rsaKeyFactory().generatePrivate(
-               Pems.privateKeySpec(ByteStreams.newInputStreamSupplier(validatorCredential.getBytes(Charsets.UTF_8))));
+               Pems.privateKeySpec(ByteSource.wrap(validatorCredential.getBytes(Charsets.UTF_8))));
          return Optional.<PrivateKey> of(validatorKey);
       } catch (ConfigurationException ex) {
          return Optional.<PrivateKey> absent();

@@ -39,6 +39,8 @@ import org.jclouds.rest.annotations.ApiVersion;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
 
+import com.google.common.base.Charsets;
+import com.google.common.io.ByteSource;
 import com.google.common.io.ByteStreams;
 import com.google.inject.AbstractModule;
 import com.google.inject.Guice;
@@ -73,8 +75,8 @@ public class ParseClientFromJsonTest {
       handler = injector.getInstance(Key.get(new TypeLiteral<ParseJson<Client>>() {
       }));
       crypto = injector.getInstance(Crypto.class);
-      certificate = Pems.x509Certificate(Payloads.newStringPayload(CERTIFICATE), null);
-      privateKey = crypto.rsaKeyFactory().generatePrivate(Pems.privateKeySpec(Payloads.newStringPayload(PRIVATE_KEY)));
+      certificate = Pems.x509Certificate(ByteSource.wrap(CERTIFICATE.getBytes(Charsets.UTF_8)), null);
+      privateKey = crypto.rsaKeyFactory().generatePrivate(Pems.privateKeySpec(ByteSource.wrap(PRIVATE_KEY.getBytes(Charsets.UTF_8))));
    }
 
    public void test() throws IOException {
