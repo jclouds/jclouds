@@ -17,10 +17,12 @@
 package org.jclouds.oauth.v2.functions;
 
 import com.google.common.annotations.VisibleForTesting;
+import com.google.common.base.Charsets;
 import com.google.common.base.Supplier;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
+import com.google.common.io.ByteSource;
 import com.google.common.util.concurrent.UncheckedExecutionException;
 import org.jclouds.domain.Credentials;
 import org.jclouds.location.Provider;
@@ -40,7 +42,6 @@ import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.base.Throwables.propagate;
 import static java.lang.String.format;
 import static org.jclouds.crypto.Pems.privateKeySpec;
-import static org.jclouds.io.Payloads.newStringPayload;
 import static org.jclouds.oauth.v2.OAuthConstants.NO_ALGORITHM;
 import static org.jclouds.oauth.v2.OAuthConstants.OAUTH_ALGORITHM_NAMES_TO_KEYFACTORY_ALGORITHM_NAMES;
 import static org.jclouds.oauth.v2.config.OAuthProperties.SIGNATURE_OR_MAC_ALGORITHM;
@@ -92,7 +93,8 @@ public class OAuthCredentialsSupplier implements Supplier<OAuthCredentials> {
                return new OAuthCredentials.Builder().identity(identity).credential(privateKeyInPemFormat).build();
             }
             KeyFactory keyFactory = KeyFactory.getInstance(keyFactoryAlgorithm);
-            PrivateKey privateKey = keyFactory.generatePrivate(privateKeySpec(newStringPayload(privateKeyInPemFormat)));
+            PrivateKey privateKey = keyFactory.generatePrivate(privateKeySpec(ByteSource.wrap(
+               privateKeyInPemFormat.getBytes(Charsets.UTF_8))));
             return new OAuthCredentials.Builder().identity(identity).credential(privateKeyInPemFormat)
                     .privateKey(privateKey).build();
          } catch (IOException e) {
