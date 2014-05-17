@@ -128,16 +128,16 @@ public class JschSshClient implements SshClient {
       this.user = checkNotNull(loginCredentials, "loginCredentials").getUser();
       this.host = checkNotNull(socket, "socket").getHostText();
       checkArgument(socket.getPort() > 0, "ssh port must be greater then zero" + socket.getPort());
-      checkArgument(loginCredentials.getPassword() != null || loginCredentials.hasUnencryptedPrivateKey() || agentConnector.isPresent(),
+      checkArgument(loginCredentials.getOptionalPassword().isPresent() || loginCredentials.hasUnencryptedPrivateKey() || agentConnector.isPresent(),
                "you must specify a password, a key or an SSH agent needs to be available");
       this.backoffLimitedRetryHandler = checkNotNull(backoffLimitedRetryHandler, "backoffLimitedRetryHandler");
-      if (loginCredentials.getPassword() != null) {
+      if (loginCredentials.getOptionalPassword().isPresent()) {
          this.toString = String.format("%s:pw[%s]@%s:%d", loginCredentials.getUser(),
-               base16().lowerCase().encode(md5().hashString(loginCredentials.getPassword(), UTF_8).asBytes()), host,
+               base16().lowerCase().encode(md5().hashString(loginCredentials.getOptionalPassword().get(), UTF_8).asBytes()), host,
                socket.getPort());
       } else if (loginCredentials.hasUnencryptedPrivateKey()) {
-         String fingerPrint = fingerprintPrivateKey(loginCredentials.getPrivateKey());
-         String sha1 = sha1PrivateKey(loginCredentials.getPrivateKey());
+         String fingerPrint = fingerprintPrivateKey(loginCredentials.getOptionalPrivateKey().get());
+         String sha1 = sha1PrivateKey(loginCredentials.getOptionalPrivateKey().get());
          this.toString = String.format("%s:rsa[fingerprint(%s),sha1(%s)]@%s:%d", loginCredentials.getUser(),
                  fingerPrint, sha1, host, socket.getPort());
       } else {

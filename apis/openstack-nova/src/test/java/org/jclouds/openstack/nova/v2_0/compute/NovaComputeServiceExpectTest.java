@@ -20,6 +20,7 @@ import static org.jclouds.compute.util.ComputeServiceUtils.getCores;
 import static org.jclouds.openstack.nova.v2_0.compute.options.NovaTemplateOptions.Builder.blockUntilRunning;
 import static org.jclouds.openstack.nova.v2_0.compute.options.NovaTemplateOptions.Builder.keyPairName;
 import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertFalse;
 import static org.testng.Assert.assertNotNull;
 import static org.testng.Assert.assertTrue;
 
@@ -267,7 +268,7 @@ public class NovaComputeServiceExpectTest extends BaseNovaComputeServiceExpectTe
 
       NodeMetadata node = Iterables.getOnlyElement(apiThatCreatesNode.createNodesInGroup("test", 1,
             blockUntilRunning(false).generateKeyPair(true)));
-      assertNotNull(node.getCredentials().getPrivateKey());
+      assertTrue(node.getCredentials().getOptionalPrivateKey().isPresent());
    }
 
    @Test
@@ -323,7 +324,7 @@ public class NovaComputeServiceExpectTest extends BaseNovaComputeServiceExpectTe
       NodeMetadata node = Iterables.getOnlyElement(apiThatCreatesNode.createNodesInGroup("test", 1,
             keyPairName("fooPair").blockUntilRunning(false)));
       // we don't have access to this private key
-      assertEquals(node.getCredentials().getPrivateKey(), null);
+      assertFalse(node.getCredentials().getOptionalPrivateKey().isPresent());
    }
 
 
@@ -374,7 +375,7 @@ public class NovaComputeServiceExpectTest extends BaseNovaComputeServiceExpectTe
       NodeMetadata node = Iterables.getOnlyElement(apiThatCreatesNode.createNodesInGroup("test", 1,
             keyPairName("fooPair").securityGroupNames("mygroup").blockUntilRunning(false)));
       // we don't have access to this private key
-      assertEquals(node.getCredentials().getPrivateKey(), null);
+      assertFalse(node.getCredentials().getOptionalPrivateKey().isPresent());
    }
 
 }

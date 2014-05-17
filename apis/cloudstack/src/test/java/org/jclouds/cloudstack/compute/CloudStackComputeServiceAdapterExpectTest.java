@@ -18,6 +18,7 @@ package org.jclouds.cloudstack.compute;
 
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
+import static org.testng.Assert.assertTrue;
 
 import java.io.IOException;
 import java.util.Map;
@@ -179,7 +180,7 @@ public class CloudStackComputeServiceAdapterExpectTest extends BaseCloudStackCom
       NodeAndInitialCredentials<VirtualMachine> server = adapter.createNodeWithGroupEncodedIntoName("test", "test-e92",
             template);
       assertNotNull(server);
-      assertEquals(server.getCredentials().getPrivateKey(), privKey);
+      assertEquals(server.getCredentials().getOptionalPrivateKey().get(), privKey);
    }
 
    public void testCreateNodeWithGroupEncodedIntoNameWithGenerateKeyPair() throws IOException {
@@ -226,7 +227,7 @@ public class CloudStackComputeServiceAdapterExpectTest extends BaseCloudStackCom
       NodeAndInitialCredentials<VirtualMachine> server = adapter.createNodeWithGroupEncodedIntoName("test", "test-e92",
             template);
       assertNotNull(server);
-      assertNotNull(server.getCredentials().getPrivateKey());
+      assertTrue(server.getCredentials().getOptionalPrivateKey().isPresent());
    }
    
    public void testCreateNodeWithGroupEncodedIntoNameWithKeyPairDefaultSecurityGroup() throws IOException {
@@ -277,7 +278,7 @@ public class CloudStackComputeServiceAdapterExpectTest extends BaseCloudStackCom
       NodeAndInitialCredentials<VirtualMachine> server = adapter.createNodeWithGroupEncodedIntoName("test", "test-e92",
             template);
       assertNotNull(server);
-      assertEquals(server.getCredentials().getPrivateKey(), privKey);
+      assertEquals(server.getCredentials().getOptionalPrivateKey().get(), privKey);
    }
 
    public void testCreateNodeWithGroupEncodedIntoNameWithKeyPairDefaultSecurityGroupAndDisk() throws IOException {
@@ -333,7 +334,7 @@ public class CloudStackComputeServiceAdapterExpectTest extends BaseCloudStackCom
       NodeAndInitialCredentials<VirtualMachine> server = adapter.createNodeWithGroupEncodedIntoName("test", "test-e92",
               template);
       assertNotNull(server);
-      assertEquals(server.getCredentials().getPrivateKey(), privKey);
+      assertEquals(server.getCredentials().getOptionalPrivateKey().get(), privKey);
    }
 
    public void testCreateNodeWithGroupEncodedIntoNameWithKeyPairGenerateSecurityGroup() throws IOException {
@@ -391,7 +392,7 @@ public class CloudStackComputeServiceAdapterExpectTest extends BaseCloudStackCom
       NodeAndInitialCredentials<VirtualMachine> server = adapter.createNodeWithGroupEncodedIntoName("test", "test-e92",
             template);
       assertNotNull(server);
-      assertEquals(server.getCredentials().getPrivateKey(), privKey);
+      assertEquals(server.getCredentials().getOptionalPrivateKey().get(), privKey);
    }
 
    public void testCreateNodeWithGroupEncodedIntoNameWithKeyPairAssignedToAccountAndDomain() throws IOException {
@@ -444,7 +445,7 @@ public class CloudStackComputeServiceAdapterExpectTest extends BaseCloudStackCom
       NodeAndInitialCredentials<VirtualMachine> server = adapter.createNodeWithGroupEncodedIntoName("test", "test-e92",
             template);
       assertNotNull(server);
-      assertEquals(server.getCredentials().getPrivateKey(), privKey);
+      assertEquals(server.getCredentials().getOptionalPrivateKey().get(), privKey);
    }   
    
    @Override

@@ -16,6 +16,7 @@
  */
 package org.jclouds.domain;
 
+import static com.google.common.base.Preconditions.checkNotNull;
 import static org.jclouds.crypto.Pems.PRIVATE_PKCS1_MARKER;
 import static org.jclouds.crypto.Pems.PRIVATE_PKCS8_MARKER;
 
@@ -54,8 +55,8 @@ public class LoginCredentials extends Credentials {
    
    public static class Builder extends Credentials.Builder<LoginCredentials> {
       private boolean authenticateSudo;
-      private Optional<String> password;
-      private Optional<String> privateKey;
+      private Optional<String> password = Optional.absent();
+      private Optional<String> privateKey = Optional.absent();
 
       public Builder identity(String identity) {
          return Builder.class.cast(super.identity(identity));
@@ -67,8 +68,6 @@ public class LoginCredentials extends Credentials {
 
       public Builder password(String password) {
          this.password = Optional.fromNullable(password);
-         if (privateKey == null)
-            noPrivateKey();
          return this;
       }
 
@@ -79,8 +78,6 @@ public class LoginCredentials extends Credentials {
 
       public Builder privateKey(String privateKey) {
          this.privateKey = Optional.fromNullable(privateKey);
-         if (password == null)
-            noPassword();
          return this;
       }
 
@@ -103,7 +100,7 @@ public class LoginCredentials extends Credentials {
       }
 
       public LoginCredentials build() {
-         if (identity == null && password == null && privateKey == null && !authenticateSudo)
+         if (identity == null && !password.isPresent() && !privateKey.isPresent() && !authenticateSudo)
             return null;
          return new LoginCredentials(identity, password, privateKey, authenticateSudo);
       }
@@ -113,13 +110,13 @@ public class LoginCredentials extends Credentials {
    private final Optional<String> password;
    private final Optional<String> privateKey;
 
-   private LoginCredentials(String username, @Nullable Optional<String> password, @Nullable Optional<String> privateKey, boolean authenticateSudo) {
-      super(username, privateKey != null && privateKey.isPresent() && isPrivateKeyCredential(privateKey.get())
+   private LoginCredentials(String username, Optional<String> password, Optional<String> privateKey, boolean authenticateSudo) {
+      super(username, privateKey.isPresent() && isPrivateKeyCredential(privateKey.get())
                     ? privateKey.get()
-                    : (password != null && password.isPresent() ? password.get() : null));
+                    : password.orNull());
       this.authenticateSudo = authenticateSudo;
-      this.password = password;
-      this.privateKey = privateKey;
+      this.password = checkNotNull(password, "password");
+      this.privateKey = checkNotNull(privateKey, "privateKey");
    }
 
    /**
@@ -131,41 +128,45 @@ public class LoginCredentials extends Credentials {
 
    /**
     * @return the password of the login user or null
+    * 
+    * @deprecated since 1.8; instead use {@link #getOptionalPassword()}
     */
    @Nullable
+   @Deprecated
    public String getPassword() {
-      return (password != null) ? password.orNull() : null;
+      return password.orNull();
    }
 
    /**
-    * @return the optional password of the user or null
+    * @return the optional password of the user (Optional.absent if none supplied).
     */
-   @Nullable
    public Optional<String> getOptionalPassword() {
       return password;
    }
 
    /**
     * @return the private ssh key of the user or null
+    * 
+    * @deprecated since 1.8; instead use {@link #getOptionalPrivateKey()}
     */
    @Nullable
+   @Deprecated
    public String getPrivateKey() {
-      return (privateKey != null) ? privateKey.orNull() : null;
+      return privateKey.orNull();
    }
 
    /**
     * @return true if there is a private key attached that is not encrypted
     */
    public boolean hasUnencryptedPrivateKey() {
-      return getPrivateKey() != null
-         && !getPrivateKey().isEmpty()
-         && !getPrivateKey().contains(Pems.PROC_TYPE_ENCRYPTED);
+      return getOptionalPrivateKey().isPresent()
+         && !getOptionalPrivateKey().get().isEmpty()
+         && !getOptionalPrivateKey().get().contains(Pems.PROC_TYPE_ENCRYPTED);
    }
 
    /**
-    * @return the optional private ssh key of the user or null
+    * @return the optional private ssh key of the user (Optional.absent if none supplied).
     */
-   @Nullable
    public Optional<String> getOptionalPrivateKey() {
       return privateKey;
    }

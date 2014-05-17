@@ -102,8 +102,8 @@ public class RunScriptOnNodeUsingSsh implements RunScriptOnNode {
 
    protected ExecResponse runCommand(String command) {
       ExecResponse returnVal;
-      logger.debug(">> running [%s] as %s@%s", command.replace(node.getCredentials().getPassword() != null ? node
-            .getCredentials().getPassword() : "XXXXX", "XXXXX"), ssh.getUsername(), ssh.getHostAddress());
+      logger.debug(">> running [%s] as %s@%s", command.replace(node.getCredentials().getOptionalPassword().isPresent() ? node
+            .getCredentials().getOptionalPassword().get() : "XXXXX", "XXXXX"), ssh.getUsername(), ssh.getHostAddress());
       returnVal = ssh.exec(command);
       return returnVal;
    }
@@ -112,7 +112,7 @@ public class RunScriptOnNodeUsingSsh implements RunScriptOnNode {
    public String execAsRoot(String command) {
       if (node.getCredentials().identity.equals("root")) {
       } else if (node.getCredentials().shouldAuthenticateSudo()) {
-         command = String.format("sudo -S sh <<'%s'\n%s\n%s%s\n", MARKER, node.getCredentials().getPassword(), command, MARKER);
+         command = String.format("sudo -S sh <<'%s'\n%s\n%s%s\n", MARKER, node.getCredentials().getOptionalPassword().get(), command, MARKER);
       } else {
          command = String.format("sudo sh <<'%s'\n%s%s\n", MARKER, command, MARKER);
       }

@@ -68,7 +68,7 @@ public class WindowsLoginCredentialsFromEncryptedDataTest {
       LoginCredentials credentials = f.apply(new PasswordDataAndPrivateKey(passwordData, PRIVATE_KEY));
 
       assertEquals(credentials.getUser(), "Administrator");
-      assertEquals(credentials.getPassword(), "u4.y9mb;nR.");
+      assertEquals(credentials.getOptionalPassword().get(), "u4.y9mb;nR.");
       assertFalse(credentials.getOptionalPrivateKey().isPresent());
    }
 }

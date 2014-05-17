@@ -95,7 +95,7 @@ public class SudoAwareInitManager {
 
    ExecResponse runCommand(String command) {
       String statement = String.format("[%s] as %s@%s", command.replace(
-            node.getCredentials().getPassword() != null ? node.getCredentials().getPassword() : "XXXXX", "XXXXX"), ssh
+            node.getCredentials().getOptionalPassword().isPresent() ? node.getCredentials().getOptionalPassword().get() : "XXXXX", "XXXXX"), ssh
             .getUsername(), ssh.getHostAddress());
       if (command.endsWith("status") || command.endsWith("stdout") || command.endsWith("stderr"))
          logger.trace(">> running %s", statement);
@@ -113,7 +113,7 @@ public class SudoAwareInitManager {
       if (node.getCredentials().identity.equals("root")) {
          command = initFile + " " + action;
       } else if (node.getCredentials().shouldAuthenticateSudo()) {
-         command = String.format("echo '%s'|sudo -S %s %s", node.getCredentials().getPassword(),
+         command = String.format("echo '%s'|sudo -S %s %s", node.getCredentials().getOptionalPassword().get(),
                initFile, action);
       } else {
          command = "sudo " + initFile + " " + action;

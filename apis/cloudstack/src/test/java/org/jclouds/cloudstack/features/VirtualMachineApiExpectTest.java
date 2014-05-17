@@ -74,7 +74,7 @@ public class VirtualMachineApiExpectTest extends BaseCloudStackExpectTest<Virtua
       WindowsLoginCredentialsFromEncryptedData passwordDecrypt = new WindowsLoginCredentialsFromEncryptedData(new JCECrypto());
 
       assertEquals(passwordDecrypt.apply(
-         EncryptedPasswordAndPrivateKey.builder().encryptedPassword(actual).privateKey(privateKey).build()).getPassword(), "bX7vvptvw");
+         EncryptedPasswordAndPrivateKey.builder().encryptedPassword(actual).privateKey(privateKey).build()).getOptionalPassword().get(), "bX7vvptvw");
    }
    
    HttpRequest deployVirtualMachineInZone =  HttpRequest.builder().method("GET")

@@ -85,8 +85,8 @@ public class CredentialStoreModule extends AbstractModule {
             LoginCredentials login = LoginCredentials.class.cast(from);
             JsonLoginCredentials val = new JsonLoginCredentials();
             val.user = login.getUser();
-            val.password = login.getPassword();
-            val.privateKey = login.getPrivateKey();
+            val.password = login.getOptionalPassword().orNull();
+            val.privateKey = login.getOptionalPrivateKey().orNull();
             if (login.shouldAuthenticateSudo())
                val.authenticateSudo = login.shouldAuthenticateSudo();
             return ByteSource.wrap(json.toJson(val).getBytes(Charsets.UTF_8));

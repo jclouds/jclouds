@@ -17,6 +17,7 @@
 package org.jclouds.domain;
 
 import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertNotNull;
 
 import org.testng.annotations.Test;
 
@@ -47,5 +48,16 @@ public class LoginCredentialsTest {
       LoginCredentials toTest = LoginCredentials.builder().user("user").password("password").privateKey("key").build();
       assertEquals(toTest.getOptionalPassword(), Optional.of("password"));
       assertEquals(toTest.getOptionalPrivateKey(), Optional.of("key"));
+   }
+   
+   
+   public void testToStringWhenNullPasswordAndKey() {
+      LoginCredentials toTest = LoginCredentials.builder().user("myuser").build();
+      assertNotNull(toTest.toString());
+   }
+   
+   public void testToString() {
+      LoginCredentials toTest = LoginCredentials.builder().user("myuser").password("password").privateKey("key").build();
+      assertNotNull(toTest.toString());
    }
 }

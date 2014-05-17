@@ -34,6 +34,7 @@ import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
 import com.google.common.base.Charsets;
+import com.google.common.base.Function;
 import com.google.common.io.ByteSource;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
@@ -124,6 +125,25 @@ public class CredentialStoreModuleTest {
       remove(map, getStore(createInjector()), "test");
    }
 
+   public void testCredentialsToByteSourceConversion() throws Exception {
+      Function<Credentials, ByteSource> toBytesFunc = getCredentialsToByteStoreFunction(createInjector());
+      Function<ByteSource, Credentials> fromBytesFunc = getByteStoreToCredentialsFunction(createInjector());
+      
+      LoginCredentials creds = LoginCredentials.builder().user("myuser").password("mypass").authenticateSudo(true).build();
+      ByteSource bytes = toBytesFunc.apply(creds);
+      LoginCredentials deserializedCreds = (LoginCredentials) fromBytesFunc.apply(bytes);
+      
+      String json = bytes.asCharSource(Charsets.UTF_8).read();
+      assertEquals(json, "{\"user\":\"myuser\",\"password\":\"mypass\",\"authenticateSudo\":true}");
+      
+      assertEquals(deserializedCreds.identity, creds.identity);
+      assertEquals(deserializedCreds.credential, creds.credential);
+      assertEquals(deserializedCreds.getUser(), creds.getUser());
+      assertEquals(deserializedCreds.getOptionalPassword(), creds.getOptionalPassword());
+      assertEquals(deserializedCreds.getOptionalPrivateKey(), creds.getOptionalPrivateKey());
+      assertEquals(deserializedCreds.shouldAuthenticateSudo(), creds.shouldAuthenticateSudo());
+   }
+   
    protected Map<String, Credentials> getStore(Injector injector) {
       return injector.getInstance(Key.get(new TypeLiteral<Map<String, Credentials>>() {
       }));
@@ -134,6 +154,16 @@ public class CredentialStoreModuleTest {
       }));
    }
 
+   protected Function<ByteSource, Credentials> getByteStoreToCredentialsFunction(Injector injector) {
+      return injector.getInstance(Key.get(new TypeLiteral<Function<ByteSource, Credentials>>() {
+      }));
+   }
+
+   protected Function<Credentials, ByteSource> getCredentialsToByteStoreFunction(Injector injector) {
+      return injector.getInstance(Key.get(new TypeLiteral<Function<Credentials, ByteSource>>() {
+      }));
+   }
+   
    protected Injector createInjectorWithProvidedMap(Map<String, ByteSource> map) {
       return Guice.createInjector(new CredentialStoreModule(map), new GsonModule());
    }

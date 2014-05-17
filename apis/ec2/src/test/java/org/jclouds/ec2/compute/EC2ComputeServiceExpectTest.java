@@ -20,6 +20,7 @@ import static org.jclouds.ec2.compute.options.EC2TemplateOptions.Builder.blockUn
 import static org.jclouds.ec2.compute.options.EC2TemplateOptions.Builder.maxCount;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
+import static org.testng.Assert.assertTrue;
 
 import javax.ws.rs.core.MediaType;
 import java.util.Set;
@@ -132,7 +133,7 @@ public class EC2ComputeServiceExpectTest extends BaseEC2ComputeServiceExpectTest
               blockUntilRunning(false).overrideLoginUser("ec2-user")));
       assertEquals(node.getCredentials().getUser(), "ec2-user");
       System.out.println(node.getImageId());
-      assertNotNull(node.getCredentials().getPrivateKey());
+      assertTrue(node.getCredentials().getOptionalPrivateKey().isPresent());
    }
 
    public void testCreateThreeNodesWithMaxCountThree() throws Exception {
@@ -312,7 +313,7 @@ public class EC2ComputeServiceExpectTest extends BaseEC2ComputeServiceExpectTest
             apiThatCreatesNode.createNodesInGroup("test", 1,
             apiThatCreatesNode.templateBuilder().from("osDescriptionMatches=.*fedora.*,loginUser=ec2-user").build()));
       assertEquals(node.getCredentials().getUser(), "ec2-user");
-      assertNotNull(node.getCredentials().getPrivateKey());
+      assertTrue(node.getCredentials().getOptionalPrivateKey().isPresent());
    }
 
 }

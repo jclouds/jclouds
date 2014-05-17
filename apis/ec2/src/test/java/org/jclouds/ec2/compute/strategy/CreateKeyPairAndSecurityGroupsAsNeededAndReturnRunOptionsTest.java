@@ -317,7 +317,7 @@ public class CreateKeyPairAndSecurityGroupsAsNeededAndReturnRunOptionsTest {
 
       // setup expectations
       expect(options.getKeyPair()).andReturn(userSuppliedKeyPair);
-      expect(options.getLoginPrivateKey()).andReturn(CREDENTIALS.getPrivateKey()).atLeastOnce();
+      expect(options.getLoginPrivateKey()).andReturn(CREDENTIALS.getOptionalPrivateKey().get()).atLeastOnce();
 
       // Notice that the fingerprint and sha1 generated
       expect(strategy.credentialsMap.put(new RegionAndName(region, userSuppliedKeyPair), KEYPAIR)).andReturn(null);

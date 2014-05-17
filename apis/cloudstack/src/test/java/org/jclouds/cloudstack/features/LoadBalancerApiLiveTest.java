@@ -89,7 +89,7 @@ public class LoadBalancerApiLiveTest extends BaseCloudStackApiLiveTest {
       vm = VirtualMachineApiLiveTest.createVirtualMachineInNetwork(network,
             defaultTemplateOrPreferredInZone(defaultTemplate, client, network.getZoneId()),
             client, jobComplete, virtualMachineRunning);
-      if (vm.getPassword() != null && loginCredentials.getOptionalPassword() == null)
+      if (vm.getPassword() != null && !loginCredentials.getOptionalPassword().isPresent())
          loginCredentials = loginCredentials.toBuilder().password(vm.getPassword()).build();
    }
 

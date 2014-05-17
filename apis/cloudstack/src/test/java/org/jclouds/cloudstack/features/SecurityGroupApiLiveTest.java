@@ -177,7 +177,7 @@ public class SecurityGroupApiLiveTest extends BaseCloudStackApiLiveTest {
       vm = VirtualMachineApiLiveTest.createVirtualMachineWithSecurityGroupInZone(zone.getId(),
             defaultTemplateOrPreferredInZone(defaultTemplate, client, zone.getId()), group.getId(), client,
             jobComplete, virtualMachineRunning);
-      if (vm.getPassword() != null && loginCredentials.getOptionalPassword() == null)
+      if (vm.getPassword() != null && !loginCredentials.getOptionalPassword().isPresent())
          loginCredentials = loginCredentials.toBuilder().password(vm.getPassword()).build();
       // ingress port 22
       checkSSH(HostAndPort.fromParts(vm.getIPAddress(), 22));

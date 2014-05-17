@@ -169,10 +169,10 @@ public final class SessionConnection implements Connection<Session> {
             .getSession(loginCredentials.getUser(), hostAndPort.getHostText(), hostAndPort.getPortOrDefault(22));
       if (sessionTimeout != 0)
          session.setTimeout(sessionTimeout);
-      if (loginCredentials.getPrivateKey() == null) {
-         session.setPassword(loginCredentials.getPassword());
+      if (!loginCredentials.getOptionalPrivateKey().isPresent()) {
+         session.setPassword(loginCredentials.getOptionalPassword().orNull());
       } else if (loginCredentials.hasUnencryptedPrivateKey()) {
-         byte[] privateKey = loginCredentials.getPrivateKey().getBytes();
+         byte[] privateKey = loginCredentials.getOptionalPrivateKey().get().getBytes();
          jsch.addIdentity(loginCredentials.getUser(), privateKey, null, emptyPassPhrase);
       } else if (agentConnector.isPresent()) {
          JSch.setConfig("PreferredAuthentications", "publickey");

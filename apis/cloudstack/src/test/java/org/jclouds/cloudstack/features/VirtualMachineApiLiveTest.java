@@ -279,7 +279,7 @@ public class VirtualMachineApiLiveTest extends BaseCloudStackApiLiveTest {
    }
 
    private void conditionallyCheckSSH() {
-      if (vm.getPassword() != null && loginCredentials.getOptionalPassword() == null)
+      if (vm.getPassword() != null && !loginCredentials.getOptionalPassword().isPresent())
          loginCredentials = loginCredentials.toBuilder().password(vm.getPassword()).build();
       assert HostSpecifier.isValid(vm.getIPAddress());
       if (!InetAddresses2.isPrivateIPAddress(vm.getIPAddress())) {

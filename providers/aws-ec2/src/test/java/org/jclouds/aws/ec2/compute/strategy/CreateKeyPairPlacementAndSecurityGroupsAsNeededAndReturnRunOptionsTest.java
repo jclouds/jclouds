@@ -463,7 +463,7 @@ public class CreateKeyPairPlacementAndSecurityGroupsAsNeededAndReturnRunOptionsT
 
       // we specify we have a public key we want to use for authentication
       expect(options.getPublicKey()).andReturn("ssh-rsa").times(2);
-      expect(options.getLoginPrivateKey()).andReturn(CREDENTIALS.getPrivateKey()).atLeastOnce();
+      expect(options.getLoginPrivateKey()).andReturn(CREDENTIALS.getOptionalPrivateKey().get()).atLeastOnce();
 
       // Here, we import the keypair and place it into the cache
       expect(strategy.importExistingKeyPair.apply(new RegionNameAndPublicKeyMaterial(region, group, "ssh-rsa")))
