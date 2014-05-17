@@ -55,7 +55,7 @@ import com.google.common.base.Objects;
 import com.google.common.base.Throwables;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Maps;
-import com.google.common.io.ByteStreams;
+import com.google.common.io.ByteSource;
 import com.google.gson.Gson;
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonDeserializer;
@@ -96,7 +96,7 @@ public class ChefParserModule extends AbstractModule {
          String keyText = json.getAsString().replaceAll("\\n", "\n");
          try {
             return crypto.rsaKeyFactory().generatePrivate(
-                  Pems.privateKeySpec(ByteStreams.newInputStreamSupplier(keyText.getBytes(Charsets.UTF_8))));
+                  Pems.privateKeySpec(ByteSource.wrap(keyText.getBytes(Charsets.UTF_8))));
          } catch (UnsupportedEncodingException e) {
             Throwables.propagate(e);
             return null;
@@ -130,7 +130,7 @@ public class ChefParserModule extends AbstractModule {
          String keyText = json.getAsString().replaceAll("\\n", "\n");
          try {
             return crypto.rsaKeyFactory().generatePublic(
-                  Pems.publicKeySpec(ByteStreams.newInputStreamSupplier(keyText.getBytes(Charsets.UTF_8))));
+                  Pems.publicKeySpec(ByteSource.wrap(keyText.getBytes(Charsets.UTF_8))));
          } catch (UnsupportedEncodingException e) {
             Throwables.propagate(e);
             return null;
@@ -163,7 +163,7 @@ public class ChefParserModule extends AbstractModule {
             throws JsonParseException {
          String keyText = json.getAsString().replaceAll("\\n", "\n");
          try {
-            return Pems.x509Certificate(ByteStreams.newInputStreamSupplier(keyText.getBytes(Charsets.UTF_8)),
+            return Pems.x509Certificate(ByteSource.wrap(keyText.getBytes(Charsets.UTF_8)),
                   crypto.certFactory());
          } catch (UnsupportedEncodingException e) {
             Throwables.propagate(e);
