@@ -33,7 +33,6 @@ import java.security.spec.RSAPublicKeySpec;
 import com.google.common.base.Charsets;
 import com.google.common.io.ByteSource;
 
-import org.jclouds.io.Payloads;
 import org.testng.annotations.Test;
 
 /**

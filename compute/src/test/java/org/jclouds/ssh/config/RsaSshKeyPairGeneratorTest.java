@@ -37,7 +37,6 @@ import java.security.spec.InvalidKeySpecException;
 
 import org.jclouds.crypto.Crypto;
 import org.jclouds.crypto.Pems;
-import org.jclouds.io.Payloads;
 import org.jclouds.ssh.SshKeys;
 import org.jclouds.ssh.internal.RsaSshKeyPairGenerator;
 import org.testng.annotations.BeforeClass;
