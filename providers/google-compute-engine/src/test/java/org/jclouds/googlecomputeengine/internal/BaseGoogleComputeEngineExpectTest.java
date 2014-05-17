@@ -27,7 +27,6 @@ import static org.jclouds.crypto.Pems.privateKeySpec;
 import static org.jclouds.crypto.Pems.publicKeySpec;
 import static org.jclouds.crypto.PemsTest.PRIVATE_KEY;
 import static org.jclouds.crypto.PemsTest.PUBLIC_KEY;
-import static org.jclouds.io.Payloads.newStringPayload;
 
 import java.io.IOException;
 import java.net.URI;
@@ -61,6 +60,7 @@ import org.jclouds.util.Strings2;
 import com.google.common.base.Joiner;
 import com.google.common.base.Supplier;
 import com.google.common.base.Suppliers;
+import com.google.common.io.ByteSource;
 import com.google.inject.Binder;
 import com.google.inject.Module;
 import com.google.inject.TypeLiteral;
@@ -106,9 +106,9 @@ public class BaseGoogleComputeEngineExpectTest<T> extends BaseRestApiExpectTest<
             binder.bind(new TypeLiteral<Supplier<Long>>() {}).toInstance(Suppliers.ofInstance(0L));
             try {
                KeyFactory keyfactory = KeyFactory.getInstance("RSA");
-               PrivateKey privateKey = keyfactory.generatePrivate(privateKeySpec(newStringPayload
-                       (PRIVATE_KEY)));
-               PublicKey publicKey = keyfactory.generatePublic(publicKeySpec(newStringPayload(PUBLIC_KEY)));
+               PrivateKey privateKey = keyfactory.generatePrivate(privateKeySpec(ByteSource.wrap(
+                       PRIVATE_KEY.getBytes(UTF_8))));
+               PublicKey publicKey = keyfactory.generatePublic(publicKeySpec(ByteSource.wrap(PUBLIC_KEY.getBytes(UTF_8))));
                KeyPair keyPair = new KeyPair(publicKey, privateKey);
                openSshKey = SshKeys.encodeAsOpenSSH(RSAPublicKey.class.cast(publicKey));
                final Crypto crypto = createMock(Crypto.class);
