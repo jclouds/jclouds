@@ -113,7 +113,7 @@ public class EC2CreateNodesInGroupThenAddToSetTest {
       expect(instance.getId()).andReturn(instanceCreatedId).atLeastOnce();
       // simulate a lazy credentials fetch
       LoginCredentials creds = LoginCredentials.builder().user("foo").privateKey("bar").build();
-      expect(strategy.instanceToCredentials.apply(instance)).andReturn(Optional.of(creds));
+      expect(strategy.instanceToCredentials.getUnchecked(instance)).andReturn(Optional.of(creds));
       expect(instance.getRegion()).andReturn(region).atLeastOnce();
       expect(strategy.credentialStore.put("node#" + region + "/" + instanceCreatedId, creds)).andReturn(null);
 
@@ -212,7 +212,7 @@ public class EC2CreateNodesInGroupThenAddToSetTest {
       expect(instance.getId()).andReturn(instanceCreatedId).atLeastOnce();
       // simulate a lazy credentials fetch
       LoginCredentials creds = LoginCredentials.builder().user("foo").privateKey("bar").build();
-      expect(strategy.instanceToCredentials.apply(instance)).andReturn(Optional.of(creds));
+      expect(strategy.instanceToCredentials.getUnchecked(instance)).andReturn(Optional.of(creds));
       expect(instance.getRegion()).andReturn(region).atLeastOnce();
       expect(strategy.credentialStore.put("node#" + region + "/" + instanceCreatedId, creds)).andReturn(null);
 
