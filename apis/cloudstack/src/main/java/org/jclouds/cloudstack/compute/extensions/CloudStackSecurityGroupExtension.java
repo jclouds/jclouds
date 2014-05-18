@@ -141,7 +141,7 @@ public class CloudStackSecurityGroupExtension implements SecurityGroupExtension 
               .name(markerGroup)
               .build();
 
-      return groupConverter.apply(groupCreator.apply(zoneAndName));
+      return groupConverter.apply(groupCreator.getUnchecked(zoneAndName));
    }
 
    @Override

@@ -172,7 +172,7 @@ public class EC2CreateNodesInGroupThenAddToSet implements CreateNodesInGroupThen
    private void populateCredentials(Set<RunningInstance> input, TemplateOptions options) {
       LoginCredentials credentials = null;
       for (RunningInstance instance : input) {
-         credentials = instanceToCredentials.apply(instance).orNull();
+         credentials = instanceToCredentials.getUnchecked(instance).orNull();
          if (credentials != null)
             break;
       }

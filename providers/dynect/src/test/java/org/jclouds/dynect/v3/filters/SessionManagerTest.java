@@ -67,7 +67,7 @@ public class SessionManagerTest {
       expect(sessionApi.login(creds)).andReturn(session);
       replay(sessionApi);
 
-      assertSame(SessionManager.buildCache(sessionApi).apply(creds), session);
+      assertSame(SessionManager.buildCache(sessionApi).getUnchecked(creds), session);
 
       verify(sessionApi);
    }

@@ -173,7 +173,7 @@ public class NovaSecurityGroupExtension implements SecurityGroupExtension {
       String markerGroup = namingConvention.create().sharedNameForGroup(name);
       ZoneSecurityGroupNameAndPorts zoneAndName = new ZoneSecurityGroupNameAndPorts(zone, markerGroup, ImmutableSet.<Integer> of());
 
-      SecurityGroupInZone rawGroup = groupCreator.apply(zoneAndName);
+      SecurityGroupInZone rawGroup = groupCreator.getUnchecked(zoneAndName);
       return groupConverter.apply(rawGroup);
    }
 
