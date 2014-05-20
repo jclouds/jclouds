@@ -18,6 +18,7 @@ package org.jclouds.compute.internal;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.base.Predicates.and;
+import static com.google.common.base.Predicates.in;
 import static com.google.common.base.Predicates.not;
 import static com.google.common.collect.ImmutableSet.copyOf;
 import static com.google.common.collect.Iterables.concat;
@@ -887,7 +888,10 @@ public abstract class BaseComputeServiceLiveTest extends BaseComputeServiceConte
    protected void tearDownContext() {
       try {
          if (nodes != null) {
-            client.destroyNodesMatching(inGroup(group));
+            // Destroy all nodes in the group but also make sure to destroy other created nodes that might not be in it.
+            // The "testCreateTwoNodesWithOneSpecifiedName" creates nodes with an explicit name that puts them outside the group,
+            // so the list of nodes should also be taken into account when destroying the nodes.
+            client.destroyNodesMatching(Predicates.<NodeMetadata> or(inGroup(group), in(nodes)));
          }
       } catch (Exception e) {
 
