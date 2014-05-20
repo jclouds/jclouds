@@ -280,6 +280,26 @@ public class CloudFilesCDNApiMockTest extends BaseOpenStackMockTest<CloudFilesAp
       }
    }
 
+   public void testGetCDNContainerWithSpaces() throws Exception {
+      MockWebServer server = mockOpenStackServer();
+      server.enqueue(addCommonHeaders(new MockResponse().setBody(stringFromResource("/access.json"))));
+      server.enqueue(addCommonHeaders(enabledResponse().setResponseCode(201)));
+
+      try {
+         CloudFilesApi api = api(server.getUrl("/").toString(), "rackspace-cloudfiles");
+
+         CDNContainer cdnContainer = api.getCDNApiForRegion("DFW").get("cdn-container with spaces");
+         assertCDNContainerNotNull(cdnContainer);
+         assertEquals(mockCDNContainerWithSpaces, cdnContainer);
+
+         assertEquals(server.getRequestCount(), 2);
+         assertAuthentication(server);
+         assertRequest(server.takeRequest(), "HEAD", "/v1/MossoCloudFS_5bcf396e-39dd-45ff-93a1-712b9aba90a9/cdn-container%20with%20spaces");
+      } finally {
+         server.shutdown();
+      }
+   }
+
    public void testGetFail() throws Exception {
       MockWebServer server = mockOpenStackServer();
       server.enqueue(addCommonHeaders(new MockResponse().setBody(stringFromResource("/access.json"))));
@@ -424,6 +444,17 @@ public class CloudFilesCDNApiMockTest extends BaseOpenStackMockTest<CloudFilesAp
          .iosUri(URI.create("http://ios-id-1.iosr.rackspace.com"))
          .build();
 
+   private static final CDNContainer mockCDNContainerWithSpaces = CDNContainer.builder()
+         .name("cdn-container with spaces")
+         .enabled(true)
+         .logRetention(false)
+         .ttl(777777)
+         .uri(URI.create("http://id-1.cdn.rackspace.com"))
+         .sslUri(URI.create("https://ssl-id-1.ssl.rackspace.com"))
+         .streamingUri(URI.create("http://streaming-id-1.stream.rackspace.com"))
+         .iosUri(URI.create("http://ios-id-1.iosr.rackspace.com"))
+         .build();
+
    private static MockResponse enabledResponse() {
       return new MockResponse()
             .addHeader(CDN_ENABLED, "true")
@@ -482,7 +513,7 @@ public class CloudFilesCDNApiMockTest extends BaseOpenStackMockTest<CloudFilesAp
                .iosUri(URI.create("http://ios-id-3.iosr.rackspace.com"))
                .build(),
          CDNContainer.builder()
-               .name("cdn-container-4")
+               .name("cdn-container-4 with spaces")
                .enabled(true)
                .logRetention(true)
                .ttl(777777)

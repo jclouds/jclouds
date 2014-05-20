@@ -11,7 +11,7 @@
     },
     {
         "cdn_streaming_uri": "http://streaming-id-4.stream.rackspace.com",
-        "name": "cdn-container-4",
+        "name": "cdn-container-4 with spaces",
         "cdn_ios_uri": "http://ios-id-4.iosr.rackspace.com",
         "cdn_ssl_uri": "https://ssl-id-4.ssl.rackspace.com",
         "cdn_enabled": true,
