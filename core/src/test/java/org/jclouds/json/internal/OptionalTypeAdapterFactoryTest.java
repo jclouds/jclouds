@@ -63,6 +63,7 @@ public class OptionalTypeAdapterFactoryTest {
          return someOtherValue;
       }
 
+      @Override
       public boolean equals(Object other) {
          SimpleBean that = SimpleBean.class.cast(other);
          return Objects.equal(value, that.value) && Objects.equal(someOtherValue, that.someOtherValue);

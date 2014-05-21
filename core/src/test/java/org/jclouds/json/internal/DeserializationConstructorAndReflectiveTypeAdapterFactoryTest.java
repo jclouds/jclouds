@@ -134,6 +134,7 @@ public final class DeserializationConstructorAndReflectiveTypeAdapterFactoryTest
          this.bar = bar;
       }
 
+      @Override
       public boolean equals(Object obj) {
          ValidatedConstructor other = ValidatedConstructor.class.cast(obj);
          return other != null && Objects.equal(foo, other.foo) && Objects.equal(bar, other.bar);
@@ -194,6 +195,7 @@ public final class DeserializationConstructorAndReflectiveTypeAdapterFactoryTest
          this.bar = bar;
       }
       
+      @Override
       public boolean equals(Object obj) {
          RenamedFields other = RenamedFields.class.cast(obj);
          return other != null && Objects.equal(foo, other.foo) && Objects.equal(bar, other.bar);
@@ -228,6 +230,7 @@ public final class DeserializationConstructorAndReflectiveTypeAdapterFactoryTest
          this.y = checkNotNull(y);
       }
 
+      @Override
       public boolean equals(Object obj) {
          ComposedObjects other = ComposedObjects.class.cast(obj);
          return other != null && Objects.equal(x, other.x) && Objects.equal(y, other.y);
