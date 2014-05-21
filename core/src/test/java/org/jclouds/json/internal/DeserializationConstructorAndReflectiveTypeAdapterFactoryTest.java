@@ -138,6 +138,11 @@ public final class DeserializationConstructorAndReflectiveTypeAdapterFactoryTest
          ValidatedConstructor other = ValidatedConstructor.class.cast(obj);
          return other != null && Objects.equal(foo, other.foo) && Objects.equal(bar, other.bar);
       }
+
+      @Override
+      public int hashCode() {
+         return Objects.hashCode(foo, bar);
+      }
    }
 
     @Test(expectedExceptions = IllegalArgumentException.class, expectedExceptionsMessageRegExp = "absent!")
@@ -193,6 +198,11 @@ public final class DeserializationConstructorAndReflectiveTypeAdapterFactoryTest
          RenamedFields other = RenamedFields.class.cast(obj);
          return other != null && Objects.equal(foo, other.foo) && Objects.equal(bar, other.bar);
       }
+
+      @Override
+      public int hashCode() {
+         return Objects.hashCode(foo, bar);
+      }
    }
 
    public void testCanOverrideDefault() throws IOException {
@@ -221,6 +231,11 @@ public final class DeserializationConstructorAndReflectiveTypeAdapterFactoryTest
       public boolean equals(Object obj) {
          ComposedObjects other = ComposedObjects.class.cast(obj);
          return other != null && Objects.equal(x, other.x) && Objects.equal(y, other.y);
+      }
+
+      @Override
+      public int hashCode() {
+         return Objects.hashCode(x, y);
       }
    }
 

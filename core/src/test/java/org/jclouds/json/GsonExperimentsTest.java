@@ -30,6 +30,7 @@ import java.util.concurrent.atomic.AtomicReference;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
 
+import com.google.common.base.Objects;
 import com.google.common.base.Optional;
 import com.google.common.collect.Lists;
 import com.google.common.util.concurrent.Atomics;
@@ -131,6 +132,11 @@ public class GsonExperimentsTest {
          } else {
             return false;
          }
+      }
+
+      @Override
+      public int hashCode() {
+         return Objects.hashCode(present, notPresent);
       }
    }
 

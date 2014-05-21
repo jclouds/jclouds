@@ -52,6 +52,10 @@ public class ImagePredicates {
          return obj instanceof Is64BitPredicate;
       }
 
+      @Override
+      public int hashCode() {
+         return 0;
+      }
    }
 
    /**

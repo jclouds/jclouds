@@ -67,6 +67,11 @@ public class OptionalTypeAdapterFactoryTest {
          SimpleBean that = SimpleBean.class.cast(other);
          return Objects.equal(value, that.value) && Objects.equal(someOtherValue, that.someOtherValue);
       }
+
+      @Override
+      public int hashCode() {
+         return Objects.hashCode(value, someOtherValue);
+      }
    }
 
    // register the type adapter so that gson can serialize/deserialize to it
