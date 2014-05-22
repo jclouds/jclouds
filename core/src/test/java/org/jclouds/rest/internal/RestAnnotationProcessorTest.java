@@ -1163,23 +1163,26 @@ public class RestAnnotationProcessorTest extends BaseRestApiTest {
       Invokable<?, ?> method = method(TestMultipartForm.class, "withParamFilePart", String.class,
             File.class);
       File file = File.createTempFile("foo", "bar");
-      Files.append("foobledata", file, UTF_8);
-      file.deleteOnExit();
+      try {
+         Files.append("foobledata", file, UTF_8);
 
-      GeneratedHttpRequest httpRequest = processor.apply(Invocation.create(method,
-            ImmutableList.<Object> of("name", file)));
-      assertRequestLineEquals(httpRequest, "POST http://localhost:9999 HTTP/1.1");
-      assertNonPayloadHeadersEqual(httpRequest, "");
-      assertPayloadEquals(httpRequest,
-            "----JCLOUDS--\r\n" + //
-                  "Content-Disposition: form-data; name=\"name\"\r\n" + //
-                  "\r\n" + //
-                  "name\r\n" + // /
-                  "----JCLOUDS--\r\n" + //
-                  "Content-Disposition: form-data; name=\"file\"; filename=\"" + file.getName() + "\"\r\n" + //
-                  "\r\n" + //
-                  "foobledata\r\n" + //
-                  "----JCLOUDS----\r\n", "multipart/form-data; boundary=--JCLOUDS--", false);
+         GeneratedHttpRequest httpRequest = processor.apply(Invocation.create(method,
+               ImmutableList.<Object> of("name", file)));
+         assertRequestLineEquals(httpRequest, "POST http://localhost:9999 HTTP/1.1");
+         assertNonPayloadHeadersEqual(httpRequest, "");
+         assertPayloadEquals(httpRequest,
+               "----JCLOUDS--\r\n" + //
+                     "Content-Disposition: form-data; name=\"name\"\r\n" + //
+                     "\r\n" + //
+                     "name\r\n" + // /
+                     "----JCLOUDS--\r\n" + //
+                     "Content-Disposition: form-data; name=\"file\"; filename=\"" + file.getName() + "\"\r\n" + //
+                     "\r\n" + //
+                     "foobledata\r\n" + //
+                     "----JCLOUDS----\r\n", "multipart/form-data; boundary=--JCLOUDS--", false);
+      } finally {
+         file.delete();
+      }
    }
 
    public void testMultipartWithParamByteArrayPart() throws SecurityException, NoSuchMethodException, IOException {
@@ -1206,24 +1209,27 @@ public class RestAnnotationProcessorTest extends BaseRestApiTest {
       Invokable<?, ?> method = method(TestMultipartForm.class, "withParamFileBinaryPart",
             String.class, File.class);
       File file = File.createTempFile("foo", "bar");
-      Files.write(new byte[] { 17, 26, 39, 40, 50 }, file);
-      file.deleteOnExit();
+      try {
+         Files.write(new byte[] { 17, 26, 39, 40, 50 }, file);
 
-      GeneratedHttpRequest httpRequest = processor.apply(Invocation.create(method,
-            ImmutableList.<Object> of("name", file)));
-      assertRequestLineEquals(httpRequest, "POST http://localhost:9999 HTTP/1.1");
-      assertNonPayloadHeadersEqual(httpRequest, "");
-      assertPayloadEquals(httpRequest,
-            "----JCLOUDS--\r\n" + //
-                  "Content-Disposition: form-data; name=\"name\"\r\n" + //
-                  "\r\n" + //
-                  "name\r\n" + // /
-                  "----JCLOUDS--\r\n" + //
-                  "Content-Disposition: form-data; name=\"file\"; filename=\"" + file.getName() + "\"\r\n" + //
-                  "Content-Type: application/octet-stream\r\n" + //
-                  "\r\n" + //
-                  "'(2\r\n" + //
-                  "----JCLOUDS----\r\n", "multipart/form-data; boundary=--JCLOUDS--", false);
+         GeneratedHttpRequest httpRequest = processor.apply(Invocation.create(method,
+               ImmutableList.<Object> of("name", file)));
+         assertRequestLineEquals(httpRequest, "POST http://localhost:9999 HTTP/1.1");
+         assertNonPayloadHeadersEqual(httpRequest, "");
+         assertPayloadEquals(httpRequest,
+               "----JCLOUDS--\r\n" + //
+                     "Content-Disposition: form-data; name=\"name\"\r\n" + //
+                     "\r\n" + //
+                     "name\r\n" + // /
+                     "----JCLOUDS--\r\n" + //
+                     "Content-Disposition: form-data; name=\"file\"; filename=\"" + file.getName() + "\"\r\n" + //
+                     "Content-Type: application/octet-stream\r\n" + //
+                     "\r\n" + //
+                     "'(2\r\n" + //
+                     "----JCLOUDS----\r\n", "multipart/form-data; boundary=--JCLOUDS--", false);
+      } finally {
+         file.delete();
+      }
    }
 
    public interface TestPut {

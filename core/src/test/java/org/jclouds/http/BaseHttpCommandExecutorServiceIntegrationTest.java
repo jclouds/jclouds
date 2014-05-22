@@ -275,7 +275,6 @@ public abstract class BaseHttpCommandExecutorServiceIntegrationTest extends Base
 
       try {
          f = File.createTempFile("jclouds", "tmp");
-         f.deleteOnExit();
          long length = (new Random().nextInt(32) + 1) * 1024 * 1024;
          byte[] buf = new byte[1024];
          Arrays.fill(buf, (byte) 'a');

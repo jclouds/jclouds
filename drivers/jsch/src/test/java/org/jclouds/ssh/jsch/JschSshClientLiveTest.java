@@ -160,12 +160,15 @@ public class JschSshClientLiveTest {
    @Test
    public void testPutAndGet() throws IOException {
       temp = File.createTempFile("foo", "bar");
-      temp.deleteOnExit();
-      SshClient client = setupClient();
-      client.put(temp.getAbsolutePath(), Payloads.newStringPayload("rabbit"));
-      Payload input = setupClient().get(temp.getAbsolutePath());
-      String contents = Strings2.toString(input);
-      assertEquals(contents, "rabbit");
+      try {
+         SshClient client = setupClient();
+         client.put(temp.getAbsolutePath(), Payloads.newStringPayload("rabbit"));
+         Payload input = setupClient().get(temp.getAbsolutePath());
+         String contents = Strings2.toString(input);
+         assertEquals(contents, "rabbit");
+      } finally {
+         temp.delete();
+      }
    }
 
    @Test
