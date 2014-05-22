@@ -19,12 +19,10 @@ package org.jclouds.http.internal;
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.hash.Hashing.md5;
 import static com.google.common.io.BaseEncoding.base16;
-import static com.google.common.io.ByteStreams.copy;
 import static java.util.concurrent.Executors.newCachedThreadPool;
 import static org.jclouds.io.ByteSources.asByteSource;
 import static org.testng.Assert.assertEquals;
 
-import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.net.URL;
 import java.net.URLConnection;
@@ -32,6 +30,8 @@ import java.net.UnknownHostException;
 import java.util.concurrent.Callable;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
+
+import com.google.common.io.ByteStreams;
 
 import org.jclouds.logging.Logger;
 import org.testng.annotations.Test;
@@ -56,9 +56,7 @@ public class WireLiveTest {
       public Void call() throws Exception {
          HttpWire wire = setUp();
          InputStream in = wire.input(fromServer);
-         ByteArrayOutputStream out = new ByteArrayOutputStream();// TODO
-         copy(in, out);
-         byte[] compare = md5().hashBytes(out.toByteArray()).asBytes();
+         byte[] compare = md5().hashBytes(ByteStreams.toByteArray(in)).asBytes();
          Thread.sleep(100);
          assertEquals(base16().lowerCase().encode(compare), checkNotNull(sysHttpStreamMd5, sysHttpStreamMd5));
          assertEquals(((BufferLogger) wire.getWireLog()).buff.toString().getBytes().length, 3331484);
