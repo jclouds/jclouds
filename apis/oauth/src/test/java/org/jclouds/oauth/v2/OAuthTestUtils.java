@@ -19,10 +19,8 @@ package org.jclouds.oauth.v2;
 import com.google.common.base.Charsets;
 import com.google.common.base.Throwables;
 import com.google.common.io.Files;
-import org.jclouds.util.Strings2;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.Properties;
 
@@ -40,8 +38,8 @@ public class OAuthTestUtils {
       try {
          properties = properties == null ? new Properties() : properties;
          properties.put("oauth.identity", "foo");
-         properties.put("oauth.credential", Strings2.toStringAndClose(new FileInputStream("src/test/resources/testpk" +
-                 ".pem")));
+         properties.put("oauth.credential",
+            Files.asCharSource(new File("src/test/resources/testpk.pem"), Charsets.UTF_8).read());
          properties.put("oauth.endpoint", "http://localhost:5000/o/oauth2/token");
          properties.put(AUDIENCE, "https://accounts.google.com/o/oauth2/token");
          return properties;

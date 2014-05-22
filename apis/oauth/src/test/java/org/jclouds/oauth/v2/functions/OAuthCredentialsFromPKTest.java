@@ -17,17 +17,19 @@
 package org.jclouds.oauth.v2.functions;
 
 import static com.google.common.base.Suppliers.ofInstance;
-import static org.jclouds.util.Strings2.toStringAndClose;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
 
-import java.io.FileInputStream;
+import java.io.File;
 import java.io.IOException;
 import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
 import java.security.UnrecoverableKeyException;
 import java.security.cert.CertificateException;
 import java.security.spec.InvalidKeySpecException;
+
+import com.google.common.base.Charsets;
+import com.google.common.io.Files;
 
 import org.jclouds.domain.Credentials;
 import org.jclouds.oauth.v2.domain.OAuthCredentials;
@@ -43,7 +45,8 @@ public class OAuthCredentialsFromPKTest {
    public static OAuthCredentials loadOAuthCredentials() throws IOException, NoSuchAlgorithmException,
          CertificateException, InvalidKeySpecException {
       OAuthCredentialsSupplier loader = new OAuthCredentialsSupplier(ofInstance(new Credentials("foo",
-            toStringAndClose(new FileInputStream("src/test/resources/testpk.pem")))), new OAuthCredentialsForCredentials("RS256"), "RS256");
+            Files.asCharSource(new File("src/test/resources/testpk.pem"), Charsets.UTF_8).read())),
+            new OAuthCredentialsForCredentials("RS256"), "RS256");
       return loader.get();
    }
 
