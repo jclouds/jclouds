@@ -32,11 +32,12 @@ import static org.testng.Assert.fail;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.Writer;
 import java.net.URLDecoder;
+import java.util.Arrays;
 import java.util.Random;
 import java.util.zip.GZIPInputStream;
 
+import org.jclouds.io.ByteSources;
 import org.jclouds.io.Payload;
 import org.jclouds.util.Strings2;
 import org.testng.annotations.BeforeClass;
@@ -48,7 +49,6 @@ import com.google.common.base.Throwables;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Multimap;
 import com.google.common.io.ByteSource;
-import com.google.common.io.CharSink;
 import com.google.common.io.Files;
 import com.squareup.okhttp.mockwebserver.Dispatcher;
 import com.squareup.okhttp.mockwebserver.MockResponse;
@@ -277,18 +277,9 @@ public abstract class BaseHttpCommandExecutorServiceIntegrationTest extends Base
          f = File.createTempFile("jclouds", "tmp");
          f.deleteOnExit();
          long length = (new Random().nextInt(32) + 1) * 1024 * 1024;
-
-         CharSink fileSink = Files.asCharSink(f, Charsets.UTF_8);
-         Writer out = null;
-         try {
-            out = fileSink.openStream();
-            for (long i = 0; i < length; i++) {
-               out.append('a');
-            }
-            out.flush();
-         } finally {
-            close(out, true);
-         }
+         byte[] buf = new byte[1024];
+         Arrays.fill(buf, (byte) 'a');
+         ByteSources.repeatingArrayByteSource(buf).slice(0, length).copyTo(Files.asByteSink(f));
 
          ByteSource byteSource = asByteSource(f);
          payload = newByteSourcePayload(byteSource);

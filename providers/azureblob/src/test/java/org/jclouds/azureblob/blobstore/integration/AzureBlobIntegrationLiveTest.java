@@ -20,7 +20,6 @@ import java.io.File;
 import java.io.IOException;
 import java.util.concurrent.ExecutionException;
 
-import com.google.common.collect.Iterables;
 import com.google.common.io.ByteSource;
 import com.google.common.io.Files;
 import org.jclouds.azureblob.blobstore.strategy.MultipartUploadStrategy;
@@ -28,6 +27,7 @@ import org.jclouds.blobstore.BlobStore;
 import org.jclouds.blobstore.domain.Blob;
 import org.jclouds.blobstore.integration.internal.BaseBlobIntegrationTest;
 import org.jclouds.blobstore.options.PutOptions;
+import org.jclouds.io.ByteSources;
 import org.testng.SkipException;
 import org.testng.annotations.Test;
 import static org.testng.Assert.assertEquals;
@@ -98,7 +98,7 @@ public class AzureBlobIntegrationLiveTest extends BaseBlobIntegrationTest {
 
    public void testMultipartChunkedFileStreamPowerOfTwoSize() throws IOException, InterruptedException {
       final long limit = MultipartUploadStrategy.MAX_BLOCK_SIZE;
-      ByteSource input = repeatingArrayByteSource(new byte[1024]).slice(0, limit);
+      ByteSource input = ByteSources.repeatingArrayByteSource(new byte[1024]).slice(0, limit);
       File file = new File("target/const.txt");
       input.copyTo(Files.asByteSink(file));
       String containerName = getContainerName();
@@ -113,9 +113,5 @@ public class AzureBlobIntegrationLiveTest extends BaseBlobIntegrationTest {
       } finally {
          returnContainer(containerName);
       }
-   }
-
-   private static ByteSource repeatingArrayByteSource(final byte[] input) {
-      return ByteSource.concat(Iterables.cycle(ByteSource.wrap(input)));
    }
 }

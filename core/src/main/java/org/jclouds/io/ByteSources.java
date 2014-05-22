@@ -22,6 +22,7 @@ import java.io.IOException;
 import java.io.InputStream;
 
 import com.google.common.annotations.Beta;
+import com.google.common.collect.Iterables;
 import com.google.common.io.ByteSource;
 
 /**
@@ -48,4 +49,8 @@ public class ByteSources {
       };
    }
 
+   /** Create an infinite-length ByteSource which repeats its input. */
+   public static ByteSource repeatingArrayByteSource(final byte[] input) {
+      return ByteSource.concat(Iterables.cycle(ByteSource.wrap(input)));
+   }
 }
