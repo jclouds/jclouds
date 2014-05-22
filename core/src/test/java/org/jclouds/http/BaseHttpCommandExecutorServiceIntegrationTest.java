@@ -34,8 +34,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.Writer;
 import java.net.URLDecoder;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 import java.util.Random;
 import java.util.zip.GZIPInputStream;
 
@@ -280,23 +278,21 @@ public abstract class BaseHttpCommandExecutorServiceIntegrationTest extends Base
          f.deleteOnExit();
          long length = (new Random().nextInt(32) + 1) * 1024 * 1024;
 
-         MessageDigest digester = md5Digest();
-
          CharSink fileSink = Files.asCharSink(f, Charsets.UTF_8);
          Writer out = null;
          try {
             out = fileSink.openStream();
             for (long i = 0; i < length; i++) {
                out.append('a');
-               digester.update((byte) 'a');
             }
             out.flush();
          } finally {
             close(out, true);
          }
 
-         payload = newByteSourcePayload(asByteSource(f));
-         byte[] digest = digester.digest();
+         ByteSource byteSource = asByteSource(f);
+         payload = newByteSourcePayload(byteSource);
+         byte[] digest = byteSource.hash(md5()).asBytes();
          String strDigest = base64().encode(digest);
 
          payload.getContentMetadata().setContentMD5(digest);
@@ -314,14 +310,6 @@ public abstract class BaseHttpCommandExecutorServiceIntegrationTest extends Base
          }
          close(client, true);
          server.shutdown();
-      }
-   }
-
-   private MessageDigest md5Digest() throws AssertionError {
-      try {
-         return MessageDigest.getInstance("MD5");
-      } catch (NoSuchAlgorithmException e) {
-         throw new AssertionError(e);
       }
    }
 
