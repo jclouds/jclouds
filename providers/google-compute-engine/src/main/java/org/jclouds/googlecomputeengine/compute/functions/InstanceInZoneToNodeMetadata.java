@@ -84,8 +84,10 @@ public class InstanceInZoneToNodeMetadata implements Function<InstanceInZone, No
 
       String group = groupFromMapOrName(input.getMetadata().getItems(),
                                                input.getName(), nodeNamingConvention);
-      FluentIterable<String> tags = FluentIterable.from(input.getTags().getItems())
-                                            .filter(Predicates.not(firewallTagNamingConvention.get(group).isFirewallTag()));
+      FluentIterable<String> tags = FluentIterable.from(input.getTags().getItems());
+      if (group != null) {
+         tags = tags.filter(Predicates.not(firewallTagNamingConvention.get(group).isFirewallTag()));
+      }
 
       NodeMetadataBuilder builder = new NodeMetadataBuilder();
 
