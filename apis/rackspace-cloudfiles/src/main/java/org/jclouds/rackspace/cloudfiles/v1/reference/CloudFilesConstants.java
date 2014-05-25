@@ -16,26 +16,12 @@
  */
 package org.jclouds.rackspace.cloudfiles.v1.reference;
 
-import org.jclouds.openstack.swift.v1.reference.SwiftHeaders;
 
 /**
- * Additional headers specified by Rackspace Cloud Files.
- * 
+ * Constants specified by Rackspace Cloud Files.
  */
-public interface CloudFilesHeaders extends SwiftHeaders {
-   // Access logs
-   String CONTAINER_ACCESS_LOG_DELIVERY = CONTAINER_METADATA_PREFIX + "Access-Log-Delivery";
-
-   // Common CDN Headers
-   String CDN_ENABLED = "X-Cdn-Enabled";
-   String CDN_LOG_RETENTION = "X-Log-Retention";
-   String CDN_TTL = "X-Ttl";
-   String CDN_URI = "X-Cdn-Uri";
-   String CDN_SSL_URI = "X-Cdn-Ssl-Uri";
-   String CDN_STREAMING_URI = "X-Cdn-Streaming-Uri";
-   String CDN_IOS_URI = "X-Cdn-Ios-Uri";
-
-   // CDN Purge
-   String CDN_PURGE_OBJECT_EMAIL = "X-Purge-Email";
-   String CDN_PURGE_OBJECT_FAILED = "X-Purge-Failed-Reason";
+public interface CloudFilesConstants {
+   int CDN_TTL_MIN = 900;
+   int CDN_TTL_MAX = 31536000;
+   int CDN_TTL_DEFAULT = 259200;
 }

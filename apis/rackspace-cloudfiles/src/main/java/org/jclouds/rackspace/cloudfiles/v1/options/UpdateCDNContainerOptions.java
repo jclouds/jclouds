@@ -23,11 +23,11 @@ import static org.jclouds.openstack.swift.v1.reference.SwiftHeaders.STATIC_WEB_E
 import static org.jclouds.openstack.swift.v1.reference.SwiftHeaders.STATIC_WEB_INDEX;
 import static org.jclouds.openstack.swift.v1.reference.SwiftHeaders.STATIC_WEB_LISTINGS;
 import static org.jclouds.openstack.swift.v1.reference.SwiftHeaders.STATIC_WEB_LISTINGS_CSS;
+import static org.jclouds.rackspace.cloudfiles.v1.reference.CloudFilesConstants.CDN_TTL_MAX;
+import static org.jclouds.rackspace.cloudfiles.v1.reference.CloudFilesConstants.CDN_TTL_MIN;
 import static org.jclouds.rackspace.cloudfiles.v1.reference.CloudFilesHeaders.CDN_ENABLED;
 import static org.jclouds.rackspace.cloudfiles.v1.reference.CloudFilesHeaders.CDN_LOG_RETENTION;
 import static org.jclouds.rackspace.cloudfiles.v1.reference.CloudFilesHeaders.CDN_TTL;
-import static org.jclouds.rackspace.cloudfiles.v1.reference.CloudFilesHeaders.CDN_TTL_MAX;
-import static org.jclouds.rackspace.cloudfiles.v1.reference.CloudFilesHeaders.CDN_TTL_MIN;
 
 import org.jclouds.http.options.BaseHttpRequestOptions;
 

@@ -35,10 +35,10 @@ import static org.testng.Assert.assertTrue;
 import java.net.URI;
 import java.util.List;
 
-import org.jclouds.openstack.swift.v1.options.ListContainerOptions;
 import org.jclouds.openstack.v2_0.internal.BaseOpenStackMockTest;
 import org.jclouds.rackspace.cloudfiles.v1.CloudFilesApi;
 import org.jclouds.rackspace.cloudfiles.v1.domain.CDNContainer;
+import org.jclouds.rackspace.cloudfiles.v1.options.ListCDNContainerOptions;
 import org.testng.annotations.Test;
 
 import com.google.common.collect.FluentIterable;
@@ -105,7 +105,7 @@ public class CloudFilesCDNApiMockTest extends BaseOpenStackMockTest<CloudFilesAp
 
       try {
          CloudFilesApi api = api(server.getUrl("/").toString(), "rackspace-cloudfiles");
-         ListContainerOptions options = ListContainerOptions.Builder.marker("cdn-container-3");
+         ListCDNContainerOptions options = new ListCDNContainerOptions().marker("cdn-container-3");
          ImmutableList<CDNContainer> containers = api.getCDNApiForRegion("DFW").list(options).toList();
 
          for (CDNContainer container : containers) {
@@ -129,7 +129,7 @@ public class CloudFilesCDNApiMockTest extends BaseOpenStackMockTest<CloudFilesAp
 
       try {
          CloudFilesApi api = api(server.getUrl("/").toString(), "rackspace-cloudfiles");
-         ListContainerOptions options = ListContainerOptions.Builder.marker("cdn-container-3");
+         ListCDNContainerOptions options = ListCDNContainerOptions.Builder.marker("cdn-container-3");
          FluentIterable<CDNContainer> containers = api.getCDNApiForRegion("DFW").list(options);
 
          assertEquals(server.getRequestCount(), 2);

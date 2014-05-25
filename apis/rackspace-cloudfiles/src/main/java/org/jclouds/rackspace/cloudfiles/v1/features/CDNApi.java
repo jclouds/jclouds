@@ -39,12 +39,12 @@ import org.jclouds.Fallbacks.FalseOnNotFoundOr404;
 import org.jclouds.Fallbacks.NullOnNotFoundOr404;
 import org.jclouds.javax.annotation.Nullable;
 import org.jclouds.openstack.keystone.v2_0.filters.AuthenticateRequest;
-import org.jclouds.openstack.swift.v1.options.ListContainerOptions;
 import org.jclouds.rackspace.cloudfiles.v1.CloudFilesApi;
 import org.jclouds.rackspace.cloudfiles.v1.binders.BindCDNPurgeEmailAddressesToHeaders;
 import org.jclouds.rackspace.cloudfiles.v1.domain.CDNContainer;
 import org.jclouds.rackspace.cloudfiles.v1.functions.ParseCDNContainerFromHeaders;
 import org.jclouds.rackspace.cloudfiles.v1.functions.ParseCDNContainerURIFromHeaders;
+import org.jclouds.rackspace.cloudfiles.v1.options.ListCDNContainerOptions;
 import org.jclouds.rackspace.cloudfiles.v1.options.UpdateCDNContainerOptions;
 import org.jclouds.rackspace.cloudfiles.v1.reference.CloudFilesHeaders;
 import org.jclouds.rest.annotations.BinderParam;
@@ -97,7 +97,7 @@ public interface CDNApi extends Closeable {
    @QueryParams(keys = {"format", "enabled_only"}, values = {"json", "true"})
    @Fallback(EmptyFluentIterableOnNotFoundOr404.class)
    @Path("/")
-   FluentIterable<CDNContainer> list(ListContainerOptions options);
+   FluentIterable<CDNContainer> list(ListCDNContainerOptions options);
 
    /**
     * Gets the specified CDN Container.

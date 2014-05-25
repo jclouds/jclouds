@@ -28,17 +28,15 @@ import org.jclouds.http.options.GetOptions;
 import org.jclouds.io.Payload;
 import org.jclouds.io.Payloads;
 import org.jclouds.openstack.swift.v1.features.ObjectApi;
-import org.jclouds.openstack.swift.v1.options.CreateContainerOptions;
-import org.jclouds.openstack.swift.v1.options.ListContainerOptions;
 import org.jclouds.rackspace.cloudfiles.v1.domain.CDNContainer;
 import org.jclouds.rackspace.cloudfiles.v1.internal.BaseCloudFilesApiLiveTest;
+import org.jclouds.rackspace.cloudfiles.v1.options.ListCDNContainerOptions;
 import org.jclouds.rackspace.cloudfiles.v1.options.UpdateCDNContainerOptions;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
 import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableMap;
 import com.google.common.io.ByteSource;
 
 
@@ -101,7 +99,7 @@ public class CloudFilesCDNApiLiveTest extends BaseCloudFilesApiLiveTest {
    public void testListWithOptions() throws Exception {
       String lexicographicallyBeforeName = name.substring(0, name.length() - 1);
       for (String regionId : regions) {
-         ListContainerOptions options = ListContainerOptions.Builder.marker(lexicographicallyBeforeName);
+         ListCDNContainerOptions options = new ListCDNContainerOptions().marker(lexicographicallyBeforeName);
           
          CDNContainer cdnContainer = api.getCDNApiForRegion(regionId).list(options).get(0);
          assertCDNContainerNotNull(cdnContainer);
