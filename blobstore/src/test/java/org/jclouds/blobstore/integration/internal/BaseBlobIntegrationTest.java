@@ -515,9 +515,6 @@ public class BaseBlobIntegrationTest extends BaseBlobStoreIntegrationTest {
       PayloadBlobBuilder blobBuilder = view.getBlobStore().blobBuilder(name).payload(Payloads.newPayload(content))
                .contentType(type);
       addContentMetadata(blobBuilder);
-      if (content instanceof InputStream) {
-         blobBuilder.calculateMD5();
-      }
       Blob blob = blobBuilder.build();
       String container = getContainerName();
       try {
@@ -621,7 +618,9 @@ public class BaseBlobIntegrationTest extends BaseBlobStoreIntegrationTest {
       // normalize the
       // providers.
       Blob blob = view.getBlobStore().blobBuilder(name).userMetadata(ImmutableMap.of("Adrian", "powderpuff"))
-               .payload(TEST_STRING).contentType(MediaType.TEXT_PLAIN).calculateMD5().build();
+               .payload(TEST_STRING).contentType(MediaType.TEXT_PLAIN)
+               .contentMD5(md5().hashString(TEST_STRING, Charsets.UTF_8).asBytes())
+               .build();
       String container = getContainerName();
       try {
          assertNull(view.getBlobStore().blobMetadata(container, "powderpuff"));

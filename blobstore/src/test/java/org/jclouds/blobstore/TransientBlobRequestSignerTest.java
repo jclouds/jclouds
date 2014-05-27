@@ -30,6 +30,10 @@ import org.jclouds.rest.internal.BaseAsyncClientTest;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
+import com.google.common.base.Charsets;
+import com.google.common.hash.Hashing;
+import com.google.common.io.ByteSource;
+
 /**
  * Tests behavior of {@code LocalBlobRequestSigner}
  * 
@@ -88,7 +92,12 @@ public class TransientBlobRequestSignerTest extends BaseAsyncClientTest<LocalAsy
 
    public void testSignPutBlobWithGenerate() throws ArrayIndexOutOfBoundsException, SecurityException,
             IllegalArgumentException, NoSuchMethodException, IOException {
-      Blob blob = blobFactory.get().name(blobName).payload("foo").calculateMD5().contentType("text/plain").build();
+      ByteSource byteSource = ByteSource.wrap("foo".getBytes(Charsets.UTF_8));
+      Blob blob = blobFactory.get().name(blobName)
+         .payload(byteSource)
+         .contentLength(byteSource.size())
+         .contentMD5(byteSource.hash(Hashing.md5()).asBytes())
+         .contentType("text/plain").build();
       byte[] md5 = { -84, -67, 24, -37, 76, -62, -8, 92, -19, -17, 101, 79, -52, -60, -92, -40 };
       
       assertEquals(blob.getPayload().getContentMetadata().getContentMD5(), md5);

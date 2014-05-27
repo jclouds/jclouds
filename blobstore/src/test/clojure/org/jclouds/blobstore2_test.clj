@@ -21,6 +21,7 @@
   (:import [java.io ByteArrayInputStream ByteArrayOutputStream
             StringBufferInputStream]
            [org.jclouds.util Strings2]
+           com.google.common.hash.Hashing
            com.google.common.io.ByteSource))
 
 (defn clean-stub-fixture
@@ -64,14 +65,14 @@
   (is (create-container blobstore-stub "container"))
   (is (empty? (blobs blobstore-stub "container")))
   (is (put-blob blobstore-stub "container"
-                (blob "blob1" :payload "blob1" :calculate-md5 true)))
+                (blob "blob1" :payload "blob1")))
   (is (put-blob blobstore-stub "container"
-                (blob "blob2" :payload "blob2" :calculate-md5 true)))
+                (blob "blob2" :payload "blob2")))
   (is (= 2 (count (blobs blobstore-stub "container"))))
   (is (= 1 (count (blobs blobstore-stub "container" :max-results 1))))
   (create-directory blobstore-stub "container" "dir")
   (is (put-blob blobstore-stub "container"
-                (blob "dir/blob2" :payload "blob2" :calculate-md5 true)))
+                (blob "dir/blob2" :payload "blob2")))
   (is (= 3 (count-blobs blobstore-stub "container")))
   (is (= 3 (count (blobs blobstore-stub "container"))))
   (is (= 4 (count (blobs blobstore-stub "container" :recursive true))))
@@ -85,8 +86,7 @@
     (create-container blobstore-stub container-name)
     (dotimes [i total-blobs] (put-blob blobstore-stub container-name
                                        (blob (str i)
-                                             :payload (str i)
-                                             :calculate-md5 true)))
+                                             :payload (str i))))
     ;; verify
     (is (= total-blobs (count-blobs blobstore-stub container-name)))))
 
@@ -98,9 +98,9 @@
 (deftest get-blob-test
   (is (create-container blobstore-stub "blob"))
   (is (put-blob blobstore-stub "blob"
-                (blob "blob1" :payload "blob1" :calculate-md5 true)))
+                (blob "blob1" :payload "blob1")))
   (is (put-blob blobstore-stub "blob"
-                (blob "blob2" :payload "blob2" :calculate-md5 true)))
+                (blob "blob2" :payload "blob2")))
   (is (= "blob2" (Strings2/toStringAndClose (get-blob-stream blobstore-stub
                                                              "blob" "blob2")))))
 
@@ -148,9 +148,10 @@
     (is (= "DELETE" (.getMethod request)))))
 
 (deftest blob-test
-  (let [a-blob (blob "test-name"
-                     :payload "test-payload"
-                     :calculate-md5 true)]
+  (let [byte-source (ByteSource/wrap (.getBytes "test-payload"))
+        a-blob (blob "test-name"
+                     :payload byte-source
+                     :content-md5 (.asBytes (.hash byte-source (Hashing/md5))))]
     (is (= (seq (.. a-blob (getPayload) (getContentMetadata) (getContentMD5)))
            (seq (.digest (doto (java.security.MessageDigest/getInstance "MD5")
                                (.reset)

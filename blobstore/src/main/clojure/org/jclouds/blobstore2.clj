@@ -291,10 +291,8 @@ Options can also be specified for extension modules
 
    The payload argument can be anything accepted by the PayloadSource protocol."
   ([^String name &
-    {:keys [payload content-type content-length content-md5 calculate-md5
+    {:keys [payload content-type content-length content-md5
             content-disposition content-encoding content-language metadata]}]
-     {:pre [(not (and content-md5 calculate-md5))
-            (not (and (nil? payload) calculate-md5))]}
      (let [blob-builder (.name (BlobBuilderImpl.) name)
            blob-builder (if payload
                           (.payload blob-builder
@@ -306,11 +304,9 @@ Options can also be specified for extension modules
            blob-builder (if content-type
                           (.contentType blob-builder content-type)
                           blob-builder)
-           blob-builder (if calculate-md5 ;; Only do calculateMD5 OR contentMD5.
-                          (.calculateMD5 blob-builder)
-                          (if content-md5
-                            (.contentMD5 blob-builder content-md5)
-                            blob-builder))]
+           blob-builder (if content-md5
+                          (.contentMD5 blob-builder content-md5)
+                          blob-builder)]
        (doto blob-builder
          (.contentDisposition content-disposition)
          (.contentEncoding content-encoding)

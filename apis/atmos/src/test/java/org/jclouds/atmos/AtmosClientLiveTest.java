@@ -16,6 +16,7 @@
  */
 package org.jclouds.atmos;
 
+import static com.google.common.base.Charsets.UTF_8;
 import static com.google.common.base.Preconditions.checkState;
 import static org.jclouds.util.Predicates2.retry;
 import static org.testng.Assert.assertEquals;
@@ -49,6 +50,8 @@ import com.google.common.base.Predicate;
 import com.google.common.base.Throwables;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Sets;
+import com.google.common.hash.HashCode;
+import com.google.common.hash.Hashing;
 
 /**
  * Tests behavior of {@code AtmosClient}
@@ -147,9 +150,11 @@ public class AtmosClientLiveTest extends BaseBlobStoreIntegrationTest {
 
    @Test(timeOut = 5 * 60 * 1000, dependsOnMethods = { "testCreateDirectory" })
    public void testListOptions() throws Exception {
-      createOrReplaceObject("object2", "here is my data!", "meta-value1");
-      createOrReplaceObject("object3", "here is my data!", "meta-value1");
-      createOrReplaceObject("object4", "here is my data!", "meta-value1");
+      String data = "here is my data!";
+      HashCode hashCode = Hashing.md5().hashString(data, UTF_8);
+      createOrReplaceObject("object2", data, hashCode, "meta-value1");
+      createOrReplaceObject("object3", data, hashCode, "meta-value1");
+      createOrReplaceObject("object4", data, hashCode, "meta-value1");
       BoundedSet<? extends DirectoryEntry> r2 = getApi().listDirectory(privateDirectory, ListOptions.Builder.limit(1));
       assertEquals(r2.size(), 1);
       assert r2.getToken() != null;
@@ -164,13 +169,15 @@ public class AtmosClientLiveTest extends BaseBlobStoreIntegrationTest {
    public void testFileOperations() throws Exception {
       // create the object
       System.err.printf("creating%n");
-      createOrReplaceObject("object", "here is my data!", "meta-value1");
+      String data1 = "here is my data!";
+      createOrReplaceObject("object", data1, Hashing.md5().hashString(data1, UTF_8), "meta-value1");
       assertEventuallyObjectMatches("object", "here is my data!", "meta-value1");
       assertEventuallyHeadMatches("object", "meta-value1");
 
       // try overwriting the object
       System.err.printf("overwriting%n");
-      createOrReplaceObject("object", "here is my data?", "meta-value?");
+      String data2 = "here is my data?";
+      createOrReplaceObject("object", data2, Hashing.md5().hashString(data2, UTF_8), "meta-value?");
       assertEventuallyObjectMatches("object", "here is my data?", "meta-value?");
 
       // loop to gather metrics
@@ -199,7 +206,7 @@ public class AtmosClientLiveTest extends BaseBlobStoreIntegrationTest {
    }
 
    private void createOrUpdateWithErrorLoop(boolean stream, String data, String metadataValue) throws Exception {
-      createOrReplaceObject("object", makeData(data, stream), metadataValue);
+      createOrReplaceObject("object", makeData(data, stream), Hashing.md5().hashString(data, UTF_8), metadataValue);
       assertEventuallyObjectMatches("object", data, metadataValue);
    }
 
@@ -207,13 +214,13 @@ public class AtmosClientLiveTest extends BaseBlobStoreIntegrationTest {
       return stream ? Strings2.toInputStream(in) : in;
    }
 
-   private void createOrReplaceObject(String name, Object data, String metadataValue) throws Exception {
+   private void createOrReplaceObject(String name, Object data, HashCode hashCode, String metadataValue) throws Exception {
       // Test PUT with string data, ETag hash, and a piece of metadata
       AtmosObject object = getApi().newObject();
       object.getContentMetadata().setName(name);
       object.setPayload(Payloads.newPayload(data));
       object.getContentMetadata().setContentLength(16l);
-      Payloads.calculateMD5(object);
+      object.getContentMetadata().setContentMD5(hashCode.asBytes());
       object.getContentMetadata().setContentType("text/plain");
       object.getUserMetadata().getMetadata().put("Metadata", metadataValue);
       replaceObject(object);

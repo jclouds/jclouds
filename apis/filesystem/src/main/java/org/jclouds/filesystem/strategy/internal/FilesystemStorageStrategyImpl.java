@@ -49,6 +49,7 @@ import com.google.common.collect.Iterables;
 import com.google.common.collect.Sets;
 import com.google.common.hash.Hashing;
 import com.google.common.hash.HashingInputStream;
+import com.google.common.io.ByteSource;
 import com.google.common.io.Closeables;
 import com.google.common.io.Files;
 
@@ -176,9 +177,11 @@ public class FilesystemStorageStrategyImpl implements LocalStorageStrategy {
    public Blob getBlob(final String container, final String key) {
       BlobBuilder builder = blobBuilders.get();
       builder.name(key);
-      File file = getFileForBlobKey(container, key);
+      ByteSource byteSource = Files.asByteSource(getFileForBlobKey(container, key));
       try {
-         builder.payload(file).calculateMD5();
+         builder.payload(byteSource)
+            .contentLength(byteSource.size())
+            .contentMD5(byteSource.hash(Hashing.md5()).asBytes());
       } catch (IOException e) {
          logger.error("An error occurred calculating MD5 for blob %s from container ", key, container);
          Throwables.propagateIfPossible(e);

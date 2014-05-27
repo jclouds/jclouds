@@ -45,7 +45,6 @@ import org.jclouds.blobstore.ContainerNotFoundException;
 import org.jclouds.blobstore.integration.internal.BaseBlobStoreIntegrationTest;
 import org.jclouds.http.HttpResponseException;
 import org.jclouds.http.options.GetOptions;
-import org.jclouds.io.Payloads;
 import org.jclouds.io.payloads.ByteArrayPayload;
 import org.jclouds.util.Strings2;
 import org.jclouds.util.Throwables2;
@@ -55,6 +54,7 @@ import com.google.common.base.Charsets;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.Iterables;
+import com.google.common.hash.Hashing;
 
 /**
  * Tests behavior of {@code AzureBlobClient}
@@ -223,7 +223,7 @@ public class AzureBlobClientLiveTest extends BaseBlobStoreIntegrationTest {
       AzureBlob object = getApi().newBlob();
       object.getProperties().setName("object");
       object.setPayload(data);
-      Payloads.calculateMD5(object);
+      object.getProperties().getContentMetadata().setContentMD5(Hashing.md5().hashString(data, Charsets.UTF_8).asBytes());
       object.getProperties().getContentMetadata().setContentType("text/plain");
       object.getProperties().getMetadata().put("mykey", "metadata-value");
       byte[] md5 = object.getProperties().getContentMetadata().getContentMD5();

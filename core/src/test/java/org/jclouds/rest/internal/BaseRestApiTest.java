@@ -123,12 +123,8 @@ public abstract class BaseRestApiTest {
          }
          assertEquals(payload, toMatch);
          Long length = Long.valueOf(payload.getBytes().length);
-         try {
-            assertContentHeadersEqual(request, contentType, contentDispositon, contentEncoding, contentLanguage,
-                  length, contentMD5 ? ByteStreams.hash(request.getPayload(), md5()).asBytes() : null, expires);
-         } catch (IOException e) {
-            propagate(e);
-         }
+         assertContentHeadersEqual(request, contentType, contentDispositon, contentEncoding, contentLanguage,
+               length, contentMD5 ? md5().hashBytes(payload.getBytes()).asBytes() : null, expires);
       }
    }
 

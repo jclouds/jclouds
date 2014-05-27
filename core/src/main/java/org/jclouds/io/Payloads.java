@@ -100,44 +100,4 @@ public class Payloads {
    public static UrlEncodedFormPayload newUrlEncodedFormPayload(Multimap<String, String> formParams) {
       return new UrlEncodedFormPayload(formParams);
    }
-   
-   /**
-    * Calculates and sets {@link Payload#setContentMD5} on the payload.
-    * 
-    * <p/>
-    * note that this will rebuffer in memory if the payload is not repeatable.
-    * 
-    * @param payload
-    *           payload to calculate
-    * @return new Payload with md5 set.
-    * @throws IOException
-    */
-   public static Payload calculateMD5(Payload payload) throws IOException {
-      checkNotNull(payload, "payload");
-      if (!payload.isRepeatable()) {
-         MutableContentMetadata oldContentMetadata = payload.getContentMetadata();
-         Payload oldPayload = payload;
-         try {
-            payload = newByteArrayPayload(toByteArray(payload));
-         } finally {
-            oldPayload.release();
-         }
-         oldContentMetadata.setContentLength(payload.getContentMetadata().getContentLength());
-         oldContentMetadata.setContentMD5(payload.getContentMetadata().getContentMD5());
-         payload.setContentMetadata(oldContentMetadata);
-      }
-      payload.getContentMetadata().setContentMD5(ByteStreams.hash(payload, md5()).asBytes());
-      return payload;
-   }
-   
-   /**
-    * Calculates the md5 on a payload, replacing as necessary.
-    */
-   public static <T extends PayloadEnclosing> T calculateMD5(T payloadEnclosing) throws IOException {
-      checkNotNull(payloadEnclosing, "payloadEnclosing");
-      Payload newPayload = calculateMD5(payloadEnclosing.getPayload());
-      if (newPayload != payloadEnclosing.getPayload())
-         payloadEnclosing.setPayload(newPayload);
-      return payloadEnclosing;
-   }
 }

@@ -46,6 +46,7 @@ import com.google.common.base.Supplier;
 import com.google.common.base.Throwables;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Multimaps;
+import com.google.common.hash.Hashing;
 import com.google.common.io.ByteStreams;
 import com.google.common.net.HttpHeaders;
 
@@ -125,7 +126,6 @@ public class TransientStorageStrategy implements LocalStorageStrategy {
       Blob newBlob = createUpdatedCopyOfBlobInContainer(containerName, blob);
       Map<String, Blob> map = containerToBlobs.get(containerName);
       map.put(newBlob.getMetadata().getName(), newBlob);
-      Payloads.calculateMD5(newBlob);
       return base16().lowerCase().encode(newBlob.getPayload().getContentMetadata().getContentMD5());
    }
 
@@ -159,11 +159,13 @@ public class TransientStorageStrategy implements LocalStorageStrategy {
          if (payload == null || !(payload instanceof ByteArrayPayload)) {
             MutableContentMetadata oldMd = in.getPayload().getContentMetadata();
             byte[] out = ByteStreams.toByteArray(in.getPayload());
-            payload = (ByteArrayPayload) Payloads.calculateMD5(Payloads.newPayload(out));
+            payload = Payloads.newByteArrayPayload(out);
+            payload.getContentMetadata().setContentMD5(Hashing.md5().hashBytes(out).asBytes());
             HttpUtils.copy(oldMd, payload.getContentMetadata());
          } else {
-            if (payload.getContentMetadata().getContentMD5() == null)
-               Payloads.calculateMD5(in);
+            if (payload.getContentMetadata().getContentMD5() == null) {
+               payload.getContentMetadata().setContentMD5(ByteStreams.hash(payload, Hashing.md5()).asBytes());
+            }
          }
       } catch (IOException e) {
          Throwables.propagate(e);

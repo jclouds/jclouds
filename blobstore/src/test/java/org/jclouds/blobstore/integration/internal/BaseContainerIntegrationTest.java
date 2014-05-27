@@ -77,7 +77,9 @@ public class BaseContainerIntegrationTest extends BaseBlobStoreIntegrationTest {
          // NOTE all metadata in jclouds comes out as lowercase, in an effort to
          // normalize the providers.
                view.getBlobStore().blobBuilder(key).userMetadata(ImmutableMap.of("Adrian", "powderpuff"))
-                     .payload(TEST_STRING).contentType(MediaType.TEXT_PLAIN).calculateMD5().build());
+                     .payload(TEST_STRING).contentType(MediaType.TEXT_PLAIN)
+                     .contentMD5(md5().hashString(TEST_STRING, UTF_8).asBytes())
+                     .build());
          validateContent(containerName, key);
 
          PageSet<? extends StorageMetadata> container = view.getBlobStore().list(containerName,

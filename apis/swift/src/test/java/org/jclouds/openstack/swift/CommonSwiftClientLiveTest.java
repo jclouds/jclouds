@@ -36,7 +36,6 @@ import org.jclouds.blobstore.domain.PageSet;
 import org.jclouds.blobstore.integration.internal.BaseBlobStoreIntegrationTest;
 import org.jclouds.http.HttpResponseException;
 import org.jclouds.http.options.GetOptions;
-import org.jclouds.io.Payloads;
 import org.jclouds.openstack.keystone.v2_0.config.KeystoneProperties;
 import org.jclouds.openstack.swift.domain.AccountMetadata;
 import org.jclouds.openstack.swift.domain.ContainerMetadata;
@@ -50,6 +49,7 @@ import org.testng.annotations.Test;
 import com.google.common.base.Charsets;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Maps;
+import com.google.common.hash.Hashing;
 
 /**
  * Tests behavior of {@code JaxrsAnnotationProcessor}
@@ -365,7 +365,7 @@ public abstract class CommonSwiftClientLiveTest<C extends CommonSwiftClient> ext
       SwiftObject object = getApi().newSwiftObject();
       object.getInfo().setName(key);
       object.setPayload(data);
-      Payloads.calculateMD5(object);
+      object.getPayload().getContentMetadata().setContentMD5(Hashing.md5().hashString(data, Charsets.UTF_8).asBytes());
       object.getInfo().setContentType("text/plain");
       object.getInfo().getMetadata().put("Metadata", "metadata-value");
       return object;

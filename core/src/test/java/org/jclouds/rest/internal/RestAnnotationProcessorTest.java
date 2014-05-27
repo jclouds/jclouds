@@ -18,7 +18,6 @@ package org.jclouds.rest.internal;
 
 import static com.google.common.base.Charsets.UTF_8;
 import static com.google.common.base.Preconditions.checkNotNull;
-import static org.jclouds.io.Payloads.calculateMD5;
 import static org.jclouds.io.Payloads.newInputStreamPayload;
 import static org.jclouds.io.Payloads.newStringPayload;
 import static org.jclouds.reflect.Reflection2.method;
@@ -140,6 +139,8 @@ import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.ImmutableSortedSet;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Multimap;
+import com.google.common.hash.Hashing;
+import com.google.common.io.ByteSource;
 import com.google.common.io.Files;
 import com.google.common.net.HttpHeaders;
 import com.google.common.reflect.Invokable;
@@ -1970,8 +1971,11 @@ public class RestAnnotationProcessorTest extends BaseRestApiTest {
 
    public void testPutPayloadEnclosingGenerateMD5() throws SecurityException, NoSuchMethodException, IOException {
       Invokable<?, ?> method = method(TestTransformers.class, "put", PayloadEnclosing.class);
-      PayloadEnclosing payloadEnclosing = new PayloadEnclosingImpl(newStringPayload("whoops"));
-      calculateMD5(payloadEnclosing);
+      ByteSource byteSource = ByteSource.wrap("whoops".getBytes(UTF_8));
+      PayloadEnclosing payloadEnclosing = new PayloadEnclosingImpl(Payloads.newByteSourcePayload(byteSource));
+      payloadEnclosing.getPayload().getContentMetadata().setContentLength(byteSource.size());
+      payloadEnclosing.getPayload().getContentMetadata().setContentMD5(byteSource.hash(Hashing.md5()).asBytes());
+
       GeneratedHttpRequest request = processor.apply(Invocation.create(method,
             ImmutableList.<Object> of(payloadEnclosing)));
       assertRequestLineEquals(request, "PUT http://localhost:9999 HTTP/1.1");
@@ -1983,10 +1987,12 @@ public class RestAnnotationProcessorTest extends BaseRestApiTest {
    public void testPutInputStreamPayloadEnclosingGenerateMD5() throws SecurityException, NoSuchMethodException,
          IOException {
       Invokable<?, ?> method = method(TestTransformers.class, "put", PayloadEnclosing.class);
+      ByteSource byteSource = ByteSource.wrap("whoops".getBytes(UTF_8));
       PayloadEnclosing payloadEnclosing = new PayloadEnclosingImpl(
-            newInputStreamPayload(Strings2.toInputStream("whoops")));
+            newInputStreamPayload(byteSource.openStream()));
+      payloadEnclosing.getPayload().getContentMetadata().setContentLength(byteSource.size());
+      payloadEnclosing.getPayload().getContentMetadata().setContentMD5(byteSource.hash(Hashing.md5()).asBytes());
 
-      calculateMD5(payloadEnclosing);
       GeneratedHttpRequest request = processor.apply(Invocation.create(method,
             ImmutableList.<Object> of(payloadEnclosing)));
       assertRequestLineEquals(request, "PUT http://localhost:9999 HTTP/1.1");
@@ -2048,8 +2054,11 @@ public class RestAnnotationProcessorTest extends BaseRestApiTest {
 
    public void testPutPayloadWithGeneratedMD5AndNoContentType() throws SecurityException, NoSuchMethodException,
          IOException {
-      Payload payload = newStringPayload("whoops");
-      calculateMD5(payload);
+      ByteSource byteSource = ByteSource.wrap("whoops".getBytes(UTF_8));
+      Payload payload = Payloads.newByteSourcePayload(byteSource);
+      payload.getContentMetadata().setContentLength(byteSource.size());
+      payload.getContentMetadata().setContentMD5(byteSource.hash(Hashing.md5()).asBytes());
+
       Invokable<?, ?> method = method(TestTransformers.class, "put", Payload.class);
       GeneratedHttpRequest request = processor.apply(Invocation.create(method,
             ImmutableList.<Object> of(payload)));
@@ -2071,8 +2080,11 @@ public class RestAnnotationProcessorTest extends BaseRestApiTest {
 
    public void testPutInputStreamPayloadWithMD5() throws NoSuchAlgorithmException, IOException, SecurityException,
          NoSuchMethodException {
-      Payload payload = newStringPayload("whoops");
-      calculateMD5(payload);
+      ByteSource byteSource = ByteSource.wrap("whoops".getBytes(UTF_8));
+      Payload payload = Payloads.newByteSourcePayload(byteSource);
+      payload.getContentMetadata().setContentLength(byteSource.size());
+      payload.getContentMetadata().setContentMD5(byteSource.hash(Hashing.md5()).asBytes());
+
       Invokable<?, ?> method = method(TestTransformers.class, "put", Payload.class);
       GeneratedHttpRequest request = processor.apply(Invocation.create(method,
             ImmutableList.<Object> of(payload)));
