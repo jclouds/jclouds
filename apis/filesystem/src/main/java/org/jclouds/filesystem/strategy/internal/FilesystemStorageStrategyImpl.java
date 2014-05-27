@@ -39,7 +39,6 @@ import org.jclouds.filesystem.predicates.validators.FilesystemContainerNameValid
 import org.jclouds.filesystem.reference.FilesystemConstants;
 import org.jclouds.filesystem.util.Utils;
 import org.jclouds.io.Payload;
-import org.jclouds.io.Payloads;
 import org.jclouds.logging.Logger;
 import org.jclouds.rest.annotations.ParamValidators;
 
@@ -48,7 +47,9 @@ import com.google.common.base.Throwables;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Sets;
-import com.google.common.io.ByteStreams;
+import com.google.common.hash.Hashing;
+import com.google.common.hash.HashingInputStream;
+import com.google.common.io.Closeables;
 import com.google.common.io.Files;
 
 /**
@@ -196,17 +197,12 @@ public class FilesystemStorageStrategyImpl implements LocalStorageStrategy {
       filesystemContainerNameValidator.validate(containerName);
       filesystemBlobKeyValidator.validate(blobKey);
       File outputFile = getFileForBlobKey(containerName, blobKey);
+      HashingInputStream his = null;
       try {
          Files.createParentDirs(outputFile);
-         if (payload.getRawContent() instanceof File)
-            Files.copy((File) payload.getRawContent(), outputFile);
-         else {
-            if (!payload.isRepeatable()) {
-               payload = Payloads.newPayload(ByteStreams.toByteArray(payload));
-            }
-            Files.copy(payload, outputFile);
-         }
-         Payloads.calculateMD5(payload);
+         his = new HashingInputStream(Hashing.md5(), payload.openStream());
+         Files.asByteSink(outputFile).writeFrom(his);
+         payload.getContentMetadata().setContentMD5(his.hash().asBytes());
          String eTag = base16().lowerCase().encode(payload.getContentMetadata().getContentMD5());
          return eTag;
       } catch (IOException ex) {
@@ -217,6 +213,7 @@ public class FilesystemStorageStrategyImpl implements LocalStorageStrategy {
          }
          throw ex;
       } finally {
+         Closeables.closeQuietly(his);
          payload.release();
       }
    }
