@@ -71,7 +71,7 @@ public class MapToStandardDrive implements Function<Map<String, String>, Standar
       try {
          return builder.build();
       } catch (NullPointerException e) {
-         logger.trace("entry missing data: %s; %s", e.getMessage(), from);
+         logger.warn("entry missing data: %s; %s", e.getMessage(), from);
          return null;
       }
    }

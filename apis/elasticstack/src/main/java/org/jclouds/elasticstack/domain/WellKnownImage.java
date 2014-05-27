@@ -146,9 +146,9 @@ public class WellKnownImage {
 
    @Override
    public String toString() {
-      return Objects.toStringHelper(this).add("uuid", uuid).add("description", description).add("osFamily", osFamily)
-            .add("osVersion", osVersion).add("size", size).add("is64bit", is64bit).add("loginUser", loginUser)
-            .toString();
+      return Objects.toStringHelper(this).omitNullValues().add("uuid", uuid).add("description", description)
+            .add("osFamily", osFamily).add("osVersion", osVersion).add("size", size).add("is64bit", is64bit)
+            .add("loginUser", loginUser).toString();
    }
 
 }
