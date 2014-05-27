@@ -47,6 +47,7 @@ public interface CommonSwiftClient extends Closeable {
     * @deprecated This method will be replaced by
     *             {@link com.jclouds.openstack.swift.v1.domain.SwiftObject#builder()}
     */
+   @Deprecated
    @Provides
    SwiftObject newSwiftObject();
 
@@ -63,6 +64,7 @@ public interface CommonSwiftClient extends Closeable {
     * @deprecated This method will be replaced by
     *             {@link com.jclouds.openstack.swift.v1.features.AccountApi#get()}
     */
+   @Deprecated
    AccountMetadata getAccountStatistics();
 
    /**
@@ -97,6 +99,7 @@ public interface CommonSwiftClient extends Closeable {
     *             {@link com.jclouds.openstack.swift.v1.features.ContainerApi#list()} and
     *             {@link com.jclouds.openstack.swift.v1.features.ContainerApi#list(ListContainerOptions)}
     */
+   @Deprecated
    Set<ContainerMetadata> listContainers(ListContainerOptions... options);
 
    /**
@@ -108,6 +111,7 @@ public interface CommonSwiftClient extends Closeable {
     * @deprecated This method will be replaced by
     *             {@link com.jclouds.openstack.swift.v1.features.ContainerApi#get()}
     */
+   @Deprecated
    ContainerMetadata getContainerMetadata(String container);
    
    /**
@@ -122,6 +126,7 @@ public interface CommonSwiftClient extends Closeable {
     * @deprecated This method will be replaced by
     *             {@link com.jclouds.openstack.swift.v1.features.ContainerApi#updateMetadata()}
     */
+   @Deprecated
    boolean setContainerMetadata(String container, Map<String, String> containerMetadata);
    
    /**
@@ -136,6 +141,7 @@ public interface CommonSwiftClient extends Closeable {
     * @deprecated This method will be replaced by
     *             {@link com.jclouds.openstack.swift.v1.features.ContainerApi#deleteMetadata()}
     */
+   @Deprecated
    boolean deleteContainerMetadata(String container, Iterable<String> metadataKeys);
 
    /**
@@ -148,24 +154,28 @@ public interface CommonSwiftClient extends Closeable {
     * @deprecated This method will be replaced by
     *             {@link com.jclouds.openstack.swift.v1.features.ContainerApi#createIfAbsent()}
     */
+   @Deprecated
    boolean createContainer(String container);
 
    /**
     * @deprecated This method will be replaced by
     *             {@link com.jclouds.openstack.swift.v1.features.ContainerApi#createIfAbsent()}
     */
+   @Deprecated
    boolean createContainer(String container, CreateContainerOptions... options);
    
    /**
     * @deprecated This method will be replaced by
     *             (@link com.jclouds.openstack.swift.v1.features.ContainerApi#deleteIfEmpty()}
     */
+   @Deprecated
    boolean deleteContainerIfEmpty(String container);
 
    /**
     * @deprecated This method will be replaced by
     *             {@link com.jclouds.openstack.swift.v1.features.ContainerApi#head()}
     */
+   @Deprecated
    boolean containerExists(String container);
 
    /**
@@ -173,30 +183,35 @@ public interface CommonSwiftClient extends Closeable {
     *             {@link com.jclouds.openstack.swift.v1.features.ObjectApi#list()} and
     *             {@link com.jclouds.openstack.swift.v1.features.ObjectApi#list(ListContainerOptions)}
     */
+   @Deprecated
    PageSet<ObjectInfo> listObjects(String container, ListContainerOptions... options);
 
    /**
     * @deprecated This method will be replaced by
     *             {@link com.jclouds.openstack.swift.v1.features.ObjectApi#get()}
     */
+   @Deprecated
    SwiftObject getObject(String container, String name, GetOptions... options);
 
    /**
     * @deprecated This method will be replaced by
     *             {@link com.jclouds.openstack.swift.v1.features.ObjectApi@updateMetadata()}
     */
+   @Deprecated
    boolean setObjectInfo(String container, String name, Map<String, String> userMetadata);
 
    /**
     * @deprecated This method will be replaced by
     *             {@link com.jclouds.openstack.swift.v1.features.ObjectApi#head()}
     */
+   @Deprecated
    MutableObjectInfoWithMetadata getObjectInfo(String container, String name);
 
    /**
     * @deprecated This method will be replaced by
     *             {@link com.jclouds.openstack.swift.v1.features.ObjectApi#replace()}
     */
+   @Deprecated
    String putObject(String container, SwiftObject object);
 
    /**
@@ -205,12 +220,14 @@ public interface CommonSwiftClient extends Closeable {
     * @deprecated This method will be replaced by
     *             {@link com.jclouds.openstack.swift.v1.features.ObjectApi#copy()}
     */
+   @Deprecated
    boolean copyObject(String sourceContainer, String sourceObject, String destinationContainer, String destinationObject);
    
    /**
     * @deprecated This method will be replaced by
     *             {@link com.jclouds.openstack.swift.v1.features.ObjectApi#delete()}
     */
+   @Deprecated
    void removeObject(String container, String name);
 
    /**
@@ -219,11 +236,13 @@ public interface CommonSwiftClient extends Closeable {
     * @deprecated This method will be replaced by
     *             {@link com.jclouds.openstack.swift.v1.features.ObjectApi#head()}
     */
+   @Deprecated
    boolean objectExists(String container, String name);
 
    /**
     * @deprecated This method will be replaced by
     *             {@link com.jclouds.openstack.swift.v1.features.ObjectApi#replaceManifest()}
     */
+   @Deprecated
    String putObjectManifest(String container, String name);
 }
