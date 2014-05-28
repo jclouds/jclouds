@@ -16,13 +16,13 @@
  */
 package org.jclouds.io;
 
-import java.util.Arrays;
 import java.util.Date;
 
 import org.jclouds.io.payloads.BaseImmutableContentMetadata;
 import org.jclouds.javax.annotation.Nullable;
 
 import com.google.common.base.Objects;
+import com.google.common.hash.HashCode;
 
 /**
  * @author Adrian Cole
@@ -35,7 +35,7 @@ public class ContentMetadataBuilder {
 
    protected String contentType = "application/unknown";
    protected Long contentLength;
-   protected byte[] contentMD5;
+   protected HashCode contentMD5;
    protected String contentDisposition;
    protected String contentLanguage;
    protected String contentEncoding;
@@ -46,14 +46,17 @@ public class ContentMetadataBuilder {
       return this;
    }
 
-   public ContentMetadataBuilder contentMD5(byte[] md5) {
-      if (md5 != null) {
-         byte[] retval = new byte[md5.length];
-         System.arraycopy(md5, 0, retval, 0, md5.length);
-         this.contentMD5 = md5;
+   /** @deprecated use {@link #contentMD5(HashCode)} instead. */
+   @Deprecated
+   public ContentMetadataBuilder contentMD5(@Nullable byte[] contentMD5) {
+      return contentMD5(contentMD5 == null ? null : HashCode.fromBytes(contentMD5));
+   }
+
+   public ContentMetadataBuilder contentMD5(@Nullable HashCode contentMD5) {
+      if (contentMD5 != null) {
+         this.contentMD5 = contentMD5;
       }
       return this;
-
    }
 
    public ContentMetadataBuilder contentType(@Nullable String contentType) {
@@ -83,7 +86,8 @@ public class ContentMetadataBuilder {
    }
 
    public ContentMetadata build() {
-      return new BaseImmutableContentMetadata(contentType, contentLength, contentMD5, contentDisposition,
+      return new BaseImmutableContentMetadata(contentType, contentLength,
+               contentMD5 == null ? null : contentMD5.asBytes(), contentDisposition,
                contentLanguage, contentEncoding, expires);
    }
 
@@ -112,7 +116,7 @@ public class ContentMetadataBuilder {
              Objects.equal(contentEncoding, other.contentEncoding) &&
              Objects.equal(contentLanguage, other.contentLanguage) &&
              Objects.equal(contentLength, other.contentLength) &&
-             Arrays.equals(contentMD5, other.contentMD5) &&
+             Objects.equal(contentMD5, other.contentMD5) &&
              Objects.equal(contentType, other.contentType) &&
              Objects.equal(expires, other.expires);
    }
@@ -121,6 +125,6 @@ public class ContentMetadataBuilder {
    public String toString() {
       return "[contentDisposition=" + contentDisposition + ", contentEncoding=" + contentEncoding
                + ", contentLanguage=" + contentLanguage + ", contentLength=" + contentLength + ", contentMD5="
-               + Arrays.toString(contentMD5) + ", contentType=" + contentType + ", expires=" + expires + "]";
+               + contentMD5 + ", contentType=" + contentType + ", expires=" + expires + "]";
    }
 }

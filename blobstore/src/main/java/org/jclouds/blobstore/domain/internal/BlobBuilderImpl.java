@@ -35,6 +35,7 @@ import org.jclouds.io.Payloads;
 import org.jclouds.io.payloads.PhantomPayload;
 
 import com.google.common.collect.Maps;
+import com.google.common.hash.HashCode;
 import com.google.common.io.ByteSource;
 
 /**
@@ -199,8 +200,15 @@ public class BlobBuilderImpl implements BlobBuilder {
          return this;
       }
 
+      /** @deprecated use {@link #contentMD5(HashCode)} instead. */
+      @Deprecated
       @Override
       public PayloadBlobBuilder contentMD5(byte[] md5) {
+         return contentMD5(md5 == null ? null : HashCode.fromBytes(md5));
+      }
+
+      @Override
+      public PayloadBlobBuilder contentMD5(HashCode md5) {
          payload.getContentMetadata().setContentMD5(md5);
          return this;
       }

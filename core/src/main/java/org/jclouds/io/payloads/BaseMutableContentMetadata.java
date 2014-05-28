@@ -23,6 +23,8 @@ import org.jclouds.io.ContentMetadataBuilder;
 import org.jclouds.io.MutableContentMetadata;
 import org.jclouds.javax.annotation.Nullable;
 
+import com.google.common.hash.HashCode;
+
 /**
  * @author Adrian Cole
  */
@@ -44,25 +46,28 @@ public class BaseMutableContentMetadata extends ContentMetadataBuilder implement
       contentLength(contentLength);
    }
 
-   /**
-    * {@inheritDoc}
-    */
+   /** @deprecated use {@link #getContentMD5AsHashCode()} instead. */
+   @Deprecated
    @Override
    public byte[] getContentMD5() {
-      if (contentMD5 != null) {
-         byte[] retval = new byte[contentMD5.length];
-         System.arraycopy(this.contentMD5, 0, retval, 0, contentMD5.length);
-         return retval;
-      } else {
-         return null;
-      }
+      HashCode hashCode = getContentMD5AsHashCode();
+      return hashCode == null ? null : hashCode.asBytes();
    }
 
-   /**
-    * {@inheritDoc}
-    */
+   @Override
+   public HashCode getContentMD5AsHashCode() {
+      return contentMD5;
+   }
+
+   /** @deprecated use {@link #setContentMD5(HashCode)} instead. */
+   @Deprecated
    @Override
    public void setContentMD5(byte[] md5) {
+      setContentMD5(md5 == null ? null : HashCode.fromBytes(md5));
+   }
+
+   @Override
+   public void setContentMD5(HashCode md5) {
       contentMD5(md5);
    }
 
