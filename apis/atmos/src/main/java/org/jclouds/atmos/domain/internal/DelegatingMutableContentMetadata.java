@@ -23,6 +23,8 @@ import org.jclouds.atmos.domain.MutableContentMetadata;
 import org.jclouds.io.ContentMetadataBuilder;
 import org.jclouds.io.payloads.BaseMutableContentMetadata;
 
+import com.google.common.hash.HashCode;
+
 public class DelegatingMutableContentMetadata implements MutableContentMetadata {
    private URI uri;
    private String name;
@@ -46,9 +48,16 @@ public class DelegatingMutableContentMetadata implements MutableContentMetadata 
       return delegate.getContentLength();
    }
 
+   /** @deprecated use {@link #getContentMD5AsHashCode()} instead. */
+   @Deprecated
    @Override
    public byte[] getContentMD5() {
       return delegate.getContentMD5();
+   }
+
+   @Override
+   public HashCode getContentMD5AsHashCode() {
+      return delegate.getContentMD5AsHashCode();
    }
 
    @Override
@@ -66,8 +75,15 @@ public class DelegatingMutableContentMetadata implements MutableContentMetadata 
       delegate.setContentLength(contentLength);
    }
 
+   /** @deprecated use {@link #setContentMD5(HashCode)} instead. */
+   @Deprecated
    @Override
    public void setContentMD5(byte[] contentMD5) {
+      delegate.setContentMD5(contentMD5);
+   }
+
+   @Override
+   public void setContentMD5(HashCode contentMD5) {
       delegate.setContentMD5(contentMD5);
    }
 

@@ -16,19 +16,19 @@
  */
 package org.jclouds.io.payloads;
 
-import java.util.Arrays;
 import java.util.Date;
 
 import org.jclouds.io.ContentMetadata;
 import org.jclouds.io.ContentMetadataBuilder;
 
 import com.google.common.base.Objects;
+import com.google.common.hash.HashCode;
 
 public class BaseImmutableContentMetadata implements ContentMetadata {
 
    protected String contentType;
    protected Long contentLength;
-   protected byte[] contentMD5;
+   protected HashCode contentMD5;
    protected String contentDisposition;
    protected String contentLanguage;
    protected String contentEncoding;
@@ -38,7 +38,7 @@ public class BaseImmutableContentMetadata implements ContentMetadata {
             String contentDisposition, String contentLanguage, String contentEncoding, Date expires) {
       this.contentType = contentType;
       this.contentLength = contentLength;
-      this.contentMD5 = contentMD5;
+      this.contentMD5 = contentMD5 == null ? null : HashCode.fromBytes(contentMD5);
       this.contentDisposition = contentDisposition;
       this.contentLanguage = contentLanguage;
       this.contentEncoding = contentEncoding;
@@ -53,18 +53,17 @@ public class BaseImmutableContentMetadata implements ContentMetadata {
       return contentLength;
    }
 
-   /**
-    * {@inheritDoc}
-    */
+   /** @deprecated use {@link #getContentMD5AsHashCode()} instead. */
+   @Deprecated
    @Override
    public byte[] getContentMD5() {
-      if (contentMD5 != null) {
-         byte[] retval = new byte[contentMD5.length];
-         System.arraycopy(this.contentMD5, 0, retval, 0, contentMD5.length);
-         return retval;
-      } else {
-         return null;
-      }
+      HashCode hashCode = getContentMD5AsHashCode();
+      return hashCode == null ? null : hashCode.asBytes();
+   }
+
+   @Override
+   public HashCode getContentMD5AsHashCode() {
+      return contentMD5;
    }
 
    /**
@@ -111,7 +110,7 @@ public class BaseImmutableContentMetadata implements ContentMetadata {
    public String toString() {
       return "[contentType=" + contentType + ", contentLength=" + contentLength + ", contentDisposition="
                + contentDisposition + ", contentEncoding=" + contentEncoding + ", contentLanguage=" + contentLanguage
-               + ", contentMD5=" + Arrays.toString(contentMD5) + ", expires = " + expires + "]";
+               + ", contentMD5=" + contentMD5 + ", expires = " + expires + "]";
    }
 
    @Override
@@ -149,7 +148,7 @@ public class BaseImmutableContentMetadata implements ContentMetadata {
             return false;
       } else if (!contentLength.equals(other.contentLength))
          return false;
-      if (!Arrays.equals(contentMD5, other.contentMD5))
+      if (!Objects.equal(contentMD5, other.contentMD5))
          return false;
       if (contentType == null) {
          if (other.contentType != null)

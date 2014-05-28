@@ -42,6 +42,7 @@ import org.jclouds.io.payloads.InputStreamPayload;
 import org.jclouds.io.payloads.InputStreamSupplierPayload;
 
 import com.google.common.base.Throwables;
+import com.google.common.hash.HashCode;
 import com.google.common.io.ByteSource;
 import com.google.common.io.ByteStreams;
 import com.google.common.io.Files;
@@ -113,7 +114,7 @@ public class BasePayloadSlicer implements PayloadSlicer {
 
          if (content.length > 0) {
             payload = new ByteArrayPayload(content);
-            ContentMetadata cm = metaData.toBuilder().contentLength((long)content.length).contentMD5(null).build();
+            ContentMetadata cm = metaData.toBuilder().contentLength((long)content.length).contentMD5((HashCode) null).build();
             payload.setContentMetadata(BaseMutableContentMetadata.fromContentMetadata(cm));
          }
 
@@ -187,7 +188,7 @@ public class BasePayloadSlicer implements PayloadSlicer {
 
    protected Payload copyMetadataAndSetLength(Payload input, Payload returnVal, long length) {
       returnVal.setContentMetadata(BaseMutableContentMetadata.fromContentMetadata(input.getContentMetadata()
-            .toBuilder().contentLength(length).contentMD5(null).build()));
+            .toBuilder().contentLength(length).contentMD5((HashCode) null).build()));
       return returnVal;
    }
 
@@ -199,7 +200,7 @@ public class BasePayloadSlicer implements PayloadSlicer {
       ContentMetadata meta = BaseMutableContentMetadata.fromContentMetadata(input.getContentMetadata())
                                                        .toBuilder()
                                                        .contentLength(size)
-                                                       .contentMD5(null)
+                                                       .contentMD5((HashCode) null)
                                                        .build();
       Object rawContent = input.getRawContent();
       if (rawContent instanceof File) {

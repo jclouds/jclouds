@@ -28,6 +28,7 @@ import java.util.Set;
 
 import org.jclouds.javax.annotation.Nullable;
 
+import com.google.common.hash.HashCode;
 import com.google.common.collect.ImmutableSet;
 
 public interface ContentMetadata {
@@ -79,8 +80,13 @@ public interface ContentMetadata {
    @Nullable
    String getContentType();
 
+   /** @deprecated use {@link #getContentMD5AsHashCode()} instead. */
+   @Deprecated
    @Nullable
    byte[] getContentMD5();
+
+   @Nullable
+   HashCode getContentMD5AsHashCode();
 
    /**
     * Get Content Language of the payload

@@ -20,11 +20,17 @@ import java.util.Date;
 
 import org.jclouds.javax.annotation.Nullable;
 
+import com.google.common.hash.HashCode;
+
 public interface MutableContentMetadata extends ContentMetadata {
 
    void setContentLength(@Nullable Long contentLength);
 
+   /** @deprecated use {@link #setContentMD5(HashCode)} instead. */
+   @Deprecated
    void setContentMD5(@Nullable byte[] md5);
+
+   void setContentMD5(@Nullable HashCode md5);
 
    void setContentType(@Nullable String contentType);
 

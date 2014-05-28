@@ -160,11 +160,11 @@ public class TransientStorageStrategy implements LocalStorageStrategy {
             MutableContentMetadata oldMd = in.getPayload().getContentMetadata();
             byte[] out = ByteStreams.toByteArray(in.getPayload());
             payload = Payloads.newByteArrayPayload(out);
-            payload.getContentMetadata().setContentMD5(Hashing.md5().hashBytes(out).asBytes());
             HttpUtils.copy(oldMd, payload.getContentMetadata());
+            payload.getContentMetadata().setContentMD5(Hashing.md5().hashBytes(out));
          } else {
             if (payload.getContentMetadata().getContentMD5() == null) {
-               payload.getContentMetadata().setContentMD5(ByteStreams.hash(payload, Hashing.md5()).asBytes());
+               payload.getContentMetadata().setContentMD5(ByteStreams.hash(payload, Hashing.md5()));
             }
          }
       } catch (IOException e) {

@@ -221,7 +221,7 @@ public class BaseBlobIntegrationTest extends BaseBlobStoreIntegrationTest {
       blobStore.putBlob(container, blobStore.blobBuilder(name)
             .payload(new InputStreamSupplierPayload(supplier))
             .contentType("text/plain")
-            .contentMD5(supplier.hash(md5()).asBytes())
+            .contentMD5(supplier.hash(md5()))
             .contentLength(supplier.size())
             .contentDisposition(contentDisposition)
             .build());
@@ -280,7 +280,7 @@ public class BaseBlobIntegrationTest extends BaseBlobStoreIntegrationTest {
          Blob blob = blobStore
             .blobBuilder(blobName)
             .payload(payload)
-            .contentMD5(contentMD5.asBytes())
+            .contentMD5(contentMD5)
             .build();
          blobStore.putBlob(container, blob);
       } finally {

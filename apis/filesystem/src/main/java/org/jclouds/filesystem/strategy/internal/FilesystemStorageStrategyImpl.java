@@ -201,7 +201,7 @@ public class FilesystemStorageStrategyImpl implements LocalStorageStrategy {
          Files.createParentDirs(outputFile);
          his = new HashingInputStream(Hashing.md5(), payload.openStream());
          Files.asByteSink(outputFile).writeFrom(his);
-         payload.getContentMetadata().setContentMD5(his.hash().asBytes());
+         payload.getContentMetadata().setContentMD5(his.hash());
          String eTag = base16().lowerCase().encode(payload.getContentMetadata().getContentMD5());
          return eTag;
       } catch (IOException ex) {

@@ -97,7 +97,7 @@ public class AWSS3ClientExpectTest extends BaseAWSS3ClientExpectTest {
 
       final Payload requestPayload = Payloads.newStringPayload(request);
       requestPayload.getContentMetadata().setContentType("text/xml");
-      requestPayload.getContentMetadata().setContentMD5(md5().hashString(request, UTF_8).asBytes());
+      requestPayload.getContentMetadata().setContentMD5(md5().hashString(request, UTF_8));
 
       final String response = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
          "<DeleteResult xmlns=\"http://s3.amazonaws.com/doc/2006-03-01/\">\n" +
