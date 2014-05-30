@@ -22,7 +22,6 @@ import static com.google.common.base.Preconditions.checkState;
 import static org.jclouds.io.Payloads.newPayload;
 
 import java.io.File;
-import java.io.IOException;
 import java.io.InputStream;
 import java.util.Date;
 import java.util.Map;
@@ -31,7 +30,6 @@ import org.jclouds.blobstore.domain.Blob;
 import org.jclouds.blobstore.domain.BlobBuilder;
 import org.jclouds.blobstore.domain.StorageType;
 import org.jclouds.io.Payload;
-import org.jclouds.io.Payloads;
 import org.jclouds.io.payloads.PhantomPayload;
 
 import com.google.common.collect.Maps;

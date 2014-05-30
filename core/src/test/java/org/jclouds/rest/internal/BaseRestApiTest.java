@@ -49,7 +49,6 @@ import org.testng.annotations.Test;
 import com.google.common.collect.Multimap;
 import com.google.common.collect.SortedSetMultimap;
 import com.google.common.collect.TreeMultimap;
-import com.google.common.io.ByteStreams;
 import com.google.common.reflect.Invokable;
 import com.google.common.util.concurrent.ListeningExecutorService;
 import com.google.common.util.concurrent.SimpleTimeLimiter;

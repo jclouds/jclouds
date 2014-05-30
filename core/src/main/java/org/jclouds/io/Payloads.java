@@ -15,12 +15,10 @@
  * limitations under the License.
  */
 package org.jclouds.io;
+
 import static com.google.common.base.Preconditions.checkNotNull;
-import static com.google.common.hash.Hashing.md5;
-import static com.google.common.io.ByteStreams.toByteArray;
 
 import java.io.File;
-import java.io.IOException;
 import java.io.InputStream;
 
 import org.jclouds.io.payloads.ByteArrayPayload;
@@ -31,7 +29,6 @@ import org.jclouds.io.payloads.StringPayload;
 import org.jclouds.io.payloads.UrlEncodedFormPayload;
 
 import com.google.common.collect.Multimap;
-import com.google.common.io.ByteStreams;
 import com.google.common.io.ByteSource;
 
 /**
