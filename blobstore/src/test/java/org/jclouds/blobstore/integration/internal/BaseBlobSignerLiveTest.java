@@ -81,18 +81,19 @@ public class BaseBlobSignerLiveTest extends BaseBlobStoreIntegrationTest {
    public void testSignGetUrlWithTime() throws InterruptedException, IOException {
       String name = "hello";
       String text = "fooooooooooooooooooooooo";
+      int timeout = 5;
 
       Blob blob = view.getBlobStore().blobBuilder(name).payload(text).contentType("text/plain").build();
       String container = getContainerName();
       try {
          view.getBlobStore().putBlob(container, blob);
          assertConsistencyAwareContainerSize(container, 1);
-         HttpRequest request = view.getSigner().signGetBlob(container, name, 3 /* seconds */);
+         HttpRequest request = view.getSigner().signGetBlob(container, name, timeout);
          
          assertEquals(request.getFilters().size(), 0);
          assertEquals(Strings2.toString(view.utils().http().invoke(request).getPayload()), text);
 
-         TimeUnit.SECONDS.sleep(4);
+         TimeUnit.SECONDS.sleep(2 * timeout);
          try {
             Strings2.toString(view.utils().http().invoke(request).getPayload());
             fail("Temporary URL did not expire as expected");
@@ -126,11 +127,12 @@ public class BaseBlobSignerLiveTest extends BaseBlobStoreIntegrationTest {
    public void testSignPutUrlWithTime() throws Exception {
       String name = "hello";
       String text = "fooooooooooooooooooooooo";
+      int timeout = 5;
 
       Blob blob = view.getBlobStore().blobBuilder(name).payload(text).contentType("text/plain").build();
       String container = getContainerName();
       try {
-         HttpRequest request = view.getSigner().signPutBlob(container, blob, 3 /* seconds */);
+         HttpRequest request = view.getSigner().signPutBlob(container, blob, timeout);
          assertEquals(request.getFilters().size(), 0);
 
          // Strip Expect: 100-continue to make actual responses visible, since
@@ -143,7 +145,7 @@ public class BaseBlobSignerLiveTest extends BaseBlobStoreIntegrationTest {
          view.getBlobStore().removeBlob(container, name);
          assertConsistencyAwareContainerSize(container, 0);
 
-         TimeUnit.SECONDS.sleep(4);
+         TimeUnit.SECONDS.sleep(2 * timeout);
          try {
             Strings2.toString(view.utils().http().invoke(request).getPayload());
             fail("Temporary URL did not expire as expected");
