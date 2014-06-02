@@ -27,6 +27,7 @@ import org.jclouds.openstack.nova.v2_0.domain.Volume;
 import org.jclouds.openstack.nova.v2_0.domain.VolumeAttachment;
 import org.jclouds.openstack.nova.v2_0.domain.VolumeSnapshot;
 import org.jclouds.openstack.nova.v2_0.internal.BaseNovaApiLiveTest;
+import org.jclouds.openstack.nova.v2_0.options.CreateServerOptions;
 import org.jclouds.openstack.nova.v2_0.options.CreateVolumeOptions;
 import org.jclouds.openstack.nova.v2_0.options.CreateVolumeSnapshotOptions;
 import org.testng.annotations.AfterClass;
@@ -46,6 +47,7 @@ public class VolumeApiLiveTest extends BaseNovaApiLiveTest {
 
    private Optional<? extends VolumeApi> volumeOption;
    private String zone;
+   private String availabilityZone;
 
    private Volume testVolume;
    private VolumeSnapshot testSnapshot;
@@ -56,6 +58,9 @@ public class VolumeApiLiveTest extends BaseNovaApiLiveTest {
       super.setup();
       zone = Iterables.getLast(api.getConfiguredZones(), "nova");
       volumeOption = api.getVolumeExtensionForZone(zone);
+
+      Optional<? extends AvailabilityZoneApi> availabilityZoneApi = api.getAvailabilityZoneApi(zone);
+      availabilityZone = availabilityZoneApi.isPresent() ? Iterables.getLast(availabilityZoneApi.get().list()).getName() : zone;
    }
 
    @AfterClass(groups = { "integration", "live" })
@@ -89,7 +94,7 @@ public class VolumeApiLiveTest extends BaseNovaApiLiveTest {
          testVolume = volumeOption.get().create(
                1,
                CreateVolumeOptions.Builder.name("jclouds-test-volume").description("description of test volume")
-                     .availabilityZone(zone));
+                     .availabilityZone(availabilityZone));
          assertTrue(retry(new Predicate<VolumeApi>() {
             public boolean apply(VolumeApi volumeApi) {
                return volumeOption.get().get(testVolume.getId()).getStatus() == Volume.Status.AVAILABLE;
@@ -215,7 +220,8 @@ public class VolumeApiLiveTest extends BaseNovaApiLiveTest {
       if (volumeOption.isPresent()) {
          String server_id = null;
          try {
-            final String serverId = server_id = createServerInZone(zone).getId();
+            CreateServerOptions createServerOptions = CreateServerOptions.Builder.availabilityZone(availabilityZone);
+            final String serverId = server_id = createServerInZone(zone, createServerOptions).getId();
 
             Set<? extends VolumeAttachment> attachments = volumeOption.get().listAttachmentsOnServer(serverId).toSet();
             assertNotNull(attachments);
@@ -236,7 +242,11 @@ public class VolumeApiLiveTest extends BaseNovaApiLiveTest {
             assertNotNull(attachments);
             assertEquals(attachments.size(), before + 1);
 
-            assertEquals(volumeOption.get().get(testVolume.getId()).getStatus(), Volume.Status.IN_USE);
+            assertTrue(retry(new Predicate<VolumeApi>() {
+               public boolean apply(VolumeApi volumeApi) {
+                  return volumeApi.get(testVolume.getId()).getStatus() == Volume.Status.IN_USE;
+               }
+            }, 30 * 1000L).apply(volumeOption.get()), "Volume status did not show in-use after 30 seconds");
 
             boolean foundIt = false;
             for (VolumeAttachment att : attachments) {

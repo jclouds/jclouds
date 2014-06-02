@@ -22,7 +22,7 @@ import java.util.Set;
 import org.jclouds.javax.annotation.Nullable;
 import org.jclouds.location.Zone;
 import org.jclouds.location.functions.ZoneToEndpoint;
-import org.jclouds.openstack.nova.v2_0.extensions.AvailabilityZoneAPI;
+import org.jclouds.openstack.nova.v2_0.extensions.AvailabilityZoneAsyncApi;
 import org.jclouds.openstack.nova.v2_0.extensions.FlavorExtraSpecsAsyncApi;
 import org.jclouds.openstack.nova.v2_0.extensions.FloatingIPAsyncApi;
 import org.jclouds.openstack.nova.v2_0.extensions.HostAdministrationAsyncApi;
@@ -72,7 +72,7 @@ public interface NovaAsyncApi extends Closeable {
     * Provides asynchronous access to availability zone features
     */
    @Delegate
-   AvailabilityZoneAPI getAvailabilityZoneApi(
+   Optional<? extends AvailabilityZoneAsyncApi> getAvailabilityZoneApi(
          @EndpointParam(parser = ZoneToEndpoint.class) @Nullable String zone);
 
    /**

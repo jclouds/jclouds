@@ -31,7 +31,7 @@ import org.jclouds.http.annotation.Redirection;
 import org.jclouds.http.annotation.ServerError;
 import org.jclouds.openstack.nova.v2_0.NovaApi;
 import org.jclouds.openstack.nova.v2_0.NovaAsyncApi;
-import org.jclouds.openstack.nova.v2_0.extensions.AvailabilityZoneAPI;
+import org.jclouds.openstack.nova.v2_0.extensions.AvailabilityZoneApi;
 import org.jclouds.openstack.nova.v2_0.extensions.AvailabilityZoneAsyncApi;
 import org.jclouds.openstack.nova.v2_0.extensions.ExtensionNamespaces;
 import org.jclouds.openstack.nova.v2_0.extensions.FlavorExtraSpecsApi;
@@ -98,7 +98,7 @@ public class NovaRestClientModule<S extends NovaApi, A extends NovaAsyncApi> ext
          .put(ImageApi.class, ImageAsyncApi.class)
          .put(ExtensionApi.class, ExtensionAsyncApi.class)
          .put(FloatingIPApi.class, FloatingIPAsyncApi.class)
-         .put(AvailabilityZoneAPI.class, AvailabilityZoneAsyncApi.class)
+         .put(AvailabilityZoneApi.class, AvailabilityZoneAsyncApi.class)
          .put(SecurityGroupApi.class, SecurityGroupAsyncApi.class)
          .put(KeyPairApi.class, KeyPairAsyncApi.class)
          .put(HostAdministrationApi.class, HostAdministrationAsyncApi.class)
@@ -160,6 +160,8 @@ public class NovaRestClientModule<S extends NovaApi, A extends NovaAsyncApi> ext
                URI.create("http://docs.openstack.org/compute/ext/quotas-sets/api/v1.1"))
           .put(URI.create(ExtensionNamespaces.VOLUME_TYPES),
                URI.create("http://docs.openstack.org/compute/ext/volume_types/api/v1.1"))
+          .put(URI.create(ExtensionNamespaces.AVAILABILITY_ZONE),
+               URI.create("http://docs.openstack.org/compute/ext/availabilityzone/api/v1.1"))
           .build();
    }
 
