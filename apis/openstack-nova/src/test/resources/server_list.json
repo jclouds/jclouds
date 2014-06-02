@@ -6,7 +6,7 @@
             "links": [
                 {
                     "rel": "self",
-                    "href": "http://servers.api.openstack.org/v1.1/1234/servers/52415800-8b69-11e0-9b19-734f6af67565"
+                    "href": "http://servers.api.openstack.org/v2/1234/servers/52415800-8b69-11e0-9b19-734f6af67565"
                 },
                 {
                     "rel": "bookmark",
@@ -20,7 +20,7 @@
             "links": [
                 {
                     "rel": "self",
-                    "href": "http://servers.api.openstack.org/v1.1/1234/servers/52415800-8b69-11e0-9b19-734f1f1350e5"
+                    "href": "http://servers.api.openstack.org/v2/1234/servers/52415800-8b69-11e0-9b19-734f1f1350e5"
                 },
                 {
                     "rel": "bookmark",

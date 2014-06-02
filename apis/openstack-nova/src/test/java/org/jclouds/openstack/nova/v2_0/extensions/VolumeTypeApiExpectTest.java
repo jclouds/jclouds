@@ -45,7 +45,7 @@ public class VolumeTypeApiExpectTest extends BaseNovaApiExpectTest {
    private DateService dateService = new SimpleDateFormatDateService();
 
    public void testListVolumeTypes() {
-      URI endpoint = URI.create("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v1.1/3456/os-volume-types");
+      URI endpoint = URI.create("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v2/3456/os-volume-types");
       VolumeTypeApi api = requestsSendResponses(
             keystoneAuthWithUsernameAndPasswordAndTenantName,
             responseWithKeystoneAccess, extensionsOfNovaRequest, extensionsOfNovaResponse,
@@ -58,7 +58,7 @@ public class VolumeTypeApiExpectTest extends BaseNovaApiExpectTest {
    }
 
    public void testGetVolumeType() {
-      URI endpoint = URI.create("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v1.1/3456/os-volume-types/8");
+      URI endpoint = URI.create("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v2/3456/os-volume-types/8");
       VolumeTypeApi api = requestsSendResponses(
             keystoneAuthWithUsernameAndPasswordAndTenantName,
             responseWithKeystoneAccess, extensionsOfNovaRequest, extensionsOfNovaResponse,
@@ -71,7 +71,7 @@ public class VolumeTypeApiExpectTest extends BaseNovaApiExpectTest {
    }
 
    public void testGetVolumeTypeFailNotFound() {
-      URI endpoint = URI.create("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v1.1/3456/os-volume-types/8");
+      URI endpoint = URI.create("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v2/3456/os-volume-types/8");
       VolumeTypeApi api = requestsSendResponses(
             keystoneAuthWithUsernameAndPasswordAndTenantName,
             responseWithKeystoneAccess, extensionsOfNovaRequest, extensionsOfNovaResponse,
@@ -83,7 +83,7 @@ public class VolumeTypeApiExpectTest extends BaseNovaApiExpectTest {
    }
 
    public void testCreateVolumeType() {
-      URI endpoint = URI.create("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v1.1/3456/os-volume-types");
+      URI endpoint = URI.create("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v2/3456/os-volume-types");
       VolumeTypeApi api = requestsSendResponses(
             keystoneAuthWithUsernameAndPasswordAndTenantName,
             responseWithKeystoneAccess, extensionsOfNovaRequest, extensionsOfNovaResponse,
@@ -98,7 +98,7 @@ public class VolumeTypeApiExpectTest extends BaseNovaApiExpectTest {
    }
 
    public void testCreateVolumeTypeWithOptsNONE() {
-      URI endpoint = URI.create("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v1.1/3456/os-volume-types");
+      URI endpoint = URI.create("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v2/3456/os-volume-types");
       VolumeTypeApi api = requestsSendResponses(
             keystoneAuthWithUsernameAndPasswordAndTenantName,
             responseWithKeystoneAccess, extensionsOfNovaRequest, extensionsOfNovaResponse,
@@ -113,7 +113,7 @@ public class VolumeTypeApiExpectTest extends BaseNovaApiExpectTest {
    }
 
    public void testCreateVolumeTypeWithOptsSet() {
-      URI endpoint = URI.create("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v1.1/3456/os-volume-types");
+      URI endpoint = URI.create("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v2/3456/os-volume-types");
       VolumeTypeApi api = requestsSendResponses(
             keystoneAuthWithUsernameAndPasswordAndTenantName,
             responseWithKeystoneAccess, extensionsOfNovaRequest, extensionsOfNovaResponse,
@@ -128,7 +128,7 @@ public class VolumeTypeApiExpectTest extends BaseNovaApiExpectTest {
    }
 
    public void testDeleteVolumeType() {
-      URI endpoint = URI.create("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v1.1/3456/os-volume-types/8");
+      URI endpoint = URI.create("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v2/3456/os-volume-types/8");
       VolumeTypeApi api = requestsSendResponses(
             keystoneAuthWithUsernameAndPasswordAndTenantName,
             responseWithKeystoneAccess, extensionsOfNovaRequest, extensionsOfNovaResponse,
@@ -140,7 +140,7 @@ public class VolumeTypeApiExpectTest extends BaseNovaApiExpectTest {
    }
 
    public void testDeleteVolumeTypeFailNotFound() {
-      URI endpoint = URI.create("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v1.1/3456/os-volume-types/8");
+      URI endpoint = URI.create("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v2/3456/os-volume-types/8");
       VolumeTypeApi api = requestsSendResponses(
             keystoneAuthWithUsernameAndPasswordAndTenantName,
             responseWithKeystoneAccess, extensionsOfNovaRequest, extensionsOfNovaResponse,
@@ -152,7 +152,7 @@ public class VolumeTypeApiExpectTest extends BaseNovaApiExpectTest {
    }
 
    public void testGetAllExtraSpecs() {
-      URI endpoint = URI.create("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v1.1/3456/os-volume-types/9/extra_specs");
+      URI endpoint = URI.create("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v2/3456/os-volume-types/9/extra_specs");
       VolumeTypeApi api = requestsSendResponses(
             keystoneAuthWithUsernameAndPasswordAndTenantName,
             responseWithKeystoneAccess, extensionsOfNovaRequest, extensionsOfNovaResponse,
@@ -164,7 +164,7 @@ public class VolumeTypeApiExpectTest extends BaseNovaApiExpectTest {
    }
 
    public void testGetAllExtraSpecsFailNotFound() {
-      URI endpoint = URI.create("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v1.1/3456/os-volume-types/9/extra_specs");
+      URI endpoint = URI.create("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v2/3456/os-volume-types/9/extra_specs");
       VolumeTypeApi api = requestsSendResponses(
             keystoneAuthWithUsernameAndPasswordAndTenantName,
             responseWithKeystoneAccess, extensionsOfNovaRequest, extensionsOfNovaResponse,
@@ -176,7 +176,7 @@ public class VolumeTypeApiExpectTest extends BaseNovaApiExpectTest {
    }
 
    public void testSetAllExtraSpecs() {
-      URI endpoint = URI.create("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v1.1/3456/os-volume-types/9/extra_specs");
+      URI endpoint = URI.create("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v2/3456/os-volume-types/9/extra_specs");
       VolumeTypeApi api = requestsSendResponses(
             keystoneAuthWithUsernameAndPasswordAndTenantName,
             responseWithKeystoneAccess, extensionsOfNovaRequest, extensionsOfNovaResponse,
@@ -190,7 +190,7 @@ public class VolumeTypeApiExpectTest extends BaseNovaApiExpectTest {
    }
 
    public void testSetExtraSpec() {
-      URI endpoint = URI.create("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v1.1/3456/os-volume-types/5/extra_specs/test1");
+      URI endpoint = URI.create("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v2/3456/os-volume-types/5/extra_specs/test1");
       VolumeTypeApi api = requestsSendResponses(
             keystoneAuthWithUsernameAndPasswordAndTenantName,
             responseWithKeystoneAccess, extensionsOfNovaRequest, extensionsOfNovaResponse,
@@ -204,7 +204,7 @@ public class VolumeTypeApiExpectTest extends BaseNovaApiExpectTest {
    }
 
    public void testGetExtraSpec() {
-      URI endpoint = URI.create("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v1.1/3456/os-volume-types/5/extra_specs/test1");
+      URI endpoint = URI.create("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v2/3456/os-volume-types/5/extra_specs/test1");
       VolumeTypeApi api = requestsSendResponses(
             keystoneAuthWithUsernameAndPasswordAndTenantName,
             responseWithKeystoneAccess, extensionsOfNovaRequest, extensionsOfNovaResponse,
@@ -216,7 +216,7 @@ public class VolumeTypeApiExpectTest extends BaseNovaApiExpectTest {
    }
 
    public void testGetExtraSpecFailNotFound() {
-      URI endpoint = URI.create("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v1.1/3456/os-volume-types/5/extra_specs/test1");
+      URI endpoint = URI.create("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v2/3456/os-volume-types/5/extra_specs/test1");
       VolumeTypeApi api = requestsSendResponses(
             keystoneAuthWithUsernameAndPasswordAndTenantName,
             responseWithKeystoneAccess, extensionsOfNovaRequest, extensionsOfNovaResponse,
@@ -228,7 +228,7 @@ public class VolumeTypeApiExpectTest extends BaseNovaApiExpectTest {
    }
 
    public void testDeleteExtraSpec() {
-      URI endpoint = URI.create("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v1.1/3456/os-volume-types/5/extra_specs/test1");
+      URI endpoint = URI.create("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v2/3456/os-volume-types/5/extra_specs/test1");
       VolumeTypeApi api = requestsSendResponses(
             keystoneAuthWithUsernameAndPasswordAndTenantName,
             responseWithKeystoneAccess, extensionsOfNovaRequest, extensionsOfNovaResponse,
@@ -240,7 +240,7 @@ public class VolumeTypeApiExpectTest extends BaseNovaApiExpectTest {
    }
 
    public void testDeleteExtraSpecFailNotFound() {
-      URI endpoint = URI.create("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v1.1/3456/os-volume-types/5/extra_specs/test1");
+      URI endpoint = URI.create("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v2/3456/os-volume-types/5/extra_specs/test1");
       VolumeTypeApi api = requestsSendResponses(
             keystoneAuthWithUsernameAndPasswordAndTenantName,
             responseWithKeystoneAccess, extensionsOfNovaRequest, extensionsOfNovaResponse,

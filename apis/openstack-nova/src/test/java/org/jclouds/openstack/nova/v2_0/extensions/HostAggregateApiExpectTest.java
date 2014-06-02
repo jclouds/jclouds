@@ -43,7 +43,7 @@ public class HostAggregateApiExpectTest extends BaseNovaApiExpectTest {
    private DateService dateService = new SimpleDateFormatDateService();
 
    public void testList() {
-      URI endpoint = URI.create("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v1.1/3456/os-aggregates");
+      URI endpoint = URI.create("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v2/3456/os-aggregates");
       HostAggregateApi api = requestsSendResponses(keystoneAuthWithUsernameAndPasswordAndTenantName,
             responseWithKeystoneAccess, extensionsOfNovaRequest, extensionsOfNovaResponse,
             authenticatedGET().endpoint(endpoint).build(),
@@ -55,7 +55,7 @@ public class HostAggregateApiExpectTest extends BaseNovaApiExpectTest {
    }
 
    public void testGet() {
-      URI endpoint = URI.create("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v1.1/3456/os-aggregates/1");
+      URI endpoint = URI.create("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v2/3456/os-aggregates/1");
       HostAggregateApi api = requestsSendResponses(keystoneAuthWithUsernameAndPasswordAndTenantName,
             responseWithKeystoneAccess, extensionsOfNovaRequest, extensionsOfNovaResponse,
             authenticatedGET().endpoint(endpoint).build(),
@@ -66,7 +66,7 @@ public class HostAggregateApiExpectTest extends BaseNovaApiExpectTest {
    }
 
    public void testGetFailNotFound() {
-      URI endpoint = URI.create("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v1.1/3456/os-aggregates/1");
+      URI endpoint = URI.create("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v2/3456/os-aggregates/1");
       HostAggregateApi api = requestsSendResponses(keystoneAuthWithUsernameAndPasswordAndTenantName,
             responseWithKeystoneAccess, extensionsOfNovaRequest, extensionsOfNovaResponse,
             authenticatedGET().endpoint(endpoint).build(),
@@ -76,7 +76,7 @@ public class HostAggregateApiExpectTest extends BaseNovaApiExpectTest {
    }
 
    public void testCreateAggregate() {
-      URI endpoint = URI.create("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v1.1/3456/os-aggregates");
+      URI endpoint = URI.create("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v2/3456/os-aggregates");
       HostAggregateApi api = requestsSendResponses(keystoneAuthWithUsernameAndPasswordAndTenantName,
             responseWithKeystoneAccess, extensionsOfNovaRequest, extensionsOfNovaResponse,
             authenticatedGET().endpoint(endpoint).method("POST")
@@ -89,7 +89,7 @@ public class HostAggregateApiExpectTest extends BaseNovaApiExpectTest {
    }
 
    public void testDeleteAggregate() {
-      URI endpoint = URI.create("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v1.1/3456/os-aggregates/1");
+      URI endpoint = URI.create("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v2/3456/os-aggregates/1");
       HostAggregateApi api = requestsSendResponses(keystoneAuthWithUsernameAndPasswordAndTenantName,
             responseWithKeystoneAccess, extensionsOfNovaRequest, extensionsOfNovaResponse,
             authenticatedGET().endpoint(endpoint).method("DELETE").build(),
@@ -99,7 +99,7 @@ public class HostAggregateApiExpectTest extends BaseNovaApiExpectTest {
    }
 
    public void testDeleteAggregateFailNotFound() {
-      URI endpoint = URI.create("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v1.1/3456/os-aggregates/1");
+      URI endpoint = URI.create("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v2/3456/os-aggregates/1");
       HostAggregateApi api = requestsSendResponses(keystoneAuthWithUsernameAndPasswordAndTenantName,
             responseWithKeystoneAccess, extensionsOfNovaRequest, extensionsOfNovaResponse,
             authenticatedGET().endpoint(endpoint).method("DELETE").build(),
@@ -109,7 +109,7 @@ public class HostAggregateApiExpectTest extends BaseNovaApiExpectTest {
    }
 
    public void testUpdateName() {
-      URI endpoint = URI.create("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v1.1/3456/os-aggregates/1");
+      URI endpoint = URI.create("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v2/3456/os-aggregates/1");
       HostAggregateApi api = requestsSendResponses(keystoneAuthWithUsernameAndPasswordAndTenantName,
             responseWithKeystoneAccess, extensionsOfNovaRequest, extensionsOfNovaResponse,
             authenticatedGET().endpoint(endpoint).method("POST")
@@ -120,7 +120,7 @@ public class HostAggregateApiExpectTest extends BaseNovaApiExpectTest {
    }
 
    public void testUpdateAvailabilityZone() {
-      URI endpoint = URI.create("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v1.1/3456/os-aggregates/1");
+      URI endpoint = URI.create("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v2/3456/os-aggregates/1");
       HostAggregateApi api = requestsSendResponses(keystoneAuthWithUsernameAndPasswordAndTenantName,
             responseWithKeystoneAccess, extensionsOfNovaRequest, extensionsOfNovaResponse,
             authenticatedGET().endpoint(endpoint).method("POST")
@@ -131,7 +131,7 @@ public class HostAggregateApiExpectTest extends BaseNovaApiExpectTest {
    }
 
    public void testAddHost() {
-      URI endpoint = URI.create("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v1.1/3456/os-aggregates/1/action");
+      URI endpoint = URI.create("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v2/3456/os-aggregates/1/action");
       HostAggregateApi api = requestsSendResponses(keystoneAuthWithUsernameAndPasswordAndTenantName,
             responseWithKeystoneAccess, extensionsOfNovaRequest, extensionsOfNovaResponse,
             authenticatedGET().endpoint(endpoint).method("POST")
@@ -142,7 +142,7 @@ public class HostAggregateApiExpectTest extends BaseNovaApiExpectTest {
    }
 
    public void testRemoveHost() {
-      URI endpoint = URI.create("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v1.1/3456/os-aggregates/1/action");
+      URI endpoint = URI.create("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v2/3456/os-aggregates/1/action");
       HostAggregateApi api = requestsSendResponses(keystoneAuthWithUsernameAndPasswordAndTenantName,
             responseWithKeystoneAccess, extensionsOfNovaRequest, extensionsOfNovaResponse,
             authenticatedGET().endpoint(endpoint).method("POST")
@@ -154,7 +154,7 @@ public class HostAggregateApiExpectTest extends BaseNovaApiExpectTest {
 
 
    public void testSetMetadata() {
-      URI endpoint = URI.create("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v1.1/3456/os-aggregates/1/action");
+      URI endpoint = URI.create("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v2/3456/os-aggregates/1/action");
       HostAggregateApi api = requestsSendResponses(keystoneAuthWithUsernameAndPasswordAndTenantName,
             responseWithKeystoneAccess, extensionsOfNovaRequest, extensionsOfNovaResponse,
             authenticatedGET().endpoint(endpoint).method("POST")

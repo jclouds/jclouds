@@ -42,7 +42,7 @@ import com.google.common.collect.ImmutableMap;
 public class AdminActionsApiExpectTest extends BaseNovaApiExpectTest {
 
    public void testSuspend() {
-      URI endpoint = URI.create("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v1.1/3456/servers/1/action");
+      URI endpoint = URI.create("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v2/3456/servers/1/action");
       ServerAdminApi api = requestsSendResponses(
             keystoneAuthWithUsernameAndPasswordAndTenantName,
             responseWithKeystoneAccess, extensionsOfNovaRequest, extensionsOfNovaResponse,
@@ -54,7 +54,7 @@ public class AdminActionsApiExpectTest extends BaseNovaApiExpectTest {
    }
 
    public void testSuspendFailsNotFound() {
-      URI endpoint = URI.create("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v1.1/3456/servers/1/action");
+      URI endpoint = URI.create("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v2/3456/servers/1/action");
       ServerAdminApi api = requestsSendResponses(
             keystoneAuthWithUsernameAndPasswordAndTenantName,
             responseWithKeystoneAccess, extensionsOfNovaRequest, extensionsOfNovaResponse,
@@ -67,7 +67,7 @@ public class AdminActionsApiExpectTest extends BaseNovaApiExpectTest {
 
    @Test(expectedExceptions = AuthorizationException.class)
    public void testSuspendFailsNotAuthorized() {
-      URI endpoint = URI.create("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v1.1/3456/servers/1/action");
+      URI endpoint = URI.create("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v2/3456/servers/1/action");
       ServerAdminApi api = requestsSendResponses(
             keystoneAuthWithUsernameAndPasswordAndTenantName,
             responseWithKeystoneAccess, extensionsOfNovaRequest, extensionsOfNovaResponse,
@@ -79,7 +79,7 @@ public class AdminActionsApiExpectTest extends BaseNovaApiExpectTest {
    }
    
    public void testResume() {
-      URI endpoint = URI.create("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v1.1/3456/servers/1/action");
+      URI endpoint = URI.create("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v2/3456/servers/1/action");
       ServerAdminApi api = requestsSendResponses(
             keystoneAuthWithUsernameAndPasswordAndTenantName,
             responseWithKeystoneAccess, extensionsOfNovaRequest, extensionsOfNovaResponse,
@@ -91,7 +91,7 @@ public class AdminActionsApiExpectTest extends BaseNovaApiExpectTest {
    }
 
    public void testResumeFailsNotFound() {
-      URI endpoint = URI.create("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v1.1/3456/servers/1/action");
+      URI endpoint = URI.create("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v2/3456/servers/1/action");
       ServerAdminApi api = requestsSendResponses(
             keystoneAuthWithUsernameAndPasswordAndTenantName,
             responseWithKeystoneAccess, extensionsOfNovaRequest, extensionsOfNovaResponse,
@@ -104,7 +104,7 @@ public class AdminActionsApiExpectTest extends BaseNovaApiExpectTest {
 
    @Test(expectedExceptions = AuthorizationException.class)
    public void testResumeFailsNotAuthorized() {
-      URI endpoint = URI.create("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v1.1/3456/servers/1/action");
+      URI endpoint = URI.create("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v2/3456/servers/1/action");
       ServerAdminApi api = requestsSendResponses(
             keystoneAuthWithUsernameAndPasswordAndTenantName,
             responseWithKeystoneAccess, extensionsOfNovaRequest, extensionsOfNovaResponse,
@@ -116,7 +116,7 @@ public class AdminActionsApiExpectTest extends BaseNovaApiExpectTest {
    }
 
    public void testLock() {
-      URI endpoint = URI.create("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v1.1/3456/servers/1/action");
+      URI endpoint = URI.create("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v2/3456/servers/1/action");
       ServerAdminApi api = requestsSendResponses(
             keystoneAuthWithUsernameAndPasswordAndTenantName,
             responseWithKeystoneAccess, extensionsOfNovaRequest, extensionsOfNovaResponse,
@@ -128,7 +128,7 @@ public class AdminActionsApiExpectTest extends BaseNovaApiExpectTest {
    }
 
    public void testLockFailsNotFound() {
-      URI endpoint = URI.create("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v1.1/3456/servers/1/action");
+      URI endpoint = URI.create("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v2/3456/servers/1/action");
       ServerAdminApi api = requestsSendResponses(
             keystoneAuthWithUsernameAndPasswordAndTenantName,
             responseWithKeystoneAccess, extensionsOfNovaRequest, extensionsOfNovaResponse,
@@ -140,7 +140,7 @@ public class AdminActionsApiExpectTest extends BaseNovaApiExpectTest {
    }
 
    public void testUnlock() {
-      URI endpoint = URI.create("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v1.1/3456/servers/1/action");
+      URI endpoint = URI.create("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v2/3456/servers/1/action");
       ServerAdminApi api = requestsSendResponses(
             keystoneAuthWithUsernameAndPasswordAndTenantName,
             responseWithKeystoneAccess, extensionsOfNovaRequest, extensionsOfNovaResponse,
@@ -152,7 +152,7 @@ public class AdminActionsApiExpectTest extends BaseNovaApiExpectTest {
    }
 
    public void testUnlockFailsNotFound() {
-      URI endpoint = URI.create("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v1.1/3456/servers/1/action");
+      URI endpoint = URI.create("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v2/3456/servers/1/action");
       ServerAdminApi api = requestsSendResponses(
             keystoneAuthWithUsernameAndPasswordAndTenantName,
             responseWithKeystoneAccess, extensionsOfNovaRequest, extensionsOfNovaResponse,
@@ -164,7 +164,7 @@ public class AdminActionsApiExpectTest extends BaseNovaApiExpectTest {
    }
 
    public void testPause() {
-      URI endpoint = URI.create("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v1.1/3456/servers/1/action");
+      URI endpoint = URI.create("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v2/3456/servers/1/action");
       ServerAdminApi api = requestsSendResponses(
             keystoneAuthWithUsernameAndPasswordAndTenantName,
             responseWithKeystoneAccess, extensionsOfNovaRequest, extensionsOfNovaResponse,
@@ -176,7 +176,7 @@ public class AdminActionsApiExpectTest extends BaseNovaApiExpectTest {
    }
 
    public void testPauseFailsNotFound() {
-      URI endpoint = URI.create("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v1.1/3456/servers/1/action");
+      URI endpoint = URI.create("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v2/3456/servers/1/action");
       ServerAdminApi api = requestsSendResponses(
             keystoneAuthWithUsernameAndPasswordAndTenantName,
             responseWithKeystoneAccess, extensionsOfNovaRequest, extensionsOfNovaResponse,
@@ -188,7 +188,7 @@ public class AdminActionsApiExpectTest extends BaseNovaApiExpectTest {
    }
    
    public void testUnpause() {
-      URI endpoint = URI.create("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v1.1/3456/servers/1/action");
+      URI endpoint = URI.create("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v2/3456/servers/1/action");
       ServerAdminApi api = requestsSendResponses(
             keystoneAuthWithUsernameAndPasswordAndTenantName,
             responseWithKeystoneAccess, extensionsOfNovaRequest, extensionsOfNovaResponse,
@@ -200,7 +200,7 @@ public class AdminActionsApiExpectTest extends BaseNovaApiExpectTest {
    }
 
    public void testUnpauseFailsNotFound() {
-      URI endpoint = URI.create("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v1.1/3456/servers/1/action");
+      URI endpoint = URI.create("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v2/3456/servers/1/action");
       ServerAdminApi api = requestsSendResponses(
             keystoneAuthWithUsernameAndPasswordAndTenantName,
             responseWithKeystoneAccess, extensionsOfNovaRequest, extensionsOfNovaResponse,
@@ -212,7 +212,7 @@ public class AdminActionsApiExpectTest extends BaseNovaApiExpectTest {
    }
    
    public void testMigrateServer() {
-      URI endpoint = URI.create("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v1.1/3456/servers/1/action");
+      URI endpoint = URI.create("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v2/3456/servers/1/action");
       ServerAdminApi api = requestsSendResponses(
             keystoneAuthWithUsernameAndPasswordAndTenantName,
             responseWithKeystoneAccess, extensionsOfNovaRequest, extensionsOfNovaResponse,
@@ -225,7 +225,7 @@ public class AdminActionsApiExpectTest extends BaseNovaApiExpectTest {
 
 
    public void testMigrateServerFailsNotFound() {
-      URI endpoint = URI.create("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v1.1/3456/servers/1/action");
+      URI endpoint = URI.create("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v2/3456/servers/1/action");
       ServerAdminApi api = requestsSendResponses(
             keystoneAuthWithUsernameAndPasswordAndTenantName,
             responseWithKeystoneAccess, extensionsOfNovaRequest, extensionsOfNovaResponse,
@@ -237,7 +237,7 @@ public class AdminActionsApiExpectTest extends BaseNovaApiExpectTest {
    }
 
    public void testResetNetworkOfServer() {
-      URI endpoint = URI.create("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v1.1/3456/servers/1/action");
+      URI endpoint = URI.create("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v2/3456/servers/1/action");
       ServerAdminApi api = requestsSendResponses(
             keystoneAuthWithUsernameAndPasswordAndTenantName,
             responseWithKeystoneAccess, extensionsOfNovaRequest, extensionsOfNovaResponse,
@@ -249,7 +249,7 @@ public class AdminActionsApiExpectTest extends BaseNovaApiExpectTest {
    }
 
    public void testResetNetworkOfServerFailsNotFound() {
-      URI endpoint = URI.create("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v1.1/3456/servers/1/action");
+      URI endpoint = URI.create("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v2/3456/servers/1/action");
       ServerAdminApi api = requestsSendResponses(
             keystoneAuthWithUsernameAndPasswordAndTenantName,
             responseWithKeystoneAccess, extensionsOfNovaRequest, extensionsOfNovaResponse,
@@ -261,7 +261,7 @@ public class AdminActionsApiExpectTest extends BaseNovaApiExpectTest {
    }
    
    public void testInjectNetworkInfoIntoServer() {
-      URI endpoint = URI.create("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v1.1/3456/servers/1/action");
+      URI endpoint = URI.create("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v2/3456/servers/1/action");
       ServerAdminApi api = requestsSendResponses(
             keystoneAuthWithUsernameAndPasswordAndTenantName,
             responseWithKeystoneAccess, extensionsOfNovaRequest, extensionsOfNovaResponse,
@@ -273,7 +273,7 @@ public class AdminActionsApiExpectTest extends BaseNovaApiExpectTest {
    }
 
    public void testInjectNetworkInfoIntoServerFailsNotFound() {
-      URI endpoint = URI.create("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v1.1/3456/servers/1/action");
+      URI endpoint = URI.create("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v2/3456/servers/1/action");
       ServerAdminApi api = requestsSendResponses(
             keystoneAuthWithUsernameAndPasswordAndTenantName,
             responseWithKeystoneAccess, extensionsOfNovaRequest, extensionsOfNovaResponse,
@@ -288,7 +288,7 @@ public class AdminActionsApiExpectTest extends BaseNovaApiExpectTest {
       ServerAdminApi api = requestsSendResponses(
             keystoneAuthWithUsernameAndPasswordAndTenantName,
             responseWithKeystoneAccess, extensionsOfNovaRequest, extensionsOfNovaResponse,
-            authenticatedGET().endpoint("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v1.1/3456/servers/1/action").method("POST")
+            authenticatedGET().endpoint("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v2/3456/servers/1/action").method("POST")
                   .payload(payloadFromStringWithContentType("{\"createBackup\":{\"backup_type\":\"weekly\",\"rotation\":3,\"name\":\"mybackup\",\"metadata\":{\"some\":\"data or other\"}}}", MediaType.APPLICATION_JSON)).build(),
             HttpResponse.builder().statusCode(202).addHeader("Location", "http://172.16.89.149:8774/v2/images/1976b3b3-409a-468d-b16c-a9172c341b46").build()
       ).getServerAdminExtensionForZone("az-1.region-a.geo-1").get();
@@ -299,7 +299,7 @@ public class AdminActionsApiExpectTest extends BaseNovaApiExpectTest {
 
    @Test(expectedExceptions = ResourceNotFoundException.class)
    public void testBackupServerFailNotFound() {
-      URI endpoint = URI.create("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v1.1/3456/servers/1/action");
+      URI endpoint = URI.create("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v2/3456/servers/1/action");
       ServerAdminApi api = requestsSendResponses(
             keystoneAuthWithUsernameAndPasswordAndTenantName,
             responseWithKeystoneAccess, extensionsOfNovaRequest, extensionsOfNovaResponse,
@@ -312,7 +312,7 @@ public class AdminActionsApiExpectTest extends BaseNovaApiExpectTest {
    }
 
    public void testLiveMigrateServer() {
-      URI endpoint = URI.create("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v1.1/3456/servers/1/action");
+      URI endpoint = URI.create("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v2/3456/servers/1/action");
       ServerAdminApi api = requestsSendResponses(
             keystoneAuthWithUsernameAndPasswordAndTenantName,
             responseWithKeystoneAccess, extensionsOfNovaRequest, extensionsOfNovaResponse,
@@ -325,7 +325,7 @@ public class AdminActionsApiExpectTest extends BaseNovaApiExpectTest {
    }
 
    public void testLiveMigrateServerFailsNotFound() {
-      URI endpoint = URI.create("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v1.1/3456/servers/1/action");
+      URI endpoint = URI.create("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v2/3456/servers/1/action");
       ServerAdminApi api = requestsSendResponses(
             keystoneAuthWithUsernameAndPasswordAndTenantName,
             responseWithKeystoneAccess, extensionsOfNovaRequest, extensionsOfNovaResponse,

@@ -35,7 +35,7 @@ import com.google.common.collect.Iterables;
 public class VirtualInterfaceApiExpectTest extends BaseNovaApiExpectTest {
 
    public void testListVirtualInterfaces() {
-      URI endpoint = URI.create("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v1.1/3456/servers/1/os-virtual-interfaces");
+      URI endpoint = URI.create("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v2/3456/servers/1/os-virtual-interfaces");
       VirtualInterfaceApi api = requestsSendResponses(
             keystoneAuthWithUsernameAndPasswordAndTenantName,
             responseWithKeystoneAccess, extensionsOfNovaRequest, extensionsOfNovaResponse,
@@ -49,7 +49,7 @@ public class VirtualInterfaceApiExpectTest extends BaseNovaApiExpectTest {
    }
 
    public void testListVirtualInterfacesFailNotFound() {
-      URI endpoint = URI.create("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v1.1/3456/servers/1/os-virtual-interfaces");
+      URI endpoint = URI.create("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v2/3456/servers/1/os-virtual-interfaces");
       VirtualInterfaceApi api = requestsSendResponses(
             keystoneAuthWithUsernameAndPasswordAndTenantName,
             responseWithKeystoneAccess, extensionsOfNovaRequest, extensionsOfNovaResponse,

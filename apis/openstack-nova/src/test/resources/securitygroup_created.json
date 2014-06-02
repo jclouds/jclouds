@@ -1,6 +1,6 @@
 {
     "security_group": {
-        "rules": [ ],
+        "rules": [],
         "tenant_id": "dev_16767499955063",
         "id": 160,
         "name": "jclouds-test",

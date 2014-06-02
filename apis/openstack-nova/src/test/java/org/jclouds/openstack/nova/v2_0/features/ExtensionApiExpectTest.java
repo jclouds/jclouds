@@ -39,7 +39,7 @@ public class ExtensionApiExpectTest extends BaseNovaApiExpectTest {
    public void testListExtensionsWhenResponseIs2xx() throws Exception {
       HttpRequest listExtensions = HttpRequest.builder()
             .method("GET")
-            .endpoint("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v1.1/3456/extensions")
+            .endpoint("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v2/3456/extensions")
             .addHeader("Accept", "application/json")
             .addHeader("X-Auth-Token", authToken)
             .build();
@@ -59,7 +59,7 @@ public class ExtensionApiExpectTest extends BaseNovaApiExpectTest {
    public void testListExtensionsWhenReponseIs404IsEmpty() throws Exception {
       HttpRequest listExtensions = HttpRequest.builder()
             .method("GET")
-            .endpoint("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v1.1/3456/extensions")
+            .endpoint("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v2/3456/extensions")
             .addHeader("Accept", "application/json")
             .addHeader("X-Auth-Token", authToken)
             .build();
@@ -76,7 +76,7 @@ public class ExtensionApiExpectTest extends BaseNovaApiExpectTest {
    public void testGetExtensionByAliasWhenResponseIs2xx() throws Exception {
       HttpRequest getExtension = HttpRequest.builder()
             .method("GET")
-            .endpoint("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v1.1/3456/extensions/RS-PIE")
+            .endpoint("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v2/3456/extensions/RS-PIE")
             .addHeader("Accept", "application/json")
             .addHeader("X-Auth-Token", authToken)
             .build();
@@ -94,7 +94,7 @@ public class ExtensionApiExpectTest extends BaseNovaApiExpectTest {
    public void testGetExtensionByAliasWhenResponseIs404() throws Exception {
       HttpRequest getExtension = HttpRequest.builder()
             .method("GET")
-            .endpoint("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v1.1/3456/extensions/RS-PIE")
+            .endpoint("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v2/3456/extensions/RS-PIE")
             .addHeader("Accept", "application/json")
             .addHeader("X-Auth-Token", authToken)
             .build();

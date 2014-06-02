@@ -51,7 +51,7 @@ public class ParseCreatedServerTest extends BaseItemParserTest<ServerCreated> {
             .name("test-e92")
             .adminPass("ZWuHcmTMQ7eXoHeM")
             .links(
-                     Link.create(Relation.SELF, URI.create("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v1.1/37936628937291/servers/71752")),
+                     Link.create(Relation.SELF, URI.create("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v2/37936628937291/servers/71752")),
                      Link.create(Relation.BOOKMARK, URI.create("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/37936628937291/servers/71752"))).build();
 
    }
@@ -66,7 +66,7 @@ public class ParseCreatedServerTest extends BaseItemParserTest<ServerCreated> {
             .adminPass("ZWuHcmTMQ7eXoHeM")
             .diskConfig(diskConfig)
             .links(
-                     Link.create(Relation.SELF, URI.create("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v1.1/37936628937291/servers/71752")),
+                     Link.create(Relation.SELF, URI.create("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v2/37936628937291/servers/71752")),
                      Link.create(Relation.BOOKMARK, URI.create("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/37936628937291/servers/71752"))).build();
 
    }

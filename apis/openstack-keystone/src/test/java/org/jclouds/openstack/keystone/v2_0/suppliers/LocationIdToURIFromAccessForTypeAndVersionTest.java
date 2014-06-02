@@ -67,19 +67,19 @@ public class LocationIdToURIFromAccessForTypeAndVersionTest {
    }).getInstance(LocationIdToURIFromAccessForTypeAndVersion.Factory.class);
 
    public void testRegionUnmatchesOkWhenNoVersionIdSet() {
-      assertEquals(Maps.transformValues(factory.createForApiTypeAndVersion("compute", "1.1").get(), Suppliers
+      assertEquals(Maps.transformValues(factory.createForApiTypeAndVersion("compute", "2").get(), Suppliers
                .<URI> supplierFunction()), ImmutableMap.of("az-1.region-a.geo-1", URI
-               .create("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v1.1/3456"), "az-2.region-a.geo-1", URI
-               .create("https://az-2.region-a.geo-1.compute.hpcloudsvc.com/v1.1/3456"), "az-3.region-a.geo-1", URI
-               .create("https://az-3.region-a.geo-1.compute.hpcloudsvc.com/v1.1/3456")));
+               .create("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v2/3456"), "az-2.region-a.geo-1", URI
+               .create("https://az-2.region-a.geo-1.compute.hpcloudsvc.com/v2/3456"), "az-3.region-a.geo-1", URI
+               .create("https://az-3.region-a.geo-1.compute.hpcloudsvc.com/v2/3456")));
    }
 
    public void testRegionMatches() {
-      assertEquals(Maps.transformValues(factory.createForApiTypeAndVersion("compute", "1.1").get(), Suppliers
+      assertEquals(Maps.transformValues(factory.createForApiTypeAndVersion("compute", "2").get(), Suppliers
                .<URI> supplierFunction()), ImmutableMap.of("az-1.region-a.geo-1", URI
-               .create("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v1.1/3456"), "az-2.region-a.geo-1", URI
-               .create("https://az-2.region-a.geo-1.compute.hpcloudsvc.com/v1.1/3456"), "az-3.region-a.geo-1", URI
-               .create("https://az-3.region-a.geo-1.compute.hpcloudsvc.com/v1.1/3456")));
+               .create("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v2/3456"), "az-2.region-a.geo-1", URI
+               .create("https://az-2.region-a.geo-1.compute.hpcloudsvc.com/v2/3456"), "az-3.region-a.geo-1", URI
+               .create("https://az-3.region-a.geo-1.compute.hpcloudsvc.com/v2/3456")));
    }
 
    private final LocationIdToURIFromAccessForTypeAndVersion.Factory raxFactory = Guice.createInjector(new AbstractModule() {

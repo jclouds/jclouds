@@ -35,23 +35,21 @@ import com.google.inject.Injector;
 @Test(groups = "unit", testName = "ParseCreateFlavorTest")
 public class ParseCreateFlavorTest extends BaseItemParserTest<Flavor> {
 
-	@Override
-	public String resource() {
-		return "/flavor_new.json";
-	}
+   @Override
+   public String resource() {
+      return "/flavor_new.json";
+   }
 
-	@Override
-	@SelectJson("flavor")
-	@Consumes(MediaType.APPLICATION_JSON)
-	public Flavor expected() {
-		return Flavor.builder()
-				.id("1cb47a44-9b84-4da4-bf81-c1976e8414ab")
-				.name("128 MB Server").ram(128).vcpus(1)
-				.disk(10).build();
-	}
+   @Override
+   @SelectJson("flavor")
+   @Consumes(MediaType.APPLICATION_JSON)
+   public Flavor expected() {
+      return Flavor.builder().id("1cb47a44-9b84-4da4-bf81-c1976e8414ab").name("128 MB Server")
+            .ram(128).vcpus(1).disk(10).build();
+   }
 
-	@Override
-	protected Injector injector() {
-		return Guice.createInjector(new NovaParserModule(), new GsonModule());
-	}
+   @Override
+   protected Injector injector() {
+      return Guice.createInjector(new NovaParserModule(), new GsonModule());
+   }
 }

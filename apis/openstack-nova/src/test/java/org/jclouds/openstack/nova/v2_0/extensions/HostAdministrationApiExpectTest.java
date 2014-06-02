@@ -44,7 +44,7 @@ public class HostAdministrationApiExpectTest extends BaseNovaApiExpectTest {
    
    
    public void testList() {
-      URI endpoint = URI.create("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v1.1/3456/os-hosts");
+      URI endpoint = URI.create("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v2/3456/os-hosts");
       HostAdministrationApi api = requestsSendResponses(keystoneAuthWithUsernameAndPasswordAndTenantName,
             responseWithKeystoneAccess, extensionsOfNovaRequest, extensionsOfNovaResponse,
             HttpRequest.builder().method("GET")
@@ -64,7 +64,7 @@ public class HostAdministrationApiExpectTest extends BaseNovaApiExpectTest {
    }
 
    public void testGet() {
-      URI endpoint = URI.create("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v1.1/3456/os-hosts/xyz");
+      URI endpoint = URI.create("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v2/3456/os-hosts/xyz");
       HostAdministrationApi api = requestsSendResponses(keystoneAuthWithUsernameAndPasswordAndTenantName,
             responseWithKeystoneAccess, extensionsOfNovaRequest, extensionsOfNovaResponse,
             HttpRequest.builder().method("GET")
@@ -84,7 +84,7 @@ public class HostAdministrationApiExpectTest extends BaseNovaApiExpectTest {
    }
    
    public void testEnableHost() {
-      URI endpoint = URI.create("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v1.1/3456/os-hosts/ubuntu");
+      URI endpoint = URI.create("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v2/3456/os-hosts/ubuntu");
       HostAdministrationApi api = requestsSendResponses(keystoneAuthWithUsernameAndPasswordAndTenantName,
             responseWithKeystoneAccess, extensionsOfNovaRequest, extensionsOfNovaResponse,
             HttpRequest.builder().method("PUT")
@@ -100,7 +100,7 @@ public class HostAdministrationApiExpectTest extends BaseNovaApiExpectTest {
 
    @Test(expectedExceptions = ResourceNotFoundException.class)
    public void testEnableHostFailNotFound() {
-      URI endpoint = URI.create("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v1.1/3456/os-hosts/ubuntu");
+      URI endpoint = URI.create("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v2/3456/os-hosts/ubuntu");
       HostAdministrationApi api = requestsSendResponses(keystoneAuthWithUsernameAndPasswordAndTenantName,
             responseWithKeystoneAccess, extensionsOfNovaRequest, extensionsOfNovaResponse,
             HttpRequest.builder().method("PUT")
@@ -114,7 +114,7 @@ public class HostAdministrationApiExpectTest extends BaseNovaApiExpectTest {
    }
 
    public void testEnableHostFailNotEnabled() {
-      URI endpoint = URI.create("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v1.1/3456/os-hosts/ubuntu");
+      URI endpoint = URI.create("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v2/3456/os-hosts/ubuntu");
       HostAdministrationApi api = requestsSendResponses(keystoneAuthWithUsernameAndPasswordAndTenantName,
             responseWithKeystoneAccess, extensionsOfNovaRequest, extensionsOfNovaResponse,
             HttpRequest.builder().method("PUT")
@@ -129,7 +129,7 @@ public class HostAdministrationApiExpectTest extends BaseNovaApiExpectTest {
    }
 
    public void testDisableHost() {
-      URI endpoint = URI.create("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v1.1/3456/os-hosts/ubuntu");
+      URI endpoint = URI.create("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v2/3456/os-hosts/ubuntu");
       HostAdministrationApi api = requestsSendResponses(keystoneAuthWithUsernameAndPasswordAndTenantName,
             responseWithKeystoneAccess, extensionsOfNovaRequest, extensionsOfNovaResponse,
             HttpRequest.builder().method("PUT")
@@ -144,7 +144,7 @@ public class HostAdministrationApiExpectTest extends BaseNovaApiExpectTest {
    }
 
    public void testStartMaintenance() {
-      URI endpoint = URI.create("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v1.1/3456/os-hosts/ubuntu");
+      URI endpoint = URI.create("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v2/3456/os-hosts/ubuntu");
       HostAdministrationApi api = requestsSendResponses(keystoneAuthWithUsernameAndPasswordAndTenantName,
             responseWithKeystoneAccess, extensionsOfNovaRequest, extensionsOfNovaResponse,
             HttpRequest.builder().method("PUT")
@@ -159,7 +159,7 @@ public class HostAdministrationApiExpectTest extends BaseNovaApiExpectTest {
    }
 
    public void testStopMaintenance() {
-      URI endpoint = URI.create("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v1.1/3456/os-hosts/ubuntu");
+      URI endpoint = URI.create("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v2/3456/os-hosts/ubuntu");
       HostAdministrationApi api = requestsSendResponses(keystoneAuthWithUsernameAndPasswordAndTenantName,
             responseWithKeystoneAccess, extensionsOfNovaRequest, extensionsOfNovaResponse,
             HttpRequest.builder().method("PUT")
@@ -177,7 +177,7 @@ public class HostAdministrationApiExpectTest extends BaseNovaApiExpectTest {
       HostAdministrationApi api = requestsSendResponses(keystoneAuthWithUsernameAndPasswordAndTenantName,
             responseWithKeystoneAccess, extensionsOfNovaRequest, extensionsOfNovaResponse,
             HttpRequest.builder().method("GET")
-                        .endpoint("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v1.1/3456/os-hosts/ubuntu/startup")
+                        .endpoint("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v2/3456/os-hosts/ubuntu/startup")
                        .addHeader("Accept", "application/json")
                        .addHeader("X-Auth-Token", authToken).build(),
             HttpResponse.builder().statusCode(200)
@@ -191,7 +191,7 @@ public class HostAdministrationApiExpectTest extends BaseNovaApiExpectTest {
       HostAdministrationApi api = requestsSendResponses(keystoneAuthWithUsernameAndPasswordAndTenantName,
             responseWithKeystoneAccess, extensionsOfNovaRequest, extensionsOfNovaResponse,
             HttpRequest.builder().method("GET")
-                       .endpoint("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v1.1/3456/os-hosts/ubuntu/startup")
+                       .endpoint("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v2/3456/os-hosts/ubuntu/startup")
                        .addHeader("Accept", "application/json")
                        .addHeader("X-Auth-Token", authToken).build(),
             HttpResponse.builder().statusCode(404).build()).getHostAdministrationExtensionForZone("az-1.region-a.geo-1").get();
@@ -202,7 +202,7 @@ public class HostAdministrationApiExpectTest extends BaseNovaApiExpectTest {
       HostAdministrationApi api = requestsSendResponses(keystoneAuthWithUsernameAndPasswordAndTenantName,
             responseWithKeystoneAccess, extensionsOfNovaRequest, extensionsOfNovaResponse,
             HttpRequest.builder().method("GET")
-                       .endpoint("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v1.1/3456/os-hosts/ubuntu/startup")
+                       .endpoint("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v2/3456/os-hosts/ubuntu/startup")
                        .addHeader("Accept", "application/json")
                        .addHeader("X-Auth-Token", authToken).build(),
             HttpResponse.builder().statusCode(200)
@@ -215,7 +215,7 @@ public class HostAdministrationApiExpectTest extends BaseNovaApiExpectTest {
       HostAdministrationApi api = requestsSendResponses(keystoneAuthWithUsernameAndPasswordAndTenantName,
             responseWithKeystoneAccess, extensionsOfNovaRequest, extensionsOfNovaResponse,
             HttpRequest.builder().method("GET")
-                       .endpoint("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v1.1/3456/os-hosts/ubuntu/shutdown")
+                       .endpoint("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v2/3456/os-hosts/ubuntu/shutdown")
                        .addHeader("Accept", "application/json")
                        .addHeader("X-Auth-Token", authToken).build(),
             HttpResponse.builder().statusCode(200)
@@ -228,7 +228,7 @@ public class HostAdministrationApiExpectTest extends BaseNovaApiExpectTest {
       HostAdministrationApi api = requestsSendResponses(keystoneAuthWithUsernameAndPasswordAndTenantName,
             responseWithKeystoneAccess, extensionsOfNovaRequest, extensionsOfNovaResponse,
             HttpRequest.builder().method("GET")
-                       .endpoint("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v1.1/3456/os-hosts/ubuntu/reboot")
+                       .endpoint("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v2/3456/os-hosts/ubuntu/reboot")
                        .addHeader("Accept", "application/json")
                        .addHeader("X-Auth-Token", authToken).build(),
             HttpResponse.builder().statusCode(200)

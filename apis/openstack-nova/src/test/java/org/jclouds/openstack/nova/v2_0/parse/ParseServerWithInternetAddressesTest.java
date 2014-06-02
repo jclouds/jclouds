@@ -82,7 +82,7 @@ public class ParseServerWithInternetAddressesTest extends BaseItemParserTest<Ser
             .links(
                   Link.create(
                          Relation.SELF,
-                         URI.create("https://nova-api.openstack.org:9774/v1.1/37/servers/1459")),
+                         URI.create("https://nova-api.openstack.org:9774/v2/37/servers/1459")),
                   Link.create(
                          Relation.BOOKMARK,
                          URI.create("https://nova-api.openstack.org:9774/37/servers/1459")))

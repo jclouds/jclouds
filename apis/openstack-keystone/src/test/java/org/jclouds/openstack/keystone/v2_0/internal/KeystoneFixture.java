@@ -37,9 +37,9 @@ public enum KeystoneFixture {
    public String getTenantId() {
       return "12346637803162";
    }
-   
+
    public String getTenantName() {
-	      return "adrian@jclouds.org";
+	      return "user@jclouds.apache.org";
 	   }
 
    public HttpRequest initialAuthWithUsernameAndPassword(String username, String password) {
@@ -52,7 +52,7 @@ public enum KeystoneFixture {
                                        "{\"auth\":{\"passwordCredentials\":{\"username\":\"%s\",\"password\":\"%s\"}}}",
                                        username, password), "application/json")).build();
    }
-  
+
    public HttpRequest initialAuthWithUsernameAndPasswordAndTenantName(String username, String password) {
       return HttpRequest.builder().method("POST")
             .endpoint("http://localhost:5000/v2.0/tokens")
@@ -63,7 +63,7 @@ public enum KeystoneFixture {
                                        "{\"auth\":{\"passwordCredentials\":{\"username\":\"%s\",\"password\":\"%s\"},\"tenantName\":\"%s\"}}",
                                        username, password, getTenantName()), "application/json")).build();
    }
-  
+
    public HttpRequest initialAuthWithAccessKeyAndSecretKeyAndTenantName(String accessKey, String secretKey) {
       return HttpRequest.builder().method("POST")
             .endpoint("http://localhost:5000/v2.0/tokens")
@@ -74,18 +74,17 @@ public enum KeystoneFixture {
                                        "{\"auth\":{\"apiAccessKeyCredentials\":{\"accessKey\":\"%s\",\"secretKey\":\"%s\"},\"tenantName\":\"%s\"}}",
                                        accessKey, secretKey, getTenantName()), "application/json")).build();
    }
-   
+
    public HttpRequest initialAuthWithAccessKeyAndSecretKeyAndTenantId(String accessKey, String secretKey) {
       return HttpRequest.builder().method("POST")
-
-	            .endpoint("http://localhost:5000/v2.0/tokens")
-	            .addHeader(HttpHeaders.ACCEPT, "application/json")
-	            .payload(
-	                     payloadFromStringWithContentType(
-	                              format(
-	                                       "{\"auth\":{\"apiAccessKeyCredentials\":{\"accessKey\":\"%s\",\"secretKey\":\"%s\"},\"tenantId\":\"%s\"}}",
-	                                       accessKey, secretKey, getTenantId()), "application/json")).build();
-	   }
+            .endpoint("http://localhost:5000/v2.0/tokens")
+            .addHeader(HttpHeaders.ACCEPT, "application/json")
+            .payload(
+                     payloadFromStringWithContentType(
+                              format(
+                                       "{\"auth\":{\"apiAccessKeyCredentials\":{\"accessKey\":\"%s\",\"secretKey\":\"%s\"},\"tenantId\":\"%s\"}}",
+                                       accessKey, secretKey, getTenantId()), "application/json")).build();
+   }
 
    public String getAuthToken() {
       return  "Auth_4f173437e4b013bee56d1007";

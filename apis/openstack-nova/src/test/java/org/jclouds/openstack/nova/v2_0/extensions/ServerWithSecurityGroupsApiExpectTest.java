@@ -35,7 +35,7 @@ import com.google.common.collect.ImmutableSet;
 public class ServerWithSecurityGroupsApiExpectTest extends BaseNovaApiExpectTest {
 
    public void testGetServerWithSecurityGroups() {
-      URI endpoint = URI.create("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v1.1/3456/os-create-server-ext/8d0a6ca5-8849-4b3d-b86e-f24c92490ebb");
+      URI endpoint = URI.create("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v2/3456/os-create-server-ext/8d0a6ca5-8849-4b3d-b86e-f24c92490ebb");
       ServerWithSecurityGroupsApi api = requestsSendResponses(
             keystoneAuthWithUsernameAndPasswordAndTenantName,
             responseWithKeystoneAccess, extensionsOfNovaRequest, extensionsOfNovaResponse,
@@ -49,7 +49,7 @@ public class ServerWithSecurityGroupsApiExpectTest extends BaseNovaApiExpectTest
    }
 
    public void testGetServerWithSecurityGroupsFailNotFound() {
-      URI endpoint = URI.create("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v1.1/3456/os-create-server-ext/8d0a6ca5-8849-4b3d-b86e-f24c92490ebb");
+      URI endpoint = URI.create("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v2/3456/os-create-server-ext/8d0a6ca5-8849-4b3d-b86e-f24c92490ebb");
       ServerWithSecurityGroupsApi api = requestsSendResponses(
             keystoneAuthWithUsernameAndPasswordAndTenantName,
             responseWithKeystoneAccess, extensionsOfNovaRequest, extensionsOfNovaResponse,

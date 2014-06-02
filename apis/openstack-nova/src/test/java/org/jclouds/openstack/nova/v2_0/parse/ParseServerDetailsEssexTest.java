@@ -61,7 +61,7 @@ public class ParseServerDetailsEssexTest extends BaseSetParserTest<Server> {
                   .links(
                         Link.create(
                               Relation.SELF,
-                              URI.create("http://nova:8774/v1.1/8d10e6646d5d4585937395b04839a353/servers/0c80b392-db30-4736-ae02-4480090f1207")),
+                              URI.create("http://nova:8774/v2/8d10e6646d5d4585937395b04839a353/servers/0c80b392-db30-4736-ae02-4480090f1207")),
                         Link.create(
                               Relation.BOOKMARK,
                               URI.create("http://nova:8774/8d10e6646d5d4585937395b04839a353/servers/0c80b392-db30-4736-ae02-4480090f1207")))
@@ -96,7 +96,7 @@ public class ParseServerDetailsEssexTest extends BaseSetParserTest<Server> {
                   .links(
                         Link.create(
                               Relation.SELF,
-                              URI.create("http://nova:8774/v1.1/8d10e6646d5d4585937395b04839a353/servers/b332b5cd-535e-4677-b68e-fc8badc13236")),
+                              URI.create("http://nova:8774/v2/8d10e6646d5d4585937395b04839a353/servers/b332b5cd-535e-4677-b68e-fc8badc13236")),
                         Link.create(
                               Relation.BOOKMARK,
                               URI.create("http://nova:8774/8d10e6646d5d4585937395b04839a353/servers/b332b5cd-535e-4677-b68e-fc8badc13236")))
@@ -130,7 +130,7 @@ public class ParseServerDetailsEssexTest extends BaseSetParserTest<Server> {
                   .links(
                         Link.create(
                               Relation.SELF,
-                              URI.create("http://nova:8774/v1.1/8d10e6646d5d4585937395b04839a353/servers/f9d43436-4572-4c9b-9b74-5fa6890a2f21")),
+                              URI.create("http://nova:8774/v2/8d10e6646d5d4585937395b04839a353/servers/f9d43436-4572-4c9b-9b74-5fa6890a2f21")),
                         Link.create(
                               Relation.BOOKMARK,
                               URI.create("http://nova:8774/8d10e6646d5d4585937395b04839a353/servers/f9d43436-4572-4c9b-9b74-5fa6890a2f21")))

@@ -43,7 +43,7 @@ public class ImageApiExpectTest extends BaseNovaApiExpectTest {
    public void testListImagesWhenResponseIs2xx() throws Exception {
       HttpRequest list = HttpRequest.builder()
             .method("GET")
-            .endpoint("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v1.1/3456/images")
+            .endpoint("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v2/3456/images")
             .addHeader("Accept", "application/json")
             .addHeader("X-Auth-Token", authToken)
             .build();
@@ -63,7 +63,7 @@ public class ImageApiExpectTest extends BaseNovaApiExpectTest {
    public void testListImagesWhenReponseIs404IsEmpty() throws Exception {
       HttpRequest list = HttpRequest.builder()
             .method("GET")
-            .endpoint("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v1.1/3456/images")
+            .endpoint("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v2/3456/images")
             .addHeader("Accept", "application/json")
             .addHeader("X-Auth-Token", authToken)
             .build();
@@ -80,7 +80,7 @@ public class ImageApiExpectTest extends BaseNovaApiExpectTest {
 
       HttpRequest getImage = HttpRequest.builder()
             .method("GET")
-            .endpoint("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v1.1/3456/images/52415800-8b69-11e0-9b19-734f5736d2a2")
+            .endpoint("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v2/3456/images/52415800-8b69-11e0-9b19-734f5736d2a2")
             .addHeader("Accept", "application/json")
             .addHeader("X-Auth-Token", authToken)
             .build();
@@ -99,7 +99,7 @@ public class ImageApiExpectTest extends BaseNovaApiExpectTest {
    public void testGetImageWhenResponseIs404() throws Exception {
       HttpRequest getImage = HttpRequest.builder()
             .method("GET")
-            .endpoint("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v1.1/3456/images/52415800-8b69-11e0-9b19-734f5736d2a2")
+            .endpoint("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v2/3456/images/52415800-8b69-11e0-9b19-734f5736d2a2")
             .addHeader("Accept", "application/json")
             .addHeader("X-Auth-Token", authToken)
             .build();
@@ -116,7 +116,7 @@ public class ImageApiExpectTest extends BaseNovaApiExpectTest {
       String imageId = "52415800-8b69-11e0-9b19-734f5736d2a2";
       HttpRequest getMetadata = HttpRequest.builder()
             .method("GET")
-            .endpoint("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v1.1/3456/images/" + imageId + "/metadata")
+            .endpoint("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v2/3456/images/" + imageId + "/metadata")
             .addHeader("Accept", "application/json")
             .addHeader("X-Auth-Token", authToken)
             .build();
@@ -135,7 +135,7 @@ public class ImageApiExpectTest extends BaseNovaApiExpectTest {
       String imageId = "52415800-8b69-11e0-9b19-734f5736d2a2";
       HttpRequest getMetadata = HttpRequest.builder()
             .method("GET")
-            .endpoint("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v1.1/3456/images/" + imageId + "/metadata")
+            .endpoint("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v2/3456/images/" + imageId + "/metadata")
             .addHeader("Accept", "*/*")
             .addHeader("X-Auth-Token", authToken)
             .build();
@@ -162,7 +162,7 @@ public class ImageApiExpectTest extends BaseNovaApiExpectTest {
 
       HttpRequest setMetadata = HttpRequest.builder()
             .method("PUT")
-            .endpoint("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v1.1/3456/images/" + imageId + "/metadata")
+            .endpoint("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v2/3456/images/" + imageId + "/metadata")
             .addHeader("Accept", "application/json")
             .addHeader("X-Auth-Token", authToken)
             .payload(payloadFromStringWithContentType(
@@ -188,7 +188,7 @@ public class ImageApiExpectTest extends BaseNovaApiExpectTest {
 
       HttpRequest setMetadata = HttpRequest.builder()
             .method("PUT")
-            .endpoint("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v1.1/3456/images/" + imageId + "/metadata")
+            .endpoint("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v2/3456/images/" + imageId + "/metadata")
             .addHeader("Accept", "*/*")
             .addHeader("X-Auth-Token", authToken)
             .payload(payloadFromStringWithContentType(
@@ -217,7 +217,7 @@ public class ImageApiExpectTest extends BaseNovaApiExpectTest {
 
       HttpRequest setMetadata = HttpRequest.builder()
             .method("POST")
-            .endpoint("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v1.1/3456/images/" + imageId + "/metadata")
+            .endpoint("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v2/3456/images/" + imageId + "/metadata")
             .addHeader("Accept", "application/json")
             .addHeader("X-Auth-Token", authToken)
             .payload(payloadFromStringWithContentType(
@@ -243,7 +243,7 @@ public class ImageApiExpectTest extends BaseNovaApiExpectTest {
 
       HttpRequest setMetadata = HttpRequest.builder()
             .method("POST")
-            .endpoint("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v1.1/3456/servers/" + imageId + "/metadata")
+            .endpoint("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v2/3456/servers/" + imageId + "/metadata")
             .addHeader("Accept", "application/json")
             .addHeader("X-Auth-Token", authToken)
             .payload(payloadFromStringWithContentType("{\"metadata\":{\"Server Label\":\"Web Head 2\",\"Server Description\":\"Simple Server\"}}", "application/json"))
@@ -269,7 +269,7 @@ public class ImageApiExpectTest extends BaseNovaApiExpectTest {
 
       HttpRequest getMetadata = HttpRequest.builder()
             .method("GET")
-            .endpoint("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v1.1/3456/images/" + imageId + "/metadata/" + key)
+            .endpoint("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v2/3456/images/" + imageId + "/metadata/" + key)
             .addHeader("Accept", "application/json")
             .addHeader("X-Auth-Token", authToken)
             .build();
@@ -290,7 +290,7 @@ public class ImageApiExpectTest extends BaseNovaApiExpectTest {
 
       HttpRequest getMetadata = HttpRequest.builder()
             .method("GET")
-            .endpoint("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v1.1/3456/images/" + imageId + "/metadata/" + key)
+            .endpoint("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v2/3456/images/" + imageId + "/metadata/" + key)
             .addHeader("Accept", "application/json")
             .addHeader("X-Auth-Token", authToken)
             .build();
@@ -310,7 +310,7 @@ public class ImageApiExpectTest extends BaseNovaApiExpectTest {
 
       HttpRequest updateMetadata = HttpRequest.builder()
             .method("PUT")
-            .endpoint("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v1.1/3456/images/" + imageId + "/metadata/" + "Image%20Version")
+            .endpoint("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v2/3456/images/" + imageId + "/metadata/" + "Image%20Version")
             .addHeader("Accept", "application/json")
             .addHeader("X-Auth-Token", authToken)
             .payload(payloadFromStringWithContentType("{\"metadata\":{\"Image Version\":\"2.5\"}}", "application/json"))
@@ -332,7 +332,7 @@ public class ImageApiExpectTest extends BaseNovaApiExpectTest {
 
       HttpRequest deleteMetadata = HttpRequest.builder()
             .method("DELETE")
-            .endpoint("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v1.1/3456/images/" + imageId + "/metadata/" + key)
+            .endpoint("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v2/3456/images/" + imageId + "/metadata/" + key)
             .addHeader("Accept", "application/json")
             .addHeader("X-Auth-Token", authToken)
             .build();
@@ -351,7 +351,7 @@ public class ImageApiExpectTest extends BaseNovaApiExpectTest {
 
       HttpRequest deleteMetadata = HttpRequest.builder()
             .method("DELETE")
-            .endpoint("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v1.1/3456/images/" + imageId + "/metadata/" + key)
+            .endpoint("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v2/3456/images/" + imageId + "/metadata/" + key)
             .addHeader("Accept", "application/json")
             .addHeader("X-Auth-Token", authToken)
             .build();

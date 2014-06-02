@@ -62,7 +62,7 @@ public class FloatingIPApiExpectTest extends BaseNovaApiExpectTest {
       HttpRequest list = HttpRequest
             .builder()
             .method("GET")
-            .endpoint("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v1.1/3456/os-floating-ips")
+            .endpoint("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v2/3456/os-floating-ips")
             .addHeader("Accept", "application/json")
             .addHeader("X-Auth-Token", authToken).build();
 
@@ -82,7 +82,7 @@ public class FloatingIPApiExpectTest extends BaseNovaApiExpectTest {
       HttpRequest list = HttpRequest
             .builder()
             .method("GET")
-            .endpoint("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v1.1/3456/os-floating-ips")
+            .endpoint("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v2/3456/os-floating-ips")
             .addHeader("Accept", "application/json")
             .addHeader("X-Auth-Token", authToken).build();
 
@@ -98,7 +98,7 @@ public class FloatingIPApiExpectTest extends BaseNovaApiExpectTest {
       HttpRequest get = HttpRequest
             .builder()
             .method("GET")
-            .endpoint("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v1.1/3456/os-floating-ips/1")
+            .endpoint("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v2/3456/os-floating-ips/1")
             .addHeader("Accept", "application/json")
             .addHeader("X-Auth-Token", authToken).build();
 
@@ -116,7 +116,7 @@ public class FloatingIPApiExpectTest extends BaseNovaApiExpectTest {
       HttpRequest get = HttpRequest
             .builder()
             .method("GET")
-            .endpoint("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v1.1/3456/os-floating-ips/1")
+            .endpoint("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v2/3456/os-floating-ips/1")
             .addHeader("Accept", "application/json")
             .addHeader("X-Auth-Token", authToken).build();
 
@@ -132,7 +132,7 @@ public class FloatingIPApiExpectTest extends BaseNovaApiExpectTest {
       HttpRequest createFloatingIP = HttpRequest
             .builder()
             .method("POST")
-            .endpoint("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v1.1/3456/os-floating-ips")
+            .endpoint("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v2/3456/os-floating-ips")
             .addHeader("Accept", "application/json")
             .addHeader("X-Auth-Token", authToken)
             .payload(payloadFromStringWithContentType("{}", "application/json")).build();
@@ -153,7 +153,7 @@ public class FloatingIPApiExpectTest extends BaseNovaApiExpectTest {
       HttpRequest createFloatingIP = HttpRequest
             .builder()
             .method("POST")
-            .endpoint("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v1.1/3456/os-floating-ips")
+            .endpoint("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v2/3456/os-floating-ips")
             .addHeader("Accept", "application/json")
             .addHeader("X-Auth-Token", authToken)
             .payload(payloadFromStringWithContentType("{}", "application/json")).build();
@@ -171,7 +171,7 @@ public class FloatingIPApiExpectTest extends BaseNovaApiExpectTest {
       HttpRequest createFloatingIP = HttpRequest
             .builder()
             .method("POST")
-            .endpoint("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v1.1/3456/os-floating-ips")
+            .endpoint("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v2/3456/os-floating-ips")
             .addHeader("Accept", "application/json")
             .addHeader("X-Auth-Token", authToken)
             .payload(payloadFromStringWithContentType("{\"pool\":\"myPool\"}", "application/json")).build();

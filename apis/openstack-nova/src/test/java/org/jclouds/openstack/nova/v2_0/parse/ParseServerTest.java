@@ -75,7 +75,7 @@ public class ParseServerTest extends BaseItemParserTest<Server> {
                         .links(
                               Link.create(
                                     Relation.SELF,
-                                    URI.create("http://servers.api.openstack.org/v1.1/1234/images/52415800-8b69-11e0-9b19-734f6f006e54")),
+                                    URI.create("http://servers.api.openstack.org/v2/1234/images/52415800-8b69-11e0-9b19-734f6f006e54")),
                               Link.create(
                                     Relation.BOOKMARK,
                                     URI.create("http://servers.api.openstack.org/1234/images/52415800-8b69-11e0-9b19-734f6f006e54")))
@@ -88,7 +88,7 @@ public class ParseServerTest extends BaseItemParserTest<Server> {
                         .links(
                               Link.create(
                                     Relation.SELF,
-                                    URI.create("http://servers.api.openstack.org/v1.1/1234/flavors/52415800-8b69-11e0-9b19-734f216543fd")),
+                                    URI.create("http://servers.api.openstack.org/v2/1234/flavors/52415800-8b69-11e0-9b19-734f216543fd")),
                               Link.create(
                                     Relation.BOOKMARK,
                                     URI.create("http://servers.api.openstack.org/1234/flavors/52415800-8b69-11e0-9b19-734f216543fd")))
@@ -101,10 +101,10 @@ public class ParseServerTest extends BaseItemParserTest<Server> {
                   .putAll("private", createV4("10.176.42.16"), createV6("::babe:10.176.42.16"))
                   .build())
             .links(Link.create(
-                        Relation.SELF, URI.create("http://servers.api.openstack.org/v1.1/1234/servers/52415800-8b69-11e0-9b19-734f6f006e54")),
+                        Relation.SELF, URI.create("http://servers.api.openstack.org/v2/1234/servers/71752")),
                    Link.create(
                         Relation.BOOKMARK,
-                        URI.create("http://servers.api.openstack.org/1234/servers/52415800-8b69-11e0-9b19-734f6f006e54")))
+                        URI.create("http://servers.api.openstack.org/1234/servers/71752")))
             .build();
    }
 

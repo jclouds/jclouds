@@ -43,7 +43,7 @@ public class NovaImageExtensionExpectTest extends BaseNovaComputeServiceExpectTe
    }
 
    HttpRequest serverDetail = HttpRequest.builder().method("GET")
-         .endpoint("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v1.1/3456/servers/71752")
+         .endpoint("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v2/3456/servers/71752")
          .addHeader("Accept", "application/json")
          .addHeader("X-Auth-Token", authToken).build();
 
@@ -51,7 +51,7 @@ public class NovaImageExtensionExpectTest extends BaseNovaComputeServiceExpectTe
          .payload(payloadFromResource("/server_details.json")).build();
 
    HttpRequest createImage = HttpRequest.builder().method("POST")
-         .endpoint("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v1.1/3456/servers/71752/action")
+         .endpoint("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v2/3456/servers/71752/action")
          .addHeader("Accept", "application/json")
          .addHeader("X-Auth-Token", authToken)
          .payload(
@@ -60,11 +60,11 @@ public class NovaImageExtensionExpectTest extends BaseNovaComputeServiceExpectTe
                      "application/json")).build();
    
    HttpResponse createImageResponse = HttpResponse.builder().statusCode(202)
-         .addHeader("Location", "https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v1.1/3456/images/52415800-8b69-11e0-9b19-734f5736d2a2")
+         .addHeader("Location", "https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v2/3456/images/52415800-8b69-11e0-9b19-734f5736d2a2")
          .build();
 
    HttpRequest getImage = HttpRequest.builder().method("GET")
-         .endpoint("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v1.1/3456/images/52415800-8b69-11e0-9b19-734f5736d2a2")
+         .endpoint("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v2/3456/images/52415800-8b69-11e0-9b19-734f5736d2a2")
          .addHeader("Accept", "application/json")
          .addHeader("X-Auth-Token", authToken).build();
    

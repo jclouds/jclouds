@@ -93,18 +93,18 @@ public class NovaComputeServiceExpectTest extends BaseNovaComputeServiceExpectTe
                            payloadFromResourceWithContentType("/keystoneAuthResponse_openstack.json", "application/json"))
                      .build())
          .put(extensionsOfNovaRequest.toBuilder()
-               .endpoint("https://nova-api.openstack.org:9774/v1.1/3456/extensions").build(),
+               .endpoint("https://nova-api.openstack.org:9774/v2/3456/extensions").build(),
                HttpResponse.builder().statusCode(200).payload(payloadFromResource("/extension_list_openstack.json"))
                      .build())
          .put(listDetail.toBuilder()
-               .endpoint("https://nova-api.openstack.org:9774/v1.1/3456/images/detail").build(),
+               .endpoint("https://nova-api.openstack.org:9774/v2/3456/images/detail").build(),
                HttpResponse.builder().statusCode(200).payload(payloadFromResource("/image_list_detail_openstack.json"))
                      .build())
          .put(listServers.toBuilder()
-               .endpoint("https://nova-api.openstack.org:9774/v1.1/3456/servers/detail").build(),
+               .endpoint("https://nova-api.openstack.org:9774/v2/3456/servers/detail").build(),
                listServersResponse)
          .put(listFlavorsDetail.toBuilder()
-               .endpoint("https://nova-api.openstack.org:9774/v1.1/3456/flavors/detail").build(),
+               .endpoint("https://nova-api.openstack.org:9774/v2/3456/flavors/detail").build(),
                HttpResponse.builder().statusCode(200).payload(payloadFromResource("/flavor_list_detail_openstack.json"))
                      .build()).build();
 
@@ -131,7 +131,7 @@ public class NovaComputeServiceExpectTest extends BaseNovaComputeServiceExpectTe
       HttpRequest listServers = HttpRequest
             .builder()
             .method("GET")
-            .endpoint("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v1.1/3456/servers/detail")
+            .endpoint("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v2/3456/servers/detail")
             .addHeader("Accept", "application/json")
             .addHeader("X-Auth-Token", authToken).build();
 
@@ -146,7 +146,7 @@ public class NovaComputeServiceExpectTest extends BaseNovaComputeServiceExpectTe
    HttpRequest list = HttpRequest
          .builder()
          .method("GET")
-         .endpoint("https://nova-api.openstack.org:9774/v1.1/3456/os-security-groups")
+         .endpoint("https://nova-api.openstack.org:9774/v2/3456/os-security-groups")
          .addHeader("Accept", "application/json")
          .addHeader("X-Auth-Token", authToken).build();
 
@@ -155,7 +155,7 @@ public class NovaComputeServiceExpectTest extends BaseNovaComputeServiceExpectTe
    HttpRequest createWithPrefixOnGroup = HttpRequest
          .builder()
          .method("POST")
-         .endpoint("https://nova-api.openstack.org:9774/v1.1/3456/os-security-groups")
+         .endpoint("https://nova-api.openstack.org:9774/v2/3456/os-security-groups")
          .addHeader("Accept", "application/json")
          .addHeader("X-Auth-Token", authToken)
          .payload(
@@ -169,7 +169,7 @@ public class NovaComputeServiceExpectTest extends BaseNovaComputeServiceExpectTe
    HttpRequest createRuleForDefaultPort22 = HttpRequest
          .builder()
          .method("POST")
-         .endpoint("https://nova-api.openstack.org:9774/v1.1/3456/os-security-group-rules")
+         .endpoint("https://nova-api.openstack.org:9774/v2/3456/os-security-group-rules")
          .addHeader("Accept", "application/json")
          .addHeader("X-Auth-Token", authToken)
          .payload(
@@ -183,7 +183,7 @@ public class NovaComputeServiceExpectTest extends BaseNovaComputeServiceExpectTe
    HttpRequest getSecurityGroup = HttpRequest
          .builder()
          .method("GET")
-         .endpoint("https://nova-api.openstack.org:9774/v1.1/3456/os-security-groups/160")
+         .endpoint("https://nova-api.openstack.org:9774/v2/3456/os-security-groups/160")
          .addHeader("Accept", "application/json")
          .addHeader("X-Auth-Token", authToken).build();
 
@@ -193,7 +193,7 @@ public class NovaComputeServiceExpectTest extends BaseNovaComputeServiceExpectTe
    HttpRequest create = HttpRequest
          .builder()
          .method("POST")
-         .endpoint("https://nova-api.openstack.org:9774/v1.1/3456/os-keypairs")
+         .endpoint("https://nova-api.openstack.org:9774/v2/3456/os-keypairs")
          .addHeader("Accept", "application/json")
          .addHeader("X-Auth-Token", authToken)
          .payload(
@@ -207,7 +207,7 @@ public class NovaComputeServiceExpectTest extends BaseNovaComputeServiceExpectTe
    HttpRequest serverDetail = HttpRequest
          .builder()
          .method("GET")
-         .endpoint("https://nova-api.openstack.org:9774/v1.1/3456/servers/71752")
+         .endpoint("https://nova-api.openstack.org:9774/v2/3456/servers/71752")
          .addHeader("Accept", "application/json")
          .addHeader("X-Auth-Token", authToken).build();
 
@@ -233,7 +233,7 @@ public class NovaComputeServiceExpectTest extends BaseNovaComputeServiceExpectTe
       HttpRequest createServerWithGeneratedKeyPair = HttpRequest
             .builder()
             .method("POST")
-            .endpoint("https://nova-api.openstack.org:9774/v1.1/3456/servers")
+            .endpoint("https://nova-api.openstack.org:9774/v2/3456/servers")
             .addHeader("Accept", "application/json")
             .addHeader("X-Auth-Token", authToken)
             .payload(
@@ -288,7 +288,7 @@ public class NovaComputeServiceExpectTest extends BaseNovaComputeServiceExpectTe
       HttpRequest createServerWithSuppliedKeyPair = HttpRequest
             .builder()
             .method("POST")
-            .endpoint("https://nova-api.openstack.org:9774/v1.1/3456/servers")
+            .endpoint("https://nova-api.openstack.org:9774/v2/3456/servers")
             .addHeader("Accept", "application/json")
             .addHeader("X-Auth-Token", authToken)
             .payload(
@@ -339,7 +339,7 @@ public class NovaComputeServiceExpectTest extends BaseNovaComputeServiceExpectTe
       HttpRequest createServerWithSuppliedKeyPairAndGroup = HttpRequest
             .builder()
             .method("POST")
-            .endpoint("https://nova-api.openstack.org:9774/v1.1/3456/servers")
+            .endpoint("https://nova-api.openstack.org:9774/v2/3456/servers")
             .addHeader("Accept", "application/json")
             .addHeader("X-Auth-Token", authToken)
             .payload(

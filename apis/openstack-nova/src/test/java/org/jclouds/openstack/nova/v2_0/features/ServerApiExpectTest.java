@@ -48,7 +48,7 @@ public class ServerApiExpectTest extends BaseNovaApiExpectTest {
    public void testListServersWhenResponseIs2xx() throws Exception {
       HttpRequest listServers = HttpRequest.builder()
             .method("GET")
-            .endpoint("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v1.1/3456/servers")
+            .endpoint("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v2/3456/servers")
             .addHeader("Accept", "application/json")
             .addHeader("X-Auth-Token", authToken).build();
 
@@ -67,7 +67,7 @@ public class ServerApiExpectTest extends BaseNovaApiExpectTest {
    public void testListServersWhenReponseIs404IsEmpty() throws Exception {
       HttpRequest listServers = HttpRequest.builder()
             .method("GET")
-            .endpoint("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v1.1/3456/servers")
+            .endpoint("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v2/3456/servers")
             .addHeader("Accept", "application/json")
             .addHeader("X-Auth-Token", authToken).build();
 
@@ -83,7 +83,7 @@ public class ServerApiExpectTest extends BaseNovaApiExpectTest {
       HttpRequest listServers = HttpRequest
               .builder()
               .method("GET")
-              .endpoint("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v1.1/3456/servers/detail")
+              .endpoint("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v2/3456/servers/detail")
               .addHeader("Accept", "application/json")
               .addHeader("X-Auth-Token", authToken).build();
 
@@ -103,7 +103,7 @@ public class ServerApiExpectTest extends BaseNovaApiExpectTest {
       HttpRequest listServers = HttpRequest
               .builder()
               .method("GET")
-              .endpoint("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v1.1/3456/servers/detail")
+              .endpoint("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v2/3456/servers/detail")
               .addHeader("Accept", "application/json")
               .addHeader("X-Auth-Token", authToken).build();
 
@@ -118,7 +118,7 @@ public class ServerApiExpectTest extends BaseNovaApiExpectTest {
    public void testCreateServerWhenResponseIs202() throws Exception {
       HttpRequest createServer = HttpRequest.builder()
             .method("POST")
-            .endpoint("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v1.1/3456/servers")
+            .endpoint("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v2/3456/servers")
             .addHeader("Accept", "application/json")
             .addHeader("X-Auth-Token", authToken)
             .payload(payloadFromStringWithContentType(
@@ -138,7 +138,7 @@ public class ServerApiExpectTest extends BaseNovaApiExpectTest {
    public void testCreateServerInAvailabilityZoneWhenResponseIs202() throws Exception {
       HttpRequest createServer = HttpRequest.builder()
             .method("POST")
-            .endpoint("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v1.1/3456/servers")
+            .endpoint("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v2/3456/servers")
             .addHeader("Accept", "application/json")
             .addHeader("X-Auth-Token", authToken)
             .payload(payloadFromStringWithContentType(
@@ -160,7 +160,7 @@ public class ServerApiExpectTest extends BaseNovaApiExpectTest {
    public void testCreateServerWithSecurityGroupsWhenResponseIs202() throws Exception {
       HttpRequest createServer = HttpRequest.builder()
          .method("POST")
-         .endpoint("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v1.1/3456/servers")
+         .endpoint("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v2/3456/servers")
          .addHeader("Accept", "application/json")
          .addHeader("X-Auth-Token", authToken)
          .payload(payloadFromStringWithContentType(
@@ -181,7 +181,7 @@ public class ServerApiExpectTest extends BaseNovaApiExpectTest {
    public void testCreateServerWithNetworksWhenResponseIs202() throws Exception {
       HttpRequest createServer = HttpRequest.builder()
          .method("POST")
-         .endpoint("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v1.1/3456/servers")
+         .endpoint("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v2/3456/servers")
          .addHeader("Accept", "application/json")
          .addHeader("X-Auth-Token", authToken)
          .payload(payloadFromStringWithContentType(
@@ -202,7 +202,7 @@ public class ServerApiExpectTest extends BaseNovaApiExpectTest {
    public void testCreateServerWithDiskConfigAuto() throws Exception {
       HttpRequest createServer = HttpRequest.builder()
          .method("POST")
-         .endpoint("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v1.1/3456/servers")
+         .endpoint("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v2/3456/servers")
          .addHeader("Accept", "application/json")
          .addHeader("X-Auth-Token", authToken)
          .payload(payloadFromStringWithContentType(
@@ -224,7 +224,7 @@ public class ServerApiExpectTest extends BaseNovaApiExpectTest {
    public void testCreateServerWithDiskConfigManual() throws Exception {
       HttpRequest createServer = HttpRequest.builder()
          .method("POST")
-         .endpoint("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v1.1/3456/servers")
+         .endpoint("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v2/3456/servers")
          .addHeader("Accept", "application/json")
          .addHeader("X-Auth-Token", authToken)
          .payload(payloadFromStringWithContentType(
@@ -247,7 +247,7 @@ public class ServerApiExpectTest extends BaseNovaApiExpectTest {
       String serverId = "52415800-8b69-11e0-9b19-734f565bc83b";
       HttpRequest rebuildServer = HttpRequest.builder()
             .method("POST")
-            .endpoint("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v1.1/3456/servers/" + serverId + "/action")
+            .endpoint("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v2/3456/servers/" + serverId + "/action")
             .addHeader("Accept", "application/json")
             .addHeader("X-Auth-Token", authToken)
             .payload(payloadFromStringWithContentType(
@@ -271,7 +271,7 @@ public class ServerApiExpectTest extends BaseNovaApiExpectTest {
 
       HttpRequest createImage = HttpRequest.builder()
             .method("POST")
-            .endpoint("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v1.1/3456/servers/" + serverId + "/action")
+            .endpoint("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v2/3456/servers/" + serverId + "/action")
             .addHeader("Accept", "application/json")
             .addHeader("X-Auth-Token", authToken)
             .payload(payloadFromStringWithContentType(
@@ -281,7 +281,7 @@ public class ServerApiExpectTest extends BaseNovaApiExpectTest {
       HttpResponse createImageResponse = HttpResponse.builder()
             .statusCode(200)
             .headers(ImmutableMultimap.<String, String> builder()
-                  .put("Location", "https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v1.1/3456/images/" + imageId).build()).build();
+                  .put("Location", "https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v2/3456/images/" + imageId).build()).build();
 
       NovaApi apiWhenServerExists = requestsSendResponses(keystoneAuthWithUsernameAndPasswordAndTenantName,
                responseWithKeystoneAccess, createImage, createImageResponse);
@@ -296,7 +296,7 @@ public class ServerApiExpectTest extends BaseNovaApiExpectTest {
 
       HttpRequest createImage = HttpRequest.builder()
             .method("POST")
-            .endpoint("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v1.1/3456/servers/" + serverId + "/action")
+            .endpoint("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v2/3456/servers/" + serverId + "/action")
             .addHeader("Accept", "application/json")
             .addHeader("X-Auth-Token", authToken)
             .payload(payloadFromStringWithContentType(
@@ -320,7 +320,7 @@ public class ServerApiExpectTest extends BaseNovaApiExpectTest {
       String serverId = "123";
       HttpRequest stopServer = HttpRequest.builder()
             .method("POST")
-            .endpoint("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v1.1/3456/servers/" + serverId + "/action")
+            .endpoint("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v2/3456/servers/" + serverId + "/action")
             .addHeader("Accept", "application/json")
             .addHeader("X-Auth-Token", authToken)
             .payload(payloadFromStringWithContentType(
@@ -339,7 +339,7 @@ public class ServerApiExpectTest extends BaseNovaApiExpectTest {
       String serverId = "123";
       HttpRequest stopServer = HttpRequest.builder()
             .method("POST")
-            .endpoint("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v1.1/3456/servers/" + serverId + "/action")
+            .endpoint("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v2/3456/servers/" + serverId + "/action")
             .addHeader("Accept", "*/*")
             .addHeader("X-Auth-Token", authToken)
             .payload(payloadFromStringWithContentType(
@@ -364,7 +364,7 @@ public class ServerApiExpectTest extends BaseNovaApiExpectTest {
       HttpRequest startServer = HttpRequest
             .builder()
             .method("POST")
-            .endpoint("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v1.1/3456/servers/" + serverId + "/action")
+            .endpoint("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v2/3456/servers/" + serverId + "/action")
             .addHeader("Accept", "application/json")
             .addHeader("X-Auth-Token", authToken)
             .payload(payloadFromStringWithContentType(
@@ -383,7 +383,7 @@ public class ServerApiExpectTest extends BaseNovaApiExpectTest {
       String serverId = "123";
       HttpRequest startServer = HttpRequest.builder()
             .method("POST")
-            .endpoint("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v1.1/3456/servers/" + serverId + "/action")
+            .endpoint("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v2/3456/servers/" + serverId + "/action")
             .addHeader("Accept", "application/json")
             .addHeader("X-Auth-Token", authToken)
             .payload(payloadFromStringWithContentType(
@@ -407,7 +407,7 @@ public class ServerApiExpectTest extends BaseNovaApiExpectTest {
       String serverId = "123";
       HttpRequest getMetadata = HttpRequest.builder()
             .method("GET")
-            .endpoint("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v1.1/3456/servers/" + serverId + "/metadata")
+            .endpoint("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v2/3456/servers/" + serverId + "/metadata")
             .addHeader("Accept", "application/json")
             .addHeader("X-Auth-Token", authToken)
             .build();
@@ -426,7 +426,7 @@ public class ServerApiExpectTest extends BaseNovaApiExpectTest {
       String serverId = "123";
       HttpRequest getMetadata = HttpRequest.builder()
             .method("GET")
-            .endpoint("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v1.1/3456/servers/" + serverId + "/metadata")
+            .endpoint("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v2/3456/servers/" + serverId + "/metadata")
             .addHeader("Accept", "*/*")
             .addHeader("X-Auth-Token", authToken)
             .build();
@@ -453,7 +453,7 @@ public class ServerApiExpectTest extends BaseNovaApiExpectTest {
 
       HttpRequest setMetadata = HttpRequest.builder()
             .method("PUT")
-            .endpoint("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v1.1/3456/servers/" + serverId + "/metadata")
+            .endpoint("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v2/3456/servers/" + serverId + "/metadata")
             .addHeader("Accept", "application/json")
             .addHeader("X-Auth-Token", authToken)
             .payload(payloadFromStringWithContentType(
@@ -479,7 +479,7 @@ public class ServerApiExpectTest extends BaseNovaApiExpectTest {
 
       HttpRequest setMetadata = HttpRequest.builder()
             .method("PUT")
-            .endpoint("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v1.1/3456/servers/" + serverId + "/metadata")
+            .endpoint("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v2/3456/servers/" + serverId + "/metadata")
             .addHeader("Accept", "*/*")
             .addHeader("X-Auth-Token", authToken)
             .payload(payloadFromStringWithContentType(
@@ -508,7 +508,7 @@ public class ServerApiExpectTest extends BaseNovaApiExpectTest {
 
       HttpRequest setMetadata = HttpRequest.builder()
             .method("POST")
-            .endpoint("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v1.1/3456/servers/" + serverId + "/metadata")
+            .endpoint("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v2/3456/servers/" + serverId + "/metadata")
             .addHeader("Accept", "application/json")
             .addHeader("X-Auth-Token", authToken)
             .payload(payloadFromStringWithContentType(
@@ -534,8 +534,8 @@ public class ServerApiExpectTest extends BaseNovaApiExpectTest {
 
       HttpRequest setMetadata = HttpRequest.builder()
             .method("POST")
-            .endpoint("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v1.1/3456/servers/" + serverId + "/metadata")
-            .addHeader("Accept", "*/*")
+            .endpoint("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v2/3456/servers/" + serverId + "/metadata")
+            .addHeader("Accept", "application/json")
             .addHeader("X-Auth-Token", authToken)
             .payload(payloadFromStringWithContentType(
                   "{\"metadata\":{\"Server Label\":\"Web Head 2\",\"Server Description\":\"Simple Server\"}}", "application/json"))
@@ -562,7 +562,7 @@ public class ServerApiExpectTest extends BaseNovaApiExpectTest {
       HttpRequest getMetadata = HttpRequest
             .builder()
             .method("GET")
-            .endpoint("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v1.1/3456/servers/" + serverId + "/metadata/" + "Server%20Label")
+            .endpoint("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v2/3456/servers/" + serverId + "/metadata/" + "Server%20Label")
             .addHeader("Accept", "application/json")
             .addHeader("X-Auth-Token", authToken)
             .build();
@@ -585,7 +585,7 @@ public class ServerApiExpectTest extends BaseNovaApiExpectTest {
 
       HttpRequest setMetadata = HttpRequest.builder()
             .method("GET")
-            .endpoint("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v1.1/3456/servers/" + serverId + "/metadata")
+            .endpoint("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v2/3456/servers/" + serverId + "/metadata")
             .addHeader("Accept", "application/json")
             .addHeader("X-Auth-Token", authToken)
             .payload(payloadFromStringWithContentType(
@@ -615,7 +615,7 @@ public class ServerApiExpectTest extends BaseNovaApiExpectTest {
 
       HttpRequest setMetadata = HttpRequest.builder()
             .method("POST")
-            .endpoint("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v1.1/3456/servers/" + serverId + "/metadata")
+            .endpoint("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v2/3456/servers/" + serverId + "/metadata")
             .addHeader("Accept", "application/json")
             .addHeader("X-Auth-Token", authToken)
             .payload(payloadFromStringWithContentType(
@@ -641,7 +641,7 @@ public class ServerApiExpectTest extends BaseNovaApiExpectTest {
 
       HttpRequest setMetadata = HttpRequest.builder()
             .method("POST")
-            .endpoint("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v1.1/3456/servers/" + serverId + "/metadata")
+            .endpoint("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v2/3456/servers/" + serverId + "/metadata")
             .addHeader("Accept", "application/json")
             .addHeader("X-Auth-Token", authToken)
             .payload(payloadFromStringWithContentType(
@@ -668,7 +668,7 @@ public class ServerApiExpectTest extends BaseNovaApiExpectTest {
 
       HttpRequest updateMetadata = HttpRequest.builder()
             .method("DELETE")
-            .endpoint("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v1.1/3456/servers/" + serverId + "/metadata/" + key)
+            .endpoint("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v2/3456/servers/" + serverId + "/metadata/" + key)
             .addHeader("Accept", "application/json")
             .addHeader("X-Auth-Token", authToken)
             .build();
@@ -687,7 +687,7 @@ public class ServerApiExpectTest extends BaseNovaApiExpectTest {
 
       HttpRequest deleteMetadata = HttpRequest.builder()
             .method("DELETE")
-            .endpoint("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v1.1/3456/servers/" + serverId + "/metadata/" + key)
+            .endpoint("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v2/3456/servers/" + serverId + "/metadata/" + key)
             .addHeader("Accept", "application/json")
             .addHeader("X-Auth-Token", authToken)
             .build();
@@ -705,7 +705,7 @@ public class ServerApiExpectTest extends BaseNovaApiExpectTest {
        HttpRequest getDiagnostics = HttpRequest.builder()
             .method("GET")
             .addHeader("Accept", "application/json")
-            .endpoint("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v1.1/3456/servers/" + serverId + "/diagnostics")
+            .endpoint("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v2/3456/servers/" + serverId + "/diagnostics")
             .addHeader("X-Auth-Token", authToken)
             .build();
 
@@ -723,7 +723,7 @@ public class ServerApiExpectTest extends BaseNovaApiExpectTest {
        HttpRequest getDiagnostics = HttpRequest.builder()
             .method("GET")
             .addHeader("Accept", "application/json")
-            .endpoint("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v1.1/3456/servers/" + serverId + "/diagnostics")
+            .endpoint("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v2/3456/servers/" + serverId + "/diagnostics")
             .addHeader("X-Auth-Token", authToken)
             .build();
 

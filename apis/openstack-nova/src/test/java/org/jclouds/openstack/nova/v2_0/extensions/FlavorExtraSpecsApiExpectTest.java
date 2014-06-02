@@ -38,7 +38,7 @@ import com.google.common.collect.ImmutableMap;
 public class FlavorExtraSpecsApiExpectTest extends BaseNovaApiExpectTest {
 
    public void testGetAllExtraSpecs() {
-      URI endpoint = URI.create("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v1.1/3456/flavors/9/os-extra_specs");
+      URI endpoint = URI.create("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v2/3456/flavors/9/os-extra_specs");
       FlavorExtraSpecsApi api = requestsSendResponses(
             keystoneAuthWithUsernameAndPasswordAndTenantName,
             responseWithKeystoneAccess, extensionsOfNovaRequest, extensionsOfNovaResponse,
@@ -50,7 +50,7 @@ public class FlavorExtraSpecsApiExpectTest extends BaseNovaApiExpectTest {
    }
 
    public void testGetAllExtraSpecsFailNotFound() {
-      URI endpoint = URI.create("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v1.1/3456/flavors/9/os-extra_specs");
+      URI endpoint = URI.create("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v2/3456/flavors/9/os-extra_specs");
       FlavorExtraSpecsApi api = requestsSendResponses(
             keystoneAuthWithUsernameAndPasswordAndTenantName,
             responseWithKeystoneAccess, extensionsOfNovaRequest, extensionsOfNovaResponse,
@@ -62,7 +62,7 @@ public class FlavorExtraSpecsApiExpectTest extends BaseNovaApiExpectTest {
    }
 
    public void testSetAllExtraSpecs() {
-      URI endpoint = URI.create("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v1.1/3456/flavors/9/os-extra_specs");
+      URI endpoint = URI.create("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v2/3456/flavors/9/os-extra_specs");
       FlavorExtraSpecsApi api = requestsSendResponses(
             keystoneAuthWithUsernameAndPasswordAndTenantName,
             responseWithKeystoneAccess, extensionsOfNovaRequest, extensionsOfNovaResponse,
@@ -76,7 +76,7 @@ public class FlavorExtraSpecsApiExpectTest extends BaseNovaApiExpectTest {
    }
 
    public void testSetExtraSpec() {
-      URI endpoint = URI.create("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v1.1/3456/flavors/5/os-extra_specs/test1");
+      URI endpoint = URI.create("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v2/3456/flavors/5/os-extra_specs/test1");
       FlavorExtraSpecsApi api = requestsSendResponses(
             keystoneAuthWithUsernameAndPasswordAndTenantName,
             responseWithKeystoneAccess, extensionsOfNovaRequest, extensionsOfNovaResponse,
@@ -90,7 +90,7 @@ public class FlavorExtraSpecsApiExpectTest extends BaseNovaApiExpectTest {
    }
 
    public void testGetExtraSpec() {
-      URI endpoint = URI.create("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v1.1/3456/flavors/5/os-extra_specs/test1");
+      URI endpoint = URI.create("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v2/3456/flavors/5/os-extra_specs/test1");
       FlavorExtraSpecsApi api = requestsSendResponses(
             keystoneAuthWithUsernameAndPasswordAndTenantName,
             responseWithKeystoneAccess, extensionsOfNovaRequest, extensionsOfNovaResponse,
@@ -102,7 +102,7 @@ public class FlavorExtraSpecsApiExpectTest extends BaseNovaApiExpectTest {
    }
 
    public void testGetExtraSpecFailNotFound() {
-      URI endpoint = URI.create("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v1.1/3456/flavors/5/os-extra_specs/test1");
+      URI endpoint = URI.create("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v2/3456/flavors/5/os-extra_specs/test1");
       FlavorExtraSpecsApi api = requestsSendResponses(
             keystoneAuthWithUsernameAndPasswordAndTenantName,
             responseWithKeystoneAccess, extensionsOfNovaRequest, extensionsOfNovaResponse,
@@ -114,7 +114,7 @@ public class FlavorExtraSpecsApiExpectTest extends BaseNovaApiExpectTest {
    }
 
    public void testDeleteExtraSpec() {
-      URI endpoint = URI.create("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v1.1/3456/flavors/5/os-extra_specs/test1");
+      URI endpoint = URI.create("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v2/3456/flavors/5/os-extra_specs/test1");
       FlavorExtraSpecsApi api = requestsSendResponses(
             keystoneAuthWithUsernameAndPasswordAndTenantName,
             responseWithKeystoneAccess, extensionsOfNovaRequest, extensionsOfNovaResponse,
@@ -126,7 +126,7 @@ public class FlavorExtraSpecsApiExpectTest extends BaseNovaApiExpectTest {
    }
 
    public void testDeleteExtraSpecFailNotFound() {
-      URI endpoint = URI.create("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v1.1/3456/flavors/5/os-extra_specs/test1");
+      URI endpoint = URI.create("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v2/3456/flavors/5/os-extra_specs/test1");
       FlavorExtraSpecsApi api = requestsSendResponses(
             keystoneAuthWithUsernameAndPasswordAndTenantName,
             responseWithKeystoneAccess, extensionsOfNovaRequest, extensionsOfNovaResponse,

@@ -55,7 +55,7 @@ public class NovaComputeServiceAdapterExpectTest extends BaseNovaComputeServiceC
    HttpRequest serverDetail = HttpRequest
          .builder()
          .method("GET")
-         .endpoint("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v1.1/3456/servers/71752")
+         .endpoint("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v2/3456/servers/71752")
          .addHeader("Accept", "application/json")
          .addHeader("X-Auth-Token", authToken).build();
 
@@ -67,7 +67,7 @@ public class NovaComputeServiceAdapterExpectTest extends BaseNovaComputeServiceC
       HttpRequest createServer = HttpRequest
          .builder()
          .method("POST")
-         .endpoint("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v1.1/3456/servers")
+         .endpoint("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v2/3456/servers")
          .addHeader("Accept", "application/json")
          .addHeader("X-Auth-Token", authToken)
          .payload(payloadFromStringWithContentType(
@@ -102,7 +102,7 @@ public class NovaComputeServiceAdapterExpectTest extends BaseNovaComputeServiceC
       HttpRequest createServer = HttpRequest
          .builder()
          .method("POST")
-         .endpoint("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v1.1/3456/servers")
+         .endpoint("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v2/3456/servers")
          .addHeader("Accept", "application/json")
          .addHeader("X-Auth-Token", authToken)
          .payload(payloadFromStringWithContentType(
@@ -137,7 +137,7 @@ public class NovaComputeServiceAdapterExpectTest extends BaseNovaComputeServiceC
       HttpRequest createServer = HttpRequest
          .builder()
          .method("POST")
-         .endpoint("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v1.1/3456/servers")
+         .endpoint("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v2/3456/servers")
          .addHeader("Accept", "application/json")
          .addHeader("X-Auth-Token", authToken)
          .payload(payloadFromStringWithContentType(
@@ -171,7 +171,7 @@ public class NovaComputeServiceAdapterExpectTest extends BaseNovaComputeServiceC
       HttpRequest createServer = HttpRequest
          .builder()
          .method("POST")
-         .endpoint("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v1.1/3456/servers")
+         .endpoint("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v2/3456/servers")
          .addHeader("Accept", "application/json")
          .addHeader("X-Auth-Token", authToken)
          .payload(payloadFromStringWithContentType(
@@ -218,7 +218,7 @@ public class NovaComputeServiceAdapterExpectTest extends BaseNovaComputeServiceC
       HttpRequest createServer = HttpRequest
          .builder()
          .method("POST")
-         .endpoint("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v1.1/3456/servers")
+         .endpoint("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v2/3456/servers")
          .addHeader("Accept", "application/json")
          .addHeader("X-Auth-Token", authToken)
          .payload(payloadFromStringWithContentType(
@@ -259,7 +259,7 @@ public class NovaComputeServiceAdapterExpectTest extends BaseNovaComputeServiceC
       HttpRequest createServer = HttpRequest
          .builder()
          .method("POST")
-         .endpoint("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v1.1/3456/servers")
+         .endpoint("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v2/3456/servers")
          .addHeader("Accept", "application/json")
          .addHeader("X-Auth-Token", authToken)
          .payload(payloadFromStringWithContentType(
@@ -309,7 +309,7 @@ public class NovaComputeServiceAdapterExpectTest extends BaseNovaComputeServiceC
       HttpRequest createServer = HttpRequest
          .builder()
          .method("POST")
-         .endpoint("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v1.1/3456/servers")
+         .endpoint("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v2/3456/servers")
          .addHeader("Accept", "application/json")
          .addHeader("X-Auth-Token", authToken)
          .payload(payloadFromStringWithContentType(
@@ -348,7 +348,7 @@ public class NovaComputeServiceAdapterExpectTest extends BaseNovaComputeServiceC
       HttpRequest suspendServer = HttpRequest
          .builder()
          .method("POST")
-         .endpoint("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v1.1/3456/servers/71752/action")
+         .endpoint("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v2/3456/servers/71752/action")
          .addHeader("Accept", "application/json")
          .addHeader("X-Auth-Token", authToken)
          .payload(payloadFromStringWithContentType(
@@ -384,7 +384,7 @@ public class NovaComputeServiceAdapterExpectTest extends BaseNovaComputeServiceC
       HttpRequest suspendServer = HttpRequest
             .builder()
             .method("POST")
-            .endpoint("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v1.1/3456/servers/71752/action")
+            .endpoint("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v2/3456/servers/71752/action")
             .addHeader("X-Auth-Token", authToken)
             .payload(payloadFromStringWithContentType(
                   "{\"suspend\":null}", "application/json"))

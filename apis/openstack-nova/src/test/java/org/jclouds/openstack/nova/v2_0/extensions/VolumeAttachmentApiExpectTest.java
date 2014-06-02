@@ -47,7 +47,7 @@ public class VolumeAttachmentApiExpectTest extends BaseNovaApiExpectTest {
    private DateService dateService = new SimpleDateFormatDateService();
 
    public void testListAttachments() {
-      URI endpoint = URI.create("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v1.1/3456/servers/instance-1/os-volume_attachments");
+      URI endpoint = URI.create("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v2/3456/servers/instance-1/os-volume_attachments");
       VolumeAttachmentApi api = requestsSendResponses(
             keystoneAuthWithUsernameAndPasswordAndTenantName,
             responseWithKeystoneAccess, extensionsOfNovaRequest, extensionsOfNovaResponse,
@@ -67,7 +67,7 @@ public class VolumeAttachmentApiExpectTest extends BaseNovaApiExpectTest {
 
    @Test(expectedExceptions = AuthorizationException.class)
    public void testListAttachmentsFail() {
-      URI endpoint = URI.create("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v1.1/3456/servers/instance-2/os-volume_attachments");
+      URI endpoint = URI.create("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v2/3456/servers/instance-2/os-volume_attachments");
       VolumeAttachmentApi api = requestsSendResponses(
             keystoneAuthWithUsernameAndPasswordAndTenantName,
             responseWithKeystoneAccess, extensionsOfNovaRequest, extensionsOfNovaResponse,
@@ -79,7 +79,7 @@ public class VolumeAttachmentApiExpectTest extends BaseNovaApiExpectTest {
    }
    
    public void testGetAttachment() {
-      URI endpoint = URI.create("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v1.1/3456/servers/instance-1/os-volume_attachments/1");
+      URI endpoint = URI.create("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v2/3456/servers/instance-1/os-volume_attachments/1");
       VolumeAttachmentApi api = requestsSendResponses(
             keystoneAuthWithUsernameAndPasswordAndTenantName,
             responseWithKeystoneAccess, extensionsOfNovaRequest, extensionsOfNovaResponse,
@@ -92,7 +92,7 @@ public class VolumeAttachmentApiExpectTest extends BaseNovaApiExpectTest {
    }
 
    public void testGetAttachmentFail() {
-      URI endpoint = URI.create("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v1.1/3456/servers/instance-1/os-volume_attachments/1");
+      URI endpoint = URI.create("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v2/3456/servers/instance-1/os-volume_attachments/1");
       VolumeAttachmentApi api = requestsSendResponses(
             keystoneAuthWithUsernameAndPasswordAndTenantName,
             responseWithKeystoneAccess, extensionsOfNovaRequest, extensionsOfNovaResponse,
@@ -104,7 +104,7 @@ public class VolumeAttachmentApiExpectTest extends BaseNovaApiExpectTest {
    }
 
    public void testAttachVolume() {
-      URI endpoint = URI.create("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v1.1/3456/servers/instance-1/os-volume_attachments");
+      URI endpoint = URI.create("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v2/3456/servers/instance-1/os-volume_attachments");
       VolumeAttachmentApi api = requestsSendResponses(
             keystoneAuthWithUsernameAndPasswordAndTenantName,
             responseWithKeystoneAccess, extensionsOfNovaRequest, extensionsOfNovaResponse,
@@ -119,7 +119,7 @@ public class VolumeAttachmentApiExpectTest extends BaseNovaApiExpectTest {
 
    @Test(expectedExceptions = ResourceNotFoundException.class)
    public void testAttachVolumeFail() {
-      URI endpoint = URI.create("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v1.1/3456/servers/instance-1/os-volume_attachments");
+      URI endpoint = URI.create("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v2/3456/servers/instance-1/os-volume_attachments");
       VolumeAttachmentApi api = requestsSendResponses(
             keystoneAuthWithUsernameAndPasswordAndTenantName,
             responseWithKeystoneAccess, extensionsOfNovaRequest, extensionsOfNovaResponse,
@@ -132,7 +132,7 @@ public class VolumeAttachmentApiExpectTest extends BaseNovaApiExpectTest {
    }
 
    public void testDetachVolume() {
-      URI endpoint = URI.create("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v1.1/3456/servers/instance-1/os-volume_attachments/1");
+      URI endpoint = URI.create("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v2/3456/servers/instance-1/os-volume_attachments/1");
       VolumeAttachmentApi api = requestsSendResponses(
             keystoneAuthWithUsernameAndPasswordAndTenantName,
             responseWithKeystoneAccess, extensionsOfNovaRequest, extensionsOfNovaResponse,
@@ -144,7 +144,7 @@ public class VolumeAttachmentApiExpectTest extends BaseNovaApiExpectTest {
    }
 
    public void testDetachVolumeFail() {
-      URI endpoint = URI.create("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v1.1/3456/servers/instance-1/os-volume_attachments/1");
+      URI endpoint = URI.create("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v2/3456/servers/instance-1/os-volume_attachments/1");
       VolumeAttachmentApi api = requestsSendResponses(
             keystoneAuthWithUsernameAndPasswordAndTenantName,
             responseWithKeystoneAccess, extensionsOfNovaRequest, extensionsOfNovaResponse,

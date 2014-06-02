@@ -85,7 +85,7 @@ public class NovaApiMetadata extends BaseHttpApiMetadata<NovaApi>  {
          .credentialName("${password}")
          .endpointName("Keystone base url ending in /v2.0/")
          .documentation(URI.create("http://api.openstack.org/"))
-         .version("1.1")
+         .version("2")
          .defaultEndpoint("http://localhost:5000/v2.0/")
          .defaultProperties(NovaApiMetadata.defaultProperties())
          .view(typeToken(ComputeServiceContext.class))

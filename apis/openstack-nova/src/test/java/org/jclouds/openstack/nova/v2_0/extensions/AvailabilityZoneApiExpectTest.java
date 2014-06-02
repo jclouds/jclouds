@@ -36,7 +36,7 @@ public class AvailabilityZoneApiExpectTest extends BaseNovaApiExpectTest {
       HttpRequest list = HttpRequest
             .builder()
             .method("GET")
-            .endpoint("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v1.1/3456/os-availability-zone")
+            .endpoint("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v2/3456/os-availability-zone")
             .addHeader("Accept", "application/json")
             .addHeader("X-Auth-Token", authToken).build();
 

@@ -67,7 +67,7 @@ public class RegionIdToAdminURIFromAccessForTypeAndVersionTest {
       map.put("region-a.geo-1", null);
       map.put("region-b.geo-1", null);
       map.put("region-c.geo-1", null);
-      assertEquals(Maps.transformValues(factory.createForApiTypeAndVersion("compute", "1.1").get(), Suppliers
+      assertEquals(Maps.transformValues(factory.createForApiTypeAndVersion("compute", "2").get(), Suppliers
                .<URI> supplierFunction()), map);
    }
    

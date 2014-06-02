@@ -55,7 +55,7 @@ public class NovaErrorHandlerTest {
 
       assertEquals(command.getException().getClass(), AuthorizationException.class);
       assertEquals(command.getException().getMessage(),
-            "POST https://nova/v1.1/servers HTTP/1.1 -> HTTP/1.1 401 Unauthorized");
+            "POST https://nova/v2/servers HTTP/1.1 -> HTTP/1.1 401 Unauthorized");
    }
    
    @Test
@@ -64,7 +64,7 @@ public class NovaErrorHandlerTest {
 
       assertEquals(command.getException().getClass(), ResourceNotFoundException.class);
       assertEquals(command.getException().getMessage(),
-            "POST https://nova/v1.1/servers HTTP/1.1 -> HTTP/1.1 404 Not Found");
+            "POST https://nova/v2/servers HTTP/1.1 -> HTTP/1.1 404 Not Found");
    }
 
    // should wait until ips are associated w/the server
@@ -215,7 +215,7 @@ public class NovaErrorHandlerTest {
          new OverLimitParser(new GsonWrapper(new Gson())));
 
    private HttpCommand command() {
-      return new HttpCommand(HttpRequest.builder().method("POST").endpoint("https://nova/v1.1/servers").build());
+      return new HttpCommand(HttpRequest.builder().method("POST").endpoint("https://nova/v2/servers").build());
    }
 
 }

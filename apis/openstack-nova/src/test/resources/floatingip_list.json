@@ -1,8 +1,8 @@
 {
-    "floating_ips" : [
+    "floating_ips": [
         {
             "instance_id": 12,
-            "ip" : "10.0.0.3",
+            "ip": "10.0.0.3",
             "fixed_ip": "11.0.0.1",
             "id" : 1,
             "pool": "nova"

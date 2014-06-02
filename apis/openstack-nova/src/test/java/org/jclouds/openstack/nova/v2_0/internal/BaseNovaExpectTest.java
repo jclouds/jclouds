@@ -57,7 +57,7 @@ public class BaseNovaExpectTest<T> extends BaseRestApiExpectTest<T> {
       
       extensionsOfNovaRequest = HttpRequest.builder().method("GET")
              // NOTE THIS IS NOVA, NOT KEYSTONE
-            .endpoint("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v1.1/3456/extensions")
+            .endpoint("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v2/3456/extensions")
             .addHeader("Accept", "application/json")
             .addHeader("X-Auth-Token", authToken).build();
 

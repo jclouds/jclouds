@@ -43,7 +43,7 @@ public class SimpleTenantUsageApiExpectTest extends BaseNovaApiExpectTest {
    private DateService dateService = new SimpleDateFormatDateService();
 
    public void testList() throws Exception {
-      URI endpoint = URI.create("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v1.1/3456/os-simple-tenant-usage");
+      URI endpoint = URI.create("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v2/3456/os-simple-tenant-usage");
       SimpleTenantUsageApi api = requestsSendResponses(keystoneAuthWithUsernameAndPasswordAndTenantName,
             responseWithKeystoneAccess, extensionsOfNovaRequest, extensionsOfNovaResponse,
             HttpRequest.builder().method("GET")
@@ -69,7 +69,7 @@ public class SimpleTenantUsageApiExpectTest extends BaseNovaApiExpectTest {
    }
 
    public void testGet() throws Exception {
-      URI endpoint = URI.create("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v1.1/3456/os-simple-tenant-usage/test-1234");
+      URI endpoint = URI.create("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v2/3456/os-simple-tenant-usage/test-1234");
       SimpleTenantUsageApi api = requestsSendResponses(keystoneAuthWithUsernameAndPasswordAndTenantName,
             responseWithKeystoneAccess, extensionsOfNovaRequest, extensionsOfNovaResponse,
             HttpRequest.builder().method("GET")

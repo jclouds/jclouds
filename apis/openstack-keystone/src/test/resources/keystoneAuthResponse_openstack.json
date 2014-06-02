@@ -12,10 +12,10 @@
             {
                 "endpoints": [
                     {
-                        "adminURL": "https://nova-api.openstack.org:9774/v1.1/3456",
+                        "adminURL": "https://nova-api.openstack.org:9774/v2/3456",
                         "region": "RegionOne",
-                        "internalURL": "https://nova-api.openstack.org:9774/v1.1/3456",
-                        "publicURL": "https://nova-api.openstack.org:9774/v1.1/3456"
+                        "internalURL": "https://nova-api.openstack.org:9774/v2/3456",
+                        "publicURL": "https://nova-api.openstack.org:9774/v2/3456"
                     }
                 ],
                 "type": "compute",

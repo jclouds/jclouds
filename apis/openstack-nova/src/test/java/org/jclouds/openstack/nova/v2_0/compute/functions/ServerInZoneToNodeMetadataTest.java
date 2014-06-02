@@ -273,8 +273,8 @@ public class ServerInZoneToNodeMetadataTest {
       assertNotNull(convertedNodeMetadata.getUserMetadata());
       assertEquals(convertedNodeMetadata.getUserMetadata(),
             ImmutableMap.<String, String> of("Server Label", "Web Head 1", "Image Version", "2.1"));
-      
-      URI expectedURI = URI.create("http://servers.api.openstack.org/v1.1/1234/servers/52415800-8b69-11e0-9b19-734f6f006e54");
+
+      URI expectedURI = URI.create("http://servers.api.openstack.org/v2/1234/servers/71752");
       assertEquals(convertedNodeMetadata.getUri(), expectedURI);
    }
 
@@ -300,7 +300,7 @@ public class ServerInZoneToNodeMetadataTest {
 
       assertEquals(convertedNodeMetadata.getLocation(), zone);
 
-      URI expectedURI = URI.create("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v1.1/37936628937291/servers/71752");
+      URI expectedURI = URI.create("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v2/37936628937291/servers/71752");
       assertEquals(convertedNodeMetadata.getUri(), expectedURI);
    }
 
@@ -334,7 +334,7 @@ public class ServerInZoneToNodeMetadataTest {
                                     URI.create("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/37936628937291/flavors/100")))
                         .build())
             .links(
-                  Link.create(Link.Relation.SELF, URI.create("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v1.1/37936628937291/servers/71752")),
+                  Link.create(Link.Relation.SELF, URI.create("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v2/37936628937291/servers/71752")),
                   Link.create(Link.Relation.BOOKMARK, URI.create("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/37936628937291/servers/71752"))).build();
 
    }

@@ -44,7 +44,7 @@ import com.google.common.collect.ImmutableSet;
 public class SecurityGroupApiExpectTest extends BaseNovaApiExpectTest {
    public void testListSecurityGroupsWhenResponseIs2xx() throws Exception {
       HttpRequest list = HttpRequest.builder().method("GET").endpoint(
-               URI.create("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v1.1/3456/os-security-groups")).headers(
+               URI.create("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v2/3456/os-security-groups")).headers(
                ImmutableMultimap.<String, String> builder().put("Accept", "application/json").put("X-Auth-Token",
                         authToken).build()).build();
 
@@ -63,7 +63,7 @@ public class SecurityGroupApiExpectTest extends BaseNovaApiExpectTest {
 
    public void testListSecurityGroupsWhenReponseIs404IsEmpty() throws Exception {
       HttpRequest listListSecurityGroups = HttpRequest.builder().method("GET").endpoint(
-               URI.create("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v1.1/3456/os-security-groups")).headers(
+               URI.create("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v2/3456/os-security-groups")).headers(
                ImmutableMultimap.<String, String> builder().put("Accept", "application/json").put("X-Auth-Token",
                         authToken).build()).build();
 
@@ -80,7 +80,7 @@ public class SecurityGroupApiExpectTest extends BaseNovaApiExpectTest {
    public void testGetSecurityGroupWhenResponseIs2xx() throws Exception {
 
       HttpRequest getSecurityGroup = HttpRequest.builder().method("GET").endpoint(
-               URI.create("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v1.1/3456/os-security-groups/0")).headers(
+               URI.create("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v2/3456/os-security-groups/0")).headers(
                ImmutableMultimap.<String, String> builder().put("Accept", "application/json").put("X-Auth-Token",
                         authToken).build()).build();
 
@@ -97,7 +97,7 @@ public class SecurityGroupApiExpectTest extends BaseNovaApiExpectTest {
 
    public void testGetSecurityGroupWhenResponseIs404() throws Exception {
       HttpRequest getSecurityGroup = HttpRequest.builder().method("GET").endpoint(
-               URI.create("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v1.1/3456/os-security-groups/0")).headers(
+               URI.create("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v2/3456/os-security-groups/0")).headers(
                ImmutableMultimap.<String, String> builder().put("Accept", "application/json").put("X-Auth-Token",
                         authToken).build()).build();
 
@@ -114,7 +114,7 @@ public class SecurityGroupApiExpectTest extends BaseNovaApiExpectTest {
 
    public void testCreateSecurityGroupWhenResponseIs2xx() throws Exception {
       HttpRequest create = HttpRequest.builder().method("POST").endpoint(
-               URI.create("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v1.1/3456/os-security-groups")).headers(
+               URI.create("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v2/3456/os-security-groups")).headers(
                ImmutableMultimap.<String, String> builder().put("Accept", "application/json").put("X-Auth-Token",
                         authToken).build())
                .payload(
@@ -136,7 +136,7 @@ public class SecurityGroupApiExpectTest extends BaseNovaApiExpectTest {
 
    public void testDeleteSecurityGroupWhenResponseIs2xx() throws Exception {
       HttpRequest delete = HttpRequest.builder().method("DELETE").endpoint(
-               URI.create("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v1.1/3456/os-security-groups/160"))
+               URI.create("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v2/3456/os-security-groups/160"))
                .headers(
                         ImmutableMultimap.<String, String> builder().put("Accept", "application/json")
                                  .put("X-Auth-Token", authToken).build()).build();
@@ -156,7 +156,7 @@ public class SecurityGroupApiExpectTest extends BaseNovaApiExpectTest {
       HttpRequest createRule = HttpRequest
                .builder()
                .method("POST")
-               .endpoint("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v1.1/3456/os-security-group-rules")
+               .endpoint("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v2/3456/os-security-group-rules")
             .addHeader("Accept", "application/json")
             .addHeader("X-Auth-Token", authToken)
                .payload(
@@ -181,7 +181,7 @@ public class SecurityGroupApiExpectTest extends BaseNovaApiExpectTest {
       HttpRequest createRule = HttpRequest
                .builder()
                .method("POST")
-               .endpoint("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v1.1/3456/os-security-group-rules")
+               .endpoint("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v2/3456/os-security-group-rules")
                .addHeader("Accept", "application/json")
                .addHeader("X-Auth-Token", authToken)
                .payload(
@@ -204,7 +204,7 @@ public class SecurityGroupApiExpectTest extends BaseNovaApiExpectTest {
 
    public void testDeleteSecurityGroupRuleWhenResponseIs2xx() throws Exception {
       HttpRequest deleteRule = HttpRequest.builder().method("DELETE").endpoint(
-               URI.create("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v1.1/3456/os-security-group-rules/161"))
+               URI.create("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v2/3456/os-security-group-rules/161"))
                .headers(
                         ImmutableMultimap.<String, String> builder().put("Accept", "application/json")
                                  .put("X-Auth-Token", authToken).build()).build();

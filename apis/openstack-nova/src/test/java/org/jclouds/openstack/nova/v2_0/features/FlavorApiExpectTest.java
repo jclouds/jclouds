@@ -45,7 +45,7 @@ public class FlavorApiExpectTest extends BaseNovaApiExpectTest {
    public void testListFlavorsWhenResponseIs2xx() throws Exception {
       HttpRequest listFlavors = HttpRequest.builder()
             .method("GET")
-            .endpoint("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v1.1/3456/flavors")
+            .endpoint("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v2/3456/flavors")
             .addHeader("Accept", "application/json")
             .addHeader("X-Auth-Token", authToken)
             .build();
@@ -65,7 +65,7 @@ public class FlavorApiExpectTest extends BaseNovaApiExpectTest {
    public void testListFlavorsWhenReponseIs404IsEmpty() throws Exception {
       HttpRequest listFlavors = HttpRequest.builder()
             .method("GET")
-            .endpoint("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v1.1/3456/flavors")
+            .endpoint("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v2/3456/flavors")
             .addHeader("Accept", "application/json")
             .addHeader("X-Auth-Token", authToken)
             .build();
@@ -82,7 +82,7 @@ public class FlavorApiExpectTest extends BaseNovaApiExpectTest {
    public void testGetFlavorWhenResponseIs2xx() throws Exception {
       HttpRequest getFlavor = HttpRequest.builder()
             .method("GET")
-            .endpoint("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v1.1/3456/flavors/52415800-8b69-11e0-9b19-734f1195ff37")
+            .endpoint("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v2/3456/flavors/52415800-8b69-11e0-9b19-734f1195ff37")
             .addHeader("Accept", "application/json")
             .addHeader("X-Auth-Token", authToken)
             .build();
@@ -101,7 +101,7 @@ public class FlavorApiExpectTest extends BaseNovaApiExpectTest {
    public void testGetFlavorWhenResponseIs404() throws Exception {
       HttpRequest getFlavor = HttpRequest.builder()
             .method("GET")
-            .endpoint("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v1.1/3456/flavors/123")
+            .endpoint("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v2/3456/flavors/123")
             .addHeader("Accept", "application/json")
             .addHeader("X-Auth-Token", authToken).build();
 
@@ -118,7 +118,7 @@ public class FlavorApiExpectTest extends BaseNovaApiExpectTest {
       ParseCreateFlavorTest parser = new ParseCreateFlavorTest();
       HttpRequest listFlavors = HttpRequest.builder()
             .method(HttpMethod.POST)
-            .endpoint("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v1.1/3456/flavors")
+            .endpoint("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v2/3456/flavors")
             .addHeader(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON)
             .addHeader("X-Auth-Token", authToken)
             .payload(payloadFromResource(parser.resource())).build();
@@ -141,7 +141,7 @@ public class FlavorApiExpectTest extends BaseNovaApiExpectTest {
       String flavorId = "1cb47a44-9b84-4da4-bf81-c1976e8414ab";
       HttpRequest updateMetadata = HttpRequest.builder()
             .method(HttpMethod.DELETE)
-            .endpoint("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v1.1/3456/flavors/" + flavorId)
+            .endpoint("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v2/3456/flavors/" + flavorId)
             .addHeader(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON)
             .addHeader("X-Auth-Token", authToken)
             .build();

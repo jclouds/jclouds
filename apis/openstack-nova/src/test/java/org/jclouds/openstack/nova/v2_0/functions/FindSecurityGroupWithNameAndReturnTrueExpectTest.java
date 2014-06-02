@@ -42,7 +42,7 @@ public class FindSecurityGroupWithNameAndReturnTrueExpectTest extends BaseNovaAp
 
    public void testUpdateReferenceWhenSecurityGroupListContainsGroupName() throws Exception {
       HttpRequest list = HttpRequest.builder().method("GET").endpoint(
-               URI.create("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v1.1/3456/os-security-groups")).headers(
+               URI.create("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v2/3456/os-security-groups")).headers(
                ImmutableMultimap.<String, String> builder().put("Accept", "application/json").put("X-Auth-Token",
                         authToken).build()).build();
 
@@ -70,7 +70,7 @@ public class FindSecurityGroupWithNameAndReturnTrueExpectTest extends BaseNovaAp
 
    public void testDoesNotUpdateReferenceWhenSecurityGroupListMissingGroupName() throws Exception {
       HttpRequest list = HttpRequest.builder().method("GET").endpoint(
-               URI.create("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v1.1/3456/os-security-groups")).headers(
+               URI.create("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v2/3456/os-security-groups")).headers(
                ImmutableMultimap.<String, String> builder().put("Accept", "application/json").put("X-Auth-Token",
                         authToken).build()).build();
 

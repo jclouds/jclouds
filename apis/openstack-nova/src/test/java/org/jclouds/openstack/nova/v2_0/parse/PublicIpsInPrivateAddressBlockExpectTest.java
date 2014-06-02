@@ -85,7 +85,7 @@ public class PublicIpsInPrivateAddressBlockExpectTest extends BaseItemParserTest
             .addresses(ImmutableMultimap.<String, Address>builder()
                   .putAll("private", Address.createV4("10.6.39.189"), Address.createV4("15.185.181.94")).build())
             .links(
-                     Link.create(Relation.SELF, URI.create("https://az-2.region-a.geo-1.compute.hpcloudsvc.com/v1.1/37936628937291/servers/59662")),
+                     Link.create(Relation.SELF, URI.create("https://az-2.region-a.geo-1.compute.hpcloudsvc.com/v2/37936628937291/servers/59662")),
                      Link.create(Relation.BOOKMARK, URI.create("https://az-2.region-a.geo-1.compute.hpcloudsvc.com/37936628937291/servers/59662"))).build();
 
    }

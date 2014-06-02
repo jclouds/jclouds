@@ -49,7 +49,7 @@ public class NovaSecurityGroupExtensionExpectTest extends BaseNovaComputeService
 
    protected String zone = "az-1.region-a.geo-1";
    protected HttpRequest list = HttpRequest.builder().method("GET").endpoint(
-           URI.create("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v1.1/3456/os-security-groups")).headers(
+           URI.create("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v2/3456/os-security-groups")).headers(
            ImmutableMultimap.<String, String> builder().put("Accept", "application/json").put("X-Auth-Token",
                    authToken).build()).build();
 
@@ -79,7 +79,7 @@ public class NovaSecurityGroupExtensionExpectTest extends BaseNovaComputeService
 
    public void testListSecurityGroupsInLocation() {
       HttpRequest list = HttpRequest.builder().method("GET").endpoint(
-              URI.create("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v1.1/3456/os-security-groups")).headers(
+              URI.create("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v2/3456/os-security-groups")).headers(
               ImmutableMultimap.<String, String> builder().put("Accept", "application/json").put("X-Auth-Token",
                       authToken).build()).build();
 
@@ -104,7 +104,7 @@ public class NovaSecurityGroupExtensionExpectTest extends BaseNovaComputeService
 
    public void testListSecurityGroupsForNode() {
       HttpRequest serverReq = HttpRequest.builder().method("GET").endpoint(
-              URI.create("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v1.1/3456/os-create-server-ext/8d0a6ca5-8849-4b3d-b86e-f24c92490ebb"))
+              URI.create("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v2/3456/os-create-server-ext/8d0a6ca5-8849-4b3d-b86e-f24c92490ebb"))
               .headers(
                       ImmutableMultimap.<String, String> builder().put("Accept", "application/json").put("X-Auth-Token",
                               authToken).build()).build();
@@ -113,7 +113,7 @@ public class NovaSecurityGroupExtensionExpectTest extends BaseNovaComputeService
               payloadFromResource("/server_with_security_groups_extension.json")).build();
 
       HttpRequest list = HttpRequest.builder().method("GET").endpoint(
-              URI.create("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v1.1/3456/os-security-groups")).headers(
+              URI.create("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v2/3456/os-security-groups")).headers(
               ImmutableMultimap.<String, String> builder().put("Accept", "application/json").put("X-Auth-Token",
                       authToken).build()).build();
 
@@ -135,7 +135,7 @@ public class NovaSecurityGroupExtensionExpectTest extends BaseNovaComputeService
 
    public void testGetSecurityGroupById() {
       HttpRequest getSecurityGroup = HttpRequest.builder().method("GET").endpoint(
-              URI.create("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v1.1/3456/os-security-groups/160")).headers(
+              URI.create("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v2/3456/os-security-groups/160")).headers(
               ImmutableMultimap.<String, String> builder().put("Accept", "application/json").put("X-Auth-Token",
                       authToken).build()).build();
 
@@ -156,7 +156,7 @@ public class NovaSecurityGroupExtensionExpectTest extends BaseNovaComputeService
 
    public void testCreateSecurityGroup() {
       HttpRequest getSecurityGroup = HttpRequest.builder().method("GET").endpoint(
-              URI.create("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v1.1/3456/os-security-groups/160")).headers(
+              URI.create("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v2/3456/os-security-groups/160")).headers(
               ImmutableMultimap.<String, String> builder().put("Accept", "application/json").put("X-Auth-Token",
                       authToken).build()).build();
 
@@ -164,7 +164,7 @@ public class NovaSecurityGroupExtensionExpectTest extends BaseNovaComputeService
               payloadFromResource("/securitygroup_details_extension.json")).build();
 
       HttpRequest create = HttpRequest.builder().method("POST").endpoint(
-              URI.create("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v1.1/3456/os-security-groups")).headers(
+              URI.create("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v2/3456/os-security-groups")).headers(
               ImmutableMultimap.<String, String> builder().put("Accept", "application/json").put("X-Auth-Token",
                       authToken).build())
               .payload(
@@ -176,7 +176,7 @@ public class NovaSecurityGroupExtensionExpectTest extends BaseNovaComputeService
               payloadFromResource("/securitygroup_created.json")).build();
 
       HttpRequest list = HttpRequest.builder().method("GET").endpoint(
-              URI.create("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v1.1/3456/os-security-groups")).headers(
+              URI.create("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v2/3456/os-security-groups")).headers(
               ImmutableMultimap.<String, String>builder().put("Accept", "application/json").put("X-Auth-Token",
                       authToken).build()).build();
 
@@ -202,7 +202,7 @@ public class NovaSecurityGroupExtensionExpectTest extends BaseNovaComputeService
 
    public void testRemoveSecurityGroup() {
       HttpRequest delete = HttpRequest.builder().method("DELETE").endpoint(
-              URI.create("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v1.1/3456/os-security-groups/160"))
+              URI.create("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v2/3456/os-security-groups/160"))
               .headers(
                       ImmutableMultimap.<String, String>builder().put("Accept", "application/json")
                               .put("X-Auth-Token", authToken).build()).build();
@@ -210,7 +210,7 @@ public class NovaSecurityGroupExtensionExpectTest extends BaseNovaComputeService
       HttpResponse deleteResponse = HttpResponse.builder().statusCode(202).build();
 
       HttpRequest getSecurityGroup = HttpRequest.builder().method("GET").endpoint(
-              URI.create("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v1.1/3456/os-security-groups/160")).headers(
+              URI.create("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v2/3456/os-security-groups/160")).headers(
               ImmutableMultimap.<String, String> builder().put("Accept", "application/json").put("X-Auth-Token",
                       authToken).build()).build();
 
@@ -232,7 +232,7 @@ public class NovaSecurityGroupExtensionExpectTest extends BaseNovaComputeService
       HttpRequest createRule = HttpRequest
               .builder()
               .method("POST")
-              .endpoint("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v1.1/3456/os-security-group-rules")
+              .endpoint("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v2/3456/os-security-group-rules")
               .addHeader("Accept", "application/json")
               .addHeader("X-Auth-Token", authToken)
               .payload(
@@ -244,7 +244,7 @@ public class NovaSecurityGroupExtensionExpectTest extends BaseNovaComputeService
               payloadFromResource("/securitygrouprule_created_cidr.json")).build();
 
       HttpRequest getSecurityGroup = HttpRequest.builder().method("GET").endpoint(
-              URI.create("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v1.1/3456/os-security-groups/160")).headers(
+              URI.create("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v2/3456/os-security-groups/160")).headers(
               ImmutableMultimap.<String, String> builder().put("Accept", "application/json").put("X-Auth-Token",
                       authToken).build()).build();
 
@@ -281,7 +281,7 @@ public class NovaSecurityGroupExtensionExpectTest extends BaseNovaComputeService
       HttpRequest createRule = HttpRequest
               .builder()
               .method("POST")
-              .endpoint("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v1.1/3456/os-security-group-rules")
+              .endpoint("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v2/3456/os-security-group-rules")
               .addHeader("Accept", "application/json")
               .addHeader("X-Auth-Token", authToken)
               .payload(
@@ -293,7 +293,7 @@ public class NovaSecurityGroupExtensionExpectTest extends BaseNovaComputeService
               payloadFromResource("/securitygrouprule_created_cidr.json")).build();
 
       HttpRequest getSecurityGroup = HttpRequest.builder().method("GET").endpoint(
-              URI.create("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v1.1/3456/os-security-groups/160")).headers(
+              URI.create("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v2/3456/os-security-groups/160")).headers(
               ImmutableMultimap.<String, String> builder().put("Accept", "application/json").put("X-Auth-Token",
                       authToken).build()).build();
 
@@ -327,7 +327,7 @@ public class NovaSecurityGroupExtensionExpectTest extends BaseNovaComputeService
       HttpRequest createRule = HttpRequest
               .builder()
               .method("POST")
-              .endpoint("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v1.1/3456/os-security-group-rules")
+              .endpoint("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v2/3456/os-security-group-rules")
               .addHeader("Accept", "application/json")
               .addHeader("X-Auth-Token", authToken)
               .payload(
@@ -339,7 +339,7 @@ public class NovaSecurityGroupExtensionExpectTest extends BaseNovaComputeService
               payloadFromResource("/securitygrouprule_created_group.json")).build();
 
       HttpRequest getSecurityGroup = HttpRequest.builder().method("GET").endpoint(
-              URI.create("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v1.1/3456/os-security-groups/160")).headers(
+              URI.create("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v2/3456/os-security-groups/160")).headers(
               ImmutableMultimap.<String, String> builder().put("Accept", "application/json").put("X-Auth-Token",
                       authToken).build()).build();
 
@@ -376,7 +376,7 @@ public class NovaSecurityGroupExtensionExpectTest extends BaseNovaComputeService
       HttpRequest createRule = HttpRequest
               .builder()
               .method("POST")
-              .endpoint("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v1.1/3456/os-security-group-rules")
+              .endpoint("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v2/3456/os-security-group-rules")
               .addHeader("Accept", "application/json")
               .addHeader("X-Auth-Token", authToken)
               .payload(
@@ -388,7 +388,7 @@ public class NovaSecurityGroupExtensionExpectTest extends BaseNovaComputeService
               payloadFromResource("/securitygrouprule_created_group.json")).build();
 
       HttpRequest getSecurityGroup = HttpRequest.builder().method("GET").endpoint(
-              URI.create("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v1.1/3456/os-security-groups/160")).headers(
+              URI.create("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v2/3456/os-security-groups/160")).headers(
               ImmutableMultimap.<String, String> builder().put("Accept", "application/json").put("X-Auth-Token",
                       authToken).build()).build();
 

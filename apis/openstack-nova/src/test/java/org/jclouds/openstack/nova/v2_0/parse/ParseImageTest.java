@@ -73,7 +73,7 @@ public class ParseImageTest extends BaseItemParserTest<Image> {
                         .links(
                               Link.create(
                                     Relation.SELF,
-                                    URI.create("http://servers.api.openstack.org/v1.1/1234/servers/52415800-8b69-11e0-9b19-734f335aa7b3")),
+                                    URI.create("http://servers.api.openstack.org/v2/1234/servers/52415800-8b69-11e0-9b19-734f335aa7b3")),
                               Link.create(
                                     Relation.BOOKMARK,
                                     URI.create("http://servers.api.openstack.org/1234/servers/52415800-8b69-11e0-9b19-734f335aa7b3")))
@@ -82,7 +82,7 @@ public class ParseImageTest extends BaseItemParserTest<Image> {
                   ImmutableSet.of(
                         Link.create(
                               Relation.SELF,
-                              URI.create("http://servers.api.openstack.org/v1.1/1234/images/52415800-8b69-11e0-9b19-734f5736d2a2")),
+                              URI.create("http://servers.api.openstack.org/v2/1234/images/52415800-8b69-11e0-9b19-734f5736d2a2")),
                         Link.create(
                               Relation.BOOKMARK,
                               URI.create("http://servers.api.openstack.org/1234/images/52415800-8b69-11e0-9b19-734f5736d2a2"))))

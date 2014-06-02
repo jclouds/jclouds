@@ -40,7 +40,7 @@ public class KeyPairApiExpectTest extends BaseNovaApiExpectTest {
       HttpRequest list = HttpRequest
             .builder()
             .method("GET")
-            .endpoint("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v1.1/3456/os-keypairs")
+            .endpoint("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v2/3456/os-keypairs")
             .addHeader("Accept", "application/json")
             .addHeader("X-Auth-Token", authToken).build();
 
@@ -61,7 +61,7 @@ public class KeyPairApiExpectTest extends BaseNovaApiExpectTest {
       HttpRequest list = HttpRequest
             .builder()
             .method("GET")
-            .endpoint("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v1.1/3456/os-keypairs")
+            .endpoint("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v2/3456/os-keypairs")
             .addHeader("Accept", "application/json")
             .addHeader("X-Auth-Token", authToken).build();
 
@@ -78,7 +78,7 @@ public class KeyPairApiExpectTest extends BaseNovaApiExpectTest {
       HttpRequest create = HttpRequest
             .builder()
             .method("POST")
-            .endpoint("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v1.1/3456/os-keypairs")
+            .endpoint("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v2/3456/os-keypairs")
             .addHeader("Accept", "application/json")
             .addHeader("X-Auth-Token", authToken)
             .payload(payloadFromStringWithContentType("{\"keypair\":{\"name\":\"testkeypair\"}}", "application/json"))
@@ -99,7 +99,7 @@ public class KeyPairApiExpectTest extends BaseNovaApiExpectTest {
       HttpRequest create = HttpRequest
             .builder()
             .method("POST")
-            .endpoint("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v1.1/3456/os-keypairs")
+            .endpoint("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v2/3456/os-keypairs")
             .addHeader("Accept", "application/json")
             .addHeader("X-Auth-Token", authToken)
             .payload(
@@ -127,7 +127,7 @@ public class KeyPairApiExpectTest extends BaseNovaApiExpectTest {
       HttpRequest delete = HttpRequest
             .builder()
             .method("DELETE")
-            .endpoint("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v1.1/3456/os-keypairs/testkeypair")
+            .endpoint("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v2/3456/os-keypairs/testkeypair")
             .addHeader("Accept", "application/json")
             .addHeader("X-Auth-Token", authToken).build();
 
@@ -143,7 +143,7 @@ public class KeyPairApiExpectTest extends BaseNovaApiExpectTest {
       HttpRequest get = HttpRequest
             .builder()
             .method("GET")
-            .endpoint("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v1.1/3456/os-keypairs/testkeypair")
+            .endpoint("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v2/3456/os-keypairs/testkeypair")
             .addHeader("Accept", "application/json")
             .addHeader("X-Auth-Token", authToken).build();
 
@@ -161,7 +161,7 @@ public class KeyPairApiExpectTest extends BaseNovaApiExpectTest {
       HttpRequest get = HttpRequest
             .builder()
             .method("GET")
-            .endpoint("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v1.1/3456/os-keypairs/testkeypair")
+            .endpoint("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v2/3456/os-keypairs/testkeypair")
             .addHeader("Accept", "application/json")
             .addHeader("X-Auth-Token", authToken).build();
 

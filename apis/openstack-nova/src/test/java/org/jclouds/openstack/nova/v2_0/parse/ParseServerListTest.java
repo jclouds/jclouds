@@ -55,7 +55,7 @@ public class ParseServerListTest extends BaseSetParserTest<Resource> {
                   .links(
                         Link.create(
                               Relation.SELF,
-                              URI.create("http://servers.api.openstack.org/v1.1/1234/servers/52415800-8b69-11e0-9b19-734f6af67565")),
+                              URI.create("http://servers.api.openstack.org/v2/1234/servers/52415800-8b69-11e0-9b19-734f6af67565")),
                         Link.create(
                               Relation.BOOKMARK,
                               URI.create("http://servers.api.openstack.org/1234/servers/52415800-8b69-11e0-9b19-734f6af67565")))
@@ -67,7 +67,7 @@ public class ParseServerListTest extends BaseSetParserTest<Resource> {
                         .links(
                               Link.create(
                                     Relation.SELF,
-                                    URI.create("http://servers.api.openstack.org/v1.1/1234/servers/52415800-8b69-11e0-9b19-734f1f1350e5")),
+                                    URI.create("http://servers.api.openstack.org/v2/1234/servers/52415800-8b69-11e0-9b19-734f1f1350e5")),
                               Link.create(
                                     Relation.BOOKMARK,
                                     URI.create("http://servers.api.openstack.org/1234/servers/52415800-8b69-11e0-9b19-734f1f1350e5")))

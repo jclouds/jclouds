@@ -68,10 +68,10 @@ public class ZoneIdToURIFromAccessForTypeAndVersionTest {
    }
   
    public void testZoneMatches() {
-      assertEquals(Maps.transformValues(factory.createForApiTypeAndVersion("compute", "1.1").get(), Suppliers
-            .<URI> supplierFunction()), ImmutableMap.of("az-1.region-a.geo-1", URI.create("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v1.1/3456"),
-                                                        "az-2.region-a.geo-1", URI.create("https://az-2.region-a.geo-1.compute.hpcloudsvc.com/v1.1/3456"),
-                                                        "az-3.region-a.geo-1", URI.create("https://az-3.region-a.geo-1.compute.hpcloudsvc.com/v1.1/3456")));
+      assertEquals(Maps.transformValues(factory.createForApiTypeAndVersion("compute", "2").get(), Suppliers
+            .<URI> supplierFunction()), ImmutableMap.of("az-1.region-a.geo-1", URI.create("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v2/3456"),
+                                                        "az-2.region-a.geo-1", URI.create("https://az-2.region-a.geo-1.compute.hpcloudsvc.com/v2/3456"),
+                                                        "az-3.region-a.geo-1", URI.create("https://az-3.region-a.geo-1.compute.hpcloudsvc.com/v2/3456")));
    }
    
    private final ZoneIdToURISupplier.Factory raxFactory = Guice.createInjector(new AbstractModule() {

@@ -40,7 +40,7 @@ public class PasswordAuthenticationExpectTest extends BaseNovaApiExpectTest {
       HttpRequest listServers = HttpRequest
             .builder()
             .method("GET")
-            .endpoint("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v1.1/3456/servers")
+            .endpoint("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v2/3456/servers")
             .addHeader("Accept", "application/json")
             .addHeader("X-Auth-Token", authToken).build();
 

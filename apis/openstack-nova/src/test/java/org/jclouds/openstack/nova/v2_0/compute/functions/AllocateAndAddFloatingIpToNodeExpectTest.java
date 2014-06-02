@@ -58,7 +58,7 @@ public class AllocateAndAddFloatingIpToNodeExpectTest extends BaseNovaComputeSer
    final NovaTemplateOptions options = NovaTemplateOptions.Builder.autoAssignFloatingIp(false);
 
    HttpRequest createFloatingIP = HttpRequest.builder().method("POST").endpoint(
-            URI.create("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v1.1/3456/os-floating-ips")).headers(
+            URI.create("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v2/3456/os-floating-ips")).headers(
             ImmutableMultimap.<String, String> builder().put("Accept", "application/json").put("X-Auth-Token",
                      authToken).build()).payload(payloadFromStringWithContentType("{}", "application/json")).build();
 
@@ -92,7 +92,7 @@ public class AllocateAndAddFloatingIpToNodeExpectTest extends BaseNovaComputeSer
 
    private HttpRequest addFloatingIPForAddress(String address) {
       HttpRequest addFloatingIPRequest = HttpRequest.builder().method("POST").endpoint(
-               URI.create("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v1.1/3456/servers/71592/action"))
+               URI.create("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v2/3456/servers/71592/action"))
                .headers(
                         ImmutableMultimap.<String, String> builder().put("Accept", "application/json")
                                  .put("X-Auth-Token", authToken).build()).payload(
@@ -111,7 +111,7 @@ public class AllocateAndAddFloatingIpToNodeExpectTest extends BaseNovaComputeSer
                                  "application/json")).build();
 
       HttpRequest list = HttpRequest.builder().method("GET").endpoint(
-               URI.create("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v1.1/3456/os-floating-ips")).headers(
+               URI.create("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v2/3456/os-floating-ips")).headers(
                ImmutableMultimap.<String, String> builder().put("Accept", "application/json").put("X-Auth-Token",
                         authToken).build()).build();
 
@@ -149,7 +149,7 @@ public class AllocateAndAddFloatingIpToNodeExpectTest extends BaseNovaComputeSer
                                  "application/json")).build();
 
       HttpRequest list = HttpRequest.builder().method("GET").endpoint(
-               URI.create("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v1.1/3456/os-floating-ips")).headers(
+               URI.create("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v2/3456/os-floating-ips")).headers(
                ImmutableMultimap.<String, String> builder().put("Accept", "application/json").put("X-Auth-Token",
                         authToken).build()).build();
 
