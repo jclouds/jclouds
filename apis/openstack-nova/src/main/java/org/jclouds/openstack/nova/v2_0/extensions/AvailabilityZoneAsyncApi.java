@@ -41,7 +41,7 @@ import javax.ws.rs.core.MediaType;
  */
 
 @Beta
-@Extension(of = ServiceType.COMPUTE, namespace = ExtensionNamespaces.ADMIN_ACTIONS)
+@Extension(of = ServiceType.COMPUTE, namespace = ExtensionNamespaces.AVAILABILITY_ZONE)
 @RequestFilters(AuthenticateRequest.class)
 public interface AvailabilityZoneAsyncApi {
 

@@ -68,6 +68,10 @@ public interface ExtensionNamespaces {
     */
    public static final String VIRTUAL_INTERFACES = "http://docs.openstack.org/ext/virtual_interfaces/api/v1.1";
    /**
+    * Availability zone extensions
+    */
+   public static final String AVAILABILITY_ZONE = "http://docs.openstack.org/compute/ext/availabilityzone/api/v1.1";
+   /**
     * Extended support to the Create Server v1.1 API
     */
    public static final String CREATESERVEREXT = "http://docs.openstack.org/ext/createserverext/api/v1.1";

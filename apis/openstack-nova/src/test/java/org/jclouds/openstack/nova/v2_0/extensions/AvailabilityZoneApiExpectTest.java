@@ -37,7 +37,7 @@ import static org.testng.Assert.assertTrue;
 @Test(groups = "unit", testName = "AvailabilityZoneApiExpectTest")
 public class AvailabilityZoneApiExpectTest extends BaseNovaApiExpectTest {
 
-   public void testLAvailabilityZonesList() throws Exception {
+   public void testAvailabilityZonesList() throws Exception {
       HttpRequest list = HttpRequest
             .builder()
             .method("GET")
@@ -53,7 +53,7 @@ public class AvailabilityZoneApiExpectTest extends BaseNovaApiExpectTest {
 
       assertEquals(availabilityZonesApi.getConfiguredZones(), ImmutableSet.of("az-1.region-a.geo-1", "az-2.region-a.geo-1", "az-3.region-a.geo-1"));
 
-      FluentIterable<? extends AvailabilityZone> zones = availabilityZonesApi.getAvailabilityZoneApi("az-1.region-a.geo-1").list();
+      FluentIterable<? extends AvailabilityZone> zones = availabilityZonesApi.getAvailabilityZoneApi("az-1.region-a.geo-1").get().list();
 
       Optional<? extends AvailabilityZone> zone = zones.first();
 

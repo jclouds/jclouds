@@ -23,10 +23,12 @@ import static org.testng.Assert.assertFalse;
 import static org.testng.Assert.assertNotNull;
 import static org.testng.Assert.assertTrue;
 
+import com.google.common.base.Optional;
 import org.jclouds.http.HttpResponseException;
 import org.jclouds.openstack.nova.v2_0.domain.Network;
 import org.jclouds.openstack.nova.v2_0.domain.Server;
 import org.jclouds.openstack.nova.v2_0.domain.ServerCreated;
+import org.jclouds.openstack.nova.v2_0.extensions.AvailabilityZoneApi;
 import org.jclouds.openstack.nova.v2_0.internal.BaseNovaApiLiveTest;
 import org.jclouds.openstack.nova.v2_0.options.CreateServerOptions;
 import org.jclouds.openstack.nova.v2_0.options.RebuildServerOptions;
@@ -84,10 +86,14 @@ public class ServerApiLiveTest extends BaseNovaApiLiveTest {
    @Test
    public void testCreateInAvailabilityZone() {
       String serverId = null;
+      String availabilityZone;
+
       for (String zoneId : zones) {
          ServerApi serverApi = api.getServerApiForZone(zoneId);
+         Optional<? extends AvailabilityZoneApi> availabilityZoneApi = api.getAvailabilityZoneApi(zoneId);
+         availabilityZone = availabilityZoneApi.isPresent() ? Iterables.getLast(availabilityZoneApi.get().list()).getName() : "nova";
          try {
-            serverId = createServer(zoneId, "nova").getId();
+            serverId = createServer(zoneId, availabilityZone).getId();
             Server server = serverApi.get(serverId);
             assertEquals(server.getStatus(), ACTIVE);
          } finally {

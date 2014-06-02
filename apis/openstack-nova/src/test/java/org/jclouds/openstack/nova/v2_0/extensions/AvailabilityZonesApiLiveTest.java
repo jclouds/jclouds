@@ -18,6 +18,7 @@
  */
 package org.jclouds.openstack.nova.v2_0.extensions;
 
+import com.google.common.base.Optional;
 import com.google.common.collect.FluentIterable;
 import org.jclouds.openstack.nova.v2_0.domain.zonescoped.AvailabilityZone;
 import org.jclouds.openstack.nova.v2_0.internal.BaseNovaApiLiveTest;
@@ -34,12 +35,14 @@ public class AvailabilityZonesApiLiveTest extends BaseNovaApiLiveTest {
    @Test
    public void testListAvailabilityZones() throws Exception {
 
-      AvailabilityZoneAPI availabilityZoneApi = api.getAvailabilityZoneApi("RegionOne");
-      FluentIterable<? extends AvailabilityZone> zones = availabilityZoneApi.list();
+      Optional<? extends AvailabilityZoneApi> availabilityZoneApi = api.getAvailabilityZoneApi("RegionOne");
+      if (availabilityZoneApi.isPresent()) {
+         FluentIterable<? extends AvailabilityZone> zones = availabilityZoneApi.get().list();
 
-      for (AvailabilityZone zone : zones) {
-         assertNotNull(zone.getName());
-         assertTrue(zone.getState().available(), "zone: " + zone.getName() + " is not available.");
+         for (AvailabilityZone zone : zones) {
+            assertNotNull(zone.getName());
+            assertTrue(zone.getState().available(), "zone: " + zone.getName() + " is not available.");
+         }
       }
    }
 }

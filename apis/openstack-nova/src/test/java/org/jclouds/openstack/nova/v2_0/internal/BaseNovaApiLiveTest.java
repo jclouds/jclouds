@@ -31,6 +31,7 @@ import org.jclouds.openstack.nova.v2_0.domain.ServerCreated;
 import org.jclouds.openstack.nova.v2_0.features.FlavorApi;
 import org.jclouds.openstack.nova.v2_0.features.ImageApi;
 import org.jclouds.openstack.nova.v2_0.features.ServerApi;
+import org.jclouds.openstack.nova.v2_0.options.CreateServerOptions;
 import org.jclouds.openstack.v2_0.domain.Resource;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
@@ -81,10 +82,14 @@ public class BaseNovaApiLiveTest extends BaseApiLiveTest<NovaApi> {
       setIfTestSystemPropertyPresent(props, NovaProperties.AUTO_ALLOCATE_FLOATING_IPS);
       return props;
    }
-   
+
    protected Server createServerInZone(String zoneId) {
+      return createServerInZone(zoneId, new CreateServerOptions());
+   }
+
+   protected Server createServerInZone(String zoneId, CreateServerOptions options) {
       ServerApi serverApi = api.getServerApiForZone(zoneId);
-      ServerCreated server = serverApi.create(hostName, imageIdForZone(zoneId), flavorRefForZone(zoneId));
+      ServerCreated server = serverApi.create(hostName, imageIdForZone(zoneId), flavorRefForZone(zoneId), options);
       blockUntilServerInState(server.getId(), serverApi, Status.ACTIVE);
       return serverApi.get(server.getId());
    }

@@ -29,8 +29,8 @@ import org.jclouds.openstack.v2_0.services.Extension;
  * @author Inbar Stolberg
  */
 @Beta
-@Extension(of = ServiceType.COMPUTE, namespace = ExtensionNamespaces.ADMIN_ACTIONS)
-public interface AvailabilityZoneAPI {
+@Extension(of = ServiceType.COMPUTE, namespace = ExtensionNamespaces.AVAILABILITY_ZONE)
+public interface AvailabilityZoneApi {
 
    /**
     * @return all availability zones
