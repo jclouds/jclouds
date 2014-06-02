@@ -30,15 +30,14 @@ import com.google.inject.Guice;
 import com.google.inject.Injector;
 
 /**
- * 
- * @author Michael Arnold
+ * Tests parsing of a {@link KeyPair}.
  */
 @Test(groups = "unit", testName = "ParseKeyPairTest")
 public class ParseKeyPairTest extends BaseItemParserTest<KeyPair> {
 
    @Override
    public String resource() {
-      return "/keypair_created.json";
+      return "/keypair_details.json";
    }
 
    @Override
