@@ -28,6 +28,8 @@ import javax.ws.rs.core.MediaType;
 
 import org.jclouds.Fallbacks.EmptyFluentIterableOnNotFoundOr404;
 import org.jclouds.Fallbacks.FalseOnNotFoundOr404;
+import org.jclouds.Fallbacks.NullOnNotFoundOr404;
+import org.jclouds.javax.annotation.Nullable;
 import org.jclouds.openstack.keystone.v2_0.filters.AuthenticateRequest;
 import org.jclouds.openstack.nova.v2_0.binders.BindKeyPairToJsonPayload;
 import org.jclouds.openstack.nova.v2_0.domain.KeyPair;
@@ -47,16 +49,10 @@ import com.google.common.collect.FluentIterable;
 import com.google.common.util.concurrent.ListenableFuture;
 
 /**
- * Provides asynchronous access to Key Pairs via the REST API.
+ * Provides asynchronous access to the OpenStack Nova Key Pair Extension API.
  * <p/>
  * 
  * @see KeyPairApi
- * @see ExtensionAsyncApi
- * @see <a href=
- *      "http://docs.openstack.org/api/openstack-compute/2/content/Extensions-d1e1444.html"
- *      />
- * @see <a href="http://nova.openstack.org/api_ext" />
- * @see <a href="http://nova.openstack.org/api_ext/ext_keypairs.html" />
  */
 @Beta
 @Extension(of = ServiceType.COMPUTE, namespace = ExtensionNamespaces.KEYPAIRS)
@@ -69,7 +65,7 @@ public interface KeyPairAsyncApi {
    @ResponseParser(ParseKeyPairs.class)
    @Consumes(MediaType.APPLICATION_JSON)
    @Fallback(EmptyFluentIterableOnNotFoundOr404.class)
-   ListenableFuture<? extends FluentIterable<? extends KeyPair>> list();
+   ListenableFuture<FluentIterable<KeyPair>> list();
 
    @Named("keypair:create")
    @POST
@@ -78,7 +74,16 @@ public interface KeyPairAsyncApi {
    @Consumes(MediaType.APPLICATION_JSON)
    @Produces(MediaType.APPLICATION_JSON)
    @Payload("%7B\"keypair\":%7B\"name\":\"{name}\"%7D%7D")
-   ListenableFuture<? extends KeyPair> create(@PayloadParam("name") String name);
+   ListenableFuture<KeyPair> create(@PayloadParam("name") String name);
+
+   @Named("keypair:get")
+   @GET
+   @Path("/os-keypairs/{name}")
+   @SelectJson("keypair")
+   @Consumes(MediaType.APPLICATION_JSON)
+   @Fallback(NullOnNotFoundOr404.class)
+   @Nullable
+   ListenableFuture<KeyPair> get(@PathParam("name") String name);
 
    @Named("keypair:create")
    @POST
@@ -87,7 +92,7 @@ public interface KeyPairAsyncApi {
    @Consumes(MediaType.APPLICATION_JSON)
    @Produces(MediaType.APPLICATION_JSON)
    @MapBinder(BindKeyPairToJsonPayload.class)
-   ListenableFuture<? extends KeyPair> createWithPublicKey(@PayloadParam("name") String name,
+   ListenableFuture<KeyPair> createWithPublicKey(@PayloadParam("name") String name,
          @PayloadParam("public_key") String publicKey);
 
    @Named("keypair:delete")

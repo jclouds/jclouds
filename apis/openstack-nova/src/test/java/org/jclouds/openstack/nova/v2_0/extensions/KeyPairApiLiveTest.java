@@ -16,6 +16,7 @@
  */
 package org.jclouds.openstack.nova.v2_0.extensions;
 
+import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
 
 import org.jclouds.openstack.nova.v2_0.domain.KeyPair;
@@ -25,10 +26,13 @@ import org.testng.annotations.Test;
 import com.google.common.collect.FluentIterable;
 
 /**
- * Tests behavior of {@code KeyPairApi}
+ * Tests live behavior of {@code KeyPairApi}
  */
 @Test(groups = "live", testName = "KeyPairApiLiveTest")
 public class KeyPairApiLiveTest extends BaseNovaApiLiveTest {
+
+   final String KEYPAIR_NAME = "testkp";
+   final String PUBLIC_KEY = "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAAAgQCrrBREFxz3002l1HuXz0+UOdJQ/mOYD5DiJwwB/TOybwIKQJPOxJWA9gBoo4k9dthTKBTaEYbzrll7iZcp59E80S6mNiAr3mUgi+x5Y8uyXeJ2Ws+h6peVyFVUu9epkwpcTd1GVfdcVWsTajwDz9+lxCDhl0RZKDFoT0scTxbj/w== nova@nv-aw2az2-api0002";
 
    public void testListKeyPairs() throws Exception {
       for (String zoneId : api.getConfiguredZones()) {
@@ -38,16 +42,20 @@ public class KeyPairApiLiveTest extends BaseNovaApiLiveTest {
       }
    }
 
-   public void testCreateAndDeleteKeyPair() throws Exception {
-      final String KEYPAIR_NAME = "testkp";
+   public void testCreateAndGetAndDeleteKeyPair() throws Exception {
       for (String zoneId : api.getConfiguredZones()) {
          KeyPairApi keyPairApi = api.getKeyPairExtensionForZone(zoneId).get();
-         KeyPair keyPair = null;
+         KeyPair createdKeyPair = null;
          try {
-            keyPair = keyPairApi.create(KEYPAIR_NAME);
-            assertNotNull(keyPair);
+            createdKeyPair = keyPairApi.create(KEYPAIR_NAME);
+            assertNotNull(createdKeyPair);
+
+            KeyPair keyPair = keyPairApi.get(KEYPAIR_NAME);
+            assertEquals(keyPair.getName(), createdKeyPair.getName());
+            assertEquals(keyPair.getFingerprint(), createdKeyPair.getFingerprint());
+            assertEquals(keyPair.getPublicKey(), createdKeyPair.getPublicKey());
          } finally {
-            if (keyPair != null) {
+            if (createdKeyPair != null) {
                keyPairApi.delete(KEYPAIR_NAME);
             }
          }
@@ -55,17 +63,19 @@ public class KeyPairApiLiveTest extends BaseNovaApiLiveTest {
    }
 
    public void testCreateAndDeleteKeyPairWithPublicKey() throws Exception {
-      final String KEYPAIR_NAME = "testkp";
-      final String PUBLIC_KEY = "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAAAgQCrrBREFxz3002l1HuXz0+UOdJQ/mOYD5DiJwwB/TOybwIKQJPOxJWA9gBoo4k9dthTKBTaEYbzrll7iZcp59E80S6mNiAr3mUgi+x5Y8uyXeJ2Ws+h6peVyFVUu9epkwpcTd1GVfdcVWsTajwDz9+lxCDhl0RZKDFoT0scTxbj/w== nova@nv-aw2az2-api0002";
-
       for (String zoneId : api.getConfiguredZones()) {
          KeyPairApi keyPairApi = api.getKeyPairExtensionForZone(zoneId).get();
-         KeyPair keyPair = null;
+         KeyPair createdKeyPair = null;
          try {
-            keyPair = keyPairApi.createWithPublicKey(KEYPAIR_NAME, PUBLIC_KEY);
-            assertNotNull(keyPair);
+            createdKeyPair = keyPairApi.createWithPublicKey(KEYPAIR_NAME, PUBLIC_KEY);
+            assertNotNull(createdKeyPair);
+
+            KeyPair keyPair = keyPairApi.get(KEYPAIR_NAME);
+            assertEquals(keyPair.getName(), createdKeyPair.getName());
+            assertEquals(keyPair.getFingerprint(), createdKeyPair.getFingerprint());
+            assertEquals(keyPair.getPublicKey(), createdKeyPair.getPublicKey());
          } finally {
-            if (keyPair != null) {
+            if (createdKeyPair != null) {
                keyPairApi.delete(KEYPAIR_NAME);
             }
          }

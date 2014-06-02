@@ -24,7 +24,7 @@ import com.google.common.annotations.Beta;
 import com.google.common.collect.FluentIterable;
 
 /**
- * Provides synchronous access to Security Groups.
+ * Provides synchronous access to the OpenStack Nova Key Pair Extension API.
  * <p/>
  * 
  * @see KeyPairAsyncApi
@@ -34,30 +34,44 @@ import com.google.common.collect.FluentIterable;
 public interface KeyPairApi {
 
    /**
-    * List all Key Pairs.
+    * Lists all Key Pairs.
     * 
     * @return all Key Pairs
     */
-   FluentIterable<? extends KeyPair> list();
+   FluentIterable<KeyPair> list();
 
    /**
-    * Create a Key Pair.
+    * Creates a {@link KeyPair}.
     * 
-    * @return a Key Pair
+    * @return the created {@link KeyPair}.
     */
    KeyPair create(String name);
 
+
    /**
-    * Create a Key Pair with a public key.
+    * Creates a {@link KeyPair} with a public key.
     * 
-    * @return a Key Pair with a public key.
+    * @return the created {@link KeyPair}.
     */
    KeyPair createWithPublicKey(String name, String publicKey);
 
    /**
-    * Delete a Key Pairs.
+    * Gets a specific {@link KeyPair} by name.
     * 
-    * @return
+    * @param name
+    *           the name of the {@link KeyPair}
+    * 
+    * @return the specified {@link KeyPair}, otherwise null.
+    */
+   KeyPair get(String name);
+
+   /**
+    * Deletes a {@link KeyPair}.
+    * 
+    * @param name
+    *           the name of the {@link KeyPair}
+    * 
+    * @return {@code true} if the {@link KeyPair} was deleted, otherwise {@code false}.
     */
    boolean delete(String name);
 
