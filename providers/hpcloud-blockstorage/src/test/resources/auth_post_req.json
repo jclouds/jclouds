@@ -1,0 +1,9 @@
+{
+    "auth": {
+        "apiAccessKeyCredentials": {
+            "accessKey": "accessKey",
+            "secretKey": "secretKey"
+        },
+        "tenantName": "myTenantName"
+    }
+}

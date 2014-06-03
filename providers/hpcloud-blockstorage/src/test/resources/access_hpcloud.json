@@ -1,0 +1,325 @@
+{
+    "access": {
+        "token": {
+            "expires": "2014-04-24T08:52:18.113Z",
+            "id": "myToken",
+            "tenant": {
+                "id": "myTenantId",
+                "name": "myTenantName"
+            }
+        },
+        "user": {
+            "id": "myUserId",
+            "name": "myUsername",
+            "otherAttributes": {
+                "domainStatus": "enabled",
+                "domainStatusCode": "00"
+            },
+            "roles": [
+                {
+                    "id": "00000000004004",
+                    "serviceId": "100",
+                    "name": "domainuser"
+                },
+                {
+                    "id": "00000000004016",
+                    "serviceId": "120",
+                    "name": "netadmin",
+                    "tenantId": "myTenantId"
+                },
+                {
+                    "id": "00000000004014",
+                    "serviceId": "150",
+                    "name": "cdn-admin",
+                    "tenantId": "myTenantId"
+                },
+                {
+                    "id": "00000000004022",
+                    "serviceId": "110",
+                    "name": "Admin",
+                    "tenantId": "myTenantId"
+                },
+                {
+                    "id": "00000000004024",
+                    "serviceId": "140",
+                    "name": "user",
+                    "tenantId": "myTenantId"
+                },
+                {
+                    "id": "00000000004013",
+                    "serviceId": "130",
+                    "name": "block-admin",
+                    "tenantId": "myTenantId"
+                },
+                {
+                    "id": "00000000004025",
+                    "serviceId": "120",
+                    "name": "sysadmin",
+                    "tenantId": "myTenantId"
+                },
+                {
+                    "id": "91643347410087",
+                    "serviceId": "240",
+                    "name": "dns-admin",
+                    "tenantId": "myTenantId"
+                },
+                {
+                    "id": "00000000004003",
+                    "serviceId": "100",
+                    "name": "domainadmin"
+                },
+                {
+                    "id": "10419409370304",
+                    "serviceId": "170",
+                    "name": "net-admin",
+                    "tenantId": "myTenantId"
+                }
+            ]
+        },
+        "serviceCatalog": [
+            {
+                "name": "Usage Reporting",
+                "type": "metering",
+                "endpoints": [
+                    {
+                        "publicURL": "",
+                        "region": "region-a.geo-1",
+                        "versionId": "2",
+                        "versionInfo": "https://region-a.geo-1.usage-reporting-internal.hpcloudsvc.com:8777",
+                        "versionList": "https://region-a.geo-1.usage-reporting-internal.hpcloudsvc.com:8777"
+                    },
+                    {
+                        "publicURL": "",
+                        "region": "region-b.geo-1",
+                        "versionId": "2",
+                        "versionInfo": "https://region-b.geo-1.usage-reporting-internal.hpcloudsvc.com:8777",
+                        "versionList": "https://region-b.geo-1.usage-reporting-internal.hpcloudsvc.com:8777"
+                    }
+                ]
+            },
+            {
+                "name": "Networking",
+                "type": "network",
+                "endpoints": [
+                    {
+                        "tenantId": "myTenantId",
+                        "publicURL": "",
+                        "publicURL2": "",
+                        "region": "az-1.region-a.geo-1",
+                        "versionId": "",
+                        "versionInfo": "",
+                        "versionList": ""
+                    },
+                    {
+                        "tenantId": "myTenantId",
+                        "publicURL": "https://region-a.geo-1.network.hpcloudsvc.com",
+                        "publicURL2": "",
+                        "region": "region-a.geo-1",
+                        "versionId": "2.0",
+                        "versionInfo": "https://region-a.geo-1.network.hpcloudsvc.com",
+                        "versionList": "https://region-a.geo-1.network.hpcloudsvc.com"
+                    },
+                    {
+                        "tenantId": "myTenantId",
+                        "publicURL": "https://region-b.geo-1.network.hpcloudsvc.com",
+                        "publicURL2": "",
+                        "region": "region-b.geo-1",
+                        "versionId": "2.0",
+                        "versionInfo": "https://region-b.geo-1.network.hpcloudsvc.com",
+                        "versionList": "https://region-b.geo-1.network.hpcloudsvc.com"
+                    }
+                ]
+            },
+            {
+                "name": "CDN",
+                "type": "hpext:cdn",
+                "endpoints": [
+                    {
+                        "tenantId": "myTenantId",
+                        "publicURL": "https://region-a.geo-1.cdnmgmt.hpcloudsvc.com/v1.0/myTenantId",
+                        "region": "region-a.geo-1",
+                        "versionId": "1.0",
+                        "versionInfo": "https://region-a.geo-1.cdnmgmt.hpcloudsvc.com/v1.0/",
+                        "versionList": "https://region-a.geo-1.cdnmgmt.hpcloudsvc.com/"
+                    },
+                    {
+                        "tenantId": "myTenantId",
+                        "publicURL": "https://region-b.geo-1.cdnmgmt.hpcloudsvc.com/v1.0/myTenantId",
+                        "region": "region-b.geo-1",
+                        "versionId": "1.0",
+                        "versionInfo": "https://region-b.geo-1.cdnmgmt.hpcloudsvc.com/v1.0/",
+                        "versionList": "https://region-b.geo-1.cdnmgmt.hpcloudsvc.com/"
+                    }
+                ]
+            },
+            {
+                "name": "Object Storage",
+                "type": "object-store",
+                "endpoints": [
+                    {
+                        "tenantId": "myTenantId",
+                        "publicURL": "https://region-a.geo-1.objects.hpcloudsvc.com/v1/myTenantId",
+                        "region": "region-a.geo-1",
+                        "versionId": "1.0",
+                        "versionInfo": "https://region-a.geo-1.objects.hpcloudsvc.com/v1.0/",
+                        "versionList": "https://region-a.geo-1.objects.hpcloudsvc.com"
+                    },
+                    {
+                        "tenantId": "myTenantId",
+                        "publicURL": "https://region-b.geo-1.objects.hpcloudsvc.com:443/v1/myTenantId",
+                        "region": "region-b.geo-1",
+                        "versionId": "1",
+                        "versionInfo": "https://region-b.geo-1.objects.hpcloudsvc.com:443/v1/",
+                        "versionList": "https://region-b.geo-1.objects.hpcloudsvc.com:443"
+                    }
+                ]
+            },
+            {
+                "name": "Identity",
+                "type": "identity",
+                "endpoints": [
+                    {
+                        "publicURL": "https://region-a.geo-1.identity.hpcloudsvc.com:35357/v2.0/",
+                        "region": "region-a.geo-1",
+                        "versionId": "2.0",
+                        "versionInfo": "https://region-a.geo-1.identity.hpcloudsvc.com:35357/v2.0/",
+                        "versionList": "https://region-a.geo-1.identity.hpcloudsvc.com:35357"
+                    },
+                    {
+                        "publicURL": "https://region-a.geo-1.identity.hpcloudsvc.com:35357/v3/",
+                        "region": "region-a.geo-1",
+                        "versionId": "3.0",
+                        "versionInfo": "https://region-a.geo-1.identity.hpcloudsvc.com:35357/v3/",
+                        "versionList": "https://region-a.geo-1.identity.hpcloudsvc.com:35357"
+                    },
+                    {
+                        "publicURL": "https://region-b.geo-1.identity.hpcloudsvc.com:35357/v2.0/",
+                        "region": "region-b.geo-1",
+                        "versionId": "2.0",
+                        "versionInfo": "https://region-b.geo-1.identity.hpcloudsvc.com:35357/v2.0/",
+                        "versionList": "https://region-b.geo-1.identity.hpcloudsvc.com:35357"
+                    },
+                    {
+                        "publicURL": "https://region-b.geo-1.identity.hpcloudsvc.com:35357/v3/",
+                        "region": "region-b.geo-1",
+                        "versionId": "3.0",
+                        "versionInfo": "https://region-b.geo-1.identity.hpcloudsvc.com:35357/v3/",
+                        "versionList": "https://region-b.geo-1.identity.hpcloudsvc.com:35357"
+                    }
+                ]
+            },
+            {
+                "name": "Image Management",
+                "type": "image",
+                "endpoints": [
+                    {
+                        "tenantId": "myTenantId",
+                        "publicURL": "https://glance1.uswest.hpcloud.net:9292/v1.0",
+                        "publicURL2": "",
+                        "region": "az-1.region-a.geo-1",
+                        "versionId": "1.0",
+                        "versionInfo": "https://glance1.uswest.hpcloud.net:9292/v1.0/",
+                        "versionList": "https://glance1.uswest.hpcloud.net:9292"
+                    },
+                    {
+                        "tenantId": "myTenantId",
+                        "publicURL": "https://region-a.geo-1.images.hpcloudsvc.com:443/v1.0",
+                        "publicURL2": "",
+                        "region": "region-a.geo-1",
+                        "versionId": "1.0",
+                        "versionInfo": "https://region-a.geo-1.images.hpcloudsvc.com:443/v1.0",
+                        "versionList": "https://region-a.geo-1.images.hpcloudsvc.com:443"
+                    },
+                    {
+                        "tenantId": "myTenantId",
+                        "publicURL": "https://region-b.geo-1.images.hpcloudsvc.com:443/v1.0",
+                        "publicURL2": "",
+                        "region": "region-b.geo-1",
+                        "versionId": "1.0",
+                        "versionInfo": "https://region-b.geo-1.images.hpcloudsvc.com:443/v1.0",
+                        "versionList": "https://region-b.geo-1.images.hpcloudsvc.com:443"
+                    }
+                ]
+            },
+            {
+                "name": "DNS",
+                "type": "hpext:dns",
+                "endpoints": [
+                    {
+                        "tenantId": "myTenantId",
+                        "publicURL": "https://region-a.geo-1.dns.hpcloudsvc.com/v1/",
+                        "publicURL2": "",
+                        "region": "region-a.geo-1",
+                        "versionId": "1",
+                        "versionInfo": "https://region-a.geo-1.dns.hpcloudsvc.com/v1/",
+                        "versionList": "https://region-a.geo-1.dns.hpcloudsvc.com/"
+                    }
+                ]
+            },
+            {
+                "name": "Block Storage",
+                "type": "volume",
+                "endpoints": [
+                    {
+                        "tenantId": "myTenantId",
+                        "publicURL": "https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v1.1/myTenantId",
+                        "publicURL2": "",
+                        "region": "az-1.region-a.geo-1",
+                        "versionId": "1.1",
+                        "versionInfo": "https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v1.1/",
+                        "versionList": "https://az-1.region-a.geo-1.compute.hpcloudsvc.com"
+                    },
+                    {
+                        "tenantId": "myTenantId",
+                        "publicURL": "https://region-a.geo-1.block.hpcloudsvc.com/v1/myTenantId",
+                        "publicURL2": "",
+                        "region": "region-a.geo-1",
+                        "versionId": "1.0",
+                        "versionInfo": "https://region-a.geo-1.block.hpcloudsvc.com/v1",
+                        "versionList": "https://region-a.geo-1.block.hpcloudsvc.com"
+                    },
+                    {
+                        "tenantId": "myTenantId",
+                        "publicURL": "https://region-b.geo-1.block.hpcloudsvc.com/v1/myTenantId",
+                        "publicURL2": "",
+                        "region": "region-b.geo-1",
+                        "versionId": "1.0",
+                        "versionInfo": "https://region-b.geo-1.block.hpcloudsvc.com/v1",
+                        "versionList": "https://region-b.geo-1.block.hpcloudsvc.com"
+                    }
+                ]
+            },
+            {
+                "name": "Compute",
+                "type": "compute",
+                "endpoints": [
+                    {
+                        "tenantId": "myTenantId",
+                        "publicURL": "https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v1.1/myTenantId",
+                        "publicURL2": "https://az-1.region-a.geo-1.ec2-compute.hpcloudsvc.com/services/Cloud",
+                        "region": "az-1.region-a.geo-1",
+                        "versionId": "1.1",
+                        "versionInfo": "https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v1.1/",
+                        "versionList": "https://az-1.region-a.geo-1.compute.hpcloudsvc.com"
+                    },
+                    {
+                        "tenantId": "myTenantId",
+                        "publicURL": "https://region-a.geo-1.compute.hpcloudsvc.com/v2/myTenantId",
+                        "region": "region-a.geo-1",
+                        "versionId": "2",
+                        "versionInfo": "https://region-a.geo-1.compute.hpcloudsvc.com/v2/",
+                        "versionList": "https://region-a.geo-1.compute.hpcloudsvc.com"
+                    },
+                    {
+                        "tenantId": "myTenantId",
+                        "publicURL": "https://region-b.geo-1.compute.hpcloudsvc.com/v2/myTenantId",
+                        "region": "region-b.geo-1",
+                        "versionId": "2",
+                        "versionInfo": "https://region-b.geo-1.compute.hpcloudsvc.com/v2/",
+                        "versionList": "https://region-b.geo-1.compute.hpcloudsvc.com"
+                    }
+                ]
+            }
+        ]
+    }
+}
