@@ -176,7 +176,7 @@ public abstract class BaseComputeServiceLiveTest extends BaseComputeServiceConte
       ComputeServiceContext context = null;
       try {
          Properties overrides = setupProperties();
-         overrides.setProperty(provider + ".identity", "MOMMA");
+         overrides.setProperty(provider + ".identity", "MOM:MA");
          overrides.setProperty(provider + ".credential", "MIA");
          context = newBuilder()
                .modules(ImmutableSet.of(getLoggingModule(), credentialStoreModule))

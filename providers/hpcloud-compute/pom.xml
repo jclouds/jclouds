@@ -33,12 +33,9 @@
 
   <properties>
     <test.hpcloud-compute.endpoint>https://region-a.geo-1.identity.hpcloudsvc.com:35357/v2.0/</test.hpcloud-compute.endpoint>
-    <test.hpcloud-compute.api-version>1.1</test.hpcloud-compute.api-version>
     <test.hpcloud-compute.build-version />
     <!--
-        Identity must be tenantName:userName.  Note that the following
-        credentials are the HP Cloud username and password, not the access
-        key id and secret key.
+        Identity must be "tenantName:accessKey". Credential is "secretKey"
     -->
     <test.hpcloud-compute.identity>FIXME_IDENTITY</test.hpcloud-compute.identity>
     <test.hpcloud-compute.credential>FIXME_CREDENTIAL</test.hpcloud-compute.credential>
