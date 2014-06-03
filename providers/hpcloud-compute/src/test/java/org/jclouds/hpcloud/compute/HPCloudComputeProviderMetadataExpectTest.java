@@ -34,8 +34,8 @@ public class HPCloudComputeProviderMetadataExpectTest extends BaseNovaApiExpectT
 
    public HPCloudComputeProviderMetadataExpectTest() {
       this.provider = "hpcloud-compute";
-      this.identity = "tenant:username";
-      this.credential = "password";
+      this.identity = "tenant:accesskey";
+      this.credential = "secret";
    }
 
    public void testCanGetConfiguredZones() {
@@ -44,7 +44,7 @@ public class HPCloudComputeProviderMetadataExpectTest extends BaseNovaApiExpectT
             .endpoint("https://region-a.geo-1.identity.hpcloudsvc.com:35357/v2.0/tokens")
             .addHeader("Accept", "application/json")
             .payload(payloadFromStringWithContentType(
-                     "{\"auth\":{\"passwordCredentials\":{\"username\":\"username\",\"password\":\"password\"},\"tenantName\":\"tenant\"}}"
+                     "{\"auth\":{\"apiAccessKeyCredentials\":{\"accessKey\":\"accesskey\",\"secretKey\":\"secret\"},\"tenantName\":\"tenant\"}}"
                      , "application/json")).build();
       
 
@@ -53,7 +53,7 @@ public class HPCloudComputeProviderMetadataExpectTest extends BaseNovaApiExpectT
 
       NovaApi whenNovaRegionExists = requestSendsResponse(authenticate, authenticationResponse);
 
-      assertEquals(whenNovaRegionExists.getConfiguredZones(), ImmutableSet.of("az-3.region-a.geo-1", "az-2.region-a.geo-1", "az-1.region-a.geo-1"));
+      assertEquals(whenNovaRegionExists.getConfiguredZones(), ImmutableSet.of("region-a.geo-1", "region-b.geo-1"));
 
    }
 

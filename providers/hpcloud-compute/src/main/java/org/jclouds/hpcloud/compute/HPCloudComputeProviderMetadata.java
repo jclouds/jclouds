@@ -18,6 +18,7 @@ package org.jclouds.hpcloud.compute;
 
 import static org.jclouds.compute.config.ComputeServiceProperties.TEMPLATE;
 import static org.jclouds.compute.config.ComputeServiceProperties.TIMEOUT_NODE_TERMINATED;
+import static org.jclouds.openstack.keystone.v2_0.config.KeystoneProperties.CREDENTIAL_TYPE;
 import static org.jclouds.openstack.keystone.v2_0.config.KeystoneProperties.REQUIRES_TENANT;
 import static org.jclouds.openstack.nova.v2_0.config.NovaProperties.AUTO_ALLOCATE_FLOATING_IPS;
 import static org.jclouds.openstack.nova.v2_0.config.NovaProperties.AUTO_GENERATE_KEYPAIRS;
@@ -26,6 +27,7 @@ import java.net.URI;
 import java.util.Properties;
 
 import org.jclouds.hpcloud.compute.config.HPCloudComputeServiceContextModule;
+import org.jclouds.openstack.keystone.v2_0.config.CredentialTypes;
 import org.jclouds.openstack.keystone.v2_0.config.KeystoneAuthenticationModule;
 import org.jclouds.openstack.keystone.v2_0.config.MappedAuthenticationApiModule;
 import org.jclouds.openstack.keystone.v2_0.config.KeystoneAuthenticationModule.ZoneModule;
@@ -66,9 +68,12 @@ public class HPCloudComputeProviderMetadata extends BaseProviderMetadata {
       properties.setProperty(TIMEOUT_NODE_TERMINATED, 60 * 1000 + "");
 
       properties.setProperty(REQUIRES_TENANT, "true");
+      properties.setProperty(CREDENTIAL_TYPE, CredentialTypes.API_ACCESS_KEY_CREDENTIALS);
+
       properties.setProperty(AUTO_ALLOCATE_FLOATING_IPS, "true");
       properties.setProperty(AUTO_GENERATE_KEYPAIRS, "true");
-      properties.setProperty(TEMPLATE, "osFamily=UBUNTU,osVersionMatches=1[012].[01][04],os64Bit=true,locationId=az-2.region-a.geo-1");
+      properties.setProperty(TEMPLATE, "osFamily=UBUNTU,osVersionMatches=1[24].[01][04]," +
+            "imageNameMatches=.*LTS.*,os64Bit=true,locationId=region-a.geo-1");
       return properties;
    }
    
@@ -78,6 +83,9 @@ public class HPCloudComputeProviderMetadata extends BaseProviderMetadata {
          id("hpcloud-compute")
          .name("HP Cloud Compute Services")
          .apiMetadata(new NovaApiMetadata().toBuilder()
+                  .identityName("${tenantName}:${accessKey}")
+                  .credentialName("${secretKey}")
+                  .version("2")
                   .endpointName("identity service url ending in /v2.0/")
                   .defaultEndpoint("https://region-a.geo-1.identity.hpcloudsvc.com:35357/v2.0/")
                   .defaultModules(ImmutableSet.<Class<? extends Module>>builder()
@@ -89,9 +97,9 @@ public class HPCloudComputeProviderMetadata extends BaseProviderMetadata {
                                               .add(HPCloudComputeServiceContextModule.class).build())
                   .build())
          .homepage(URI.create("http://hpcloud.com"))
-         .console(URI.create("https://manage.hpcloud.com/compute"))
+         .console(URI.create("https://horizon.hpcloud.com/"))
          .linkedServices("hpcloud-compute", "hpcloud-objectstorage")
-         .iso3166Codes("US-NV")
+         .iso3166Codes("US-NV", "US-VA")
          .endpoint("https://region-a.geo-1.identity.hpcloudsvc.com:35357/v2.0/")
          .defaultProperties(HPCloudComputeProviderMetadata.defaultProperties());
       }

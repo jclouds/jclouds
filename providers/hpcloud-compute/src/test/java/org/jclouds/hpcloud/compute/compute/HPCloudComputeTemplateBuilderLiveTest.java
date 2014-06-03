@@ -18,6 +18,7 @@ package org.jclouds.hpcloud.compute.compute;
 
 import static org.jclouds.compute.util.ComputeServiceUtils.getCores;
 import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertTrue;
 
 import java.util.Set;
 
@@ -47,12 +48,13 @@ public class HPCloudComputeTemplateBuilderLiveTest extends BaseTemplateBuilderLi
          public boolean apply(OsFamilyVersion64Bit input) {
             switch (input.family) {
                case UBUNTU:
-                  return (input.version.equals("") || input.version.equals("12.04") || input.version.matches("^1[01].*")) && input.is64Bit;
+                  return (input.version.equals("") || input.version.matches("(10.04)|(11.10)|(12.04)|(12.10)|(13.04)|(13.10)")) && input.is64Bit;
                case DEBIAN:
-                  return input.is64Bit && !input.version.equals("5.0");
+                  return input.is64Bit && !input.version.matches("(5.[0-9])|(6.[0-9])|(7.[0-9])");
                case CENTOS:
-                  return (input.version.equals("") || input.version.equals("5.6") || input.version.equals("6.0"))
-                           && input.is64Bit;
+                  return (input.version.equals("") || input.version.matches("(5.0)|(5.8)|(6.3)|(6.5)")) && input.is64Bit;
+               case WINDOWS:
+                  return input.version.equals("") || input.version.equals("2008") || (input.version.equals("2008 R2") && input.is64Bit);
                default:
                   return false;
             }
@@ -67,17 +69,17 @@ public class HPCloudComputeTemplateBuilderLiveTest extends BaseTemplateBuilderLi
       assertEquals(defaultTemplate.getImage().getOperatingSystem().is64Bit(), true);
       assertEquals(defaultTemplate.getImage().getOperatingSystem().getVersion(), "12.04");
       assertEquals(defaultTemplate.getImage().getOperatingSystem().getFamily(), OsFamily.UBUNTU);
-      assertEquals(defaultTemplate.getImage().getName(), "Ubuntu Precise 12.04 LTS Server 64-bit 20120424");
+      assertTrue(defaultTemplate.getImage().getName().startsWith("Ubuntu Server 12.04"));
       assertEquals(defaultTemplate.getImage().getDefaultCredentials().getUser(), "ubuntu");
-      assertEquals(defaultTemplate.getLocation().getId(), "az-2.region-a.geo-1");
-      assertEquals(defaultTemplate.getImage().getLocation().getId(), "az-2.region-a.geo-1");
-      assertEquals(defaultTemplate.getHardware().getLocation().getId(), "az-2.region-a.geo-1");
+      assertEquals(defaultTemplate.getLocation().getId(), "region-a.geo-1");
+      assertEquals(defaultTemplate.getImage().getLocation().getId(), "region-a.geo-1");
+      assertEquals(defaultTemplate.getHardware().getLocation().getId(), "region-a.geo-1");
       assertEquals(defaultTemplate.getOptions().as(NovaTemplateOptions.class).shouldAutoAssignFloatingIp(), true);
       assertEquals(getCores(defaultTemplate.getHardware()), 1.0d);
    }
 
    @Override
    protected Set<String> getIso3166Codes() {
-      return ImmutableSet.<String> of("US-NV");
+      return ImmutableSet.<String> of("US-NV", "US-VA");
    }
 }
