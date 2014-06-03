@@ -79,8 +79,7 @@ public class VolumeAndSnapshotApiLiveTest extends BaseCinderApiLiveTest {
    public void testCreateVolume() {
       CreateVolumeOptions options = CreateVolumeOptions.Builder
             .name(name)
-            .description("description of test volume")
-            .availabilityZone(zone);
+            .description("description of test volume");
       testVolume = volumeApi.create(100, options);
       
       assertTrue(VolumePredicates.awaitAvailable(volumeApi).apply(testVolume));
