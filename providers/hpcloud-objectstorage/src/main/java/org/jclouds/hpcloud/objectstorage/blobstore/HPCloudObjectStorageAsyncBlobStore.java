@@ -16,8 +16,10 @@
  */
 package org.jclouds.hpcloud.objectstorage.blobstore;
 
+import static com.google.common.util.concurrent.Futures.immediateFuture;
 import static com.google.common.util.concurrent.Futures.transform;
 
+import java.net.URI;
 import java.util.Set;
 
 import javax.inject.Inject;
@@ -80,20 +82,14 @@ public class HPCloudObjectStorageAsyncBlobStore extends SwiftAsyncBlobStore {
    @Override
    public ListenableFuture<Boolean> createContainerInLocation(Location location, final String container,
             CreateContainerOptions options) {
-
-      ListenableFuture<Boolean> returnVal = createContainerInLocation(location, container);
-      if (options.isPublicRead())
-         return transform(createContainerInLocation(location, container), new Function<Boolean, Boolean>() {
-
-            @Override
-            public Boolean apply(Boolean input) {
-               if (Boolean.TRUE.equals(input)) {
-                  return enableAndCache.apply(container) != null;
-               }
-               return false;
+      if (options.isPublicRead()) {
+         return transform(immediateFuture(enableAndCache.apply(container)), new Function<URI, Boolean>() {
+            public Boolean apply(URI from) {
+               return from != null;
             }
-
          }, userExecutor);
-      return returnVal;
+      }
+
+      return createContainerInLocation(location, container);
    }
 }

@@ -16,8 +16,11 @@
  */
 package org.jclouds.blobstore.integration.internal;
 
+import static java.util.concurrent.TimeUnit.SECONDS;
 import static org.jclouds.blobstore.options.CreateContainerOptions.Builder.publicRead;
+import static org.jclouds.util.Predicates2.retry;
 import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertTrue;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
@@ -25,11 +28,13 @@ import java.util.Collections;
 import java.util.List;
 import java.util.logging.Logger;
 
+import com.google.common.net.HostAndPort;
 import org.jclouds.blobstore.BlobStore;
 import org.jclouds.blobstore.domain.BlobMetadata;
 import org.jclouds.blobstore.domain.StorageMetadata;
 import org.jclouds.domain.Location;
 import org.jclouds.javax.annotation.Nullable;
+import org.jclouds.predicates.SocketOpen;
 import org.jclouds.util.Strings2;
 import org.testng.SkipException;
 import org.testng.annotations.Test;
@@ -70,7 +75,11 @@ public class BaseContainerLiveTest extends BaseBlobStoreIntegrationTest {
 
          BlobMetadata metadata = view.getBlobStore().blobMetadata(containerName, "hello");
 
-         assert metadata.getPublicUri() != null : metadata;
+         assertTrue(metadata.getPublicUri() != null, metadata.toString());
+
+         SocketOpen socketOpen = context.utils().injector().getInstance(SocketOpen.class);
+         Predicate<HostAndPort> socketTester = retry(socketOpen, 1200, 10, SECONDS);
+         assertTrue(socketTester.apply(HostAndPort.fromParts(metadata.getPublicUri().getHost(),80)), metadata.getPublicUri().toString());
 
          assertEquals(Strings2.toStringAndClose(view.utils().http().get(metadata.getPublicUri())), TEST_STRING);
 
