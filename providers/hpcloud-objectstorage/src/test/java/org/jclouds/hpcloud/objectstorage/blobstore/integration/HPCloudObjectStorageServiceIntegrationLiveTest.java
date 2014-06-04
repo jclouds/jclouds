@@ -19,6 +19,7 @@ package org.jclouds.hpcloud.objectstorage.blobstore.integration;
 import java.util.Set;
 
 import org.jclouds.openstack.swift.blobstore.integration.SwiftServiceIntegrationLiveTest;
+import org.testng.SkipException;
 import org.testng.annotations.Test;
 
 import com.google.common.collect.ImmutableSet;
@@ -31,7 +32,11 @@ public class HPCloudObjectStorageServiceIntegrationLiveTest extends SwiftService
 
    @Override
    protected Set<String> getIso3166Codes() {
-      return ImmutableSet.<String> of("US-NV");
+      return ImmutableSet.<String> of("US-NV", "US-VA");
    }
+
+   @Override
+   @Test
+   public void testAllLocations() { throw new SkipException("Locations are ignored"); }
 
 }

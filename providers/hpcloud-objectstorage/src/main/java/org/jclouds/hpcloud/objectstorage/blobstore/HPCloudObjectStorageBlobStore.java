@@ -45,7 +45,7 @@ import com.google.common.base.Supplier;
 @Singleton
 public class HPCloudObjectStorageBlobStore extends SwiftBlobStore {
 
-   private EnableCDNAndCache enableAndCache;
+   private EnableCDNAndCache enableCDNAndCache;
 
    @Inject
    protected HPCloudObjectStorageBlobStore(BlobStoreContext context, BlobUtils blobUtils,
@@ -54,23 +54,19 @@ public class HPCloudObjectStorageBlobStore extends SwiftBlobStore {
             BlobStoreListContainerOptionsToListContainerOptions container2ContainerListOptions,
             ContainerToResourceList container2ResourceList, ObjectToBlob object2Blob, BlobToObject blob2Object,
             ObjectToBlobMetadata object2BlobMd, BlobToHttpGetOptions blob2ObjectGetOptions,
-            Provider<FetchBlobMetadata> fetchBlobMetadataProvider, EnableCDNAndCache enableAndCache,
+            Provider<FetchBlobMetadata> fetchBlobMetadataProvider, EnableCDNAndCache enableCDNAndCache,
             Provider<MultipartUploadStrategy> multipartUploadStrategy) {
       super(context, blobUtils, defaultLocation, locations, sync, container2ResourceMd, container2ContainerListOptions,
                container2ResourceList, object2Blob, blob2Object, object2BlobMd, blob2ObjectGetOptions,
                fetchBlobMetadataProvider, multipartUploadStrategy);
-      this.enableAndCache = enableAndCache;
+      this.enableCDNAndCache = enableCDNAndCache;
 
    }
 
    @Override
    public boolean createContainerInLocation(Location location, String container, CreateContainerOptions options) {
-      try {
-         return createContainerInLocation(location, container);
-      } finally {
-         if (options.isPublicRead())
-            enableAndCache.apply(container);
-      }
+      // Enabling CDN will create the container if it does not exist
+      return options.isPublicRead() ? enableCDNAndCache.apply(container) != null : createContainerInLocation(location, container);
    }
 
 }

@@ -130,8 +130,8 @@ public class CDNContainer implements Comparable<CDNContainer> {
    private final String referrerAcl;
    private final String useragentAcl;
 
-   @ConstructorProperties({ "name", "cdnEnabled", "ttl", "cdnUri", "cdnSslUri", "referrerAcl", "useragentAcl", 
-                            "logRetention" })
+   @ConstructorProperties({ "name", "cdn_enabled", "ttl", "x-cdn-uri", "x-cdn-ssl-uri", "referrerAcl", "useragentAcl",
+                            "log_retention" })
    protected CDNContainer(@Nullable String name, boolean cdnEnabled, long ttl, @Nullable URI CDNUri,
            @Nullable URI CDNSslUri, @Nullable String referrerAcl, @Nullable String useragentAcl, 
            boolean logRetention) {

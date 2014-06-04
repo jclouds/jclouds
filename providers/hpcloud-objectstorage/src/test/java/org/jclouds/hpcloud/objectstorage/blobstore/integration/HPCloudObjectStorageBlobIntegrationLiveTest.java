@@ -18,12 +18,27 @@ package org.jclouds.hpcloud.objectstorage.blobstore.integration;
 
 import org.jclouds.blobstore.domain.Blob;
 import org.jclouds.openstack.swift.blobstore.integration.SwiftBlobIntegrationLiveTest;
+import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
 @Test(groups = "live")
 public class HPCloudObjectStorageBlobIntegrationLiveTest extends SwiftBlobIntegrationLiveTest {
    public HPCloudObjectStorageBlobIntegrationLiveTest() {
       provider = "hpcloud-objectstorage";
+   }
+
+    /**
+     * HP Cloud Object Storage container naming rules have more restrictions than defaults
+     * @see <a href="http://docs.hpcloud.com/api/object-storage#naming" />
+     */
+   @DataProvider(name = "delete")
+   public Object[][] createData() {
+      if (System.getProperty("os.name").toLowerCase().contains("windows")) {
+         return new Object[][] { { "normal" }, { "sp ace" } };
+      } else {
+         return new Object[][] { { "normal" }, { "sp ace" }, { "qu?stion" }, { "unic₪de" }, { "path/foo" }, { "colon:" },
+               { "asteri*k" }, { "p|pe" } };
+      }
    }
 
    @Override

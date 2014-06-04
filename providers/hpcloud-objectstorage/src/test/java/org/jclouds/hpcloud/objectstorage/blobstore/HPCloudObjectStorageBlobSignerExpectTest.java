@@ -44,37 +44,37 @@ import com.google.inject.Module;
 public class HPCloudObjectStorageBlobSignerExpectTest extends BaseBlobSignerExpectTest {
 
    public HPCloudObjectStorageBlobSignerExpectTest() {
-      identity = "12346637803162:identity";
+      identity = "myTenantName:apiaccesskey";
    }
 
    @Override
    protected HttpRequest getBlob() {
       return HttpRequest.builder().method("GET")
-            .endpoint("https://objects.jclouds.org/v1.0/40806637803162/container/name")
-            .addHeader("X-Auth-Token", "Auth_4f173437e4b013bee56d1007").build();
+            .endpoint("https://region-a.geo-1.objects.hpcloudsvc.com/v1/myTenantId/container/name")
+            .addHeader("X-Auth-Token", "myToken").build();
    }
 
    @Override
    protected HttpRequest getBlobWithTime() {
       return HttpRequest.builder().method("GET")
-            .endpoint("https://objects.jclouds.org/v1.0/40806637803162/container/name?temp_url_sig=40806637803162%3Aidentity%3Ada88bc31122f0d0806b1c7bf71cd3af5c5d5b94c&temp_url_expires=123456792")
+            .endpoint("https://region-a.geo-1.objects.hpcloudsvc.com/v1/myTenantId/container/name?temp_url_sig=myTenantId%3Aapiaccesskey%3A5620ad176e6dd08f25e7ae34f72e5fd98d1b89b1&temp_url_expires=123456792")
             .build();
    }
 
    @Override
    protected HttpRequest getBlobWithOptions() {
       return HttpRequest.builder().method("GET")
-            .endpoint("https://objects.jclouds.org/v1.0/40806637803162/container/name")
-            .addHeader("X-Auth-Token", "Auth_4f173437e4b013bee56d1007").addHeader("Range", "bytes=0-1").build();
+            .endpoint("https://region-a.geo-1.objects.hpcloudsvc.com/v1/myTenantId/container/name")
+            .addHeader("X-Auth-Token", "myToken").addHeader("Range", "bytes=0-1").build();
    }
 
    @Override
    protected HttpRequest putBlob() {
       return HttpRequest.builder().method("PUT")
-            .endpoint("https://objects.jclouds.org/v1.0/40806637803162/container/name")
+            .endpoint("https://region-a.geo-1.objects.hpcloudsvc.com/v1/myTenantId/container/name")
             .addHeader("ETag", "00020408")
             .addHeader("Expect", "100-continue")
-            .addHeader("X-Auth-Token", "Auth_4f173437e4b013bee56d1007")
+            .addHeader("X-Auth-Token", "myToken")
             .addHeader("X-Delete-At", "1")
             .build();
    }
@@ -82,7 +82,7 @@ public class HPCloudObjectStorageBlobSignerExpectTest extends BaseBlobSignerExpe
    @Override
    protected HttpRequest putBlobWithTime() {
       return HttpRequest.builder().method("PUT")
-            .endpoint("https://objects.jclouds.org/v1.0/40806637803162/container/name?temp_url_sig=40806637803162%3Aidentity%3Ac90269245ab0a316d5ea5e654d4c2a975fb4bf77&temp_url_expires=123456792")
+            .endpoint("https://region-a.geo-1.objects.hpcloudsvc.com/v1/myTenantId/container/name?temp_url_sig=myTenantId%3Aapiaccesskey%3A04dc6071fbbf8e1696eaceb61a3fe49874abb71d&temp_url_expires=123456792")
             .addHeader("Expect", "100-continue")
             .build();
    }
@@ -90,8 +90,8 @@ public class HPCloudObjectStorageBlobSignerExpectTest extends BaseBlobSignerExpe
    @Override
    protected HttpRequest removeBlob() {
       return HttpRequest.builder().method("DELETE")
-            .endpoint("https://objects.jclouds.org/v1.0/40806637803162/container/name")
-            .addHeader("X-Auth-Token", "Auth_4f173437e4b013bee56d1007").build();
+            .endpoint("https://region-a.geo-1.objects.hpcloudsvc.com/v1/myTenantId/container/name")
+            .addHeader("X-Auth-Token", "myToken").build();
    }
 
    /**
@@ -107,7 +107,7 @@ public class HPCloudObjectStorageBlobSignerExpectTest extends BaseBlobSignerExpe
             .addHeader("Accept", "application/json")
             .payload(
                   payloadFromStringWithContentType(
-                        "{\"auth\":{\"passwordCredentials\":{\"username\":\"identity\",\"password\":\"credential\"},\"tenantName\":\"12346637803162\"}}",
+                        "{\"auth\":{\"apiAccessKeyCredentials\":{\"accessKey\":\"apiaccesskey\",\"secretKey\":\"credential\"},\"tenantName\":\"myTenantName\"}}",
                         "application/json")).build();
 
       HttpResponse authenticationResponse = HttpResponse.builder().statusCode(200)
@@ -118,7 +118,7 @@ public class HPCloudObjectStorageBlobSignerExpectTest extends BaseBlobSignerExpe
             .builder()
             .method("HEAD")
             .endpoint("https://objects.jclouds.org/v1.0/40806637803162/")
-            .addHeader("X-Auth-Token", "Auth_4f173437e4b013bee56d1007").build();
+            .addHeader("X-Auth-Token", "myToken").build();
 
       HttpResponse temporaryKeyResponse = HttpResponse.builder().statusCode(200)
             .addHeader(ACCOUNT_TEMPORARY_URL_KEY, "TEMPORARY_KEY").build();

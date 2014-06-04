@@ -36,9 +36,7 @@
     <test.hpcloud-objectstorage.api-version>1.0</test.hpcloud-objectstorage.api-version>
     <test.hpcloud-objectstorage.build-version />
     <!--
-        Identity must be tenantName:userName.  Note that the following
-        credentials are the HP Cloud username and password, not the access
-        key id and secret key.
+        Identity must be "tenantName:accessKey".  Credential is "secretKey".
     -->
     <test.hpcloud-objectstorage.identity>FIXME_IDENTITY</test.hpcloud-objectstorage.identity>
     <test.hpcloud-objectstorage.credential>FIXME_CREDENTIAL</test.hpcloud-objectstorage.credential>

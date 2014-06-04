@@ -37,7 +37,7 @@ public class HPCloudObjectStorageBlobStoreExpectTest extends BaseHPCloudObjectSt
 
     public void testListObjectsWhenResponseIs2xx() throws Exception {
         Map<HttpRequest, HttpResponse> requestResponseMap = ImmutableMap.<HttpRequest, HttpResponse> builder().put(
-                 keystoneAuthWithUsernameAndPassword, responseWithKeystoneAccess).build();
+                 keystoneAuthWithAccessKeyAndSecretKey, responseWithKeystoneAccess).build();
 
         BlobStore clientWhenLocationsExist = requestsSendResponses(requestResponseMap);
 

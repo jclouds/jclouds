@@ -17,15 +17,17 @@
 package org.jclouds.hpcloud.objectstorage;
 
 import static org.jclouds.openstack.keystone.v2_0.config.KeystoneProperties.REQUIRES_TENANT;
+import static org.jclouds.openstack.keystone.v2_0.config.KeystoneProperties.CREDENTIAL_TYPE;
 
 import java.net.URI;
 import java.util.Properties;
 
+import org.jclouds.openstack.keystone.v2_0.config.CredentialTypes;
 import org.jclouds.providers.ProviderMetadata;
 import org.jclouds.providers.internal.BaseProviderMetadata;
 
 /**
- * Implementation of {@link org.jclouds.types.ProviderMetadata} for StratoGen VMware hosting
+ * Implementation of {@link org.jclouds.types.ProviderMetadata} for HP Cloud
  */
 public class HPCloudObjectStorageProviderMetadata extends BaseProviderMetadata {
 
@@ -49,6 +51,8 @@ public class HPCloudObjectStorageProviderMetadata extends BaseProviderMetadata {
    public static Properties defaultProperties() {
       Properties properties = new Properties();
       properties.setProperty(REQUIRES_TENANT, "true");
+      properties.setProperty(CREDENTIAL_TYPE, CredentialTypes.API_ACCESS_KEY_CREDENTIALS);
+
       return properties;
    }
    
@@ -61,7 +65,7 @@ public class HPCloudObjectStorageProviderMetadata extends BaseProviderMetadata {
          .homepage(URI.create("http://hpcloud.com"))
          .console(URI.create("https://manage.hpcloud.com/objects/us-west"))
          .linkedServices("hpcloud-compute", "hpcloud-objectstorage")
-         .iso3166Codes("US-NV")
+         .iso3166Codes("US-NV", "US-VA")
          .endpoint("https://region-a.geo-1.identity.hpcloudsvc.com:35357/v2.0/")
          .defaultProperties(HPCloudObjectStorageProviderMetadata.defaultProperties());
       }

@@ -17,6 +17,7 @@
 package org.jclouds.hpcloud.objectstorage.blobstore.integration;
 
 import org.jclouds.blobstore.integration.internal.BaseContainerLiveTest;
+import org.testng.SkipException;
 import org.testng.annotations.Test;
 
 @Test(groups = { "live" })
@@ -24,4 +25,13 @@ public class HPCloudObjectStorageContainerLiveTest extends BaseContainerLiveTest
    public HPCloudObjectStorageContainerLiveTest() {
       provider = "hpcloud-objectstorage";
    }
+
+   @Override
+   @Test
+   public void testPublicAccessInNonDefaultLocation() { throw new SkipException("Locations are ignored"); }
+
+   @Override
+   @Test
+   public void testPublicAccessInNonDefaultLocationWithBigBlob() { throw new SkipException("Locations are ignored"); }
+
 }
