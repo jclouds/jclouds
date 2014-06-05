@@ -28,6 +28,7 @@ import org.jclouds.compute.domain.Image;
 import org.jclouds.compute.domain.TemplateBuilder;
 import org.jclouds.compute.domain.internal.TemplateBuilderImpl;
 import org.jclouds.compute.options.TemplateOptions;
+import org.jclouds.compute.strategy.GetImageStrategy;
 import org.jclouds.domain.Location;
 
 import com.google.common.base.Supplier;
@@ -40,7 +41,7 @@ public class CloudSigmaTemplateBuilderImpl extends TemplateBuilderImpl {
    public CloudSigmaTemplateBuilderImpl(@Memoized Supplier<Set<? extends Location>> locations,
                                         @Memoized Supplier<Set<? extends Image>> images, @Memoized Supplier<Set<? extends Hardware>> hardwares,
                                         Supplier<Location> defaultLocation2, @Named("DEFAULT") Provider<TemplateOptions> optionsProvider,
-                                        @Named("DEFAULT") Provider<TemplateBuilder> defaultTemplateProvider) {
-      super(locations, images, hardwares, defaultLocation2, optionsProvider, defaultTemplateProvider);
+                                        @Named("DEFAULT") Provider<TemplateBuilder> defaultTemplateProvider, GetImageStrategy getImageStrategy) {
+      super(locations, images, hardwares, defaultLocation2, optionsProvider, defaultTemplateProvider, getImageStrategy);
    }
 }
