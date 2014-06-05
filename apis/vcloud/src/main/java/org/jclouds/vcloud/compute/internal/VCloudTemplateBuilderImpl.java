@@ -28,6 +28,7 @@ import org.jclouds.compute.domain.Image;
 import org.jclouds.compute.domain.TemplateBuilder;
 import org.jclouds.compute.domain.internal.TemplateBuilderImpl;
 import org.jclouds.compute.options.TemplateOptions;
+import org.jclouds.compute.strategy.GetImageStrategy;
 import org.jclouds.domain.Location;
 
 import com.google.common.base.Supplier;
@@ -42,7 +43,7 @@ public class VCloudTemplateBuilderImpl extends TemplateBuilderImpl {
    protected VCloudTemplateBuilderImpl(@Memoized Supplier<Set<? extends Location>> locations,
          @Memoized Supplier<Set<? extends Image>> images, @Memoized Supplier<Set<? extends Hardware>> sizes,
          Supplier<Location> defaultLocation, @Named("DEFAULT") Provider<TemplateOptions> optionsProvider,
-         @Named("DEFAULT") Provider<TemplateBuilder> defaultTemplateProvider) {
-      super(locations, images, sizes, defaultLocation, optionsProvider, defaultTemplateProvider);
+         @Named("DEFAULT") Provider<TemplateBuilder> defaultTemplateProvider, GetImageStrategy getImageStrategy) {
+      super(locations, images, sizes, defaultLocation, optionsProvider, defaultTemplateProvider, getImageStrategy);
    }
 }

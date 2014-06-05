@@ -48,6 +48,7 @@ import org.jclouds.compute.domain.OsFamily;
 import org.jclouds.compute.domain.Template;
 import org.jclouds.compute.domain.TemplateBuilder;
 import org.jclouds.compute.options.TemplateOptions;
+import org.jclouds.compute.strategy.GetImageStrategy;
 import org.jclouds.domain.Location;
 import org.jclouds.domain.LocationBuilder;
 import org.jclouds.domain.LocationScope;
@@ -212,11 +213,13 @@ public class EC2TemplateBuilderTest {
       Provider<TemplateOptions> optionsProvider = createMock(Provider.class);
       Provider<TemplateBuilder> templateBuilderProvider = createMock(Provider.class);
       TemplateOptions defaultOptions = createMock(TemplateOptions.class);
+      GetImageStrategy getImageStrategy = createMock(GetImageStrategy.class);
 
       expect(optionsProvider.get()).andReturn(defaultOptions);
 
       replay(optionsProvider);
       replay(templateBuilderProvider);
+      replay(getImageStrategy);
       Supplier<Set<? extends Location>> locations = Suppliers.<Set<? extends Location>> ofInstance(ImmutableSet
                .<Location> of(location));
       Supplier<Set<? extends Hardware>> sizes = Suppliers.<Set<? extends Hardware>> ofInstance(ImmutableSet
@@ -225,10 +228,10 @@ public class EC2TemplateBuilderTest {
 			      m2_4xlarge().build(), g2_2xlarge().build(), CC1_4XLARGE));
 
       return new EC2TemplateBuilderImpl(locations, images, sizes, Suppliers.ofInstance(location), optionsProvider,
-               templateBuilderProvider, imageCache) {
+               templateBuilderProvider, getImageStrategy, imageCache) {
       };
    }
-   
+
    Function<ComputeMetadata, String> indexer() {
       return new Function<ComputeMetadata, String>() {
          @Override

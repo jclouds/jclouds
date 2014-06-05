@@ -53,6 +53,7 @@ import org.jclouds.compute.domain.TemplateBuilder;
 import org.jclouds.compute.domain.TemplateBuilderSpec;
 import org.jclouds.compute.options.TemplateOptions;
 import org.jclouds.compute.reference.ComputeServiceConstants;
+import org.jclouds.compute.strategy.GetImageStrategy;
 import org.jclouds.domain.Location;
 import org.jclouds.logging.Logger;
 
@@ -60,6 +61,7 @@ import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Function;
 import com.google.common.base.Objects;
 import com.google.common.base.Objects.ToStringHelper;
+import com.google.common.base.Optional;
 import com.google.common.base.Predicate;
 import com.google.common.base.Predicates;
 import com.google.common.base.Supplier;
@@ -85,6 +87,7 @@ public class TemplateBuilderImpl implements TemplateBuilder {
    protected final Supplier<Location> defaultLocation;
    protected final Provider<TemplateOptions> optionsProvider;
    protected final Provider<TemplateBuilder> defaultTemplateProvider;
+   protected final GetImageStrategy getImageStrategy;
 
    @VisibleForTesting
    protected Location location;
@@ -133,13 +136,14 @@ public class TemplateBuilderImpl implements TemplateBuilder {
    protected TemplateBuilderImpl(@Memoized Supplier<Set<? extends Location>> locations,
          @Memoized Supplier<Set<? extends Image>> images, @Memoized Supplier<Set<? extends Hardware>> hardwares,
          Supplier<Location> defaultLocation2, @Named("DEFAULT") Provider<TemplateOptions> optionsProvider,
-         @Named("DEFAULT") Provider<TemplateBuilder> defaultTemplateProvider) {
-      this.locations = locations;
-      this.images = images;
-      this.hardwares = hardwares;
-      this.defaultLocation = defaultLocation2;
-      this.optionsProvider = optionsProvider;
-      this.defaultTemplateProvider = defaultTemplateProvider;
+         @Named("DEFAULT") Provider<TemplateBuilder> defaultTemplateProvider, GetImageStrategy getImageStrategy) {
+      this.locations = checkNotNull(locations, "locations");
+      this.images = checkNotNull(images, "locations");
+      this.hardwares = checkNotNull(hardwares, "hardwares");
+      this.defaultLocation = checkNotNull(defaultLocation2, "defaultLocation2");
+      this.optionsProvider = checkNotNull(optionsProvider, "optionsProvider");
+      this.defaultTemplateProvider = checkNotNull(defaultTemplateProvider, "defaultTemplateProvider");
+      this.getImageStrategy = checkNotNull(getImageStrategy, "getImageStrategy");
    }
 
    static Predicate<Hardware> supportsImagesPredicate(final Iterable<? extends Image> images) {
@@ -727,12 +731,21 @@ public class TemplateBuilderImpl implements TemplateBuilder {
    }
 
    private Image findImageWithId(Set<? extends Image> images) {
-      Image image;
-      // TODO: switch to GetImageStrategy in version 1.5
-      image = tryFind(images, idPredicate).orNull();
-      if (image == null)
-         throwNoSuchElementExceptionAfterLoggingImageIds(format("%s not found", idPredicate), images);
-      return image;
+      // Try find the image in the cache and fallback to the GetImageStrategy
+      // see https://issues.apache.org/jira/browse/JCLOUDS-570
+      Optional<? extends Image> image = tryFind(images, idPredicate);
+      if (!image.isPresent()) {
+         logger.warn("Image %s not found in the image cache. Trying to get it directly...", imageId);
+         // Note that this might generate make a call to the provider instead of using a cache, but
+         // this will be executed rarely, only when an image is not present in the image list but
+         // it actually exists in the provider. It shouldn't be an expensive call so using a cache just for
+         // this corner case is overkill.
+         image = Optional.fromNullable(getImageStrategy.getImage(imageId));
+         if (!image.isPresent()) {
+            throwNoSuchElementExceptionAfterLoggingImageIds(format("%s not found", idPredicate), images);
+         }
+      }
+      return image.get();
    }
 
    private Hardware findHardwareWithId(Set<? extends Hardware> hardwaresToSearch) {

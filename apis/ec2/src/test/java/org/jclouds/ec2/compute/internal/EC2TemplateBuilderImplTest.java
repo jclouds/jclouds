@@ -37,6 +37,7 @@ import org.jclouds.compute.domain.TemplateBuilder;
 import org.jclouds.compute.domain.internal.TemplateBuilderImpl;
 import org.jclouds.compute.domain.internal.TemplateBuilderImplTest;
 import org.jclouds.compute.options.TemplateOptions;
+import org.jclouds.compute.strategy.GetImageStrategy;
 import org.jclouds.domain.Location;
 import org.jclouds.ec2.compute.domain.RegionAndName;
 import org.jclouds.ec2.compute.functions.ImagesToRegionAndIdMap;
@@ -68,7 +69,7 @@ public class EC2TemplateBuilderImplTest extends TemplateBuilderImplTest {
    protected EC2TemplateBuilderImpl createTemplateBuilder(final Image knownImage,
          @Memoized Supplier<Set<? extends Location>> locations, @Memoized final Supplier<Set<? extends Image>> images,
          @Memoized Supplier<Set<? extends Hardware>> sizes, Location defaultLocation,
-         Provider<TemplateOptions> optionsProvider, Provider<TemplateBuilder> templateBuilderProvider) {
+         Provider<TemplateOptions> optionsProvider, Provider<TemplateBuilder> templateBuilderProvider, GetImageStrategy getImageStrategy) {
 
       LoadingCache<RegionAndName, ? extends Image> imageMap;
       if (knownImage != null) {
@@ -88,7 +89,7 @@ public class EC2TemplateBuilderImplTest extends TemplateBuilderImplTest {
       }
 
       return new EC2TemplateBuilderImpl(locations, images, sizes, Suppliers.ofInstance(defaultLocation),
-            optionsProvider, templateBuilderProvider, Suppliers.<LoadingCache<RegionAndName, ? extends Image>>ofInstance(imageMap));
+            optionsProvider, templateBuilderProvider, getImageStrategy, Suppliers.<LoadingCache<RegionAndName, ? extends Image>>ofInstance(imageMap));
    }
 
    @Override
@@ -118,6 +119,7 @@ public class EC2TemplateBuilderImplTest extends TemplateBuilderImplTest {
       TemplateOptions defaultOptions = createMock(TemplateOptions.class);
       Image knownImage = createMock(Image.class);
       OperatingSystem os = createMock(OperatingSystem.class);
+      GetImageStrategy getImageStrategy = createMock(GetImageStrategy.class);
 
       expect(optionsProvider.get()).andReturn(defaultOptions);
 
@@ -137,22 +139,14 @@ public class EC2TemplateBuilderImplTest extends TemplateBuilderImplTest {
       expect(os.getArch()).andReturn("paravirtual").atLeastOnce();
       expect(os.is64Bit()).andReturn(false).atLeastOnce();
 
-      replay(knownImage);
-      replay(os);
-      replay(defaultOptions);
-      replay(optionsProvider);
-      replay(templateBuilderProvider);
+      replay(knownImage, os, defaultOptions, optionsProvider, templateBuilderProvider, getImageStrategy);
 
       TemplateBuilderImpl template = createTemplateBuilder(knownImage, locations, images, sizes, region,
-            optionsProvider, templateBuilderProvider);
+            optionsProvider, templateBuilderProvider, getImageStrategy);
 
       assertEquals(template.imageId("us-east-1/ami").build().getImage(), knownImage);
 
-      verify(knownImage);
-      verify(os);
-      verify(defaultOptions);
-      verify(optionsProvider);
-      verify(templateBuilderProvider);
+      verify(knownImage, os, defaultOptions, optionsProvider, templateBuilderProvider, getImageStrategy);
    }
 
    @SuppressWarnings("unchecked")
@@ -169,29 +163,25 @@ public class EC2TemplateBuilderImplTest extends TemplateBuilderImplTest {
       Provider<TemplateBuilder> templateBuilderProvider = createMock(Provider.class);
       TemplateOptions defaultOptions = createMock(TemplateOptions.class);
       Image knownImage = createMock(Image.class);
+      GetImageStrategy getImageStrategy = createMock(GetImageStrategy.class);
       expect(knownImage.getId()).andReturn("region/ami").anyTimes();
       expect(knownImage.getProviderId()).andReturn("ami").anyTimes();
       expect(knownImage.getLocation()).andReturn(region).anyTimes();
 
       expect(optionsProvider.get()).andReturn(defaultOptions);
 
-      replay(knownImage);
-      replay(defaultOptions);
-      replay(optionsProvider);
-      replay(templateBuilderProvider);
+      replay(knownImage,  defaultOptions, optionsProvider, templateBuilderProvider, getImageStrategy);
 
       TemplateBuilderImpl template = createTemplateBuilder(knownImage, locations, images, sizes, region,
-            optionsProvider, templateBuilderProvider);
+            optionsProvider, templateBuilderProvider, getImageStrategy);
       try {
          template.imageId("ami").build();
          fail("Expected IllegalArgumentException");
       } catch (IllegalArgumentException e) {
 
       }
-      verify(knownImage);
-      verify(defaultOptions);
-      verify(optionsProvider);
-      verify(templateBuilderProvider);
+
+      verify(knownImage,  defaultOptions, optionsProvider, templateBuilderProvider, getImageStrategy);
    }
 
    @SuppressWarnings("unchecked")
@@ -208,6 +198,7 @@ public class EC2TemplateBuilderImplTest extends TemplateBuilderImplTest {
       Provider<TemplateOptions> optionsProvider = createMock(Provider.class);
       Provider<TemplateBuilder> templateBuilderProvider = createMock(Provider.class);
       TemplateOptions defaultOptions = createMock(TemplateOptions.class);
+      GetImageStrategy getImageStrategy = createMock(GetImageStrategy.class);
       Image knownImage = createMock(Image.class);
       expect(knownImage.getId()).andReturn("region/ami").anyTimes();
       expect(knownImage.getProviderId()).andReturn("ami").anyTimes();
@@ -216,22 +207,21 @@ public class EC2TemplateBuilderImplTest extends TemplateBuilderImplTest {
       expect(defaultLocation.getId()).andReturn("region");
       expect(optionsProvider.get()).andReturn(defaultOptions);
 
-      replay(knownImage);
-      replay(defaultOptions);
-      replay(defaultLocation);
-      replay(optionsProvider);
-      replay(templateBuilderProvider);
+      replay(knownImage,  defaultOptions, defaultLocation, optionsProvider, templateBuilderProvider, getImageStrategy);
 
       TemplateBuilderImpl template = createTemplateBuilder(knownImage, locations, images, sizes, defaultLocation,
-            optionsProvider, templateBuilderProvider);
+            optionsProvider, templateBuilderProvider, getImageStrategy);
 
       assertEquals(template.imageId("region/bad").build().getImage(), knownImage);
 
-      verify(knownImage);
-      verify(defaultOptions);
-      verify(defaultLocation);
-      verify(optionsProvider);
-      verify(templateBuilderProvider);
+      verify(knownImage,  defaultOptions, defaultLocation, optionsProvider, templateBuilderProvider, getImageStrategy);
    }
 
+   // The EC2 provider already overrides the getImage method so this test is not useful for EC2
+   @Override
+   @Test(enabled = false)
+   public void testFindImageWithIdDefaultToGetImageStrategy() {
+
+   }
+   
 }

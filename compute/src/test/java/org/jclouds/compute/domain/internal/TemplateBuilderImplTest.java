@@ -16,6 +16,7 @@
  */
 package org.jclouds.compute.domain.internal;
 
+import static org.easymock.EasyMock.anyObject;
 import static org.easymock.EasyMock.createMock;
 import static org.easymock.EasyMock.expect;
 import static org.easymock.EasyMock.replay;
@@ -30,6 +31,7 @@ import java.util.Set;
 
 import javax.inject.Provider;
 
+import org.easymock.EasyMock;
 import org.jclouds.compute.domain.Hardware;
 import org.jclouds.compute.domain.HardwareBuilder;
 import org.jclouds.compute.domain.Image;
@@ -43,6 +45,7 @@ import org.jclouds.compute.domain.TemplateBuilder;
 import org.jclouds.compute.domain.Volume;
 import org.jclouds.compute.options.TemplateOptions;
 import org.jclouds.compute.predicates.ImagePredicates;
+import org.jclouds.compute.strategy.GetImageStrategy;
 import org.jclouds.domain.Location;
 import org.jclouds.domain.LocationBuilder;
 import org.jclouds.domain.LocationScope;
@@ -135,15 +138,15 @@ public class TemplateBuilderImplTest {
       Provider<TemplateOptions> optionsProvider = createMock(Provider.class);
       Provider<TemplateBuilder> templateBuilderProvider = createMock(Provider.class);
       TemplateBuilder defaultTemplate = createMock(TemplateBuilder.class);
+      GetImageStrategy getImageStrategy = createMock(GetImageStrategy.class);
 
-
-      replay(defaultTemplate, optionsProvider, templateBuilderProvider);
+      replay(defaultTemplate, optionsProvider, templateBuilderProvider, getImageStrategy);
 
       TemplateBuilderImpl template = createTemplateBuilder(null, locations, images, hardwares, region,
-               optionsProvider, templateBuilderProvider);
+               optionsProvider, templateBuilderProvider, getImageStrategy);
       assert template.locationPredicate.apply(hardware);
 
-      verify(defaultTemplate, optionsProvider, templateBuilderProvider);
+      verify(defaultTemplate, optionsProvider, templateBuilderProvider, getImageStrategy);
    }
    
    /**
@@ -165,16 +168,17 @@ public class TemplateBuilderImplTest {
       Provider<TemplateOptions> optionsProvider = createMock(Provider.class);
       Provider<TemplateBuilder> templateBuilderProvider = createMock(Provider.class);
       TemplateBuilder defaultTemplate = createMock(TemplateBuilder.class);
+      GetImageStrategy getImageStrategy = createMock(GetImageStrategy.class);
 
-      replay(defaultTemplate, optionsProvider, templateBuilderProvider);
+      replay(defaultTemplate, optionsProvider, templateBuilderProvider, getImageStrategy);
 
       TemplateBuilderImpl template = createTemplateBuilder(null, locations, inputImages, hardwares, region,
-               optionsProvider, templateBuilderProvider);
+               optionsProvider, templateBuilderProvider, getImageStrategy);
       template = templateBuilderPerTestCustomizer.apply(template);
 
       assertEquals(template.resolveImage(hardware, inputImages.get()), expectedBest);
 
-      verify(defaultTemplate, optionsProvider, templateBuilderProvider);
+      verify(defaultTemplate, optionsProvider, templateBuilderProvider, getImageStrategy);
    }
 
    protected void doTestResolveImages(Supplier<Set<? extends Image>> inputImages, Image expectedBest) {
@@ -293,17 +297,18 @@ public class TemplateBuilderImplTest {
       Provider<TemplateOptions> optionsProvider = createMock(Provider.class);
       Provider<TemplateBuilder> templateBuilderProvider = createMock(Provider.class);
       TemplateBuilder defaultTemplate = createMock(TemplateBuilder.class);
+      GetImageStrategy getImageStrategy = createMock(GetImageStrategy.class);
 
       expect(optionsProvider.get()).andReturn(new TemplateOptions());
 
-      replay(defaultTemplate, optionsProvider, templateBuilderProvider);
+      replay(defaultTemplate, optionsProvider, templateBuilderProvider, getImageStrategy);
 
       TemplateBuilderImpl template = createTemplateBuilder(null, locations, images, hardwares, region,
-               optionsProvider, templateBuilderProvider);
+               optionsProvider, templateBuilderProvider, getImageStrategy);
 
       assertEquals(template.smallest().osArchMatches("X86_32").build().getImage(), image);
 
-      verify(defaultTemplate, optionsProvider, templateBuilderProvider);
+      verify(defaultTemplate, optionsProvider, templateBuilderProvider, getImageStrategy);
    }
 
    @SuppressWarnings("unchecked")
@@ -322,21 +327,18 @@ public class TemplateBuilderImplTest {
       Provider<TemplateOptions> optionsProvider = createMock(Provider.class);
       Provider<TemplateBuilder> templateBuilderProvider = createMock(Provider.class);
       TemplateBuilder defaultTemplate = createMock(TemplateBuilder.class);
+      GetImageStrategy getImageStrategy = createMock(GetImageStrategy.class);
 
       expect(optionsProvider.get()).andReturn(new TemplateOptions());
 
-      replay(defaultTemplate);
-      replay(optionsProvider);
-      replay(templateBuilderProvider);
+      replay(defaultTemplate, optionsProvider, templateBuilderProvider, getImageStrategy);
 
       TemplateBuilderImpl template = createTemplateBuilder(null, locations, images, hardwares, region,
-               optionsProvider, templateBuilderProvider);
+               optionsProvider, templateBuilderProvider, getImageStrategy);
 
       template.imageId(getProviderFormatId("imageId")).build();
 
-      verify(defaultTemplate);
-      verify(optionsProvider);
-      verify(templateBuilderProvider);
+      verify(defaultTemplate, optionsProvider, templateBuilderProvider, getImageStrategy);
    }
 
    @SuppressWarnings("unchecked")
@@ -355,17 +357,18 @@ public class TemplateBuilderImplTest {
       Provider<TemplateOptions> optionsProvider = createMock(Provider.class);
       Provider<TemplateBuilder> templateBuilderProvider = createMock(Provider.class);
       TemplateBuilder defaultTemplate = createMock(TemplateBuilder.class);
+      GetImageStrategy getImageStrategy = createMock(GetImageStrategy.class);
 
       expect(optionsProvider.get()).andReturn(new TemplateOptions());
 
-      replay(defaultTemplate, optionsProvider, templateBuilderProvider);
+      replay(defaultTemplate, optionsProvider, templateBuilderProvider, getImageStrategy);
 
       TemplateBuilderImpl template = createTemplateBuilder(null, locations, images, hardwares, region,
-               optionsProvider, templateBuilderProvider);
+               optionsProvider, templateBuilderProvider, getImageStrategy);
 
       template.imageId(getProviderFormatId("imageId")).build();
 
-      verify(defaultTemplate, optionsProvider, templateBuilderProvider);
+      verify(defaultTemplate, optionsProvider, templateBuilderProvider, getImageStrategy);
 
    }
 
@@ -385,20 +388,21 @@ public class TemplateBuilderImplTest {
       Provider<TemplateOptions> optionsProvider = createMock(Provider.class);
       Provider<TemplateBuilder> templateBuilderProvider = createMock(Provider.class);
       TemplateBuilder defaultTemplate = createMock(TemplateBuilder.class);
+      GetImageStrategy getImageStrategy = createMock(GetImageStrategy.class);
 
       expect(optionsProvider.get()).andReturn(new TemplateOptions());
       
-      replay(defaultTemplate, optionsProvider, templateBuilderProvider);
+      replay(defaultTemplate, optionsProvider, templateBuilderProvider, getImageStrategy);
       
       TemplateBuilderImpl template = createTemplateBuilder(image, locations, images, hardwares, region,
-               optionsProvider, templateBuilderProvider);
+               optionsProvider, templateBuilderProvider, getImageStrategy);
       try {
          template.imageId(getProviderFormatId("imageId")).build();
          fail("Expected NoSuchElementException");
       } catch (NoSuchElementException e) {
          // make sure message is succinct
          assertEquals(e.getMessage(), "no hardware profiles support images matching params: idEquals(differentImageId)");
-         verify(defaultTemplate, optionsProvider, templateBuilderProvider);
+         verify(defaultTemplate, optionsProvider, templateBuilderProvider, getImageStrategy);
       }
    }
 
@@ -417,26 +421,21 @@ public class TemplateBuilderImplTest {
       Provider<TemplateOptions> optionsProvider = createMock(Provider.class);
       Provider<TemplateBuilder> templateBuilderProvider = createMock(Provider.class);
       TemplateBuilder defaultTemplate = createMock(TemplateBuilder.class);
+      GetImageStrategy getImageStrategy = createMock(GetImageStrategy.class);
 
       expect(templateBuilderProvider.get()).andReturn(defaultTemplate);
       expect(defaultTemplate.options(from)).andReturn(defaultTemplate);
       expect(defaultTemplate.build()).andReturn(null);
       expect(optionsProvider.get()).andReturn(from).atLeastOnce();
 
-      replay(defaultTemplate);
-      replay(defaultLocation);
-      replay(optionsProvider);
-      replay(templateBuilderProvider);
+      replay(defaultTemplate, defaultLocation, optionsProvider, templateBuilderProvider, getImageStrategy);
 
       TemplateBuilderImpl template = createTemplateBuilder(null, locations, images, hardwares, defaultLocation,
-               optionsProvider, templateBuilderProvider);
+               optionsProvider, templateBuilderProvider, getImageStrategy);
 
       template.options(options).build();
 
-      verify(defaultTemplate);
-      verify(defaultLocation);
-      verify(optionsProvider);
-      verify(templateBuilderProvider);
+      verify(defaultTemplate, defaultLocation, optionsProvider, templateBuilderProvider, getImageStrategy);
    }
 
    @SuppressWarnings("unchecked")
@@ -453,32 +452,27 @@ public class TemplateBuilderImplTest {
       Provider<TemplateOptions> optionsProvider = createMock(Provider.class);
       Provider<TemplateBuilder> templateBuilderProvider = createMock(Provider.class);
       TemplateBuilder defaultTemplate = createMock(TemplateBuilder.class);
+      GetImageStrategy getImageStrategy = createMock(GetImageStrategy.class);
 
       expect(templateBuilderProvider.get()).andReturn(defaultTemplate);
       expect(defaultTemplate.build()).andReturn(null);
 
-      replay(defaultTemplate);
-      replay(defaultLocation);
-      replay(optionsProvider);
-      replay(templateBuilderProvider);
+      replay(defaultTemplate, defaultLocation, optionsProvider, templateBuilderProvider, getImageStrategy);
 
       TemplateBuilderImpl template = createTemplateBuilder(null, locations, images, hardwares, defaultLocation,
-               optionsProvider, templateBuilderProvider);
+               optionsProvider, templateBuilderProvider, getImageStrategy);
 
       template.build();
 
-      verify(defaultTemplate);
-      verify(defaultLocation);
-      verify(optionsProvider);
-      verify(templateBuilderProvider);
+      verify(defaultTemplate, defaultLocation, optionsProvider, templateBuilderProvider, getImageStrategy);
    }
 
    protected TemplateBuilderImpl createTemplateBuilder(Image knownImage, Supplier<Set<? extends Location>> locations,
             Supplier<Set<? extends Image>> images, Supplier<Set<? extends Hardware>> hardwares,
             Location defaultLocation, Provider<TemplateOptions> optionsProvider,
-            Provider<TemplateBuilder> templateBuilderProvider) {
+            Provider<TemplateBuilder> templateBuilderProvider, GetImageStrategy getImageStrategy) {
       TemplateBuilderImpl template = new TemplateBuilderImpl(locations, images, hardwares, Suppliers
-               .ofInstance(defaultLocation), optionsProvider, templateBuilderProvider);
+               .ofInstance(defaultLocation), optionsProvider, templateBuilderProvider, getImageStrategy);
       return template;
    }
 
@@ -499,16 +493,17 @@ public class TemplateBuilderImplTest {
       Provider<TemplateOptions> optionsProvider = createMock(Provider.class);
       Provider<TemplateBuilder> templateBuilderProvider = createMock(Provider.class);
       TemplateOptions defaultOptions = createMock(TemplateOptions.class);
+      GetImageStrategy getImageStrategy = createMock(GetImageStrategy.class);
       expect(optionsProvider.get()).andReturn(from).atLeastOnce();
 
-      replay(defaultOptions, optionsProvider, templateBuilderProvider);
+      replay(defaultOptions, optionsProvider, templateBuilderProvider, getImageStrategy);
 
       TemplateBuilderImpl template = createTemplateBuilder(null, locations, images, hardwares, region,
-               optionsProvider, templateBuilderProvider);
+               optionsProvider, templateBuilderProvider, getImageStrategy);
 
       assertEquals(template.imageId(image.getId()).locationId(provider.getId()).build().getLocation(), region);
 
-      verify(defaultOptions, optionsProvider, templateBuilderProvider);
+      verify(defaultOptions, optionsProvider, templateBuilderProvider, getImageStrategy);
    }
 
    @SuppressWarnings("unchecked")
@@ -522,13 +517,12 @@ public class TemplateBuilderImplTest {
       Provider<TemplateOptions> optionsProvider = createMock(Provider.class);
       Provider<TemplateBuilder> templateBuilderProvider = createMock(Provider.class);
       TemplateOptions defaultOptions = createMock(TemplateOptions.class);
+      GetImageStrategy getImageStrategy = createMock(GetImageStrategy.class);
 
-      replay(defaultOptions);
-      replay(optionsProvider);
-      replay(templateBuilderProvider);
+      replay(defaultOptions, optionsProvider, templateBuilderProvider, getImageStrategy);
 
       TemplateBuilderImpl template = createTemplateBuilder(null, locations, images, hardwares, region,
-               optionsProvider, templateBuilderProvider);
+               optionsProvider, templateBuilderProvider, getImageStrategy);
 
       try {
          template.imageId("foo").locationId("location").build();
@@ -537,9 +531,7 @@ public class TemplateBuilderImplTest {
 
       }
 
-      verify(defaultOptions);
-      verify(optionsProvider);
-      verify(templateBuilderProvider);
+      verify(defaultOptions, optionsProvider, templateBuilderProvider, getImageStrategy);
    }
 
    @SuppressWarnings("unchecked")
@@ -554,14 +546,14 @@ public class TemplateBuilderImplTest {
                .<Hardware> of());
       Provider<TemplateOptions> optionsProvider = createMock(Provider.class);
       Provider<TemplateBuilder> templateBuilderProvider = createMock(Provider.class);
+      GetImageStrategy getImageStrategy = createMock(GetImageStrategy.class);
 
       expect(optionsProvider.get()).andReturn(from).atLeastOnce();
 
-      replay(optionsProvider);
-      replay(templateBuilderProvider);
+      replay(optionsProvider, templateBuilderProvider, getImageStrategy);
 
       TemplateBuilderImpl template = createTemplateBuilder(null, locations, images, hardwares, region,
-               optionsProvider, templateBuilderProvider);
+               optionsProvider, templateBuilderProvider, getImageStrategy);
 
       try {
          template.imageId("foo").options(provideTemplateOptions()).locationId("location").build();
@@ -570,8 +562,7 @@ public class TemplateBuilderImplTest {
 
       }
 
-      verify(optionsProvider);
-      verify(templateBuilderProvider);
+      verify(optionsProvider, templateBuilderProvider, getImageStrategy);
    }
 
    @SuppressWarnings("unchecked")
@@ -584,13 +575,14 @@ public class TemplateBuilderImplTest {
       Provider<TemplateOptions> optionsProvider = createMock(Provider.class);
       Provider<TemplateBuilder> templateBuilderProvider = createMock(Provider.class);
       TemplateOptions defaultOptions = createMock(TemplateOptions.class);
+      GetImageStrategy getImageStrategy = createMock(GetImageStrategy.class);
 
       expect(optionsProvider.get()).andReturn(defaultOptions);
 
-      replay(defaultOptions, optionsProvider, templateBuilderProvider);
+      replay(defaultOptions, optionsProvider, templateBuilderProvider, getImageStrategy);
 
       TemplateBuilderImpl template = createTemplateBuilder(null, locations, images, hardwares, region,
-               optionsProvider, templateBuilderProvider);
+               optionsProvider, templateBuilderProvider, getImageStrategy);
 
       try {
          template.os64Bit(true).build();
@@ -599,7 +591,7 @@ public class TemplateBuilderImplTest {
          assertEquals(e.getMessage(), "no images present!");
       }
 
-      verify(defaultOptions, optionsProvider, templateBuilderProvider);
+      verify(defaultOptions, optionsProvider, templateBuilderProvider, getImageStrategy);
    }
 
    @SuppressWarnings("unchecked")
@@ -612,13 +604,14 @@ public class TemplateBuilderImplTest {
       Provider<TemplateOptions> optionsProvider = createMock(Provider.class);
       Provider<TemplateBuilder> templateBuilderProvider = createMock(Provider.class);
       TemplateOptions defaultOptions = createMock(TemplateOptions.class);
+      GetImageStrategy getImageStrategy = createMock(GetImageStrategy.class);
 
       expect(optionsProvider.get()).andReturn(defaultOptions);
 
-      replay(defaultOptions, optionsProvider, templateBuilderProvider);
+      replay(defaultOptions, optionsProvider, templateBuilderProvider, getImageStrategy);
 
       TemplateBuilderImpl template = createTemplateBuilder(null, locations, images, hardwares, region,
-               optionsProvider, templateBuilderProvider);
+               optionsProvider, templateBuilderProvider, getImageStrategy);
 
       try {
          template.os64Bit(true).build();
@@ -627,7 +620,7 @@ public class TemplateBuilderImplTest {
          assertEquals(e.getMessage(), "no hardware profiles present!");
       }
 
-      verify(defaultOptions, optionsProvider, templateBuilderProvider);
+      verify(defaultOptions, optionsProvider, templateBuilderProvider, getImageStrategy);
    }
 
    @SuppressWarnings("unchecked")
@@ -641,13 +634,15 @@ public class TemplateBuilderImplTest {
       Provider<TemplateOptions> optionsProvider = createMock(Provider.class);
       Provider<TemplateBuilder> templateBuilderProvider = createMock(Provider.class);
       TemplateOptions defaultOptions = createMock(TemplateOptions.class);
+      GetImageStrategy getImageStrategy = createMock(GetImageStrategy.class);
 
       expect(optionsProvider.get()).andReturn(defaultOptions);
+      expect(getImageStrategy.getImage(anyObject(String.class))).andReturn(null);
 
-      replay(defaultOptions, optionsProvider, templateBuilderProvider);
+      replay(defaultOptions, optionsProvider, templateBuilderProvider, getImageStrategy);
 
       TemplateBuilderImpl template = createTemplateBuilder(null, locations, images, hardwares, region,
-               optionsProvider, templateBuilderProvider);
+               optionsProvider, templateBuilderProvider, getImageStrategy);
 
       try {
          template.imageId("region/imageId2").build();
@@ -671,13 +666,14 @@ public class TemplateBuilderImplTest {
       Provider<TemplateOptions> optionsProvider = createMock(Provider.class);
       Provider<TemplateBuilder> templateBuilderProvider = createMock(Provider.class);
       TemplateOptions defaultOptions = createMock(TemplateOptions.class);
+      GetImageStrategy getImageStrategy = createMock(GetImageStrategy.class);
 
       expect(optionsProvider.get()).andReturn(defaultOptions);
 
-      replay(defaultOptions, optionsProvider, templateBuilderProvider);
+      replay(defaultOptions, optionsProvider, templateBuilderProvider, getImageStrategy);
 
       TemplateBuilderImpl template = createTemplateBuilder(null, locations, images, hardwares, region,
-               optionsProvider, templateBuilderProvider);
+               optionsProvider, templateBuilderProvider, getImageStrategy);
 
       try {
          template.imageDescriptionMatches("notDescription").build();
@@ -687,7 +683,7 @@ public class TemplateBuilderImplTest {
          assertEquals(e.getMessage(), "no image matched predicate: Predicates.and(nullEqualToIsParentOrIsGrandparentOfCurrentLocation(),imageDescription(notDescription))");
       }
 
-      verify(defaultOptions, optionsProvider, templateBuilderProvider);
+      verify(defaultOptions, optionsProvider, templateBuilderProvider, getImageStrategy);
    }
 
    protected TemplateOptions provideTemplateOptions() {
@@ -706,13 +702,15 @@ public class TemplateBuilderImplTest {
       Provider<TemplateOptions> optionsProvider = createMock(Provider.class);
       TemplateOptions from = provideTemplateOptions();
       Provider<TemplateBuilder> templateBuilderProvider = createMock(Provider.class);
+      GetImageStrategy getImageStrategy = createMock(GetImageStrategy.class);
 
       expect(optionsProvider.get()).andReturn(from);
+      expect(getImageStrategy.getImage(anyObject(String.class))).andReturn(null);
 
-      replay(defaultLocation, optionsProvider, templateBuilderProvider);
+      replay(defaultLocation, optionsProvider, templateBuilderProvider, getImageStrategy);
 
       TemplateBuilderImpl template = createTemplateBuilder(null, locations, images, hardwares, defaultLocation,
-               optionsProvider, templateBuilderProvider);
+               optionsProvider, templateBuilderProvider, getImageStrategy);
 
       try {
          template.imageId("region/ami").options(provideTemplateOptions()).build();
@@ -735,13 +733,12 @@ public class TemplateBuilderImplTest {
       Location defaultLocation = createMock(Location.class);
       Provider<TemplateOptions> optionsProvider = createMock(Provider.class);
       Provider<TemplateBuilder> templateBuilderProvider = createMock(Provider.class);
+      GetImageStrategy getImageStrategy = createMock(GetImageStrategy.class);
 
-      replay(defaultLocation);
-      replay(optionsProvider);
-      replay(templateBuilderProvider);
+      replay(defaultLocation, optionsProvider, templateBuilderProvider, getImageStrategy);
 
       TemplateBuilderImpl template = createTemplateBuilder(null, locations, images, hardwares, defaultLocation,
-               optionsProvider, templateBuilderProvider);
+               optionsProvider, templateBuilderProvider, getImageStrategy);
 
       template.imageDescriptionMatches("imageDescriptionMatches");
       template.imageNameMatches("imageNameMatches");
@@ -767,9 +764,69 @@ public class TemplateBuilderImplTest {
       assertEquals(template.osFamily, null);
       assertEquals(template.imageId, "myid");
 
-      verify(defaultLocation);
-      verify(optionsProvider);
-      verify(templateBuilderProvider);
+      verify(defaultLocation, optionsProvider, templateBuilderProvider, getImageStrategy);
+   }
+
+   @Test
+   public void testFindImageWithIdDefaultToGetImageStrategy() {
+      final Supplier<Set<? extends Location>> locations = Suppliers.<Set<? extends Location>> ofInstance(ImmutableSet
+            .<Location> of(region));
+      final Supplier<Set<? extends Image>> images = Suppliers.<Set<? extends Image>> ofInstance(ImmutableSet
+            .<Image> of(
+                  new ImageBuilder()
+                        .ids("Ubuntu 11.04 x64")
+                        .name("Ubuntu 11.04 x64")
+                        .description("Ubuntu 11.04 x64")
+                        .location(region)
+                        .status(Status.AVAILABLE)
+                        .operatingSystem(
+                              OperatingSystem.builder().name("Ubuntu 11.04 x64").description("Ubuntu 11.04 x64")
+                                    .is64Bit(true).version("11.04").family(OsFamily.UBUNTU).build()).build(),
+                  new ImageBuilder()
+                        .ids("Ubuntu 11.04 64-bit")
+                        .name("Ubuntu 11.04 64-bit")
+                        .description("Ubuntu 11.04 64-bit")
+                        .location(region)
+                        .status(Status.AVAILABLE)
+                        .operatingSystem(
+                              OperatingSystem.builder().name("Ubuntu 11.04 64-bit").description("Ubuntu 11.04 64-bit")
+                                    .is64Bit(true).version("11.04").family(OsFamily.UBUNTU).build()).build()));
+
+      final Supplier<Set<? extends Hardware>> hardwares = Suppliers.<Set<? extends Hardware>> ofInstance(ImmutableSet
+            .<Hardware> of(
+                  new HardwareBuilder()
+                        .ids(String.format("datacenter(%s)platform(%s)cpuCores(%d)memorySizeMB(%d)diskSizeGB(%d)",
+                              "Falkenberg", "Xen", 1, 512, 5)).ram(512)
+                        .processors(ImmutableList.of(new Processor(1, 1.0)))
+                        .volumes(ImmutableList.<Volume> of(new VolumeImpl((float) 5, true, true))).hypervisor("Xen")
+                        .location(region)
+                        .supportsImage(ImagePredicates.idEquals(image.getId())).build()));
+
+      final Provider<TemplateOptions> optionsProvider = new Provider<TemplateOptions>() {
+         @Override
+         public TemplateOptions get() {
+            return new TemplateOptions();
+         }
+      };
+
+      final GetImageStrategy getImageStrategy = createMock(GetImageStrategy.class);
+
+      expect(getImageStrategy.getImage(image.getId())).andReturn(image);
+      replay(getImageStrategy);
+
+      Provider<TemplateBuilder> templateBuilderProvider = new Provider<TemplateBuilder>() {
+         @Override
+         public TemplateBuilder get() {
+            return createTemplateBuilder(null, locations, images, hardwares, region, optionsProvider, this, getImageStrategy);
+         }
+      };
+
+      // Note that the image provided is not in the image list, but it is the one returned by the GetImagestrategy
+      TemplateBuilder templateBuilder = templateBuilderProvider.get().imageId(image.getId());
+      Template template = templateBuilder.build();
+
+      assertEquals(template.getImage().getId(), image.getId());
+      verify(getImageStrategy);
    }
    
    @SuppressWarnings("unchecked")
@@ -783,13 +840,12 @@ public class TemplateBuilderImplTest {
       Location defaultLocation = createMock(Location.class);
       Provider<TemplateOptions> optionsProvider = createMock(Provider.class);
       Provider<TemplateBuilder> templateBuilderProvider = createMock(Provider.class);
+      GetImageStrategy getImageStrategy = createMock(GetImageStrategy.class);
 
-      replay(defaultLocation);
-      replay(optionsProvider);
-      replay(templateBuilderProvider);
+      replay(defaultLocation, optionsProvider, templateBuilderProvider, getImageStrategy);
 
       TemplateBuilderImpl template = createTemplateBuilder(null, locations, images, hardwares, defaultLocation,
-               optionsProvider, templateBuilderProvider);
+               optionsProvider, templateBuilderProvider, getImageStrategy);
 
 
       template.hypervisorMatches("OpenVZ");
@@ -802,14 +858,11 @@ public class TemplateBuilderImplTest {
       assertEquals(template.hypervisor, null);
 
 
-      verify(defaultLocation);
-      verify(optionsProvider);
-      verify(templateBuilderProvider);
+      verify(defaultLocation, optionsProvider, templateBuilderProvider, getImageStrategy);
    }
 
    @Test
    public void testMatchesHardwareWithIdPredicate() {
-
       final Supplier<Set<? extends Location>> locations = Suppliers.<Set<? extends Location>> ofInstance(ImmutableSet
             .<Location> of(region));
       final Supplier<Set<? extends Image>> images = Suppliers.<Set<? extends Image>> ofInstance(ImmutableSet
@@ -858,11 +911,14 @@ public class TemplateBuilderImplTest {
          }
 
       };
+
+      final GetImageStrategy getImageStrategy = createMock(GetImageStrategy.class);
+
       Provider<TemplateBuilder> templateBuilderProvider = new Provider<TemplateBuilder>() {
 
          @Override
          public TemplateBuilder get() {
-            return createTemplateBuilder(null, locations, images, hardwares, region, optionsProvider, this);
+            return createTemplateBuilder(null, locations, images, hardwares, region, optionsProvider, this, getImageStrategy);
          }
 
       };
@@ -875,13 +931,11 @@ public class TemplateBuilderImplTest {
       Template template = templateBuilder.build();
       assertEquals(template.getHardware().getHypervisor(), "OpenVZ");
       assertEquals(template.getImage().getId(), "Ubuntu 11.04 64-bit");
-
    }
    
 
    @Test
    public void testImageLocationNonDefault() {
-
       final Supplier<Set<? extends Location>> locations = Suppliers.<Set<? extends Location>> ofInstance(ImmutableSet
             .<Location> of(region));
       final Supplier<Set<? extends Image>> images = Suppliers.<Set<? extends Image>> ofInstance(ImmutableSet
@@ -912,11 +966,14 @@ public class TemplateBuilderImplTest {
          }
 
       };
+
+      final GetImageStrategy getImageStrategy = createMock(GetImageStrategy.class);
+
       Provider<TemplateBuilder> templateBuilderProvider = new Provider<TemplateBuilder>() {
 
          @Override
          public TemplateBuilder get() {
-            return createTemplateBuilder(null, locations, images, hardwares, region, optionsProvider, this);
+            return createTemplateBuilder(null, locations, images, hardwares, region, optionsProvider, this, getImageStrategy);
          }
 
       };
@@ -927,12 +984,10 @@ public class TemplateBuilderImplTest {
 
       Template template = templateBuilder.build();
       assertEquals(template.getLocation().getId(), "us-east-2");
-
    }
 
    @Test
    public void testFromSpecWithLoginUser() {
-
       final Supplier<Set<? extends Location>> locations = Suppliers.<Set<? extends Location>> ofInstance(ImmutableSet
             .<Location> of(region));
       final Supplier<Set<? extends Image>> images = Suppliers.<Set<? extends Image>> ofInstance(ImmutableSet
@@ -963,11 +1018,14 @@ public class TemplateBuilderImplTest {
          }
 
       };
+
+      final GetImageStrategy getImageStrategy = createMock(GetImageStrategy.class);
+
       Provider<TemplateBuilder> templateBuilderProvider = new Provider<TemplateBuilder>() {
 
          @Override
          public TemplateBuilder get() {
-            return createTemplateBuilder(null, locations, images, hardwares, region, optionsProvider, this);
+            return createTemplateBuilder(null, locations, images, hardwares, region, optionsProvider, this, getImageStrategy);
          }
 
       };
