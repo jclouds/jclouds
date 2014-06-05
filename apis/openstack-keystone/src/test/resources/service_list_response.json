@@ -1,1 +1,16 @@
-{"OS-KSADM:services": [{"id": "150a35a1e24547fdb4122b7fc90929b0", "type": "network", "name": "neutron", "description": "Network Service"}, {"id": "313b229fcede4a148f5bd11199264f8e", "type": "volume", "name": "cinder", "description": "OpenStack Volume Service"}]}
+{
+    "OS-KSADM:services": [
+        {
+            "id": "150a35a1e24547fdb4122b7fc90929b0",
+            "type": "network",
+            "name": "neutron",
+            "description": "Network Service"
+        },
+        {
+            "id": "313b229fcede4a148f5bd11199264f8e",
+            "type": "volume",
+            "name": "cinder",
+            "description": "OpenStack Volume Service"
+        }
+    ]
+}

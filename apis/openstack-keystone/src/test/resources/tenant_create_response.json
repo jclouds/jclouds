@@ -1,1 +1,8 @@
-{"tenant":{"id":"t1000","name":"jclouds-tenant","description":"jclouds-description","enabled":true}}
+{
+    "tenant": {
+        "id": "t1000",
+        "name": "jclouds-tenant",
+        "description": "jclouds-description",
+        "enabled": true
+    }
+}

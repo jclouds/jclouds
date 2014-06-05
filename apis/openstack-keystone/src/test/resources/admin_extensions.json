@@ -1,1 +1,11 @@
-{"extensions":[{"name":"OS-KSADM","alias":"OS-KSADM","namespace":"http://docs.openstack.org/identity/api/ext/OS-KSADM/v1.0","updated":"2011-08-08T00:00:00+00:00","description":"Keystone Administration Extension"}]}
+{
+    "extensions": [
+        {
+            "name": "OS-KSADM",
+            "alias": "OS-KSADM",
+            "namespace": "http://docs.openstack.org/identity/api/ext/OS-KSADM/v1.0",
+            "updated": "2011-08-08T00:00:00+00:00",
+            "description": "Keystone Administration Extension"
+        }
+    ]
+}

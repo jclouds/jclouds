@@ -1,1 +1,8 @@
-{"user":{"id":"u1000","name":"jqsmith-renamed","email":"john.smith.renamed@example.org","enabled":false}}
+{
+    "user": {
+        "id": "u1000",
+        "name": "jqsmith-renamed",
+        "email": "john.smith.renamed@example.org",
+        "enabled": false
+    }
+}
