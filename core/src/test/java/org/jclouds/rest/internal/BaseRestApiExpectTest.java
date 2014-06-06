@@ -453,13 +453,14 @@ public abstract class BaseRestApiExpectTest<S> {
 
             if (response == null) {
                StringBuilder payload = new StringBuilder("\n");
-               payload.append("the following request is not configured:\n");
+               payload.append("\n----------------------------------------\n");
+               payload.append("The following request is not configured:\n");
                payload.append("----------------------------------------\n");
                payload.append(renderRequest(input));
-               payload.append("----------------------------------------\n");
-               payload.append("configured requests:\n");
+               payload.append("\n----------------------------------------\n");
+               payload.append("Configured requests:\n");
                for (HttpRequest request : requestToResponse.keySet()) {
-                  payload.append("----------------------------------------\n");
+                  payload.append("\n----------------------------------------\n");
                   payload.append(renderRequest(request));
                }
                response = HttpResponse.builder().statusCode(500).message("no response configured for request").payload(
