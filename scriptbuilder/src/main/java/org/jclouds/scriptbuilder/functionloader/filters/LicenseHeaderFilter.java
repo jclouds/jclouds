@@ -29,8 +29,6 @@ import com.google.common.io.LineProcessor;
 
 /**
  * FunctionLoader decorator to filters out license header comments from a file.
- * 
- * @author Ignasi Barrera
  */
 public class LicenseHeaderFilter implements FunctionLoader {
 
@@ -65,7 +63,6 @@ public class LicenseHeaderFilter implements FunctionLoader {
    /**
     * Line by line processor.
     *
-    * @author Ignasi Barrera
     */
    private static class LicenseHeaderProcessor implements LineProcessor<String> {
 

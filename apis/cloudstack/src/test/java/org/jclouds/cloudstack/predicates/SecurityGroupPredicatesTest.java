@@ -33,9 +33,6 @@ import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Iterables;
 
-/**
- * @author Andrew Bayer
- */
 @Test(groups = "unit")
 public class SecurityGroupPredicatesTest {
 

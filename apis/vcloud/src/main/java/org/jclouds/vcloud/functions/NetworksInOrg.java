@@ -30,9 +30,6 @@ import org.jclouds.vcloud.domain.network.OrgNetwork;
 
 import com.google.common.base.Function;
 
-/**
- * @author Adrian Cole
- */
 @Singleton
 public class NetworksInOrg implements Function<Org, Iterable<OrgNetwork>> {
    @Resource

@@ -27,9 +27,6 @@ import org.testng.annotations.Test;
 
 import com.google.common.base.Optional;
 
-/**
- * @author Adrian Cole
- */
 @Test(testName = "UltraWSExceptionTest")
 public class UltraWSExceptionTest extends BaseHandlerTest {
 

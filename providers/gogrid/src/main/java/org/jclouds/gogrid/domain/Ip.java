@@ -29,7 +29,6 @@ import com.google.common.primitives.Longs;
 /**
  * Class Ip
  * 
- * @author Oleksiy Yarmula
 */
 public class Ip implements Comparable<Ip> {
 

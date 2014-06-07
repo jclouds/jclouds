@@ -31,9 +31,6 @@ import org.jclouds.gogrid.domain.JobState;
 import org.jclouds.gogrid.domain.ObjectType;
 import org.jclouds.http.options.BaseHttpRequestOptions;
 
-/**
- * @author Oleksiy Yarmula
- */
 public class GetJobListOptions extends BaseHttpRequestOptions {
 
    public static final GetJobListOptions NONE = new GetJobListOptions();

@@ -23,10 +23,6 @@ import org.jclouds.route53.domain.HostedZone;
 import org.xml.sax.Attributes;
 
 
-/**
- * 
- * @author Adrian Cole
- */
 public class HostedZoneHandler extends ParseSax.HandlerForGeneratedRequestWithResult<HostedZone> {
 
    private StringBuilder currentText = new StringBuilder();

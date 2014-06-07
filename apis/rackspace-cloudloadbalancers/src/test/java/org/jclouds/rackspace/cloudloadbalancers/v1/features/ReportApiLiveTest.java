@@ -41,9 +41,6 @@ import org.testng.annotations.Test;
 import com.google.common.collect.FluentIterable;
 import com.google.common.collect.Iterables;
 
-/**
- * @author Everett Toews
- */
 @Test(groups = "live", singleThreaded = true, testName = "ReportApiLiveTest")
 public class ReportApiLiveTest extends BaseCloudLoadBalancersApiLiveTest {
    private LoadBalancer lb;

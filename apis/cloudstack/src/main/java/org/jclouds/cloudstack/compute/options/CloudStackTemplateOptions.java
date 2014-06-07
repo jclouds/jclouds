@@ -45,8 +45,6 @@ import com.google.common.collect.Sets;
  * templateBuilder.options(inboundPorts(22, 80, 8080, 443));
  * Set&lt;? extends NodeMetadata&gt; set = client.createNodesInGroup(tag, 2, templateBuilder.build());
  * </pre>
- * 
- * @author Adrian Cole
  */
 public class CloudStackTemplateOptions extends TemplateOptions implements Cloneable {
 

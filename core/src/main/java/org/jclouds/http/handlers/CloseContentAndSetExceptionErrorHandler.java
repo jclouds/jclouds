@@ -28,10 +28,6 @@ import org.jclouds.http.HttpResponse;
 import org.jclouds.http.HttpResponseException;
 import org.jclouds.util.Strings2;
 
-/**
- * 
- * @author Adrian Cole
- */
 @Singleton
 public class CloseContentAndSetExceptionErrorHandler implements HttpErrorHandler {
 

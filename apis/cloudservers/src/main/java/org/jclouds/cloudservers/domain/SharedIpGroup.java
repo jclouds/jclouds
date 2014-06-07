@@ -33,7 +33,6 @@ import com.google.common.collect.ImmutableList;
  * the exception of the first server in a shared IP group, servers must be launched into shared IP
  * groups. A server may only be a member of one shared IP group.
  * 
- * @author Adrian Cole
 */
 public class SharedIpGroup {
 

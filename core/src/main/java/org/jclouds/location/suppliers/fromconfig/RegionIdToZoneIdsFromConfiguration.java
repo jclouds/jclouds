@@ -43,8 +43,6 @@ import com.google.common.collect.ImmutableSet;
  * 
  * looks for properties bound to the naming convention jclouds.location.region.{@code regionId}
  * .zones
- * 
- * @author Adrian Cole
  */
 @Singleton
 public class RegionIdToZoneIdsFromConfiguration implements RegionIdToZoneIdsSupplier {

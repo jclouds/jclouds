@@ -25,9 +25,6 @@ import java.util.Date;
 import com.google.common.base.Objects;
 import com.google.common.base.Objects.ToStringHelper;
 
-/**
- * @author Everett Toews
- */
 public class RecordDetail {
    private final String id;
    private final Date created;

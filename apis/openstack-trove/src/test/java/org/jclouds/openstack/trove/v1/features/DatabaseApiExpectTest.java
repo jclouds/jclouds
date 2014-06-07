@@ -32,8 +32,6 @@ import org.testng.annotations.Test;
 
 /**
  * Tests DatabaseApi Guice wiring and parsing
- *
- * @author Zack Shoylev
  */
 @Test(groups = "unit", testName = "DatabaseApiExpectTest")
 public class DatabaseApiExpectTest extends BaseTroveApiExpectTest {

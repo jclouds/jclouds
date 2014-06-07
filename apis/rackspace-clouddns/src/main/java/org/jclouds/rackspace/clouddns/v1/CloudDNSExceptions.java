@@ -22,8 +22,6 @@ import org.jclouds.rackspace.clouddns.v1.domain.Job;
 
 /**
  * Exceptions likely to be encountered when using {@link CloudDNSApi}
- * 
- * @author Everett Toews
  */
 public interface CloudDNSExceptions {
    /**

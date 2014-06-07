@@ -33,8 +33,6 @@ import com.google.common.collect.ImmutableList;
 
 /**
  * Tests behavior of {@code ListLoadBalancerRulesOptions}
- *
- * @author Adrian Cole
  */
 @Test(groups = "unit")
 public class ListLoadBalancerRulesOptionsTest {

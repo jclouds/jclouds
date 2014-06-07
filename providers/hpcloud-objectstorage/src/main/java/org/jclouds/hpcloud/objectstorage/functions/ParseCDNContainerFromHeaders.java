@@ -33,8 +33,6 @@ import com.google.common.base.Splitter;
 
 /**
  * This parses {@link AccountMetadata} from HTTP headers.
- * 
- * @author James Murty
  */
 public class ParseCDNContainerFromHeaders implements
          Function<HttpResponse, CDNContainer>, InvocationContext<ParseCDNContainerFromHeaders> {

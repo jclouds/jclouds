@@ -24,9 +24,6 @@ import org.jclouds.util.Strings2;
 
 /**
  * Represents an error obtained from an HttpResponse.
- * 
- * @author Adrian Cole
- * 
  */
 public class HttpResponseException extends RuntimeException {
 

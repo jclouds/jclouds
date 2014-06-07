@@ -35,11 +35,6 @@ import org.jclouds.rest.binders.BindToStringPayload;
 import com.google.inject.Inject;
 import com.jamesmurty.utils.XMLBuilder;
 
-/**
- * 
- * @author Adrian Cole
- * 
- */
 @Singleton
 public class BindParamsToXmlPayload implements MapBinder {
 

@@ -28,8 +28,6 @@ import com.google.common.base.Objects.ToStringHelper;
  * <p/>
  * A handful of Cloudstack API calls return this structure when there is no domain model data to return - for example,
  * when deleting an object.
- *
- * @author Richard Downer
  */
 public class JobResult {
 

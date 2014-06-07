@@ -41,9 +41,6 @@ import org.xml.sax.SAXException;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 
-/**
- * @author Adrian Cole
- */
 public class VAppTemplateHandler extends ParseSax.HandlerWithResult<VAppTemplate> {
 
    protected final TaskHandler taskHandler;

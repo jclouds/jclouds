@@ -22,10 +22,6 @@ import static org.jclouds.util.SaxUtils.equalsOrSuffix;
 
 import org.jclouds.http.functions.ParseSax;
 
-/**
- * 
- * @author Adrian Cole
- */
 public abstract class ElementTextHandler extends ParseSax.HandlerForGeneratedRequestWithResult<String> {
 
    public static class Guid extends ElementTextHandler {

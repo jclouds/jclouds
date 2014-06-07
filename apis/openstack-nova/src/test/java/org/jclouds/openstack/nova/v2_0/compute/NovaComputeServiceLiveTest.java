@@ -29,10 +29,6 @@ import org.testng.annotations.Test;
 
 import com.google.inject.Module;
 
-/**
- * 
- * @author Adrian Cole
- */
 @Test(groups = "live", singleThreaded = true, testName = "NovaComputeServiceLiveTest")
 public class NovaComputeServiceLiveTest extends BaseComputeServiceLiveTest {
 

@@ -31,8 +31,6 @@ import com.google.common.collect.Maps;
 
 /**
  * Class ResourceLimit
- *
- * @author Vijay Kiran
  */
 public class ResourceLimit {
 

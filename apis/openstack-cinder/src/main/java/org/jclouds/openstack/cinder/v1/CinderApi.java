@@ -35,7 +35,6 @@ import com.google.inject.Provides;
  * Provides synchronous access to Cinder.
  *
  * @see <a href="http://api.openstack.org/">API Doc</a>
- * @author Everett Toews
  */
 public interface CinderApi extends Closeable {
    /**

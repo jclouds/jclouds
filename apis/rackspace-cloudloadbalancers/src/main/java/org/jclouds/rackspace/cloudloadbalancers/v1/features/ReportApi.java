@@ -51,7 +51,6 @@ import org.jclouds.rest.annotations.Transform;
 /**
  * Reporting for load balancers.
  * <p/>
- * @author Everett Toews
  */
 @RequestFilters(AuthenticateRequest.class)
 public interface ReportApi {

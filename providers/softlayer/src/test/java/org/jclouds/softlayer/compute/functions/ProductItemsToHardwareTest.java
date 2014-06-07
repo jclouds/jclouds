@@ -39,8 +39,6 @@ import com.google.inject.Guice;
 
 /**
  * Tests {@code ProductItemsToHardware}
- * 
- * @author Jason King
  */
 @Test(groups = "unit")
 public class ProductItemsToHardwareTest {

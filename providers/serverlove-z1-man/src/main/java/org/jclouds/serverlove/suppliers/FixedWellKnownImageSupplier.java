@@ -35,9 +35,6 @@ import com.google.inject.TypeLiteral;
 
 /**
  * Supplies the pre-installed images.
- * 
- * @author Ignasi Barrera
- * 
  */
 @Singleton
 public class FixedWellKnownImageSupplier implements WellKnownImageSupplier {

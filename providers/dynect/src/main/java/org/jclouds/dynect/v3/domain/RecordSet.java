@@ -33,8 +33,6 @@ import com.google.common.collect.ImmutableList;
 
 /**
  * A set of records which shared the same name, type, and ttl
- * 
- * @author Adrian Cole
  */
 public class RecordSet extends ForwardingList<Value> {
 

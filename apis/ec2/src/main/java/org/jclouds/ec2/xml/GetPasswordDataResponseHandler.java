@@ -23,9 +23,6 @@ import org.jclouds.date.DateCodecFactory;
 import org.jclouds.ec2.domain.PasswordData;
 import org.jclouds.http.functions.ParseSax;
 
-/**
- * @author Richard Downer
- */
 public class GetPasswordDataResponseHandler extends ParseSax.HandlerWithResult<PasswordData> {
    protected final DateCodec dateCodec;
 

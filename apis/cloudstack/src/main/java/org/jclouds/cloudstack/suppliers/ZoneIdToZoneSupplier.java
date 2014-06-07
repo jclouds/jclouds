@@ -32,8 +32,6 @@ import com.google.inject.Inject;
 
 /**
  * Supplies a cache that maps from zone IDs to zones.
- *
- * @author Richard Downer
  */
 public class ZoneIdToZoneSupplier implements Supplier<LoadingCache<String, Zone>> {
    private final LoadingCache<String, Zone> cache;

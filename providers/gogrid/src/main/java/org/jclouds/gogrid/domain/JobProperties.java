@@ -31,7 +31,6 @@ import com.google.common.primitives.Longs;
  * State of a job.
  * 
  * @see <a href="http://wiki.gogrid.com/wiki/index.php/API:Job_State_(Object)"/>
- * @author Oleksiy Yarmula
 */
 public class JobProperties implements Comparable<JobProperties> {
 

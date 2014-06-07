@@ -35,9 +35,6 @@ import com.google.inject.Injector;
 import com.google.inject.Key;
 import com.google.inject.TypeLiteral;
 
-/**
- * @author Adrian Cole
- */
 @Test(groups = "unit")
 public class JsonBallTest {
 

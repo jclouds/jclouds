@@ -28,8 +28,6 @@ import com.google.common.collect.ImmutableSet;
 
 /**
  * Tests behavior of {@code UpdateNetworkOfferingOptions}
- *
- * @author Andrei Savu
  */
 @Test(groups = "unit")
 public class UpdateNetworkOfferingOptionsTest {

@@ -58,8 +58,6 @@ import com.google.common.collect.FluentIterable;
  * Provides synchronous access to Server.
  * <p/>
  *
- * @author Adrian Cole
- * @author Adam Lowe
  * @see <a href="https://github.com/GleSYS/API/wiki/API-Documentation" />
  */
 @RequestFilters(BasicAuthentication.class)

@@ -29,7 +29,6 @@ import org.jclouds.softlayer.features.VirtualGuestApi;
  * <p/>
  * 
  * @see <a href="http://sldn.softlayer.com/article/REST" />
- * @author Adrian Cole
  */
 public interface SoftLayerApi extends Closeable {
 

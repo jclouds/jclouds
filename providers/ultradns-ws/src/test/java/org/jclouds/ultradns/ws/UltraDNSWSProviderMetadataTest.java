@@ -19,10 +19,6 @@ package org.jclouds.ultradns.ws;
 import org.jclouds.providers.internal.BaseProviderMetadataTest;
 import org.testng.annotations.Test;
 
-/**
- * 
- * @author Adrian Cole
- */
 @Test(groups = "unit", testName = "UltraDNSWSProviderMetadataTest")
 public class UltraDNSWSProviderMetadataTest extends BaseProviderMetadataTest {
 

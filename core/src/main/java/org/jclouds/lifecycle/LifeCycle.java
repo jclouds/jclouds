@@ -21,8 +21,6 @@ import javax.annotation.PreDestroy;
 
 /**
  * // TODO: Adrian: Document this!
- *
- * @author Adrian Cole
  */
 public interface LifeCycle {
 

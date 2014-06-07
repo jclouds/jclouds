@@ -39,7 +39,6 @@ import org.jclouds.vcloud.xml.OrgNetworkHandler;
 /**
  * Provides access to Network functionality in vCloud
  * <p/>
- * @author Adrian Cole
  */
 @RequestFilters(AddVCloudAuthorizationAndCookieToRequest.class)
 public interface NetworkApi {

@@ -25,11 +25,6 @@ import org.jclouds.compute.strategy.GetImageStrategy;
 
 import com.google.inject.Inject;
 
-/**
- * 
- * 
- * @author Adrian Cole
- */
 public class AtomicImageDeleted extends TrueIfNullOrDeletedRefreshAndDoubleCheckOnFalse<Image.Status, Image> {
 
    private final GetImageStrategy client;

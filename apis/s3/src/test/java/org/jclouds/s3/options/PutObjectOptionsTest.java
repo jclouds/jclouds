@@ -27,8 +27,6 @@ import com.google.common.collect.Multimap;
 
 /**
  * Tests possible uses of PutObjectOptions and PutObjectOptions.Builder.*
- * 
- * @author Adrian Cole
  */
 @Test(groups = "unit")
 public class PutObjectOptionsTest {

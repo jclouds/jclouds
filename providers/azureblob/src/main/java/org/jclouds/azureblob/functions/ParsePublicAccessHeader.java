@@ -25,10 +25,6 @@ import org.jclouds.http.HttpResponse;
 
 import com.google.common.base.Function;
 
-/**
- * 
- * @author Adrian Cole
- */
 @Singleton
 public class ParsePublicAccessHeader implements Function<HttpResponse, PublicAccess> {
 

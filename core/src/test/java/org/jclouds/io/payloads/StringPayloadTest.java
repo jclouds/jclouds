@@ -23,10 +23,6 @@ import org.testng.annotations.Test;
 
 import com.google.common.base.Charsets;
 
-/**
- * 
- * @author Adrian Cole
- */
 @Test
 public class StringPayloadTest {
    public void testLengthIsCorrectPerUTF8() {

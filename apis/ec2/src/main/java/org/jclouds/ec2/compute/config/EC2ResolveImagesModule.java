@@ -22,9 +22,6 @@ import org.jclouds.ec2.compute.strategy.EC2PopulateDefaultLoginCredentialsForIma
 
 import com.google.inject.AbstractModule;
 
-/**
- * @author Oleksiy Yarmula
- */
 @ResolvesImages
 public class EC2ResolveImagesModule extends AbstractModule {
     

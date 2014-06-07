@@ -28,10 +28,6 @@ import org.testng.annotations.Test;
 
 import com.google.common.collect.ImmutableMap;
 
-/**
- * 
- * @author Adrian Cole
- */
 @Test(groups = { "unit" })
 public class MapToProfileInfoTest {
    public static ProfileInfo ONE = new ProfileInfo.Builder().type(ProfileType.REGULAR)//

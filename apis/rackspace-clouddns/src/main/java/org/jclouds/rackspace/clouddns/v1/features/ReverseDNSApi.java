@@ -59,8 +59,6 @@ import org.jclouds.rest.annotations.Transform;
  * Cloud DNS supports the management of reverse DNS (PTR) records for Rackspace Cloud devices such as Cloud Load
  * Balancers and Cloud Servers (both first generation and next generation). In order to manage the PTR records for
  * Rackspace Cloud devices, the service as well as the device resource URI must be specified along with record details.
- * 
- * @author Everett Toews
  */
 @Endpoint(CloudDNS.class)
 @RequestFilters(AuthenticateRequest.class)

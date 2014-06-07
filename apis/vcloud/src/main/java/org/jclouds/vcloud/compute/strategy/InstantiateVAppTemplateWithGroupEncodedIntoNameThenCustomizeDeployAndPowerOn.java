@@ -62,9 +62,6 @@ import com.google.common.base.Predicate;
 import com.google.common.cache.LoadingCache;
 import com.google.common.collect.ImmutableSet;
 
-/**
- * @author Adrian Cole
- */
 @Singleton
 public class InstantiateVAppTemplateWithGroupEncodedIntoNameThenCustomizeDeployAndPowerOn {
    @Resource

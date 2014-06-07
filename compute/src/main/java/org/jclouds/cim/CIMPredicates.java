@@ -25,10 +25,6 @@ import org.jclouds.cim.ResourceAllocationSettingData.ResourceType;
 import com.google.common.base.Predicate;
 import com.google.common.collect.ImmutableSet;
 
-/**
- * 
- * @author Adrian Cole
- */
 public class CIMPredicates {
 
    /**

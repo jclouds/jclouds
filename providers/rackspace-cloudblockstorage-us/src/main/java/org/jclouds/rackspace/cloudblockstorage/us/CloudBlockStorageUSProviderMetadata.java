@@ -39,8 +39,6 @@ import com.google.inject.Module;
 
 /**
  * Implementation of {@link org.jclouds.types.ProviderMetadata} for Rackspace Next Generation Cloud Block Storage.
- * 
- * @author Everett Toews
  */
 public class CloudBlockStorageUSProviderMetadata extends BaseProviderMetadata {
 

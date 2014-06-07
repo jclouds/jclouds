@@ -45,8 +45,6 @@ import org.jclouds.util.Strings2;
  * This will parse and set an appropriate exception on the command object.
  * 
  * @see AtmosError
- * @author Adrian Cole
- * 
  */
 @Singleton
 public class ParseAtmosErrorFromXmlContent implements HttpErrorHandler {

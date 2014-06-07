@@ -58,8 +58,6 @@ import com.google.inject.Module;
 import com.google.inject.Scopes;
 /**
  * Tests behavior of {@code ElasticStackApi}
- * 
- * @author Adrian Cole
  */
 // NOTE:without testName, this will not call @Before* and fail w/NPE during surefire
 @Test(groups = "unit", testName = "ElasticStackApiTest")

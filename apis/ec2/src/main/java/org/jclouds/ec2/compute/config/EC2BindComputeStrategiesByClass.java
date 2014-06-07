@@ -35,9 +35,6 @@ import org.jclouds.ec2.compute.strategy.EC2RebootNodeStrategy;
 import org.jclouds.ec2.compute.strategy.EC2ResumeNodeStrategy;
 import org.jclouds.ec2.compute.strategy.EC2SuspendNodeStrategy;
 
-/**
- * @author Adrian Cole
- */
 public class EC2BindComputeStrategiesByClass extends BindComputeStrategiesByClass {
    @Override
    protected Class<? extends CreateNodesInGroupThenAddToSet> defineRunNodesAndAddToSetStrategy() {

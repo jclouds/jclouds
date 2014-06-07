@@ -35,8 +35,6 @@ import com.google.inject.Inject;
 
 /**
  * Retrieves all metadata in the blobstore by the most efficient means possible.
- * 
- * @author Adrian Cole
  */
 @Singleton
 public class ConcatenateContainerLists implements ListContainerStrategy {

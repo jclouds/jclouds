@@ -30,10 +30,6 @@ import org.jclouds.vcloud.domain.ReferenceType;
 import com.google.common.base.Function;
 import com.google.common.base.Supplier;
 
-/**
- * 
- * @author Adrian Cole
- */
 @Singleton
 public class DefaultTasksListForOrg implements Function<ReferenceType, ReferenceType> {
    private final Supplier<Map<String, Org>> nameToOrg;

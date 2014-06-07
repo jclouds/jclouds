@@ -26,9 +26,6 @@ import org.jclouds.route53.domain.ResourceRecordSetIterable;
 import org.jclouds.route53.xml.ListResourceRecordSetsResponseHandler;
 import org.testng.annotations.Test;
 
-/**
- * @author Adrian Cole
- */
 // NOTE:without testName, this will not call @Before* and fail w/NPE during
 // surefire
 @Test(groups = "unit", testName = "ListResourceRecordSetsResponseTest")

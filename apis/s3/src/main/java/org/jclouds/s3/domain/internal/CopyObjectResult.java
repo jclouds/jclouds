@@ -29,8 +29,6 @@ import com.google.common.collect.ImmutableMap;
 
 /**
  * Returns the metadata parsable from a bucket listing
- * 
- * @author Adrian Cole
  */
 public class CopyObjectResult implements ObjectMetadata {
 

@@ -56,8 +56,6 @@ import com.google.inject.Provides;
 
 /**
  * Sample test for the behaviour of our Integration Test jetty server.
- * 
- * @author Adrian Cole
  */
 public interface IntegrationTestClient extends Closeable {
    @Target({ ElementType.METHOD })

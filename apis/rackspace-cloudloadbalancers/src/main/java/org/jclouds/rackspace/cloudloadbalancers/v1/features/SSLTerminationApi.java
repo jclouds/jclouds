@@ -63,8 +63,6 @@ import org.jclouds.rest.annotations.WrapWith;
  * decrypted traffic will be sent in clear text over the public internet to the external node(s) and will no longer 
  * be secure.</li>
  * </ol>
- *
- * @author Everett Toews
  */
 @RequestFilters(AuthenticateRequest.class)
 public interface SSLTerminationApi {

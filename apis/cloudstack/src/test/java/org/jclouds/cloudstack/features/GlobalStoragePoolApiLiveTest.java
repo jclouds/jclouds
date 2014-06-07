@@ -31,8 +31,6 @@ import com.google.common.base.Strings;
 
 /**
  * Tests behavior of {@code GlobalStoragePoolApi}
- *
- * @author Richard Downer
  */
 @Test(groups = "live", singleThreaded = true, testName = "GlobalStoragePoolApiLiveTest")
 public class GlobalStoragePoolApiLiveTest extends BaseCloudStackApiLiveTest {

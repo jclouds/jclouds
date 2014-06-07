@@ -28,10 +28,6 @@ import org.jclouds.io.payloads.Part;
 import org.jclouds.io.payloads.Part.PartOptions;
 import org.jclouds.rest.Binder;
 
-/**
- * 
- * @author Adrian Cole
- */
 @Singleton
 public class BindBlobToMultipartForm implements Binder {
 

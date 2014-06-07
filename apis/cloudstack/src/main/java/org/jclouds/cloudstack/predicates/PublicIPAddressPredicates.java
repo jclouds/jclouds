@@ -23,10 +23,6 @@ import org.jclouds.cloudstack.domain.PublicIPAddress;
 import com.google.common.base.Predicate;
 import com.google.common.base.Predicates;
 
-/**
- * 
- * @author Adrian Cole
- */
 public class PublicIPAddressPredicates {
 
    public static final class AssociatedWithNetwork implements Predicate<PublicIPAddress> {

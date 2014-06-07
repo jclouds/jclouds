@@ -31,10 +31,6 @@ import org.jclouds.scriptbuilder.domain.Statement;
 import com.google.common.base.Objects;
 import com.google.inject.assistedinject.Assisted;
 
-/**
- * 
- * @author Adrian Cole
- */
 public class InitializeRunScriptOnNodeOrPlaceInBadMap implements Callable<RunScriptOnNode> {
 
    public interface Factory {

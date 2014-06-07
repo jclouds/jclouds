@@ -28,8 +28,6 @@ import com.google.common.base.Objects.ToStringHelper;
 
 /**
  * Class NIC
- *
- * @author Adrian Cole
  */
 public class NIC {
 

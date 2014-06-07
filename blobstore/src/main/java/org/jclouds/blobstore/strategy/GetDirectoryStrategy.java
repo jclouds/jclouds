@@ -23,8 +23,6 @@ import com.google.inject.ImplementedBy;
 
 /**
  * Gets a directory or throws KeyNotFoundException
- * 
- * @author Adrian Cole
  */
 @ImplementedBy(MarkersGetDirectoryStrategy.class)
 public interface GetDirectoryStrategy {

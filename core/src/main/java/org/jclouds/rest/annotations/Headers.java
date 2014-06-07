@@ -28,7 +28,6 @@ import java.lang.annotation.Target;
  * {@code value}, expanding any variables annotated with {@code PathParam}.
  * 
  * @see PathParam
- * @author Adrian Cole
  */
 @Target( { TYPE, METHOD })
 @Retention(RUNTIME)

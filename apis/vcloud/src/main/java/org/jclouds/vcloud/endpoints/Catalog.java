@@ -25,9 +25,6 @@ import javax.inject.Qualifier;
 
 /**
  * Related to a VCloud Catalog.
- * 
- * @author Adrian Cole
- * 
  */
 @Retention(value = RetentionPolicy.RUNTIME)
 @Target(value = { ElementType.TYPE, ElementType.FIELD, ElementType.PARAMETER, ElementType.METHOD })

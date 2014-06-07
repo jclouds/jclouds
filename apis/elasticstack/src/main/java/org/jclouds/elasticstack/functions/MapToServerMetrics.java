@@ -26,10 +26,6 @@ import org.jclouds.elasticstack.domain.ServerMetrics;
 
 import com.google.common.base.Function;
 
-/**
- * 
- * @author Adrian Cole
- */
 @Singleton
 public class MapToServerMetrics implements Function<Map<String, String>, ServerMetrics> {
    private final Function<Map<String, String>, Map<String, ? extends DriveMetrics>> mapToDriveMetrics;

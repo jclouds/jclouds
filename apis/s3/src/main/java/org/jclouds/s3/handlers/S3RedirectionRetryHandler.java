@@ -35,8 +35,6 @@ import com.google.common.net.HttpHeaders;
 
 /**
  * Handles Retryable responses with error codes in the 3xx range
- * 
- * @author Adrian Cole
  */
 @Singleton
 public class S3RedirectionRetryHandler extends RedirectionRetryHandler {

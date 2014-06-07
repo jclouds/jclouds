@@ -48,8 +48,6 @@ import com.google.common.collect.Multimap;
 /**
  * Provides access to EC2 Elastic IP Addresses via REST API.
  * <p/>
- * 
- * @author Adrian Cole
  */
 @RequestFilters(FormSigner.class)
 @VirtualHost

@@ -24,8 +24,6 @@ import com.google.common.base.Function;
 
 /**
  * Utilities for {@link Message}s
- * 
- * @author Adrian Cole
  */
 public class Messages {
    public static Function<Message, String> toReceiptHandle() {

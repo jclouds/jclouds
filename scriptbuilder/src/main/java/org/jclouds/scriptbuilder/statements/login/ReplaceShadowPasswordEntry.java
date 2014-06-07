@@ -31,8 +31,6 @@ import com.google.common.collect.ImmutableList;
 /**
  * Replaces the password entry for a user in the shadow file, using SHA-512
  * crypt syntax.
- * 
- * @author Adrian Cole
  */
 public class ReplaceShadowPasswordEntry implements Statement {
 

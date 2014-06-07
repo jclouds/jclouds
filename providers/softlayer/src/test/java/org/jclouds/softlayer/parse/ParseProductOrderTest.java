@@ -41,10 +41,6 @@ import com.google.common.collect.Iterables;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 
-/**
- * 
- * @author Jason King
- */
 @Test(groups = "unit", testName = "ParseProductOrderTest")
 public class ParseProductOrderTest extends BaseItemParserTest<ProductOrder> {
 

@@ -23,9 +23,6 @@ import org.jclouds.compute.domain.Image;
 import org.jclouds.ec2.compute.config.EC2BindComputeSuppliersByClass;
 
 import com.google.common.base.Supplier;
-/**
- * @author Aled Sage
- */
 public class AWSEC2BindComputeSuppliersByClass extends EC2BindComputeSuppliersByClass {
    @Override
    protected Class<? extends Supplier<Set<? extends Image>>> defineImageSupplier() {

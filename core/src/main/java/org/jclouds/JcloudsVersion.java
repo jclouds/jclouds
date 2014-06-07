@@ -29,10 +29,6 @@ import org.jclouds.javax.annotation.Nullable;
 
 import com.google.common.annotations.VisibleForTesting;
 
-/**
- * @author Andrew Phillips
- * @author Adrian Cole
- */
 public class JcloudsVersion {
     @VisibleForTesting
     static final String VERSION_RESOURCE_FILE = "META-INF/maven/org.apache.jclouds/jclouds-core/pom.properties";

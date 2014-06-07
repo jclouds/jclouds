@@ -38,9 +38,6 @@ import com.google.common.collect.FluentIterable;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 
-/**
- * @author Zack Shoylev
- */
 @Test(groups = "live", testName = "InstanceApiLiveTest")
 public class InstanceApiLiveTest extends BaseTroveApiLiveTest {
 

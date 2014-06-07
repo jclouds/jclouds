@@ -40,8 +40,6 @@ import com.google.inject.Injector;
 
 /**
  * Tests behavior of {@code OrgNetworkHandler}
- * 
- * @author Adrian Cole
  */
 @Test(groups = "unit")
 public class OrgNetworkHandlerTest {

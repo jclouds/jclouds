@@ -32,8 +32,6 @@ import com.google.common.collect.ImmutableSet;
 
 /**
  * Tests behavior of {@code BindNetworkConnectionSectionToXmlPayload}
- * 
- * @author Adrian Cole
  */
 @Test(groups = "unit", testName = "BindNetworkConnectionSectionToXmlPayloadTest")
 public class BindNetworkConnectionSectionToXmlPayloadTest extends BasePayloadTest {

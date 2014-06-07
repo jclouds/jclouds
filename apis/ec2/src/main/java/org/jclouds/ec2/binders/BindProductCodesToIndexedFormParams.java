@@ -24,8 +24,6 @@ import org.jclouds.rest.Binder;
 
 /**
  * Binds the Iterable to form parameters named with ProductCode.index
- * 
- * @author Adrian Cole
  */
 @Singleton
 public class BindProductCodesToIndexedFormParams implements Binder {

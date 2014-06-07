@@ -45,8 +45,6 @@ import com.google.common.net.HostAndPort;
  * This tests that we can use guest customization as an alternative to bootstrapping with ssh. There
  * are a few advantages to this, including the fact that it can work inside google appengine where
  * network sockets (ssh:22) are prohibited.
- * 
- * @author Adrian Cole
  */
 @Test(groups = "live", enabled = true, singleThreaded = true, testName = "VmApiLiveTest")
 public class VmApiLiveTest extends BaseVCloudApiLiveTest {

@@ -42,8 +42,6 @@ import com.google.common.collect.ImmutableSet;
 
 /**
  * Tests behavior of {@code AWSServerErrorRetryHandler}
- * 
- * @author Andrew Bayer
  */
 @Test(groups = "unit", testName = "AWSServerErrorRetryHandlerTest")
 public class AWSServerErrorRetryHandlerTest {

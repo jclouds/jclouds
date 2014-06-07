@@ -41,9 +41,6 @@ import com.google.inject.Scopes;
 
 /**
  * Configures the GoGrid connection.
- * 
- * @author Adrian Cole
- * @author Oleksiy Yarmula
  */
 @ConfiguresRestClient
 public class GoGridHttpApiModule extends HttpApiModule<GoGridApi> {

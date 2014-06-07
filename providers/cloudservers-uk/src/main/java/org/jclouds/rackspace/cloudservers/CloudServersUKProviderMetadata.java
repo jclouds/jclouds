@@ -27,8 +27,6 @@ import org.jclouds.providers.internal.BaseProviderMetadata;
 
 /**
  * Implementation of {@link org.jclouds.types.ProviderMetadata} for Rackspace Cloud Servers UK.
- * 
- * @author Adrian Cole
  */
 public class CloudServersUKProviderMetadata extends BaseProviderMetadata {
    

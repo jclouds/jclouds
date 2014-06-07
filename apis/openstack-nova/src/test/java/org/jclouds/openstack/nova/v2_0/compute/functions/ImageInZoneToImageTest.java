@@ -39,8 +39,6 @@ import com.google.common.collect.ImmutableMap;
 
 /**
  * Tests the function that transforms nova-specific images to generic images.
- * 
- * @author Matt Stephenson, Adrian Cole
  */
 @Test(testName = "ImageInZoneToHardwareTest")
 public class ImageInZoneToImageTest {

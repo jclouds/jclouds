@@ -31,8 +31,6 @@ import com.google.common.collect.Maps;
 
 /**
  * Information about a dimension of the capacity
- *
- * @author Richard Downer
  */
 public class Capacity implements Comparable<Capacity> {
 

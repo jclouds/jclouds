@@ -19,9 +19,6 @@ package org.jclouds.cloudservers.compute.config;
 import org.jclouds.cloudservers.domain.ServerStatus;
 import org.testng.annotations.Test;
 
-/**
- * @author Adrian Cole
- */
 @Test(groups = "unit", testName = "CloudServersComputeServiceContextModuleTest")
 public class CloudServersComputeServiceContextModuleTest {
 

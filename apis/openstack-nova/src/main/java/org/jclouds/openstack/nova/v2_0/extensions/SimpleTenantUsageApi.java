@@ -27,7 +27,6 @@ import com.google.common.collect.FluentIterable;
  * Provides asynchronous access to Simple Tenant Usage via the REST API.
  * <p/>
  *
- * @author Adam Lowe
  * @see SimpleTenantUsageAsyncApi
  */
 @Beta

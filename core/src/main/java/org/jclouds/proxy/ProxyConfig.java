@@ -28,9 +28,6 @@ import com.google.inject.ImplementedBy;
 /**
  * parameters needed to configure {@link java.net.Proxy}. Check presence of
  * {@link #getProxyHost()} to decide if proxy support should even be attempted.
- * 
- * @author Adrian Cole
- * 
  */
 @ImplementedBy(GuiceProxyConfig.class)
 public interface ProxyConfig {

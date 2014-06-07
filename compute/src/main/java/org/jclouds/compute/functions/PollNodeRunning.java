@@ -38,9 +38,6 @@ import com.google.common.base.Stopwatch;
 /**
  * Polls until the node is running or throws {@link IllegalStateException} if
  * this cannot be achieved within the timeout.
- *
- * @author Adrian Cole
- *
  */
 @Named(TIMEOUT_NODE_RUNNING)
 public class PollNodeRunning implements Function<AtomicReference<NodeMetadata>, AtomicReference<NodeMetadata>> {

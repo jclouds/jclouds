@@ -28,10 +28,6 @@ import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
 import com.google.common.util.concurrent.UncheckedExecutionException;
 
-/**
- * 
- * @author Adrian Cole
- */
 @Test(groups = "unit", singleThreaded = true, testName = "CacheLearningTest")
 public class CacheLearningTest {
    @Test

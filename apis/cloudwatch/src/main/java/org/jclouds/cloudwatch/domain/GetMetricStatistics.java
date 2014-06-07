@@ -30,8 +30,6 @@ import com.google.common.collect.Sets;
  * Options use to get statistics for the specified metric.
  *
  * @see <a href="http://docs.amazonwebservices.com/AmazonCloudWatch/latest/APIReference/API_GetMetricStatistics.html" />
- *
- * @author Jeremy Whitlock
  */
 @Beta
 public class GetMetricStatistics {

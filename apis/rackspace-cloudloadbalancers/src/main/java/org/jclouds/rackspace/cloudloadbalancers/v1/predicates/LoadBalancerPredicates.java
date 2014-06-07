@@ -54,8 +54,6 @@ import com.google.common.base.Predicate;
  * }
  * }
  * </pre>
- * 
- * @author Everett Toews
  */
 public class LoadBalancerPredicates {
    /**

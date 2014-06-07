@@ -33,9 +33,6 @@ import org.xml.sax.SAXException;
 
 import com.google.common.collect.Sets;
 
-/**
- * @author Adrian Cole
- */
 public class TasksListHandler extends ParseSax.HandlerWithResult<TasksList> {
 
    private SortedSet<Task> tasks = Sets.newTreeSet();

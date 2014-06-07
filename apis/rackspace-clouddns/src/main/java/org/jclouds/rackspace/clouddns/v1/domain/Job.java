@@ -26,7 +26,6 @@ import com.google.common.base.Optional;
 
 /**
  * @see CloudDNSApi#getJob(String)
- * @author Everett Toews
  */
 public class Job<T> {
    private final String id;

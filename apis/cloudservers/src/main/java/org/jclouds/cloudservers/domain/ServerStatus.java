@@ -30,8 +30,6 @@ package org.jclouds.cloudservers.domain;
  * <ul>
  * <li>[Web Hosting #119335]</li>
  * </ul>
- * 
- * @author Adrian Cole
  */
 public enum ServerStatus {
 

@@ -24,10 +24,6 @@ import org.jclouds.ultradns.ws.UltraDNSWSError;
 
 import com.google.common.base.Optional;
 
-/**
- * 
- * @author Adrian Cole
- */
 public class UltraWSExceptionHandler extends ParseSax.HandlerForGeneratedRequestWithResult<UltraDNSWSError> {
 
    private StringBuilder currentText = new StringBuilder();

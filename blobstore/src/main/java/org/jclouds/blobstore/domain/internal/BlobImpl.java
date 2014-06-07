@@ -33,8 +33,6 @@ import com.google.common.collect.Multimap;
  * of a {@link org.jclouds.blobstore.domain.Value#getInput() value}, a {@link Blob#getKey key and
  * 
  * @link Blob.Metadata#getUserMetadata() metadata}
- * 
- * @author Adrian Cole
  */
 public class BlobImpl extends PayloadEnclosingImpl implements Blob, Comparable<Blob> {
 

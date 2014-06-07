@@ -38,7 +38,6 @@ import org.jclouds.ec2.options.internal.BaseEC2RequestOptions;
  * history = client.getSpotInstanceServices().requestSpotInstancesInRegion("us-east-1",validFrom(yesterday).type("m1.small"));
  * <code>
  * 
- * @author Adrian Cole
  * @see <a href=
  *      "http://docs.amazonwebservices.com/AWSEC2/latest/APIReference/index.html?ApiReference-form-RequestSpotInstances.html"
  *      />

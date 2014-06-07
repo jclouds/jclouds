@@ -30,10 +30,6 @@ import com.google.common.base.Function;
 import com.google.common.base.Optional;
 import com.google.common.cache.LoadingCache;
 
-/**
- * 
- * @author Adrian Cole
- */
 @Singleton
 public class EnableCDNAndCache implements Function<String, URI> {
    private final LoadingCache<String, URI> cdnContainer;

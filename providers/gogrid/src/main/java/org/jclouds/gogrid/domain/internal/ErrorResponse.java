@@ -26,8 +26,6 @@ import com.google.common.collect.ComparisonChain;
 
 /**
  * Class ErrorResponse
- *
- * @author Oleksiy Yarmula
  */
 public class ErrorResponse implements Comparable<ErrorResponse> {
 

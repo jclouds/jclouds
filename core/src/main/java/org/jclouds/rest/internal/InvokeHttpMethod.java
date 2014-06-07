@@ -41,9 +41,6 @@ import com.google.common.base.Objects;
 import com.google.common.base.Optional;
 import com.google.common.util.concurrent.TimeLimiter;
 
-/**
- * @author Adrian Cole
- */
 public class InvokeHttpMethod implements Function<Invocation, Object> {
 
    @Resource

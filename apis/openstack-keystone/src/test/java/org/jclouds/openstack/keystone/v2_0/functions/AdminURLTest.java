@@ -23,9 +23,6 @@ import java.net.URI;
 import org.jclouds.openstack.keystone.v2_0.domain.Endpoint;
 import org.testng.annotations.Test;
 
-/**
- * @author Adam Lowe
- */
 @Test(groups = "unit", testName = "AdminURLTest")
 public class AdminURLTest {
    private final AdminURL fn = new AdminURL();

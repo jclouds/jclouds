@@ -23,7 +23,6 @@ import com.google.common.base.Objects;
 
 /**
  * The IpRange element defines a range of IP addresses available on a network.
- * 
  */
 public class IpRange {
    private final String startAddress;

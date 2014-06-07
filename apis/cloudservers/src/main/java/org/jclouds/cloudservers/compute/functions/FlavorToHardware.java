@@ -28,9 +28,6 @@ import org.jclouds.compute.domain.internal.VolumeImpl;
 import com.google.common.base.Function;
 import com.google.common.collect.ImmutableList;
 
-/**
- * @author Adrian Cole
- */
 @Singleton
 public class FlavorToHardware implements Function<Flavor, Hardware> {
    public Hardware apply(Flavor from) {

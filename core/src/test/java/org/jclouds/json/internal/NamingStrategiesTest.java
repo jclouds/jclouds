@@ -40,9 +40,6 @@ import com.google.common.reflect.Invokable;
 import com.google.gson.FieldNamingStrategy;
 import com.google.gson.annotations.SerializedName;
 
-/**
- * @author Adam Lowe
- */
 @Test(testName = "NamingStrategiesTest")
 public final class NamingStrategiesTest {
 

@@ -26,7 +26,6 @@ import javax.inject.Qualifier;
 /**
  * HP Extension Block Store Service
  * 
- * @author Jeremy Daggett
  * @see <a href="http://docs.openstack.org/api/openstack-typeentity-service/2.0/content/Identity-Service-Concepts-e1362.html"
  *      />
  * @see HPExtensionServiceType#BLOCK_STORE

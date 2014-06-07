@@ -19,10 +19,6 @@ package org.jclouds.gogrid;
 import org.jclouds.providers.internal.BaseProviderMetadataTest;
 import org.testng.annotations.Test;
 
-/**
- * 
- * @author Adrian Cole
- */
 @Test(groups = "unit", testName = "GoGridProviderTest")
 public class GoGridProviderTest extends BaseProviderMetadataTest {
 

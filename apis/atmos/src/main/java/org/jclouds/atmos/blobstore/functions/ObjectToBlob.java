@@ -28,9 +28,6 @@ import org.jclouds.http.HttpUtils;
 
 import com.google.common.base.Function;
 
-/**
- * @author Adrian Cole
- */
 @Singleton
 public class ObjectToBlob implements Function<AtmosObject, Blob> {
    private final Factory blobFactory;

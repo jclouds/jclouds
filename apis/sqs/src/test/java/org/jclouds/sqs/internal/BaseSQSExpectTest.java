@@ -25,10 +25,6 @@ import org.jclouds.sqs.config.SQSHttpApiModule;
 
 import com.google.inject.Module;
 
-/**
- * 
- * @author Adrian Cole
- */
 public class BaseSQSExpectTest<T> extends BaseRestApiExpectTest<T> {
    protected URI queue = URI.create("https://sqs.us-east-1.amazonaws.com/993194456877/adrian-sqs11/");
 

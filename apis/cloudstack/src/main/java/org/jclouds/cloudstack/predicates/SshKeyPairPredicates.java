@@ -24,9 +24,6 @@ import com.google.common.base.Predicate;
 
 /**
  * Predicates handy when working with SshKeyPairs
- * 
- * @author Adam Lowe
- * @author Andrew Bayer
  */
 
 public class SshKeyPairPredicates {

@@ -18,8 +18,6 @@ package org.jclouds.vcloud.reference;
 
 /**
  * Configuration properties and constants used in VCloud connections.
- * 
- * @author Adrian Cole
  */
 public final class VCloudConstants {
    public static final String PROPERTY_VCLOUD_VERSION_SCHEMA = "jclouds.vcloud.version.schema";

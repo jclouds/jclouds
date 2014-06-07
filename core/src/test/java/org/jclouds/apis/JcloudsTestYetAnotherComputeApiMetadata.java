@@ -24,8 +24,6 @@ import org.jclouds.rest.internal.BaseRestApiMetadata;
 
 /**
  * Implementation of @ link org.jclouds.types.ApiMetadata} for testing.
- * 
- * @author Jeremy Whitlock <jwhitlock@apache.org>
  */
 public class JcloudsTestYetAnotherComputeApiMetadata extends BaseRestApiMetadata {
 

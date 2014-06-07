@@ -22,9 +22,6 @@ import java.net.URI;
 
 import org.testng.annotations.Test;
 
-/**
- * @author Adrian Cole
- */
 @Test(groups = "unit", testName = "StatementsTest")
 public class StatementsTest {
 

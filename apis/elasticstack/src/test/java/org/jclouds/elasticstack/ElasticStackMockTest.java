@@ -41,8 +41,6 @@ import com.squareup.okhttp.mockwebserver.RecordedRequest;
 
 /**
  * Mock tests for the {@link ElasticStackApi} class.
- * 
- * @author Ignasi Barrera
  */
 @Test(groups = "unit", testName = "ElasticStackMockTest")
 public class ElasticStackMockTest extends BaseMockWebServerTest {

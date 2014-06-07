@@ -28,9 +28,6 @@ import org.testng.annotations.Test;
 import com.google.common.collect.FluentIterable;
 import com.google.common.collect.ImmutableSet;
 
-/**
- * @author Adrian Cole
- */
 @Test(groups = "unit", testName = "CDNContainersTest")
 public class CDNContainersTest extends BaseItemParserTest<FluentIterable<CDNContainer>> {
 

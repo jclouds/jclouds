@@ -29,8 +29,6 @@ import com.google.inject.Scopes;
 
 /**
  * Configures the domain object mappings needed for all Blob implementations
- * 
- * @author Adrian Cole
  */
 public class BlobStoreObjectModule extends AbstractModule {
 

@@ -27,10 +27,6 @@ import org.jclouds.logging.Logger;
 import com.google.common.base.Function;
 import com.google.common.base.Splitter;
 
-/**
- * 
- * @author Adrian Cole
- */
 @Singleton
 public class MapToStaticIPInfo implements Function<Map<String, String>, StaticIPInfo> {
 

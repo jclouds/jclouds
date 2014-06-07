@@ -25,7 +25,6 @@ import java.net.URI;
  * system.
  * 
  * @see InitMetadata
- * @author Adrian Cole
  */
 public class JavaInitMetadata extends InitMetadata {
    private final String javaHome;

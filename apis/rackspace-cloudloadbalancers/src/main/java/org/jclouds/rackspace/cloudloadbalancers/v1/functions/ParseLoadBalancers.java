@@ -42,9 +42,6 @@ import com.google.common.base.Function;
 import com.google.common.base.Optional;
 import com.google.common.collect.Iterables;
 
-/**
- * @author Adrian Cole
- */
 public class ParseLoadBalancers implements Function<HttpResponse, IterableWithMarker<LoadBalancer>>,
          InvocationContext<ParseLoadBalancers> {
 

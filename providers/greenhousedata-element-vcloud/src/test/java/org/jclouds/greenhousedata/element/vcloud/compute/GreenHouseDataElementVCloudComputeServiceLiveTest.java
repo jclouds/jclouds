@@ -19,11 +19,6 @@ package org.jclouds.greenhousedata.element.vcloud.compute;
 import org.jclouds.vcloud.compute.VCloudComputeServiceLiveTest;
 import org.testng.annotations.Test;
 
-/**
- * 
- * 
- * @author Adrian Cole
- */
 @Test(groups = "live", enabled = true, singleThreaded = true, testName = "GreenHouseDataElementVCloudComputeServiceLiveTest")
 public class GreenHouseDataElementVCloudComputeServiceLiveTest extends VCloudComputeServiceLiveTest {
    public GreenHouseDataElementVCloudComputeServiceLiveTest() {

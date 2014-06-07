@@ -32,8 +32,6 @@ import com.google.common.collect.ImmutableMap.Builder;
 
 /**
  * Tests behavior of {@code BindCloneVAppTemplateParamsToXmlPayload}
- * 
- * @author Adrian Cole
  */
 @Test(groups = "unit")
 public class BindCloneVAppTemplateParamsToXmlPayloadTest extends BasePayloadTest {

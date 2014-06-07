@@ -29,7 +29,6 @@ import com.google.common.base.Objects;
  * organization network to an external IP address and port.
  * 
  * @since vcloud 0.8
- * @author Adrian Cole
  */
 public class PortForwardingRule implements NatRule {
    private final String externalIP;

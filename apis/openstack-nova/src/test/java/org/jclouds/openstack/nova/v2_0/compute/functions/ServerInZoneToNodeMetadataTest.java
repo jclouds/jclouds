@@ -52,8 +52,6 @@ import com.google.inject.Guice;
 /**
  * Tests for the function for transforming a nova specific Server into a generic
  * NodeMetadata object.
- * 
- * @author Matt Stephenson, Adam Lowe, Adrian Cole
  */
 @Test(testName = "ServerInZoneToNodeMetadataTest")
 public class ServerInZoneToNodeMetadataTest {

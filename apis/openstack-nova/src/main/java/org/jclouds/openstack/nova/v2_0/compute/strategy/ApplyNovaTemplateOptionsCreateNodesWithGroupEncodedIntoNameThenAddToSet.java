@@ -56,10 +56,6 @@ import com.google.common.util.concurrent.Futures;
 import com.google.common.util.concurrent.ListenableFuture;
 import com.google.common.util.concurrent.ListeningExecutorService;
 
-/**
- * 
- * @author Adrian Cole
- */
 @Singleton
 public class ApplyNovaTemplateOptionsCreateNodesWithGroupEncodedIntoNameThenAddToSet extends
          CreateNodesWithGroupEncodedIntoNameThenAddToSet {

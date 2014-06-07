@@ -38,10 +38,6 @@ import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 
-/**
- * 
- * @author Adrian Cole
- */
 public class OrgNetworkImpl extends ReferenceTypeImpl implements OrgNetwork {
    @Nullable
    private final ReferenceType org;

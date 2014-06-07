@@ -22,9 +22,6 @@ import org.jclouds.http.HttpRequest;
 
 /**
  * Builds the payload of a Post request.
- * 
- * @author Adrian Cole
- * 
  */
 public interface MapBinder extends Binder {
 

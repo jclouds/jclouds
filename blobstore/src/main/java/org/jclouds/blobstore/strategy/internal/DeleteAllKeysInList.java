@@ -53,9 +53,6 @@ import com.google.inject.Inject;
 
 /**
  * Deletes all keys in the container
- *
- * @author Adrian Cole
- * @author Shrinand Javadekar
  */
 @Singleton
 public class DeleteAllKeysInList implements ClearListStrategy, ClearContainerStrategy {

@@ -31,10 +31,6 @@ import org.testng.annotations.Test;
 import com.google.common.base.Supplier;
 import com.google.inject.Module;
 
-/**
- * 
- * @author Adrian Cole
- */
 @Test(groups = "unit")
 public abstract class BaseGoGridApiTest<T> extends BaseAsyncClientTest<T> {
    @Override

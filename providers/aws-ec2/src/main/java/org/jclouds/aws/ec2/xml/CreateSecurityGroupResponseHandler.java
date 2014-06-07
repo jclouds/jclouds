@@ -18,10 +18,6 @@ package org.jclouds.aws.ec2.xml;
 
 import org.jclouds.http.functions.ParseSax;
 
-/**
- * 
- * @author Adrian Cole
- */
 public class CreateSecurityGroupResponseHandler extends ParseSax.HandlerWithResult<String> {
 
    private StringBuilder currentText = new StringBuilder();

@@ -20,8 +20,6 @@ import org.jclouds.dynect.v3.DynECTApi;
 
 /**
  * Base class for writing DynECT Expect tests
- * 
- * @author Adrian Cole
  */
 public class BaseDynECTApiExpectTest extends BaseDynECTExpectTest<DynECTApi> {
 

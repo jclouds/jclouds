@@ -18,9 +18,6 @@ package org.jclouds.openstack.nova.v2_0.domain.zonescoped;
 
 import com.google.common.base.Objects;
 
-/**
- * @author Inbar Stolberg
- */
 public class ZoneState {
 
    private final boolean available;

@@ -23,7 +23,6 @@ import org.jclouds.openstack.keystone.v2_0.domain.Tenant;
  * Provides synchronous access to the KeyStone Tenant API.
  * <p/>
  * 
- * @author Adam Lowe
  * @see ServiceAsyncApi
  * @see <a href=
  *      "http://docs.openstack.org/api/openstack-identity-service/2.0/content/Service_API_Api_Operations.html"

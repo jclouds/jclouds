@@ -37,9 +37,6 @@ import org.jclouds.softlayer.domain.ProductItemPrice;
 import com.google.common.base.Function;
 import com.google.common.base.Objects;
 
-/**
- * @author Jason King
- */
 @Singleton
 public class ProductItemToImage implements Function<ProductItem, Image> {
 

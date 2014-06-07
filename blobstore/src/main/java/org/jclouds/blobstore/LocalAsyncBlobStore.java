@@ -85,10 +85,6 @@ import com.google.common.util.concurrent.ListeningExecutorService;
  * Implementation of {@link BaseAsyncBlobStore} which uses a pluggable
  * LocalStorageStrategy.
  *
- * @author Adrian Cole
- * @author Alfredo "Rainbowbreeze" Morresi
- * @author Andrew Gaul
- * @author James Murty
  * @deprecated will be removed in jclouds 1.7, as async interfaces are no longer
  *             supported. Please create and use {@link LocalBlobStore}
  */

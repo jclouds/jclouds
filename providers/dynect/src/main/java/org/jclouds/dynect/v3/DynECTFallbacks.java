@@ -25,10 +25,6 @@ import org.jclouds.Fallback;
 
 import com.google.common.util.concurrent.ListenableFuture;
 
-/**
- * 
- * @author Adrian Cole
- */
 public final class DynECTFallbacks {
    private DynECTFallbacks() {
    }

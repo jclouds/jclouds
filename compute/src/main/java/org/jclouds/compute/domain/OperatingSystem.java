@@ -27,8 +27,6 @@ import com.google.common.base.Objects.ToStringHelper;
 
 /**
  * Running Operating system
- * 
- * @author Adrian Cole
  */
 @Beta
 public class OperatingSystem {

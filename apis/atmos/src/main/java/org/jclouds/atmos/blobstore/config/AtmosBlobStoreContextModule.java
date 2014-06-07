@@ -38,8 +38,6 @@ import com.google.inject.Scopes;
 
 /**
  * Configures the {@link AtmosBlobStoreContext}; requires {@link AtmosAsyncBlobStore} bound.
- * 
- * @author Adrian Cole
  */
 public class AtmosBlobStoreContextModule extends AbstractModule {
 

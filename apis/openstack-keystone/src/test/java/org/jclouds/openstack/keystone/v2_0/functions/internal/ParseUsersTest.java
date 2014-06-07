@@ -36,10 +36,6 @@ import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 import com.google.inject.Guice;
 
-/**
- * 
- * @author Adrian Cole
- */
 @Test(testName = "ParseUsersTest")
 public class ParseUsersTest {
 

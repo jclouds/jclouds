@@ -33,7 +33,6 @@ import com.google.common.collect.ImmutableSet;
 /**
  * Information the SimpleTenantUsage extension returns data about each tenant
  * 
- * @author Adam Lowe
 */
 public class SimpleTenantUsage {
 

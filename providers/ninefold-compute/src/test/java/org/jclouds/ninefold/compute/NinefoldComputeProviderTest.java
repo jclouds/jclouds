@@ -22,8 +22,6 @@ import org.testng.annotations.Test;
 
 /**
  * The NinefoldComputeProviderTest tests the {@link NinefoldComputeProviderMetadata} class.
- * 
- * @author Adrian Cole
  */
 @Test(groups = "unit", testName = "NinefoldComputeProviderTest")
 public class NinefoldComputeProviderTest extends BaseProviderMetadataTest {

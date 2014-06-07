@@ -22,11 +22,6 @@ import org.jclouds.blobstore.integration.internal.BaseBlobIntegrationTest;
 import org.testng.SkipException;
 import org.testng.annotations.Test;
 
-/**
- * 
- * @author James Murty
- * @author Adrian Cole
- */
 @Test(groups = { "integration" })
 public class TransientBlobIntegrationTest extends BaseBlobIntegrationTest {
    public TransientBlobIntegrationTest() {

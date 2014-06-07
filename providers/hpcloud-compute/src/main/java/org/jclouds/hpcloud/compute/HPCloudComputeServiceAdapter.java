@@ -33,10 +33,6 @@ import com.google.common.base.Supplier;
 import com.google.common.cache.LoadingCache;
 import com.google.common.collect.Iterables;
 
-/**
- * 
- * @author Adrian Cole
- */
 public class HPCloudComputeServiceAdapter extends NovaComputeServiceAdapter {
 
    @Inject

@@ -25,8 +25,6 @@ import org.testng.annotations.Test;
 
 /**
  * Tests behavior of {@code AccountApi}
- * 
- * @author Adrian Cole
  */
 @Test(groups = "live", singleThreaded = true, testName = "AccountApiLiveTest")
 public class AccountApiLiveTest extends BaseCloudStackApiLiveTest {

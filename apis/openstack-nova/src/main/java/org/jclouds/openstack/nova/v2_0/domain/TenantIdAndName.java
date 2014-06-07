@@ -28,7 +28,6 @@ import com.google.common.base.Objects.ToStringHelper;
 /**
  * Class TenantIdAndName
  * 
- * @author Adrian Cole
 */
 public class TenantIdAndName {
 

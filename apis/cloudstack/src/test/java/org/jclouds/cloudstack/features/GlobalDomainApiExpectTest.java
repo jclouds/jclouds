@@ -31,8 +31,6 @@ import org.testng.annotations.Test;
 
 /**
  * Test the CloudStack GlobalDomainApi
- *
- * @author Andrei Savu
  */
 @Test(groups = "unit", testName = "GlobalDomainApiExpectTest")
 public class GlobalDomainApiExpectTest extends BaseCloudStackExpectTest<GlobalDomainApi> {

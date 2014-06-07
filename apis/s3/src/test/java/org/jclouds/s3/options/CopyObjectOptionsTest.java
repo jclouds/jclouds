@@ -46,8 +46,6 @@ import com.google.common.collect.Multimap;
 
 /**
  * Tests possible uses of CopyObjectOptions and CopyObjectOptions.Builder.*
- * 
- * @author Adrian Cole
  */
 @Test(groups = "unit")
 public class CopyObjectOptionsTest {

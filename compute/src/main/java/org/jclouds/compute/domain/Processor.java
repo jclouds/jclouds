@@ -24,8 +24,6 @@ import com.google.common.collect.ComparisonChain;
 
 /**
  * Processor (or CPU) as a part of {@link Hardware} of a {@link NodeMetadata}
- * 
- * @author Adrian Cole
  */
 public class Processor implements Comparable<Processor> {
    private final double cores;

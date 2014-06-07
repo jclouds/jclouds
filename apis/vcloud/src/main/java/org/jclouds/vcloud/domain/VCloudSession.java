@@ -18,10 +18,6 @@ package org.jclouds.vcloud.domain;
 
 import java.util.Map;
 
-/**
- * 
- * @author Adrian Cole
- */
 public interface VCloudSession {
    String getVCloudToken();
 

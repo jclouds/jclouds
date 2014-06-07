@@ -26,9 +26,6 @@ import javax.inject.Named;
 
 import com.google.common.base.Objects.ToStringHelper;
 
-/**
- * @author Adrian Cole
- */
 public class Record<D extends Map<String, Object>> extends RecordId {
 
    private final int ttl;

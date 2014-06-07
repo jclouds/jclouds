@@ -25,7 +25,6 @@ import com.google.inject.AbstractModule;
 
 /**
  * 
- * @author Adrian Cole
  * @deprecated will be removed in jclouds 1.7, as async interfaces are no longer
  *             supported. please use {@link AuthenticationApiModule}
  */

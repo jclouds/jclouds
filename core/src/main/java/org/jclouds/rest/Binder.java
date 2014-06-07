@@ -20,8 +20,6 @@ import org.jclouds.http.HttpRequest;
 
 /**
  * Adds an payload to a request.
- * 
- * @author Adrian Cole
  */
 public interface Binder {
    <R extends HttpRequest> R bindToRequest(R request, Object input);

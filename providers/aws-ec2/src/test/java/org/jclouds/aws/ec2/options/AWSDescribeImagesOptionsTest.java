@@ -31,8 +31,6 @@ import com.google.common.collect.ImmutableMultimap;
 
 /**
  * Tests possible uses of AWSDescribeImagesOptions and AWSDescribeImagesOptions.Builder.*
- * 
- * @author Adrian Cole
  */
 public class AWSDescribeImagesOptionsTest {
 

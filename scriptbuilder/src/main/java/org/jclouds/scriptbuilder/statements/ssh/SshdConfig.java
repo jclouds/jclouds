@@ -30,8 +30,6 @@ import com.google.common.collect.ImmutableList;
 
 /**
  * Control sshd_config
- * 
- * @author Adrian Cole
  */
 public class SshdConfig implements Statement {
    private static final String sshdConfig = "/etc/ssh/sshd_config";

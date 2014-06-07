@@ -27,8 +27,6 @@ import com.google.common.collect.Multimap;
  * @see <a href=
  *      "http://docs.aws.amazon.com/STS/latest/APIReference/API_GetSessionToken.html"
  *      />
- * 
- * @author Adrian Cole
  */
 public class SessionCredentialsOptions extends BaseHttpRequestOptions implements Cloneable {
 

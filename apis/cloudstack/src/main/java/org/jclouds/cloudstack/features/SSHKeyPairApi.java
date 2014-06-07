@@ -39,7 +39,6 @@ import org.jclouds.rest.annotations.SelectJson;
 /**
  * Provides synchronous access to CloudStack SSHKeyPair features.
  *
- * @author Vijay Kiran
  * @see <a
  *      href="http://download.cloud.com/releases/2.2.0/api_2.2.8/TOC_User.html"
  *      />

@@ -33,9 +33,6 @@ import com.google.inject.Guice;
 import com.google.inject.Provides;
 import com.google.inject.assistedinject.FactoryModuleBuilder;
 
-/**
- * @author Adrian Cole
- */
 @Test(groups = "unit", testName = "V1DefaultRegionIdSupplierTest")
 public class V1DefaultRegionIdSupplierTest {
    private final V1DefaultRegionIdSupplier.Factory factory = Guice.createInjector(new AbstractModule() {

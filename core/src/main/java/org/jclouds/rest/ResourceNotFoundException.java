@@ -18,8 +18,6 @@ package org.jclouds.rest;
 
 /**
  * Thrown when a resource cannot be located.
- * 
- * @author Adrian Cole
  */
 public class ResourceNotFoundException extends RuntimeException {
 

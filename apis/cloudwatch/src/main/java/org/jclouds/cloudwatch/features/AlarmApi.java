@@ -52,7 +52,6 @@ import org.jclouds.rest.annotations.XMLResponseParser;
  * <p/>
  *
  * @see <a href="http://docs.amazonwebservices.com/AmazonCloudWatch/latest/APIReference" />
- * @author Jeremy Whitlock
  */
 @RequestFilters(FormSigner.class)
 @VirtualHost

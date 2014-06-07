@@ -30,12 +30,6 @@ import org.jclouds.rest.binders.BindToJsonPayload;
 
 import com.google.common.collect.ImmutableMap;
 
-/**
- * 
- * 
- * @author Adrian Cole
- * 
- */
 public class CreateSharedIpGroupOptions implements MapBinder {
    @Inject
    private BindToJsonPayload jsonBinder;

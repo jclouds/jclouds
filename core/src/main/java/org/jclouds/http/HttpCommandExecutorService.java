@@ -21,8 +21,6 @@ import com.google.common.util.concurrent.ListenableFuture;
 
 /**
  * Capable of invoking http commands.
- * 
- * @author Adrian Cole
  */
 public interface HttpCommandExecutorService { 
 

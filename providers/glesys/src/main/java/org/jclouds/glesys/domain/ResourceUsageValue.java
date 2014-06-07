@@ -27,7 +27,6 @@ import com.google.common.base.Objects.ToStringHelper;
 /**
  * Detailed information on usage
  *
- * @author Adam Lowe
  * @see org.jclouds.glesys.domain.ServerStatus
  */
 public class ResourceUsageValue {

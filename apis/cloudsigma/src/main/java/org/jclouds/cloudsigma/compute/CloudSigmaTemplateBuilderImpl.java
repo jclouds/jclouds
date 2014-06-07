@@ -33,9 +33,6 @@ import org.jclouds.domain.Location;
 
 import com.google.common.base.Supplier;
 
-/**
- * @author Andrei Savu
- */
 public class CloudSigmaTemplateBuilderImpl extends TemplateBuilderImpl {
    @Inject
    public CloudSigmaTemplateBuilderImpl(@Memoized Supplier<Set<? extends Location>> locations,

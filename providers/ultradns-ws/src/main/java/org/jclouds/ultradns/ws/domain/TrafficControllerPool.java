@@ -22,8 +22,6 @@ import com.google.common.base.Objects;
 
 /**
  * Traffic Controller pools are used to create weighted {@code A} and {@code CNAME} records.
- * 
- * @author Adrian Cole
  */
 public final class TrafficControllerPool {
 

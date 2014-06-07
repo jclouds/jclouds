@@ -30,8 +30,6 @@ import com.google.common.collect.Iterables;
 
 /**
  * Tests behavior of VolumeTypeApi.
- *
- * @author Everett Toews
  */
 @Test(groups = "live", testName = "VolumeTypeApiLiveTest", singleThreaded = true)
 public class VolumeTypeApiLiveTest extends BaseCinderApiLiveTest {

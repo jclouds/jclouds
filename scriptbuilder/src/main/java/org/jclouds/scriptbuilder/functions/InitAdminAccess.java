@@ -22,10 +22,6 @@ import org.jclouds.scriptbuilder.domain.AdminAccessVisitor;
 import org.jclouds.scriptbuilder.statements.login.AdminAccess;
 import org.jclouds.scriptbuilder.statements.login.AdminAccess.Configuration;
 
-/**
- * 
- * @author Adrian Cole
- */
 public class InitAdminAccess extends AdminAccessVisitor {
    private final AdminAccess.Configuration adminAccessConfiguration;
 

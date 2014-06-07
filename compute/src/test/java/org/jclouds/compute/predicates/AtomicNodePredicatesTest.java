@@ -36,8 +36,6 @@ import org.testng.annotations.Test;
 
 /**
  * Tests possible uses of NodePredicates
- * 
- * @author Aled Sage, Adrian Cole
  */
 @Test(singleThreaded = true, testName = "AtomicNodePredicatesTest")
 public class AtomicNodePredicatesTest {

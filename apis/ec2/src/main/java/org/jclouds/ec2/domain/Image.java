@@ -31,7 +31,6 @@ import com.google.common.collect.Sets;
  * 
  * @see <a href="http://docs.amazonwebservices.com/AWSEC2/latest/APIReference/ApiReference-ItemType-DescribeImagesResponseItemType.html"
  *      />
- * @author Adrian Cole
  */
 public class Image implements Comparable<Image> {
 

@@ -34,7 +34,6 @@ import com.google.common.collect.ImmutableSet;
  * sold. All prices are returned in Floating point values measured in US Dollars
  * ($USD).
  *
- * @author Adrian Cole
  * @see <a href=
 "http://sldn.softlayer.com/reference/datatypes/SoftLayer_Product_Item_Price"
 />

@@ -33,8 +33,6 @@ import com.google.inject.Scopes;
 
 /**
  * Contains logic for parsing objects from Strings.
- * 
- * @author Adrian Cole
  */
 public class SaxParserModule extends AbstractModule {
 

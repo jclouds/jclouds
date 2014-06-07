@@ -36,8 +36,6 @@ import org.testng.annotations.Test;
  * This test has been separated out into a separate class as it modifies
  * a system-wide setting (the {@code SecurityManager}) and needs to perform 
  * cleanup to avoid affecting other tests.
- *
- * @author Andrew Phillips
  */
 @Test(singleThreaded = true)
 public class Reflection2CoreJavaClassesTest {

@@ -21,7 +21,6 @@ import com.google.common.collect.ImmutableSet;
 /**
  * Options used to control what port forwarding rules are returned
  *
- * @author Adrian Cole
  * @see <a href=
  *      "http://download.cloud.com/releases/2.2.0/api_2.2.12/global_admin/listPortForwardingRules.html"
  *      />

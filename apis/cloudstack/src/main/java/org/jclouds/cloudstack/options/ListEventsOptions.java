@@ -25,7 +25,6 @@ import com.google.common.collect.ImmutableSet;
 /**
  * Options used to control what events are returned
  *
- * @author Vijay Kiran
  * @see <a href=
  *      "http://download.cloud.com/releases/2.2.0/api_2.2.12/user/listEvents.html"
  *      />

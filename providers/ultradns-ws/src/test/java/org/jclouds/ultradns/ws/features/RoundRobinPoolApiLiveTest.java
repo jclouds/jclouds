@@ -41,9 +41,6 @@ import com.google.common.base.Optional;
 import com.google.common.base.Predicate;
 import com.google.common.collect.FluentIterable;
 
-/**
- * @author Adrian Cole
- */
 @Test(groups = "live", singleThreaded = true, testName = "RoundRobinPoolApiLiveTest")
 public class RoundRobinPoolApiLiveTest extends BaseUltraDNSWSApiLiveTest {
 

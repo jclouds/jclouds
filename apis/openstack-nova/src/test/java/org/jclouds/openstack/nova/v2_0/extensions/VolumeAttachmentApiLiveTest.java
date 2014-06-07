@@ -38,8 +38,6 @@ import com.google.common.collect.Iterables;
 
 /**
  * Tests behavior of Volume Attachment API
- * 
- * @author Everett Toews
  */
 @Test(groups = "live", testName = "VolumeAttachmentApiLiveTest", singleThreaded = true)
 public class VolumeAttachmentApiLiveTest extends BaseNovaApiLiveTest {

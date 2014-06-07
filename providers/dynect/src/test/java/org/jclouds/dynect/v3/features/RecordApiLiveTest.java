@@ -50,9 +50,6 @@ import org.testng.annotations.Test;
 
 import com.google.common.collect.ImmutableList;
 
-/**
- * @author Adrian Cole
- */
 @Test(groups = "live", singleThreaded = true, testName = "RecordApiLiveTest")
 public class RecordApiLiveTest extends BaseDynECTApiLiveTest {
 

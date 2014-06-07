@@ -23,7 +23,6 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * 
  * @see <a href="http://docs.amazonwebservices.com/AWSEC2/latest/APIReference/ApiReference-ItemType-TerminateInstancesResponseInfoType.html"
  *      />
- * @author Adrian Cole
  */
 public class InstanceStateChange implements Comparable<InstanceStateChange> {
 

@@ -40,10 +40,6 @@ import com.google.inject.AbstractModule;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 
-/**
- * 
- * @author Adrian Cole
- */
 @Test(groups = "unit", testName = "BindRestContextWithWildcardExtendsExplicitAndRawTypeTest")
 public class BindRestContextWithWildcardExtendsExplicitAndRawTypeTest {
 

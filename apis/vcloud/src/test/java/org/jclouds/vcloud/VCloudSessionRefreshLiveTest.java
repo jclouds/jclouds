@@ -21,8 +21,6 @@ import org.testng.annotations.Test;
 
 /**
  * Tests session refresh works
- * 
- * @author Adrian Cole
  */
 @Test(groups = "live", singleThreaded = true)
 public class VCloudSessionRefreshLiveTest extends BaseVCloudApiLiveTest {

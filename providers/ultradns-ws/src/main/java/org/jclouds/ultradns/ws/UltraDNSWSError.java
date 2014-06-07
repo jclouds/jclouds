@@ -22,9 +22,6 @@ import static java.lang.String.format;
 import com.google.common.base.Objects;
 import com.google.common.base.Optional;
 
-/**
- * @author Adrian Cole
- */
 public final class UltraDNSWSError {
    public static UltraDNSWSError fromCodeAndDescription(int code, Optional<String> description) {
       return new UltraDNSWSError(code, description);

@@ -23,9 +23,6 @@ import org.jclouds.View;
 import org.jclouds.compute.ComputeServiceContext;
 import org.testng.annotations.Test;
 
-/**
- * @author Andrew Bayer
- */
 @Test(groups = "unit", testName = "EC2ContextBuilderTest")
 public class EC2ContextBuilderText {
    public void testAssignability() {

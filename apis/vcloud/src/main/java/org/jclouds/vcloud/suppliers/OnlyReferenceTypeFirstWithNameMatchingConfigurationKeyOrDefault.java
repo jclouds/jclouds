@@ -28,10 +28,6 @@ import com.google.common.base.Function;
 import com.google.common.base.Predicate;
 import com.google.common.collect.Iterables;
 
-/**
- * 
- * @author Adrian Cole
- */
 public class OnlyReferenceTypeFirstWithNameMatchingConfigurationKeyOrDefault implements
       Function<Iterable<ReferenceType>, ReferenceType> {
 

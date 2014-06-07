@@ -26,8 +26,6 @@ import org.jclouds.rest.Binder;
 /**
  * 
  * @see org.jclouds.gogrid.features.GridJobApi#getJobsForObjectName(String)
- * 
- * @author Oleksiy Yarmula
  */
 public class BindObjectNameToGetJobsRequestQueryParams implements Binder {
 

@@ -34,9 +34,6 @@ import com.squareup.okhttp.mockwebserver.MockWebServer;
  * Tests the retry behavior of the default {@link RetryHandler} implementation
  * {@link BackoffLimitedRetryHandler} to ensure that retries up to the default
  * limit succeed.
- * 
- * @author James Murty
- * @author Ignasi Barrera
  */
 @Test(groups = "integration")
 public class BackoffLimitedRetryJavaTest extends BaseMockWebServerTest {

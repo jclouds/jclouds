@@ -48,10 +48,6 @@ import com.google.common.collect.ImmutableMap.Builder;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Sets;
 
-/**
- * 
- * @author Adrian Cole
- */
 @Singleton
 public class EC2ImageSupplier implements Supplier<Set<? extends Image>> {
    @Resource

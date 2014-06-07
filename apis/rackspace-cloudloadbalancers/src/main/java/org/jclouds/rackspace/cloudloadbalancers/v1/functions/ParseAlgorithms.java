@@ -33,9 +33,6 @@ import com.google.common.base.Function;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 
-/**
- * @author Everett Toews
- */
 public class ParseAlgorithms implements Function<HttpResponse, List<String>>, InvocationContext<ParseAlgorithms> {
 
    private final ParseJson<Map<String, List<Map<String, String>>>> json;

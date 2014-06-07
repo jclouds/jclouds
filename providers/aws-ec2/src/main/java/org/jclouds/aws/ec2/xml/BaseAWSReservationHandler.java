@@ -48,10 +48,6 @@ import com.google.common.base.Supplier;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 
-/**
- * 
- * @author Adrian Cole
- */
 public abstract class BaseAWSReservationHandler<T> extends HandlerForGeneratedRequestWithResult<T> {
 
    @Resource

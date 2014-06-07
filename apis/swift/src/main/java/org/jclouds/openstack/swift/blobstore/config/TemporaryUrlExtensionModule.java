@@ -44,9 +44,6 @@ import com.google.inject.TypeLiteral;
 
 /**
  * Isolates dependencies needed for {@link SwiftBlobSigner}
- *
- * @author Adrian Cole
- *
  */
 public abstract class TemporaryUrlExtensionModule<A extends CommonSwiftAsyncClient> extends AbstractModule {
 

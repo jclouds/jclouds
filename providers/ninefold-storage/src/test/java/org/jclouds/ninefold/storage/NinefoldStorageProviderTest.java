@@ -22,8 +22,6 @@ import org.testng.annotations.Test;
 
 /**
  * The NinefoldStorageProviderTest tests the {@link NinefoldStorageProviderMetadata} class.
- * 
- * @author Jeremy Whitlock <jwhitlock@apache.org>
  */
 @Test(groups = "unit", testName = "NinefoldStorageProviderTest")
 public class NinefoldStorageProviderTest extends BaseProviderMetadataTest {

@@ -27,8 +27,6 @@ import com.google.common.base.Objects.ToStringHelper;
 
 /**
  * Representation of the API domain response
- *
- * @author Andrei Savu
  */
 public class Domain implements Comparable<Domain> {
 

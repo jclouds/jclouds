@@ -27,10 +27,6 @@ import com.google.common.base.Function;
 import com.google.common.collect.ImmutableMap;
 import com.google.inject.Injector;
 
-/**
- * 
- * @author Adrian Cole
- */
 @Test(groups = "unit")
 public class ListOSCategoriesResponseTest extends BaseItemParserTest<Map<String, String>> {
 

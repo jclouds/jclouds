@@ -29,8 +29,6 @@ import com.google.common.base.Strings;
  * @see <a
  *      href="http://docs.amazonwebservices.com/AWSEC2/latest/APIReference/ApiReference-query-DescribeTags.html"
  *      >xml</a>
- * 
- * @author Adrian Cole
  */
 public class TagHandler extends ParseSax.HandlerForGeneratedRequestWithResult<Tag> {
 

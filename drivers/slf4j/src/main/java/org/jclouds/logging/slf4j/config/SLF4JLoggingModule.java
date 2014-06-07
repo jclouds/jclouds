@@ -22,9 +22,6 @@ import org.jclouds.logging.slf4j.SLF4JLogger;
 
 /**
  * Configures logging of type {@link SLF4JLogger}
- * 
- * @author Adrian Cole
- * 
  */
 public class SLF4JLoggingModule extends LoggingModule {
 

@@ -18,8 +18,6 @@ package org.jclouds.s3.reference;
 
 /**
  * Configuration properties and constants used in S3 connections.
- * 
- * @author Adrian Cole
  */
 public final class S3Constants {
 

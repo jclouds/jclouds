@@ -29,10 +29,6 @@ import org.jclouds.domain.Credentials;
 import org.jclouds.domain.LoginCredentials;
 import org.testng.annotations.Test;
 
-/**
- * 
- * @author Adrian Cole
- */
 @Test(groups = "unit", testName = "GetLoginForProviderFromPropertiesAndStoreCredentialsOrReturnNullTest")
 public class GetLoginForProviderFromPropertiesAndStoreCredentialsOrReturnNullTest {
 

@@ -32,8 +32,6 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.reflect.Invokable;
 /**
  * Tests behavior of {@code EventApi}
- *
- * @author Vijay Kiran
  */
 // NOTE:without testName, this will not call @Before* and fail w/NPE during
 // surefire

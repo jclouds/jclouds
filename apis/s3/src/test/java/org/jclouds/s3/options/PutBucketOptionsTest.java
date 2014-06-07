@@ -27,8 +27,6 @@ import com.google.common.collect.Multimap;
 
 /**
  * Tests possible uses of PutBucketOptions and PutBucketOptions.Builder.*
- * 
- * @author Adrian Cole
  */
 @Test(groups = "unit")
 public class PutBucketOptionsTest {

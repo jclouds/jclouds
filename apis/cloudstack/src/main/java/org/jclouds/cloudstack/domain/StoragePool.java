@@ -31,8 +31,6 @@ import com.google.common.collect.ImmutableSet;
 
 /**
  * Represents a storage pool in CloudStack
- *
- * @author Richard Downer
  */
 public class StoragePool implements Comparable<StoragePool> {
 

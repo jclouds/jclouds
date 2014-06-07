@@ -19,10 +19,6 @@ package org.jclouds.rackspace.clouddns.us.features;
 import org.jclouds.rackspace.clouddns.v1.features.DomainApiLiveTest;
 import org.testng.annotations.Test;
 
-/**
- * 
- * @author Everett Toews
- */
 @Test(groups = "live", singleThreaded = true, testName = "CloudDNSUSDomainApiLiveTest")
 public class CloudDNSUSDomainApiLiveTest extends DomainApiLiveTest {
    public CloudDNSUSDomainApiLiveTest() {

@@ -43,7 +43,6 @@ import com.google.inject.Inject;
  * String imageId = connection.getWindowsServices().bundleInstanceInRegion(...bucketOwnedBy(anotherAccessKey));
  * <code>
  * 
- * @author Adrian Cole
  * @see <a
  *      href="http://docs.amazonwebservices.com/AWSEC2/latest/APIReference/ApiReference-query-BundleInstance.html"
  *      />

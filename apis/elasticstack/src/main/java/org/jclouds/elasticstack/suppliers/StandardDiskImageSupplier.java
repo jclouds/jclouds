@@ -33,9 +33,6 @@ import com.google.common.collect.ImmutableList;
 
 /**
  * Supplies the pre-installed images.
- * 
- * @author Ignasi Barrera
- * 
  */
 @Singleton
 public class StandardDiskImageSupplier implements WellKnownImageSupplier {

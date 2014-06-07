@@ -21,11 +21,6 @@ import java.beans.ConstructorProperties;
 import com.google.common.base.Objects;
 import com.google.common.base.Objects.ToStringHelper;
 
-/**
- * 
- * @author James Murty
- * 
- */
 public class AccountMetadata {
 
    public static Builder<?> builder() {

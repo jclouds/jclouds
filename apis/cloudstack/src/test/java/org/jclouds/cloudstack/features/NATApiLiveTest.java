@@ -29,8 +29,6 @@ import org.testng.annotations.Test;
 
 /**
  * Tests behavior of {@code NATApiLiveTest}
- * 
- * @author Adrian Cole
  */
 @Test(groups = "live", singleThreaded = true, testName = "NATApiLiveTest")
 public class NATApiLiveTest extends BaseCloudStackApiLiveTest {

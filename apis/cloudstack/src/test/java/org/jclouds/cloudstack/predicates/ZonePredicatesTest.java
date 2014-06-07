@@ -25,9 +25,6 @@ import org.jclouds.cloudstack.domain.NetworkType;
 import org.jclouds.cloudstack.domain.Zone;
 import org.testng.annotations.Test;
 
-/**
- * @author Andrei Savu
- */
 @Test(groups = "unit")
 public class ZonePredicatesTest {
 

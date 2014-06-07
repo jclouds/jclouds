@@ -25,7 +25,6 @@ import org.jclouds.http.functions.ParseSax;
  * @see <a
  *      href="http://docs.amazonwebservices.com/AmazonS3/2006-03-01/index.html?UsingRESTError.html"
  *      />
- * @author Adrian Cole
  */
 public class ErrorHandler extends ParseSax.HandlerWithResult<AzureStorageError> {
 

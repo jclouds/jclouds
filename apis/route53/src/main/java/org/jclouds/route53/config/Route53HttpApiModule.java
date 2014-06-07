@@ -37,8 +37,6 @@ import com.google.inject.Provides;
 
 /**
  * Configures the Route53 connection.
- * 
- * @author Adrian Cole
  */
 @ConfiguresHttpApi
 public class Route53HttpApiModule extends AWSHttpApiModule<Route53Api> {

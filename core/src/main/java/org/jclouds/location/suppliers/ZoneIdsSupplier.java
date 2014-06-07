@@ -23,10 +23,6 @@ import org.jclouds.location.suppliers.fromconfig.ZoneIdsFromConfiguration;
 import com.google.common.base.Supplier;
 import com.google.inject.ImplementedBy;
 
-/**
- * 
- * @author Adrian Cole
- */
 @ImplementedBy(ZoneIdsFromConfiguration.class)
 public interface ZoneIdsSupplier extends Supplier<Set<String>> {
 

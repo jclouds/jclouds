@@ -33,7 +33,6 @@ import com.google.common.collect.Iterables;
  * @see <a href=
  *      "http://docs.amazonwebservices.com/AWSSimpleQueueService/latest/APIReference/Query_QueryListQueues.html"
  *      />
- * @author Adrian Cole
  */
 @Singleton
 public class RegexQueueHandler extends BaseRegexQueueHandler implements Function<HttpResponse, URI> {

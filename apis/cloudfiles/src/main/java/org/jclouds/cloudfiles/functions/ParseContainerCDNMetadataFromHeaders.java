@@ -35,9 +35,6 @@ import com.google.common.collect.Iterables;
 
 /**
  * This parses {@link AccountMetadata} from HTTP headers.
- * 
- * @author James Murty
- * @author Jeremy Daggett
  */
 public class ParseContainerCDNMetadataFromHeaders implements
          Function<HttpResponse, ContainerCDNMetadata>, InvocationContext<ParseContainerCDNMetadataFromHeaders> {

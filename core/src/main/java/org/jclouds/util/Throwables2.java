@@ -40,8 +40,6 @@ import com.google.inject.spi.Message;
 
 /**
  * General utilities used in jclouds code.
- * 
- * @author Adrian Cole
  */
 public class Throwables2 {
 

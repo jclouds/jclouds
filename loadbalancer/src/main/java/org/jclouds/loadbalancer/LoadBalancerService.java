@@ -29,8 +29,6 @@ import com.google.inject.ImplementedBy;
 
 /**
  * Provides portable access to load balancer services.
- * 
- * @author Lili Nadar
  */
 @Beta
 @ImplementedBy(BaseLoadBalancerService.class)

@@ -34,7 +34,6 @@ import com.google.common.collect.Iterables;
  * @see <a href=
  *      "http://download.cloud.com/releases/2.2.0/api/user/deployVirtualMachine.html"
  *      />
- * @author Adrian Cole
  */
 public class DeployVirtualMachineOptions extends AccountInDomainOptions {
 

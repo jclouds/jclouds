@@ -22,9 +22,6 @@ import org.jclouds.apis.BaseApiLiveTest;
 import org.jclouds.openstack.keystone.v2_0.config.KeystoneProperties;
 import org.jclouds.rackspace.clouddns.v1.CloudDNSApi;
 
-/**
- * @author Everett Toews
- */
 public class BaseCloudDNSApiLiveTest extends BaseApiLiveTest<CloudDNSApi> {
 
    public BaseCloudDNSApiLiveTest() {

@@ -19,10 +19,6 @@ package org.jclouds.openstack.nova.ec2.features;
 import org.jclouds.ec2.features.SubnetApiLiveTest;
 import org.testng.annotations.Test;
 
-/**
- * 
- * @author Adrian Cole
- */
 @Test(groups = "live", testName = "NovaSubnetApiLiveTest")
 public class NovaSubnetApiLiveTest extends SubnetApiLiveTest {
    public NovaSubnetApiLiveTest() {

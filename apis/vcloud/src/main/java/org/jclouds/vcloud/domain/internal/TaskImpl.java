@@ -30,11 +30,6 @@ import org.jclouds.vcloud.domain.VCloudError;
 
 import com.google.common.base.Objects;
 
-/**
- * 
- * @author Adrian Cole
- * 
- */
 public class TaskImpl extends ReferenceTypeImpl implements Task {
 
    private final String operation;

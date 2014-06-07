@@ -81,10 +81,6 @@ import com.google.inject.TypeLiteral;
 import com.google.inject.assistedinject.FactoryModuleBuilder;
 import com.google.inject.name.Names;
 
-/**
- * 
- * @author Adrian Cole
- */
 public class AWSEC2ComputeServiceDependenciesModule extends EC2ComputeServiceDependenciesModule {
    @Override
    protected void configure() {

@@ -20,10 +20,6 @@ import org.jclouds.apis.BaseApiLiveTest;
 import org.jclouds.cloudwatch.CloudWatchApi;
 import org.testng.annotations.Test;
 
-/**
- * 
- * @author Adrian Cole
- */
 @Test(groups = "live")
 public class BaseCloudWatchApiLiveTest extends BaseApiLiveTest<CloudWatchApi> {
 

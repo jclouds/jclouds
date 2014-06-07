@@ -36,9 +36,6 @@ import org.testng.annotations.Test;
 
 import com.google.common.collect.ImmutableSet;
 
-/**
- * @author Adrian Cole
- */
 @Test(groups = "unit", testName = "DirectionalPoolApiExpectTest")
 public class DirectionalPoolApiExpectTest extends BaseUltraDNSWSApiExpectTest {
    HttpRequest create = HttpRequest.builder().method(POST)

@@ -29,9 +29,6 @@ import com.google.common.base.Function;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
 
-/**
- * @author Adrian Cole
- */
 @Singleton
 public class PublicUriForObjectInfo implements Function<ObjectInfo, URI> {
    private final LoadingCache<String, URI> cdnContainer;

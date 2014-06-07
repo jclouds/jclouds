@@ -42,8 +42,6 @@ import com.google.inject.Injector;
 
 /**
  * Tests the compute service abstraction of the cloudstack api.
- * 
- * @author Adrian Cole
  */
 @Test(groups = "unit")
 public class CloudStackComputeServiceAdapterExpectTest extends BaseCloudStackComputeServiceContextExpectTest<Injector> {

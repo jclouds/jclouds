@@ -28,8 +28,6 @@ import org.testng.annotations.Test;
 
 /**
  * Tests TenantApi
- * 
- * @author Adam Lowe
  */
 @Test(groups = "live", testName = "TenantApiLiveTest")
 public class TenantApiLiveTest extends BaseKeystoneApiLiveTest {

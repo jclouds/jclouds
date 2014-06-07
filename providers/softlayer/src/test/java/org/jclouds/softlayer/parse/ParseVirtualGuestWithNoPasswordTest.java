@@ -32,10 +32,6 @@ import org.testng.annotations.Test;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 
-/**
- * 
- * @author Adrian Cole
- */
 @Test(groups = "unit", testName = "ParseVirtualGuestWithNoPasswordTest")
 public class ParseVirtualGuestWithNoPasswordTest extends BaseItemParserTest<VirtualGuest> {
 

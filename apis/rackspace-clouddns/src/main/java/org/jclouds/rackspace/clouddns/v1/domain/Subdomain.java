@@ -27,8 +27,6 @@ import com.google.common.base.Optional;
 /**
  * Subdomains are domains within a parent domain. Subdomains allow you to delegate domains. Subdomains can themselves
  * have subdomains, so third-level, fourth-level, fifth-level, and deeper levels of nesting are possible.
- * 
- * @author Everett Toews
  */
 public class Subdomain {
    private final int id;

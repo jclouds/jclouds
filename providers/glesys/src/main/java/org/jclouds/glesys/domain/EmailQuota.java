@@ -26,7 +26,6 @@ import com.google.common.base.Objects.ToStringHelper;
 /**
  * Information on an Email Account Quota size
  *
- * @author Adam Lowe
  * @see <a href="https://customer.glesys.com/api.php?a=doc#email_list" />
  */
 public class EmailQuota {

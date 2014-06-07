@@ -20,10 +20,6 @@ import org.jclouds.azureblob.domain.AzureBlob;
 
 import com.google.common.base.Function;
 
-/**
- * 
- * @author Adrian Cole
- */
 public class BlobName implements Function<Object, String> {
 
    public String apply(Object from) {

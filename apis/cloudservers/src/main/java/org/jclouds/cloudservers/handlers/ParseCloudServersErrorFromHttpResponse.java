@@ -35,9 +35,6 @@ import org.jclouds.util.Strings2;
 
 /**
  * This will parse and set an appropriate exception on the command object.
- * 
- * @author Adrian Cole
- * 
  */
 public class ParseCloudServersErrorFromHttpResponse implements HttpErrorHandler {
    @Resource

@@ -22,8 +22,6 @@ import org.testng.annotations.Test;
 
 /**
  * The CloudOneStorageProviderTest tests the {@link CloudOneStorageProviderMetadata} class.
- * 
- * @author Jeremy Whitlock <jwhitlock@apache.org>
  */
 @Test(groups = "unit", testName = "CloudOneStorageProviderTest")
 public class CloudOneStorageProviderTest extends BaseProviderMetadataTest {

@@ -19,10 +19,6 @@ package org.jclouds.openstack.nova.ec2;
 import org.jclouds.compute.internal.BaseComputeServiceApiMetadataTest;
 import org.testng.annotations.Test;
 
-/**
- * 
- * @author Adrian Cole
- */
 @Test(groups = "unit", testName = "NovaEC2ApiMetadataTest")
 public class NovaEC2ApiMetadataTest extends BaseComputeServiceApiMetadataTest {
 

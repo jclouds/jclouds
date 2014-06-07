@@ -29,8 +29,6 @@ import com.google.inject.Injector;
 
 /**
  * Tests behavior of {@code BindResourceIdsToIndexedFormParams}
- * 
- * @author grkvlt@apache.org
  */
 @Test(groups = "unit")
 public class BindResourceIdsToIndexedFormParamsTest {

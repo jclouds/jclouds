@@ -25,8 +25,6 @@ import org.testng.annotations.Test;
 
 /**
  * Tests behavior of {@link AlarmNamesBinder}.
- *
- * @author Jeremy Whitlock
  */
 @Test(groups = "unit", testName = "AlarmNamesBinderTest")
 public class AlarmNamesBinderTest {

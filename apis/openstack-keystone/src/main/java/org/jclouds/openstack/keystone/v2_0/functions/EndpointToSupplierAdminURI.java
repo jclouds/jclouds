@@ -18,9 +18,6 @@ package org.jclouds.openstack.keystone.v2_0.functions;
 
 import com.google.inject.ImplementedBy;
 
-/**
- * @author Adam Lowe
- */
 @ImplementedBy(AdminURL.class)
 public interface EndpointToSupplierAdminURI extends EndpointToSupplierURI {  
 }

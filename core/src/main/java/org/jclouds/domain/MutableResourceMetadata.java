@@ -25,8 +25,6 @@ import com.google.inject.ImplementedBy;
 
 /**
  * Used to construct new resources or modify existing ones.
- * 
- * @author Adrian Cole
  */
 @ImplementedBy(MutableResourceMetadataImpl.class)
 public interface MutableResourceMetadata<T extends Enum<T>> extends ResourceMetadata<T> {

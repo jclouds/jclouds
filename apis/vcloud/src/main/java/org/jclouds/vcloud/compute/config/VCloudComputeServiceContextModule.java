@@ -24,8 +24,6 @@ import org.jclouds.vcloud.domain.VAppTemplate;
 /**
  * Configures the {@link VCloudComputeServiceContext}; requires {@link VCloudComputeClientImpl}
  * bound.
- * 
- * @author Adrian Cole
  */
 public class VCloudComputeServiceContextModule extends
          ComputeServiceAdapterContextModule<VApp, VAppTemplate, VAppTemplate, Location> {

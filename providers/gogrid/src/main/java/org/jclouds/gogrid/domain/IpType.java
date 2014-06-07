@@ -16,9 +16,6 @@
  */
 package org.jclouds.gogrid.domain;
 
-/**
- * @author Oleksiy Yarmula
- */
 public enum IpType {
     PRIVATE("Private"),
     PRIVATE_2("Private 2"),

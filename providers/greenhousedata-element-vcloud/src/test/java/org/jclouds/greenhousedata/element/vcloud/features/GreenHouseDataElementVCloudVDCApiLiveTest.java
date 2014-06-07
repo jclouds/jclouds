@@ -19,11 +19,6 @@ package org.jclouds.greenhousedata.element.vcloud.features;
 import org.jclouds.vcloud.features.VDCApiLiveTest;
 import org.testng.annotations.Test;
 
-/**
- * 
- * 
- * @author Adrian Cole
- */
 @Test(groups = "live", enabled = true, singleThreaded = true, testName = "GreenHouseDataElementVCloudVDCApiLiveTest")
 public class GreenHouseDataElementVCloudVDCApiLiveTest extends VDCApiLiveTest {
 

@@ -31,7 +31,6 @@ import com.google.common.base.Function;
  * Parses response headers and creates a new AzureBlob from them and the HTTP content.
  * 
  * @see ParseMetadataFromHeaders
- * @author Adrian Cole
  */
 @Singleton
 public class ParseBlobFromHeadersAndHttpContent implements Function<HttpResponse, AzureBlob>,

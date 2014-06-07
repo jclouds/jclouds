@@ -48,8 +48,6 @@ import com.google.inject.TypeLiteral;
 
 /**
  * Configures the elasticstack connection.
- * 
- * @author Adrian Cole
  */
 @ConfiguresRestClient
 public class ElasticStackHttpApiModule extends HttpApiModule<ElasticStackApi> {

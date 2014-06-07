@@ -70,8 +70,6 @@ import com.google.inject.TypeLiteral;
 
 /**
  * Tests behavior of {@code VCloudApi}
- * 
- * @author Adrian Cole
  */
 // NOTE:without testName, this will not call @Before* and fail w/NPE during surefire
 @Test(groups = "unit", testName = "BaseVCloudApiTest")

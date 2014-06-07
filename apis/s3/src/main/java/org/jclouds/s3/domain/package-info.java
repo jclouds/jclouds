@@ -17,6 +17,5 @@
 /**
  * This package contains the core components of S3. 
  * @see <a href="http://docs.amazonwebservices.com/AmazonS3/latest/Components.html" />
- * @author Adrian Cole
  */
 package org.jclouds.s3.domain;

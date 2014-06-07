@@ -22,8 +22,6 @@ import com.google.common.collect.ImmutableSet;
 
 /**
  * Options to the GlobalStoragePools[Async]Client.listStoragePools API call
- *
- * @author Richard Downer
  */
 public class ListStoragePoolsOptions extends BaseHttpRequestOptions {
 

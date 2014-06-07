@@ -27,8 +27,6 @@ import org.testng.annotations.Test;
 
 /**
  * Tests possible uses of CloneDriveOptions and CloneDriveOptions.Builder.*
- * 
- * @author Adrian Cole
  */
 @Test(groups = "unit")
 public class CloneDriveOptionsTest {

@@ -23,8 +23,6 @@ import org.testng.annotations.Test;
 
 /**
  * Tests possible uses of {@code GoGridTemplateOptions} and {@code GoGridTemplateOptions.Builder.*}.
- * 
- * @author Andrew Kennedy
  */
 //NOTE:without testName, this will not call @Before* and fail w/NPE during surefire
 @Test(groups = "unit", testName = "GoGridTemplateOptionsTest")

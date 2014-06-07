@@ -37,7 +37,6 @@ import com.google.common.collect.Multimap;
 /**
  * Extended server returned by ServerWithSecurityGroupsApi
  * 
- * @author Adam Lowe
  * @see <a href=
 "http://docs.openstack.org/api/openstack-compute/1.1/content/Get_Server_Details-d1e2623.html"
 />

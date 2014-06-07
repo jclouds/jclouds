@@ -21,8 +21,6 @@ import org.testng.annotations.Test;
 
 /**
  * Tests behavior of {@code STSApi}
- * 
- * @author Adrian Cole
  */
 @Test(groups = "live", singleThreaded = true, testName = "AWSSTSApiLiveTest")
 public class AWSSTSApiLiveTest extends STSApiLiveTest {

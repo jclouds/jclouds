@@ -25,8 +25,6 @@ import org.jclouds.providers.internal.BaseProviderMetadata;
 
 /**
  * Implementation of {@link org.jclouds.types.ProviderMetadata} for OpenHosting East1.
- * 
- * @author Adrian Cole
  */
 public class OpenHostingEast1ProviderMetadata extends BaseProviderMetadata {
 

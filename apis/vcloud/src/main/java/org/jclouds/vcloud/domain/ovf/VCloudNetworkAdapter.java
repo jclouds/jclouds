@@ -20,10 +20,6 @@ import java.util.List;
 
 import org.jclouds.cim.ResourceAllocationSettingData;
 
-/**
- * @author Adrian Cole
- * 
- */
 public class VCloudNetworkAdapter extends ResourceAllocationSettingData {
 
    public static Builder builder() {

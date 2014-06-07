@@ -35,10 +35,6 @@ import com.google.common.base.Throwables;
 import com.google.common.eventbus.EventBus;
 import com.google.inject.assistedinject.Assisted;
 
-/**
- * 
- * @author Adrian Cole
- */
 public class RunScriptOnNodeAsInitScriptUsingSshAndBlockUntilComplete extends RunScriptOnNodeAsInitScriptUsingSsh {
    protected final Timeouts timeouts;
    protected final BlockUntilInitScriptStatusIsZeroThenReturnOutput.Factory statusFactory;

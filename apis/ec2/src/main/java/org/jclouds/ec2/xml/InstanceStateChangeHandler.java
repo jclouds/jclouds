@@ -37,7 +37,6 @@ import com.google.common.collect.Sets;
  * StartInstancesResponse xmlns="http://ec2.amazonaws.com/doc/2010-08-31/" StopInstancesResponse
  * xmlns="http://ec2.amazonaws.com/doc/2010-08-31/"
  * 
- * @author Adrian Cole
  * @see <a href="http://docs.amazonwebservices.com/AWSEC2/latest/APIReference/ApiReference-ItemType-TerminateInstancesResponseInfoType.html"
  *      />
  * @see <a href="http://docs.amazonwebservices.com/AWSEC2/latest/APIReference/ApiReference-ItemType-StartInstancesResponseInfoType.html"

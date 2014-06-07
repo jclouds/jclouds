@@ -32,9 +32,6 @@ import org.xml.sax.Attributes;
 
 import com.google.common.collect.Sets;
 
-/**
- * @author Adrian Cole
- */
 public class NetworkConnectionSectionHandler extends ParseSax.HandlerWithResult<NetworkConnectionSection> {
    protected StringBuilder currentText = new StringBuilder();
 

@@ -46,7 +46,6 @@ import org.jclouds.rest.annotations.RequestFilters;
  * <p/>
  * 
  * @see <a href="https://manage.dynect.net/help/docs/api2/rest/" />
- * @author Adrian Cole
  */
 public interface DynECTApi extends Closeable {
    /**

@@ -36,9 +36,6 @@ import com.google.inject.TypeLiteral;
 /**
  * Records come back encoded in REST paths, such as
  * {@code /REST/NSRecord/adrianc.zone.dynecttest.jclouds.org/adrianc.zone.dynecttest.jclouds.org/50976583}
- * 
- * @author Adrian Cole
- * 
  */
 public final class ToRecordIds implements Function<HttpResponse, FluentIterable<RecordId>> {
    private final ParseFirstJsonValueNamed<FluentIterable<String>> parser;

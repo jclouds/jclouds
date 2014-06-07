@@ -24,9 +24,6 @@ import org.jclouds.vcloud.domain.NetworkConnection;
 import org.jclouds.vcloud.domain.network.IpAddressAllocationMode;
 import org.xml.sax.Attributes;
 
-/**
- * @author Adrian Cole
- */
 public class NetworkConnectionHandler extends ParseSax.HandlerWithResult<NetworkConnection> {
    protected StringBuilder currentText = new StringBuilder();
 

@@ -26,9 +26,6 @@ import com.google.common.base.Throwables;
 import org.jclouds.io.MutableContentMetadata;
 import org.jclouds.io.Payload;
 
-/**
- * @author Adrian Cole
- */
 public abstract class BasePayload<V> implements Payload {
    protected final V content;
    protected transient volatile boolean written;

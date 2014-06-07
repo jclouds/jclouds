@@ -19,10 +19,6 @@ package org.jclouds.openstack.nova.ec2.features;
 import org.jclouds.ec2.features.AvailabilityZoneAndRegionApiLiveTest;
 import org.testng.annotations.Test;
 
-/**
- * 
- * @author Adrian Cole
- */
 @Test(groups = "live", singleThreaded = true, testName = "NovaEC2AvailabilityZoneAndRegionApiLiveTest")
 public class NovaEC2AvailabilityZoneAndRegionApiLiveTest extends AvailabilityZoneAndRegionApiLiveTest {
    public NovaEC2AvailabilityZoneAndRegionApiLiveTest() {

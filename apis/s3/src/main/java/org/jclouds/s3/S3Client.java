@@ -42,8 +42,6 @@ import com.google.inject.Provides;
  * processing will be backend in an {@link ExecutionException} as documented in
  * {@link Future#get()}.
  * 
- * @author Adrian Cole
- * @author James Murty
  * @see <a href="http://docs.amazonwebservices.com/AmazonS3/2006-03-01/RESTAPI.html" />
  */
 public interface S3Client extends Closeable {

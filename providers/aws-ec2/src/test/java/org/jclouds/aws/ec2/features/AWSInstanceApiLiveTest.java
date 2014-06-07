@@ -29,8 +29,6 @@ import org.testng.annotations.Test;
 
 /**
  * Tests behavior of {@code AWSEC2Api}
- * 
- * @author Adrian Cole
  */
 @Test(groups = "live", singleThreaded = true)
 public class AWSInstanceApiLiveTest extends BaseComputeServiceContextLiveTest {

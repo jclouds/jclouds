@@ -28,8 +28,6 @@ import org.jclouds.http.functions.ParseSax;
  * @see <a href=
  *      "http://docs.aws.amazon.com/STS/latest/APIReference/API_Credentials.html"
  *      />
- * 
- * @author Adrian Cole
  */
 public class SessionCredentialsHandler extends ParseSax.HandlerForGeneratedRequestWithResult<SessionCredentials> {
    private final DateService dateService;

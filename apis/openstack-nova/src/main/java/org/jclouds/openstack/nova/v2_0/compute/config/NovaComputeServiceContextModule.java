@@ -98,8 +98,6 @@ import com.google.inject.name.Names;
 
 /**
  * Module for building a compute service context for Nova
- * 
- * @author Matt Stephenson
  */
 public class NovaComputeServiceContextModule extends
          ComputeServiceAdapterContextModule<ServerInZone, FlavorInZone, ImageInZone, Location> {

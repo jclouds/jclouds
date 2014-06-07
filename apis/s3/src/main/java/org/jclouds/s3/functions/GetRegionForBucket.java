@@ -31,10 +31,6 @@ import com.google.common.cache.CacheLoader.InvalidCacheLoadException;
 import com.google.common.cache.LoadingCache;
 import com.google.common.util.concurrent.UncheckedExecutionException;
 
-/**
- * 
- * @author Adrian Cole
- */
 @Singleton
 public class GetRegionForBucket implements Function<String, Optional<String>> {
    @Resource

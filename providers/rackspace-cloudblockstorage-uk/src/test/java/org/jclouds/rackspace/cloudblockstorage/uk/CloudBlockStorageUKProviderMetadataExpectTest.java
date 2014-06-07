@@ -28,8 +28,6 @@ import com.google.common.collect.ImmutableSet;
 
 /**
  * This test ensures that the wiring in {@link CloudBlockStorageUKProviderMetadata} is correct.
- * 
- * @author Everett Toews
  */
 @Test(groups = "unit", testName = "CloudBlockStorageUKProviderMetadataExpectTest")
 public class CloudBlockStorageUKProviderMetadataExpectTest extends BaseCinderApiExpectTest {

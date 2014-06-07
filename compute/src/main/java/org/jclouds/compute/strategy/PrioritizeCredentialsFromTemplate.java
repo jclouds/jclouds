@@ -27,10 +27,6 @@ import org.jclouds.domain.LoginCredentials.Builder;
 
 import com.google.common.base.Function;
 
-/**
- * 
- * @author Adrian Cole
- */
 @Singleton
 public class PrioritizeCredentialsFromTemplate {
    private final Function<Template, LoginCredentials> credentialsFromImageOrTemplateOptions;

@@ -35,8 +35,6 @@ import com.google.common.base.Supplier;
 /**
  * Return a uri corresponding to the name of the region (passed argument).
  * Otherwise, return the default location.
- * 
- * @author Adrian Cole
  */
 @Singleton
 public class RegionToEndpointOrProviderIfNull implements Function<Object, URI> {

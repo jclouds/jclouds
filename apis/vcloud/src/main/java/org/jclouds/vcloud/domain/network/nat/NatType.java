@@ -25,8 +25,6 @@ import com.google.common.base.CaseFormat;
  * The NatType element specifies how network address translation is implemented by the NAT service.
  * 
  * @since vcloud api 0.9
- * 
- * @author Adrian Cole
  */
 public enum NatType {
    /**

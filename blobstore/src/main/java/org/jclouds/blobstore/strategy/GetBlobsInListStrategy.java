@@ -24,8 +24,6 @@ import com.google.inject.ImplementedBy;
 
 /**
  * Retrieves all blobs in the blobstore by the most efficient means possible.
- * 
- * @author Adrian Cole
  */
 @ImplementedBy(GetAllBlobsInListAndRetryOnFailure.class)
 public interface GetBlobsInListStrategy {

@@ -23,11 +23,6 @@ import java.util.Map;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Maps;
 
-/**
- * 
- * @author Adrian Cole
- * 
- */
 public class CatalogItemOptions {
 
    private String description;

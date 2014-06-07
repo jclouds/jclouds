@@ -30,8 +30,6 @@ import com.google.inject.Injector;
 
 /**
  * Tests the ability to configure a {@link JschSshClient}
- * 
- * @author Adrian Cole
  */
 @Test
 public class JschSshClientModuleTest {

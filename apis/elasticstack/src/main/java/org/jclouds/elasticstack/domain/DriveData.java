@@ -21,10 +21,6 @@ import java.util.Map;
 import org.jclouds.javax.annotation.Nullable;
 
 
-/**
- * 
- * @author Adrian Cole
- */
 public class DriveData extends Drive {
    public static class Builder extends Drive.Builder {
 

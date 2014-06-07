@@ -58,9 +58,6 @@ import org.jclouds.rest.annotations.Transform;
 import org.jclouds.rest.annotations.WrapWith;
 import org.jclouds.rest.binders.BindToJsonPayload;
 
-/**
- * @author Everett Toews
- */
 @Endpoint(CloudDNS.class)
 @RequestFilters(AuthenticateRequest.class)
 public interface RecordApi {

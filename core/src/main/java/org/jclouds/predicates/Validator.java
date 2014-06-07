@@ -29,8 +29,6 @@ import com.google.common.base.Predicate;
  * use {@link Object}.
  *
  * @see com.google.common.base.Predicate
- *
- * @author Oleksiy Yarmula
  */
 public abstract class Validator<T> implements Predicate<T> {
 

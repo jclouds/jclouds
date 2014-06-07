@@ -29,8 +29,6 @@ import com.google.inject.Scopes;
 /**
  * Configures the {@link CloudFilesBlobStoreContext}; requires
  * {@link SwiftAsyncBlobStore} bound.
- *
- * @author Adrian Cole
  */
 public class SwiftBlobStoreContextModule extends AbstractModule {
 

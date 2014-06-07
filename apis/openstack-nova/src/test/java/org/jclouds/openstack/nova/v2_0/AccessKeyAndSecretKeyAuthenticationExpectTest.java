@@ -31,7 +31,6 @@ import com.google.common.collect.ImmutableSet;
 /**
  * 
  * @see KeystoneProperties#CREDENTIAL_TYPE
- * @author Adrian Cole
  */
 @Test(groups = "unit", testName = "AccessKeyAndSecretKeyAuthenticationExpectTest")
 public class AccessKeyAndSecretKeyAuthenticationExpectTest extends BaseNovaApiExpectTest {

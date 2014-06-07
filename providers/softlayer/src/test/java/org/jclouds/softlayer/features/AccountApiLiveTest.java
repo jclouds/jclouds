@@ -25,8 +25,6 @@ import org.testng.annotations.Test;
 
 /**
  * Tests behavior of {@code AccountApi}
- * 
- * @author Jason King
  */
 @Test(groups = "live")
 public class AccountApiLiveTest extends BaseSoftLayerApiLiveTest {

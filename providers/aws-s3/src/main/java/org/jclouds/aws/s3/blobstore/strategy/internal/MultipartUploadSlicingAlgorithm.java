@@ -21,7 +21,6 @@
  *   Created by: tibor
  *
  *   History
- *
  */
 
 package org.jclouds.aws.s3.blobstore.strategy.internal;

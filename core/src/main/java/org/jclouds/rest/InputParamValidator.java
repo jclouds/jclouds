@@ -37,8 +37,6 @@ import com.google.inject.Injector;
  * Checks the {@link ParamValidators} annotation for validators. There can be method-level validators that apply to all
  * parameters, and parameter-level validators. When validation on at least one parameter doesn't pass, throws
  * {@link IllegalStateException}.
- * 
- * @author Oleksiy Yarmula
  */
 public class InputParamValidator {
 

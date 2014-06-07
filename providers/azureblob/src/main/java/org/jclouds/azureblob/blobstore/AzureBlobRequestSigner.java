@@ -37,10 +37,6 @@ import com.google.common.base.Function;
 import com.google.common.collect.ImmutableList;
 import com.google.common.reflect.Invokable;
 
-/**
- * 
- * @author Adrian Cole
- */
 @Singleton
 public class AzureBlobRequestSigner implements BlobRequestSigner {
    private final Function<Invocation, HttpRequest> processor;

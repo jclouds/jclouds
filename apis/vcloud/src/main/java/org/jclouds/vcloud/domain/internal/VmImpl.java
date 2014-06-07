@@ -36,9 +36,6 @@ import com.google.common.collect.Lists;
 
 /**
  * Locations of resources in vCloud
- * 
- * @author Adrian Cole
- * 
  */
 public class VmImpl extends ReferenceTypeImpl implements Vm {
 

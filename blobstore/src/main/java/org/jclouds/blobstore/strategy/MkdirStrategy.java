@@ -22,8 +22,6 @@ import com.google.inject.ImplementedBy;
 
 /**
  * Creates a directory
- * 
- * @author Adrian Cole
  */
 @ImplementedBy(MarkerFileMkdirStrategy.class)
 public interface MkdirStrategy {

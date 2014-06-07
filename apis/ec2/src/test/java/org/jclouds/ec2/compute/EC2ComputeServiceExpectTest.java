@@ -38,8 +38,6 @@ import org.testng.annotations.Test;
 
 /**
  * Tests the compute service abstraction of the EC2 api.
- * 
- * @author Adrian Cole
  */
 @Test(groups = "unit", testName = "EC2ComputeServiceExpectTest")
 public class EC2ComputeServiceExpectTest extends BaseEC2ComputeServiceExpectTest {

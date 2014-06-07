@@ -44,10 +44,6 @@ import com.google.mockwebserver.MockWebServer;
 import com.google.mockwebserver.QueueDispatcher;
 import com.google.mockwebserver.RecordedRequest;
 
-/**
- * 
- * @author Adrian Cole
- */
 @Test(singleThreaded = true)
 public class SequentialMultipartUploadStrategyMockTest {
 

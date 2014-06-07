@@ -44,9 +44,6 @@ import com.google.common.collect.Iterators;
 import com.google.common.collect.Lists;
 import com.google.inject.TypeLiteral;
 
-/**
- * @author Everett Toews
- */
 public class ParseJob implements Function<HttpResponse, Job<?>> {
 
    private final ParseJson<RawJob> parseJson;

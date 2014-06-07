@@ -29,8 +29,6 @@ import com.google.inject.assistedinject.FactoryModuleBuilder;
 
 /**
  * Tests behavior of {@code BindToJsonPayloadWrappedWith}
- * 
- * @author Adrian Cole
  */
 @Test(groups = "unit")
 public class BindToJsonPayloadWrappedWithTest {

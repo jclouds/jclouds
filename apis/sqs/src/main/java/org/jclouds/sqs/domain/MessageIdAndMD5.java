@@ -26,8 +26,6 @@ import com.google.common.hash.HashCode;
  * @see <a
  *      href="http://docs.amazonwebservices.com/AWSSimpleQueueService/latest/SQSDeveloperGuide/MessageLifecycle.html"
  *      >doc</a>
- * 
- * @author Adrian Cole
  */
 public class MessageIdAndMD5 {
 

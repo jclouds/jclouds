@@ -37,9 +37,6 @@ import com.google.common.io.ByteSource;
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
 
-/**
- * @author Adrian Cole
- */
 public class SupplyFromProviderURIOrNodesProperty extends ByteSource implements Function<URI, InputStream> {
    @Resource
    protected Logger logger = Logger.NULL;

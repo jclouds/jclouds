@@ -36,8 +36,6 @@ import com.google.common.base.Predicate;
 
 /**
  * Tests behavior of RoleAdminApi
- * 
- * @author Pedro Navarro
  */
 @Test(groups = "live", testName = "RoleAdminApiLiveTest", singleThreaded = true)
 public class RoleAdminApiLiveTest extends BaseKeystoneApiLiveTest {

@@ -30,10 +30,6 @@ import com.google.common.base.Charsets;
 import com.google.common.hash.HashCode;
 import com.google.common.hash.Hashing;
 
-/**
- * 
- * @author Adrian Cole
- */
 @Test(groups = "live", singleThreaded = true, testName = "MessageApiLiveTest")
 public class MessageApiLiveTest extends BaseSQSApiLiveTest {
 

@@ -112,7 +112,6 @@ import com.google.common.collect.ImmutableMap;
  * <p>
  * Design inspired by {@link CacheBuilderSpec}
  * 
- * @author Adrian Cole
  * @since 1.5
  */
 @Beta

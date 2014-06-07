@@ -19,10 +19,6 @@ package org.jclouds.openstack.nova.ec2.features;
 import org.jclouds.ec2.features.ElasticIPAddressApiLiveTest;
 import org.testng.annotations.Test;
 
-/**
- * 
- * @author Adrian Cole
- */
 @Test(groups = "live", singleThreaded = true, testName = "NovaEC2ElasticIPAddressApiLiveTest")
 public class NovaEC2ElasticIPAddressApiLiveTest extends ElasticIPAddressApiLiveTest {
    public NovaEC2ElasticIPAddressApiLiveTest() {

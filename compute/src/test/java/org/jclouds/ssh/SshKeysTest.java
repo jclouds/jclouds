@@ -39,10 +39,6 @@ import org.jclouds.crypto.Pems;
 import org.jclouds.util.Strings2;
 import org.testng.annotations.Test;
 
-/**
- * 
- * @author Adrian Cole
- */
 @Test(groups = "unit", singleThreaded = true, testName = "SshKeysTest")
 public class SshKeysTest {
 

@@ -33,8 +33,6 @@ import com.google.inject.Module;
 
 /**
  * Tests the functionality of the {@link ApacheHCHttpCommandExecutorService}
- * 
- * @author Adrian Cole
  */
 public class ApacheHCHttpCommandExecutorServiceTestDisabled extends BaseHttpCommandExecutorServiceIntegrationTest {
 

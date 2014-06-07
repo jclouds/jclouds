@@ -26,10 +26,6 @@ import org.jclouds.io.Payload;
 import org.jclouds.io.PayloadEnclosing;
 import org.jclouds.javax.annotation.Nullable;
 
-/**
- * 
- * @author Adrian Cole
- */
 public class PayloadEnclosingImpl implements PayloadEnclosing {
    protected Payload payload;
 

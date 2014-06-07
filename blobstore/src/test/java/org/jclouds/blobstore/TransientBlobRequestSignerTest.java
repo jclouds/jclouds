@@ -36,8 +36,6 @@ import com.google.common.io.ByteSource;
 
 /**
  * Tests behavior of {@code LocalBlobRequestSigner}
- * 
- * @author Adrian Cole
  */
 // NOTE:without testName, this will not call @Before* and fail w/NPE during surefire
 @Test(groups = "unit", testName = "TransientBlobRequestSignerTest")

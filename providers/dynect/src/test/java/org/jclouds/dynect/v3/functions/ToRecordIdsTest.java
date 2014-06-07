@@ -26,9 +26,6 @@ import org.testng.annotations.Test;
 
 import com.google.gson.Gson;
 
-/**
- * @author Adrian Cole
- */
 @Test(groups = "unit")
 public class ToRecordIdsTest {
    ToRecordIds fn = new ToRecordIds(new GsonWrapper(new Gson()));

@@ -30,9 +30,6 @@ import org.jclouds.rackspace.clouddns.v1.domain.RecordDetail;
 
 import com.google.common.base.Function;
 
-/**
- * @author Everett Toews
- */
 public class ParseRecord implements Function<HttpResponse, RecordDetail> {
 
    private final ParseJson<RawRecord> json;

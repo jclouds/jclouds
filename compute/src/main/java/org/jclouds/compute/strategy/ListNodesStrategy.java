@@ -21,10 +21,6 @@ import org.jclouds.compute.domain.NodeMetadata;
 
 import com.google.common.base.Predicate;
 
-/**
- * 
- * @author Adrian Cole
- */
 public interface ListNodesStrategy {
 
    Iterable<? extends ComputeMetadata> listNodes();

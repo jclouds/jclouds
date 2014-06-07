@@ -20,11 +20,6 @@ import javax.inject.Singleton;
 
 import com.google.common.net.HostAndPort;
 
-/**
- * 
- * 
- * @author Adrian Cole
- */
 @Singleton
 public class SocketOpenUnsupported implements SocketOpen {
 

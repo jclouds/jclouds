@@ -19,7 +19,6 @@ package org.jclouds.cloudstack.domain;
 import com.google.common.base.CaseFormat;
 
 /**
- * @author Adrian Cole
  * @see TemplateApi#listTemplates
  */
 public enum TemplateFilter {

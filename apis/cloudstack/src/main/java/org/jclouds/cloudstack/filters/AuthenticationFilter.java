@@ -23,9 +23,6 @@ import com.google.inject.ImplementedBy;
 /**
  * Marker interface that determines how we authenticate http requests in cloudstack. default to sign
  * requests as opposed to login.
- * 
- * @author Adrian Cole
- * 
  */
 @ImplementedBy(QuerySigner.class)
 public interface AuthenticationFilter extends HttpRequestFilter {

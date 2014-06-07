@@ -35,8 +35,6 @@ import com.google.common.base.Predicate;
 
 /**
  * Tests behavior of TenantAdminApi
- * 
- * @author Pedro Navarro
  */
 @Test(groups = "live", testName = "TenantAdminApiLiveTest", singleThreaded = true)
 public class TenantAdminApiLiveTest extends BaseKeystoneApiLiveTest {

@@ -44,8 +44,6 @@ import com.google.common.collect.ImmutableSet;
 
 /**
  * Tests parsing and Guice wiring of TokenApi
- *
- * @author Adam Lowe
  */
 @Test(testName = "TokenApiExpectTest")
 public class TokenApiExpectTest extends BaseKeystoneRestApiExpectTest<KeystoneApi> {

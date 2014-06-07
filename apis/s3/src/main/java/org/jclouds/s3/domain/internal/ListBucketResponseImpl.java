@@ -24,11 +24,6 @@ import org.jclouds.s3.domain.ObjectMetadata;
 
 import com.google.common.collect.Iterables;
 
-/**
- * 
- * @author Adrian Cole
- * 
- */
 public class ListBucketResponseImpl extends LinkedHashSet<ObjectMetadata> implements ListBucketResponse {
 
    protected final String name;

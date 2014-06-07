@@ -24,10 +24,6 @@ import org.jclouds.http.HttpRequest;
 import org.jclouds.rest.MapBinder;
 import org.jclouds.ultradns.ws.domain.UpdatePoolRecord;
 
-/**
- * 
- * @author Adrian Cole
- */
 public class UpdatePoolRecordToXML implements MapBinder {
    private static final String HEADER = "<v01:updatePoolRecord><transactionID /><poolRecordID>%s</poolRecordID><parentPoolId /><childPoolId />";
    private static final String FOOTER = "</v01:updatePoolRecord>";

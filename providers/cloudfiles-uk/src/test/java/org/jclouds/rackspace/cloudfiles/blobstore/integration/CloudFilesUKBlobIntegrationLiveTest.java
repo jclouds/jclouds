@@ -19,9 +19,6 @@ package org.jclouds.rackspace.cloudfiles.blobstore.integration;
 import org.jclouds.cloudfiles.blobstore.integration.CloudFilesBlobIntegrationLiveTest;
 import org.testng.annotations.Test;
 
-/**
- * @author Adrian Cole
- */
 @Test(groups =  "live", testName = "CloudFilesUKBlobIntegrationLiveTest")
 public class CloudFilesUKBlobIntegrationLiveTest extends CloudFilesBlobIntegrationLiveTest {
    public CloudFilesUKBlobIntegrationLiveTest() {

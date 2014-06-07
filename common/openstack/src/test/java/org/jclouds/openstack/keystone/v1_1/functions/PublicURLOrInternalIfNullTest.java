@@ -23,9 +23,6 @@ import java.net.URI;
 import org.jclouds.openstack.keystone.v1_1.domain.Endpoint;
 import org.testng.annotations.Test;
 
-/**
- * @author Adrian Cole
- */
 @Test(groups = "unit", testName = "PublicURLOrInternalIfNullTest")
 public class PublicURLOrInternalIfNullTest {
    private final PublicURLOrInternalIfNull fn = new PublicURLOrInternalIfNull();

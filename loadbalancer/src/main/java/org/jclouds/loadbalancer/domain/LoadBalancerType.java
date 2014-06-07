@@ -16,10 +16,6 @@
  */
 package org.jclouds.loadbalancer.domain;
 
-/**
- * 
- * @author Adrian Cole
- */
 public enum LoadBalancerType {
 
    GSLB, LB;

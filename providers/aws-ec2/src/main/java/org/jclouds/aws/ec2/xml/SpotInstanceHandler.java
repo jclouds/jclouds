@@ -34,10 +34,6 @@ import org.xml.sax.SAXException;
 
 import com.google.common.base.Supplier;
 
-/**
- * 
- * @author Adrian Cole
- */
 public class SpotInstanceHandler extends ParseSax.HandlerForGeneratedRequestWithResult<SpotInstanceRequest> {
    private StringBuilder currentText = new StringBuilder();
 

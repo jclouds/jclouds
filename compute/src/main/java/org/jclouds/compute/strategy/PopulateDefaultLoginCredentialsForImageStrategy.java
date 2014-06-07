@@ -22,9 +22,6 @@ import org.jclouds.domain.LoginCredentials;
 import com.google.common.base.Function;
 import com.google.inject.ImplementedBy;
 
-/**
- * @author Oleksiy Yarmula
- */
 @ImplementedBy(ReturnCredentialsBoundToImage.class)
 public interface PopulateDefaultLoginCredentialsForImageStrategy extends Function<Object, LoginCredentials> {
 

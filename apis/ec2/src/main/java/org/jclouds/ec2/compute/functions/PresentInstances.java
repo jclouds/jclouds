@@ -44,8 +44,6 @@ import com.google.inject.Inject;
 
 /**
  * returns the instances present in the list.  Makes a single rest call per aggregate on region.
- * 
- * @author Adrian Cole
  */
 @Singleton
 public class PresentInstances implements Function<Set<RegionAndName>, Set<RunningInstance>> {

@@ -35,8 +35,6 @@ import com.google.common.collect.ImmutableSet.Builder;
  * @see <a
  *      href="http://docs.amazonwebservices.com/AWSSimpleQueueService/latest/APIReference/Query_QueryDeleteMessageBatch.html"
  *      >docs</a>
- * 
- * @author Adrian Cole
  */
 public class BatchResponseHandler<V> extends ParseSax.HandlerForGeneratedRequestWithResult<BatchResult<V>> {
 

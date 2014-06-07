@@ -23,8 +23,6 @@ import java.lang.annotation.Target;
 
 /**
  * Designates the module configures an {@link EventBus}.
- * 
- * @author Ignasi Barrera
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)

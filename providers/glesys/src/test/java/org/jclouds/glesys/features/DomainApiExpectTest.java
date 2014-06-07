@@ -40,8 +40,6 @@ import com.google.common.collect.Iterables;
 
 /**
  * Tests annotation parsing of {@code DomainApi}
- *
- * @author Adam Lowe
  */
 @Test(groups = "unit", testName = "DomainApiExpectTest")
 public class DomainApiExpectTest extends BaseGleSYSApiExpectTest {

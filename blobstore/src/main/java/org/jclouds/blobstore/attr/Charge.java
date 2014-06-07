@@ -18,9 +18,6 @@ package org.jclouds.blobstore.attr;
 
 /**
  * Represents the ways a BlobStore are charged.
- * 
- * @author Adrian Cole
- * 
  */
 public enum Charge {
 

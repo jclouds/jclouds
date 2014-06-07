@@ -33,9 +33,6 @@ import com.google.common.base.Predicate;
 import com.google.common.base.Predicates;
 import com.google.common.collect.ImmutableSet;
 
-/**
- * @author Ignasi Barrera
- */
 @Test(groups = "live", testName = "ElasticHostsSydneyTemplateBuilderLiveTest")
 public class ElasticHostsSydneyTemplateBuilderLiveTest extends BaseTemplateBuilderLiveTest {
 

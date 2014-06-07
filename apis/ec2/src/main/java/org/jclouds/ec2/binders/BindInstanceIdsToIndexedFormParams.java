@@ -24,8 +24,6 @@ import org.jclouds.rest.Binder;
 
 /**
  * Binds the String [] to form parameters named with InstanceId.index
- * 
- * @author Adrian Cole
  */
 @Singleton
 public class BindInstanceIdsToIndexedFormParams implements Binder {

@@ -27,8 +27,6 @@ import org.jclouds.providers.internal.BaseProviderMetadata;
 
 /**
  * Implementation of {@link org.jclouds.types.ProviderMetadata} for ElasticHosts San Jose.
- * 
- * @author Ignasi Barrera
  */
 public class ElasticHostsSanJoseProviderMetadata extends BaseProviderMetadata {
 

@@ -28,7 +28,6 @@ import com.google.common.collect.FluentIterable;
  * Provides asynchronous access to Host Administration features via the REST API.
  * <p/>
  *
- * @author Adam Lowe
  * @see HostAdministrationAsyncApi
  */
 @Beta

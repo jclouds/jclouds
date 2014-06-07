@@ -26,10 +26,6 @@ import com.google.common.base.Splitter;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 
-/**
- * 
- * @author Adrian Cole
- */
 @Singleton
 public class ListOfKeyValuesDelimitedByBlankLinesToListOfMaps implements Function<String, List<Map<String, String>>> {
 

@@ -41,7 +41,6 @@ import com.google.common.util.concurrent.ListenableFuture;
  * {@link HttpResponseException} with a {@link HttpResponse set} and a valid
  * {@link HttpHeaders#RETRY_AFTER} header set.
  * 
- * @author Adrian Cole
  * @see <a href="https://tools.ietf.org/html/rfc2616#section-14.37">Retry-After
  *      format</a>
  */

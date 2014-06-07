@@ -42,9 +42,6 @@ import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Function;
 import com.google.common.net.HttpHeaders;
 
-/**
- * @author Adrian Cole
- */
 public class ParseSystemAndUserMetadataFromHeaders implements Function<HttpResponse, MutableBlobMetadata>,
          InvocationContext<ParseSystemAndUserMetadataFromHeaders> {
    private final String metadataPrefix;

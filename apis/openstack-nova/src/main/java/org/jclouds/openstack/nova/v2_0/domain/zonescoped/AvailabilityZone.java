@@ -21,9 +21,6 @@ import com.google.gson.annotations.SerializedName;
 
 import java.beans.ConstructorProperties;
 
-/**
- * @author Inbar Stolberg
- */
 public class AvailabilityZone {
 
    @SerializedName("zoneName")

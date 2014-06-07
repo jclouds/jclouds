@@ -26,8 +26,6 @@ import com.google.common.collect.Multimap;
 
 /**
  * saves the content of the http response to a file
- * 
- * @author Adrian Cole
  */
 public class SaveHttpResponseTo extends InterpretableStatement {
    public static final String CURL = "curl -q -s -S -L --connect-timeout 10 --max-time 600 --retry 20";

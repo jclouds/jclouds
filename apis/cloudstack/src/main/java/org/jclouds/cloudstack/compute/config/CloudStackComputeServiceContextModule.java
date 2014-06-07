@@ -105,10 +105,6 @@ import com.google.inject.TypeLiteral;
 import com.google.inject.assistedinject.FactoryModuleBuilder;
 import com.google.inject.name.Names;
 
-/**
- * 
- * @author Adrian Cole
- */
 public class CloudStackComputeServiceContextModule extends
          ComputeServiceAdapterContextModule<VirtualMachine, ServiceOffering, Template, Zone> {
 

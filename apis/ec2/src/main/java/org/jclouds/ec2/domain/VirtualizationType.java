@@ -20,8 +20,6 @@ import com.google.common.base.CaseFormat;
 
 /**
  * Virtualization type of the image.
- * 
- * @author Adrian Cole
  */
 public enum VirtualizationType {
 

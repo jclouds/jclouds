@@ -19,10 +19,6 @@ package org.jclouds.aws.sqs.features;
 import org.jclouds.sqs.features.MessageApiLiveTest;
 import org.testng.annotations.Test;
 
-/**
- * 
- * @author Adrian Cole
- */
 @Test(groups = "live", testName = "AWSMessageApiLiveTest")
 public class AWSMessageApiLiveTest extends MessageApiLiveTest {
 

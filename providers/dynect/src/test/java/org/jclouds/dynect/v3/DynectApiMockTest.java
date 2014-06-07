@@ -34,10 +34,6 @@ import com.google.common.collect.ImmutableSet;
 import com.google.inject.Module;
 import com.google.mockwebserver.MockResponse;
 import com.google.mockwebserver.MockWebServer;
-/**
- * 
- * @author Adrian Cole
- */
 @Test(singleThreaded = true)
 public class DynectApiMockTest {
    

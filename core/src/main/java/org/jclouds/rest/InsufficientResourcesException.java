@@ -18,8 +18,6 @@ package org.jclouds.rest;
 
 /**
  * Thrown when there is a quota or otherwise limit preventing the operation from occurring.
- * 
- * @author Adrian Cole
  */
 public class InsufficientResourcesException extends RuntimeException {
 

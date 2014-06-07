@@ -23,10 +23,6 @@ import org.jclouds.rest.internal.BaseRestApiExpectTest;
 
 import com.google.inject.Module;
 
-/**
- * 
- * @author Adrian Cole
- */
 public class BaseSTSExpectTest<T> extends BaseRestApiExpectTest<T> {
 
    public BaseSTSExpectTest() {

@@ -47,7 +47,6 @@ import com.google.common.util.concurrent.ListenableFuture;
  * Provides asynchronous access to Volume Attachments .
  * 
  * @see VolumeAttachmentApi
- * @author Everett Toews
  */
 @Beta
 @Extension(of = ServiceType.COMPUTE, namespace = ExtensionNamespaces.VOLUMES)

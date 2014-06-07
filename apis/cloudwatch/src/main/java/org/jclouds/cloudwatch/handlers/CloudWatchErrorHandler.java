@@ -34,9 +34,6 @@ import org.jclouds.http.HttpResponseException;
 import org.jclouds.http.functions.ParseSax;
 import org.jclouds.rest.InsufficientResourcesException;
 
-/**
- * @author Jeremy Whitlock
- */
 @Beta
 @Singleton
 public class CloudWatchErrorHandler implements HttpErrorHandler {

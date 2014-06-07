@@ -18,8 +18,6 @@ package org.jclouds.vcloud.domain;
 
 /**
  * reports storage resource consumption in a vDC.
- * 
- * @author Adrian Cole
  */
 public class Capacity {
 

@@ -30,10 +30,6 @@ import org.jclouds.s3.Bucket;
 import com.google.common.base.Function;
 import com.google.common.base.Optional;
 
-/**
- * 
- * @author Adrian Cole
- */
 @Singleton
 public class AssignCorrectHostnameForBucket implements Function<Object, URI> {
    @Resource

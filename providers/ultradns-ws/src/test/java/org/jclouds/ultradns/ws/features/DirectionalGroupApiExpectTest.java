@@ -31,9 +31,6 @@ import org.jclouds.ultradns.ws.parse.GetDirectionalDNSGroupDetailsResponseTest;
 import org.jclouds.ultradns.ws.parse.GetDirectionalDNSRecordsForHostResponseTest;
 import org.testng.annotations.Test;
 
-/**
- * @author Adrian Cole
- */
 @Test(groups = "unit", testName = "DirectionalGroupApiExpectTest")
 public class DirectionalGroupApiExpectTest extends BaseUltraDNSWSApiExpectTest {
 

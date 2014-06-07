@@ -31,8 +31,6 @@ import org.testng.annotations.Test;
 
 /**
  * Tests behavior of {@code ListAlarmsForMetric}.
- *
- * @author Jeremy Whitlock
  */
 @Test(groups = "unit")
 public class ListAlarmsForMetricTest {

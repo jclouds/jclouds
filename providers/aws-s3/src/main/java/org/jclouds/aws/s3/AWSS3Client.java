@@ -26,7 +26,6 @@ import org.jclouds.s3.options.PutObjectOptions;
 /**
  * Provides access to amazon-specific S3 features
  *
- * @author Adrian Cole
  * @see AWSS3AsyncClient
  */
 public interface AWSS3Client extends S3Client {

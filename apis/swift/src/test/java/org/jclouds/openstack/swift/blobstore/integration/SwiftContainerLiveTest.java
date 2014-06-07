@@ -24,9 +24,6 @@ import org.jclouds.blobstore.integration.internal.BaseContainerLiveTest;
 import org.jclouds.openstack.keystone.v2_0.config.KeystoneProperties;
 import org.testng.annotations.Test;
 
-/**
- * @author Adrian Cole
- */
 @Test(groups = "live", testName = "SwiftContainerLiveTest" )
 public class SwiftContainerLiveTest extends BaseContainerLiveTest {
    @Override

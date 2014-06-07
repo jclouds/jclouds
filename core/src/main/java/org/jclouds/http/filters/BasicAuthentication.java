@@ -36,8 +36,6 @@ import com.google.common.base.Supplier;
  * Uses Basic Authentication to sign the request.
  * 
  * @see <a href= "http://en.wikipedia.org/wiki/Basic_access_authentication" />
- * @author Adrian Cole
- * 
  */
 @Singleton
 public class BasicAuthentication implements HttpRequestFilter {

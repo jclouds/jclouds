@@ -34,9 +34,6 @@ import org.testng.annotations.Test;
 
 import com.google.common.collect.Lists;
 
-/**
- * @author Adrian Cole
- */
 @Test(testName = "FalseIfBucketAlreadyOwnedByYouOrOperationAbortedWhenBucketExistsTest")
 public class FalseIfBucketAlreadyOwnedByYouOrOperationAbortedWhenBucketExistsTest {
 

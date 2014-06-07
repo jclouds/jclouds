@@ -40,9 +40,6 @@ import org.testng.annotations.Test;
 
 import com.google.common.base.Charsets;
 
-/**
- * @author Barak Merimovich.
- */
 public class BouncyCastlePasswordDecryptionTest {
 
 	private static final String PRIVATE_KEY = "-----BEGIN RSA PRIVATE KEY-----\n"

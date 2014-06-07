@@ -29,7 +29,6 @@ import com.google.common.base.Supplier;
  * 
  * @see <a href="http://docs.amazonwebservices.com/AWSEC2/latest/APIReference/index.html?ApiReference-query-DescribeReservedInstancesOfferingsResponseSetItemType.html"
  *      />
- * @author Adrian Cole
  */
 public class ReservedInstancesOfferingHandler extends
       ParseSax.HandlerForGeneratedRequestWithResult<ReservedInstancesOffering> {

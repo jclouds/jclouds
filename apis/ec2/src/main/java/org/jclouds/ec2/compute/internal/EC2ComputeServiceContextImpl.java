@@ -28,9 +28,6 @@ import org.jclouds.location.Provider;
 
 import com.google.common.reflect.TypeToken;
 
-/**
- * @author Adrian Cole
- */
 @Singleton
 public class EC2ComputeServiceContextImpl extends ComputeServiceContextImpl implements EC2ComputeServiceContext {
    @Inject

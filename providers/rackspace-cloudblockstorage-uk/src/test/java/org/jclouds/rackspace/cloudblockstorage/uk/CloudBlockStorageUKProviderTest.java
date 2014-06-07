@@ -20,9 +20,6 @@ import org.jclouds.openstack.cinder.v1.CinderApiMetadata;
 import org.jclouds.providers.internal.BaseProviderMetadataTest;
 import org.testng.annotations.Test;
 
-/**
- * @author Everett Toews
- */
 @Test(groups = "unit", testName = "CloudBlockStorageUKProviderTest")
 public class CloudBlockStorageUKProviderTest extends BaseProviderMetadataTest {
 

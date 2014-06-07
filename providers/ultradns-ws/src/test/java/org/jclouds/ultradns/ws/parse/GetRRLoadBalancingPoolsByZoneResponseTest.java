@@ -28,9 +28,6 @@ import org.testng.annotations.Test;
 import com.google.common.collect.FluentIterable;
 import com.google.common.collect.ImmutableList;
 
-/**
- * @author Adrian Cole
- */
 @Test(testName = "GetRRLoadBalancingPoolsByZoneResponseTest")
 public class GetRRLoadBalancingPoolsByZoneResponseTest extends BaseHandlerTest {
 

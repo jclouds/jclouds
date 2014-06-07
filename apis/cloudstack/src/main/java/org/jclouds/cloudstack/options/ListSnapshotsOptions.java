@@ -25,7 +25,6 @@ import com.google.common.collect.ImmutableSet;
  *
  * @see org.jclouds.cloudstack.features.SnapshotApi#listSnapshots
  * @see org.jclouds.cloudstack.features.SnapshotApi#listSnapshots
- * @author Richard Downer
  */
 public class ListSnapshotsOptions extends AccountInDomainOptions {
 

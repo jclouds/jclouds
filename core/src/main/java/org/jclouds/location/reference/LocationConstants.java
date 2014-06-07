@@ -16,10 +16,6 @@
  */
 package org.jclouds.location.reference;
 
-/**
- * 
- * @author Adrian Cole
- */
 public final class LocationConstants {
    public static final String ENDPOINT = "endpoint";
    public static final String ISO3166_CODES = "iso3166-codes";

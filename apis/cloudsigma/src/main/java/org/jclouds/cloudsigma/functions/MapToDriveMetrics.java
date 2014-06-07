@@ -26,10 +26,6 @@ import com.google.common.base.Function;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableMap.Builder;
 
-/**
- * 
- * @author Adrian Cole
- */
 @Singleton
 public class MapToDriveMetrics implements Function<Map<String, String>, Map<String, ? extends DriveMetrics>> {
 

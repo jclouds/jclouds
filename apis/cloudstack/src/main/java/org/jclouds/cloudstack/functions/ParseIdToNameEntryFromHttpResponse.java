@@ -28,10 +28,6 @@ import com.google.common.base.Function;
 import com.google.common.collect.Iterables;
 import com.google.inject.Inject;
 
-/**
- * 
- * @author Adrian Cole
- */
 @Singleton
 public class ParseIdToNameEntryFromHttpResponse implements Function<HttpResponse, Map.Entry<String, String>> {
    private final ParseIdToNameFromHttpResponse parser;

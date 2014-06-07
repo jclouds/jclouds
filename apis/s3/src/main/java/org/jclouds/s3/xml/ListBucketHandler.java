@@ -41,7 +41,6 @@ import com.google.common.collect.ImmutableSet.Builder;
  * <p/>
  * ListBucketResult xmlns="http://s3.amazonaws.com/doc/2006-03-01"
  * 
- * @author Adrian Cole
  * @see <a
  *      href="http://docs.amazonwebservices.com/AmazonS3/2006-03-01/index.html?RESTBucketGET.html"
  *      />

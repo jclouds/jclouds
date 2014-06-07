@@ -37,8 +37,6 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.reflect.Invokable;
 /**
  * Tests behavior of {@code NATApi}
- * 
- * @author Adrian Cole
  */
 // NOTE:without testName, this will not call @Before* and fail w/NPE during
 // surefire

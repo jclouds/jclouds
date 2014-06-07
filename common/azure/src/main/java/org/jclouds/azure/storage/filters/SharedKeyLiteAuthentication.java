@@ -58,8 +58,6 @@ import com.google.common.net.HttpHeaders;
  * Signs the Azure Storage request.
  * 
  * @see <a href= "http://msdn.microsoft.com/en-us/library/dd179428.aspx" />
- * @author Adrian Cole
- * 
  */
 @Singleton
 public class SharedKeyLiteAuthentication implements HttpRequestFilter {

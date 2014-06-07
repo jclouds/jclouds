@@ -22,9 +22,6 @@ import org.jclouds.compute.domain.internal.ImageTemplateImpl;
  * A builder for {@link ImageTemplate}s. Includes sub-builders to build specific
  * {@link ImageTemplate}s for different purposes, such as cloning, creating from iso, creating from
  * netboot.
- * 
- * @author David Alves
- * 
  */
 public abstract class ImageTemplateBuilder {
 

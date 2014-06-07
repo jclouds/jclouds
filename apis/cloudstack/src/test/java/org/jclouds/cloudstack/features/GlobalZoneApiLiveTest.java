@@ -29,8 +29,6 @@ import com.google.common.collect.ImmutableList;
 
 /**
  * Tests behavior of {@code GlobalZoneApi}
- *
- * @author Andrei Savu
  */
 @Test(groups = "live", singleThreaded = true, testName = "GlobalZoneApiLiveTest")
 public class GlobalZoneApiLiveTest extends BaseCloudStackApiLiveTest {

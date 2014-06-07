@@ -21,7 +21,6 @@ import static com.google.common.base.Preconditions.checkNotNull;
 import com.google.common.base.CaseFormat;
 
 /**
- * @author Adrian Cole
  * @see OfferingApi#listServiceOfferings
  */
 public enum StorageType {

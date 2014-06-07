@@ -29,10 +29,6 @@ import com.google.common.base.Function;
 import com.google.common.base.Joiner;
 import com.google.common.collect.ImmutableMap;
 
-/**
- * 
- * @author Adrian Cole
- */
 @Singleton
 public class BaseDriveToMap implements Function<Drive, Map<String, String>> {
    @Override

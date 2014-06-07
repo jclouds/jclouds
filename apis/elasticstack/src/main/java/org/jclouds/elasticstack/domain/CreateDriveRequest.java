@@ -25,10 +25,6 @@ import org.jclouds.javax.annotation.Nullable;
 
 import com.google.common.collect.ImmutableSet;
 
-/**
- * 
- * @author Adrian Cole
- */
 public class CreateDriveRequest extends Drive {
    public static class Builder extends Drive.Builder {
 

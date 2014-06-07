@@ -27,8 +27,6 @@ import com.google.common.collect.Maps;
 
 /**
  * Used to construct new resources or modify existing ones.
- * 
- * @author Adrian Cole
  */
 public class MutableResourceMetadataImpl<T extends Enum<T>> implements MutableResourceMetadata<T> {
 

@@ -30,7 +30,6 @@ import com.google.common.base.Objects;
  * 
  * @see <a href="http://docs.rackspace.com/servers/api/v2/cs-devguide/content/curl_auth.html">docs</a>
 
- * @author Adrian Cole
  */
 @CredentialType(CloudIdentityCredentialTypes.API_KEY_CREDENTIALS)
 public class ApiKeyCredentials {

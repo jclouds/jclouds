@@ -35,8 +35,6 @@ import org.testng.annotations.Test;
 
 /**
  * Tests behavior of {@code CloudWatch}.
- *
- * @author Jeremy Whitlock
  */
 public class CloudWatchLiveTest extends BaseCloudWatchApiLiveTest {
 

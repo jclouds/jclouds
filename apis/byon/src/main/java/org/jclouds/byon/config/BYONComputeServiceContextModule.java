@@ -33,10 +33,6 @@ import com.google.common.base.Function;
 import com.google.common.io.ByteSource;
 import com.google.inject.TypeLiteral;
 
-/**
- * 
- * @author Adrian Cole
- */
 @SingleThreaded
 public class BYONComputeServiceContextModule extends JCloudsNativeComputeServiceAdapterContextModule {
 

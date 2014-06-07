@@ -20,8 +20,6 @@ import com.google.common.base.Function;
 
 /**
  * Statements used to manipulate the shadow file
- * 
- * @author Adrian Cole
  */
 public class ShadowStatements {
 

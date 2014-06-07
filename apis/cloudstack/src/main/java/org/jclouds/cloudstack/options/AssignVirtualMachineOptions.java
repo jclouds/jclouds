@@ -28,7 +28,6 @@ import com.google.common.collect.Iterables;
  * @see <a href=
  *      "http://download.cloud.com/releases/3.0.3/api_3.0.3/root_admin/assignVirtualMachine.html"
  *      />
- * @author Adrian Cole
  */
 public class AssignVirtualMachineOptions extends AccountInDomainOptions {
 

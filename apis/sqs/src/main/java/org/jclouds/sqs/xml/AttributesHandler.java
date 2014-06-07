@@ -29,8 +29,6 @@ import com.google.common.collect.ImmutableMap.Builder;
  * @see <a href=
  *      "http://docs.amazonwebservices.com/AWSSimpleQueueService/2011-10-01/APIReference/Query_QueryGetQueueAttributes.html"
  *      />
- * 
- * @author Adrian Cole
  */
 public class AttributesHandler extends ParseSax.HandlerForGeneratedRequestWithResult<Map<String, String>> {
 

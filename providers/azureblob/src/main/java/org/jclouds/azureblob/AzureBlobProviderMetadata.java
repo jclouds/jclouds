@@ -24,8 +24,6 @@ import org.jclouds.providers.internal.BaseProviderMetadata;
 
 /**
  * Implementation of {@link org.jclouds.types.ProviderMetadata} for Microsoft Azure Blob Service.
- * 
- * @author Adrian Cole
  */
 public class AzureBlobProviderMetadata extends BaseProviderMetadata {
    

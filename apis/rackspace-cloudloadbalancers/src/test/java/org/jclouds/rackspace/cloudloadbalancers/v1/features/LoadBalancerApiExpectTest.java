@@ -46,9 +46,6 @@ import org.testng.annotations.Test;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Sets;
 
-/**
- * @author Everett Toews
- */
 @Test(groups = "unit")
 public class LoadBalancerApiExpectTest extends BaseCloudLoadBalancerApiExpectTest<CloudLoadBalancersApi> {
 

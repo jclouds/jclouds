@@ -29,7 +29,6 @@ import com.google.common.base.Function;
 
 /**
  * @see <a href="http://docs.amazonwebservices.com/AmazonS3/latest/API/mpUploadComplete.html" />
- * @author Adrian Cole
  */
 @Singleton
 public class ETagFromHttpResponseViaRegex implements Function<HttpResponse, String> {

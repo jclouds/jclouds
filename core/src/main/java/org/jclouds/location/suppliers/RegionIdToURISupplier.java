@@ -27,11 +27,6 @@ import com.google.common.base.Supplier;
 import com.google.inject.ImplementedBy;
 import com.google.inject.assistedinject.Assisted;
 
-/**
- * 
- * 
- * @author Adrian Cole
- */
 @ImplementedBy(RegionIdToURIFromConfigurationOrDefaultToProvider.class)
 public interface RegionIdToURISupplier extends Supplier<Map<String, Supplier<URI>>> {
    interface Factory {

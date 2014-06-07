@@ -18,6 +18,5 @@
  * This package contains request options for S3 REST commands.
  * 
  * @see <a href="http://docs.amazonwebservices.com/AmazonS3/latest/RESTAPI.html" />
- * @author Adrian Cole
  */
 package org.jclouds.s3.options;

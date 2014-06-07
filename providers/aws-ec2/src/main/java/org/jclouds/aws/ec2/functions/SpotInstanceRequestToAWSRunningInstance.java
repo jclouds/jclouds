@@ -25,9 +25,6 @@ import org.jclouds.ec2.domain.InstanceState;
 
 import com.google.common.base.Function;
 
-/**
- * @author Adrian Cole
- */
 public class SpotInstanceRequestToAWSRunningInstance implements Function<SpotInstanceRequest, AWSRunningInstance> {
 
    @Override

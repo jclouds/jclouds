@@ -36,8 +36,6 @@ import com.google.common.collect.Lists;
 
 /**
  * Binds the Records to the request as a JSON payload.
- * 
- * @author Everett Toews
  */
 @Singleton
 public class UpdateRecordsToJSON implements Binder {

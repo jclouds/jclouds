@@ -37,9 +37,6 @@ import com.google.common.base.Function;
 /**
  * Defaults to version null and 64bit, if the operating system is unrecognized and the pattern
  * "32bit" isn't in the string.
- * 
- * @author Adrian Cole
- * 
  */
 @Singleton
 public class ParseOsFamilyVersion64BitFromImageName implements Function<String, OsFamilyVersion64Bit> {

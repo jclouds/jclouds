@@ -29,8 +29,6 @@ import com.google.common.collect.ImmutableMap;
 
 /**
  * Class ContainerMetadata
- *
- * @author Adrian Cole
  */
 public class ContainerMetadata {
 

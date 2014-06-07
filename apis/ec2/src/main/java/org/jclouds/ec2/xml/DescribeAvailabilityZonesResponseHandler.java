@@ -30,10 +30,6 @@ import org.xml.sax.Attributes;
 import com.google.common.base.Supplier;
 import com.google.common.collect.Sets;
 
-/**
- * 
- * @author Adrian Cole
- */
 public class DescribeAvailabilityZonesResponseHandler extends ParseSax.HandlerWithResult<Set<AvailabilityZoneInfo>> {
    private StringBuilder currentText = new StringBuilder();
    private final Supplier<String> defaultRegion;

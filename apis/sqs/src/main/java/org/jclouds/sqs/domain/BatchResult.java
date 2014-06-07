@@ -32,8 +32,6 @@ import com.google.common.collect.Maps;
  * @see <a
  *      href="http://docs.amazonwebservices.com/AWSSimpleQueueService/latest/SQSDeveloperGuide/MessageLifecycle.html"
  *      >doc</a>
- * 
- * @author Adrian Cole
  */
 public class BatchResult<V> extends ForwardingMap<String, V> {
 

@@ -26,8 +26,6 @@ import com.google.inject.ImplementedBy;
 
 /**
  * Size of a node.
- * 
- * @author Adrian Cole
  */
 @ImplementedBy(HardwareImpl.class)
 public interface Hardware extends ComputeMetadata {

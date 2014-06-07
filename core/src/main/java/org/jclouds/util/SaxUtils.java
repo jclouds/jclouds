@@ -23,10 +23,6 @@ import org.xml.sax.Attributes;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableMap.Builder;
 
-/**
- * 
- * @author Adrian Cole
- */
 public class SaxUtils {
 
    public static boolean equalsOrSuffix(String val, String expected) {

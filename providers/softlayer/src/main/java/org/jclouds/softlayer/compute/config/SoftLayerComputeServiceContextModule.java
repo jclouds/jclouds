@@ -60,10 +60,6 @@ import com.google.common.collect.Iterables;
 import com.google.inject.Provides;
 import com.google.inject.TypeLiteral;
 
-/**
- * 
- * @author Adrian Cole
- */
 public class SoftLayerComputeServiceContextModule extends
          ComputeServiceAdapterContextModule<VirtualGuest, Iterable<ProductItem>, ProductItem, Datacenter> {
 

@@ -36,9 +36,6 @@ import com.google.common.base.Optional;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
 
-/**
- * @author Adrian Cole
- */
 @Test(groups = "unit", singleThreaded = true, testName = "EC2DestroyNodeStrategyTest")
 public class EC2DestroyNodeStrategyTest {
 

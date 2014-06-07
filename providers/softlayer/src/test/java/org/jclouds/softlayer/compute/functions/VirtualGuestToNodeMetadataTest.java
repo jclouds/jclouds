@@ -46,9 +46,6 @@ import com.google.common.base.Suppliers;
 import com.google.common.collect.ImmutableSet;
 import com.google.inject.Guice;
 
-/**
- * @author Adrian Cole
- */
 @Test(groups = "unit", testName = "VirtualGuestToNodeMetadataTest")
 public class VirtualGuestToNodeMetadataTest {
    GroupNamingConvention.Factory namingConvention = Guice.createInjector().getInstance(GroupNamingConvention.Factory.class);

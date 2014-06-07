@@ -37,8 +37,6 @@ import org.jclouds.sqs.SQSApiMetadata;
 /**
  * Implementation of @ link org.jclouds.types.ProviderMetadata} for Amazon's Simple Queue Service
  * provider.
- * 
- * @author Adrian Cole
  */
 public class AWSSQSProviderMetadata extends BaseProviderMetadata {
 

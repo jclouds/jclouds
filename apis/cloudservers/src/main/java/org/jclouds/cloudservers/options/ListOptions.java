@@ -25,7 +25,6 @@ import org.jclouds.openstack.options.BaseListOptions;
  * 
  * @see BaseListOptions
  * @see <a href="http://docs.rackspacecloud.com/servers/api/cs-devguide-latest.pdf" />
- * @author Adrian Cole
  */
 public class ListOptions extends BaseListOptions {
 

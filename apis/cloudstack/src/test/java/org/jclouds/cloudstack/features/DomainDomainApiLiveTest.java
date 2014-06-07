@@ -36,8 +36,6 @@ import com.google.common.collect.Sets;
 
 /**
  * Tests behavior of {@code DomainDomainApi}
- *
- * @author Andrei Savu
  */
 @Test(groups = "live", singleThreaded = true, testName = "DomainDomainApiLiveTest")
 public class DomainDomainApiLiveTest extends BaseCloudStackApiLiveTest {

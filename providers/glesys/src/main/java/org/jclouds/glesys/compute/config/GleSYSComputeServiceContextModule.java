@@ -36,10 +36,6 @@ import org.jclouds.glesys.domain.ServerDetails;
 import com.google.common.base.Function;
 import com.google.inject.TypeLiteral;
 
-/**
- * 
- * @author Adrian Cole
- */
 public class GleSYSComputeServiceContextModule extends
          ComputeServiceAdapterContextModule<ServerDetails, Hardware, OSTemplate, String> {
 

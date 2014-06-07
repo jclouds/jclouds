@@ -19,9 +19,6 @@ package org.jclouds.ninefold.storage.blobstore.integration;
 import org.jclouds.atmos.blobstore.integration.AtmosIntegrationLiveTest;
 import org.testng.annotations.Test;
 
-/**
- * @author Adrian Cole
- */
 @Test(groups = "live", testName = "NinefoldStorageBlobIntegrationLiveTest")
 public class NinefoldStorageBlobIntegrationLiveTest extends AtmosIntegrationLiveTest {
 

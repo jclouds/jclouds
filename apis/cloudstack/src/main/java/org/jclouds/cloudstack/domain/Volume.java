@@ -31,9 +31,6 @@ import com.google.common.base.Objects.ToStringHelper;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Maps;
 
-/**
- * @author Vijay Kiran
- */
 public class Volume {
 
    /**

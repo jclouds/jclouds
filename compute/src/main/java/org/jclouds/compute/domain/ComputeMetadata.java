@@ -25,8 +25,6 @@ import org.jclouds.javax.annotation.Nullable;
 import com.google.inject.ImplementedBy;
 
 /**
- * @author Ivan Meredith
- * @author Adrian Cole
  */
 @ImplementedBy(ComputeMetadataImpl.class)
 public interface ComputeMetadata extends ResourceMetadata<ComputeType> {

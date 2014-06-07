@@ -28,8 +28,6 @@ import com.google.common.collect.ImmutableList;
 
 /**
  * An Openstack Trove Flavor.
- * 
- * @author Zack Shoylev
  */
 public class Flavor implements Comparable<Flavor>{
 

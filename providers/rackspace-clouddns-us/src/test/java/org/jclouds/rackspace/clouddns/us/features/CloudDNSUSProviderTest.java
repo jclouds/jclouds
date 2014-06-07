@@ -21,10 +21,6 @@ import org.jclouds.rackspace.clouddns.us.CloudDNSUSProviderMetadata;
 import org.jclouds.rackspace.clouddns.v1.CloudDNSApiMetadata;
 import org.testng.annotations.Test;
 
-/**
- * 
- * @author Everett Toews
- */
 @Test(groups = "unit", testName = "CloudDNSUSProviderTest")
 public class CloudDNSUSProviderTest extends BaseProviderMetadataTest {
 

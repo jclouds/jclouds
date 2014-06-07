@@ -27,7 +27,6 @@ import com.google.common.annotations.Beta;
  * Provides synchronous access to the KeyStone Admin API.
  * <p/>
  *
- * @author Adam Lowe
  * @see TokenAsyncApi
  * @see <a href=
  *       "http://docs.openstack.org/api/openstack-identity-service/2.0/content/Token_Operations.html"

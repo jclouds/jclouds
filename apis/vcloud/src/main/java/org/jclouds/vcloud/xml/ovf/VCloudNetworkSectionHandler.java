@@ -31,9 +31,6 @@ import org.jclouds.vcloud.domain.ovf.VCloudNetworkSection;
 import org.jclouds.vcloud.util.Utils;
 import org.xml.sax.Attributes;
 
-/**
- * @author Adrian Cole
- */
 public class VCloudNetworkSectionHandler extends ParseSax.HandlerWithResult<VCloudNetworkSection> {
    private final NetworkSectionHandler networkSectionHandler;
 

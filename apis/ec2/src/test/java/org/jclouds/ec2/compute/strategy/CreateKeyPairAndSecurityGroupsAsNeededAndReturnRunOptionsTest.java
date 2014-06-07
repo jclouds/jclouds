@@ -49,9 +49,6 @@ import org.jclouds.ec2.options.RunInstancesOptions;
 import org.jclouds.scriptbuilder.domain.Statements;
 import org.testng.annotations.Test;
 
-/**
- * @author Adrian Cole
- */
 @Test(groups = "unit", singleThreaded = true, testName = "CreateKeyPairAndSecurityGroupsAsNeededAndReturnRunOptionsTest")
 public class CreateKeyPairAndSecurityGroupsAsNeededAndReturnRunOptionsTest {
 

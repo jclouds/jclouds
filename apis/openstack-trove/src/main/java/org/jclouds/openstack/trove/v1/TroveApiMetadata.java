@@ -36,8 +36,6 @@ import com.google.inject.Module;
 
 /**
  * Implementation of {@link org.jclouds.apis.ApiMetadata} for the OpenStack Trove v1 API.
- * 
- * @author Zack Shoylev
  */
 public class TroveApiMetadata extends BaseHttpApiMetadata<TroveApi> {
       

@@ -25,7 +25,6 @@ import org.jclouds.openstack.keystone.v1_1.domain.Auth;
  * @see AuthenticationAsyncClient
  * @see <a href="http://docs.openstack.org/api/openstack-identity-service/2.0/content/Service_API_Client_Operations.html"
  *      />
- * @author Adrian Cole
  */
 public interface AuthenticationClient {
 

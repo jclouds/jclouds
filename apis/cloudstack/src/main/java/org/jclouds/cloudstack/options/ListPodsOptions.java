@@ -23,8 +23,6 @@ import com.google.common.collect.ImmutableSet;
 
 /**
  * Options to the GlobalPodApi.listPods API call.
- *
- * @author Richard Downer
  */
 public class ListPodsOptions extends BaseHttpRequestOptions {
 

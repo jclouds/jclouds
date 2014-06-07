@@ -18,10 +18,6 @@ package org.jclouds.cloudsigma.domain;
 
 import static com.google.common.base.Preconditions.checkArgument;
 
-/**
- * 
- * @author Adrian Cole
- */
 public class BlockDevice extends Device {
    public static class Builder extends Device.Builder {
       private final int index;

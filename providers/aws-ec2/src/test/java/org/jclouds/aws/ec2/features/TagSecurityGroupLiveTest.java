@@ -24,10 +24,6 @@ import org.testng.annotations.Test;
 
 import com.google.common.collect.Iterables;
 
-/**
- * 
- * @author Adrian Cole
- */
 @Test(groups = "live", singleThreaded = true)
 public class TagSecurityGroupLiveTest extends BaseTagApiLiveTest {
    public TagSecurityGroupLiveTest() {

@@ -40,8 +40,6 @@ import com.google.common.collect.ImmutableSet;
 /**
  * Tests possible uses of AWSEC2TemplateOptions and
  * AWSEC2TemplateOptions.Builder.*
- * 
- * @author Adrian Cole
  */
 public class AWSEC2TemplateOptionsTest {
 

@@ -23,9 +23,6 @@ import org.jclouds.sqs.domain.Action;
 import org.jclouds.sqs.internal.BaseSQSApiExpectTest;
 import org.testng.annotations.Test;
 
-/**
- * @author Adrian Cole
- */
 @Test(groups = "unit", testName = "PermissionApiExpectTest")
 public class PermissionApiExpectTest extends BaseSQSApiExpectTest {
    

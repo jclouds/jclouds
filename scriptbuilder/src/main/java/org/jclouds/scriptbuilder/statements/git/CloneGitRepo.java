@@ -37,8 +37,6 @@ import com.google.common.collect.Iterables;
  * using git branch -r), and creates and checks out an initial branch that is
  * forked from the cloned gitRepoAndRef's currently active branch. PWD is set to
  * the directory being checked out.
- * 
- * @author Adrian Cole
  */
 public class CloneGitRepo implements Statement {
 

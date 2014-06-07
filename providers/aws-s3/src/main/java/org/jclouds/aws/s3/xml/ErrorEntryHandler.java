@@ -25,9 +25,6 @@ import java.util.Map;
 
 import static org.jclouds.util.SaxUtils.equalsOrSuffix;
 
-/**
- * @author Andrei Savu
- */
 public class ErrorEntryHandler extends ParseSax.HandlerForGeneratedRequestWithResult<Map.Entry<String, DeleteResult.Error>> {
 
    private StringBuilder accumulator = new StringBuilder();

@@ -27,10 +27,6 @@ import org.jclouds.io.Payload;
 
 import com.google.common.base.Throwables;
 
-/**
- * 
- * @author Adrian Cole
- */
 public class RSADecryptingPayload extends BaseCipherPayload {
 
    public RSADecryptingPayload(Payload delegate, Key key) {

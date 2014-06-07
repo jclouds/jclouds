@@ -20,8 +20,6 @@ package org.jclouds.compute.domain;
 /**
  * The login type of the server.
  * 
- * @author Adrian Cole
- * @author Ivan Meredith
  */
 public enum LoginType {
 

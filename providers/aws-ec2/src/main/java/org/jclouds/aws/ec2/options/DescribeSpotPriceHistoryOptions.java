@@ -37,7 +37,6 @@ import org.jclouds.ec2.options.internal.BaseEC2RequestOptions;
  * history = client.getSpotInstanceServices().describeSpotPriceHistoryInRegion(from(yesterday).instanceType("m1.small"));
  * <code>
  * 
- * @author Adrian Cole
  * @see <a href=
  *      "http://docs.amazonwebservices.com/AWSEC2/latest/APIReference/index.html?ApiReference-form-DescribeSpotPriceHistory.html"
  *      />

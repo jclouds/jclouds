@@ -25,9 +25,6 @@ import org.testng.annotations.Test;
 import com.google.common.base.Function;
 import com.google.common.collect.ImmutableMap;
 
-/**
- * @author Adrian Cole
- */
 @Test(groups = "unit")
 public class Maps2Test {
 

@@ -23,8 +23,6 @@ import com.google.common.collect.ImmutableList;
 
 /**
  * Statement used in a shell script without modifications apart from a trailing newline.
- * 
- * @author Adrian Cole
  */
 public class LiteralStatement implements Statement {
 

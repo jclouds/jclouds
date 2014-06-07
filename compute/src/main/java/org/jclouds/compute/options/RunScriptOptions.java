@@ -29,8 +29,6 @@ import com.google.common.base.Objects.ToStringHelper;
 
 /**
  * Enables additional options for running a script.
- * 
- * @author Oleksiy Yarmula
  */
 public class RunScriptOptions {
 

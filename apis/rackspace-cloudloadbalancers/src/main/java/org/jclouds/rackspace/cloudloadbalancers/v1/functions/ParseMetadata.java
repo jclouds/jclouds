@@ -33,9 +33,6 @@ import org.jclouds.rackspace.cloudloadbalancers.v1.domain.Metadata;
 
 import com.google.inject.TypeLiteral;
 
-/**
- * @author Everett Toews
- */
 public class ParseMetadata extends ParseJson<Metadata> {
 
    @Inject

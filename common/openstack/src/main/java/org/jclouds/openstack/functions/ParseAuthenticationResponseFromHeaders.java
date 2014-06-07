@@ -40,8 +40,6 @@ import com.google.common.collect.ImmutableMap.Builder;
 
 /**
  * This parses {@link AuthenticationResponse} from HTTP headers.
- * 
- * @author Adrian Cole
  */
 public class ParseAuthenticationResponseFromHeaders implements Function<HttpResponse, AuthenticationResponse>,
          InvocationContext<ParseAuthenticationResponseFromHeaders> {

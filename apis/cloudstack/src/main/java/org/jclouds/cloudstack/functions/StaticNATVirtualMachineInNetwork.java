@@ -33,10 +33,6 @@ import org.jclouds.logging.Logger;
 import com.google.common.base.Function;
 import com.google.inject.assistedinject.Assisted;
 
-/**
- * 
- * @author Adrian Cole
- */
 @Singleton
 public class StaticNATVirtualMachineInNetwork implements Function<VirtualMachine, PublicIPAddress> {
    public interface Factory {

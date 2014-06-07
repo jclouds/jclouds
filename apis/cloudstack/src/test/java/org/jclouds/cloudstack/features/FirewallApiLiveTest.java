@@ -43,8 +43,6 @@ import com.google.common.net.HostAndPort;
 
 /**
  * Tests behavior of {@code FirewallApiLiveTest}
- *
- * @author Adrian Cole
  */
 @Test(groups = "live", singleThreaded = true, testName = "FirewallApiLiveTest")
 public class FirewallApiLiveTest extends BaseCloudStackApiLiveTest {

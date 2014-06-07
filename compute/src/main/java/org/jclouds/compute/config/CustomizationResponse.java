@@ -19,8 +19,6 @@ package org.jclouds.compute.config;
 /**
  * 
  * Designates information related to customization of a resource.
- * 
- * @author Adrian Cole
  */
 public interface CustomizationResponse {
 

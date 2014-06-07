@@ -27,8 +27,6 @@ import org.jclouds.providers.internal.BaseProviderMetadata;
 
 /**
  * Implementation of {@link org.jclouds.types.ProviderMetadata} for ElasticHosts Sydney.
- * 
- * @author Ignasi Barrera
  */
 public class ElasticHostsSydneyProviderMetadata extends BaseProviderMetadata {
 

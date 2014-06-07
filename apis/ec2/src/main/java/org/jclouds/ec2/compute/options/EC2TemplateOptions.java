@@ -56,8 +56,6 @@ import org.jclouds.scriptbuilder.domain.Statement;
  * templateBuilder.options(inboundPorts(22, 80, 8080, 443));
  * Set<? extends NodeMetadata> set = client.createNodesInGroup(tag, 2, templateBuilder.build());
  * <code>
- * 
- * @author Adrian Cole
  */
 public class EC2TemplateOptions extends TemplateOptions implements Cloneable {
    @Override

@@ -22,9 +22,6 @@ import org.jclouds.openstack.nova.v2_0.domain.zonescoped.AvailabilityZone;
 import org.jclouds.openstack.v2_0.ServiceType;
 import org.jclouds.openstack.v2_0.services.Extension;
 
-/**
- * @author Inbar Stolberg
- */
 @Beta
 @Extension(of = ServiceType.COMPUTE, namespace = ExtensionNamespaces.ADMIN_ACTIONS)
 public interface AvailabilityZoneAPI {

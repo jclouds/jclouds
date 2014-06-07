@@ -23,9 +23,6 @@ import java.io.InputStream;
 import org.jclouds.io.ContentMetadata;
 import org.jclouds.io.MutableContentMetadata;
 
-/**
- * @author Adrian Cole
- */
 public class PhantomPayload extends BasePayload<Object> {
 
    public PhantomPayload() {

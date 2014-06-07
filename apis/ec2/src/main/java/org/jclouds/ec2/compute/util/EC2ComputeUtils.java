@@ -21,10 +21,6 @@ import javax.inject.Singleton;
 import org.jclouds.domain.Location;
 import org.jclouds.domain.LocationScope;
 
-/**
- * 
- * @author Adrian Cole
- */
 @Singleton
 public class EC2ComputeUtils {
 

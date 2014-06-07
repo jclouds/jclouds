@@ -37,10 +37,6 @@ import com.google.inject.AbstractModule;
 import com.google.inject.Injector;
 import com.google.inject.assistedinject.FactoryModuleBuilder;
 
-/**
- * 
- * @author Adrian Cole
- */
 @Test(groups = "unit")
 public class ParseLoadBalancersTest extends BaseIterableWithMarkerParserTest<LoadBalancer> {
 

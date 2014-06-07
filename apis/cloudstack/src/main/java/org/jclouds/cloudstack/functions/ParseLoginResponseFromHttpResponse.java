@@ -30,9 +30,6 @@ import com.google.common.base.Splitter;
 import com.google.inject.Inject;
 import com.google.inject.TypeLiteral;
 
-/**
- * @author Andrei Savu
- */
 public class ParseLoginResponseFromHttpResponse implements Function<HttpResponse, LoginResponse> {
 
    private ParseFirstJsonValueNamed<LoginResponse> parser;

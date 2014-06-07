@@ -38,7 +38,6 @@ import org.jclouds.rest.annotations.SelectJson;
  * @see <a href=
  *      "http://docs.openstack.org/api/openstack-identity-service/2.0/content/Service_API_Api_Operations.html"
  *      />
- * @author Adrian Cole
  */
 public interface CloudIdentityAuthenticationApi extends AuthenticationApi {
 

@@ -25,8 +25,6 @@ import com.google.common.base.Objects;
  * @see <a
  *      href="http://docs.amazonwebservices.com/AWSSimpleQueueService/latest/APIReference/Query_QueryDeleteMessageBatch.html"
  *      >doc</a>
- * 
- * @author Adrian Cole
  */
 public class BatchError {
 

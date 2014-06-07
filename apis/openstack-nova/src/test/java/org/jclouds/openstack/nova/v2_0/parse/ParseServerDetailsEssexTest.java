@@ -41,9 +41,6 @@ import com.google.common.collect.ImmutableSet;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 
-/**
- * @author Adrian Cole
- */
 @Test(groups = "unit", testName = "ParseServerDetailsEssexTest")
 public class ParseServerDetailsEssexTest extends BaseSetParserTest<Server> {
 

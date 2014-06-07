@@ -25,8 +25,6 @@ import com.google.common.io.ByteProcessor;
 
 /**
  * functions for {@link Mac}
- * 
- * @author Adrian Cole
  */
 @Beta
 public class Macs {

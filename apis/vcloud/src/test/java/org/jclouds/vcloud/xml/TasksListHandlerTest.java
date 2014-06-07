@@ -36,8 +36,6 @@ import com.google.common.collect.ImmutableSortedSet;
 
 /**
  * Tests behavior of {@code TasksListHandler}
- * 
- * @author Adrian Cole
  */
 // NOTE:without testName, this will not call @Before* and fail w/NPE during surefire
 @Test(groups = "unit", testName = "TasksListHandlerTest")

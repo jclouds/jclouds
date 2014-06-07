@@ -32,9 +32,6 @@ import org.jclouds.ultradns.ws.parse.GetRRLoadBalancingPoolsByZoneResponseTest;
 import org.jclouds.ultradns.ws.parse.GetResourceRecordsOfResourceRecordResponseTest;
 import org.testng.annotations.Test;
 
-/**
- * @author Adrian Cole
- */
 @Test(groups = "unit", testName = "RoundRobinPoolApiExpectTest")
 public class RoundRobinPoolApiExpectTest extends BaseUltraDNSWSApiExpectTest {
    HttpRequest createA = HttpRequest.builder().method(POST)

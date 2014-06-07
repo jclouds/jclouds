@@ -20,8 +20,6 @@ import com.google.common.base.Objects;
 
 /**
  * This would be replaced with the real java object related to the underlying server
- * 
- * @author Adrian Cole
  */
 public class Server {
    public enum Status {

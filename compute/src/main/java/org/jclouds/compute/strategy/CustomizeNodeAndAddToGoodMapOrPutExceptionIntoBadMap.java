@@ -46,10 +46,6 @@ import com.google.common.collect.Multimap;
 import com.google.inject.assistedinject.Assisted;
 import com.google.inject.assistedinject.AssistedInject;
 
-/**
- * 
- * @author Adrian Cole
- */
 public class CustomizeNodeAndAddToGoodMapOrPutExceptionIntoBadMap implements Callable<Void>,
       Function<AtomicReference<NodeMetadata>, Void> {
 

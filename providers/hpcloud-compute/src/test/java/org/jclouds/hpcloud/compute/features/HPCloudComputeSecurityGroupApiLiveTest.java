@@ -19,10 +19,6 @@ package org.jclouds.hpcloud.compute.features;
 import org.jclouds.openstack.nova.v2_0.extensions.SecurityGroupApiLiveTest;
 import org.testng.annotations.Test;
 
-/**
- *
- * @author Michael Arnold
- */
 @Test(groups = "live", testName = "HPCloudComputeSecurityGroupApiLiveTest")
 public class HPCloudComputeSecurityGroupApiLiveTest extends SecurityGroupApiLiveTest {
     public HPCloudComputeSecurityGroupApiLiveTest() {

@@ -27,9 +27,6 @@ import org.jclouds.blobstore.domain.BlobMetadata;
 
 import com.google.common.base.Function;
 
-/**
- * @author Adrian Cole
- */
 @Singleton
 public class BlobMetadataToObject implements Function<BlobMetadata, AtmosObject> {
    private final AtmosObject.Factory factory;

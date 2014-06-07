@@ -27,8 +27,6 @@ import com.google.inject.Guice;
 
 /**
  * Tests behavior of {@code ParseUserMetadataFromHeaders}
- * 
- * @author Adrian Cole
  */
 @Test(groups = "unit")
 public class ParseUserMetadataFromHeadersTest {

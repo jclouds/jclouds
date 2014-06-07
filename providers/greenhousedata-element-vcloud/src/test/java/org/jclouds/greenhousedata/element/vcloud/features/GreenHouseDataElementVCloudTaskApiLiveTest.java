@@ -19,11 +19,6 @@ package org.jclouds.greenhousedata.element.vcloud.features;
 import org.jclouds.vcloud.features.TaskApiLiveTest;
 import org.testng.annotations.Test;
 
-/**
- * 
- * 
- * @author Adrian Cole
- */
 @Test(groups = "live", enabled = true, singleThreaded = true, testName = "GreenHouseDataElementVCloudTaskApiLiveTest")
 public class GreenHouseDataElementVCloudTaskApiLiveTest extends TaskApiLiveTest {
 

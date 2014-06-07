@@ -24,8 +24,6 @@ import com.google.inject.ImplementedBy;
 
 /**
  * Parses XML documents.
- * 
- * @author Ignasi Barrera
  */
 @ImplementedBy(JAXBParser.class)
 public interface XMLParser {

@@ -31,8 +31,6 @@ import com.google.inject.Provides;
 /**
  * Configures signature process and dependencies needed for AWS Query apis
  * (which we sent as POST requests, hence the name Form).
- * 
- * @author Adrian Cole
  */
 @ConfiguresHttpApi
 public abstract class FormSigningHttpApiModule<A> extends AWSHttpApiModule<A> {

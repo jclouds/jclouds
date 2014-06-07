@@ -29,8 +29,6 @@ import org.jclouds.location.suppliers.RegionIdsSupplier;
 /**
  * 
  * looks for properties bound to the naming convention jclouds.regions
- * 
- * @author Adrian Cole
  */
 @Singleton
 public class RegionIdsFromConfiguration extends SplitConfigurationKey implements RegionIdsSupplier {

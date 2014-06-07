@@ -34,8 +34,6 @@ import com.google.inject.TypeLiteral;
 
 /**
  * Implementation of {@link ApiMetadata} for Rackspace Cloud Files API
- *
- * @author Adrian Cole
  */
 public class CloudFilesApiMetadata extends SwiftApiMetadata {
 

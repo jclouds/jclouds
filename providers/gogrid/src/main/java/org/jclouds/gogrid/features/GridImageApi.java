@@ -52,7 +52,6 @@ import org.jclouds.rest.annotations.ResponseParser;
  * 
  * @see <a
  *      href="http://wiki.gogrid.com/wiki/index.php/API#Server_Image_Methods"/>
- * @author Oleksiy Yarmula
  */
 @RequestFilters(SharedKeyLiteAuthentication.class)
 @QueryParams(keys = VERSION, values = "{jclouds.api-version}")

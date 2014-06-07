@@ -18,10 +18,6 @@ package org.jclouds.http;
 
 import org.testng.annotations.Test;
 
-/**
- * 
- * @author Adrian Cole
- */
 public class TransformingHttpCommandImplTest {
 
    @Test

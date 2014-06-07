@@ -29,8 +29,6 @@ import com.google.common.base.Predicate;
  * 
  * This class has static methods that create customized predicates to use with
  * {@link org.jclouds.compute.ComputeService}.
- * 
- * @author Adrian Cole
  */
 public class EC2ImagePredicates {
 

@@ -24,8 +24,6 @@ import org.jclouds.rest.Binder;
 
 /**
  * Binds the String [] to form parameters named with SpotInstanceRequestId.index
- * 
- * @author Adrian Cole
  */
 @Singleton
 public class BindSpotInstanceRequestIdsToIndexedFormParams implements Binder {

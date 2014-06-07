@@ -29,10 +29,6 @@ import com.google.common.base.Function;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Iterables;
 
-/**
- * 
- * @author Adrian Cole
- */
 @Singleton
 public class ListOfKeyValuesDelimitedByBlankLinesToServerInfoSet implements Function<HttpResponse, Set<ServerInfo>> {
    private final ReturnStringIf2xx returnStringIf200;

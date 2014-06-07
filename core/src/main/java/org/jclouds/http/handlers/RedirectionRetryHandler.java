@@ -39,8 +39,6 @@ import com.google.inject.Inject;
 /**
  * Handles Retryable responses with error codes in the 3xx range, backing off
  * when redirecting to itself.
- * 
- * @author Adrian Cole
  */
 @Singleton
 public class RedirectionRetryHandler implements HttpRetryHandler {

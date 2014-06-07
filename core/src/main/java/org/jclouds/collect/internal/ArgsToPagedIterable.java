@@ -39,8 +39,6 @@ import com.google.common.base.Function;
  * have the context of the initial request. This class propagates the arguments
  * used in the original request, so they can be used to fetch the next page in
  * the result set.
- * 
- * @author Ignasi Barrera
  */
 @Beta
 public abstract class ArgsToPagedIterable<T, I extends ArgsToPagedIterable<T, I>> implements
@@ -79,7 +77,6 @@ public abstract class ArgsToPagedIterable<T, I extends ArgsToPagedIterable<T, I>
     * the caller arg0 is the value of {@code zone}, and the callee is
     * {@code UserApi.list()}
     * 
-    * @author Adrian Cole
     * @see ParseImages function in openstack-glance for a usage example.
     */
    public abstract static class FromCaller<T, I extends FromCaller<T, I>> extends ArgsToPagedIterable<T, I> {

@@ -18,10 +18,6 @@ package org.jclouds.scriptbuilder.domain;
 
 import org.jclouds.scriptbuilder.statements.login.AdminAccess;
 
-/**
- * 
- * @author Adrian Cole
- */
 public abstract class AdminAccessVisitor implements StatementVisitor {
    public abstract void visit(AdminAccess input);
 

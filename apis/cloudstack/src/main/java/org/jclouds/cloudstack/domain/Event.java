@@ -28,8 +28,6 @@ import com.google.common.base.Objects.ToStringHelper;
 
 /**
  * Class Event
- *
- * @author Vijay Kiran
  */
 public class Event implements Comparable<Event> {
 

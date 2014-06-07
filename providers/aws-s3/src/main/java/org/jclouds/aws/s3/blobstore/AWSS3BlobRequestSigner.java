@@ -44,9 +44,6 @@ import com.google.common.net.HttpHeaders;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 
-/**
- * @author Diwaker Gupta
- */
 public class AWSS3BlobRequestSigner extends S3BlobRequestSigner<AWSS3AsyncClient> {
    public static final String TEMPORARY_SIGNATURE_PARAM = "Signature";
 

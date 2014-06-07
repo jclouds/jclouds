@@ -26,9 +26,6 @@ import org.jclouds.vcloud.domain.GuestCustomizationSection;
 import org.jclouds.vcloud.domain.ReferenceType;
 import org.xml.sax.Attributes;
 
-/**
- * @author Adrian Cole
- */
 public class GuestCustomizationSectionHandler extends ParseSax.HandlerWithResult<GuestCustomizationSection> {
    protected StringBuilder currentText = new StringBuilder();
    private ReferenceType guest;

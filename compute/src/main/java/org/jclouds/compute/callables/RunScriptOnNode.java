@@ -29,8 +29,6 @@ import com.google.inject.ImplementedBy;
 
 /**
  * Separates out how one implements the ability to run a script on a node.
- * 
- * @author Adrian Cole
  */
 @Beta
 public interface RunScriptOnNode extends Callable<ExecResponse> {

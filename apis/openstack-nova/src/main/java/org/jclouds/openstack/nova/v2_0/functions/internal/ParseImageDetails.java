@@ -42,8 +42,6 @@ import org.jclouds.openstack.v2_0.options.PaginationOptions;
 
 /**
  * boiler plate until we determine a better way
- * 
- * @author Adrian Cole
  */
 @Beta
 @Singleton

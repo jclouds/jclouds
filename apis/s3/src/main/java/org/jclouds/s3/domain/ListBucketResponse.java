@@ -38,7 +38,6 @@ import java.util.Set;
  * object homepage.html?is stored in the Amazon S3 bucket mybucket its address would be
  * http://mybucket.s3.amazonaws.com/homepage.html?
  * 
- * @author Adrian Cole
  * @see <a href="http://docs.amazonwebservices.com/AmazonS3/2006-03-01/index.html" />
  */
 public interface ListBucketResponse extends Set<ObjectMetadata> {

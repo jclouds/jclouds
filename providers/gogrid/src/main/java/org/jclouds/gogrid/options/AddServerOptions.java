@@ -23,9 +23,6 @@ import static org.jclouds.gogrid.reference.GoGridQueryParams.IS_SANDBOX_KEY;
 
 import org.jclouds.http.options.BaseHttpRequestOptions;
 
-/**
- * @author Oleksiy Yarmula
- */
 public class AddServerOptions extends BaseHttpRequestOptions {
 
    public AddServerOptions withDescription(String description) {

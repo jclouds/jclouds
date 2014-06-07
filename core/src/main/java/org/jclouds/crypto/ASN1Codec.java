@@ -43,8 +43,6 @@ import com.google.common.primitives.Bytes;
  * 
  * This codec is based on code from {@code bouncycastle.org}. It simplifies extraction of RSA keys from {@code ASN.1}
  * encoding. This only parses the {@code BigInteger} elements needed to generate {@link KeySpec}
- * 
- * @author Adrian Cole
  */
 @Beta
 final class ASN1Codec {

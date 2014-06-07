@@ -31,9 +31,6 @@ import com.google.common.collect.LinkedHashMultimap;
 import com.google.common.collect.Multimap;
 import com.google.common.collect.Sets;
 
-/**
- * @author Adrian Cole
- */
 public class BaseVirtualSystem<T extends BaseVirtualSystem<T>> extends Section<T> {
 
    @SuppressWarnings("unchecked")

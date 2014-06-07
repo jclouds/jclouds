@@ -20,9 +20,6 @@ import java.util.Date;
 
 import org.jclouds.javax.annotation.Nullable;
 
-/**
- * @author Adrian Cole
- */
 public interface MutableContentMetadata extends ContentMetadata {
 
    void setContentLength(@Nullable Long contentLength);

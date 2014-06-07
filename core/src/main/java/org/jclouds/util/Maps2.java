@@ -27,8 +27,6 @@ import com.google.common.collect.ImmutableMap.Builder;
 
 /**
  * General utilities used in jclouds code for {@link Map Maps}.
- * 
- * @author Adrian Cole
  */
 public class Maps2 {
 

@@ -31,7 +31,6 @@ import org.jclouds.http.options.BaseHttpRequestOptions;
  * Set<Queue> queues = connection.listQueuesInRegion(queuePrefix("foo"));
  * <code>
  * 
- * @author Adrian Cole
  * @see <a
  *      href="http://docs.amazonwebservices.com/AWSSimpleQueueService/latest/APIReference/Query_QueryListQueues.html"
  *      />

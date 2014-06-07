@@ -29,10 +29,6 @@ import org.jclouds.s3.domain.S3Object;
 
 import com.google.common.net.HttpHeaders;
 
-/**
- * 
- * @author Adrian Cole
- */
 @Singleton
 public class BindS3ObjectMetadataToRequest implements Binder {
    protected final BindMapToHeadersWithPrefix metadataPrefixer;

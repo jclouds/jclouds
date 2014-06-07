@@ -18,9 +18,6 @@ package org.jclouds.sqs.binders;
 
 import org.jclouds.aws.binders.BindMapToIndexedFormParams;
 
-/**
- * @author Adrian Cole
- */
 public class BindSendMessageBatchRequestEntryToIndexedFormParams extends BindMapToIndexedFormParams {
 
    protected BindSendMessageBatchRequestEntryToIndexedFormParams() {

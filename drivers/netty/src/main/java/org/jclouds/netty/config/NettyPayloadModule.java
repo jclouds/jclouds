@@ -21,11 +21,6 @@ import org.jclouds.netty.io.NettyPayloadSlicer;
 
 import com.google.inject.AbstractModule;
 
-/**
- * 
- * @author Adrian Cole
- * 
- */
 public class NettyPayloadModule extends AbstractModule {
 
    @Override

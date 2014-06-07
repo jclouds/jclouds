@@ -40,8 +40,6 @@ import com.google.common.collect.ImmutableSet;
 
 /**
  * Tests possible uses of AWSRunInstancesOptions and AWSRunInstancesOptions.Builder.*
- * 
- * @author Adrian Cole
  */
 public class AWSRunInstancesOptionsTest {
 

@@ -28,7 +28,6 @@ import com.google.common.collect.FluentIterable;
  * <p/>
  * 
  * @see KeyPairAsyncApi
- * @author Jeremy Daggett
  */
 @Beta
 @Extension(of = ServiceType.COMPUTE, namespace = ExtensionNamespaces.KEYPAIRS)

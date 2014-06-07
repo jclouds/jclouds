@@ -22,8 +22,6 @@ import com.google.common.base.Optional;
 
 /**
  * Update a Domain or Subdomain.
- * 
- * @author Everett Toews
  */
 public class UpdateDomain {
    private final Optional<String> emailAddress;

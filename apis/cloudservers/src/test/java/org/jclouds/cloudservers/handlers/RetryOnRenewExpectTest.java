@@ -26,8 +26,6 @@ import org.testng.annotations.Test;
 
 /**
  * Tests behavior of {@code RetryOnRenew} handler
- * 
- * @author grkvlt@apache.org
  */
 @Test(groups = "unit", testName = "RetryOnRenewExpectTest")
 public class RetryOnRenewExpectTest extends BaseCloudServersRestClientExpectTest {

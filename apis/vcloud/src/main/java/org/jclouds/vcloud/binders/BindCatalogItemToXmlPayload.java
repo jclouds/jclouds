@@ -41,11 +41,6 @@ import org.jclouds.vcloud.options.CatalogItemOptions;
 import com.google.inject.Inject;
 import com.jamesmurty.utils.XMLBuilder;
 
-/**
- * 
- * @author Adrian Cole
- * 
- */
 @Singleton
 public class BindCatalogItemToXmlPayload implements MapBinder {
 

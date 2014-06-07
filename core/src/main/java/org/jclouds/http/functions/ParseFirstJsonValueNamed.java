@@ -41,9 +41,6 @@ import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonToken;
 import com.google.inject.TypeLiteral;
 
-/**
- * @author Adrian Cole
- */
 public class ParseFirstJsonValueNamed<T> implements Function<HttpResponse, T> {
 
    @Resource

@@ -31,7 +31,6 @@ import com.google.common.collect.ImmutableSet;
  * @see <a
  *      href="http://docs.rackspacecloud.com/loadbalancers/api/v1.0/clb-devguide/content/ch03s06.html"
  *      />
- * @author Adrian Cole
  */
 public class ListOptions extends BaseHttpRequestOptions {
    public static final ListOptions NONE = new ListOptions();

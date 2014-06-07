@@ -24,8 +24,6 @@ import com.google.inject.ImplementedBy;
 /**
  * Means to constrain zones returned to abstraction calls. Particularly useful
  * to whitelist certain zones.
- * 
- * @author Adrian Cole
  */
 @ImplementedBy(AnyOrConfiguredZoneId.class)
 public interface ZoneIdFilter extends Predicate<String> {

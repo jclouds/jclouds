@@ -29,8 +29,6 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.reflect.Invokable;
 /**
  * Tests behavior of {@code GlobalHostApi}
- *
- * @author Andrei Savu
  */
 @Test(groups = "unit", testName = "GlobalHostApiTest")
 public class GlobalHostApiTest extends BaseCloudStackApiTest<GlobalHostApi> {

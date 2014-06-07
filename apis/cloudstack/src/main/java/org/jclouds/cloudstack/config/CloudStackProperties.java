@@ -19,8 +19,6 @@ package org.jclouds.cloudstack.config;
 
 /**
  * Configuration properties and constants used in CloudStack connections.
- * 
- * @author Adrian Cole
  */
 public interface CloudStackProperties {
 

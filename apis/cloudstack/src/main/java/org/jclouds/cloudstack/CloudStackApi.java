@@ -48,7 +48,6 @@ import org.jclouds.rest.annotations.Delegate;
  * Provides synchronous access to CloudStack.
  * <p/>
  *
- * @author Adrian Cole
  * @see <a href="http://download.cloud.com/releases/2.2.0/api_2.2.12/TOC_User.html" />
  */
 public interface CloudStackApi extends Closeable {

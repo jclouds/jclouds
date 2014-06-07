@@ -26,8 +26,6 @@ import com.google.common.base.Function;
 
 /**
  * Binds base64 encodes the byte [] input
- * 
- * @author Adrian Cole
  */
 @Singleton
 public class ConvertUnencodedBytesToBase64EncodedString implements Function<Object, String> {

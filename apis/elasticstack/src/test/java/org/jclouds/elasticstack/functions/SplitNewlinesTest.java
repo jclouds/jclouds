@@ -30,8 +30,6 @@ import com.google.inject.Guice;
 
 /**
  * Tests behavior of {@code NewlineDelimitedStringHandler}
- * 
- * @author Adrian Cole
  */
 @Test(groups = "unit")
 public class SplitNewlinesTest {

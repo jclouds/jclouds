@@ -29,7 +29,6 @@ import com.google.common.base.Objects.ToStringHelper;
 /**
  * Domain data for a Glesys account.
  *
- * @author Adam Lowe
  * @see <a href= "https://customer.glesys.com/api.php?a=doc#domain_list" />
  */
 public class Domain {

@@ -28,10 +28,6 @@ import org.jclouds.http.functions.ParseSax;
 import com.google.common.collect.Maps;
 import com.google.inject.Inject;
 
-/**
- *
- * @author Adrian Cole
- */
 public class BlockDeviceMappingHandler extends
          ParseSax.HandlerWithResult<Map<String, BlockDevice>> {
    private StringBuilder currentText = new StringBuilder();

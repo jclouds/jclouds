@@ -54,8 +54,6 @@ import com.google.inject.TypeLiteral;
 
 /**
  * Tests behavior of modules configured in ContextBuilder
- * 
- * @author Adrian Cole
  */
 @Test(groups = "unit", testName = "ContextBuilderTest")
 public class ContextBuilderTest {

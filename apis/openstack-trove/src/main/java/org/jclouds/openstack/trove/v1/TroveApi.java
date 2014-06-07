@@ -37,7 +37,6 @@ import com.google.inject.Provides;
  * Provides access to Trove.
  *  
  * @see <a href="http://api.openstack.org/">API Doc</a>
- * @author Zack Shoylev
  */
 public interface TroveApi extends Closeable{
    /**

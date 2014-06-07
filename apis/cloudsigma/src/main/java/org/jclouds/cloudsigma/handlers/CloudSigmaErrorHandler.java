@@ -39,9 +39,6 @@ import com.google.common.base.Throwables;
  * <p/>
  * Errors are returned with an appropriate HTTP status code, an X-Elastic- Error header specifying
  * the error type, and a text description in the HTTP body.
- * 
- * @author Adrian Cole
- * 
  */
 @Singleton
 public class CloudSigmaErrorHandler implements HttpErrorHandler {

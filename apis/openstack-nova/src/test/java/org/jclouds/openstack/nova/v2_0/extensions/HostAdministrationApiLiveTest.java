@@ -35,8 +35,6 @@ import com.google.common.collect.Iterables;
 
 /**
  * Tests behavior of HostAdministrationApi
- *
- * @author Adam Lowe
  */
 @Test(groups = "live", testName = "HostAdministrationApiLiveTest", singleThreaded = true)
 public class HostAdministrationApiLiveTest extends BaseNovaApiLiveTest {

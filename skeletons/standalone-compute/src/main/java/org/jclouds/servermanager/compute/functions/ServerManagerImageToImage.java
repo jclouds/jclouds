@@ -30,9 +30,6 @@ import org.jclouds.logging.Logger;
 
 import com.google.common.base.Function;
 
-/**
- * @author Adrian Cole
- */
 @Singleton
 public class ServerManagerImageToImage implements Function<org.jclouds.servermanager.Image, Image> {
    @Resource

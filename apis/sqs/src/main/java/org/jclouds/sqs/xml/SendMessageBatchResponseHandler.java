@@ -24,8 +24,6 @@ import org.jclouds.sqs.domain.MessageIdAndMD5;
  * @see <a
  *      href="http://docs.amazonwebservices.com/AWSSimpleQueueService/latest/APIReference/Query_QuerySendMessageBatch.html"
  *      >docs</a>
- * 
- * @author Adrian Cole
  */
 public class SendMessageBatchResponseHandler extends BatchResponseHandler<MessageIdAndMD5> {
 

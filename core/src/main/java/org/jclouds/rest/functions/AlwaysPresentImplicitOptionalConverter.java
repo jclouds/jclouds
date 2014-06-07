@@ -21,10 +21,6 @@ import org.jclouds.reflect.InvocationSuccess;
 import com.google.common.annotations.Beta;
 import com.google.common.base.Optional;
 
-/**
- * 
- * @author Adrian Cole
- */
 @Beta
 public class AlwaysPresentImplicitOptionalConverter implements ImplicitOptionalConverter {
 

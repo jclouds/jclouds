@@ -38,8 +38,6 @@ import com.google.common.io.Files;
 
 /**
  * utilities helpful in testing compute providers
- * 
- * @author Adrian Cole
  */
 public class ComputeTestUtils {
 

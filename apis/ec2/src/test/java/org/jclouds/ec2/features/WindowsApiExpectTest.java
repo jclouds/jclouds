@@ -31,9 +31,6 @@ import org.testng.annotations.Test;
 import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.ImmutableSet;
 
-/**
- * @author Adrian Cole
- */
 @Test(groups = "unit", testName = "WindowsApiExpectTest")
 public class WindowsApiExpectTest extends BaseEC2ApiExpectTest<EC2Api> {
 

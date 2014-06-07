@@ -41,10 +41,6 @@ import org.xml.sax.Attributes;
 import com.google.common.base.Supplier;
 import com.google.common.collect.Sets;
 
-/**
- * 
- * @author Adrian Cole
- */
 public abstract class BaseReservationHandler<T> extends HandlerForGeneratedRequestWithResult<T> {
 
    protected final DateCodec dateCodec;

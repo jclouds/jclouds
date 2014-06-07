@@ -39,10 +39,6 @@ import com.google.common.base.Predicate;
 import com.google.common.base.Predicates;
 import com.google.common.collect.ImmutableSet;
 
-/**
- * @author Adrian Cole
- * @author Andrew Bayer
- */
 @Test(groups = "unit", singleThreaded = true, testName = "AWSEC2CreateSecurityGroupIfNeeded")
 public class AWSEC2CreateSecurityGroupIfNeededTest {
 

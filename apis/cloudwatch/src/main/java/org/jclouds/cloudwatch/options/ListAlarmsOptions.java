@@ -28,8 +28,6 @@ import org.jclouds.http.options.BaseHttpRequestOptions;
  * Options used to describe alarms.
  *
  * @see <a href="http://docs.aws.amazon.com/AmazonCloudWatch/latest/APIReference/API_DescribeAlarms.html" />
- *
- * @author Jeremy Whitlock
  */
 public class ListAlarmsOptions extends BaseHttpRequestOptions {
 

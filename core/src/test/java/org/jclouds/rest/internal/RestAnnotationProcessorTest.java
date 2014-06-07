@@ -154,8 +154,6 @@ import com.google.inject.Provides;
 import com.google.inject.TypeLiteral;
 /**
  * Tests behavior of {@code RestAnnotationProcessor}
- * 
- * @author Adrian Cole
  */
 // NOTE:without testName, this will not call @Before* and fail w/NPE during
 // surefire

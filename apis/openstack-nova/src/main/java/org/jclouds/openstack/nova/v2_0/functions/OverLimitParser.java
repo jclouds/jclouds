@@ -56,9 +56,6 @@ import com.google.common.collect.ImmutableMap;
  *      }
  *    }
  * </pre>
- * 
- * @author Adrian Cole, Steve Loughran
- * 
  */
 public class OverLimitParser implements Function<String, Map<String, String>> {
    

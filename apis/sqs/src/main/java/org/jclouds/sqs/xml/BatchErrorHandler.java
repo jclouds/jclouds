@@ -25,8 +25,6 @@ import org.jclouds.sqs.domain.BatchError;
  * @see <a href=
  *      "http://docs.amazonwebservices.com/AWSSimpleQueueService/latest/APIReference/Query_QueryDeleteMessageBatch.html"
  *      />
- * 
- * @author Adrian Cole
  */
 public class BatchErrorHandler extends ParseSax.HandlerForGeneratedRequestWithResult<BatchError> {
 

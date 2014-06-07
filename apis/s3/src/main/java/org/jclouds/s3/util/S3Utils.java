@@ -36,8 +36,6 @@ import com.google.common.reflect.Parameter;
 
 /**
  * Encryption, Hashing, and IO Utilities needed to sign and verify S3 requests and responses.
- * 
- * @author Adrian Cole
  */
 public class S3Utils {
 

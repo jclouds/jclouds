@@ -49,8 +49,6 @@ import com.google.inject.assistedinject.FactoryModuleBuilder;
 
 /**
  * Configures the Rackspace authentication service connection, including logging and http transport.
- * 
- * @author Adrian Cole
  */
 public class OpenStackAuthenticationModule extends AbstractModule {
 

@@ -32,10 +32,6 @@ import com.google.common.base.Predicate;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 
-/**
- * 
- * @author Adrian Cole
- */
 public class HardwareBuilder extends ComputeMetadataBuilder {
    protected List<Processor> processors = Lists.newArrayList();
    protected int ram;

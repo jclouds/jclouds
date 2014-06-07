@@ -35,8 +35,6 @@ import com.google.common.base.Function;
 
 /**
  * This parses {@link BoundedSet} from HTTP headers and xml content.
- * 
- * @author Adrian Cole
  */
 @Singleton
 public class ParseDirectoryListFromContentAndHeaders implements Function<HttpResponse, BoundedSet<DirectoryEntry>> {

@@ -27,8 +27,6 @@ import com.google.common.base.Objects.ToStringHelper;
 
 /**
  * Class TemplateMetadata
- *
- * @author Richard Downer
  */
 public class TemplateMetadata {
 

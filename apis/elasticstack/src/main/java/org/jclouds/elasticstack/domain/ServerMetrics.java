@@ -22,10 +22,6 @@ import java.util.Map;
 
 import com.google.common.collect.ImmutableMap;
 
-/**
- * 
- * @author Adrian Cole
- */
 public class ServerMetrics {
 
    public static class Builder {

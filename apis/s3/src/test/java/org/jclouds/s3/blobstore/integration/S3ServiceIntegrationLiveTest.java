@@ -19,9 +19,6 @@ package org.jclouds.s3.blobstore.integration;
 import org.jclouds.blobstore.integration.internal.BaseBlobStoreIntegrationTest;
 import org.jclouds.blobstore.integration.internal.BaseServiceIntegrationTest;
 
-/**
- * @author Adrian Cole
- */
 public class S3ServiceIntegrationLiveTest extends BaseServiceIntegrationTest {
 
    public S3ServiceIntegrationLiveTest() {

@@ -23,7 +23,6 @@ import com.google.common.collect.ImmutableSet;
  *
  * @see org.jclouds.cloudstack.features.SnapshotApi#createSnapshot
  * @see org.jclouds.cloudstack.features.SnapshotApi#createSnapshot
- * @author Richard Downer
  */
 public class CreateSnapshotOptions extends AccountInDomainOptions {
 

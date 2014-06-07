@@ -24,8 +24,6 @@ import com.google.common.collect.ImmutableSet;
 
 /**
  * Tests behavior of {@code IterableWithMarkers}.
- * 
- * @author Adrian Cole
  */
 @Test(testName = "IterableWithMarkersTest")
 public class IterableWithMarkersTest {

@@ -30,7 +30,6 @@ import com.google.common.collect.FluentIterable;
  * <p/>
  * 
  * @see SecurityGroupAsyncApi
- * @author Jeremy Daggett
  */
 @Beta
 @Extension(of = ServiceType.COMPUTE, namespace = ExtensionNamespaces.SECURITY_GROUPS)

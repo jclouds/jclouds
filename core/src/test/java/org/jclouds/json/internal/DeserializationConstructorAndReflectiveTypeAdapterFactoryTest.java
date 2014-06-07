@@ -50,10 +50,6 @@ import com.google.gson.internal.ConstructorConstructor;
 import com.google.gson.internal.Excluder;
 import com.google.gson.reflect.TypeToken;
 
-/**
- * @author Adrian Cole
- * @author Adam Lowe
- */
 @Test(testName = "DeserializationConstructorTypeAdapterFactoryTest")
 @SuppressWarnings("unused")
 public final class DeserializationConstructorAndReflectiveTypeAdapterFactoryTest {

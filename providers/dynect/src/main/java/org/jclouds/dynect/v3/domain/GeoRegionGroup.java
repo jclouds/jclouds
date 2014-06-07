@@ -26,9 +26,6 @@ import com.google.common.base.Objects;
 import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableList;
 
-/**
- * @author Adrian Cole
- */
 public class GeoRegionGroup {
 
    private final Optional<String> serviceName;

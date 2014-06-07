@@ -20,10 +20,6 @@ import org.jclouds.blobstore.integration.internal.BaseBlobSignerLiveTest;
 import org.jclouds.blobstore.integration.internal.BaseBlobStoreIntegrationTest;
 import org.testng.annotations.Test;
 
-/**
- * 
- * @author Adrian Cole
- */
 @Test(groups = "live", testName = "S3BlobSignerLiveTest")
 public class S3BlobSignerLiveTest extends BaseBlobSignerLiveTest {
 

@@ -37,8 +37,6 @@ import com.google.inject.Provides;
 
 /**
  * Configures the Cinder connection.
- * 
- * @author Everett Toews
  */
 @ConfiguresHttpApi
 public class CinderHttpApiModule extends HttpApiModule<CinderApi> {

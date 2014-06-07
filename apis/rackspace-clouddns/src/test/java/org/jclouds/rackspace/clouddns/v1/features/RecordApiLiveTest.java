@@ -41,9 +41,6 @@ import com.google.common.base.Function;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Maps;
 
-/**
- * @author Everett Toews
- */
 @Test(groups = "live", singleThreaded = true, testName = "RecordApiLiveTest")
 public class RecordApiLiveTest extends BaseCloudDNSApiLiveTest {
 

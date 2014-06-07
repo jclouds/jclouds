@@ -32,10 +32,6 @@ import com.google.common.collect.FluentIterable;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.ImmutableSet.Builder;
 
-/**
- * 
- * @author Adrian Cole
- */
 public class TrafficControllerPoolRecordDetailListHandler extends
       ParseSax.HandlerForGeneratedRequestWithResult<FluentIterable<TrafficControllerPoolRecordDetail>> {
 

@@ -41,8 +41,6 @@ import com.google.common.util.concurrent.Atomics;
 
 /**
  * Tests the compute service abstraction of the nova api.
- * 
- * @author Matt Stephenson
  */
 @Test(groups = "unit", testName = "AllocateAndAddFloatingIpToNodeTest")
 public class AllocateAndAddFloatingIpToNodeExpectTest extends BaseNovaComputeServiceExpectTest {

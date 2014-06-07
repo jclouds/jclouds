@@ -31,8 +31,6 @@ import org.testng.annotations.Test;
 
 /**
  * Tests behavior of {@code S3}.
- *
- * @author Adrian Cole
  */
 public class S3Test {
 

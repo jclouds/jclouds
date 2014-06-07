@@ -22,11 +22,9 @@ package org.jclouds.cim;
  * ManagedElement is an abstract class that provides a common superclass (or top of the inheritance
  * tree) for the non-association classes in the CIM Schema.
  * 
- * @author Adrian Cole
  * @see <a
  *      href="http://dmtf.org/sites/default/files/cim/cim_schema_v2280/cim_schema_2.28.0Final-Doc.zip"
  *      />
- * 
  */
 public abstract class ManagedElement extends SettingData {
    public static Builder builder() {

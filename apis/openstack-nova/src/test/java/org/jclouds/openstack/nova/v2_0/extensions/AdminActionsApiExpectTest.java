@@ -37,8 +37,6 @@ import com.google.common.collect.ImmutableMap;
 
 /**
  * Tests parsing and guice wiring of AdminActionsApi
- *
- * @author Adam Lowe
  */
 @Test(groups = "unit", testName = "AdminActionsApiExpectTest")
 public class AdminActionsApiExpectTest extends BaseNovaApiExpectTest {

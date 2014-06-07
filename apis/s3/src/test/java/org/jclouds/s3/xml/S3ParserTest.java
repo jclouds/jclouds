@@ -49,8 +49,6 @@ import com.google.inject.Injector;
 
 /**
  * Tests parsing of S3 responses
- * 
- * @author Adrian Cole
  */
 // NOTE:without testName, this will not call @Before* and fail w/NPE during surefire
 @Test(groups = "performance", sequential = true, timeOut = 2 * 60 * 1000, testName = "S3ParserTest")

@@ -19,9 +19,6 @@ package org.jclouds.rackspace.clouddatabases.uk.features;
 import org.jclouds.openstack.trove.v1.features.FlavorApiLiveTest;
 import org.testng.annotations.Test;
 
-/**
- * @author Zack Shoylev
- */
 @Test(groups = "live", testName = "CloudDatabasesUKFlavorApiLiveTest")
 public class CloudDatabasesUKFlavorApiLiveTest extends FlavorApiLiveTest {
    public CloudDatabasesUKFlavorApiLiveTest() {

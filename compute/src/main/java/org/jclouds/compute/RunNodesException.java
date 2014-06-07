@@ -25,10 +25,6 @@ import java.util.Set;
 import org.jclouds.compute.domain.NodeMetadata;
 import org.jclouds.compute.domain.Template;
 
-/**
- * 
- * @author Adrian Cole
- */
 public class RunNodesException extends Exception {
 
    private final String group;

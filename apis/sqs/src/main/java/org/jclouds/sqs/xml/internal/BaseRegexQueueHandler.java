@@ -32,7 +32,6 @@ import com.google.common.collect.ImmutableSet.Builder;
  * @see <a href=
  *      "http://docs.amazonwebservices.com/AWSSimpleQueueService/latest/APIReference/Query_QueryListQueues.html"
  *      />
- * @author Adrian Cole
  */
 @Singleton
 public class BaseRegexQueueHandler {

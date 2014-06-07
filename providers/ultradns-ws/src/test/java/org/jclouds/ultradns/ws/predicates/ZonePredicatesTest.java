@@ -25,10 +25,6 @@ import org.jclouds.ultradns.ws.domain.Zone.DNSSECStatus;
 import org.jclouds.ultradns.ws.domain.Zone.Type;
 import org.testng.annotations.Test;
 
-/**
- * 
- * @author Adrian Cole
- */
 @Test(groups = "unit", testName = "ZonePredicatesTest")
 public class ZonePredicatesTest {
    Zone zone = Zone.builder()

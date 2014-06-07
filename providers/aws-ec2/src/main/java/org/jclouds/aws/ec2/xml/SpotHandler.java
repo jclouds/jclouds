@@ -27,10 +27,6 @@ import org.jclouds.location.Region;
 
 import com.google.common.base.Supplier;
 
-/**
- * 
- * @author Adrian Cole
- */
 public class SpotHandler extends ParseSax.HandlerForGeneratedRequestWithResult<Spot> {
    private StringBuilder currentText = new StringBuilder();
 

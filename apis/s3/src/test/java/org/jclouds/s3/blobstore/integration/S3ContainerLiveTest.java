@@ -20,10 +20,6 @@ import org.jclouds.blobstore.integration.internal.BaseBlobStoreIntegrationTest;
 import org.jclouds.blobstore.integration.internal.BaseContainerLiveTest;
 import org.testng.annotations.Test;
 
-/**
- * @author James Murty
- * @author Adrian Cole
- */
 @Test(groups = "live", testName = "S3ContainerLiveTest")
 public class S3ContainerLiveTest extends BaseContainerLiveTest {
 

@@ -25,9 +25,6 @@ import org.jclouds.sqs.domain.BatchResult;
 import org.jclouds.sqs.xml.DeleteMessageBatchResponseHandler;
 import org.testng.annotations.Test;
 
-/**
- * @author Adrian Cole
- */
 // NOTE:without testName, this will not call @Before* and fail w/NPE during
 // surefire
 @Test(groups = "unit", testName = "DeleteMessageBatchResponseTest")

@@ -32,8 +32,6 @@ import com.google.common.base.Predicate;
 /**
  * 
  * Tests to see if a LoadBalancerRule is active
- * 
- * @author Adrian Cole
  */
 @Singleton
 public class LoadBalancerRuleActive implements Predicate<LoadBalancerRule> {

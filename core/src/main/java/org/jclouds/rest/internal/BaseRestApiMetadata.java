@@ -33,7 +33,6 @@ import com.google.common.reflect.TypeToken;
 /**
  * Useful in creating rest apis.
  * 
- * @author Adrian Cole
  * @deprecated please use {@link BaseHttpApiMetadata} as
  *             async interface will be removed in jclouds 1.7.
  */

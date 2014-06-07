@@ -19,10 +19,6 @@ package org.jclouds.aws.ec2.features;
 import org.jclouds.ec2.features.SubnetApiLiveTest;
 import org.testng.annotations.Test;
 
-/**
- * 
- * @author Adrian Cole
- */
 @Test(groups = "live", testName = "AWSSubnetApiLiveTest")
 public class AWSSubnetApiLiveTest extends SubnetApiLiveTest {
    public AWSSubnetApiLiveTest() {

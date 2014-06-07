@@ -32,8 +32,6 @@ import com.google.common.collect.FluentIterable;
 
 /**
  * Utilities for interacting with SQS
- * 
- * @author Adrian Cole
  */
 @Beta
 public class SQS {

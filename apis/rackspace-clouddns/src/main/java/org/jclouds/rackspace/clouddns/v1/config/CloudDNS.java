@@ -25,8 +25,6 @@ import javax.inject.Qualifier;
 
 /**
  * Represents a component related to Rackspace Cloud DNS.
- * 
- * @author Everett Toews
  */
 @Retention(value = RetentionPolicy.RUNTIME)
 @Target(value = { ElementType.TYPE, ElementType.FIELD, ElementType.PARAMETER, ElementType.METHOD })

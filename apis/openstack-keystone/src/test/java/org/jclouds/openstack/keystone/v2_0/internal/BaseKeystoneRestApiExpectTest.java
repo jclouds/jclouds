@@ -33,8 +33,6 @@ import com.google.common.base.Objects;
 
 /**
  * Base class for writing KeyStone 2.0 Rest Api Expect tests
- * 
- * @author Adam Lowe
  */
 public class BaseKeystoneRestApiExpectTest<S> extends BaseRestApiExpectTest<S> {
    protected HttpRequest keystoneAuthWithUsernameAndPasswordAndTenantName;

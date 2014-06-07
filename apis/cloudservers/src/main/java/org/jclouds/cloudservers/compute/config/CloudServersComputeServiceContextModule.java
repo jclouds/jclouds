@@ -51,8 +51,6 @@ import com.google.inject.TypeLiteral;
 /**
  * Configures the {@link CloudServersComputeServiceContext}; requires {@link BaseComputeService}
  * bound.
- * 
- * @author Adrian Cole
  */
 public class CloudServersComputeServiceContextModule extends
          ComputeServiceAdapterContextModule<Server, Flavor, org.jclouds.cloudservers.domain.Image, Location> {

@@ -43,10 +43,6 @@ import com.google.common.cache.LoadingCache;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.util.concurrent.UncheckedExecutionException;
 
-/**
- * 
- * @author Adrian Cole
- */
 public class EC2TemplateBuilderImpl extends TemplateBuilderImpl {
 
    private final Supplier<LoadingCache<RegionAndName, ? extends Image>> lazyImageCache;

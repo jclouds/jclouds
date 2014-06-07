@@ -39,8 +39,6 @@ import com.google.inject.TypeLiteral;
 
 /**
  * Tests behavior of {@code ParseImageFromJsonResponse}
- * 
- * @author Adrian Cole
  */
 @Test(groups = "unit")
 public class ParseImageFromJsonResponseTest {

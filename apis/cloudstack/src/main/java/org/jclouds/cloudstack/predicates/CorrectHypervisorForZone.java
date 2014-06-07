@@ -39,8 +39,6 @@ import com.google.common.collect.ImmutableMap.Builder;
 /**
  * Templates can be present in a zone, and available, but not valid for launch
  * as their hypervisor isn't installed.
- * 
- * @author Adrian Cole
  */
 @Singleton
 public class CorrectHypervisorForZone implements Function<String, Predicate<Template>> {

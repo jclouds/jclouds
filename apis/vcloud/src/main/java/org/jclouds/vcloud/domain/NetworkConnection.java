@@ -21,8 +21,6 @@ import org.jclouds.vcloud.domain.network.IpAddressAllocationMode;
 
 /**
  * describes a single network connection.
- * 
- * @author Adrian Cole
  */
 public class NetworkConnection {
    public static Builder builder() {

@@ -19,10 +19,6 @@ package org.jclouds.openstack.nova.ec2.features;
 import org.jclouds.ec2.features.ElasticBlockStoreApiLiveTest;
 import org.testng.annotations.Test;
 
-/**
- * 
- * @author Adrian Cole
- */
 @Test(groups = "live", singleThreaded = true, testName = "NovaEC2ElasticBlockStoreApiLiveTest")
 public class NovaEC2ElasticBlockStoreApiLiveTest extends ElasticBlockStoreApiLiveTest {
    public NovaEC2ElasticBlockStoreApiLiveTest() {

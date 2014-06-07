@@ -30,7 +30,6 @@ import javax.inject.Qualifier;
  * Used to configure {@link EventBus} injection, providing a flexible way to inject the
  * {@link AsyncEventBus}.
  * 
- * @author Ignasi Barrera
  * 
  * @see EventBusModule
  */

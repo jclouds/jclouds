@@ -33,8 +33,6 @@ import org.jclouds.blobstore.util.BlobUtils;
 
 /**
  * Encryption, Hashing, and IO Utilities needed to sign and verify blobstore requests and responses.
- * 
- * @author Adrian Cole
  */
 @Singleton
 public class BlobUtilsImpl implements BlobUtils {

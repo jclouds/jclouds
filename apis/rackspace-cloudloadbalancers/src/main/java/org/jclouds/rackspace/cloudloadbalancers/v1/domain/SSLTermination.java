@@ -120,9 +120,6 @@ import com.google.common.base.Optional;
  *     </tr>
  *   </tbody>
  * </table>
- * 
- *  
- * @author Everett Toews
  */
 public class SSLTermination {
    private final boolean enabled;

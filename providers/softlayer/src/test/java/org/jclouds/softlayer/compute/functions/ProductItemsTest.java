@@ -35,8 +35,6 @@ import com.google.common.collect.ImmutableSet;
 
 /**
  * Tests {@code ProductItems}
- *
- * @author Jason King
  */
 @Test(groups = "unit")
 public class ProductItemsTest {

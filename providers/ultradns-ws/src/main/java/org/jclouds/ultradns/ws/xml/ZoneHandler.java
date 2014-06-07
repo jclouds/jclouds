@@ -28,10 +28,6 @@ import org.jclouds.ultradns.ws.domain.Zone.DNSSECStatus;
 import org.xml.sax.Attributes;
 
 
-/**
- * 
- * @author Adrian Cole
- */
 public class ZoneHandler extends ParseSax.HandlerForGeneratedRequestWithResult<Zone> {
 
    private Zone zone;

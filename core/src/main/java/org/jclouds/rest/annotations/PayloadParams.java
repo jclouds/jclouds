@@ -29,7 +29,6 @@ import java.lang.annotation.Target;
  * @see QueryParam
  * @see Payload
  * @see MapBinder
- * @author Adrian Cole
  */
 @Target( { TYPE, METHOD })
 @Retention(RUNTIME)

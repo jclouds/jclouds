@@ -29,8 +29,6 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.reflect.Invokable;
 /**
  * Tests behavior of {@code DomainAccountApi}
- *
- * @author Adrian
  */
 @Test(groups = "unit", testName = "DomainAccountApiTest")
 public class DomainAccountApiTest extends BaseCloudStackApiTest<DomainAccountApi> {

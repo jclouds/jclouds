@@ -31,8 +31,6 @@ import org.testng.annotations.Test;
 
 /**
  * Tests behavior of {@code GuestOSApiLiveTest}
- * 
- * @author Adrian Cole
  */
 @Test(groups = "live", singleThreaded = true, testName = "GuestOSApiLiveTest")
 public class GuestOSApiLiveTest extends BaseCloudStackApiLiveTest {

@@ -24,8 +24,6 @@ import org.jclouds.rest.Binder;
 
 /**
  * Binds the String [] to query parameters named with KeyName.index
- * 
- * @author Adrian Cole
  */
 @Singleton
 public class BindKeyNamesToIndexedFormParams implements Binder {

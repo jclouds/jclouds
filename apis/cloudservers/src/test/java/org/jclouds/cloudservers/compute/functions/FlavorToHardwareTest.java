@@ -34,9 +34,6 @@ import org.testng.annotations.Test;
 
 import com.google.common.collect.ImmutableList;
 
-/**
- * @author Adrian Cole
- */
 @Test(groups = "unit")
 public class FlavorToHardwareTest {
    Location provider = new LocationBuilder().scope(LocationScope.ZONE).id("dallas").description("description").build();

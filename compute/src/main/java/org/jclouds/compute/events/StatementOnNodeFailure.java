@@ -26,8 +26,6 @@ import com.google.common.base.Objects.ToStringHelper;
 
 /**
  * A statement that failed execution on a node.
- * 
- * @author Adrian Cole
  */
 @Beta
 public class StatementOnNodeFailure extends StatementOnNode {

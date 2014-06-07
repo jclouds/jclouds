@@ -25,10 +25,6 @@ import org.testng.annotations.Test;
 
 import com.google.common.collect.ImmutableSet;
 
-/**
- * 
- * @author Richard Downer
- */
 @Test(groups = "unit")
 public class ListCapacityResponseTest extends BaseSetParserTest<Capacity> {
 

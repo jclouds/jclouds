@@ -30,8 +30,6 @@ import com.google.common.collect.ImmutableSet;
 
 /**
  * Class FirewallRule
- *
- * @author Andrei Savu
  */
 public class FirewallRule implements Comparable<FirewallRule> {
 

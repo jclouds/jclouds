@@ -19,7 +19,6 @@ package org.jclouds.azureblob.domain;
 /**
  * Indicates whether data in the container may be accessed publicly and the level of access.
  * 
- * @author Adrian Cole
  * 
  * @see <a href="http://msdn.microsoft.com/en-us/library/dd179469.aspx"/>
  */

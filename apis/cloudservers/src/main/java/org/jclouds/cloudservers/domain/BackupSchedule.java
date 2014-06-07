@@ -27,7 +27,6 @@ import com.google.common.base.Objects.ToStringHelper;
  * A backup schedule can be defined to create server images at regular intervals (daily and weekly).
  * Backup schedules are configurable per server.
  * 
- * @author Adrian Cole
 */
 public class BackupSchedule {
 

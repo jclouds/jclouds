@@ -56,8 +56,6 @@ import com.google.common.util.concurrent.ListeningExecutorService;
 
 /**
  * creates futures that correlate to
- * 
- * @author Adrian Cole
  */
 @Singleton
 public class CreateNodesWithGroupEncodedIntoNameThenAddToSet implements CreateNodesInGroupThenAddToSet {

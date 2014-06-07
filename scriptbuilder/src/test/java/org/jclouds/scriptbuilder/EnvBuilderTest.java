@@ -31,8 +31,6 @@ import com.google.common.io.Resources;
 
 /**
  * Tests possible uses of EnvBuilder
- * 
- * @author Adrian Cole
  */
 public class EnvBuilderTest {
 

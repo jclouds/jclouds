@@ -30,10 +30,6 @@ import org.testng.annotations.Test;
 import com.google.common.base.Ticker;
 import com.google.common.net.HttpHeaders;
 
-/**
- * 
- * @author Adrian Cole
- */
 @Test(groups = "unit")
 public class HeaderToRetryAfterExceptionTest {
 

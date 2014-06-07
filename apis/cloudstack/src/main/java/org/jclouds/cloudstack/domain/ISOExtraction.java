@@ -28,8 +28,6 @@ import com.google.common.base.Objects.ToStringHelper;
 
 /**
  * Class ISOExtraction
- *
- * @author Richard Downer
  */
 public class ISOExtraction {
 

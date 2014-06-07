@@ -26,10 +26,6 @@ import org.jclouds.compute.strategy.SuspendNodeStrategy;
 import org.jclouds.ec2.EC2Api;
 import org.jclouds.ec2.features.InstanceApi;
 
-/**
- * 
- * @author Adrian Cole
- */
 @Singleton
 public class EC2SuspendNodeStrategy implements SuspendNodeStrategy {
    private final InstanceApi client;

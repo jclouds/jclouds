@@ -19,11 +19,6 @@ package org.jclouds.bluelock.vcloud.zone01.features;
 import org.jclouds.vcloud.features.NetworkApiLiveTest;
 import org.testng.annotations.Test;
 
-/**
- * 
- * 
- * @author Adrian Cole
- */
 @Test(groups = "live", enabled = true, singleThreaded = true, testName = "BluelockVCloudZone01NetworkApiLiveTest")
 public class BluelockVCloudZone01NetworkApiLiveTest extends NetworkApiLiveTest {
 

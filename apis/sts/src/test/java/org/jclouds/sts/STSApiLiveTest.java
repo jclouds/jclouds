@@ -29,9 +29,6 @@ import org.jclouds.sts.options.SessionCredentialsOptions;
 import org.testng.SkipException;
 import org.testng.annotations.Test;
 
-/**
- * @author Adrian Cole
- */
 @Test(groups = "live", singleThreaded = true, testName = "STSApiLiveTest")
 public class STSApiLiveTest extends BaseSTSApiLiveTest {
 

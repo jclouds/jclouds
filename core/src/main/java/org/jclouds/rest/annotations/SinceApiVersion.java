@@ -35,7 +35,6 @@ import javax.inject.Qualifier;
  * For example, in EC2, the tag api only exists at or after version
  * {@code 2010-08-31}
  * 
- * @author Adrian Cole
  * @see ApiVersion
  */
 @Target({ TYPE, METHOD, FIELD, PARAMETER })

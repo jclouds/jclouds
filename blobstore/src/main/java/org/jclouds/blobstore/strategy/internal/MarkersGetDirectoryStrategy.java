@@ -45,7 +45,6 @@ import com.google.inject.Inject;
  * </ul>
  * 
  * @see MarkerFileMkdirStrategy
- * @author Adrian Cole
  */
 @Singleton
 public class MarkersGetDirectoryStrategy implements GetDirectoryStrategy {

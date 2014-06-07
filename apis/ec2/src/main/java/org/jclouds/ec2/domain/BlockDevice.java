@@ -25,7 +25,6 @@ import org.jclouds.ec2.domain.Attachment.Status;
  * @see <a href=
  *      "http://docs.amazonwebservices.com/AWSEC2/latest/APIReference/ApiReference-ItemType-RunningInstancesItemType.html"
  *      />
- * @author Adrian Cole
  */
 public class BlockDevice {
    private final String volumeId;

@@ -32,8 +32,6 @@ import com.google.common.base.Strings;
 
 /**
  * Binds the request parameters to an XML formatted payload.
- * 
- * @author Ignasi Barrera
  */
 @Singleton
 public class BindToXMLPayload implements Binder {

@@ -27,7 +27,6 @@ import com.google.common.collect.ImmutableSet;
  *
  * @see org.jclouds.cloudstack.features.ISOApi#listISOs
  * @see org.jclouds.cloudstack.features.ISOApi#listISOs
- * @author Richard Downer
  */
 public class ListISOsOptions extends AccountInDomainOptions {
    public static final ListISOsOptions NONE = new ListISOsOptions();

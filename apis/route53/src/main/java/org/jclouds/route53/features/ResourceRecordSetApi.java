@@ -53,7 +53,6 @@ import org.jclouds.route53.xml.ListResourceRecordSetsResponseHandler;
  * @see <a href=
  *      "http://docs.aws.amazon.com/Route53/latest/APIReference/ActionsOnRRS.html"
  *      />
- * @author Adrian Cole
  */
 @RequestFilters(RestAuthentication.class)
 @VirtualHost

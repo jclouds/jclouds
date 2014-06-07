@@ -36,8 +36,6 @@ import com.google.common.collect.Maps;
 
 /**
  * Tests behavior of FlavorExtraSpecsApi
- *
- * @author Adam Lowe
  */
 @Test(groups = "live", testName = "FlavorExtraSpecsApiLiveTest", singleThreaded = true)
 public class FlavorExtraSpecsApiLiveTest extends BaseNovaApiLiveTest {

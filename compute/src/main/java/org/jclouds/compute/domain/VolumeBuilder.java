@@ -21,10 +21,6 @@ import static com.google.common.base.Preconditions.checkNotNull;
 import org.jclouds.compute.domain.internal.VolumeImpl;
 import org.jclouds.javax.annotation.Nullable;
 
-/**
- * 
- * @author Adrian Cole
- */
 public class VolumeBuilder {
 
    private Volume.Type type;

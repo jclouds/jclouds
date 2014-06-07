@@ -29,9 +29,6 @@ import com.google.common.base.Charsets;
 import com.google.common.collect.ImmutableList;
 import com.google.common.io.Resources;
 
-/**
- * @author Adrian Cole
- */
 @Test(groups = "unit")
 public class CreateRunScriptTest {
    Statement statement = createRunScript(

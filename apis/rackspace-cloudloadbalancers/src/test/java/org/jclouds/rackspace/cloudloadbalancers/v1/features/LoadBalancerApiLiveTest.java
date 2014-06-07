@@ -42,9 +42,6 @@ import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Sets;
 
-/**
- * @author Adrian Cole
- */
 @Test(groups = "live", singleThreaded = true, testName = "LoadBalancerApiLiveTest")
 public class LoadBalancerApiLiveTest extends BaseCloudLoadBalancersApiLiveTest {
    private Set<LoadBalancer> lbs = Sets.newLinkedHashSet();

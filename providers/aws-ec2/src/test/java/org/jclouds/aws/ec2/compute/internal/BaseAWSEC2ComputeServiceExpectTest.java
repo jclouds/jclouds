@@ -36,8 +36,6 @@ import com.google.inject.TypeLiteral;
 
 /**
  * Tests the compute service abstraction of the EC2 api.
- * 
- * @author Adrian Cole
  */
 public abstract class BaseAWSEC2ComputeServiceExpectTest extends BaseEC2ComputeServiceExpectTest {
 

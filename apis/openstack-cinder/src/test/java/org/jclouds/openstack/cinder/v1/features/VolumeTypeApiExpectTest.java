@@ -34,8 +34,6 @@ import com.google.common.collect.ImmutableSet;
 
 /**
  * Tests Guice wiring and parsing of VolumeTypeApi
- *
- * @author Everett Toews
  */
 @Test(groups = "unit", testName = "VolumeTypeApiExpectTest")
 public class VolumeTypeApiExpectTest extends BaseCinderApiExpectTest {

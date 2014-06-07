@@ -25,9 +25,6 @@ import org.testng.annotations.Test;
 import com.google.common.base.Optional;
 import com.google.common.reflect.Invokable;
 
-/**
- * @author Adrian Cole
- */
 @Test
 public class Optionals2Test {
 

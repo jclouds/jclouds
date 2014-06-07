@@ -61,10 +61,6 @@ import com.google.common.base.Strings;
 import com.google.common.base.Supplier;
 import com.google.common.collect.Iterables;
 
-/**
- * 
- * @author Adrian Cole
- */
 @Singleton
 public class SwiftBlobStore extends BaseBlobStore {
    private final CommonSwiftClient sync;

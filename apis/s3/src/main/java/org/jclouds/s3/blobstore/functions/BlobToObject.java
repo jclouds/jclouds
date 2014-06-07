@@ -26,9 +26,6 @@ import org.jclouds.s3.domain.S3Object;
 
 import com.google.common.base.Function;
 
-/**
- * @author Adrian Cole
- */
 @Singleton
 public class BlobToObject implements Function<Blob, S3Object> {
    private final BlobToObjectMetadata blob2ObjectMd;

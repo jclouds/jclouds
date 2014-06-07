@@ -38,8 +38,6 @@ import com.google.inject.Inject;
 /**
  * 
  * Tests to see if a socket is open.
- * 
- * @author Adrian Cole
  */
 @Singleton
 public class InetSocketAddressConnect implements SocketOpen {

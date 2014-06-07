@@ -29,7 +29,6 @@ import com.google.common.base.Objects.ToStringHelper;
  * A flavor is an available hardware configuration for a server. Each flavor has a unique
  * combination of disk space and memory capacity.
  * 
- * @author Adrian Cole
 */
 public class Flavor {
 

@@ -29,8 +29,6 @@ import com.google.inject.Singleton;
  * 
  * @see org.jclouds.rest.InputParamValidator
  * @see org.jclouds.predicates.Validator
- * 
- * @author Oleksiy Yarmula
  */
 @Singleton
 public class ContainerNameValidator extends DnsNameValidator {

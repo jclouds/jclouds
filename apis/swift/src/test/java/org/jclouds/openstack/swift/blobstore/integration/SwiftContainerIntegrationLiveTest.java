@@ -31,11 +31,6 @@ import org.testng.annotations.Test;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 
-/**
- * @author James Murty
- * @author Adrian Cole
- * @author Everett Toews
- */
 @Test(groups = "live")
 public class SwiftContainerIntegrationLiveTest extends BaseContainerIntegrationTest {
    @Override

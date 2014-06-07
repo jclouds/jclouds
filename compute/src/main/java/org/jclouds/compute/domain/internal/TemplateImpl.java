@@ -28,10 +28,6 @@ import org.jclouds.domain.Location;
 import com.google.common.base.Objects;
 import com.google.common.base.Objects.ToStringHelper;
 
-/**
- * 
- * @author Adrian Cole
- */
 public class TemplateImpl implements Template {
 
    private final Image image;

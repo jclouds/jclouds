@@ -26,8 +26,6 @@ import java.lang.annotation.Target;
 
 /**
  * Designates that this Resource expects virtual host style requests
- * 
- * @author Adrian Cole
  */
 @Target( { TYPE, METHOD })
 @Retention(RUNTIME)

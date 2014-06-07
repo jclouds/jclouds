@@ -32,7 +32,6 @@ import com.google.common.collect.ImmutableSet;
  * @see <a href=
  *      "http://docs.amazonwebservices.com/AWSEC2/latest/APIReference/ApiReference-query-CreateVolume.html"
  *      />
- * @author Adrian Cole, Andrei Savu
  */
 public class Volume implements Comparable<Volume> {
 
@@ -44,7 +43,6 @@ public class Volume implements Comparable<Volume> {
     * Specifies whether the instance's Amazon EBS volumes are stopped or terminated when the
     * instance is shut down.
     * 
-    * @author Adrian Cole
     */
    public static enum InstanceInitiatedShutdownBehavior {
       STOP, TERMINATE, UNRECOGNIZED;

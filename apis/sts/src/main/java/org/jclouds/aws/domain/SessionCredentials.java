@@ -31,8 +31,6 @@ import com.google.common.base.Optional;
  * @see <a href=
  *      "http://docs.aws.amazon.com/STS/latest/APIReference/API_Credentials.html"
  *      />
- * 
- * @author Adrian Cole
  */
 public final class SessionCredentials extends Credentials {
 

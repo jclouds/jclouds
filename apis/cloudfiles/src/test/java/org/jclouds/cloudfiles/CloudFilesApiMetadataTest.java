@@ -19,10 +19,6 @@ package org.jclouds.cloudfiles;
 import org.jclouds.blobstore.internal.BaseBlobStoreApiMetadataTest;
 import org.testng.annotations.Test;
 
-/**
- * 
- * @author Adrian Cole
- */
 @Test(groups = "unit", testName = "CloudFilesApiMetadataTest")
 public class CloudFilesApiMetadataTest extends BaseBlobStoreApiMetadataTest {
 

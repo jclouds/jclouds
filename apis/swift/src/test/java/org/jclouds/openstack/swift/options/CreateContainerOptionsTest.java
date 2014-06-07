@@ -26,8 +26,6 @@ import com.google.common.collect.ImmutableMap;
 
 /**
  * Tests behavior of {@code CreateContainerOptions}
- * 
- * @author Adrian Cole
  */
 @Test(groups = "unit")
 public class CreateContainerOptionsTest {

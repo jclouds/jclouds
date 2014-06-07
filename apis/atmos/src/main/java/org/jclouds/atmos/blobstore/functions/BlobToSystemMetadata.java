@@ -24,9 +24,6 @@ import org.jclouds.blobstore.domain.BlobMetadata;
 
 import com.google.common.base.Function;
 
-/**
- * @author Adrian Cole
- */
 @Singleton
 public class BlobToSystemMetadata implements Function<BlobMetadata, SystemMetadata> {
    public SystemMetadata apply(BlobMetadata base) {

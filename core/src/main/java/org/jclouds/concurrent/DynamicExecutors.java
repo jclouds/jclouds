@@ -23,8 +23,6 @@ import java.util.concurrent.TimeUnit;
 
 /**
  * Factory and utility methods for handling {@link DynamicThreadPoolExecutor}.
- * 
- * @author kimchy (shay.banon)
  */
 public class DynamicExecutors {
 

@@ -27,8 +27,6 @@ import org.jclouds.vcloud.VCloudApiMetadata;
 
 /**
  * Implementation of {@link org.jclouds.types.ProviderMetadata} for Bluelock vCloud Zone 1.
- * 
- * @author Adrian Cole
  */
 public class BluelockVCloudZone01ProviderMetadata extends BaseProviderMetadata {
 

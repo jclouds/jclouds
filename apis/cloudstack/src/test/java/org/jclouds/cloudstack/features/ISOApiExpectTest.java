@@ -34,8 +34,6 @@ import com.google.common.collect.ImmutableSet;
 
 /**
  * Test the CloudStack ISOApi
- *
- * @author Adrian Cole
  */
 @Test(groups = "unit", testName = "ISOApiExpectTest")
 public class ISOApiExpectTest extends BaseCloudStackExpectTest<ISOApi> {

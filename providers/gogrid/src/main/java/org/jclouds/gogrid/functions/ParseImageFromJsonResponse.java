@@ -25,9 +25,6 @@ import com.google.common.base.Function;
 import com.google.common.collect.Iterables;
 import com.google.inject.Singleton;
 
-/**
- * @author Oleksiy Yarmula
- */
 @Singleton
 public class ParseImageFromJsonResponse implements
       Function<HttpResponse, ServerImage> {

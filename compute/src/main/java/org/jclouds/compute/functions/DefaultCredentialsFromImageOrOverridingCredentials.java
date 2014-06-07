@@ -26,10 +26,6 @@ import org.jclouds.javax.annotation.Nullable;
 
 import com.google.common.base.Function;
 
-/**
- * 
- * @author Adrian Cole
- */
 @Singleton
 public class DefaultCredentialsFromImageOrOverridingCredentials implements Function<Template, LoginCredentials> {
 

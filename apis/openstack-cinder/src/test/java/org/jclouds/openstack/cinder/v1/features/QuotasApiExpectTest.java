@@ -25,9 +25,6 @@ import java.net.URI;
 
 import static org.testng.Assert.assertEquals;
 
-/**
- * @author inbar stolberg
- */
 @Test(groups = "unit", testName = "QuotaApiExpectTest")
 public class QuotasApiExpectTest extends BaseCinderApiExpectTest {
 

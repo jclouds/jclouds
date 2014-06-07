@@ -23,8 +23,6 @@ import org.jclouds.scriptbuilder.domain.StatementList;
 
 /**
  * Installs Ruby onto a host.
- * 
- * @author Ignasi Barrera
  */
 public class InstallRuby extends StatementList {
 

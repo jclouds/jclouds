@@ -20,9 +20,6 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 import org.jclouds.openstack.nova.v2_0.domain.SecurityGroup;
 
-/**
- * @author Adrian Cole
- */
 public class SecurityGroupInZone extends ZoneAndName {
    protected final SecurityGroup securityGroup;
 

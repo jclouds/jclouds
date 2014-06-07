@@ -28,7 +28,6 @@ import static com.google.common.base.Preconditions.checkArgument;
  * Used to provide support for network, port, and fixed_ip when booting Nova servers.
  * OpenStack will support either a Nova Network or Neutron, but not both at the same time.
  * Specifying a port is only possible with Neutron.
- * @author Zack Shoylev
  */
 public class Network implements Comparable<Network> {
    private final String networkUuid;

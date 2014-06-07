@@ -31,10 +31,6 @@ import com.google.common.collect.ImmutableMap;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 
-/**
- * 
- * @author Jeremy Daggett
- */
 @Test(groups = "unit", testName = "ParseMetadataUpdateTest")
 public class ParseMetadataUpdateTest extends BaseItemParserTest<Map<String, String>> {
 

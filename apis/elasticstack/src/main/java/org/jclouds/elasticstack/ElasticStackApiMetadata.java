@@ -32,8 +32,6 @@ import com.google.inject.Module;
 
 /**
  * Implementation of {@link ApiMetadata} for the ElasticStack API
- * 
- * @author Adrian Cole
  */
 public class ElasticStackApiMetadata extends BaseHttpApiMetadata<ElasticStackApi> {
 

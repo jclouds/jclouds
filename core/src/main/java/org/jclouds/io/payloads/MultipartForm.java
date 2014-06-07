@@ -26,10 +26,6 @@ import java.util.Map.Entry;
 import com.google.common.io.ByteSource;
 import com.google.common.io.InputSupplier;
 
-/**
- * 
- * @author Adrian Cole
- */
 public class MultipartForm extends BasePayload<Iterable<? extends Part>> {
    public static final String BOUNDARY = "--JCLOUDS--";
    private static final String rn = "\r\n";

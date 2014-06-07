@@ -25,9 +25,6 @@ import javax.inject.Qualifier;
 
 /**
  * Related to a ClusterCompute resource.
- * 
- * @author Adrian Cole
- * 
  */
 @Retention(value = RetentionPolicy.RUNTIME)
 @Target(value = { ElementType.FIELD, ElementType.PARAMETER, ElementType.METHOD })

@@ -35,10 +35,6 @@ import org.jclouds.ec2.compute.internal.EC2TemplateBuilderImpl;
 import com.google.common.base.Supplier;
 import com.google.common.cache.LoadingCache;
 
-/**
- * 
- * @author Adrian Cole
- */
 public class AWSEC2TemplateBuilderImpl extends EC2TemplateBuilderImpl {
 
    @Inject

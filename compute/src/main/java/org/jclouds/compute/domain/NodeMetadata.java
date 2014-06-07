@@ -24,10 +24,6 @@ import org.jclouds.javax.annotation.Nullable;
 
 import com.google.inject.ImplementedBy;
 
-/**
- * @author Adrian Cole
- * @author Ivan Meredith
- */
 @ImplementedBy(NodeMetadataImpl.class)
 public interface NodeMetadata extends ComputeMetadataIncludingStatus<NodeMetadata.Status> {
    

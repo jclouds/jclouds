@@ -37,10 +37,6 @@ import org.jclouds.ultradns.ws.UltraDNSWSResponseException;
 import org.testng.annotations.Test;
 
 import com.google.inject.Guice;
-/**
- * 
- * @author Adrian Cole
- */
 @Test(groups = "unit")
 public class UltraDNSWSErrorHandlerTest {
    UltraDNSWSErrorHandler function = Guice.createInjector(new SaxParserModule()).getInstance(

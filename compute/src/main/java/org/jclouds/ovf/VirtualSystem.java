@@ -20,9 +20,6 @@ import org.jclouds.ovf.internal.BaseVirtualSystem;
 
 import com.google.common.collect.Multimap;
 
-/**
- * @author Adrian Cole
- */
 public class VirtualSystem extends BaseVirtualSystem<VirtualSystem> {
 
    public static class Builder extends BaseVirtualSystem.Builder<VirtualSystem> {

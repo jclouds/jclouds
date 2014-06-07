@@ -36,8 +36,6 @@ import com.google.common.collect.ImmutableSet;
  * Keep an atomic reference to a
  * resource, so as to eliminate a redundant {@link ComputeService#getNodeMetadata} call after the
  * predicate passes.
- * 
- * @author Adrian Cole
  */
 @Singleton
 public abstract class RefreshAndDoubleCheckOnFailUnlessStatusInvalid<S extends Enum<S>, C extends ComputeMetadataIncludingStatus<S>> implements Predicate<AtomicReference<C>> {

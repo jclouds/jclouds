@@ -37,8 +37,6 @@ import org.testng.annotations.Test;
 /**
  * Tests behavior of {@code ListAlarmsForMetricResponseHandler}.  Implicitly tests behavior of
  * {@code MetricAlarmHandler}.
- *
- * @author Jeremy Whitlock
  */
 // NOTE: Without testName, this will not call @Before* and fail w/NPE during surefire
 @Test(groups = "unit", testName = "ListAlarmsForMetricResponseHandlerTest")

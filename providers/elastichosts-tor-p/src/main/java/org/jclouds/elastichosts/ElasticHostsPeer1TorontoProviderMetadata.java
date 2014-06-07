@@ -27,8 +27,6 @@ import org.jclouds.providers.internal.BaseProviderMetadata;
 
 /**
  * Implementation of {@link org.jclouds.types.ProviderMetadata} for ElasticHosts Toronto Peer 1.
- * 
- * @author Adrian Cole
  */
 public class ElasticHostsPeer1TorontoProviderMetadata extends BaseProviderMetadata {
 

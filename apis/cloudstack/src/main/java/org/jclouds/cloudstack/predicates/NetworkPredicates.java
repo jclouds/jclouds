@@ -26,10 +26,6 @@ import com.google.common.base.Predicate;
 import com.google.common.base.Predicates;
 import com.google.common.collect.Iterables;
 
-/**
- * 
- * @author Adrian Cole
- */
 public class NetworkPredicates {
 
    public static enum HasFirewallServiceWhichSupportsStaticNAT implements Predicate<Network> {

@@ -39,9 +39,6 @@ import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 
-/**
- * @author Adrian Cole
- */
 @Test(groups = "unit")
 public class PresentSpotRequestsAndInstancesTest {
    AWSRunningInstance instance1 = createMock(AWSRunningInstance.class);

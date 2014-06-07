@@ -29,7 +29,6 @@ import com.google.common.annotations.Beta;
  * <p/>
  * To use this extension, you need to have administrative rights to the tenants upon which you are placing quotas.
  *
- * @author Adam Lowe
  * @see QuotaAsyncApi
  * @see <a href="http://nova.openstack.org/api_ext/ext_quotas.html"/>
  */

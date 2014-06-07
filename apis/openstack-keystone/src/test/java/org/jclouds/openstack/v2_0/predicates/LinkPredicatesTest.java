@@ -26,10 +26,6 @@ import org.jclouds.openstack.v2_0.domain.Link;
 import org.jclouds.openstack.v2_0.domain.Link.Relation;
 import org.testng.annotations.Test;
 
-/**
- * 
- * @author Adrian Cole
- */
 @Test(groups = "unit", testName = "LinkPredicatesTest")
 public class LinkPredicatesTest {
    Link ref = Link.builder().type("application/pdf").relation(Relation.DESCRIBEDBY).href(

@@ -40,8 +40,6 @@ import com.google.inject.Injector;
 
 /**
  * Tests behavior of {@code VAppHandler}
- * 
- * @author Adrian Cole
  */
 @Test(groups = "unit")
 public class VAppHandlerTest {

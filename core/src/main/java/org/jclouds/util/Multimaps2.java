@@ -28,10 +28,6 @@ import com.google.common.collect.ImmutableMultimap.Builder;
 import com.google.common.collect.Multimap;
 import com.google.common.collect.Multimaps;
 
-/**
- * 
- * @author Adrian Cole
- */
 public class Multimaps2 {
 
    public static <K, V> Multimap<K, V> replaceValue(Multimap<K, V> fromMultimap, final K key, final V value) {

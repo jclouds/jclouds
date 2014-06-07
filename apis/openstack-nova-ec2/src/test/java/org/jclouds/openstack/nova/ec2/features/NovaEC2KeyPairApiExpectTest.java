@@ -25,9 +25,6 @@ import org.jclouds.openstack.nova.ec2.internal.BaseNovaEC2RestApiExpectTest;
 import org.jclouds.rest.ResourceNotFoundException;
 import org.testng.annotations.Test;
 
-/**
- * @author Adam Lowe
- */
 public class NovaEC2KeyPairApiExpectTest extends BaseNovaEC2RestApiExpectTest {
 
    public void testImportKeyPair() {

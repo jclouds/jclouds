@@ -37,7 +37,6 @@ import com.google.common.base.Optional;
  * failover for effectively routing traffic in case the primary node fails. This is an additional feature that will 
  * ensure you remain up in case your primary node fails.
  * <p/>
- * @author Everett Toews
  */
 public class HealthMonitor {
 

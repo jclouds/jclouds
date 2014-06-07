@@ -33,8 +33,6 @@ import com.google.inject.util.Types;
 /**
  * Allows you to lookup the {@link HttpApiMetadata#getContext()} as
  * {@link ApiContext}, {@code ApiContext<Api>}, and {@code ApiContext<?>}.
- * 
- * @author Adrian Cole
  */
 public class BindApiContextWithWildcardExtendsExplicitAndRawType extends AbstractModule {
    private final HttpApiMetadata<?> httpApiMetadata;

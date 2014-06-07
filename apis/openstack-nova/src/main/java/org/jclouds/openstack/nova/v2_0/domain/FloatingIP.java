@@ -32,8 +32,6 @@ import com.google.common.base.Objects.ToStringHelper;
  * Server instance. Floating IPs can also be disassociated and deleted from a
  * Server instance.
  * 
- * @author Jeremy Daggett
- * @author chamerling
 */
 public class FloatingIP implements Comparable<FloatingIP> {
 

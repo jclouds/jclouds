@@ -38,7 +38,6 @@ import com.google.common.collect.ImmutableSet;
 /**
  * defines the connection between the {@link ServerManager} implementation and the jclouds
  * {@link ComputeService}
- * 
  */
 @Singleton
 public class ServerManagerComputeServiceAdapter implements ComputeServiceAdapter<Server, Hardware, Image, Datacenter> {

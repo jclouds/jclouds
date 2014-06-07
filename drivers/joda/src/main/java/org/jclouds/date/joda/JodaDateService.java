@@ -31,11 +31,6 @@ import org.joda.time.DateTimeZone;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 
-/**
- * 
- * @author Adrian Cole
- * @author James Murty
- */
 @Singleton
 public class JodaDateService implements DateService {
    

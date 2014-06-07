@@ -27,7 +27,6 @@ import com.google.common.collect.ImmutableSet;
  * @see <a
  *      href="http://download.cloud.com/releases/2.2.8/api/user/updateTemplate.html"
  *      />
- * @author Richard Downer
  */
 public class UpdateTemplateOptions extends BaseHttpRequestOptions {
 

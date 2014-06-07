@@ -27,8 +27,6 @@ import org.jclouds.http.HttpResponseException;
  * @see <a href="http://docs.amazonwebservices.com/AmazonS3/2006-03-01/UsingRESTError.html" />
  * @see AzureStorageError
  * @see org.jclouds.aws.handlers.ParseAzureStorageErrorFromXmlContent
- * @author Adrian Cole
- * 
  */
 public class AzureStorageResponseException extends HttpResponseException {
 

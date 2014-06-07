@@ -39,9 +39,6 @@ import com.google.common.collect.FluentIterable;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.ImmutableSet.Builder;
 
-/**
- * @author Everett Toews
- */
 public class ParseDomain implements Function<HttpResponse, Domain> {
 
    private final ParseJson<RawDomain> json;

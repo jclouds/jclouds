@@ -32,9 +32,6 @@ import org.jclouds.compute.domain.internal.VolumeImpl;
 
 import com.google.common.base.Function;
 
-/**
- * @author Adrian Cole
- */
 @Singleton
 public class HardwareBuilderFromResourceAllocations implements
          Function<Iterable<? extends ResourceAllocationSettingData>, HardwareBuilder> {

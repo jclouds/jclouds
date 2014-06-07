@@ -25,9 +25,6 @@ import com.google.common.base.Objects;
 import com.google.common.base.Objects.ToStringHelper;
 import com.google.common.collect.ImmutableSet;
 
-/**
- * @author Andrew Bayer
- */
 public class ZoneSecurityGroupNamePortsCidrs extends ZoneAndName {
 
    public static Builder<?> builder() {

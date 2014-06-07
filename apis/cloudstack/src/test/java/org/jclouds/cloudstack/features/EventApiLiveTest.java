@@ -26,8 +26,6 @@ import org.testng.annotations.Test;
 
 /**
  * Tests behavior of {@code EventApi}
- *
- * @author Vijay Kiran
  */
 @Test(groups = "live", singleThreaded = true, testName = "EventApiLiveTest")
 public class EventApiLiveTest extends BaseCloudStackApiLiveTest {

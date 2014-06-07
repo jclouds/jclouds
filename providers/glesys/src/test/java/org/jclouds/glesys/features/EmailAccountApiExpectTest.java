@@ -43,8 +43,6 @@ import com.google.common.collect.Iterables;
 
 /**
  * Tests annotation parsing of {@code EmailAccountApi}
- *
- * @author Adam Lowe
  */
 @Test(groups = "unit", testName = "EmailAccountAsyncApiTest")
 public class EmailAccountApiExpectTest extends BaseGleSYSApiExpectTest {

@@ -19,11 +19,6 @@ package org.jclouds.bluelock.vcloud.zone01.features;
 import org.jclouds.vcloud.features.VAppApiLiveTest;
 import org.testng.annotations.Test;
 
-/**
- * 
- * 
- * @author Adrian Cole
- */
 @Test(groups = "live", enabled = true, singleThreaded = true, testName = "BluelockVCloudZone01VAppApiLiveTest")
 public class BluelockVCloudZone01VAppApiLiveTest extends VAppApiLiveTest {
 

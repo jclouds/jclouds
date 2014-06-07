@@ -35,10 +35,6 @@ import com.jcraft.jsch.agentproxy.AgentProxyException;
 import com.jcraft.jsch.agentproxy.Connector;
 import com.jcraft.jsch.agentproxy.ConnectorFactory;
 
-/**
- * 
- * @author Adrian Cole
- */
 @ConfiguresSshClient
 public class SshjSshClientModule extends AbstractModule {
 

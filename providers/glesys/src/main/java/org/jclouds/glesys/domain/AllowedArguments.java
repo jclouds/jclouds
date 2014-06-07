@@ -33,7 +33,6 @@ import com.google.common.collect.ImmutableSet;
  * resource type as well as the cost per unit.
  * 
  * @see AllowedArgumentsForCreateServer
- * @author Peter Gardfjäll
  */
 public class AllowedArguments {
 	public static Builder builder() {

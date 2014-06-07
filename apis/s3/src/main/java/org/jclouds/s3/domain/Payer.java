@@ -53,7 +53,6 @@ import com.google.common.base.CaseFormat;
  * However, you can turn on end user logging on a Requester Pays bucket where the target bucket is a
  * non Requester Pays bucket.
  * 
- * @author Adrian Cole
  * @see <a href=
  *      "http://docs.amazonwebservices.com/AmazonS3/latest/index.html?RESTrequestPaymentGET.html" />
  */

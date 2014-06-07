@@ -27,8 +27,6 @@ import org.jclouds.rest.internal.BaseHttpApiMetadata;
 
 /**
  * Implementation of {@link ApiMetadata} for Amazon's CloudWatch api.
- * 
- * @author Adrian Cole
  */
 public class CloudWatchApiMetadata extends BaseHttpApiMetadata {
 

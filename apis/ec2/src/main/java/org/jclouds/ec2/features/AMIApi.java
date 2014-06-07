@@ -57,8 +57,6 @@ import com.google.common.collect.Multimap;
 /**
  * Provides access to AMI Services.
  * <p/>
- * 
- * @author Adrian Cole
  */
 @RequestFilters(FormSigner.class)
 @VirtualHost

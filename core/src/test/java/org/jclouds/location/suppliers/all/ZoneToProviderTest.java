@@ -32,10 +32,6 @@ import com.google.common.base.Suppliers;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 
-/**
- * 
- * @author Adrian Cole
- */
 @Test(groups = "unit", testName = "ZoneToProviderTest")
 public class ZoneToProviderTest {
    Location provider = new LocationBuilder().scope(LocationScope.PROVIDER).id("servo").description("http://servo")

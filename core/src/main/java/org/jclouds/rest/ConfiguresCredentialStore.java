@@ -26,9 +26,6 @@ import com.google.common.annotations.Beta;
 
 /**
  * designates the module configures a {@code Map<String, ? extends Credentials>}
- * 
- * @author Adrian Cole
- * 
  */
 @Beta
 @Retention(RUNTIME)

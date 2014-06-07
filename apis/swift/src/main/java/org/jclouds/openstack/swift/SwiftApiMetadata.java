@@ -37,8 +37,6 @@ import com.google.inject.Module;
 
 /**
  * Implementation of {@link ApiMetadata} for OpenStack Swift
- *
- * @author Adrian Cole
  */
 public class SwiftApiMetadata extends BaseRestApiMetadata {
 

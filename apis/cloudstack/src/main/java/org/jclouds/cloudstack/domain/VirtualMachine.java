@@ -33,8 +33,6 @@ import com.google.common.collect.ImmutableSet;
 
 /**
  * Class VirtualMachine
- *
- * @author Adrian Cole
  */
 public class VirtualMachine {
 

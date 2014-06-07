@@ -31,7 +31,6 @@ import com.google.common.collect.ImmutableSet;
  * @see <a href=
  *      "http://download.cloud.com/releases/2.2.0/api_2.2.12/global_admin/updateZone.html"
  *      />
- * @author Andrei Savu
  */
 public class UpdateZoneOptions extends BaseHttpRequestOptions {
 

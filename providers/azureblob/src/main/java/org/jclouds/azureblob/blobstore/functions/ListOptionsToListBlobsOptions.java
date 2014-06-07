@@ -25,9 +25,6 @@ import org.jclouds.blobstore.options.ListContainerOptions;
 
 import com.google.common.base.Function;
 
-/**
- * @author Adrian Cole
- */
 @Singleton
 public class ListOptionsToListBlobsOptions implements
          Function<ListContainerOptions, ListBlobsOptions> {

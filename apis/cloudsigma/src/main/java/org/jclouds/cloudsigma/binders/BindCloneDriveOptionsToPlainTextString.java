@@ -36,10 +36,6 @@ import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Maps;
 
-/**
- * 
- * @author Adrian Cole
- */
 @Singleton
 public class BindCloneDriveOptionsToPlainTextString implements MapBinder {
    private final ListOfMapsToListOfKeyValuesDelimitedByBlankLines listOfMapsToListOfKeyValuesDelimitedByBlankLines;

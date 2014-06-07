@@ -24,9 +24,6 @@ import static org.jclouds.gogrid.reference.GoGridQueryParams.SERVER_TYPE_KEY;
 
 import org.jclouds.http.options.BaseHttpRequestOptions;
 
-/**
- * @author Oleksiy Yarmula
- */
 public class GetServerListOptions extends BaseHttpRequestOptions {
 
    public static final GetServerListOptions NONE = new GetServerListOptions();

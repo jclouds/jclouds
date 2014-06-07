@@ -30,8 +30,6 @@ import com.google.common.base.Predicate;
 
 /**
  * Tests behavior of {@code GlobalDomainApi}
- *
- * @author Andrei Savu
  */
 @Test(groups = "live", singleThreaded = true, testName = "GlobalDomainApiLiveTest")
 public class GlobalDomainApiLiveTest extends BaseCloudStackApiLiveTest {

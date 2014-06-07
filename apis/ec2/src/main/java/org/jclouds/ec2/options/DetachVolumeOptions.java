@@ -33,7 +33,6 @@ import org.jclouds.ec2.options.internal.BaseEC2RequestOptions;
  * client.getElasticBlockStoreApi().get().detachVolumeInRegion(null, id, fromDevice("123125").force());
  * <code>
  * 
- * @author Adrian Cole
  * @see <a
  *      href="http://docs.amazonwebservices.com/AWSEC2/latest/APIReference/index.html?ApiReference-form-DetachVolume.html"
  *      />

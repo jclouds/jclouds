@@ -27,8 +27,6 @@ import org.jclouds.rest.internal.BaseRestClientExpectTest;
 
 /**
  * Base class for writing Swift Keystone Expect tests
- * 
- * @author Adrian Cole
  */
 public class BaseSwiftKeystoneExpectTest<T> extends BaseRestClientExpectTest<T>  {
    protected HttpRequest keystoneAuthWithUsernameAndPassword;

@@ -19,10 +19,6 @@ package org.jclouds.blobstore;
 import org.jclouds.blobstore.internal.BaseBlobStoreApiMetadataTest;
 import org.testng.annotations.Test;
 
-/**
- * 
- * @author Adrian Cole
- */
 @Test(groups = "unit", testName = "TransientApiMetadataTest")
 public class TransientApiMetadataTest extends BaseBlobStoreApiMetadataTest {
 

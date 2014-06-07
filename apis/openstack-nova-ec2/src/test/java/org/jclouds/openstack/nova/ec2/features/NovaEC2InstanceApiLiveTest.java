@@ -19,10 +19,6 @@ package org.jclouds.openstack.nova.ec2.features;
 import org.jclouds.ec2.features.InstanceApiLiveTest;
 import org.testng.annotations.Test;
 
-/**
- * 
- * @author Adrian Cole
- */
 @Test(groups = "live", singleThreaded = true, testName = "NovaEC2InstanceApiLiveTest")
 public class NovaEC2InstanceApiLiveTest extends InstanceApiLiveTest {
    public NovaEC2InstanceApiLiveTest() {

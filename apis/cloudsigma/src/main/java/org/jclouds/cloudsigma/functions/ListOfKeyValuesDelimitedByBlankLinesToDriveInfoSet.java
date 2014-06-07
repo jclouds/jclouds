@@ -29,10 +29,6 @@ import com.google.common.base.Function;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Iterables;
 
-/**
- * 
- * @author Adrian Cole
- */
 @Singleton
 public class ListOfKeyValuesDelimitedByBlankLinesToDriveInfoSet implements Function<HttpResponse, Set<DriveInfo>> {
    private final ReturnStringIf2xx returnStringIf200;

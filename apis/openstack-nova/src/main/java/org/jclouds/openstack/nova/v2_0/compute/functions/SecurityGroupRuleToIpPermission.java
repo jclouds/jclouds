@@ -45,8 +45,6 @@ import com.google.common.util.concurrent.Atomics;
 /**
  * A function for transforming a nova-specific SecurityGroupRule into a generic
  * IpPermission object.
- * 
- * @author Andrew Bayer
  */
 public class SecurityGroupRuleToIpPermission implements Function<SecurityGroupRule, IpPermission> {
    @Resource

@@ -54,7 +54,6 @@ import com.google.inject.Provides;
  * @see NovaApi
  * @see <a href="http://docs.openstack.org/api/openstack-compute/1.1/content/"
  *      />
- * @author Adrian Cole
  * @deprecated please use {@code org.jclouds.ContextBuilder#buildApi(NovaApi.class)} as
  *             {@link NovaAsyncApi} interface will be removed in jclouds 1.7.
  */

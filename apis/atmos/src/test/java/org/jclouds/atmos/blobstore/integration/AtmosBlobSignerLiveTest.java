@@ -19,10 +19,6 @@ package org.jclouds.atmos.blobstore.integration;
 import org.jclouds.blobstore.integration.internal.BaseBlobSignerLiveTest;
 import org.testng.annotations.Test;
 
-/**
- * 
- * @author Adrian Cole
- */
 @Test(groups = { "live" })
 public class AtmosBlobSignerLiveTest extends BaseBlobSignerLiveTest {
    public AtmosBlobSignerLiveTest() {

@@ -25,8 +25,6 @@ import com.google.inject.ImplementedBy;
 
 /**
  * Provides the ability to decouple timeouts and fallbacks from what's built-in.
- * 
- * @author Adrian Cole
  */
 @Beta
 @ImplementedBy(ReadAnnotationsAndProperties.class)

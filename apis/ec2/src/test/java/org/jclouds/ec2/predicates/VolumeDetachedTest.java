@@ -35,9 +35,6 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
-/**
- * @author Andrei Savu
- */
 @Test(groups = "unit", singleThreaded = true)
 public class VolumeDetachedTest {
 

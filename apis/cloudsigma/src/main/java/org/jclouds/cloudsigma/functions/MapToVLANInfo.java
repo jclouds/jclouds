@@ -26,10 +26,6 @@ import org.jclouds.logging.Logger;
 
 import com.google.common.base.Function;
 
-/**
- * 
- * @author Adrian Cole
- */
 @Singleton
 public class MapToVLANInfo implements Function<Map<String, String>, VLANInfo> {
 

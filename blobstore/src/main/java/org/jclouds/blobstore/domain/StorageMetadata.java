@@ -27,8 +27,6 @@ import com.google.inject.ImplementedBy;
 
 /**
  * Identifies containers, files, etc.
- * 
- * @author Adrian Cole
  */
 @ImplementedBy(StorageMetadataImpl.class)
 public interface StorageMetadata extends ResourceMetadata<StorageType> {

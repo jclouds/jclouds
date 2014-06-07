@@ -19,10 +19,6 @@ package org.jclouds.hpcloud.compute.features;
 import org.jclouds.openstack.nova.v2_0.extensions.VolumeApiLiveTest;
 import org.testng.annotations.Test;
 
-/**
- * 
- * @author Adrian Cole
- */
 @Test(groups = "live", testName = "HPCloudComputeVolumeApiLiveTest")
 public class HPCloudComputeVolumeApiLiveTest extends VolumeApiLiveTest {
    public HPCloudComputeVolumeApiLiveTest() {

@@ -55,7 +55,6 @@ import com.google.common.collect.Multimap;
  * <p/>
  * 
  * @see <a href="http://docs.amazonwebservices.com/AWSEC2/latest/APIReference" >doc</a>
- * @author Adrian Cole
  */
 @RequestFilters(FormSigner.class)
 @VirtualHost

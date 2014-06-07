@@ -30,9 +30,6 @@ import org.jclouds.openstack.swift.domain.ObjectInfo;
 
 import com.google.common.base.Function;
 
-/**
- * @author Adrian Cole
- */
 @Singleton
 public class ObjectToBlobMetadata implements Function<ObjectInfo, MutableBlobMetadata> {
    private final IfDirectoryReturnNameStrategy ifDirectoryReturnName;

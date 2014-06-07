@@ -19,10 +19,6 @@ package org.jclouds.rackspace.cloudservers.us.features;
 import org.jclouds.openstack.nova.v2_0.features.ImageApiLiveTest;
 import org.testng.annotations.Test;
 
-/**
- *
- * @author Adrian Cole
- */
 @Test(groups = "live", testName = "CloudServersUSImageApiLiveTest")
 public class CloudServersUSImageApiLiveTest extends ImageApiLiveTest {
     public CloudServersUSImageApiLiveTest() {

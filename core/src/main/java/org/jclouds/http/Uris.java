@@ -66,9 +66,6 @@ import com.google.common.collect.Multimap;
  * noted in the RFC.
  * 
  * @since 1.6
- * 
- * @author Adrian Cole
- * 
  */
 @Beta
 public final class Uris {
@@ -380,7 +377,6 @@ public final class Uris {
    /**
     * Mutable and permits null values. Url decodes all mutations except {@link Multimap#putAll(Multimap)}
     * 
-    * @author Adrian Cole
     * 
     */
    static final class DecodingMultimap extends ForwardingMultimap<String, Object> {

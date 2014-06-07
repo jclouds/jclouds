@@ -26,9 +26,6 @@ import javax.inject.Named;
 
 import com.google.common.base.Objects;
 
-/**
- * @author Adrian Cole
- */
 public final class Job {
 
    @Named("job_id")

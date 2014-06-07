@@ -27,8 +27,6 @@ import org.jclouds.sts.config.STSHttpApiModule;
 
 /**
  * Implementation of {@link ApiMetadata} for Amazon's STS api.
- * 
- * @author Adrian Cole
  */
 public class STSApiMetadata extends BaseHttpApiMetadata<STSApi> {
 

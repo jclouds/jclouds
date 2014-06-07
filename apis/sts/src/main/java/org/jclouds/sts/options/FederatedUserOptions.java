@@ -25,8 +25,6 @@ import com.google.common.collect.Multimap;
  * @see <a href=
  *      "http://docs.aws.amazon.com/STS/latest/APIReference/API_GetFederationToken.html"
  *      />
- * 
- * @author Adrian Cole
  */
 public class FederatedUserOptions extends BaseHttpRequestOptions implements Cloneable {
 

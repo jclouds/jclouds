@@ -34,7 +34,6 @@ import javax.ws.rs.Path;
 import javax.ws.rs.core.MediaType;
 
 /**
- * @author Andrei Savu
  * @see TemporaryUrlKeyApi
  * @see <a href="http://docs.openstack.org/trunk/openstack-object-storage/admin/content/swift-tempurl.html">docs</a>
  */

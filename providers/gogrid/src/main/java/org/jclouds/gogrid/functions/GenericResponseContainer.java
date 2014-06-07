@@ -27,8 +27,6 @@ import java.util.SortedSet;
  * 
  * This class is not intended to be used by customers directly, it is here to
  * assist in deserialization.
- * 
- * @author Oleksiy Yarmula
  */
 public class GenericResponseContainer<T> {
 

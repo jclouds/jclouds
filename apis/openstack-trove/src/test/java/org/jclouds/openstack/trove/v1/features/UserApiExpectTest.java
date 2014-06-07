@@ -39,8 +39,6 @@ import com.google.common.collect.ImmutableSortedSet.Builder;
 
 /**
  * Tests UserApi Guice wiring and parsing
- *
- * @author Zack Shoylev
  */
 @Test(groups = "unit", testName = "UserApiExpectTest")
 public class UserApiExpectTest extends BaseTroveApiExpectTest {

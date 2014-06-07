@@ -26,9 +26,6 @@ import org.jclouds.cim.ResourceAllocationSettingData.ResourceType;
 import org.jclouds.http.functions.ParseSax;
 import org.xml.sax.Attributes;
 
-/**
- * @author Adrian Cole
- */
 public class ResourceAllocationSettingDataHandler extends ParseSax.HandlerWithResult<ResourceAllocationSettingData> {
    protected StringBuilder currentText = new StringBuilder();
 

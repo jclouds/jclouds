@@ -27,8 +27,6 @@ import com.google.inject.Module;
 /**
  * 
  * Generally disabled, as it incurs higher fees.
- * 
- * @author Adrian Cole
  */
 @Test(groups = "live", enabled = true, singleThreaded = true)
 public class CloudStackComputeServiceLiveTest extends BaseComputeServiceLiveTest {

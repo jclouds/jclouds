@@ -27,7 +27,6 @@ import com.google.common.collect.ImmutableSet;
  * @see <a
  *      href="http://download.cloud.com/releases/2.2.0/api/user/listNetworks.html"
  *      />
- * @author Adrian Cole
  */
 public class ListNetworksOptions extends AccountInDomainOptions {
 

@@ -27,9 +27,6 @@ import javax.inject.Named;
 import com.google.common.base.CaseFormat;
 import com.google.common.base.Objects;
 
-/**
- * @author Adrian Cole
- */
 public final class Zone {
 
    private final String fqdn;

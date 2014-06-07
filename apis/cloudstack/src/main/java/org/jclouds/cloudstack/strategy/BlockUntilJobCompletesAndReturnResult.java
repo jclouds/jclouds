@@ -33,9 +33,6 @@ import org.jclouds.logging.Logger;
 import com.google.common.base.Predicate;
 import com.google.common.util.concurrent.UncheckedExecutionException;
 
-/**
- * @author Adrian Cole
- */
 @Singleton
 public class BlockUntilJobCompletesAndReturnResult {
    @Resource

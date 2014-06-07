@@ -34,10 +34,6 @@ import com.google.common.base.Supplier;
 import com.google.common.collect.ImmutableMap;
 import com.google.inject.Module;
 
-/**
- * 
- * @author Adrian Cole
- */
 public class BaseCloudWatchExpectTest<T> extends BaseRestApiExpectTest<T> {
 
    public BaseCloudWatchExpectTest() {

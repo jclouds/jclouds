@@ -38,9 +38,6 @@ import com.google.common.base.Function;
 import com.google.common.base.Supplier;
 import com.google.common.collect.ImmutableMap;
 
-/**
- * @author Adrian Cole
- */
 @Singleton
 public class WellKnownImageToImage implements Function<DriveInfo, Image> {
    private final Supplier<Location> locationSupplier;

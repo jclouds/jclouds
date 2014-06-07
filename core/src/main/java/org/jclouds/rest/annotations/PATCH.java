@@ -25,9 +25,6 @@ import javax.ws.rs.HttpMethod;
 
 /**
  * Implements the PATCH HTTP request type
- *
- * @author Ignacio Mulas
- *
  */
 @Target({ ElementType.METHOD })
 @Retention(RetentionPolicy.RUNTIME)

@@ -46,9 +46,6 @@ import com.google.common.collect.Multimap;
  * // this will get the first megabyte of an object.
  * blob = client.get("objectName",range(0,1024));
  * <code>
- * 
- * @author Adrian Cole
- * 
  */
 public class GetOptions extends BaseHttpRequestOptions {
    private static final DateService dateService = new SimpleDateFormatDateService();

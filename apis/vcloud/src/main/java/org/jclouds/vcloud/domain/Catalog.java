@@ -24,9 +24,6 @@ import org.jclouds.vcloud.domain.internal.CatalogImpl;
 
 import com.google.inject.ImplementedBy;
 
-/**
- * @author Adrian Cole
- */
 @org.jclouds.vcloud.endpoints.Catalog
 @ImplementedBy(CatalogImpl.class)
 public interface Catalog extends ReferenceType, Map<String, ReferenceType> {

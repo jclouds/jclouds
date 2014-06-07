@@ -46,7 +46,6 @@ import com.google.common.collect.Multimap;
  * <p/>
  * 
  * @see <a href="https://www.ultradns.net/api/NUS_API_XML_SOAP.pdf" />
- * @author Adrian Cole
  */
 @RequestFilters(SOAPWrapWithPasswordAuth.class)
 @VirtualHost

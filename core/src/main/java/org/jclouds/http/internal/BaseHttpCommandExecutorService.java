@@ -50,10 +50,6 @@ import org.jclouds.logging.Logger;
 import com.google.common.util.concurrent.ListenableFuture;
 import com.google.common.util.concurrent.ListeningExecutorService;
 
-/**
- * 
- * @author Adrian Cole
- */
 public abstract class BaseHttpCommandExecutorService<Q> implements HttpCommandExecutorService {
    protected final HttpUtils utils;
    protected final ContentMetadataCodec contentMetadataCodec;

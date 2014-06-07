@@ -67,8 +67,6 @@ import com.google.inject.Inject;
 
 /**
  * Basic implementation of a {@link HttpCommandExecutorService}.
- * 
- * @author Adrian Cole
  */
 @Singleton
 public class JavaUrlHttpCommandExecutorService extends BaseHttpCommandExecutorService<HttpURLConnection> {

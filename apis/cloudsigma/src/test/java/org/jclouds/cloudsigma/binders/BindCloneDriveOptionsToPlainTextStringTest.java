@@ -33,10 +33,6 @@ import com.google.common.base.Throwables;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.inject.Guice;
-/**
- * 
- * @author Adrian Cole
- */
 @Test(groups = "unit")
 public class BindCloneDriveOptionsToPlainTextStringTest {
 

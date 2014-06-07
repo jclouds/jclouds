@@ -32,8 +32,6 @@ import org.jclouds.vcloud.xml.ErrorHandler;
 
 /**
  * Needed to sign and verify requests and responses.
- * 
- * @author Adrian Cole
  */
 @Singleton
 public class VCloudUtils {

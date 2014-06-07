@@ -17,11 +17,6 @@
 package org.jclouds.compute.domain;
 
 
-/**
- * 
- * @author Adrian Cole
- * 
- */
 public class OsFamilyVersion64Bit {
    public OsFamily family;
    public String version;

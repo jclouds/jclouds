@@ -24,7 +24,6 @@ import org.jclouds.rest.annotations.RequestFilters;
 /**
  * Only purpose is to override the auth filter with one that works in keystone
  *
- * @author Adrian Cole
  * @see TemporaryUrlKeyApi
  */
 @RequestFilters(AuthenticateRequest.class)

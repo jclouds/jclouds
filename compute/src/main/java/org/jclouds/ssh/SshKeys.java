@@ -59,7 +59,6 @@ import com.google.common.io.ByteSource;
 /**
  * Utilities for ssh key pairs
  * 
- * @author Adrian Cole
  * @see <a href=
  *      "http://stackoverflow.com/questions/3706177/how-to-generate-ssh-compatible-id-rsa-pub-from-java"
  *      />

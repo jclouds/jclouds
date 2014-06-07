@@ -34,11 +34,6 @@ import org.jclouds.location.suppliers.ImplicitLocationSupplier;
 
 import com.google.common.base.Supplier;
 
-/**
- * 
- * @author Dies Koper
- * 
- */
 @Singleton
 public class FirstNetwork implements ImplicitLocationSupplier {
 

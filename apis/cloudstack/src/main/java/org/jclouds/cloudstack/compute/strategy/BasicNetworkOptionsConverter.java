@@ -24,8 +24,6 @@ import java.util.Map;
 
 /**
  * Convert template options into DeployVirtualMachineOptions, when the target zone has basic networking.
- *
- * @author Richard Downer
  */
 public class BasicNetworkOptionsConverter implements OptionsConverter {
    @Override

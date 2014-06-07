@@ -33,7 +33,6 @@ import com.google.common.base.Supplier;
  * @see <a href=
  *      "http://docs.amazonwebservices.com/AWSEC2/latest/APIReference/ApiReference-query-CreateKeyPair.html"
  *      />
- * @author Adrian Cole
  */
 public class KeyPairResponseHandler extends ParseSax.HandlerForGeneratedRequestWithResult<KeyPair> {
    private final Supplier<String> defaultRegion;

@@ -33,8 +33,6 @@ import com.google.inject.name.Names;
 
 /**
  * Tests behavior of {@code ParseAuthenticationResponseFromHeaders}
- *
- * @author Adrian Cole
  */
 @Test(groups = "unit", testName = "ParseAuthenticationResponseFromHeadersTest")
 public class ParseAuthenticationResponseFromHeadersTest {

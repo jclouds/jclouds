@@ -65,9 +65,6 @@ import com.google.common.io.ByteSource;
  *       credential_url: password_or_rsa_file ex. resource:///id_rsa will get the classpath /id_rsa; file://path/to/id_rsa
  *       sudo_password: password
  * </pre>
- * 
- * @author Kelvin Kakugawa
- * @author Adrian Cole
  */
 public class YamlNode {
    public String id;

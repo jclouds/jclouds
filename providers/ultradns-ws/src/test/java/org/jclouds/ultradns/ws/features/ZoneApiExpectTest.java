@@ -32,9 +32,6 @@ import org.jclouds.ultradns.ws.internal.BaseUltraDNSWSApiExpectTest;
 import org.jclouds.ultradns.ws.parse.GetGeneralPropertiesForZoneResponseTest;
 import org.jclouds.ultradns.ws.parse.GetZonesOfAccountResponseTest;
 import org.testng.annotations.Test;
-/**
- * @author Adrian Cole
- */
 @Test(groups = "unit", testName = "ZoneApiExpectTest")
 public class ZoneApiExpectTest extends BaseUltraDNSWSApiExpectTest {
    HttpRequest create = HttpRequest.builder().method(POST)

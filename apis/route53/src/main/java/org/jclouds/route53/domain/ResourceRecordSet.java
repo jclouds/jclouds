@@ -31,10 +31,6 @@ import com.google.common.base.Objects.ToStringHelper;
 import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableList;
 
-/**
- * 
- * @author Adrian Cole
- */
 public class ResourceRecordSet {
 
    protected final String name;

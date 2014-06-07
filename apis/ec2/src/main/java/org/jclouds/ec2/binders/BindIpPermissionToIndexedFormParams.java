@@ -24,9 +24,6 @@ import org.jclouds.http.HttpRequest;
 import org.jclouds.net.domain.IpPermission;
 import org.jclouds.rest.Binder;
 
-/**
- * @author Adrian Cole
- */
 public class BindIpPermissionToIndexedFormParams implements Binder {
 
    @SuppressWarnings("unchecked")

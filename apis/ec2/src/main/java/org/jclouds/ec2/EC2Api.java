@@ -52,8 +52,6 @@ import com.google.inject.Provides;
  * Optional&lt;? extends WindowsApi&gt; windowsOption = ec2Api.getWindowsApi();
  * checkState(windowsOption.isPresent(), &quot;windows feature required, but not present&quot;);
  * </pre>
- * 
- * @author Adrian Cole
  */
 public interface EC2Api extends Closeable {
    /**

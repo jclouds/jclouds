@@ -28,8 +28,6 @@ import com.google.common.base.Predicate;
 /**
  * 
  * Tests to if the runscript is still running
- * 
- * @author Adrian Cole
  */
 @Singleton
 public class ScriptStatusReturnsZero implements Predicate<ScriptStatusReturnsZero.CommandUsingClient> {

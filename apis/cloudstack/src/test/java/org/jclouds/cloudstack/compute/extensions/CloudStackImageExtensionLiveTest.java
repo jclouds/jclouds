@@ -24,9 +24,6 @@ import com.google.inject.Module;
 
 /**
  * Live test for CloudStack {@link ImageExtension} implementation.
- * 
- * @author Andrew Bayer
- * 
  */
 @Test(groups = "live", singleThreaded = true, testName = "CloudStackImageExtensionLiveTest")
 public class CloudStackImageExtensionLiveTest extends BaseImageExtensionLiveTest {

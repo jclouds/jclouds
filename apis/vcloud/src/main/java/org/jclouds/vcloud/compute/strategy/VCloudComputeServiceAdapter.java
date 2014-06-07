@@ -58,7 +58,6 @@ import com.google.common.collect.ImmutableSet.Builder;
 /**
  * defines the connection between the {@link org.jclouds.vcloud.VCloudApi} implementation and the jclouds
  * {@link ComputeService}
- * 
  */
 @Singleton
 public class VCloudComputeServiceAdapter implements ComputeServiceAdapter<VApp, VAppTemplate, VAppTemplate, Location> {

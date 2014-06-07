@@ -37,8 +37,6 @@ import com.google.common.base.Predicate;
 
 /**
  * Tests behavior of {@code DomainApi}
- *
- * @author Adam Lowe
  */
 @Test(groups = "live", testName = "DomainApiLiveTest", singleThreaded = true)
 public class DomainApiLiveTest extends BaseGleSYSApiLiveTest {

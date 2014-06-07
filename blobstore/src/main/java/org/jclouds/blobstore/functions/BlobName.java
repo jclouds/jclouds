@@ -24,10 +24,6 @@ import org.jclouds.blobstore.domain.Blob;
 
 import com.google.common.base.Function;
 
-/**
- * 
- * @author Adrian Cole
- */
 @Singleton
 public final class BlobName implements Function<Blob, String> {
 

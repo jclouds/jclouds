@@ -29,9 +29,6 @@ import org.jclouds.cloudstack.domain.User;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
-/**
- * @author Andrei Savu
- */
 @Test(groups = "unit")
 public class UserPredicatesTest {
 

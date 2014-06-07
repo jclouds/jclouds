@@ -27,9 +27,6 @@ import org.jclouds.cloudwatch.features.AlarmApi;
 import org.jclouds.collect.IterableWithMarker;
 import org.jclouds.collect.internal.CallerArg0ToPagedIterable;
 
-/**
- * @author Jeremy Whitlock
- */
 @Beta
 public class ListAlarmsToPagedIterable
       extends CallerArg0ToPagedIterable<Alarm, ListAlarmsToPagedIterable> {

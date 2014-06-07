@@ -25,8 +25,6 @@ import com.google.common.net.HttpHeaders;
 
 /**
  * Base class for writing KeyStone Rest Client Expect tests
- * 
- * @author Adrian Cole
  */
 public class BaseKeystoneRestClientExpectTest<S> extends BaseRestClientExpectTest<S> {
 

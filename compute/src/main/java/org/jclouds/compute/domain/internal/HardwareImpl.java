@@ -39,9 +39,6 @@ import com.google.common.base.Predicate;
 import com.google.common.collect.ComparisonChain;
 import com.google.common.collect.ImmutableList;
 
-/**
- * @author Adrian Cole
- */
 public class HardwareImpl extends ComputeMetadataImpl implements Hardware {
 
    private final List<Processor> processors;

@@ -24,9 +24,6 @@ import org.testng.annotations.Test;
 
 import com.google.common.net.HttpHeaders;
 
-/**
- * @author Diwaker Gupta
- */
 @Test(groups = "unit")
 public class StripExpectHeaderTest {
    public void testExpectHeaderIsStripped() {

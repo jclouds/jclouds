@@ -25,8 +25,6 @@ import com.google.common.collect.ImmutableMap;
 
 /**
  * Create a Domain or Subdomain.
- * 
- * @author Everett Toews
  */
 public class CreateDomain {
    private final String name;

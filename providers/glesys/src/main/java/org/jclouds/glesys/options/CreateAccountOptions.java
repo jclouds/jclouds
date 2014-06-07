@@ -19,7 +19,6 @@ package org.jclouds.glesys.options;
 import org.jclouds.http.options.BaseHttpRequestOptions;
 
 /**
- * @author Adam Lowe
  * @see <a href="https://customer.glesys.com/api.php?a=doc#email_createaccount" />
  */
 public class CreateAccountOptions extends BaseHttpRequestOptions {

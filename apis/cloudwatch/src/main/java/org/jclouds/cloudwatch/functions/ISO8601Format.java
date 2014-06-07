@@ -27,11 +27,6 @@ import org.jclouds.date.DateService;
 
 import com.google.common.base.Function;
 
-/**
- * 
- * @author Adrian Cole
- * 
- */
 @Singleton
 public class ISO8601Format implements Function<Object, String> {
 

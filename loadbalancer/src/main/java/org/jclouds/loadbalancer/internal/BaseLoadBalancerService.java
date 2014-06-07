@@ -49,11 +49,6 @@ import com.google.common.base.Supplier;
 import com.google.common.util.concurrent.Atomics;
 import com.google.inject.Inject;
 
-/**
- * 
- * @author Lili Nadar
- * @author Adrian Cole
- */
 @Singleton
 public class BaseLoadBalancerService implements LoadBalancerService {
 

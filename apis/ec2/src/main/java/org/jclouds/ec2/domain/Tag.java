@@ -30,8 +30,6 @@ import com.google.common.base.Optional;
  * @see <a
  *      href="http://docs.amazonwebservices.com/AWSEC2/latest/UserGuide/Using_Tags.html"
  *      >doc</a>
- * 
- * @author Adrian Cole
  */
 public class Tag {
 

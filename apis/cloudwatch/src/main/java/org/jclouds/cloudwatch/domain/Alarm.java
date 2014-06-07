@@ -30,8 +30,6 @@ import com.google.common.base.Optional;
 
 /**
  * @see <a href="http://docs.aws.amazon.com/AmazonCloudWatch/latest/APIReference/API_MetricAlarm.html" />
- *
- * @author Jeremy Whitlock
  */
 @Beta
 public class Alarm {

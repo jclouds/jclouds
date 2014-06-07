@@ -36,10 +36,6 @@ import com.google.common.reflect.Invokable;
 import com.google.common.reflect.TypeToken;
 import com.google.common.util.concurrent.ListenableFuture;
 
-/**
- * 
- * @author Adrian Cole
- */
 @Test(groups = "unit")
 public class MappedHttpInvocationModuleTest {
    interface Sync {

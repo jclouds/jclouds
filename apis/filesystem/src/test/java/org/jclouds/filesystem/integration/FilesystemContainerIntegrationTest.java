@@ -41,10 +41,6 @@ import org.testng.SkipException;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Iterables;
 
-/**
- * @author James Murty
- * @author Adrian Cole
- */
 @Test(groups = { "integration", "live" }, testName = "blobstore.FilesystemContainerIntegrationTest")
 public class FilesystemContainerIntegrationTest extends BaseContainerIntegrationTest {
    public FilesystemContainerIntegrationTest() {

@@ -28,8 +28,6 @@ import com.google.common.base.Optional;
 /**
  * Used to propagate {@code arg0} during an advance in a {@link PagedIterable}. For example, in the call
  * {@code api.getUserApi().listPathPrefix("/users")}, the arg0 is the value {@code "/users"}.
- * 
- * @author Adrian Cole
  */
 @Beta
 public abstract class Arg0ToPagedIterable<T, I extends Arg0ToPagedIterable<T, I>> extends ArgsToPagedIterable<T, I> {
@@ -51,7 +49,6 @@ public abstract class Arg0ToPagedIterable<T, I extends Arg0ToPagedIterable<T, I>
     * the call {@code api.getUserApiForZone(zone).list()}, the caller arg0 is the value of {@code zone}, and the callee
     * is {@code UserApi.list()}
     * 
-    * @author Adrian Cole
     */
    public abstract static class FromCaller<T, I extends FromCaller<T, I>> extends Arg0ToPagedIterable<T, I> {
       @Override

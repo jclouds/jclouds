@@ -19,10 +19,6 @@ package org.jclouds.rackspace.clouddns.us.features;
 import org.jclouds.rackspace.clouddns.v1.features.LimitApiLiveTest;
 import org.testng.annotations.Test;
 
-/**
- * 
- * @author Everett Toews
- */
 @Test(groups = "live", singleThreaded = true, testName = "CloudDNSUSLimitApiLiveTest")
 public class CloudDNSUSLimitApiLiveTest extends LimitApiLiveTest {
    public CloudDNSUSLimitApiLiveTest() {

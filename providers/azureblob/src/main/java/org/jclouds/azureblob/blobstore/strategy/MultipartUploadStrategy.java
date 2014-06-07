@@ -21,8 +21,6 @@ import org.jclouds.blobstore.domain.Blob;
 
 /**
  * @see <a href="http://msdn.microsoft.com/en-us/library/windowsazure/dd135726.aspx">Azure Put Block Documentation</a>
- *
- * @author John Victor Kew
  */
 @ImplementedBy(AzureBlobBlockUploadStrategy.class)
 public interface MultipartUploadStrategy {

@@ -22,10 +22,6 @@ import org.jclouds.openstack.keystone.v2_0.AuthenticationApi;
 
 import com.google.inject.AbstractModule;
 
-/**
- * 
- * @author Adrian Cole
- */
 public class AuthenticationApiModule extends AbstractModule  {
 
    @Override

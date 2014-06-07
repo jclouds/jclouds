@@ -28,8 +28,6 @@ import com.google.common.base.Objects.ToStringHelper;
 
 /**
  * Class User
- *
- * @author Adrian Cole
  */
 public class User {
 

@@ -27,8 +27,6 @@ import com.google.common.base.Function;
 
 /**
  * Converts a Map to a typed QueueAttributes object
- * 
- * @author Adrian Cole
  */
 public class MapToQueueAttributes implements Function<Map<String, String>, QueueAttributes> {
 

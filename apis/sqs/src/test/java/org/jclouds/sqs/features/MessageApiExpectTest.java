@@ -34,9 +34,6 @@ import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.ImmutableTable;
 import com.google.common.collect.Iterables;
 
-/**
- * @author Adrian Cole
- */
 @Test(groups = "unit", testName = "MessageApiExpectTest")
 public class MessageApiExpectTest extends BaseSQSApiExpectTest {
    

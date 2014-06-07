@@ -31,7 +31,6 @@ import org.jclouds.logging.Logger;
 import com.google.common.util.concurrent.Uninterruptibles;
 
 /**
- * @author Zack Shoylev
  * 
  * Helper methods for dealing with instances that get created with errors.
  */

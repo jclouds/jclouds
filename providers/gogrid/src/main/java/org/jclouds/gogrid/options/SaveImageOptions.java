@@ -22,9 +22,6 @@ import static org.jclouds.gogrid.reference.GoGridQueryParams.DESCRIPTION_KEY;
 
 import org.jclouds.http.options.BaseHttpRequestOptions;
 
-/**
- * @author Adrian Cole
- */
 public class SaveImageOptions extends BaseHttpRequestOptions {
 
    public SaveImageOptions withDescription(String description) {

@@ -26,8 +26,6 @@ import org.jclouds.rest.Binder;
 
 /**
  * Binds the AvailabilityZone to a form parameter if set.
- * 
- * @author Adrian Cole
  */
 @Singleton
 public class IfNotNullBindAvailabilityZoneToFormParam implements Binder {

@@ -35,9 +35,6 @@ import com.google.common.base.Objects.ToStringHelper;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Maps;
 
-/**
- * @author Adam Lowe
- */
 public class CreateVolumeOptions implements MapBinder {
    public static final CreateVolumeOptions NONE = new CreateVolumeOptions();
 

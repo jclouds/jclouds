@@ -33,8 +33,6 @@ import com.google.common.collect.ImmutableSet;
 
 /**
  * Test the CloudStack AccountApi
- *
- * @author Andrei Savu
  */
 @Test(groups = "unit", testName = "AccountApiExpectTest")
 public class AccountApiExpectTest extends BaseCloudStackExpectTest<AccountApi> {

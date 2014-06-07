@@ -39,8 +39,6 @@ import com.google.inject.Module;
 
 /**
  * Implementation of {@link ApiMetadata} for the Rackspace Cloud Identity Service
- * 
- * @author Adrian Cole
  */
 public class CloudIdentityApiMetadata extends KeystoneApiMetadata {
    

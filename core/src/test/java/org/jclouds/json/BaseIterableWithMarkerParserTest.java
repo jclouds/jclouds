@@ -22,10 +22,6 @@ import org.jclouds.collect.IterableWithMarker;
 
 import com.google.common.collect.ImmutableSortedSet;
 
-/**
- * 
- * @author Adrian Cole
- */
 public abstract class BaseIterableWithMarkerParserTest<T> extends BaseParserTest<IterableWithMarker<T>, T> {
 
    public void compare(IterableWithMarker<T> expects, IterableWithMarker<T> response) {

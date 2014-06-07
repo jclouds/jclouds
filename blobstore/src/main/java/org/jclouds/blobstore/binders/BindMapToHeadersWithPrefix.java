@@ -33,10 +33,6 @@ import org.jclouds.util.Maps2;
 import com.google.common.base.Function;
 import com.google.common.collect.Multimaps;
 
-/**
- * 
- * @author Adrian Cole
- */
 @Singleton
 public class BindMapToHeadersWithPrefix implements Binder {
    private final Function<String, String> FN;

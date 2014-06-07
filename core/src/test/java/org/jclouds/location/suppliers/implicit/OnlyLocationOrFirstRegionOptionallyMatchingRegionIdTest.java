@@ -33,8 +33,6 @@ import com.google.common.collect.ImmutableSet;
 
 /**
  * Tests behavior of {@code OnlyLocationOrFirstRegionOptionallyMatchingRegionId}
- * 
- * @author Adrian Cole
  */
 @Test(groups = "unit", testName = "OnlyLocationOrFirstRegionOptionallyMatchingRegionIdTest")
 public class OnlyLocationOrFirstRegionOptionallyMatchingRegionIdTest {

@@ -20,8 +20,6 @@ import org.jclouds.ec2.reference.EC2Constants;
 
 /**
  * Configuration properties and constants used in EC2 connections.
- * 
- * @author Adrian Cole
  */
 public final class AWSEC2Constants extends EC2Constants {
    /**

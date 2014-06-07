@@ -44,8 +44,6 @@ import com.google.common.base.Objects.ToStringHelper;
  * templateBuilder.options(inboundPorts(22, 80, 8080, 443));
  * Set<NodeMetadata> set = client.createNodesInGroup(tag, 2, templateBuilder.build());
  * <code>
- * 
- * @author Adrian Cole
  */
 public class VCloudTemplateOptions extends TemplateOptions implements Cloneable {
    @Override

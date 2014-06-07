@@ -28,8 +28,6 @@ import com.google.inject.Guice;
 
 /**
  * Tests behavior of {@code ParseObjectFromHeadersAndHttpContent}
- * 
- * @author Adrian Cole
  */
 @Test(groups = "unit", testName = "ParseObjectFromHeadersAndHttpContentTest")
 public class ParseObjectFromHeadersAndHttpContentTest {

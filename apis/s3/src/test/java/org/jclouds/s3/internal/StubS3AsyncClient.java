@@ -80,9 +80,6 @@ import com.google.common.util.concurrent.ListeningExecutorService;
 
 /**
  * Implementation of {@link S3AsyncBlobStore} which keeps all data in a local Map object.
- * 
- * @author Adrian Cole
- * @author James Murty
  */
 @Singleton
 public class StubS3AsyncClient implements S3AsyncClient {

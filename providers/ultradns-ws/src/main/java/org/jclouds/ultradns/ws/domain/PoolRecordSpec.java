@@ -25,8 +25,6 @@ import com.google.common.base.Objects;
 
 /**
  * specifications and status of a current record in the pool.
- * 
- * @author Adrian Cole
  */
 public final class PoolRecordSpec {
    private final String description;

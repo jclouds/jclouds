@@ -27,10 +27,6 @@ import org.jclouds.rest.Binder;
 import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.ImmutableMultimap.Builder;
 
-/**
- * 
- * @author Adrian Cole
- */
 @Singleton
 public class BindSnapshotPolicyScheduleToQueryParam implements Binder {
 

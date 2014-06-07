@@ -25,9 +25,6 @@ import com.google.common.base.Optional;
 import com.google.inject.Inject;
 import java.util.Map;
 
-/**
- * @author Leander Beernaert
- */
 public class ParseDiagnostics implements Function<HttpResponse, Optional <Map<String, String>>> {
 
 

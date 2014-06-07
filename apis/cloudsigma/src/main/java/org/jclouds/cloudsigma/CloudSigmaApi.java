@@ -67,7 +67,6 @@ import org.jclouds.rest.annotations.ResponseParser;
  * <p/>
  *
  * @see <a href="http://cloudsigma.com/en/platform-details/the-api" />
- * @author Adrian Cole
  */
 @RequestFilters(BasicAuthentication.class)
 @Consumes(MediaType.TEXT_PLAIN)

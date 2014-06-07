@@ -25,10 +25,6 @@ import com.google.common.base.Joiner;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Maps;
 
-/**
- * 
- * @author Adrian Cole
- */
 @Singleton
 public class ListOfMapsToListOfKeyValuesDelimitedByBlankLines implements
       Function<Iterable<Map<String, String>>, String> {

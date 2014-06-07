@@ -33,10 +33,6 @@ import org.jclouds.servermanager.compute.strategy.ServerManagerComputeServiceAda
 import com.google.common.base.Function;
 import com.google.inject.TypeLiteral;
 
-/**
- * 
- * @author Adrian Cole
- */
 public class ServerManagerComputeServiceContextModule extends
          ComputeServiceAdapterContextModule<Server, Hardware, Image, Datacenter> {
 

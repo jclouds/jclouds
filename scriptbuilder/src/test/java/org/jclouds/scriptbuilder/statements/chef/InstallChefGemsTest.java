@@ -30,8 +30,6 @@ import com.google.common.io.Resources;
 
 /**
  * Unit tests for the {@link InstallChefGems} statement.
- * 
- * @author Ignasi Barrera
  */
 @Test(groups = "unit", testName = "InstallChefGemsTest")
 public class InstallChefGemsTest {

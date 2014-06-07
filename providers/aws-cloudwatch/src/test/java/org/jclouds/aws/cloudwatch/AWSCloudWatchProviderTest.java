@@ -22,8 +22,6 @@ import org.testng.annotations.Test;
 
 /**
  * The AWSCloudWatchProviderTest tests the org.jclouds.providers.AWSCloudWatchProvider class.
- * 
- * @author Adrian Cole
  */
 @Test(groups = "unit", testName = "AWSCloudWatchProviderTest")
 public class AWSCloudWatchProviderTest extends BaseProviderMetadataTest {

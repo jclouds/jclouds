@@ -29,9 +29,6 @@ import org.testng.annotations.Test;
 import com.google.common.collect.FluentIterable;
 import com.google.common.collect.ImmutableSet;
 
-/**
- * @author Adrian Cole
- */
 @Test(testName = "GetZonesOfAccountResponseTest")
 public class GetZonesOfAccountResponseTest extends BaseHandlerTest {
 

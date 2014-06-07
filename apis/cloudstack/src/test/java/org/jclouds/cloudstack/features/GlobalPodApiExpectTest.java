@@ -35,8 +35,6 @@ import com.google.common.collect.ImmutableSet;
 
 /**
  * Test the CloudStack PodClient
- *
- * @author Richard Downer
  */
 @Test(groups = "unit", testName = "GlobalPodApiExpectTest")
 public class GlobalPodApiExpectTest extends BaseCloudStackExpectTest<GlobalPodApi> {

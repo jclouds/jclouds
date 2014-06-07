@@ -33,9 +33,6 @@ import org.jclouds.http.HttpResponse;
 import com.google.common.base.Function;
 import com.google.common.base.Splitter;
 
-/**
- * @author Adrian Cole
- */
 @Singleton
 public class ParseSystemMetadataFromHeaders implements Function<HttpResponse, SystemMetadata> {
    private final DateService dateService;

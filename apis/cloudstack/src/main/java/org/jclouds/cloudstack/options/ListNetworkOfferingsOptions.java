@@ -28,7 +28,6 @@ import com.google.common.collect.ImmutableSet;
  * @see <a href=
  *      "http://download.cloud.com/releases/2.2.0/api_2.2.12/user/listNetworkOfferings.html"
  *      />
- * @author Adrian Cole
  */
 public class ListNetworkOfferingsOptions extends BaseHttpRequestOptions {
 

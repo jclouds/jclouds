@@ -30,8 +30,6 @@ import com.google.common.collect.Maps;
 
 /**
  * Tests behavior of {@code BindUndeployVAppParamsToXmlPayload}
- * 
- * @author Adrian Cole
  */
 @Test(groups = "unit")
 public class BindUndeployVAppParamsToXmlPayloadTest extends BasePayloadTest {

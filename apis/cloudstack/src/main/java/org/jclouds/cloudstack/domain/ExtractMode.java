@@ -18,9 +18,6 @@ package org.jclouds.cloudstack.domain;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
-/**
- * @author Richard Downer
- */
 public enum ExtractMode {
 
    HTTP_DOWNLOAD, FTP_UPLOAD, UNRECOGNIZED;

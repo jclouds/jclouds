@@ -20,9 +20,6 @@ import com.google.common.base.Objects;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
-/**
- * @author Inbar Stolberg
- */
 public class VolumeQuota {
 
    private final String id;

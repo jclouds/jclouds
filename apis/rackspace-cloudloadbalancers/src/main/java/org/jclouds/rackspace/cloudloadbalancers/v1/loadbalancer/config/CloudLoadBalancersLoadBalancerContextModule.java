@@ -20,8 +20,6 @@ import org.jclouds.loadbalancer.config.BaseLoadBalancerServiceContextModule;
 
 /**
  * Configures the CloudLoadBalancers connection.
- * 
- * @author Adrian Cole
  */
 
 public class CloudLoadBalancersLoadBalancerContextModule extends BaseLoadBalancerServiceContextModule {

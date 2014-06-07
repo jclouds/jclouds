@@ -19,10 +19,6 @@ package org.jclouds.atmos;
 import org.jclouds.blobstore.internal.BaseBlobStoreApiMetadataTest;
 import org.testng.annotations.Test;
 
-/**
- * 
- * @author Adrian Cole
- */
 @Test(groups = "unit", testName = "AtmosApiMetadataTest")
 public class AtmosApiMetadataTest extends BaseBlobStoreApiMetadataTest {
 

@@ -33,8 +33,6 @@ import com.google.common.collect.ImmutableList;
 
 /**
  * Tests possible uses of GetOptions and GetOptions.Builder.*
- * 
- * @author Adrian Cole
  */
 @Test(groups = "unit")
 public class GetOptionsTest {

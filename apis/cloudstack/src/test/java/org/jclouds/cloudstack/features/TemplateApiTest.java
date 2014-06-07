@@ -50,8 +50,6 @@ import com.google.common.collect.ImmutableSet;
 import com.google.common.reflect.Invokable;
 /**
  * Tests behavior of {@code TemplateApi}
- * 
- * @author Adrian Cole
  */
 // NOTE:without testName, this will not call @Before* and fail w/NPE during
 // surefire

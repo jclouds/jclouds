@@ -18,9 +18,6 @@ package org.jclouds.glesys.options;
 
 import org.jclouds.http.options.BaseHttpRequestOptions;
 
-/**
- * @author Adam Lowe
- */
 public class ListIpOptions extends BaseHttpRequestOptions {
 
    public static class Builder {

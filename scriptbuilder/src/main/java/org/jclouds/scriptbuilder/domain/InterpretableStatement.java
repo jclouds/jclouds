@@ -27,8 +27,6 @@ import com.google.common.collect.ImmutableList;
 
 /**
  * Statement used in a shell script
- * 
- * @author Adrian Cole
  */
 public class InterpretableStatement implements Statement {
 

@@ -24,9 +24,6 @@ import org.jclouds.http.functions.BaseHandlerTest;
 import org.jclouds.ultradns.ws.xml.AttributeHandler;
 import org.testng.annotations.Test;
 
-/**
- * @author Adrian Cole
- */
 @Test(testName = "GetPoolForPoolHostNameResponseTest")
 public class GetPoolForPoolHostNameResponseTest extends BaseHandlerTest {
 

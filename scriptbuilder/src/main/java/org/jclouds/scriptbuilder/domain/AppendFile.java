@@ -30,8 +30,6 @@ import com.google.common.collect.Maps;
 
 /**
  * Creates a run script
- * 
- * @author Adrian Cole
  */
 public class AppendFile implements Statement {
    public static final String DELIMITER = "END_OF_JCLOUDS_FILE";

@@ -54,8 +54,6 @@ import com.google.common.collect.ImmutableMultimap;
 import com.google.common.reflect.Invokable;
 /**
  * Tests behavior of {@code AzureBlobAsyncClient}
- * 
- * @author Adrian Cole
  */
 // NOTE:without testName, this will not call @Before* and fail w/NPE during surefire
 @Test(groups = "unit", testName = "AzureBlobAsyncClientTest")

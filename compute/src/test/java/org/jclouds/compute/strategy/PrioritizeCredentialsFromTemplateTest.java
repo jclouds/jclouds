@@ -30,10 +30,6 @@ import org.jclouds.domain.Credentials;
 import org.jclouds.domain.LoginCredentials;
 import org.testng.annotations.Test;
 
-/**
- * 
- * @author Adrian Cole
- */
 @Test(groups = "unit", testName = "PrioritizeCredentialsFromTemplateTest")
 public class PrioritizeCredentialsFromTemplateTest {
    private static final PrioritizeCredentialsFromTemplate fn = new PrioritizeCredentialsFromTemplate(

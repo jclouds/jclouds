@@ -35,7 +35,6 @@ import com.google.common.collect.Iterables;
 
 /**
  * Tests {@code TemplateToImage}
- * 
  */
 @Test(groups = "unit")
 public class TemplateToImageTest {

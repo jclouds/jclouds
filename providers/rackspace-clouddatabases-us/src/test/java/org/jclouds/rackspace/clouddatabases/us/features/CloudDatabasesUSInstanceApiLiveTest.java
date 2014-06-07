@@ -19,9 +19,6 @@ package org.jclouds.rackspace.clouddatabases.us.features;
 import org.jclouds.openstack.trove.v1.features.InstanceApiLiveTest;
 import org.testng.annotations.Test;
 
-/**
- * @author Zack Shoylev
- */
 @Test(groups = "live", testName = "CloudDatabasesUSInstanceApiLiveTest")
 public class CloudDatabasesUSInstanceApiLiveTest extends InstanceApiLiveTest {
    public CloudDatabasesUSInstanceApiLiveTest() {

@@ -48,8 +48,6 @@ import com.google.inject.TypeLiteral;
 
 /**
  * Configures the CloudSigma connection.
- * 
- * @author Adrian Cole
  */
 @ConfiguresRestClient
 public class CloudSigmaRestClientModule extends HttpApiModule<CloudSigmaApi> {

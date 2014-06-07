@@ -65,8 +65,6 @@ import org.jclouds.logging.Logger;
 
 /**
  * creates futures that correlate to
- * 
- * @author Adrian Cole
  */
 @Singleton
 public class EC2CreateNodesInGroupThenAddToSet implements CreateNodesInGroupThenAddToSet {

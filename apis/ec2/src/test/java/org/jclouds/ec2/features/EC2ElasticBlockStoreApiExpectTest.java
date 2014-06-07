@@ -33,9 +33,6 @@ import com.google.common.collect.ImmutableMap.Builder;
 import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.ImmutableSet;
 
-/**
- * @author Adrian Cole
- */
 @Test(groups = "unit", testName = "EC2ElasticBlockStoreApiExpectTest")
 public class EC2ElasticBlockStoreApiExpectTest extends BaseEC2ApiExpectTest<EC2Api> {
    Volume creating = Volume.builder()

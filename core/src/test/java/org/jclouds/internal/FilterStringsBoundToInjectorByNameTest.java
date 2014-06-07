@@ -29,10 +29,6 @@ import com.google.inject.Guice;
 import com.google.inject.Provides;
 import com.google.inject.name.Names;
 
-/**
- * 
- * @author Adrian Cole
- */
 @Test(testName = "FilterStringsBoundToInjectorByNameTest")
 public class FilterStringsBoundToInjectorByNameTest {
 

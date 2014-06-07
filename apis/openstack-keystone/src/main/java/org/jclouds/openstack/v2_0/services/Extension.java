@@ -36,7 +36,6 @@ import javax.inject.Qualifier;
  * ="http://docs.openstack.org/ext/keypairs/api/v1.1">http://docs.openstack.org
  * /ext/keypairs/api/v1.1</a>.
  * 
- * @author Adrian Cole
  * 
  * @see ServiceType
  * @see <a href=

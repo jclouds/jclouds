@@ -26,8 +26,6 @@ import com.google.common.base.Function;
 
 /**
  * Convert a Date object into a "yyyy-MM-dd" String
- *
- * @author Richard Downer
  */
 public class DateToYyyyMmDd implements Function<Object, String> {
 

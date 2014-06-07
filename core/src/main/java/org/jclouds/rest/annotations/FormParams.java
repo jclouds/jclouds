@@ -27,7 +27,6 @@ import java.lang.annotation.Target;
  * Designates that a url encoded form will be added to the request.
  * 
  * @see FormParam
- * @author Adrian Cole
  */
 @Target( { TYPE, METHOD })
 @Retention(RUNTIME)

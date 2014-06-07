@@ -40,7 +40,6 @@ import org.jclouds.io.Payload;
  * processing will be backend in an {@link ExecutionException} as documented in {@link Future#get()}.
  * 
  * @see <a href="http://msdn.microsoft.com/en-us/library/dd135733.aspx" />
- * @author Adrian Cole
  */
 public interface AzureBlobClient {
    @Provides

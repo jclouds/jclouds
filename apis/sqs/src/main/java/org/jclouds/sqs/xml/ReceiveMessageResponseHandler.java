@@ -32,8 +32,6 @@ import com.google.inject.Inject;
  * @see <a
  *      href="http://docs.amazonwebservices.com/AWSSimpleQueueService/2011-10-01/APIReference/Query_QueryReceiveMessage.html"
  *      >docs</a>
- * 
- * @author Adrian Cole
  */
 public class ReceiveMessageResponseHandler extends ParseSax.HandlerForGeneratedRequestWithResult<FluentIterable<Message>> {
 

@@ -33,7 +33,6 @@ import com.google.common.collect.ImmutableSet;
 /**
  * Class Addresses
  * 
- * @author Adrian Cole
 */
 public class Addresses {
 

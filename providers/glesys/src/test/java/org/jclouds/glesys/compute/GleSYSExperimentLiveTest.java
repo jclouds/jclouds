@@ -25,10 +25,6 @@ import org.jclouds.glesys.GleSYSProviderMetadata;
 import org.jclouds.util.Closeables2;
 import org.testng.annotations.Test;
 
-/**
- * 
- * @author Adrian Cole
- */
 @Test(groups = "live", singleThreaded = true, testName = "GleSYSExperimentLiveTest")
 public class GleSYSExperimentLiveTest extends BaseComputeServiceContextLiveTest {
 

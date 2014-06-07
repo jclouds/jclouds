@@ -31,8 +31,6 @@ import com.google.common.collect.Multimap;
 
 /**
  * Default Implementation of {@link S3Object}.
- * 
- * @author Adrian Cole
  */
 public class S3ObjectImpl extends PayloadEnclosingImpl implements S3Object, Comparable<S3Object> {
 

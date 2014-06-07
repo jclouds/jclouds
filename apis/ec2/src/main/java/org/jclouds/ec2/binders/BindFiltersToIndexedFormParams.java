@@ -41,8 +41,6 @@ import com.google.common.collect.Multimap;
  * &Filter.3.Value.2=Production
  * &AUTHPARAMS
  * </pre>
- * 
- * @author Adrian Cole
  */
 @Singleton
 public class BindFiltersToIndexedFormParams implements Binder {

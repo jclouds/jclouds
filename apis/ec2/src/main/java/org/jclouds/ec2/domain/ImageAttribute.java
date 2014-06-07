@@ -20,11 +20,9 @@ package org.jclouds.ec2.domain;
  * 
  * An attribute of an AMI.
  * 
- * @author Adrian Cole
  * @see EC2AsyncClient#modifyImageAttribute
  * @see EC2AsyncClient#resetImageAttribute
  * @see EC2AsyncClient#describeImageAttribute
- * 
  */
 public enum ImageAttribute {
 

@@ -36,8 +36,6 @@ import com.google.gson.Gson;
  * 
  * <p/>
  * inspired by guava {@code CacheBuilderSpecTest}
- * 
- * @author David Alves
  */
 @Test(testName = "AdminAccessBuilderSpecTest")
 public class AdminAccessBuilderSpecTest {

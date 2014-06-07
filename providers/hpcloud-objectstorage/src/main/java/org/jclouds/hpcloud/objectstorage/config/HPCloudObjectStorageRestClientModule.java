@@ -41,10 +41,6 @@ import com.google.common.collect.ImmutableMap;
 import com.google.inject.Provides;
 import com.google.inject.Scopes;
 
-/**
- *
- * @author Adrian Cole
- */
 @ConfiguresRestClient
 public class HPCloudObjectStorageRestClientModule extends
          SwiftRestClientModule<HPCloudObjectStorageApi, HPCloudObjectStorageAsyncApi> {

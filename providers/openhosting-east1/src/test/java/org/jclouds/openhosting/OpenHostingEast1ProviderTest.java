@@ -22,8 +22,6 @@ import org.testng.annotations.Test;
 
 /**
  * The OpenHostingEast1ProviderTest tests the {@link OpenHostingEast1ProviderMetadata} class.
- * 
- * @author Jeremy Whitlock <jwhitlock@apache.org>
  */
 @Test(groups = "unit", testName = "OpenHostingEast1ProviderTest")
 public class OpenHostingEast1ProviderTest extends BaseProviderMetadataTest {

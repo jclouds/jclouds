@@ -27,9 +27,6 @@ import org.jclouds.domain.Location;
 import org.jclouds.domain.LoginCredentials;
 import org.jclouds.javax.annotation.Nullable;
 
-/**
- * @author Adrian Cole
- */
 public class ImageBuilder extends ComputeMetadataBuilder {
    private OperatingSystem operatingSystem;
    private Status status;

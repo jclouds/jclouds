@@ -39,7 +39,6 @@ import com.google.common.collect.ImmutableSet.Builder;
  * <p/>
  * DescribeImagesResponse xmlns="http:
  * 
- * @author Adrian Cole
  * @see <a href="http: />
  */
 public class AWSDescribeInstancesResponseHandler extends

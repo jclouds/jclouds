@@ -29,8 +29,6 @@ import com.google.common.base.Objects.ToStringHelper;
 
 /**
  * Start of Authority per RFC 1035
- * 
- * @author Adrian Cole
  */
 public final class SOARecord extends Record<SOAData> {
 

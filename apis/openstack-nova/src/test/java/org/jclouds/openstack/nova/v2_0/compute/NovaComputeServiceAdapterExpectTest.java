@@ -48,8 +48,6 @@ import com.google.inject.TypeLiteral;
 
 /**
  * Tests the compute service abstraction of the nova api.
- * 
- * @author Adrian Cole
  */
 @Test(groups = "unit", testName = "NovaComputeServiceAdapterExpectTest")
 public class NovaComputeServiceAdapterExpectTest extends BaseNovaComputeServiceContextExpectTest<Injector> {

@@ -30,7 +30,6 @@ import org.jclouds.http.options.BaseHttpRequestOptions;
  * @see <a href=
  *      "http://docs.openstack.org/api/openstack-compute/2/content/Paginated_Collections-d1e664.html"
  *      />
- * @author Adrian Cole
  */
 public class PaginationOptions extends BaseHttpRequestOptions {
    /**

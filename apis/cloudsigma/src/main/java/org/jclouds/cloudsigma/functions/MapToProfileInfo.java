@@ -27,10 +27,6 @@ import org.jclouds.logging.Logger;
 
 import com.google.common.base.Function;
 
-/**
- * 
- * @author Adrian Cole
- */
 @Singleton
 public class MapToProfileInfo implements Function<Map<String, String>, ProfileInfo> {
 

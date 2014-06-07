@@ -36,10 +36,6 @@ import com.google.common.collect.ImmutableMap;
 import com.google.common.util.concurrent.Futures;
 import com.google.inject.Module;
 
-/**
- * 
- * @author Andrew Bayer
- */
 @Test(groups = "unit", testName = "CloudStackImageExtensionExpectTest")
 public class CloudStackImageExtensionExpectTest extends BaseCloudStackComputeServiceContextExpectTest<ComputeService> {
 

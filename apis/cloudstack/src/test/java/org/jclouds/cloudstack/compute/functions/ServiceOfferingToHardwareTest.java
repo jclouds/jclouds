@@ -33,7 +33,6 @@ import com.google.common.collect.Iterables;
 
 /**
  * Tests {@code ServiceOfferingToHardware}
- * 
  */
 @Test(groups = "unit")
 public class ServiceOfferingToHardwareTest {

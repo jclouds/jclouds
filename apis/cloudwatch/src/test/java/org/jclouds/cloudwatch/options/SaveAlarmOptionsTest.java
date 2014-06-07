@@ -32,8 +32,6 @@ import org.testng.annotations.Test;
 
 /**
  * Tests behavior of {@code SaveAlarmOptions}.
- *
- * @author Jeremy Whitlock
  */
 @Test(groups = "unit")
 public class SaveAlarmOptionsTest {

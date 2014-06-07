@@ -30,8 +30,6 @@ import org.testng.annotations.Test;
 
 /**
  * Tests possible uses of RegisterImageOptions and RegisterImageOptions.Builder.*
- * 
- * @author Adrian Cole
  */
 public class RegisterImageOptionsTest {
 

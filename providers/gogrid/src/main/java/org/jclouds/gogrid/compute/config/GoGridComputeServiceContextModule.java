@@ -49,11 +49,6 @@ import com.google.common.collect.ImmutableMap;
 import com.google.inject.Provides;
 import com.google.inject.TypeLiteral;
 
-/**
- * @author Oleksiy Yarmula
- * @author Adrian Cole
- * @author Andrew Kennedy
- */
 public class GoGridComputeServiceContextModule extends
          ComputeServiceAdapterContextModule<Server, Hardware, ServerImage, Option> {
 

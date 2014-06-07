@@ -32,7 +32,6 @@ import com.google.gson.stream.JsonWriter;
  * writes or reads the literal json directly
  * 
  * @see <a href="http://code.google.com/p/google-gson/issues/detail?id=326" />
- * 
  */
 @Singleton
 public abstract class NullHackJsonLiteralAdapter<L> extends TypeAdapter<L> {

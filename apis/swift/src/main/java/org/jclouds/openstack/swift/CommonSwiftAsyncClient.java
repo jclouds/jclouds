@@ -77,7 +77,6 @@ import com.google.inject.Provides;
  * 
  * @see CommonSwiftClient
  * 
- * @author Adrian Cole
  * 
  * @deprecated Please use {@code org.jclouds.ContextBuilder#buildApi(CommonSwiftClient.class)} as
  *             {@link CommonSwiftAsyncClient} will be removed in jclouds 2.0.

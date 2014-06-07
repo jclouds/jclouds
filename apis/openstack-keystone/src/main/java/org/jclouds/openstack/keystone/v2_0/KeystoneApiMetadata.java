@@ -37,8 +37,6 @@ import com.google.inject.Module;
 
 /**
  * Implementation of {@link org.jclouds.apis.ApiMetadata} for Keystone 2.0 API
- * 
- * @author Adrian Cole
  */
 public class KeystoneApiMetadata extends BaseRestApiMetadata {
    

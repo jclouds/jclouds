@@ -27,8 +27,6 @@ import com.google.common.base.Objects.ToStringHelper;
 
 /**
  * Class SnapshotPolicy
- *
- * @author Richard Downer
  */
 public class SnapshotPolicy {
 

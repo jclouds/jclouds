@@ -39,10 +39,6 @@ import com.google.common.annotations.VisibleForTesting;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
 
-/**
- * 
- * @author Adrian Cole
- */
 @Singleton
 public class EC2DestroyNodeStrategy implements DestroyNodeStrategy {
    @Resource

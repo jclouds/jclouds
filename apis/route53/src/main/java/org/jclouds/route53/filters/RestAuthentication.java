@@ -46,8 +46,6 @@ import com.google.common.base.Supplier;
  * @see <a href=
  *      "http://docs.aws.amazon.com/Route53/latest/DeveloperGuide/RESTAuthentication.html#StringToSign"
  *      />
- * @author Adrian Cole
- * 
  */
 @Singleton
 public class RestAuthentication implements HttpRequestFilter, RequestSigner {

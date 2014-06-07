@@ -37,8 +37,6 @@ import com.google.common.collect.Iterables;
 
 /**
  * Tests HostAggregateApi guice wiring and parsing
- *
- * @author Adam Lowe
  */
 @Test(groups = "unit", testName = "HostAggregateApiExpectTest")
 public class HostAggregateApiExpectTest extends BaseNovaApiExpectTest {

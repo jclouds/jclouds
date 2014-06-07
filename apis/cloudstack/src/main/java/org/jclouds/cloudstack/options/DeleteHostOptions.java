@@ -22,8 +22,6 @@ import com.google.common.collect.ImmutableSet;
 
 /**
  * Options to the GlobalHostApi.deleteHost() API call
- *
- * @author Richard Downer
  */
 public class DeleteHostOptions extends BaseHttpRequestOptions {
 

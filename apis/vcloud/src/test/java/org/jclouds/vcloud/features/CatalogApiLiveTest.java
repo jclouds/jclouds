@@ -29,9 +29,6 @@ import org.testng.annotations.Test;
 
 import com.google.inject.Key;
 
-/**
- * @author Adrian Cole
- */
 @Test(groups = "live", enabled = true, singleThreaded = true, testName = "CatalogApiLiveTest")
 public class CatalogApiLiveTest extends BaseVCloudApiLiveTest {
    @Test

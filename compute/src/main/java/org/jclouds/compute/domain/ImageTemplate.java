@@ -18,9 +18,6 @@ package org.jclouds.compute.domain;
 
 /**
  * A template for building new {@link Image}s.
- * 
- * @author David Alves
- * 
  */
 public interface ImageTemplate {
 

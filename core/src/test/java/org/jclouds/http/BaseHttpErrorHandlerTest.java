@@ -29,10 +29,6 @@ import org.jclouds.http.functions.config.SaxParserModule;
 
 import com.google.inject.Guice;
 
-/**
- * 
- * @author Adrian Cole
- */
 public abstract class BaseHttpErrorHandlerTest {
 
    public static Exception classEq(final Class<? extends Exception> in) {

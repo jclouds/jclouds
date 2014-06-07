@@ -25,8 +25,6 @@ import org.jclouds.compute.domain.ComputeMetadata;
 
 /**
  * Configuration properties and constants in GleSYS connections.
- * 
- * @author Adam Lowe
  */
 public final class GleSYSConstants {
 

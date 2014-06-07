@@ -16,10 +16,6 @@
  */
 package org.jclouds.ec2.compute.domain;
 
-/**
- * 
- * @author Adrian Cole
- */
 public class RegionNameAndIngressRules extends RegionAndName {
    private final int[] ports;
    private final boolean authorizeSelf;

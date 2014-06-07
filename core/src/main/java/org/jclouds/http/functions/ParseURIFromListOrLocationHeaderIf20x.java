@@ -36,8 +36,6 @@ import com.google.common.base.Function;
 
 /**
  * parses a single URI from a list
- * 
- * @author Adrian Cole
  */
 public class ParseURIFromListOrLocationHeaderIf20x implements Function<HttpResponse, URI>,
       InvocationContext<ParseURIFromListOrLocationHeaderIf20x> {

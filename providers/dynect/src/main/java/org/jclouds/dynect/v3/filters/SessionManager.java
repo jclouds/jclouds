@@ -50,9 +50,6 @@ import com.google.inject.Singleton;
  * authentication header are invalid, or if the token has expired, the server
  * returns HTTP response code 401. After the token expires, you must log in
  * again to obtain a new token.
- * 
- * @author Adrian Cole
- * 
  */
 @Singleton
 public final class SessionManager extends BackoffLimitedRetryHandler implements HttpRequestFilter {

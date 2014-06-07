@@ -34,10 +34,6 @@ import com.google.common.collect.ImmutableMap.Builder;
 import com.google.inject.Inject;
 import com.google.inject.TypeLiteral;
 
-/**
- * 
- * @author Adrian Cole
- */
 @Singleton
 public class ParseIdToNameFromHttpResponse implements Function<HttpResponse, Map<String, String>> {
    private final ParseFirstJsonValueNamed<Set<IdName>> parser;

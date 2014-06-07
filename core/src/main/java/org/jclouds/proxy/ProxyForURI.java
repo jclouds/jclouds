@@ -38,9 +38,6 @@ import com.google.common.base.Function;
 import com.google.common.base.Optional;
 import com.google.inject.Inject;
 
-/**
- * @author Adrian Cole
- */
 @Singleton
 public class ProxyForURI implements Function<URI, Proxy> {
    private final ProxyConfig config;

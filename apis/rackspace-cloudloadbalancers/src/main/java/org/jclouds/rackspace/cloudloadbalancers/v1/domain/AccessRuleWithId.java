@@ -21,8 +21,6 @@ import com.google.common.base.Objects.ToStringHelper;
 
 /**
  * The same as {@link AccessRule} but this will have an id as assigned by the Cloud Load Balancers service.
- * 
- * @author Everett Toews
  */
 public class AccessRuleWithId extends AccessRule {
 

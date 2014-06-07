@@ -61,8 +61,6 @@ import com.google.inject.spi.TypeListener;
  * <pre>
  * 
  * </pre>
- * 
- * @author Adrian Cole
  */
 public class LifeCycleModule extends AbstractModule {
 

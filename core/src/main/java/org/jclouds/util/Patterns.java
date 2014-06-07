@@ -22,10 +22,6 @@ import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
 
-/**
- * 
- * @author Adrian Cole
- */
 public class Patterns {
 
    public static final Pattern NEWLINE_PATTERN = Pattern.compile("\r?\n");

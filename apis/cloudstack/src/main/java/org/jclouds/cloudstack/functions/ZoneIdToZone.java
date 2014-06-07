@@ -27,8 +27,6 @@ import com.google.inject.Inject;
 
 /**
  * Defines a cache that allows a zone to be looked up by its ID.
- *
- * @author Richard Downer
  */
 public class ZoneIdToZone extends CacheLoader<String, Zone> {
 

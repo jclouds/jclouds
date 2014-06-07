@@ -18,8 +18,6 @@ package org.jclouds.softlayer.reference;
 
 /**
  * Configuration properties and constants used in SoftLayer connections.
- * 
- * @author Adrian Cole
  */
 public final class SoftLayerConstants {
 

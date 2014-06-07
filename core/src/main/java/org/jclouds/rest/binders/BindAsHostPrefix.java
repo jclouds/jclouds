@@ -29,10 +29,6 @@ import org.jclouds.rest.Binder;
 
 import com.google.common.net.InternetDomainName;
 
-/**
- * 
- * @author Adrian Cole
- */
 @Singleton
 public class BindAsHostPrefix implements Binder {
 

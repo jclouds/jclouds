@@ -29,9 +29,6 @@ import org.jclouds.cloudstack.features.VirtualMachineApi;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-/**
- * @author Andrei Savu
- */
 @Test(groups = "unit", singleThreaded = true, testName = "VirtualMachineExpungedTest")
 public class VirtualMachineExpungedTest {
 

@@ -32,8 +32,6 @@ import com.google.common.collect.ImmutableMap;
 
 /**
  * Tests behavior of {@code AssignCorrectHostnameForBucket}
- * 
- * @author Adrian Cole
  */
 // NOTE:without testName, this will not call @Before* and fail w/NPE during
 // surefire

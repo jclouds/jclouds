@@ -25,9 +25,6 @@ import org.jclouds.vcloud.util.Utils;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 
-/**
- * @author Adrian Cole
- */
 public class ErrorHandler extends ParseSax.HandlerWithResult<VCloudError> {
    private VCloudError error;
 

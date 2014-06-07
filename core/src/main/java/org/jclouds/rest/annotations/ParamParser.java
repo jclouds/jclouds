@@ -30,7 +30,6 @@ import com.google.common.base.Function;
  * presented with a Object [] from the method args used to derive the value;
  * 
  * @see PathParam
- * @author Adrian Cole
  */
 @Target( { METHOD, PARAMETER })
 @Retention(RUNTIME)

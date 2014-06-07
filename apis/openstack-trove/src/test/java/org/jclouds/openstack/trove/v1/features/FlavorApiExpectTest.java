@@ -31,8 +31,6 @@ import org.testng.annotations.Test;
 
 /**
  * Tests FlavorApi Guice wiring and parsing
- *
- * @author Zack Shoylev
  */
 @Test(groups = "unit", testName = "FlavorApiExpectTest")
 public class FlavorApiExpectTest extends BaseTroveApiExpectTest {

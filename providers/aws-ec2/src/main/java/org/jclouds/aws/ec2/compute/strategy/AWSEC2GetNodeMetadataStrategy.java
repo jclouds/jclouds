@@ -31,10 +31,6 @@ import org.jclouds.ec2.domain.RunningInstance;
 
 import com.google.common.base.Function;
 
-/**
- * 
- * @author Adrian Cole
- */
 @Singleton
 public class AWSEC2GetNodeMetadataStrategy extends EC2GetNodeMetadataStrategy {
 

@@ -40,7 +40,6 @@ import com.google.common.collect.ImmutableSet;
  * Future<ReservationInfo> instances = connection.runInstances(executableBy("123125").imageIds(1000, 1004));
  * <code>
  * 
- * @author Adrian Cole
  * @see <a href=
  *      "http://docs.amazonwebservices.com/AWSEC2/latest/APIReference/index.html?ApiReference-form-RunInstances.html"
  *      />

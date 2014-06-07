@@ -68,8 +68,6 @@ import com.google.inject.Guice;
  * End to end live test for GoGrid
  * <p/>
  * Takes too long to execute. Please split into multiple tests
- * 
- * @author Oleksiy Yarmula
  */
 @Test(enabled = false, groups = "live", singleThreaded = true, testName = "GoGridLiveTestDisabled")
 public class GoGridLiveTestDisabled extends BaseApiLiveTest<GoGridApi> {

@@ -24,8 +24,6 @@ import org.testng.annotations.Test;
 
 /**
  * Tests behavior of {@code LimitApi}
- *
- * @author Vijay Kiran
  */
 @Test(groups = "live", singleThreaded = true, testName = "LimitApiLiveTest")
 public class LimitApiLiveTest extends BaseCloudStackApiLiveTest {

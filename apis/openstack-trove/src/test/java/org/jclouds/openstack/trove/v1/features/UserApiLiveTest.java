@@ -41,9 +41,6 @@ import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 
-/**
- * @author Zack Shoylev
- */
 @Test(groups = "live", testName = "UserApiLiveTest")
 public class UserApiLiveTest extends BaseTroveApiLiveTest {
 

@@ -37,10 +37,6 @@ import com.google.common.collect.ImmutableMap;
 import com.google.common.net.HttpHeaders;
 import com.jamesmurty.utils.XMLBuilder;
 
-/**
- * 
- * @author Adrian Cole
- */
 @Test(singleThreaded = true, testName = "InstantiateVAppTemplateWithGroupEncodedIntoNameThenCustomizeDeployAndPowerOnExpectTest")
 public class InstantiateVAppTemplateWithGroupEncodedIntoNameThenCustomizeDeployAndPowerOnExpectTest extends
          BaseVCloudComputeServiceExpectTest {

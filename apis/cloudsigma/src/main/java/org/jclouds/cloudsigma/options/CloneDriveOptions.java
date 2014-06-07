@@ -43,9 +43,6 @@ import com.google.common.collect.Sets;
  * 
  * Payload payload = client.cloneDrive("drive-uuid","newName", size(2*1024*1024l));
  * <code>
- * 
- * @author Adrian Cole
- * 
  */
 public class CloneDriveOptions {
    private static final String SSD_AFFINITY_TAG = "affinity:ssd";

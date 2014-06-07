@@ -34,8 +34,6 @@ import com.google.inject.Provides;
 /**
  * Provides access to SQS via their REST API.
  * <p/>
- * 
- * @author Adrian Cole
  */
 @Beta
 public interface SQSApi extends Closeable {

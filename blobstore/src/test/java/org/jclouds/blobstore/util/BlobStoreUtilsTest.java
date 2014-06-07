@@ -39,8 +39,6 @@ import com.google.common.base.Throwables;
 import com.google.common.collect.ImmutableList;
 /**
  * Tests behavior of {@code BlobStoreUtils}
- * 
- * @author Adrian Cole
  */
 @Test(groups = "unit")
 public class BlobStoreUtilsTest {

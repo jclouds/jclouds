@@ -60,8 +60,6 @@ import org.jclouds.rest.annotations.WrapWith;
 /**
  * Provides access to CloudLoadBalancers LoadBalancer features.
  * <p/>
- * 
- * @author Everett Toews
  */
 @RequestFilters(AuthenticateRequest.class)
 public interface LoadBalancerApi {

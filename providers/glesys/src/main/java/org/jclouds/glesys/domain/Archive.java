@@ -26,7 +26,6 @@ import com.google.common.base.Objects.ToStringHelper;
 /**
  * Information about an archive
  *
- * @author Adam Lowe
  * @see <a href= "https://customer.glesys.com/api.php?a=doc#archive_list" />
  */
 public class Archive {

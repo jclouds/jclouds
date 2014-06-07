@@ -22,9 +22,6 @@ import org.jclouds.blobstore.integration.internal.BaseServiceIntegrationTest;
 import org.jclouds.openstack.keystone.v2_0.config.KeystoneProperties;
 import org.testng.annotations.Test;
 
-/**
- * @author Adrian Cole
- */
 @Test(groups = "live")
 public class SwiftServiceIntegrationLiveTest extends BaseServiceIntegrationTest {
    @Override

@@ -27,8 +27,6 @@ import com.google.common.io.ByteSource;
 
 /**
  * functions related to or replacing those in {@link ByteSource}
- * 
- * @author Adrian Cole
  */
 @Beta
 public class ByteSources {

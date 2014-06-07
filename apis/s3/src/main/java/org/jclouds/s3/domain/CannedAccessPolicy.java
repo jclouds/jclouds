@@ -33,8 +33,6 @@ package org.jclouds.s3.domain;
  * 
  * @see <a href="http://docs.amazonwebservices.com/AmazonS3/2006-03-01/index.html?
  *      RESTAccessPolicy.html" />
- * @author Adrian Cole
- * 
  */
 public enum CannedAccessPolicy {
 

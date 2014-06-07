@@ -29,10 +29,6 @@ import org.jclouds.compute.domain.Image.Status;
 
 import com.google.common.base.Function;
 
-/**
- * 
- * @author Adrian Cole
- */
 @Singleton
 public class CloudServersImageToImage implements Function<org.jclouds.cloudservers.domain.Image, Image> {
    private final Map<ImageStatus, Status> toPortableImageStatus;

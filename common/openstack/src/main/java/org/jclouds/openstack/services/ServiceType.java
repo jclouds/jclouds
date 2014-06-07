@@ -21,7 +21,6 @@ package org.jclouds.openstack.services;
  * A service provides one or more endpoints through which users can access resources and perform
  * (presumably useful) operations.
  * 
- * @author Adrian Cole
  * @see <a href="http://docs.openstack.org/api/openstack-typeentity-service/2.0/content/Identity-Service-Concepts-e1362.html"
  *      />
  */

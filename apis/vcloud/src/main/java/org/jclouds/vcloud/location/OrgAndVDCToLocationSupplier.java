@@ -40,9 +40,6 @@ import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.ImmutableSet.Builder;
 import com.google.common.collect.Iterables;
 
-/**
- * @author Adrian Cole
- */
 @Singleton
 public class OrgAndVDCToLocationSupplier extends JustProvider implements LocationsSupplier {
 

@@ -37,9 +37,6 @@ import com.google.common.collect.Lists;
  * // this will get the first megabyte of an blob, provided it wasn't modified since yesterday
  * blob = blobStore.getBlob("container, "blobName",range(0,1024).ifUnmodifiedSince(new Date().minusDays(1)));
  * <code>
- * 
- * @author Adrian Cole
- * 
  */
 public class GetOptions {
 

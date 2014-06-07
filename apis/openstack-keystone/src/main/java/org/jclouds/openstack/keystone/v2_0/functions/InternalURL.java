@@ -28,7 +28,6 @@ import com.google.common.base.Suppliers;
 /**
  * Select internal URL endpoints services
  * 
- * @author Ignacio Mulas
  */
 @Singleton
 public class InternalURL implements EndpointToSupplierURI {

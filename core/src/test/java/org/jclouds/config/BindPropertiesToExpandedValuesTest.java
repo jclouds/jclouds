@@ -26,8 +26,6 @@ import com.google.inject.Guice;
 
 /**
  * Tests behavior of BindPropertiesToExpandedValues
- * 
- * @author Adrian Cole
  */
 @Test(groups = "unit", testName = "BindPropertiesToExpandedValuesTest")
 public class BindPropertiesToExpandedValuesTest {

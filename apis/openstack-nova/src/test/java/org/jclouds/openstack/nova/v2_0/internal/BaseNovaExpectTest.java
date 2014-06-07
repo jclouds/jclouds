@@ -25,8 +25,6 @@ import org.jclouds.rest.internal.BaseRestApiExpectTest;
 
 /**
  * Base class for writing Nova Expect tests
- * 
- * @author Adrian Cole
  */
 public class BaseNovaExpectTest<T> extends BaseRestApiExpectTest<T> {
    protected HttpRequest keystoneAuthWithUsernameAndPassword;

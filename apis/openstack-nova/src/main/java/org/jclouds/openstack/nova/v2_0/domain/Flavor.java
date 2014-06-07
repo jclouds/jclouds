@@ -35,7 +35,6 @@ import com.google.common.base.Optional;
  * A flavor is an available hardware configuration for a server. Each flavor has
  * a unique combination of disk space and memory capacity.
  * 
- * @author Jeremy Daggett, Ilja Bobkevic
  * @see <a href=
       "http://docs.openstack.org/api/openstack-compute/2/content/List_Flavors-d1e4188.html"
       />

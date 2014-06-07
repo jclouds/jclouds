@@ -23,10 +23,6 @@ import org.jclouds.route53.domain.ResourceRecordSet;
 import org.xml.sax.Attributes;
 
 
-/**
- * 
- * @author Adrian Cole
- */
 public class ResourceRecordSetHandler extends ParseSax.HandlerForGeneratedRequestWithResult<ResourceRecordSet> {
 
    private StringBuilder currentText = new StringBuilder();

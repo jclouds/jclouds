@@ -18,10 +18,6 @@ package org.jclouds.cloudsigma.domain;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
-/**
- * 
- * @author Adrian Cole
- */
 public enum Model {
    E1000, RTl8139, VIRTIO, UNRECOGNIZED;
 

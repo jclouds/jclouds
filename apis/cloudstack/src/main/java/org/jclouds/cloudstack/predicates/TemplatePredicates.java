@@ -22,11 +22,6 @@ import org.jclouds.cloudstack.domain.Template;
 
 import com.google.common.base.Predicate;
 
-/**
- * 
- * 
- * @author Adrian Cole
- */
 @Singleton
 public class TemplatePredicates {
    public static Predicate<Template> isReady() {

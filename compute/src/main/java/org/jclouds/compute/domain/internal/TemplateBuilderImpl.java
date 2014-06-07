@@ -72,10 +72,6 @@ import com.google.common.collect.Iterables;
 import com.google.common.collect.Ordering;
 import com.google.common.primitives.Doubles;
 
-/**
- * 
- * @author Adrian Cole
- */
 public class TemplateBuilderImpl implements TemplateBuilder {
    @Resource
    @Named(ComputeServiceConstants.COMPUTE_LOGGER)

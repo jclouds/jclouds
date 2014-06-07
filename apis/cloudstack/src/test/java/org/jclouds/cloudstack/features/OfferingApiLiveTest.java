@@ -39,8 +39,6 @@ import com.google.common.collect.Iterables;
 
 /**
  * Tests behavior of {@code OfferingApi}
- * 
- * @author Adrian Cole
  */
 @Test(groups = "live", singleThreaded = true, testName = "OfferingApiLiveTest")
 public class OfferingApiLiveTest extends BaseCloudStackApiLiveTest {

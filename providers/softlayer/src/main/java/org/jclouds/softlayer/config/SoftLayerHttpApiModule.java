@@ -34,8 +34,6 @@ import com.google.inject.Scopes;
 
 /**
  * Configures the SoftLayer connection.
- * 
- * @author Adrian Cole
  */
 @ConfiguresRestClient
 public class SoftLayerHttpApiModule extends HttpApiModule<SoftLayerApi> {

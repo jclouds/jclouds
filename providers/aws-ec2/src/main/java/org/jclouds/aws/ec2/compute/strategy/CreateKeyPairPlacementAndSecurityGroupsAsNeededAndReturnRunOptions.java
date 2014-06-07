@@ -47,10 +47,6 @@ import com.google.common.base.Function;
 import com.google.common.base.Predicate;
 import com.google.common.cache.LoadingCache;
 
-/**
- * 
- * @author Adrian Cole
- */
 @Singleton
 public class CreateKeyPairPlacementAndSecurityGroupsAsNeededAndReturnRunOptions extends
       CreateKeyPairAndSecurityGroupsAsNeededAndReturnRunOptions {

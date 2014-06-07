@@ -35,10 +35,6 @@ import com.google.common.collect.ImmutableSortedSet;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 
-/**
- * 
- * @author Adrian Cole
- */
 public class BaseLoadBalancer<N extends BaseNode<N>, T extends BaseLoadBalancer<N, T>> implements
       Comparable<BaseLoadBalancer<N, T>> {
 

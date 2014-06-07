@@ -30,7 +30,6 @@ import com.google.common.collect.ImmutableSet;
  * Detailed information about a server such as cpuCores, hardware configuration
  * (cpu, memory and disk), ip addresses, cost, transfer, os and more.
  *
- * @author Adrian Cole
  * @see <a href= "https://customer.glesys.com/api.php?a=doc#server_details" />
  */
 public class ServerDetails extends Server {

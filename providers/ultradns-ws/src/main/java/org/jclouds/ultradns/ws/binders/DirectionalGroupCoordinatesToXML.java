@@ -23,10 +23,6 @@ import org.jclouds.ultradns.ws.domain.DirectionalGroupCoordinates;
 
 import com.google.common.collect.ImmutableMap;
 
-/**
- * 
- * @author Adrian Cole
- */
 public class DirectionalGroupCoordinatesToXML implements Binder {
    private static final String TEMPLATE = "<v01:getDirectionalDNSRecordsForGroup><groupName>{groupName}</groupName><hostName>{recordName}</hostName><zoneName>{zoneName}</zoneName><poolRecordType>{recordType}</poolRecordType></v01:getDirectionalDNSRecordsForGroup>";
 

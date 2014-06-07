@@ -26,8 +26,6 @@ import java.lang.annotation.Target;
  * Unwraps the only value in a nested json response
  * 
  * ex. { "foo" :"bar" } becomes "bar"
- * 
- * @author Adrian Cole
  */
 @Target(METHOD)
 @Retention(RUNTIME)

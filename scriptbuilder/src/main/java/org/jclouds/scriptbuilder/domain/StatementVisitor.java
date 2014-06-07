@@ -16,10 +16,6 @@
  */
 package org.jclouds.scriptbuilder.domain;
 
-/**
- * 
- * @author Adrian Cole
- */
 public interface StatementVisitor {
    void visit(Statement in);
 }

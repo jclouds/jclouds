@@ -34,10 +34,6 @@ import com.google.common.base.Supplier;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.ImmutableSet.Builder;
 
-/**
- * 
- * @author Adrian Cole
- */
 @Singleton
 public class CloudLoadBalancersListLoadBalancersStrategy implements ListLoadBalancersStrategy {
 

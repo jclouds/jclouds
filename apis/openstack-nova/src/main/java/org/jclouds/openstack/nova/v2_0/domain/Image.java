@@ -36,7 +36,6 @@ import com.google.common.collect.ImmutableMap;
  * An image is a collection of files you use to create or rebuild a server. Operators provide
  * pre-built OS images by default. You may also create custom images.
  * 
- * @author Jeremy Daggett
  * @see <a href= "http://docs.openstack.org/api/openstack-compute/1.1/content/Images-d1e4427.html"
       />
 */
@@ -49,7 +48,6 @@ public class Image extends Resource {
     * are available for install. The optional minDisk and minRam attributes set the minimum disk and
     * RAM requirements needed to create a server with the image.
     * 
-    * @author Adrian Cole
     */
    public static enum Status {
       

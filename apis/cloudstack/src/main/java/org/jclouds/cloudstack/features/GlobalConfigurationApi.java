@@ -38,7 +38,6 @@ import org.jclouds.rest.annotations.SelectJson;
  * Provides synchronous access to CloudStack Configuration features available to Global
  * Admin users.
  *
- * @author Andrei Savu
  * @see <a href=
  *      "http://download.cloud.com/releases/2.2.0/api_2.2.12/TOC_Global_Admin.html"
  *      />

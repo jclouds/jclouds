@@ -33,8 +33,6 @@ import org.testng.annotations.Test;
 
 /**
  * Tests parsing of a request
- * 
- * @author Adrian Cole
  */
 @Test(testName = "http.MultipartFormTest")
 public class MultipartFormTest {

@@ -28,8 +28,6 @@ import com.google.inject.Module;
 
 /**
  * Configures {@link AsyncGaeHttpCommandExecutorService}.
- * 
- * @author Adrian Cole
  */
 @ConfiguresHttpCommandExecutorService
 @ConfiguresExecutorService

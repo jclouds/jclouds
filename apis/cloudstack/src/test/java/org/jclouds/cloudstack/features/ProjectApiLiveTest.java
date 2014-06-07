@@ -26,8 +26,6 @@ import org.testng.annotations.Test;
 
 /**
  * Tests behavior of {@code ProjectApi}
- * 
- * @author Andrew Bayer
  */
 @Test(groups = "live", singleThreaded = true, testName = "ProjectApiLiveTest")
 public class ProjectApiLiveTest extends BaseCloudStackApiLiveTest {

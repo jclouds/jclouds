@@ -28,8 +28,6 @@ import org.testng.annotations.Test;
 
 /**
  * Tests behavior of {@code GlobalAlertsClient}
- *
- * @author Richard Downer
  */
 @Test(groups = "live", singleThreaded = true, testName = "GlobalAlertApiLiveTest")
 public class GlobalAlertApiLiveTest extends BaseCloudStackApiLiveTest {

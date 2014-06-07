@@ -44,8 +44,6 @@ import org.testng.annotations.Test;
 
 /**
  * Tests behavior of {@code NetworkApiLiveTest}
- * 
- * @author Adrian Cole
  */
 @Test(groups = "live", singleThreaded = true, testName = "NetworkApiLiveTest")
 public class NetworkApiLiveTest extends BaseCloudStackApiLiveTest {

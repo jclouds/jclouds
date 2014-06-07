@@ -33,8 +33,6 @@ import com.google.common.collect.ImmutableSet;
 
 /**
  * Tests behavior of {@code CreateVlanIPRangeOptions}
- *
- * @author Richard Downer
  */
 @Test(groups = "unit")
 public class CreateVlanIPRangeOptionsTest {

@@ -62,8 +62,6 @@ import com.google.common.io.Files;
 
 /**
  * Tests behavior of {@code S3Client}
- * 
- * @author Adrian Cole
  */
 @Test(groups = "live", singleThreaded = true, testName = "AWSS3ClientLiveTest")
 public class AWSS3ClientLiveTest extends S3ClientLiveTest {

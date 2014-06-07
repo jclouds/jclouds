@@ -27,8 +27,6 @@ import com.google.common.util.concurrent.ListeningExecutorService;
 
 /**
  * Configures {@link AsyncGaeHttpCommandExecutorService}.
- * 
- * @author Adrian Cole
  */
 @Beta
 @ConfiguresHttpCommandExecutorService

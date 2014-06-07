@@ -27,8 +27,6 @@ import com.google.common.base.Objects.ToStringHelper;
 
 /**
  * Represents the data object used in CloudStack's "Vlan" API.
- *
- * @author Richard Downer
  */
 public class VlanIPRange implements Comparable<VlanIPRange> {
 

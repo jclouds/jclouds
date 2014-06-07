@@ -24,9 +24,6 @@ import java.util.Map;
 import org.jclouds.http.functions.ParseSax;
 import org.xml.sax.Attributes;
 
-/**
- * @author Adrian Cole
- */
 public abstract class AttributeHandler extends ParseSax.HandlerForGeneratedRequestWithResult<String> {
 
    public static class PoolName extends AttributeHandler {

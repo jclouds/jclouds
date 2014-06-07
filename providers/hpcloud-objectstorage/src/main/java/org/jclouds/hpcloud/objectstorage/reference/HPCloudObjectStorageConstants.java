@@ -19,8 +19,6 @@ package org.jclouds.hpcloud.objectstorage.reference;
 
 /**
  * Configuration properties and constants used by HP Cloud Object Storage.
- * 
- * @author Jeremy Daggett
  */
 public final class HPCloudObjectStorageConstants {
    /**

@@ -53,8 +53,6 @@ import com.google.inject.Module;
  * implementing ApiMetadata.
  * 
  * (Note: This class must be abstract to allow {@link java.util.ServiceLoader} to work properly.
- * 
- * @author Jeremy Whitlock <jwhitlock@apache.org>, Adrian Cole
  */
 public abstract class BaseApiMetadata implements ApiMetadata {
 

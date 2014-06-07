@@ -38,7 +38,6 @@ import com.google.common.collect.FluentIterable;
  * Provides synchronous access to Archive requests.
  * <p/>
  *
- * @author Adam Lowe
  * @see <a href="https://github.com/GleSYS/API/wiki/API-Documentation" />
  */
 @RequestFilters(BasicAuthentication.class)

@@ -23,8 +23,6 @@ import com.google.inject.ImplementedBy;
 
 /**
  * puts all blobs into the blobstore by the most efficient means possible.
- * 
- * @author Adrian Cole
  */
 @ImplementedBy(PutBlobsStrategyImpl.class)
 public interface PutBlobsStrategy {

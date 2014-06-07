@@ -35,10 +35,6 @@ import com.google.common.base.Splitter;
 import com.google.common.base.Supplier;
 import com.google.common.collect.Iterables;
 
-/**
- * 
- * @author Adrian Cole
- */
 @Singleton
 public class GoGridDefaultLocationSupplier implements ImplicitLocationSupplier {
    private final Supplier<Set<? extends Location>> locations;

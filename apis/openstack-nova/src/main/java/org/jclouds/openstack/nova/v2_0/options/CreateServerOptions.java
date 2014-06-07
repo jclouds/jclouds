@@ -45,11 +45,6 @@ import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 
-/**
- * @author Adrian Cole
- * @author Inbar Stolberg
- * @author Zack Shoylev
- */
 public class CreateServerOptions implements MapBinder {
    @Inject
    private BindToJsonPayload jsonBinder;

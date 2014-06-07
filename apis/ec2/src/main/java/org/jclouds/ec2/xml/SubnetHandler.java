@@ -27,9 +27,6 @@ import org.xml.sax.Attributes;
 
 /**
  * @see <a href="http://docs.aws.amazon.com/AWSEC2/latest/APIReference/ApiReference-ItemType-SubnetType.html" >xml</a>
- * 
- * @author Adrian Cole
- * @author Andrew Bayer
  */
 public class SubnetHandler extends ParseSax.HandlerForGeneratedRequestWithResult<Subnet> {
    private StringBuilder currentText = new StringBuilder();

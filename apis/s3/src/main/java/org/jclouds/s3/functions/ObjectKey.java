@@ -22,10 +22,6 @@ import org.jclouds.s3.domain.S3Object;
 
 import com.google.common.base.Function;
 
-/**
- * 
- * @author Adrian Cole
- */
 @Singleton
 public class ObjectKey implements Function<Object, String> {
 

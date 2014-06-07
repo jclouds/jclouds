@@ -28,8 +28,6 @@ import com.google.common.base.Function;
 
 /**
  * Takes a Date and return a yyyy-MM-dd String.
- * 
- * @author Everett Toews
  */
 @Singleton
 public class DateParser implements Function<Object, String> {

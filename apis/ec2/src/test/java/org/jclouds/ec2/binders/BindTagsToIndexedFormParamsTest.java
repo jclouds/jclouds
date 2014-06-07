@@ -28,8 +28,6 @@ import com.google.common.collect.ImmutableSet;
 
 /**
  * Tests behavior of {@code BindTagsToIndexedFormParams}
- * 
- * @author grkvlt@apache.org
  */
 @Test(groups = "unit")
 public class BindTagsToIndexedFormParamsTest {

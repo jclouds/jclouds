@@ -27,7 +27,6 @@ import com.google.common.base.Objects.ToStringHelper;
 
 /**
 
- * @author Adrian Cole
  */
 @Beta
 public class StatementOnNode {

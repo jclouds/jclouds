@@ -33,9 +33,6 @@ import com.google.common.collect.ImmutableSet;
 
 /**
  * Tests behavior of {@code FirstNetwork}
- * 
- * @author Adrian Cole
- * @author Dies Koper
  */
 @Test(groups = "unit", testName = "FirstNetworkTest")
 public class FirstNetworkTest {

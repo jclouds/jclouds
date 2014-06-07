@@ -29,8 +29,6 @@ import com.google.inject.Provides;
 
 /**
  * Configures the domain object mappings needed for all S3 implementations
- * 
- * @author Adrian Cole
  */
 public class S3ObjectModule extends AbstractModule {
 

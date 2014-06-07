@@ -34,8 +34,6 @@ import com.google.common.collect.ImmutableList;
 
 /**
  * Tests TroveUtils
- *
- * @author Zack Shoylev
  */
 @Test(groups = "unit", testName = "InstanceApiExpectTest")
 public class TroveUtilsExpectTest extends BaseTroveApiExpectTest {

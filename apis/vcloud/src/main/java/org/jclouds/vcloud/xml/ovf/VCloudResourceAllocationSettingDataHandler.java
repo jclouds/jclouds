@@ -28,9 +28,6 @@ import org.jclouds.vcloud.domain.ovf.VCloudNetworkAdapter;
 import org.jclouds.vcloud.util.Utils;
 import org.xml.sax.Attributes;
 
-/**
- * @author Adrian Cole
- */
 public class VCloudResourceAllocationSettingDataHandler extends ResourceAllocationSettingDataHandler {
 
    private ReferenceType edit;

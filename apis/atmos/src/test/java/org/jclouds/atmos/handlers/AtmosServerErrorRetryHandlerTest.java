@@ -32,8 +32,6 @@ import org.testng.annotations.Test;
 
 /**
  * Tests behavior of {@code AtmosServerErrorRetryHandler}
- *
- * @author Andrew Gaul
  */
 @Test(groups = "unit")
 public class AtmosServerErrorRetryHandlerTest {

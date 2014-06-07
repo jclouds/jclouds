@@ -40,10 +40,6 @@ import com.google.inject.Injector;
 import com.google.inject.Provides;
 import com.google.inject.TypeLiteral;
 
-/**
- * 
- * @author Adrian Cole
- */
 public class DefaultVCloudReferencesModule extends AbstractModule {
    
    @Override

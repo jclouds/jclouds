@@ -38,8 +38,6 @@ import com.google.common.collect.Iterables;
 
 /**
  * Tests HostAdministrationApi guice wiring and parsing (including the Response parsers in FieldValueResponseParsers)
- * 
- * @author Adam Lowe
  */
 @Test(groups = "unit", testName = "HostAdministrationApiExpectTest")
 public class HostAdministrationApiExpectTest extends BaseNovaApiExpectTest {

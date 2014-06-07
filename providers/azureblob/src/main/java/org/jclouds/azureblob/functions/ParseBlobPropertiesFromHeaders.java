@@ -34,9 +34,6 @@ import com.google.common.base.Function;
 /**
  * This parses @{link {@link org.jclouds.azureblob.domain.BlobProperties} from HTTP
  * headers.
- * 
- * 
- * @author Adrian Cole
  */
 public class ParseBlobPropertiesFromHeaders implements Function<HttpResponse, MutableBlobProperties>,
       InvocationContext<ParseBlobPropertiesFromHeaders> {

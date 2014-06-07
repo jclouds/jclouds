@@ -34,10 +34,6 @@ import org.jclouds.javax.annotation.Nullable;
 import com.google.common.base.Objects.ToStringHelper;
 import com.google.common.collect.ImmutableSet;
 
-/**
- * @author Adrian Cole
- * @author Ivan Meredith
- */
 public class NodeMetadataImpl extends ComputeMetadataImpl implements NodeMetadata {
 
    private final Status status;

@@ -31,8 +31,6 @@ import com.google.common.collect.ImmutableMultimap;
  * Binds a virtual IP to the request.
  * 
  * The {@link IpPortPair} must have a {@link IpPortPair#ip} set with a valid IP address.
- * 
- * @author Oleksiy Yarmula
  */
 public class BindVirtualIpPortPairToQueryParams implements Binder {
 

@@ -35,10 +35,6 @@ import com.google.common.base.Function;
 import com.google.common.base.Supplier;
 import com.google.common.collect.Iterables;
 
-/**
- * 
- * @author Adrian Cole
- */
 @Singleton
 public class OptionToLocation implements Function<Option, Location> {
    private final Location provider;

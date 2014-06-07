@@ -22,10 +22,6 @@ import org.jclouds.blobstore.util.internal.BlobUtilsImpl;
 
 import com.google.inject.ImplementedBy;
 
-/**
- * 
- * @author Adrian Cole
- */
 @ImplementedBy(BlobUtilsImpl.class)
 public interface BlobUtils {
    BlobBuilder blobBuilder();

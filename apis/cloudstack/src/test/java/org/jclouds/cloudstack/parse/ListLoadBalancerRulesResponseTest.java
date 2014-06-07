@@ -29,10 +29,6 @@ import com.google.common.collect.ImmutableSet;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 
-/**
- * 
- * @author Andrei Savu
- */
 @Test(groups = "unit")
 public class ListLoadBalancerRulesResponseTest extends BaseSetParserTest<LoadBalancerRule> {
 

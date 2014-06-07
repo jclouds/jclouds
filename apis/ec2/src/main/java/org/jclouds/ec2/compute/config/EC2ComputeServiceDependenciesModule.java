@@ -78,10 +78,6 @@ import com.google.inject.Provides;
 import com.google.inject.TypeLiteral;
 import com.google.inject.name.Names;
 
-/**
- * 
- * @author Adrian Cole
- */
 public class EC2ComputeServiceDependenciesModule extends AbstractModule {
 
    public static final Map<InstanceState, Status> toPortableNodeStatus = ImmutableMap

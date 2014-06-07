@@ -32,8 +32,6 @@ import com.google.inject.assistedinject.FactoryModuleBuilder;
 
 /**
  * Configures the Rackspace Cloud Load Balancers connection.
- * 
- * @author Adrian Cole
  */
 @ConfiguresHttpApi
 public class CloudLoadBalancersHttpApiModule extends HttpApiModule<CloudLoadBalancersApi> {

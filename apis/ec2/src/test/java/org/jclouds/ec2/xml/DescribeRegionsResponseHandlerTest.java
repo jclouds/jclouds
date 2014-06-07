@@ -40,8 +40,6 @@ import com.google.inject.TypeLiteral;
 
 /**
  * Tests behavior of {@code DescribeRegionsResponseHandler}
- * 
- * @author Adrian Cole
  */
 // NOTE:without testName, this will not call @Before* and fail w/NPE during surefire
 @Test(groups = "unit", testName = "DescribeRegionsResponseHandlerTest")

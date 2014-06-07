@@ -33,8 +33,6 @@ import com.google.inject.Module;
 
 /**
  * Base class for writing DynECT Expect tests
- * 
- * @author Adrian Cole
  */
 public class BaseDynECTExpectTest<T> extends BaseRestApiExpectTest<T> {
    public BaseDynECTExpectTest() {

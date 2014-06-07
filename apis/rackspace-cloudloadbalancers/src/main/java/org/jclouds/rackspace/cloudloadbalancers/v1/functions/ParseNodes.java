@@ -43,8 +43,6 @@ import com.google.inject.TypeLiteral;
 
 /**
  * boiler plate until we determine a better way
- * 
- * @author Everett Toews
  */
 @Beta
 @Singleton

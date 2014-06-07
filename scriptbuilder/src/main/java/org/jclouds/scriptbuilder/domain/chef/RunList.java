@@ -28,8 +28,6 @@ import com.google.common.collect.Lists;
 
 /**
  * A Run list to be executed in a Chef Solo run.
- * 
- * @author Ignasi Barrera
  */
 public class RunList {
 

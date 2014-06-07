@@ -85,9 +85,6 @@ import com.google.common.util.concurrent.Futures;
 import com.google.common.util.concurrent.ListenableFuture;
 import com.google.common.util.concurrent.Uninterruptibles;
 
-/**
- * @author Adrian Cole
- */
 public class BaseBlobIntegrationTest extends BaseBlobStoreIntegrationTest {
    private ByteSource oneHundredOneConstitutions;
    private byte[] oneHundredOneConstitutionsMD5;

@@ -24,10 +24,6 @@ import org.testng.annotations.Test;
 
 import com.google.common.collect.ImmutableMap;
 
-/**
- * 
- * @author Adrian Cole
- */
 @Test
 public class UriTemplatesTest {
 

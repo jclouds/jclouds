@@ -18,8 +18,6 @@ package org.jclouds.openstack.nova.v2_0.config;
 
 /**
  * Configuration properties and constants used in openstack Nova connections.
- *
- * @author Adam Lowe
  */
 public class NovaProperties {
 

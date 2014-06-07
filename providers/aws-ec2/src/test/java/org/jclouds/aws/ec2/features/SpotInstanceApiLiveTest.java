@@ -51,8 +51,6 @@ import com.google.common.collect.ImmutableSortedSet;
 
 /**
  * Tests behavior of {@code SpotInstanceApi}
- * 
- * @author Adrian Cole
  */
 @Test(groups = "live", singleThreaded = true)
 public class SpotInstanceApiLiveTest  extends BaseComputeServiceContextLiveTest {

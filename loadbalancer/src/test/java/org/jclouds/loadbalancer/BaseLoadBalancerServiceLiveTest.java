@@ -50,10 +50,6 @@ import com.google.common.reflect.TypeToken;
 import com.google.inject.Guice;
 import com.google.inject.Module;
 
-/**
- * 
- * @author Adrian Cole
- */
 @Test(groups = "live", singleThreaded = true)
 public abstract class BaseLoadBalancerServiceLiveTest extends BaseViewLiveTest<LoadBalancerServiceContext> {
 

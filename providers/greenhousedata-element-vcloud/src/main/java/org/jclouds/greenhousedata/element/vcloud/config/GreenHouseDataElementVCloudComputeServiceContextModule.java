@@ -25,8 +25,6 @@ import com.google.inject.Injector;
 
 /**
  * per docs, we are to use pool mode.
- * 
- * @author Adrian Cole
  */
 public class GreenHouseDataElementVCloudComputeServiceContextModule extends VCloudComputeServiceContextModule {
 

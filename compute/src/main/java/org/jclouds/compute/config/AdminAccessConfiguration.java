@@ -37,11 +37,6 @@ import com.google.common.collect.ImmutableMap;
 import com.google.common.io.Files;
 import com.google.inject.ImplementedBy;
 
-/**
- * 
- * @author Adrian Cole
- * 
- */
 @ImplementedBy(Default.class)
 public interface AdminAccessConfiguration extends Configuration {
    @Singleton

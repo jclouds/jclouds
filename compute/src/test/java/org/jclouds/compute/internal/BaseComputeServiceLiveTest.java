@@ -117,10 +117,6 @@ import com.google.common.util.concurrent.ListeningExecutorService;
 import com.google.common.util.concurrent.MoreExecutors;
 import com.google.inject.Module;
 
-/**
- * 
- * @author Adrian Cole
- */
 @Test(groups = { "integration", "live" }, singleThreaded = true)
 public abstract class BaseComputeServiceLiveTest extends BaseComputeServiceContextLiveTest {
 

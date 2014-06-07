@@ -46,9 +46,6 @@ import com.google.common.base.Predicate;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Iterables;
 
-/**
- * @author Jeremy Whitlock, Adrian Cole
- */
 @Test(groups = "live", testName = "MetricApiLiveTest")
 public class MetricApiLiveTest extends BaseCloudWatchApiLiveTest {
 

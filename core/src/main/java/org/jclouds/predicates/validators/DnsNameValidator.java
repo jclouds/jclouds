@@ -32,8 +32,6 @@ import com.google.inject.Singleton;
  * 
  * @see org.jclouds.rest.InputParamValidator
  * @see org.jclouds.predicates.Validator
- * 
- * @author Adrian Cole
  */
 @Singleton
 public class DnsNameValidator extends Validator<String> {

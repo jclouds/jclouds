@@ -38,8 +38,6 @@ import com.google.inject.TypeLiteral;
 /**
  * This object will parse the body of an HttpResponse and return the result of
  * type <T> back to the caller.
- * 
- * @author Adrian Cole
  */
 @Singleton
 public class ParseJson<T> implements Function<HttpResponse, T> {

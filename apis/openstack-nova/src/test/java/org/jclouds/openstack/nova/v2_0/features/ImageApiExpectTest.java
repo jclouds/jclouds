@@ -36,8 +36,6 @@ import com.google.common.collect.ImmutableSet;
 
 /**
  * Tests annotation parsing of {@code ImageAsyncApi}
- * 
- * @author Michael Arnold
  */
 @Test(groups = "unit", testName = "ImageAsyncApiTest")
 public class ImageApiExpectTest extends BaseNovaApiExpectTest {

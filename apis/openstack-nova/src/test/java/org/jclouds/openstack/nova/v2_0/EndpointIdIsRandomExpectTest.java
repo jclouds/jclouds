@@ -30,8 +30,6 @@ import com.google.common.collect.ImmutableSet;
 
 /**
  * Tests to ensure that we can pick the only endpoint of a service
- *
- * @author Adrian Cole
  */
 @Test(groups = "unit", testName = "EndpointIdIsRandomExpectTest")
 public class EndpointIdIsRandomExpectTest extends BaseNovaApiExpectTest {

@@ -34,9 +34,6 @@ import com.google.common.base.Function;
 import com.google.common.base.Predicate;
 import com.google.common.collect.FluentIterable;
 
-/**
- * @author Adrian Cole
- */
 @Singleton
 public class OrgsForLocations implements Function<Iterable<Location>, Iterable<Org>> {
    @Resource

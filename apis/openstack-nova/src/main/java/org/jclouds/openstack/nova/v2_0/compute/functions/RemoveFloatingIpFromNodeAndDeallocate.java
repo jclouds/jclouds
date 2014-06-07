@@ -35,8 +35,6 @@ import com.google.common.cache.LoadingCache;
 
 /**
  * A function for removing and deallocating an ip address from a node
- * 
- * @author Adrian Cole
  */
 public class RemoveFloatingIpFromNodeAndDeallocate implements Function<ZoneAndId, ZoneAndId> {
 

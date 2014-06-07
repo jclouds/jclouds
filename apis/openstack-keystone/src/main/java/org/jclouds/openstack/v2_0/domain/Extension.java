@@ -34,7 +34,6 @@ import com.google.common.base.Objects.ToStringHelper;
  * change and they allow the introduction of vendor specific niche
  * functionality.
  * 
- * @author Adrian Cole
  * @see <a href=
       "http://docs.openstack.org/api/openstack-compute/2/content/Extensions-d1e1444.html"
       />

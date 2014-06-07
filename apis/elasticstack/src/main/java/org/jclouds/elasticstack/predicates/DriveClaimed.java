@@ -28,10 +28,6 @@ import org.jclouds.logging.Logger;
 
 import com.google.common.base.Predicate;
 
-/**
- * 
- * @author Adrian Cole
- */
 @Singleton
 public class DriveClaimed implements Predicate<DriveInfo> {
 

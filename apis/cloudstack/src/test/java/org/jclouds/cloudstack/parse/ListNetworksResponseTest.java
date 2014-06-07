@@ -33,10 +33,6 @@ import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.ImmutableSortedMap;
 import com.google.common.collect.ImmutableSortedSet;
 
-/**
- * 
- * @author Adrian Cole
- */
 @Test(groups = "unit")
 public class ListNetworksResponseTest extends BaseSetParserTest<Network> {
 

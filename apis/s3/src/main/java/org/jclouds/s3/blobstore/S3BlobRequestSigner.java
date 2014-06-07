@@ -38,10 +38,6 @@ import org.jclouds.s3.options.PutObjectOptions;
 import com.google.common.collect.ImmutableList;
 import com.google.common.reflect.Invokable;
 
-/**
- * 
- * @author Adrian Cole
- */
 @Singleton
 public class S3BlobRequestSigner<T extends S3AsyncClient> implements BlobRequestSigner {
    protected final RestAnnotationProcessor processor;

@@ -38,9 +38,6 @@ import com.google.common.base.Predicate;
 import com.google.common.collect.ImmutableMap;
 import com.google.inject.Module;
 
-/**
- * @author Oleksiy Yarmula
- */
 // NOTE:without testName, this will not call @Before* and fail w/NPE during
 // surefire
 @Test(groups = "live", singleThreaded = true, testName = "GoGridComputeServiceLiveTest")

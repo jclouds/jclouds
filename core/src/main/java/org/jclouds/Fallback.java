@@ -25,7 +25,6 @@ import com.google.common.util.concurrent.FutureFallback;
  * @param <V>
  *           the result type of the backup value
  * 
- * @author Adrian Cole
  * @see FutureFallback
  * @since 1.6
  */

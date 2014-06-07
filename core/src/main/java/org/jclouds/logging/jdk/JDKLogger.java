@@ -23,9 +23,6 @@ import org.jclouds.logging.Logger;
 
 /**
  * {@link java.util.logging.Logger} implementation of {@link Logger}.
- * 
- * @author Adrian Cole
- * 
  */
 public class JDKLogger extends BaseLogger {
    private final java.util.logging.Logger logger;

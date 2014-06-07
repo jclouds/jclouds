@@ -56,9 +56,6 @@ import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Iterables;
 import com.google.common.util.concurrent.UncheckedExecutionException;
 
-/**
- * @author Adrian Cole
- */
 @Singleton
 public class ServerInfoToNodeMetadata implements Function<ServerInfo, NodeMetadata> {
    public static final Map<ServerStatus, Status> serverStatusToNodeStatus = ImmutableMap
@@ -144,7 +141,6 @@ public class ServerInfoToNodeMetadata implements Function<ServerInfo, NodeMetada
     * When we create the boot drive of the server, by convention we set the name
     * to the image it came from.
     * 
-    * @author Adrian Cole
     * 
     */
    @Singleton

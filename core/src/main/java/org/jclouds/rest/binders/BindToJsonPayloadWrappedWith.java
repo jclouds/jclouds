@@ -30,8 +30,6 @@ import com.google.inject.assistedinject.Assisted;
 
 /**
  * Sometimes, cloud apis wrap requests inside an envelope. This addresses this.
- *
- * @author Adrian Cole
  */
 public class BindToJsonPayloadWrappedWith implements MapBinder {
 

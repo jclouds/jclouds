@@ -27,9 +27,6 @@ import javax.ws.rs.core.MediaType;
 
 import static org.testng.Assert.assertEquals;
 
-/**
- * @author Andrei Savu
- */
 public class BindIterableAsPayloadToDeleteRequestTest {
 
    private final BindIterableAsPayloadToDeleteRequest binder = new BindIterableAsPayloadToDeleteRequest();

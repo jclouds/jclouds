@@ -36,8 +36,6 @@ import com.google.inject.TypeLiteral;
 /**
  * finds all the named string bindings who's name annotation matches the filter.
  * for convenience, the bindings are returned as a map.
- * 
- * @author Adrian Cole
  */
 @Singleton
 public class FilterStringsBoundToInjectorByName implements Function<Predicate<String>, Map<String, String>> {

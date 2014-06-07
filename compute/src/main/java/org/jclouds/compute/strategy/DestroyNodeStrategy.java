@@ -21,8 +21,6 @@ import org.jclouds.javax.annotation.Nullable;
 
 /**
  * terminates the node
- * 
- * @author Adrian Cole
  */
 public interface DestroyNodeStrategy {
 

@@ -32,10 +32,6 @@ import com.google.common.base.Predicate;
 import com.google.common.base.Predicates;
 import com.google.common.collect.ImmutableSet;
 
-/**
- * 
- * @author Adrian Cole
- */
 @Test(groups = "live", singleThreaded = true, testName = "CloudSigmaZurichTemplateBuilderLiveTest")
 public class CloudSigmaZurichTemplateBuilderLiveTest extends BaseTemplateBuilderLiveTest {
 

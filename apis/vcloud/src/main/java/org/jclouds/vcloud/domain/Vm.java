@@ -30,8 +30,6 @@ import com.google.inject.ImplementedBy;
  * <p/>
  * When the {@link #getStatus} is {@link Status#UNRESOLVED}, there will be a task present for the
  * instantiation of the VApp.
- * 
- * @author Adrian Cole
  */
 @ImplementedBy(VmImpl.class)
 public interface Vm extends ReferenceType {

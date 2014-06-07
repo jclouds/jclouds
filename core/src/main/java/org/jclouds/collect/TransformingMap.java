@@ -29,9 +29,6 @@ import com.google.common.base.Function;
 /**
  * A map that transforms values on the way in and out. Inspired by the guava method
  * {@code Maps.transformValues}.
- * 
- * @author Adrian Cole
- * 
  */
 public class TransformingMap<K, V1, V2> extends AbstractMap<K, V2> {
    private final Map<K, V1> fromMap;

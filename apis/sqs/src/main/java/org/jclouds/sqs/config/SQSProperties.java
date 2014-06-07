@@ -19,8 +19,6 @@ package org.jclouds.sqs.config;
 
 /**
  * Configuration properties and constants used in SQS connections.
- * 
- * @author Adrian Cole
  */
 public interface SQSProperties {
 

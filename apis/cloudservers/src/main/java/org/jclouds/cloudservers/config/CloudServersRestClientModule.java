@@ -45,10 +45,6 @@ import org.jclouds.rest.config.RestClientModule;
 import com.google.common.base.Supplier;
 import com.google.inject.Provides;
 
-/**
- * 
- * @author Adrian Cole
- */
 @ConfiguresRestClient
 public class CloudServersRestClientModule extends RestClientModule<CloudServersClient, CloudServersAsyncClient> {
 

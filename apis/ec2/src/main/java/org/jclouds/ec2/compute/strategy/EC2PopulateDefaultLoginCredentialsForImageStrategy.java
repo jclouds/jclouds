@@ -34,9 +34,6 @@ import org.jclouds.javax.annotation.Nullable;
 
 import com.google.common.collect.ImmutableMap;
 
-/**
- * @author Oleksiy Yarmula
- */
 @Singleton
 public class EC2PopulateDefaultLoginCredentialsForImageStrategy extends ReturnCredentialsBoundToImage {
    public EC2PopulateDefaultLoginCredentialsForImageStrategy() {

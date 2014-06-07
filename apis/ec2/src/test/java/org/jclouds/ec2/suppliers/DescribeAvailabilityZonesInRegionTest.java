@@ -40,8 +40,6 @@ import com.google.common.collect.Maps;
 
 /**
  * A test for {@link DescribeAvailabilityZonesInRegion}.
- * 
- * @author Eric Pabst (pabstec@familysearch.org)
  */
 public class DescribeAvailabilityZonesInRegionTest {
    @Test

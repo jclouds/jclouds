@@ -24,8 +24,6 @@ import org.jclouds.openstack.keystone.v2_0.config.KeystoneProperties;
 
 /**
  * Tests behavior of CinderApi
- * 
- * @author Everett Toews
  */
 public class BaseCinderApiLiveTest extends BaseApiLiveTest<CinderApi> {
 

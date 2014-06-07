@@ -30,8 +30,6 @@ import com.google.common.collect.Multimap;
 
 /**
  * Tests behavior of {@code BindToXMLPayload}.
- * 
- * @author Ignasi Barrera
  */
 @Test(groups = "unit", testName = "BindToXMLPayloadTest")
 public class BindToXMLPayloadTest {

@@ -30,10 +30,6 @@ import org.testng.annotations.Test;
 
 import com.google.common.collect.ImmutableSet;
 
-/**
- * 
- * @author Adrian Cole
- */
 @Test(groups = "unit", testName = "UpdateProviderMetadataFromPropertiesTest")
 public class UpdateProviderMetadataFromPropertiesTest {
 

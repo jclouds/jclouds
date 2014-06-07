@@ -22,8 +22,6 @@ import com.google.common.base.Objects;
 
 /**
  * An encrypted Windows Administrator password, and the private key that can decrypt it.
- * 
- * @author Richard Downer
  */
 public class PasswordDataAndPrivateKey {
 

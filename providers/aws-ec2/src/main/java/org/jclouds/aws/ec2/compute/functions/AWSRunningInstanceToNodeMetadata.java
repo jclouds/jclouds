@@ -41,9 +41,6 @@ import org.jclouds.ec2.domain.RunningInstance;
 import com.google.common.base.Supplier;
 import com.google.common.cache.LoadingCache;
 
-/**
- * @author Adrian Cole
- */
 @Singleton
 public class AWSRunningInstanceToNodeMetadata extends RunningInstanceToNodeMetadata {
 

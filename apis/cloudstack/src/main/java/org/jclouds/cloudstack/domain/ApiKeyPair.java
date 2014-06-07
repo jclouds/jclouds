@@ -25,8 +25,6 @@ import com.google.common.base.Objects.ToStringHelper;
 
 /**
  * Representation of the API keypair response
- *
- * @author Andrei Savu
  */
 public class ApiKeyPair {
 

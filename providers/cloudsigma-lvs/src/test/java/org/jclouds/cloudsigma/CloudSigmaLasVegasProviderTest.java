@@ -19,10 +19,6 @@ package org.jclouds.cloudsigma;
 import org.jclouds.providers.internal.BaseProviderMetadataTest;
 import org.testng.annotations.Test;
 
-/**
- * 
- * @author Adrian Cole
- */
 @Test(groups = "unit", testName = "CloudSigmaLasVegasProviderTest")
 public class CloudSigmaLasVegasProviderTest extends BaseProviderMetadataTest {
 

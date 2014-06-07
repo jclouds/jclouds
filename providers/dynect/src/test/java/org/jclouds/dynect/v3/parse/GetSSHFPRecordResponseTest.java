@@ -25,9 +25,6 @@ import org.jclouds.dynect.v3.internal.BaseDynECTParseTest;
 import org.jclouds.rest.annotations.SelectJson;
 import org.testng.annotations.Test;
 
-/**
- * @author Adrian Cole
- */
 @Test(groups = "unit")
 public class GetSSHFPRecordResponseTest extends BaseDynECTParseTest<Record<SSHFPData>> {
 

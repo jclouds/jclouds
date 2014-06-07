@@ -21,8 +21,6 @@ import org.testng.annotations.Test;
 
 /**
  * The HPCloudObjectStorageProviderTest tests the {@link org.jclouds.hpcloud.objectstorage.HPCloudObjectStorageProviderMetadata} class.
- * 
- * @author Jeremy Daggett
  */
 @Test(groups = "unit", testName = "HPCloudObjectStorageProviderTest")
 public class HPCloudObjectStorageProviderTest extends BaseProviderMetadataTest {

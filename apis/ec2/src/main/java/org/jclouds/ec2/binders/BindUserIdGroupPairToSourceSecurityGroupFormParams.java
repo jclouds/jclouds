@@ -30,8 +30,6 @@ import com.google.common.collect.ImmutableMultimap.Builder;
 
 /**
  * Binds the String [] to query parameters named with GroupName.index
- * 
- * @author Adrian Cole
  */
 @Singleton
 public class BindUserIdGroupPairToSourceSecurityGroupFormParams implements Binder {

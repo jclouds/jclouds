@@ -28,8 +28,6 @@ import com.google.common.collect.ImmutableSet;
 
 /**
  * Utilities for using {@link IterableWithMarker}s.
- * 
- * @author Adrian Cole, Jeremy Whitlock
  */
 @Beta
 public class IterableWithMarkers {

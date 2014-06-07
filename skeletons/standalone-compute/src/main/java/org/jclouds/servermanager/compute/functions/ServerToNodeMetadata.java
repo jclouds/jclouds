@@ -45,9 +45,6 @@ import com.google.common.base.Supplier;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 
-/**
- * @author Adrian Cole
- */
 @Singleton
 public class ServerToNodeMetadata implements Function<Server, NodeMetadata> {
 

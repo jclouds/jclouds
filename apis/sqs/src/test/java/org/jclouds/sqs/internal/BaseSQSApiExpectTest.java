@@ -18,10 +18,6 @@ package org.jclouds.sqs.internal;
 
 import org.jclouds.sqs.SQSApi;
 
-/**
- * 
- * @author Adrian Cole
- */
 public class BaseSQSApiExpectTest extends BaseSQSExpectTest<SQSApi> {
 
 }

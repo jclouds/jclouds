@@ -21,8 +21,6 @@ import org.testng.annotations.Test;
 
 /**
  * Teroute53 behavior of {@code Route53Api}
- * 
- * @author Adrian Cole
  */
 @Test(groups = "live", singleThreaded = true, testName = "AWSRoute53ApiLiveTest")
 public class AWSRoute53ApiLiveTest extends Route53ApiLiveTest {

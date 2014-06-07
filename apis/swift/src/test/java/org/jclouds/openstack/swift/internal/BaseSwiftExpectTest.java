@@ -24,8 +24,6 @@ import org.jclouds.rest.internal.BaseRestClientExpectTest;
 
 /**
  * Base class for writing Swift Expect tests
- * 
- * @author Adrian Cole
  */
 public class BaseSwiftExpectTest<T> extends BaseRestClientExpectTest<T> {
 

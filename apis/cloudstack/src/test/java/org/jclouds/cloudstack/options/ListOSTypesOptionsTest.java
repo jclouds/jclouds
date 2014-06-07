@@ -26,8 +26,6 @@ import com.google.common.collect.ImmutableList;
 
 /**
  * Tests behavior of {@code ListOSTypesOptions}
- * 
- * @author Adrian Cole
  */
 @Test(groups = "unit")
 public class ListOSTypesOptionsTest {

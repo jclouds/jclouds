@@ -47,8 +47,6 @@ import com.google.inject.TypeLiteral;
 
 /**
  * This parses {@link ObjectInfo} from a gson string.
- * 
- * @author Adrian Cole
  */
 public class ParseObjectInfoListFromJsonResponse extends ParseJson<PageSet<ObjectInfo>> implements
       InvocationContext<ParseObjectInfoListFromJsonResponse> {

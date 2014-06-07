@@ -35,7 +35,6 @@ import com.google.common.util.concurrent.ListenableFuture;
  * <p/>
  * 
  * @see <a href="http://docs.rackspacecloud.com/servers/api/cs-devguide-latest.pdf" />
- * @author Adrian Cole
  */
 @Path("/v{" + Constants.PROPERTY_API_VERSION + "}")
 @VirtualHost

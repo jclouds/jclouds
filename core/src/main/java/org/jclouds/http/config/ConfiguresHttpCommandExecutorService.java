@@ -24,9 +24,6 @@ import java.lang.annotation.Target;
 
 /**
  * designates the the module configures a {@link HttpCommandExecutorService}
- * 
- * @author Adrian Cole
- * 
  */
 @Retention(RUNTIME)
 @Target(TYPE)

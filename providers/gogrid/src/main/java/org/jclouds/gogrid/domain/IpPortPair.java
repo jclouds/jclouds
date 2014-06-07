@@ -28,7 +28,6 @@ import com.google.common.primitives.Longs;
 /**
  * Class IpPortPair
  * 
- * @author Oleksiy Yarmula
 */
 public class IpPortPair implements Comparable<IpPortPair> {
 

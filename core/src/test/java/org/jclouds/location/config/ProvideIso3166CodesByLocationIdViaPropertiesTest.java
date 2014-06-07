@@ -34,10 +34,6 @@ import com.google.inject.AbstractModule;
 import com.google.inject.Guice;
 import com.google.inject.Provides;
 
-/**
- * 
- * @author Adrian Cole
- */
 @Test(testName = "ProvideIso3166CodesByLocationIdViaPropertiesTest")
 public class ProvideIso3166CodesByLocationIdViaPropertiesTest {
 

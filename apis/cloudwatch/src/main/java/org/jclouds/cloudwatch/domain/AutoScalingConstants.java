@@ -20,8 +20,6 @@ package org.jclouds.cloudwatch.domain;
  * Constants interface for the AWS AutoScaling dimensions and metric names as of 2012-04-24.
  *
  * @see <a href="http://docs.amazonwebservices.com/AmazonCloudWatch/latest/DeveloperGuide/CW_Support_For_AWS.html#as-metricscollected" />
- *
- * @author Jeremy Whitlock
  */
 public final class AutoScalingConstants {
 

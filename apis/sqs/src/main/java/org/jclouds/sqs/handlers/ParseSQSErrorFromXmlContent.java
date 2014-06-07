@@ -30,10 +30,6 @@ import org.jclouds.rest.ResourceNotFoundException;
 
 import com.google.common.collect.ImmutableSet;
 
-/**
- * @author Adrian Cole
- * 
- */
 @Singleton
 public class ParseSQSErrorFromXmlContent extends ParseAWSErrorFromXmlContent {
    protected Set<String> resourceNotFoundCodes = ImmutableSet.of("AWS.SimpleQueueService.NonExistentQueue");

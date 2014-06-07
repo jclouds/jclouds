@@ -23,10 +23,6 @@ import org.jclouds.atmos.domain.MutableContentMetadata;
 import org.jclouds.io.ContentMetadataBuilder;
 import org.jclouds.io.payloads.BaseMutableContentMetadata;
 
-/**
- * 
- * @author Adrian Cole
- */
 public class DelegatingMutableContentMetadata implements MutableContentMetadata {
    private URI uri;
    private String name;

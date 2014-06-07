@@ -35,8 +35,6 @@ import com.google.inject.TypeLiteral;
 
 /**
  * Tests behavior of {@code ParseInetAddressListFromJsonResponse}
- * 
- * @author Adrian Cole
  */
 @Test(groups = "unit")
 public class ParseInetAddressListFromJsonResponseTest {

@@ -31,8 +31,6 @@ import com.google.common.collect.ImmutableSet;
 
 /**
  * Tests behavior of {@code AMIApi}
- * 
- * @author Adrian Cole
  */
 @Test(groups = "live", singleThreaded = true)
 public class AWSAMIApiLiveTest extends AMIApiLiveTest {

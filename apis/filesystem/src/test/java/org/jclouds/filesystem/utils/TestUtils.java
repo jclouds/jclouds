@@ -36,8 +36,6 @@ import com.google.common.io.Files;
 
 /**
  * Utility class for test
- *
- * @author Alfredo "Rainbowbreeze" Morresi
  */
 public class TestUtils {
 

@@ -25,9 +25,6 @@ import javax.inject.Qualifier;
 
 /**
  * A VCloud Session Token
- * 
- * @author Adrian Cole
- * 
  */
 @Retention(value = RetentionPolicy.RUNTIME)
 @Target(value = { ElementType.FIELD, ElementType.PARAMETER, ElementType.METHOD })

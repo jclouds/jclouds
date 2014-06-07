@@ -23,7 +23,6 @@ import org.jclouds.http.HttpResponse;
 /**
  * Base class for writing CloudStack Expect tests with the ComputeService
  * abstraction
- * 
  */
 public abstract class BaseCloudStackComputeServiceContextExpectTest<T> extends BaseCloudStackExpectTest<T> {
    

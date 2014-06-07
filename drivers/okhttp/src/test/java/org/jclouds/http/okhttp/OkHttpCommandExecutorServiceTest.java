@@ -43,8 +43,6 @@ import com.squareup.okhttp.mockwebserver.RecordedRequest;
 
 /**
  * Tests the functionality of the {@link OkHttpCommandExecutorService}
- * 
- * @author Ignasi Barrera
  */
 @Test
 public class OkHttpCommandExecutorServiceTest extends BaseHttpCommandExecutorServiceIntegrationTest {

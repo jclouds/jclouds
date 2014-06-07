@@ -22,9 +22,6 @@ import org.jclouds.route53.domain.ResourceRecordSet;
 import org.jclouds.route53.domain.ResourceRecordSet.RecordSubset.Weighted;
 import org.testng.annotations.Test;
 
-/**
- * @author Adrian Cole
- */
 @Test(groups = "unit")
 public class SerializeRRSTest {
 

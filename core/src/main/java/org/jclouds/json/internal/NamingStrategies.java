@@ -46,9 +46,6 @@ import com.google.gson.annotations.SerializedName;
 
 /**
  * NamingStrategies used for JSON deserialization using GSON
- * 
- * @author Adrian Cole
- * @author Adam Lowe
  */
 public class NamingStrategies {
    /**

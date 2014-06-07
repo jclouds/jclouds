@@ -54,10 +54,6 @@ import com.google.common.io.ByteSource;
 import com.google.inject.Guice;
 import com.google.inject.Module;
 
-/**
- * 
- * @author Adrian Cole
- */
 @Test(groups = "integration,live")
 public abstract class BaseTemplateBuilderLiveTest extends BaseComputeServiceContextLiveTest {
 

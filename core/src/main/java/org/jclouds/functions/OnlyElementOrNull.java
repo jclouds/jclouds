@@ -21,9 +21,6 @@ import javax.inject.Singleton;
 import com.google.common.base.Function;
 import com.google.common.collect.Iterables;
 
-/**
- * @author Adrian Cole
- */
 @Singleton
 public class OnlyElementOrNull<T> implements Function<Iterable<T>, T> {
 

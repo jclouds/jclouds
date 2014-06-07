@@ -22,10 +22,6 @@ import org.jclouds.s3.domain.ObjectMetadata;
 
 import com.google.common.base.Function;
 
-/**
- * 
- * @author Adrian Cole
- */
 @Singleton
 public class ObjectMetadataKey implements Function<Object, String> {
 

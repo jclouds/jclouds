@@ -27,8 +27,6 @@ import com.google.common.collect.Iterables;
 
 /**
  * counts all blobs in the blobstore at the prefix by the most efficient means possible.
- * 
- * @author Adrian Cole
  */
 @Singleton
 public class CountBlobTypeInList implements CountListStrategy {

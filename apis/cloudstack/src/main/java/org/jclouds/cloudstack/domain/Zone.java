@@ -27,9 +27,6 @@ import com.google.common.base.Objects;
 import com.google.common.base.Objects.ToStringHelper;
 import com.google.common.collect.ImmutableList;
 
-/**
- * @author Adrian Cole, Andrei Savu
- */
 public class Zone implements Comparable<Zone> {
 
    public static Builder<?> builder() {

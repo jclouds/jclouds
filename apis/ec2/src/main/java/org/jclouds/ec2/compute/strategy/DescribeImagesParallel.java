@@ -41,10 +41,6 @@ import com.google.common.base.Function;
 import com.google.common.util.concurrent.ListenableFuture;
 import com.google.common.util.concurrent.ListeningExecutorService;
 
-/**
- * 
- * @author Adrian Cole
- */
 @Singleton
 public class DescribeImagesParallel implements
          Function<Iterable<Entry<String, DescribeImagesOptions>>, Iterable<? extends org.jclouds.ec2.domain.Image>> {

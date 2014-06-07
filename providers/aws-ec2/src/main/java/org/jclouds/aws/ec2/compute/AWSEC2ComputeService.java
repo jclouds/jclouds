@@ -74,9 +74,6 @@ import com.google.common.base.Supplier;
 import com.google.common.cache.LoadingCache;
 import com.google.common.util.concurrent.ListeningExecutorService;
 
-/**
- * @author Adrian Cole
- */
 @Singleton
 public class AWSEC2ComputeService extends EC2ComputeService {
 

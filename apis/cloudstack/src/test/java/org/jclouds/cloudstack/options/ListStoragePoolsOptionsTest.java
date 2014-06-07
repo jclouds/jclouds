@@ -32,8 +32,6 @@ import com.google.common.collect.ImmutableList;
 
 /**
  * Test for the ListStoragePoolsOptions class.
- *
- * @author Richard Downer
  */
 @Test(groups = "unit")
 public class ListStoragePoolsOptionsTest {

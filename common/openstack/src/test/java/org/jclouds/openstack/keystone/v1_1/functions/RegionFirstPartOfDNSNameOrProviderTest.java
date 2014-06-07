@@ -23,9 +23,6 @@ import java.net.URI;
 import org.jclouds.openstack.keystone.v1_1.domain.Endpoint;
 import org.testng.annotations.Test;
 
-/**
- * @author Adrian Cole
- */
 @Test(groups = "unit", testName = "RegionFirstPartOfDNSNameOrProviderTest")
 public class RegionFirstPartOfDNSNameOrProviderTest {
    private final RegionFirstPartOfDNSNameOrProvider fn = new RegionFirstPartOfDNSNameOrProvider("keystone");

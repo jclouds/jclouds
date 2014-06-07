@@ -38,9 +38,6 @@ import com.google.common.collect.ImmutableMultimap;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 
-/**
- * @author Adrian Cole
- */
 @Test(groups = "unit", testName = "ParseServerTest")
 public class ParseServerWithInternetAddressesTest extends BaseItemParserTest<Server> {
 

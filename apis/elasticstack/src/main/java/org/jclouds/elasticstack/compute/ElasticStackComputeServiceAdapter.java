@@ -73,7 +73,6 @@ import com.google.common.util.concurrent.UncheckedExecutionException;
 /**
  * defines the connection between the {@link org.jclouds.elasticstack.ElasticStackApi} implementation
  * and the jclouds {@link org.jclouds.compute.ComputeService}
- * 
  */
 @Singleton
 public class ElasticStackComputeServiceAdapter implements

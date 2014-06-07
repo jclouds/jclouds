@@ -32,9 +32,6 @@ import org.jclouds.rackspace.clouddns.v1.functions.ParseRecord.RawRecord;
 import com.google.common.base.Function;
 import com.google.common.collect.Iterables;
 
-/**
- * @author Everett Toews
- */
 public class ParseOnlyRecord implements Function<HttpResponse, RecordDetail> {
 
    private final ParseJson<Map<String, List<RawRecord>>> json;

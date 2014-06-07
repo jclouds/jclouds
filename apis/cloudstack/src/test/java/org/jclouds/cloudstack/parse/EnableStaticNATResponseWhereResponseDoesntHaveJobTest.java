@@ -24,10 +24,6 @@ import org.jclouds.json.BaseItemParserTest;
 import org.jclouds.rest.annotations.Unwrap;
 import org.testng.annotations.Test;
 
-/**
- * 
- * @author Adrian Cole
- */
 @Test(groups = "unit", testName = "EnableStaticNATResponseWhereResponseDoesntHaveJobTest")
 public class EnableStaticNATResponseWhereResponseDoesntHaveJobTest extends BaseItemParserTest<AsyncCreateResponse> {
 

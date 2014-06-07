@@ -33,8 +33,6 @@ import com.google.common.collect.ImmutableSet;
 
 /**
  * Installs RubyGems onto a host.
- * 
- * @author Ignasi Barrera
  */
 public class InstallRubyGems implements Statement {
 

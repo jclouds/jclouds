@@ -32,8 +32,6 @@ import com.google.common.collect.Sets;
 
 /**
  * Tests behavior of {@code ElasticIPAddressApi}
- * 
- * @author Adrian Cole
  */
 @Test(groups = "live", singleThreaded = true, testName = "ElasticIPAddressApiLiveTest")
 public class ElasticIPAddressApiLiveTest extends BaseComputeServiceContextLiveTest {

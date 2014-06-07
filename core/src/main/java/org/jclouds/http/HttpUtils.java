@@ -68,9 +68,6 @@ import com.google.common.io.ByteSource;
 import com.google.common.reflect.Invokable;
 import com.google.inject.Inject;
 
-/**
- * @author Adrian Cole
- */
 @Singleton
 public class HttpUtils {
 

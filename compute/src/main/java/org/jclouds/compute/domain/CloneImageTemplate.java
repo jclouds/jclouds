@@ -18,8 +18,6 @@ package org.jclouds.compute.domain;
 
 /**
  * An {@link ImageTemplate} for the purpose of cloning an existing node.
- * 
- * @author David Alves
  */
 public interface CloneImageTemplate extends ImageTemplate {
 

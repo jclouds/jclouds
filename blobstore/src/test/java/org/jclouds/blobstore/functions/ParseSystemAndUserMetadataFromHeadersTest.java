@@ -32,9 +32,6 @@ import org.testng.annotations.Test;
 
 import com.google.common.net.HttpHeaders;
 
-/**
- * @author Adrian Cole
- */
 @Test(sequential = true)
 public class ParseSystemAndUserMetadataFromHeadersTest {
 

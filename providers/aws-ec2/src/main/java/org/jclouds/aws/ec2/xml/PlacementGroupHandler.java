@@ -26,10 +26,6 @@ import org.jclouds.location.Region;
 
 import com.google.common.base.Supplier;
 
-/**
- * 
- * @author Adrian Cole
- */
 public class PlacementGroupHandler extends
          ParseSax.HandlerForGeneratedRequestWithResult<PlacementGroup> {
    private StringBuilder currentText = new StringBuilder();

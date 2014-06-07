@@ -35,8 +35,6 @@ import com.google.common.base.Objects;
  * @see <a
  *      href="http://docs.amazonwebservices.com/AWSEC2/latest/APIReference/ApiReference-query-GetPasswordData.html"
  *      >doc</a>
- * 
- * @author Richard Downer
  */
 public class PasswordData {
 

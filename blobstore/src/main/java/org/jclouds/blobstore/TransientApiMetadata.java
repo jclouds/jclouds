@@ -23,8 +23,6 @@ import org.jclouds.blobstore.config.TransientBlobStoreContextModule;
 
 /**
  * Implementation of {@link ApiMetadata} for jclouds in-memory (Transient) API
- * 
- * @author Adrian Cole
  */
 public class TransientApiMetadata extends BaseApiMetadata {
 

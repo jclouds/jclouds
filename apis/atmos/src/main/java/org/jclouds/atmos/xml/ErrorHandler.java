@@ -21,8 +21,6 @@ import org.jclouds.http.functions.ParseSax;
 
 /**
  * Parses the error from the Atmos Online Storage REST API.
- * 
- * @author Adrian Cole
  */
 public class ErrorHandler extends ParseSax.HandlerWithResult<AtmosError> {
 

@@ -37,10 +37,6 @@ import org.jclouds.filesystem.util.internal.FileSystemBlobUtilsImpl;
 
 import com.google.inject.AbstractModule;
 
-/**
- * 
- * @author Alfredo "Rainbowbreeze" Morresi
- */
 public class FilesystemBlobStoreContextModule extends AbstractModule {
 
    @Override

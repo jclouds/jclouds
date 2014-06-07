@@ -34,9 +34,6 @@ import org.jclouds.ultradns.ws.parse.GetPoolRecordSpecResponseTest;
 import org.jclouds.ultradns.ws.parse.GetTCLoadBalancingPoolsByZoneResponseTest;
 import org.jclouds.ultradns.ws.parse.GetTCPoolRecordsResponseTest;
 import org.testng.annotations.Test;
-/**
- * @author Adrian Cole
- */
 @Test(groups = "unit", testName = "TrafficControllerPoolApiExpectTest")
 public class TrafficControllerPoolApiExpectTest extends BaseUltraDNSWSApiExpectTest {
    HttpRequest create = HttpRequest.builder().method(POST)

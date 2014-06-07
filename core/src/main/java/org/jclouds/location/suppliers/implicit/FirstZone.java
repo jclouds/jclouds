@@ -34,11 +34,6 @@ import org.jclouds.location.suppliers.ImplicitLocationSupplier;
 
 import com.google.common.base.Supplier;
 
-/**
- * 
- * @author Adrian Cole
- * 
- */
 @Singleton
 public class FirstZone implements ImplicitLocationSupplier {
 

@@ -31,8 +31,6 @@ import com.google.inject.Singleton;
  * Parses the list of generic options.
  * 
  * GoGrid uses options as containers for id/name/description objects.
- * 
- * @author Oleksiy Yarmula
  */
 @Singleton
 public class ParseOptionsFromJsonResponse implements

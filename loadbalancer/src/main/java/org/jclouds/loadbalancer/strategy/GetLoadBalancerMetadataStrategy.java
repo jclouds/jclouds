@@ -20,8 +20,6 @@ import org.jclouds.loadbalancer.domain.LoadBalancerMetadata;
 
 /**
  * returns all details associated to the node below.
- * 
- * @author Adrian Cole
  */
 public interface GetLoadBalancerMetadataStrategy {
 

@@ -48,8 +48,6 @@ import com.google.common.collect.Maps;
 import com.google.common.reflect.Invokable;
 /**
  * Tests behavior of {@code InstanceApi}
- * 
- * @author Adrian Cole
  */
 // NOTE:without testName, this will not call @Before* and fail w/NPE during surefire
 @Test(groups = "unit", testName = "InstanceApiTest")

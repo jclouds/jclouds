@@ -19,10 +19,6 @@ package org.jclouds.elasticstack;
 import org.jclouds.compute.internal.BaseComputeServiceApiMetadataTest;
 import org.testng.annotations.Test;
 
-/**
- * 
- * @author Adrian Cole
- */
 @Test(groups = "unit", testName = "ElasticStackApiMetadataTest")
 public class ElasticStackApiMetadataTest extends BaseComputeServiceApiMetadataTest {
 

@@ -34,9 +34,6 @@ import org.testng.annotations.Test;
 import com.google.common.base.Function;
 import com.google.common.eventbus.EventBus;
 
-/**
- * @author Adam Lowe
- */
 @Test(groups = { "unit" }, singleThreaded = true)
 public class RunScriptOnNodeUsingSshTest {
    EventBus eventBus = new EventBus();

@@ -19,9 +19,6 @@ package org.jclouds.blobstore.integration;
 import org.jclouds.blobstore.integration.internal.BaseServiceIntegrationTest;
 import org.testng.annotations.Test;
 
-/**
- * @author Adrian Cole
- */
 @Test(groups = { "integration", "live" })
 public class TransientServiceIntegrationTest extends BaseServiceIntegrationTest {
    public TransientServiceIntegrationTest() {

@@ -28,10 +28,6 @@ import com.google.common.collect.Multimap;
 import com.google.common.util.concurrent.ListenableFuture;
 import com.google.inject.ImplementedBy;
 
-/**
- * 
- * @author Adrian Cole
- */
 @ImplementedBy(CreateNodesWithGroupEncodedIntoNameThenAddToSet.class)
 public interface CreateNodesInGroupThenAddToSet {
 

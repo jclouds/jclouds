@@ -29,9 +29,6 @@ import org.jclouds.rackspace.cloudloadbalancers.v1.domain.SessionPersistence;
 import org.jclouds.rackspace.cloudloadbalancers.v1.internal.BaseCloudLoadBalancerApiExpectTest;
 import org.testng.annotations.Test;
 
-/**
- * @author Everett Toews
- */
 @Test(groups = "unit")
 public class SessionPersistenceApiExpectTest extends BaseCloudLoadBalancerApiExpectTest<CloudLoadBalancersApi> {
    public void testGetSessionPersistence() {

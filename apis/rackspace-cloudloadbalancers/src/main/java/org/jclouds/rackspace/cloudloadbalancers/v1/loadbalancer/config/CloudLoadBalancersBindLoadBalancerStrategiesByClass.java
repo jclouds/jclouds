@@ -26,9 +26,6 @@ import org.jclouds.rackspace.cloudloadbalancers.v1.loadbalancer.strategy.CloudLo
 import org.jclouds.rackspace.cloudloadbalancers.v1.loadbalancer.strategy.CloudLoadBalancersListLoadBalancersStrategy;
 import org.jclouds.rackspace.cloudloadbalancers.v1.loadbalancer.strategy.CloudLoadBalancersLoadBalanceNodesStrategy;
 
-/**
- * @author Adrian Cole
- */
 public class CloudLoadBalancersBindLoadBalancerStrategiesByClass extends BindLoadBalancerStrategiesByClass {
 
    @Override

@@ -21,8 +21,6 @@ import org.jclouds.domain.Location;
 
 /**
  * Configured operating system used to start nodes.
- * 
- * @author Adrian Cole
  */
 public interface Template extends Cloneable {
    /**

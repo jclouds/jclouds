@@ -23,8 +23,6 @@ import com.google.inject.ImplementedBy;
 
 /**
  * Describes what appears as a disk to an {@link OperatingSystem}
- * 
- * @author Adrian Cole
  */
 @ImplementedBy(VolumeImpl.class)
 public interface Volume {

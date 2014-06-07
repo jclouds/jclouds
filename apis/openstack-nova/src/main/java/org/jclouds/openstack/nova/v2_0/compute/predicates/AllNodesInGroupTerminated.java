@@ -33,9 +33,6 @@ import org.jclouds.openstack.nova.v2_0.domain.zonescoped.ZoneAndName;
 import com.google.common.base.Predicate;
 import com.google.common.base.Predicates;
 
-/**
- * @author Adrian Cole
- */
 public class AllNodesInGroupTerminated implements Predicate<ZoneAndName> {
    private final ComputeService computeService;
 

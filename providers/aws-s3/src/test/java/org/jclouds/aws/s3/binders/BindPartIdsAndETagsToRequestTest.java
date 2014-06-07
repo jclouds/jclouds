@@ -30,8 +30,6 @@ import com.google.common.collect.ImmutableMap;
 
 /**
  * Tests behavior of {@code BindPartIdsAndETagsToRequest}
- * 
- * @author Adrian Cole
  */
 // NOTE:without testName, this will not call @Before* and fail w/NPE during surefire
 @Test(groups = "unit", testName = "BindPartIdsAndETagsToRequestTest")

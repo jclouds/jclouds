@@ -40,8 +40,6 @@ import org.jclouds.rest.annotations.ResponseParser;
  * reduces load off the back end nodes. The result is improved response times for those requests and less load on the 
  * web server.
  * <p/>
- * 
- * @author Everett Toews
  */
 @RequestFilters(AuthenticateRequest.class)
 public interface ContentCachingApi {

@@ -31,10 +31,6 @@ import org.jclouds.vcloud.domain.VDC;
 import org.jclouds.vcloud.endpoints.Org;
 
 import com.google.common.base.Supplier;
-/**
- * 
- * @author Adrian Cole
- */
 public abstract class OrgNameVDCNameResourceNameToEndpoint implements MapBinder {
 
    protected final Supplier<Map<String, Map<String, org.jclouds.vcloud.domain.VDC>>> orgVDCMap;

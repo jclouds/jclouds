@@ -49,8 +49,6 @@ import com.google.inject.Inject;
 
 /**
  * functions related to or replacing those in {@link com.google.common.collect.Iterables} dealing with Futures
- * 
- * @author Adrian Cole
  */
 @Beta
 public class FutureIterables {

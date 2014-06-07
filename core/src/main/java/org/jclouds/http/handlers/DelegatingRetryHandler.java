@@ -31,8 +31,6 @@ import com.google.inject.Inject;
 /**
  * Delegates to {@link HttpRetryHandler HttpRetryHandlers} who are annotated according to the
  * response codes they relate to.
- * 
- * @author Adrian Cole
  */
 @Singleton
 public class DelegatingRetryHandler implements HttpRetryHandler {

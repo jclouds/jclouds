@@ -23,7 +23,6 @@ import com.google.common.collect.ImmutableSet;
 /**
  * Optional arguments for updating an User
  *
- * @author Andrei Savu
  * @see <a
  *      href="http://download.cloud.com/releases/2.2.0/api_2.2.12/global_admin/updateUser.html"
  *      />

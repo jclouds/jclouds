@@ -29,11 +29,6 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableList.Builder;
 import com.google.common.collect.Iterables;
 
-/**
- * 
- * @author Adrian Cole
- * 
- */
 @Singleton
 public class JoinOnComma implements Function<Object, String> {
 

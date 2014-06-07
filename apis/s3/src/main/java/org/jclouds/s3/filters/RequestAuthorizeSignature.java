@@ -71,8 +71,6 @@ import com.google.common.net.HttpHeaders;
  * @see <a href=
  *      "http://docs.amazonwebservices.com/AmazonS3/2006-03-01/dev/index.html?RESTAuthentication.html"
  *      />
- * @author Adrian Cole
- * 
  */
 @Singleton
 public class RequestAuthorizeSignature implements HttpRequestFilter, RequestSigner {

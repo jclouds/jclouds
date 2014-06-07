@@ -41,7 +41,6 @@ import org.jclouds.cloudservers.options.RebuildServerOptions;
  * 
  * @see CloudServersAsyncClient
  * @see <a href="http://docs.rackspacecloud.com/servers/api/cs-devguide-latest.pdf" />
- * @author Adrian Cole
  */
 public interface CloudServersClient extends Closeable {
    /**

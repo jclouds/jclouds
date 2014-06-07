@@ -51,8 +51,6 @@ import com.google.inject.TypeLiteral;
 
 /**
  * Tests behavior of {@code VirtualGuestApi}
- * 
- * @author Adrian Cole
  */
 @Test(groups = "live")
 public class VirtualGuestApiLiveTest extends BaseSoftLayerApiLiveTest {

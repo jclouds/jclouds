@@ -39,10 +39,6 @@ import com.google.common.collect.Sets;
 import com.google.common.util.concurrent.Atomics;
 import com.google.common.util.concurrent.Uninterruptibles;
 
-/**
- * 
- * @author Adrian Cole
- */
 @Test(groups = "live")
 public class BaseSQSApiLiveTest extends BaseApiLiveTest<SQSApi> {
 

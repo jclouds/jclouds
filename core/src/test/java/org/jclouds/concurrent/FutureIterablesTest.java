@@ -40,8 +40,6 @@ import com.google.common.util.concurrent.MoreExecutors;
 
 /**
  * Tests behavior of FutureIterables
- * 
- * @author Adrian Cole
  */
 @Test(groups = "unit", singleThreaded = true, testName = "FutureIterablesTest")
 public class FutureIterablesTest {

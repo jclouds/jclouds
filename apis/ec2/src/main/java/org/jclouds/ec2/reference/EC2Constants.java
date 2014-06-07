@@ -19,8 +19,6 @@ package org.jclouds.ec2.reference;
 
 /**
  * Configuration properties and constants used in EC2 connections.
- * 
- * @author Adrian Cole
  */
 public class EC2Constants {
    /**

@@ -27,8 +27,6 @@ import org.testng.annotations.Test;
 
 /**
  * Tests possible uses of ListOptions and ListOptions.Builder.*
- * 
- * @author Adrian Cole
  */
 public class ListOptionsTest {
    @Test

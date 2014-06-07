@@ -36,8 +36,6 @@ import com.google.common.collect.ImmutableSet;
 
 /**
  * Test the CloudStack SSHKeyPairApi
- *
- * @author Andrei Savu
  */
 @Test(groups = "unit", testName = "SSHKeyPairApiExpectTest")
 public class SSHKeyPairApiExpectTest extends BaseCloudStackExpectTest<SSHKeyPairApi> {

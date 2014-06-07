@@ -20,9 +20,6 @@ import static org.jclouds.util.Closeables2.closeQuietly;
 
 import java.io.InputStream;
 
-/**
- * @author Adrian Cole
- */
 public class InputStreamPayload extends BasePayload<InputStream> {
 
    public InputStreamPayload(InputStream content) {

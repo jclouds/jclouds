@@ -49,11 +49,6 @@ import com.google.inject.Provides;
 import com.google.inject.TypeLiteral;
 import com.google.inject.name.Names;
 
-/**
- * 
- * @author Adrian Cole
- * 
- */
 public class ComputeServiceTimeoutsModule extends AbstractModule {
 
    @Provides
@@ -119,7 +114,6 @@ public class ComputeServiceTimeoutsModule extends AbstractModule {
     * Ensures we always pass a non-null to the wrapped predicate, but will propagate the null to
     * the caller qt the end.
     * 
-    * @author Aled Sage
     */
    private static class RetryablePredicateGuardingNull<T> implements Predicate<AtomicReference<T>> {
       

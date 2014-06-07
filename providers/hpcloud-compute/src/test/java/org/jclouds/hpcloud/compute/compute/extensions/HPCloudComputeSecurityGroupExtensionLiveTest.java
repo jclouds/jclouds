@@ -22,11 +22,6 @@ import org.testng.annotations.Test;
 
 import com.google.inject.Module;
 
-/**
- * 
- * @author Andrew Bayer
- * 
- */
 @Test(groups = "live", singleThreaded = true, testName = "HPCloudComputeImageExtensionLiveTest")
 public class HPCloudComputeSecurityGroupExtensionLiveTest extends BaseSecurityGroupExtensionLiveTest {
 

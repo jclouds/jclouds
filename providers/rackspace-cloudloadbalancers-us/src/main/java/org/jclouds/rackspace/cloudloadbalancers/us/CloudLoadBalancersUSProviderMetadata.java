@@ -29,8 +29,6 @@ import org.jclouds.rackspace.cloudloadbalancers.v1.CloudLoadBalancersApiMetadata
 
 /**
  * Implementation of {@link org.jclouds.types.ProviderMetadata} for Rackspace Cloud LoadBalancers US.
- * 
- * @author Adrian Cole
  */
 public class CloudLoadBalancersUSProviderMetadata extends BaseProviderMetadata {
 

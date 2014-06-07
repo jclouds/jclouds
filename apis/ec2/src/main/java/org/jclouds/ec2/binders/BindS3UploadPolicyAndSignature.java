@@ -30,10 +30,6 @@ import org.jclouds.rest.Binder;
 import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.ImmutableMultimap.Builder;
 
-/**
- * 
- * @author Adrian Cole
- */
 @Singleton
 public class BindS3UploadPolicyAndSignature implements Binder {
    private final FormSigner signer;

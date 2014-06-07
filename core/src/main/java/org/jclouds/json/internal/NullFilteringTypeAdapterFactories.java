@@ -48,8 +48,6 @@ import com.google.gson.stream.JsonWriter;
  * Eliminates null values when deserializing Collections, Maps, and Multimaps
  * <p/>
  * Treats [null] as the empty set; [A, null] as [A]; etc.
- * 
- * @author Adrian Cole
  */
 public class NullFilteringTypeAdapterFactories {
    private NullFilteringTypeAdapterFactories() {

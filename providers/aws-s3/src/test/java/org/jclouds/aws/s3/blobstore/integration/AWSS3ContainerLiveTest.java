@@ -19,9 +19,6 @@ package org.jclouds.aws.s3.blobstore.integration;
 import org.jclouds.s3.blobstore.integration.S3ContainerLiveTest;
 import org.testng.annotations.Test;
 
-/**
- * @author Adrian Cole
- */
 @Test(groups = "live", singleThreaded = true, testName = "AWSS3ContainerLiveTest")
 public class AWSS3ContainerLiveTest extends S3ContainerLiveTest {
    public AWSS3ContainerLiveTest() {

@@ -61,8 +61,6 @@ import com.google.inject.Injector;
 
 /**
  * Tests the ability of a {@link JschSshClient}
- * 
- * @author Adrian Cole
  */
 @Test(groups = "live", testName = "JschSshClientLiveTest" )
 public class JschSshClientLiveTest {

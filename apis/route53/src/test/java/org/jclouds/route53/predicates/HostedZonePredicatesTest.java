@@ -21,10 +21,6 @@ import static org.jclouds.route53.predicates.HostedZonePredicates.nameEquals;
 import org.jclouds.route53.domain.HostedZone;
 import org.testng.annotations.Test;
 
-/**
- * 
- * @author Adrian Cole
- */
 @Test(groups = "unit", testName = "HostedZonePredicatesTest")
 public class HostedZonePredicatesTest {
    HostedZone zone = HostedZone.builder().id("EEEFFFEEE").callerReference("goog").name("jclouds.org.").build();

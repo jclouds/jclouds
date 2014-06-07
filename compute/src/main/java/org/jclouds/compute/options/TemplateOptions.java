@@ -53,8 +53,6 @@ import com.google.common.primitives.Ints;
  * that must be done in with mutators in a single call to options --
  * <code>templateBuilder.options(inboundPorts(22, 80, 8080, 443).tags("I love it!"))</code>
  * -- not as repeated calls to <code>options</code>.
- * 
- * @author Adrian Cole
  */
 public class TemplateOptions extends RunScriptOptions implements Cloneable {
 

@@ -27,10 +27,6 @@ import com.google.common.base.Function;
 import com.google.common.collect.ImmutableSet;
 import com.google.inject.Injector;
 
-/**
- * 
- * @author Adrian Cole
- */
 @Test(groups = "unit")
 public class ListHypervisorsResponseTest extends BaseSetParserTest<String> {
 

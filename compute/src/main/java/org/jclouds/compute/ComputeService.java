@@ -42,9 +42,6 @@ import com.google.inject.ImplementedBy;
 
 /**
  * Provides portable access to launching compute instances.
- * 
- * @author Adrian Cole
- * @author Ivan Meredith
  */
 @ImplementedBy(BaseComputeService.class)
 public interface ComputeService {

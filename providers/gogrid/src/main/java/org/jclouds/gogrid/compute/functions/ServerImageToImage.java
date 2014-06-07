@@ -38,10 +38,6 @@ import org.jclouds.logging.Logger;
 
 import com.google.common.base.Function;
 
-/**
- * 
- * @author Adrian Cole
- */
 @Singleton
 public class ServerImageToImage implements Function<ServerImage, Image> {
    public static final Pattern GOGRID_OS_PATTERN = Pattern.compile("([a-zA-Z]*).*");

@@ -26,10 +26,6 @@ import com.google.common.base.Suppliers;
 import com.google.common.base.Throwables;
 import com.google.common.collect.Iterables;
 
-/**
- * 
- * @author Adrian Cole
- */
 public class Suppliers2 {
 
    public static <K, V> Supplier<V> getLastValueInMap(final Supplier<Map<K, Supplier<V>>> input) {

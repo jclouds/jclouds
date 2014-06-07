@@ -43,8 +43,6 @@ import com.google.common.collect.Multimap;
  * 
  * @see <a href="http://docs.amazonwebservices.com/AWSEC2/latest/APIReference/ApiReference-query-DescribeSubnets.html"
  *      >doc</a>
- * @author Adrian Cole
- * @author Andrew Bayer
  */
 @SinceApiVersion("2011-01-01")
 @RequestFilters(FormSigner.class)

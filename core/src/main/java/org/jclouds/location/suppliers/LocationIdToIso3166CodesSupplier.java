@@ -27,8 +27,6 @@ import com.google.inject.ImplementedBy;
 /**
  * 
 
- * 
- * @author Adrian Cole
  */
 @ImplementedBy(LocationIdToIso3166CodesFromConfiguration.class)
 public interface LocationIdToIso3166CodesSupplier extends Supplier<Map<String, Supplier<Set<String>>>> {

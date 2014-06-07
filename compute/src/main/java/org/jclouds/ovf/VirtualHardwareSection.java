@@ -32,8 +32,6 @@ import com.google.common.collect.Sets;
  * This specification supports abstract or incomplete hardware descriptions in which only the major
  * devices are described. The hypervisor is allowed to create additional virtual hardware
  * controllers and devices, as long as the required devices listed in the descriptor are realized.
- * 
- * @author Adrian Cole
  */
 public class VirtualHardwareSection extends Section<VirtualHardwareSection> {
 

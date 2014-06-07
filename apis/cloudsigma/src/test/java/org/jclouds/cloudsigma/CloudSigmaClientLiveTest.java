@@ -61,8 +61,6 @@ import com.google.inject.Guice;
 
 /**
  * Tests behavior of {@code CloudSigmaApi}
- * 
- * @author Adrian Cole
  */
 @Test(groups = "live", singleThreaded = true, testName = "CloudSigmaClientLiveTest")
 public class CloudSigmaClientLiveTest extends BaseComputeServiceContextLiveTest {

@@ -28,8 +28,6 @@ import com.google.common.collect.ImmutableSet;
 
 /**
  * Tests behavior of {@code IterableWithMarkers}.
- * 
- * @author Adrian Cole
  */
 @Test(testName = "PagedIterablesTest")
 public class PagedIterablesTest {

@@ -39,9 +39,6 @@ import org.xml.sax.SAXException;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 
-/**
- * @author Adrian Cole
- */
 public class VDCHandler extends ParseSax.HandlerWithResult<VDC> {
 
    protected final TaskHandler taskHandler;

@@ -25,8 +25,6 @@ import org.jclouds.domain.internal.MutableResourceMetadataImpl;
 
 /**
  * Used to construct new resources or modify existing ones.
- * 
- * @author Adrian Cole
  */
 public class MutableStorageMetadataImpl extends MutableResourceMetadataImpl<StorageType> implements
          MutableStorageMetadata {

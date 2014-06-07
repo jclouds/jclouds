@@ -40,10 +40,6 @@ import org.jclouds.s3.S3ApiMetadata;
 import com.google.common.base.Joiner;
 import com.google.common.base.Splitter;
 
-/**
- * @author Adrian Cole
- * 
- */
 @Singleton
 public class ParseS3ErrorFromXmlContent extends ParseAWSErrorFromXmlContent {
 

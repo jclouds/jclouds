@@ -43,10 +43,6 @@ import org.jclouds.net.domain.IpPermission;
 import org.jclouds.net.domain.IpProtocol;
 import org.testng.annotations.Test;
 
-/**
- * 
- * @author Andrew Bayer
- */
 @Test(groups = "unit", testName = "AWSEC2SecurityGroupExtensionExpectTest")
 public class AWSEC2SecurityGroupExtensionExpectTest extends BaseAWSEC2ComputeServiceExpectTest {
 

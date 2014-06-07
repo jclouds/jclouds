@@ -20,8 +20,6 @@ import com.google.common.base.Objects;
 
 /**
  * @see <a href="http://docs.amazonwebservices.com/AmazonCloudWatch/latest/APIReference/API_Dimension.html" />
- *
- * @author Jeremy Whitlock
  */
 public class Dimension {
 

@@ -44,8 +44,6 @@ import static org.testng.Assert.fail;
 /**
  * Tests possible uses of {@code CloudStackTemplateOptions} and
  * {@code CloudStackTemplateOptions.Builder.*}.
- * 
- * @author Adrian Cole
  */
 // NOTE:without testName, this will not call @Before* and fail w/NPE during
 // surefire

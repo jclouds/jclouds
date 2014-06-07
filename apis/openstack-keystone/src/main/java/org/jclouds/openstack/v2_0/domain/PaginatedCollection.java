@@ -33,7 +33,6 @@ import static org.jclouds.http.utils.Queries.queryParser;
  * @see <a
  *      href="http://docs.openstack.org/api/openstack-identity-service/2.0/content/Paginated_Collections-d1e325.html">
  *      docs</a>
- * @author Everett Toews
  */
 public class PaginatedCollection<T> extends IterableWithMarker<T> {
    private final Iterable<T> resources;

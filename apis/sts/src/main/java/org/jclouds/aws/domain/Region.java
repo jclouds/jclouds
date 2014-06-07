@@ -31,11 +31,9 @@ import com.google.common.collect.ImmutableSet;
  * 
  * Regions used for all aws commands.
  * 
- * @author Adrian Cole
  * @see <a
  *      href="http://docs.amazonwebservices.com/AmazonS3/latest/dev/index.html?LocationSelection.html"
  *      />
- * 
  */
 public class Region {
    /**

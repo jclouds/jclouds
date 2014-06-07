@@ -41,8 +41,6 @@ import org.jclouds.openstack.nova.v2_0.parse.ParseServerDiagnostics;
 
 /**
  * Tests annotation parsing of {@code ServerAsyncApi}
- *
- * @author Adrian Cole
  */
 @Test(groups = "unit", testName = "ServerAsyncApiTest")
 public class ServerApiExpectTest extends BaseNovaApiExpectTest {

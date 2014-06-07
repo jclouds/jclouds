@@ -27,10 +27,6 @@ import org.jclouds.ultradns.ws.domain.TrafficControllerPoolRecordDetail;
 import org.jclouds.ultradns.ws.domain.TrafficControllerPoolRecordDetail.Status;
 import org.testng.annotations.Test;
 
-/**
- * 
- * @author Adrian Cole
- */
 @Test(groups = "unit", testName = "TrafficControllerPoolPredicatesTest")
 public class TrafficControllerPoolPredicatesTest {
    TrafficControllerPool pool = TrafficControllerPool.builder()

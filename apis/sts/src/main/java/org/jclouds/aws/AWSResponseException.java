@@ -27,8 +27,6 @@ import org.jclouds.http.HttpResponseException;
  * @see <a href="http://docs.amazonwebservices.com/AmazonS3/2006-03-01/UsingRESTError.html" />
  * @see AWSError
  * @see org.jclouds.aws.handlers.ParseAWSErrorFromXmlContent
- * @author Adrian Cole
- * 
  */
 public class AWSResponseException extends HttpResponseException {
 

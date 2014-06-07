@@ -31,7 +31,6 @@ import com.google.common.collect.ImmutableSet;
 /**
  * TODO
  *
- * @author Adrian Cole
  * @see <a href=
  *      "http://docs.openstack.org/api/openstack-identity-service/2.0/content/Identity-Service-Concepts-e1362.html"
  *      />

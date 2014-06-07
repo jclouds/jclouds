@@ -24,8 +24,6 @@ import com.google.common.base.Objects;
  * The Protocols element specifies the protocols to which firewall rules apply.
  * 
  * @since vcloud api 0.9 emulated for 0.8
- * 
- * 
  */
 public class FirewallProtocols {
    private final boolean tcp;

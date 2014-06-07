@@ -27,7 +27,6 @@ import com.google.common.collect.FluentIterable;
 /**
  * Provide access to Host Aggregates in Nova (alias "OS-AGGREGATES")
  *
- * @author Adam Lowe
  * @see HostAggregateAsyncApi
  * @see <a href="http://nova.openstack.org/api_ext/ext_aggregates.html"/>
  * @see <a href="http://wiki.openstack.org/host-aggregates"/>

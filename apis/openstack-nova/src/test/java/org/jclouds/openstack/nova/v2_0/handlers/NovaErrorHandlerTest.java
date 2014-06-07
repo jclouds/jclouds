@@ -39,10 +39,6 @@ import org.testng.annotations.Test;
 import com.google.common.base.Ticker;
 import com.google.gson.Gson;
 
-/**
- * 
- * @author Adrian Cole, Steve Loughran
- */
 @Test(groups = "unit", testName = "NovaErrorHandlerTest", singleThreaded = true)
 public class NovaErrorHandlerTest {
    

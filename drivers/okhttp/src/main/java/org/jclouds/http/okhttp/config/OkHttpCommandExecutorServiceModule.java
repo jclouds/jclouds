@@ -28,8 +28,6 @@ import com.google.inject.Scopes;
  * Configures the {@link OkHttpCommandExecutorService}.
  * 
  * Note that this uses threads.
- * 
- * @author Ignasi Barrera
  */
 @ConfiguresHttpCommandExecutorService
 public class OkHttpCommandExecutorServiceModule extends AbstractModule {

@@ -22,7 +22,6 @@ import com.google.common.base.CaseFormat;
 
 /**
  * The MappingMode element specifies how IP address mapping is implemented by the NAT service.
- * 
  */
 public enum MappingMode {
    /**

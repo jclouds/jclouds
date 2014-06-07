@@ -23,9 +23,6 @@ import java.io.InputStream;
 
 import com.google.common.collect.Multimap;
 
-/**
- * @author Adrian Cole
- */
 public class UrlEncodedFormPayload extends BasePayload<String> {
    public UrlEncodedFormPayload(Multimap<String, String> formParams) {
       super(encodeQueryLine(formParams));

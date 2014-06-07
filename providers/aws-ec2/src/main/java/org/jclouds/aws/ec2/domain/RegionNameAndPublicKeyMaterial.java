@@ -18,10 +18,6 @@ package org.jclouds.aws.ec2.domain;
 
 import org.jclouds.ec2.compute.domain.RegionAndName;
 
-/**
- * 
- * @author Adrian Cole
- */
 public class RegionNameAndPublicKeyMaterial extends RegionAndName {
    private final String publicKeyMaterial;
 

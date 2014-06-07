@@ -34,9 +34,6 @@ import org.jclouds.rest.InvocationContext;
 import com.google.common.base.Function;
 import com.google.common.collect.Iterables;
 
-/**
- * @author Adrian Cole
- */
 public class ParseLoadBalancer implements Function<HttpResponse, LoadBalancer>, InvocationContext<ParseLoadBalancer> {
 
    private final ParseJson<Map<String, LB>> json;

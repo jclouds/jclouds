@@ -26,7 +26,6 @@ import com.google.common.base.Objects.ToStringHelper;
 /**
  * Detailed information on usage
  *
- * @author Adam Lowe
  * @see ServerStatus
  */
 public class ResourceStatus {

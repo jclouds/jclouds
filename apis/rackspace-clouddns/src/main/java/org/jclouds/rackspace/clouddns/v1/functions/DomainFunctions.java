@@ -26,8 +26,6 @@ import com.google.common.collect.Maps;
 
 /**
  * Functions for working with Domains.
- * 
- * @author Everett Toews
  */
 public class DomainFunctions {
 

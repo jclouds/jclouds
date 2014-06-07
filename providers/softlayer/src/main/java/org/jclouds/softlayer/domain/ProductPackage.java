@@ -33,7 +33,6 @@ import com.google.common.collect.ImmutableSet;
  * regarding what is in them, where they are currently sold, availability, and
  * pricing.
  *
- * @author Adrian Cole
  * @see <a href=
 "http://sldn.softlayer.com/reference/datatypes/SoftLayer_Product_Package"
 />

@@ -16,10 +16,6 @@
  */
 package org.jclouds.openstack.swift.reference;
 
-/**
- * @author Adrian Cole
- * 
- */
 public interface SwiftHeaders {
 
    public static final String ACCOUNT_TEMPORARY_URL_KEY = "X-Account-Meta-Temp-Url-Key";

@@ -25,10 +25,6 @@ import org.jclouds.cloudsigma.domain.VNC;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 
-/**
- * 
- * @author Adrian Cole
- */
 public class Servers {
    /**
     * Helper to create a small persistent server

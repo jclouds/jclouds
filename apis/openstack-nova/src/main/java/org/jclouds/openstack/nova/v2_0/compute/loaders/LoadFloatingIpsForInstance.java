@@ -33,8 +33,6 @@ import com.google.common.collect.ImmutableSet;
  * Each zone may or may not have the floating ip function present. In order to safely proceed, we
  * must allow the user to determine if a zone has floating ip services before attempting to use
  * them.
- * 
- * @author Adam Lowe
  */
 @Singleton
 public class LoadFloatingIpsForInstance extends CacheLoader<ZoneAndId, Iterable<? extends FloatingIP>> {

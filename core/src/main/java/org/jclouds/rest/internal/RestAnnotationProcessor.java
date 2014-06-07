@@ -126,10 +126,6 @@ import com.google.inject.Injector;
 import com.google.inject.Key;
 import com.google.inject.TypeLiteral;
 
-/**
- * 
- * @author Adrian Cole
- */
 public class RestAnnotationProcessor implements Function<Invocation, HttpRequest> {
 
    @Resource

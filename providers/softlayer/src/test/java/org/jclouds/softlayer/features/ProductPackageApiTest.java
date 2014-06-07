@@ -29,8 +29,6 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.reflect.Invokable;
 /**
  * Tests annotation parsing of {@code ProductPackageApi}
- * 
- * @author Adrian Cole
  */
 @Test(groups = "unit")
 public class ProductPackageApiTest extends BaseSoftLayerApiTest<ProductPackageApi> {

@@ -36,9 +36,6 @@ import org.jclouds.rackspace.cloudloadbalancers.v1.internal.BaseCloudLoadBalance
 import org.jclouds.util.Strings2;
 import org.testng.annotations.Test;
 
-/**
- * @author Everett Toews 
- */
 @Test(groups = "unit")
 public class SSLTerminationApiExpectTest extends BaseCloudLoadBalancerApiExpectTest<CloudLoadBalancersApi> {
 

@@ -33,7 +33,6 @@ import org.jclouds.rest.annotations.SelectJson;
  * Provides synchronous access to CloudStack Limit features available to Domain
  * Admin users.
  * 
- * @author Adrian Cole
  * @see <a href=
  *      "http://download.cloud.com/releases/2.2.0/api_2.2.12/TOC_Domain_Admin.html"
  *      />

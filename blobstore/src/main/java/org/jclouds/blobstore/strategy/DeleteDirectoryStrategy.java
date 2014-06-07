@@ -22,8 +22,6 @@ import com.google.inject.ImplementedBy;
 
 /**
  * Deletes a directory.
- * 
- * @author Adrian Cole
  */
 @ImplementedBy(MarkersDeleteDirectoryStrategy.class)
 public interface DeleteDirectoryStrategy {

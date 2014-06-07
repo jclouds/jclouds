@@ -32,9 +32,6 @@ import com.google.common.collect.Maps;
 import com.google.common.collect.Multimap;
 import com.google.common.collect.Multimaps;
 
-/**
- * @author Adrian Cole
- */
 public class BindMapToIndexedFormParams implements Binder {
 
    private final String keyPattern;

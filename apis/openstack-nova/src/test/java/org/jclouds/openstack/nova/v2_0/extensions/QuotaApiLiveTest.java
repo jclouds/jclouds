@@ -29,8 +29,6 @@ import com.google.common.collect.Iterables;
 
 /**
  * Tests behavior of QuotaApi
- *
- * @author Adam Lowe
  */
 @Test(groups = "live", testName = "QuotaApiLiveTest", singleThreaded = true)
 public class QuotaApiLiveTest extends BaseNovaApiLiveTest {

@@ -20,8 +20,6 @@ package org.jclouds.azure.storage.reference;
  * Additional headers specified by Azure Storage REST API.
  * 
  * @see <a href="http://msdn.microsoft.com/en-us/library/dd179357.aspx" />
- * @author Adrian Cole
- * 
  */
 public interface AzureStorageHeaders {
 

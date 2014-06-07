@@ -35,9 +35,6 @@ import com.google.gson.stream.JsonToken;
 import com.google.gson.stream.JsonWriter;
 import com.google.inject.AbstractModule;
 
-/**
- * @author Adam Lowe
- */
 public class KeystoneParserModule extends AbstractModule {
 
    @Override

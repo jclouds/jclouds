@@ -42,10 +42,6 @@ import com.google.common.eventbus.EventBus;
 import com.google.inject.assistedinject.Assisted;
 import com.google.inject.assistedinject.AssistedInject;
 
-/**
- * 
- * @author Adrian Cole
- */
 public class RunScriptOnNodeUsingSsh implements RunScriptOnNode {
    public static final String MARKER = "RUN_SCRIPT_AS_ROOT_SSH";
 

@@ -19,10 +19,6 @@ package org.jclouds.skalicloud.compute;
 import org.jclouds.elasticstack.compute.ElasticStackComputeServiceLiveTest;
 import org.testng.annotations.Test;
 
-/**
- * 
- * @author Adrian Cole
- */
 @Test(groups = "live", sequential = true, testName = "SkaliCloudMalaysiaComputeServiceLiveTest")
 public class SkaliCloudMalaysiaComputeServiceLiveTest extends ElasticStackComputeServiceLiveTest {
 

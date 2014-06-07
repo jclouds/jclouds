@@ -54,10 +54,6 @@ import com.google.common.reflect.TypeToken;
 import com.google.inject.Provides;
 import com.google.inject.Scopes;
 
-/**
- *
- * @author Adrian Cole
- */
 @ConfiguresRestClient
 public class SwiftRestClientModule<S extends CommonSwiftClient, A extends CommonSwiftAsyncClient> extends
       RestClientModule<S, A> {

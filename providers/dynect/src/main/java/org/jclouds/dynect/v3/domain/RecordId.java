@@ -25,9 +25,6 @@ import java.beans.ConstructorProperties;
 import com.google.common.base.Objects;
 import com.google.common.base.Objects.ToStringHelper;
 
-/**
- * @author Adrian Cole
- */
 public class RecordId extends Node {
 
    private final long id;

@@ -22,10 +22,6 @@ import javax.inject.Singleton;
 import org.jclouds.http.HttpRequest;
 import org.jclouds.rest.Binder;
 
-/**
- * 
- * @author Adrian Cole
- */
 @Singleton
 public class BindNoBucketLoggingToXmlPayload implements Binder {
    private final BindAsHostPrefixIfConfigured bindAsHostPrefixIfConfigured;

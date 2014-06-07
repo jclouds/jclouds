@@ -27,9 +27,6 @@ import com.google.common.base.Charsets;
 import com.google.common.collect.ImmutableList;
 import com.google.common.io.Resources;
 
-/**
- * @author Adrian Cole
- */
 @Test(groups = "unit")
 public class AppendFileTest {
    Statement statement = appendFile("{root}etc{fs}chef{fs}client.rb", ImmutableList.of("log_level :info",

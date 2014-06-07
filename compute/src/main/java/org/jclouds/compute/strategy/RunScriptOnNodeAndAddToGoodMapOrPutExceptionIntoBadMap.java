@@ -35,10 +35,6 @@ import org.jclouds.logging.Logger;
 import com.google.common.base.Objects;
 import com.google.inject.assistedinject.AssistedInject;
 
-/**
- * 
- * @author Adrian Cole
- */
 public class RunScriptOnNodeAndAddToGoodMapOrPutExceptionIntoBadMap implements Callable<ExecResponse> {
 
    @Resource

@@ -30,10 +30,6 @@ import com.google.inject.ImplementedBy;
  * 
  * <h2>Note</h2> Please issue {@link #close()} when you are finished with this context in order to
  * release resources.
- * 
- * 
- * @author Adrian Cole
- * 
  */
 @ImplementedBy(ContextImpl.class)
 public interface Context extends Location, Closeable {

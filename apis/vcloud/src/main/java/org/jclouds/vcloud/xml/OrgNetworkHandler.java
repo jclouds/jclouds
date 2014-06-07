@@ -56,9 +56,6 @@ import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 
-/**
- * @author Adrian Cole
- */
 public class OrgNetworkHandler extends ParseSax.HandlerWithResult<OrgNetwork> {
 
    protected final TaskHandler taskHandler;

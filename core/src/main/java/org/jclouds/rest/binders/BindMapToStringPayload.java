@@ -32,10 +32,6 @@ import org.jclouds.rest.internal.GeneratedHttpRequest;
 
 import com.google.common.reflect.Invokable;
 
-/**
- * 
- * @author Adrian Cole
- */
 @Singleton
 public class BindMapToStringPayload implements MapBinder {
 

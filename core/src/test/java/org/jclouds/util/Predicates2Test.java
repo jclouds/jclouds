@@ -36,10 +36,6 @@ import com.google.common.base.Stopwatch;
 import com.google.common.base.Supplier;
 import com.google.common.collect.Lists;
 
-/**
- * 
- * @author Adrian Cole
- */
 @Test(groups = "unit", singleThreaded = true)
 public class Predicates2Test {
    // Grace must be reasonably big; Thread.sleep can take a bit longer to wake up sometimes...

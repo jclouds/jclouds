@@ -20,8 +20,6 @@ import org.jclouds.scriptbuilder.domain.Statement;
 
 /**
  * Statements used in sudo control
- * 
- * @author Adrian Cole
  */
 public class SudoStatements {
 

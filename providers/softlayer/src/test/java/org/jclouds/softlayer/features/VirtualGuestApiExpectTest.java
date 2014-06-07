@@ -22,10 +22,6 @@ import org.jclouds.rest.internal.BaseRestClientExpectTest;
 import org.jclouds.softlayer.SoftLayerApi;
 import org.testng.annotations.Test;
 
-/**
- * 
- * @author Adrian Cole
- */
 @Test(groups = "unit", testName = "SoftLayerClientExpectTest")
 public class VirtualGuestApiExpectTest extends BaseRestClientExpectTest<SoftLayerApi> {
 

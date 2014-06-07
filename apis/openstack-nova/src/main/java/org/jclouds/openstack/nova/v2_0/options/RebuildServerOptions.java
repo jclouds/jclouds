@@ -30,10 +30,6 @@ import org.jclouds.rest.binders.BindToJsonPayload;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Maps;
 
-/**
- * @author Adrian Cole
- * @author Inbar Stolberg
- */
 public class RebuildServerOptions implements MapBinder {
    @Inject
    private BindToJsonPayload jsonBinder;

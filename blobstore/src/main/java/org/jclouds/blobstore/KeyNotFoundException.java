@@ -20,8 +20,6 @@ import org.jclouds.rest.ResourceNotFoundException;
 
 /**
  * Thrown when a blob cannot be located in the container.
- * 
- * @author Adrian Cole
  */
 public class KeyNotFoundException extends ResourceNotFoundException {
 

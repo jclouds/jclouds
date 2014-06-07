@@ -28,9 +28,6 @@ import org.jclouds.io.Payload;
 import org.jclouds.io.Payloads;
 import org.jclouds.rest.Binder;
 
-/**
- * @author Andrei Savu
- */
 public class BindIterableAsPayloadToDeleteRequest implements Binder {
 
    @SuppressWarnings("unchecked")

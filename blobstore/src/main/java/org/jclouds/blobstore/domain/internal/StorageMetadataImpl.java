@@ -32,8 +32,6 @@ import org.jclouds.javax.annotation.Nullable;
 
 /**
  * Idpayload of the object
- * 
- * @author Adrian Cole
  */
 public class StorageMetadataImpl extends ResourceMetadataImpl<StorageType> implements StorageMetadata {
 

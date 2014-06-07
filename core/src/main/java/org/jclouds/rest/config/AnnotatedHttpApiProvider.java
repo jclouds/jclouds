@@ -27,10 +27,6 @@ import org.jclouds.rest.internal.DelegatesToInvocationFunction;
 import com.google.common.base.Function;
 import com.google.inject.Provider;
 
-/**
- * 
- * @author Adrian Cole
- */
 @Singleton
 public class AnnotatedHttpApiProvider<A> implements Provider<A> {
    private final Class<A> annotatedApiType;

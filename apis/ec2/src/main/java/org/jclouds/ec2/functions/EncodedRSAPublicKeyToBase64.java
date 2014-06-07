@@ -33,7 +33,6 @@ import com.google.common.base.Predicates;
  * @see <a href=
  *      "http://docs.amazonwebservices.com/AWSEC2/latest/APIReference/ApiReference-query-ImportKeyPair.html"
  *      />
- * @author Adrian Cole
  */
 @Singleton
 public class EncodedRSAPublicKeyToBase64 implements Function<Object, String> {

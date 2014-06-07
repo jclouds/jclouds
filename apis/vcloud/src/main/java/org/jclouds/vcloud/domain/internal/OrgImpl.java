@@ -33,9 +33,6 @@ import com.google.common.collect.Maps;
 
 /**
  * Locations of resources in vCloud
- * 
- * @author Adrian Cole
- * 
  */
 public class OrgImpl extends ReferenceTypeImpl implements Org {
    private final String fullName;

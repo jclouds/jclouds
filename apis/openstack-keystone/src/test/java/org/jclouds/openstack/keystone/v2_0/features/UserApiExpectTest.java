@@ -40,8 +40,6 @@ import com.google.common.collect.ImmutableSet;
 
 /**
  * Tests parsing and Guice wiring of UserApi
- *
- * @author Adam Lowe
  */
 @Test(singleThreaded = true, testName = "UserApiExpectTest")
 public class UserApiExpectTest extends BaseKeystoneRestApiExpectTest<KeystoneApi> {

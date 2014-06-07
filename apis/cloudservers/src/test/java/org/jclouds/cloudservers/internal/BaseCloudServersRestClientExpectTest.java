@@ -34,8 +34,6 @@ import com.google.inject.Module;
 
 /**
  * Base class for writing CloudServers Rest Client Expect tests
- * 
- * @author Adrian Cole
  */
 public class BaseCloudServersRestClientExpectTest extends BaseKeystoneRestClientExpectTest<CloudServersClient> {
 

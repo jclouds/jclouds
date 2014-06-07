@@ -19,10 +19,6 @@ package org.jclouds.elastichosts;
 import org.jclouds.elasticstack.ElasticStackApiLiveTest;
 import org.testng.annotations.Test;
 
-/**
- * 
- * @author Adrian Cole
- */
 @Test(groups = "live", singleThreaded = true, testName = "ElasticHostsPeer1SanAntonioApiLiveTest")
 public class ElasticHostsPeer1SanAntonioApiLiveTest extends ElasticStackApiLiveTest {
    public ElasticHostsPeer1SanAntonioApiLiveTest() {

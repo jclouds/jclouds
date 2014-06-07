@@ -54,9 +54,6 @@ import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Iterables;
 import com.google.inject.Inject;
 
-/**
- * @author Adrian Cole
- */
 @Singleton
 public class ParseTypedAsyncJob implements Function<AsyncJob<Map<String, JsonBall>>, AsyncJob<?>> {
    @Resource

@@ -21,8 +21,6 @@ import org.testng.annotations.Test;
 
 /**
  * The AWSEC2ProviderTest tests the org.jclouds.providers.AWSEC2Provider class.
- * 
- * @author Jeremy Whitlock <jwhitlock@apache.org>
  */
 @Test(groups = "unit", testName = "AWSEC2ProviderTest")
 public class AWSEC2ProviderTest extends BaseProviderMetadataTest {

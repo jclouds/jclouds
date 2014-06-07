@@ -26,8 +26,6 @@ import com.google.inject.ImplementedBy;
 
 /**
  * Used to construct new resources or modify existing ones.
- * 
- * @author Adrian Cole
  */
 @ImplementedBy(MutableStorageMetadataImpl.class)
 public interface MutableStorageMetadata extends MutableResourceMetadata<StorageType>,

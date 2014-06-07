@@ -26,7 +26,6 @@ import com.google.common.base.Objects.ToStringHelper;
 /**
  * Describes the schedule of a snapshot policy.
  *
- * @author Richard Downer
  * @see org.jclouds.cloudstack.util.SnapshotPolicySchedules
  */
 public class SnapshotPolicySchedule {

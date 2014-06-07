@@ -25,9 +25,6 @@ import org.jclouds.ultradns.ws.domain.IdAndName;
 import org.jclouds.ultradns.ws.xml.AccountHandler;
 import org.testng.annotations.Test;
 
-/**
- * @author Adrian Cole
- */
 @Test(testName = "GetAccountsListOfUserResponseTest")
 public class GetAccountsListOfUserResponseTest extends BaseHandlerTest {
 

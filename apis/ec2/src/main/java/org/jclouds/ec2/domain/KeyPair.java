@@ -26,7 +26,6 @@ import org.jclouds.ssh.SshKeys;
  * @see <a href=
  *      "http://docs.amazonwebservices.com/AWSEC2/latest/APIReference/ApiReference-query-CreateKeyPair.html"
  *      />
- * @author Adrian Cole
  */
 public class KeyPair implements Comparable<KeyPair> {
    @Override

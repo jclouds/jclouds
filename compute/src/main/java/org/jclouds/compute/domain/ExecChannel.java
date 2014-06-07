@@ -29,8 +29,6 @@ import com.google.common.base.Supplier;
 
 /**
  * A current connection to an exec'd command.  Please ensure you call {@link ExecChannel#close}
- * 
- * @author Adrian Cole
  */
 public class ExecChannel implements Closeable {
 

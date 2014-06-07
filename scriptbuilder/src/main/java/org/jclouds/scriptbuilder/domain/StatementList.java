@@ -26,8 +26,6 @@ import com.google.common.collect.ImmutableList.Builder;
 
 /**
  * Statements used in a shell script
- * 
- * @author Adrian Cole
  */
 public class StatementList extends ForwardingList<Statement> implements Statement, AcceptsStatementVisitor {
 

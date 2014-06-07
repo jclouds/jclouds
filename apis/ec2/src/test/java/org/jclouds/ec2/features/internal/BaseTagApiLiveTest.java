@@ -42,8 +42,6 @@ import com.google.common.collect.ImmutableSet;
 
 /**
  * tests ability to tag, filter, and delete tags from a resource.
- * 
- * @author Adrian Cole
  */
 @Test(groups = "live")
 public abstract class BaseTagApiLiveTest extends BaseEC2ApiLiveTest {

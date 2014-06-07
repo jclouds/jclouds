@@ -37,8 +37,6 @@ import com.google.inject.Inject;
 /**
  * A function for transforming a CloudStack-specific SecurityGroup into a generic
  * SecurityGroup object.
- * 
- * @author Andrew Bayer
  */
 @Singleton
 public class CloudStackSecurityGroupToSecurityGroup implements Function<org.jclouds.cloudstack.domain.SecurityGroup, SecurityGroup> {

@@ -26,8 +26,6 @@ import com.google.common.base.Function;
 
 /**
  * Simply returns the InputStream of the response
- * 
- * @author Adrian Cole
  */
 @Singleton
 public class ReturnInputStream implements Function<HttpResponse, InputStream> {

@@ -53,10 +53,6 @@ import com.google.common.cache.LoadingCache;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Sets;
 
-/**
- * 
- * @author Adrian Cole
- */
 @Test(groups = "unit", singleThreaded = true)
 public class EC2TemplateBuilderImplTest extends TemplateBuilderImplTest {
 

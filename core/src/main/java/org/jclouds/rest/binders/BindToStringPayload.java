@@ -23,8 +23,6 @@ import org.jclouds.rest.Binder;
 
 /**
  * Adds an payload to a request.
- * 
- * @author Adrian Cole
  */
 @Singleton
 public class BindToStringPayload implements Binder {

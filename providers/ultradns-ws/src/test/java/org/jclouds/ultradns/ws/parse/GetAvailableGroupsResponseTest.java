@@ -27,9 +27,6 @@ import org.testng.annotations.Test;
 import com.google.common.collect.FluentIterable;
 import com.google.common.collect.ImmutableSet;
 
-/**
- * @author Adrian Cole
- */
 @Test(testName = "GetAvailableGroupsResponseTest")
 public class GetAvailableGroupsResponseTest extends BaseHandlerTest {
 

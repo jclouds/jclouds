@@ -18,8 +18,6 @@ package org.jclouds.atmos.domain;
 
 /**
  * Metadata of a Atmos Online object
- * 
- * @author Adrian Cole
  */
 public class DirectoryEntry implements Comparable<DirectoryEntry> {
    private final String objectid;

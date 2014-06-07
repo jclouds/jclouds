@@ -19,10 +19,6 @@ package org.jclouds.serverlove.compute;
 import org.jclouds.elasticstack.compute.ElasticStackComputeServiceLiveTest;
 import org.testng.annotations.Test;
 
-/**
- * 
- * @author Adrian Cole
- */
 @Test(groups = "live", sequential = true, testName = "ServerloveManchesterComputeServiceLiveTest")
 public class ServerloveManchesterComputeServiceLiveTest extends ElasticStackComputeServiceLiveTest {
 

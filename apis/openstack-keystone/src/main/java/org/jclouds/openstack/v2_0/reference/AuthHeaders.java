@@ -16,10 +16,6 @@
  */
 package org.jclouds.openstack.v2_0.reference;
 
-/**
- * @author Adrian Cole
- * 
- */
 public interface AuthHeaders {
 
    public static final String AUTH_USER = "X-Auth-User";

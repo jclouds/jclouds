@@ -25,10 +25,6 @@ import org.jclouds.compute.reference.ComputeServiceConstants.InitStatusPropertie
 import org.jclouds.compute.reference.ComputeServiceConstants.PollPeriod;
 import org.testng.annotations.Test;
 
-/**
- * 
- * @author Adrian Cole
- */
 @Test(groups = "unit", testName = "ComputeServicePropertiesTest")
 public class ComputeServicePropertiesTest {
    public void testDefaultInitStatusProperties() {

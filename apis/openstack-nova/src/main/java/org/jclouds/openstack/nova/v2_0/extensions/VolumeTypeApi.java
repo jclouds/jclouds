@@ -28,7 +28,6 @@ import com.google.common.collect.FluentIterable;
 /**
  * Provides synchronous access to Volume Type features
  *
- * @author Adam Lowe
  * @see VolumeApi
  * @see VolumeTypeAsyncApi
  * @see <a href="http://nova.openstack.org/api/nova.api.openstack.compute.contrib.volumetypes.html"/>

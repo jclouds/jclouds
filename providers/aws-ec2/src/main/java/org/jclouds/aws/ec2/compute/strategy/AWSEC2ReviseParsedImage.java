@@ -34,9 +34,6 @@ import org.jclouds.compute.util.ComputeServiceUtils;
 import org.jclouds.ec2.compute.strategy.ReviseParsedImage;
 import org.jclouds.logging.Logger;
 
-/**
- * @author Adrian Cole
- */
 @Singleton
 public class AWSEC2ReviseParsedImage implements ReviseParsedImage {
 

@@ -27,8 +27,6 @@ import com.google.common.base.Predicate;
 
 /**
  * Predicates handy when working with Extensions
- * 
- * @author Adrian Cole
  */
 
 public class ExtensionPredicates {

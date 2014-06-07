@@ -46,10 +46,6 @@ import com.squareup.okhttp.mockwebserver.MockWebServer;
 import com.squareup.okhttp.mockwebserver.QueueDispatcher;
 import com.squareup.okhttp.mockwebserver.RecordedRequest;
 
-/**
- * @author Jeremy Daggett
- * @author Zack Shoylev
- */
 public class BaseOpenStackMockTest<A extends Closeable> {
 
    /**

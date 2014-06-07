@@ -25,8 +25,6 @@ import org.jclouds.rest.AnonymousRestApiMetadata;
 
 /**
  * Useful in creating arbitrary clients.
- * 
- * @author Adrian Cole
  */
 public class AnonymousProviderMetadata extends BaseProviderMetadata {
 

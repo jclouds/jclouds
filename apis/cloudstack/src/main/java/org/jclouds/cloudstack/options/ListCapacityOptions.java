@@ -23,8 +23,6 @@ import com.google.common.collect.ImmutableSet;
 
 /**
  * Options to the listCapacity command.
- *
- * @author Richard Downer
  */
 public class ListCapacityOptions extends BaseHttpRequestOptions {
 

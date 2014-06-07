@@ -32,10 +32,6 @@ import org.jclouds.location.Region;
 import com.google.common.base.Function;
 import com.google.common.base.Supplier;
 
-/**
- * 
- * @author Adrian Cole
- */
 @Singleton
 public class RegionToEndpoint implements Function<Object, URI> {
 

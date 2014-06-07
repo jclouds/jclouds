@@ -31,10 +31,6 @@ import org.testng.annotations.Test;
 import com.google.common.collect.FluentIterable;
 import com.google.common.collect.ImmutableSet;
 
-/**
- * 
- * @author Adrian Cole
- */
 @Test(groups = "live", singleThreaded = true, testName = "QueueApiLiveTest")
 public class QueueApiLiveTest extends BaseSQSApiLiveTest {
 

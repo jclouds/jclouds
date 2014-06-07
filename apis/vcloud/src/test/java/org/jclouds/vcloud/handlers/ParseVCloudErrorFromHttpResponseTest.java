@@ -26,10 +26,6 @@ import org.jclouds.rest.ResourceNotFoundException;
 import org.jclouds.vcloud.VCloudMediaType;
 import org.testng.annotations.Test;
 
-/**
- * 
- * @author Adrian Cole
- */
 @Test(groups = { "unit" })
 public class ParseVCloudErrorFromHttpResponseTest extends BaseHttpErrorHandlerTest {
 

@@ -23,8 +23,6 @@ import org.jclouds.http.options.BaseHttpRequestOptions;
 
 /**
  * Options used to control paginated results (aka list commands).
- * 
- * @author Adrian Cole
  */
 public class ListOptions extends BaseHttpRequestOptions {
    public static final ListOptions NONE = new ListOptions();

@@ -33,7 +33,6 @@ import com.google.common.collect.Ordering;
  * @see <a href=
  *      "http://docs.amazonwebservices.com/AWSEC2/latest/APIReference/ApiReference-ItemType-ReservationInfoType.html"
  *      />
- * @author Adrian Cole
  */
 public class Reservation<T extends RunningInstance> extends ForwardingSet<T> implements Comparable<Reservation<T>> {
 

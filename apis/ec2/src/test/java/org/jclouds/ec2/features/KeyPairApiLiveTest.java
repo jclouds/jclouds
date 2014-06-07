@@ -35,8 +35,6 @@ import com.google.common.collect.Sets;
 
 /**
  * Tests behavior of {@code KeyPairApi}
- * 
- * @author Adrian Cole
  */
 @Test(groups = "live", singleThreaded = true, testName = "KeyPairApiLiveTest")
 public class KeyPairApiLiveTest extends BaseComputeServiceContextLiveTest {

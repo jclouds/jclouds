@@ -29,9 +29,6 @@ import org.jclouds.openstack.nova.v2_0.domain.Image;
 
 import com.google.common.base.Function;
 
-/**
- * @author Adrian Cole
- */
 @Singleton
 public class NovaReviseParsedImage implements ReviseParsedImage {
 

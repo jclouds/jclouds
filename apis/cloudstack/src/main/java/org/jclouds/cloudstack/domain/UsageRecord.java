@@ -32,8 +32,6 @@ import com.google.common.collect.Maps;
 
 /**
  * Represents a usage record from CloudStack
- *
- * @author Richard Downer
  */
 public class UsageRecord {
 

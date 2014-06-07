@@ -72,10 +72,6 @@ import com.google.inject.Key;
 import com.google.inject.Provides;
 import com.google.inject.TypeLiteral;
 
-/**
- * 
- * @author Adrian Cole
- */
 public class AWSEC2ComputeServiceContextModule extends BaseComputeServiceContextModule {
    @Override
    protected void configure() {

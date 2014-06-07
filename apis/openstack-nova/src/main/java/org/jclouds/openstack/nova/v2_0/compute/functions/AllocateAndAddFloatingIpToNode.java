@@ -47,8 +47,6 @@ import com.google.common.collect.Lists;
 
 /**
  * A function for adding and allocating an ip to a node
- * 
- * @author Adrian Cole
  */
 public class AllocateAndAddFloatingIpToNode implements
          Function<AtomicReference<NodeMetadata>, AtomicReference<NodeMetadata>> {

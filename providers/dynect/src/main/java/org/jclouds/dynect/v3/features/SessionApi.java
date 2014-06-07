@@ -38,7 +38,6 @@ import org.jclouds.rest.binders.BindToJsonPayload;
  * @see <a
  *      href="https://manage.dynect.net/help/docs/api2/rest/resources/Session.html"
  *      />
- * @author Adrian Cole
  */
 @Headers(keys = "API-Version", values = "{jclouds.api-version}")
 @Path("/Session")

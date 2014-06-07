@@ -54,9 +54,6 @@ import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
 import com.google.common.collect.ImmutableList;
 
-/**
- * @author Adrian Cole
- */
 @Test(groups = "live", testName = "ResourceResourceRecordSetApiLiveTest")
 public class ResourceRecordSetApiLiveTest extends BaseRoute53ApiLiveTest {
 

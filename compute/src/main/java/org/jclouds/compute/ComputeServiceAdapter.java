@@ -30,9 +30,6 @@ import org.jclouds.javax.annotation.Nullable;
  * 
  * While implementations may cache results of calls to this interface, it is important to not cache
  * within this. Otherwise, status updates will not be visible immediately.
- * 
- * @author Adrian Cole
- * 
  */
 public interface ComputeServiceAdapter<N, H, I, L> {
 

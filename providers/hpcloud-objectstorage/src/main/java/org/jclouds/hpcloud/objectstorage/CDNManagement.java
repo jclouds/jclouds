@@ -27,8 +27,6 @@ import javax.inject.Qualifier;
  * Represents a component related to HP Cloud Services Content Delivery Network.
  * 
  * @see <a href="https://manage.hpcloud.com/pages/build/docs/object-storage/api">HP Cloud Object Storage API</a>
- * @author Jeremy Daggett
- * 
  */
 @Retention(value = RetentionPolicy.RUNTIME)
 @Target(value = { ElementType.TYPE, ElementType.FIELD, ElementType.PARAMETER, ElementType.METHOD })

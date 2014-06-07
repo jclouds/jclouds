@@ -27,9 +27,6 @@ import org.jclouds.rest.Binder;
 import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.ImmutableMultimap.Builder;
 
-/**
- * @author Adrian Cole
- */
 public class BindIpPermissionsToIndexedFormParams implements Binder {
 
    @SuppressWarnings("unchecked")

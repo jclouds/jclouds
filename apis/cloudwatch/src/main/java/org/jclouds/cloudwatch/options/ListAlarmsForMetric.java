@@ -31,8 +31,6 @@ import org.jclouds.http.options.BaseHttpRequestOptions;
  * Options used to describe alarms for metric.
  *
  * @see <a href="http://docs.aws.amazon.com/AmazonCloudWatch/latest/APIReference/API_DescribeAlarmsForMetric.html" />
- *
- * @author Jeremy Whitlock
  */
 @Beta
 public class ListAlarmsForMetric extends BaseHttpRequestOptions {

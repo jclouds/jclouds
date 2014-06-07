@@ -32,8 +32,6 @@ import com.google.inject.ImplementedBy;
 
 /**
  * Allows you to access cryptographic objects and factories without adding a provider to the JCE runtime.
- * 
- * @author Adrian Cole
  */
 @ImplementedBy(JCECrypto.class)
 public interface Crypto {

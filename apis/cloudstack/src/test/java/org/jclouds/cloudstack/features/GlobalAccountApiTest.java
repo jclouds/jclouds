@@ -33,8 +33,6 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.reflect.Invokable;
 /**
  * Tests behavior of {@code GlobalAccountApi}
- *
- * @author Adrian
  */
 @Test(groups = "unit", testName = "GlobalAccountApiTest")
 public class GlobalAccountApiTest extends BaseCloudStackApiTest<GlobalAccountApi> {

@@ -54,8 +54,6 @@ import com.google.common.collect.Multimap;
 /**
  * Provides access to EC2 Spot Instances via their REST API.
  * <p/>
- * 
- * @author Adrian Cole
  */
 @RequestFilters(FormSigner.class)
 @VirtualHost

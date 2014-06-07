@@ -24,9 +24,6 @@ import org.jclouds.ultradns.ws.domain.Task;
 import org.jclouds.ultradns.ws.internal.BaseUltraDNSWSApiLiveTest;
 import org.testng.annotations.Test;
 
-/**
- * @author Adrian Cole
- */
 @Test(groups = "live", testName = "TaskApiLiveTest")
 public class TaskApiLiveTest extends BaseUltraDNSWSApiLiveTest {
 

@@ -20,9 +20,6 @@ package org.jclouds.atmos.domain;
  * When an Atmos Storage request is in error, the client receives an error response.
  * 
  * Provides access to EMC Atmos Online Storage resources via their REST API.
- * 
- * @author Adrian Cole
- * 
  */
 public class AtmosError {
    private final int code;

@@ -22,10 +22,6 @@ import com.google.common.base.Function;
 import com.google.common.base.Objects;
 import com.google.common.base.Objects.ToStringHelper;
 
-/**
- * 
- * @author Adrian Cole
- */
 public class RegionAndName {
 
    protected final String region;

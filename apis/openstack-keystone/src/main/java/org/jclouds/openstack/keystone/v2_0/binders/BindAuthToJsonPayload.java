@@ -37,11 +37,6 @@ import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableMap.Builder;
 import com.google.common.collect.Iterables;
 
-/**
- * 
- * @author Adrian Cole
- * 
- */
 @Singleton
 public class BindAuthToJsonPayload extends BindToJsonPayload implements MapBinder {
    @Inject

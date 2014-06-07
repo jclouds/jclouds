@@ -31,7 +31,6 @@ import com.google.common.collect.ImmutableSet;
  * The SoftLayer_Product_Item data type contains general information relating to
  * a single SoftLayer product.
  *
- * @author Adrian Cole
  * @see <a href=
 "http://sldn.softlayer.com/reference/datatypes/SoftLayer_Product_Item"
 />

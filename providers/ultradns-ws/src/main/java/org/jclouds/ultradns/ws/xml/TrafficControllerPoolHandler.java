@@ -26,10 +26,6 @@ import org.jclouds.ultradns.ws.domain.TrafficControllerPool;
 import org.jclouds.ultradns.ws.domain.TrafficControllerPool.Builder;
 import org.xml.sax.Attributes;
 
-/**
- * 
- * @author Adrian Cole
- */
 public class TrafficControllerPoolHandler extends ParseSax.HandlerForGeneratedRequestWithResult<TrafficControllerPool> {
 
    private Builder pool = TrafficControllerPool.builder();

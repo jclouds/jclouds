@@ -22,7 +22,6 @@ import org.jclouds.http.functions.ParseSax;
  * 
  * @see <a href="http://docs.amazonwebservices.com/AWSEC2/latest/APIReference/index.html?ApiReference-query-DescribeInstanceAttribute.html"
  *      />
- * @author Adrian Cole
  */
 public class StringValueHandler extends
          ParseSax.HandlerWithResult<String> {

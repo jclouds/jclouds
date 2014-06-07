@@ -48,8 +48,6 @@ import com.google.inject.TypeLiteral;
 
 /**
  * Tests behavior of {@code DescribeImagesResponseHandler}
- * 
- * @author Adrian Cole
  */
 @Test(groups = "unit", testName = "DescribeImagesResponseHandlerTest")
 public class DescribeImagesResponseHandlerTest {

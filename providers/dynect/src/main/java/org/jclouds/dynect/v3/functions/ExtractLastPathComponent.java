@@ -27,9 +27,6 @@ import com.google.common.collect.FluentIterable;
 /**
  * Zones, Geo Services, and Geo region groups come back encoded in REST paths, such as
  * {@code /REST/Geo/srv-global/}
- * 
- * @author Adrian Cole
- * 
  */
 public final class ExtractLastPathComponent implements Function<FluentIterable<String>, FluentIterable<String>> {
    public FluentIterable<String> apply(FluentIterable<String> in) {

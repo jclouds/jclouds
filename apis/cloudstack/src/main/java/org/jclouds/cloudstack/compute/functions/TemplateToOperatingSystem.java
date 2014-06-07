@@ -40,10 +40,6 @@ import org.jclouds.logging.Logger;
 import com.google.common.base.Function;
 import com.google.common.base.Supplier;
 
-/**
- * 
- * @author Adrian Cole
- */
 @Singleton
 public class TemplateToOperatingSystem implements Function<Template, OperatingSystem> {
    // CentOS 5.2 (32-bit)

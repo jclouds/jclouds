@@ -24,8 +24,6 @@ import java.lang.annotation.Target;
 
 /**
  * Designates that this parameter will be bound to a multipart form.
- * 
- * @author Adrian Cole
  */
 @Target(PARAMETER)
 @Retention(RUNTIME)

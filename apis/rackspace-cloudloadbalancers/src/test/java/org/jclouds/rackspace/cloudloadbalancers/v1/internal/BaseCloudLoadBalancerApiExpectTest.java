@@ -26,8 +26,6 @@ import org.jclouds.rest.internal.BaseRestApiExpectTest;
 
 /**
  * Base class for writing Cloud Load Balancer Expect tests
- * 
- * @author Everett Toews
  */
 public class BaseCloudLoadBalancerApiExpectTest<T> extends BaseRestApiExpectTest<T> {
    protected HttpRequest rackspaceAuthWithUsernameAndApiKey;

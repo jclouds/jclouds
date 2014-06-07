@@ -37,9 +37,6 @@ import com.google.common.util.concurrent.ListeningExecutorService;
 import com.google.inject.Injector;
 import com.google.inject.Singleton;
 
-/**
- * @author Adrian Cole
- */
 @Singleton
 public class UtilsImpl implements Utils {
 

@@ -30,9 +30,6 @@ import org.testng.annotations.Test;
 
 import com.google.common.collect.ImmutableSet;
 
-/**
- * @author Oleksiy Yarmula
- */
 // NOTE:without testName, this will not call @Before* and fail w/NPE during surefire
 @Test(groups = "unit", testName = "ServerLatestJobCompletedTest")
 public class ServerLatestJobCompletedTest {

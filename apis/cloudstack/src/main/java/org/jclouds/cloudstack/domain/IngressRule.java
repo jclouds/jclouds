@@ -25,9 +25,6 @@ import org.jclouds.javax.annotation.Nullable;
 import com.google.common.base.Objects;
 import com.google.common.base.Objects.ToStringHelper;
 
-/**
- * @author Adrian Cole
- */
 public class IngressRule implements Comparable<IngressRule> {
 
    public static Builder<?> builder() {

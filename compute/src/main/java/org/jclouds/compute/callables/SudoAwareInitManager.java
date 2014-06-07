@@ -35,10 +35,6 @@ import com.google.common.base.Objects;
 import com.google.common.base.Predicates;
 import com.google.common.collect.ImmutableSet;
 
-/**
- * 
- * @author Adrian Cole
- */
 public class SudoAwareInitManager {
    @Resource
    @Named(ComputeServiceConstants.COMPUTE_LOGGER)

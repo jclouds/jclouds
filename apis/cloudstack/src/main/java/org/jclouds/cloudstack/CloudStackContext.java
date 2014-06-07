@@ -21,12 +21,6 @@ import org.jclouds.compute.ComputeServiceContext;
 
 import com.google.inject.ImplementedBy;
 
-/**
- * 
- * 
- * @author Adrian Cole
- * 
- */
 @ImplementedBy(CloudStackContextImpl.class)
 public interface CloudStackContext extends ComputeServiceContext {
 

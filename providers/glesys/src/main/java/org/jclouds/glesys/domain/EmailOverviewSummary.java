@@ -25,7 +25,6 @@ import com.google.common.base.Objects.ToStringHelper;
 /**
  * Summary information of e-mail settings and limits for a GleSYS account
  *
- * @author Adam Lowe
  * @see <a href="https://customer.glesys.com/api.php?a=doc#email_overview" />
  */
 //TODO: find a better name for this class

@@ -30,7 +30,6 @@ import com.google.common.base.Function;
  * Parses response headers and creates a new SwiftObject from them and the HTTP content.
  * 
  * @see ParseMetadataFromHeaders
- * @author Adrian Cole
  */
 public class ParseObjectFromHeadersAndHttpContent implements Function<HttpResponse, SwiftObject>,
          InvocationContext<ParseObjectFromHeadersAndHttpContent> {

@@ -35,9 +35,6 @@ import com.google.common.collect.Iterables;
 import com.google.inject.Inject;
 import com.google.inject.TypeLiteral;
 
-/**
- * @author Adrian Cole
- */
 @Singleton
 public class ParseAsyncJobsFromHttpResponse implements Function<HttpResponse, Set<AsyncJob<?>>> {
    private final ParseFirstJsonValueNamed<Set<AsyncJob<Map<String, JsonBall>>>> parser;

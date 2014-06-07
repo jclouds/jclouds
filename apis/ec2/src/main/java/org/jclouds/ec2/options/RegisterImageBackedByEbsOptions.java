@@ -35,7 +35,6 @@ import org.jclouds.javax.annotation.Nullable;
  * String imageId = connection.getImageServices().registerImageBackedByEbs(...addEphemeralBlockDeviceFromSnapshot("/dev/sda2","virtual-1","snapshot-id"));
  * <code>
  * 
- * @author Adrian Cole
  * @see <a
  *      href="http://docs.amazonwebservices.com/AWSEC2/latest/APIReference/index.html?ApiReference-form-RegisterImage.html"
  *      />

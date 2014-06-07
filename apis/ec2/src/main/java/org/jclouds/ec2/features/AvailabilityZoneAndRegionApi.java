@@ -45,8 +45,6 @@ import org.jclouds.rest.annotations.XMLResponseParser;
 /**
  * Provides access to EC2 Availability Zones and Regions via their REST API.
  * <p/>
- * 
- * @author Adrian Cole
  */
 @RequestFilters(FormSigner.class)
 @VirtualHost

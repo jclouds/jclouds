@@ -25,9 +25,6 @@ import org.jclouds.route53.domain.ResourceRecordSet.RecordSubset.Weighted;
 
 import com.google.common.base.Function;
 
-/**
- * @author Adrian Cole
- */
 public class SerializeRRS implements Function<Object, String> {
    @Override
    public String apply(Object in) {

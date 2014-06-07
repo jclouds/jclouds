@@ -28,9 +28,6 @@ import javax.inject.Provider;
 import org.jclouds.ovf.OperatingSystemSection;
 import org.xml.sax.Attributes;
 
-/**
- * @author Adrian Cole
- */
 public class OperatingSystemSectionHandler extends
          SectionHandler<OperatingSystemSection, OperatingSystemSection.Builder> {
    @Inject

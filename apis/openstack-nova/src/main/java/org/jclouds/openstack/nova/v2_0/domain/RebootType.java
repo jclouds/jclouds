@@ -16,10 +16,6 @@
  */
 package org.jclouds.openstack.nova.v2_0.domain;
 
-/**
- * 
- * @author Adrian Cole
- */
 public enum RebootType {
 
    HARD, SOFT;

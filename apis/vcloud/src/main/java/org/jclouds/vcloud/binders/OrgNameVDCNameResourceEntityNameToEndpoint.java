@@ -29,10 +29,6 @@ import org.jclouds.vcloud.endpoints.VDC;
 
 import com.google.common.base.Supplier;
 
-/**
- * 
- * @author Adrian Cole
- */
 @Singleton
 public class OrgNameVDCNameResourceEntityNameToEndpoint extends OrgNameVDCNameResourceNameToEndpoint {
    @Inject

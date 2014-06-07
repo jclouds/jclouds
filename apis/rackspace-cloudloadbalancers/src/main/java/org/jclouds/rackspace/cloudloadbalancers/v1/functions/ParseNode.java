@@ -35,9 +35,6 @@ import org.jclouds.rest.InvocationContext;
 import com.google.common.base.Function;
 import com.google.common.collect.Iterables;
 
-/**
- * @author Everett Toews
- */
 public class ParseNode implements Function<HttpResponse, Node>, InvocationContext<ParseNode> {
 
    private final ParseJson<Map<String, NodeWithCLBMetadata>> json;

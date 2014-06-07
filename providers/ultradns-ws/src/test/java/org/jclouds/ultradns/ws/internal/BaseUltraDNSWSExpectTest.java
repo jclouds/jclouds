@@ -18,10 +18,6 @@ package org.jclouds.ultradns.ws.internal;
 
 import org.jclouds.rest.internal.BaseRestApiExpectTest;
 
-/**
- * 
- * @author Adrian Cole
- */
 public class BaseUltraDNSWSExpectTest<T> extends BaseRestApiExpectTest<T> {
 
    public BaseUltraDNSWSExpectTest() {

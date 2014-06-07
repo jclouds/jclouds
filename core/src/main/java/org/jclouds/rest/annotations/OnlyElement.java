@@ -30,7 +30,6 @@ import javax.inject.Qualifier;
 /**
  * Extracts the only element of a collection or null
  * 
- * @author Adrian Cole
  * @see SelectJson
  */
 @Target( { ANNOTATION_TYPE, METHOD, FIELD, PARAMETER })

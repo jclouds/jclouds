@@ -30,9 +30,6 @@ import org.jclouds.vcloud.domain.ReferenceType;
 import org.jclouds.vcloud.domain.ovf.VCloudVirtualHardwareSection;
 import org.xml.sax.Attributes;
 
-/**
- * @author Adrian Cole
- */
 public class VCloudVirtualHardwareHandler extends ParseSax.HandlerWithResult<VCloudVirtualHardwareSection> {
 
    private final VirtualHardwareSectionHandler hardwareHandler;

@@ -36,8 +36,6 @@ import com.google.common.collect.ImmutableList;
 
 /**
  * Tests behavior of {@code ListClustersOptions}
- *
- * @author Richard Downer
  */
 @Test(groups = "unit")
 public class ListClustersOptionsTest {

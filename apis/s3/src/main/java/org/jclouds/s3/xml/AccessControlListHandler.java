@@ -34,7 +34,6 @@ import org.xml.sax.Attributes;
  * <p/>
  * AccessControlPolicy xmlns="http://s3.amazonaws.com/doc/2006-03-01/"
  * 
- * @author James Murty
  * @see <a href="http://docs.amazonwebservices.com/AmazonS3/2006-03-01/RESTAccessPolicy.html"/>
  */
 public class AccessControlListHandler extends ParseSax.HandlerWithResult<AccessControlList> {

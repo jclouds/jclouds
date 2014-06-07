@@ -27,10 +27,6 @@ import org.jclouds.rest.binders.BindToJsonPayload;
 
 import com.google.common.collect.ImmutableMap;
 
-/**
- * 
- * @author Adrian Cole
- */
 @Singleton
 public class BindMetadataToJsonPayload extends BindToJsonPayload {
 

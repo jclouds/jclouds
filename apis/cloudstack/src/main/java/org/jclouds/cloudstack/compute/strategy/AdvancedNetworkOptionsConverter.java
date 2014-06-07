@@ -32,8 +32,6 @@ import static org.jclouds.cloudstack.predicates.NetworkPredicates.supportsStatic
 
 /**
  * Convert template options into DeployVirtualMachineOptions, when the target zone has advanced networking.
- *
- * @author Richard Downer
  */
 public class AdvancedNetworkOptionsConverter implements OptionsConverter {
    @Override

@@ -34,8 +34,6 @@ import com.google.common.collect.Multimap;
 
 /**
  * Default Implementation of {@link AtmosObject}.
- * 
- * @author Adrian Cole
  */
 public class AtmosObjectImpl extends PayloadEnclosingImpl implements AtmosObject, Comparable<AtmosObject> {
    @Singleton

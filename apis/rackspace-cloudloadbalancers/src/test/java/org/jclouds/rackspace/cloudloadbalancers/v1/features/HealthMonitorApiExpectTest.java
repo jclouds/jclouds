@@ -32,9 +32,6 @@ import org.jclouds.rackspace.cloudloadbalancers.v1.domain.HealthMonitor;
 import org.jclouds.rackspace.cloudloadbalancers.v1.internal.BaseCloudLoadBalancerApiExpectTest;
 import org.testng.annotations.Test;
 
-/**
- * @author Everett Toews
- */
 @Test(groups = "unit")
 public class HealthMonitorApiExpectTest extends BaseCloudLoadBalancerApiExpectTest<CloudLoadBalancersApi> {
    public void testGetHealthMonitor() {

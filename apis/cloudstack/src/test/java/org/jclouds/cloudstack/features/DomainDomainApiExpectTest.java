@@ -33,8 +33,6 @@ import com.google.common.collect.ImmutableSet;
 
 /**
  * Test the CloudStack DomainDomainApi
- *
- * @author Andrei Savu
  */
 @Test(groups = "unit", testName = "DomainDomainApiExpectTest")
 public class DomainDomainApiExpectTest extends BaseCloudStackExpectTest<DomainDomainApi> {

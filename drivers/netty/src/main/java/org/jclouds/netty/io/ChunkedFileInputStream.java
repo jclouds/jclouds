@@ -24,13 +24,6 @@ import java.io.RandomAccessFile;
 import org.jboss.netty.buffer.ChannelBuffer;
 import org.jboss.netty.handler.stream.ChunkedFile;
 
-/**
- * 
- * 
- * 
- * 
- * @author Tibor Kiss
- */
 public class ChunkedFileInputStream extends InputStream {
 
    private static final int CHUNK_SIZE = 8192;

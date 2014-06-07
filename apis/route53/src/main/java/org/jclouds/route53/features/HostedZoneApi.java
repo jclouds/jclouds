@@ -53,7 +53,6 @@ import org.jclouds.route53.xml.ListHostedZonesResponseHandler;
  * @see <a href=
  *      "http://docs.aws.amazon.com/Route53/latest/APIReference/ActionsOnHostedZones.html"
  *      />
- * @author Adrian Cole
  */
 @RequestFilters(RestAuthentication.class)
 @VirtualHost

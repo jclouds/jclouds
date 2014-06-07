@@ -36,8 +36,6 @@ import com.google.inject.Module;
 
 /**
  * Implementation of {@link ApiMetadata} for Cinder v1 API
- * 
- * @author Everett Toews
  */
 public class CinderApiMetadata extends BaseHttpApiMetadata<CinderApi> {
    

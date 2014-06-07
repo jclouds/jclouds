@@ -33,9 +33,6 @@ import org.jclouds.sts.parse.GetFederationTokenResponseTest;
 import org.jclouds.sts.parse.GetSessionTokenResponseTest;
 import org.testng.annotations.Test;
 
-/**
- * @author Adrian Cole
- */
 @Test(groups = "unit", testName = "STSApiExpectTest")
 public class STSApiExpectTest extends BaseSTSApiExpectTest {
 

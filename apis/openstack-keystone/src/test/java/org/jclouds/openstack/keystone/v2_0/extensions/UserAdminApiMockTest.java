@@ -34,8 +34,6 @@ import com.squareup.okhttp.mockwebserver.RecordedRequest;
 
 /**
  * Tests UserApi Guice wiring and parsing
- * 
- * @author Pedro Navarro
  */
 @Test(groups = "unit", testName = "UserAdminApiMockTest")
 public class UserAdminApiMockTest extends BaseOpenStackMockTest<KeystoneApi> {

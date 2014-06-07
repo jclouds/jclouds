@@ -29,7 +29,6 @@ import com.google.common.collect.AbstractIterator;
 /**
  * Utilities for using Blob Stores.
  * 
- * @author Aled Sage
  * @since 1.3
  */
 public class BlobStores {

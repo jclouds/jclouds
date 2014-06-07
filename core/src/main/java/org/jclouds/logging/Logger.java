@@ -32,8 +32,6 @@ package org.jclouds.logging;
  * In other words, don't do the following
  * <code>if (logger.isTraceEnabled()) logger.trace("message");.
  * <p/>
- * 
- * @author Adrian Cole
  */
 public interface Logger {
 
@@ -76,7 +74,6 @@ public interface Logger {
    /**
     * Produces instances of {@link Logger} relevant to the specified category
     * 
-    * @author Adrian Cole
     * 
     */
    public interface LoggerFactory {

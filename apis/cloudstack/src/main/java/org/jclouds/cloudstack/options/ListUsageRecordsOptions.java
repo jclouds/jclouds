@@ -20,8 +20,6 @@ import com.google.common.collect.ImmutableSet;
 
 /**
  * Options to the GlobalUsageApi.listUsageOptions() API call
- *
- * @author Richard Downer
  */
 public class ListUsageRecordsOptions extends AccountInDomainOptions {
 

@@ -32,10 +32,6 @@ import org.jclouds.scriptbuilder.statements.ssh.InstallRSAPrivateKey;
 import com.google.common.base.Function;
 import com.google.common.collect.ImmutableSet;
 
-/**
- * 
- * @author Adrian Cole
- */
 @Singleton
 public class TemplateOptionsToStatement implements Function<TemplateOptions, Statement> {
 

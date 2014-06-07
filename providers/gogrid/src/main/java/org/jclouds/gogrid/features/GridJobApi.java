@@ -38,8 +38,6 @@ import org.jclouds.rest.annotations.ResponseParser;
  * Manages the customer's jobs.
  * 
  * @see <a href="http://wiki.gogrid.com/wiki/index.php/API#Job_Methods" />
- * 
- * @author Oleksiy Yarmula
  */
 @RequestFilters(SharedKeyLiteAuthentication.class)
 @QueryParams(keys = VERSION, values = "{jclouds.api-version}")

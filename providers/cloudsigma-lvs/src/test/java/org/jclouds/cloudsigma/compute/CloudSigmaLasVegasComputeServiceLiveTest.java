@@ -18,10 +18,6 @@ package org.jclouds.cloudsigma.compute;
 
 import org.testng.annotations.Test;
 
-/**
- * 
- * @author Adrian Cole
- */
 @Test(groups = "live", singleThreaded = true, testName = "CloudSigmaLasVegasComputeServiceLiveTest")
 public class CloudSigmaLasVegasComputeServiceLiveTest extends CloudSigmaComputeServiceLiveTest {
 

@@ -41,10 +41,6 @@ import com.google.gson.Gson;
 import com.google.inject.Guice;
 import com.google.inject.TypeLiteral;
 
-/**
- * 
- * @author Adrian Cole
- */
 @Test(groups = "unit")
 public class ParseOsFamilyVersion64BitFromImageNameTest {
    Json json = new GsonWrapper(new Gson());

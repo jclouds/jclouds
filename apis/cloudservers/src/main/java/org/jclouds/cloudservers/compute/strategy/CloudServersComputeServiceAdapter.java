@@ -44,7 +44,6 @@ import com.google.common.collect.ImmutableSet;
 /**
  * defines the connection between the {@link CloudServersClient} implementation and the jclouds
  * {@link ComputeService}
- * 
  */
 @Singleton
 public class CloudServersComputeServiceAdapter implements ComputeServiceAdapter<Server, Flavor, Image, Location> {

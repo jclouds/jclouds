@@ -47,7 +47,6 @@ import com.google.common.util.concurrent.ListenableFuture;
  * <p/>
  * 
  * @see FloatingIPApi
- * @author Jeremy Daggett
  * @see ExtensionAsyncApi
  * @see <a href= "http://docs.openstack.org/api/openstack-compute/2/content/Extensions-d1e1444.html"
  *      />

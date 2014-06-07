@@ -29,9 +29,6 @@ import org.jclouds.openstack.swift.domain.internal.MutableObjectInfoWithMetadata
 import com.google.common.base.Function;
 import org.jclouds.openstack.swift.utils.ETagUtils;
 
-/**
- * @author Adrian Cole
- */
 @Singleton
 public class ResourceToObjectInfo implements Function<StorageMetadata, MutableObjectInfoWithMetadata> {
 

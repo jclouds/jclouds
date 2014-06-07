@@ -27,8 +27,6 @@ import org.jclouds.http.HttpRequestFilter;
 /**
  * 
  * DynECT requires Content-Type even on GET requests.
- * 
- * @author Adrian Cole
  */
 public final class AlwaysAddContentType implements HttpRequestFilter {
    @Override

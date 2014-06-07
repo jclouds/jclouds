@@ -19,10 +19,6 @@ package org.jclouds.openstack.swift;
 import org.jclouds.blobstore.internal.BaseBlobStoreApiMetadataTest;
 import org.testng.annotations.Test;
 
-/**
- * 
- * @author Adrian Cole
- */
 @Test(groups = "unit", testName = "SwiftKeystoneApiMetadataTest")
 public class SwiftKeystoneApiMetadataTest extends BaseBlobStoreApiMetadataTest {
 

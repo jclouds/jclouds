@@ -34,9 +34,6 @@ import org.jclouds.rest.internal.GeneratedHttpRequest;
 import com.google.common.base.Objects;
 import com.google.common.collect.ImmutableMultimap;
 
-/**
- * @author Adam Lowe
- */
 public class CreateServerOptions implements MapBinder {
 
    private String ip;

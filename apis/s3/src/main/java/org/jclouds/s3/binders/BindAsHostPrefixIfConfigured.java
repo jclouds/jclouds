@@ -29,10 +29,6 @@ import org.jclouds.rest.binders.BindAsHostPrefix;
 
 import com.google.common.net.HttpHeaders;
 
-/**
- * 
- * @author Adrian Cole
- */
 @Singleton
 public class BindAsHostPrefixIfConfigured implements Binder {
 

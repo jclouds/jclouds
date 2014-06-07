@@ -28,7 +28,6 @@ import com.google.common.base.Objects.ToStringHelper;
 /**
  * The power state class provides a common set of values for which a guest's power state will be presented in the SoftLayer API.
  *
- * @author Jason King
  * @see <a href= "http://sldn.softlayer.com/reference/datatypes/SoftLayer_Virtual_Guest_Power_State"
 />
  */

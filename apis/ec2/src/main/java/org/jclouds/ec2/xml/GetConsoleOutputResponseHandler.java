@@ -24,7 +24,6 @@ import java.util.regex.Pattern;
 import org.jclouds.http.functions.ParseSax;
 
 /**
- * @author Andrew Kennedy
  * @see <a href="http://docs.amazonwebservices.com/AWSEC2/latest/APIReference/ApiReference-query-GetConsoleOutput.html">
  *       ApiReference query GetConsoleOutput</a>
  */

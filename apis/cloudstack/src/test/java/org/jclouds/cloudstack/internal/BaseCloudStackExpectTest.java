@@ -35,8 +35,6 @@ import com.google.inject.Module;
 
 /**
  * Base class for writing CloudStack Rest Client Expect tests
- * 
- * @author Andrei Savu
  */
 public abstract class BaseCloudStackExpectTest<S> extends BaseRestClientExpectTest<S> {
 

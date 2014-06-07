@@ -20,8 +20,6 @@ import org.jclouds.compute.domain.NodeMetadata;
 
 /**
  * Resumes a node from the state {@link org.jclouds.compute.domain.NodeState#SUSPENDED suspended}
- * 
- * @author Adrian Cole
  */
 public interface ResumeNodeStrategy {
 

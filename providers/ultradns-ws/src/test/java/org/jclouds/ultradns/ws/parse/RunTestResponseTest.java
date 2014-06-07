@@ -24,9 +24,6 @@ import org.jclouds.http.functions.BaseHandlerTest;
 import org.jclouds.ultradns.ws.xml.ElementTextHandler;
 import org.testng.annotations.Test;
 
-/**
- * @author Adrian Cole
- */
 @Test(testName = "RunTestResponseTest")
 public class RunTestResponseTest extends BaseHandlerTest {
 

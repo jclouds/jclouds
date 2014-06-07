@@ -21,7 +21,6 @@ import org.testng.annotations.Test;
 
 /**
  * TODO
- * 
  */
 @Test(groups = "unit")
 public class ServerSpecToHardwareTest extends BaseGleSYSComputeServiceExpectTest {

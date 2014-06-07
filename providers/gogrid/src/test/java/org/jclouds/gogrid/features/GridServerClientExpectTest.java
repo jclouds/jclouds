@@ -32,10 +32,6 @@ import org.jclouds.http.HttpResponse;
 import org.jclouds.rest.ResourceNotFoundException;
 import org.testng.annotations.Test;
 
-/**
- * 
- * @author Adrian Cole
- */
 @Test(groups = "unit", testName = "GridServerClientExpectTest")
 public class GridServerClientExpectTest extends BaseGoGridHttpApiExpectTest {
 

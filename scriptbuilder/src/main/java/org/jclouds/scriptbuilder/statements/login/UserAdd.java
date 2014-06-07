@@ -46,8 +46,6 @@ import com.google.common.collect.Lists;
  * <p>
  * Note that some places where this is used may have stricter requirements on the parameters
  * (for example {@link AdminAccess} requires password and keys).
- *
- * @author Adrian Cole
  */
 public class UserAdd implements Statement {
    public static UserAdd.Builder builder() {

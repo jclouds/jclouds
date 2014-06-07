@@ -21,8 +21,6 @@ import com.google.common.base.CaseFormat;
 /**
  * The root device type used by the AMI. The AMI can use an Amazon EBS or instance store root
  * device.
- * 
- * @author Adrian Cole
  */
 public enum RootDeviceType {
 

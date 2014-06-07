@@ -46,9 +46,6 @@ import com.google.inject.Guice;
 import com.google.inject.Injector;
 import com.google.inject.Provides;
 
-/**
- * @author Oleksiy Yarmula
- */
 //NOTE:without testName, this will not call @Before* and fail w/NPE during surefire
 @Test(groups = "unit", testName = "ParseLoadBalancersFromJsonResponseTest")
 public class ParseLoadBalancersFromJsonResponseTest {

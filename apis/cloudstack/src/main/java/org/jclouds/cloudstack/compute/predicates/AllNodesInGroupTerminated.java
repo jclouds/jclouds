@@ -33,9 +33,6 @@ import org.jclouds.cloudstack.domain.ZoneAndName;
 import com.google.common.base.Predicate;
 import com.google.common.base.Predicates;
 
-/**
- * @author Adrian Cole
- */
 public class AllNodesInGroupTerminated implements Predicate<ZoneAndName> {
    private final ComputeService computeService;
 

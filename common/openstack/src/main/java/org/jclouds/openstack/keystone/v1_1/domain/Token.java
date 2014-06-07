@@ -33,7 +33,6 @@ import com.google.common.base.Objects;
  * will reach that lifespan. Clients are encouraged to cache a token until it
  * expires.
  * 
- * @author Adrian Cole
  * @see <a href=
  *      "http://docs.rackspace.com/loadbalancers/api/v1.0/clb-devguide/content/Service_Access_Endpoints-d1e517.html"
  *      />

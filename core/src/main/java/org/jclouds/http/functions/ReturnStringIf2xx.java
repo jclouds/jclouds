@@ -29,10 +29,6 @@ import org.jclouds.util.Strings2;
 
 import com.google.common.base.Function;
 
-/**
- * 
- * @author Adrian Cole
- */
 @Singleton
 public class ReturnStringIf2xx implements Function<HttpResponse, String> {
 

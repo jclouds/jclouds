@@ -54,8 +54,6 @@ import com.google.common.collect.Iterables;
 import com.google.common.reflect.Invokable;
 /**
  * Tests behavior of {@code CloudSigmaApi}
- * 
- * @author Adrian Cole
  */
 // NOTE:without testName, this will not call @Before* and fail w/NPE during surefire
 @Test(groups = "unit", testName = "CloudSigmaApiTest")

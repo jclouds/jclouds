@@ -27,8 +27,6 @@ import org.jclouds.vcloud.domain.ovf.VCloudNetworkSection;
  * <p/>
  * When the {@link #getStatus} is {@link Status#UNRESOLVED}, there will be a task present for the
  * instantiation of the VApp.
- * 
- * @author Adrian Cole
  */
 public interface VApp extends ReferenceType {
    /**

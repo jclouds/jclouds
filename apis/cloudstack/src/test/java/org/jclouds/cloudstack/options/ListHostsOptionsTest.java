@@ -38,8 +38,6 @@ import com.google.common.collect.ImmutableList;
 
 /**
  * Tests behavior of {@code ListHostsOptions}
- *
- * @author Andrei Savu
  */
 @Test(groups = "unit")
 public class ListHostsOptionsTest {

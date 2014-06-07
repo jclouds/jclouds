@@ -33,8 +33,6 @@ import org.jclouds.http.functions.ParseSax;
 /**
  * Encryption, Hashing, and IO Utilities needed to sign and verify Azure Storage requests and
  * responses.
- * 
- * @author Adrian Cole
  */
 public class AzureStorageUtils {
 

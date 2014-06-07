@@ -28,7 +28,6 @@ import com.google.common.base.Objects.ToStringHelper;
 /**
  * Detailed information server status including hardware usage (cpu, memory and disk), bandwidth and up-time.
  *
- * @author Adam Lowe
  * @see <a href= "https://customer.glesys.com/api.php?a=doc#server_status" />
  */
 public class ServerStatus {

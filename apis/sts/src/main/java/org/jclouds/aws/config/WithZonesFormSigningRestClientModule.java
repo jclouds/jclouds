@@ -24,10 +24,6 @@ import org.jclouds.rest.ConfiguresRestClient;
 import com.google.common.reflect.TypeToken;
 
 
-/**
- * 
- * @author Adrian Cole
- */
 @ConfiguresRestClient
 public abstract class WithZonesFormSigningRestClientModule<S, A> extends FormSigningRestClientModule<S, A> {
    protected WithZonesFormSigningRestClientModule(Map<Class<?>, Class<?>> delegates) {

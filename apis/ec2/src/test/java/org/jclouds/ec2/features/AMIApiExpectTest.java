@@ -29,9 +29,6 @@ import org.testng.annotations.Test;
 import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.ImmutableSet;
 
-/**
- * @author Andrew Bayer
- */
 @Test(groups = "unit", testName = "AMIApiExpectTest")
 public class AMIApiExpectTest extends BaseEC2ApiExpectTest<EC2Api> {
 

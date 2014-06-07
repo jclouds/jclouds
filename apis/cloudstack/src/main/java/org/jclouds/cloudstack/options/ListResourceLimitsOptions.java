@@ -20,9 +20,6 @@ import org.jclouds.http.options.BaseHttpRequestOptions;
 
 import com.google.common.collect.ImmutableSet;
 
-/**
- * @author Vijay Kiran
- */
 public class ListResourceLimitsOptions extends BaseHttpRequestOptions {
    public static final ListResourceLimitsOptions NONE = new ListResourceLimitsOptions();
 

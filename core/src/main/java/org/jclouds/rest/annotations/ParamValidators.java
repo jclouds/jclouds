@@ -30,8 +30,6 @@ import org.jclouds.predicates.Validator;
  * 
  * @see org.jclouds.rest.internal.RestAnnotationProcessor
  * @see com.google.common.base.Predicate
- * 
- * @author Oleksiy Yarmula
  */
 @Target( { METHOD, PARAMETER })
 @Retention(RUNTIME)

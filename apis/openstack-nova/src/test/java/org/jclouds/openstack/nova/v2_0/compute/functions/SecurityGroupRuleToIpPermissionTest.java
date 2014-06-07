@@ -31,8 +31,6 @@ import com.google.common.collect.ImmutableSet;
 /**
  * Tests for the function for transforming a nova specific SecurityGroupRule into a generic
  * IpPermission object.
- * 
- * @author Andrew Bayer
  */
 public class SecurityGroupRuleToIpPermissionTest {
 

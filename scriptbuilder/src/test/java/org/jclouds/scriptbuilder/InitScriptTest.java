@@ -36,8 +36,6 @@ import com.google.common.io.Resources;
 
 /**
  * Tests possible uses of InitScript
- * 
- * @author Adrian Cole
  */
 public class InitScriptTest {
    InitScript testInitScript = InitScript

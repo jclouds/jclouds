@@ -30,7 +30,6 @@ import org.jclouds.providers.internal.BaseProviderMetadata;
  * Implementation of @ link org.jclouds.types.ProviderMetadata} for Amazon's CloudWatch
  * provider.
 *
-* @author Adrian Cole
 */
 public class AWSCloudWatchProviderMetadata extends BaseProviderMetadata {
 

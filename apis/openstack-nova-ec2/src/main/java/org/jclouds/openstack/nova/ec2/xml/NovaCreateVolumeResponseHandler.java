@@ -30,10 +30,6 @@ import org.jclouds.location.Zone;
 
 import com.google.common.base.Supplier;
 
-/**
- *
- * @author Adam lowe
- */
 public class NovaCreateVolumeResponseHandler extends CreateVolumeResponseHandler {
 
    @Inject

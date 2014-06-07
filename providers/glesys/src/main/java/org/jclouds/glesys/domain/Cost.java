@@ -26,7 +26,6 @@ import com.google.common.base.Objects.ToStringHelper;
 /**
  * The Cost class contains information about the cost of a server
  *
- * @author Adam Lowe
  * @see ServerDetails
  */
 public class Cost {

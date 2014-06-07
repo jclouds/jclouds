@@ -24,9 +24,6 @@ import org.jclouds.util.SaxUtils;
 
 import com.google.common.collect.Maps;
 
-/**
- * @author Adrian Cole
- */
 public class SupportedVersionsHandler extends ParseSax.HandlerWithResult<SortedMap<String, URI>> {
    private StringBuilder currentText = new StringBuilder();
 

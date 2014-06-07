@@ -33,8 +33,6 @@ import com.google.inject.Injector;
 
 /**
  * Tests behavior of {@code BindBlockDeviceMappingToIndexedFormParams}
- * 
- * @author Adrian Cole
  */
 @Test(groups = "unit")
 public class BindBlockDeviceMappingToIndexedFormParamsTest {

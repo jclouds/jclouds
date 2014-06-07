@@ -18,10 +18,6 @@ package org.jclouds.loadbalancer.config;
 
 import com.google.inject.AbstractModule;
 
-/**
- * 
- * @author Adrian Cole
- */
 public abstract class BaseLoadBalancerServiceContextModule extends AbstractModule {
 
    @Override

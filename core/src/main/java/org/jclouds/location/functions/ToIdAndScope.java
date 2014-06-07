@@ -20,11 +20,6 @@ import org.jclouds.domain.Location;
 
 import com.google.common.base.Function;
 
-/**
- * 
- * @author Adrian Cole
- * 
- */
 public enum ToIdAndScope implements Function<Location, String> {
    INSTANCE;
    @Override

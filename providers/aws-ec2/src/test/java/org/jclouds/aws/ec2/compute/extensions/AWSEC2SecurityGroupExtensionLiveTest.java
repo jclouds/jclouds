@@ -23,9 +23,6 @@ import org.testng.annotations.Test;
 
 /**
  * Live test for aws-ec2 {@link SecurityGroupExtension} implementation
- * 
- * @author Andrew Bayer
- * 
  */
 @Test(groups = "live", singleThreaded = true, testName = "AWSEC2SecurityGroupExtensionLiveTest")
 public class AWSEC2SecurityGroupExtensionLiveTest extends BaseSecurityGroupExtensionLiveTest {

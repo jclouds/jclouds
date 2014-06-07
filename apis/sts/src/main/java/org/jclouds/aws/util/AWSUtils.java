@@ -50,8 +50,6 @@ import com.google.common.collect.Multimap;
 
 /**
  * Needed to sign and verify requests and responses.
- * 
- * @author Adrian Cole
  */
 @Singleton
 @SuppressWarnings("unchecked")

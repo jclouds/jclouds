@@ -29,8 +29,6 @@ import org.jclouds.location.suppliers.ZoneIdsSupplier;
 /**
  * 
  * looks for properties bound to the naming convention jclouds.zones
- * 
- * @author Adrian Cole
  */
 @Singleton
 public class ZoneIdsFromConfiguration extends SplitConfigurationKey implements ZoneIdsSupplier {

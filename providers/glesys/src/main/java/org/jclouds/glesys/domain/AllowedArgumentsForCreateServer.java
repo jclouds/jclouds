@@ -28,7 +28,6 @@ import com.google.common.collect.ImmutableSet;
 /**
  * Sets the allowed arguments for some of the functions in this module such as disksize, cpucores etc.
  *
- * @author Adam Lowe
  * @see <a href="https://customer.glesys.com/api.php?a=doc#server_allowedarguments" />
  */
 public class AllowedArgumentsForCreateServer {

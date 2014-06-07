@@ -28,9 +28,6 @@ import org.jclouds.rackspace.clouddns.v1.domain.Job;
 import org.jclouds.rackspace.clouddns.v1.internal.BaseCloudDNSApiExpectTest;
 import org.testng.annotations.Test;
 
-/**
- * @author Everett Toews
- */
 @Test(groups = "unit")
 public class CloudDNSApiExpectTest extends BaseCloudDNSApiExpectTest<CloudDNSApi> {
    public void testGetJobDomainExport() {

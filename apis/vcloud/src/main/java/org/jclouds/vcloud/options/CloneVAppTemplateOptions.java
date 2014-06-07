@@ -16,11 +16,6 @@
  */
 package org.jclouds.vcloud.options;
 
-/**
- * 
- * @author Adrian Cole
- * 
- */
 public class CloneVAppTemplateOptions extends CloneOptions {
    /**
     * {@inheritDoc}

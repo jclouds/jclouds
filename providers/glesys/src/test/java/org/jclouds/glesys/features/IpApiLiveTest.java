@@ -37,8 +37,6 @@ import com.google.common.collect.Sets;
 
 /**
  * Tests behavior of {@code IpApi}
- * 
- * @author Adrian Cole, Mattias Holmqvist
  */
 @Test(groups = "live", testName = "IpApiLiveTest", singleThreaded = true)
 public class IpApiLiveTest extends BaseGleSYSApiWithAServerLiveTest {

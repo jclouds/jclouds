@@ -20,9 +20,6 @@ import org.jclouds.logging.Logger;
 
 /**
  * Configures logging of type {@link ConsoleLogger}
- * 
- * @author Adrian Cole
- * 
  */
 public class ConsoleLoggingModule extends LoggingModule {
 

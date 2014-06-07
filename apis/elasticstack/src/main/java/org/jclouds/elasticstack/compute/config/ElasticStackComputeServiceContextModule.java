@@ -70,10 +70,6 @@ import com.google.common.collect.Maps;
 import com.google.inject.Provides;
 import com.google.inject.TypeLiteral;
 
-/**
- * 
- * @author Adrian Cole
- */
 public class ElasticStackComputeServiceContextModule extends
       ComputeServiceAdapterContextModule<ServerInfo, Hardware, DriveInfo, Location> {
 

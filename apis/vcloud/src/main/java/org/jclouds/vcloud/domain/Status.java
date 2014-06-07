@@ -28,8 +28,6 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * The deployment status of an object is indicated by the value of its deployed attribute.
  * 
  * @since vcloud api 0.8
- * 
- * @author Adrian Cole
  */
 public enum Status {
    /**

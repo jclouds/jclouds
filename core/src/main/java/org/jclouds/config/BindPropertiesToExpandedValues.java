@@ -32,8 +32,6 @@ import com.google.inject.Provides;
 
 /**
  * expands properties.
- * 
- * @author Adrian Cole
  */
 public class BindPropertiesToExpandedValues extends AbstractModule {
    private final Properties resolved;

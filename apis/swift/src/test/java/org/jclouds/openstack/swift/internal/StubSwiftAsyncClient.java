@@ -62,8 +62,6 @@ import com.google.common.util.concurrent.ListeningExecutorService;
 
 /**
  * Implementation of {@link SwiftAsyncClient} which keeps all data in a local Map object.
- *
- * @author Adrian Cole
  */
 @Singleton
 public class StubSwiftAsyncClient implements CommonSwiftAsyncClient {

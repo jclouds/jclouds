@@ -24,9 +24,6 @@ import org.testng.annotations.Test;
 
 /**
  * Base test for {@link SecurityGroupExtension} implementations.
- * 
- * @author Andrew Bayer
- * 
  */
 @Test(groups = { "integration", "live" }, singleThreaded = true, testName = "StubSecurityGroupExtensionIntegrationTest")
 public class StubSecurityGroupExtensionIntegrationTest extends BaseSecurityGroupExtensionLiveTest {

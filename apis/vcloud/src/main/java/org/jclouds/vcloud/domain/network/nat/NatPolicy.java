@@ -22,7 +22,6 @@ import com.google.common.base.CaseFormat;
 
 /**
  * The Policy element of a NatService element specifies how packets are handled by the NAT service.
- * 
  */
 public enum NatPolicy {
    /**

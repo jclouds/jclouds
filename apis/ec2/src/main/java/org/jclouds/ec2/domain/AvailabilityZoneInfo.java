@@ -27,7 +27,6 @@ import com.google.common.collect.Sets;
  * 
  * @see <a href="http://docs.amazonwebservices.com/AWSEC2/latest/APIReference/ApiReference-ItemType-AvailabilityZoneItemType.html"
  *      />
- * @author Adrian Cole
  */
 public class AvailabilityZoneInfo implements Comparable<AvailabilityZoneInfo> {
 

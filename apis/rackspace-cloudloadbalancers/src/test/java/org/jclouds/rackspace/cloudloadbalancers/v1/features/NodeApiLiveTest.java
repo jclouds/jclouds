@@ -46,9 +46,6 @@ import org.jclouds.rackspace.cloudloadbalancers.v1.internal.BaseCloudLoadBalance
 import org.testng.annotations.AfterGroups;
 import org.testng.annotations.Test;
 
-/**
- * @author Dan Lo Bianco
- */
 @Test(groups = "live", singleThreaded = true, testName = "NodeClientLiveTest")
 public class NodeApiLiveTest extends BaseCloudLoadBalancersApiLiveTest {
    private Map<LoadBalancer, Set<Node>> nodes = Maps.newHashMap();

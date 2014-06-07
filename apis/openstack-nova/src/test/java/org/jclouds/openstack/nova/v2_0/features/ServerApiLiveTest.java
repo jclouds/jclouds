@@ -40,9 +40,6 @@ import com.google.common.collect.Iterables;
 
 /**
  * Tests behavior of {@link ServerApi}
- * 
- * @author Adrian Cole
- * @author Inbar Stolberg
  */
 @Test(groups = "live", testName = "ServerApiLiveTest")
 public class ServerApiLiveTest extends BaseNovaApiLiveTest {

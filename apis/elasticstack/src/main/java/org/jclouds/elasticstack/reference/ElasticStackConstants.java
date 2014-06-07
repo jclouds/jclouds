@@ -18,8 +18,6 @@ package org.jclouds.elasticstack.reference;
 
 /**
  * Common constants used in ElasticStack provider
- *
- * @author Adrian Cole
  */
 public final class ElasticStackConstants {
 

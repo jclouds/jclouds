@@ -28,8 +28,6 @@ import com.google.common.collect.Multimap;
 
 /**
  * A region is a set of territory names.
- * 
- * @author Adrian Cole
  */
 public class DirectionalGroup extends ForwardingMultimap<String, String> {
 

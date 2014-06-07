@@ -30,9 +30,6 @@ import org.jclouds.http.HttpRequest;
 import org.jclouds.http.HttpResponse;
 import org.testng.annotations.Test;
 
-/**
- * @author Adrian Cole
- */
 @Test(groups = "unit", testName = "GeoServiceApiExpectTest")
 public class GeoServiceApiExpectTest extends BaseDynECTApiExpectTest {
 

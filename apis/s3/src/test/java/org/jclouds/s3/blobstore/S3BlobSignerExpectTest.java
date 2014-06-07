@@ -31,8 +31,6 @@ import com.google.inject.Module;
 
 /**
  * Tests behavior of {@code S3BlobRequestSigner}
- *
- * @author Adrian Cole
  */
 @Test(groups = "unit", testName = "S3BlobSignerExpectTest")
 public class S3BlobSignerExpectTest extends BaseBlobSignerExpectTest {

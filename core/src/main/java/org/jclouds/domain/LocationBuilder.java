@@ -26,10 +26,6 @@ import org.jclouds.domain.internal.LocationImpl;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 
-/**
- * 
- * @author Adrian Cole
- */
 public final class LocationBuilder {
    private LocationScope scope;
    private String id;

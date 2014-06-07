@@ -45,8 +45,6 @@ import com.google.common.annotations.VisibleForTesting;
  * This will parse and set an appropriate exception on the command object.
  * 
  * @see AWSError
- * @author Adrian Cole
- * 
  */
 @Singleton
 public class ParseAWSErrorFromXmlContent implements HttpErrorHandler {

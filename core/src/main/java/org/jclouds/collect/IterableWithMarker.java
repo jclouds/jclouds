@@ -22,8 +22,6 @@ import com.google.common.collect.FluentIterable;
 
 /**
  * An {@code Iterable} that can be continued
- * 
- * @author Adrian Cole
  */
 @Beta
 public abstract class IterableWithMarker<T> extends FluentIterable<T> {

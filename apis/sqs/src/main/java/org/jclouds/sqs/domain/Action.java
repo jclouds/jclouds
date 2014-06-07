@@ -25,7 +25,6 @@ import com.google.common.base.CaseFormat;
  * @see <a href=
  *      "http://docs.amazonwebservices.com/AWSSimpleQueueService/latest/SQSDeveloperGuide/acp-overview.html#PermissionTypes"
  *      />
- * @author Adrian Cole
  */
 public enum Action {
    /**

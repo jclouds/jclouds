@@ -32,8 +32,6 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.reflect.Invokable;
 /**
  * Tests behavior of {@code DomainLimitApi}
- * 
- * @author Adrian
  */
 @Test(groups = "unit", testName = "DomainLimitApiTest")
 public class DomainLimitApiTest extends BaseCloudStackApiTest<DomainLimitApi> {

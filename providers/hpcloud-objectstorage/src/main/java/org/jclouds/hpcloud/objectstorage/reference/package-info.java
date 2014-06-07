@@ -16,7 +16,5 @@
  */
 /**
  * This package contains properties and reference data used in HP Cloud Object Storage.
- * 
- * @author Jeremy Daggett
  */
 package org.jclouds.hpcloud.objectstorage.reference;

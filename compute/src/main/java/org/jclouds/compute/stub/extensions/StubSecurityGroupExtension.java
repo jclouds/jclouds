@@ -47,8 +47,6 @@ import com.google.common.util.concurrent.ListeningExecutorService;
 /**
  * An extension to compute service to allow for the manipulation of {@link SecurityGroup}s. Implementation
  * is optional by providers.
- * 
- * @author Andrew Bayer
  */
 public class StubSecurityGroupExtension implements SecurityGroupExtension {
 

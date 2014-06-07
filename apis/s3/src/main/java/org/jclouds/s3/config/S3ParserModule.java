@@ -21,11 +21,6 @@ import org.jclouds.json.config.GsonModule.Iso8601DateAdapter;
 
 import com.google.inject.AbstractModule;
 
-/**
- * 
- * 
- * @author Adrian Cole
- */
 public class S3ParserModule extends AbstractModule {
 
    @Override

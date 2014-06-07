@@ -27,8 +27,6 @@ import org.jclouds.rest.Binder;
 /**
  * Designates that this parameter will modify the request, possibly including adding an payload to
  * it.
- * 
- * @author Adrian Cole
  */
 @Target(PARAMETER)
 @Retention(RUNTIME)

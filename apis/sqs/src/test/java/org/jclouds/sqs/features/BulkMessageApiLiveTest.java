@@ -39,10 +39,6 @@ import com.google.common.collect.ImmutableMap.Builder;
 import com.google.common.collect.Iterables;
 import com.google.common.hash.Hashing;
 
-/**
- * 
- * @author Adrian Cole
- */
 @Test(groups = "live", singleThreaded = true, testName = "BulkMessageApiLiveTest")
 public class BulkMessageApiLiveTest extends BaseSQSApiLiveTest {
 

@@ -20,9 +20,6 @@ import com.google.common.collect.Multimap;
 
 /**
  * Builds options that override or append to HttpRequests.
- * 
- * @author Adrian Cole
- * 
  */
 public interface HttpRequestOptions {
 

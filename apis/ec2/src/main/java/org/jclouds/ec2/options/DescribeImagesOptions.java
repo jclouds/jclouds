@@ -35,7 +35,6 @@ import org.jclouds.ec2.options.internal.BaseEC2RequestOptions;
  * Future<Set<ImageMetadata>> images = connection.getAMIApi().get().describeImages(executableBy("123125").imageIds(1000, 1004));
  * <code>
  * 
- * @author Adrian Cole
  * @see <a
  *      href="http://docs.amazonwebservices.com/AWSEC2/latest/APIReference/index.html?ApiReference-form-DescribeImages.html"
  *      />

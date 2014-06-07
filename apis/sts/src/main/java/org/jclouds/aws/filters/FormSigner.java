@@ -72,8 +72,6 @@ import com.google.common.net.HttpHeaders;
  * @see <a href=
  *      "http://docs.amazonwebservices.com/AWSEC2/latest/APIReference/Query-Common-Parameters.html"
  *      />
- * @author Adrian Cole
- * 
  */
 @Singleton
 public class FormSigner implements HttpRequestFilter, RequestSigner {

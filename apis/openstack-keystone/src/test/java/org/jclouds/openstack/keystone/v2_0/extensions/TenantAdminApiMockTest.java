@@ -34,8 +34,6 @@ import com.squareup.okhttp.mockwebserver.RecordedRequest;
 
 /**
  * Tests TenantApi Guice wiring and parsing
- * 
- * @author Pedro Navarro
  */
 @Test(groups = "unit", testName = "TenantAdminApiMockTest")
 public class TenantAdminApiMockTest extends BaseOpenStackMockTest<KeystoneApi> {

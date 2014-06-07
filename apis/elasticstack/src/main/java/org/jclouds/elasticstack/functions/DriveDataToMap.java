@@ -26,10 +26,6 @@ import org.jclouds.elasticstack.domain.DriveData;
 import com.google.common.base.Function;
 import com.google.common.collect.ImmutableMap;
 
-/**
- * 
- * @author Adrian Cole
- */
 @Singleton
 public class DriveDataToMap implements Function<DriveData, Map<String, String>> {
    private final BaseDriveToMap baseDriveToMap;

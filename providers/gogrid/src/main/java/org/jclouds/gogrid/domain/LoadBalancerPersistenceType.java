@@ -18,9 +18,6 @@ package org.jclouds.gogrid.domain;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
-/**
- * @author Oleksiy Yarmula
- */
 public enum LoadBalancerPersistenceType {
 
    NONE("None"), SSL_STICKY("SSL Sticky"), SOURCE_ADDRESS("Source Address"), UNRECOGNIZED("Unknown");

@@ -71,8 +71,6 @@ import com.jcraft.jsch.agentproxy.Connector;
 
 /**
  * This class needs refactoring. It is not thread safe.
- * 
- * @author Adrian Cole
  */
 public class JschSshClient implements SshClient {
 

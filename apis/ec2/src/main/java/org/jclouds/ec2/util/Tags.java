@@ -25,10 +25,6 @@ import org.jclouds.ec2.domain.Tag;
 import com.google.common.base.Function;
 import com.google.common.collect.Maps;
 
-/**
- * 
- * @author Adrian Cole
- */
 public class Tags {
    private Tags() {
    }

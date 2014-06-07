@@ -33,8 +33,6 @@ import com.google.common.collect.ImmutableMultimap;
  * Binds a list of real IPs to the request.
  * 
  * The {@link IpPortPair pairs} must have a {@link IpPortPair#ip} set with a valid IP address.
- * 
- * @author Oleksiy Yarmula
  */
 public class BindRealIpPortPairsToQueryParams implements Binder {
 

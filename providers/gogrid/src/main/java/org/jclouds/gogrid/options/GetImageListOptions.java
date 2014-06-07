@@ -28,9 +28,6 @@ import org.jclouds.gogrid.domain.ServerImageState;
 import org.jclouds.gogrid.domain.ServerImageType;
 import org.jclouds.http.options.BaseHttpRequestOptions;
 
-/**
- * @author Oleksiy Yarmula
- */
 public class GetImageListOptions extends BaseHttpRequestOptions {
 
    public GetImageListOptions setType(ServerImageType imageType) {

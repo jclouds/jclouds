@@ -27,10 +27,6 @@ import org.jclouds.compute.domain.ExecResponse;
 import com.google.common.base.Supplier;
 import com.google.common.util.concurrent.ListenableFuture;
 
-/**
- * 
- * @author Adrian Cole
- */
 public class ScriptStillRunningException extends TimeoutException implements Supplier<ListenableFuture<ExecResponse>> {
 
    private final ListenableFuture<ExecResponse> delegate;

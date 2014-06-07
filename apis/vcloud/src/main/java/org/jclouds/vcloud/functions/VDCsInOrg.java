@@ -30,9 +30,6 @@ import org.jclouds.vcloud.domain.VDC;
 
 import com.google.common.base.Function;
 
-/**
- * @author Adrian Cole
- */
 @Singleton
 public class VDCsInOrg implements Function<Org, Iterable<VDC>> {
    @Resource

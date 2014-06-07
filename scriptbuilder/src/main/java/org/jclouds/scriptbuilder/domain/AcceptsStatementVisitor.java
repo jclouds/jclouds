@@ -16,10 +16,6 @@
  */
 package org.jclouds.scriptbuilder.domain;
 
-/**
- * 
- * @author Adrian Cole
- */
 public interface AcceptsStatementVisitor {
 
    void accept(StatementVisitor visitor);

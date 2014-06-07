@@ -24,8 +24,6 @@ import com.google.common.collect.Maps;
  * When an Azure Storage request is in error, the client receives an error response.
  * 
  * @see <a href="http://msdn.microsoft.com/en-us/library/dd573365.aspx" />
- * @author Adrian Cole
- * 
  */
 public class AzureStorageError {
    private String code;

@@ -23,9 +23,6 @@ import org.testng.annotations.Test;
 
 import com.google.common.collect.ImmutableSet;
 
-/**
- * @author Jeremy Daggett
- */
 @Test(groups = "live")
 public class HPCloudObjectStorageServiceIntegrationLiveTest extends SwiftServiceIntegrationLiveTest {
    public HPCloudObjectStorageServiceIntegrationLiveTest() {

@@ -44,8 +44,6 @@ import com.google.inject.Inject;
 
 /**
  * Retrieves all blobmetadata in the list as efficiently as possible
- * 
- * @author Adrian Cole
  */
 @NotThreadSafe
 public class FetchBlobMetadata implements Function<PageSet<? extends StorageMetadata>, PageSet<? extends StorageMetadata>> {

@@ -20,8 +20,6 @@ import java.util.Date;
 
 /**
  * System metadata of the S3Bucket
- * 
- * @author Adrian Cole
  */
 public class BucketMetadata implements Comparable<BucketMetadata> {
    private final Date creationDate;

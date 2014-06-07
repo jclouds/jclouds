@@ -47,7 +47,6 @@ import com.google.common.collect.Sets;
  * EnumerationResults ContainerName="http://myaccount.blob.core.windows.net/mycontainer"
  * 
  * @see <a href="http://msdn.microsoft.com/en-us/library/dd135734.aspx#samplerequestandresponse" />
- * @author Adrian Cole
  */
 public class ContainerNameEnumerationResultsHandler extends ParseSax.HandlerWithResult<ListBlobsResponse> {
    private Set<BlobProperties> blobMetadata = Sets.newLinkedHashSet();

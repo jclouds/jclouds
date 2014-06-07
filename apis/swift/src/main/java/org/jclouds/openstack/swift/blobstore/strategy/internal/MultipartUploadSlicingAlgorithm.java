@@ -21,7 +21,6 @@
  *   Created by: tibor
  *
  *   History
- *
  */
 
 package org.jclouds.openstack.swift.blobstore.strategy.internal;

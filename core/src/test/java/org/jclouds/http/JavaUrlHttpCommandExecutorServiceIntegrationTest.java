@@ -30,8 +30,6 @@ import com.google.inject.Module;
 
 /**
  * Tests the functionality of the {@link JavaUrlHttpCommandExecutorService}
- * 
- * @author Adrian Cole
  */
 @Test(groups = "integration")
 public class JavaUrlHttpCommandExecutorServiceIntegrationTest extends BaseHttpCommandExecutorServiceIntegrationTest {

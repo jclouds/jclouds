@@ -33,10 +33,6 @@ import com.google.common.base.Function;
 import com.google.common.base.Supplier;
 import com.google.common.collect.Maps;
 
-/**
- * 
- * @author Adrian Cole
- */
 public class NetworksForCurrentUser implements Supplier<Map<String, Network>> {
    private final CloudStackApi client;
    private final Supplier<User> currentUserSupplier;

@@ -31,8 +31,6 @@ import com.google.common.collect.Iterables;
 
 /**
  * Tests behavior of {@code VMGroupApi}
- *
- * @author Richard Downer
  */
 @Test(groups = "live", singleThreaded = true, testName = "VMGroupApiLiveTest")
 public class VMGroupApiLiveTest extends BaseCloudStackApiLiveTest {

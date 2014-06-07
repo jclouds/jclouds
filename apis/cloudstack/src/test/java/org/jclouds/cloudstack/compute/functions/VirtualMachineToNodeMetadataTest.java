@@ -47,9 +47,6 @@ import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Iterables;
 import com.google.inject.Guice;
 
-/**
- * @author Adrian Cole, Andrei Savu
- */
 @Test(groups = "unit", testName = "VirtualMachineToNodeMetadataTest")
 public class VirtualMachineToNodeMetadataTest {
 

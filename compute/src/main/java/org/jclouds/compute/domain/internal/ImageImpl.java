@@ -32,9 +32,6 @@ import org.jclouds.javax.annotation.Nullable;
 
 import com.google.common.base.Objects.ToStringHelper;
 
-/**
- * @author Adrian Cole
- */
 public class ImageImpl extends ComputeMetadataImpl implements Image {
 
    private final OperatingSystem operatingSystem;

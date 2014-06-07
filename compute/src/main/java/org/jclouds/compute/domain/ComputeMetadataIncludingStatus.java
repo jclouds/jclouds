@@ -19,7 +19,6 @@ package org.jclouds.compute.domain;
 import org.jclouds.javax.annotation.Nullable;
 
 /**
- * @author Adrian Cole
  */
 public interface ComputeMetadataIncludingStatus<S extends Enum<S>> extends ComputeMetadata {
 

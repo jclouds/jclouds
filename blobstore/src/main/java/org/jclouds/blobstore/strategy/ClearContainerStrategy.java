@@ -22,8 +22,6 @@ import com.google.inject.ImplementedBy;
 
 /**
  * Clears a container
- * 
- * @author Adrian Cole
  */
 @ImplementedBy(DeleteAllKeysInList.class)
 public interface ClearContainerStrategy {

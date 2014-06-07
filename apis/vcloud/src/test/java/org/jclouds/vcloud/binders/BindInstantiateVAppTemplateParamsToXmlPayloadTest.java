@@ -60,8 +60,6 @@ import com.google.inject.Provides;
 
 /**
  * Tests behavior of {@code BindInstantiateVAppTemplateParamsToXmlPayload}
- * 
- * @author Adrian Cole
  */
 @Test(groups = "unit")
 public class BindInstantiateVAppTemplateParamsToXmlPayloadTest extends BasePayloadTest {

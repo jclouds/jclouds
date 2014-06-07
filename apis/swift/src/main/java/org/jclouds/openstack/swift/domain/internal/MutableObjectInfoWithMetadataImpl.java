@@ -28,11 +28,6 @@ import org.jclouds.openstack.swift.domain.ObjectInfo;
 
 import com.google.common.collect.Maps;
 
-/**
- * 
- * @author Adrian Cole
- * 
- */
 public class MutableObjectInfoWithMetadataImpl implements MutableObjectInfoWithMetadata {
    private String name;
    private String container;

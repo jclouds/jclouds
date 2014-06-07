@@ -32,10 +32,6 @@ import com.google.common.collect.Iterables;
 import com.google.inject.Inject;
 import com.google.inject.TypeLiteral;
 
-/**
- * 
- * @author Adrian Cole
- */
 @Singleton
 public class OnlyMetadataValueOrNull implements Function<HttpResponse, String> {
    private final ParseJson<Wrapper> parser;

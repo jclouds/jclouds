@@ -30,7 +30,6 @@ import com.google.common.collect.ImmutableSet;
 /**
  * Class ProductOrder
  *
- * @author Jason King
  * @see <a href= "http://sldn.softlayer.com/reference/datatypes/SoftLayer_Container_Product_Order_Virtual_Guest"
 />
  */

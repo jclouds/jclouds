@@ -24,8 +24,6 @@ import java.lang.annotation.Target;
 
 /**
  * Designates that this method returns a rest client
- * 
- * @author Adrian Cole
  */
 @Target(METHOD)
 @Retention(RUNTIME)

@@ -30,10 +30,6 @@ import org.testng.annotations.Test;
 import com.google.common.base.Supplier;
 import com.google.common.util.concurrent.UncheckedExecutionException;
 
-/**
- * 
- * @author Adrian Cole
- */
 @Test(groups = "unit", testName = "MemoizedRetryOnTimeOutButNotOnAuthorizationExceptionSupplierTest")
 public class MemoizedRetryOnTimeOutButNotOnAuthorizationExceptionSupplierTest {
    @Test

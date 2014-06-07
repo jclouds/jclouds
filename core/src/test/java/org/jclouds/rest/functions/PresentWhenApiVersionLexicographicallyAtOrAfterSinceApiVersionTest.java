@@ -38,8 +38,6 @@ import com.google.common.collect.ImmutableList;
 /**
  * Allows you to use simple api version comparison to determine if a feature is
  * available.
- * 
- * @author Adrian Cole
  */
 @Test(groups = "unit")
 public class PresentWhenApiVersionLexicographicallyAtOrAfterSinceApiVersionTest {

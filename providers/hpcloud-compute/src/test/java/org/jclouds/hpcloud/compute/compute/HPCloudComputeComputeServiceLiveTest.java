@@ -19,10 +19,6 @@ package org.jclouds.hpcloud.compute.compute;
 import org.jclouds.openstack.nova.v2_0.compute.NovaComputeServiceLiveTest;
 import org.testng.annotations.Test;
 
-/**
- * 
- * @author Adrian Cole
- */
 @Test(groups = "live", singleThreaded = true, testName = "HPCloudComputeComputeServiceLiveTest")
 public class HPCloudComputeComputeServiceLiveTest extends NovaComputeServiceLiveTest {
 

@@ -35,7 +35,6 @@ import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.ImmutableSet;
 
 /**
- * @author Andrew Bayer
  *
  * @see org.jclouds.ec2.features.ElasticIPAddressApi
  */

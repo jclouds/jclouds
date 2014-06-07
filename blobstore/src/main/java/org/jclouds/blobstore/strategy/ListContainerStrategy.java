@@ -24,8 +24,6 @@ import com.google.inject.ImplementedBy;
 
 /**
  * Lists the blobstore.
- * 
- * @author Adrian Cole
  */
 @ImplementedBy(ConcatenateContainerLists.class)
 public interface ListContainerStrategy {

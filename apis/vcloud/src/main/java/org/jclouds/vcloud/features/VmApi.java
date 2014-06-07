@@ -60,8 +60,6 @@ import org.jclouds.vcloud.xml.VmHandler;
 /**
  * Provides access to VM functionality in vCloud
  * <p/>
- * 
- * @author Adrian Cole
  */
 @RequestFilters(AddVCloudAuthorizationAndCookieToRequest.class)
 public interface VmApi {

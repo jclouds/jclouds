@@ -20,8 +20,6 @@ import org.jclouds.http.HttpRequest;
 
 /**
  * Exception thrown during the binding process.
- * 
- * @author Ignasi Barrera
  */
 public class BindException extends RuntimeException {
 

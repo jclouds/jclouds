@@ -32,9 +32,6 @@ import com.google.common.base.Supplier;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableMap.Builder;
 
-/**
- * 
- */
 @Singleton
 public class ZoneIdToURIFromJoinOnRegionIdToURI implements ZoneIdToURISupplier {
 

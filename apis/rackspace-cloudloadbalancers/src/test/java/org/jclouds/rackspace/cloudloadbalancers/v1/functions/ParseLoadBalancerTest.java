@@ -44,10 +44,6 @@ import com.google.inject.AbstractModule;
 import com.google.inject.Injector;
 import com.google.inject.assistedinject.FactoryModuleBuilder;
 
-/**
- * 
- * @author Adrian Cole
- */
 @Test(groups = "unit", testName = "UnwrapLoadBalancerTest")
 public class ParseLoadBalancerTest extends BaseItemParserTest<LoadBalancer> {
 

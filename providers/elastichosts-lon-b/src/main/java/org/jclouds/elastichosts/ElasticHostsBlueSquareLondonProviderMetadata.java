@@ -27,8 +27,6 @@ import org.jclouds.providers.internal.BaseProviderMetadata;
 
 /**
  * Implementation of {@link org.jclouds.types.ProviderMetadata} for ElasticHosts London BlueSquare.
- * 
- * @author Adrian Cole
  */
 public class ElasticHostsBlueSquareLondonProviderMetadata extends BaseProviderMetadata {
 

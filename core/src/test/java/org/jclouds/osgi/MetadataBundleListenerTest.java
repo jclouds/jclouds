@@ -46,11 +46,6 @@ import org.testng.annotations.Test;
 
 import com.google.common.collect.Lists;
 
-/**
- * 
- * @author iocanel
- * 
- */
 public class MetadataBundleListenerTest {
 
    @Test

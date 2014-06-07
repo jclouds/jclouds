@@ -37,9 +37,6 @@ import org.jclouds.rest.annotations.RequestFilters;
 import org.jclouds.rest.annotations.VirtualHost;
 import org.jclouds.rest.annotations.XMLResponseParser;
 
-/**
- * @author Adrian Cole
- */
 @RequestFilters(FormSigner.class)
 @VirtualHost
 public interface NovaEC2KeyPairApi extends KeyPairApi {

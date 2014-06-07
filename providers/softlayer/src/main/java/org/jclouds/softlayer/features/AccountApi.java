@@ -34,7 +34,6 @@ import org.jclouds.softlayer.domain.ProductPackage;
  * <p/>
  * 
  * @see <a href="http://sldn.softlayer.com/article/REST" />
- * @author Jason King
  */
 @RequestFilters(BasicAuthentication.class)
 @Path("/v{jclouds.api-version}")

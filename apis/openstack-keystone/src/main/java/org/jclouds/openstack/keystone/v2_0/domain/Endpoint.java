@@ -30,7 +30,6 @@ import com.google.common.base.Objects.ToStringHelper;
  * template, which represents the templates of all the consumable services that
  * are available across the regions.
  *
- * @author AdrianCole
  * @see <a href=
  *      "http://docs.openstack.org/api/openstack-identity-service/2.0/content/Identity-Endpoint-Concepts-e1362.html"
  *      />

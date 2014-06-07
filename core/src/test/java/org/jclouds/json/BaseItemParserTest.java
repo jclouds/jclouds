@@ -17,10 +17,6 @@
 package org.jclouds.json;
 
 
-/**
- * 
- * @author Adrian Cole
- */
 public abstract class BaseItemParserTest<T> extends BaseParserTest<T, T> {
 
 }

@@ -32,8 +32,6 @@ import com.google.inject.Singleton;
 
 /**
  * Tests to see if a volume is detached.
- *
- * @author Karthik Arunachalam
  */
 @Singleton
 public class VolumeDetached implements Predicate<Attachment> {

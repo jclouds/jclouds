@@ -28,8 +28,6 @@ import com.google.common.collect.Multimap;
 /**
  * 
  * Shortcut to create ingress rules
- * 
- * @author Adrian Cole
  */
 public class IpPermissions extends IpPermission {
 

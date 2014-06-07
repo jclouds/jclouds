@@ -29,9 +29,6 @@ import org.xml.sax.SAXException;
 
 import com.google.common.collect.Sets;
 
-/**
- * @author Adrian Cole
- */
 public class DescribeBundleTasksResponseHandler extends ParseSax.HandlerWithResult<Set<BundleTask>> {
 
    private Set<BundleTask> bundleTasks = Sets.newLinkedHashSet();

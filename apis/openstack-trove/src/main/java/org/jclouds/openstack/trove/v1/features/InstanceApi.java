@@ -50,8 +50,6 @@ import com.google.common.collect.FluentIterable;
  * @see <a
  *      href="https://github.com/reddwarf-nextgen/reddwarf">api
  *      src</a>
- *      
- * @author Zack Shoylev
  */
 @SkipEncoding({'/', '='})
 @RequestFilters(AuthenticateRequest.class)

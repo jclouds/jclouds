@@ -33,10 +33,6 @@ import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
 
-/**
- * 
- * @author Adrian Cole
- */
 @Beta
 @Singleton
 public class PresentWhenApiVersionLexicographicallyAtOrAfterSinceApiVersion implements ImplicitOptionalConverter {

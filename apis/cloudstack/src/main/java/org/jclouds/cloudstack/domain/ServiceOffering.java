@@ -30,8 +30,6 @@ import com.google.common.collect.ImmutableSet;
 
 /**
  * Class ServiceOffering
- *
- * @author Adrian Cole
  */
 public class ServiceOffering implements Comparable<ServiceOffering> {
 

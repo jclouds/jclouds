@@ -23,10 +23,6 @@ import org.testng.annotations.Test;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.reflect.TypeToken;
 
-/**
- * 
- * @author Adrian Cole
- */
 @Test(groups = "unit", testName = "Route53ApiMetadataTest")
 public class Route53ApiMetadataTest extends BaseHttpApiMetadataTest {
 

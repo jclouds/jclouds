@@ -35,8 +35,6 @@ import com.google.common.cache.LoadingCache;
 
 /**
  * Tests behavior of {@code RetryOnRenew} handler
- * 
- * @author grkvlt@apache.org
  */
 @Test(groups = "unit", testName = "RetryOnRenewTest")
 public class RetryOnRenewTest {

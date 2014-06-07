@@ -24,9 +24,6 @@ import static org.testng.Assert.assertTrue;
 import org.jclouds.cloudstack.domain.Template;
 import org.testng.annotations.Test;
 
-/**
- * @author Andrei Savu
- */
 @Test(groups = "unit")
 public class TemplatePredicatesTest {
 

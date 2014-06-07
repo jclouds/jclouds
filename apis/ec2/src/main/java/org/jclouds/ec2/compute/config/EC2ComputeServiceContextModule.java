@@ -54,8 +54,6 @@ import com.google.inject.name.Names;
 
 /**
  * Configures the {@link ComputeServiceContext}; requires {@link EC2ComputeService} bound.
- * 
- * @author Adrian Cole
  */
 public class EC2ComputeServiceContextModule extends BaseComputeServiceContextModule {
    @Override

@@ -28,10 +28,6 @@ import com.google.common.base.Function;
 import com.google.common.base.Optional;
 import com.google.common.cache.LoadingCache;
 
-/**
- *
- * @author Adrian Cole
- */
 @Singleton
 public class DefaultEndpointThenInvalidateRegion implements Function<Object, URI> {
 

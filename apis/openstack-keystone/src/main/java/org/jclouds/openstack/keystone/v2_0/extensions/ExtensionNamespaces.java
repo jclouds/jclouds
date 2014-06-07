@@ -19,7 +19,6 @@ package org.jclouds.openstack.keystone.v2_0.extensions;
 /**
  * Extension namespaces
  *
- * @author Pedro Navarro
  * @see <a href= "http://docs.openstack.org/developer/keystone/extension_development.html" />
  */
 public interface ExtensionNamespaces {

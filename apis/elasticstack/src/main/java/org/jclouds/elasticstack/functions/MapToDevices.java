@@ -32,10 +32,6 @@ import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Maps;
 import com.google.common.collect.ImmutableSet.Builder;
 
-/**
- * 
- * @author Adrian Cole
- */
 @Singleton
 public class MapToDevices implements Function<Map<String, String>, Map<String, ? extends Device>> {
    @Singleton

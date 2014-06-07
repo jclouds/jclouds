@@ -16,6 +16,5 @@
  */
 /**
  * This package contains properties and reference data used in Rackspace Cloud Files.
- * @author Adrian Cole
  */
 package org.jclouds.cloudfiles.reference;

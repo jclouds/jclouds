@@ -26,7 +26,6 @@ import org.testng.annotations.Test;
 
 /**
 * 
- * @author Adrian Cole
  */
 @Test(groups = "unit")
 public class HttpUtilsTest  {

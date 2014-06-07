@@ -31,7 +31,6 @@ import com.google.common.base.Objects.ToStringHelper;
  *
  * @see <a href="http://docs.openstack.org/api/openstack-identity-service/2.0/content/POST_authenticate_v2.0_tokens_Service_API_Api_Operations.html#d662e583"
 />
- * @author Adrian Cole
  */
 @CredentialType(CredentialTypes.API_ACCESS_KEY_CREDENTIALS)
 public class ApiAccessKeyCredentials {

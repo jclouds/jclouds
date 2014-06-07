@@ -19,10 +19,6 @@ package org.jclouds.rackspace.cloudservers;
 import org.jclouds.cloudservers.CloudServersClientLiveTest;
 import org.testng.annotations.Test;
 
-/**
- * 
- * @author Adrian Cole
- */
 @Test(groups = "live", sequential = true)
 public class CloudServersUKClientLiveTest extends CloudServersClientLiveTest {
    public CloudServersUKClientLiveTest() {

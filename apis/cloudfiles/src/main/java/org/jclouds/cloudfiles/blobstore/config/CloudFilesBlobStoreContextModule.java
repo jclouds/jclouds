@@ -36,9 +36,6 @@ import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
 import com.google.inject.Provides;
 
-/**
- * @author Adrian Cole
- */
 public class CloudFilesBlobStoreContextModule extends SwiftBlobStoreContextModule {
 
    @Provides

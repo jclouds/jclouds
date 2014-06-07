@@ -43,8 +43,6 @@ import com.google.inject.Provides;
 /**
  * Provides access to Rackspace Cloud Load Balancers.
  * <p/>
- * 
- * @author Everett Toews
  */
 public interface CloudLoadBalancersApi extends Closeable {
    /**

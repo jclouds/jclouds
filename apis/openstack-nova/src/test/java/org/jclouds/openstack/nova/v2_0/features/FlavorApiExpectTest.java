@@ -38,8 +38,6 @@ import com.google.common.net.HttpHeaders;
 
 /**
  * Tests annotation parsing of {@code FlavorAsyncApi}
- * 
- * @author Jeremy Daggett, Ilja Bobkevic
  */
 @Test(groups = "unit", testName = "FlavorApiExpectTest")
 public class FlavorApiExpectTest extends BaseNovaApiExpectTest {

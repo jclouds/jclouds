@@ -33,7 +33,6 @@ import org.jclouds.ec2.options.internal.BaseEC2RequestOptions;
  * Set<Snapshot> snapshots = connection.getElasticBlockStoreApi().get().describeSnapshots(restorableBy("123125").snapshotIds(1000, 1004));
  * <code>
  * 
- * @author Adrian Cole
  * @see <a
  *      href="http://docs.amazonwebservices.com/AWSEC2/latest/APIReference/index.html?ApiReference-form-DescribeSnapshots.html"
  *      />

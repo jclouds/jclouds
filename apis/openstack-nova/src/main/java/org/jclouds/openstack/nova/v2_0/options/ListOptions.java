@@ -25,7 +25,6 @@ import org.jclouds.openstack.v2_0.options.PaginationOptions;
  * 
  * @see PaginationOptions
  * @see <a href="http://wiki.openstack.org/OpenStackAPI_1-1" />
- * @author Adrian Cole
  */
 public class ListOptions extends PaginationOptions {
 

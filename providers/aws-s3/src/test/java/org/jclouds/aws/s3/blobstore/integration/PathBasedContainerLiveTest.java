@@ -23,9 +23,6 @@ import java.util.Properties;
 import org.jclouds.s3.blobstore.integration.S3ContainerLiveTest;
 import org.testng.annotations.Test;
 
-/**
- * @author Adrian Cole
- */
 @Test(groups = "live", singleThreaded = true, testName = "PathBasedContainerLiveTest")
 public class PathBasedContainerLiveTest  extends S3ContainerLiveTest {
    public PathBasedContainerLiveTest() {

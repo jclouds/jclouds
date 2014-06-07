@@ -26,9 +26,6 @@ import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import com.google.inject.Module;
 
-/**
- * @author Adrian Cole
- */
 @Test(groups = "live", testName = "CloudSigmaComputeServiceLiveTest")
 public class CloudSigmaComputeServiceLiveTest extends BaseComputeServiceLiveTest {
 

@@ -38,9 +38,6 @@ import com.google.common.base.Supplier;
  * 
  * Depending on your latency and legal requirements, you can specify a location
  * constraint that will affect where your data physically resides.
- * 
- * @author Adrian Cole
- * 
  */
 @Singleton
 public class BindRegionToXmlPayload extends BindToStringPayload {

@@ -31,9 +31,6 @@ import org.xml.sax.SAXException;
 
 import com.google.common.collect.Maps;
 
-/**
- * @author Adrian Cole
- */
 public class CatalogItemHandler extends ParseSax.HandlerWithResult<CatalogItem> {
    private StringBuilder currentText = new StringBuilder();
 

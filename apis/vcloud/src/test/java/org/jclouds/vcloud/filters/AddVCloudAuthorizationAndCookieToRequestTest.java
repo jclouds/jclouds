@@ -25,9 +25,6 @@ import org.testng.annotations.Test;
 import com.google.common.base.Supplier;
 import com.google.common.net.HttpHeaders;
 
-/**
- * @author Adrian Cole
- */
 @Test(testName = "AddVCloudAuthorizationAndCookieToRequestTest")
 public class AddVCloudAuthorizationAndCookieToRequestTest {
 

@@ -43,8 +43,6 @@ import com.google.common.net.InternetDomainName;
  * templateBuilder.options(inboundPorts(22, 80, 8080, 443));
  * Set&lt;? extends NodeMetadata&gt; set = client.createNodesInGroup(tag, 2, templateBuilder.build());
  * </pre>
- * 
- * @author Adrian Cole
  */
 public class SoftLayerTemplateOptions extends TemplateOptions implements Cloneable {
 

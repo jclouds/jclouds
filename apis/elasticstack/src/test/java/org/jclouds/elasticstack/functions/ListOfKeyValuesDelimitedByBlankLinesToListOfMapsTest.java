@@ -24,10 +24,6 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Lists;
 
-/**
- * 
- * @author Adrian Cole
- */
 @Test(groups = { "unit" })
 public class ListOfKeyValuesDelimitedByBlankLinesToListOfMapsTest {
 

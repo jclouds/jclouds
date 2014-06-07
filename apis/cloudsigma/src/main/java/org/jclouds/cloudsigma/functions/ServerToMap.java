@@ -31,10 +31,6 @@ import com.google.common.base.Function;
 import com.google.common.base.Joiner;
 import com.google.common.collect.ImmutableMap;
 
-/**
- * 
- * @author Adrian Cole
- */
 @Singleton
 public class ServerToMap implements Function<Server, Map<String, String>> {
    @Override

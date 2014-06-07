@@ -35,8 +35,6 @@ import com.google.common.reflect.TypeToken;
 
 /**
  * The Apis class provides static methods for accessing apis.
- * 
- * @author Jeremy Whitlock <jwhitlock@apache.org>
  */
 public class Apis {
 

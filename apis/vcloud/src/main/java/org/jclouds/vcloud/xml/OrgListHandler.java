@@ -28,9 +28,6 @@ import org.xml.sax.SAXException;
 
 import com.google.common.collect.Maps;
 
-/**
- * @author Adrian Cole
- */
 public class OrgListHandler extends ParseSax.HandlerWithResult<Map<String, ReferenceType>> {
 
    private Map<String, ReferenceType> org = Maps.newHashMap();

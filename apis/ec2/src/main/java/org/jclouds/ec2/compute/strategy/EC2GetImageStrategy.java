@@ -32,10 +32,6 @@ import org.jclouds.ec2.options.DescribeImagesOptions;
 
 import com.google.common.base.Function;
 
-/**
- * 
- * @author Adrian Cole
- */
 @Singleton
 public class EC2GetImageStrategy implements GetImageStrategy {
 

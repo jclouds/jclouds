@@ -30,9 +30,6 @@ import org.testng.annotations.Test;
 
 import com.google.common.collect.ImmutableSet;
 
-/**
- * @author Adam Lowe
- */
 @Test(groups = "unit", testName = "NovaEC2ElasticBlockStoreApiTest")
 public class NovaEC2ElasticBlockStoreExpectApiTest extends BaseNovaEC2RestApiExpectTest {
 

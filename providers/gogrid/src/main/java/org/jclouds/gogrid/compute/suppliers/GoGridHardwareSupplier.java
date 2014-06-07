@@ -30,10 +30,6 @@ import com.google.common.base.Supplier;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 
-/**
- * 
- * @author Adrian Cole
- */
 @Singleton
 public class GoGridHardwareSupplier implements Supplier<Set<? extends Hardware>> {
    public static final Hardware H16384 = new HardwareBuilder().ids("6").ram(16384)

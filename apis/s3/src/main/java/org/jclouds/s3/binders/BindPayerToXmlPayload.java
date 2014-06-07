@@ -26,11 +26,6 @@ import org.jclouds.http.HttpRequest;
 import org.jclouds.rest.Binder;
 import org.jclouds.s3.domain.Payer;
 
-/**
- * 
- * @author Adrian Cole
- * 
- */
 @Singleton
 public class BindPayerToXmlPayload implements Binder {
    @Override

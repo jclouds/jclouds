@@ -33,10 +33,6 @@ import com.google.common.collect.ImmutableSet.Builder;
 import com.google.inject.Inject;
 import com.google.inject.TypeLiteral;
 
-/**
- * 
- * @author Adrian Cole
- */
 @Singleton
 public class ParseNamesFromHttpResponse implements Function<HttpResponse, Set<String>> {
    private final ParseFirstJsonValueNamed<Set<Name>> parser;

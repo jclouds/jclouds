@@ -36,9 +36,6 @@ import com.google.inject.Injector;
 
 /**
  * Compares performance of date operations
- * 
- * @author Adrian Cole
- * @author James Murty
  */
 //NOTE:without testName, this will not call @Before* and fail w/NPE during surefire
 @Test(groups = "performance", singleThreaded = true, timeOut = 2 * 60 * 1000, testName = "JodaDateServiceTest")

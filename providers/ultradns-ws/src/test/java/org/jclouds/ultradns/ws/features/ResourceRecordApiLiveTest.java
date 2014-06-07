@@ -43,9 +43,6 @@ import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
 import com.google.common.collect.FluentIterable;
 
-/**
- * @author Adrian Cole
- */
 @Test(groups = "live", singleThreaded = true, testName = "ResourceRecordApiLiveTest")
 public class ResourceRecordApiLiveTest extends BaseUltraDNSWSApiLiveTest {
 

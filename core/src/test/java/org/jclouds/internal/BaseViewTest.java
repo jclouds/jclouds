@@ -40,7 +40,6 @@ import com.google.common.base.Suppliers;
 import com.google.common.reflect.TypeToken;
 
 /** 
- * @author Adrian Cole
  */
 @Test(groups = "unit", testName = "BaseViewTest")
 public class BaseViewTest {

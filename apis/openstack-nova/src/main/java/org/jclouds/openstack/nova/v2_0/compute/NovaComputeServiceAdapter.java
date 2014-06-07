@@ -65,8 +65,6 @@ import com.google.common.collect.ImmutableSet.Builder;
 /**
  * The adapter used by the NovaComputeServiceContextModule to interface the nova-specific domain
  * model to the computeService generic domain model.
- * 
- * @author Matt Stephenson, Adrian Cole
  */
 public class NovaComputeServiceAdapter implements
          ComputeServiceAdapter<ServerInZone, FlavorInZone, ImageInZone, Location> {

@@ -19,10 +19,6 @@ package org.jclouds.glesys;
 import org.jclouds.providers.internal.BaseProviderMetadataTest;
 import org.testng.annotations.Test;
 
-/**
- * 
- * @author Adrian Cole
- */
 @Test(groups = "unit", testName = "GleSYSProviderTest")
 public class GleSYSProviderTest extends BaseProviderMetadataTest {
 

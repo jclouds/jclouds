@@ -36,7 +36,6 @@ import com.google.inject.Provides;
  * 
  * @see AtmosAsyncClient
  * @see <a href="https://community.emc.com/community/labs/atmos_online" />
- * @author Adrian Cole
  */
 public interface AtmosClient extends Closeable {
    /**

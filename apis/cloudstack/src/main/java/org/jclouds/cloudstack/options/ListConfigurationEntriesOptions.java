@@ -26,7 +26,6 @@ import com.google.common.collect.ImmutableSet;
  * @see <a href=
  *      "http://download.cloud.com/releases/2.2.0/api_2.2.12/global_admin/listConfigurations.html"
  *      />
- * @author Andrei Savu
  */
 public class ListConfigurationEntriesOptions extends BaseHttpRequestOptions {
 

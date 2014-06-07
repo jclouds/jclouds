@@ -25,8 +25,6 @@ import com.google.inject.AbstractModule;
 
 /**
  * Custom configuration for the Serverlove provider.
- * 
- * @author Ignasi Barrera
  */
 public class ServerloveImagesModule extends AbstractModule {
 

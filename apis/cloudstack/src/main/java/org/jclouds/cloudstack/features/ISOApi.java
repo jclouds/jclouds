@@ -50,7 +50,6 @@ import org.jclouds.rest.annotations.Unwrap;
  * <p/>
  * 
  * @see http://download.cloud.com/releases/2.2.12/api/TOC_User.html
- * @author Richard Downer
  */
 @RequestFilters(AuthenticationFilter.class)
 @QueryParams(keys = "response", values = "json")

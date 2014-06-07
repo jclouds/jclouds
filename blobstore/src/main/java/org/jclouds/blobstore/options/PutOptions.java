@@ -25,8 +25,6 @@ package org.jclouds.blobstore.options;
  * import static org.jclouds.blobstore.options.PutOptions.Builder.*
  * eTag = blobStore.putBlob("container", blob, multipart());
  * <code>
- * 
- * @author Adrian Cole
  */
 public class PutOptions implements Cloneable {
 

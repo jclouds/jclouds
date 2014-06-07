@@ -35,8 +35,6 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * Utilities used to build init scripts.
- * 
- * @author Adrian Cole
  */
 public class Utils {
 

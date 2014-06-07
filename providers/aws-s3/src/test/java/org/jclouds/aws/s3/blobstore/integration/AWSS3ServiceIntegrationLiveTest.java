@@ -23,9 +23,6 @@ import org.testng.annotations.Test;
 
 import com.google.common.collect.ImmutableSet;
 
-/**
- * @author Adrian Cole
- */
 @Test(groups = "live", testName = "AWSS3ServiceIntegrationLiveTest")
 public class AWSS3ServiceIntegrationLiveTest extends S3ServiceIntegrationLiveTest {
    public AWSS3ServiceIntegrationLiveTest() {

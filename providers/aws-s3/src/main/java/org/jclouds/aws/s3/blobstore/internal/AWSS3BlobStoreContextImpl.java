@@ -33,9 +33,6 @@ import org.jclouds.s3.blobstore.internal.S3BlobStoreContextImpl;
 
 import com.google.common.reflect.TypeToken;
 
-/**
- * @author Adrian Cole
- */
 @Singleton
 public class AWSS3BlobStoreContextImpl extends S3BlobStoreContextImpl implements AWSS3BlobStoreContext {
 

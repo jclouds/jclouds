@@ -34,10 +34,6 @@ import com.google.common.base.Predicate;
 import com.google.common.base.Supplier;
 import com.google.common.collect.Iterables;
 
-/**
- * 
- * @author Adrian Cole
- */
 public class GetCurrentUser implements Supplier<User> {
 
    @Resource

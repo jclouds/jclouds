@@ -26,9 +26,6 @@ import org.jclouds.rest.MapBinder;
 
 import com.google.common.base.Joiner;
 
-/**
- * @author Everett Toews
- */
 public class FormatAndContentsToJSON implements MapBinder {
    private static final String template = "{\"domains\":[{\"contentType\":\"%s\",\"contents\":\"%s\"}]}";
 

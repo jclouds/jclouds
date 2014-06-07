@@ -18,9 +18,6 @@ package org.jclouds.utils;
 
 /**
  * Utility class for test
- * 
- * @author Andrew Phillips
- * 
  */
 public class TestUtils {
     public static final Object[][] NO_INVOCATIONS = new Object[0][0];

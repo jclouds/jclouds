@@ -18,9 +18,6 @@ package org.jclouds.vcloud.domain;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
-/**
- * @author Adrian Cole
- */
 public enum TaskStatus {
    /**
     * The task has completed and returned a value indicating success.

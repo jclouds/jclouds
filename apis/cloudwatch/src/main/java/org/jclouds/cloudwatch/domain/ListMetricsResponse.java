@@ -27,8 +27,6 @@ import com.google.common.collect.ImmutableSet;
 /**
  * list of {@link Metric}
  * @see <a href="http://docs.amazonwebservices.com/AmazonCloudWatch/latest/APIReference/API_ListMetrics.html" />
- *
- * @author Jeremy Whitlock
  */
 public class ListMetricsResponse extends ForwardingSet<Metric> {
 

@@ -27,7 +27,6 @@ import com.google.common.collect.Sets;
  * 
  * @see <a href="http://docs.amazonwebservices.com/AWSEC2/latest/APIReference/ApiReference-ItemType-LaunchPermissionItemType.html"
  *      />
- * @author Adrian Cole
  */
 public class Permission {
    private final Set<String> groups = Sets.newHashSet();

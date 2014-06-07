@@ -30,8 +30,6 @@ import org.jclouds.http.options.BaseHttpRequestOptions;
  *
  * @see org.jclouds.gogrid.features.GridLoadBalancerApi#addLoadBalancer
  * @see <a href="http://wiki.gogrid.com/wiki/index.php/API:grid.loadbalancer.add"/>
- *
- * @author Oleksiy Yarmula
  */
 public class AddLoadBalancerOptions extends BaseHttpRequestOptions {
 

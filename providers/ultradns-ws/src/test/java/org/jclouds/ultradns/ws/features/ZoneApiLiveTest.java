@@ -35,9 +35,6 @@ import org.testng.annotations.Test;
 
 import com.google.common.collect.FluentIterable;
 
-/**
- * @author Adrian Cole
- */
 @Test(groups = "live", testName = "ZoneApiLiveTest")
 public class ZoneApiLiveTest extends BaseUltraDNSWSApiLiveTest {
 

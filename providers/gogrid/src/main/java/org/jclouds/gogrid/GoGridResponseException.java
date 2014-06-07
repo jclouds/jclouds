@@ -25,9 +25,6 @@ import org.jclouds.http.HttpCommand;
 import org.jclouds.http.HttpResponse;
 import org.jclouds.http.HttpResponseException;
 
-/**
- * @author Oleksiy Yarmula
- */
 public class GoGridResponseException extends HttpResponseException {
 
     private Set<ErrorResponse> errors;

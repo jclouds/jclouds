@@ -25,9 +25,6 @@ import org.jclouds.s3.options.ListBucketOptions;
 
 import com.google.common.base.Function;
 
-/**
- * @author Adrian Cole
- */
 @Singleton
 public class ContainerToBucketListOptions implements
          Function<ListContainerOptions, ListBucketOptions> {

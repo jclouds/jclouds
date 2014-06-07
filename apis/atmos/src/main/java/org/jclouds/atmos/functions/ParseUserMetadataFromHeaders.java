@@ -34,9 +34,6 @@ import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Maps;
 
-/**
- * @author Adrian Cole
- */
 @Singleton
 public class ParseUserMetadataFromHeaders implements Function<HttpResponse, UserMetadata> {
    private static final Set<String> SYS_KEYS = ImmutableSet.of(

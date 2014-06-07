@@ -19,10 +19,6 @@ package org.jclouds.scriptbuilder.statements.login;
 import com.google.common.base.Function;
 
 
-/**
- * 
- * @author Adrian Cole
- */
 public class ReplaceShadowPasswordEntryOfLoginUser extends ReplaceShadowPasswordEntry {
 
    public ReplaceShadowPasswordEntryOfLoginUser(Function<String, String> cryptFunction, String password) {

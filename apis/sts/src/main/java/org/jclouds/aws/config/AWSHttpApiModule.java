@@ -36,10 +36,6 @@ import com.google.common.collect.ImmutableSet;
 import com.google.inject.Provides;
 
 
-/**
- * 
- * @author Adrian Cole
- */
 @ConfiguresHttpApi
 public abstract class AWSHttpApiModule<A> extends HttpApiModule<A> {
    protected AWSHttpApiModule() {

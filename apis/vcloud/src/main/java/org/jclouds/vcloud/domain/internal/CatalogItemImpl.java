@@ -28,11 +28,6 @@ import org.jclouds.vcloud.domain.ReferenceType;
 
 import com.google.common.collect.Maps;
 
-/**
- * 
- * @author Adrian Cole
- * 
- */
 public class CatalogItemImpl extends ReferenceTypeImpl implements CatalogItem {
 
    private final String description;

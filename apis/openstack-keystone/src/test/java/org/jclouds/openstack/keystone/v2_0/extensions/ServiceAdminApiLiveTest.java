@@ -36,8 +36,6 @@ import com.google.common.base.Predicate;
 
 /**
  * Tests behavior of ServiceAdminApi
- * 
- * @author Pedro Navarro
  */
 @Test(groups = "live", testName = "ServiceAdminApiLiveTest", singleThreaded = true)
 public class ServiceAdminApiLiveTest extends BaseKeystoneApiLiveTest {

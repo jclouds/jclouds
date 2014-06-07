@@ -26,10 +26,6 @@ import org.testng.annotations.Test;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Iterables;
 
-/**
- * 
- * @author Adrian Cole
- */
 @Test
 public class ImagePredicatesTest {
    ComputeService computeService = ContextBuilder.newBuilder("stub").build(ComputeServiceContext.class).getComputeService();

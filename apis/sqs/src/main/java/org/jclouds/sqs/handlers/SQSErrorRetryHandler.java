@@ -36,10 +36,6 @@ import com.google.common.annotations.VisibleForTesting;
 import com.google.common.util.concurrent.Uninterruptibles;
 import com.google.inject.Inject;
 
-/**
- * 
- * @author Adrian Cole
- */
 public class SQSErrorRetryHandler extends AWSClientErrorRetryHandler {
 
    private final long retryInterval;

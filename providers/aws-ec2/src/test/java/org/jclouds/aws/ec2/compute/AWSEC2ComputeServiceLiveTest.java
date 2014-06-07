@@ -59,10 +59,6 @@ import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.ImmutableSortedSet;
 import com.google.common.util.concurrent.ListenableFuture;
 
-/**
- * 
- * @author Adrian Cole
- */
 @Test(groups = "live", singleThreaded = true, testName = "AWSEC2ComputeServiceLiveTest")
 public class AWSEC2ComputeServiceLiveTest extends EC2ComputeServiceLiveTest {
 

@@ -74,7 +74,6 @@ import com.google.inject.Provides;
  * 
  * @see AtmosClient
  * @see <a href="https://community.emc.com/community/labs/atmos_online" />
- * @author Adrian Cole
  * 
  * @deprecated please use {@code org.jclouds.ContextBuilder#buildApi(AtmosClient.class)} as
  *             {@link AtmosAsyncClient} interface will be removed in jclouds 1.7.

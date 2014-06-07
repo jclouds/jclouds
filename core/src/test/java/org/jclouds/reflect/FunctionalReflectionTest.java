@@ -31,10 +31,6 @@ import org.testng.annotations.Test;
 import com.google.common.base.Function;
 import com.google.common.collect.ImmutableList;
 
-/**
- * 
- * @author Adrian Cole
- */
 @Test(singleThreaded = true)
 public class FunctionalReflectionTest {
    

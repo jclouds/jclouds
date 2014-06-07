@@ -27,10 +27,6 @@ import org.jclouds.blobstore.options.ListContainerOptions;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
 
-/**
- * 
- * @author Adrian Cole
- */
 @Test
 public class BiggerThanPageSizeTest {
    private BlobStore blobstore;

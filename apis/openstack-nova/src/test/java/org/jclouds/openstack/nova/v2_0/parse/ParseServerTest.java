@@ -42,9 +42,6 @@ import com.google.inject.Injector;
 import static org.jclouds.openstack.nova.v2_0.domain.Address.createV4;
 import static org.jclouds.openstack.nova.v2_0.domain.Address.createV6;
 
-/**
- * @author Adrian Cole
- */
 @Test(groups = "unit", testName = "ParseServerTest")
 public class ParseServerTest extends BaseItemParserTest<Server> {
 

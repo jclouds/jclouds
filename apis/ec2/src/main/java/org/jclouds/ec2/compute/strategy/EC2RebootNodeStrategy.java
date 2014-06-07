@@ -26,10 +26,6 @@ import org.jclouds.compute.strategy.RebootNodeStrategy;
 import org.jclouds.ec2.EC2Api;
 import org.jclouds.ec2.features.InstanceApi;
 
-/**
- * 
- * @author Adrian Cole
- */
 @Singleton
 public class EC2RebootNodeStrategy implements RebootNodeStrategy {
    private final InstanceApi client;

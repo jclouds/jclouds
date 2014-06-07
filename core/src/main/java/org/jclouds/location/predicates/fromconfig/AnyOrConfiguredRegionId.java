@@ -30,8 +30,6 @@ import org.jclouds.location.suppliers.fromconfig.RegionIdsFromConfiguration;
  * 
  * If there are regions configured in {@link RegionIdsFromConfiguration}, return
  * true if that set contains the input param. If there aren't, return true.
- * 
- * @author Adrian Cole
  */
 @Singleton
 public class AnyOrConfiguredRegionId implements RegionIdFilter {

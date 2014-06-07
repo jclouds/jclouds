@@ -31,10 +31,6 @@ import org.jclouds.logging.Logger;
 
 import com.google.common.base.Supplier;
 
-/**
- * 
- * @author Adrian Cole
- */
 public class AttachmentHandler extends ParseSax.HandlerForGeneratedRequestWithResult<Attachment> {
 
    @Resource

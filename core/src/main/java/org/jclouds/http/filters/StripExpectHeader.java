@@ -24,9 +24,6 @@ import org.jclouds.http.HttpRequestFilter;
 import com.google.common.net.HttpHeaders;
 import com.google.inject.Singleton;
 
-/**
- * @author Diwaker Gupta
- */
 @Singleton
 public class StripExpectHeader implements HttpRequestFilter {
    @Override

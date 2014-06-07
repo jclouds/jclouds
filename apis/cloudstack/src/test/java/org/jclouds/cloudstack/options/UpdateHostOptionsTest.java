@@ -29,8 +29,6 @@ import com.google.common.collect.ImmutableSet;
 
 /**
  * Tests behavior of {@code UpdateHostOptions}
- *
- * @author Richard Downer
  */
 @Test(groups = "unit")
 public class UpdateHostOptionsTest {

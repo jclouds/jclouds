@@ -39,8 +39,6 @@ import com.google.common.collect.ImmutableSet;
 
 /**
  * Tests behavior of {@link ListISOsOptions}
- * 
- * @author grkvlt@apache.org
  */
 @Test(groups = "unit")
 public class ListISOsOptionsTest {

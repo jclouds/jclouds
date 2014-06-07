@@ -28,8 +28,6 @@ import org.testng.annotations.Test;
 
 /**
  * Tests behavior of {@code AsyncJobApiLiveTest}
- *
- * @author Adrian Cole
  */
 @Test(groups = "live", singleThreaded = true, testName = "AsyncJobApiLiveTest")
 public class AsyncJobApiLiveTest extends BaseCloudStackApiLiveTest {

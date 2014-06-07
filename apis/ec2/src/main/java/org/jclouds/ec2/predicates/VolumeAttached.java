@@ -32,8 +32,6 @@ import com.google.inject.Inject;
 /**
  * 
  * Tests to see if a volume is attached.
- * 
- * @author Adrian Cole
  */
 @Singleton
 public class VolumeAttached implements Predicate<Attachment> {

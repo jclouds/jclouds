@@ -25,11 +25,6 @@ import org.jclouds.compute.strategy.GetNodeMetadataStrategy;
 
 import com.google.inject.Inject;
 
-/**
- * 
- * 
- * @author Adrian Cole
- */
 public class AtomicNodeTerminated extends TrueIfNullOrDeletedRefreshAndDoubleCheckOnFalse<NodeMetadata.Status, NodeMetadata> {
 
    private final GetNodeMetadataStrategy client;

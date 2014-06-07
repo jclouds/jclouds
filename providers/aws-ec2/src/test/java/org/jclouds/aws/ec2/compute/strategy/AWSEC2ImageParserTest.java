@@ -48,9 +48,6 @@ import com.google.common.collect.Sets;
 import com.google.gson.Gson;
 import com.google.inject.Guice;
 
-/**
- * @author Adrian Cole
- */
 @Test(groups = "unit", testName = "AWSEC2ImageParserTest")
 public class AWSEC2ImageParserTest {
    public void testParseAlesticCanonicalImage() {

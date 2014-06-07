@@ -41,9 +41,6 @@ import com.google.common.base.Supplier;
 import com.google.common.util.concurrent.ListenableFuture;
 import com.google.common.util.concurrent.ListeningExecutorService;
 
-/**
- * @author Adrian Cole
- */
 @Singleton
 public class VAppTemplatesSupplier implements Supplier<Set<VAppTemplate>> {
 

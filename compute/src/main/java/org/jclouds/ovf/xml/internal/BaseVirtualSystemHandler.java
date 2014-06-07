@@ -37,9 +37,6 @@ import org.xml.sax.SAXException;
 import com.google.common.collect.ImmutableMap;
 import com.google.inject.Inject;
 
-/**
- * @author Adrian Cole
- */
 public class BaseVirtualSystemHandler<T extends BaseVirtualSystem<T>, B extends BaseVirtualSystem.Builder<T>> extends
          SectionHandler<T, B> {
 

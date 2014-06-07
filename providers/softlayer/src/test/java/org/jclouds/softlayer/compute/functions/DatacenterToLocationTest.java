@@ -33,8 +33,6 @@ import com.google.common.collect.ImmutableSet;
 
 /**
  * Tests {@code DatacenterToLocation}
- * 
- * @author Jason King
  */
 @Test(singleThreaded = true, groups = "unit")
 public class DatacenterToLocationTest {

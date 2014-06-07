@@ -28,7 +28,6 @@ import com.google.common.collect.ImmutableSet;
 /**
  * Detailed information on usage
  *
- * @author Adam Lowe
  * @see ResourceUsageInfo
  * @see ResourceUsageValue
  */

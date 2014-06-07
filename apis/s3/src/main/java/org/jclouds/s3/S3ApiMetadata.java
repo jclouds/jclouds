@@ -53,8 +53,6 @@ import com.google.inject.Module;
  * (context). This allows subtypes to add in new feature groups or extensions,
  * not present in the base api. For example, you could make a subtype for
  * context, that exposes admin operations.
- * 
- * @author Adrian Cole
  */
 public class S3ApiMetadata extends BaseRestApiMetadata {
    

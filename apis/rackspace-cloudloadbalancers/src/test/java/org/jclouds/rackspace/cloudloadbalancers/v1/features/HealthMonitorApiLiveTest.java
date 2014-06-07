@@ -33,9 +33,6 @@ import org.testng.annotations.Test;
 
 import com.google.common.collect.Iterables;
 
-/**
- * @author Everett Toews
- */
 @Test(groups = "live", singleThreaded = true, testName = "HealthMonitorApiLiveTest")
 public class HealthMonitorApiLiveTest extends BaseCloudLoadBalancersApiLiveTest {
    private LoadBalancer lb;

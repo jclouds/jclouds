@@ -32,8 +32,6 @@ import com.google.common.collect.Maps;
  * Allows you to lazy discover a key by value. This is useful for example in service discovery,
  * where you need to see what the "current" service name is based on a map of service names to
  * endpoints. <h3>note</h3> take care to memoize this using {@link Suppliers#memoize(Supplier)}
- * 
- * @author Adrian Cole
  */
 public class SupplyKeyMatchingValueOrNull<K, V> implements Supplier<K> {
    @Resource

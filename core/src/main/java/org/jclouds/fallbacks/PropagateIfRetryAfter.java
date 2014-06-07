@@ -23,8 +23,6 @@ import com.google.inject.ImplementedBy;
 /**
  * propagates as {@link org.jclouds.rest.RetryAfterException} if a Throwable contains information such as a retry
  * offset.
- * 
- * @author Adrian Cole
  */
 @ImplementedBy(HeaderToRetryAfterException.class)
 public interface PropagateIfRetryAfter extends FutureFallback<Object> {

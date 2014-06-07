@@ -28,10 +28,6 @@ import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Maps;
 
-/**
- * 
- * @author Adrian Cole
- */
 public class SpotInstanceRequest implements Comparable<SpotInstanceRequest> {
    public static Builder builder() {
       return new Builder();

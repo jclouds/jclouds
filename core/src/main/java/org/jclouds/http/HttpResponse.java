@@ -25,8 +25,6 @@ import com.google.common.collect.Multimap;
 
 /**
  * Represents a response produced from {@link HttpCommandExecutorService}
- * 
- * @author Adrian Cole
  */
 public class HttpResponse extends HttpMessage {
 

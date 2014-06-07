@@ -67,8 +67,6 @@ import com.google.common.net.HostSpecifier;
 
 /**
  * Tests behavior of {@code VirtualMachineApiLiveTest}
- * 
- * @author Adrian Cole
  */
 @Test(groups = "live", singleThreaded = true, testName = "VirtualMachineApiLiveTest")
 public class VirtualMachineApiLiveTest extends BaseCloudStackApiLiveTest {

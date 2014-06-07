@@ -24,10 +24,6 @@ import org.jclouds.http.handlers.BaseHttpErrorHandlerTest;
 import org.jclouds.rest.ResourceNotFoundException;
 import org.testng.annotations.Test;
 
-/**
- * 
- * @author Adrian Cole
- */
 @Test(groups = { "unit" })
 public class ParseCloudLoadBalancersErrorFromHttpResponseTest extends
          BaseHttpErrorHandlerTest<ParseCloudLoadBalancersErrorFromHttpResponse> {

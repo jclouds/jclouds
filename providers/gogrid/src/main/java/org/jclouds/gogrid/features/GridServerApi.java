@@ -59,9 +59,6 @@ import org.jclouds.rest.annotations.SelectJson;
  * <p/>
  * 
  * @see <a href="http://wiki.gogrid.com/wiki/index.php/API" />
- * 
- * @author Adrian Cole
- * @author Oleksiy Yarmula
  */
 @RequestFilters(SharedKeyLiteAuthentication.class)
 @QueryParams(keys = VERSION, values = "1.6")

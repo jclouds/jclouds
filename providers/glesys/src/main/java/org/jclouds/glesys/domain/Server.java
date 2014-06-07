@@ -27,7 +27,6 @@ import com.google.common.base.Objects.ToStringHelper;
 /**
  * Listing of a server.
  *
- * @author Adrian Cole
  * @see <a href= "https://customer.glesys.com/api.php?a=doc#server_list" />
  */
 public class Server {

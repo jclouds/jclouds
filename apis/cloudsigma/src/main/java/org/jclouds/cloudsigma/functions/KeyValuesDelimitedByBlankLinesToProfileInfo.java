@@ -27,10 +27,6 @@ import org.jclouds.http.HttpResponse;
 import com.google.common.base.Function;
 import com.google.common.collect.Iterables;
 
-/**
- * 
- * @author Adrian Cole
- */
 @Singleton
 public class KeyValuesDelimitedByBlankLinesToProfileInfo implements Function<HttpResponse, ProfileInfo> {
    private final ListOfKeyValuesDelimitedByBlankLinesToProfileInfoSet setParser;

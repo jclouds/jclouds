@@ -29,10 +29,6 @@ import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import com.google.inject.Guice;
 
-/**
- * 
- * @author Adrian Cole
- */
 @Test(groups = { "unit" })
 public class DriveDataToMapTest {
    

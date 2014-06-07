@@ -60,9 +60,6 @@ import com.google.common.util.concurrent.UncheckedTimeoutException;
 /**
  * EC2 implementation of {@link ImageExtension} please note that {@link #createImage(ImageTemplate)}
  * only works by cloning EBS backed instances for the moment.
- * 
- * @author David Alves
- * 
  */
 public class EC2ImageExtension implements ImageExtension {
 

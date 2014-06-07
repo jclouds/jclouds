@@ -52,8 +52,6 @@ import com.google.common.io.Files;
 
 /**
  * Test class for {@link FilesystemStorageStrategyImpl } class
- * 
- * @author Alfredo "Rainbowbreeze" Morresi
  */
 @Test(groups = "unit", testName = "filesystem.FilesystemBlobUtilsTest", sequential = true)
 public class FilesystemStorageStrategyImplTest {

@@ -31,7 +31,6 @@ import com.google.common.collect.ImmutableSet;
  * @see <a
  *      href="http://download.cloud.com/releases/2.2.0/api/user/listAsyncJobs.html"
  *      />
- * @author Adrian Cole
  */
 public class ListAsyncJobsOptions extends AccountInDomainOptions {
    private static final DateService dateService = new SimpleDateFormatDateService();

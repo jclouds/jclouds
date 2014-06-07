@@ -18,9 +18,6 @@ package org.jclouds.blobstore.attr;
 
 /**
  * Represents the ways data can become consistent in distributed systems.
- * 
- * @author Adrian Cole
- * 
  */
 public enum ConsistencyModel {
 

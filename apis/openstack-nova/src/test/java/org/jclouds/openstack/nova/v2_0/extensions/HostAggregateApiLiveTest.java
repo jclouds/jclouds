@@ -37,8 +37,6 @@ import com.google.common.collect.Iterables;
 
 /**
  * Tests behavior of AggregateApi
- *
- * @author Adam Lowe
  */
 @Test(groups = "live", testName = "AggregateApiLiveTest", singleThreaded = true)
 public class HostAggregateApiLiveTest extends BaseNovaApiLiveTest {

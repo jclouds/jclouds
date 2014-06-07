@@ -18,10 +18,6 @@ package org.jclouds.cloudwatch.internal;
 
 import org.jclouds.cloudwatch.CloudWatchApi;
 
-/**
- * 
- * @author Adrian Cole
- */
 public class BaseCloudWatchApiExpectTest extends BaseCloudWatchExpectTest<CloudWatchApi> {
 
 }

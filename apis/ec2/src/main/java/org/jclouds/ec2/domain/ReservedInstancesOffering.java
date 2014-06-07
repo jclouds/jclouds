@@ -20,7 +20,6 @@ package org.jclouds.ec2.domain;
  * 
  * @see <a href="http://docs.amazonwebservices.com/AWSEC2/latest/APIReference/ApiReference-query-CreateVolume.html"
  *      />
- * @author Adrian Cole
  */
 public class ReservedInstancesOffering implements Comparable<ReservedInstancesOffering> {
    private final String region;

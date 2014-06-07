@@ -18,10 +18,6 @@ package org.jclouds.openstack.swift;
 
 import org.testng.annotations.Test;
 
-/**
- * 
- * @author Adrian Cole
- */
 @Test(groups = "live", testName = "SwiftClientLiveTest")
 public class SwiftClientLiveTest extends CommonSwiftClientLiveTest<CommonSwiftClient> {
    

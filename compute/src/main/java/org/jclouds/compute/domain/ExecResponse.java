@@ -20,9 +20,6 @@ import org.jclouds.compute.config.CustomizationResponse;
 
 import com.google.common.base.Objects;
 
-/**
- * @author Adrian Cole
- */
 public class ExecResponse implements CustomizationResponse {
 
    private final String output;

@@ -31,8 +31,6 @@ import com.google.common.net.HttpHeaders;
 
 /**
  * Base class for writing HP Cloud Object Storage Rest Client Expect tests
- * 
- * @author Michael Arnold
  */
 public enum KeystoneFixture {
    INSTANCE;

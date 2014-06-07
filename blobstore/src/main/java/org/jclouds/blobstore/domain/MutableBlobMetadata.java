@@ -26,8 +26,6 @@ import com.google.inject.ImplementedBy;
 
 /**
  * System and user Metadata for the {@link Blob}.
- * 
- * @author Adrian Cole
  */
 @ImplementedBy(MutableBlobMetadataImpl.class)
 public interface MutableBlobMetadata extends BlobMetadata, MutableStorageMetadata {

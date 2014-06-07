@@ -21,8 +21,6 @@ import org.testng.annotations.Test;
 
 /**
  * Tests behavior of {@code AtmosClient}
- * 
- * @author Adrian Cole
  */
 @Test(groups = "live", sequential = true, testName = "CloudOneStorageClientLiveTest")
 public class CloudOneStorageClientLiveTest extends AtmosClientLiveTest {

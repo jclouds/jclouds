@@ -26,9 +26,6 @@ import org.jclouds.openstack.swift.domain.SwiftObject;
 
 import com.google.common.base.Function;
 
-/**
- * @author Adrian Cole
- */
 @Singleton
 public class BlobToObject implements Function<Blob, SwiftObject> {
    private final ResourceToObjectInfo blob2ObjectMd;

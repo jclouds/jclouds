@@ -45,9 +45,6 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.net.HttpHeaders;
 
-/**
- * @author Everett Toews
- */
 @Test(groups = "unit")
 public class ReverseDNSApiExpectTest extends BaseCloudDNSApiExpectTest<CloudDNSApi> {
    public static final String CLOUD_SERVERS_OPEN_STACK = "cloudServersOpenStack";

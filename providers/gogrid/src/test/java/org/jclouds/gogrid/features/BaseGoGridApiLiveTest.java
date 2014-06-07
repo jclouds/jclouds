@@ -22,8 +22,6 @@ import org.testng.annotations.Test;
 
 /**
  * Tests behavior of {@code GoGridApi}
- * 
- * @author Adrian Cole
  */
 @Test(groups = "live", singleThreaded = true, testName = "BaseGoGridApiLiveTest")
 public class BaseGoGridApiLiveTest extends BaseApiLiveTest<GoGridApi> {

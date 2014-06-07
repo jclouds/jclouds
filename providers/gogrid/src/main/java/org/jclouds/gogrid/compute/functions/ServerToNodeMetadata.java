@@ -44,9 +44,6 @@ import com.google.common.base.Supplier;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Iterables;
 
-/**
- * @author Oleksiy Yarmula
- */
 @Singleton
 public class ServerToNodeMetadata implements Function<Server, NodeMetadata> {
 

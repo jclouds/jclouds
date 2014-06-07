@@ -33,7 +33,6 @@ import javax.ws.rs.core.MediaType;
 /**
  * Provides asynchronous access to Quota via their REST API.
  *
- * @author Inbar Stolberg
  * @see QuotaApi
  * @see <a href="http://api.openstack.org/">API Doc</a>
  */

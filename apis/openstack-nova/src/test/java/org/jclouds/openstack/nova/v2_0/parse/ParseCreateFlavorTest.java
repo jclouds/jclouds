@@ -31,7 +31,6 @@ import com.google.inject.Injector;
 
 /**
  * @see FlavorApiExpectTest
- * @author Ilja Bobkevic
  */
 @Test(groups = "unit", testName = "ParseCreateFlavorTest")
 public class ParseCreateFlavorTest extends BaseItemParserTest<Flavor> {

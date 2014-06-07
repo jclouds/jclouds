@@ -32,8 +32,6 @@ import com.google.common.collect.ImmutableSet;
 
 /**
  * Describes a security group containing a set of @{link IpPermission}s
- * 
- * @author Andrew Bayer
  */
 public class SecurityGroup extends ComputeMetadataImpl {
 

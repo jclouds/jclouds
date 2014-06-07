@@ -27,8 +27,6 @@ import com.google.common.base.Objects.ToStringHelper;
 
 /**
  * Class SshKeyPair
- *
- * @author Vijay Kiran
  */
 public class SshKeyPair {
 

@@ -23,10 +23,6 @@ import org.jclouds.http.HttpRequest.Builder;
 import org.jclouds.rest.Binder;
 import org.jclouds.route53.domain.ResourceRecordSetIterable.NextRecord;
 
-/**
- * 
- * @author Adrian Cole
- */
 @Singleton
 public class BindNextRecord implements Binder {
    @SuppressWarnings("unchecked")

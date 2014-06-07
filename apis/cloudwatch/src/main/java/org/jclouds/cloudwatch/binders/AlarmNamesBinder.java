@@ -24,8 +24,6 @@ import org.jclouds.http.HttpRequest;
 
 /**
  * Binds the alarm names request to the http request
- *
- * @author Jeremy Whitlock
  */
 @Beta
 public class AlarmNamesBinder implements org.jclouds.rest.Binder {

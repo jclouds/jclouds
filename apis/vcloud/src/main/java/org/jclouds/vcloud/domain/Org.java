@@ -30,8 +30,6 @@ import com.google.inject.ImplementedBy;
  * contain Catalog, Network, and vDC elements. If there are any queued, running, or recently
  * completed tasks owned by a member of the organization, it also contains a TasksList element. As
  * viewed by an administrator, an organization also contains users, groups, and other information
- * 
- * @author Adrian Cole
  */
 @ImplementedBy(OrgImpl.class)
 public interface Org extends ReferenceType {

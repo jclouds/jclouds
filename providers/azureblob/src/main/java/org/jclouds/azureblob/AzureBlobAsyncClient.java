@@ -87,7 +87,6 @@ import com.google.inject.Provides;
  * 
  * @see <a href="http://msdn.microsoft.com/en-us/library/dd135733.aspx" />
  * @see AzureBlobClient
- * @author Adrian Cole
  * @deprecated please use {@code org.jclouds.ContextBuilder#buildApi(AzureBlobClient.class)} as
  *             {@link AzureBlobAsyncClient} interface will be removed in jclouds 1.7.
  */

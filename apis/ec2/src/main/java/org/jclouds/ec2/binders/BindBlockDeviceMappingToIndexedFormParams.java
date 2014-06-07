@@ -32,10 +32,6 @@ import org.jclouds.rest.Binder;
 import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.Multimap;
 
-/**
- * @author Oleksiy Yarmula
- * @author Adrian Cole
- */
 public class BindBlockDeviceMappingToIndexedFormParams implements Binder {
 
    private static final String deviceNamePattern = "BlockDeviceMapping.%d.DeviceName";

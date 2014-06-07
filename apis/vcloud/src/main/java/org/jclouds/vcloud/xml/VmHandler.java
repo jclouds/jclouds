@@ -40,9 +40,6 @@ import org.xml.sax.SAXException;
 
 import com.google.common.collect.Lists;
 
-/**
- * @author Adrian Cole
- */
 public class VmHandler extends ParseSax.HandlerWithResult<Vm> {
 
    protected final TaskHandler taskHandler;

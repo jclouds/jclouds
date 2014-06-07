@@ -61,8 +61,6 @@ import com.google.inject.Guice;
 
 /**
  * Tests behavior of {@code ElasticStackApi}
- * 
- * @author Adrian Cole
  */
 @Test(groups = "live", singleThreaded = true, testName = "ElasticStackApiLiveTest")
 public class ElasticStackApiLiveTest extends BaseComputeServiceContextLiveTest {

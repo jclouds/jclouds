@@ -25,7 +25,6 @@ import com.google.common.collect.ImmutableSet;
  *
  * @see org.jclouds.cloudstack.features.ISOApi#deleteISO
  * @see org.jclouds.cloudstack.features.ISOApi#deleteISO
- * @author Richard Downer
  */
 public class DeleteISOOptions extends BaseHttpRequestOptions {
 

@@ -30,10 +30,6 @@ import org.testng.annotations.Test;
 
 import com.google.common.collect.FluentIterable;
 
-/**
- * 
- * @author Adrian Cole
- */
 @Test(groups = "live", testName = "HPCloudObjectStorageClientLiveTest")
 public class HPCloudObjectStorageClientLiveTest extends CommonSwiftClientLiveTest<HPCloudObjectStorageApi> {
    

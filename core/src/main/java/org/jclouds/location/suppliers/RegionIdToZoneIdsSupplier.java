@@ -26,7 +26,6 @@ import com.google.inject.ImplementedBy;
 
 /**
 
- * @author Adrian Cole
  */
 @ImplementedBy(RegionIdToZoneIdsFromConfiguration.class)
 public interface RegionIdToZoneIdsSupplier extends Supplier<Map<String, Supplier<Set<String>>>> {

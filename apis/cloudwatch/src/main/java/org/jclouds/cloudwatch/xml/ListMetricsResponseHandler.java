@@ -31,8 +31,6 @@ import com.google.inject.Inject;
 
 /**
  * @see <a href="http://docs.amazonwebservices.com/AmazonCloudWatch/latest/APIReference/API_ListMetrics.html" />
- *
- * @author Jeremy Whitlock
  */
 public class ListMetricsResponseHandler extends ParseSax.HandlerForGeneratedRequestWithResult<IterableWithMarker<Metric>> {
 

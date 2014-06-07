@@ -25,8 +25,6 @@ import com.google.common.base.Objects.ToStringHelper;
  * A virtual IP (VIP) makes a load balancer accessible by clients. The load balancing service
  * supports either a public virtual IP, routable on the public Internet, or a ServiceNet address, routable
  * only within the region in which the load balancer resides.
- * 
- * @author Everett Toews
  */
 public class VirtualIP {
 

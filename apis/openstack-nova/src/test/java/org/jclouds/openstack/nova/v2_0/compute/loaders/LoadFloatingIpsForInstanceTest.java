@@ -34,9 +34,6 @@ import com.google.common.base.Optional;
 import com.google.common.collect.FluentIterable;
 import com.google.common.collect.ImmutableSet;
 
-/**
- * @author Adam Lowe
- */
 @Test(groups = "unit", singleThreaded = true, testName = "LoadFloatingIpsForInstanceTest")
 public class LoadFloatingIpsForInstanceTest {
 

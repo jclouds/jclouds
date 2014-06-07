@@ -33,8 +33,6 @@ import com.google.common.collect.Sets;
 
 /**
  * Class NetworkService
- *
- * @author Adrian Cole
  */
 public class NetworkService implements Comparable<NetworkService> {
 

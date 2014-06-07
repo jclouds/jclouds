@@ -31,8 +31,6 @@ import com.google.inject.ImplementedBy;
 /**
  * 
  * In case the name was confusing, this indeed builds a Blob.
- * 
- * @author Adrian Cole
  */
 @ImplementedBy(BlobBuilderImpl.class)
 public interface BlobBuilder {

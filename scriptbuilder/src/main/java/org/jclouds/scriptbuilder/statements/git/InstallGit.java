@@ -22,8 +22,6 @@ import org.jclouds.scriptbuilder.domain.StatementList;
 
 /**
  * Installs git onto a host
- * 
- * @author Adrian Cole
  */
 public class InstallGit extends StatementList {
 

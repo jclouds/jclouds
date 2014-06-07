@@ -36,9 +36,6 @@ import com.google.common.base.Function;
 import com.google.common.base.Optional;
 import com.google.common.base.Supplier;
 
-/**
- * @author Adrian Cole
- */
 @Singleton
 public class LocationFromBucketName implements Function<String, Location> {
    private final Supplier<Set<? extends Location>> locations;

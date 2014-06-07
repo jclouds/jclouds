@@ -50,9 +50,6 @@ import com.google.inject.Guice;
 import com.google.inject.Injector;
 import com.google.inject.assistedinject.FactoryModuleBuilder;
 
-/**
- * @author Adrian Cole
- */
 @Test(groups = "unit", singleThreaded = true, testName = "RunScriptOnNodeAsInitScriptUsingSshAndBlockUntilCompleteTest")
 public class RunScriptOnNodeAsInitScriptUsingSshAndBlockUntilCompleteTest {
    Injector injector = Guice.createInjector(new ExecutorServiceModule(sameThreadExecutor(), sameThreadExecutor()),

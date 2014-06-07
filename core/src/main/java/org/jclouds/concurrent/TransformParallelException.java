@@ -24,8 +24,6 @@ import com.google.common.collect.Iterables;
 
 /**
  * A failure occurred while concurrently operating on an Iterable
- * 
- * @author Adrian Cole
  */
 @SuppressWarnings("serial")
 public final class TransformParallelException extends RuntimeException {

@@ -27,10 +27,6 @@ import javax.inject.Singleton;
 import com.google.common.base.Supplier;
 import com.google.inject.Inject;
 
-/**
- * 
- * @author Adrian Cole
- */
 @Singleton
 public class InitScriptConfigurationForTasks {
    public static final String PROPERTY_INIT_SCRIPT_PATTERN = "jclouds.compute.init-script-pattern";

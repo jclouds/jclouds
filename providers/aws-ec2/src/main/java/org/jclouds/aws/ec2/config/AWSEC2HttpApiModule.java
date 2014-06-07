@@ -38,8 +38,6 @@ import com.google.inject.TypeLiteral;
 
 /**
  * Configures the EC2 connection.
- * 
- * @author Adrian Cole
  */
 @ConfiguresHttpApi
 public class AWSEC2HttpApiModule extends BaseEC2HttpApiModule<AWSEC2Api> {

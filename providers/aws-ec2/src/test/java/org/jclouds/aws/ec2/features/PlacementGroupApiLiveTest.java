@@ -59,8 +59,6 @@ import com.google.inject.Module;
 
 /**
  * Tests behavior of {@code PlacementGroupApi}
- * 
- * @author Adrian Cole
  */
 @Test(groups = "live", singleThreaded = true, testName = "PlacementGroupApiLiveTest")
 public class PlacementGroupApiLiveTest extends BaseComputeServiceContextLiveTest {

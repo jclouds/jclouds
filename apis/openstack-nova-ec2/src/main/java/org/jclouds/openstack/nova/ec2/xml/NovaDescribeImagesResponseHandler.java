@@ -33,8 +33,6 @@ import com.google.common.collect.Iterables;
 
 /**
  * Adjusted to filter out non-MACHINE images
- *
- * @author Adam Lowe
  */
 public class NovaDescribeImagesResponseHandler extends DescribeImagesResponseHandler {
    @Inject

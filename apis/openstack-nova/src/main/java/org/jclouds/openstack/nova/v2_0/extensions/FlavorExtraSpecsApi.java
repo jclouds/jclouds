@@ -25,7 +25,6 @@ import com.google.common.annotations.Beta;
 /**
  * Provide access to extra metadata for Nova flavors.
  *
- * @author Adam Lowe
  * @see <a href="http://nova.openstack.org/api/nova.api.openstack.compute.contrib.flavorextraspecs.html"/>
  * @see org.jclouds.openstack.nova.v2_0.features.FlavorApi
  * @see org.jclouds.openstack.nova.v2_0.extensions.FlavorExtraSpecsAsyncApi

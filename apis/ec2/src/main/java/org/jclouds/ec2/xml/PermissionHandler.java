@@ -27,7 +27,6 @@ import com.google.common.collect.Sets;
  * 
  * @see <a href="http://docs.amazonwebservices.com/AWSEC2/latest/APIReference/index.html?ApiReference-query-DescribeImageAttribute.html"
  *      />
- * @author Adrian Cole
  */
 public class PermissionHandler extends ParseSax.HandlerWithResult<Permission> {
 

@@ -36,9 +36,6 @@ import org.testng.annotations.Test;
 import com.google.common.collect.FluentIterable;
 import com.google.common.collect.Iterables;
 
-/**
- * @author Everett Toews
- */
 @Test(groups = "unit")
 public class ReportApiExpectTest extends BaseCloudLoadBalancerApiExpectTest<CloudLoadBalancersApi> {
    public void testListBillableLoadBalancers() {

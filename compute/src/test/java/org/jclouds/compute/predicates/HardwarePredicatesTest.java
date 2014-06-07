@@ -24,10 +24,6 @@ import org.testng.annotations.Test;
 
 import com.google.common.collect.Iterables;
 
-/**
- * 
- * @author Adrian Cole
- */
 @Test
 public class HardwarePredicatesTest {
    ComputeService computeService = ContextBuilder.newBuilder("stub").build(ComputeServiceContext.class).getComputeService();

@@ -36,10 +36,6 @@ import com.google.common.collect.ImmutableMap.Builder;
 import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.ImmutableSet;
 
-/**
- * 
- * @author Adrian Cole
- */
 @Test(groups = "unit", testName = "CreateSecurityGroupIfNeededTest")
 public class CreateSecurityGroupIfNeededTest extends BaseNovaApiExpectTest {
    HttpRequest create = HttpRequest.builder().method("POST").endpoint(

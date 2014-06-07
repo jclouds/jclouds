@@ -36,8 +36,6 @@ import com.google.common.collect.ImmutableMultimap;
 
 /**
  * Test the CloudStack GlobalZoneApi
- *
- * @author Andrei Savu
  */
 @Test(groups = "unit", testName = "GlobalZoneApiExpectTest")
 public class GlobalZoneApiExpectTest extends BaseCloudStackExpectTest<GlobalZoneApi> {

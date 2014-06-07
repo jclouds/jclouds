@@ -27,8 +27,6 @@ import com.google.common.collect.Maps;
 
 /**
  * Functions for working with Records.
- * 
- * @author Everett Toews
  */
 public class RecordFunctions {
    

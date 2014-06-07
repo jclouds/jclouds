@@ -77,10 +77,6 @@ import com.google.inject.TypeLiteral;
 import com.google.inject.assistedinject.FactoryModuleBuilder;
 import com.google.inject.name.Names;
 
-/**
- * 
- * @author Adrian Cole
- */
 public abstract class BaseComputeServiceContextModule extends AbstractModule {
 
    @Override

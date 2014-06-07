@@ -35,10 +35,6 @@ import com.google.inject.Binder;
 import com.google.inject.Injector;
 import com.google.inject.Module;
 
-/**
- * 
- * @author Adrian Cole
- */
 @Test(groups = "unit")
 public abstract class BaseAsyncApiTest<T> extends BaseRestApiTest {
 

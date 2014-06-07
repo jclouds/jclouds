@@ -25,10 +25,6 @@ import org.jclouds.azure.storage.AzureStorageResponseException;
 
 import com.google.common.util.concurrent.ListenableFuture;
 
-/**
- * 
- * @author Adrian Cole
- */
 public final class AzureBlobFallbacks {
    private AzureBlobFallbacks() {
    }

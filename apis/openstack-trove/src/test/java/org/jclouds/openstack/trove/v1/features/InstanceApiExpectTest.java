@@ -30,8 +30,6 @@ import org.testng.annotations.Test;
 
 /**
  * Tests InstanceApi Guice wiring and parsing
- *
- * @author Zack Shoylev
  */
 @Test(groups = "unit", testName = "InstanceApiExpectTest")
 public class InstanceApiExpectTest extends BaseTroveApiExpectTest {

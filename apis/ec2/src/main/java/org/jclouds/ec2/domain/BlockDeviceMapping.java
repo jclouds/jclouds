@@ -22,10 +22,6 @@ import static com.google.common.base.Strings.emptyToNull;
 
 import org.jclouds.javax.annotation.Nullable;
 
-/**
- * 
- * @author Lili Nadar
- */
 public class BlockDeviceMapping implements Comparable<BlockDeviceMapping> {
    public static Builder builder() {
       return new Builder();

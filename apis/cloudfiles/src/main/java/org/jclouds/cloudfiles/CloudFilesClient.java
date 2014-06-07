@@ -26,7 +26,6 @@ import org.jclouds.openstack.swift.SwiftClient;
 /**
  * Provides access to Cloud Files via their REST API.
  *
- * @author Adrian Cole
  * @see <a href="http://docs.rackspace.com/files/api/v1/cf-devguide/content/index.html">Cloud Files</a>
  */
 public interface CloudFilesClient extends SwiftClient {

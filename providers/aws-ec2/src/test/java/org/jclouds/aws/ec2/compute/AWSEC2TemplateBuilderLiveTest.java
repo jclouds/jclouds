@@ -54,10 +54,6 @@ import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Lists;
 import com.google.inject.Module;
 
-/**
- * 
- * @author Adrian Cole
- */
 @Test(groups = "live", testName = "AWSEC2TemplateBuilderLiveTest")
 public class AWSEC2TemplateBuilderLiveTest extends EC2TemplateBuilderLiveTest {
 

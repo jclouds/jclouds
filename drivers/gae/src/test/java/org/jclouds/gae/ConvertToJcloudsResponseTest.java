@@ -43,10 +43,6 @@ import com.google.common.base.Throwables;
 import com.google.common.collect.Lists;
 import com.google.common.net.HttpHeaders;
 
-/**
- * 
- * @author Adrian Cole
- */
 @Test
 public class ConvertToJcloudsResponseTest {
    ConvertToJcloudsResponse req;

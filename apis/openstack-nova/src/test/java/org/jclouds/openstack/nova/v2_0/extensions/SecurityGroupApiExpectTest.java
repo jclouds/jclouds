@@ -39,8 +39,6 @@ import com.google.common.collect.ImmutableSet;
 
 /**
  * Tests annotation parsing of {@code SecurityGroupAsyncApi}
- * 
- * @author Michael Arnold
  */
 @Test(groups = "unit", testName = "SecurityGroupApiExpectTest")
 public class SecurityGroupApiExpectTest extends BaseNovaApiExpectTest {

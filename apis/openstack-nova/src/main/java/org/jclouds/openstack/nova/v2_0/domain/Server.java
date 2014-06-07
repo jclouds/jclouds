@@ -39,7 +39,6 @@ import com.google.common.collect.Multimap;
  * A server is a virtual machine instance in the compute system. Flavor and image are requisite
  * elements when creating a server.
  *
- * @author Adrian Cole
  * @see <a href=
  *      "http://docs.openstack.org/api/openstack-compute/1.1/content/Get_Server_Details-d1e2623.html"
  *      />
@@ -55,7 +54,6 @@ public class Server extends Resource {
     * Other possible values for the status attribute include: BUILD, REBUILD, SUSPENDED, RESIZE,
     * VERIFY_RESIZE, REVERT_RESIZE, PASSWORD, REBOOT, HARD_REBOOT, DELETED, UNKNOWN, and ERROR.
     *
-    * @author Adrian Cole
     */
    public static enum Status {
 

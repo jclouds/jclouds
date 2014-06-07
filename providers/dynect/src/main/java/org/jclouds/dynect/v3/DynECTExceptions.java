@@ -18,8 +18,6 @@ package org.jclouds.dynect.v3;
 
 /**
  * Exceptions likely to be encountered when using {@link DynECTApi}
- * 
- * @author Adrian Cole
  */
 public interface DynECTExceptions {
    /**

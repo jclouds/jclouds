@@ -32,9 +32,6 @@ import com.google.common.base.Function;
 import com.google.common.base.Splitter;
 import com.google.common.collect.Maps;
 
-/**
- * @author Ignasi Barrera
- */
 @Singleton
 public class MapToStandardDrive implements Function<Map<String, String>, StandardDrive> {
 

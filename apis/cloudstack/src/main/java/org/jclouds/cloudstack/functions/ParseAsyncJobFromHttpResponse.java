@@ -30,10 +30,6 @@ import org.jclouds.http.functions.UnwrapOnlyJsonValue;
 import com.google.common.base.Function;
 import com.google.inject.Inject;
 
-/**
- * 
- * @author Adrian Cole
- */
 @Singleton
 public class ParseAsyncJobFromHttpResponse implements Function<HttpResponse, AsyncJob<?>> {
    private final UnwrapOnlyJsonValue<AsyncJob<Map<String, JsonBall>>> parser;

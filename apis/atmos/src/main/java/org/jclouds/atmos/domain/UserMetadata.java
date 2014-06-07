@@ -26,8 +26,6 @@ import com.google.common.collect.Sets;
 
 /**
  * User metadata
- * 
- * @author Adrian Cole
  */
 public class UserMetadata {
    private final Map<String, String> metadata;

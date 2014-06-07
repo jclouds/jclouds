@@ -36,7 +36,6 @@ import com.google.inject.Provides;
  * @see HPCloudObjectStorageAsyncApi
  * @see <a href="https://manage.hpcloud.com/pages/build/docs/objectstorage-lvs/api">HP Cloud Object
  *      Storage API</a>
- * @author Jeremy Daggett
  */
 public interface HPCloudObjectStorageApi extends CommonSwiftClient {
    /**

@@ -35,10 +35,6 @@ import com.google.common.base.Predicate;
 import com.google.common.base.Predicates;
 import com.google.common.collect.ImmutableSet;
 
-/**
- * 
- * @author Adrian Cole
- */
 @Test(groups = "live", testName = "GleSYSTemplateBuilderLiveTest")
 public class GleSYSTemplateBuilderLiveTest extends BaseTemplateBuilderLiveTest {
 

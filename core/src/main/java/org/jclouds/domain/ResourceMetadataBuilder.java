@@ -24,10 +24,6 @@ import java.util.Map;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Maps;
 
-/**
- * 
- * @author Adrian Cole
- */
 public abstract class ResourceMetadataBuilder<T extends Enum<T>> {
    protected String providerId;
    protected String name;

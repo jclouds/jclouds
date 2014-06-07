@@ -29,9 +29,6 @@ import org.jclouds.util.Strings2;
 import com.google.common.base.Throwables;
 import com.google.common.net.HttpHeaders;
 
-/**
- * @author Everett Toews
- */
 public enum RackspaceFixture {
    INSTANCE;
 

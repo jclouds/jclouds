@@ -23,10 +23,6 @@ import org.jclouds.http.functions.ParseSax;
 
 import com.google.common.collect.Maps;
 
-/**
- * 
- * @author Adrian Cole
- */
 public class MonitoringStateHandler extends
          ParseSax.HandlerWithResult<Map<String, MonitoringState>> {
    private StringBuilder currentText = new StringBuilder();

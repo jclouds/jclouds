@@ -24,7 +24,6 @@ import com.google.common.collect.ImmutableSet;
  * @see <a
  *      href="http://download.cloud.com/releases/3.0.6/api_3.0.6/root_admin/listProjects.html"
  *      />
- * @author Andrew Bayer
  */
 public class ListProjectsOptions extends AccountInDomainOptions {
 

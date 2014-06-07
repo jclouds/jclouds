@@ -23,9 +23,6 @@ import org.jclouds.javax.annotation.Nullable;
 /**
  * A means of specifying the interface between the {@link LoadBalancerService LoadBalancerServices}
  * and a concrete compute cloud implementation, jclouds or otherwise.
- * 
- * @author Adrian Cole
- * 
  */
 public interface LoadBalancerServiceAdapter<B, L> {
 

@@ -58,10 +58,6 @@ import org.jclouds.ec2.compute.suppliers.EC2HardwareSupplier;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.ImmutableSet.Builder;
 
-/**
- * 
- * @author Adrian Cole
- */
 @Singleton
 public class AWSEC2HardwareSupplier extends EC2HardwareSupplier {
 

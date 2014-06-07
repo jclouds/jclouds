@@ -23,9 +23,6 @@ import static org.testng.Assert.assertEquals;
 
 import org.testng.annotations.Test;
 
-/**
- * @author Adrian Cole
- */
 @Test(groups = "unit")
 public class StatementListTest {
    Statement statement = newStatementList(call("default"), interpret("echo started{lf}"));

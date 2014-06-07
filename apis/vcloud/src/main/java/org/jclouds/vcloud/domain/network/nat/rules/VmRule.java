@@ -32,7 +32,6 @@ import com.google.common.base.Objects;
  * VmReference and VmNicId.
  * 
  * @since vcloud 0.9
- * @author Adrian Cole
  */
 public class VmRule implements NatRule {
    @Nullable

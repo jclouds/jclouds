@@ -33,8 +33,6 @@ import org.testng.annotations.Test;
 
 /**
  * Tests HostAdministrationApi guice wiring and parsing
- *
- * @author Adam Lowe
  */
 @Test(groups = "unit", testName = "QuotaApiExpectTest")
 public class QuotaApiExpectTest extends BaseNovaApiExpectTest {

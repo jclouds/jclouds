@@ -36,9 +36,6 @@ import org.testng.annotations.Test;
 
 import com.google.common.collect.ImmutableSet;
 
-/**
- * @author Adrian Cole
- */
 @Test(groups = "unit", testName = "HostedZoneApiExpectTest")
 public class HostedZoneApiExpectTest extends BaseRoute53ApiExpectTest {
    HttpRequest createWithReference = HttpRequest.builder().method(POST)

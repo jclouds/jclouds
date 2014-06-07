@@ -26,7 +26,6 @@ import javax.inject.Qualifier;
 /**
  * Compute (Nova)
  * 
- * @author Adrian Cole
  * @see <a href="http://docs.openstack.org/api/openstack-typeentity-service/2.0/content/Identity-Service-Concepts-e1362.html"
  *      />
  * @see ServiceType#COMPUTE

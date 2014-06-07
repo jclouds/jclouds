@@ -24,8 +24,6 @@ import com.google.inject.ImplementedBy;
 
 /**
  * metadata of the object
- * 
- * @author Adrian Cole
  */
 @ImplementedBy(DelegatingMutableContentMetadata.class)
 public interface MutableContentMetadata extends org.jclouds.io.MutableContentMetadata {

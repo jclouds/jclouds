@@ -31,9 +31,6 @@ import org.jclouds.openstack.keystone.v2_0.domain.User;
 import org.jclouds.rest.annotations.SelectJson;
 import org.testng.annotations.Test;
 
-/**
- * @author Adam Lowe, Adrian Cole
- */
 @Test(groups = "unit", testName = "ParseAdminAccessTest")
 public class ParseAdminAccessTest extends BaseItemParserTest<Access> {
 

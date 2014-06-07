@@ -35,10 +35,6 @@ import com.google.common.base.Function;
 import com.google.common.base.Splitter;
 import com.google.common.collect.Maps;
 
-/**
- * 
- * @author Adrian Cole
- */
 @Singleton
 public class MapToServerInfo implements Function<Map<String, String>, ServerInfo> {
    private final Function<Map<String, String>, Map<String, ? extends Device>> mapToDevices;

@@ -26,8 +26,6 @@ import com.google.inject.ImplementedBy;
 
 /**
  * A vDC is a deployment environment for vApps. A Vdc element provides a user view of a vDC.
- * 
- * @author Adrian Cole
  */
 @org.jclouds.vcloud.endpoints.VDC
 @ImplementedBy(VDCImpl.class)

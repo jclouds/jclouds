@@ -21,10 +21,6 @@ import java.util.List;
 import org.jclouds.cim.ResourceAllocationSettingData;
 import org.jclouds.vcloud.domain.ReferenceType;
 
-/**
- * @author Adrian Cole
- * 
- */
 public class EditableResourceAllocationSettingData extends ResourceAllocationSettingData {
 
    public static Builder builder() {

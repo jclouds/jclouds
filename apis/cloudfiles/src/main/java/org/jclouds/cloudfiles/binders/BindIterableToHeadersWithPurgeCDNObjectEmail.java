@@ -30,9 +30,6 @@ import org.jclouds.rest.Binder;
 import com.google.common.base.Joiner;
 import com.google.common.collect.ImmutableMultimap;
 
-/**
- * @author Everett Toews
- */
 @Singleton
 public class BindIterableToHeadersWithPurgeCDNObjectEmail implements Binder {
    @SuppressWarnings("unchecked")

@@ -48,7 +48,6 @@ import com.google.common.util.concurrent.ListenableFuture;
  * @see <a href=
  *       "http://docs.openstack.org/api/openstack-identity-service/2.0/content/Token_Operations.html"
  *      />
- * @author Adam Lowe
  */
 @org.jclouds.rest.annotations.Endpoint(Identity.class)
 public interface TokenAsyncApi {

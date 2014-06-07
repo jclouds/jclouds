@@ -31,7 +31,6 @@ import com.google.common.collect.ImmutableMap;
  * A server is a virtual machine instance in the Cloud Servers system. Flavor and image are
  * requisite elements when creating a server.
  * 
- * @author Adrian Cole
 */
 public class Server {
 

@@ -28,8 +28,6 @@ import org.testng.annotations.Test;
 
 /**
  * Unit tests for the {@link StandardDriveToWellKnownImage} class.
- * 
- * @author Ignasi Barrera
  */
 @Test(groups = "unit", testName = "StandardDriveToWellKnownImageTest")
 public class StandardDriveToWellKnownImageTest {

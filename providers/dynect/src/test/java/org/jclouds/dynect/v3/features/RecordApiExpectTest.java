@@ -51,9 +51,6 @@ import org.jclouds.http.HttpRequest;
 import org.jclouds.http.HttpResponse;
 import org.testng.annotations.Test;
 
-/**
- * @author Adrian Cole
- */
 @Test(groups = "unit", testName = "RecordApiExpectTest")
 public class RecordApiExpectTest extends BaseDynECTApiExpectTest {
    HttpRequest getSOA = HttpRequest.builder().method(GET)

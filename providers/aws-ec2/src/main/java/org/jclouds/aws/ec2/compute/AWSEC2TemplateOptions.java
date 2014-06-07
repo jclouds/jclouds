@@ -53,8 +53,6 @@ import com.google.common.collect.Iterables;
  * templateBuilder.options(inboundPorts(22, 80, 8080, 443));
  * Set<? extends NodeMetadata> set = client.createNodesInGroup(tag, 2, templateBuilder.build());
  * <code>
- * 
- * @author Adrian Cole
  */
 public class AWSEC2TemplateOptions extends EC2TemplateOptions implements Cloneable {
    @Override

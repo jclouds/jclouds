@@ -32,8 +32,6 @@ import com.google.inject.Inject;
 /**
  * 
  * Tests to see if a job is in progress.
- * 
- * @author Adrian Cole
  */
 @Singleton
 public class JobComplete implements Predicate<String> {

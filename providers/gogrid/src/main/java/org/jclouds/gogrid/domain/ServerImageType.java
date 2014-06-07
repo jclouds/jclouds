@@ -18,9 +18,6 @@ package org.jclouds.gogrid.domain;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
-/**
- * @author Oleksiy Yarmula
- */
 public enum ServerImageType {
 
     WEB_APPLICATION_SERVER("Web Server"),

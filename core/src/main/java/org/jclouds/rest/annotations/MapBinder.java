@@ -24,8 +24,6 @@ import java.lang.annotation.Target;
 
 /**
  * Designates that this parameter will hold the payload for a PUT or POST command.
- * 
- * @author Adrian Cole
  */
 @Target(METHOD)
 @Retention(RUNTIME)

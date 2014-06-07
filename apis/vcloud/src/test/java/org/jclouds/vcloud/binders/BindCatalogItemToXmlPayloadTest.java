@@ -31,8 +31,6 @@ import com.google.common.collect.ImmutableMap;
 
 /**
  * Tests behavior of {@code BindCatalogItemToXmlPayload}
- * 
- * @author Adrian Cole
  */
 @Test(groups = "unit")
 public class BindCatalogItemToXmlPayloadTest extends BasePayloadTest {

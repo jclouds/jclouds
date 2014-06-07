@@ -28,8 +28,6 @@ import javax.inject.Qualifier;
 
 /**
  * Designates that this object is going to return cached results
- * 
- * @author Adrian Cole
  */
 @Target( { TYPE, METHOD, PARAMETER })
 @Retention(RUNTIME)

@@ -51,7 +51,6 @@ import com.google.common.util.concurrent.ListenableFuture;
  * <p/>
  * 
  * @see KeyPairApi
- * @author Jeremy Daggett
  * @see ExtensionAsyncApi
  * @see <a href=
  *      "http://docs.openstack.org/api/openstack-compute/2/content/Extensions-d1e1444.html"

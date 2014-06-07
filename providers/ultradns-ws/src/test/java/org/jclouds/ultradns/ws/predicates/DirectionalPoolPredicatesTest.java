@@ -29,10 +29,6 @@ import org.jclouds.ultradns.ws.domain.DirectionalPoolRecord;
 import org.jclouds.ultradns.ws.domain.DirectionalPoolRecordDetail;
 import org.testng.annotations.Test;
 
-/**
- * 
- * @author Adrian Cole
- */
 @Test(groups = "unit", testName = "DirectionalPoolPredicatesTest")
 public class DirectionalPoolPredicatesTest {
    DirectionalPool pool = DirectionalPool.builder()

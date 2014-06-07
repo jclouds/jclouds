@@ -43,8 +43,6 @@ import com.google.inject.Provides;
 
 /**
  * Configures the Trove connection.
- * 
- * @author Zack Shoylev
  */
 @ConfiguresHttpApi
 public class TroveHttpApiModule extends HttpApiModule<TroveApi> {

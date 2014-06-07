@@ -41,9 +41,6 @@ import com.google.common.net.HttpHeaders;
 /**
  * This parses @{link {@link org.jclouds.azureblob.domain.ListableContainerProperties} from
  * HTTP headers.
- * 
- * 
- * @author Adrian Cole
  */
 public class ParseContainerPropertiesFromHeaders implements Function<HttpResponse, ContainerProperties>,
       InvocationContext<ParseContainerPropertiesFromHeaders> {

@@ -24,8 +24,6 @@ import com.google.common.base.CaseFormat;
  * 
  * The FenceMode element contains one of the following strings that specify how a network is
  * connected to its parent network.
- * 
- * @author Adrian Cole
  */
 public enum FenceMode {
    /**

@@ -19,10 +19,6 @@ package org.jclouds.hpcloud.compute.features;
 import org.jclouds.openstack.nova.v2_0.features.ImageApiLiveTest;
 import org.testng.annotations.Test;
 
-/**
- *
- * @author Michael Arnold
- */
 @Test(groups = "live", testName = "HPCloudComputeImageApiLiveTest")
 public class HPCloudComputeImageApiLiveTest extends ImageApiLiveTest {
     public HPCloudComputeImageApiLiveTest() {

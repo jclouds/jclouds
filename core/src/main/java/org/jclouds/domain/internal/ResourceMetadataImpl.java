@@ -34,8 +34,6 @@ import com.google.common.collect.Maps;
 
 /**
  * Idpayload of the object
- * 
- * @author Adrian Cole
  */
 public abstract class ResourceMetadataImpl<T extends Enum<T>> implements ResourceMetadata<T> {
 

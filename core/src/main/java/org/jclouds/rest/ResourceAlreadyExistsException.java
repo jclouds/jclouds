@@ -19,8 +19,6 @@ package org.jclouds.rest;
 
 /**
  * Thrown when creating a resource that already exists.
- *
- * @author Andrew Gaul
  */
 public class ResourceAlreadyExistsException extends RuntimeException {
    public ResourceAlreadyExistsException() {

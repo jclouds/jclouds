@@ -40,8 +40,6 @@ import com.google.inject.Module;
 
 /**
  * Tests TokenApi
- * 
- * @author Adam Lowe
  */
 @Test(groups = "live", testName = "TokenApiLiveTest", singleThreaded = true)
 public class TokenApiLiveTest extends BaseKeystoneApiLiveTest {

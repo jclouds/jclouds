@@ -30,9 +30,6 @@ import org.jclouds.rackspace.clouddns.v1.domain.Domain;
 
 import com.google.common.base.Function;
 
-/**
- * @author Everett Toews
- */
 public class ParseDomains implements Function<HttpResponse, PaginatedCollection<Domain>> {
 
    private final ParseJson<Domains> json;

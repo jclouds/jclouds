@@ -38,10 +38,6 @@ import org.testng.annotations.Test;
 
 import com.google.common.collect.ImmutableSet;
 import com.google.inject.Guice;
-/**
- * 
- * @author Adrian Cole
- */
 @Test(groups = "unit", singleThreaded = true, testName = "Route53ErrorHandlerTest" )
 public class Route53ErrorHandlerTest {
    Route53ErrorHandler function = Guice.createInjector(new SaxParserModule()).getInstance(Route53ErrorHandler.class);

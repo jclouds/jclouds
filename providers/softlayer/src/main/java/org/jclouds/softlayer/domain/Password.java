@@ -29,7 +29,6 @@ import com.google.common.base.Objects.ToStringHelper;
 /**
  * Contains a password for a specific software component instance
  *
- * @author Jason King
  * @see <a href= "http://sldn.softlayer.com/reference/datatypes/SoftLayer_Software_Component_Password"
 />
  */

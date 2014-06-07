@@ -26,9 +26,6 @@ import org.jclouds.http.HttpErrorHandler;
 import org.jclouds.http.HttpResponse;
 import org.jclouds.http.HttpResponseException;
 
-/**
- * @author Adrian Cole
- */
 public class DynECTErrorHandler implements HttpErrorHandler {
    private static final String JOB_STILL_RUNNING = "This session already has a job running";
    private static final String OPERATION_BLOCKED = "Operation blocked by current task";

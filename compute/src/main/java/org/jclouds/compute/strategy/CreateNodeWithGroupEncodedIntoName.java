@@ -21,8 +21,6 @@ import org.jclouds.compute.domain.Template;
 
 /**
  * Adds a node into an existing tag set, or creates one new.
- * 
- * @author Adrian Cole
  */
 public interface CreateNodeWithGroupEncodedIntoName {
 

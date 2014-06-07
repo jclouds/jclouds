@@ -50,9 +50,6 @@ import com.google.inject.Inject;
 
 /**
  * Simple implementation of a {@link HttpFutureCommandClient}, Apache Components HttpClient 4.x.
- * 
- * @author Sam Tunnicliffe
- * @author Adrian Cole
  */
 public class ApacheHCHttpCommandExecutorService extends BaseHttpCommandExecutorService<HttpUriRequest> {
    private final HttpClient client;

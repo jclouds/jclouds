@@ -31,7 +31,6 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * <p/>
  * Contains a list of the keys that were deleted
  *
- * @author Andrei Savu
  * @see <a href="http://docs.amazonwebservices.com/AmazonS3/latest/API/multiobjectdeleteapi.html" />
  */
 public class DeleteResult extends ForwardingSet<String> {

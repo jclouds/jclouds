@@ -20,9 +20,6 @@ import org.jclouds.logging.Logger;
 
 /**
  * Configures logging of type {@link NullLogger}
- * 
- * @author Adrian Cole
- * 
  */
 public class NullLoggingModule extends LoggingModule {
 

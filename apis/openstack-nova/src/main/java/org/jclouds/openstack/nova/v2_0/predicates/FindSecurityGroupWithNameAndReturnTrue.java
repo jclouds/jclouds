@@ -40,8 +40,6 @@ import com.google.inject.Inject;
 
 /**
  * AtomicReference is so that we can return the securityGroup that matched.
- * 
- * @author Adrian Cole
  */
 @Singleton
 public class FindSecurityGroupWithNameAndReturnTrue implements Predicate<AtomicReference<ZoneAndName>> {

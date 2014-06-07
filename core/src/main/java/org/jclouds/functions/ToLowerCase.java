@@ -22,9 +22,6 @@ import javax.inject.Singleton;
 
 import com.google.common.base.Function;
 
-/**
- * @author Everett Toews
- */
 @Singleton
 public class ToLowerCase implements Function<String, String> {
 

@@ -24,9 +24,6 @@ import org.testng.annotations.Test;
 
 import com.google.inject.Module;
 
-/**
- * @author Adrian Cole
- */
 @Test(groups = "live", testName = "ElasticStackComputeServiceLiveTest")
 public class ElasticStackComputeServiceLiveTest extends BaseComputeServiceLiveTest {
 

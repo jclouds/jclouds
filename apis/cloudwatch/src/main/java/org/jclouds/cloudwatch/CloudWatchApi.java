@@ -34,7 +34,6 @@ import org.jclouds.rest.annotations.EndpointParam;
  * @see <a
  *      href="http://docs.amazonwebservices.com/AmazonCloudWatch/latest/APIReference"
  *      />
- * @author Adrian Cole
  */
 public interface CloudWatchApi extends Closeable {
    /**

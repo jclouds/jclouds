@@ -28,8 +28,6 @@ import com.google.common.collect.ImmutableMap;
 
 /**
  * Statement used in a shell script
- * 
- * @author Adrian Cole
  */
 public class Call implements Statement {
 

@@ -32,8 +32,6 @@ import com.google.common.collect.ImmutableSet;
  * @see <a href=
  *      "http://docs.amazonwebservices.com/AmazonCloudWatch/latest/APIReference/API_MetricDatum.html"
  *      />
- * 
- * @author Jeremy Whitlock
  */
 public class MetricDatum {
 

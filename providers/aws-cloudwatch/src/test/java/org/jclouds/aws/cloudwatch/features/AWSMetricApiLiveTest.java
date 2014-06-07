@@ -19,9 +19,6 @@ package org.jclouds.aws.cloudwatch.features;
 import org.jclouds.cloudwatch.features.MetricApiLiveTest;
 import org.testng.annotations.Test;
 
-/**
- * @author Jeremy Whitlock, Adrian Cole
- */
 @Test(groups = "live", testName = "AWSMetricApiLiveTest")
 public class AWSMetricApiLiveTest extends MetricApiLiveTest {
    public AWSMetricApiLiveTest() {

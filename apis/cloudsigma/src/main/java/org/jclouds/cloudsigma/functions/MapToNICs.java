@@ -28,10 +28,6 @@ import com.google.common.base.Function;
 import com.google.common.base.Splitter;
 import com.google.common.collect.ImmutableList;
 
-/**
- * 
- * @author Adrian Cole
- */
 @Singleton
 public class MapToNICs implements Function<Map<String, String>, List<NIC>> {
 

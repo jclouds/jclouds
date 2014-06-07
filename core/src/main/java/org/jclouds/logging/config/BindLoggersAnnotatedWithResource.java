@@ -66,8 +66,6 @@ import com.google.inject.spi.TypeListener;
  *     A = i.getInstance(A.class);
  *     // A will now have a logger associated with it
  * </pre>
- *
- * @author Adrian Cole
  */
 public class BindLoggersAnnotatedWithResource implements TypeListener {
 

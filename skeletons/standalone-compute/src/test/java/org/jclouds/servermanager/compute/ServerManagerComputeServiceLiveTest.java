@@ -28,9 +28,6 @@ import org.testng.annotations.Test;
 
 import com.google.common.collect.ImmutableMap;
 
-/**
- * @author Adrian Cole
- */
 @Test(groups = "live", enabled = true, singleThreaded = true)
 public class ServerManagerComputeServiceLiveTest extends BaseComputeServiceLiveTest {
 

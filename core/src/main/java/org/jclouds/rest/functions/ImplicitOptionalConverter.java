@@ -72,8 +72,6 @@ import com.google.inject.ImplementedBy;
  * <pre>
  * bind(ImplicitOptionalConverter.class).to(MyCustomOptionalConverter.class);
  * </pre>
- * 
- * @author Adrian Cole
  */
 @Beta
 @ImplementedBy(PresentWhenApiVersionLexicographicallyAtOrAfterSinceApiVersion.class)

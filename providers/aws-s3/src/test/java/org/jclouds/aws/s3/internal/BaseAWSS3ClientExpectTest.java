@@ -29,8 +29,6 @@ import com.google.inject.Module;
 
 /**
  * Base class for writing Expect tests for AWS-S3
- *
- * @author Andrei Savu
  */
 public class BaseAWSS3ClientExpectTest extends BaseRestClientExpectTest<AWSS3Client> {
 

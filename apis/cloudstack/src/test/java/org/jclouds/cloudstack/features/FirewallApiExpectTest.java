@@ -35,8 +35,6 @@ import com.google.common.collect.ImmutableSet;
 
 /**
  * Test the CloudStack FirewallApi
- *
- * @author Andrei Savu
  */
 @Test(groups = "unit", testName = "FirewallApiExpectTest")
 public class FirewallApiExpectTest extends BaseCloudStackExpectTest<FirewallApi> {

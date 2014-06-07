@@ -50,8 +50,6 @@ import com.google.inject.Injector;
 
 /**
  * Tests the ability of a {@link SshjSshClient}
- * 
- * @author Adrian Cole
  */
 @Test(groups = "live", testName = "SshjSshClientLiveTest")
 public class SshjSshClientLiveTest {

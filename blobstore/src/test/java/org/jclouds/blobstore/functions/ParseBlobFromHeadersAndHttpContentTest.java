@@ -36,9 +36,6 @@ import org.testng.annotations.Test;
 import com.google.common.collect.ImmutableList;
 import com.google.inject.Guice;
 
-/**
- * @author Adrian Cole
- */
 public class ParseBlobFromHeadersAndHttpContentTest {
 
    @BeforeTest

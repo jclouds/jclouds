@@ -25,10 +25,6 @@ import org.jclouds.rest.internal.BaseRestClientExpectTest;
 import com.google.common.base.Supplier;
 import com.google.inject.Module;
 
-/**
- * 
- * @author Adrian Cole
- */
 public class BaseGoGridHttpApiExpectTest extends BaseRestClientExpectTest<GoGridApi> {
 
    public BaseGoGridHttpApiExpectTest() {

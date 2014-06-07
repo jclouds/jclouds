@@ -20,10 +20,6 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 import com.google.common.annotations.Beta;
 
-/**
- * @author Adrian Cole
- * 
- */
 @Beta
 public enum IpProtocol {
 

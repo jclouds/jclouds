@@ -20,10 +20,6 @@ import java.util.Set;
 
 import org.jclouds.azure.storage.domain.BoundedSet;
 
-/**
- * 
- * @author Adrian Cole
- */
 public interface ListBlobsResponse extends BoundedSet<BlobProperties> {
 
    String getDelimiter();

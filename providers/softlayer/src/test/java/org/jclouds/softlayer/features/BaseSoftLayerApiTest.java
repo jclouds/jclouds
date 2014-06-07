@@ -24,9 +24,6 @@ import org.jclouds.providers.ProviderMetadata;
 import org.jclouds.rest.internal.BaseAsyncClientTest;
 import org.jclouds.softlayer.SoftLayerProviderMetadata;
 
-/**
- * @author Adrian Cole
- */
 public abstract class BaseSoftLayerApiTest<T> extends BaseAsyncClientTest<T> {
 
    @Override

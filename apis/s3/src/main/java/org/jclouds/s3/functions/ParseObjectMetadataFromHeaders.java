@@ -42,7 +42,6 @@ import com.google.common.net.HttpHeaders;
  * headers.
  * 
  * @see <a href="http://docs.amazonwebservices.com/AmazonS3/latest/RESTObjectGET.html" />
- * @author Adrian Cole
  */
 public class ParseObjectMetadataFromHeaders implements Function<HttpResponse, MutableObjectMetadata>,
          InvocationContext<ParseObjectMetadataFromHeaders> {

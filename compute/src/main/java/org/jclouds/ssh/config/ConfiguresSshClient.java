@@ -24,9 +24,6 @@ import java.lang.annotation.Target;
 
 /**
  * designates the module configures an Ssh Client.
- * 
- * @author Adrian Cole
- * 
  */
 @Retention(RUNTIME)
 @Target(TYPE)

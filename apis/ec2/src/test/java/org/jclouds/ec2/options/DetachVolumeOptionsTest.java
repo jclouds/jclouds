@@ -27,8 +27,6 @@ import org.testng.annotations.Test;
 
 /**
  * Tests possible uses of DetachVolumeOptions and DetachVolumeOptions.Builder.*
- * 
- * @author Adrian Cole
  */
 public class DetachVolumeOptionsTest {
 

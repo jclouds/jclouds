@@ -29,10 +29,6 @@ import org.testng.annotations.Test;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 
-/**
- * 
- * @author Adrian Cole
- */
 @Test(groups = "unit")
 public class ParseAsyncJobsFromHttpResponseTest {
 

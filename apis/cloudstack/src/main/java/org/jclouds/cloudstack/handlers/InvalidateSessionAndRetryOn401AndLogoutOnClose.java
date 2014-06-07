@@ -35,8 +35,6 @@ import com.google.inject.Singleton;
 
 /**
  * This will parse and set an appropriate exception on the command object.
- *
- * @author Adrian Cole
  */
 @Singleton
 public class InvalidateSessionAndRetryOn401AndLogoutOnClose extends BackoffLimitedRetryHandler {

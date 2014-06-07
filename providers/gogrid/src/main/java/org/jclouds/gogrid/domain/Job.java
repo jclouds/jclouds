@@ -35,7 +35,6 @@ import com.google.common.primitives.Longs;
  * Represents any job in GoGrid system
  * (jobs include server creation, stopping, etc)
  *
- * @author Oleksiy Yarmula
  * @see <a href="http://wiki.gogrid.com/wiki/index.php/API:Job_(Object)" />
  */
 public class Job implements Comparable<Job> {

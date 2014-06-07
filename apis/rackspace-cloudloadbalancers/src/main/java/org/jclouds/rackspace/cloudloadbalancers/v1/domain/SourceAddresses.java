@@ -23,8 +23,6 @@ import com.google.common.base.Objects.ToStringHelper;
  * The load balancer source IP addresses are useful for customers who are automating the deployment of infrastructure 
  * and need to determine the IP addresses of requests coming from our load balancers for the purpose of creating more 
  * robust firewall rules.
- * 
- * @author Everett Toews
  */
 public class SourceAddresses {
 

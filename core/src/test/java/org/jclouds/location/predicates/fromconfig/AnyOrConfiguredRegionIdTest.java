@@ -32,8 +32,6 @@ import com.google.inject.name.Names;
 
 /**
  * Tests behavior of {@code AnyOrConfiguredRegionId}
- * 
- * @author Adrian Cole
  */
 @Test(groups = "unit", testName = "AnyOrConfiguredRegionIdTest")
 public class AnyOrConfiguredRegionIdTest {

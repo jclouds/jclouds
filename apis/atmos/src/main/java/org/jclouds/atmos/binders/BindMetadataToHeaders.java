@@ -29,9 +29,6 @@ import org.jclouds.atmos.reference.AtmosHeaders;
 import org.jclouds.http.HttpRequest;
 import org.jclouds.rest.Binder;
 
-/**
- * @author Adrian Cole
- */
 @Singleton
 public class BindMetadataToHeaders implements Binder {
    private final BindUserMetadataToHeaders metaBinder;

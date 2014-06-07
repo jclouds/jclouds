@@ -35,8 +35,6 @@ import com.google.inject.Module;
 
 /**
  * Base class for writing VCloud Expect tests for ComputeService operations
- * 
- * @author Adrian Cole
  */
 public abstract class BaseVCloudComputeServiceExpectTest extends BaseRestClientExpectTest<ComputeService> {
    protected static final String ENDPOINT = "https://zone.myvcloud.com/api";

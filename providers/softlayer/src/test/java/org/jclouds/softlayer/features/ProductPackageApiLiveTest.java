@@ -44,8 +44,6 @@ import com.google.common.collect.Maps;
 
 /**
  * Tests behavior of {@code ProductPackageApi}
- * 
- * @author Adrian Cole
  */
 @Test(groups = "live", singleThreaded = true, testName = "ProductPackageApiLiveTest")
 public class ProductPackageApiLiveTest extends BaseSoftLayerApiLiveTest {

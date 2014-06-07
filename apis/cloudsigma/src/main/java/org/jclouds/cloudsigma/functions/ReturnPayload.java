@@ -23,9 +23,6 @@ import org.jclouds.io.Payload;
 
 import com.google.common.base.Function;
 
-/**
- * @author Adrian Cole
- */
 @Singleton
 public class ReturnPayload implements Function<HttpResponse, Payload> {
 

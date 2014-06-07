@@ -32,9 +32,6 @@ import com.google.common.annotations.Beta;
 import com.google.common.base.Function;
 import com.google.common.base.Optional;
 
-/**
- * @author Everett Toews
- */
 @Beta
 public class SubdomainsToPagedIterable extends Arg0ToPagedIterable<Subdomain, SubdomainsToPagedIterable> {
 

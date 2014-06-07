@@ -16,9 +16,6 @@
  */
 package org.jclouds.gogrid.reference;
 
-/**
- * @author Oleksiy Yarmula
- */
 public interface GoGridQueryParams {
 
    public static final String ID_KEY = "id";

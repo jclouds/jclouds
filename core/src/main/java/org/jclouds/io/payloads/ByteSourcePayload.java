@@ -26,8 +26,6 @@ import com.google.common.io.Closer;
 
 /**
  * A repeatable, ByteSource-backed Payload.
- *
- * @author Andrew Gaul
  */
 public class ByteSourcePayload extends BasePayload<ByteSource> {
    private final Closer closer = Closer.create();

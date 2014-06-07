@@ -31,9 +31,6 @@ import org.jclouds.util.Closeables2;
 
 import com.google.common.reflect.TypeToken;
 
-/**
- * @author Adrian Cole
- */
 @Singleton
 public class LoadBalancerServiceContextImpl extends BaseView implements LoadBalancerServiceContext {
    private final LoadBalancerService loadBalancerService;

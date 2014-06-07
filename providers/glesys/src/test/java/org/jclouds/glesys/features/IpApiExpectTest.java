@@ -36,8 +36,6 @@ import com.google.common.collect.ImmutableSet;
 
 /**
  * Allows us to test a api via its side effects.
- *
- * @author Adrian Cole, Adam Lowe
  */
 @Test(groups = "unit", testName = "IpApiExpectTest")
 public class IpApiExpectTest extends BaseGleSYSApiExpectTest {

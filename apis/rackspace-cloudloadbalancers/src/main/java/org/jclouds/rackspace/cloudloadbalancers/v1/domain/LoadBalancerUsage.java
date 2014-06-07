@@ -26,9 +26,6 @@ import org.jclouds.rackspace.cloudloadbalancers.v1.domain.VirtualIP.Type;
 import com.google.common.base.Objects;
 import com.google.common.base.Optional;
 
-/**
- * @author Everett Toews
- */
 public final class LoadBalancerUsage {
    private final int id;
    private final float averageNumConnections;

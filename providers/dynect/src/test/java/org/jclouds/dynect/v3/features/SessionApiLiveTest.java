@@ -24,9 +24,6 @@ import org.jclouds.dynect.v3.internal.BaseDynECTApiLiveTest;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.Test;
 
-/**
- * @author Adrian Cole
- */
 @Test(groups = "live", testName = "SessionApiLiveTest")
 public class SessionApiLiveTest extends BaseDynECTApiLiveTest {
 

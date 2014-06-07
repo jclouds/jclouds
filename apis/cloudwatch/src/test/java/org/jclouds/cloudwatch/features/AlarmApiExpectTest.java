@@ -51,9 +51,6 @@ import org.jclouds.rest.InsufficientResourcesException;
 import org.jclouds.rest.ResourceNotFoundException;
 import org.testng.annotations.Test;
 
-/**
- * @author Jeremy Whitlock
- */
 @Test(groups = "unit", testName = "AlarmApiExpectTest")
 public class AlarmApiExpectTest extends BaseCloudWatchApiExpectTest {
 

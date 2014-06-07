@@ -32,8 +32,6 @@ import java.lang.annotation.Target;
  * <li>default username</li>
  * <li>default password, specific to a cloud and image.</li>
  * </ul>
- * 
- * @author Oleksiy Yarmula
  */
 @Retention(RUNTIME)
 @Target(TYPE)

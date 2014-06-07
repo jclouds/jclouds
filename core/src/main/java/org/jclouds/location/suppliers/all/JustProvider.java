@@ -33,10 +33,6 @@ import org.jclouds.location.Provider;
 import com.google.common.base.Supplier;
 import com.google.common.collect.ImmutableSet;
 
-/**
- * 
- * @author Adrian Cole
- */
 @Singleton
 public class JustProvider implements Supplier<Set<? extends Location>> {
    private final String providerName;

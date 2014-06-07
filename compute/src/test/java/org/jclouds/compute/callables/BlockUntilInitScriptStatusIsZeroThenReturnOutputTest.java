@@ -41,9 +41,6 @@ import com.google.common.util.concurrent.AbstractFuture;
 import com.google.common.util.concurrent.ListeningExecutorService;
 import com.google.common.util.concurrent.MoreExecutors;
 
-/**
- * @author Adrian Cole
- */
 @Test(groups = "unit", singleThreaded = true, testName = "BlockUntilInitScriptStatusIsZeroThenReturnOutputTest")
 public class BlockUntilInitScriptStatusIsZeroThenReturnOutputTest {
 

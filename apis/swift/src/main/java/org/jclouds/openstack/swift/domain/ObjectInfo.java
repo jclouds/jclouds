@@ -19,11 +19,6 @@ package org.jclouds.openstack.swift.domain;
 import java.net.URI;
 import java.util.Date;
 
-/**
- * 
- * @author Adrian Cole
- * 
- */
 public interface ObjectInfo extends Comparable<ObjectInfo> {
 
    URI getUri();

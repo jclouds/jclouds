@@ -26,8 +26,6 @@ import com.google.inject.ImplementedBy;
 
 /**
  * Generates signed requests for blobs. useful in other tools such as backup utilities.
- * 
- * @author Adrian Cole
  */
 @ImplementedBy(RequestSigningUnsupported.class)
 public interface BlobRequestSigner {

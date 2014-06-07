@@ -34,9 +34,6 @@ import com.google.common.collect.ImmutableSet;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 
-/**
- * @author Adam Lowe
- */
 @Test(groups = "unit", testName = "ParseDevstackApiMetadataTest")
 public class ParseDevstackApiMetadataTest extends BaseItemParserTest<ApiMetadata> {
 

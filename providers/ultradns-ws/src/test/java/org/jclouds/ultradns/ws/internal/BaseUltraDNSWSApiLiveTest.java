@@ -30,10 +30,6 @@ import org.testng.annotations.Test;
 import com.google.common.base.Optional;
 import com.google.common.base.Predicate;
 
-/**
- * 
- * @author Adrian Cole
- */
 @Test(groups = "live")
 public class BaseUltraDNSWSApiLiveTest extends BaseApiLiveTest<UltraDNSWSApi> {
    protected String zoneName = String.format("%s-%s.ultradnstest.jclouds.org.", System.getProperty("user.name")

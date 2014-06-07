@@ -26,8 +26,6 @@ import com.google.inject.ImplementedBy;
 
 /**
  * Lists the blobstore.
- * 
- * @author Adrian Cole
  */
 @ImplementedBy(ListContainerAndRecurseThroughFolders.class)
 public interface ListBlobsInContainer {

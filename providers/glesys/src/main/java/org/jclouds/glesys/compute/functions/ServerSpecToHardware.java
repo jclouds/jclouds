@@ -39,10 +39,6 @@ import com.google.common.base.Supplier;
 import com.google.common.collect.FluentIterable;
 import com.google.common.collect.ImmutableList;
 
-/**
- * 
- * @author Adrian Cole
- */
 @Singleton
 public class ServerSpecToHardware implements Function<ServerSpec, Hardware> {
 

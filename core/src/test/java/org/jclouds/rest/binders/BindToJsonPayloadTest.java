@@ -30,8 +30,6 @@ import com.google.gson.Gson;
 
 /**
  * Tests behavior of {@code BindToJsonPayload}
- * 
- * @author Adrian Cole
  */
 @Test(groups = "unit", testName = "BindToJsonPayloadTest")
 public class BindToJsonPayloadTest {

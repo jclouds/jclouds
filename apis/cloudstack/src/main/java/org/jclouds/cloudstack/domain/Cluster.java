@@ -29,8 +29,6 @@ import com.google.common.base.Objects.ToStringHelper;
 
 /**
  * Represents a CloudStack Cluster.
- *
- * @author Richard Downer
  */
 public class Cluster implements Comparable<Cluster> {
 

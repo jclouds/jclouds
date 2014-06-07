@@ -36,9 +36,6 @@ import org.xml.sax.SAXException;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 
-/**
- * @author Adrian Cole
- */
 public class OrgHandler extends ParseSax.HandlerWithResult<Org> {
 
    protected final TaskHandler taskHandler;

@@ -23,10 +23,6 @@ import org.jclouds.concurrent.SingleThreaded;
 import com.google.common.base.Optional;
 import com.google.inject.Injector;
 
-/**
- * 
- * @author Adrian Cole
- */
 @SingleThreaded
 public class StubComputeServiceContextModule extends JCloudsNativeComputeServiceAdapterContextModule {
 

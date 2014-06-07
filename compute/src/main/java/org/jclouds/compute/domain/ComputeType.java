@@ -16,10 +16,6 @@
  */
 package org.jclouds.compute.domain;
 
-/**
- * 
- * @author Adrian Cole
- */
 public enum ComputeType {
 
    NODE, IMAGE, HARDWARE, SECURITYGROUP;

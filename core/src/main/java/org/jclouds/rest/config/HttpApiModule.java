@@ -29,10 +29,6 @@ import com.google.common.base.Function;
 import com.google.common.reflect.TypeToken;
 import com.google.inject.TypeLiteral;
 
-/**
- * 
- * @author Adrian Cole
- */
 @ConfiguresHttpApi
 public class HttpApiModule<A> extends RestModule {
    protected final Class<A> api;

@@ -42,10 +42,6 @@ import com.google.common.collect.Multimap;
 import com.google.common.collect.ImmutableMap.Builder;
 import com.google.inject.assistedinject.Assisted;
 
-/**
- * 
- * @author Adrian Cole
- */
 @Singleton
 public class CallForImages implements Callable<Iterable<Image>> {
    public interface Factory {

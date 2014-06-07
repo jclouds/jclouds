@@ -28,10 +28,6 @@ import org.testng.annotations.Test;
 
 import com.google.common.base.Predicate;
 
-/**
- * 
- * @author Adrian Cole
- */
 @Test(groups = "live")
 public class BaseRoute53ApiLiveTest extends BaseApiLiveTest<Route53Api> {
 

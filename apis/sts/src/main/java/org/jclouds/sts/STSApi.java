@@ -41,7 +41,6 @@ import org.jclouds.sts.xml.UserAndSessionCredentialsHandler;
  * <p/>
  * 
  * @see <a href="http://docs.amazonwebservices.com/STS/latest/APIReference" />
- * @author Adrian Cole
  */
 @RequestFilters(FormSigner.class)
 @VirtualHost

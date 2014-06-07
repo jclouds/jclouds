@@ -31,9 +31,6 @@ import org.jclouds.rest.InvocationContext;
 import com.google.common.base.Function;
 import com.google.common.collect.Iterables;
 
-/**
- * @author Everett Toews
- */
 public class ParseNestedBoolean implements Function<HttpResponse, Boolean>, InvocationContext<ParseNestedBoolean> {
 
    private final ParseJson<Map<String, Map<String, Boolean>>> json;

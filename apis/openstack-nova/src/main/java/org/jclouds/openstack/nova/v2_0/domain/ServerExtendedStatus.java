@@ -28,7 +28,6 @@ import com.google.common.base.Objects.ToStringHelper;
 /**
  * Additional attributes delivered by Extended Server Status extension (alias "OS-EXT-STS")
  * 
- * @author Adam Lowe
  * @see <a href=
        "http://nova.openstack.org/api/nova.api.openstack.compute.contrib.extended_status.html"
        />

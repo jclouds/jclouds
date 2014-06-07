@@ -33,9 +33,6 @@ import org.jclouds.http.options.BaseHttpRequestOptions;
  * AtmosClient connection = // get connection
  *  connection.createDirectory("directory", publicRead());
  * <code>
- * 
- * @author Adrian Cole
- * 
  */
 public class PutOptions extends BaseHttpRequestOptions {
    public static final PutOptions NONE = new PutOptions();

@@ -16,9 +16,6 @@
  */
 package org.jclouds.glesys.options;
 
-/**
- * @author Adam Lowe
- */
 public class UpdateRecordOptions extends AddRecordOptions {
 
    public static class Builder {

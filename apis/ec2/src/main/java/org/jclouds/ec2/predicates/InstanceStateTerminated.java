@@ -33,8 +33,6 @@ import com.google.inject.Inject;
 /**
  * 
  * Tests to see if a task succeeds.
- * 
- * @author Adrian Cole
  */
 @Singleton
 public class InstanceStateTerminated implements Predicate<RunningInstance> {

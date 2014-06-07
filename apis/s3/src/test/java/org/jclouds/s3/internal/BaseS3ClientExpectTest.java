@@ -27,10 +27,6 @@ import org.jclouds.s3.config.S3RestClientModule;
 import com.google.common.base.Supplier;
 import com.google.inject.Module;
 
-/**
- * 
- * @author Adrian Cole
- */
 public abstract class BaseS3ClientExpectTest extends BaseRestClientExpectTest<S3Client> {
 
    protected static final String CONSTANT_DATE = "2009-11-08T15:54:08.897Z";

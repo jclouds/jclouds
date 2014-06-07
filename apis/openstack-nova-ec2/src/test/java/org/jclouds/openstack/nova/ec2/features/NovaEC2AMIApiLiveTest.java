@@ -19,10 +19,6 @@ package org.jclouds.openstack.nova.ec2.features;
 import org.jclouds.ec2.features.AMIApiLiveTest;
 import org.testng.annotations.Test;
 
-/**
- * 
- * @author Adrian Cole
- */
 @Test(groups = "live", singleThreaded = true, testName = "NovaEC2AMIApiLiveTest")
 public class NovaEC2AMIApiLiveTest extends AMIApiLiveTest {
    public NovaEC2AMIApiLiveTest() {

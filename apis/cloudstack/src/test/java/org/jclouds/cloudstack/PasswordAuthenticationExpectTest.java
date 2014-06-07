@@ -32,7 +32,6 @@ import com.google.common.net.HttpHeaders;
 /**
  * 
  * @see CloudStackProperties#CREDENTIAL_TYPE
- * @author Adrian Cole
  */
 @Test(groups = "unit", testName = "PasswordAuthenticationExpectTest")
 public class PasswordAuthenticationExpectTest extends BaseCloudStackExpectTest<AccountApi> {

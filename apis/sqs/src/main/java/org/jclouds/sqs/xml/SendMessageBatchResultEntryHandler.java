@@ -33,8 +33,6 @@ import com.google.common.hash.HashCode;
  * @see <a href=
  *      "http://docs.amazonwebservices.com/AWSSimpleQueueService/2011-10-01/APIReference/Query_QueryReceiveMessage.html"
  *      />
- * 
- * @author Adrian Cole
  */
 public class SendMessageBatchResultEntryHandler extends
       ParseSax.HandlerForGeneratedRequestWithResult<Map.Entry<String, MessageIdAndMD5>> {

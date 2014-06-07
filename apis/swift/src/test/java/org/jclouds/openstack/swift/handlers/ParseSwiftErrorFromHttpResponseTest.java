@@ -37,10 +37,6 @@ import org.testng.annotations.Test;
 
 import com.google.common.base.Strings;
 
-/**
- * 
- * @author Adrian Cole
- */
 @Test(groups = { "unit" })
 public class ParseSwiftErrorFromHttpResponseTest {
 

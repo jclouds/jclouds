@@ -38,9 +38,6 @@ import com.google.inject.Guice;
 import com.google.inject.TypeLiteral;
 import com.google.inject.name.Names;
 
-/**
- * @author Adrian Cole
- */
 @Test(groups = "unit", testName = "CreateUniqueKeyPairTest")
 public class CreateUniqueKeyPairTest {
    

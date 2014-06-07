@@ -18,6 +18,5 @@
  * This package contains an Amazon SQS api implemented by {@link org.jclouds.http.HttpCommandExecutorService} commands.
  *
  * @see <a href="http://docs.amazonwebservices.com/AWSSimpleQueueService/latest/APIReference/index.html"/>
- * @author Adrian Cole
  */
 package org.jclouds.sqs;

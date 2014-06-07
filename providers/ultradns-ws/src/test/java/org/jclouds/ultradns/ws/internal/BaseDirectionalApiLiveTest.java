@@ -38,9 +38,6 @@ import com.google.common.base.Optional;
 import com.google.common.base.Predicate;
 import com.google.common.collect.Multimap;
 
-/**
- * @author Adrian Cole
- */
 @Test(groups = "live")
 public class BaseDirectionalApiLiveTest extends BaseUltraDNSWSApiLiveTest {
 

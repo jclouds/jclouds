@@ -23,8 +23,6 @@ import org.jclouds.rest.internal.BaseRestApiExpectTest;
 
 /**
  * Configures a glesys api expect test - provides a dateService
- *
- * @author Adam Lowe
  */
 public class BaseGleSYSApiExpectTest extends BaseRestApiExpectTest<GleSYSApi> {
    protected DateService dateService = new SimpleDateFormatDateService();

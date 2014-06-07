@@ -31,9 +31,6 @@ import org.testng.annotations.Test;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 
-/**
- * @author Ignasi Barrera
- */
 @Test(groups = { "unit" })
 public class MapToStandardDriveTest {
    public static StandardDrive ONE = new StandardDrive.Builder()

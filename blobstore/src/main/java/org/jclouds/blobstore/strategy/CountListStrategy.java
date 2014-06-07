@@ -23,8 +23,6 @@ import com.google.inject.ImplementedBy;
 
 /**
  * Number of objects in a container
- * 
- * @author Adrian Cole
  */
 @ImplementedBy(CountBlobTypeInList.class)
 public interface CountListStrategy {

@@ -40,10 +40,6 @@ import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Maps;
 
-/**
- * 
- * @author Adrian Cole
- */
 @Test(singleThreaded = true, testName = "NodeToNodeMetadataTest")
 public class NodeToNodeMetadataTest {
    public static Location expectedProviderLocationFromResource(String resource) {

@@ -39,10 +39,6 @@ import com.google.common.util.concurrent.MoreExecutors;
 import com.google.inject.AbstractModule;
 import com.google.inject.Provides;
 
-/**
- * 
- * @author Adrian Cole
- */
 @Beta
 @ConfiguresExecutorService
 public class CurrentRequestExecutorServiceModule extends AbstractModule {

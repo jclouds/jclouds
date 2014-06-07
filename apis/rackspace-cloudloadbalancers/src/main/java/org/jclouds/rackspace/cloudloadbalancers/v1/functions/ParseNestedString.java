@@ -31,9 +31,6 @@ import org.jclouds.rest.InvocationContext;
 import com.google.common.base.Function;
 import com.google.common.collect.Iterables;
 
-/**
- * @author Everett Toews
- */
 public class ParseNestedString implements Function<HttpResponse, String>, InvocationContext<ParseNestedString> {
 
    private final ParseJson<Map<String, Map<String, String>>> json;

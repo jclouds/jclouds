@@ -28,7 +28,6 @@ import com.google.common.collect.ImmutableList;
 /**
  * The allowed arguments for archive manipulation, such as archivesize
  *
- * @author Adam Lowe
  * @see <a href= "https://customer.glesys.com/api.php?a=doc#archive_allowedarguments" />
  */
 public class ArchiveAllowedArguments {

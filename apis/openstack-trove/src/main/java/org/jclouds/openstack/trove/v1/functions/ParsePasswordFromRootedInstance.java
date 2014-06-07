@@ -25,8 +25,6 @@ import com.google.inject.Inject;
 
 /**
  * This parses the password
- * 
- * @author Zack Shoylev
  */
 public class ParsePasswordFromRootedInstance implements Function<HttpResponse, String> {
 

@@ -28,8 +28,6 @@ import com.google.inject.ImplementedBy;
 /**
  * A VAppTemplate is an abstract description of a vApp. It is created when you upload an OVF package
  * to a vDC.
- * 
- * @author Adrian Cole
  */
 @ImplementedBy(VAppTemplateImpl.class)
 public interface VAppTemplate extends ReferenceType {

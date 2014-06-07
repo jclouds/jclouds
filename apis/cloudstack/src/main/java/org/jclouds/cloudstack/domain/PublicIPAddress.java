@@ -29,8 +29,6 @@ import com.google.common.base.Objects.ToStringHelper;
 
 /**
  * Class PublicIPAddress
- *
- * @author Adrian Cole
  */
 public class PublicIPAddress {
 

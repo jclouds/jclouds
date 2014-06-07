@@ -28,8 +28,6 @@ import com.google.common.collect.ImmutableSet;
 
 /**
  * This test ensures that the wiring in {@link HPCloudComputeProviderMetadata} is correct.
- * 
- * @author Adrian Cole
  */
 @Test(groups = "unit", testName = "HPCloudComputeProviderMetadataExpectTest")
 public class HPCloudComputeProviderMetadataExpectTest extends BaseNovaApiExpectTest {

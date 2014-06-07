@@ -72,9 +72,6 @@ import org.jclouds.rest.binders.BindToJsonPayload;
 
 import static org.jclouds.openstack.keystone.v2_0.KeystoneFallbacks.EmptyPaginatedCollectionOnNotFoundOr404;
 
-/**
- * @author Everett Toews
- */
 @Endpoint(CloudDNS.class)
 @RequestFilters(AuthenticateRequest.class)
 public interface DomainApi {

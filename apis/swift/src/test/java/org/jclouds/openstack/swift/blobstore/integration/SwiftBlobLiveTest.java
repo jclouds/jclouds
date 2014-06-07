@@ -22,11 +22,6 @@ import org.jclouds.blobstore.integration.internal.BaseBlobLiveTest;
 import org.jclouds.openstack.keystone.v2_0.config.KeystoneProperties;
 import org.testng.annotations.Test;
 
-/**
- *
- * @author James Murty
- * @author Adrian Cole
- */
 @Test(groups = { "live" })
 public class SwiftBlobLiveTest extends BaseBlobLiveTest {
    @Override

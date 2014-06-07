@@ -105,10 +105,6 @@ import com.google.common.util.concurrent.Atomics;
 import com.google.common.util.concurrent.ListenableFuture;
 import com.google.common.util.concurrent.ListeningExecutorService;
 
-/**
- * 
- * @author Adrian Cole
- */
 @Singleton
 public class BaseComputeService implements ComputeService {
 

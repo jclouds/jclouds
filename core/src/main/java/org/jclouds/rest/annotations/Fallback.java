@@ -27,7 +27,6 @@ import java.lang.annotation.Target;
  * the exception or returns a valid fallback value.
  * 
  * @since 1.6
- * @author Adrian Cole
  */
 @Target(METHOD)
 @Retention(RUNTIME)

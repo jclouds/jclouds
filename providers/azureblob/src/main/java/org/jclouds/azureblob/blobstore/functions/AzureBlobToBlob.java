@@ -27,9 +27,6 @@ import org.jclouds.blobstore.domain.Blob.Factory;
 
 import com.google.common.base.Function;
 
-/**
- * @author Adrian Cole
- */
 @Singleton
 public class AzureBlobToBlob implements Function<AzureBlob, Blob> {
    private final Factory blobFactory;

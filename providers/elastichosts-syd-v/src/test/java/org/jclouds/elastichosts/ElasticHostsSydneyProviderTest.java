@@ -20,9 +20,6 @@ import org.jclouds.elasticstack.ElasticStackApiMetadata;
 import org.jclouds.providers.internal.BaseProviderMetadataTest;
 import org.testng.annotations.Test;
 
-/**
- * @author Ignasi Barrera
- */
 @Test(groups = "unit", testName = "ElasticHostsSydneyProviderTest")
 public class ElasticHostsSydneyProviderTest extends BaseProviderMetadataTest {
 

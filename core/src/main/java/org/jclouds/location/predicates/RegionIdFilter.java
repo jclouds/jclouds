@@ -24,8 +24,6 @@ import com.google.inject.ImplementedBy;
 /**
  * Means to constrain regions returned to abstraction calls. Particularly useful
  * to whitelist certain regions.
- * 
- * @author Adrian Cole
  */
 @ImplementedBy(AnyOrConfiguredRegionId.class)
 public interface RegionIdFilter extends Predicate<String> {

@@ -28,10 +28,6 @@ import org.jclouds.vcloud.domain.network.NetworkConfig;
 import com.google.common.annotations.Beta;
 import com.google.common.base.Supplier;
 
-/**
- * 
- * @author Adrian Cole
- */
 @Beta
 public class NetworkConfigurationForNetworkAndOptions {
    protected final Supplier<NetworkConfig> defaultNetworkConfig;

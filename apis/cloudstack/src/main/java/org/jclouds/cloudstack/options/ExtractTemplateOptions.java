@@ -20,9 +20,6 @@ import org.jclouds.http.options.BaseHttpRequestOptions;
 
 import com.google.common.collect.ImmutableSet;
 
-/**
- * @author Richard Downer
- */
 public class ExtractTemplateOptions extends BaseHttpRequestOptions {
 
    public static final ExtractTemplateOptions NONE = new ExtractTemplateOptions();

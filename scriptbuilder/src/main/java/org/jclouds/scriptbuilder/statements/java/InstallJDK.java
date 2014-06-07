@@ -25,8 +25,6 @@ import org.jclouds.scriptbuilder.domain.StatementList;
 
 /**
  * Installs a default JDK to a host
- * 
- * @author Adrian Cole
  */
 public class InstallJDK {
 

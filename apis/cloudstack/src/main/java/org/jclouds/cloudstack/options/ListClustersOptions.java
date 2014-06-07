@@ -26,7 +26,6 @@ import com.google.common.collect.ImmutableSet;
 /**
  * Options used to control what cluster information is returned
  *
- * @author Richard Downer
  * @see <a
  *      href="http://download.cloud.com/releases/2.2.0/api_2.2.12/global_admin/listClusters.html"
  *      />

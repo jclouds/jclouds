@@ -27,7 +27,6 @@ import org.jclouds.http.options.BaseHttpRequestOptions;
  * Options used to control paginated results (aka list commands).
  * 
  * @see <a href="http://docs.rackspacecloud.com/servers/api/cs-devguide-latest.pdf" />
- * @author Adrian Cole
  */
 public class BaseListOptions extends BaseHttpRequestOptions {
    public static final BaseListOptions NONE = new BaseListOptions();

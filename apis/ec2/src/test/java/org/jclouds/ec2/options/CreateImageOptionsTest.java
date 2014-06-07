@@ -27,8 +27,6 @@ import org.testng.annotations.Test;
 
 /**
  * Tests possible uses of CreateImageOptions and CreateImageOptions.Builder.*
- * 
- * @author Adrian Cole
  */
 public class CreateImageOptionsTest {
 

@@ -56,9 +56,6 @@ import com.google.common.collect.Maps;
 
 /**
  * Tests annotation parsing of {@code ServerApi}
- *
- * @author Adrian Cole
- * @author Adam Lowe
  */
 @Test(groups = "unit", testName = "ServerApiTest")
 public class ServerApiExpectTest extends BaseGleSYSApiExpectTest {

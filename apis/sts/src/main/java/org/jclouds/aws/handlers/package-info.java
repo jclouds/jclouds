@@ -17,6 +17,5 @@
 /**
  * This package contains HttpResponseHandlers needed to operate the REST api.
  * @see <a href="http://docs.amazonwebservices.com/AmazonS3/latest/RESTAuthentication.html" />
- * @author Adrian Cole
  */
 package org.jclouds.aws.handlers;

@@ -27,8 +27,6 @@ import com.google.inject.Injector;
 
 /**
  * Tests behavior of {@code ConvertUnencodedBytesToBase64EncodedString}
- * 
- * @author Adrian Cole
  */
 @Test(groups = "unit")
 public class ConvertUnencodedBytesToBase64EncodedStringTest {

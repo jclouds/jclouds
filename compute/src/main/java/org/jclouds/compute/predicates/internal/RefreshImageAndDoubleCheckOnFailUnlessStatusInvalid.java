@@ -34,8 +34,6 @@ import com.google.inject.Inject;
  * The point of RefreshAndDoubleCheckOnFailUnlessStateInvalid is to keep an atomic reference to a
  * image, so as to eliminate a redundant {@link ComputeService#getImage} call after the
  * predicate passes.
- * 
- * @author Adrian Cole
  */
 @Singleton
 public class RefreshImageAndDoubleCheckOnFailUnlessStatusInvalid extends RefreshAndDoubleCheckOnFailUnlessStatusInvalid<Image.Status, Image> {

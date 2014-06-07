@@ -25,8 +25,6 @@ import com.google.common.collect.Maps;
 
 /**
  * Configuration properties and constants used in Keystone connections.
- * 
- * @author Adrian Cole
  */
 public class CredentialTypes {
 

@@ -32,8 +32,6 @@ import com.google.inject.Inject;
  * Binds the metrics request to the http request
  *
  * @see <a href="http://docs.amazonwebservices.com/AmazonCloudWatch/latest/APIReference/API_PutMetricData.html" />
- *
- * @author Jeremy Whitlock
  */
 @Beta
 public class MetricDataBinder implements org.jclouds.rest.Binder {

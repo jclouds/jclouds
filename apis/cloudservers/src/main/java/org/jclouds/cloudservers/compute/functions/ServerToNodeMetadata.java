@@ -50,9 +50,6 @@ import com.google.common.base.Predicate;
 import com.google.common.base.Supplier;
 import com.google.common.collect.Iterables;
 
-/**
- * @author Adrian Cole
- */
 @Singleton
 public class ServerToNodeMetadata implements Function<Server, NodeMetadata> {
    @Resource

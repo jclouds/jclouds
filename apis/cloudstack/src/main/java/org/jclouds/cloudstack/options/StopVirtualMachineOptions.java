@@ -26,8 +26,6 @@ import com.google.common.collect.ImmutableSet;
  * @see <a
  *      href="http://download.cloud.com/releases/3.0.3/api_3.0.3/root_admin/stopVirtualMachine.html"
  *      />
- * @author Adrian Cole
- * @author Andrew Bayer
  */
 public class StopVirtualMachineOptions extends BaseHttpRequestOptions {
 

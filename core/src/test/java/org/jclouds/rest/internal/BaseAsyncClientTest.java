@@ -18,10 +18,6 @@ package org.jclouds.rest.internal;
 
 import org.testng.annotations.Test;
 
-/**
- * 
- * @author Adrian Cole
- */
 @Test(groups = "unit")
 public abstract class BaseAsyncClientTest<T> extends BaseAsyncApiTest<T> {
 

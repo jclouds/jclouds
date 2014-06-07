@@ -25,9 +25,6 @@ import com.google.inject.ImplementedBy;
 
 /**
  * Supplies the well known images
- * 
- * @author Ignasi Barrera
- * 
  */
 @ImplementedBy(StandardDiskImageSupplier.class)
 public interface WellKnownImageSupplier extends Supplier<List<WellKnownImage>> {

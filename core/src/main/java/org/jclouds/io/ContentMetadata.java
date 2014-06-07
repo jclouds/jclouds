@@ -30,9 +30,6 @@ import org.jclouds.javax.annotation.Nullable;
 
 import com.google.common.collect.ImmutableSet;
 
-/**
- * @author Adrian Cole
- */
 public interface ContentMetadata {
    public static final Set<String> HTTP_HEADERS = ImmutableSet.of(CONTENT_LENGTH, CONTENT_MD5, CONTENT_TYPE,
             CONTENT_DISPOSITION, CONTENT_ENCODING, CONTENT_LANGUAGE, EXPIRES);

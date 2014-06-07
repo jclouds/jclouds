@@ -21,10 +21,6 @@ import org.jclouds.javax.annotation.Nullable;
 
 import com.google.common.collect.Multimap;
 
-/**
- * 
- * @author Adrian Cole
- */
 public interface SwiftObject extends PayloadEnclosing, Comparable<SwiftObject> {
    public interface Factory {
       SwiftObject create(@Nullable MutableObjectInfoWithMetadata info);

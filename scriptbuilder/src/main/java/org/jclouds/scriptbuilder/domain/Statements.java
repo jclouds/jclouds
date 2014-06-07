@@ -26,8 +26,6 @@ import com.google.common.collect.Multimap;
 
 /**
  * Statements used in shell scripts.
- * 
- * @author Adrian Cole
  */
 public class Statements {
    private static final Kill KILL = new Kill();

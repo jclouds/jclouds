@@ -30,8 +30,6 @@ import com.google.common.base.Objects;
  * Session credentials for API authentication.
  * 
  * @see <a href= "https://manage.dynect.net/help/docs/api2/rest/" />
- * 
- * @author Adrian Cole
  */
 public final class SessionCredentials extends Credentials {
    public static Builder builder() {

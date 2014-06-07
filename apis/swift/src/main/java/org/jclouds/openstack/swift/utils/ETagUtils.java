@@ -22,9 +22,6 @@ import com.google.common.annotations.VisibleForTesting;
 
 import static com.google.common.io.BaseEncoding.base16;
 
-/**
- * @author Francis Devereux
- */
 public class ETagUtils {
    private static final Pattern QUOTED_STRING = Pattern.compile("^\"(.*)\"$");
 

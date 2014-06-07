@@ -29,9 +29,6 @@ import org.jclouds.rest.internal.BaseAsyncApiTest;
 
 import com.google.inject.Module;
 
-/**
- * @author Adrian Cole
- */
 public abstract class BaseCloudStackApiTest<T> extends BaseAsyncApiTest<T> {
 
    @ConfiguresHttpApi

@@ -36,9 +36,6 @@ import org.jclouds.rest.AuthorizationException;
 
 /**
  * This will parse and set an appropriate exception on the command object.
- * 
- * @author Adrian Cole
- * 
  */
 public class ParseSwiftErrorFromHttpResponse implements HttpErrorHandler {
    @Resource

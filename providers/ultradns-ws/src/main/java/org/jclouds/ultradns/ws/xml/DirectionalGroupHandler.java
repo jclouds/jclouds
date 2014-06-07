@@ -26,10 +26,6 @@ import org.xml.sax.Attributes;
 import com.google.common.base.Splitter;
 import com.google.common.collect.ImmutableSortedSet;
 
-/**
- * 
- * @author Adrian Cole
- */
 public class DirectionalGroupHandler extends ParseSax.HandlerForGeneratedRequestWithResult<DirectionalGroup> {
 
    private final Builder group = DirectionalGroup.builder();

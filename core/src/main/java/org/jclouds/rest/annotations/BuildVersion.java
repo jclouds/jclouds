@@ -30,7 +30,6 @@ import javax.inject.Qualifier;
 /**
  * Designates that this Resource qualifies an object to an build version.
  * 
- * @author Adrian Cole
  * @see Constants#PROPERTY_BUILD_VERSION
  */
 @Target( { ANNOTATION_TYPE, FIELD, METHOD,  PARAMETER })

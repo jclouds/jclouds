@@ -50,10 +50,6 @@ import com.google.gson.JsonSerializer;
 import com.google.inject.AbstractModule;
 import com.google.inject.Provides;
 
-/**
- * @author Adrian Cole
- * @author Adam Lowe
- */
 public class NovaParserModule extends AbstractModule {
 
    @Provides

@@ -23,8 +23,6 @@ import org.xml.sax.SAXException;
 
 /**
  * @see <a href="http://docs.amazonwebservices.com/AmazonCloudWatch/latest/APIReference/API_Dimension.html" />
- *
- * @author Jeremy Whitlock
  */
 public class DimensionHandler extends ParseSax.HandlerForGeneratedRequestWithResult<Dimension> {
 

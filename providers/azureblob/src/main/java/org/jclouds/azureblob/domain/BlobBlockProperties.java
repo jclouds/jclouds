@@ -18,8 +18,6 @@ package org.jclouds.azureblob.domain;
 
 /**
  * Properties on a specific block within a blob
- *
- * @author John V Kew II
  */
 public interface BlobBlockProperties {
    String getBlockName();

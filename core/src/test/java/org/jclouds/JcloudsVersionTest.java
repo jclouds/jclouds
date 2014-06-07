@@ -30,9 +30,6 @@ import org.testng.annotations.Test;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Iterables;
 
-/**
- * @author Andrew Phillips
- */
 @Test(singleThreaded = true)
 public class JcloudsVersionTest {
 

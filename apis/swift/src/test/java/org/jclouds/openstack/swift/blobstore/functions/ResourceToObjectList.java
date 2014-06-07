@@ -27,9 +27,6 @@ import org.jclouds.openstack.swift.domain.ObjectInfo;
 import com.google.common.base.Function;
 import com.google.common.collect.Iterables;
 
-/**
- * @author Adrian Cole
- */
 @Singleton
 public class ResourceToObjectList implements
          Function<PageSet<? extends StorageMetadata>, PageSet<ObjectInfo>> {

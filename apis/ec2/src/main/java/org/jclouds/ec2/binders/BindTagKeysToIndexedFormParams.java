@@ -29,8 +29,6 @@ import com.google.common.collect.Iterables;
 
 /**
  * Binds the Iterable<String> to form parameters named with Tag.index.Key
- * 
- * @author Adrian Cole
  */
 @Singleton
 public class BindTagKeysToIndexedFormParams implements Binder {

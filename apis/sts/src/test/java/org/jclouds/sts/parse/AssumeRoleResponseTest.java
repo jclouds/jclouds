@@ -26,9 +26,6 @@ import org.jclouds.sts.domain.User;
 import org.jclouds.sts.xml.UserAndSessionCredentialsHandler;
 import org.testng.annotations.Test;
 
-/**
- * @author Adrian Cole
- */
 // NOTE:without testName, this will not call @Before* and fail w/NPE during surefire
 @Test(groups = "unit", testName = "AssumeRoleResponseTest")
 public class AssumeRoleResponseTest extends BaseHandlerTest {

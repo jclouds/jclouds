@@ -35,8 +35,6 @@ import com.google.common.collect.Maps;
 /**
  * This parses @{link {@link org.jclouds.openstack.swift.domain.ContainerMetadata} from
  * HTTP headers.
- * 
- * @author Jeremy Daggett
  */
 public class ParseContainerMetadataFromHeaders implements Function<HttpResponse, ContainerMetadata>,
       InvocationContext<ParseContainerMetadataFromHeaders> {

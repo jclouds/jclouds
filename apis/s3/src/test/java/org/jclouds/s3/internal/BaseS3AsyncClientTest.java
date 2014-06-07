@@ -29,10 +29,6 @@ import org.jclouds.s3.filters.RequestAuthorizeSignature;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
-/**
- * 
- * @author Adrian Cole
- */
 @Test(groups = "unit")
 public abstract class BaseS3AsyncClientTest<T extends S3AsyncClient> extends BaseAsyncClientTest<T> {
 

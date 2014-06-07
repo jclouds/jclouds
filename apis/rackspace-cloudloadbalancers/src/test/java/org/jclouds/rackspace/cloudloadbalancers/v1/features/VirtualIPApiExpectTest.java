@@ -34,9 +34,6 @@ import org.testng.annotations.Test;
 
 import com.google.common.collect.ImmutableList;
 
-/**
- * @author Everett Toews
- */
 @Test(groups = "unit")
 public class VirtualIPApiExpectTest extends BaseCloudLoadBalancerApiExpectTest<CloudLoadBalancersApi> {
    public void testListVirtualIPs() {

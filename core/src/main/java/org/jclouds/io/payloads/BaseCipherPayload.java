@@ -26,10 +26,6 @@ import javax.crypto.CipherInputStream;
 
 import org.jclouds.io.Payload;
 
-/**
- * 
- * @author Adrian Cole
- */
 public abstract class BaseCipherPayload extends DelegatingPayload {
 
    private final Key key;

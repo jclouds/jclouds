@@ -64,7 +64,6 @@ import com.google.common.util.concurrent.ListeningExecutorService;
 
 /**
  *
- * @author Tibor Kiss, Andrei Savu
  * @deprecated will be removed in jclouds 1.7, as async interfaces are no longer
  *             supported. Please use {@link AWSS3BlobStore}
  */

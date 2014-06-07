@@ -39,9 +39,6 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Maps;
 
-/**
- * @author Everett Toews
- */
 @Test(groups = "live", singleThreaded = true, testName = "AccessListApiLiveTest")
 public class AccessRuleApiLiveTest extends BaseCloudLoadBalancersApiLiveTest {
    private LoadBalancer lb;

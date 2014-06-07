@@ -35,10 +35,6 @@ import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableMap.Builder;
 import com.google.common.collect.Multimaps;
 
-/**
- * 
- * @author Adrian Cole
- */
 @Singleton
 public class BindLaunchSpecificationToFormParams implements Binder, Function<LaunchSpecification, Map<String, String>> {
 

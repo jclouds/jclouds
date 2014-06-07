@@ -18,9 +18,6 @@ package org.jclouds.logging;
 
 /**
  * Base implementation that constructs formatted log strings.
- * 
- * @author Adrian Cole
- * 
  */
 public abstract class BaseLogger implements Logger {
 

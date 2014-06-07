@@ -24,9 +24,6 @@ import org.testng.annotations.Test;
 import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.Multimap;
 
-/**
- * @author Everett Toews
- */
 @Test(groups = "unit")
 public class Multimaps2Test {
 	public void testTransformKeysToLowerCase() {

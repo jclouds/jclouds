@@ -40,10 +40,6 @@ import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.util.concurrent.ListenableFuture;
 
-/**
- * 
- * @author Adrian Cole
- */
 public final class Fallbacks {
    private Fallbacks() {
    }
@@ -102,7 +98,6 @@ public final class Fallbacks {
    }
 
    /**
-    * @author Leander Beernaert
     */
    public static final class AbsentOn403Or404Or500 implements Fallback<Optional<Object>> {
       public ListenableFuture<Optional<Object>> create(Throwable t) throws Exception {

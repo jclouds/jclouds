@@ -26,8 +26,6 @@ import static com.google.common.collect.Sets.newHashSet;
  * Key and value must be 256 characters or less. All UTF-8 characters are valid.
  * </p>
  * Use the *Id methods when you need to get a metadata id for updating and removal.
- * 
- * @author Everett Toews
  */
 public class Metadata extends ForwardingMap<String, String> {
    private final Map<String, String> metadata = newLinkedHashMap(); // Implementing class must be sorted.

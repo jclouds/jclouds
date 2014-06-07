@@ -31,8 +31,6 @@ import org.jclouds.providers.internal.BaseProviderMetadata;
 /**
  * Implementation of {@ link org.jclouds.types.ProviderMetadata} for Amazon's
  * Elastic Compute Cloud (EC2) provider.
- *
- * @author Adrian Cole
  */
 public class AWSEC2ProviderMetadata extends BaseProviderMetadata {
 

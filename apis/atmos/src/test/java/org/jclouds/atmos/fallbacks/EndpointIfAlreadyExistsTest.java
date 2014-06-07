@@ -25,10 +25,6 @@ import java.net.URI;
 import org.jclouds.blobstore.KeyAlreadyExistsException;
 import org.testng.annotations.Test;
 
-/**
- * 
- * @author Adrian Cole
- */
 @Test(groups = "unit")
 public class EndpointIfAlreadyExistsTest {
 

@@ -16,6 +16,5 @@
  */
 /**
  * This package contains utilities needed for S3.
- * @author Adrian Cole
  */
 package org.jclouds.s3.util;

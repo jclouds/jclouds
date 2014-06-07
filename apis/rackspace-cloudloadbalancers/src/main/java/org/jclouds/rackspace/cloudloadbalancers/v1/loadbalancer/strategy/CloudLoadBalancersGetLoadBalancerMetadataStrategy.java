@@ -28,10 +28,6 @@ import org.jclouds.rackspace.cloudloadbalancers.v1.domain.LoadBalancer;
 
 import com.google.common.base.Function;
 
-/**
- * 
- * @author Adrian Cole
- */
 @Singleton
 public class CloudLoadBalancersGetLoadBalancerMetadataStrategy implements GetLoadBalancerMetadataStrategy {
 

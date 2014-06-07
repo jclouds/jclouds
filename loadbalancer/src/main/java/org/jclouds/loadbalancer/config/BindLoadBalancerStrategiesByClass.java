@@ -24,11 +24,6 @@ import org.jclouds.loadbalancer.strategy.LoadBalanceNodesStrategy;
 import com.google.inject.AbstractModule;
 import com.google.inject.Scopes;
 
-/**
- * 
- * @author Adrian Cole
- * 
- */
 public abstract class BindLoadBalancerStrategiesByClass extends AbstractModule {
    protected void configure() {
       bindLoadBalanceNodesStrategy(defineLoadBalanceNodesStrategy());

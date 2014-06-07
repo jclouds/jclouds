@@ -35,10 +35,6 @@ import org.jclouds.s3.reference.S3Constants;
 import com.google.common.base.Throwables;
 import com.jamesmurty.utils.XMLBuilder;
 
-/**
- * 
- * @author Adrian Cole
- */
 @Singleton
 public class BindBucketLoggingToXmlPayload implements Binder {
    @Override

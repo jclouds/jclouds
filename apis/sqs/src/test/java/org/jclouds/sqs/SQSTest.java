@@ -32,8 +32,6 @@ import com.google.common.collect.Iterables;
 
 /**
  * Tests behavior of {@code SQS}.
- *
- * @author Adrian Cole
  */
 @Test(testName = "SQSTest", singleThreaded = true)
 public class SQSTest {

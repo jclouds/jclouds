@@ -60,8 +60,6 @@ import com.google.inject.Provider;
 
 /**
  * Signer for HP's variant of temporary signed URLs. They prefix the signature with the tenant id.
- * 
- * @author Andrew Gaul
  */
 @Singleton
 public class HPCloudObjectStorageBlobRequestSigner implements BlobRequestSigner {

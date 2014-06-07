@@ -28,9 +28,6 @@ import org.jclouds.ec2.compute.domain.RegionAndName;
 
 import com.google.common.base.Function;
 
-/**
- * @author Adrian Cole
- */
 @Singleton
 public class ImagesToRegionAndIdMap implements Function<Iterable<? extends Image>, Map<RegionAndName, ? extends Image>> {
 

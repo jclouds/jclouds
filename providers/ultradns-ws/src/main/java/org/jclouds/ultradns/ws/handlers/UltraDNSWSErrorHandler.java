@@ -34,9 +34,6 @@ import org.jclouds.ultradns.ws.UltraDNSWSExceptions.ResourceAlreadyExistsExcepti
 import org.jclouds.ultradns.ws.UltraDNSWSResponseException;
 import org.jclouds.ultradns.ws.xml.UltraWSExceptionHandler;
 
-/**
- * @author Adrian Cole
- */
 @Singleton
 public class UltraDNSWSErrorHandler implements HttpErrorHandler {
 

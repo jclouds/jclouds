@@ -31,10 +31,6 @@ import org.jclouds.vcloud.suppliers.OnlyReferenceTypeFirstWithNameMatchingConfig
 import com.google.common.base.Predicate;
 import com.google.common.base.Supplier;
 
-/**
- * 
- * @author Adrian Cole
- */
 @Singleton
 public class DefaultOrgForUser implements Supplier<ReferenceType> {
 

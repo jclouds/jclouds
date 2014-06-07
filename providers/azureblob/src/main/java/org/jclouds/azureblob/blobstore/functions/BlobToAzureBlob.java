@@ -26,9 +26,6 @@ import org.jclouds.blobstore.domain.Blob;
 
 import com.google.common.base.Function;
 
-/**
- * @author Adrian Cole
- */
 @Singleton
 public class BlobToAzureBlob implements Function<Blob, AzureBlob> {
    private final BlobMetadataToBlobProperties blob2ObjectMd;

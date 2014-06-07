@@ -33,7 +33,6 @@ import com.google.common.collect.FluentIterable;
  * 
  * @see VolumeAsyncApi
  * @see org.jclouds.openstack.nova.v2_0.extensions.VolumeAsyncApi
- * @author Adam Lowe
  */
 @Beta
 @Extension(of = ServiceType.COMPUTE, namespace = ExtensionNamespaces.VOLUMES)

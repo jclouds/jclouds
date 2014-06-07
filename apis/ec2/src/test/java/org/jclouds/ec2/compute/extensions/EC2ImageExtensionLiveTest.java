@@ -30,9 +30,6 @@ import com.google.inject.Module;
 
 /**
  * Live test for ec2 {@link ImageExtension} implementation
- * 
- * @author David Alves
- * 
  */
 @Test(groups = "live", singleThreaded = true, testName = "EC2ImageExtensionLiveTest")
 public class EC2ImageExtensionLiveTest extends BaseImageExtensionLiveTest {

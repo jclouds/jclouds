@@ -29,7 +29,6 @@ import org.jclouds.providers.internal.BaseProviderMetadata;
 
 /**
  * Implementation of {@link org.jclouds.types.ProviderMetadata} for GleSYS.
- * @author Adrian Cole
  */
 public class GleSYSProviderMetadata extends BaseProviderMetadata {
 

@@ -44,10 +44,6 @@ import com.google.common.collect.LinkedHashMultimap;
 import com.google.common.collect.Multimap;
 import com.google.common.collect.Sets;
 
-/**
- * 
- * @author Andrew Bayer
- */
 @Test(groups = "unit", testName = "NovaSecurityGroupExtensionExpectTest")
 public class NovaSecurityGroupExtensionExpectTest extends BaseNovaComputeServiceExpectTest {
 

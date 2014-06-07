@@ -31,8 +31,6 @@ import com.google.common.primitives.Longs;
 
 /**
  * Binds IDs to corresponding query parameters
- * 
- * @author Oleksiy Yarmula
  */
 @Singleton
 public class BindIdsToQueryParams implements Binder {

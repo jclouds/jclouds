@@ -22,9 +22,6 @@ import org.jclouds.logging.log4j.Log4JLogger;
 
 /**
  * Configures logging of type {@link Log4JLogger}
- * 
- * @author Adrian Cole
- * 
  */
 public class Log4JLoggingModule extends LoggingModule {
 

@@ -35,10 +35,6 @@ import com.google.common.base.Objects;
 import com.google.common.base.Objects.ToStringHelper;
 import com.google.common.collect.ImmutableSet;
 
-/**
- * @author Adrian Cole
- * @author Ivan Meredith
- */
 public class ComputeMetadataImpl extends ResourceMetadataImpl<ComputeType> implements ComputeMetadata {
 
    private final String id;

@@ -30,7 +30,6 @@ import com.google.common.collect.ImmutableSet;
 /**
  * Resource found in a paginated collection
  *
- * @author AdrianCole
  * @see <a href=
 "http://docs.openstack.org/api/openstack-compute/1.1/content/Paginated_Collections-d1e664.html"
 />

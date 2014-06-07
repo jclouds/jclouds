@@ -112,8 +112,6 @@ import com.google.inject.TypeLiteral;
  *          .build());
  * assert !clientWhenBucketDoesntExist.bucketExists(&quot;foo&quot;);
  * </pre>
- * 
- * @author Adrian Cole
  */
 @Beta
 public abstract class BaseRestApiExpectTest<S> {

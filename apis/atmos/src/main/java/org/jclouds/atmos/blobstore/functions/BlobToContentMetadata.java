@@ -26,9 +26,6 @@ import org.jclouds.http.HttpUtils;
 
 import com.google.common.base.Function;
 
-/**
- * @author Adrian Cole
- */
 @Singleton
 public class BlobToContentMetadata implements Function<BlobMetadata, MutableContentMetadata> {
    public MutableContentMetadata apply(BlobMetadata base) {

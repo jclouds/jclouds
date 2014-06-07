@@ -32,7 +32,6 @@ import static org.testng.Assert.assertNotNull;
 /**
 * Test the CloudStack VolumeApi
 *
-* @author Adam Lowe
 */
 @Test(groups = "unit", testName = "VolumeApiExpectTest")
 public class VolumeApiExpectTest extends BaseCloudStackExpectTest<VolumeApi> {

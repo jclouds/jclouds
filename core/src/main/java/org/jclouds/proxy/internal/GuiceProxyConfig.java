@@ -41,8 +41,6 @@ import com.google.inject.Inject;
 
 /**
  * Configuration derived from Guice properties.
- * 
- * @author Adrian Cole
  */
 @Singleton
 public class GuiceProxyConfig implements ProxyConfig {

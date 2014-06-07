@@ -27,9 +27,6 @@ import org.jclouds.s3.domain.S3Object;
 
 import com.google.common.base.Function;
 
-/**
- * @author Adrian Cole
- */
 @Singleton
 public class ObjectToBlob implements Function<S3Object, Blob> {
    private final Factory blobFactory;

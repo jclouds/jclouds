@@ -36,8 +36,6 @@ import com.google.common.collect.ImmutableSet;
 
 /**
  * Tests behavior of {@code SQSErrorRetryHandler}
- * 
- * @author Adrian Cole
  */
 @Test(groups = "unit", testName = "SQSErrorRetryHandlerTest")
 public class SQSErrorRetryHandlerTest {

@@ -18,8 +18,6 @@ package org.jclouds.scriptbuilder.domain;
 
 /**
  * Statement used in a shell script
- * 
- * @author Adrian Cole
  */
 public interface Statement {
    Iterable<String> functionDependencies(OsFamily family);

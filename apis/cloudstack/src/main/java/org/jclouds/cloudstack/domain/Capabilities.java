@@ -25,8 +25,6 @@ import com.google.common.base.Objects.ToStringHelper;
 
 /**
  * Class Capabilities
- *
- * @author Adrian Cole
  */
 public class Capabilities {
 

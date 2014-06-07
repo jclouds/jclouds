@@ -35,10 +35,6 @@ import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.ImmutableSet.Builder;
 import com.google.common.collect.Iterables;
 
-/**
- * 
- * @author Adrian Cole
- */
 @Singleton
 public class RegionToProviderOrJustProvider implements Supplier<Set<? extends Location>> {
    private final JustProvider justProvider;

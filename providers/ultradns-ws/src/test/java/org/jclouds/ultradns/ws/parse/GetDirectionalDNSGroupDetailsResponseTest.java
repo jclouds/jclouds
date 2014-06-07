@@ -27,9 +27,6 @@ import org.testng.annotations.Test;
 
 import com.google.common.collect.ImmutableList;
 
-/**
- * @author Adrian Cole
- */
 @Test(testName = "GetDirectionalDNSGroupDetailsResponseTest")
 public class GetDirectionalDNSGroupDetailsResponseTest extends BaseHandlerTest {
 

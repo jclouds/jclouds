@@ -44,8 +44,6 @@ import org.jclouds.vcloud.xml.OrgListHandler;
 /**
  * Provides access to Org functionality in vCloud
  * <p/>
- * 
- * @author Adrian Cole
  */
 @RequestFilters(AddVCloudAuthorizationAndCookieToRequest.class)
 public interface OrgApi {

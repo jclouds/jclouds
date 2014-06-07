@@ -16,10 +16,6 @@
  */
 package org.jclouds.cloudsigma.reference;
 
-/**
- *
- * @author Adrian Cole
- */
 public final class CloudSigmaConstants {
 
     /**

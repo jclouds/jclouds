@@ -29,8 +29,6 @@ package org.jclouds.gogrid.domain;
  * 
  * @see org.jclouds.gogrid.features.GridServerApi#power(String, PowerCommand)
  * @see <a href="http://wiki.gogrid.com/wiki/index.php/API:grid.server.power" />
- * 
- * @author Oleksiy Yarmula
  */
 public enum PowerCommand {
    START, STOP /* NOTE: This is a hard shutdown, equivalent to powering off a server. */, RESTART;

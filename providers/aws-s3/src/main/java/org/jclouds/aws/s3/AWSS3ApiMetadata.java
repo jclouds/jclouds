@@ -32,8 +32,6 @@ import com.google.inject.Module;
 
 /**
  * Implementation of {@link ApiMetadata} for the Amazon-specific S3 API
- * 
- * @author Adrian Cole
  */
 public class AWSS3ApiMetadata extends S3ApiMetadata {
    

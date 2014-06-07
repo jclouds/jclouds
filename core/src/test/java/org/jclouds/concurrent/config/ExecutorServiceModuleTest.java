@@ -42,10 +42,6 @@ import com.google.inject.Guice;
 import com.google.inject.Injector;
 import com.google.inject.Key;
 
-/**
- * 
- * @author Adrian Cole
- */
 @Test
 public class ExecutorServiceModuleTest {
    private static final String LINE_SEPARATOR = System.getProperty("line.separator");

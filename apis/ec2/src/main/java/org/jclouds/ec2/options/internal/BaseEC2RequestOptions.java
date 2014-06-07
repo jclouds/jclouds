@@ -27,10 +27,6 @@ import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.ImmutableSet.Builder;
 import com.google.common.collect.Iterables;
 
-/**
- * 
- * @author Adrian Cole
- */
 public class BaseEC2RequestOptions extends BaseHttpRequestOptions {
 
    @Override

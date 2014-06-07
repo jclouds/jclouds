@@ -46,10 +46,6 @@ import com.google.common.collect.LinkedHashMultimap;
 import com.google.common.collect.Multimap;
 import com.google.common.collect.Sets;
 
-/**
- * 
- * @author Adrian Cole
- */
 @Test(groups = "unit", testName = "EC2SecurityGroupExtensionExpectTest")
 public class EC2SecurityGroupExtensionExpectTest extends BaseEC2ComputeServiceExpectTest {
    

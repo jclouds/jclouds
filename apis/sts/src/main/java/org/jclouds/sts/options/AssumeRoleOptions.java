@@ -25,8 +25,6 @@ import com.google.common.collect.Multimap;
  * @see <a href=
  *      "http://docs.aws.amazon.com/STS/latest/APIReference/API_AssumeRole.html"
  *      />
- * 
- * @author Adrian Cole
  */
 public class AssumeRoleOptions extends BaseHttpRequestOptions implements Cloneable {
 

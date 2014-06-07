@@ -28,8 +28,6 @@ import com.google.common.reflect.TypeToken;
 
 /**
  * Container for api filters (predicates).
- * 
- * @author Jeremy Whitlock <jwhitlock@apache.org>
  */
 public class ApiPredicates {
 

@@ -19,9 +19,6 @@ package org.jclouds.cloudonestorage.blobstore.integration;
 import org.jclouds.atmos.blobstore.integration.AtmosContainerIntegrationLiveTest;
 import org.testng.annotations.Test;
 
-/**
- * @author Adrian Cole
- */
 @Test(groups =  "live", testName = "CloudOneStorageContainerIntegrationLiveTest")
 public class CloudOneStorageContainerIntegrationLiveTest extends AtmosContainerIntegrationLiveTest {
    public CloudOneStorageContainerIntegrationLiveTest() {

@@ -33,8 +33,6 @@ import com.google.gson.Gson;
 
 /**
  * Tests behavior of {@code ProductOrderToJsonTest}
- *
- * @author Jason King
  */
 @Test(groups = "unit")
 public class ProductOrderToJsonTest {

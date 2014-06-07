@@ -53,9 +53,6 @@ import com.google.common.base.Supplier;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
 
-/**
- * @author Adrian Cole
- */
 @Singleton
 public class AtmosBlobStore extends BaseBlobStore {
    private final AtmosClient sync;

@@ -66,9 +66,6 @@ import com.google.common.collect.Sets;
 import com.google.common.util.concurrent.UncheckedExecutionException;
 import com.google.inject.Inject;
 
-/**
- * @author Adrian Cole
- */
 @Singleton
 public class RunningInstanceToNodeMetadata implements Function<RunningInstance, NodeMetadata> {
 

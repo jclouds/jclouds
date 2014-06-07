@@ -36,9 +36,6 @@ import org.testng.annotations.Test;
 
 import com.google.common.collect.Sets;
 
-/**
- * @author Adrian Cole
- */
 @Test(groups = "live", singleThreaded = true, testName = "DirectionalGroupApiLiveTest")
 public class DirectionalGroupApiLiveTest extends BaseUltraDNSWSApiLiveTest {
 

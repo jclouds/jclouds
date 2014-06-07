@@ -34,8 +34,6 @@ import com.google.common.collect.ImmutableSet;
 
 /**
  * Tests parsing and Guice wiring of ServiceApi
- * 
- * @author Adam Lowe
  */
 @Test(testName = "ServiceApiExpectTest")
 public class ServiceApiExpectTest extends BaseKeystoneRestApiExpectTest<KeystoneApi> {

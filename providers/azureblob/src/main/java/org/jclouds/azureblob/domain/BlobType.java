@@ -20,9 +20,6 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 import com.google.common.base.CaseFormat;
 
-/**
- * @author Adrian Cole
- */
 public enum BlobType {
    BLOCK_BLOB, PAGE_BLOB, UNRECOGNIZED;
 

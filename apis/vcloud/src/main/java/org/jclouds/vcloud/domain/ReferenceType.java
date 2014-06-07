@@ -25,9 +25,6 @@ import com.google.inject.ImplementedBy;
 /**
  * Many container elements are populated with references to contained objects. Each reference
  * consists of a hyperlink, an optional media type, and a name.
- * 
- * @author Adrian Cole
- * 
  */
 @ImplementedBy(ReferenceTypeImpl.class)
 public interface ReferenceType extends Comparable<ReferenceType> {

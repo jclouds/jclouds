@@ -34,11 +34,6 @@ import com.google.common.base.Throwables;
 import com.google.inject.Inject;
 import com.jamesmurty.utils.XMLBuilder;
 
-/**
- * 
- * @author Adrian Cole
- * 
- */
 @Singleton
 public class BindMemoryToXmlPayload extends BindToStringPayload {
    protected final String ns;

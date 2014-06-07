@@ -62,9 +62,6 @@ import com.google.inject.Scopes;
  * Configures {@link ApacheHCHttpCommandExecutorService}.
  * 
  * Note that this uses threads
- * 
- * @author Sam Tunnicliffe
- * @author Adrian Cole
  */
 @ConfiguresHttpCommandExecutorService
 public class ApacheHCHttpCommandExecutorServiceModule extends AbstractModule {

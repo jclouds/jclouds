@@ -25,10 +25,6 @@ import org.testng.annotations.Test;
 
 import static org.testng.Assert.assertEquals;
 
-/**
- * 
- * @author Adrian Cole
- */
 @Test(groups = "live")
 public class CloudFilesBlobIntegrationLiveTest extends SwiftBlobIntegrationLiveTest {
    public CloudFilesBlobIntegrationLiveTest() {

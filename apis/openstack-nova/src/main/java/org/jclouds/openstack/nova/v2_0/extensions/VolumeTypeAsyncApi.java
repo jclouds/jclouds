@@ -55,7 +55,6 @@ import com.google.common.util.concurrent.ListenableFuture;
 /**
  * Provides asynchronous access to Volume Type features
  *
- * @author Adam Lowe
  * @see VolumeTypeApi
  */
 @Beta

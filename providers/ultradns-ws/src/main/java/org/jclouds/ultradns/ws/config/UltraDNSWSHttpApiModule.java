@@ -29,8 +29,6 @@ import org.jclouds.ultradns.ws.handlers.UltraDNSWSErrorHandler;
 
 /**
  * Configures the UltraDNSWS connection.
- * 
- * @author Adrian Cole
  */
 @ConfiguresHttpApi
 public class UltraDNSWSHttpApiModule extends HttpApiModule<UltraDNSWSApi> {

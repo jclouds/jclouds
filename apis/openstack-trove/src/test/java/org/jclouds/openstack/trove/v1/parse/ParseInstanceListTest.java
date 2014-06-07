@@ -33,10 +33,6 @@ import org.testng.annotations.Test;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 
-/**
- * 
- * @author Zack Shoylev
- */
 
 @Test(groups = "unit", testName = "ParseInstanceTest")
 public class ParseInstanceListTest extends BaseSetParserTest<Instance> {

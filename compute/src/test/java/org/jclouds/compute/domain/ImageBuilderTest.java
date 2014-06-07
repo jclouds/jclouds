@@ -23,7 +23,6 @@ import org.testng.annotations.Test;
 
 /**
  * Unit tests for org.jclouds.compute.domain.ImageBuilder
- *
  */
 @Test(testName = "ImageBuilderTest")
 public class ImageBuilderTest {

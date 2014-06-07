@@ -24,9 +24,6 @@ import java.util.Map;
 import com.google.common.base.Objects;
 import com.google.common.collect.Iterables;
 
-/**
- * @author Everett Toews
- */
 public final class HistoricalUsage {
    private final int accountId;
    private final Map<String, Iterable<AccountUsage>> accountUsage;

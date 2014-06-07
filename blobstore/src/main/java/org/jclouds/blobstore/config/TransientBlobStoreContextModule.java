@@ -31,8 +31,6 @@ import com.google.inject.AbstractModule;
 
 /**
  * Configures the {@link TransientBlobStoreContext}; requires {@link TransientAsyncBlobStore} bound.
- * 
- * @author Adrian Cole
  */
 public class TransientBlobStoreContextModule extends AbstractModule {
    @Override

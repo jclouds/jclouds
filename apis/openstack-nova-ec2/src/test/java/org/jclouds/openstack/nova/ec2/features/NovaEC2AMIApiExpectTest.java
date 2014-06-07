@@ -27,9 +27,6 @@ import org.jclouds.http.HttpResponse;
 import org.jclouds.openstack.nova.ec2.internal.BaseNovaEC2RestApiExpectTest;
 import org.testng.annotations.Test;
 
-/**
- * @author Adam Lowe
- */
 @Test(groups = "unit", testName = "NovaEC2ElasticBlockStoreApiTest")
 public class NovaEC2AMIApiExpectTest extends BaseNovaEC2RestApiExpectTest {
 

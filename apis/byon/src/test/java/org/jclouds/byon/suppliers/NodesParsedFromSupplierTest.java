@@ -22,10 +22,6 @@ import org.testng.annotations.Test;
 import com.google.common.base.Charsets;
 import com.google.common.io.ByteSource;
 
-/**
- * 
- * @author Adrian Cole
- */
 public class NodesParsedFromSupplierTest {
 
    @Test(expectedExceptions = IllegalStateException.class)

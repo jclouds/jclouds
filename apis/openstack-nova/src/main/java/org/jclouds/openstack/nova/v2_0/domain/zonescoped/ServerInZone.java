@@ -20,9 +20,6 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 import org.jclouds.openstack.nova.v2_0.domain.Server;
 
-/**
- * @author Adrian Cole
- */
 public class ServerInZone extends ZoneAndId {
    protected final Server server;
 

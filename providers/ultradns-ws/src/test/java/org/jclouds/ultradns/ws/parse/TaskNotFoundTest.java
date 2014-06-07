@@ -27,9 +27,6 @@ import org.testng.annotations.Test;
 
 import com.google.common.base.Optional;
 
-/**
- * @author Adrian Cole
- */
 @Test(testName = "TaskNotFoundTest")
 public class TaskNotFoundTest extends BaseHandlerTest {
 

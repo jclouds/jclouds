@@ -23,9 +23,6 @@ import org.jclouds.json.config.GsonModule;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 
-/**
- * @author David Alves
- */
 public abstract class BaseDynECTParseTest<T> extends BaseItemParserTest<T> {
 
    @Override

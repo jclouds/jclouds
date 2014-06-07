@@ -32,9 +32,6 @@ import org.jclouds.rest.InvocationContext;
 import com.google.common.base.Function;
 import com.google.common.collect.Iterables;
 
-/**
- * @author Everett Toews
- */
 public class ParseSessionPersistence implements Function<HttpResponse, SessionPersistence>, InvocationContext<ParseSessionPersistence> {
 
    private final ParseJson<Map<String, Map<String, SessionPersistence>>> json;

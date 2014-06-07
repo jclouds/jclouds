@@ -26,8 +26,6 @@ import com.google.common.collect.Maps;
  * @see <a
  *      href="http://docs.amazonwebservices.com/AmazonS3/2006-03-01/index.html?ErrorResponse.html"
  *      />
- * @author Adrian Cole
- * 
  */
 public class AWSError {
    private String code;

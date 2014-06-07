@@ -43,7 +43,6 @@ import com.google.common.util.concurrent.ListenableFuture;
 /**
  * Provide access to Quota information for Nova tenants.
  * 
- * @author Adam Lowe
  * @see QuotaApi
  * @see <a href="http://nova.openstack.org/api_ext/ext_quotas.html"/>
  */

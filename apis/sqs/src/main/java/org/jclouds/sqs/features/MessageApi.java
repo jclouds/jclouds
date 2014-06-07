@@ -60,8 +60,6 @@ import com.google.common.collect.Table;
 /**
  * Provides access to SQS via their REST API.
  * <p/>
- * 
- * @author Adrian Cole
  */
 @RequestFilters(FormSigner.class)
 @FormParams(keys = VERSION, values = "{" + Constants.PROPERTY_API_VERSION + "}")

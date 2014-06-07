@@ -28,8 +28,6 @@ import com.google.inject.Inject;
 
 /**
  * This parses the list of databases
- * 
- * @author Zack Shoylev
  */
 public class ParseDatabaseListForUser implements Function<HttpResponse, FluentIterable<String>> {
 

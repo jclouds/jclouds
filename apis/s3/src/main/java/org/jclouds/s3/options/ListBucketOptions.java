@@ -34,7 +34,6 @@ import org.jclouds.http.options.BaseHttpRequestOptions;
  * Future<S3Bucket> bucket = connection.listBucket("bucketName",withPrefix("home/users").maxKeys(1000));
  * <code>
  * 
- * @author Adrian Cole
  * @see <a
  *      href="http://docs.amazonwebservices.com/AmazonS3/2006-03-01/index.html?RESTBucketGET.html?"
  *      />

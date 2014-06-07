@@ -23,7 +23,6 @@ import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 
 /**
- * @author Adrian Cole
  * @deprecated see ByteSourcePayload
  */
 @Deprecated

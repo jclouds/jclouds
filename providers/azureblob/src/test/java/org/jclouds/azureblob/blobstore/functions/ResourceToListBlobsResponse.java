@@ -35,9 +35,6 @@ import com.google.common.base.Predicate;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Sets;
 
-/**
- * @author Adrian Cole
- */
 @Singleton
 public class ResourceToListBlobsResponse implements
          Function<PageSet<? extends StorageMetadata>, ListBlobsResponse> {

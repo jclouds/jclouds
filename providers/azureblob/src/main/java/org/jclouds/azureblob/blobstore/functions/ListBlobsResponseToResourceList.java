@@ -34,9 +34,6 @@ import com.google.common.collect.Iterables;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 
-/**
- * @author Adrian Cole
- */
 @Singleton
 public class ListBlobsResponseToResourceList implements
          Function<ListBlobsResponse, PageSet<? extends StorageMetadata>> {

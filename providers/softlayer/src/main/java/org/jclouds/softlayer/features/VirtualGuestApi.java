@@ -41,7 +41,6 @@ import org.jclouds.softlayer.domain.VirtualGuest;
  * <p/>
  * 
  * @see <a href="http://sldn.softlayer.com/article/REST" />
- * @author Adrian Cole
  */
 @RequestFilters(BasicAuthentication.class)
 @Path("/v{jclouds.api-version}")

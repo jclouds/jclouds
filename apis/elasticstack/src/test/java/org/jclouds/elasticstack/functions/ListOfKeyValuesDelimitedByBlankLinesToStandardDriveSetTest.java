@@ -25,9 +25,6 @@ import org.testng.annotations.Test;
 import com.google.common.collect.ImmutableSet;
 import com.google.inject.Guice;
 
-/**
- * @author Ignasi Barrera
- */
 @Test(groups = { "unit" })
 public class ListOfKeyValuesDelimitedByBlankLinesToStandardDriveSetTest {
 

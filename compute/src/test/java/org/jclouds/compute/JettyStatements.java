@@ -27,10 +27,6 @@ import org.jclouds.scriptbuilder.domain.StatementList;
 import org.jclouds.scriptbuilder.statements.java.InstallJDK;
 import org.jclouds.scriptbuilder.statements.login.AdminAccess;
 
-/**
- * 
- * @author Adrian Cole
- */
 public class JettyStatements {
 
    public static final URI JETTY_URL = URI.create(System.getProperty("test.jetty-url",

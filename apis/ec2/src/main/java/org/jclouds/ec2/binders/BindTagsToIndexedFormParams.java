@@ -27,9 +27,6 @@ import org.jclouds.rest.Binder;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableMap.Builder;
 
-/**
- * @author Adrian Cole
- */
 public class BindTagsToIndexedFormParams implements Binder {
 
    @SuppressWarnings("unchecked")

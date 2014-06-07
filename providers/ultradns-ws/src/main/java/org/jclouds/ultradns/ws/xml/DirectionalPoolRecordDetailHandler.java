@@ -27,10 +27,6 @@ import org.jclouds.ultradns.ws.domain.DirectionalPoolRecordDetail;
 import org.jclouds.ultradns.ws.domain.IdAndName;
 import org.xml.sax.Attributes;
 
-/**
- * 
- * @author Adrian Cole
- */
 public class DirectionalPoolRecordDetailHandler extends
       ParseSax.HandlerForGeneratedRequestWithResult<DirectionalPoolRecordDetail> {
 

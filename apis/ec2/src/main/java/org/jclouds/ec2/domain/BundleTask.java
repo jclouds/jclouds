@@ -26,7 +26,6 @@ import org.jclouds.javax.annotation.Nullable;
  * 
  * @see <a href="http://docs.amazonwebservices.com/AWSEC2/latest/APIReference/ApiReference-ItemType-BundleInstanceTaskType.html"
  *      />
- * @author Adrian Cole
  */
 public class BundleTask implements Comparable<BundleTask> {
    /**
@@ -41,7 +40,6 @@ public class BundleTask implements Comparable<BundleTask> {
     * 
     * @see <a href="http://docs.amazonwebservices.com/AWSEC2/latest/APIReference/ApiReference-ItemType-BundleInstanceTaskErrorType.html"
     *      />
-    * @author Adrian Cole
     */
    public static class Error {
       private final String code;

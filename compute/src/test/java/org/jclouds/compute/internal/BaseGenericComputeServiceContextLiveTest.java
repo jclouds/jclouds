@@ -33,9 +33,6 @@ import com.google.common.io.ByteSource;
 import com.google.inject.Module;
 import com.google.inject.util.Modules;
 
-/**
- * @author Jason King, Adrian Cole
- */
 public abstract class BaseGenericComputeServiceContextLiveTest<W extends ComputeServiceContext> extends BaseViewLiveTest<W> {
 
    protected TemplateBuilderSpec template;

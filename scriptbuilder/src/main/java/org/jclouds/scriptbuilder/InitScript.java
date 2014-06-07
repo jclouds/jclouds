@@ -47,8 +47,6 @@ import com.google.common.collect.ImmutableMap;
 
 /**
  * Creates an init script file
- * 
- * @author Adrian Cole
  */
 public class InitScript extends ForwardingObject implements Statement, AcceptsStatementVisitor {
 

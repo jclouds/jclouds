@@ -27,8 +27,6 @@ import com.google.common.collect.Iterables;
  * @see <a href=
  *      "http://docs.amazonwebservices.com/AWSSimpleQueueService/latest/APIReference/Query_QueryDeleteMessageBatch.html"
  *      />
- * 
- * @author Adrian Cole
  */
 public class IdHandler extends TextFromSingleElementHandler<Map.Entry<String, String>> {
    @Inject

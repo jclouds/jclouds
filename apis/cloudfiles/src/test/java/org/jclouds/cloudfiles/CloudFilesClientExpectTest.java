@@ -30,11 +30,6 @@ import org.jclouds.http.HttpRequest;
 import org.jclouds.http.HttpResponse;
 import org.testng.annotations.Test;
 
-/**
- * 
- * @author Adrian Cole
- * @author Jeremy Daggett
- */
 @Test(groups = "unit", testName = "CloudFilesClientExpectTest")
 public class CloudFilesClientExpectTest extends BaseCloudFilesRestClientExpectTest {
 

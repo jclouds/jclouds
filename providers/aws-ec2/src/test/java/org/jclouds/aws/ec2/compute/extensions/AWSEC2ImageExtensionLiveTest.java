@@ -31,9 +31,6 @@ import com.google.inject.Module;
 
 /**
  * Live test for aws-ec2 {@link ImageExtension} implementation
- * 
- * @author David Alves
- * 
  */
 @Test(groups = "live", singleThreaded = true, testName = "AWSEC2ImageExtensionLiveTest")
 public class AWSEC2ImageExtensionLiveTest extends BaseImageExtensionLiveTest {

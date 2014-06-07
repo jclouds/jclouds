@@ -24,8 +24,6 @@ import java.util.Set;
 
 /**
  * @see <a href="http://docs.amazonwebservices.com/AmazonCloudWatch/latest/APIReference/API_Metric.html" />
- *
- * @author Jeremy Whitlock
  */
 public class Metric {
 

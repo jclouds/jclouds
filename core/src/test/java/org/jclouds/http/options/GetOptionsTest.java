@@ -34,8 +34,6 @@ import org.testng.annotations.Test;
 
 /**
  * Tests possible uses of GetOptions and GetOptions.Builder.*
- * 
- * @author Adrian Cole
  */
 @Test(groups = "unit")
 public class GetOptionsTest {

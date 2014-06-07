@@ -24,9 +24,6 @@ import org.jclouds.io.ContentMetadataBuilder;
 
 import com.google.common.base.Objects;
 
-/**
- * @author Adrian Cole
- */
 public class BaseImmutableContentMetadata implements ContentMetadata {
 
    protected String contentType;

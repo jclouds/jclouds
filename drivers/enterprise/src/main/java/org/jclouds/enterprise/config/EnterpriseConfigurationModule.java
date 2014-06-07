@@ -26,9 +26,6 @@ import com.google.common.util.concurrent.ListeningExecutorService;
 
 /**
  * Configures Enterprise-grade components
- * 
- * @author Adrian Cole
- * 
  */
 @ConfiguresExecutorService
 public class EnterpriseConfigurationModule extends ExecutorServiceModule {

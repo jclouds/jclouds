@@ -25,9 +25,6 @@ import org.jclouds.domain.Location;
 /**
  * A means of specifying the implementation of a service that uses jclouds
  * types.
- * 
- * @author Adrian Cole
- * 
  */
 public interface JCloudsNativeComputeServiceAdapter extends
       ComputeServiceAdapter<NodeMetadata, Hardware, Image, Location> {

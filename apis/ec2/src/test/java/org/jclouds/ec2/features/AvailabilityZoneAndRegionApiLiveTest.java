@@ -37,8 +37,6 @@ import com.google.common.collect.Maps;
 
 /**
  * Tests behavior of {@code AvailabilityZoneAndRegionApi}
- * 
- * @author Adrian Cole
  */
 @Test(groups = "live", singleThreaded = true, testName = "AvailabilityZoneAndRegionApiLiveTest")
 public class AvailabilityZoneAndRegionApiLiveTest extends BaseComputeServiceContextLiveTest {

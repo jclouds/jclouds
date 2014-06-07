@@ -44,8 +44,6 @@ import com.google.common.collect.Sets;
 
 /**
  * Tests behavior of {@code GlobalVlanApi}
- *
- * @author Richard Downer
  */
 @Test(groups = "live", singleThreaded = true, testName = "GlobalVlanApiLiveTest")
 public class GlobalVlanApiLiveTest extends BaseCloudStackApiLiveTest {

@@ -31,8 +31,6 @@ import com.google.common.reflect.Invokable;
 
 /**
  * Tests behavior of {@code LimitApi}
- *
- * @author Vijay Kiran
  */
 @Test(groups = "unit", testName = "LimitApiTest")
 public class LimitApiTest extends BaseCloudStackApiTest<LimitApi> {

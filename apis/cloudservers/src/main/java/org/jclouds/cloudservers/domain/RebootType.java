@@ -16,10 +16,6 @@
  */
 package org.jclouds.cloudservers.domain;
 
-/**
- * 
- * @author Adrian Cole
- */
 public enum RebootType {
 
    HARD, SOFT;

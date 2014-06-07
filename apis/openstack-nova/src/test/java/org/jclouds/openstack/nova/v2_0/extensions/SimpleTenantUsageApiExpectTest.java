@@ -37,8 +37,6 @@ import com.google.common.collect.Iterables;
 
 /**
  * Tests SimpleTenantUsageApi guice wiring and parsing
- * 
- * @author Adam Lowe
  */
 @Test(groups = "unit", testName = "SimpleTenantUsageApiExpectTest")
 public class SimpleTenantUsageApiExpectTest extends BaseNovaApiExpectTest {

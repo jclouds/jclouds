@@ -29,8 +29,6 @@ import com.google.inject.Singleton;
 
 /**
  * Parses {@link org.jclouds.gogrid.domain.Job jobs} from a json string.
- * 
- * @author Oleksiy Yarmula
  */
 @Singleton
 public class ParseJobListFromJsonResponse implements

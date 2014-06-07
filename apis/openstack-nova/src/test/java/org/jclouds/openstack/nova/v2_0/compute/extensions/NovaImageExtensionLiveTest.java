@@ -24,9 +24,6 @@ import com.google.inject.Module;
 
 /**
  * Live test for openstack-nova {@link ImageExtension} implementation.
- * 
- * @author David Alves
- * 
  */
 @Test(groups = "live", singleThreaded = true, testName = "NovaImageExtensionLiveTest")
 public class NovaImageExtensionLiveTest extends BaseImageExtensionLiveTest {

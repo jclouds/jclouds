@@ -27,9 +27,6 @@ import com.google.common.collect.ImmutableTable;
 import com.google.common.collect.ImmutableTable.Builder;
 import com.google.common.collect.Maps;
 
-/**
- * @author Adrian Cole
- */
 public class BindChangeMessageVisibilityBatchRequestEntryToIndexedFormParams extends BindTableToIndexedFormParams
       implements MapBinder {
 

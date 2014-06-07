@@ -20,9 +20,6 @@ import org.jclouds.openstack.trove.v1.TroveApiMetadata;
 import org.jclouds.providers.internal.BaseProviderMetadataTest;
 import org.testng.annotations.Test;
 
-/**
- * @author Zack Shoylev
- */
 @Test(groups = "unit", testName = "CloudDatabasesUSProviderTest")
 public class CloudDatabasesUSProviderTest extends BaseProviderMetadataTest {
 

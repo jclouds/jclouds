@@ -26,9 +26,6 @@ import org.jclouds.gogrid.domain.IpState;
 import org.jclouds.gogrid.domain.IpType;
 import org.jclouds.http.options.BaseHttpRequestOptions;
 
-/**
- * @author Oleksiy Yarmula
- */
 public class GetIpListOptions extends BaseHttpRequestOptions {
 
    public static final GetIpListOptions NONE = new GetIpListOptions();

@@ -30,9 +30,6 @@ import org.jclouds.s3.domain.internal.MutableObjectMetadataImpl;
 
 import com.google.common.base.Function;
 
-/**
- * @author Adrian Cole
- */
 public class BlobToObjectMetadata implements Function<BlobMetadata, MutableObjectMetadata>,
          InvocationContext<BlobToObjectMetadata> {
    private String bucket;

@@ -33,7 +33,6 @@ import org.jclouds.ec2.options.internal.BaseEC2RequestOptions;
  * Snapshot snapshot = connection.getElasticBlockStoreApi().get().createSnapshotInRegion(volumeId, withDescription("123125"));
  * <code>
  * 
- * @author Adrian Cole
  * @see <a
  *      href="http://docs.amazonwebservices.com/AWSEC2/latest/APIReference/index.html?ApiReference-form-CreateSnapshot.html"
  *      />

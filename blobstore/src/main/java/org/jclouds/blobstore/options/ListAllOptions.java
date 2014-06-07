@@ -24,7 +24,6 @@ import com.google.common.base.Objects;
  *  
  * @see ListOptions for recommended usage patterns
  * 
- * @author Aled Sage
  * @since 1.3
  */
 @Beta

@@ -28,10 +28,6 @@ import org.testng.annotations.Test;
 
 import com.google.common.base.Suppliers;
 
-/**
- * 
- * @author Adrian Cole
- */
 @Test(testName = "NullEqualToIsParentOrIsGrandparentOfCurrentLocationTest")
 public class NullEqualToIsParentOrIsGrandparentOfCurrentLocationTest {
    Location provider = new LocationBuilder().scope(LocationScope.PROVIDER).id("aws-ec2").description("aws-ec2").build();

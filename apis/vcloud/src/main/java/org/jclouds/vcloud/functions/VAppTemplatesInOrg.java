@@ -32,9 +32,6 @@ import com.google.common.base.Function;
 import com.google.common.base.Predicate;
 import com.google.common.collect.ImmutableSet;
 
-/**
- * @author Adrian Cole
- */
 @Singleton
 public class VAppTemplatesInOrg implements Function<Org, Iterable<VAppTemplate>> {
 

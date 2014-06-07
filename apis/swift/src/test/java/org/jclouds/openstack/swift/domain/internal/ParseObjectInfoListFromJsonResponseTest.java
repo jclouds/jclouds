@@ -36,8 +36,6 @@ import com.google.common.collect.ImmutableSet;
 
 /**
  * Tests behavior of {@code ParseObjectInfoListFromJsonResponse}
- * 
- * @author Adrian Cole
  */
 @Test(groups = "unit")
 public class ParseObjectInfoListFromJsonResponseTest extends BasePayloadTest {

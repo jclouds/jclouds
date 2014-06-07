@@ -32,9 +32,6 @@ import com.google.common.base.Splitter;
 import com.google.common.collect.FluentIterable;
 import com.google.common.collect.ImmutableList;
 
-/**
- * @author Adrian Cole
- */
 @Test(testName = "GetResourceRecordsOfResourceRecordResponseTest")
 public class GetResourceRecordsOfResourceRecordResponseTest extends BaseHandlerTest {
    SimpleDateFormatDateService dateService = new SimpleDateFormatDateService();

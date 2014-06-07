@@ -27,10 +27,6 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.LinkedListMultimap;
 import com.google.common.collect.Multimap;
 
-/**
- * 
- * @author Adrian Cole
- */
 public class Queries {
 
    private static final Function<String, Multimap<String, String>> parseQueryToDecodedMap = new Function<String, Multimap<String, String>>() {

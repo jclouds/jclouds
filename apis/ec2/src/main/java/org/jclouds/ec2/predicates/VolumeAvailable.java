@@ -30,8 +30,6 @@ import com.google.inject.Inject;
 /**
  * 
  * Tests to see if a volume is completed.
- * 
- * @author Adrian Cole
  */
 @Singleton
 public class VolumeAvailable implements Predicate<Volume> {

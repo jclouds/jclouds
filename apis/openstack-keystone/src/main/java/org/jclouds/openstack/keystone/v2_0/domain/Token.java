@@ -36,7 +36,6 @@ import com.google.common.base.Optional;
  * support additional protocols in the future. The intent is for it to be an integration service
  * foremost, and not a aspire to be a full-fledged identity store and management solution.
  *
- * @author Adrian Cole
  * @see <a href="http://docs.openstack.org/api/openstack-identity-service/2.0/content/Identity-Service-Concepts-e1362.html"
 />
  */

@@ -26,8 +26,6 @@ import org.testng.annotations.Test;
 
 /**
  * Test class for {@link FilesystemBlobKeyValidator } class
- *
- * @author Alfredo "Rainbowbreeze" Morresi
  */
 @Test(groups = "unit", testName = "filesystem.FilesystemBlobKeyValidatorTest")
 public class FilesystemBlobKeyValidatorTest {

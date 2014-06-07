@@ -77,9 +77,6 @@ import com.google.common.collect.Iterables;
 import com.google.common.collect.Multimap;
 import com.google.common.util.concurrent.ListeningExecutorService;
 
-/**
- * @author Adrian Cole
- */
 @Singleton
 public class CloudStackComputeService extends BaseComputeService {
    protected final CloudStackApi client;

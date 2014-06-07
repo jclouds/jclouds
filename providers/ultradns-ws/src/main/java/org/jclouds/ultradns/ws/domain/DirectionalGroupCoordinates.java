@@ -23,9 +23,6 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 import com.google.common.base.Objects;
 
-/**
- * @author Adrian Cole
- */
 public class DirectionalGroupCoordinates {
 
    private final String zoneName;

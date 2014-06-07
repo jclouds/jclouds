@@ -29,9 +29,6 @@ import com.google.common.base.Supplier;
 
 /**
  * Signs the Rackspace request. This will update the Authentication Token before 24 hours is up.
- * 
- * @author Adrian Cole
- * 
  */
 @Singleton
 public class AuthenticateRequest implements HttpRequestFilter {

@@ -45,8 +45,6 @@ import com.google.common.base.Predicate;
 /**
  * Encryption, Hashing, and IO Utilities needed to sign and verify Atmos Storage requests and
  * responses.
- * 
- * @author Adrian Cole
  */
 public class AtmosUtils {
 

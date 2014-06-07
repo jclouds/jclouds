@@ -40,8 +40,6 @@ import com.google.common.collect.Iterables;
 
 /**
  * Tests behavior of VolumeApi
- * 
- * @author Adam Lowe
  */
 @Test(groups = "live", testName = "VolumeApiLiveTest", singleThreaded = true)
 public class VolumeApiLiveTest extends BaseNovaApiLiveTest {

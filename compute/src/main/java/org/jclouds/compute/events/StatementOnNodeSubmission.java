@@ -26,8 +26,6 @@ import com.google.common.annotations.Beta;
  * <p/>
  * Note this does not guarantee that there was success, nor that the node
  * received the statement.
- * 
- * @author Adrian Cole
  */
 @Beta
 public class StatementOnNodeSubmission extends StatementOnNode {

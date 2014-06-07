@@ -43,7 +43,6 @@ import com.google.inject.Guice;
 
 /**
  * Tests {@code TemplateToOperatingSystem}
- * 
  */
 @Test(groups = "unit")
 public class TemplateToOperatingSystemTest {

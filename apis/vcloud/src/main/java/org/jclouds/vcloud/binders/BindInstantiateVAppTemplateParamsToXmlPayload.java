@@ -54,11 +54,6 @@ import com.google.common.cache.LoadingCache;
 import com.google.common.collect.ImmutableSet;
 import com.jamesmurty.utils.XMLBuilder;
 
-/**
- * 
- * @author Adrian Cole
- * 
- */
 @Singleton
 public class BindInstantiateVAppTemplateParamsToXmlPayload implements MapBinder {
 

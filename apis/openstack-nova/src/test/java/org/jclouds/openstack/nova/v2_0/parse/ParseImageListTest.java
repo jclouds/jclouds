@@ -35,10 +35,6 @@ import com.google.common.collect.ImmutableSet;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 
-/**
- * 
- * @author Jeremy Daggett
- */
 @Test(groups = "unit", testName = "ParseImageListTest")
 public class ParseImageListTest extends BaseSetParserTest<Resource> {
 

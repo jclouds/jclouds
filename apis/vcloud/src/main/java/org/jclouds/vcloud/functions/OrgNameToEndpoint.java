@@ -29,10 +29,6 @@ import org.jclouds.vcloud.endpoints.Org;
 import com.google.common.base.Function;
 import com.google.common.base.Supplier;
 
-/**
- * 
- * @author Adrian Cole
- */
 @Singleton
 public class OrgNameToEndpoint implements Function<Object, URI> {
    private final Supplier<Map<String, ReferenceType>> orgNameToEndpointSupplier;

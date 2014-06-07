@@ -21,8 +21,6 @@ import org.jclouds.cloudstack.domain.SnapshotPolicySchedule;
 
 /**
  * Methods to create SnapshotPolicySchedule objects in the format required by Cloudstack.
- * 
- * @author Richard Downer
  */
 public class SnapshotPolicySchedules {
    public static SnapshotPolicySchedule hourly(int minute) {

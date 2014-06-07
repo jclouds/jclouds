@@ -33,10 +33,6 @@ import org.jclouds.domain.Location;
 
 import com.google.common.base.Supplier;
 
-/**
- * 
- * @author Adrian Cole
- */
 public class VCloudTemplateBuilderImpl extends TemplateBuilderImpl {
 
    @Inject

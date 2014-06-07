@@ -19,10 +19,6 @@ package org.jclouds.rackspace.cloudloadbalancers.v1;
 import org.jclouds.loadbalancer.internal.BaseLoadBalancerServiceApiMetadataTest;
 import org.testng.annotations.Test;
 
-/**
- * 
- * @author Adrian Cole
- */
 @Test(groups = "unit", testName = "CloudLoadBalancersApiMetadataTest")
 public class CloudLoadBalancersApiMetadataTest extends BaseLoadBalancerServiceApiMetadataTest {
 

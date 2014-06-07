@@ -29,8 +29,6 @@ import org.jclouds.collect.PagedIterables;
 
 /**
  * Utilities for using CloudWatch.
- *
- * @author Jeremy Whitlock
  */
 public class CloudWatch {
 

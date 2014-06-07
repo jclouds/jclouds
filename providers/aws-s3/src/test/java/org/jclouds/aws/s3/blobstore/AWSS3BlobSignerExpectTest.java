@@ -30,9 +30,6 @@ import org.testng.annotations.Test;
 import com.google.common.base.Supplier;
 import com.google.inject.Module;
 
-/**
- * @author Diwaker Gupta
- */
 @Test(groups = "unit", testName = "AWSS3BlobSignerExpectTest")
 public class AWSS3BlobSignerExpectTest extends S3BlobSignerExpectTest {
    private static final String DATE = "Thu, 05 Jun 2008 16:38:19 GMT";

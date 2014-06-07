@@ -27,9 +27,6 @@ import org.jclouds.openstack.swift.domain.SwiftObject;
 
 import com.google.common.base.Function;
 
-/**
- * @author Adrian Cole
- */
 @Singleton
 public class ObjectToBlob implements Function<SwiftObject, Blob> {
    private final Factory blobFactory;

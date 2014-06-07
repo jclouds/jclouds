@@ -22,10 +22,6 @@ import org.jclouds.http.functions.ParseSax;
 
 import com.google.common.collect.ImmutableList;
 
-/**
- * 
- * @author Adrian Cole
- */
 public class InvalidChangeBatchHandler extends ParseSax.HandlerForGeneratedRequestWithResult<ImmutableList<String>> {
 
    private StringBuilder currentText = new StringBuilder();

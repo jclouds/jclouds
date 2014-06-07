@@ -41,10 +41,6 @@ import com.google.common.collect.Sets;
 import com.google.common.reflect.TypeToken;
 import com.google.inject.Module;
 
-/**
- * 
- * @author Adrian Cole
- */
 public abstract class BaseApiLiveTest<A extends Closeable> {
    protected String prefix = System.getProperty("user.name");
    protected String provider;

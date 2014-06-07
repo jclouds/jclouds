@@ -25,8 +25,6 @@ import com.google.common.collect.ImmutableSet;
 
 /**
  * Options for the GlobalHostApi.updateCluster() API call.
- *
- * @author Richard Downer
  */
 public class UpdateClusterOptions extends BaseHttpRequestOptions {
 

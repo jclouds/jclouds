@@ -22,11 +22,6 @@ import org.testng.annotations.Test;
 
 import com.google.inject.Module;
 
-/**
- * 
- * 
- * @author Adrian Cole
- */
 @Test(groups = "live", enabled = true, singleThreaded = true)
 public class VCloudComputeServiceLiveTest extends BaseComputeServiceLiveTest {
 

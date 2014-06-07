@@ -26,8 +26,6 @@ import org.jclouds.http.functions.ParseURIFromListOrLocationHeaderIf20x;
 /**
  * Parses a single URI from a list, returning null when blob length was zero.
  * Atmos returns "HTTP/1.1 201 null" when putting zero-length blobs.
- *
- * @author Andrew Gaul
  */
 public class ParseNullableURIFromListOrLocationHeaderIf20x extends ParseURIFromListOrLocationHeaderIf20x {
 

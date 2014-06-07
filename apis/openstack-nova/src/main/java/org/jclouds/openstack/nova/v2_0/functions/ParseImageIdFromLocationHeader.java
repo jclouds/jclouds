@@ -25,8 +25,6 @@ import com.google.common.net.HttpHeaders;
 
 /**
  * This parses {@link Image} from the body of the link in the Location header of the HTTPResponse.
- * 
- * @author Tim Miller
  */
 @Singleton
 public class ParseImageIdFromLocationHeader implements Function<HttpResponse, String> {

@@ -55,9 +55,6 @@ import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Iterables;
 import com.google.common.util.concurrent.UncheckedExecutionException;
 
-/**
- * @author Adrian Cole, Andrei Savu
- */
 @Singleton
 public class VirtualMachineToNodeMetadata implements Function<VirtualMachine, NodeMetadata> {
 

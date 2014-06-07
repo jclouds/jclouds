@@ -44,10 +44,6 @@ import com.google.common.collect.Multimap;
 import com.google.common.util.concurrent.ListeningExecutorService;
 import com.google.inject.Inject;
 
-/**
- * 
- * @author Adrian Cole
- */
 @Singleton
 public class AWSEC2ListNodesStrategy extends EC2ListNodesStrategy {
 

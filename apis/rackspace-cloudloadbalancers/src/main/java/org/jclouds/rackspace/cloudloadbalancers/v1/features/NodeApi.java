@@ -62,8 +62,6 @@ import org.jclouds.rest.annotations.WrapWith;
 /**
  * Provides access to CloudLoadBalancers Node features.
  * <p/>
- * 
- * @author Everett Toews
  */
 @RequestFilters(AuthenticateRequest.class)
 public interface NodeApi {

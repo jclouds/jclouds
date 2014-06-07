@@ -28,8 +28,6 @@ import com.google.common.collect.Multimap;
 
 /**
  * unzips the content into a directory
- * 
- * @author Adrian Cole
  */
 public class UnzipHttpResponseIntoDirectory extends InterpretableStatement {
    /**

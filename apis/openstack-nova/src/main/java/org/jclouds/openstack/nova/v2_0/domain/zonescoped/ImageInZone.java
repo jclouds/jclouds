@@ -20,9 +20,6 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 import org.jclouds.openstack.nova.v2_0.domain.Image;
 
-/**
- * @author Adrian Cole
- */
 public class ImageInZone extends ZoneAndId {
    protected final Image image;
 

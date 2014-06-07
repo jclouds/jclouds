@@ -46,7 +46,6 @@ import com.google.common.collect.FluentIterable;
 /**
  * @see <a href="https://ultra-api.ultradns.com:8443/UltraDNS_WS/v01?wsdl" />
  * @see <a href="https://www.ultradns.net/api/NUS_API_XML_SOAP.pdf" />
- * @author Adrian Cole
  */
 @RequestFilters(SOAPWrapWithPasswordAuth.class)
 @VirtualHost

@@ -20,10 +20,6 @@ import org.jclouds.providers.internal.BaseProviderMetadataTest;
 import org.jclouds.vcloud.VCloudApiMetadata;
 import org.testng.annotations.Test;
 
-/**
- * 
- * @author Adrian Cole
- */
 @Test(groups = "unit", testName = "GreenHouseDataElementVCloudProviderTest")
 public class GreenHouseDataElementVCloudProviderTest extends BaseProviderMetadataTest {
 

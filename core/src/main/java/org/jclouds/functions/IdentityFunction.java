@@ -20,11 +20,6 @@ import javax.inject.Singleton;
 
 import com.google.common.base.Function;
 
-/**
- * 
- * @author Adrian Cole
- * 
- */
 @Singleton
 public enum IdentityFunction implements Function<Object, Object> {
    INSTANCE;

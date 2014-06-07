@@ -31,8 +31,6 @@ import com.google.common.collect.Iterables;
 
 /**
  * Tests behavior of {@code ZoneApiLiveTest}
- * 
- * @author Adrian Cole
  */
 @Test(groups = "live", singleThreaded = true, testName = "ZoneApiLiveTest")
 public class ZoneApiLiveTest extends BaseCloudStackApiLiveTest {

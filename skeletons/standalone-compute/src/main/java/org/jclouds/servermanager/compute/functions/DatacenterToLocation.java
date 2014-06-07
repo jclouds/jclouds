@@ -30,9 +30,6 @@ import org.jclouds.servermanager.Datacenter;
 import com.google.common.base.Function;
 import com.google.common.base.Supplier;
 
-/**
- * @author Adrian Cole
- */
 @Singleton
 public class DatacenterToLocation implements Function<Datacenter, Location> {
    private final Provider<Supplier<Location>> provider;

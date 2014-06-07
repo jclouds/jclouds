@@ -28,9 +28,6 @@ import com.google.common.collect.ImmutableMap;
  * Amazon EC2 VPCs contain one or more subnets.
  * 
  * @see <a href="http://docs.aws.amazon.com/AmazonVPC/latest/UserGuide/VPC_Subnets.html" >doc</a>
- * 
- * @author Adrian Cole
- * @author Andrew Bayer
  */
 public final class Subnet {
 

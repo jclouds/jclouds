@@ -36,10 +36,6 @@ import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.ImmutableSet.Builder;
 import com.google.common.collect.Iterables;
 
-/**
- * 
- * @author Adrian Cole
- */
 public class VCloudComputeUtils {
    public static OperatingSystem toComputeOs(VApp vApp, OperatingSystem defaultOs) {
       CIMOperatingSystem cimOs = toComputeOs(vApp);

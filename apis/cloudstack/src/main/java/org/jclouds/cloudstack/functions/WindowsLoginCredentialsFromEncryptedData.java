@@ -39,8 +39,6 @@ import com.google.inject.Singleton;
 
 /**
  * Given an encrypted Windows Administrator password and the decryption key, return a LoginCredentials instance.
- *
- * @author Richard Downer, Andrei Savu
  */
 @Singleton
 public class WindowsLoginCredentialsFromEncryptedData implements Function<EncryptedPasswordAndPrivateKey, LoginCredentials> {

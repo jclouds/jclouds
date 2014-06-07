@@ -27,8 +27,6 @@ import javax.inject.Qualifier;
  * Represents a component related to Rackspace Cloud Files Content delivery network.
  * 
  * @see <a href="http://www.rackspacecloud.com/cf-devguide-20090311.pdf" />
- * @author Adrian Cole
- * 
  */
 @Retention(value = RetentionPolicy.RUNTIME)
 @Target(value = { ElementType.TYPE, ElementType.FIELD, ElementType.PARAMETER, ElementType.METHOD })

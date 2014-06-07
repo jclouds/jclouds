@@ -28,7 +28,6 @@ import com.google.common.base.Objects.ToStringHelper;
 /**
  * DNS record data.
  *
- * @author Adam Lowe
  * @see <a href= "https://customer.glesys.com/api.php?a=doc#domain_list_records" />
  */
 public class DomainRecord {

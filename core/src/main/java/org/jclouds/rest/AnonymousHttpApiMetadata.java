@@ -24,8 +24,6 @@ import com.google.common.annotations.Beta;
 
 /**
  * Useful in creating arbitrary http apis.
- * 
- * @author Adrian Cole
  */
 @Beta
 public class AnonymousHttpApiMetadata<A> extends BaseHttpApiMetadata<A> {

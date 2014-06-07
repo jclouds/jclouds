@@ -25,9 +25,6 @@ import java.util.Map;
 
 import com.google.common.base.Objects;
 
-/**
- * @author Adrian Cole
- */
 public class CreateRecord<D extends Map<String, Object>> {
 
    private final String fqdn;

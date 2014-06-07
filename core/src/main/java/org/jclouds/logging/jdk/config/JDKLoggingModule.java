@@ -22,9 +22,6 @@ import org.jclouds.logging.jdk.JDKLogger;
 
 /**
  * Configures logging of type {@link JDKLogger}
- * 
- * @author Adrian Cole
- * 
  */
 public class JDKLoggingModule extends LoggingModule {
     public Logger.LoggerFactory createLoggerFactory() {

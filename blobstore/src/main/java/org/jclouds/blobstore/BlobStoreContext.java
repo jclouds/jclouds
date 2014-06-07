@@ -28,9 +28,6 @@ import com.google.inject.ImplementedBy;
 /**
  * Represents a cloud that has key-value storage functionality. This object is scoped to a service
  * and an identity.
- * 
- * @author Adrian Cole
- * 
  */
 @ImplementedBy(BlobStoreContextImpl.class)
 public interface BlobStoreContext extends Closeable, View {

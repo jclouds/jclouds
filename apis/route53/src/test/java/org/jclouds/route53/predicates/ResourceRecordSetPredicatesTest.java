@@ -21,10 +21,6 @@ import static org.jclouds.route53.predicates.ResourceRecordSetPredicates.typeEqu
 import org.jclouds.route53.domain.ResourceRecordSet;
 import org.testng.annotations.Test;
 
-/**
- * 
- * @author Adrian Cole
- */
 @Test(groups = "unit", testName = "ResourceRecordSetPredicatesTest")
 public class ResourceRecordSetPredicatesTest {
    ResourceRecordSet rrs = ResourceRecordSet.builder().name("jclouds.org.").type("NS").add("ns-119.awsdns-14.com.")

@@ -21,9 +21,6 @@ import static org.testng.Assert.assertNull;
 import org.jclouds.route53.internal.BaseRoute53ApiLiveTest;
 import org.testng.annotations.Test;
 
-/**
- * @author Adrian Cole
- */
 @Test(groups = "live", singleThreaded = true, testName = "Route53ApiLiveTest")
 public class Route53ApiLiveTest extends BaseRoute53ApiLiveTest {
 

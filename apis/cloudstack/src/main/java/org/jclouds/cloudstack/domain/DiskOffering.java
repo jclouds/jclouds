@@ -30,8 +30,6 @@ import com.google.common.collect.ImmutableSet;
 
 /**
  * Class DiskOffering
- *
- * @author Adrian Cole
  */
 public class DiskOffering implements Comparable<DiskOffering> {
 

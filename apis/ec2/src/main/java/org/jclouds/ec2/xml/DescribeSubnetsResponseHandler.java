@@ -29,9 +29,6 @@ import com.google.inject.Inject;
 
 /**
  * @see <a href="http://docs.aws.amazon.com/AWSEC2/latest/APIReference/ApiReference-query-DescribeSubnets.html" >xml</a>
- * 
- * @author Adrian Cole
- * @author Andrew Bayer
  */
 public class DescribeSubnetsResponseHandler extends
       ParseSax.HandlerForGeneratedRequestWithResult<FluentIterable<Subnet>> {

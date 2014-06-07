@@ -29,9 +29,6 @@ import org.jclouds.s3.domain.BucketMetadata;
 
 import com.google.common.base.Function;
 
-/**
- * @author Adrian Cole
- */
 @Singleton
 public class BucketToResourceMetadata implements Function<BucketMetadata, StorageMetadata> {
    private final Function<String, Location> locationOfBucket;

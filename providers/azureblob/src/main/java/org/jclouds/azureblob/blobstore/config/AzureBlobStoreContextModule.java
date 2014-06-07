@@ -39,8 +39,6 @@ import com.google.inject.Scopes;
 
 /**
  * Configures the {@link AzureBlobStoreContext}; requires {@link AzureAsyncBlobStore} bound.
- * 
- * @author Adrian Cole
  */
 public class AzureBlobStoreContextModule extends AbstractModule {
 

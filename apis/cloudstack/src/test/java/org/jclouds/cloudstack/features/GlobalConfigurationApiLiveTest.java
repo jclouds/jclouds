@@ -34,8 +34,6 @@ import com.google.common.collect.Iterables;
 
 /**
  * Tests behavior of {@code GlobalConfigurationApi}
- *
- * @author Andrei Savu
  */
 @Test(groups = "live", singleThreaded = true, testName = "GlobalConfigurationApiLiveTest")
 public class GlobalConfigurationApiLiveTest extends BaseCloudStackApiLiveTest {

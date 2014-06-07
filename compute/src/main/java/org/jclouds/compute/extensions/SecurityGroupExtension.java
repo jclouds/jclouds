@@ -28,8 +28,6 @@ import com.google.common.collect.Multimap;
 /**
  * An extension to compute service to allow for the manipulation of {@link SecurityGroup}s. Implementation
  * is optional by providers.
- * 
- * @author Andrew Bayer
  */
 public interface SecurityGroupExtension {
 

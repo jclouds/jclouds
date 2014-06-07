@@ -31,8 +31,6 @@ import com.google.common.collect.Multimap;
 
 /**
  * Tests possible uses of ListContainerOptions and ListContainerOptions.Builder.*
- * 
- * @author Adrian Cole
  */
 public class ListContainerOptionsTest {
 

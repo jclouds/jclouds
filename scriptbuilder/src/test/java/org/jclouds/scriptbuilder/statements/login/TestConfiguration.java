@@ -25,11 +25,6 @@ import com.google.common.base.Supplier;
 import com.google.common.base.Suppliers;
 import com.google.common.collect.ImmutableMap;
 
-/**
- * 
- * @author Adrian Cole
- * 
- */
 public enum TestConfiguration implements Configuration {
    INSTANCE;
    int pwCount = 0;

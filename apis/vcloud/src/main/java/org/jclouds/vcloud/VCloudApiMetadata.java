@@ -38,8 +38,6 @@ import com.google.inject.Module;
 
 /**
  * Implementation of {@link ApiMetadata} for VCloud 1.0 API
- * 
- * @author Adrian Cole
  */
 public class VCloudApiMetadata extends BaseHttpApiMetadata<VCloudApi> {
 

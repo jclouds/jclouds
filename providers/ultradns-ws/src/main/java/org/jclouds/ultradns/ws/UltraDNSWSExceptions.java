@@ -18,8 +18,6 @@ package org.jclouds.ultradns.ws;
 
 /**
  * Exceptions likely to be encountered when using {@link UltraDNSWSApi}
- * 
- * @author Adrian Cole
  */
 public interface UltraDNSWSExceptions {
 

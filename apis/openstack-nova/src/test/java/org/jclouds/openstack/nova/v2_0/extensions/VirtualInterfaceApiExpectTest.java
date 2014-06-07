@@ -30,8 +30,6 @@ import com.google.common.collect.Iterables;
 
 /**
  * Tests parsing and guice wiring of VirtualInterfaceApi
- *
- * @author Adam Lowe
  */
 @Test(groups = "live", testName = "VirtualInterfaceApiLiveTest")
 public class VirtualInterfaceApiExpectTest extends BaseNovaApiExpectTest {

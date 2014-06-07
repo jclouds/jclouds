@@ -26,10 +26,6 @@ import org.testng.annotations.Test;
 
 import com.google.common.net.HttpHeaders;
 
-/**
- * 
- * @author Adrian Cole
- */
 @Test(groups = { "unit" })
 public class MapHttp4xxCodesToExceptionsTest {
 

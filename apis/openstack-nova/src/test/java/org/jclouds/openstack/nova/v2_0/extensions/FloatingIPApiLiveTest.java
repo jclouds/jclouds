@@ -35,8 +35,6 @@ import com.google.common.collect.Multimap;
 
 /**
  * Tests behavior of {@code ServerApi}
- * 
- * @author Adrian Cole
  */
 @Test(groups = "live", testName = "FloatingIPApiLiveTest")
 public class FloatingIPApiLiveTest extends BaseNovaApiLiveTest {

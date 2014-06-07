@@ -31,8 +31,6 @@ import com.google.inject.Module;
 
 /**
  * Base class for writing KeyStone Expect tests with the ComputeService abstraction
- * 
- * @author Matt Stephenson
  */
 public abstract class BaseNovaComputeServiceContextExpectTest<T> extends BaseNovaExpectTest<T> implements
          Function<ComputeServiceContext, T> {

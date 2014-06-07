@@ -23,9 +23,6 @@ import org.jclouds.dynect.v3.domain.Job;
 import org.jclouds.dynect.v3.internal.BaseDynECTParseTest;
 import org.testng.annotations.Test;
 
-/**
- * @author Adrian Cole
- */
 @Test(groups = "unit")
 public class DeleteZoneResponseTest extends BaseDynECTParseTest<Job> {
 

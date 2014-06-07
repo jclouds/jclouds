@@ -60,10 +60,6 @@ import com.google.common.base.Functions;
 import com.google.common.base.Predicate;
 import com.google.common.collect.FluentIterable;
 
-/**
- * @author Adrian Cole
- * 
- */
 @Singleton
 public class AdaptingComputeServiceStrategies<N, H, I, L> implements CreateNodeWithGroupEncodedIntoName,
          DestroyNodeStrategy, GetNodeMetadataStrategy, GetImageStrategy, ListNodesStrategy, RebootNodeStrategy,

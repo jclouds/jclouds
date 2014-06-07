@@ -71,8 +71,6 @@ import com.google.inject.Injector;
  * adds in functionality to boot a lamp instance: http://alestic.com/2009/06/ec2-user-data-scripts
  * <p/>
  * Generally disabled, as it incurs higher fees.
- * 
- * @author Adrian Cole
  */
 @Test(groups = "live", enabled = false, singleThreaded = true, testName = "CloudApplicationArchitecturesEC2ApiLiveTest")
 public class CloudApplicationArchitecturesEC2ApiLiveTest extends BaseComputeServiceContextLiveTest {

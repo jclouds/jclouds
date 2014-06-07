@@ -20,10 +20,6 @@ import org.jclouds.cloudfiles.CloudFilesApiMetadata;
 import org.jclouds.providers.internal.BaseProviderMetadataTest;
 import org.testng.annotations.Test;
 
-/**
- * 
- * @author Adrian Cole
- */
 @Test(groups = "unit", testName = "CloudFilesUKProviderTest")
 public class CloudFilesUKProviderTest extends BaseProviderMetadataTest {
 

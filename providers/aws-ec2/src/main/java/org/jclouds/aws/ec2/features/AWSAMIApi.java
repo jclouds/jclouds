@@ -41,8 +41,6 @@ import org.jclouds.rest.annotations.XMLResponseParser;
 /**
  * Provides access to AMI Services.
  * <p/>
- * 
- * @author Adrian Cole
  */
 @RequestFilters(FormSigner.class)
 @VirtualHost

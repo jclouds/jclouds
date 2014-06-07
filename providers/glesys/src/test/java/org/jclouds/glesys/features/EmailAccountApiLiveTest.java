@@ -40,8 +40,6 @@ import com.google.common.collect.Iterables;
 
 /**
  * Tests behavior of {@code EmailAccountApi}
- * 
- * @author Adam Lowe
  */
 @Test(groups = "live", testName = "EmailAccountApiLiveTest", singleThreaded = true)
 public class EmailAccountApiLiveTest extends BaseGleSYSApiLiveTest {

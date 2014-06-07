@@ -24,10 +24,6 @@ import org.jclouds.compute.domain.OsFamily;
 
 import com.google.inject.ImplementedBy;
 
-/**
- * 
- * @author Adrian Cole
- */
 @ImplementedBy(ReviseParsedImage.NoopReviseParsedImage.class)
 public interface ReviseParsedImage {
    void reviseParsedImage(org.jclouds.ec2.domain.Image from, ImageBuilder builder, OsFamily family,

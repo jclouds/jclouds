@@ -36,11 +36,6 @@ import com.google.common.base.Function;
 import com.google.common.base.Supplier;
 import com.google.inject.Module;
 
-/**
- * 
- * @author David Alves
- * 
- */
 public abstract class BaseCloudServersComputeServiceExpectTest<T> extends BaseKeystoneRestClientExpectTest<T> implements
          Function<ComputeServiceContext, T> {
 

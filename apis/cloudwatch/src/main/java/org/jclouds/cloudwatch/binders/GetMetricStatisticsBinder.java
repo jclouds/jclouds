@@ -34,8 +34,6 @@ import com.google.common.collect.ImmutableMultimap;
  * 
  * @see <a href="http://docs.amazonwebservices.com/AmazonCloudWatch/latest/APIReference/API_GetMetricStatistics.html"
  *      />
- * 
- * @author Jeremy Whitlock, Adrian Cole
  */
 @Beta
 public class GetMetricStatisticsBinder implements org.jclouds.rest.Binder {

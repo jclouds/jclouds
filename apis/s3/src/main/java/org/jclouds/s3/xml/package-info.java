@@ -16,6 +16,5 @@
  */
 /**
  * This package contains xml logic that parses S3 responses. 
- * @author Adrian Cole
  */
 package org.jclouds.s3.xml;

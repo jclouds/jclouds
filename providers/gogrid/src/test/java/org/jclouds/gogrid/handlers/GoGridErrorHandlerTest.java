@@ -34,8 +34,6 @@ import com.google.inject.Guice;
 
 /**
  * Tests that the GoGridErrorHandler is correctly handling the exceptions.
- * 
- * @author Oleksiy Yarmula
  */
 //NOTE:without testName, this will not call @Before* and fail w/NPE during surefire
 @Test(groups = "unit", testName = "GoGridErrorHandlerTest")

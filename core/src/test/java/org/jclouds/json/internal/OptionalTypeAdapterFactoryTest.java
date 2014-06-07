@@ -30,8 +30,6 @@ import com.google.gson.GsonBuilder;
 
 /**
  * Tests to verify and illustrate the behavior of the OptionalTypeAdaptorFactory.
- * 
- * @author Adam Lowe
  */
 @Test(testName = "OptionalTypeAdapterFactoryTest")
 public class OptionalTypeAdapterFactoryTest {

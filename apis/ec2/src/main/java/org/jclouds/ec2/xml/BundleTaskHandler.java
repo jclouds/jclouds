@@ -29,10 +29,6 @@ import org.jclouds.location.Region;
 
 import com.google.common.base.Supplier;
 
-/**
- * 
- * @author Adrian Cole
- */
 public class BundleTaskHandler extends ParseSax.HandlerForGeneratedRequestWithResult<BundleTask> {
    protected final DateCodec dateCodec;
    protected final Supplier<String> defaultRegion;

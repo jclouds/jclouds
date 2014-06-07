@@ -16,10 +16,6 @@
  */
 package org.jclouds.loadbalancer.reference;
 
-/**
- * 
- * @author Adrian Cole
- */
 public final class LoadBalancerConstants {
 
    public static final String LOADBALANCER_LOGGER = "jclouds.loadbalancer";

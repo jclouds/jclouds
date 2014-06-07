@@ -34,7 +34,6 @@ import org.jclouds.ec2.options.internal.BaseEC2RequestOptions;
  * group = connection.getAMIServices().createSecurityGroup(vpcId("123125").noReboot());
  * <code>
  * 
- * @author Adrian Cole
  * @see <a href=
  *      "http://docs.amazonwebservices.com/AWSEC2/latest/APIReference/index.html?ApiReference-form-CreateSecurityGroup.html"
  *      />

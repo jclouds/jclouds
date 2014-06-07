@@ -20,9 +20,6 @@ package org.jclouds.openstack.v2_0;
  * An OpenStack service, such as Compute (Nova), Object Storage (Swift), or Image Service (Glance).
  * A service provides one or more endpoints through which users can access resources and perform
  * (presumably useful) operations.
- * 
- * @author Adrian Cole
- * @author Jeremy Daggett
  */
 public interface ServiceType {
    /**

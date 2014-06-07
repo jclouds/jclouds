@@ -21,10 +21,6 @@ import org.jclouds.compute.domain.NodeMetadata;
 import org.jclouds.ec2.compute.EC2ComputeServiceLiveTest;
 import org.testng.annotations.Test;
 
-/**
- * 
- * @author Adrian Cole
- */
 @Test(groups = "live", singleThreaded = true, testName = "NovaEC2ComputeServiceLiveTest")
 public class NovaEC2ComputeServiceLiveTest extends EC2ComputeServiceLiveTest {
 

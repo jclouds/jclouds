@@ -29,8 +29,6 @@ import com.google.common.reflect.Invokable;
 
 /**
  * Context needed to call {@link com.google.common.reflect.Invokable#invoke(Object, Object...)}
- * 
- * @author Adrian Cole
  */
 @Beta
 public final class Invocation {

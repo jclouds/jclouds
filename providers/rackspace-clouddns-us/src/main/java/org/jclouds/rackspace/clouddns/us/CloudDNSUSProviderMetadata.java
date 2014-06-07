@@ -25,8 +25,6 @@ import org.jclouds.rackspace.clouddns.v1.CloudDNSApiMetadata;
 
 /**
  * Implementation of {@link org.jclouds.types.ProviderMetadata} for Rackspace DNS US.
- * 
- * @author Everett Toews
  */
 public class CloudDNSUSProviderMetadata extends BaseProviderMetadata {
 

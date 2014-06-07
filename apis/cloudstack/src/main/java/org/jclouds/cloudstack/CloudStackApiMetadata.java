@@ -30,8 +30,6 @@ import com.google.common.collect.ImmutableSet;
 import com.google.inject.Module;
 /**
  * Implementation of {@link ApiMetadata} for Citrix/Apache CloudStack api.
- * 
- * @author Adrian Cole
  */
 public class CloudStackApiMetadata extends BaseHttpApiMetadata<CloudStackApi> {
    

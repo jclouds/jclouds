@@ -43,10 +43,6 @@ import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 import com.google.common.collect.Sets.SetView;
 
-/**
- * 
- * @author Adrian Cole
- */
 @Singleton
 public class ZoneToRegionToProviderOrJustProvider implements LocationsSupplier {
 

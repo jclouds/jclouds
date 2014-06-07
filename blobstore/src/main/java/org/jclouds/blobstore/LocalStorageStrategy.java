@@ -24,8 +24,6 @@ import org.jclouds.domain.Location;
 
 /**
  * Strategy for local operations related to container and blob
- *
- * @author Alfredo "Rainbowbreeze" Morresi
  */
 public interface LocalStorageStrategy {
 

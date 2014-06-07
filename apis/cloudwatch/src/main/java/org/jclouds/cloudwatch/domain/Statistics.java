@@ -22,8 +22,6 @@ import com.google.common.base.CaseFormat;
 
 /**
  * @see <a href="http://docs.amazonwebservices.com/AmazonCloudWatch/latest/APIReference/API_GetMetricStatistics.html?r=5424"/>
- *
- * @author Andrei Savu
  */
 public enum Statistics {
    AVERAGE,

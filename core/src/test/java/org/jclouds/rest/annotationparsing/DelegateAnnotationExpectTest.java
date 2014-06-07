@@ -44,8 +44,6 @@ import com.google.inject.Module;
 
 /**
  * Tests the ways that {@link Delegate}
- * 
- * @author Adrian Cole
  */
 @Test(groups = "unit", testName = "DelegateAnnotationExpectTest")
 public class DelegateAnnotationExpectTest extends BaseRestClientExpectTest<DelegateAnnotationExpectTest.DelegatingApi> {

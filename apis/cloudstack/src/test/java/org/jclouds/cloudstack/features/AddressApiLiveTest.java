@@ -35,8 +35,6 @@ import com.google.common.collect.Iterables;
 
 /**
  * Tests behavior of {@code AddressApi}
- * 
- * @author Adrian Cole
  */
 @Test(groups = "live", singleThreaded = true, testName = "AddressApiLiveTest")
 public class AddressApiLiveTest extends BaseCloudStackApiLiveTest {

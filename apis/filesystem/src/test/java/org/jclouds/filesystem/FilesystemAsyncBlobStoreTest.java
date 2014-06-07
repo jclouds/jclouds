@@ -66,8 +66,6 @@ import com.google.inject.CreationException;
 
 /**
  * Test class for {@link FilesystemAsyncBlobStore} class
- *
- * @author Alfredo "Rainbowbreeze" Morresi
  */
 @Test(groups = "unit", testName = "filesystem.FilesystemAsyncBlobStoreTest", singleThreaded = true)
 public class FilesystemAsyncBlobStoreTest {

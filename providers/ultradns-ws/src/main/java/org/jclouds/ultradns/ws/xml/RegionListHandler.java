@@ -30,10 +30,6 @@ import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.ImmutableMultimap.Builder;
 import com.google.common.collect.Multimap;
 
-/**
- * 
- * @author Adrian Cole
- */
 public class RegionListHandler extends ParseSax.HandlerForGeneratedRequestWithResult<Multimap<IdAndName, String>> {
 
    private final Builder<IdAndName, String> regions = ImmutableMultimap.<IdAndName, String> builder();

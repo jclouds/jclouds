@@ -29,9 +29,6 @@ import com.google.common.collect.FluentIterable;
 import com.google.common.collect.ImmutableSet;
 import com.google.inject.Injector;
 
-/**
- * @author Adrian Cole
- */
 @Test(groups = "unit")
 public class ListGeoServicesResponseTest extends BaseDynECTParseTest<FluentIterable<String>> {
 

@@ -40,8 +40,6 @@ import com.google.inject.Inject;
 
 /**
  * Retrieves all blobs in the blobstore by the most efficient means possible.
- * 
- * @author Adrian Cole
  */
 @Singleton
 public class ListContainerAndRecurseThroughFolders implements ListBlobsInContainer {

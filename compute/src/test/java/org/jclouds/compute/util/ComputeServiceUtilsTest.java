@@ -46,9 +46,6 @@ import com.google.inject.Guice;
 
 /**
  * Test the compute utils.
- * 
- * @author Adrian Cole
- * 
  */
 @Test(groups = "unit", testName = "ComputeServiceUtilsTest")
 public class ComputeServiceUtilsTest {

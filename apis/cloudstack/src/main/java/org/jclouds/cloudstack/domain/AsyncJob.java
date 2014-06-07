@@ -28,8 +28,6 @@ import com.google.common.base.Objects.ToStringHelper;
 
 /**
  * Class AsyncJob
- *
- * @author Adrian Cole
  */
 public class AsyncJob<S> {
 

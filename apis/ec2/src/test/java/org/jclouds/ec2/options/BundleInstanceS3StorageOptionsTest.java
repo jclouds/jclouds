@@ -29,8 +29,6 @@ import com.google.common.collect.ImmutableList;
 /**
  * Tests possible uses of BundleInstanceS3StorageOptions and
  * BundleInstanceS3StorageOptions.Builder.*
- * 
- * @author Adrian Cole
  */
 public class BundleInstanceS3StorageOptionsTest {
 

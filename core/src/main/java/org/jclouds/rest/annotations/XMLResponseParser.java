@@ -26,8 +26,6 @@ import org.jclouds.http.functions.ParseSax;
 
 /**
  * Shows the transformer type used to parse XML in a HttpResponse
- * 
- * @author Adrian Cole
  */
 @Target(METHOD)
 @Retention(RUNTIME)

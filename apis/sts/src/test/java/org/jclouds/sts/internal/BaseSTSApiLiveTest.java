@@ -20,10 +20,6 @@ import org.jclouds.apis.BaseApiLiveTest;
 import org.jclouds.sts.STSApi;
 import org.testng.annotations.Test;
 
-/**
- * 
- * @author Adrian Cole
- */
 @Test(groups = "live")
 public class BaseSTSApiLiveTest extends BaseApiLiveTest<STSApi> {
    public BaseSTSApiLiveTest() {

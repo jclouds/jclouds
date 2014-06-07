@@ -27,7 +27,6 @@ import com.google.common.collect.ImmutableMap;
 /**
  * A Data bag to be configured for a Chef Solo run.
  * 
- * @author Ignasi Barrera
  * @since Chef 0.10.4
  */
 public class DataBag extends ForwardingMap<String, String> {

@@ -31,10 +31,6 @@ import org.testng.annotations.Test;
 
 import com.google.common.collect.ImmutableMap;
 
-/**
- * 
- * @author Adrian Cole
- */
 @Test(groups = "unit", testName = "ReturnCredentialsBoundToImageTest")
 public class ReturnCredentialsBoundToImageTest {
    LoginCredentials creds = LoginCredentials.builder().user("ubuntu").password("foo").build();

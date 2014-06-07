@@ -34,8 +34,6 @@ import com.google.common.base.Supplier;
 /**
  * 
  * looks for properties bound to the naming convention jclouds.region.{@code regionId}.endpoint
- * 
- * @author Adrian Cole
  */
 @Singleton
 public class RegionIdToURIFromConfigurationOrDefaultToProvider extends LocationIdToURIFromConfigurationOrDefaultToProvider implements RegionIdToURISupplier {

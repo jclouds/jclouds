@@ -30,8 +30,6 @@ import com.google.inject.Singleton;
 /**
  * Parses {@link org.jclouds.gogrid.domain.LoadBalancer jobs} from a json
  * string.
- * 
- * @author Oleksiy Yarmula
  */
 @Singleton
 public class ParseLoadBalancerListFromJsonResponse implements

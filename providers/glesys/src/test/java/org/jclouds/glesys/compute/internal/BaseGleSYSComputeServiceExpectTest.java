@@ -34,8 +34,6 @@ import com.google.inject.Module;
 
 /**
  * Base class for writing GleSYS Expect tests for ComputeService operations
- * 
- * @author Adrian Cole
  */
 public abstract class BaseGleSYSComputeServiceExpectTest extends BaseRestApiExpectTest<ComputeService> {
 

@@ -35,8 +35,6 @@ import org.testng.annotations.Test;
 
 /**
  * Tests possible uses of RunInstancesOptions and RunInstancesOptions.Builder.*
- * 
- * @author Adrian Cole
  */
 public class RunInstancesOptionsTest {
 

@@ -18,9 +18,6 @@ package org.jclouds.json;
 
 import java.lang.reflect.Type;
 
-/**
- * @author Adrian Cole
- */
 public interface Json {
    /**
     * Serialize the object into json. If the object is a generic type, use

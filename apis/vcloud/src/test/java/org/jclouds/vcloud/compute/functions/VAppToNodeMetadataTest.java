@@ -63,8 +63,6 @@ import com.google.inject.name.Names;
 
 /**
  * Tests behavior of {@code VAppToNodeMetadata}
- * 
- * @author Adrian Cole
  */
 @Test(groups = "unit")
 public class VAppToNodeMetadataTest {

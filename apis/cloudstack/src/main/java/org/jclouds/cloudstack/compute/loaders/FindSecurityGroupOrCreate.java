@@ -33,11 +33,6 @@ import org.jclouds.cloudstack.domain.ZoneSecurityGroupNamePortsCidrs;
 import com.google.common.base.Function;
 import com.google.common.cache.CacheLoader;
 
-/**
- * 
- * @author Adrian Cole
- * @author Andrew Bayer
- */
 public class FindSecurityGroupOrCreate extends CacheLoader<ZoneAndName, SecurityGroup> {
    @Resource
    @Named(ComputeServiceConstants.COMPUTE_LOGGER)

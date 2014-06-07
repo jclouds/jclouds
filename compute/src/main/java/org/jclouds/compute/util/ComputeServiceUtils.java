@@ -60,10 +60,6 @@ import com.google.common.collect.RangeSet;
 import com.google.common.collect.TreeRangeSet;
 import com.google.common.primitives.Ints;
 
-/**
- * 
- * @author Adrian Cole
- */
 public class ComputeServiceUtils {
    
    /**

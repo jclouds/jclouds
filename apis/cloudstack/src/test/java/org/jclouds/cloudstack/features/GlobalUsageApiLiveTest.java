@@ -33,8 +33,6 @@ import org.testng.annotations.Test;
 
 /**
  * Tests behavior of {@code GlobalUsageApi}
- *
- * @author Richard Downer
  */
 @Test(groups = "live", singleThreaded = true, testName = "GlobalUsageApiLiveTest")
 public class GlobalUsageApiLiveTest extends BaseCloudStackApiLiveTest {

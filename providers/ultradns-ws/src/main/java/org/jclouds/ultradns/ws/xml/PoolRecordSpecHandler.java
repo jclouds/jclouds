@@ -26,10 +26,6 @@ import org.jclouds.http.functions.ParseSax;
 import org.jclouds.ultradns.ws.domain.PoolRecordSpec;
 import org.xml.sax.Attributes;
 
-/**
- * 
- * @author Adrian Cole
- */
 public class PoolRecordSpecHandler extends ParseSax.HandlerForGeneratedRequestWithResult<PoolRecordSpec> {
 
    private final PoolRecordSpec.Builder builder = PoolRecordSpec.builder();

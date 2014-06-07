@@ -30,9 +30,6 @@ import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Multimap;
 
-/**
- * @author Adrian Cole
- */
 @Test(testName = "GetAvailableRegionsResponseTest")
 public class GetAvailableRegionsResponseTest extends BaseHandlerTest {
 

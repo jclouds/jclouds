@@ -21,10 +21,6 @@ import org.jclouds.json.BaseItemParserTest;
 import org.jclouds.rest.annotations.SelectJson;
 import org.testng.annotations.Test;
 
-/**
- * 
- * @author Adrian Cole
- */
 @Test(groups = "unit", testName = "DeployVirtualMachineResponse3xTest")
 public class DeployVirtualMachineResponse4xTest extends BaseItemParserTest<AsyncCreateResponse> {
 

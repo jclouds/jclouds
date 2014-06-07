@@ -25,9 +25,6 @@ import com.google.common.collect.ForwardingObject;
 /**
  * you cannot return from a top-level script, so if you are using snippets that
  * issue {@code return} then you'll want to wrap them in this.
- * 
- * @author Adrian Cole
- * 
  */
 public class ExitInsteadOfReturn extends ForwardingObject implements Statement {
    private final Statement delegate;

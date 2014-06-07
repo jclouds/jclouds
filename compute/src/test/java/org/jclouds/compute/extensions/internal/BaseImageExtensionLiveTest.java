@@ -48,9 +48,6 @@ import com.google.common.collect.Iterables;
 
 /**
  * Base test for {@link ImageExtension} implementations.
- * 
- * @author David Alves
- * 
  */
 public abstract class BaseImageExtensionLiveTest extends BaseComputeServiceContextLiveTest {
 

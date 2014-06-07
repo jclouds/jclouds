@@ -24,10 +24,6 @@ import org.jclouds.cloudstack.domain.Zone;
 
 import com.google.common.base.Predicate;
 
-/**
- * 
- * @author Adrian Cole
- */
 public class ZonePredicates {
    /**
     * 

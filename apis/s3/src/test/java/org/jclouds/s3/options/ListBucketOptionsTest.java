@@ -31,8 +31,6 @@ import com.google.common.collect.Multimap;
 
 /**
  * Tests possible uses of ListBucketOptions and ListBucketOptions.Builder.*
- * 
- * @author Adrian Cole
  */
 public class ListBucketOptionsTest {
 

@@ -30,8 +30,6 @@ import com.google.common.io.Resources;
 
 /**
  * Unit tests for the {@link InstallChefUsingOmnibus} statement.
- * 
- * @author Ignasi Barrera
  */
 @Test(groups = "unit", testName = "InstallChefClientUsingOmnibusTest")
 public class InstallChefUsingOmnibusTest {

@@ -22,8 +22,6 @@ import org.jclouds.sts.STSApi;
 
 /**
  * Configures the STS connection.
- * 
- * @author Adrian Cole
  */
 @ConfiguresHttpApi
 public class STSHttpApiModule extends FormSigningHttpApiModule<STSApi> {

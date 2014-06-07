@@ -44,7 +44,6 @@ import com.google.common.util.concurrent.ListenableFuture;
  * Provides access to OpenStack keystone resources via their REST API.
  * <p/>
  *
- * @author Adam Lowe
  * @see <a href="http://keystone.openstack.org/" />
  * @see KeystoneApi
  * @deprecated please use {@code org.jclouds.ContextBuilder#buildApi(KeystoneApi.class)} as

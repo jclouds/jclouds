@@ -57,9 +57,6 @@ import com.google.inject.AbstractModule;
 import com.google.inject.Guice;
 import com.google.inject.name.Names;
 
-/**
- * @author Adrian Cole
- */
 @Test(groups = "unit")
 public class AWSRunningInstanceToNodeMetadataTest {
 

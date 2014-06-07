@@ -38,8 +38,6 @@ import org.testng.annotations.Test;
 
 /**
  * Tests parsing of S3 responses
- * 
- * @author Adrian Cole
  */
 @Test(singleThreaded = true, groups = "unit", testName = "AWSUtilsTest")
 public class AWSUtilsTest {

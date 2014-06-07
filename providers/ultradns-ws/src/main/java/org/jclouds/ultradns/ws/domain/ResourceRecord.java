@@ -28,9 +28,6 @@ import java.util.List;
 import com.google.common.base.Objects;
 import com.google.common.collect.ImmutableList;
 
-/**
- * @author Adrian Cole
- */
 public class ResourceRecord {
 
    private final String dName;

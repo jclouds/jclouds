@@ -25,10 +25,6 @@ import org.testng.annotations.Test;
 
 import com.google.common.collect.ImmutableMultimap;
 
-/**
- *
- * @author Adrian Cole
- */
 @Test(groups = "unit", testName = "CloudServersExpectTest")
 public class CloudServersExpectTest extends BaseCloudServersRestClientExpectTest {
    

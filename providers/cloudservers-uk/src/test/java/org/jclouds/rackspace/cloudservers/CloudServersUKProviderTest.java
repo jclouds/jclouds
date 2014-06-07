@@ -37,10 +37,6 @@ import org.jclouds.cloudservers.CloudServersApiMetadata;
 import org.jclouds.providers.internal.BaseProviderMetadataTest;
 import org.testng.annotations.Test;
 
-/**
- * 
- * @author Adrian Cole
- */
 @Test(groups = "unit", testName = "CloudServersUKProviderTest")
 public class CloudServersUKProviderTest extends BaseProviderMetadataTest {
 

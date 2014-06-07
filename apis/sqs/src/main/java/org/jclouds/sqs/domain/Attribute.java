@@ -23,7 +23,6 @@ package org.jclouds.sqs.domain;
  * @see <a href=
  *      "http://docs.amazonwebservices.com/AWSSimpleQueueService/latest/SQSDeveloperGuide/acp-overview.html#PermissionTypes"
  *      />
- * @author Adrian Cole
  */
 public interface Attribute {
 

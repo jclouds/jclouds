@@ -25,9 +25,6 @@ import java.util.List;
 import com.google.common.base.Objects;
 import com.google.common.collect.ImmutableList;
 
-/**
- * @author Adrian Cole
- */
 public class GeoService {
 
    private final String name;

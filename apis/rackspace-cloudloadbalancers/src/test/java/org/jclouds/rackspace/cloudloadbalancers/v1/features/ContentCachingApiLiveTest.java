@@ -31,9 +31,6 @@ import org.testng.annotations.Test;
 
 import com.google.common.collect.Iterables;
 
-/**
- * @author Everett Toews
- */
 @Test(groups = "live", singleThreaded = true, testName = "ContentCachingApiLiveTest")
 public class ContentCachingApiLiveTest extends BaseCloudLoadBalancersApiLiveTest {
    private LoadBalancer lb;

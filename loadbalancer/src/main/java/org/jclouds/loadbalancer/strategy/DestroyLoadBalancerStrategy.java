@@ -20,11 +20,6 @@ import org.jclouds.loadbalancer.domain.LoadBalancerMetadata;
 
 import com.google.common.annotations.Beta;
 
-/**
- * 
- * 
- * @author Adrian Cole
- */
 @Beta
 public interface DestroyLoadBalancerStrategy {
 

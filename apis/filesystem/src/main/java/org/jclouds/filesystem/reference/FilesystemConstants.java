@@ -18,8 +18,6 @@ package org.jclouds.filesystem.reference;
 
 /**
  * Common constants used in filesystem provider
- *
- * @author Alfredo "Rainbowbreeze" Morresi
  */
 public final class FilesystemConstants {
 

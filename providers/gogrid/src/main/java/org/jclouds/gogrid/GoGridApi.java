@@ -25,9 +25,6 @@ import org.jclouds.gogrid.features.GridLoadBalancerApi;
 import org.jclouds.gogrid.features.GridServerApi;
 import org.jclouds.rest.annotations.Delegate;
 
-/**
- * @author Oleksiy Yarmula
- */
 public interface GoGridApi extends Closeable {
 
    /**

@@ -25,9 +25,6 @@ import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Maps;
 import com.google.inject.Inject;
 
-/**
- * @author Zack Shoylev
- */
 public class BindCreateInstanceToJson implements MapBinder {
     
     @Inject

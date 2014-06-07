@@ -31,9 +31,6 @@ import org.testng.annotations.Test;
 import com.google.common.base.Predicate;
 import com.google.common.collect.Iterables;
 
-/**
- * @author Everett Toews
- */
 @Test(groups = "unit")
 public class LimitApiExpectTest extends BaseCloudDNSApiExpectTest<CloudDNSApi> {
    public void testListLimits() {

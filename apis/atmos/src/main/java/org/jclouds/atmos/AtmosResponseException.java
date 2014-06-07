@@ -26,8 +26,6 @@ import org.jclouds.http.HttpResponseException;
  * 
  * @see AtmosError
  * @see ParseAtmosErrorFromXmlContent
- * @author Adrian Cole
- * 
  */
 public class AtmosResponseException extends HttpResponseException {
 

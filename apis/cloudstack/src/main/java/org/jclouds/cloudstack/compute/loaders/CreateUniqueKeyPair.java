@@ -31,10 +31,6 @@ import com.google.common.base.Throwables;
 import com.google.common.cache.CacheLoader;
 import com.google.inject.Inject;
 
-/**
- * @author Adam Lowe
- * @author Andrew Bayer
- */
 @Singleton
 public class CreateUniqueKeyPair extends CacheLoader<String, SshKeyPair> {
    @Resource

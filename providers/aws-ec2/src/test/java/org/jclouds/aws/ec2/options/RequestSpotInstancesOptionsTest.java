@@ -33,8 +33,6 @@ import org.testng.annotations.Test;
 
 /**
  * Tests possible uses of RequestSpotInstancesOptions and RequestSpotInstancesOptions.Builder.*
- * 
- * @author Adrian Cole
  */
 public class RequestSpotInstancesOptionsTest {
 

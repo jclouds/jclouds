@@ -45,7 +45,6 @@ import com.google.common.collect.Lists;
 /**
  * Bootstraps a node using Chef Solo.
  * 
- * @author Ignasi Barrera
  * 
  * @see InstallChefGems
  * @see InstallRuby

@@ -31,8 +31,6 @@ import com.google.common.collect.Iterables;
 
 /**
  * Tests behavior of VirtualInterfaceApi
- *
- * @author Adam Lowe
  */
 @Test(groups = "live", testName = "VirtualInterfaceApiLiveTest", singleThreaded = true)
 public class VirtualInterfaceApiLiveTest extends BaseNovaApiLiveTest {

@@ -23,8 +23,6 @@ import java.net.URI;
 /**
  * Defines the environment of a process that can be started in the background on an operating
  * system.
- * 
- * @author Adrian Cole
  */
 public class InitMetadata {
 

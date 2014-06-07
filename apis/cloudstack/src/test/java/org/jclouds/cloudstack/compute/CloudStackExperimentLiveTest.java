@@ -38,9 +38,6 @@ import static com.google.common.collect.Sets.newTreeSet;
 import static org.jclouds.cloudstack.options.CreateNetworkOptions.Builder.vlan;
 import static org.jclouds.cloudstack.options.ListNetworkOfferingsOptions.Builder.specifyVLAN;
 
-/**
- * @author Adrian Cole
- */
 @Test(groups = "live", testName = "CloudStackExperimentLiveTest")
 public class CloudStackExperimentLiveTest extends BaseCloudStackApiLiveTest {
 

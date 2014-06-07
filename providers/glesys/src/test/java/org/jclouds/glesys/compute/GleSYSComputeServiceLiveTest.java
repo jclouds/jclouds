@@ -27,8 +27,6 @@ import com.google.inject.Module;
 /**
  * 
  * TODO: enable this
- * 
- * @author Adrian Cole
  */
 @Test(groups = "live", enabled = true, singleThreaded = true)
 public class GleSYSComputeServiceLiveTest extends BaseComputeServiceLiveTest {

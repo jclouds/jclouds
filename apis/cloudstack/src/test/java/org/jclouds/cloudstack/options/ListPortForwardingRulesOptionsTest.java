@@ -27,8 +27,6 @@ import com.google.common.collect.ImmutableList;
 
 /**
  * Tests behavior of {@code ListPortForwardingRulesOptions}
- * 
- * @author Adrian Cole
  */
 @Test(groups = "unit")
 public class ListPortForwardingRulesOptionsTest {

@@ -48,9 +48,6 @@ import com.google.common.collect.Iterables;
 import com.google.common.collect.Sets;
 import com.google.inject.Guice;
 
-/**
- * @author Adrian Cole
- */
 @Test(groups = "unit", testName = "NovaReviseParsedImageTest")
 public class NovaReviseParsedImageTest {
 

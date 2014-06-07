@@ -20,7 +20,6 @@ package org.jclouds.aws.reference;
  * Configuration properties and constants used in EC2 connections.
  * 
  * @see <a href="http://docs.amazonwebservices.com/AWSEC2/latest/APIReference/Query-Common-Parameters.html"/>
- * @author Adrian Cole
  */
 public interface FormParameters {
 

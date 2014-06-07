@@ -32,8 +32,6 @@ import com.google.common.collect.ImmutableSet;
 
 /**
  * Test the CloudStack ZoneApi
- *
- * @author Andrei Savu
  */
 @Test(groups = "unit", testName = "ZoneApiExpectTest")
 public class ZoneApiExpectTest extends BaseCloudStackExpectTest<ZoneApi> {

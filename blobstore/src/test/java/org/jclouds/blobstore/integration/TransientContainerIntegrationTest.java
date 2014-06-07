@@ -35,10 +35,6 @@ import org.testng.annotations.Test;
 
 import com.google.common.collect.ImmutableMap;
 
-/**
- * @author James Murty
- * @author Adrian Cole
- */
 @Test(groups = { "integration", "live" })
 public class TransientContainerIntegrationTest extends BaseContainerIntegrationTest {
    public TransientContainerIntegrationTest() {

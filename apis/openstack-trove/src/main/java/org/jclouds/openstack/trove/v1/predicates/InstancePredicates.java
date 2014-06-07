@@ -54,8 +54,6 @@ import com.google.common.base.Predicate;
  * }
  * }
  * </pre>
- * 
- * @author Zack Shoylev
  */
 public class InstancePredicates {
    /**

@@ -24,8 +24,6 @@ import org.testng.annotations.Test;
 /**
  * Tests behavior of {@code MultipartUploadSlicingAlgorithm} from the perspective of
  * partitioning algorithm
- * 
- * @author Tibor Kiss
  */
 @Test(groups = "unit")
 public class MpuPartitioningAlgorithmTest {

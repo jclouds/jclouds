@@ -31,7 +31,6 @@ import com.google.common.base.Objects.ToStringHelper;
 /**
  * Information the SimpleTenantUsage extension return data about each Server
  * 
- * @author Adam Lowe
 */
 public class SimpleServerUsage {
 

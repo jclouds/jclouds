@@ -40,8 +40,6 @@ import com.google.inject.Injector;
 
 /**
  * Tests behavior of {@code VirtualSystemSettingDataHandler}
- * 
- * @author Adrian Cole
  */
 // NOTE:without testName, this will not call @Before* and fail w/NPE during surefire
 @Test(groups = "unit", testName = "VirtualSystemSettingDataHandlerTest")

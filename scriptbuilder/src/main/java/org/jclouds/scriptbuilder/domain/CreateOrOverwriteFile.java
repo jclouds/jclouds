@@ -19,8 +19,6 @@ package org.jclouds.scriptbuilder.domain;
 
 /**
  * Creates a run script
- * 
- * @author Adrian Cole
  */
 public class CreateOrOverwriteFile extends AppendFile {
    public static Builder builder() {

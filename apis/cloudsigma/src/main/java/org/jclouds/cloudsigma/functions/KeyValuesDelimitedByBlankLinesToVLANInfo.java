@@ -27,10 +27,6 @@ import org.jclouds.http.HttpResponse;
 import com.google.common.base.Function;
 import com.google.common.collect.Iterables;
 
-/**
- * 
- * @author Adrian Cole
- */
 @Singleton
 public class KeyValuesDelimitedByBlankLinesToVLANInfo implements Function<HttpResponse, VLANInfo> {
    private final ListOfKeyValuesDelimitedByBlankLinesToVLANInfoSet setParser;

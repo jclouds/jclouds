@@ -35,10 +35,6 @@ import com.google.common.collect.ImmutableSet;
 import com.google.inject.Guice;
 import com.google.inject.TypeLiteral;
 
-/**
- * 
- * @author Adrian Cole
- */
 @Test(testName = "ParseFirstJsonValueNamedTest")
 public class ParseFirstJsonValueNamedTest {
 

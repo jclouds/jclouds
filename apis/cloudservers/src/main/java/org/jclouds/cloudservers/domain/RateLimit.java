@@ -39,7 +39,6 @@ import com.google.common.base.Objects.ToStringHelper;
  * event you exceed the thresholds established for your identity, a 413 Rate Control HTTP response
  * will be returned with a Reply-After header to notify the client when theyagain.
  * 
- * @author Adrian Cole
 */
 public class RateLimit {
 

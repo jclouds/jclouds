@@ -32,9 +32,6 @@ import org.testng.annotations.Test;
 
 /**
  * Tests the use of the {@link PATCH} annotation.
- *
- * @author Ignacio Mulas
- *
  */
 @Test(groups = "unit", testName = "PATCHAnnotationExpectTest")
 public class PATCHAnnotationExpectTest extends

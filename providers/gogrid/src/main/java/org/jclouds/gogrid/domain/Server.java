@@ -29,7 +29,6 @@ import com.google.common.primitives.Longs;
 /**
  * Class Server
  * 
- * @author Oleksiy Yarmula
 */
 public class Server implements Comparable<Server> {
 

@@ -58,7 +58,6 @@ import org.jclouds.rest.annotations.ResponseParser;
  * <p/>
  *
  * @see <a href="TODO: insert URL of provider documentation" />
- * @author Adrian Cole
  */
 @RequestFilters(BasicAuthentication.class)
 @Consumes(MediaType.TEXT_PLAIN)

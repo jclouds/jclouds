@@ -17,10 +17,6 @@
 package org.jclouds.elasticstack.domain;
 
 
-/**
- * 
- * @author Adrian Cole
- */
 public class DriveMetrics {
    public static class Builder {
       protected long readBytes;

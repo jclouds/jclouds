@@ -46,8 +46,6 @@ import com.google.common.base.Objects.ToStringHelper;
  * the algorithm of the load balancer is changed to WEIGHTED_ROUND_ROBIN and the nodes do not
  * already have an assigned weight, the service will automatically set the weight to "1" for all
  * nodes.
- * 
- * @author Adrian Cole
  */
 public class BaseNode<T extends BaseNode<T>> implements Comparable<BaseNode<T>> {
 

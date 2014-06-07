@@ -51,9 +51,6 @@ import com.google.common.base.Supplier;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Iterables;
 
-/**
- * @author Adrian Cole
- */
 @Singleton
 public class NodeToNodeMetadata implements Function<Node, NodeMetadata> {
    @Resource

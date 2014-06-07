@@ -35,8 +35,6 @@ import com.google.inject.Injector;
 
 /**
  * Tests behavior of {@code CatalogItemHandler}
- * 
- * @author Adrian Cole
  */
 @Test(groups = "unit")
 public class CatalogItemHandlerTest {

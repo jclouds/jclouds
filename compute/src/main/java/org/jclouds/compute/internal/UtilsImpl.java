@@ -40,10 +40,6 @@ import com.google.common.util.concurrent.ListeningExecutorService;
 import com.google.inject.Inject;
 import com.google.inject.Injector;
 
-/**
- * 
- * @author Adrian Cole
- */
 @Singleton
 public class UtilsImpl extends org.jclouds.rest.internal.UtilsImpl implements Utils {
    @Inject(optional = true)

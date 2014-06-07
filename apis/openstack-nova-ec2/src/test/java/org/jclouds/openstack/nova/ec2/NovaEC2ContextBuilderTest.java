@@ -24,10 +24,6 @@ import org.jclouds.compute.ComputeServiceContext;
 import org.jclouds.ec2.EC2Api;
 import org.testng.annotations.Test;
 
-/**
- *
- * @author Andrew Bayer
- */
 @Test(groups = "unit", testName = "NovaEC2ContextBuilderTest")
 public class NovaEC2ContextBuilderTest {
 

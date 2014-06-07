@@ -26,7 +26,6 @@ import com.google.common.base.Objects.ToStringHelper;
 /**
  * Represents an ip address used by a server.
  *
- * @author Adam Lowe
  * @see Server
  * @see ServerDetails
  */

@@ -37,9 +37,6 @@ import org.jclouds.dynect.v3.parse.ListZonesResponseTest;
 import org.jclouds.http.HttpRequest;
 import org.jclouds.http.HttpResponse;
 import org.testng.annotations.Test;
-/**
- * @author Adrian Cole
- */
 @Test(groups = "unit", testName = "ZoneApiExpectTest")
 public class ZoneApiExpectTest extends BaseDynECTApiExpectTest {
    HttpRequest get = HttpRequest.builder().method(GET)

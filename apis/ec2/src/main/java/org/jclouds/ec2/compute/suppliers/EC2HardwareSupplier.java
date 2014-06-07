@@ -31,10 +31,6 @@ import org.jclouds.compute.domain.Hardware;
 import com.google.common.base.Supplier;
 import com.google.common.collect.ImmutableSet;
 
-/**
- * 
- * @author Adrian Cole
- */
 @Singleton
 public class EC2HardwareSupplier implements Supplier<Set<? extends Hardware>> {
 

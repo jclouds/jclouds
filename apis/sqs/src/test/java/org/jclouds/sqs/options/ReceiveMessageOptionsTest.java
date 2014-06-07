@@ -26,8 +26,6 @@ import com.google.common.collect.ImmutableSet;
 
 /**
  * Tests behavior of {@code ReceiveMessageOptions}
- * 
- * @author Adrian Cole
  */
 @Test(groups = "unit", testName = "ReceiveMessageOptionsTest")
 public class ReceiveMessageOptionsTest {

@@ -35,7 +35,6 @@ import com.google.inject.name.Named;
 /**
  * Parses XML documents using JAXB.
  * 
- * @author Ignasi Barrera
  * @see ParseXMLWithJAXB
  */
 @Singleton

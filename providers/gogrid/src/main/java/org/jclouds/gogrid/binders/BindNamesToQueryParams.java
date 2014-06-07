@@ -25,8 +25,6 @@ import org.jclouds.rest.Binder;
 
 /**
  * Binds names to corresponding query parameters
- * 
- * @author Oleksiy Yarmula
  */
 public class BindNamesToQueryParams implements Binder {
 

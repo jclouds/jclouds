@@ -27,8 +27,6 @@ import org.testng.annotations.Test;
 /**
  * Tests possible uses of {@code GleSYSTemplateOptions} and {@code
  * GleSYSTemplateOptions.Builder.*}.
- * 
- * @author Adrian Cole
  */
 // NOTE:without testName, this will not call @Before* and fail w/NPE during surefire
 @Test(groups = "unit", testName = "GleSYSTemplateOptionsTest")

@@ -22,10 +22,6 @@ import org.jclouds.compute.internal.BaseComputeServiceContextLiveTest;
 import org.jclouds.servermanager.ServerManagerApiMetadata;
 import org.testng.annotations.Test;
 
-/**
- * 
- * @author Adrian Cole
- */
 @Test(groups = "live", singleThreaded = true, testName = "ServerManagerExperimentLiveTest")
 public class ServerManagerExperimentLiveTest extends BaseComputeServiceContextLiveTest {
 

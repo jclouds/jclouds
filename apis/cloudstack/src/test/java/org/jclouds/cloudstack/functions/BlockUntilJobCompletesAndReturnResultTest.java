@@ -35,9 +35,6 @@ import com.google.common.base.Predicate;
 import com.google.common.base.Predicates;
 import com.google.common.util.concurrent.UncheckedExecutionException;
 
-/**
- * @author Adrian Cole
- */
 @Test(groups = "unit", testName = "BlockUntilJobCompletesAndReturnResultTest")
 public class BlockUntilJobCompletesAndReturnResultTest {
 

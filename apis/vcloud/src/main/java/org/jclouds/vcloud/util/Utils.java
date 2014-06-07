@@ -25,10 +25,6 @@ import org.jclouds.vcloud.domain.VCloudError.MinorCode;
 import org.jclouds.vcloud.domain.internal.ErrorImpl;
 import org.jclouds.vcloud.domain.internal.ReferenceTypeImpl;
 
-/**
- * 
- * @author Adrian Cole
- */
 public class Utils {
 
    public static ReferenceType newReferenceType(Map<String, String> attributes, String defaultType) {

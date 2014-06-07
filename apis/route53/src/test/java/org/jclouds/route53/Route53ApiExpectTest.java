@@ -29,9 +29,6 @@ import org.jclouds.route53.internal.BaseRoute53ApiExpectTest;
 import org.jclouds.route53.parse.GetChangeResponseTest;
 import org.testng.annotations.Test;
 
-/**
- * @author Adrian Cole
- */
 @Test(groups = "unit", testName = "Route53ApiExpectTest")
 public class Route53ApiExpectTest extends BaseRoute53ApiExpectTest {
 

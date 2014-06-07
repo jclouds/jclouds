@@ -42,10 +42,6 @@ import org.jclouds.openstack.swift.blobstore.strategy.internal.MultipartUploadSt
 
 import com.google.common.base.Supplier;
 
-/**
- * 
- * @author Adrian Cole
- */
 @Singleton
 public class HPCloudObjectStorageBlobStore extends SwiftBlobStore {
 

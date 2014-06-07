@@ -43,9 +43,6 @@ import com.google.inject.Key;
 import com.google.inject.Module;
 import com.google.inject.TypeLiteral;
 
-/**
- * @author Adrian Cole
- */
 @Test(groups = "unit", testName = "EC2HttpApiModuleExpectTest")
 public class EC2HttpApiModuleExpectTest extends BaseEC2ApiExpectTest<Injector> {
    private Injector injector;

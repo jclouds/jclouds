@@ -29,8 +29,6 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.reflect.Invokable;
 /**
  * Tests annotation parsing of {@code AccountApi}
- *
- * @author Jason King
  */
 @Test(groups = "unit")
 public class AccountApiTest extends BaseSoftLayerApiTest<AccountApi> {

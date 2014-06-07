@@ -22,8 +22,6 @@ import com.google.common.collect.Multimap;
 
 /**
  * Pipes the content of the http response to tar -xpzf
- * 
- * @author Adrian Cole
  */
 public class PipeHttpResponseToTarxpzfIntoDirectory extends PipeHttpResponseTo {
    /**

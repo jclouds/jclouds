@@ -28,8 +28,6 @@ import org.testng.annotations.Test;
 
 /**
  * Tests behavior of {@code GlobalCapacityApi}
- *
- * @author Richard Downer
  */
 @Test(groups = "live", singleThreaded = true, testName = "GlobalCapacityApiLiveTest")
 public class GlobalCapacityApiLiveTest extends BaseCloudStackApiLiveTest {

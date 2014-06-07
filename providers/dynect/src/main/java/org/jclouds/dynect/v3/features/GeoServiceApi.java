@@ -40,7 +40,6 @@ import com.google.common.collect.FluentIterable;
  * @see <a
  *      href="https://manage.dynect.net/help/docs/api2/rest/resources/Geo.html"
  *      />
- * @author Adrian Cole
  */
 @Headers(keys = "API-Version", values = "{jclouds.api-version}")
 @Path("/Geo")

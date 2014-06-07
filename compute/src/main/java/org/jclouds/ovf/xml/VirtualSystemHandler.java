@@ -22,9 +22,6 @@ import javax.inject.Provider;
 import org.jclouds.ovf.VirtualSystem;
 import org.jclouds.ovf.xml.internal.BaseVirtualSystemHandler;
 
-/**
- * @author Adrian Cole
- */
 public class VirtualSystemHandler extends BaseVirtualSystemHandler<VirtualSystem, VirtualSystem.Builder> {
 
    @Inject

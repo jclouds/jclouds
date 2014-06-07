@@ -50,10 +50,6 @@ import com.google.common.collect.Sets;
 import com.google.common.util.concurrent.UncheckedExecutionException;
 import com.google.inject.Module;
 
-/**
- * 
- * @author Andrew Bayer
- */
 @Test(groups = "unit", testName = "CloudStackSecurityGroupExtensionExpectTest")
 public class CloudStackSecurityGroupExtensionExpectTest extends BaseCloudStackComputeServiceContextExpectTest<ComputeService> {
 

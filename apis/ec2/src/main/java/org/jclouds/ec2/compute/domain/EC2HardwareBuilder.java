@@ -47,7 +47,6 @@ import com.google.common.collect.ImmutableSet;
 
 /**
  * 
- * @author Adrian Cole
  * @see <a href=
  *      "http://docs.amazonwebservices.com/AWSEC2/latest/UserGuide/index.html?instance-types.html"
  *      />

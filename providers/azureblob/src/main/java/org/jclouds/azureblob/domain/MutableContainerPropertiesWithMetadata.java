@@ -24,11 +24,6 @@ import org.jclouds.azureblob.domain.internal.MutableContainerPropertiesWithMetad
 
 import com.google.inject.ImplementedBy;
 
-/**
- * 
- * @author Adrian Cole
- * 
- */
 @ImplementedBy(MutableContainerPropertiesWithMetadataImpl.class)
 public interface MutableContainerPropertiesWithMetadata extends ContainerProperties {
    /**

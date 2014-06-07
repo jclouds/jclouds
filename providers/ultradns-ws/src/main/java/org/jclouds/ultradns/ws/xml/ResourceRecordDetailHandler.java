@@ -29,10 +29,6 @@ import org.xml.sax.Attributes;
 
 import com.google.inject.Inject;
 
-/**
- * 
- * @author Adrian Cole
- */
 public class ResourceRecordDetailHandler extends
       ParseSax.HandlerForGeneratedRequestWithResult<ResourceRecordDetail> {
    private final DateService dateService;

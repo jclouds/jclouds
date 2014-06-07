@@ -22,9 +22,6 @@ import org.jclouds.vcloud.domain.internal.CatalogItemImpl;
 
 import com.google.inject.ImplementedBy;
 
-/**
- * @author Adrian Cole
- */
 @ImplementedBy(CatalogItemImpl.class)
 public interface CatalogItem extends ReferenceType {
 

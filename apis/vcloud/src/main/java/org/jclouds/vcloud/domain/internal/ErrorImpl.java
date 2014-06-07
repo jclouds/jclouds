@@ -21,11 +21,6 @@ import static com.google.common.base.Preconditions.checkNotNull;
 import org.jclouds.javax.annotation.Nullable;
 import org.jclouds.vcloud.domain.VCloudError;
 
-/**
- * 
- * @author Adrian Cole
- * 
- */
 public class ErrorImpl implements VCloudError {
    private final String message;
    private final int majorErrorCode;

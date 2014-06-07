@@ -36,8 +36,6 @@ import com.google.common.net.HttpHeaders;
 
 /**
  * This parses @{link {@link MutableObjectInfoWithMetadata} from HTTP headers.
- * 
- * @author Adrian Cole
  */
 public class ParseObjectInfoFromHeaders implements Function<HttpResponse, MutableObjectInfoWithMetadata>,
          InvocationContext<ParseObjectInfoFromHeaders> {

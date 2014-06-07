@@ -63,7 +63,6 @@ import com.google.common.util.concurrent.ListenableFuture;
 /**
  * Provides access to amazon-specific S3 features
  * 
- * @author Adrian Cole, Jeremy Whitlock
  * @deprecated please use
  *             {@code org.jclouds.ContextBuilder#buildApi(AWSS3Client.class)}
  *             as {@link AWSS3AsyncClient} interface will be removed in jclouds 1.7.

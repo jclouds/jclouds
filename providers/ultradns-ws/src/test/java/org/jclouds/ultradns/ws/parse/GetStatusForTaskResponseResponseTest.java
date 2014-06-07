@@ -27,9 +27,6 @@ import org.jclouds.ultradns.ws.domain.Task.StatusCode;
 import org.jclouds.ultradns.ws.xml.TaskHandler;
 import org.testng.annotations.Test;
 
-/**
- * @author Adrian Cole
- */
 @Test(testName = "GetStatusForTaskResponseResponseTest")
 public class GetStatusForTaskResponseResponseTest extends BaseHandlerTest {
 

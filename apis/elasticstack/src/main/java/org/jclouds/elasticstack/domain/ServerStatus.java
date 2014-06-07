@@ -18,10 +18,6 @@ package org.jclouds.elasticstack.domain;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
-/**
- * 
- * @author Adrian Cole
- */
 public enum ServerStatus {
    ACTIVE, STOPPED, PAUSED, DUMPED, DEAD, UNRECOGNIZED;
    public String value() {

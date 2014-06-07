@@ -25,10 +25,6 @@ import org.jclouds.logging.Logger;
 import org.jclouds.util.Strings2;
 import org.testng.annotations.Test;
 
-/**
- * 
- * @author Adrian Cole
- */
 @Test(groups = "unit", sequential = true)
 public class WireTest {
 

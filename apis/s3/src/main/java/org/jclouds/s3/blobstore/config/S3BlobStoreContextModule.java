@@ -44,8 +44,6 @@ import com.google.inject.TypeLiteral;
 
 /**
  * Configures the {@link S3BlobStoreContext}; requires {@link S3AsyncBlobStore} bound.
- * 
- * @author Adrian Cole
  */
 public class S3BlobStoreContextModule extends AbstractModule {
 

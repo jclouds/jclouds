@@ -37,9 +37,6 @@ import com.google.inject.AbstractModule;
 import com.google.inject.Guice;
 import com.google.inject.TypeLiteral;
 
-/**
- * @author Adam Lowe
- */
 @Test(groups = "unit", testName = "CreateUniqueKeyPairTest")
 public class CreateUniqueKeyPairTest {
 

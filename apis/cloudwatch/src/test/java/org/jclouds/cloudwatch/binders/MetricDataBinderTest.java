@@ -32,8 +32,6 @@ import com.google.inject.Injector;
 
 /**
  * Tests behavior of {@link MetricDataBinder}.
- *
- * @author Jeremy Whitlock
  */
 @Test(groups = "unit", testName = "MetricDataBinderTest")
 public class MetricDataBinderTest {

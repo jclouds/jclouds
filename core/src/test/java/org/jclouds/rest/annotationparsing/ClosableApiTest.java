@@ -38,8 +38,6 @@ import com.google.inject.Module;
 /**
  * ensures that jclouds can be operated w/o reference to a context as the Api
  * itself is closeable.
- * 
- * @author Adrian Cole
  */
 @Test(groups = "unit", testName = "ClosableApiTest")
 public class ClosableApiTest {

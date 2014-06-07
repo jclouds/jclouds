@@ -32,10 +32,6 @@ import org.jclouds.location.Zone;
 import com.google.common.base.Function;
 import com.google.common.base.Supplier;
 
-/**
- * 
- * @author Adrian Cole
- */
 @Singleton
 public class ZoneToEndpoint implements Function<Object, URI> {
 

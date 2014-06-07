@@ -36,9 +36,6 @@ import com.google.common.base.Supplier;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Iterables;
 
-/**
- * @author Adrian Cole
- */
 @Singleton
 public class DirectoryEntryListToResourceMetadataList implements
          Function<BoundedSet<? extends DirectoryEntry>, PageSet<? extends StorageMetadata>> {

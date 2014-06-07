@@ -37,8 +37,6 @@ import com.google.inject.TypeLiteral;
 
 /**
  * Tests behavior of {@code ParseContainerCDNMetadataListFromJsonResponse}
- * 
- * @author Adrian Cole
  */
 @Test(groups = "unit")
 public class ParseContainerCDNMetadataListFromJsonResponseTest {

@@ -48,8 +48,6 @@ import com.google.common.collect.ImmutableSet;
  * templateBuilder.options(inboundPorts(22, 80, 8080, 443));
  * Set<? extends NodeMetadata> set = api.createNodesInGroup(tag, 2, templateBuilder.build());
  * <code>
- * 
- * @author Adam Lowe
  */
 public class NovaTemplateOptions extends TemplateOptions implements Cloneable {
    @Override

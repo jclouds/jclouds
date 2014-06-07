@@ -30,9 +30,6 @@ import com.google.common.base.Supplier;
 
 /**
  * Adds a timestamp to the query line so that cache is invalidated.
- * 
- * @author Mike Mayo
- * 
  */
 @Singleton
 public class AddTimestampQuery implements HttpRequestFilter {

@@ -46,9 +46,6 @@ import com.google.common.base.Suppliers;
 import com.google.common.collect.ImmutableSet;
 import com.google.inject.Guice;
 
-/**
- * @author Adrian Cole
- */
 //NOTE:without testName, this will not call @Before* and fail w/NPE during surefire
 @Test(groups = "unit", testName = "ServerToNodeMetadataTest")
 public class ServerToNodeMetadataTest {

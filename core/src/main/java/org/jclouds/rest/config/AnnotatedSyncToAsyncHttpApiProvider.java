@@ -30,7 +30,6 @@ import com.google.inject.TypeLiteral;
 
 /**
  * 
- * @author Adrian Cole
  * @deprecated please use {@link DelegatesToInvocationFunction} as async
  *             interface will be removed in jclouds 1.7.
  */

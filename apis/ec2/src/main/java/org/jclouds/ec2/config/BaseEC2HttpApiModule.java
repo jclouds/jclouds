@@ -38,8 +38,6 @@ import com.google.inject.Scopes;
 
 /**
  * Configures the EC2 connection.
- * 
- * @author Adrian Cole (EDIT: Nick Terry nterry@familysearch.org)
  */
 @ConfiguresHttpApi
 public abstract class BaseEC2HttpApiModule<A extends EC2Api> extends

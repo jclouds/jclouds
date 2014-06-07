@@ -24,9 +24,6 @@ import org.jclouds.ovf.VirtualSystem;
 import org.jclouds.ovf.Envelope.Builder;
 import org.jclouds.ovf.xml.internal.BaseEnvelopeHandler;
 
-/**
- * @author Adrian Cole
- */
 public class EnvelopeHandler extends
          BaseEnvelopeHandler<VirtualSystem, VirtualSystem.Builder, VirtualSystemHandler, Envelope, Envelope.Builder> {
 

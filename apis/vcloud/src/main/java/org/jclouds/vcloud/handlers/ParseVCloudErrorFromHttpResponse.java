@@ -42,9 +42,6 @@ import org.jclouds.vcloud.util.VCloudUtils;
 
 /**
  * This will parse and set an appropriate exception on the command object.
- * 
- * @author Adrian Cole
- * 
  */
 @Singleton
 public class ParseVCloudErrorFromHttpResponse implements HttpErrorHandler {

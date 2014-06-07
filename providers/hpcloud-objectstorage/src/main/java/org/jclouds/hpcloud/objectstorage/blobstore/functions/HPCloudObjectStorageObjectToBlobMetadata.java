@@ -24,9 +24,6 @@ import org.jclouds.blobstore.strategy.IfDirectoryReturnNameStrategy;
 import org.jclouds.openstack.swift.blobstore.functions.ObjectToBlobMetadata;
 import org.jclouds.openstack.swift.domain.ObjectInfo;
 
-/**
- * @author Adrian Cole
- */
 @Singleton
 public class HPCloudObjectStorageObjectToBlobMetadata extends ObjectToBlobMetadata {
 

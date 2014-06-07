@@ -40,8 +40,6 @@ import org.jclouds.util.Strings2;
  * This will parse and set an appropriate exception on the command object.
  * 
  * @see AzureStorageError
- * @author Adrian Cole
- * 
  */
 public class ParseAzureStorageErrorFromXmlContent implements HttpErrorHandler {
    @Resource

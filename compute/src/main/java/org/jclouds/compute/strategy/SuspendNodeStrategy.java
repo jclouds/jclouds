@@ -20,8 +20,6 @@ import org.jclouds.compute.domain.NodeMetadata;
 
 /**
  * Reboots a node unless it is in the state {@link org.jclouds.compute.domain.NodeState#SUSPENDED suspended}
- * 
- * @author Adrian Cole
  */
 public interface SuspendNodeStrategy {
 

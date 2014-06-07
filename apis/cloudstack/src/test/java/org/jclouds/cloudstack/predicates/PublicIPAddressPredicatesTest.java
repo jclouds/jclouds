@@ -21,10 +21,6 @@ import static org.jclouds.cloudstack.predicates.PublicIPAddressPredicates.availa
 import org.jclouds.cloudstack.domain.PublicIPAddress;
 import org.testng.annotations.Test;
 
-/**
- * 
- * @author Adrian Cole
- */
 @Test(groups = "unit")
 public class PublicIPAddressPredicatesTest {
 

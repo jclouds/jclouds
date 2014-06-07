@@ -29,9 +29,6 @@ import org.jclouds.ultradns.ws.internal.BaseUltraDNSWSApiExpectTest;
 import org.jclouds.ultradns.ws.parse.GetAllTasksResponseTest;
 import org.jclouds.ultradns.ws.parse.GetStatusForTaskResponseResponseTest;
 import org.testng.annotations.Test;
-/**
- * @author Adrian Cole
- */
 @Test(groups = "unit", testName = "TaskApiExpectTest")
 public class TaskApiExpectTest extends BaseUltraDNSWSApiExpectTest {
    HttpRequest runTest = HttpRequest.builder().method(POST)

@@ -21,10 +21,6 @@ import org.jclouds.elasticstack.ElasticStackApiLiveTest;
 import org.jclouds.elasticstack.domain.Server;
 import org.testng.annotations.Test;
 
-/**
- * 
- * @author Adrian Cole
- */
 @Test(groups = "live", singleThreaded = true, testName = "ServerloveManchesterApiLiveTest")
 public class ServerloveManchesterApiLiveTest extends ElasticStackApiLiveTest {
    public ServerloveManchesterApiLiveTest() {

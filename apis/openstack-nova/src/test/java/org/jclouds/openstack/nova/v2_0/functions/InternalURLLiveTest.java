@@ -32,7 +32,6 @@ import com.google.inject.Module;
  * Simple live test to check the correct loading of the internal endpoint
  * services.
  * 
- * @author Ignacio Mulas
  * 
  */
 @Test(groups = "live", testName = "InternalURLLiveTest")

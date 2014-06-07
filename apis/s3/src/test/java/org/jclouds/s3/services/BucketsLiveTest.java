@@ -56,11 +56,6 @@ import com.google.common.base.Throwables;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Iterables;
 
-/**
- * 
- * @author James Murty
- * @author Adrian Cole
- */
 @Test(groups = { "integration", "live" })
 public class BucketsLiveTest extends BaseBlobStoreIntegrationTest {
    public BucketsLiveTest() {

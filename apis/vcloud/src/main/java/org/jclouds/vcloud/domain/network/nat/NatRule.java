@@ -23,8 +23,6 @@ import org.jclouds.javax.annotation.Nullable;
  * Defines a rule associated with Nat
  * 
  * @since vcloud api 0.9
- * 
- * @author Adrian Cole
  */
 public interface NatRule {
    /**

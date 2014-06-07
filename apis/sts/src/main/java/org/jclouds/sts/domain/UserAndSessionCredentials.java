@@ -22,10 +22,6 @@ import org.jclouds.aws.domain.SessionCredentials;
 
 import com.google.common.base.Objects;
 
-/**
- * 
- * @author Adrian Cole
- */
 public final class UserAndSessionCredentials {
    public static Builder builder() {
       return new Builder();

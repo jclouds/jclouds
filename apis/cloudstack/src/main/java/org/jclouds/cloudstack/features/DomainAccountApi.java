@@ -36,7 +36,6 @@ import org.jclouds.rest.annotations.Unwrap;
  * Provides synchronous access to CloudStack Account features available to Domain
  * Admin users.
  *
- * @author Adrian Cole
  * @see <a href=
  *      "http://download.cloud.com/releases/2.2.0/api_2.2.12/TOC_Domain_Admin.html"
  *      />

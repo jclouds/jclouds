@@ -25,8 +25,6 @@ import com.google.common.collect.Multimap;
  * Value type for an HTTP Blob service. Blobs are stored in containers and consist of a
  * {@link MutableBlobMetadata#getName name}, {@link Payload payload}, and
  * {@link MutableBlobMetadata metadata}.
- * 
- * @author Adrian Cole
  */
 public interface Blob extends PayloadEnclosing, Comparable<Blob> {
    /**

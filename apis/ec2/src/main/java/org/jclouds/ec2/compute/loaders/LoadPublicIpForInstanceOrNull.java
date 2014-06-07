@@ -29,9 +29,6 @@ import com.google.common.base.Predicate;
 import com.google.common.cache.CacheLoader;
 import com.google.common.collect.Iterables;
 
-/**
- * @author Adrian Cole
- */
 @Singleton
 public class LoadPublicIpForInstanceOrNull extends CacheLoader<RegionAndName, String> {
    private final EC2Api client;

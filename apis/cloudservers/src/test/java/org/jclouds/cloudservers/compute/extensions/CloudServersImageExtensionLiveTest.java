@@ -24,9 +24,6 @@ import com.google.inject.Module;
 
 /**
  * Live test for cloudservers {@link ImageExtension} implementation
- * 
- * @author David Alves
- * 
  */
 @Test(groups = "live", singleThreaded = true, testName = "CloudServersImageExtensionLiveTest")
 public class CloudServersImageExtensionLiveTest extends BaseImageExtensionLiveTest {

@@ -29,7 +29,6 @@ import org.jclouds.providers.internal.BaseProviderMetadata;
 
 /**
  * Implementation of {@link org.jclouds.types.ProviderMetadata} for GoGrid.
- * @author Adrian Cole
  */
 public class GoGridProviderMetadata extends BaseProviderMetadata {
 

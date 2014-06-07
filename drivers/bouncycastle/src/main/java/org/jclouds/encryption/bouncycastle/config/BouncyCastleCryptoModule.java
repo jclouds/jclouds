@@ -23,9 +23,6 @@ import com.google.inject.AbstractModule;
 
 /**
  * Configures Crypto of type {@link BouncyCastleCrypto}
- * 
- * @author Adrian Cole
- * 
  */
 public class BouncyCastleCryptoModule extends AbstractModule {
 

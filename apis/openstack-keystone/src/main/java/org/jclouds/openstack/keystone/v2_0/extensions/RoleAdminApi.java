@@ -28,7 +28,6 @@ import com.google.common.collect.FluentIterable;
  * <p/>
  * 
  * @see org.jclouds.openstack.keystone.v2_0.extensions.RoleAdminAsyncApi
- * @author Pedro Navarro
  */
 @Beta
 @Extension(of = ServiceType.IDENTITY, namespace = ExtensionNamespaces.OS_KSADM)

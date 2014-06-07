@@ -26,8 +26,6 @@ import com.google.common.collect.ImmutableSet;
 
 /**
  * Tests possible uses of IpPermissions
- * 
- * @author Adrian Cole
  */
 @Test(testName = "IpPermissionsTest")
 public class IpPermissionsTest {

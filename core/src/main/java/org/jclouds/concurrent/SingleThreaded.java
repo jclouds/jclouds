@@ -24,9 +24,6 @@ import java.lang.annotation.Target;
 
 /**
  * designates that the object must not exist in an environment that spawns threads.
- * 
- * @author Adrian Cole
- * 
  */
 @Retention(RUNTIME)
 @Target(TYPE)

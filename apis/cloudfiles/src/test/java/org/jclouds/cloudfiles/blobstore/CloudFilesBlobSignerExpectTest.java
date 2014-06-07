@@ -40,8 +40,6 @@ import com.google.inject.Module;
 
 /**
  * Tests behavior of {@code SwiftBlobSigner}
- *
- * @author Adrian Cole
  */
 // NOTE:without testName, this will not call @Before* and fail w/NPE during
 // surefire

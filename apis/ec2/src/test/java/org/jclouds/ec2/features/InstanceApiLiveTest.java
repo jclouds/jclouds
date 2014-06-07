@@ -34,8 +34,6 @@ import com.google.common.collect.ImmutableMultimap;
 
 /**
  * Tests behavior of {@code EC2Api}
- * 
- * @author Adrian Cole, Andrew Bayer
  */
 @Test(groups = "live", singleThreaded = true, testName = "InstanceApiLiveTest")
 public class InstanceApiLiveTest extends BaseComputeServiceContextLiveTest {

@@ -30,7 +30,6 @@ import com.google.common.reflect.Invokable;
 import com.google.inject.Provider;
 
 /**
- * @author Adrian Cole
  * @deprecated will be removed in jclouds 1.7, as async interfaces are no longer supported.
  */
 @Deprecated

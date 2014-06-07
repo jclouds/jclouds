@@ -34,10 +34,6 @@ import static org.testng.Assert.assertEquals;
 
 import static com.google.common.hash.Hashing.md5;
 
-/**
- * 
- * @author Adrian Cole
- */
 @Test(groups = "live")
 public class AzureBlobIntegrationLiveTest extends BaseBlobIntegrationTest {
     private ByteSource oneHundredOneConstitutions;

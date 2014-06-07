@@ -18,10 +18,6 @@ package org.jclouds.sts.internal;
 
 import org.jclouds.sts.STSApi;
 
-/**
- * 
- * @author Adrian Cole
- */
 public class BaseSTSApiExpectTest extends BaseSTSExpectTest<STSApi> {
 
 }

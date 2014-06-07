@@ -30,10 +30,6 @@ import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.ImmutableSet.Builder;
 import com.google.inject.Injector;
 
-/**
- * 
- * @author Adrian Cole
- */
 public class CloudIdentityAuthenticationModule extends KeystoneAuthenticationModule {
 
    @Override

@@ -41,8 +41,6 @@ import org.jclouds.rest.annotations.ResponseParser;
  * Session persistence is a feature of the load balancing service that forces multiple requests from clients to be 
  * directed to the same node. This is common with many web applications that do not inherently share application 
  * state between back-end servers. Two session persistence modes are available, HTTP Cookie and Source IP.
- *  
- * @author Everett Toews
  */
 @RequestFilters(AuthenticateRequest.class)
 public interface SessionPersistenceApi {

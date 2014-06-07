@@ -29,8 +29,6 @@ import javax.inject.Qualifier;
 /**
  * Implies that the object can address {@link org.jclouds.http.HttpResponse}s that contain status
  * code 3xx.
- * 
- * @author Adrian Cole
  */
 @Qualifier
 @Target( { FIELD, PARAMETER, METHOD })

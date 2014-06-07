@@ -46,10 +46,6 @@ import org.jclouds.ec2.domain.KeyPair;
 import org.jclouds.ec2.options.RunInstancesOptions;
 import org.jclouds.javax.annotation.Nullable;
 
-/**
- * 
- * @author Adrian Cole
- */
 @Singleton
 public class CreateKeyPairAndSecurityGroupsAsNeededAndReturnRunOptions {
    @VisibleForTesting

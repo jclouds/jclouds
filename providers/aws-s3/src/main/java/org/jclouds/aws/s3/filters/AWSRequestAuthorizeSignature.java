@@ -44,7 +44,6 @@ import com.google.common.base.Supplier;
  * @see <a href=
  *      "http://docs.amazonwebservices.com/AmazonS3/2006-03-01/dev/index.html?RESTAuthentication.html"
  *      />
- * 
  */
 @Singleton
 public class AWSRequestAuthorizeSignature extends RequestAuthorizeSignature {

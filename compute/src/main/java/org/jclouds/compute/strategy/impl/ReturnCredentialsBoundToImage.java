@@ -33,9 +33,6 @@ import org.jclouds.javax.annotation.Nullable;
 
 import com.google.common.base.Objects;
 
-/**
- * @author Adrian Cole
- */
 @Singleton
 public class ReturnCredentialsBoundToImage implements PopulateDefaultLoginCredentialsForImageStrategy {
 

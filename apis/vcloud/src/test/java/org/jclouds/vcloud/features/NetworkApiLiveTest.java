@@ -19,9 +19,6 @@ package org.jclouds.vcloud.features;
 import org.jclouds.vcloud.internal.BaseVCloudApiLiveTest;
 import org.testng.annotations.Test;
 
-/**
- * @author Adrian Cole
- */
 @Test(groups = "live", enabled = true, singleThreaded = true, testName = "NetworkApiLiveTest")
 public class NetworkApiLiveTest extends BaseVCloudApiLiveTest {
 

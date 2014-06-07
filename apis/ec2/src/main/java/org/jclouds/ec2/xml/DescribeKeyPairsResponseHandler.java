@@ -36,7 +36,6 @@ import com.google.common.collect.Sets;
  * 
  * @see <a href="http://docs.amazonwebservices.com/AWSEC2/latest/APIReference/ApiReference-query-DescribeKeyPairs.html"
  *      />
- * @author Adrian Cole
  */
 public class DescribeKeyPairsResponseHandler extends ParseSax.HandlerForGeneratedRequestWithResult<Set<KeyPair>> {
    private final Supplier<String> defaultRegion;

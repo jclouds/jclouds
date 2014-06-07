@@ -27,7 +27,6 @@ import org.jclouds.providers.internal.BaseProviderMetadata;
  * Implementation of @ link org.jclouds.types.ProviderMetadata} for Amazon's Route53
  * provider.
 *
-* @author Adrian Cole
 */
 public class AWSRoute53ProviderMetadata extends BaseProviderMetadata {
 

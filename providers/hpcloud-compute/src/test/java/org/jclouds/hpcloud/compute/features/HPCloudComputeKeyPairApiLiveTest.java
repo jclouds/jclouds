@@ -19,10 +19,6 @@ package org.jclouds.hpcloud.compute.features;
 import org.jclouds.openstack.nova.v2_0.extensions.KeyPairApiLiveTest;
 import org.testng.annotations.Test;
 
-/**
- * 
- * @author Michael Arnold
- */
 @Test(groups = "live", testName = "HPCloudComputeKeyPairApiLiveTest")
 public class HPCloudComputeKeyPairApiLiveTest extends KeyPairApiLiveTest {
    public HPCloudComputeKeyPairApiLiveTest() {

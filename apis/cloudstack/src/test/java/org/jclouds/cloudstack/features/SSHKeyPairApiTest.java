@@ -41,8 +41,6 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.reflect.Invokable;
 /**
  * Tests behavior of {@code SSHKeyPairApi}
- *
- * @author Vijay Kiran
  */
 @Test(groups = "unit", testName = "SSHKeyPairApiTest")
 public class SSHKeyPairApiTest extends BaseCloudStackApiTest<SSHKeyPairApi> {

@@ -23,10 +23,6 @@ import org.testng.annotations.Test;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.reflect.TypeToken;
 
-/**
- * 
- * @author Adrian Cole
- */
 @Test(groups = "unit", testName = "SQSApiMetadataTest")
 public class SQSApiMetadataTest extends BaseHttpApiMetadataTest {
 

@@ -40,9 +40,6 @@ import com.google.common.collect.ImmutableMap;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 
-/**
- * @author Adrian Cole
- */
 @Test(groups = "unit")
 public class ParseAsyncJobFromHttpResponseTest {
 

@@ -51,9 +51,6 @@ import com.google.common.collect.Sets;
 
 /**
  * Base test for {@link SecurityGroupExtension} implementations.
- * 
- * @author Andrew Bayer
- * 
  */
 public abstract class BaseSecurityGroupExtensionLiveTest extends BaseComputeServiceContextLiveTest {
 

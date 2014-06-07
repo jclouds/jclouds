@@ -20,8 +20,6 @@ package org.jclouds.cloudwatch.domain;
  * Constants interface for the AWS provided namespaces as of 2012-04-24.
  *
  * @see <a href="http://docs.amazonwebservices.com/AmazonCloudWatch/latest/DeveloperGuide/CW_Support_For_AWS.html#aws-namespaces" />
- *
- * @author Jeremy Whitlock
  */
 public interface Namespaces {
 

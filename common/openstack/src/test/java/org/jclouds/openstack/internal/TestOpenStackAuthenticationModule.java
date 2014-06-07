@@ -30,10 +30,6 @@ import org.jclouds.openstack.reference.AuthHeaders;
 import com.google.common.base.Supplier;
 import com.google.common.collect.ImmutableMap;
 
-/**
- * 
- * @author Adrian Cole
- */
 public class TestOpenStackAuthenticationModule extends OpenStackAuthenticationModule {
    @Override
    protected void configure() {

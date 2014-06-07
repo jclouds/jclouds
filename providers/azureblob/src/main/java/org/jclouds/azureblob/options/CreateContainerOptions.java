@@ -36,7 +36,6 @@ import com.google.common.collect.Multimap;
  * <code> *
  * 
  * @see <a href="http://msdn.microsoft.com/en-us/library/dd179466.aspx" />
- * @author Adrian Cole
  */
 public class CreateContainerOptions extends CreateOptions {
    public static final CreateContainerOptions NONE = new CreateContainerOptions();

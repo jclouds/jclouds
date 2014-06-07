@@ -41,8 +41,6 @@ import com.google.inject.Module;
 
 /**
  * Implementation of {@link org.jclouds.types.ProviderMetadata} for Rackspace Cloud Databases.
- * 
- * @author Zack Shoylev
  */
 public class CloudDatabasesUSProviderMetadata extends BaseProviderMetadata {
 

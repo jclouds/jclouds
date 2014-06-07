@@ -25,11 +25,6 @@ import org.jclouds.io.MutableContentMetadata;
 
 import com.google.inject.ImplementedBy;
 
-/**
- * 
- * @author Adrian Cole
- * 
- */
 @ImplementedBy(MutableBlobPropertiesImpl.class)
 public interface MutableBlobProperties extends BlobProperties {
    /**

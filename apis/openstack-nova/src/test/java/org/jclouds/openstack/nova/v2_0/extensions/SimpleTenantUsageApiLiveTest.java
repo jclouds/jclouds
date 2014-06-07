@@ -28,8 +28,6 @@ import com.google.common.base.Optional;
 
 /**
  * Tests behavior of SimpleTenantUsageApi
- *
- * @author Adam Lowe
  */
 @Test(groups = "live", testName = "SimpleTenantUsageApiLiveTest")
 public class SimpleTenantUsageApiLiveTest extends BaseNovaApiLiveTest {

@@ -33,8 +33,6 @@ import org.jclouds.io.Payloads;
 /**
  * if the redirection URL is a Job, do not replay the original request; just get
  * the job.
- * 
- * @author Adrian Cole
  */
 @Singleton
 public class GetJobRedirectionRetryHandler extends RedirectionRetryHandler {

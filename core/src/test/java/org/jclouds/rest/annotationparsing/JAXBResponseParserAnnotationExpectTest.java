@@ -42,8 +42,6 @@ import com.google.common.util.concurrent.ListenableFuture;
 
 /**
  * Tests the use of the {@link JAXBResponseParser} annotation.
- * 
- * @author Ignasi Barrera
  */
 @Test(groups = "unit", testName = "JAXBResponseParserAnnotationExpectTest")
 public class JAXBResponseParserAnnotationExpectTest extends

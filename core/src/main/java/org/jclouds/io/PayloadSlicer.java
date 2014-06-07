@@ -21,10 +21,6 @@ import org.jclouds.io.internal.BasePayloadSlicer;
 import com.google.inject.ImplementedBy;
 
 
-/**
- * 
- * @author Adrian Cole
- */
 @ImplementedBy(BasePayloadSlicer.class)
 public interface PayloadSlicer {
    /**

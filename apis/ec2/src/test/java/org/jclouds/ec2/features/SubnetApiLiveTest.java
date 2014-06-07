@@ -36,9 +36,6 @@ import com.google.common.collect.ImmutableSet;
 
 /**
  * tests ability to list/filter subnets
- * 
- * @author Adrian Cole
- * @author Andrew Bayer
  */
 @Test(groups = "live")
 public class SubnetApiLiveTest extends BaseEC2ApiLiveTest {

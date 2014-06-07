@@ -41,10 +41,6 @@ import com.google.inject.Provides;
 import com.google.inject.TypeLiteral;
 import com.google.inject.name.Names;
 
-/**
- * 
- * @author Adrian Cole
- */
 @ConfiguresNodeStore
 @Beta
 public class YamlNodeStoreModule extends AbstractModule {

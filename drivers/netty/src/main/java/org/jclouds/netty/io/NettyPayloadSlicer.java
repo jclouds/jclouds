@@ -24,10 +24,6 @@ import org.jclouds.io.Payload;
 import org.jclouds.io.Payloads;
 import org.jclouds.io.internal.BasePayloadSlicer;
 
-/**
- * 
- * @author Adrian Cole
- */
 @Singleton
 public class NettyPayloadSlicer extends BasePayloadSlicer {
 

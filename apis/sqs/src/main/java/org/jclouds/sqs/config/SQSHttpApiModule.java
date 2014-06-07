@@ -34,8 +34,6 @@ import org.jclouds.sqs.handlers.SQSErrorRetryHandler;
 
 /**
  * Configures the SQS connection.
- * 
- * @author Adrian Cole
  */
 @ConfiguresHttpApi
 public class SQSHttpApiModule extends FormSigningHttpApiModule<SQSApi> {

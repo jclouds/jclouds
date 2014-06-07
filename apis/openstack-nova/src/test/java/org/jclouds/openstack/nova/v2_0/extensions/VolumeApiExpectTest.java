@@ -44,8 +44,6 @@ import com.google.common.collect.Iterables;
 
 /**
  * Tests VolumeApi guice wiring and parsing
- *
- * @author Adam Lowe
  */
 @Test(groups = "unit", testName = "VolumeApiExpectTest")
 public class VolumeApiExpectTest extends BaseNovaApiExpectTest {

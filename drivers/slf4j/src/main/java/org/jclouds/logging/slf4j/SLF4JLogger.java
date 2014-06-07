@@ -21,9 +21,6 @@ import org.jclouds.logging.Logger;
 
 /**
  * {@link org.slf4j.LoggerFactory} implementation of {@link Logger}.
- * 
- * @author Adrian Cole
- * 
  */
 public class SLF4JLogger extends BaseLogger {
    static {

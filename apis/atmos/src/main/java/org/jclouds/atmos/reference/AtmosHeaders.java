@@ -20,8 +20,6 @@ package org.jclouds.atmos.reference;
  * Query parameters common to Atmos apis.
  * 
  * @see <a href="https://community.emc.com/community/labs/atmos_online" />
- * @author Adrian Cole
- * 
  */
 public interface AtmosHeaders {
 

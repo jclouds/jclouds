@@ -33,7 +33,6 @@ import org.jclouds.azure.storage.options.ListOptions;
  * <code> *
  * 
  * @see <a href="http://msdn.microsoft.com/en-us/library/dd179466.aspx" />
- * @author Adrian Cole
  */
 public class ListBlobsOptions extends ListOptions {
 

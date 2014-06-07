@@ -27,10 +27,6 @@ import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.ImmutableSet.Builder;
 import com.google.inject.Inject;
 
-/**
- * 
- * @author Adrian Cole
- */
 public class TaskListHandler extends ParseSax.HandlerForGeneratedRequestWithResult<FluentIterable<Task>> {
 
    private final TaskHandler taskHandler;

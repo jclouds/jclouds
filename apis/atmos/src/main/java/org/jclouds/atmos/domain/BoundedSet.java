@@ -23,11 +23,6 @@ import org.jclouds.javax.annotation.Nullable;
 
 import com.google.inject.ImplementedBy;
 
-/**
- * 
- * @author Adrian Cole
- * 
- */
 @ImplementedBy(BoundedLinkedHashSet.class)
 public interface BoundedSet<T> extends Set<T> {
 

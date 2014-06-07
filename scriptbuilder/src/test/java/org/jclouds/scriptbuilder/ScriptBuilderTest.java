@@ -44,8 +44,6 @@ import com.google.common.io.Resources;
 
 /**
  * Tests possible uses of ScriptBuilder
- * 
- * @author Adrian Cole
  */
 public class ScriptBuilderTest {
 

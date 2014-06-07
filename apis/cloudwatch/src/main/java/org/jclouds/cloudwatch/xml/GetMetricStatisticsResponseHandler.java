@@ -27,9 +27,6 @@ import org.xml.sax.SAXException;
 
 import com.google.common.collect.Sets;
 
-/**
- * @author Adrian Cole
- */
 public class GetMetricStatisticsResponseHandler extends ParseSax.HandlerWithResult<Set<Datapoint>> {
 
    private Set<Datapoint> datapoints = Sets.newLinkedHashSet();

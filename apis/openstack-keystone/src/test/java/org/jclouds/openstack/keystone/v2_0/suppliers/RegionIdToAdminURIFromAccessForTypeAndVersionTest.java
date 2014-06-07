@@ -40,9 +40,6 @@ import com.google.inject.Provides;
 import com.google.inject.TypeLiteral;
 import com.google.inject.assistedinject.FactoryModuleBuilder;
 
-/**
- * @author Adam Lowe
- */
 @Test(groups = "unit", testName = "RegionIdToAdminURIFromAccessForTypeAndVersionTest")
 public class RegionIdToAdminURIFromAccessForTypeAndVersionTest {
    private final RegionIdToAdminURISupplier.Factory factory = Guice.createInjector(new AbstractModule() {

@@ -27,8 +27,6 @@ import com.google.common.base.Objects.ToStringHelper;
 
 /**
  * Class OSType
- *
- * @author Adrian Cole
  */
 public class OSType implements Comparable<OSType> {
 

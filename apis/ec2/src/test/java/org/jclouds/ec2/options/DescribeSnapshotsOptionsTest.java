@@ -28,8 +28,6 @@ import org.testng.annotations.Test;
 
 /**
  * Tests possible uses of DescribeSnapshotsOptions and DescribeSnapshotsOptions.Builder.*
- * 
- * @author Adrian Cole
  */
 public class DescribeSnapshotsOptionsTest {
 

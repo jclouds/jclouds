@@ -33,8 +33,6 @@ import com.google.common.collect.Iterables;
 
 /**
  * Tests behavior of ServerWithSecurityGroupsApi
- *
- * @author Adam Lowe
  */
 @Test(groups = "live", testName = "ServerWithSecurityGroupsApiLiveTest", singleThreaded = true)
 public class ServerWithSecurityGroupsApiLiveTest extends BaseNovaApiLiveTest {

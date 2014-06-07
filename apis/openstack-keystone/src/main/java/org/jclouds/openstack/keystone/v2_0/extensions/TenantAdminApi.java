@@ -29,7 +29,6 @@ import com.google.common.annotations.Beta;
  * <p/>
  * 
  * @see org.jclouds.openstack.keystone.v2_0.extensions.TenantAdminAsyncApi
- * @author Pedro Navarro
  */
 @Beta
 @Extension(of = ServiceType.IDENTITY, namespace = ExtensionNamespaces.OS_KSADM)

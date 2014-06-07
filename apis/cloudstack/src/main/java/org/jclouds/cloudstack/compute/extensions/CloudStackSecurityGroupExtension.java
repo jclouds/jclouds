@@ -51,8 +51,6 @@ import com.google.common.collect.Multimap;
 /**
  * An extension to compute service to allow for the manipulation of {@link org.jclouds.compute.domain.SecurityGroup}s. Implementation
  * is optional by providers.
- *
- * @author Andrew Bayer
  */
 public class CloudStackSecurityGroupExtension implements SecurityGroupExtension {
    protected final CloudStackApi api;

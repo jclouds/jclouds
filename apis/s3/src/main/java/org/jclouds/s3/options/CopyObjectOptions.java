@@ -68,7 +68,6 @@ import com.google.common.collect.Multimap;
  * );
  * <code>
  * 
- * @author Adrian Cole
  * @see <a
  *      href="http://docs.amazonwebservices.com/AmazonS3/2006-03-01/index.html?RESTObjectCOPY.html?"
  *      />

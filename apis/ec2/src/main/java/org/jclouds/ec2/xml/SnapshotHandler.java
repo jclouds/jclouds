@@ -30,10 +30,6 @@ import org.jclouds.location.Region;
 
 import com.google.common.base.Supplier;
 
-/**
- * 
- * @author Adrian Cole
- */
 public class SnapshotHandler extends ParseSax.HandlerForGeneratedRequestWithResult<Snapshot> {
    private StringBuilder currentText = new StringBuilder();
 

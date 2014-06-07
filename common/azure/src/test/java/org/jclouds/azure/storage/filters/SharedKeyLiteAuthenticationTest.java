@@ -41,10 +41,6 @@ import com.google.common.net.HttpHeaders;
 import com.google.inject.Injector;
 import com.google.inject.Module;
 
-/**
- * 
- * @author Adrian Cole
- */
 @Test(groups = "unit")
 public class SharedKeyLiteAuthenticationTest {
 

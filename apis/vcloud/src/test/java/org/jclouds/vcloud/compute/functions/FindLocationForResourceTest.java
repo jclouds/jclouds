@@ -33,8 +33,6 @@ import com.google.common.collect.ImmutableSet;
 
 /**
  * Tests behavior of {@code FindLocationForResource}
- * 
- * @author Adrian Cole
  */
 @Test(groups = "unit")
 public class FindLocationForResourceTest {

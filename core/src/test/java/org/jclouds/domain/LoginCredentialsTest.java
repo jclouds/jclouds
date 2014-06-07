@@ -22,9 +22,6 @@ import org.testng.annotations.Test;
 
 import com.google.common.base.Optional;
 
-/**
- * @author Adrian Cole
- */
 @Test(groups = "unit", testName = "LoginCredentialsTest")
 public class LoginCredentialsTest {
 

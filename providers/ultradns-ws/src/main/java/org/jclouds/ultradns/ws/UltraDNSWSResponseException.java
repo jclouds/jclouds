@@ -22,7 +22,6 @@ import org.jclouds.http.HttpResponseException;
 
 /**
  * @see UltraDNSWSError
- * @author Adrian Cole
  */
 public class UltraDNSWSResponseException extends HttpResponseException {
 

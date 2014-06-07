@@ -47,8 +47,6 @@ import com.squareup.okhttp.OkHttpClient;
 /**
  * Implementation of the <code>HttpCommandExecutorService</code> that uses the
  * OkHttp client to support modern HTTP methods such as PATCH.
- * 
- * @author Ignasi Barrera
  */
 @Singleton
 public class OkHttpCommandExecutorService extends JavaUrlHttpCommandExecutorService {

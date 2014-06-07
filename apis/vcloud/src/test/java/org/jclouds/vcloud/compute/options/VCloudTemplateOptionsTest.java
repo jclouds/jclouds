@@ -34,8 +34,6 @@ import org.testng.annotations.Test;
 /**
  * Tests possible uses of VCloudTemplateOptions and
  * VCloudTemplateOptions.Builder.*
- * 
- * @author Adrian Cole
  */
 public class VCloudTemplateOptionsTest {
    @Test

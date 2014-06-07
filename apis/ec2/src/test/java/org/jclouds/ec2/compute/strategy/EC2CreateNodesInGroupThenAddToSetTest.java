@@ -60,9 +60,6 @@ import org.jclouds.ec2.options.RunInstancesOptions;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-/**
- * @author Adrian Cole
- */
 @Test(groups = "unit", singleThreaded = true, testName = "EC2CreateNodesInGroupThenAddToSetTest")
 public class EC2CreateNodesInGroupThenAddToSetTest {
 

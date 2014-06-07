@@ -29,8 +29,6 @@ import com.google.inject.Module;
 
 /**
  * Implementation of {@link org.jclouds.types.ProviderMetadata} for Serverlove Manchester.
- * 
- * @author Adrian Cole
  */
 public class ServerloveManchesterProviderMetadata extends BaseProviderMetadata {
 

@@ -25,8 +25,6 @@ import com.google.common.base.Objects.ToStringHelper;
 
 /**
  * Used to update Nodes.
- * 
- * @author Everett Toews
  */
 public class UpdateNode {
    private final Condition condition;

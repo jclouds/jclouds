@@ -33,7 +33,6 @@ import com.google.common.primitives.Longs;
 /**
  * Class ServerImage
  * 
- * @author Oleksiy Yarmula
 */
 public class ServerImage implements Comparable<ServerImage> {
 

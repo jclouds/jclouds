@@ -26,9 +26,6 @@ import org.testng.annotations.Test;
 import com.google.common.base.Charsets;
 import com.google.common.io.Resources;
 
-/**
- * @author Adrian Cole
- */
 @Test(groups = "unit", singleThreaded = true, testName = "AdminAccessTest")
 public class AdminAccessTest {
 

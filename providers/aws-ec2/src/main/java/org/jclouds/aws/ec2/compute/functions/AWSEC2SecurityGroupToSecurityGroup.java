@@ -31,8 +31,6 @@ import com.google.inject.Inject;
 /**
  * A function for transforming an EC2-specific SecurityGroup into a generic
  * SecurityGroup object.
- * 
- * @author Andrew Bayer
  */
 @Singleton
 public class AWSEC2SecurityGroupToSecurityGroup extends EC2SecurityGroupToSecurityGroup {

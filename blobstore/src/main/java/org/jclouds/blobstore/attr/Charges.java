@@ -23,9 +23,6 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
 
-/**
- * @author Adrian Cole
- */
 @Target( { TYPE, METHOD })
 @Retention(RUNTIME)
 public @interface Charges {

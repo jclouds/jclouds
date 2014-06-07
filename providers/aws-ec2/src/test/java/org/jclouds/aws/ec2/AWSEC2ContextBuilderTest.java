@@ -34,9 +34,6 @@ import org.testng.annotations.Test;
 import com.google.inject.Key;
 import com.google.inject.TypeLiteral;
 
-/**
- * @author Adrian Cole
- */
 @Test(groups = "unit", testName = "AWSEC2ContextBuilderTest")
 public class AWSEC2ContextBuilderTest {
    private Map<String, String> queriesForProperties(Properties input) {

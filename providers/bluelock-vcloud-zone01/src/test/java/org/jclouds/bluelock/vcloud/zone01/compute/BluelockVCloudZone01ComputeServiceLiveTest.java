@@ -19,11 +19,6 @@ package org.jclouds.bluelock.vcloud.zone01.compute;
 import org.jclouds.vcloud.compute.VCloudComputeServiceLiveTest;
 import org.testng.annotations.Test;
 
-/**
- * 
- * 
- * @author Adrian Cole
- */
 @Test(groups = "live", enabled = true, singleThreaded = true, testName = "BluelockVCloudZone01ComputeServiceLiveTest")
 public class BluelockVCloudZone01ComputeServiceLiveTest extends VCloudComputeServiceLiveTest {
    public BluelockVCloudZone01ComputeServiceLiveTest() {

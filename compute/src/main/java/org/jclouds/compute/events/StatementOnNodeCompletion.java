@@ -27,8 +27,6 @@ import com.google.common.base.Objects.ToStringHelper;
 
 /**
  * A statement that completed execution on a node.
- * 
- * @author Adrian Cole
  */
 @Beta
 public class StatementOnNodeCompletion extends StatementOnNode {

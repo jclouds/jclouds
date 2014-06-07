@@ -22,11 +22,6 @@ import org.testng.annotations.Test;
 
 import com.google.inject.Module;
 
-/**
- * 
- * @author Adrian Cole
- * 
- */
 @Test(groups = "live", singleThreaded = true, testName = "CloudServersUKImageExtensionLivetest")
 public class CloudServersUKImageExtensionLivetest extends BaseImageExtensionLiveTest {
 

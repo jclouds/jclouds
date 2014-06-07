@@ -34,9 +34,6 @@ import org.jclouds.util.Closeables2;
 
 import com.google.common.reflect.TypeToken;
 
-/**
- * @author Adrian Cole
- */
 @Singleton
 public class BlobStoreContextImpl extends BaseView implements BlobStoreContext {
    private final AsyncBlobStore ablobStore;

@@ -18,7 +18,5 @@
  * This package contains an HP Cloud Object Storage client implemented by {@link org.jclouds.http.HttpCommandExecutorService} commands.
  *
  * @see <a href="https://manage.hpcloud.com/pages/build/docs/objectstorage-lvs/api" />
- * 
- * @author Jeremy Daggett
  */
 package org.jclouds.hpcloud.objectstorage;

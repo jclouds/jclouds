@@ -26,9 +26,6 @@ import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import com.google.common.collect.FluentIterable;
 
-/**
- * @author Zack Shoylev
- */
 @Test(groups = "live", testName = "FlavorApiLiveTest")
 public class FlavorApiLiveTest extends BaseTroveApiLiveTest {
 

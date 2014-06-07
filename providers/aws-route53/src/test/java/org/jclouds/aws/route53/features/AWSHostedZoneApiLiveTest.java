@@ -19,9 +19,6 @@ package org.jclouds.aws.route53.features;
 import org.jclouds.route53.features.HostedZoneApiLiveTest;
 import org.testng.annotations.Test;
 
-/**
- * @author Adrian Cole
- */
 @Test(groups = "live", testName = "AWSHostedZoneApiLiveTest")
 public class AWSHostedZoneApiLiveTest extends HostedZoneApiLiveTest {
    public AWSHostedZoneApiLiveTest() {

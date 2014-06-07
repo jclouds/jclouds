@@ -74,7 +74,6 @@ import com.google.common.util.concurrent.ListeningExecutorService;
 /**
  * defines the connection between the {@link GleSYSApi} implementation and
  * the jclouds {@link ComputeService}
- * 
  */
 @Singleton
 public class GleSYSComputeServiceAdapter implements ComputeServiceAdapter<ServerDetails, Hardware, OSTemplate, String> {

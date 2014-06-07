@@ -20,8 +20,6 @@ import org.jclouds.compute.domain.NodeMetadata;
 
 /**
  * returns all details associated to the node below.
- * 
- * @author Adrian Cole
  */
 public interface GetNodeMetadataStrategy {
 

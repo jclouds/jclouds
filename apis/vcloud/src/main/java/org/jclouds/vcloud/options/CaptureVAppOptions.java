@@ -18,11 +18,6 @@ package org.jclouds.vcloud.options;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
-/**
- * 
- * @author Adrian Cole
- * 
- */
 public class CaptureVAppOptions {
 
    private String description;

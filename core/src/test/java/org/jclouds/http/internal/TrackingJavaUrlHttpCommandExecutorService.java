@@ -49,8 +49,6 @@ import com.google.inject.TypeLiteral;
 
 /**
  * Records all http commands submitted, storing them in the given List<HttpCommand>.
- * 
- * @author Adrian Cole
  */
 @Singleton
 public class TrackingJavaUrlHttpCommandExecutorService extends JavaUrlHttpCommandExecutorService {

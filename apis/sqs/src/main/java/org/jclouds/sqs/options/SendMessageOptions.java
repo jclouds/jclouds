@@ -27,8 +27,6 @@ import com.google.common.collect.Multimap;
  * @see <a
  *      href="http://docs.amazonwebservices.com/AWSSimpleQueueService/2011-10-01/APIReference/Query_QuerySendMessage.html"
  *      >docs</a>
- * 
- * @author Adrian Cole
  */
 public class SendMessageOptions extends BaseHttpRequestOptions implements Cloneable {
 

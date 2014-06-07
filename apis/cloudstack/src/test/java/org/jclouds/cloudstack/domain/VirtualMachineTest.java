@@ -23,8 +23,6 @@ import org.testng.annotations.Test;
 
 /**
  * Tests for the VirtualMachine class.
- *
- * @author Richard Downer
  */
 @Test(groups = "unit", testName = "VirtualMachineTest")
 public class VirtualMachineTest {

@@ -40,8 +40,6 @@ import com.google.common.io.FileBackedOutputStream;
 
 /**
  * Logs data to the wire LOG, similar to {@code org.apache.HttpWire.impl.conn.Wire}
- * 
- * @author Adrian Cole
  */
 public abstract class Wire {
 

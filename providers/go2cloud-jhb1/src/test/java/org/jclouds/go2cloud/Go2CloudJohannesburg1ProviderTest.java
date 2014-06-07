@@ -22,8 +22,6 @@ import org.testng.annotations.Test;
 
 /**
  * The Go2CloudJohannesburg1ProviderTest tests the {@link Go2CloudJohannesburg1ProviderMetadata} class.
- * 
- * @author Adrian Cole
  */
 @Test(groups = "unit", testName = "Go2CloudJohannesburg1ProviderTest")
 public class Go2CloudJohannesburg1ProviderTest extends BaseProviderMetadataTest {

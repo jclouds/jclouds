@@ -29,8 +29,6 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.reflect.Invokable;
 /**
  * Tests behavior of {@code GlobalStoragePoolApi}
- *
- * @author Richard Downer
  */
 @Test(groups = "unit", testName = "GlobalStoragePoolApiTest")
 public class GlobalStoragePoolApiTest extends BaseCloudStackApiTest<GlobalStoragePoolApi> {

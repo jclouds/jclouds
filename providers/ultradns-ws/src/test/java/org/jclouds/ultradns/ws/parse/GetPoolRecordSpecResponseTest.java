@@ -25,9 +25,6 @@ import org.jclouds.ultradns.ws.domain.PoolRecordSpec;
 import org.jclouds.ultradns.ws.xml.PoolRecordSpecHandler;
 import org.testng.annotations.Test;
 
-/**
- * @author Adrian Cole
- */
 @Test(testName = "GetPoolRecordSpecResponseTest")
 public class GetPoolRecordSpecResponseTest extends BaseHandlerTest {
 

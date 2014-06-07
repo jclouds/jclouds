@@ -38,8 +38,6 @@ import org.testng.annotations.Test;
 
 /**
  * Tests behavior of {@code CloudWatch}.
- *
- * @author Jeremy Whitlock
  */
 @Test(testName = "CloudWatchTest")
 public class CloudWatchTest {

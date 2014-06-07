@@ -28,8 +28,6 @@ import javax.lang.model.type.NullType;
 /**
  * Shows the transformer type used to parse XML with the
  * {@link ParseXMLWithJAXB} parser in a HttpResponse.
- * 
- * @author Ignasi Barrera
  */
 @Target(METHOD)
 @Retention(RUNTIME)

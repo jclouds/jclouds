@@ -31,10 +31,6 @@ import org.jclouds.rest.InvocationContext;
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.util.concurrent.ListenableFuture;
 
-/**
- * 
- * @author Adrian Cole
- */
 public class EndpointIfAlreadyExists implements Fallback<URI>, InvocationContext<EndpointIfAlreadyExists> {
 
    private URI endpoint;

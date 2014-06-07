@@ -42,10 +42,6 @@ import org.jclouds.openstack.swift.blobstore.functions.ObjectToBlobMetadata;
 import com.google.common.base.Supplier;
 import org.jclouds.openstack.swift.blobstore.strategy.internal.MultipartUploadStrategy;
 
-/**
- * 
- * @author Adrian Cole
- */
 @Singleton
 public class CloudFilesBlobStore extends SwiftBlobStore {
 

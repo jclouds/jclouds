@@ -22,8 +22,6 @@ import org.testng.annotations.Test;
 
 /**
  * The AWSSQSProviderTest tests the org.jclouds.providers.AWSSQSProvider class.
- * 
- * @author Adrian Cole
  */
 @Test(groups = "unit", testName = "AWSSQSProviderTest")
 public class AWSSQSProviderTest extends BaseProviderMetadataTest {

@@ -35,10 +35,6 @@ import org.jclouds.ec2.compute.strategy.EC2DestroyNodeStrategy;
 import com.google.common.cache.LoadingCache;
 import com.google.common.collect.Iterables;
 
-/**
- * 
- * @author Adrian Cole
- */
 @Singleton
 public class AWSEC2DestroyNodeStrategy extends EC2DestroyNodeStrategy {
 

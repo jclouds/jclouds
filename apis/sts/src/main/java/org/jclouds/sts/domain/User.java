@@ -20,9 +20,6 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 import com.google.common.base.Objects;
 
-/**
- * @author Adrian Cole
- */
 public final class User {
    public static User fromIdAndArn(String id, String arn) {
       return new User(id, arn);

@@ -18,10 +18,6 @@ package org.jclouds.rest;
 
 import org.jclouds.http.HttpRequest;
 
-/**
- * 
- * @author Adrian Cole
- */
 public interface RequestSigner {
 
    String createStringToSign(HttpRequest input);

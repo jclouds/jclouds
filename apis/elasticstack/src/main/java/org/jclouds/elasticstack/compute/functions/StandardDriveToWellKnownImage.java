@@ -38,8 +38,6 @@ import com.google.common.base.Predicate;
 
 /**
  * Transforms a standard drive into an image that can be used to create nodes.
- * 
- * @author Ignasi Barrera
  */
 @Singleton
 public class StandardDriveToWellKnownImage implements Function<StandardDrive, WellKnownImage> {

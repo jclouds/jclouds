@@ -21,8 +21,6 @@ import org.testng.annotations.Test;
 
 /**
  * Tests behavior of {@code AtmosClient}
- * 
- * @author Adrian Cole
  */
 @Test(groups = "live", singleThreaded = true, testName = "NinefoldStorageClientLiveTest")
 public class NinefoldStorageClientLiveTest extends AtmosClientLiveTest {

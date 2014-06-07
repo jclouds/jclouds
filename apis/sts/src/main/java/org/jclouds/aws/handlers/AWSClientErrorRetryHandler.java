@@ -32,8 +32,6 @@ import com.google.inject.Inject;
 
 /**
  * Handles Retryable responses with error codes in the 4xx range
- * 
- * @author Adrian Cole
  */
 public class AWSClientErrorRetryHandler implements HttpRetryHandler {
 

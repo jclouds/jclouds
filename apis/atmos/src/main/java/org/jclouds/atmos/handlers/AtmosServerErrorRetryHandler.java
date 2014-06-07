@@ -36,7 +36,6 @@ import com.google.inject.Inject;
  * Handles Retryable responses with error codes in the 5xx range
  *
  * @see Error codes section at <a href="https://www.synaptic.att.com/assets/us/en/home/Atmos_Programmers_Guide_1.3.4A.pdf" />
- * @author Andrew Gaul
  */
 public class AtmosServerErrorRetryHandler implements HttpRetryHandler {
    private final AtmosUtils utils;

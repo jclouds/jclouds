@@ -41,10 +41,6 @@ import com.google.inject.Guice;
 import com.google.inject.Injector;
 import com.google.inject.Key;
 
-/**
- * 
- * @author Adrian Cole
- */
 @Test
 public class LifeCycleModuleTest {
 

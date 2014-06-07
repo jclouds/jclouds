@@ -25,8 +25,6 @@ import java.lang.annotation.Target;
 
 /**
  * Designates we should not encode the following parameters
- * 
- * @author Adrian Cole
  */
 @Target({ TYPE, METHOD })
 @Retention(RUNTIME)

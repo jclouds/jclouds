@@ -22,8 +22,6 @@ import com.google.common.collect.ImmutableSet;
 
 /**
  * Options to the listAlerts command.
- *
- * @author Richard Downer
  */
 public class ListAlertsOptions extends BaseHttpRequestOptions {
 

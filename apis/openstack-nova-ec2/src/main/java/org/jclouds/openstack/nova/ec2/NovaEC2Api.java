@@ -27,8 +27,6 @@ import com.google.common.base.Optional;
 
 /**
  * Provides synchronous access to EC2 services.
- * 
- * @author Adam Lowe
  */
 public interface NovaEC2Api extends EC2Api {
 

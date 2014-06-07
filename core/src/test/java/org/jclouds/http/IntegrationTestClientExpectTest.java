@@ -34,8 +34,6 @@ import com.google.common.base.Function;
 /**
  * 
  * Allows us to test a client via its side effects.
- * 
- * @author Adrian Cole
  */
 @Test(groups = "unit", testName = "IntegrationTestClientExpectTest")
 // only needed as IntegrationTestClient is not registered in rest.properties

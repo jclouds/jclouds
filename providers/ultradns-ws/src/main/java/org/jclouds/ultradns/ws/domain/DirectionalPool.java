@@ -23,8 +23,6 @@ import com.google.common.base.Optional;
 
 /**
  * Records are resolved in consideration of the location of the requestor.
- * 
- * @author Adrian Cole
  */
 public final class DirectionalPool {
 

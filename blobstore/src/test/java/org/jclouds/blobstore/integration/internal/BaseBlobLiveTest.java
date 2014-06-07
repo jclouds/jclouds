@@ -31,8 +31,6 @@ import org.testng.annotations.Test;
  * Tests integrated functionality of all PutObject commands.
  * <p/>
  * Each test uses a different container name, so it should be perfectly fine to run in parallel.
- * 
- * @author Adrian Cole
  */
 @Test(groups = { "live" })
 public class BaseBlobLiveTest extends BaseBlobStoreIntegrationTest {

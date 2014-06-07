@@ -21,10 +21,6 @@ import org.jclouds.json.BaseItemParserTest;
 import org.jclouds.rest.annotations.SelectJson;
 import org.testng.annotations.Test;
 
-/**
- * 
- * @author Richard Downer
- */
 @Test(groups = "unit", testName = "DeleteNetworkResponseTest")
 public class JobResultResponseTest extends BaseItemParserTest<JobResult> {
 

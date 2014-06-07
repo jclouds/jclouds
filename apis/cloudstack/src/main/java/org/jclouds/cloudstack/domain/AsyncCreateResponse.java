@@ -25,8 +25,6 @@ import com.google.common.base.Objects.ToStringHelper;
 
 /**
  * Class AsyncCreateResponse
- *
- * @author Adrian Cole
  */
 public class AsyncCreateResponse {
    public static final AsyncCreateResponse UNINITIALIZED = new AsyncCreateResponse(null, null);

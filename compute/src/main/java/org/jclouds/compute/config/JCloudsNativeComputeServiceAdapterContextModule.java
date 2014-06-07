@@ -27,10 +27,6 @@ import org.jclouds.functions.IdentityFunction;
 import com.google.common.base.Function;
 import com.google.inject.TypeLiteral;
 
-/**
- * 
- * @author Adrian Cole
- */
 public class JCloudsNativeComputeServiceAdapterContextModule extends
          ComputeServiceAdapterContextModule<NodeMetadata, Hardware, Image, Location> {
    protected final Class<? extends ComputeServiceAdapter<NodeMetadata, Hardware, Image, Location>> adapter;

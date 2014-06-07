@@ -34,10 +34,6 @@ import com.google.common.collect.ImmutableSet;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 
-/**
- * 
- * @author Michael Arnold
- */
 @Test(groups = "unit", testName = "ParseSecurityGroupListTest")
 public class ParseSecurityGroupListTest extends BaseSetParserTest<SecurityGroup> {
 

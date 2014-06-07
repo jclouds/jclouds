@@ -32,12 +32,6 @@ import com.google.common.util.concurrent.ListeningExecutorService;
 import com.google.inject.ImplementedBy;
 import com.google.inject.Injector;
 
-/**
- * 
- * 
- * @author Adrian Cole
- * 
- */
 @ImplementedBy(UtilsImpl.class)
 public interface Utils {
 

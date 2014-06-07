@@ -41,8 +41,6 @@ import com.google.common.collect.ImmutableSet;
 
 /**
  * Tests {@code ProductItemToImage}
- *
- * @author Jason King
  */
 @Test(groups = "unit", testName = "ProductItemToImageTest")
 public class ProductItemToImageTest {

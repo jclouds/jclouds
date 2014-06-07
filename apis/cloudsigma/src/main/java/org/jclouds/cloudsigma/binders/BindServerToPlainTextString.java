@@ -32,10 +32,6 @@ import org.jclouds.rest.Binder;
 import com.google.common.base.Function;
 import com.google.common.collect.ImmutableSet;
 
-/**
- * 
- * @author Adrian Cole
- */
 @Singleton
 public class BindServerToPlainTextString implements Binder {
    private final Function<Server, Map<String, String>> createServerRequestToMap;

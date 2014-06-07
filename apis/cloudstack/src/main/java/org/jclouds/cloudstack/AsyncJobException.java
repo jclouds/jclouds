@@ -16,9 +16,6 @@
  */
 package org.jclouds.cloudstack;
 
-/**
- * @author Andrei Savu
- */
 public class AsyncJobException extends RuntimeException {
 
    public AsyncJobException() {

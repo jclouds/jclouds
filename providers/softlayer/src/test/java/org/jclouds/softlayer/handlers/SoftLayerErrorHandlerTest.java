@@ -34,10 +34,6 @@ import org.testng.annotations.Test;
 
 import com.google.inject.Guice;
 
-/**
- * 
- * @author Adrian Cole
- */
 @Test(groups = { "unit" })
 public class SoftLayerErrorHandlerTest {
 

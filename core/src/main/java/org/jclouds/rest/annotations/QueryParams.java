@@ -27,7 +27,6 @@ import java.lang.annotation.Target;
  * Designates that a query will be added to the request.
  * 
  * @see QueryParam
- * @author Adrian Cole
  */
 @Target( { TYPE, METHOD })
 @Retention(RUNTIME)

@@ -25,8 +25,6 @@ import com.google.common.collect.Multimap;
 /**
  * 
  * @see HttpRequestOptions
- * @author Adrian Cole
- * 
  */
 public class BaseHttpRequestOptions implements HttpRequestOptions {
 

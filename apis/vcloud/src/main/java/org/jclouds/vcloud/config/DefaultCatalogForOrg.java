@@ -35,10 +35,6 @@ import com.google.common.base.Function;
 import com.google.common.base.Predicate;
 import com.google.common.base.Supplier;
 
-/**
- * 
- * @author Adrian Cole
- */
 @Singleton
 public class DefaultCatalogForOrg implements Function<ReferenceType, ReferenceType> {
    private final OnlyReferenceTypeFirstWithNameMatchingConfigurationKeyOrDefault selector;

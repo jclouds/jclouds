@@ -30,8 +30,6 @@ import com.google.common.collect.ImmutableSet;
 /**
  * Tests for the function for transforming a cloudstack specific IngressRule into a generic
  * IpPermission object.
- * 
- * @author Andrew Bayer
  */
 public class IngressRuleToIpPermissionTest {
 

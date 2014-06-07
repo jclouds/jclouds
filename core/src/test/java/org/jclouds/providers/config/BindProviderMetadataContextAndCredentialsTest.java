@@ -49,10 +49,6 @@ import com.google.inject.Guice;
 import com.google.inject.Key;
 import com.google.inject.name.Names;
 
-/**
- * 
- * @author Adrian Cole
- */
 @Test(groups = "unit", testName = "BindProviderMetadataContextAndCredentialsTest")
 public class BindProviderMetadataContextAndCredentialsTest {
 

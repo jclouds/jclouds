@@ -25,8 +25,6 @@ import com.google.common.collect.ImmutableSet;
 
 /**
  * Tests behavior of {@code GenerateUsageRecordsOptions}
- *
- * @author Richard Downer
  */
 @Test(groups = "unit")
 public class GenerateUsageRecordsOptionsTest {

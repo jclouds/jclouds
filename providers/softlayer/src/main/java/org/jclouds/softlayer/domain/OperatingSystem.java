@@ -30,7 +30,6 @@ import com.google.common.collect.ImmutableSet;
 /**
  * Extends the SoftLayer_Software_Component data type to include operating system specific properties.
  *
- * @author Jason King
  * @see <a href=
 "http://sldn.softlayer.com/reference/datatypes/SoftLayer_Software_Component_OperatingSystem"
 />

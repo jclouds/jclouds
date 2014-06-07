@@ -16,10 +16,6 @@
  */
 package org.jclouds.cloudservers.domain;
 
-/**
- * 
- * @author Adrian Cole
- */
 public enum Action {
    CONFIRM_RESIZE, REBOOT, REBUILD, RESIZE, REVERT_RESIZE
 }

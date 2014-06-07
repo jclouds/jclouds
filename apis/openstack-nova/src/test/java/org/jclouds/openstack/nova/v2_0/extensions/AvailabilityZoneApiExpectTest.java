@@ -29,9 +29,6 @@ import org.testng.annotations.Test;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertTrue;
 
-/**
- * @author Inbar Stolberg
- */
 @Test(groups = "unit", testName = "AvailabilityZoneApiExpectTest")
 public class AvailabilityZoneApiExpectTest extends BaseNovaApiExpectTest {
 

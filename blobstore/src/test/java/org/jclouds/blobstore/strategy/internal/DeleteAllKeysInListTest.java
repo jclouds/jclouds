@@ -54,10 +54,6 @@ import com.google.common.util.concurrent.ListenableFuture;
 import com.google.common.util.concurrent.ListeningExecutorService;
 import com.google.inject.Injector;
 
-/**
- *
- * @author Adrian Cole
- */
 @Test(testName = "DeleteAllKeysInListTest", singleThreaded = true)
 public class DeleteAllKeysInListTest {
    private BlobStore blobstore;

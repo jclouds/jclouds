@@ -44,8 +44,6 @@ import com.google.common.base.Predicate;
 
 /**
  * Tests behavior of {@code GleSYSApi}
- * 
- * @author Adrian Cole, Adam Lowe
  */
 @Test(groups = "live", singleThreaded = true)
 public class BaseGleSYSApiWithAServerLiveTest extends BaseGleSYSApiLiveTest {

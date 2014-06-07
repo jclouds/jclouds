@@ -22,7 +22,6 @@ import org.jclouds.openstack.domain.AuthenticationResponse;
  * <p/>
  * 
  * @see <a href="http://docs.rackspacecloud.com/servers/api/cs-devguide-latest.pdf" />
- * @author Adrian Cole
  */
 public interface OpenStackAuthClient {
 

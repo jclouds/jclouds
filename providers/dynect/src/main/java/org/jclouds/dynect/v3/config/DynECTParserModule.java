@@ -43,9 +43,6 @@ import com.google.gson.JsonSerializer;
 import com.google.inject.AbstractModule;
 import com.google.inject.Provides;
 
-/**
- * @author Adrian Cole
- */
 public class DynECTParserModule extends AbstractModule {
 
    @Override

@@ -40,11 +40,6 @@ import org.jclouds.vcloud.options.CaptureVAppOptions;
 import com.google.inject.Inject;
 import com.jamesmurty.utils.XMLBuilder;
 
-/**
- * 
- * @author Adrian Cole
- * 
- */
 @Singleton
 public class BindCaptureVAppParamsToXmlPayload implements MapBinder {
 

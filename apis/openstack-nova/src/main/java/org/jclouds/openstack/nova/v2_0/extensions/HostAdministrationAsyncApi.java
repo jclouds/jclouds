@@ -52,7 +52,6 @@ import com.google.common.util.concurrent.ListenableFuture;
  * Provides asynchronous access to Host Administration features via the REST API.
  * <p/>
  *
- * @author Adam Lowe
  * @see HostAdministrationApi
  * @see <a href= "http://docs.openstack.org/api/openstack-compute/2/content/Extensions-d1e1444.html"/>
  * @see <a href="http://nova.openstack.org/api_ext" />

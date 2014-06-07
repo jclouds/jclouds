@@ -28,10 +28,6 @@ import org.jclouds.rest.binders.BindToJsonPayload;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSortedMap;
 
-/**
- * 
- * @author Adrian Cole
- */
 @Singleton
 public class BindKeyPairToJsonPayload extends BindToJsonPayload {
 

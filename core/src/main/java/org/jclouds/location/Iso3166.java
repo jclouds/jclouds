@@ -25,9 +25,6 @@ import javax.inject.Qualifier;
 
 /**
  * Related to a Iso3166 code
- * 
- * @author Adrian Cole
- * 
  */
 @Retention(value = RetentionPolicy.RUNTIME)
 @Target(value = { ElementType.FIELD, ElementType.PARAMETER, ElementType.METHOD })

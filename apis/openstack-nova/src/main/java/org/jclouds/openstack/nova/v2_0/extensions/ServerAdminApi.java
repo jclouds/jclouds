@@ -28,7 +28,6 @@ import com.google.common.annotations.Beta;
  * 'suspend', 'resume', 'migrate', 'lock', 'unlock', 'resetNetwork', 'createBackup', 'pause', 'migrateLive',
  * 'injectNetworkInfo', 'unpause'
  *
- * @author Adam Lowe
  * @see org.jclouds.openstack.nova.v2_0.extensions.ServerAdminAsyncApi
  */
 @Beta

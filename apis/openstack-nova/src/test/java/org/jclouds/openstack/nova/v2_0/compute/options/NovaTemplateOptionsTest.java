@@ -36,8 +36,6 @@ import com.google.common.collect.ImmutableSet;
 
 /**
  * Tests possible uses of NovaTemplateOptions and NovaTemplateOptions.Builder.*
- * 
- * @author Adrian Cole
  */
 @Test(testName = "NovaTemplateOptionsTest")
 public class NovaTemplateOptionsTest {

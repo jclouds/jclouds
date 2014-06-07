@@ -38,8 +38,6 @@ import com.google.inject.Inject;
  * time.
  * 
  * The passed server instance must not be null and must have a name.
- * 
- * @author Oleksiy Yarmula
  */
 @Singleton
 public class ServerLatestJobCompleted implements Predicate<Server> {

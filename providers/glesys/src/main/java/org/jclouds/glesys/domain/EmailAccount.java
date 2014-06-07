@@ -29,7 +29,6 @@ import com.google.common.base.Objects.ToStringHelper;
 /**
  * Detailed information on an Email Account
  *
- * @author Adam Lowe
  * @see <a href="https://customer.glesys.com/api.php?a=doc#email_list" />
  */
 public class EmailAccount {

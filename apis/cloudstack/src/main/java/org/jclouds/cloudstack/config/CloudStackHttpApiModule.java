@@ -58,8 +58,6 @@ import com.google.inject.name.Named;
 
 /**
  * Configures the cloudstack connection.
- * 
- * @author Adrian Cole
  */
 @ConfiguresHttpApi
 public class CloudStackHttpApiModule extends HttpApiModule<CloudStackApi> {

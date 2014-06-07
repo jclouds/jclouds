@@ -30,8 +30,6 @@ import org.testng.annotations.Test;
 
 /**
  * Tests behavior of {@link ImageApi}
- * 
- * @author Michael Arnold
  */
 @Test(groups = "live", testName = "ImageApiLiveTest")
 public class ImageApiLiveTest extends BaseNovaApiLiveTest {

@@ -45,8 +45,6 @@ import com.squareup.okhttp.mockwebserver.RecordedRequest;
 /**
  * Base class for integration tests that use {@link MockWebServer} to verify the
  * behavior of the HTTP workflows.
- * 
- * @author Ignasi Barrera
  */
 public abstract class BaseMockWebServerTest {
 

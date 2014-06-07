@@ -35,7 +35,6 @@ import com.google.gson.reflect.TypeToken;
 /**
  * Shows how we currently allow users to specify json literal types.
  * 
- * @author Adrian Cole
  * @see <a href="http://code.google.com/p/google-gson/issues/detail?id=326"/>
  */
 @Test(testName = "NullHackJsonLiteralAdapterTest")

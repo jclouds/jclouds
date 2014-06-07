@@ -35,10 +35,6 @@ import com.google.common.io.ByteSource;
 
 import org.testng.annotations.Test;
 
-/**
- * 
- * @author Adrian Cole
- */
 @Test(groups = "unit", sequential = true)
 public class PemsTest {
 

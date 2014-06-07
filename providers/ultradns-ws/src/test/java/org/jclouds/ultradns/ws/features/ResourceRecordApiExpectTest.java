@@ -34,9 +34,6 @@ import org.testng.annotations.Test;
 
 
 
-/**
- * @author Adrian Cole
- */
 @Test(groups = "unit", testName = "ResourceRecordApiExpectTest")
 public class ResourceRecordApiExpectTest extends BaseUltraDNSWSApiExpectTest {
    HttpRequest create = HttpRequest.builder().method(POST)

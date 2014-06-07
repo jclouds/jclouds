@@ -25,7 +25,6 @@ import com.google.common.collect.ImmutableSet;
  *
  * @see org.jclouds.cloudstack.features.ISOApi#updateISO
  * @see org.jclouds.cloudstack.features.ISOApi#updateISO
- * @author Richard Downer
  */
 public class UpdateISOOptions extends BaseHttpRequestOptions {
 

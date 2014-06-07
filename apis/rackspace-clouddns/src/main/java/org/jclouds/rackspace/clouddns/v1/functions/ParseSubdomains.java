@@ -32,9 +32,6 @@ import org.jclouds.rest.InvocationContext;
 
 import com.google.common.base.Function;
 
-/**
- * @author Everett Toews
- */
 public class ParseSubdomains implements Function<HttpResponse, PaginatedCollection<Subdomain>>, InvocationContext<ParseSubdomains> {
 
    private final ParseJson<Subdomains> json;

@@ -42,8 +42,6 @@ import com.google.common.base.Throwables;
 
 /**
  * Tests behavior of {@code NovaApi}
- * 
- * @author Adrian Cole
  */
 @Test(groups = "live")
 public class BaseNovaApiLiveTest extends BaseApiLiveTest<NovaApi> {

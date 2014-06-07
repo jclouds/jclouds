@@ -25,9 +25,6 @@ import org.jclouds.aws.util.AWSUtils;
 import org.jclouds.http.HttpRequest;
 import org.jclouds.rest.Binder;
 
-/**
- * @author grkvlt@apache.org
- */
 public class BindTagsToIndexedFormParams implements Binder {
     @Override
     public <R extends HttpRequest> R bindToRequest(R request, Object input) {

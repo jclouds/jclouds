@@ -23,9 +23,6 @@ import org.jclouds.vcloud.domain.VCloudError;
 
 /**
  * Encapsulates an VCloud Error.
- * 
- * @author Adrian Cole
- * 
  */
 public class VCloudResponseException extends HttpResponseException {
 

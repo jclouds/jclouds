@@ -43,8 +43,6 @@ import com.google.common.collect.Sets;
 
 /**
  * Creates a shell script.
- * 
- * @author Adrian Cole
  */
 public class ScriptBuilder implements Statement, AcceptsStatementVisitor {
 

@@ -21,10 +21,6 @@ import static org.testng.Assert.assertEquals;
 import org.jclouds.blobstore.integration.internal.BaseBlobLiveTest;
 import org.testng.annotations.Test;
 
-/**
- * 
- * @author Adrian Cole
- */
 @Test(groups = { "live" })
 public class AtmosLiveTest extends BaseBlobLiveTest {
    public AtmosLiveTest() {

@@ -24,10 +24,6 @@ import org.jclouds.net.domain.IpPermission;
 import org.jclouds.net.domain.IpProtocol;
 import org.xml.sax.SAXException;
 
-/**
- *
- * @author Adrian Cole
- */
 public class IpPermissionHandler extends ParseSax.HandlerForGeneratedRequestWithResult<IpPermission> {
 
    private StringBuilder currentText = new StringBuilder();

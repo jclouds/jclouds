@@ -45,7 +45,6 @@ import com.google.common.util.concurrent.ListenableFuture;
 /**
  * Provide access to Admin Server Actions via REST API
  *
- * @author Adam Lowe
  * @see org.jclouds.openstack.nova.v2_0.extensions.ServerAdminApi
  */
 @Beta

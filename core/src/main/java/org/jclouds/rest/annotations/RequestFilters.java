@@ -27,8 +27,6 @@ import org.jclouds.http.HttpRequestFilter;
 
 /**
  * Filters that should be applied to the request
- * 
- * @author Adrian Cole
  */
 @Target( { TYPE, METHOD })
 @Retention(RUNTIME)

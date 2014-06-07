@@ -36,8 +36,6 @@ import com.google.common.base.Function;
 import com.google.common.base.Supplier;
 import com.google.common.collect.FluentIterable;
 
-/**
- */
 @Singleton
 public class TemplateToImage implements Function<Template, Image> {
    private final Supplier<Set<? extends Location>> locations;

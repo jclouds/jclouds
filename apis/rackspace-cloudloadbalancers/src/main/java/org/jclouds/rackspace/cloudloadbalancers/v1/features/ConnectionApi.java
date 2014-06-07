@@ -42,8 +42,6 @@ import org.jclouds.rest.annotations.WrapWith;
 /**
  * Connection management features.
  * <p/>
- * 
- * @author Everett Toews
  */
 @RequestFilters(AuthenticateRequest.class)
 public interface ConnectionApi {

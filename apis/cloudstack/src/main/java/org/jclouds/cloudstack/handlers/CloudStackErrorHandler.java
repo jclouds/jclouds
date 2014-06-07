@@ -34,11 +34,6 @@ import org.jclouds.util.Strings2;
 
 import com.google.common.base.Throwables;
 
-/**
- * 
- * @author Adrian Cole
- * 
- */
 @Singleton
 public class CloudStackErrorHandler implements HttpErrorHandler {
    @Resource

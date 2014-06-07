@@ -22,9 +22,6 @@ import org.jclouds.http.options.GetOptions;
 
 import com.google.common.base.Function;
 
-/**
- * @author Adrian Cole
- */
 @Singleton
 public class BlobToObjectGetOptions implements
          Function<org.jclouds.blobstore.options.GetOptions, GetOptions> {

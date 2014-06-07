@@ -30,8 +30,6 @@ import org.testng.annotations.Test;
 
 /**
  * Tests behavior of {@code ListAlarmHistoryOptions}.
- *
- * @author Jeremy Whitlock
  */
 @Test(groups = "unit")
 public class ListAlarmHistoryOptionsTest {

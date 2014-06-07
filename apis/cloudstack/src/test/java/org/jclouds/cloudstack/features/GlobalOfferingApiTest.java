@@ -35,8 +35,6 @@ import com.google.common.reflect.Invokable;
 
 /**
  * Tests behavior of {@code GlobalOfferingApi}
- *
- * @author Andrei Savu
  */
 @Test(groups = "unit", testName = "GlobalOfferingApiTest")
 public class GlobalOfferingApiTest extends BaseCloudStackApiTest<GlobalOfferingApi> {

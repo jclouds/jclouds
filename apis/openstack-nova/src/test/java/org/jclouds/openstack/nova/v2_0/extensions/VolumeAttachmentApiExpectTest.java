@@ -41,8 +41,6 @@ import com.google.common.collect.Iterables;
 
 /**
  * Tests VolumeAttachmentApi Guice wiring and parsing
- *
- * @author Adam Lowe
  */
 @Test(groups = "unit", testName = "VolumeAttachmentApiExpectTest")
 public class VolumeAttachmentApiExpectTest extends BaseNovaApiExpectTest {

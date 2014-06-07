@@ -42,9 +42,6 @@ import org.testng.annotations.Test;
 
 import com.google.common.base.Supplier;
 import com.google.common.cache.LoadingCache;
-/**
- * @author Adrian Cole
- */
 @Test(groups = "unit", testName = "SessionManagerTest")
 public class SessionManagerTest {
    SessionCredentials creds = SessionCredentials.builder()

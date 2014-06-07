@@ -27,10 +27,6 @@ import org.jclouds.json.BaseItemParserTest;
 import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableMap;
 
-/**
- *
- * @author Leander Beernaert
- */
 public class ParseServerDiagnostics extends BaseItemParserTest<Optional<Map<String, String>>> {
 
 

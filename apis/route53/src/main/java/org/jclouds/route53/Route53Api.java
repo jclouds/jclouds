@@ -42,7 +42,6 @@ import org.jclouds.route53.xml.ChangeHandler;
  * 
  * @see <a href="http://docs.amazonwebservices.com/Route53/latest/APIReference"
  *      />
- * @author Adrian Cole
  */
 @RequestFilters(RestAuthentication.class)
 @VirtualHost

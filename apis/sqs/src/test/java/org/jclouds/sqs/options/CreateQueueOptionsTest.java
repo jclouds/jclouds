@@ -26,8 +26,6 @@ import com.google.common.collect.ImmutableSet;
 
 /**
  * Tests behavior of {@code CreateQueueOptions}
- * 
- * @author Adrian Cole
  */
 @Test(groups = "unit", testName = "CreateQueueOptionsTest")
 public class CreateQueueOptionsTest {

@@ -33,9 +33,6 @@ import org.jclouds.vcloud.domain.VAppTemplate;
 import com.google.common.base.Function;
 import com.google.common.collect.Iterables;
 
-/**
- * @author Adrian Cole
- */
 @Singleton
 public class HardwareForVAppTemplate implements Function<VAppTemplate, Hardware> {
 

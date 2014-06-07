@@ -39,8 +39,6 @@ import com.google.inject.Module;
 
 /**
  * Tests behavior of {@code RedirectionRetryHandler}
- * 
- * @author Adrian Cole
  */
 @Test(groups = "unit")
 public class RedirectionRetryHandlerTest {

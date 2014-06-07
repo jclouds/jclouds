@@ -32,8 +32,6 @@ import com.google.inject.Inject;
  * @see <a
  *      href="http://docs.amazonwebservices.com/AWSEC2/latest/APIReference/ApiReference-query-DescribeTags.html"
  *      >xml</a>
- * 
- * @author Adrian Cole
  */
 public class DescribeTagsResponseHandler extends ParseSax.HandlerForGeneratedRequestWithResult<FluentIterable<Tag>> {
 

@@ -18,11 +18,6 @@ package org.jclouds.blobstore.domain;
 
 import java.util.Set;
 
-/**
- * 
- * @author Adrian Cole
- * 
- */
 public interface PageSet<T> extends Set<T> {
 
    /**

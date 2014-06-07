@@ -26,10 +26,6 @@ import org.jclouds.rest.AuthorizationException;
 
 import com.google.common.base.Supplier;
 
-/**
- * 
- * @author Adrian Cole
- */
 public class SetAndThrowAuthorizationExceptionSupplier<T> implements Supplier<T> {
    private final Supplier<T> delegate;
    private final AtomicReference<AuthorizationException> authException;

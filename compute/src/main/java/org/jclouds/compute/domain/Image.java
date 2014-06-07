@@ -25,8 +25,6 @@ import com.google.inject.ImplementedBy;
 
 /**
  * Running Operating system
- * 
- * @author Adrian Cole
  */
 @ImplementedBy(ImageImpl.class)
 public interface Image extends ComputeMetadataIncludingStatus<Image.Status> {

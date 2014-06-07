@@ -29,7 +29,6 @@ import com.google.common.net.HttpHeaders;
 
 /**
  * 
- * @author Andrei Savu, Adrian Cole
  * @see <a href="http://docs.cloud.com/CloudStack_Documentation/Customizing_the_CloudStack_UI#Cross_Site_Request_Forgery_%28CSRF%29"
  *      />
  */

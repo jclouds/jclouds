@@ -30,10 +30,6 @@ import org.jclouds.logging.Logger;
 import com.google.common.base.Supplier;
 import com.google.common.collect.Sets;
 
-/**
- * 
- * @author Adrian Cole
- */
 public class DescribeAddressesResponseHandler extends
          HandlerForGeneratedRequestWithResult<Set<PublicIpInstanceIdPair>> {
 

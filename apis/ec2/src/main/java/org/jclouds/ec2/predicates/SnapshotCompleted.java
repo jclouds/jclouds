@@ -32,8 +32,6 @@ import com.google.inject.Inject;
 /**
  * 
  * Tests to see if a snapshot is completed.
- * 
- * @author Adrian Cole
  */
 @Singleton
 public class SnapshotCompleted implements Predicate<Snapshot> {

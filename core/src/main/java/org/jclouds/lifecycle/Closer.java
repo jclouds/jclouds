@@ -33,8 +33,6 @@ import static org.jclouds.lifecycle.Closer.State.PROCESSING;
 
 /**
  * This will close objects in the reverse order that they were added.
- * 
- * @author Adrian Cole
  */
 @Singleton
 public class Closer implements Closeable {

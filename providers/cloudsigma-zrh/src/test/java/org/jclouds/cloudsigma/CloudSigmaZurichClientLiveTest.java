@@ -18,10 +18,6 @@ package org.jclouds.cloudsigma;
 
 import org.testng.annotations.Test;
 
-/**
- * 
- * @author Adrian Cole
- */
 @Test(groups = "live", singleThreaded = true, testName = "CloudSigmaZurichClientLiveTest")
 public class CloudSigmaZurichClientLiveTest extends CloudSigmaClientLiveTest {
    public CloudSigmaZurichClientLiveTest() {

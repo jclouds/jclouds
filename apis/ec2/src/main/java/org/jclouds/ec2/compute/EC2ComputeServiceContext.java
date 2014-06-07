@@ -21,9 +21,6 @@ import org.jclouds.ec2.compute.internal.EC2ComputeServiceContextImpl;
 
 import com.google.inject.ImplementedBy;
 
-/**
- * @author Adrian Cole
- */
 @ImplementedBy(EC2ComputeServiceContextImpl.class)
 public interface EC2ComputeServiceContext extends ComputeServiceContext {
 

@@ -35,9 +35,6 @@ import com.google.common.base.Function;
 import com.google.common.base.Objects;
 import com.google.common.collect.Maps;
 
-/**
- * @author Oleksiy Yarmula
- */
 @Singleton
 public class ParseServerNameToCredentialsMapFromJsonResponse implements
       Function<HttpResponse, Map<String, Credentials>> {

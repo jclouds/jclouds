@@ -35,8 +35,6 @@ import com.google.common.reflect.TypeToken;
 
 /**
  * The Providers class provides static methods for accessing providers.
- * 
- * @author Jeremy Whitlock <jwhitlock@apache.org>
  */
 public class Providers {
 

@@ -27,8 +27,6 @@ import org.jclouds.rest.Binder;
 
 /**
  * Binds Ids to query parameters named with ResourceId.index
- * 
- * @author grkvlt@apache.org
  */
 @Singleton
 public class BindResourceIdsToIndexedFormParams implements Binder {

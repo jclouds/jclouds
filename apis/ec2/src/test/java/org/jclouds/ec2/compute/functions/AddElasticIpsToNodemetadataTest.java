@@ -30,9 +30,6 @@ import com.google.common.cache.LoadingCache;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 
-/**
- * @author Adrian Cole
- */
 @Test(groups = "unit", singleThreaded = true, testName = "AddElasticIpsToNodemetadataTest")
 public class AddElasticIpsToNodemetadataTest {
 

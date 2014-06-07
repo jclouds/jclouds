@@ -22,9 +22,6 @@ import org.testng.annotations.Test;
 
 import java.util.Properties;
 
-/**
- * @author Adrian Cole
- */
 @Test(groups = {"live"})
 public class SwiftBlobSignerLiveTest extends BaseBlobSignerLiveTest {
 

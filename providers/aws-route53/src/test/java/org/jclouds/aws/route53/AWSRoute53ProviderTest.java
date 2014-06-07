@@ -22,8 +22,6 @@ import org.testng.annotations.Test;
 
 /**
  * The AWSRoute53ProviderTest teroute53 the org.jclouds.providers.AWSRoute53Provider class.
- * 
- * @author Adrian Cole
  */
 @Test(groups = "unit", testName = "AWSRoute53ProviderTest")
 public class AWSRoute53ProviderTest extends BaseProviderMetadataTest {

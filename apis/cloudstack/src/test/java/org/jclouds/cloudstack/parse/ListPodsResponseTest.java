@@ -26,10 +26,6 @@ import org.testng.annotations.Test;
 
 import com.google.common.collect.ImmutableSet;
 
-/**
- * 
- * @author Richard Downer
- */
 @Test(groups = "unit")
 public class ListPodsResponseTest extends BaseSetParserTest<Pod> {
 

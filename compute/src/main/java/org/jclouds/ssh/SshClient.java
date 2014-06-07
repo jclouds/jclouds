@@ -23,9 +23,6 @@ import org.jclouds.io.Payload;
 
 import com.google.common.net.HostAndPort;
 
-/**
- * @author Adrian Cole
- */
 public interface SshClient {
 
    interface Factory {

@@ -23,7 +23,6 @@ import org.jclouds.rest.annotations.RequestFilters;
 /**
  * Functionality that's in Swift, and not in CloudFiles.
  * 
- * @author Adrian Cole
  * 
  * @deprecated Please use {@code org.jclouds.ContextBuilder#buildApi(SwiftClient.class)}, as
  *             {@link SwiftAsyncClient} will be removed in jclouds 2.0.

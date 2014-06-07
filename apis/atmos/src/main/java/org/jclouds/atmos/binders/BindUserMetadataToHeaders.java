@@ -33,9 +33,6 @@ import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableMap.Builder;
 import com.google.common.collect.Multimaps;
 
-/**
- * @author Adrian Cole
- */
 @Singleton
 public class BindUserMetadataToHeaders implements Binder, Function<UserMetadata, Map<String, String>> {
    

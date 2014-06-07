@@ -27,8 +27,6 @@ import org.testng.annotations.Test;
 
 /**
  * Tests ServiceApi
- * 
- * @author Adam Lowe
  */
 @Test(groups = "live", testName = "ServiceApiLiveTest")
 public class ServiceApiLiveTest extends BaseKeystoneApiLiveTest {

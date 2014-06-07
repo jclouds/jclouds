@@ -31,8 +31,6 @@ import com.google.inject.Injector;
 
 /**
  * Tests behavior of {@code BindMetadataToHeaders}
- * 
- * @author Adrian Cole
  */
 @Test(groups = "unit")
 public class BindMetadataToHeadersTest {

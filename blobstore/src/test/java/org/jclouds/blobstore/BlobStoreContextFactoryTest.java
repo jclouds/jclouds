@@ -29,8 +29,6 @@ import com.google.common.base.Splitter;
 
 /**
  * Tests parsing of a request
- * 
- * @author Adrian Cole
  */
 @Test(testName = "blobstore.BlobStoreContextFactoryTest")
 public class BlobStoreContextFactoryTest {

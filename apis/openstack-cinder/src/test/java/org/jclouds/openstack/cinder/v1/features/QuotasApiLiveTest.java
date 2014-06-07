@@ -26,9 +26,6 @@ import java.util.concurrent.ExecutionException;
 
 import static org.testng.Assert.assertTrue;
 
-/**
- * @author inbar stolberg
- */
 @Test(groups = "live", testName = "QuotasApiLiveTest", singleThreaded = true)
 public class QuotasApiLiveTest extends BaseCinderApiLiveTest {
 

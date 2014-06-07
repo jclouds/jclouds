@@ -33,8 +33,6 @@ import com.google.common.collect.ImmutableSet;
 
 /**
  * Tests behavior of {@code FirstZone}
- * 
- * @author Adrian Cole
  */
 @Test(groups = "unit", testName = "FirstZoneTest")
 public class FirstZoneTest {

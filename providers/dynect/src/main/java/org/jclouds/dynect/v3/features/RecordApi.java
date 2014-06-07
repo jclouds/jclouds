@@ -62,9 +62,6 @@ import org.jclouds.rest.annotations.SelectJson;
 
 import com.google.common.collect.FluentIterable;
 
-/**
- * @author Adrian Cole
- */
 @Headers(keys = "API-Version", values = "{jclouds.api-version}")
 @RequestFilters({ AlwaysAddContentType.class, SessionManager.class })
 public interface RecordApi {

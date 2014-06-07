@@ -32,10 +32,6 @@ import com.google.common.base.Predicate;
 import com.google.common.cache.CacheLoader;
 import com.google.common.util.concurrent.Atomics;
 
-/**
- * 
- * @author Adrian Cole
- */
 public class FindSecurityGroupOrCreate extends CacheLoader<ZoneAndName, SecurityGroupInZone> {
 
    protected final Predicate<AtomicReference<ZoneAndName>> returnSecurityGroupExistsInZone;

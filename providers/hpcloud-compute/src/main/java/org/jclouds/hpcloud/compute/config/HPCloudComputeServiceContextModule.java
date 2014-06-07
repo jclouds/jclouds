@@ -20,10 +20,6 @@ import org.jclouds.hpcloud.compute.HPCloudComputeServiceAdapter;
 import org.jclouds.openstack.nova.v2_0.compute.NovaComputeServiceAdapter;
 import org.jclouds.openstack.nova.v2_0.compute.config.NovaComputeServiceContextModule;
 
-/**
- * 
- * @author Adrian Cole
- */
 public class HPCloudComputeServiceContextModule extends NovaComputeServiceContextModule {
    
    @Override

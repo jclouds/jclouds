@@ -33,10 +33,6 @@ import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.ImmutableMultimap.Builder;
 import com.google.common.collect.Multimap;
 
-/**
- * 
- * @author Adrian Cole
- */
 @Singleton
 public class BindAccountSecurityGroupPairsToIndexedQueryParams implements Binder {
 

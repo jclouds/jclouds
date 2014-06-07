@@ -32,8 +32,6 @@ import com.google.common.collect.Sets;
  * 
  * This class has static methods that create customized predicates to use with
  * {@link org.jclouds.compute.ComputeService}.
- * 
- * @author Adrian Cole
  */
 public class ImagePredicates {
    private static final class Is64BitPredicate implements Predicate<Image> {

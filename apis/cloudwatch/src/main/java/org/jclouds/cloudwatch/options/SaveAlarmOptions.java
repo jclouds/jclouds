@@ -32,8 +32,6 @@ import org.jclouds.http.options.BaseHttpRequestOptions;
  * Options used to create/update an alarm.
  *
  * @see <a href="http://docs.aws.amazon.com/AmazonCloudWatch/latest/APIReference/API_PutMetricAlarm.html" />
- *
- * @author Jeremy Whitlock
  */
 @Beta
 public class SaveAlarmOptions extends BaseHttpRequestOptions {

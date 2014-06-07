@@ -29,8 +29,6 @@ import com.google.common.base.Predicate;
 
 /**
  * Tests behavior of {@code GleSYSApi}
- * 
- * @author Adrian Cole, Adam Lowe
  */
 @Test(groups = "live")
 public class BaseGleSYSApiLiveTest extends BaseApiLiveTest<GleSYSApi> {

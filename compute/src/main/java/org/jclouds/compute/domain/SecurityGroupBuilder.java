@@ -26,9 +26,6 @@ import org.jclouds.net.domain.IpPermission;
 
 import com.google.common.collect.ImmutableSet;
 
-/**
- * @author Andrew Bayer
- */
 public class SecurityGroupBuilder extends ComputeMetadataBuilder {
    private ImmutableSet.Builder<IpPermission> ipPermissions = ImmutableSet.<IpPermission> builder();
    private String ownerId;

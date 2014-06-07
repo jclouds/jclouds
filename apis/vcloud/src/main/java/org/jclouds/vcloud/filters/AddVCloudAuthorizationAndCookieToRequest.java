@@ -30,9 +30,6 @@ import com.google.common.net.HttpHeaders;
 
 /**
  * Adds the VCloud Token to the request as a cookie
- * 
- * @author Adrian Cole
- * 
  */
 @Singleton
 public class AddVCloudAuthorizationAndCookieToRequest implements HttpRequestFilter {

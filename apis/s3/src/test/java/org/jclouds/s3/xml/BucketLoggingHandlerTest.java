@@ -31,8 +31,6 @@ import com.google.common.collect.ImmutableSet;
 
 /**
  * Tests behavior of {@code BucketLoggingHandler}
- * 
- * @author Adrian Cole
  */
 // NOTE:without testName, this will not call @Before* and fail w/NPE during surefire
 @Test(groups = "unit", testName = "BucketLoggingHandlerTest")

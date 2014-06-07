@@ -68,7 +68,6 @@ import com.google.common.collect.ImmutableSet.Builder;
 /**
  * defines the connection between the {@link SoftLayerApi} implementation and
  * the jclouds {@link ComputeService}
- * 
  */
 @Singleton
 public class SoftLayerComputeServiceAdapter implements

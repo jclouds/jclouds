@@ -23,9 +23,6 @@ import org.jclouds.http.HttpResponse;
 import org.jclouds.rackspace.cloudidentity.v2_0.internal.RackspaceFixture;
 import org.jclouds.rest.internal.BaseRestApiExpectTest;
 
-/**
- * @author Everett Toews
- */
 public class BaseCloudDNSApiExpectTest<T> extends BaseRestApiExpectTest<T> {
    protected HttpRequest rackspaceAuthWithUsernameAndApiKey;
 

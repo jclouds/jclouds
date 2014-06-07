@@ -28,8 +28,6 @@ import com.google.common.eventbus.Subscribe;
  * Default handler for dead events.
  * <p>
  * It simply logs all dead events to allow debugging and troubleshooting.
- * 
- * @author Ignasi Barrera
  */
 @Singleton
 public class DeadEventLoggingHandler {

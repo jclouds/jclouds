@@ -80,8 +80,6 @@ import com.google.inject.assistedinject.FactoryModuleBuilder;
 
 /**
  * Configures the Keystone connection.
- *
- * @author Adam Lowe
  */
 @ConfiguresRestClient
 public class KeystoneRestClientModule<S extends KeystoneApi, A extends KeystoneAsyncApi> extends

@@ -24,8 +24,6 @@ import com.google.common.util.concurrent.ListenableFuture;
 /**
  * An extension to compute service to allow for the manipulation of {@link Image}s. Implementation
  * is optional by providers.
- * 
- * @author David Alves
  */
 public interface ImageExtension {
 

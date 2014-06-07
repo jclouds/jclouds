@@ -19,10 +19,6 @@ package org.jclouds.cloudsigma;
 import org.jclouds.compute.internal.BaseComputeServiceApiMetadataTest;
 import org.testng.annotations.Test;
 
-/**
- * 
- * @author Adrian Cole
- */
 @Test(groups = "unit", testName = "CloudSigmaApiMetadataTest")
 public class CloudSigmaApiMetadataTest extends BaseComputeServiceApiMetadataTest {
 

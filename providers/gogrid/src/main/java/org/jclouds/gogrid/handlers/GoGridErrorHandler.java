@@ -36,9 +36,6 @@ import org.jclouds.rest.ResourceNotFoundException;
 import com.google.common.collect.Iterables;
 import com.google.inject.Inject;
 
-/**
- * @author Oleksiy Yarmula
- */
 public class GoGridErrorHandler implements HttpErrorHandler {
 
    private final ParseJson<GenericResponseContainer<ErrorResponse>> errorParser;

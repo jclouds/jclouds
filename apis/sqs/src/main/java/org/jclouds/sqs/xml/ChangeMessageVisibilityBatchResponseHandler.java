@@ -22,8 +22,6 @@ import javax.inject.Inject;
  * @see <a
  *      href="http://docs.amazonwebservices.com/AWSSimpleQueueService/latest/APIReference/Query_QueryChangeMessageVisibilityBatch.html"
  *      >docs</a>
- * 
- * @author Adrian Cole
  */
 public class ChangeMessageVisibilityBatchResponseHandler extends BatchResponseHandler<String> {
    @Inject

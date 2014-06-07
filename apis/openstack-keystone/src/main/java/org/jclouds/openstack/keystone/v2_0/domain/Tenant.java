@@ -30,7 +30,6 @@ import com.google.common.base.Objects.ToStringHelper;
  * Depending on the service operator, a tenant may map to a customer, account,
  * organization, or project.
  * 
- * @author Adrian Cole
  * @see <a href=
  *      "http://docs.openstack.org/api/openstack-identity-service/2.0/content/Identity-Service-Concepts-e1362.html"
  *      />

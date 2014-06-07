@@ -21,10 +21,6 @@ import org.jclouds.location.suppliers.implicit.GetRegionIdMatchingProviderURIOrN
 import com.google.common.base.Supplier;
 import com.google.inject.ImplementedBy;
 
-/**
- * 
- * @author Adrian Cole
- */
 @ImplementedBy(GetRegionIdMatchingProviderURIOrNull.class)
 public interface ImplicitRegionIdSupplier extends Supplier<String> {
 

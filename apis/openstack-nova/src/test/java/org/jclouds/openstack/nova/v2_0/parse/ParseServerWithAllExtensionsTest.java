@@ -40,9 +40,6 @@ import com.google.common.collect.ImmutableMultimap;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 
-/**
- * @author Adam Lowe
- */
 @Test(groups = "unit", testName = "ParseServerWithAllExtensionsTest")
 public class ParseServerWithAllExtensionsTest extends BaseItemParserTest<Server> {
 

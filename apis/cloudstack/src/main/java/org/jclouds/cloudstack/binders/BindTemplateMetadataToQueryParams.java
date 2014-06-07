@@ -25,9 +25,6 @@ import org.jclouds.rest.Binder;
 import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.ImmutableMultimap.Builder;
 
-/**
- * @author Richard Downer
- */
 public class BindTemplateMetadataToQueryParams implements Binder {
 
    @SuppressWarnings("unchecked")

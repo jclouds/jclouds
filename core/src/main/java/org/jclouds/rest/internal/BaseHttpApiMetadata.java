@@ -34,8 +34,6 @@ import com.google.common.reflect.TypeToken;
 
 /**
  * Useful in creating http apis.
- * 
- * @author Adrian Cole
  */
 @Beta
 public abstract class BaseHttpApiMetadata<A> extends BaseApiMetadata implements HttpApiMetadata<A> {

@@ -29,8 +29,6 @@ import com.google.common.collect.ImmutableList;
 
 /**
  * Tests behavior of {@code BindIterableToHeadersWithPurgeCDNObjectEmail}
- * 
- * @author Everett Toews
  */
 // NOTE:without testName, this will not call @Before* and fail w/NPE during surefire
 @Test(groups = "unit", testName = "BindIterableToHeadersWithPurgeCDNObjectEmailTest")

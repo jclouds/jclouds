@@ -20,8 +20,6 @@ import org.jclouds.aws.s3.blobstore.strategy.MultipartUpload;
 
 /**
  * Print out on the console some graph data regarding the partitioning algorithm.
- *
- * @author Tibor Kiss
  */
 public class MpuGraphData {
 

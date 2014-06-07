@@ -55,11 +55,6 @@ import org.testng.annotations.Test;
 import com.google.common.base.Throwables;
 import com.google.common.collect.Maps;
 
-/**
- * 
- * @author James Murty
- * @author Adrian Cole
- */
 @Test(groups = { "integration", "live" })
 public class S3ClientLiveTest extends BaseBlobStoreIntegrationTest {
    public S3ClientLiveTest() {

@@ -26,10 +26,6 @@ import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.Multimap;
 import com.google.common.net.HttpHeaders;
 
-/**
- * 
- * @author Adrian Cole
- */
 public class Part extends DelegatingPayload {
    final String name;
    final Multimap<String, String> headers;

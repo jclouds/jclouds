@@ -28,9 +28,6 @@ import org.testng.annotations.Test;
 import com.google.common.base.Optional;
 import com.google.common.cache.LoadingCache;
 
-/**
- * @author Adrian Cole
- */
 @Test(testName = "DefaultEndpointThenInvalidateRegionTest")
 public class DefaultEndpointThenInvalidateRegionTest {
 

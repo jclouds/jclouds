@@ -23,8 +23,6 @@ import com.google.common.base.Objects.ToStringHelper;
 
 /**
  * @see VirtualIP
- * 
- * @author Everett Toews
  */
 public class VirtualIPWithId extends VirtualIP {
 

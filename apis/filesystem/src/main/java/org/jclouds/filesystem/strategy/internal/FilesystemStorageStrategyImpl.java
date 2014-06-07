@@ -53,10 +53,6 @@ import com.google.common.io.ByteSource;
 import com.google.common.io.Closeables;
 import com.google.common.io.Files;
 
-/**
- * 
- * @author Alfredo "Rainbowbreeze" Morresi
- */
 public class FilesystemStorageStrategyImpl implements LocalStorageStrategy {
 
    private static final String BACK_SLASH = "\\";

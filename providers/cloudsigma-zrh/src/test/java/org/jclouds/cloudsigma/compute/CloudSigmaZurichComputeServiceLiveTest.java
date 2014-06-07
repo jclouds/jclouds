@@ -36,10 +36,6 @@ import org.jclouds.compute.domain.Template;
 import org.jclouds.compute.domain.TemplateBuilder;
 import org.testng.annotations.Test;
 
-/**
- * 
- * @author Adrian Cole
- */
 @Test(groups = "live", singleThreaded = true, testName = "CloudSigmaZurichComputeServiceLiveTest")
 public class CloudSigmaZurichComputeServiceLiveTest extends CloudSigmaComputeServiceLiveTest {
 

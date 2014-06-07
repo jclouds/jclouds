@@ -30,9 +30,6 @@ import org.jclouds.openstack.swift.domain.ObjectInfo;
 import com.google.common.base.Function;
 import com.google.common.collect.Iterables;
 
-/**
- * @author Adrian Cole
- */
 @Singleton
 public class ContainerToResourceList implements Function<PageSet<ObjectInfo>, PageSet<? extends StorageMetadata>> {
    private final ObjectToBlobMetadata object2blobMd;

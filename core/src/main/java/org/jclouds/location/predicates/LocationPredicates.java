@@ -25,10 +25,6 @@ import org.jclouds.domain.LocationScope;
 
 import com.google.common.base.Predicate;
 
-/**
- * 
- * @author Adrian Cole
- */
 public class LocationPredicates {
 
    public static Predicate<Location> isProvider() {

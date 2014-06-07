@@ -31,8 +31,6 @@ import com.google.inject.Inject;
 /**
  * 
  * Tests to see if a virtualMachine is expunged from the system
- * 
- * @author Andrei Savu
  */
 @Singleton
 public class VirtualMachineExpunged implements Predicate<VirtualMachine> {

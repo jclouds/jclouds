@@ -26,8 +26,6 @@ import org.jclouds.providers.internal.BaseProviderMetadata;
 
 /**
  * Implementation of {@link org.jclouds.types.ProviderMetadata} for StratoGen VMware hosting
- * 
- * @author Adrian Cole
  */
 public class HPCloudObjectStorageProviderMetadata extends BaseProviderMetadata {
 

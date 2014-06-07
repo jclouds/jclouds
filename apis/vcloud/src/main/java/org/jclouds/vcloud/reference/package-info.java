@@ -16,6 +16,5 @@
  */
 /**
  * This package contains properties and reference data used in vCloud.
- * @author Adrian Cole
  */
 package org.jclouds.vcloud.reference;

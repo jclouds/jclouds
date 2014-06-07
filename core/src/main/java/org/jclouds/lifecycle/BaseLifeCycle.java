@@ -32,8 +32,6 @@ import com.google.common.util.concurrent.ListeningExecutorService;
 
 /**
  * // TODO: Adrian: Document this!
- * 
- * @author Adrian Cole
  */
 public abstract class BaseLifeCycle implements Runnable, LifeCycle {
    @Resource

@@ -28,8 +28,6 @@ import org.testng.annotations.Test;
 
 /**
  * Tests behavior of {@code BindS3UploadPolicyAndSignature}
- * 
- * @author Adrian Cole
  */
 // NOTE:without testName, this will not call @Before* and fail w/NPE during surefire
 @Test(groups = "unit", testName = "BindS3UploadPolicyAndSignatureTest")

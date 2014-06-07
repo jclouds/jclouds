@@ -24,10 +24,6 @@ import org.jclouds.location.suppliers.all.ZoneToRegionToProviderOrJustProvider;
 import com.google.common.base.Supplier;
 import com.google.inject.ImplementedBy;
 
-/**
- * 
- * @author Adrian Cole
- */
 @ImplementedBy(ZoneToRegionToProviderOrJustProvider.class)
 public interface LocationsSupplier extends Supplier<Set<? extends Location>> {
 

@@ -27,7 +27,6 @@ import com.google.common.base.Objects.ToStringHelper;
  * The SoftLayer_Product_Item_Category data type contains
  * general category information for prices.
  *
- * @author Jason King
  * @see <a href=
 "http://sldn.softlayer.com/reference/datatypes/SoftLayer_Product_Item_Category"
 />

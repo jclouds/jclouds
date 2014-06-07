@@ -33,7 +33,6 @@ import com.google.common.base.Objects.ToStringHelper;
  * Services that are being called by that user determine how they interpret the set of roles a user
  * has and which operations or resources each roles grants access to.
  *
- * @author AdrianCole
  * @see <a href="http://docs.openstack.org/api/openstack-identity-service/2.0/content/Identity-Service-Concepts-e1362.html"
 />
  */

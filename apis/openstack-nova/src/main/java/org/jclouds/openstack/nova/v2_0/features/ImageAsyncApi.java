@@ -60,7 +60,6 @@ import com.google.common.util.concurrent.ListenableFuture;
  * <p/>
  * 
  * @see ImageApi
- * @author Jeremy Daggett
  */
 @RequestFilters(AuthenticateRequest.class)
 public interface ImageAsyncApi {

@@ -39,10 +39,6 @@ import org.testng.annotations.Test;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Iterables;
 
-/**
- * 
- * @author Adrian Cole
- */
 @Test(singleThreaded = true, testName = "ListImagesInVCloudExpectTest")
 public class ListImagesInVCloudExpectTest extends BaseVCloudComputeServiceExpectTest {
 

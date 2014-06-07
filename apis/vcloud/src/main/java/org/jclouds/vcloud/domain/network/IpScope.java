@@ -31,7 +31,6 @@ import com.google.common.collect.Sets;
 /**
  * The IpScope element defines the address range, gateway, netmask, and other properties of the
  * network.
- * 
  */
 public class IpScope {
    private final boolean inherited;

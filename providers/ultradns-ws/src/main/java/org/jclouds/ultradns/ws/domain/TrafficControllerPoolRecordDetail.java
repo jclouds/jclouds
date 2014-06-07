@@ -21,10 +21,6 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 import com.google.common.base.Objects;
 
-/**
- * 
- * @author Adrian Cole
- */
 public final class TrafficControllerPoolRecordDetail {
 
    private final String id;

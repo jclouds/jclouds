@@ -25,10 +25,6 @@ import com.google.common.base.Charsets;
 import org.jclouds.util.Strings2;
 import org.testng.annotations.Test;
 
-/**
- * 
- * @author Adrian Cole
- */
 public class SupplyFromProviderURIOrNodesPropertyTest {
 
    @Test

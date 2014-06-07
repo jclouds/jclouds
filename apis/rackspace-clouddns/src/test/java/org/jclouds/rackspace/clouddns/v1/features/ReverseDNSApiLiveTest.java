@@ -53,9 +53,6 @@ import org.testng.annotations.Test;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 
-/**
- * @author Everett Toews
- */
 @Test(groups = "live", singleThreaded = true, testName = "ReverseDNSApiLiveTest")
 public class ReverseDNSApiLiveTest extends BaseCloudDNSApiLiveTest {
 

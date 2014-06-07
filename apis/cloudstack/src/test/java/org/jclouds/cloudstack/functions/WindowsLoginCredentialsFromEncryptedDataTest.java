@@ -26,9 +26,6 @@ import org.jclouds.domain.LoginCredentials;
 import org.jclouds.encryption.internal.JCECrypto;
 import org.testng.annotations.Test;
 
-/**
- * @author Richard Downer
- */
 public class WindowsLoginCredentialsFromEncryptedDataTest {
 
    private static final String PRIVATE_KEY = "-----BEGIN RSA PRIVATE KEY-----\n" +

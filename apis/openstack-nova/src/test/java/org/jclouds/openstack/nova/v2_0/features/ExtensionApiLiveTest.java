@@ -29,8 +29,6 @@ import org.testng.annotations.Test;
 
 /**
  * Tests behavior of {@link ExtensionApi}
- * 
- * @author Adrian Cole
  */
 @Test(groups = "live", testName = "ExtensionApiLiveTest")
 public class ExtensionApiLiveTest extends BaseNovaApiLiveTest {

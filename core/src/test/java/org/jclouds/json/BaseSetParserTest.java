@@ -22,10 +22,6 @@ import java.util.Set;
 
 import com.google.common.collect.ImmutableSortedSet;
 
-/**
- * 
- * @author Adrian Cole
- */
 public abstract class BaseSetParserTest<T> extends BaseParserTest<Set<T>, T> {
 
    public void compare(Set<T> expects, Set<T> response) {

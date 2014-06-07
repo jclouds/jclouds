@@ -37,11 +37,6 @@ import com.google.common.base.Function;
 import com.google.common.net.HostAndPort;
 import com.google.inject.Inject;
 
-/**
- * 
- * @author Adrian Cole
- *
- */
 @Singleton
 public class CreateSshClientOncePortIsListeningOnNode implements Function<NodeMetadata, SshClient> {
    @Resource

@@ -22,10 +22,6 @@ import org.jclouds.http.handlers.BackoffLimitedRetryHandler;
 
 import com.google.inject.ImplementedBy;
 
-/**
- * 
- * @author Adrian Cole
- */
 @ImplementedBy(BackoffLimitedRetryHandler.class)
 public interface IOExceptionRetryHandler {
 

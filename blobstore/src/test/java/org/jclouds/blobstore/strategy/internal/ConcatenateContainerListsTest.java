@@ -30,10 +30,6 @@ import org.testng.annotations.Test;
 import com.google.common.collect.Iterables;
 import com.google.inject.Injector;
 
-/**
- * 
- * @author Adrian Cole
- */
 @Test(testName = "ConcatenateContainerListsTest", singleThreaded = true)
 public class ConcatenateContainerListsTest {
    private BlobStore blobstore;

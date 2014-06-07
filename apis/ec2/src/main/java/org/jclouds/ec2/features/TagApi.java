@@ -49,7 +49,6 @@ import com.google.common.collect.Multimap;
  * @see <a
  *      href="http://docs.amazonwebservices.com/AWSEC2/latest/APIReference/ApiReference-query-DescribeTags.html"
  *      >doc</a>
- * @author Adrian Cole
  */
 @SinceApiVersion("2010-08-31")
 @RequestFilters(FormSigner.class)

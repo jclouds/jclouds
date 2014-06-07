@@ -18,11 +18,6 @@ package org.jclouds.vcloud.options;
 
 import static com.google.common.base.Preconditions.checkState;
 
-/**
- * 
- * @author Adrian Cole
- * 
- */
 public class CloneVAppOptions extends CloneOptions {
 
    private boolean deploy;

@@ -37,7 +37,6 @@ import com.google.common.cache.LoadingCache;
  * @see <a href=
  *      "http://docs.amazonwebservices.com/AmazonS3/latest/RESTBucketLocationGET.html"
  *      />
- * @author Adrian Cole
  */
 public class LocationConstraintHandler extends ParseSax.HandlerWithResult<String> {
    private final LoadingCache<String, Optional<String>> bucketToRegion;

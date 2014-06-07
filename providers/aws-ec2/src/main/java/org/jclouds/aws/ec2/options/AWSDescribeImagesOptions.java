@@ -31,7 +31,6 @@ import com.google.common.collect.Multimaps;
  * Extra options only available in Amazon's implementation
  * 
  * @see DescribeImagesOptions
- * @author Adrian Cole
  */
 public class AWSDescribeImagesOptions extends DescribeImagesOptions {
    public static final AWSDescribeImagesOptions NONE = new AWSDescribeImagesOptions();

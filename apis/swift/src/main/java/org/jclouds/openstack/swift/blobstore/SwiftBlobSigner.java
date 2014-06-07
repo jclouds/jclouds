@@ -55,9 +55,6 @@ import com.google.common.io.ByteProcessor;
 import com.google.common.reflect.Invokable;
 import com.google.inject.Provider;
 
-/**
- * @author Adrian Cole
- */
 @Singleton
 public class SwiftBlobSigner<T extends CommonSwiftAsyncClient> implements BlobRequestSigner {
 

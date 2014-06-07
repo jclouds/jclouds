@@ -39,7 +39,6 @@ import com.google.common.collect.Multimap;
  * <code> *
  * 
  * @see <a href="http://msdn.microsoft.com/en-us/library/dd179466.aspx" />
- * @author Adrian Cole
  */
 public class CreateOptions extends BaseHttpRequestOptions {
    public static final CreateOptions NONE = new CreateOptions();

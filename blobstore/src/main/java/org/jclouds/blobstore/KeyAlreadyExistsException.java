@@ -18,8 +18,6 @@ package org.jclouds.blobstore;
 
 /**
  * Thrown when a blob was attempted to be replaced while it already exists
- * 
- * @author Adrian Cole
  */
 public class KeyAlreadyExistsException extends RuntimeException {
 

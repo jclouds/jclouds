@@ -36,9 +36,6 @@ import com.google.gson.stream.JsonToken;
 import com.google.gson.stream.JsonWriter;
 import com.google.inject.AbstractModule;
 
-/**
- * @author Adrian Cole
- */
 public class CloudStackParserModule extends AbstractModule {
 
    @Override
@@ -53,7 +50,6 @@ public class CloudStackParserModule extends AbstractModule {
     * Essentially this is a workaround for the CloudStack getUsage() API call returning a corrupted form of ISO-8601
     * dates, which have an unexpected pair of apostrophes, like 2011-12-12'T'00:00:00+00:00
     * 
-    * @author Richard Downer
     */
    public static class CloudStackDateAdapter extends Iso8601DateAdapter {
 
@@ -71,7 +67,6 @@ public class CloudStackParserModule extends AbstractModule {
    /**
     * Handles types that were previously strings and now arrays (ex. tags)
     * 
-    * @author Adrian Cole
     */
    public static class CommaDelimitedOKIterableTypeAdapterFactory extends IterableTypeAdapterFactory {
 

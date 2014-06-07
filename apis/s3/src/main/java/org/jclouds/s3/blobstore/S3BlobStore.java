@@ -64,10 +64,6 @@ import com.google.common.base.Supplier;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
 
-/**
- * 
- * @author Adrian Cole
- */
 @Singleton
 public class S3BlobStore extends BaseBlobStore {
    private final S3Client sync;

@@ -24,9 +24,6 @@ import org.jclouds.javax.annotation.Nullable;
 
 import com.google.common.base.Optional;
 
-/**
- * @author Adrian Cole
- */
 public class LoginCredentials extends Credentials {
 
    private static boolean isPrivateKeyCredential(String credential) {

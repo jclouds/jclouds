@@ -21,9 +21,6 @@ import org.testng.annotations.Test;
 
 /**
  * Live test for openstack-nova {@link org.jclouds.compute.extensions.SecurityGroupExtension} implementation.
- *
- * @author Andrew Bayer
- *
  */
 @Test(groups = "live", singleThreaded = true, testName = "NovaSecurityGroupExtensionLiveTest")
 public class NovaSecurityGroupExtensionLiveTest extends BaseSecurityGroupExtensionLiveTest {

@@ -46,8 +46,6 @@ import com.google.common.collect.Iterables;
 
 /**
  * Tests behavior of {@code VolumeApi}
- *
- * @author Vijay Kiran, Alex Heneveld
  */
 @Test(groups = "live", singleThreaded = true, testName = "VolumeApiLiveTest")
 public class VolumeApiLiveTest extends BaseCloudStackApiLiveTest {

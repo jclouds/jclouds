@@ -28,10 +28,6 @@ import com.google.common.base.Splitter;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableList.Builder;
 
-/**
- * 
- * @author Adrian Cole
- */
 public class InstallRSAPrivateKey implements Statement {
    private final String sshDir;
    private final String privateKey;

@@ -24,8 +24,6 @@ import com.google.common.base.Predicate;
 
 /**
  * Predicates handy when working with KeyPairs
- * 
- * @author Adam Lowe
  */
 
 public class KeyPairPredicates {

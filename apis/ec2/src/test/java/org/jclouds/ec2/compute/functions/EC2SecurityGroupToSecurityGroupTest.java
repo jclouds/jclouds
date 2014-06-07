@@ -31,9 +31,6 @@ import org.testng.annotations.Test;
 import com.google.common.base.Supplier;
 import com.google.common.collect.ImmutableSet;
 
-/**
- * @author Andrew Bayer
- */
 @Test(groups = "unit", testName = "EC2SecurityGroupToSecurityGroupTest")
 public class EC2SecurityGroupToSecurityGroupTest {
 

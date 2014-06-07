@@ -44,8 +44,6 @@ import com.google.common.reflect.TypeToken;
 import com.google.inject.Module;
 /**
  * Implementation of {@link org.jclouds.providers.ProviderMetadata} for HP Cloud Services Object Storage
- *
- * @author Jeremy Daggett
  */
 public class HPCloudObjectStorageApiMetadata extends SwiftKeystoneApiMetadata {
 

@@ -35,11 +35,6 @@ import org.jclouds.rest.ConfiguresHttpApi;
 
 import com.google.inject.Scopes;
 
-/**
- * 
- * @author Adrian Cole
- * @author Adam Lowe
- */
 @ConfiguresHttpApi
 public class NovaEC2HttpApiModule extends BaseEC2HttpApiModule<NovaEC2Api> {
 

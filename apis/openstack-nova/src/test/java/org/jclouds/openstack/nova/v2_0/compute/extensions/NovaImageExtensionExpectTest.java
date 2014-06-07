@@ -32,10 +32,6 @@ import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableMap.Builder;
 import com.google.common.util.concurrent.Futures;
 
-/**
- * 
- * @author Adrian Cole
- */
 @Test(groups = "unit", testName = "NovaImageExtensionExpectTest")
 public class NovaImageExtensionExpectTest extends BaseNovaComputeServiceExpectTest {
    

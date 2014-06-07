@@ -61,9 +61,6 @@ import com.google.common.base.Predicate;
 import com.google.common.base.Supplier;
 import com.google.common.util.concurrent.ListeningExecutorService;
 
-/**
- * @author Andrew Kennedy
- */
 @Singleton
 public class GoGridComputeService extends BaseComputeService {
    @Inject

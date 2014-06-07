@@ -27,7 +27,6 @@ import com.google.common.collect.FluentIterable;
  * Provides synchronous access to Virtual Interface features (VIFs).
  * 
  * @see VirtualInterfaceAsyncApi
- * @author Adam Lowe
  */
 @Beta
 @Extension(of = ServiceType.COMPUTE, namespace = ExtensionNamespaces.VIRTUAL_INTERFACES)

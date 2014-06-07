@@ -18,8 +18,6 @@ package org.jclouds.scriptbuilder.domain;
 
 /**
  * Type of an Operating System.
- * 
- * @author Adrian Cole
  */
 public enum OsFamily {
 

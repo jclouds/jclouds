@@ -36,8 +36,6 @@ import com.google.inject.Inject;
 /**
  * A function for transforming a Nova-specific SecurityGroup into a generic
  * SecurityGroup object.
- * 
- * @author Andrew Bayer
  */
 @Singleton
 public class NovaSecurityGroupToSecurityGroup implements Function<org.jclouds.openstack.nova.v2_0.domain.SecurityGroup, SecurityGroup> {

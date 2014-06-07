@@ -19,8 +19,6 @@ package org.jclouds.http;
 /**
  * Indicate whether a request should be retried after a server error response (HTTP status code >=
  * 500) based on the request's replayable status and the number of attempts already performed.
- * 
- * @author James Murty
  */
 public interface HttpRetryHandler {
    public static final HttpRetryHandler ALWAYS_RETRY = new HttpRetryHandler() {

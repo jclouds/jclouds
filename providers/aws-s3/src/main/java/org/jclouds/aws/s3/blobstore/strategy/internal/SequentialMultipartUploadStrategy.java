@@ -48,8 +48,6 @@ import com.google.inject.Inject;
  * (for example 100 partCount), then it grows the partition size instead of number
  * of partitions. When we reached the maximum part size, then again it starts to
  * grow the number of partitions.
- * 
- * @author Tibor Kiss, Adrian Cole
  */
 public class SequentialMultipartUploadStrategy implements MultipartUploadStrategy {
    @Resource

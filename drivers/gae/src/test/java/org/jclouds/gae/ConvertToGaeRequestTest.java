@@ -47,10 +47,6 @@ import com.google.common.base.Throwables;
 import com.google.common.io.Files;
 import com.google.common.net.HttpHeaders;
 
-/**
- * 
- * @author Adrian Cole
- */
 @Test
 public class ConvertToGaeRequestTest {
    ConvertToGaeRequest req;

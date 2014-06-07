@@ -26,9 +26,6 @@ import org.testng.annotations.Test;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 
-/**
- * @author Adrian Cole
- */
 @Test
 public class TagsTest {
    Tag resourceTag1 = Tag.builder().resourceType(IMAGE).resourceId("1").key("key").value("value").build();

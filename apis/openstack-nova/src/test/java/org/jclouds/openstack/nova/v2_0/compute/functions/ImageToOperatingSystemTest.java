@@ -38,8 +38,6 @@ import com.google.common.collect.Maps;
 /**
  * Tests for the function for transforming a nova specific Image into a generic
  * OperatingSystem object.
- * 
- * @author Matt Stephenson
  */
 public class ImageToOperatingSystemTest {
 

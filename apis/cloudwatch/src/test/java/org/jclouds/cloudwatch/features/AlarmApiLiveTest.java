@@ -47,9 +47,6 @@ import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
-/**
- * @author Jeremy Whitlock
- */
 @Test(groups = "live", testName = "AlarmApiLiveTest")
 public class AlarmApiLiveTest extends BaseCloudWatchApiLiveTest {
 

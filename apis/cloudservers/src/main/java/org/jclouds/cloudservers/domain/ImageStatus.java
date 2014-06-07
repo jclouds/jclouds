@@ -21,8 +21,6 @@ package org.jclouds.cloudservers.domain;
  * element (0- 100% completion) will also be returned. Other possible values for the status
  * attribute include: UNKNOWN, PREPARING, ACTIVE QUEUED, FAILED. Images with an ACTIVE status are
  * available for install.
- * 
- * @author Adrian Cole
  */
 public enum ImageStatus {
 

@@ -41,10 +41,8 @@ import com.google.inject.Provides;
  * <p>
  * This module is not registered by default in the context because some providers do not allow to spawn threads.
  * 
- * @author Ignasi Barrera
  * 
  * @see ExecutorServiceModule
- * 
  */
 public class ScheduledExecutorServiceModule extends AbstractModule {
    @Provides

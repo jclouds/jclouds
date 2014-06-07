@@ -30,8 +30,6 @@ import com.google.common.collect.ImmutableMap;
 
 /**
  * Tests behavior of {@code ZoneToEndpoint}
- * 
- * @author Adrian Cole
  */
 @Test(groups = "unit", testName = "ZoneToEndpointTest")
 public class ZoneToEndpointTest {

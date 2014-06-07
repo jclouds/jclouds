@@ -37,10 +37,6 @@ import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.Iterables;
 import com.google.common.util.concurrent.Atomics;
 
-/**
- * 
- * @author Adrian Cole
- */
 @Test(groups = "unit", testName = "FindSecurityGroupWithNameAndReturnTrueExpectTest")
 public class FindSecurityGroupWithNameAndReturnTrueExpectTest extends BaseNovaApiExpectTest {
 

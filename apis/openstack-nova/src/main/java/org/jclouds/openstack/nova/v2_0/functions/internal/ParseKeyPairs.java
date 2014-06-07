@@ -32,10 +32,6 @@ import com.google.common.collect.FluentIterable;
 import com.google.inject.Inject;
 import com.google.inject.TypeLiteral;
 
-/**
- * 
- * @author Adrian Cole
- */
 @Singleton
 public class ParseKeyPairs implements Function<HttpResponse, FluentIterable<? extends KeyPair>> {
    private final ParseFirstJsonValueNamed<FluentIterable<Wrapper>> parser;

@@ -30,9 +30,6 @@ import org.xml.sax.SAXException;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.ImmutableSet.Builder;
 
-/**
- * @author Adrian Cole
- */
 public class SpotInstancesHandler extends ParseSax.HandlerWithResult<Set<SpotInstanceRequest>> {
 
    private final Builder<SpotInstanceRequest> spotRequests = ImmutableSet.builder();

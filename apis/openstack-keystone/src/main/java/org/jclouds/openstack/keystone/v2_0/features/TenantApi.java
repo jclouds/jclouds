@@ -25,7 +25,6 @@ import org.jclouds.openstack.v2_0.options.PaginationOptions;
  * Provides synchronous access to the KeyStone Tenant API.
  * <p/>
  * 
- * @author Adam Lowe
  * @see TenantAsyncApi
  * @see <a href=
  *      "http://docs.openstack.org/api/openstack-identity-service/2.0/content/Tenant_Operations.html"

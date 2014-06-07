@@ -24,7 +24,6 @@ import com.google.common.collect.ImmutableSet;
  * @see <a href=
  *      "http://download.cloud.com/releases/2.2.0/api/user/listIpForwardingRules.html"
  *      />
- * @author Adrian Cole
  */
 public class ListIPForwardingRulesOptions extends AccountInDomainOptions {
 

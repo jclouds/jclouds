@@ -29,9 +29,6 @@ import org.jclouds.domain.Location;
 import com.google.common.base.Function;
 import com.google.common.base.Supplier;
 
-/**
- * @author Adrian Cole
- */
 @Singleton
 public class ContainerToResourceMetadata implements Function<ContainerProperties, StorageMetadata> {
    private Supplier<Location> defaultLocation;

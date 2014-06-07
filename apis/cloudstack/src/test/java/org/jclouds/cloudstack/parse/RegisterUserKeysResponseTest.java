@@ -21,9 +21,6 @@ import org.jclouds.json.BaseParserTest;
 import org.jclouds.rest.annotations.SelectJson;
 import org.testng.annotations.Test;
 
-/**
- * @author Andrei Savu
- */
 @Test(groups = "unit")
 public class RegisterUserKeysResponseTest extends BaseParserTest<ApiKeyPair, Object> {
 

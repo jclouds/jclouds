@@ -27,9 +27,6 @@ import org.jclouds.ec2.EC2Api;
 import com.google.common.base.Function;
 import com.google.common.collect.Iterables;
 
-/**
- * @author Andrew Bayer
- */
 @Singleton
 public class EC2SecurityGroupIdFromName implements Function<String, String> {
    protected EC2Api api;

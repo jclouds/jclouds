@@ -19,9 +19,6 @@ package org.jclouds.hpcloud.objectstorage.blobstore.integration;
 import org.jclouds.openstack.swift.blobstore.integration.SwiftBlobLiveTest;
 import org.testng.annotations.Test;
 
-/**
- * @author Jeremy Daggett
- */
 @Test(groups = { "live" })
 public class HPCloudObjectStorageBlobLiveTest extends SwiftBlobLiveTest {
    public HPCloudObjectStorageBlobLiveTest() {

@@ -26,11 +26,6 @@ import org.jclouds.internal.ContextImpl;
 import org.jclouds.servermanager.ServerManagerApiMetadata;
 import org.testng.annotations.Test;
 
-/**
- * 
- * @author Adrian Cole
- * 
- */
 @Test(groups = "unit", testName = "ServerManagerContextBuilderTest")
 public class ServerManagerComputeServiceContextBuilderTest {
 

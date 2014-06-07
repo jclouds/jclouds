@@ -20,10 +20,6 @@ import org.jclouds.openstack.swift.domain.SwiftObject;
 
 import com.google.common.base.Function;
 
-/**
- * 
- * @author Adrian Cole
- */
 public class ObjectName implements Function<Object, String> {
 
    public String apply(Object from) {

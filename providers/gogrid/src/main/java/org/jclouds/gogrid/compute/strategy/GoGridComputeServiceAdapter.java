@@ -53,7 +53,6 @@ import com.google.common.primitives.Longs;
 /**
  * defines the connection between the {@link org.jclouds.gogrid.GoGridApi} implementation and the jclouds
  * {@link ComputeService}
- * 
  */
 @Singleton
 public class GoGridComputeServiceAdapter implements ComputeServiceAdapter<Server, Hardware, ServerImage, Option> {

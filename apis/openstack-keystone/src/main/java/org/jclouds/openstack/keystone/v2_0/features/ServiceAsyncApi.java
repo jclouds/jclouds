@@ -41,7 +41,6 @@ import com.google.common.util.concurrent.ListenableFuture;
  * @see <a href=
  *      "http://docs.openstack.org/api/openstack-identity-service/2.0/content/Service_API_Api_Operations.html"
  *      />
- * @author Adam Lowe
  */
 public interface ServiceAsyncApi {
 

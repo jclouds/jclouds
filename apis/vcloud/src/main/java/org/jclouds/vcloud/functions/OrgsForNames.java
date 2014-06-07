@@ -30,9 +30,6 @@ import com.google.common.base.Function;
 import com.google.common.base.Predicates;
 import com.google.common.collect.Iterables;
 
-/**
- * @author Adrian Cole
- */
 @Singleton
 public class OrgsForNames implements Function<Iterable<String>, Iterable<Org>> {
    @Resource

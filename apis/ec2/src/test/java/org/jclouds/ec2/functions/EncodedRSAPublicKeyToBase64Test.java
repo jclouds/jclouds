@@ -24,8 +24,6 @@ import org.testng.annotations.Test;
 
 /**
  * Tests behavior of {@code EncodedRSAPublicKeyToBase64}
- * 
- * @author Adrian Cole
  */
 @Test(groups = "unit")
 public class EncodedRSAPublicKeyToBase64Test {

@@ -23,8 +23,6 @@ import com.google.inject.ImplementedBy;
 
 /**
  * Determines if a directory exists or not.
- * 
- * @author Adrian Cole
  */
 @ImplementedBy(MarkersIfDirectoryReturnNameStrategy.class)
 public interface IfDirectoryReturnNameStrategy {

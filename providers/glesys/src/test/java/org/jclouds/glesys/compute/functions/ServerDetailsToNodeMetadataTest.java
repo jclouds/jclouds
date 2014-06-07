@@ -42,7 +42,6 @@ import com.google.common.collect.ImmutableSet;
 
 /**
  * TODO
- * 
  */
 @Test(groups = "unit", testName = "ServerDetailsToNodeMetadataTest")
 public class ServerDetailsToNodeMetadataTest extends BaseGleSYSComputeServiceExpectTest {

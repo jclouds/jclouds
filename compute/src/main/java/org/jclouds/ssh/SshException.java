@@ -16,9 +16,6 @@
  */
 package org.jclouds.ssh;
 
-/**
- * @author Adrian Cole
- */
 public class SshException extends RuntimeException {
 
    public SshException() {

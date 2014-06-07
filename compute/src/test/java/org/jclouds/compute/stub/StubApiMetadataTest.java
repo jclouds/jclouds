@@ -19,10 +19,6 @@ package org.jclouds.compute.stub;
 import org.jclouds.compute.internal.BaseComputeServiceApiMetadataTest;
 import org.testng.annotations.Test;
 
-/**
- * 
- * @author Adrian Cole
- */
 @Test(groups = "unit", testName = "StubApiMetadataTest")
 public class StubApiMetadataTest extends BaseComputeServiceApiMetadataTest {
 

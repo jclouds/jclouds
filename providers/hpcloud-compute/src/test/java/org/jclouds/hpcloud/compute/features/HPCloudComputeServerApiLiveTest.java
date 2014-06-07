@@ -19,10 +19,6 @@ package org.jclouds.hpcloud.compute.features;
 import org.jclouds.openstack.nova.v2_0.features.ServerApiLiveTest;
 import org.testng.annotations.Test;
 
-/**
- * 
- * @author Adrian Cole
- */
 @Test(groups = "live", testName = "HPCloudComputeServerApiLiveTest")
 public class HPCloudComputeServerApiLiveTest extends ServerApiLiveTest {
    public HPCloudComputeServerApiLiveTest() {

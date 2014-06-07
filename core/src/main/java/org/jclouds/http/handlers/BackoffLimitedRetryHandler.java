@@ -72,8 +72,6 @@ import com.google.inject.Inject;
  * {@link TransformingHttpCommand#incrementFailureCount()}, because this failure count value is used
  * to determine how many times the command has already been tried. It also closes the response's
  * content input stream to ensure connections are cleaned up.
- * 
- * @author James Murty
  */
 @Singleton
 public class BackoffLimitedRetryHandler implements HttpRetryHandler, IOExceptionRetryHandler {

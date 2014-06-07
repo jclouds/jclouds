@@ -24,9 +24,6 @@ import java.io.InputStream;
 
 import static org.testng.Assert.assertEquals;
 
-/**
- * @author Andrei Savu
- */
 // NOTE:without testName, this will not call @Before* and fail w/NPE during surefire
 @Test(groups = "unit", testName = "DeleteResultHandlerTest")
 public class DeleteResultHandlerTest extends BaseHandlerTest {

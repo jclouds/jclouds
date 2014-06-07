@@ -45,7 +45,6 @@ import com.google.common.reflect.Invokable;
  * Tests the behaviour of SnapshotApi.
  * 
  * @see SnapshotApi
- * @author Richard Downer
  */
 // NOTE:without testName, this will not call @Before* and fail w/NPE during
 // surefire

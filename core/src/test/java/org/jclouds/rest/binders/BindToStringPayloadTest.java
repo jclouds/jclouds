@@ -27,8 +27,6 @@ import com.google.common.collect.ImmutableMap;
 
 /**
  * Tests behavior of {@code BindToStringPayload}
- * 
- * @author Adrian Cole
  */
 @Test(groups = "unit", testName = "BindToStringPayloadTest")
 public class BindToStringPayloadTest {

@@ -28,10 +28,6 @@ import org.xml.sax.SAXException;
 
 import com.google.inject.Inject;
 
-/**
- * 
- * @author Adrian Cole
- */
 public class UserAndSessionCredentialsHandler extends ParseSax.HandlerForGeneratedRequestWithResult<UserAndSessionCredentials> {
 
    private final SessionCredentialsHandler credsHandler;

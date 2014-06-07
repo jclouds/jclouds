@@ -34,9 +34,6 @@ import com.google.common.collect.ForwardingObject;
 import com.google.common.reflect.TypeParameter;
 import com.google.common.reflect.TypeToken;
 
-/**
- * @author Adrian Cole
- */
 @Singleton
 public abstract class BaseView extends ForwardingObject implements View {
 

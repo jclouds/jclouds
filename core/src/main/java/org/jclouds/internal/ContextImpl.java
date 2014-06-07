@@ -44,9 +44,6 @@ import com.google.common.base.Supplier;
 import com.google.common.collect.ImmutableMap;
 import com.google.inject.Singleton;
 
-/**
- * @author Adrian Cole
- */
 @Singleton
 public class ContextImpl implements Context {
 

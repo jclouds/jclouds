@@ -22,8 +22,6 @@ import com.google.common.base.CaseFormat;
 
 /**
  * Decides what type of credentials createContext is supplied with.
- * 
- * @author Adrian Cole
  */
 public enum CredentialType {
 

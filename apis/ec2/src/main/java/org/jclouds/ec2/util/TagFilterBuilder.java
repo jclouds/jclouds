@@ -44,7 +44,6 @@ import com.google.common.collect.Multimap;
  * example, a value of {@code \*amazon\?\\} searches for the literal string
  * {@code *amazon?\}.
  * 
- * @author Adrian Cole
  * @see TagApi
  */
 public class TagFilterBuilder extends ImmutableMultimap.Builder<String, String> {

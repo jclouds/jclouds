@@ -53,7 +53,6 @@ import com.google.common.util.concurrent.ListenableFuture;
  * <p/>
  * 
  * @see org.jclouds.openstack.nova.v2_0.extensions.VolumeAsyncApi
- * @author Adam Lowe
  */
 @Beta
 @Extension(of = ServiceType.COMPUTE, namespace = ExtensionNamespaces.VOLUMES)

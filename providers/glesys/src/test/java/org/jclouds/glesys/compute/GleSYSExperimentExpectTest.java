@@ -22,10 +22,6 @@ import org.jclouds.compute.ComputeServiceContext;
 import org.jclouds.glesys.compute.internal.BaseGleSYSComputeServiceExpectTest;
 import org.testng.annotations.Test;
 
-/**
- * 
- * @author Adrian Cole
- */
 @Test(groups = "live", singleThreaded = true, testName = "GleSYSExperimentLiveTest")
 public class GleSYSExperimentExpectTest extends BaseGleSYSComputeServiceExpectTest {
 

@@ -30,7 +30,6 @@ import com.google.common.base.Supplier;
  * <p/>
  * RunInstancesResponse xmlns="http:
  * 
- * @author Adrian Cole
  * @see <a href="http: />
  */
 public class AWSRunInstancesResponseHandler extends BaseAWSReservationHandler<Reservation<? extends RunningInstance>> {

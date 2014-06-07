@@ -18,10 +18,6 @@ package org.jclouds.elasticstack.domain;
 
 import org.jclouds.javax.annotation.Nullable;
 
-/**
- * 
- * @author Adrian Cole
- */
 public class VNC {
    @Nullable
    private final String ip;

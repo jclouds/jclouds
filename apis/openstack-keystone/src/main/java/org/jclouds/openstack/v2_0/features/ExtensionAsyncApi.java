@@ -43,7 +43,6 @@ import com.google.common.util.concurrent.ListenableFuture;
  * @see <a href=
  *      "http://docs.openstack.org/api/openstack-compute/2/content/Extensions-d1e1444.html"
  *      />
- * @author Adrian Cole
  */
 @RequestFilters(AuthenticateRequest.class)
 public interface ExtensionAsyncApi {

@@ -28,8 +28,6 @@ import com.google.common.collect.Maps;
 
 /**
  * Constants used in shell scripting.
- * 
- * @author Adrian Cole
  */
 public enum ShellToken {
 

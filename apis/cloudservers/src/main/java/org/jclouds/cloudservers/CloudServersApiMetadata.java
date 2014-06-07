@@ -32,8 +32,6 @@ import com.google.inject.Module;
 
 /**
  * Implementation of {@link ApiMetadata} for CloudServers 1.0 API
- * 
- * @author Adrian Cole
  */
 public class CloudServersApiMetadata extends BaseRestApiMetadata {
 

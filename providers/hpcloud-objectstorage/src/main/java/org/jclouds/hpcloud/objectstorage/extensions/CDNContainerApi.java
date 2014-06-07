@@ -34,7 +34,6 @@ import com.google.common.collect.FluentIterable;
  * @see <a href="https://manage.hpcloud.com/pages/build/docs/objectstorage-lvs/api">HP Cloud Object
  *      Storage API</a>
  * @see CDNContainerAsyncApi
- * @author Jeremy Daggett
  */
 @Beta
 public interface CDNContainerApi  {

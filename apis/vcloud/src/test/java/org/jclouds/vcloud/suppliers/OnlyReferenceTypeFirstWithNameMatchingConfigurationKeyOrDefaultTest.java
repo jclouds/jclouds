@@ -36,8 +36,6 @@ import com.google.inject.name.Names;
 /**
  * Tests behavior of
  * {@code OnlyReferenceTypeFirstWithNameMatchingConfigurationKeyOrDefault}
- * 
- * @author Adrian Cole
  */
 // NOTE:without testName, this will not call @Before* and fail w/NPE during
 // surefire

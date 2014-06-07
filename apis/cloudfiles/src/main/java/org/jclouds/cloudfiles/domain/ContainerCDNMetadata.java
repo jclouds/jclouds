@@ -25,11 +25,6 @@ import javax.inject.Named;
 
 import org.jclouds.javax.annotation.Nullable;
 
-/**
- * 
- * @author James Murty
- * 
- */
 public class ContainerCDNMetadata implements Comparable<ContainerCDNMetadata> {
 
    private String name;

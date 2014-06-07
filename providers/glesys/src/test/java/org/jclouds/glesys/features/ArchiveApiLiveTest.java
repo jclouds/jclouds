@@ -33,8 +33,6 @@ import com.google.common.base.Predicate;
 
 /**
  * Tests behavior of {@code ArchiveApi}
- *
- * @author Adam Lowe
  */
 @Test(groups = "live", testName = "ArchiveApiLiveTest", singleThreaded = true)
 public class ArchiveApiLiveTest extends BaseGleSYSApiLiveTest {

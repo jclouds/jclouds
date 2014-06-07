@@ -30,7 +30,6 @@ import javax.inject.Qualifier;
 /**
  * Designates that this Resource qualifies an object to an api version.
  * 
- * @author Adrian Cole
  * @see Constants#PROPERTY_API_VERSION
  */
 @Target( { ANNOTATION_TYPE, FIELD, METHOD, PARAMETER })

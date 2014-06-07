@@ -24,10 +24,6 @@ import com.google.common.base.Optional;
 import com.google.common.reflect.Invokable;
 import com.google.common.reflect.TypeToken;
 
-/**
- * 
- * @author Adrian Cole
- */
 public class Optionals2 {
    public static Class<?> unwrapIfOptional(TypeToken<?> type) {
       if (type.getRawType().isAssignableFrom(Optional.class)) {

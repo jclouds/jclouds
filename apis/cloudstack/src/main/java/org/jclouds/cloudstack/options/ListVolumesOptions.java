@@ -22,8 +22,6 @@ import com.google.common.collect.ImmutableSet;
 
 /**
  * Options used to control what volume
- *
- * @author Vijay Kiran
  */
 public class ListVolumesOptions extends AccountInDomainOptions {
 

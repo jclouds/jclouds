@@ -31,7 +31,6 @@ import com.google.common.primitives.Longs;
 /**
  * Class LoadBalancer
  * 
- * @author Oleksiy Yarmula
 */
 public class LoadBalancer implements Comparable<LoadBalancer> {
 

@@ -32,9 +32,6 @@ import org.jclouds.rest.ApiContext;
 
 import com.google.common.reflect.TypeToken;
 
-/**
- * @author Adrian Cole
- */
 @Singleton
 public class CloudStackContextImpl extends ComputeServiceContextImpl implements CloudStackContext {
    private final CloudStackApi client;

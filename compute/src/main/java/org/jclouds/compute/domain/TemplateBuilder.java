@@ -27,8 +27,6 @@ import com.google.inject.ImplementedBy;
 
 /**
  * Creates a customized template based on requirements.
- * 
- * @author Adrian Cole
  */
 @ImplementedBy(TemplateBuilderImpl.class)
 public interface TemplateBuilder {

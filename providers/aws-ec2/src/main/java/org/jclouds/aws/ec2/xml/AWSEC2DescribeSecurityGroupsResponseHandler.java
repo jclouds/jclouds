@@ -38,7 +38,6 @@ import com.google.common.collect.ImmutableSet.Builder;
  * @see <a href=
  *      "http://docs.amazonwebservices.com/AWSEC2/latest/APIReference/index.html?ApiReference-query-DescribesecurityGroupInfo.html"
  *      />
- * @author Adrian Cole
  */
 public class AWSEC2DescribeSecurityGroupsResponseHandler extends
       HandlerForGeneratedRequestWithResult<Set<SecurityGroup>> {

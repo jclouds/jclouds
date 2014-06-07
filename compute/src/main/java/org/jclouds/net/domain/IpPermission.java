@@ -40,7 +40,6 @@ import com.google.common.collect.Sets;
  * range (cidrblock), set of explicit security group ids in the current tenant, or security group
  * names in another tenant.
  * 
- * @author Adrian Cole
  * @see IpPermissions
  */
 @Beta

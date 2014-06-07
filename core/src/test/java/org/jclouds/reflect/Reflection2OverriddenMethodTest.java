@@ -43,8 +43,6 @@ import com.google.common.reflect.TypeToken;
  * This test has been separated out into a separate class as it requires
  * reflection to modify the internal static caches of {@code Reflection2}
  * and needs to perform cleanup to avoid affecting other tests.
- * 
- * @author Andrew Phillips
  */
 @Test
 public class Reflection2OverriddenMethodTest {

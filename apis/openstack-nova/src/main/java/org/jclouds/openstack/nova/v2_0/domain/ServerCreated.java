@@ -30,7 +30,6 @@ import com.google.common.base.Optional;
 /**
  * Server Resource with administrative password returned by ServerApi#CreateServer calls
  * 
- * @author Adam Lowe
  * @see <a href=
       "http://docs.openstack.org/api/openstack-compute/1.1/content/Get_Server_Details-d1e2623.html"
       />

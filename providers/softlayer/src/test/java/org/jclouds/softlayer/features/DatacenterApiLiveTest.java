@@ -31,8 +31,6 @@ import com.google.common.collect.ImmutableSet.Builder;
 
 /**
  * Tests behavior of {@code DatacenterApi}
- * 
- * @author Adrian Cole
  */
 @Test(groups = "live")
 public class DatacenterApiLiveTest extends BaseSoftLayerApiLiveTest {

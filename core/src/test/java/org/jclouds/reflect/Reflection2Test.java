@@ -38,10 +38,6 @@ import com.google.common.reflect.Parameter;
 import com.google.common.reflect.TypeToken;
 import com.google.inject.TypeLiteral;
 
-/**
- * 
- * @author Adrian Cole
- */
 @Test
 public class Reflection2Test {
 

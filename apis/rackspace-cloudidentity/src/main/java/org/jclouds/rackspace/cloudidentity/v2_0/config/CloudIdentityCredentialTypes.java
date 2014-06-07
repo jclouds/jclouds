@@ -19,10 +19,6 @@ package org.jclouds.rackspace.cloudidentity.v2_0.config;
 import org.jclouds.openstack.keystone.v2_0.config.CredentialTypes;
 
 
-/**
- * 
- * @author Adrian Cole
- */
 public class CloudIdentityCredentialTypes extends CredentialTypes {
 
    public static final String API_KEY_CREDENTIALS = "RAX-KSKEY:apiKeyCredentials";

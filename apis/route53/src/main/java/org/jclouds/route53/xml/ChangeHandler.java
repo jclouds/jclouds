@@ -32,8 +32,6 @@ import org.xml.sax.Attributes;
  * @see <a href=
  *      "http://docs.aws.amazon.com/Route53/latest/APIReference/API_GetChange.html"
  *      />
- * 
- * @author Adrian Cole
  */
 public class ChangeHandler extends ParseSax.HandlerForGeneratedRequestWithResult<Change> {
    private final DateService dateService;

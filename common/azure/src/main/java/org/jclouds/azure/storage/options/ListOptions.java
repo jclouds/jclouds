@@ -27,7 +27,6 @@ import com.google.common.collect.ImmutableSet;
  * Options used to control paginated results (aka list commands).
  * 
  * @see <a href="http://msdn.microsoft.com/en-us/library/dd179466.aspx" />
- * @author Adrian Cole
  */
 public class ListOptions extends BaseHttpRequestOptions {
    public static final ListOptions NONE = new ListOptions();

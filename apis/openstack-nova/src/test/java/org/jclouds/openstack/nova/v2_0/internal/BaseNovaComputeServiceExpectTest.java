@@ -22,8 +22,6 @@ import org.jclouds.compute.ComputeServiceContext;
 /**
  * Base class for writing KeyStone Expect tests with the ComputeService
  * abstraction
- * 
- * @author Matt Stephenson
  */
 public class BaseNovaComputeServiceExpectTest extends BaseNovaComputeServiceContextExpectTest<ComputeService> {
 

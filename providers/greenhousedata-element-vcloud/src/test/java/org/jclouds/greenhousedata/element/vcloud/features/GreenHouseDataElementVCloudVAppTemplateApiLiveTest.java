@@ -19,11 +19,6 @@ package org.jclouds.greenhousedata.element.vcloud.features;
 import org.jclouds.vcloud.features.VAppTemplateApiLiveTest;
 import org.testng.annotations.Test;
 
-/**
- * 
- * 
- * @author Adrian Cole
- */
 @Test(groups = "live", enabled = true, singleThreaded = true, testName = "GreenHouseDataElementVCloudVAppTemplateApiLiveTest")
 public class GreenHouseDataElementVCloudVAppTemplateApiLiveTest extends VAppTemplateApiLiveTest {
 

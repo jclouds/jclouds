@@ -40,8 +40,6 @@ import com.google.inject.Inject;
 /**
  * A function for transforming a Nova-specific SecurityGroup into a generic
  * SecurityGroup object.
- * 
- * @author Andrew Bayer
  */
 @Singleton
 public class NovaSecurityGroupInZoneToSecurityGroup implements Function<SecurityGroupInZone, SecurityGroup> {

@@ -40,8 +40,6 @@ import org.jclouds.vcloud.xml.VDCHandler;
 /**
  * Provides access to VDC functionality in vCloud
  * <p/>
- * 
- * @author Adrian Cole
  */
 @RequestFilters(AddVCloudAuthorizationAndCookieToRequest.class)
 public interface VDCApi {

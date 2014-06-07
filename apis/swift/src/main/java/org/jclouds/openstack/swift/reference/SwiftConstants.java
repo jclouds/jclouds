@@ -19,8 +19,6 @@ package org.jclouds.openstack.swift.reference;
 
 /**
  * Configuration properties and constants used in Cloud Files connections.
- * 
- * @author Adrian Cole
  */
 public final class SwiftConstants {
    /**

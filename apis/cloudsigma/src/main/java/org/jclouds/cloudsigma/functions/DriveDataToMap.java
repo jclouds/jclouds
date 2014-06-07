@@ -33,10 +33,6 @@ import com.google.common.base.Function;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableMap.Builder;
 
-/**
- * 
- * @author Adrian Cole
- */
 @Singleton
 public class DriveDataToMap implements Function<DriveData, Map<String, String>> {
    private final BaseDriveToMap baseDriveToMap;

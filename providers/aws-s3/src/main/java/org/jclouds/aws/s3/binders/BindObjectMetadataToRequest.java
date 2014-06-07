@@ -32,10 +32,6 @@ import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.ImmutableMultimap.Builder;
 import com.google.common.net.HttpHeaders;
 
-/**
- * 
- * @author Adrian Cole
- */
 @Singleton
 public class BindObjectMetadataToRequest implements Binder {
    protected final BindMapToHeadersWithPrefix metadataPrefixer;

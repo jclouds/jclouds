@@ -32,10 +32,6 @@ import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
 
-/**
- * 
- * @author Adrian Cole
- */
 @Singleton
 public class RegionAndNameToImageSupplier implements Supplier<LoadingCache<RegionAndName, ? extends Image>> {
    private final LoadingCache<RegionAndName, Image> cache;

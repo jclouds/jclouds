@@ -35,8 +35,6 @@ import com.google.common.collect.Iterables;
 
 /**
  * Tests behavior of {@code JaxrsAnnotationProcessor}
- * 
- * @author Adrian Cole
  */
 @Test(groups = "live")
 public class CloudFilesClientLiveTest extends CommonSwiftClientLiveTest<CloudFilesClient> {

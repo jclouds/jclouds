@@ -23,10 +23,6 @@ import org.jclouds.blobstore.domain.Blob;
 import org.jclouds.blobstore.options.GetOptions;
 import org.jclouds.http.HttpRequest;
 
-/**
- * 
- * @author Adrian Cole
- */
 @Singleton
 public class RequestSigningUnsupported implements BlobRequestSigner {
 

@@ -27,9 +27,6 @@ import org.jclouds.ultradns.ws.parse.GetAccountsListOfUserResponseTest;
 import org.jclouds.ultradns.ws.parse.GetAvailableRegionsResponseTest;
 import org.testng.annotations.Test;
 
-/**
- * @author Adrian Cole
- */
 @Test(groups = "unit", testName = "UltraDNSWSApiExpectTest")
 public class UltraDNSWSApiExpectTest extends BaseUltraDNSWSApiExpectTest {
 

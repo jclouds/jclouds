@@ -29,8 +29,6 @@ import com.google.inject.Inject;
  * @see <a href=
  *      "http://docs.aws.amazon.com/Route53/latest/APIReference/API_CreateHostedZone.html"
  *      />
- * 
- * @author Adrian Cole
  */
 public class CreateHostedZoneResponseHandler extends ParseSax.HandlerForGeneratedRequestWithResult<NewHostedZone> {
 

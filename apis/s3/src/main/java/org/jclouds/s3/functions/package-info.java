@@ -16,6 +16,5 @@
  */
 /**
  * This package contains response handlers for S3 commands. 
- * @author Adrian Cole
  */
 package org.jclouds.s3.functions;

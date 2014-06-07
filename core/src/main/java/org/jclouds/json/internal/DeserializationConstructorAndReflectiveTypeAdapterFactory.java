@@ -99,9 +99,6 @@ import com.google.gson.stream.JsonWriter;
  * </pre>
  * <p/>
  * <br/>
- * 
- * @author Adrian Cole
- * @author Adam Lowe
  */
 public final class DeserializationConstructorAndReflectiveTypeAdapterFactory implements TypeAdapterFactory {
    private final AnnotationConstructorNamingStrategy constructorFieldNamingPolicy;

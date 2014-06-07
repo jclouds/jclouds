@@ -62,7 +62,6 @@ import com.google.common.util.concurrent.ListenableFuture;
  * @see <a
  *      href="https://api-docs.hpcloud.com/hpcloud-cdn-storage/1.0/content/ch_cdn-dev-overview.html">HP
  *      Cloud Object Storage API</a>
- * @author Jeremy Daggett
  */
 @RequestFilters(AuthenticateRequest.class)
 @Endpoint(HPExtensionCDN.class)

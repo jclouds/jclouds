@@ -32,8 +32,6 @@ import com.google.common.collect.ImmutableSet;
 
 /**
  * Represents a host issued by Cloudstack
- *
- * @author Andrei Savu
  */
 public class Host implements Comparable<Host> {
 

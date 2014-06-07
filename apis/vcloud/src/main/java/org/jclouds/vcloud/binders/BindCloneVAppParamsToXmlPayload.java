@@ -29,11 +29,6 @@ import org.jclouds.vcloud.options.CloneVAppOptions;
 import com.google.inject.Inject;
 import com.jamesmurty.utils.XMLBuilder;
 
-/**
- * 
- * @author Adrian Cole
- * 
- */
 @Singleton
 public class BindCloneVAppParamsToXmlPayload extends BindCloneParamsToXmlPayload<CloneVAppOptions> {
 

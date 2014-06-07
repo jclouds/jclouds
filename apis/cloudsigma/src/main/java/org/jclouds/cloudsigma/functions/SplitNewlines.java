@@ -29,10 +29,6 @@ import org.jclouds.http.functions.ReturnStringIf2xx;
 import com.google.common.base.Function;
 import com.google.common.base.Splitter;
 
-/**
- * 
- * @author Adrian Cole
- */
 @Singleton
 public class SplitNewlines implements Function<HttpResponse, Set<String>> {
    private final ReturnStringIf2xx returnStringIf200;

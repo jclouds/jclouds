@@ -29,8 +29,6 @@ import com.google.inject.TypeLiteral;
 
 /**
  * Configures Rackspace Cloud DNS.
- * 
- * @author Everett Toews
  */
 @ConfiguresHttpApi
 public class CloudDNSHttpApiModule extends HttpApiModule<CloudDNSApi> {

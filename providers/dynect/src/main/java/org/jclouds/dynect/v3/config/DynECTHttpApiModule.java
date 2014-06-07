@@ -60,8 +60,6 @@ import com.google.common.util.concurrent.ListeningExecutorService;
 
 /**
  * Configures the DynECT connection.
- * 
- * @author Adrian Cole
  */
 @ConfiguresHttpApi
 // only one job at a time or error "This session already has a job running"

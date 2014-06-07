@@ -22,8 +22,6 @@ import com.google.common.collect.ImmutableList;
 
 /**
  * Configuration properties and constants used in BlobStore connections.
- * 
- * @author Adrian Cole
  */
 public final class BlobStoreConstants {
    /**

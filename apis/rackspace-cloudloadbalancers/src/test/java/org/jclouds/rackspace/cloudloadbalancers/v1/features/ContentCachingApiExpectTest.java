@@ -26,9 +26,6 @@ import org.jclouds.rackspace.cloudloadbalancers.v1.CloudLoadBalancersApi;
 import org.jclouds.rackspace.cloudloadbalancers.v1.internal.BaseCloudLoadBalancerApiExpectTest;
 import org.testng.annotations.Test;
 
-/**
- * @author Everett Toews 
- */
 @Test(groups = "unit")
 public class ContentCachingApiExpectTest extends BaseCloudLoadBalancerApiExpectTest<CloudLoadBalancersApi> {
    public void testIsContentCaching() {

@@ -31,7 +31,6 @@ import com.google.common.base.Objects;
  * the specified VmReference and NIC ID.
  * 
  * @since vcloud 0.9
- * @author Adrian Cole
  */
 public class OneToOneVmRule implements NatRule {
    private final MappingMode mappingMode;

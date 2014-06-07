@@ -26,8 +26,6 @@ import org.testng.annotations.Test;
 
 /**
  * Tests behavior of {@code CloudFilesClient}
- * 
- * @author Adrian Cole
  */
 @Test(groups = "live", singleThreaded = true, testName = "CloudFilesUKClientLiveTest")
 public class CloudFilesUKClientLiveTest extends CloudFilesClientLiveTest {

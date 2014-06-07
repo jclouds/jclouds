@@ -26,10 +26,6 @@ import org.jclouds.ultradns.ws.domain.Task;
 import org.jclouds.ultradns.ws.domain.Task.StatusCode;
 import org.xml.sax.Attributes;
 
-/**
- * 
- * @author Adrian Cole
- */
 public class TaskHandler extends ParseSax.HandlerForGeneratedRequestWithResult<Task> {
    private StringBuilder currentText = new StringBuilder();
    private Task.Builder builder = Task.builder();

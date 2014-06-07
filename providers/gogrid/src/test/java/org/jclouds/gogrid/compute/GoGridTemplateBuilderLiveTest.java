@@ -32,10 +32,6 @@ import com.google.common.base.Predicate;
 import com.google.common.base.Predicates;
 import com.google.common.collect.ImmutableSet;
 
-/**
- * 
- * @author Adrian Cole
- */
 //NOTE:without testName, this will not call @Before* and fail w/NPE during surefire
 @Test(groups = "live", singleThreaded = true, testName = "GoGridTemplateBuilderLiveTest")
 public class GoGridTemplateBuilderLiveTest extends BaseTemplateBuilderLiveTest {

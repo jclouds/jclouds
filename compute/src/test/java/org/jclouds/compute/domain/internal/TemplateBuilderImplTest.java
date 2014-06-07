@@ -62,10 +62,6 @@ import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Ordering;
 
-/**
- * 
- * @author Adrian Cole
- */
 @Test(groups = "unit", singleThreaded = true, testName = "TemplateBuilderImplTest")
 public class TemplateBuilderImplTest {
 

@@ -23,8 +23,6 @@ import org.jclouds.openstack.swift.reference.SwiftHeaders;
  * Additional headers specified by HP Cloud Object Storage REST API.
  * 
  * @see <a href="https://manage.hpcloud.com/pages/build/docs/objectstorage-lvs/api" />
- * @author Jeremy Daggett
- * 
  */
 public interface HPCloudObjectStorageHeaders extends SwiftHeaders {
 

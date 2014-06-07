@@ -34,9 +34,6 @@ import com.google.common.collect.Iterables;
 import com.google.inject.Inject;
 import com.google.inject.TypeLiteral;
 
-/**
- * @author Adrian Cole
- */
 @Singleton
 public class ParseTemplatesFromHttpResponse implements Function<HttpResponse, FluentIterable<OSTemplate>> {
    private final ParseFirstJsonValueNamed<Map<String, Set<OSTemplate>>> parser;

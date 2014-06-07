@@ -30,8 +30,6 @@ import com.google.inject.Inject;
  * @see <a href=
  *      "http://docs.aws.amazon.com/Route53/latest/APIReference/API_ListResourceRecordSets.html"
  *      />
- * 
- * @author Adrian Cole
  */
 public class ListResourceRecordSetsResponseHandler extends
       ParseSax.HandlerForGeneratedRequestWithResult<ResourceRecordSetIterable> {

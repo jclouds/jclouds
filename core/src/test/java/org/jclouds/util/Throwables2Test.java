@@ -45,9 +45,6 @@ import com.google.inject.CreationException;
 import com.google.inject.ProvisionException;
 import com.google.inject.spi.Message;
 
-/**
- * @author Adrian Cole
- */
 @Test
 public class Throwables2Test {
 

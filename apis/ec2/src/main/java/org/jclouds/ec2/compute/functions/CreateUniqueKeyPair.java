@@ -33,10 +33,6 @@ import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Function;
 import com.google.inject.Inject;
 
-/**
- * 
- * @author Adrian Cole
- */
 @Singleton
 public class CreateUniqueKeyPair implements Function<RegionAndName, KeyPair> {
    @Resource

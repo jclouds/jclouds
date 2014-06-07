@@ -22,8 +22,6 @@ import org.testng.annotations.Test;
 
 /**
  * Unit tests for the {@link RunList} class.
- * 
- * @author Ignasi Barrera
  */
 @Test(groups = "unit", testName = "RunListTest")
 public class RunListTest {

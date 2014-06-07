@@ -44,8 +44,6 @@ import com.google.common.net.InetAddresses;
  * templateBuilder.options(rootPassword("caQu5rou"));
  * Set&lt;? extends NodeMetadata&gt; set = api.createNodesInGroup(tag, 2, templateBuilder.build());
  * </pre>
- * 
- * @author Adrian Cole
  */
 public class GleSYSTemplateOptions extends TemplateOptions implements Cloneable {
 

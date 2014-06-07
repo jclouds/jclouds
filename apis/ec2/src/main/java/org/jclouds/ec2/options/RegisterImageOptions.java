@@ -34,7 +34,6 @@ import org.jclouds.ec2.options.internal.BaseEC2RequestOptions;
  * String imageId = connection.getImageServices().registerImageFromManifest(...withArchitecture(Architecture.I386).withDescription("description"));
  * <code>
  * 
- * @author Adrian Cole
  * @see <a
  *      href="http://docs.amazonwebservices.com/AWSEC2/latest/APIReference/index.html?ApiReference-form-RegisterImage.html"
  *      />

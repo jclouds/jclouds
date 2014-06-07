@@ -28,8 +28,6 @@ import com.google.common.base.Function;
 
 /**
  * Utilities for using S3.
- *
- * @author Adrian Cole
  */
 public class S3 {
 

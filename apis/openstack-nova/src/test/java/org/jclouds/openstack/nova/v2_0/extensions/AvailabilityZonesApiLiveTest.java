@@ -23,9 +23,6 @@ import org.testng.annotations.Test;
 import static org.testng.Assert.assertNotNull;
 import static org.testng.Assert.assertTrue;
 
-/**
- * @author inbar stolberg
- */
 @Test(groups = "live", testName = "AvailabilityZonesApiLiveTest")
 public class AvailabilityZonesApiLiveTest extends BaseNovaApiLiveTest {
 

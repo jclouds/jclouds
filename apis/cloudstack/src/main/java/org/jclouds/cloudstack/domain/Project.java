@@ -28,8 +28,6 @@ import com.google.common.base.Objects.ToStringHelper;
 
 /**
  * Representation of the API project response
- *
- * @author Andrew Bayer
  */
 public class Project implements Comparable<Project> {
 

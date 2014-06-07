@@ -26,7 +26,6 @@ import com.google.common.base.Objects.ToStringHelper;
 /**
  * Represents an 'uptime' duration of server in a Glesys cloud
  *
- * @author Adam Lowe
  * @see ServerStatus
  */
 public class ServerUptime {

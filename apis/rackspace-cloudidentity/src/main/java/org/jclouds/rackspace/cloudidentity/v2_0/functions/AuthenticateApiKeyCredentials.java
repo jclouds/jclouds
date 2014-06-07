@@ -30,7 +30,6 @@ import com.google.common.base.Optional;
 
 /**
  * 
- * @author Adrian Cole
  * @see <a
  *      href="http://docs.rackspace.com/servers/api/v2/cs-devguide/content/curl_auth.html">docs</a>
  */

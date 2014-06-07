@@ -23,11 +23,6 @@ import org.jclouds.vcloud.domain.internal.ErrorImpl;
 
 import com.google.inject.ImplementedBy;
 
-/**
- * 
- * 
- * @author Adrian Cole
- */
 @ImplementedBy(ErrorImpl.class)
 public interface VCloudError {
    public static enum MinorCode {

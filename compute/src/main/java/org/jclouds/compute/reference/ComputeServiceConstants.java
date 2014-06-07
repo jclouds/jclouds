@@ -39,10 +39,6 @@ import org.jclouds.util.Predicates2;
 import com.google.common.base.Supplier;
 import com.google.inject.Inject;
 
-/**
- * 
- * @author Adrian Cole
- */
 public final class ComputeServiceConstants {
 
    public static final String COMPUTE_LOGGER = "jclouds.compute";

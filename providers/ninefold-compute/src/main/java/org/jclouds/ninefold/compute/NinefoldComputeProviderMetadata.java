@@ -28,7 +28,6 @@ import org.jclouds.providers.internal.BaseProviderMetadata;
 /**
  * Implementation of {@link org.jclouds.types.ProviderMetadata} for Ninefold
  * Compute. 
- * @author Adrian Cole
  */
 public class NinefoldComputeProviderMetadata extends BaseProviderMetadata {
 

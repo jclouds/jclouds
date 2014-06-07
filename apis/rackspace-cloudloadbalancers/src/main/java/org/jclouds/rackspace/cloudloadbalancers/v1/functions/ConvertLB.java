@@ -33,9 +33,6 @@ import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Iterables;
 import com.google.inject.assistedinject.Assisted;
 
-/**
- * @author Adrian Cole
- */
 public class ConvertLB implements Function<LB, LoadBalancer> {
    private static final String LOAD_BALANCERS = "loadbalancers";
 

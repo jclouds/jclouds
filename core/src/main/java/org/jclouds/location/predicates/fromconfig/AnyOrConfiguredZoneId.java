@@ -30,8 +30,6 @@ import org.jclouds.location.suppliers.fromconfig.ZoneIdsFromConfiguration;
  * 
  * If there are zones configured in {@link ZoneIdsFromConfiguration}, return
  * true if that set contains the input param. If there aren't, return true.
- * 
- * @author Adrian Cole
  */
 @Singleton
 public class AnyOrConfiguredZoneId implements ZoneIdFilter {

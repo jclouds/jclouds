@@ -28,14 +28,11 @@ import com.google.common.base.Optional;
 /**
  * The ProviderMetadata interface allows jclouds to provide a plugin framework
  * for gathering cloud provider metadata.
- * 
- * @author Jeremy Whitlock <jwhitlock@apache.org>, Adrian Cole
  */
 public interface ProviderMetadata {
   
    /**
     * 
-    * @author Adrian Cole
     * @since 1.5
     */
    public interface Builder {

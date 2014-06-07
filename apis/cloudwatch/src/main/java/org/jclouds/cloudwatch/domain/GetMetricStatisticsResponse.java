@@ -28,8 +28,6 @@ import com.google.common.collect.ImmutableSet;
  *  the list of {@link Datapoint} for the metric
  *  
  * @see <a href="http://docs.amazonwebservices.com/AmazonCloudWatch/latest/APIReference/API_GetMetricStatistics.html" />
- *
- * @author Jeremy Whitlock
  */
 public class GetMetricStatisticsResponse extends FluentIterable<Datapoint> {
 

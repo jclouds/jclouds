@@ -20,8 +20,6 @@ import org.jclouds.javax.annotation.Nullable;
 
 /**
  * An OperatingSystemSection specifies the operating system installed on a virtual machine.
- * 
- * @author Adrian Cole
  */
 public class OperatingSystemSection extends Section<OperatingSystemSection> {
 

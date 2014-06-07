@@ -42,8 +42,6 @@ import com.google.inject.Provides;
 
 /**
  * Configures the AzureStorage connection, including logging and http transport.
- * 
- * @author Adrian Cole
  */
 @ConfiguresRestClient
 public class AzureStorageRestClientModule<S, A> extends RestClientModule<S, A> {

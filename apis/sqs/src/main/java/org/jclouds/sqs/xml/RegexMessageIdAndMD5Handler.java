@@ -35,7 +35,6 @@ import com.google.inject.Singleton;
  * 
  * @see <a href="http://docs.amazonwebservices.com/AWSSimpleQueueService/latest/APIReference/Query_QuerySendMessage.html"
  *      />
- * @author Adrian Cole
  */
 @Singleton
 public class RegexMessageIdAndMD5Handler implements Function<HttpResponse, MessageIdAndMD5> {

@@ -26,7 +26,6 @@ import com.google.common.base.Objects.ToStringHelper;
 /**
  * Connection information to connect to a server with VNC.
  *
- * @author Adam Lowe
  * @see <a href="https://customer.glesys.com/api.php?a=doc#server_console" />
  */
 public class Console {

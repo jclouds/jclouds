@@ -32,9 +32,6 @@ import com.google.common.base.Function;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Iterables;
 
-/**
- * @author Ignasi Barrera
- */
 @Singleton
 public class ListOfKeyValuesDelimitedByBlankLinesToStandardDriveSet implements Function<HttpResponse, Set<StandardDrive>> {
    private final ReturnStringIf2xx returnStringIf2xx;

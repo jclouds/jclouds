@@ -26,10 +26,6 @@ import org.jclouds.ultradns.ws.domain.RoundRobinPool;
 import org.jclouds.ultradns.ws.domain.RoundRobinPool.Builder;
 import org.xml.sax.Attributes;
 
-/**
- * 
- * @author Adrian Cole
- */
 public class RoundRobinPoolHandler extends ParseSax.HandlerForGeneratedRequestWithResult<RoundRobinPool> {
 
    private Builder pool = RoundRobinPool.builder();

@@ -29,8 +29,6 @@ import com.google.inject.Injector;
 
 /**
  * Tests behavior of {@code BindTagsToIndexedFormParams}
- * 
- * @author grkvlt@apache.org
  */
 @Test(groups = "unit")
 public class BindTagsToIndexedFormParamsTest {

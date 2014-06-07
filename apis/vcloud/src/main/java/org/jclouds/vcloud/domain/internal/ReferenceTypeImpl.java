@@ -27,9 +27,6 @@ import com.google.common.base.Objects.ToStringHelper;
 
 /**
  * Location of a Rest resource
- * 
- * @author Adrian Cole
- * 
  */
 public class ReferenceTypeImpl implements ReferenceType {
    private final String name;

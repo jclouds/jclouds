@@ -40,9 +40,6 @@ import org.jclouds.route53.xml.InvalidChangeBatchHandler;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 
-/**
- * @author Adrian Cole
- */
 @Singleton
 public class Route53ErrorHandler implements HttpErrorHandler {
 

@@ -26,10 +26,6 @@ import com.google.common.collect.ImmutableMap;
 import com.google.common.io.ByteSource;
 import com.google.common.io.Resources;
 
-/**
- * 
- * @author Adrian Cole
- */
 public class NodesFromYamlTest {
    public static final String key = new StringBuilder().append("-----BEGIN RSA PRIVATE KEY-----\n")
          .append("MIIEowIBAAKCAQEAuzaE6azgUxwESX1rCGdJ5xpdrc1XC311bOGZBCE8NA+CpFh2\n")

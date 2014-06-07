@@ -48,8 +48,6 @@ import org.jclouds.rest.annotations.ResponseParser;
  * Provides access to the Rackspace Cloud DNS API.
  * <p/>
  * See <a href="http://docs.rackspace.com/cdns/api/v1.0/cdns-devguide/content/index.html">Cloud DNS Developer Guide</a>
- *  
- * @author Everett Toews
  */
 public interface CloudDNSApi extends Closeable {
 

@@ -29,9 +29,6 @@ import org.xml.sax.SAXException;
 
 import com.google.common.collect.Sets;
 
-/**
- * @author Adrian Cole
- */
 public class DescribePlacementGroupsResponseHandler extends
          ParseSax.HandlerWithResult<Set<PlacementGroup>> {
 

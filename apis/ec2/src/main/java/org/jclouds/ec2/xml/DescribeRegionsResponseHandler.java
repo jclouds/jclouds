@@ -26,10 +26,6 @@ import org.jclouds.logging.Logger;
 
 import com.google.common.collect.Maps;
 
-/**
- * 
- * @author Adrian Cole
- */
 public class DescribeRegionsResponseHandler extends ParseSax.HandlerWithResult<Map<String, URI>> {
    private StringBuilder currentText = new StringBuilder();
 

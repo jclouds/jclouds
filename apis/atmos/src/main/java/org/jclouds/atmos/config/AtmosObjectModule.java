@@ -25,8 +25,6 @@ import com.google.inject.Provides;
 
 /**
  * Configures the domain object mappings needed for all Atmos implementations
- * 
- * @author Adrian Cole
  */
 public class AtmosObjectModule extends AbstractModule {
 

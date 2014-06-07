@@ -46,9 +46,6 @@ import com.google.inject.name.Names;
  * {@code org.jclouds.location} and {@code org.jclouds.rest.annotations} packages. It also binds the
  * properties specified in {@link ProviderMetadata#getDefaultProperties()} {@link ProviderMetadata}
  * explicitly. Finally, it bind the context type so that it can be looked up later.
- * 
- * 
- * @author Adrian Cole
  */
 public class BindProviderMetadataContextAndCredentials extends AbstractModule {
 

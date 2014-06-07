@@ -26,8 +26,6 @@ import com.google.inject.Scopes;
  * Configures {@link JavaUrlHttpCommandExecutorService}.
  * 
  * Note that this uses threads
- * 
- * @author Adrian Cole
  */
 @ConfiguresHttpCommandExecutorService
 public class JavaUrlHttpCommandExecutorServiceModule extends AbstractModule {

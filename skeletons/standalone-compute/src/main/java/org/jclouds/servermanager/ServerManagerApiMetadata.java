@@ -24,8 +24,6 @@ import org.jclouds.servermanager.compute.config.ServerManagerComputeServiceConte
 
 /**
  * Implementation of {@link ApiMetadata} for an example of library integration (ServerManager)
- * 
- * @author Adrian Cole
  */
 public class ServerManagerApiMetadata extends BaseApiMetadata {
 

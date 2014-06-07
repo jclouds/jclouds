@@ -24,10 +24,6 @@ import org.jclouds.rackspace.cloudidentity.v2_0.CloudIdentityAuthenticationApi;
 import com.google.inject.AbstractModule;
 import com.google.inject.Provides;
 
-/**
- * 
- * @author Adrian Cole
- */
 public class CloudIdentityAuthenticationApiModule extends AbstractModule  {
 
    @Override

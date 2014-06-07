@@ -22,8 +22,6 @@ import com.google.common.collect.ImmutableSet;
 
 /**
  * Options to the GlobalUsageApi.generateUsageOptions() API call
- *
- * @author Richard Downer
  */
 public class GenerateUsageRecordsOptions extends BaseHttpRequestOptions {
 

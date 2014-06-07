@@ -36,7 +36,6 @@ import com.google.common.base.Optional;
  * Provides access to OpenStack keystone resources via their REST API.
  * <p/>
  *
- * @author Adam Lowe
  * @see <a href="http://keystone.openstack.org/" />
  * @see KeystoneAsyncApi
  */

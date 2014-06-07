@@ -42,8 +42,6 @@ import org.jclouds.vcloud.xml.TasksListHandler;
 /**
  * Provides access to Task functionality in vCloud
  * <p/>
- * 
- * @author Adrian Cole
  */
 @RequestFilters(AddVCloudAuthorizationAndCookieToRequest.class)
 public interface TaskApi {

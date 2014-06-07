@@ -24,8 +24,6 @@ import com.google.common.collect.ImmutableMap;
 
 /**
  * Statements used in ssh control
- * 
- * @author Adrian Cole
  */
 public class SshStatements {
 

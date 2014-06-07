@@ -56,10 +56,8 @@ import com.google.common.util.concurrent.ListenableFuture;
  * @see <a href=
  *      "http://docs.openstack.org/api/openstack-compute/2/content/List_Flavors-d1e4188.html"
  *      >docs</a>
- * @author Jeremy Daggett TODO: Need a ListFlavorOptions class minDisk=minDiskInGB&
- *         minRam=minRamInMB& marker=markerID&limit=int
- * @author Ilja Bobkevic
  */
+// TODO: Need a ListFlavorOptions class minDisk=minDiskInGB&minRam=minRamInMB& marker=markerID&limit=int
 @RequestFilters(AuthenticateRequest.class)
 public interface FlavorAsyncApi {
 

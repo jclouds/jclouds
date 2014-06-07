@@ -26,8 +26,6 @@ import com.google.common.collect.FluentIterable;
 
 /**
  * Tests behavior of {@code KeyPairApi}
- * 
- * @author Michael Arnold
  */
 @Test(groups = "live", testName = "KeyPairApiLiveTest")
 public class KeyPairApiLiveTest extends BaseNovaApiLiveTest {

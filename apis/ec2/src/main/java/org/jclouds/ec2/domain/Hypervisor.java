@@ -20,8 +20,6 @@ import com.google.common.base.CaseFormat;
 
 /**
  * Hypervisor of the image.
- * 
- * @author Adrian Cole
  */
 public enum Hypervisor {
 

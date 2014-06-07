@@ -34,8 +34,6 @@ import com.google.common.reflect.Invokable;
 
 /**
  * Tests behavior of {@code ProjectApi}
- * 
- * @author Andrew Bayer
  */
 // NOTE:without testName, this will not call @Before* and fail w/NPE during
 // surefire

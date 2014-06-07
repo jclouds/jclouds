@@ -101,9 +101,6 @@ import org.jclouds.ec2.util.TagFilterBuilder;
 import org.jclouds.scriptbuilder.functions.InitAdminAccess;
 import org.jclouds.util.Strings2;
 
-/**
- * @author Adrian Cole
- */
 @Singleton
 public class EC2ComputeService extends BaseComputeService {
    private final EC2Api client;

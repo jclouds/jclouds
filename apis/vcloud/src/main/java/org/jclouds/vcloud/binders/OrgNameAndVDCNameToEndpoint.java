@@ -34,10 +34,6 @@ import org.jclouds.vcloud.endpoints.VDC;
 import com.google.common.base.Supplier;
 import com.google.common.collect.Iterables;
 
-/**
- * 
- * @author Adrian Cole
- */
 @Singleton
 public class OrgNameAndVDCNameToEndpoint implements MapBinder {
    private final Supplier<Map<String, Org>> orgNameToVDCEndpoint;

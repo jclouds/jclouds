@@ -41,8 +41,6 @@ import org.jclouds.rest.annotations.ResponseParser;
  * displayed when traffic is requested for an offline node. A single custom error page may be added to a load 
  * balancer with an HTTP-based protocol. Page updates will override existing content.
  * <p/>
- * 
- * @author Everett Toews
  */
 @RequestFilters(AuthenticateRequest.class)
 public interface ErrorPageApi {

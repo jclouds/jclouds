@@ -19,10 +19,6 @@ package org.jclouds.ninefold.compute.compute;
 import org.jclouds.cloudstack.compute.CloudStackComputeServiceLiveTest;
 import org.testng.annotations.Test;
 
-/**
- * 
- * @author Adrian Cole
- */
 @Test(groups = "live", singleThreaded = true, testName = "NinefoldComputeServiceLiveTest")
 public class NinefoldComputeServiceLiveTest extends CloudStackComputeServiceLiveTest {
 

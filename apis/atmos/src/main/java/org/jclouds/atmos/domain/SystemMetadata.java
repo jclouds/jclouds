@@ -22,8 +22,6 @@ import org.jclouds.javax.annotation.Nullable;
 
 /**
  * Metadata of a Atmos Online object
- * 
- * @author Adrian Cole
  */
 public class SystemMetadata extends DirectoryEntry {
 

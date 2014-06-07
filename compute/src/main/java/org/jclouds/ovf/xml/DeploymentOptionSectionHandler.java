@@ -29,9 +29,6 @@ import org.jclouds.ovf.DeploymentOptionSection;
 import org.jclouds.util.SaxUtils;
 import org.xml.sax.Attributes;
 
-/**
- * @author Adrian Cole
- */
 public class DeploymentOptionSectionHandler extends
          SectionHandler<DeploymentOptionSection, DeploymentOptionSection.Builder> {
    protected Configuration.Builder configBuilder = Configuration.builder();

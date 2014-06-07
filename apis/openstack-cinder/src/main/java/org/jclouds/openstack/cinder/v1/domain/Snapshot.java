@@ -30,8 +30,6 @@ import com.google.common.base.Objects.ToStringHelper;
 
 /**
  * An Openstack Cinder Volume Snapshot.
- * 
- * @author Everett Toews
  */
 public class Snapshot {
 

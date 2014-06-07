@@ -64,10 +64,6 @@ import com.google.common.collect.Iterables;
 import com.google.common.net.HostAndPort;
 import com.google.inject.Module;
 
-/**
- * 
- * @author Adrian Cole
- */
 @Test(groups = "live", singleThreaded = true)
 public class EC2ComputeServiceLiveTest extends BaseComputeServiceLiveTest {
 

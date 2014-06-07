@@ -48,9 +48,6 @@ import com.google.common.base.Predicate;
 import com.google.common.base.Strings;
 import com.google.common.util.concurrent.Atomics;
 
-/**
- * @author Adrian Cole
- */
 @Singleton
 public class PasswordCredentialsFromWindowsInstance implements Function<RunningInstance, LoginCredentials> {
 

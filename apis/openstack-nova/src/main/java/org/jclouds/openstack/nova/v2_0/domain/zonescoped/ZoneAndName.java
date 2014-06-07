@@ -28,8 +28,6 @@ import com.google.common.collect.Iterables;
 
 /**
  * Helpful when looking for resources by zone and name
- * 
- * @author Adrian Cole
  */
 public class ZoneAndName {
    

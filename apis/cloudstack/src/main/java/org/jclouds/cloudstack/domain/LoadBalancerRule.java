@@ -30,8 +30,6 @@ import com.google.common.collect.ImmutableSet;
 
 /**
  * Class LoadBalancerRule
- *
- * @author Adrian Cole
  */
 public class LoadBalancerRule {
 

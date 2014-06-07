@@ -30,8 +30,6 @@ import com.google.inject.Scopes;
 
 /**
  * Configures the domain object mappings needed for all CF implementations
- * 
- * @author Adrian Cole
  */
 public class SwiftObjectModule extends AbstractModule {
 

@@ -20,8 +20,6 @@ package org.jclouds.openstack.reference;
  * Headers common to Rackspace apis.
  * 
  * @see <a href="http://docs.rackspacecloud.com/servers/api/cs-devguide-latest.pdf" />
- * @author Adrian Cole
- * 
  */
 public interface AuthHeaders {
 

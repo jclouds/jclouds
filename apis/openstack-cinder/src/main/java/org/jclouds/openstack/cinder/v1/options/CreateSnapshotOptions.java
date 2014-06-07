@@ -32,9 +32,6 @@ import com.google.common.base.Objects.ToStringHelper;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Maps;
 
-/**
- * @author Adam Lowe
- */
 public class CreateSnapshotOptions implements MapBinder {
    public static final CreateSnapshotOptions NONE = new CreateSnapshotOptions();
 

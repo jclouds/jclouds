@@ -27,8 +27,6 @@ import org.jclouds.providers.internal.BaseProviderMetadata;
 
 /**
  * Implementation of {@link org.jclouds.types.ProviderMetadata} for ElasticHosts Hong Kong.
- * 
- * @author Ignasi Barrera
  */
 public class ElasticHostsHongKongProviderMetadata extends BaseProviderMetadata {
 

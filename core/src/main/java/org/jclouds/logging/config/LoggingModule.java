@@ -27,9 +27,6 @@ import com.google.inject.Provides;
 
 /**
  * Creates a post-injection listener that binds Loggers named the same as the enclosing class.
- * 
- * @author Adrian Cole
- * 
  */
 public abstract class LoggingModule extends AbstractModule {
 

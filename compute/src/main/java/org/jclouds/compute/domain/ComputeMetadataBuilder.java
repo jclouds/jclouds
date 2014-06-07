@@ -28,10 +28,6 @@ import org.jclouds.domain.ResourceMetadataBuilder;
 
 import com.google.common.collect.ImmutableSet;
 
-/**
- * 
- * @author Adrian Cole
- */
 public class ComputeMetadataBuilder extends ResourceMetadataBuilder<ComputeType> {
    protected String id;
    protected ComputeType type;

@@ -32,9 +32,6 @@ import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.ImmutableSet;
 
-/**
- * @author Adrian Cole
- */
 @Test(groups = "unit")
 public class TagApiExpectTest extends BaseEC2ApiExpectTest<EC2Api> {
 

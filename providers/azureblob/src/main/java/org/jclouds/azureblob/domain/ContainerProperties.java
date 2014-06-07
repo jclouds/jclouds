@@ -20,11 +20,6 @@ import java.net.URI;
 import java.util.Date;
 import java.util.Map;
 
-/**
- * 
- * @author Adrian Cole
- * 
- */
 public interface ContainerProperties extends Comparable<ContainerProperties> {
    URI getUrl();
 

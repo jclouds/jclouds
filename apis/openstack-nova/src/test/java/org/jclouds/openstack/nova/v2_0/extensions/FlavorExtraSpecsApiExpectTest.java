@@ -33,8 +33,6 @@ import com.google.common.collect.ImmutableMap;
 
 /**
  * Tests guice wiring and parsing of FlavorExtraSpecsApi
- *
- * @author Adam Lowe
  */
 @Test(groups = "unit", testName = "FlavorExtraSpecsApiExpectTest")
 public class FlavorExtraSpecsApiExpectTest extends BaseNovaApiExpectTest {

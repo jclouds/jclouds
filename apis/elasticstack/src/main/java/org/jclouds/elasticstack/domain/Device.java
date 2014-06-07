@@ -18,10 +18,6 @@ package org.jclouds.elasticstack.domain;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
-/**
- * 
- * @author Adrian Cole
- */
 public abstract class Device {
    public abstract static class Builder {
       protected String uuid;

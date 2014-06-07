@@ -69,7 +69,6 @@ import com.google.common.util.concurrent.UncheckedExecutionException;
 /**
  * defines the connection between the {@link org.jclouds.cloudsigma.CloudSigmaApi} implementation
  * and the jclouds {@link ComputeService}
- *
  */
 @Singleton
 public class CloudSigmaComputeServiceAdapter implements

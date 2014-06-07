@@ -23,10 +23,6 @@ import org.jclouds.blobstore.domain.StorageMetadata;
 import org.jclouds.blobstore.reference.BlobStoreConstants;
 import org.jclouds.blobstore.strategy.IfDirectoryReturnNameStrategy;
 
-/**
- * 
- * @author Adrian Cole
- */
 @Singleton
 public class MarkersIfDirectoryReturnNameStrategy implements IfDirectoryReturnNameStrategy {
    @Override

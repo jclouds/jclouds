@@ -27,8 +27,6 @@ import java.lang.annotation.Target;
  * Wraps the payload in json nested one level deep, relating to the value parameter.
  * 
  * ex. "bar" becomes { "foo" :"bar" }
- * 
- * @author Adrian Cole
  */
 @Target( { METHOD, PARAMETER })
 @Retention(RUNTIME)

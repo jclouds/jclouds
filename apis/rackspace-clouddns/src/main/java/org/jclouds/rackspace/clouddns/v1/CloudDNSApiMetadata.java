@@ -35,8 +35,6 @@ import com.google.inject.Module;
 
 /**
  * Implementation of {@link ApiMetadata} for Rackspace Cloud DNS 1.0 API
- * 
- * @author Everett Toews
  */
 public class CloudDNSApiMetadata extends BaseHttpApiMetadata<CloudDNSApi> {
 

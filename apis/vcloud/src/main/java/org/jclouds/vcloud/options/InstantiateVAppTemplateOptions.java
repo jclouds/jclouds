@@ -27,11 +27,6 @@ import com.google.common.base.Objects;
 import com.google.common.base.Objects.ToStringHelper;
 import com.google.common.collect.Sets;
 
-/**
- * 
- * @author Adrian Cole
- * 
- */
 public class InstantiateVAppTemplateOptions {
    private Set<NetworkConfig> networkConfig = Sets.newLinkedHashSet();
 

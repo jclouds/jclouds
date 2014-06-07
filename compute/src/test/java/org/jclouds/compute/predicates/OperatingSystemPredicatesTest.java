@@ -28,8 +28,6 @@ import org.testng.annotations.Test;
 
 /**
  * Tests possible uses of OperatingSystemPredicates
- * 
- * @author Adrian Cole
  */
 @Test
 public class OperatingSystemPredicatesTest {

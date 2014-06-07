@@ -19,10 +19,6 @@ package org.jclouds.date.internal;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-/**
- * 
- * @author Adrian Cole
- */
 public class DateUtils {
 
    private static final String TZ_REGEX = "([+-][0-9][0-9](:?[0-9][0-9])?|Z)";

@@ -27,10 +27,6 @@ import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.ImmutableSet.Builder;
 import com.google.inject.Inject;
 
-/**
- * 
- * @author Adrian Cole
- */
 public class DirectionalPoolRecordDetailListHandler extends
       ParseSax.HandlerForGeneratedRequestWithResult<FluentIterable<DirectionalPoolRecordDetail>> {
 

@@ -27,8 +27,6 @@ import com.google.common.collect.ImmutableSet;
 
 /**
  * Tests behavior of {@code CreateAccountOptions}
- *
- * @author Andrei Savu
  */
 @Test(groups = "unit")
 public class CreateAccountOptionsTest {

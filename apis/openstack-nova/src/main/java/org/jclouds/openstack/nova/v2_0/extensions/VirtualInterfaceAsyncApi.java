@@ -40,7 +40,6 @@ import com.google.common.util.concurrent.ListenableFuture;
  * Provides asynchronous access to Virtual Interface features (VIFs).
  * 
  * @see VirtualInterfaceApi
- * @author Adam Lowe
  */
 @Beta
 @Extension(of = ServiceType.COMPUTE, namespace = ExtensionNamespaces.VIRTUAL_INTERFACES)

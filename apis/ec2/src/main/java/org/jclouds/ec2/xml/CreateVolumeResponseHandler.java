@@ -42,10 +42,6 @@ import com.google.common.base.Suppliers;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 
-/**
- * 
- * @author Adrian Cole
- */
 public class CreateVolumeResponseHandler extends ParseSax.HandlerForGeneratedRequestWithResult<Volume> {
    protected final DateCodec dateCodec;
    protected final Supplier<String> defaultRegion;

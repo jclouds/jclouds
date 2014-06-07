@@ -57,9 +57,6 @@ import com.google.common.util.concurrent.UncheckedTimeoutException;
 
 /**
  * Nova implementation of {@link ImageExtension}
- * 
- * @author David Alves
- *
  */
 @Singleton
 public class NovaImageExtension implements ImageExtension {

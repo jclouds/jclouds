@@ -26,8 +26,6 @@ import org.testng.annotations.Test;
 
 /**
  * Tests possible uses of ListQueuesOptions and ListQueuesOptions.Builder.*
- * 
- * @author Adrian Cole
  */
 public class ListQueuesOptionsTest {
 

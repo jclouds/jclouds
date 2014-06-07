@@ -25,8 +25,6 @@ import com.google.common.base.Objects.ToStringHelper;
 
 /**
  * Representation of the login API call response
- *
- * @author Andrei Savu
  */
 public class LoginResponse {
 

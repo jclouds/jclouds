@@ -28,7 +28,6 @@ import com.google.common.base.Function;
 import com.google.common.base.Optional;
 
 /**
- * @author Adrian Cole
  * @deprecated Arg0ToPagedIterable.FromCaller
  */
 @Beta

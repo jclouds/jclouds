@@ -27,7 +27,6 @@ import com.google.common.collect.Multimap;
 /**
  * TODO
  * 
- * @author Adrian Cole
  * @see <a href=
  *      "http://docs.rackspace.com/loadbalancers/api/v1.0/clb-devguide/content/Endpoint_Access_Endpoints-d1e517.html"
  *      />

@@ -21,8 +21,6 @@ import static com.google.common.base.Preconditions.checkNotNull;
 /**
  * Media type - set to 'cdrom' to simulate a cdrom, set to 'disk' or leave unset to simulate a hard
  * disk.
- * 
- * @author Adrian Cole
  */
 public enum MediaType {
    DISK, CDROM, UNRECOGNIZED;

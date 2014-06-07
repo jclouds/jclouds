@@ -55,8 +55,6 @@ import com.google.common.hash.Hashing;
 
 /**
  * Tests behavior of {@code AtmosClient}
- * 
- * @author Adrian Cole
  */
 @Test(groups = "live", singleThreaded = true)
 public class AtmosClientLiveTest extends BaseBlobStoreIntegrationTest {

@@ -27,7 +27,6 @@ import com.google.common.primitives.Longs;
 /**
  * Class BillingToken
  * 
- * @author Oleksiy Yarmula
 */
 public class BillingToken implements Comparable<BillingToken> {
 

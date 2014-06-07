@@ -20,8 +20,6 @@ import org.jclouds.javax.annotation.Nullable;
 
 /**
  * @see <a href="http://docs.amazonwebservices.com/AmazonCloudWatch/latest/APIReference/API_StatisticSet.html" />
- *
- * @author Jeremy Whitlock
  */
 public class StatisticValues {
 

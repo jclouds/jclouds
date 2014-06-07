@@ -34,7 +34,6 @@ import org.jclouds.ec2.options.internal.BaseEC2RequestOptions;
  * Future<Set<ImageMetadata>> images = connection.getAvailabilityZoneAndRegionApi().get().describeAvailabilityZones(zones("us-east-1a", "us-east-1b"));
  * <code>
  * 
- * @author Adrian Cole
  * @see <a
  *      href="http://docs.amazonwebservices.com/AWSEC2/latest/APIReference/index.html?ApiReference-form-DescribeAvailabilityZones.html"
  *      />

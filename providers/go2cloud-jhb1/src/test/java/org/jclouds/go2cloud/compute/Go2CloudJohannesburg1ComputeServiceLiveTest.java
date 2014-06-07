@@ -19,10 +19,6 @@ package org.jclouds.go2cloud.compute;
 import org.jclouds.elasticstack.compute.ElasticStackComputeServiceLiveTest;
 import org.testng.annotations.Test;
 
-/**
- * 
- * @author Adrian Cole
- */
 @Test(groups = "live", sequential = true, testName = "Go2CloudJohannesburg1ComputeServiceLiveTest")
 public class Go2CloudJohannesburg1ComputeServiceLiveTest extends ElasticStackComputeServiceLiveTest {
 

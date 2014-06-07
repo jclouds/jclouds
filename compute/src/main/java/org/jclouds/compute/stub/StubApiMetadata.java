@@ -24,8 +24,6 @@ import org.jclouds.compute.stub.config.StubComputeServiceContextModule;
 
 /**
  * Implementation of {@link ApiMetadata} for jclouds in-memory (Stub) API
- * 
- * @author Adrian Cole
  */
 public class StubApiMetadata extends BaseApiMetadata {
 

@@ -31,8 +31,6 @@ import com.google.common.collect.Multimap;
 
 /**
  * Default Implementation of {@link SwiftObject}.
- * 
- * @author Adrian Cole
  */
 public class SwiftObjectImpl extends PayloadEnclosingImpl implements SwiftObject, Comparable<SwiftObject> {
 

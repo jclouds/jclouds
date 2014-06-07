@@ -28,8 +28,6 @@ import com.google.common.collect.ImmutableList;
 
 /**
  * Tests behavior of {@code ParseContainerMetadataFromHeaders}
- * 
- * @author Everett Toews
  */
 @Test(groups = "unit")
 public class ParseContainerMetadataFromHeadersTest extends BasePayloadTest {

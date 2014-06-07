@@ -51,8 +51,6 @@ import com.google.inject.Provides;
  * This extends the underlying Future to expose a description (the task's toString) and the submission context (stack
  * trace). The submission stack trace is appended to relevant stack traces on exceptions that are returned, so the user
  * can see the logical chain of execution (in the executor, and where it was passed to the executor).
- * 
- * @author Adrian Cole
  */
 @ConfiguresExecutorService
 public class ExecutorServiceModule extends AbstractModule {

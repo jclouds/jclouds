@@ -31,10 +31,6 @@ import org.testng.annotations.Test;
 import com.google.common.base.Predicate;
 import com.google.common.collect.ImmutableSet;
 
-/**
- * 
- * @author Adrian Cole
- */
 @Test(groups = "live", testName = "BluelockVCloudZone01TemplateBuilderLiveTest")
 public class BluelockVCloudZone01TemplateBuilderLiveTest extends BaseTemplateBuilderLiveTest {
 

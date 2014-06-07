@@ -23,8 +23,6 @@ import com.google.common.collect.ImmutableSet;
 
 /**
  * Options to the GlobalHostApi.addHost() API call
- *
- * @author Richard Downer
  */
 public class AddClusterOptions extends BaseHttpRequestOptions {
 

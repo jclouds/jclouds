@@ -23,9 +23,6 @@ import com.google.inject.AbstractModule;
 
 /**
  * Configures DateService of type {@link JodaDateService}
- * 
- * @author Adrian Cole
- * 
  */
 public class JodaDateServiceModule extends AbstractModule {
 

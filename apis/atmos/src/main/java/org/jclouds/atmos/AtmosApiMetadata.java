@@ -33,8 +33,6 @@ import com.google.inject.Module;
 
 /**
  * Implementation of {@link ApiMetadata} for EMC Atmos API
- * 
- * @author Adrian Cole
  */
 public class AtmosApiMetadata extends BaseRestApiMetadata {
 

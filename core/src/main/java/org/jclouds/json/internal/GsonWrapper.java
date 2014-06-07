@@ -26,9 +26,6 @@ import org.jclouds.json.Json;
 import com.google.common.collect.ForwardingObject;
 import com.google.gson.Gson;
 
-/**
- * @author Adrian Cole
- */
 @Singleton
 public class GsonWrapper extends ForwardingObject implements Json  {
 

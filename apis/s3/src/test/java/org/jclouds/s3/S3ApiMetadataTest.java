@@ -19,10 +19,6 @@ package org.jclouds.s3;
 import org.jclouds.blobstore.internal.BaseBlobStoreApiMetadataTest;
 import org.testng.annotations.Test;
 
-/**
- * 
- * @author Adrian Cole
- */
 @Test(groups = "unit", testName = "S3ApiMetadataTest")
 public class S3ApiMetadataTest extends BaseBlobStoreApiMetadataTest {
 

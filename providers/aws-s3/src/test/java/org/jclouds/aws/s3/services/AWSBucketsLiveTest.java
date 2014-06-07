@@ -30,9 +30,6 @@ import org.testng.annotations.Test;
 
 import com.google.common.base.Throwables;
 
-/**
- * @author Adrian Cole
- */
 @Test(groups = "live", testName = "AWSBucketsLiveTest")
 public class AWSBucketsLiveTest extends BucketsLiveTest {
    public AWSBucketsLiveTest() {

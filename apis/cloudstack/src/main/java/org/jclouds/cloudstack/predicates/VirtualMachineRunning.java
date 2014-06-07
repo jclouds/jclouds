@@ -32,8 +32,6 @@ import com.google.inject.Inject;
 /**
  * 
  * Tests to see if a virtualMachine is running
- * 
- * @author Adrian Cole
  */
 @Singleton
 public class VirtualMachineRunning implements Predicate<VirtualMachine> {

@@ -16,10 +16,6 @@
  */
 package org.jclouds.ovf;
 
-/**
- * 
- * @author Adrian Cole
- */
 public class Configuration {
    public static Builder builder() {
       return new Builder();

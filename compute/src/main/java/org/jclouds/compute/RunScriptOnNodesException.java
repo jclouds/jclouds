@@ -27,10 +27,6 @@ import org.jclouds.compute.options.RunScriptOptions;
 import org.jclouds.javax.annotation.Nullable;
 import org.jclouds.scriptbuilder.domain.Statement;
 
-/**
- * 
- * @author Adrian Cole
- */
 public class RunScriptOnNodesException extends Exception {
 
    private final Statement runScript;

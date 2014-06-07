@@ -29,9 +29,6 @@ import org.jclouds.ovf.NetworkSection;
 import org.jclouds.util.SaxUtils;
 import org.xml.sax.Attributes;
 
-/**
- * @author Adrian Cole
- */
 public class NetworkSectionHandler extends SectionHandler<NetworkSection, NetworkSection.Builder> {
    protected Network.Builder networkBuilder = Network.builder();
 

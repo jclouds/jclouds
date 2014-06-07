@@ -30,7 +30,6 @@ import org.jclouds.rest.annotations.Delegate;
  * <p/>
  * 
  * @see <a href="https://customer.glesys.com/api.php" />
- * @author Adrian Cole
  */
 public interface GleSYSApi extends Closeable {
 

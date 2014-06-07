@@ -80,8 +80,6 @@ import com.google.inject.Provides;
 
 /**
  * Contains logic for parsing objects from Strings.
- * 
- * @author Adrian Cole
  */
 public class GsonModule extends AbstractModule {
 

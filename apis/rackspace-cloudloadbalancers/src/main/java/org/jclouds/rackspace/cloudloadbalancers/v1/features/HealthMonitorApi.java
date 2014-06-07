@@ -45,7 +45,6 @@ import org.jclouds.rest.annotations.WrapWith;
  * failover for effectively routing traffic in case the primary node fails. This is an additional feature that will 
  * ensure you remain up in case your primary node fails.
  * <p/>
- * @author Everett Toews
  */
 @RequestFilters(AuthenticateRequest.class)
 public interface HealthMonitorApi {

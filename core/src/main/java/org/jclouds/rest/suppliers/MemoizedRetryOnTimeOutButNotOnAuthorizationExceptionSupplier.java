@@ -50,8 +50,6 @@ import com.google.common.util.concurrent.UncheckedExecutionException;
  * 
  * Note this implementation is folded into the same class, vs being decorated as stacktraces are exceptionally long and
  * difficult to grok otherwise. We use {@link LoadingCache} to deal with concurrency issues related to the supplier.
- * 
- * @author Adrian Cole
  */
 public class MemoizedRetryOnTimeOutButNotOnAuthorizationExceptionSupplier<T> extends ForwardingObject implements
       Supplier<T> {

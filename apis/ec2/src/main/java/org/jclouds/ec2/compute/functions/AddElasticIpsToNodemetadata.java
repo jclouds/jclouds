@@ -38,8 +38,6 @@ import com.google.common.collect.ImmutableSet;
 /**
  * This class searches for elastic ip addresses that are associated with the node, and adds them to
  * the publicIpAddress collection if present.
- * 
- * @author Adrian Cole
  */
 @Singleton
 public class AddElasticIpsToNodemetadata implements Function<NodeMetadata, NodeMetadata> {

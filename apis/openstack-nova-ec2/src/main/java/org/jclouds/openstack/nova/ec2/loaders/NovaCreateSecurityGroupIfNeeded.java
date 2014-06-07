@@ -29,10 +29,6 @@ import org.jclouds.ec2.compute.loaders.CreateSecurityGroupIfNeeded;
 
 import com.google.common.base.Predicate;
 
-/**
- * 
- * @author Adrian Cole
- */
 @Singleton
 public class NovaCreateSecurityGroupIfNeeded extends CreateSecurityGroupIfNeeded {
 

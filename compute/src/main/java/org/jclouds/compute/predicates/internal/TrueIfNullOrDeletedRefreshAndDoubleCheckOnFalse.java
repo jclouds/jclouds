@@ -28,11 +28,6 @@ import org.jclouds.logging.Logger;
 
 import com.google.common.base.Predicate;
 
-/**
- * 
- * 
- * @author Adrian Cole
- */
 public abstract class TrueIfNullOrDeletedRefreshAndDoubleCheckOnFalse<S extends Enum<S>, C extends ComputeMetadataIncludingStatus<S>>
          implements Predicate<AtomicReference<C>> {
    protected final S deletedStatus;

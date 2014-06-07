@@ -31,8 +31,6 @@ import com.google.gson.stream.JsonWriter;
 
 /**
  * Writes and reads Optional values as JSON
- * 
- * @author Adam Lowe
  */
 public class OptionalTypeAdapterFactory implements TypeAdapterFactory {
 

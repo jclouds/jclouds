@@ -27,9 +27,6 @@ import org.jclouds.rest.Binder;
 import com.google.common.base.Joiner;
 import com.google.common.collect.Iterables;
 
-/**
- * @author Richard Downer
- */
 @Singleton
 public class BindIdListToCommaDelimitedQueryParam implements Binder {
 

@@ -24,9 +24,6 @@ import org.jclouds.blobstore.domain.BlobMetadata;
 import org.jclouds.blobstore.integration.internal.BaseContainerIntegrationTest;
 import org.testng.annotations.Test;
 
-/**
- * @author Adrian Cole
- */
 @Test(groups = "live")
 public class AtmosContainerIntegrationLiveTest extends BaseContainerIntegrationTest {
    public AtmosContainerIntegrationLiveTest() {

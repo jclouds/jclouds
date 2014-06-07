@@ -28,11 +28,6 @@ import org.jclouds.rest.binders.BindToJsonPayload;
 
 import com.google.common.collect.ImmutableMap;
 
-/**
- * 
- * @author Adrian Cole
- * 
- */
 @Singleton
 public class BindCredentialsToJsonPayload extends BindToJsonPayload implements MapBinder {
    @Inject

@@ -30,9 +30,6 @@ import org.jclouds.location.Provider;
 
 import com.google.common.base.Supplier;
 
-/**
- * @author Adrian Cole
- */
 public class SOAPWrapWithPasswordAuth implements HttpRequestFilter {
    static final String WSSE_NS = "http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd";
    static final String PASSWORD_TEXT = "http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-username-token-profile-1.0#PasswordText";

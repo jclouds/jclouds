@@ -58,10 +58,6 @@ import com.google.common.cache.LoadingCache;
 import com.google.inject.Provides;
 import com.google.inject.TypeLiteral;
 
-/**
- * 
- * @author Adrian Cole
- */
 public class CloudSigmaComputeServiceContextModule extends
          ComputeServiceAdapterContextModule<ServerInfo, Hardware, DriveInfo, Location> {
 

@@ -25,8 +25,6 @@ import com.google.common.base.Objects.ToStringHelper;
 
 /**
  * Helpful when looking for resources by zone and name
- * 
- * @author Adrian Cole
  */
 public class ZoneAndName {
    

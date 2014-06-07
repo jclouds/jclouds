@@ -32,9 +32,6 @@ import com.google.common.base.Predicate;
 import com.google.common.collect.Iterables;
 import com.google.inject.Inject;
 
-/**
- * @author Oleksiy Yarmula
- */
 @Singleton
 public class LoadBalancerLatestJobCompleted implements Predicate<LoadBalancer> {
 

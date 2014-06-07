@@ -30,9 +30,6 @@ import org.jclouds.route53.features.ResourceRecordSetApi;
 import com.google.common.annotations.Beta;
 import com.google.common.base.Function;
 
-/**
- * @author Adrian Cole
- */
 @Beta
 public class ResourceRecordSetIterableToPagedIterable extends
       CallerArg0ToPagedIterable<ResourceRecordSet, ResourceRecordSetIterableToPagedIterable> {

@@ -27,8 +27,6 @@ import com.google.inject.Provider;
 
 /**
  * Allows the provider to supply a value set in a threadlocal.
- * 
- * @author Adrian Cole
  */
 public class SetCaller {
 

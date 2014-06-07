@@ -39,8 +39,6 @@ import com.google.common.collect.Multimap;
  * A {@link BundleListener} that listens for {@link BundleEvent} and searches for
  * {@link org.jclouds.providers.ProviderMetadata} and {@link org.jclouds.apis.ApiMetadata} in newly installed Bundles.
  * This is used as a workaround for OSGi environments where the ServiceLoader cannot cross bundle boundaries.
- * 
- * @author iocanel
  */
 public class MetadataBundleListener implements BundleListener {
 

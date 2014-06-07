@@ -47,10 +47,6 @@ import com.google.common.cache.LoadingCache;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.ImmutableSet.Builder;
 import com.google.common.util.concurrent.UncheckedExecutionException;
-/**
- * 
- * @author Adrian Cole
- */
 @Singleton
 public class BYONComputeServiceAdapter implements JCloudsNativeComputeServiceAdapter {
    private final Supplier<LoadingCache<String, Node>> nodes;

@@ -60,9 +60,6 @@ import com.google.common.base.Supplier;
 import com.google.common.collect.Iterables;
 import org.jclouds.io.Payload;
 
-/**
- * @author Adrian Cole
- */
 @Singleton
 public class AzureBlobStore extends BaseBlobStore {
    private final AzureBlobClient sync;

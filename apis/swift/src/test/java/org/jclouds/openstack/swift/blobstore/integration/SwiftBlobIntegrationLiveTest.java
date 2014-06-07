@@ -42,11 +42,6 @@ import com.google.common.hash.Hashing;
 import com.google.common.io.ByteSource;
 import com.google.common.io.Files;
 
-/**
- * 
- * @author James Murty
- * @author Adrian Cole
- */
 @Test(groups = "live")
 public class SwiftBlobIntegrationLiveTest extends BaseBlobIntegrationTest {
    /**

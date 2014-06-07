@@ -30,9 +30,6 @@ import org.testng.annotations.Test;
 import com.google.common.base.Supplier;
 import com.google.common.cache.CacheLoader;
 
-/**
- * @author Aled Sage
- */
 @Test(groups = "unit")
 public class AWSEC2ComputeServiceContextModuleTest {
    

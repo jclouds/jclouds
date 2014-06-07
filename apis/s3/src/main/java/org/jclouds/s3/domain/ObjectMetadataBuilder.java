@@ -29,8 +29,6 @@ import com.google.common.collect.ImmutableMap;
 
 /**
  * Allows you to create {@link ObjectMetadata} objects.
- * 
- * @author Adrian Cole
  */
 public class ObjectMetadataBuilder {
    public static ObjectMetadataBuilder create() {

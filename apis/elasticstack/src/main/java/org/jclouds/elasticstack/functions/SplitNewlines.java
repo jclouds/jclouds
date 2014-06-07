@@ -28,10 +28,6 @@ import com.google.common.base.Function;
 import com.google.common.base.Splitter;
 import com.google.common.collect.ImmutableSet;
 
-/**
- * 
- * @author Adrian Cole
- */
 @Singleton
 public class SplitNewlines implements Function<HttpResponse, Set<String>> {
    private final ReturnStringIf2xx returnStringIf200;

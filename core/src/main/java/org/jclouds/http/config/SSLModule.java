@@ -38,11 +38,6 @@ import com.google.inject.AbstractModule;
 import com.google.inject.TypeLiteral;
 import com.google.inject.name.Names;
 
-/**
- * 
- * 
- * @author Adrian Cole
- */
 public class SSLModule extends AbstractModule {
 
    @Override
@@ -57,7 +52,6 @@ public class SSLModule extends AbstractModule {
     * 
     * Used to get more information about HTTPS hostname wrong errors.
     * 
-    * @author Adrian Cole
     */
    @Singleton
    public static class LogToMapHostnameVerifier implements HostnameVerifier {
@@ -105,7 +99,6 @@ public class SSLModule extends AbstractModule {
     * 
     * Used to trust all certs
     * 
-    * @author Adrian Cole
     */
    @Singleton
    public static class TrustAllCerts implements X509TrustManager {

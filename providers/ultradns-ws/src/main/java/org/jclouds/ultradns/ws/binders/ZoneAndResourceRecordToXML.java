@@ -27,10 +27,6 @@ import org.jclouds.ultradns.ws.domain.ResourceRecord;
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Optional;
 
-/**
- * 
- * @author Adrian Cole
- */
 public class ZoneAndResourceRecordToXML implements MapBinder {
    private static final String template = "<v01:createResourceRecord><transactionID /><resourceRecord ZoneName=\"%s\" Type=\"%s\" DName=\"%s\" TTL=\"%s\">%s</resourceRecord></v01:createResourceRecord>";
 

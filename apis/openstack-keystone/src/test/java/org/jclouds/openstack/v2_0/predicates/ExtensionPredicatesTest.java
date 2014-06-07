@@ -25,10 +25,6 @@ import org.jclouds.date.internal.SimpleDateFormatDateService;
 import org.jclouds.openstack.v2_0.domain.Extension;
 import org.testng.annotations.Test;
 
-/**
- * 
- * @author Adrian Cole
- */
 @Test(groups = "unit", testName = "ExtensionPredicatesTest")
 public class ExtensionPredicatesTest {
    Extension ref = Extension.builder().alias("os-keypairs").name("Keypairs").namespace(

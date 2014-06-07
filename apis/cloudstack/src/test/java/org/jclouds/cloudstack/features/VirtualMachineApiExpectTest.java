@@ -33,8 +33,6 @@ import org.testng.annotations.Test;
 
 /**
  * Test the CloudStack VirtualMachineApiClient
- *
- * @author Andrei Savu
  */
 @Test(groups = "unit", testName = "VirtualMachineApiExpectTest")
 public class VirtualMachineApiExpectTest extends BaseCloudStackExpectTest<VirtualMachineApi> {

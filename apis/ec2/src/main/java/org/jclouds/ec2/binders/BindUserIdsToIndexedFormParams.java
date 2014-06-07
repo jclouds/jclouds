@@ -24,8 +24,6 @@ import org.jclouds.rest.Binder;
 
 /**
  * Binds the Iterable to form parameters named with UserId.index
- * 
- * @author Adrian Cole
  */
 @Singleton
 public class BindUserIdsToIndexedFormParams implements Binder {

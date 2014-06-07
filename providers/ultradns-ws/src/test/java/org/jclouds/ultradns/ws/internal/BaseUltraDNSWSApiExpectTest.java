@@ -18,10 +18,6 @@ package org.jclouds.ultradns.ws.internal;
 
 import org.jclouds.ultradns.ws.UltraDNSWSApi;
 
-/**
- * 
- * @author Adrian Cole
- */
 public class BaseUltraDNSWSApiExpectTest extends BaseUltraDNSWSExpectTest<UltraDNSWSApi> {
 
 }

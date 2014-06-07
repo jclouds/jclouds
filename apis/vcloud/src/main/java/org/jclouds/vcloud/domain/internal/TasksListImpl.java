@@ -24,9 +24,6 @@ import org.jclouds.vcloud.domain.TasksList;
 
 /**
  * Locations of resources in vCloud
- * 
- * @author Adrian Cole
- * 
  */
 public class TasksListImpl implements TasksList {
    private final SortedSet<Task> tasks;

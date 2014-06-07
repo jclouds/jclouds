@@ -27,8 +27,6 @@ import org.jclouds.route53.config.Route53HttpApiModule;
 
 /**
  * Implementation of {@link ApiMetadata} for Amazon's Route53 api.
- * 
- * @author Adrian Cole
  */
 public class Route53ApiMetadata extends BaseHttpApiMetadata<Route53Api> {
 

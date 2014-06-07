@@ -24,8 +24,6 @@ import com.google.common.annotations.Beta;
 
 /**
  * Creates a load balancer for nodes listed
- * 
- * @author Lili Nader
  */
 public interface LoadBalanceNodesStrategy {
    /**

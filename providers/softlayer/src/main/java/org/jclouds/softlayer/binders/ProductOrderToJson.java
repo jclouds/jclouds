@@ -38,8 +38,6 @@ import com.google.common.collect.Sets;
 /**
  * Converts a ProductOrder into a json string valid for placing an order via the softlayer api The
  * String is set into the payload of the HttpRequest
- * 
- * @author Jason King
  */
 public class ProductOrderToJson implements Binder {
 

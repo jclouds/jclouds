@@ -24,9 +24,6 @@ import org.jclouds.javax.annotation.Nullable;
 
 import com.google.common.base.Objects;
 
-/**
- * @author Adrian Cole
- */
 public class ContentMetadataBuilder {
 
    public static ContentMetadataBuilder create() {

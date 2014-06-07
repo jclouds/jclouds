@@ -25,9 +25,6 @@ import com.google.inject.ImplementedBy;
 /**
  * Parses and formats the ISO8601, C, and RFC822 date formats found in XML responses and HTTP
  * response headers.
- * 
- * @author Adrian Cole
- * @author James Murty
  */
 @ImplementedBy(SimpleDateFormatDateService.class)
 public interface DateService {

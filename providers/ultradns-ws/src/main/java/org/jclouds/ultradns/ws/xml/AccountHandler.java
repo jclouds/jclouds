@@ -25,10 +25,6 @@ import org.jclouds.http.functions.ParseSax;
 import org.jclouds.ultradns.ws.domain.IdAndName;
 import org.xml.sax.Attributes;
 
-/**
- * 
- * @author Adrian Cole
- */
 public class AccountHandler extends ParseSax.HandlerForGeneratedRequestWithResult<IdAndName> {
 
    private IdAndName account;

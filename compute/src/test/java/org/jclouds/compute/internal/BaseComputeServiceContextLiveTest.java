@@ -22,9 +22,6 @@ import org.jclouds.compute.ComputeServiceContext;
 
 import com.google.common.reflect.TypeToken;
 
-/**
- * @author Jason King, Adrian Cole
- */
 public abstract class BaseComputeServiceContextLiveTest extends BaseGenericComputeServiceContextLiveTest<ComputeServiceContext> {
 
    @Override

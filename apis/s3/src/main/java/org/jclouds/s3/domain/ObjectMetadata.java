@@ -28,7 +28,6 @@ import org.jclouds.io.ContentMetadata;
  * {@link S3Object#getKey key}, {@link ObjectMetadata#getUserMetadata() metadata}, and an access
  * control policy.
  * 
- * @author Adrian Cole
  * @see <a href="http://docs.amazonwebservices.com/AmazonS3/2006-03-01/index.html?UsingObjects.html"
  * 
  * @see <a href= "http://docs.amazonwebservices.com/AmazonS3/2006-03-01/UsingMetadata.html" />

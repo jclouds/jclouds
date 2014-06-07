@@ -20,9 +20,6 @@ import org.jclouds.ovf.internal.BaseEnvelope;
 
 import com.google.common.collect.Multimap;
 
-/**
- * @author Adrian Cole
- */
 public class Envelope extends BaseEnvelope<VirtualSystem, Envelope> {
 
    @SuppressWarnings("unchecked")

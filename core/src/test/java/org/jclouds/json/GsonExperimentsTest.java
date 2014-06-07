@@ -46,10 +46,6 @@ import com.google.gson.stream.JsonToken;
 import com.google.gson.stream.JsonWriter;
 import com.google.inject.TypeLiteral;
 
-/**
- * 
- * @author Adrian Cole
- */
 @Test
 public class GsonExperimentsTest {
    public static final String json = "['hello',5,{name:'GREETINGS',source:'guest'}]";

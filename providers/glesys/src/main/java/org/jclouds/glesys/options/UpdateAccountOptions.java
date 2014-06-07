@@ -18,7 +18,6 @@ package org.jclouds.glesys.options;
 
 
 /**
- * @author Adam Lowe
  * @see <a href="https://customer.glesys.com/api.php?a=doc#email_editaccount" />
  */
 public class UpdateAccountOptions extends CreateAccountOptions {

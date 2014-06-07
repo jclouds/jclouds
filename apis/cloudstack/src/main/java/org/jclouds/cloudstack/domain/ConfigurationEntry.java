@@ -27,8 +27,6 @@ import com.google.common.base.Objects.ToStringHelper;
 
 /**
  * Representation of the API configuration entry response
- *
- * @author Andrei Savu
  */
 public class ConfigurationEntry implements Comparable<ConfigurationEntry> {
 

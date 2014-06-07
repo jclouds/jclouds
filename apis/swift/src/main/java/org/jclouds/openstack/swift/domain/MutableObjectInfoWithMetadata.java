@@ -24,11 +24,6 @@ import org.jclouds.openstack.swift.domain.internal.MutableObjectInfoWithMetadata
 
 import com.google.inject.ImplementedBy;
 
-/**
- * 
- * @author Adrian Cole
- * 
- */
 @ImplementedBy(MutableObjectInfoWithMetadataImpl.class)
 public interface MutableObjectInfoWithMetadata extends ObjectInfo {
 

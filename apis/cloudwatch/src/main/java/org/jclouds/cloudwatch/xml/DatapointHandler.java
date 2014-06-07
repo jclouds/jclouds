@@ -24,10 +24,6 @@ import org.jclouds.http.functions.ParseSax;
 import javax.inject.Inject;
 import java.util.Date;
 
-/**
- * 
- * @author Adrian Cole
- */
 public class DatapointHandler extends ParseSax.HandlerForGeneratedRequestWithResult<Datapoint> {
    private StringBuilder currentText = new StringBuilder();
 

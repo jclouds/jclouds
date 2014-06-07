@@ -39,8 +39,6 @@ import com.google.inject.Module;
 
 /**
  * Tests behavior of {@code SwiftBlobRequestSigner}
- *
- * @author Adrian Cole
  */
 @Test(groups = "unit", testName = "HPCloudObjectStorageBlobSignerExpectTest")
 public class HPCloudObjectStorageBlobSignerExpectTest extends BaseBlobSignerExpectTest {

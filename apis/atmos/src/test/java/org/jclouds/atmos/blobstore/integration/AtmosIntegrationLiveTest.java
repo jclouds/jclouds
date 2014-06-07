@@ -28,10 +28,6 @@ import org.testng.SkipException;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
-/**
- * 
- * @author Adrian Cole
- */
 @Test(groups = { "integration", "live" })
 public class AtmosIntegrationLiveTest extends BaseBlobIntegrationTest {
    public AtmosIntegrationLiveTest() {

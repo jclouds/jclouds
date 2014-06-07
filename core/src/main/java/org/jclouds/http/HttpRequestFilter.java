@@ -23,8 +23,6 @@ package org.jclouds.http;
  * request yield in the same output. Example: this is required for request retrial (
  * {@link org.jclouds.http.internal.BaseHttpCommandExecutorService}, so that signatures can be
  * updated.
- * 
- * @author Adrian Cole
  */
 public interface HttpRequestFilter {
    // note this is not generic typed, as http implementations do not care

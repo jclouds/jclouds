@@ -32,7 +32,6 @@ import com.google.inject.Provider;
 
 /**
  * 
- * @author Adrian Cole
  * @deprecated will be removed in jclouds 1.7; use {@link AnnotatedHttpApiProvider}
  */
 @Deprecated

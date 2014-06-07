@@ -31,10 +31,6 @@ import com.google.common.collect.FluentIterable;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.ImmutableSet.Builder;
 
-/**
- * 
- * @author Adrian Cole
- */
 public class DirectionalPoolListHandler extends ParseSax.HandlerForGeneratedRequestWithResult<FluentIterable<DirectionalPool>> {
 
    private final Builder<DirectionalPool> pools = ImmutableSet.<DirectionalPool> builder();

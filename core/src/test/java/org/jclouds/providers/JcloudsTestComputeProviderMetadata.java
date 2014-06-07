@@ -25,8 +25,6 @@ import com.google.common.collect.ImmutableSet;
 
 /**
  * Implementation of @ link org.jclouds.types.ProviderMetadata} for testing.
- * 
- * @author Jeremy Whitlock <jwhitlock@apache.org>
  */
 public class JcloudsTestComputeProviderMetadata extends BaseProviderMetadata {
 

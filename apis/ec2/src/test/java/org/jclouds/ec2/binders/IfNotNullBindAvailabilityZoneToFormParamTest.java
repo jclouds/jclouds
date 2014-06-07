@@ -29,8 +29,6 @@ import com.google.inject.Injector;
 
 /**
  * Tests behavior of {@code IfNotNullBindAvailabilityZoneToFormParam}
- * 
- * @author Adrian Cole
  */
 @Test(groups = "unit")
 public class IfNotNullBindAvailabilityZoneToFormParamTest {

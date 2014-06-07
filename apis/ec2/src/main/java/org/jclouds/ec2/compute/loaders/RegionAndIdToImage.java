@@ -33,10 +33,6 @@ import org.jclouds.logging.Logger;
 import com.google.common.cache.CacheLoader;
 import com.google.common.collect.Iterables;
 
-/**
- * 
- * @author Adrian Cole
- */
 @Singleton
 public class RegionAndIdToImage extends CacheLoader<RegionAndName, Image> {
    @Resource

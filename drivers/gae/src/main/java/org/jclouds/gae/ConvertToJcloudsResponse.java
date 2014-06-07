@@ -31,10 +31,6 @@ import com.google.common.collect.LinkedHashMultimap;
 import com.google.common.collect.Multimap;
 import com.google.inject.Inject;
 
-/**
- * 
- * @author Adrian Cole
- */
 @Singleton
 public class ConvertToJcloudsResponse implements Function<HTTPResponse, HttpResponse> {
 

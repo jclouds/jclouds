@@ -36,10 +36,6 @@ import com.google.common.collect.Maps;
 import com.google.common.util.concurrent.Futures;
 import com.google.common.util.concurrent.ListenableFuture;
 
-/**
- * 
- * @author Adrian Cole
- */
 public class BlobStoreUtils {
    public static <T> HttpRequest cleanRequest(HttpRequest returnVal) {
       checkNotNull(returnVal, "http request");

@@ -27,7 +27,6 @@ import org.jclouds.openstack.v2_0.domain.Extension;
  * @see <a href=
  *      "http://docs.openstack.org/api/openstack-compute/2/content/Extensions-d1e1444.html"
  *      />
- * @author Adrian Cole
  */
 public interface ExtensionApi {
 

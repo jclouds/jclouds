@@ -26,10 +26,6 @@ import org.jclouds.blobstore.domain.Blob;
 import org.jclouds.http.HttpRequest;
 import org.jclouds.rest.Binder;
 
-/**
- * 
- * @author Adrian Cole
- */
 @Singleton
 public class BindUserMetadataToHeadersWithPrefix implements Binder {
    private final BindMapToHeadersWithPrefix metadataPrefixer;

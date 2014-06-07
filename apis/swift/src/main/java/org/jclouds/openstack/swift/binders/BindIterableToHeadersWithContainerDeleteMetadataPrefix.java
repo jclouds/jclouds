@@ -29,9 +29,6 @@ import com.google.common.base.Function;
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Iterables;
 
-/**
- * @author Everett Toews
- */
 @Singleton
 public class BindIterableToHeadersWithContainerDeleteMetadataPrefix implements Binder {
    private final Function<String, String> FN;

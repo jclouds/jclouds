@@ -28,8 +28,6 @@ import com.google.common.collect.ImmutableList;
 
 /**
  * Tests behavior of {@code UpdateClusterOptions}
- *
- * @author Richard Downer
  */
 @Test(groups = "unit")
 public class UpdateClusterOptionsTest {

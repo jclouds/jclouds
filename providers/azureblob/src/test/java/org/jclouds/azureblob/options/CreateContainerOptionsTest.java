@@ -27,8 +27,6 @@ import com.google.common.collect.ImmutableMultimap;
 
 /**
  * Tests behavior of {@code CreateContainerOptions}
- * 
- * @author Adrian Cole
  */
 @Test(groups = "unit")
 public class CreateContainerOptionsTest {

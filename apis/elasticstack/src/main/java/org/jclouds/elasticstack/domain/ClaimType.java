@@ -21,8 +21,6 @@ import static com.google.common.base.Preconditions.checkNotNull;
 /**
  * either 'exclusive' (the default) or 'shared' to allow multiple servers to access a drive
  * simultaneously
- * 
- * @author Adrian Cole
  */
 public enum ClaimType {
    /**

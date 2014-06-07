@@ -25,8 +25,6 @@ import com.google.common.base.Function;
 
 /**
  * looks for a single value in the xml
- * 
- * @author Adrian Cole
  */
 public abstract class TextFromSingleElementHandler<V> extends ParseSax.HandlerForGeneratedRequestWithResult<V>
       implements Function<String, V> {

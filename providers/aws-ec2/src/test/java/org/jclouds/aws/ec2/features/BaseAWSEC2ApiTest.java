@@ -52,9 +52,6 @@ import com.google.common.collect.ImmutableSet;
 import com.google.inject.Module;
 import com.google.inject.Provides;
 
-/**
- * @author Adrian Cole
- */
 @Test(groups = "unit")
 public abstract class BaseAWSEC2ApiTest<T> extends BaseAsyncApiTest<T> {
 

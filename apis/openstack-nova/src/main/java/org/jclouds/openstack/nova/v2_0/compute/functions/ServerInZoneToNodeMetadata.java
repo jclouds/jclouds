@@ -66,8 +66,6 @@ import com.google.common.net.InetAddresses;
 /**
  * A function for transforming a nova-specific Server into a generic
  * NodeMetadata object.
- * 
- * @author Matt Stephenson, Adam Lowe, Adrian Cole
  */
 public class ServerInZoneToNodeMetadata implements Function<ServerInZone, NodeMetadata> {
    @Resource

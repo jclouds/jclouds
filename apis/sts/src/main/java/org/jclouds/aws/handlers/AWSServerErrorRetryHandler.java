@@ -32,8 +32,6 @@ import com.google.inject.Singleton;
 
 /**
  * Handles Retryable responses with error codes in the 5xx range
- * 
- * @author Andrew Bayer
  */
 @Singleton
 public class AWSServerErrorRetryHandler extends BackoffLimitedRetryHandler {

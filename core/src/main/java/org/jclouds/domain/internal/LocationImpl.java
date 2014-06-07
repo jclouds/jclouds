@@ -31,10 +31,6 @@ import com.google.common.base.Objects.ToStringHelper;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 
-/**
- * 
- * @author Adrian Cole
- */
 public class LocationImpl implements Location {
 
    private final LocationScope scope;

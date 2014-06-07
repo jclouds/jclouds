@@ -39,9 +39,6 @@ import com.google.common.base.Functions;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.eventbus.EventBus;
 
-/**
- * @author Adrian Cole
- */
 @Test(groups = "unit", singleThreaded = true, testName = "RunScriptOnNodeAsInitScriptUsingSshTest")
 public class RunScriptOnNodeAsInitScriptUsingSshTest {
    EventBus eventBus = new EventBus();

@@ -41,11 +41,6 @@ import com.google.common.base.Supplier;
 import com.google.common.cache.LoadingCache;
 import com.google.common.collect.ImmutableSet;
 
-/**
- * 
- * @author Adrian Cole
- * @author Andrew Bayer
- */
 @Singleton
 public class CreateSecurityGroupIfNeeded implements Function<ZoneSecurityGroupNamePortsCidrs, SecurityGroup> {
    @Resource

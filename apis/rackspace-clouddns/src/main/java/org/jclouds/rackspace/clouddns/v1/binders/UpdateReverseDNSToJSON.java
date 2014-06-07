@@ -34,9 +34,6 @@ import org.jclouds.rest.MapBinder;
 
 import com.google.common.collect.ImmutableMap;
 
-/**
- * @author Everett Toews
- */
 public class UpdateReverseDNSToJSON implements MapBinder {
    private final Json jsonBinder;
 

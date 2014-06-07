@@ -44,8 +44,6 @@ import com.google.inject.TypeLiteral;
  * with one single root element, so the objects to parse should not be
  * collections but objects that wrap collections of elements, and that should
  * work fine.
- * 
- * @author Ignasi Barrera
  */
 @Singleton
 public class ParseXMLWithJAXB<T> implements Function<HttpResponse, T> {

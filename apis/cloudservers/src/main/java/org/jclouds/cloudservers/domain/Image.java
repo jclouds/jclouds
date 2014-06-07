@@ -32,7 +32,6 @@ import com.google.common.base.Objects.ToStringHelper;
  * launched. These custom images are useful for backup purposes or for producing gold server images
  * if you plan to deploy a particular server configuration frequently.
  * 
- * @author Adrian Cole
 */
 public class Image {
 

@@ -30,9 +30,6 @@ import org.xml.sax.Attributes;
 
 import com.google.common.base.Splitter;
 
-/**
- * @author Adrian Cole
- */
 public class VirtualSystemSettingDataHandler extends ParseSax.HandlerWithResult<VirtualSystemSettingData> {
    protected StringBuilder currentText = new StringBuilder();
 

@@ -29,8 +29,6 @@ import com.google.common.base.Predicates;
 /**
  * The LoggingModules class provides static methods for accessing
  * loggingModules.
- * 
- * @author Adrian Cole
  */
 public class LoggingModules {
 

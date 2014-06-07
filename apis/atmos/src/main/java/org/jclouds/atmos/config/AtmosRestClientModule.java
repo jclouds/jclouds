@@ -44,8 +44,6 @@ import com.google.inject.Provides;
 /**
  * Configures the EMC Atmos Online Storage authentication service connection, including logging and
  * http transport.
- * 
- * @author Adrian Cole
  */
 @ConfiguresRestClient
 public class AtmosRestClientModule extends RestClientModule<AtmosClient, AtmosAsyncClient> {

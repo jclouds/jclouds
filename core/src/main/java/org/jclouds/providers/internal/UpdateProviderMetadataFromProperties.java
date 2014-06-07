@@ -37,8 +37,6 @@ import com.google.common.base.Splitter;
 
 /**
  * Updates {@link ProviderMetadata} carrying over the input {@code Properties}, filtering out those which are typed fields in {@link ProviderMetadata} or {@link ApiMetadata}
- * 
- * @author Adrian Cole
  */
 public class UpdateProviderMetadataFromProperties implements Function<Properties, ProviderMetadata> {
    private final ApiMetadata apiMetadata;

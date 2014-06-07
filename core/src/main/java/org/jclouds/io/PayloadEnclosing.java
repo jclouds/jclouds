@@ -21,10 +21,6 @@ import java.io.InputStream;
 
 import org.jclouds.javax.annotation.Nullable;
 
-/**
- * 
- * @author Adrian Cole
- */
 public interface PayloadEnclosing {
 
    /**

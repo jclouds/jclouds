@@ -22,7 +22,6 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * 
  * State of monitoring for the instance.
  * 
- * @author Adrian Cole
  * @see InstanceClient#runInstances
  * @see MonitoringClient#monitorInstances
  * @see MonitoringClient#UnmonitorInstances

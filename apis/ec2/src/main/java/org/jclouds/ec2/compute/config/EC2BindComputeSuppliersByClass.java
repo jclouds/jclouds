@@ -25,9 +25,6 @@ import org.jclouds.ec2.compute.suppliers.EC2HardwareSupplier;
 import org.jclouds.ec2.compute.suppliers.EC2ImageSupplier;
 
 import com.google.common.base.Supplier;
-/**
- * @author Adrian Cole
- */
 public class EC2BindComputeSuppliersByClass extends BindComputeSuppliersByClass {
    @Override
    protected Class<? extends Supplier<Set<? extends Hardware>>> defineHardwareSupplier() {

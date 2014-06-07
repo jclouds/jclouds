@@ -30,9 +30,6 @@ import org.jclouds.location.Provider;
 
 import com.google.common.reflect.TypeToken;
 
-/**
- * @author Adrian Cole
- */
 @Singleton
 public class ComputeServiceContextImpl extends BaseView implements ComputeServiceContext {
    private final ComputeService computeService;

@@ -39,8 +39,6 @@ import com.google.common.collect.ImmutableSet;
 
 /**
  * Tests guice wiring and parsing of VolumeTypeApi
- *
- * @author Adam Lowe
  */
 @Test(groups = "unit", testName = "VolumeTypeApiExpectTest")
 public class VolumeTypeApiExpectTest extends BaseNovaApiExpectTest {

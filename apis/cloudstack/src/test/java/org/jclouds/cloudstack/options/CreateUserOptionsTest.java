@@ -26,8 +26,6 @@ import com.google.common.collect.ImmutableSet;
 
 /**
  * Tests behavior of {@code CreateUserOptions}
- *
- * @author Andrei Savu
  */
 @Test(groups = "unit")
 public class CreateUserOptionsTest {

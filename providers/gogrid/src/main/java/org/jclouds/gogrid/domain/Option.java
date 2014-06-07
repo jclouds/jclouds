@@ -29,7 +29,6 @@ import com.google.common.primitives.Longs;
 /**
  * Class Option
  * 
- * @author Oleksiy Yarmula
 */
 public class Option implements Comparable<Option> {
 

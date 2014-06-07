@@ -48,9 +48,6 @@ import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import com.google.inject.Guice;
 
-/**
- * @author Adrian Cole
- */
 @Test(groups = "unit", testName = "ServerToNodeMetadataTest")
 public class ServerToNodeMetadataTest {
    Location provider = new LocationBuilder().scope(LocationScope.ZONE).id("dallas").description("description").build();

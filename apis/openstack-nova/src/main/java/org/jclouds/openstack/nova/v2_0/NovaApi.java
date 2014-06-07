@@ -53,7 +53,6 @@ import com.google.inject.Provides;
  * @see NovaAsyncApi
  * @see <a href="http://docs.openstack.org/api/openstack-compute/1.1/content/"
  *      />
- * @author Adrian Cole
  */
 public interface NovaApi extends Closeable {
    /**

@@ -22,10 +22,6 @@ import java.net.URI;
 
 import org.jclouds.javax.annotation.Nullable;
 
-/**
- * 
- * @author Adrian Cole
- */
 public class NetworkConfig {
 
    public Builder toBuilder() {

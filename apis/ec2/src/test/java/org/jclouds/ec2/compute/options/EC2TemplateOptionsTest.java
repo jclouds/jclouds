@@ -34,8 +34,6 @@ import org.testng.annotations.Test;
 
 /**
  * Tests possible uses of EC2TemplateOptions and EC2TemplateOptions.Builder.*
- * 
- * @author Adrian Cole
  */
 public class EC2TemplateOptionsTest {
 

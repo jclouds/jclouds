@@ -26,10 +26,6 @@ import javax.inject.Singleton;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.jclouds.encryption.internal.JCECrypto;
 
-/**
- * 
- * @author Adrian Cole
- */
 @Singleton
 public class BouncyCastleCrypto extends JCECrypto {
 

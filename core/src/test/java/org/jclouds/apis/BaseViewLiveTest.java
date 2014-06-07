@@ -27,10 +27,6 @@ import org.jclouds.util.Closeables2;
 import com.google.common.reflect.TypeToken;
 import com.google.inject.Module;
 
-/**
- * 
- * @author Adrian Cole
- */
 public abstract class BaseViewLiveTest<V extends View> extends BaseContextLiveTest<Context> {
 
    protected volatile V view;

@@ -24,10 +24,6 @@ import org.jclouds.javax.annotation.Nullable;
 
 import com.google.common.collect.ImmutableSet;
 
-/**
- * 
- * @author Adrian Cole
- */
 public class NIC {
    public static class Builder {
       private String dhcp;

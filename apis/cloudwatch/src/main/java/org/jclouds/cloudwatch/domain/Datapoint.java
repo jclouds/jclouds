@@ -24,8 +24,6 @@ import java.util.Date;
 /**
  * @see <a href="http://docs.amazonwebservices.com/AmazonCloudWatch/latest/APIReference?DT_Datapoint.html"
  *      />
- * 
- * @author Adrian Cole
  */
 public class Datapoint {
 

@@ -20,8 +20,6 @@ package org.jclouds.vcloud.domain.network;
 /**
  * 
  * The IpAddressAllocationMode element specifies how an IP address is allocated to this connection.
- * 
- * @author Adrian Cole
  */
 public enum IpAddressAllocationMode {
    /**

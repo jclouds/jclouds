@@ -24,10 +24,6 @@ import java.util.Date;
 
 import com.google.common.base.Objects;
 
-/**
- * 
- * @author Adrian Cole
- */
 public class ResourceRecordDetail {
 
    private final String zoneId;

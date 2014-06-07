@@ -27,9 +27,6 @@ import org.xml.sax.Attributes;
 import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableMap;
 
-/**
- * @author grkvlt@apache.org
- */
 public class TagSetHandler extends ParseSax.HandlerForGeneratedRequestWithResult<Map<String, String>> {
    private StringBuilder currentText = new StringBuilder();
 

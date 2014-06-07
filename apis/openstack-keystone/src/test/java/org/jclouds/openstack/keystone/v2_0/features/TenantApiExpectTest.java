@@ -37,8 +37,6 @@ import com.google.common.collect.ImmutableSet;
 
 /**
  * Tests parsing and Guice wiring of TenantApi
- * 
- * @author Adam Lowe
  */
 @Test(testName = "TenantApiExpectTest")
 public class TenantApiExpectTest extends BaseKeystoneRestApiExpectTest<KeystoneApi> {

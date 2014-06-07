@@ -35,11 +35,6 @@ import com.google.common.base.Supplier;
 import com.google.common.base.Suppliers;
 import com.google.common.collect.Maps;
 
-/**
- * 
- * 
- * @author Adrian Cole
- */
 @Singleton
 public class OSCategoryIn implements Function<Set<String>, Predicate<Template>> {
    private final Supplier<Map<String, String>> categoriesSupplier;

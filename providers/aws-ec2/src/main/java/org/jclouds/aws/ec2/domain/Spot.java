@@ -24,7 +24,6 @@ import java.util.Date;
  * @see <a href=
  *      "http://docs.amazonwebservices.com/AWSEC2/latest/APIReference/ApiReference-query-DescribeSpotPriceHistory.html"
  *      />
- * @author Adrian Cole
  */
 public class Spot implements Comparable<Spot> {
    public static Builder builder() {

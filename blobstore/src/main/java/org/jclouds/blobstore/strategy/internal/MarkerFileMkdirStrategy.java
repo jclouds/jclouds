@@ -32,8 +32,6 @@ import com.google.inject.Inject;
  * Key-value implementations of BlobStore, such as S3, do not have directories. In following the
  * rackspace cloud files project, we use an empty object '#{dirpath}' with content type set to
  * 'application/directory'.
- * 
- * @author Adrian Cole
  */
 @Singleton
 public class MarkerFileMkdirStrategy implements MkdirStrategy {

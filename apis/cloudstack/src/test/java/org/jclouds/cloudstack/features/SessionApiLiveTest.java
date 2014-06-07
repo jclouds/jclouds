@@ -37,8 +37,6 @@ import org.testng.annotations.Test;
 
 /**
  * Tests behavior of {@code SessionApi}
- *
- * @author Andrei Savu
  */
 @Test(groups = "live", singleThreaded = true, testName = "SessionApiLiveTest")
 public class SessionApiLiveTest extends BaseCloudStackApiLiveTest {

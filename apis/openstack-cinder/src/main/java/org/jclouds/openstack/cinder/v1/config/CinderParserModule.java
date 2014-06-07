@@ -21,9 +21,6 @@ import org.jclouds.json.config.GsonModule.DateAdapter;
 
 import com.google.inject.AbstractModule;
 
-/**
- * @author Everett Toews
- */
 public class CinderParserModule extends AbstractModule {
    @Override
    protected void configure() {

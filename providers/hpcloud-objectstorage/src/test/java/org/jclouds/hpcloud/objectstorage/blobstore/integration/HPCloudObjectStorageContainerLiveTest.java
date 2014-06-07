@@ -19,9 +19,6 @@ package org.jclouds.hpcloud.objectstorage.blobstore.integration;
 import org.jclouds.blobstore.integration.internal.BaseContainerLiveTest;
 import org.testng.annotations.Test;
 
-/**
- * @author Jeremy Daggett
- */
 @Test(groups = { "live" })
 public class HPCloudObjectStorageContainerLiveTest extends BaseContainerLiveTest {
    public HPCloudObjectStorageContainerLiveTest() {

@@ -24,7 +24,6 @@ import java.util.Date;
  * 
  * @see <a href="http://docs.amazonwebservices.com/AWSEC2/latest/APIReference/ApiReference-query-CreateSnapshot.html"
  *      />
- * @author Adrian Cole
  */
 public class Snapshot implements Comparable<Snapshot> {
    public static enum Status {

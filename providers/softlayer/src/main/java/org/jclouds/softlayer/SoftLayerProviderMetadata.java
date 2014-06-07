@@ -35,7 +35,6 @@ import com.google.common.collect.ImmutableSet;
 
 /**
  * Implementation of {@link org.jclouds.types.ProviderMetadata} for SoftLayer.
- * @author Adrian Cole
  */
 public class SoftLayerProviderMetadata extends BaseProviderMetadata {
 

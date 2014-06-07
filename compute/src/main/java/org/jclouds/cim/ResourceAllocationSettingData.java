@@ -38,11 +38,9 @@ import com.google.common.collect.Maps;
  * virtualization system may use time-slicing to schedule the the virtual
  * processor to only allow it to use 1 ghz.
  * 
- * @author Adrian Cole
  * @see <a href=
  *      "http://dmtf.org/sites/default/files/cim/cim_schema_v2280/cim_schema_2.28.0Final-Doc.zip"
  *      />
- * 
  */
 public class ResourceAllocationSettingData extends ManagedElement {
 

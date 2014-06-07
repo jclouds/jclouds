@@ -24,7 +24,6 @@ import org.jclouds.openstack.keystone.v2_0.domain.Endpoint;
 import org.testng.annotations.Test;
 
 /**
- * @author Ignacio Mulas
  */
 @Test(groups = "unit", testName = "InternalURLTest")
 public class InternalURLTest {

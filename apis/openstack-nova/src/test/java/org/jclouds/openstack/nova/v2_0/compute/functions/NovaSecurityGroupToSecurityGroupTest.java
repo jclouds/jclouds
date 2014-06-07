@@ -44,9 +44,6 @@ import com.google.common.cache.LoadingCache;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 
-/**
- * @author Andrew Bayer
- */
 @Test(groups = "unit", testName = "NovaSecurityGroupToSecurityGroupTest")
 public class NovaSecurityGroupToSecurityGroupTest {
 

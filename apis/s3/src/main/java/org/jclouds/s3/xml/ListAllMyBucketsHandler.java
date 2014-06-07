@@ -38,7 +38,6 @@ import com.google.common.collect.Sets;
  * @see <a
  *      href="http://docs.amazonwebservices.com/AmazonS3/2006-03-01/index.html?RESTServiceGET.html"
  *      />
- * @author Adrian Cole
  */
 public class ListAllMyBucketsHandler extends ParseSax.HandlerWithResult<Set<BucketMetadata>> {
 

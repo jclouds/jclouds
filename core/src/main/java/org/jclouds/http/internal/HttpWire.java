@@ -23,10 +23,6 @@ import org.jclouds.Constants;
 import org.jclouds.logging.Logger;
 import org.jclouds.logging.internal.Wire;
 
-/**
- * 
- * @author Adrian Cole
- */
 public class HttpWire extends Wire {
 
    @Resource

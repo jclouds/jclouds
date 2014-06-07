@@ -28,9 +28,6 @@ import com.google.common.reflect.TypeToken;
  * For example, the {@code CloudStackContext} can be backend by both
  * {@code ComputeServiceContext} and {@code LoadBalancerServiceContext}, as the
  * api covers these features.
- * 
- * @author Adrian Cole
- * 
  */
 @Beta
 public interface View {

@@ -22,11 +22,6 @@ import org.testng.annotations.Test;
 
 import com.google.inject.Module;
 
-/**
- * 
- * @author David Alves
- * 
- */
 @Test(groups = "live", singleThreaded = true, testName = "HPCloudComputeImageExtensionLivetest")
 public class HPCloudComputeImageExtensionLivetest extends BaseImageExtensionLiveTest {
 

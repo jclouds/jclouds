@@ -46,8 +46,6 @@ import org.jclouds.util.Closeables2;
 /**
  * This object will parse the body of an HttpResponse and return the result of type <T> back to the
  * caller.
- * 
- * @author Adrian Cole
  */
 public class ParseSax<T> implements Function<HttpResponse, T>, InvocationContext<ParseSax<T>> {
 
@@ -183,7 +181,6 @@ public class ParseSax<T> implements Function<HttpResponse, T>, InvocationContext
    /**
     * Handler that produces a useable domain object accessible after parsing completes.
     * 
-    * @author Adrian Cole
     */
    public abstract static class HandlerWithResult<T> extends DefaultHandler implements
             InvocationContext<HandlerWithResult<T>> {

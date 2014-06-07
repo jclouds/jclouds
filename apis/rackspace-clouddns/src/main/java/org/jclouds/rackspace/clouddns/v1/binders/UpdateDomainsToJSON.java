@@ -27,9 +27,6 @@ import org.jclouds.rest.MapBinder;
 import com.google.common.base.Joiner;
 import com.google.common.collect.Lists;
 
-/**
- * @author Everett Toews
- */
 public class UpdateDomainsToJSON implements MapBinder {
    private static final String template = "{\"domains\":[%s]}";
 

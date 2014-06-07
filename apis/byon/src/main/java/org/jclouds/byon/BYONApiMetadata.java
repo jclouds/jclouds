@@ -34,8 +34,6 @@ import com.google.inject.Module;
  * 
  * This class is not setup to allow a subclasses to override the type of api,
  * asyncapi, or context. This is an optimization for s.
- * 
- * @author Adrian Cole
  */
 public class BYONApiMetadata extends BaseApiMetadata {
 

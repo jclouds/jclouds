@@ -33,8 +33,6 @@ import com.google.common.collect.Iterables;
 import com.google.common.reflect.Invokable;
 /**
  * Tests annotation parsing of {@code VirtualGuestApi}
- * 
- * @author Adrian Cole
  */
 @Test(groups = "unit")
 public class VirtualGuestApiTest extends BaseSoftLayerApiTest<VirtualGuestApi> {

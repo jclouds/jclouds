@@ -64,8 +64,6 @@ import com.google.inject.TypeLiteral;
 /**
  * All of these are memoized as locations do not change often at runtime. Note that we take care to
  * propagate authorization exceptions. this is so that we do not lock out the account.
- * 
- * @author Adrian Cole
  */
 public class LocationModule extends AbstractModule {
 

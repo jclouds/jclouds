@@ -20,8 +20,6 @@ import org.jclouds.rest.ResourceNotFoundException;
 
 /**
  * Thrown when an object cannot be copied.
- * 
- * @author Everett Toews
  */
 public class CopyObjectException extends ResourceNotFoundException {
 

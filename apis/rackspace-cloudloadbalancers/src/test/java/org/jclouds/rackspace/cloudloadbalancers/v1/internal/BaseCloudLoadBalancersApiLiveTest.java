@@ -24,10 +24,6 @@ import org.jclouds.openstack.keystone.v2_0.config.KeystoneProperties;
 import org.jclouds.rackspace.cloudloadbalancers.v1.CloudLoadBalancersApi;
 import org.testng.annotations.BeforeGroups;
 
-/**
- * 
- * @author Adrian Cole
- */
 public class BaseCloudLoadBalancersApiLiveTest extends BaseApiLiveTest<CloudLoadBalancersApi> {
 
    public BaseCloudLoadBalancersApiLiveTest() {

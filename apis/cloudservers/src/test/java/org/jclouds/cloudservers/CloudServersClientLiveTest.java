@@ -67,8 +67,6 @@ import com.google.inject.Module;
 
 /**
  * Tests behavior of {@code CloudServersClient}
- * 
- * @author Adrian Cole
  */
 @Test(groups = "live", singleThreaded = true, testName = "CloudServersClientLiveTest")
 public class CloudServersClientLiveTest extends BaseComputeServiceContextLiveTest {

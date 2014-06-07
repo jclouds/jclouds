@@ -40,10 +40,6 @@ import com.google.inject.Guice;
 import com.google.inject.Injector;
 import com.google.inject.name.Names;
 
-/**
- * 
- * @author Adrian Cole
- */
 @Test(groups = "unit", singleThreaded = true)
 public class ReadAnnotationsAndPropertiesTest {
 

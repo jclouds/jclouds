@@ -21,8 +21,6 @@ import static com.google.common.base.Preconditions.checkNotNull;
 /**
  * Option for the cloneDrive operation.
  * 'HDD' to specifies a regular "spinning oxide" disk; 'SSD' specifies a solid-state drive.
- * 
- * @author Alasdair Hodge
  */
 public enum AffinityType {
    HDD,

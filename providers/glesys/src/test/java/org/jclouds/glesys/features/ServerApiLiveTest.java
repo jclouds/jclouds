@@ -49,9 +49,6 @@ import com.google.common.collect.FluentIterable;
 
 /**
  * Tests behavior of {@code ServerApi}
- *
- * @author Adrian Cole
- * @author Adam Lowe
  */
 @Test(groups = "live", testName = "ServerApiLiveTest", singleThreaded = true)
 public class ServerApiLiveTest extends BaseGleSYSApiWithAServerLiveTest {

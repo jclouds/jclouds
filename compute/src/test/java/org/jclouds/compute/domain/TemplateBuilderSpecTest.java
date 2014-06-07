@@ -38,8 +38,6 @@ import com.google.gson.Gson;
  * 
  * <p/>
  * inspired by guava {@code CacheBuilderSpecTest}
- * 
- * @author Adrian Cole
  */
 @Test(testName = "TemplateBuilderSpecTest")
 public class TemplateBuilderSpecTest {

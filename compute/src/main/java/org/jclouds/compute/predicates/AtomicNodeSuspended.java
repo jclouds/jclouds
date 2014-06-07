@@ -28,8 +28,6 @@ import com.google.common.collect.ImmutableSet;
 /**
  * 
  * Tests to see if a node is suspended.
- * 
- * @author Adrian Cole
  */
 @Singleton
 public class AtomicNodeSuspended extends RefreshNodeAndDoubleCheckOnFailUnlessStatusInvalid {

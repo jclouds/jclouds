@@ -29,8 +29,6 @@ import com.google.common.collect.ImmutableSet;
 
 /**
  * Class ISOPermissions
- *
- * @author Richard Downer
  */
 public class ISOPermissions {
 

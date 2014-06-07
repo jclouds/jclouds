@@ -28,8 +28,6 @@ import org.jclouds.rest.ConfiguresHttpApi;
 
 /**
  * Configures the Monitoring connection.
- * 
- * @author Adrian Cole
  */
 @ConfiguresHttpApi
 public class CloudWatchHttpApiModule extends FormSigningHttpApiModule<CloudWatchApi> {

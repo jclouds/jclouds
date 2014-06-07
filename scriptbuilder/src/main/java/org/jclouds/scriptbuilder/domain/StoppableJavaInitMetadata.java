@@ -24,7 +24,6 @@ import java.net.URI;
  * A java process that has a graceful shutdown mechanism.
  * 
  * @see JavaInitMetadata
- * @author Adrian Cole
  */
 public class StoppableJavaInitMetadata extends JavaInitMetadata {
    private final String[] stopClasspath;

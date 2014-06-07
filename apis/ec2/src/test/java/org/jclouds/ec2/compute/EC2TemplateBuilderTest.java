@@ -75,8 +75,6 @@ import com.google.common.collect.ImmutableSet;
  * interaction with Amazon Web Services.
  * 
  * @see EC2ComputeServiceLiveTest
- * 
- * @author Oleksiy Yarmula
  */
 @Test(testName = "EC2TemplateBuilderTest")
 public class EC2TemplateBuilderTest {

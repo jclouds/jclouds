@@ -32,7 +32,6 @@ import org.testng.annotations.Test;
 /**
  * 
  * @see KeystoneProperties#CREDENTIAL_TYPE
- * @author Adrian Cole
  */
 @Test(groups = "unit", testName = "AccessKeyAndSecretKeyAndTenantNamePropertyAuthenticationExpectTest")
 public class AccessKeyAndSecretKeyAndTenantNamePropertyAuthenticationExpectTest extends BaseSwiftKeystoneExpectTest<SwiftKeystoneClient> {

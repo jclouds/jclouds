@@ -31,8 +31,6 @@ import com.google.common.collect.ImmutableList;
 
 /**
  * Tests behavior of {@code UpdatePodOptions}
- * 
- * @author Richard Downer
  */
 @Test(groups = "unit")
 public class UpdatePodOptionsTest {

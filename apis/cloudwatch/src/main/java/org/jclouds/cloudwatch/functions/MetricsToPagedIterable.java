@@ -30,9 +30,6 @@ import org.jclouds.collect.internal.CallerArg0ToPagedIterable;
 import com.google.common.annotations.Beta;
 import com.google.common.base.Function;
 
-/**
- * @author Adrian Cole
- */
 @Beta
 public class MetricsToPagedIterable extends CallerArg0ToPagedIterable<Metric, MetricsToPagedIterable> {
 

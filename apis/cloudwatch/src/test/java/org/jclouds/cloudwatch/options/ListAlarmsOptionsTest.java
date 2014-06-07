@@ -28,8 +28,6 @@ import org.testng.annotations.Test;
 
 /**
  * Tests behavior of {@code ListAlarmsOptions}.
- *
- * @author Jeremy Whitlock
  */
 @Test(groups = "unit")
 public class ListAlarmsOptionsTest {

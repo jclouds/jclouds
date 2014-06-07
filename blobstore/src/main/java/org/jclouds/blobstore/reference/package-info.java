@@ -16,6 +16,5 @@
  */
 /**
  * This package contains properties and reference data used in blob service.
- * @author Adrian Cole
  */
 package org.jclouds.blobstore.reference;

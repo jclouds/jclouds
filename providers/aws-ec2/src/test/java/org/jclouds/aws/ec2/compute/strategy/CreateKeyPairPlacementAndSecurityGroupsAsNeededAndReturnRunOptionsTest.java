@@ -61,9 +61,6 @@ import com.google.common.cache.LoadingCache;
 import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.ImmutableSet;
 
-/**
- * @author Adrian Cole
- */
 @Test(groups = "unit", singleThreaded = true, testName = "CreateKeyPairPlacementAndSecurityGroupsAsNeededAndReturnRunOptionsTest")
 public class CreateKeyPairPlacementAndSecurityGroupsAsNeededAndReturnRunOptionsTest {
    private static final Provider<RunInstancesOptions> OPTIONS_PROVIDER = new javax.inject.Provider<RunInstancesOptions>() {

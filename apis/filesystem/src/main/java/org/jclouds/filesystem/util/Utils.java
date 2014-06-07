@@ -24,8 +24,6 @@ import com.google.common.util.concurrent.Uninterruptibles;
 
 /**
  * Utilities for the filesystem blobstore.
- *
- * @author Andrew Gaul
  */
 public class Utils {
    /** Private constructor for utility class. */

@@ -24,8 +24,6 @@ import org.jclouds.rest.Binder;
 
 /**
  * Binds the String [] to query parameters named with GroupName.index
- * 
- * @author Adrian Cole
  */
 @Singleton
 public class BindGroupNamesToIndexedFormParams implements Binder {

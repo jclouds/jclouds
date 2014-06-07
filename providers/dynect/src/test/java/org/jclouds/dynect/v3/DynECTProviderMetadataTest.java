@@ -19,10 +19,6 @@ package org.jclouds.dynect.v3;
 import org.jclouds.providers.internal.BaseProviderMetadataTest;
 import org.testng.annotations.Test;
 
-/**
- * 
- * @author Adrian Cole
- */
 @Test(groups = "unit", testName = "DynECTProviderMetadataTest")
 public class DynECTProviderMetadataTest extends BaseProviderMetadataTest {
    public DynECTProviderMetadataTest() {

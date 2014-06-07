@@ -34,8 +34,6 @@ import com.google.common.collect.ImmutableSet;
 
 /**
  * Class ApiMetadata
- *
- * @author Adam Lowe
  */
 public class ApiMetadata extends Resource {
 

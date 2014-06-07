@@ -28,8 +28,6 @@ import com.google.common.collect.ImmutableMultimap.Builder;
 
 /**
  * Binds the Iterable<String> to form parameters named with AttributeName.index
- * 
- * @author Adrian Cole
  */
 @Singleton
 public class BindAttributeNamesToIndexedFormParams implements Binder {

@@ -20,8 +20,6 @@ import org.jclouds.javax.annotation.Nullable;
 
 /**
  * Metadata about a virtual machine or grouping of them
- * 
- * @author Adrian Cole
  */
 public class Section<T extends Section<T>> {
 

@@ -58,8 +58,6 @@ import com.google.common.hash.Hashing;
 
 /**
  * Tests behavior of {@code AzureBlobClient}
- * 
- * @author Adrian Cole
  */
 @Test(groups = "live", singleThreaded = true)
 public class AzureBlobClientLiveTest extends BaseBlobStoreIntegrationTest {

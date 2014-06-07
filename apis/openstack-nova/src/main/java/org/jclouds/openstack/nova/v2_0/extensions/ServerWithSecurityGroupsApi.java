@@ -29,7 +29,6 @@ import com.google.common.annotations.Beta;
  * NOTE: the equivalent to listServersInDetail() isn't available at the other end, so not extending ServerApi at this
  * time.
  *
- * @author Adam Lowe
  * @see org.jclouds.openstack.nova.v2_0.features.ServerApi
  * @see ServerWithSecurityGroupsAsyncApi
  * @see <a href="http://nova.openstack.org/api/nova.api.openstack.compute.contrib.createserverext.html"/>

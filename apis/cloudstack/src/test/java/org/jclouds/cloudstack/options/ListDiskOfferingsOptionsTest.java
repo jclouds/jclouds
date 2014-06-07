@@ -27,8 +27,6 @@ import com.google.common.collect.ImmutableList;
 
 /**
  * Tests behavior of {@code ListDiskOfferingsOptions}
- * 
- * @author Adrian Cole
  */
 @Test(groups = "unit")
 public class ListDiskOfferingsOptionsTest {

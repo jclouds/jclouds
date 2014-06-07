@@ -38,8 +38,6 @@ import com.google.inject.Module;
 
 /**
  * Implementation of {@link ApiMetadata} for OpenStack Swift authenticated with KeyStone
- *
- * @author Adrian Cole
  */
 public class SwiftKeystoneApiMetadata extends SwiftApiMetadata {
 

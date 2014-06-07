@@ -32,7 +32,6 @@ import com.google.common.collect.ImmutableSet;
  * of Ruby and Rubygems, use the {@link InstallChefUsingOmnibus} statement
  * instead.
  * 
- * @author Ignasi Barrera
  * 
  * @see InstallChefUsingOmnibus
  * @see InstallRuby

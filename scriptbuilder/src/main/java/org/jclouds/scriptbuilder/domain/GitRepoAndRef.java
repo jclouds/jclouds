@@ -25,8 +25,6 @@ import com.google.common.base.Optional;
 
 /**
  * Description of git coordinates to checkout.
- * 
- * @author Adrian Cole
  */
 public class GitRepoAndRef  {
 

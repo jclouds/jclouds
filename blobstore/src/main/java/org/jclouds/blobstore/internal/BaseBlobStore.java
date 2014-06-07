@@ -40,10 +40,6 @@ import org.jclouds.domain.Location;
 import com.google.common.base.Predicate;
 import com.google.common.base.Supplier;
 
-/**
- * 
- * @author Adrian Cole
- */
 public abstract class BaseBlobStore implements BlobStore {
 
    protected final BlobStoreContext context;

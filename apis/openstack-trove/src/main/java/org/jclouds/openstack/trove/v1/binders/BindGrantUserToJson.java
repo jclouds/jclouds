@@ -26,9 +26,6 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.inject.Inject;
 
-/**
- * @author Zack Shoylev
- */
 public class BindGrantUserToJson implements MapBinder {
     
     @Inject

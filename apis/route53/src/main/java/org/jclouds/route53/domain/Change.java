@@ -24,9 +24,6 @@ import java.util.Date;
 
 import com.google.common.base.Objects;
 
-/**
- * @author Adrian Cole
- */
 public final class Change {
 
    private final String id;

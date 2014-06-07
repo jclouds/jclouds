@@ -25,7 +25,6 @@ import com.google.common.base.Optional;
 
 /**
  * 
- * @author Adrian Cole
  * 
  * @see <a href=
  *      "http://docs.amazonwebservices.com/AWSSimpleQueueService/2011-10-01/APIReference/Query_QueryGetQueueAttributes.html"

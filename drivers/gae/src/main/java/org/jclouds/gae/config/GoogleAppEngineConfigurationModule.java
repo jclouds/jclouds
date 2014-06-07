@@ -38,8 +38,6 @@ import com.google.inject.Scopes;
 
 /**
  * Configures {@link GaeHttpCommandExecutorService}.
- * 
- * @author Adrian Cole
  */
 @ConfiguresHttpCommandExecutorService
 @ConfiguresExecutorService

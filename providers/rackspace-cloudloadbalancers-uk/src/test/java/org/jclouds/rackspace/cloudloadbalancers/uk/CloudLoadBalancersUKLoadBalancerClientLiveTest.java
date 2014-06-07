@@ -19,10 +19,6 @@ package org.jclouds.rackspace.cloudloadbalancers.uk;
 import org.jclouds.rackspace.cloudloadbalancers.v1.features.LoadBalancerApiLiveTest;
 import org.testng.annotations.Test;
 
-/**
- * 
- * @author Dan Lo Bianco
- */
 @Test(groups = "live", singleThreaded = true, testName = "CloudLoadBalancersUKLoadBalancerClientLiveTest")
 public class CloudLoadBalancersUKLoadBalancerClientLiveTest extends LoadBalancerApiLiveTest {
    public CloudLoadBalancersUKLoadBalancerClientLiveTest() {

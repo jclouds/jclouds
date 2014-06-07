@@ -47,9 +47,6 @@ import com.google.common.collect.Multimap;
 import com.google.common.collect.Sets;
 import com.google.common.util.concurrent.Atomics;
 
-/**
- * @author Adrian Cole
- */
 @Test(groups = "unit", testName = "CustomizeNodeAndAddToGoodMapOrPutExceptionIntoBadMapTest")
 public class CustomizeNodeAndAddToGoodMapOrPutExceptionIntoBadMapTest {
 

@@ -29,9 +29,6 @@ import org.jclouds.ovf.Property;
 import org.jclouds.util.SaxUtils;
 import org.xml.sax.Attributes;
 
-/**
- * @author Adrian Cole
- */
 public class ProductSectionHandler extends SectionHandler<ProductSection, ProductSection.Builder> {
    protected Property.Builder configBuilder = Property.builder();
 

@@ -44,11 +44,6 @@ import com.google.common.io.CharStreams;
 import com.google.common.io.InputSupplier;
 import com.google.common.primitives.Chars;
 
-/**
- * 
- * 
- * @author Adrian Cole
- */
 public class Strings2 {
 
    /**

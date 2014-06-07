@@ -33,7 +33,6 @@ import org.jclouds.s3.domain.internal.CopyObjectResult;
  * CopyObjectResult is the document we expect to parse.
  * 
  * @see <a href= "http://docs.amazonwebservices.com/AmazonS3/2006-03-01/RESTObjectCOPY.html" />
- * @author Adrian Cole
  */
 public class CopyObjectHandler extends ParseSax.HandlerWithResult<ObjectMetadata> {
 

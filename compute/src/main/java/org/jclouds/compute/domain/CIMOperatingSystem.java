@@ -26,7 +26,6 @@ import com.google.common.base.Objects.ToStringHelper;
 /**
  * Operating system based on DMTF CIM model.
  * 
- * @author Adrian Cole
  * @see <a href="http://dmtf.org/standards/cim/cim_schema_v2260">DMTF CIM model</a>
  */
 @Beta

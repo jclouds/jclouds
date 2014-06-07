@@ -23,10 +23,6 @@ import org.jclouds.blobstore.domain.StorageType;
 import org.jclouds.blobstore.domain.internal.MutableStorageMetadataImpl;
 import org.testng.annotations.Test;
 
-/**
- * 
- * @author Adrian Cole
- */
 @Test(groups = "unit")
 public class PrefixToResourceMetadataTest {
    PrefixToResourceMetadata fn = new PrefixToResourceMetadata();

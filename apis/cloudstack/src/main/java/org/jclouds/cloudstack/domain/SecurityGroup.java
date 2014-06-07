@@ -30,8 +30,6 @@ import com.google.common.collect.ImmutableSortedSet;
 
 /**
  * Class SecurityGroup
- *
- * @author Adrian Cole
  */
 public class SecurityGroup implements Comparable<SecurityGroup> {
 

@@ -28,8 +28,6 @@ import com.google.common.collect.ImmutableSet;
 /**
  * 
  * Tests to see if a image is available.
- * 
- * @author Adrian Cole
  */
 @Singleton
 public class AtomicImageAvailable extends RefreshImageAndDoubleCheckOnFailUnlessStatusInvalid {

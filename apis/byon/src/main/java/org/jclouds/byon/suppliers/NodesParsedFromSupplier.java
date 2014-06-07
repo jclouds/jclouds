@@ -32,10 +32,6 @@ import com.google.common.base.Supplier;
 import com.google.common.cache.LoadingCache;
 import com.google.common.io.ByteSource;
 
-/**
- * 
- * @author Adrian Cole
- */
 @Singleton
 public class NodesParsedFromSupplier implements Supplier<LoadingCache<String, Node>> {
    @Resource

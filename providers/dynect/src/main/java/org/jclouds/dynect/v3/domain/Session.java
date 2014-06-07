@@ -22,9 +22,6 @@ import java.beans.ConstructorProperties;
 
 import com.google.common.base.Objects;
 
-/**
- * @author Adrian Cole
- */
 public final class Session {
 
    public static Session forTokenAndVersion(String token, String version) {

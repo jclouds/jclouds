@@ -23,8 +23,6 @@ import com.google.common.base.Optional;
 
 /**
  * A Role to be configured for a Chef Solo run.
- * 
- * @author Ignasi Barrera
  */
 public class Role {
 

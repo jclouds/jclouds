@@ -21,9 +21,6 @@ import org.jclouds.s3.blobstore.S3BlobStoreContext;
 
 import com.google.inject.ImplementedBy;
 
-/**
- * @author Adrian Cole
- */
 @ImplementedBy(AWSS3BlobStoreContextImpl.class)
 public interface AWSS3BlobStoreContext extends S3BlobStoreContext {
 

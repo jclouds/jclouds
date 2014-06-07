@@ -19,10 +19,6 @@ package org.jclouds.elastichosts.compute;
 import org.jclouds.elasticstack.compute.ElasticStackComputeServiceLiveTest;
 import org.testng.annotations.Test;
 
-/**
- * 
- * @author Adrian Cole
- */
 @Test(groups = "live", sequential = true, testName = "ElasticHostsPeer1LondonComputeServiceLiveTest")
 public class ElasticHostsPeer1LondonComputeServiceLiveTest extends ElasticStackComputeServiceLiveTest {
 

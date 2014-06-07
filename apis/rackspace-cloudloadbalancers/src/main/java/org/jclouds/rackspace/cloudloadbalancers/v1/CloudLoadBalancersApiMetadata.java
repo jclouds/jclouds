@@ -36,8 +36,6 @@ import com.google.common.collect.ImmutableSet;
 import com.google.inject.Module;
 /**
  * Implementation of {@link ApiMetadata} for CloudLoadBalancers 1.0 API
- * 
- * @author Adrian Cole
  */
 public class CloudLoadBalancersApiMetadata extends BaseHttpApiMetadata<CloudLoadBalancersApi> {
 

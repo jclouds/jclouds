@@ -32,7 +32,6 @@ import com.google.common.base.Objects;
  * template, which represents the templates of all the consumable services that
  * are available across the regions.
  * 
- * @author AdrianCole
  * @see <a href=
  *      "http://docs.rackspace.com/loadbalancers/api/v1.0/clb-devguv1Defaulte/content/Authentication-d1e699.html#Authenticate-d1e171"
  *      />

@@ -30,9 +30,6 @@ import org.jclouds.javax.annotation.Nullable;
 import com.google.common.base.Objects;
 import com.google.common.base.Optional;
 
-/**
- * @author Everett Toews
- */
 public final class Limit {
 
    private final String verb;

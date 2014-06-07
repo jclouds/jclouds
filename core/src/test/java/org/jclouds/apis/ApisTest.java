@@ -25,8 +25,6 @@ import org.testng.annotations.Test;
 
 /**
  * The ApisTest tests the org.jclouds.apis.Apis class.
- * 
- * @author Jeremy Whitlock <jwhitlock@apache.org>
  */
 @Test(groups = "unit", testName = "ApisTest")
 public class ApisTest {

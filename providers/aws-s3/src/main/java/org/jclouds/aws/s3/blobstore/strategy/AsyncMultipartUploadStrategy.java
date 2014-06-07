@@ -25,8 +25,6 @@ import com.google.inject.ImplementedBy;
 
 /**
  * @see <a href="http://docs.amazonwebservices.com/AmazonS3/latest/dev/index.html?qfacts.html">AWS Documentation</a>
- *
- * @author Tibor Kiss
  */
 @ImplementedBy(ParallelMultipartUploadStrategy.class)
 public interface AsyncMultipartUploadStrategy extends MultipartUpload {

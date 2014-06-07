@@ -22,8 +22,6 @@ package org.jclouds.vcloud.domain.network.nat;
  * The Protocol specifies the network protocol to which this rule applies
  * 
  * @since vcloud api 0.9
- * 
- * @author Adrian Cole
  */
 public enum NatProtocol {
    /**

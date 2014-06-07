@@ -19,8 +19,6 @@ package org.jclouds.rest;
 
 /**
  * Thrown when there is an authorization error.
- * 
- * @author Adrian Cole
  */
 public class AuthorizationException extends RuntimeException {
 

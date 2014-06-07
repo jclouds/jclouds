@@ -27,8 +27,6 @@ import org.jclouds.openstack.swift.reference.SwiftHeaders;
  * 
  * This specifically enables the Swift ACL for public reads using the 'X-Container-Read'
  * header. This should be refactored into the Swift API.
- * 
- * @author Jeremy Daggett
  */
 public class CreateContainerOptions extends BaseHttpRequestOptions {
    public static final CreateContainerOptions NONE = new CreateContainerOptions();

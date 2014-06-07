@@ -25,8 +25,6 @@ import com.google.common.annotations.Beta;
  * An init script was submitted to a node for execution.
  * <p/>
  * Note this does not guarantee that there was success, nor that the init script started.
- * 
- * @author Adrian Cole
  */
 @Beta
 public class InitScriptOnNodeSubmission extends StatementOnNodeSubmission {

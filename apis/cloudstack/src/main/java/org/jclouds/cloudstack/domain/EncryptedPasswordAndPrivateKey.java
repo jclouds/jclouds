@@ -22,10 +22,6 @@ import org.jclouds.javax.annotation.Nullable;
 
 import com.google.common.base.Objects;
 
-/**
- *
- * @author Andrei Savu
- */
 public final class EncryptedPasswordAndPrivateKey {
 
    public static Builder builder() {

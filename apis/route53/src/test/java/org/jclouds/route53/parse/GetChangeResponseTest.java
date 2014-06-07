@@ -28,9 +28,6 @@ import org.jclouds.route53.domain.Change.Status;
 import org.jclouds.route53.xml.ChangeHandler;
 import org.testng.annotations.Test;
 
-/**
- * @author Adrian Cole
- */
 // NOTE:without testName, this will not call @Before* and fail w/NPE during surefire
 @Test(groups = "unit", testName = "GetChangeResponseTest")
 public class GetChangeResponseTest extends BaseHandlerTest {

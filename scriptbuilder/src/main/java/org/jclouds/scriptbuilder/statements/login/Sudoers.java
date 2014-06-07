@@ -31,8 +31,6 @@ import com.google.common.collect.ImmutableSet;
 
 /**
  * Control /etc/sudoers
- * 
- * @author Adrian Cole
  */
 @Beta
 public class Sudoers implements Statement {

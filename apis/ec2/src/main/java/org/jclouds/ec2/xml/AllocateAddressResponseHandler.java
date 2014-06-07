@@ -21,9 +21,6 @@ import javax.annotation.Resource;
 import org.jclouds.http.functions.ParseSax.HandlerWithResult;
 import org.jclouds.logging.Logger;
 
-/**
- * @author Adrian Cole
- */
 public class AllocateAddressResponseHandler extends HandlerWithResult<String> {
 
    @Resource

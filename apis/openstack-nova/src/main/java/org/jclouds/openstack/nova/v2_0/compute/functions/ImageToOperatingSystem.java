@@ -47,8 +47,6 @@ import com.google.common.base.Splitter;
 
 /**
  * A function for transforming a nova specific Image into a generic OperatingSystem object.
- * 
- * @author Matt Stephenson
  */
 public class ImageToOperatingSystem implements Function<Image, OperatingSystem> {
    public static final Pattern DEFAULT_PATTERN = Pattern.compile("(([^ ]*) ([0-9.]+) ?.*)");

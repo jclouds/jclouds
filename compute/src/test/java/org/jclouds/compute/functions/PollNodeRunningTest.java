@@ -38,9 +38,6 @@ import org.testng.annotations.Test;
 import com.google.common.base.Predicate;
 import com.google.common.util.concurrent.Atomics;
 
-/**
- * @author Adrian Cole
- */
 @Test
 public class PollNodeRunningTest {
 

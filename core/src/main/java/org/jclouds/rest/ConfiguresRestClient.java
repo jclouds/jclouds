@@ -24,9 +24,6 @@ import java.lang.annotation.Target;
 
 /**
  * designates the module configures a Client to a cloud.
- * 
- * @author Adrian Cole
- * 
  */
 @Retention(RUNTIME)
 @Target(TYPE)

@@ -23,8 +23,6 @@ import org.jclouds.openstack.swift.reference.SwiftHeaders;
  * Additional headers specified by Rackspace Cloud Files REST API.
  * 
  * @see <a href="http://www.rackspacecloud.com/cf-devguide-20090311.pdf" />
- * @author Adrian Cole
- * 
  */
 public interface CloudFilesHeaders extends SwiftHeaders {
 

@@ -24,7 +24,6 @@ import com.google.common.collect.ImmutableSet;
  * Options for services that apply to accounts in domains
  * 
  * @see <a href="http://download.cloud.com/releases/2.2.0/api_2.2.12/TOC_User.html" />
- * @author Adrian Cole
  */
 public class AccountInDomainOptions extends BaseHttpRequestOptions {
 

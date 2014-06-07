@@ -50,7 +50,6 @@ import com.google.common.util.concurrent.ListeningExecutorService;
 import com.google.common.util.concurrent.TimeLimiter;
 
 /**
- * @author Adrian Cole
  * @deprecated will be replaced in jclouds 1.7 with {@link InvokeHttpMethod}, as async interfaces are no longer supported.
  */
 @Deprecated

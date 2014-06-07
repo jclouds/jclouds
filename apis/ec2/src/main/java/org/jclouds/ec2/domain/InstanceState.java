@@ -24,11 +24,9 @@ import com.google.common.base.CaseFormat;
  * 
  * The current state of the instance..
  * 
- * @author Adrian Cole
  * @see EC2AsyncClient#describeInstances
  * @see EC2AsyncClient#runInstances
  * @see EC2AsyncClient#terminateInstances
- * 
  */
 public enum InstanceState {
 

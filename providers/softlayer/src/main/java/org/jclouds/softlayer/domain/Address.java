@@ -29,7 +29,6 @@ import com.google.common.base.Objects.ToStringHelper;
 /**
  * Class Address
  *
- * @author Jason King
  * @see <a href= "http://sldn.softlayer.com/reference/datatypes/SoftLayer_Account_Address"
 />
  */

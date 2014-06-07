@@ -36,8 +36,6 @@ import com.google.common.collect.ImmutableSet;
 
 /**
  * Tests parsing of {@code ArchiveApi}
- *
- * @author Adam Lowe
  */
 @Test(groups = "unit", testName = "ArchiveApiExpectTest")
 public class ArchiveApiExpectTest extends BaseGleSYSApiExpectTest {

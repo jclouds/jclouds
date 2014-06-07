@@ -22,8 +22,6 @@ package org.jclouds.s3.reference;
  * @see <a
  *      href="http://docs.amazonwebservices.com/AmazonS3/latest/index.html?RESTAuthentication.html"
  *      />
- * @author Adrian Cole
- * 
  */
 public interface S3Headers {
 

@@ -88,8 +88,6 @@ import com.google.inject.Provides;
 
 /**
  * Configures the Nova connection.
- *
- * @author Adrian Cole
  */
 @ConfiguresRestClient
 public class NovaRestClientModule<S extends NovaApi, A extends NovaAsyncApi> extends RestClientModule<S, A> {

@@ -26,9 +26,6 @@ import org.testng.annotations.Test;
 import com.google.common.util.concurrent.AbstractFuture;
 import com.google.common.util.concurrent.ListenableFuture;
 
-/**
- * @author Adam Lowe
- */
 @Test(groups = "unit", singleThreaded = true, testName = "ScriptStillRunningExceptionTest")
 public class ScriptStillRunningExceptionTest {
 

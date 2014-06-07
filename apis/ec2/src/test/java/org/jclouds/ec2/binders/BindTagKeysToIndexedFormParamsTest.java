@@ -27,8 +27,6 @@ import com.google.common.collect.ImmutableSet;
 
 /**
  * Tests behavior of {@code BindTagKeysToIndexedFormParams}
- * 
- * @author Adrian Cole
  */
 @Test(groups = "unit")
 public class BindTagKeysToIndexedFormParamsTest {

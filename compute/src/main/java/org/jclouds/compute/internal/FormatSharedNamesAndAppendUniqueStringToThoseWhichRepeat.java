@@ -45,7 +45,6 @@ import com.google.inject.Inject;
  * 
  * This implementation will pass the group and a hex formatted random number to
  * the configured naming convention.
- * 
  */
 public class FormatSharedNamesAndAppendUniqueStringToThoseWhichRepeat implements GroupNamingConvention {
 

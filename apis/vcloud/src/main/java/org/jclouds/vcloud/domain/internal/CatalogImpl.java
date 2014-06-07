@@ -33,9 +33,6 @@ import com.google.common.collect.Lists;
 
 /**
  * Locations of resources in vCloud
- * 
- * @author Adrian Cole
- * 
  */
 public class CatalogImpl extends LinkedHashMap<String, ReferenceType> implements Catalog {
 

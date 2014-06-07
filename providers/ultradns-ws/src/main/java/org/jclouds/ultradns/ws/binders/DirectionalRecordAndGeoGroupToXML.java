@@ -30,10 +30,6 @@ import org.jclouds.ultradns.ws.domain.DirectionalPoolRecord;
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Joiner;
 
-/**
- * 
- * @author Adrian Cole
- */
 public class DirectionalRecordAndGeoGroupToXML implements MapBinder {
 
    @SuppressWarnings("unchecked")

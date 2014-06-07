@@ -25,10 +25,6 @@ import com.google.inject.ImplementedBy;
 
 /**
  * Represents a cloud that has compute functionality.
- * 
- * 
- * @author Adrian Cole
- * 
  */
 @ImplementedBy(ComputeServiceContextImpl.class)
 public interface ComputeServiceContext extends Closeable, View {

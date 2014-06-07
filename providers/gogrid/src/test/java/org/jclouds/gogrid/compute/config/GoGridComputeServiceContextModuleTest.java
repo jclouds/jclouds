@@ -19,9 +19,6 @@ package org.jclouds.gogrid.compute.config;
 import org.jclouds.gogrid.domain.ServerState;
 import org.testng.annotations.Test;
 
-/**
- * @author Adrian Cole
- */
 //NOTE:without testName, this will not call @Before* and fail w/NPE during surefire
 @Test(groups = "unit", testName = "GoGridComputeServiceContextModuleTest")
 public class GoGridComputeServiceContextModuleTest {

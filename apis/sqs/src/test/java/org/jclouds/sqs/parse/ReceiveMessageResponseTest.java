@@ -30,9 +30,6 @@ import com.google.common.collect.FluentIterable;
 import com.google.common.collect.ImmutableList;
 import com.google.common.hash.HashCode;
 
-/**
- * @author Adrian Cole
- */
 // NOTE:without testName, this will not call @Before* and fail w/NPE during
 // surefire
 @Test(groups = "unit", testName = "ReceiveMessageResponseTest")

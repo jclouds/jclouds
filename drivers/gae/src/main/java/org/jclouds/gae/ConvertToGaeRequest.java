@@ -44,10 +44,6 @@ import com.google.common.collect.ImmutableSet;
 import com.google.common.io.ByteStreams;
 import com.google.common.net.HttpHeaders;
 
-/**
- * 
- * @author Adrian Cole
- */
 @Singleton
 public class ConvertToGaeRequest implements Function<HttpRequest, HTTPRequest> {
    public static final String USER_AGENT = "jclouds/1.0 urlfetch/1.4.3";

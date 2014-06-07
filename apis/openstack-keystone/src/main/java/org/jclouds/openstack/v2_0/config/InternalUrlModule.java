@@ -25,9 +25,6 @@ import com.google.inject.Singleton;
 /**
  * Guice module to configure JClouds in order to use the internal urls to
  * communicate with the services.
- * 
- * @author Ignacio Mulas
- * 
  */
 @Singleton
 public class InternalUrlModule extends AbstractModule {

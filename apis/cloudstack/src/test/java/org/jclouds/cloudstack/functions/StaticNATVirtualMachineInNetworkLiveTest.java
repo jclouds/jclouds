@@ -43,8 +43,6 @@ import com.google.common.net.HostAndPort;
 
 /**
  * Tests behavior of {@code StaticNATVirtualMachineInNetwork}
- * 
- * @author Adrian Cole
  */
 @Test(groups = "live", singleThreaded = true, testName = "StaticNATVirtualMachineInNetworkLiveTest")
 public class StaticNATVirtualMachineInNetworkLiveTest extends NATApiLiveTest {

@@ -32,9 +32,6 @@ import org.xml.sax.SAXException;
 import com.google.common.base.Supplier;
 import com.google.inject.Inject;
 
-/**
- * @author Adrian Cole
- */
 public class SecurityGroupHandler extends ParseSax.HandlerForGeneratedRequestWithResult<SecurityGroup> {
 
    protected final IpPermissionHandler ipPermissionHandler;

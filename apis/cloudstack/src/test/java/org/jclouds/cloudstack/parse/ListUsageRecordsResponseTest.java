@@ -32,10 +32,6 @@ import com.google.common.collect.ImmutableSet;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 
-/**
- * 
- * @author Richard Downer
- */
 @Test(groups = "unit")
 public class ListUsageRecordsResponseTest extends BaseSetParserTest<UsageRecord> {
 

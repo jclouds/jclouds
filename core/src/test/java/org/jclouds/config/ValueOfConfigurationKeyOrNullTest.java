@@ -26,8 +26,6 @@ import com.google.inject.name.Names;
 
 /**
  * Tests behavior of ValueOfConfigurationKeyOrNull
- * 
- * @author Adrian Cole
  */
 @Test(groups = "unit")
 public class ValueOfConfigurationKeyOrNullTest {

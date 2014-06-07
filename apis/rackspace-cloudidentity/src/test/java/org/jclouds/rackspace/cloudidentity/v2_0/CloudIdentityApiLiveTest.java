@@ -19,10 +19,6 @@ package org.jclouds.rackspace.cloudidentity.v2_0;
 import org.jclouds.openstack.keystone.v2_0.KeystoneApiLiveTest;
 import org.testng.annotations.Test;
 
-/**
- * 
- * @author Adrian Cole
- */
 @Test(groups = "live", testName = "CloudIdentityApiLiveTest", singleThreaded = true)
 public class CloudIdentityApiLiveTest extends KeystoneApiLiveTest {
    public CloudIdentityApiLiveTest() {

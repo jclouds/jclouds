@@ -28,8 +28,6 @@ import com.google.common.collect.ImmutableSet;
 
 /**
  * Utilities for using {@link PagedIterable}s.
- * 
- * @author Adrian Cole
  */
 @Beta
 public class PagedIterables {

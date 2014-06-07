@@ -36,9 +36,6 @@ import org.jclouds.vcloud.domain.VAppTemplate;
 
 import com.google.common.base.Function;
 
-/**
- * @author Adrian Cole
- */
 @Singleton
 public class ImageForVAppTemplate implements Function<VAppTemplate, Image> {
 

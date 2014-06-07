@@ -26,7 +26,6 @@ import com.google.common.base.Objects.ToStringHelper;
 /**
  * Class Customer
  * 
- * @author Oleksiy Yarmula
 */
 public class Customer {
 

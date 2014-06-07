@@ -74,7 +74,6 @@ import com.google.common.util.concurrent.ListenableFuture;
  * @see ServerApi
  * @see <a href= "http://docs.openstack.org/api/openstack-compute/1.1/content/Servers-d1e2073.html"
  *      />
- * @author Adrian Cole
  */
 @RequestFilters(AuthenticateRequest.class)
 public interface ServerAsyncApi {

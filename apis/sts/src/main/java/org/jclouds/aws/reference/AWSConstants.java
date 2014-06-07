@@ -18,8 +18,6 @@ package org.jclouds.aws.reference;
 
 /**
  * Configuration properties and constants used in amazon connections.
- * 
- * @author Adrian Cole
  */
 public final class AWSConstants {
    public static final String PROPERTY_ZONECLIENT_ENDPOINT = "jclouds.aws.zoneclient-endpoint";

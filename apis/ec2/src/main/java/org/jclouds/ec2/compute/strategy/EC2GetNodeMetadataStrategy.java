@@ -33,10 +33,6 @@ import org.jclouds.ec2.domain.RunningInstance;
 import com.google.common.base.Function;
 import com.google.common.collect.Iterables;
 
-/**
- * 
- * @author Adrian Cole
- */
 @Singleton
 public class EC2GetNodeMetadataStrategy implements GetNodeMetadataStrategy {
 

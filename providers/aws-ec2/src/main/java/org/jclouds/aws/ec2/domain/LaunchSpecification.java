@@ -42,7 +42,6 @@ import com.google.common.collect.ImmutableSortedSet;
  * @see <a href=
  *      "http://docs.amazonwebservices.com/AWSEC2/latest/APIReference/ApiReference-query-RequestSpotInstances.html"
  *      />
- * @author Adrian Cole
  */
 public class LaunchSpecification {
 

@@ -27,9 +27,6 @@ import org.jclouds.vcloud.domain.ovf.VCloudOperatingSystemSection;
 import org.jclouds.vcloud.util.Utils;
 import org.xml.sax.Attributes;
 
-/**
- * @author Adrian Cole
- */
 public class VCloudOperatingSystemHandler extends ParseSax.HandlerWithResult<VCloudOperatingSystemSection> {
    private StringBuilder currentText = new StringBuilder();
 

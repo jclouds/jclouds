@@ -24,7 +24,6 @@ import org.jclouds.loadbalancer.domain.internal.LoadBalancerMetadataImpl;
 import com.google.inject.ImplementedBy;
 
 /**
- * @author Adrian Cole
  */
 @ImplementedBy(LoadBalancerMetadataImpl.class)
 public interface LoadBalancerMetadata extends ResourceMetadata<LoadBalancerType> {

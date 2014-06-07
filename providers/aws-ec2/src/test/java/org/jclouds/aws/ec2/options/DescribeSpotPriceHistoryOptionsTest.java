@@ -31,8 +31,6 @@ import org.testng.annotations.Test;
 /**
  * Tests possible uses of DescribeSpotPriceHistoryOptions and
  * DescribeSpotPriceHistoryOptions.Builder.*
- * 
- * @author Adrian Cole
  */
 public class DescribeSpotPriceHistoryOptionsTest {
 

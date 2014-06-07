@@ -54,8 +54,6 @@ import com.google.common.collect.UnmodifiableIterator;
  *    };
  * }
  * </pre>
- * 
- * @author Adrian Cole
  */
 @Beta
 public abstract class PagedIterable<E> extends FluentIterable<IterableWithMarker<E>> {

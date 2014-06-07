@@ -32,7 +32,6 @@ import com.google.common.base.Function;
  * Parses response headers and creates a new Blob from them and the HTTP content.
  * 
  * @see ParseSystemAndUserMetadataFromHeaders
- * @author Adrian Cole
  */
 public class ParseBlobFromHeadersAndHttpContent implements Function<HttpResponse, Blob>,
       InvocationContext<ParseBlobFromHeadersAndHttpContent> {

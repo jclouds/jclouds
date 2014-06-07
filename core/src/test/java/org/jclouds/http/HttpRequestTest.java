@@ -29,8 +29,6 @@ import com.google.common.collect.ImmutableMultimap;
 
 /**
  * Tests parsing of a request
- * 
- * @author Adrian Cole
  */
 @Test(testName = "http.HttpRequestTest")
 public class HttpRequestTest {

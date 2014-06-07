@@ -31,8 +31,6 @@ import com.google.common.collect.ImmutableSet;
 
 /**
  * Test the CloudStack ProjectApi
- *
- * @author Andrew Bayer
  */
 @Test(groups = "unit", testName = "ProjectApiExpectTest")
 public class ProjectApiExpectTest extends BaseCloudStackExpectTest<ProjectApi> {

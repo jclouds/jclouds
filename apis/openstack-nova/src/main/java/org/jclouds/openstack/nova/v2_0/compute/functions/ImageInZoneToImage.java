@@ -36,8 +36,6 @@ import com.google.common.base.Supplier;
 
 /**
  * A function for transforming a nova-specific Image into a generic Image object.
- * 
- * @author Matt Stephenson
  */
 public class ImageInZoneToImage implements Function<ImageInZone, Image> {
    private final Map<Status, org.jclouds.compute.domain.Image.Status> toPortableImageStatus;

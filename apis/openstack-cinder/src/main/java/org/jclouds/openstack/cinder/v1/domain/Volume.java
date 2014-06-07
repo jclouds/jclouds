@@ -35,8 +35,6 @@ import com.google.common.collect.ImmutableSet;
 
 /**
  * An Openstack Cinder Volume.
- * 
- * @author Everett Toews
  */
 public class Volume {
 

@@ -65,7 +65,6 @@ public interface ContentMetadataCodec {
    /**
     * Default implementation, in accordance with HTTP 1.1 spec.
     * 
-    * @author aled
     */
    public static class DefaultContentMetadataCodec implements ContentMetadataCodec {
       

@@ -48,8 +48,6 @@ import com.google.inject.name.Named;
 
 /**
  * A future that works in tandem with a task that was invoked by {@link InitScript}
- * 
- * @author Adrian Cole
  */
 public class BlockUntilInitScriptStatusIsZeroThenReturnOutput extends AbstractFuture<ExecResponse> implements Runnable {
 

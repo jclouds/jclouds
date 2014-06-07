@@ -67,8 +67,6 @@ import com.google.inject.TypeLiteral;
 
 /**
  * Configures the S3 connection, including logging and http transport.
- * 
- * @author Adrian Cole
  */
 @ConfiguresRestClient
 public class S3RestClientModule<S extends S3Client, A extends S3AsyncClient> extends AWSRestClientModule<S, A> {

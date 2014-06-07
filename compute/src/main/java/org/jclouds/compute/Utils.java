@@ -24,10 +24,6 @@ import org.jclouds.ssh.SshClient;
 import com.google.common.base.Function;
 import com.google.inject.ImplementedBy;
 
-/**
- * 
- * @author Adrian Cole
- */
 @ImplementedBy(UtilsImpl.class)
 public interface Utils extends org.jclouds.rest.Utils {
    @Nullable

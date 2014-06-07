@@ -41,8 +41,6 @@ import org.jclouds.rest.annotations.WrapWith;
  * The access list management feature allows fine-grained network access controls to be applied to the load balancer's
  * virtual IP address.
  * <p/>
- * 
- * @author Everett Toews
  */
 @RequestFilters(AuthenticateRequest.class)
 public interface AccessRuleApi {

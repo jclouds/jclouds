@@ -30,9 +30,6 @@ import org.testng.annotations.Test;
 import com.google.common.collect.FluentIterable;
 import com.google.common.collect.ImmutableSet;
 
-/**
- * @author Adrian Cole
- */
 @Test(testName = "GetDirectionalDNSRecordsForHostResponseTest")
 public class GetDirectionalDNSRecordsForHostResponseTest extends BaseHandlerTest {
 

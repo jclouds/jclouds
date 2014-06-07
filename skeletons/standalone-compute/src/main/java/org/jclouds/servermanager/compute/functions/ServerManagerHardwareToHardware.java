@@ -27,9 +27,6 @@ import org.jclouds.compute.domain.internal.VolumeImpl;
 import com.google.common.base.Function;
 import com.google.common.collect.ImmutableList;
 
-/**
- * @author Adrian Cole
- */
 @Singleton
 public class ServerManagerHardwareToHardware implements Function<org.jclouds.servermanager.Hardware, Hardware> {
 

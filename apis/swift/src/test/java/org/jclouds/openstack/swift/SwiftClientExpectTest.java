@@ -31,10 +31,6 @@ import org.testng.annotations.Test;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 
-/**
- * 
- * @author Adrian Cole
- */
 @Test(testName = "SwiftClientExpectTest")
 public class SwiftClientExpectTest extends BaseSwiftExpectTest<SwiftClient> {
 

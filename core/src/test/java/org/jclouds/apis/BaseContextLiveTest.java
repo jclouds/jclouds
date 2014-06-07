@@ -37,10 +37,6 @@ import com.google.common.collect.ImmutableSet;
 import com.google.common.reflect.TypeToken;
 import com.google.inject.Module;
 
-/**
- * 
- * @author Adrian Cole
- */
 public abstract class BaseContextLiveTest<C extends Context> {
    protected String prefix = System.getProperty("user.name");
    protected String provider;

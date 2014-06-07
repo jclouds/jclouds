@@ -44,8 +44,6 @@ import com.google.inject.Module;
 
 /**
  * Implementation of {@link ApiMetadata} for Nova 2.0 API
- * 
- * @author Adrian Cole
  */
 public class NovaApiMetadata extends BaseRestApiMetadata {
 

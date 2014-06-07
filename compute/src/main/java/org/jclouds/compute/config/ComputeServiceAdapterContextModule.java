@@ -49,10 +49,6 @@ import com.google.common.collect.FluentIterable;
 import com.google.inject.AbstractModule;
 import com.google.inject.Provides;
 
-/**
- * 
- * @author Adrian Cole
- */
 public class ComputeServiceAdapterContextModule<N, H, I, L> extends BaseComputeServiceContextModule {
 
    /**

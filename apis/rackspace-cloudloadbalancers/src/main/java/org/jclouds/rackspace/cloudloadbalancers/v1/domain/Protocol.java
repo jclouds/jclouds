@@ -22,9 +22,6 @@ import java.beans.ConstructorProperties;
 
 import com.google.common.base.Objects;
 
-/**
- * @author Everett Toews
- */
 public final class Protocol {
    private final String name;
    private final int port;

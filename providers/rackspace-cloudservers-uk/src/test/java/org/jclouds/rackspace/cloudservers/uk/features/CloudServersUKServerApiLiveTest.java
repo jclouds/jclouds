@@ -19,10 +19,6 @@ package org.jclouds.rackspace.cloudservers.uk.features;
 import org.jclouds.openstack.nova.v2_0.features.ServerApiLiveTest;
 import org.testng.annotations.Test;
 
-/**
- * 
- * @author Adrian Cole
- */
 @Test(groups = "live", testName = "CloudServersUKServerApiLiveTest")
 public class CloudServersUKServerApiLiveTest extends ServerApiLiveTest {
    public CloudServersUKServerApiLiveTest() {

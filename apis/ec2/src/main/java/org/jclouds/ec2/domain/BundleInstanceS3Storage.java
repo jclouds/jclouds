@@ -24,7 +24,6 @@ import org.jclouds.javax.annotation.Nullable;
  * 
  * @see <a href="http://docs.amazonwebservices.com/AWSEC2/latest/APIReference/ApiReference-ItemType-BundleInstanceS3StorageType.html"
  *      />
- * @author Adrian Cole
  */
 public class BundleInstanceS3Storage {
    private final String ccessKeyId;

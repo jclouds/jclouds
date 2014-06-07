@@ -36,10 +36,6 @@ import com.google.common.util.concurrent.ForwardingFuture;
 import com.google.common.util.concurrent.ForwardingListenableFuture;
 import com.google.common.util.concurrent.ForwardingListeningExecutorService;
 
-/**
- * 
- * @author Adrian Cole
- */
 public class WithSubmissionTrace {
 
    private WithSubmissionTrace() {

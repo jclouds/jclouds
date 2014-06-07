@@ -43,8 +43,6 @@ import org.jclouds.rest.binders.BindToJsonPayload;
  * routable on the public Internet, or a ServiceNet address, routable only within the region in which the load balancer 
  * resides.
  * <p/>
- * 
- * @author Everett Toews
  */
 @RequestFilters(AuthenticateRequest.class)
 public interface VirtualIPApi {

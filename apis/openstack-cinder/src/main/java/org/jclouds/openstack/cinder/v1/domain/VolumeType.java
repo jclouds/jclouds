@@ -33,8 +33,6 @@ import com.google.common.collect.ImmutableMap;
 
 /**
  * An Openstack Cinder Volume Type.
- * 
- * @author Everett Toews
  */
 public class VolumeType {
 

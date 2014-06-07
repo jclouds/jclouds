@@ -27,10 +27,6 @@ import org.jclouds.route53.domain.ChangeBatch;
 import org.jclouds.route53.domain.ChangeBatch.ActionOnResourceRecordSet;
 import org.jclouds.route53.functions.SerializeRRS;
 
-/**
- * 
- * @author Adrian Cole
- */
 @Singleton
 public class BindChangeBatch implements Binder {
 

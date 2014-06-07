@@ -35,7 +35,6 @@ import com.google.common.base.Function;
  * Parses response headers and creates a new AtmosObject from them and the HTTP content.
  * 
  * @see ParseMetadataFromHeaders
- * @author Adrian Cole
  */
 public class ParseObjectFromHeadersAndHttpContent implements Function<HttpResponse, AtmosObject>,
          InvocationContext<ParseObjectFromHeadersAndHttpContent> {

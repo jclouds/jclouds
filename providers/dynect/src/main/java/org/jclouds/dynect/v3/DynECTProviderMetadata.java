@@ -27,7 +27,6 @@ import org.jclouds.providers.internal.BaseProviderMetadata;
 
 /**
  * Implementation of {@link org.jclouds.types.ProviderMetadata} for DynECT Managed DNS.
- * @author Adrian Cole
  */
 public class DynECTProviderMetadata extends BaseProviderMetadata {
 

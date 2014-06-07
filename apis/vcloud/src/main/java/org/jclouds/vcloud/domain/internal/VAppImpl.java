@@ -36,9 +36,6 @@ import com.google.common.collect.Sets;
 
 /**
  * Locations of resources in vCloud
- * 
- * @author Adrian Cole
- * 
  */
 public class VAppImpl extends ReferenceTypeImpl implements VApp {
 

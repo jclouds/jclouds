@@ -20,10 +20,6 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 import org.jclouds.javax.annotation.Nullable;
 
-/**
- * 
- * @author Adrian Cole
- */
 public class VLANInfo {
    public static class Builder {
       protected String uuid;

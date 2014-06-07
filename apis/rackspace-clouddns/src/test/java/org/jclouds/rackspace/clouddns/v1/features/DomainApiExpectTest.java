@@ -47,9 +47,6 @@ import org.testng.annotations.Test;
 
 import com.google.common.collect.ImmutableList;
 
-/**
- * @author Everett Toews
- */
 @Test(groups = "unit")
 public class DomainApiExpectTest extends BaseCloudDNSApiExpectTest<CloudDNSApi> {
    private static final String JCLOUDS_EXAMPLE = "jclouds-example.com";

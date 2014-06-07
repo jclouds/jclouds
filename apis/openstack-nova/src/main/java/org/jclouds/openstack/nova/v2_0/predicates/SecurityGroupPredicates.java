@@ -29,8 +29,6 @@ import com.google.common.base.Predicates;
 
 /**
  * Predicates handy when working with SecurityGroups
- * 
- * @author Adrian Cole
  */
 
 public class SecurityGroupPredicates {

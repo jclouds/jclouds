@@ -55,8 +55,6 @@ import com.google.inject.Module;
 
 /**
  * Tests behavior of {@code AWSKeyPairApi}
- * 
- * @author Adrian Cole
  */
 @Test(groups = "live", singleThreaded = true)
 public class AWSKeyPairApiLiveTest extends BaseComputeServiceContextLiveTest {

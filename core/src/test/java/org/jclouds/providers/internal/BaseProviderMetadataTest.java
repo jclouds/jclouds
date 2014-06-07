@@ -32,10 +32,6 @@ import org.testng.annotations.Test;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.reflect.TypeToken;
 
-/**
- * 
- * @author Jeremy Whitlock <jwhitlock@apache.org>
- */
 @Test(groups = "unit")
 public abstract class BaseProviderMetadataTest {
 

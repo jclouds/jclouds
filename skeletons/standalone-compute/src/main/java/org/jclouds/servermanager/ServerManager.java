@@ -27,8 +27,6 @@ import com.google.common.collect.Maps;
 /**
  * This would be replaced with the real connection to the service that can
  * create/list/reboot/get/destroy things
- * 
- * @author Adrian Cole
  */
 @Singleton
 public class ServerManager {

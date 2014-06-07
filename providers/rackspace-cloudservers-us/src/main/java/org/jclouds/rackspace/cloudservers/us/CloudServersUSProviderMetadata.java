@@ -40,8 +40,6 @@ import com.google.inject.Module;
 
 /**
  * Implementation of {@link org.jclouds.types.ProviderMetadata} for Rackspace Next Generation Cloud Servers.
- * 
- * @author Adrian Cole
  */
 public class CloudServersUSProviderMetadata extends BaseProviderMetadata {
 

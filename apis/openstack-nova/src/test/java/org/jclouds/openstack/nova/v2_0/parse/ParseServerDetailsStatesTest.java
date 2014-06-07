@@ -39,9 +39,6 @@ import org.jclouds.openstack.v2_0.domain.Resource;
 import org.jclouds.rest.annotations.SelectJson;
 import org.testng.annotations.Test;
 
-/**
- * @author Jacob Mourelos
- */
 @Test(groups = "unit", testName = "ParseServerDetailsStatesTest")
 public class ParseServerDetailsStatesTest extends BaseSetParserTest<Server> {
 

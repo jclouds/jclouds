@@ -33,8 +33,6 @@ import com.google.common.base.Optional;
 
 /**
  * Provides synchronous access to EC2 services.
- * 
- * @author Adrian Cole
  */
 public interface AWSEC2Api extends EC2Api {
 

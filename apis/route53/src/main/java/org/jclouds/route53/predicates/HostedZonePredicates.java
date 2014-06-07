@@ -24,8 +24,6 @@ import com.google.common.base.Predicate;
 
 /**
  * Predicates handy when working with HostedZones
- * 
- * @author Adrian Cole
  */
 public class HostedZonePredicates {
 

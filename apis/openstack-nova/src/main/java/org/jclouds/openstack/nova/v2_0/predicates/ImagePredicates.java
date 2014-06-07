@@ -25,8 +25,6 @@ import com.google.common.base.Predicate;
 
 /**
  * Predicates handy when working with Images
- * 
- * @author Adrian Cole
  */
 
 public class ImagePredicates {

@@ -32,8 +32,6 @@ import com.google.common.collect.ImmutableSet;
 
 /**
  * Tests annotation parsing of {@code ExtensionAsyncApi}
- * 
- * @author Adrian Cole
  */
 @Test(groups = "unit", testName = "ExtensionApiExpectTest")
 public class ExtensionApiExpectTest extends BaseNovaApiExpectTest {

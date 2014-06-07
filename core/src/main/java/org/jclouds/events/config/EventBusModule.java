@@ -37,7 +37,6 @@ import com.google.inject.Provides;
  * This class will provide an {@link AsyncEventBus} to be used to provide a basic pub/sub system for asynchronous
  * operations.
  * 
- * @author Ignasi Barrera
  * 
  * @see ExecutorServiceModule
  * @see AsyncEventBus

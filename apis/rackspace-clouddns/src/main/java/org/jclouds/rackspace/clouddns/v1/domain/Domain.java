@@ -32,8 +32,6 @@ import com.google.common.collect.ImmutableSet;
 /**
  * A domain is an entity/container of all DNS-related information containing one or more records. Within Rackspace DNS,
  * the account which creates the domain is the domain owner.
- * 
- * @author Everett Toews
  */
 public class Domain {
    private final int id;

@@ -22,8 +22,6 @@ import com.google.common.collect.ImmutableSet;
 
 /**
  * Options for the GlobalHostApi.addSecondaryStorage() API call
- * 
- * @author Richard Downer
  */
 public class AddSecondaryStorageOptions extends BaseHttpRequestOptions {
    

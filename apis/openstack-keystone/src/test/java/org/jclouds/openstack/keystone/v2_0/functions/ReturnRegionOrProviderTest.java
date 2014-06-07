@@ -23,9 +23,6 @@ import java.net.URI;
 import org.jclouds.openstack.keystone.v2_0.domain.Endpoint;
 import org.testng.annotations.Test;
 
-/**
- * @author Adrian Cole
- */
 @Test(groups = "unit", testName = "ReturnRegionOrProviderTest")
 public class ReturnRegionOrProviderTest {
    private final ReturnRegionOrProvider fn = new ReturnRegionOrProvider("openstack-keystone");

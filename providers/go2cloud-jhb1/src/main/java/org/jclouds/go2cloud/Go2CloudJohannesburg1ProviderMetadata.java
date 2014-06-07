@@ -26,8 +26,6 @@ import org.jclouds.providers.internal.BaseProviderMetadata;
 /**
  * Implementation of {@link org.jclouds.types.ProviderMetadata} for Go2Cloud's Johannesburg1
  * provider.
- * 
- * @author Adrian Cole
  */
 public class Go2CloudJohannesburg1ProviderMetadata extends BaseProviderMetadata {
 

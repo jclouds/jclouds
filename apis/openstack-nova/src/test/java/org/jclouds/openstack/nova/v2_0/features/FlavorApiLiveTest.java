@@ -30,8 +30,6 @@ import org.testng.annotations.Test;
 
 /**
  * Tests behavior of {@link FlavorApi}
- * 
- * @author Jeremy Daggett
  */
 @Test(groups = "live", testName = "FlavorApiLiveTest")
 public class FlavorApiLiveTest extends BaseNovaApiLiveTest {

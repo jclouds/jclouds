@@ -39,8 +39,6 @@ import com.google.common.cache.LoadingCache;
 
 /**
  * Tests behavior of {@code InvalidateSessionAndRetryOn401AndLogoutOnClose} handler
- *
- * @author grkvlt@apache.org
  */
 @Test(groups = "unit", testName = "InvalidateSessionAndRetryOn401AndLogoutOnCloseTest")
 public class InvalidateSessionAndRetryOn401AndLogoutOnCloseTest {

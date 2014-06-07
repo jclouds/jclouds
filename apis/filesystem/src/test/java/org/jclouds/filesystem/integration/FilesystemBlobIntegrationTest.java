@@ -29,11 +29,6 @@ import org.jclouds.filesystem.utils.TestUtils;
 import org.testng.annotations.Test;
 import org.testng.SkipException;
 
-/**
- * 
- * @author James Murty
- * @author Adrian Cole
- */
 @Test(groups = { "integration" }, singleThreaded = true,  testName = "blobstore.FilesystemBlobIntegrationTest")
 public class FilesystemBlobIntegrationTest extends BaseBlobIntegrationTest {
    public FilesystemBlobIntegrationTest() {

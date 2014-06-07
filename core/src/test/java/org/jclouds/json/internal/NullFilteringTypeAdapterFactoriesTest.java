@@ -47,10 +47,6 @@ import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
-/**
- * 
- * @author Adrian Cole
- */
 @Test(testName = "NullFilteringTypeAdapterFactoriesTest")
 public class NullFilteringTypeAdapterFactoriesTest {
    private static class Resource {

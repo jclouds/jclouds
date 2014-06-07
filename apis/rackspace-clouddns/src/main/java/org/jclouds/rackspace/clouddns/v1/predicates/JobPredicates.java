@@ -32,8 +32,6 @@ import com.google.common.util.concurrent.Atomics;
 
 /**
  * Useful Predicates for dealing with Jobs.
- * 
- * @author Everett Toews
  */
 public class JobPredicates {
    

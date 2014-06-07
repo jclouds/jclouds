@@ -26,10 +26,6 @@ import com.google.inject.ConfigurationException;
 import com.google.inject.Injector;
 import com.google.inject.Key;
 
-/**
- * 
- * @author Adrian Cole
- */
 public class ValueOfConfigurationKeyOrNull implements Function<String, String> {
    private final Injector injector;
 

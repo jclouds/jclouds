@@ -35,7 +35,6 @@ import com.google.common.collect.ImmutableMultimap;
  * If you want more control on the Ruby version or the gems being installed, use
  * the {@link InstallChefGems} statement instead.
  * 
- * @author Ignasi Barrera
  * 
  * @see InstallChefGems
  * @see InstallRuby

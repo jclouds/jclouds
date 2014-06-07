@@ -32,7 +32,6 @@ import org.jclouds.openstack.v2_0.options.PaginationOptions;
  * @see <a href=
  *      "http://docs.openstack.org/api/openstack-compute/1.1/content/Servers-d1e2073.html"
  *      />
- * @author Adrian Cole
  */
 public interface ImageApi {
 

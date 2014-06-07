@@ -99,8 +99,6 @@ import com.google.inject.Provides;
  * processing will be backend in an {@link ExecutionException} as documented in
  * {@link ListenableFuture#get()}.
  *
- * @author Adrian Cole
- * @author James Murty
  * @see AWSS3Client
  * @see <a href="http://docs.amazonwebservices.com/AmazonS3/2006-03-01/RESTAPI.html" />
  * @deprecated please use

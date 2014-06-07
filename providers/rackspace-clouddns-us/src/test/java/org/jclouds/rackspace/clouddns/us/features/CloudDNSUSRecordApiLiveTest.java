@@ -19,10 +19,6 @@ package org.jclouds.rackspace.clouddns.us.features;
 import org.jclouds.rackspace.clouddns.v1.features.RecordApiLiveTest;
 import org.testng.annotations.Test;
 
-/**
- * 
- * @author Everett Toews
- */
 @Test(groups = "live", singleThreaded = true, testName = "CloudDNSUSRecordApiLiveTest")
 public class CloudDNSUSRecordApiLiveTest extends RecordApiLiveTest {
    public CloudDNSUSRecordApiLiveTest() {

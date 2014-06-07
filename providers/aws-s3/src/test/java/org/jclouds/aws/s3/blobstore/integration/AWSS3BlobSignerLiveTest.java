@@ -22,10 +22,6 @@ import org.jclouds.Constants;
 import org.jclouds.s3.blobstore.integration.S3BlobSignerLiveTest;
 import org.testng.annotations.Test;
 
-/**
- * 
- * @author Adrian Cole
- */
 @Test(groups = "live", testName = "AWSS3BlobSignerLiveTest")
 public class AWSS3BlobSignerLiveTest extends S3BlobSignerLiveTest {
    public AWSS3BlobSignerLiveTest() {

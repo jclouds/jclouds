@@ -30,10 +30,6 @@ import org.jclouds.http.functions.ParseSax.HandlerForGeneratedRequestWithResult;
 import org.jclouds.logging.Logger;
 import org.xml.sax.Attributes;
 
-/**
- * 
- * @author Adrian Cole
- */
 public class LaunchSpecificationHandler extends HandlerForGeneratedRequestWithResult<LaunchSpecification> {
 
    @Resource

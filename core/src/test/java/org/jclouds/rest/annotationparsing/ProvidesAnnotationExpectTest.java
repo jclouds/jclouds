@@ -43,8 +43,6 @@ import com.google.inject.name.Names;
 
 /**
  * Tests that we can add {@link Provides} methods on interfaces
- * 
- * @author Adrian Cole
  */
 @Test(groups = "unit", testName = "ProvidesAnnotationExpectTest")
 public class ProvidesAnnotationExpectTest extends BaseRestClientExpectTest<ProvidesAnnotationExpectTest.ProvidingApi> {

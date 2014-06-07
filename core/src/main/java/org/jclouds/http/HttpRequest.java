@@ -42,8 +42,6 @@ import com.google.common.collect.Multimaps;
 
 /**
  * Represents a request that can be executed within {@link HttpCommandExecutorService}
- * 
- * @author Adrian Cole
  */
 public class HttpRequest extends HttpMessage {
 

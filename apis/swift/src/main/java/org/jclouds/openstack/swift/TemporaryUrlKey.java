@@ -26,7 +26,6 @@ import java.lang.annotation.Target;
  * Represents the key used for signing URLs that have temporary access to objects
  *
  * @see <a href="http://docs.openstack.org/developer/swift/misc.html#module-swift.common.middleware.tempurl" />
- * @author Andrei Savu
  */
 @Retention(value = RetentionPolicy.RUNTIME)
 @Target(value = { ElementType.TYPE, ElementType.FIELD, ElementType.PARAMETER, ElementType.METHOD })

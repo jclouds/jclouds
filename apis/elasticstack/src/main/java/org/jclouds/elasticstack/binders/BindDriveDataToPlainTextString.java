@@ -32,10 +32,6 @@ import org.jclouds.rest.Binder;
 import com.google.common.base.Function;
 import com.google.common.collect.ImmutableSet;
 
-/**
- * 
- * @author Adrian Cole
- */
 @Singleton
 public class BindDriveDataToPlainTextString implements Binder {
    private final Function<DriveData, Map<String, String>> createDriveRequestToMap;

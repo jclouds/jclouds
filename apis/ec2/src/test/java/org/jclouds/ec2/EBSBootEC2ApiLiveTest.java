@@ -82,8 +82,6 @@ import com.google.inject.Injector;
  * <p/>
  * 
  * Generally disabled, as it incurs higher fees.
- * 
- * @author Adrian Cole
  */
 @Test(groups = "live", enabled = false, singleThreaded = true, testName = "EBSBootEC2ApiLiveTest")
 public class EBSBootEC2ApiLiveTest extends BaseComputeServiceContextLiveTest {

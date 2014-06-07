@@ -31,10 +31,6 @@ import org.testng.annotations.Test;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 
-/**
- * 
- * @author Adrian Cole
- */
 @Test(groups = { "unit" })
 public class MapToDriveInfoTest {
    public static DriveInfo ONE = new DriveInfo.Builder()

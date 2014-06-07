@@ -28,8 +28,6 @@ import com.google.inject.Singleton;
  * 
  * @see org.jclouds.rest.InputParamValidator
  * @see org.jclouds.predicates.Validator
- * 
- * @author Adrian Cole, Jeremy Whitlock
  */
 @Singleton
 public class AWSS3BucketNameValidator extends BucketNameValidator {

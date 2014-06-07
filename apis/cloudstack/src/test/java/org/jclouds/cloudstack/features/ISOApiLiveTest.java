@@ -42,8 +42,6 @@ import com.google.common.collect.Iterables;
 
 /**
  * Tests behavior of {@link ISOApi} and {@link ISOApi}
- * 
- * @author grkvlt@apache.org
  */
 @Test(groups = "live", singleThreaded = true, testName = "ISOApiLiveTest")
 public class ISOApiLiveTest extends BaseCloudStackApiLiveTest {

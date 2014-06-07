@@ -23,11 +23,6 @@ import org.jclouds.azure.storage.domain.BoundedSet;
 
 import com.google.common.collect.Iterables;
 
-/**
- * 
- * @author Adrian Cole
- * 
- */
 public class BoundedHashSet<T> extends HashSet<T> implements BoundedSet<T> {
 
    protected final URI url;

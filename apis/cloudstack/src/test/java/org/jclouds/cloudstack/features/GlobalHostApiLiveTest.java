@@ -32,8 +32,6 @@ import com.google.common.base.Strings;
 
 /**
  * Tests behavior of {@code GlobalHostApi}
- *
- * @author Andrei Savu
  */
 @Test(groups = "live", singleThreaded = true, testName = "GlobalHostApiLiveTest")
 public class GlobalHostApiLiveTest extends BaseCloudStackApiLiveTest {

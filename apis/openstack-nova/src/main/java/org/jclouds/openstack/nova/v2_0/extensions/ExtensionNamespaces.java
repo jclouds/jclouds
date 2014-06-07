@@ -19,7 +19,6 @@ package org.jclouds.openstack.nova.v2_0.extensions;
 /**
  * Extension namespaces
  *
- * @author Adrian Cole
  * @see <a href= "http://nova.openstack.org/api_ext/" />
  */
 public interface ExtensionNamespaces {

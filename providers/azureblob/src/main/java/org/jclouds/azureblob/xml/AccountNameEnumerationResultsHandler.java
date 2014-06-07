@@ -41,7 +41,6 @@ import com.google.common.collect.Sets;
  * EnumerationResults AccountName="http://myaccount.blob.core.windows.net"
  * 
  * @see <a href="http://msdn.microsoft.com/en-us/library/dd179352.aspx" />
- * @author Adrian Cole
  */
 public class AccountNameEnumerationResultsHandler extends
          ParseSax.HandlerWithResult<BoundedSet<ContainerProperties>> {

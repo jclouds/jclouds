@@ -38,9 +38,6 @@ import org.jclouds.vcloud.util.Utils;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 
-/**
- * @author Adrian Cole
- */
 public class TaskHandler extends ParseSax.HandlerWithResult<Task> {
    protected final DateService dateService;
    private String operation;

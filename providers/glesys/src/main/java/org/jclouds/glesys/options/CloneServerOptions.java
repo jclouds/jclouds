@@ -16,9 +16,6 @@
  */
 package org.jclouds.glesys.options;
 
-/**
- * @author Adam Lowe
- */
 public class CloneServerOptions extends UpdateServerOptions {
    public static class Builder {
       /**

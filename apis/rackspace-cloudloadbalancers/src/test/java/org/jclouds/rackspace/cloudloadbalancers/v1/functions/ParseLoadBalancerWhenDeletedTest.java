@@ -30,10 +30,6 @@ import com.google.inject.AbstractModule;
 import com.google.inject.Injector;
 import com.google.inject.assistedinject.FactoryModuleBuilder;
 
-/**
- * 
- * @author Adrian Cole
- */
 @Test(groups = "unit", testName = "UnwrapLoadBalancerWhenDeletedTest")
 public class ParseLoadBalancerWhenDeletedTest extends BaseItemParserTest<LoadBalancer> {
 

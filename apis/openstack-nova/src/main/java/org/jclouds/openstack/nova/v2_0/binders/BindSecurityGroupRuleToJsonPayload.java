@@ -36,11 +36,6 @@ import org.jclouds.rest.internal.GeneratedHttpRequest;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableMap.Builder;
 
-/**
- * 
- * @author Adrian Cole
- * 
- */
 @Singleton
 public class BindSecurityGroupRuleToJsonPayload extends BindToJsonPayload implements MapBinder {
    @Inject

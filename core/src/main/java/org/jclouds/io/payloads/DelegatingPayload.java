@@ -26,10 +26,6 @@ import com.google.common.base.Throwables;
 import org.jclouds.io.MutableContentMetadata;
 import org.jclouds.io.Payload;
 
-/**
- * 
- * @author Adrian Cole
- */
 public class DelegatingPayload implements Payload {
 
    private final Payload delegate;

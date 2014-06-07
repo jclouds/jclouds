@@ -30,7 +30,6 @@ import com.google.common.base.Objects;
  * A region keyname can be used as part of an order.
  * Check the SoftLayer_Product_Order service for more details.
  *
- * @author Jason King
  * @see <a href= "http://sldn.softlayer.com/reference/datatypes/SoftLayer_Location_Region"
  *      />
  */

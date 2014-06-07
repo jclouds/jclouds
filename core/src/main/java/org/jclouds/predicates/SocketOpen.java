@@ -23,8 +23,6 @@ import com.google.inject.ImplementedBy;
 /**
  * 
  * Tests to see if a socket is open.
- * 
- * @author Adrian Cole
  */
 @ImplementedBy(InetSocketAddressConnect.class)
 public interface SocketOpen extends Predicate<HostAndPort> {

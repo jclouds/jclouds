@@ -37,9 +37,6 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Iterators;
 
-/**
- * @author Everett Toews
- */
 @Test(groups = "live", singleThreaded = true, testName = "VirtualIPApiLiveTest")
 public class VirtualIPApiLiveTest extends BaseCloudLoadBalancersApiLiveTest {
    private LoadBalancer lb;

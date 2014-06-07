@@ -28,8 +28,6 @@ package org.jclouds.blobstore.options;
  * BlobStore connection = // get connection
  * Future<CreateResponse<ResourceMetadata>> list = connection.list("container",inDirectory("home/users").maxResults(1000));
  * <code>
- * 
- * @author Adrian Cole
  */
 public class CreateContainerOptions implements Cloneable {
 

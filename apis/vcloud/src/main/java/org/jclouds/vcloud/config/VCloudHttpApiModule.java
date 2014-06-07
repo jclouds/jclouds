@@ -106,8 +106,6 @@ import com.google.inject.TypeLiteral;
 
 /**
  * Configures the VCloud authentication service connection, including logging and http transport.
- * 
- * @author Adrian Cole
  */
 @ConfiguresHttpApi
 public class VCloudHttpApiModule extends HttpApiModule<VCloudApi> {

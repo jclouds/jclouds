@@ -32,8 +32,6 @@ import com.google.common.collect.ImmutableSet;
 
 /**
  * Test the CloudStack VlanClient
- *
- * @author Richard Downer
  */
 @Test(groups = "unit", testName = "GlobalVlanApiExpectTest")
 public class GlobalVlanApiExpectTest extends BaseCloudStackExpectTest<GlobalVlanApi> {

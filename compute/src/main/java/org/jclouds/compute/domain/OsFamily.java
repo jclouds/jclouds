@@ -23,9 +23,6 @@ import static com.google.common.base.CaseFormat.UPPER_UNDERSCORE;
 
 /**
  * Running Operating system
- * 
- * 
- * @author Adrian Cole
  */
 public enum OsFamily {
    UNRECOGNIZED, AIX, ARCH, CENTOS, DARWIN, DEBIAN, ESX, FEDORA, FREEBSD, GENTOO, HPUX, LINUX, 

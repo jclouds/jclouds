@@ -30,10 +30,6 @@ import com.google.common.base.Optional;
 import com.google.common.collect.ForwardingList;
 import com.google.common.collect.ImmutableList;
 
-/**
- * 
- * @author Adrian Cole
- */
 public class ChangeBatch extends ForwardingList<ActionOnResourceRecordSet> {
 
    public static ChangeBatch createAll(Iterable<ResourceRecordSet> toCreate) {

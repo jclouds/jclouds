@@ -25,9 +25,6 @@ import org.jclouds.blobstore.domain.internal.MutableStorageMetadataImpl;
 
 import com.google.common.base.Function;
 
-/**
- * @author Adrian Cole
- */
 @Singleton
 public class CommonPrefixesToResourceMetadata implements Function<String, StorageMetadata> {
 

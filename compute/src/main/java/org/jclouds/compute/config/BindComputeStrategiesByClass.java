@@ -30,11 +30,6 @@ import org.jclouds.compute.strategy.impl.CreateNodesWithGroupEncodedIntoNameThen
 import com.google.inject.AbstractModule;
 import com.google.inject.Scopes;
 
-/**
- * 
- * @author Adrian Cole
- * 
- */
 public abstract class BindComputeStrategiesByClass extends AbstractModule {
    protected void configure() {
       bindRunNodesAndAddToSetStrategy(defineRunNodesAndAddToSetStrategy());

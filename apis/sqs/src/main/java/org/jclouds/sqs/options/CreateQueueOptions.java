@@ -31,8 +31,6 @@ import com.google.common.collect.Multimap;
  * @see <a
  *      href="http://docs.amazonwebservices.com/AWSSimpleQueueService/2011-10-01/APIReference/Query_QueryCreateQueue.html"
  *      >docs</a>
- * 
- * @author Adrian Cole
  */
 public class CreateQueueOptions extends BaseHttpRequestOptions implements Cloneable {
 

@@ -23,10 +23,6 @@ import java.util.Date;
 import org.jclouds.http.options.GetOptions;
 import org.testng.annotations.Test;
 
-/**
- * 
- * @author Adrian Cole
- */
 @Test(groups = "unit")
 public class BlobToHttpGetOptionsTest {
    BlobToHttpGetOptions fn = new BlobToHttpGetOptions();

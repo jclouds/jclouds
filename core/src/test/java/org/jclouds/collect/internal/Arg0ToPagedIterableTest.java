@@ -33,9 +33,6 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.reflect.Invokable;
 
-/**
- * @author Adrian Cole
- */
 @Test(testName = "Arg0ToPagedIterableTest")
 public class Arg0ToPagedIterableTest {
 

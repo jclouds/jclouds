@@ -30,11 +30,6 @@ import com.google.common.base.Predicate;
 import com.google.common.collect.Iterables;
 import com.google.inject.Inject;
 
-/**
- * 
- * 
- * @author Adrian Cole
- */
 @Singleton
 public class SpotInstanceRequestActive implements Predicate<SpotInstanceRequest> {
 

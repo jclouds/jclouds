@@ -22,11 +22,9 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * 
  * The type of resource this allocation setting represents.
  * 
- * @author Adrian Cole
  * @see <a
  *      href="http://dmtf.org/sites/default/files/cim/cim_schema_v2280/cim_schema_2.28.0Final-Doc.zip"
  *      />
- * 
  */
 public abstract class SettingData implements Comparable<SettingData> {
 

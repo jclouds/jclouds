@@ -27,8 +27,6 @@ import com.google.common.base.Objects.ToStringHelper;
  * The connection throttling feature imposes limits on the number of connections per IP address to help mitigate 
  * malicious or abusive traffic to your applications. The attributes in the table that follows can be configured 
  * based on the traffic patterns for your sites.
- * 
- * @author Everett Toews
  */
 public class ConnectionThrottle {
 

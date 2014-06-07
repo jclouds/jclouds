@@ -30,8 +30,6 @@ import org.jclouds.javax.annotation.Nullable;
 
 /**
  * System and user Metadata for the {@link Blob}.
- * 
- * @author Adrian Cole
  */
 public class BlobMetadataImpl extends StorageMetadataImpl implements BlobMetadata {
 

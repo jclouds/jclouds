@@ -29,9 +29,6 @@ import org.jclouds.openstack.swift.domain.ContainerMetadata;
 import com.google.common.base.Function;
 import com.google.common.base.Supplier;
 
-/**
- * @author Adrian Cole
- */
 @Singleton
 public class ContainerToResourceMetadata implements Function<ContainerMetadata, StorageMetadata> {
    private Supplier<Location> defaultLocation;

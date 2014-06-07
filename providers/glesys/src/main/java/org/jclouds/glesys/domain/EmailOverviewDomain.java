@@ -27,7 +27,6 @@ import com.google.common.base.Objects.ToStringHelper;
 /**
  * Detailed information about e-mail settings for a single domain
  *
- * @author Adam Lowe
  * @see <a href="https://customer.glesys.com/api.php?a=doc#email_overview" />
  */
 @Beta

@@ -19,10 +19,6 @@ package org.jclouds.aws.sqs.features;
 import org.jclouds.sqs.features.QueueApiLiveTest;
 import org.testng.annotations.Test;
 
-/**
- * 
- * @author Adrian Cole
- */
 @Test(groups = "live", testName = "AWSQueueApiLiveTest")
 public class AWSQueueApiLiveTest extends QueueApiLiveTest {
 

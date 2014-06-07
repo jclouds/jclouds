@@ -25,9 +25,6 @@ import java.util.UUID;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
 
-/**
- * @author Adrian Cole
- */
 @Test(groups = {"live"})
 public class CloudFilesBlobLiveTest extends SwiftBlobLiveTest {
 

@@ -73,7 +73,6 @@ import com.google.common.collect.ImmutableMap;
  * <p>
  * Design inspired by {@link CacheBuilderSpec}
  * 
- * @author David Alves
  * @since 1.5
  */
 

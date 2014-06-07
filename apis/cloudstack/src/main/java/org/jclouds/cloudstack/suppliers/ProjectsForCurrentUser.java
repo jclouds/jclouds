@@ -33,10 +33,6 @@ import com.google.common.base.Function;
 import com.google.common.base.Supplier;
 import com.google.common.collect.Maps;
 
-/**
- * 
- * @author Andrew Bayer
- */
 public class ProjectsForCurrentUser implements Supplier<Map<String, Project>> {
    private final CloudStackApi api;
    private final Supplier<User> currentUserSupplier;

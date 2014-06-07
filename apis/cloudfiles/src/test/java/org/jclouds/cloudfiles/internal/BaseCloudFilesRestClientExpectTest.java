@@ -25,8 +25,6 @@ import org.jclouds.openstack.keystone.v1_1.internal.BaseKeystoneRestClientExpect
 
 /**
  * Base class for writing CloudFiles Rest Client Expect tests
- * 
- * @author Adrian Cole
  */
 public class BaseCloudFilesRestClientExpectTest extends BaseKeystoneRestClientExpectTest<CloudFilesClient> {
 

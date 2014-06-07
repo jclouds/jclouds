@@ -35,9 +35,6 @@ import com.google.common.base.Optional;
 import com.google.common.cache.CacheLoader;
 import com.google.inject.Inject;
 
-/**
- * @author Adam Lowe
- */
 @Singleton
 public class CreateUniqueKeyPair extends CacheLoader<ZoneAndName, KeyPair> {
    @Resource

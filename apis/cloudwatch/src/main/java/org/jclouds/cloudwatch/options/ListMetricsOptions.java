@@ -30,8 +30,6 @@ import com.google.common.collect.Sets;
  * Options used to list available metrics.
  *
  * @see <a href="http://docs.amazonwebservices.com/AmazonCloudWatch/latest/APIReference/API_ListMetrics.html" />
- *
- * @author Jeremy Whitlock
  */
 public class ListMetricsOptions extends BaseHttpRequestOptions implements Cloneable {
 

@@ -20,8 +20,6 @@ import org.jclouds.compute.domain.NodeMetadata;
 
 /**
  * Reboots a node unless it is in the state NODE_TERMINATED.
- * 
- * @author Adrian Cole
  */
 public interface RebootNodeStrategy {
 

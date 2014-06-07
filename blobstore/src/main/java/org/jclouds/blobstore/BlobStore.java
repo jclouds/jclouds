@@ -33,7 +33,6 @@ import org.jclouds.javax.annotation.Nullable;
 /**
  * Synchronous access to a BlobStore such as Amazon S3
  * 
- * @author Adrian Cole
  * @see AsyncBlobStore
  * 
  * @see BlobStoreContextFactory

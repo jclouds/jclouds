@@ -29,9 +29,6 @@ import org.jclouds.route53.features.HostedZoneApi;
 import com.google.common.annotations.Beta;
 import com.google.common.base.Function;
 
-/**
- * @author Adrian Cole
- */
 @Beta
 public class HostedZonesToPagedIterable extends CallerArg0ToPagedIterable<HostedZone, HostedZonesToPagedIterable> {
 

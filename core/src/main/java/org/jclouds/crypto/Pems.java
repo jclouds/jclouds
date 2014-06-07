@@ -60,8 +60,6 @@ import com.google.common.io.ByteSource;
 
 /**
  * Reads and writes PEM encoded Strings and Streams
- * 
- * @author Adrian Cole
  */
 @Beta
 public class Pems {

@@ -73,8 +73,6 @@ import com.google.inject.Module;
 import com.google.inject.Provides;
 /**
  * Tests behavior of {@code CloudServersAsyncClient}
- * 
- * @author Adrian Cole
  */
 // NOTE:without testName, this will not call @Before* and fail w/NPE during
 // surefire

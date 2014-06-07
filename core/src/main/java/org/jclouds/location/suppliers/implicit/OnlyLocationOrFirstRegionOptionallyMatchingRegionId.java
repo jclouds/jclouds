@@ -41,9 +41,6 @@ import com.google.common.base.Predicates;
 import com.google.common.base.Supplier;
 import com.google.common.collect.Iterables;
 
-/**
- * @author Adrian Cole
- */
 @Singleton
 public class OnlyLocationOrFirstRegionOptionallyMatchingRegionId implements ImplicitLocationSupplier {
    private final Supplier<String>  regionSupplier;

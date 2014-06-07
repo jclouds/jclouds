@@ -23,10 +23,6 @@ import org.jclouds.openstack.nova.v2_0.domain.Image.Status;
 import org.jclouds.openstack.nova.v2_0.parse.ParseImageTest;
 import org.testng.annotations.Test;
 
-/**
- * 
- * @author Adrian Cole
- */
 @Test(groups = "unit", testName = "ImagePredicatesTest")
 public class ImagePredicatesTest {
    Image ref = new ParseImageTest().expected();

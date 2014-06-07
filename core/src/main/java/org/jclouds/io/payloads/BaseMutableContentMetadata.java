@@ -23,9 +23,6 @@ import org.jclouds.io.ContentMetadataBuilder;
 import org.jclouds.io.MutableContentMetadata;
 import org.jclouds.javax.annotation.Nullable;
 
-/**
- * @author Adrian Cole
- */
 public class BaseMutableContentMetadata extends ContentMetadataBuilder implements MutableContentMetadata {
 
    /**

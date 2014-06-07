@@ -26,8 +26,6 @@ import org.jclouds.cloudstack.options.DeployVirtualMachineOptions;
  * Convert template options into DeployVirtualMachineOptions. Expressed as an interface, because in
  * CloudStack different zone network types have different requirements when it comes to networks and
  * security groups.
- *
- * @author Richard Downer
  */
 public interface OptionsConverter {
 

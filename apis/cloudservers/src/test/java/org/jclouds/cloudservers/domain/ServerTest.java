@@ -22,8 +22,6 @@ import org.testng.annotations.Test;
 
 /**
  * Tests behavior of {@code CreateImageBinder}
- * 
- * @author Adrian Cole
  */
 @Test(groups = "unit")
 public class ServerTest {

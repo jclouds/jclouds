@@ -24,9 +24,6 @@ import org.jclouds.date.internal.SimpleDateFormatDateService;
 import org.jclouds.openstack.v2_0.domain.Extension;
 import org.testng.annotations.Test;
 
-/**
- * @author Adrian Cole
- */
 @Test(groups = "unit", testName = "ExtensionToNameSpaceTest")
 public class ExtensionToNameSpaceTest {
    private final ExtensionToNameSpace fn = new ExtensionToNameSpace();

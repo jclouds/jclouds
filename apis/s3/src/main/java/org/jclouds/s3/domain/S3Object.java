@@ -26,7 +26,6 @@ import com.google.common.collect.Multimap;
  * {@link ObjectMetadataS3Object#getInput() value}, a {@link ObjectMetadata#getKey key},
  * {@link ObjectMetadata#getUserMetadata() metadata}, and an access control policy.
  * 
- * @author Adrian Cole
  * @see <a href="http://docs.amazonwebservices.com/AmazonS3/2006-03-01/index.html?UsingObjects.html"
  *      />
  */

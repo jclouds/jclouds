@@ -26,9 +26,6 @@ import com.google.inject.AbstractModule;
 import com.google.inject.Scopes;
 import com.google.inject.TypeLiteral;
 
-/**
- * @author Adrian Cole
- */
 public abstract class BindComputeSuppliersByClass extends AbstractModule {
 
    @Override

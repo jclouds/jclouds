@@ -24,8 +24,6 @@ import org.jclouds.ultradns.ws.config.UltraDNSWSHttpApiModule;
 
 /**
  * Implementation of {@link ApiMetadata} for Neustar's UltraDNSWS api.
- * 
- * @author Adrian Cole
  */
 public class UltraDNSWSApiMetadata extends BaseHttpApiMetadata<UltraDNSWSApi> {
 

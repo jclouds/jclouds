@@ -37,8 +37,6 @@ import com.google.common.io.ByteSource;
 
 /**
  * Represents a request that can be executed within {@link HttpCommandExecutorService}
- * 
- * @author Adrian Cole
  */
 public class HttpMessage extends PayloadEnclosingImpl {
 

@@ -19,10 +19,6 @@ package org.jclouds.rackspace.cloudfiles.blobstore.integration;
 import org.jclouds.cloudfiles.blobstore.integration.CloudFilesBlobSignerLiveTest;
 import org.testng.annotations.Test;
 
-/**
- * 
- * @author Adrian Cole
- */
 @Test(groups =  "live", testName = "CloudFilesUKBlobSignerLiveTest")
 public class CloudFilesUKBlobSignerLiveTest extends CloudFilesBlobSignerLiveTest {
    public CloudFilesUKBlobSignerLiveTest() {

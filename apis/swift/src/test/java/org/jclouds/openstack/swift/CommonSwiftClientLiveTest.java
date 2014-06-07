@@ -53,8 +53,6 @@ import com.google.common.hash.Hashing;
 
 /**
  * Tests behavior of {@code JaxrsAnnotationProcessor}
- * 
- * @author Adrian Cole
  */
 @Test(groups = "live")
 public abstract class CommonSwiftClientLiveTest<C extends CommonSwiftClient> extends BaseBlobStoreIntegrationTest {

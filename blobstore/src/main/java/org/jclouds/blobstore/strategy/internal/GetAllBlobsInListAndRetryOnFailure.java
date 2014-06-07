@@ -41,8 +41,6 @@ import com.google.inject.Inject;
 /**
  * Retrieves all blobs in the blobstore under the current path, by the most efficient means
  * possible.
- * 
- * @author Adrian Cole
  */
 @Singleton
 public class GetAllBlobsInListAndRetryOnFailure implements GetBlobsInListStrategy {

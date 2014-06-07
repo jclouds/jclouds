@@ -31,8 +31,6 @@ import com.google.common.reflect.TypeToken;
 
 /**
  * Container for provider filters (predicates).
- * 
- * @author Jeremy Whitlock <jwhitlock@apache.org>
  */
 public class ProviderPredicates {
 

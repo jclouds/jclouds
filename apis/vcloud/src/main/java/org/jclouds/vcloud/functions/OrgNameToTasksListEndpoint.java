@@ -32,10 +32,6 @@ import org.jclouds.vcloud.endpoints.TasksList;
 import com.google.common.base.Function;
 import com.google.common.base.Supplier;
 
-/**
- * 
- * @author Adrian Cole
- */
 @Singleton
 public class OrgNameToTasksListEndpoint implements Function<Object, URI> {
    private final Supplier<Map<String, Org>> orgMap;

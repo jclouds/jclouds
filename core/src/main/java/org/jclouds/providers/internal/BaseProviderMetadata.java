@@ -39,8 +39,6 @@ import com.google.common.collect.ImmutableSet;
  * those implementing ProviderMetadata.
  * 
  * (Note: This class must be abstract to allow {@link java.util.ServiceLoader} to work properly.
- * 
- * @author Adrian Cole
  */
 public abstract class BaseProviderMetadata implements ProviderMetadata {
 

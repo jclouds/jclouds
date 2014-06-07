@@ -30,8 +30,6 @@ import com.google.common.net.HttpHeaders;
 
 /**
  * Base class for writing KeyStone Rest Api Expect tests
- * 
- * @author Adrian Cole
  */
 public enum KeystoneFixture {
    INSTANCE;

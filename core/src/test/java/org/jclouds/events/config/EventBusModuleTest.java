@@ -34,8 +34,6 @@ import com.google.inject.name.Names;
 
 /**
  * Unit tests for the {@link EventBusModule} class.
- * 
- * @author Ignasi Barrera
  */
 @Test(groups = "unit", testName = "EventBusModuleTest")
 public class EventBusModuleTest {

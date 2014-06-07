@@ -25,8 +25,6 @@ import com.google.inject.ImplementedBy;
 
 /**
  * Identifies containers, files, etc.
- * 
- * @author Adrian Cole
  */
 @ImplementedBy(ResourceMetadataImpl.class)
 public interface ResourceMetadata<T extends Enum<T>> extends Comparable<ResourceMetadata<T>> {

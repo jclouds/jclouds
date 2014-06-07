@@ -27,8 +27,6 @@ import com.google.common.base.Objects.ToStringHelper;
 
 /**
  * Represents a Pod in CloudStack.
- *
- * @author Richard Downer
  */
 public class Pod implements Comparable<Pod> {
 

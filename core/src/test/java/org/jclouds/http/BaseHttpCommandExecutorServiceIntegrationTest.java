@@ -58,9 +58,6 @@ import com.squareup.okhttp.mockwebserver.RecordedRequest;
  * Tests for functionality all {@link HttpCommandExecutorService} http executor
  * services must express. These tests will operate against an in-memory http
  * engine, so as to ensure end-to-end functionality works.
- * 
- * @author Adrian Cole
- * @author Ignasi Barrera
  */
 @Test(groups = "integration")
 public abstract class BaseHttpCommandExecutorServiceIntegrationTest extends BaseMockWebServerTest {

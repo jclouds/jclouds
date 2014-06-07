@@ -30,10 +30,6 @@ import org.jclouds.rest.ResourceNotFoundException;
 
 import com.google.common.util.concurrent.ListenableFuture;
 
-/**
- * 
- * @author Adrian Cole
- */
 @Singleton
 public final class MapHttp4xxCodesToExceptions implements Fallback<Object> {
 

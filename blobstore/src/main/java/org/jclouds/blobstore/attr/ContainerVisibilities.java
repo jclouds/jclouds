@@ -18,9 +18,6 @@ package org.jclouds.blobstore.attr;
 
 /**
  * Represents the ways a container is scoped
- * 
- * @author Adrian Cole
- * 
  */
 public enum ContainerVisibilities {
 

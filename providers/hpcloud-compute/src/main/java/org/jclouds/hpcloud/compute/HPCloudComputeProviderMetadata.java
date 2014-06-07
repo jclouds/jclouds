@@ -40,8 +40,6 @@ import com.google.inject.Module;
 
 /**
  * Implementation of {@link org.jclouds.types.ProviderMetadata} for HP Cloud Compute Services.
- * 
- * @author Adrian Cole
  */
 public class HPCloudComputeProviderMetadata extends BaseProviderMetadata {
 

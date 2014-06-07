@@ -19,10 +19,6 @@ package org.jclouds.rackspace.cloudservers.uk.features;
 import org.jclouds.openstack.nova.v2_0.features.FlavorApiLiveTest;
 import org.testng.annotations.Test;
 
-/**
- * 
- * @author Adrian Cole
- */
 @Test(groups = "live", testName = "CloudServersUKFlavorApiLiveTest")
 public class CloudServersUKFlavorApiLiveTest extends FlavorApiLiveTest {
    public CloudServersUKFlavorApiLiveTest() {

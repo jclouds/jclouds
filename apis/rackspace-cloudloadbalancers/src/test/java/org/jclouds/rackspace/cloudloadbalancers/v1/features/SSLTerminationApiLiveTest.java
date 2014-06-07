@@ -33,9 +33,6 @@ import org.testng.annotations.Test;
 
 import com.google.common.collect.Iterables;
 
-/**
- * @author Everett Toews
- */
 @Test(groups = "live", singleThreaded = true, testName = "SSLTerminationApiLiveTest")
 public class SSLTerminationApiLiveTest extends BaseCloudLoadBalancersApiLiveTest {
    private LoadBalancer lb;

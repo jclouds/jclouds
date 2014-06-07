@@ -36,9 +36,6 @@ import org.jclouds.rest.annotations.QueryParams;
 import org.jclouds.rest.annotations.RequestFilters;
 import org.jclouds.rest.annotations.ResponseParser;
 
-/**
- * @author Oleksiy Yarmula
- */
 @RequestFilters(SharedKeyLiteAuthentication.class)
 @QueryParams(keys = VERSION, values = "{jclouds.api-version}")
 public interface GridIpApi {

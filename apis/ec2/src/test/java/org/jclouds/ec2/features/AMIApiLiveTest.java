@@ -56,8 +56,6 @@ import com.google.common.collect.ImmutableMultimap;
 
 /**
  * Tests behavior of {@code AMIApi}
- * 
- * @author Adrian Cole
  */
 @Test(groups = "live", singleThreaded = true)
 public class AMIApiLiveTest extends BaseComputeServiceContextLiveTest {

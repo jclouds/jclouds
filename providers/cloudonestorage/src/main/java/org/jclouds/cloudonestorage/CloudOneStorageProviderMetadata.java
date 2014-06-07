@@ -26,8 +26,6 @@ import org.jclouds.providers.internal.BaseProviderMetadata;
 /**
  * Implementation of {@ link org.jclouds.types.ProviderMetadata} for PEER1's
  * CloudOne Storage provider.
- *
- * @author Jeremy Whitlock <jwhitlock@apache.org>
  */
 public class CloudOneStorageProviderMetadata extends BaseProviderMetadata {
 

@@ -28,8 +28,6 @@ import com.google.common.base.Objects.ToStringHelper;
 
 /**
  * Represents an alert issued by Cloudstack
- *
- * @author Richard Downer
  */
 public class Alert {
 

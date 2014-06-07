@@ -26,8 +26,6 @@ import org.jclouds.providers.internal.BaseProviderMetadata;
 /**
  * Implementation of {@link org.jclouds.types.ProviderMetadata} for Ninefold's
  * Storage provider.
- *
- * @author Jeremy Whitlock <jwhitlock@apache.org>
  */
 public class NinefoldStorageProviderMetadata extends BaseProviderMetadata {
 

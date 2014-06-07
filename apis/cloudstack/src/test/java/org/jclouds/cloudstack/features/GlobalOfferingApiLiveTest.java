@@ -41,8 +41,6 @@ import com.google.common.collect.ImmutableSet;
 
 /**
  * Tests behavior of {@code GlobalOfferingApi}
- *
- * @author Andrei Savu
  */
 @Test(groups = "live", singleThreaded = true, testName = "GlobalOfferingApiLiveTest")
 public class GlobalOfferingApiLiveTest extends BaseCloudStackApiLiveTest {

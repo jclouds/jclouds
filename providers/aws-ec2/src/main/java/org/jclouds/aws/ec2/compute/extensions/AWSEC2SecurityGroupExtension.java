@@ -49,8 +49,6 @@ import org.jclouds.net.domain.IpProtocol;
 /**
  * An extension to compute service to allow for the manipulation of {@link SecurityGroup}s. Implementation
  * is optional by providers.
- * 
- * @author Andrew Bayer
  */
 public class AWSEC2SecurityGroupExtension extends EC2SecurityGroupExtension {
    protected final AWSEC2Api client;

@@ -41,11 +41,9 @@ import com.google.common.collect.Sets;
  * active, - input requests to create new virtual systems, - input requests to modify existing
  * virtual systems, or - snapshots of virtual systems.
  * 
- * @author Adrian Cole
  * @see <a
  *      href="http://dmtf.org/sites/default/files/cim/cim_schema_v2280/cim_schema_2.28.0Final-Doc.zip"
  *      />
- * 
  */
 public class VirtualSystemSettingData extends ManagedElement {
 

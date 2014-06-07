@@ -28,8 +28,6 @@ import org.jclouds.rest.MapBinder;
 
 /**
  * Binds the object to the request as a json object.
- * 
- * @author Adrian Cole
  */
 public class BindToJsonPayload implements MapBinder {
 

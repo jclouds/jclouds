@@ -18,11 +18,6 @@ package org.jclouds.vcloud;
 
 import org.jclouds.vcloud.domain.Task;
 
-/**
- * 
- * @author Adrian Cole
- * 
- */
 public class TaskStillRunningException extends RuntimeException {
 
    private final Task task;

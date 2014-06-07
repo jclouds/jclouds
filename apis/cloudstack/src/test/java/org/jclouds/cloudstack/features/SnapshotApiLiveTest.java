@@ -42,8 +42,6 @@ import com.google.common.collect.Iterables;
 
 /**
  * Tests behavior of {@code SnapshotApi}
- *
- * @author grkvlt@apache.org, Alex Heneveld
  */
 @Test(groups = "live", singleThreaded = true, testName = "SnapshotApiLiveTest")
 public class SnapshotApiLiveTest extends BaseCloudStackApiLiveTest {

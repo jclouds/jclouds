@@ -22,7 +22,6 @@ import com.google.common.annotations.Beta;
 
 /**
  * 
- * @author Adrian Cole
  * @since 1.6
  * @see ConfiguresHttpApi
  */

@@ -19,10 +19,6 @@ package org.jclouds.rackspace.cloudservers.compute;
 import org.jclouds.cloudservers.compute.CloudServersComputeServiceLiveTest;
 import org.testng.annotations.Test;
 
-/**
- * 
- * @author Adrian Cole
- */
 @Test(groups = "live", singleThreaded = true, testName = "CloudServersUSComputeServiceLiveTest")
 public class CloudServersUSComputeServiceLiveTest extends CloudServersComputeServiceLiveTest {
 

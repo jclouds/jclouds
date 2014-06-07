@@ -29,9 +29,6 @@ import org.xml.sax.SAXException;
 
 import com.google.common.collect.Sets;
 
-/**
- * @author Adrian Cole
- */
 public class DescribeReservedInstancesOfferingResponseHandler extends
       ParseSax.HandlerWithResult<Set<ReservedInstancesOffering>> {
 

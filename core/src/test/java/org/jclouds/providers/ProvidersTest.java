@@ -31,8 +31,6 @@ import com.google.common.collect.Iterables;
 
 /**
  * The ProvidersTest tests the org.jclouds.providers.Providers class.
- * 
- * @author Jeremy Whitlock <jwhitlock@apache.org>
  */
 @Test(groups = "unit", testName = "ProvidersTest")
 public class ProvidersTest {

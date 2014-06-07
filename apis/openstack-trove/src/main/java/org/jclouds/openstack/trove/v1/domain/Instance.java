@@ -29,8 +29,6 @@ import com.google.common.collect.ImmutableList;
 
 /**
  * An Openstack Trove Database Instance.
- * 
- * @author Zack Shoylev
  */
 public class Instance implements Comparable<Instance>{
 
@@ -113,7 +111,6 @@ public class Instance implements Comparable<Instance>{
 
    /**
     * Lists possible Instance status.
-    * @author zack-shoylev
     *
     */
    public enum Status {

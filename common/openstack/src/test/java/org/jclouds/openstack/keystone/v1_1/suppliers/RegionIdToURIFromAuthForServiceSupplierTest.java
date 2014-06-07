@@ -37,9 +37,6 @@ import com.google.inject.Guice;
 import com.google.inject.Provides;
 import com.google.inject.assistedinject.FactoryModuleBuilder;
 
-/**
- * @author Adrian Cole
- */
 @Test(groups = "unit", testName = "RegionIdToURIFromAuthForServiceSupplierTest")
 public class RegionIdToURIFromAuthForServiceSupplierTest {
    private final RegionIdToURISupplier.Factory factory = Guice.createInjector(new AbstractModule() {

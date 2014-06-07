@@ -36,9 +36,6 @@ import org.xml.sax.SAXException;
 import com.google.common.collect.ImmutableMap;
 import com.google.inject.Inject;
 
-/**
- * @author Adrian Cole
- */
 public class BaseEnvelopeHandler<V extends BaseVirtualSystem<V>, B extends BaseVirtualSystem.Builder<V>, H extends BaseVirtualSystemHandler<V, B>, E extends BaseEnvelope<V, E>, T extends BaseEnvelope.Builder<V, E>>
          extends ParseSax.HandlerWithResult<E> {
 

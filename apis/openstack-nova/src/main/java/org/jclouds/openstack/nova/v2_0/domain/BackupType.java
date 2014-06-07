@@ -20,9 +20,6 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 import com.google.common.base.CaseFormat;
 
-/**
- * @author Adam Lowe
- */
 public enum BackupType {
    DAILY, WEEKLY;
 

@@ -44,8 +44,6 @@ import com.google.common.net.HttpHeaders;
 
 /**
  * This parses {@link VCloudSession} from HTTP headers.
- * 
- * @author Adrian Cole
  */
 @Singleton
 public class ParseLoginResponseFromHeaders implements Function<HttpResponse, VCloudSession> {

@@ -28,7 +28,6 @@ import com.google.inject.Provides;
 
 /**
  * 
- * @author Adrian Cole
  * @deprecated will be removed in jclouds 1.7, as async interfaces are no longer
  *             supported. please use
  *             {@link CloudIdentityAuthenticationApiModule}

@@ -35,7 +35,6 @@ import com.google.inject.Provides;
 /**
  * Common features in OpenStack Swift.
  * 
- * @author Adrian Cole
  * 
  * @deprecated Please use {@code com.jclouds.openstack.swift.v1.SwiftApi} and related
  *             feature APIs in {@code com.jclouds.openstack.swift.v1.features.*} as noted in

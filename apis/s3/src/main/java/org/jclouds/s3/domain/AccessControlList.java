@@ -38,7 +38,6 @@ import com.google.common.collect.Sets;
  * payload to perform that action.
  * 
  * 
- * @author James Murty
  * @see <a href="http://docs.amazonwebservices.com/AmazonS3/2006-03-01/RESTAccessPolicy.html"/>
  */
 public class AccessControlList {

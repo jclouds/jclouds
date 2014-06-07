@@ -25,11 +25,6 @@ import org.jclouds.date.DateCodec;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
 
-/**
- * 
- * @author aled
- * 
- */
 @Test(testName = "DateServiceDateCodecFactoryTest")
 public class DateServiceDateCodecFactoryTest {
 

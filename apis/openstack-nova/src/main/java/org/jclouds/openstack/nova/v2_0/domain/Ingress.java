@@ -30,7 +30,6 @@ import com.google.common.base.Objects.ToStringHelper;
 /**
  * Ingress access to a destination protocol on particular ports
  * 
- * @author Adrian Cole
 */
 @Beta
 public class Ingress {

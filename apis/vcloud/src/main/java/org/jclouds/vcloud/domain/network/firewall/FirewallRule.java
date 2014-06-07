@@ -26,7 +26,6 @@ import com.google.common.base.Objects;
 /**
  * The FirewallRule element defines a single firewall rule.
  * 
- * @author Adrian Cole
  * @since vcloud api 0.8
  */
 public class FirewallRule {

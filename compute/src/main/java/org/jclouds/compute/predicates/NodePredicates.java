@@ -34,8 +34,6 @@ import com.google.common.collect.ImmutableSet;
  * 
  * This class has static methods that create customized predicates to use with
  * {@link org.jclouds.compute.ComputeService}.
- * 
- * @author Oleksiy Yarmula
  */
 public class NodePredicates {
 

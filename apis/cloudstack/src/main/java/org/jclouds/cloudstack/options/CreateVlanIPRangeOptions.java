@@ -20,8 +20,6 @@ import com.google.common.collect.ImmutableSet;
 
 /**
  * Options to the createVlanIPRange API call.
- *
- * @author Richard Downer
  */
 public class CreateVlanIPRangeOptions extends AccountInDomainOptions {
 

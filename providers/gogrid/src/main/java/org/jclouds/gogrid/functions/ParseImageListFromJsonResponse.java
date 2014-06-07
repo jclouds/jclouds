@@ -27,9 +27,6 @@ import org.jclouds.http.functions.ParseJson;
 import com.google.common.base.Function;
 import com.google.inject.Singleton;
 
-/**
- * @author Oleksiy Yarmula
- */
 @Singleton
 public class ParseImageListFromJsonResponse implements
       Function<HttpResponse, SortedSet<ServerImage>> {

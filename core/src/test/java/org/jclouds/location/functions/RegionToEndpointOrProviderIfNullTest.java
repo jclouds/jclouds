@@ -30,8 +30,6 @@ import com.google.common.collect.ImmutableMap;
 
 /**
  * Tests behavior of {@code RegionToEndpointOrProviderIfNull}
- * 
- * @author Adrian Cole
  */
 @Test(groups = "unit", testName = "RegionToEndpointOrProviderIfNullTest")
 public class RegionToEndpointOrProviderIfNullTest {

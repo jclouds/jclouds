@@ -19,8 +19,6 @@ package org.jclouds.http;
 /**
  * Responsible for setting an exception on the command relevant to the unrecoverable error in the
  * HttpResponse.
- * 
- * @author Adrian Cole
  */
 public interface HttpErrorHandler {
    public static final HttpErrorHandler NOOP = new HttpErrorHandler() {

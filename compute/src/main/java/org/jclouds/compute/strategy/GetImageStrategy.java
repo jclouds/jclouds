@@ -20,8 +20,6 @@ import org.jclouds.compute.domain.Image;
 
 /**
  * returns all details associated to the image below.
- * 
- * @author Adrian Cole
  */
 public interface GetImageStrategy {
 

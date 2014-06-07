@@ -24,10 +24,6 @@ import org.jclouds.cloudstack.domain.Account.Type;
 
 import com.google.common.base.Predicate;
 
-/**
- * 
- * @author Adrian Cole
- */
 public class UserPredicates {
 
    public static class ApiKeyEquals implements Predicate<User> {

@@ -42,11 +42,6 @@ import com.google.common.cache.CacheLoader;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Iterables;
 
-/**
- * 
- * @author Adrian Cole
- * @author Andrew Bayer
- */
 @Singleton
 public class AWSEC2CreateSecurityGroupIfNeeded extends CacheLoader<RegionAndName, String> {
    @Resource

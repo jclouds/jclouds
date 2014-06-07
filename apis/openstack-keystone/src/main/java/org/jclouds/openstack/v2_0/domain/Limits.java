@@ -27,9 +27,6 @@ import javax.inject.Named;
 
 import com.google.common.base.Objects;
 
-/**
- * @author Everett Toews
- */
 public final class Limits {
 
    @Named("rate")

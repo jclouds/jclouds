@@ -16,6 +16,5 @@
  */
 /**
  * This package contains properties and reference data used in SQS.
- * @author Adrian Cole
  */
 package org.jclouds.sqs.reference;

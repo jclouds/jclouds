@@ -33,9 +33,6 @@ import org.jclouds.location.Provider;
 
 import com.google.common.base.Supplier;
 
-/**
- * @author Adrian Cole
- */
 @Singleton
 public class LocalBlobRequestSigner implements BlobRequestSigner {
 

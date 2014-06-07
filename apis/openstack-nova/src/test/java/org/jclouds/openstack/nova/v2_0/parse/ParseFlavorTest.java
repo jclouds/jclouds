@@ -34,9 +34,6 @@ import com.google.common.collect.ImmutableSet;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 
-/**
- * @author Jeremy Daggett
- */
 @Test(groups = "unit", testName = "ParseFlavorTest")
 public class ParseFlavorTest extends BaseItemParserTest<Flavor> {
 

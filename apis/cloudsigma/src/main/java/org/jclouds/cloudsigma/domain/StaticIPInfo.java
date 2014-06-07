@@ -24,10 +24,6 @@ import org.jclouds.javax.annotation.Nullable;
 
 import com.google.common.collect.ImmutableSet;
 
-/**
- * 
- * @author Adrian Cole
- */
 public class StaticIPInfo {
    public static class Builder {
       protected String ip;

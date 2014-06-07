@@ -21,8 +21,6 @@ import org.jclouds.s3.domain.ObjectMetadata;
 
 /**
  * Contains AWS-S3 specific options supported in the put blob operation
- *
- * @author Andrei Savu
  */
 public class AWSS3PutOptions extends PutOptions {
 

@@ -45,7 +45,6 @@ import com.google.common.base.Objects.ToStringHelper;
  * Combining the hostname, followed by a period '.', followed by the domain gives the FQDN (fully qualified domain name),
  * which may not exceed 253 characters in total length.
  *
- * @author Adrian Cole
  * @see <a href=
 "http://sldn.softlayer.com/reference/datatypes/SoftLayer_Virtual_Guest"
 />

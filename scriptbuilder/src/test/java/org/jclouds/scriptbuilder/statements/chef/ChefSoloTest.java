@@ -35,8 +35,6 @@ import com.google.common.collect.ImmutableSet;
 
 /**
  * Unit tests for the {@link ChefSoloTest} statement.
- * 
- * @author Ignasi Barrera
  */
 @Test(groups = "unit", testName = "ChefSoloTest")
 public class ChefSoloTest {

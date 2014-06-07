@@ -43,8 +43,6 @@ import com.google.inject.name.Names;
 import com.google.common.net.HttpHeaders;
 /**
  * Tests behavior of {@code FormSigner}
- * 
- * @author Adrian Cole
  */
 // NOTE:without testName, this will not call @Before* and fail w/NPE during
 // surefire

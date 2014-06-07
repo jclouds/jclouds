@@ -25,9 +25,6 @@ import org.jclouds.http.functions.ParseSax;
 import org.jclouds.ovf.Section;
 import org.jclouds.ovf.Section.Builder;
 
-/**
- * @author Adrian Cole
- */
 public class SectionHandler<T extends Section<T>, B extends Section.Builder<T>> extends ParseSax.HandlerWithResult<T> {
    @SuppressWarnings("unchecked")
    public static SectionHandler create() {

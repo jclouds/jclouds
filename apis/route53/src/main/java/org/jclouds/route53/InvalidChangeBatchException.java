@@ -24,8 +24,6 @@ import com.google.common.collect.ImmutableList;
  * @see <a href=
  *      "http://docs.aws.amazon.com/Route53/latest/APIReference/API_ChangeResourceRecordSets.html"
  *      />
- * 
- * @author Adrian Cole
  */
 public class InvalidChangeBatchException extends IllegalArgumentException {
    private static final long serialVersionUID = 1L;

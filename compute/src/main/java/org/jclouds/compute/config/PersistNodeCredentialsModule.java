@@ -35,10 +35,6 @@ import com.google.inject.assistedinject.Assisted;
 import com.google.inject.assistedinject.FactoryModuleBuilder;
 import com.google.inject.name.Names;
 
-/**
- * 
- * @author Adrian Cole
- */
 public class PersistNodeCredentialsModule extends AbstractModule {
 
    static class RefreshCredentialsForNodeIfRanAdminAccess implements Function<NodeMetadata, NodeMetadata> {

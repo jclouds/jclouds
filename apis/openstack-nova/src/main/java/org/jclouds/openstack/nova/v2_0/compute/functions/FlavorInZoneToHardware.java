@@ -36,8 +36,6 @@ import com.google.common.base.Supplier;
 
 /**
  * A function for transforming the nova specific FlavorInZone object to the generic Hardware object.
- * 
- * @author Matt Stephenson
  */
 public class FlavorInZoneToHardware implements Function<FlavorInZone, Hardware> {
 

@@ -26,8 +26,6 @@ import org.jclouds.compute.domain.Processor;
 import com.google.common.base.Function;
 import com.google.common.collect.ImmutableList;
 
-/**
- */
 @Singleton
 public class ServiceOfferingToHardware implements Function<ServiceOffering, Hardware> {
 

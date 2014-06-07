@@ -37,8 +37,6 @@ import com.google.inject.Module;
 /**
  * 
  * Integration test for the URLFetchService
- * 
- * @author Adrian Cole
  */
 @Test
 public class AsyncGaeHttpCommandExecutorServiceIntegrationTest extends BaseHttpCommandExecutorServiceIntegrationTest {

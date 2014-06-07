@@ -21,10 +21,6 @@ import org.jclouds.blobstore.integration.internal.BaseContainerIntegrationTest;
 import org.testng.SkipException;
 import org.testng.annotations.Test;
 
-/**
- * @author James Murty
- * @author Adrian Cole
- */
 @Test(groups = "live", testName = "S3ContainerIntegrationLiveTest")
 public class S3ContainerIntegrationLiveTest extends BaseContainerIntegrationTest {
 

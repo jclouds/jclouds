@@ -22,9 +22,6 @@ import java.beans.ConstructorProperties;
 
 import com.google.common.base.Objects;
 
-/**
- * @author Everett Toews
- */
 public final class LoadBalancerInfo {
    private final int loadBalancerId;
    private final String loadBalancerName;

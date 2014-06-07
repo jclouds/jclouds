@@ -68,8 +68,6 @@ import com.google.common.io.Files;
  *   sometimes known to the provider), securely and randomly as described above (resetLoginPassword)</li>
  *   <li>lockdown sshd_config for no root login, nor passwords allowed (lockSsh)</li> 
  * </ul>
- * 
- * @author Adrian Cole
  */
 public class AdminAccess implements Statement {
    public static Builder builder() {

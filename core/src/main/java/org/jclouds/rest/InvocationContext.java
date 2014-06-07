@@ -22,7 +22,6 @@ import org.jclouds.http.HttpRequest;
  * Passes generated Http request into this object;
  * 
  * @see PathParam
- * @author Adrian Cole
  */
 public interface InvocationContext<I extends InvocationContext<I>> {
    I setContext(HttpRequest request);

@@ -19,9 +19,6 @@ package org.jclouds.azureblob.blobstore.integration;
 import org.jclouds.blobstore.integration.internal.BaseContainerLiveTest;
 import org.testng.annotations.Test;
 
-/**
- * @author Adrian Cole
- */
 @Test(groups = { "live" })
 public class AzureBlobContainerLiveTest extends BaseContainerLiveTest {
    public AzureBlobContainerLiveTest() {

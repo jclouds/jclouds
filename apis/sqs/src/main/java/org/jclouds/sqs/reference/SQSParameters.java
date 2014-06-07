@@ -21,7 +21,6 @@ package org.jclouds.sqs.reference;
  * 
  * @see <a href="http://docs.amazonwebservices.com/AWSSimpleQueueService/2011-10-01/APIReference/Query_QueryParams.html"
  *      />
- * @author Adrian Cole
  */
 public interface SQSParameters {
 

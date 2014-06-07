@@ -21,8 +21,6 @@ import org.testng.annotations.Test;
 
 /**
  * The AWSS3ProviderTest tests the {@link org.jclouds.aws.s3.AWSS3ProviderMetadata} class.
- * 
- * @author Adrian Cole
  */
 @Test(groups = "unit", testName = "AWSS3ProviderTest")
 public class AWSS3ProviderTest extends BaseProviderMetadataTest {

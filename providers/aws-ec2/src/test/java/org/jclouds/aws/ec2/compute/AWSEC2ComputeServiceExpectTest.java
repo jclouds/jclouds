@@ -37,8 +37,6 @@ import com.google.common.collect.Iterables;
 
 /**
  * Tests the compute service abstraction of the EC2 api.
- * 
- * @author Adrian Cole
  */
 @Test(groups = "unit", testName = "AWSEC2ComputeServiceExpectTest")
 public class AWSEC2ComputeServiceExpectTest extends BaseAWSEC2ComputeServiceExpectTest {

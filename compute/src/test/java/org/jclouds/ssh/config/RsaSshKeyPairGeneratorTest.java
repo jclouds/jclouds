@@ -48,9 +48,6 @@ import com.google.common.io.ByteSource;
 import com.google.inject.AbstractModule;
 import com.google.inject.Guice;
 
-/**
- * @author Adrian Cole
- */
 @Test(groups = "unit", testName = "RsaSshKeyPairGeneratorTest")
 public class RsaSshKeyPairGeneratorTest {
    private static final String lineSeparator = System.getProperty("line.separator");

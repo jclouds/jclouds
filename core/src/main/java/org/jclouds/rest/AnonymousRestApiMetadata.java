@@ -25,7 +25,6 @@ import com.google.common.annotations.Beta;
 /**
  * Useful in creating arbitrary clients.
  * 
- * @author Adrian Cole
  * @deprecated please use {@link AnonymousHttpApiMetadata} as
  *             async interface will be removed in jclouds 1.7.
  */

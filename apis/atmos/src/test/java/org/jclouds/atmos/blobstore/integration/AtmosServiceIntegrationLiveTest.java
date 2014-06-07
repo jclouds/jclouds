@@ -19,9 +19,6 @@ package org.jclouds.atmos.blobstore.integration;
 import org.jclouds.blobstore.integration.internal.BaseServiceIntegrationTest;
 import org.testng.annotations.Test;
 
-/**
- * @author Adrian Cole
- */
 @Test(groups = "live")
 public class AtmosServiceIntegrationLiveTest extends BaseServiceIntegrationTest {
    public AtmosServiceIntegrationLiveTest() {

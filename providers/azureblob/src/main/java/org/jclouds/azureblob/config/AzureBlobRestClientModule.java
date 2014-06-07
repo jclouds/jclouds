@@ -28,8 +28,6 @@ import org.jclouds.rest.ConfiguresRestClient;
 
 /**
  * Configures the Azure Blob Service connection, including logging and http transport.
- * 
- * @author Adrian Cole
  */
 @ConfiguresRestClient
 public class AzureBlobRestClientModule extends AzureStorageRestClientModule<AzureBlobClient, AzureBlobAsyncClient> {

@@ -49,8 +49,6 @@ import com.google.inject.Inject;
 /**
  * returns either the instances present in the list, or spot instances, if they ids start with {@code sir-}. Makes a
  * single rest call per aggregate on region.
- * 
- * @author Adrian Cole
  */
 @Singleton
 public class PresentSpotRequestsAndInstances extends PresentInstances {

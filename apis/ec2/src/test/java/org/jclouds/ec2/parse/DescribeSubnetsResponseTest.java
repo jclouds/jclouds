@@ -28,10 +28,6 @@ import org.testng.annotations.Test;
 import com.google.common.collect.FluentIterable;
 import com.google.common.collect.ImmutableSet;
 
-/**
- * @author Adrian Cole
- * @author Andrew Bayer
- */
 // NOTE:without testName, this will not call @Before* and fail w/NPE during surefire
 @Test(groups = "unit", testName = "DescribeSubnetsResponseTest")
 public class DescribeSubnetsResponseTest extends BaseHandlerTest {

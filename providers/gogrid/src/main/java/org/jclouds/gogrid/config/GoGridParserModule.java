@@ -41,9 +41,6 @@ import com.google.inject.Provides;
 
 /**
  * Configures the GoGrid connection.
- * 
- * @author Adrian Cole
- * @author Oleksiy Yarmula
  */
 
 public class GoGridParserModule extends AbstractModule {

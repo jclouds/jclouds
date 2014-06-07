@@ -33,7 +33,6 @@ import com.google.inject.Module;
  * The ApiMetadata interface allows jclouds to provide a plugin framework for
  * gathering cloud api metadata.
  * 
- * @author Jeremy Whitlock <jwhitlock@apache.org>, Adrian Cole
  * @since 1.5
  */
 @Beta

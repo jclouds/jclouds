@@ -42,8 +42,6 @@ import com.google.common.collect.ImmutableSet;
 
 /**
  * Test the CloudStack GlobalHostApi
- *
- * @author Richard Downer
  */
 @Test(groups = "unit", testName = "GlobalConfigurationApiExpectTest")
 public class GlobalHostApiExpectTest extends BaseCloudStackExpectTest<GlobalHostApi> {

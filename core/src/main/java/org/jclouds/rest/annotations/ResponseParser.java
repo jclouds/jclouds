@@ -28,8 +28,6 @@ import com.google.common.base.Function;
 
 /**
  * Shows the transformer type used to parse the HttpResponse
- * 
- * @author Adrian Cole
  */
 @Target(METHOD)
 @Retention(RUNTIME)

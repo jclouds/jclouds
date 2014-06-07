@@ -31,9 +31,6 @@ import org.jclouds.javax.annotation.Nullable;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Sets;
 
-/**
- * @author Adrian Cole
- */
 public class NodeMetadataBuilder extends ComputeMetadataBuilder {
    private Status status;
    private String backendStatus;

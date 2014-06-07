@@ -57,8 +57,6 @@ import com.google.common.io.ByteProcessor;
 /**
  * 
  * @see <a href= "http://download.cloud.com/releases/2.2.0/api/user/2.2api_security_details.html" />
- * @author Adrian Cole
- * 
  */
 @Singleton
 public class QuerySigner implements AuthenticationFilter, RequestSigner {

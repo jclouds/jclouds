@@ -37,8 +37,6 @@ import com.google.common.collect.ImmutableMap;
 
 /**
  * Tests the function used to transform Flavor objects into Hardware objects
- * 
- * @author Matt Stephenson, Adrian Cole
  */
 @Test(testName = "FlavorInZoneToHardwareTest")
 public class FlavorInZoneToHardwareTest {

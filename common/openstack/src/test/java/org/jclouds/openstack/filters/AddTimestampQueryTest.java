@@ -25,10 +25,6 @@ import org.testng.annotations.Test;
 
 import com.google.common.base.Supplier;
 
-/**
- * 
- * @author Adrian Cole
- */
 
 @Test(groups = "unit")
 public class AddTimestampQueryTest {

@@ -36,9 +36,6 @@ import org.testng.annotations.Test;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Maps;
 
-/**
- * @author Andrei Savu
- */
 @Test(groups = "unit", singleThreaded = true)
 public class OSCategoryInTest {
 

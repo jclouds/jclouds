@@ -36,8 +36,6 @@ import com.google.common.collect.ImmutableSet.Builder;
 
 /**
  * Tests behavior of {@code ParseDirectoryListFromContentAndHeaders}
- * 
- * @author Adrian Cole
  */
 //NOTE:without testName, this will not call @Before* and fail w/NPE during surefire
 @Test(groups = "unit", testName = "ParseDirectoryListFromContentAndHeadersTest")

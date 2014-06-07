@@ -38,8 +38,6 @@ import org.jclouds.providers.internal.BaseProviderMetadata;
 /**
  * Implementation of {@link org.jclouds.providers.ProviderMetadata} for Amazon's Simple Storage Service
  * (S3) provider.
- * 
- * @author Adrian Cole
  */
 public class AWSS3ProviderMetadata extends BaseProviderMetadata {
 

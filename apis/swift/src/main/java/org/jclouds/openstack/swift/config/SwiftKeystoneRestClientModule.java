@@ -27,10 +27,6 @@ import org.jclouds.rest.ConfiguresRestClient;
 import com.google.common.collect.ImmutableMap;
 import com.google.inject.Scopes;
 
-/**
- *
- * @author Adrian Cole
- */
 @ConfiguresRestClient
 public class SwiftKeystoneRestClientModule extends SwiftRestClientModule<SwiftKeystoneClient, SwiftKeystoneAsyncClient> {
 

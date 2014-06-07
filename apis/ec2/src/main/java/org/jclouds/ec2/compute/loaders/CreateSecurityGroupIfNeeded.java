@@ -36,10 +36,6 @@ import com.google.common.base.Predicate;
 import com.google.common.cache.CacheLoader;
 import com.google.common.collect.Iterables;
 
-/**
- * 
- * @author Adrian Cole
- */
 @Singleton
 public class CreateSecurityGroupIfNeeded extends CacheLoader<RegionAndName, String> {
    @Resource

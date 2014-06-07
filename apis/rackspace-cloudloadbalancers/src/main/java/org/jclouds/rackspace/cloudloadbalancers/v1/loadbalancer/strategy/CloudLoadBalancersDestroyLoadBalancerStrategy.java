@@ -30,10 +30,6 @@ import org.jclouds.loadbalancer.strategy.GetLoadBalancerMetadataStrategy;
 import org.jclouds.logging.Logger;
 import org.jclouds.rackspace.cloudloadbalancers.v1.CloudLoadBalancersApi;
 
-/**
- * 
- * @author Adrian Cole
- */
 @Singleton
 public class CloudLoadBalancersDestroyLoadBalancerStrategy implements DestroyLoadBalancerStrategy {
    @Resource

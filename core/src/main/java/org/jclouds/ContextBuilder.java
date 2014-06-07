@@ -143,7 +143,6 @@ import com.google.inject.TypeLiteral;
  * {@link JavaUrlHttpCommandExecutorServiceModule http transports} will be
  * installed.
  * 
- * @author Adrian Cole, Andrew Newdigate
  * @see Context
  * @see View
  * @see ApiMetadata

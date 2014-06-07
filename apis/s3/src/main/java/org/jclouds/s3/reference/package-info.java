@@ -16,6 +16,5 @@
  */
 /**
  * This package contains properties and reference data used in S3.
- * @author Adrian Cole
  */
 package org.jclouds.s3.reference;

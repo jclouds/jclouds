@@ -19,7 +19,6 @@ package org.jclouds.domain;
 /**
  * The scope of the location
  * 
- * @author Adrian Cole
  */
 public enum LocationScope {
 

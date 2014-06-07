@@ -35,9 +35,6 @@ import com.google.common.base.Suppliers;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 
-/**
- * @author Andrew Bayer
- */
 @Test(groups = "unit", testName = "NovaSecurityGroupInZoneToSecurityGroupTest")
 public class NovaSecurityGroupInZoneToSecurityGroupTest {
 

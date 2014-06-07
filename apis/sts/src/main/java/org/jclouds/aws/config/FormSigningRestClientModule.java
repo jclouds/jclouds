@@ -30,10 +30,6 @@ import org.jclouds.rest.RequestSigner;
 import com.google.common.reflect.TypeToken;
 import com.google.inject.Provides;
 
-/**
- * 
- * @author Adrian Cole
- */
 @ConfiguresRestClient
 public abstract class FormSigningRestClientModule<S, A> extends AWSRestClientModule<S, A> {
 

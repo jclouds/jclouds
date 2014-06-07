@@ -25,7 +25,6 @@ import java.io.IOException;
 
 
 /**
- * @author Adrian Cole
  * @deprecated see ByteSourcePayload
  */
 @Deprecated

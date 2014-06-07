@@ -64,9 +64,6 @@ import com.google.common.util.concurrent.UncheckedTimeoutException;
 
 /**
  * CloudStack implementation of {@link ImageExtension}
- * 
- * @author Andrew Bayer
- *
  */
 @Singleton
 public class CloudStackImageExtension implements ImageExtension {

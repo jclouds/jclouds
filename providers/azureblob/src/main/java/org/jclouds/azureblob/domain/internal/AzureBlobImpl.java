@@ -30,8 +30,6 @@ import com.google.common.collect.Multimap;
 
 /**
  * Default Implementation of {@link AzureBlob}.
- * 
- * @author Adrian Cole
  */
 public class AzureBlobImpl extends PayloadEnclosingImpl implements AzureBlob, Comparable<AzureBlob> {
 

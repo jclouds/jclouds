@@ -50,8 +50,6 @@ import com.google.common.net.HostAndPort;
 
 /**
  * Tests behavior of {@code LoadBalancerApiLiveTest}
- * 
- * @author Adrian Cole
  */
 @Test(groups = "live", singleThreaded = true, testName = "LoadBalancerApiLiveTest")
 public class LoadBalancerApiLiveTest extends BaseCloudStackApiLiveTest {

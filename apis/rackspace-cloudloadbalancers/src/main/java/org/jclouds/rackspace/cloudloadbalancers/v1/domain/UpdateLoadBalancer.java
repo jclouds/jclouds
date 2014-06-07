@@ -24,8 +24,6 @@ import com.google.common.base.Objects.ToStringHelper;
 
 /**
  * Used to update Load Balancers.
- * 
- * @author Everett Toews
  */
 public class UpdateLoadBalancer {
    private final String name;

@@ -33,8 +33,6 @@ import com.google.common.collect.ImmutableSortedSet;
 
 /**
  * Class Network
- *
- * @author Adrian Cole
  */
 public class Network {
 

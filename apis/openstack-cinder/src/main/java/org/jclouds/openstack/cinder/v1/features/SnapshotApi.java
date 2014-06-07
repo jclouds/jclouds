@@ -45,7 +45,6 @@ import com.google.common.collect.FluentIterable;
  * Provides synchronous access to Volume Snapshots via their REST API.
  * 
  * @see <a href="http://api.openstack.org/">API Doc</a>
- * @author Everett Toews
  */
 @SkipEncoding({'/', '='})
 @RequestFilters(AuthenticateRequest.class)

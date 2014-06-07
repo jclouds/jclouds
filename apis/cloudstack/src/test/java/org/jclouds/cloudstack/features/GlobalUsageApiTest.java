@@ -33,8 +33,6 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.reflect.Invokable;
 /**
  * Tests behavior of {@code GlobalUsageApi}
- *
- * @author Richard Downer
  */
 @Test(groups = "unit", testName = "GlobalUsageApiTest")
 public class GlobalUsageApiTest extends BaseCloudStackApiTest<GlobalUsageApi> {

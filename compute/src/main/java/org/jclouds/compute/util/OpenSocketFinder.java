@@ -25,8 +25,6 @@ import com.google.inject.ImplementedBy;
 
 /**
  * For finding an open/reachable ip:port for a node.
- * 
- * @author aled
  */
 @ImplementedBy(ConcurrentOpenSocketFinder.class)
 public interface OpenSocketFinder {

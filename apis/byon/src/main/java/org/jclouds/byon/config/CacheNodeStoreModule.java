@@ -32,10 +32,6 @@ import com.google.common.cache.LoadingCache;
 import com.google.inject.AbstractModule;
 import com.google.inject.TypeLiteral;
 
-/**
- * 
- * @author Adrian Cole
- */
 @ConfiguresNodeStore
 @Beta
 public class CacheNodeStoreModule extends AbstractModule {

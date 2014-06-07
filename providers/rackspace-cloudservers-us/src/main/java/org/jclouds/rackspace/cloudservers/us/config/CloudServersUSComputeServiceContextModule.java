@@ -25,10 +25,6 @@ import org.jclouds.openstack.nova.v2_0.compute.config.NovaComputeServiceContextM
 import com.google.common.collect.ImmutableMap;
 import com.google.inject.Injector;
 
-/**
- * 
- * @author Adrian Cole
- */
 public class CloudServersUSComputeServiceContextModule extends NovaComputeServiceContextModule {
 
    /**

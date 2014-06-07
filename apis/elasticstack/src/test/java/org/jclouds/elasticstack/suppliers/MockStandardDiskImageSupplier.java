@@ -37,8 +37,6 @@ import com.google.common.collect.ImmutableList;
 
 /**
  * Mock {@link WellKnownImageSupplier} to be used in tests.
- * 
- * @author Ignasi Barrera
  */
 @Singleton
 public class MockStandardDiskImageSupplier implements WellKnownImageSupplier {

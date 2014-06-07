@@ -39,10 +39,6 @@ import org.jclouds.openstack.nova.v2_0.extensions.SecurityGroupApi;
 import com.google.common.base.Function;
 import com.google.common.base.Optional;
 
-/**
- * 
- * @author Adrian Cole
- */
 @Singleton
 public class CreateSecurityGroupIfNeeded implements Function<ZoneSecurityGroupNameAndPorts, SecurityGroupInZone> {
    @Resource

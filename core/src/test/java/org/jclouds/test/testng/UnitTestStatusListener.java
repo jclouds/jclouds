@@ -27,9 +27,6 @@ import org.testng.ITestResult;
  * adapted from the following class:
  * 
  * @see org.UnitTestStatusListener.test.testng.UnitTestTestNGListener
- * @author Adrian Cole
- * @author dpospisi@redhat.com
- * @author Mircea.Markus@jboss.com
  */
 public class UnitTestStatusListener implements ITestListener {
 

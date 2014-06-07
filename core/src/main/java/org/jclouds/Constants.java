@@ -21,8 +21,6 @@ import org.jclouds.location.reference.LocationConstants;
 
 /**
  * Constants used in jclouds services.
- * 
- * @author Adrian Cole
  */
 public final class Constants {
    /**

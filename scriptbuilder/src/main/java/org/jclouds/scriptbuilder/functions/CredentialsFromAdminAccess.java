@@ -28,10 +28,6 @@ import org.jclouds.scriptbuilder.statements.login.AdminAccess;
 import com.google.common.base.Function;
 import com.google.common.util.concurrent.Atomics;
 
-/**
- * 
- * @author Adrian Cole
- */
 public enum CredentialsFromAdminAccess implements Function<Statement, Credentials> {
    INSTANCE;
    @Override

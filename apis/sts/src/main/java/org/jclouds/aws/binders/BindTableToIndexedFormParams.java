@@ -33,9 +33,6 @@ import com.google.common.collect.Multimaps;
 import com.google.common.collect.Table;
 import com.google.common.collect.Table.Cell;
 
-/**
- * @author Adrian Cole
- */
 public class BindTableToIndexedFormParams implements Binder {
 
    private final String rowPattern;

@@ -22,10 +22,6 @@ import static org.jclouds.dynect.v3.predicates.RecordPredicates.typeEquals;
 import org.jclouds.dynect.v3.domain.RecordId;
 import org.testng.annotations.Test;
 
-/**
- * 
- * @author Adrian Cole
- */
 @Test(groups = "unit")
 public class RecordPredicatesTest {
    RecordId recordId = recordIdBuilder()

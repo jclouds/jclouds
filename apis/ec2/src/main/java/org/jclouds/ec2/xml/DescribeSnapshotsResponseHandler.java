@@ -28,9 +28,6 @@ import org.xml.sax.SAXException;
 
 import com.google.common.collect.Sets;
 
-/**
- * @author Adrian Cole
- */
 public class DescribeSnapshotsResponseHandler extends ParseSax.HandlerWithResult<Set<Snapshot>> {
 
    private Set<Snapshot> snapshots = Sets.newLinkedHashSet();

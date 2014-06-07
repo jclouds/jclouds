@@ -28,9 +28,6 @@ import org.jclouds.blobstore.domain.StorageType;
 import com.google.common.base.Function;
 import com.google.common.collect.Iterables;
 
-/**
- * @author Adrian Cole
- */
 @Singleton
 public class ResourceMetadataListToDirectoryEntryList
          implements

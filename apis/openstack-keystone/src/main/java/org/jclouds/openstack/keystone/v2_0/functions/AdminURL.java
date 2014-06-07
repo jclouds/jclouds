@@ -25,9 +25,6 @@ import org.jclouds.openstack.keystone.v2_0.domain.Endpoint;
 import com.google.common.base.Supplier;
 import com.google.common.base.Suppliers;
 
-/**
- * @author Adam Lowe
- */
 @Singleton
 public class AdminURL implements EndpointToSupplierAdminURI {
    @Override

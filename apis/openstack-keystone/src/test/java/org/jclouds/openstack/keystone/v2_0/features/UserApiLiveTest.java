@@ -30,8 +30,6 @@ import org.testng.annotations.Test;
 
 /**
  * Tests UserApi
- * 
- * @author Adam Lowe
  */
 @Test(groups = "live", testName = "UserApiLiveTest", singleThreaded = true)
 public class UserApiLiveTest extends BaseKeystoneApiLiveTest {

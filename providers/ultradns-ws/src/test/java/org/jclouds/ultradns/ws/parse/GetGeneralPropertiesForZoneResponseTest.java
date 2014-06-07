@@ -26,9 +26,6 @@ import org.jclouds.ultradns.ws.domain.ZoneProperties;
 import org.jclouds.ultradns.ws.xml.ZonePropertiesHandler;
 import org.testng.annotations.Test;
 
-/**
- * @author Adrian Cole
- */
 @Test(testName = "GetGeneralPropertiesForZoneResponseTest")
 public class GetGeneralPropertiesForZoneResponseTest extends BaseHandlerTest {
 

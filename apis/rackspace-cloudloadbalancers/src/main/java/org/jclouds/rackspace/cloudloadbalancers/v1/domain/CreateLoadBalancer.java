@@ -32,8 +32,6 @@ import com.google.common.collect.ImmutableSet;
 
 /**
  * Used to create Load Balancers.
- * 
- * @author Adrian Cole
  */
 public class CreateLoadBalancer extends BaseLoadBalancer<AddNode, CreateLoadBalancer> {
 

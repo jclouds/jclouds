@@ -27,8 +27,6 @@ import org.jclouds.providers.internal.BaseProviderMetadata;
 
 /**
  * Implementation of {@link org.jclouds.types.ProviderMetadata} for ElasticHosts San Antonio Peer 1.
- * 
- * @author Adrian Cole
  */
 public class ElasticHostsPeer1SanAntonioProviderMetadata extends BaseProviderMetadata {
 

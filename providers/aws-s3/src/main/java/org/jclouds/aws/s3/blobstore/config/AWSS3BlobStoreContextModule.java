@@ -30,11 +30,6 @@ import org.jclouds.s3.blobstore.config.S3BlobStoreContextModule;
 
 import com.google.inject.Scopes;
 
-/**
- * 
- * 
- * @author Tibor Kiss
- */
 public class AWSS3BlobStoreContextModule extends S3BlobStoreContextModule {
 
    @Override

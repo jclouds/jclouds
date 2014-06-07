@@ -21,10 +21,6 @@ import com.google.common.reflect.TypeToken;
 import com.google.inject.Binder;
 import com.google.inject.TypeLiteral;
 
-/**
- * 
- * @author Adrian Cole
- */
 public class BinderUtils {
 
    /**

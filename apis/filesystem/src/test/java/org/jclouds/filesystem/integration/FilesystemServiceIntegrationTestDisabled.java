@@ -24,9 +24,6 @@ import org.jclouds.filesystem.reference.FilesystemConstants;
 import org.jclouds.filesystem.utils.TestUtils;
 import org.testng.annotations.Test;
 
-/**
- * @author Adrian Cole
- */
 @Test(groups = { "integration", "live" }, testName = "blobstore.FilesystemServiceIntegrationTest")
 public class FilesystemServiceIntegrationTestDisabled extends BaseServiceIntegrationTest {
    public FilesystemServiceIntegrationTestDisabled() {

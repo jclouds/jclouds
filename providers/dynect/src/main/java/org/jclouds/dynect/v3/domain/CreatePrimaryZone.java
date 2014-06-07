@@ -27,9 +27,6 @@ import org.jclouds.dynect.v3.domain.Zone.SerialStyle;
 import com.google.common.base.Function;
 import com.google.common.base.Objects;
 
-/**
- * @author Adrian Cole
- */
 public final class CreatePrimaryZone {
    // persisted via path param
    private final transient String fqdn;

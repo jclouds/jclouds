@@ -30,8 +30,6 @@ import com.google.common.collect.ImmutableSet;
 
 /**
  * Tests parsing and guice wiring of ServerWithSecurityGroupsApi
- *
- * @author Adam Lowe
  */
 @Test(groups = "unit", testName = "ServerWithSecurityGroupsApiExpectTest")
 public class ServerWithSecurityGroupsApiExpectTest extends BaseNovaApiExpectTest {

@@ -40,7 +40,6 @@ import com.google.common.collect.FluentIterable;
  * Provides synchronous access to IP Addresses.
  * <p/>
  *
- * @author Adrian Cole, Mattias Holmqvist, Adam Lowe
  * @see <a href="https://github.com/GleSYS/API/wiki/API-Documentation" />
  */
 @RequestFilters(BasicAuthentication.class)

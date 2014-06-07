@@ -18,8 +18,6 @@ package org.jclouds.openstack.keystone.v2_0.config;
 
 /**
  * Configuration properties and constants used in Keystone connections.
- *
- * @author Adrian Cole
  */
 public interface KeystoneProperties {
 

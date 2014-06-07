@@ -32,9 +32,6 @@ import org.jclouds.ovf.DiskSection;
 import org.jclouds.util.SaxUtils;
 import org.xml.sax.Attributes;
 
-/**
- * @author Adrian Cole
- */
 public class DiskSectionHandler extends SectionHandler<DiskSection, DiskSection.Builder> {
 
    @Resource

@@ -19,10 +19,6 @@ package org.jclouds.byon;
 import org.jclouds.compute.internal.BaseComputeServiceApiMetadataTest;
 import org.testng.annotations.Test;
 
-/**
- * 
- * @author Adrian Cole
- */
 @Test(groups = "unit", testName = "BYONApiMetadataTest")
 public class BYONApiMetadataTest extends BaseComputeServiceApiMetadataTest {
 

@@ -26,11 +26,6 @@ import org.jclouds.azureblob.domain.ListBlobsResponse;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Sets;
 
-/**
- * 
- * @author Adrian Cole
- * 
- */
 public class HashSetListBlobsResponse extends BoundedHashSet<BlobProperties> implements
          ListBlobsResponse {
 

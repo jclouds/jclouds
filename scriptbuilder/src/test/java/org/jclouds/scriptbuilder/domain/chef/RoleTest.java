@@ -22,8 +22,6 @@ import org.testng.annotations.Test;
 
 /**
  * Unit tests for the {@link Role} class.
- * 
- * @author Ignasi Barrera
  */
 @Test(groups = "unit", testName = "RoleTest")
 public class RoleTest {

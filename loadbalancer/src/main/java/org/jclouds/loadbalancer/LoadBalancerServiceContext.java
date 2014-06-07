@@ -26,10 +26,6 @@ import com.google.inject.ImplementedBy;
 
 /**
  * Represents a cloud that has LoadBalancer functionality.
- * 
- * 
- * @author Adrian Cole
- * 
  */
 @ImplementedBy(LoadBalancerServiceContextImpl.class)
 public interface LoadBalancerServiceContext extends Closeable, View {

@@ -31,10 +31,6 @@ import com.google.common.collect.ImmutableMap;
 import com.google.inject.AbstractModule;
 import com.google.inject.Provides;
 
-/**
- * @author Adrian Cole
- * @author Adam Lowe
- */
 public class GleSYSParserModule extends AbstractModule {
 
    @Provides

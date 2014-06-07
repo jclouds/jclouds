@@ -40,8 +40,6 @@ import com.google.common.collect.Iterables;
 
 /**
  * Tests behavior of {@code GlobalPodApi}
- *
- * @author Richard Downer
  */
 @Test(groups = "live", singleThreaded = true, testName = "GlobalPodApiLiveTest")
 public class GlobalPodApiLiveTest extends BaseCloudStackApiLiveTest {

@@ -41,10 +41,6 @@ import com.google.common.collect.ImmutableList;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 
-/**
- * 
- * @author Adrian Cole
- */
 public abstract class BaseParserTest<T, G> {
 
    @Retention(value = RetentionPolicy.RUNTIME)

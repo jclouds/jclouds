@@ -26,8 +26,6 @@ import java.lang.annotation.Target;
  * Selects a name in a json structure as opposed to parsing from root.
  * 
  * ex. for "foo" { "foo" :"bar" } becomes "bar"
- * 
- * @author Adrian Cole
  */
 @Target(METHOD)
 @Retention(RUNTIME)

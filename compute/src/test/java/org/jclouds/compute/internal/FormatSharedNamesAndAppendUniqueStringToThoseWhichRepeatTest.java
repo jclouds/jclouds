@@ -33,10 +33,6 @@ import com.google.inject.Guice;
 import com.google.inject.TypeLiteral;
 import com.google.inject.name.Names;
 
-/**
- * 
- * @author Adrian Cole
- */
 @Test(testName = "FormatSharedNamesAndAppendUniqueStringToThoseWhichRepeatTest")
 public class FormatSharedNamesAndAppendUniqueStringToThoseWhichRepeatTest {
    Validator<String> okValidator = new Validator<String>() {

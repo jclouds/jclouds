@@ -32,8 +32,6 @@ import com.google.inject.Module;
 
 /**
  * Implementation of {@link ApiMetadata} for Amazon's Simple Queue Service api.
- * 
- * @author Adrian Cole
  */
 public class SQSApiMetadata extends BaseHttpApiMetadata {
    

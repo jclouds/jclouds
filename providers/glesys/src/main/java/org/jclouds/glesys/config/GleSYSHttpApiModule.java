@@ -33,8 +33,6 @@ import com.google.inject.Scopes;
 
 /**
  * Configures the GleSYS connection.
- * 
- * @author Adrian Cole
  */
 @ConfiguresRestClient
 public class GleSYSHttpApiModule extends HttpApiModule<GleSYSApi> {

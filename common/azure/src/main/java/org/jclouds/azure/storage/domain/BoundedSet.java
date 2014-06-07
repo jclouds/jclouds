@@ -19,11 +19,6 @@ package org.jclouds.azure.storage.domain;
 import java.net.URI;
 import java.util.Set;
 
-/**
- * 
- * @author Adrian Cole
- * 
- */
 public interface BoundedSet<T> extends Set<T> {
    URI getUrl();
 

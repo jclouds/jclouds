@@ -43,8 +43,6 @@ import com.google.common.util.concurrent.ListeningExecutorService;
 
 /**
  * Google App Engine version of {@link HttpCommandExecutorService}
- * 
- * @author Adrian Cole
  */
 @SingleThreaded
 @Singleton

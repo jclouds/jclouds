@@ -46,8 +46,6 @@ import com.google.common.collect.Sets;
 
 /**
  * Tests behavior of {@code ElasticBlockStoreApi}
- * 
- * @author Adrian Cole
  */
 @Test(groups = "live", singleThreaded = true, testName = "ElasticBlockStoreApiLiveTest")
 public class ElasticBlockStoreApiLiveTest extends BaseComputeServiceContextLiveTest {

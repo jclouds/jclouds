@@ -42,8 +42,6 @@ import com.google.common.collect.Iterables;
 
 /**
  * Tests SnapshotApi Guice wiring and parsing
- *
- * @author Everett Toews
  */
 @Test(groups = "unit", testName = "SnapshotApiExpectTest")
 public class SnapshotApiExpectTest extends BaseCinderApiExpectTest {

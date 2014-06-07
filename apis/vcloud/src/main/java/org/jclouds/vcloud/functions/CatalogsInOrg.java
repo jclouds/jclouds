@@ -30,9 +30,6 @@ import org.jclouds.vcloud.domain.ReferenceType;
 
 import com.google.common.base.Function;
 
-/**
- * @author Adrian Cole
- */
 @Singleton
 public class CatalogsInOrg implements Function<Org, Iterable<Catalog>> {
    @Resource

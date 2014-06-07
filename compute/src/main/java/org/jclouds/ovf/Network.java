@@ -17,10 +17,6 @@
 package org.jclouds.ovf;
 
 
-/**
- * 
- * @author Adrian Cole
- */
 public class Network {
    public static Builder builder() {
       return new Builder();

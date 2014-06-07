@@ -31,8 +31,6 @@ import com.google.common.collect.ImmutableSet;
 
 /**
  * Tests annotation parsing of {@code KeyPairAsyncApi}
- * 
- * @author Michael Arnold
  */
 @Test(groups = "unit", testName = "KeyPairApiExpectTest")
 public class KeyPairApiExpectTest extends BaseNovaApiExpectTest {

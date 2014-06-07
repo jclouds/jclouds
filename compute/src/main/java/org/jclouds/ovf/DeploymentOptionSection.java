@@ -29,8 +29,6 @@ import com.google.common.collect.Sets;
  * the OVF shall select a configuration, for example, by prompting the user. The selected
  * configuration is visible in the OVF environment, enabling guest software to adapt to the selected
  * configuration.
- * 
- * @author Adrian Cole
  */
 public class DeploymentOptionSection extends Section<DeploymentOptionSection> {
 

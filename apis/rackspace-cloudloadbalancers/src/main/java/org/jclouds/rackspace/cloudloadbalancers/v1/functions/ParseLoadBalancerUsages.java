@@ -41,8 +41,6 @@ import com.google.inject.TypeLiteral;
 
 /**
  * boiler plate until we determine a better way
- * 
- * @author Everett Toews
  */
 @Singleton
 public class ParseLoadBalancerUsages extends ParseJson<LoadBalancerUsages> {

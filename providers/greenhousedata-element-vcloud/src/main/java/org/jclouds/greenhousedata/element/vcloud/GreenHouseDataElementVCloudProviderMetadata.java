@@ -32,8 +32,6 @@ import com.google.inject.Module;
 
 /**
  * Implementation of {@link org.jclouds.types.ProviderMetadata} for Green House Data Element vCloud
- * 
- * @author Adrian Cole
  */
 public class GreenHouseDataElementVCloudProviderMetadata extends BaseProviderMetadata {
 

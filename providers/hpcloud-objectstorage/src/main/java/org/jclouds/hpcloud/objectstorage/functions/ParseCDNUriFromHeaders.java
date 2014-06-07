@@ -27,8 +27,6 @@ import com.google.common.base.Function;
 
 /**
  * This parses {@link AccountMetadata} from HTTP headers.
- * 
- * @author James Murty
  */
 public class ParseCDNUriFromHeaders implements Function<HttpResponse, URI> {
 

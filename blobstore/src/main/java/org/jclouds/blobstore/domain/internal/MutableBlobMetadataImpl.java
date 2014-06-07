@@ -27,8 +27,6 @@ import org.jclouds.io.payloads.BaseMutableContentMetadata;
 
 /**
  * System and user Metadata for the {@link Blob}.
- * 
- * @author Adrian Cole
  */
 public class MutableBlobMetadataImpl extends MutableStorageMetadataImpl implements MutableBlobMetadata {
 

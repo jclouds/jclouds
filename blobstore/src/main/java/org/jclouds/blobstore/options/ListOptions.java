@@ -30,8 +30,6 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * BlobStore connection = // get connection
  * Future<BoundedSortedSet<ResourceMetadata>> list = connection.list(maxResults(1000));
  * <code>
- * 
- * @author Adrian Cole
  */
 public class ListOptions implements Cloneable {
 

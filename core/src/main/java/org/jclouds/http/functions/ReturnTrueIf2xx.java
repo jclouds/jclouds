@@ -26,8 +26,6 @@ import com.google.common.base.Function;
 
 /**
  * Simply returns true when the http response code is in the range 200-299.
- * 
- * @author Adrian Cole
  */
 @Singleton
 public class ReturnTrueIf2xx implements Function<HttpResponse, Boolean> {

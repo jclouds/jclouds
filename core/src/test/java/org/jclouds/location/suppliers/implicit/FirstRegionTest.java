@@ -33,8 +33,6 @@ import com.google.common.collect.ImmutableSet;
 
 /**
  * Tests behavior of {@code FirstRegion}
- * 
- * @author Adrian Cole
  */
 @Test(groups = "unit", testName = "FirstRegionTest")
 public class FirstRegionTest {

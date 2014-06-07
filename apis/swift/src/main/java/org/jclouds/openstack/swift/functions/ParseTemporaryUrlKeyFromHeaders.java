@@ -22,9 +22,6 @@ import org.jclouds.http.HttpResponse;
 
 import com.google.common.base.Function;
 
-/**
- * @author Andrei Savu
- */
 public class ParseTemporaryUrlKeyFromHeaders implements Function<HttpResponse, String> {
 
    @Override

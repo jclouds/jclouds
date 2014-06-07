@@ -34,10 +34,6 @@ import org.jclouds.vcloud.endpoints.Org;
 
 import com.google.common.base.Supplier;
 
-/**
- * 
- * @author Adrian Cole
- */
 @Singleton
 public class OrgNameCatalogNameVAppTemplateNameToEndpoint implements MapBinder {
    private final Supplier<Map<String, Map<String, Map<String, CatalogItem>>>> orgCatalogItemMap;

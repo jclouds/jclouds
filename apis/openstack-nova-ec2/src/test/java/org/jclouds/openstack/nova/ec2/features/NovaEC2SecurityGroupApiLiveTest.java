@@ -19,10 +19,6 @@ package org.jclouds.openstack.nova.ec2.features;
 import org.jclouds.ec2.features.SecurityGroupApiLiveTest;
 import org.testng.annotations.Test;
 
-/**
- * 
- * @author Adrian Cole
- */
 @Test(groups = "live", singleThreaded = true, testName = "NovaEC2SecurityGroupApiLiveTest")
 public class NovaEC2SecurityGroupApiLiveTest extends SecurityGroupApiLiveTest {
    public NovaEC2SecurityGroupApiLiveTest() {

@@ -34,8 +34,6 @@ import com.google.common.collect.Maps;
 
 /**
  * Class Account
- *
- * @author Adrian Cole
  */
 public class Account extends ForwardingSet<User> {
 

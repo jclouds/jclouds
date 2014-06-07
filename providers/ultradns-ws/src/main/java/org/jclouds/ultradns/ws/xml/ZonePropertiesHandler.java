@@ -30,10 +30,6 @@ import org.jclouds.ultradns.ws.domain.Zone.Type;
 import org.jclouds.ultradns.ws.domain.ZoneProperties;
 import org.xml.sax.Attributes;
 
-/**
- * 
- * @author Adrian Cole
- */
 public class ZonePropertiesHandler extends ParseSax.HandlerForGeneratedRequestWithResult<ZoneProperties> {
 
    private final DateService dateService;

@@ -25,8 +25,6 @@ import org.jclouds.rest.ConfiguresHttpApi;
 
 /**
  * Configures the EC2 connection.
- * 
- * @author Adrian Cole (EDIT: Nick Terry nterry@familysearch.org)
  */
 @ConfiguresHttpApi
 public class EC2HttpApiModule extends BaseEC2HttpApiModule<EC2Api> {

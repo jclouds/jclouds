@@ -30,8 +30,6 @@ import com.google.inject.Singleton;
  * 
  * This class delegates parsing to {@link ParseLoadBalancerListFromJsonResponse}
  * .
- * 
- * @author Oleksiy Yarmula
  */
 @Singleton
 public class ParseLoadBalancerFromJsonResponse implements

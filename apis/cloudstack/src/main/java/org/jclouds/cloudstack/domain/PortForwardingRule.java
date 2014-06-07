@@ -30,8 +30,6 @@ import com.google.common.collect.ImmutableSet;
 
 /**
  * Class PortForwardingRule
- *
- * @author Adrian Cole, Andrei Savu
  */
 public class PortForwardingRule implements Comparable<PortForwardingRule> {
 

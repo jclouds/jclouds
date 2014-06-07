@@ -18,9 +18,6 @@ package org.jclouds.domain;
 
 import com.google.common.base.Objects;
 
-/**
- * @author Adrian Cole
- */
 public class Credentials {
    public static class Builder<T extends Credentials> {
       protected String identity;

@@ -56,8 +56,6 @@ import com.google.common.util.concurrent.ListeningExecutorService;
 
 /**
  * Implementation of {@link AtmosAsyncClient} which keeps all data in a local Map object.
- * 
- * @author Adrian Cole
  */
 public class StubAtmosAsyncClient implements AtmosAsyncClient {
    private final HttpGetOptionsListToGetOptions httpGetOptionsConverter;

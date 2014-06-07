@@ -29,8 +29,6 @@ import com.google.common.collect.Iterables;
 
 /**
  * Binds the Iterable to query parameters named with UserGroup.index
- * 
- * @author Adrian Cole
  */
 @Singleton
 public class BindUserGroupsToIndexedFormParams implements Binder {

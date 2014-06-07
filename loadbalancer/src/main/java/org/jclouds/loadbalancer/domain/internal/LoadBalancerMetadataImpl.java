@@ -29,9 +29,6 @@ import org.jclouds.loadbalancer.domain.LoadBalancerType;
 
 import com.google.common.collect.ImmutableSet;
 
-/**
- * @author Adrian Cole
- */
 public class LoadBalancerMetadataImpl extends ResourceMetadataImpl<LoadBalancerType> implements LoadBalancerMetadata {
 
    private final String id;

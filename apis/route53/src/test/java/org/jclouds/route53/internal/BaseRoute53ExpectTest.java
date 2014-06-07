@@ -25,10 +25,6 @@ import org.jclouds.rest.internal.BaseRestApiExpectTest;
 import org.jclouds.route53.config.Route53HttpApiModule;
 
 import com.google.inject.Module;
-/**
- * 
- * @author Adrian Cole
- */
 public class BaseRoute53ExpectTest<T> extends BaseRestApiExpectTest<T> {
 
    public BaseRoute53ExpectTest() {

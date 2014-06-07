@@ -26,7 +26,6 @@ import com.google.common.base.Objects.ToStringHelper;
 /**
  * IP address
  * 
- * @author AdrianCole
 */
 public class Address {
 

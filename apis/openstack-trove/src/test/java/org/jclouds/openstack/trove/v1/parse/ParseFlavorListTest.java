@@ -32,10 +32,6 @@ import org.testng.annotations.Test;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 
-/**
- * 
- * @author Zack Shoylev
- */
 
 @Test(groups = "unit", testName = "ParseFlavorTest")
 public class ParseFlavorListTest extends BaseSetParserTest<Flavor> {

@@ -28,9 +28,6 @@ import org.xml.sax.SAXException;
 
 import com.google.common.collect.Sets;
 
-/**
- * @author Adrian Cole
- */
 public class DescribeVolumesResponseHandler extends ParseSax.HandlerWithResult<Set<Volume>> {
 
    private Set<Volume> volumes = Sets.newLinkedHashSet();

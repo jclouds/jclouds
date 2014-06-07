@@ -35,10 +35,6 @@ import org.jclouds.s3.reference.S3Constants;
 import com.google.common.base.Throwables;
 import com.jamesmurty.utils.XMLBuilder;
 
-/**
- * 
- * @author James Murty
- */
 @Singleton
 public class BindACLToXMLPayload implements Binder {
    @Override

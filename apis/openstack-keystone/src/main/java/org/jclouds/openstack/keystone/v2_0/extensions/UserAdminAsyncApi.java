@@ -48,7 +48,6 @@ import com.google.common.util.concurrent.ListenableFuture;
  * <p/>
  * 
  * @see org.jclouds.openstack.keystone.v2_0.extensions.UserAdminApi
- * @author Pedro Navarro
  */
 @Beta
 @Extension(of = ServiceType.IDENTITY, namespace = ExtensionNamespaces.OS_KSADM)

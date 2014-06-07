@@ -22,9 +22,6 @@ import com.google.common.base.Throwables;
  * <tt>Logger</tt> that logs to the console
  * <p />
  * Useful to get baseline performance unaffected by logging.
- * 
- * @author Adrian Cole
- * 
  */
 public class ConsoleLogger implements Logger {
 

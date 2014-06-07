@@ -25,11 +25,6 @@ import org.jclouds.javax.annotation.Nullable;
 
 import com.google.common.collect.Iterables;
 
-/**
- * 
- * @author Adrian Cole
- * 
- */
 public class BoundedLinkedHashSet<T> extends LinkedHashSet<T> implements BoundedSet<T> {
 
    protected final String token;

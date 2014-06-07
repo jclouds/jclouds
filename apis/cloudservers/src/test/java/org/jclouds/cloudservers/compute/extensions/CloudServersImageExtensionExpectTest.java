@@ -33,11 +33,6 @@ import com.google.common.collect.ImmutableMap.Builder;
 import com.google.common.net.HttpHeaders;
 import com.google.common.util.concurrent.Futures;
 
-/**
- * 
- * @author David Alves
- * 
- */
 @Test(groups = "unit", testName = "CloudServersImageExtensionExpectTest")
 public class CloudServersImageExtensionExpectTest extends BaseCloudServersComputeServiceExpectTest<ComputeService> {
    private HttpRequest getServerDetail = HttpRequest.builder().method("GET")

@@ -31,8 +31,6 @@ import com.google.inject.Module;
 
 /**
  * Implementation of {@link ApiMetadata} for API
- * 
- * @author Adrian Cole
  */
 public class SoftLayerApiMetadata extends BaseHttpApiMetadata<SoftLayerApi> {
 

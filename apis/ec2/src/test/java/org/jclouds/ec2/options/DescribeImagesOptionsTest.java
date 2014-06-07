@@ -28,8 +28,6 @@ import org.testng.annotations.Test;
 
 /**
  * Tests possible uses of DescribeImagesOptions and DescribeImagesOptions.Builder.*
- * 
- * @author Adrian Cole
  */
 public class DescribeImagesOptionsTest {
 

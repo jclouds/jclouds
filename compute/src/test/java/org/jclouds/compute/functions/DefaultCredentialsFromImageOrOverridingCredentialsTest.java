@@ -28,10 +28,6 @@ import org.jclouds.compute.options.TemplateOptions;
 import org.jclouds.domain.LoginCredentials;
 import org.testng.annotations.Test;
 
-/**
- * 
- * @author Adrian Cole
- */
 @Test(groups = "unit", testName = "DefaultLoginCredentialsFromImageOrOverridingLoginCredentialsTest")
 public class DefaultCredentialsFromImageOrOverridingCredentialsTest {
    private static final DefaultCredentialsFromImageOrOverridingCredentials fn = new DefaultCredentialsFromImageOrOverridingCredentials();

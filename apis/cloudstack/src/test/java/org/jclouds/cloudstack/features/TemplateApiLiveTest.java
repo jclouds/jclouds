@@ -51,8 +51,6 @@ import com.google.common.collect.Iterables;
 
 /**
  * Tests behavior of {@code TemplateApi}
- * 
- * @author Adrian Cole
  */
 @Test(groups = "live", singleThreaded = true, testName = "TemplateApiLiveTest")
 public class TemplateApiLiveTest extends BaseCloudStackApiLiveTest {

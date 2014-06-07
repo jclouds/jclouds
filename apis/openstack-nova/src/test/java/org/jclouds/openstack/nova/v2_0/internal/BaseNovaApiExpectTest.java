@@ -20,8 +20,6 @@ import org.jclouds.openstack.nova.v2_0.NovaApi;
 
 /**
  * Base class for writing KeyStone Rest Api Expect tests
- * 
- * @author Adrian Cole
  */
 public class BaseNovaApiExpectTest extends BaseNovaExpectTest<NovaApi> {
 

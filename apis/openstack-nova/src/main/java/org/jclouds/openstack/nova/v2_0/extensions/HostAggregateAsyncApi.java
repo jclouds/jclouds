@@ -48,7 +48,6 @@ import com.google.common.util.concurrent.ListenableFuture;
 /**
  * Provide access to Aggregates in Nova.
  *
- * @author Adam Lowe
  * @see HostAggregateApi
  */
 @Beta

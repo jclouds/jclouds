@@ -34,10 +34,6 @@ import com.google.common.collect.ImmutableSet;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 
-/**
- * 
- * @author Adrian Cole
- */
 @Test(groups = "unit", testName = "ParseExtensionListNormalTest")
 public class ParseExtensionListNormalTest extends BaseSetParserTest<Extension> {
 

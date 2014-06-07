@@ -52,7 +52,6 @@ import org.jclouds.vcloud.xml.CatalogItemHandler;
  * <p/>
  * 
  * @see <a href="http://communities.vmware.com/community/developer/forums/vcloudapi" />
- * @author Adrian Cole
  */
 @RequestFilters(AddVCloudAuthorizationAndCookieToRequest.class)
 public interface CatalogApi {

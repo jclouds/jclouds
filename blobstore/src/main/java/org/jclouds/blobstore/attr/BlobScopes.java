@@ -18,9 +18,6 @@ package org.jclouds.blobstore.attr;
 
 /**
  * Represents the ways a Blob is named.
- * 
- * @author Adrian Cole
- * 
  */
 public enum BlobScopes {
 

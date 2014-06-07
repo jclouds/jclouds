@@ -30,8 +30,6 @@ import com.google.common.collect.Maps;
 
 /**
  * Creates an environment file
- * 
- * @author Adrian Cole
  */
 public class EnvBuilder {
 

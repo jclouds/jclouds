@@ -37,9 +37,6 @@ import org.jclouds.logging.Logger;
 import com.google.common.base.Supplier;
 import com.google.common.collect.ImmutableMap;
 
-/**
- * @author Oleksiy Yarmula
- */
 public class SharedKeyLiteAuthentication implements HttpRequestFilter {
 
    private final Supplier<Credentials> creds;

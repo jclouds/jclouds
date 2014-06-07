@@ -47,7 +47,6 @@ import com.google.common.base.Function;
 import com.google.common.base.Splitter;
 import com.google.common.collect.ImmutableMap;
 
-/** @author Adrian Cole */
 @Singleton
 public class VAppToNodeMetadata implements Function<VApp, NodeMetadata> {
    @Resource

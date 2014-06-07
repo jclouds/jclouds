@@ -18,7 +18,6 @@ package org.jclouds.openstack.swift.extensions;
 
 
 /**
- * @author Andrei Savu
  * @see <a href="http://docs.rackspace.com/files/api/v1/cf-devguide/content/Public_Access_to_Account-d1a4440.html" />
  */
 public interface TemporaryUrlKeyApi {

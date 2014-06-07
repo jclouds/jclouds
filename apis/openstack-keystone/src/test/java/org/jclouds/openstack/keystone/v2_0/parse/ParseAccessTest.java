@@ -41,9 +41,6 @@ import static org.jclouds.openstack.v2_0.ServiceType.OBJECT_STORE;
 import static org.jclouds.openstack.v2_0.ServiceType.QUEUES;
 
 
-/**
- * @author Adrian Cole
- */
 @Test(groups = "unit", testName = "ParseAccessTest")
 public class ParseAccessTest extends BaseItemParserTest<Access> {
 

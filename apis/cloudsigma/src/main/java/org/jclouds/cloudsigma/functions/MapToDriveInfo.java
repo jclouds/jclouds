@@ -34,10 +34,6 @@ import com.google.common.base.Function;
 import com.google.common.base.Splitter;
 import com.google.common.collect.Maps;
 
-/**
- * 
- * @author Adrian Cole
- */
 @Singleton
 public class MapToDriveInfo implements Function<Map<String, String>, DriveInfo> {
 

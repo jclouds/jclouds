@@ -33,7 +33,6 @@ import com.google.common.collect.ImmutableSet;
  * @see <a href=
  *      "http://docs.amazonwebservices.com/AWSEC2/latest/APIReference/ApiReference-ItemType-SecurityGroupItemType.html"
  *      />
- * @author Adrian Cole
  */
 public class SecurityGroup extends ForwardingSet<IpPermission> {
 

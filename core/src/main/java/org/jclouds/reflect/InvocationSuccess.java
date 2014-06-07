@@ -28,8 +28,6 @@ import com.google.common.base.Optional;
 
 /**
  * Holds the context of a successful call to {@link com.google.common.reflect.Invokable#invoke(Object, Object...)}
- * 
- * @author Adrian Cole
  */
 @Beta
 public final class InvocationSuccess {

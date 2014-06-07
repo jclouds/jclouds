@@ -25,7 +25,6 @@ import com.google.common.io.Closer;
 import com.google.common.io.InputSupplier;
 
 /**
- * @author Adrian Cole
  * @deprecated see ByteSourcePayload
  */
 @Deprecated

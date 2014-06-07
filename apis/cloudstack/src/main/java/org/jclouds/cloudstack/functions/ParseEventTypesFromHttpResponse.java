@@ -33,9 +33,6 @@ import com.google.common.collect.ImmutableSet.Builder;
 import com.google.inject.Inject;
 import com.google.inject.TypeLiteral;
 
-/**
- * @author Vijay Kiran
- */
 @Singleton
 public class ParseEventTypesFromHttpResponse implements Function<HttpResponse, Set<String>> {
    private final ParseFirstJsonValueNamed<Set<EventType>> parser;

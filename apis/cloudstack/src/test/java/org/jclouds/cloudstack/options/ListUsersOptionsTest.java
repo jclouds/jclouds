@@ -35,8 +35,6 @@ import com.google.common.collect.ImmutableSet;
 
 /**
  * Tests behavior of {@code ListUsersOptions}
- *
- * @author Andrei Savu
  */
 @Test(groups = "unit")
 public class ListUsersOptionsTest {

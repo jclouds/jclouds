@@ -35,9 +35,6 @@ import com.google.common.base.Function;
 import com.google.common.collect.ImmutableMap;
 import com.google.inject.Module;
 
-/**
- * @author Adrian Cole
- */
 public abstract class BaseBlobSignerExpectTest extends BaseRestClientExpectTest<BlobStore> {
 
    /**

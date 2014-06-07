@@ -36,10 +36,6 @@ import com.google.common.base.Function;
 import com.google.common.base.Predicate;
 import com.google.common.base.Supplier;
 
-/**
- * 
- * @author Adrian Cole
- */
 @Singleton
 public class DefaultNetworkForVDC implements Function<ReferenceType, ReferenceType> {
 

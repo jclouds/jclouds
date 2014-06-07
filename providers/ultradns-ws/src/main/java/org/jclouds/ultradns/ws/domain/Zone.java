@@ -22,10 +22,6 @@ import static com.google.common.base.Preconditions.checkNotNull;
 import com.google.common.base.Objects;
 import com.google.common.base.Optional;
 
-/**
- * 
- * @author Adrian Cole
- */
 public final class Zone {
 
    private final String id;

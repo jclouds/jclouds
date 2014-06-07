@@ -25,9 +25,6 @@ import org.xml.sax.SAXException;
 
 import static org.jclouds.util.SaxUtils.equalsOrSuffix;
 
-/**
- * @author Andrei Savu
- */
 public class DeleteResultHandler extends ParseSax.HandlerForGeneratedRequestWithResult<DeleteResult> {
 
    public static final String DELETED_TAG = "Deleted";

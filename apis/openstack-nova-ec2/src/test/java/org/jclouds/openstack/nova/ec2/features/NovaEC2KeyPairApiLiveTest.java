@@ -36,8 +36,6 @@ import org.testng.annotations.Test;
 
 /**
  * Tests behavior of {@code NovaKeyPairApi}
- * 
- * @author Adam Lowe
  */
 @Test(groups = "live", singleThreaded = true)
 public class NovaEC2KeyPairApiLiveTest extends BaseComputeServiceContextLiveTest {

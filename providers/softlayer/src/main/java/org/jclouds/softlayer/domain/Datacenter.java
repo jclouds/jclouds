@@ -30,7 +30,6 @@ import com.google.common.collect.ImmutableSet;
 /**
  * Class Datacenter
  *
- * @author Adrian Cole
  * @see <a href= "http://sldn.softlayer.com/reference/datatypes/SoftLayer_Location_Datacenter"
 />
  */

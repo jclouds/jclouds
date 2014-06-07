@@ -44,8 +44,6 @@ import com.google.common.collect.Iterables;
  * Tests behavior of HostAdministrationApi
  * 
  * TODO test migration methods
- * 
- * @author Adam Lowe
  */
 @Test(groups = "live", testName = "AdminActionsApiLiveTest", singleThreaded = true)
 public class AdminActionsApiLiveTest extends BaseNovaApiLiveTest {

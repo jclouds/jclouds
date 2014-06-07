@@ -36,8 +36,6 @@ import com.google.common.collect.ImmutableMultimap;
 /**
  * Tests possible uses of RegisterImageBackedByEbsOptions and
  * RegisterImageBackedByEbsOptions.Builder.*
- * 
- * @author Adrian Cole
  */
 public class RegisterImageBackedByEbsOptionsTest {
 

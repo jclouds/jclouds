@@ -31,10 +31,6 @@ import org.jclouds.io.payloads.UrlEncodedFormPayload;
 import com.google.common.collect.Multimap;
 import com.google.common.io.ByteSource;
 
-/**
- * 
- * @author Adrian Cole
- */
 public class Payloads {
    private Payloads() {
    }

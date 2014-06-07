@@ -30,10 +30,6 @@ import com.google.common.collect.FluentIterable;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.ImmutableSet.Builder;
 
-/**
- * 
- * @author Adrian Cole
- */
 public class AccountLevelGroupsHandler extends
       ParseSax.HandlerForGeneratedRequestWithResult<FluentIterable<AccountLevelGroup>> {
 

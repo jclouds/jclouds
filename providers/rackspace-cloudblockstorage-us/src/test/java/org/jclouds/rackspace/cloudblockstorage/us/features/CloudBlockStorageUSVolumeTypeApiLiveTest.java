@@ -19,9 +19,6 @@ package org.jclouds.rackspace.cloudblockstorage.us.features;
 import org.jclouds.openstack.cinder.v1.features.VolumeTypeApiLiveTest;
 import org.testng.annotations.Test;
 
-/**
- * @author Everett Toews
- */
 @Test(groups = "live", testName = "CloudBlockStorageUSVolumeTypeApiLiveTest")
 public class CloudBlockStorageUSVolumeTypeApiLiveTest extends VolumeTypeApiLiveTest {
     public CloudBlockStorageUSVolumeTypeApiLiveTest() {

@@ -23,8 +23,6 @@ import org.jclouds.predicates.Validator;
  *
  * @see org.jclouds.rest.InputParamValidator
  * @see org.jclouds.predicates.Validator
- *
- * @author Alfredo "Rainbowbreeze" Morresi
  */
 public abstract class FilesystemBlobKeyValidator extends Validator<String> {
 }

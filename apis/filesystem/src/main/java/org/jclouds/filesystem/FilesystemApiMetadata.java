@@ -24,8 +24,6 @@ import org.jclouds.filesystem.config.FilesystemBlobStoreContextModule;
 
 /**
  * Implementation of {@link ApiMetadata} for jclouds Filesystem-based BlobStore
- * 
- * @author Adrian Cole
  */
 public class FilesystemApiMetadata extends BaseApiMetadata {
 

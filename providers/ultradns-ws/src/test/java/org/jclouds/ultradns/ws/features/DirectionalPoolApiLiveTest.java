@@ -52,9 +52,6 @@ import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Multimap;
 
-/**
- * @author Adrian Cole
- */
 @Test(groups = "live", singleThreaded = true, testName = "DirectionalPoolApiLiveTest")
 public class DirectionalPoolApiLiveTest extends BaseDirectionalApiLiveTest {
 

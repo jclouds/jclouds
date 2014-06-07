@@ -31,9 +31,6 @@ import org.xml.sax.SAXException;
 import com.google.common.base.Supplier;
 import com.google.inject.Inject;
 
-/**
- * @author Adrian Cole
- */
 public class AWSEC2SecurityGroupHandler extends HandlerForGeneratedRequestWithResult<SecurityGroup> {
 
    protected final AWSEC2IpPermissionHandler ipPermissionHandler;

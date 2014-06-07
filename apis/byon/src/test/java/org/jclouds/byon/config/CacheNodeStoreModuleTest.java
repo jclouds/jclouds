@@ -41,10 +41,6 @@ import com.google.inject.Key;
 import com.google.inject.TypeLiteral;
 import com.google.inject.util.Providers;
 
-/**
- * 
- * @author Adrian Cole
- */
 @Test(groups = "unit", singleThreaded = true, testName = "CacheNodeStoreModuleTest")
 public class CacheNodeStoreModuleTest {
 

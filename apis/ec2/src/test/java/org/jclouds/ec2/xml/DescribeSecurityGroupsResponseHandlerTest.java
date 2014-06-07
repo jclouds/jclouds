@@ -34,8 +34,6 @@ import com.google.common.collect.Multimap;
 
 /**
  * Tests behavior of {@code DescribeSecurityGroupsResponseHandler}
- *
- * @author Adrian Cole
  */
 // NOTE:without testName, this will not call @Before* and fail w/NPE during
 // surefire

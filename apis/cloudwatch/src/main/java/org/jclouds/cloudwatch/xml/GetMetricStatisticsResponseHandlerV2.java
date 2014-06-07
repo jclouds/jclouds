@@ -29,8 +29,6 @@ import java.util.Set;
 
 /**
  * @see <a href="http://docs.amazonwebservices.com/AmazonCloudWatch/latest/APIReference/API_GetMetricStatistics.html" />
- *
- * @author Jeremy Whitlock
  */
 public class GetMetricStatisticsResponseHandlerV2 extends ParseSax.HandlerWithResult<GetMetricStatisticsResponse> {
 

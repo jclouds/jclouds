@@ -40,8 +40,6 @@ import com.google.inject.Scopes;
 
 /**
  * Configures the S3 connection.
- *
- * @author Adrian Cole
  */
 @ConfiguresRestClient
 public class AWSS3RestClientModule extends S3RestClientModule<AWSS3Client, AWSS3AsyncClient> {

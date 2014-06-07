@@ -26,7 +26,6 @@ import com.google.common.base.Objects.ToStringHelper;
 /**
  * Class AbsoluteLimit
  * 
- * @author Adrian Cole
 */
 public class AbsoluteLimit {
 

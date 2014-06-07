@@ -26,7 +26,6 @@ import com.google.common.collect.ImmutableSet;
  * @see <a href=
  *      "http://download.cloud.com/releases/2.2.0/api_2.2.12/domain_admin/listDomains.html"
  *      />
- * @author Andrei Savu
  */
 public class ListDomainsOptions extends BaseHttpRequestOptions {
 

@@ -37,8 +37,6 @@ import org.jclouds.rest.annotations.ResponseParser;
 
 /**
  * Simple client
- * 
- * @author Adrian Cole
  */
 public interface HttpClient {
    /**

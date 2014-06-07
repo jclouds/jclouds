@@ -59,7 +59,6 @@ import com.google.inject.Inject;
  * </ul>
  * 
  * @see MarkerFileMkdirStrategy
- * @author Adrian Cole
  */
 @Singleton
 public class MarkersDeleteDirectoryStrategy implements DeleteDirectoryStrategy {

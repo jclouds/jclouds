@@ -30,9 +30,6 @@ import com.google.common.base.Objects;
 import com.google.common.base.Objects.ToStringHelper;
 import com.google.common.collect.ImmutableMap;
 
-/**
- * @author Pedro Navarro
- */
 public class UpdateTenantOptions implements MapBinder {
    @Inject
    private BindToJsonPayload jsonBinder;

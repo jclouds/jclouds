@@ -33,7 +33,6 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * @see <a
  *      href="http://docs.amazonwebservices.com/AmazonCloudWatch/latest/APIReference/index.html?API_GetMetricStatistics.html"
  *      />
- * @author Andrei Savu, Jeremy Whitlock
  */
 public class GetMetricStatisticsOptions extends BaseHttpRequestOptions {
 

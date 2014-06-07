@@ -31,9 +31,6 @@ import org.jclouds.dynect.v3.parse.CreateSessionResponseTest;
 import org.jclouds.http.HttpRequest;
 import org.jclouds.http.HttpResponse;
 import org.testng.annotations.Test;
-/**
- * @author Adrian Cole
- */
 @Test(groups = "unit", testName = "SessionApiExpectTest")
 public class SessionApiExpectTest extends BaseDynECTApiExpectTest {
 

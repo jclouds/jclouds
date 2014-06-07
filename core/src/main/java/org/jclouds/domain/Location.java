@@ -21,8 +21,6 @@ import java.util.Set;
 
 /**
  * Description of where a resource is running. Note this can be physical or virtual.
- * 
- * @author Adrian Cole
  */
 public interface Location {
 

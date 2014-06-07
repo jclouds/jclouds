@@ -24,9 +24,6 @@ import org.jclouds.logging.Logger;
 
 /**
  * {@link org.apache.log4j.Logger} implementation of {@link Logger}.
- * 
- * @author Adrian Cole
- * 
  */
 public class Log4JLogger extends BaseLogger {
     private final org.apache.log4j.Logger logger;

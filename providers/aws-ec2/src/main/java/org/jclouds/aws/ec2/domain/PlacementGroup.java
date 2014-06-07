@@ -34,7 +34,6 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * 
  * @see <a href="http://docs.amazonwebservices.com/AWSEC2/latest/APIReference/ApiReference-query-DescribePlacementGroups.html"
  *      />
- * @author Adrian Cole
  */
 public class PlacementGroup implements Comparable<PlacementGroup> {
    public static enum State {

@@ -32,9 +32,6 @@ import org.jclouds.openstack.nova.ec2.internal.BaseNovaEC2RestApiExpectTest;
 
 import com.google.common.collect.Iterables;
 
-/**
- * @author Adam Lowe
- */
 public class NovaEC2InstanceApiExpectTest extends BaseNovaEC2RestApiExpectTest {
 
    public void testDescribeInstancesWithDashesInPlaceOfNullDates() {

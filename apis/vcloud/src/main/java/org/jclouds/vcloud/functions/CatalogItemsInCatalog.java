@@ -33,9 +33,6 @@ import org.jclouds.vcloud.domain.ReferenceType;
 import com.google.common.base.Function;
 import com.google.common.base.Predicate;
 
-/**
- * @author Adrian Cole
- */
 @Singleton
 public class CatalogItemsInCatalog implements Function<Catalog, Iterable<CatalogItem>> {
    @Resource

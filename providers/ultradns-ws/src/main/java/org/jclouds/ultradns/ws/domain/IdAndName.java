@@ -24,9 +24,6 @@ import com.google.common.base.Function;
 import com.google.common.base.Objects;
 import com.google.common.base.Predicate;
 
-/**
- * @author Adrian Cole
- */
 public final class IdAndName {
 
    public static IdAndName create(String id, String name) {

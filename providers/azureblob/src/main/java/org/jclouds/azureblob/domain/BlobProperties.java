@@ -22,11 +22,6 @@ import java.util.Map;
 
 import org.jclouds.io.ContentMetadata;
 
-/**
- * 
- * @author Adrian Cole
- * 
- */
 public interface BlobProperties extends Comparable<BlobProperties> {
 
    Map<String, String> getMetadata();

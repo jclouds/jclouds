@@ -33,8 +33,6 @@ import com.google.common.collect.ImmutableSet;
 
 /**
  * Utility functions helpful in working with {@link Bundle bundles}.
- * 
- * @author Adrian Cole
  */
 public final class Bundles {
    private Bundles() {

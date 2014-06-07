@@ -32,8 +32,6 @@ import com.google.inject.name.Names;
 
 /**
  * Tests behavior of {@code AnyOrConfiguredZoneId}
- * 
- * @author Adrian Cole
  */
 @Test(groups = "unit", testName = "AnyOrConfiguredZoneIdTest")
 public class AnyOrConfiguredZoneIdTest {

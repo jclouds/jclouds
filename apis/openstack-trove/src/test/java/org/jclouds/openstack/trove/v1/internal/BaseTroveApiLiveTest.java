@@ -24,8 +24,6 @@ import org.jclouds.openstack.trove.v1.TroveApi;
 
 /**
  * Tests behavior of TroveApi
- * 
- * @author Zack Shoylev
  */
 public class BaseTroveApiLiveTest extends BaseApiLiveTest<TroveApi> {
 

@@ -21,7 +21,6 @@ import org.jclouds.compute.domain.OsFamily;
 /**
  * Operating system based on DMTF CIM model.
  * 
- * @author Adrian Cole
  * @see <a
  *      href="http://dmtf.org/sites/default/files/cim/cim_schema_v2280/cim_schema_2.28.0Final-Doc.zip"
  *      />

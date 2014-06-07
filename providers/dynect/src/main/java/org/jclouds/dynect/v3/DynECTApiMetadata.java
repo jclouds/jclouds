@@ -28,8 +28,6 @@ import com.google.inject.Module;
 
 /**
  * Implementation of {@link ApiMetadata} for DynECT 1.0 API
- * 
- * @author Adrian Cole
  */
 public class DynECTApiMetadata extends BaseHttpApiMetadata<DynECTApi> {
    

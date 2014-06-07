@@ -22,9 +22,6 @@ import java.io.IOException;
 
 import com.google.common.io.InputSupplier;
 
-/**
- * @author Adrian Cole
- */
 public interface Payload extends InputSupplier<InputStream>, Closeable {
 
    /**

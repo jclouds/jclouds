@@ -27,10 +27,6 @@ import org.jclouds.openstack.nova.v2_0.compute.functions.ImageToOperatingSystem;
 import com.google.common.base.Function;
 import com.google.inject.TypeLiteral;
 
-/**
- * 
- * @author Adrian Cole
- */
 public class NovaEC2ComputeServiceContextModule extends EC2ComputeServiceContextModule {
 
    @Override

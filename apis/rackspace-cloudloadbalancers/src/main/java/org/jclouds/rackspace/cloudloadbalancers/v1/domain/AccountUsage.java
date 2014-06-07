@@ -24,9 +24,6 @@ import java.util.Date;
 import com.google.common.base.Objects;
 import com.google.common.base.Optional;
 
-/**
- * @author Everett Toews
- */
 public final class AccountUsage {
    private final int numPublicVIPs;
    private final int numServiceNetVIPs;

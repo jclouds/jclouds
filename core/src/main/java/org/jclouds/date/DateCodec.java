@@ -21,7 +21,6 @@ import java.util.Date;
 /**
  * converting from Date->String and vice versa.
  * 
- * @author aled
  * @see DateCodecFactory
  */
 public interface DateCodec {

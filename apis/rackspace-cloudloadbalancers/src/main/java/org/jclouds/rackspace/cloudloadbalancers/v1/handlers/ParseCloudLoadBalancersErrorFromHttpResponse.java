@@ -34,11 +34,6 @@ import org.jclouds.rest.AuthorizationException;
 import org.jclouds.rest.ResourceNotFoundException;
 import org.jclouds.util.Strings2;
 
-/**
- * 
- * @author Adrian Cole
- * 
- */
 @Singleton
 public class ParseCloudLoadBalancersErrorFromHttpResponse implements HttpErrorHandler {
    @Resource

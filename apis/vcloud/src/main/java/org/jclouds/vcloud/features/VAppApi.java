@@ -58,7 +58,6 @@ import org.jclouds.vcloud.xml.VAppHandler;
  * <p/>
  * 
  * @see <a href="http://communities.vmware.com/community/developer/forums/vcloudapi" />
- * @author Adrian Cole
  */
 @RequestFilters(AddVCloudAuthorizationAndCookieToRequest.class)
 public interface VAppApi {

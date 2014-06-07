@@ -29,8 +29,6 @@ import com.google.common.collect.ImmutableSet;
 
 /**
  * Tests behavior of {@code JustProvider}
- * 
- * @author Adrian Cole
  */
 @Test(groups = "unit", testName = "JustProviderTest")
 public class JustProviderTest {

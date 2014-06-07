@@ -25,11 +25,6 @@ import org.jclouds.rest.binders.BindToStringPayload;
 
 import com.google.inject.Inject;
 
-/**
- * 
- * @author Adrian Cole
- * 
- */
 @Singleton
 public class BindUndeployVAppParamsToXmlPayload extends BindParamsToXmlPayload {
 

@@ -27,9 +27,6 @@ import com.google.inject.AbstractModule;
 import com.google.inject.Guice;
 import com.google.inject.name.Names;
 
-/**
- * @author Adam Lowe
- */
 @Test(groups = "unit", singleThreaded = true, testName = "InitScriptConfigurationForTasksTest")
 public class InitScriptConfigurationForTasksTest {
 

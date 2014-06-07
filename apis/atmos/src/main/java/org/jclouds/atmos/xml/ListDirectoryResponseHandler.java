@@ -29,7 +29,6 @@ import com.google.common.collect.Sets;
  * <p/>
  * 
  * @see <a href="https://community.emc.com/community/labs/atmos_online" />
- * @author Adrian Cole
  */
 public class ListDirectoryResponseHandler extends ParseSax.HandlerWithResult<Set<DirectoryEntry>> {
 

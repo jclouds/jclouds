@@ -35,8 +35,6 @@ import com.google.common.collect.Iterables;
 
 /**
  * Tests {@code ZoneToLocation}
- * 
- * @author Jason King
  */
 @Test(singleThreaded = true, groups = "unit")
 public class ZoneToLocationTest {

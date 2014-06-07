@@ -39,7 +39,6 @@ import com.google.common.collect.FluentIterable;
  * 
  * @see VolumeAsyncApi
  * @see <a href="http://api.openstack.org/">API Doc</a>
- * @author Everett Toews
  */
 @SkipEncoding({'/', '='})
 @RequestFilters(AuthenticateRequest.class)

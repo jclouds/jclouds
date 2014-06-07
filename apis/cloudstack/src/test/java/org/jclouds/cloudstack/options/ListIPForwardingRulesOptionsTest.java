@@ -29,8 +29,6 @@ import com.google.common.collect.ImmutableList;
 
 /**
  * Tests behavior of {@code ListIPForwardingRulesOptions}
- * 
- * @author Adrian Cole
  */
 @Test(groups = "unit")
 public class ListIPForwardingRulesOptionsTest {

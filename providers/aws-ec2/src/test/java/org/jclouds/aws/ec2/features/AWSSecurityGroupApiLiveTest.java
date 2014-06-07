@@ -32,10 +32,6 @@ import org.testng.annotations.Test;
 import com.google.common.base.Predicate;
 import com.google.common.collect.ImmutableMultimap;
 
-/**
- * 
- * @author Adrian Cole
- */
 @Test(groups = "live", singleThreaded = true)
 public class AWSSecurityGroupApiLiveTest extends SecurityGroupApiLiveTest {
    public AWSSecurityGroupApiLiveTest() {

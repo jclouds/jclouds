@@ -25,8 +25,6 @@ import org.jclouds.providers.internal.BaseProviderMetadata;
 /**
  * Implementation of {@link org.jclouds.types.ProviderMetadata} for Neustar
  * UltraDNS.
- * 
- * @author Adrian Cole
  */
 public class UltraDNSWSProviderMetadata extends BaseProviderMetadata {
 

@@ -23,9 +23,6 @@ import org.testng.annotations.Test;
 
 import com.google.common.base.Function;
 
-/**
- * @author Adrian Cole
- */
 @Test(groups = "unit")
 public class ReplaceShadowPasswordEntryTest {
    Function<String, String> crypt = new Function<String, String>() {

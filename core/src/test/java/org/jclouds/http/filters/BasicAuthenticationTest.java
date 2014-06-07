@@ -30,10 +30,6 @@ import org.testng.annotations.Test;
 
 import com.google.common.base.Supplier;
 
-/**
- * 
- * @author Adrian Cole
- */
 @Test(groups = "unit")
 public class BasicAuthenticationTest {
    private static final Credentials credential1 = new Credentials("Aladdin", "open sesame");

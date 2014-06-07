@@ -25,7 +25,6 @@ import org.jclouds.s3.reference.S3Headers;
  * Contains options supported in the AWS S3 REST API for the PUT object operation
  *
  * @see PutObjectOptions
- * @author Andrei Savu
  */
 public class AWSS3PutObjectOptions extends PutObjectOptions {
 

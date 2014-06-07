@@ -32,9 +32,6 @@ import org.jclouds.cloudstack.domain.Account;
 import org.jclouds.cloudstack.domain.ApiKeyPair;
 import org.jclouds.cloudstack.domain.User;
 
-/**
- * @author Andrei Savu
- */
 public class ApiKeyPairs {
 
    /**

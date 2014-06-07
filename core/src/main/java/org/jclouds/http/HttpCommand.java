@@ -24,8 +24,6 @@ import com.google.common.base.Objects;
 
 /**
  * Command whose endpoint is an http service.
- * 
- * @author Adrian Cole
  */
 //TODO: get rid of all the mock tests so that this can be made final
 public class HttpCommand {

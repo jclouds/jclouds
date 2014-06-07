@@ -38,8 +38,6 @@ import com.squareup.okhttp.mockwebserver.RecordedRequest;
 
 /**
  * Tests RoleApi Guice wiring and parsing
- * 
- * @author Pedro Navarro
  */
 @Test(groups = "unit", testName = "RoleAdminApiMockTest")
 public class RoleAdminApiMockTest extends BaseOpenStackMockTest<KeystoneApi> {

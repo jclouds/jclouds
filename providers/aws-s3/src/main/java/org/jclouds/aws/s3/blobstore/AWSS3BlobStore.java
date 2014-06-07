@@ -58,8 +58,6 @@ import com.google.common.cache.LoadingCache;
 
 /**
  * Provide AWS S3 specific extensions.
- *
- * @author Tibor Kiss, Andrei Savu
  */
 public class AWSS3BlobStore extends S3BlobStore {
 

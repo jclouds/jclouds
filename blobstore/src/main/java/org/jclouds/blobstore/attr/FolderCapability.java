@@ -18,9 +18,6 @@ package org.jclouds.blobstore.attr;
 
 /**
  * Represents the capabilities of a BlobStore
- * 
- * @author Adrian Cole
- * 
  */
 public enum FolderCapability {
 

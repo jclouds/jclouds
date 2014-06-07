@@ -22,11 +22,6 @@ import java.util.Map;
 
 import com.google.common.collect.Lists;
 
-/**
- * 
- * @author Adrian Cole
- * 
- */
 public class UriTemplates {
 
    /**

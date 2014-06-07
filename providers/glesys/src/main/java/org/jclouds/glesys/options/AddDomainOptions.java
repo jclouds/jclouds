@@ -17,9 +17,6 @@
 package org.jclouds.glesys.options;
 
 
-/**
- * @author Adam Lowe
- */
 public class AddDomainOptions extends DomainOptions {
    public static class Builder {
       /**

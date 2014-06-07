@@ -34,8 +34,6 @@ import static org.testng.Assert.assertTrue;
 
 /**
  * Tests possible uses of TemplateOptions and TemplateOptions.Builder.*
- * 
- * @author Adrian Cole
  */
 public class TemplateOptionsTest {
    @Test(expectedExceptions = IllegalArgumentException.class)

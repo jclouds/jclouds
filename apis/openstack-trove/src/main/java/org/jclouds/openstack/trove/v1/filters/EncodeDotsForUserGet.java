@@ -27,9 +27,6 @@ import org.jclouds.http.HttpRequestFilter;
 
 /**
  * Encodes "." as %2e when getting a user with restricted hostname
- * 
- * @author Zack Shoylev
- * 
  */
 @Singleton
 public class EncodeDotsForUserGet implements HttpRequestFilter {

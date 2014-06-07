@@ -33,10 +33,6 @@ import org.jclouds.s3.S3Client;
 
 import com.google.common.util.concurrent.ListenableFuture;
 
-/**
- * 
- * @author Adrian Cole
- */
 public class FalseIfBucketAlreadyOwnedByYouOrOperationAbortedWhenBucketExists implements Fallback<Boolean>,
       InvocationContext<FalseIfBucketAlreadyOwnedByYouOrOperationAbortedWhenBucketExists> {
 

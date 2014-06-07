@@ -26,8 +26,6 @@ import com.google.common.collect.ImmutableSet;
 
 /**
  * Tests behavior of {@code UpdateServiceOfferingOptions}
- *
- * @author Andrei Savu
  */
 @Test(groups = "unit")
 public class UpdateServiceOfferingOptionsTest {

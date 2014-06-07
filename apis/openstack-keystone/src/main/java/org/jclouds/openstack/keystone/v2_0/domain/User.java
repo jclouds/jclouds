@@ -36,7 +36,6 @@ import com.google.common.collect.ImmutableSet;
  * directly assigned to a particular tenant and behave as if they are contained
  * in that tenant.
  * 
- * @author Adrian Cole
  * @see <a href=
  *      "http://docs.openstack.org/api/openstack-identity-service/2.0/content/Identity-User-Concepts-e1362.html"
  *      />

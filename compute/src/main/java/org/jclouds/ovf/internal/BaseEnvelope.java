@@ -30,9 +30,6 @@ import com.google.common.collect.LinkedHashMultimap;
 import com.google.common.collect.Multimap;
 import com.google.common.collect.Sets;
 
-/**
- * @author Adrian Cole
- */
 public class BaseEnvelope<V extends BaseVirtualSystem<V>, E extends BaseEnvelope<V, E>> {
 
    public static <V extends BaseVirtualSystem<V>, E extends BaseEnvelope<V, E>> Builder<V, E> builder() {

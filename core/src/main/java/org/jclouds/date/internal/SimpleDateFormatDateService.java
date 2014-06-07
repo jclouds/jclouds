@@ -30,9 +30,6 @@ import org.jclouds.date.DateService;
 /**
  * 
  * uses {@link SimpleDateFormat} internally.
- * 
- * @author Adrian Cole
- * @author James Murty
  */
 public class SimpleDateFormatDateService implements DateService {
 

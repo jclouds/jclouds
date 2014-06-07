@@ -29,7 +29,6 @@ import com.google.common.collect.ImmutableSet;
 /**
  * Structure containing all information about e-mail addresses for a GleSYS account
  *
- * @author Adam Lowe
  * @see <a href="https://customer.glesys.com/api.php?a=doc#email_overview" />
  */
 //TODO: find a better name for this class

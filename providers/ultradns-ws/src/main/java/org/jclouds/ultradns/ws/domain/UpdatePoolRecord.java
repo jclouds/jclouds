@@ -25,8 +25,6 @@ import com.google.common.base.Objects;
 
 /**
  * holds updates for a record
- * 
- * @author Adrian Cole
  */
 public final class UpdatePoolRecord {
 

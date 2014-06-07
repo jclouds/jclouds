@@ -45,8 +45,6 @@ import com.google.common.collect.ImmutableSet;
 
 /**
  * Tests behavior of {@code SecurityGroupApi}
- * 
- * @author Adrian Cole
  */
 @Test(groups = "live", singleThreaded = true, testName = "SecurityGroupApiLiveTest")
 public class SecurityGroupApiLiveTest extends BaseComputeServiceContextLiveTest {

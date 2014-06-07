@@ -40,9 +40,6 @@ import org.jclouds.compute.options.TemplateOptions;
  * </pre>
  * 
  * TODO add GoGrid specific options
- * 
- * @author Adrian Cole
- * @author Andrew Kennedy
  */
 public class GoGridTemplateOptions extends TemplateOptions implements Cloneable {
    @Override

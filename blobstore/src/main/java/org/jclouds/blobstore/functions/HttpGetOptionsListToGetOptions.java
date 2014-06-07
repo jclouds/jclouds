@@ -28,10 +28,6 @@ import org.jclouds.date.DateService;
 
 import com.google.common.base.Function;
 
-/**
- * 
- * @author Adrian Cole
- */
 @Singleton
 public class HttpGetOptionsListToGetOptions implements
       Function<org.jclouds.http.options.GetOptions[], org.jclouds.blobstore.options.GetOptions> {

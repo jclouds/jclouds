@@ -28,8 +28,6 @@ import com.google.common.base.Function;
 
 /**
  * Parses an MD5 checksum from the header {@link com.google.common.net.HttpHeaders.HttpHeaders#ETAG}.
- * 
- * @author Adrian Cole
  */
 @Singleton
 public class ParseETagHeader implements Function<HttpResponse, String> {

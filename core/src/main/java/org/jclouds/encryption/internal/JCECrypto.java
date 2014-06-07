@@ -34,10 +34,6 @@ import javax.inject.Singleton;
 import org.jclouds.crypto.Crypto;
 import org.jclouds.javax.annotation.Nullable;
 
-/**
- * 
- * @author Adrian Cole
- */
 @Singleton
 public class JCECrypto implements Crypto {
 

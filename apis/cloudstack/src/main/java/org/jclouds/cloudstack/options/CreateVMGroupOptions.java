@@ -23,7 +23,6 @@ import com.google.common.collect.ImmutableSet;
 /**
  * Options used to control options for creating a VM group
  *
- * @author Richard Downer
  * @see <a
  *      href="http://download.cloud.com/releases/2.2.8/api/user/createInstanceGroup.html"
  *      />

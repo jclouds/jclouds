@@ -36,9 +36,6 @@ import com.google.common.collect.Maps;
 import com.google.common.io.ByteSource;
 import com.google.common.net.MediaType;
 
-/**
- * @author Adrian Cole
- */
 public class BlobBuilderImpl implements BlobBuilder {
 
    private Payload payload;

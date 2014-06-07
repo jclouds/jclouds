@@ -38,9 +38,6 @@ import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Maps;
 
-/**
- * @author Adrian Cole
- */
 @Singleton
 public class ObjectToBlobMetadata implements Function<AtmosObject, MutableBlobMetadata> {
    private final AtmosObjectName objectName;

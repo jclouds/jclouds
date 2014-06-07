@@ -33,7 +33,6 @@ import com.google.common.base.Objects;
  * For convenience, resources contain links to themselves. This allows a client to easily obtain a
  * resource URIs rather than to construct them.
  * 
- * @author AdrianCole
  * @see <a href= "http://docs.openstack.org/api/openstack-compute/1.1/content/LinksReferences.html"
  *      />
  */

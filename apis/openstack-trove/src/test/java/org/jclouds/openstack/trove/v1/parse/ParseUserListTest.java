@@ -25,10 +25,6 @@ import org.jclouds.rest.annotations.SelectJson;
 import org.testng.annotations.Test;
 import com.google.common.collect.ImmutableSet;
 
-/**
- * 
- * @author Zack Shoylev
- */
 
 @Test(groups = "unit", testName = "ParseUserTest")
 public class ParseUserListTest extends BaseSetParserTest<User> {

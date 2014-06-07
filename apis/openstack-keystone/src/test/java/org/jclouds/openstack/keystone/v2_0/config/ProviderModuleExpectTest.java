@@ -60,8 +60,6 @@ import com.google.inject.Provides;
 
 /**
  * Tests configuration via {@link ProviderModule}
- * 
- * @author Adrian Cole
  */
 @Test(groups = "unit", testName = "ProviderModuleExpectTest")
 public class ProviderModuleExpectTest extends BaseRestApiExpectTest<ProviderModuleExpectTest.DNSApi> {

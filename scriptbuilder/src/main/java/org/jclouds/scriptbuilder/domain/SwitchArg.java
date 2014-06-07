@@ -33,8 +33,6 @@ import com.google.common.collect.Lists;
 
 /**
  * Statement used in a shell script
- * 
- * @author Adrian Cole
  */
 public class SwitchArg implements Statement, AcceptsStatementVisitor {
 

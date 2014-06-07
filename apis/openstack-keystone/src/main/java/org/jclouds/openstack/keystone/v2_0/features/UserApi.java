@@ -29,7 +29,6 @@ import com.google.common.annotations.Beta;
  * Provides synchronous access to the KeyStone User API.
  * <p/>
  * 
- * @author Adam Lowe
  * @see UserAsyncApi
  * @see <a href=
  *      "http://docs.openstack.org/api/openstack-identity-service/2.0/content/User_Operations.html"

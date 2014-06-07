@@ -24,9 +24,6 @@ import org.jclouds.compute.domain.Volume;
 import org.jclouds.compute.domain.internal.VolumeImpl;
 import org.jclouds.vcloud.domain.ovf.VCloudHardDisk;
 
-/**
- * @author Adrian Cole
- */
 @Singleton
 public class VCloudHardwareBuilderFromResourceAllocations extends HardwareBuilderFromResourceAllocations {
    @Override

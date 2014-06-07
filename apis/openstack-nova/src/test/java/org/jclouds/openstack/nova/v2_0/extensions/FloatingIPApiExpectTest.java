@@ -33,8 +33,6 @@ import com.google.common.collect.ImmutableSet;
 
 /**
  * Tests annotation parsing of {@code FloatingIPAsyncApi}
- * 
- * @author Michael Arnold
  */
 @Test(groups = "unit", testName = "FloatingIPApiExpectTest")
 public class FloatingIPApiExpectTest extends BaseNovaApiExpectTest {

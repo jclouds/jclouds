@@ -28,8 +28,6 @@ import java.util.concurrent.atomic.AtomicInteger;
 /**
  * An {@link ExecutorService} that executes each submitted task using one of possibly several pooled threads, normally
  * configured using {@link DynamicExecutors} factory methods.
- * 
- * @author kimchy (shay.banon)
  */
 class DynamicThreadPoolExecutor extends ThreadPoolExecutor {
    /**
@@ -69,7 +67,6 @@ class DynamicThreadPoolExecutor extends ThreadPoolExecutor {
     * <li> {@link TimedBlockingPolicy} - waits for a given time for the task to be executed.</li>
     * </ol>
     * 
-    * @author kimchy (Shay Banon)
     */
    static class DynamicQueue<E> extends LinkedBlockingQueue<E> {
       private static final long serialVersionUID = 1L;

@@ -28,8 +28,6 @@ import com.google.inject.Injector;
 
 /**
  * Tests behavior of {@code BindBundleIdsToIndexedFormParams}
- * 
- * @author Adrian Cole
  */
 @Test(groups = "unit")
 public class BindBundleIdsToIndexedFormParamsTest {

@@ -31,9 +31,6 @@ import org.jclouds.location.Provider;
 
 import com.google.inject.Inject;
 
-/**
- * @author Adrian Cole
- */
 @Singleton
 public class GetLoginForProviderFromPropertiesAndStoreCredentialsOrReturnNull implements
       javax.inject.Provider<LoginCredentials> {

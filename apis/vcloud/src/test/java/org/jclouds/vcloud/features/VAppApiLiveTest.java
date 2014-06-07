@@ -26,10 +26,6 @@ import org.jclouds.vcloud.domain.VDC;
 import org.jclouds.vcloud.internal.BaseVCloudApiLiveTest;
 import org.testng.annotations.Test;
 
-/**
- * 
- * @author Adrian Cole
- */
 @Test(groups = "live", enabled = true, singleThreaded = true, testName = "VAppApiLiveTest")
 public class VAppApiLiveTest extends BaseVCloudApiLiveTest {
 

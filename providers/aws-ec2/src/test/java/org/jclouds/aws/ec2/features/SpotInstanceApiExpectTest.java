@@ -29,9 +29,6 @@ import org.testng.annotations.Test;
 import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.ImmutableSet;
 
-/**
- * @author Andrew Bayer
- */
 @Test(groups = "unit", testName = "SpotInstanceApiExpectTest")
 public class SpotInstanceApiExpectTest extends BaseAWSEC2ComputeServiceExpectTest {
 

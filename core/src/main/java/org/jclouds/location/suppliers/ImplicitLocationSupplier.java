@@ -22,10 +22,6 @@ import org.jclouds.location.suppliers.implicit.OnlyLocationOrFirstRegionOptional
 import com.google.common.base.Supplier;
 import com.google.inject.ImplementedBy;
 
-/**
- * 
- * @author Adrian Cole
- */
 @ImplementedBy(OnlyLocationOrFirstRegionOptionallyMatchingRegionId.class)
 public interface ImplicitLocationSupplier extends Supplier<Location> {
 

@@ -24,11 +24,6 @@ import org.jclouds.io.payloads.BaseMutableContentMetadata;
 import org.jclouds.openstack.swift.domain.MutableObjectInfoWithMetadata;
 import org.jclouds.openstack.swift.domain.ObjectInfo;
 
-/**
- * 
- * @author Adrian Cole
- * 
- */
 public class DelegatingMutableObjectInfoWithMetadata extends BaseMutableContentMetadata implements
          MutableObjectInfoWithMetadata {
 

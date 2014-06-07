@@ -44,10 +44,6 @@ import com.google.common.eventbus.EventBus;
 import com.google.inject.assistedinject.Assisted;
 import com.google.inject.assistedinject.AssistedInject;
 
-/**
- * 
- * @author Adrian Cole
- */
 public class RunScriptOnNodeAsInitScriptUsingSsh extends SudoAwareInitManager implements RunScriptOnNode {
 
    protected final EventBus eventBus;

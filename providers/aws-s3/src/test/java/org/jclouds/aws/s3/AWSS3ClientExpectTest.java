@@ -39,9 +39,6 @@ import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import com.google.inject.Injector;
 
-/**
- * @author Andrei Savu
- */
 @Test
 public class AWSS3ClientExpectTest extends BaseAWSS3ClientExpectTest {
 

@@ -30,8 +30,6 @@ import com.google.common.collect.Maps;
 
 /**
  * An Openstack Trove Database User.
- * 
- * @author Zack Shoylev
  */
 public class User implements Comparable<User>{
    private final String name;

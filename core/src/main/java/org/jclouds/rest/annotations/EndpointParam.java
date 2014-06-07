@@ -31,7 +31,6 @@ import com.google.common.base.Function;
  * Extracts the endpoint of a parameter from an object.
  * 
  * @see PathParam
- * @author Adrian Cole
  */
 @Target(PARAMETER)
 @Retention(RUNTIME)

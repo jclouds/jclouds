@@ -20,10 +20,6 @@ import org.jclouds.providers.internal.BaseProviderMetadataTest;
 import org.jclouds.vcloud.VCloudApiMetadata;
 import org.testng.annotations.Test;
 
-/**
- * 
- * @author Adrian Cole
- */
 @Test(groups = "unit", testName = "BluelockVCloudZone01ProviderTest")
 public class BluelockVCloudZone01ProviderTest extends BaseProviderMetadataTest {
 

@@ -24,8 +24,6 @@ import java.lang.annotation.Target;
 
 /**
  * Do not accept filters that were passed from the type.
- * 
- * @author Adrian Cole
  */
 @Target( { METHOD })
 @Retention(RUNTIME)

@@ -26,8 +26,6 @@ import org.testng.annotations.Test;
 
 /**
  * Tests possible uses of CreateSnapshotOptions and CreateSnapshotOptions.Builder.*
- * 
- * @author Adrian Cole
  */
 public class CreateSnapshotOptionsTest {
 

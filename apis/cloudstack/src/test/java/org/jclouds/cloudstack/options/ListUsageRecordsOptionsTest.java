@@ -31,8 +31,6 @@ import com.google.common.collect.ImmutableSet;
 
 /**
  * Options to the GlobalUsageApi.listUsageOptions() API call
- *
- * @author Richard Downer
  */
 @Test(groups = "unit")
 public class ListUsageRecordsOptionsTest {

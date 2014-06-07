@@ -36,7 +36,6 @@ import com.google.inject.Singleton;
 import com.google.inject.TypeLiteral;
 
 /**
- * @author Adrian Cole
 */
 @Singleton
 public class ApiContextImpl<A> extends ContextImpl implements ApiContext<A> {

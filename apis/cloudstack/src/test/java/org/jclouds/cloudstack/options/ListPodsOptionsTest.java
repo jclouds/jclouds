@@ -30,8 +30,6 @@ import com.google.common.collect.ImmutableList;
 
 /**
  * Tests behavior of {@code ListPodsOptions}
- * 
- * @author Richard Downer
  */
 @Test(groups = "unit")
 public class ListPodsOptionsTest {

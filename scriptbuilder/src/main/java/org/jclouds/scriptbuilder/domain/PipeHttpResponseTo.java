@@ -28,8 +28,6 @@ import com.google.common.collect.Multimap;
 
 /**
  * Pipes the content of the http response to a shell command that accepts input from stdin
- * 
- * @author Adrian Cole
  */
 public class PipeHttpResponseTo extends InterpretableStatement {
    /**

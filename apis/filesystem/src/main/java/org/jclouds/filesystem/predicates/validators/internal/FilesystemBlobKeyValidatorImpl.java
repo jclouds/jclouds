@@ -27,8 +27,6 @@ import com.google.inject.Singleton;
  *
  * @see org.jclouds.rest.InputParamValidator
  * @see org.jclouds.predicates.Validator
- *
- * @author Alfredo "Rainbowbreeze" Morresi
  */
 @Singleton
 public class FilesystemBlobKeyValidatorImpl extends FilesystemBlobKeyValidator {

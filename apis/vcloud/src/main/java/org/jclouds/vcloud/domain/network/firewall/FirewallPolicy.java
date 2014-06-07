@@ -22,7 +22,6 @@ import com.google.common.base.CaseFormat;
 
 /**
  * specifies how packets are handled by the firewall
- * 
  */
 public enum FirewallPolicy {
    /**

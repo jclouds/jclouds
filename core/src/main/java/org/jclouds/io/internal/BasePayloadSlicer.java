@@ -47,10 +47,6 @@ import com.google.common.io.ByteStreams;
 import com.google.common.io.Files;
 import com.google.common.io.InputSupplier;
 
-/**
- * 
- * @author Adrian Cole
- */
 @Singleton
 public class BasePayloadSlicer implements PayloadSlicer {
 

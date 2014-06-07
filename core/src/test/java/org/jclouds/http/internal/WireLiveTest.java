@@ -36,10 +36,6 @@ import com.google.common.io.ByteStreams;
 import org.jclouds.logging.Logger;
 import org.testng.annotations.Test;
 
-/**
- * 
- * @author Adrian Cole
- */
 @Test(groups = "live", sequential = true)
 public class WireLiveTest {
 

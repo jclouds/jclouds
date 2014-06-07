@@ -45,8 +45,6 @@ import com.google.common.collect.Multimap;
  * example, a value of {@code \*amazon\?\\} searches for the literal string
  * {@code *amazon?\}.
  * 
- * @author Adrian Cole
- * @author Andrew Bayer
  * @see SubnetApi
  */
 public class SubnetFilterBuilder extends ImmutableMultimap.Builder<String, String> {

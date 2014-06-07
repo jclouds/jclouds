@@ -57,10 +57,6 @@ import com.google.common.base.Throwables;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.net.HttpHeaders;
 
-/**
- * 
- * @author Adrian Cole
- */
 @Singleton
 public class ApacheHCUtils {
    //TODO: look up httpclient version

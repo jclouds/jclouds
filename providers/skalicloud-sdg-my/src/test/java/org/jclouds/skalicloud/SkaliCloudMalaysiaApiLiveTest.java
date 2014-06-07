@@ -19,10 +19,6 @@ package org.jclouds.skalicloud;
 import org.jclouds.elasticstack.ElasticStackApiLiveTest;
 import org.testng.annotations.Test;
 
-/**
- * 
- * @author Adrian Cole
- */
 @Test(groups = "live", singleThreaded = true, testName = "SkaliCloudMalaysiaApiLiveTest")
 public class SkaliCloudMalaysiaApiLiveTest extends ElasticStackApiLiveTest {
    public SkaliCloudMalaysiaApiLiveTest() {

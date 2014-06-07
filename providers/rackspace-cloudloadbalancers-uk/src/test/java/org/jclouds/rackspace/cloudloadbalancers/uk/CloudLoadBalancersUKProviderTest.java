@@ -20,10 +20,6 @@ import org.jclouds.providers.internal.BaseProviderMetadataTest;
 import org.jclouds.rackspace.cloudloadbalancers.v1.CloudLoadBalancersApiMetadata;
 import org.testng.annotations.Test;
 
-/**
- * 
- * @author Dan Lo Bianco
- */
 @Test(groups = "unit", testName = "CloudLoadBalancersUKProviderTest")
 public class CloudLoadBalancersUKProviderTest extends BaseProviderMetadataTest {
 

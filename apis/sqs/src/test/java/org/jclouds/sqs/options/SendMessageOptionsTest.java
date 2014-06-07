@@ -25,8 +25,6 @@ import com.google.common.collect.ImmutableSet;
 
 /**
  * Tests possible uses of SendMessageOptions and SendMessageOptions.Builder.*
- * 
- * @author Adrian Cole
  */
 public class SendMessageOptionsTest {
 

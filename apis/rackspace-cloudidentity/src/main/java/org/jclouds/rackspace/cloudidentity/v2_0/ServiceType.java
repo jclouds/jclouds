@@ -19,8 +19,6 @@ package org.jclouds.rackspace.cloudidentity.v2_0;
 /**
  * An Rackspace service, such as Cloud Load Balancers, DNS, etc.
  * A service provides one or more endpoints through which users can access resources and perform operations.
- * 
- * @author Everett Toews
  */
 public interface ServiceType {
    /**

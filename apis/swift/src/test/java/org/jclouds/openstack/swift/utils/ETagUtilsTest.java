@@ -20,9 +20,6 @@ import org.testng.annotations.Test;
 
 import static org.testng.Assert.assertEquals;
 
-/**
- * @author Francis Devereux
- */
 @Test(groups = "unit")
 public class ETagUtilsTest {
    @Test

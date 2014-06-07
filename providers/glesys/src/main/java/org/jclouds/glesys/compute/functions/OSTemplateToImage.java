@@ -31,9 +31,6 @@ import org.jclouds.glesys.domain.OSTemplate;
 
 import com.google.common.base.Function;
 
-/**
- * @author Adrian Cole
- */
 @Singleton
 public class OSTemplateToImage implements Function<OSTemplate, Image> {
    private final Function<String, OsFamilyVersion64Bit> osParser;

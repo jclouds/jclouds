@@ -29,10 +29,6 @@ import org.jclouds.reflect.Invocation;
 import com.google.common.base.Optional;
 import com.google.common.collect.Multimap;
 
-/**
- * 
- * @author Adrian Cole
- */
 public final class GeneratedHttpRequest extends HttpRequest {
 
    public static Builder builder() {

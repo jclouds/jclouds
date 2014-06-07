@@ -26,8 +26,6 @@ import org.testng.annotations.Test;
 
 /**
  * Tests behavior of {@code HypervisorApiLiveTest}
- * 
- * @author Adrian Cole
  */
 @Test(groups = "live", singleThreaded = true, testName = "HypervisorApiLiveTest")
 public class HypervisorApiLiveTest extends BaseCloudStackApiLiveTest {

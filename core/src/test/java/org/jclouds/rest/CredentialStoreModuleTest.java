@@ -40,10 +40,6 @@ import com.google.inject.Injector;
 import com.google.inject.Key;
 import com.google.inject.TypeLiteral;
 
-/**
- * 
- * @author Adrian Cole
- */
 @Test(groups = "unit", singleThreaded = true)
 public class CredentialStoreModuleTest {
    Json json = createInjector().getInstance(Json.class);

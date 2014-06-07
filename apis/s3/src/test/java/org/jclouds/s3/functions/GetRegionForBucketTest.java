@@ -32,9 +32,6 @@ import com.google.common.cache.CacheLoader.InvalidCacheLoadException;
 import com.google.common.cache.LoadingCache;
 import com.google.common.util.concurrent.UncheckedExecutionException;
 
-/**
- * @author Adrian Cole
- */
 @Test(testName = "GetRegionForBucketTest")
 public class GetRegionForBucketTest {
 

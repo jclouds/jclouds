@@ -33,8 +33,6 @@ import com.google.common.base.Objects;
  * BlobStore connection = // get connection
  * Future<ListResponse<ResourceMetadata>> list = connection.list("container",inDirectory("home/users").maxResults(1000));
  * <code>
- * 
- * @author Adrian Cole
  */
 public class ListContainerOptions extends ListOptions implements Cloneable {
 

@@ -31,8 +31,6 @@ import com.google.common.collect.Iterables;
 import com.google.common.reflect.Invokable;
 /**
  * Tests annotation parsing of {@code DatacenterApi}
- * 
- * @author Adrian Cole
  */
 @Test(groups = "unit")
 public class DatacenterApiTest extends BaseSoftLayerApiTest<DatacenterApi> {

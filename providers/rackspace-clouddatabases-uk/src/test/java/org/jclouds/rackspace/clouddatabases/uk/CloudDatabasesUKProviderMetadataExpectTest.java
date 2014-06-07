@@ -28,8 +28,6 @@ import com.google.common.collect.ImmutableSet;
 
 /**
  * This test ensures that the wiring in {@link CloudDatabasesUKProviderMetadata} is correct.
- * 
- * @author Zack Shoylev
  */
 @Test(groups = "unit", testName = "CloudDatabasesUKProviderMetadataExpectTest")
 public class CloudDatabasesUKProviderMetadataExpectTest extends BaseTroveApiExpectTest {

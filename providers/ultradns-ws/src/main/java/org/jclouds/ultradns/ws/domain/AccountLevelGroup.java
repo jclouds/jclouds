@@ -23,10 +23,6 @@ import org.jclouds.ultradns.ws.domain.DirectionalPool.Type;
 
 import com.google.common.base.Objects;
 
-/**
- * 
- * @author Adrian Cole
- */
 public final class AccountLevelGroup {
 
    private final String id;

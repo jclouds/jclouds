@@ -26,8 +26,6 @@ import com.google.common.collect.ImmutableList;
 
 /**
  * Tests behavior of {@code DeleteHostOptions}
- *
- * @author Richard Downer
  */
 @Test(groups = "unit")
 public class DeleteHostOptionsTest {

@@ -53,9 +53,6 @@ import com.google.inject.Provides;
 import com.google.inject.TypeLiteral;
 import com.google.inject.name.Names;
 
-/**
- * @author Andrew Bayer
- */
 @Test(groups = "unit", testName = "CreateSecurityGroupIfNeededTest")
 public class CreateSecurityGroupIfNeededTest {
 

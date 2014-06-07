@@ -27,10 +27,6 @@ import org.jclouds.openstack.keystone.v2_0.internal.BaseKeystoneRestApiExpectTes
 import org.jclouds.openstack.keystone.v2_0.parse.ParseRackspaceApiMetadataTest;
 import org.testng.annotations.Test;
 
-/**
- *
- * @author Adrian Cole
- */
 @Test(testName = "KeystoneApiExpectTest")
 public class KeystoneApiExpectTest extends BaseKeystoneRestApiExpectTest<KeystoneApi> {
 

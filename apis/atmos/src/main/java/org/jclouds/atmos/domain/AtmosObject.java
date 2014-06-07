@@ -23,10 +23,6 @@ import org.jclouds.javax.annotation.Nullable;
 import com.google.common.collect.Multimap;
 import com.google.inject.ImplementedBy;
 
-/**
- * 
- * @author Adrian Cole
- */
 public interface AtmosObject extends PayloadEnclosing, Comparable<AtmosObject> {
    @ImplementedBy(AtmosObjectFactory.class)
    public interface Factory {

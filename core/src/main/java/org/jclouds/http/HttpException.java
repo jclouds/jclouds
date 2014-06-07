@@ -18,8 +18,6 @@ package org.jclouds.http;
 
 /**
  * // TODO: Adrian: Document this!
- * 
- * @author Adrian Cole
  */
 public class HttpException extends RuntimeException {
 

@@ -18,10 +18,6 @@ package org.jclouds.openhosting.config;
 
 import org.jclouds.elasticstack.compute.config.ElasticStackComputeServiceContextModule;
 
-/**
- * 
- * @author Adrian Cole
- */
 public class OpenHostingEast1ComputeServiceContextModule extends ElasticStackComputeServiceContextModule {
 
 }

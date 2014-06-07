@@ -20,10 +20,6 @@ import org.jclouds.elasticstack.ElasticStackApiMetadata;
 import org.jclouds.providers.internal.BaseProviderMetadataTest;
 import org.testng.annotations.Test;
 
-/**
- * 
- * @author Adrian Cole
- */
 @Test(groups = "unit", testName = "SkaliCloudMalaysiaProviderTest")
 public class SkaliCloudMalaysiaProviderTest extends BaseProviderMetadataTest {
 

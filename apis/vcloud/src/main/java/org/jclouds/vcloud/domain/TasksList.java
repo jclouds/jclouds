@@ -23,9 +23,6 @@ import org.jclouds.vcloud.domain.internal.TasksListImpl;
 
 import com.google.inject.ImplementedBy;
 
-/**
- * @author Adrian Cole
- */
 @org.jclouds.vcloud.endpoints.TasksList
 @ImplementedBy(TasksListImpl.class)
 public interface TasksList {

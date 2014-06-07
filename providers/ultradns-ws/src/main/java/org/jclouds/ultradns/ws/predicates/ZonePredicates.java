@@ -25,8 +25,6 @@ import com.google.common.base.Predicate;
 
 /**
  * Predicates handy when working with Zone Types
- * 
- * @author Adrian Cole
  */
 public class ZonePredicates {
 

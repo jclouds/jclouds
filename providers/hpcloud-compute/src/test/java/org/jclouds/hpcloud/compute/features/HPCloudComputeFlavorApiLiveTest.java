@@ -19,10 +19,6 @@ package org.jclouds.hpcloud.compute.features;
 import org.jclouds.openstack.nova.v2_0.features.FlavorApiLiveTest;
 import org.testng.annotations.Test;
 
-/**
- * 
- * @author Adrian Cole
- */
 @Test(groups = "live", testName = "HPCloudComputeFlavorApiLiveTest")
 public class HPCloudComputeFlavorApiLiveTest extends FlavorApiLiveTest {
    public HPCloudComputeFlavorApiLiveTest() {

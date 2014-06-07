@@ -22,8 +22,6 @@ import org.testng.annotations.Test;
 
 /**
  * Tests behavior of {@code SoftLayerApi}
- * 
- * @author Adrian Cole
  */
 @Test(groups = "live")
 public class BaseSoftLayerApiLiveTest extends BaseApiLiveTest<SoftLayerApi> {
