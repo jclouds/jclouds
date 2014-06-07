@@ -25,8 +25,6 @@ import com.google.gson.annotations.SerializedName;
 
 /**
  * User object.
- * 
- * @author Ignasi Barrera
  */
 public class User {
    public static Builder builder() {

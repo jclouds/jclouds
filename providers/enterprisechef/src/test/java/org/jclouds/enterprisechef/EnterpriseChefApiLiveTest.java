@@ -33,8 +33,6 @@ import org.testng.annotations.Test;
 
 /**
  * Tests behavior of the EnterpriseChefApi.
- * 
- * @author Adrian Cole
  */
 @Test(groups = "live", singleThreaded = true, testName = "EnterpriseChefApiLiveTest")
 public class EnterpriseChefApiLiveTest extends BaseChefApiLiveTest<EnterpriseChefApi> {

@@ -32,8 +32,6 @@ import org.jclouds.rest.binders.BindToJsonPayload;
 /**
  * Binds a group to the payload expected for the Put method in the Enterprise Chef
  * Api.
- * 
- * @author Ignasi Barrera
  */
 @Singleton
 public class BindGroupToUpdateRequestJsonPayload extends BindToJsonPayload {

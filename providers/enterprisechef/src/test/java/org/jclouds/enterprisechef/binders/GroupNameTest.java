@@ -25,8 +25,6 @@ import org.testng.annotations.Test;
 
 /**
  * Unit tests for the {@link GroupName} class.
- * 
- * @author Ignasi Barrera
  */
 @Test(groups = "unit", testName = "GroupNameTest")
 public class GroupNameTest {

@@ -21,8 +21,6 @@ import org.testng.annotations.Test;
 
 /**
  * Unit tests for the {@link EnterpriseChefProviderMetadata} class.
- * 
- * @author Adrian Cole
  */
 @Test(groups = "unit", testName = "EnterpriseChefProviderTest")
 public class EnterpriseChefProviderMetadataTest extends BaseProviderMetadataTest {

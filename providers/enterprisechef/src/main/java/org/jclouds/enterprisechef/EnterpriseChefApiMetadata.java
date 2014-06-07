@@ -32,8 +32,6 @@ import com.google.inject.Module;
 
 /**
  * Implementation of {@link ApiMetadata} for the Enterprise Chef api.
- * 
- * @author Adrian Cole
  */
 public class EnterpriseChefApiMetadata extends BaseHttpApiMetadata<EnterpriseChefApi> {
 

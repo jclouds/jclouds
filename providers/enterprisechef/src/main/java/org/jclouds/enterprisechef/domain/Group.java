@@ -28,8 +28,6 @@ import com.google.common.collect.ImmutableSet;
 
 /**
  * Group object.
- * 
- * @author Ignasi Barrera
  */
 public class Group {
    public static Builder builder(String groupname) {

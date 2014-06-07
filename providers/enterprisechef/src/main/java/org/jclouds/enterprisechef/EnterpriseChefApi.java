@@ -47,8 +47,6 @@ import org.jclouds.rest.annotations.WrapWith;
 
 /**
  * Provides synchronous access to the Enterprise Chef Api.
- * 
- * @author Ignasi Barrera
  */
 @RequestFilters(SignedHeaderAuth.class)
 @Consumes(MediaType.APPLICATION_JSON)

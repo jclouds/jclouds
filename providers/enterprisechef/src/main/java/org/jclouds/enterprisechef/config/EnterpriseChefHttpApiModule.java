@@ -23,8 +23,6 @@ import org.jclouds.rest.ConfiguresHttpApi;
 
 /**
  * Configures the Enterprise Chef connection.
- * 
- * @author Ignasi Barrera
  */
 @ConfiguresHttpApi
 public class EnterpriseChefHttpApiModule extends BaseChefHttpApiModule<EnterpriseChefApi> {

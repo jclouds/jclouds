@@ -26,8 +26,6 @@ import com.google.common.base.Function;
 
 /**
  * Gets the name of a group.
- * 
- * @author Ignasi Barrera
  */
 @Singleton
 public class GroupName implements Function<Object, String> {

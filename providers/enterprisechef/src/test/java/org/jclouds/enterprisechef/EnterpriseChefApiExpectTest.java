@@ -42,8 +42,6 @@ import com.google.inject.Module;
 
 /**
  * Expect tests for the {@link EnterpriseChefApi} class.
- * 
- * @author Ignasi Barrera
  */
 @Test(groups = "unit", testName = "EnterpriseChefApiExpectTest")
 public class EnterpriseChefApiExpectTest extends BaseChefApiExpectTest<EnterpriseChefApi> {

@@ -24,8 +24,6 @@ import org.jclouds.providers.internal.BaseProviderMetadata;
 
 /**
  * Implementation of @ link org.jclouds.types.ProviderMetadata} for Enterprise Chef
- * 
- * @author Adrian Cole
  */
 public class EnterpriseChefProviderMetadata extends BaseProviderMetadata
 {

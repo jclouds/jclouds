@@ -36,8 +36,6 @@ import com.google.inject.Injector;
 
 /**
  * Unit tests for the {@link BindGroupToUpdateRequestJsonPayload} class.
- * 
- * @author Ignasi Barrera
  */
 @Test(groups = "unit", testName = "BindGroupToUpdateRequestJsonPayloadTest")
 public class BindGroupToUpdateRequestJsonPayloadTest {
