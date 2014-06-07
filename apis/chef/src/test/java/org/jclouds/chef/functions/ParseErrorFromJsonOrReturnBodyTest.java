@@ -26,9 +26,6 @@ import org.jclouds.http.functions.ReturnStringIf2xx;
 import org.jclouds.util.Strings2;
 import org.testng.annotations.Test;
 
-/**
- * @author Adrian Cole
- */
 @Test(groups = { "unit" })
 public class ParseErrorFromJsonOrReturnBodyTest {
 

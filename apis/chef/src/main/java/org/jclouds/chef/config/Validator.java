@@ -31,8 +31,6 @@ import javax.inject.Qualifier;
  * <p>
  * In a Chef server it must be only one validator client. This client is used by
  * new nodes to autoregister themselves in the Chef server.
- * 
- * @author Ignasi Barrera
  */
 @Target({ METHOD, PARAMETER, FIELD })
 @Retention(RUNTIME)

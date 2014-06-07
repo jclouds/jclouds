@@ -29,8 +29,6 @@ import com.google.common.collect.ImmutableSet;
 
 /**
  * Cookbook definition as returned by the Chef server >= 0.10.8.
- * 
- * @author Ignasi Barrera
  */
 public class CookbookDefinition {
    public static Builder builder() {

@@ -42,11 +42,6 @@ import com.google.common.collect.Multimap;
 import com.google.common.collect.Sets;
 import com.google.inject.TypeLiteral;
 
-/**
- * 
- * 
- * @author Adrian Cole
- */
 @Singleton
 public class NestSlashKeys implements Function<Multimap<String, Supplier<JsonBall>>, Map<String, JsonBall>> {
 

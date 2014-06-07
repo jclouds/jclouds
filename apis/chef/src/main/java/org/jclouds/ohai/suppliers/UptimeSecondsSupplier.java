@@ -25,10 +25,6 @@ import org.jclouds.domain.JsonBall;
 
 import com.google.common.base.Supplier;
 
-/**
- * 
- * @author Adrian Cole
- */
 @Singleton
 public class UptimeSecondsSupplier implements Supplier<JsonBall> {
 

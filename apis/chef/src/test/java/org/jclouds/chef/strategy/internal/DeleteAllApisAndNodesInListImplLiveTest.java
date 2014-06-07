@@ -27,8 +27,6 @@ import com.google.common.collect.ImmutableSet;
 
 /**
  * Tests behavior of {@code DeleteAllApisAndNodesInListImpl} strategies
- * 
- * @author Adrian Cole
  */
 @Test(groups = "live", testName = "DeleteAllApisAndNodesInListImplLiveTest")
 public class DeleteAllApisAndNodesInListImplLiveTest extends BaseChefLiveTest<ChefApi> {

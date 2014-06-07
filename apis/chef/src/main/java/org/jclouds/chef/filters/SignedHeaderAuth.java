@@ -63,8 +63,6 @@ import com.google.common.io.ByteSource;
  * Ported from mixlib-authentication in order to sign Chef requests.
  * 
  * @see <a href= "http://github.com/opscode/mixlib-authentication" />
- * @author Adrian Cole
- * 
  */
 @Singleton
 public class SignedHeaderAuth implements HttpRequestFilter {

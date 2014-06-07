@@ -30,8 +30,6 @@ import com.google.inject.multibindings.MapBinder;
 
 /**
  * Wires the components needed to parse ohai data from a JVM
- * 
- * @author Adrian Cole
  */
 @ConfiguresOhai
 public class JMXOhaiModule extends OhaiModule {

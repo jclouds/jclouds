@@ -39,8 +39,6 @@ import com.google.inject.TypeLiteral;
 
 /**
  * Tests behavior of {@code ParseSandboxFromJson}
- * 
- * @author Adrian Cole
  */
 @Test(groups = { "unit" }, singleThreaded = true)
 public class ParseSandboxFromJsonTest {

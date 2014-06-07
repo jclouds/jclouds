@@ -56,8 +56,6 @@ import com.google.inject.TypeLiteral;
 /**
  * 
  * Generates a bootstrap script relevant for a particular group
- * 
- * @author Adrian Cole
  */
 @Singleton
 public class GroupToBootScript implements Function<String, Statement> {

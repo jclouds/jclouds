@@ -30,8 +30,6 @@ import static com.google.common.collect.Iterables.getFirst;
 
 /**
  * Parses the cookbook versions in a Chef Server <= 0.9.8.
- * 
- * @author Ignasi Barrera
  */
 @Singleton
 public class ParseCookbookVersionsV09FromJson implements Function<HttpResponse, Set<String>> {

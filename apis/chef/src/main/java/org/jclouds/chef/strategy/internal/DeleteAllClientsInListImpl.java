@@ -43,9 +43,6 @@ import com.google.inject.Inject;
 
 /**
  * Concurrently delete all given clients.
- * 
- * @author Adrian Cole
- * @author Ignasi Barrera
  */
 @Singleton
 public class DeleteAllClientsInListImpl implements DeleteAllClientsInList {

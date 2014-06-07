@@ -21,8 +21,6 @@ import org.testng.annotations.Test;
 
 /**
  * Tests behavior of {@code ChefApi} against a Chef Server <= 0.9.8.
- * 
- * @author Adrian Cole
  */
 @Test(groups = { "live" })
 public class ChefApiLiveTest extends BaseChefApiLiveTest<ChefApi> {

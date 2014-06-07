@@ -22,10 +22,6 @@ import org.jclouds.chef.strategy.internal.ListCookbookVersionsImpl;
 import com.google.common.util.concurrent.ListeningExecutorService;
 import com.google.inject.ImplementedBy;
 
-/**
- * 
- * @author Adrian Cole
- */
 @ImplementedBy(ListCookbookVersionsImpl.class)
 public interface ListCookbookVersions {
 

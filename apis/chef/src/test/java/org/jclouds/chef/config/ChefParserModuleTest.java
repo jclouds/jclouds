@@ -33,8 +33,6 @@ import com.google.gson.GsonBuilder;
 
 /**
  * Unit tests for the {@link ChefParserModule} class.
- * 
- * @author Ignasi Barrera
  */
 @Test(groups = "unit", testName = "ChefParserModuleTest")
 public class ChefParserModuleTest {

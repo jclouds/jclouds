@@ -29,8 +29,6 @@ import org.testng.annotations.Test;
 
 /**
  * Tests behavior of {@code ChefClientErrorRetryHandler}
- * 
- * @author Adrian Cole
  */
 @Test(groups = { "unit" })
 public class ChefApiErrorRetryHandlerTest {

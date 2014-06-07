@@ -31,10 +31,6 @@ import org.jclouds.location.Provider;
 
 import com.google.common.reflect.TypeToken;
 
-/**
- * @author Adrian Cole
- * @author Ignasi Barrera
- */
 @Singleton
 public class ChefContextImpl extends BaseView implements ChefContext {
    private final ChefService chefService;

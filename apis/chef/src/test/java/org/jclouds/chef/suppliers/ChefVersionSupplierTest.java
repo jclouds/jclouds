@@ -23,8 +23,6 @@ import org.testng.annotations.Test;
 
 /**
  * Unit tests for the {@link ChefVersionSupplier} class.
- * 
- * @author Ignasi Barrera
  */
 @Test(groups = "unit", testName = "ChefVersionSupplierTest")
 public class ChefVersionSupplierTest {

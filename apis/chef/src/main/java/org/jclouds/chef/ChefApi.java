@@ -87,9 +87,6 @@ import org.jclouds.rest.binders.BindToJsonPayload;
 
 /**
  * Provides synchronous access to Chef.
- * 
- * @author Adrian Cole
- * @author Ignasi Barrera
  */
 @RequestFilters(SignedHeaderAuth.class)
 @Headers(keys = "X-Chef-Version", values = "{" + Constants.PROPERTY_API_VERSION + "}")

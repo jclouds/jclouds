@@ -35,8 +35,6 @@ import com.google.inject.Injector;
 
 /**
  * Tests behavior of {@code ParseKeySetFromJson}
- * 
- * @author Adrian Cole
  */
 @Test(groups = { "unit" }, singleThreaded = true)
 public class ParseKeySetFromJsonTest {

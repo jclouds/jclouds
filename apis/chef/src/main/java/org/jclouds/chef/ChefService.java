@@ -35,8 +35,6 @@ import com.google.inject.ImplementedBy;
 
 /**
  * Provides high level Chef operations.
- * 
- * @author Adrian Cole
  */
 @ImplementedBy(BaseChefService.class)
 public interface ChefService {

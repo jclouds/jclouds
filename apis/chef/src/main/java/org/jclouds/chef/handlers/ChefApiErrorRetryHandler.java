@@ -32,8 +32,6 @@ import com.google.inject.Inject;
 
 /**
  * Allow for eventual consistency on sandbox requests.
- * 
- * @author Adrian Cole
  */
 public class ChefApiErrorRetryHandler implements HttpRetryHandler {
 

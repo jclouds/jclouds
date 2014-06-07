@@ -52,10 +52,6 @@ import com.google.inject.Module;
 import com.google.inject.Provides;
 import com.google.inject.name.Names;
 
-/**
- * 
- * @author Adrian Cole
- */
 @ConfiguresHttpApi
 public class TransientChefApiModule extends AbstractModule {
 

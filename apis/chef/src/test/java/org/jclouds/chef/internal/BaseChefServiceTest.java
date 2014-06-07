@@ -38,8 +38,6 @@ import com.google.inject.Module;
 
 /**
  * Unit tests for the <code>BaseChefService</code> class.
- * 
- * @author Ignasi Barrera
  */
 @Test(groups = "unit", testName = "BaseChefServiceTest")
 public class BaseChefServiceTest {

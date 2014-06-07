@@ -30,8 +30,6 @@ import com.google.common.base.Function;
 /**
  * Parses a cookbook definition from a Json response, taking care of using the
  * appropriate parser.
- * 
- * @author Ignasi Barrera
  */
 @Singleton
 public class ParseCookbookDefinitionCheckingChefVersion implements Function<HttpResponse, Set<String>> {

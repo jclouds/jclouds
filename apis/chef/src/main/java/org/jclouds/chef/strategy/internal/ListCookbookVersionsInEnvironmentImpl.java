@@ -43,10 +43,6 @@ import com.google.common.util.concurrent.ListenableFuture;
 import com.google.common.util.concurrent.ListeningExecutorService;
 import com.google.inject.Inject;
 
-/**
- *
- * @author Noorul Islam K M
- */
 @Singleton
 public class ListCookbookVersionsInEnvironmentImpl implements ListCookbookVersionsInEnvironment {
 

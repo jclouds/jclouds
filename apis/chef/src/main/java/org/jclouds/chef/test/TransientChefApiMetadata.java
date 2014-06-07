@@ -30,8 +30,6 @@ import com.google.inject.Module;
 
 /**
  * Implementation of {@link ApiMetadata} for the Amazon-specific Chef API
- * 
- * @author Adrian Cole
  */
 public class TransientChefApiMetadata extends BaseHttpApiMetadata<TransientChefApi> {
 

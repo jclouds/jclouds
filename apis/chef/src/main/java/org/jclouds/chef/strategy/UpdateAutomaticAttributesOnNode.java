@@ -23,8 +23,6 @@ import com.google.inject.ImplementedBy;
 /**
  * 
  * Updates node with new automatic attributes.
- * 
- * @author Adrian Cole
  */
 @ImplementedBy(UpdateAutomaticAttributesOnNodeImpl.class)
 public interface UpdateAutomaticAttributesOnNode {

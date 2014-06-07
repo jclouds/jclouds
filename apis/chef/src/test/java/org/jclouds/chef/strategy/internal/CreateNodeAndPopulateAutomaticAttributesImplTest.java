@@ -34,8 +34,6 @@ import com.google.common.collect.ImmutableSet;
 
 /**
  * Tests behavior of {@code CreateNodeAndPopulateAutomaticAttributesImpl}
- * 
- * @author Adrian Cole
  */
 @Test(groups = "unit", testName = "CreateNodeAndPopulateAutomaticAttributesImplTest")
 public class CreateNodeAndPopulateAutomaticAttributesImplTest {

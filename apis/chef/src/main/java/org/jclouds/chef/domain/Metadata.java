@@ -29,9 +29,6 @@ import com.google.gson.annotations.SerializedName;
 
 /**
  * A metadata object.
- * 
- * @author Adrian Cole
- * @author Ignasi Barrera
  */
 public class Metadata {
    public static Builder builder() {

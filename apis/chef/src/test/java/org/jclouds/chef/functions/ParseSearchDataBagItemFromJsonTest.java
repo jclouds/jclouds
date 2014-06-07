@@ -34,9 +34,6 @@ import com.google.inject.AbstractModule;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 
-/**
- * @author Ignasi Barrera
- */
 @Test(groups = { "unit" })
 public class ParseSearchDataBagItemFromJsonTest {
    private ParseSearchDatabagFromJson handler;

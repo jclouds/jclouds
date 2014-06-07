@@ -33,11 +33,6 @@ import com.google.inject.Binder;
 import com.google.inject.TypeLiteral;
 import com.google.inject.multibindings.MapBinder;
 
-/**
- * 
- * 
- * @author Adrian Cole
- */
 public class ChefUtils {
 
    public static Date fromOhaiTime(JsonBall ohaiDate) {

@@ -32,9 +32,6 @@ import com.google.gson.annotations.SerializedName;
 
 /**
  * Role object.
- * 
- * @author Adrian Cole
- * @author Ignasi Barrera
  */
 public class Role {
    public static Builder builder() {

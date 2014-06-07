@@ -27,9 +27,6 @@ import org.jclouds.http.functions.ParseJson;
 
 import com.google.common.base.Function;
 
-/**
- * @author Adrian Cole
- */
 @Singleton
 public class ParseKeySetFromJson implements Function<HttpResponse, Set<String>> {
 

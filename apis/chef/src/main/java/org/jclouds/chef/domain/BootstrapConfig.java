@@ -28,7 +28,6 @@ import com.google.common.collect.ImmutableList;
 /**
  * Configures how the nodes in a group will bootstrap.
  * 
- * @author Ignasi Barrera
  * @since 1.7
  */
 public class BootstrapConfig {

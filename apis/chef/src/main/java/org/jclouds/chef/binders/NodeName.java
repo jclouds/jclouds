@@ -22,10 +22,6 @@ import org.jclouds.chef.domain.Node;
 
 import com.google.common.base.Function;
 
-/**
- * 
- * @author Adrian Cole
- */
 @Singleton
 public class NodeName implements Function<Object, String> {
 

@@ -40,10 +40,6 @@ import com.google.inject.AbstractModule;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 
-/**
- * @author Adrian Cole
- * @author Ignasi Barrera
- */
 @Test(groups = "unit", testName = "RunListForGroupTest")
 public class RunListForGroupTest {
    private Injector injector = Guice.createInjector(new AbstractModule() {

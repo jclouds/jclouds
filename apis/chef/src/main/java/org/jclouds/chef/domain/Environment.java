@@ -30,8 +30,6 @@ import com.google.gson.annotations.SerializedName;
 
 /**
  * An environment.
- * 
- * @author Ignasi Barrera
  */
 public class Environment {
    public static Builder builder() {

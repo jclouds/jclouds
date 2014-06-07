@@ -43,9 +43,6 @@ import com.google.inject.TypeLiteral;
 
 /**
  * Tests behavior of {@code ParseCookbookVersionFromJson}
- * 
- * @author Adrian Cole
- * @author Ignasi Barrera
  */
 @Test(groups = { "unit" }, singleThreaded = true)
 public class ParseCookbookVersionFromJsonTest {

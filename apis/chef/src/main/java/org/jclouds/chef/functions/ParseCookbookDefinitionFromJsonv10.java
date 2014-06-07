@@ -27,8 +27,6 @@ import java.util.Map;
 
 /**
  * Parses the cookbook versions in a Chef Server >= 0.10.8.
- * 
- * @author Alexandr Kulik
  */
 @Singleton
 public class ParseCookbookDefinitionFromJsonv10 implements Function<HttpResponse, CookbookDefinition> {

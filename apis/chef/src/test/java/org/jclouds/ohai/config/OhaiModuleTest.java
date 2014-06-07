@@ -45,8 +45,6 @@ import com.google.inject.util.Providers;
 
 /**
  * Tests behavior of {@code OhaiModule}
- * 
- * @author Adrian Cole
  */
 @Test(groups = { "unit" })
 public class OhaiModuleTest {

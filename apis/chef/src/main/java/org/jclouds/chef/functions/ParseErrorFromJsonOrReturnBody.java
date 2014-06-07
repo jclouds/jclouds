@@ -27,11 +27,6 @@ import org.jclouds.http.functions.ReturnStringIf2xx;
 
 import com.google.common.base.Function;
 
-/**
- * 
- * 
- * @author Adrian Cole
- */
 @Singleton
 public class ParseErrorFromJsonOrReturnBody implements Function<HttpResponse, String> {
    Pattern pattern = Pattern.compile(".*\\[\"([^\"]+)\"\\].*");

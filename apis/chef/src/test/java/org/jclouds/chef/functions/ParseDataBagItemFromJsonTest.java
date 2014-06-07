@@ -37,9 +37,6 @@ import com.google.inject.Injector;
 import com.google.inject.Key;
 import com.google.inject.TypeLiteral;
 
-/**
- * @author AdrianCole
- */
 @Test(groups = { "unit" })
 public class ParseDataBagItemFromJsonTest {
    private ParseJson<DatabagItem> handler;

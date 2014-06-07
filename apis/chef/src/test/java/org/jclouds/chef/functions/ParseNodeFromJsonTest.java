@@ -39,8 +39,6 @@ import com.google.inject.TypeLiteral;
 
 /**
  * Tests behavior of {@code ParseNodeFromJson}
- * 
- * @author Adrian Cole
  */
 @Test(groups = { "unit" }, singleThreaded = true)
 public class ParseNodeFromJsonTest {

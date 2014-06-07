@@ -34,9 +34,6 @@ import com.google.inject.TypeLiteral;
 
 /**
  * Retrieves the run-list for a specific group
- * 
- * @author Adrian Cole
- * @author Ignasi Barrera
  */
 @Singleton
 public class RunListForGroup implements Function<String, List<String>> {

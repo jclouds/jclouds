@@ -28,9 +28,6 @@ import com.google.common.primitives.Bytes;
 
 /**
  * Resource object.
- * 
- * @author Adrian Cole
- * @author Ignasi Barrera
  */
 public class Resource {
    public static Builder builder() {

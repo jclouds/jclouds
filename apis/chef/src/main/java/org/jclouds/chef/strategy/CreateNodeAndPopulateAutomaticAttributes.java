@@ -24,8 +24,6 @@ import com.google.inject.ImplementedBy;
 /**
  * 
  * Creates a new node with automatic attributes.
- * 
- * @author Adrian Cole
  */
 @ImplementedBy(CreateNodeAndPopulateAutomaticAttributesImpl.class)
 public interface CreateNodeAndPopulateAutomaticAttributes {

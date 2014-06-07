@@ -22,10 +22,6 @@ import javax.inject.Singleton;
 import org.jclouds.chef.domain.Node;
 import org.jclouds.http.functions.ParseJson;
 
-/**
- * 
- * @author Adrian Cole
- */
 @Singleton
 public class ParseSearchNodesFromJson extends ParseSearchResultFromJson<Node> {
 

@@ -35,8 +35,6 @@ import com.google.common.base.Supplier;
 
 /**
  * Properly supply the version of the Chef Server.
- * 
- * @author Ignasi Barrera
  */
 @Singleton
 public class ChefVersionSupplier implements Supplier<Integer> {

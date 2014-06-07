@@ -31,8 +31,6 @@ import com.google.common.base.Function;
 /**
  * Parses a cookbook definition from a Json response, assuming a Chef Server >=
  * 0.10.8.
- * 
- * @author Ignasi Barrera
  */
 @Singleton
 public class ParseCookbookDefinitionFromJson implements Function<HttpResponse, Set<String>> {

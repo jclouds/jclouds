@@ -32,8 +32,6 @@ import com.google.common.base.Function;
 /**
  * 
  * Generates a client relevant for a particular group
- * 
- * @author Adrian Cole
  */
 @Singleton
 public class ClientForGroup implements Function<String, Client> {

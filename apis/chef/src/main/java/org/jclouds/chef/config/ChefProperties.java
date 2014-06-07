@@ -19,8 +19,6 @@ package org.jclouds.chef.config;
 
 /**
  * Configuration properties and constants used in Chef connections.
- * 
- * @author Adrian Cole
  */
 public interface ChefProperties {
 

@@ -24,8 +24,6 @@ import com.google.common.collect.ImmutableList;
 
 /**
  * Tests possible uses of RunListBuilder
- * 
- * @author Adrian Cole
  */
 public class RunListBuilderTest {
 

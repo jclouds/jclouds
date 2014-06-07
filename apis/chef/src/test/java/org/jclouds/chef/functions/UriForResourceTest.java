@@ -27,8 +27,6 @@ import com.google.common.base.Function;
 
 /**
  * Tests behavior of {@code UriForResource}
- * 
- * @author Ignasi Barrera
  */
 @Test(groups = { "unit" })
 public class UriForResourceTest {

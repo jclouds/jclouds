@@ -70,8 +70,6 @@ import com.google.inject.Module;
 
 /**
  * Tests annotation parsing of {@code ChefApi}.
- * 
- * @author Adrian Cole
  */
 @Test(groups = { "unit" })
 public class ChefApiTest extends BaseAsyncApiTest<ChefApi> {

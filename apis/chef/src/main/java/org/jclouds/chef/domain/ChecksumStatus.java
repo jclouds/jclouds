@@ -24,9 +24,6 @@ import com.google.gson.annotations.SerializedName;
 
 /**
  * The checksum of an uploaded resource.
- * 
- * @author Adrian Cole
- * @author Ignasi Barrera
  */
 public class ChecksumStatus {
    public static Builder builder() {

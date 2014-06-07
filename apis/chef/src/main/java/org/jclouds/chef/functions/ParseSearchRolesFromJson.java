@@ -22,10 +22,6 @@ import javax.inject.Singleton;
 import org.jclouds.chef.domain.Role;
 import org.jclouds.http.functions.ParseJson;
 
-/**
- * 
- * @author Adrian Cole
- */
 @Singleton
 public class ParseSearchRolesFromJson extends ParseSearchResultFromJson<Role> {
 

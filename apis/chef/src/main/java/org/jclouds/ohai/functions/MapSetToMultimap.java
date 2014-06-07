@@ -26,10 +26,6 @@ import com.google.common.base.Function;
 import com.google.common.collect.LinkedHashMultimap;
 import com.google.common.collect.Multimap;
 
-/**
- * 
- * @author Adrian Cole
- */
 @Singleton
 public class MapSetToMultimap<K, V> implements Function<Map<K, Set<V>>, Multimap<K, V>> {
 

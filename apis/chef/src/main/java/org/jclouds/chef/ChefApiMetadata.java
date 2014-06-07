@@ -39,9 +39,6 @@ import com.google.inject.Module;
 
 /**
  * Implementation of {@link ApiMetadata} for OpsCode's Chef api.
- * 
- * @author Adrian Cole
- * @author Ignasi Barrera
  */
 public class ChefApiMetadata extends BaseHttpApiMetadata<ChefApi> {
 
