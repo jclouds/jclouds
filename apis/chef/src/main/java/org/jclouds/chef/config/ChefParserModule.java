@@ -70,11 +70,6 @@ import com.google.inject.AbstractModule;
 import com.google.inject.ImplementedBy;
 import com.google.inject.Provides;
 
-/**
- * 
- * 
- * @author Adrian Cole
- */
 public class ChefParserModule extends AbstractModule {
    @ImplementedBy(PrivateKeyAdapterImpl.class)
    public interface PrivateKeyAdapter extends JsonDeserializer<PrivateKey> {

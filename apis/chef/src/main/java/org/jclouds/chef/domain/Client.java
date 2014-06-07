@@ -28,9 +28,6 @@ import com.google.gson.annotations.SerializedName;
 
 /**
  * Client object.
- * 
- * @author Adrian Cole
- * @author Ignasi Barrera
  */
 public class Client {
    public static Builder builder() {

@@ -32,9 +32,6 @@ import com.google.gson.annotations.SerializedName;
 
 /**
  * Node object.
- * 
- * @author Adrian Cole
- * @author Ignasi Barrera
  */
 public class Node {
    public static Builder builder() {

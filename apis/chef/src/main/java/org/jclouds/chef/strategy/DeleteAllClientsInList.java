@@ -23,9 +23,6 @@ import com.google.inject.ImplementedBy;
 
 /**
  * Deletes all clients in a given list.
- * 
- * @author Adrian Cole
- * @author Ignasi Barrera
  */
 @ImplementedBy(DeleteAllClientsInListImpl.class)
 public interface DeleteAllClientsInList {

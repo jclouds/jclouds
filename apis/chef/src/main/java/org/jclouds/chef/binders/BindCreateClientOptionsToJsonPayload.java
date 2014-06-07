@@ -35,8 +35,6 @@ import com.google.common.collect.Iterables;
 
 /**
  * Bind the parameters of a {@link CreateClientOptions} to the payload.
- * 
- * @author Ignasi Barrera
  */
 public class BindCreateClientOptionsToJsonPayload extends BindToJsonPayload {
    @Inject

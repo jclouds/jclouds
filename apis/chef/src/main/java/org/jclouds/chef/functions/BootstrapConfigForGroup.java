@@ -37,9 +37,6 @@ import com.google.inject.TypeLiteral;
 /**
  * 
  * Retrieves the bootstrap configuration for a specific group
- * 
- * @author Adrian Cole
- * @author Ignasi Barrera
  */
 @Singleton
 public class BootstrapConfigForGroup implements Function<String, DatabagItem> {

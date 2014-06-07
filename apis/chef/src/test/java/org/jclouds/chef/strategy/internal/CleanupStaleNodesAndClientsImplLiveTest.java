@@ -27,8 +27,6 @@ import com.google.common.collect.ImmutableSet;
 
 /**
  * Tests behavior of {@code CleanupStaleNodesAndClientsImpl} strategies
- * 
- * @author Adrian Cole
  */
 @Test(groups = "live", testName = "CleanupStaleNodesAndClientsImplLiveTest")
 public class CleanupStaleNodesAndClientsImplLiveTest extends BaseChefLiveTest<ChefApi> {

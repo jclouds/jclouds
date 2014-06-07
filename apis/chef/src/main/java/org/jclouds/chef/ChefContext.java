@@ -25,8 +25,6 @@ import com.google.inject.ImplementedBy;
 
 /**
  * Provides an entry point to Chef features.
- * 
- * @author Ignasi Barrera
  */
 @ImplementedBy(ChefContextImpl.class)
 public interface ChefContext extends View, Closeable {

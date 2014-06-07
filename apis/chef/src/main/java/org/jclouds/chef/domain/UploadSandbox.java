@@ -31,9 +31,6 @@ import com.google.gson.annotations.SerializedName;
 
 /**
  * An upload sandbox.
- * 
- * @author Adrian Cole
- * @author Ignasi Barrera
  */
 public class UploadSandbox {
    public static Builder builder() {

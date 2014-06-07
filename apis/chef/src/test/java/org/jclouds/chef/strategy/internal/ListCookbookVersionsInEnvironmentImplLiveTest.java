@@ -45,8 +45,6 @@ import com.google.common.primitives.Bytes;
 
 /**
  * Tests behavior of {@code ListCookbookVersionsInEnvironmentImpl} strategies
- *
- * @author Noorul Islam K M
  */
 @Test(groups = "live", testName = "ListCookbookVersionsInEnvironmentImplLiveTest")
 public class ListCookbookVersionsInEnvironmentImplLiveTest extends BaseChefLiveTest<ChefApi> {

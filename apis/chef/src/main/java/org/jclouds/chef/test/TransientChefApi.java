@@ -57,8 +57,6 @@ import com.google.common.base.Function;
 
 /**
  * In-memory chef simulator.
- * 
- * @author Adrian Cole
  */
 public class TransientChefApi implements ChefApi {
    @Singleton

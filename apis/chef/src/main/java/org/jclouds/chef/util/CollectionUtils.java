@@ -28,8 +28,6 @@ import com.google.common.collect.ImmutableSet;
 
 /**
  * Utility methods to work with collections.
- * 
- * @author Ignasi Barrera
  */
 public class CollectionUtils {
 

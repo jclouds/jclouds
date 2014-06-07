@@ -29,9 +29,6 @@ import com.google.gson.annotations.SerializedName;
 
 /**
  * Cookbook object.
- * 
- * @author Adrian Cole
- * @author Ignasi Barrera
  */
 public class CookbookVersion {
    public static Builder builder(String name, String version) {

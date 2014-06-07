@@ -37,9 +37,6 @@ import com.google.common.io.Closeables;
 
 /**
  * This will parse and set an appropriate exception on the command object.
- * 
- * @author Adrian Cole
- * 
  */
 @Singleton
 public class ChefErrorHandler implements HttpErrorHandler {

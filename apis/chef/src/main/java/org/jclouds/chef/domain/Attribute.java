@@ -32,9 +32,6 @@ import com.google.gson.annotations.SerializedName;
 
 /**
  * An attribute in a cookbook metadata.
- * 
- * @author Adrian Cole
- * @author Ignasi Barrera
  */
 public class Attribute {
    public static Builder builder() {

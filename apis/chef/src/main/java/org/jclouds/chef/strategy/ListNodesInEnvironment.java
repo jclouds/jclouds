@@ -22,10 +22,6 @@ import org.jclouds.chef.strategy.internal.ListNodesInEnvironmentImpl;
 import com.google.common.util.concurrent.ListeningExecutorService;
 import com.google.inject.ImplementedBy;
 
-/**
- * 
- * @author Noorul Islam K M
- */
 @ImplementedBy(ListNodesInEnvironmentImpl.class)
 public interface ListNodesInEnvironment {
 

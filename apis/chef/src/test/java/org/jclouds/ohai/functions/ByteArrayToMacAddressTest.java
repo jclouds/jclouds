@@ -23,8 +23,6 @@ import org.testng.annotations.Test;
 
 /**
  * Tests behavior of {@code ByteArrayToMacAddress}
- * 
- * @author Adrian Cole
  */
 @Test(groups = { "unit" }, sequential = true)
 public class ByteArrayToMacAddressTest {

@@ -29,8 +29,6 @@ import com.google.common.base.Function;
 
 /**
  * Extracts the uri field of the given {@link Resource}.
- * 
- * @author Ignasi Barrera
  */
 @Singleton
 public class UriForResource implements Function<Object, URI> {

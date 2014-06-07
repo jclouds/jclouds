@@ -69,8 +69,6 @@ import com.google.common.primitives.Bytes;
 
 /**
  * Tests behavior of {@code ChefApi}
- * 
- * @author Adrian Cole
  */
 @Test(groups = { "live", "integration" })
 public abstract class BaseChefApiLiveTest<A extends ChefApi> extends BaseChefLiveTest<A> {

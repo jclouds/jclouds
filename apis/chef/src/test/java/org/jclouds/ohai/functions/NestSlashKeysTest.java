@@ -38,8 +38,6 @@ import com.google.inject.Injector;
 
 /**
  * Tests behavior of {@code NestSlashKeys}
- * 
- * @author Adrian Cole
  */
 @Test(groups = { "unit" }, sequential = true)
 public class NestSlashKeysTest {

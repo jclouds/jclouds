@@ -50,8 +50,6 @@ import com.google.inject.TypeLiteral;
 
 /**
  * Tests behavior of {@code ParseClientFromJson}
- * 
- * @author Adrian Cole
  */
 @Test(groups = { "unit" })
 public class ParseClientFromJsonTest {

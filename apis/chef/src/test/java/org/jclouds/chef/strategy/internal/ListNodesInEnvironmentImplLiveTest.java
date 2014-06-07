@@ -28,8 +28,6 @@ import com.google.common.collect.ImmutableSet;
 
 /**
  * Tests behavior of {@code ListNodesInEnvironmentImpl} strategies
- *
- * @author Noorul Islam K M
  */
 @Test(groups = "live", testName = "ListNodesInEnvironmentImplLiveTest")
 public class ListNodesInEnvironmentImplLiveTest extends BaseChefLiveTest<ChefApi> {

@@ -21,11 +21,6 @@ import org.jclouds.chef.strategy.internal.DeleteAllNodesInListImpl;
 import com.google.common.util.concurrent.ListeningExecutorService;
 import com.google.inject.ImplementedBy;
 
-/**
- * 
- * 
- * @author Adrian Cole
- */
 @ImplementedBy(DeleteAllNodesInListImpl.class)
 public interface DeleteAllNodesInList {
 

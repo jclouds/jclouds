@@ -37,8 +37,6 @@ import static com.google.common.collect.Iterables.transform;
  * <p>
  * When searching databags, the items are contained inside the
  * <code>raw_data</code> list.
- * 
- * @author Adrian Cole
  */
 @Singleton
 public class ParseSearchDatabagFromJson implements Function<HttpResponse, SearchResult<DatabagItem>> {

@@ -26,10 +26,6 @@ import java.lang.annotation.Target;
 
 import javax.inject.Qualifier;
 
-/**
- * 
- * @author Adrian Cole
- */
 @Retention(RUNTIME)
 @Target({ TYPE, METHOD, PARAMETER })
 @Qualifier

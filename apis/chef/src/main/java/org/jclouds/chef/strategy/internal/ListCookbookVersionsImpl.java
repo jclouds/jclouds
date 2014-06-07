@@ -42,10 +42,6 @@ import com.google.common.util.concurrent.ListenableFuture;
 import com.google.common.util.concurrent.ListeningExecutorService;
 import com.google.inject.Inject;
 
-/**
- * 
- * @author Adrian Cole
- */
 @Singleton
 public class ListCookbookVersionsImpl implements ListCookbookVersions {
 

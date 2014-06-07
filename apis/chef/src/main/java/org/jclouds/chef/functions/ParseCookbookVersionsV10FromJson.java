@@ -34,8 +34,6 @@ import static com.google.common.collect.Sets.newLinkedHashSet;
 
 /**
  * Parses the cookbook versions in a Chef Server >= 0.10.8.
- * 
- * @author Ignasi Barrera
  */
 @Singleton
 public class ParseCookbookVersionsV10FromJson implements Function<HttpResponse, Set<String>> {

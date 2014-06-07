@@ -32,8 +32,6 @@ import com.google.common.base.Joiner;
 /**
  * 
  * Creates a string in the form: {@code 00:26:bb:09:e6:c4 }
- * 
- * @author Adrian Cole
  */
 @Singleton
 public class ByteArrayToMacAddress implements Function<byte[], String> {

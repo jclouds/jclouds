@@ -34,8 +34,6 @@ import com.google.common.collect.ImmutableMap;
 
 /**
  * Tests behavior of {@code UpdateAutomaticAttributesOnNodeImpl}
- * 
- * @author Adrian Cole
  */
 @Test(groups = { "unit" })
 public class UpdateAutomaticAttributesOnNodeImplTest {

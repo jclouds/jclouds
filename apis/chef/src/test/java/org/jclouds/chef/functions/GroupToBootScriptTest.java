@@ -58,9 +58,6 @@ import com.google.inject.Injector;
 import com.google.inject.Key;
 import com.google.inject.name.Names;
 
-/**
- * @author Adrian Cole
- */
 @Test(groups = "unit", testName = "GroupToBootScriptTest")
 public class GroupToBootScriptTest {
 

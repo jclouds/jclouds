@@ -22,8 +22,6 @@ import org.jclouds.http.options.BaseHttpRequestOptions;
 
 /**
  * Options for the search api.
- * 
- * @author Ignasi Barrera
  */
 public class SearchOptions extends BaseHttpRequestOptions {
 

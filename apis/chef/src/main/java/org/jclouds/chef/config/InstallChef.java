@@ -28,8 +28,6 @@ import javax.inject.Qualifier;
 
 /**
  * Used to configure the Chef install script.
- * 
- * @author Ignasi Barrera
  */
 @Target({ METHOD, PARAMETER, FIELD })
 @Retention(RUNTIME)

@@ -29,8 +29,6 @@ import com.google.inject.Injector;
 
 /**
  * Tests behavior of {@code ParseCookbookDefinitionCheckingChefVersion}.
- * 
- * @author Ignasi Barrera
  */
 @Test(groups = { "unit" }, singleThreaded = true)
 public class ParseCookbookDefinitionCheckingChefVersionTest {

@@ -35,8 +35,6 @@ import com.google.inject.Injector;
 
 /**
  * Tests behavior of {@code ParseCookbookVersionsV10FromJson}
- * 
- * @author Ignasi Barrera
  */
 @Test(groups = { "unit" }, singleThreaded = true)
 public class ParseCookbookVersionsV10FromJsonTest {

@@ -31,8 +31,6 @@ import static com.google.common.collect.Sets.newLinkedHashSet;
 
 /**
  * Parses the cookbook versions in a Chef Server >= 0.10.8.
- *
- * @author Alexandr Kulik
  */
 @Singleton
 public class ParseCookbookDefinitionListFromJsonv10 implements Function<HttpResponse, Set<CookbookDefinition>> {

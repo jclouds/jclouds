@@ -29,8 +29,6 @@ import com.google.common.collect.ImmutableList;
 
 /**
  * builds a run list in the correct syntax for chef.
- * 
- * @author Adrian Cole
  */
 public class RunListBuilder {
    private List<String> list = newArrayList();

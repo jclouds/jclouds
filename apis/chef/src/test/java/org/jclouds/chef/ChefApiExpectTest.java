@@ -39,8 +39,6 @@ import com.google.inject.Module;
 
 /**
  * Expect tests for the {@link ChefApi} class.
- *
- * @author Noorul Islam K M
  */
 @Test(groups = "unit", testName = "ChefApiExpectTest")
 public class ChefApiExpectTest extends BaseChefApiExpectTest<ChefApi> {

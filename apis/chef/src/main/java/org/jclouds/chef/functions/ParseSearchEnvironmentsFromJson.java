@@ -22,9 +22,6 @@ import org.jclouds.http.functions.ParseJson;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
-/**
- * @author Alex Kulik
- */
 @Singleton
 public class ParseSearchEnvironmentsFromJson extends ParseSearchResultFromJson<Environment> {
 

@@ -30,9 +30,6 @@ import com.google.gson.annotations.SerializedName;
 
 /**
  * Sandbox object.
- * 
- * @author Adrian Cole
- * @author Ignasi Barrera
  */
 public class Sandbox {
    public static Builder builder() {

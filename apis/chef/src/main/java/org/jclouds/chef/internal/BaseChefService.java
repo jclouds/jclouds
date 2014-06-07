@@ -68,9 +68,6 @@ import com.google.common.collect.Maps;
 import com.google.common.io.ByteStreams;
 import com.google.common.io.InputSupplier;
 
-/**
- * @author Adrian Cole
- */
 @Singleton
 public class BaseChefService implements ChefService {
 

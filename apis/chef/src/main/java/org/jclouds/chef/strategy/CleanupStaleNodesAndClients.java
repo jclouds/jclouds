@@ -23,8 +23,6 @@ import com.google.inject.ImplementedBy;
 /**
  * 
  * Cleans up nodes and clients who have been hanging around too long.
- * 
- * @author Adrian Cole
  */
 @ImplementedBy(CleanupStaleNodesAndClientsImpl.class)
 public interface CleanupStaleNodesAndClients {

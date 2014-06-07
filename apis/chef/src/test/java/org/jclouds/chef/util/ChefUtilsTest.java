@@ -28,8 +28,6 @@ import com.google.common.collect.ImmutableList;
 
 /**
  * Tests behavior of {@code ChefUtils}
- * 
- * @author Adrian Cole
  */
 @Test(groups = { "unit" }, sequential = true)
 public class ChefUtilsTest {

@@ -29,11 +29,6 @@ import org.jclouds.ohai.functions.NestSlashKeys;
 import com.google.common.base.Supplier;
 import com.google.common.collect.Multimap;
 
-/**
- * 
- * @author Adrian Cole
- * 
- */
 @Singleton
 public class AutomaticSupplier implements Supplier<Map<String, JsonBall>> {
    private final Multimap<String, Supplier<JsonBall>> autoAttrs;

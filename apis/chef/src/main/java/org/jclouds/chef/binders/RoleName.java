@@ -22,10 +22,6 @@ import org.jclouds.chef.domain.Role;
 
 import com.google.common.base.Function;
 
-/**
- * 
- * @author Adrian Cole
- */
 @Singleton
 public class RoleName implements Function<Object, String> {
 

@@ -35,10 +35,6 @@ import com.google.common.reflect.TypeToken;
 import com.google.inject.Injector;
 import com.google.inject.Module;
 
-/**
- * 
- * @author Adrian Cole
- */
 @Test(groups = "live")
 public abstract class BaseChefLiveTest<A extends ChefApi> extends BaseApiLiveTest<A> {
 

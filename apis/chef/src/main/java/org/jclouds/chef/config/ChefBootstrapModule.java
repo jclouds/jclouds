@@ -39,8 +39,6 @@ import com.google.inject.Provides;
 
 /**
  * Provides bootstrap configuration for nodes.
- * 
- * @author Ignasi Barrera
  */
 public class ChefBootstrapModule extends AbstractModule {
 

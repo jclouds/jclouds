@@ -32,8 +32,6 @@ import javax.inject.Qualifier;
  * Chef Server version 0.9 and 0.10 return a different Json when rquesting the
  * cookbook definitions. This annotation can be used to setup the cookbook
  * parser.
- * 
- * @author Ignasi Barrera
  */
 @Target({ METHOD, PARAMETER, FIELD })
 @Retention(RUNTIME)

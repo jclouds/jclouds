@@ -45,8 +45,6 @@ import com.google.inject.multibindings.MapBinder;
 
 /**
  * Wires the components needed to parse ohai data
- * 
- * @author Adrian Cole
  */
 @ConfiguresOhai
 public class OhaiModule extends AbstractModule {

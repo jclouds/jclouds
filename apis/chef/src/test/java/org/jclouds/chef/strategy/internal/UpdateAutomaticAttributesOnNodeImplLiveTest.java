@@ -30,8 +30,6 @@ import com.google.common.collect.ImmutableSet;
 
 /**
  * Tests behavior of {@code UpdateAutomaticAttributesOnNodeImpl} strategies
- * 
- * @author Adrian Cole
  */
 @Test(groups = "live", testName = "UpdateAutomaticAttributesOnNodeImplLiveTest")
 public class UpdateAutomaticAttributesOnNodeImplLiveTest extends BaseChefLiveTest<ChefApi> {

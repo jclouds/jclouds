@@ -33,8 +33,6 @@ import com.google.common.collect.Multimap;
  * 
  * This class has static methods that create customized predicates to use with
  * {@link org.jclouds.chef.ChefService}.
- * 
- * @author Adrian Cole
  */
 public class CookbookVersionPredicates {
    /**

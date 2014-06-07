@@ -71,9 +71,6 @@ import com.google.inject.name.Names;
 
 /**
  * Configures the Chef connection.
- * 
- * @author Adrian Cole
- * @author Ignasi Barrera
  */
 @ConfiguresHttpApi
 public abstract class BaseChefHttpApiModule<S> extends HttpApiModule<S> {

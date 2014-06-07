@@ -30,10 +30,6 @@ import org.jclouds.chef.domain.DatabagItem;
 import org.jclouds.rest.annotations.Api;
 import org.testng.annotations.Test;
 
-/**
- * @author Adrian Cole
- * @author Ignasi Barrera
- */
 @Test(groups = "unit", testName = "BootstrapConfigForGroupTest")
 public class BootstrapConfigForGroupTest {
 

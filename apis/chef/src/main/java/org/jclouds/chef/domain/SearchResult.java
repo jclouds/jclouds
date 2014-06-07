@@ -22,9 +22,6 @@ import com.google.common.collect.Iterables;
 
 /**
  * A result of a search.
- * 
- * @author Adrian Cole
- * @author Ignasi Barrera
  */
 public class SearchResult<T> extends LinkedHashSet<T> {
    private static final long serialVersionUID = 4000610660948065287L;

@@ -28,8 +28,6 @@ import org.testng.annotations.Test;
 
 /**
  * Tests behavior of {@code TransientChefApi}
- * 
- * @author Adrian Cole
  */
 @Test(groups = { "integration" })
 public class TransientChefApiIntegrationTest extends BaseChefLiveTest<ChefApi> {

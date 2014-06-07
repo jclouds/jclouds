@@ -38,8 +38,6 @@ import com.google.common.base.Supplier;
 /**
  * 
  * Updates node with new automatic attributes.
- * 
- * @author Adrian Cole
  */
 @Singleton
 public class CreateNodeAndPopulateAutomaticAttributesImpl implements CreateNodeAndPopulateAutomaticAttributes {

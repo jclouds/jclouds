@@ -18,8 +18,6 @@ package org.jclouds.chef.options;
 
 /**
  * Options for the create client method.
- * 
- * @author Ignasi Barrera
  */
 public class CreateClientOptions implements Cloneable {
    /** Administrator flag. This flag will be ignored in Opscode Hosted Chef. */

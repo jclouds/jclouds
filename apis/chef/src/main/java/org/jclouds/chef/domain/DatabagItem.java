@@ -22,9 +22,6 @@ import org.jclouds.domain.JsonBall;
 
 /**
  * An item in a data bag.
- * 
- * @author Adrian Cole
- * @author Ignasi Barrera
  */
 public class DatabagItem extends JsonBall {
 
