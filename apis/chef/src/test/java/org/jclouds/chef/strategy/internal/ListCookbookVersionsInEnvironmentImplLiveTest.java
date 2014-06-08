@@ -41,6 +41,8 @@ import java.util.List;
 
 import com.google.common.base.Predicate;
 import com.google.common.collect.ImmutableSet;
+import com.google.common.hash.Hashing;
+import com.google.common.io.Files;
 import com.google.common.primitives.Bytes;
 
 /**
@@ -94,11 +96,12 @@ public class ListCookbookVersionsInEnvironmentImplLiveTest extends BaseChefLiveT
 
    private FilePayload uploadContent(String fileName) throws Exception {
       // Define the file you want in the cookbook
-      FilePayload content = Payloads.newFilePayload(new File(System.getProperty("user.dir"), fileName));
+      File file = new File(System.getProperty("user.dir"), fileName);
+      FilePayload content = Payloads.newFilePayload(file);
       content.getContentMetadata().setContentType("application/x-binary");
 
       // Get an md5 so that you can see if the server already has it or not
-      Payloads.calculateMD5(content);
+      content.getContentMetadata().setContentMD5(Files.asByteSource(file).hash(Hashing.md5()).asBytes());
 
       // Note that java collections cannot effectively do equals or hashcodes on
       // byte arrays, so let's convert to a list of bytes.
