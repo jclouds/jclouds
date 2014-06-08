@@ -57,7 +57,6 @@ import static org.jclouds.openstack.keystone.v2_0.KeystoneFallbacks.EmptyPaginat
  * A logical entity for forwarding packets across internal subnets and NATting them on external
  * networks through an appropriate external gateway.
  *
- * @author Nick Livens
  * @see <a href=
  *      "http://docs.openstack.org/api/openstack-network/2.0/content/router_ext.html">api doc</a>
  */

@@ -26,8 +26,6 @@ import javax.ws.rs.core.MediaType;
 
 /**
  * Base class for writing Neutron Expect tests
- *
- * @author Nick Livens
  */
 public class BaseNeutronExpectTest<T> extends BaseRestApiExpectTest<T> {
    protected HttpRequest keystoneAuthWithUsernameAndPassword;

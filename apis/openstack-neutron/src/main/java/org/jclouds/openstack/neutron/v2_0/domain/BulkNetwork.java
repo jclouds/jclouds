@@ -24,8 +24,6 @@ import java.beans.ConstructorProperties;
 /**
  * A Neutron network used for creating networks in bulk
  * The only difference between this and the actual network are the missing fields id, tenantId, state & shared
- *
- * @author Nick Livens
  */
 public class BulkNetwork {
 

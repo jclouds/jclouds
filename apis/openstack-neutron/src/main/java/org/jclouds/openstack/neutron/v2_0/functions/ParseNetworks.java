@@ -38,9 +38,6 @@ import java.beans.ConstructorProperties;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
-/**
- * @author Nick Livens
- */
 @Beta
 @Singleton
 public class ParseNetworks extends ParseJson<Networks> {

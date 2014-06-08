@@ -40,8 +40,6 @@ import static org.testng.Assert.assertTrue;
 
 /**
  * Tests parsing and Guice wiring of SubnetApi
- *
- * @author Nick Livens
  */
 @Test(groups = "unit", testName = "SubnetApiExpectTest")
 public class SubnetApiExpectTest extends BaseNeutronApiExpectTest {

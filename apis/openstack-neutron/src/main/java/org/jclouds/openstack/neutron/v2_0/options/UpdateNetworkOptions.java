@@ -25,9 +25,6 @@ import org.jclouds.rest.binders.BindToJsonPayload;
 import javax.inject.Inject;
 import java.util.Map;
 
-/**
- * @author Nick Livens
- */
 public class UpdateNetworkOptions implements MapBinder {
 
    @Inject

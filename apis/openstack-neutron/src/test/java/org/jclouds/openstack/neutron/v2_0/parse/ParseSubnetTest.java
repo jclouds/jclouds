@@ -25,9 +25,6 @@ import org.testng.annotations.Test;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.core.MediaType;
 
-/**
- * @author Nick Livens
- */
 @Test(groups = "unit", testName = "ParseSubnetTest")
 public class ParseSubnetTest extends BaseItemParserTest<Subnet> {
 

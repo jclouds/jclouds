@@ -20,7 +20,6 @@ package org.jclouds.openstack.neutron.v2_0.domain;
 /**
  * The possible state of an entity
  *
- * @author Nick Livens
  * @see <a href="http://docs.openstack.org/api/openstack-network/2.0/content/Concepts-d1e369.html">api doc</a>
  */
 public enum State {

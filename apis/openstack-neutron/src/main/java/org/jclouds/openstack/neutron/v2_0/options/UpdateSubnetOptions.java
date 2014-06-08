@@ -30,9 +30,6 @@ import java.util.Collection;
 import java.util.Map;
 import java.util.Set;
 
-/**
- * @author Nick Livens
- */
 public class UpdateSubnetOptions implements MapBinder {
 
    @Inject

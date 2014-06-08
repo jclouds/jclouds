@@ -56,7 +56,6 @@ import static org.jclouds.openstack.keystone.v2_0.KeystoneFallbacks.EmptyPaginat
  * Provides synchronous access to Subnet operations on the Openstack Neutron API.
  *
 
- * @author Nick Livens
  * @see <a href=
  *      "http://docs.openstack.org/api/openstack-network/2.0/content/Subnets.html">api doc</a>
  */

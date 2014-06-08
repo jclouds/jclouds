@@ -26,8 +26,6 @@ import java.util.Map;
 
 /**
  * This class is used for methods who don't need a wrapper around their JSON body
- *
- * @author Nick Livens
  */
 public class EmptyOptions implements MapBinder {
 

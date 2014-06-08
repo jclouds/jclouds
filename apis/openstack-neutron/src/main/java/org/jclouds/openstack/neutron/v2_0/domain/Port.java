@@ -27,7 +27,6 @@ import static com.google.common.base.Preconditions.checkNotNull;
 /**
  * A Neutron port
  *
- * @author Nick Livens
  * @see <a href="http://docs.openstack.org/api/openstack-network/1.0/content/Ports.html">api doc</a>
  */
 public class Port extends ReferenceWithName {

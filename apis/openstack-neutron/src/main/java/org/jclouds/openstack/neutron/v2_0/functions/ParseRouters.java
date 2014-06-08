@@ -39,9 +39,6 @@ import java.beans.ConstructorProperties;
 import static com.google.common.base.Preconditions.checkNotNull;
 import static org.jclouds.openstack.v2_0.options.PaginationOptions.Builder.marker;
 
-/**
- * @author Nick Livens
- */
 @Beta
 @Singleton
 public class ParseRouters extends ParseJson<Routers> {

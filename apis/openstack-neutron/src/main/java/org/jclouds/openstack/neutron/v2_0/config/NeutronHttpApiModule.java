@@ -43,8 +43,6 @@ import com.google.inject.Provides;
 
 /**
  * Configures the Neutron connection.
- * 
- * @author Nick Livens
  */
 @ConfiguresHttpApi
 public class NeutronHttpApiModule extends HttpApiModule<NeutronApi> {

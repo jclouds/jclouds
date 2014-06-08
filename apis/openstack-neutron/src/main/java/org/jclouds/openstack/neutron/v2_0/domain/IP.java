@@ -21,9 +21,6 @@ import com.google.common.base.Objects;
 
 import java.beans.ConstructorProperties;
 
-/**
- * @author Nick Livens
- */
 public class IP {
 
    private String ipAddress;

@@ -36,8 +36,6 @@ import static org.jclouds.openstack.keystone.v2_0.config.KeystoneProperties.SERV
 
 /**
  * Implementation of {@link org.jclouds.apis.ApiMetadata} for Neutron 2.0 API
- *
- * @author Nick Livens
  */
 public class NeutronApiMetadata extends BaseHttpApiMetadata<NeutronApi> {
 

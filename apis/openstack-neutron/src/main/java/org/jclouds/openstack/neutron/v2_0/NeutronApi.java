@@ -37,7 +37,6 @@ import java.util.Set;
  * Provides synchronous access to Neutron.
  * <p/>
  *
- * @author Nick Livens
  * @see <a href="http://docs.openstack.org/api/openstack-network/2.0/content/">api doc</a>
  */
 public interface NeutronApi extends Closeable {

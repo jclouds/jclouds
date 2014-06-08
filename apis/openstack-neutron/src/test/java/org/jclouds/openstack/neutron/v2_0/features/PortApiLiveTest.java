@@ -43,8 +43,6 @@ import com.google.common.collect.Sets;
 
 /**
  * Tests PortApi in combination with the Network & SubnetApi
- *
- * @author Nick Livens
  */
 @Test(groups = "live", testName = "PortApiLiveTest")
 public class PortApiLiveTest extends BaseNeutronApiLiveTest {

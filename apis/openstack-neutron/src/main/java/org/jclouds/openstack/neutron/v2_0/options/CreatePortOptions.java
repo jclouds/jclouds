@@ -31,9 +31,6 @@ import java.util.Set;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
-/**
- * @author Nick Livens
- */
 public class CreatePortOptions implements MapBinder {
 
    @Inject

@@ -60,7 +60,6 @@ import static org.jclouds.openstack.keystone.v2_0.KeystoneFallbacks.EmptyPaginat
  * <p/>
  * A port has an administrative state which is either 'DOWN' or 'ACTIVE'. Ports which are administratively down will not be able to receive/send traffic.
 
- * @author Nick Livens
  * @see <a href=
  *      "http://docs.openstack.org/api/openstack-network/2.0/content/Ports.html">api doc</a>
  */

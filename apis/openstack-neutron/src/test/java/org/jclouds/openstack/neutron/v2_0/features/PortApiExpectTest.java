@@ -41,8 +41,6 @@ import static org.testng.Assert.assertTrue;
 
 /**
  * Tests parsing and Guice wiring of PortApi
- *
- * @author Nick Livens
  */
 @Test(groups = "unit", testName = "PortApiExpectTest")
 public class PortApiExpectTest extends BaseNeutronApiExpectTest {

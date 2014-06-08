@@ -22,9 +22,6 @@ import org.jclouds.javax.annotation.Nullable;
 
 import java.lang.reflect.Field;
 
-/**
- * @author Nick Livens
- */
 public class PredicateUtil {
 
     public static <T> Predicate<T> createIdEqualsPredicate(final String id) {

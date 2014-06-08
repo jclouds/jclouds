@@ -57,8 +57,6 @@ import static org.jclouds.openstack.keystone.v2_0.KeystoneFallbacks.EmptyPaginat
  * Each tenant can define one or more networks. A network is a virtual isolated layer-2 broadcast domain reserved to the
  * tenant. A tenant can create several ports for a network, and plug virtual interfaces into these ports.
  *
- * @author Adam Lowe
- * @author Nick Livens
  * @see <a href=
  *      "http://docs.openstack.org/api/openstack-network/2.0/content/Networks.html">api doc</a>
  */

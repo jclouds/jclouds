@@ -38,8 +38,6 @@ import static org.testng.Assert.assertTrue;
 
 /**
  * Tests parsing and Guice wiring of NetworkApi
- *
- * @author Nick Livens
  */
 @Test(groups = "live", testName = "NetworkApiLiveTest")
 public class NetworkApiLiveTest extends BaseNeutronApiLiveTest {

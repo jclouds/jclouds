@@ -24,7 +24,6 @@ import java.beans.ConstructorProperties;
 /**
  * A Neutron Router
  *
- * @author Nick Livens
  * @see <a href="http://docs.openstack.org/api/openstack-network/2.0/content/router_ext_concepts.html">api doc</a>
  */
 public class Router extends ReferenceWithName {

@@ -23,9 +23,6 @@ import org.jclouds.View;
 import org.jclouds.apis.internal.BaseApiMetadataTest;
 import org.testng.annotations.Test;
 
-/**
- * @author Nick Livens
- */
 @Test(groups = "unit", testName = "NeutronApiMetadataTest")
 public class NeutronApiMetadataTest extends BaseApiMetadataTest {
    public NeutronApiMetadataTest() {

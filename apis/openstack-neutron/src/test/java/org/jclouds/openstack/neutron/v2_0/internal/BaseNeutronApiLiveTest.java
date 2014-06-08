@@ -26,8 +26,6 @@ import java.util.Properties;
 
 /**
  * Tests behavior of {@code NeutronApi}
- *
- * @author Nick Livens
  */
 @Test(groups = "live")
 public class BaseNeutronApiLiveTest extends BaseApiLiveTest<NeutronApi> {

@@ -30,7 +30,6 @@ import static com.google.common.base.Preconditions.checkNotNull;
 /**
  * A Neutron subnet
  *
- * @author Nick Livens
  * @see <a href="http://docs.openstack.org/api/openstack-network/2.0/content/Subnets.html">api doc</a>
  */
 public class Subnet extends ReferenceWithName {

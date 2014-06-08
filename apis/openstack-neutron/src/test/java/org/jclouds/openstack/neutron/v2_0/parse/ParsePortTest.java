@@ -26,9 +26,6 @@ import org.testng.annotations.Test;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.core.MediaType;
 
-/**
- * @author Nick Livens
- */
 @Test(groups = "unit", testName = "ParsePortTest")
 public class ParsePortTest extends BaseItemParserTest<Port> {
 

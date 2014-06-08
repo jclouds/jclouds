@@ -26,7 +26,6 @@ import java.beans.ConstructorProperties;
 /**
  * Base class for beans in the Neutron v2.0 api
  *
- * @author Nick Livens
  * @see <a href="http://docs.openstack.org/api/openstack-network/2.0/content/Networks.html">api doc</a>
  */
 public class ReferenceWithName extends Reference {

@@ -29,9 +29,6 @@ import org.jclouds.rest.ResourceNotFoundException;
 
 /**
  * This will parse and set an appropriate exception on the command object.
- *
- * @author Nick Livens
- *
  */
 @Singleton
 public class NeutronErrorHandler implements HttpErrorHandler {

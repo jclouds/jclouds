@@ -27,8 +27,6 @@ import java.util.Set;
 /**
  * A Neutron port used for creating ports in bulk
  * The only difference between this and the actual port are the missing fields id, tenantId & state
- *
- * @author Nick Livens
  */
 public class BulkPort {
 

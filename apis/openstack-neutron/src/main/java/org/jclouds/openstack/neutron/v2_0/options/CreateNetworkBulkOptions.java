@@ -34,9 +34,6 @@ import java.util.Map;
 import static com.google.common.base.Preconditions.checkNotNull;
 import static org.jclouds.openstack.neutron.v2_0.options.CreateNetworkOptions.CreateNetworkRequest;
 
-/**
- * @author Nick Livens
- */
 public class CreateNetworkBulkOptions implements MapBinder {
 
    @Inject

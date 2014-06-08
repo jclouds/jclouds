@@ -19,9 +19,6 @@ package org.jclouds.openstack.neutron.v2_0.util;
 
 import java.lang.reflect.Field;
 
-/**
- * @author Nick Livens
- */
 public class ClassUtil {
 
     public static Field findField(Class clazz, String fieldName) {

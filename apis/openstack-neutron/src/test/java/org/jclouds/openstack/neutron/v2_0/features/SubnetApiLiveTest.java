@@ -43,8 +43,6 @@ import com.google.common.collect.Sets;
 
 /**
  * Tests subnet api in combination with the network api
- *
- * @author Nick Livens
  */
 @Test(groups = "live", testName = "SubnetApiLiveTest")
 public class SubnetApiLiveTest extends BaseNeutronApiLiveTest {

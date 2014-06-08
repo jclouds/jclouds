@@ -23,8 +23,6 @@ import java.beans.ConstructorProperties;
 
 /**
  * Information on external gateway for the router
- *
- * @author Nick Livens
  */
 public class ExternalGatewayInfo {
 

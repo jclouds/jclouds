@@ -24,7 +24,6 @@ import java.beans.ConstructorProperties;
 /**
  * A Neutron Router Interface
  *
- * @author Nick Livens
  * @see <a href="http://docs.openstack.org/api/openstack-network/2.0/content/router_add_interface.html">api doc</a>
  */
 public class RouterInterface {

@@ -25,7 +25,6 @@ import java.beans.ConstructorProperties;
 /**
  * A Neutron Subnet Allocation Pool
  *
- * @author Nick Livens
  * @see <a href="http://docs.openstack.org/api/openstack-network/2.0/content/Subnets.html">api doc</a>
  */
 public class AllocationPool {

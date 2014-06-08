@@ -26,8 +26,6 @@ import java.util.Set;
 
 /**
  * Base class for writing Neutron Rest Api Expect tests
- *
- * @author Nick Livens
  */
 public class BaseNeutronApiExpectTest extends BaseNeutronExpectTest<NeutronApi> {
 

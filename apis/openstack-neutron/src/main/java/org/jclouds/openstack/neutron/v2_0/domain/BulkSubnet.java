@@ -27,8 +27,6 @@ import java.util.Set;
 /**
  * A Neutron subnet used for creating subnets in bulk
  * The only difference between this and the actual subnet are the missing fields id & tenantId
- *
- * @author Nick Livens
  */
 public class BulkSubnet {
 
