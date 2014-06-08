@@ -34,8 +34,6 @@ import com.google.inject.TypeLiteral;
  * Overrides OAuthModule leaving TypeAdapters bindings out.
  * <p/>
  * TODO overcome this by using multibindings on GSonModule?
- *
- * @author David Alves
  */
 public class OAuthModuleWithoutTypeAdapters extends OAuthModule {
 

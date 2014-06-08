@@ -65,9 +65,6 @@ import com.google.inject.Binder;
 import com.google.inject.Module;
 import com.google.inject.TypeLiteral;
 
-/**
- * @author Adrian Cole
- */
 public class BaseGoogleComputeEngineExpectTest<T> extends BaseRestApiExpectTest<T> {
 
    private static final String header = "{\"alg\":\"none\",\"typ\":\"JWT\"}";

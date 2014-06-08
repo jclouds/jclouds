@@ -24,7 +24,6 @@ import com.google.common.collect.ImmutableSet;
 /**
  * Options to create a route.
  *
- * @author Andrew Bayer
  * @see org.jclouds.googlecomputeengine.domain.Route
  */
 public class RouteOptions {

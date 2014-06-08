@@ -32,7 +32,6 @@ import com.google.common.base.Optional;
 /**
  * Represents a disk image to use on an instance.
  *
- * @author David Alves
  * @see <a href="https://developers.google.com/compute/docs/reference/v1/images"/>
  */
 @Beta
@@ -154,7 +153,6 @@ public final class Image extends Resource {
    /**
     * A raw disk image, usually the base for an image.
     *
-    * @author David Alves
     * @see <a href="https://developers.google.com/compute/docs/reference/v1/images"/>
     */
    public static class RawDisk {

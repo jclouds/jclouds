@@ -28,9 +28,6 @@ import org.jclouds.googlecomputeengine.internal.BaseGoogleComputeEngineParseTest
 
 import com.google.common.collect.ImmutableSet;
 
-/**
- * @author David Alves
- */
 public class ParseNetworkListTest extends BaseGoogleComputeEngineParseTest<ListPage<Network>> {
 
    @Override

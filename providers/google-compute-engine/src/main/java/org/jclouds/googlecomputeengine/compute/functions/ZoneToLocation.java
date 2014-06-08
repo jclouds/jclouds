@@ -29,8 +29,6 @@ import com.google.common.collect.ImmutableMap;
 
 /**
  * Transforms a google compute domain specific zone to a generic Zone object.
- *
- * @author David Alves
  */
 public class ZoneToLocation implements Function<Zone, Location> {
 

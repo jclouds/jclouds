@@ -25,9 +25,6 @@ import org.jclouds.date.internal.SimpleDateFormatDateService;
 import org.jclouds.googlecomputeengine.domain.Network;
 import org.jclouds.googlecomputeengine.internal.BaseGoogleComputeEngineParseTest;
 
-/**
- * @author David Alves
- */
 public class ParseNetworkTest extends BaseGoogleComputeEngineParseTest<Network> {
 
    @Override

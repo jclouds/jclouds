@@ -41,8 +41,6 @@ import com.google.inject.Module;
 
 /**
  * Implementation of {@link ApiMetadata} for GoogleCompute v1 API
- *
- * @author David Alves
  */
 public class GoogleComputeEngineApiMetadata extends BaseHttpApiMetadata<GoogleComputeEngineApi> {
 

@@ -22,7 +22,6 @@ import java.util.Date;
 /**
  * Options to set the deprecation status of a resource. Currently only for images.
  *
- * @author Andrew Bayer
  * @see <a href="https://developers.google.com/compute/docs/reference/latest/images/deprecate" />
  */
 public class DeprecateOptions {

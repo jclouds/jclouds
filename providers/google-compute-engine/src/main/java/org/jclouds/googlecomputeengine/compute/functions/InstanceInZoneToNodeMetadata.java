@@ -47,8 +47,6 @@ import com.google.common.collect.ImmutableSet;
 
 /**
  * Transforms a google compute domain Instance into a generic NodeMetatada object.
- *
- * @author David Alves
  */
 public class InstanceInZoneToNodeMetadata implements Function<InstanceInZone, NodeMetadata> {
 

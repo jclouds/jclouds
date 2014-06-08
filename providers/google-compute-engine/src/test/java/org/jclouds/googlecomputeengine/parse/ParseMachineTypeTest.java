@@ -25,9 +25,6 @@ import org.jclouds.date.internal.SimpleDateFormatDateService;
 import org.jclouds.googlecomputeengine.domain.MachineType;
 import org.jclouds.googlecomputeengine.internal.BaseGoogleComputeEngineParseTest;
 
-/**
- * @author David Alves
- */
 public class ParseMachineTypeTest extends BaseGoogleComputeEngineParseTest<MachineType> {
 
 

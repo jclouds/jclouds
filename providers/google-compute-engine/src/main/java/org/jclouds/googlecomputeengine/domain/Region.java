@@ -32,7 +32,6 @@ import com.google.common.collect.ImmutableSet;
 /**
  * Represents a region resource.
  *
- * @author David Alves
  * @see <a href="https://developers.google.com/compute/docs/reference/v1/regions"/>
  */
 @Beta

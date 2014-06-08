@@ -19,9 +19,6 @@ package org.jclouds.googlecomputeengine.internal;
 import org.jclouds.compute.ComputeService;
 import org.jclouds.compute.ComputeServiceContext;
 
-/**
- * @author David Alves
- */
 public class BaseGoogleComputeEngineServiceExpectTest extends BaseGoogleComputeEngineServiceContextExpectTest<ComputeService> {
 
    @Override

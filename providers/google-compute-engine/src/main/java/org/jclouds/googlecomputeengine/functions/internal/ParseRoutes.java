@@ -31,9 +31,6 @@ import org.jclouds.json.Json;
 import com.google.common.base.Function;
 import com.google.inject.TypeLiteral;
 
-/**
- * @author Andrew Bayer
- */
 public class ParseRoutes extends ParseJson<ListPage<Route>> {
 
    @Inject

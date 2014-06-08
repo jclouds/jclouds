@@ -33,8 +33,6 @@ import com.google.common.collect.Range;
 /**
  * A function for transforming a GCE-specific Firewall into a generic
  * IpPermission object.
- *
- * @author Andrew Bayer
  */
 public class FirewallToIpPermission implements Function<Firewall, Iterable<IpPermission>> {
    @Resource

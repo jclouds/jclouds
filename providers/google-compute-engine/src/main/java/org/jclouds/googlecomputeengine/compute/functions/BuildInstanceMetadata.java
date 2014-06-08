@@ -28,8 +28,6 @@ import com.google.common.collect.ImmutableMap;
 
 /**
  * Prepares metadata from the provided TemplateOptions
- *
- * @author David Alves
  */
 @Singleton
 public class BuildInstanceMetadata implements Function<TemplateOptions, ImmutableMap.Builder<String, String>> {

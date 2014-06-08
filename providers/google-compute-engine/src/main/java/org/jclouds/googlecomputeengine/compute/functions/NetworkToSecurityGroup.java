@@ -38,8 +38,6 @@ import com.google.common.collect.ImmutableSet;
 /**
  * A function for transforming a GCE-specific Network into a generic
  * SecurityGroup object.
- *
- * @author Andrew Bayer
  */
 public class NetworkToSecurityGroup implements Function<Network, SecurityGroup> {
    @Resource

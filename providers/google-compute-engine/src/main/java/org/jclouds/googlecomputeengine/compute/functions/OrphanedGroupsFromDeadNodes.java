@@ -27,9 +27,6 @@ import com.google.common.base.Function;
 import com.google.common.base.Predicate;
 import com.google.common.collect.Sets;
 
-/**
- * @author David Alves
- */
 @Singleton
 public class OrphanedGroupsFromDeadNodes implements Function<Set<? extends NodeMetadata>, Set<String>> {
 

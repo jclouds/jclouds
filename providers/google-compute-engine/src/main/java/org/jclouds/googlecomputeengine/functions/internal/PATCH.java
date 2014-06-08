@@ -26,7 +26,6 @@ import javax.ws.rs.HttpMethod;
 /**
  * Indicates that the annotated method responds to HTTP PATCH requests
  *
- * @author David Alves
  * @see javax.ws.rs.HttpMethod
  */
 @Target({ElementType.METHOD})

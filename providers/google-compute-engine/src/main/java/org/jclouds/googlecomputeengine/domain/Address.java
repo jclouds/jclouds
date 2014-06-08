@@ -31,7 +31,6 @@ import com.google.common.base.Optional;
 /**
  * Represents an Address resource.
  *
- * @author Andrew Bayer
  * @see <a href="https://developers.google.com/compute/docs/reference/v1/addresses"/>
  */
 @Beta

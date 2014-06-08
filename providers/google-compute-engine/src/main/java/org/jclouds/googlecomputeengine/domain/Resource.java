@@ -38,8 +38,6 @@ import com.google.common.collect.Iterables;
 
 /**
  * Base class for Google Compute Engine resources.
- *
- * @author David Alves
  */
 @Beta
 public class Resource {

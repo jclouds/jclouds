@@ -30,7 +30,6 @@ import com.google.common.base.Optional;
 /**
  * A Persistent Disk Snapshot resource.
  *
- * @author Andrew Bayer
  * @see <a href="https://developers.google.com/compute/docs/reference/v1/snapshots"/>
  */
 @Beta

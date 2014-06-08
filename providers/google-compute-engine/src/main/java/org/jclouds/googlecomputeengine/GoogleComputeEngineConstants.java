@@ -22,9 +22,6 @@ import org.jclouds.domain.LocationScope;
 
 import com.google.common.annotations.Beta;
 
-/**
- * @author David Alves
- */
 public final class GoogleComputeEngineConstants {
 
    public static final String GCE_PROVIDER_NAME = "google-compute-engine";

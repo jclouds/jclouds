@@ -65,8 +65,6 @@ import com.google.common.util.concurrent.Atomics;
 /**
  * An extension to compute service to allow for the manipulation of {@link org.jclouds.compute.domain.SecurityGroup}s. Implementation
  * is optional by providers.
- *
- * @author Andrew Bayer
  */
 public class GoogleComputeEngineSecurityGroupExtension implements SecurityGroupExtension {
 

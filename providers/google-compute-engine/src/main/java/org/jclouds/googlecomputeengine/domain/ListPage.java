@@ -33,8 +33,6 @@ import com.google.common.collect.ImmutableSet;
 
 /**
  * The collection returned from any <code>listFirstPage()</code> method.
- *
- * @author David Alves
  */
 public class ListPage<T> extends IterableWithMarker<T> {
 

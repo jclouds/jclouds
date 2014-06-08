@@ -90,9 +90,6 @@ import com.google.inject.Injector;
 import com.google.inject.Provides;
 import com.google.inject.TypeLiteral;
 
-/**
- * @author David Alves
- */
 public class GoogleComputeEngineServiceContextModule
         extends ComputeServiceAdapterContextModule<InstanceInZone, MachineTypeInZone, Image, Zone> {
 

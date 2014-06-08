@@ -45,8 +45,6 @@ import com.google.inject.Inject;
 
 /**
  * Transforms a google compute domain specific machine type to a generic Hardware object.
- *
- * @author David Alves
  */
 public class MachineTypeInZoneToHardware implements Function<MachineTypeInZone, Hardware> {
 

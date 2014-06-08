@@ -32,7 +32,6 @@ import com.google.common.collect.ImmutableList;
 /**
  * Represents a machine type used to host an instance.
  *
- * @author David Alves
  * @see <a href="https://developers.google.com/compute/docs/reference/v1/machineTypes"/>
  */
 @Beta

@@ -16,9 +16,6 @@
  */
 package org.jclouds.googlecomputeengine.features;
 
-/**
- * @author David Alves
- */
 
 import static com.google.common.base.Predicates.equalTo;
 import static com.google.common.base.Predicates.not;
@@ -38,7 +35,6 @@ import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Maps;
 
 /**
- * @author David Alves
  */
 public class ProjectApiLiveTest extends BaseGoogleComputeEngineApiLiveTest {
 

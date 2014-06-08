@@ -19,9 +19,6 @@ package org.jclouds.googlecomputeengine.compute.extensions;
 import org.jclouds.compute.extensions.internal.BaseSecurityGroupExtensionLiveTest;
 import org.testng.annotations.Test;
 
-/**
- * @author Andrew Bayer
- */
 @Test(groups = "live", singleThreaded = true, testName = "GoogleComputeEngineSecurityGroupExtensionLiveTest")
 public class GoogleComputeEngineSecurityGroupExtensionLiveTest extends BaseSecurityGroupExtensionLiveTest {
 

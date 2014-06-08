@@ -26,9 +26,6 @@ import org.jclouds.googlecomputeengine.domain.Operation;
 import org.jclouds.googlecomputeengine.domain.Resource;
 import org.jclouds.googlecomputeengine.internal.BaseGoogleComputeEngineParseTest;
 
-/**
- * @author David Alves
- */
 public class ParseOperationListTest extends BaseGoogleComputeEngineParseTest<ListPage<Operation>> {
 
    @Override

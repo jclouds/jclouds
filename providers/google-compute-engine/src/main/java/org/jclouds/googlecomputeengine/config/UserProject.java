@@ -25,8 +25,6 @@ import javax.inject.Qualifier;
 
 /**
  * Qualifies a property as the user's project id.
- *
- * @author David Alves
  */
 @Retention(value = RetentionPolicy.RUNTIME)
 @Target(value = {ElementType.TYPE, ElementType.FIELD, ElementType.PARAMETER, ElementType.METHOD})

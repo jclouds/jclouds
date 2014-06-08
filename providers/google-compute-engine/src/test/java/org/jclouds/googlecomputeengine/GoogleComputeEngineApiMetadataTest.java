@@ -29,8 +29,6 @@ import com.google.common.reflect.TypeToken;
  * <pre>
  * META-INF/services/org.jclouds.apis.ApiMetadata
  * </pre>
- *
- * @author Adrian Cole
  */
 @Test(groups = "unit", testName = "GoogleComputeApiMetadataTest")
 public class GoogleComputeEngineApiMetadataTest extends BaseApiMetadataTest {

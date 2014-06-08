@@ -26,7 +26,6 @@ import com.google.common.collect.ImmutableSet;
 /**
  * Options to create a firewall.
  *
- * @author David Alves
  * @see Firewall
  */
 public class FirewallOptions {

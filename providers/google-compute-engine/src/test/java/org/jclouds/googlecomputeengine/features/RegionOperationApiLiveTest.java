@@ -31,9 +31,6 @@ import org.testng.annotations.Test;
 import com.google.common.base.Predicate;
 import com.google.common.collect.Iterables;
 
-/**
- * @author Andrew Bayer
- */
 public class RegionOperationApiLiveTest extends BaseGoogleComputeEngineApiLiveTest {
 
    private static final String ADDRESS_NAME = "region-operations-api-live-test-address";

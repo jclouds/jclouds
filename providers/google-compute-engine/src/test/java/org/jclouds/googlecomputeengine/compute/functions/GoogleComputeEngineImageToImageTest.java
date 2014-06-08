@@ -25,9 +25,6 @@ import org.jclouds.compute.domain.OsFamily;
 import org.jclouds.googlecomputeengine.domain.Image;
 import org.testng.annotations.Test;
 
-/**
- * @author David Alves
- */
 @Test(groups = "unit")
 public class GoogleComputeEngineImageToImageTest {
 

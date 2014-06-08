@@ -32,10 +32,6 @@ import com.google.common.annotations.Beta;
 import com.google.common.base.Function;
 import com.google.common.base.Optional;
 
-/**
- * @author Adrian Cole
- * @author Andrew Bayer
- */
 @Beta
 public abstract class BaseWithZoneToPagedIterable<T, I extends BaseWithZoneToPagedIterable<T, I>> implements
         Function<ListPage<T>, PagedIterable<T>>, InvocationContext<I> {

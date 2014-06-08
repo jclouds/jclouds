@@ -29,9 +29,6 @@ import org.jclouds.rest.binders.BindToJsonPayload;
 
 import com.google.common.collect.ImmutableMap;
 
-/**
- * @author David Alves
- */
 public class MetadataBinder implements MapBinder {
 
    @Inject

@@ -32,8 +32,6 @@ import org.testng.annotations.Test;
 /**
  * A test specifically for the paging system. The code used is common to all list() methods so we're using Images
  * but it could be anything else.
- *
- * @author David Alves
  */
 @Test(groups = "unit")
 public class PageSystemExpectTest extends BaseGoogleComputeEngineApiExpectTest {

@@ -28,9 +28,6 @@ import org.jclouds.googlecomputeengine.internal.BaseGoogleComputeEngineParseTest
 
 import com.google.common.collect.ImmutableMap;
 
-/**
- * @author David Alves
- */
 public class ParseInstanceTest extends BaseGoogleComputeEngineParseTest<Instance> {
 
    @Override

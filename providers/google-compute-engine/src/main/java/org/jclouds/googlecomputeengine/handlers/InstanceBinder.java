@@ -31,9 +31,6 @@ import org.jclouds.rest.binders.BindToJsonPayload;
 
 import com.google.common.base.Function;
 
-/**
- * @author David Alves
- */
 public class InstanceBinder implements MapBinder {
 
    @Inject

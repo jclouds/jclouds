@@ -35,8 +35,6 @@ import com.google.common.collect.Sets;
 
 /**
  * Instance options specific to Google Compute Engine.
- *
- * @author David Alves
  */
 public class GoogleComputeEngineTemplateOptions extends TemplateOptions {
 

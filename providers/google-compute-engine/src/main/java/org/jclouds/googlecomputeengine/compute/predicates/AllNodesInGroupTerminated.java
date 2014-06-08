@@ -30,9 +30,6 @@ import org.jclouds.compute.ComputeService;
 
 import com.google.common.base.Predicate;
 
-/**
- * @author David Alves
- */
 @Singleton
 public class AllNodesInGroupTerminated implements Predicate<String> {
 

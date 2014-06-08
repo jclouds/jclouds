@@ -32,9 +32,6 @@ import org.jclouds.ssh.internal.RsaSshKeyPairGenerator;
 
 import com.google.inject.Inject;
 
-/**
- * @author David Alves
- */
 @Singleton
 public class PopulateDefaultLoginCredentialsForImageStrategy implements
         org.jclouds.compute.strategy.PopulateDefaultLoginCredentialsForImageStrategy {

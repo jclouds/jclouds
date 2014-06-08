@@ -22,9 +22,6 @@ import javax.ws.rs.core.MediaType;
 import org.jclouds.googlecomputeengine.domain.Instance;
 import org.jclouds.googlecomputeengine.internal.BaseGoogleComputeEngineParseTest;
 
-/**
- * @author David Alves
- */
 public class ParseInstanceSerialOutputTest extends BaseGoogleComputeEngineParseTest<Instance.SerialPortOutput> {
 
    @Override

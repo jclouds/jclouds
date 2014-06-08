@@ -57,9 +57,6 @@ import com.google.gson.JsonSerializer;
 import com.google.inject.AbstractModule;
 import com.google.inject.Provides;
 
-/**
- * @author David Alves
- */
 public class GoogleComputeEngineParserModule extends AbstractModule {
 
    @Override

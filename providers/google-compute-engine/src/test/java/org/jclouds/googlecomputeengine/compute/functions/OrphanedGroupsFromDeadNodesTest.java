@@ -37,9 +37,6 @@ import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Sets;
 
-/**
- * @author David Alves
- */
 public class OrphanedGroupsFromDeadNodesTest {
 
    private static class IdAndGroupOnlyNodeMetadata extends NodeMetadataImpl {

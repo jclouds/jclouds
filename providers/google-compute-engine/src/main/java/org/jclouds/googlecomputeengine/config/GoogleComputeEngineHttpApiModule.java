@@ -62,8 +62,6 @@ import com.google.inject.TypeLiteral;
 
 /**
  * Configures the GoogleCompute connection.
- *
- * @author David Alves
  */
 @ConfiguresHttpApi
 public class GoogleComputeEngineHttpApiModule extends HttpApiModule<GoogleComputeEngineApi> {

@@ -34,8 +34,6 @@ import com.google.inject.Inject;
 
 /**
  * Tests that a Global Operation is done, returning the completed Operation when it is.
- *
- * @author David Alves
  */
 public class RegionOperationDonePredicate implements Predicate<AtomicReference<Operation>> {
 

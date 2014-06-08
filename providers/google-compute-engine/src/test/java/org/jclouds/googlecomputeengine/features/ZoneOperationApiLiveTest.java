@@ -32,9 +32,6 @@ import org.testng.annotations.Test;
 import com.google.common.base.Predicate;
 import com.google.common.collect.Iterables;
 
-/**
- * @author Andrew Bayer
- */
 public class ZoneOperationApiLiveTest extends BaseGoogleComputeEngineApiLiveTest {
 
    private static final String DISK_NAME = "zone-operations-api-live-test-disk";

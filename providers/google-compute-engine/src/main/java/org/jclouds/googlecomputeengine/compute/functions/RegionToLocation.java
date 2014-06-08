@@ -29,8 +29,6 @@ import com.google.common.collect.ImmutableMap;
 
 /**
  * Transforms a google compute domain specific region to a generic Region object.
- *
- * @author David Alves
  */
 public class RegionToLocation implements Function<Region, Location> {
 

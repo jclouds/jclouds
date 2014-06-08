@@ -31,7 +31,6 @@ import com.google.common.base.Optional;
 /**
  * Represents a network used to enable instance communication.
  *
- * @author David Alves
  * @see <a href="https://developers.google.com/compute/docs/reference/v1/networks"/>
  */
 @Beta

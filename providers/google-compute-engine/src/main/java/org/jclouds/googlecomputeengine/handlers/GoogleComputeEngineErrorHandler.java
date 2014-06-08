@@ -29,8 +29,6 @@ import org.jclouds.rest.ResourceNotFoundException;
 
 /**
  * This will parse and set an appropriate exception on the command object.
- *
- * @author Adrian Cole
  */
 @Singleton
 public class GoogleComputeEngineErrorHandler implements HttpErrorHandler {

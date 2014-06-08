@@ -30,8 +30,6 @@ import com.google.inject.Singleton;
 /**
  * GCE needs the credentials to create the node so the node credentials already take the Image credentials into account,
  * as such only overriding the TemplateOptions credentials is required.
- *
- * @author David Alves
  */
 @Singleton
 public class UseNodeCredentialsButOverrideFromTemplate extends PrioritizeCredentialsFromTemplate {

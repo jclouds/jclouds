@@ -19,9 +19,6 @@ package org.jclouds.googlecomputeengine;
 import org.jclouds.oauth.v2.internal.BaseOAuthAuthenticatedApiLiveTest;
 import org.testng.annotations.Test;
 
-/**
- * @author David Alves
- */
 @Test(groups = "live")
 public class GoogleComputeEngineAuthenticatedRestContextLiveTest extends BaseOAuthAuthenticatedApiLiveTest<GoogleComputeEngineApi> {
 

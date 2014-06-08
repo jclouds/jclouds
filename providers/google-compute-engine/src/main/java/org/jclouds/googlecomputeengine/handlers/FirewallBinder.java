@@ -28,9 +28,6 @@ import org.jclouds.http.HttpRequest;
 import org.jclouds.rest.MapBinder;
 import org.jclouds.rest.binders.BindToJsonPayload;
 
-/**
- * @author David Alves
- */
 public class FirewallBinder implements MapBinder {
 
    @Inject

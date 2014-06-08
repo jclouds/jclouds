@@ -33,9 +33,6 @@ import com.google.common.base.Function;
 import com.google.common.base.Supplier;
 import com.google.common.cache.CacheLoader;
 
-/**
- * @author Andrew Bayer
- */
 public class FindNetworkOrCreate extends CacheLoader<NetworkAndAddressRange, Network> {
    @Resource
    @Named(ComputeServiceConstants.COMPUTE_LOGGER)

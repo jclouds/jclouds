@@ -62,7 +62,6 @@ import org.jclouds.rest.binders.BindToJsonPayload;
 /**
  * Provides access to Instances via their REST API.
  *
- * @author David Alves
  * @see <a href="https://developers.google.com/compute/docs/reference/v1/instances"/>
  * @see InstanceApi
  */

@@ -54,7 +54,6 @@ import org.jclouds.rest.binders.BindToJsonPayload;
 /**
  * Provides access to Addresses via their REST API.
  *
- * @author Andrew Bayer
  * @see <a href="https://developers.google.com/compute/docs/reference/v1/addresses"/>
  */
 @SkipEncoding({'/', '='})

@@ -31,9 +31,6 @@ import org.testng.annotations.Test;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 
-/**
- * @author David Alves
- */
 public class DiskApiLiveTest extends BaseGoogleComputeEngineApiLiveTest {
 
    public static final String DISK_NAME = "disk-api-live-test-disk";

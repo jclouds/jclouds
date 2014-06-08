@@ -20,9 +20,6 @@ import java.util.Properties;
 
 import org.jclouds.googlecomputeengine.GoogleComputeEngineApi;
 
-/**
- * @author Adrian Cole
- */
 public class BaseGoogleComputeEngineApiExpectTest extends BaseGoogleComputeEngineExpectTest<GoogleComputeEngineApi> {
 
    @Override

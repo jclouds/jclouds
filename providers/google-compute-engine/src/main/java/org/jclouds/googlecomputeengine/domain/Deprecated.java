@@ -28,8 +28,6 @@ import com.google.common.base.Optional;
 
 /**
  * Deprecation information for an image or kernel
- *
- * @author Andrew Bayer
  */
 public class Deprecated {
    private final Optional<String> state;

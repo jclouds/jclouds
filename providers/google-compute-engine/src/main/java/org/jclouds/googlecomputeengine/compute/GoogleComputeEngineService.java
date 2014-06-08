@@ -77,9 +77,6 @@ import com.google.common.collect.Sets;
 import com.google.common.util.concurrent.Atomics;
 import com.google.common.util.concurrent.ListeningExecutorService;
 
-/**
- * @author David Alves
- */
 public class GoogleComputeEngineService extends BaseComputeService {
 
    private final Function<Set<? extends NodeMetadata>, Set<String>> findOrphanedGroups;

@@ -35,8 +35,6 @@ import com.google.common.collect.Lists;
 
 /**
  * Transforms a google compute domain specific image to a generic Image object.
- *
- * @author David Alves
  */
 public class GoogleComputeEngineImageToImage implements Function<Image, org.jclouds.compute.domain.Image> {
 

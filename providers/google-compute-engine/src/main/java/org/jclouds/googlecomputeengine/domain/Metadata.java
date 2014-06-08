@@ -29,7 +29,6 @@ import com.google.common.collect.ImmutableMap;
 
 /**
  * Metadata for an instance or project, with their fingerprint.
- * @author Andrew Bayer
  */
 public class Metadata {
    @Nullable

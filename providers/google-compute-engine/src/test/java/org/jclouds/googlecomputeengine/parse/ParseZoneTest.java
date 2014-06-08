@@ -26,9 +26,6 @@ import org.jclouds.googlecomputeengine.domain.Zone;
 import org.jclouds.googlecomputeengine.internal.BaseGoogleComputeEngineParseTest;
 import org.testng.annotations.Test;
 
-/**
- * @author David Alves
- */
 @Test(groups = "unit")
 public class ParseZoneTest extends BaseGoogleComputeEngineParseTest<Zone> {
 

@@ -34,9 +34,6 @@ import org.testng.annotations.Test;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 
-/**
- * @author David Alves
- */
 public class ImageApiLiveTest extends BaseGoogleComputeEngineApiLiveTest {
 
    private Image image;

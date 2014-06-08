@@ -30,9 +30,6 @@ import org.testng.annotations.Test;
 
 import com.google.common.collect.ImmutableSet;
 
-/**
- * @author David Alves
- */
 @Test(groups = "unit")
 public class ParseAddressListTest extends BaseGoogleComputeEngineParseTest<ListPage<Address>> {
 

@@ -50,7 +50,6 @@ import org.jclouds.rest.annotations.Transform;
  * Provides access to Images via their REST API.
  * <p/>
  *
- * @author David Alves
  * @see <a href="https://developers.google.com/compute/docs/reference/v1/images"/>
  */
 @SkipEncoding({'/', '='})

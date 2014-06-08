@@ -34,9 +34,6 @@ import org.testng.annotations.Test;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 
-/**
- * @author Andrew Bayer
- */
 public class RegionApiLiveTest extends BaseGoogleComputeEngineApiLiveTest {
 
    private Region region;

@@ -32,10 +32,6 @@ import org.jclouds.json.Json;
 import com.google.common.base.Function;
 import com.google.inject.TypeLiteral;
 
-/**
- * @author David Alves
- * @author Andrew Bayer
- */
 @Singleton
 public class ParseSnapshots extends ParseJson<ListPage<Snapshot>> {
 

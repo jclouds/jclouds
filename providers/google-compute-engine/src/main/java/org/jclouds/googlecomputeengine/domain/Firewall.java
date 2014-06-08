@@ -39,7 +39,6 @@ import com.google.common.collect.TreeRangeSet;
 /**
  * Represents a network firewall
  *
- * @author David Alves
  * @see <a href="https://developers.google.com/compute/docs/reference/v1/firewalls"/>
  * @see <a href="https://developers.google.com/compute/docs/networking#firewalls"/>
  */
@@ -242,7 +241,6 @@ public final class Firewall extends Resource {
     * A Firewall rule. Rule specifies a protocol and port-range tuple that describes a
     * permitted connection.
     *
-    * @author David Alves
     * @see <a href="https://developers.google.com/compute/docs/reference/v1/firewalls"/>
     */
    public static final class Rule {

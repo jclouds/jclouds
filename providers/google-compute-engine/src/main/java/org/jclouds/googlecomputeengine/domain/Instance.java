@@ -38,7 +38,6 @@ import com.google.common.collect.ImmutableSet;
 /**
  * Represents a virtual machine.
  *
- * @author David Alves
  * @see <a href="https://developers.google.com/compute/docs/reference/v1/instances"/>
  */
 @Beta
@@ -968,7 +967,6 @@ public class Instance extends Resource {
    /**
     * The output of an instance's serial port;
     *
-    * @author David Alves
     * @see <a href="https://developers.google.com/compute/docs/reference/v1/instances/serialPort"/>
     */
    public static final class SerialPortOutput {
@@ -1076,7 +1074,6 @@ public class Instance extends Resource {
    /**
     * A service account for which access tokens are to be made available to the instance through metadata queries.
     *
-    * @author David Alves
     * @see <a href="https://developers.google.com/compute/docs/reference/v1/instances"/>
     */
    public static final class ServiceAccount {

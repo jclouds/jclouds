@@ -21,7 +21,6 @@ import java.net.URI;
 /**
  * Options for attaching disks to instances.
  *
- * @author Andrew Bayer
  * @see <a href="https://developers.google.com/compute/docs/reference/latest/instances/attachDisk"/>
  */
 public class AttachDiskOptions {

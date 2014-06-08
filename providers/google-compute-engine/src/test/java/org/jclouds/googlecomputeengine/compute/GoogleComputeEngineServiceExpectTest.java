@@ -76,9 +76,6 @@ import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 
 
-/**
- * @author David Alves
- */
 @Test(groups = "unit")
 public class GoogleComputeEngineServiceExpectTest extends BaseGoogleComputeEngineServiceExpectTest {
 

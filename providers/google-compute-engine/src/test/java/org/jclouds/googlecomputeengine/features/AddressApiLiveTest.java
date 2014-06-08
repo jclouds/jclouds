@@ -29,9 +29,6 @@ import org.testng.annotations.Test;
 
 import com.google.common.collect.Lists;
 
-/**
- * @author Andrew Bayer
- */
 public class AddressApiLiveTest extends BaseGoogleComputeEngineApiLiveTest {
 
    private static final String ADDRESS_NAME = "address-api-live-test-address";

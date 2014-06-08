@@ -48,7 +48,6 @@ import org.jclouds.rest.annotations.Transform;
 /**
  * Provides access to Global Operations via their REST API.
  *
- * @author David Alves
  * @see <a href="https://developers.google.com/compute/docs/reference/v1/globalOperations"/>
  */
 @SkipEncoding({'/', '='})

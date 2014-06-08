@@ -23,8 +23,6 @@ import javax.inject.Inject;
 
 /**
  * The convention for naming instance tags that firewall rules recognise.
- *
- * @author richardcloudsoft
  */
 public class FirewallTagNamingConvention {
 

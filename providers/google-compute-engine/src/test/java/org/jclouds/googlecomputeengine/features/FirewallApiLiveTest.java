@@ -33,9 +33,6 @@ import org.testng.annotations.Test;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Lists;
 
-/**
- * @author David Alves
- */
 public class FirewallApiLiveTest extends BaseGoogleComputeEngineApiLiveTest {
 
    private static final String FIREWALL_NAME = "firewall-api-live-test-firewall";

@@ -37,9 +37,6 @@ import org.testng.annotations.Test;
 
 import com.google.common.base.Supplier;
 
-/**
- * @author Andrew Bayer
- */
 public class CreateNetworkIfNeededTest {
 
    @Test

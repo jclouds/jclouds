@@ -32,9 +32,6 @@ import org.jclouds.json.Json;
 import com.google.common.base.Function;
 import com.google.inject.TypeLiteral;
 
-/**
- * @author David Alves
- */
 @Singleton
 public class ParseDisks extends ParseJson<ListPage<Disk>> {
 

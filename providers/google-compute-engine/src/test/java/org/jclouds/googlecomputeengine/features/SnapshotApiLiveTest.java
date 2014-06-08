@@ -31,9 +31,6 @@ import org.testng.annotations.Test;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 
-/**
- * @author Andrew Bayer
- */
 public class SnapshotApiLiveTest extends BaseGoogleComputeEngineApiLiveTest {
 
    private static final String DISK_NAME = "snapshot-api-live-test-disk";

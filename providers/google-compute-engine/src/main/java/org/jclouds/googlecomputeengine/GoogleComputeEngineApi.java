@@ -45,7 +45,6 @@ import com.google.common.annotations.Beta;
  * Provides access to GoogleCompute.
  * <p/>
  *
- * @author David Alves
  * @see <a href="https://developers.google.com/compute/docs/reference/v1">api doc</a>
  */
 @Beta

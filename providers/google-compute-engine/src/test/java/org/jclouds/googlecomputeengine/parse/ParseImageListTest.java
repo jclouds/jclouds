@@ -31,9 +31,6 @@ import org.testng.annotations.Test;
 
 import com.google.common.collect.ImmutableSet;
 
-/**
- * @author David Alves
- */
 @Test(groups = "unit")
 public class ParseImageListTest extends BaseGoogleComputeEngineParseTest<ListPage<Image>> {
 

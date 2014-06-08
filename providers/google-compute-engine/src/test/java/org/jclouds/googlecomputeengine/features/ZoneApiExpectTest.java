@@ -28,9 +28,6 @@ import org.jclouds.http.HttpRequest;
 import org.jclouds.http.HttpResponse;
 import org.testng.annotations.Test;
 
-/**
- * @author David Alves
- */
 @Test(groups = "unit")
 public class ZoneApiExpectTest extends BaseGoogleComputeEngineApiExpectTest {
 

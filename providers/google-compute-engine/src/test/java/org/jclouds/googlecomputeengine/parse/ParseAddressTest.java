@@ -26,9 +26,6 @@ import org.jclouds.googlecomputeengine.domain.Address;
 import org.jclouds.googlecomputeengine.internal.BaseGoogleComputeEngineParseTest;
 import org.testng.annotations.Test;
 
-/**
- * @author David Alves
- */
 @Test(groups = "unit")
 public class ParseAddressTest extends BaseGoogleComputeEngineParseTest<Address> {
 

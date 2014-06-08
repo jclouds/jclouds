@@ -34,9 +34,6 @@ import org.testng.annotations.Test;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 
-/**
- * @author David Alves
- */
 public class ZoneApiLiveTest extends BaseGoogleComputeEngineApiLiveTest {
 
    private Zone zone;

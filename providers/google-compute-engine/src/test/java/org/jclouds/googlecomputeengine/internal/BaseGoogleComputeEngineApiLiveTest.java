@@ -40,9 +40,6 @@ import com.google.inject.TypeLiteral;
 import com.google.inject.name.Names;
 
 
-/**
- * @author David Alves
- */
 public class BaseGoogleComputeEngineApiLiveTest extends BaseApiLiveTest<GoogleComputeEngineApi> {
 
    protected static final String API_URL_PREFIX = "https://www.googleapis.com/compute/v1/projects/";

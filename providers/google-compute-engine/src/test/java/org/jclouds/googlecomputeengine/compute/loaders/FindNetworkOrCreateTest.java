@@ -40,9 +40,6 @@ import com.google.common.base.Supplier;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.LoadingCache;
 
-/**
- * @author Andrew Bayer
- */
 public class FindNetworkOrCreateTest {
 
    @Test

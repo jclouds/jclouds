@@ -27,9 +27,6 @@ import org.jclouds.http.HttpResponse;
 import com.google.common.base.Function;
 import com.google.inject.Module;
 
-/**
- * @author David Alves
- */
 public abstract class BaseGoogleComputeEngineServiceContextExpectTest<T> extends BaseGoogleComputeEngineExpectTest<T> implements
         Function<ComputeServiceContext, T> {
 

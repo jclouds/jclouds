@@ -27,7 +27,6 @@ import com.google.common.base.Objects;
 /**
  * A persistent disk resource
  *
- * @author David Alves
  * @see <a href="https://developers.google.com/compute/docs/reference/v1/disks"/>
  */
 @Beta

@@ -43,9 +43,6 @@ import com.google.common.base.Predicate;
 import com.google.common.base.Supplier;
 import com.google.common.util.concurrent.Atomics;
 
-/**
- * @author Andrew Bayer
- */
 @Singleton
 public class CreateNetworkIfNeeded implements Function<NetworkAndAddressRange, Network> {
    @Resource

@@ -45,7 +45,6 @@ import org.jclouds.rest.annotations.SkipEncoding;
 /**
  * Provides access to Projects via their REST API.
  *
- * @author David Alves
  * @see <a href="https://developers.google.com/compute/docs/reference/v1/projects"/>
  */
 @SkipEncoding({'/', '='})

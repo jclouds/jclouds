@@ -61,9 +61,6 @@ import com.google.common.util.concurrent.Atomics;
 import com.google.common.util.concurrent.ListenableFuture;
 import com.google.common.util.concurrent.ListeningExecutorService;
 
-/**
- * @author David Alves
- */
 public class CreateNodesWithGroupEncodedIntoNameThenAddToSet extends
         org.jclouds.compute.strategy.impl.CreateNodesWithGroupEncodedIntoNameThenAddToSet {
 

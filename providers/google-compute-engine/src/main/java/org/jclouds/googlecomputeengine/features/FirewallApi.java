@@ -62,7 +62,6 @@ import org.jclouds.rest.binders.BindToJsonPayload;
  * Provides access to Firewalls via their REST API.
  * <p/>
  *
- * @author David Alves
  * @see <a href="https://developers.google.com/compute/docs/reference/v1/firewalls"/>
  */
 @SkipEncoding({'/', '='})

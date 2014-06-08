@@ -31,9 +31,6 @@ import org.jclouds.json.Json;
 import com.google.common.base.Function;
 import com.google.inject.TypeLiteral;
 
-/**
- * @author David Alves
- */
 public class ParseInstances extends ParseJson<ListPage<Instance>> {
 
    @Inject

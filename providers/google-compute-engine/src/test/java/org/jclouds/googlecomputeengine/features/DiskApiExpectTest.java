@@ -32,9 +32,6 @@ import org.jclouds.http.HttpRequest;
 import org.jclouds.http.HttpResponse;
 import org.testng.annotations.Test;
 
-/**
- * @author David Alves
- */
 @Test(groups = "unit")
 public class DiskApiExpectTest extends BaseGoogleComputeEngineApiExpectTest {
    public static final String IMAGE_URL = "https://www.googleapis.com/compute/v1/projects/myproject/zones/us-central1-a/images/foo";

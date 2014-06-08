@@ -33,9 +33,6 @@ import org.testng.annotations.Test;
 import com.google.common.base.Predicate;
 import com.google.common.collect.Iterables;
 
-/**
- * @author David Alves
- */
 public class GlobalOperationApiLiveTest extends BaseGoogleComputeEngineApiLiveTest {
 
    private static final String METADATA_ITEM_KEY = "operationLiveTestTestProp";

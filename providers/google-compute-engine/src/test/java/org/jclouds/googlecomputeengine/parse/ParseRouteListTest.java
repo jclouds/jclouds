@@ -30,9 +30,6 @@ import org.testng.annotations.Test;
 
 import com.google.common.collect.ImmutableSet;
 
-/**
- * @author Andrew Bayer
- */
 @Test(groups = "unit")
 public class ParseRouteListTest extends BaseGoogleComputeEngineParseTest<ListPage<Route>> {
 

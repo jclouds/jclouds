@@ -29,9 +29,6 @@ import org.testng.annotations.Test;
 
 import com.google.common.collect.ImmutableMap;
 
-/**
- * @author David Alves
- */
 @Test(groups = "unit")
 public class ParseProjectTest extends BaseGoogleComputeEngineParseTest<Project> {
 

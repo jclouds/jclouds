@@ -33,8 +33,6 @@ import com.google.common.collect.Sets;
 
 /**
  * Optional information for creating an instance.
- *
- * @author David Alves
  */
 public class InstanceTemplate {
 

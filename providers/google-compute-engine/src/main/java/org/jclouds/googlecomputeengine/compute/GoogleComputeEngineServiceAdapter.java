@@ -87,9 +87,6 @@ import com.google.common.util.concurrent.Atomics;
 import com.google.common.util.concurrent.UncheckedTimeoutException;
 import com.google.inject.Inject;
 
-/**
- * @author David Alves
- */
 public class GoogleComputeEngineServiceAdapter implements ComputeServiceAdapter<InstanceInZone, MachineTypeInZone, Image, Zone> {
 
    @Resource
