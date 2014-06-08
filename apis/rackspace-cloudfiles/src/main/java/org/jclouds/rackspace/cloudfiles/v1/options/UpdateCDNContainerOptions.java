@@ -35,8 +35,6 @@ import com.google.common.net.MediaType;
 
 /**
  * Options supported for updating CDN containers.
- * 
- * @author Jeremy Daggett
  */
 public class UpdateCDNContainerOptions extends BaseHttpRequestOptions {
    public static final UpdateCDNContainerOptions NONE = new UpdateCDNContainerOptions();

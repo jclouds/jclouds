@@ -20,7 +20,6 @@ import org.jclouds.openstack.swift.v1.reference.SwiftHeaders;
 
 /**
  * Additional headers specified by Rackspace Cloud Files.
- * 
  */
 public interface CloudFilesHeaders extends SwiftHeaders {
    // Access logs

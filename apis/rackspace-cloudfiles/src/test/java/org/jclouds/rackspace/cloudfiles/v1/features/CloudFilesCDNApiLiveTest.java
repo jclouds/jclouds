@@ -42,8 +42,6 @@ import com.google.common.io.ByteSource;
 
 /**
  * Tests the live behavior of the {@code CloudFilesCDNApi}.
- * 
- * @author Jeremy Daggett
  */
 @Test(groups = "live", testName = "CloudFilesCDNApiLiveTest")
 public class CloudFilesCDNApiLiveTest extends BaseCloudFilesApiLiveTest {

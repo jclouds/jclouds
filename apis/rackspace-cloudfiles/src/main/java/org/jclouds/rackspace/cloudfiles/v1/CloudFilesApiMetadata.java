@@ -41,8 +41,6 @@ import com.google.inject.Module;
 
 /**
  * Implementation of {@link ApiMetadata} for Cloud Files.
- * 
- * @author Jeremy Daggett
  */
 public class CloudFilesApiMetadata extends BaseHttpApiMetadata<CloudFilesApi> {
 

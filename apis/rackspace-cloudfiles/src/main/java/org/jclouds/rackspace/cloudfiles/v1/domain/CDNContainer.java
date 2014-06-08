@@ -29,8 +29,6 @@ import com.google.common.base.Objects.ToStringHelper;
 
 /**
  * Represents a CDN Container in Rackspace Cloud Files.
- * 
- * @author Jeremy Daggett
  */
 public class CDNContainer implements Comparable<CDNContainer> {
 

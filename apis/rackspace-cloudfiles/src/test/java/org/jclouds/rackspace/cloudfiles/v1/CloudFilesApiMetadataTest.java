@@ -25,8 +25,6 @@ import com.google.common.reflect.TypeToken;
 
 /**
  * Tests the behavior of {@link CloudFilesApiMetadata}.
- * 
- * @author Jeremy Daggett
  */
 @Test(groups = "unit", testName = "CloudFilesApiMetadataTest")
 public class CloudFilesApiMetadataTest extends BaseApiMetadataTest {

@@ -22,8 +22,6 @@ import org.testng.annotations.Test;
 
 /**
  * Base class for all {@link CloudFilesApi} live tests.
- * 
- * @author Jeremy Daggett
  */
 @Test(groups = "live", testName = "BaseCloudFilesApiLiveTest")
 public abstract class BaseCloudFilesApiLiveTest extends BaseSwiftApiLiveTest<CloudFilesApi> {

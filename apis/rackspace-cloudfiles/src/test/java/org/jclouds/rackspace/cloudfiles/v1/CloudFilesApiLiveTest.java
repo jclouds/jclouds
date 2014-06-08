@@ -21,8 +21,6 @@ import org.testng.annotations.Test;
 
 /**
  * Tests live behavior of {@code CloudFilesApi}.
- * 
- * @author Jeremy Daggett
  */
 @Test(groups = "live", testName = "CloudFilesApiLiveTest")
 public class CloudFilesApiLiveTest extends BaseCloudFilesApiLiveTest {

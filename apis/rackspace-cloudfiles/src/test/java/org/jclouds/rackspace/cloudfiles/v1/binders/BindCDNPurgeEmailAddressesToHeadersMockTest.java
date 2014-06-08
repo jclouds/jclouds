@@ -30,8 +30,6 @@ import com.google.common.collect.ImmutableList;
 
 /**
  * Tests the behavior of {@code BindCDNPurgeEmailAddressesToHeaders}.
- * 
- * @author Jeremy Daggett
  */
 @Test(groups = "unit", testName = "BindCDNPurgeEmailAddressesToHeadersMockTest")
 public class BindCDNPurgeEmailAddressesToHeadersMockTest extends BaseOpenStackMockTest<CloudFilesApi> {

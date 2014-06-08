@@ -22,8 +22,6 @@ import org.testng.annotations.Test;
 /**
  * Tests the live behavior of the OpenStack Object Storage {@link ObjectApi}
  * via the {@link CloudFilesApi}.
- * 
- * @author Jeremy Daggett
  */
 @Test(groups = "live", testName = "CloudFilesObjectApiLiveTest")
 public class CloudFilesObjectApiLiveTest extends ObjectApiLiveTest {

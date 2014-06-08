@@ -43,10 +43,6 @@ import org.jclouds.rackspace.cloudidentity.v2_0.config.CloudIdentityCredentialTy
 import com.google.common.collect.ImmutableSet;
 import com.google.inject.Module;
 
-/**
- * 
- * @author Jeremy Daggett
- */
 public class CloudFilesUKProviderMetadata extends BaseProviderMetadata {
    
    public static Builder builder() {

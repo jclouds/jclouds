@@ -40,9 +40,6 @@ import com.google.common.base.Splitter;
 
 /**
  * Parses the {@link CDNContainer} from the response headers.
- * 
- * @author Jeremy Daggett
- *
  */
 public class ParseCDNContainerFromHeaders implements Function<HttpResponse, CDNContainer>,
       InvocationContext<ParseCDNContainerFromHeaders> {

@@ -34,8 +34,6 @@ import com.google.common.net.MediaType;
 
 /**
  * Tests behavior of {@link UpdateCDNContainerOptions}.
- * 
- * @author Jeremy Daggett
  */
 @Test(groups = "unit")
 public class UpdateCDNContainerOptionsTest {

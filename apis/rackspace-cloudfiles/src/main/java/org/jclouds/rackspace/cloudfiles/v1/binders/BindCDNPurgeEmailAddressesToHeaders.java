@@ -34,8 +34,6 @@ import com.google.common.collect.ImmutableMultimap;
  * Binds a list of email addresses to request headers. 
  * 
  * @see {@link CDNApi#purgeObject(String, String, Iterable)}
- * 
- * @author Jeremy Daggett
  */
 @Singleton
 public class BindCDNPurgeEmailAddressesToHeaders implements Binder {

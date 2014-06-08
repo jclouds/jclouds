@@ -27,9 +27,6 @@ import com.google.common.base.Function;
 
 /**
  * Parses the {@link CDNContainer} from the response headers.
- * 
- * @author Jeremy Daggett
- *
  */
 public class ParseCDNContainerURIFromHeaders implements Function<HttpResponse, URI> {
 

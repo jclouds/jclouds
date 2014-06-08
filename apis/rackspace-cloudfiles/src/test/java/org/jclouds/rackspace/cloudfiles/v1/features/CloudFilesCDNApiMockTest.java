@@ -48,8 +48,6 @@ import com.squareup.okhttp.mockwebserver.MockWebServer;
 
 /**
  * Tests the behavior of the {@link CloudFilesCDNApi}.
- * 
- * @author Jeremy Daggett
  */
 @Test(groups = "unit", testName = "CloudFilesCDNApiMockTest")
 public class CloudFilesCDNApiMockTest extends BaseOpenStackMockTest<CloudFilesApi> {

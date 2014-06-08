@@ -25,8 +25,6 @@ import org.testng.annotations.Test;
 
 /**
  * Tests the live behavior of the {@link RegionScopedBlobStoreContext}.
- * 
- * @author Jeremy Daggett
  */
 @Test(groups = "live")
 public class CloudFilesRegionScopedBlobStoreContextLiveTest extends RegionScopedBlobStoreContextLiveTest {

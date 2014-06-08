@@ -42,7 +42,6 @@ import com.google.common.base.Supplier;
  * The Cloud Files Service Type will always default to OpenStack Object Storage ("object-storage").
  * <p/>
  * 
- * @author Jeremy Daggett
  * 
  * @see CloudFilesApi#cdnApiInRegion(String)
  * @see CDNApi

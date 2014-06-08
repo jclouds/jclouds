@@ -45,8 +45,6 @@ import com.google.inject.Module;
 
 /**
  * Implementation of {@link ProviderMetadata} for Rackspace Cloud Files US regions.
- * 
- * @author Jeremy Daggett
  */
 public class CloudFilesUSProviderMetadata extends BaseProviderMetadata {
    
