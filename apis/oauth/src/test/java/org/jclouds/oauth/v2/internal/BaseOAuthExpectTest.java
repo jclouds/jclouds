@@ -18,9 +18,6 @@ package org.jclouds.oauth.v2.internal;
 
 import org.jclouds.rest.internal.BaseRestApiExpectTest;
 
-/**
- * @author Adrian Cole
- */
 public class BaseOAuthExpectTest<T> extends BaseRestApiExpectTest<T> {
 
    public BaseOAuthExpectTest() {

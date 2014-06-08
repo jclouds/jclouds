@@ -23,9 +23,6 @@ import org.testng.annotations.Test;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.core.MediaType;
 
-/**
- * @author David Alves
- */
 @Test(groups = "unit")
 public class ParseTokenTest extends BaseItemParserTest<Token> {
 

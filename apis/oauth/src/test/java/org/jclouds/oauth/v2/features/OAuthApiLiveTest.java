@@ -42,8 +42,6 @@ import org.testng.annotations.Test;
  * - test.jclouds.oauth.audience
  * - test.jclouds.oauth.scopes
  * - test.jclouds.oauth.signature-or-mac-algorithm
- *
- * @author David Alves
  */
 @Test(groups = "live", singleThreaded = true)
 public class OAuthApiLiveTest extends BaseOAuthApiLiveTest {

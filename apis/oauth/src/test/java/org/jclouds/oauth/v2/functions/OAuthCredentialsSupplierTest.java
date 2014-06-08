@@ -27,9 +27,6 @@ import java.util.Properties;
 import static org.jclouds.oauth.v2.functions.OAuthCredentialsSupplier.OAuthCredentialsForCredentials;
 import static org.testng.Assert.assertNotNull;
 
-/**
- * @author David Alves
- */
 @Test(groups = "unit")
 public class OAuthCredentialsSupplierTest {
 

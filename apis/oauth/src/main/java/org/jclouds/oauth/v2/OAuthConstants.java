@@ -22,8 +22,6 @@ import java.util.Map;
 
 /**
  * The constants for OAuth \
- *
- * @author David Alves
  */
 public final class OAuthConstants {
 

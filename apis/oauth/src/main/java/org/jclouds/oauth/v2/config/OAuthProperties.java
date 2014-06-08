@@ -18,8 +18,6 @@ package org.jclouds.oauth.v2.config;
 
 /**
  * Configurable properties for jclouds OAuth
- *
- * @author David Alves
  */
 public class OAuthProperties {
 

@@ -26,8 +26,6 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * The oauth token, obtained upon a successful token request and ready to embed in requests.
- *
- * @author David Alves
  */
 public class Token {
 

@@ -27,8 +27,6 @@ import javax.inject.Singleton;
 /**
  * Generic implementation of a token binder. Uses a provided {@link TokenRequestFormat} to actually bind tokens to
  * requests.
- *
- * @author David Alves
  */
 @Singleton
 public class OAuthTokenBinder implements Binder {

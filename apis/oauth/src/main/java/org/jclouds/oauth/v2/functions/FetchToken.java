@@ -24,9 +24,6 @@ import org.jclouds.oauth.v2.domain.TokenRequest;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
-/**
- * @author David Alves
- */
 @Singleton
 public class FetchToken implements Function<TokenRequest, Token> {
 

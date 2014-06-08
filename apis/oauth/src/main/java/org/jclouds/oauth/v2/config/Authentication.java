@@ -26,7 +26,6 @@ import java.lang.annotation.Target;
 /**
  * Qualifies OAuth related resources, such as Endpoint.
  *
- * @author David Alves
  * @see org.jclouds.oauth.v2.OAuthAsyncApi
  */
 @Retention(value = RetentionPolicy.RUNTIME)

@@ -51,7 +51,6 @@ import static org.jclouds.util.Throwables2.getFirstThrowableOfType;
  * Loads {@link OAuthCredentials} from a pem private key using the KeyFactory obtained from the JWT Algorithm
  * Name<->KeyFactory name mapping in OAuthConstants. The pem pk algorithm must match the KeyFactory algorithm.
  *
- * @author David Alves
  * @see org.jclouds.oauth.v2.OAuthConstants#OAUTH_ALGORITHM_NAMES_TO_KEYFACTORY_ALGORITHM_NAMES
  */
 @Singleton

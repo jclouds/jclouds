@@ -27,8 +27,6 @@ import java.util.Map;
 /**
  * JSON TypeAdapter for the ClaimSet type. Pull the claims maps to the root level and adds two properties for the
  * expiration time and issuing time.
- *
- * @author David Alves
  */
 public class ClaimSetTypeAdapter extends TypeAdapter<ClaimSet> {
 

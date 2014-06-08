@@ -30,8 +30,6 @@ import static org.jclouds.http.HttpUtils.closeClientButKeepContentStream;
 
 /**
  * This will parse and set an appropriate exception on the command object.
- *
- * @author David Alves
  */
 @Singleton
 public class OAuthErrorHandler implements HttpErrorHandler {

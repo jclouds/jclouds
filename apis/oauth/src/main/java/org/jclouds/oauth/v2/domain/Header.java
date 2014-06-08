@@ -25,7 +25,6 @@ import static com.google.common.base.Preconditions.checkNotNull;
 /**
  * The header for the OAuth token, contains the signer algorithm's name and the type of the token
  *
- * @author David Alves
  * @see <a href="https://developers.google.com/accounts/docs/OAuth2ServiceAccount">doc</a>
  */
 public class Header {

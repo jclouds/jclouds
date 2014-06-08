@@ -30,9 +30,6 @@ import static org.easymock.EasyMock.replay;
 import static org.easymock.EasyMock.reportMatcher;
 import static org.easymock.EasyMock.verify;
 
-/**
- * @author Adrian Cole
- */
 @Test(groups = "unit")
 public class OAuthErrorHandlerTest {
 

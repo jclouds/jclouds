@@ -26,8 +26,6 @@ import java.lang.annotation.Target;
  * Used to annotate REST methods/ifaces that use OAuthAuthentication.
  * <p/>
  * Sets the scopes for the token request for that particular method.
- *
- * @author David Alves
  */
 @Retention(value = RetentionPolicy.RUNTIME)
 @Target(value = {ElementType.TYPE, ElementType.METHOD})

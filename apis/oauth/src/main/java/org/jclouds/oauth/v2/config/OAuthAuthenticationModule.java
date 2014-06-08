@@ -32,8 +32,6 @@ import com.google.inject.Provides;
 
 /**
  * An OAuth module to be used form other providers.
- * 
- * @author David Alves
  */
 public class OAuthAuthenticationModule extends AbstractModule {
 

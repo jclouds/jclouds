@@ -24,8 +24,6 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * A complete token request.
- *
- * @author David Alves
  */
 public class TokenRequest {
 

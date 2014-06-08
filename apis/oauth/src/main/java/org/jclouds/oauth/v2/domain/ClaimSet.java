@@ -35,7 +35,6 @@ import static com.google.common.base.Preconditions.checkState;
 /**
  * The claimset for the token.
  *
- * @author David Alves
  * @see <a
  *      href="https://developers.google.com/accounts/docs/OAuth2ServiceAccount"
  *      >doc</a>

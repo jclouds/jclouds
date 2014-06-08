@@ -34,8 +34,6 @@ import static com.google.common.base.Preconditions.checkState;
  * To be used by client applications to embed an OAuth authentication in their REST requests.
  * <p/>
  * TODO when we're able to use the OAuthAuthentication an this should be used automatically
- *
- * @author David Alves
  */
 @Singleton
 public class OAuthAuthenticator implements HttpRequestFilter {

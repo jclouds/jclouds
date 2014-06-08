@@ -31,8 +31,6 @@ import org.testng.annotations.Test;
 
 /**
  * Tests the SignOrProduceMacForToken
- *
- * @author David Alves
  */
 @Test(groups = "unit")
 public class SignerFunctionTest {

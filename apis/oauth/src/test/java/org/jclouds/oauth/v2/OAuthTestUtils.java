@@ -29,8 +29,6 @@ import static org.jclouds.oauth.v2.config.OAuthProperties.AUDIENCE;
 
 /**
  * Utils for OAuth tests.
- *
- * @author David Alves
  */
 public class OAuthTestUtils {
 

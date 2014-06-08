@@ -38,8 +38,6 @@ import org.testng.annotations.Test;
 
 /**
  * Tests that a token requess is well formed.
- *
- * @author David Alves
  */
 @Test(groups = "unit")
 public class OAuthApiExpectTest extends BaseOAuthApiExpectTest {

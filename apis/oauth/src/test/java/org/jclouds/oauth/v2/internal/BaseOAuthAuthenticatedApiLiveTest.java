@@ -53,8 +53,6 @@ import com.google.inject.Module;
  * <p/>
  * This test asserts that a provider can authenticate with oauth for a given scope, or more simply
  * that authentication/authorization is working.
- *
- * @author David Alves
  */
 
 @Test(groups = "live")

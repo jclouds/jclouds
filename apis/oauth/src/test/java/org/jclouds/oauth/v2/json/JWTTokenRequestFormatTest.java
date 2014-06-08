@@ -36,9 +36,6 @@ import org.testng.annotations.Test;
 import com.google.common.base.Splitter;
 import com.google.common.collect.Iterables;
 
-/**
- * @author David Alves
- */
 @Test(groups = "unit")
 public class JWTTokenRequestFormatTest {
    public static final String STRING_THAT_GENERATES_URL_UNSAFE_BASE64_ENCODING = "§1234567890'+±!\"#$%&/()" +

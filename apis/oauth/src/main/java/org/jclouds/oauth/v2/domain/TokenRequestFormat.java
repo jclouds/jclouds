@@ -24,8 +24,6 @@ import java.util.Set;
 
 /**
  * Transforms a TokenRequest into a specific format (e.g. JWT token)
- *
- * @author David Alves
  */
 @ImplementedBy(JWTTokenRequestFormat.class)
 public interface TokenRequestFormat {

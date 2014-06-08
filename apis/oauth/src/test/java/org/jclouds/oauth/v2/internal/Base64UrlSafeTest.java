@@ -24,8 +24,6 @@ import org.testng.annotations.Test;
 
 /**
  * Tests that the Base64 implementations used to Base64 encode the tokens are Url safe.
- * 
- * @author David Alves
  */
 @Test(groups = "unit")
 public class Base64UrlSafeTest {

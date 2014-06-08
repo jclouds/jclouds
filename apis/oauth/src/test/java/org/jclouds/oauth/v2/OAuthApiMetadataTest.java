@@ -28,8 +28,6 @@ import org.testng.annotations.Test;
  * <pre>
  * META-INF/services/org.jclouds.apis.ApiMetadata
  * </pre>
- *
- * @author Adrian Cole
  */
 @Test(groups = "unit")
 public class OAuthApiMetadataTest extends BaseApiMetadataTest {

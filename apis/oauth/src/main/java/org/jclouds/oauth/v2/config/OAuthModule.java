@@ -48,8 +48,6 @@ import static org.jclouds.Constants.PROPERTY_SESSION_INTERVAL;
 
 /**
  * Base OAuth module
- *
- * @author David Alves
  */
 public class OAuthModule extends AbstractModule {
 

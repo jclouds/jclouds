@@ -31,8 +31,6 @@ import com.google.inject.Module;
 
 /**
  * Implementation of {@link ApiMetadata} for OAuth 2 API
- *
- * @author David Alves
  */
 public class OAuthApiMetadata extends BaseHttpApiMetadata<OAuthApi> {
 

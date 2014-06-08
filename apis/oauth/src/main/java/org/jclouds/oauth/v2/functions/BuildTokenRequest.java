@@ -49,8 +49,6 @@ import com.google.inject.name.Named;
  * Builds the default token request with the following claims: iss,scope,aud,iat,exp.
  * <p/>
  * TODO scopes etc should come from the REST method and not from a global property
- *
- * @author David Alves
  */
 @Singleton
 public class BuildTokenRequest implements Function<GeneratedHttpRequest, TokenRequest> {

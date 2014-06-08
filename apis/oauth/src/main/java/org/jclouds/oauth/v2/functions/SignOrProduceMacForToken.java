@@ -40,8 +40,6 @@ import static org.jclouds.oauth.v2.config.OAuthProperties.SIGNATURE_OR_MAC_ALGOR
 /**
  * Function that signs/produces mac's for  OAuth tokens, provided a {@link Signature} or a {@link Mac} algorithm and
  * {@link PrivateKey}
- *
- * @author David Alves
  */
 public class SignOrProduceMacForToken implements Function<byte[], byte[]> {
 

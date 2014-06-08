@@ -31,8 +31,6 @@ import com.google.inject.Provides;
 
 /**
  * OAuth module to when accessing OAuth stand-alone.
- * 
- * @author David Alves
  */
 @ConfiguresHttpApi
 public class OAuthHttpApiModule extends HttpApiModule<OAuthApi> {

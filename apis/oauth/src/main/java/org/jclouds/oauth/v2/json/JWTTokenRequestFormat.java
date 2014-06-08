@@ -44,8 +44,6 @@ import com.google.common.collect.ImmutableSet;
  * - creates the full url encoded payload as described in:
  * https://developers.google.com/accounts/docs/OAuth2ServiceAccount
  * <p/>
- *
- * @author David Alves
  */
 @Singleton
 public class JWTTokenRequestFormat implements TokenRequestFormat {
