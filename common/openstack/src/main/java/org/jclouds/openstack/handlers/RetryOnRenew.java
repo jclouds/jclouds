@@ -19,8 +19,12 @@ package org.jclouds.openstack.handlers;
 import static org.jclouds.http.HttpUtils.closeClientButKeepContentStream;
 import static org.jclouds.http.HttpUtils.releasePayload;
 
-import javax.annotation.Resource;
+import java.util.concurrent.TimeUnit;
 
+import javax.annotation.Resource;
+import javax.inject.Named;
+
+import org.jclouds.Constants;
 import org.jclouds.domain.Credentials;
 import org.jclouds.http.HttpCommand;
 import org.jclouds.http.HttpResponse;
@@ -29,8 +33,12 @@ import org.jclouds.logging.Logger;
 import org.jclouds.openstack.domain.AuthenticationResponse;
 import org.jclouds.openstack.reference.AuthHeaders;
 
+import com.google.common.annotations.VisibleForTesting;
+import com.google.common.cache.Cache;
+import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.LoadingCache;
 import com.google.common.collect.Multimap;
+import com.google.common.util.concurrent.Uninterruptibles;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
@@ -42,7 +50,22 @@ public class RetryOnRenew implements HttpRetryHandler {
    @Resource
    protected Logger logger = Logger.NULL;
 
+   @VisibleForTesting
+   @Inject(optional = true)
+   @Named(Constants.PROPERTY_MAX_RETRIES)
+   static int NUM_RETRIES = 5;
+
    private final LoadingCache<Credentials, AuthenticationResponse> authenticationResponseCache;
+
+   /*
+    * The reason retries need to be tracked is that it is possible that a token
+    * can be expired at any time. The reason we track by request is that only
+    * some requests might return a 401 (such as temporary URLs). However
+    * consistent failures of the magnitude this code tracks should indicate a
+    * problem.
+    */
+   private static final Cache<HttpCommand, Integer> retryCountMap = CacheBuilder
+         .newBuilder().expireAfterWrite(5, TimeUnit.MINUTES).build();
 
    @Inject
    protected RetryOnRenew(LoadingCache<Credentials, AuthenticationResponse> authenticationResponseCache) {
@@ -61,16 +84,34 @@ public class RetryOnRenew implements HttpRetryHandler {
                         && headers.containsKey(AuthHeaders.AUTH_KEY) && !headers.containsKey(AuthHeaders.AUTH_TOKEN)) {
                   retry = false;
                } else {
-                  byte[] content = closeClientButKeepContentStream(response);
-                  if (content != null && new String(content).contains("lease renew")) {
-                     logger.debug("invalidating authentication token");
+                  closeClientButKeepContentStream(response);
+                  // This is not an authentication request returning 401
+                  // Check if we already had seen this request
+                  Integer count = retryCountMap.getIfPresent(command);
+
+                  if (count == null) {
+                     // First time this non-authentication request failed
+                     logger.debug("invalidating authentication token - first time for %s", command);
+                     retryCountMap.put(command, 1);
                      authenticationResponseCache.invalidateAll();
                      retry = true;
                   } else {
-                     retry = false;
+                     // This request has failed before
+                     if (count + 1 >= NUM_RETRIES) {
+                        logger.debug("too many 401s - giving up after: %s for %s", count, command);
+                        retry = false;
+                     } else {
+                        // Retry just in case
+                        logger.debug("invalidating authentication token - retry %s for %s", count, command);
+                        retryCountMap.put(command, count + 1);
+                        // Wait between retries
+                        authenticationResponseCache.invalidateAll();
+                        Uninterruptibles.sleepUninterruptibly(5, TimeUnit.SECONDS);
+                        retry = true;
+                     }
                   }
                }
-               break;
+            break;
          }
          return retry;
 

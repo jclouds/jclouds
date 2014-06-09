@@ -21,6 +21,7 @@ import static org.easymock.EasyMock.expect;
 import static org.easymock.EasyMock.expectLastCall;
 import static org.easymock.EasyMock.replay;
 import static org.easymock.EasyMock.verify;
+import static org.testng.Assert.assertFalse;
 import static org.testng.Assert.assertTrue;
 
 import org.jclouds.domain.Credentials;
@@ -51,7 +52,8 @@ public class RetryOnRenewTest {
       cache.invalidateAll();
       expectLastCall();
 
-      expect(response.getPayload()).andReturn(Payloads.newStringPayload("token expired, please renew")).anyTimes();
+      expect(response.getPayload()).andReturn(Payloads.newStringPayload(""))
+            .anyTimes();
       expect(response.getStatusCode()).andReturn(401).atLeastOnce();
 
       replay(command);
@@ -65,5 +67,54 @@ public class RetryOnRenewTest {
       verify(command);
       verify(response);
       verify(cache);
+   }
+
+   /**
+    * We have three types of authentication failures: a) When the session
+    * (token) expires b) When you hit a URL you don't have access to (because of
+    * permissions) c) When you attempt to authenticate to the service (with bad
+    * credentials)
+    *
+    * In case c), which is detectable, we do not retry, as usually this means
+    * your credentials are broken. Case a) and b) cannot be distinguished easily
+    * at this point. Different providers will request token re-authentication in
+    * different ways (but usually preceded or by an authentication failure). To
+    * attempt to distinguish between case a) and b) this code tracks failures
+    * for specific calls. Multiple failures for the same call almost certainly
+    * indicates a permissions issue. A success results in a successful
+    * re-authentication.
+    */
+   @Test
+   public void test401ShouldRetry4Times() {
+      HttpCommand command = createMock(HttpCommand.class);
+      HttpRequest request = createMock(HttpRequest.class);
+      HttpResponse response = createMock(HttpResponse.class);
+
+      @SuppressWarnings("unchecked")
+      LoadingCache<Credentials, AuthenticationResponse> cache = createMock(LoadingCache.class);
+
+      expect(command.getCurrentRequest()).andReturn(request).anyTimes();
+      expect(request.getHeaders()).andStubReturn(null);
+
+      cache.invalidateAll();
+      expectLastCall().anyTimes();
+
+      expect(response.getPayload()).andReturn(Payloads.newStringPayload(""))
+            .anyTimes();
+      expect(response.getStatusCode()).andReturn(401).anyTimes();
+
+      replay(command, request, response, cache);
+
+      RetryOnRenew retry = new RetryOnRenew(cache);
+
+      for (int n = 0; n < RetryOnRenew.NUM_RETRIES - 1; n++) {
+         assertTrue(retry.shouldRetryRequest(command, response),
+               "Expected retry to succeed");
+      }
+
+      assertFalse(retry.shouldRetryRequest(command, response),
+            "Expected retry to fail on attempt 5");
+
+      verify(command, response, cache);
    }
 }
