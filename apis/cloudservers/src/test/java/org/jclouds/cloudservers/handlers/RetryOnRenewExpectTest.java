@@ -67,10 +67,10 @@ public class RetryOnRenewExpectTest extends BaseCloudServersRestClientExpectTest
       assert clientWhenImageExists.deleteImage(11);
    }
 
-   @Test(expectedExceptions = AuthorizationException.class)
-   public void testDoesNotReauthenticateOnFatal401() {
+   public void testReauthenticateOn401ForFailedCommand() {
+      String requestUrl = "https://lon.servers.api.rackspacecloud.com/v1.0/10001786/images/11?now=1257695648897";
       HttpRequest deleteImage = HttpRequest.builder().method("DELETE")
-            .endpoint("https://lon.servers.api.rackspacecloud.com/v1.0/10001786/images/11?now=1257695648897")
+            .endpoint(requestUrl)
             .addHeader("X-Auth-Token", authToken).build();
 
       HttpResponse unauthResponse = HttpResponse
@@ -80,8 +80,31 @@ public class RetryOnRenewExpectTest extends BaseCloudServersRestClientExpectTest
             .payload("[{\"unauthorized\":{\"message\":\"Fatal unauthorized.\",\"code\":401}}]")
             .build();
 
-      CloudServersClient client = orderedRequestsSendResponses(initialAuth, responseWithAuth, deleteImage,
-            unauthResponse);
+      // second auth uses same creds as initial one
+      HttpRequest redoAuth = initialAuth;
+
+      String authToken2 = "12345678-9012-47c0-9770-2c5097da25fc";
+      HttpResponse responseWithUrls2 = responseWithAuth.toBuilder()
+            .payload(responseWithAuth.getPayload().getRawContent().toString()
+                     .replace(authToken, authToken2)).build();
+
+      HttpRequest deleteImage2 = HttpRequest
+            .builder().method("DELETE")
+            .endpoint(requestUrl).addHeader("X-Auth-Token", authToken2).build();
+
+      HttpResponse imageDeleted = HttpResponse.builder().statusCode(204)
+            .message("HTTP/1.1 204 No Content").build();
+
+      // The sequence of events simulated here is as follows:
+      // 1. First auth succeeds.
+      // 2. The token returned in #1 is used in the deleteImage command.
+      // 3. The deleteImage command fails with a 401 error.
+      // 4. This should result in a new auth request which succeeds.
+      // 5. The new token is used in the next deleteImage command.
+      // 6. Succeed that command.
+      CloudServersClient client = orderedRequestsSendResponses(initialAuth,
+            responseWithAuth, deleteImage, unauthResponse, redoAuth,
+            responseWithUrls2, deleteImage2, imageDeleted);
 
       client.deleteImage(11);
    }

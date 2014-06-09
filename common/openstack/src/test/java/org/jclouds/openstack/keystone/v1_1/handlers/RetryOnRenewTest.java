@@ -21,6 +21,7 @@ import static org.easymock.EasyMock.expect;
 import static org.easymock.EasyMock.expectLastCall;
 import static org.easymock.EasyMock.replay;
 import static org.easymock.EasyMock.verify;
+import static org.testng.Assert.assertFalse;
 import static org.testng.Assert.assertTrue;
 
 import org.jclouds.domain.Credentials;
@@ -30,6 +31,7 @@ import org.jclouds.http.HttpResponse;
 import org.jclouds.http.handlers.BackoffLimitedRetryHandler;
 import org.jclouds.io.Payloads;
 import org.jclouds.openstack.keystone.v1_1.domain.Auth;
+import org.jclouds.openstack.keystone.v1_1.handlers.RetryOnRenew;
 import org.testng.annotations.Test;
 
 import com.google.common.cache.LoadingCache;
@@ -71,6 +73,41 @@ public class RetryOnRenewTest {
       verify(response);
       verify(cache);
       verify(backoffHandler);
+   }
+
+   @Test
+   public void test401ShouldRetry4Times() {
+      HttpCommand command = createMock(HttpCommand.class);
+      HttpRequest request = createMock(HttpRequest.class);
+      HttpResponse response = createMock(HttpResponse.class);
+
+      @SuppressWarnings("unchecked")
+      LoadingCache<Credentials, Auth> cache = createMock(LoadingCache.class);
+      BackoffLimitedRetryHandler backoffHandler = createMock(BackoffLimitedRetryHandler.class);
+
+      expect(command.getCurrentRequest()).andReturn(request).anyTimes();
+      expect(request.getHeaders()).andStubReturn(null);
+
+      cache.invalidateAll();
+      expectLastCall().anyTimes();
+
+      expect(response.getPayload()).andReturn(Payloads.newStringPayload(""))
+            .anyTimes();
+      expect(response.getStatusCode()).andReturn(401).anyTimes();
+
+      replay(command, request, response, cache);
+
+      RetryOnRenew retry = new RetryOnRenew(cache, backoffHandler);
+
+      for (int i = 0; i < RetryOnRenew.NUM_RETRIES - 1; ++i) {
+         assertTrue(retry.shouldRetryRequest(command, response),
+               "Expected retry to succeed");
+      }
+
+      assertFalse(retry.shouldRetryRequest(command, response),
+            "Expected retry to fail on attempt " + RetryOnRenew.NUM_RETRIES);
+
+      verify(command, response, cache);
    }
 
    @Test
