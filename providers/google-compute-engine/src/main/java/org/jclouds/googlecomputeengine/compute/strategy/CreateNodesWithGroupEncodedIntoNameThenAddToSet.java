@@ -175,7 +175,8 @@ public class CreateNodesWithGroupEncodedIntoNameThenAddToSet extends
       for (AtomicReference<Operation> operation : operations) {
          retry(operationDonePredicate, operationCompleteCheckTimeout, operationCompleteCheckInterval,
                  MILLISECONDS).apply(operation);
-         checkState(!operation.get().getHttpError().isPresent(), "Could not create firewall, operation failed" + operation);
+         checkState(!operation.get().getHttpError().isPresent(),
+               "Could not create firewall, operation failed" + operation);
       }
    }
 
