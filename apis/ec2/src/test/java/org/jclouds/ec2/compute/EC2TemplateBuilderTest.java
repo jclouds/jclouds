@@ -49,6 +49,7 @@ import org.jclouds.compute.domain.Template;
 import org.jclouds.compute.domain.TemplateBuilder;
 import org.jclouds.compute.options.TemplateOptions;
 import org.jclouds.compute.strategy.GetImageStrategy;
+import org.jclouds.compute.suppliers.ImageCacheSupplier;
 import org.jclouds.domain.Location;
 import org.jclouds.domain.LocationBuilder;
 import org.jclouds.domain.LocationScope;
@@ -225,7 +226,7 @@ public class EC2TemplateBuilderTest {
                         m1_small().build(), m1_xlarge().build(), m2_xlarge().build(), m2_2xlarge().build(),
 			      m2_4xlarge().build(), g2_2xlarge().build(), CC1_4XLARGE));
 
-      return new EC2TemplateBuilderImpl(locations, images, sizes, Suppliers.ofInstance(location), optionsProvider,
+      return new EC2TemplateBuilderImpl(locations, new ImageCacheSupplier(images, 60), sizes, Suppliers.ofInstance(location), optionsProvider,
                templateBuilderProvider, getImageStrategy, imageCache) {
       };
    }

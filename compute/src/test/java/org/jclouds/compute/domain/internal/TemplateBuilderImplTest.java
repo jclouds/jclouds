@@ -22,6 +22,7 @@ import static org.easymock.EasyMock.expect;
 import static org.easymock.EasyMock.replay;
 import static org.easymock.EasyMock.verify;
 import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertNotNull;
 import static org.testng.Assert.assertTrue;
 import static org.testng.Assert.fail;
 
@@ -45,6 +46,7 @@ import org.jclouds.compute.domain.Volume;
 import org.jclouds.compute.options.TemplateOptions;
 import org.jclouds.compute.predicates.ImagePredicates;
 import org.jclouds.compute.strategy.GetImageStrategy;
+import org.jclouds.compute.suppliers.ImageCacheSupplier;
 import org.jclouds.domain.Location;
 import org.jclouds.domain.LocationBuilder;
 import org.jclouds.domain.LocationScope;
@@ -466,7 +468,7 @@ public class TemplateBuilderImplTest {
             Supplier<Set<? extends Image>> images, Supplier<Set<? extends Hardware>> hardwares,
             Location defaultLocation, Provider<TemplateOptions> optionsProvider,
             Provider<TemplateBuilder> templateBuilderProvider, GetImageStrategy getImageStrategy) {
-      TemplateBuilderImpl template = new TemplateBuilderImpl(locations, images, hardwares, Suppliers
+      TemplateBuilderImpl template = new TemplateBuilderImpl(locations, new ImageCacheSupplier(images, 60), hardwares, Suppliers
                .ofInstance(defaultLocation), optionsProvider, templateBuilderProvider, getImageStrategy);
       return template;
    }
@@ -824,6 +826,82 @@ public class TemplateBuilderImplTest {
       verify(getImageStrategy);
    }
    
+   @Test
+   public void testFindImageWithIdDefaultToGetImageStrategyAndPopulatesTheCache() {
+      final Supplier<Set<? extends Location>> locations = Suppliers.<Set<? extends Location>> ofInstance(ImmutableSet
+            .<Location> of(region));
+      final Supplier<Set<? extends Image>> images = Suppliers.<Set<? extends Image>> ofInstance(ImmutableSet
+            .<Image> of(
+                  new ImageBuilder()
+                        .ids("Ubuntu 11.04 x64")
+                        .name("Ubuntu 11.04 x64")
+                        .description("Ubuntu 11.04 x64")
+                        .location(region)
+                        .status(Status.AVAILABLE)
+                        .operatingSystem(
+                              OperatingSystem.builder().name("Ubuntu 11.04 x64").description("Ubuntu 11.04 x64")
+                                    .is64Bit(true).version("11.04").family(OsFamily.UBUNTU).build()).build(),
+                  new ImageBuilder()
+                        .ids("Ubuntu 11.04 64-bit")
+                        .name("Ubuntu 11.04 64-bit")
+                        .description("Ubuntu 11.04 64-bit")
+                        .location(region)
+                        .status(Status.AVAILABLE)
+                        .operatingSystem(
+                              OperatingSystem.builder().name("Ubuntu 11.04 64-bit").description("Ubuntu 11.04 64-bit")
+                                    .is64Bit(true).version("11.04").family(OsFamily.UBUNTU).build()).build()));
+
+      final Supplier<Set<? extends Hardware>> hardwares = Suppliers.<Set<? extends Hardware>> ofInstance(ImmutableSet
+            .<Hardware> of(
+                  new HardwareBuilder()
+                        .ids(String.format("datacenter(%s)platform(%s)cpuCores(%d)memorySizeMB(%d)diskSizeGB(%d)",
+                              "Falkenberg", "Xen", 1, 512, 5)).ram(512)
+                        .processors(ImmutableList.of(new Processor(1, 1.0)))
+                        .volumes(ImmutableList.<Volume> of(new VolumeImpl((float) 5, true, true))).hypervisor("Xen")
+                        .location(region)
+                        .supportsImage(ImagePredicates.idEquals(image.getId())).build()));
+
+      final Provider<TemplateOptions> optionsProvider = new Provider<TemplateOptions>() {
+         @Override
+         public TemplateOptions get() {
+            return new TemplateOptions();
+         }
+      };
+
+      final GetImageStrategy getImageStrategy = createMock(GetImageStrategy.class);
+
+      expect(getImageStrategy.getImage(image.getId())).andReturn(image);
+      replay(getImageStrategy);
+
+      Provider<TemplateBuilder> templateBuilderProvider = new Provider<TemplateBuilder>() {
+         @Override
+         public TemplateBuilder get() {
+            return createTemplateBuilder(null, locations, images, hardwares, region, optionsProvider, this, getImageStrategy);
+         }
+      };
+
+      TemplateBuilder templateBuilder = templateBuilderProvider.get();
+
+      try {
+         // First call searching for the image properties will fail, as the image is not in the cache
+         templateBuilder.osNameMatches(image.getOperatingSystem().getName()).build();
+         fail("Image should not exist in the cache");
+      } catch (Exception ex) {
+         // Expected path
+      }
+
+      // A second call using the imageId will fallback to the GetImageStrategy and populate the image in the cache.
+      assertNotNull(templateBuilder.imageId(image.getId()).build());
+
+      // The third call will succeed, as the previous one should have populated the image in the cache.
+      templateBuilder.imageId(null); // Clear all criteria
+      Template template = templateBuilder.osNameMatches(image.getOperatingSystem().getName()).build();
+      assertEquals(template.getImage().getId(), image.getId());
+
+      // Verify this is called only once, as the third call will already find the image in the cache
+      verify(getImageStrategy);
+   }
+
    @SuppressWarnings("unchecked")
    @Test
    public void testHardwareIdNullsHypervisor() {

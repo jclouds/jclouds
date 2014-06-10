@@ -28,6 +28,7 @@ import org.jclouds.compute.domain.Image;
 import org.jclouds.compute.domain.TemplateBuilder;
 import org.jclouds.compute.options.TemplateOptions;
 import org.jclouds.compute.strategy.GetImageStrategy;
+import org.jclouds.compute.suppliers.ImageCacheSupplier;
 import org.jclouds.domain.Location;
 import org.jclouds.ec2.compute.domain.RegionAndName;
 import org.jclouds.ec2.compute.internal.EC2TemplateBuilderImpl;
@@ -39,7 +40,7 @@ public class AWSEC2TemplateBuilderImpl extends EC2TemplateBuilderImpl {
 
    @Inject
    protected AWSEC2TemplateBuilderImpl(@Memoized Supplier<Set<? extends Location>> locations,
-         @Memoized Supplier<Set<? extends Image>> images, @Memoized Supplier<Set<? extends Hardware>> sizes,
+         ImageCacheSupplier images, @Memoized Supplier<Set<? extends Hardware>> sizes,
          Supplier<Location> defaultLocation, @Named("DEFAULT") Provider<TemplateOptions> optionsProvider,
          @Named("DEFAULT") Provider<TemplateBuilder> defaultTemplateProvider, GetImageStrategy getImageStrategy,
          Supplier<LoadingCache<RegionAndName, ? extends Image>> imageMap) {

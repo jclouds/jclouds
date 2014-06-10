@@ -53,6 +53,7 @@ import org.jclouds.compute.options.TemplateOptions;
 import org.jclouds.compute.reference.ComputeServiceConstants;
 import org.jclouds.compute.strategy.CustomizeNodeAndAddToGoodMapOrPutExceptionIntoBadMap;
 import org.jclouds.compute.strategy.InitializeRunScriptOnNodeOrPlaceInBadMap;
+import org.jclouds.compute.suppliers.ImageCacheSupplier;
 import org.jclouds.config.ValueOfConfigurationKeyOrNull;
 import org.jclouds.domain.LoginCredentials;
 import org.jclouds.json.Json;
@@ -111,6 +112,9 @@ public abstract class BaseComputeServiceContextModule extends AbstractModule {
       }, InitializeRunScriptOnNodeOrPlaceInBadMap.class).build(InitializeRunScriptOnNodeOrPlaceInBadMap.Factory.class));
 
       install(new FactoryModuleBuilder().build(BlockUntilInitScriptStatusIsZeroThenReturnOutput.Factory.class));
+
+      bind(new TypeLiteral<Supplier<Set<? extends Image>>>() {
+      }).annotatedWith(Memoized.class).to(ImageCacheSupplier.class);
    }
 
    protected void bindCredentialsOverriderFunction() {
@@ -229,7 +233,7 @@ public abstract class BaseComputeServiceContextModule extends AbstractModule {
 
    @Provides
    @Singleton
-   @Memoized
+   @Named("imageCache")
    protected Supplier<Set<? extends Image>> supplyImageCache(AtomicReference<AuthorizationException> authException, @Named(PROPERTY_SESSION_INTERVAL) long seconds,
          final Supplier<Set<? extends Image>> imageSupplier, Injector injector) {
       if (shouldEagerlyParseImages(injector)) {
