@@ -31,7 +31,6 @@ import java.util.Set;
 
 import javax.inject.Provider;
 
-import org.easymock.EasyMock;
 import org.jclouds.compute.domain.Hardware;
 import org.jclouds.compute.domain.HardwareBuilder;
 import org.jclouds.compute.domain.Image;

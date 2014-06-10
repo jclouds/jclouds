@@ -19,7 +19,6 @@ package org.jclouds.openstack.swift.functions;
 import com.google.common.collect.ImmutableList;
 import com.google.common.reflect.Invokable;
 import com.google.gson.Gson;
-import org.jclouds.blobstore.domain.PageSet;
 import org.jclouds.json.internal.GsonWrapper;
 import org.jclouds.openstack.swift.domain.ObjectInfo;
 import org.jclouds.openstack.swift.options.ListContainerOptions;
@@ -28,17 +27,10 @@ import org.jclouds.rest.internal.GeneratedHttpRequest;
 import org.jclouds.util.Strings2;
 import org.testng.annotations.Test;
 
-import javax.ws.rs.core.NewCookie;
 import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.List;
 
 import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertNotNull;
 
-/**
- * @author Bill Branan
- */
 @Test(groups = "unit")
 public class ParseObjectInfoListFromJsonResponseTest {
 
