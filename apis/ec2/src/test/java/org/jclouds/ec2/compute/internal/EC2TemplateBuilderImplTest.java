@@ -38,6 +38,7 @@ import org.jclouds.compute.domain.internal.TemplateBuilderImpl;
 import org.jclouds.compute.domain.internal.TemplateBuilderImplTest;
 import org.jclouds.compute.options.TemplateOptions;
 import org.jclouds.compute.strategy.GetImageStrategy;
+import org.jclouds.compute.suppliers.ImageCacheSupplier;
 import org.jclouds.domain.Location;
 import org.jclouds.ec2.compute.domain.RegionAndName;
 import org.jclouds.ec2.compute.functions.ImagesToRegionAndIdMap;
@@ -88,7 +89,7 @@ public class EC2TemplateBuilderImplTest extends TemplateBuilderImplTest {
                   ImagesToRegionAndIdMap.imagesToMap(images.get()))));
       }
 
-      return new EC2TemplateBuilderImpl(locations, images, sizes, Suppliers.ofInstance(defaultLocation),
+      return new EC2TemplateBuilderImpl(locations, new ImageCacheSupplier(images, 60), sizes, Suppliers.ofInstance(defaultLocation),
             optionsProvider, templateBuilderProvider, getImageStrategy, Suppliers.<LoadingCache<RegionAndName, ? extends Image>>ofInstance(imageMap));
    }
 
@@ -223,5 +224,11 @@ public class EC2TemplateBuilderImplTest extends TemplateBuilderImplTest {
    public void testFindImageWithIdDefaultToGetImageStrategy() {
 
    }
-   
+
+   // The EC2 provider already overrides the getImage method so this test is not useful for EC2
+   @Override
+   public void testFindImageWithIdDefaultToGetImageStrategyAndPopulatesTheCache() {
+
+   }
+
 }

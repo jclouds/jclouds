@@ -54,6 +54,7 @@ import org.jclouds.compute.domain.TemplateBuilderSpec;
 import org.jclouds.compute.options.TemplateOptions;
 import org.jclouds.compute.reference.ComputeServiceConstants;
 import org.jclouds.compute.strategy.GetImageStrategy;
+import org.jclouds.compute.suppliers.ImageCacheSupplier;
 import org.jclouds.domain.Location;
 import org.jclouds.logging.Logger;
 
@@ -81,7 +82,7 @@ public class TemplateBuilderImpl implements TemplateBuilder {
    @Named(ComputeServiceConstants.COMPUTE_LOGGER)
    protected Logger logger = Logger.NULL;
 
-   protected final Supplier<Set<? extends Image>> images;
+   protected final ImageCacheSupplier images;
    protected final Supplier<Set<? extends Hardware>> hardwares;
    protected final Supplier<Set<? extends Location>> locations;
    protected final Supplier<Location> defaultLocation;
@@ -134,13 +135,13 @@ public class TemplateBuilderImpl implements TemplateBuilder {
 
    @Inject
    protected TemplateBuilderImpl(@Memoized Supplier<Set<? extends Location>> locations,
-         @Memoized Supplier<Set<? extends Image>> images, @Memoized Supplier<Set<? extends Hardware>> hardwares,
-         Supplier<Location> defaultLocation2, @Named("DEFAULT") Provider<TemplateOptions> optionsProvider,
+         ImageCacheSupplier images, @Memoized Supplier<Set<? extends Hardware>> hardwares,
+         Supplier<Location> defaultLocation, @Named("DEFAULT") Provider<TemplateOptions> optionsProvider,
          @Named("DEFAULT") Provider<TemplateBuilder> defaultTemplateProvider, GetImageStrategy getImageStrategy) {
       this.locations = checkNotNull(locations, "locations");
-      this.images = checkNotNull(images, "locations");
+      this.images = checkNotNull(images, "images");
       this.hardwares = checkNotNull(hardwares, "hardwares");
-      this.defaultLocation = checkNotNull(defaultLocation2, "defaultLocation2");
+      this.defaultLocation = checkNotNull(defaultLocation, "defaultLocation");
       this.optionsProvider = checkNotNull(optionsProvider, "optionsProvider");
       this.defaultTemplateProvider = checkNotNull(defaultTemplateProvider, "defaultTemplateProvider");
       this.getImageStrategy = checkNotNull(getImageStrategy, "getImageStrategy");
@@ -731,21 +732,26 @@ public class TemplateBuilderImpl implements TemplateBuilder {
    }
 
    private Image findImageWithId(Set<? extends Image> images) {
-      // Try find the image in the cache and fallback to the GetImageStrategy
+      // Try to find the image in the cache and fallback to the GetImageStrategy
       // see https://issues.apache.org/jira/browse/JCLOUDS-570
       Optional<? extends Image> image = tryFind(images, idPredicate);
-      if (!image.isPresent()) {
-         logger.warn("Image %s not found in the image cache. Trying to get it directly...", imageId);
-         // Note that this might generate make a call to the provider instead of using a cache, but
-         // this will be executed rarely, only when an image is not present in the image list but
-         // it actually exists in the provider. It shouldn't be an expensive call so using a cache just for
-         // this corner case is overkill.
-         image = Optional.fromNullable(getImageStrategy.getImage(imageId));
-         if (!image.isPresent()) {
-            throwNoSuchElementExceptionAfterLoggingImageIds(format("%s not found", idPredicate), images);
-         }
+      if (image.isPresent()) {
+         return image.get();
       }
-      return image.get();
+
+      logger.info("Image %s not found in the image cache. Trying to get it from the provider...", imageId);
+      // Note that this will generate make a call to the provider instead of using a cache, but
+      // this will be executed rarely, only when an image is not present in the image list but
+      // it actually exists in the provider. It shouldn't be an expensive call so using a cache just for
+      // this corner case is overkill.
+      Image imageFromProvider = getImageStrategy.getImage(imageId);
+      if (imageFromProvider == null) {
+         throwNoSuchElementExceptionAfterLoggingImageIds(format("%s not found", idPredicate), images);
+      }
+      // Register the just found image in the image cache, so subsequent uses of the TemplateBuilder and
+      // the ComptueService find it.
+      this.images.registerImage(imageFromProvider);
+      return imageFromProvider;
    }
 
    private Hardware findHardwareWithId(Set<? extends Hardware> hardwaresToSearch) {

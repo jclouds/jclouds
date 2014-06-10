@@ -34,6 +34,7 @@ import javax.inject.Singleton;
 
 import org.jclouds.compute.ComputeServiceAdapter;
 import org.jclouds.compute.ComputeServiceAdapter.NodeAndInitialCredentials;
+import org.jclouds.compute.config.ComputeServiceAdapterContextModule.AddDefaultCredentialsToImage;
 import org.jclouds.compute.domain.ComputeMetadata;
 import org.jclouds.compute.domain.Image;
 import org.jclouds.compute.domain.NodeMetadata;
@@ -78,12 +79,13 @@ public class AdaptingComputeServiceStrategies<N, H, I, L> implements CreateNodeW
    private final ComputeServiceAdapter<N, H, I, L> client;
    private final Function<N, NodeMetadata> nodeMetadataAdapter;
    private final Function<I, Image> imageAdapter;
+   private final AddDefaultCredentialsToImage addDefaultCredentialsToImage;
 
    @Inject
    public AdaptingComputeServiceStrategies(Map<String, Credentials> credentialStore,
             PrioritizeCredentialsFromTemplate prioritizeCredentialsFromTemplate,
             ComputeServiceAdapter<N, H, I, L> client, Function<N, NodeMetadata> nodeMetadataAdapter,
-            Function<I, Image> imageAdapter) {
+            Function<I, Image> imageAdapter, AddDefaultCredentialsToImage addDefaultCredentialsToImage) {
       this.credentialStore = checkNotNull(credentialStore, "credentialStore");
       this.prioritizeCredentialsFromTemplate = checkNotNull(prioritizeCredentialsFromTemplate,
                "prioritizeCredentialsFromTemplate");
@@ -91,6 +93,7 @@ public class AdaptingComputeServiceStrategies<N, H, I, L> implements CreateNodeW
       this.nodeMetadataAdapter = Functions.compose(addLoginCredentials, checkNotNull(nodeMetadataAdapter,
                "nodeMetadataAdapter"));
       this.imageAdapter = checkNotNull(imageAdapter, "imageAdapter");
+      this.addDefaultCredentialsToImage = checkNotNull(addDefaultCredentialsToImage, "addDefaultCredentialsToImage");
    }
 
    private final Function<NodeMetadata, NodeMetadata> addLoginCredentials = new Function<NodeMetadata, NodeMetadata>() {
@@ -128,7 +131,9 @@ public class AdaptingComputeServiceStrategies<N, H, I, L> implements CreateNodeW
       I image = client.getImage(checkNotNull(id, "id"));
       if (image == null)
          return null;
-      return imageAdapter.apply(image);
+      // The image supplier configured in the ComputeServiceAdapterContextModule also adds the default credentials to
+      // each image in the image list. When getting a single image, the behavior must be the same.
+      return addDefaultCredentialsToImage.apply(imageAdapter.apply(image));
    }
    
    @Override
