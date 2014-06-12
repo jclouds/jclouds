@@ -54,7 +54,7 @@ public class ParseServerWithoutImageTest extends BaseItemParserTest<Server> {
    public Server expected() {
       return Server
             .builder()
-            .id("52415800-8b69-11e0-9b19-734f000004d2")
+            .id("71752")
             .tenantId("1234")
             .userId("5678")
             .name("sample-f352")

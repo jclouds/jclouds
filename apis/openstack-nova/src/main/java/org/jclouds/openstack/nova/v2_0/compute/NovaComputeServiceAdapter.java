@@ -268,8 +268,9 @@ public class NovaComputeServiceAdapter implements
       ZoneAndId zoneAndId = ZoneAndId.fromSlashEncoded(id);
       if (novaApi.getServerAdminExtensionForZone(zoneAndId.getZone()).isPresent()) {
          novaApi.getServerAdminExtensionForZone(zoneAndId.getZone()).get().resume(zoneAndId.getId());
+      } else {
+         throw new UnsupportedOperationException("resume requires installation of the Admin Actions extension");
       }
-      throw new UnsupportedOperationException("resume requires installation of the Admin Actions extension");
    }
 
    @Override
@@ -277,8 +278,9 @@ public class NovaComputeServiceAdapter implements
       ZoneAndId zoneAndId = ZoneAndId.fromSlashEncoded(id);
       if (novaApi.getServerAdminExtensionForZone(zoneAndId.getZone()).isPresent()) {
          novaApi.getServerAdminExtensionForZone(zoneAndId.getZone()).get().suspend(zoneAndId.getId());
+      } else {
+         throw new UnsupportedOperationException("suspend requires installation of the Admin Actions extension");
       }
-      throw new UnsupportedOperationException("suspend requires installation of the Admin Actions extension");
    }
 
 }
