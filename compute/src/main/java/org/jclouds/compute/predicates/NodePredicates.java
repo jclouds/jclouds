@@ -252,7 +252,7 @@ public class NodePredicates {
 
       @Override
       public String toString() {
-         return "RUNNING";
+         return Status.RUNNING.toString();
       }
    };
 
@@ -267,7 +267,22 @@ public class NodePredicates {
 
       @Override
       public String toString() {
-         return "TERMINATED";
+         return Status.TERMINATED.toString();
+      }
+   };
+
+   /**
+    * Match nodes with State == SUSPENDED
+    */
+   public static final Predicate<NodeMetadata> SUSPENDED = new Predicate<NodeMetadata>() {
+      @Override
+      public boolean apply(NodeMetadata nodeMetadata) {
+         return nodeMetadata.getStatus() == Status.SUSPENDED;
+      }
+
+      @Override
+      public String toString() {
+         return Status.SUSPENDED.toString();
       }
    };
 

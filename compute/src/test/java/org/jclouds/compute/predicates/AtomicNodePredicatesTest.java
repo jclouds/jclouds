@@ -133,12 +133,23 @@ public class AtomicNodePredicatesTest {
    public void testNodeRunningReturnsTrueWhenRunning() {
       expect(node.getStatus()).andReturn(Status.RUNNING).atLeastOnce();
       expect(node.getBackendStatus()).andReturn(null).atLeastOnce();
-      replay(node);
-      replay(computeService);
+      replay(node, computeService);
 
       AtomicNodeRunning nodeRunning = new AtomicNodeRunning(computeService);
       AtomicReference<NodeMetadata> reference = Atomics.newReference(node);
       Assert.assertTrue(nodeRunning.apply(reference));
+      Assert.assertEquals(reference.get(), node);
+   }
+   
+   @Test
+   public void testNodeSuspendedReturnsTrueWhenSuspended() {
+      expect(node.getStatus()).andReturn(Status.SUSPENDED).atLeastOnce();
+      expect(node.getBackendStatus()).andReturn(null).atLeastOnce();
+      replay(node, computeService);
+
+      AtomicNodeSuspended nodeSuspended = new AtomicNodeSuspended(computeService);
+      AtomicReference<NodeMetadata> reference = Atomics.newReference(node);
+      Assert.assertTrue(nodeSuspended.apply(reference));
       Assert.assertEquals(reference.get(), node);
    }
 
@@ -146,8 +157,7 @@ public class AtomicNodePredicatesTest {
    public void testNodeRunningFailsOnTerminated() {
       expect(node.getStatus()).andReturn(Status.TERMINATED).atLeastOnce();
       expect(node.getBackendStatus()).andReturn(null).atLeastOnce();
-      replay(node);
-      replay(computeService);
+      replay(node, computeService);
 
       AtomicNodeRunning nodeRunning = new AtomicNodeRunning(computeService);
       AtomicReference<NodeMetadata> reference = Atomics.newReference(node);
@@ -159,8 +169,7 @@ public class AtomicNodePredicatesTest {
    public void testNodeRunningFailsOnError() {
       expect(node.getStatus()).andReturn(Status.ERROR).atLeastOnce();
       expect(node.getBackendStatus()).andReturn(null).atLeastOnce();
-      replay(node);
-      replay(computeService);
+      replay(node, computeService);
 
       AtomicNodeRunning nodeRunning = new AtomicNodeRunning(computeService);
       AtomicReference<NodeMetadata> reference = Atomics.newReference(node);
