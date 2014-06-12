@@ -23,6 +23,7 @@ import static org.testng.Assert.assertNull;
 import java.util.Map;
 import java.util.Properties;
 
+import org.jclouds.compute.ComputeService;
 import org.jclouds.compute.ComputeServiceAdapter.NodeAndInitialCredentials;
 import org.jclouds.compute.ComputeServiceContext;
 import org.jclouds.compute.domain.Template;
@@ -306,7 +307,7 @@ public class NovaComputeServiceAdapterExpectTest extends BaseNovaComputeServiceC
     * inject, then you simply cannot log in to the server.
     */
    public void testNoKeyPairOrAdminPass() throws Exception {
-      
+
       HttpRequest createServer = HttpRequest
          .builder()
          .method("POST")
@@ -316,7 +317,7 @@ public class NovaComputeServiceAdapterExpectTest extends BaseNovaComputeServiceC
          .payload(payloadFromStringWithContentType(
                   "{\"server\":{\"name\":\"test-e92\",\"imageRef\":\"1241\",\"flavorRef\":\"100\"}}","application/json"))
          .build();
-  
+
       HttpResponse createServerResponse = HttpResponse.builder().statusCode(202).message("HTTP/1.1 202 Accepted")
          .payload(payloadFromResourceWithContentType("/new_server_no_adminpass.json","application/json; charset=UTF-8")).build();
 
@@ -331,15 +332,84 @@ public class NovaComputeServiceAdapterExpectTest extends BaseNovaComputeServiceC
       Injector forSecurityGroups = requestsSendResponses(requestResponseMap);
 
       Template template = forSecurityGroups.getInstance(TemplateBuilder.class).build();
-      
+
       NovaComputeServiceAdapter adapter = forSecurityGroups.getInstance(NovaComputeServiceAdapter.class);
-      
+
       NodeAndInitialCredentials<ServerInZone> server = adapter.createNodeWithGroupEncodedIntoName("test", "test-e92",
             template);
       assertNotNull(server);
       assertNull(server.getCredentials());
    }
-   
+
+   /**
+    * Test successful suspend/resume via ComputeService which depends on
+    * Admin extension being installed in OpenStack
+    */
+   public void testSuspendWithAdminExtensionSucceeds() throws Exception {
+
+      HttpRequest suspendServer = HttpRequest
+         .builder()
+         .method("POST")
+         .endpoint("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v1.1/3456/servers/71752/action")
+         .addHeader("X-Auth-Token", authToken)
+         .payload(payloadFromStringWithContentType(
+                  "{\"suspend\":null}", "application/json"))
+         .build();
+
+      HttpResponse suspendServerResponse = HttpResponse.builder()
+            .statusCode(202)
+            .build();
+
+      Map<HttpRequest, HttpResponse> requestResponseMap = ImmutableMap.<HttpRequest, HttpResponse> builder()
+               .put(keystoneAuthWithUsernameAndPasswordAndTenantName, responseWithKeystoneAccess)
+               .put(extensionsOfNovaRequest, extensionsOfNovaResponse)
+               .put(listDetail, listDetailResponse)
+               .put(listFlavorsDetail, listFlavorsDetailResponse)
+               .put(suspendServer, suspendServerResponse)
+               .put(serverDetail, serverDetailResponse).build();
+
+      Injector forAdminExtension = requestsSendResponses(requestResponseMap);
+
+      ComputeService computeService = forAdminExtension.getInstance(ComputeService.class);
+
+      computeService.suspendNode("az-1.region-a.geo-1/71752");
+   }
+
+   /**
+    * Test failed suspend/resume via ComputeService which depends on
+    * Admin extension being installed in OpenStack. Throws UOE if extension is missing.
+    */
+   @Test(expectedExceptions =  UnsupportedOperationException.class)
+   public void testSuspendWithoutAdminExtensionThrowsUOE() throws Exception {
+
+      HttpRequest suspendServer = HttpRequest
+            .builder()
+            .method("POST")
+            .endpoint("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v1.1/3456/servers/71752/action")
+            .addHeader("X-Auth-Token", authToken)
+            .payload(payloadFromStringWithContentType(
+                  "{\"suspend\":null}", "application/json"))
+            .build();
+
+      HttpResponse suspendServerResponse = HttpResponse.builder()
+            .statusCode(202)
+            .build();
+
+      Map<HttpRequest, HttpResponse> requestResponseMap = ImmutableMap.<HttpRequest, HttpResponse> builder()
+            .put(keystoneAuthWithUsernameAndPasswordAndTenantName, responseWithKeystoneAccess)
+            .put(extensionsOfNovaRequest, unmatchedExtensionsOfNovaResponse)
+            .put(listDetail, listDetailResponse)
+            .put(listFlavorsDetail, listFlavorsDetailResponse)
+            .put(suspendServer, suspendServerResponse)
+            .put(serverDetail, serverDetailResponse).build();
+
+      Injector forAdminExtension = requestsSendResponses(requestResponseMap);
+
+      ComputeService compute = forAdminExtension.getInstance(ComputeService.class);
+
+      compute.suspendNode("az-1.region-a.geo-1/71752");
+   }
+
    @Override
    public Injector apply(ComputeServiceContext input) {
       return input.utils().injector();

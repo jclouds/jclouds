@@ -43,7 +43,7 @@ public class ServerPredicatesMockTest extends BaseOpenStackMockTest<NovaApi> {
          NovaApi novaApi = api(server.getUrl("/").toString(), "openstack-nova");
          ServerApi serverApi = novaApi.getServerApiForZone(("RegionOne"));
 
-         boolean result = awaitActive(serverApi).apply("52415800-8b69-11e0-9b19-734f000004d2");
+         boolean result = awaitActive(serverApi).apply("71752");
 
          assertTrue(result);
          assertEquals(server.getRequestCount(), 5);
@@ -68,7 +68,7 @@ public class ServerPredicatesMockTest extends BaseOpenStackMockTest<NovaApi> {
          NovaApi novaApi = api(server.getUrl("/").toString(), "openstack-nova");
          ServerApi serverApi = novaApi.getServerApiForZone(("RegionOne"));
 
-         boolean result = awaitShutoff(serverApi).apply("52415800-8b69-11e0-9b19-734f000004d2");
+         boolean result = awaitShutoff(serverApi).apply("71752");
 
          assertTrue(result);
          assertEquals(server.getRequestCount(), 7);
@@ -90,7 +90,7 @@ public class ServerPredicatesMockTest extends BaseOpenStackMockTest<NovaApi> {
          NovaApi novaApi = api(server.getUrl("/").toString(), "openstack-nova");
          ServerApi serverApi = novaApi.getServerApiForZone(("RegionOne"));
 
-         boolean result = awaitStatus(serverApi, ACTIVE, 3, 1).apply("52415800-8b69-11e0-9b19-734f000004d2");
+         boolean result = awaitStatus(serverApi, ACTIVE, 3, 1).apply("71752");
 
          assertFalse(result);
          assertAuthentication(server);

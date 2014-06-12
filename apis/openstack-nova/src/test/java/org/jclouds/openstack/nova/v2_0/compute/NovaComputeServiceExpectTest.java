@@ -79,7 +79,7 @@ public class NovaComputeServiceExpectTest extends BaseNovaComputeServiceExpectTe
       assertNotNull(apiWhenServersExist.listNodes());
       assertEquals(apiWhenServersExist.listNodes().size(), 1);
       assertEquals(apiWhenServersExist.listNodes().iterator().next().getId(),
-            "az-1.region-a.geo-1/52415800-8b69-11e0-9b19-734f000004d2");
+            "az-1.region-a.geo-1/71752");
       assertEquals(apiWhenServersExist.listNodes().iterator().next().getName(), "sample-server");
    }
 

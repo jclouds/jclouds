@@ -1,7 +1,7 @@
 {
     "servers": [
       {
-        "id": "52415800-8b69-11e0-9b19-734f000004d2",
+        "id": "71752",
         "tenant_id": "1234",
         "user_id": "5678",
         "name": "sample-server",
