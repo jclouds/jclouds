@@ -28,6 +28,7 @@ import java.util.Properties;
 import java.util.Set;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
+import java.util.regex.Pattern;
 
 import org.jclouds.ContextBuilder;
 import org.jclouds.concurrent.config.ExecutorServiceModule;
@@ -61,6 +62,11 @@ public class BaseOpenStackMockTest<A extends Closeable> {
 
    private final Set<Module> modules = ImmutableSet.<Module> of(
          new ExecutorServiceModule(sameThreadExecutor(), sameThreadExecutor()));
+
+   /**
+    * Pattern for replacing the URL token with the correct local address.
+    */
+   private static final Pattern urlTokenPattern = Pattern.compile(":\\s*\"\\s*URL");
 
    @SuppressWarnings("serial")
    public A api(String uri, String provider, Properties overrides) {
@@ -102,10 +108,11 @@ public class BaseOpenStackMockTest<A extends Closeable> {
             if (response.getBody() != null) {
                /*
                 * "URL" must be used in the service catalog sample (such as
-                * access.json or accessRackspace) for the declared service
+                * access.json or accessRackspace.json) for the declared service
                 * endpoints.
                 */
-               String newBody = new String(response.getBody()).replace(":\"URL", ":\"" + url.toString());
+               String newBody = urlTokenPattern.matcher(new String(response.getBody())).replaceAll(": \"" + url.toString());
+
                response = response.setBody(newBody);
             }
             return response;
