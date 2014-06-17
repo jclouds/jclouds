@@ -14,27 +14,26 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.jclouds.googlecloudstorage;
+package org.jclouds.googlecloudstorage.parse;
 
-import java.io.Closeable;
+import javax.ws.rs.Consumes;
+import javax.ws.rs.core.MediaType;
 
-import javax.ws.rs.Path;
+import org.jclouds.googlecloudstorage.domain.DefaultObjectAccessControls;
+import org.jclouds.googlecloudstorage.features.ApiResourceRefferences.ObjectRole;
+import org.jclouds.googlecloudstorage.internal.BaseGoogleCloudStorageParseTest;
 
-import org.jclouds.googlecloudstorage.features.DefaultObjectAccessControlsApi;
-import org.jclouds.rest.annotations.Delegate;
+public class DefaultObjectAclInsertTest extends BaseGoogleCloudStorageParseTest<DefaultObjectAccessControls> {
 
-/**
- * Provide access to GoogleCloudStorage
- *
- * @see <a href="https://developers.google.com/storage/docs/json_api/v1/">api doc /a>
- */
-public interface GoogleCloudStorageApi extends Closeable {
+   @Override
+   public String resource() {
+      return "/default_objectacl_insert_response.json";
+   }
 
-   /**
-    * Provides access to Default Object Access Control features on bucket
-    */
-   @Delegate
-   @Path("")
-   DefaultObjectAccessControlsApi getDefaultObjectAccessControlsApi();
+   @Override
+   @Consumes(MediaType.APPLICATION_JSON)
+   public DefaultObjectAccessControls expected() {
+      return DefaultObjectAccessControls.builder().entity("allUsers").role(ObjectRole.OWNER).etag("CAo=").build();
 
+   }
 }

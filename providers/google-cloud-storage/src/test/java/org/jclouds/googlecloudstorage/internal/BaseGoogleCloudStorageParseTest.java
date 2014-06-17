@@ -14,27 +14,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.jclouds.googlecloudstorage;
+package org.jclouds.googlecloudstorage.internal;
 
-import java.io.Closeable;
+import org.jclouds.googlecloudstorage.config.GoogleCloudStorageParserModule;
+import org.jclouds.json.BaseItemParserTest;
+import org.jclouds.json.config.GsonModule;
 
-import javax.ws.rs.Path;
+import com.google.inject.Guice;
+import com.google.inject.Injector;
 
-import org.jclouds.googlecloudstorage.features.DefaultObjectAccessControlsApi;
-import org.jclouds.rest.annotations.Delegate;
+public abstract class BaseGoogleCloudStorageParseTest<T> extends BaseItemParserTest<T> {
 
-/**
- * Provide access to GoogleCloudStorage
- *
- * @see <a href="https://developers.google.com/storage/docs/json_api/v1/">api doc /a>
- */
-public interface GoogleCloudStorageApi extends Closeable {
-
-   /**
-    * Provides access to Default Object Access Control features on bucket
-    */
-   @Delegate
-   @Path("")
-   DefaultObjectAccessControlsApi getDefaultObjectAccessControlsApi();
-
+   @Override
+   protected Injector injector() {
+      return Guice.createInjector(new GsonModule(), new GoogleCloudStorageParserModule());
+   }
 }

@@ -14,27 +14,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.jclouds.googlecloudstorage;
+package org.jclouds.googlecloudstorage.internal;
 
-import java.io.Closeable;
+import java.util.Properties;
 
-import javax.ws.rs.Path;
+import org.jclouds.googlecloudstorage.GoogleCloudStorageApi;
 
-import org.jclouds.googlecloudstorage.features.DefaultObjectAccessControlsApi;
-import org.jclouds.rest.annotations.Delegate;
+public class BaseGoogleCloudStorageApiExpectTest extends BaseGoogleCloudStorageExpectTest<GoogleCloudStorageApi> {
 
-/**
- * Provide access to GoogleCloudStorage
- *
- * @see <a href="https://developers.google.com/storage/docs/json_api/v1/">api doc /a>
- */
-public interface GoogleCloudStorageApi extends Closeable {
-
-   /**
-    * Provides access to Default Object Access Control features on bucket
-    */
-   @Delegate
-   @Path("")
-   DefaultObjectAccessControlsApi getDefaultObjectAccessControlsApi();
-
+   @Override
+   protected Properties setupProperties() {
+      Properties properties = super.setupProperties();
+      properties.put("google-cloud-storage.identity", "JcloudTest");
+      return properties;
+   }
 }

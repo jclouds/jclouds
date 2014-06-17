@@ -1,0 +1,10 @@
+{
+   "kind": "storage#objectAccessControl",
+   "entity": "project-owners-1082289308625",
+   "role": "OWNER",
+   "projectTeam": {
+     "projectNumber": "1082289308625",
+     "team": "owners"
+   },
+   "etag": "CAk="
+}
