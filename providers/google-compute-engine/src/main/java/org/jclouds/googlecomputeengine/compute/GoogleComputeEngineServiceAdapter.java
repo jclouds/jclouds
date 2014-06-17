@@ -298,7 +298,7 @@ public class GoogleComputeEngineServiceAdapter implements ComputeServiceAdapter<
    public InstanceInZone getNode(String name) {
       SlashEncodedIds slashEncodedIds = SlashEncodedIds.fromSlashEncoded(name);
 
-      Instance instance= api.getInstanceApiForProject(userProject.get()).getInZone(slashEncodedIds.getFirstId(),
+      Instance instance = api.getInstanceApiForProject(userProject.get()).getInZone(slashEncodedIds.getFirstId(),
               slashEncodedIds.getSecondId());
 
       return instance == null ?  null : new InstanceInZone(instance, slashEncodedIds.getFirstId());

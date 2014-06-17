@@ -38,7 +38,7 @@ public class Metadata {
    @ConstructorProperties({"fingerprint", "items"})
    public Metadata(@Nullable String fingerprint, @Nullable Map<String, String> items) {
       this.fingerprint = fingerprint;
-      this.items = items == null ? ImmutableMap.<String,String>of() : items;
+      this.items = items == null ? ImmutableMap.<String, String>of() : items;
    }
 
    /**
@@ -100,7 +100,7 @@ public class Metadata {
 
    public static final class Builder {
 
-      private ImmutableMap.Builder<String,String> items = ImmutableMap.builder();
+      private ImmutableMap.Builder<String, String> items = ImmutableMap.builder();
       private String fingerprint;
 
       /**

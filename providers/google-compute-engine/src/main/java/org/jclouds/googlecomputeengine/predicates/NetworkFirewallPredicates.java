@@ -33,7 +33,7 @@ public class NetworkFirewallPredicates {
 
          @Override
          public boolean apply(Firewall fw) {
-            for (Rule rule: fw.getAllowed()) {
+            for (Rule rule : fw.getAllowed()) {
                if (rule.getIpProtocol().equals(protocol)) {
                   return true;
                }
@@ -95,7 +95,7 @@ public class NetworkFirewallPredicates {
          public boolean apply(Firewall input) {
             boolean groupsMatchTags = (permission.getGroupIds().isEmpty() && input.getSourceTags().isEmpty())
                     || !Sets.intersection(permission.getGroupIds(), input.getSourceTags()).isEmpty();
-            boolean cidrsMatchRanges =(permission.getCidrBlocks().isEmpty() && input.getSourceRanges().isEmpty())
+            boolean cidrsMatchRanges = (permission.getCidrBlocks().isEmpty() && input.getSourceRanges().isEmpty())
                     || !Sets.intersection(permission.getCidrBlocks(), input.getSourceRanges()).isEmpty();
             boolean firewallHasPorts = hasProtocol(permission.getIpProtocol()).apply(input)
                     && ((permission.getFromPort() == 0 && permission.getToPort() == 0)

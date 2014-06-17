@@ -39,7 +39,7 @@ public class MetadataBinder implements MapBinder {
     */
    @Override
    public <R extends HttpRequest> R bindToRequest(R request, Map<String, Object> postParams) {
-      Map<String, String> items = ImmutableMap.copyOf((Map<String,String>)checkNotNull(postParams.get("items"), "item"));
+      Map<String, String> items = ImmutableMap.copyOf((Map<String, String>)checkNotNull(postParams.get("items"), "item"));
       String fingerprint = (String) checkNotNull(postParams.get("fingerprint"), "fingerprint");
       Metadata metadata = Metadata.builder()
               .fingerprint(fingerprint)

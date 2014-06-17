@@ -47,7 +47,7 @@ public class FirewallToIpPermission implements Function<Firewall, Iterable<IpPer
    public Iterable<IpPermission> apply(Firewall fw) {
       ImmutableSet.Builder setBuilder = ImmutableSet.builder();
 
-      for (Rule rule: fw.getAllowed()) {
+      for (Rule rule : fw.getAllowed()) {
          if (!rule.getPorts().isEmpty()) {
             for (Range<Integer> r : rule.getPorts().asRanges()) {
                IpPermission.Builder builder = populateBuilder(fw, rule.getIpProtocol());

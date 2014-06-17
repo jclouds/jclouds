@@ -344,7 +344,7 @@ public class GoogleComputeEngineServiceExpectTest extends BaseGoogleComputeEngin
               .addHeader("Accept", "application/json")
               .addHeader("Authorization", "Bearer " + TOKEN).build();
 
-      HttpRequest deleteDiskRequest= HttpRequest.builder()
+      HttpRequest deleteDiskRequest = HttpRequest.builder()
                                                 .method("DELETE")
                                                 .endpoint("https://www.googleapis" +
                                                           ".com/compute/v1/projects/myproject/zones/us-central1-a/disks/test")

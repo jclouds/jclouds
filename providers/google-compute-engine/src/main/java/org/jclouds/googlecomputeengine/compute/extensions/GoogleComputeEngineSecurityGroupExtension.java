@@ -241,7 +241,7 @@ public class GoogleComputeEngineSecurityGroupExtension implements SecurityGroupE
 
    @Override
    public SecurityGroup addIpPermission(IpProtocol protocol, int fromPort, int toPort,
-           Multimap<String,String> tenantIdGroupNamePairs, Iterable<String> cidrBlocks,
+           Multimap<String, String> tenantIdGroupNamePairs, Iterable<String> cidrBlocks,
            Iterable<String> groupIds, SecurityGroup group) {
 
       IpPermission.Builder permBuilder = IpPermission.builder();
@@ -283,7 +283,7 @@ public class GoogleComputeEngineSecurityGroupExtension implements SecurityGroupE
 
    @Override
    public SecurityGroup removeIpPermission(IpProtocol protocol, int fromPort, int toPort,
-                                        Multimap<String,String> tenantIdGroupNamePairs, Iterable<String> cidrBlocks,
+                                        Multimap<String, String> tenantIdGroupNamePairs, Iterable<String> cidrBlocks,
                                         Iterable<String> groupIds, SecurityGroup group) {
 
       IpPermission.Builder permBuilder = IpPermission.builder();
