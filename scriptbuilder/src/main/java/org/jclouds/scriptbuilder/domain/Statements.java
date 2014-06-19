@@ -189,11 +189,12 @@ public class Statements {
     */
    public static Statement extractTargzAndFlattenIntoDirectory(URI tgz, String dest) {
       return new StatementList(ImmutableSet.<Statement> builder()
-            .add(exec("mkdir /tmp/$$"))
-            .add(extractTargzIntoDirectory(tgz, "/tmp/$$"))
+            .add(exec("export TAR_TEMP=\"$(mktemp -d)\""))
+            .add(extractTargzIntoDirectory(tgz, "\"${TAR_TEMP}\""))
             .add(exec("mkdir -p " + dest))
-            .add(exec("mv /tmp/$$/*/* " + dest))
-            .add(exec("rm -rf /tmp/$$")).build());
+            .add(exec("mv \"${TAR_TEMP}\"/*/* " + dest))
+            .add(exec("rm -rf \"${TAR_TEMP}\""))
+            .build());
    }
    
    public static Statement extractTargzIntoDirectory(URI targz, String directory) {

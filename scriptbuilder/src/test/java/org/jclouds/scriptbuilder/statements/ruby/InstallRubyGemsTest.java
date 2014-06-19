@@ -87,10 +87,10 @@ public class InstallRubyGemsTest {
    private static String installRubyGems(String version) {
       String script = "if ! hash gem 2>/dev/null; then\n"
             + "(\n"
-            + "mkdir /tmp/$$\n"
+            + "export TAR_TEMP=\"$(mktemp -d)\"\n"
             + "curl -q -s -S -L --connect-timeout 10 --max-time 600 --retry 20 -X GET  http://production.cf.rubygems.org/rubygems/rubygems-"
-            + version + ".tgz |(mkdir -p /tmp/$$ &&cd /tmp/$$ &&tar -xpzf -)\n" + "mkdir -p /tmp/rubygems\n"
-            + "mv /tmp/$$/*/* /tmp/rubygems\n" + "rm -rf /tmp/$$\n" + "cd /tmp/rubygems\n"
+            + version + ".tgz |(mkdir -p \"${TAR_TEMP}\" &&cd \"${TAR_TEMP}\" &&tar -xpzf -)\n" + "mkdir -p /tmp/rubygems\n"
+            + "mv \"${TAR_TEMP}\"/*/* /tmp/rubygems\n" + "rm -rf \"${TAR_TEMP}\"\n" + "cd /tmp/rubygems\n"
             + "ruby setup.rb --no-format-executable\n" //
             + "rm -fr /tmp/rubygems\n" + //
             ")\n" + //

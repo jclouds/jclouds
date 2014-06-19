@@ -54,11 +54,11 @@ public class StatementsTest {
                   "/usr/local/maven");
       assertEquals(
             save.render(OsFamily.UNIX),
-            "mkdir /tmp/$$\n" +
-            "curl -q -s -S -L --connect-timeout 10 --max-time 600 --retry 20 -X GET  http://www.us.apache.org/dist/maven/binaries/apache-maven-3.0.4-bin.tar.gz |(mkdir -p /tmp/$$ &&cd /tmp/$$ &&tar -xpzf -)\n" +
+            "export TAR_TEMP=\"$(mktemp -d)\"\n" +
+            "curl -q -s -S -L --connect-timeout 10 --max-time 600 --retry 20 -X GET  http://www.us.apache.org/dist/maven/binaries/apache-maven-3.0.4-bin.tar.gz |(mkdir -p \"${TAR_TEMP}\" &&cd \"${TAR_TEMP}\" &&tar -xpzf -)\n" +
             "mkdir -p /usr/local/maven\n" +
-            "mv /tmp/$$/*/* /usr/local/maven\n" +
-            "rm -rf /tmp/$$\n");
+            "mv \"${TAR_TEMP}\"/*/* /usr/local/maven\n" +
+            "rm -rf \"${TAR_TEMP}\"\n");
    }
 
 
