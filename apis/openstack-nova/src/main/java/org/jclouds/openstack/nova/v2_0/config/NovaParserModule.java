@@ -122,7 +122,16 @@ public class NovaParserModule extends AbstractModule {
       @Override
       public Server deserialize(JsonElement jsonElement, Type type, JsonDeserializationContext context)
             throws JsonParseException {
-         Server serverBase = apply((ServerInternal) context.deserialize(jsonElement, ServerInternal.class));
+         Server serverBase = null;
+
+         // Servers can be created without an image so test if an image object is returned
+         if (jsonElement.getAsJsonObject().get("image").isJsonObject()) {
+            serverBase = apply((ServerInternal) context.deserialize(jsonElement, ServerInternal.class));
+         }
+         else {
+            serverBase = apply((ServerInternalWithoutImage) context.deserialize(jsonElement, ServerInternalWithoutImage.class));
+         }
+
          Server.Builder<?> result = Server.builder().fromServer(serverBase);
          ServerExtendedStatus extendedStatus = context.deserialize(jsonElement, ServerExtendedStatus.class);
          if (!Objects.equal(extendedStatus, ServerExtendedStatus.builder().build())) {
@@ -149,6 +158,23 @@ public class NovaParserModule extends AbstractModule {
                                   @Nullable String configDrive, Multimap<String, Address> addresses, Map<String, String> metadata,
                                   @Nullable ServerExtendedStatus extendedStatus, @Nullable ServerExtendedAttributes extendedAttributes, @Nullable String diskConfig) {
             super(id, name, links, uuid, tenantId, userId, updated, created, hostId, accessIPv4, accessIPv6, status, image, flavor, keyName, configDrive, addresses, metadata, extendedStatus, extendedAttributes, diskConfig);
+         }
+      }
+
+      public Server apply(ServerInternalWithoutImage in) {
+         return in.toBuilder().build();
+      }
+
+      private static class ServerInternalWithoutImage extends Server {
+         @ConstructorProperties({
+               "id", "name", "links", "uuid", "tenant_id", "user_id", "updated", "created", "hostId", "accessIPv4", "accessIPv6", "status", "flavor", "key_name", "config_drive", "addresses", "metadata", "extendedStatus", "extendedAttributes", "OS-DCF:diskConfig"
+         })
+         protected ServerInternalWithoutImage(String id, @Nullable String name, java.util.Set<Link> links, @Nullable String uuid, String tenantId,
+                                  String userId, Date updated, Date created, @Nullable String hostId, @Nullable String accessIPv4,
+                                  @Nullable String accessIPv6, Server.Status status, Resource flavor, @Nullable String keyName,
+                                  @Nullable String configDrive, Multimap<String, Address> addresses, Map<String, String> metadata,
+                                  @Nullable ServerExtendedStatus extendedStatus, @Nullable ServerExtendedAttributes extendedAttributes, @Nullable String diskConfig) {
+            super(id, name, links, uuid, tenantId, userId, updated, created, hostId, accessIPv4, accessIPv6, status, null, flavor, keyName, configDrive, addresses, metadata, extendedStatus, extendedAttributes, diskConfig);
          }
       }
    }

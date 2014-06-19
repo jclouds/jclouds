@@ -317,7 +317,7 @@ public class Server extends Resource {
    })
    protected Server(String id, @Nullable String name, java.util.Set<Link> links, @Nullable String uuid, String tenantId,
                     String userId, @Nullable Date updated, Date created, @Nullable String hostId, @Nullable String accessIPv4,
-                    @Nullable String accessIPv6, Server.Status status, Resource image, Resource flavor, @Nullable String keyName,
+                    @Nullable String accessIPv6, Server.Status status, @Nullable Resource image, Resource flavor, @Nullable String keyName,
                     @Nullable String configDrive, Multimap<String, Address> addresses, Map<String, String> metadata,
                     @Nullable ServerExtendedStatus extendedStatus, @Nullable ServerExtendedAttributes extendedAttributes,
                     @Nullable String diskConfig) {
@@ -331,7 +331,7 @@ public class Server extends Resource {
       this.accessIPv4 = Strings.emptyToNull(accessIPv4);
       this.accessIPv6 = Strings.emptyToNull(accessIPv6);
       this.status = checkNotNull(status, "status");
-      this.image = checkNotNull(image, "image");
+      this.image = image;
       this.flavor = checkNotNull(flavor, "flavor");
       this.keyName = Strings.emptyToNull(keyName);
       this.configDrive = Strings.emptyToNull(configDrive);
