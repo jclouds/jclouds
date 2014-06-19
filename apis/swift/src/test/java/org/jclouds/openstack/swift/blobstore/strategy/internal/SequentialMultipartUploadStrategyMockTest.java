@@ -39,10 +39,10 @@ import com.google.common.base.Charsets;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.util.concurrent.Atomics;
 import com.google.inject.Module;
-import com.google.mockwebserver.MockResponse;
-import com.google.mockwebserver.MockWebServer;
-import com.google.mockwebserver.QueueDispatcher;
-import com.google.mockwebserver.RecordedRequest;
+import com.squareup.okhttp.mockwebserver.MockResponse;
+import com.squareup.okhttp.mockwebserver.MockWebServer;
+import com.squareup.okhttp.mockwebserver.QueueDispatcher;
+import com.squareup.okhttp.mockwebserver.RecordedRequest;
 
 @Test(singleThreaded = true)
 public class SequentialMultipartUploadStrategyMockTest {

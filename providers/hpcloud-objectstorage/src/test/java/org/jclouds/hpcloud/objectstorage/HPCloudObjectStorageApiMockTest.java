@@ -22,9 +22,9 @@ import org.jclouds.hpcloud.objectstorage.internal.BaseHPCloudObjectStorageMockTe
 import org.testng.annotations.Test;
 
 import com.google.common.collect.ImmutableSet;
-import com.google.mockwebserver.MockResponse;
-import com.google.mockwebserver.MockWebServer;
-import com.google.mockwebserver.RecordedRequest;
+import com.squareup.okhttp.mockwebserver.MockResponse;
+import com.squareup.okhttp.mockwebserver.MockWebServer;
+import com.squareup.okhttp.mockwebserver.RecordedRequest;
 
 @Test
 public class HPCloudObjectStorageApiMockTest extends BaseHPCloudObjectStorageMockTest {

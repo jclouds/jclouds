@@ -278,11 +278,6 @@
         <artifactId>logback-core</artifactId>
         <version>1.0.9</version>
       </dependency>
-      <dependency>
-        <groupId>com.google.mockwebserver</groupId>
-        <artifactId>mockwebserver</artifactId>
-        <version>20121111</version>
-      </dependency>
     </dependencies>
   </dependencyManagement>
   <dependencies>

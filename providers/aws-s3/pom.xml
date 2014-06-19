@@ -112,9 +112,15 @@
       <scope>test</scope>
     </dependency>
     <dependency>
-      <groupId>com.google.mockwebserver</groupId>
+      <groupId>com.squareup.okhttp</groupId>
       <artifactId>mockwebserver</artifactId>
       <scope>test</scope>
+      <exclusions>
+        <exclusion>
+          <groupId>org.bouncycastle</groupId>
+          <artifactId>bcprov-jdk15on</artifactId>
+        </exclusion>
+      </exclusions>
     </dependency>
   </dependencies>
 
