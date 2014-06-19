@@ -45,13 +45,14 @@ public class DescribeVolumesResponseHandlerTest extends BaseEC2HandlerTest {
       Set<Volume> expected = Sets.newLinkedHashSet();
       expected.add(new Volume(defaultRegion, "vol-2a21e543", 1, null, "us-east-1a",
                Volume.Status.AVAILABLE, dateService.iso8601DateParse("2009-12-28T05:42:53.000Z"),
-               Sets.<Attachment> newLinkedHashSet()));
+               "standard", 0, false, Sets.<Attachment> newLinkedHashSet()));
       expected.add(new Volume(defaultRegion, "vol-4282672b", 800, "snap-536d1b3a",
-               "us-east-1a", Volume.Status.IN_USE, dateService
-                        .iso8601DateParse("2008-05-07T11:51:50.000Z"), Sets
-                        .<Attachment> newHashSet(new Attachment(defaultRegion, "vol-4282672b", "i-6058a509",
-                                 "/dev/sdh", Attachment.Status.ATTACHED, dateService
-                                          .iso8601DateParse("2008-05-07T12:51:50.000Z")))));
+              "us-east-1a", Volume.Status.IN_USE, dateService
+              .iso8601DateParse("2008-05-07T11:51:50.000Z"),
+              "standard", 0, false,
+              Sets.<Attachment> newHashSet(new Attachment(defaultRegion, "vol-4282672b", "i-6058a509",
+                      "/dev/sdh", Attachment.Status.ATTACHED, dateService
+                      .iso8601DateParse("2008-05-07T12:51:50.000Z")))));
 
       DescribeVolumesResponseHandler handler = injector
                .getInstance(DescribeVolumesResponseHandler.class);

@@ -100,6 +100,11 @@ public class Volume implements Comparable<Volume> {
       private Status status;
       private Date createTime;
       private Set<Attachment> attachments = ImmutableSet.of();
+      @Nullable
+      private String volumeType;
+      @Nullable
+      private Integer iops;
+      private boolean encrypted = false;
 
       public Builder region(String region) {
          this.region = region;
@@ -145,15 +150,31 @@ public class Volume implements Comparable<Volume> {
          this.attachments = ImmutableSet.copyOf(attachments);
          return this;
       }
-      
+
+      public Builder volumeType(String volumeType) {
+         this.volumeType = volumeType;
+         return this;
+      }
+
+      public Builder iops(Integer iops) {
+         this.iops = iops;
+         return this;
+      }
+
+      public Builder encrypted(boolean encrypted) {
+         this.encrypted = encrypted;
+         return this;
+      }
+
       public Volume build() {
-         return new Volume(region, id, size, snapshotId, availabilityZone, status, createTime, attachments);
+         return new Volume(region, id, size, snapshotId, availabilityZone, status, createTime,
+                 volumeType, iops, encrypted, attachments);
       }
 
       public Builder fromVolume(Volume in) {
          return region(in.region).id(in.id).size(in.size).snapshotId(in.snapshotId)
                   .availabilityZone(in.availabilityZone).status(in.status).createTime(in.createTime)
-                  .attachments(in.attachments);
+                  .volumeType(in.volumeType).iops(in.iops).encrypted(in.encrypted).attachments(in.attachments);
       }
    }
 
@@ -167,8 +188,14 @@ public class Volume implements Comparable<Volume> {
    private final Date createTime;
    private final Set<Attachment> attachments;
 
+   @Nullable
+   private final String volumeType;
+   @Nullable
+   private final Integer iops;
+   private final boolean encrypted;
+
    public Volume(String region, String id, int size, String snapshotId, String availabilityZone, Volume.Status status,
-            Date createTime, Iterable<Attachment> attachments) {
+            Date createTime, String volumeType, Integer iops, boolean encrypted, Iterable<Attachment> attachments) {
       this.region = checkNotNull(region, "region");
       this.id = id;
       this.size = size;
@@ -176,6 +203,9 @@ public class Volume implements Comparable<Volume> {
       this.availabilityZone = availabilityZone;
       this.status = status;
       this.createTime = createTime;
+      this.volumeType = volumeType;
+      this.iops = iops;
+      this.encrypted = encrypted;
       this.attachments = ImmutableSet.copyOf(attachments);
    }
 
@@ -214,6 +244,18 @@ public class Volume implements Comparable<Volume> {
       return createTime;
    }
 
+   public String getVolumeType() {
+      return volumeType;
+   }
+
+   public Integer getIops() {
+      return iops;
+   }
+
+   public boolean getEncrypted() {
+      return encrypted;
+   }
+
    public Set<Attachment> getAttachments() {
       return attachments;
    }
@@ -230,7 +272,10 @@ public class Volume implements Comparable<Volume> {
       result = prime * result + size;
       result = prime * result + ((snapshotId == null) ? 0 : snapshotId.hashCode());
       result = prime * result + ((status == null) ? 0 : status.hashCode());
-      return result;
+      result = prime * result + ((volumeType == null) ? 0 : volumeType.hashCode());
+      result = prime * result + ((iops == null) ? 0 : iops.hashCode());
+      result = prime * result + (encrypted ? 1249 : 1259);
+            return result;
    }
 
    @Override
@@ -279,6 +324,18 @@ public class Volume implements Comparable<Volume> {
             return false;
       } else if (!status.equals(other.status))
          return false;
+      if (volumeType == null) {
+         if (other.volumeType != null)
+            return false;
+      } else if (!volumeType.equals(other.volumeType))
+         return false;
+      if (iops == null) {
+         if (other.iops != null)
+            return false;
+      } else if (!iops.equals(other.iops))
+         return false;
+      if (encrypted != other.encrypted)
+         return false;
       return true;
    }
 
@@ -290,7 +347,8 @@ public class Volume implements Comparable<Volume> {
    @Override
    public String toString() {
       return "Volume [attachments=" + attachments + ", availabilityZone=" + availabilityZone + ", createTime="
-               + createTime + ", id=" + id + ", region=" + region + ", size=" + size + ", snapshotId=" + snapshotId
-               + ", status=" + status + "]";
+              + createTime + ", id=" + id + ", region=" + region + ", size=" + size + ", snapshotId=" + snapshotId
+              + ", status=" + status + ", volumeType=" + volumeType + ", iops=" + iops + ", encrypted=" + encrypted
+              +"]";
    }
 }

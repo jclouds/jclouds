@@ -18,6 +18,7 @@ package org.jclouds.ec2.xml;
 
 import static com.google.common.collect.Iterables.get;
 import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertNull;
 
 import java.io.InputStream;
 import java.util.Set;
@@ -85,17 +86,22 @@ public class DescribeImagesResponseHandlerTest {
 
    public void testEBS() {
       Set<Image> contents = ImmutableSet.of(new Image("us-east-1", Architecture.I386, "websrv_2009-12-10",
-               "Web Server AMI", "ami-246f8d4d", "706093390852/websrv_2009-12-10", "706093390852",
-               ImageState.AVAILABLE, "available", ImageType.MACHINE, true, Sets.<String> newHashSet(), null, "windows", null,
-               RootDeviceType.EBS, "/dev/sda1", ImmutableMap.<String, EbsBlockDevice> of("/dev/sda1",
-                        new EbsBlockDevice("snap-d01272b9", 30, true), "xvdf", new EbsBlockDevice("snap-d31272ba", 250,
-                                 false)), ImmutableMap.<String, String> of(), VirtualizationType.HVM, Hypervisor.XEN));
+              "Web Server AMI", "ami-246f8d4d", "706093390852/websrv_2009-12-10", "706093390852",
+              ImageState.AVAILABLE, "available", ImageType.MACHINE, true, Sets.<String> newHashSet(), null, "windows", null,
+              RootDeviceType.EBS, "/dev/sda1",
+              ImmutableMap.<String, EbsBlockDevice> of("/dev/sda1",
+                      new EbsBlockDevice("snap-d01272b9", 30, true, "standard", null, false),
+                      "xvdf", new EbsBlockDevice("snap-d31272ba", 250, false, "standard", null, false)),
+              ImmutableMap.<String, String> of(), VirtualizationType.HVM, Hypervisor.XEN));
 
       Set<Image> result = parseImages("/describe_images_ebs.xml");
 
       assertEquals(result.toString(), contents.toString());
       assertEquals(get(result, 0).getImageState(), ImageState.AVAILABLE);
       assertEquals(get(result, 0).getRawState(), "available");
+      assertEquals(get(result, 0).getEbsBlockDevices().get("/dev/sda1").getVolumeType(), "standard");
+      assertEquals(get(result, 0).getEbsBlockDevices().get("/dev/sda1").isEncrypted(), false);
+      assertNull(get(result, 0).getEbsBlockDevices().get("/dev/sda1").getIops());
    }
    
    public void testTags() {

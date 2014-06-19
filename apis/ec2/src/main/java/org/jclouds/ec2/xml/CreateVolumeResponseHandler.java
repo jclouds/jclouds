@@ -18,13 +18,16 @@ package org.jclouds.ec2.xml;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
+import javax.inject.Inject;
 import java.util.Date;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
-import javax.inject.Inject;
-
+import com.google.common.base.Supplier;
+import com.google.common.base.Suppliers;
+import com.google.common.collect.Maps;
+import com.google.common.collect.Sets;
 import org.jclouds.aws.util.AWSUtils;
 import org.jclouds.date.DateCodec;
 import org.jclouds.date.DateCodecFactory;
@@ -42,10 +45,6 @@ import com.google.common.base.Suppliers;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 
-/**
- * 
- * @author Adrian Cole
- */
 public class CreateVolumeResponseHandler extends ParseSax.HandlerForGeneratedRequestWithResult<Volume> {
    protected final DateCodec dateCodec;
    protected final Supplier<String> defaultRegion;
@@ -77,6 +76,9 @@ public class CreateVolumeResponseHandler extends ParseSax.HandlerForGeneratedReq
    protected String device;
    protected Attachment.Status attachmentStatus;
    protected Date attachTime;
+   protected String volumeType;
+   protected Integer iops;
+   protected boolean encrypted;
 
    protected boolean inAttachmentSet;
 
@@ -129,6 +131,14 @@ public class CreateVolumeResponseHandler extends ParseSax.HandlerForGeneratedReq
          device = currentText.toString().trim();
       } else if (qName.equals("attachTime")) {
          attachTime = dateCodec.toDate(currentText.toString().trim());
+      } else if (qName.equals("volumeType")) {
+         volumeType = currentText.toString().trim();
+         if (volumeType.equals(""))
+            volumeType = null;
+      } else if (qName.equals("iops")) {
+         iops = Integer.parseInt(currentText.toString().trim());
+      } else if (qName.equals("encrypted")) {
+         encrypted = Boolean.parseBoolean(currentText.toString().trim());
       } else if (qName.equals("item")) {
          if (inAttachmentSet) {
             attachments.add(new Attachment(region, volumeId, instanceId, device, attachmentStatus, attachTime));
@@ -144,7 +154,8 @@ public class CreateVolumeResponseHandler extends ParseSax.HandlerForGeneratedReq
    }
 
    private Volume newVolume() {
-      Volume volume = new Volume(region, id, size, snapshotId, availabilityZone, volumeStatus, createTime, attachments);
+      Volume volume = new Volume(region, id, size, snapshotId, availabilityZone, volumeStatus, createTime,
+              volumeType, iops, encrypted, attachments);
       id = null;
       size = 0;
       snapshotId = null;
@@ -152,6 +163,9 @@ public class CreateVolumeResponseHandler extends ParseSax.HandlerForGeneratedReq
       volumeStatus = null;
       createTime = null;
       attachments = Sets.newLinkedHashSet();
+      volumeType = null;
+      iops = null;
+      encrypted = false;
       return volume;
    }
 

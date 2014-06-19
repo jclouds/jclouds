@@ -43,9 +43,9 @@ public class CreateVolumeResponseHandlerTest extends BaseEC2HandlerTest {
       InputStream is = getClass().getResourceAsStream("/created_volume.xml");
 
       Volume expected = new Volume(Region.US_EAST_1, "vol-2a21e543", 1, null,
-            "us-east-1a", Volume.Status.CREATING, dateService
-                        .iso8601DateParse("2009-12-28T05:42:53.000Z"), Sets
-                        .<Attachment> newLinkedHashSet());
+              "us-east-1a", Volume.Status.CREATING, dateService
+              .iso8601DateParse("2009-12-28T05:42:53.000Z"), "standard", 0, false,
+              Sets.<Attachment> newLinkedHashSet());
 
       CreateVolumeResponseHandler handler = injector.getInstance(CreateVolumeResponseHandler.class);
       addDefaultRegionToHandler(handler);

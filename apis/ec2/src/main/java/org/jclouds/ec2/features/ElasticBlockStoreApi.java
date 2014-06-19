@@ -37,6 +37,7 @@ import org.jclouds.ec2.domain.Permission;
 import org.jclouds.ec2.domain.Snapshot;
 import org.jclouds.ec2.domain.Volume;
 import org.jclouds.ec2.options.CreateSnapshotOptions;
+import org.jclouds.ec2.options.CreateVolumeOptions;
 import org.jclouds.ec2.options.DescribeSnapshotsOptions;
 import org.jclouds.ec2.options.DetachVolumeOptions;
 import org.jclouds.ec2.xml.AttachmentHandler;
@@ -165,6 +166,36 @@ public interface ElasticBlockStoreApi {
    Volume createVolumeInAvailabilityZone(
             @EndpointParam(parser = ZoneToEndpoint.class) @FormParam("AvailabilityZone") String availabilityZone,
             @FormParam("Size") int size);
+
+   /**
+    * Creates a new Amazon EBS volume to which any Amazon EC2 instance can attach within the same
+    * Availability Zone. For more information about Amazon EBS, go to the Amazon Elastic Compute
+    * Cloud Developer Guide or Amazon Elastic Compute Cloud User Guide.
+    *
+    * @param availabilityZone
+    *           An Amazon EBS volume must be located within the same Availability Zone as the
+    *           instance to which it attaches.
+    * @param options
+    *           options like specifying a snapshot, EBS volume type, etc
+    *
+    *
+    * @see #describeVolumesInRegion
+    * @see #deleteVolumeInRegion
+    * @see #attachVolumeInRegion
+    * @see #detachVolumeInRegion
+    * @see AvailabilityZoneAndRegionApi#describeAvailabilityZonesInRegion
+    * @see <a href=
+    *      "http://docs.amazonwebservices.com/AWSEC2/latest/APIReference/ApiReference-query-CreateVolume.html"
+    *      />
+    */
+   @Named("CreateVolume")
+   @POST
+   @Path("/")
+   @FormParams(keys = ACTION, values = "CreateVolume")
+   @XMLResponseParser(CreateVolumeResponseHandler.class)
+   Volume createVolumeInAvailabilityZone(
+           @EndpointParam(parser = ZoneToEndpoint.class) @FormParam("AvailabilityZone") String availabilityZone,
+           CreateVolumeOptions... options);
 
    /**
     * Describes the specified Amazon EBS volumes that you own. If you do not specify one or more

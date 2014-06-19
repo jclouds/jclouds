@@ -23,6 +23,7 @@ import org.jclouds.ec2.EC2Api;
 import org.jclouds.ec2.domain.Snapshot;
 import org.jclouds.ec2.domain.Volume;
 import org.jclouds.ec2.internal.BaseEC2ApiExpectTest;
+import org.jclouds.ec2.options.CreateVolumeOptions;
 import org.jclouds.http.HttpRequest;
 import org.jclouds.http.HttpResponse;
 import org.jclouds.rest.ResourceNotFoundException;
@@ -39,14 +40,16 @@ import com.google.common.collect.ImmutableSet;
 @Test(groups = "unit", testName = "EC2ElasticBlockStoreApiExpectTest")
 public class EC2ElasticBlockStoreApiExpectTest extends BaseEC2ApiExpectTest<EC2Api> {
    Volume creating = Volume.builder()
-                           .id("vol-2a21e543")
-                           .status(Volume.Status.CREATING)
-                           .availabilityZone("us-east-1a")
-                           .region("us-east-1")
-                           .id("vol-2a21e543")
-                           .size(1)
-                           .createTime(dateService.iso8601DateParse("2009-12-28T05:42:53.000Z"))
-                           .build();
+           .id("vol-2a21e543")
+           .status(Volume.Status.CREATING)
+           .availabilityZone("us-east-1a")
+           .region("us-east-1")
+           .id("vol-2a21e543")
+           .volumeType("standard")
+           .iops(0)
+           .size(1)
+           .createTime(dateService.iso8601DateParse("2009-12-28T05:42:53.000Z"))
+           .build();
    
    public void testCreateVolumeInAvailabilityZone() {
       Builder<HttpRequest, HttpResponse> builder = ImmutableMap.<HttpRequest, HttpResponse>builder();
@@ -66,7 +69,38 @@ public class EC2ElasticBlockStoreApiExpectTest extends BaseEC2ApiExpectTest<EC2A
 
       assertEquals(client.createVolumeInAvailabilityZone("us-east-1a", 4), creating);
    }
-   
+
+   public void testCreateVolumeInAvailabilityZoneWithOptions() {
+      Builder<HttpRequest, HttpResponse> builder = ImmutableMap.<HttpRequest, HttpResponse>builder();
+      builder.put(describeRegionsRequest, describeRegionsResponse);
+      builder.putAll(describeAvailabilityZonesRequestResponse);
+      builder.put(
+              HttpRequest.builder()
+                      .method("POST")
+                      .endpoint("https://ec2.us-east-1.amazonaws.com/")
+                      .addHeader("Host", "ec2.us-east-1.amazonaws.com")
+                      .payload(payloadFromStringWithContentType("Action=CreateVolume" +
+                              "&AvailabilityZone=us-east-1a" +
+                              "&Iops=0" +
+                              "&Signature=uI5tXrwV4zXB3uh0OP4RkfU2HMdQ2yICfpo4gKrajMI%3D" +
+                              "&SignatureMethod=HmacSHA256" +
+                              "&SignatureVersion=2" +
+                              "&Size=4" +
+                              "&Timestamp=2012-04-16T15%3A54%3A08.897Z" +
+                              "&Version=2010-08-31" +
+                              "&VolumeType=standard" +
+                              "&AWSAccessKeyId=identity", "application/x-www-form-urlencoded")).build(),
+              HttpResponse.builder()
+                      .statusCode(200)
+                      .payload(payloadFromResource("/created_volume.xml")).build());
+
+      ElasticBlockStoreApi client = requestsSendResponses(builder.build()).getElasticBlockStoreApi().get();
+
+      assertEquals(client.createVolumeInAvailabilityZone("us-east-1a",
+              CreateVolumeOptions.Builder.withSize(4).isEncrypted(false).volumeType("standard").withIops(0)),
+              creating);
+   }
+
    public void testCreateVolumeFromSnapshotInAvailabilityZoneEuSetsCorrectEndpoint() {
       String region = "eu-west-1";
       
@@ -75,16 +109,17 @@ public class EC2ElasticBlockStoreApiExpectTest extends BaseEC2ApiExpectTest<EC2A
       builder.putAll(describeAvailabilityZonesRequestResponse);
       builder.put(
             formSigner.filter(HttpRequest.builder()
-                                         .method("POST")
-                                         .endpoint("https://ec2." + region + ".amazonaws.com/")
-                                         .addHeader("Host", "ec2." + region + ".amazonaws.com")
-                                         .addFormParam("Action", "CreateVolume")
-                                         .addFormParam("AvailabilityZone", "eu-west-1a")
-                                         .addFormParam("Size", "1")
-                                         .addFormParam("SnapshotId", "snap-8b7ffbdd").build()),
-            HttpResponse.builder()
-                        .statusCode(200)
-                        .payload(payloadFromResource("/created_volume.xml")).build());
+                    .method("POST")
+                    .endpoint("https://ec2." + region + ".amazonaws.com/")
+                    .addHeader("Host", "ec2." + region + ".amazonaws.com")
+                    .addFormParam("Action", "CreateVolume")
+                    .addFormParam("AvailabilityZone", "eu-west-1a")
+                    .addFormParam("Size", "1")
+                    .addFormParam("SnapshotId", "snap-8b7ffbdd")
+                    .build()),
+              HttpResponse.builder()
+                      .statusCode(200)
+                      .payload(payloadFromResource("/created_volume.xml")).build());
       
       ElasticBlockStoreApi client = requestsSendResponses(builder.build()).getElasticBlockStoreApi().get();
 

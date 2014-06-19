@@ -26,12 +26,11 @@ import static org.jclouds.ec2.options.RegisterImageBackedByEbsOptions.Builder.wi
 import static org.jclouds.ec2.options.RegisterImageBackedByEbsOptions.Builder.withRamdisk;
 import static org.testng.Assert.assertEquals;
 
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableMultimap;
 import org.jclouds.ec2.domain.Image.Architecture;
 import org.jclouds.http.options.HttpRequestOptions;
 import org.testng.annotations.Test;
-
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableMultimap;
 
 /**
  * Tests possible uses of RegisterImageBackedByEbsOptions and
@@ -191,6 +190,41 @@ public class RegisterImageBackedByEbsOptionsTest {
    }
 
    @Test
+   public void testAdvancedAddBlockDeviceFromSnapshot() {
+      RegisterImageBackedByEbsOptions options = new RegisterImageBackedByEbsOptions();
+      options.addBlockDeviceFromSnapshot("deviceName", "virtualName", "snapshotId", true, "gp2", 0, false);
+      assertEquals(options.buildFormParameters().entries(), ImmutableMultimap.builder()
+              .put("BlockDeviceMapping.1.Ebs.DeleteOnTermination", "true")
+              .put("BlockDeviceMapping.1.Ebs.VolumeType", "gp2")
+              .put("BlockDeviceMapping.1.Ebs.Iops", "0")
+              .put("BlockDeviceMapping.1.DeviceName", "deviceName")
+              .put("BlockDeviceMapping.1.VirtualName", "virtualName")
+              .put("BlockDeviceMapping.1.Ebs.SnapshotId", "snapshotId")
+              .build()
+              .entries());
+   }
+
+   @Test
+   public void testAdvancedAddBlockDeviceFromSnapshotStatic() {
+      RegisterImageBackedByEbsOptions options = addBlockDeviceFromSnapshot("deviceName", "virtualName", "snapshotId", true, "gp2", 0, true);
+      assertEquals(options.buildFormParameters().entries(), ImmutableMultimap.builder()
+              .put("BlockDeviceMapping.1.Ebs.DeleteOnTermination", "true")
+              .put("BlockDeviceMapping.1.Ebs.VolumeType", "gp2")
+              .put("BlockDeviceMapping.1.Ebs.Iops", "0")
+              .put("BlockDeviceMapping.1.Ebs.Encrypted", "true")
+              .put("BlockDeviceMapping.1.DeviceName", "deviceName")
+              .put("BlockDeviceMapping.1.VirtualName", "virtualName")
+              .put("BlockDeviceMapping.1.Ebs.SnapshotId", "snapshotId")
+              .build()
+              .entries());
+   }
+
+   @Test(expectedExceptions = NullPointerException.class)
+   public void testAdvancedAddBlockDeviceFromSnapshotNPE() {
+      addBlockDeviceFromSnapshot(null, null, null, false, null, null, false);
+   }
+
+   @Test
    public void testAddEphemeralBlockDeviceFromSnapshot() {
       RegisterImageBackedByEbsOptions options = new RegisterImageBackedByEbsOptions();
       options.addEphemeralBlockDeviceFromSnapshot("deviceName", "virtualName", "snapshotId");
@@ -267,6 +301,41 @@ public class RegisterImageBackedByEbsOptionsTest {
    @Test(expectedExceptions = NullPointerException.class)
    public void testAddNewBlockDeviceNPE() {
       addNewBlockDevice(null, null, 1);
+   }
+
+   @Test
+   public void testAdvancedAddNewBlockDevice() {
+      RegisterImageBackedByEbsOptions options = new RegisterImageBackedByEbsOptions();
+      options.addNewBlockDevice("deviceName", "virtualName", 5, true, "gp2", 0, true);
+      assertEquals(options.buildFormParameters().entries(), ImmutableMultimap.builder()
+              .put("BlockDeviceMapping.1.Ebs.DeleteOnTermination", "true")
+              .put("BlockDeviceMapping.1.Ebs.VolumeType", "gp2")
+              .put("BlockDeviceMapping.1.Ebs.Iops", "0")
+              .put("BlockDeviceMapping.1.Ebs.Encrypted", "true")
+              .put("BlockDeviceMapping.1.DeviceName", "deviceName")
+              .put("BlockDeviceMapping.1.VirtualName", "virtualName")
+              .put("BlockDeviceMapping.1.Ebs.VolumeSize", "5")
+              .build()
+              .entries());
+   }
+
+   @Test
+   public void testAdvancedAddNewBlockDeviceStatic() {
+      RegisterImageBackedByEbsOptions options = addNewBlockDevice("deviceName", "virtualName", 5, true, "gp2", 0, false);
+      assertEquals(options.buildFormParameters().entries(), ImmutableMultimap.builder()
+              .put("BlockDeviceMapping.1.Ebs.DeleteOnTermination", "true")
+              .put("BlockDeviceMapping.1.Ebs.VolumeType", "gp2")
+              .put("BlockDeviceMapping.1.Ebs.Iops", "0")
+              .put("BlockDeviceMapping.1.DeviceName", "deviceName")
+              .put("BlockDeviceMapping.1.VirtualName", "virtualName")
+              .put("BlockDeviceMapping.1.Ebs.VolumeSize", "5")
+              .build()
+              .entries());
+   }
+
+   @Test(expectedExceptions = NullPointerException.class)
+   public void testAdvancedAddNewBlockDeviceNPE() {
+      addNewBlockDevice(null, null, 5, false, null, null, false);
    }
 
    @Test(expectedExceptions = IllegalArgumentException.class)

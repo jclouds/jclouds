@@ -38,6 +38,9 @@ public class BlockDeviceMapping implements Comparable<BlockDeviceMapping> {
       private Integer sizeInGib;
       private Boolean noDevice;
       private Boolean deleteOnTermination;
+      private String volumeType;
+      private Integer iops;
+      private Boolean encrypted;
 
       public Builder deviceName(String deviceName) {
          this.deviceName = deviceName;
@@ -69,8 +72,24 @@ public class BlockDeviceMapping implements Comparable<BlockDeviceMapping> {
          return this;
       }
 
+      public Builder volumeType(String volumeType) {
+         this.volumeType = volumeType;
+         return this;
+      }
+
+      public Builder iops(Integer iops) {
+         this.iops = iops;
+         return this;
+      }
+
+      public Builder encrypted(Boolean encrypted) {
+         this.encrypted = encrypted;
+         return this;
+      }
+
       public BlockDeviceMapping build() {
-         return new BlockDeviceMapping(deviceName, virtualName, snapshotId, sizeInGib, noDevice, deleteOnTermination);
+         return new BlockDeviceMapping(deviceName, virtualName, snapshotId, sizeInGib, noDevice, deleteOnTermination,
+                 volumeType, iops, encrypted);
       }
 
       public Builder clear() {
@@ -80,6 +99,9 @@ public class BlockDeviceMapping implements Comparable<BlockDeviceMapping> {
          this.sizeInGib = null;
          this.noDevice = null;
          this.deleteOnTermination = null;
+         this.volumeType = null;
+         this.iops = null;
+         this.encrypted = null;
          return this;
       }
    }
@@ -90,13 +112,17 @@ public class BlockDeviceMapping implements Comparable<BlockDeviceMapping> {
    private final Integer sizeInGib;
    private final Boolean noDevice;
    private final Boolean deleteOnTermination;
+   private final String volumeType;
+   private final Integer iops;
+   private final Boolean encrypted;
 
    // values expressed in GB
    private static final Integer VOLUME_SIZE_MIN_VALUE = 1;
    private static final Integer VOLUME_SIZE_MAX_VALUE = 1000;
 
    BlockDeviceMapping(String deviceName, @Nullable String virtualName, @Nullable String snapshotId,
-         @Nullable Integer sizeInGib, @Nullable Boolean noDevice, @Nullable Boolean deleteOnTermination) {
+         @Nullable Integer sizeInGib, @Nullable Boolean noDevice, @Nullable Boolean deleteOnTermination,
+         @Nullable String volumeType, @Nullable Integer iops, @Nullable Boolean encrypted) {
 
       checkNotNull(deviceName, "deviceName cannot be null");
       checkNotNull(emptyToNull(deviceName), "deviceName must be defined");
@@ -111,6 +137,9 @@ public class BlockDeviceMapping implements Comparable<BlockDeviceMapping> {
       this.sizeInGib = sizeInGib;
       this.noDevice = noDevice;
       this.deleteOnTermination = deleteOnTermination;
+      this.volumeType = volumeType;
+      this.iops = iops;
+      this.encrypted = encrypted;
    }
 
    public String getDeviceName() {
@@ -137,6 +166,18 @@ public class BlockDeviceMapping implements Comparable<BlockDeviceMapping> {
       return deleteOnTermination;
    }
 
+   public String getEbsVolumeType() {
+      return volumeType;
+   }
+
+   public Integer getEbsIops() {
+      return iops;
+   }
+
+   public Boolean getEbsEncrypted() {
+      return encrypted;
+   }
+
    @Override
    public int hashCode() {
       final int prime = 31;
@@ -147,6 +188,9 @@ public class BlockDeviceMapping implements Comparable<BlockDeviceMapping> {
       result = prime * result + ((sizeInGib == null) ? 0 : sizeInGib.hashCode());
       result = prime * result + ((snapshotId == null) ? 0 : snapshotId.hashCode());
       result = prime * result + ((virtualName == null) ? 0 : virtualName.hashCode());
+      result = prime * result + ((volumeType == null) ? 0 : volumeType.hashCode());
+      result = prime * result + ((iops == null) ? 0 : iops.hashCode());
+      result = prime * result + ((encrypted == null ) ? 0 : encrypted.hashCode());
       return result;
    }
 
@@ -189,41 +233,59 @@ public class BlockDeviceMapping implements Comparable<BlockDeviceMapping> {
             return false;
       } else if (!virtualName.equals(other.virtualName))
          return false;
+      if (volumeType == null) {
+         if (other.volumeType != null)
+            return false;
+      } else if (!volumeType.equals(other.volumeType))
+         return false;
+      if (iops== null) {
+         if (other.iops != null)
+            return false;
+      } else if (!iops.equals(other.iops))
+         return false;
+      if (encrypted == null) {
+         if (other.encrypted != null)
+            return false;
+      } else if (!encrypted.equals(other.encrypted))
+         return false;
       return true;
    }
 
    @Override
    public String toString() {
       return "[deviceName=" + deviceName + ", virtualName=" + virtualName + ", snapshotId=" + snapshotId
-            + ", sizeInGib=" + sizeInGib + ", noDevice=" + noDevice + ", deleteOnTermination=" + deleteOnTermination
-            + "]";
+              + ", sizeInGib=" + sizeInGib + ", noDevice=" + noDevice + ", deleteOnTermination=" + deleteOnTermination
+              + ", volumeType=" + volumeType + ", iops=" + iops + ", encrypted=" + encrypted
+              + "]";
    }
 
    public static class MapEBSSnapshotToDevice extends BlockDeviceMapping {
       public MapEBSSnapshotToDevice(String deviceName, String snapshotId, @Nullable Integer sizeInGib,
-            @Nullable Boolean deleteOnTermination) {
-         super(deviceName, null, snapshotId, sizeInGib, null, deleteOnTermination);
+            @Nullable Boolean deleteOnTermination, @Nullable String volumeType,
+            @Nullable Integer iops, @Nullable Boolean encrypted) {
+         super(deviceName, null, snapshotId, sizeInGib, null, deleteOnTermination, volumeType, iops, encrypted);
          checkNotNull(emptyToNull(snapshotId), "snapshotId must be defined");
       }
    }
 
    public static class MapNewVolumeToDevice extends BlockDeviceMapping {
-      public MapNewVolumeToDevice(String deviceName, Integer sizeInGib, @Nullable Boolean deleteOnTermination) {
-         super(deviceName, null, null, sizeInGib, null, deleteOnTermination);
+      public MapNewVolumeToDevice(String deviceName, Integer sizeInGib, @Nullable Boolean deleteOnTermination,
+                                  @Nullable String volumeType, @Nullable Integer iops, @Nullable Boolean encrypted) {
+         super(deviceName, null, null, sizeInGib, null, deleteOnTermination, volumeType, iops, encrypted);
          checkNotNull(sizeInGib, "sizeInGib cannot be null");
       }
    }
 
    public static class MapEphemeralDeviceToDevice extends BlockDeviceMapping {
       public MapEphemeralDeviceToDevice(String deviceName, String virtualName) {
-         super(deviceName, virtualName, null, null, null, null);
+         super(deviceName, virtualName, null, null, null, null, null, null, null);
          checkNotNull(emptyToNull(virtualName), "virtualName must be defined");
       }
    }
 
    public static class UnmapDeviceNamed extends BlockDeviceMapping {
       public UnmapDeviceNamed(String deviceName) {
-         super(deviceName, null, null, null, true, null);
+         super(deviceName, null, null, null, true, null, null, null, null);
       }
    }
 
