@@ -23,6 +23,8 @@
                         <snapshotId>snap-d01272b9</snapshotId>
                         <volumeSize>30</volumeSize>
                         <deleteOnTermination>true</deleteOnTermination>
+                        <volumeType>standard</volumeType>
+                        <encrypted>false</encrypted>
                     </ebs>
                 </item>
                 <item>
@@ -31,6 +33,8 @@
                         <snapshotId>snap-d31272ba</snapshotId>
                         <volumeSize>250</volumeSize>
                         <deleteOnTermination>false</deleteOnTermination>
+                        <volumeType>standard</volumeType>
+                        <encrypted>false</encrypted>
                     </ebs>
                 </item>
             </blockDeviceMapping>

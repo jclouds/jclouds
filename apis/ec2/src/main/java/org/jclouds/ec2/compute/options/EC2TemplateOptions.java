@@ -187,12 +187,27 @@ public class EC2TemplateOptions extends TemplateOptions implements Cloneable {
 
    public EC2TemplateOptions mapEBSSnapshotToDeviceName(String deviceName, String snapshotId,
          @Nullable Integer sizeInGib, boolean deleteOnTermination) {
-      blockDeviceMappings.add(new MapEBSSnapshotToDevice(deviceName, snapshotId, sizeInGib, deleteOnTermination));
+      return mapEBSSnapshotToDeviceName(deviceName, snapshotId, sizeInGib, deleteOnTermination, null, null, false);
+   }
+
+   public EC2TemplateOptions mapEBSSnapshotToDeviceName(String deviceName, String snapshotId,
+                                                        @Nullable Integer sizeInGib, boolean deleteOnTermination,
+                                                        @Nullable String volumeType, @Nullable Integer iops,
+                                                        boolean encrypted) {
+      blockDeviceMappings.add(new MapEBSSnapshotToDevice(deviceName, snapshotId, sizeInGib, deleteOnTermination,
+              volumeType, iops, encrypted));
       return this;
    }
 
    public EC2TemplateOptions mapNewVolumeToDeviceName(String deviceName, int sizeInGib, boolean deleteOnTermination) {
-      blockDeviceMappings.add(new MapNewVolumeToDevice(deviceName, sizeInGib, deleteOnTermination));
+      return mapNewVolumeToDeviceName(deviceName, sizeInGib, deleteOnTermination, null, null, false);
+   }
+
+   public EC2TemplateOptions mapNewVolumeToDeviceName(String deviceName, int sizeInGib, boolean deleteOnTermination,
+                                                      @Nullable String volumeType, @Nullable Integer iops,
+                                                      boolean encrypted) {
+      blockDeviceMappings.add(new MapNewVolumeToDevice(deviceName, sizeInGib, deleteOnTermination, volumeType,
+              iops, encrypted));
       return this;
    }
 

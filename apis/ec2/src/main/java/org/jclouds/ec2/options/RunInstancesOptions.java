@@ -139,6 +139,13 @@ public class RunInstancesOptions extends BaseEC2RequestOptions {
          if (mapping.getEbsDeleteOnTermination() != null)
             formParameters.put(String.format("BlockDeviceMapping.%d.Ebs.DeleteOnTermination", i),
                   String.valueOf(mapping.getEbsDeleteOnTermination()));
+         if (mapping.getEbsVolumeType() != null)
+            formParameters.put(String.format("BlockDeviceMapping.%d.Ebs.VolumeType", i), mapping.getEbsVolumeType());
+         if (mapping.getEbsIops() != null)
+            formParameters.put(String.format("BlockDeviceMapping.%d.Ebs.Iops", i),
+                    String.valueOf(mapping.getEbsIops()));
+         if (mapping.getEbsEncrypted() != null)
+            formParameters.put(String.format("BlockDeviceMapping.%d.Ebs.Encrypted", i), String.valueOf(mapping.getEbsEncrypted()));
          i++;
       }
       return this;
@@ -179,7 +186,7 @@ public class RunInstancesOptions extends BaseEC2RequestOptions {
       }
 
       /**
-       * @see RunInstancesOptions#asType(InstanceType)
+       * @see RunInstancesOptions#asType(String)
        */
       public static RunInstancesOptions asType(String instanceType) {
          RunInstancesOptions options = new RunInstancesOptions();

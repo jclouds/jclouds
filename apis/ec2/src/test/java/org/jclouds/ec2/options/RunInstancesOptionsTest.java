@@ -207,7 +207,7 @@ public class RunInstancesOptionsTest {
 
    @Test
    public void testWithBlockDeviceMapping() {
-      BlockDeviceMapping mapping = new BlockDeviceMapping.MapNewVolumeToDevice("/dev/sda1", 120, true);
+      BlockDeviceMapping mapping = new BlockDeviceMapping.MapNewVolumeToDevice("/dev/sda1", 120, true, "gp2", 10, true);
       RunInstancesOptions options = new RunInstancesOptions().withBlockDeviceMappings(ImmutableSet
                .<BlockDeviceMapping> of(mapping));
       assertEquals(options.buildFormParameters().get("BlockDeviceMapping.1.DeviceName"),
@@ -216,6 +216,12 @@ public class RunInstancesOptionsTest {
                ImmutableList.of("120"));
       assertEquals(options.buildFormParameters().get("BlockDeviceMapping.1.Ebs.DeleteOnTermination"),
                ImmutableList.of("true"));
+      assertEquals(options.buildFormParameters().get("BlockDeviceMapping.1.Ebs.VolumeType"),
+              ImmutableList.of("gp2"));
+      assertEquals(options.buildFormParameters().get("BlockDeviceMapping.1.Ebs.Iops"),
+              ImmutableList.of("10"));
+      assertEquals(options.buildFormParameters().get("BlockDeviceMapping.1.Ebs.Encrypted"),
+              ImmutableList.of("true"));
    }
 
    @Test
@@ -226,7 +232,7 @@ public class RunInstancesOptionsTest {
 
    @Test
    public void testWithBlockDeviceMappingStatic() {
-      BlockDeviceMapping mapping = new BlockDeviceMapping.MapNewVolumeToDevice("/dev/sda1", 120, true);
+      BlockDeviceMapping mapping = new BlockDeviceMapping.MapNewVolumeToDevice("/dev/sda1", 120, true, null, null, false);
       RunInstancesOptions options = withBlockDeviceMappings(ImmutableSet
                .<BlockDeviceMapping> of(mapping));
       assertEquals(options.buildFormParameters().get("BlockDeviceMapping.1.DeviceName"),
@@ -235,6 +241,8 @@ public class RunInstancesOptionsTest {
                ImmutableList.of("120"));
       assertEquals(options.buildFormParameters().get("BlockDeviceMapping.1.Ebs.DeleteOnTermination"),
                ImmutableList.of("true"));
+      assertEquals(options.buildFormParameters().get("BlockDeviceMapping.1.Ebs.VolumeType"),
+              ImmutableList.of());
    }
 
    @Test(expectedExceptions = NullPointerException.class)

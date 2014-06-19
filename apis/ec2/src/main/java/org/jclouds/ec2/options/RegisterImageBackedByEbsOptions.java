@@ -94,9 +94,90 @@ public class RegisterImageBackedByEbsOptions extends RegisterImageOptions {
 
    /**
     * 
+    * adds a block device to the image from an ebs snapshot.
+    * 
+    * @param deviceName
+    *           The device name (e.g., /dev/sdh).
+    * @param virtualName
+    *           The virtual device name. (nullable)
+    * @param snapshotId
+    *           The ID of the snapshot.
+    * @param deleteOnTermination
+    *           Whether this volume should be automatically deleted on instance termination.
+    *           Defaults to false.
+    * @param volumeType
+    *           What EBS volume type should be used.
+    * @param iops
+    *           EBS provisioned IOPS for this volume.
+    * @param encrypted
+    *           Whether this volume should be encrypted.
+    */
+   public RegisterImageBackedByEbsOptions addBlockDeviceFromSnapshot(String deviceName,
+            @Nullable String virtualName, String snapshotId, boolean deleteOnTermination,
+            @Nullable String volumeType, @Nullable Integer iops, boolean encrypted) {
+
+      addAdvancedEbsOptions(deleteOnTermination, volumeType, iops, encrypted);
+      addEphemeralBlockDeviceFromSnapshot(deviceName, virtualName, snapshotId);
+
+      return this;
+   }
+
+   /**
+    *
+    * adds a new block device to the image.
+    *
+    * @param deviceName
+    *           The device name (e.g., /dev/sdh).
+    * @param virtualName
+    *           The virtual device name. (nullable)
+    * @param volumeSize
+    *           The size of the volume, in GiBs..
+    * @param deleteOnTermination
+    *           Whether this volume should be automatically deleted on instance termination.
+    *           Defaults to false.
+    * @param volumeType
+    *           What EBS volume type should be used.
+    * @param iops
+    *           EBS provisioned IOPS for this volume.
+    * @param encrypted
+    *           Whether this volume should be encrypted.
+    */
+   public RegisterImageBackedByEbsOptions addNewBlockDevice(String deviceName,
+                                                            @Nullable String virtualName,
+                                                            int volumeSize,
+                                                            boolean deleteOnTermination,
+                                                            @Nullable String volumeType,
+                                                            @Nullable Integer iops,
+                                                            boolean encrypted) {
+      addAdvancedEbsOptions(deleteOnTermination, volumeType, iops, encrypted);
+      addNewEphemeralBlockDevice(deviceName, virtualName, volumeSize);
+
+      return this;
+   }
+
+   private RegisterImageBackedByEbsOptions addAdvancedEbsOptions(boolean deleteOnTermination,
+                                                                 @Nullable String volumeType,
+                                                                 @Nullable Integer iops,
+                                                                 boolean encrypted) {
+
+      formParameters.put("BlockDeviceMapping." + deviceIndex + ".Ebs.DeleteOnTermination",
+              Boolean.toString(deleteOnTermination));
+
+      if (volumeType != null)
+         formParameters.put("BlockDeviceMapping." + deviceIndex + ".Ebs.VolumeType", volumeType);
+      if (iops != null)
+         formParameters.put("BlockDeviceMapping." + deviceIndex + ".Ebs.Iops", iops.toString());
+      if (encrypted)
+         formParameters.put("BlockDeviceMapping." + deviceIndex + ".Ebs.Encrypted", "true");
+
+      return this;
+   }
+
+   /**
+    *
     * adds a block device to the image from an ebs snapshot. This device is retained on instance
     * termination.
-    * 
+    *
     * @param name
     *           The device name (e.g., /dev/sdh).
     * @param virtualName
@@ -105,7 +186,7 @@ public class RegisterImageBackedByEbsOptions extends RegisterImageOptions {
     *           The ID of the snapshot.
     */
    public RegisterImageBackedByEbsOptions addBlockDeviceFromSnapshot(String deviceName,
-            @Nullable String virtualName, String snapshotId) {
+                                                                     @Nullable String virtualName, String snapshotId) {
       formParameters.put("BlockDeviceMapping." + deviceIndex + ".Ebs.DeleteOnTermination", "false");
       addEphemeralBlockDeviceFromSnapshot(deviceName, virtualName, snapshotId);
       return this;
@@ -172,6 +253,21 @@ public class RegisterImageBackedByEbsOptions extends RegisterImageOptions {
       }
 
       /**
+       * @see RegisterImageBackedByEbsOptions#addBlockDeviceFromSnapshot(String, String, String, boolean, String, Integer, boolean)
+       */
+      public static RegisterImageBackedByEbsOptions addBlockDeviceFromSnapshot(String deviceName,
+                                                                               @Nullable String virtualName,
+                                                                               String snapshotId,
+                                                                               boolean deleteOnTermination,
+                                                                               @Nullable String volumeType,
+                                                                               @Nullable Integer iops,
+                                                                               boolean encrypted) {
+         RegisterImageBackedByEbsOptions options = new RegisterImageBackedByEbsOptions();
+         return options.addBlockDeviceFromSnapshot(deviceName, virtualName, snapshotId, deleteOnTermination,
+                 volumeType, iops, encrypted);
+      }
+
+      /**
        * @see RegisterImageBackedByEbsOptions#addEphemeralBlockDeviceFromSnapshot(String, String,
        *      String)
        */
@@ -188,6 +284,21 @@ public class RegisterImageBackedByEbsOptions extends RegisterImageOptions {
                @Nullable String virtualName, int volumeSize) {
          RegisterImageBackedByEbsOptions options = new RegisterImageBackedByEbsOptions();
          return options.addNewBlockDevice(deviceName, virtualName, volumeSize);
+      }
+
+      /**
+       * @see RegisterImageBackedByEbsOptions#addNewBlockDevice(String, String, int, boolean, String, Integer, boolean)
+       */
+      public static RegisterImageBackedByEbsOptions addNewBlockDevice(String deviceName,
+                                                               @Nullable String virtualName,
+                                                               int volumeSize,
+                                                               boolean deleteOnTermination,
+                                                               @Nullable String volumeType,
+                                                               @Nullable Integer iops,
+                                                               boolean encrypted) {
+         RegisterImageBackedByEbsOptions options = new RegisterImageBackedByEbsOptions();
+         return options.addNewBlockDevice(deviceName, virtualName, volumeSize, deleteOnTermination,
+                 volumeType, iops, encrypted);
       }
 
       /**

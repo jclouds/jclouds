@@ -396,7 +396,7 @@ public class EBSBootEC2ApiLiveTest extends BaseComputeServiceContextLiveTest {
       assertEquals(ebsImage.getRootDeviceType(), RootDeviceType.EBS);
       assertEquals(ebsImage.getRootDeviceName(), "/dev/sda1");
       assertEquals(ebsImage.getEbsBlockDevices().entrySet(),
-            ImmutableMap.of("/dev/sda1", new Image.EbsBlockDevice(snapshot.getId(), VOLUME_SIZE, true)).entrySet());
+            ImmutableMap.of("/dev/sda1", new Image.EbsBlockDevice(snapshot.getId(), VOLUME_SIZE, true, "standard", null, false)).entrySet());
    }
 
    private void tryToChangeStuff() {

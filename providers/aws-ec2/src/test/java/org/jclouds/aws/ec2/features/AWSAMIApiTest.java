@@ -263,28 +263,29 @@ public class AWSAMIApiTest extends BaseAWSEC2ApiTest<AWSAMIApi> {
    }
 
    HttpRequest registerImageBackedByEBSOptions = HttpRequest.builder().method("POST")
-                                                            .endpoint("https://ec2.us-east-1.amazonaws.com/")
-                                                            .addHeader("Host", "ec2.us-east-1.amazonaws.com")
-                                                            .addFormParam("Action", "RegisterImage")
-                                                            .addFormParam("BlockDeviceMapping.0.DeviceName", "/dev/sda1")
-                                                            .addFormParam("BlockDeviceMapping.0.Ebs.SnapshotId", "snapshotId")
-                                                            .addFormParam("BlockDeviceMapping.1.DeviceName", "/dev/device")
-                                                            .addFormParam("BlockDeviceMapping.1.Ebs.DeleteOnTermination", "false")
-                                                            .addFormParam("BlockDeviceMapping.1.Ebs.SnapshotId", "snapshot")
-                                                            .addFormParam("BlockDeviceMapping.2.DeviceName", "/dev/newdevice")
-                                                            .addFormParam("BlockDeviceMapping.2.Ebs.DeleteOnTermination", "false")
-                                                            .addFormParam("BlockDeviceMapping.2.Ebs.VolumeSize", "100")
-                                                            .addFormParam("BlockDeviceMapping.2.VirtualName", "newblock")
-                                                            .addFormParam("Description", "description")
-                                                            .addFormParam("Name", "imageName")
-                                                            .addFormParam("RootDeviceName", "/dev/sda1").build();
+           .endpoint("https://ec2.us-east-1.amazonaws.com/")
+           .addHeader("Host", "ec2.us-east-1.amazonaws.com")
+           .addFormParam("Action", "RegisterImage")
+           .addFormParam("BlockDeviceMapping.0.DeviceName", "/dev/sda1")
+           .addFormParam("BlockDeviceMapping.0.Ebs.SnapshotId", "snapshotId")
+           .addFormParam("BlockDeviceMapping.1.DeviceName", "/dev/device")
+           .addFormParam("BlockDeviceMapping.1.Ebs.DeleteOnTermination", "false")
+           .addFormParam("BlockDeviceMapping.1.Ebs.SnapshotId", "snapshot")
+           .addFormParam("BlockDeviceMapping.1.Ebs.VolumeType", "gp2")
+           .addFormParam("BlockDeviceMapping.2.DeviceName", "/dev/newdevice")
+           .addFormParam("BlockDeviceMapping.2.Ebs.DeleteOnTermination", "false")
+           .addFormParam("BlockDeviceMapping.2.Ebs.VolumeSize", "100")
+           .addFormParam("BlockDeviceMapping.2.VirtualName", "newblock")
+           .addFormParam("Description", "description")
+           .addFormParam("Name", "imageName")
+           .addFormParam("RootDeviceName", "/dev/sda1").build();
 
    public void testRegisterImageBackedByEBSOptions() throws SecurityException, NoSuchMethodException, IOException {
       Invokable<?, ?> method = method(AWSAMIApi.class, "registerUnixImageBackedByEbsInRegion", String.class,
                String.class, String.class, RegisterImageBackedByEbsOptions[].class);
       GeneratedHttpRequest request = processor.createRequest(method, Lists.<Object> newArrayList(null, "imageName", "snapshotId",
                new RegisterImageBackedByEbsOptions().withDescription("description").addBlockDeviceFromSnapshot(
-                        "/dev/device", null, "snapshot").addNewBlockDevice("/dev/newdevice", "newblock", 100)));
+                        "/dev/device", null, "snapshot", false, "gp2", null, false).addNewBlockDevice("/dev/newdevice", "newblock", 100)));
 
       request = (GeneratedHttpRequest) request.getFilters().get(0).filter(request);
       

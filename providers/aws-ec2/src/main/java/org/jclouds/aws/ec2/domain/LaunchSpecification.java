@@ -138,12 +138,26 @@ public class LaunchSpecification {
 
       public Builder mapEBSSnapshotToDevice(String deviceName, String snapshotId, @Nullable Integer sizeInGib,
             boolean deleteOnTermination) {
-         blockDeviceMappings.add(new MapEBSSnapshotToDevice(deviceName, snapshotId, sizeInGib, deleteOnTermination));
+         return mapEBSSnapshotToDevice(deviceName, snapshotId, sizeInGib, deleteOnTermination, null, null, null);
+      }
+
+      public Builder mapEBSSnapshotToDevice(String deviceName, String snapshotId, @Nullable Integer sizeInGib,
+                                            boolean deleteOnTermination, @Nullable String volumeType,
+                                            @Nullable Integer iops, @Nullable Boolean encrypted) {
+         blockDeviceMappings.add(new MapEBSSnapshotToDevice(deviceName, snapshotId, sizeInGib, deleteOnTermination,
+                 volumeType, iops, encrypted));
          return this;
       }
 
       public Builder mapNewVolumeToDevice(String deviceName, int sizeInGib, boolean deleteOnTermination) {
-         blockDeviceMappings.add(new MapNewVolumeToDevice(deviceName, sizeInGib, deleteOnTermination));
+         return mapNewVolumeToDevice(deviceName, sizeInGib, deleteOnTermination, null, null, null);
+      }
+
+      public Builder mapNewVolumeToDevice(String deviceName, int sizeInGib, boolean deleteOnTermination,
+                                          @Nullable String volumeType, @Nullable Integer iops,
+                                          @Nullable Boolean encrypted) {
+         blockDeviceMappings.add(new MapNewVolumeToDevice(deviceName, sizeInGib, deleteOnTermination,
+                 volumeType, iops, encrypted));
          return this;
       }
 

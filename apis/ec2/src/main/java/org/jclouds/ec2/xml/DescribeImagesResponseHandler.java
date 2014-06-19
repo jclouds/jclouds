@@ -19,29 +19,27 @@ package org.jclouds.ec2.xml;
 import static org.jclouds.util.SaxUtils.currentOrNull;
 import static org.jclouds.util.SaxUtils.equalsOrSuffix;
 
-import java.util.Map;
-import java.util.Set;
-
 import javax.annotation.Resource;
 import javax.inject.Inject;
-
-import org.jclouds.aws.util.AWSUtils;
-import org.jclouds.ec2.domain.Hypervisor;
-import org.jclouds.ec2.domain.Image;
-import org.jclouds.ec2.domain.RootDeviceType;
-import org.jclouds.ec2.domain.VirtualizationType;
-import org.jclouds.ec2.domain.Image.Architecture;
-import org.jclouds.ec2.domain.Image.EbsBlockDevice;
-import org.jclouds.ec2.domain.Image.ImageState;
-import org.jclouds.ec2.domain.Image.ImageType;
-import org.jclouds.http.functions.ParseSax;
-import org.jclouds.location.Region;
-import org.jclouds.logging.Logger;
-import org.xml.sax.Attributes;
+import java.util.Map;
+import java.util.Set;
 
 import com.google.common.base.Supplier;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
+import org.jclouds.aws.util.AWSUtils;
+import org.jclouds.ec2.domain.Hypervisor;
+import org.jclouds.ec2.domain.Image;
+import org.jclouds.ec2.domain.Image.Architecture;
+import org.jclouds.ec2.domain.Image.EbsBlockDevice;
+import org.jclouds.ec2.domain.Image.ImageState;
+import org.jclouds.ec2.domain.Image.ImageType;
+import org.jclouds.ec2.domain.RootDeviceType;
+import org.jclouds.ec2.domain.VirtualizationType;
+import org.jclouds.http.functions.ParseSax;
+import org.jclouds.location.Region;
+import org.jclouds.logging.Logger;
+import org.xml.sax.Attributes;
 
 /**
  * Parses the following XML document:
@@ -94,7 +92,9 @@ public class DescribeImagesResponseHandler extends ParseSax.HandlerForGeneratedR
 
    private int volumeSize;
    private boolean deleteOnTermination = true;// correct default is true.
-
+   private boolean encrypted = false;
+   private String volumeType;
+   private Integer iops;
    private String rootDeviceName;
 
    public Set<Image> getResult() {
@@ -159,6 +159,12 @@ public class DescribeImagesResponseHandler extends ParseSax.HandlerForGeneratedR
          volumeSize = Integer.parseInt(currentText.toString().trim());
       } else if (qName.equals("deleteOnTermination")) {
          deleteOnTermination = Boolean.parseBoolean(currentText.toString().trim());
+      } else if (qName.equals("encrypted")) {
+         encrypted = Boolean.parseBoolean(currentText.toString().trim());
+      } else if (qName.equals("iops")) {
+         iops = Integer.valueOf(currentText.toString().trim());
+      } else if (qName.equals("volumeType")) {
+         volumeType = currentText.toString().trim();
       } else if (qName.equals("ramdiskId")) {
          ramdiskId = currentText.toString().trim();
       } else if (qName.equals("rootDeviceType")) {
@@ -171,11 +177,15 @@ public class DescribeImagesResponseHandler extends ParseSax.HandlerForGeneratedR
          hypervisor = Hypervisor.fromValue(currentText.toString().trim());
       } else if (qName.equals("item")) {
          if (inBlockDeviceMapping) {
-            ebsBlockDevices.put(deviceName, new Image.EbsBlockDevice(snapshotId, volumeSize, deleteOnTermination));
+            ebsBlockDevices.put(deviceName, new Image.EbsBlockDevice(snapshotId, volumeSize, deleteOnTermination,
+                    volumeType, iops, encrypted));
             this.deviceName = null;
             this.snapshotId = null;
             this.volumeSize = 0;
             this.deleteOnTermination = true;
+            this.encrypted = false;
+            this.volumeType = null;
+            this.iops = null;
          } else if (!inTagSet && !inProductCodes) {
             try {
                String region = getRequest() != null ? AWSUtils.findRegionInArgsOrNull(getRequest()) : null;

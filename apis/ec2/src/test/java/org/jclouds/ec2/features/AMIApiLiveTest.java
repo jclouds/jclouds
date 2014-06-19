@@ -182,7 +182,7 @@ public class AMIApiLiveTest extends BaseComputeServiceContextLiveTest {
 
       // Register a new image...
       ebsBackedImageId = client.registerUnixImageBackedByEbsInRegion(regionId, ebsBackedImageName, snapshot.getId(),
-            addNewBlockDevice("/dev/sda2", "myvirtual", 1).withDescription("adrian"));
+            addNewBlockDevice("/dev/sda2", "myvirtual", 1, false, "gp2", null, false).withDescription("adrian"));
       imagesToDeregister.add(ebsBackedImageId);
       final Image ebsBackedImage = getOnlyElement(client.describeImagesInRegion(regionId, imageIds(ebsBackedImageId)));
       assertEquals(ebsBackedImage.getName(), ebsBackedImageName);
@@ -192,8 +192,8 @@ public class AMIApiLiveTest extends BaseComputeServiceContextLiveTest {
       assertEquals(ebsBackedImage.getDescription(), "adrian");
       assertEquals(
             ebsBackedImage.getEbsBlockDevices().entrySet(),
-            ImmutableMap.of("/dev/sda1", new Image.EbsBlockDevice(snapshot.getId(), snapshot.getVolumeSize(), true),
-                  "/dev/sda2", new Image.EbsBlockDevice(null, 1, false)).entrySet());
+            ImmutableMap.of("/dev/sda1", new Image.EbsBlockDevice(snapshot.getId(), snapshot.getVolumeSize(), true, "standard", null, false),
+                  "/dev/sda2", new Image.EbsBlockDevice(null, 1, false, "gp2", null, false)).entrySet());
 
       // List of images after - should be one larger than before
       int after = client.describeImagesInRegionWithFilter(regionId,

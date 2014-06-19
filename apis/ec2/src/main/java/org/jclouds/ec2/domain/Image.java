@@ -159,11 +159,18 @@ public class Image implements Comparable<Image> {
       private final String snapshotId;
       private final long volumeSize;
       private final boolean deleteOnTermination;
+      private final String volumeType;
+      private final Integer iops;
+      private final boolean encrypted;
 
-      public EbsBlockDevice(@Nullable String snapshotId, long volumeSize, boolean deleteOnTermination) {
+      public EbsBlockDevice(@Nullable String snapshotId, long volumeSize, boolean deleteOnTermination,
+                            @Nullable String volumeType, @Nullable Integer iops, boolean encrypted) {
          this.snapshotId = snapshotId;
          this.volumeSize = volumeSize;
          this.deleteOnTermination = deleteOnTermination;
+         this.volumeType = volumeType;
+         this.iops = iops;
+         this.encrypted = encrypted;
       }
 
       public String getSnapshotId() {
@@ -178,6 +185,18 @@ public class Image implements Comparable<Image> {
          return deleteOnTermination;
       }
 
+      public String getVolumeType() {
+         return volumeType;
+      }
+
+      public Integer getIops() {
+         return iops;
+      }
+
+      public boolean isEncrypted() {
+         return encrypted;
+      }
+
       @Override
       public int hashCode() {
          final int prime = 31;
@@ -185,6 +204,9 @@ public class Image implements Comparable<Image> {
          result = prime * result + (deleteOnTermination ? 1231 : 1237);
          result = prime * result + ((snapshotId == null) ? 0 : snapshotId.hashCode());
          result = prime * result + (int) (volumeSize ^ (volumeSize >>> 32));
+         result = prime * result + (encrypted ? 1249 : 1259);
+         result = prime * result + ((volumeType == null) ? 0 : volumeType.hashCode());
+         result = prime * result + ((iops == null) ? 0 : iops.hashCode());
          return result;
       }
 
@@ -199,10 +221,22 @@ public class Image implements Comparable<Image> {
          EbsBlockDevice other = (EbsBlockDevice) obj;
          if (deleteOnTermination != other.deleteOnTermination)
             return false;
+         if (encrypted != other.encrypted)
+            return false;
          if (snapshotId == null) {
             if (other.snapshotId != null)
                return false;
          } else if (!snapshotId.equals(other.snapshotId))
+            return false;
+         if (volumeType == null) {
+            if (other.volumeType != null)
+               return false;
+         } else if (!volumeType.equals(other.volumeType))
+            return false;
+         if (iops == null) {
+            if (other.iops != null)
+               return false;
+         } else if (!iops.equals(other.iops))
             return false;
          if (volumeSize != other.volumeSize)
             return false;
@@ -212,7 +246,8 @@ public class Image implements Comparable<Image> {
       @Override
       public String toString() {
          return "EbsBlockDevice [deleteOnTermination=" + deleteOnTermination + ", snapshotId=" + snapshotId
-                  + ", volumeSize=" + volumeSize + "]";
+                 + ", volumeSize=" + volumeSize + ", volumeType=" + volumeType + ", iops=" + iops
+                 + ", encrypted=" + encrypted + "]";
       }
 
    }
