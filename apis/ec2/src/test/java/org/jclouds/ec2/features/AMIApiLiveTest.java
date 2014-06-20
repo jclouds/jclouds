@@ -33,6 +33,7 @@ import java.util.Iterator;
 import java.util.Properties;
 import java.util.Set;
 
+import org.jclouds.Constants;
 import org.jclouds.aws.AWSResponseException;
 import org.jclouds.compute.RunNodesException;
 import org.jclouds.compute.domain.Template;
@@ -45,7 +46,9 @@ import org.jclouds.ec2.domain.Image.ImageType;
 import org.jclouds.ec2.domain.RootDeviceType;
 import org.jclouds.ec2.domain.RunningInstance;
 import org.jclouds.ec2.domain.Snapshot;
+import org.jclouds.ec2.options.RegisterImageBackedByEbsOptions;
 import org.jclouds.ec2.predicates.InstanceStateRunning;
+import org.jclouds.ec2.predicates.SnapshotCompleted;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
@@ -182,7 +185,7 @@ public class AMIApiLiveTest extends BaseComputeServiceContextLiveTest {
 
       // Register a new image...
       ebsBackedImageId = client.registerUnixImageBackedByEbsInRegion(regionId, ebsBackedImageName, snapshot.getId(),
-            addNewBlockDevice("/dev/sda2", "myvirtual", 1, false, "gp2", null, false).withDescription("adrian"));
+              newBlockDeviceOption());
       imagesToDeregister.add(ebsBackedImageId);
       final Image ebsBackedImage = getOnlyElement(client.describeImagesInRegion(regionId, imageIds(ebsBackedImageId)));
       assertEquals(ebsBackedImage.getName(), ebsBackedImageName);
@@ -192,20 +195,35 @@ public class AMIApiLiveTest extends BaseComputeServiceContextLiveTest {
       assertEquals(ebsBackedImage.getDescription(), "adrian");
       assertEquals(
             ebsBackedImage.getEbsBlockDevices().entrySet(),
-            ImmutableMap.of("/dev/sda1", new Image.EbsBlockDevice(snapshot.getId(), snapshot.getVolumeSize(), true, "standard", null, false),
-                  "/dev/sda2", new Image.EbsBlockDevice(null, 1, false, "gp2", null, false)).entrySet());
+            ImmutableMap.of("/dev/sda1", new Image.EbsBlockDevice(snapshot.getId(), snapshot.getVolumeSize(), true, null, null, false),
+                  "/dev/sda2", newBlockDeviceInfo()).entrySet());
 
-      // List of images after - should be one larger than before
-      int after = client.describeImagesInRegionWithFilter(regionId,
-              ImmutableMultimap.<String, String>builder()
-                      .put("name", ebsBackedImageName).build()).size();
+      int describeCount = 0;
+      int after = 0;
 
+      // This loop is in here to deal with a lag between image creation and it showing up in filtered describeImage queries.
+      while (describeCount < 10 && after == 0) {
+         describeCount++;
+         Thread.sleep(30000);
+         // List of images after - should be one larger than before
+         after = client.describeImagesInRegionWithFilter(regionId,
+                 ImmutableMultimap.<String, String>builder()
+                         .put("name", ebsBackedImageName).build()).size();
+      }
       assertEquals(after, sizeBefore + 1);
+   }
+
+   protected RegisterImageBackedByEbsOptions newBlockDeviceOption() {
+      return addNewBlockDevice("/dev/sda2", "myvirtual", 5, false, null, null, false).withDescription("adrian");
+   }
+
+   protected Image.EbsBlockDevice newBlockDeviceInfo() {
+      return new Image.EbsBlockDevice(null, 5, false, null, null, false);
    }
 
    // Fires up an instance, finds its root volume ID, takes a snapshot, then
    // terminates the instance.
-   private Snapshot createSnapshot() throws RunNodesException {
+   protected Snapshot createSnapshot() throws RunNodesException {
 
       String instanceId = null;
       try {
@@ -222,6 +240,8 @@ public class AMIApiLiveTest extends BaseComputeServiceContextLiveTest {
          Snapshot snapshot = ec2Api.getElasticBlockStoreApi().get().createSnapshotInRegion(regionId,
                device.getVolumeId());
          snapshotsToDelete.add(snapshot.getId());
+         Predicate<Snapshot> snapshotted = retry(new SnapshotCompleted(ec2Api.getElasticBlockStoreApi().get()), 600, 10, SECONDS);
+         assert snapshotted.apply(snapshot);
          return snapshot;
       } finally {
          if (instanceId != null)

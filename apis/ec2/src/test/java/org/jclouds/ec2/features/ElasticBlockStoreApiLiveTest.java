@@ -15,10 +15,11 @@
  * limitations under the License.
  */
 package org.jclouds.ec2.features;
+
 import static com.google.common.base.Preconditions.checkNotNull;
 import static java.util.concurrent.TimeUnit.SECONDS;
 import static org.jclouds.ec2.options.CreateVolumeOptions.Builder.fromSnapshotId;
-import static org.jclouds.ec2.options.CreateVolumeOptions.Builder.volumeType;
+import static org.jclouds.ec2.options.CreateVolumeOptions.Builder.withSize;
 import static org.jclouds.ec2.options.DescribeSnapshotsOptions.Builder.snapshotIds;
 import static org.jclouds.util.Predicates2.retry;
 import static org.testng.Assert.assertEquals;
@@ -31,6 +32,7 @@ import java.util.SortedSet;
 import com.google.common.base.Predicate;
 import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableMultimap;
+import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Sets;
 import org.jclouds.aws.AWSResponseException;
@@ -48,20 +50,20 @@ import org.testng.annotations.Test;
 /**
  * Tests behavior of {@code ElasticBlockStoreApi}
  */
-@Test(groups = "live", singleThreaded = true, testName = "ElasticBlockStoreApiLiveTest")
+@Test(groups = "live", singleThreaded = true)
 public class ElasticBlockStoreApiLiveTest extends BaseComputeServiceContextLiveTest {
    public ElasticBlockStoreApiLiveTest() {
       provider = "ec2";
    }
 
-   private EC2Api ec2Api;
-   private ElasticBlockStoreApi client;
+   protected EC2Api ec2Api;
+   protected ElasticBlockStoreApi client;
 
-   private String defaultRegion;
-   private String defaultZone;
+   protected String defaultRegion;
+   protected String defaultZone;
 
-   private String volumeId;
-   private Snapshot snapshot;
+   protected String volumeId;
+   protected Snapshot snapshot;
 
    @Override
    @BeforeClass(groups = { "integration", "live" })
@@ -118,10 +120,9 @@ public class ElasticBlockStoreApiLiveTest extends BaseComputeServiceContextLiveT
    @Test
    void testCreateVolumeInAvailabilityZone() {
       Volume expected = client.createVolumeInAvailabilityZone(defaultZone,
-              volumeType("gp2"));
+              withSize(1));
       assertNotNull(expected);
       assertEquals(expected.getAvailabilityZone(), defaultZone);
-      assertEquals(expected.getVolumeType(), "gp2");
       this.volumeId = expected.getId();
 
       Set<Volume> result = Sets.newLinkedHashSet(client.describeVolumesInRegion(defaultRegion, expected.getId()));
@@ -159,10 +160,10 @@ public class ElasticBlockStoreApiLiveTest extends BaseComputeServiceContextLiveT
       assertEquals(volume.getAvailabilityZone(), defaultZone);
       assertEquals(result.getStatus(), Volume.Status.AVAILABLE);
 
-      client.deleteVolumeInRegion(snapshot.getRegion(), volume.getId());
+      client.deleteVolumeInRegion(snapshot.getRegion(), result.getId());
    }
 
-   @Test(dependsOnMethods = "testCreateSnapshotInRegion")
+   @Test(dependsOnMethods = "testCreateVolumeFromSnapshotInAvailabilityZone")
    void testCreateVolumeFromSnapshotInAvailabilityZoneWithOptions() {
       Volume volume = client.createVolumeInAvailabilityZone(defaultZone,
               fromSnapshotId(snapshot.getId()));
@@ -177,10 +178,10 @@ public class ElasticBlockStoreApiLiveTest extends BaseComputeServiceContextLiveT
       assertEquals(volume.getAvailabilityZone(), defaultZone);
       assertEquals(result.getStatus(), Volume.Status.AVAILABLE);
 
-      client.deleteVolumeInRegion(snapshot.getRegion(), volume.getId());
+      client.deleteVolumeInRegion(snapshot.getRegion(), result.getId());
    }
 
-   @Test(dependsOnMethods = "testCreateSnapshotInRegion")
+   @Test(dependsOnMethods = "testCreateVolumeFromSnapshotInAvailabilityZoneWithOptions")
    void testCreateVolumeFromSnapshotInAvailabilityZoneWithSize() {
       Volume volume = client.createVolumeFromSnapshotInAvailabilityZone(defaultZone, 2, snapshot.getId());
       assertNotNull(volume);
@@ -195,7 +196,7 @@ public class ElasticBlockStoreApiLiveTest extends BaseComputeServiceContextLiveT
       assertEquals(volume.getSize(), 2);
       assertEquals(result.getStatus(), Volume.Status.AVAILABLE);
 
-      client.deleteVolumeInRegion(snapshot.getRegion(), volume.getId());
+      client.deleteVolumeInRegion(snapshot.getRegion(), result.getId());
    }
 
    @Test
@@ -274,21 +275,21 @@ public class ElasticBlockStoreApiLiveTest extends BaseComputeServiceContextLiveT
       // snapshotId);
    }
 
-   @Test(dependsOnMethods = "testCreateSnapshotInRegion")
+   @Test(dependsOnMethods = "testCreateVolumeFromSnapshotInAvailabilityZoneWithSize")
    public void testGetCreateVolumePermissionForSnapshot() {
       client.getCreateVolumePermissionForSnapshotInRegion(snapshot.getRegion(), snapshot.getId());
    }
 
-   @Test(dependsOnMethods = "testCreateSnapshotInRegion")
+   @Test(dependsOnMethods = "testGetCreateVolumePermissionForSnapshot")
    void testDeleteVolumeInRegion() {
       client.deleteVolumeInRegion(defaultRegion, volumeId);
-      Set<Volume> result = Sets.newLinkedHashSet(client.describeVolumesInRegion(defaultRegion, volumeId));
-      assertEquals(result.size(), 1);
-      Volume volume = result.iterator().next();
-      assertEquals(volume.getStatus(), Volume.Status.DELETING);
+      assertEquals(client.describeVolumesInRegionWithFilter(defaultRegion,
+                      ImmutableMultimap.<String, String>builder()
+                              .put("volume-id", volumeId).build()),
+              ImmutableSet.of());
    }
 
-   @Test(dependsOnMethods = "testGetCreateVolumePermissionForSnapshot")
+   @Test(dependsOnMethods = "testDeleteVolumeInRegion")
    void testDeleteSnapshotInRegion() {
       client.deleteSnapshotInRegion(snapshot.getRegion(), snapshot.getId());
       assert client.describeSnapshotsInRegion(snapshot.getRegion(), snapshotIds(snapshot.getId())).size() == 0;
