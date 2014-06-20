@@ -145,7 +145,7 @@ public class RunInstancesOptions extends BaseEC2RequestOptions {
          if (mapping.getEbsIops() != null)
             formParameters.put(String.format("BlockDeviceMapping.%d.Ebs.Iops", i),
                     String.valueOf(mapping.getEbsIops()));
-         if (mapping.getEbsEncrypted() != null)
+         if (mapping.getEbsEncrypted() != null && mapping.getEbsEncrypted())
             formParameters.put(String.format("BlockDeviceMapping.%d.Ebs.Encrypted", i), String.valueOf(mapping.getEbsEncrypted()));
          i++;
       }
