@@ -1,0 +1,27 @@
+{
+   "kind": "storage#bucketAccessControls",
+   "items": [
+     {
+       "kind": "storage#bucketAccessControl",
+       "id": "jcloudtestbucket/allUsers",
+       "selfLink": "https://content.googleapis.com/storage/v1/b/jcloudtestbucket/acl/allUsers",
+       "bucket": "jcloudtestbucket",
+       "entity": "allUsers",
+       "role": "READER",
+       "etag": "CAc="
+    },
+    {
+       "kind": "storage#bucketAccessControl",
+       "id": "jcloudtestbucket/project-owners-1082289308625",
+       "selfLink": "https://content.googleapis.com/storage/v1/b/jcloudtestbucket/acl/project-owners-1082289308625",
+       "bucket": "jcloudtestbucket",
+       "entity": "project-owners-1082289308625",
+       "role": "OWNER",
+       "projectTeam": {
+          "projectNumber": "1082289308625",
+          "team": "owners"
+       },
+       "etag": "CAc="
+    }
+   ]
+}
