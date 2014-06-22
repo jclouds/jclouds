@@ -553,14 +553,26 @@ public abstract class BaseComputeServiceLiveTest extends BaseComputeServiceConte
 
    @Test(enabled = true, dependsOnMethods = "testGet")
    public void testReboot() throws Exception {
-      client.rebootNodesMatching(inGroup(group));// TODO test
+      Set<? extends NodeMetadata> rebootNodes = client.rebootNodesMatching(inGroup(group));
+      for (ComputeMetadata node : rebootNodes) {
+         assertNotNull(node);
+         assert node.getProviderId() != null : node;
+         assert node.getLocation() != null : node;
+      }
+
       // validation
       testGet();
    }
 
    @Test(enabled = true, dependsOnMethods = "testReboot")
    public void testSuspendResume() throws Exception {
-      client.suspendNodesMatching(inGroup(group));
+
+      Set<? extends NodeMetadata> suspendedNodes = client.suspendNodesMatching(inGroup(group));
+      for (ComputeMetadata node : suspendedNodes) {
+         assertNotNull(node);
+         assert node.getProviderId() != null : node;
+         assert node.getLocation() != null : node;
+      }
 
       Set<? extends NodeMetadata> stoppedNodes = refreshNodes();
 
@@ -576,7 +588,13 @@ public abstract class BaseComputeServiceLiveTest extends BaseComputeServiceConte
 
       }) : stoppedNodes;
 
-      client.resumeNodesMatching(inGroup(group));
+      Set<? extends NodeMetadata> resumedNodes = client.resumeNodesMatching(inGroup(group));
+      for (ComputeMetadata node : resumedNodes) {
+         assertNotNull(node);
+         assert node.getProviderId() != null : node;
+         assert node.getLocation() != null : node;
+      }
+
       testGet();
    }
 
