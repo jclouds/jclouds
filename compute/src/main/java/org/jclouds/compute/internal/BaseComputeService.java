@@ -23,7 +23,6 @@ import static com.google.common.base.Throwables.propagate;
 import static com.google.common.collect.Iterables.filter;
 import static com.google.common.collect.Maps.newLinkedHashMap;
 import static com.google.common.collect.Sets.newLinkedHashSet;
-import static com.google.common.util.concurrent.Futures.immediateFuture;
 import static java.util.concurrent.TimeUnit.MILLISECONDS;
 import static org.jclouds.compute.config.ComputeServiceProperties.TIMEOUT_NODE_RUNNING;
 import static org.jclouds.compute.config.ComputeServiceProperties.TIMEOUT_NODE_SUSPENDED;
@@ -252,7 +251,7 @@ public class BaseComputeService implements ComputeService {
    @Override
    public Set<? extends NodeMetadata> destroyNodesMatching(Predicate<NodeMetadata> filter) {
       logger.debug(">> destroying nodes matching(%s)", filter);
-      Set<NodeMetadata> set = ImmutableSet.copyOf(transformParallel(nodesMatchingFilterAndNotTerminated(filter),
+      Set<NodeMetadata> destroyNodes = ImmutableSet.copyOf(transformParallel(nodesMatchingFilterAndNotTerminated(filter),
             new Function<NodeMetadata, ListenableFuture<? extends NodeMetadata>>() {
 
                // TODO make an async interface instead of re-wrapping
@@ -270,10 +269,10 @@ public class BaseComputeService implements ComputeService {
                }
 
             }, userExecutor, null, logger, "destroyNodesMatching(" + filter + ")"));
-      logger.debug("<< destroyed(%d)", set.size());
+      logger.debug("<< destroyed(%d)", destroyNodes.size());
       
-      cleanUpIncidentalResourcesOfDeadNodes(set);
-      return set;
+      cleanUpIncidentalResourcesOfDeadNodes(destroyNodes);
+      return destroyNodes;
    }
 
    /**
@@ -428,19 +427,29 @@ public class BaseComputeService implements ComputeService {
     * {@inheritDoc}
     */
    @Override
-   public void rebootNodesMatching(Predicate<NodeMetadata> filter) {
+   public Set<? extends NodeMetadata> rebootNodesMatching(Predicate<NodeMetadata> filter) {
       logger.debug(">> rebooting nodes matching(%s)", filter);
-      transformParallel(nodesMatchingFilterAndNotTerminatedExceptionIfNotFound(filter),
-            new Function<NodeMetadata, ListenableFuture<? extends Void>>() {
-               // TODO use native async
+      Set<NodeMetadata> rebootNodes = ImmutableSet.copyOf(transformParallel(nodesMatchingFilterAndNotTerminated(filter),
+            new Function<NodeMetadata, ListenableFuture<? extends NodeMetadata>>() {
+
+               // TODO make an async interface instead of re-wrapping
                @Override
-               public ListenableFuture<Void> apply(NodeMetadata from) {
-                  rebootNode(from.getId());
-                  return immediateFuture(null);
+               public ListenableFuture<NodeMetadata> apply(final NodeMetadata from) {
+                  return userExecutor.submit(new Callable<NodeMetadata>() {
+                     public NodeMetadata call() throws Exception {
+                        rebootNode(from.getId());
+                        return from;
+                     }
+                     public String toString() {
+                        return "rebootNode(" + from.getId() + ")";
+                     }
+                  });
                }
 
-            }, userExecutor, null, logger, "rebootNodesMatching(" + filter + ")");
-      logger.debug("<< rebooted");
+            }, userExecutor, null, logger, "rebootNodesMatching(" + filter + ")"));
+      logger.debug("<< rebooted(%d)", rebootNodes.size());
+
+      return rebootNodes;
    }
 
    /**
@@ -459,19 +468,29 @@ public class BaseComputeService implements ComputeService {
     * {@inheritDoc}
     */
    @Override
-   public void resumeNodesMatching(Predicate<NodeMetadata> filter) {
+   public Set<? extends NodeMetadata> resumeNodesMatching(Predicate<NodeMetadata> filter) {
       logger.debug(">> resuming nodes matching(%s)", filter);
-      transformParallel(nodesMatchingFilterAndNotTerminatedExceptionIfNotFound(filter),
-            new Function<NodeMetadata, ListenableFuture<? extends Void>>() {
-               // TODO use native async
+      Set<NodeMetadata> resumeNodes = ImmutableSet.copyOf(transformParallel(nodesMatchingFilterAndNotTerminated(filter),
+            new Function<NodeMetadata, ListenableFuture<? extends NodeMetadata>>() {
+
+               // TODO make an async interface instead of re-wrapping
                @Override
-               public ListenableFuture<Void> apply(NodeMetadata from) {
-                  resumeNode(from.getId());
-                  return immediateFuture(null);
+               public ListenableFuture<NodeMetadata> apply(final NodeMetadata from) {
+                  return userExecutor.submit(new Callable<NodeMetadata>() {
+                     public NodeMetadata call() throws Exception {
+                        resumeNode(from.getId());
+                        return from;
+                     }
+                     public String toString() {
+                        return "resumeNode(" + from.getId() + ")";
+                     }
+                  });
                }
 
-            }, userExecutor, null, logger, "resumeNodesMatching(" + filter + ")");
-      logger.debug("<< resumed");
+            }, userExecutor, null, logger, "resumeNodesMatching(" + filter + ")"));
+      logger.debug("<< resumed(%d)", resumeNodes.size());
+
+      return resumeNodes;
    }
 
    /**
@@ -490,19 +509,29 @@ public class BaseComputeService implements ComputeService {
     * {@inheritDoc}
     */
    @Override
-   public void suspendNodesMatching(Predicate<NodeMetadata> filter) {
+   public Set<? extends NodeMetadata> suspendNodesMatching(Predicate<NodeMetadata> filter) {
       logger.debug(">> suspending nodes matching(%s)", filter);
-      transformParallel(nodesMatchingFilterAndNotTerminatedExceptionIfNotFound(filter),
-            new Function<NodeMetadata, ListenableFuture<? extends Void>>() {
-               // TODO use native async
+      Set<NodeMetadata> suspendNodes = ImmutableSet.copyOf(transformParallel(nodesMatchingFilterAndNotTerminated(filter),
+            new Function<NodeMetadata, ListenableFuture<? extends NodeMetadata>>() {
+
+               // TODO make an async interface instead of re-wrapping
                @Override
-               public ListenableFuture<Void> apply(NodeMetadata from) {
-                  suspendNode(from.getId());
-                  return immediateFuture(null);
+               public ListenableFuture<NodeMetadata> apply(final NodeMetadata from) {
+                  return userExecutor.submit(new Callable<NodeMetadata>() {
+                     public NodeMetadata call() throws Exception {
+                        suspendNode(from.getId());
+                        return from;
+                     }
+                     public String toString() {
+                        return "suspendNode(" + from.getId() + ")";
+                     }
+                  });
                }
 
-            }, userExecutor, null, logger, "suspendNodesMatching(" + filter + ")");
-      logger.debug("<< suspended");
+            }, userExecutor, null, logger, "suspendNodesMatching(" + filter + ")"));
+      logger.debug("<< suspended(%d)", suspendNodes.size());
+
+      return suspendNodes;
    }
 
    /**

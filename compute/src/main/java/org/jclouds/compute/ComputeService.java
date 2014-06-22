@@ -190,12 +190,14 @@ public interface ComputeService {
     * 
     * affected nodes may not resume with the same IP address(es)
     * 
+    * @return list of nodes resumed
+    *
     * @throws UnsupportedOperationException
     *            if the underlying provider doesn't support suspend/resume
     * @throws NoSuchElementException
     *            if no nodes matched the predicate specified
     */
-   void resumeNodesMatching(Predicate<NodeMetadata> filter);
+   Set<? extends NodeMetadata> resumeNodesMatching(Predicate<NodeMetadata> filter);
 
    /**
     * suspend the node, given its id. This will result in
@@ -218,12 +220,14 @@ public interface ComputeService {
     * 
     * affected nodes may not resume with the same IP address(es)
     * 
+    * @return list of nodes suspended
+    *
     * @throws UnsupportedOperationException
     *            if the underlying provider doesn't support suspend/resume
     * @throws NoSuchElementException
     *            if no nodes matched the predicate specified
     */
-   void suspendNodesMatching(Predicate<NodeMetadata> filter);
+   Set<? extends NodeMetadata> suspendNodesMatching(Predicate<NodeMetadata> filter);
 
    /**
     * destroy the node, given its id. If it is the only node in a tag set, the dependent resources
@@ -249,10 +253,12 @@ public interface ComputeService {
     * nodes matching the filter are treated as a logical set. Using this command, you can save time
     * by rebooting the nodes in parallel.
     * 
+    * @return list of nodes rebooted
+    *
     * @throws NoSuchElementException
     *            if no nodes matched the predicate specified
     */
-   void rebootNodesMatching(Predicate<NodeMetadata> filter);
+   Set<? extends NodeMetadata> rebootNodesMatching(Predicate<NodeMetadata> filter);
 
    /**
     * Find a node by its id.
