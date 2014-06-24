@@ -18,6 +18,7 @@ package org.jclouds.openstack.nova.v2_0.compute.functions;
 
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
+import static org.testng.Assert.assertNull;
 
 import java.net.URI;
 import java.util.Map;
@@ -39,6 +40,7 @@ import org.jclouds.openstack.nova.v2_0.compute.config.NovaComputeServiceContextM
 import org.jclouds.openstack.nova.v2_0.domain.Server;
 import org.jclouds.openstack.nova.v2_0.domain.zonescoped.ServerInZone;
 import org.jclouds.openstack.nova.v2_0.parse.ParseServerTest;
+import org.jclouds.openstack.nova.v2_0.parse.ParseServerWithoutImageTest;
 import org.jclouds.openstack.v2_0.domain.Link;
 import org.jclouds.openstack.v2_0.domain.Resource;
 import org.testng.annotations.Test;
@@ -203,7 +205,30 @@ public class ServerInZoneToNodeMetadataTest {
       }
    }
 
-    // TODO: clean up this syntax
+   @Test
+   public void testServerWithoutImage() {
+      Hardware existingHardware = new HardwareBuilder().id("az-1.region-a.geo-1/52415800-8b69-11e0-9b19-734f216543fd")
+            .providerId("52415800-8b69-11e0-9b19-734f216543fd").location(zone).build();
+      Image existingImage = new ImageBuilder().id("az-1.region-a.geo-1/52415800-8b69-11e0-9b19-734f6f006e54")
+            .operatingSystem(OperatingSystem.builder().family(OsFamily.LINUX).description("foobuntu").build())
+            .providerId("52415800-8b69-11e0-9b19-734f6f006e54").description("foobuntu").status(Image.Status.AVAILABLE)
+            .location(zone).build();
+
+      Server serverToConvert = new ParseServerWithoutImageTest().expected();
+      ServerInZone serverInZoneToConvert = new ServerInZone(serverToConvert, "az-1.region-a.geo-1");
+
+      ServerInZoneToNodeMetadata converter = new ServerInZoneToNodeMetadata(
+            NovaComputeServiceContextModule.toPortableNodeStatus, locationIndex,
+            Suppliers.<Set<? extends Image>> ofInstance(ImmutableSet.of(existingImage)),
+            Suppliers.<Set<? extends Hardware>> ofInstance(ImmutableSet.of(existingHardware)),
+            namingConvention);
+
+      NodeMetadata convertedNodeMetadata = converter.apply(serverInZoneToConvert);
+
+      assertNull(convertedNodeMetadata.getImageId());
+   }
+
+   // TODO: clean up this syntax
    private void checkHardwareAndImageStatus(Hardware expectedHardware, Hardware existingHardware,
          String expectedImageId, OperatingSystem expectedOs, Image existingImage) {
 

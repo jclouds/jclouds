@@ -126,13 +126,12 @@ public class NovaParserModule extends AbstractModule {
       @Override
       public Server deserialize(JsonElement jsonElement, Type type, JsonDeserializationContext context)
             throws JsonParseException {
-         Server serverBase = null;
+         Server serverBase;
 
          // Servers can be created without an image so test if an image object is returned
          if (jsonElement.getAsJsonObject().get("image").isJsonObject()) {
             serverBase = apply((ServerInternal) context.deserialize(jsonElement, ServerInternal.class));
-         }
-         else {
+         } else {
             serverBase = apply((ServerInternalWithoutImage) context.deserialize(jsonElement, ServerInternalWithoutImage.class));
          }
 
@@ -148,7 +147,7 @@ public class NovaParserModule extends AbstractModule {
          return result.build();
       }
 
-      public Server apply(ServerInternal in) {
+      public Server apply(Server in) {
          return in.toBuilder().build();
       }
 
@@ -163,10 +162,6 @@ public class NovaParserModule extends AbstractModule {
                                   @Nullable ServerExtendedStatus extendedStatus, @Nullable ServerExtendedAttributes extendedAttributes, @Nullable String diskConfig) {
             super(id, name, links, uuid, tenantId, userId, updated, created, hostId, accessIPv4, accessIPv6, status, image, flavor, keyName, configDrive, addresses, metadata, extendedStatus, extendedAttributes, diskConfig);
          }
-      }
-
-      public Server apply(ServerInternalWithoutImage in) {
-         return in.toBuilder().build();
       }
 
       private static class ServerInternalWithoutImage extends Server {

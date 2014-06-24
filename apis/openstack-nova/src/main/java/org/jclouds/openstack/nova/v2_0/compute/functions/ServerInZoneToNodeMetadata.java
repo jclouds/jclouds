@@ -106,7 +106,11 @@ public class ServerInZoneToNodeMetadata implements Function<ServerInZone, NodeMe
             .description(from.getHostId()).parent(zone).build() : zone);
       builder.group(groupFromMapOrName(from.getMetadata(), from.getName(), nodeNamingConvention));
       addMetadataAndParseTagsFromCommaDelimitedValue(builder, from.getMetadata());
-      builder.imageId(ZoneAndId.fromZoneAndId(serverInZone.getZone(), from.getImage().getId()).slashEncode());
+
+      if (from.getImage() != null) {
+         builder.imageId(ZoneAndId.fromZoneAndId(serverInZone.getZone(), from.getImage().getId()).slashEncode());
+      }
+
       builder.operatingSystem(findOperatingSystemForServerOrNull(serverInZone));
       builder.hardware(findHardwareForServerOrNull(serverInZone));
       builder.status(toPortableNodeStatus.get(from.getStatus()));
@@ -176,9 +180,15 @@ public class ServerInZoneToNodeMetadata implements Function<ServerInZone, NodeMe
    }
 
    protected OperatingSystem findOperatingSystemForServerOrNull(ServerInZone serverInZone) {
-      Image image = findObjectOfTypeForServerOrNull(images.get(), "image", serverInZone.getServer().getImage().getId(),
-            serverInZone);
-      return (image != null) ? image.getOperatingSystem() : null;
+      if (serverInZone.getServer().getImage() != null) {
+         Image image = findObjectOfTypeForServerOrNull(
+               images.get(), "image", serverInZone.getServer().getImage().getId(), serverInZone);
+
+         return (image != null) ? image.getOperatingSystem() : null;
+      } else {
+         return null;
+      }
+
    }
 
    public <T extends ComputeMetadata> T findObjectOfTypeForServerOrNull(Set<? extends T> supply, String type,
