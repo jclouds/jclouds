@@ -1,0 +1,38 @@
+{
+   "kind": "storage#bucket",
+   "id": "jcloudtestbucket3500",
+   "selfLink": "https://www.googleapis.com/storage/v1/b/jcloudtestbucket3500",
+   "projectNumber": "1082289308625",
+   "name": "jcloudtestbucket3500",
+   "timeCreated": "2014-06-19T14:03:22.345Z",
+   "metageneration": "10",
+   "acl": [
+     {
+        "kind": "storage#bucketAccessControl",
+        "id": "jcloudtestbucket3500/project-owners-1082289308625",
+        "selfLink": "https://www.googleapis.com/storage/v1/b/jcloudtestbucket3500/acl/project-owners-1082289308625",
+        "bucket": "jcloudtestbucket3500",
+        "entity": "project-owners-1082289308625",
+        "role": "OWNER",
+        "projectTeam": {
+           "projectNumber": "1082289308625",
+           "team": "owners"
+        },
+        "etag": "CAo="
+     }
+    ],
+    "defaultObjectAcl": [
+       {
+          "kind": "storage#objectAccessControl",
+          "entity": "project-owners-1082289308625",
+          "role": "OWNER",
+          "etag": "CAo="
+       }
+    ],
+    "owner": {
+       "entity": "project-owners-1082289308625"
+     },
+    "location": "US",
+    "storageClass": "STANDARD",
+    "etag": "CAo="
+}

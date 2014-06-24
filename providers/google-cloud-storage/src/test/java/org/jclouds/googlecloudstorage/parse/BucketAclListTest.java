@@ -22,12 +22,13 @@ import javax.ws.rs.Consumes;
 import javax.ws.rs.core.MediaType;
 
 import org.jclouds.googlecloudstorage.domain.BucketAccessControls;
-import org.jclouds.googlecloudstorage.domain.BucketAccessControls.ProjectTeam;
-import org.jclouds.googlecloudstorage.domain.BucketAccessControls.ProjectTeam.Team;
-import org.jclouds.googlecloudstorage.domain.BucketAccessControls.Role;
+import org.jclouds.googlecloudstorage.domain.DomainResourceRefferences.Role;
 import org.jclouds.googlecloudstorage.domain.ListBucketAccessControls;
 import org.jclouds.googlecloudstorage.domain.Resource.Kind;
+import org.jclouds.googlecloudstorage.domain.internal.ProjectTeam;
+import org.jclouds.googlecloudstorage.domain.internal.ProjectTeam.Team;
 import org.jclouds.googlecloudstorage.internal.BaseGoogleCloudStorageParseTest;
+
 import com.google.common.collect.ImmutableSet;
 
 public class BucketAclListTest extends BaseGoogleCloudStorageParseTest<ListBucketAccessControls> {

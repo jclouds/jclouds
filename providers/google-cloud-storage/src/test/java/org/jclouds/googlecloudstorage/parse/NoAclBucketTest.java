@@ -21,22 +21,29 @@ import java.net.URI;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.core.MediaType;
 
-import org.jclouds.googlecloudstorage.domain.BucketAccessControls;
-import org.jclouds.googlecloudstorage.domain.DomainResourceRefferences.Role;
+import org.jclouds.date.internal.SimpleDateFormatDateService;
+import org.jclouds.googlecloudstorage.domain.Bucket;
+import org.jclouds.googlecloudstorage.domain.DomainResourceRefferences.Location;
+import org.jclouds.googlecloudstorage.domain.DomainResourceRefferences.StorageClass;
+import org.jclouds.googlecloudstorage.domain.internal.Owner;
 import org.jclouds.googlecloudstorage.internal.BaseGoogleCloudStorageParseTest;
 
-public class BucketAclUpdateTest extends BaseGoogleCloudStorageParseTest<BucketAccessControls> {
+public class NoAclBucketTest extends BaseGoogleCloudStorageParseTest<Bucket> {
 
    @Override
    public String resource() {
-      return "/bucketacl_update_response.json";
+      return "/noAcl_bucket.json";
    }
 
    @Override
    @Consumes(MediaType.APPLICATION_JSON)
-   public BucketAccessControls expected() {
-      return BucketAccessControls.builder().id("jcloudtestbucket/allUsers")
-               .selfLink(URI.create("https://content.googleapis.com/storage/v1/b/jcloudtestbucket/acl/allUsers"))
-               .bucket("jcloudtestbucket").entity("allUsers").role(Role.OWNER).etag("CAg=").build();
+   public Bucket expected() {
+      return Bucket.builder().id("bhashbucket")
+               .selfLink(URI.create("https://content.googleapis.com/storage/v1/b/bhashbucket")).name("bhashbucket")
+               .projectNumber(Long.valueOf("1082289308625"))
+               .timeCreated(new SimpleDateFormatDateService().iso8601DateParse("2014-06-02T19:19:41.112z"))
+               .metageneration(Long.valueOf(87)).owner(Owner.builder().entity("project-owners-1082289308625").build())
+               .location(Location.US).storageClass(StorageClass.STANDARD).etag("CFc=").build();
    }
+
 }

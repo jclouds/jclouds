@@ -38,6 +38,7 @@ MIICXgIBAAKBgQRRbRqVDtJLN1MO/xJoKqZuphDeBh5jIKueW3aNIiWs1XFcct+h
 ...
 aH7xmpHSTbbXmQkuuv+z8EKijigprd/FoJpTX1f5/R+4wQ==
 -----END RSA PRIVATE KEY-----</test.google-cloud-storage.credential>
+    <test.google-cloud-storage.project-number>123451234</test.google-cloud-storage.project-number>
 </properties>
 ```
 

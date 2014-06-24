@@ -25,7 +25,7 @@ import javax.ws.rs.core.MediaType;
 
 import org.jclouds.googlecloudstorage.domain.DefaultObjectAccessControls;
 import org.jclouds.googlecloudstorage.domain.DefaultObjectAccessControlsTemplate;
-import org.jclouds.googlecloudstorage.features.ApiResourceRefferences.ObjectRole;
+import org.jclouds.googlecloudstorage.domain.DomainResourceRefferences.ObjectRole;
 import org.jclouds.googlecloudstorage.internal.BaseGoogleCloudStorageApiExpectTest;
 import org.jclouds.googlecloudstorage.parse.DefaultObjectAclGetTest;
 import org.jclouds.googlecloudstorage.parse.DefaultObjectAclInsertTest;

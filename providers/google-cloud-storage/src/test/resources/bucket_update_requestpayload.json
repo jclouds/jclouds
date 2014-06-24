@@ -1,0 +1,12 @@
+{
+   "name":"bhashbucket",
+   "acl": [
+      {
+         "kind":"storage#bucketAccessControl",
+         "bucket":"bhashbucket",
+         "id":"bhashbucket/allAuthenticatedUsers",
+         "entity": "allAuthenticatedUsers",
+         "role": "OWNER"
+      }
+    ]
+}

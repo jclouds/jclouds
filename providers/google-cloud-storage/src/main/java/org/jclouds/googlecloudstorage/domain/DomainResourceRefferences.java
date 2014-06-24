@@ -14,17 +14,42 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.jclouds.googlecloudstorage.features;
+package org.jclouds.googlecloudstorage.domain;
 
 import com.google.common.base.CaseFormat;
 
-public final class ApiResourceRefferences {
+public final class DomainResourceRefferences {
 
-   private ApiResourceRefferences() {
+   private DomainResourceRefferences() {
+   }
+
+   public enum Role {
+      READER, WRITER, OWNER
    }
 
    public enum ObjectRole {
       READER, OWNER
+   }
+
+   public enum Location {
+      ASIA, EU, US, ASIA_EAST1, US_CENTRAL1, US_CENTRAL2, US_EAST1, US_EAST2, US_EAST3, US_WEST1;
+
+      public String value() {
+         return CaseFormat.UPPER_UNDERSCORE.to(CaseFormat.LOWER_HYPHEN, name()).toUpperCase();
+      }
+
+      @Override
+      public String toString() {
+         return value().toUpperCase();
+      }
+
+      public static Location fromValue(String location) {
+         return valueOf(CaseFormat.LOWER_HYPHEN.to(CaseFormat.UPPER_UNDERSCORE, location.toLowerCase()));
+      }
+   }
+
+   public enum StorageClass {
+      STANDARD, DURABLE_REDUCED_AVAILABILITY;
    }
 
    public enum Projection {

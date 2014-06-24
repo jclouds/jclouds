@@ -19,12 +19,12 @@ package org.jclouds.googlecloudstorage.parse;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.core.MediaType;
 
+import org.jclouds.googlecloudstorage.domain.DomainResourceRefferences.ObjectRole;
 import org.jclouds.googlecloudstorage.domain.DefaultObjectAccessControls;
-import org.jclouds.googlecloudstorage.domain.DefaultObjectAccessControls.ProjectTeam;
-import org.jclouds.googlecloudstorage.domain.DefaultObjectAccessControls.ProjectTeam.Team;
 import org.jclouds.googlecloudstorage.domain.ListDefaultObjectAccessControls;
 import org.jclouds.googlecloudstorage.domain.Resource.Kind;
-import org.jclouds.googlecloudstorage.features.ApiResourceRefferences.ObjectRole;
+import org.jclouds.googlecloudstorage.domain.internal.ProjectTeam;
+import org.jclouds.googlecloudstorage.domain.internal.ProjectTeam.Team;
 import org.jclouds.googlecloudstorage.internal.BaseGoogleCloudStorageParseTest;
 
 import com.google.common.collect.ImmutableSet;

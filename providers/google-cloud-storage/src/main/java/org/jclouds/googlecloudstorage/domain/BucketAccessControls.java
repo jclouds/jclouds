@@ -17,11 +17,12 @@
 package org.jclouds.googlecloudstorage.domain;
 
 import static com.google.common.base.Objects.equal;
-import static com.google.common.base.Objects.toStringHelper;
 import static com.google.common.base.Preconditions.checkNotNull;
 
-import java.beans.ConstructorProperties;
 import java.net.URI;
+
+import org.jclouds.googlecloudstorage.domain.DomainResourceRefferences.Role;
+import org.jclouds.googlecloudstorage.domain.internal.ProjectTeam;
 
 import com.google.common.base.Objects;
 
@@ -31,10 +32,6 @@ import com.google.common.base.Objects;
  * @see <a href= "https://developers.google.com/storage/docs/json_api/v1/bucketAccessControls" />
  */
 public class BucketAccessControls extends Resource {
-
-   public enum Role {
-      READER, WRITER, OWNER
-   }
 
    protected final String bucket;
    protected final String entity;
@@ -83,78 +80,6 @@ public class BucketAccessControls extends Resource {
 
    public ProjectTeam getProjectTeam() {
       return projectTeam;
-   }
-
-   public static class ProjectTeam {
-
-      public enum Team {
-         owners, editors, viewers;
-      }
-
-      private final String projectId;
-      private final Team team;
-
-      @ConstructorProperties({ "projectId", "team" })
-      public ProjectTeam(String projectId, Team team) {
-         this.projectId = projectId;
-         this.team = team;
-      }
-
-      public String getProjectId() {
-         return projectId;
-      }
-
-      public Team getTeam() {
-         return team;
-      }
-
-      @Override
-      public int hashCode() {
-         return Objects.hashCode(projectId, team);
-      }
-
-      @Override
-      public boolean equals(Object obj) {
-         if (this == obj)
-            return true;
-         if (obj == null || getClass() != obj.getClass())
-            return false;
-         ProjectTeam that = ProjectTeam.class.cast(obj);
-         return equal(this.projectId, that.projectId) && equal(this.team, that.team);
-      }
-
-      protected Objects.ToStringHelper string() {
-         return toStringHelper(this).add("projectId", projectId).add("team", team);
-      }
-
-      @Override
-      public String toString() {
-         return string().toString();
-      }
-
-      public static class Builder {
-
-         private String projectId;
-         private Team team;
-
-         public Builder projectId(String projectId) {
-            this.projectId = projectId;
-            return this;
-         }
-
-         public Builder team(Team team) {
-            this.team = team;
-            return this;
-         }
-
-         public ProjectTeam build() {
-            return new ProjectTeam(this.projectId, this.team);
-         }
-
-         public Builder fromProjectTeam(ProjectTeam in) {
-            return this.projectId(in.getProjectId()).team(in.getTeam());
-         }
-      }
    }
 
    @Override

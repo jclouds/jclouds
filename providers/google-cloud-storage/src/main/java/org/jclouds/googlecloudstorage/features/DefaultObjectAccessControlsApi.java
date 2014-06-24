@@ -34,7 +34,7 @@ import org.jclouds.Fallbacks.NullOnNotFoundOr404;
 import org.jclouds.googlecloudstorage.domain.DefaultObjectAccessControls;
 import org.jclouds.googlecloudstorage.domain.ListDefaultObjectAccessControls;
 import org.jclouds.googlecloudstorage.domain.DefaultObjectAccessControlsTemplate;
-import org.jclouds.googlecloudstorage.features.ApiResourceRefferences.ObjectRole;
+import org.jclouds.googlecloudstorage.domain.DomainResourceRefferences.ObjectRole;
 import org.jclouds.googlecloudstorage.handlers.DefaultObjectAccessControlsBinder;
 import org.jclouds.http.HttpResponse;
 import org.jclouds.javax.annotation.Nullable;
