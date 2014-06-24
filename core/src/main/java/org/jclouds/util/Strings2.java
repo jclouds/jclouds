@@ -160,14 +160,14 @@ public class Strings2 {
       int i = 0;
       while (matcher.find()) {
          String replacement = replacements.get(matcher.group(1));
-         builder.append(input.substring(i, matcher.start()));
+         builder.append(input, i, matcher.start());
          if (replacement == null)
             builder.append(matcher.group(0));
          else
             builder.append(replacement);
          i = matcher.end();
       }
-      builder.append(input.substring(i, input.length()));
+      builder.append(input, i, input.length());
       return builder.toString();
    }
    

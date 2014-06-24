@@ -174,7 +174,7 @@ public class Sha512Crypt {
 
          while (saltBuf.length() < 16) {
             int index = (int) (randgen.nextFloat() * SALTCHARS.length());
-            saltBuf.append(SALTCHARS.substring(index, index + 1));
+            saltBuf.append(SALTCHARS, index, index + 1);
          }
 
          shadowPrefix = saltBuf.toString();

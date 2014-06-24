@@ -369,7 +369,8 @@ public class ChefSolo implements Statement {
       if (jsonAttributes.isPresent()) {
          // Start the node configuration with the attributes, but remove the
          // last bracket to append the run list to the json configuration
-         json.append(jsonAttributes.get().substring(0, jsonAttributes.get().lastIndexOf('}')));
+         String attributes = jsonAttributes.get();
+         json.append(attributes, 0, attributes.lastIndexOf('}'));
          json.append(",");
       } else {
          json.append("{");
