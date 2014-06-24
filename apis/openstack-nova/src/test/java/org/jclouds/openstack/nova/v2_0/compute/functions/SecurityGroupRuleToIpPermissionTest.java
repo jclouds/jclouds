@@ -54,7 +54,7 @@ public class SecurityGroupRuleToIpPermissionTest {
       assertEquals(convertedPerm.getFromPort(), ruleToConvert.getFromPort());
       assertEquals(convertedPerm.getToPort(), ruleToConvert.getToPort());
       assertTrue(convertedPerm.getGroupIds().contains("az-1.region-a.geo-1/some-id"));
-      assertTrue(convertedPerm.getCidrBlocks().size() == 0);
+      assertEquals(convertedPerm.getCidrBlocks().size(), 0);
    }
 
    @Test
@@ -74,6 +74,6 @@ public class SecurityGroupRuleToIpPermissionTest {
       assertEquals(convertedPerm.getFromPort(), ruleToConvert.getFromPort());
       assertEquals(convertedPerm.getToPort(), ruleToConvert.getToPort());
       assertEquals(convertedPerm.getCidrBlocks(), ImmutableSet.of("0.0.0.0/0"));
-      assertTrue(convertedPerm.getTenantIdGroupNamePairs().size() == 0);
+      assertEquals(convertedPerm.getTenantIdGroupNamePairs().size(), 0);
    }
 }

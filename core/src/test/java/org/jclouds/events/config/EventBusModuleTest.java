@@ -17,6 +17,7 @@
 package org.jclouds.events.config;
 
 import static org.testng.Assert.assertNotNull;
+import static org.testng.Assert.assertSame;
 import static org.testng.Assert.assertTrue;
 
 import org.jclouds.Constants;
@@ -69,6 +70,6 @@ public class EventBusModuleTest {
         EventBus eventBus1 = injector.getInstance(EventBus.class);
         EventBus eventBus2 = injector.getInstance(EventBus.class);
 
-        assertTrue(eventBus1 == eventBus2);
+        assertSame(eventBus1, eventBus2);
     }
 }

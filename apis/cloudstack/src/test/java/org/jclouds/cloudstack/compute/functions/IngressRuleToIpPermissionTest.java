@@ -17,7 +17,6 @@
 package org.jclouds.cloudstack.compute.functions;
 
 import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertTrue;
 
 import org.jclouds.cloudstack.domain.IngressRule;
 import org.jclouds.net.domain.IpPermission;
@@ -53,7 +52,7 @@ public class IngressRuleToIpPermissionTest {
       assertEquals(convertedPerm.getFromPort(), ruleToConvert.getStartPort());
       assertEquals(convertedPerm.getToPort(), ruleToConvert.getEndPort());
       assertEquals(convertedPerm.getCidrBlocks(), ImmutableSet.of("0.0.0.0/0"));
-      assertTrue(convertedPerm.getTenantIdGroupNamePairs().size() == 1);
-      assertTrue(convertedPerm.getGroupIds().size() == 0);
+      assertEquals(convertedPerm.getTenantIdGroupNamePairs().size(), 1);
+      assertEquals(convertedPerm.getGroupIds().size(), 0);
    }
 }

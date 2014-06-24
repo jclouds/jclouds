@@ -17,8 +17,8 @@
 package org.jclouds.cloudstack.features;
 
 import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertNotEquals;
 import static org.testng.Assert.assertNotNull;
-import static org.testng.Assert.assertTrue;
 
 import org.jclouds.cloudstack.domain.Project;
 import org.jclouds.cloudstack.internal.BaseCloudStackApiLiveTest;
@@ -39,8 +39,8 @@ public class ProjectApiLiveTest extends BaseCloudStackApiLiveTest {
    protected void checkProject(Project project) {
       assertNotNull(project.getId());
       assertEquals(project.toString(), client.getProjectApi().getProject(project.getId()).toString());
-      assertTrue(project.getState() != null);
-      assertTrue(project.getState() != Project.State.UNRECOGNIZED);
+      assertNotNull(project.getState());
+      assertNotEquals(project.getState(), Project.State.UNRECOGNIZED);
    }
 
 }

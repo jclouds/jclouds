@@ -20,6 +20,7 @@ import static java.util.concurrent.TimeUnit.SECONDS;
 import static org.jclouds.blobstore.options.CreateContainerOptions.Builder.publicRead;
 import static org.jclouds.util.Predicates2.retry;
 import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertNotNull;
 import static org.testng.Assert.assertTrue;
 
 import java.io.IOException;
@@ -71,7 +72,7 @@ public class BaseContainerLiveTest extends BaseBlobStoreIntegrationTest {
 
          BlobMetadata metadata = view.getBlobStore().blobMetadata(containerName, "hello");
 
-         assertTrue(metadata.getPublicUri() != null, metadata.toString());
+         assertNotNull(metadata.getPublicUri(), metadata.toString());
 
          SocketOpen socketOpen = context.utils().injector().getInstance(SocketOpen.class);
          Predicate<HostAndPort> socketTester = retry(socketOpen, 1200, 10, SECONDS);

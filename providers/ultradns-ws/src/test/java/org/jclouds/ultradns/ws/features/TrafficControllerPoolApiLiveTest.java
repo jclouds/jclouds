@@ -23,6 +23,7 @@ import static org.jclouds.ultradns.ws.predicates.TrafficControllerPoolPredicates
 import static org.jclouds.ultradns.ws.predicates.TrafficControllerPoolPredicates.recordIdEqualTo;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertFalse;
+import static org.testng.Assert.assertNotEquals;
 import static org.testng.Assert.assertNotNull;
 import static org.testng.Assert.assertNull;
 import static org.testng.Assert.assertTrue;
@@ -102,7 +103,7 @@ public class TrafficControllerPoolApiLiveTest extends BaseUltraDNSWSApiLiveTest 
       assertTrue(record.getWeight() >= 0, "Weight must be unsigned for " + record);
       assertTrue(record.getPriority() >= 0, "Priority must be unsigned for " + record);
       assertNotNull(record.getStatus(), "Status cannot be null for " + record);
-      assertTrue(record.getStatus() != UNRECOGNIZED, "unrecognized status for " + record);
+      assertNotEquals(record.getStatus(), UNRECOGNIZED, "unrecognized status for " + record);
       assertNotNull(record.getDescription(), "Description cannot be null for " + record);
       return record;
    }

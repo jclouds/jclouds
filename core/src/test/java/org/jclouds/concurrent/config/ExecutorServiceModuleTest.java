@@ -25,6 +25,8 @@ import static org.easymock.EasyMock.replay;
 import static org.easymock.EasyMock.verify;
 import static org.jclouds.Constants.PROPERTY_IO_WORKER_THREADS;
 import static org.jclouds.Constants.PROPERTY_USER_THREADS;
+import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertNotEquals;
 import static org.testng.Assert.assertNull;
 import static org.testng.Assert.assertTrue;
 
@@ -114,8 +116,8 @@ public class ExecutorServiceModuleTest {
    }
 
    static void assertTraceHasSubmission(String trace, String expected) {
-      assertTrue(trace.indexOf(WithSubmissionTrace.class.getName()) == -1, trace);
-      assertTrue(trace.indexOf(expected) != -1, trace + " " + expected);
+      assertEquals(trace.indexOf(WithSubmissionTrace.class.getName()), -1, trace);
+      assertNotEquals(trace.indexOf(expected), -1, trace + " " + expected);
    }
 
    static <E extends Exception> E incrementInitialElement(E ex, int lines) {
