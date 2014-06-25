@@ -725,6 +725,8 @@
         <artifactId>maven-compiler-plugin</artifactId>
         <version>3.1</version>
         <configuration>
+          <compilerId>javac-with-errorprone</compilerId>
+          <forceJavacCompilerUse>true</forceJavacCompilerUse>
           <encoding>${project.build.sourceEncoding}</encoding>
           <source>${maven.compile.source}</source>
           <target>${maven.compile.target}</target>
@@ -736,8 +738,20 @@
               <compilerArg>-Xlint:-rawtypes</compilerArg>
               <compilerArg>-Xlint:-serial</compilerArg>
               <compilerArg>-Xlint:-unchecked</compilerArg>
+              <compilerArg>-Xep:GuiceAssistedInjectScoping:OFF</compilerArg>
+              <compilerArg>-Xep:LongLiteralLowerCaseSuffix:OFF</compilerArg>
+              <compilerArg>-Xep:NonAtomicVolatileUpdate:OFF</compilerArg>
+              <compilerArg>-Xep:StringEquality:ERROR</compilerArg>
+              <compilerArg>-Xep:TypeParameterUnusedInFormals:OFF</compilerArg>
             </compilerArgs>
         </configuration>
+        <dependencies>
+            <dependency>
+                <groupId>org.codehaus.plexus</groupId>
+                <artifactId>plexus-compiler-javac-errorprone</artifactId>
+                <version>2.5</version>
+            </dependency>
+        </dependencies>
       </plugin>
       <plugin>
         <artifactId>maven-resources-plugin</artifactId>
