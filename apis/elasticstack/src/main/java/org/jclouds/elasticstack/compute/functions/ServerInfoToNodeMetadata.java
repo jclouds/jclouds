@@ -162,16 +162,18 @@ public class ServerInfoToNodeMetadata implements Function<ServerInfo, NodeMetada
       @Override
       public String apply(Server from) {
          String imageId = null;
-         String bootDeviceId = Iterables.get(from.getBootDeviceIds(), 0);
-         Device bootDevice = from.getDevices().get(bootDeviceId);
-         if (bootDevice != null) {
-            try {
-               DriveInfo drive = cache.getUnchecked(bootDevice.getDriveUuid());
-               imageId = drive.getName();
-            } catch (NullPointerException e) {
-               logger.debug("drive %s not found", bootDevice.getDriveUuid());
-            } catch (UncheckedExecutionException e) {
-               logger.warn(e, "error finding drive %s: %s", bootDevice.getDriveUuid(), e.getMessage());
+         if (!from.getBootDeviceIds().isEmpty()) {
+            String bootDeviceId = Iterables.get(from.getBootDeviceIds(), 0);
+            Device bootDevice = from.getDevices().get(bootDeviceId);
+            if (bootDevice != null) {
+               try {
+                  DriveInfo drive = cache.getUnchecked(bootDevice.getDriveUuid());
+                  imageId = drive.getName();
+               } catch (NullPointerException e) {
+                  logger.debug("drive %s not found", bootDevice.getDriveUuid());
+               } catch (UncheckedExecutionException e) {
+                  logger.warn(e, "error finding drive %s: %s", bootDevice.getDriveUuid(), e.getMessage());
+               }
             }
          }
          return imageId;
