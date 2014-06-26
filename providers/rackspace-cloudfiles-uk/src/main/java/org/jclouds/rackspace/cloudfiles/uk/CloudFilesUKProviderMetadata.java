@@ -81,7 +81,7 @@ public class CloudFilesUKProviderMetadata extends BaseProviderMetadata {
          .apiMetadata(new CloudFilesApiMetadata().toBuilder()
                .identityName("${userName}")
                .credentialName("${apiKey}")
-               .defaultEndpoint("https://identity.api.rackspacecloud.com/v2.0/")
+               .defaultEndpoint("https://lon.identity.api.rackspacecloud.com/v2.0/")
                .documentation(URI.create("http://docs.rackspace.com/files/api/v1/cf-devguide/content/index.html"))
                .endpointName("Rackspace Cloud Identity service URL ending in /v2.0/")
                .version("1.0")
@@ -96,12 +96,12 @@ public class CloudFilesUKProviderMetadata extends BaseProviderMetadata {
                      .add(SignUsingTemporaryUrls.class)
                      .build())
                .build())
-         .homepage(URI.create("http://www.rackspace.com/cloud/files"))
-         .console(URI.create("https://mycloud.rackspace.com"))
-         .linkedServices("rackspace-autoscale-us", "rackspace-cloudblockstorage-us",
-                         "rackspace-clouddatabases-us", "rackspace-clouddns-us",
-                         "rackspace-cloudidentity", "rackspace-cloudloadbalancers-us",
-                         "rackspace-cloudqueues-us")
+         .homepage(URI.create("http://www.rackspace.co.uk/cloud/files/"))
+         .console(URI.create("https://mycloud.rackspace.co.uk"))
+         .linkedServices("rackspace-autoscale-uk", "rackspace-cloudblockstorage-uk",
+                         "rackspace-clouddatabases-uk", "rackspace-clouddns-uk",
+                         "rackspace-cloudidentity", "rackspace-cloudloadbalancers-uk",
+                         "rackspace-cloudqueues-uk")
          .iso3166Codes("GB-SLG")
          .defaultProperties(CloudFilesUKProviderMetadata.defaultProperties());
          
