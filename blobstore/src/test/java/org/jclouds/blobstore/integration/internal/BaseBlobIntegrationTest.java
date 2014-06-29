@@ -35,6 +35,7 @@ import java.io.InputStream;
 import java.security.NoSuchAlgorithmException;
 import java.security.cert.CertificateException;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Date;
 import java.util.Map;
 import java.util.Random;
@@ -43,7 +44,6 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.zip.GZIPInputStream;
 
 import javax.ws.rs.core.MediaType;
 
@@ -79,43 +79,31 @@ import com.google.common.hash.HashCode;
 import com.google.common.io.ByteSource;
 import com.google.common.io.ByteStreams;
 import com.google.common.io.Files;
+import com.google.common.io.Resources;
 import com.google.common.util.concurrent.Futures;
 import com.google.common.util.concurrent.ListenableFuture;
 import com.google.common.util.concurrent.Uninterruptibles;
 
 public class BaseBlobIntegrationTest extends BaseBlobStoreIntegrationTest {
-   private ByteSource oneHundredOneConstitutions;
-   private byte[] oneHundredOneConstitutionsMD5;
-   private static long oneHundredOneConstitutionsLength;
+   private static ByteSource oneHundredOneConstitutions;
 
    @BeforeClass(groups = { "integration", "live" }, dependsOnMethods = "setupContext")
    @Override
    public void setUpResourcesOnThisThread(ITestContext testContext) throws Exception {
       super.setUpResourcesOnThisThread(testContext);
       oneHundredOneConstitutions = getTestDataSupplier();
-      oneHundredOneConstitutionsMD5 = oneHundredOneConstitutions.hash(md5()).asBytes();
    }
 
-   @SuppressWarnings("unchecked")
    public static ByteSource getTestDataSupplier() throws IOException {
-      byte[] oneConstitution = ByteStreams.toByteArray(new GZIPInputStream(BaseJettyTest.class
-               .getResourceAsStream("/const.txt.gz")));
-      ByteSource constitutionSupplier = ByteSource.wrap(oneConstitution);
-
-      ByteSource temp = ByteSource.concat(constitutionSupplier);
-
-      for (int i = 0; i < 100; i++) {
-         temp = ByteSource.concat(temp, constitutionSupplier);
-      }
-      oneHundredOneConstitutionsLength = oneConstitution.length * 101l;
-      return temp;
+      return ByteSource.concat(Collections.nCopies(
+            101, Resources.asByteSource(BaseJettyTest.class.getResource("/const.txt"))));
    }
 
    public static long getOneHundredOneConstitutionsLength() throws IOException {
-      if (oneHundredOneConstitutionsLength == 0) {
+      if (oneHundredOneConstitutions == null) {
          getTestDataSupplier();
       }
-      return oneHundredOneConstitutionsLength;
+      return oneHundredOneConstitutions.size();
    }
 
    /**

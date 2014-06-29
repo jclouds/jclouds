@@ -28,9 +28,9 @@ import static org.testng.Assert.fail;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Collections;
 import java.util.Set;
 import java.util.UUID;
-import java.util.zip.GZIPInputStream;
 
 import org.jclouds.aws.AWSResponseException;
 import org.jclouds.aws.domain.Region;
@@ -59,6 +59,7 @@ import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.io.ByteSource;
 import com.google.common.io.Files;
+import com.google.common.io.Resources;
 
 /**
  * Tests behavior of {@code S3Client}
@@ -70,7 +71,6 @@ public class AWSS3ClientLiveTest extends S3ClientLiveTest {
    }
    private ByteSource oneHundredOneConstitutions;
    private byte[] oneHundredOneConstitutionsMD5;
-   private static long oneHundredOneConstitutionsLength;
 
    @Override
    public AWSS3Client getApi() {
@@ -85,17 +85,11 @@ public class AWSS3ClientLiveTest extends S3ClientLiveTest {
       oneHundredOneConstitutionsMD5 = oneHundredOneConstitutions.hash(md5()).asBytes();
    }
 
-   @SuppressWarnings("unchecked")
    public static ByteSource getTestDataSupplier() throws IOException {
-      byte[] oneConstitution = toByteArray(new GZIPInputStream(BaseJettyTest.class.getResourceAsStream("/const.txt.gz")));
-      ByteSource constitutionSupplier = ByteSource.wrap(oneConstitution);
-
-      ByteSource temp = ByteSource.concat(constitutionSupplier);
+      ByteSource byteSource = Resources.asByteSource(BaseJettyTest.class.getResource("/const.txt"));
       // we have to go beyond 5MB per part
-      for (oneHundredOneConstitutionsLength = oneConstitution.length; oneHundredOneConstitutionsLength < 5 * 1024 * 1024; oneHundredOneConstitutionsLength += oneConstitution.length) {
-         temp = ByteSource.concat(temp, constitutionSupplier);
-      }
-      return temp;
+      int nCopies = (int) ((5 * 1024 * 1024 + 1) / byteSource.size());
+      return ByteSource.concat(Collections.nCopies(nCopies, byteSource));
    }
 
    public void testMultipartSynchronously() throws InterruptedException, IOException {
@@ -106,7 +100,7 @@ public class AWSS3ClientLiveTest extends S3ClientLiveTest {
          String uploadId = getApi().initiateMultipartUpload(containerName,
                   ObjectMetadataBuilder.create().key(key).contentMD5(oneHundredOneConstitutionsMD5).build());
          byte[] buffer = oneHundredOneConstitutions.read();
-         assertEquals(oneHundredOneConstitutionsLength, (long) buffer.length);
+         assertEquals(oneHundredOneConstitutions.size(), (long) buffer.length);
 
          Payload part1 = newByteArrayPayload(buffer);
          part1.getContentMetadata().setContentLength((long) buffer.length);

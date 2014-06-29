@@ -18,7 +18,6 @@ package org.jclouds.http;
 
 import static com.google.common.hash.Hashing.md5;
 import static com.google.common.io.BaseEncoding.base64;
-import static com.google.common.io.ByteStreams.toByteArray;
 import static com.google.common.io.Closeables.close;
 import static com.google.common.io.Files.asByteSource;
 import static org.jclouds.http.options.GetOptions.Builder.tail;
@@ -34,9 +33,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URLDecoder;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Random;
 import java.util.concurrent.TimeUnit;
-import java.util.zip.GZIPInputStream;
 
 import org.jclouds.io.ByteSources;
 import org.jclouds.io.Payload;
@@ -50,6 +49,7 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Multimap;
 import com.google.common.io.ByteSource;
 import com.google.common.io.Files;
+import com.google.common.io.Resources;
 import com.squareup.okhttp.mockwebserver.Dispatcher;
 import com.squareup.okhttp.mockwebserver.MockResponse;
 import com.squareup.okhttp.mockwebserver.MockWebServer;
@@ -67,7 +67,6 @@ public abstract class BaseHttpCommandExecutorServiceIntegrationTest extends Base
    private static final String XML2 = "<foo><bar>chubbs</bar></foo>";
 
    private String constitutionsMd5;
-   private long constitutionsLength;
    private ByteSource oneHundredOneConstitutions;
 
    @BeforeClass(groups = "integration")
@@ -222,7 +221,7 @@ public abstract class BaseHttpCommandExecutorServiceIntegrationTest extends Base
    public void testGetBigFile() throws Exception {
       MockResponse response = new MockResponse().addHeader("Content-MD5", constitutionsMd5)
             .addHeader("Content-type", "text/plain")
-            .setBody(oneHundredOneConstitutions.openStream(), constitutionsLength);
+            .setBody(oneHundredOneConstitutions.openStream(), oneHundredOneConstitutions.size());
 
       MockWebServer server = mockWebServer(response, response);
       InputStream input = server.getUrl("/101constitutions").openStream();
@@ -640,15 +639,8 @@ public abstract class BaseHttpCommandExecutorServiceIntegrationTest extends Base
 
    @SuppressWarnings("unchecked")
    private ByteSource getTestDataSupplier() throws IOException {
-      byte[] oneConstitution = toByteArray(new GZIPInputStream(
-            BaseHttpCommandExecutorServiceIntegrationTest.class.getResourceAsStream("/const.txt.gz")));
-      ByteSource constitutionSupplier = ByteSource.wrap(oneConstitution);
-      ByteSource temp = ByteSource.concat(constitutionSupplier);
-      for (int i = 0; i < 100; i++) {
-         temp = ByteSource.concat(temp, constitutionSupplier);
-      }
-      constitutionsLength = oneConstitution.length * 101;
-      return temp;
+      return ByteSource.concat(Collections.nCopies(
+            101, Resources.asByteSource(BaseHttpCommandExecutorServiceIntegrationTest.class.getResource("/const.txt"))));
    }
 
 }

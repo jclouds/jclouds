@@ -19,7 +19,6 @@ package org.jclouds.http;
 import static com.google.common.base.Throwables.getStackTraceAsString;
 import static com.google.common.hash.Hashing.md5;
 import static com.google.common.io.BaseEncoding.base64;
-import static com.google.common.io.ByteStreams.toByteArray;
 import static com.google.common.net.HttpHeaders.CONTENT_DISPOSITION;
 import static com.google.common.net.HttpHeaders.CONTENT_ENCODING;
 import static com.google.common.net.HttpHeaders.CONTENT_LANGUAGE;
@@ -34,13 +33,13 @@ import static org.jclouds.util.Strings2.toStringAndClose;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Collections;
 import java.util.Enumeration;
 import java.util.Properties;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import java.util.zip.GZIPInputStream;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -67,6 +66,7 @@ import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.LinkedHashMultimap;
 import com.google.common.collect.Multimap;
 import com.google.common.io.ByteSource;
+import com.google.common.io.Resources;
 import com.google.inject.Injector;
 import com.google.inject.Module;
 
@@ -245,17 +245,9 @@ public abstract class BaseJettyTest {
       server2.start();
    }
 
-   @SuppressWarnings("unchecked")
    public static ByteSource getTestDataSupplier() throws IOException {
-      byte[] oneConstitution = toByteArray(new GZIPInputStream(BaseJettyTest.class.getResourceAsStream("/const.txt.gz")));
-      ByteSource constitutionSupplier = ByteSource.wrap(oneConstitution);
-
-      ByteSource temp = ByteSource.concat(constitutionSupplier);
-
-      for (int i = 0; i < 100; i++) {
-         temp = ByteSource.concat(temp, constitutionSupplier);
-      }
-      return temp;
+      return ByteSource.concat(Collections.nCopies(
+            101, Resources.asByteSource(BaseJettyTest.class.getResource("/const.txt"))));
    }
 
    public static ContextBuilder newBuilder(int testPort, Properties properties, Module... connectionModules) {
