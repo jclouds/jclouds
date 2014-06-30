@@ -31,6 +31,8 @@ import org.jclouds.domain.LocationScope;
 import org.jclouds.domain.LoginCredentials;
 import org.jclouds.http.HttpRequest;
 import org.jclouds.http.HttpResponse;
+import org.jclouds.openstack.nova.v2_0.compute.options.NodeAndNovaTemplateOptions;
+import org.jclouds.openstack.nova.v2_0.compute.options.NovaTemplateOptions;
 import org.jclouds.openstack.nova.v2_0.internal.BaseNovaComputeServiceExpectTest;
 import org.testng.annotations.Test;
 
@@ -55,7 +57,8 @@ public class AllocateAndAddFloatingIpToNodeExpectTest extends BaseNovaComputeSer
    final NodeMetadata node = new NodeMetadataBuilder().id("az-1.region-a.geo-1/71592").providerId("71592").location(
             host).name("Server 71592").status(Status.RUNNING).privateAddresses(ImmutableSet.of("10.4.27.237"))
             .credentials(LoginCredentials.builder().password("foo").build()).build();
-
+   final NovaTemplateOptions options = NovaTemplateOptions.Builder.autoAssignFloatingIp(false);
+   
    HttpRequest createFloatingIP = HttpRequest.builder().method("POST").endpoint(
             URI.create("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v1.1/3456/os-floating-ips")).headers(
             ImmutableMultimap.<String, String> builder().put("Accept", "application/json").put("X-Auth-Token",
@@ -77,9 +80,13 @@ public class AllocateAndAddFloatingIpToNodeExpectTest extends BaseNovaComputeSer
                .getInstance(AllocateAndAddFloatingIpToNode.class);
 
       AtomicReference<NodeMetadata> nodeRef = Atomics.newReference(node);
-      fn.apply(nodeRef);
+      AtomicReference<NovaTemplateOptions> optionsRef = Atomics.newReference(options);
+      AtomicReference<NodeAndNovaTemplateOptions> nodeNovaRef = NodeAndNovaTemplateOptions.newAtomicReference(nodeRef, optionsRef);
+
+      fn.apply(nodeNovaRef);
       NodeMetadata node1 = nodeRef.get();
       assertNotNull(node1);
+      assertNotNull(optionsRef.get());
       assertEquals(node1.getPublicAddresses(), ImmutableSet.of("10.0.0.3"));
       assertEquals(node1.getCredentials(), node.getCredentials());
 
@@ -96,7 +103,7 @@ public class AllocateAndAddFloatingIpToNodeExpectTest extends BaseNovaComputeSer
       return addFloatingIPRequest;
    }
 
-   public void testAllocateWhenAllocationFailsLookupUnusedIpAddToServerAndUpdatesNodeMetadata() throws Exception {
+   public void testAllocateWhenAllocationFailsOn400LookupUnusedIpAddToServerAndUpdatesNodeMetadata() throws Exception {
       HttpResponse createFloatingIPResponse = HttpResponse
                .builder()
                .statusCode(400)
@@ -124,10 +131,51 @@ public class AllocateAndAddFloatingIpToNodeExpectTest extends BaseNovaComputeSer
                .getInstance(AllocateAndAddFloatingIpToNode.class);
 
       AtomicReference<NodeMetadata> nodeRef = Atomics.newReference(node);
-      fn.apply(nodeRef);
+      AtomicReference<NovaTemplateOptions> optionsRef = Atomics.newReference(options);
+      AtomicReference<NodeAndNovaTemplateOptions> nodeNovaRef = NodeAndNovaTemplateOptions.newAtomicReference(nodeRef, optionsRef);
+
+      fn.apply(nodeNovaRef);
       NodeMetadata node1 = nodeRef.get();
       assertNotNull(node1);
+      assertNotNull(optionsRef.get());
       assertEquals(node1.getPublicAddresses(), ImmutableSet.of("10.0.0.5"));
+   }
+   
+   public void testAllocateWhenAllocationFailsOn404LookupUnusedIpAddToServerAndUpdatesNodeMetadata() throws Exception {
+      HttpResponse createFloatingIPResponse = HttpResponse
+               .builder()
+               .statusCode(404)
+               .payload(
+                        payloadFromStringWithContentType(
+                                 "{\"badRequest\": {\"message\": \"AddressLimitExceeded: Address quota exceeded. You cannot create any more addresses\", \"code\": 404}}",
+                                 "application/json")).build();
 
+      HttpRequest list = HttpRequest.builder().method("GET").endpoint(
+               URI.create("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v1.1/3456/os-floating-ips")).headers(
+               ImmutableMultimap.<String, String> builder().put("Accept", "application/json").put("X-Auth-Token",
+                        authToken).build()).build();
+
+      HttpResponse listResponseForUnassigned = HttpResponse.builder().statusCode(200).payload(
+               payloadFromResource("/floatingip_list.json")).build();
+
+      HttpRequest addFloatingIPRequest = addFloatingIPForAddress("10.0.0.5");
+
+      AllocateAndAddFloatingIpToNode fn = requestsSendResponses(
+               ImmutableMap.<HttpRequest, HttpResponse> builder().put(keystoneAuthWithUsernameAndPasswordAndTenantName,
+                        responseWithKeystoneAccess).put(extensionsOfNovaRequest, extensionsOfNovaResponse).put(
+                        createFloatingIP, createFloatingIPResponse)
+                        .put(addFloatingIPRequest, addFloatingIPResponse).put(list,
+                                 listResponseForUnassigned).build()).getContext().utils().injector()
+               .getInstance(AllocateAndAddFloatingIpToNode.class);
+
+      AtomicReference<NodeMetadata> nodeRef = Atomics.newReference(node);
+      AtomicReference<NovaTemplateOptions> optionsRef = Atomics.newReference(options);
+      AtomicReference<NodeAndNovaTemplateOptions> nodeNovaRef = NodeAndNovaTemplateOptions.newAtomicReference(nodeRef, optionsRef);
+
+      fn.apply(nodeNovaRef);
+      NodeMetadata node1 = nodeRef.get();
+      assertNotNull(node1);
+      assertNotNull(optionsRef.get());
+      assertEquals(node1.getPublicAddresses(), ImmutableSet.of("10.0.0.5"));
    }
 }

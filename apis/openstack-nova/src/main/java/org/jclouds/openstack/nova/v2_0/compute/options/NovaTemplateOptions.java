@@ -66,6 +66,8 @@ public class NovaTemplateOptions extends TemplateOptions implements Cloneable {
       if (to instanceof NovaTemplateOptions) {
          NovaTemplateOptions eTo = NovaTemplateOptions.class.cast(to);
          eTo.autoAssignFloatingIp(shouldAutoAssignFloatingIp());
+         if (getFloatingIpPoolNames().isPresent())
+            eTo.floatingIpPoolNames(getFloatingIpPoolNames().get());
          if (getSecurityGroupNames().isPresent())
             eTo.securityGroupNames(getSecurityGroupNames().get());
          eTo.generateKeyPair(shouldGenerateKeyPair());
@@ -83,6 +85,7 @@ public class NovaTemplateOptions extends TemplateOptions implements Cloneable {
    }
 
    protected boolean autoAssignFloatingIp = false;
+   protected Optional<Set<String>> floatingIpPoolNames = Optional.absent();
    protected Optional<Set<String>> securityGroupNames = Optional.absent();
    protected boolean generateKeyPair = false;
    protected String keyPairName;
@@ -99,6 +102,7 @@ public class NovaTemplateOptions extends TemplateOptions implements Cloneable {
          return false;
       NovaTemplateOptions that = NovaTemplateOptions.class.cast(o);
       return super.equals(that) && equal(this.autoAssignFloatingIp, that.autoAssignFloatingIp)
+            && equal(this.floatingIpPoolNames, that.floatingIpPoolNames)
             && equal(this.securityGroupNames, that.securityGroupNames)
             && equal(this.generateKeyPair, that.generateKeyPair)
             && equal(this.keyPairName, that.keyPairName)
@@ -110,7 +114,7 @@ public class NovaTemplateOptions extends TemplateOptions implements Cloneable {
 
    @Override
    public int hashCode() {
-      return Objects.hashCode(super.hashCode(), autoAssignFloatingIp, securityGroupNames, generateKeyPair, keyPairName, userData, diskConfig, configDrive, novaNetworks);
+      return Objects.hashCode(super.hashCode(), autoAssignFloatingIp, floatingIpPoolNames, securityGroupNames, generateKeyPair, keyPairName, userData, diskConfig, configDrive, novaNetworks);
    }
 
    @Override
@@ -118,6 +122,8 @@ public class NovaTemplateOptions extends TemplateOptions implements Cloneable {
       ToStringHelper toString = super.string();
       if (!autoAssignFloatingIp)
          toString.add("autoAssignFloatingIp", autoAssignFloatingIp);
+      if (floatingIpPoolNames.isPresent())
+         toString.add("floatingIpPoolNames", floatingIpPoolNames.get());
       if (securityGroupNames.isPresent())
          toString.add("securityGroupNames", securityGroupNames.get());
       if (generateKeyPair)
@@ -133,10 +139,27 @@ public class NovaTemplateOptions extends TemplateOptions implements Cloneable {
    public static final NovaTemplateOptions NONE = new NovaTemplateOptions();
 
    /**
-    * @see #shouldAutoAssignFloatingIp()
+    * @see #getFloatingIpPoolNames()
     */
    public NovaTemplateOptions autoAssignFloatingIp(boolean enable) {
       this.autoAssignFloatingIp = enable;
+      return this;
+   }
+   
+   /**
+    * @see #getFloatingIpPoolNames()
+    */
+   public NovaTemplateOptions floatingIpPoolNames(String... floatingIpPoolNames) {
+      return floatingIpPoolNames(ImmutableSet.copyOf(checkNotNull(floatingIpPoolNames, "floatingIpPoolNames")));
+   }
+
+   /**
+    * @see #getFloatingIpPoolNames()
+    */
+   public NovaTemplateOptions floatingIpPoolNames(Iterable<String> floatingIpPoolNames) {
+      for (String groupName : checkNotNull(floatingIpPoolNames, "floatingIpPoolNames"))
+        checkNotNull(emptyToNull(groupName), "all floating-ip-pool-names must be non-empty");
+      this.floatingIpPoolNames = Optional.<Set<String>> of(ImmutableSet.copyOf(floatingIpPoolNames));
       return this;
    }
 
@@ -187,13 +210,25 @@ public class NovaTemplateOptions extends TemplateOptions implements Cloneable {
    }
 
    /**
+    * The floating IP pool name(s) to use when allocating a FloatingIP. Applicable
+    * only if #shouldAutoAssignFloatingIp() returns true. If not set will attempt to 
+    * use whatever FloatingIP(s) can be found regardless of which pool they originated 
+    * from
+    * 
+    * @return floating-ip-pool names to use
+    */
+   public Optional<Set<String>> getFloatingIpPoolNames() {
+      return floatingIpPoolNames;
+   }   
+   
+   /**
     * Specifies the keypair used to run instances with
     * @return the keypair to be used
     */
    public String getKeyPairName() {
       return keyPairName;
    }
-
+   
    /**
     * <h3>Note</h3>
     *
@@ -250,6 +285,22 @@ public class NovaTemplateOptions extends TemplateOptions implements Cloneable {
          return new NovaTemplateOptions().autoAssignFloatingIp(enable);
       }
 
+      /**
+       * @see #getFloatingIpPoolNames()
+       */
+      public NovaTemplateOptions floatingIpPoolNames(String... floatingIpPoolNames) {
+         NovaTemplateOptions options = new NovaTemplateOptions();
+         return NovaTemplateOptions.class.cast(options.floatingIpPoolNames(floatingIpPoolNames));         
+      }
+
+      /**
+       * @see #getFloatingIpPoolNames()
+       */
+      public NovaTemplateOptions floatingIpPoolNames(Iterable<String> floatingIpPoolNames) {
+         NovaTemplateOptions options = new NovaTemplateOptions();
+         return NovaTemplateOptions.class.cast(options.floatingIpPoolNames(floatingIpPoolNames)); 
+      }     
+      
       /**
        * @see NovaTemplateOptions#shouldGenerateKeyPair() 
        */
