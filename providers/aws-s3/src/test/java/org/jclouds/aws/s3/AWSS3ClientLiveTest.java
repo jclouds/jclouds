@@ -27,7 +27,6 @@ import static org.testng.Assert.fail;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Collections;
 import java.util.Set;
 import java.util.UUID;
 
@@ -41,7 +40,6 @@ import org.jclouds.blobstore.domain.Blob;
 import org.jclouds.blobstore.domain.StorageMetadata;
 import org.jclouds.blobstore.options.PutOptions;
 import org.jclouds.domain.Location;
-import org.jclouds.http.BaseJettyTest;
 import org.jclouds.io.ByteStreams2;
 import org.jclouds.io.Payload;
 import org.jclouds.s3.S3Client;
@@ -51,15 +49,16 @@ import org.jclouds.s3.domain.ObjectMetadata;
 import org.jclouds.s3.domain.ObjectMetadata.StorageClass;
 import org.jclouds.s3.domain.ObjectMetadataBuilder;
 import org.jclouds.s3.domain.S3Object;
+import org.jclouds.utils.TestUtils;
 import org.testng.ITestContext;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
+import com.google.common.hash.HashCode;
 import com.google.common.io.ByteSource;
 import com.google.common.io.Files;
-import com.google.common.io.Resources;
 
 /**
  * Tests behavior of {@code S3Client}
@@ -69,8 +68,8 @@ public class AWSS3ClientLiveTest extends S3ClientLiveTest {
    public AWSS3ClientLiveTest() {
       provider = "aws-s3";
    }
-   private ByteSource oneHundredOneConstitutions;
-   private byte[] oneHundredOneConstitutionsMD5;
+
+   private static final ByteSource oneHundredOneConstitutions = TestUtils.randomByteSource().slice(0, 5 * 1024 * 1024 + 1);
 
    @Override
    public AWSS3Client getApi() {
@@ -81,24 +80,16 @@ public class AWSS3ClientLiveTest extends S3ClientLiveTest {
    @Override
    public void setUpResourcesOnThisThread(ITestContext testContext) throws Exception {
       super.setUpResourcesOnThisThread(testContext);
-      oneHundredOneConstitutions = getTestDataSupplier();
-      oneHundredOneConstitutionsMD5 = oneHundredOneConstitutions.hash(md5()).asBytes();
-   }
-
-   public static ByteSource getTestDataSupplier() throws IOException {
-      ByteSource byteSource = Resources.asByteSource(BaseJettyTest.class.getResource("/const.txt"));
-      // we have to go beyond 5MB per part
-      int nCopies = (int) ((5 * 1024 * 1024 + 1) / byteSource.size());
-      return ByteSource.concat(Collections.nCopies(nCopies, byteSource));
    }
 
    public void testMultipartSynchronously() throws InterruptedException, IOException {
+      HashCode oneHundredOneConstitutionsMD5 = oneHundredOneConstitutions.hash(md5());
       String containerName = getContainerName();
       S3Object object = null;
       try {
          String key = "constitution.txt";
          String uploadId = getApi().initiateMultipartUpload(containerName,
-                  ObjectMetadataBuilder.create().key(key).contentMD5(oneHundredOneConstitutionsMD5).build());
+                  ObjectMetadataBuilder.create().key(key).contentMD5(oneHundredOneConstitutionsMD5.asBytes()).build());
          byte[] buffer = oneHundredOneConstitutions.read();
          assertEquals(oneHundredOneConstitutions.size(), (long) buffer.length);
 

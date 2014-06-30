@@ -22,9 +22,7 @@ import static org.testng.Assert.assertTrue;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.Collections;
 import java.util.Properties;
-import java.util.Random;
 
 import org.jclouds.blobstore.BlobStore;
 import org.jclouds.blobstore.domain.Blob;
@@ -35,6 +33,7 @@ import org.jclouds.io.ByteStreams2;
 import org.jclouds.io.Payload;
 import org.jclouds.openstack.keystone.v2_0.config.KeystoneProperties;
 import org.jclouds.openstack.swift.blobstore.strategy.MultipartUpload;
+import org.jclouds.utils.TestUtils;
 import org.testng.ITestContext;
 import org.testng.SkipException;
 import org.testng.annotations.BeforeClass;
@@ -206,16 +205,10 @@ public class SwiftBlobIntegrationLiveTest extends BaseBlobIntegrationTest {
    }
 
    private ByteSource createByteSource(long size) throws IOException {
-      final Random random = new Random();
-      final byte[] randomBytes = new byte[(int) MultipartUpload.MIN_PART_SIZE];
-      random.nextBytes(randomBytes);
-      ByteSource byteSource = ByteSources.repeatingArrayByteSource(randomBytes).slice(0, size);
-      assertEquals(byteSource.size(), size);
-      return byteSource;
+      return TestUtils.randomByteSource().slice(0, size);
    }
 
    private ByteSource createByteSourceBiggerThan(long partSize) throws IOException {
-      int nCopies = (int) (partSize / getOneHundredOneConstitutionsLength()) + 1;
-      return ByteSource.concat(Collections.nCopies(nCopies, oneHundredOneConstitutions));
+      return TestUtils.randomByteSource().slice(0, partSize + 1);
    }
 }

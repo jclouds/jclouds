@@ -33,7 +33,6 @@ import java.io.File;
 import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
 import java.security.cert.CertificateException;
-import java.util.Collections;
 import java.util.Date;
 import java.util.Map;
 import java.util.Random;
@@ -55,13 +54,13 @@ import org.jclouds.blobstore.domain.StorageMetadata;
 import org.jclouds.blobstore.domain.StorageType;
 import org.jclouds.crypto.Crypto;
 import org.jclouds.encryption.internal.JCECrypto;
-import org.jclouds.http.BaseJettyTest;
 import org.jclouds.http.HttpResponseException;
 import org.jclouds.io.ByteStreams2;
 import org.jclouds.io.Payload;
 import org.jclouds.io.Payloads;
 import org.jclouds.io.payloads.ByteSourcePayload;
 import org.jclouds.logging.Logger;
+import org.jclouds.utils.TestUtils;
 import org.testng.ITestContext;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.DataProvider;
@@ -77,30 +76,24 @@ import com.google.common.collect.Maps;
 import com.google.common.hash.HashCode;
 import com.google.common.io.ByteSource;
 import com.google.common.io.Files;
-import com.google.common.io.Resources;
 import com.google.common.util.concurrent.Futures;
 import com.google.common.util.concurrent.ListenableFuture;
 import com.google.common.util.concurrent.Uninterruptibles;
 
 public class BaseBlobIntegrationTest extends BaseBlobStoreIntegrationTest {
-   private static ByteSource oneHundredOneConstitutions;
+   private static final ByteSource oneHundredOneConstitutions = TestUtils.randomByteSource().slice(0, 101 * 45118);
 
    @BeforeClass(groups = { "integration", "live" }, dependsOnMethods = "setupContext")
    @Override
    public void setUpResourcesOnThisThread(ITestContext testContext) throws Exception {
       super.setUpResourcesOnThisThread(testContext);
-      oneHundredOneConstitutions = getTestDataSupplier();
    }
 
    public static ByteSource getTestDataSupplier() throws IOException {
-      return ByteSource.concat(Collections.nCopies(
-            101, Resources.asByteSource(BaseJettyTest.class.getResource("/const.txt"))));
+      return oneHundredOneConstitutions;
    }
 
    public static long getOneHundredOneConstitutionsLength() throws IOException {
-      if (oneHundredOneConstitutions == null) {
-         getTestDataSupplier();
-      }
       return oneHundredOneConstitutions.size();
    }
 

@@ -32,14 +32,12 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URLDecoder;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.Random;
 import java.util.concurrent.TimeUnit;
 
-import org.jclouds.io.ByteSources;
 import org.jclouds.io.Payload;
 import org.jclouds.util.Strings2;
+import org.jclouds.utils.TestUtils;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
@@ -49,7 +47,6 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Multimap;
 import com.google.common.io.ByteSource;
 import com.google.common.io.Files;
-import com.google.common.io.Resources;
 import com.squareup.okhttp.mockwebserver.Dispatcher;
 import com.squareup.okhttp.mockwebserver.MockResponse;
 import com.squareup.okhttp.mockwebserver.MockWebServer;
@@ -65,14 +62,10 @@ public abstract class BaseHttpCommandExecutorServiceIntegrationTest extends Base
 
    private static final String XML = "<foo><bar>whoppers</bar></foo>";
    private static final String XML2 = "<foo><bar>chubbs</bar></foo>";
-
-   private String constitutionsMd5;
-   private ByteSource oneHundredOneConstitutions;
+   private static final ByteSource oneHundredOneConstitutions = TestUtils.randomByteSource().slice(0, 101 * 45118);
 
    @BeforeClass(groups = "integration")
    public void setup() throws IOException {
-      oneHundredOneConstitutions = getTestDataSupplier();
-      constitutionsMd5 = base64().encode(oneHundredOneConstitutions.hash(md5()).asBytes());
    }
 
    protected IntegrationTestClient client(String url) {
@@ -219,6 +212,7 @@ public abstract class BaseHttpCommandExecutorServiceIntegrationTest extends Base
 
    @Test
    public void testGetBigFile() throws Exception {
+      String constitutionsMd5 = base64().encode(oneHundredOneConstitutions.hash(md5()).asBytes());
       MockResponse response = new MockResponse().addHeader("Content-MD5", constitutionsMd5)
             .addHeader("Content-type", "text/plain")
             .setBody(oneHundredOneConstitutions.openStream(), oneHundredOneConstitutions.size());
@@ -272,9 +266,7 @@ public abstract class BaseHttpCommandExecutorServiceIntegrationTest extends Base
       try {
          f = File.createTempFile("jclouds", "tmp");
          long length = (new Random().nextInt(32) + 1) * 1024 * 1024;
-         byte[] buf = new byte[1024];
-         Arrays.fill(buf, (byte) 'a');
-         ByteSources.repeatingArrayByteSource(buf).slice(0, length).copyTo(Files.asByteSink(f));
+         TestUtils.randomByteSource().slice(0, length).copyTo(Files.asByteSink(f));
 
          ByteSource byteSource = asByteSource(f);
          payload = newByteSourcePayload(byteSource);
@@ -636,11 +628,4 @@ public abstract class BaseHttpCommandExecutorServiceIntegrationTest extends Base
          server.shutdown();
       }
    }
-
-   @SuppressWarnings("unchecked")
-   private ByteSource getTestDataSupplier() throws IOException {
-      return ByteSource.concat(Collections.nCopies(
-            101, Resources.asByteSource(BaseHttpCommandExecutorServiceIntegrationTest.class.getResource("/const.txt"))));
-   }
-
 }

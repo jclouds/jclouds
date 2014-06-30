@@ -33,7 +33,6 @@ import static org.jclouds.util.Strings2.toStringAndClose;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.Collections;
 import java.util.Enumeration;
 import java.util.Properties;
 import java.util.concurrent.TimeUnit;
@@ -54,6 +53,7 @@ import org.eclipse.jetty.server.ssl.SslSelectChannelConnector;
 import org.eclipse.jetty.util.ssl.SslContextFactory;
 import org.jclouds.ContextBuilder;
 import org.jclouds.providers.AnonymousProviderMetadata;
+import org.jclouds.utils.TestUtils;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Optional;
@@ -66,7 +66,6 @@ import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.LinkedHashMultimap;
 import com.google.common.collect.Multimap;
 import com.google.common.io.ByteSource;
-import com.google.common.io.Resources;
 import com.google.inject.Injector;
 import com.google.inject.Module;
 
@@ -74,6 +73,7 @@ public abstract class BaseJettyTest {
 
    protected static final String XML = "<foo><bar>whoppers</bar></foo>";
    protected static final String XML2 = "<foo><bar>chubbs</bar></foo>";
+   private static final ByteSource oneHundredOneConstitutions = TestUtils.randomByteSource().slice(0, 101 * 45118);
 
    protected Server server = null;
    protected IntegrationTestClient client;
@@ -89,7 +89,6 @@ public abstract class BaseJettyTest {
    public void setUpJetty(@Optional("8123") final int testPort) throws Exception {
       this.testPort = testPort;
 
-      final ByteSource oneHundredOneConstitutions = getTestDataSupplier();
       md5 = base64().encode(oneHundredOneConstitutions.hash(md5()).asBytes());
 
       Handler server1Handler = new AbstractHandler() {
@@ -243,11 +242,6 @@ public abstract class BaseJettyTest {
       server2.setConnectors(new Connector[] { ssl_connector });
 
       server2.start();
-   }
-
-   public static ByteSource getTestDataSupplier() throws IOException {
-      return ByteSource.concat(Collections.nCopies(
-            101, Resources.asByteSource(BaseJettyTest.class.getResource("/const.txt"))));
    }
 
    public static ContextBuilder newBuilder(int testPort, Properties properties, Module... connectionModules) {
