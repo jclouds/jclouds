@@ -42,16 +42,19 @@ import org.jclouds.compute.strategy.ListNodesStrategy;
 import org.jclouds.compute.strategy.impl.CreateNodesWithGroupEncodedIntoNameThenAddToSet;
 import org.jclouds.openstack.nova.v2_0.NovaApi;
 import org.jclouds.openstack.nova.v2_0.compute.functions.AllocateAndAddFloatingIpToNode;
+import org.jclouds.openstack.nova.v2_0.compute.options.NodeAndNovaTemplateOptions;
 import org.jclouds.openstack.nova.v2_0.compute.options.NovaTemplateOptions;
 import org.jclouds.openstack.nova.v2_0.domain.KeyPair;
 import org.jclouds.openstack.nova.v2_0.domain.zonescoped.SecurityGroupInZone;
 import org.jclouds.openstack.nova.v2_0.domain.zonescoped.ZoneAndName;
 import org.jclouds.openstack.nova.v2_0.domain.zonescoped.ZoneSecurityGroupNameAndPorts;
 
+import com.google.common.base.Function;
 import com.google.common.base.Throwables;
 import com.google.common.cache.LoadingCache;
 import com.google.common.collect.Multimap;
 import com.google.common.primitives.Ints;
+import com.google.common.util.concurrent.Atomics;
 import com.google.common.util.concurrent.Futures;
 import com.google.common.util.concurrent.ListenableFuture;
 import com.google.common.util.concurrent.ListeningExecutorService;
@@ -149,13 +152,21 @@ public class ApplyNovaTemplateOptionsCreateNodesWithGroupEncodedIntoNameThenAddT
             final String name, Template template) {
 
       ListenableFuture<AtomicReference<NodeMetadata>> future = super.createNodeInGroupWithNameAndTemplate(group, name, template);
-      NovaTemplateOptions templateOptions = NovaTemplateOptions.class.cast(template.getOptions());
-
+      final NovaTemplateOptions templateOptions = NovaTemplateOptions.class.cast(template.getOptions());
       if (templateOptions.shouldAutoAssignFloatingIp()) {
-         return Futures.transform(future, createAndAddFloatingIpToNode, userExecutor);
+
+         ListenableFuture<AtomicReference<NodeAndNovaTemplateOptions>> nodeAndNovaTemplateOptions = Futures.transform(future,
+               new Function<AtomicReference<NodeMetadata>, AtomicReference<NodeAndNovaTemplateOptions>>() {
+
+                  @Override
+                  public AtomicReference<NodeAndNovaTemplateOptions> apply(AtomicReference<NodeMetadata> input) {
+                     return NodeAndNovaTemplateOptions.newAtomicReference(input, Atomics.newReference(templateOptions));
+                  }
+               }
+         );
+         return Futures.transform(nodeAndNovaTemplateOptions, createAndAddFloatingIpToNode, userExecutor);
       } else {
          return future;
       }
    }
-
 }
