@@ -39,7 +39,6 @@ import org.jclouds.chef.domain.Resource;
 import org.jclouds.chef.domain.Role;
 import org.jclouds.chef.filters.SignedHeaderAuth;
 import org.jclouds.chef.filters.SignedHeaderAuthTest;
-import org.jclouds.chef.functions.ParseCookbookDefinitionCheckingChefVersion;
 import org.jclouds.chef.functions.ParseCookbookVersionsCheckingChefVersion;
 import org.jclouds.chef.functions.ParseKeySetFromJson;
 import org.jclouds.chef.functions.ParseSearchClientsFromJson;

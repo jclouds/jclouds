@@ -17,14 +17,14 @@
 package org.jclouds.chef.strategy.internal;
 
 import static com.google.common.collect.Iterables.size;
-import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertNotNull;
 import static org.testng.Assert.assertTrue;
 import static org.testng.Assert.fail;
 
+import java.io.File;
+import java.util.List;
+
 import org.jclouds.chef.ChefApi;
 import org.jclouds.chef.domain.ChecksumStatus;
-import org.jclouds.chef.domain.CookbookDefinition;
 import org.jclouds.chef.domain.CookbookVersion;
 import org.jclouds.chef.domain.Metadata;
 import org.jclouds.chef.domain.Resource;
@@ -36,10 +36,6 @@ import org.jclouds.io.payloads.FilePayload;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.Test;
 
-import java.io.File;
-import java.util.List;
-
-import com.google.common.base.Predicate;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.hash.Hashing;
 import com.google.common.io.Files;
