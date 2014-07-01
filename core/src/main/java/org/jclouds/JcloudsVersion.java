@@ -20,6 +20,7 @@ import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 import static java.lang.String.format;
 
+import java.io.InputStream;
 import java.io.IOException;
 import java.util.Properties;
 import java.util.regex.Matcher;
@@ -28,6 +29,7 @@ import java.util.regex.Pattern;
 import org.jclouds.javax.annotation.Nullable;
 
 import com.google.common.annotations.VisibleForTesting;
+import com.google.common.io.Closeables;
 
 public class JcloudsVersion {
     @VisibleForTesting
@@ -82,10 +84,13 @@ public class JcloudsVersion {
 
     private static String readVersionPropertyFromClasspath(ClassLoader resourceLoader) {
         Properties versionProperties = new Properties();
+        InputStream is = checkNotNull(resourceLoader.getResourceAsStream(VERSION_RESOURCE_FILE), VERSION_RESOURCE_FILE);
         try {
-            versionProperties.load(checkNotNull(resourceLoader.getResourceAsStream(VERSION_RESOURCE_FILE), VERSION_RESOURCE_FILE));
+            versionProperties.load(is);
         } catch (IOException exception) {
             throw new IllegalStateException(format("Unable to load version resource file '%s'", VERSION_RESOURCE_FILE), exception);
+        } finally {
+            Closeables.closeQuietly(is);
         }
         return checkNotNull(versionProperties.getProperty(VERSION_PROPERTY_NAME), VERSION_PROPERTY_NAME);
     }
