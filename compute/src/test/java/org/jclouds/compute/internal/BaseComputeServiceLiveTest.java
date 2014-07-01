@@ -35,8 +35,6 @@ import static java.util.concurrent.TimeUnit.SECONDS;
 import static java.util.logging.Logger.getAnonymousLogger;
 import static org.jclouds.compute.options.RunScriptOptions.Builder.nameTask;
 import static org.jclouds.compute.options.RunScriptOptions.Builder.wrapInInitScript;
-import static org.jclouds.compute.options.TemplateOptions.Builder.inboundPorts;
-import static org.jclouds.compute.options.TemplateOptions.Builder.nodeNames;
 import static org.jclouds.compute.options.TemplateOptions.Builder.overrideLoginCredentials;
 import static org.jclouds.compute.options.TemplateOptions.Builder.runAsRoot;
 import static org.jclouds.compute.predicates.NodePredicates.TERMINATED;
@@ -50,7 +48,6 @@ import static org.testng.Assert.assertFalse;
 import static org.testng.Assert.assertNotNull;
 import static org.testng.Assert.assertTrue;
 import static org.testng.Assert.fail;
-
 import java.io.IOException;
 import java.util.Collection;
 import java.util.List;
@@ -82,7 +79,6 @@ import org.jclouds.compute.domain.NodeMetadata.Status;
 import org.jclouds.compute.domain.OperatingSystem;
 import org.jclouds.compute.domain.Template;
 import org.jclouds.compute.domain.TemplateBuilder;
-import org.jclouds.compute.options.TemplateOptions;
 import org.jclouds.compute.util.OpenSocketFinder;
 import org.jclouds.domain.Credentials;
 import org.jclouds.domain.Location;
@@ -218,10 +214,10 @@ public abstract class BaseComputeServiceLiveTest extends BaseComputeServiceConte
       } catch (Exception e) {
 
       }
-
-      TemplateOptions options = client.templateOptions().blockOnPort(22, 120);
+      template = buildTemplate(client.templateBuilder());
+      template.getOptions().blockOnPort(22, 120);
       try {
-         Set<? extends NodeMetadata> nodes = client.createNodesInGroup(group, 1, options);
+         Set<? extends NodeMetadata> nodes = client.createNodesInGroup(group, 1, template);
          NodeMetadata node = get(nodes, 0);
          LoginCredentials good = node.getCredentials();
          assert good.identity != null : nodes;
@@ -362,9 +358,11 @@ public abstract class BaseComputeServiceLiveTest extends BaseComputeServiceConte
 
    @Test(enabled = true, dependsOnMethods = "testCreateTwoNodesWithRunScript")
    public void testCreateTwoNodesWithOneSpecifiedName() throws Exception {
+      template = buildTemplate(client.templateBuilder());
+      template.getOptions().nodeNames(ImmutableSet.of("first-node"));
       Set<? extends NodeMetadata> nodes;
       try {
-         nodes = newTreeSet(client.createNodesInGroup(group, 2, nodeNames(ImmutableSet.of("first-node"))));
+         nodes = newTreeSet(client.createNodesInGroup(group, 2, template));
       } catch (RunNodesException e) {
          nodes = newTreeSet(concat(e.getSuccessfulNodes(), e.getNodeErrors().keySet()));
          throw e;
@@ -423,6 +421,7 @@ public abstract class BaseComputeServiceLiveTest extends BaseComputeServiceConte
 
       if (existingLocationIsAssignable) {
          getAnonymousLogger().info("creating another node based on existing nodes' location: " + existingLocation);
+         template = buildTemplate(client.templateBuilder());
          template = addRunScriptToTemplate(client.templateBuilder().fromTemplate(template)
                .locationId(existingLocation.getId()).build());
       } else {
@@ -456,11 +455,11 @@ public abstract class BaseComputeServiceLiveTest extends BaseComputeServiceConte
             final int groupNum = i;
             final String group = "twin" + groupNum;
             groups.add(group);
-
+            template = buildTemplate(client.templateBuilder());
+            template.getOptions().inboundPorts(22, 8080).blockOnPort(22, 300 + groupNum);
             ListenableFuture<NodeMetadata> future = userExecutor.submit(new Callable<NodeMetadata>() {
                public NodeMetadata call() throws Exception {
-                  NodeMetadata node = getOnlyElement(client.createNodesInGroup(group, 1, inboundPorts(22, 8080)
-                           .blockOnPort(22, 300 + groupNum)));
+                  NodeMetadata node = getOnlyElement(client.createNodesInGroup(group, 1, template));
                   getAnonymousLogger().info("Started node " + node.getId());
                   return node;
                }
@@ -713,8 +712,11 @@ public abstract class BaseComputeServiceLiveTest extends BaseComputeServiceConte
       
       ImmutableSet<String> tags = ImmutableSet. of(group);
       Stopwatch watch = Stopwatch.createStarted();
-      NodeMetadata node = getOnlyElement(client.createNodesInGroup(group, 1,
-            inboundPorts(22, 8080).blockOnPort(22, 300).userMetadata(userMetadata).tags(tags)));
+
+      template = buildTemplate(client.templateBuilder());
+      template.getOptions().inboundPorts(22, 8080).blockOnPort(22, 300).userMetadata(userMetadata).tags(tags);
+
+      NodeMetadata node = getOnlyElement(client.createNodesInGroup(group, 1, template));
       long createSeconds = watch.elapsed(TimeUnit.SECONDS);
 
       final String nodeId = node.getId();
@@ -812,10 +814,11 @@ public abstract class BaseComputeServiceLiveTest extends BaseComputeServiceConte
 
       }
       // no inbound ports
-      TemplateOptions options = client.templateOptions().blockUntilRunning(false).inboundPorts();
+      template = buildTemplate(client.templateBuilder());
+      template.getOptions().blockUntilRunning(false).inboundPorts();
       try {
          long time = currentTimeMillis();
-         Set<? extends NodeMetadata> nodes = client.createNodesInGroup(group, 1, options);
+         Set<? extends NodeMetadata> nodes = client.createNodesInGroup(group, 1, template);
          NodeMetadata node = getOnlyElement(nodes);
          assert node.getStatus() != Status.RUNNING : node;
          long duration = (currentTimeMillis() - time) / 1000;
