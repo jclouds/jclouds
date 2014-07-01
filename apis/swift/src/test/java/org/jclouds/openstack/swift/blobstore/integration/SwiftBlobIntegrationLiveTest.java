@@ -25,11 +25,14 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
+import java.util.Random;
 
 import org.jclouds.blobstore.BlobStore;
 import org.jclouds.blobstore.domain.Blob;
 import org.jclouds.blobstore.integration.internal.BaseBlobIntegrationTest;
 import org.jclouds.blobstore.options.PutOptions;
+import org.jclouds.io.ByteSources;
+import org.jclouds.io.Payload;
 import org.jclouds.openstack.keystone.v2_0.config.KeystoneProperties;
 import org.jclouds.openstack.swift.blobstore.strategy.MultipartUpload;
 import org.testng.ITestContext;
@@ -76,18 +79,18 @@ public class SwiftBlobIntegrationLiveTest extends BaseBlobIntegrationTest {
       throw new SkipException("not yet implemented");
    }
 
-    @BeforeClass(groups = { "integration", "live" }, dependsOnMethods = "setupContext")
-    @Override
-    public void setUpResourcesOnThisThread(ITestContext testContext) throws Exception {
-        super.setUpResourcesOnThisThread(testContext);
-        oneHundredOneConstitutions = getTestDataSupplier();
-    }
+   @BeforeClass(groups = {"integration", "live"}, dependsOnMethods = "setupContext")
+   @Override
+   public void setUpResourcesOnThisThread(ITestContext testContext) throws Exception {
+      super.setUpResourcesOnThisThread(testContext);
+      oneHundredOneConstitutions = getTestDataSupplier();
+   }
 
    @Override
    protected void checkContentDisposition(Blob blob, String contentDisposition) {
-     // This works for Swift Server 1.4.4/SWauth 1.0.3 but was null in previous versions.
-     // TODO: Better testing for the different versions.
-     super.checkContentDisposition(blob, contentDisposition);
+      // This works for Swift Server 1.4.4/SWauth 1.0.3 but was null in previous versions.
+      // TODO: Better testing for the different versions.
+      super.checkContentDisposition(blob, contentDisposition);
    }
 
    // not supported in swift
@@ -121,7 +124,40 @@ public class SwiftBlobIntegrationLiveTest extends BaseBlobIntegrationTest {
                     "A multipart blob wasn't actually created - " +
                     "there was only 1 extra blob but there should be one manifest blob and multiple chunk blobs");
       } finally {
-          returnContainer(containerName);
+         returnContainer(containerName);
+      }
+   }
+
+   /**
+    * Checks that when there are more than 9 chunks the object names
+    * are set correctly so that the order of the object names matches
+    * the upload order.
+    * See issue https://issues.apache.org/jira/browse/JCLOUDS-619
+    */
+   @Test(groups = {"integration", "live"})
+   public void testMultipartChunkedFilenames() throws InterruptedException, IOException {
+      String containerName = getContainerName();
+      try {
+         BlobStore blobStore = view.getBlobStore();
+         String objectName = "object.txt";
+         long countBefore = blobStore.countBlobs(containerName);
+
+         // we want 11 parts
+         ByteSource inputSource = createByteSource(PART_SIZE * 11);
+         addMultipartBlobToContainer(containerName, objectName, inputSource);
+
+         // did we create enough parts?
+         long countAfter = blobStore.countBlobs(containerName);
+         assertNotEquals(countAfter, countBefore, "No blob was created");
+         assertEquals(countAfter, countBefore + 12,
+                 "12 parts (11 objects + 1 manifest) were expected.");
+
+         // download and check if correct
+         Blob read = blobStore.getBlob(containerName, objectName);
+         Payload readPayload = read.getPayload();
+         assertTrue(inputSource.contentEquals(ByteSources.asByteSource(readPayload.openStream())));
+      } finally {
+         returnContainer(containerName);
       }
    }
 
@@ -158,13 +194,26 @@ public class SwiftBlobIntegrationLiveTest extends BaseBlobIntegrationTest {
 
    protected void addMultipartBlobToContainer(String containerName, String key) throws IOException {
       File fileToUpload = createFileBiggerThan(PART_SIZE);
+      addMultipartBlobToContainer(containerName, key, Files.asByteSource(fileToUpload));
+   }
 
+   protected void addMultipartBlobToContainer(String containerName, String key, ByteSource byteSource) throws IOException {
       BlobStore blobStore = view.getBlobStore();
       blobStore.createContainerInLocation(null, containerName);
       Blob blob = blobStore.blobBuilder(key)
-         .payload(fileToUpload)
-         .build();
+              .payload(byteSource)
+              .contentLength(byteSource.size())
+              .build();
       blobStore.putBlob(containerName, blob, PutOptions.Builder.multipart());
+   }
+
+   private ByteSource createByteSource(long size) throws IOException {
+      final Random random = new Random();
+      final byte[] randomBytes = new byte[(int) MultipartUpload.MIN_PART_SIZE];
+      random.nextBytes(randomBytes);
+      ByteSource byteSource = ByteSources.repeatingArrayByteSource(randomBytes).slice(0, size);
+      assertEquals(byteSource.size(), size);
+      return byteSource;
    }
 
    @SuppressWarnings("unchecked")

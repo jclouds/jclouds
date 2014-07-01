@@ -34,7 +34,6 @@ import org.jclouds.openstack.swift.blobstore.functions.BlobToObject;
 import com.google.inject.Inject;
 
 public class SequentialMultipartUploadStrategy implements MultipartUploadStrategy {
-   private static final String PART_SEPARATOR = "/";
 
    @Resource
    @Named(BlobStoreConstants.BLOBSTORE_LOGGER)
@@ -45,15 +44,18 @@ public class SequentialMultipartUploadStrategy implements MultipartUploadStrateg
    private final BlobToObject blob2Object;
    private final MultipartUploadSlicingAlgorithm algorithm;
    private final PayloadSlicer slicer;
+   private final MultipartNamingStrategy namingStrategy;
 
    @Inject
    public SequentialMultipartUploadStrategy(CommonSwiftClient client, Provider<BlobBuilder> blobBuilders,
-         BlobToObject blob2Object, MultipartUploadSlicingAlgorithm algorithm, PayloadSlicer slicer) {
+         BlobToObject blob2Object, MultipartUploadSlicingAlgorithm algorithm, PayloadSlicer slicer,
+         MultipartNamingStrategy namingStrategy) {
       this.client = checkNotNull(client, "client");
       this.blobBuilders = checkNotNull(blobBuilders, "blobBuilders");
       this.blob2Object = checkNotNull(blob2Object, "blob2Object");
       this.algorithm = checkNotNull(algorithm, "algorithm");
       this.slicer = checkNotNull(slicer, "slicer");
+      this.namingStrategy = checkNotNull(namingStrategy, "namingStrategy");
    }
 
    @Override
@@ -68,10 +70,11 @@ public class SequentialMultipartUploadStrategy implements MultipartUploadStrateg
       if (partCount > 0) {
          for (Payload part : slicer.slice(payload, chunkSize)) {
             int partNum = algorithm.getNextPart();
+            String partName = namingStrategy.getPartName(key, partNum, partCount);
             Blob blobPart = blobBuilders.get()
-                                        .name(key + PART_SEPARATOR + partNum)
+                                        .name(partName)
                                         .payload(part)
-                                        .contentDisposition(key + PART_SEPARATOR + partNum)
+                                        .contentDisposition(partName)
                                         .build();
             client.putObject(container, blob2Object.apply(blobPart));
          }
