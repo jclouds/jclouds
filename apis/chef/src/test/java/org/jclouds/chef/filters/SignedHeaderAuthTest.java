@@ -28,6 +28,7 @@ import javax.ws.rs.HttpMethod;
 
 import org.jclouds.ContextBuilder;
 import org.jclouds.chef.ChefApiMetadata;
+import org.jclouds.crypto.Crypto;
 import org.jclouds.domain.Credentials;
 import org.jclouds.http.HttpRequest;
 import org.jclouds.http.HttpUtils;
@@ -193,6 +194,7 @@ public class SignedHeaderAuthTest {
             .modules(ImmutableSet.<Module> of(new MockModule(), new NullLoggingModule())).buildInjector();
 
       HttpUtils utils = injector.getInstance(HttpUtils.class);
+      Crypto crypto = injector.getInstance(Crypto.class);
 
       Supplier<PrivateKey> privateKey = injector.getInstance(Key.get(new TypeLiteral<Supplier<PrivateKey>>() {
       }));
@@ -205,7 +207,7 @@ public class SignedHeaderAuthTest {
                   return TIMESTAMP_ISO8601;
                }
 
-            }, utils);
+            }, utils, crypto);
    }
 
 }

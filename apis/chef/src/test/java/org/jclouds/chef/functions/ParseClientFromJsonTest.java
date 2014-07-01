@@ -19,6 +19,7 @@ package org.jclouds.chef.functions;
 import static org.testng.Assert.assertEquals;
 
 import java.io.IOException;
+import java.security.NoSuchAlgorithmException;
 import java.security.PrivateKey;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
@@ -29,6 +30,7 @@ import org.jclouds.chef.config.ChefParserModule;
 import org.jclouds.chef.domain.Client;
 import org.jclouds.crypto.Crypto;
 import org.jclouds.crypto.Pems;
+import org.jclouds.encryption.internal.JCECrypto;
 import org.jclouds.http.HttpResponse;
 import org.jclouds.http.functions.ParseJson;
 import org.jclouds.io.Payloads;
@@ -77,16 +79,16 @@ public class ParseClientFromJsonTest {
       privateKey = crypto.rsaKeyFactory().generatePrivate(Pems.privateKeySpec(ByteSource.wrap(PRIVATE_KEY.getBytes(Charsets.UTF_8))));
    }
 
-   public void test() throws IOException {
+   public void test() throws IOException, CertificateException, NoSuchAlgorithmException {
 
       Client user = Client.builder().certificate(certificate).orgname("jclouds").clientname("adriancole-jcloudstest")
             .name("adriancole-jcloudstest").isValidator(false).privateKey(privateKey).build();
 
-      byte[] encrypted = ByteStreams.toByteArray(new RSAEncryptingPayload(Payloads.newPayload("fooya"), user
+      byte[] encrypted = ByteStreams.toByteArray(new RSAEncryptingPayload(new JCECrypto(), Payloads.newPayload("fooya"), user
             .getCertificate().getPublicKey()));
 
       assertEquals(
-            ByteStreams.toByteArray(new RSADecryptingPayload(Payloads.newPayload(encrypted), user.getPrivateKey())),
+            ByteStreams.toByteArray(new RSADecryptingPayload(new JCECrypto(), Payloads.newPayload(encrypted), user.getPrivateKey())),
             "fooya".getBytes());
 
       assertEquals(
