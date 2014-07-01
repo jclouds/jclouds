@@ -234,7 +234,7 @@ public class BlockDeviceMapping implements Comparable<BlockDeviceMapping> {
             return false;
       } else if (!volumeType.equals(other.volumeType))
          return false;
-      if (iops== null) {
+      if (iops == null) {
          if (other.iops != null)
             return false;
       } else if (!iops.equals(other.iops))

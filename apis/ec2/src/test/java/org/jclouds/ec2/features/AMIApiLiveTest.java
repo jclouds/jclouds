@@ -33,7 +33,6 @@ import java.util.Iterator;
 import java.util.Properties;
 import java.util.Set;
 
-import org.jclouds.Constants;
 import org.jclouds.aws.AWSResponseException;
 import org.jclouds.compute.RunNodesException;
 import org.jclouds.compute.domain.Template;

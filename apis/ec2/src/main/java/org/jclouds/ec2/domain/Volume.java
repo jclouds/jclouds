@@ -347,6 +347,6 @@ public class Volume implements Comparable<Volume> {
       return "Volume [attachments=" + attachments + ", availabilityZone=" + availabilityZone + ", createTime="
               + createTime + ", id=" + id + ", region=" + region + ", size=" + size + ", snapshotId=" + snapshotId
               + ", status=" + status + ", volumeType=" + volumeType + ", iops=" + iops + ", encrypted=" + encrypted
-              +"]";
+              + "]";
    }
 }

@@ -31,7 +31,6 @@ import org.jclouds.http.HttpResponse;
 import org.jclouds.http.handlers.BackoffLimitedRetryHandler;
 import org.jclouds.io.Payloads;
 import org.jclouds.openstack.keystone.v1_1.domain.Auth;
-import org.jclouds.openstack.keystone.v1_1.handlers.RetryOnRenew;
 import org.testng.annotations.Test;
 
 import com.google.common.cache.LoadingCache;
