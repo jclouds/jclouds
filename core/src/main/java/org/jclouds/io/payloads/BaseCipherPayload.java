@@ -24,14 +24,18 @@ import java.security.Key;
 import javax.crypto.Cipher;
 import javax.crypto.CipherInputStream;
 
+import org.jclouds.crypto.Crypto;
 import org.jclouds.io.Payload;
 
 public abstract class BaseCipherPayload extends DelegatingPayload {
 
    private final Key key;
 
-   public BaseCipherPayload(Payload delegate, Key key) {
+   protected final Crypto crypto;
+
+   public BaseCipherPayload(Crypto crypto, Payload delegate, Key key) {
       super(delegate);
+      this.crypto = checkNotNull(crypto, "crypto");
       this.key = checkNotNull(key, "key");
    }
 

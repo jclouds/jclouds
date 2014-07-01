@@ -23,21 +23,22 @@ import java.security.NoSuchAlgorithmException;
 import javax.crypto.Cipher;
 import javax.crypto.NoSuchPaddingException;
 
+import org.jclouds.crypto.Crypto;
 import org.jclouds.io.Payload;
 
 import com.google.common.base.Throwables;
 
 public class RSAEncryptingPayload extends BaseCipherPayload {
 
-   public RSAEncryptingPayload(Payload delegate, Key key) {
-      super(delegate, key);
+   public RSAEncryptingPayload(Crypto crypto, Payload delegate, Key key) {
+      super(crypto, delegate, key);
    }
 
    @Override
    public Cipher initializeCipher(Key key) {
       Cipher cipher = null;
       try {
-         cipher = Cipher.getInstance("RSA");
+         cipher = crypto.cipher("RSA");
          cipher.init(Cipher.ENCRYPT_MODE, key);
       } catch (NoSuchAlgorithmException e) {
          Throwables.propagate(e);
