@@ -18,6 +18,7 @@ package org.jclouds.chef.filters;
 
 import static com.google.common.base.Charsets.UTF_8;
 import static com.google.common.base.Preconditions.checkArgument;
+import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.hash.Hashing.sha1;
 import static com.google.common.io.BaseEncoding.base64;
 import static com.google.common.io.ByteStreams.toByteArray;
@@ -33,6 +34,7 @@ import javax.inject.Provider;
 import javax.inject.Singleton;
 
 import org.jclouds.Constants;
+import org.jclouds.crypto.Crypto;
 import org.jclouds.date.TimeStamp;
 import org.jclouds.domain.Credentials;
 import org.jclouds.http.HttpException;
@@ -50,6 +52,7 @@ import org.jclouds.logging.Logger;
 import org.jclouds.util.Strings2;
 
 import com.google.common.annotations.VisibleForTesting;
+import com.google.common.base.Preconditions;
 import com.google.common.base.Predicate;
 import com.google.common.base.Splitter;
 import com.google.common.base.Supplier;
@@ -74,6 +77,7 @@ public class SignedHeaderAuth implements HttpRequestFilter {
    private final Provider<String> timeStampProvider;
    private final String emptyStringHash;
    private final HttpUtils utils;
+   private final Crypto crypto;
 
    @Resource
    @Named(Constants.LOGGER_SIGNATURE)
@@ -81,13 +85,14 @@ public class SignedHeaderAuth implements HttpRequestFilter {
 
    @Inject
    public SignedHeaderAuth(SignatureWire signatureWire, @org.jclouds.location.Provider Supplier<Credentials> creds,
-         Supplier<PrivateKey> supplyKey, @TimeStamp Provider<String> timeStampProvider, HttpUtils utils) {
-      this.signatureWire = signatureWire;
-      this.creds = creds;
-      this.supplyKey = supplyKey;
-      this.timeStampProvider = timeStampProvider;
+         Supplier<PrivateKey> supplyKey, @TimeStamp Provider<String> timeStampProvider, HttpUtils utils, Crypto crypto) {
+      this.signatureWire = checkNotNull(signatureWire, "signatureWire");
+      this.creds = checkNotNull(creds, "creds");
+      this.supplyKey = checkNotNull(supplyKey, "supplyKey");
+      this.timeStampProvider = checkNotNull(timeStampProvider, "timeStampProvider");
       this.emptyStringHash = hashBody(Payloads.newStringPayload(""));
-      this.utils = utils;
+      this.utils = checkNotNull(utils, "utils");
+      this.crypto = checkNotNull(crypto, "crypto");
    }
 
    public HttpRequest filter(HttpRequest input) throws HttpException {
@@ -186,7 +191,7 @@ public class SignedHeaderAuth implements HttpRequestFilter {
 
    public String sign(String toSign) {
       try {
-         byte[] encrypted = toByteArray(new RSAEncryptingPayload(Payloads.newStringPayload(toSign), supplyKey.get()));
+         byte[] encrypted = toByteArray(new RSAEncryptingPayload(crypto, Payloads.newStringPayload(toSign), supplyKey.get()));
          return base64().encode(encrypted);
       } catch (IOException e) {
          throw new HttpException("error signing request", e);

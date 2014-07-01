@@ -54,6 +54,7 @@ import org.jclouds.chef.strategy.ListNodesInEnvironment;
 import org.jclouds.chef.strategy.ListEnvironments;
 import org.jclouds.chef.strategy.ListNodes;
 import org.jclouds.chef.strategy.UpdateAutomaticAttributesOnNode;
+import org.jclouds.crypto.Crypto;
 import org.jclouds.domain.JsonBall;
 import org.jclouds.io.Payloads;
 import org.jclouds.io.payloads.RSADecryptingPayload;
@@ -90,6 +91,8 @@ public class BaseChefService implements ChefService {
    private final ListEnvironments listEnvironments;
    private final ListNodesInEnvironment listNodesInEnvironment;
    private final Json json;
+   private final Crypto crypto;
+   
    @Resource
    @Named(ChefProperties.CHEF_LOGGER)
    protected Logger logger = Logger.NULL;
@@ -104,7 +107,7 @@ public class BaseChefService implements ChefService {
          @Named(CHEF_BOOTSTRAP_DATABAG) String databag, GroupToBootScript groupToBootScript,
          BootstrapConfigForGroup bootstrapConfigForGroup, RunListForGroup runListForGroup,
          ListEnvironments listEnvironments, ListNodesInEnvironment listNodesInEnvironment,
-         ListCookbookVersionsInEnvironment listCookbookVersionsInEnvironment, Json json) {
+         ListCookbookVersionsInEnvironment listCookbookVersionsInEnvironment, Json json, Crypto crypto) {
       this.chefContext = checkNotNull(chefContext, "chefContext");
       this.api = checkNotNull(api, "api");
       this.cleanupStaleNodesAndClients = checkNotNull(cleanupStaleNodesAndClients, "cleanupStaleNodesAndClients");
@@ -126,6 +129,7 @@ public class BaseChefService implements ChefService {
       this.listNodesInEnvironment = checkNotNull(listNodesInEnvironment, "listNodesInEnvironment");
       this.listCookbookVersionsInEnvironment = checkNotNull(listCookbookVersionsInEnvironment, "listCookbookVersionsInEnvironment");
       this.json = checkNotNull(json, "json");
+      this.crypto = checkNotNull(crypto, "crypto");
    }
 
    @Override
@@ -135,13 +139,13 @@ public class BaseChefService implements ChefService {
 
    @Override
    public byte[] encrypt(InputSupplier<? extends InputStream> supplier) throws IOException {
-      return ByteStreams.toByteArray(new RSAEncryptingPayload(Payloads.newPayload(supplier.getInput()), privateKey
+      return ByteStreams.toByteArray(new RSAEncryptingPayload(crypto, Payloads.newPayload(supplier.getInput()), privateKey
             .get()));
    }
 
    @Override
    public byte[] decrypt(InputSupplier<? extends InputStream> supplier) throws IOException {
-      return ByteStreams.toByteArray(new RSADecryptingPayload(Payloads.newPayload(supplier.getInput()), privateKey
+      return ByteStreams.toByteArray(new RSADecryptingPayload(crypto, Payloads.newPayload(supplier.getInput()), privateKey
             .get()));
    }
 
