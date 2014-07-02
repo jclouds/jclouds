@@ -32,6 +32,8 @@
   <packaging>bundle</packaging>
 
   <properties>
+    <test.aws.identity>FIXME_IDENTITY</test.aws.identity>
+    <test.aws.credential>FIXME_CREDENTIAL</test.aws.credential>
     <test.aws-ec2.endpoint>https://ec2.us-east-1.amazonaws.com</test.aws-ec2.endpoint>
     <test.aws-ec2.api-version>2012-06-01</test.aws-ec2.api-version>
     <test.aws-ec2.build-version />
@@ -108,7 +110,7 @@
         <artifactId>clojure-maven-plugin</artifactId>
       </plugin>
     </plugins>
-  </build> 
+  </build>
 
   <profiles>
     <profile>

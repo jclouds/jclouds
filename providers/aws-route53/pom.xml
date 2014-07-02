@@ -32,6 +32,8 @@
   <packaging>bundle</packaging>
 
   <properties>
+    <test.aws.identity>FIXME_IDENTITY</test.aws.identity>
+    <test.aws.credential>FIXME_CREDENTIAL</test.aws.credential>
     <test.aws-route53.endpoint>https://route53.amazonaws.com</test.aws-route53.endpoint>
     <test.aws-route53.api-version>2012-02-29</test.aws-route53.api-version>
     <test.aws-route53.build-version />

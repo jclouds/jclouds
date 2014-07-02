@@ -32,6 +32,8 @@
   <packaging>bundle</packaging>
 
   <properties>
+    <test.aws.identity>FIXME_IDENTITY</test.aws.identity>
+    <test.aws.credential>FIXME_CREDENTIAL</test.aws.credential>
     <test.aws-cloudwatch.endpoint>https://monitoring.us-east-1.amazonaws.com</test.aws-cloudwatch.endpoint>
     <test.aws-cloudwatch.api-version>2010-08-01</test.aws-cloudwatch.api-version>
     <test.aws-cloudwatch.build-version />

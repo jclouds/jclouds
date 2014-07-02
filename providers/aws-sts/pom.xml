@@ -32,6 +32,8 @@
   <packaging>bundle</packaging>
 
   <properties>
+    <test.aws.identity>FIXME_IDENTITY</test.aws.identity>
+    <test.aws.credential>FIXME_CREDENTIAL</test.aws.credential>
     <test.aws-sts.endpoint>https://sts.amazonaws.com</test.aws-sts.endpoint>
     <test.aws-sts.api-version>2011-06-15</test.aws-sts.api-version>
     <test.aws-sts.build-version />

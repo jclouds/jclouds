@@ -32,6 +32,8 @@
   <packaging>bundle</packaging>
 
   <properties>
+    <test.aws.identity>FIXME_IDENTITY</test.aws.identity>
+    <test.aws.credential>FIXME_CREDENTIAL</test.aws.credential>
     <test.initializer>org.jclouds.aws.s3.blobstore.integration.AWSS3TestInitializer</test.initializer>
     <test.aws-s3.endpoint>https://s3.amazonaws.com</test.aws-s3.endpoint>
     <test.aws-s3.api-version>2006-03-01</test.aws-s3.api-version>

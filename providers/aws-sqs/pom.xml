@@ -32,6 +32,8 @@
   <packaging>bundle</packaging>
 
   <properties>
+    <test.aws.identity>FIXME_IDENTITY</test.aws.identity>
+    <test.aws.credential>FIXME_CREDENTIAL</test.aws.credential>
     <test.aws-sqs.endpoint>https://sqs.us-east-1.amazonaws.com</test.aws-sqs.endpoint>
     <test.aws-sqs.api-version>2011-10-01</test.aws-sqs.api-version>
     <test.aws-sqs.build-version />
