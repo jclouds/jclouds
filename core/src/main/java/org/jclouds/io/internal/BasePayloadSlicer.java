@@ -96,17 +96,25 @@ public class BasePayloadSlicer implements PayloadSlicer {
 
       private Payload getNextPayload() {
          byte[] content = new byte[readLen];
-         int read = 0;
+         int offset = 0;
 
          try {
-            if ((read = input.read(content)) == -1) {
-               return null;
+            while (true) {
+               int read = input.read(content, offset, readLen - offset);
+               if (read <= 0) {
+                  if (offset == 0) {
+                     return null;
+                  } else {
+                     break;
+                  }
+               }
+               offset += read;
             }
          } catch (IOException e) {
             throw Throwables.propagate(e);
          }
 
-         return createPayload((content.length == read) ? content : Arrays.copyOf(content, read));
+         return createPayload((content.length == offset) ? content : Arrays.copyOf(content, offset));
       }
 
       private Payload createPayload(byte[] content) {

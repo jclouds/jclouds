@@ -24,13 +24,17 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.util.Iterator;
 
+import org.jclouds.io.ByteSources;
 import org.jclouds.io.Payload;
 import org.jclouds.io.PayloadSlicer;
+import org.jclouds.io.payloads.ByteSourcePayload;
 import org.jclouds.io.payloads.InputStreamPayload;
 import org.jclouds.util.Strings2;
 import org.testng.annotations.Test;
 
 import com.google.common.base.Charsets;
+import com.google.common.collect.Iterables;
+import com.google.common.io.ByteSource;
 import com.google.common.io.ByteStreams;
 
 @Test
@@ -67,4 +71,15 @@ public class BasePayloadSlicerTest {
 
    }
 
+   @Test
+   public void testIterableSliceWithRepeatingByteSource() throws IOException {
+      String content = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz\n"; /* 53 chars */
+      byte[] contentBytes = content.getBytes(Charsets.UTF_8);
+      ByteSource byteSource = ByteSources.repeatingArrayByteSource(contentBytes).slice(0, 1024);
+      PayloadSlicer slicer = new BasePayloadSlicer();
+      Payload payload = new ByteSourcePayload(byteSource);
+
+      assertEquals(Iterables.size(slicer.slice(payload, 100)), 11);
+      assertEquals(Iterables.size(slicer.slice(payload, 53)), 20);
+   }
 }
