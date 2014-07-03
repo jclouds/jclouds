@@ -35,8 +35,8 @@
     <test.hpcloud-blockstorage.endpoint>https://region-a.geo-1.identity.hpcloudsvc.com:35357/v2.0/</test.hpcloud-blockstorage.endpoint>
     <test.hpcloud-blockstorage.api-version>1.0</test.hpcloud-blockstorage.api-version>
     <test.hpcloud-blockstorage.build-version />
-    <test.hpcloud-blockstorage.identity>FIXME</test.hpcloud-blockstorage.identity>
-    <test.hpcloud-blockstorage.credential>FIXME</test.hpcloud-blockstorage.credential>
+    <test.hpcloud-blockstorage.identity>FIXME_IDENTITY</test.hpcloud-blockstorage.identity>
+    <test.hpcloud-blockstorage.credential>FIXME_CREDENTIAL</test.hpcloud-blockstorage.credential>
     <test.hpcloud-blockstorage.template />
     <jclouds.osgi.export>org.jclouds.hpcloud.blockstorage.*;version="${project.version}"</jclouds.osgi.export>
     <jclouds.osgi.import>

@@ -35,8 +35,8 @@
     <test.atmos.endpoint>https://accesspoint.atmosonline.com</test.atmos.endpoint>
     <test.atmos.api-version>1.3.0</test.atmos.api-version>
     <test.atmos.build-version />
-    <test.atmos.identity>FIXME</test.atmos.identity>
-    <test.atmos.credential>FIXME</test.atmos.credential>
+    <test.atmos.identity>FIXME_IDENTITY</test.atmos.identity>
+    <test.atmos.credential>FIXME_CREDENTIAL</test.atmos.credential>
 
     <jclouds.osgi.import>*</jclouds.osgi.import>
     <jclouds.osgi.export>org.jclouds.atmos*;version="${project.version}";-noimport:=true</jclouds.osgi.export>

@@ -35,8 +35,8 @@
     <test.cloudsigma-lvs.endpoint>https://api.lvs.cloudsigma.com</test.cloudsigma-lvs.endpoint>
     <test.cloudsigma-lvs.api-version>1.0</test.cloudsigma-lvs.api-version>
     <test.cloudsigma-lvs.build-version />
-    <test.cloudsigma-lvs.identity>FIXME</test.cloudsigma-lvs.identity>
-    <test.cloudsigma-lvs.credential>FIXME</test.cloudsigma-lvs.credential>
+    <test.cloudsigma-lvs.identity>FIXME_IDENTITY</test.cloudsigma-lvs.identity>
+    <test.cloudsigma-lvs.credential>FIXME_CREDENTIAL</test.cloudsigma-lvs.credential>
     <test.cloudsigma-lvs.template />
     <jclouds.osgi.export>org.jclouds.cloudsigma*;version="${project.version}"</jclouds.osgi.export>
     <jclouds.osgi.import>

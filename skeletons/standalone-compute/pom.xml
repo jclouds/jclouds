@@ -33,11 +33,11 @@
   <properties>
     <!-- when instances are hung, open a ticket and add here -->
     <jclouds.compute.blacklist-nodes>trmkrun-ccc,test.trmk-924</jclouds.compute.blacklist-nodes>
-    <test.servermanager.identity>FIXME</test.servermanager.identity>
+    <test.servermanager.identity>FIXME_IDENTITY</test.servermanager.identity>
+    <test.servermanager.credential>FIXME_CREDENTIAL</test.servermanager.credential>
     <test.servermanager.endpoint>https://servermanager.com</test.servermanager.endpoint>
     <test.servermanager.api-version>1.0</test.servermanager.api-version>
     <test.servermanager.build-version />
-    <test.servermanager.identity>FIXME</test.servermanager.identity>
 
     <jclouds.osgi.export>org.jclouds.servermanager*;version="${project.version}"</jclouds.osgi.export>
     <jclouds.osgi.import>org.jclouds*;version="${project.version}",*</jclouds.osgi.import>

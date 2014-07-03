@@ -35,8 +35,8 @@
     <test.elasticstack.endpoint>https://api-lon-p.elastichosts.com</test.elasticstack.endpoint>
     <test.elasticstack.api-version>2.0</test.elasticstack.api-version>
     <test.elasticstack.build-version />
-    <test.elasticstack.identity>FIXME</test.elasticstack.identity>
-    <test.elasticstack.credential>FIXME</test.elasticstack.credential>
+    <test.elasticstack.identity>FIXME_IDENTITY</test.elasticstack.identity>
+    <test.elasticstack.credential>FIXME_CREDENTIAL</test.elasticstack.credential>
     <test.elasticstack.template>imageId=38df0986-4d85-4b76-b502-3878ffc80161,loginUser=toor</test.elasticstack.template>
     <jclouds.osgi.export>org.jclouds.elasticstack*;version="${project.version}"</jclouds.osgi.export>
     <jclouds.osgi.import>

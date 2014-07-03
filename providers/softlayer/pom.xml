@@ -49,8 +49,8 @@
     <test.softlayer.endpoint>https://api.softlayer.com/rest</test.softlayer.endpoint>
     <test.softlayer.api-version>3</test.softlayer.api-version>
     <test.softlayer.build-version />
-    <test.softlayer.identity>FIXME</test.softlayer.identity>
-    <test.softlayer.credential>FIXME</test.softlayer.credential>
+    <test.softlayer.identity>FIXME_IDENTITY</test.softlayer.identity>
+    <test.softlayer.credential>FIXME_CREDENTIAL</test.softlayer.credential>
     <test.softlayer.template />
     <jclouds.osgi.export>org.jclouds.softlayer*;version="${project.version}"</jclouds.osgi.export>
     <jclouds.osgi.import>

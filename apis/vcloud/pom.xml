@@ -32,11 +32,11 @@
   <packaging>bundle</packaging>
 
   <properties>
-    <test.vcloud.endpoint>FIXME</test.vcloud.endpoint>
+    <test.vcloud.endpoint>FIXME_ENDPOINT</test.vcloud.endpoint>
     <test.vcloud.api-version>1.0</test.vcloud.api-version>
     <test.vcloud.build-version />
-    <test.vcloud.identity>FIXME</test.vcloud.identity>
-    <test.vcloud.credential>FIXME</test.vcloud.credential>
+    <test.vcloud.identity>FIXME_IDENTITY</test.vcloud.identity>
+    <test.vcloud.credential>FIXME_CREDENTIAL</test.vcloud.credential>
     <test.vcloud.template />
     <jclouds.osgi.export>org.jclouds.vcloud*;version="${project.version}"</jclouds.osgi.export>
     <jclouds.osgi.import>
