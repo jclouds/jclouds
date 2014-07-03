@@ -25,7 +25,6 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.UnsupportedEncodingException;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
@@ -41,6 +40,7 @@ import org.jclouds.io.payloads.ByteSourcePayload;
 import org.jclouds.io.payloads.InputStreamPayload;
 import org.jclouds.io.payloads.InputStreamSupplierPayload;
 
+import com.google.common.base.Charsets;
 import com.google.common.base.Throwables;
 import com.google.common.hash.HashCode;
 import com.google.common.io.ByteSource;
@@ -230,11 +230,7 @@ public class BasePayloadSlicer implements PayloadSlicer {
    }
 
    protected Iterable<Payload> doSlice(String rawContent, ContentMetadata meta) {
-      try {
-         return doSlice(rawContent.getBytes("UTF-8"), meta);
-      } catch (UnsupportedEncodingException e) {
-         throw Throwables.propagate(e);
-      }
+      return doSlice(rawContent.getBytes(Charsets.UTF_8), meta);
    }
 
    protected Iterable<Payload> doSlice(byte[] rawContent, ContentMetadata meta) {
