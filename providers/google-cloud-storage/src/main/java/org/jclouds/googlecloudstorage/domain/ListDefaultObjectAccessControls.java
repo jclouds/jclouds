@@ -35,10 +35,10 @@ import com.google.common.collect.ImmutableSet;
 
 public class ListDefaultObjectAccessControls {
 
-   protected final Kind kind;
-   protected final Set<DefaultObjectAccessControls> items;
+   private final Kind kind;
+   private final Set<DefaultObjectAccessControls> items;
 
-   protected ListDefaultObjectAccessControls(Kind kind, Set<DefaultObjectAccessControls> items) {
+   private ListDefaultObjectAccessControls(Kind kind, Set<DefaultObjectAccessControls> items) {
 
       this.kind = checkNotNull(kind, "kind");
       this.items = checkNotNull(items, "items");
@@ -110,4 +110,3 @@ public class ListDefaultObjectAccessControls {
       }
    }
 }
-

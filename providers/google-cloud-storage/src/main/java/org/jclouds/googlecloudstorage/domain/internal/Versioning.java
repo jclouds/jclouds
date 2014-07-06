@@ -29,7 +29,7 @@ import com.google.common.base.Objects;
 public final class Versioning {
    private final Boolean enabled;
 
-   public Versioning(Boolean enabled) {
+   private Versioning(Boolean enabled) {
       this.enabled = enabled;
    }
 

@@ -25,8 +25,8 @@ import org.jclouds.googlecloudstorage.domain.DomainResourceRefferences.ObjectRol
  */
 public class DefaultObjectAccessControlsTemplate {
 
-   protected String entity;
-   protected ObjectRole role;
+   private String entity;
+   private ObjectRole role;
 
    public DefaultObjectAccessControlsTemplate role(ObjectRole role) {
       this.role = role;

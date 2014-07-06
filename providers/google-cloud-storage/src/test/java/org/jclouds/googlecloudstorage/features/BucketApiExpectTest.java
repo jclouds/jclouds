@@ -73,9 +73,9 @@ public class BucketApiExpectTest extends BaseGoogleCloudStorageApiExpectTest {
    public void testGetBucketWithNoOptionsResponseIs2xx() throws Exception {
 
       BucketApi api = requestsSendResponses(requestForScopes(STORAGE_READONLY_SCOPE), TOKEN_RESPONSE,
-               GET_BUCKET_REQUEST, BUCKET_RESPONSE).getBucketsApi();
+               GET_BUCKET_REQUEST, BUCKET_RESPONSE).getBucketApi();
 
-      assertEquals(api.getBuckets(EXPECTED_TEST_BUCKET), new NoAclBucketTest().expected());
+      assertEquals(api.getBucket(EXPECTED_TEST_BUCKET), new NoAclBucketTest().expected());
    }
 
    public void testGetBucketResponseIs4xx() throws Exception {
@@ -83,40 +83,40 @@ public class BucketApiExpectTest extends BaseGoogleCloudStorageApiExpectTest {
       HttpResponse getResponse = HttpResponse.builder().statusCode(404).build();
 
       BucketApi api = requestsSendResponses(requestForScopes(STORAGE_READONLY_SCOPE), TOKEN_RESPONSE,
-               GET_BUCKET_REQUEST, getResponse).getBucketsApi();
+               GET_BUCKET_REQUEST, getResponse).getBucketApi();
 
-      assertNull("404", api.getBuckets(EXPECTED_TEST_BUCKET));
+      assertNull("404", api.getBucket(EXPECTED_TEST_BUCKET));
    }
 
    // Test getBucket with options
    public void testGetBucketWithOptionsResponseIs2xx() throws Exception {
 
       BucketApi api = requestsSendResponses(requestForScopes(STORAGE_READONLY_SCOPE), TOKEN_RESPONSE,
-               GET_BUCKET_REQUEST_WITHOPTIONS, BUCKET_RESPONSE).getBucketsApi();
+               GET_BUCKET_REQUEST_WITHOPTIONS, BUCKET_RESPONSE).getBucketApi();
 
       GetBucketOptions options = new GetBucketOptions().ifMetagenerationNotMatch(Long.valueOf(100)).projection(
                Projection.FULL);
-      assertEquals(api.getBuckets(EXPECTED_TEST_BUCKET, options), new NoAclBucketTest().expected());
+      assertEquals(api.getBucket(EXPECTED_TEST_BUCKET, options), new NoAclBucketTest().expected());
    }
 
    // Test listBucket without options
    public void testListBucketWithNoOptionsResponseIs2xx() throws Exception {
 
       BucketApi api = requestsSendResponses(requestForScopes(STORAGE_FULLCONTROL_SCOPE), TOKEN_RESPONSE,
-               LIST_BUCKET_REQUEST, LIST_BUCKET_RESPONSE).getBucketsApi();
+               LIST_BUCKET_REQUEST, LIST_BUCKET_RESPONSE).getBucketApi();
 
-      assertEquals(api.listBuckets(EXPECTED_TEST_PROJECT_NUMBER), new NoAclBucketListTest().expected());
+      assertEquals(api.listBucket(EXPECTED_TEST_PROJECT_NUMBER), new NoAclBucketListTest().expected());
 
    }
 
    public void testListBucketWithOptionsResponseIs2xx() throws Exception {
 
       BucketApi api = requestsSendResponses(requestForScopes(STORAGE_FULLCONTROL_SCOPE), TOKEN_RESPONSE,
-               LIST_BUCKET_REQUEST_WITHOPTIONS, LIST_BUCKET_RESPONSE).getBucketsApi();
+               LIST_BUCKET_REQUEST_WITHOPTIONS, LIST_BUCKET_RESPONSE).getBucketApi();
 
       ListOptions options = new ListOptions().maxResults(2).pageToken("jcloudtestbucket500");
 
-      assertEquals(api.listBuckets(EXPECTED_TEST_PROJECT_NUMBER, options), new NoAclBucketListTest().expected());
+      assertEquals(api.listBucket(EXPECTED_TEST_PROJECT_NUMBER, options), new NoAclBucketListTest().expected());
 
    }
 
@@ -124,9 +124,9 @@ public class BucketApiExpectTest extends BaseGoogleCloudStorageApiExpectTest {
       HttpResponse listResponse = HttpResponse.builder().statusCode(404).build();
 
       BucketApi api = requestsSendResponses(requestForScopes(STORAGE_FULLCONTROL_SCOPE), TOKEN_RESPONSE,
-               LIST_BUCKET_REQUEST, listResponse).getBucketsApi();
+               LIST_BUCKET_REQUEST, listResponse).getBucketApi();
 
-      assertNull(api.listBuckets(EXPECTED_TEST_PROJECT_NUMBER));
+      assertNull(api.listBucket(EXPECTED_TEST_PROJECT_NUMBER));
    }
 
    // Test createBucket without options
@@ -143,11 +143,11 @@ public class BucketApiExpectTest extends BaseGoogleCloudStorageApiExpectTest {
                         MediaType.APPLICATION_JSON)).build();
 
       BucketApi api = requestsSendResponses(requestForScopes(STORAGE_FULLCONTROL_SCOPE), TOKEN_RESPONSE,
-               createRequest, BUCKET_RESPONSE).getBucketsApi();
+               createRequest, BUCKET_RESPONSE).getBucketApi();
 
       BucketTemplate template = new BucketTemplate().name("bhashbucket");
 
-      assertEquals(api.createBuckets(EXPECTED_TEST_PROJECT_NUMBER, template), new NoAclBucketTest().expected());
+      assertEquals(api.createBucket(EXPECTED_TEST_PROJECT_NUMBER, template), new NoAclBucketTest().expected());
 
    }
 
@@ -171,9 +171,9 @@ public class BucketApiExpectTest extends BaseGoogleCloudStorageApiExpectTest {
                .payload(staticPayloadFromResource("/bucket_update_response.json")).build();
 
       BucketApi api = requestsSendResponses(requestForScopes(STORAGE_FULLCONTROL_SCOPE), TOKEN_RESPONSE,
-               updateRequest, updateResponse).getBucketsApi();
+               updateRequest, updateResponse).getBucketApi();
 
-      assertEquals(api.updateBuckets(EXPECTED_TEST_BUCKET, template), new BucketUpdateTest().expected());
+      assertEquals(api.updateBucket(EXPECTED_TEST_BUCKET, template), new BucketUpdateTest().expected());
    }
 
    public void testUpdateBucketWithOptionsResponseIs2xx() throws Exception {
@@ -199,9 +199,9 @@ public class BucketApiExpectTest extends BaseGoogleCloudStorageApiExpectTest {
                .payload(staticPayloadFromResource("/bucket_update_response.json")).build();
 
       BucketApi api = requestsSendResponses(requestForScopes(STORAGE_FULLCONTROL_SCOPE), TOKEN_RESPONSE,
-               updateRequest, updateResponse).getBucketsApi();
+               updateRequest, updateResponse).getBucketApi();
 
-      assertEquals(api.updateBuckets(EXPECTED_TEST_BUCKET, template, options), new BucketUpdateTest().expected());
+      assertEquals(api.updateBucket(EXPECTED_TEST_BUCKET, template, options), new BucketUpdateTest().expected());
    }
 
    public void testPatchBucketWithNoOptionsResponseIs2xx() throws Exception {
@@ -224,9 +224,9 @@ public class BucketApiExpectTest extends BaseGoogleCloudStorageApiExpectTest {
                .payload(staticPayloadFromResource("/bucket_update_response.json")).build();
 
       BucketApi api = requestsSendResponses(requestForScopes(STORAGE_FULLCONTROL_SCOPE), TOKEN_RESPONSE, patchRequest,
-               patchResponse).getBucketsApi();
+               patchResponse).getBucketApi();
 
-      assertEquals(api.patchBuckets(EXPECTED_TEST_BUCKET, template), new BucketUpdateTest().expected());
+      assertEquals(api.patchBucket(EXPECTED_TEST_BUCKET, template), new BucketUpdateTest().expected());
    }
 
    public void testPatchBucketWithOptionsResponseIs2xx() throws Exception {
@@ -252,8 +252,8 @@ public class BucketApiExpectTest extends BaseGoogleCloudStorageApiExpectTest {
                .payload(staticPayloadFromResource("/bucket_update_response.json")).build();
 
       BucketApi api = requestsSendResponses(requestForScopes(STORAGE_FULLCONTROL_SCOPE), TOKEN_RESPONSE, patchRequest,
-               patchResponse).getBucketsApi();
+               patchResponse).getBucketApi();
 
-      assertEquals(api.updateBuckets(EXPECTED_TEST_BUCKET, template, options), new BucketUpdateTest().expected());
+      assertEquals(api.updateBucket(EXPECTED_TEST_BUCKET, template, options), new BucketUpdateTest().expected());
    }
 }

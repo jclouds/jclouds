@@ -33,11 +33,11 @@ public class BucketLifeCycle {
 
    private final Set<Rule> rules;
 
-   public BucketLifeCycle(Set<Rule> rule) {
-      this.rules = rule == null ? ImmutableSet.<Rule> of() : rule;
+   private BucketLifeCycle(Set<Rule> rules) {
+      this.rules = rules.isEmpty() ? null : rules;
    }
 
-   public Set<Rule> getRule() {
+   public Set<Rule> getRules() {
       return rules;
    }
 
@@ -77,6 +77,7 @@ public class BucketLifeCycle {
    }
 
    public static class Builder {
+
       ImmutableSet.Builder<Rule> rules = ImmutableSet.builder();
 
       public Builder addRule(Rule rule) {
@@ -84,8 +85,8 @@ public class BucketLifeCycle {
          return this;
       }
 
-      public Builder rule(Set<Rule> rule) {
-         this.rules.addAll(rule);
+      public Builder rule(Set<Rule> rules) {
+         this.rules.addAll(rules);
          return this;
       }
 
@@ -94,8 +95,8 @@ public class BucketLifeCycle {
       }
 
       public Builder fromLifeCycle(BucketLifeCycle in) {
-         return this.rule(in.getRule());
+         return this.rule(in.getRules());
       }
-
    }
+
 }

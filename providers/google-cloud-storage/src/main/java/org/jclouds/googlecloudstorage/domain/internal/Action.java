@@ -27,7 +27,7 @@ import com.google.common.base.Objects;
 public class Action {
    private final String type;
 
-   public Action(String type) {
+   private Action(String type) {
       this.type = type;
    }
 
@@ -84,9 +84,7 @@ public class Action {
 
       public Builder fromAction(Action in) {
          return this.type(in.getType());
-
       }
 
    }
-
 }

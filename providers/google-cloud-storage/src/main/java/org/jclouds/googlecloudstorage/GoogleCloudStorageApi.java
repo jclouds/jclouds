@@ -51,5 +51,5 @@ public interface GoogleCloudStorageApi extends Closeable {
     */
    @Delegate
    @Path("")
-   BucketApi getBucketsApi();
+   BucketApi getBucketApi();
 }

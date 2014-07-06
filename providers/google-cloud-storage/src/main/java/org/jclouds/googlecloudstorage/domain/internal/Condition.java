@@ -20,6 +20,8 @@ import static com.google.common.base.Objects.toStringHelper;
 
 import java.util.Date;
 
+import org.jclouds.javax.annotation.Nullable;
+
 import com.google.common.base.Objects;
 
 /**
@@ -32,7 +34,8 @@ public class Condition {
    private final Boolean isLive;
    private final Integer numNewerVersions;
 
-   public Condition(Integer age, Date createdBefore, Boolean isLive, Integer numNewerVersions) {
+   private Condition(@Nullable Integer age, @Nullable Date createdBefore, @Nullable Boolean isLive,
+            @Nullable Integer numNewerVersions) {
       this.age = age;
       this.createdBefore = createdBefore;
       this.isLive = isLive;

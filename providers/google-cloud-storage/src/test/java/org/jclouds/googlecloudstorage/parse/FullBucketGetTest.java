@@ -29,6 +29,7 @@ import org.jclouds.googlecloudstorage.domain.Bucket;
 import org.jclouds.googlecloudstorage.domain.DefaultObjectAccessControls;
 import org.jclouds.googlecloudstorage.domain.DomainResourceRefferences.Role;
 import org.jclouds.googlecloudstorage.domain.DomainResourceRefferences.StorageClass;
+import org.jclouds.googlecloudstorage.domain.internal.BucketCors;
 import org.jclouds.googlecloudstorage.domain.internal.Owner;
 import org.jclouds.googlecloudstorage.domain.internal.ProjectTeam;
 import org.jclouds.googlecloudstorage.domain.internal.ProjectTeam.Team;
@@ -36,15 +37,20 @@ import org.jclouds.googlecloudstorage.internal.BaseGoogleCloudStorageParseTest;
 
 public class FullBucketGetTest extends BaseGoogleCloudStorageParseTest<Bucket> {
 
-   private final BucketAccessControls acl_1 = BucketAccessControls
+   private final BucketAccessControls acl1 = BucketAccessControls
             .builder()
             .id("jcloudtestbucket3500/project-owners-1082289308625")
             .selfLink(
                      URI.create("https://www.googleapis.com/storage/v1/b/jcloudtestbucket3500/acl/project-owners-1082289308625"))
             .bucket("jcloudtestbucket3500").entity("project-owners-1082289308625").role(Role.OWNER)
-            .projectTeam(new ProjectTeam("1082289308625", Team.owners)).etag("CAo=").build();
+            .projectTeam(ProjectTeam.builder().projectId("1082289308625").team(Team.OWNERS).build()).etag("CAo=")
+            .build();
+
    private final DefaultObjectAccessControls defObjectAcl = DefaultObjectAccessControls.builder()
             .entity("project-owners-1082289308625").role(ObjectRole.OWNER).etag("CAo=").build();
+
+   private final BucketCors bucketCors = BucketCors.builder().addOrigin("http://example.appspot.com").addMethod("GET")
+            .addMethod("HEAD").addResponseHeader("x-meta-goog-custom").maxAgeSeconds(10).build();
 
    @Override
    public String resource() {
@@ -59,8 +65,8 @@ public class FullBucketGetTest extends BaseGoogleCloudStorageParseTest<Bucket> {
                .name("jcloudtestbucket3500").projectNumber(Long.valueOf("1082289308625"))
                .timeCreated(new SimpleDateFormatDateService().iso8601DateParse("2014-06-19T14:03:22.345Z"))
                .metageneration(Long.valueOf(10)).owner(Owner.builder().entity("project-owners-1082289308625").build())
-               .location(Location.US).storageClass(StorageClass.STANDARD).etag("CAo=").addAcl(acl_1)
-               .addDefaultObjectAcl(defObjectAcl).build();
+               .location(Location.US).storageClass(StorageClass.STANDARD).etag("CAo=").addAcl(acl1)
+               .addDefaultObjectAcl(defObjectAcl).addCORS(bucketCors).build();
    }
 
 }

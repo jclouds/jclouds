@@ -17,6 +17,7 @@
 package org.jclouds.googlecloudstorage.domain.internal;
 
 import static com.google.common.base.Objects.toStringHelper;
+import static com.google.common.base.Preconditions.checkNotNull;
 
 import com.google.common.base.Objects;
 
@@ -29,9 +30,9 @@ public class Rule {
    private final Action action;
    private final Condition condition;
 
-   public Rule(Action action, Condition condition) {
-      this.action = action;
-      this.condition = condition;
+   private Rule(Action action, Condition condition) {
+      this.action = checkNotNull(action, "action");
+      this.condition = checkNotNull(condition, "condition");
    }
 
    public Action getAction() {

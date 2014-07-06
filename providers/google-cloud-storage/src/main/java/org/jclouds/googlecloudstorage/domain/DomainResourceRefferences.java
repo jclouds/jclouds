@@ -35,16 +35,16 @@ public final class DomainResourceRefferences {
       ASIA, EU, US, ASIA_EAST1, US_CENTRAL1, US_CENTRAL2, US_EAST1, US_EAST2, US_EAST3, US_WEST1;
 
       public String value() {
-         return CaseFormat.UPPER_UNDERSCORE.to(CaseFormat.LOWER_HYPHEN, name()).toUpperCase();
+         return name().replace('_', '-');       
       }
 
       @Override
       public String toString() {
-         return value().toUpperCase();
+         return value();
       }
 
       public static Location fromValue(String location) {
-         return valueOf(CaseFormat.LOWER_HYPHEN.to(CaseFormat.UPPER_UNDERSCORE, location.toLowerCase()));
+         return valueOf(location.replace('-', '_'));      
       }
    }
 

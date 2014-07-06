@@ -35,10 +35,10 @@ import com.google.common.collect.ImmutableSet;
 
 public class ListBucketAccessControls {
 
-   protected final Kind kind;
-   protected final Set<BucketAccessControls> items;
+   private final Kind kind;
+   private final Set<BucketAccessControls> items;
 
-   protected ListBucketAccessControls(Kind kind, Set<BucketAccessControls> items) {
+   private ListBucketAccessControls(Kind kind, Set<BucketAccessControls> items) {
 
       this.kind = checkNotNull(kind, "kind");
       this.items = checkNotNull(items, "items");

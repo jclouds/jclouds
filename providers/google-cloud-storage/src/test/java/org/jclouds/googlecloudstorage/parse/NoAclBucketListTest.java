@@ -32,7 +32,7 @@ import org.jclouds.googlecloudstorage.internal.BaseGoogleCloudStorageParseTest;
 
 public class NoAclBucketListTest extends BaseGoogleCloudStorageParseTest<ListPage<Bucket>> {
 
-   private Bucket item_1 = Bucket.builder().id("bhashbucket")
+   private Bucket item1 = Bucket.builder().id("bhashbucket")
             .selfLink(URI.create("https://content.googleapis.com/storage/v1/b/bhashbucket")).name("bhashbucket")
             .projectNumber(Long.valueOf("1082289308625"))
             .timeCreated(new SimpleDateFormatDateService().iso8601DateParse("2014-06-02T19:19:41.112z"))
@@ -47,7 +47,7 @@ public class NoAclBucketListTest extends BaseGoogleCloudStorageParseTest<ListPag
    @Override
    @Consumes(MediaType.APPLICATION_JSON)
    public ListPage<Bucket> expected() {
-      return ListPage.<Bucket> builder().kind(Kind.BUCKETS).nextPageToken("bhashbucket").addItem(item_1).build();
+      return ListPage.<Bucket> builder().kind(Kind.BUCKETS).nextPageToken("bhashbucket").addItem(item1).build();
    }
 
 }

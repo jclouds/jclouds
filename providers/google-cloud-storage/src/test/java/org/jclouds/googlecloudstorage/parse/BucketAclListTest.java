@@ -42,8 +42,8 @@ public class BucketAclListTest extends BaseGoogleCloudStorageParseTest<ListBucke
             .id("jcloudtestbucket/project-owners-1082289308625")
             .selfLink(
                      URI.create("https://content.googleapis.com/storage/v1/b/jcloudtestbucket/acl/project-owners-1082289308625"))
-            .projectTeam(new ProjectTeam("1082289308625", Team.owners)).bucket("jcloudtestbucket")
-            .entity("project-owners-1082289308625").role(Role.OWNER).etag("CAc=").build();
+            .projectTeam(ProjectTeam.builder().projectId("1082289308625").team(Team.OWNERS).build())
+            .bucket("jcloudtestbucket").entity("project-owners-1082289308625").role(Role.OWNER).etag("CAc=").build();
 
    @Override
    public String resource() {

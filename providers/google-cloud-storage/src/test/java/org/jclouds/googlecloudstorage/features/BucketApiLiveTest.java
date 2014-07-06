@@ -43,54 +43,64 @@ import org.jclouds.googlecloudstorage.options.DeleteBucketOptions;
 import org.jclouds.googlecloudstorage.options.GetBucketOptions;
 import org.jclouds.googlecloudstorage.options.InsertBucketOptions;
 import org.jclouds.googlecloudstorage.options.UpdateBucketOptions;
-import org.jclouds.http.HttpResponse;
+import org.jclouds.rest.ResourceNotFoundException;
 import org.testng.annotations.Test;
 
 import com.google.common.collect.Lists;
 
 public class BucketApiLiveTest extends BaseGoogleCloudStorageApiLiveTest {
 
-   private static final String BUCKET_NAME = "jcloudtestbucket" + (int) (Math.random() * 10000);
+   private static final String BUCKET_NAME = "jcloudstestbucket" + (int) (Math.random() * 10000);
 
    private static final String BUCKET_NAME_WITHOPTIONS = "jcloudtestbucketoptions" + (int) (Math.random() * 10000);
 
-   private static final String LOG_BUCKET_NAME = "jcloudtestbucket" + (int) (Math.random() * 10000);
+   private static final String LOG_BUCKET_NAME = "jcloudslogbucket" + (int) (Math.random() * 10000);
 
    private Long metageneration;
 
    private BucketApi api() {
-      return api.getBucketsApi();
+      return api.getBucketApi();
    }
 
    @Test(groups = "live")
    public void testCreateBucket() {
 
       BucketTemplate logTemplate = new BucketTemplate().name(LOG_BUCKET_NAME);
-      Bucket logResponse = api().createBuckets(PROJECT_NUMBER, logTemplate);
+      Bucket logResponse = api().createBucket(PROJECT_NUMBER, logTemplate);
       assertNotNull(logResponse);
 
       BucketAccessControls acl = BucketAccessControls.builder().bucket(BUCKET_NAME).entity("allUsers").role(Role.OWNER)
                .build();
       DefaultObjectAccessControls oac = DefaultObjectAccessControls.builder().bucket(BUCKET_NAME).entity("allUsers")
                .role(ObjectRole.OWNER).build();
-      BucketCors bucketCors = BucketCors.builder().addOrigin("http://example.appspot.com").addMethod("GET").addMethod("HEAD")
-               .addResponseHeader("x-meta-goog-custom").maxAgeSeconds(10).build();
+      BucketCors bucketCors = BucketCors.builder().addOrigin("http://example.appspot.com").addMethod("GET")
+               .addMethod("HEAD").addResponseHeader("x-meta-goog-custom").maxAgeSeconds(10).build();
       Versioning version = Versioning.builder().enalbled(true).build();
 
-      Logging log = new Logging(LOG_BUCKET_NAME, BUCKET_NAME);
+      Logging log = Logging.builder().logBucket(LOG_BUCKET_NAME).logObjectPrefix(BUCKET_NAME).build();
 
-      BucketTemplate template = new BucketTemplate().name(BUCKET_NAME).addAcl(acl)
-               .addDefaultObjectAccessControls(oac).versioning(version).location(Location.US_CENTRAL2).logging(log)
+      BucketTemplate template = new BucketTemplate().name(BUCKET_NAME).addAcl(acl).addDefaultObjectAccessControls(oac)
+               .versioning(version).location(Location.US_CENTRAL2).logging(log)
                .storageClass(StorageClass.DURABLE_REDUCED_AVAILABILITY).addCORS(bucketCors);
 
-      Bucket response = api().createBuckets(PROJECT_NUMBER, template);
+      Bucket response = api().createBucket(PROJECT_NUMBER, template);
 
       assertNotNull(response);
       assertNotNull(response.getCors());
+      assertTrue(response.getCors().size() == 1);
       assertEquals(response.getKind(), Kind.BUCKET);
       assertEquals(response.getName(), BUCKET_NAME);
       assertEquals(response.getLocation(), Location.US_CENTRAL2);
       assertTrue(response.getVersioning().isEnabled());
+   }
+
+   @Test(groups = "live", dependsOnMethods = { "testCreateBucket" }, expectedExceptions = { IllegalStateException.class })
+   public void testCreateAlreadyExistBucket() {
+
+      BucketTemplate template = new BucketTemplate().name(BUCKET_NAME).location(Location.US_CENTRAL2)
+               .storageClass(StorageClass.DURABLE_REDUCED_AVAILABILITY);
+
+      api().createBucket(PROJECT_NUMBER, template);
    }
 
    @Test(groups = "live")
@@ -98,17 +108,17 @@ public class BucketApiLiveTest extends BaseGoogleCloudStorageApiLiveTest {
 
       DefaultObjectAccessControls oac = DefaultObjectAccessControls.builder().bucket(BUCKET_NAME_WITHOPTIONS)
                .entity("allUsers").role(ObjectRole.OWNER).build();
-      BucketCors bucketCors = BucketCors.builder().addOrigin("http://example.appspot.com").addMethod("GET").addMethod("HEAD")
-               .addResponseHeader("x-meta-goog-custom").maxAgeSeconds(10).build();
+      BucketCors bucketCors = BucketCors.builder().addOrigin("http://example.appspot.com").addMethod("GET")
+               .addMethod("HEAD").addResponseHeader("x-meta-goog-custom").maxAgeSeconds(10).build();
       Versioning version = Versioning.builder().enalbled(true).build();
 
-      BucketTemplate template = new BucketTemplate().name(BUCKET_NAME_WITHOPTIONS)
-               .addDefaultObjectAccessControls(oac).versioning(version).location(Location.US_CENTRAL2)
+      BucketTemplate template = new BucketTemplate().name(BUCKET_NAME_WITHOPTIONS).addDefaultObjectAccessControls(oac)
+               .versioning(version).location(Location.US_CENTRAL2)
                .storageClass(StorageClass.DURABLE_REDUCED_AVAILABILITY).addCORS(bucketCors);
 
       InsertBucketOptions options = new InsertBucketOptions().projection(Projection.FULL);
 
-      Bucket response = api().createBuckets(PROJECT_NUMBER, template, options);
+      Bucket response = api().createBucket(PROJECT_NUMBER, template, options);
 
       assertNotNull(response);
       assertNotNull(response.getCors());
@@ -123,7 +133,7 @@ public class BucketApiLiveTest extends BaseGoogleCloudStorageApiLiveTest {
       BucketAccessControls bucketacl = BucketAccessControls.builder().bucket(BUCKET_NAME)
                .entity("allAuthenticatedUsers").role(Role.OWNER).build();
       BucketTemplate template = new BucketTemplate().name(BUCKET_NAME).addAcl(bucketacl);
-      Bucket response = api().updateBuckets(BUCKET_NAME, template);
+      Bucket response = api().updateBucket(BUCKET_NAME, template);
 
       assertNotNull(response);
       assertEquals(response.getName(), BUCKET_NAME);
@@ -136,7 +146,7 @@ public class BucketApiLiveTest extends BaseGoogleCloudStorageApiLiveTest {
                .entity("allAuthenticatedUsers").role(Role.OWNER).build();
       UpdateBucketOptions options = new UpdateBucketOptions().projection(Projection.FULL);
       BucketTemplate template = new BucketTemplate().name(BUCKET_NAME_WITHOPTIONS).addAcl(bucketacl);
-      Bucket response = api().updateBuckets(BUCKET_NAME_WITHOPTIONS, template, options);
+      Bucket response = api().updateBucket(BUCKET_NAME_WITHOPTIONS, template, options);
 
       assertNotNull(response);
 
@@ -148,7 +158,7 @@ public class BucketApiLiveTest extends BaseGoogleCloudStorageApiLiveTest {
 
    @Test(groups = "live", dependsOnMethods = "testCreateBucket")
    public void testGetBucket() {
-      Bucket response = api().getBuckets(BUCKET_NAME);
+      Bucket response = api().getBucket(BUCKET_NAME);
 
       assertNotNull(response);
       assertEquals(response.getName(), BUCKET_NAME);
@@ -158,7 +168,7 @@ public class BucketApiLiveTest extends BaseGoogleCloudStorageApiLiveTest {
    @Test(groups = "live", dependsOnMethods = "testUpdateBucketWithOptions")
    public void testGetBucketWithOptions() {
       GetBucketOptions options = new GetBucketOptions().ifMetagenerationMatch(metageneration);
-      Bucket response = api().getBuckets(BUCKET_NAME_WITHOPTIONS, options);
+      Bucket response = api().getBucket(BUCKET_NAME_WITHOPTIONS, options);
 
       assertNotNull(response);
       assertEquals(response.getName(), BUCKET_NAME_WITHOPTIONS);
@@ -167,25 +177,25 @@ public class BucketApiLiveTest extends BaseGoogleCloudStorageApiLiveTest {
 
    @Test(groups = "live", dependsOnMethods = "testCreateBucket")
    public void testListBucket() {
-      ListPage<Bucket> bucket = api().listBuckets(PROJECT_NUMBER);
+      ListPage<Bucket> bucket = api().listBucket(PROJECT_NUMBER);
 
       Iterator<Bucket> pageIterator = bucket.iterator();
       assertTrue(pageIterator.hasNext());
 
-      Bucket singlePageIterator = pageIterator.next();
-      List<Bucket> bucketAsList = Lists.newArrayList(singlePageIterator);
+      Bucket iteratedBucket = pageIterator.next();
+      List<Bucket> bucketAsList = Lists.newArrayList(iteratedBucket);
 
-      assertNotNull(singlePageIterator);
+      assertNotNull(iteratedBucket);
       assertSame(bucketAsList.size(), 1);
 
    }
 
    @Test(groups = "live", dependsOnMethods = "testCreateBucket")
    public void testPatchBucket() {
-      Logging logging = new Logging(LOG_BUCKET_NAME, BUCKET_NAME);
+      Logging logging = Logging.builder().logBucket(LOG_BUCKET_NAME).logObjectPrefix(BUCKET_NAME).build();
       BucketTemplate template = new BucketTemplate().name(BUCKET_NAME).logging(logging);
 
-      Bucket response = api().patchBuckets(BUCKET_NAME, template);
+      Bucket response = api().patchBucket(BUCKET_NAME, template);
 
       assertNotNull(response);
       assertEquals(response.getName(), BUCKET_NAME);
@@ -194,14 +204,13 @@ public class BucketApiLiveTest extends BaseGoogleCloudStorageApiLiveTest {
 
    @Test(groups = "live", dependsOnMethods = { "testListBucket", "testGetBucket", "testUpdateBucket" })
    public void testDeleteBucket() {
-      HttpResponse response = api().deleteBuckets(BUCKET_NAME);
-      HttpResponse response2 = api().deleteBuckets(LOG_BUCKET_NAME);
+      api().deleteBucket(BUCKET_NAME);
+      api().deleteBucket(LOG_BUCKET_NAME);
+   }
 
-      assertNotNull(response);
-      assertEquals(response.getStatusCode(), 204);
-      assertNotNull(response2);
-      assertEquals(response2.getStatusCode(), 204);
-
+   @Test(groups = "live", dependsOnMethods = { "testDeleteBucket" }, expectedExceptions = { ResourceNotFoundException.class })
+   public void testDeleteNotExistingBucket() {
+      api().deleteBucket(BUCKET_NAME);
    }
 
    @Test(groups = "live", dependsOnMethods = { "testGetBucketWithOptions" })
@@ -210,10 +219,8 @@ public class BucketApiLiveTest extends BaseGoogleCloudStorageApiLiveTest {
       DeleteBucketOptions options = new DeleteBucketOptions().ifMetagenerationMatch(metageneration)
                .ifMetagenerationNotMatch(metageneration + 1);
 
-      HttpResponse response = api().deleteBuckets(BUCKET_NAME_WITHOPTIONS, options);
+      api().deleteBucket(BUCKET_NAME_WITHOPTIONS, options);
 
-      assertNotNull(response);
-      assertEquals(response.getStatusCode(), 204);
    }
 
 }

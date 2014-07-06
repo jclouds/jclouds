@@ -32,18 +32,18 @@ import com.google.common.collect.Sets;
 
 public class BucketTemplate {
 
-   private String name;
-   private Long projectNumber;
-   private Set<BucketAccessControls> acl;
-   private Set<DefaultObjectAccessControls> defaultObjectAccessControls;
-   private Owner owner;
-   private Location location;
-   private Website website;
-   private Logging logging;
-   private Versioning versioning;
-   private Set<BucketCors> cors;
-   private BucketLifeCycle lifeCycle;
-   private StorageClass storageClass;
+   protected String name;
+   protected Long projectNumber;
+   protected Set<BucketAccessControls> acl = Sets.newHashSet();
+   protected Set<DefaultObjectAccessControls> defaultObjectAccessControls = Sets.newHashSet();
+   protected Owner owner;
+   protected Location location;
+   protected Website website;
+   protected Logging logging;
+   protected Versioning versioning;
+   protected Set<BucketCors> cors = Sets.newHashSet();
+   protected BucketLifeCycle lifeCycle;
+   protected StorageClass storageClass;
 
    public BucketTemplate name(String name) {
       this.name = name;
@@ -91,54 +91,32 @@ public class BucketTemplate {
    }
 
    public BucketTemplate addAcl(BucketAccessControls bucketAccessControls) {
-
-      if (this.acl == null) {
-         this.acl = Sets.newLinkedHashSet();
-      }
-
       this.acl.add(bucketAccessControls);
       return this;
    }
 
    public BucketTemplate acl(Set<BucketAccessControls> acl) {
 
-      if (this.acl == null) {
-         this.acl = Sets.newLinkedHashSet();
-      }
-
       this.acl.addAll(acl);
       return this;
    }
 
    public BucketTemplate addDefaultObjectAccessControls(DefaultObjectAccessControls oac) {
-      if (this.defaultObjectAccessControls == null) {
-         this.defaultObjectAccessControls = Sets.newLinkedHashSet();
-      }
       this.defaultObjectAccessControls.add(oac);
       return this;
    }
 
    public BucketTemplate defaultObjectAccessControls(Set<DefaultObjectAccessControls> defaultObjectAcl) {
-      if (this.defaultObjectAccessControls == null) {
-         this.defaultObjectAccessControls = Sets.newLinkedHashSet();
-      }
       this.defaultObjectAccessControls.addAll(defaultObjectAcl);
       return this;
    }
 
    public BucketTemplate addCORS(BucketCors cors) {
-      if (this.cors == null) {
-         this.cors = Sets.newLinkedHashSet();
-      }
-
       this.cors.add(cors);
       return this;
    }
 
    public BucketTemplate cors(Set<BucketCors> cors) {
-      if (this.cors == null) {
-         this.cors = Sets.newLinkedHashSet();
-      }
       this.cors.addAll(cors);
       return this;
    }

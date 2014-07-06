@@ -24,6 +24,8 @@ import static com.google.common.base.Preconditions.checkNotNull;
 import java.beans.ConstructorProperties;
 import java.net.URI;
 
+import org.jclouds.javax.annotation.Nullable;
+
 import com.google.common.base.CaseFormat;
 import com.google.common.base.Joiner;
 import com.google.common.base.Objects;
@@ -62,7 +64,7 @@ public class Resource {
    protected final String etag;
 
    @ConstructorProperties({ "kind", "id", "selfLink", "etag" })
-   protected Resource(Kind kind, String id, URI selfLink, String etag) {
+   protected Resource(Kind kind, @Nullable String id, @Nullable URI selfLink, @Nullable String etag) {
       this.kind = checkNotNull(kind, "kind");
       this.id = id;
       this.selfLink = selfLink;

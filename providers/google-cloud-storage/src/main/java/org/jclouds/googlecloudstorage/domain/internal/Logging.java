@@ -18,6 +18,7 @@ package org.jclouds.googlecloudstorage.domain.internal;
 
 import static com.google.common.base.Objects.equal;
 import static com.google.common.base.Objects.toStringHelper;
+import static com.google.common.base.Preconditions.checkNotNull;
 
 import com.google.common.base.Objects;
 
@@ -28,14 +29,14 @@ import com.google.common.base.Objects;
  * @see <a href= "https://developers.google.com/storage/docs/accesslogs" />
  */
 
-public final class Logging {
+public class Logging {
    private final String logBucket;
    private final String logObjectPrefix;
 
-   public Logging(String logBucket, String logObjectPrefix) {
+   private Logging(String logBucket, String logObjectPrefix) {
 
-      this.logBucket = logBucket;
-      this.logObjectPrefix = logObjectPrefix;
+      this.logBucket =  checkNotNull(logBucket, "logBucket");
+      this.logObjectPrefix = checkNotNull(logObjectPrefix , "logObjectPrefix");
    }
 
    public String getLogBucket() {

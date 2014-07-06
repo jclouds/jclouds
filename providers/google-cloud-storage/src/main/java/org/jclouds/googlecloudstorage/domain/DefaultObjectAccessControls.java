@@ -23,6 +23,7 @@ import java.net.URI;
 
 import org.jclouds.googlecloudstorage.domain.DomainResourceRefferences.ObjectRole;
 import org.jclouds.googlecloudstorage.domain.internal.ProjectTeam;
+import org.jclouds.javax.annotation.Nullable;
 
 import com.google.common.base.Objects;
 
@@ -33,16 +34,17 @@ import com.google.common.base.Objects;
  */
 public class DefaultObjectAccessControls extends Resource {
 
-   protected final String bucket;
-   protected final String entity;
-   protected final ObjectRole role;
-   protected final String email;
-   protected final String entityId;
-   protected final String domain;
-   protected final ProjectTeam projectTeam;
+   private final String bucket;
+   private final String entity;
+   private final ObjectRole role;
+   private final String email;
+   private final String entityId;
+   private final String domain;
+   private final ProjectTeam projectTeam;
 
-   protected DefaultObjectAccessControls(String id, URI selfLink, String etag, String bucket, String entity,
-            String entityId, ObjectRole role, String email, String domain, ProjectTeam projectTeam) {
+   private DefaultObjectAccessControls(@Nullable String id, @Nullable URI selfLink, @Nullable String etag,
+            @Nullable String bucket, String entity, @Nullable String entityId, ObjectRole role, @Nullable String email,
+            @Nullable String domain, @Nullable ProjectTeam projectTeam) {
       super(Kind.OBJECT_ACCESS_CONTROL, id, selfLink, etag);
 
       this.bucket = bucket;
@@ -117,13 +119,13 @@ public class DefaultObjectAccessControls extends Resource {
 
    public static final class Builder extends Resource.Builder<Builder> {
 
-      protected String bucket;
-      protected String entity;
-      protected String entityId;
-      protected ObjectRole role;
-      protected String email;
-      protected String domain;
-      protected ProjectTeam projectTeam;
+      private String bucket;
+      private String entity;
+      private String entityId;
+      private ObjectRole role;
+      private String email;
+      private String domain;
+      private ProjectTeam projectTeam;
 
       public Builder bucket(String bucket) {
          this.bucket = bucket;

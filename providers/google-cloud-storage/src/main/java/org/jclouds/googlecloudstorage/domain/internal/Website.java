@@ -19,6 +19,8 @@ package org.jclouds.googlecloudstorage.domain.internal;
 import static com.google.common.base.Objects.equal;
 import static com.google.common.base.Objects.toStringHelper;
 
+import org.jclouds.javax.annotation.Nullable;
+
 import com.google.common.base.Objects;
 
 /**
@@ -28,11 +30,10 @@ import com.google.common.base.Objects;
  */
 
 public class Website {
-
    private final String mainPageSuffix;
    private final String notFoundPage;
 
-   public Website(String mainPageSuffix, String notFoundPage) {
+   private Website(@Nullable String mainPageSuffix, @Nullable String notFoundPage) {
 
       this.mainPageSuffix = mainPageSuffix;
       this.notFoundPage = notFoundPage;

@@ -18,6 +18,9 @@ package org.jclouds.googlecloudstorage.domain.internal;
 
 import static com.google.common.base.Objects.equal;
 import static com.google.common.base.Objects.toStringHelper;
+import static com.google.common.base.Preconditions.checkNotNull;
+
+import org.jclouds.javax.annotation.Nullable;
 
 import com.google.common.base.Objects;
 
@@ -25,13 +28,12 @@ import com.google.common.base.Objects;
  * This is an internal object used in both Bucket and Object representation
  */
 
-public final class Owner {
-
+public class Owner {
    private final String entity;
    private final String entityId;
 
-   public Owner(String entity, String entityId) {
-      this.entity = entity;
+   private Owner(String entity, @Nullable String entityId) {
+      this.entity = checkNotNull(entity, "entity");
       this.entityId = entityId;
    }
 
@@ -59,7 +61,7 @@ public final class Owner {
    }
 
    protected Objects.ToStringHelper string() {
-      return toStringHelper(this).omitNullValues().add("entiy", entity).add("entityId", entityId);
+      return toStringHelper(this).omitNullValues().add("entity", entity).add("entityId", entityId);
    }
 
    @Override

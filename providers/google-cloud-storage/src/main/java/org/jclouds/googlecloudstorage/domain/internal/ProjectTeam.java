@@ -19,8 +19,6 @@ package org.jclouds.googlecloudstorage.domain.internal;
 import static com.google.common.base.Objects.equal;
 import static com.google.common.base.Objects.toStringHelper;
 
-import java.beans.ConstructorProperties;
-
 import com.google.common.base.Objects;
 
 /**
@@ -31,14 +29,27 @@ import com.google.common.base.Objects;
 public final class ProjectTeam {
 
    public enum Team {
-      owners, editors, viewers;
+      OWNERS, EDITORS, VIEWERS;
+      
+      public String value() {
+         return name().toLowerCase();
+      }
+
+      @Override
+      public String toString() {
+         return value();
+      }
+
+      public static Team fromValue(String team) {
+         return valueOf(team.toUpperCase());       
+      } 
    }
 
    private final String projectId;
    private final Team team;
 
-   @ConstructorProperties({ "projectId", "team" })
-   public ProjectTeam(String projectId, Team team) {
+   
+   private ProjectTeam(String projectId, Team team) {
       this.projectId = projectId;
       this.team = team;
    }
@@ -73,6 +84,10 @@ public final class ProjectTeam {
    @Override
    public String toString() {
       return string().toString();
+   }
+
+   public static Builder builder() {
+      return new Builder();
    }
 
    public static class Builder {

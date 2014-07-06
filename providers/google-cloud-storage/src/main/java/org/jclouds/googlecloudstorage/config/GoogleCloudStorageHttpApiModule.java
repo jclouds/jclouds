@@ -17,6 +17,11 @@
 package org.jclouds.googlecloudstorage.config;
 
 import org.jclouds.googlecloudstorage.GoogleCloudStorageApi;
+import org.jclouds.googlecloudstorage.handlers.GoogleCloudStorageErrorHandler;
+import org.jclouds.http.HttpErrorHandler;
+import org.jclouds.http.annotation.ClientError;
+import org.jclouds.http.annotation.Redirection;
+import org.jclouds.http.annotation.ServerError;
 import org.jclouds.rest.ConfiguresHttpApi;
 import org.jclouds.rest.config.HttpApiModule;
 
@@ -27,4 +32,12 @@ import org.jclouds.rest.config.HttpApiModule;
 public class GoogleCloudStorageHttpApiModule extends HttpApiModule<GoogleCloudStorageApi> {
    public GoogleCloudStorageHttpApiModule() {
    }
+
+   @Override
+   protected void bindErrorHandlers() {
+      bind(HttpErrorHandler.class).annotatedWith(Redirection.class).to(GoogleCloudStorageErrorHandler.class);
+      bind(HttpErrorHandler.class).annotatedWith(ClientError.class).to(GoogleCloudStorageErrorHandler.class);
+      bind(HttpErrorHandler.class).annotatedWith(ServerError.class).to(GoogleCloudStorageErrorHandler.class);
+   }
+
 }

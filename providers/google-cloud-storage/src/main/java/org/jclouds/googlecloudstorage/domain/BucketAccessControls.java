@@ -23,6 +23,7 @@ import java.net.URI;
 
 import org.jclouds.googlecloudstorage.domain.DomainResourceRefferences.Role;
 import org.jclouds.googlecloudstorage.domain.internal.ProjectTeam;
+import org.jclouds.javax.annotation.Nullable;
 
 import com.google.common.base.Objects;
 
@@ -33,22 +34,23 @@ import com.google.common.base.Objects;
  */
 public class BucketAccessControls extends Resource {
 
-   protected final String bucket;
-   protected final String entity;
-   protected final Role role;
-   protected final String email;
-   protected final String domain;
-   protected final String entityId;
-   protected final ProjectTeam projectTeam;
+   private final String bucket;
+   private final String entity;
+   private final Role role;
+   private final String email;
+   private final String domain;
+   private final String entityId;
+   private final ProjectTeam projectTeam;
 
-   protected BucketAccessControls(String id, URI selfLink, String etag, String bucket, String entity, String entityId,
-            Role role, String email, String domain, ProjectTeam projectTeam) {
+   private BucketAccessControls(@Nullable String id, @Nullable URI selfLink, @Nullable String etag, String bucket,
+            String entity, @Nullable String entityId, Role role, @Nullable String email, @Nullable String domain,
+            @Nullable ProjectTeam projectTeam) {
       super(Kind.BUCKET_ACCESS_CONTROL, id == null ? (bucket + "/" + entity) : id, selfLink, etag);
 
       this.bucket = checkNotNull(bucket, "bucket");
       this.entity = checkNotNull(entity, "entity");
       this.entityId = entityId;
-      this.role = role;
+      this.role = checkNotNull(role, "role");
       this.email = email;
       this.domain = domain;
       this.projectTeam = projectTeam;
@@ -117,13 +119,13 @@ public class BucketAccessControls extends Resource {
 
    public static final class Builder extends Resource.Builder<Builder> {
 
-      protected String bucket;
-      protected String entity;
-      protected String entityId;
-      protected Role role;
-      protected String email;
-      protected String domain;
-      protected ProjectTeam projectTeam;
+      private String bucket;
+      private String entity;
+      private String entityId;
+      private Role role;
+      private String email;
+      private String domain;
+      private ProjectTeam projectTeam;
 
       public Builder bucket(String bucket) {
          this.bucket = bucket;

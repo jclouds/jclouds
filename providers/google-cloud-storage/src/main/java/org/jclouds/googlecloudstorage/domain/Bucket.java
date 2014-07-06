@@ -33,14 +33,14 @@ import org.jclouds.googlecloudstorage.domain.internal.Owner;
 import org.jclouds.googlecloudstorage.domain.internal.Versioning;
 import org.jclouds.googlecloudstorage.domain.internal.Website;
 
-
+import org.jclouds.javax.annotation.Nullable;
 
 import com.google.common.base.Objects;
 import com.google.common.collect.ImmutableSet;
 
 /**
- * The Bucket represents a bucket in Google Cloud Storage There is a single global namespace shared by all buckets
- *
+ * The Bucket represents a bucket in Google Cloud Storage. There is a single global namespace shared by all buckets.
+ * 
  * @see <a href = " https://developers.google.com/storage/docs/json_api/v1/buckets"/>
  */
 public class Bucket extends Resource {
@@ -60,10 +60,11 @@ public class Bucket extends Resource {
    private final BucketLifeCycle lifeCycle;
    private final StorageClass storageClass;
 
-   public Bucket(String id, URI selfLink, String name, String etag, Long projectNumber, Date timeCreated,
+   private Bucket(String id,  URI selfLink, String name, String etag, @Nullable Long projectNumber, Date timeCreated,
             Long metageneration, Set<BucketAccessControls> acl, Set<DefaultObjectAccessControls> defaultObjectAcl,
-            Owner owner, Location location, Website website, Logging logging, Versioning versioning, Set<BucketCors> cors,
-            BucketLifeCycle lifeCycle, StorageClass storageClass) {
+            Owner owner, @Nullable Location location, @Nullable Website website, @Nullable Logging logging,
+            @Nullable Versioning versioning, Set<BucketCors> cors, @Nullable BucketLifeCycle lifeCycle,
+            @Nullable StorageClass storageClass) {
 
       super(Kind.BUCKET, id, selfLink, etag);
       this.projectNumber = projectNumber;
@@ -72,7 +73,7 @@ public class Bucket extends Resource {
       this.acl = acl.isEmpty() ? null : acl;
       this.defaultObjectAcl = defaultObjectAcl.isEmpty() ? null : defaultObjectAcl;
       this.owner = checkNotNull(owner, "Owner");
-      this.location = checkNotNull(location, "location");
+      this.location = location;
       this.website = website;
       this.logging = logging;
       this.versioning = versioning;
@@ -197,7 +198,6 @@ public class Bucket extends Resource {
       public Builder projectNumber(Long projectNumber) {
          this.projectNumber = projectNumber;
          return this;
-
       }
 
       public Builder timeCreated(Date timeCreated) {

@@ -33,7 +33,8 @@ public class DefaultObjectAclListTest extends BaseGoogleCloudStorageParseTest<Li
 
    private DefaultObjectAccessControls item_1 = DefaultObjectAccessControls.builder()
             .entity("project-owners-1082289308625").role(ObjectRole.OWNER)
-            .projectTeam(new ProjectTeam("1082289308625", Team.owners)).etag("CAk=").build();
+            .projectTeam(ProjectTeam.builder().projectId("1082289308625").team(Team.OWNERS).build()).etag("CAk=")
+            .build();
 
    @Override
    public String resource() {

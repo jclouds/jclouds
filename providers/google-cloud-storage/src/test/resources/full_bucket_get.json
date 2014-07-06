@@ -29,6 +29,22 @@
           "etag": "CAo="
        }
     ],
+    
+    "cors": [
+       {
+          "maxAgeSeconds": 10,
+          "origin": [
+             "http://example.appspot.com"
+          ],
+          "responseHeader": [
+             "x-meta-goog-custom"
+          ],
+          "method": [
+            "GET",
+            "HEAD"            
+          ]
+        }
+    ],
     "owner": {
        "entity": "project-owners-1082289308625"
      },
