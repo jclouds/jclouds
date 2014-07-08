@@ -150,6 +150,8 @@ import com.google.inject.TypeLiteral;
  */
 public class ContextBuilder {
 
+   private static final Stage GUICE_STAGE = Stage.PRODUCTION;
+
    /**
     * looks up a provider or api with the given id
     * 
@@ -379,7 +381,7 @@ public class ContextBuilder {
 
 
    private Properties expandProperties(final Properties resolved) {
-      return Guice.createInjector(new BindPropertiesToExpandedValues(resolved)).getInstance(Properties.class);
+      return Guice.createInjector(GUICE_STAGE, new BindPropertiesToExpandedValues(resolved)).getInstance(Properties.class);
    }
 
    public static Injector buildInjector(String name, ProviderMetadata providerMetadata, Supplier<Credentials> creds, List<Module> inputModules) {
