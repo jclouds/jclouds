@@ -35,6 +35,7 @@ import java.io.InputStream;
 import java.net.URLDecoder;
 import java.util.Arrays;
 import java.util.Random;
+import java.util.concurrent.TimeUnit;
 import java.util.zip.GZIPInputStream;
 
 import org.jclouds.io.ByteSources;
@@ -610,6 +611,27 @@ public abstract class BaseHttpCommandExecutorServiceIntegrationTest extends Base
       try {
          String result = client.downloadAndParse("");
          assertEquals(result, "whoppers");
+      } finally {
+         close(client, true);
+         server.shutdown();
+      }
+   }
+
+   @Test
+   public void testInterruptThrottledGet() throws Exception {
+      long timeoutMillis = 10 * 1000;
+      MockWebServer server = mockWebServer(new MockResponse().setBody(XML).throttleBody(XML.length() / 2, timeoutMillis, TimeUnit.MILLISECONDS));
+      IntegrationTestClient client = client(server.getUrl("/").toString());
+      try {
+         HttpResponse response = client.invoke(HttpRequest.builder()
+            .method("GET")
+            .endpoint(server.getUrl("/").toURI())
+            .build());
+         InputStream is = response.getPayload().getInput();
+         long now = System.currentTimeMillis();
+         is.close();
+         long diff = System.currentTimeMillis() - now;
+         assertTrue(diff < timeoutMillis / 2, "expected " + diff + " to be less than " + (timeoutMillis / 2));
       } finally {
          close(client, true);
          server.shutdown();
