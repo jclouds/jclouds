@@ -94,10 +94,10 @@ import com.google.common.base.Predicate;
 import com.google.common.base.Splitter;
 import com.google.common.base.Supplier;
 import com.google.common.base.Suppliers;
-import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.ImmutableMultimap.Builder;
 import com.google.common.collect.ImmutableSet;
+import com.google.common.collect.Iterables;
 import com.google.common.reflect.TypeToken;
 import com.google.common.util.concurrent.ExecutionList;
 import com.google.inject.Guice;
@@ -399,15 +399,15 @@ public class ContextBuilder {
       modules.add(new LifeCycleModule());
       modules.add(new BindProviderMetadataContextAndCredentials(providerMetadata, creds));
       modules.add(new BindNameToContext(name));
-      Injector returnVal = Guice.createInjector(Stage.PRODUCTION, modules);
+      Injector returnVal = Guice.createInjector(GUICE_STAGE, modules);
       returnVal.getInstance(ExecutionList.class).execute();
       return returnVal;
    }
 
    static Properties resolveProperties(Properties mutable, String providerId, Set<String> keys, Set<String> optionalKeys) throws NoSuchElementException {
       for (String key : keys) {
+         String scopedProperty = Iterables.get(Splitter.on('.').split(key), 1);
          try {
-            String scopedProperty = ImmutableList.copyOf(Splitter.on('.').split(key)).get(1);
             mutable.setProperty(key, searchPropertiesForProviderScopedProperty(mutable, providerId, scopedProperty));
          } catch (NoSuchElementException e) {
             if (!optionalKeys.contains(key))
