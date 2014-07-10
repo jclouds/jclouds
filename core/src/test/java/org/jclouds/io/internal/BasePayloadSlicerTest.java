@@ -35,7 +35,6 @@ import org.testng.annotations.Test;
 import com.google.common.base.Charsets;
 import com.google.common.collect.Iterables;
 import com.google.common.io.ByteSource;
-import com.google.common.io.ByteStreams;
 
 @Test
 public class BasePayloadSlicerTest {
@@ -49,7 +48,7 @@ public class BasePayloadSlicerTest {
       Iterator<Payload> iter = slicer.slice(payload, 25).iterator();
 
       assertTrue(iter.hasNext(), "Not enough results");
-      assertEquals(new String(ByteStreams.toByteArray(iter.next())), contents);
+      assertEquals(Strings2.toStringAndClose(iter.next().openStream()), contents);
       assertFalse(iter.hasNext());
 
    }

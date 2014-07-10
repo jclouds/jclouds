@@ -39,12 +39,12 @@ import org.jclouds.http.handlers.DelegatingRetryHandler;
 import org.jclouds.http.internal.BaseHttpCommandExecutorService;
 import org.jclouds.http.internal.HttpWire;
 import org.jclouds.io.ContentMetadataCodec;
+import org.jclouds.io.ByteStreams2;
 import org.jclouds.io.Payload;
 import org.jclouds.io.Payloads;
 
 import com.google.common.collect.LinkedHashMultimap;
 import com.google.common.collect.Multimap;
-import com.google.common.io.ByteStreams;
 import com.google.common.util.concurrent.ListeningExecutorService;
 import com.google.inject.Inject;
 
@@ -69,7 +69,7 @@ public class ApacheHCHttpCommandExecutorService extends BaseHttpCommandExecutorS
    protected HttpUriRequest convert(HttpRequest request) throws IOException {
       HttpUriRequest returnVal = apacheHCUtils.convertToApacheRequest(request);
       if (request.getPayload() != null && request.getPayload().getContentMetadata().getContentMD5() != null) {
-         String md5 = base64().encode(ByteStreams.hash(request.getPayload(), md5()).asBytes());
+         String md5 = base64().encode(ByteStreams2.hashAndClose(request.getPayload().openStream(), md5()).asBytes());
          returnVal.addHeader("Content-MD5", md5);
       }
 

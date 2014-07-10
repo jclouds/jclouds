@@ -49,6 +49,7 @@ import org.jclouds.filesystem.reference.FilesystemConstants;
 import org.jclouds.filesystem.util.Utils;
 import org.jclouds.filesystem.utils.TestUtils;
 import org.jclouds.http.HttpRequest;
+import org.jclouds.io.ByteStreams2;
 import org.jclouds.io.Payload;
 import org.jclouds.io.payloads.PhantomPayload;
 import org.jclouds.io.payloads.StringPayload;
@@ -60,7 +61,6 @@ import org.testng.annotations.Test;
 
 import com.google.common.collect.Sets;
 import com.google.common.io.ByteSource;
-import com.google.common.io.ByteStreams;
 import com.google.common.io.Files;
 import com.google.inject.CreationException;
 
@@ -583,7 +583,7 @@ public class FilesystemAsyncBlobStoreTest {
         assertNotNull(resultBlob, "Blob exists");
         // checks file content
         ByteSource expectedFile = Files.asByteSource(new File(TARGET_CONTAINER_NAME, blobKey));
-        assertTrue(ByteStreams.equal(expectedFile, resultBlob.getPayload()),
+        assertEquals(expectedFile.read(), ByteStreams2.toByteArrayAndClose(resultBlob.getPayload().openStream()),
                 "Blob payload differs from file content");
         // metadata are verified in the test for blobMetadata, so no need to
         // perform a complete test here

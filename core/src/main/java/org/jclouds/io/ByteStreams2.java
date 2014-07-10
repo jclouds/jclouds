@@ -22,11 +22,37 @@ import static com.google.common.base.Preconditions.checkNotNull;
 import java.io.IOException;
 import java.io.InputStream;
 import com.google.common.annotations.Beta;
+import com.google.common.hash.HashCode;
+import com.google.common.hash.HashFunction;
+import com.google.common.hash.HashingInputStream;
 import com.google.common.io.ByteSource;
+import com.google.common.io.ByteStreams;
+import com.google.common.io.Closeables;
 import com.google.common.io.InputSupplier;
 
 @Beta
 public class ByteStreams2 {
+   public static HashCode hashAndClose(InputStream input, HashFunction hashFunction) throws IOException {
+      checkNotNull(input, "input");
+      checkNotNull(hashFunction, "hashFunction");
+      try {
+         HashingInputStream his = new HashingInputStream(hashFunction, input);
+         ByteStreams.copy(his, ByteStreams.nullOutputStream());
+         return his.hash();
+      } finally {
+         Closeables.closeQuietly(input);
+      }
+   }
+
+   public static byte[] toByteArrayAndClose(InputStream input) throws IOException {
+      checkNotNull(input, "input");
+      try {
+         return ByteStreams.toByteArray(input);
+      } finally {
+         Closeables.closeQuietly(input);
+      }
+   }
+
    @Deprecated
    public static ByteSource asByteSource(final InputSupplier<? extends InputStream> supplier) {
       checkNotNull(supplier, "supplier");

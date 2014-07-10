@@ -17,7 +17,6 @@
 package org.jclouds.aws.s3;
 
 import static com.google.common.hash.Hashing.md5;
-import static com.google.common.io.ByteStreams.toByteArray;
 import static org.jclouds.aws.s3.blobstore.options.AWSS3PutOptions.Builder.storageClass;
 import static org.jclouds.io.Payloads.newByteArrayPayload;
 import static org.jclouds.s3.options.ListBucketOptions.Builder.withPrefix;
@@ -43,6 +42,7 @@ import org.jclouds.blobstore.domain.StorageMetadata;
 import org.jclouds.blobstore.options.PutOptions;
 import org.jclouds.domain.Location;
 import org.jclouds.http.BaseJettyTest;
+import org.jclouds.io.ByteStreams2;
 import org.jclouds.io.Payload;
 import org.jclouds.s3.S3Client;
 import org.jclouds.s3.S3ClientLiveTest;
@@ -123,7 +123,7 @@ public class AWSS3ClientLiveTest extends S3ClientLiveTest {
          assert !eTagOf1.equals(eTag);
 
          object = getApi().getObject(containerName, key);
-         assertEquals(toByteArray(object.getPayload()), buffer);
+         assertEquals(ByteStreams2.toByteArrayAndClose(object.getPayload().openStream()), buffer);
 
          // noticing amazon does not return content-md5 header or a parsable ETag after a multi-part
          // upload is complete:

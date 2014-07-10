@@ -25,7 +25,6 @@ import static com.google.common.collect.Iterables.size;
 import static com.google.common.collect.Iterables.transform;
 import static com.google.common.collect.Sets.filter;
 import static com.google.common.collect.Sets.newTreeSet;
-import static com.google.common.io.ByteStreams.toByteArray;
 import static com.google.common.util.concurrent.Futures.immediateFailedFuture;
 import static com.google.common.util.concurrent.Futures.immediateFuture;
 
@@ -66,6 +65,7 @@ import org.jclouds.http.HttpRequest;
 import org.jclouds.http.HttpResponse;
 import org.jclouds.http.HttpResponseException;
 import org.jclouds.http.HttpUtils;
+import org.jclouds.io.ByteStreams2;
 import org.jclouds.io.ContentMetadata;
 import org.jclouds.io.ContentMetadataCodec;
 import org.jclouds.io.Payload;
@@ -467,7 +467,7 @@ public class LocalAsyncBlobStore extends BaseAsyncBlobStore {
          if (options.getRanges() != null && options.getRanges().size() > 0) {
             byte[] data;
             try {
-               data = toByteArray(blob.getPayload());
+               data = ByteStreams2.toByteArrayAndClose(blob.getPayload().openStream());
             } catch (IOException e) {
                return immediateFailedFuture(new RuntimeException(e));
             }

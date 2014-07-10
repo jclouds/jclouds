@@ -43,6 +43,7 @@ import org.testng.annotations.Test;
 
 import com.google.common.hash.Hashing;
 import com.google.common.io.ByteSource;
+import com.google.common.io.Closeables;
 import com.google.common.io.Files;
 
 @Test(groups = "live")
@@ -178,7 +179,12 @@ public class SwiftBlobIntegrationLiveTest extends BaseBlobIntegrationTest {
          blobStore.putBlob(container, write, PutOptions.Builder.multipart());
 
          Blob read = blobStore.getBlob(container, "const.txt");
-         Files.copy(read.getPayload(), outFile);
+         InputStream is = read.getPayload().openStream();
+         try {
+            Files.asByteSink(outFile).writeFrom(is);
+         } finally {
+            Closeables.closeQuietly(is);
+         }
 
          assertEquals(Files.hash(outFile, Hashing.md5()), Files.hash(inFile, Hashing.md5()));
 

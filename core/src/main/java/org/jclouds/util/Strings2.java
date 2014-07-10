@@ -126,8 +126,7 @@ public class Strings2 {
    @Deprecated
    public static String toString(InputSupplier<? extends InputStream> supplier)
          throws IOException {
-      return CharStreams.toString(CharStreams.newReaderSupplier(supplier,
-         Charsets.UTF_8));
+      return toStringAndClose(supplier.getInput());
    }
 
    public static String toStringAndClose(InputStream input) throws IOException {

@@ -17,40 +17,45 @@
 package org.jclouds.io.payloads;
 
 import static com.google.common.collect.Lists.newArrayList;
-import static com.google.common.io.ByteStreams.join;
 
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.SequenceInputStream;
+import java.util.Collections;
 import java.util.Map.Entry;
 
-import com.google.common.io.ByteSource;
-import com.google.common.io.InputSupplier;
+import com.google.common.collect.ImmutableList;
 
 public class MultipartForm extends BasePayload<Iterable<? extends Part>> {
    public static final String BOUNDARY = "--JCLOUDS--";
    private static final String rn = "\r\n";
    private static final String dd = "--";
 
-   private boolean isRepeatable;
-   private final InputSupplier<? extends InputStream> chain;
+   private final String boundary;
+   private final Iterable<? extends Part> content;
+   private final boolean isRepeatable;
 
    @SuppressWarnings("unchecked")
    public MultipartForm(String boundary, Iterable<? extends Part> content) {
       super(content);
+      this.boundary = boundary;
+      this.content = content;
+
       getContentMetadata().setContentType("multipart/form-data; boundary=" + boundary);
-      getContentMetadata().setContentLength(0l);
       String boundaryrn = boundary + rn;
-      isRepeatable = true;
-      InputSupplier<? extends InputStream> chain = join();
+      boolean isRepeatable = true;
+      long contentLength = 0;
       for (Part part : content) {
          if (!part.isRepeatable())
             isRepeatable = false;
-         getContentMetadata().setContentLength(
-                  getContentMetadata().getContentLength() + part.getContentMetadata().getContentLength());
-         chain = join(chain, addLengthAndReturnHeaders(boundaryrn, part), part, addLengthAndReturnRn());
+         contentLength += part.getContentMetadata().getContentLength()
+            + createHeaders(boundaryrn, part).length()
+            + createRn().length();
       }
-      chain = join(chain, addLengthAndReturnFooter(boundary));
-      this.chain = chain;
+      contentLength += createFooter(boundary).length();
+      getContentMetadata().setContentLength(contentLength);
+      this.isRepeatable = isRepeatable;
    }
 
    public MultipartForm(String boundary, Part... parts) {
@@ -61,31 +66,35 @@ public class MultipartForm extends BasePayload<Iterable<? extends Part>> {
       this(BOUNDARY, parts);
    }
 
-   private ByteSource addLengthAndReturnRn() {
-      getContentMetadata().setContentLength(getContentMetadata().getContentLength() + rn.length());
-      return ByteSource.wrap(rn.getBytes());
+   private String createRn() {
+      return rn;
    }
 
-   private ByteSource addLengthAndReturnHeaders(String boundaryrn, Part part) {
+   private String createHeaders(String boundaryrn, Part part) {
       StringBuilder builder = new StringBuilder(dd).append(boundaryrn);
       for (Entry<String, String> entry : part.getHeaders().entries()) {
          String header = String.format("%s: %s%s", entry.getKey(), entry.getValue(), rn);
          builder.append(header);
       }
       builder.append(rn);
-      getContentMetadata().setContentLength(getContentMetadata().getContentLength() + builder.length());
-      return ByteSource.wrap(builder.toString().getBytes());
+      return builder.toString();
    }
 
-   private ByteSource addLengthAndReturnFooter(String boundary) {
-      String end = dd + boundary + dd + rn;
-      getContentMetadata().setContentLength(getContentMetadata().getContentLength() + end.length());
-      return ByteSource.wrap(end.getBytes());
+   private static String createFooter(String boundary) {
+      return dd + boundary + dd + rn;
    }
 
    @Override
    public InputStream openStream() throws IOException {
-      return chain.getInput();
+      String boundaryrn = boundary + rn;
+      ImmutableList.Builder<InputStream> builder = ImmutableList.builder();
+      for (Part part : content) {
+         builder.add(new ByteArrayInputStream(createHeaders(boundaryrn, part).getBytes()))
+            .add(part.openStream())
+            .add(new ByteArrayInputStream(createRn().getBytes()));
+      }
+      builder.add(new ByteArrayInputStream(createFooter(boundary).getBytes()));
+      return new SequenceInputStream(Collections.enumeration(builder.build()));
    }
 
    @Override
