@@ -122,6 +122,8 @@ public class Strings2 {
       }
    }
 
+   /** @deprecated use CharSource.read() instead */
+   @Deprecated
    public static String toString(InputSupplier<? extends InputStream> supplier)
          throws IOException {
       return CharStreams.toString(CharStreams.newReaderSupplier(supplier,
