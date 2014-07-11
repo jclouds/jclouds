@@ -79,7 +79,6 @@ import com.google.common.hash.HashCode;
 import com.google.common.io.ByteSource;
 import com.google.common.io.ByteStreams;
 import com.google.common.io.Files;
-import com.google.common.io.InputSupplier;
 import com.google.common.util.concurrent.Futures;
 import com.google.common.util.concurrent.ListenableFuture;
 import com.google.common.util.concurrent.Uninterruptibles;
@@ -95,10 +94,6 @@ public class BaseBlobIntegrationTest extends BaseBlobStoreIntegrationTest {
       super.setUpResourcesOnThisThread(testContext);
       oneHundredOneConstitutions = getTestDataSupplier();
       oneHundredOneConstitutionsMD5 = oneHundredOneConstitutions.hash(md5()).asBytes();
-   }
-
-   private static byte[] md5Supplier(InputSupplier<? extends InputStream> supplier) throws IOException {
-      return ByteStreams.hash(supplier, md5()).asBytes();
    }
 
    @SuppressWarnings("unchecked")
@@ -134,7 +129,7 @@ public class BaseBlobIntegrationTest extends BaseBlobStoreIntegrationTest {
       createTestInput(32 * 1024).copyTo(Files.asByteSink(payloadFile));
       
       final Payload testPayload = Payloads.newFilePayload(payloadFile);
-      final byte[] md5 = md5Supplier(testPayload);
+      final HashCode md5 = ByteStreams.hash(testPayload, md5());
       testPayload.getContentMetadata().setContentType("image/png");
       
       final AtomicInteger blobCount = new AtomicInteger();
@@ -153,8 +148,8 @@ public class BaseBlobIntegrationTest extends BaseBlobStoreIntegrationTest {
                   assertConsistencyAwareBlobExists(container, name);
                   blob = view.getBlobStore().getBlob(container, name);
 
-                  assert Arrays.equals(md5Supplier(blob.getPayload()), md5) : String.format(
-                           "md5 didn't match on %s/%s", container, name);
+                  assertEquals(ByteStreams.hash(blob.getPayload(), md5()), md5,
+                           String.format("md5 didn't match on %s/%s", container, name));
 
                   view.getBlobStore().removeBlob(container, name);
                   assertConsistencyAwareBlobDoesntExist(container, name);
@@ -192,7 +187,7 @@ public class BaseBlobIntegrationTest extends BaseBlobStoreIntegrationTest {
                         public Void apply(Blob from) {
                            try {
                               validateMetadata(from.getMetadata(), container, name);
-                              assertEquals(md5Supplier(from.getPayload()), supplier.hash(md5()).asBytes());
+                              assertEquals(ByteStreams.hash(from.getPayload(), md5()), supplier.hash(md5()));
                               checkContentDisposition(from, expectedContentDisposition);
                            } catch (IOException e) {
                               Throwables.propagate(e);
