@@ -19,12 +19,17 @@ package org.jclouds.chef.strategy.internal;
 import static com.google.common.collect.Iterables.size;
 import static org.testng.Assert.assertTrue;
 
+import com.google.common.util.concurrent.ListeningExecutorService;
+import com.google.common.util.concurrent.MoreExecutors;
 import org.jclouds.chef.ChefApi;
 import org.jclouds.chef.internal.BaseChefLiveTest;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.Test;
 
 import com.google.common.collect.ImmutableSet;
+
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 /**
  * Tests behavior of {@code ListNodesImpl} strategies
@@ -35,6 +40,9 @@ public class ListNodesImplLiveTest extends BaseChefLiveTest<ChefApi> {
    private ListNodesImpl strategy;
    private CreateNodeAndPopulateAutomaticAttributesImpl creator;
 
+   private ExecutorService testExecutorService;
+   private ListeningExecutorService testListeningExecutorService;
+
    @Override
    protected void initialize() {
       super.initialize();
@@ -42,6 +50,9 @@ public class ListNodesImplLiveTest extends BaseChefLiveTest<ChefApi> {
       this.strategy = injector.getInstance(ListNodesImpl.class);
       creator.execute(prefix, ImmutableSet.<String> of());
       creator.execute(prefix + 1, ImmutableSet.<String> of());
+
+      this.testExecutorService = Executors.newFixedThreadPool(5);
+      this.testListeningExecutorService = MoreExecutors.listeningDecorator(Executors.newFixedThreadPool(5));
    }
 
    @AfterClass(groups = { "integration", "live" })
@@ -49,11 +60,23 @@ public class ListNodesImplLiveTest extends BaseChefLiveTest<ChefApi> {
    protected void tearDown() {
       api.deleteNode(prefix);
       api.deleteNode(prefix + 1);
+
+      this.testExecutorService.shutdown();
+      this.testListeningExecutorService.shutdown();
+
       super.tearDown();
    }
 
    @Test
    public void testExecute() {
       assertTrue(size(strategy.execute()) > 0, "Expected one or more elements");
+   }
+
+   public void testExecuteConcurrentlyWithExecutorService() {
+      assertTrue(size(strategy.execute(testExecutorService)) > 0, "Expected one or more elements");
+   }
+
+   public void testExecuteConcurrentlyWithListeningExecutorService() {
+      assertTrue(size(strategy.execute(testListeningExecutorService)) > 0, "Expected one or more elements");
    }
 }

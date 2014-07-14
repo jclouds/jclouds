@@ -16,11 +16,11 @@
  */
 package org.jclouds.chef.strategy;
 
+import com.google.inject.ImplementedBy;
 import org.jclouds.chef.domain.CookbookVersion;
 import org.jclouds.chef.strategy.internal.ListCookbookVersionsInEnvironmentImpl;
 
-import com.google.common.util.concurrent.ListeningExecutorService;
-import com.google.inject.ImplementedBy;
+import java.util.concurrent.ExecutorService;
 
 @ImplementedBy(ListCookbookVersionsInEnvironmentImpl.class)
 public interface ListCookbookVersionsInEnvironment {
@@ -29,7 +29,9 @@ public interface ListCookbookVersionsInEnvironment {
 
    Iterable<? extends CookbookVersion> execute(String environmentName, String numVersions);
 
-   Iterable<? extends CookbookVersion> execute(ListeningExecutorService executor, String environmentName);
+   Iterable<? extends CookbookVersion> execute(ExecutorService executor, String environmentName);
 
-   Iterable<? extends CookbookVersion> execute(ListeningExecutorService executor, String environmentName, String numVersions);
+   Iterable<? extends CookbookVersion> execute(ExecutorService executor, String environmentName, String numVersions);
+
+
 }

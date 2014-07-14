@@ -16,16 +16,17 @@
  */
 package org.jclouds.chef.strategy;
 
+import com.google.inject.ImplementedBy;
 import org.jclouds.chef.domain.Node;
 import org.jclouds.chef.strategy.internal.ListNodesImpl;
 
-import com.google.common.util.concurrent.ListeningExecutorService;
-import com.google.inject.ImplementedBy;
+import java.util.concurrent.ExecutorService;
 
 @ImplementedBy(ListNodesImpl.class)
 public interface ListNodes {
 
    Iterable<? extends Node> execute();
 
-   Iterable<? extends Node> execute(ListeningExecutorService executor);
+   Iterable<? extends Node> execute(ExecutorService executor);
+
 }

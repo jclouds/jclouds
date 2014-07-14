@@ -40,6 +40,12 @@ import com.google.common.base.Joiner;
 import com.google.common.util.concurrent.ListenableFuture;
 import com.google.common.util.concurrent.ListeningExecutorService;
 import com.google.inject.Inject;
+import com.google.common.util.concurrent.MoreExecutors;
+
+
+import java.util.concurrent.ExecutorService;
+
+
 
 @Singleton
 public class ListEnvironmentsImpl implements ListEnvironments {
@@ -62,7 +68,11 @@ public class ListEnvironmentsImpl implements ListEnvironments {
    }
 
    @Override
-   public Iterable<? extends Environment> execute(ListeningExecutorService executor) {
+   public Iterable<? extends Environment> execute(ExecutorService executor) {
+      return this.execute(MoreExecutors.listeningDecorator(executor));
+   }
+
+   private Iterable<? extends Environment> execute(ListeningExecutorService executor) {
       return execute(executor, api.listEnvironments());
    }
 

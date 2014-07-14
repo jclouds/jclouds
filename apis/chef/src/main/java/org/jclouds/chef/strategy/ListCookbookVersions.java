@@ -16,16 +16,17 @@
  */
 package org.jclouds.chef.strategy;
 
+import com.google.inject.ImplementedBy;
 import org.jclouds.chef.domain.CookbookVersion;
 import org.jclouds.chef.strategy.internal.ListCookbookVersionsImpl;
 
-import com.google.common.util.concurrent.ListeningExecutorService;
-import com.google.inject.ImplementedBy;
+import java.util.concurrent.ExecutorService;
 
 @ImplementedBy(ListCookbookVersionsImpl.class)
 public interface ListCookbookVersions {
 
    Iterable<? extends CookbookVersion> execute();
 
-   Iterable<? extends CookbookVersion> execute(ListeningExecutorService executor);
+   Iterable<? extends CookbookVersion> execute(ExecutorService executor);
+
 }

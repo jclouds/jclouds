@@ -16,16 +16,17 @@
  */
 package org.jclouds.chef.strategy;
 
+import com.google.inject.ImplementedBy;
 import org.jclouds.chef.domain.Client;
 import org.jclouds.chef.strategy.internal.ListClientsImpl;
 
-import com.google.common.util.concurrent.ListeningExecutorService;
-import com.google.inject.ImplementedBy;
+import java.util.concurrent.ExecutorService;
 
 @ImplementedBy(ListClientsImpl.class)
 public interface ListClients {
 
    Iterable<? extends Client> execute();
 
-   Iterable<? extends Client> execute(ListeningExecutorService executor);
+   Iterable<? extends Client> execute(ExecutorService executor);
+
 }

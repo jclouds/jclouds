@@ -16,16 +16,16 @@
  */
 package org.jclouds.chef.strategy;
 
+import com.google.inject.ImplementedBy;
 import org.jclouds.chef.domain.Environment;
 import org.jclouds.chef.strategy.internal.ListEnvironmentsImpl;
 
-import com.google.common.util.concurrent.ListeningExecutorService;
-import com.google.inject.ImplementedBy;
+import java.util.concurrent.ExecutorService;
 
 @ImplementedBy(ListEnvironmentsImpl.class)
 public interface ListEnvironments {
 
    Iterable<? extends Environment> execute();
 
-   Iterable<? extends Environment> execute(ListeningExecutorService executor);
+   Iterable<? extends Environment> execute(ExecutorService executor);
 }
