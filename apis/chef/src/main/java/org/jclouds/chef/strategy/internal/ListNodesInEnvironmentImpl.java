@@ -16,71 +16,47 @@
  */
 package org.jclouds.chef.strategy.internal;
 
-import static com.google.common.base.Preconditions.checkNotNull;
-import static com.google.common.collect.Iterables.transform;
-import static com.google.common.util.concurrent.Futures.allAsList;
-import static com.google.common.util.concurrent.Futures.getUnchecked;
-
-import java.util.List;
-import java.util.concurrent.Callable;
-
 import javax.annotation.Resource;
 import javax.inject.Named;
 import javax.inject.Singleton;
 
-import org.jclouds.Constants;
+import com.google.common.util.concurrent.ListeningExecutorService;
+import com.google.common.util.concurrent.MoreExecutors;
+import com.google.inject.Inject;
 import org.jclouds.chef.ChefApi;
 import org.jclouds.chef.config.ChefProperties;
 import org.jclouds.chef.domain.Node;
 import org.jclouds.chef.strategy.ListNodesInEnvironment;
 import org.jclouds.logging.Logger;
 
-import com.google.common.base.Function;
-import com.google.common.base.Joiner;
-import com.google.common.util.concurrent.ListenableFuture;
-import com.google.common.util.concurrent.ListeningExecutorService;
-import com.google.inject.Inject;
+import java.util.concurrent.ExecutorService;
 
 @Singleton
-public class ListNodesInEnvironmentImpl implements ListNodesInEnvironment {
+public class ListNodesInEnvironmentImpl extends BaseListNodesImpl implements ListNodesInEnvironment {
 
-   protected final ChefApi api;
-   protected final ListeningExecutorService userExecutor;
    @Resource
    @Named(ChefProperties.CHEF_LOGGER)
    protected Logger logger = Logger.NULL;
 
    @Inject
-   ListNodesInEnvironmentImpl(@Named(Constants.PROPERTY_USER_THREADS) ListeningExecutorService userExecutor, ChefApi api) {
-      this.userExecutor = checkNotNull(userExecutor, "userExecuor");
-      this.api = checkNotNull(api, "api");
+   ListNodesInEnvironmentImpl(ChefApi api) {
+      super(api);
    }
 
    @Override
    public Iterable<? extends Node> execute(String environmentName) {
-      return execute(userExecutor, environmentName);
+      return super.execute(api.listNodesInEnvironment(environmentName));
    }
 
    @Override
-   public Iterable<? extends Node> execute(ListeningExecutorService executor, String environmentName) {
-      return execute(executor, environmentName, api.listNodesInEnvironment(environmentName));
+   public Iterable<? extends Node> execute(ExecutorService executor, String environmentName) {
+      return this.executeConcurrently(MoreExecutors.listeningDecorator(executor), environmentName);
    }
 
-   private Iterable<? extends Node> execute(final ListeningExecutorService executor, String environmentName, Iterable<String> toGet) {
-      ListenableFuture<List<Node>> futures = allAsList(transform(toGet, new Function<String, ListenableFuture<Node>>() {
-         @Override
-         public ListenableFuture<Node> apply(final String input) {
-            return executor.submit(new Callable<Node>() {
-               @Override
-               public Node call() throws Exception {
-                  return api.getNode(input);
-               }
-            });
-         }
-      }));
 
-      logger.trace(String.format("getting nodes in environment %s: %s", environmentName, Joiner.on(',').join(toGet)));
-      return getUnchecked(futures);
+   private Iterable<? extends Node> executeConcurrently(ListeningExecutorService executor,
+         String environmentName) {
+      return super.executeConcurrently(executor, api.listNodesInEnvironment(environmentName));
    }
 
 }

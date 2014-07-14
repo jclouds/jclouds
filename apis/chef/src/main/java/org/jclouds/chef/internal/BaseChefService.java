@@ -24,6 +24,7 @@ import java.io.InputStream;
 import java.security.PrivateKey;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ExecutorService;
 
 import javax.annotation.Resource;
 import javax.inject.Inject;
@@ -50,9 +51,9 @@ import org.jclouds.chef.strategy.DeleteAllNodesInList;
 import org.jclouds.chef.strategy.ListClients;
 import org.jclouds.chef.strategy.ListCookbookVersions;
 import org.jclouds.chef.strategy.ListCookbookVersionsInEnvironment;
-import org.jclouds.chef.strategy.ListNodesInEnvironment;
 import org.jclouds.chef.strategy.ListEnvironments;
 import org.jclouds.chef.strategy.ListNodes;
+import org.jclouds.chef.strategy.ListNodesInEnvironment;
 import org.jclouds.chef.strategy.UpdateAutomaticAttributesOnNode;
 import org.jclouds.crypto.Crypto;
 import org.jclouds.domain.JsonBall;
@@ -92,7 +93,7 @@ public class BaseChefService implements ChefService {
    private final ListNodesInEnvironment listNodesInEnvironment;
    private final Json json;
    private final Crypto crypto;
-   
+
    @Resource
    @Named(ChefProperties.CHEF_LOGGER)
    protected Logger logger = Logger.NULL;
@@ -127,7 +128,7 @@ public class BaseChefService implements ChefService {
       this.runListForGroup = checkNotNull(runListForGroup, "runListForGroup");
       this.listEnvironments = checkNotNull(listEnvironments, "listEnvironments");
       this.listNodesInEnvironment = checkNotNull(listNodesInEnvironment, "listNodesInEnvironment");
-      this.listCookbookVersionsInEnvironment = checkNotNull(listCookbookVersionsInEnvironment, "listCookbookVersionsInEnvironment");
+      this.listCookbookVersionsInEnvironment = checkNotNull(listCookbookVersionsInEnvironment,"listCookbookVersionsInEnvironment");
       this.json = checkNotNull(json, "json");
       this.crypto = checkNotNull(crypto, "crypto");
    }
@@ -140,13 +141,13 @@ public class BaseChefService implements ChefService {
    @Override
    public byte[] encrypt(InputSupplier<? extends InputStream> supplier) throws IOException {
       return ByteStreams.toByteArray(new RSAEncryptingPayload(crypto, Payloads.newPayload(supplier.getInput()), privateKey
-            .get()));
+                  .get()));
    }
 
    @Override
    public byte[] decrypt(InputSupplier<? extends InputStream> supplier) throws IOException {
       return ByteStreams.toByteArray(new RSADecryptingPayload(crypto, Payloads.newPayload(supplier.getInput()), privateKey
-            .get()));
+                  .get()));
    }
 
    @VisibleForTesting
@@ -233,13 +234,28 @@ public class BaseChefService implements ChefService {
    }
 
    @Override
+   public Iterable<? extends Node> listNodes(ExecutorService executorService) {
+      return listNodes.execute(executorService);
+   }
+
+   @Override
    public Iterable<? extends Client> listClients() {
       return listClients.execute();
    }
 
    @Override
+   public Iterable<? extends Client> listClients(ExecutorService executorService) {
+      return listClients.execute(executorService);
+   }
+
+   @Override
    public Iterable<? extends CookbookVersion> listCookbookVersions() {
       return listCookbookVersions.execute();
+   }
+
+   @Override public Iterable<? extends CookbookVersion> listCookbookVersions(
+         ExecutorService executorService) {
+      return listCookbookVersions.execute(executorService);
    }
 
    @Override
@@ -248,8 +264,21 @@ public class BaseChefService implements ChefService {
    }
 
    @Override
-   public Iterable<? extends CookbookVersion> listCookbookVersionsInEnvironment(String environmentName, String numVersions) {
+   public Iterable<? extends CookbookVersion> listCookbookVersionsInEnvironment(String environmentName,
+         ExecutorService executorService) {
+      return listCookbookVersionsInEnvironment.execute(executorService, environmentName);
+   }
+
+   @Override
+   public Iterable<? extends CookbookVersion> listCookbookVersionsInEnvironment(String environmentName,
+         String numVersions) {
       return listCookbookVersionsInEnvironment.execute(environmentName, numVersions);
+   }
+
+   @Override
+   public Iterable<? extends CookbookVersion> listCookbookVersionsInEnvironment(String environmentName,
+         String numVersions, ExecutorService executorService) {
+      return listCookbookVersionsInEnvironment.execute(executorService, environmentName, numVersions);
    }
 
    @Override
@@ -260,6 +289,11 @@ public class BaseChefService implements ChefService {
    @Override
    public Iterable<? extends Node> listNodesInEnvironment(String environmentName) {
       return listNodesInEnvironment.execute(environmentName);
+   }
+
+   @Override
+   public Iterable<? extends Node> listNodesInEnvironment(String environmentName, ExecutorService executorService) {
+      return listNodesInEnvironment.execute(executorService, environmentName);
    }
 
 }

@@ -28,45 +28,66 @@ import javax.annotation.Resource;
 import javax.inject.Named;
 import javax.inject.Singleton;
 
-import org.jclouds.Constants;
+import com.google.common.base.Function;
+import com.google.common.base.Joiner;
+import com.google.common.util.concurrent.ListenableFuture;
+import com.google.common.util.concurrent.ListeningExecutorService;
+import com.google.common.util.concurrent.MoreExecutors;
+import com.google.inject.Inject;
 import org.jclouds.chef.ChefApi;
 import org.jclouds.chef.config.ChefProperties;
 import org.jclouds.chef.domain.Client;
 import org.jclouds.chef.strategy.ListClients;
 import org.jclouds.logging.Logger;
 
-import com.google.common.base.Function;
-import com.google.common.base.Joiner;
-import com.google.common.util.concurrent.ListenableFuture;
-import com.google.common.util.concurrent.ListeningExecutorService;
-import com.google.inject.Inject;
+import java.util.concurrent.ExecutorService;
+
 
 @Singleton
 public class ListClientsImpl implements ListClients {
 
    protected final ChefApi api;
-   protected final ListeningExecutorService userExecutor;
    @Resource
    @Named(ChefProperties.CHEF_LOGGER)
    protected Logger logger = Logger.NULL;
 
    @Inject
-   ListClientsImpl(@Named(Constants.PROPERTY_USER_THREADS) ListeningExecutorService userExecutor, ChefApi api) {
-      this.userExecutor = checkNotNull(userExecutor, "userExecuor");
+   ListClientsImpl(ChefApi api) {
       this.api = checkNotNull(api, "api");
    }
 
    @Override
    public Iterable<? extends Client> execute() {
-      return execute(userExecutor);
+
+      Iterable<String> toGet = api.listClients();
+      Iterable<? extends Client> clients = transform(toGet,
+            new Function<String, Client>() {
+               @Override
+               public Client apply(final String input) {
+
+                  return api.getClient(input);
+               }
+
+            }
+      );
+
+      logger.trace(String.format("getting clients: %s", Joiner.on(',').join(toGet)));
+      return clients;
+
    }
 
    @Override
-   public Iterable<? extends Client> execute(ListeningExecutorService executor) {
-      return execute(executor, api.listClients());
+   public Iterable<? extends Client> execute(ExecutorService executorService) {
+      return this.execute(MoreExecutors.listeningDecorator(executorService));
    }
 
-   private Iterable<? extends Client> execute(final ListeningExecutorService executor, Iterable<String> toGet) {
+
+   private Iterable<? extends Client> execute(ListeningExecutorService listeningExecutor) {
+      return executeConcurrently(listeningExecutor, api.listClients());
+   }
+
+   private Iterable<? extends Client> executeConcurrently(final ListeningExecutorService executor,
+         Iterable<String> toGet) {
       ListenableFuture<List<Client>> futures = allAsList(transform(toGet,
             new Function<String, ListenableFuture<Client>>() {
                @Override
@@ -78,7 +99,8 @@ public class ListClientsImpl implements ListClients {
                      }
                   });
                }
-            }));
+            }
+      ));
 
       logger.trace(String.format("getting clients: %s", Joiner.on(',').join(toGet)));
       return getUnchecked(futures);

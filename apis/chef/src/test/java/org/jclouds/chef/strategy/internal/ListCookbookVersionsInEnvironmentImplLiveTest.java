@@ -22,7 +22,11 @@ import static org.testng.Assert.fail;
 
 import java.io.File;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
+import com.google.common.util.concurrent.ListeningExecutorService;
+import com.google.common.util.concurrent.MoreExecutors;
 import org.jclouds.chef.ChefApi;
 import org.jclouds.chef.domain.ChecksumStatus;
 import org.jclouds.chef.domain.CookbookVersion;
@@ -51,6 +55,9 @@ public class ListCookbookVersionsInEnvironmentImplLiveTest extends BaseChefLiveT
    private ListCookbookVersionsInEnvironmentImpl strategy;
    private CreateNodeAndPopulateAutomaticAttributesImpl creator;
 
+   private ExecutorService testExecutorService;
+   private ListeningExecutorService testListeningExecutorService;
+
    @Override
    protected void initialize() {
       super.initialize();
@@ -63,6 +70,8 @@ public class ListCookbookVersionsInEnvironmentImplLiveTest extends BaseChefLiveT
       }
 
       this.strategy = injector.getInstance(ListCookbookVersionsInEnvironmentImpl.class);
+      this.testExecutorService = Executors.newFixedThreadPool(5);
+      this.testListeningExecutorService = MoreExecutors.listeningDecorator(Executors.newFixedThreadPool(5));
    }
 
    @AfterClass(groups = { "integration", "live" })
@@ -72,6 +81,10 @@ public class ListCookbookVersionsInEnvironmentImplLiveTest extends BaseChefLiveT
       api.deleteCookbook(PREFIX, "1.0.0");
       api.deleteCookbook(PREFIX + 1, "0.0.0");
       api.deleteCookbook(PREFIX + 1, "1.0.0");
+
+      this.testExecutorService.shutdown();
+      this.testListeningExecutorService.shutdown();
+
       super.tearDown();
    }
 
@@ -81,13 +94,49 @@ public class ListCookbookVersionsInEnvironmentImplLiveTest extends BaseChefLiveT
    }
 
    @Test
+   public void testExecuteConcurrentlyWithExecutorService() {
+      assertTrue(size(strategy.execute(testExecutorService, "_default")) > 0,
+            "Expected one or more elements");
+   }
+
+   @Test
+   public void testExecuteConcurrentlyWithListeningExecutorService() {
+      assertTrue(size(strategy.execute(testListeningExecutorService, "_default")) > 0,
+            "Expected one or more elements");
+   }
+
+   @Test
    public void testExecuteWithNumVersions() {
       assertTrue(size(strategy.execute("_default", "2")) > 0, "Expected one or more elements");
    }
 
    @Test
+   public void testExecuteConcurrentlyWithNumVersionsAndExecutorService() {
+      assertTrue(size(strategy.execute(testExecutorService, "_default", "2")) > 0,
+            "Expected one or more elements");
+   }
+
+   @Test
+   public void testExecuteConcurrentlyWithNumVersionsAndListeningExecutorService() {
+      assertTrue(size(strategy.execute(testListeningExecutorService, "_default", "2")) > 0,
+            "Expected one or more elements");
+   }
+
+   @Test
    public void testExecuteWithNumVersionsAll() {
       assertTrue(size(strategy.execute("_default", "all")) > 0, "Expected one or more elements");
+   }
+
+   @Test
+   public void testExecuteConcurrentlyWithNumVersionsAllAndExecutorService() {
+      assertTrue(size(strategy.execute(testExecutorService, "_default", "all")) > 0,
+            "Expected one or more elements");
+   }
+
+   @Test
+   public void testExecuteConcurrentlyWithNumVersionsAllAndListeningExecutorService() {
+      assertTrue(size(strategy.execute(testListeningExecutorService, "_default", "all")) > 0,
+            "Expected one or more elements");
    }
 
    private FilePayload uploadContent(String fileName) throws Exception {
