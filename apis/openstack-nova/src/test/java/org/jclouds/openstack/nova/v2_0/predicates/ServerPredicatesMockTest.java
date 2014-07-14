@@ -16,17 +16,22 @@
  */
 package org.jclouds.openstack.nova.v2_0.predicates;
 
-import com.squareup.okhttp.mockwebserver.MockResponse;
-import com.squareup.okhttp.mockwebserver.MockWebServer;
+import static org.jclouds.openstack.nova.v2_0.domain.Server.Status.ACTIVE;
+import static org.jclouds.openstack.nova.v2_0.domain.Server.Status.SHUTOFF;
+import static org.jclouds.openstack.nova.v2_0.predicates.ServerPredicates.awaitActive;
+import static org.jclouds.openstack.nova.v2_0.predicates.ServerPredicates.awaitShutoff;
+import static org.jclouds.openstack.nova.v2_0.predicates.ServerPredicates.awaitStatus;
+import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertFalse;
+import static org.testng.Assert.assertTrue;
+
 import org.jclouds.openstack.nova.v2_0.NovaApi;
 import org.jclouds.openstack.nova.v2_0.features.ServerApi;
 import org.jclouds.openstack.v2_0.internal.BaseOpenStackMockTest;
 import org.testng.annotations.Test;
 
-import static org.jclouds.openstack.nova.v2_0.domain.Server.Status.ACTIVE;
-import static org.jclouds.openstack.nova.v2_0.domain.Server.Status.SHUTOFF;
-import static org.jclouds.openstack.nova.v2_0.predicates.ServerPredicates.*;
-import static org.testng.Assert.*;
+import com.squareup.okhttp.mockwebserver.MockResponse;
+import com.squareup.okhttp.mockwebserver.MockWebServer;
 
 @Test(groups = "unit", testName = "ServerPredicatesMockTest")
 public class ServerPredicatesMockTest extends BaseOpenStackMockTest<NovaApi> {
@@ -41,7 +46,7 @@ public class ServerPredicatesMockTest extends BaseOpenStackMockTest<NovaApi> {
 
       try {
          NovaApi novaApi = api(server.getUrl("/").toString(), "openstack-nova");
-         ServerApi serverApi = novaApi.getServerApiForZone(("RegionOne"));
+         ServerApi serverApi = novaApi.getServerApiForZone("RegionOne");
 
          boolean result = awaitActive(serverApi).apply("71752");
 
@@ -66,7 +71,7 @@ public class ServerPredicatesMockTest extends BaseOpenStackMockTest<NovaApi> {
 
       try {
          NovaApi novaApi = api(server.getUrl("/").toString(), "openstack-nova");
-         ServerApi serverApi = novaApi.getServerApiForZone(("RegionOne"));
+         ServerApi serverApi = novaApi.getServerApiForZone("RegionOne");
 
          boolean result = awaitShutoff(serverApi).apply("71752");
 
@@ -88,7 +93,7 @@ public class ServerPredicatesMockTest extends BaseOpenStackMockTest<NovaApi> {
 
       try {
          NovaApi novaApi = api(server.getUrl("/").toString(), "openstack-nova");
-         ServerApi serverApi = novaApi.getServerApiForZone(("RegionOne"));
+         ServerApi serverApi = novaApi.getServerApiForZone("RegionOne");
 
          boolean result = awaitStatus(serverApi, ACTIVE, 3, 1).apply("71752");
 

@@ -33,15 +33,12 @@ import javax.inject.Inject;
 import javax.inject.Named;
 
 import org.jclouds.http.HttpRequest;
-import org.jclouds.openstack.nova.v2_0.NovaApi;
 import org.jclouds.openstack.nova.v2_0.domain.Network;
-import org.jclouds.openstack.nova.v2_0.domain.Server;
 import org.jclouds.rest.MapBinder;
 import org.jclouds.rest.binders.BindToJsonPayload;
 
 import com.google.common.base.Objects;
 import com.google.common.base.Objects.ToStringHelper;
-import com.google.common.base.Optional;
 import com.google.common.collect.ForwardingObject;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
@@ -208,7 +205,7 @@ public class CreateServerOptions implements MapBinder {
          server.availabilityZone = availabilityZone;
       if (userData != null)
          server.user_data = base64().encode(userData);
-      if (configDrive == true)
+      if (configDrive)
          server.configDrive = "true";
       if (securityGroupNames.size() > 0) {
          server.securityGroupNames = Sets.newLinkedHashSet();
@@ -367,8 +364,8 @@ public class CreateServerOptions implements MapBinder {
     * <p/>
     * <h3>Note</h3>
     * <p/>
-    * This requires that {@link NovaApi#getSecurityGroupExtensionForZone(String)} to return
-    * {@link Optional#isPresent present}
+    * This requires that {@link org.jclouds.openstack.nova.v2_0.NovaApi#getSecurityGroupExtensionForZone(String)} to return
+    * {@link com.google.common.base.Optional#isPresent present}
     */
    public Set<String> getSecurityGroupNames() {
       return securityGroupNames;
@@ -413,9 +410,9 @@ public class CreateServerOptions implements MapBinder {
 
    /**
     * When you create a server from an image with the diskConfig value set to
-    * {@link Server#DISK_CONFIG_AUTO}, the server is built with a single partition that is expanded to
+    * {@link org.jclouds.openstack.nova.v2_0.domain.Server#DISK_CONFIG_AUTO}, the server is built with a single partition that is expanded to
     * the disk size of the flavor selected. When you set the diskConfig attribute to
-    * {@link Server#DISK_CONFIG_MANUAL}, the server is built by using the partition scheme and file
+    * {@link org.jclouds.openstack.nova.v2_0.domain.Server#DISK_CONFIG_MANUAL}, the server is built by using the partition scheme and file
     * system that is in the source image.
     * <p/>
     * If the target flavor disk is larger, remaining disk space is left unpartitioned. A server inherits the diskConfig

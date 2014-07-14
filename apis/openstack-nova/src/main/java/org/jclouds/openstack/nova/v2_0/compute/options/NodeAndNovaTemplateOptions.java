@@ -23,15 +23,15 @@ import org.jclouds.compute.domain.NodeMetadata;
 import com.google.common.util.concurrent.Atomics;
 
 /**
- * Simple data-structure for holding a NodeMetadata object along with a 
+ * Simple data-structure for holding a NodeMetadata object along with a
  * corresponding NovaTemplateOptions object.
  */
 public class NodeAndNovaTemplateOptions {
 
    private final AtomicReference<NodeMetadata> nodeMetadata;
    private final AtomicReference<NovaTemplateOptions> novaTemplateOptions;
-   
-   protected NodeAndNovaTemplateOptions(AtomicReference<NodeMetadata> nodeMetadata, AtomicReference<NovaTemplateOptions> novaTemplateOptions){
+
+   protected NodeAndNovaTemplateOptions(AtomicReference<NodeMetadata> nodeMetadata, AtomicReference<NovaTemplateOptions> novaTemplateOptions) {
       this.nodeMetadata = nodeMetadata;
       this.novaTemplateOptions = novaTemplateOptions;
    }
@@ -43,12 +43,12 @@ public class NodeAndNovaTemplateOptions {
    public AtomicReference<NovaTemplateOptions> getNovaTemplateOptions() {
       return novaTemplateOptions;
    }
-   
-   public static NodeAndNovaTemplateOptions newReference(AtomicReference<NodeMetadata> node, AtomicReference<NovaTemplateOptions> options){
+
+   public static NodeAndNovaTemplateOptions newReference(AtomicReference<NodeMetadata> node, AtomicReference<NovaTemplateOptions> options) {
       return new NodeAndNovaTemplateOptions(node, options);
    }
-   
-   public static AtomicReference<NodeAndNovaTemplateOptions> newAtomicReference(AtomicReference<NodeMetadata> node, AtomicReference<NovaTemplateOptions> options){
+
+   public static AtomicReference<NodeAndNovaTemplateOptions> newAtomicReference(AtomicReference<NodeMetadata> node, AtomicReference<NovaTemplateOptions> options) {
       return Atomics.newReference(NodeAndNovaTemplateOptions.newReference(node, options));
    }
 }

@@ -80,7 +80,7 @@ public class AllocateAndAddFloatingIpToNode implements
       String zoneId = node.getLocation().getParent().getId();
       FloatingIPApi floatingIpApi = novaApi.getFloatingIPExtensionForZone(zoneId).get();
       Optional<Set<String>> poolNames = input.get().getNovaTemplateOptions().get().getFloatingIpPoolNames();
-            
+
       Optional<FloatingIP> ip = allocateFloatingIPForNode(floatingIpApi, poolNames, node.getId());
       if (!ip.isPresent()) {
          throw new InsufficientResourcesException("Failed to allocate a FloatingIP for node(" + node.getId() + ")");
@@ -95,40 +95,40 @@ public class AllocateAndAddFloatingIpToNode implements
 
    /**
     * Allocates a FloatingIP for a given Node
-    * 
+    *
     * @param floatingIpApi FloatingIPApi to create or query for a valid FloatingIP
     * @param poolNames optional set of pool names from which we will attempt to allocate an IP from. Most cases this is null
     * @param nodeID optional id of the Node we are trying to allocate a FloatingIP for. Used here only for logging purposes
-    * @return Optional<FloatingIP> 
+    * @return Optional<FloatingIP>
     */
    private Optional<FloatingIP> allocateFloatingIPForNode(FloatingIPApi floatingIpApi, Optional<Set<String>> poolNames, String nodeID) {
-	   
+
       FloatingIP ip = null;
-      
+
       // 1.) Attempt to allocate from optionally passed poolNames
       if (poolNames.isPresent()) {
-         for (String poolName : poolNames.get()){
+         for (String poolName : poolNames.get()) {
             try {
                logger.debug(">> allocating floating IP from pool %s for node(%s)", poolName, nodeID);
                ip = floatingIpApi.allocateFromPool(poolName);
                if (ip != null)
                   return Optional.of(ip);
-            } catch (InsufficientResourcesException ire){
+            } catch (InsufficientResourcesException ire) {
                logger.trace("<< [%s] failed to allocate floating IP from pool %s for node(%s)", ire.getMessage(), poolName, nodeID);
             }
          }
       }
-      
+
       // 2.) Attempt to allocate, if necessary, via 'create()' call
       try {
          logger.debug(">> creating floating IP for node(%s)", nodeID);
          ip = floatingIpApi.create();
-         if(ip != null)
+         if (ip != null)
             return Optional.of(ip);
-      } catch (InsufficientResourcesException ire){
+      } catch (InsufficientResourcesException ire) {
          logger.trace("<< [%s] failed to create floating IP for node(%s)", ire.getMessage(), nodeID);
       }
-      
+
       // 3.) If no IP was found make final attempt by searching through list of available IP's
       logger.trace(">> searching for existing, unassigned floating IP for node(%s)", nodeID);
       List<FloatingIP> unassignedIps = Lists.newArrayList(Iterables.filter(floatingIpApi.list(),
@@ -145,7 +145,7 @@ public class AllocateAndAddFloatingIpToNode implements
       ip = Iterables.getLast(unassignedIps);
       return Optional.fromNullable(ip);
    }
-   
+
    @Override
    public String toString() {
       return Objects.toStringHelper("AllocateAndAddFloatingIpToNode").toString();

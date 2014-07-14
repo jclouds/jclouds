@@ -19,7 +19,6 @@ package org.jclouds.openstack.nova.v2_0.internal;
 import java.util.Properties;
 import java.util.Set;
 
-import com.google.common.collect.*;
 import org.jclouds.apis.BaseApiLiveTest;
 import org.jclouds.openstack.keystone.v2_0.config.KeystoneProperties;
 import org.jclouds.openstack.nova.v2_0.NovaApi;
@@ -37,6 +36,10 @@ import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
 import com.google.common.base.Throwables;
+import com.google.common.collect.ComparisonChain;
+import com.google.common.collect.ImmutableSet;
+import com.google.common.collect.Iterables;
+import com.google.common.collect.Ordering;
 
 /**
  * Tests behavior of {@code NovaApi}

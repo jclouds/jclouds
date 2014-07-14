@@ -28,7 +28,6 @@ import java.util.Set;
 import org.jclouds.compute.options.TemplateOptions;
 import org.jclouds.domain.LoginCredentials;
 import org.jclouds.openstack.nova.v2_0.domain.Network;
-import org.jclouds.openstack.nova.v2_0.options.CreateServerOptions;
 import org.jclouds.scriptbuilder.domain.Statement;
 
 import com.google.common.base.Objects;
@@ -145,7 +144,7 @@ public class NovaTemplateOptions extends TemplateOptions implements Cloneable {
       this.autoAssignFloatingIp = enable;
       return this;
    }
-   
+
    /**
     * @see #getFloatingIpPoolNames()
     */
@@ -200,7 +199,7 @@ public class NovaTemplateOptions extends TemplateOptions implements Cloneable {
    /**
     * <h3>Note</h3>
     * 
-    * This requires that {@link NovaApi#getExtensionForZone(String)} to return
+    * This requires that {@link org.jclouds.openstack.nova.v2_0.NovaApi#getExtensionForZone(String)} to return
     * {@link Optional#isPresent present}
     * 
     * @return true if auto assignment of a floating ip to each vm is enabled
@@ -211,16 +210,16 @@ public class NovaTemplateOptions extends TemplateOptions implements Cloneable {
 
    /**
     * The floating IP pool name(s) to use when allocating a FloatingIP. Applicable
-    * only if #shouldAutoAssignFloatingIp() returns true. If not set will attempt to 
-    * use whatever FloatingIP(s) can be found regardless of which pool they originated 
+    * only if #shouldAutoAssignFloatingIp() returns true. If not set will attempt to
+    * use whatever FloatingIP(s) can be found regardless of which pool they originated
     * from
-    * 
+    *
     * @return floating-ip-pool names to use
     */
    public Optional<Set<String>> getFloatingIpPoolNames() {
       return floatingIpPoolNames;
-   }   
-   
+   }
+
    /**
     * Specifies the keypair used to run instances with
     * @return the keypair to be used
@@ -228,11 +227,11 @@ public class NovaTemplateOptions extends TemplateOptions implements Cloneable {
    public String getKeyPairName() {
       return keyPairName;
    }
-   
+
    /**
     * <h3>Note</h3>
     *
-    * This requires that {@link NovaApi#getKeyPairExtensionForZone(String)} to return
+    * This requires that {@link org.jclouds.openstack.nova.v2_0.NovaApi#getKeyPairExtensionForZone(String)} to return
     * {@link Optional#isPresent present}
     *
     * @return true if auto generation of keypairs is enabled
@@ -256,21 +255,21 @@ public class NovaTemplateOptions extends TemplateOptions implements Cloneable {
    }
 
    /**
-    * @see CreateServerOptions#getDiskConfig()
+    * @see org.jclouds.openstack.nova.v2_0.options.CreateServerOptions#getDiskConfig()
     */
    public String getDiskConfig() {
       return diskConfig;
    }
 
    /**
-    * @see CreateServerOptions#getConfigDrive()
+    * @see org.jclouds.openstack.nova.v2_0.options.CreateServerOptions#getConfigDrive()
     */
    public boolean getConfigDrive() {
       return configDrive;
    }
 
    /**
-    * @see CreateServerOptions#getNetworks()
+    * @see org.jclouds.openstack.nova.v2_0.options.CreateServerOptions#getNetworks()
     */
    public Set<Network> getNovaNetworks() {
       return novaNetworks;
@@ -298,11 +297,11 @@ public class NovaTemplateOptions extends TemplateOptions implements Cloneable {
        */
       public NovaTemplateOptions floatingIpPoolNames(Iterable<String> floatingIpPoolNames) {
          NovaTemplateOptions options = new NovaTemplateOptions();
-         return NovaTemplateOptions.class.cast(options.floatingIpPoolNames(floatingIpPoolNames)); 
-      }     
-      
+         return NovaTemplateOptions.class.cast(options.floatingIpPoolNames(floatingIpPoolNames));
+      }
+
       /**
-       * @see NovaTemplateOptions#shouldGenerateKeyPair() 
+       * @see NovaTemplateOptions#shouldGenerateKeyPair()
        */
       public static NovaTemplateOptions generateKeyPair(boolean enable) {
          return new NovaTemplateOptions().generateKeyPair(enable);
@@ -638,7 +637,7 @@ public class NovaTemplateOptions extends TemplateOptions implements Cloneable {
    }
 
    /**
-    * @see CreateServerOptions#getDiskConfig()
+    * @see org.jclouds.openstack.nova.v2_0.options.CreateServerOptions#getDiskConfig()
     */
    public NovaTemplateOptions diskConfig(String diskConfig) {
       this.diskConfig = diskConfig;
@@ -651,7 +650,7 @@ public class NovaTemplateOptions extends TemplateOptions implements Cloneable {
     * normally be available through the metadata service by mounting this disk and reading files from it.
     * To enable the config drive, set this parameter to "true".
     * This has to be enabled for user data cases.
-    * @see CreateServerOptions#getConfigDrive()
+    * @see org.jclouds.openstack.nova.v2_0.options.CreateServerOptions#getConfigDrive()
     */
    public NovaTemplateOptions configDrive(boolean configDrive) {
       this.configDrive = configDrive;
@@ -662,7 +661,7 @@ public class NovaTemplateOptions extends TemplateOptions implements Cloneable {
     * @param novaNetworks The list of network declarations.
     * Nova-specific network declarations allow for specifying network UUIDs, port UUIDs, and fixed IPs.
     * Unline {@link #networks(Iterable)} this supports setting additional network parameters and not just network UUIDs.
-    * @see CreateServerOptions#getNetworks()
+    * @see org.jclouds.openstack.nova.v2_0.options.CreateServerOptions#getNetworks()
     */
    public NovaTemplateOptions novaNetworks(Set<Network> novaNetworks) {
       this.novaNetworks = novaNetworks;

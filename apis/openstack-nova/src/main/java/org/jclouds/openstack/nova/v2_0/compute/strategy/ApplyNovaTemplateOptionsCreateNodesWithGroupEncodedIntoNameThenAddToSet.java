@@ -158,9 +158,9 @@ public class ApplyNovaTemplateOptionsCreateNodesWithGroupEncodedIntoNameThenAddT
       ListenableFuture<AtomicReference<NodeMetadata>> future = super.createNodeInGroupWithNameAndTemplate(group, name, template);
       final NovaTemplateOptions templateOptions = NovaTemplateOptions.class.cast(template.getOptions());
       if (templateOptions.shouldAutoAssignFloatingIp()) {
-         
-         ListenableFuture<AtomicReference<NodeAndNovaTemplateOptions>> nodeAndNovaTemplateOptions = Futures.transform(future, 
-               new Function<AtomicReference<NodeMetadata>, AtomicReference<NodeAndNovaTemplateOptions>>(){
+
+         ListenableFuture<AtomicReference<NodeAndNovaTemplateOptions>> nodeAndNovaTemplateOptions = Futures.transform(future,
+               new Function<AtomicReference<NodeMetadata>, AtomicReference<NodeAndNovaTemplateOptions>>() {
 
                   @Override
                   public AtomicReference<NodeAndNovaTemplateOptions> apply(AtomicReference<NodeMetadata> input) {
