@@ -24,6 +24,7 @@ import org.jclouds.javax.annotation.Nullable;
 public class VolumeBuilder {
 
    private Volume.Type type;
+   @Nullable
    private String id;
    @Nullable
    private Float size;
@@ -38,7 +39,7 @@ public class VolumeBuilder {
    }
 
    public VolumeBuilder id(String id) {
-      this.id = checkNotNull(id, "id");
+      this.id = id;
       return this;
    }
 

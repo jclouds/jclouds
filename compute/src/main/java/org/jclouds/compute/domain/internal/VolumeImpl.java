@@ -27,6 +27,7 @@ import com.google.common.base.Objects.ToStringHelper;
 
 public class VolumeImpl implements Volume {
 
+   @Nullable
    private final String id;
    private final Volume.Type type;
    @Nullable
