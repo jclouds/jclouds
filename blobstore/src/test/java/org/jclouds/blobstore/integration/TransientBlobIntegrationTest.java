@@ -16,10 +16,7 @@
  */
 package org.jclouds.blobstore.integration;
 
-import java.io.IOException;
-
 import org.jclouds.blobstore.integration.internal.BaseBlobIntegrationTest;
-import org.testng.SkipException;
 import org.testng.annotations.Test;
 
 @Test(groups = { "integration" })
