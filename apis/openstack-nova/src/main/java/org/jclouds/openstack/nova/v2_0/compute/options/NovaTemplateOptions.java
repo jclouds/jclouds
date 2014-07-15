@@ -83,7 +83,6 @@ public class NovaTemplateOptions extends TemplateOptions implements Cloneable {
 
    protected boolean autoAssignFloatingIp = false;
    protected Optional<Set<String>> floatingIpPoolNames = Optional.absent();
-   protected Optional<Set<String>> securityGroupNames = Optional.absent();
    protected boolean generateKeyPair = false;
    protected String keyPairName;
    protected byte[] userData;
@@ -100,7 +99,6 @@ public class NovaTemplateOptions extends TemplateOptions implements Cloneable {
       NovaTemplateOptions that = NovaTemplateOptions.class.cast(o);
       return super.equals(that) && equal(this.autoAssignFloatingIp, that.autoAssignFloatingIp)
             && equal(this.floatingIpPoolNames, that.floatingIpPoolNames)
-            && equal(this.securityGroupNames, that.securityGroupNames)
             && equal(this.generateKeyPair, that.generateKeyPair)
             && equal(this.keyPairName, that.keyPairName)
             && Arrays.equals(this.userData, that.userData)
@@ -111,7 +109,7 @@ public class NovaTemplateOptions extends TemplateOptions implements Cloneable {
 
    @Override
    public int hashCode() {
-      return Objects.hashCode(super.hashCode(), autoAssignFloatingIp, floatingIpPoolNames, securityGroupNames, generateKeyPair, keyPairName, userData, diskConfig, configDrive, novaNetworks);
+      return Objects.hashCode(super.hashCode(), autoAssignFloatingIp, floatingIpPoolNames, generateKeyPair, keyPairName, userData, diskConfig, configDrive, novaNetworks);
    }
 
    @Override
@@ -121,8 +119,6 @@ public class NovaTemplateOptions extends TemplateOptions implements Cloneable {
          toString.add("autoAssignFloatingIp", autoAssignFloatingIp);
       if (floatingIpPoolNames.isPresent())
          toString.add("floatingIpPoolNames", floatingIpPoolNames.get());
-      if (securityGroupNames.isPresent())
-         toString.add("securityGroupNames", securityGroupNames.get());
       if (generateKeyPair)
          toString.add("generateKeyPair", generateKeyPair);
       toString.add("keyPairName", keyPairName);
@@ -179,18 +175,22 @@ public class NovaTemplateOptions extends TemplateOptions implements Cloneable {
    /**
     *
     * @see org.jclouds.openstack.nova.v2_0.options.CreateServerOptions#getSecurityGroupNames
+    * @deprecated Use @link {@link TemplateOptions#securityGroups(String...)} instead.
     */
+   @Deprecated
    public NovaTemplateOptions securityGroupNames(String... securityGroupNames) {
       return securityGroupNames(ImmutableSet.copyOf(checkNotNull(securityGroupNames, "securityGroupNames")));
    }
 
    /**
     * @see org.jclouds.openstack.nova.v2_0.options.CreateServerOptions#getSecurityGroupNames
+    * @deprecated Use {@link TemplateOptions#securityGroups(Iterable)} instead.
     */
+   @Deprecated
    public NovaTemplateOptions securityGroupNames(Iterable<String> securityGroupNames) {
       for (String groupName : checkNotNull(securityGroupNames, "securityGroupNames"))
          checkNotNull(emptyToNull(groupName), "all security groups must be non-empty");
-      this.securityGroupNames = Optional.<Set<String>> of(ImmutableSet.copyOf(securityGroupNames));
+      securityGroups(securityGroupNames);
       return this;
    }
 
@@ -243,9 +243,11 @@ public class NovaTemplateOptions extends TemplateOptions implements Cloneable {
     * to {@link #getInboundPorts()}
     * 
     * @see org.jclouds.openstack.nova.v2_0.options.CreateServerOptions#getSecurityGroupNames
+    * @deprecated Use {@link TemplateOptions#getGroups()} instead.
     */
+   @Deprecated
    public Optional<Set<String>> getSecurityGroupNames() {
-      return securityGroupNames;
+      return getGroups().isEmpty() ? Optional.<Set<String>>absent() : Optional.of(getGroups());
    }
 
    public byte[] getUserData() {
