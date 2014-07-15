@@ -318,7 +318,8 @@ public class SshjSshClient implements SshClient {
 
                @Override
                public long getLength() {
-                  return contents.getContentMetadata().getContentLength();
+                  Long length = contents.getContentMetadata().getContentLength();
+                  return length != null ? length : -1;
                }
 
                @Override
