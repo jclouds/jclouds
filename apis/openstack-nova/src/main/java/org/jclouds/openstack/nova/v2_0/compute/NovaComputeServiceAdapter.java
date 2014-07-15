@@ -103,8 +103,8 @@ public class NovaComputeServiceAdapter implements
 
       CreateServerOptions options = new CreateServerOptions();
       options.metadata(metadataAndTagsAsCommaDelimitedValue(template.getOptions()));
-      if (templateOptions.getSecurityGroupNames().isPresent())
-         options.securityGroupNames(templateOptions.getSecurityGroupNames().get());
+      if (!templateOptions.getGroups().isEmpty())
+         options.securityGroupNames(templateOptions.getGroups());
       options.userData(templateOptions.getUserData());
       options.diskConfig(templateOptions.getDiskConfig());
       options.configDrive(templateOptions.getConfigDrive());
