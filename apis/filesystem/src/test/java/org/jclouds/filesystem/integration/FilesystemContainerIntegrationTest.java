@@ -83,18 +83,8 @@ public class FilesystemContainerIntegrationTest extends BaseContainerIntegration
    }
 
    @Override
-   public void testClearWhenContentsUnderPath() throws InterruptedException {
-      throw new SkipException("not yet implemented");
-   }
-
-   @Override
-   public void testDirectory() throws InterruptedException {
-      throw new SkipException("not yet implemented");
-   }
-
-   @Override
    public void testWithDetails() throws InterruptedException, IOException {
-      throw new SkipException("not yet implemented");
+      throw new SkipException("requires Java 7 xattr support");
    }
 
    @Override

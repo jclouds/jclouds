@@ -121,13 +121,17 @@ public class FilesystemStorageStrategyImpl implements LocalStorageStrategy {
    @Override
    public void clearContainer(String container, ListContainerOptions options) {
       filesystemContainerNameValidator.validate(container);
-      // TODO implement options
+      if (options.getDir() != null) {
+         container += denormalize("/" + options.getDir());
+      }
       try {
          File containerFile = openFolder(container);
          File[] children = containerFile.listFiles();
          if (null != children) {
             for (File child : children)
-               Utils.deleteRecursively(child);
+               if (options.isRecursive() || child.isFile()) {
+                  Utils.deleteRecursively(child);
+               }
          }
       } catch (IOException e) {
          logger.error(e, "An error occurred while clearing container %s", container);

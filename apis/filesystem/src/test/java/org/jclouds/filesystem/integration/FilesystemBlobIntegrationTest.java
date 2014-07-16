@@ -60,21 +60,16 @@ public class FilesystemBlobIntegrationTest extends BaseBlobIntegrationTest {
 
    @Override
    public void testCreateBlobWithExpiry() throws InterruptedException {
-      throw new SkipException("not yet implemented");
+      throw new SkipException("requires Java 7 xattr support");
    }
 
    @Override
    public void testGetIfModifiedSince() throws InterruptedException {
-      throw new SkipException("not yet implemented");
+      throw new SkipException("requires Java 7 xattr support");
    }
 
    @Override
    public void testGetIfUnmodifiedSince() throws InterruptedException {
-      throw new SkipException("not yet implemented");
-   }
-
-   @Override
-   public void testPutObjectStream() throws InterruptedException, IOException, ExecutionException {
-      throw new SkipException("not yet implemented");
+      throw new SkipException("requires Java 7 xattr support");
    }
 }
