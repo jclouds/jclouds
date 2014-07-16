@@ -20,10 +20,9 @@ import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotEquals;
 import static org.testng.Assert.assertTrue;
 
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Collections;
 import java.util.Properties;
 import java.util.Random;
 
@@ -32,6 +31,7 @@ import org.jclouds.blobstore.domain.Blob;
 import org.jclouds.blobstore.integration.internal.BaseBlobIntegrationTest;
 import org.jclouds.blobstore.options.PutOptions;
 import org.jclouds.io.ByteSources;
+import org.jclouds.io.ByteStreams2;
 import org.jclouds.io.Payload;
 import org.jclouds.openstack.keystone.v2_0.config.KeystoneProperties;
 import org.jclouds.openstack.swift.blobstore.strategy.MultipartUpload;
@@ -43,8 +43,6 @@ import org.testng.annotations.Test;
 
 import com.google.common.hash.Hashing;
 import com.google.common.io.ByteSource;
-import com.google.common.io.Closeables;
-import com.google.common.io.Files;
 
 @Test(groups = "live")
 public class SwiftBlobIntegrationLiveTest extends BaseBlobIntegrationTest {
@@ -171,23 +169,17 @@ public class SwiftBlobIntegrationLiveTest extends BaseBlobIntegrationTest {
 
          blobStore.createContainerInLocation(null, container);
 
-         File inFile = createFileBiggerThan(PART_SIZE);
-         File outFile = new File("target/lots-of-const-readback.txt");
+         ByteSource input = createByteSourceBiggerThan(PART_SIZE);
 
-         InputStream contentToUpload = new FileInputStream(inFile);
-         Blob write = blobStore.blobBuilder("const.txt").payload(contentToUpload).contentLength(inFile.length()).build();
+         Blob write = blobStore.blobBuilder("const.txt")
+             .payload(input.openStream())
+             .contentLength(input.size())
+             .build();
          blobStore.putBlob(container, write, PutOptions.Builder.multipart());
 
          Blob read = blobStore.getBlob(container, "const.txt");
          InputStream is = read.getPayload().openStream();
-         try {
-            Files.asByteSink(outFile).writeFrom(is);
-         } finally {
-            Closeables.closeQuietly(is);
-         }
-
-         assertEquals(Files.hash(outFile, Hashing.md5()), Files.hash(inFile, Hashing.md5()));
-
+         assertEquals(ByteStreams2.hashAndClose(is, Hashing.md5()), input.hash(Hashing.md5()));
       } finally {
          returnContainer(container);
       }
@@ -199,8 +191,8 @@ public class SwiftBlobIntegrationLiveTest extends BaseBlobIntegrationTest {
    }
 
    protected void addMultipartBlobToContainer(String containerName, String key) throws IOException {
-      File fileToUpload = createFileBiggerThan(PART_SIZE);
-      addMultipartBlobToContainer(containerName, key, Files.asByteSource(fileToUpload));
+      ByteSource byteSource = createByteSourceBiggerThan(PART_SIZE);
+      addMultipartBlobToContainer(containerName, key, byteSource);
    }
 
    protected void addMultipartBlobToContainer(String containerName, String key, ByteSource byteSource) throws IOException {
@@ -222,20 +214,8 @@ public class SwiftBlobIntegrationLiveTest extends BaseBlobIntegrationTest {
       return byteSource;
    }
 
-   @SuppressWarnings("unchecked")
-   private File createFileBiggerThan(long partSize) throws IOException {
-      long copiesNeeded = (partSize / getOneHundredOneConstitutionsLength()) + 1;
-
-      ByteSource temp = ByteSource.concat(oneHundredOneConstitutions);
-
-      for (int i = 0; i < copiesNeeded; i++) {
-         temp = ByteSource.concat(temp, oneHundredOneConstitutions);
-      }
-
-      File fileToUpload = new File("target/lots-of-const.txt");
-      temp.copyTo(Files.asByteSink(fileToUpload));
-
-      assertTrue(fileToUpload.length() > partSize);
-      return fileToUpload;
+   private ByteSource createByteSourceBiggerThan(long partSize) throws IOException {
+      int nCopies = (int) (partSize / getOneHundredOneConstitutionsLength()) + 1;
+      return ByteSource.concat(Collections.nCopies(nCopies, oneHundredOneConstitutions));
    }
 }
