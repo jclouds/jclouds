@@ -35,67 +35,56 @@ import org.jclouds.rest.annotations.SelectJson;
 import com.google.inject.name.Named;
 
 /**
- * Provides synchronous access to the KeyStone Service API.
- * <p/>
- * 
- * @see <a href=
- *      "http://docs.openstack.org/api/openstack-identity-service/2.0/content/Service_API_Api_Operations.html"
- *      />
+ * Provides access to the OpenStack Keystone Service API.
  */
+@Consumes(MediaType.APPLICATION_JSON)
+@Path("/tokens")
 public interface AuthenticationApi extends Closeable {
 
    /**
     * Authenticate to generate a token.
-    * 
+    *
     * @return access with token
     */
    @Named("authenticate")
    @POST
    @SelectJson("access")
-   @Consumes(MediaType.APPLICATION_JSON)
-   @Path("/tokens")
    @MapBinder(BindAuthToJsonPayload.class)
    Access authenticateWithTenantNameAndCredentials(@Nullable @PayloadParam("tenantName") String tenantName,
          PasswordCredentials passwordCredentials);
 
    /**
     * Authenticate to generate a token.
-    * 
+    *
     * @return access with token
     */
    @Named("authenticate")
    @POST
    @SelectJson("access")
-   @Consumes(MediaType.APPLICATION_JSON)
-   @Path("/tokens")
    @MapBinder(BindAuthToJsonPayload.class)
    Access authenticateWithTenantIdAndCredentials(@Nullable @PayloadParam("tenantId") String tenantId,
          PasswordCredentials passwordCredentials);
 
    /**
     * Authenticate to generate a token.
-    * 
+    *
     * @return access with token
     */
    @Named("authenticate")
    @POST
    @SelectJson("access")
-   @Consumes(MediaType.APPLICATION_JSON)
-   @Path("/tokens")
    @MapBinder(BindAuthToJsonPayload.class)
    Access authenticateWithTenantNameAndCredentials(@Nullable @PayloadParam("tenantName") String tenantName,
          ApiAccessKeyCredentials apiAccessKeyCredentials);
 
    /**
     * Authenticate to generate a token.
-    * 
+    *
     * @return access with token
     */
    @Named("authenticate")
    @POST
    @SelectJson("access")
-   @Consumes(MediaType.APPLICATION_JSON)
-   @Path("/tokens")
    @MapBinder(BindAuthToJsonPayload.class)
    Access authenticateWithTenantIdAndCredentials(@Nullable @PayloadParam("tenantId") String tenantId,
          ApiAccessKeyCredentials apiAccessKeyCredentials);

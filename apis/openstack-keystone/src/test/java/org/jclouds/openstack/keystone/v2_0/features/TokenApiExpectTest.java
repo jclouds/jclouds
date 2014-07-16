@@ -111,7 +111,9 @@ public class TokenApiExpectTest extends BaseKeystoneRestApiExpectTest<KeystoneAp
             keystoneAuthWithUsernameAndPasswordAndTenantName, responseWithKeystoneAccess,
             HttpRequest.builder().method("HEAD")
                        .endpoint(endpoint + "/v2.0/tokens/sometokenorother")
-                       .addHeader("X-Auth-Token", authToken).build(),
+                       .addHeader("Accept", APPLICATION_JSON)
+                       .addHeader("X-Auth-Token", authToken)
+                       .build(),
             HttpResponse.builder().statusCode(200).payload(payloadFromResourceWithContentType("/token_details.json", APPLICATION_JSON)).build())
             .getTokenApi().get();
       assertTrue(api.isValid("sometokenorother"));
@@ -122,7 +124,9 @@ public class TokenApiExpectTest extends BaseKeystoneRestApiExpectTest<KeystoneAp
             keystoneAuthWithUsernameAndPasswordAndTenantName, responseWithKeystoneAccess,
             HttpRequest.builder().method("HEAD")
                        .endpoint(endpoint + "/v2.0/tokens/sometokenorother")
-                       .addHeader("X-Auth-Token", authToken).build(),
+                       .addHeader("Accept", APPLICATION_JSON)
+                       .addHeader("X-Auth-Token", authToken)
+                       .build(),
             HttpResponse.builder().statusCode(404).build()).getTokenApi().get();
       assertFalse(api.isValid("sometokenorother"));
    }

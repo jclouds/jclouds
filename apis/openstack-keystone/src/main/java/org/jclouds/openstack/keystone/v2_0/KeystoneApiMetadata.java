@@ -22,14 +22,14 @@ import static org.jclouds.openstack.keystone.v2_0.config.KeystoneProperties.SERV
 import java.net.URI;
 import java.util.Properties;
 
+import org.jclouds.openstack.keystone.v2_0.config.AuthenticationApiModule;
 import org.jclouds.openstack.keystone.v2_0.config.CredentialTypes;
 import org.jclouds.openstack.keystone.v2_0.config.KeystoneAuthenticationModule;
+import org.jclouds.openstack.keystone.v2_0.config.KeystoneHttpApiModule;
+import org.jclouds.openstack.keystone.v2_0.config.KeystoneHttpApiModule.KeystoneAdminURLModule;
 import org.jclouds.openstack.keystone.v2_0.config.KeystoneParserModule;
-import org.jclouds.openstack.keystone.v2_0.config.KeystoneRestClientModule;
-import org.jclouds.openstack.keystone.v2_0.config.KeystoneRestClientModule.KeystoneAdminURLModule;
-import org.jclouds.openstack.keystone.v2_0.config.MappedAuthenticationApiModule;
 import org.jclouds.openstack.v2_0.ServiceType;
-import org.jclouds.rest.internal.BaseRestApiMetadata;
+import org.jclouds.rest.internal.BaseHttpApiMetadata;
 
 import com.google.common.collect.ImmutableSet;
 import com.google.common.reflect.TypeToken;
@@ -38,8 +38,8 @@ import com.google.inject.Module;
 /**
  * Implementation of {@link org.jclouds.apis.ApiMetadata} for Keystone 2.0 API
  */
-public class KeystoneApiMetadata extends BaseRestApiMetadata {
-   
+public class KeystoneApiMetadata extends BaseHttpApiMetadata<KeystoneApi> {
+
    /**
     * @deprecated please use {@code org.jclouds.ContextBuilder#buildApi(KeystoneApi.class)} as
     *             {@link KeystoneAsyncApi} interface will be removed in jclouds 1.7.
@@ -63,37 +63,32 @@ public class KeystoneApiMetadata extends BaseRestApiMetadata {
    }
 
    public static Properties defaultProperties() {
-      Properties properties = BaseRestApiMetadata.defaultProperties();
-      properties.setProperty(SERVICE_TYPE, ServiceType.IDENTITY);
+      Properties properties = BaseHttpApiMetadata.defaultProperties();
       properties.setProperty(CREDENTIAL_TYPE, CredentialTypes.PASSWORD_CREDENTIALS);
+      properties.setProperty(SERVICE_TYPE, ServiceType.IDENTITY);
       return properties;
    }
 
-   public abstract static class Builder<T extends Builder<T>> extends BaseRestApiMetadata.Builder<T> {
-      @SuppressWarnings("deprecation")
-      protected Builder() {
-         this(KeystoneApi.class, KeystoneAsyncApi.class);
-      }
+   public abstract static class Builder<T extends Builder<T>> extends BaseHttpApiMetadata.Builder<KeystoneApi, T> {
 
-      protected Builder(Class<?> api, Class<?> asyncApi) {
-         super(api, asyncApi);
+      protected Builder() {
           id("openstack-keystone")
          .name("OpenStack Keystone Essex+ API")
          .identityName("${tenantName}:${userName} or ${userName}, if your keystone supports a default tenant")
          .credentialName("${password}")
-         .endpointName("KeyStone base url ending in /v${jclouds.api-version}/")
+         .endpointName("Keystone base url ending in /v${jclouds.api-version}/")
          .documentation(URI.create("http://api.openstack.org/"))
          .version("2.0")
          .defaultEndpoint("http://localhost:5000/v${jclouds.api-version}/")
          .defaultProperties(KeystoneApiMetadata.defaultProperties())
          .defaultModules(ImmutableSet.<Class<? extends Module>>builder()
-                                     .add(MappedAuthenticationApiModule.class)
+                                     .add(AuthenticationApiModule.class)
                                      .add(KeystoneAuthenticationModule.class)
                                      .add(KeystoneAdminURLModule.class)
                                      .add(KeystoneParserModule.class)
-                                     .add(KeystoneRestClientModule.class).build());
+                                     .add(KeystoneHttpApiModule.class).build());
       }
-      
+
       @Override
       public KeystoneApiMetadata build() {
          return new KeystoneApiMetadata(this);

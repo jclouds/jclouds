@@ -16,40 +16,27 @@
  */
 package org.jclouds.rackspace.cloudidentity.v2_0;
 
-
-
 import static org.jclouds.openstack.keystone.v2_0.config.KeystoneProperties.CREDENTIAL_TYPE;
 
 import java.net.URI;
 import java.util.Properties;
 
-import org.jclouds.openstack.keystone.v2_0.KeystoneApi;
+import org.jclouds.apis.ApiMetadata;
 import org.jclouds.openstack.keystone.v2_0.KeystoneApiMetadata;
-import org.jclouds.openstack.keystone.v2_0.KeystoneAsyncApi;
+import org.jclouds.openstack.keystone.v2_0.config.KeystoneHttpApiModule;
+import org.jclouds.openstack.keystone.v2_0.config.KeystoneHttpApiModule.KeystoneAdminURLModule;
 import org.jclouds.openstack.keystone.v2_0.config.KeystoneParserModule;
-import org.jclouds.openstack.keystone.v2_0.config.KeystoneRestClientModule;
-import org.jclouds.openstack.keystone.v2_0.config.KeystoneRestClientModule.KeystoneAdminURLModule;
+import org.jclouds.rackspace.cloudidentity.v2_0.config.CloudIdentityAuthenticationApiModule;
 import org.jclouds.rackspace.cloudidentity.v2_0.config.CloudIdentityAuthenticationModule;
 import org.jclouds.rackspace.cloudidentity.v2_0.config.CloudIdentityCredentialTypes;
-import org.jclouds.rackspace.cloudidentity.v2_0.config.SyncToAsyncCloudIdentityAuthenticationApiModule;
 
 import com.google.common.collect.ImmutableSet;
-import com.google.common.reflect.TypeToken;
 import com.google.inject.Module;
 
 /**
  * Implementation of {@link ApiMetadata} for the Rackspace Cloud Identity Service
  */
 public class CloudIdentityApiMetadata extends KeystoneApiMetadata {
-   
-   /**
-    * @deprecated please use {@code org.jclouds.ContextBuilder#buildApi(KeystoneApi.class)} as
-    *             {@link KeystoneAsyncApi} interface will be removed in jclouds 1.7.
-    */
-   @Deprecated
-   public static final TypeToken<org.jclouds.rest.RestContext<KeystoneApi, KeystoneAsyncApi>> CONTEXT_TOKEN = new TypeToken<org.jclouds.rest.RestContext<KeystoneApi, KeystoneAsyncApi>>() {
-      private static final long serialVersionUID = 1L;
-   };
 
    @Override
    public Builder toBuilder() {
@@ -63,7 +50,7 @@ public class CloudIdentityApiMetadata extends KeystoneApiMetadata {
    protected CloudIdentityApiMetadata(Builder builder) {
       super(builder);
    }
-   
+
    public static Properties defaultProperties() {
       Properties properties = KeystoneApiMetadata.defaultProperties();
       properties.setProperty(CREDENTIAL_TYPE, CloudIdentityCredentialTypes.API_KEY_CREDENTIALS);
@@ -71,9 +58,7 @@ public class CloudIdentityApiMetadata extends KeystoneApiMetadata {
    }
 
    public static class Builder extends KeystoneApiMetadata.Builder<Builder> {
-      @SuppressWarnings("deprecation")
       protected Builder() {
-         super(KeystoneApi.class, KeystoneAsyncApi.class);
          id("rackspace-cloudidentity")
          .name("Rackspace Cloud Identity Service")
          .identityName("${userName}")
@@ -81,16 +66,15 @@ public class CloudIdentityApiMetadata extends KeystoneApiMetadata {
          .defaultEndpoint("https://identity.api.rackspacecloud.com/v${jclouds.api-version}/")
          .endpointName("identity service url ending in /v${jclouds.api-version}/")
          .defaultProperties(CloudIdentityApiMetadata.defaultProperties())
-         .context(CONTEXT_TOKEN)
          .documentation(URI.create("http://docs.rackspace.com/auth/api/v2.0/auth-api-devguide/"))
          .defaultModules(ImmutableSet.<Class<? extends Module>>builder()
-                                     .add(SyncToAsyncCloudIdentityAuthenticationApiModule.class)
+                                     .add(CloudIdentityAuthenticationApiModule.class)
                                      .add(CloudIdentityAuthenticationModule.class)
                                      .add(KeystoneAdminURLModule.class)
                                      .add(KeystoneParserModule.class)
-                                     .add(KeystoneRestClientModule.class).build());
+                                     .add(KeystoneHttpApiModule.class).build());
       }
-      
+
       @Override
       public CloudIdentityApiMetadata build() {
          return new CloudIdentityApiMetadata(this);

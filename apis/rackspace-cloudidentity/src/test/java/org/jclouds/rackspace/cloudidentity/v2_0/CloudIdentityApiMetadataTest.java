@@ -17,14 +17,14 @@
 package org.jclouds.rackspace.cloudidentity.v2_0;
 
 import org.jclouds.View;
-import org.jclouds.rest.internal.BaseRestApiMetadataTest;
+import org.jclouds.apis.internal.BaseApiMetadataTest;
 import org.testng.annotations.Test;
 
 import com.google.common.collect.ImmutableSet;
 import com.google.common.reflect.TypeToken;
 
 @Test(groups = "unit", testName = "CloudIdentityApiMetadataTest")
-public class CloudIdentityApiMetadataTest extends BaseRestApiMetadataTest {
+public class CloudIdentityApiMetadataTest extends BaseApiMetadataTest {
 
    // no identity abstraction, yet
    public CloudIdentityApiMetadataTest() {

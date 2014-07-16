@@ -17,46 +17,71 @@
 package org.jclouds.openstack.keystone.v2_0.features;
 
 import java.util.Set;
+
+import javax.inject.Named;
+import javax.ws.rs.Consumes;
+import javax.ws.rs.GET;
+import javax.ws.rs.HEAD;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.core.MediaType;
+
+import org.jclouds.Fallbacks.EmptySetOnNotFoundOr404;
+import org.jclouds.Fallbacks.FalseOnNotFoundOr404;
+import org.jclouds.Fallbacks.NullOnNotFoundOr404;
+import org.jclouds.javax.annotation.Nullable;
 import org.jclouds.openstack.keystone.v2_0.domain.Endpoint;
 import org.jclouds.openstack.keystone.v2_0.domain.Token;
 import org.jclouds.openstack.keystone.v2_0.domain.User;
-
-import com.google.common.annotations.Beta;
+import org.jclouds.openstack.keystone.v2_0.filters.AuthenticateRequest;
+import org.jclouds.openstack.v2_0.services.Identity;
+import org.jclouds.rest.annotations.Fallback;
+import org.jclouds.rest.annotations.RequestFilters;
+import org.jclouds.rest.annotations.SelectJson;
 
 /**
- * Provides synchronous access to the KeyStone Admin API.
- * <p/>
- *
- * @see TokenAsyncApi
- * @see <a href=
- *       "http://docs.openstack.org/api/openstack-identity-service/2.0/content/Token_Operations.html"
- *      />
+ * Provides access to the Keystone Admin API.
  */
-@Beta
+@Consumes(MediaType.APPLICATION_JSON)
+@RequestFilters(AuthenticateRequest.class)
+@org.jclouds.rest.annotations.Endpoint(Identity.class)
+@Path("/tokens/{token}")
 public interface TokenApi {
 
+   /**
+    * Validate a token and, if it is valid, return access information regarding the tenant (though not the service catalog)/
+    *
+    * @return the requested information
+    */
+   @Named("token:get")
+   @GET
+   @SelectJson("token")
+   @Fallback(NullOnNotFoundOr404.class)
+   @Nullable
+   Token get(@PathParam("token") String token);
 
    /**
     * Validate a token and, if it is valid, return access information regarding the tenant (though not the service catalog)/
     *
     * @return the requested information
     */
-   Token get(String token);
-   
-   /**
-    * Validate a token and, if it is valid, return access information regarding the tenant (though not the service catalog)/
-    *
-    * @return the requested information
-    */
-   User getUserOfToken(String token);
-   
+   @Named("token:getuser")
+   @GET
+   @SelectJson("user")
+   @Fallback(NullOnNotFoundOr404.class)
+   @Nullable
+   User getUserOfToken(@PathParam("token") String token);
+
    /**
     * Validate a token. This is a high-performance variant of the #getToken() call that does not return any further
     * information.
     *
     * @return true if the token is valid
     */
-   boolean isValid(String token);
+   @Named("token:valid")
+   @HEAD
+   @Fallback(FalseOnNotFoundOr404.class)
+   boolean isValid(@PathParam("token") String token);
 
    /**
     * List all endpoints for a token
@@ -65,6 +90,10 @@ public interface TokenApi {
     *
     * @return the set of endpoints
     */
-   Set<? extends Endpoint> listEndpointsForToken(String token);
-
+   @Named("token:listEndpoints")
+   @GET
+   @SelectJson("endpoints")
+   @Path("/endpoints")
+   @Fallback(EmptySetOnNotFoundOr404.class)
+   Set<Endpoint> listEndpointsForToken(@PathParam("token") String token);
 }

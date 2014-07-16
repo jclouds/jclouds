@@ -27,6 +27,7 @@ import javax.ws.rs.core.MediaType;
 
 import org.jclouds.Fallbacks.EmptySetOnNotFoundOr404;
 import org.jclouds.Fallbacks.NullOnNotFoundOr404;
+import org.jclouds.javax.annotation.Nullable;
 import org.jclouds.openstack.keystone.v2_0.filters.AuthenticateRequest;
 import org.jclouds.openstack.v2_0.domain.Extension;
 import org.jclouds.rest.annotations.Fallback;
@@ -34,27 +35,27 @@ import org.jclouds.rest.annotations.RequestFilters;
 import org.jclouds.rest.annotations.SelectJson;
 
 /**
- * Provides asynchronous access to Extensions via their REST API.
+ * Provides access to OpenStack Extension APIs.
  */
+@Consumes(MediaType.APPLICATION_JSON)
 @RequestFilters(AuthenticateRequest.class)
+@Path("/extensions")
 public interface ExtensionApi {
 
    /**
     * Lists all available extensions
-    * 
+    *
     * @return all extensions
     */
    @Named("extension:list")
    @GET
    @SelectJson("extensions")
-   @Consumes(MediaType.APPLICATION_JSON)
-   @Path("/extensions")
    @Fallback(EmptySetOnNotFoundOr404.class)
    Set<Extension> list();
 
    /**
     * Extensions may also be queried individually by their unique alias.
-    * 
+    *
     * @param id
     *           id of the extension
     * @return extension or null if not found
@@ -62,8 +63,8 @@ public interface ExtensionApi {
    @Named("extension:get")
    @GET
    @SelectJson("extension")
-   @Consumes(MediaType.APPLICATION_JSON)
-   @Path("/extensions/{alias}")
+   @Path("/{alias}")
    @Fallback(NullOnNotFoundOr404.class)
+   @Nullable
    Extension get(@PathParam("alias") String id);
 }

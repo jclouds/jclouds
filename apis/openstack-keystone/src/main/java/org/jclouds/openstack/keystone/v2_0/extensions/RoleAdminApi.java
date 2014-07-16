@@ -16,49 +16,88 @@
  */
 package org.jclouds.openstack.keystone.v2_0.extensions;
 
+import javax.inject.Named;
+import javax.ws.rs.Consumes;
+import javax.ws.rs.DELETE;
+import javax.ws.rs.GET;
+import javax.ws.rs.POST;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
+import javax.ws.rs.core.MediaType;
+
+import org.jclouds.Fallbacks.EmptyFluentIterableOnNotFoundOr404;
+import org.jclouds.Fallbacks.FalseOnNotFoundOr404;
+import org.jclouds.Fallbacks.NullOnNotFoundOr404;
+import org.jclouds.javax.annotation.Nullable;
 import org.jclouds.openstack.keystone.v2_0.domain.Role;
 import org.jclouds.openstack.v2_0.ServiceType;
 import org.jclouds.openstack.v2_0.services.Extension;
+import org.jclouds.rest.annotations.Fallback;
+import org.jclouds.rest.annotations.PayloadParam;
+import org.jclouds.rest.annotations.SelectJson;
+import org.jclouds.rest.annotations.WrapWith;
 
 import com.google.common.annotations.Beta;
 import com.google.common.collect.FluentIterable;
 
 /**
- * Provides synchronous access to Role Administration actions.
- * <p/>
- * 
- * @see org.jclouds.openstack.keystone.v2_0.extensions.RoleAdminAsyncApi
+ * Provides access to the OpenStack Keystone Role Administration Extension API.
+ *
  */
 @Beta
 @Extension(of = ServiceType.IDENTITY, namespace = ExtensionNamespaces.OS_KSADM)
+@Path("OS-KSADM/roles")
 public interface RoleAdminApi {
 
    /**
     * Returns a summary list of roles.
-    * 
+    *
     * @return The list of roles
     */
+   @Named("role:list")
+   @GET
+   @SelectJson("roles")
+   @Consumes(MediaType.APPLICATION_JSON)
+   @Fallback(EmptyFluentIterableOnNotFoundOr404.class)
    FluentIterable<? extends Role> list();
 
    /**
     * Creates a new Role
-    * 
+    *
     * @return the new Role
     */
-   Role create(String name);
+   @Named("role:create")
+   @POST
+   @SelectJson("role")
+   @Produces(MediaType.APPLICATION_JSON)
+   @WrapWith("role")
+   @Fallback(NullOnNotFoundOr404.class)
+   @Nullable
+   Role create(@PayloadParam("name") String name);
 
    /**
     * Gets the role
-    * 
+    *
     * @return the role
     */
-   Role get(String roleId);
+   @Named("role:get")
+   @GET
+   @SelectJson("role")
+   @Path("/{id}")
+   @Fallback(NullOnNotFoundOr404.class)
+   @Nullable
+   Role get(@PathParam("id") String roleId);
 
    /**
     * Deletes a role
-    * 
+    *
     * @return true if successful
     */
-   boolean delete(String roleId);
-
+   @Named("role:delete")
+   @DELETE
+   @Path("/{id}")
+   @Consumes
+   @Fallback(FalseOnNotFoundOr404.class)
+   boolean delete(@PathParam("id") String roleId);
 }

@@ -29,24 +29,26 @@ import org.jclouds.rest.annotations.ResponseParser;
 import org.jclouds.rest.annotations.VirtualHost;
 
 import com.google.common.util.concurrent.ListenableFuture;
+import com.google.inject.name.Named;
 
 /**
  * Provides access to Rackspace resources via their REST API.
  * <p/>
- * 
+ *
  * @see <a href="http://docs.rackspacecloud.com/servers/api/cs-devguide-latest.pdf" />
  */
 @Path("/v{" + Constants.PROPERTY_API_VERSION + "}")
 @VirtualHost
 public interface OpenStackAuthAsyncClient {
 
+   @Named("authenticate")
    @GET
    @Consumes
    @ResponseParser(ParseAuthenticationResponseFromHeaders.class)
    ListenableFuture<AuthenticationResponse> authenticate(@HeaderParam(AuthHeaders.AUTH_USER) String user,
             @HeaderParam(AuthHeaders.AUTH_KEY) String key);
-   
 
+   @Named("authenticate")
    @GET
    @Consumes
    @ResponseParser(ParseAuthenticationResponseFromHeaders.class)

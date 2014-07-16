@@ -16,64 +16,115 @@
  */
 package org.jclouds.openstack.keystone.v2_0.extensions;
 
+import javax.inject.Named;
+import javax.ws.rs.Consumes;
+import javax.ws.rs.DELETE;
+import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
+import javax.ws.rs.core.MediaType;
+
+import org.jclouds.Fallbacks.FalseOnNotFoundOr404;
+import org.jclouds.Fallbacks.NullOnNotFoundOr404;
+import org.jclouds.javax.annotation.Nullable;
 import org.jclouds.openstack.keystone.v2_0.domain.Tenant;
+import org.jclouds.openstack.keystone.v2_0.filters.AuthenticateRequest;
 import org.jclouds.openstack.keystone.v2_0.options.CreateTenantOptions;
 import org.jclouds.openstack.keystone.v2_0.options.UpdateTenantOptions;
 import org.jclouds.openstack.v2_0.ServiceType;
 import org.jclouds.openstack.v2_0.services.Extension;
+import org.jclouds.rest.annotations.Fallback;
+import org.jclouds.rest.annotations.MapBinder;
+import org.jclouds.rest.annotations.PayloadParam;
+import org.jclouds.rest.annotations.RequestFilters;
+import org.jclouds.rest.annotations.SelectJson;
 
 import com.google.common.annotations.Beta;
 
 /**
- * Provides synchronous access to Tenant Administration actions.
- * <p/>
- * 
- * @see org.jclouds.openstack.keystone.v2_0.extensions.TenantAdminAsyncApi
+ * Provides access to Tenant Administration actions.
  */
 @Beta
+@Consumes(MediaType.APPLICATION_JSON)
 @Extension(of = ServiceType.IDENTITY, namespace = ExtensionNamespaces.OS_KSADM)
+@RequestFilters(AuthenticateRequest.class)
+@Path("/tenants")
 public interface TenantAdminApi {
 
    /**
     * Creates a new tenant
-    * 
+    *
     * @return the new tenant
     */
-   Tenant create(String name);
-   
+   @Named("tenant:create")
+   @POST
+   @SelectJson("tenant")
+   @Produces(MediaType.APPLICATION_JSON)
+   @Fallback(NullOnNotFoundOr404.class)
+   @Nullable
+   Tenant create(@PayloadParam("name") String name);
+
    /**
     * Creates a new tenant
-    * 
+    *
     * @return the new tenant
     */
-   Tenant create(String name, CreateTenantOptions options);
+   @Named("tenant:create")
+   @POST
+   @SelectJson("tenant")
+   @MapBinder(CreateTenantOptions.class)
+   @Fallback(NullOnNotFoundOr404.class)
+   @Nullable
+   Tenant create(@PayloadParam("name") String name, CreateTenantOptions options);
 
    /**
     * Deletes a tenant
-    * 
+    *
     * @return true if successful
     */
-   boolean delete(String userId);
+   @Named("tenant:delete")
+   @DELETE
+   @Path("/{id}")
+   @Fallback(FalseOnNotFoundOr404.class)
+   boolean delete(@PathParam("id") String userId);
 
    /**
     * Updates a tenant
-    * 
+    *
     * @return the updated tenant
     */
-   Tenant update(String id, UpdateTenantOptions options);
+   @Named("tenant:updateTenant")
+   @PUT
+   @Path("/{id}")
+   @SelectJson("tenant")
+   @MapBinder(UpdateTenantOptions.class)
+   @Fallback(NullOnNotFoundOr404.class)
+   @Nullable
+   Tenant update(@PathParam("id") String id, UpdateTenantOptions options);
 
    /**
     * Adds role to a user on a tenant
-    * 
+    *
     * @return true if successful
     */
-   boolean addRoleOnTenant(String tenantId, String userId, String roleId);
+   @Named("tenant:addRoleOnTenant")
+   @PUT
+   @Path("/{id}/users/{userId}/roles/OS-KSADM/{roleId}")
+   @Fallback(FalseOnNotFoundOr404.class)
+   boolean addRoleOnTenant(@PathParam("id") String tenantId, @PathParam("userId") String userId,
+         @PathParam("roleId") String roleId);
 
    /**
     * Deletes role to a user on tenant
-    * 
+    *
     * @return true if successful
     */
-   boolean deleteRoleOnTenant(String tenantId, String userId, String roleId);
-
+   @Named("tenant:deleteRoleOnTenant")
+   @DELETE
+   @Path("/{id}/users/{userId}/roles/OS-KSADM/{roleId}")
+   @Fallback(FalseOnNotFoundOr404.class)
+   boolean deleteRoleOnTenant(@PathParam("id") String tenantId, @PathParam("userId") String userdId,
+         @PathParam("roleId") String roleId);
 }

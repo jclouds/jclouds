@@ -16,50 +16,90 @@
  */
 package org.jclouds.openstack.keystone.v2_0.extensions;
 
+import javax.inject.Named;
+import javax.ws.rs.Consumes;
+import javax.ws.rs.DELETE;
+import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.core.MediaType;
+
+import org.jclouds.Fallbacks.FalseOnNotFoundOr404;
+import org.jclouds.Fallbacks.NullOnNotFoundOr404;
+import org.jclouds.javax.annotation.Nullable;
 import org.jclouds.openstack.keystone.v2_0.domain.User;
+import org.jclouds.openstack.keystone.v2_0.filters.AuthenticateRequest;
 import org.jclouds.openstack.keystone.v2_0.options.CreateUserOptions;
 import org.jclouds.openstack.keystone.v2_0.options.UpdateUserOptions;
 import org.jclouds.openstack.v2_0.ServiceType;
 import org.jclouds.openstack.v2_0.services.Extension;
+import org.jclouds.rest.annotations.Fallback;
+import org.jclouds.rest.annotations.MapBinder;
+import org.jclouds.rest.annotations.PayloadParam;
+import org.jclouds.rest.annotations.RequestFilters;
+import org.jclouds.rest.annotations.SelectJson;
 
 import com.google.common.annotations.Beta;
 
 /**
- * Provides synchronous access to User Administration actions.
- * <p/>
- * 
- * @see org.jclouds.openstack.keystone.v2_0.extensions.UserAdminAsyncApi
+ * Provides access to User Administration actions.
  */
 @Beta
+@Consumes(MediaType.APPLICATION_JSON)
 @Extension(of = ServiceType.IDENTITY, namespace = ExtensionNamespaces.OS_KSADM)
+@RequestFilters(AuthenticateRequest.class)
+@Path("/users")
 public interface UserAdminApi {
-   
-   /**
-    * Creates a new user
-    * 
-    * @return the new user
-    */
-   User create(String name, String password);
 
    /**
     * Creates a new user
-    * 
+    *
     * @return the new user
     */
-   User create(String name, String password, CreateUserOptions options);
+   @Named("user:create")
+   @POST
+   @SelectJson("user")
+   @Fallback(NullOnNotFoundOr404.class)
+   @Nullable
+   User create(@PayloadParam("name") String name, @PayloadParam("password") String password);
+
+   /**
+    * Creates a new user
+    *
+    * @return the new user
+    */
+   @Named("user:create")
+   @POST
+   @SelectJson("user")
+   @MapBinder(CreateUserOptions.class)
+   @Fallback(NullOnNotFoundOr404.class)
+   @Nullable
+   User create(@PayloadParam("name") String name,
+         @PayloadParam("password") String password, CreateUserOptions options);
 
    /**
     * Deletes an user
-    * 
+    *
     * @return true if successful
     */
-   boolean delete(String userId);
+   @Named("user:delete")
+   @DELETE
+   @Path("/{id}")
+   @Fallback(FalseOnNotFoundOr404.class)
+   boolean delete(@PathParam("id") String userId);
 
    /**
     * Updates an user
-    * 
+    *
     * @return the updated user
     */
-   User update(String id, UpdateUserOptions options);
-
+   @Named("user:updateUser")
+   @PUT
+   @Path("/{id}")
+   @SelectJson("user")
+   @MapBinder(UpdateUserOptions.class)
+   @Fallback(NullOnNotFoundOr404.class)
+   @Nullable
+   User update(@PathParam("id") String id, UpdateUserOptions options);
 }

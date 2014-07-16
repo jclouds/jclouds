@@ -32,41 +32,33 @@ import org.jclouds.rest.annotations.PayloadParam;
 import org.jclouds.rest.annotations.SelectJson;
 
 /**
- * Provides synchronous access to the KeyStone Service API.
- * <p/>
- * 
- * @see <a href=
- *      "http://docs.openstack.org/api/openstack-identity-service/2.0/content/Service_API_Api_Operations.html"
- *      />
+ * Provides access to the Rackspace Cloud Identity API.
  */
+@Consumes(MediaType.APPLICATION_JSON)
+@Path("/tokens")
 public interface CloudIdentityAuthenticationApi extends AuthenticationApi {
 
    /**
     * Authenticate to generate a token.
-    * 
+    *
     * @return access with token
     */
    @Named("authenticate")
    @POST
    @SelectJson("access")
-   @Consumes(MediaType.APPLICATION_JSON)
-   @Path("/tokens")
    @MapBinder(BindAuthToJsonPayload.class)
    Access authenticateWithTenantNameAndCredentials(@Nullable @PayloadParam("tenantName") String tenantName,
          ApiKeyCredentials apiKeyCredentials);
 
    /**
     * Authenticate to generate a token.
-    * 
+    *
     * @return access with token
     */
    @Named("authenticate")
    @POST
    @SelectJson("access")
-   @Consumes(MediaType.APPLICATION_JSON)
-   @Path("/tokens")
    @MapBinder(BindAuthToJsonPayload.class)
    Access authenticateWithTenantIdAndCredentials(@Nullable @PayloadParam("tenantId") String tenantId,
          ApiKeyCredentials apiKeyCredentials);
-
 }

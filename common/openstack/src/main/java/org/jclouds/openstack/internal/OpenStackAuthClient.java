@@ -15,18 +15,36 @@
  * limitations under the License.
  */
 package org.jclouds.openstack.internal;
+import javax.ws.rs.Consumes;
+import javax.ws.rs.GET;
+import javax.ws.rs.HeaderParam;
+import javax.ws.rs.Path;
+
+import org.jclouds.Constants;
 import org.jclouds.openstack.domain.AuthenticationResponse;
+import org.jclouds.openstack.functions.ParseAuthenticationResponseFromHeaders;
+import org.jclouds.openstack.reference.AuthHeaders;
+import org.jclouds.rest.annotations.ResponseParser;
+
+import com.google.inject.name.Named;
 
 /**
- * Provides access to Rackspace resources via their REST API.
- * <p/>
- * 
- * @see <a href="http://docs.rackspacecloud.com/servers/api/cs-devguide-latest.pdf" />
+ * Provides access to OpenStack auth.
  */
+@Path("/v{" + Constants.PROPERTY_API_VERSION + "}")
 public interface OpenStackAuthClient {
 
-   AuthenticationResponse authenticate(String user, String key);
+   @Named("authenticate")
+   @GET
+   @Consumes
+   @ResponseParser(ParseAuthenticationResponseFromHeaders.class)
+   AuthenticationResponse authenticate(@HeaderParam(AuthHeaders.AUTH_USER) String user,
+         @HeaderParam(AuthHeaders.AUTH_KEY) String key);
 
-   AuthenticationResponse authenticateStorage(String user, String key);
-
+   @Named("authenticate")
+   @GET
+   @Consumes
+   @ResponseParser(ParseAuthenticationResponseFromHeaders.class)
+   AuthenticationResponse authenticateStorage(@HeaderParam(AuthHeaders.STORAGE_USER) String user,
+         @HeaderParam(AuthHeaders.STORAGE_PASS) String key);
 }

@@ -17,21 +17,34 @@
 package org.jclouds.openstack.keystone.v2_0.features;
 
 import java.util.Set;
+
+import javax.inject.Named;
+import javax.ws.rs.Consumes;
+import javax.ws.rs.GET;
+import javax.ws.rs.Path;
+import javax.ws.rs.core.MediaType;
+
+import org.jclouds.Fallbacks.EmptySetOnNotFoundOr404;
 import org.jclouds.openstack.keystone.v2_0.domain.Tenant;
+import org.jclouds.openstack.keystone.v2_0.filters.AuthenticateRequest;
+import org.jclouds.rest.annotations.Fallback;
+import org.jclouds.rest.annotations.RequestFilters;
+import org.jclouds.rest.annotations.SelectJson;
 
 /**
- * Provides synchronous access to the KeyStone Tenant API.
- * <p/>
- * 
- * @see ServiceAsyncApi
- * @see <a href=
- *      "http://docs.openstack.org/api/openstack-identity-service/2.0/content/Service_API_Api_Operations.html"
- *      />
+ * Provides access to the Keystone Tenant API.
  */
+@Consumes(MediaType.APPLICATION_JSON)
+@RequestFilters(AuthenticateRequest.class)
+@Path("/tenants")
 public interface ServiceApi {
 
    /**
     * The operation returns a list of tenants which the current token provides access to.
     */
-   Set<? extends Tenant> listTenants();
+   @Named("service:listTenants")
+   @GET
+   @SelectJson("tenants")
+   @Fallback(EmptySetOnNotFoundOr404.class)
+   Set<Tenant> listTenants();
 }

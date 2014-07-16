@@ -16,22 +16,34 @@
  */
 package org.jclouds.openstack.keystone.v1_1;
 
+import javax.ws.rs.Consumes;
+import javax.ws.rs.POST;
+import javax.ws.rs.Path;
+import javax.ws.rs.core.MediaType;
+
+import org.jclouds.openstack.keystone.v1_1.binders.BindCredentialsToJsonPayload;
 import org.jclouds.openstack.keystone.v1_1.domain.Auth;
+import org.jclouds.rest.annotations.MapBinder;
+import org.jclouds.rest.annotations.SelectJson;
+
+import com.google.inject.name.Named;
 
 /**
- * Provides synchronous access to the KeyStone Service API.
- * <p/>
- * 
- * @see AuthenticationAsyncClient
- * @see <a href="http://docs.openstack.org/api/openstack-identity-service/2.0/content/Service_API_Client_Operations.html"
- *      />
+ * Provides access to the Keystone v1.1 Service API.
  */
+@Consumes(MediaType.APPLICATION_JSON)
+@Path("/v1.1")
 public interface AuthenticationClient {
 
    /**
     * Authenticate to generate a token.
-    * 
+    *
     * @return access with token
     */
+   @Named("authenticate")
+   @POST
+   @SelectJson("auth")
+   @Path("/auth")
+   @MapBinder(BindCredentialsToJsonPayload.class)
    Auth authenticate(String username, String key);
 }

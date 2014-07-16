@@ -18,6 +18,13 @@ package org.jclouds.openstack.keystone.v2_0;
 
 import java.io.Closeable;
 
+import javax.inject.Named;
+import javax.ws.rs.Consumes;
+import javax.ws.rs.GET;
+import javax.ws.rs.core.MediaType;
+
+import org.jclouds.Fallbacks.NullOnNotFoundOr404;
+import org.jclouds.javax.annotation.Nullable;
 import org.jclouds.openstack.keystone.v2_0.domain.ApiMetadata;
 import org.jclouds.openstack.keystone.v2_0.extensions.RoleAdminApi;
 import org.jclouds.openstack.keystone.v2_0.extensions.ServiceAdminApi;
@@ -29,75 +36,79 @@ import org.jclouds.openstack.keystone.v2_0.features.TokenApi;
 import org.jclouds.openstack.keystone.v2_0.features.UserApi;
 import org.jclouds.openstack.v2_0.features.ExtensionApi;
 import org.jclouds.rest.annotations.Delegate;
+import org.jclouds.rest.annotations.Fallback;
+import org.jclouds.rest.annotations.SelectJson;
 
 import com.google.common.base.Optional;
 
 /**
- * Provides access to OpenStack keystone resources via their REST API.
- * <p/>
- *
- * @see <a href="http://keystone.openstack.org/" />
- * @see KeystoneAsyncApi
+ * Provides access to the OpenStack Identity (Keystone) REST API.
  */
 public interface KeystoneApi extends Closeable {
 
    /**
     * Discover API version information, links to documentation (PDF, HTML, WADL), and supported media types
     *
-    * @return the requested information
+    * @return the {@link ApiMetadata}
     */
+   @Named("keystone:getApiMetadata")
+   @GET
+   @SelectJson("version")
+   @Consumes(MediaType.APPLICATION_JSON)
+   @Fallback(NullOnNotFoundOr404.class)
+   @Nullable
    ApiMetadata getApiMetadata();
-   
-   /** 
-    * Provides synchronous access to Token features 
+
+   /**
+    * Provides access to Token features
     */
    @Delegate
    ServiceApi getServiceApi();
 
    /**
-    * Provides synchronous access to Extension features.
+    * Provides access to Extension features.
     */
    @Delegate
    ExtensionApi getExtensionApi();
 
-   /** 
-    * Provides synchronous access to Token features 
+   /**
+    * Provides access to Token features
     */
    @Delegate
    Optional<? extends TokenApi> getTokenApi();
 
-   /** 
-    * Provides synchronous access to User features 
+   /**
+    * Provides access to User features
     */
    @Delegate
    Optional<? extends UserApi> getUserApi();
-   
-   /** 
-    * Provides synchronous access to Tenant features 
+
+   /**
+    * Provides access to Tenant features
     */
    @Delegate
    Optional<? extends TenantApi> getTenantApi();
-   
-   /** 
-    * Provides synchronous access to Admin user features 
+
+   /**
+    * Provides access to Admin user features
     */
    @Delegate
    Optional<? extends UserAdminApi> getUserAdminApi();
-   
-   /** 
-    * Provides synchronous access to Admin tenant features 
+
+   /**
+    * Provides access to Admin tenant features
     */
    @Delegate
    Optional<? extends TenantAdminApi> getTenantAdminApi();
-   
-   /** 
-    * Provides synchronous access to Admin role features 
+
+   /**
+    * Provides access to Admin role features
     */
    @Delegate
    Optional<? extends RoleAdminApi> getRoleAdminApi();
-   
-   /** 
-    * Provides synchronous access to Admin service features 
+
+   /**
+    * Provides access to Admin service features
     */
    @Delegate
    Optional<? extends ServiceAdminApi> getServiceAdminApi();
