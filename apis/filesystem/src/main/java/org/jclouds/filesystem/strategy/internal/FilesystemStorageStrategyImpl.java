@@ -22,7 +22,11 @@ import static com.google.common.io.BaseEncoding.base16;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.ByteBuffer;
+import java.nio.file.attribute.UserDefinedFileAttributeView;
+import java.nio.charset.StandardCharsets;
 import java.util.Date;
+import java.util.Map;
 import java.util.Set;
 
 import javax.annotation.Resource;
@@ -39,6 +43,7 @@ import org.jclouds.filesystem.predicates.validators.FilesystemBlobKeyValidator;
 import org.jclouds.filesystem.predicates.validators.FilesystemContainerNameValidator;
 import org.jclouds.filesystem.reference.FilesystemConstants;
 import org.jclouds.filesystem.util.Utils;
+import org.jclouds.io.ContentMetadata;
 import org.jclouds.io.Payload;
 import org.jclouds.logging.Logger;
 import org.jclouds.rest.annotations.ParamValidators;
@@ -46,6 +51,8 @@ import org.jclouds.rest.annotations.ParamValidators;
 import com.google.common.base.Function;
 import com.google.common.base.Throwables;
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Sets;
 import com.google.common.hash.HashCode;
@@ -54,8 +61,17 @@ import com.google.common.hash.HashingInputStream;
 import com.google.common.io.ByteSource;
 import com.google.common.io.Closeables;
 import com.google.common.io.Files;
+import com.google.common.primitives.Longs;
 
 public class FilesystemStorageStrategyImpl implements LocalStorageStrategy {
+
+   private static final String XATTR_CONTENT_DISPOSITION = "user.content-disposition";
+   private static final String XATTR_CONTENT_ENCODING = "user.content-encoding";
+   private static final String XATTR_CONTENT_LANGUAGE = "user.content-language";
+   private static final String XATTR_CONTENT_MD5 = "user.content-md5";
+   private static final String XATTR_CONTENT_TYPE = "user.content-type";
+   private static final String XATTR_EXPIRES = "user.expires";
+   private static final String XATTR_USER_METADATA_PREFIX = "user.user-metadata.";
 
    private static final String BACK_SLASH = "\\";
 
@@ -182,12 +198,47 @@ public class FilesystemStorageStrategyImpl implements LocalStorageStrategy {
       File file = getFileForBlobKey(container, key);
       ByteSource byteSource = Files.asByteSource(file);
       try {
+         UserDefinedFileAttributeView view = java.nio.file.Files.getFileAttributeView(
+            file.toPath(), UserDefinedFileAttributeView.class);
+         Set<String> attributes = ImmutableSet.copyOf(view.list());
+
+         String contentDisposition = readStringAttributeIfPresent(view, attributes, XATTR_CONTENT_DISPOSITION);
+         String contentEncoding = readStringAttributeIfPresent(view, attributes, XATTR_CONTENT_ENCODING);
+         String contentLanguage = readStringAttributeIfPresent(view, attributes, XATTR_CONTENT_LANGUAGE);
+         String contentType = readStringAttributeIfPresent(view, attributes, XATTR_CONTENT_TYPE);
+         HashCode hashCode = null;
+         if (attributes.contains(XATTR_CONTENT_MD5)) {
+            ByteBuffer buf = ByteBuffer.allocate(view.size(XATTR_CONTENT_MD5));
+            view.read(XATTR_CONTENT_MD5, buf);
+            hashCode = HashCode.fromBytes(buf.array());
+         }
+         Date expires = null;
+         if (attributes.contains(XATTR_EXPIRES)) {
+            ByteBuffer buf = ByteBuffer.allocate(view.size(XATTR_EXPIRES));
+            view.read(XATTR_EXPIRES, buf);
+            buf.flip();
+            expires = new Date(buf.asLongBuffer().get());
+         }
+         ImmutableMap.Builder<String, String> userMetadata = ImmutableMap.builder();
+         for (String attribute : attributes) {
+            if (!attribute.startsWith(XATTR_USER_METADATA_PREFIX)) {
+               continue;
+            }
+            String value = readStringAttributeIfPresent(view, attributes, attribute);
+            userMetadata.put(attribute.substring(XATTR_USER_METADATA_PREFIX.length()), value);
+         }
+
          builder.payload(byteSource)
+            .contentDisposition(contentDisposition)
+            .contentEncoding(contentEncoding)
+            .contentLanguage(contentLanguage)
             .contentLength(byteSource.size())
-            .contentMD5(byteSource.hash(Hashing.md5()).asBytes());
+            .contentMD5(hashCode)
+            .contentType(contentType)
+            .expires(expires)
+            .userMetadata(userMetadata.build());
       } catch (IOException e) {
-         logger.error("An error occurred calculating MD5 for blob %s from container ", key, container);
-         Throwables.propagateIfPossible(e);
+         throw Throwables.propagate(e);
       }
       Blob blob = builder.build();
       blob.getMetadata().setContainer(container);
@@ -201,6 +252,7 @@ public class FilesystemStorageStrategyImpl implements LocalStorageStrategy {
    public String putBlob(final String containerName, final Blob blob) throws IOException {
       String blobKey = blob.getMetadata().getName();
       Payload payload = blob.getPayload();
+      ContentMetadata metadata = payload.getContentMetadata();
       filesystemContainerNameValidator.validate(containerName);
       filesystemBlobKeyValidator.validate(blobKey);
       File outputFile = getFileForBlobKey(containerName, blobKey);
@@ -216,7 +268,23 @@ public class FilesystemStorageStrategyImpl implements LocalStorageStrategy {
                   " expected: " + expectedHashCode);
          }
          payload.getContentMetadata().setContentMD5(actualHashCode);
-         // TODO: store metadata in extended attributes when moving to Java 7
+
+         UserDefinedFileAttributeView view = java.nio.file.Files.getFileAttributeView(
+            outputFile.toPath(), UserDefinedFileAttributeView.class);
+         view.write(XATTR_CONTENT_MD5, ByteBuffer.wrap(actualHashCode.asBytes()));
+         writeStringAttributeIfPresent(view, XATTR_CONTENT_DISPOSITION, metadata.getContentDisposition());
+         writeStringAttributeIfPresent(view, XATTR_CONTENT_ENCODING, metadata.getContentEncoding());
+         writeStringAttributeIfPresent(view, XATTR_CONTENT_LANGUAGE, metadata.getContentLanguage());
+         writeStringAttributeIfPresent(view, XATTR_CONTENT_TYPE, metadata.getContentType());
+         Date expires = metadata.getExpires();
+         if (expires != null) {
+            ByteBuffer buf = ByteBuffer.allocate(Longs.BYTES).putLong(expires.getTime());
+            buf.flip();
+            view.write(XATTR_EXPIRES, buf);
+         }
+         for (Map.Entry<String, String> entry : blob.getMetadata().getUserMetadata().entrySet()) {
+            writeStringAttributeIfPresent(view, XATTR_USER_METADATA_PREFIX + entry.getKey(), entry.getValue());
+         }
          return base16().lowerCase().encode(actualHashCode.asBytes());
       } catch (IOException ex) {
          if (outputFile != null) {
@@ -487,4 +555,21 @@ public class FilesystemStorageStrategyImpl implements LocalStorageStrategy {
       return result;
    }
 
+   /** Read the String representation of filesystem attribute, or return null if not present. */
+   private static String readStringAttributeIfPresent(UserDefinedFileAttributeView view, Set<String> attributes,
+         String name) throws IOException {
+      if (!attributes.contains(name)) {
+         return null;
+      }
+      ByteBuffer buf = ByteBuffer.allocate(view.size(name));
+      view.read(name, buf);
+      return new String(buf.array(), StandardCharsets.UTF_8);
+   }
+
+   /** Write an filesystem attribute, if its value is non-null. */
+   private static void writeStringAttributeIfPresent(UserDefinedFileAttributeView view, String name, String value) throws IOException {
+      if (value != null) {
+         view.write(name, ByteBuffer.wrap(value.getBytes(StandardCharsets.UTF_8)));
+      }
+   }
 }

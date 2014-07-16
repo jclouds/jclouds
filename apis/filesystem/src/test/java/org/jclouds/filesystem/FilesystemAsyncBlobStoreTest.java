@@ -595,7 +595,11 @@ public class FilesystemAsyncBlobStoreTest {
     public void testBlobMetadata_withDefaultMetadata() throws IOException {
         String BLOB_KEY = TestUtils.createRandomBlobKey(null, null);
         // create the blob
-        TestUtils.createBlobsInContainer(CONTAINER_NAME, BLOB_KEY);
+        blobStore.createContainerInLocation(null, CONTAINER_NAME);
+        Blob blob = blobStore.blobBuilder(BLOB_KEY)
+           .payload(TestUtils.getImageForBlobPayload())
+           .build();
+        blobStore.putBlob(CONTAINER_NAME, blob);
 
         BlobMetadata metadata = blobStore.blobMetadata(CONTAINER_NAME, BLOB_KEY);
         assertNotNull(metadata, "Metadata null");

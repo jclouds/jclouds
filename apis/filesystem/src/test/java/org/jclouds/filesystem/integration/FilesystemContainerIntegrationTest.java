@@ -19,7 +19,6 @@ package org.jclouds.filesystem.integration;
 import static org.jclouds.blobstore.options.ListContainerOptions.Builder.maxResults;
 import static org.testng.Assert.assertEquals;
 
-import java.io.IOException;
 import java.util.Properties;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeoutException;
@@ -36,7 +35,6 @@ import org.jclouds.filesystem.reference.FilesystemConstants;
 import org.jclouds.filesystem.utils.TestUtils;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
-import org.testng.SkipException;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Iterables;
@@ -80,11 +78,6 @@ public class FilesystemContainerIntegrationTest extends BaseContainerIntegration
       } finally {
          returnContainer(containerName);
       }
-   }
-
-   @Override
-   public void testWithDetails() throws InterruptedException, IOException {
-      throw new SkipException("requires Java 7 xattr support");
    }
 
    @Override
