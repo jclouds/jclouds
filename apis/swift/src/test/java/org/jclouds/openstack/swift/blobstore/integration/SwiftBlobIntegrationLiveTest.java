@@ -141,15 +141,15 @@ public class SwiftBlobIntegrationLiveTest extends BaseBlobIntegrationTest {
          String objectName = "object.txt";
          long countBefore = blobStore.countBlobs(containerName);
 
-         // we want 11 parts
-         ByteSource inputSource = createByteSource(PART_SIZE * 11);
+         // we want 2 parts
+         ByteSource inputSource = createByteSource(PART_SIZE + 1);
          addMultipartBlobToContainer(containerName, objectName, inputSource);
 
          // did we create enough parts?
          long countAfter = blobStore.countBlobs(containerName);
          assertNotEquals(countAfter, countBefore, "No blob was created");
-         assertEquals(countAfter, countBefore + 12,
-                 "12 parts (11 objects + 1 manifest) were expected.");
+         assertEquals(countAfter, countBefore + 3,
+                 "3 parts (2 objects + 1 manifest) were expected.");
 
          // download and check if correct
          Blob read = blobStore.getBlob(containerName, objectName);
