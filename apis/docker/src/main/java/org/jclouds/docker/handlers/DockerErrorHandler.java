@@ -16,8 +16,10 @@
  */
 package org.jclouds.docker.handlers;
 
-import com.google.common.base.Throwables;
-import com.google.common.io.Closeables;
+import java.io.IOException;
+
+import javax.annotation.Resource;
+
 import org.jclouds.http.HttpCommand;
 import org.jclouds.http.HttpErrorHandler;
 import org.jclouds.http.HttpResponse;
@@ -27,8 +29,8 @@ import org.jclouds.rest.AuthorizationException;
 import org.jclouds.rest.ResourceNotFoundException;
 import org.jclouds.util.Strings2;
 
-import javax.annotation.Resource;
-import java.io.IOException;
+import com.google.common.base.Throwables;
+import com.google.common.io.Closeables;
 
 /**
  * This will parse and set an appropriate exception on the command object.
@@ -92,15 +94,9 @@ public class DockerErrorHandler implements HttpErrorHandler {
       if (response.getPayload() == null)
          return null;
       try {
-         return Strings2.toString(response.getPayload());
+         return Strings2.toStringAndClose(response.getPayload().openStream());
       } catch (IOException e) {
          throw Throwables.propagate(e);
-      } finally {
-         try {
-            response.getPayload().close();
-         } catch (IOException e) {
-            throw Throwables.propagate(e);
-         }
       }
    }
 }
