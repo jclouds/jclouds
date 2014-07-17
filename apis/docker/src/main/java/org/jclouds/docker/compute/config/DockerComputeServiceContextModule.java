@@ -37,6 +37,7 @@ import org.jclouds.functions.IdentityFunction;
 public class DockerComputeServiceContextModule extends
         ComputeServiceAdapterContextModule<Container, Hardware, Image, Location> {
 
+   @SuppressWarnings("unchecked")
    @Override
    protected void configure() {
       super.configure();

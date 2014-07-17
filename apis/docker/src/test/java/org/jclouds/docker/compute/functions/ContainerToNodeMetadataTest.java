@@ -187,7 +187,6 @@ public class ContainerToNodeMetadataTest {
       assertEquals(node.getPublicAddresses().size(), 1);
    }
 
-   @SuppressWarnings("unchecked")
    private Container mockContainer() {
       Container mockContainer = EasyMock.createMock(Container.class);
 

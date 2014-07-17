@@ -60,7 +60,6 @@ public class ImageToImageTest {
       assertEquals(mockImage.getId(), image.getId().toString());
    }
 
-   @SuppressWarnings("unchecked")
    private org.jclouds.docker.domain.Image mockImage() {
       org.jclouds.docker.domain.Image mockImage = EasyMock.createMock(org.jclouds.docker.domain.Image.class);
 
