@@ -39,7 +39,7 @@ import org.jclouds.googlecloudstorage.handlers.DefaultObjectAccessControlsBinder
 import org.jclouds.http.HttpResponse;
 import org.jclouds.javax.annotation.Nullable;
 import org.jclouds.oauth.v2.config.OAuthScopes;
-import org.jclouds.oauth.v2.filters.OAuthAuthenticator;
+import org.jclouds.oauth.v2.filters.OAuthAuthenticationFilter;
 import org.jclouds.rest.annotations.BinderParam;
 import org.jclouds.rest.annotations.Fallback;
 import org.jclouds.rest.annotations.MapBinder;
@@ -56,7 +56,7 @@ import org.jclouds.rest.binders.BindToJsonPayload;
  */
 
 @SkipEncoding({ '/', '=' })
-@RequestFilters(OAuthAuthenticator.class)
+@RequestFilters(OAuthAuthenticationFilter.class)
 public interface DefaultObjectAccessControlsApi {
 
    /**
