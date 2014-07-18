@@ -16,6 +16,7 @@
  */
 package org.jclouds.googlecomputeengine.config;
 
+import org.jclouds.oauth.v2.config.CredentialType;
 import org.jclouds.oauth.v2.config.OAuthModule;
 import org.jclouds.oauth.v2.domain.OAuthCredentials;
 import org.jclouds.oauth.v2.domain.Token;
@@ -47,5 +48,6 @@ public class OAuthModuleWithoutTypeAdapters extends OAuthModule {
       }).to(BuildTokenRequest.class);
       bind(new TypeLiteral<Function<TokenRequest, Token>>() {
       }).to(FetchToken.class);
+      bind(CredentialType.class).toProvider(OAuthModule.CredentialTypeFromPropertyOrDefault.class);
    }
 }

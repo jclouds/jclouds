@@ -34,7 +34,7 @@ import org.jclouds.googlecomputeengine.domain.Region;
 import org.jclouds.googlecomputeengine.functions.internal.ParseRegions;
 import org.jclouds.googlecomputeengine.options.ListOptions;
 import org.jclouds.oauth.v2.config.OAuthScopes;
-import org.jclouds.oauth.v2.filters.OAuthAuthenticator;
+import org.jclouds.oauth.v2.filters.OAuthAuthenticationFilter;
 import org.jclouds.rest.annotations.Fallback;
 import org.jclouds.rest.annotations.RequestFilters;
 import org.jclouds.rest.annotations.ResponseParser;
@@ -47,7 +47,7 @@ import org.jclouds.rest.annotations.Transform;
  * @see <a href="https://developers.google.com/compute/docs/reference/v1/regions"/>
  */
 @SkipEncoding({'/', '='})
-@RequestFilters(OAuthAuthenticator.class)
+@RequestFilters(OAuthAuthenticationFilter.class)
 @Consumes(MediaType.APPLICATION_JSON)
 public interface RegionApi {
 

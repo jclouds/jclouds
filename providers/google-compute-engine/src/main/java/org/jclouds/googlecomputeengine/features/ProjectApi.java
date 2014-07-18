@@ -35,7 +35,7 @@ import org.jclouds.googlecomputeengine.domain.Operation;
 import org.jclouds.googlecomputeengine.domain.Project;
 import org.jclouds.googlecomputeengine.handlers.MetadataBinder;
 import org.jclouds.oauth.v2.config.OAuthScopes;
-import org.jclouds.oauth.v2.filters.OAuthAuthenticator;
+import org.jclouds.oauth.v2.filters.OAuthAuthenticationFilter;
 import org.jclouds.rest.annotations.Fallback;
 import org.jclouds.rest.annotations.MapBinder;
 import org.jclouds.rest.annotations.PayloadParam;
@@ -48,7 +48,7 @@ import org.jclouds.rest.annotations.SkipEncoding;
  * @see <a href="https://developers.google.com/compute/docs/reference/v1/projects"/>
  */
 @SkipEncoding({'/', '='})
-@RequestFilters(OAuthAuthenticator.class)
+@RequestFilters(OAuthAuthenticationFilter.class)
 public interface ProjectApi {
 
    /**

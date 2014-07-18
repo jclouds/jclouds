@@ -29,6 +29,8 @@ import org.jclouds.compute.internal.BaseComputeServiceLiveTest;
 import org.jclouds.googlecomputeengine.GoogleComputeEngineApi;
 import org.jclouds.googlecomputeengine.config.UserProject;
 import org.jclouds.googlecomputeengine.domain.MachineType;
+import org.jclouds.oauth.v2.config.CredentialType;
+import org.jclouds.oauth.v2.config.OAuthProperties;
 import org.jclouds.sshj.config.SshjSshClientModule;
 import org.testng.annotations.Test;
 
@@ -51,7 +53,10 @@ public class GoogleComputeEngineServiceLiveTest extends BaseComputeServiceLiveTe
    @Override
    protected Properties setupProperties() {
       Properties props = super.setupProperties();
+      if(!System.getProperty(OAuthProperties.CREDENTIAL_TYPE, "")
+            .equalsIgnoreCase(CredentialType.BEARER_TOKEN_CREDENTIALS.toString())) {
       setCredential(props, provider + ".credential");
+      }
       return props;
    }
 

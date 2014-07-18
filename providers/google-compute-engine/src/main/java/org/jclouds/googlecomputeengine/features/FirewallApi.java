@@ -47,7 +47,7 @@ import org.jclouds.googlecomputeengine.options.FirewallOptions;
 import org.jclouds.googlecomputeengine.options.ListOptions;
 import org.jclouds.javax.annotation.Nullable;
 import org.jclouds.oauth.v2.config.OAuthScopes;
-import org.jclouds.oauth.v2.filters.OAuthAuthenticator;
+import org.jclouds.oauth.v2.filters.OAuthAuthenticationFilter;
 import org.jclouds.rest.annotations.BinderParam;
 import org.jclouds.rest.annotations.Fallback;
 import org.jclouds.rest.annotations.MapBinder;
@@ -65,7 +65,7 @@ import org.jclouds.rest.binders.BindToJsonPayload;
  * @see <a href="https://developers.google.com/compute/docs/reference/v1/firewalls"/>
  */
 @SkipEncoding({'/', '='})
-@RequestFilters(OAuthAuthenticator.class)
+@RequestFilters(OAuthAuthenticationFilter.class)
 public interface FirewallApi {
    /**
     * Returns the specified image resource.
