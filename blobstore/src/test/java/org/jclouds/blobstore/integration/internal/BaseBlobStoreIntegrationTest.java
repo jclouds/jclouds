@@ -22,7 +22,6 @@ import static org.jclouds.reflect.Reflection2.typeToken;
 import static org.testng.Assert.assertEquals;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.security.SecureRandom;
 import java.util.Date;
 import java.util.Map;
@@ -516,14 +515,7 @@ public class BaseBlobStoreIntegrationTest extends BaseViewLiveTest<BlobStoreCont
    public static String getContentAsStringOrNullAndClose(Blob blob) throws IOException {
       checkNotNull(blob, "blob");
       checkNotNull(blob.getPayload(), "blob.payload");
-      if (blob.getPayload().getInput() == null)
-         return null;
-      Object o = blob.getPayload().getInput();
-      if (o instanceof InputStream) {
-         return Strings2.toStringAndClose((InputStream) o);
-      } else {
-         throw new IllegalArgumentException("Object type not supported: " + o.getClass().getName());
-      }
+      return Strings2.toStringAndClose(blob.getPayload().openStream());
    }
    protected Module createHttpModule() {
       return new JavaUrlHttpCommandExecutorServiceModule();
