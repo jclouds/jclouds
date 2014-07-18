@@ -40,4 +40,12 @@ public class OAuthProperties {
     * Optional list of comma-separated scopes to use when no OAuthScopes annotation is present.
     */
    public static final String SCOPES = "jclouds.oauth.scopes";
+
+   /**
+    * Specify if credentials are id + private key or if you are reusing an oauth2 token.
+    *
+    * @see org.jclouds.oauth.v2.config.CredentialType
+    */
+   public static final String CREDENTIAL_TYPE = "jclouds.oauth.credential-type";
+
 }

@@ -19,6 +19,8 @@ package org.jclouds.oauth.v2;
 import com.google.common.base.Charsets;
 import com.google.common.base.Throwables;
 import com.google.common.io.Files;
+import org.jclouds.oauth.v2.config.CredentialType;
+import org.jclouds.oauth.v2.config.OAuthProperties;
 
 import java.io.File;
 import java.io.IOException;
@@ -44,6 +46,16 @@ public class OAuthTestUtils {
       } catch (IOException e) {
          throw Throwables.propagate(e);
       }
+   }
+
+   public static Properties bearerTokenAuthProperties(Properties properties) {
+      properties = properties == null ? new Properties() : properties;
+      properties.put("oauth.identity", "761326798069-r5mljlln1rd4lrbhg75efgigp36m78j5@developer.gserviceaccount.com");
+      properties.put("oauth.credential", "1/8xbJqaOZXSUZbHLl5EOtu1pxz3fmmetKx9W8CV4t79M");
+      properties.put("oauth.endpoint", "http://localhost:5000/o/oauth2/token");
+      properties.put(AUDIENCE, "https://accounts.google.com/o/oauth2/token");
+      properties.put(OAuthProperties.CREDENTIAL_TYPE, CredentialType.BEARER_TOKEN_CREDENTIALS.toString());
+      return properties;
    }
 
    public static String setCredential(Properties overrides, String key) {

@@ -20,7 +20,6 @@ import com.google.common.base.Function;
 import com.google.common.cache.LoadingCache;
 import org.jclouds.http.HttpException;
 import org.jclouds.http.HttpRequest;
-import org.jclouds.http.HttpRequestFilter;
 import org.jclouds.oauth.v2.domain.Token;
 import org.jclouds.oauth.v2.domain.TokenRequest;
 import org.jclouds.rest.internal.GeneratedHttpRequest;
@@ -36,7 +35,7 @@ import static com.google.common.base.Preconditions.checkState;
  * TODO when we're able to use the OAuthAuthentication an this should be used automatically
  */
 @Singleton
-public class OAuthAuthenticator implements HttpRequestFilter {
+public class OAuthAuthenticator implements OAuthAuthenticationFilter {
 
    private Function<GeneratedHttpRequest, TokenRequest> tokenRequestBuilder;
    private Function<TokenRequest, Token> tokenFetcher;
