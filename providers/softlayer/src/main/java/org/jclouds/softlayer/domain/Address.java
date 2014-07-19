@@ -200,7 +200,7 @@ public class Address {
       this.isActive = isActive;
       this.locationId = locationId;
       this.postalCode = postalCode;
-      this.country = checkNotNull(emptyToNull(country),"country cannot be null or empty:"+country);
+      this.country = checkNotNull(emptyToNull(country), "country cannot be null or empty:" + country);
       this.state = state;
       this.description = description;
    }

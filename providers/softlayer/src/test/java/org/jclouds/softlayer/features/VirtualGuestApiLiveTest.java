@@ -132,7 +132,7 @@ public class VirtualGuestApiLiveTest extends BaseSoftLayerApiLiveTest {
             guest = api().getVirtualGuest(virtualGuest.getId());
             return guest.getPowerState().getKeyName() == VirtualGuest.State.PAUSED;
          }
-      }, 5*60*1000).apply(virtualGuest), "%s still not paused!", virtualGuest);
+      }, 5 * 60 * 1000).apply(virtualGuest), "%s still not paused!", virtualGuest);
       VirtualGuest found = virtualGuestApi.getVirtualGuest(virtualGuest.getId());
       assertTrue(found.getPowerState().getKeyName() == VirtualGuest.State.PAUSED);
    }
@@ -145,7 +145,7 @@ public class VirtualGuestApiLiveTest extends BaseSoftLayerApiLiveTest {
             guest = api().getVirtualGuest(virtualGuest.getId());
             return guest.getPowerState().getKeyName() == VirtualGuest.State.RUNNING;
          }
-      }, 5*60*1000).apply(virtualGuest), "%s still not running!", virtualGuest);
+      }, 5 * 60 * 1000).apply(virtualGuest), "%s still not running!", virtualGuest);
       VirtualGuest found = virtualGuestApi.getVirtualGuest(virtualGuest.getId());
       assertTrue(found.getPowerState().getKeyName() == VirtualGuest.State.RUNNING);
    }
@@ -156,7 +156,7 @@ public class VirtualGuestApiLiveTest extends BaseSoftLayerApiLiveTest {
             guest = api().getVirtualGuest(virtualGuest.getId());
             return guest.getActiveTransactionCount() == 0;
          }
-      }, 5*60*1000).apply(virtualGuest), "%s still has active transactions!", virtualGuest);
+      }, 5 * 60 * 1000).apply(virtualGuest), "%s still has active transactions!", virtualGuest);
       assertTrue(api().deleteVirtualGuest(virtualGuest.getId()));
    }
 

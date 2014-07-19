@@ -31,7 +31,7 @@ import com.google.common.collect.Iterables;
 /**
  * Tests the function that transforms SoftLayer VirtualGuest to generic hardware.
  */
-@Test(groups="unit", testName = "VirtualGuestToHardwareTest")
+@Test(groups = "unit", testName = "VirtualGuestToHardwareTest")
 public class VirtualGuestToHardwareTest {
 
    @Test

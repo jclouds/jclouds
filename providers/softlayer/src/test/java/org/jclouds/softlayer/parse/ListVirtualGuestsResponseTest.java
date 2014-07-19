@@ -28,9 +28,6 @@ import org.testng.annotations.Test;
 
 import com.google.common.collect.ImmutableSet;
 
-/**
- * @author Andrea Turli
- */
 @Test(groups = "unit")
 public class ListVirtualGuestsResponseTest extends BaseSoftLayerParseTest<Set<VirtualGuest>> {
 

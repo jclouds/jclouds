@@ -67,13 +67,13 @@ public class SoftLayerTemplateOptions extends TemplateOptions implements Cloneab
       if (to instanceof SoftLayerTemplateOptions) {
          SoftLayerTemplateOptions eTo = SoftLayerTemplateOptions.class.cast(to);
          eTo.domainName(domainName);
-         if(blockDevices.isPresent()) {
+         if (blockDevices.isPresent()) {
             eTo.blockDevices(blockDevices.get());
          }
-         if(diskType.isPresent()) {
+         if (diskType.isPresent()) {
             eTo.diskType(diskType.get());
          }
-         if(portSpeed.isPresent()) {
+         if (portSpeed.isPresent()) {
             eTo.portSpeed(portSpeed.get());
          }
       }

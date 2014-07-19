@@ -24,9 +24,6 @@ import org.jclouds.softlayer.domain.VirtualGuest;
 import org.jclouds.softlayer.internal.BaseSoftLayerParseTest;
 import org.testng.annotations.Test;
 
-/**
- * @author Andrea Turli
- */
 @Test(groups = "unit")
 public class GetVirtualGuestResponseTest extends BaseSoftLayerParseTest<VirtualGuest> {
 

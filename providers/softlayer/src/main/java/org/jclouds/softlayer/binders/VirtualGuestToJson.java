@@ -77,7 +77,7 @@ public class VirtualGuestToJson implements Binder {
          templateObject = new TemplateObject(hostname, domain, startCpus, maxMemory, true,
                  operatingSystemReferenceCode, null, localDiskFlag, new Datacenter(datacenterName), networkComponents,
                  getBlockDevices(virtualGuest));
-      } else if(virtualGuest.getVirtualGuestBlockDeviceTemplateGroup() != null) {
+      } else if (virtualGuest.getVirtualGuestBlockDeviceTemplateGroup() != null) {
          String globalIdentifier = checkNotNull(virtualGuest.getVirtualGuestBlockDeviceTemplateGroup()
                  .getGlobalIdentifier(), "blockDeviceTemplateGroup.globalIdentifier");
          templateObject = new TemplateObject(hostname, domain, startCpus, maxMemory, true, null,

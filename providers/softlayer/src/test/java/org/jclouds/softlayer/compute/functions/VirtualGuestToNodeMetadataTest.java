@@ -44,7 +44,7 @@ import com.google.inject.Guice;
 /**
  * Tests the function that transforms SoftLayer VirtualGuest to NodeMetadata.
  */
-@Test(groups="unit", testName = "VirtualGuestToNodeMetadataTest")
+@Test(groups = "unit", testName = "VirtualGuestToNodeMetadataTest")
 public class VirtualGuestToNodeMetadataTest {
 
    VirtualGuestToImage virtualGuestToImage = Guice.createInjector().getInstance(VirtualGuestToImage.class);

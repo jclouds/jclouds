@@ -33,7 +33,7 @@ import com.google.inject.Guice;
 /**
  * Tests the function that transforms SoftLayer VirtualGuest to generic image.
  */
-@Test(groups="unit", testName = "VirtualGuestToImageTest")
+@Test(groups = "unit", testName = "VirtualGuestToImageTest")
 public class VirtualGuestToImageTest {
 
    OperatingSystemToImage operatingSystemToImage = Guice.createInjector().getInstance(OperatingSystemToImage.class);

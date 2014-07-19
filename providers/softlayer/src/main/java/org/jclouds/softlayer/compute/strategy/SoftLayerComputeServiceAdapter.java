@@ -242,7 +242,7 @@ public class SoftLayerComputeServiceAdapter implements
                     .compare(h1.getRam(), h2.getRam())
                     .compare(getSpace(h1), getSpace(h2))
                     .compare(getBootableDeviceType(h1), getBootableDeviceType(h2));
-            if(!volumes1.isEmpty() && !volumes2.isEmpty() && volumes1.size() == volumes2.size()) {
+            if (!volumes1.isEmpty() && !volumes2.isEmpty() && volumes1.size() == volumes2.size()) {
                for (int i = 0; i < volumes1.size(); i++) {
                   comparisonChain.compare(volumes1.get(i).getType(), volumes2.get(i).getType());
                }
@@ -285,7 +285,7 @@ public class SoftLayerComputeServiceAdapter implements
             return volume.getDevice().equals(BOOTABLE_DEVICE);
          }
       });
-      if(!optionalBootableVolume.isPresent()) {
+      if (!optionalBootableVolume.isPresent()) {
          return Type.LOCAL.ordinal();
       }
       return optionalBootableVolume.get().getType().ordinal();
@@ -352,9 +352,9 @@ public class SoftLayerComputeServiceAdapter implements
       Map<String, SoftwareDescription> softwareDescriptions = Maps.newHashMap();
       for (VirtualGuestBlockDeviceTemplateGroup image : images) {
          final String globalIdentifier = image.getGlobalIdentifier();
-         for(VirtualGuestBlockDeviceTemplateGroup child : image.getChildren()) {
-            for(VirtualGuestBlockDeviceTemplate blockDeviceTemplate : child.getBlockDevices()) {
-               for(VirtualDiskImageSoftware softwareReference : blockDeviceTemplate.getDiskImage().getSoftwareReferences()) {
+         for (VirtualGuestBlockDeviceTemplateGroup child : image.getChildren()) {
+            for (VirtualGuestBlockDeviceTemplate blockDeviceTemplate : child.getBlockDevices()) {
+               for (VirtualDiskImageSoftware softwareReference : blockDeviceTemplate.getDiskImage().getSoftwareReferences()) {
                   softwareDescriptions.put(globalIdentifier, softwareReference.getSoftwareDescription());
                }
             }

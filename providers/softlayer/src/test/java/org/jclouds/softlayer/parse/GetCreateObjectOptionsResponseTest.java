@@ -30,9 +30,6 @@ import org.jclouds.softlayer.internal.BaseSoftLayerParseTest;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.core.MediaType;
 
-/**
- * @author Andrea Turli
- */
 public class GetCreateObjectOptionsResponseTest extends BaseSoftLayerParseTest<ContainerVirtualGuestConfiguration> {
 
    @Override

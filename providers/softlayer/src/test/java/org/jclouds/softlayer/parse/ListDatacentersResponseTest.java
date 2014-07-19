@@ -27,9 +27,6 @@ import org.testng.annotations.Test;
 
 import com.google.common.collect.ImmutableSet;
 
-/**
- * @author Andrea Turli
- */
 @Test(groups = "unit")
 public class ListDatacentersResponseTest extends BaseSoftLayerParseTest<Set<Datacenter>> {
 

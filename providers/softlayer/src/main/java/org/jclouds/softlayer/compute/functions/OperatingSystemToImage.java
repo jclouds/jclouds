@@ -57,12 +57,12 @@ public class OperatingSystemToImage implements Function<OperatingSystem, Image> 
       OsFamily osFamily = OsFamily.UNRECOGNIZED;
       String osVersion = UNRECOGNIZED;
       Integer bits = null;
-      if(optOSReferenceCode.isPresent()) {
+      if (optOSReferenceCode.isPresent()) {
          String operatingSystemReferenceCode = optOSReferenceCode.get();
          osFamily = OperatingSystems.osFamily().apply(operatingSystemReferenceCode);
          bits = OperatingSystems.bits().apply(operatingSystemReferenceCode);
       }
-      if(optVersion.isPresent()) {
+      if (optVersion.isPresent()) {
          osVersion = OperatingSystems.version().apply(optVersion.get());
       }
       if (osFamily == OsFamily.UNRECOGNIZED) {
