@@ -18,6 +18,7 @@ package org.jclouds.filesystem.util;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
 
 /**
  * Utilities for the filesystem blobstore.
@@ -38,8 +39,6 @@ public class Utils {
             }
          }
       }
-      if (!file.delete()) {
-         throw new IOException("Could not delete: " + file);
-      }
+      Files.delete(file.toPath());
    }
 }
