@@ -22,6 +22,7 @@ import static com.google.common.io.BaseEncoding.base16;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Date;
 import java.util.Set;
 
 import javax.annotation.Resource;
@@ -178,7 +179,8 @@ public class FilesystemStorageStrategyImpl implements LocalStorageStrategy {
    public Blob getBlob(final String container, final String key) {
       BlobBuilder builder = blobBuilders.get();
       builder.name(key);
-      ByteSource byteSource = Files.asByteSource(getFileForBlobKey(container, key));
+      File file = getFileForBlobKey(container, key);
+      ByteSource byteSource = Files.asByteSource(file);
       try {
          builder.payload(byteSource)
             .contentLength(byteSource.size())
@@ -189,6 +191,7 @@ public class FilesystemStorageStrategyImpl implements LocalStorageStrategy {
       }
       Blob blob = builder.build();
       blob.getMetadata().setContainer(container);
+      blob.getMetadata().setLastModified(new Date(file.lastModified()));
       if (blob.getPayload().getContentMetadata().getContentMD5() != null)
          blob.getMetadata().setETag(base16().lowerCase().encode(blob.getPayload().getContentMetadata().getContentMD5()));
       return blob;

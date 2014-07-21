@@ -62,14 +62,4 @@ public class FilesystemBlobIntegrationTest extends BaseBlobIntegrationTest {
    public void testCreateBlobWithExpiry() throws InterruptedException {
       throw new SkipException("requires Java 7 xattr support");
    }
-
-   @Override
-   public void testGetIfModifiedSince() throws InterruptedException {
-      throw new SkipException("requires Java 7 xattr support");
-   }
-
-   @Override
-   public void testGetIfUnmodifiedSince() throws InterruptedException {
-      throw new SkipException("requires Java 7 xattr support");
-   }
 }
