@@ -32,7 +32,6 @@ import org.jclouds.Fallbacks.NullOnNotFoundOr404;
 import org.jclouds.javax.annotation.Nullable;
 import org.jclouds.openstack.keystone.v2_0.filters.AuthenticateRequest;
 import org.jclouds.openstack.nova.v2_0.domain.Volume;
-import org.jclouds.openstack.nova.v2_0.domain.VolumeAttachment;
 import org.jclouds.openstack.nova.v2_0.domain.VolumeSnapshot;
 import org.jclouds.openstack.nova.v2_0.options.CreateVolumeOptions;
 import org.jclouds.openstack.nova.v2_0.options.CreateVolumeSnapshotOptions;
@@ -43,7 +42,6 @@ import org.jclouds.rest.annotations.MapBinder;
 import org.jclouds.rest.annotations.PayloadParam;
 import org.jclouds.rest.annotations.RequestFilters;
 import org.jclouds.rest.annotations.SelectJson;
-import org.jclouds.rest.annotations.WrapWith;
 
 import com.google.common.annotations.Beta;
 import com.google.common.collect.FluentIterable;
@@ -118,71 +116,6 @@ public interface VolumeApi {
    @Fallback(FalseOnNotFoundOr404.class)
    boolean delete(@PathParam("volumeId") String volumeId);
 
-   /**
-    * List volume attachments for a given instance.
-    *
-    * @return all Floating IPs
-    * @deprecated To be removed in jclouds 1.7
-    * @see VolumeAttachmentApi#listAttachmentsOnServer(String)
-    */
-   @Deprecated
-   @Named("volume:listAttachments")
-   @GET
-   @Path("/servers/{id}/os-volume_attachments")
-   @SelectJson("volumeAttachments")
-   @Consumes(MediaType.APPLICATION_JSON)
-   @Fallback(EmptyFluentIterableOnNotFoundOr404.class)
-   FluentIterable<VolumeAttachment> listAttachmentsOnServer(@PathParam("id") String serverId);
-
-   /**
-    * Get a specific attached volume.
-    *
-    * @return data about the given volume attachment.
-    * @deprecated To be removed in jclouds 1.7
-    * @see VolumeAttachmentApi#getAttachmentForVolumeOnServer(String, String)
-    */
-   @Deprecated
-   @Named("volume:getAttachments")
-   @GET
-   @Path("/servers/{serverId}/os-volume_attachments/{id}")
-   @SelectJson("volumeAttachment")
-   @Consumes(MediaType.APPLICATION_JSON)
-   @Fallback(NullOnNotFoundOr404.class)
-   @Nullable
-   VolumeAttachment getAttachmentForVolumeOnServer(@PathParam("id") String volumeId,
-         @PathParam("serverId") String serverId);
-
-   /**
-    * Attach a volume to an instance
-    *
-    * @return data about the new volume attachment
-    * @deprecated To be removed in jclouds 1.7
-    * @see VolumeAttachmentApi#attachVolumeToServerAsDevice(String, String, String)
-    */
-   @Deprecated
-   @Named("volume:attach")
-   @POST
-   @Path("/servers/{serverId}/os-volume_attachments")
-   @SelectJson("volumeAttachment")
-   @Produces(MediaType.APPLICATION_JSON)
-   @WrapWith("volumeAttachment")
-   VolumeAttachment attachVolumeToServerAsDevice(@PayloadParam("volumeId") String volumeId,
-         @PathParam("serverId") String serverId, @PayloadParam("device") String device);
-
-   /**
-    * Detach a Volume from an instance.
-    *
-    * @return true if successful
-    * @deprecated To be removed in jclouds 1.7
-    * @see VolumeAttachmentApi#detachVolumeFromServer(String, String)
-    */
-   @Deprecated
-   @Named("volume:detach")
-   @DELETE
-   @Path("/servers/{serverId}/os-volume_attachments/{id}")
-   @Fallback(FalseOnNotFoundOr404.class)
-   Boolean detachVolumeFromServer(@PathParam("id") String volumeId,
-         @PathParam("serverId") String serverId);
 
    /**
     * Returns a summary list of snapshots.

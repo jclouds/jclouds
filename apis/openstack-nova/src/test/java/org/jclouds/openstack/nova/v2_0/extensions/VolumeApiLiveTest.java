@@ -24,10 +24,8 @@ import static org.testng.Assert.assertTrue;
 import java.util.Set;
 
 import org.jclouds.openstack.nova.v2_0.domain.Volume;
-import org.jclouds.openstack.nova.v2_0.domain.VolumeAttachment;
 import org.jclouds.openstack.nova.v2_0.domain.VolumeSnapshot;
 import org.jclouds.openstack.nova.v2_0.internal.BaseNovaApiLiveTest;
-import org.jclouds.openstack.nova.v2_0.options.CreateServerOptions;
 import org.jclouds.openstack.nova.v2_0.options.CreateVolumeOptions;
 import org.jclouds.openstack.nova.v2_0.options.CreateVolumeSnapshotOptions;
 import org.testng.annotations.AfterClass;
@@ -215,68 +213,4 @@ public class VolumeApiLiveTest extends BaseNovaApiLiveTest {
       assertEquals(a.getVolumeId(), b.getVolumeId());
    }
 
-   @Test(dependsOnMethods = "testCreateVolume")
-   public void testAttachments() {
-      if (volumeOption.isPresent()) {
-         String server_id = null;
-         try {
-            CreateServerOptions createServerOptions = CreateServerOptions.Builder.availabilityZone(availabilityZone);
-            final String serverId = server_id = createServerInRegion(region, createServerOptions).getId();
-
-            Set<? extends VolumeAttachment> attachments = volumeOption.get().listAttachmentsOnServer(serverId).toSet();
-            assertNotNull(attachments);
-            final int before = attachments.size();
-
-            VolumeAttachment testAttachment = volumeOption.get().attachVolumeToServerAsDevice(testVolume.getId(),
-                     serverId, "/dev/vdf");
-            assertNotNull(testAttachment.getId());
-            assertEquals(testAttachment.getVolumeId(), testVolume.getId());
-
-            assertTrue(retry(new Predicate<VolumeApi>() {
-               public boolean apply(VolumeApi volumeApi) {
-                  return volumeOption.get().listAttachmentsOnServer(serverId).size() > before;
-               }
-            }, 60 * 1000L).apply(volumeOption.get()));
-
-            attachments = volumeOption.get().listAttachmentsOnServer(serverId).toSet();
-            assertNotNull(attachments);
-            assertEquals(attachments.size(), before + 1);
-
-            assertTrue(retry(new Predicate<VolumeApi>() {
-               public boolean apply(VolumeApi volumeApi) {
-                  return volumeApi.get(testVolume.getId()).getStatus() == Volume.Status.IN_USE;
-               }
-            }, 30 * 1000L).apply(volumeOption.get()), "Volume status did not show in-use after 30 seconds");
-
-            boolean foundIt = false;
-            for (VolumeAttachment att : attachments) {
-               VolumeAttachment details = volumeOption.get()
-                        .getAttachmentForVolumeOnServer(att.getVolumeId(), serverId);
-               assertNotNull(details);
-               assertNotNull(details.getId());
-               assertNotNull(details.getServerId());
-               assertNotNull(details.getVolumeId());
-               if (Objects.equal(details.getVolumeId(), testVolume.getId())) {
-                  foundIt = true;
-                  assertEquals(details.getDevice(), "/dev/vdf");
-                  assertEquals(details.getServerId(), serverId);
-               }
-            }
-
-            assertTrue(foundIt, "Failed to find the attachment we created in listAttachments() response");
-
-            volumeOption.get().detachVolumeFromServer(testVolume.getId(), serverId);
-            assertTrue(retry(new Predicate<VolumeApi>() {
-               public boolean apply(VolumeApi volumeApi) {
-                  return volumeOption.get().listAttachmentsOnServer(serverId).size() == before;
-               }
-            }, 60 * 1000L).apply(volumeOption.get()));
-
-         } finally {
-            if (server_id != null)
-               api.getServerApi(region).delete(server_id);
-         }
-
-      }
-   }
 }

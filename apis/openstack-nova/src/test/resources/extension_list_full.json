@@ -279,6 +279,14 @@
             "namespace": "http://docs.openstack.org/compute/ext/availabilityzone/api/v1.1",
             "alias": "os-availability-zone",
             "description": "1. Add availability_zone to the Create Server v1.1 API.\n       2. Add availability zones describing.\n    "
+        },
+        {
+            "alias": "os-volume-attachment-update",
+            "description": "Support for updating a volume attachment.",
+            "links": [],
+            "name": "VolumeAttachmentUpdate",
+            "namespace": "http://docs.openstack.org/compute/ext/os-volume-attachment-update/api/v2",
+            "updated": "2013-06-20T00:00:00Z"
         }
     ]
 }

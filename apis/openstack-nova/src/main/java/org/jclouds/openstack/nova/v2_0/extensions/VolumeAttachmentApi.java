@@ -59,13 +59,13 @@ import com.google.common.collect.FluentIterable;
  *
  */
 @Beta
-@Extension(of = ServiceType.COMPUTE, namespace = ExtensionNamespaces.VOLUMES)
+@Extension(of = ServiceType.COMPUTE, namespace = ExtensionNamespaces.VOLUME_ATTACHMENTS)
 @RequestFilters(AuthenticateRequest.class)
 @Consumes(MediaType.APPLICATION_JSON)
 @Path("/servers")
 public interface VolumeAttachmentApi {
    /**
-    * List Volume Attachments for a given Server.
+    * Lists Volume Attachments for a given Server.
     *
     * @param serverId The ID of the Server
     * @return All VolumeAttachments for the Server
@@ -78,7 +78,7 @@ public interface VolumeAttachmentApi {
    FluentIterable<VolumeAttachment> listAttachmentsOnServer(@PathParam("serverId") String serverId);
 
    /**
-    * Get a specific Volume Attachment for a Volume and Server.
+    * Gets a specific Volume Attachment for a Volume and Server.
     *
     * @param volumeId The ID of the Volume
     * @param serverId The ID of the Server
@@ -94,7 +94,7 @@ public interface VolumeAttachmentApi {
          @PathParam("serverId") String serverId);
 
    /**
-    * Attach a Volume to a Server.
+    * Attaches a Volume to a Server.
     *
     * Note: If you are using KVM as your hypervisor then the actual device name in the Server will be different than
     * the one specified. When the Server sees a new device, it picks the next available name (which in most cases is
@@ -115,7 +115,7 @@ public interface VolumeAttachmentApi {
          @PathParam("serverId") String serverId, @PayloadParam("device") String device);
 
    /**
-    * Detach a Volume from a server.
+    * Detaches a Volume from a server.
     *
     * Note: Make sure you've unmounted the volume first. Failure to do so could result in failure or data loss.
     *

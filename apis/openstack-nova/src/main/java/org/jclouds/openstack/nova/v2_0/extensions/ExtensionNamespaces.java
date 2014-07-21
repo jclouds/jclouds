@@ -31,6 +31,11 @@ public final class ExtensionNamespaces {
     */
    public static final String VOLUMES = "http://docs.openstack.org/ext/volumes/api/v1.1";
    /**
+    * Volume attachment support
+    */
+   public static final String VOLUME_ATTACHMENTS = "http://docs.openstack.org/compute/ext/os-volume-attachment-update/api/v2";
+
+   /**
     * Volume types support
     */
    public static final String VOLUME_TYPES = "http://docs.openstack.org/ext/volume_types/api/v1.1";
