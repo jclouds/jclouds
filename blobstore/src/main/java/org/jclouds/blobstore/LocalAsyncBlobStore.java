@@ -256,6 +256,7 @@ public class LocalAsyncBlobStore extends BaseAsyncBlobStore {
       return immediateFuture(null);
    }
 
+   @Override
    public ListenableFuture<Boolean> deleteContainerIfEmpty(final String container) {
       Boolean returnVal = true;
       if (storageStrategy.containerExists(container)) {

@@ -266,6 +266,21 @@ public abstract class BaseAsyncBlobStore implements AsyncBlobStore {
       });
    }
 
+   @Override
+   public ListenableFuture<Boolean> deleteContainerIfEmpty(final String container) {
+      return userExecutor.submit(new Callable<Boolean>() {
+
+         public Boolean call() throws Exception {
+            return deleteAndVerifyContainerGone(container);
+         }
+
+         @Override
+         public String toString() {
+            return "deleteContainerIfEmpty(" + container + ")";
+         }
+      });
+   }
+
    protected void deletePathAndEnsureGone(String path) {
       checkState(retry(new Predicate<String>() {
          public boolean apply(String in) {
@@ -284,6 +299,12 @@ public abstract class BaseAsyncBlobStore implements AsyncBlobStore {
       return Futures.<Set<? extends Location>> immediateFuture(locations.get());
    }
 
+   /**
+    * Delete a container if it is empty.
+    *
+    * @param container what to delete
+    * @return true if the container was deleted or does not exist
+    */
    protected abstract boolean deleteAndVerifyContainerGone(String container);
 
 }

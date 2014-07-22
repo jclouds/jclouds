@@ -23,11 +23,11 @@ import java.io.IOException;
 
 import org.jclouds.Fallbacks.FalseOnNotFoundOr404;
 import org.jclouds.Fallbacks.NullOnNotFoundOr404;
-import org.jclouds.Fallbacks.VoidOnNotFoundOr404;
 import org.jclouds.apis.ApiMetadata;
 import org.jclouds.atmos.blobstore.functions.BlobToObject;
 import org.jclouds.atmos.config.AtmosRestClientModule;
 import org.jclouds.atmos.domain.AtmosObject;
+import org.jclouds.atmos.fallbacks.TrueOn404FalseOnPathNotEmpty;
 import org.jclouds.atmos.filters.SignRequest;
 import org.jclouds.atmos.functions.ParseDirectoryListFromContentAndHeaders;
 import org.jclouds.atmos.functions.ParseNullableURIFromListOrLocationHeaderIf20x;
@@ -44,6 +44,7 @@ import org.jclouds.date.TimeStamp;
 import org.jclouds.http.HttpRequest;
 import org.jclouds.http.functions.ParseURIFromListOrLocationHeaderIf20x;
 import org.jclouds.http.functions.ReleasePayloadAndReturn;
+import org.jclouds.http.functions.ReturnTrueIf2xx;
 import org.jclouds.http.options.GetOptions;
 import org.jclouds.rest.ConfiguresRestClient;
 import org.jclouds.rest.internal.BaseAsyncClientTest;
@@ -264,9 +265,9 @@ public class AtmosAsyncClientTest extends BaseAsyncClientTest<AtmosAsyncClient> 
       assertNonPayloadHeadersEqual(request, HttpHeaders.ACCEPT + ": */*\n");
       assertPayloadEquals(request, null, null, false);
 
-      assertResponseParserClassEquals(method, request, ReleasePayloadAndReturn.class);
+      assertResponseParserClassEquals(method, request, ReturnTrueIf2xx.class);
       assertSaxResponseParserClassEquals(method, null);
-      assertFallbackClassEquals(method, VoidOnNotFoundOr404.class);
+      assertFallbackClassEquals(method, TrueOn404FalseOnPathNotEmpty.class);
 
       checkFilters(request);
    }

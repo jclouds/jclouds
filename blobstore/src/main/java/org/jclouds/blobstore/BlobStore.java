@@ -140,8 +140,17 @@ public interface BlobStore {
     * 
     * @param container
     *           what to delete
+    * @param container name of the container to delete
     */
    void deleteContainer(String container);
+
+   /**
+    * Deletes a container if it is empty.
+    *
+    * @param container name of the container to delete
+    * @return true if the container was deleted or does not exist
+    */
+   boolean deleteContainerIfEmpty(String container);
 
    /**
     * Determines if a directory exists

@@ -101,6 +101,24 @@ public class FilesystemContainerIntegrationTest extends BaseContainerIntegration
 
    @Override
    @Test(dataProvider = "ignoreOnWindows")
+   public void deleteContainerWithoutContents() throws InterruptedException {
+      super.deleteContainerWithoutContents();
+   }
+
+   @Override
+   @Test(dataProvider = "ignoreOnWindows")
+   public void deleteContainerIfEmptyWithContents() throws InterruptedException {
+      super.deleteContainerIfEmptyWithContents();
+   }
+
+   @Override
+   @Test(dataProvider = "ignoreOnWindows")
+   public void deleteContainerIfEmptyWithoutContents() throws InterruptedException {
+      super.deleteContainerIfEmptyWithoutContents();
+   }
+
+   @Override
+   @Test(dataProvider = "ignoreOnWindows")
    public void testListContainer() throws InterruptedException, ExecutionException, TimeoutException {
       super.testListContainer();
    }
@@ -127,12 +145,6 @@ public class FilesystemContainerIntegrationTest extends BaseContainerIntegration
    @Test(dataProvider = "ignoreOnWindows")
    public void testPutTwiceIsOkAndDoesntOverwrite() throws InterruptedException {
       super.testPutTwiceIsOkAndDoesntOverwrite();
-   }
-
-   @Override
-   @Test(dataProvider = "ignoreOnWindows")
-   public void deleteContainerIfEmpty() throws InterruptedException {
-      super.deleteContainerIfEmpty();
    }
 
    @Override

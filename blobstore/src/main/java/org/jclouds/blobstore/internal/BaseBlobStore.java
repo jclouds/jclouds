@@ -189,6 +189,15 @@ public abstract class BaseBlobStore implements BlobStore {
       deletePathAndEnsureGone(container);
    }
 
+   @Override
+   public boolean deleteContainerIfEmpty(String container) {
+      try {
+         return deleteAndVerifyContainerGone(container);
+      } catch (ContainerNotFoundException cnfe) {
+         return true;
+      }
+   }
+
    protected void deletePathAndEnsureGone(String path) {
       checkState(retry(new Predicate<String>() {
          public boolean apply(String in) {
@@ -207,6 +216,12 @@ public abstract class BaseBlobStore implements BlobStore {
       return locations.get();
    }
 
+   /**
+    * Delete a container if it is empty.
+    *
+    * @param container what to delete
+    * @return whether container was deleted
+    */
    protected abstract boolean deleteAndVerifyContainerGone(String container);
 
 }

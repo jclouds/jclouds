@@ -59,9 +59,11 @@ import org.jclouds.domain.Location;
 import org.jclouds.http.options.GetOptions;
 
 import com.google.common.base.Function;
+import com.google.common.base.Functions;
 import com.google.common.base.Supplier;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
+import com.google.common.util.concurrent.Futures;
 import com.google.common.util.concurrent.ListenableFuture;
 import com.google.common.util.concurrent.ListeningExecutorService;
 
@@ -260,7 +262,8 @@ public class AtmosAsyncBlobStore extends BaseAsyncBlobStore {
     */
    @Override
    public ListenableFuture<Void> removeBlob(String container, String key) {
-      return async.deletePath(container + "/" + key);
+      return Futures.transform(async.deletePath(container + "/" + key), Functions.constant((Void) null),
+            userExecutor);
    }
 
    @Override

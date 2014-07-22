@@ -35,13 +35,13 @@ import javax.ws.rs.core.MediaType;
 
 import org.jclouds.Fallbacks.FalseOnNotFoundOr404;
 import org.jclouds.Fallbacks.NullOnNotFoundOr404;
-import org.jclouds.Fallbacks.VoidOnNotFoundOr404;
 import org.jclouds.atmos.binders.BindMetadataToHeaders;
 import org.jclouds.atmos.domain.AtmosObject;
 import org.jclouds.atmos.domain.BoundedSet;
 import org.jclouds.atmos.domain.DirectoryEntry;
 import org.jclouds.atmos.domain.SystemMetadata;
 import org.jclouds.atmos.domain.UserMetadata;
+import org.jclouds.atmos.fallbacks.TrueOn404FalseOnPathNotEmpty;
 import org.jclouds.atmos.filters.SignRequest;
 import org.jclouds.atmos.functions.AtmosObjectName;
 import org.jclouds.atmos.functions.ParseDirectoryListFromContentAndHeaders;
@@ -201,10 +201,10 @@ public interface AtmosAsyncClient extends Closeable {
     */
    @Named("DeleteObject")
    @DELETE
-   @Fallback(VoidOnNotFoundOr404.class)
+   @Fallback(TrueOn404FalseOnPathNotEmpty.class)
    @Path("/{path}")
    @Consumes(MediaType.WILDCARD)
-   ListenableFuture<Void> deletePath(@PathParam("path") String path);
+   ListenableFuture<Boolean> deletePath(@PathParam("path") String path);
 
    /**
     * @see AtmosClient#pathExists

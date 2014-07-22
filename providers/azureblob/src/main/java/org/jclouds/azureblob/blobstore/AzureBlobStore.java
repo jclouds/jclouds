@@ -266,7 +266,13 @@ public class AzureBlobStore extends BaseBlobStore {
 
    @Override
    protected boolean deleteAndVerifyContainerGone(String container) {
-      throw new UnsupportedOperationException("please use deleteContainer");
+      // Azure deleteContainer supports deleting empty containers so emulate
+      // deleteIfEmpty by listing.
+      if (!list(container).isEmpty()) {
+         return false;
+      }
+      sync.deleteContainer(container);
+      return true;
    }
 
    @Override

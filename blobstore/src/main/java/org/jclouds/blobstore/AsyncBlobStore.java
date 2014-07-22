@@ -103,6 +103,11 @@ public interface AsyncBlobStore {
    ListenableFuture<Void> deleteContainer(String container);
 
    /**
+    * @see BlobStore#deleteContainerIfEmpty
+    */
+   ListenableFuture<Boolean> deleteContainerIfEmpty(String container);
+
+   /**
     * @see BlobStore#directoryExists
     */
    ListenableFuture<Boolean> directoryExists(String container, String directory);

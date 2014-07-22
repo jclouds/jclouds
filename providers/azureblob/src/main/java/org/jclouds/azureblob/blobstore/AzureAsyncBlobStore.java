@@ -64,6 +64,7 @@ import org.jclouds.http.options.GetOptions;
 import com.google.common.base.Function;
 import com.google.common.base.Supplier;
 import com.google.common.collect.Iterables;
+import com.google.common.util.concurrent.Futures;
 import com.google.common.util.concurrent.ListenableFuture;
 import com.google.common.util.concurrent.ListeningExecutorService;
 import org.jclouds.io.Payload;
@@ -278,7 +279,13 @@ public class AzureAsyncBlobStore extends BaseAsyncBlobStore {
 
    @Override
    protected boolean deleteAndVerifyContainerGone(String container) {
-      throw new UnsupportedOperationException("please use deleteContainer");
+      // Azure deleteContainer supports deleting empty containers so emulate
+      // deleteIfEmpty by listing.
+      if (!Futures.getUnchecked(list(container)).isEmpty()) {
+         return false;
+      }
+      Futures.getUnchecked(async.deleteContainer(container));
+      return true;
    }
 
    @Override

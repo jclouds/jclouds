@@ -207,6 +207,11 @@ Options can also be specified for extension modules
   [^BlobStore blobstore container-name]
   (.deleteContainer blobstore container-name))
 
+(defn delete-container-if-empty
+  "Delete a container if empty."
+  [^BlobStore blobstore container-name]
+  (.deleteContainerIfEmpty blobstore container-name))
+
 (defn container-exists?
   "Predicate to check presence of a container"
   [^BlobStore blobstore container-name]

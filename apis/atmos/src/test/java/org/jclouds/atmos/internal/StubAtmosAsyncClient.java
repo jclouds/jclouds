@@ -49,6 +49,7 @@ import org.jclouds.http.options.GetOptions;
 import org.jclouds.lifecycle.Closer;
 
 import com.google.common.base.Function;
+import com.google.common.base.Functions;
 import com.google.common.base.Throwables;
 import com.google.common.util.concurrent.Futures;
 import com.google.common.util.concurrent.ListenableFuture;
@@ -134,21 +135,14 @@ public class StubAtmosAsyncClient implements AtmosAsyncClient {
    }
 
    @Override
-   public ListenableFuture<Void> deletePath(String path) {
+   public ListenableFuture<Boolean> deletePath(String path) {
       if (path.indexOf('/') == path.length() - 1) {
          // chop off the trailing slash
-         return Futures.transform(blobStore.deleteContainerIfEmpty(path.substring(0, path.length() - 1)),
-                  new Function<Boolean, Void>() {
-
-                     public Void apply(Boolean from) {
-                        return null;
-                     }
-
-                  }, userExecutor);
+         return blobStore.deleteContainerIfEmpty(path.substring(0, path.length() - 1));
       } else {
          String container = path.substring(0, path.indexOf('/'));
          path = path.substring(path.indexOf('/') + 1);
-         return blobStore.removeBlob(container, path);
+         return Futures.transform(blobStore.removeBlob(container, path), Functions.constant(Boolean.TRUE), userExecutor);
       }
    }
 

@@ -24,6 +24,8 @@ import static org.jclouds.blobstore.options.ListContainerOptions.Builder.afterMa
 import static org.jclouds.blobstore.options.ListContainerOptions.Builder.inDirectory;
 import static org.jclouds.blobstore.options.ListContainerOptions.Builder.maxResults;
 import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertFalse;
+import static org.testng.Assert.assertTrue;
 
 import java.io.IOException;
 import java.util.Set;
@@ -280,11 +282,37 @@ public class BaseContainerIntegrationTest extends BaseBlobStoreIntegrationTest {
    }
 
    @Test(groups = { "integration", "live" })
-   public void deleteContainerIfEmpty() throws InterruptedException {
+   public void deleteContainerWithoutContents() throws InterruptedException {
       final String containerName = getContainerName();
       try {
          view.getBlobStore().deleteContainer(containerName);
          assertNotExists(containerName);
+      } finally {
+         // this container is now deleted, so we can't reuse it directly
+         recycleContainerAndAddToPool(containerName);
+      }
+   }
+
+   @Test(groups = { "integration", "live" })
+   public void deleteContainerIfEmptyWithContents() throws InterruptedException {
+      String containerName = getContainerName();
+      try {
+         addBlobToContainer(containerName, "test");
+         assertFalse(view.getBlobStore().deleteContainerIfEmpty(containerName));
+         assertTrue(view.getBlobStore().containerExists(containerName));
+      } finally {
+         recycleContainerAndAddToPool(containerName);
+      }
+   }
+
+   @Test(groups = { "integration", "live" })
+   public void deleteContainerIfEmptyWithoutContents() throws InterruptedException {
+      final String containerName = getContainerName();
+      try {
+         assertTrue(view.getBlobStore().deleteContainerIfEmpty(containerName));
+         assertNotExists(containerName);
+         // verify that false is returned even if the container does not exist
+         assertTrue(view.getBlobStore().deleteContainerIfEmpty(containerName));
       } finally {
          // this container is now deleted, so we can't reuse it directly
          recycleContainerAndAddToPool(containerName);
