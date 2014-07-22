@@ -16,11 +16,6 @@
  */
 package org.jclouds.io;
 
-import static com.google.common.base.Preconditions.checkNotNull;
-
-import java.io.IOException;
-import java.io.InputStream;
-
 import com.google.common.annotations.Beta;
 import com.google.common.collect.Iterables;
 import com.google.common.io.ByteSource;
@@ -30,22 +25,6 @@ import com.google.common.io.ByteSource;
  */
 @Beta
 public class ByteSources {
-
-   /**
-    * always returns the same stream
-    * 
-    * @param in
-    *           stream to always return
-    */
-   public static ByteSource asByteSource(final InputStream in) {
-      checkNotNull(in, "in");
-      return new ByteSource() {
-         @Override
-         public InputStream openStream() throws IOException {
-            return in;
-         }
-      };
-   }
 
    /** Create an infinite-length ByteSource which repeats its input. */
    public static ByteSource repeatingArrayByteSource(final byte[] input) {

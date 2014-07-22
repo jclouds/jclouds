@@ -20,7 +20,6 @@ import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.hash.Hashing.md5;
 import static com.google.common.io.BaseEncoding.base16;
 import static java.util.concurrent.Executors.newCachedThreadPool;
-import static org.jclouds.io.ByteSources.asByteSource;
 import static org.testng.Assert.assertEquals;
 
 import java.io.InputStream;
@@ -33,6 +32,7 @@ import java.util.concurrent.TimeUnit;
 
 import com.google.common.io.ByteStreams;
 
+import org.jclouds.io.ByteStreams2;
 import org.jclouds.logging.Logger;
 import org.testng.annotations.Test;
 
@@ -132,7 +132,7 @@ public class WireLiveTest {
          URLConnection connection = url.openConnection();
          HttpWire wire = setUp();
          InputStream in = wire.input(connection.getInputStream());
-         byte[] compare = asByteSource(in).hash(md5()).asBytes();
+         byte[] compare = ByteStreams2.hashAndClose(in, md5()).asBytes();
          Thread.sleep(100);
          assertEquals(base16().lowerCase().encode(compare), checkNotNull(sysHttpStreamMd5, sysHttpStreamMd5));
          assertEquals(((BufferLogger) wire.getWireLog()).buff.toString().getBytes().length, 3331484);
@@ -157,7 +157,7 @@ public class WireLiveTest {
          URLConnection connection = url.openConnection();
          HttpWire wire = setUpSynch();
          InputStream in = wire.input(connection.getInputStream());
-         byte[] compare = asByteSource(in).hash(md5()).asBytes();
+         byte[] compare = ByteStreams2.hashAndClose(in, md5()).asBytes();
          Thread.sleep(100);
          assertEquals(base16().lowerCase().encode(compare), checkNotNull(sysHttpStreamMd5, sysHttpStreamMd5));
          assertEquals(((BufferLogger) wire.getWireLog()).buff.toString().getBytes().length, 3331484);

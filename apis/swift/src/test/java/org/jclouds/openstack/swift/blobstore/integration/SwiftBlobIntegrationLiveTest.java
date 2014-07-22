@@ -22,13 +22,13 @@ import static org.testng.Assert.assertTrue;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Arrays;
 import java.util.Properties;
 
 import org.jclouds.blobstore.BlobStore;
 import org.jclouds.blobstore.domain.Blob;
 import org.jclouds.blobstore.integration.internal.BaseBlobIntegrationTest;
 import org.jclouds.blobstore.options.PutOptions;
-import org.jclouds.io.ByteSources;
 import org.jclouds.io.ByteStreams2;
 import org.jclouds.io.Payload;
 import org.jclouds.openstack.keystone.v2_0.config.KeystoneProperties;
@@ -153,7 +153,7 @@ public class SwiftBlobIntegrationLiveTest extends BaseBlobIntegrationTest {
          // download and check if correct
          Blob read = blobStore.getBlob(containerName, objectName);
          Payload readPayload = read.getPayload();
-         assertTrue(inputSource.contentEquals(ByteSources.asByteSource(readPayload.openStream())));
+         assertTrue(Arrays.equals(inputSource.read(), ByteStreams2.toByteArrayAndClose(readPayload.openStream())));
       } finally {
          returnContainer(containerName);
       }

@@ -27,7 +27,6 @@ import static com.google.common.util.concurrent.Uninterruptibles.sleepUninterrup
 import static javax.servlet.http.HttpServletResponse.SC_OK;
 import static org.jclouds.Constants.PROPERTY_RELAX_HOSTNAME;
 import static org.jclouds.Constants.PROPERTY_TRUST_ALL_CERTS;
-import static org.jclouds.io.ByteSources.asByteSource;
 import static org.jclouds.util.Closeables2.closeQuietly;
 import static org.jclouds.util.Strings2.toStringAndClose;
 
@@ -52,6 +51,7 @@ import org.eclipse.jetty.server.handler.AbstractHandler;
 import org.eclipse.jetty.server.ssl.SslSelectChannelConnector;
 import org.eclipse.jetty.util.ssl.SslContextFactory;
 import org.jclouds.ContextBuilder;
+import org.jclouds.io.ByteStreams2;
 import org.jclouds.providers.AnonymousProviderMetadata;
 import org.jclouds.utils.TestUtils;
 import org.testng.annotations.AfterClass;
@@ -173,7 +173,7 @@ public abstract class BaseJettyTest {
          if (request.getHeader("Content-MD5") != null) {
             String expectedMd5 = request.getHeader("Content-MD5");
             String realMd5FromRequest;
-            realMd5FromRequest = base64().encode(asByteSource(body).hash(md5()).asBytes());
+            realMd5FromRequest = base64().encode(ByteStreams2.hashAndClose(body, md5()).asBytes());
             boolean matched = expectedMd5.equals(realMd5FromRequest);
             if (matched) {
                response.setStatus(SC_OK);

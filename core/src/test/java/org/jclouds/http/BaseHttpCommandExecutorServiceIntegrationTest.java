@@ -21,7 +21,6 @@ import static com.google.common.io.BaseEncoding.base64;
 import static com.google.common.io.Closeables.close;
 import static com.google.common.io.Files.asByteSource;
 import static org.jclouds.http.options.GetOptions.Builder.tail;
-import static org.jclouds.io.ByteSources.asByteSource;
 import static org.jclouds.io.Payloads.newByteSourcePayload;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertFalse;
@@ -35,6 +34,7 @@ import java.net.URLDecoder;
 import java.util.Random;
 import java.util.concurrent.TimeUnit;
 
+import org.jclouds.io.ByteStreams2;
 import org.jclouds.io.Payload;
 import org.jclouds.util.Strings2;
 import org.jclouds.utils.TestUtils;
@@ -229,7 +229,7 @@ public abstract class BaseHttpCommandExecutorServiceIntegrationTest extends Base
    }
 
    private void assertValidMd5(final InputStream input, String md5) throws IOException {
-      assertEquals(base64().encode(asByteSource(input).hash(md5()).asBytes()), md5);
+      assertEquals(base64().encode(ByteStreams2.hashAndClose(input, md5()).asBytes()), md5);
    }
 
    private static class MD5CheckDispatcher extends Dispatcher {
