@@ -178,7 +178,7 @@ public abstract class S3AsyncClientTest<T extends S3AsyncClient> extends BaseS3A
       Invokable<?, ?> method = method(S3AsyncClient.class, "bucketExists", String.class);
       GeneratedHttpRequest request = processor.createRequest(method, ImmutableList.<Object> of("bucket"));
 
-      assertRequestLineEquals(request, "GET https://bucket." + url + "/?max-keys=0 HTTP/1.1");
+      assertRequestLineEquals(request, "HEAD https://bucket." + url + "/ HTTP/1.1");
       assertNonPayloadHeadersEqual(request, "Host: bucket." + url + "\n");
       assertPayloadEquals(request, null, null, false);
 

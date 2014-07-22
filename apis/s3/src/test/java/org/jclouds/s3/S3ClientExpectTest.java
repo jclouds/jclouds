@@ -31,11 +31,11 @@ public class S3ClientExpectTest extends BaseS3ClientExpectTest {
    @Test
    public void testBucketExistsReturnsTrueOn200AndFalseOn404() {
       
-      HttpRequest bucketFooExists = HttpRequest.builder().method("GET").endpoint(
-               URI.create("https://s3.amazonaws.com/foo?max-keys=0")).headers(
+      HttpRequest bucketFooExists = HttpRequest.builder().method("HEAD").endpoint(
+               URI.create("https://s3.amazonaws.com/foo")).headers(
                ImmutableMultimap.<String, String> builder()
                   .put("Date", CONSTANT_DATE)
-                  .put("Authorization", "AWS identity:p32RsBr2inawMBeCkkiA228BT2w=")
+                  .put("Authorization", "AWS identity:lLD0mzo2bZPIWhxlFDZoT09MKUQ=")
                   .build()).build();
       
       S3Client clientWhenBucketExists = requestSendsResponse(bucketFooExists, HttpResponse.builder().statusCode(200).build());
