@@ -202,10 +202,9 @@ public interface S3AsyncClient extends Closeable {
    /**
     * @see S3Client#bucketExists
     */
-   @Named("ListBucket")
-   @GET
+   @Named("BucketExists")
+   @HEAD
    @Path("/")
-   @QueryParams(keys = "max-keys", values = "0")
    @Fallback(FalseOnContainerNotFound.class)
    ListenableFuture<Boolean> bucketExists(
             @Bucket @EndpointParam(parser = AssignCorrectHostnameForBucket.class) @BinderParam(BindAsHostPrefixIfConfigured.class) @ParamValidators(BucketNameValidator.class) String bucketName);
