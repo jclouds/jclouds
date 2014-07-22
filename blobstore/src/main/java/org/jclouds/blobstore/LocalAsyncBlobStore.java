@@ -33,6 +33,7 @@ import java.io.IOException;
 import java.util.Date;
 import java.util.Set;
 import java.util.SortedSet;
+import java.util.regex.Pattern;
 
 import javax.annotation.Resource;
 import javax.inject.Inject;
@@ -332,7 +333,7 @@ public class LocalAsyncBlobStore extends BaseAsyncBlobStore {
          // ensure we don't accidentally append twice
          String toMatch = prefix.endsWith("/") ? prefix : prefix + delimiter;
          if (metadata.getName().startsWith(toMatch)) {
-            String unprefixedName = metadata.getName().replaceFirst(toMatch, "");
+            String unprefixedName = metadata.getName().replaceFirst(Pattern.quote(toMatch), "");
             if (unprefixedName.equals("")) {
                // we are the prefix in this case, return false
                return false;
@@ -359,7 +360,7 @@ public class LocalAsyncBlobStore extends BaseAsyncBlobStore {
             // ensure we don't accidentally append twice
             String toMatch = prefix.endsWith("/") ? prefix : prefix + delimiter;
             if (working.startsWith(toMatch)) {
-               working = working.replaceFirst(toMatch, "");
+               working = working.replaceFirst(Pattern.quote(toMatch), "");
             }
          }
          if (working.contains(delimiter)) {
