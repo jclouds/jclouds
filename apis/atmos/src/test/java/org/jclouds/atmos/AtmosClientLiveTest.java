@@ -178,18 +178,14 @@ public class AtmosClientLiveTest extends BaseBlobStoreIntegrationTest {
       createOrReplaceObject("object", data2, Hashing.md5().hashString(data2, UTF_8), "meta-value?");
       assertEventuallyObjectMatches("object", "here is my data?", "meta-value?");
 
-      // loop to gather metrics
       for (boolean stream : new boolean[] { true, false }) {
-         for (int i = 0; i < 10; i++) {
-            System.err.printf("upload/delete/create attempt %d type %s%n", i + 1, stream ? "stream" : "string");
-            // try updating
-            createOrUpdateWithErrorLoop(stream, "there is my data", "2");
+         System.err.printf("upload/delete/create type %s%n", stream ? "stream" : "string");
+         // try updating
+         createOrUpdateWithErrorLoop(stream, "there is my data", "2");
 
-            deleteConfirmed(privateDirectory + "/object");
-            // now create
-            createOrUpdateWithErrorLoop(stream, "where is my data", "3");
-
-         }
+         deleteConfirmed(privateDirectory + "/object");
+         // now create
+         createOrUpdateWithErrorLoop(stream, "where is my data", "3");
       }
    }
 
