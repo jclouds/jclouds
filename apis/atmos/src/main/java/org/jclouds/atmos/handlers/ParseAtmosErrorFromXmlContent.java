@@ -29,6 +29,7 @@ import javax.inject.Singleton;
 
 import org.jclouds.atmos.AtmosResponseException;
 import org.jclouds.atmos.domain.AtmosError;
+import org.jclouds.atmos.reference.AtmosErrorCode;
 import org.jclouds.atmos.util.AtmosUtils;
 import org.jclouds.blobstore.ContainerNotFoundException;
 import org.jclouds.blobstore.KeyAlreadyExistsException;
@@ -77,7 +78,7 @@ public class ParseAtmosErrorFromXmlContent implements HttpErrorHandler {
                logger.warn(e, "exception reading error from response", response);
             }
          }
-         if (error != null && error.getCode() == 1016) {
+         if (error != null && error.getCode() == AtmosErrorCode.RESOURCE_ALREADY_EXISTS.getCode()) {
             File file = new File(command.getCurrentRequest().getEndpoint().getPath());
             exception = new KeyAlreadyExistsException(file.getParentFile().getAbsolutePath(), file.getName());
          } else {

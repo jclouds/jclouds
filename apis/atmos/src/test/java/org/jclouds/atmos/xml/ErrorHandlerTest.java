@@ -21,6 +21,7 @@ import static org.testng.Assert.assertEquals;
 import java.io.InputStream;
 
 import org.jclouds.atmos.domain.AtmosError;
+import org.jclouds.atmos.reference.AtmosErrorCode;
 import org.jclouds.http.functions.BaseHandlerTest;
 import org.jclouds.http.functions.ParseSax;
 import org.testng.annotations.Test;
@@ -42,6 +43,6 @@ public class ErrorHandlerTest extends BaseHandlerTest {
       InputStream is = getClass().getResourceAsStream("/error.xml");
       ParseSax<AtmosError> parser = createParser();
       AtmosError result = parser.parse(is);
-      assertEquals(result.getCode(), 1003);
+      assertEquals(result.getCode(), AtmosErrorCode.OBJECT_NOT_FOUND.getCode());
    }
 }

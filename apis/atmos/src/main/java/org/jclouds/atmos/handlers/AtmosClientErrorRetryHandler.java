@@ -21,6 +21,7 @@ import javax.inject.Named;
 
 import org.jclouds.Constants;
 import org.jclouds.atmos.domain.AtmosError;
+import org.jclouds.atmos.reference.AtmosErrorCode;
 import org.jclouds.atmos.util.AtmosUtils;
 import org.jclouds.http.HttpCommand;
 import org.jclouds.http.HttpException;
@@ -67,7 +68,7 @@ public class AtmosClientErrorRetryHandler implements HttpRetryHandler {
             try {
                AtmosError error = utils.parseAtmosErrorFromContent(command, response,
                         new String(content));
-               if (error.getCode() == 1006) {
+               if (error.getCode() == AtmosErrorCode.CONFLICTING_OPERATION.getCode()) {
                   return backoffHandler.shouldRetryRequest(command, response);
                }
                // don't increment count before here, since backoff handler does already

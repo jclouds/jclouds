@@ -30,6 +30,7 @@ import org.jclouds.atmos.domain.AtmosError;
 import org.jclouds.atmos.domain.AtmosObject;
 import org.jclouds.atmos.filters.SignRequest;
 import org.jclouds.atmos.options.PutOptions;
+import org.jclouds.atmos.reference.AtmosErrorCode;
 import org.jclouds.atmos.xml.ErrorHandler;
 import org.jclouds.blobstore.ContainerNotFoundException;
 import org.jclouds.blobstore.KeyAlreadyExistsException;
@@ -60,7 +61,7 @@ public class AtmosUtils {
    public AtmosError parseAtmosErrorFromContent(HttpCommand command, HttpResponse response, InputStream content)
             throws HttpException {
       AtmosError error = factory.create(errorHandlerProvider.get()).parse(content);
-      if (error.getCode() == 1032) {
+      if (error.getCode() == AtmosErrorCode.SIGNATURE_MISMATCH.getCode()) {
          error.setStringSigned(signer.createStringToSign(command.getCurrentRequest()));
       }
       return error;
