@@ -17,9 +17,20 @@
 
 package org.jclouds.openstack.neutron.v2_0.extensions;
 
+import javax.inject.Named;
+import javax.ws.rs.Consumes;
+import javax.ws.rs.DELETE;
+import javax.ws.rs.GET;
+import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.core.MediaType;
+
 import org.jclouds.Fallbacks;
 import org.jclouds.collect.PagedIterable;
 import org.jclouds.javax.annotation.Nullable;
+import org.jclouds.openstack.keystone.v2_0.KeystoneFallbacks.EmptyPaginatedCollectionOnNotFoundOr404;
 import org.jclouds.openstack.keystone.v2_0.filters.AuthenticateRequest;
 import org.jclouds.openstack.neutron.v2_0.domain.ReferenceWithName;
 import org.jclouds.openstack.neutron.v2_0.domain.Router;
@@ -39,27 +50,14 @@ import org.jclouds.rest.annotations.ResponseParser;
 import org.jclouds.rest.annotations.SelectJson;
 import org.jclouds.rest.annotations.Transform;
 
-import javax.inject.Named;
-import javax.ws.rs.Consumes;
-import javax.ws.rs.DELETE;
-import javax.ws.rs.GET;
-import javax.ws.rs.POST;
-import javax.ws.rs.PUT;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.core.MediaType;
-
-import static org.jclouds.openstack.keystone.v2_0.KeystoneFallbacks.EmptyPaginatedCollectionOnNotFoundOr404;
-
 /**
  * Provides synchronous access to Router operations on the OpenStack Neutron API.
  * <p/>
  * A logical entity for forwarding packets across internal subnets and NATting them on external
  * networks through an appropriate external gateway.
  *
- * @see <a href=
- *      "http://docs.openstack.org/api/openstack-network/2.0/content/router_ext.html">api doc</a>
- * @deprecated Use v2 instead of v2_0
+ * @deprecated Please use {@link org.jclouds.openstack.neutron.v2.extensions.RouterApi} as this
+ *             interface will be removed in jclouds 3.0.
  */
 @Deprecated
 @Path("/v2.0/routers")

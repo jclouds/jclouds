@@ -39,6 +39,9 @@ import java.beans.ConstructorProperties;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
+/**
+ * @author Nick Livens
+ */
 @Beta
 @Singleton
 public class ParsePortDetails extends ParseJson<Ports> {

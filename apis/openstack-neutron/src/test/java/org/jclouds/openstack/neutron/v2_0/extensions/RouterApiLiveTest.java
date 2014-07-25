@@ -42,6 +42,8 @@ import static org.testng.Assert.assertTrue;
 
 /**
  * Tests parsing and Guice wiring of RouterApi
+ *
+ * @author Nick Livens
  */
 @Test(groups = "live", testName = "RouterApiLiveTest")
 public class RouterApiLiveTest extends BaseNeutronApiLiveTest {

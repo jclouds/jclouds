@@ -16,8 +16,19 @@
  */
 package org.jclouds.openstack.neutron.v2.extensions;
 
-import com.google.common.annotations.Beta;
-import org.jclouds.Fallbacks;
+import javax.inject.Named;
+import javax.ws.rs.Consumes;
+import javax.ws.rs.DELETE;
+import javax.ws.rs.GET;
+import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.core.MediaType;
+
+import org.jclouds.Fallbacks.EmptyPagedIterableOnNotFoundOr404;
+import org.jclouds.Fallbacks.FalseOnNotFoundOr404;
+import org.jclouds.Fallbacks.NullOnNotFoundOr404;
 import org.jclouds.collect.PagedIterable;
 import org.jclouds.javax.annotation.Nullable;
 import org.jclouds.openstack.keystone.v2_0.filters.AuthenticateRequest;
@@ -38,15 +49,7 @@ import org.jclouds.rest.annotations.SelectJson;
 import org.jclouds.rest.annotations.Transform;
 import org.jclouds.rest.annotations.WrapWith;
 
-import javax.inject.Named;
-import javax.ws.rs.Consumes;
-import javax.ws.rs.DELETE;
-import javax.ws.rs.GET;
-import javax.ws.rs.POST;
-import javax.ws.rs.PUT;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.core.MediaType;
+import com.google.common.annotations.Beta;
 
 /**
  * Provides synchronous access to Router operations on the OpenStack Neutron API.
@@ -73,7 +76,7 @@ public interface RouterApi {
    @GET
    @Transform(RouterToPagedIterable.class)
    @ResponseParser(ParseRouters.class)
-   @Fallback(Fallbacks.EmptyPagedIterableOnNotFoundOr404.class)
+   @Fallback(EmptyPagedIterableOnNotFoundOr404.class)
    PagedIterable<Router> list();
 
    /**
@@ -95,7 +98,7 @@ public interface RouterApi {
    @GET
    @Path("/{id}")
    @SelectJson("router")
-   @Fallback(Fallbacks.NullOnNotFoundOr404.class)
+   @Fallback(NullOnNotFoundOr404.class)
    @Nullable
    Router get(@PathParam("id") String id);
 
@@ -121,7 +124,7 @@ public interface RouterApi {
    @PUT
    @Path("/{id}")
    @SelectJson("router")
-   @Fallback(Fallbacks.NullOnNotFoundOr404.class)
+   @Fallback(NullOnNotFoundOr404.class)
    @Nullable
    Router update(@PathParam("id") String id, @WrapWith("router") Router.UpdateOptions router);
 
@@ -134,7 +137,7 @@ public interface RouterApi {
    @Named("router:delete")
    @DELETE
    @Path("/{id}")
-   @Fallback(Fallbacks.FalseOnNotFoundOr404.class)
+   @Fallback(FalseOnNotFoundOr404.class)
    boolean delete(@PathParam("id") String id);
 
    /**
@@ -148,7 +151,7 @@ public interface RouterApi {
    @PUT
    @Path("/{id}/add_router_interface")
    @MapBinder(EmptyOptions.class)
-   @Fallback(Fallbacks.NullOnNotFoundOr404.class)
+   @Fallback(NullOnNotFoundOr404.class)
    @Nullable
    RouterInterface addInterfaceForSubnet(@PathParam("id") String routerId, @PayloadParam("subnet_id") String subnetId);
 
@@ -163,7 +166,7 @@ public interface RouterApi {
    @PUT
    @Path("/{id}/add_router_interface")
    @MapBinder(EmptyOptions.class)
-   @Fallback(Fallbacks.NullOnNotFoundOr404.class)
+   @Fallback(NullOnNotFoundOr404.class)
    @Nullable
    RouterInterface addInterfaceForPort(@PathParam("id") String routerId, @PayloadParam("port_id") String portId);
 
@@ -177,7 +180,7 @@ public interface RouterApi {
    @PUT
    @Path("/{id}/remove_router_interface")
    @MapBinder(EmptyOptions.class)
-   @Fallback(Fallbacks.FalseOnNotFoundOr404.class)
+   @Fallback(FalseOnNotFoundOr404.class)
    boolean removeInterfaceForSubnet(@PathParam("id") String routerId, @PayloadParam("subnet_id") String subnetId);
 
    /**
@@ -190,6 +193,6 @@ public interface RouterApi {
    @PUT
    @Path("/{id}/remove_router_interface")
    @MapBinder(EmptyOptions.class)
-   @Fallback(Fallbacks.FalseOnNotFoundOr404.class)
+   @Fallback(FalseOnNotFoundOr404.class)
    boolean removeInterfaceForPort(@PathParam("id") String routerId, @PayloadParam("port_id") String portId);
 }

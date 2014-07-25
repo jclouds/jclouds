@@ -42,6 +42,8 @@ import static org.testng.Assert.assertTrue;
 
 /**
  * Tests parsing and Guice wiring of NetworkApi
+ *
+ * @author Nick Livens
  */
 @Test(groups = "unit", testName = "NetworkApiExpectTest")
 public class NetworkApiExpectTest extends BaseNeutronApiExpectTest {

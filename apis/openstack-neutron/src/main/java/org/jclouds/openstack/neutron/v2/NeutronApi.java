@@ -70,7 +70,20 @@ public interface NeutronApi extends Closeable {
 
    /**
     * Provides synchronous access to Router features.
+    *
+    * <h3>NOTE</h3>
+    * This API is an extension that may or may not be present in your OpenStack cloud. Use the Optional return type
+    * to determine if it is present.
     */
    @Delegate
+   Optional<? extends RouterApi> getRouterApi(@EndpointParam(parser = RegionToEndpoint.class) @Nullable String region);
+
+   /**
+    * Provides synchronous access to Router features.
+    * @deprecated Please use {@link #getRouterApi(String)} as this method will be removed in jclouds 3.0.
+    */
+   @Deprecated
+   @Delegate
    Optional<? extends RouterApi> getRouterExtensionApi(@EndpointParam(parser = RegionToEndpoint.class) @Nullable String region);
+
 }
