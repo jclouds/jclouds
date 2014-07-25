@@ -16,44 +16,6 @@
  */
 package org.jclouds.json.config;
 
-import static com.google.common.io.BaseEncoding.base16;
-
-import java.beans.ConstructorProperties;
-import java.io.IOException;
-import java.lang.reflect.Type;
-import java.util.Date;
-import java.util.Enumeration;
-import java.util.List;
-import java.util.Map;
-import java.util.Properties;
-import java.util.Set;
-
-import javax.inject.Inject;
-import javax.inject.Provider;
-import javax.inject.Singleton;
-
-import org.jclouds.date.DateService;
-import org.jclouds.domain.JsonBall;
-import org.jclouds.json.Json;
-import org.jclouds.json.internal.DeserializationConstructorAndReflectiveTypeAdapterFactory;
-import org.jclouds.json.internal.EnumTypeAdapterThatReturnsFromValue;
-import org.jclouds.json.internal.GsonWrapper;
-import org.jclouds.json.internal.NamingStrategies.AnnotationConstructorNamingStrategy;
-import org.jclouds.json.internal.NamingStrategies.AnnotationOrNameFieldNamingStrategy;
-import org.jclouds.json.internal.NamingStrategies.ExtractNamed;
-import org.jclouds.json.internal.NamingStrategies.ExtractSerializedName;
-import org.jclouds.json.internal.NullFilteringTypeAdapterFactories.CollectionTypeAdapterFactory;
-import org.jclouds.json.internal.NullFilteringTypeAdapterFactories.FluentIterableTypeAdapterFactory;
-import org.jclouds.json.internal.NullFilteringTypeAdapterFactories.ImmutableListTypeAdapterFactory;
-import org.jclouds.json.internal.NullFilteringTypeAdapterFactories.ImmutableSetTypeAdapterFactory;
-import org.jclouds.json.internal.NullFilteringTypeAdapterFactories.IterableTypeAdapterFactory;
-import org.jclouds.json.internal.NullFilteringTypeAdapterFactories.ListTypeAdapterFactory;
-import org.jclouds.json.internal.NullFilteringTypeAdapterFactories.MapTypeAdapterFactory;
-import org.jclouds.json.internal.NullFilteringTypeAdapterFactories.MultimapTypeAdapterFactory;
-import org.jclouds.json.internal.NullFilteringTypeAdapterFactories.SetTypeAdapterFactory;
-import org.jclouds.json.internal.NullHackJsonLiteralAdapter;
-import org.jclouds.json.internal.OptionalTypeAdapterFactory;
-
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableMap.Builder;
 import com.google.common.collect.ImmutableSet;
@@ -77,6 +39,43 @@ import com.google.gson.stream.JsonWriter;
 import com.google.inject.AbstractModule;
 import com.google.inject.ImplementedBy;
 import com.google.inject.Provides;
+import org.jclouds.date.DateService;
+import org.jclouds.domain.JsonBall;
+import org.jclouds.json.Json;
+import org.jclouds.json.internal.DeserializationConstructorAndReflectiveTypeAdapterFactory;
+import org.jclouds.json.internal.EnumTypeAdapterThatReturnsFromValue;
+import org.jclouds.json.internal.GsonWrapper;
+import org.jclouds.json.internal.NamingStrategies.AnnotationConstructorNamingStrategy;
+import org.jclouds.json.internal.NamingStrategies.AnnotationOrNameFieldNamingStrategy;
+import org.jclouds.json.internal.NamingStrategies.ExtractNamed;
+import org.jclouds.json.internal.NamingStrategies.ExtractSerializedName;
+import org.jclouds.json.internal.NullFilteringTypeAdapterFactories.ImmutableMapTypeAdapterFactory;
+import org.jclouds.json.internal.NullFilteringTypeAdapterFactories.CollectionTypeAdapterFactory;
+import org.jclouds.json.internal.NullFilteringTypeAdapterFactories.FluentIterableTypeAdapterFactory;
+import org.jclouds.json.internal.NullFilteringTypeAdapterFactories.ImmutableListTypeAdapterFactory;
+import org.jclouds.json.internal.NullFilteringTypeAdapterFactories.ImmutableSetTypeAdapterFactory;
+import org.jclouds.json.internal.NullFilteringTypeAdapterFactories.IterableTypeAdapterFactory;
+import org.jclouds.json.internal.NullFilteringTypeAdapterFactories.ListTypeAdapterFactory;
+import org.jclouds.json.internal.NullFilteringTypeAdapterFactories.MapTypeAdapterFactory;
+import org.jclouds.json.internal.NullFilteringTypeAdapterFactories.MultimapTypeAdapterFactory;
+import org.jclouds.json.internal.NullFilteringTypeAdapterFactories.SetTypeAdapterFactory;
+import org.jclouds.json.internal.NullHackJsonLiteralAdapter;
+import org.jclouds.json.internal.OptionalTypeAdapterFactory;
+
+import javax.inject.Inject;
+import javax.inject.Provider;
+import javax.inject.Singleton;
+import java.beans.ConstructorProperties;
+import java.io.IOException;
+import java.lang.reflect.Type;
+import java.util.Date;
+import java.util.Enumeration;
+import java.util.List;
+import java.util.Map;
+import java.util.Properties;
+import java.util.Set;
+
+import static com.google.common.io.BaseEncoding.base16;
 
 /**
  * Contains logic for parsing objects from Strings.
@@ -92,7 +91,7 @@ public class GsonModule extends AbstractModule {
          MapTypeAdapterFactory map, MultimapTypeAdapterFactory multimap, IterableTypeAdapterFactory iterable,
          CollectionTypeAdapterFactory collection, ListTypeAdapterFactory list,
          ImmutableListTypeAdapterFactory immutableList, FluentIterableTypeAdapterFactory fluentIterable,
-         DefaultExclusionStrategy exclusionStrategy) {
+         ImmutableMapTypeAdapterFactory immutableMap, DefaultExclusionStrategy exclusionStrategy) {
 
       FieldNamingStrategy serializationPolicy = new AnnotationOrNameFieldNamingStrategy(ImmutableSet.of(
             new ExtractSerializedName(), new ExtractNamed()));
@@ -117,6 +116,7 @@ public class GsonModule extends AbstractModule {
       builder.registerTypeAdapterFactory(map);
       builder.registerTypeAdapterFactory(multimap);
       builder.registerTypeAdapterFactory(fluentIterable);
+      builder.registerTypeAdapterFactory(immutableMap);
 
       AnnotationConstructorNamingStrategy deserializationPolicy = new AnnotationConstructorNamingStrategy(
             ImmutableSet.of(ConstructorProperties.class, Inject.class), ImmutableSet.of(new ExtractNamed()));
@@ -151,7 +151,7 @@ public class GsonModule extends AbstractModule {
          return false;
       }
    }
-   
+
    @ImplementedBy(CDateAdapter.class)
    public abstract static class DateAdapter extends TypeAdapter<Date> {
 

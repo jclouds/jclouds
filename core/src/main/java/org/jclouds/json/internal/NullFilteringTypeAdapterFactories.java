@@ -16,18 +16,6 @@
  */
 package org.jclouds.json.internal;
 
-import static com.google.common.base.Objects.equal;
-import static com.google.common.base.Objects.toStringHelper;
-
-import java.io.IOException;
-import java.lang.reflect.ParameterizedType;
-import java.lang.reflect.Type;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Set;
-
 import com.google.common.base.Objects;
 import com.google.common.collect.FluentIterable;
 import com.google.common.collect.ImmutableCollection;
@@ -43,6 +31,18 @@ import com.google.gson.internal.JsonReaderInternalAccess;
 import com.google.gson.reflect.TypeToken;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
+
+import java.io.IOException;
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
+
+import static com.google.common.base.Objects.equal;
+import static com.google.common.base.Objects.toStringHelper;
 
 /**
  * Eliminates null values when deserializing Collections, Maps, and Multimaps
@@ -150,7 +150,7 @@ public class NullFilteringTypeAdapterFactories {
          super(Iterable.class);
       }
    }
-   
+
    public static class CollectionTypeAdapterFactory extends ImmutableListTypeAdapterFactory {
       public CollectionTypeAdapterFactory() {
          super(Collection.class);
@@ -268,6 +268,13 @@ public class NullFilteringTypeAdapterFactories {
       @SuppressWarnings("unchecked")
       protected <E, I> TypeAdapter<I> newAdapter(TypeAdapter<E> elementAdapter) {
          return (TypeAdapter<I>) new FluentIterableTypeAdapter<E>(elementAdapter);
+      }
+   }
+
+   public static class ImmutableMapTypeAdapterFactory extends MapTypeAdapterFactory {
+
+      public ImmutableMapTypeAdapterFactory() {
+         super(ImmutableMap.class);
       }
    }
 

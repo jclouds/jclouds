@@ -16,26 +16,6 @@
  */
 package org.jclouds.json.internal;
 
-import static com.google.common.base.Objects.equal;
-import static org.testng.Assert.assertEquals;
-
-import java.lang.reflect.Type;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
-import org.jclouds.json.internal.NullFilteringTypeAdapterFactories.CollectionTypeAdapterFactory;
-import org.jclouds.json.internal.NullFilteringTypeAdapterFactories.FluentIterableTypeAdapterFactory;
-import org.jclouds.json.internal.NullFilteringTypeAdapterFactories.ImmutableListTypeAdapterFactory;
-import org.jclouds.json.internal.NullFilteringTypeAdapterFactories.ImmutableSetTypeAdapterFactory;
-import org.jclouds.json.internal.NullFilteringTypeAdapterFactories.IterableTypeAdapterFactory;
-import org.jclouds.json.internal.NullFilteringTypeAdapterFactories.ListTypeAdapterFactory;
-import org.jclouds.json.internal.NullFilteringTypeAdapterFactories.MapTypeAdapterFactory;
-import org.jclouds.json.internal.NullFilteringTypeAdapterFactories.MultimapTypeAdapterFactory;
-import org.jclouds.json.internal.NullFilteringTypeAdapterFactories.SetTypeAdapterFactory;
-import org.testng.annotations.Test;
-
 import com.google.common.base.Objects;
 import com.google.common.collect.FluentIterable;
 import com.google.common.collect.ImmutableList;
@@ -46,6 +26,26 @@ import com.google.common.collect.Multimap;
 import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import org.jclouds.json.internal.NullFilteringTypeAdapterFactories.CollectionTypeAdapterFactory;
+import org.jclouds.json.internal.NullFilteringTypeAdapterFactories.FluentIterableTypeAdapterFactory;
+import org.jclouds.json.internal.NullFilteringTypeAdapterFactories.ImmutableListTypeAdapterFactory;
+import org.jclouds.json.internal.NullFilteringTypeAdapterFactories.ImmutableSetTypeAdapterFactory;
+import org.jclouds.json.internal.NullFilteringTypeAdapterFactories.IterableTypeAdapterFactory;
+import org.jclouds.json.internal.NullFilteringTypeAdapterFactories.ListTypeAdapterFactory;
+import org.jclouds.json.internal.NullFilteringTypeAdapterFactories.MapTypeAdapterFactory;
+import org.jclouds.json.internal.NullFilteringTypeAdapterFactories.MultimapTypeAdapterFactory;
+import org.jclouds.json.internal.NullFilteringTypeAdapterFactories.SetTypeAdapterFactory;
+import org.jclouds.json.internal.NullFilteringTypeAdapterFactories.ImmutableMapTypeAdapterFactory;
+import org.testng.annotations.Test;
+
+import java.lang.reflect.Type;
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
+import static com.google.common.base.Objects.equal;
+import static org.testng.Assert.assertEquals;
 
 @Test(testName = "NullFilteringTypeAdapterFactoriesTest")
 public class NullFilteringTypeAdapterFactoriesTest {
@@ -225,6 +225,26 @@ public class NullFilteringTypeAdapterFactoriesTest {
       Iterable<Resource> resources = immutableSet.fromJson(
             "[{\"id\":\"i-foo\",\"name\":\"foo\"},{\"id\":\"i-bar\",\"name\":\"bar\"}]", immutableSetResourceType);
       assertEquals(resources, ImmutableSet.of(new Resource("i-foo", "foo"), new Resource("i-bar", "bar")));
+   }
+
+   private Gson immutableMap = new GsonBuilder().registerTypeAdapterFactory(new ImmutableMapTypeAdapterFactory()).create();
+   private Type immutableMapType = new TypeToken<ImmutableMap<String, String>>() {
+      private static final long serialVersionUID = 1L;
+   }.getType();
+   private Type immutableMapResourceType = new TypeToken<ImmutableMap<String, Resource>>() {
+      private static final long serialVersionUID = 1L;
+   }.getType();
+
+   public void testImmutableMap() {
+      ImmutableMap<String, String> noNulls = immutableMap.fromJson("{\"value\":\"a test string!\"}", immutableMapType);
+      assertEquals(noNulls, ImmutableMap.of("value", "a test string!"));
+      ImmutableMap<String, String> withNull = immutableMap.fromJson("{\"key\":null}", immutableMapType);
+      assertEquals(withNull, ImmutableMap.of());
+      ImmutableMap<String, String> withEmpty = map.fromJson("{\"value\":\"\"}", mapType);
+      assertEquals(withEmpty, ImmutableMap.of("value", ""));
+      ImmutableMap<String, Resource> resources = immutableMap.fromJson(
+            "{\"key1\":{\"id\":\"i-foo\",\"name\":\"foo\"},\"key2\":{\"id\":\"i-bar\",\"name\":\"bar\"}}", immutableMapResourceType);
+      assertEquals(resources, ImmutableMap.of("key1", new Resource("i-foo", "foo"), "key2",  new Resource("i-bar", "bar")));
    }
 
    private Gson map = new GsonBuilder().registerTypeAdapterFactory(new MapTypeAdapterFactory()).create();
