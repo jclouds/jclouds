@@ -32,7 +32,7 @@ import com.google.common.annotations.Beta;
  * <p/>
  * Additionally, Cloud Files provides a simple yet powerful way to publish and distribute content
  * behind a Content Distribution Network.
- * 
+ *
  * @see CDNApi
  * @see SwiftApi
  */
@@ -41,21 +41,21 @@ public interface CloudFilesApi extends SwiftApi {
 
    /**
     * Provides access to Cloud Files CDN features.
-    * 
+    *
     * @param region  the region to access the CDN API.
-    * 
+    *
     * @return the {@link CDNApi} for the specified region.
     */
    @Delegate
-   CDNApi getCDNApiForRegion(@EndpointParam(parser = RegionToCDNEndpoint.class) @Nullable String region);
+   CDNApi getCDNApi(@EndpointParam(parser = RegionToCDNEndpoint.class) @Nullable String region);
 
    /**
     * Provides access to Cloud Files CDN features.
-    * 
+    *
     * @param region  the region to access the CDN API.
-    * 
+    *
     * @return the {@link CDNApi} for the specified region.
-    * 
+    *
     * @deprecated Please use {@link #getCDNApiForRegion(String)}. This method will be removed in jclouds 1.8.
     */
    @Deprecated

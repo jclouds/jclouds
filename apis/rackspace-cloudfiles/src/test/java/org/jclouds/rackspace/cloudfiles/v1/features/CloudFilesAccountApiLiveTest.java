@@ -36,8 +36,8 @@ public class CloudFilesAccountApiLiveTest extends AccountApiLiveTest {
    }
 
    public void testUrlKeyExists() throws Exception {
-      for (String regionId : regions) {
-         Account account = api.getAccountApiForRegion(regionId).get();
+      for (String region : regions) {
+         Account account = api.getAccountApi(region).get();
          assertTrue(account.getTemporaryUrlKey().isPresent());
       }
    }
