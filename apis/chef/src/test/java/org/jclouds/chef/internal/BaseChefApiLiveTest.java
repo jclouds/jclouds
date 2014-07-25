@@ -54,7 +54,7 @@ import org.jclouds.chef.domain.UploadSandbox;
 import org.jclouds.chef.options.CreateClientOptions;
 import org.jclouds.chef.options.SearchOptions;
 import org.jclouds.crypto.Pems;
-import org.jclouds.io.ByteStream2;
+import org.jclouds.io.ByteStreams2;
 import org.jclouds.io.Payloads;
 import org.jclouds.io.payloads.FilePayload;
 import org.jclouds.rest.ResourceNotFoundException;
@@ -167,7 +167,7 @@ public abstract class BaseChefApiLiveTest<A extends ChefApi> extends BaseChefLiv
             InputStream stream = api.getResourceContents(resource);
             assertNotNull(stream, "Resource contents are null for resource: " + resource.getName());
 
-            byte[] md5 = ByteStream2.hashAndClose(stream, md5()).asBytes();
+            byte[] md5 = ByteStreams2.hashAndClose(stream, md5()).asBytes();
             assertEquals(md5, resource.getChecksum());
          }
       }
