@@ -25,6 +25,7 @@ import org.jclouds.date.internal.SimpleDateFormatDateService;
 import org.jclouds.http.functions.BaseHandlerTest;
 import org.jclouds.s3.domain.ObjectMetadata;
 import org.jclouds.s3.domain.internal.CopyObjectResult;
+import org.jclouds.util.Strings2;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
 
@@ -36,6 +37,8 @@ import org.testng.annotations.Test;
 public class CopyObjectHandlerTest extends BaseHandlerTest {
 
    private DateService dateService;
+
+   private final String copyObjectXML = "<CopyObjectResult xmlns=\"http://s3.amazonaws.com/doc/2006-03-01/\"><LastModified>2014-07-23T20:53:17+0000</LastModified><ETag>\"92836a3ea45a6984d1b4d23a747d46bb\"</ETag></CopyObjectResult>";
 
    @BeforeTest
    @Override
@@ -57,4 +60,20 @@ public class CopyObjectHandlerTest extends BaseHandlerTest {
       assertEquals(result, expected);
    }
 
+   /**
+    * Verifies that the parser doesn't barf if the timestamp in the copy object
+    * xml has time zone designators.
+    */
+   public void testTimeStampWithTZ() {
+      InputStream is = Strings2.toInputStream(copyObjectXML);
+      ObjectMetadata expected = new CopyObjectResult(
+            new SimpleDateFormatDateService()
+                  .iso8601SecondsDateParse("2014-07-23T20:53:17+0000"),
+            "\"92836a3ea45a6984d1b4d23a747d46bb\"");
+
+      ObjectMetadata result = factory.create(
+            injector.getInstance(CopyObjectHandler.class)).parse(is);
+
+      assertEquals(result, expected);
+   }
 }
