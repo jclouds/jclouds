@@ -76,6 +76,21 @@ public interface DateService {
     */
    Date iso8601SecondsDateParse(String toParse) throws IllegalArgumentException;
 
+   /**
+    * Parse a given date in either of two iso8601 formats:
+    * "yyyy-MM-dd'T'HH:mm:ssZ" or "yyyy-MM-dd'T'HH:mm:ss.SSSZ". The latter one
+    * has the timezone designator, e.g. 2014-07-23T20:53:17+0000. At least one
+    * S3 compatible blobstore uses both these formats when returning
+    * container/object metadata.
+    *
+    * @param toParse
+    *           The string to parse.
+    * @return the Date object of the parsed string.
+    * @throws IllegalArgumentException
+    */
+   Date iso8601DateParseWithOptionalTZ(String toParse)
+         throws IllegalArgumentException;
+
    String rfc1123DateFormat(Date date);
 
    String rfc1123DateFormat();

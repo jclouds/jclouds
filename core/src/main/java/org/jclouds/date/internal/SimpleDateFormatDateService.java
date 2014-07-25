@@ -18,6 +18,7 @@ package org.jclouds.date.internal;
 import static org.jclouds.date.internal.DateUtils.findTZ;
 import static org.jclouds.date.internal.DateUtils.trimTZ;
 import static org.jclouds.date.internal.DateUtils.trimToMillis;
+import static org.jclouds.util.SaxUtils.currentOrNull;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -152,7 +153,8 @@ public class SimpleDateFormatDateService implements DateService {
    }
 
    @Override
-   public final Date iso8601SecondsDateParse(String toParse) {
+   public final Date iso8601SecondsDateParse(String toParse)
+         throws IllegalArgumentException {
       if (toParse.length() < 10)
          throw new IllegalArgumentException("incorrect date format " + toParse);
       String tz = findTZ(toParse);
@@ -201,6 +203,20 @@ public class SimpleDateFormatDateService implements DateService {
             return rfc1123SimpleDateFormat.parse(toParse);
          } catch (ParseException pe) {
             throw new IllegalArgumentException("Error parsing data at " + pe.getErrorOffset(), pe);
+         }
+      }
+   }
+
+   @Override
+   public Date iso8601DateParseWithOptionalTZ(String toParse)
+         throws IllegalArgumentException {
+      try {
+         return iso8601DateParse(toParse);
+      } catch (IllegalArgumentException orig) {
+         try {
+            return iso8601SecondsDateParse(toParse);
+         } catch (IllegalArgumentException ie) {
+            throw orig;
          }
       }
    }

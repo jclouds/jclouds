@@ -52,7 +52,8 @@ public class CopyObjectHandler extends ParseSax.HandlerWithResult<ObjectMetadata
       if (qName.equals("ETag")) {
          this.currentETag = currentOrNull(currentText);
       } else if (qName.equals("LastModified")) {
-         this.currentLastModified = dateParser.iso8601DateParse(currentOrNull(currentText));
+         this.currentLastModified = dateParser
+             .iso8601DateParseWithOptionalTZ(currentOrNull(currentText));
       } else if (qName.equals("CopyObjectResult")) {
          metadata = new CopyObjectResult(currentLastModified, currentETag);
       }
