@@ -1,0 +1,10 @@
+{
+   "kind": "storage#objectAccessControl",
+   "selfLink": "https://www.googleapis.com/storage/v1/b/jcloudtestbucket/o/foo.txt/acl/user-00b4903a97adfde729f0650133a7379693099d8d85d6b1b18255ca70bf89e31d",
+   "bucket": "jcloudtestbucket",
+   "object": "foo.txt",
+   "entity": "user-00b4903a97adfde729f0650133a7379693099d8d85d6b1b18255ca70bf89e31d",
+   "role": "OWNER",
+   "entityId": "00b4903a97adfde729f0650133a7379693099d8d85d6b1b18255ca70bf89e31d",
+   "etag": "CIix/dmj/rwCEAE="
+}

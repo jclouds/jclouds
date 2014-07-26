@@ -41,6 +41,10 @@ public class GoogleCloudStorageErrorHandler implements HttpErrorHandler {
               : new HttpResponseException(command, response);
       message = message != null ? message : String.format("%s -> %s", command.getCurrentRequest().getRequestLine(),
               response.getStatusLine());
+
+      String message411 = "MissingContentLength: You must provide the Content-Length HTTP header.\n";
+      String message412 = "PreconditionFailed: At least one of the pre-conditions you specified did not hold.\n";
+
       switch (response.getStatusCode()) {
          case 401:
          case 403:
@@ -51,6 +55,12 @@ public class GoogleCloudStorageErrorHandler implements HttpErrorHandler {
              break;
          case 409:
             exception = new IllegalStateException(message, exception);
+            break;
+         case 411:
+            exception = new IllegalStateException(message411 + message, exception);
+            break;
+         case 412:
+            exception = new IllegalStateException(message412 + message, exception);
             break;
       }
       command.setException(exception);

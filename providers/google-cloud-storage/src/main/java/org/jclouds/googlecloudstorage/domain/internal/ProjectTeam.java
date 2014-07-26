@@ -46,17 +46,17 @@ public final class ProjectTeam {
       } 
    }
 
-   private final String projectId;
+   private final String projectNumber;
    private final Team team;
 
    
-   private ProjectTeam(String projectId, Team team) {
-      this.projectId = projectId;
+   private ProjectTeam(String projectNumber, Team team) {
+      this.projectNumber = projectNumber;
       this.team = team;
    }
 
-   public String getProjectId() {
-      return projectId;
+   public String getProjectNumber() {
+      return projectNumber;
    }
 
    public Team getTeam() {
@@ -65,7 +65,7 @@ public final class ProjectTeam {
 
    @Override
    public int hashCode() {
-      return Objects.hashCode(projectId, team);
+      return Objects.hashCode(projectNumber, team);
    }
 
    @Override
@@ -75,11 +75,11 @@ public final class ProjectTeam {
       if (obj == null || getClass() != obj.getClass())
          return false;
       ProjectTeam that = ProjectTeam.class.cast(obj);
-      return equal(this.projectId, that.projectId) && equal(this.team, that.team);
+      return equal(this.projectNumber, that.projectNumber) && equal(this.team, that.team);
    }
 
    protected MoreObjects.ToStringHelper string() {
-      return toStringHelper(this).add("projectId", projectId).add("team", team);
+      return toStringHelper(this).add("projectNumber", projectNumber).add("team", team);
    }
 
    @Override
@@ -93,11 +93,11 @@ public final class ProjectTeam {
 
    public static class Builder {
 
-      private String projectId;
+      private String projectNumber;
       private Team team;
 
-      public Builder projectId(String projectId) {
-         this.projectId = projectId;
+      public Builder projectNumber(String projectNumber) {
+         this.projectNumber = projectNumber;
          return this;
       }
 
@@ -107,11 +107,11 @@ public final class ProjectTeam {
       }
 
       public ProjectTeam build() {
-         return new ProjectTeam(this.projectId, this.team);
+         return new ProjectTeam(this.projectNumber, this.team);
       }
 
       public Builder fromProjectTeam(ProjectTeam in) {
-         return this.projectId(in.getProjectId()).team(in.getTeam());
+         return this.projectNumber(in.getProjectNumber()).team(in.getTeam());
       }
    }
 }

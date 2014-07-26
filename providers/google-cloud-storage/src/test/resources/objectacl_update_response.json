@@ -1,0 +1,9 @@
+{
+   "kind": "storage#objectAccessControl",
+   "selfLink": "https://www.googleapis.com/storage/v1/b/jcloudtestbucket/o/foo.txt/acl/allUsers",
+   "bucket": "jcloudtestbucket",
+   "object": "foo.txt",
+   "entity": "allUsers",
+   "role": "OWNER",
+   "etag": "CIix/dmj/rwCEAQ="
+}

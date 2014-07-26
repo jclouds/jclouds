@@ -36,7 +36,7 @@ public class DefaultObjectAclGetTest extends BaseGoogleCloudStorageParseTest<Def
    @Consumes(MediaType.APPLICATION_JSON)
    public DefaultObjectAccessControls expected() {
       return DefaultObjectAccessControls.builder().entity("project-owners-1082289308625").role(ObjectRole.OWNER)
-               .etag("CAk=").projectTeam(ProjectTeam.builder().projectId("1082289308625").team(Team.OWNERS).build())
+               .etag("CAk=").projectTeam(ProjectTeam.builder().projectNumber("1082289308625").team(Team.OWNERS).build())
                .build();
    }
 }

@@ -21,7 +21,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 import java.net.URI;
 
-import org.jclouds.googlecloudstorage.domain.DomainResourceRefferences.Role;
+import org.jclouds.googlecloudstorage.domain.DomainResourceRefferences.ObjectRole;
 import org.jclouds.googlecloudstorage.domain.internal.ProjectTeam;
 import org.jclouds.javax.annotation.Nullable;
 
@@ -29,27 +29,31 @@ import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
 
 /**
- * Represents a BucketAccessControls Resource
+ * Represents a Object Access Control Resource.
  *
- * @see <a href= "https://developers.google.com/storage/docs/json_api/v1/bucketAccessControls" />
+ * @see <a href= "https://developers.google.com/storage/docs/json_api/v1/objectAccessControls"/>
  */
-public class BucketAccessControls extends Resource {
+public class ObjectAccessControls extends Resource {
 
-   private final String bucket;
-   private final String entity;
-   private final Role role;
-   private final String email;
-   private final String domain;
-   private final String entityId;
-   private final ProjectTeam projectTeam;
+   protected final String bucket;
+   protected final String entity;
+   protected final String object;
+   protected final Long generation;
+   protected final ObjectRole role;
+   protected final String email;
+   protected final String entityId;
+   protected final String domain;
+   protected final ProjectTeam projectTeam;
 
-   private BucketAccessControls(@Nullable String id, @Nullable URI selfLink, @Nullable String etag, String bucket,
-            String entity, @Nullable String entityId, Role role, @Nullable String email, @Nullable String domain,
-            @Nullable ProjectTeam projectTeam) {
-      super(Kind.BUCKET_ACCESS_CONTROL, id == null ? (bucket + "/" + entity) : id, selfLink, etag);
+   protected ObjectAccessControls(@Nullable String id, @Nullable URI selfLink, @Nullable String etag, String bucket,
+            @Nullable String object, @Nullable Long generation, String entity, @Nullable String entityId,
+            ObjectRole role, @Nullable String email, @Nullable String domain, @Nullable ProjectTeam projectTeam) {
+      super(Kind.OBJECT_ACCESS_CONTROL, id, selfLink, etag);
 
-      this.bucket = checkNotNull(bucket, "bucket");
+      this.bucket = bucket;
       this.entity = checkNotNull(entity, "entity");
+      this.object = object;
+      this.generation = generation;
       this.entityId = entityId;
       this.role = checkNotNull(role, "role");
       this.email = email;
@@ -65,12 +69,20 @@ public class BucketAccessControls extends Resource {
       return entity;
    }
 
-   public Role getRole() {
+   public ObjectRole getRole() {
       return role;
    }
 
    public String getEmail() {
       return email;
+   }
+
+   public String getObject() {
+      return object;
+   }
+
+   public Long getGeneration() {
+      return generation;
    }
 
    public String getDomain() {
@@ -91,19 +103,20 @@ public class BucketAccessControls extends Resource {
          return true;
       if (obj == null || getClass() != obj.getClass())
          return false;
-      BucketAccessControls that = BucketAccessControls.class.cast(obj);
-      return equal(this.kind, that.kind) && equal(this.bucket, that.bucket) && equal(this.entity, that.entity)
-               && equal(this.id, that.id);
+      ObjectAccessControls that = ObjectAccessControls.class.cast(obj);
+      return equal(this.kind, that.kind) && equal(this.bucket, that.bucket) && equal(this.object, that.object)
+               && equal(this.entity, that.entity) && equal(this.id , that.id);
    }
 
    protected MoreObjects.ToStringHelper string() {
       return super.string().omitNullValues().add("bucket", bucket).add("entity", entity).add("entityId", entityId)
-               .add("role", role).add("email", email).add("domain", domain);
+               .add("object", object).add("generation", generation).add("role", role).add("email", email)
+               .add("domain", domain).add("projectTeam", projectTeam);
    }
 
    @Override
    public int hashCode() {
-      return Objects.hashCode(kind, bucket, entity);
+      return Objects.hashCode(kind, bucket, object, entity);
    }
 
    @Override
@@ -116,21 +129,33 @@ public class BucketAccessControls extends Resource {
    }
 
    public Builder toBuilder() {
-      return new Builder().fromBucketACL(this);
+      return new Builder().fromObjectAccessControls(this);
    }
 
    public static final class Builder extends Resource.Builder<Builder> {
 
-      private String bucket;
-      private String entity;
-      private String entityId;
-      private Role role;
-      private String email;
-      private String domain;
-      private ProjectTeam projectTeam;
+      protected String object;
+      protected Long generation;
+      protected String bucket;
+      protected String entity;
+      protected String entityId;
+      protected ObjectRole role;
+      protected String email;
+      protected String domain;
+      protected ProjectTeam projectTeam;
 
       public Builder bucket(String bucket) {
          this.bucket = bucket;
+         return this;
+      }
+
+      public Builder object(String object) {
+         this.object = object;
+         return this;
+      }
+
+      public Builder generation(Long generation) {
+         this.generation = generation;
          return this;
       }
 
@@ -144,7 +169,7 @@ public class BucketAccessControls extends Resource {
          return this;
       }
 
-      public Builder role(Role role) {
+      public Builder role(ObjectRole role) {
          this.role = role;
          return this;
       }
@@ -164,15 +189,15 @@ public class BucketAccessControls extends Resource {
          return this;
       }
 
-      public BucketAccessControls build() {
-         return new BucketAccessControls(super.id, super.selfLink, super.etag, bucket, entity, entityId, role, email,
-                  domain, projectTeam);
+      public ObjectAccessControls build() {
+         return new ObjectAccessControls(super.id, super.selfLink, super.etag, bucket, object, generation, entity,
+                  entityId, role, email, domain, projectTeam);
       }
 
-      public Builder fromBucketACL(BucketAccessControls bACL) {
-         return super.fromResource(bACL).bucket(bACL.getBucket()).entity(bACL.getEntity()).entityId(bACL.getEntityId())
-                  .role(bACL.getRole()).email(bACL.getEmail()).domain(bACL.getDomain())
-                  .projectTeam(bACL.getProjectTeam());
+      public Builder fromObjectAccessControls(ObjectAccessControls in) {
+         return super.fromResource(in).bucket(in.getBucket()).entity(in.getEntity()).entityId(in.getEntityId())
+                  .role(in.getRole()).email(in.getEmail()).domain(in.getDomain()).object(in.getObject())
+                  .generation(in.getGeneration()).projectTeam(in.getProjectTeam());
       }
 
       @Override

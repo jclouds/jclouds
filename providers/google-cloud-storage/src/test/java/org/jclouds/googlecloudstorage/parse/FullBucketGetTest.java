@@ -43,7 +43,7 @@ public class FullBucketGetTest extends BaseGoogleCloudStorageParseTest<Bucket> {
             .selfLink(
                      URI.create("https://www.googleapis.com/storage/v1/b/jcloudtestbucket3500/acl/project-owners-1082289308625"))
             .bucket("jcloudtestbucket3500").entity("project-owners-1082289308625").role(Role.OWNER)
-            .projectTeam(ProjectTeam.builder().projectId("1082289308625").team(Team.OWNERS).build()).etag("CAo=")
+            .projectTeam(ProjectTeam.builder().projectNumber("1082289308625").team(Team.OWNERS).build()).etag("CAo=")
             .build();
 
    private final DefaultObjectAccessControls defObjectAcl = DefaultObjectAccessControls.builder()

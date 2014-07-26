@@ -16,35 +16,39 @@
  */
 package org.jclouds.googlecloudstorage.parse;
 
+import java.net.URI;
+
 import javax.ws.rs.Consumes;
 import javax.ws.rs.core.MediaType;
 
 import org.jclouds.googlecloudstorage.domain.DomainResourceRefferences.ObjectRole;
-import org.jclouds.googlecloudstorage.domain.DefaultObjectAccessControls;
-import org.jclouds.googlecloudstorage.domain.ListDefaultObjectAccessControls;
-import org.jclouds.googlecloudstorage.domain.Resource.Kind;
+import org.jclouds.googlecloudstorage.domain.ObjectAccessControls;
 import org.jclouds.googlecloudstorage.domain.internal.ProjectTeam;
 import org.jclouds.googlecloudstorage.domain.internal.ProjectTeam.Team;
 import org.jclouds.googlecloudstorage.internal.BaseGoogleCloudStorageParseTest;
 
-import com.google.common.collect.ImmutableSet;
-
-public class DefaultObjectAclListTest extends BaseGoogleCloudStorageParseTest<ListDefaultObjectAccessControls> {
-
-   private DefaultObjectAccessControls item_1 = DefaultObjectAccessControls.builder()
-            .entity("project-owners-1082289308625").role(ObjectRole.OWNER)
-            .projectTeam(ProjectTeam.builder().projectNumber("1082289308625").team(Team.OWNERS).build()).etag("CAk=")
-            .build();
+public class ObjectAclGetTest extends BaseGoogleCloudStorageParseTest<ObjectAccessControls> {
 
    @Override
    public String resource() {
-      return "/default_objectacl_list.json";
+      return "/objectacl_get.json";
    }
 
    @Override
    @Consumes(MediaType.APPLICATION_JSON)
-   public ListDefaultObjectAccessControls expected() {
-      return ListDefaultObjectAccessControls.builder().kind(Kind.OBJECT_ACCESS_CONTROLS).items(ImmutableSet.of(item_1))
-               .build();
+   public ObjectAccessControls expected() {
+      return ObjectAccessControls
+               .builder()
+               .bucket("jcloudtestbucket")
+               .object("foo.txt")
+               .generation(1394121608485000L)
+               .entity("project-owners-1082289308625")
+               .role(ObjectRole.OWNER)
+               .etag("CIix/dmj/rwCEAE=")
+               .projectTeam(ProjectTeam.builder().projectNumber("1082289308625").team(Team.OWNERS).build())
+               .selfLink(
+                        URI.create("https://www.googleapis.com/storage/v1/b/jcloudtestbucket/o/foo.txt/acl/project-owners-1082289308625"))
+               .id("jcloudtestbucket/foo.txt/1394121608485000/project-owners-1082289308625").build();
    }
+
 }
