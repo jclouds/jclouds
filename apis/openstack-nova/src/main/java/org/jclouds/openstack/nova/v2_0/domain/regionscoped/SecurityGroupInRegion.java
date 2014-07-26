@@ -14,17 +14,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.jclouds.openstack.nova.v2_0.domain.zonescoped;
+package org.jclouds.openstack.nova.v2_0.domain.regionscoped;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
 import org.jclouds.openstack.nova.v2_0.domain.SecurityGroup;
 
-public class SecurityGroupInZone extends ZoneAndName {
+public class SecurityGroupInRegion extends RegionAndName {
    protected final SecurityGroup securityGroup;
 
-   public SecurityGroupInZone(SecurityGroup securityGroup, String zoneId) {
-      super(zoneId, checkNotNull(securityGroup, "securityGroup").getName());
+   public SecurityGroupInRegion(SecurityGroup securityGroup, String regionId) {
+      super(regionId, checkNotNull(securityGroup, "securityGroup").getName());
       this.securityGroup = securityGroup;
    }
 
@@ -32,12 +32,12 @@ public class SecurityGroupInZone extends ZoneAndName {
       return securityGroup;
    }
 
-   // superclass hashCode/equals are good enough, and help us use ZoneAndName and ServerInZone
+   // superclass hashCode/equals are good enough, and help us use RegionAndName and ServerInRegion
    // interchangeably as Map keys
 
    @Override
    public String toString() {
-      return "[securityGroup=" + securityGroup + ", zoneId=" + zoneId + "]";
+      return "[securityGroup=" + securityGroup + ", regionId=" + regionId + "]";
    }
 
 }

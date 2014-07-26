@@ -33,20 +33,20 @@ public class FlavorTest {
       assertEquals(flavor1.getName(), "small");
       assertFalse(flavor1.equals(flavor2));
    }
-   
+
    /**
-    * Creates a dummy Flavor when you need a Flavor with just the flavorId. 
-    * 
+    * Creates a dummy Flavor when you need a Flavor with just the flavorId.
+    *
     * 1. name  = small
     * 2. ram   = 512
     * 3. links = self, bookmark
     */
-   public static Flavor forId(int flavorId) {       
+   public static Flavor forId(int flavorId) {
        return Flavor.builder()
                .id(flavorId)
                .name("small")
                .ram(512)
-               .links( 
+               .links(
                        ImmutableList.of(
                                Link.create(Relation.SELF, Uris.uriBuilder("http://test1").build() ),
                                Link.create(Relation.BOOKMARK, Uris.uriBuilder("http://test2").build() )

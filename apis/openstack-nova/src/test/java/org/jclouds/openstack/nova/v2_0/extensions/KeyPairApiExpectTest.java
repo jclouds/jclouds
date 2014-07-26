@@ -50,10 +50,10 @@ public class KeyPairApiExpectTest extends BaseNovaApiExpectTest {
       NovaApi apiWhenServersExist = requestsSendResponses(keystoneAuthWithUsernameAndPasswordAndTenantName,
             responseWithKeystoneAccess, extensionsOfNovaRequest, extensionsOfNovaResponse, list, listResponse);
 
-      assertEquals(apiWhenServersExist.getConfiguredZones(), ImmutableSet.of("az-1.region-a.geo-1", "az-2.region-a.geo-1", "az-3.region-a.geo-1"));
+      assertEquals(apiWhenServersExist.getConfiguredRegions(), ImmutableSet.of("az-1.region-a.geo-1", "az-2.region-a.geo-1", "az-3.region-a.geo-1"));
 
       // NOTE this required a change to the KeyPair domain object toString method
-      assertEquals(apiWhenServersExist.getKeyPairExtensionForZone("az-1.region-a.geo-1").get().list().toString(),
+      assertEquals(apiWhenServersExist.getKeyPairApi("az-1.region-a.geo-1").get().list().toString(),
             new ParseKeyPairListTest().expected().toString());
    }
 
@@ -70,7 +70,7 @@ public class KeyPairApiExpectTest extends BaseNovaApiExpectTest {
       NovaApi apiWhenNoServersExist = requestsSendResponses(keystoneAuthWithUsernameAndPasswordAndTenantName,
             responseWithKeystoneAccess, extensionsOfNovaRequest, extensionsOfNovaResponse, list, listResponse);
 
-      assertTrue(apiWhenNoServersExist.getKeyPairExtensionForZone("az-1.region-a.geo-1").get().list().isEmpty());
+      assertTrue(apiWhenNoServersExist.getKeyPairApi("az-1.region-a.geo-1").get().list().isEmpty());
 
    }
 
@@ -90,7 +90,7 @@ public class KeyPairApiExpectTest extends BaseNovaApiExpectTest {
       NovaApi apiWhenServersExist = requestsSendResponses(keystoneAuthWithUsernameAndPasswordAndTenantName,
             responseWithKeystoneAccess, extensionsOfNovaRequest, extensionsOfNovaResponse, create, createResponse);
 
-      assertEquals(apiWhenServersExist.getKeyPairExtensionForZone("az-1.region-a.geo-1").get().create("testkeypair")
+      assertEquals(apiWhenServersExist.getKeyPairApi("az-1.region-a.geo-1").get().create("testkeypair")
             .toString(), new ParseKeyPairTest().expected().toString());
 
    }
@@ -115,7 +115,7 @@ public class KeyPairApiExpectTest extends BaseNovaApiExpectTest {
 
       assertEquals(
             apiWhenServersExist
-                  .getKeyPairExtensionForZone("az-1.region-a.geo-1")
+                  .getKeyPairApi("az-1.region-a.geo-1")
                   .get()
                   .createWithPublicKey(
                         "testkeypair",
@@ -136,7 +136,7 @@ public class KeyPairApiExpectTest extends BaseNovaApiExpectTest {
       NovaApi apiWhenServersExist = requestsSendResponses(keystoneAuthWithUsernameAndPasswordAndTenantName,
             responseWithKeystoneAccess, extensionsOfNovaRequest, extensionsOfNovaResponse, delete, deleteResponse);
 
-      assertTrue(apiWhenServersExist.getKeyPairExtensionForZone("az-1.region-a.geo-1").get().delete("testkeypair"));
+      assertTrue(apiWhenServersExist.getKeyPairApi("az-1.region-a.geo-1").get().delete("testkeypair"));
    }
 
    public void testGetKeyPairWhenResponseIs2xx() throws Exception {
@@ -153,7 +153,7 @@ public class KeyPairApiExpectTest extends BaseNovaApiExpectTest {
       NovaApi apiWhenKeyPairExists = requestsSendResponses(keystoneAuthWithUsernameAndPasswordAndTenantName,
             responseWithKeystoneAccess, extensionsOfNovaRequest, extensionsOfNovaResponse, get, getResponse);
 
-      assertEquals(apiWhenKeyPairExists.getKeyPairExtensionForZone("az-1.region-a.geo-1").get().get("testkeypair"),
+      assertEquals(apiWhenKeyPairExists.getKeyPairApi("az-1.region-a.geo-1").get().get("testkeypair"),
             new ParseKeyPairTest().expected());
    }
 
@@ -170,6 +170,6 @@ public class KeyPairApiExpectTest extends BaseNovaApiExpectTest {
       NovaApi apiWhenNoKeyPairExists = requestsSendResponses(keystoneAuthWithUsernameAndPasswordAndTenantName,
             responseWithKeystoneAccess, extensionsOfNovaRequest, extensionsOfNovaResponse, get, getResponse);
 
-      assertNull(apiWhenNoKeyPairExists.getKeyPairExtensionForZone("az-1.region-a.geo-1").get().get("testkeypair"));
+      assertNull(apiWhenNoKeyPairExists.getKeyPairApi("az-1.region-a.geo-1").get().get("testkeypair"));
    }
 }

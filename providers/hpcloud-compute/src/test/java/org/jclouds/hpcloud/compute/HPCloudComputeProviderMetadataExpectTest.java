@@ -38,22 +38,22 @@ public class HPCloudComputeProviderMetadataExpectTest extends BaseNovaApiExpectT
       this.credential = "secret";
    }
 
-   public void testCanGetConfiguredZones() {
-      
+   public void testCanGetConfiguredRegions() {
+
       HttpRequest authenticate = HttpRequest.builder().method("POST")
             .endpoint("https://region-a.geo-1.identity.hpcloudsvc.com:35357/v2.0/tokens")
             .addHeader("Accept", "application/json")
             .payload(payloadFromStringWithContentType(
                      "{\"auth\":{\"apiAccessKeyCredentials\":{\"accessKey\":\"accesskey\",\"secretKey\":\"secret\"},\"tenantName\":\"tenant\"}}"
                      , "application/json")).build();
-      
+
 
       HttpResponse authenticationResponse = HttpResponse.builder().statusCode(200)
             .payload(payloadFromResourceWithContentType("/access_hpcloud.json", "application/json")).build();
 
       NovaApi whenNovaRegionExists = requestSendsResponse(authenticate, authenticationResponse);
 
-      assertEquals(whenNovaRegionExists.getConfiguredZones(), ImmutableSet.of("region-a.geo-1", "region-b.geo-1"));
+      assertEquals(whenNovaRegionExists.getConfiguredRegions(), ImmutableSet.of("region-a.geo-1", "region-b.geo-1"));
 
    }
 

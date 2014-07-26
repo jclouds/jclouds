@@ -18,11 +18,13 @@ package org.jclouds.openstack.trove.v1;
 
 import java.io.Closeable;
 import java.util.Set;
+
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
+
 import org.jclouds.javax.annotation.Nullable;
-import org.jclouds.location.Zone;
-import org.jclouds.location.functions.ZoneToEndpoint;
+import org.jclouds.location.Region;
+import org.jclouds.location.functions.RegionToEndpoint;
 import org.jclouds.openstack.keystone.v2_0.domain.Tenant;
 import org.jclouds.openstack.trove.v1.features.DatabaseApi;
 import org.jclouds.openstack.trove.v1.features.FlavorApi;
@@ -30,44 +32,42 @@ import org.jclouds.openstack.trove.v1.features.InstanceApi;
 import org.jclouds.openstack.trove.v1.features.UserApi;
 import org.jclouds.rest.annotations.Delegate;
 import org.jclouds.rest.annotations.EndpointParam;
+
 import com.google.common.base.Optional;
 import com.google.inject.Provides;
 
 /**
- * Provides access to Trove.
- *  
- * @see <a href="http://api.openstack.org/">API Doc</a>
+ * Provides access to the OpenStack Trove (Database) v2 API.
+ *
  */
-public interface TroveApi extends Closeable{
+public interface TroveApi extends Closeable {
    /**
-    * Provides a set of all zones available.
-    * 
-    * @return the Zone codes configured
+    * Provides a set of all regions available.
+    *
+    * @return the Region codes configured
     */
    @Provides
-   @Zone
-   Set<String> getConfiguredZones();
+   @Region
+   Set<String> getConfiguredRegions();
 
    /**
     * Provides access to Flavor features.
     */
    @Delegate
-   FlavorApi getFlavorApiForZone(
-         @EndpointParam(parser = ZoneToEndpoint.class) @Nullable String zone);
+   FlavorApi getFlavorApi(@EndpointParam(parser = RegionToEndpoint.class) @Nullable String region);
 
    /**
     * Provides access to Instance features.
     */
    @Delegate
-   InstanceApi getInstanceApiForZone(
-         @EndpointParam(parser = ZoneToEndpoint.class) @Nullable String zone);
+   InstanceApi getInstanceApi(@EndpointParam(parser = RegionToEndpoint.class) @Nullable String region);
 
    /**
     * Provides access to User features.
     */
    @Delegate
    @Path("/instances/{instanceId}")
-   UserApi getUserApiForZoneAndInstance(@EndpointParam(parser = ZoneToEndpoint.class) @Nullable String zone,
+   UserApi getUserApi(@EndpointParam(parser = RegionToEndpoint.class) @Nullable String region,
          @PathParam("instanceId") String instanceId);
 
    /**
@@ -75,12 +75,66 @@ public interface TroveApi extends Closeable{
     */
    @Delegate
    @Path("/instances/{instanceId}")
-   DatabaseApi getDatabaseApiForZoneAndInstance(@EndpointParam(parser = ZoneToEndpoint.class) @Nullable String zone,
+   DatabaseApi getDatabaseApi(@EndpointParam(parser = RegionToEndpoint.class) @Nullable String region,
+         @PathParam("instanceId") String instanceId);
+
+   /**
+    * Provides a set of all zones available.
+    *
+    * @return the Zone codes configured
+    * @deprecated Please use {@link #getConfiguredRegions()} as this method will be removed
+    *             in jclouds 3.0.
+    */
+   @Deprecated
+   @Provides
+   @Region
+   Set<String> getConfiguredZones();
+
+   /**
+    * Provides access to Flavor features.
+    * @deprecated Please use {@link #getFlavorApi(String region)} as this method will be removed
+    *             in jclouds 3.0.
+    */
+   @Deprecated
+   @Delegate
+   FlavorApi getFlavorApiForZone(
+         @EndpointParam(parser = RegionToEndpoint.class) @Nullable String zone);
+
+   /**
+    * Provides access to Instance features.
+    * @deprecated Please use {@link #getInstanceApi(String region)} as this method will be removed
+    *             in jclouds 3.0.
+    */
+   @Deprecated
+   @Delegate
+   InstanceApi getInstanceApiForZone(
+         @EndpointParam(parser = RegionToEndpoint.class) @Nullable String zone);
+
+   /**
+    * Provides access to User features.
+    * @deprecated Please use {@link #getUserApi(String region, String instanceId)} as this method will be
+    *             removed in jclouds 3.0.
+    */
+   @Deprecated
+   @Delegate
+   @Path("/instances/{instanceId}")
+   UserApi getUserApiForZoneAndInstance(@EndpointParam(parser = RegionToEndpoint.class) @Nullable String zone,
+         @PathParam("instanceId") String instanceId);
+
+   /**
+    * Provides access to Database features.
+    * @deprecated Please use {@link #getDatabaseApi(String region, String instanceId)} as this method will
+    *             be removed in jclouds 3.0.
+    */
+   @Deprecated
+   @Delegate
+   @Path("/instances/{instanceId}")
+   DatabaseApi getDatabaseApiForZoneAndInstance(@EndpointParam(parser = RegionToEndpoint.class) @Nullable String zone,
          @PathParam("instanceId") String instanceId);
 
    /**
     * Provides the Tenant.
     */
-   @Provides 
+   @Provides
    Optional<Tenant> getCurrentTenantId();
 }

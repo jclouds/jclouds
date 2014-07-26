@@ -38,10 +38,10 @@ public class ConnectionApiExpectTest extends BaseCloudLoadBalancerApiExpectTest<
       URI endpoint = URI.create("https://dfw.loadbalancers.api.rackspacecloud.com/v1.0/123123/loadbalancers/2000/connectionthrottle");
       ConnectionApi api = requestsSendResponses(
             rackspaceAuthWithUsernameAndApiKey,
-            responseWithAccess, 
+            responseWithAccess,
             authenticatedGET().endpoint(endpoint).build(),
             HttpResponse.builder().statusCode(OK.getStatusCode()).payload(payloadFromResource("/connectionthrottle-get.json")).build()
-      ).getConnectionApiForZoneAndLoadBalancer("DFW", 2000);
+      ).getConnectionApi("DFW", 2000);
 
       ConnectionThrottle connectionThrottle = api.getConnectionThrottle();
       assertEquals(connectionThrottle, getConnectionThrottle());
@@ -51,10 +51,10 @@ public class ConnectionApiExpectTest extends BaseCloudLoadBalancerApiExpectTest<
       URI endpoint = URI.create("https://dfw.loadbalancers.api.rackspacecloud.com/v1.0/123123/loadbalancers/2000/connectionthrottle");
       ConnectionApi api = requestsSendResponses(
             rackspaceAuthWithUsernameAndApiKey,
-            responseWithAccess, 
+            responseWithAccess,
             authenticatedGET().endpoint(endpoint).build(),
             HttpResponse.builder().statusCode(OK.getStatusCode()).payload(payloadFromResource("/connectionthrottle-get-deleted.json")).build()
-      ).getConnectionApiForZoneAndLoadBalancer("DFW", 2000);
+      ).getConnectionApi("DFW", 2000);
 
       ConnectionThrottle connectionThrottle = api.getConnectionThrottle();
       assertNull(connectionThrottle);
@@ -64,70 +64,70 @@ public class ConnectionApiExpectTest extends BaseCloudLoadBalancerApiExpectTest<
       URI endpoint = URI.create("https://dfw.loadbalancers.api.rackspacecloud.com/v1.0/123123/loadbalancers/2000/connectionthrottle");
       ConnectionApi api = requestsSendResponses(
             rackspaceAuthWithUsernameAndApiKey,
-            responseWithAccess, 
+            responseWithAccess,
             authenticatedGET().method(PUT).endpoint(endpoint).payload(payloadFromResource("/connectionthrottle-create.json")).build(),
             HttpResponse.builder().statusCode(OK.getStatusCode()).build()
-      ).getConnectionApiForZoneAndLoadBalancer("DFW", 2000);
-      
+      ).getConnectionApi("DFW", 2000);
+
       api.createOrUpdateConnectionThrottle(getConnectionThrottle());
    }
-   
+
    public void testValidConnectionThrottle() {
       assertTrue(getConnectionThrottle().isValid());
    }
 
    @Test(expectedExceptions = IllegalArgumentException.class)
    public void testInvalidConnectionThrottle() {
-      ConnectionThrottle.builder().build();      
+      ConnectionThrottle.builder().build();
    }
 
    public void testRemoveConnectionThrottle() {
       URI endpoint = URI.create("https://dfw.loadbalancers.api.rackspacecloud.com/v1.0/123123/loadbalancers/2000/connectionthrottle");
       ConnectionApi api = requestsSendResponses(
             rackspaceAuthWithUsernameAndApiKey,
-            responseWithAccess, 
+            responseWithAccess,
             authenticatedGET().method(DELETE).endpoint(endpoint).replaceHeader(ACCEPT, WILDCARD).build(),
             HttpResponse.builder().statusCode(OK.getStatusCode()).build()
-      ).getConnectionApiForZoneAndLoadBalancer("DFW", 2000);
+      ).getConnectionApi("DFW", 2000);
 
       assertTrue(api.deleteConnectionThrottle());
    }
-   
+
    public void testIsConnectionLogging() {
       URI endpoint = URI.create("https://dfw.loadbalancers.api.rackspacecloud.com/v1.0/123123/loadbalancers/2000/connectionlogging");
       ConnectionApi api = requestsSendResponses(
             rackspaceAuthWithUsernameAndApiKey,
-            responseWithAccess, 
+            responseWithAccess,
             authenticatedGET().endpoint(endpoint).build(),
             HttpResponse.builder().statusCode(OK.getStatusCode()).payload(payloadFromResource("/connectionlogging-enable.json")).build()
-      ).getConnectionApiForZoneAndLoadBalancer("DFW", 2000);
-      
+      ).getConnectionApi("DFW", 2000);
+
       assertTrue(api.isConnectionLogging());
    }
-   
+
    public void testEnableConnectionLogging() {
       URI endpoint = URI.create("https://dfw.loadbalancers.api.rackspacecloud.com/v1.0/123123/loadbalancers/2000/connectionlogging");
       ConnectionApi api = requestsSendResponses(
             rackspaceAuthWithUsernameAndApiKey,
-            responseWithAccess, 
+            responseWithAccess,
             authenticatedGET().method(PUT).endpoint(endpoint).payload(payloadFromResource("/connectionlogging-enable.json")).build(),
             HttpResponse.builder().statusCode(OK.getStatusCode()).build()
-      ).getConnectionApiForZoneAndLoadBalancer("DFW", 2000);
-      
+      ).getConnectionApi("DFW", 2000);
+
       api.enableConnectionLogging();
    }
-   
+
    public void testDisableConnectionLogging() {
       URI endpoint = URI.create("https://dfw.loadbalancers.api.rackspacecloud.com/v1.0/123123/loadbalancers/2000/connectionlogging");
       ConnectionApi api = requestsSendResponses(
             rackspaceAuthWithUsernameAndApiKey,
-            responseWithAccess, 
+            responseWithAccess,
             authenticatedGET().method(PUT).endpoint(endpoint).payload(payloadFromResource("/connectionlogging-disable.json")).build(),
             HttpResponse.builder().statusCode(OK.getStatusCode()).build()
-      ).getConnectionApiForZoneAndLoadBalancer("DFW", 2000);
-      
+      ).getConnectionApi("DFW", 2000);
+
       api.disableConnectionLogging();
-   }   
+   }
 
    public static ConnectionThrottle getConnectionThrottle() {
       ConnectionThrottle connectionThrottle = ConnectionThrottle.builder()

@@ -90,9 +90,9 @@ public class ConsolesApiMockTest extends BaseOpenStackMockTest<NovaApi> {
       try {
          NovaApi novaApi = api(server.getUrl("/").toString(), "openstack-nova");
 
-         String zoneId = getFirst(novaApi.getConfiguredZones(), "RegionTwo");
+         String regionId = getFirst(novaApi.getConfiguredRegions(), "RegionTwo");
 
-         ConsolesApi consolesApi = novaApi.getConsolesExtensionForZone(zoneId).get();
+         ConsolesApi consolesApi = novaApi.getConsolesApi(regionId).get();
 
          assertEquals(server.getRequestCount(), 2);
          assertAuthentication(server);
@@ -120,9 +120,9 @@ public class ConsolesApiMockTest extends BaseOpenStackMockTest<NovaApi> {
       try {
          NovaApi novaApi = api(server.getUrl("/").toString(), "openstack-nova");
 
-         String zoneId = getFirst(novaApi.getConfiguredZones(), "RegionTwo");
+         String regionId = getFirst(novaApi.getConfiguredRegions(), "RegionTwo");
 
-         ConsolesApi consolesApi = novaApi.getConsolesExtensionForZone(zoneId).get();
+         ConsolesApi consolesApi = novaApi.getConsolesApi(regionId).get();
 
          assertEquals(server.getRequestCount(), 2);
          assertAuthentication(server);

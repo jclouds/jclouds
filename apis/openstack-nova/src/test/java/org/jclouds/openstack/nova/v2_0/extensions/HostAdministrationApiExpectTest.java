@@ -41,8 +41,8 @@ import com.google.common.collect.Iterables;
  */
 @Test(groups = "unit", testName = "HostAdministrationApiExpectTest")
 public class HostAdministrationApiExpectTest extends BaseNovaApiExpectTest {
-   
-   
+
+
    public void testList() {
       URI endpoint = URI.create("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v2/3456/os-hosts");
       HostAdministrationApi api = requestsSendResponses(keystoneAuthWithUsernameAndPasswordAndTenantName,
@@ -51,8 +51,8 @@ public class HostAdministrationApiExpectTest extends BaseNovaApiExpectTest {
                        .addHeader("Accept", "application/json")
                        .addHeader("X-Auth-Token", authToken)
                   .endpoint(endpoint).build(),
-            HttpResponse.builder().statusCode(200).payload(payloadFromResource("/hosts_list.json")).build()).getHostAdministrationExtensionForZone("az-1.region-a.geo-1").get();
-      
+            HttpResponse.builder().statusCode(200).payload(payloadFromResource("/hosts_list.json")).build()).getHostAdministrationApi("az-1.region-a.geo-1").get();
+
       Host expected = Host.builder().name("ubuntu").service("compute").build();
 
       Set<? extends Host> result = api.list().toSet();
@@ -71,7 +71,7 @@ public class HostAdministrationApiExpectTest extends BaseNovaApiExpectTest {
                        .addHeader("Accept", "application/json")
                        .addHeader("X-Auth-Token", authToken)
                   .endpoint(endpoint).build(),
-            HttpResponse.builder().statusCode(200).payload(payloadFromResource("/host.json")).build()).getHostAdministrationExtensionForZone("az-1.region-a.geo-1").get();
+            HttpResponse.builder().statusCode(200).payload(payloadFromResource("/host.json")).build()).getHostAdministrationApi("az-1.region-a.geo-1").get();
 
       Set<HostResourceUsage> expected = ImmutableSet.of(
             HostResourceUsage.builder().memoryMb(16083).project("(total)").cpu(4).diskGb(181).host("ubuntu").build(),
@@ -82,7 +82,7 @@ public class HostAdministrationApiExpectTest extends BaseNovaApiExpectTest {
 
       assertEquals(api.listResourceUsage("xyz").toSet(), expected);
    }
-   
+
    public void testEnableHost() {
       URI endpoint = URI.create("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v2/3456/os-hosts/ubuntu");
       HostAdministrationApi api = requestsSendResponses(keystoneAuthWithUsernameAndPasswordAndTenantName,
@@ -94,7 +94,7 @@ public class HostAdministrationApiExpectTest extends BaseNovaApiExpectTest {
                   .endpoint(endpoint).build(),
             HttpResponse.builder().statusCode(200)
                   .payload(payloadFromStringWithContentType("{\"host\":\"ubuntu\",\"status\":\"enabled\"}", MediaType.APPLICATION_JSON))
-                  .build()).getHostAdministrationExtensionForZone("az-1.region-a.geo-1").get();
+                  .build()).getHostAdministrationApi("az-1.region-a.geo-1").get();
       assertTrue(api.enable("ubuntu"));
    }
 
@@ -109,7 +109,7 @@ public class HostAdministrationApiExpectTest extends BaseNovaApiExpectTest {
                   .payload(payloadFromStringWithContentType("{\"status\":\"enable\"}", MediaType.APPLICATION_JSON))
                   .endpoint(endpoint).build(),
             HttpResponse.builder().statusCode(404)
-                  .build()).getHostAdministrationExtensionForZone("az-1.region-a.geo-1").get();
+                  .build()).getHostAdministrationApi("az-1.region-a.geo-1").get();
       api.enable("ubuntu");
    }
 
@@ -124,7 +124,7 @@ public class HostAdministrationApiExpectTest extends BaseNovaApiExpectTest {
                   .endpoint(endpoint).build(),
             HttpResponse.builder().statusCode(200)
                   .payload(payloadFromStringWithContentType("{\"host\":\"ubuntu\",\"status\":\"disabled\"}", MediaType.APPLICATION_JSON))
-                  .build()).getHostAdministrationExtensionForZone("az-1.region-a.geo-1").get();
+                  .build()).getHostAdministrationApi("az-1.region-a.geo-1").get();
       assertFalse(api.enable("ubuntu"));
    }
 
@@ -139,7 +139,7 @@ public class HostAdministrationApiExpectTest extends BaseNovaApiExpectTest {
                   .endpoint(endpoint).build(),
             HttpResponse.builder().statusCode(200)
                   .payload(payloadFromStringWithContentType("{\"host\":\"ubuntu\",\"status\":\"disabled\"}", MediaType.APPLICATION_JSON))
-                  .build()).getHostAdministrationExtensionForZone("az-1.region-a.geo-1").get();
+                  .build()).getHostAdministrationApi("az-1.region-a.geo-1").get();
       assertTrue(api.disable("ubuntu"));
    }
 
@@ -154,7 +154,7 @@ public class HostAdministrationApiExpectTest extends BaseNovaApiExpectTest {
                   .endpoint(endpoint).build(),
             HttpResponse.builder().statusCode(200)
                   .payload(payloadFromStringWithContentType("{\"host\":\"ubuntu\",\"maintenance_mode\":\"on_maintenance\"}", MediaType.APPLICATION_JSON))
-                  .build()).getHostAdministrationExtensionForZone("az-1.region-a.geo-1").get();
+                  .build()).getHostAdministrationApi("az-1.region-a.geo-1").get();
       assertTrue(api.startMaintenance("ubuntu"));
    }
 
@@ -169,10 +169,10 @@ public class HostAdministrationApiExpectTest extends BaseNovaApiExpectTest {
                   .endpoint(endpoint).build(),
             HttpResponse.builder().statusCode(200)
                   .payload(payloadFromStringWithContentType("{\"host\":\"ubuntu\",\"maintenance_mode\":\"off_maintenance\"}", MediaType.APPLICATION_JSON))
-                  .build()).getHostAdministrationExtensionForZone("az-1.region-a.geo-1").get();
+                  .build()).getHostAdministrationApi("az-1.region-a.geo-1").get();
       assertTrue(api.stopMaintenance("ubuntu"));
    }
-   
+
    public void testStartupHost() {
       HostAdministrationApi api = requestsSendResponses(keystoneAuthWithUsernameAndPasswordAndTenantName,
             responseWithKeystoneAccess, extensionsOfNovaRequest, extensionsOfNovaResponse,
@@ -182,7 +182,7 @@ public class HostAdministrationApiExpectTest extends BaseNovaApiExpectTest {
                        .addHeader("X-Auth-Token", authToken).build(),
             HttpResponse.builder().statusCode(200)
                   .payload(payloadFromStringWithContentType("{\"host\":\"ubuntu\",\"power_action\":\"startup\"}", MediaType.APPLICATION_JSON))
-                  .build()).getHostAdministrationExtensionForZone("az-1.region-a.geo-1").get();
+                  .build()).getHostAdministrationApi("az-1.region-a.geo-1").get();
       assertTrue(api.startup("ubuntu"));
    }
 
@@ -194,7 +194,7 @@ public class HostAdministrationApiExpectTest extends BaseNovaApiExpectTest {
                        .endpoint("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v2/3456/os-hosts/ubuntu/startup")
                        .addHeader("Accept", "application/json")
                        .addHeader("X-Auth-Token", authToken).build(),
-            HttpResponse.builder().statusCode(404).build()).getHostAdministrationExtensionForZone("az-1.region-a.geo-1").get();
+            HttpResponse.builder().statusCode(404).build()).getHostAdministrationApi("az-1.region-a.geo-1").get();
       assertTrue(api.startup("ubuntu"));
    }
 
@@ -207,10 +207,10 @@ public class HostAdministrationApiExpectTest extends BaseNovaApiExpectTest {
                        .addHeader("X-Auth-Token", authToken).build(),
             HttpResponse.builder().statusCode(200)
                   .payload(payloadFromStringWithContentType("{\"host\":\"ubuntu\",\"power_action\":\"shutdown\"}", MediaType.APPLICATION_JSON))
-                  .build()).getHostAdministrationExtensionForZone("az-1.region-a.geo-1").get();
+                  .build()).getHostAdministrationApi("az-1.region-a.geo-1").get();
       assertFalse(api.startup("ubuntu"));
    }
-   
+
    public void testShutdownHost() {
       HostAdministrationApi api = requestsSendResponses(keystoneAuthWithUsernameAndPasswordAndTenantName,
             responseWithKeystoneAccess, extensionsOfNovaRequest, extensionsOfNovaResponse,
@@ -220,10 +220,10 @@ public class HostAdministrationApiExpectTest extends BaseNovaApiExpectTest {
                        .addHeader("X-Auth-Token", authToken).build(),
             HttpResponse.builder().statusCode(200)
                   .payload(payloadFromStringWithContentType("{\"host\":\"ubuntu\",\"power_action\":\"shutdown\"}", MediaType.APPLICATION_JSON))
-                  .build()).getHostAdministrationExtensionForZone("az-1.region-a.geo-1").get();
+                  .build()).getHostAdministrationApi("az-1.region-a.geo-1").get();
       assertTrue(api.shutdown("ubuntu"));
    }
-   
+
    public void testRebootHost() {
       HostAdministrationApi api = requestsSendResponses(keystoneAuthWithUsernameAndPasswordAndTenantName,
             responseWithKeystoneAccess, extensionsOfNovaRequest, extensionsOfNovaResponse,
@@ -233,7 +233,7 @@ public class HostAdministrationApiExpectTest extends BaseNovaApiExpectTest {
                        .addHeader("X-Auth-Token", authToken).build(),
             HttpResponse.builder().statusCode(200)
                   .payload(payloadFromStringWithContentType("{\"host\":\"ubuntu\",\"power_action\":\"reboot\"}", MediaType.APPLICATION_JSON))
-                  .build()).getHostAdministrationExtensionForZone("az-1.region-a.geo-1").get();
+                  .build()).getHostAdministrationApi("az-1.region-a.geo-1").get();
       assertTrue(api.reboot("ubuntu"));
    }
 }

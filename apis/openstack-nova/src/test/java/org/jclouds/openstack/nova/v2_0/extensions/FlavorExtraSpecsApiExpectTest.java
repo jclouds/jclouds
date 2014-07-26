@@ -44,7 +44,7 @@ public class FlavorExtraSpecsApiExpectTest extends BaseNovaApiExpectTest {
             responseWithKeystoneAccess, extensionsOfNovaRequest, extensionsOfNovaResponse,
             authenticatedGET().endpoint(endpoint).build(),
             HttpResponse.builder().statusCode(200).payload(payloadFromResource("/volume_type_extra_specs.json")).build()
-      ).getFlavorExtraSpecsExtensionForZone("az-1.region-a.geo-1").get();
+      ).getFlavorExtraSpecsApi("az-1.region-a.geo-1").get();
 
       assertEquals(api.getMetadata("9"), ImmutableMap.of("test", "value1"));
    }
@@ -56,7 +56,7 @@ public class FlavorExtraSpecsApiExpectTest extends BaseNovaApiExpectTest {
             responseWithKeystoneAccess, extensionsOfNovaRequest, extensionsOfNovaResponse,
             authenticatedGET().endpoint(endpoint).build(),
             HttpResponse.builder().statusCode(404).build()
-      ).getFlavorExtraSpecsExtensionForZone("az-1.region-a.geo-1").get();
+      ).getFlavorExtraSpecsApi("az-1.region-a.geo-1").get();
 
       assertTrue(api.getMetadata("9").isEmpty());
    }
@@ -70,7 +70,7 @@ public class FlavorExtraSpecsApiExpectTest extends BaseNovaApiExpectTest {
                   .method("POST")
                   .payload(payloadFromStringWithContentType("{\"extra_specs\":{\"test1\":\"somevalue\"}}", MediaType.APPLICATION_JSON)).build(),
             HttpResponse.builder().statusCode(200).build()
-      ).getFlavorExtraSpecsExtensionForZone("az-1.region-a.geo-1").get();
+      ).getFlavorExtraSpecsApi("az-1.region-a.geo-1").get();
 
       assertTrue(api.updateMetadata("9", ImmutableMap.of("test1", "somevalue")));
    }
@@ -84,7 +84,7 @@ public class FlavorExtraSpecsApiExpectTest extends BaseNovaApiExpectTest {
                   .method("PUT")
                   .payload(payloadFromStringWithContentType("{\"test1\":\"somevalue\"}", MediaType.APPLICATION_JSON)).build(),
             HttpResponse.builder().statusCode(200).build()
-      ).getFlavorExtraSpecsExtensionForZone("az-1.region-a.geo-1").get();
+      ).getFlavorExtraSpecsApi("az-1.region-a.geo-1").get();
 
       assertTrue(api.updateMetadataEntry("5", "test1", "somevalue"));
    }
@@ -96,7 +96,7 @@ public class FlavorExtraSpecsApiExpectTest extends BaseNovaApiExpectTest {
             responseWithKeystoneAccess, extensionsOfNovaRequest, extensionsOfNovaResponse,
             authenticatedGET().endpoint(endpoint).build(),
             HttpResponse.builder().statusCode(200).payload(payloadFromStringWithContentType("{\"test1\":\"another value\"}", MediaType.APPLICATION_JSON)).build()
-      ).getFlavorExtraSpecsExtensionForZone("az-1.region-a.geo-1").get();
+      ).getFlavorExtraSpecsApi("az-1.region-a.geo-1").get();
 
       assertEquals(api.getMetadataKey("5", "test1"), "another value");
    }
@@ -108,7 +108,7 @@ public class FlavorExtraSpecsApiExpectTest extends BaseNovaApiExpectTest {
             responseWithKeystoneAccess, extensionsOfNovaRequest, extensionsOfNovaResponse,
             authenticatedGET().endpoint(endpoint).build(),
             HttpResponse.builder().statusCode(404).build()
-      ).getFlavorExtraSpecsExtensionForZone("az-1.region-a.geo-1").get();
+      ).getFlavorExtraSpecsApi("az-1.region-a.geo-1").get();
 
       assertNull(api.getMetadataKey("5", "test1"));
    }
@@ -120,7 +120,7 @@ public class FlavorExtraSpecsApiExpectTest extends BaseNovaApiExpectTest {
             responseWithKeystoneAccess, extensionsOfNovaRequest, extensionsOfNovaResponse,
             authenticatedGET().endpoint(endpoint).method("DELETE").build(),
             HttpResponse.builder().statusCode(200).build()
-      ).getFlavorExtraSpecsExtensionForZone("az-1.region-a.geo-1").get();
+      ).getFlavorExtraSpecsApi("az-1.region-a.geo-1").get();
 
       assertTrue(api.deleteMetadataKey("5", "test1"));
    }
@@ -132,7 +132,7 @@ public class FlavorExtraSpecsApiExpectTest extends BaseNovaApiExpectTest {
             responseWithKeystoneAccess, extensionsOfNovaRequest, extensionsOfNovaResponse,
             authenticatedGET().endpoint(endpoint).method("DELETE").build(),
             HttpResponse.builder().statusCode(404).build()
-      ).getFlavorExtraSpecsExtensionForZone("az-1.region-a.geo-1").get();
+      ).getFlavorExtraSpecsApi("az-1.region-a.geo-1").get();
 
       assertFalse(api.deleteMetadataKey("5", "test1"));
    }

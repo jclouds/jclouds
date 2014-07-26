@@ -38,16 +38,16 @@ public class SecurityGroupApiLiveTest extends BaseNovaApiLiveTest {
    public static final String SECURITY_GROUP_NAME = "testsg";
 
    public void list() throws Exception {
-      for (String zoneId : api.getConfiguredZones()) {
-         SecurityGroupApi securityGroupApi = api.getSecurityGroupExtensionForZone(zoneId).get();
+      for (String regionId : api.getConfiguredRegions()) {
+         SecurityGroupApi securityGroupApi = api.getSecurityGroupApi(regionId).get();
          Set<? extends SecurityGroup> securityGroupsList = securityGroupApi.list().toSet();
          assertNotNull(securityGroupsList);
       }
    }
 
    public void createGetAndDeleteSecurityGroup() throws Exception {
-      for (String zoneId : api.getConfiguredZones()) {
-         SecurityGroupApi securityGroupApi = api.getSecurityGroupExtensionForZone(zoneId).get();
+      for (String regionId : api.getConfiguredRegions()) {
+         SecurityGroupApi securityGroupApi = api.getSecurityGroupApi(regionId).get();
          SecurityGroup securityGroup = null;
          String id;
          try {
@@ -66,8 +66,8 @@ public class SecurityGroupApiLiveTest extends BaseNovaApiLiveTest {
    }
 
    public void createAndDeleteSecurityGroupRule() throws Exception {
-      for (String zoneId : api.getConfiguredZones()) {
-         SecurityGroupApi securityGroupApi = api.getSecurityGroupExtensionForZone(zoneId).get();
+      for (String regionId : api.getConfiguredRegions()) {
+         SecurityGroupApi securityGroupApi = api.getSecurityGroupApi(regionId).get();
          SecurityGroup securityGroup = null;
 
          try {

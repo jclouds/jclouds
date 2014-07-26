@@ -41,19 +41,15 @@ import com.google.common.collect.FluentIterable;
 
 /**
  * This API is for creating, listing, and deleting a Database
- * 
- * @see <a href="http://sourceforge.net/apps/trac/reddwarf/">api doc</a>
- * @see <a
- *      href="https://github.com/reddwarf-nextgen/reddwarf">api
- *      src</a>
+ *
  */
 @SkipEncoding({'/', '='})
 @RequestFilters(AuthenticateRequest.class)
 public interface DatabaseApi {
-    
+
    /**
     * Same as create(String, null, null)
-    * @see DatabaseApi#create(String, String, String) 
+    * @see DatabaseApi#create(String, String, String)
     */
    @Named("database:create")
    @POST
@@ -62,10 +58,10 @@ public interface DatabaseApi {
    @Fallback(FalseOnNotFoundOr404.class)
    @MapBinder(BindCreateDatabaseToJson.class)
    boolean create(@PayloadParam("database") String database);
-   
+
    /**
     * This operation creates a new database within the specified instance.
-    * 
+    *
     * @param database The name of the database to be created
     * @param character_set Optional. Set of symbols and encodings. The default character set is utf8.
     * @param collate Optional. Set of rules for comparing characters in a character set. The default value for collate is utf8_general_ci.
@@ -78,7 +74,7 @@ public interface DatabaseApi {
    @Fallback(FalseOnNotFoundOr404.class)
    @MapBinder(BindCreateDatabaseToJson.class)
    boolean create(@PayloadParam("database") String database, @PayloadParam("character_set") String character_set, @PayloadParam("collate") String collate);
-   
+
    /**
     * This operation deletes the specified database for the specified database instance.
     *
@@ -91,7 +87,7 @@ public interface DatabaseApi {
    @Consumes(MediaType.APPLICATION_JSON)
    @Fallback(FalseOnNotFoundOr404.class)
    boolean delete(@PathParam("name") String databaseName);
-   
+
    /**
     * This operation lists the databases for the specified database instance.
     *
@@ -99,9 +95,9 @@ public interface DatabaseApi {
     */
    @Named("database:list")
    @GET
-   @Path("/databases")   
+   @Path("/databases")
    @ResponseParser(ParseDatabaseListForUser.class)
    @Consumes(MediaType.APPLICATION_JSON)
-   @Fallback(EmptyFluentIterableOnNotFoundOr404.class)   
-   FluentIterable<String> list();   
+   @Fallback(EmptyFluentIterableOnNotFoundOr404.class)
+   FluentIterable<String> list();
 }

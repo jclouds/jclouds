@@ -57,18 +57,18 @@ public class ServerPredicates {
 
    /**
     * Waits until a Server is ACTIVE.
-    * 
-    * @param serverApi The ServerApi in the zone where your Server resides.
+    *
+    * @param serverApi The ServerApi in the region where your Server resides.
     * @return Predicate that will check the status every 5 seconds for a maximum of 10 minutes.
     */
    public static Predicate<String> awaitActive(ServerApi serverApi) {
       return awaitStatus(serverApi, ACTIVE, TEN_MINUTES, FIVE_SECONDS);
    }
-   
+
    /**
     * Waits until a Server is SHUTOFF.
-    * 
-    * @param serverApi The ServerApi in the zone where your Server resides.
+    *
+    * @param serverApi The ServerApi in the region where your Server resides.
     * @return Predicate that will check the status every 5 seconds for a maximum of 10 minutes.
     */
    public static Predicate<String> awaitShutoff(ServerApi serverApi) {
@@ -78,7 +78,7 @@ public class ServerPredicates {
    /**
     * Waits until a Server reaches Status.
     *
-    * @param serverApi The ServerApi in the zone where your Server resides.
+    * @param serverApi The ServerApi in the region where your Server resides.
     * @return Predicate that will check the status every periodInSec seconds for a maximum of maxWaitInSec minutes.
     */
    public static Predicate<String> awaitStatus(
@@ -87,7 +87,7 @@ public class ServerPredicates {
 
       return retry(statusPredicate, maxWaitInSec, periodInSec, periodInSec, SECONDS);
    }
-   
+
    public static class ServerStatusPredicate implements Predicate<String> {
       private final ServerApi serverApi;
       private final Status status;

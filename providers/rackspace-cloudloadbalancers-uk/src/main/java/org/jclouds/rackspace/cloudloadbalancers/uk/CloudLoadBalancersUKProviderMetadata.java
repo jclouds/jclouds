@@ -17,8 +17,8 @@
 package org.jclouds.rackspace.cloudloadbalancers.uk;
 
 import static org.jclouds.location.reference.LocationConstants.ISO3166_CODES;
-import static org.jclouds.location.reference.LocationConstants.PROPERTY_ZONE;
-import static org.jclouds.location.reference.LocationConstants.PROPERTY_ZONES;
+import static org.jclouds.location.reference.LocationConstants.PROPERTY_REGION;
+import static org.jclouds.location.reference.LocationConstants.PROPERTY_REGIONS;
 
 import java.net.URI;
 import java.util.Properties;
@@ -31,7 +31,7 @@ import org.jclouds.rackspace.cloudloadbalancers.v1.CloudLoadBalancersApiMetadata
  * Implementation of {@link org.jclouds.types.ProviderMetadata} for Rackspace Cloud LoadBalancers UK.
  */
 public class CloudLoadBalancersUKProviderMetadata extends BaseProviderMetadata {
-   
+
    public static Builder builder() {
       return new Builder();
    }
@@ -40,7 +40,7 @@ public class CloudLoadBalancersUKProviderMetadata extends BaseProviderMetadata {
    public Builder toBuilder() {
       return builder().fromProviderMetadata(this);
    }
-   
+
    public CloudLoadBalancersUKProviderMetadata() {
       super(builder());
    }
@@ -51,8 +51,8 @@ public class CloudLoadBalancersUKProviderMetadata extends BaseProviderMetadata {
 
    public static Properties defaultProperties() {
       Properties properties = new Properties();
-      properties.setProperty(PROPERTY_ZONES, "LON");
-      properties.setProperty(PROPERTY_ZONE + ".LON." + ISO3166_CODES, "GB-SLG");
+      properties.setProperty(PROPERTY_REGIONS, "LON");
+      properties.setProperty(PROPERTY_REGION + ".LON." + ISO3166_CODES, "GB-SLG");
       return properties;
    }
    public static class Builder extends BaseProviderMetadata.Builder {
@@ -75,7 +75,7 @@ public class CloudLoadBalancersUKProviderMetadata extends BaseProviderMetadata {
       public CloudLoadBalancersUKProviderMetadata build() {
          return new CloudLoadBalancersUKProviderMetadata(this);
       }
-      
+
       @Override
       public Builder fromProviderMetadata(
             ProviderMetadata in) {

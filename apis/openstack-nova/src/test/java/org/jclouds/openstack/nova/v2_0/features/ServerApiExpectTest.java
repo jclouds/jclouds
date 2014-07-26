@@ -58,9 +58,9 @@ public class ServerApiExpectTest extends BaseNovaApiExpectTest {
       NovaApi apiWhenServersExist = requestsSendResponses(keystoneAuthWithUsernameAndPasswordAndTenantName,
             responseWithKeystoneAccess, listServers, listServersResponse);
 
-      assertEquals(apiWhenServersExist.getConfiguredZones(), ImmutableSet.of("az-1.region-a.geo-1", "az-2.region-a.geo-1", "az-3.region-a.geo-1"));
+      assertEquals(apiWhenServersExist.getConfiguredRegions(), ImmutableSet.of("az-1.region-a.geo-1", "az-2.region-a.geo-1", "az-3.region-a.geo-1"));
 
-      assertEquals(apiWhenServersExist.getServerApiForZone("az-1.region-a.geo-1").list().concat().toString(),
+      assertEquals(apiWhenServersExist.getServerApi("az-1.region-a.geo-1").list().concat().toString(),
             new ParseServerListTest().expected().toString());
    }
 
@@ -76,7 +76,7 @@ public class ServerApiExpectTest extends BaseNovaApiExpectTest {
       NovaApi apiWhenNoServersExist = requestsSendResponses(keystoneAuthWithUsernameAndPasswordAndTenantName,
             responseWithKeystoneAccess, listServers, listServersResponse);
 
-      assertTrue(apiWhenNoServersExist.getServerApiForZone("az-1.region-a.geo-1").list().concat().isEmpty());
+      assertTrue(apiWhenNoServersExist.getServerApi("az-1.region-a.geo-1").list().concat().isEmpty());
    }
 
    public void testListInDetailServersWhenResponseIs2xx() throws Exception {
@@ -93,9 +93,9 @@ public class ServerApiExpectTest extends BaseNovaApiExpectTest {
       NovaApi apiWhenServersExist = requestsSendResponses(keystoneAuthWithUsernameAndPasswordAndTenantName,
               responseWithKeystoneAccess, listServers, listInDetailServersResponse);
 
-      assertEquals(apiWhenServersExist.getConfiguredZones(), ImmutableSet.of("az-1.region-a.geo-1", "az-2.region-a.geo-1", "az-3.region-a.geo-1"));
+      assertEquals(apiWhenServersExist.getConfiguredRegions(), ImmutableSet.of("az-1.region-a.geo-1", "az-2.region-a.geo-1", "az-3.region-a.geo-1"));
 
-      assertEquals(apiWhenServersExist.getServerApiForZone("az-1.region-a.geo-1").listInDetail().concat().toString(),
+      assertEquals(apiWhenServersExist.getServerApi("az-1.region-a.geo-1").listInDetail().concat().toString(),
               new ParseServerDetailsStatesTest().expected().toString());
    }
 
@@ -112,7 +112,7 @@ public class ServerApiExpectTest extends BaseNovaApiExpectTest {
       NovaApi apiWhenNoServersExist = requestsSendResponses(keystoneAuthWithUsernameAndPasswordAndTenantName,
               responseWithKeystoneAccess, listServers, listInDetailServersResponse);
 
-      assertTrue(apiWhenNoServersExist.getServerApiForZone("az-1.region-a.geo-1").listInDetail().concat().isEmpty());
+      assertTrue(apiWhenNoServersExist.getServerApi("az-1.region-a.geo-1").listInDetail().concat().isEmpty());
    }
 
    public void testCreateServerWhenResponseIs202() throws Exception {
@@ -131,7 +131,7 @@ public class ServerApiExpectTest extends BaseNovaApiExpectTest {
       NovaApi apiWithNewServer = requestsSendResponses(keystoneAuthWithUsernameAndPasswordAndTenantName,
             responseWithKeystoneAccess, createServer, createServerResponse);
 
-      assertEquals(apiWithNewServer.getServerApiForZone("az-1.region-a.geo-1").create("test-e92", "1241", "100").toString(),
+      assertEquals(apiWithNewServer.getServerApi("az-1.region-a.geo-1").create("test-e92", "1241", "100").toString(),
               new ParseCreatedServerTest().expected().toString());
    }
 
@@ -153,7 +153,7 @@ public class ServerApiExpectTest extends BaseNovaApiExpectTest {
 
       CreateServerOptions options = new CreateServerOptions().availabilityZone("nova");
 
-      assertEquals(apiWithNewServer.getServerApiForZone("az-1.region-a.geo-1").create("test-e92", "1241", "100", options).toString(),
+      assertEquals(apiWithNewServer.getServerApi("az-1.region-a.geo-1").create("test-e92", "1241", "100", options).toString(),
             new ParseCreatedServerTest().expected().toString());
    }
 
@@ -173,7 +173,7 @@ public class ServerApiExpectTest extends BaseNovaApiExpectTest {
       NovaApi apiWithNewServer = requestsSendResponses(keystoneAuthWithUsernameAndPasswordAndTenantName,
             responseWithKeystoneAccess, createServer, createServerResponse);
 
-      assertEquals(apiWithNewServer.getServerApiForZone("az-1.region-a.geo-1").create("test-e92", "1241",
+      assertEquals(apiWithNewServer.getServerApi("az-1.region-a.geo-1").create("test-e92", "1241",
                "100", new CreateServerOptions().securityGroupNames("group1", "group2")).toString(),
               new ParseCreatedServerTest().expected().toString());
    }
@@ -194,7 +194,7 @@ public class ServerApiExpectTest extends BaseNovaApiExpectTest {
       NovaApi apiWithNewServer = requestsSendResponses(keystoneAuthWithUsernameAndPasswordAndTenantName,
             responseWithKeystoneAccess, createServer, createServerResponse);
 
-      assertEquals(apiWithNewServer.getServerApiForZone("az-1.region-a.geo-1").create("test-e92", "1241",
+      assertEquals(apiWithNewServer.getServerApi("az-1.region-a.geo-1").create("test-e92", "1241",
                "100", new CreateServerOptions().networks("b3856ac0-f481-11e2-b778-0800200c9a66", "bf0f0f90-f481-11e2-b778-0800200c9a66")).toString(),
               new ParseCreatedServerTest().expected().toString());
    }
@@ -216,7 +216,7 @@ public class ServerApiExpectTest extends BaseNovaApiExpectTest {
             keystoneAuthWithUsernameAndPasswordAndTenantName, responseWithKeystoneAccess,
             createServer, createServerResponse);
 
-      assertEquals(apiWithNewServer.getServerApiForZone("az-1.region-a.geo-1").create("test-e92", "1241",
+      assertEquals(apiWithNewServer.getServerApi("az-1.region-a.geo-1").create("test-e92", "1241",
                "100", new CreateServerOptions().diskConfig(Server.DISK_CONFIG_AUTO)).toString(),
               new ParseCreatedServerTest().expectedWithDiskConfig(Server.DISK_CONFIG_AUTO).toString());
    }
@@ -238,7 +238,7 @@ public class ServerApiExpectTest extends BaseNovaApiExpectTest {
             keystoneAuthWithUsernameAndPasswordAndTenantName, responseWithKeystoneAccess,
             createServer, createServerResponse);
 
-      assertEquals(apiWithNewServer.getServerApiForZone("az-1.region-a.geo-1").create("test-e92", "1241",
+      assertEquals(apiWithNewServer.getServerApi("az-1.region-a.geo-1").create("test-e92", "1241",
                "100", new CreateServerOptions().diskConfig(Server.DISK_CONFIG_MANUAL)).toString(),
               new ParseCreatedServerTest().expectedWithDiskConfig(Server.DISK_CONFIG_MANUAL).toString());
    }
@@ -261,7 +261,7 @@ public class ServerApiExpectTest extends BaseNovaApiExpectTest {
 
       RebuildServerOptions options = new RebuildServerOptions().withImage("1234").name("newName").adminPass("password").ipv4Address("1.1.1.1").ipv6Address("fe80::100");
 
-      apiRebuildServer.getServerApiForZone("az-1.region-a.geo-1").rebuild(serverId, options);
+      apiRebuildServer.getServerApi("az-1.region-a.geo-1").rebuild(serverId, options);
    }
 
    public void testCreateImageWhenResponseIs2xx() throws Exception {
@@ -286,7 +286,7 @@ public class ServerApiExpectTest extends BaseNovaApiExpectTest {
       NovaApi apiWhenServerExists = requestsSendResponses(keystoneAuthWithUsernameAndPasswordAndTenantName,
                responseWithKeystoneAccess, createImage, createImageResponse);
 
-      assertEquals(apiWhenServerExists.getServerApiForZone("az-1.region-a.geo-1").createImageFromServer(imageName, serverId),
+      assertEquals(apiWhenServerExists.getServerApi("az-1.region-a.geo-1").createImageFromServer(imageName, serverId),
             imageId);
    }
 
@@ -309,7 +309,7 @@ public class ServerApiExpectTest extends BaseNovaApiExpectTest {
                responseWithKeystoneAccess, createImage, createImageResponse);
 
       try {
-         apiWhenServerDoesNotExist.getServerApiForZone("az-1.region-a.geo-1").createImageFromServer(imageName, serverId);
+         apiWhenServerDoesNotExist.getServerApi("az-1.region-a.geo-1").createImageFromServer(imageName, serverId);
          fail("Expected an exception.");
       } catch (Exception e) {
          // expected
@@ -332,7 +332,7 @@ public class ServerApiExpectTest extends BaseNovaApiExpectTest {
       NovaApi apiWhenServerExists = requestsSendResponses(keystoneAuthWithUsernameAndPasswordAndTenantName,
                responseWithKeystoneAccess, stopServer, stopServerResponse);
 
-      apiWhenServerExists.getServerApiForZone("az-1.region-a.geo-1").stop(serverId);
+      apiWhenServerExists.getServerApi("az-1.region-a.geo-1").stop(serverId);
    }
 
    public void testStopServerWhenResponseIs404() throws Exception {
@@ -352,7 +352,7 @@ public class ServerApiExpectTest extends BaseNovaApiExpectTest {
                responseWithKeystoneAccess, stopServer, stopServerResponse);
 
       try {
-         apiWhenServerExists.getServerApiForZone("az-1.region-a.geo-1").stop(serverId);
+         apiWhenServerExists.getServerApi("az-1.region-a.geo-1").stop(serverId);
          fail("Expected an exception.");
       } catch (Exception e) {
          // expected
@@ -376,7 +376,7 @@ public class ServerApiExpectTest extends BaseNovaApiExpectTest {
       NovaApi apiWhenServerExists = requestsSendResponses(keystoneAuthWithUsernameAndPasswordAndTenantName,
                responseWithKeystoneAccess, startServer, startServerResponse);
 
-      apiWhenServerExists.getServerApiForZone("az-1.region-a.geo-1").start(serverId);
+      apiWhenServerExists.getServerApi("az-1.region-a.geo-1").start(serverId);
    }
 
    public void testStartServerWhenResponseIs404() throws Exception {
@@ -396,7 +396,7 @@ public class ServerApiExpectTest extends BaseNovaApiExpectTest {
                responseWithKeystoneAccess, startServer, startServerResponse);
 
       try {
-         apiWhenServerExists.getServerApiForZone("az-1.region-a.geo-1").start(serverId);
+         apiWhenServerExists.getServerApi("az-1.region-a.geo-1").start(serverId);
          fail("Expected an exception.");
       } catch (Exception e) {
          // expected
@@ -418,7 +418,7 @@ public class ServerApiExpectTest extends BaseNovaApiExpectTest {
       NovaApi apiWhenServerExists = requestsSendResponses(keystoneAuthWithUsernameAndPasswordAndTenantName,
                responseWithKeystoneAccess, getMetadata, getMetadataResponse);
 
-      assertEquals(apiWhenServerExists.getServerApiForZone("az-1.region-a.geo-1").getMetadata(serverId).toString(),
+      assertEquals(apiWhenServerExists.getServerApi("az-1.region-a.geo-1").getMetadata(serverId).toString(),
              new ParseMetadataListTest().expected().toString());
    }
 
@@ -437,7 +437,7 @@ public class ServerApiExpectTest extends BaseNovaApiExpectTest {
                responseWithKeystoneAccess, getMetadata, getMetadataResponse);
 
       try {
-         apiWhenServerExists.getServerApiForZone("az-1.region-a.geo-1").getMetadata(serverId);
+         apiWhenServerExists.getServerApi("az-1.region-a.geo-1").getMetadata(serverId);
          fail("Expected an exception.");
       } catch (Exception e) {
          // expected
@@ -466,7 +466,7 @@ public class ServerApiExpectTest extends BaseNovaApiExpectTest {
       NovaApi apiWhenServerExists = requestsSendResponses(keystoneAuthWithUsernameAndPasswordAndTenantName,
                responseWithKeystoneAccess, setMetadata, setMetadataResponse);
 
-      assertEquals(apiWhenServerExists.getServerApiForZone("az-1.region-a.geo-1").setMetadata(serverId, metadata).toString(),
+      assertEquals(apiWhenServerExists.getServerApi("az-1.region-a.geo-1").setMetadata(serverId, metadata).toString(),
              new ParseMetadataListTest().expected().toString());
    }
 
@@ -492,7 +492,7 @@ public class ServerApiExpectTest extends BaseNovaApiExpectTest {
                responseWithKeystoneAccess, setMetadata, setMetadataResponse);
 
       try {
-         apiWhenServerExists.getServerApiForZone("az-1.region-a.geo-1").setMetadata(serverId, metadata);
+         apiWhenServerExists.getServerApi("az-1.region-a.geo-1").setMetadata(serverId, metadata);
          fail("Expected an exception.");
       } catch (Exception e) {
          // expected
@@ -521,7 +521,7 @@ public class ServerApiExpectTest extends BaseNovaApiExpectTest {
       NovaApi apiWhenServerExists = requestsSendResponses(keystoneAuthWithUsernameAndPasswordAndTenantName,
                responseWithKeystoneAccess, setMetadata, setMetadataResponse);
 
-      assertEquals(apiWhenServerExists.getServerApiForZone("az-1.region-a.geo-1").updateMetadata(serverId, metadata).toString(),
+      assertEquals(apiWhenServerExists.getServerApi("az-1.region-a.geo-1").updateMetadata(serverId, metadata).toString(),
              new ParseMetadataUpdateTest().expected().toString());
    }
 
@@ -548,7 +548,7 @@ public class ServerApiExpectTest extends BaseNovaApiExpectTest {
                responseWithKeystoneAccess, setMetadata, setMetadataResponse);
 
       try {
-         apiWhenServerExists.getServerApiForZone("az-1.region-a.geo-1").setMetadata(serverId, metadata);
+         apiWhenServerExists.getServerApi("az-1.region-a.geo-1").setMetadata(serverId, metadata);
          fail("Expected an exception.");
       } catch (Exception e) {
          // expected
@@ -573,7 +573,7 @@ public class ServerApiExpectTest extends BaseNovaApiExpectTest {
       NovaApi apiWhenServerExists = requestsSendResponses(keystoneAuthWithUsernameAndPasswordAndTenantName,
                responseWithKeystoneAccess, getMetadata, getMetadataResponse);
 
-      assertEquals(apiWhenServerExists.getServerApiForZone("az-1.region-a.geo-1").getMetadata(serverId, key).toString(),
+      assertEquals(apiWhenServerExists.getServerApi("az-1.region-a.geo-1").getMetadata(serverId, key).toString(),
              "Web Head 1");
    }
 
@@ -599,7 +599,7 @@ public class ServerApiExpectTest extends BaseNovaApiExpectTest {
                responseWithKeystoneAccess, setMetadata, setMetadataResponse);
 
       try {
-         apiWhenServerExists.getServerApiForZone("az-1.region-a.geo-1").setMetadata(serverId, metadata);
+         apiWhenServerExists.getServerApi("az-1.region-a.geo-1").setMetadata(serverId, metadata);
          fail("Expected an exception.");
       } catch (Exception e) {
          // expected
@@ -628,7 +628,7 @@ public class ServerApiExpectTest extends BaseNovaApiExpectTest {
       NovaApi apiWhenServerExists = requestsSendResponses(keystoneAuthWithUsernameAndPasswordAndTenantName,
                responseWithKeystoneAccess, setMetadata, setMetadataResponse);
 
-      assertEquals(apiWhenServerExists.getServerApiForZone("az-1.region-a.geo-1").updateMetadata(serverId, metadata).toString(),
+      assertEquals(apiWhenServerExists.getServerApi("az-1.region-a.geo-1").updateMetadata(serverId, metadata).toString(),
              new ParseMetadataUpdateTest().expected().toString());
    }
 
@@ -655,7 +655,7 @@ public class ServerApiExpectTest extends BaseNovaApiExpectTest {
                responseWithKeystoneAccess, setMetadata, setMetadataResponse);
 
       try {
-         apiWhenServerExists.getServerApiForZone("az-1.region-a.geo-1").setMetadata(serverId, metadata);
+         apiWhenServerExists.getServerApi("az-1.region-a.geo-1").setMetadata(serverId, metadata);
          fail("Expected an exception.");
       } catch (Exception e) {
          // expected
@@ -678,7 +678,7 @@ public class ServerApiExpectTest extends BaseNovaApiExpectTest {
       NovaApi apiWhenServerExists = requestsSendResponses(keystoneAuthWithUsernameAndPasswordAndTenantName,
                responseWithKeystoneAccess, updateMetadata, updateMetadataResponse);
 
-      apiWhenServerExists.getServerApiForZone("az-1.region-a.geo-1").deleteMetadata(serverId, key);
+      apiWhenServerExists.getServerApi("az-1.region-a.geo-1").deleteMetadata(serverId, key);
    }
 
    public void testDeleteMetadataItemWhenResponseIs404() throws Exception {
@@ -697,7 +697,7 @@ public class ServerApiExpectTest extends BaseNovaApiExpectTest {
       NovaApi apiWhenServerExists = requestsSendResponses(keystoneAuthWithUsernameAndPasswordAndTenantName,
                responseWithKeystoneAccess, deleteMetadata, deleteMetadataResponse);
 
-      apiWhenServerExists.getServerApiForZone("az-1.region-a.geo-1").deleteMetadata(serverId, key);
+      apiWhenServerExists.getServerApi("az-1.region-a.geo-1").deleteMetadata(serverId, key);
    }
 
    public void testGetDiagnosticsWhenResponseIs200() throws Exception {
@@ -714,7 +714,7 @@ public class ServerApiExpectTest extends BaseNovaApiExpectTest {
 
       NovaApi apiWithNewServer = requestsSendResponses(keystoneAuthWithUsernameAndPasswordAndTenantName,
             responseWithKeystoneAccess, getDiagnostics, serverDiagnosticsResponse);
-      assertEquals(apiWithNewServer.getServerApiForZone("az-1.region-a.geo-1").getDiagnostics(serverId),
+      assertEquals(apiWithNewServer.getServerApi("az-1.region-a.geo-1").getDiagnostics(serverId),
              new ParseServerDiagnostics().expected());
    }
 
@@ -729,7 +729,7 @@ public class ServerApiExpectTest extends BaseNovaApiExpectTest {
 
       for (int statusCode : ImmutableSet.of(403, 404, 500)) {
         assertTrue(!requestsSendResponses(keystoneAuthWithUsernameAndPasswordAndTenantName, responseWithKeystoneAccess, getDiagnostics,
-            HttpResponse.builder().statusCode(statusCode).build()).getServerApiForZone("az-1.region-a.geo-1").getDiagnostics(serverId).isPresent());
+            HttpResponse.builder().statusCode(statusCode).build()).getServerApi("az-1.region-a.geo-1").getDiagnostics(serverId).isPresent());
       }
    }
 }

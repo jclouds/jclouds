@@ -35,7 +35,7 @@ import com.google.common.collect.Maps;
 @Test(groups = "live", testName = "DatabaseApiLiveTest")
 public class DatabaseApiLiveTest extends BaseTroveApiLiveTest {
 
-   // zone to instance
+   // region to instance
    private static Map<String, List<Instance>> instancesToDelete = Maps.newHashMap();
    // not deleting databases. they will be deleted when instances are deleted
 
@@ -44,17 +44,17 @@ public class DatabaseApiLiveTest extends BaseTroveApiLiveTest {
    public void setup() {
       super.setup();
       TroveUtils utils = new TroveUtils(api);
-      for (String zone : api.getConfiguredZones()) {
+      for (String region : api.getConfiguredRegions()) {
          // create instances
          List<Instance> instanceList = Lists.newArrayList();
-         Instance first = utils.getWorkingInstance(zone, "first_database_testing_" + zone, "1", 1);
-         Instance second = utils.getWorkingInstance(zone, "second_database_testing_" + zone, "1", 1);
+         Instance first = utils.getWorkingInstance(region, "first_database_testing_" + region, "1", 1);
+         Instance second = utils.getWorkingInstance(region, "second_database_testing_" + region, "1", 1);
          instanceList.add(first);
          instanceList.add(second);
-         instancesToDelete.put(zone, instanceList);
+         instancesToDelete.put(region, instanceList);
 
-         DatabaseApi databaseApiFirst = api.getDatabaseApiForZoneAndInstance(zone, first.getId());
-         DatabaseApi databaseApiSecond = api.getDatabaseApiForZoneAndInstance(zone, second.getId());
+         DatabaseApi databaseApiFirst = api.getDatabaseApi(region, first.getId());
+         DatabaseApi databaseApiSecond = api.getDatabaseApi(region, second.getId());
          databaseApiFirst.create("livetest_db1");
          databaseApiFirst.create("livetest_db2");
          databaseApiSecond.create("livetest_db3");
@@ -64,9 +64,9 @@ public class DatabaseApiLiveTest extends BaseTroveApiLiveTest {
    @Override
    @AfterClass(groups = { "integration", "live" })
    public void tearDown(){
-      for (String zone : api.getConfiguredZones()) {
-         InstanceApi instanceApi = api.getInstanceApiForZone(zone);
-         for (Instance instance : instancesToDelete.get(zone)) {
+      for (String region : api.getConfiguredRegions()) {
+         InstanceApi instanceApi = api.getInstanceApi(region);
+         for (Instance instance : instancesToDelete.get(region)) {
             if (!instanceApi.delete(instance.getId()))
                throw new RuntimeException("Could not delete a database instance after tests!");
          }
@@ -76,28 +76,28 @@ public class DatabaseApiLiveTest extends BaseTroveApiLiveTest {
 
    @Test
    public void testListDatabases() {
-      for (String zone : api.getConfiguredZones()) {
-         InstanceApi instanceApi = api.getInstanceApiForZone(zone);
+      for (String region : api.getConfiguredRegions()) {
+         InstanceApi instanceApi = api.getInstanceApi(region);
          assertTrue(instanceApi.list().size() >= 2);
-         for (Instance instance : instancesToDelete.get(zone)) {
-            DatabaseApi databaseApi = api.getDatabaseApiForZoneAndInstance(zone, instance.getId());
+         for (Instance instance : instancesToDelete.get(region)) {
+            DatabaseApi databaseApi = api.getDatabaseApi(region, instance.getId());
             if (!instance.getName().contains("database_testing"))
                continue;
             assertTrue(databaseApi.list().size() >= 1);
             for (String database : databaseApi.list()) {
-               assertNotNull(database);      
+               assertNotNull(database);
             }
-         }  
-      }   
+         }
+      }
    }
 
    @Test
    public void testDeleteDatabases() {
-      for (String zone : api.getConfiguredZones()) {
-         InstanceApi instanceApi = api.getInstanceApiForZone(zone);
+      for (String region : api.getConfiguredRegions()) {
+         InstanceApi instanceApi = api.getInstanceApi(region);
          assertTrue(instanceApi.list().size() >= 2);
-         for (Instance instance : instancesToDelete.get(zone)) {
-            DatabaseApi databaseApi = api.getDatabaseApiForZoneAndInstance(zone, instance.getId());
+         for (Instance instance : instancesToDelete.get(region)) {
+            DatabaseApi databaseApi = api.getDatabaseApi(region, instance.getId());
             if (!instance.getName().contains("database_testing"))
                continue;
             assertTrue(databaseApi.list().size() >= 1);
@@ -107,7 +107,7 @@ public class DatabaseApiLiveTest extends BaseTroveApiLiveTest {
                assertTrue(databaseApi.delete(database));
                assertTrue(databaseApi.create(database));
             }
-         }  
-      }   
+         }
+      }
    }
 }

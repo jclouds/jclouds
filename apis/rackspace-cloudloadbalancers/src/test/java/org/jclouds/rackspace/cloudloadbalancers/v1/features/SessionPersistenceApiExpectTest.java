@@ -35,10 +35,10 @@ public class SessionPersistenceApiExpectTest extends BaseCloudLoadBalancerApiExp
       URI endpoint = URI.create("https://dfw.loadbalancers.api.rackspacecloud.com/v1.0/123123/loadbalancers/2000/sessionpersistence");
       SessionPersistenceApi api = requestsSendResponses(
             rackspaceAuthWithUsernameAndApiKey,
-            responseWithAccess, 
+            responseWithAccess,
             authenticatedGET().endpoint(endpoint).build(),
             HttpResponse.builder().statusCode(OK.getStatusCode()).payload(payloadFromResource("/sessionpersistence-get.json")).build()
-      ).getSessionPersistenceApiForZoneAndLoadBalancer("DFW", 2000);
+      ).getSessionPersistenceApi("DFW", 2000);
 
       SessionPersistence sessionPersistence = api.get();
       assertEquals(sessionPersistence, SessionPersistence.HTTP_COOKIE);
@@ -48,36 +48,36 @@ public class SessionPersistenceApiExpectTest extends BaseCloudLoadBalancerApiExp
       URI endpoint = URI.create("https://dfw.loadbalancers.api.rackspacecloud.com/v1.0/123123/loadbalancers/2000/sessionpersistence");
       SessionPersistenceApi api = requestsSendResponses(
             rackspaceAuthWithUsernameAndApiKey,
-            responseWithAccess, 
+            responseWithAccess,
             authenticatedGET().endpoint(endpoint).build(),
             HttpResponse.builder().statusCode(OK.getStatusCode()).payload(payloadFromResource("/sessionpersistence-get-deleted.json")).build()
-      ).getSessionPersistenceApiForZoneAndLoadBalancer("DFW", 2000);
+      ).getSessionPersistenceApi("DFW", 2000);
 
       SessionPersistence sessionPersistence = api.get();
       assertNull(sessionPersistence);
    }
-   
+
    public void testCreateSessionPersistence() {
       URI endpoint = URI.create("https://dfw.loadbalancers.api.rackspacecloud.com/v1.0/123123/loadbalancers/2000/sessionpersistence");
       SessionPersistenceApi api = requestsSendResponses(
             rackspaceAuthWithUsernameAndApiKey,
-            responseWithAccess, 
+            responseWithAccess,
             authenticatedGET().method(PUT).endpoint(endpoint).payload(payloadFromResource("/sessionpersistence-create.json")).build(),
             HttpResponse.builder().statusCode(OK.getStatusCode()).build()
-      ).getSessionPersistenceApiForZoneAndLoadBalancer("DFW", 2000);
-      
+      ).getSessionPersistenceApi("DFW", 2000);
+
       api.create(SessionPersistence.HTTP_COOKIE);
    }
-   
+
    public void testRemoveSessionPersistence() {
       URI endpoint = URI.create("https://dfw.loadbalancers.api.rackspacecloud.com/v1.0/123123/loadbalancers/2000/sessionpersistence");
       SessionPersistenceApi api = requestsSendResponses(
             rackspaceAuthWithUsernameAndApiKey,
-            responseWithAccess, 
+            responseWithAccess,
             authenticatedGET().method(DELETE).endpoint(endpoint).build(),
             HttpResponse.builder().statusCode(OK.getStatusCode()).build()
-      ).getSessionPersistenceApiForZoneAndLoadBalancer("DFW", 2000);
-      
+      ).getSessionPersistenceApi("DFW", 2000);
+
       api.delete();
-   }   
+   }
 }

@@ -27,7 +27,7 @@ import org.jclouds.openstack.cinder.v1.config.CinderParserModule;
 import org.jclouds.openstack.keystone.v2_0.config.AuthenticationApiModule;
 import org.jclouds.openstack.keystone.v2_0.config.CredentialTypes;
 import org.jclouds.openstack.keystone.v2_0.config.KeystoneAuthenticationModule;
-import org.jclouds.openstack.keystone.v2_0.config.KeystoneAuthenticationModule.ZoneModule;
+import org.jclouds.openstack.keystone.v2_0.config.KeystoneAuthenticationModule.RegionModule;
 import org.jclouds.openstack.v2_0.ServiceType;
 import org.jclouds.rest.internal.BaseHttpApiMetadata;
 
@@ -35,10 +35,10 @@ import com.google.common.collect.ImmutableSet;
 import com.google.inject.Module;
 
 /**
- * Implementation of {@link ApiMetadata} for Cinder v1 API
+ * Implementation of {@link org.jclouds.apis.ApiMetadata} for Cinder v1 API
  */
 public class CinderApiMetadata extends BaseHttpApiMetadata<CinderApi> {
-   
+
    @Override
    public Builder toBuilder() {
       return new Builder().fromApiMetadata(this);
@@ -74,12 +74,12 @@ public class CinderApiMetadata extends BaseHttpApiMetadata<CinderApi> {
          .defaultModules(ImmutableSet.<Class<? extends Module>>builder()
                                      .add(AuthenticationApiModule.class)
                                      .add(KeystoneAuthenticationModule.class)
-                                     .add(ZoneModule.class)
+                                     .add(RegionModule.class)
                                      .add(CinderParserModule.class)
                                      .add(CinderHttpApiModule.class)
                                      .build());
       }
-      
+
       @Override
       public CinderApiMetadata build() {
          return new CinderApiMetadata(this);

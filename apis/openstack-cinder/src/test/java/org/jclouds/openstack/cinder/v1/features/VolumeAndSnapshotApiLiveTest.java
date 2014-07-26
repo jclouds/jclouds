@@ -42,12 +42,12 @@ import com.google.common.collect.Iterables;
 @Test(groups = "live", testName = "VolumeApiLiveTest", singleThreaded = true)
 public class VolumeAndSnapshotApiLiveTest extends BaseCinderApiLiveTest {
    private static final String name = System.getProperty("user.name").replace('.', '-').toLowerCase();
-   
-   private String zone;
+
+   private String region;
 
    private VolumeApi volumeApi;
    private SnapshotApi snapshotApi;
-   
+
    private Volume testVolume;
    private Snapshot testSnapshot;
 
@@ -55,9 +55,9 @@ public class VolumeAndSnapshotApiLiveTest extends BaseCinderApiLiveTest {
    @Override
    public void setup() {
       super.setup();
-      zone = Iterables.getLast(api.getConfiguredZones(), "nova");
-      volumeApi = api.getVolumeApiForZone(zone);
-      snapshotApi = api.getSnapshotApiForZone(zone);
+      region = Iterables.getLast(api.getConfiguredRegions(), "nova");
+      volumeApi = api.getVolumeApi(region);
+      snapshotApi = api.getSnapshotApi(region);
    }
 
    @AfterClass(groups = { "integration", "live" })
@@ -81,7 +81,7 @@ public class VolumeAndSnapshotApiLiveTest extends BaseCinderApiLiveTest {
             .name(name)
             .description("description of test volume");
       testVolume = volumeApi.create(100, options);
-      
+
       assertTrue(VolumePredicates.awaitAvailable(volumeApi).apply(testVolume));
    }
 

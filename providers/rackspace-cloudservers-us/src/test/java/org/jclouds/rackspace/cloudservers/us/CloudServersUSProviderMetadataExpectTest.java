@@ -38,22 +38,22 @@ public class CloudServersUSProviderMetadataExpectTest extends BaseNovaApiExpectT
       this.credential = "myApiKey";
    }
 
-   public void testCanGetConfiguredZones() {
-      
+   public void testCanGetConfiguredRegions() {
+
       HttpRequest authenticate = HttpRequest.builder().method("POST")
             .endpoint("https://identity.api.rackspacecloud.com/v2.0/tokens")
             .addHeader("Accept", "application/json")
             .payload(payloadFromStringWithContentType(
                      "{\"auth\":{\"RAX-KSKEY:apiKeyCredentials\":{\"username\":\"myUsername\",\"apiKey\":\"myApiKey\"}}}"
                      , "application/json")).build();
-      
+
 
       HttpResponse authenticationResponse = HttpResponse.builder().statusCode(200)
             .payload(payloadFromResourceWithContentType("/access_rax_us.json", "application/json")).build();
 
       NovaApi whenNovaRegionExists = requestSendsResponse(authenticate, authenticationResponse);
 
-      assertEquals(whenNovaRegionExists.getConfiguredZones(), ImmutableSet.of("ORD", "DFW"));
+      assertEquals(whenNovaRegionExists.getConfiguredRegions(), ImmutableSet.of("ORD", "DFW"));
 
    }
 

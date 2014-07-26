@@ -43,8 +43,8 @@ public class FloatingIPApiLiveTest extends BaseNovaApiLiveTest {
 
    @Test
    public void testListFloatingIPs() throws Exception {
-      for (String zoneId : api.getConfiguredZones()) {
-         Optional<? extends FloatingIPApi> apiOption = api.getFloatingIPExtensionForZone(zoneId);
+      for (String regionId : api.getConfiguredRegions()) {
+         Optional<? extends FloatingIPApi> apiOption = api.getFloatingIPApi(regionId);
          if (!apiOption.isPresent())
             continue;
          FloatingIPApi api = apiOption.get();
@@ -65,8 +65,8 @@ public class FloatingIPApiLiveTest extends BaseNovaApiLiveTest {
 
    @Test
    public void testAllocateAndDecreateFloatingIPs() throws Exception {
-      for (String zoneId : api.getConfiguredZones()) {
-         Optional<? extends FloatingIPApi> apiOption = api.getFloatingIPExtensionForZone(zoneId);
+      for (String regionId : api.getConfiguredRegions()) {
+         Optional<? extends FloatingIPApi> apiOption = api.getFloatingIPApi(regionId);
          if (!apiOption.isPresent())
             continue;
          FloatingIPApi api = apiOption.get();
@@ -96,13 +96,13 @@ public class FloatingIPApiLiveTest extends BaseNovaApiLiveTest {
 
    @Test
    public void testAddAndRemoveFloatingIp() throws Exception {
-      for (String zoneId : api.getConfiguredZones()) {
-         Optional<? extends FloatingIPApi> apiOption = api.getFloatingIPExtensionForZone(zoneId);
+      for (String regionId : api.getConfiguredRegions()) {
+         Optional<? extends FloatingIPApi> apiOption = api.getFloatingIPApi(regionId);
          if (!apiOption.isPresent())
             continue;
          FloatingIPApi api = apiOption.get();
-         ServerApi serverApi = this.api.getServerApiForZone(zoneId);
-         Server server = createServerInZone(zoneId);
+         ServerApi serverApi = this.api.getServerApi(regionId);
+         Server server = createServerInRegion(regionId);
          FloatingIP floatingIP = api.create();
          assertNotNull(floatingIP);
          try {

@@ -34,47 +34,47 @@ import com.google.common.collect.Iterables;
 @Test(groups = "live", singleThreaded = true, testName = "ContentCachingApiLiveTest")
 public class ContentCachingApiLiveTest extends BaseCloudLoadBalancersApiLiveTest {
    private LoadBalancer lb;
-   private String zone;
+   private String region;
 
    public void testCreateLoadBalancer() {
       AddNode addNode = AddNode.builder().address("192.168.1.1").port(8080).build();
       CreateLoadBalancer createLB = CreateLoadBalancer.builder()
             .name(prefix + "-jclouds").protocol("HTTP").port(80).virtualIPType(Type.PUBLIC).node(addNode).build();
 
-      zone = Iterables.getFirst(api.getConfiguredZones(), null);
-      lb = api.getLoadBalancerApiForZone(zone).create(createLB);
-      
-      assertTrue(awaitAvailable(api.getLoadBalancerApiForZone(zone)).apply(lb));
+      region = Iterables.getFirst(api.getConfiguredRegions(), null);
+      lb = api.getLoadBalancerApi(region).create(createLB);
+
+      assertTrue(awaitAvailable(api.getLoadBalancerApi(region)).apply(lb));
    }
-   
+
    @Test(dependsOnMethods = "testCreateLoadBalancer")
    public void testEnableAndIsContentCaching() throws Exception {
-      api.getContentCachingApiForZoneAndLoadBalancer(zone, lb.getId()).enable();
-      assertTrue(awaitAvailable(api.getLoadBalancerApiForZone(zone)).apply(lb));
-      
-      boolean isContentCaching = 
-            api.getContentCachingApiForZoneAndLoadBalancer(zone, lb.getId()).isContentCaching();
-      
+      api.getContentCachingApi(region, lb.getId()).enable();
+      assertTrue(awaitAvailable(api.getLoadBalancerApi(region)).apply(lb));
+
+      boolean isContentCaching =
+            api.getContentCachingApi(region, lb.getId()).isContentCaching();
+
       assertTrue(isContentCaching);
    }
-   
+
    @Test(dependsOnMethods = "testEnableAndIsContentCaching")
    public void testDisableAndIsContentCaching() throws Exception {
-      api.getContentCachingApiForZoneAndLoadBalancer(zone, lb.getId()).disable();
-      assertTrue(awaitAvailable(api.getLoadBalancerApiForZone(zone)).apply(lb));
-      
-      boolean isContentCaching = 
-            api.getContentCachingApiForZoneAndLoadBalancer(zone, lb.getId()).isContentCaching();
-      
+      api.getContentCachingApi(region, lb.getId()).disable();
+      assertTrue(awaitAvailable(api.getLoadBalancerApi(region)).apply(lb));
+
+      boolean isContentCaching =
+            api.getContentCachingApi(region, lb.getId()).isContentCaching();
+
       assertFalse(isContentCaching);
    }
 
    @Override
    @AfterGroups(groups = "live")
    protected void tearDown() {
-      assertTrue(awaitAvailable(api.getLoadBalancerApiForZone(zone)).apply(lb));
-      api.getLoadBalancerApiForZone(zone).delete(lb.getId());
-      assertTrue(awaitDeleted(api.getLoadBalancerApiForZone(zone)).apply(lb));
+      assertTrue(awaitAvailable(api.getLoadBalancerApi(region)).apply(lb));
+      api.getLoadBalancerApi(region).delete(lb.getId());
+      assertTrue(awaitDeleted(api.getLoadBalancerApi(region)).apply(lb));
       super.tearDown();
    }
 }

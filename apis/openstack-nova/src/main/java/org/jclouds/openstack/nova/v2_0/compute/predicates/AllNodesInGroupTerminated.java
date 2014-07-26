@@ -28,15 +28,15 @@ import javax.inject.Inject;
 
 import org.jclouds.compute.ComputeService;
 import org.jclouds.compute.domain.ComputeMetadata;
-import org.jclouds.openstack.nova.v2_0.domain.zonescoped.ZoneAndName;
+import org.jclouds.openstack.nova.v2_0.domain.regionscoped.RegionAndName;
 
 import com.google.common.base.Predicate;
 import com.google.common.base.Predicates;
 
-public class AllNodesInGroupTerminated implements Predicate<ZoneAndName> {
+public class AllNodesInGroupTerminated implements Predicate<RegionAndName> {
    private final ComputeService computeService;
 
-   
+
    //TODO: TESTME
    @Inject
    public AllNodesInGroupTerminated(ComputeService computeService) {
@@ -44,10 +44,10 @@ public class AllNodesInGroupTerminated implements Predicate<ZoneAndName> {
    }
 
    @Override
-   public boolean apply(ZoneAndName input) {
-      // new nodes can have the zone as their location, existing nodes, the parent is the
+   public boolean apply(RegionAndName input) {
+      // new nodes can have the region as their location, existing nodes, the parent is the
       // location
-      return all(computeService.listNodesDetailsMatching(Predicates.<ComputeMetadata> or(locationId(input.getZone()),
-               parentLocationId(input.getZone()))), and(inGroup(input.getName()), TERMINATED));
+      return all(computeService.listNodesDetailsMatching(Predicates.<ComputeMetadata> or(locationId(input.getRegion()),
+               parentLocationId(input.getRegion()))), and(inGroup(input.getName()), TERMINATED));
    }
 }

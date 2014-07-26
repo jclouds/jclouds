@@ -40,8 +40,8 @@ public class QuotaApiLiveTest extends BaseNovaApiLiveTest {
    public void setup() {
       super.setup();
       tenant = identity.split(":")[0];
-      String zone = Iterables.getLast(api.getConfiguredZones(), "nova");
-      apiOption = api.getQuotaExtensionForZone(zone);
+      String region = Iterables.getLast(api.getConfiguredRegions(), "nova");
+      apiOption = api.getQuotaApi(region);
    }
 
    public void testGetQuotasForCurrentTenant() {

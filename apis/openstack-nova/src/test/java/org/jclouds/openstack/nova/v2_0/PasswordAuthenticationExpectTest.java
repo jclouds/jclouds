@@ -27,15 +27,15 @@ import org.testng.annotations.Test;
 import com.google.common.collect.ImmutableSet;
 
 /**
- * 
- * @see KeystoneProperties#CREDENTIAL_TYPE
+ *
+ * @see org.jclouds.openstack.keystone.v2_0.config.KeystoneProperties#CREDENTIAL_TYPE
  */
 @Test(groups = "unit", testName = "PasswordAuthenticationExpectTest")
 public class PasswordAuthenticationExpectTest extends BaseNovaApiExpectTest {
    public PasswordAuthenticationExpectTest() {
       identity = "identity";
    }
-   
+
    public void testListServersWhenResponseIs2xx() throws Exception {
       HttpRequest listServers = HttpRequest
             .builder()
@@ -50,9 +50,9 @@ public class PasswordAuthenticationExpectTest extends BaseNovaApiExpectTest {
       NovaApi apiWhenServersExist = requestsSendResponses(keystoneAuthWithUsernameAndPassword,
             responseWithKeystoneAccess, listServers, listServersResponse);
 
-      assertEquals(apiWhenServersExist.getConfiguredZones(), ImmutableSet.of("az-1.region-a.geo-1", "az-2.region-a.geo-1", "az-3.region-a.geo-1"));
+      assertEquals(apiWhenServersExist.getConfiguredRegions(), ImmutableSet.of("az-1.region-a.geo-1", "az-2.region-a.geo-1", "az-3.region-a.geo-1"));
 
-      assertEquals(apiWhenServersExist.getServerApiForZone("az-1.region-a.geo-1").list().concat().toString(),
+      assertEquals(apiWhenServersExist.getServerApi("az-1.region-a.geo-1").list().concat().toString(),
             new ParseServerListTest().expected().toString());
    }
 

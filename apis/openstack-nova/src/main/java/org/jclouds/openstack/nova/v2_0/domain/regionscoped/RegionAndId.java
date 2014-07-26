@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.jclouds.openstack.nova.v2_0.domain.zonescoped;
+package org.jclouds.openstack.nova.v2_0.domain.regionscoped;
 
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -23,36 +23,36 @@ import com.google.common.base.Objects;
 import com.google.common.base.Splitter;
 import com.google.common.collect.Iterables;
 
-public class ZoneAndId {
-   public static ZoneAndId fromSlashEncoded(String id) {
+public class RegionAndId {
+   public static RegionAndId fromSlashEncoded(String id) {
       Iterable<String> parts = Splitter.on('/').split(checkNotNull(id, "id"));
-      checkArgument(Iterables.size(parts) == 2, "id must be in format zoneId/id");
-      return new ZoneAndId(Iterables.get(parts, 0), Iterables.get(parts, 1));
+      checkArgument(Iterables.size(parts) == 2, "id must be in format regionId/id");
+      return new RegionAndId(Iterables.get(parts, 0), Iterables.get(parts, 1));
    }
 
-   public static ZoneAndId fromZoneAndId(String zoneId, String id) {
-      return new ZoneAndId(zoneId, id);
+   public static RegionAndId fromRegionAndId(String regionId, String id) {
+      return new RegionAndId(regionId, id);
    }
 
-   private static String slashEncodeZoneAndId(String zoneId, String id) {
-      return checkNotNull(zoneId, "zoneId") + "/" + checkNotNull(id, "id");
+   private static String slashEncodeRegionAndId(String regionId, String id) {
+      return checkNotNull(regionId, "regionId") + "/" + checkNotNull(id, "id");
    }
 
    public String slashEncode() {
-      return slashEncodeZoneAndId(zoneId, id);
+      return slashEncodeRegionAndId(regionId, id);
    }
 
-   protected final String zoneId;
+   protected final String regionId;
    protected final String id;
 
-   protected ZoneAndId(String zoneId, String id) {
-      this.zoneId = checkNotNull(zoneId, "zoneId");
+   protected RegionAndId(String regionId, String id) {
+      this.regionId = checkNotNull(regionId, "regionId");
       this.id = checkNotNull(id, "id");
    }
 
    @Override
    public int hashCode() {
-      return Objects.hashCode(zoneId, id);
+      return Objects.hashCode(regionId, id);
    }
 
    @Override
@@ -63,12 +63,12 @@ public class ZoneAndId {
          return false;
       if (getClass() != obj.getClass())
          return false;
-      ZoneAndId other = (ZoneAndId) obj;
-      return Objects.equal(zoneId, other.zoneId) && Objects.equal(id, other.id);
+      RegionAndId other = (RegionAndId) obj;
+      return Objects.equal(regionId, other.regionId) && Objects.equal(id, other.id);
    }
 
-   public String getZone() {
-      return zoneId;
+   public String getRegion() {
+      return regionId;
    }
 
    public String getId() {
@@ -77,7 +77,7 @@ public class ZoneAndId {
 
    @Override
    public String toString() {
-      return "[zoneId=" + zoneId + ", id=" + id + "]";
+      return "[regionId=" + regionId + ", id=" + id + "]";
    }
 
 }

@@ -46,7 +46,7 @@ import org.jclouds.domain.Location;
 import org.jclouds.logging.Logger;
 import org.jclouds.openstack.nova.v2_0.NovaApi;
 import org.jclouds.openstack.nova.v2_0.domain.Server;
-import org.jclouds.openstack.nova.v2_0.domain.zonescoped.ZoneAndId;
+import org.jclouds.openstack.nova.v2_0.domain.regionscoped.RegionAndId;
 
 import com.google.common.base.Predicate;
 import com.google.common.base.Supplier;
@@ -82,10 +82,10 @@ public class NovaImageExtension implements ImageExtension {
 
    @Override
    public ImageTemplate buildImageTemplateFromNode(String name, final String id) {
-      ZoneAndId zoneAndId = ZoneAndId.fromSlashEncoded(id);
-      Server server = novaApi.getServerApiForZone(zoneAndId.getZone()).get(zoneAndId.getId());
+      RegionAndId regionAndId = RegionAndId.fromSlashEncoded(id);
+      Server server = novaApi.getServerApi(regionAndId.getRegion()).get(regionAndId.getId());
       if (server == null)
-         throw new NoSuchElementException("Cannot find server with id: " + zoneAndId);
+         throw new NoSuchElementException("Cannot find server with id: " + regionAndId);
       CloneImageTemplate template = new ImageTemplateBuilder.CloneImageTemplateBuilder().nodeId(id).name(name).build();
       return template;
    }
@@ -95,19 +95,19 @@ public class NovaImageExtension implements ImageExtension {
       checkState(template instanceof CloneImageTemplate,
                " openstack-nova only supports creating images through cloning.");
       CloneImageTemplate cloneTemplate = (CloneImageTemplate) template;
-      ZoneAndId sourceImageZoneAndId = ZoneAndId.fromSlashEncoded(cloneTemplate.getSourceNodeId());
+      RegionAndId sourceImageRegionAndId = RegionAndId.fromSlashEncoded(cloneTemplate.getSourceNodeId());
 
-      String newImageId = novaApi.getServerApiForZone(sourceImageZoneAndId.getZone()).createImageFromServer(
-               cloneTemplate.getName(), sourceImageZoneAndId.getId());
+      String newImageId = novaApi.getServerApi(sourceImageRegionAndId.getRegion()).createImageFromServer(
+               cloneTemplate.getName(), sourceImageRegionAndId.getId());
 
-      final ZoneAndId targetImageZoneAndId = ZoneAndId.fromZoneAndId(sourceImageZoneAndId.getZone(), newImageId);
+      final RegionAndId targetImageRegionAndId = RegionAndId.fromRegionAndId(sourceImageRegionAndId.getRegion(), newImageId);
 
       logger.info(">> Registered new Image %s, waiting for it to become available.", newImageId);
-      
+
       final AtomicReference<Image> image = Atomics.newReference(new ImageBuilder()
-            .location(find(locations.get(), idEquals(targetImageZoneAndId.getZone())))
-            .id(targetImageZoneAndId.slashEncode())
-            .providerId(targetImageZoneAndId.getId())
+            .location(find(locations.get(), idEquals(targetImageRegionAndId.getRegion())))
+            .id(targetImageRegionAndId.slashEncode())
+            .providerId(targetImageRegionAndId.getId())
             .description(cloneTemplate.getName())
             .operatingSystem(OperatingSystem.builder().description(cloneTemplate.getName()).build())
             .status(Image.Status.PENDING).build());
@@ -125,9 +125,9 @@ public class NovaImageExtension implements ImageExtension {
 
    @Override
    public boolean deleteImage(String id) {
-      ZoneAndId zoneAndId = ZoneAndId.fromSlashEncoded(id);
+      RegionAndId regionAndId = RegionAndId.fromSlashEncoded(id);
       try {
-         this.novaApi.getImageApiForZone(zoneAndId.getZone()).delete(zoneAndId.getId());
+         this.novaApi.getImageApi(regionAndId.getRegion()).delete(regionAndId.getId());
       } catch (Exception e) {
          return false;
       }

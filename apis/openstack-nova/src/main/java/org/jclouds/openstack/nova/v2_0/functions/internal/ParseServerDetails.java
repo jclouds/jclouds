@@ -71,8 +71,8 @@ public class ParseServerDetails extends ParseJson<Servers> {
 
       @Override
       protected Function<Object, IterableWithMarker<Server>> markerToNextForArg0(Optional<Object> arg0) {
-         String zone = arg0.get().toString();
-         final ServerApi serverApi = api.getServerApiForZone(zone);
+         String region = arg0.get().toString();
+         final ServerApi serverApi = api.getServerApi(region);
          return new Function<Object, IterableWithMarker<Server>>() {
 
             @SuppressWarnings("unchecked")

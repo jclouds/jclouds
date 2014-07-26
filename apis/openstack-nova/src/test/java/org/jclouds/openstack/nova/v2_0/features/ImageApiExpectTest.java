@@ -54,9 +54,9 @@ public class ImageApiExpectTest extends BaseNovaApiExpectTest {
       NovaApi apiWhenImagesExist = requestsSendResponses(keystoneAuthWithUsernameAndPasswordAndTenantName,
             responseWithKeystoneAccess, list, listResponse);
 
-      assertEquals(apiWhenImagesExist.getConfiguredZones(), ImmutableSet.of("az-1.region-a.geo-1", "az-2.region-a.geo-1", "az-3.region-a.geo-1"));
+      assertEquals(apiWhenImagesExist.getConfiguredRegions(), ImmutableSet.of("az-1.region-a.geo-1", "az-2.region-a.geo-1", "az-3.region-a.geo-1"));
 
-      assertEquals(apiWhenImagesExist.getImageApiForZone("az-1.region-a.geo-1").list().concat().toString(),
+      assertEquals(apiWhenImagesExist.getImageApi("az-1.region-a.geo-1").list().concat().toString(),
             new ParseImageListTest().expected().toString());
    }
 
@@ -73,7 +73,7 @@ public class ImageApiExpectTest extends BaseNovaApiExpectTest {
       NovaApi apiWhenNoServersExist = requestsSendResponses(keystoneAuthWithUsernameAndPasswordAndTenantName,
             responseWithKeystoneAccess, list, listResponse);
 
-      assertTrue(apiWhenNoServersExist.getImageApiForZone("az-1.region-a.geo-1").list().concat().isEmpty());
+      assertTrue(apiWhenNoServersExist.getImageApi("az-1.region-a.geo-1").list().concat().isEmpty());
    }
 
    public void testGetImageWhenResponseIs2xx() throws Exception {
@@ -92,7 +92,7 @@ public class ImageApiExpectTest extends BaseNovaApiExpectTest {
             responseWithKeystoneAccess, getImage, getImageResponse);
 
       assertEquals(
-            apiWhenImagesExist.getImageApiForZone("az-1.region-a.geo-1").get("52415800-8b69-11e0-9b19-734f5736d2a2")
+            apiWhenImagesExist.getImageApi("az-1.region-a.geo-1").get("52415800-8b69-11e0-9b19-734f5736d2a2")
                   .toString(), new ParseImageTest().expected().toString());
    }
 
@@ -109,7 +109,7 @@ public class ImageApiExpectTest extends BaseNovaApiExpectTest {
       NovaApi apiWhenNoImagesExist = requestsSendResponses(keystoneAuthWithUsernameAndPasswordAndTenantName,
             responseWithKeystoneAccess, getImage, getImageResponse);
 
-      assertNull(apiWhenNoImagesExist.getImageApiForZone("az-1.region-a.geo-1").get("52415800-8b69-11e0-9b19-734f5736d2a2"));
+      assertNull(apiWhenNoImagesExist.getImageApi("az-1.region-a.geo-1").get("52415800-8b69-11e0-9b19-734f5736d2a2"));
    }
 
    public void testListMetadataWhenResponseIs2xx() throws Exception {
@@ -127,7 +127,7 @@ public class ImageApiExpectTest extends BaseNovaApiExpectTest {
       NovaApi apiWhenServerExists = requestsSendResponses(keystoneAuthWithUsernameAndPasswordAndTenantName,
                responseWithKeystoneAccess, getMetadata, getMetadataResponse);
 
-      assertEquals(apiWhenServerExists.getImageApiForZone("az-1.region-a.geo-1").getMetadata(imageId).toString(),
+      assertEquals(apiWhenServerExists.getImageApi("az-1.region-a.geo-1").getMetadata(imageId).toString(),
              new ParseMetadataListTest().expected().toString());
    }
 
@@ -146,7 +146,7 @@ public class ImageApiExpectTest extends BaseNovaApiExpectTest {
                responseWithKeystoneAccess, getMetadata, getMetadataResponse);
 
       try {
-         apiWhenServerExists.getImageApiForZone("az-1.region-a.geo-1").getMetadata(imageId);
+         apiWhenServerExists.getImageApi("az-1.region-a.geo-1").getMetadata(imageId);
          fail("Expected an exception.");
          } catch (Exception e) {
             // expected
@@ -175,7 +175,7 @@ public class ImageApiExpectTest extends BaseNovaApiExpectTest {
       NovaApi apiWhenImageExists = requestsSendResponses(keystoneAuthWithUsernameAndPasswordAndTenantName,
                responseWithKeystoneAccess, setMetadata, setMetadataResponse);
 
-      assertEquals(apiWhenImageExists.getImageApiForZone("az-1.region-a.geo-1").setMetadata(imageId, metadata).toString(),
+      assertEquals(apiWhenImageExists.getImageApi("az-1.region-a.geo-1").setMetadata(imageId, metadata).toString(),
              new ParseMetadataListTest().expected().toString());
    }
 
@@ -201,7 +201,7 @@ public class ImageApiExpectTest extends BaseNovaApiExpectTest {
                responseWithKeystoneAccess, setMetadata, setMetadataResponse);
 
       try {
-    	 apiWhenServerExists.getImageApiForZone("az-1.region-a.geo-1").setMetadata(imageId, metadata);
+    	 apiWhenServerExists.getImageApi("az-1.region-a.geo-1").setMetadata(imageId, metadata);
          fail("Expected an exception.");
       } catch (Exception e) {
          // expected
@@ -230,7 +230,7 @@ public class ImageApiExpectTest extends BaseNovaApiExpectTest {
       NovaApi apiWhenServerExists = requestsSendResponses(keystoneAuthWithUsernameAndPasswordAndTenantName,
                responseWithKeystoneAccess, setMetadata, setMetadataResponse);
 
-      assertEquals(apiWhenServerExists.getImageApiForZone("az-1.region-a.geo-1").updateMetadata(imageId, metadata).toString(),
+      assertEquals(apiWhenServerExists.getImageApi("az-1.region-a.geo-1").updateMetadata(imageId, metadata).toString(),
              new ParseMetadataUpdateTest().expected().toString());
    }
 
@@ -256,7 +256,7 @@ public class ImageApiExpectTest extends BaseNovaApiExpectTest {
                responseWithKeystoneAccess, setMetadata, setMetadataResponse);
 
       try {
-         apiWhenServerExists.getImageApiForZone("az-1.region-a.geo-1").setMetadata(imageId, metadata);
+         apiWhenServerExists.getImageApi("az-1.region-a.geo-1").setMetadata(imageId, metadata);
          fail("Expected an exception.");
       } catch (Exception e) {
          // expected
@@ -280,7 +280,7 @@ public class ImageApiExpectTest extends BaseNovaApiExpectTest {
       NovaApi apiWhenServerExists = requestsSendResponses(keystoneAuthWithUsernameAndPasswordAndTenantName,
                responseWithKeystoneAccess, getMetadata, getMetadataResponse);
 
-      assertEquals(apiWhenServerExists.getImageApiForZone("az-1.region-a.geo-1").getMetadata(imageId, "Image Version").toString(),
+      assertEquals(apiWhenServerExists.getImageApi("az-1.region-a.geo-1").getMetadata(imageId, "Image Version").toString(),
              "2.5");
    }
 
@@ -301,7 +301,7 @@ public class ImageApiExpectTest extends BaseNovaApiExpectTest {
       NovaApi apiWhenImageExists = requestsSendResponses(keystoneAuthWithUsernameAndPasswordAndTenantName,
                responseWithKeystoneAccess, getMetadata, getMetadataResponse);
 
-      assertNull(apiWhenImageExists.getImageApiForZone("az-1.region-a.geo-1").getMetadata(imageId, key));
+      assertNull(apiWhenImageExists.getImageApi("az-1.region-a.geo-1").getMetadata(imageId, key));
    }
 
    public void testSetMetadataItemWhenResponseIs2xx() throws Exception {
@@ -322,7 +322,7 @@ public class ImageApiExpectTest extends BaseNovaApiExpectTest {
       NovaApi apiWhenServerExists = requestsSendResponses(keystoneAuthWithUsernameAndPasswordAndTenantName,
                responseWithKeystoneAccess, updateMetadata, updateMetadataResponse);
 
-      assertEquals(apiWhenServerExists.getImageApiForZone("az-1.region-a.geo-1").updateMetadata(imageId, key, "2.5").toString(),
+      assertEquals(apiWhenServerExists.getImageApi("az-1.region-a.geo-1").updateMetadata(imageId, key, "2.5").toString(),
              "2.5");
    }
 
@@ -342,7 +342,7 @@ public class ImageApiExpectTest extends BaseNovaApiExpectTest {
       NovaApi apiWhenImageExists = requestsSendResponses(keystoneAuthWithUsernameAndPasswordAndTenantName,
                responseWithKeystoneAccess, deleteMetadata, deleteMetadataResponse);
 
-      apiWhenImageExists.getImageApiForZone("az-1.region-a.geo-1").deleteMetadata(imageId, key);
+      apiWhenImageExists.getImageApi("az-1.region-a.geo-1").deleteMetadata(imageId, key);
    }
 
    public void testDeleteMetadataItemWhenResponseIs404() throws Exception {
@@ -361,6 +361,6 @@ public class ImageApiExpectTest extends BaseNovaApiExpectTest {
       NovaApi apiWhenImageExists = requestsSendResponses(keystoneAuthWithUsernameAndPasswordAndTenantName,
                responseWithKeystoneAccess, deleteMetadata, deleteMetadataResponse);
 
-      apiWhenImageExists.getImageApiForZone("az-1.region-a.geo-1").deleteMetadata(imageId, key);
+      apiWhenImageExists.getImageApi("az-1.region-a.geo-1").deleteMetadata(imageId, key);
    }
 }

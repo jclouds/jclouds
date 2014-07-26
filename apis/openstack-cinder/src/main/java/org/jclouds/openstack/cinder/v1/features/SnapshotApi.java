@@ -29,6 +29,7 @@ import javax.ws.rs.core.MediaType;
 import org.jclouds.Fallbacks.EmptyFluentIterableOnNotFoundOr404;
 import org.jclouds.Fallbacks.FalseOnNotFoundOr404;
 import org.jclouds.Fallbacks.NullOnNotFoundOr404;
+import org.jclouds.javax.annotation.Nullable;
 import org.jclouds.openstack.cinder.v1.domain.Snapshot;
 import org.jclouds.openstack.cinder.v1.options.CreateSnapshotOptions;
 import org.jclouds.openstack.keystone.v2_0.filters.AuthenticateRequest;
@@ -42,12 +43,13 @@ import org.jclouds.rest.annotations.SkipEncoding;
 import com.google.common.collect.FluentIterable;
 
 /**
- * Provides synchronous access to Volume Snapshots via their REST API.
- * 
- * @see <a href="http://api.openstack.org/">API Doc</a>
+ * Provides synchronous access to Volume Snapshots API.
+ *
  */
 @SkipEncoding({'/', '='})
 @RequestFilters(AuthenticateRequest.class)
+@Consumes(MediaType.APPLICATION_JSON)
+@Path("/snapshots")
 public interface SnapshotApi {
    /**
     * Returns a summary list of Snapshots.
@@ -56,10 +58,8 @@ public interface SnapshotApi {
     */
    @Named("snapshot:list")
    @GET
-   @Path("/snapshots")
    @SelectJson("snapshots")
-   @Consumes(MediaType.APPLICATION_JSON)
-   @Fallback(EmptyFluentIterableOnNotFoundOr404.class)	
+   @Fallback(EmptyFluentIterableOnNotFoundOr404.class)
    FluentIterable<? extends Snapshot> list();
 
    /**
@@ -69,10 +69,9 @@ public interface SnapshotApi {
     */
    @Named("snapshot:list")
    @GET
-   @Path("/snapshots/detail")
+   @Path("/detail")
    @SelectJson("snapshots")
-   @Consumes(MediaType.APPLICATION_JSON)
-   @Fallback(EmptyFluentIterableOnNotFoundOr404.class)   
+   @Fallback(EmptyFluentIterableOnNotFoundOr404.class)
    FluentIterable<? extends Snapshot> listInDetail();
 
    /**
@@ -83,26 +82,24 @@ public interface SnapshotApi {
     */
    @Named("snapshot:get")
    @GET
-   @Path("/snapshots/{id}")
+   @Path("/{id}")
    @SelectJson("snapshot")
-   @Consumes(MediaType.APPLICATION_JSON)
-   @Fallback(NullOnNotFoundOr404.class)   
+   @Fallback(NullOnNotFoundOr404.class)
+   @Nullable
    Snapshot get(@PathParam("id") String snapshotId);
 
    /**
     * Creates a new Snapshot. The Volume status must be Available.
-    * 
+    *
     * @param volumeId The Volume Id from which to create the Snapshot
     * @param options See CreateSnapshotOptions
     * @return The new Snapshot
     */
    @Named("snapshot:create")
    @POST
-   @Path("/snapshots")
    @SelectJson("snapshot")
-   @Consumes(MediaType.APPLICATION_JSON)
    @Produces(MediaType.APPLICATION_JSON)
-   @MapBinder(CreateSnapshotOptions.class)   
+   @MapBinder(CreateSnapshotOptions.class)
    Snapshot create(@PayloadParam("volume_id") String volumeId, CreateSnapshotOptions... options);
 
    /**
@@ -113,8 +110,7 @@ public interface SnapshotApi {
     */
    @Named("snapshot:delete")
    @DELETE
-   @Path("/snapshots/{id}")
-   @Consumes(MediaType.APPLICATION_JSON)
-   @Fallback(FalseOnNotFoundOr404.class)   
+   @Path("/{id}")
+   @Fallback(FalseOnNotFoundOr404.class)
    boolean delete(@PathParam("id") String snapshotId);
 }

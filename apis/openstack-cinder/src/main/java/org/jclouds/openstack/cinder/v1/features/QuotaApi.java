@@ -16,7 +16,15 @@
  */
 package org.jclouds.openstack.cinder.v1.features;
 
-import org.jclouds.Fallbacks;
+import javax.inject.Named;
+import javax.ws.rs.Consumes;
+import javax.ws.rs.GET;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.core.MediaType;
+
+import org.jclouds.Fallbacks.NullOnNotFoundOr404;
+import org.jclouds.javax.annotation.Nullable;
 import org.jclouds.openstack.cinder.v1.domain.VolumeQuota;
 import org.jclouds.openstack.keystone.v2_0.filters.AuthenticateRequest;
 import org.jclouds.rest.annotations.Fallback;
@@ -24,29 +32,22 @@ import org.jclouds.rest.annotations.RequestFilters;
 import org.jclouds.rest.annotations.SelectJson;
 import org.jclouds.rest.annotations.SkipEncoding;
 
-import javax.ws.rs.Consumes;
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.core.MediaType;
-
 /**
- * Provides asynchronous access to Quota via their REST API.
+ * Provides access to the Quota API.
  *
- * @see QuotaApi
- * @see <a href="http://api.openstack.org/">API Doc</a>
  */
 @SkipEncoding({'/', '='})
 @RequestFilters(AuthenticateRequest.class)
+@Consumes(MediaType.APPLICATION_JSON)
 @Path("/os-quota-sets")
 public interface QuotaApi {
 
-
+   @Named("quota:get")
    @GET
    @SelectJson("quota_set")
-   @Consumes(MediaType.APPLICATION_JSON)
    @Path("/{tenant_id}")
-   @Fallback(Fallbacks.NullOnNotFoundOr404.class)
+   @Fallback(NullOnNotFoundOr404.class)
+   @Nullable
    VolumeQuota getByTenant(@PathParam("tenant_id") String tenantId);
 
 }

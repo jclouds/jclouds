@@ -44,7 +44,7 @@ import com.google.common.collect.Maps;
 @Test(groups = "live", testName = "UserApiLiveTest")
 public class UserApiLiveTest extends BaseTroveApiLiveTest {
 
-   // zone to instance
+   // region to instance
    private static Map<String, List<Instance>> instancesToDelete = Maps.newHashMap();
    // not deleting users. they will be deleted when instances are deleted
 
@@ -53,36 +53,36 @@ public class UserApiLiveTest extends BaseTroveApiLiveTest {
    public void setup() {
       super.setup();
       TroveUtils utils = new TroveUtils(api);
-      for (String zone : api.getConfiguredZones()) {
+      for (String region : api.getConfiguredRegions()) {
          // create instances
          List<Instance> instanceList = Lists.newArrayList();
-         Instance first = utils.getWorkingInstance(zone, "first_user_trove_live_testing_" + zone, "1", 1);
-         Instance second = utils.getWorkingInstance(zone, "second_user_trove_live_testing_" + zone, "1", 1);
+         Instance first = utils.getWorkingInstance(region, "first_user_trove_live_testing_" + region, "1", 1);
+         Instance second = utils.getWorkingInstance(region, "second_user_trove_live_testing_" + region, "1", 1);
          instanceList.add(first);
          instanceList.add(second);
-         instancesToDelete.put(zone, instanceList);
+         instancesToDelete.put(region, instanceList);
          // create users
          User user1 = User.builder()
                .name("user1")
                .password(UUID.randomUUID().toString())
                .databases(ImmutableSet.of(
-                     "u1db1", 
+                     "u1db1",
                      "u1db2")).build();
          User user2 = User.builder()
                .name("user2")
                .password(UUID.randomUUID().toString())
                .databases(ImmutableSet.of(
-                     "u2db1", 
+                     "u2db1",
                      "u2db2")).build();
          User user3 = User.builder()
                .name("user3")
                .password(UUID.randomUUID().toString())
                .host("173.203.44.122")
                .databases(ImmutableSet.of(
-                     "u3db1", 
+                     "u3db1",
                      "u3db2")).build();
-         UserApi userApiFirst = api.getUserApiForZoneAndInstance(zone, first.getId());
-         UserApi userApiSecond = api.getUserApiForZoneAndInstance(zone, second.getId());
+         UserApi userApiFirst = api.getUserApi(region, first.getId());
+         UserApi userApiSecond = api.getUserApi(region, second.getId());
          userApiFirst.create(ImmutableSet.of(user1, user2));
          userApiSecond.create(ImmutableSet.of(user3));
       }
@@ -91,9 +91,9 @@ public class UserApiLiveTest extends BaseTroveApiLiveTest {
    @Override
    @AfterClass(groups = { "integration", "live" })
    public void tearDown(){
-      for (String zone : api.getConfiguredZones()) {
-         InstanceApi instanceApi = api.getInstanceApiForZone(zone);
-         for (Instance instance : instancesToDelete.get(zone)) {
+      for (String region : api.getConfiguredRegions()) {
+         InstanceApi instanceApi = api.getInstanceApi(region);
+         for (Instance instance : instancesToDelete.get(region)) {
             if (!instanceApi.delete(instance.getId()))
                throw new RuntimeException("Could not delete a database instance after tests!");
          }
@@ -109,28 +109,28 @@ public class UserApiLiveTest extends BaseTroveApiLiveTest {
 
    @Test
    public void testListUsers() {
-      for (String zone : api.getConfiguredZones()) {
-         InstanceApi instanceApi = api.getInstanceApiForZone(zone);
+      for (String region : api.getConfiguredRegions()) {
+         InstanceApi instanceApi = api.getInstanceApi(region);
          assertTrue(instanceApi.list().size() >= 2);
-         for (Instance instance : instancesToDelete.get(zone)) {
-            UserApi userApi = api.getUserApiForZoneAndInstance(zone, instance.getId());
+         for (Instance instance : instancesToDelete.get(region)) {
+            UserApi userApi = api.getUserApi(region, instance.getId());
             if (!instance.getName().contains("user_trove_live_testing"))
                continue;
             assertTrue(userApi.list().size() >= 1);
             for (User user : userApi.list()) {
-               checkUser(user);      
+               checkUser(user);
             }
-         }  
-      }   
-   }    
+         }
+      }
+   }
 
    @Test
    public void testGetUser() {
-      for (String zone : api.getConfiguredZones()) {
-         InstanceApi instanceApi = api.getInstanceApiForZone(zone);
+      for (String region : api.getConfiguredRegions()) {
+         InstanceApi instanceApi = api.getInstanceApi(region);
          assertTrue(instanceApi.list().size() >= 2);
-         for (Instance instance : instancesToDelete.get(zone)) {
-            UserApi userApi = api.getUserApiForZoneAndInstance(zone, instance.getId());
+         for (Instance instance : instancesToDelete.get(region)) {
+            UserApi userApi = api.getUserApi(region, instance.getId());
             if (!instance.getName().contains("user_trove_live_testing"))
                continue;
             assertTrue(userApi.list().size() >= 1);
@@ -142,41 +142,41 @@ public class UserApiLiveTest extends BaseTroveApiLiveTest {
                assertEquals(userFromGet.getDatabases(), user.getDatabases());
                assertEquals(userFromGet, user);
             }
-         }  
-      } 
+         }
+      }
    }
 
    @Test
    public void testGetDatabaseListForUser() {
-      for (String zone : api.getConfiguredZones()) {
-         InstanceApi instanceApi = api.getInstanceApiForZone(zone);
+      for (String region : api.getConfiguredRegions()) {
+         InstanceApi instanceApi = api.getInstanceApi(region);
          assertTrue(instanceApi.list().size() >= 2 );
-         for (Instance instance : instancesToDelete.get(zone)) {
-            UserApi userApi = api.getUserApiForZoneAndInstance(zone, instance.getId());
+         for (Instance instance : instancesToDelete.get(region)) {
+            UserApi userApi = api.getUserApi(region, instance.getId());
             if (!instance.getName().contains("user_trove_live_testing"))
                continue;
             assertTrue(userApi.list().size() >= 1);
             for (User user : userApi.list()) {
                assertFalse(userApi.getDatabaseList(user.getIdentifier()).isEmpty());
             }
-         }  
-      } 
+         }
+      }
    }
 
    @Test
    public void testGrantAndRevokeAcccessForUser() {
-      for (String zone : api.getConfiguredZones()) {
-         InstanceApi instanceApi = api.getInstanceApiForZone(zone);
+      for (String region : api.getConfiguredRegions()) {
+         InstanceApi instanceApi = api.getInstanceApi(region);
          assertTrue(instanceApi.list().size() >= 2);
-         for (Instance instance : instancesToDelete.get(zone)) {
-            UserApi userApi = api.getUserApiForZoneAndInstance(zone, instance.getId());
+         for (Instance instance : instancesToDelete.get(region)) {
+            UserApi userApi = api.getUserApi(region, instance.getId());
             if (!instance.getName().contains("user_trove_live_testing"))
                continue;
             assertTrue(userApi.list().size() >= 1);
             for (User user : userApi.list()) {
                userApi.grant(user.getIdentifier(), "dbA");
                userApi.grant(user.getIdentifier(), ImmutableList.of(
-                     "dbB", 
+                     "dbB",
                      "dbC"));
 
                Set<String> databases = userApi.getDatabaseList(user.getIdentifier()).toSet();
@@ -193,15 +193,15 @@ public class UserApiLiveTest extends BaseTroveApiLiveTest {
                assertFalse(databases.contains("dbB"));
                assertFalse(databases.contains("dbC"));
             }
-         }  
-      } 
+         }
+      }
    }
 
    @Test
    public void testGetUserWhenNotFound() {
-      for (String zone : api.getConfiguredZones()) {
-         String instanceId = instancesToDelete.get(zone).iterator().next().getId();
-         UserApi userApi = api.getUserApiForZoneAndInstance(zone, instanceId);
+      for (String region : api.getConfiguredRegions()) {
+         String instanceId = instancesToDelete.get(region).iterator().next().getId();
+         UserApi userApi = api.getUserApi(region, instanceId);
          assertNull(userApi.get("9999"));
       }
    }

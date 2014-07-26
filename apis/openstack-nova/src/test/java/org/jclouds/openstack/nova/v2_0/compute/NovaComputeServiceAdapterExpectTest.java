@@ -35,8 +35,8 @@ import org.jclouds.openstack.nova.v2_0.compute.options.NovaTemplateOptions;
 import org.jclouds.openstack.nova.v2_0.domain.KeyPair;
 import org.jclouds.openstack.nova.v2_0.domain.Network;
 import org.jclouds.openstack.nova.v2_0.domain.Server;
-import org.jclouds.openstack.nova.v2_0.domain.zonescoped.ServerInZone;
-import org.jclouds.openstack.nova.v2_0.domain.zonescoped.ZoneAndName;
+import org.jclouds.openstack.nova.v2_0.domain.regionscoped.ServerInRegion;
+import org.jclouds.openstack.nova.v2_0.domain.regionscoped.RegionAndName;
 import org.jclouds.openstack.nova.v2_0.internal.BaseNovaComputeServiceContextExpectTest;
 import org.testng.annotations.Test;
 
@@ -92,7 +92,7 @@ public class NovaComputeServiceAdapterExpectTest extends BaseNovaComputeServiceC
 
       NovaComputeServiceAdapter adapter = forNetworks.getInstance(NovaComputeServiceAdapter.class);
 
-      NodeAndInitialCredentials<ServerInZone> server = adapter.createNodeWithGroupEncodedIntoName("test", "test-e92", template);
+      NodeAndInitialCredentials<ServerInRegion> server = adapter.createNodeWithGroupEncodedIntoName("test", "test-e92", template);
       assertNotNull(server);
       // Response irrelevant in this expect test - just verifying the request.
    }
@@ -127,7 +127,7 @@ public class NovaComputeServiceAdapterExpectTest extends BaseNovaComputeServiceC
 
       NovaComputeServiceAdapter adapter = forDiskConfig.getInstance(NovaComputeServiceAdapter.class);
 
-      NodeAndInitialCredentials<ServerInZone> server = adapter.createNodeWithGroupEncodedIntoName("test", "test-e92", template);
+      NodeAndInitialCredentials<ServerInRegion> server = adapter.createNodeWithGroupEncodedIntoName("test", "test-e92", template);
       assertNotNull(server);
       assertEquals(server.getNode().getServer().getDiskConfig().orNull(), Server.DISK_CONFIG_AUTO);
    }
@@ -162,7 +162,7 @@ public class NovaComputeServiceAdapterExpectTest extends BaseNovaComputeServiceC
 
       NovaComputeServiceAdapter adapter = forConfigDrive.getInstance(NovaComputeServiceAdapter.class);
 
-      NodeAndInitialCredentials<ServerInZone> server = adapter.createNodeWithGroupEncodedIntoName("test", "test-e92", template);
+      NodeAndInitialCredentials<ServerInRegion> server = adapter.createNodeWithGroupEncodedIntoName("test", "test-e92", template);
       assertNotNull(server);
    }
 
@@ -209,7 +209,7 @@ public class NovaComputeServiceAdapterExpectTest extends BaseNovaComputeServiceC
 
       NovaComputeServiceAdapter adapter = forNovaNetworks.getInstance(NovaComputeServiceAdapter.class);
 
-      NodeAndInitialCredentials<ServerInZone> server = adapter.createNodeWithGroupEncodedIntoName("test", "test-e92", template);
+      NodeAndInitialCredentials<ServerInRegion> server = adapter.createNodeWithGroupEncodedIntoName("test", "test-e92", template);
       assertNotNull(server);
    }
 
@@ -243,7 +243,7 @@ public class NovaComputeServiceAdapterExpectTest extends BaseNovaComputeServiceC
 
       NovaComputeServiceAdapter adapter = forSecurityGroups.getInstance(NovaComputeServiceAdapter.class);
 
-      NodeAndInitialCredentials<ServerInZone> server = adapter.createNodeWithGroupEncodedIntoName("test", "test-e92",
+      NodeAndInitialCredentials<ServerInRegion> server = adapter.createNodeWithGroupEncodedIntoName("test", "test-e92",
                template);
       assertNotNull(server);
       assertEquals(server.getCredentials(), LoginCredentials.builder().password("ZWuHcmTMQ7eXoHeM").build());
@@ -286,13 +286,13 @@ public class NovaComputeServiceAdapterExpectTest extends BaseNovaComputeServiceC
       NovaComputeServiceAdapter adapter = forSecurityGroups.getInstance(NovaComputeServiceAdapter.class);
 
       // we expect to have already an entry in the cache for the key
-      LoadingCache<ZoneAndName, KeyPair> keyPairCache = forSecurityGroups.getInstance(Key
-               .get(new TypeLiteral<LoadingCache<ZoneAndName, KeyPair>>() {
+      LoadingCache<RegionAndName, KeyPair> keyPairCache = forSecurityGroups.getInstance(Key
+               .get(new TypeLiteral<LoadingCache<RegionAndName, KeyPair>>() {
                }));
-      keyPairCache.put(ZoneAndName.fromZoneAndName("az-1.region-a.geo-1", "foo"), KeyPair.builder().name("foo")
+      keyPairCache.put(RegionAndName.fromRegionAndName("az-1.region-a.geo-1", "foo"), KeyPair.builder().name("foo")
                .privateKey("privateKey").build());
 
-      NodeAndInitialCredentials<ServerInZone> server = adapter.createNodeWithGroupEncodedIntoName("test", "test-e92",
+      NodeAndInitialCredentials<ServerInRegion> server = adapter.createNodeWithGroupEncodedIntoName("test", "test-e92",
                template);
       assertNotNull(server);
       assertEquals(server.getCredentials(), LoginCredentials.builder().privateKey("privateKey").build());
@@ -333,7 +333,7 @@ public class NovaComputeServiceAdapterExpectTest extends BaseNovaComputeServiceC
 
       NovaComputeServiceAdapter adapter = forSecurityGroups.getInstance(NovaComputeServiceAdapter.class);
 
-      NodeAndInitialCredentials<ServerInZone> server = adapter.createNodeWithGroupEncodedIntoName("test", "test-e92",
+      NodeAndInitialCredentials<ServerInRegion> server = adapter.createNodeWithGroupEncodedIntoName("test", "test-e92",
             template);
       assertNotNull(server);
       assertNull(server.getCredentials());
@@ -417,8 +417,8 @@ public class NovaComputeServiceAdapterExpectTest extends BaseNovaComputeServiceC
    @Override
    protected Properties setupProperties() {
       Properties overrides = super.setupProperties();
-      // only specify one zone so that we don't have to configure requests for multiple zones
-      overrides.setProperty("jclouds.zones", "az-1.region-a.geo-1");
+      // only specify one region so that we don't have to configure requests for multiple regions
+      overrides.setProperty("jclouds.regions", "az-1.region-a.geo-1");
       return overrides;
    }
 }

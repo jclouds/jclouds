@@ -46,7 +46,7 @@ import com.google.common.collect.Iterables;
 public class VolumeApiLiveTest extends BaseNovaApiLiveTest {
 
    private Optional<? extends VolumeApi> volumeOption;
-   private String zone;
+   private String region;
    private String availabilityZone;
 
    private Volume testVolume;
@@ -56,11 +56,11 @@ public class VolumeApiLiveTest extends BaseNovaApiLiveTest {
    @Override
    public void setup() {
       super.setup();
-      zone = Iterables.getLast(api.getConfiguredZones(), "nova");
-      volumeOption = api.getVolumeExtensionForZone(zone);
+      region = Iterables.getLast(api.getConfiguredRegions(), "nova");
+      volumeOption = api.getVolumeApi(region);
 
-      Optional<? extends AvailabilityZoneApi> availabilityZoneApi = api.getAvailabilityZoneApi(zone);
-      availabilityZone = availabilityZoneApi.isPresent() ? Iterables.getLast(availabilityZoneApi.get().list()).getName() : zone;
+      Optional<? extends AvailabilityZoneApi> availabilityZoneApi = api.getAvailabilityZoneApi(region);
+      availabilityZone = availabilityZoneApi.isPresent() ? Iterables.getLast(availabilityZoneApi.get().list()).getName() : region;
    }
 
    @AfterClass(groups = { "integration", "live" })
@@ -221,7 +221,7 @@ public class VolumeApiLiveTest extends BaseNovaApiLiveTest {
          String server_id = null;
          try {
             CreateServerOptions createServerOptions = CreateServerOptions.Builder.availabilityZone(availabilityZone);
-            final String serverId = server_id = createServerInZone(zone, createServerOptions).getId();
+            final String serverId = server_id = createServerInRegion(region, createServerOptions).getId();
 
             Set<? extends VolumeAttachment> attachments = volumeOption.get().listAttachmentsOnServer(serverId).toSet();
             assertNotNull(attachments);
@@ -274,7 +274,7 @@ public class VolumeApiLiveTest extends BaseNovaApiLiveTest {
 
          } finally {
             if (server_id != null)
-               api.getServerApiForZone(zone).delete(server_id);
+               api.getServerApi(region).delete(server_id);
          }
 
       }

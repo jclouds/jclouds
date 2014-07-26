@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.jclouds.openstack.nova.v2_0.domain.zonescoped;
+package org.jclouds.openstack.nova.v2_0.domain.regionscoped;
 
 import static com.google.common.base.Objects.equal;
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -25,11 +25,11 @@ import com.google.common.base.Objects;
 import com.google.common.base.MoreObjects.ToStringHelper;
 import com.google.common.collect.ImmutableSet;
 
-public class ZoneSecurityGroupNameAndPorts extends ZoneAndName {
+public class RegionSecurityGroupNameAndPorts extends RegionAndName {
    protected final Set<Integer> ports;
 
-   public ZoneSecurityGroupNameAndPorts(String zoneId, String name, Iterable<Integer> ports) {
-      super(zoneId, name);
+   public RegionSecurityGroupNameAndPorts(String regionId, String name, Iterable<Integer> ports) {
+      super(regionId, name);
       this.ports = ImmutableSet.<Integer> copyOf(checkNotNull(ports, "ports"));
    }
 
@@ -43,7 +43,7 @@ public class ZoneSecurityGroupNameAndPorts extends ZoneAndName {
          return true;
       if (o == null || getClass() != o.getClass())
          return false;
-      ZoneSecurityGroupNameAndPorts that = ZoneSecurityGroupNameAndPorts.class.cast(o);
+      RegionSecurityGroupNameAndPorts that = RegionSecurityGroupNameAndPorts.class.cast(o);
       return super.equals(that) && equal(this.ports, that.ports);
    }
 

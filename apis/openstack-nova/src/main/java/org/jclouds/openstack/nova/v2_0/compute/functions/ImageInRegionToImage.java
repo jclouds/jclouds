@@ -28,7 +28,7 @@ import org.jclouds.compute.domain.ImageBuilder;
 import org.jclouds.compute.domain.OperatingSystem;
 import org.jclouds.domain.Location;
 import org.jclouds.openstack.nova.v2_0.domain.Image.Status;
-import org.jclouds.openstack.nova.v2_0.domain.zonescoped.ImageInZone;
+import org.jclouds.openstack.nova.v2_0.domain.regionscoped.ImageInRegion;
 
 import com.google.common.base.Function;
 import com.google.common.base.MoreObjects;
@@ -37,13 +37,13 @@ import com.google.common.base.Supplier;
 /**
  * A function for transforming a nova-specific Image into a generic Image object.
  */
-public class ImageInZoneToImage implements Function<ImageInZone, Image> {
+public class ImageInRegionToImage implements Function<ImageInRegion, Image> {
    private final Map<Status, org.jclouds.compute.domain.Image.Status> toPortableImageStatus;
    private final Function<org.jclouds.openstack.nova.v2_0.domain.Image, OperatingSystem> imageToOs;
    private final Supplier<Map<String, Location>> locationIndex;
 
    @Inject
-   public ImageInZoneToImage(Map<org.jclouds.openstack.nova.v2_0.domain.Image.Status, Image.Status> toPortableImageStatus, 
+   public ImageInRegionToImage(Map<org.jclouds.openstack.nova.v2_0.domain.Image.Status, Image.Status> toPortableImageStatus,
             Function<org.jclouds.openstack.nova.v2_0.domain.Image, OperatingSystem> imageToOs,
             Supplier<Map<String, Location>> locationIndex) {
       this.toPortableImageStatus = checkNotNull(toPortableImageStatus, "toPortableImageStatus");
@@ -52,15 +52,15 @@ public class ImageInZoneToImage implements Function<ImageInZone, Image> {
    }
 
    @Override
-   public Image apply(ImageInZone imageInZone) {
-      Location location = locationIndex.get().get(imageInZone.getZone());
-      checkState(location != null, "location %s not in locationIndex: %s", imageInZone.getZone(), locationIndex.get());
-      org.jclouds.openstack.nova.v2_0.domain.Image image = imageInZone.getImage();
-      return new ImageBuilder().id(imageInZone.slashEncode()).providerId(image.getId()).name(image.getName())
+   public Image apply(ImageInRegion imageInRegion) {
+      Location location = locationIndex.get().get(imageInRegion.getRegion());
+      checkState(location != null, "location %s not in locationIndex: %s", imageInRegion.getRegion(), locationIndex.get());
+      org.jclouds.openstack.nova.v2_0.domain.Image image = imageInRegion.getImage();
+      return new ImageBuilder().id(imageInRegion.slashEncode()).providerId(image.getId()).name(image.getName())
                .userMetadata(image.getMetadata()).operatingSystem(imageToOs.apply(image)).description(image.getName())
                .location(location).status(toPortableImageStatus.get(image.getStatus())).build();
    }
-   
+
    @Override
    public String toString() {
       return MoreObjects.toStringHelper(this).toString();

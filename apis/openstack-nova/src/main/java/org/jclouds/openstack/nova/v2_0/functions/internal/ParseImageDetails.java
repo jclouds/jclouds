@@ -71,8 +71,8 @@ public class ParseImageDetails extends ParseJson<Images> {
 
       @Override
       protected Function<Object, IterableWithMarker<Image>> markerToNextForArg0(Optional<Object> arg0) {
-         String zone = arg0.get().toString();
-         final ImageApi imageApi = api.getImageApiForZone(zone);
+         String region = arg0.get().toString();
+         final ImageApi imageApi = api.getImageApi(region);
          return new Function<Object, IterableWithMarker<Image>>() {
 
             @SuppressWarnings("unchecked")

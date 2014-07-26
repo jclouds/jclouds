@@ -23,22 +23,22 @@ import java.beans.ConstructorProperties;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
-import com.google.common.base.Optional;
 import org.jclouds.collect.IterableWithMarker;
 import org.jclouds.collect.internal.Arg0ToPagedIterable;
 import org.jclouds.http.functions.ParseJson;
 import org.jclouds.json.Json;
-import org.jclouds.openstack.v2_0.domain.PaginatedCollection;
 import org.jclouds.openstack.nova.v2_0.NovaApi;
 import org.jclouds.openstack.nova.v2_0.domain.Flavor;
 import org.jclouds.openstack.nova.v2_0.features.FlavorApi;
 import org.jclouds.openstack.nova.v2_0.functions.internal.ParseFlavorDetails.Flavors;
 import org.jclouds.openstack.v2_0.domain.Link;
+import org.jclouds.openstack.v2_0.domain.PaginatedCollection;
+import org.jclouds.openstack.v2_0.options.PaginationOptions;
 
 import com.google.common.annotations.Beta;
 import com.google.common.base.Function;
+import com.google.common.base.Optional;
 import com.google.inject.TypeLiteral;
-import org.jclouds.openstack.v2_0.options.PaginationOptions;
 
 /**
  * boiler plate until we determine a better way
@@ -71,8 +71,8 @@ public class ParseFlavorDetails extends ParseJson<Flavors> {
 
       @Override
       protected Function<Object, IterableWithMarker<Flavor>> markerToNextForArg0(Optional<Object> arg0) {
-         String zone = arg0.get().toString();
-         final FlavorApi flavorApi = api.getFlavorApiForZone(zone);
+         String region = arg0.get().toString();
+         final FlavorApi flavorApi = api.getFlavorApi(region);
          return new Function<Object, IterableWithMarker<Flavor>>() {
 
             @SuppressWarnings("unchecked")

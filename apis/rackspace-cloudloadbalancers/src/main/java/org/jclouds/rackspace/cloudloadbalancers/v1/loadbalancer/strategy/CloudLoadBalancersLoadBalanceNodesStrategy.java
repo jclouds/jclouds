@@ -60,7 +60,7 @@ public class CloudLoadBalancersLoadBalanceNodesStrategy implements LoadBalanceNo
       String region = checkNotNull(location, "location").getId();
 
       // TODO need to query and update the LB per current design.
-      LoadBalancer lb = client.getLoadBalancerApiForZone(region).create(
+      LoadBalancer lb = client.getLoadBalancerApi(region).create(
                CreateLoadBalancer.builder().name(name).protocol(protocol.toUpperCase()).port(loadBalancerPort)
                         .virtualIPType(Type.PUBLIC).nodes(
                                  Iterables.transform(nodes, new Function<NodeMetadata, AddNode>() {

@@ -18,12 +18,13 @@ package org.jclouds.rackspace.cloudloadbalancers.v1;
 
 import java.io.Closeable;
 import java.util.Set;
+
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 
 import org.jclouds.javax.annotation.Nullable;
-import org.jclouds.location.Zone;
-import org.jclouds.location.functions.ZoneToEndpoint;
+import org.jclouds.location.Region;
+import org.jclouds.location.functions.RegionToEndpoint;
 import org.jclouds.rackspace.cloudloadbalancers.v1.features.AccessRuleApi;
 import org.jclouds.rackspace.cloudloadbalancers.v1.features.ConnectionApi;
 import org.jclouds.rackspace.cloudloadbalancers.v1.features.ContentCachingApi;
@@ -46,95 +47,220 @@ import com.google.inject.Provides;
  */
 public interface CloudLoadBalancersApi extends Closeable {
    /**
-    * @return the Zone codes configured
+    * @return the Region codes configured
     */
    @Provides
-   @Zone
-   Set<String> getConfiguredZones();
+   @Region
+   Set<String> getConfiguredRegions();
 
    /**
     * Provides access to Load Balancer features.
     */
    @Delegate
-   LoadBalancerApi getLoadBalancerApiForZone(
-         @EndpointParam(parser = ZoneToEndpoint.class) @Nullable String zone);
-   
+   LoadBalancerApi getLoadBalancerApi(
+         @EndpointParam(parser = RegionToEndpoint.class) @Nullable String region);
+
    /**
     * Provides access to Node features.
     */
    @Delegate
    @Path("/loadbalancers/{lbId}")
-   NodeApi getNodeApiForZoneAndLoadBalancer(
-         @EndpointParam(parser = ZoneToEndpoint.class) @Nullable String zone, @PathParam("lbId") int lbId);
+   NodeApi getNodeApi(
+         @EndpointParam(parser = RegionToEndpoint.class) @Nullable String region, @PathParam("lbId") int lbId);
 
    /**
     * Provides access to Access Rule features.
     */
    @Delegate
    @Path("/loadbalancers/{lbId}")
-   AccessRuleApi getAccessRuleApiForZoneAndLoadBalancer(
-         @EndpointParam(parser = ZoneToEndpoint.class) @Nullable String zone, @PathParam("lbId") int lbId);
+   AccessRuleApi getAccessRuleApi(
+         @EndpointParam(parser = RegionToEndpoint.class) @Nullable String region, @PathParam("lbId") int lbId);
 
    /**
     * Provides access to Virtual IP features.
     */
    @Delegate
    @Path("/loadbalancers/{lbId}")
-   VirtualIPApi getVirtualIPApiForZoneAndLoadBalancer(
-         @EndpointParam(parser = ZoneToEndpoint.class) @Nullable String zone, @PathParam("lbId") int lbId);
+   VirtualIPApi getVirtualIPApi(
+         @EndpointParam(parser = RegionToEndpoint.class) @Nullable String region, @PathParam("lbId") int lbId);
 
    /**
     * Provides access to Connection features.
     */
    @Delegate
    @Path("/loadbalancers/{lbId}")
-   ConnectionApi getConnectionApiForZoneAndLoadBalancer(
-         @EndpointParam(parser = ZoneToEndpoint.class) @Nullable String zone, @PathParam("lbId") int lbId);
+   ConnectionApi getConnectionApi(
+         @EndpointParam(parser = RegionToEndpoint.class) @Nullable String region, @PathParam("lbId") int lbId);
 
    /**
     * Provides access to Health Monitor features.
     */
    @Delegate
    @Path("/loadbalancers/{lbId}")
-   HealthMonitorApi getHealthMonitorApiForZoneAndLoadBalancer(
-         @EndpointParam(parser = ZoneToEndpoint.class) @Nullable String zone, @PathParam("lbId") int lbId);
+   HealthMonitorApi getHealthMonitorApi(
+         @EndpointParam(parser = RegionToEndpoint.class) @Nullable String region, @PathParam("lbId") int lbId);
 
    /**
     * Provides access to Session Persistence features.
     */
    @Delegate
    @Path("/loadbalancers/{lbId}")
-   SessionPersistenceApi getSessionPersistenceApiForZoneAndLoadBalancer(
-         @EndpointParam(parser = ZoneToEndpoint.class) @Nullable String zone, @PathParam("lbId") int lbId);
+   SessionPersistenceApi getSessionPersistenceApi(
+         @EndpointParam(parser = RegionToEndpoint.class) @Nullable String region, @PathParam("lbId") int lbId);
 
    /**
     * Provides access to Content Caching features.
     */
    @Delegate
    @Path("/loadbalancers/{lbId}")
-   ContentCachingApi getContentCachingApiForZoneAndLoadBalancer(
-         @EndpointParam(parser = ZoneToEndpoint.class) @Nullable String zone, @PathParam("lbId") int lbId);
+   ContentCachingApi getContentCachingApi(
+         @EndpointParam(parser = RegionToEndpoint.class) @Nullable String region, @PathParam("lbId") int lbId);
 
    /**
     * Provides access to SSL Termination features.
     */
    @Delegate
    @Path("/loadbalancers/{lbId}")
-   SSLTerminationApi getSSLTerminationApiForZoneAndLoadBalancer(
-         @EndpointParam(parser = ZoneToEndpoint.class) @Nullable String zone, @PathParam("lbId") int lbId);
+   SSLTerminationApi getSSLTerminationApi(
+         @EndpointParam(parser = RegionToEndpoint.class) @Nullable String region, @PathParam("lbId") int lbId);
 
    /**
     * Provides access to Error Page features.
     */
    @Delegate
    @Path("/loadbalancers/{lbId}")
-   ErrorPageApi getErrorPageApiForZoneAndLoadBalancer(
-         @EndpointParam(parser = ZoneToEndpoint.class) @Nullable String zone, @PathParam("lbId") int lbId);
+   ErrorPageApi getErrorPageApi(
+         @EndpointParam(parser = RegionToEndpoint.class) @Nullable String region, @PathParam("lbId") int lbId);
 
    /**
     * Provides access to Report features.
     */
    @Delegate
+   ReportApi getReportApi(@EndpointParam(parser = RegionToEndpoint.class) @Nullable String region);
+
+   /**
+    * @return the Zone codes configured
+    * @deprecated Please use {@link #getConfiguredRegions()} as this method will be removed in jclouds 3.0.
+    */
+   @Deprecated
+   @Provides
+   @Region
+   Set<String> getConfiguredZones();
+
+   /**
+    * Provides access to Load Balancer features.
+    * @deprecated Please use {@link #getLoadBalancerApi(String region)} as this method will be removed in jclouds 3.0.
+    */
+   @Deprecated
+   @Delegate
+   LoadBalancerApi getLoadBalancerApiForZone(
+         @EndpointParam(parser = RegionToEndpoint.class) @Nullable String zone);
+
+   /**
+    * Provides access to Node features.
+    * @deprecated Please use {@link #getNodeApiForLoadBalancer(String region. int lbId)} as this method will be removed
+    *             in jclouds 3.0.
+    */
+   @Deprecated
+   @Delegate
+   @Path("/loadbalancers/{lbId}")
+   NodeApi getNodeApiForZoneAndLoadBalancer(
+         @EndpointParam(parser = RegionToEndpoint.class) @Nullable String zone, @PathParam("lbId") int lbId);
+
+   /**
+    * Provides access to Access Rule features.
+    * @deprecated Please use {@link #getAccessRuleApi(String region, int lbId)} as this method will be
+    *             removed in jclouds 3.0.
+    */
+   @Deprecated
+   @Delegate
+   @Path("/loadbalancers/{lbId}")
+   AccessRuleApi getAccessRuleApiForZoneAndLoadBalancer(
+         @EndpointParam(parser = RegionToEndpoint.class) @Nullable String zone, @PathParam("lbId") int lbId);
+
+   /**
+    * Provides access to Virtual IP features.
+    * @deprecated Please use {@link #getVirtualIPApi(String region, int lbId)} as this method will be
+    *             removed in jclouds 3.0.
+    */
+   @Deprecated
+   @Delegate
+   @Path("/loadbalancers/{lbId}")
+   VirtualIPApi getVirtualIPApiForZoneAndLoadBalancer(
+         @EndpointParam(parser = RegionToEndpoint.class) @Nullable String zone, @PathParam("lbId") int lbId);
+
+   /**
+    * Provides access to Connection features.
+    * @deprecated Please use {@link #getConnectionApi(String region, int lbId)} as this method will be
+    *             removed in jclouds 3.0.
+    */
+   @Deprecated
+   @Delegate
+   @Path("/loadbalancers/{lbId}")
+   ConnectionApi getConnectionApiForZoneAndLoadBalancer(
+         @EndpointParam(parser = RegionToEndpoint.class) @Nullable String zone, @PathParam("lbId") int lbId);
+
+   /**
+    * Provides access to Health Monitor features.
+    * @deprecated Please use {@link #getHealthMonitorApi(String region, int lbId)} as this method will be
+    *             removed in jclouds 3.0.
+    */
+   @Deprecated
+   @Delegate
+   @Path("/loadbalancers/{lbId}")
+   HealthMonitorApi getHealthMonitorApiForZoneAndLoadBalancer(
+         @EndpointParam(parser = RegionToEndpoint.class) @Nullable String zone, @PathParam("lbId") int lbId);
+
+   /**
+    * Provides access to Session Persistence features.
+    * @deprecated Please use {@link #getSessionPersistenceApi(String region, int lbId)} as this method
+    *             will be removed in jclouds 3.0.
+    */
+   @Deprecated
+   @Delegate
+   @Path("/loadbalancers/{lbId}")
+   SessionPersistenceApi getSessionPersistenceApiForZoneAndLoadBalancer(
+         @EndpointParam(parser = RegionToEndpoint.class) @Nullable String zone, @PathParam("lbId") int lbId);
+
+   /**
+    * Provides access to Content Caching features.
+    * @deprecated Please use {@link #getContentCachingApi(String region, int lbId)} as this method
+    *             will be removed in jclouds 3.0.
+    */
+   @Deprecated
+   @Delegate
+   @Path("/loadbalancers/{lbId}")
+   ContentCachingApi getContentCachingApiForZoneAndLoadBalancer(
+         @EndpointParam(parser = RegionToEndpoint.class) @Nullable String zone, @PathParam("lbId") int lbId);
+
+   /**
+    * Provides access to SSL Termination features.
+    * @deprecated Please use {@link #getSSLTerminationApi(String region, int lbId)} as this method
+    *             will be removed in jclouds 3.0.
+    */
+   @Deprecated
+   @Delegate
+   @Path("/loadbalancers/{lbId}")
+   SSLTerminationApi getSSLTerminationApiForZoneAndLoadBalancer(
+         @EndpointParam(parser = RegionToEndpoint.class) @Nullable String zone, @PathParam("lbId") int lbId);
+
+   /**
+    * Provides access to Error Page features.
+    * @deprecated Please use {@link #getErrorPageApi(String region, int lbId)} as this method
+    *             will be removed in jclouds 3.0.
+    */
+   @Deprecated
+   @Delegate
+   @Path("/loadbalancers/{lbId}")
+   ErrorPageApi getErrorPageApiForZoneAndLoadBalancer(
+         @EndpointParam(parser = RegionToEndpoint.class) @Nullable String zone, @PathParam("lbId") int lbId);
+
+   /**
+    * Provides access to Report features.
+    * @deprecated Please use {@link #getReportApi(String region)} as this method will be removed in jclouds 3.0.
+    */
+   @Deprecated
+   @Delegate
    ReportApi getReportApiForZone(
-         @EndpointParam(parser = ZoneToEndpoint.class) @Nullable String zone);
+         @EndpointParam(parser = RegionToEndpoint.class) @Nullable String zone);
 }

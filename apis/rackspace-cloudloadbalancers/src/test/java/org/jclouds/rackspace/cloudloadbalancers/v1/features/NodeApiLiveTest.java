@@ -51,16 +51,16 @@ public class NodeApiLiveTest extends BaseCloudLoadBalancersApiLiveTest {
    private Map<LoadBalancer, Set<Node>> nodes = Maps.newHashMap();
 
    public void testCreateLoadBalancers() {
-      assertTrue(api.getConfiguredZones().size() > 0, "Need to have some zones!");
-      Logger.getAnonymousLogger().info("running against zones " + api.getConfiguredZones());
-      for (String zone : api.getConfiguredZones()) {
-         Logger.getAnonymousLogger().info("starting lb in zone " + zone);
-         LoadBalancer lb = api.getLoadBalancerApiForZone(zone).create(
-                  CreateLoadBalancer.builder().name(prefix + "-" + zone).protocol("HTTP").port(80).virtualIPType(
+      assertTrue(api.getConfiguredRegions().size() > 0, "Need to have some regions!");
+      Logger.getAnonymousLogger().info("running against regions " + api.getConfiguredRegions());
+      for (String region : api.getConfiguredRegions()) {
+         Logger.getAnonymousLogger().info("starting lb in region " + region);
+         LoadBalancer lb = api.getLoadBalancerApi(region).create(
+                  CreateLoadBalancer.builder().name(prefix + "-" + region).protocol("HTTP").port(80).virtualIPType(
                            Type.PUBLIC).node(AddNode.builder().address("192.168.1.1").port(8080).build()).build());
          nodes.put(lb, new HashSet<Node>());
 
-         assertTrue(awaitAvailable(api.getLoadBalancerApiForZone(lb.getRegion())).apply(lb));
+         assertTrue(awaitAvailable(api.getLoadBalancerApi(lb.getRegion())).apply(lb));
       }
    }
 
@@ -71,17 +71,17 @@ public class NodeApiLiveTest extends BaseCloudLoadBalancersApiLiveTest {
          Set<Node> nodeSet = entry.getValue();
          String region = lb.getRegion();
          Logger.getAnonymousLogger().info("starting node on loadbalancer " + lb.getId() + " in region " + region);
-         Set<Node> newNodes = api.getNodeApiForZoneAndLoadBalancer(region, lb.getId()).add(
+         Set<Node> newNodes = api.getNodeApi(region, lb.getId()).add(
                   ImmutableSet.<AddNode> of(AddNode.builder().address("192.168.1.2").port(8080).build()));
 
          for (Node n : newNodes) {
             assertEquals(n.getStatus(), Node.Status.ONLINE);
             nodeSet.add(n);
-            assertEquals(api.getNodeApiForZoneAndLoadBalancer(region, lb.getId()).get(n.getId()).getStatus(),
+            assertEquals(api.getNodeApi(region, lb.getId()).get(n.getId()).getStatus(),
                      Node.Status.ONLINE);
          }
 
-         assertTrue(awaitAvailable(api.getLoadBalancerApiForZone(lb.getRegion())).apply(lb));
+         assertTrue(awaitAvailable(api.getLoadBalancerApi(lb.getRegion())).apply(lb));
       }
    }
 
@@ -90,12 +90,12 @@ public class NodeApiLiveTest extends BaseCloudLoadBalancersApiLiveTest {
       for (Entry<LoadBalancer, Set<Node>> entry : nodes.entrySet()) {
          for (Node n : entry.getValue()) {
             String region = entry.getKey().getRegion();
-            api.getNodeApiForZoneAndLoadBalancer(region, entry.getKey().getId()).update(n.getId(),
+            api.getNodeApi(region, entry.getKey().getId()).update(n.getId(),
                      UpdateNode.builder().weight(23).build());
-            assertEquals(api.getNodeApiForZoneAndLoadBalancer(region, entry.getKey().getId()).get(n.getId())
+            assertEquals(api.getNodeApi(region, entry.getKey().getId()).get(n.getId())
                      .getStatus(), Node.Status.ONLINE);
 
-            Node newNode = api.getNodeApiForZoneAndLoadBalancer(region, entry.getKey().getId()).get(n.getId());
+            Node newNode = api.getNodeApi(region, entry.getKey().getId()).get(n.getId());
             assertEquals(newNode.getStatus(), Node.Status.ONLINE);
             assertEquals(newNode.getWeight(), (Integer) 23);
          }
@@ -105,7 +105,7 @@ public class NodeApiLiveTest extends BaseCloudLoadBalancersApiLiveTest {
    @Test(dependsOnMethods = "testModifyNode")
    public void testListNodes() throws Exception {
       for (LoadBalancer lb : nodes.keySet()) {
-         Set<Node> response = api.getNodeApiForZoneAndLoadBalancer(lb.getRegion(), lb.getId()).list().concat().toSet();
+         Set<Node> response = api.getNodeApi(lb.getRegion(), lb.getId()).list().concat().toSet();
          assert null != response;
          assertTrue(response.size() >= 0);
          for (Node n : response) {
@@ -117,7 +117,7 @@ public class NodeApiLiveTest extends BaseCloudLoadBalancersApiLiveTest {
             assert !Arrays.asList(LoadBalancer.WEIGHTED_ALGORITHMS).contains(lb.getAlgorithm())
                      || n.getWeight() != null : n;
 
-            Node getDetails = api.getNodeApiForZoneAndLoadBalancer(lb.getRegion(), lb.getId()).get(n.getId());
+            Node getDetails = api.getNodeApi(lb.getRegion(), lb.getId()).get(n.getId());
 
             try {
                assertEquals(getDetails.getId(), n.getId());
@@ -134,7 +134,7 @@ public class NodeApiLiveTest extends BaseCloudLoadBalancersApiLiveTest {
          }
       }
    }
-   
+
    @Test(dependsOnMethods = "testListNodes")
    public void testNodeMetadata() throws Exception {
       for (Entry<LoadBalancer, Set<Node>> entry : nodes.entrySet()) {
@@ -144,28 +144,28 @@ public class NodeApiLiveTest extends BaseCloudLoadBalancersApiLiveTest {
                "key1", "value1",
                "key2", "value2",
                "key3", "value3");
-         
-         Metadata metadata = api.getNodeApiForZoneAndLoadBalancer(lb.getRegion(), lb.getId()).createMetadata(node.getId(), metadataMap);
-         assertEquals(metadata, getExpectedMetadata());
-         assertTrue(awaitAvailable(api.getLoadBalancerApiForZone(lb.getRegion())).apply(lb));
 
-         metadata = api.getNodeApiForZoneAndLoadBalancer(lb.getRegion(), lb.getId()).getMetadata(node.getId());
+         Metadata metadata = api.getNodeApi(lb.getRegion(), lb.getId()).createMetadata(node.getId(), metadataMap);
+         assertEquals(metadata, getExpectedMetadata());
+         assertTrue(awaitAvailable(api.getLoadBalancerApi(lb.getRegion())).apply(lb));
+
+         metadata = api.getNodeApi(lb.getRegion(), lb.getId()).getMetadata(node.getId());
          assertEquals(metadata, getExpectedMetadata());
 
-         assertTrue(api.getNodeApiForZoneAndLoadBalancer(lb.getRegion(), lb.getId()).updateMetadatum(node.getId(), metadata.getId("key1"), "key1-updated"));
-         assertTrue(awaitAvailable(api.getLoadBalancerApiForZone(lb.getRegion())).apply(lb));
-         metadata = api.getNodeApiForZoneAndLoadBalancer(lb.getRegion(), lb.getId()).getMetadata(node.getId());
+         assertTrue(api.getNodeApi(lb.getRegion(), lb.getId()).updateMetadatum(node.getId(), metadata.getId("key1"), "key1-updated"));
+         assertTrue(awaitAvailable(api.getLoadBalancerApi(lb.getRegion())).apply(lb));
+         metadata = api.getNodeApi(lb.getRegion(), lb.getId()).getMetadata(node.getId());
          assertEquals(metadata.get("key1"), "key1-updated");
 
-         assertTrue(api.getNodeApiForZoneAndLoadBalancer(lb.getRegion(), lb.getId()).deleteMetadatum(node.getId(), metadata.getId("key1")));
-         assertTrue(awaitAvailable(api.getLoadBalancerApiForZone(lb.getRegion())).apply(lb));
-         metadata = api.getNodeApiForZoneAndLoadBalancer(lb.getRegion(), lb.getId()).getMetadata(node.getId());
+         assertTrue(api.getNodeApi(lb.getRegion(), lb.getId()).deleteMetadatum(node.getId(), metadata.getId("key1")));
+         assertTrue(awaitAvailable(api.getLoadBalancerApi(lb.getRegion())).apply(lb));
+         metadata = api.getNodeApi(lb.getRegion(), lb.getId()).getMetadata(node.getId());
          assertNull(metadata.get("key1"));
 
-         assertTrue(api.getNodeApiForZoneAndLoadBalancer(lb.getRegion(), lb.getId()).deleteMetadata(node.getId(), 
+         assertTrue(api.getNodeApi(lb.getRegion(), lb.getId()).deleteMetadata(node.getId(),
                ImmutableList.<Integer> of(metadata.getId("key2"), metadata.getId("key3"))));
-         assertTrue(awaitAvailable(api.getLoadBalancerApiForZone(lb.getRegion())).apply(lb));
-         metadata = api.getNodeApiForZoneAndLoadBalancer(lb.getRegion(), lb.getId()).getMetadata(node.getId());
+         assertTrue(awaitAvailable(api.getLoadBalancerApi(lb.getRegion())).apply(lb));
+         metadata = api.getNodeApi(lb.getRegion(), lb.getId()).getMetadata(node.getId());
          assertEquals(metadata.size(), 0);
       }
    }
@@ -175,13 +175,13 @@ public class NodeApiLiveTest extends BaseCloudLoadBalancersApiLiveTest {
    protected void tearDown() {
       for (Entry<LoadBalancer, Set<Node>> entry : nodes.entrySet()) {
          LoadBalancer lb = entry.getKey();
-         LoadBalancerApi lbClient = api.getLoadBalancerApiForZone(lb.getRegion());
+         LoadBalancerApi lbClient = api.getLoadBalancerApi(lb.getRegion());
 
          if (lbClient.get(lb.getId()).getStatus() != Status.DELETED) {
-            assertTrue(awaitAvailable(api.getLoadBalancerApiForZone(lb.getRegion())).apply(lb));
+            assertTrue(awaitAvailable(api.getLoadBalancerApi(lb.getRegion())).apply(lb));
             lbClient.delete(lb.getId());
          }
-         assertTrue(awaitDeleted(api.getLoadBalancerApiForZone(lb.getRegion())).apply(lb));
+         assertTrue(awaitDeleted(api.getLoadBalancerApi(lb.getRegion())).apply(lb));
       }
       super.tearDown();
    }

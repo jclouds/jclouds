@@ -45,7 +45,7 @@ public class RecordsToPagedIterable extends Arg0ToPagedIterable.FromCaller<Recor
    @Override
    protected Function<Object, IterableWithMarker<RecordDetail>> markerToNextForArg0(Optional<Object> arg0) {
       int domainId = Integer.class.cast(arg0.get());
-      return new ListRecordsAtMarker(api.getRecordApiForDomain(domainId));
+      return new ListRecordsAtMarker(api.getRecordApi(domainId));
    }
 
    private static class ListRecordsAtMarker implements Function<Object, IterableWithMarker<RecordDetail>> {

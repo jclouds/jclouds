@@ -37,21 +37,21 @@ import com.google.common.base.Predicate;
  * Snapshot snapshot = snapshotApi.create(volumeId);
  * RetryablePredicate<String> awaitAvailable = RetryablePredicate.create(
  *    SnapshotPredicates.available(snapshotApi), 600, 10, 10, TimeUnit.SECONDS);
- * 
+ *
  * if (!awaitAvailable.apply(snapshot.getId())) {
- *    throw new TimeoutException("Timeout on snapshot: " + snapshot); 
- * }    
+ *    throw new TimeoutException("Timeout on snapshot: " + snapshot);
+ * }
  * }
  * </pre>
- * 
+ *
  * You can also use the static convenience methods as so.
- * 
+ *
  * <pre>
  * {@code
  * Snapshot snapshot = snapshotApi.create(volumeId);
- * 
+ *
  * if (!SnapshotPredicates.awaitAvailable(snapshotApi).apply(snapshot.getId())) {
- *    throw new TimeoutException("Timeout on snapshot: " + snapshot);     
+ *    throw new TimeoutException("Timeout on snapshot: " + snapshot);
  * }
  * }
  * </pre>
@@ -59,20 +59,20 @@ import com.google.common.base.Predicate;
 public class SnapshotPredicates {
    /**
     * Wait until a Snapshot is Available.
-    * 
-    * @param snapshotApi The SnapshotApi in the zone where your Snapshot resides.
+    *
+    * @param snapshotApi The SnapshotApi in the region where your Snapshot resides.
     * @return RetryablePredicate That will check the status every 5 seconds for a maxiumum of 20 minutes.
     */
    public static Predicate<Snapshot> awaitAvailable(SnapshotApi snapshotApi) {
       StatusUpdatedPredicate statusPredicate = new StatusUpdatedPredicate(snapshotApi, Volume.Status.AVAILABLE);
       return retry(statusPredicate, 1200, 5, 5, SECONDS);
    }
-   
+
    /**
     * Wait until a Snapshot no longer exists.
-    * 
-    * @param snapshotApi The SnapshotApi in the zone where your Snapshot resides.
-    * @return RetryablePredicate That will check the whether the Snapshot exists 
+    *
+    * @param snapshotApi The SnapshotApi in the region where your Snapshot resides.
+    * @return RetryablePredicate That will check the whether the Snapshot exists
     * every 5 seconds for a maxiumum of 20 minutes.
     */
    public static Predicate<Snapshot> awaitDeleted(SnapshotApi snapshotApi) {
@@ -85,7 +85,7 @@ public class SnapshotPredicates {
    StatusUpdatedPredicate statusPredicate = new StatusUpdatedPredicate(snapshotApi, status);
       return retry(statusPredicate, maxWaitInSec, periodInSec, periodInSec, SECONDS);
    }
-   
+
    private static class StatusUpdatedPredicate implements Predicate<Snapshot> {
       private SnapshotApi snapshotApi;
       private Status status;
@@ -108,7 +108,7 @@ public class SnapshotPredicates {
          else {
             Snapshot snapshotUpdated = snapshotApi.get(snapshot.getId());
             checkNotNull(snapshotUpdated, "Snapshot %s not found.", snapshot.getId());
-            
+
             return status.equals(snapshotUpdated.getStatus());
          }
       }

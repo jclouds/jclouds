@@ -54,7 +54,7 @@ public class PresentWhenExtensionAnnotationNamespaceEqualsAnyNamespaceInExtensio
             "Keypair Support").build();
 
    @org.jclouds.openstack.v2_0.services.Extension(of = ServiceType.COMPUTE, namespace = "http://docs.openstack.org/ext/keypairs/api/v1.1")
-   interface KeyPairAsyncApi {
+   interface KeyPairApi {
 
    }
 
@@ -64,50 +64,50 @@ public class PresentWhenExtensionAnnotationNamespaceEqualsAnyNamespaceInExtensio
             "Floating IPs support").build();
 
    @org.jclouds.openstack.v2_0.services.Extension(of = ServiceType.COMPUTE, namespace = "http://docs.openstack.org/ext/floating_ips/api/v1.1")
-   interface FloatingIPAsyncApi {
+   interface FloatingIPApi {
 
    }
 
-   interface NovaAsyncApi {
+   interface NovaApi {
 
       @Delegate
-      Optional<FloatingIPAsyncApi> getFloatingIPExtensionForZone(String zone);
+      Optional<FloatingIPApi> getFloatingIPExtensionApi(String region);
 
       @Delegate
-      Optional<KeyPairAsyncApi> getKeyPairExtensionForZone(String zone);
+      Optional<KeyPairApi> getKeyPairExtensionApi(String region);
 
    }
 
    InvocationSuccess getFloatingIPExtension(List<Object> args) throws SecurityException, NoSuchMethodException {
       return InvocationSuccess.create(
-            Invocation.create(method(NovaAsyncApi.class, "getFloatingIPExtensionForZone", String.class), args), "foo");
+            Invocation.create(method(NovaApi.class, "getFloatingIPExtensionApi", String.class), args), "foo");
    }
 
    InvocationSuccess getKeyPairExtension(List<Object> args) throws SecurityException, NoSuchMethodException {
       return InvocationSuccess.create(
-            Invocation.create(method(NovaAsyncApi.class, "getKeyPairExtensionForZone", String.class), args), "foo");
+            Invocation.create(method(NovaApi.class, "getKeyPairExtensionApi", String.class), args), "foo");
    }
 
    public void testPresentWhenExtensionsIncludeNamespaceFromAnnotationAbsentWhenNot() throws SecurityException, NoSuchMethodException {
 
-      assertEquals(whenExtensionsInZoneInclude("zone", keypairs, floatingIps).apply(getFloatingIPExtension(ImmutableList.<Object> of("zone"))), Optional.of("foo"));
-      assertEquals(whenExtensionsInZoneInclude("zone", keypairs, floatingIps).apply(getKeyPairExtension(ImmutableList.<Object> of("zone"))), Optional.of("foo"));
-      assertEquals(whenExtensionsInZoneInclude("zone", keypairs).apply(getFloatingIPExtension(ImmutableList.<Object> of("zone"))), Optional.absent());
-      assertEquals(whenExtensionsInZoneInclude("zone", floatingIps).apply(getKeyPairExtension(ImmutableList.<Object> of("zone"))), Optional.absent());
+      assertEquals(whenExtensionsInRegionInclude("region", keypairs, floatingIps).apply(getFloatingIPExtension(ImmutableList.<Object> of("region"))), Optional.of("foo"));
+      assertEquals(whenExtensionsInRegionInclude("region", keypairs, floatingIps).apply(getKeyPairExtension(ImmutableList.<Object> of("region"))), Optional.of("foo"));
+      assertEquals(whenExtensionsInRegionInclude("region", keypairs).apply(getFloatingIPExtension(ImmutableList.<Object> of("region"))), Optional.absent());
+      assertEquals(whenExtensionsInRegionInclude("region", floatingIps).apply(getKeyPairExtension(ImmutableList.<Object> of("region"))), Optional.absent());
    }
-   
-   public void testZoneWithoutExtensionsReturnsAbsent() throws SecurityException, NoSuchMethodException {
-      assertEquals(whenExtensionsInZoneInclude("zone", floatingIps).apply(
-               getFloatingIPExtension(ImmutableList.<Object> of("differentzone"))), Optional.absent());
-      assertEquals(whenExtensionsInZoneInclude("zone", keypairs).apply(
-               getKeyPairExtension(ImmutableList.<Object> of("differentzone"))), Optional.absent());
+
+   public void testRegionWithoutExtensionsReturnsAbsent() throws SecurityException, NoSuchMethodException {
+      assertEquals(whenExtensionsInRegionInclude("region", floatingIps).apply(
+               getFloatingIPExtension(ImmutableList.<Object> of("differentregion"))), Optional.absent());
+      assertEquals(whenExtensionsInRegionInclude("region", keypairs).apply(
+               getKeyPairExtension(ImmutableList.<Object> of("differentregion"))), Optional.absent());
    }
 
    /**
     * It is possible that the /extensions call returned the correct extension, but that the
     * namespaces were different, for whatever reason. One way to address this is to have a multimap
     * of the authoritative namespace to alternate onces, which could be wired up with guice
-    * 
+    *
     */
    public void testPresentWhenAliasForExtensionMapsToNamespace() throws SecurityException, NoSuchMethodException {
       Extension keypairsWithDifferentNamespace = keypairs.toBuilder().namespace(
@@ -116,22 +116,22 @@ public class PresentWhenExtensionAnnotationNamespaceEqualsAnyNamespaceInExtensio
       Multimap<URI, URI> aliases = ImmutableMultimap.of(keypairs.getNamespace(), keypairsWithDifferentNamespace
                .getNamespace());
 
-      assertEquals(whenExtensionsAndAliasesInZoneInclude("zone", ImmutableSet.of(keypairsWithDifferentNamespace), aliases).apply(
-              getKeyPairExtension(ImmutableList.<Object> of("zone"))), Optional.of("foo"));
-      assertEquals(whenExtensionsAndAliasesInZoneInclude("zone", ImmutableSet.of(keypairsWithDifferentNamespace), aliases).apply(
-              getFloatingIPExtension(ImmutableList.<Object> of("zone"))), Optional.absent());
+      assertEquals(whenExtensionsAndAliasesInRegionInclude("region", ImmutableSet.of(keypairsWithDifferentNamespace), aliases).apply(
+              getKeyPairExtension(ImmutableList.<Object> of("region"))), Optional.of("foo"));
+      assertEquals(whenExtensionsAndAliasesInRegionInclude("region", ImmutableSet.of(keypairsWithDifferentNamespace), aliases).apply(
+              getFloatingIPExtension(ImmutableList.<Object> of("region"))), Optional.absent());
 
    }
 
-   private PresentWhenExtensionAnnotationNamespaceEqualsAnyNamespaceInExtensionsSet whenExtensionsInZoneInclude(
-            String zone, Extension... extensions) {
-      return whenExtensionsAndAliasesInZoneInclude(zone, ImmutableSet.copyOf(extensions), ImmutableMultimap.<URI, URI> of());
+   private PresentWhenExtensionAnnotationNamespaceEqualsAnyNamespaceInExtensionsSet whenExtensionsInRegionInclude(
+            String region, Extension... extensions) {
+      return whenExtensionsAndAliasesInRegionInclude(region, ImmutableSet.copyOf(extensions), ImmutableMultimap.<URI, URI> of());
    }
 
-   private PresentWhenExtensionAnnotationNamespaceEqualsAnyNamespaceInExtensionsSet whenExtensionsAndAliasesInZoneInclude(
-            String zone, final Set<Extension> extensions, final Multimap<URI, URI> aliases) {
-      final LoadingCache<String, Set<? extends Extension>> extensionsForZone = CacheBuilder.newBuilder().build(
-               CacheLoader.from(Functions.forMap(ImmutableMap.<String, Set<? extends Extension>>of(zone, extensions, "differentzone",
+   private PresentWhenExtensionAnnotationNamespaceEqualsAnyNamespaceInExtensionsSet whenExtensionsAndAliasesInRegionInclude(
+            String region, final Set<Extension> extensions, final Multimap<URI, URI> aliases) {
+      final LoadingCache<String, Set<? extends Extension>> extensionsForRegion = CacheBuilder.newBuilder().build(
+               CacheLoader.from(Functions.forMap(ImmutableMap.<String, Set<? extends Extension>>of(region, extensions, "differentregion",
                         ImmutableSet.<Extension> of()))));
 
       PresentWhenExtensionAnnotationNamespaceEqualsAnyNamespaceInExtensionsSet fn = Guice.createInjector(
@@ -142,7 +142,7 @@ public class PresentWhenExtensionAnnotationNamespaceEqualsAnyNamespaceInExtensio
 
                   @Provides
                   LoadingCache<String, Set<? extends Extension>> getExtensions() {
-                     return extensionsForZone;
+                     return extensionsForRegion;
                   }
 
                   @Provides
@@ -150,7 +150,7 @@ public class PresentWhenExtensionAnnotationNamespaceEqualsAnyNamespaceInExtensio
                      return aliases;
                   }
                }).getInstance(PresentWhenExtensionAnnotationNamespaceEqualsAnyNamespaceInExtensionsSet.class);
-      
+
       return fn;
    }
 }

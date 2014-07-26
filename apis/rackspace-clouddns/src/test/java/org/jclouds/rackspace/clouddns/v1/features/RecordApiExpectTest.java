@@ -58,7 +58,7 @@ public class RecordApiExpectTest extends BaseCloudDNSApiExpectTest<CloudDNSApi> 
                .endpoint(endpoint)
                .build(),
             HttpResponse.builder().statusCode(OK.getStatusCode()).payload(payloadFromResource("/record-create-response.json")).build())
-            .getRecordApiForDomain(3650908);
+            .getRecordApi(3650908);
 
       Record createMXRecord = Record.builder()
             .type("MX")
@@ -118,7 +118,7 @@ public class RecordApiExpectTest extends BaseCloudDNSApiExpectTest<CloudDNSApi> 
             responseWithAccess,
             authenticatedGET().endpoint(endpoint).build(),
             HttpResponse.builder().statusCode(OK.getStatusCode()).payload(payloadFromResource("/record-list.json")).build())
-            .getRecordApiForDomain(3650908);
+            .getRecordApi(3650908);
 
       ImmutableList<RecordDetail> records = api.list().concat().toList();
       assertEquals(records.size(), 4); // 2 created above + 2 nameserver (NS) records
@@ -138,7 +138,7 @@ public class RecordApiExpectTest extends BaseCloudDNSApiExpectTest<CloudDNSApi> 
             HttpResponse.builder().statusCode(OK.getStatusCode()).payload(payloadFromResource("/record-list-page1.json")).build(),
             authenticatedGET().endpoint(endpointPage2).build(),
             HttpResponse.builder().statusCode(OK.getStatusCode()).payload(payloadFromResource("/record-list-page2.json")).build())
-         .getRecordApiForDomain(3650908);
+         .getRecordApi(3650908);
 
       ImmutableList<RecordDetail> records = api.list().concat().toList();
       assertEquals(records.size(), 8);
@@ -155,7 +155,7 @@ public class RecordApiExpectTest extends BaseCloudDNSApiExpectTest<CloudDNSApi> 
             responseWithAccess,
             authenticatedGET().endpoint(endpoint).build(),
             HttpResponse.builder().statusCode(OK.getStatusCode()).payload(payloadFromResource("/record-list-with-filter.json")).build())
-            .getRecordApiForDomain(3650908);
+            .getRecordApi(3650908);
 
       ImmutableList<RecordDetail> records = api.listByType("A").concat().toList();
       Date now = new Date();
@@ -177,7 +177,7 @@ public class RecordApiExpectTest extends BaseCloudDNSApiExpectTest<CloudDNSApi> 
             responseWithAccess,
             authenticatedGET().endpoint(endpoint).build(),
             HttpResponse.builder().statusCode(OK.getStatusCode()).payload(payloadFromResource("/record-list-with-filter.json")).build())
-            .getRecordApiForDomain(3650908);
+            .getRecordApi(3650908);
 
       ImmutableList<RecordDetail> records = api.listByTypeAndData("A", "10.0.1.0").concat().toList();
       Date now = new Date();
@@ -199,7 +199,7 @@ public class RecordApiExpectTest extends BaseCloudDNSApiExpectTest<CloudDNSApi> 
             responseWithAccess,
             authenticatedGET().endpoint(endpoint).build(),
             HttpResponse.builder().statusCode(OK.getStatusCode()).payload(payloadFromResource("/record-list-with-filter.json")).build())
-            .getRecordApiForDomain(3650908);
+            .getRecordApi(3650908);
 
       ImmutableList<RecordDetail> records = api.listByNameAndType(JCLOUDS_EXAMPLE, "A").concat().toList();
       Date now = new Date();
@@ -221,7 +221,7 @@ public class RecordApiExpectTest extends BaseCloudDNSApiExpectTest<CloudDNSApi> 
             responseWithAccess,
             authenticatedGET().endpoint(endpoint).build(),
             HttpResponse.builder().statusCode(OK.getStatusCode()).payload(payloadFromResource("/record-list-with-filter.json")).build())
-            .getRecordApiForDomain(3650908);
+            .getRecordApi(3650908);
 
       RecordDetail record = api.getByNameAndTypeAndData(JCLOUDS_EXAMPLE, "A", "10.0.1.0");
       Date now = new Date();
@@ -242,7 +242,7 @@ public class RecordApiExpectTest extends BaseCloudDNSApiExpectTest<CloudDNSApi> 
             responseWithAccess,
             authenticatedGET().endpoint(endpoint).build(),
             HttpResponse.builder().statusCode(OK.getStatusCode()).payload(payloadFromResource("/record-get.json")).build())
-            .getRecordApiForDomain(3650908);
+            .getRecordApi(3650908);
 
       RecordDetail record = api.get("A-9846146");
       Date now = new Date();
@@ -267,7 +267,7 @@ public class RecordApiExpectTest extends BaseCloudDNSApiExpectTest<CloudDNSApi> 
                .endpoint(endpoint)
                .build(),
             HttpResponse.builder().statusCode(OK.getStatusCode()).payload(payloadFromResource("/record-update-response.json")).build())
-            .getRecordApiForDomain(3650908);
+            .getRecordApi(3650908);
 
       Record record = Record.builder()
             .name("_sip._udp." + JCLOUDS_EXAMPLE)
@@ -293,7 +293,7 @@ public class RecordApiExpectTest extends BaseCloudDNSApiExpectTest<CloudDNSApi> 
                .endpoint(endpoint)
                .build(),
             HttpResponse.builder().statusCode(OK.getStatusCode()).payload(payloadFromResource("/records-update-response.json")).build())
-            .getRecordApiForDomain(3650908);
+            .getRecordApi(3650908);
 
       Record updateARecord = Record.builder()
             .comment("Multi-record Update")
@@ -319,7 +319,7 @@ public class RecordApiExpectTest extends BaseCloudDNSApiExpectTest<CloudDNSApi> 
             responseWithAccess,
             authenticatedGET().method("DELETE").replaceHeader("Accept", MediaType.WILDCARD).endpoint(endpoint).build(),
             HttpResponse.builder().statusCode(OK.getStatusCode()).payload(payloadFromResource("/record-delete.json")).build())
-            .getRecordApiForDomain(3650908);
+            .getRecordApi(3650908);
 
       Job<?> job = api.delete("A-9846146");
 
@@ -333,7 +333,7 @@ public class RecordApiExpectTest extends BaseCloudDNSApiExpectTest<CloudDNSApi> 
             responseWithAccess,
             authenticatedGET().method("DELETE").replaceHeader("Accept", MediaType.WILDCARD).endpoint(endpoint).build(),
             HttpResponse.builder().statusCode(OK.getStatusCode()).payload(payloadFromResource("/records-delete.json")).build())
-            .getRecordApiForDomain(3650908);
+            .getRecordApi(3650908);
 
       List<String> recordIds = ImmutableList.<String> of("A-9846146", "MX-9846146");      
       Job<?> job = api.delete(recordIds);

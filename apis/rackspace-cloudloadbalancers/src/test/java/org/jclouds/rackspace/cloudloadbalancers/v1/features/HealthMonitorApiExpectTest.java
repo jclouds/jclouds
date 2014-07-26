@@ -38,10 +38,10 @@ public class HealthMonitorApiExpectTest extends BaseCloudLoadBalancerApiExpectTe
       URI endpoint = URI.create("https://dfw.loadbalancers.api.rackspacecloud.com/v1.0/123123/loadbalancers/2000/healthmonitor");
       HealthMonitorApi api = requestsSendResponses(
             rackspaceAuthWithUsernameAndApiKey,
-            responseWithAccess, 
+            responseWithAccess,
             authenticatedGET().endpoint(endpoint).build(),
             HttpResponse.builder().statusCode(OK.getStatusCode()).payload(payloadFromResource("/healthmonitor-get.json")).build()
-      ).getHealthMonitorApiForZoneAndLoadBalancer("DFW", 2000);
+      ).getHealthMonitorApi("DFW", 2000);
 
       HealthMonitor healthMonitor = api.get();
       assertEquals(healthMonitor, getConnectHealthMonitor());
@@ -51,10 +51,10 @@ public class HealthMonitorApiExpectTest extends BaseCloudLoadBalancerApiExpectTe
       URI endpoint = URI.create("https://dfw.loadbalancers.api.rackspacecloud.com/v1.0/123123/loadbalancers/2000/healthmonitor");
       HealthMonitorApi api = requestsSendResponses(
             rackspaceAuthWithUsernameAndApiKey,
-            responseWithAccess, 
+            responseWithAccess,
             authenticatedGET().endpoint(endpoint).build(),
             HttpResponse.builder().statusCode(OK.getStatusCode()).payload(payloadFromResource("/healthmonitor-get-deleted.json")).build()
-      ).getHealthMonitorApiForZoneAndLoadBalancer("DFW", 2000);
+      ).getHealthMonitorApi("DFW", 2000);
 
       HealthMonitor healthMonitor = api.get();
       assertNull(healthMonitor);
@@ -64,11 +64,11 @@ public class HealthMonitorApiExpectTest extends BaseCloudLoadBalancerApiExpectTe
       URI endpoint = URI.create("https://dfw.loadbalancers.api.rackspacecloud.com/v1.0/123123/loadbalancers/2000/healthmonitor");
       HealthMonitorApi api = requestsSendResponses(
             rackspaceAuthWithUsernameAndApiKey,
-            responseWithAccess, 
+            responseWithAccess,
             authenticatedGET().method(PUT).endpoint(endpoint).payload(payloadFromResource("/healthmonitor-create.json")).build(),
             HttpResponse.builder().statusCode(OK.getStatusCode()).build()
-      ).getHealthMonitorApiForZoneAndLoadBalancer("DFW", 2000);
-      
+      ).getHealthMonitorApi("DFW", 2000);
+
       api.createOrUpdate(getConnectHealthMonitor());
    }
 
@@ -76,10 +76,10 @@ public class HealthMonitorApiExpectTest extends BaseCloudLoadBalancerApiExpectTe
       URI endpoint = URI.create("https://dfw.loadbalancers.api.rackspacecloud.com/v1.0/123123/loadbalancers/2000/healthmonitor");
       HealthMonitorApi api = requestsSendResponses(
             rackspaceAuthWithUsernameAndApiKey,
-            responseWithAccess, 
+            responseWithAccess,
             authenticatedGET().method(DELETE).endpoint(endpoint).replaceHeader(ACCEPT, WILDCARD).build(),
             HttpResponse.builder().statusCode(OK.getStatusCode()).build()
-      ).getHealthMonitorApiForZoneAndLoadBalancer("DFW", 2000);
+      ).getHealthMonitorApi("DFW", 2000);
 
       assertTrue(api.delete());
    }
@@ -87,12 +87,12 @@ public class HealthMonitorApiExpectTest extends BaseCloudLoadBalancerApiExpectTe
    public void testValidConnectHealthMonitor() {
       assertTrue(getConnectHealthMonitor().isValid());
    }
-   
+
    @Test(expectedExceptions = IllegalArgumentException.class)
    public void testInvalidConnectHealthMonitorWithoutRequirements() {
-      HealthMonitor.builder().type(HealthMonitor.Type.CONNECT).build();      
+      HealthMonitor.builder().type(HealthMonitor.Type.CONNECT).build();
    }
-   
+
    @Test(expectedExceptions = IllegalArgumentException.class)
    public void testInvalidConnectHealthMonitorWithUnrequired() {
       HealthMonitor.builder()
@@ -103,14 +103,14 @@ public class HealthMonitorApiExpectTest extends BaseCloudLoadBalancerApiExpectTe
             .path("/foobar")
             .build();
    }
-   
+
    public void testValidHTTPHealthMonitor() {
       assertTrue(getHTTPHealthMonitor().isValid());
    }
-   
+
    @Test(expectedExceptions = IllegalArgumentException.class)
    public void testInvalidHTTPHealthMonitorWithoutRequirements() {
-      HealthMonitor.builder().type(HealthMonitor.Type.HTTP).build();      
+      HealthMonitor.builder().type(HealthMonitor.Type.HTTP).build();
    }
 
    @Test(expectedExceptions = IllegalArgumentException.class)

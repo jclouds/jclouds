@@ -42,7 +42,7 @@ import com.google.common.collect.Iterables;
 
 /**
  * Tests behavior of HostAdministrationApi
- * 
+ *
  * TODO test migration methods
  */
 @Test(groups = "live", testName = "AdminActionsApiLiveTest", singleThreaded = true)
@@ -51,7 +51,7 @@ public class AdminActionsApiLiveTest extends BaseNovaApiLiveTest {
    private ServerApi serverApi;
    private ExtensionApi extensionApi;
    private Optional<? extends ServerAdminApi> apiOption;
-   private String zone;
+   private String region;
 
    private String testServerId;
    private String backupImageId;
@@ -60,13 +60,13 @@ public class AdminActionsApiLiveTest extends BaseNovaApiLiveTest {
    @Override
    public void setup() {
       super.setup();
-      zone = Iterables.getLast(api.getConfiguredZones(), "nova");
-      serverApi = api.getServerApiForZone(zone);
-      extensionApi = api.getExtensionApiForZone(zone);
-      imageApi = api.getImageApiForZone(zone);
-      apiOption = api.getServerAdminExtensionForZone(zone);
+      region = Iterables.getLast(api.getConfiguredRegions(), "nova");
+      serverApi = api.getServerApi(region);
+      extensionApi = api.getExtensionApi(region);
+      imageApi = api.getImageApi(region);
+      apiOption = api.getServerAdminApi(region);
       if (apiOption.isPresent()) {
-         testServerId = createServerInZone(zone).getId();
+         testServerId = createServerInRegion(region).getId();
       }
    }
 
@@ -75,7 +75,7 @@ public class AdminActionsApiLiveTest extends BaseNovaApiLiveTest {
    protected void tearDown() {
       if (apiOption.isPresent()) {
          if (testServerId != null) {
-            assertTrue(api.getServerApiForZone(zone).delete(testServerId));
+            assertTrue(api.getServerApi(region).delete(testServerId));
          }
          if (backupImageId != null) {
             imageApi.delete(backupImageId);

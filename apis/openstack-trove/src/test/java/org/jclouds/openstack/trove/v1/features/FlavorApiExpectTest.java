@@ -42,7 +42,7 @@ public class FlavorApiExpectTest extends BaseTroveApiExpectTest {
             responseWithKeystoneAccess,
             authenticatedGET().endpoint(endpoint).build(),
             HttpResponse.builder().statusCode(200).payload(payloadFromResource("/flavor_list.json")).build()
-      ).getFlavorApiForZone("RegionOne");
+      ).getFlavorApi("RegionOne");
 
       Set<? extends Flavor> flavors = api.list().toSet();
       assertEquals(flavors.size(), 6);
@@ -56,11 +56,11 @@ public class FlavorApiExpectTest extends BaseTroveApiExpectTest {
             responseWithKeystoneAccess,
             authenticatedGET().endpoint(endpoint).build(),
             HttpResponse.builder().statusCode(404).build()
-      ).getFlavorApiForZone("RegionOne");
+      ).getFlavorApi("RegionOne");
 
       Set<? extends Flavor> flavors = api.list().toSet();
       assertTrue(flavors.isEmpty());
-   }   
+   }
 
    public void testGetFlavor() {
       URI endpoint = URI.create("http://172.16.0.1:8776/v1/3456/flavors/1");
@@ -69,7 +69,7 @@ public class FlavorApiExpectTest extends BaseTroveApiExpectTest {
             responseWithKeystoneAccess,
             authenticatedGET().endpoint(endpoint).build(),
             HttpResponse.builder().statusCode(200).payload(payloadFromResource("/flavor_get.json")).build()
-      ).getFlavorApiForZone("RegionOne");
+      ).getFlavorApi("RegionOne");
 
       Flavor flavor = api.get(1);
       assertEquals(flavor.getName(), "512MB Instance");
@@ -77,17 +77,17 @@ public class FlavorApiExpectTest extends BaseTroveApiExpectTest {
       assertEquals(flavor.getRam(), 512);
       assertEquals(flavor.getLinks().size(), 2);
    }
-   
+
    public void testGetFlavorByAccountId() {
 	      URI endpoint = URI.create("http://172.16.0.1:8776/v1/3456/flavors/40806637803162");
-	      TroveApi redDwarfApi = requestsSendResponses(
+	      TroveApi troveApi = requestsSendResponses(
                keystoneAuthWithUsernameAndPasswordAndTenantName,
                responseWithKeystoneAccess,
                authenticatedGET().endpoint(endpoint).build(),
-               HttpResponse.builder().statusCode(200).payload(payloadFromResource("/flavor_list.json")).build() ); 
-	      FlavorApi api = redDwarfApi.getFlavorApiForZone("RegionOne");
+               HttpResponse.builder().statusCode(200).payload(payloadFromResource("/flavor_list.json")).build() );
+	      FlavorApi api = troveApi.getFlavorApi("RegionOne");
 
-	      Set<? extends Flavor> flavors = api.list( redDwarfApi.getCurrentTenantId().get().getId() ).toSet();
+	      Set<? extends Flavor> flavors = api.list(troveApi.getCurrentTenantId().get().getId() ).toSet();
 	      Flavor flavor = flavors.iterator().next();
 	      assertEquals(flavor.getName(), "512MB Instance");
 	      assertEquals(flavor.getId(), 1);
@@ -102,8 +102,8 @@ public class FlavorApiExpectTest extends BaseTroveApiExpectTest {
             responseWithKeystoneAccess,
             authenticatedGET().endpoint(endpoint).build(),
             HttpResponse.builder().statusCode(404).build()
-      ).getFlavorApiForZone("RegionOne");
+      ).getFlavorApi("RegionOne");
 
       assertNull(api.get(12312));
-   }   
+   }
 }

@@ -33,24 +33,24 @@ import com.google.common.base.Predicate;
  * <pre>
  * {@code
  * LoadBalancer loadBalancer = loadBalancerApi.create(loadBalancerRequest);
- * 
+ *
  * RetryablePredicate<String> awaitAvailable = RetryablePredicate.create(
  *    LoadBalancerPredicates.available(loadBalancerApi), 600, 10, 10, TimeUnit.SECONDS);
- * 
+ *
  * if (!awaitAvailable.apply(loadBalancer)) {
- *    throw new TimeoutException("Timeout on loadBalancer: " + loadBalancer); 
- * }    
+ *    throw new TimeoutException("Timeout on loadBalancer: " + loadBalancer);
+ * }
  * }
  * </pre>
- * 
+ *
  * You can also use the static convenience methods as so.
  * <br/>
  * <pre>
  * {@code
  * LoadBalancer loadBalancer = loadBalancerApi.create(loadBalancerRequest);
- * 
+ *
  * if (!LoadBalancerPredicates.awaitAvailable(loadBalancerApi).apply(loadBalancer)) {
- *    throw new TimeoutException("Timeout on loadBalancer: " + loadBalancer);     
+ *    throw new TimeoutException("Timeout on loadBalancer: " + loadBalancer);
  * }
  * }
  * </pre>
@@ -58,33 +58,33 @@ import com.google.common.base.Predicate;
 public class LoadBalancerPredicates {
    /**
     * Wait until a LoadBalancer is Available.
-    * 
-    * @param loadBalancerApi The LoadBalancerApi in the zone where your LoadBalancer resides.
+    *
+    * @param loadBalancerApi The LoadBalancerApi in the region where your LoadBalancer resides.
     * @return RetryablePredicate That will check the status every 3 seconds for a maxiumum of 5 minutes.
     */
    public static Predicate<LoadBalancer> awaitAvailable(LoadBalancerApi loadBalancerApi) {
       StatusUpdatedPredicate statusPredicate = new StatusUpdatedPredicate(loadBalancerApi, LoadBalancer.Status.ACTIVE);
       return retry(statusPredicate, 300, 3, 3, SECONDS);
    }
-   
+
    /**
     * Wait until a LoadBalancer no longer exists.
-    * 
-    * @param loadBalancerApi The LoadBalancerApi in the zone where your LoadBalancer resides.
-    * @return RetryablePredicate That will check the whether the LoadBalancer exists 
+    *
+    * @param loadBalancerApi The LoadBalancerApi in the region where your LoadBalancer resides.
+    * @return RetryablePredicate That will check the whether the LoadBalancer exists
     * every 3 seconds for a maxiumum of 5 minutes.
     */
    public static Predicate<LoadBalancer> awaitDeleted(LoadBalancerApi loadBalancerApi) {
       DeletedPredicate deletedPredicate = new DeletedPredicate(loadBalancerApi);
       return retry(deletedPredicate, 300, 3, 3, SECONDS);
    }
-   
+
    public static Predicate<LoadBalancer> awaitStatus(
          LoadBalancerApi loadBalancerApi, LoadBalancer.Status status, long maxWaitInSec, long periodInSec) {
       StatusUpdatedPredicate statusPredicate = new StatusUpdatedPredicate(loadBalancerApi, status);
       return retry(statusPredicate, maxWaitInSec, periodInSec, periodInSec, SECONDS);
    }
-   
+
    private static class StatusUpdatedPredicate implements Predicate<LoadBalancer> {
       private LoadBalancerApi loadBalancerApi;
       private LoadBalancer.Status status;
@@ -100,10 +100,10 @@ public class LoadBalancerPredicates {
       @Override
       public boolean apply(LoadBalancer loadBalancer) {
          checkNotNull(loadBalancer, "loadBalancer must be defined");
-         
+
          LoadBalancer loadBalancerUpdated = loadBalancerApi.get(loadBalancer.getId());
          checkNotNull(loadBalancerUpdated, "LoadBalancer %s not found.", loadBalancer.getId());
-         
+
          return status.equals(loadBalancerUpdated.getStatus());
       }
    }
@@ -121,7 +121,7 @@ public class LoadBalancerPredicates {
       @Override
       public boolean apply(LoadBalancer loadBalancer) {
          checkNotNull(loadBalancer, "loadBalancer must be defined");
-         LoadBalancer loadBalancerUpdate = loadBalancerApi.get(loadBalancer.getId()); 
+         LoadBalancer loadBalancerUpdate = loadBalancerApi.get(loadBalancer.getId());
 
          if (loadBalancerUpdate == null) {
             return true;

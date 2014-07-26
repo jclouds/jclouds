@@ -56,7 +56,7 @@ public class LoadBalancerApiExpectTest extends BaseCloudLoadBalancerApiExpectTes
             responseWithAccess, 
             authenticatedGET().endpoint(endpoint).build(),
             HttpResponse.builder().statusCode(OK.getStatusCode()).payload(payloadFromResource("/loadbalancers-list.json")).build()
-      ).getLoadBalancerApiForZone("DFW");
+      ).getLoadBalancerApi("DFW");
 
       Set<LoadBalancer> loadBalancers = api.list().concat().toSet();
       assertEquals(loadBalancers, getExpectedLoadBalancers());
@@ -69,7 +69,7 @@ public class LoadBalancerApiExpectTest extends BaseCloudLoadBalancerApiExpectTes
             responseWithAccess, 
             authenticatedGET().endpoint(endpoint).build(),
             HttpResponse.builder().statusCode(OK.getStatusCode()).payload(payloadFromResource("/loadbalancer-get.json")).build()
-      ).getLoadBalancerApiForZone("DFW");
+      ).getLoadBalancerApi("DFW");
 
       LoadBalancer loadBalancer = api.get(2000);
       assertEquals(loadBalancer, getExpectedLoadBalancer());
@@ -86,7 +86,7 @@ public class LoadBalancerApiExpectTest extends BaseCloudLoadBalancerApiExpectTes
                   .endpoint(endpoint)
                   .build(),
             HttpResponse.builder().statusCode(OK.getStatusCode()).payload(payloadFromResource("/loadbalancer-get.json")).build()
-      ).getLoadBalancerApiForZone("DFW");
+      ).getLoadBalancerApi("DFW");
 
       AddNode addNode1 = AddNode.builder()
             .address("10.1.1.1")
@@ -123,7 +123,7 @@ public class LoadBalancerApiExpectTest extends BaseCloudLoadBalancerApiExpectTes
             responseWithAccess, 
             authenticatedGET().method(PUT).payload(payloadFromResource("/loadbalancer-update.json")).endpoint(endpoint).build(),
             HttpResponse.builder().statusCode(ACCEPTED.getStatusCode()).payload("").build()
-      ).getLoadBalancerApiForZone("DFW");
+      ).getLoadBalancerApi("DFW");
 
       UpdateLoadBalancer updateLB = UpdateLoadBalancer.builder()
             .name("foo")
@@ -146,7 +146,7 @@ public class LoadBalancerApiExpectTest extends BaseCloudLoadBalancerApiExpectTes
                   .endpoint(endpoint)
                   .build(),
             HttpResponse.builder().statusCode(ACCEPTED.getStatusCode()).payload("").build()
-      ).getLoadBalancerApiForZone("DFW");
+      ).getLoadBalancerApi("DFW");
       
       api.delete(2000);
    }
@@ -158,7 +158,7 @@ public class LoadBalancerApiExpectTest extends BaseCloudLoadBalancerApiExpectTes
             responseWithAccess, 
             authenticatedGET().endpoint(endpoint).build(),
             HttpResponse.builder().statusCode(OK.getStatusCode()).payload(payloadFromResource("/metadata-list.json")).build()
-      ).getLoadBalancerApiForZone("DFW");
+      ).getLoadBalancerApi("DFW");
 
       Metadata metadata = api.getMetadata(2000);
       assertEquals(metadata, getExpectedMetadataWithIds());
@@ -174,7 +174,7 @@ public class LoadBalancerApiExpectTest extends BaseCloudLoadBalancerApiExpectTes
                .endpoint(endpoint)
                .payload(payloadFromResourceWithContentType("/metadata-create.json", APPLICATION_JSON)).build(),
             HttpResponse.builder().statusCode(OK.getStatusCode()).payload(payloadFromResource("/metadata-list.json")).build()
-      ).getLoadBalancerApiForZone("DFW");
+      ).getLoadBalancerApi("DFW");
          
       Metadata metadata = api.createMetadata(2000, getExpectedMetadata());
       assertEquals(metadata, getExpectedMetadataWithIds());
@@ -187,7 +187,7 @@ public class LoadBalancerApiExpectTest extends BaseCloudLoadBalancerApiExpectTes
             responseWithAccess, 
             authenticatedGET().method(DELETE).endpoint(endpoint).replaceHeader(ACCEPT, WILDCARD).build(),
             HttpResponse.builder().statusCode(OK.getStatusCode()).build()
-      ).getLoadBalancerApiForZone("DFW");
+      ).getLoadBalancerApi("DFW");
 
       assertTrue(api.deleteMetadatum(2000, 23));
    }
@@ -199,7 +199,7 @@ public class LoadBalancerApiExpectTest extends BaseCloudLoadBalancerApiExpectTes
             responseWithAccess, 
             authenticatedGET().method(DELETE).endpoint(endpoint).replaceHeader(ACCEPT, WILDCARD).build(),
             HttpResponse.builder().statusCode(OK.getStatusCode()).build()
-      ).getLoadBalancerApiForZone("DFW");
+      ).getLoadBalancerApi("DFW");
       
       
       

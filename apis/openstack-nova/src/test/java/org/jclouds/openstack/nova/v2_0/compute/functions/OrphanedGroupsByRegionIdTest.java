@@ -29,8 +29,8 @@ import org.jclouds.domain.Location;
 import org.jclouds.domain.LocationBuilder;
 import org.jclouds.domain.LocationScope;
 import org.jclouds.openstack.nova.v2_0.compute.config.NovaComputeServiceContextModule;
-import org.jclouds.openstack.nova.v2_0.domain.zonescoped.ServerInZone;
-import org.jclouds.openstack.nova.v2_0.domain.zonescoped.ZoneAndName;
+import org.jclouds.openstack.nova.v2_0.domain.regionscoped.ServerInRegion;
+import org.jclouds.openstack.nova.v2_0.domain.regionscoped.RegionAndName;
 import org.jclouds.openstack.nova.v2_0.parse.ParseServerTest;
 import org.testng.annotations.Test;
 
@@ -42,49 +42,49 @@ import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.ImmutableSet;
 import com.google.inject.Guice;
 
-@Test(testName = "OrphanedGroupsByZoneIdTest")
-public class OrphanedGroupsByZoneIdTest {
+@Test(testName = "OrphanedGroupsByRegionIdTest")
+public class OrphanedGroupsByRegionIdTest {
 
    Location provider = new LocationBuilder().scope(LocationScope.PROVIDER).id("openstack-nova").description(
             "openstack-nova").build();
-   Location zone = new LocationBuilder().id("az-1.region-a.geo-1").description("az-1.region-a.geo-1").scope(
-            LocationScope.ZONE).parent(provider).build();
+   Location region = new LocationBuilder().id("az-1.region-a.geo-1").description("az-1.region-a.geo-1").scope(
+            LocationScope.REGION).parent(provider).build();
    Supplier<Map<String, Location>> locationIndex = Suppliers.<Map<String, Location>> ofInstance(ImmutableMap
-            .<String, Location> of("az-1.region-a.geo-1", zone));
+            .<String, Location> of("az-1.region-a.geo-1", region));
 
    GroupNamingConvention.Factory namingConvention = Guice.createInjector().getInstance(GroupNamingConvention.Factory.class);
-   
+
    @Test
    public void testWhenComputeServiceSaysAllNodesAreDeadBothGroupsAreReturned() {
 
-      ServerInZone withoutHost = new ServerInZone(new ServerInZoneToNodeMetadataTest().expectedServer(), "az-1.region-a.geo-1");
-      ServerInZone withHost = new ServerInZone(new ParseServerTest().expected(), "az-1.region-a.geo-1");
-      
-      ServerInZoneToNodeMetadata converter = new ServerInZoneToNodeMetadata(
+      ServerInRegion withoutHost = new ServerInRegion(new ServerInRegionToNodeMetadataTest().expectedServer(), "az-1.region-a.geo-1");
+      ServerInRegion withHost = new ServerInRegion(new ParseServerTest().expected(), "az-1.region-a.geo-1");
+
+      ServerInRegionToNodeMetadata converter = new ServerInRegionToNodeMetadata(
                NovaComputeServiceContextModule.toPortableNodeStatus, locationIndex, Suppliers
                .<Set<? extends Image>> ofInstance(ImmutableSet.<Image> of()), Suppliers
                .<Set<? extends Hardware>> ofInstance(ImmutableSet.<Hardware> of()), namingConvention);
 
       Set<? extends NodeMetadata> set = ImmutableSet.of(converter.apply(withHost), converter.apply(withoutHost));
 
-      assertEquals(new OrphanedGroupsByZoneId(Predicates.<ZoneAndName> alwaysTrue()).apply(set), ImmutableMultimap
+      assertEquals(new OrphanedGroupsByRegionId(Predicates.<RegionAndName> alwaysTrue()).apply(set), ImmutableMultimap
                .<String, String> builder().putAll("az-1.region-a.geo-1", "sample", "test").build());
    }
 
    @Test
    public void testWhenComputeServiceSaysAllNodesAreDeadNoGroupsAreReturned() {
 
-      ServerInZone withoutHost = new ServerInZone(new ServerInZoneToNodeMetadataTest().expectedServer(), "az-1.region-a.geo-1");
-      ServerInZone withHost = new ServerInZone(new ParseServerTest().expected(), "az-1.region-a.geo-1");
+      ServerInRegion withoutHost = new ServerInRegion(new ServerInRegionToNodeMetadataTest().expectedServer(), "az-1.region-a.geo-1");
+      ServerInRegion withHost = new ServerInRegion(new ParseServerTest().expected(), "az-1.region-a.geo-1");
 
-      ServerInZoneToNodeMetadata converter = new ServerInZoneToNodeMetadata(
+      ServerInRegionToNodeMetadata converter = new ServerInRegionToNodeMetadata(
                NovaComputeServiceContextModule.toPortableNodeStatus, locationIndex, Suppliers
                         .<Set<? extends Image>> ofInstance(ImmutableSet.<Image> of()), Suppliers
                         .<Set<? extends Hardware>> ofInstance(ImmutableSet.<Hardware> of()), namingConvention);
 
       Set<? extends NodeMetadata> set = ImmutableSet.of(converter.apply(withHost), converter.apply(withoutHost));
 
-      assertEquals(new OrphanedGroupsByZoneId(Predicates.<ZoneAndName> alwaysFalse()).apply(set), ImmutableMultimap
+      assertEquals(new OrphanedGroupsByRegionId(Predicates.<RegionAndName> alwaysFalse()).apply(set), ImmutableMultimap
                .<String, String> of());
 
    }

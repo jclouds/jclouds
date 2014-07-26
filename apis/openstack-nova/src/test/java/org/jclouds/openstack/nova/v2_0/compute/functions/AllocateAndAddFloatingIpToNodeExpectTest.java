@@ -48,10 +48,10 @@ import com.google.common.util.concurrent.Atomics;
 public class AllocateAndAddFloatingIpToNodeExpectTest extends BaseNovaComputeServiceExpectTest {
    final Location provider = new LocationBuilder().scope(LocationScope.PROVIDER).id("openstack-nova").description(
             "openstack-nova").build();
-   final Location zone = new LocationBuilder().id("az-1.region-a.geo-1").description("az-1.region-a.geo-1").scope(
-            LocationScope.ZONE).parent(provider).build();
+   final Location region = new LocationBuilder().id("az-1.region-a.geo-1").description("az-1.region-a.geo-1").scope(
+            LocationScope.REGION).parent(provider).build();
    final Location host = new LocationBuilder().scope(LocationScope.HOST).id("hostId").description("hostId")
-            .parent(zone).build();
+            .parent(region).build();
    final NodeMetadata node = new NodeMetadataBuilder().id("az-1.region-a.geo-1/71592").providerId("71592").location(
             host).name("Server 71592").status(Status.RUNNING).privateAddresses(ImmutableSet.of("10.4.27.237"))
             .credentials(LoginCredentials.builder().password("foo").build()).build();

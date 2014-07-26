@@ -23,10 +23,9 @@ import static org.easymock.EasyMock.verify;
 import static org.testng.Assert.assertEquals;
 import static org.testng.AssertJUnit.assertFalse;
 
-
 import org.jclouds.openstack.nova.v2_0.NovaApi;
 import org.jclouds.openstack.nova.v2_0.domain.FloatingIP;
-import org.jclouds.openstack.nova.v2_0.domain.zonescoped.ZoneAndId;
+import org.jclouds.openstack.nova.v2_0.domain.regionscoped.RegionAndId;
 import org.jclouds.openstack.nova.v2_0.extensions.FloatingIPApi;
 import org.testng.annotations.Test;
 
@@ -43,7 +42,7 @@ public class LoadFloatingIpsForInstanceTest {
       FloatingIPApi ipApi = createMock(FloatingIPApi.class);
       FloatingIP testIp = FloatingIP.builder().id("1").ip("1.1.1.1").fixedIp("10.1.1.1").instanceId("i-blah").build();
 
-      expect(api.getFloatingIPExtensionForZone("Zone")).andReturn((Optional) Optional.of(ipApi)).atLeastOnce();
+      expect(api.getFloatingIPApi("RegionOne")).andReturn((Optional) Optional.of(ipApi)).atLeastOnce();
       expect(ipApi.list()).andReturn((FluentIterable) FluentIterable.from(ImmutableSet.<FloatingIP> of(testIp)))
                .atLeastOnce();
 
@@ -52,7 +51,7 @@ public class LoadFloatingIpsForInstanceTest {
 
       LoadFloatingIpsForInstance parser = new LoadFloatingIpsForInstance(api);
 
-      assertEquals(ImmutableSet.copyOf(parser.load(ZoneAndId.fromZoneAndId("Zone", "i-blah"))), ImmutableSet.of(testIp));
+      assertEquals(ImmutableSet.copyOf(parser.load(RegionAndId.fromRegionAndId("RegionOne", "i-blah"))), ImmutableSet.of(testIp));
 
       verify(api);
       verify(ipApi);
@@ -63,7 +62,7 @@ public class LoadFloatingIpsForInstanceTest {
       NovaApi api = createMock(NovaApi.class);
       FloatingIPApi ipApi = createMock(FloatingIPApi.class);
 
-      expect(api.getFloatingIPExtensionForZone("Zone")).andReturn((Optional) Optional.of(ipApi)).atLeastOnce();
+      expect(api.getFloatingIPApi("region")).andReturn((Optional) Optional.of(ipApi)).atLeastOnce();
 
       expect(ipApi.list()).andReturn((FluentIterable) FluentIterable.from(ImmutableSet.<FloatingIP> of()))
       .atLeastOnce();
@@ -73,7 +72,7 @@ public class LoadFloatingIpsForInstanceTest {
 
       LoadFloatingIpsForInstance parser = new LoadFloatingIpsForInstance(api);
 
-      assertFalse(parser.load(ZoneAndId.fromZoneAndId("Zone", "i-blah")).iterator().hasNext());
+      assertFalse(parser.load(RegionAndId.fromRegionAndId("region", "i-blah")).iterator().hasNext());
 
       verify(api);
       verify(ipApi);
@@ -85,7 +84,7 @@ public class LoadFloatingIpsForInstanceTest {
       NovaApi api = createMock(NovaApi.class);
       FloatingIPApi ipApi = createMock(FloatingIPApi.class);
 
-      expect(api.getFloatingIPExtensionForZone("Zone")).andReturn((Optional) Optional.of(ipApi)).atLeastOnce();
+      expect(api.getFloatingIPApi("region")).andReturn((Optional) Optional.of(ipApi)).atLeastOnce();
 
       expect(ipApi.list()).andReturn((FluentIterable) FluentIterable.from(ImmutableSet.<FloatingIP> of(FloatingIP.builder().id("1").ip("1.1.1.1").build())))
       .atLeastOnce();
@@ -95,7 +94,7 @@ public class LoadFloatingIpsForInstanceTest {
 
       LoadFloatingIpsForInstance parser = new LoadFloatingIpsForInstance(api);
 
-      assertFalse(parser.load(ZoneAndId.fromZoneAndId("Zone", "i-blah")).iterator().hasNext());
+      assertFalse(parser.load(RegionAndId.fromRegionAndId("region", "i-blah")).iterator().hasNext());
 
       verify(api);
       verify(ipApi);

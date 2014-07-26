@@ -17,8 +17,8 @@
 package org.jclouds.rackspace.cloudblockstorage.uk;
 
 import static org.jclouds.location.reference.LocationConstants.ISO3166_CODES;
-import static org.jclouds.location.reference.LocationConstants.PROPERTY_ZONE;
-import static org.jclouds.location.reference.LocationConstants.PROPERTY_ZONES;
+import static org.jclouds.location.reference.LocationConstants.PROPERTY_REGION;
+import static org.jclouds.location.reference.LocationConstants.PROPERTY_REGIONS;
 import static org.jclouds.openstack.keystone.v2_0.config.KeystoneProperties.CREDENTIAL_TYPE;
 
 import java.net.URI;
@@ -27,7 +27,7 @@ import java.util.Properties;
 import org.jclouds.openstack.cinder.v1.CinderApiMetadata;
 import org.jclouds.openstack.cinder.v1.config.CinderHttpApiModule;
 import org.jclouds.openstack.cinder.v1.config.CinderParserModule;
-import org.jclouds.openstack.keystone.v2_0.config.KeystoneAuthenticationModule.ZoneModule;
+import org.jclouds.openstack.keystone.v2_0.config.KeystoneAuthenticationModule.RegionModule;
 import org.jclouds.providers.ProviderMetadata;
 import org.jclouds.providers.internal.BaseProviderMetadata;
 import org.jclouds.rackspace.cloudidentity.v2_0.config.CloudIdentityAuthenticationApiModule;
@@ -62,11 +62,11 @@ public class CloudBlockStorageUKProviderMetadata extends BaseProviderMetadata {
    public static Properties defaultProperties() {
       Properties properties = new Properties();
       properties.setProperty(CREDENTIAL_TYPE, CloudIdentityCredentialTypes.API_KEY_CREDENTIALS);
-      properties.setProperty(PROPERTY_ZONES, "LON");
-      properties.setProperty(PROPERTY_ZONE + ".LON." + ISO3166_CODES, "GB-SLG");
+      properties.setProperty(PROPERTY_REGIONS, "LON");
+      properties.setProperty(PROPERTY_REGION + ".LON." + ISO3166_CODES, "GB-SLG");
       return properties;
    }
-   
+
    public static class Builder extends BaseProviderMetadata.Builder {
 
       protected Builder() {
@@ -81,7 +81,7 @@ public class CloudBlockStorageUKProviderMetadata extends BaseProviderMetadata {
                   .defaultModules(ImmutableSet.<Class<? extends Module>>builder()
                                               .add(CloudIdentityAuthenticationApiModule.class)
                                               .add(CloudIdentityAuthenticationModule.class)
-                                              .add(ZoneModule.class)
+                                              .add(RegionModule.class)
                                               .add(CinderParserModule.class)
                                               .add(CinderHttpApiModule.class).build())
                   .build())

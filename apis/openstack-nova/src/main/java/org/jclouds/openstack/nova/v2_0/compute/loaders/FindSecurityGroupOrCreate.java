@@ -23,60 +23,60 @@ import java.util.concurrent.atomic.AtomicReference;
 import javax.inject.Inject;
 import javax.inject.Named;
 
-import org.jclouds.openstack.nova.v2_0.domain.zonescoped.SecurityGroupInZone;
-import org.jclouds.openstack.nova.v2_0.domain.zonescoped.ZoneAndName;
-import org.jclouds.openstack.nova.v2_0.domain.zonescoped.ZoneSecurityGroupNameAndPorts;
+import org.jclouds.openstack.nova.v2_0.domain.regionscoped.SecurityGroupInRegion;
+import org.jclouds.openstack.nova.v2_0.domain.regionscoped.RegionAndName;
+import org.jclouds.openstack.nova.v2_0.domain.regionscoped.RegionSecurityGroupNameAndPorts;
 
 import com.google.common.base.Function;
 import com.google.common.base.Predicate;
 import com.google.common.cache.CacheLoader;
 import com.google.common.util.concurrent.Atomics;
 
-public class FindSecurityGroupOrCreate extends CacheLoader<ZoneAndName, SecurityGroupInZone> {
+public class FindSecurityGroupOrCreate extends CacheLoader<RegionAndName, SecurityGroupInRegion> {
 
-   protected final Predicate<AtomicReference<ZoneAndName>> returnSecurityGroupExistsInZone;
-   protected final Function<ZoneSecurityGroupNameAndPorts, SecurityGroupInZone> groupCreator;
+   protected final Predicate<AtomicReference<RegionAndName>> returnSecurityGroupExistsInRegion;
+   protected final Function<RegionSecurityGroupNameAndPorts, SecurityGroupInRegion> groupCreator;
 
    @Inject
    public FindSecurityGroupOrCreate(
-            @Named("SECURITYGROUP_PRESENT") Predicate<AtomicReference<ZoneAndName>> returnSecurityGroupExistsInZone,
-            Function<ZoneSecurityGroupNameAndPorts, SecurityGroupInZone> groupCreator) {
-      this.returnSecurityGroupExistsInZone = checkNotNull(returnSecurityGroupExistsInZone,
-               "returnSecurityGroupExistsInZone");
+            @Named("SECURITYGROUP_PRESENT") Predicate<AtomicReference<RegionAndName>> returnSecurityGroupExistsInRegion,
+            Function<RegionSecurityGroupNameAndPorts, SecurityGroupInRegion> groupCreator) {
+      this.returnSecurityGroupExistsInRegion = checkNotNull(returnSecurityGroupExistsInRegion,
+               "returnSecurityGroupExistsInRegion");
       this.groupCreator = checkNotNull(groupCreator, "groupCreator");
    }
 
    @Override
-   public SecurityGroupInZone load(ZoneAndName in) {
-      AtomicReference<ZoneAndName> securityGroupInZoneRef = Atomics.newReference(checkNotNull(in,
-               "zoneSecurityGroupNameAndPorts"));
-      if (returnSecurityGroupExistsInZone.apply(securityGroupInZoneRef)) {
-         return returnExistingSecurityGroup(securityGroupInZoneRef);
+   public SecurityGroupInRegion load(RegionAndName in) {
+      AtomicReference<RegionAndName> securityGroupInRegionRef = Atomics.newReference(checkNotNull(in,
+               "regionSecurityGroupNameAndPorts"));
+      if (returnSecurityGroupExistsInRegion.apply(securityGroupInRegionRef)) {
+         return returnExistingSecurityGroup(securityGroupInRegionRef);
       } else {
          return createNewSecurityGroup(in);
       }
    }
 
-   private SecurityGroupInZone returnExistingSecurityGroup(AtomicReference<ZoneAndName> securityGroupInZoneRef) {
-      ZoneAndName securityGroupInZone = securityGroupInZoneRef.get();
-      checkState(securityGroupInZone instanceof SecurityGroupInZone,
+   private SecurityGroupInRegion returnExistingSecurityGroup(AtomicReference<RegionAndName> securityGroupInRegionRef) {
+      RegionAndName securityGroupInRegion = securityGroupInRegionRef.get();
+      checkState(securityGroupInRegion instanceof SecurityGroupInRegion,
                "programming error: predicate %s should update the atomic reference to the actual security group found",
-               returnSecurityGroupExistsInZone);
-      return SecurityGroupInZone.class.cast(securityGroupInZone);
+               returnSecurityGroupExistsInRegion);
+      return SecurityGroupInRegion.class.cast(securityGroupInRegion);
    }
 
-   private SecurityGroupInZone createNewSecurityGroup(ZoneAndName in) {
+   private SecurityGroupInRegion createNewSecurityGroup(RegionAndName in) {
       checkState(
-               checkNotNull(in, "zoneSecurityGroupNameAndPorts") instanceof ZoneSecurityGroupNameAndPorts,
-               "programming error: when issuing get to this cacheloader, you need to pass an instance of ZoneSecurityGroupNameAndPorts, not %s",
+               checkNotNull(in, "regionSecurityGroupNameAndPorts") instanceof RegionSecurityGroupNameAndPorts,
+               "programming error: when issuing get to this cacheloader, you need to pass an instance of RegionSecurityGroupNameAndPorts, not %s",
                in);
-      ZoneSecurityGroupNameAndPorts zoneSecurityGroupNameAndPorts = ZoneSecurityGroupNameAndPorts.class.cast(in);
-      return groupCreator.apply(zoneSecurityGroupNameAndPorts);
+      RegionSecurityGroupNameAndPorts regionSecurityGroupNameAndPorts = RegionSecurityGroupNameAndPorts.class.cast(in);
+      return groupCreator.apply(regionSecurityGroupNameAndPorts);
    }
 
    @Override
    public String toString() {
-      return "returnExistingSecurityGroupInZoneOrCreateAsNeeded()";
+      return "returnExistingSecurityGroupInRegionOrCreateAsNeeded()";
    }
 
 }

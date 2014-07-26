@@ -45,7 +45,7 @@ public class ServerPredicatesMockTest extends BaseOpenStackMockTest<NovaApi> {
 
       try {
          NovaApi novaApi = api(server.getUrl("/").toString(), "openstack-nova");
-         ServerApi serverApi = novaApi.getServerApiForZone("RegionOne");
+         ServerApi serverApi = novaApi.getServerApi("RegionOne");
 
          boolean result = awaitActive(serverApi).apply("71752");
 
@@ -70,7 +70,7 @@ public class ServerPredicatesMockTest extends BaseOpenStackMockTest<NovaApi> {
 
       try {
          NovaApi novaApi = api(server.getUrl("/").toString(), "openstack-nova");
-         ServerApi serverApi = novaApi.getServerApiForZone("RegionOne");
+         ServerApi serverApi = novaApi.getServerApi("RegionOne");
 
          boolean result = awaitShutoff(serverApi).apply("71752");
 
@@ -92,7 +92,7 @@ public class ServerPredicatesMockTest extends BaseOpenStackMockTest<NovaApi> {
 
       try {
          NovaApi novaApi = api(server.getUrl("/").toString(), "openstack-nova");
-         ServerApi serverApi = novaApi.getServerApiForZone("RegionOne");
+         ServerApi serverApi = novaApi.getServerApi("RegionOne");
 
          boolean result = awaitStatus(serverApi, ACTIVE, 3, 1).apply("71752");
 

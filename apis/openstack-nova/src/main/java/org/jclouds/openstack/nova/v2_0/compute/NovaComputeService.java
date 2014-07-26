@@ -61,8 +61,8 @@ import org.jclouds.openstack.nova.v2_0.NovaApi;
 import org.jclouds.openstack.nova.v2_0.compute.options.NovaTemplateOptions;
 import org.jclouds.openstack.nova.v2_0.domain.KeyPair;
 import org.jclouds.openstack.nova.v2_0.domain.SecurityGroup;
-import org.jclouds.openstack.nova.v2_0.domain.zonescoped.SecurityGroupInZone;
-import org.jclouds.openstack.nova.v2_0.domain.zonescoped.ZoneAndName;
+import org.jclouds.openstack.nova.v2_0.domain.regionscoped.SecurityGroupInRegion;
+import org.jclouds.openstack.nova.v2_0.domain.regionscoped.RegionAndName;
 import org.jclouds.openstack.nova.v2_0.extensions.KeyPairApi;
 import org.jclouds.openstack.nova.v2_0.extensions.SecurityGroupApi;
 import org.jclouds.openstack.nova.v2_0.predicates.SecurityGroupPredicates;
@@ -81,9 +81,9 @@ import com.google.common.util.concurrent.ListeningExecutorService;
 @Singleton
 public class NovaComputeService extends BaseComputeService {
    protected final NovaApi novaApi;
-   protected final LoadingCache<ZoneAndName, SecurityGroupInZone> securityGroupMap;
-   protected final LoadingCache<ZoneAndName, KeyPair> keyPairCache;
-   protected final Function<Set<? extends NodeMetadata>, Multimap<String, String>> orphanedGroupsByZoneId;
+   protected final LoadingCache<RegionAndName, SecurityGroupInRegion> securityGroupMap;
+   protected final LoadingCache<RegionAndName, KeyPair> keyPairCache;
+   protected final Function<Set<? extends NodeMetadata>, Multimap<String, String>> orphanedGroupsByRegionId;
    protected final GroupNamingConvention.Factory namingConvention;
 
    @Inject
@@ -102,9 +102,9 @@ public class NovaComputeService extends BaseComputeService {
             RunScriptOnNode.Factory runScriptOnNodeFactory, InitAdminAccess initAdminAccess,
             PersistNodeCredentials persistNodeCredentials, Timeouts timeouts,
             @Named(Constants.PROPERTY_USER_THREADS) ListeningExecutorService userExecutor, NovaApi novaApi,
-            LoadingCache<ZoneAndName, SecurityGroupInZone> securityGroupMap,
-            LoadingCache<ZoneAndName, KeyPair> keyPairCache,
-            Function<Set<? extends NodeMetadata>, Multimap<String, String>> orphanedGroupsByZoneId,
+            LoadingCache<RegionAndName, SecurityGroupInRegion> securityGroupMap,
+            LoadingCache<RegionAndName, KeyPair> keyPairCache,
+            Function<Set<? extends NodeMetadata>, Multimap<String, String>> orphanedGroupsByRegionId,
             GroupNamingConvention.Factory namingConvention, Optional<ImageExtension> imageExtension,
             Optional<SecurityGroupExtension> securityGroupExtension) {
       super(context, credentialStore, images, sizes, locations, listNodesStrategy, getImageStrategy,
@@ -115,53 +115,53 @@ public class NovaComputeService extends BaseComputeService {
       this.novaApi = checkNotNull(novaApi, "novaApi");
       this.securityGroupMap = checkNotNull(securityGroupMap, "securityGroupMap");
       this.keyPairCache = checkNotNull(keyPairCache, "keyPairCache");
-      this.orphanedGroupsByZoneId = checkNotNull(orphanedGroupsByZoneId, "orphanedGroupsByZoneId");
+      this.orphanedGroupsByRegionId = checkNotNull(orphanedGroupsByRegionId, "orphanedGroupsByRegionId");
       this.namingConvention = checkNotNull(namingConvention, "namingConvention");
    }
 
    @Override
    protected void cleanUpIncidentalResourcesOfDeadNodes(Set<? extends NodeMetadata> deadNodes) {
-      Multimap<String, String> zoneToZoneAndGroupNames = orphanedGroupsByZoneId.apply(deadNodes);
-      for (Map.Entry<String, Collection<String>> entry : zoneToZoneAndGroupNames.asMap().entrySet()) {
-         cleanOrphanedGroupsInZone(ImmutableSet.copyOf(entry.getValue()), entry.getKey());
+      Multimap<String, String> regionToRegionAndGroupNames = orphanedGroupsByRegionId.apply(deadNodes);
+      for (Map.Entry<String, Collection<String>> entry : regionToRegionAndGroupNames.asMap().entrySet()) {
+         cleanOrphanedGroupsInRegion(ImmutableSet.copyOf(entry.getValue()), entry.getKey());
       }
    }
 
-   protected void cleanOrphanedGroupsInZone(Set<String> groups, String zoneId) {
-      cleanupOrphanedSecurityGroupsInZone(groups, zoneId);
-      cleanupOrphanedKeyPairsInZone(groups, zoneId);
+   protected void cleanOrphanedGroupsInRegion(Set<String> groups, String regionId) {
+      cleanupOrphanedSecurityGroupsInRegion(groups, regionId);
+      cleanupOrphanedKeyPairsInRegion(groups, regionId);
    }
 
-   private void cleanupOrphanedSecurityGroupsInZone(Set<String> groups, String zoneId) {
-      Optional<? extends SecurityGroupApi> securityGroupApi = novaApi.getSecurityGroupExtensionForZone(zoneId);
+   private void cleanupOrphanedSecurityGroupsInRegion(Set<String> groups, String regionId) {
+      Optional<? extends SecurityGroupApi> securityGroupApi = novaApi.getSecurityGroupApi(regionId);
       if (securityGroupApi.isPresent()) {
          for (String group : groups) {
             for (SecurityGroup securityGroup : Iterables.filter(securityGroupApi.get().list(),
                      SecurityGroupPredicates.nameMatches(namingConvention.create().containsGroup(group)))) {
-               ZoneAndName zoneAndName = ZoneAndName.fromZoneAndName(zoneId, securityGroup.getName());
-               logger.debug(">> deleting securityGroup(%s)", zoneAndName);
+               RegionAndName regionAndName = RegionAndName.fromRegionAndName(regionId, securityGroup.getName());
+               logger.debug(">> deleting securityGroup(%s)", regionAndName);
                securityGroupApi.get().delete(securityGroup.getId());
                // TODO: test this clear happens
-               securityGroupMap.invalidate(zoneAndName);
-               logger.debug("<< deleted securityGroup(%s)", zoneAndName);
+               securityGroupMap.invalidate(regionAndName);
+               logger.debug("<< deleted securityGroup(%s)", regionAndName);
             }
          }
       }
    }
 
-   private void cleanupOrphanedKeyPairsInZone(Set<String> groups, String zoneId) {
-      Optional<? extends KeyPairApi> keyPairApi = novaApi.getKeyPairExtensionForZone(zoneId);
+   private void cleanupOrphanedKeyPairsInRegion(Set<String> groups, String regionId) {
+      Optional<? extends KeyPairApi> keyPairApi = novaApi.getKeyPairApi(regionId);
       if (keyPairApi.isPresent()) {
          for (String group : groups) {
             for (KeyPair pair : keyPairApi.get().list().filter(nameMatches(namingConvention.create().containsGroup(group)))) {
-               ZoneAndName zoneAndName = ZoneAndName.fromZoneAndName(zoneId, pair.getName());
-               logger.debug(">> deleting keypair(%s)", zoneAndName);
+               RegionAndName regionAndName = RegionAndName.fromRegionAndName(regionId, pair.getName());
+               logger.debug(">> deleting keypair(%s)", regionAndName);
                keyPairApi.get().delete(pair.getName());
                // TODO: test this clear happens
-               keyPairCache.invalidate(zoneAndName);
-               logger.debug("<< deleted keypair(%s)", zoneAndName);
+               keyPairCache.invalidate(regionAndName);
+               logger.debug("<< deleted keypair(%s)", regionAndName);
             }
-            keyPairCache.invalidate(ZoneAndName.fromZoneAndName(zoneId,
+            keyPairCache.invalidate(RegionAndName.fromRegionAndName(regionId,
                      namingConvention.create().sharedNameForGroup(group)));
          }
       }
@@ -174,7 +174,5 @@ public class NovaComputeService extends BaseComputeService {
    public NovaTemplateOptions templateOptions() {
       return NovaTemplateOptions.class.cast(super.templateOptions());
    }
-   
-   
 
 }

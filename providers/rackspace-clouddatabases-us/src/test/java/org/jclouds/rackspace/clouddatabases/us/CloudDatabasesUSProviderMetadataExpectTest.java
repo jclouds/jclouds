@@ -38,15 +38,15 @@ public class CloudDatabasesUSProviderMetadataExpectTest extends BaseTroveApiExpe
       this.credential = "myApiKey";
    }
 
-   public void testCanGetConfiguredZones() {
-      
+   public void testCanGetConfiguredRegions() {
+
       HttpRequest authenticate = HttpRequest.builder().method("POST")
             .endpoint("https://identity.api.rackspacecloud.com/v2.0/tokens")
             .addHeader("Accept", "application/json")
             .payload(payloadFromStringWithContentType(
                      "{\"auth\":{\"RAX-KSKEY:apiKeyCredentials\":{\"username\":\"myUsername\",\"apiKey\":\"myApiKey\"}}}"
                      , "application/json")).build();
-      
+
 
       HttpResponse authenticationResponse = HttpResponse.builder()
             .statusCode(200)
@@ -55,7 +55,7 @@ public class CloudDatabasesUSProviderMetadataExpectTest extends BaseTroveApiExpe
 
       TroveApi whenRegionExists = requestSendsResponse(authenticate, authenticationResponse);
 
-      assertEquals(whenRegionExists.getConfiguredZones(), ImmutableSet.of("ORD", "DFW", "SYD"));
+      assertEquals(whenRegionExists.getConfiguredRegions(), ImmutableSet.of("ORD", "DFW", "SYD"));
 
    }
 

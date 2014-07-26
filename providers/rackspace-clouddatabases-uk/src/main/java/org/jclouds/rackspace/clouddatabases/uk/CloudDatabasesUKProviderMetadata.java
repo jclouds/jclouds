@@ -17,15 +17,15 @@
 package org.jclouds.rackspace.clouddatabases.uk;
 
 import static org.jclouds.location.reference.LocationConstants.ISO3166_CODES;
-import static org.jclouds.location.reference.LocationConstants.PROPERTY_ZONE;
-import static org.jclouds.location.reference.LocationConstants.PROPERTY_ZONES;
+import static org.jclouds.location.reference.LocationConstants.PROPERTY_REGION;
+import static org.jclouds.location.reference.LocationConstants.PROPERTY_REGIONS;
 import static org.jclouds.openstack.keystone.v2_0.config.KeystoneProperties.CREDENTIAL_TYPE;
 import static org.jclouds.openstack.keystone.v2_0.config.KeystoneProperties.SERVICE_TYPE;
 
 import java.net.URI;
 import java.util.Properties;
 
-import org.jclouds.openstack.keystone.v2_0.config.KeystoneAuthenticationModule.ZoneModule;
+import org.jclouds.openstack.keystone.v2_0.config.KeystoneAuthenticationModule.RegionModule;
 import org.jclouds.openstack.trove.v1.TroveApiMetadata;
 import org.jclouds.openstack.trove.v1.config.TroveHttpApiModule;
 import org.jclouds.openstack.trove.v1.config.TroveParserModule;
@@ -65,8 +65,8 @@ public class CloudDatabasesUKProviderMetadata extends BaseProviderMetadata {
       Properties properties = new Properties();
       properties.setProperty(CREDENTIAL_TYPE, CloudIdentityCredentialTypes.API_KEY_CREDENTIALS);
       properties.setProperty(SERVICE_TYPE, ServiceType.DATABASES);
-      properties.setProperty(PROPERTY_ZONES, "LON");
-      properties.setProperty(PROPERTY_ZONE + ".LON." + ISO3166_CODES, "GB-SLG");
+      properties.setProperty(PROPERTY_REGIONS, "LON");
+      properties.setProperty(PROPERTY_REGION + ".LON." + ISO3166_CODES, "GB-SLG");
       return properties;
    }
 
@@ -84,7 +84,7 @@ public class CloudDatabasesUKProviderMetadata extends BaseProviderMetadata {
                   .defaultModules(ImmutableSet.<Class<? extends Module>>builder()
                                               .add(CloudIdentityAuthenticationApiModule.class)
                                               .add(CloudIdentityAuthenticationModule.class)
-                                              .add(ZoneModule.class)
+                                              .add(RegionModule.class)
                                               .add(TroveParserModule.class)
                                               .add(TroveHttpApiModule.class).build())
                   .build())

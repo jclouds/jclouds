@@ -48,7 +48,7 @@ public class HostAggregateApiExpectTest extends BaseNovaApiExpectTest {
             responseWithKeystoneAccess, extensionsOfNovaRequest, extensionsOfNovaResponse,
             authenticatedGET().endpoint(endpoint).build(),
             HttpResponse.builder().statusCode(200).payload(payloadFromResource("/host_aggregate_list.json")).build())
-            .getHostAggregateExtensionForZone("az-1.region-a.geo-1").get();
+            .getHostAggregateApi("az-1.region-a.geo-1").get();
 
       HostAggregate result = Iterables.getOnlyElement(api.list());
       assertEquals(result, exampleHostAggregate());
@@ -60,7 +60,7 @@ public class HostAggregateApiExpectTest extends BaseNovaApiExpectTest {
             responseWithKeystoneAccess, extensionsOfNovaRequest, extensionsOfNovaResponse,
             authenticatedGET().endpoint(endpoint).build(),
             HttpResponse.builder().statusCode(200).payload(payloadFromResource("/host_aggregate_with_host_details.json")).build())
-            .getHostAggregateExtensionForZone("az-1.region-a.geo-1").get();
+            .getHostAggregateApi("az-1.region-a.geo-1").get();
 
       assertEquals(api.get("1"), exampleHostAggregateWithHost());
    }
@@ -70,7 +70,7 @@ public class HostAggregateApiExpectTest extends BaseNovaApiExpectTest {
       HostAggregateApi api = requestsSendResponses(keystoneAuthWithUsernameAndPasswordAndTenantName,
             responseWithKeystoneAccess, extensionsOfNovaRequest, extensionsOfNovaResponse,
             authenticatedGET().endpoint(endpoint).build(),
-            HttpResponse.builder().statusCode(404).build()).getHostAggregateExtensionForZone("az-1.region-a.geo-1").get();
+            HttpResponse.builder().statusCode(404).build()).getHostAggregateApi("az-1.region-a.geo-1").get();
 
       assertNull(api.get("1"));
    }
@@ -83,7 +83,7 @@ public class HostAggregateApiExpectTest extends BaseNovaApiExpectTest {
                   .payload(payloadFromStringWithContentType("{\"aggregate\":{\"name\":\"ubuntu1\",\"availability_zone\":\"nova\"}}", MediaType.APPLICATION_JSON))
                   .endpoint(endpoint).build(),
             HttpResponse.builder().statusCode(200).payload(payloadFromResource("/host_aggregate_details.json")).build())
-            .getHostAggregateExtensionForZone("az-1.region-a.geo-1").get();
+            .getHostAggregateApi("az-1.region-a.geo-1").get();
 
       assertEquals(api.createInAvailabilityZone("ubuntu1", "nova"), exampleHostAggregate());
    }
@@ -93,7 +93,7 @@ public class HostAggregateApiExpectTest extends BaseNovaApiExpectTest {
       HostAggregateApi api = requestsSendResponses(keystoneAuthWithUsernameAndPasswordAndTenantName,
             responseWithKeystoneAccess, extensionsOfNovaRequest, extensionsOfNovaResponse,
             authenticatedGET().endpoint(endpoint).method("DELETE").build(),
-            HttpResponse.builder().statusCode(200).build()).getHostAggregateExtensionForZone("az-1.region-a.geo-1").get();
+            HttpResponse.builder().statusCode(200).build()).getHostAggregateApi("az-1.region-a.geo-1").get();
 
       assertTrue(api.delete("1"));
    }
@@ -103,7 +103,7 @@ public class HostAggregateApiExpectTest extends BaseNovaApiExpectTest {
       HostAggregateApi api = requestsSendResponses(keystoneAuthWithUsernameAndPasswordAndTenantName,
             responseWithKeystoneAccess, extensionsOfNovaRequest, extensionsOfNovaResponse,
             authenticatedGET().endpoint(endpoint).method("DELETE").build(),
-            HttpResponse.builder().statusCode(404).build()).getHostAggregateExtensionForZone("az-1.region-a.geo-1").get();
+            HttpResponse.builder().statusCode(404).build()).getHostAggregateApi("az-1.region-a.geo-1").get();
 
       assertFalse(api.delete("1"));
    }
@@ -114,7 +114,7 @@ public class HostAggregateApiExpectTest extends BaseNovaApiExpectTest {
             responseWithKeystoneAccess, extensionsOfNovaRequest, extensionsOfNovaResponse,
             authenticatedGET().endpoint(endpoint).method("POST")
                   .payload(payloadFromStringWithContentType("{\"aggregate\":{\"name\":\"newaggregatename\"}}", MediaType.APPLICATION_JSON)).build(),
-            HttpResponse.builder().statusCode(200).payload(payloadFromResource("/host_aggregate_details.json")).build()).getHostAggregateExtensionForZone("az-1.region-a.geo-1").get();
+            HttpResponse.builder().statusCode(200).payload(payloadFromResource("/host_aggregate_details.json")).build()).getHostAggregateApi("az-1.region-a.geo-1").get();
 
       assertEquals(api.updateName("1", "newaggregatename"), exampleHostAggregate());
    }
@@ -125,7 +125,7 @@ public class HostAggregateApiExpectTest extends BaseNovaApiExpectTest {
             responseWithKeystoneAccess, extensionsOfNovaRequest, extensionsOfNovaResponse,
             authenticatedGET().endpoint(endpoint).method("POST")
                   .payload(payloadFromStringWithContentType("{\"aggregate\":{\"availability_zone\":\"zone1\"}}", MediaType.APPLICATION_JSON)).build(),
-            HttpResponse.builder().statusCode(200).payload(payloadFromResource("/host_aggregate_details.json")).build()).getHostAggregateExtensionForZone("az-1.region-a.geo-1").get();
+            HttpResponse.builder().statusCode(200).payload(payloadFromResource("/host_aggregate_details.json")).build()).getHostAggregateApi("az-1.region-a.geo-1").get();
 
       assertEquals(api.updateAvailabilityZone("1", "zone1"), exampleHostAggregate());
    }
@@ -136,7 +136,7 @@ public class HostAggregateApiExpectTest extends BaseNovaApiExpectTest {
             responseWithKeystoneAccess, extensionsOfNovaRequest, extensionsOfNovaResponse,
             authenticatedGET().endpoint(endpoint).method("POST")
                   .payload(payloadFromStringWithContentType("{\"add_host\":{\"host\":\"ubuntu\"}}", MediaType.APPLICATION_JSON)).build(),
-            HttpResponse.builder().statusCode(200).payload(payloadFromResource("/host_aggregate_details.json")).build()).getHostAggregateExtensionForZone("az-1.region-a.geo-1").get();
+            HttpResponse.builder().statusCode(200).payload(payloadFromResource("/host_aggregate_details.json")).build()).getHostAggregateApi("az-1.region-a.geo-1").get();
 
       assertEquals(api.addHost("1", "ubuntu"), exampleHostAggregate());
    }
@@ -147,7 +147,7 @@ public class HostAggregateApiExpectTest extends BaseNovaApiExpectTest {
             responseWithKeystoneAccess, extensionsOfNovaRequest, extensionsOfNovaResponse,
             authenticatedGET().endpoint(endpoint).method("POST")
                   .payload(payloadFromStringWithContentType("{\"remove_host\":{\"host\":\"ubuntu\"}}", MediaType.APPLICATION_JSON)).build(),
-            HttpResponse.builder().statusCode(200).payload(payloadFromResource("/host_aggregate_details.json")).build()).getHostAggregateExtensionForZone("az-1.region-a.geo-1").get();
+            HttpResponse.builder().statusCode(200).payload(payloadFromResource("/host_aggregate_details.json")).build()).getHostAggregateApi("az-1.region-a.geo-1").get();
 
       assertEquals(api.removeHost("1", "ubuntu"), exampleHostAggregate());
    }
@@ -159,7 +159,7 @@ public class HostAggregateApiExpectTest extends BaseNovaApiExpectTest {
             responseWithKeystoneAccess, extensionsOfNovaRequest, extensionsOfNovaResponse,
             authenticatedGET().endpoint(endpoint).method("POST")
                   .payload(payloadFromStringWithContentType("{\"set_metadata\":{\"metadata\":{\"mykey\":\"some value or other\"}}}", MediaType.APPLICATION_JSON)).build(),
-            HttpResponse.builder().statusCode(200).payload(payloadFromResource("/host_aggregate_details.json")).build()).getHostAggregateExtensionForZone("az-1.region-a.geo-1").get();
+            HttpResponse.builder().statusCode(200).payload(payloadFromResource("/host_aggregate_details.json")).build()).getHostAggregateApi("az-1.region-a.geo-1").get();
 
       assertEquals(api.setMetadata("1", ImmutableMap.of("mykey", "some value or other")), exampleHostAggregate());
    }

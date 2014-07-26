@@ -26,7 +26,7 @@ import java.net.UnknownHostException;
 
 import org.jclouds.openstack.nova.v2_0.NovaApi;
 import org.jclouds.openstack.nova.v2_0.domain.KeyPair;
-import org.jclouds.openstack.nova.v2_0.domain.zonescoped.ZoneAndName;
+import org.jclouds.openstack.nova.v2_0.domain.regionscoped.RegionAndName;
 import org.jclouds.openstack.nova.v2_0.extensions.KeyPairApi;
 import org.testng.annotations.Test;
 
@@ -48,8 +48,8 @@ public class CreateUniqueKeyPairTest {
       KeyPair pair = createMock(KeyPair.class);
 
       Optional optKeyApi = Optional.of(keyApi);
-      
-      expect(api.getKeyPairExtensionForZone("zone")).andReturn(optKeyApi).atLeastOnce();
+
+      expect(api.getKeyPairApi("region")).andReturn(optKeyApi).atLeastOnce();
 
       expect(keyApi.create("group-1")).andReturn(pair);
 
@@ -66,7 +66,7 @@ public class CreateUniqueKeyPairTest {
 
       }).getInstance(CreateUniqueKeyPair.class);
 
-      assertEquals(parser.load(ZoneAndName.fromZoneAndName("zone", "group")), pair);
+      assertEquals(parser.load(RegionAndName.fromRegionAndName("region", "group")), pair);
 
       verify(api, keyApi);
    }
@@ -80,7 +80,7 @@ public class CreateUniqueKeyPairTest {
 
       KeyPair pair = createMock(KeyPair.class);
 
-      expect(api.getKeyPairExtensionForZone("zone")).andReturn((Optional) Optional.of(keyApi)).atLeastOnce();
+      expect(api.getKeyPairApi("region")).andReturn((Optional) Optional.of(keyApi)).atLeastOnce();
 
       expect(uniqueIdSupplier.get()).andReturn("1");
       expect(keyApi.create("group-1")).andThrow(new IllegalStateException());
@@ -100,7 +100,7 @@ public class CreateUniqueKeyPairTest {
 
       }).getInstance(CreateUniqueKeyPair.class);
 
-      assertEquals(parser.load(ZoneAndName.fromZoneAndName("zone", "group")), pair);
+      assertEquals(parser.load(RegionAndName.fromRegionAndName("region", "group")), pair);
 
       verify(api, keyApi, uniqueIdSupplier);
    }

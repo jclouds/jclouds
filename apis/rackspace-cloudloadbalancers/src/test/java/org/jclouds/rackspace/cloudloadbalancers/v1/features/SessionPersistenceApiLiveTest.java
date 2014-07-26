@@ -36,47 +36,47 @@ import com.google.common.collect.Iterables;
 @Test(groups = "live", singleThreaded = true, testName = "SessionPersistenceApiLiveTest")
 public class SessionPersistenceApiLiveTest extends BaseCloudLoadBalancersApiLiveTest {
    private LoadBalancer lb;
-   private String zone;
+   private String region;
 
    public void testCreateLoadBalancer() {
       AddNode addNode = AddNode.builder().address("192.168.1.1").port(8080).build();
       CreateLoadBalancer createLB = CreateLoadBalancer.builder()
             .name(prefix + "-jclouds").protocol("HTTP").port(80).virtualIPType(Type.PUBLIC).node(addNode).build();
 
-      zone = Iterables.getFirst(api.getConfiguredZones(), null);
-      lb = api.getLoadBalancerApiForZone(zone).create(createLB);
-      
-      assertTrue(awaitAvailable(api.getLoadBalancerApiForZone(zone)).apply(lb));
+      region = Iterables.getFirst(api.getConfiguredRegions(), null);
+      lb = api.getLoadBalancerApi(region).create(createLB);
+
+      assertTrue(awaitAvailable(api.getLoadBalancerApi(region)).apply(lb));
    }
 
    @Test(dependsOnMethods = "testCreateLoadBalancer")
    public void testCreateAndGetSessionPersistence() throws Exception {
-      api.getSessionPersistenceApiForZoneAndLoadBalancer(zone, lb.getId()).create(SessionPersistence.HTTP_COOKIE);
-      assertTrue(awaitAvailable(api.getLoadBalancerApiForZone(zone)).apply(lb));
-      
-      SessionPersistence sessionPersistence = 
-            api.getSessionPersistenceApiForZoneAndLoadBalancer(zone, lb.getId()).get();
+      api.getSessionPersistenceApi(region, lb.getId()).create(SessionPersistence.HTTP_COOKIE);
+      assertTrue(awaitAvailable(api.getLoadBalancerApi(region)).apply(lb));
+
+      SessionPersistence sessionPersistence =
+            api.getSessionPersistenceApi(region, lb.getId()).get();
 
       assertEquals(sessionPersistence, SessionPersistence.HTTP_COOKIE);
    }
-   
+
    @Test(dependsOnMethods = "testCreateAndGetSessionPersistence")
    public void testRemoveAndGetSessionPersistence() throws Exception {
-      api.getSessionPersistenceApiForZoneAndLoadBalancer(zone, lb.getId()).delete();
-      assertTrue(awaitAvailable(api.getLoadBalancerApiForZone(zone)).apply(lb));
-      
-      SessionPersistence sessionPersistence = 
-            api.getSessionPersistenceApiForZoneAndLoadBalancer(zone, lb.getId()).get();
-      
+      api.getSessionPersistenceApi(region, lb.getId()).delete();
+      assertTrue(awaitAvailable(api.getLoadBalancerApi(region)).apply(lb));
+
+      SessionPersistence sessionPersistence =
+            api.getSessionPersistenceApi(region, lb.getId()).get();
+
       assertNull(sessionPersistence);
    }
 
    @Override
    @AfterGroups(groups = "live")
    protected void tearDown() {
-      assertTrue(awaitAvailable(api.getLoadBalancerApiForZone(zone)).apply(lb));
-      api.getLoadBalancerApiForZone(zone).delete(lb.getId());
-      assertTrue(awaitDeleted(api.getLoadBalancerApiForZone(zone)).apply(lb));
+      assertTrue(awaitAvailable(api.getLoadBalancerApi(region)).apply(lb));
+      api.getLoadBalancerApi(region).delete(lb.getId());
+      assertTrue(awaitDeleted(api.getLoadBalancerApi(region)).apply(lb));
       super.tearDown();
    }
 }

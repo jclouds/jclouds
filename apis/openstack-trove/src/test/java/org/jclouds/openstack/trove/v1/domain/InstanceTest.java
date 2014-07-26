@@ -33,18 +33,18 @@ public class InstanceTest {
       assertEquals(instance1.getName(), "json");
       assertFalse(instance1.equals(instance2));
    }
-   
+
    /**
     * Creates a dummy Instance when you need an Instance with just the instanceId.
     */
-   public static Instance forId(String instanceId) {       
+   public static Instance forId(String instanceId) {
        return Instance.builder()
                .id(instanceId)
                .name("json")
                .status(Instance.Status.ACTIVE)
                .size(2)
                .flavor( FlavorTest.forId(1) )
-               .links( 
+               .links(
                        ImmutableList.of(
                                Link.create(Relation.SELF, Uris.uriBuilder("http://test1").build() ),
                                Link.create(Relation.BOOKMARK, Uris.uriBuilder("http://test2").build() )

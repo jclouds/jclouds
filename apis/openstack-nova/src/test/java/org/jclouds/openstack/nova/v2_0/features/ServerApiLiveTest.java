@@ -48,8 +48,8 @@ public class ServerApiLiveTest extends BaseNovaApiLiveTest {
 
    @Test(description = "GET /v${apiVersion}/{tenantId}/servers")
    public void testListServers() throws Exception {
-      for (String zoneId : zones) {
-         ServerApi serverApi = api.getServerApiForZone(zoneId);
+      for (String regionId : regions) {
+         ServerApi serverApi = api.getServerApi(regionId);
          for (Resource server : serverApi.list().concat()) {
             checkResource(server);
          }
@@ -58,8 +58,8 @@ public class ServerApiLiveTest extends BaseNovaApiLiveTest {
 
    @Test(description = "GET /v${apiVersion}/{tenantId}/servers/detail")
    public void testListServersInDetail() throws Exception {
-      for (String zoneId : zones) {
-         ServerApi serverApi = api.getServerApiForZone(zoneId);
+      for (String regionId : regions) {
+         ServerApi serverApi = api.getServerApi(regionId);
          for (Server server : serverApi.listInDetail().concat()) {
             checkServer(server);
          }
@@ -68,8 +68,8 @@ public class ServerApiLiveTest extends BaseNovaApiLiveTest {
 
    @Test(description = "GET /v${apiVersion}/{tenantId}/servers/{id}", dependsOnMethods = { "testListServersInDetail" })
    public void testGetServerById() throws Exception {
-      for (String zoneId : zones) {
-         ServerApi serverApi = api.getServerApiForZone(zoneId);
+      for (String regionId : regions) {
+         ServerApi serverApi = api.getServerApi(regionId);
          for (Resource server : serverApi.list().concat()) {
             Server details = serverApi.get(server.getId());
             assertEquals(details.getId(), server.getId());
@@ -85,12 +85,12 @@ public class ServerApiLiveTest extends BaseNovaApiLiveTest {
       String serverId = null;
       String availabilityZone;
 
-      for (String zoneId : zones) {
-         ServerApi serverApi = api.getServerApiForZone(zoneId);
-         Optional<? extends AvailabilityZoneApi> availabilityZoneApi = api.getAvailabilityZoneApi(zoneId);
+      for (String regionId : regions) {
+         ServerApi serverApi = api.getServerApi(regionId);
+         Optional<? extends AvailabilityZoneApi> availabilityZoneApi = api.getAvailabilityZoneApi(regionId);
          availabilityZone = availabilityZoneApi.isPresent() ? Iterables.getLast(availabilityZoneApi.get().list()).getName() : "nova";
          try {
-            serverId = createServer(zoneId, availabilityZone).getId();
+            serverId = createServer(regionId, availabilityZone).getId();
             Server server = serverApi.get(serverId);
             assertEquals(server.getStatus(), ACTIVE);
          } finally {
@@ -110,14 +110,14 @@ public class ServerApiLiveTest extends BaseNovaApiLiveTest {
    @Test(enabled = false)
    public void testCreateWithNetworkOptions() {
       String serverId = null;
-      for (String zoneId : zones) {
-         ServerApi serverApi = api.getServerApiForZone(zoneId);
+      for (String regionId : regions) {
+         ServerApi serverApi = api.getServerApi(regionId);
          try {
             CreateServerOptions options = CreateServerOptions.Builder.novaNetworks(
                   // This network UUID must match an existing network.
                   ImmutableSet.of(Network.builder().networkUuid("bc4cfa2b-2b27-4671-8e8f-73009623def0").fixedIp("192.168.55.56").build())
                   );
-            ServerCreated server = serverApi.create(hostName, imageIdForZone(zoneId), "1", options);
+            ServerCreated server = serverApi.create(hostName, imageIdForRegion(regionId), "1", options);
             serverId = server.getId();
 
             awaitActive(serverApi).apply(server.getId());
@@ -135,10 +135,10 @@ public class ServerApiLiveTest extends BaseNovaApiLiveTest {
    @Test
    public void testCreateInWrongAvailabilityZone() {
       String serverId = null;
-      for (String zoneId : zones) {
-         ServerApi serverApi = api.getServerApiForZone(zoneId);
+      for (String regionId : regions) {
+         ServerApi serverApi = api.getServerApi(regionId);
          try {
-             serverId = createServer(zoneId, "err").getId();
+             serverId = createServer(regionId, "err").getId();
          } catch (HttpResponseException e) {
             // Here is an implementation detail difference between OpenStack and some providers.
             // Some providers accept a bad availability zone and create the server in the zoneId.
@@ -157,10 +157,10 @@ public class ServerApiLiveTest extends BaseNovaApiLiveTest {
 
       String serverId = null;
 
-      for (String zoneId : zones) {
-         ServerApi serverApi = api.getServerApiForZone(zoneId);
+      for (String regionId : regions) {
+         ServerApi serverApi = api.getServerApi(regionId);
          try {
-            serverId = createServer(zoneId, null).getId();
+            serverId = createServer(regionId, null).getId();
 
             Server server = serverApi.get(serverId);
 
@@ -189,15 +189,15 @@ public class ServerApiLiveTest extends BaseNovaApiLiveTest {
       }
    }
 
-   private Server createServer(String zoneId, String availabilityZoneId) {
-      ServerApi serverApi = api.getServerApiForZone(zoneId);
+   private Server createServer(String regionId, String availabilityZoneId) {
+      ServerApi serverApi = api.getServerApi(regionId);
 
       CreateServerOptions options = new CreateServerOptions();
       if (availabilityZoneId != null) {
           options = options.availabilityZone(availabilityZoneId);
       }
 
-      ServerCreated server = serverApi.create(hostName, imageIdForZone(zoneId), flavorRefForZone(zoneId), options);
+      ServerCreated server = serverApi.create(hostName, imageIdForRegion(regionId), flavorRefForRegion(regionId), options);
 
       awaitActive(serverApi).apply(server.getId());
 

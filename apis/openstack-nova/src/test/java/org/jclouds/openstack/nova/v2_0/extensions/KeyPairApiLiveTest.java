@@ -35,16 +35,16 @@ public class KeyPairApiLiveTest extends BaseNovaApiLiveTest {
    final String PUBLIC_KEY = "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAAAgQCrrBREFxz3002l1HuXz0+UOdJQ/mOYD5DiJwwB/TOybwIKQJPOxJWA9gBoo4k9dthTKBTaEYbzrll7iZcp59E80S6mNiAr3mUgi+x5Y8uyXeJ2Ws+h6peVyFVUu9epkwpcTd1GVfdcVWsTajwDz9+lxCDhl0RZKDFoT0scTxbj/w== nova@nv-aw2az2-api0002";
 
    public void testListKeyPairs() throws Exception {
-      for (String zoneId : api.getConfiguredZones()) {
-         KeyPairApi keyPairApi = api.getKeyPairExtensionForZone(zoneId).get();
+      for (String regionId : api.getConfiguredRegions()) {
+         KeyPairApi keyPairApi = api.getKeyPairApi(regionId).get();
          FluentIterable<? extends KeyPair> keyPairsList = keyPairApi.list();
          assertNotNull(keyPairsList);
       }
    }
 
    public void testCreateAndGetAndDeleteKeyPair() throws Exception {
-      for (String zoneId : api.getConfiguredZones()) {
-         KeyPairApi keyPairApi = api.getKeyPairExtensionForZone(zoneId).get();
+      for (String regionId : api.getConfiguredRegions()) {
+         KeyPairApi keyPairApi = api.getKeyPairApi(regionId).get();
          KeyPair createdKeyPair = null;
          try {
             createdKeyPair = keyPairApi.create(KEYPAIR_NAME);
@@ -63,8 +63,8 @@ public class KeyPairApiLiveTest extends BaseNovaApiLiveTest {
    }
 
    public void testCreateAndDeleteKeyPairWithPublicKey() throws Exception {
-      for (String zoneId : api.getConfiguredZones()) {
-         KeyPairApi keyPairApi = api.getKeyPairExtensionForZone(zoneId).get();
+      for (String regionId : api.getConfiguredRegions()) {
+         KeyPairApi keyPairApi = api.getKeyPairApi(regionId).get();
          KeyPair createdKeyPair = null;
          try {
             createdKeyPair = keyPairApi.createWithPublicKey(KEYPAIR_NAME, PUBLIC_KEY);

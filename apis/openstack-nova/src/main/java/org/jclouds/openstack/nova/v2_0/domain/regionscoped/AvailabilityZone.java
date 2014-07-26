@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.jclouds.openstack.nova.v2_0.domain.zonescoped;
+package org.jclouds.openstack.nova.v2_0.domain.regionscoped;
 
 import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;

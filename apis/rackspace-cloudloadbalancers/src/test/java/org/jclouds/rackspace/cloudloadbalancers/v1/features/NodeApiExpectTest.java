@@ -50,7 +50,7 @@ public class NodeApiExpectTest extends BaseCloudLoadBalancerApiExpectTest<CloudL
             responseWithAccess, 
             authenticatedGET().endpoint(endpoint).build(),
             HttpResponse.builder().statusCode(OK.getStatusCode()).payload(payloadFromResource("/nodes-list.json")).build()
-      ).getNodeApiForZoneAndLoadBalancer("DFW", 2000);
+      ).getNodeApi("DFW", 2000);
 
       Set<Node> nodes = api.list().concat().toSet();
       assertEquals(nodes, getExpectedNodes());
@@ -63,7 +63,7 @@ public class NodeApiExpectTest extends BaseCloudLoadBalancerApiExpectTest<CloudL
             responseWithAccess, 
             authenticatedGET().endpoint(endpoint).build(),
             HttpResponse.builder().statusCode(OK.getStatusCode()).payload(payloadFromResource("/node-get.json")).build()
-      ).getNodeApiForZoneAndLoadBalancer("DFW", 2000);
+      ).getNodeApi("DFW", 2000);
 
       Node node = api.get(410);
       assertEquals(node, testNode());
@@ -80,7 +80,7 @@ public class NodeApiExpectTest extends BaseCloudLoadBalancerApiExpectTest<CloudL
                   .endpoint(endpoint)
                   .build(),
             HttpResponse.builder().statusCode(OK.getStatusCode()).payload(payloadFromResource("/nodes-list.json")).build()
-      ).getNodeApiForZoneAndLoadBalancer("DFW", 2000);
+      ).getNodeApi("DFW", 2000);
 
       AddNode addNode1 = AddNode.builder()
             .address("10.1.1.1")
@@ -117,7 +117,7 @@ public class NodeApiExpectTest extends BaseCloudLoadBalancerApiExpectTest<CloudL
             responseWithAccess, 
             authenticatedGET().method(PUT).payload(payloadFromResource("/node-update.json")).endpoint(endpoint).build(),
             HttpResponse.builder().statusCode(OK.getStatusCode()).build()
-      ).getNodeApiForZoneAndLoadBalancer("DFW", 2000);
+      ).getNodeApi("DFW", 2000);
 
       UpdateNode updateNode = UpdateNode.builder()
             .condition(Node.Condition.DISABLED)
@@ -135,7 +135,7 @@ public class NodeApiExpectTest extends BaseCloudLoadBalancerApiExpectTest<CloudL
             responseWithAccess, 
             authenticatedGET().method(DELETE).replaceHeader(ACCEPT, WILDCARD).endpoint(endpoint).build(),
             HttpResponse.builder().statusCode(OK.getStatusCode()).build()
-      ).getNodeApiForZoneAndLoadBalancer("DFW", 2000);
+      ).getNodeApi("DFW", 2000);
 
       api.remove(410);
    }
@@ -147,7 +147,7 @@ public class NodeApiExpectTest extends BaseCloudLoadBalancerApiExpectTest<CloudL
             responseWithAccess, 
             authenticatedGET().method(DELETE).replaceHeader(ACCEPT, WILDCARD).endpoint(endpoint).build(),
             HttpResponse.builder().statusCode(OK.getStatusCode()).build()
-      ).getNodeApiForZoneAndLoadBalancer("DFW", 2000);
+      ).getNodeApi("DFW", 2000);
       
       Set<Integer> nodeIds = ImmutableSortedSet.<Integer> of(410, 411);
 
@@ -161,7 +161,7 @@ public class NodeApiExpectTest extends BaseCloudLoadBalancerApiExpectTest<CloudL
             responseWithAccess, 
             authenticatedGET().endpoint(endpoint).build(),
             HttpResponse.builder().statusCode(OK.getStatusCode()).payload(payloadFromResource("/metadata-list.json")).build()
-      ).getNodeApiForZoneAndLoadBalancer("DFW", 2000);
+      ).getNodeApi("DFW", 2000);
 
       Metadata metadata = api.getMetadata(410);
       assertEquals(metadata, getExpectedMetadataWithIds());
@@ -177,7 +177,7 @@ public class NodeApiExpectTest extends BaseCloudLoadBalancerApiExpectTest<CloudL
                .endpoint(endpoint)
                .payload(payloadFromResourceWithContentType("/metadata-create.json", APPLICATION_JSON)).build(),
             HttpResponse.builder().statusCode(OK.getStatusCode()).payload(payloadFromResource("/metadata-list.json")).build()
-      ).getNodeApiForZoneAndLoadBalancer("DFW", 2000);
+      ).getNodeApi("DFW", 2000);
          
       Metadata metadata = api.createMetadata(410, getExpectedMetadata());
       assertEquals(metadata, getExpectedMetadataWithIds());
@@ -190,7 +190,7 @@ public class NodeApiExpectTest extends BaseCloudLoadBalancerApiExpectTest<CloudL
             responseWithAccess, 
             authenticatedGET().method(DELETE).endpoint(endpoint).replaceHeader(ACCEPT, WILDCARD).build(),
             HttpResponse.builder().statusCode(OK.getStatusCode()).build()
-      ).getNodeApiForZoneAndLoadBalancer("DFW", 2000);
+      ).getNodeApi("DFW", 2000);
 
       assertTrue(api.deleteMetadatum(410, 23));
    }
@@ -202,7 +202,7 @@ public class NodeApiExpectTest extends BaseCloudLoadBalancerApiExpectTest<CloudL
             responseWithAccess, 
             authenticatedGET().method(DELETE).endpoint(endpoint).replaceHeader(ACCEPT, WILDCARD).build(),
             HttpResponse.builder().statusCode(OK.getStatusCode()).build()
-      ).getNodeApiForZoneAndLoadBalancer("DFW", 2000);
+      ).getNodeApi("DFW", 2000);
       
       
       

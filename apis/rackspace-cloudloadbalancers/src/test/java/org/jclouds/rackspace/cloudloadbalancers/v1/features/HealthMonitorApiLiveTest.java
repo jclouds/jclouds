@@ -36,48 +36,48 @@ import com.google.common.collect.Iterables;
 @Test(groups = "live", singleThreaded = true, testName = "HealthMonitorApiLiveTest")
 public class HealthMonitorApiLiveTest extends BaseCloudLoadBalancersApiLiveTest {
    private LoadBalancer lb;
-   private String zone;
+   private String region;
 
    public void testCreateLoadBalancer() {
       AddNode addNode = AddNode.builder().address("192.168.1.1").port(8080).build();
       CreateLoadBalancer createLB = CreateLoadBalancer.builder()
             .name(prefix + "-jclouds").protocol("HTTP").port(80).virtualIPType(Type.PUBLIC).node(addNode).build();
 
-      zone = Iterables.getFirst(api.getConfiguredZones(), null);
-      lb = api.getLoadBalancerApiForZone(zone).create(createLB);
-      
-      assertTrue(awaitAvailable(api.getLoadBalancerApiForZone(zone)).apply(lb));
+      region = Iterables.getFirst(api.getConfiguredRegions(), null);
+      lb = api.getLoadBalancerApi(region).create(createLB);
+
+      assertTrue(awaitAvailable(api.getLoadBalancerApi(region)).apply(lb));
    }
 
    @Test(dependsOnMethods = "testCreateLoadBalancer")
    public void testCreateAndGetHealthMonitor() throws Exception {
-      api.getHealthMonitorApiForZoneAndLoadBalancer(zone, lb.getId()).createOrUpdate(
+      api.getHealthMonitorApi(region, lb.getId()).createOrUpdate(
             HealthMonitorApiExpectTest.getConnectHealthMonitor());
-      assertTrue(awaitAvailable(api.getLoadBalancerApiForZone(zone)).apply(lb));
-      
-      HealthMonitor healthMonitor = 
-            api.getHealthMonitorApiForZoneAndLoadBalancer(zone, lb.getId()).get();
+      assertTrue(awaitAvailable(api.getLoadBalancerApi(region)).apply(lb));
+
+      HealthMonitor healthMonitor =
+            api.getHealthMonitorApi(region, lb.getId()).get();
 
       assertEquals(healthMonitor, HealthMonitorApiExpectTest.getConnectHealthMonitor());
    }
-   
+
    @Test(dependsOnMethods = "testCreateAndGetHealthMonitor")
    public void testRemoveAndGetHealthMonitor() throws Exception {
-      assertTrue(api.getHealthMonitorApiForZoneAndLoadBalancer(zone, lb.getId()).delete());
-      assertTrue(awaitAvailable(api.getLoadBalancerApiForZone(zone)).apply(lb));
-      
-      HealthMonitor healthMonitor = 
-            api.getHealthMonitorApiForZoneAndLoadBalancer(zone, lb.getId()).get();
-      
+      assertTrue(api.getHealthMonitorApi(region, lb.getId()).delete());
+      assertTrue(awaitAvailable(api.getLoadBalancerApi(region)).apply(lb));
+
+      HealthMonitor healthMonitor =
+            api.getHealthMonitorApi(region, lb.getId()).get();
+
       assertNull(healthMonitor);
    }
 
    @Override
    @AfterGroups(groups = "live")
    protected void tearDown() {
-      assertTrue(awaitAvailable(api.getLoadBalancerApiForZone(zone)).apply(lb));
-      api.getLoadBalancerApiForZone(zone).delete(lb.getId());
-      assertTrue(awaitDeleted(api.getLoadBalancerApiForZone(zone)).apply(lb));
+      assertTrue(awaitAvailable(api.getLoadBalancerApi(region)).apply(lb));
+      api.getLoadBalancerApi(region).delete(lb.getId());
+      assertTrue(awaitDeleted(api.getLoadBalancerApi(region)).apply(lb));
       super.tearDown();
    }
 }

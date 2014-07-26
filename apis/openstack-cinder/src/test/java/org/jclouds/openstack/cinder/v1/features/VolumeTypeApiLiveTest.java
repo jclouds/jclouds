@@ -34,14 +34,14 @@ import com.google.common.collect.Iterables;
 @Test(groups = "live", testName = "VolumeTypeApiLiveTest", singleThreaded = true)
 public class VolumeTypeApiLiveTest extends BaseCinderApiLiveTest {
    private VolumeTypeApi volumeTypeApi;
-   private String zone;
+   private String region;
 
    @BeforeGroups(groups = {"integration", "live"})
    @Override
    public void setup() {
       super.setup();
-      zone = Iterables.getLast(api.getConfiguredZones(), "nova");
-      volumeTypeApi = api.getVolumeTypeApiForZone(zone);
+      region = Iterables.getLast(api.getConfiguredRegions(), "nova");
+      volumeTypeApi = api.getVolumeTypeApi(region);
    }
 
    @AfterClass(groups = { "integration", "live" })

@@ -30,7 +30,7 @@ import org.jclouds.compute.domain.NodeMetadata;
 import org.jclouds.compute.predicates.NodePredicates;
 import org.jclouds.domain.LocationScope;
 import org.jclouds.openstack.nova.v2_0.compute.predicates.AllNodesInGroupTerminated;
-import org.jclouds.openstack.nova.v2_0.domain.zonescoped.ZoneAndName;
+import org.jclouds.openstack.nova.v2_0.domain.regionscoped.RegionAndName;
 
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Function;
@@ -39,35 +39,35 @@ import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Multimap;
 import com.google.common.collect.Multimaps;
 
-public class OrphanedGroupsByZoneId implements Function<Set<? extends NodeMetadata>, Multimap<String, String>> {
-   private final Predicate<ZoneAndName> allNodesInGroupTerminated;
+public class OrphanedGroupsByRegionId implements Function<Set<? extends NodeMetadata>, Multimap<String, String>> {
+   private final Predicate<RegionAndName> allNodesInGroupTerminated;
 
    @Inject
-   protected OrphanedGroupsByZoneId(ComputeService computeService) {
+   protected OrphanedGroupsByRegionId(ComputeService computeService) {
       this(new AllNodesInGroupTerminated(checkNotNull(computeService, "computeService")));
    }
 
    @VisibleForTesting
-   OrphanedGroupsByZoneId(Predicate<ZoneAndName> allNodesInGroupTerminated) {
+   OrphanedGroupsByRegionId(Predicate<RegionAndName> allNodesInGroupTerminated) {
       this.allNodesInGroupTerminated = checkNotNull(allNodesInGroupTerminated, "allNodesInGroupTerminated");
    }
 
    public Multimap<String, String> apply(Set<? extends NodeMetadata> deadNodes) {
       Iterable<? extends NodeMetadata> nodesWithGroup = filter(deadNodes, NodePredicates.hasGroup());
-      Set<ZoneAndName> zoneAndGroupNames = ImmutableSet.copyOf(filter(transform(nodesWithGroup,
-               new Function<NodeMetadata, ZoneAndName>() {
+      Set<RegionAndName> regionAndGroupNames = ImmutableSet.copyOf(filter(transform(nodesWithGroup,
+               new Function<NodeMetadata, RegionAndName>() {
 
                   @Override
-                  public ZoneAndName apply(NodeMetadata input) {
-                     String zoneId = input.getLocation().getScope() == LocationScope.HOST ? input.getLocation()
+                  public RegionAndName apply(NodeMetadata input) {
+                     String regionId = input.getLocation().getScope() == LocationScope.HOST ? input.getLocation()
                               .getParent().getId() : input.getLocation().getId();
-                     return ZoneAndName.fromZoneAndName(zoneId, input.getGroup());
+                     return RegionAndName.fromRegionAndName(regionId, input.getGroup());
                   }
 
                }), allNodesInGroupTerminated));
-      Multimap<String, String> zoneToZoneAndGroupNames = Multimaps.transformValues(Multimaps.index(zoneAndGroupNames,
-               ZoneAndName.ZONE_FUNCTION), ZoneAndName.NAME_FUNCTION);
-      return zoneToZoneAndGroupNames;
+      Multimap<String, String> regionToRegionAndGroupNames = Multimaps.transformValues(Multimaps.index(regionAndGroupNames,
+               RegionAndName.REGION_FUNCTION), RegionAndName.NAME_FUNCTION);
+      return regionToRegionAndGroupNames;
    }
 
 }

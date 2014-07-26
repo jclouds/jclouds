@@ -44,7 +44,7 @@ public class InstanceApiExpectTest extends BaseTroveApiExpectTest {
                 .payload(payloadFromResourceWithContentType("/instance_create_request.json", MediaType.APPLICATION_JSON))
                 .build(),
                 HttpResponse.builder().statusCode(200).payload(payloadFromResource("/instance_create.json")).build() // response
-                ).getInstanceApiForZone("RegionOne");
+                ).getInstanceApi("RegionOne");
 
         Instance instance = api.create("1", 2, "json_rack_instance");
         assertEquals(instance.getSize(), 2);
@@ -62,7 +62,7 @@ public class InstanceApiExpectTest extends BaseTroveApiExpectTest {
                 .payload(payloadFromResourceWithContentType("/instance_create_request.json", MediaType.APPLICATION_JSON))
                 .build(),
                 HttpResponse.builder().statusCode(404).payload(payloadFromResource("/instance_create.json")).build() // response
-                ).getInstanceApiForZone("RegionOne");
+                ).getInstanceApi("RegionOne");
 
         api.create("1", 2, "json_rack_instance");
     }
@@ -74,7 +74,7 @@ public class InstanceApiExpectTest extends BaseTroveApiExpectTest {
                 responseWithKeystoneAccess,
                 authenticatedGET().endpoint(endpoint).method("DELETE").build(),
                 HttpResponse.builder().statusCode(202).build() // response
-                ).getInstanceApiForZone("RegionOne");
+                ).getInstanceApi("RegionOne");
 
         assertTrue( api.delete("098653ba-218b-47ce-936a-e0b749101f81") );
     }
@@ -86,7 +86,7 @@ public class InstanceApiExpectTest extends BaseTroveApiExpectTest {
                 responseWithKeystoneAccess,
                 authenticatedGET().endpoint(endpoint).method("DELETE").build(),
                 HttpResponse.builder().statusCode(404).build() // response
-                ).getInstanceApiForZone("RegionOne");
+                ).getInstanceApi("RegionOne");
 
         assertTrue( !api.delete("098653ba-218b-47ce-936a-e0b749101f81") );
     }
@@ -99,7 +99,7 @@ public class InstanceApiExpectTest extends BaseTroveApiExpectTest {
             responseWithKeystoneAccess,
             authenticatedGET().endpoint(endpoint).build(),
             HttpResponse.builder().statusCode(200).payload(payloadFromResource("/instance_list.json")).build()
-      ).getInstanceApiForZone("RegionOne");
+      ).getInstanceApi("RegionOne");
 
       Set<? extends Instance> instances = api.list().toSet();
       assertEquals(instances.size(), 2);
@@ -113,7 +113,7 @@ public class InstanceApiExpectTest extends BaseTroveApiExpectTest {
             responseWithKeystoneAccess,
             authenticatedGET().endpoint(endpoint).build(),
             HttpResponse.builder().statusCode(404).build()
-      ).getInstanceApiForZone("RegionOne");
+      ).getInstanceApi("RegionOne");
 
       Set<? extends Instance> instances = api.list().toSet();
       assertTrue(instances.isEmpty());
@@ -126,7 +126,7 @@ public class InstanceApiExpectTest extends BaseTroveApiExpectTest {
             responseWithKeystoneAccess,
             authenticatedGET().endpoint(endpoint).build(),
             HttpResponse.builder().statusCode(200).payload(payloadFromResource("/instance_get.json")).build()
-      ).getInstanceApiForZone("RegionOne");
+      ).getInstanceApi("RegionOne");
 
       Instance instance = api.get("44b277eb-39be-4921-be31-3d61b43651d7");
       assertEquals(instance.getName(), "json_rack_instance");
@@ -142,7 +142,7 @@ public class InstanceApiExpectTest extends BaseTroveApiExpectTest {
             responseWithKeystoneAccess,
             authenticatedGET().endpoint(endpoint).build(),
             HttpResponse.builder().statusCode(404).build()
-      ).getInstanceApiForZone("RegionOne");
+      ).getInstanceApi("RegionOne");
 
       assertNull(api.get("12312"));
    }  
@@ -154,7 +154,7 @@ public class InstanceApiExpectTest extends BaseTroveApiExpectTest {
              responseWithKeystoneAccess,
              authenticatedGET().method("POST").endpoint(endpoint).build(),
              HttpResponse.builder().statusCode(200).payload(payloadFromResource("/instance_root.json")).build()
-       ).getInstanceApiForZone("RegionOne");
+       ).getInstanceApi("RegionOne");
 
        String password = api.enableRoot("44b277eb-39be-4921-be31-3d61b43651d7");
        assertEquals(password, "12345");
@@ -167,7 +167,7 @@ public class InstanceApiExpectTest extends BaseTroveApiExpectTest {
              responseWithKeystoneAccess,
              authenticatedGET().method("POST").endpoint(endpoint).build(),
              HttpResponse.builder().statusCode(404).payload(payloadFromResource("/instance_root.json")).build()
-       ).getInstanceApiForZone("RegionOne");
+       ).getInstanceApi("RegionOne");
 
        String password = api.enableRoot("44b277eb-39be-4921-be31-3d61b43651d7");
        assertEquals(password, null);
@@ -180,7 +180,7 @@ public class InstanceApiExpectTest extends BaseTroveApiExpectTest {
              responseWithKeystoneAccess,
              authenticatedGET().endpoint(endpoint).build(),
              HttpResponse.builder().statusCode(200).payload(payloadFromResource("/instance_is_rooted.json")).build()
-       ).getInstanceApiForZone("RegionOne");
+       ).getInstanceApi("RegionOne");
 
        boolean rooted = api.isRooted("44b277eb-39be-4921-be31-3d61b43651d7");
        assertEquals(rooted, true);
@@ -193,7 +193,7 @@ public class InstanceApiExpectTest extends BaseTroveApiExpectTest {
              responseWithKeystoneAccess,
              authenticatedGET().endpoint(endpoint).build(),
              HttpResponse.builder().statusCode(200).payload(payloadFromResource("/instance_is_rooted_false.json")).build()
-       ).getInstanceApiForZone("RegionOne");
+       ).getInstanceApi("RegionOne");
 
        Boolean rooted = api.isRooted("44b277eb-39be-4921-be31-3d61b43651d7");
        assertEquals(rooted.booleanValue(), false);
@@ -207,7 +207,7 @@ public class InstanceApiExpectTest extends BaseTroveApiExpectTest {
              responseWithKeystoneAccess,
              authenticatedGET().endpoint(endpoint).build(),
              HttpResponse.builder().statusCode(404).payload(payloadFromResource("/instance_is_rooted.json")).build()
-       ).getInstanceApiForZone("RegionOne");
+       ).getInstanceApi("RegionOne");
 
        Boolean rooted = api.isRooted("44b277eb-39be-4921-be31-3d61b43651d7");
        assertNull(rooted);

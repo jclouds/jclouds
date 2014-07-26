@@ -53,8 +53,8 @@ public class HostAdministrationApiLiveTest extends BaseNovaApiLiveTest {
       super.setup();
 
       if (identity.endsWith(":admin")) {
-         String zone = Iterables.getLast(api.getConfiguredZones(), "nova");
-         optApi = api.getHostAdministrationExtensionForZone(zone);
+         String region = Iterables.getLast(api.getConfiguredRegions(), "nova");
+         optApi = api.getHostAdministrationApi(region);
       }
    }
 

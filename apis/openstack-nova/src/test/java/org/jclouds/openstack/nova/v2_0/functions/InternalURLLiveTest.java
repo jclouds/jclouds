@@ -31,18 +31,18 @@ import com.google.inject.Module;
 /**
  * Simple live test to check the correct loading of the internal endpoint
  * services.
- * 
- * 
+ *
+ *
  */
 @Test(groups = "live", testName = "InternalURLLiveTest")
 public class InternalURLLiveTest extends BaseNovaApiLiveTest {
 
    @Test(description = "InternalUrl service endpoints loader")
    public void testGetInternalUrlServiceEndpoint() throws Exception {
-      String zone = api.getConfiguredZones().iterator().next();
+      String region = api.getConfiguredRegions().iterator().next();
       // List current servers to ensure that can reach nova with internalUrl ip
       try {
-         api.getServerApiForZone(zone).list().concat().toList();
+         api.getServerApi(region).list().concat().toList();
       } catch (Exception e) {
          Assert.fail("Could not retrieve servers list using the internalUrl", e);
       }

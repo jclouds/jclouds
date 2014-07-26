@@ -48,18 +48,13 @@ import com.google.common.collect.FluentIterable;
 
 /**
  * This API is for creating, listing, and deleting a User. Also allows listing, granting, and revoking access permissions for users.
- * @see org.jclouds.openstack.trove.v1.domain.User
- * User
- * 
- * @see <a href="http://sourceforge.net/apps/trac/reddwarf/">api doc</a>
- * @see <a
- *      href="https://github.com/reddwarf-nextgen/reddwarf">api
- *      src</a>
+ *
+ * @see User
  */
 @SkipEncoding({'/', '='})
 @RequestFilters(AuthenticateRequest.class)
 public interface UserApi {
-    
+
    /**
     * Create database users.
     * A user is granted all privileges on the specified databases.
@@ -77,7 +72,7 @@ public interface UserApi {
    @Fallback(FalseOnNotFoundOr404.class)
    @MapBinder(BindCreateUserToJson.class)
    boolean create(@PayloadParam("users") Set<User> users);
-   
+
    /**
     * Create a database user by name, password, and database name. Simpler overload for {@link #create(String, Set)}.
     *
@@ -93,7 +88,7 @@ public interface UserApi {
    @Fallback(FalseOnNotFoundOr404.class)
    @MapBinder(BindCreateUserToJson.class)
    boolean create(@PayloadParam("name") String userName, @PayloadParam("password") String password, @PayloadParam("databaseName") String databaseName);
-   
+
    /**
     * Create a database user by name, password, and database name. Simpler overload for {@link #create(String, Set)}.
     *
@@ -126,7 +121,7 @@ public interface UserApi {
    @Fallback(FalseOnNotFoundOr404.class)
    @MapBinder(BindGrantUserToJson.class)
    boolean grant(@PathParam("name") String userName, @PayloadParam("databases") List<String> databases);
-   
+
    /**
     * This operation grants access for the specified user to a database for the specified instance. Simpler overload for {@link #create(String, Set)}.
     * The user is granted all privileges.
@@ -142,7 +137,7 @@ public interface UserApi {
    @Fallback(FalseOnNotFoundOr404.class)
    @MapBinder(BindGrantUserToJson.class)
    boolean grant(@PathParam("name") String userName, @PayloadParam("databaseName") String databaseName);
-   
+
    /**
     * This operation grants access for the specified user to a database for the specified instance.
     * The user is granted all privileges.
@@ -157,7 +152,7 @@ public interface UserApi {
    @Consumes(MediaType.APPLICATION_JSON)
    @Fallback(FalseOnNotFoundOr404.class)
    boolean revoke(@PathParam("name") String userName, @PathParam("databaseName") String databaseName);
-   
+
    /**
     * This operation deletes the specified user for the specified database instance.
     *
@@ -170,7 +165,7 @@ public interface UserApi {
    @Consumes(MediaType.APPLICATION_JSON)
    @Fallback(FalseOnNotFoundOr404.class)
    boolean delete(@PathParam("name") String userName);
-   
+
    /**
     * This operation lists the users in the specified database instance.
     * This operation does not return the system users (database administrators that administer the health of the database). Also, this operation returns the "root" user only if "root" user has been enabled.
@@ -184,7 +179,7 @@ public interface UserApi {
    @Consumes(MediaType.APPLICATION_JSON)
    @Fallback(EmptyFluentIterableOnNotFoundOr404.class)
    FluentIterable<User> list();
-   
+
    /**
     * This operation shows a list of all databases to which a user has access.
     *
@@ -199,7 +194,7 @@ public interface UserApi {
    @Consumes(MediaType.APPLICATION_JSON)
    @Fallback(EmptyFluentIterableOnNotFoundOr404.class)
    FluentIterable<String> getDatabaseList(@PathParam("name") String userName);
-      
+
    /**
     * Returns a User by identifier.
     *
@@ -215,7 +210,7 @@ public interface UserApi {
    @Fallback(NullOnNotFoundOr404.class)
    @Nullable
    User get(@PathParam("name") String name);
-   
+
    /**
     * Returns a User by name and allowed host.
     *

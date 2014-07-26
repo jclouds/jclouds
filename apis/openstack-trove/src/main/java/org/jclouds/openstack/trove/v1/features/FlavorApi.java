@@ -36,13 +36,8 @@ import com.google.common.collect.FluentIterable;
 
 /**
  * This API strictly for listing and retrieving Flavor. Flavors cannot be created or deleted.
- * @see org.jclouds.openstack.trove.v1.domain.Flavor
- * Flavor
- * 
- * @see <a href="http://sourceforge.net/apps/trac/reddwarf/">api doc</a>
- * @see <a
- *      href="https://github.com/reddwarf-nextgen/reddwarf">api
- *      src</a>
+ *
+ * @see Flavor
  */
 @SkipEncoding({'/', '='})
 @RequestFilters(AuthenticateRequest.class)
@@ -59,7 +54,7 @@ public interface FlavorApi {
    @Consumes(MediaType.APPLICATION_JSON)
    @Fallback(EmptyFluentIterableOnNotFoundOr404.class)
    FluentIterable<Flavor> list();
-   
+
    /**
     * Returns a Flavor by id.
     *
@@ -73,7 +68,7 @@ public interface FlavorApi {
    @Consumes(MediaType.APPLICATION_JSON)
    @Fallback(NullOnNotFoundOr404.class)
    Flavor get(@PathParam("id") int flavorId);
-   
+
    /**
     * Returns a list of Flavors by Account ID (Tenant Id).
     *

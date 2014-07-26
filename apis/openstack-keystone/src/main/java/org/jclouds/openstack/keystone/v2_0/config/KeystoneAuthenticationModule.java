@@ -80,7 +80,7 @@ public class KeystoneAuthenticationModule extends AbstractModule {
     * <li>add the above annotation to any {@link AsyncApi} classes by placing it on the type. ex.
     * {@code @Endpoint(CloudDNS.class)}</li>
     * <li>add the following to your {@link org.jclouds.rest.config.RestClientModule}</li>
-    * 
+    *
     * <pre>
     * bind(new TypeLiteral&lt;Supplier&lt;URI&gt;&gt;() {
     * }).annotatedWith(CloudDNS.class).to(new TypeLiteral&lt;Supplier&lt;URI&gt;&gt;() {
@@ -148,6 +148,11 @@ public class KeystoneAuthenticationModule extends AbstractModule {
 
    }
 
+   /**
+    * @deprecated All OpenStack APIs rely on regions in jclouds 2.0 and this module will be removed
+    *             in jclouds 3.0.
+    */
+   @Deprecated
    public static class ZoneModule extends AbstractModule {
       @Override
       protected void configure() {

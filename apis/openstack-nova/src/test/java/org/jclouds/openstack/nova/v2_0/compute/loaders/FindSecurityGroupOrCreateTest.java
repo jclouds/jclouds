@@ -22,9 +22,9 @@ import static org.testng.Assert.fail;
 
 import java.util.concurrent.atomic.AtomicReference;
 
-import org.jclouds.openstack.nova.v2_0.domain.zonescoped.SecurityGroupInZone;
-import org.jclouds.openstack.nova.v2_0.domain.zonescoped.ZoneAndName;
-import org.jclouds.openstack.nova.v2_0.domain.zonescoped.ZoneSecurityGroupNameAndPorts;
+import org.jclouds.openstack.nova.v2_0.domain.regionscoped.SecurityGroupInRegion;
+import org.jclouds.openstack.nova.v2_0.domain.regionscoped.RegionAndName;
+import org.jclouds.openstack.nova.v2_0.domain.regionscoped.RegionSecurityGroupNameAndPorts;
 import org.testng.annotations.Test;
 
 import com.google.common.base.Function;
@@ -39,43 +39,43 @@ public class FindSecurityGroupOrCreateTest {
 
    @Test
    public void testWhenNotFoundCreatesANewSecurityGroup() throws Exception {
-      Predicate<AtomicReference<ZoneAndName>> returnSecurityGroupExistsInZone = Predicates.alwaysFalse();
+      Predicate<AtomicReference<RegionAndName>> returnSecurityGroupExistsInRegion = Predicates.alwaysFalse();
 
-      SecurityGroupInZone securityGroupInZone = createMock(SecurityGroupInZone.class);
+      SecurityGroupInRegion securityGroupInRegion = createMock(SecurityGroupInRegion.class);
 
-      ZoneSecurityGroupNameAndPorts input = new ZoneSecurityGroupNameAndPorts("zone", "groupName", ImmutableSet
+      RegionSecurityGroupNameAndPorts input = new RegionSecurityGroupNameAndPorts("region", "groupName", ImmutableSet
                .<Integer> of(22, 8080));
 
-      Function<ZoneSecurityGroupNameAndPorts, SecurityGroupInZone> groupCreator = Functions.forMap(ImmutableMap
-               .<ZoneSecurityGroupNameAndPorts, SecurityGroupInZone> of(input, securityGroupInZone));
+      Function<RegionSecurityGroupNameAndPorts, SecurityGroupInRegion> groupCreator = Functions.forMap(ImmutableMap
+               .<RegionSecurityGroupNameAndPorts, SecurityGroupInRegion> of(input, securityGroupInRegion));
 
       FindSecurityGroupOrCreate parser = new FindSecurityGroupOrCreate(
-               returnSecurityGroupExistsInZone, groupCreator);
+               returnSecurityGroupExistsInRegion, groupCreator);
 
-      assertEquals(parser.load(input), securityGroupInZone);
+      assertEquals(parser.load(input), securityGroupInRegion);
 
    }
-   
+
    @Test
    public void testWhenFoundReturnsSecurityGroupFromAtomicReferenceValueUpdatedDuringPredicateCheck() throws Exception {
-      final SecurityGroupInZone securityGroupInZone = createMock(SecurityGroupInZone.class);
+      final SecurityGroupInRegion securityGroupInRegion = createMock(SecurityGroupInRegion.class);
 
-      Predicate<AtomicReference<ZoneAndName>> returnSecurityGroupExistsInZone = new Predicate<AtomicReference<ZoneAndName>>() {
+      Predicate<AtomicReference<RegionAndName>> returnSecurityGroupExistsInRegion = new Predicate<AtomicReference<RegionAndName>>() {
 
          @Override
-         public boolean apply(AtomicReference<ZoneAndName> input) {
-            input.set(securityGroupInZone);
+         public boolean apply(AtomicReference<RegionAndName> input) {
+            input.set(securityGroupInRegion);
             return true;
          }
-         
+
       };
 
-      ZoneAndName input = ZoneAndName.fromZoneAndName("zone", "groupName");
+      RegionAndName input = RegionAndName.fromRegionAndName("region", "groupName");
 
-      Function<ZoneSecurityGroupNameAndPorts, SecurityGroupInZone> groupCreator = new Function<ZoneSecurityGroupNameAndPorts, SecurityGroupInZone>() {
+      Function<RegionSecurityGroupNameAndPorts, SecurityGroupInRegion> groupCreator = new Function<RegionSecurityGroupNameAndPorts, SecurityGroupInRegion>() {
 
          @Override
-         public SecurityGroupInZone apply(ZoneSecurityGroupNameAndPorts input) {
+         public SecurityGroupInRegion apply(RegionSecurityGroupNameAndPorts input) {
             fail();
             return null;
          }
@@ -83,24 +83,24 @@ public class FindSecurityGroupOrCreateTest {
       };
 
       FindSecurityGroupOrCreate parser = new FindSecurityGroupOrCreate(
-               returnSecurityGroupExistsInZone, groupCreator);
+               returnSecurityGroupExistsInRegion, groupCreator);
 
-      assertEquals(parser.load(input), securityGroupInZone);
+      assertEquals(parser.load(input), securityGroupInRegion);
 
    }
 
-   
+
    @Test(expectedExceptions = IllegalStateException.class)
    public void testWhenFoundPredicateMustUpdateAtomicReference() throws Exception {
 
-      Predicate<AtomicReference<ZoneAndName>> returnSecurityGroupExistsInZone = Predicates.alwaysTrue();
+      Predicate<AtomicReference<RegionAndName>> returnSecurityGroupExistsInRegion = Predicates.alwaysTrue();
 
-      ZoneAndName input = ZoneAndName.fromZoneAndName("zone", "groupName");
+      RegionAndName input = RegionAndName.fromRegionAndName("region", "groupName");
 
-      Function<ZoneSecurityGroupNameAndPorts, SecurityGroupInZone> groupCreator = new Function<ZoneSecurityGroupNameAndPorts, SecurityGroupInZone>() {
+      Function<RegionSecurityGroupNameAndPorts, SecurityGroupInRegion> groupCreator = new Function<RegionSecurityGroupNameAndPorts, SecurityGroupInRegion>() {
 
          @Override
-         public SecurityGroupInZone apply(ZoneSecurityGroupNameAndPorts input) {
+         public SecurityGroupInRegion apply(RegionSecurityGroupNameAndPorts input) {
             fail();
             return null;
          }
@@ -108,7 +108,7 @@ public class FindSecurityGroupOrCreateTest {
       };
 
       FindSecurityGroupOrCreate parser = new FindSecurityGroupOrCreate(
-               returnSecurityGroupExistsInZone, groupCreator);
+               returnSecurityGroupExistsInRegion, groupCreator);
 
       parser.load(input);
 
@@ -117,15 +117,15 @@ public class FindSecurityGroupOrCreateTest {
 
 
    @Test(expectedExceptions = IllegalStateException.class)
-   public void testWhenNotFoundInputMustBeZoneSecurityGroupNameAndPorts() throws Exception {
-      Predicate<AtomicReference<ZoneAndName>> returnSecurityGroupExistsInZone = Predicates.alwaysFalse();
+   public void testWhenNotFoundInputMustBeRegionSecurityGroupNameAndPorts() throws Exception {
+      Predicate<AtomicReference<RegionAndName>> returnSecurityGroupExistsInRegion = Predicates.alwaysFalse();
 
-      ZoneAndName input = ZoneAndName.fromZoneAndName("zone", "groupName");
+      RegionAndName input = RegionAndName.fromRegionAndName("region", "groupName");
 
-      Function<ZoneSecurityGroupNameAndPorts, SecurityGroupInZone> groupCreator = new Function<ZoneSecurityGroupNameAndPorts, SecurityGroupInZone>() {
+      Function<RegionSecurityGroupNameAndPorts, SecurityGroupInRegion> groupCreator = new Function<RegionSecurityGroupNameAndPorts, SecurityGroupInRegion>() {
 
          @Override
-         public SecurityGroupInZone apply(ZoneSecurityGroupNameAndPorts input) {
+         public SecurityGroupInRegion apply(RegionSecurityGroupNameAndPorts input) {
             fail();
             return null;
          }
@@ -133,7 +133,7 @@ public class FindSecurityGroupOrCreateTest {
       };
 
       FindSecurityGroupOrCreate parser = new FindSecurityGroupOrCreate(
-               returnSecurityGroupExistsInZone, groupCreator);
+               returnSecurityGroupExistsInRegion, groupCreator);
 
       parser.load(input);
 

@@ -62,7 +62,7 @@ public class ReverseDNSApiExpectTest extends BaseCloudDNSApiExpectTest<CloudDNSA
                .endpoint(endpoint)
                .build(),
             HttpResponse.builder().statusCode(OK.getStatusCode()).payload(payloadFromResource("/record-ptr-create-response.json")).build())
-            .getReverseDNSApiForService(CLOUD_SERVERS_OPEN_STACK);
+            .getReverseDNSApi(CLOUD_SERVERS_OPEN_STACK);
 
       Record createPTRRecordIPv4 = Record.builder()
             .type("PTR")
@@ -125,7 +125,7 @@ public class ReverseDNSApiExpectTest extends BaseCloudDNSApiExpectTest<CloudDNSA
             responseWithAccess,
             authenticatedGET().endpoint(endpoint).build(),
             HttpResponse.builder().statusCode(OK.getStatusCode()).payload(payloadFromResource("/record-ptr-list.json")).build())
-            .getReverseDNSApiForService(CLOUD_SERVERS_OPEN_STACK);
+            .getReverseDNSApi(CLOUD_SERVERS_OPEN_STACK);
 
       ImmutableList<RecordDetail> records = api.list(SERVER_URI).concat().toList();
       assertEquals(records.size(), 2);
@@ -143,7 +143,7 @@ public class ReverseDNSApiExpectTest extends BaseCloudDNSApiExpectTest<CloudDNSA
             responseWithAccess,
             authenticatedGET().endpoint(endpoint).build(),
             HttpResponse.builder().statusCode(OK.getStatusCode()).payload(payloadFromResource("/record-ptr-get.json")).build())
-            .getReverseDNSApiForService(CLOUD_SERVERS_OPEN_STACK);
+            .getReverseDNSApi(CLOUD_SERVERS_OPEN_STACK);
 
       RecordDetail record = api.get(SERVER_URI, "PTR-557437");
       Date now = new Date();
@@ -170,7 +170,7 @@ public class ReverseDNSApiExpectTest extends BaseCloudDNSApiExpectTest<CloudDNSA
                .endpoint(endpoint)
                .build(),
             HttpResponse.builder().statusCode(OK.getStatusCode()).payload(payloadFromResource("/record-ptr-update-response.json")).build())
-            .getReverseDNSApiForService(CLOUD_SERVERS_OPEN_STACK);
+            .getReverseDNSApi(CLOUD_SERVERS_OPEN_STACK);
 
       Record updatePTRRecordIPv4 = Record.builder()
             .type("PTR")
@@ -193,7 +193,7 @@ public class ReverseDNSApiExpectTest extends BaseCloudDNSApiExpectTest<CloudDNSA
             responseWithAccess,
             authenticatedGET().method(DELETE).replaceHeader(HttpHeaders.ACCEPT, MediaType.WILDCARD).endpoint(endpoint).build(),
             HttpResponse.builder().statusCode(OK.getStatusCode()).payload(payloadFromResource("/record-ptr-delete.json")).build())
-            .getReverseDNSApiForService(CLOUD_SERVERS_OPEN_STACK);
+            .getReverseDNSApi(CLOUD_SERVERS_OPEN_STACK);
 
       Job<Void> job = api.delete(SERVER_URI, "166.78.146.80");
 
@@ -207,7 +207,7 @@ public class ReverseDNSApiExpectTest extends BaseCloudDNSApiExpectTest<CloudDNSA
             responseWithAccess,
             authenticatedGET().method(DELETE).replaceHeader("Accept", MediaType.WILDCARD).endpoint(endpoint).build(),
             HttpResponse.builder().statusCode(OK.getStatusCode()).payload(payloadFromResource("/records-ptr-delete.json")).build())
-            .getReverseDNSApiForService(CLOUD_SERVERS_OPEN_STACK);
+            .getReverseDNSApi(CLOUD_SERVERS_OPEN_STACK);
 
       Job<Void> job = api.deleteAll(SERVER_URI);
 

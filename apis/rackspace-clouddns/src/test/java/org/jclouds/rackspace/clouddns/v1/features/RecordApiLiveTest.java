@@ -96,7 +96,7 @@ public class RecordApiLiveTest extends BaseCloudDNSApiLiveTest {
             .build();
 
       List<Record> createRecords = ImmutableList.of(createMXRecord, createARecord, createSRVRecord);
-      Set<RecordDetail> records = awaitComplete(api, api.getRecordApiForDomain(domainId).create(createRecords));
+      Set<RecordDetail> records = awaitComplete(api, api.getRecordApi(domainId).create(createRecords));
 
       Thread.sleep(1000);
       Date now = new Date();
@@ -145,23 +145,23 @@ public class RecordApiLiveTest extends BaseCloudDNSApiLiveTest {
 
    @Test(dependsOnMethods = "testCreateRecords")
    public void testListRecords() throws Exception {
-      Set<RecordDetail> records = api.getRecordApiForDomain(domainId).list().concat().toSet();
+      Set<RecordDetail> records = api.getRecordApi(domainId).list().concat().toSet();
       assertEquals(records.size(), 5); // 3 created above + 2 nameserver (NS) records
    }
 
    @Test(dependsOnMethods = "testListRecords")
    public void testListRecordsByCriteriaMethods() throws Exception {
-      List<RecordDetail> records = api.getRecordApiForDomain(domainId).listByType("SRV").concat().toList();
+      List<RecordDetail> records = api.getRecordApi(domainId).listByType("SRV").concat().toList();
       assertEquals(records.size(), 1);
       
       srvRecordId = records.get(0).getId();
 
-      records = api.getRecordApiForDomain(domainId).listByTypeAndData("A", "10.0.0.1").concat().toList();
+      records = api.getRecordApi(domainId).listByTypeAndData("A", "10.0.0.1").concat().toList();
       assertEquals(records.size(), 1);
       
       aRecordId = records.get(0).getId();
 
-      records = api.getRecordApiForDomain(domainId).listByNameAndType(JCLOUDS_EXAMPLE, "MX").concat().toList();
+      records = api.getRecordApi(domainId).listByNameAndType(JCLOUDS_EXAMPLE, "MX").concat().toList();
       assertEquals(records.size(), 1);
       
       mxRecordId = records.get(0).getId();
@@ -169,7 +169,7 @@ public class RecordApiLiveTest extends BaseCloudDNSApiLiveTest {
 
    @Test(dependsOnMethods = "testListRecordsByCriteriaMethods")
    public void testGetRecordByNameAndTypeAndData() throws Exception {
-      RecordDetail record = api.getRecordApiForDomain(domainId).getByNameAndTypeAndData(JCLOUDS_EXAMPLE, "A", "10.0.0.1");
+      RecordDetail record = api.getRecordApi(domainId).getByNameAndTypeAndData(JCLOUDS_EXAMPLE, "A", "10.0.0.1");
       Date now = new Date();
       
       assertNotNull(record.getId());
@@ -183,7 +183,7 @@ public class RecordApiLiveTest extends BaseCloudDNSApiLiveTest {
 
    @Test(dependsOnMethods = "testGetRecordByNameAndTypeAndData")
    public void testGetRecord() throws Exception {
-      RecordDetail record = api.getRecordApiForDomain(domainId).get(aRecordId);
+      RecordDetail record = api.getRecordApi(domainId).get(aRecordId);
       Date now = new Date();
       
       assertNotNull(record.getId());
@@ -205,9 +205,9 @@ public class RecordApiLiveTest extends BaseCloudDNSApiLiveTest {
             .comment("Updated Protocol to UDP")
             .build();
 
-      awaitComplete(api, api.getRecordApiForDomain(domainId).update(srvRecordId, record));
+      awaitComplete(api, api.getRecordApi(domainId).update(srvRecordId, record));
 
-      RecordDetail srvRecord = api.getRecordApiForDomain(domainId).get(srvRecordId);
+      RecordDetail srvRecord = api.getRecordApi(domainId).get(srvRecordId);
       Date now = new Date();
       
       assertNotNull(srvRecord.getId());
@@ -223,13 +223,13 @@ public class RecordApiLiveTest extends BaseCloudDNSApiLiveTest {
 
    @Test(dependsOnMethods = "testUpdateRecord")
    public void testUpdateRecords() throws Exception {      
-      Set<RecordDetail> recordDetails = api.getRecordApiForDomain(domainId).list().concat().toSet();
+      Set<RecordDetail> recordDetails = api.getRecordApi(domainId).list().concat().toSet();
       Map<String, Record> idsToRecords = RecordFunctions.toRecordMap(recordDetails);
       Map<String, Record> updateRecords = Maps.transformValues(idsToRecords, updateTTLAndComment(35813, "New TTL")); 
             
-      awaitComplete(api, api.getRecordApiForDomain(domainId).update(updateRecords));
+      awaitComplete(api, api.getRecordApi(domainId).update(updateRecords));
 
-      RecordDetail record = api.getRecordApiForDomain(domainId).get(aRecordId);
+      RecordDetail record = api.getRecordApi(domainId).get(aRecordId);
       Date now = new Date();
       
       assertNotNull(record.getId());
@@ -241,7 +241,7 @@ public class RecordApiLiveTest extends BaseCloudDNSApiLiveTest {
       assertTrue(record.getCreated().before(now));
       assertTrue(record.getUpdated().before(now));
       
-      recordDetails = api.getRecordApiForDomain(domainId).list().concat().toSet();
+      recordDetails = api.getRecordApi(domainId).list().concat().toSet();
       
       for (RecordDetail recordDetail : recordDetails) {
          assertEquals(recordDetail.getTTL(), 35813);
@@ -259,19 +259,19 @@ public class RecordApiLiveTest extends BaseCloudDNSApiLiveTest {
 
    @Test(dependsOnMethods = "testUpdateRecords")
    public void testDeleteRecord() throws Exception {      
-      awaitComplete(api, api.getRecordApiForDomain(domainId).delete(aRecordId));
+      awaitComplete(api, api.getRecordApi(domainId).delete(aRecordId));
       
-      assertNull(api.getRecordApiForDomain(domainId).get(aRecordId));
+      assertNull(api.getRecordApi(domainId).get(aRecordId));
    }
 
    @Test(dependsOnMethods = "testDeleteRecord")
    public void testDeleteRecords() throws Exception {      
       List<String> recordIds = ImmutableList.<String> of(srvRecordId, mxRecordId);
       
-      awaitComplete(api, api.getRecordApiForDomain(domainId).delete(recordIds));
+      awaitComplete(api, api.getRecordApi(domainId).delete(recordIds));
       
-      assertNull(api.getRecordApiForDomain(domainId).get(srvRecordId));
-      assertNull(api.getRecordApiForDomain(domainId).get(mxRecordId));
+      assertNull(api.getRecordApi(domainId).get(srvRecordId));
+      assertNull(api.getRecordApi(domainId).get(mxRecordId));
    }
 
    @Override

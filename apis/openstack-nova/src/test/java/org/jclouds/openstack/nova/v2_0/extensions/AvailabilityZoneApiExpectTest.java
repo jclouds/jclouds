@@ -19,10 +19,11 @@ package org.jclouds.openstack.nova.v2_0.extensions;
 import com.google.common.base.Optional;
 import com.google.common.collect.FluentIterable;
 import com.google.common.collect.ImmutableSet;
+
 import org.jclouds.http.HttpRequest;
 import org.jclouds.http.HttpResponse;
 import org.jclouds.openstack.nova.v2_0.NovaApi;
-import org.jclouds.openstack.nova.v2_0.domain.zonescoped.AvailabilityZone;
+import org.jclouds.openstack.nova.v2_0.domain.regionscoped.AvailabilityZone;
 import org.jclouds.openstack.nova.v2_0.internal.BaseNovaApiExpectTest;
 import org.testng.annotations.Test;
 
@@ -46,7 +47,7 @@ public class AvailabilityZoneApiExpectTest extends BaseNovaApiExpectTest {
       NovaApi availabilityZonesApi = requestsSendResponses(keystoneAuthWithUsernameAndPasswordAndTenantName,
             responseWithKeystoneAccess, extensionsOfNovaRequest, extensionsOfNovaResponse, list, listResponse);
 
-      assertEquals(availabilityZonesApi.getConfiguredZones(), ImmutableSet.of("az-1.region-a.geo-1", "az-2.region-a.geo-1", "az-3.region-a.geo-1"));
+      assertEquals(availabilityZonesApi.getConfiguredRegions(), ImmutableSet.of("az-1.region-a.geo-1", "az-2.region-a.geo-1", "az-3.region-a.geo-1"));
 
       FluentIterable<? extends AvailabilityZone> zones = availabilityZonesApi.getAvailabilityZoneApi("az-1.region-a.geo-1").get().list();
 

@@ -97,12 +97,12 @@ public class NovaHttpApiModule extends HttpApiModule<NovaApi> {
 
    @Provides
    @Singleton
-   public LoadingCache<String, Set<? extends Extension>> provideExtensionsByZone(final Provider<NovaApi> novaApi) {
+   public LoadingCache<String, Set<? extends Extension>> provideExtensionsByRegion(final Provider<NovaApi> novaApi) {
       return CacheBuilder.newBuilder().expireAfterWrite(23, TimeUnit.HOURS)
             .build(new CacheLoader<String, Set<? extends Extension>>() {
                @Override
                public Set<? extends Extension> load(String key) throws Exception {
-                  return novaApi.get().getExtensionApiForZone(key).list();
+                  return novaApi.get().getExtensionApi(key).list();
                }
             });
    }

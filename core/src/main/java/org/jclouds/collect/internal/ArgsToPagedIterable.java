@@ -73,10 +73,10 @@ public abstract class ArgsToPagedIterable<T, I extends ArgsToPagedIterable<T, I>
     * <p>
     * This class provides a way to propagate the arguments passed to the caller
     * of the method, so they can be used to fetch the next page of the result
-    * set. For example, in the call {@code api.getUserApiForZone(zone).list()},
-    * the caller arg0 is the value of {@code zone}, and the callee is
+    * set. For example, in the call {@code api.getUserApi(region).list()},
+    * the caller arg0 is the value of {@code region}, and the callee is
     * {@code UserApi.list()}
-    * 
+    *
     * @see ParseImages function in openstack-glance for a usage example.
     */
    public abstract static class FromCaller<T, I extends FromCaller<T, I>> extends ArgsToPagedIterable<T, I> {

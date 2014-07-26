@@ -50,9 +50,9 @@ public class ExtensionApiExpectTest extends BaseNovaApiExpectTest {
       NovaApi apiWhenExtensionsExist = requestsSendResponses(keystoneAuthWithUsernameAndPasswordAndTenantName,
             responseWithKeystoneAccess, listExtensions, listExtensionsResponse);
 
-      assertEquals(apiWhenExtensionsExist.getConfiguredZones(), ImmutableSet.of("az-1.region-a.geo-1", "az-2.region-a.geo-1", "az-3.region-a.geo-1"));
+      assertEquals(apiWhenExtensionsExist.getConfiguredRegions(), ImmutableSet.of("az-1.region-a.geo-1", "az-2.region-a.geo-1", "az-3.region-a.geo-1"));
 
-      assertEquals(apiWhenExtensionsExist.getExtensionApiForZone("az-1.region-a.geo-1").list().toString(),
+      assertEquals(apiWhenExtensionsExist.getExtensionApi("az-1.region-a.geo-1").list().toString(),
             new ParseExtensionListTest().expected().toString());
    }
 
@@ -69,7 +69,7 @@ public class ExtensionApiExpectTest extends BaseNovaApiExpectTest {
       NovaApi apiWhenNoServersExist = requestsSendResponses(keystoneAuthWithUsernameAndPasswordAndTenantName,
             responseWithKeystoneAccess, listExtensions, listExtensionsResponse);
 
-      assertTrue(apiWhenNoServersExist.getExtensionApiForZone("az-1.region-a.geo-1").list().isEmpty());
+      assertTrue(apiWhenNoServersExist.getExtensionApi("az-1.region-a.geo-1").list().isEmpty());
    }
 
    // TODO: gson deserializer for Multimap
@@ -87,7 +87,7 @@ public class ExtensionApiExpectTest extends BaseNovaApiExpectTest {
       NovaApi apiWhenExtensionsExist = requestsSendResponses(keystoneAuthWithUsernameAndPasswordAndTenantName,
             responseWithKeystoneAccess, getExtension, getExtensionResponse);
 
-      assertEquals(apiWhenExtensionsExist.getExtensionApiForZone("az-1.region-a.geo-1").get("RS-PIE")
+      assertEquals(apiWhenExtensionsExist.getExtensionApi("az-1.region-a.geo-1").get("RS-PIE")
             .toString(), new ParseExtensionTest().expected().toString());
    }
 
@@ -105,6 +105,6 @@ public class ExtensionApiExpectTest extends BaseNovaApiExpectTest {
       NovaApi apiWhenNoExtensionsExist = requestsSendResponses(keystoneAuthWithUsernameAndPasswordAndTenantName,
             responseWithKeystoneAccess, getExtension, getExtensionResponse);
 
-      assertNull(apiWhenNoExtensionsExist.getExtensionApiForZone("az-1.region-a.geo-1").get("RS-PIE"));
+      assertNull(apiWhenNoExtensionsExist.getExtensionApi("az-1.region-a.geo-1").get("RS-PIE"));
    }
 }

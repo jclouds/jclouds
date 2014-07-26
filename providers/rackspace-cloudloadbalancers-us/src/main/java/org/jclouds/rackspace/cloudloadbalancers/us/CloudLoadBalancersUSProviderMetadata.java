@@ -17,8 +17,8 @@
 package org.jclouds.rackspace.cloudloadbalancers.us;
 
 import static org.jclouds.location.reference.LocationConstants.ISO3166_CODES;
-import static org.jclouds.location.reference.LocationConstants.PROPERTY_ZONE;
-import static org.jclouds.location.reference.LocationConstants.PROPERTY_ZONES;
+import static org.jclouds.location.reference.LocationConstants.PROPERTY_REGION;
+import static org.jclouds.location.reference.LocationConstants.PROPERTY_REGIONS;
 
 import java.net.URI;
 import java.util.Properties;
@@ -40,7 +40,7 @@ public class CloudLoadBalancersUSProviderMetadata extends BaseProviderMetadata {
    public Builder toBuilder() {
       return builder().fromProviderMetadata(this);
    }
-   
+
    public CloudLoadBalancersUSProviderMetadata() {
       super(builder());
    }
@@ -51,15 +51,15 @@ public class CloudLoadBalancersUSProviderMetadata extends BaseProviderMetadata {
 
    public static Properties defaultProperties() {
       Properties properties = new Properties();
-      properties.setProperty(PROPERTY_ZONES, "ORD,DFW,IAD,SYD,HKG");
-      properties.setProperty(PROPERTY_ZONE + ".ORD." + ISO3166_CODES, "US-IL");
-      properties.setProperty(PROPERTY_ZONE + ".DFW." + ISO3166_CODES, "US-TX");
-      properties.setProperty(PROPERTY_ZONE + ".IAD." + ISO3166_CODES, "US-VA");
-      properties.setProperty(PROPERTY_ZONE + ".SYD." + ISO3166_CODES, "AU-NSW");
-      properties.setProperty(PROPERTY_ZONE + ".HKG." + ISO3166_CODES, "HK");
+      properties.setProperty(PROPERTY_REGIONS, "ORD,DFW,IAD,SYD,HKG");
+      properties.setProperty(PROPERTY_REGION + ".ORD." + ISO3166_CODES, "US-IL");
+      properties.setProperty(PROPERTY_REGION + ".DFW." + ISO3166_CODES, "US-TX");
+      properties.setProperty(PROPERTY_REGION + ".IAD." + ISO3166_CODES, "US-VA");
+      properties.setProperty(PROPERTY_REGION + ".SYD." + ISO3166_CODES, "AU-NSW");
+      properties.setProperty(PROPERTY_REGION + ".HKG." + ISO3166_CODES, "HK");
       return properties;
    }
-   
+
    public static class Builder extends BaseProviderMetadata.Builder {
 
       protected Builder() {
@@ -80,7 +80,7 @@ public class CloudLoadBalancersUSProviderMetadata extends BaseProviderMetadata {
       public CloudLoadBalancersUSProviderMetadata build() {
          return new CloudLoadBalancersUSProviderMetadata(this);
       }
-      
+
       @Override
       public Builder fromProviderMetadata(
             ProviderMetadata in) {

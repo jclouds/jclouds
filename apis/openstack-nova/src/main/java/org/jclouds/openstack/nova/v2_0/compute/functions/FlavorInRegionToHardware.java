@@ -29,29 +29,29 @@ import org.jclouds.compute.domain.Processor;
 import org.jclouds.compute.domain.internal.VolumeImpl;
 import org.jclouds.domain.Location;
 import org.jclouds.openstack.nova.v2_0.domain.Flavor;
-import org.jclouds.openstack.nova.v2_0.domain.zonescoped.FlavorInZone;
+import org.jclouds.openstack.nova.v2_0.domain.regionscoped.FlavorInRegion;
 
 import com.google.common.base.Function;
 import com.google.common.base.Supplier;
 
 /**
- * A function for transforming the nova specific FlavorInZone object to the generic Hardware object.
+ * A function for transforming the nova specific FlavorInRegion object to the generic Hardware object.
  */
-public class FlavorInZoneToHardware implements Function<FlavorInZone, Hardware> {
+public class FlavorInRegionToHardware implements Function<FlavorInRegion, Hardware> {
 
    private final Supplier<Map<String, Location>> locationIndex;
 
    @Inject
-   public FlavorInZoneToHardware(Supplier<Map<String, Location>> locationIndex) {
+   public FlavorInRegionToHardware(Supplier<Map<String, Location>> locationIndex) {
       this.locationIndex = checkNotNull(locationIndex, "locationIndex");
    }
 
    @Override
-   public Hardware apply(FlavorInZone flavorInZone) {
-      Location location = locationIndex.get().get(flavorInZone.getZone());
-      checkState(location != null, "location %s not in locationIndex: %s", flavorInZone.getZone(), locationIndex.get());
-      Flavor flavor = flavorInZone.getFlavor();
-      return new HardwareBuilder().id(flavorInZone.slashEncode()).providerId(flavor.getId()).name(flavor.getName())
+   public Hardware apply(FlavorInRegion flavorInRegion) {
+      Location location = locationIndex.get().get(flavorInRegion.getRegion());
+      checkState(location != null, "location %s not in locationIndex: %s", flavorInRegion.getRegion(), locationIndex.get());
+      Flavor flavor = flavorInRegion.getFlavor();
+      return new HardwareBuilder().id(flavorInRegion.slashEncode()).providerId(flavor.getId()).name(flavor.getName())
                .ram(flavor.getRam()).processor(new Processor(flavor.getVcpus(), 1.0)).volume(
                         new VolumeImpl(Float.valueOf(flavor.getDisk()), true, true)).location(location).build();
    }

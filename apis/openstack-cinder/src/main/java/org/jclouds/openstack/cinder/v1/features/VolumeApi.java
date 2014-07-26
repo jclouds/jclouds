@@ -29,6 +29,7 @@ import javax.ws.rs.core.MediaType;
 import org.jclouds.Fallbacks.EmptyFluentIterableOnNotFoundOr404;
 import org.jclouds.Fallbacks.FalseOnNotFoundOr404;
 import org.jclouds.Fallbacks.NullOnNotFoundOr404;
+import org.jclouds.javax.annotation.Nullable;
 import org.jclouds.openstack.cinder.v1.domain.Volume;
 import org.jclouds.openstack.cinder.v1.options.CreateVolumeOptions;
 import org.jclouds.openstack.keystone.v2_0.filters.AuthenticateRequest;
@@ -42,16 +43,16 @@ import org.jclouds.rest.annotations.SkipEncoding;
 import com.google.common.collect.FluentIterable;
 
 /**
- * Provides synchronous access to Volumes.
- * 
+ * Provides synchronous access to the Volume API.
+ *
  * This API strictly handles creating and managing Volumes. To attach a Volume to a Server you need to use the
  * @see VolumeAttachmentApi
- * 
- * @see VolumeAsyncApi
- * @see <a href="http://api.openstack.org/">API Doc</a>
+ *
  */
 @SkipEncoding({'/', '='})
 @RequestFilters(AuthenticateRequest.class)
+@Consumes(MediaType.APPLICATION_JSON)
+@Path("/volumes")
 public interface VolumeApi {
    /**
     * Returns a summary list of Volumes.
@@ -60,9 +61,7 @@ public interface VolumeApi {
     */
    @Named("volume:list")
    @GET
-   @Path("/volumes")
    @SelectJson("volumes")
-   @Consumes(MediaType.APPLICATION_JSON)
    @Fallback(EmptyFluentIterableOnNotFoundOr404.class)
    FluentIterable<? extends Volume> list();
 
@@ -73,10 +72,9 @@ public interface VolumeApi {
     */
    @Named("volume:list")
    @GET
-   @Path("/volumes/detail")
+   @Path("/detail")
    @SelectJson("volumes")
-   @Consumes(MediaType.APPLICATION_JSON)
-   @Fallback(EmptyFluentIterableOnNotFoundOr404.class)   
+   @Fallback(EmptyFluentIterableOnNotFoundOr404.class)
    FluentIterable<? extends Volume> listInDetail();
 
    /**
@@ -87,24 +85,22 @@ public interface VolumeApi {
     */
    @Named("volume:get")
    @GET
-   @Path("/volumes/{id}")
+   @Path("/{id}")
    @SelectJson("volume")
-   @Consumes(MediaType.APPLICATION_JSON)
-   @Fallback(NullOnNotFoundOr404.class)   
+   @Fallback(NullOnNotFoundOr404.class)
+   @Nullable
    Volume get(@PathParam("id") String volumeId);
 
    /**
     * Creates a new Volume
-    * 
+    *
     * @param volumeId Id of the Volume
     * @param options See CreateVolumeOptions
     * @return The new Volume
     */
    @Named("volume:create")
    @POST
-   @Path("/volumes")
    @SelectJson("volume")
-   @Consumes(MediaType.APPLICATION_JSON)
    @Produces(MediaType.APPLICATION_JSON)
    @MapBinder(CreateVolumeOptions.class)
    Volume create(@PayloadParam("size") int sizeGB, CreateVolumeOptions... options);
@@ -117,8 +113,7 @@ public interface VolumeApi {
     */
    @Named("volume:delete")
    @DELETE
-   @Path("/volumes/{id}")
-   @Consumes(MediaType.APPLICATION_JSON)
+   @Path("/{id}")
    @Fallback(FalseOnNotFoundOr404.class)
    boolean delete(@PathParam("id") String volumeId);
 }

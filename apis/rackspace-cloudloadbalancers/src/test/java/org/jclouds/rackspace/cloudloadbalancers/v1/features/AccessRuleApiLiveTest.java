@@ -42,7 +42,7 @@ import com.google.common.collect.Maps;
 @Test(groups = "live", singleThreaded = true, testName = "AccessListApiLiveTest")
 public class AccessRuleApiLiveTest extends BaseCloudLoadBalancersApiLiveTest {
    private LoadBalancer lb;
-   private String zone;
+   private String region;
    private AccessRule accessRule1;
    private AccessRule accessRule2;
    private AccessRule accessRule3;
@@ -58,12 +58,12 @@ public class AccessRuleApiLiveTest extends BaseCloudLoadBalancersApiLiveTest {
       accessRule2 = AccessRule.deny("206.160.165.11");
       accessRule3 = AccessRule.deny("206.160.163.22");
       accessRule4 = AccessRule.deny("206.160.168.22");
-      
+
       accessRules = Maps.newHashMap();
       accessRules.put(accessRule1.getAddress(), accessRule1);
       accessRules.put(accessRule2.getAddress(), accessRule2);
       accessRules.put(accessRule3.getAddress(), accessRule3);
-      accessRules.put(accessRule4.getAddress(), accessRule4); 
+      accessRules.put(accessRule4.getAddress(), accessRule4);
    }
 
    public void testCreateLoadBalancer() {
@@ -71,60 +71,60 @@ public class AccessRuleApiLiveTest extends BaseCloudLoadBalancersApiLiveTest {
       CreateLoadBalancer createLB = CreateLoadBalancer.builder()
             .name(prefix + "-jclouds").protocol("HTTP").port(80).virtualIPType(Type.PUBLIC).node(addNode).build();
 
-      zone = "ORD";//Iterables.getFirst(api.getConfiguredZones(), null);
-      lb = api.getLoadBalancerApiForZone(zone).create(createLB);
-      
-      assertTrue(awaitAvailable(api.getLoadBalancerApiForZone(zone)).apply(lb));
+      region = "ORD";//Iterables.getFirst(api.getConfiguredRegions(), null);
+      lb = api.getLoadBalancerApi(region).create(createLB);
+
+      assertTrue(awaitAvailable(api.getLoadBalancerApi(region)).apply(lb));
    }
 
    @Test(dependsOnMethods = "testCreateLoadBalancer")
    public void testCreateAccessList() throws Exception {
-      api.getAccessRuleApiForZoneAndLoadBalancer(zone, lb.getId()).create(accessRules.values());
-      assertTrue(awaitAvailable(api.getLoadBalancerApiForZone(zone)).apply(lb));
-      
+      api.getAccessRuleApi(region, lb.getId()).create(accessRules.values());
+      assertTrue(awaitAvailable(api.getLoadBalancerApi(region)).apply(lb));
+
       assertExpectedAccessRules(accessRules);
    }
-   
+
    @Test(dependsOnMethods = "testCreateAccessList")
    public void testRemoveSingleAccessRule() throws Exception {
-      Iterable<AccessRuleWithId> actualAccessList = api.getAccessRuleApiForZoneAndLoadBalancer(zone, lb.getId()).list();
+      Iterable<AccessRuleWithId> actualAccessList = api.getAccessRuleApi(region, lb.getId()).list();
       AccessRuleWithId removedAccessRule = Iterables.getFirst(actualAccessList, null);
       accessRules.remove(removedAccessRule.getAddress());
-      
-      assertTrue(api.getAccessRuleApiForZoneAndLoadBalancer(zone, lb.getId()).delete(removedAccessRule.getId()));
-      assertTrue(awaitAvailable(api.getLoadBalancerApiForZone(zone)).apply(lb));
-      
+
+      assertTrue(api.getAccessRuleApi(region, lb.getId()).delete(removedAccessRule.getId()));
+      assertTrue(awaitAvailable(api.getLoadBalancerApi(region)).apply(lb));
+
       assertExpectedAccessRules(accessRules);
    }
-   
+
    @Test(dependsOnMethods = "testRemoveSingleAccessRule")
    public void testRemoveManyAccessRules() throws Exception {
-      Iterable<AccessRuleWithId> actualAccessList = api.getAccessRuleApiForZoneAndLoadBalancer(zone, lb.getId()).list();
+      Iterable<AccessRuleWithId> actualAccessList = api.getAccessRuleApi(region, lb.getId()).list();
       AccessRuleWithId removedAccessRule1 = Iterables.getFirst(actualAccessList, null);
       AccessRuleWithId removedAccessRule2 = Iterables.getLast(actualAccessList);
       List<Integer> removedAccessRuleIds = ImmutableList.<Integer> of(removedAccessRule1.getId(), removedAccessRule2.getId());
       accessRules.remove(removedAccessRule1.getAddress());
       accessRules.remove(removedAccessRule2.getAddress());
-      
-      assertTrue(api.getAccessRuleApiForZoneAndLoadBalancer(zone, lb.getId()).delete(removedAccessRuleIds));
-      assertTrue(awaitAvailable(api.getLoadBalancerApiForZone(zone)).apply(lb));
-      
+
+      assertTrue(api.getAccessRuleApi(region, lb.getId()).delete(removedAccessRuleIds));
+      assertTrue(awaitAvailable(api.getLoadBalancerApi(region)).apply(lb));
+
       assertExpectedAccessRules(accessRules);
    }
-   
+
    @Test(dependsOnMethods = "testRemoveManyAccessRules")
    public void testRemoveAllAccessRules() throws Exception {
-      assertTrue(api.getAccessRuleApiForZoneAndLoadBalancer(zone, lb.getId()).deleteAll());
-      assertTrue(awaitAvailable(api.getLoadBalancerApiForZone(zone)).apply(lb));
-      
+      assertTrue(api.getAccessRuleApi(region, lb.getId()).deleteAll());
+      assertTrue(awaitAvailable(api.getLoadBalancerApi(region)).apply(lb));
+
       assertExpectedAccessRules(Maps.<String, AccessRule>newHashMap());
    }
-   
+
    private void assertExpectedAccessRules(Map<String, AccessRule> expectedAccessList) {
-      Iterable<AccessRuleWithId> actualAccessList = api.getAccessRuleApiForZoneAndLoadBalancer(zone, lb.getId()).list();
-      
+      Iterable<AccessRuleWithId> actualAccessList = api.getAccessRuleApi(region, lb.getId()).list();
+
       for (AccessRule actualAccessRule : actualAccessList) {
-         assertEquals(expectedAccessList.containsKey(actualAccessRule.getAddress()), true, 
+         assertEquals(expectedAccessList.containsKey(actualAccessRule.getAddress()), true,
                "The AccessRule " + actualAccessRule + " was not found in " + expectedAccessList);
       }
    }
@@ -132,9 +132,9 @@ public class AccessRuleApiLiveTest extends BaseCloudLoadBalancersApiLiveTest {
    @Override
    @AfterGroups(groups = "live")
    protected void tearDown() {
-      assertTrue(awaitAvailable(api.getLoadBalancerApiForZone(zone)).apply(lb));
-      api.getLoadBalancerApiForZone(zone).delete(lb.getId());
-      assertTrue(awaitDeleted(api.getLoadBalancerApiForZone(zone)).apply(lb));
+      assertTrue(awaitAvailable(api.getLoadBalancerApi(region)).apply(lb));
+      api.getLoadBalancerApi(region).delete(lb.getId());
+      assertTrue(awaitDeleted(api.getLoadBalancerApi(region)).apply(lb));
       super.tearDown();
    }
 }

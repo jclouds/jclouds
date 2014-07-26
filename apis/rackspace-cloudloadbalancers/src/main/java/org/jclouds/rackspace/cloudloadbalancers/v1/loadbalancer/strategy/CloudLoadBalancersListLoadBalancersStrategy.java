@@ -25,7 +25,7 @@ import javax.inject.Singleton;
 
 import org.jclouds.loadbalancer.domain.LoadBalancerMetadata;
 import org.jclouds.loadbalancer.strategy.ListLoadBalancersStrategy;
-import org.jclouds.location.Zone;
+import org.jclouds.location.Region;
 import org.jclouds.rackspace.cloudloadbalancers.v1.CloudLoadBalancersApi;
 import org.jclouds.rackspace.cloudloadbalancers.v1.domain.LoadBalancer;
 
@@ -39,21 +39,21 @@ public class CloudLoadBalancersListLoadBalancersStrategy implements ListLoadBala
 
    private final CloudLoadBalancersApi aclient;
    private final Function<LoadBalancer, LoadBalancerMetadata> converter;
-   private final Supplier<Set<String>> zones;
+   private final Supplier<Set<String>> regions;
 
    @Inject
    protected CloudLoadBalancersListLoadBalancersStrategy(CloudLoadBalancersApi aclient,
-         Function<LoadBalancer, LoadBalancerMetadata> converter, @Zone Supplier<Set<String>> zones) {
+         Function<LoadBalancer, LoadBalancerMetadata> converter, @Region Supplier<Set<String>> regions) {
       this.aclient = checkNotNull(aclient, "aclient");
-      this.zones = checkNotNull(zones, "zones");
+      this.regions = checkNotNull(regions, "regions");
       this.converter = checkNotNull(converter, "converter");
    }
 
    @Override
    public Iterable<? extends LoadBalancerMetadata> listLoadBalancers() {
       Builder<LoadBalancerMetadata> loadBalancers = ImmutableSet.<LoadBalancerMetadata> builder();
-      for (String zone : zones.get()) { // TODO: parallel
-         loadBalancers.addAll(aclient.getLoadBalancerApiForZone(zone).list().concat().transform(converter));
+      for (String region : regions.get()) { // TODO: parallel
+         loadBalancers.addAll(aclient.getLoadBalancerApi(region).list().concat().transform(converter));
       }
       return loadBalancers.build();
    }

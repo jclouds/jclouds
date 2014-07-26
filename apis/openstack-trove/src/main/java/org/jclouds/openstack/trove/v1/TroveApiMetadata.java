@@ -25,7 +25,7 @@ import java.util.Properties;
 import org.jclouds.openstack.keystone.v2_0.config.AuthenticationApiModule;
 import org.jclouds.openstack.keystone.v2_0.config.CredentialTypes;
 import org.jclouds.openstack.keystone.v2_0.config.KeystoneAuthenticationModule;
-import org.jclouds.openstack.keystone.v2_0.config.KeystoneAuthenticationModule.ZoneModule;
+import org.jclouds.openstack.keystone.v2_0.config.KeystoneAuthenticationModule.RegionModule;
 import org.jclouds.openstack.trove.v1.config.TroveHttpApiModule;
 import org.jclouds.openstack.trove.v1.config.TroveParserModule;
 import org.jclouds.openstack.v2_0.ServiceType;
@@ -38,7 +38,7 @@ import com.google.inject.Module;
  * Implementation of {@link org.jclouds.apis.ApiMetadata} for the OpenStack Trove v1 API.
  */
 public class TroveApiMetadata extends BaseHttpApiMetadata<TroveApi> {
-      
+
    @Override
    public Builder toBuilder() {
       return new Builder().fromApiMetadata(this);
@@ -61,7 +61,7 @@ public class TroveApiMetadata extends BaseHttpApiMetadata<TroveApi> {
 
    public static class Builder extends BaseHttpApiMetadata.Builder<TroveApi, Builder> {
 
-      protected Builder() {         
+      protected Builder() {
           id("openstack-trove")
          .name("OpenStack Trove API")
          .identityName("${tenantName}:${userName} or ${userName}, if your keystone supports a default tenant")
@@ -74,7 +74,7 @@ public class TroveApiMetadata extends BaseHttpApiMetadata<TroveApi> {
          .defaultModules(ImmutableSet.<Class<? extends Module>>builder()
                                      .add(AuthenticationApiModule.class)
                                      .add(KeystoneAuthenticationModule.class)
-                                     .add(ZoneModule.class)
+                                     .add(RegionModule.class)
                                      .add(TroveParserModule.class)
                                      .add(TroveHttpApiModule.class)
                                      .build());

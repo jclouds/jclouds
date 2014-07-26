@@ -20,13 +20,13 @@ import java.util.Set;
 
 import javax.inject.Inject;
 
-import org.jclouds.location.Zone;
+import org.jclouds.location.Region;
 import org.jclouds.openstack.nova.v2_0.NovaApi;
 import org.jclouds.openstack.nova.v2_0.compute.NovaComputeServiceAdapter;
 import org.jclouds.openstack.nova.v2_0.compute.functions.RemoveFloatingIpFromNodeAndDeallocate;
 import org.jclouds.openstack.nova.v2_0.domain.KeyPair;
-import org.jclouds.openstack.nova.v2_0.domain.zonescoped.ImageInZone;
-import org.jclouds.openstack.nova.v2_0.domain.zonescoped.ZoneAndName;
+import org.jclouds.openstack.nova.v2_0.domain.regionscoped.ImageInRegion;
+import org.jclouds.openstack.nova.v2_0.domain.regionscoped.RegionAndName;
 
 import com.google.common.base.Predicate;
 import com.google.common.base.Supplier;
@@ -36,17 +36,17 @@ import com.google.common.collect.Iterables;
 public class HPCloudComputeServiceAdapter extends NovaComputeServiceAdapter {
 
    @Inject
-   public HPCloudComputeServiceAdapter(NovaApi novaApi, @Zone Supplier<Set<String>> zoneIds,
-            RemoveFloatingIpFromNodeAndDeallocate removeFloatingIpFromNodeAndDeallocate, LoadingCache<ZoneAndName, KeyPair> keyPairCache) {
-      super(novaApi, zoneIds, removeFloatingIpFromNodeAndDeallocate, keyPairCache);
+   public HPCloudComputeServiceAdapter(NovaApi novaApi, @Region Supplier<Set<String>> regionIds,
+            RemoveFloatingIpFromNodeAndDeallocate removeFloatingIpFromNodeAndDeallocate, LoadingCache<RegionAndName, KeyPair> keyPairCache) {
+      super(novaApi, regionIds, removeFloatingIpFromNodeAndDeallocate, keyPairCache);
    }
 
    @Override
-   public Iterable<ImageInZone> listImages() {
-      return Iterables.filter(super.listImages(), new Predicate<ImageInZone>() {
+   public Iterable<ImageInRegion> listImages() {
+      return Iterables.filter(super.listImages(), new Predicate<ImageInRegion>() {
 
          @Override
-         public boolean apply(ImageInZone arg0) {
+         public boolean apply(ImageInRegion arg0) {
             String imageName = arg0.getImage().getName();
             return imageName.indexOf("Kernel") == -1 && imageName.indexOf("Ramdisk") == -1;
          }

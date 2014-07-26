@@ -36,8 +36,8 @@ public class ImageApiLiveTest extends BaseNovaApiLiveTest {
 
    @Test(description = "GET /v${apiVersion}/{tenantId}/images")
    public void testListImages() throws Exception {
-      for (String zoneId : zones) {
-         ImageApi imageApi = api.getImageApiForZone(zoneId);
+      for (String regionId : regions) {
+         ImageApi imageApi = api.getImageApi(regionId);
          Set<? extends Resource> response = imageApi.list().concat().toSet();
          assertNotNull(response);
          assertFalse(response.isEmpty());
@@ -51,8 +51,8 @@ public class ImageApiLiveTest extends BaseNovaApiLiveTest {
 
    @Test(description = "GET /v${apiVersion}/{tenantId}/images/detail")
    public void testListImagesInDetail() throws Exception {
-      for (String zoneId : api.getConfiguredZones()) {
-         ImageApi imageApi = api.getImageApiForZone(zoneId);
+      for (String regionId : api.getConfiguredRegions()) {
+         ImageApi imageApi = api.getImageApi(regionId);
          Set<? extends Image> response = imageApi.listInDetail().concat().toSet();
          assertNotNull(response);
          assertFalse(response.isEmpty());
@@ -75,8 +75,8 @@ public class ImageApiLiveTest extends BaseNovaApiLiveTest {
 
    @Test(description = "GET /v${apiVersion}/{tenantId}/images/{id}", dependsOnMethods = { "testListImagesInDetail" })
    public void testGetImageById() throws Exception {
-      for (String zoneId : api.getConfiguredZones()) {
-         ImageApi imageApi = api.getImageApiForZone(zoneId);
+      for (String regionId : api.getConfiguredRegions()) {
+         ImageApi imageApi = api.getImageApi(regionId);
          Set<? extends Image> response = imageApi.listInDetail().concat().toSet();
          for (Image image : response) {
             Image details = imageApi.get(image.getId());

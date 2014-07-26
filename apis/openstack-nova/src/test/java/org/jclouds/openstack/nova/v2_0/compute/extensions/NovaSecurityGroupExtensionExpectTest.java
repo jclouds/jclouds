@@ -47,7 +47,7 @@ import com.google.common.collect.Sets;
 @Test(groups = "unit", testName = "NovaSecurityGroupExtensionExpectTest")
 public class NovaSecurityGroupExtensionExpectTest extends BaseNovaComputeServiceExpectTest {
 
-   protected String zone = "az-1.region-a.geo-1";
+   protected String region = "az-1.region-a.geo-1";
    protected HttpRequest list = HttpRequest.builder().method("GET").endpoint(
            URI.create("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v2/3456/os-security-groups")).headers(
            ImmutableMultimap.<String, String> builder().put("Accept", "application/json").put("X-Auth-Token",
@@ -59,7 +59,7 @@ public class NovaSecurityGroupExtensionExpectTest extends BaseNovaComputeService
    @Override
    protected Properties setupProperties() {
       Properties overrides = super.setupProperties();
-      overrides.setProperty("jclouds.zones", zone);
+      overrides.setProperty("jclouds.regions", region);
       return overrides;
    }
 
@@ -95,9 +95,9 @@ public class NovaSecurityGroupExtensionExpectTest extends BaseNovaComputeService
       SecurityGroupExtension extension = requestsSendResponses(requestResponseMap.build()).getSecurityGroupExtension().get();
 
       Set<SecurityGroup> groups = extension.listSecurityGroupsInLocation(new LocationBuilder()
-              .scope(LocationScope.ZONE)
-              .id(zone)
-              .description("zone")
+              .scope(LocationScope.REGION)
+              .id(region)
+              .description("region")
               .build());
       assertEquals(groups.size(), 1);
    }
@@ -129,7 +129,7 @@ public class NovaSecurityGroupExtensionExpectTest extends BaseNovaComputeService
 
       SecurityGroupExtension extension = requestsSendResponses(requestResponseMap.build()).getSecurityGroupExtension().get();
 
-      Set<SecurityGroup> groups = extension.listSecurityGroupsForNode(zone + "/8d0a6ca5-8849-4b3d-b86e-f24c92490ebb");
+      Set<SecurityGroup> groups = extension.listSecurityGroupsForNode(region + "/8d0a6ca5-8849-4b3d-b86e-f24c92490ebb");
       assertEquals(groups.size(), 1);
    }
 
@@ -150,8 +150,8 @@ public class NovaSecurityGroupExtensionExpectTest extends BaseNovaComputeService
 
       SecurityGroupExtension extension = requestsSendResponses(requestResponseMap.build()).getSecurityGroupExtension().get();
 
-      SecurityGroup group = extension.getSecurityGroupById(zone + "/160");
-      assertEquals(group.getId(), zone + "/160");
+      SecurityGroup group = extension.getSecurityGroupById(region + "/160");
+      assertEquals(group.getId(), region + "/160");
    }
 
    public void testCreateSecurityGroup() {
@@ -193,11 +193,11 @@ public class NovaSecurityGroupExtensionExpectTest extends BaseNovaComputeService
       SecurityGroupExtension extension = requestsSendResponses(requestResponseMap.build()).getSecurityGroupExtension().get();
 
       SecurityGroup group = extension.createSecurityGroup("test", new LocationBuilder()
-              .scope(LocationScope.ZONE)
-              .id(zone)
-              .description("zone")
+              .scope(LocationScope.REGION)
+              .id(region)
+              .description("region")
               .build());
-      assertEquals(group.getId(), zone + "/160");
+      assertEquals(group.getId(), region + "/160");
    }
 
    public void testRemoveSecurityGroup() {
@@ -225,7 +225,7 @@ public class NovaSecurityGroupExtensionExpectTest extends BaseNovaComputeService
 
       SecurityGroupExtension extension = requestsSendResponses(requestResponseMap.build()).getSecurityGroupExtension().get();
 
-      assertTrue(extension.removeSecurityGroup(zone + "/160"), "Expected removal of securitygroup to be successful");
+      assertTrue(extension.removeSecurityGroup(region + "/160"), "Expected removal of securitygroup to be successful");
    }
 
    public void testAddIpPermissionCidrFromIpPermission() {
@@ -269,7 +269,7 @@ public class NovaSecurityGroupExtensionExpectTest extends BaseNovaComputeService
 
       IpPermission perm = builder.build();
 
-      SecurityGroup origGroup = extension.getSecurityGroupById(zone + "/160");
+      SecurityGroup origGroup = extension.getSecurityGroupById(region + "/160");
 
       assertNotNull(origGroup);
       SecurityGroup newGroup = extension.addIpPermission(perm, origGroup);
@@ -309,7 +309,7 @@ public class NovaSecurityGroupExtensionExpectTest extends BaseNovaComputeService
               ImmutableList.of(responseWithKeystoneAccess, extensionsOfNovaResponse, getSecurityGroupNoRulesResponse,
                       createRuleResponse, getSecurityGroupResponse, listResponse, listResponse)).getSecurityGroupExtension().get();
 
-      SecurityGroup origGroup = extension.getSecurityGroupById(zone + "/160");
+      SecurityGroup origGroup = extension.getSecurityGroupById(region + "/160");
 
       assertNotNull(origGroup);
       SecurityGroup newGroup = extension.addIpPermission(IpProtocol.TCP,
@@ -364,7 +364,7 @@ public class NovaSecurityGroupExtensionExpectTest extends BaseNovaComputeService
 
       IpPermission perm = builder.build();
 
-      SecurityGroup origGroup = extension.getSecurityGroupById(zone + "/160");
+      SecurityGroup origGroup = extension.getSecurityGroupById(region + "/160");
 
       assertNotNull(origGroup);
       SecurityGroup newGroup = extension.addIpPermission(perm, origGroup);
@@ -404,7 +404,7 @@ public class NovaSecurityGroupExtensionExpectTest extends BaseNovaComputeService
               ImmutableList.of(responseWithKeystoneAccess, extensionsOfNovaResponse, getSecurityGroupNoRulesResponse,
                       createRuleResponse, getSecurityGroupResponse, listResponse, listResponse)).getSecurityGroupExtension().get();
 
-      SecurityGroup origGroup = extension.getSecurityGroupById(zone + "/160");
+      SecurityGroup origGroup = extension.getSecurityGroupById(region + "/160");
 
       assertNotNull(origGroup);
       SecurityGroup newGroup = extension.addIpPermission(IpProtocol.TCP,

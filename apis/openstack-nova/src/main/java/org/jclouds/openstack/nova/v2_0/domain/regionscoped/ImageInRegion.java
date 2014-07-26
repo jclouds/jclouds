@@ -14,17 +14,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.jclouds.openstack.nova.v2_0.domain.zonescoped;
+package org.jclouds.openstack.nova.v2_0.domain.regionscoped;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
 import org.jclouds.openstack.nova.v2_0.domain.Image;
 
-public class ImageInZone extends ZoneAndId {
+public class ImageInRegion extends RegionAndId {
    protected final Image image;
 
-   public ImageInZone(Image image, String zoneId) {
-      super(zoneId, checkNotNull(image, "image").getId());
+   public ImageInRegion(Image image, String regionId) {
+      super(regionId, checkNotNull(image, "image").getId());
       this.image = image;
    }
 
@@ -32,12 +32,12 @@ public class ImageInZone extends ZoneAndId {
       return image;
    }
 
-   // superclass hashCode/equals are good enough, and help us use ZoneAndId and ImageInZone
+   // superclass hashCode/equals are good enough, and help us use RegionAndId and ImageInRegion
    // interchangeably as Map keys
 
    @Override
    public String toString() {
-      return "[image=" + image + ", zoneId=" + zoneId + "]";
+      return "[image=" + image + ", regionId=" + regionId + "]";
    }
 
 }

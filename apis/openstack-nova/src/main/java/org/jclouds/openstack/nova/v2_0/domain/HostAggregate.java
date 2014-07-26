@@ -36,16 +36,16 @@ import com.google.common.collect.ImmutableSet;
 
 /**
  * Aggregates can be manipulated using the Aggregate Extension to Nova (alias "OS-AGGREGATES")
- * 
+ *
  * @see org.jclouds.openstack.nova.v2_0.extensions.HostAggregateApi
 */
 public class HostAggregate {
 
-   public static Builder<?> builder() { 
+   public static Builder<?> builder() {
       return new ConcreteBuilder();
    }
-   
-   public Builder<?> toBuilder() { 
+
+   public Builder<?> toBuilder() {
       return new ConcreteBuilder().fromHostAggregate(this);
    }
 
@@ -60,8 +60,8 @@ public class HostAggregate {
       protected Date created;
       protected Date updated;
       protected Map<String, String> metadata = ImmutableMap.of();
-   
-      /** 
+
+      /**
        * @see HostAggregate#getId()
        */
       public T id(String id) {
@@ -69,7 +69,7 @@ public class HostAggregate {
          return self();
       }
 
-      /** 
+      /**
        * @see HostAggregate#getName()
        */
       public T name(String name) {
@@ -77,7 +77,7 @@ public class HostAggregate {
          return self();
       }
 
-      /** 
+      /**
        * @see HostAggregate#getAvailabilityZone()
        */
       public T availabilityZone(String availabilityZone) {
@@ -85,11 +85,11 @@ public class HostAggregate {
          return self();
       }
 
-      /** 
+      /**
        * @see HostAggregate#getHosts()
        */
       public T hosts(Set<String> hosts) {
-         this.hosts = ImmutableSet.copyOf(checkNotNull(hosts, "hosts"));      
+         this.hosts = ImmutableSet.copyOf(checkNotNull(hosts, "hosts"));
          return self();
       }
 
@@ -97,7 +97,7 @@ public class HostAggregate {
          return hosts(ImmutableSet.copyOf(in));
       }
 
-      /** 
+      /**
        * @see HostAggregate#getState()
        */
       public T state(String state) {
@@ -105,7 +105,7 @@ public class HostAggregate {
          return self();
       }
 
-      /** 
+      /**
        * @see HostAggregate#getCreated()
        */
       public T created(Date created) {
@@ -113,7 +113,7 @@ public class HostAggregate {
          return self();
       }
 
-      /** 
+      /**
        * @see HostAggregate#getUpdated()
        */
       public T updated(Date updated) {
@@ -121,18 +121,18 @@ public class HostAggregate {
          return self();
       }
 
-      /** 
+      /**
        * @see HostAggregate#getMetadata()
        */
       public T metadata(Map<String, String> metadata) {
-         this.metadata = ImmutableMap.copyOf(checkNotNull(metadata, "metadata"));     
+         this.metadata = ImmutableMap.copyOf(checkNotNull(metadata, "metadata"));
          return self();
       }
 
       public HostAggregate build() {
          return new HostAggregate(id, name, availabilityZone, hosts, state, created, updated, metadata);
       }
-      
+
       public T fromHostAggregate(HostAggregate in) {
          return this
                   .id(in.getId())
@@ -174,11 +174,11 @@ public class HostAggregate {
       this.id = checkNotNull(id, "id");
       this.name = checkNotNull(name, "name");
       this.availabilityZone = checkNotNull(availabilityZone, "availabilityZone");
-      this.hosts = hosts == null ? ImmutableSet.<String>of() : ImmutableSet.copyOf(hosts);      
+      this.hosts = hosts == null ? ImmutableSet.<String>of() : ImmutableSet.copyOf(hosts);
       this.state = checkNotNull(state, "state");
       this.created = checkNotNull(created, "created");
       this.updated = Optional.fromNullable(updated);
-      this.metadata = metadata == null ? ImmutableMap.<String, String>of() : ImmutableMap.copyOf(metadata);     
+      this.metadata = metadata == null ? ImmutableMap.<String, String>of() : ImmutableMap.copyOf(metadata);
    }
 
    public String getId() {
@@ -190,8 +190,6 @@ public class HostAggregate {
    }
 
    /**
-    * note: an "Availability Zone" is different from a Nova "Zone"
-    * 
     * @return the availability zone this aggregate is in
     */
    public String getAvailabilityZone() {
@@ -237,12 +235,12 @@ public class HostAggregate {
                && Objects.equal(this.updated, that.updated)
                && Objects.equal(this.metadata, that.metadata);
    }
-   
+
    protected ToStringHelper string() {
       return MoreObjects.toStringHelper(this)
             .add("id", id).add("name", name).add("availabilityZone", availabilityZone).add("hosts", hosts).add("state", state).add("created", created).add("updated", updated).add("metadata", metadata);
    }
-   
+
    @Override
    public String toString() {
       return string().toString();

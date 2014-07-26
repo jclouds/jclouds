@@ -44,40 +44,40 @@ import com.google.common.collect.Iterables;
 @Test(groups = "live", singleThreaded = true, testName = "ReportApiLiveTest")
 public class ReportApiLiveTest extends BaseCloudLoadBalancersApiLiveTest {
    private LoadBalancer lb;
-   private String zone;
+   private String region;
 
    public void testCreateLoadBalancer() {
       AddNode addNode = AddNode.builder().address("192.168.1.1").port(8080).build();
       CreateLoadBalancer createLB = CreateLoadBalancer.builder()
             .name(prefix + "-jclouds").protocol("HTTP").port(80).virtualIPType(Type.PUBLIC).node(addNode).build();
 
-      zone = Iterables.getFirst(api.getConfiguredZones(), null);
-      lb = api.getLoadBalancerApiForZone(zone).create(createLB);
-      
-      assertTrue(awaitAvailable(api.getLoadBalancerApiForZone(zone)).apply(lb));
+      region = Iterables.getFirst(api.getConfiguredRegions(), null);
+      lb = api.getLoadBalancerApi(region).create(createLB);
+
+      assertTrue(awaitAvailable(api.getLoadBalancerApi(region)).apply(lb));
    }
 
    @Test(dependsOnMethods = "testCreateLoadBalancer")
    public void testReports() throws Exception {
       Calendar calendar = Calendar.getInstance();
-      calendar.add(Calendar.DATE, -1);      
+      calendar.add(Calendar.DATE, -1);
       Date yesterday = calendar.getTime();
       Date today = new Date();
 
-      FluentIterable<LoadBalancer> loadBalancers = api.getReportApiForZone(zone).listBillableLoadBalancers(yesterday, today).concat();
+      FluentIterable<LoadBalancer> loadBalancers = api.getReportApi(region).listBillableLoadBalancers(yesterday, today).concat();
       assertNotNull(loadBalancers);
-      
-      HistoricalUsage historicalUsage = api.getReportApiForZone(zone).getHistoricalUsage(yesterday, today);
+
+      HistoricalUsage historicalUsage = api.getReportApi(region).getHistoricalUsage(yesterday, today);
       assertNotEquals(historicalUsage.getAccountId(), 0);
 
-      FluentIterable<LoadBalancerUsage> loadBalancerUsages = api.getReportApiForZone(zone).listLoadBalancerUsage(lb.getId(), yesterday, today).concat();
+      FluentIterable<LoadBalancerUsage> loadBalancerUsages = api.getReportApi(region).listLoadBalancerUsage(lb.getId(), yesterday, today).concat();
       assertNotNull(loadBalancerUsages);
 
-      loadBalancerUsages = api.getReportApiForZone(zone).listCurrentLoadBalancerUsage(lb.getId()).concat();
+      loadBalancerUsages = api.getReportApi(region).listCurrentLoadBalancerUsage(lb.getId()).concat();
       assertNotNull(loadBalancerUsages);
-      
+
       try {
-         LoadBalancerStats loadBalancerStats = api.getReportApiForZone(zone).getLoadBalancerStats(lb.getId());
+         LoadBalancerStats loadBalancerStats = api.getReportApi(region).getLoadBalancerStats(lb.getId());
          assertNotNull(loadBalancerStats);
       }
       catch (HttpResponseException e) {
@@ -86,20 +86,20 @@ public class ReportApiLiveTest extends BaseCloudLoadBalancersApiLiveTest {
             throw e;
          }
       }
-      
-      Iterable<Protocol> protocols = api.getReportApiForZone(zone).listProtocols();
+
+      Iterable<Protocol> protocols = api.getReportApi(region).listProtocols();
       assertTrue(!Iterables.isEmpty(protocols));
 
-      Iterable<String> algorithms = api.getReportApiForZone(zone).listAlgorithms();
+      Iterable<String> algorithms = api.getReportApi(region).listAlgorithms();
       assertTrue(!Iterables.isEmpty(algorithms));
    }
 
    @Override
    @AfterGroups(groups = "live")
    protected void tearDown() {
-      assertTrue(awaitAvailable(api.getLoadBalancerApiForZone(zone)).apply(lb));
-      api.getLoadBalancerApiForZone(zone).delete(lb.getId());
-      assertTrue(awaitDeleted(api.getLoadBalancerApiForZone(zone)).apply(lb));
+      assertTrue(awaitAvailable(api.getLoadBalancerApi(region)).apply(lb));
+      api.getLoadBalancerApi(region).delete(lb.getId());
+      assertTrue(awaitDeleted(api.getLoadBalancerApi(region)).apply(lb));
       super.tearDown();
    }
 }

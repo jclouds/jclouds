@@ -41,7 +41,7 @@ import com.google.common.collect.Maps;
 public class FlavorExtraSpecsApiLiveTest extends BaseNovaApiLiveTest {
    private FlavorApi flavorApi;
    private Optional<? extends FlavorExtraSpecsApi> apiOption;
-   private String zone;
+   private String region;
 
    private Resource testFlavor;
    private Map<String, String> testSpecs = ImmutableMap.of("jclouds-test", "some data", "jclouds-test2", "more data!");
@@ -50,9 +50,9 @@ public class FlavorExtraSpecsApiLiveTest extends BaseNovaApiLiveTest {
    @Override
    public void setup() {
       super.setup();
-      zone = Iterables.getLast(api.getConfiguredZones(), "nova");
-      flavorApi = api.getFlavorApiForZone(zone);
-      apiOption = api.getFlavorExtraSpecsExtensionForZone(zone);
+      region = Iterables.getLast(api.getConfiguredRegions(), "nova");
+      flavorApi = api.getFlavorApi(region);
+      apiOption = api.getFlavorExtraSpecsApi(region);
    }
 
    @AfterClass(groups = { "integration", "live" })

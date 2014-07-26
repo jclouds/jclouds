@@ -34,22 +34,23 @@ import org.jclouds.compute.domain.Template;
 import org.jclouds.compute.reference.ComputeServiceConstants;
 import org.jclouds.domain.Location;
 import org.jclouds.domain.LoginCredentials;
-import org.jclouds.location.Zone;
+import org.jclouds.location.Region;
 import org.jclouds.logging.Logger;
 import org.jclouds.openstack.nova.v2_0.NovaApi;
 import org.jclouds.openstack.nova.v2_0.compute.functions.RemoveFloatingIpFromNodeAndDeallocate;
 import org.jclouds.openstack.nova.v2_0.compute.options.NovaTemplateOptions;
+import org.jclouds.openstack.nova.v2_0.compute.strategy.ApplyNovaTemplateOptionsCreateNodesWithGroupEncodedIntoNameThenAddToSet;
 import org.jclouds.openstack.nova.v2_0.domain.Flavor;
 import org.jclouds.openstack.nova.v2_0.domain.Image;
 import org.jclouds.openstack.nova.v2_0.domain.KeyPair;
 import org.jclouds.openstack.nova.v2_0.domain.RebootType;
 import org.jclouds.openstack.nova.v2_0.domain.Server;
 import org.jclouds.openstack.nova.v2_0.domain.ServerCreated;
-import org.jclouds.openstack.nova.v2_0.domain.zonescoped.FlavorInZone;
-import org.jclouds.openstack.nova.v2_0.domain.zonescoped.ImageInZone;
-import org.jclouds.openstack.nova.v2_0.domain.zonescoped.ServerInZone;
-import org.jclouds.openstack.nova.v2_0.domain.zonescoped.ZoneAndId;
-import org.jclouds.openstack.nova.v2_0.domain.zonescoped.ZoneAndName;
+import org.jclouds.openstack.nova.v2_0.domain.regionscoped.FlavorInRegion;
+import org.jclouds.openstack.nova.v2_0.domain.regionscoped.ImageInRegion;
+import org.jclouds.openstack.nova.v2_0.domain.regionscoped.RegionAndId;
+import org.jclouds.openstack.nova.v2_0.domain.regionscoped.RegionAndName;
+import org.jclouds.openstack.nova.v2_0.domain.regionscoped.ServerInRegion;
 import org.jclouds.openstack.nova.v2_0.options.CreateServerOptions;
 import org.jclouds.openstack.nova.v2_0.predicates.ImagePredicates;
 
@@ -67,23 +68,23 @@ import com.google.common.collect.ImmutableSet.Builder;
  * model to the computeService generic domain model.
  */
 public class NovaComputeServiceAdapter implements
-         ComputeServiceAdapter<ServerInZone, FlavorInZone, ImageInZone, Location> {
+         ComputeServiceAdapter<ServerInRegion, FlavorInRegion, ImageInRegion, Location> {
 
    @Resource
    @Named(ComputeServiceConstants.COMPUTE_LOGGER)
    protected Logger logger = Logger.NULL;
 
    protected final NovaApi novaApi;
-   protected final Supplier<Set<String>> zoneIds;
+   protected final Supplier<Set<String>> regionIds;
    protected final RemoveFloatingIpFromNodeAndDeallocate removeFloatingIpFromNodeAndDeallocate;
-   protected final LoadingCache<ZoneAndName, KeyPair> keyPairCache;
+   protected final LoadingCache<RegionAndName, KeyPair> keyPairCache;
 
    @Inject
-   public NovaComputeServiceAdapter(NovaApi novaApi, @Zone Supplier<Set<String>> zoneIds,
+   public NovaComputeServiceAdapter(NovaApi novaApi, @Region Supplier<Set<String>> regionIds,
             RemoveFloatingIpFromNodeAndDeallocate removeFloatingIpFromNodeAndDeallocate,
-            LoadingCache<ZoneAndName, KeyPair> keyPairCache) {
+            LoadingCache<RegionAndName, KeyPair> keyPairCache) {
       this.novaApi = checkNotNull(novaApi, "novaApi");
-      this.zoneIds = checkNotNull(zoneIds, "zoneIds");
+      this.regionIds = checkNotNull(regionIds, "regionIds");
       this.removeFloatingIpFromNodeAndDeallocate = checkNotNull(removeFloatingIpFromNodeAndDeallocate,
                "removeFloatingIpFromNodeAndDeallocate");
       this.keyPairCache = checkNotNull(keyPairCache, "keyPairCache");
@@ -95,7 +96,7 @@ public class NovaComputeServiceAdapter implements
     * done so.
     */
    @Override
-   public NodeAndInitialCredentials<ServerInZone> createNodeWithGroupEncodedIntoName(String group, String name,
+   public NodeAndInitialCredentials<ServerInRegion> createNodeWithGroupEncodedIntoName(String group, String name,
             Template template) {
 
       LoginCredentials.Builder credentialsBuilder = LoginCredentials.builder();
@@ -118,40 +119,40 @@ public class NovaComputeServiceAdapter implements
       Optional<String> privateKey = Optional.absent();
       if (templateOptions.getKeyPairName() != null) {
          options.keyPairName(templateOptions.getKeyPairName());
-         KeyPair keyPair = keyPairCache.getIfPresent(ZoneAndName.fromZoneAndName(template.getLocation().getId(), templateOptions.getKeyPairName()));
+         KeyPair keyPair = keyPairCache.getIfPresent(RegionAndName.fromRegionAndName(template.getLocation().getId(), templateOptions.getKeyPairName()));
          if (keyPair != null && keyPair.getPrivateKey() != null) {
             privateKey = Optional.of(keyPair.getPrivateKey());
             credentialsBuilder.privateKey(privateKey.get());
          }
       }
 
-      String zoneId = template.getLocation().getId();
+      String regionId = template.getLocation().getId();
       String imageId = template.getImage().getProviderId();
       String flavorId = template.getHardware().getProviderId();
 
-      logger.debug(">> creating new server zone(%s) name(%s) image(%s) flavor(%s) options(%s)", zoneId, name, imageId, flavorId, options);
-      ServerCreated lightweightServer = novaApi.getServerApiForZone(zoneId).create(name, imageId, flavorId, options);
-      Server server = novaApi.getServerApiForZone(zoneId).get(lightweightServer.getId());
+      logger.debug(">> creating new server region(%s) name(%s) image(%s) flavor(%s) options(%s)", regionId, name, imageId, flavorId, options);
+      ServerCreated lightweightServer = novaApi.getServerApi(regionId).create(name, imageId, flavorId, options);
+      Server server = novaApi.getServerApi(regionId).get(lightweightServer.getId());
 
       logger.trace("<< server(%s)", server.getId());
 
-      ServerInZone serverInZone = new ServerInZone(server, zoneId);
+      ServerInRegion serverInRegion = new ServerInRegion(server, regionId);
       if (!privateKey.isPresent() && lightweightServer.getAdminPass().isPresent())
          credentialsBuilder.password(lightweightServer.getAdminPass().get());
-      return new NodeAndInitialCredentials<ServerInZone>(serverInZone, serverInZone.slashEncode(), credentialsBuilder
+      return new NodeAndInitialCredentials<ServerInRegion>(serverInRegion, serverInRegion.slashEncode(), credentialsBuilder
                .build());
    }
 
    @Override
-   public Iterable<FlavorInZone> listHardwareProfiles() {
-      Builder<FlavorInZone> builder = ImmutableSet.builder();
-      for (final String zoneId : zoneIds.get()) {
-         builder.addAll(transform(novaApi.getFlavorApiForZone(zoneId).listInDetail().concat(),
-                  new Function<Flavor, FlavorInZone>() {
+   public Iterable<FlavorInRegion> listHardwareProfiles() {
+      Builder<FlavorInRegion> builder = ImmutableSet.builder();
+      for (final String regionId : regionIds.get()) {
+         builder.addAll(transform(novaApi.getFlavorApi(regionId).listInDetail().concat(),
+                  new Function<Flavor, FlavorInRegion>() {
 
                      @Override
-                     public FlavorInZone apply(Flavor arg0) {
-                        return new FlavorInZone(arg0, zoneId);
+                     public FlavorInRegion apply(Flavor arg0) {
+                        return new FlavorInRegion(arg0, regionId);
                      }
 
                   }));
@@ -160,19 +161,19 @@ public class NovaComputeServiceAdapter implements
    }
 
    @Override
-   public Iterable<ImageInZone> listImages() {
-      Builder<ImageInZone> builder = ImmutableSet.builder();
-      Set<String> zones = zoneIds.get();
-      checkState(zones.size() > 0, "no zones found in supplier %s", zoneIds);
-      for (final String zoneId : zones) {
-         Set<? extends Image> images = novaApi.getImageApiForZone(zoneId).listInDetail().concat().toSet();
+   public Iterable<ImageInRegion> listImages() {
+      Builder<ImageInRegion> builder = ImmutableSet.builder();
+      Set<String> regions = regionIds.get();
+      checkState(regions.size() > 0, "no regions found in supplier %s", regionIds);
+      for (final String regionId : regions) {
+         Set<? extends Image> images = novaApi.getImageApi(regionId).listInDetail().concat().toSet();
          if (images.size() == 0) {
-            logger.debug("no images found in zone %s", zoneId);
+            logger.debug("no images found in region %s", regionId);
             continue;
          }
          Iterable<? extends Image> active = filter(images, ImagePredicates.statusEquals(Image.Status.ACTIVE));
          if (images.size() == 0) {
-            logger.debug("no images with status active in zone %s; non-active: %s", zoneId,
+            logger.debug("no images with status active in region %s; non-active: %s", regionId,
                      transform(active, new Function<Image, String>() {
 
                         @Override
@@ -184,11 +185,11 @@ public class NovaComputeServiceAdapter implements
                      }));
             continue;
          }
-         builder.addAll(transform(active, new Function<Image, ImageInZone>() {
+         builder.addAll(transform(active, new Function<Image, ImageInRegion>() {
 
             @Override
-            public ImageInZone apply(Image arg0) {
-               return new ImageInZone(arg0, zoneId);
+            public ImageInRegion apply(Image arg0) {
+               return new ImageInRegion(arg0, regionId);
             }
 
          }));
@@ -197,15 +198,15 @@ public class NovaComputeServiceAdapter implements
    }
 
    @Override
-   public Iterable<ServerInZone> listNodes() {
-      Builder<ServerInZone> builder = ImmutableSet.builder();
-      for (final String zoneId : zoneIds.get()) {
-         builder.addAll(novaApi.getServerApiForZone(zoneId).listInDetail().concat()
-                  .transform(new Function<Server, ServerInZone>() {
+   public Iterable<ServerInRegion> listNodes() {
+      Builder<ServerInRegion> builder = ImmutableSet.builder();
+      for (final String regionId : regionIds.get()) {
+         builder.addAll(novaApi.getServerApi(regionId).listInDetail().concat()
+                  .transform(new Function<Server, ServerInRegion>() {
 
                      @Override
-                     public ServerInZone apply(Server arg0) {
-                        return new ServerInZone(arg0, zoneId);
+                     public ServerInRegion apply(Server arg0) {
+                        return new ServerInRegion(arg0, regionId);
                      }
 
                   }));
@@ -214,11 +215,11 @@ public class NovaComputeServiceAdapter implements
    }
 
    @Override
-   public Iterable<ServerInZone> listNodesByIds(final Iterable<String> ids) {
-      return filter(listNodes(), new Predicate<ServerInZone>() {
+   public Iterable<ServerInRegion> listNodesByIds(final Iterable<String> ids) {
+      return filter(listNodes(), new Predicate<ServerInRegion>() {
 
             @Override
-            public boolean apply(ServerInZone server) {
+            public boolean apply(ServerInRegion server) {
                return contains(ids, server.slashEncode());
             }
          });
@@ -231,43 +232,43 @@ public class NovaComputeServiceAdapter implements
    }
 
    @Override
-   public ServerInZone getNode(String id) {
-      ZoneAndId zoneAndId = ZoneAndId.fromSlashEncoded(id);
-      Server server = novaApi.getServerApiForZone(zoneAndId.getZone()).get(zoneAndId.getId());
-      return server == null ? null : new ServerInZone(server, zoneAndId.getZone());
+   public ServerInRegion getNode(String id) {
+      RegionAndId regionAndId = RegionAndId.fromSlashEncoded(id);
+      Server server = novaApi.getServerApi(regionAndId.getRegion()).get(regionAndId.getId());
+      return server == null ? null : new ServerInRegion(server, regionAndId.getRegion());
    }
 
    @Override
-   public ImageInZone getImage(String id) {
-      ZoneAndId zoneAndId = ZoneAndId.fromSlashEncoded(id);
-      Image image = novaApi.getImageApiForZone(zoneAndId.getZone()).get(zoneAndId.getId());
-      return image == null ? null : new ImageInZone(image, zoneAndId.getZone());
+   public ImageInRegion getImage(String id) {
+      RegionAndId regionAndId = RegionAndId.fromSlashEncoded(id);
+      Image image = novaApi.getImageApi(regionAndId.getRegion()).get(regionAndId.getId());
+      return image == null ? null : new ImageInRegion(image, regionAndId.getRegion());
    }
 
    @Override
    public void destroyNode(String id) {
-      ZoneAndId zoneAndId = ZoneAndId.fromSlashEncoded(id);
-      if (novaApi.getFloatingIPExtensionForZone(zoneAndId.getZone()).isPresent()) {
+      RegionAndId regionAndId = RegionAndId.fromSlashEncoded(id);
+      if (novaApi.getFloatingIPApi(regionAndId.getRegion()).isPresent()) {
          try {
-            removeFloatingIpFromNodeAndDeallocate.apply(zoneAndId);
+            removeFloatingIpFromNodeAndDeallocate.apply(regionAndId);
          } catch (RuntimeException e) {
             logger.warn(e, "<< error removing and deallocating ip from node(%s): %s", id, e.getMessage());
          }
       }
-      novaApi.getServerApiForZone(zoneAndId.getZone()).delete(zoneAndId.getId());
+      novaApi.getServerApi(regionAndId.getRegion()).delete(regionAndId.getId());
    }
 
    @Override
    public void rebootNode(String id) {
-      ZoneAndId zoneAndId = ZoneAndId.fromSlashEncoded(id);
-      novaApi.getServerApiForZone(zoneAndId.getZone()).reboot(zoneAndId.getId(), RebootType.HARD);
+      RegionAndId regionAndId = RegionAndId.fromSlashEncoded(id);
+      novaApi.getServerApi(regionAndId.getRegion()).reboot(regionAndId.getId(), RebootType.HARD);
    }
 
    @Override
    public void resumeNode(String id) {
-      ZoneAndId zoneAndId = ZoneAndId.fromSlashEncoded(id);
-      if (novaApi.getServerAdminExtensionForZone(zoneAndId.getZone()).isPresent()) {
-         novaApi.getServerAdminExtensionForZone(zoneAndId.getZone()).get().resume(zoneAndId.getId());
+      RegionAndId regionAndId = RegionAndId.fromSlashEncoded(id);
+      if (novaApi.getServerAdminApi(regionAndId.getRegion()).isPresent()) {
+         novaApi.getServerAdminApi(regionAndId.getRegion()).get().resume(regionAndId.getId());
       } else {
          throw new UnsupportedOperationException("resume requires installation of the Admin Actions extension");
       }
@@ -275,9 +276,9 @@ public class NovaComputeServiceAdapter implements
 
    @Override
    public void suspendNode(String id) {
-      ZoneAndId zoneAndId = ZoneAndId.fromSlashEncoded(id);
-      if (novaApi.getServerAdminExtensionForZone(zoneAndId.getZone()).isPresent()) {
-         novaApi.getServerAdminExtensionForZone(zoneAndId.getZone()).get().suspend(zoneAndId.getId());
+      RegionAndId regionAndId = RegionAndId.fromSlashEncoded(id);
+      if (novaApi.getServerAdminApi(regionAndId.getRegion()).isPresent()) {
+         novaApi.getServerAdminApi(regionAndId.getRegion()).get().suspend(regionAndId.getId());
       } else {
          throw new UnsupportedOperationException("suspend requires installation of the Admin Actions extension");
       }

@@ -30,7 +30,7 @@ import org.jclouds.hpcloud.compute.config.HPCloudComputeServiceContextModule;
 import org.jclouds.openstack.keystone.v2_0.config.AuthenticationApiModule;
 import org.jclouds.openstack.keystone.v2_0.config.CredentialTypes;
 import org.jclouds.openstack.keystone.v2_0.config.KeystoneAuthenticationModule;
-import org.jclouds.openstack.keystone.v2_0.config.KeystoneAuthenticationModule.ZoneModule;
+import org.jclouds.openstack.keystone.v2_0.config.KeystoneAuthenticationModule.RegionModule;
 import org.jclouds.openstack.nova.v2_0.NovaApiMetadata;
 import org.jclouds.openstack.nova.v2_0.config.NovaHttpApiModule;
 import org.jclouds.openstack.nova.v2_0.config.NovaParserModule;
@@ -53,7 +53,7 @@ public class HPCloudComputeProviderMetadata extends BaseProviderMetadata {
    public Builder toBuilder() {
       return builder().fromProviderMetadata(this);
    }
-   
+
    public HPCloudComputeProviderMetadata() {
       super(builder());
    }
@@ -76,7 +76,7 @@ public class HPCloudComputeProviderMetadata extends BaseProviderMetadata {
             "imageNameMatches=.*LTS.*,os64Bit=true,locationId=region-a.geo-1");
       return properties;
    }
-   
+
    public static class Builder extends BaseProviderMetadata.Builder {
 
       protected Builder() {
@@ -91,7 +91,7 @@ public class HPCloudComputeProviderMetadata extends BaseProviderMetadata {
                   .defaultModules(ImmutableSet.<Class<? extends Module>>builder()
                                               .add(AuthenticationApiModule.class)
                                               .add(KeystoneAuthenticationModule.class)
-                                              .add(ZoneModule.class)
+                                              .add(RegionModule.class)
                                               .add(NovaParserModule.class)
                                               .add(NovaHttpApiModule.class)
                                               .add(HPCloudComputeServiceContextModule.class).build())

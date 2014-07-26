@@ -30,15 +30,15 @@ public class UserTest {
       assertEquals(user2.getName(), "2");
       assertFalse(user1.equals(user2));
    }
-   
+
    /**
     * Creates a dummy User when you need an User with just the userName.
     */
-   public static User forName(String userName) {       
+   public static User forName(String userName) {
        return User.builder()
                .name(userName)
                .password("password")
-               .databases( 
+               .databases(
                        ImmutableSet.of(
                                "db1",
                                "db2"

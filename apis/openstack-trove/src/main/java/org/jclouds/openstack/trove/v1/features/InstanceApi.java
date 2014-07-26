@@ -24,6 +24,7 @@ import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.core.MediaType;
+
 import org.jclouds.Fallbacks.EmptyFluentIterableOnNotFoundOr404;
 import org.jclouds.Fallbacks.FalseOnNotFoundOr404;
 import org.jclouds.Fallbacks.NullOnNotFoundOr404;
@@ -32,6 +33,7 @@ import org.jclouds.openstack.keystone.v2_0.filters.AuthenticateRequest;
 import org.jclouds.openstack.trove.v1.binders.BindCreateInstanceToJson;
 import org.jclouds.openstack.trove.v1.domain.Instance;
 import org.jclouds.openstack.trove.v1.functions.ParsePasswordFromRootedInstance;
+import org.jclouds.rest.ResourceNotFoundException;
 import org.jclouds.rest.annotations.Fallback;
 import org.jclouds.rest.annotations.MapBinder;
 import org.jclouds.rest.annotations.PayloadParam;
@@ -39,22 +41,18 @@ import org.jclouds.rest.annotations.RequestFilters;
 import org.jclouds.rest.annotations.ResponseParser;
 import org.jclouds.rest.annotations.SelectJson;
 import org.jclouds.rest.annotations.SkipEncoding;
+
 import com.google.common.collect.FluentIterable;
 
 /**
  * This API is for creating, listing, and deleting an Instance, and allows enabling a root user.
- * @see org.jclouds.openstack.trove.v1.domain.Instance
- * Instance
- * 
- * @see <a href="http://sourceforge.net/apps/trac/reddwarf/">api doc</a>
- * @see <a
- *      href="https://github.com/reddwarf-nextgen/reddwarf">api
- *      src</a>
+
+ * @see Instance
  */
 @SkipEncoding({'/', '='})
 @RequestFilters(AuthenticateRequest.class)
 public interface InstanceApi {
-    
+
    /**
     * Same as {@link #create(String, int, String)} but accept an integer Flavor ID.
     *
@@ -62,7 +60,7 @@ public interface InstanceApi {
     * @param volumeSize The size in GB of the instance volume.
     * @param name The name of the instance.
     * @return The instance created.
-    * 
+    *
     * @see InstanceApi#create(String, int, String)
     */
    @Named("instance:create")
@@ -88,7 +86,7 @@ public interface InstanceApi {
    @Consumes(MediaType.APPLICATION_JSON)
    @MapBinder(BindCreateInstanceToJson.class)
    Instance create(@PayloadParam("flavorRef") String flavor, @PayloadParam("size") int volumeSize, @PayloadParam("name") String name);
-   
+
    /**
     * Deletes an Instance by id.
     *
@@ -101,7 +99,7 @@ public interface InstanceApi {
    @Consumes(MediaType.APPLICATION_JSON)
    @Fallback(FalseOnNotFoundOr404.class)
    boolean delete(@PathParam("id") String instanceId);
-   
+
    /**
     * Enables root for an instance.
     *
@@ -115,7 +113,7 @@ public interface InstanceApi {
    @ResponseParser(ParsePasswordFromRootedInstance.class)
    @Fallback(NullOnNotFoundOr404.class)
    String enableRoot(@PathParam("id") String instanceId);
-   
+
    /**
     * Checks to see if root is enabled for an instance.
     *
@@ -129,7 +127,7 @@ public interface InstanceApi {
    @Consumes(MediaType.APPLICATION_JSON)
    @SelectJson("rootEnabled")
    boolean isRooted(@PathParam("id") String instanceId);
-   
+
    /**
     * Returns a summary list of Instances.
     *
@@ -142,7 +140,7 @@ public interface InstanceApi {
    @Consumes(MediaType.APPLICATION_JSON)
    @Fallback(EmptyFluentIterableOnNotFoundOr404.class)
    FluentIterable<Instance> list();
-      
+
    /**
     * Returns an Instance by id.
     *

@@ -21,7 +21,7 @@ import javax.inject.Singleton;
 
 import org.jclouds.openstack.nova.v2_0.NovaApi;
 import org.jclouds.openstack.nova.v2_0.domain.FloatingIP;
-import org.jclouds.openstack.nova.v2_0.domain.zonescoped.ZoneAndId;
+import org.jclouds.openstack.nova.v2_0.domain.regionscoped.RegionAndId;
 import org.jclouds.openstack.nova.v2_0.extensions.FloatingIPApi;
 
 import com.google.common.base.Optional;
@@ -30,12 +30,12 @@ import com.google.common.cache.CacheLoader;
 import com.google.common.collect.ImmutableSet;
 
 /**
- * Each zone may or may not have the floating ip function present. In order to safely proceed, we
- * must allow the user to determine if a zone has floating ip services before attempting to use
+ * Each region may or may not have the floating ip function present. In order to safely proceed, we
+ * must allow the user to determine if a region has floating ip services before attempting to use
  * them.
  */
 @Singleton
-public class LoadFloatingIpsForInstance extends CacheLoader<ZoneAndId, Iterable<? extends FloatingIP>> {
+public class LoadFloatingIpsForInstance extends CacheLoader<RegionAndId, Iterable<? extends FloatingIP>> {
    private final NovaApi api;
 
    @Inject
@@ -44,9 +44,9 @@ public class LoadFloatingIpsForInstance extends CacheLoader<ZoneAndId, Iterable<
    }
 
    @Override
-   public Iterable<? extends FloatingIP> load(final ZoneAndId key) throws Exception {
-      String zone = key.getZone();
-      Optional<? extends FloatingIPApi> ipApiOptional = api.getFloatingIPExtensionForZone(zone);
+   public Iterable<? extends FloatingIP> load(final RegionAndId key) throws Exception {
+      String region = key.getRegion();
+      Optional<? extends FloatingIPApi> ipApiOptional = api.getFloatingIPApi(region);
       if (ipApiOptional.isPresent()) {
          return ipApiOptional.get().list().filter(
                   new Predicate<FloatingIP>() {

@@ -29,8 +29,8 @@ import org.jclouds.domain.LocationScope;
 import org.jclouds.net.domain.IpProtocol;
 import org.jclouds.openstack.nova.v2_0.domain.SecurityGroupRule;
 import org.jclouds.openstack.nova.v2_0.domain.TenantIdAndName;
-import org.jclouds.openstack.nova.v2_0.domain.zonescoped.SecurityGroupInZone;
-import org.jclouds.openstack.nova.v2_0.domain.zonescoped.ZoneAndName;
+import org.jclouds.openstack.nova.v2_0.domain.regionscoped.RegionAndName;
+import org.jclouds.openstack.nova.v2_0.domain.regionscoped.SecurityGroupInRegion;
 import org.testng.annotations.Test;
 
 import com.google.common.base.Functions;
@@ -49,23 +49,23 @@ public class NovaSecurityGroupToSecurityGroupTest {
 
    private static final Location provider = new LocationBuilder().scope(LocationScope.PROVIDER).id("openstack-nova")
            .description("openstack-nova").build();
-   private static final Location zone = new LocationBuilder().id("az-1.region-a.geo-1").description("az-1.region-a.geo-1")
-           .scope(LocationScope.ZONE).parent(provider).build();
+   private static final Location region = new LocationBuilder().id("az-1.region-a.geo-1").description("az-1.region-a.geo-1")
+           .scope(LocationScope.REGION).parent(provider).build();
    private static final Supplier<Map<String, Location>> locationIndex = Suppliers.<Map<String, Location>> ofInstance(ImmutableMap
-           .<String, Location>of("az-1.region-a.geo-1", zone));
+           .<String, Location>of("az-1.region-a.geo-1", region));
 
 
-   private static final Predicate<AtomicReference<ZoneAndName>> returnSecurityGroupExistsInZone = Predicates.alwaysTrue();
+   private static final Predicate<AtomicReference<RegionAndName>> returnSecurityGroupExistsInRegion = Predicates.alwaysTrue();
 
-   private static final Map<ZoneAndName, SecurityGroupInZone> groupMap = ImmutableMap.of(
-           ZoneAndName.fromZoneAndName("az-1.region-a.geo-1", "some-group"), new SecurityGroupInZone(securityGroupWithGroup(), "az-1.region-a.geo-1"),
-           ZoneAndName.fromZoneAndName("az-1.region-a.geo-1", "some-other-group"), new SecurityGroupInZone(securityGroupWithCidr(), "az-1.region-a.geo-1"));
+   private static final Map<RegionAndName, SecurityGroupInRegion> groupMap = ImmutableMap.of(
+           RegionAndName.fromRegionAndName("az-1.region-a.geo-1", "some-group"), new SecurityGroupInRegion(securityGroupWithGroup(), "az-1.region-a.geo-1"),
+           RegionAndName.fromRegionAndName("az-1.region-a.geo-1", "some-other-group"), new SecurityGroupInRegion(securityGroupWithCidr(), "az-1.region-a.geo-1"));
 
    // weird compilation error means have to declare extra generics for call to build() - see https://bugs.eclipse.org/bugs/show_bug.cgi?id=365818
-   private static final Supplier <LoadingCache<ZoneAndName, SecurityGroupInZone>> groupCache = Suppliers.<LoadingCache<ZoneAndName, SecurityGroupInZone>> ofInstance(
-           CacheBuilder.newBuilder().<ZoneAndName, SecurityGroupInZone>build(CacheLoader.from(Functions.forMap(groupMap))));
+   private static final Supplier <LoadingCache<RegionAndName, SecurityGroupInRegion>> groupCache = Suppliers.<LoadingCache<RegionAndName, SecurityGroupInRegion>> ofInstance(
+           CacheBuilder.newBuilder().<RegionAndName, SecurityGroupInRegion>build(CacheLoader.from(Functions.forMap(groupMap))));
 
-   public static final SecurityGroupRuleToIpPermission ruleConverter = new SecurityGroupRuleToIpPermission(returnSecurityGroupExistsInZone, locationIndex,
+   public static final SecurityGroupRuleToIpPermission ruleConverter = new SecurityGroupRuleToIpPermission(returnSecurityGroupExistsInRegion, locationIndex,
            groupCache.get());
 
    public static org.jclouds.openstack.nova.v2_0.domain.SecurityGroup securityGroupWithGroup() {

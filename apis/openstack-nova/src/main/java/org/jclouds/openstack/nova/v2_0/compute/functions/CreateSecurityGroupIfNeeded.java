@@ -32,15 +32,15 @@ import org.jclouds.net.domain.IpProtocol;
 import org.jclouds.openstack.nova.v2_0.NovaApi;
 import org.jclouds.openstack.nova.v2_0.domain.Ingress;
 import org.jclouds.openstack.nova.v2_0.domain.SecurityGroup;
-import org.jclouds.openstack.nova.v2_0.domain.zonescoped.SecurityGroupInZone;
-import org.jclouds.openstack.nova.v2_0.domain.zonescoped.ZoneSecurityGroupNameAndPorts;
+import org.jclouds.openstack.nova.v2_0.domain.regionscoped.SecurityGroupInRegion;
+import org.jclouds.openstack.nova.v2_0.domain.regionscoped.RegionSecurityGroupNameAndPorts;
 import org.jclouds.openstack.nova.v2_0.extensions.SecurityGroupApi;
 
 import com.google.common.base.Function;
 import com.google.common.base.Optional;
 
 @Singleton
-public class CreateSecurityGroupIfNeeded implements Function<ZoneSecurityGroupNameAndPorts, SecurityGroupInZone> {
+public class CreateSecurityGroupIfNeeded implements Function<RegionSecurityGroupNameAndPorts, SecurityGroupInRegion> {
    @Resource
    @Named(ComputeServiceConstants.COMPUTE_LOGGER)
    protected Logger logger = Logger.NULL;
@@ -52,29 +52,29 @@ public class CreateSecurityGroupIfNeeded implements Function<ZoneSecurityGroupNa
    }
 
    @Override
-   public SecurityGroupInZone apply(ZoneSecurityGroupNameAndPorts zoneSecurityGroupNameAndPorts) {
-      checkNotNull(zoneSecurityGroupNameAndPorts, "zoneSecurityGroupNameAndPorts");
+   public SecurityGroupInRegion apply(RegionSecurityGroupNameAndPorts regionSecurityGroupNameAndPorts) {
+      checkNotNull(regionSecurityGroupNameAndPorts, "regionSecurityGroupNameAndPorts");
 
-      String zoneId = zoneSecurityGroupNameAndPorts.getZone();
-      Optional<? extends SecurityGroupApi> api = novaApi.getSecurityGroupExtensionForZone(zoneId);
-      checkArgument(api.isPresent(), "Security groups are required, but the extension is not availablein zone %s!", zoneId);
-      logger.debug(">> creating securityGroup %s", zoneSecurityGroupNameAndPorts);
+      String regionId = regionSecurityGroupNameAndPorts.getRegion();
+      Optional<? extends SecurityGroupApi> api = novaApi.getSecurityGroupApi(regionId);
+      checkArgument(api.isPresent(), "Security groups are required, but the extension is not available in region %s!", regionId);
+      logger.debug(">> creating securityGroup %s", regionSecurityGroupNameAndPorts);
       try {
 
          SecurityGroup securityGroup = api.get().createWithDescription(
-                  zoneSecurityGroupNameAndPorts.getName(), zoneSecurityGroupNameAndPorts.getName());
+                  regionSecurityGroupNameAndPorts.getName(), regionSecurityGroupNameAndPorts.getName());
 
          logger.debug("<< created securityGroup(%s)", securityGroup);
-         for (int port : zoneSecurityGroupNameAndPorts.getPorts()) {
+         for (int port : regionSecurityGroupNameAndPorts.getPorts()) {
             authorizeGroupToItselfAndAllIPsToTCPPort(api.get(), securityGroup, port);
          }
-         return new SecurityGroupInZone(api.get().get(securityGroup.getId()), zoneId);
+         return new SecurityGroupInRegion(api.get().get(securityGroup.getId()), regionId);
       } catch (IllegalStateException e) {
-         logger.trace("<< trying to find securityGroup(%s): %s", zoneSecurityGroupNameAndPorts, e.getMessage());
-         SecurityGroup group = find(api.get().list(), nameEquals(zoneSecurityGroupNameAndPorts
+         logger.trace("<< trying to find securityGroup(%s): %s", regionSecurityGroupNameAndPorts, e.getMessage());
+         SecurityGroup group = find(api.get().list(), nameEquals(regionSecurityGroupNameAndPorts
                   .getName()));
          logger.debug("<< reused securityGroup(%s)", group.getId());
-         return new SecurityGroupInZone(group, zoneId);
+         return new SecurityGroupInRegion(group, regionId);
       }
    }
 

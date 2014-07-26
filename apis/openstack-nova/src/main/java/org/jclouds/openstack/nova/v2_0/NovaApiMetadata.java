@@ -31,7 +31,7 @@ import org.jclouds.compute.ComputeServiceContext;
 import org.jclouds.openstack.keystone.v2_0.config.AuthenticationApiModule;
 import org.jclouds.openstack.keystone.v2_0.config.CredentialTypes;
 import org.jclouds.openstack.keystone.v2_0.config.KeystoneAuthenticationModule;
-import org.jclouds.openstack.keystone.v2_0.config.KeystoneAuthenticationModule.ZoneModule;
+import org.jclouds.openstack.keystone.v2_0.config.KeystoneAuthenticationModule.RegionModule;
 import org.jclouds.openstack.nova.v2_0.compute.config.NovaComputeServiceContextModule;
 import org.jclouds.openstack.nova.v2_0.config.NovaHttpApiModule;
 import org.jclouds.openstack.nova.v2_0.config.NovaParserModule;
@@ -92,7 +92,7 @@ public class NovaApiMetadata extends BaseHttpApiMetadata<NovaApi>  {
          .defaultModules(ImmutableSet.<Class<? extends Module>>builder()
                                      .add(AuthenticationApiModule.class)
                                      .add(KeystoneAuthenticationModule.class)
-                                     .add(ZoneModule.class)
+                                     .add(RegionModule.class)
                                      .add(NovaParserModule.class)
                                      .add(NovaHttpApiModule.class)
                                      .add(NovaComputeServiceContextModule.class).build());

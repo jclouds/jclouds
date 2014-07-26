@@ -60,13 +60,13 @@ public class ParseLoadBalancers implements Function<HttpResponse, IterableWithMa
    @Override
    public IterableWithMarker<LoadBalancer> apply(HttpResponse arg0) {
       LoadBalancers lbs = json.apply(arg0);
-      
+
       if (lbs.size() == 0)
          return IterableWithMarkers.EMPTY;
-      
-      Iterable<LoadBalancer> transform = Iterables.transform(lbs, convertLB);      
+
+      Iterable<LoadBalancer> transform = Iterables.transform(lbs, convertLB);
       IterableWithMarker<LoadBalancer> iterableWithMarker = IterableWithMarkers.from(transform);
-      
+
       return iterableWithMarker;
    }
 
@@ -77,9 +77,9 @@ public class ParseLoadBalancers implements Function<HttpResponse, IterableWithMa
 
    ParseLoadBalancers setEndpointAndRegion(URI endpoint) {
       String region = endpoint.getHost().substring(0, endpoint.getHost().indexOf('.'));
-      
+
       this.convertLB = factory.createForEndpointAndRegion(endpoint, region);
-      
+
       return this;
    }
 
@@ -103,9 +103,9 @@ public class ParseLoadBalancers implements Function<HttpResponse, IterableWithMa
 
       @Override
       protected Function<Object, IterableWithMarker<LoadBalancer>> markerToNextForArg0(Optional<Object> arg0) {
-         String zone = arg0.get().toString();
-         final LoadBalancerApi loadBalancerApi = api.getLoadBalancerApiForZone(zone);
-         
+         String region = arg0.get().toString();
+         final LoadBalancerApi loadBalancerApi = api.getLoadBalancerApi(region);
+
          return new Function<Object, IterableWithMarker<LoadBalancer>>() {
 
             @Override

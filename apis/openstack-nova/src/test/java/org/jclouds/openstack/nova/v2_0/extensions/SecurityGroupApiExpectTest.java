@@ -55,9 +55,9 @@ public class SecurityGroupApiExpectTest extends BaseNovaApiExpectTest {
                responseWithKeystoneAccess, extensionsOfNovaRequest, extensionsOfNovaResponse, list,
                listResponse);
 
-      assertEquals(apiWhenSecurityGroupsExist.getConfiguredZones(), ImmutableSet.of("az-1.region-a.geo-1", "az-2.region-a.geo-1", "az-3.region-a.geo-1"));
+      assertEquals(apiWhenSecurityGroupsExist.getConfiguredRegions(), ImmutableSet.of("az-1.region-a.geo-1", "az-2.region-a.geo-1", "az-3.region-a.geo-1"));
 
-      assertEquals(apiWhenSecurityGroupsExist.getSecurityGroupExtensionForZone("az-1.region-a.geo-1").get()
+      assertEquals(apiWhenSecurityGroupsExist.getSecurityGroupApi("az-1.region-a.geo-1").get()
                .list().toString(), new ParseSecurityGroupListTest().expected().toString());
    }
 
@@ -73,7 +73,7 @@ public class SecurityGroupApiExpectTest extends BaseNovaApiExpectTest {
                responseWithKeystoneAccess, extensionsOfNovaRequest, extensionsOfNovaResponse, listListSecurityGroups,
                listListSecurityGroupsResponse);
 
-      assertTrue(apiWhenNoSecurityGroupsExist.getSecurityGroupExtensionForZone("az-1.region-a.geo-1").get()
+      assertTrue(apiWhenNoSecurityGroupsExist.getSecurityGroupApi("az-1.region-a.geo-1").get()
                .list().isEmpty());
    }
 
@@ -91,7 +91,7 @@ public class SecurityGroupApiExpectTest extends BaseNovaApiExpectTest {
                responseWithKeystoneAccess, extensionsOfNovaRequest, extensionsOfNovaResponse, getSecurityGroup,
                getSecurityGroupResponse);
 
-      assertEquals(apiWhenSecurityGroupsExist.getSecurityGroupExtensionForZone("az-1.region-a.geo-1").get()
+      assertEquals(apiWhenSecurityGroupsExist.getSecurityGroupApi("az-1.region-a.geo-1").get()
                .get("0").toString(), new ParseSecurityGroupTest().expected().toString());
    }
 
@@ -107,7 +107,7 @@ public class SecurityGroupApiExpectTest extends BaseNovaApiExpectTest {
                responseWithKeystoneAccess, extensionsOfNovaRequest, extensionsOfNovaResponse, getSecurityGroup,
                getSecurityGroupResponse);
 
-      assertNull(apiWhenNoSecurityGroupsExist.getSecurityGroupExtensionForZone("az-1.region-a.geo-1").get()
+      assertNull(apiWhenNoSecurityGroupsExist.getSecurityGroupApi("az-1.region-a.geo-1").get()
                .get("0"));
 
    }
@@ -129,7 +129,7 @@ public class SecurityGroupApiExpectTest extends BaseNovaApiExpectTest {
                responseWithKeystoneAccess, extensionsOfNovaRequest, extensionsOfNovaResponse, create,
                createResponse);
 
-      assertEquals(apiWhenSecurityGroupsExist.getSecurityGroupExtensionForZone("az-1.region-a.geo-1").get()
+      assertEquals(apiWhenSecurityGroupsExist.getSecurityGroupApi("az-1.region-a.geo-1").get()
                .createWithDescription("jclouds-test", "jclouds-test").toString(),
                createExpected().toString());
    }
@@ -147,7 +147,7 @@ public class SecurityGroupApiExpectTest extends BaseNovaApiExpectTest {
                responseWithKeystoneAccess, extensionsOfNovaRequest, extensionsOfNovaResponse, delete,
                deleteResponse);
 
-      assertTrue(apiWhenServersExist.getSecurityGroupExtensionForZone("az-1.region-a.geo-1").get()
+      assertTrue(apiWhenServersExist.getSecurityGroupApi("az-1.region-a.geo-1").get()
                .delete("160"));
 
    }
@@ -171,12 +171,12 @@ public class SecurityGroupApiExpectTest extends BaseNovaApiExpectTest {
                responseWithKeystoneAccess, extensionsOfNovaRequest, extensionsOfNovaResponse, createRule,
                createRuleResponse);
 
-      assertEquals(apiWhenSecurityGroupsExist.getSecurityGroupExtensionForZone("az-1.region-a.geo-1").get()
+      assertEquals(apiWhenSecurityGroupsExist.getSecurityGroupApi("az-1.region-a.geo-1").get()
                .createRuleAllowingCidrBlock("161",
                         Ingress.builder().ipProtocol(IpProtocol.TCP).fromPort(80).toPort(8080).build(), "0.0.0.0/0")
                .toString(), createRuleExpected().toString());
    }
-   
+
    public void testCreateSecurityGroupRuleForSecurityGroupIdWhenResponseIs2xx() throws Exception {
       HttpRequest createRule = HttpRequest
                .builder()
@@ -196,7 +196,7 @@ public class SecurityGroupApiExpectTest extends BaseNovaApiExpectTest {
                responseWithKeystoneAccess, extensionsOfNovaRequest, extensionsOfNovaResponse, createRule,
                createRuleResponse);
 
-      assertEquals(apiWhenSecurityGroupsExist.getSecurityGroupExtensionForZone("az-1.region-a.geo-1").get()
+      assertEquals(apiWhenSecurityGroupsExist.getSecurityGroupApi("az-1.region-a.geo-1").get()
                .createRuleAllowingSecurityGroupId("161",
                         Ingress.builder().ipProtocol(IpProtocol.TCP).fromPort(80).toPort(8080).build(), "999")
                .toString(), createRuleExpected().toString());
@@ -215,7 +215,7 @@ public class SecurityGroupApiExpectTest extends BaseNovaApiExpectTest {
                responseWithKeystoneAccess, extensionsOfNovaRequest, extensionsOfNovaResponse, deleteRule,
                deleteRuleResponse);
 
-      assertTrue(apiWhenSecurityGroupsExist.getSecurityGroupExtensionForZone("az-1.region-a.geo-1").get()
+      assertTrue(apiWhenSecurityGroupsExist.getSecurityGroupApi("az-1.region-a.geo-1").get()
                .deleteRule("161"));
 
    }

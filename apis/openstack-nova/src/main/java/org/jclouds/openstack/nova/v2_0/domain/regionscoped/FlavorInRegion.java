@@ -14,30 +14,30 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.jclouds.openstack.nova.v2_0.domain.zonescoped;
+package org.jclouds.openstack.nova.v2_0.domain.regionscoped;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
-import org.jclouds.openstack.nova.v2_0.domain.Server;
+import org.jclouds.openstack.nova.v2_0.domain.Flavor;
 
-public class ServerInZone extends ZoneAndId {
-   protected final Server server;
+public class FlavorInRegion extends RegionAndId {
+   protected final Flavor image;
 
-   public ServerInZone(Server server, String zoneId) {
-      super(zoneId, checkNotNull(server, "server").getId());
-      this.server = server;
+   public FlavorInRegion(Flavor image, String regionId) {
+      super(regionId, checkNotNull(image, "image").getId());
+      this.image = image;
    }
 
-   public Server getServer() {
-      return server;
+   public Flavor getFlavor() {
+      return image;
    }
 
-   // superclass hashCode/equals are good enough, and help us use ZoneAndId and ServerInZone
+   // superclass hashCode/equals are good enough, and help us use RegionAndId and FlavorInRegion
    // interchangeably as Map keys
 
    @Override
    public String toString() {
-      return "[server=" + server + ", zoneId=" + zoneId + "]";
+      return "[image=" + image + ", regionId=" + regionId + "]";
    }
 
 }

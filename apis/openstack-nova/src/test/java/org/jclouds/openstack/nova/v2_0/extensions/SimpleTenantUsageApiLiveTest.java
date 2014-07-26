@@ -33,8 +33,8 @@ import com.google.common.base.Optional;
 public class SimpleTenantUsageApiLiveTest extends BaseNovaApiLiveTest {
 
    public void testList() throws Exception {
-      for (String zoneId : api.getConfiguredZones()) {
-         Optional<? extends SimpleTenantUsageApi> optApi = api.getSimpleTenantUsageExtensionForZone(zoneId);
+      for (String regionId : api.getConfiguredRegions()) {
+         Optional<? extends SimpleTenantUsageApi> optApi = api.getSimpleTenantUsageApi(regionId);
          if (optApi.isPresent() && identity.endsWith(":admin")) {
             SimpleTenantUsageApi api = optApi.get();
             Set<? extends SimpleTenantUsage> usages = api.list().toSet();

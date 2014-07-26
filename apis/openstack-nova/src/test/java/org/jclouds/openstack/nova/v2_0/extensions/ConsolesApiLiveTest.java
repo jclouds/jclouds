@@ -42,16 +42,16 @@ public class ConsolesApiLiveTest extends BaseNovaApiLiveTest {
    }
 
    private void testGetConsole(Console.Type consoleType) {
-      for (String zoneId : api.getConfiguredZones()) {
-         Optional<? extends ConsolesApi> apiOption = api.getConsolesExtensionForZone(zoneId);
+      for (String regionId : api.getConfiguredRegions()) {
+         Optional<? extends ConsolesApi> apiOption = api.getConsolesApi(regionId);
          if (!apiOption.isPresent()) {
             System.err.println("Consoles extension not present in server.");
             continue;
          }
 
          ConsolesApi api = apiOption.get();
-         ServerApi serverApi = this.api.getServerApiForZone(zoneId);
-         Server server = createServerInZone(zoneId);
+         ServerApi serverApi = this.api.getServerApi(regionId);
+         Server server = createServerInRegion(regionId);
          Console console = api.getConsole(server.getId(), consoleType);
          assertNotNull(console.getType());
          assertTrue(consoleType.equals(console.getType()));

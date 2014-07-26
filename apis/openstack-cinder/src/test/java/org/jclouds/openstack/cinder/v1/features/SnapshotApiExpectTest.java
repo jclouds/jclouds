@@ -56,7 +56,7 @@ public class SnapshotApiExpectTest extends BaseCinderApiExpectTest {
             responseWithKeystoneAccess,
             authenticatedGET().endpoint(endpoint).build(),
             HttpResponse.builder().statusCode(200).payload(payloadFromResource("/snapshot_list_simple.json")).build()
-      ).getSnapshotApiForZone("RegionOne");
+      ).getSnapshotApi("RegionOne");
 
       Set<? extends Snapshot> snapshots = api.list().toSet();
       assertEquals(snapshots, ImmutableSet.of(testSnapshot()));
@@ -69,7 +69,7 @@ public class SnapshotApiExpectTest extends BaseCinderApiExpectTest {
             responseWithKeystoneAccess,
             authenticatedGET().endpoint(endpoint).build(),
             HttpResponse.builder().statusCode(404).build()
-      ).getSnapshotApiForZone("RegionOne");
+      ).getSnapshotApi("RegionOne");
 
       Set<? extends Snapshot> snapshots = api.list().toSet();
       assertTrue(snapshots.isEmpty());
@@ -82,7 +82,7 @@ public class SnapshotApiExpectTest extends BaseCinderApiExpectTest {
             responseWithKeystoneAccess,
             authenticatedGET().endpoint(endpoint).build(),
             HttpResponse.builder().statusCode(200).payload(payloadFromResource("/snapshot_list_details.json")).build()
-      ).getSnapshotApiForZone("RegionOne");
+      ).getSnapshotApi("RegionOne");
 
       Set<? extends Snapshot> snapshots = api.listInDetail().toSet();
       assertEquals(snapshots, ImmutableSet.of(testSnapshot()));
@@ -104,7 +104,7 @@ public class SnapshotApiExpectTest extends BaseCinderApiExpectTest {
             responseWithKeystoneAccess,
             authenticatedGET().endpoint(endpoint).build(),
             HttpResponse.builder().statusCode(404).build()
-      ).getSnapshotApiForZone("RegionOne");
+      ).getSnapshotApi("RegionOne");
 
       Set<? extends Snapshot> snapshots = api.listInDetail().toSet();
       assertTrue(snapshots.isEmpty());
@@ -117,7 +117,7 @@ public class SnapshotApiExpectTest extends BaseCinderApiExpectTest {
             responseWithKeystoneAccess,
             authenticatedGET().endpoint(endpoint).build(),
             HttpResponse.builder().statusCode(200).payload(payloadFromResource("/snapshot_get.json")).build()
-      ).getSnapshotApiForZone("RegionOne");
+      ).getSnapshotApi("RegionOne");
 
       Snapshot snapshot = api.get("67d03df1-ce5d-4ba7-adbe-492ceb80170b");
       assertEquals(snapshot, testSnapshot());
@@ -130,7 +130,7 @@ public class SnapshotApiExpectTest extends BaseCinderApiExpectTest {
             responseWithKeystoneAccess,
             authenticatedGET().endpoint(endpoint).build(),
             HttpResponse.builder().statusCode(404).build()
-      ).getSnapshotApiForZone("RegionOne");
+      ).getSnapshotApi("RegionOne");
 
       assertNull(api.get("67d03df1-ce5d-4ba7-adbe-492ceb80170b"));
    }
@@ -145,7 +145,7 @@ public class SnapshotApiExpectTest extends BaseCinderApiExpectTest {
                   .payload(payloadFromResourceWithContentType("/snapshot_create.json", MediaType.APPLICATION_JSON))
                   .build(),
             HttpResponse.builder().statusCode(200).payload(payloadFromResource("/snapshot_create_response.json")).build()
-      ).getSnapshotApiForZone("RegionOne");
+      ).getSnapshotApi("RegionOne");
 
       CreateSnapshotOptions options = CreateSnapshotOptions.Builder
             .name("jclouds-test-snapshot")
@@ -167,7 +167,7 @@ public class SnapshotApiExpectTest extends BaseCinderApiExpectTest {
                   .payload(payloadFromResourceWithContentType("/snapshot_create.json", MediaType.APPLICATION_JSON))
                   .build(),
             HttpResponse.builder().statusCode(404).build()
-      ).getSnapshotApiForZone("RegionOne");
+      ).getSnapshotApi("RegionOne");
 
       CreateSnapshotOptions options = CreateSnapshotOptions.Builder
             .name("jclouds-test-snapshot")
@@ -193,7 +193,7 @@ public class SnapshotApiExpectTest extends BaseCinderApiExpectTest {
                         .wrap("{\"badRequest\": {\"message\": \"Invalid volume: must be available\", \"code\": 400}}"
                               .getBytes())))
                   .build()
-      ).getSnapshotApiForZone("RegionOne");
+      ).getSnapshotApi("RegionOne");
 
       CreateSnapshotOptions options = CreateSnapshotOptions.Builder
             .name("jclouds-test-snapshot")
@@ -214,7 +214,7 @@ public class SnapshotApiExpectTest extends BaseCinderApiExpectTest {
                   .payload(payloadFromResourceWithContentType("/snapshot_create.json", MediaType.APPLICATION_JSON))
                   .build(),
             HttpResponse.builder().statusCode(401).build()
-      ).getSnapshotApiForZone("RegionOne");
+      ).getSnapshotApi("RegionOne");
 
       CreateSnapshotOptions options = CreateSnapshotOptions.Builder
             .name("jclouds-test-snapshot")
@@ -231,7 +231,7 @@ public class SnapshotApiExpectTest extends BaseCinderApiExpectTest {
             responseWithKeystoneAccess,
             authenticatedGET().endpoint(endpoint).method("DELETE").build(),
             HttpResponse.builder().statusCode(200).build()
-      ).getSnapshotApiForZone("RegionOne");
+      ).getSnapshotApi("RegionOne");
 
       assertTrue(api.delete("67d03df1-ce5d-4ba7-adbe-492ceb80170b"));
    }
@@ -244,7 +244,7 @@ public class SnapshotApiExpectTest extends BaseCinderApiExpectTest {
             responseWithKeystoneAccess,
             authenticatedGET().endpoint(endpoint).method("DELETE").build(),
             HttpResponse.builder().statusCode(401).build()
-      ).getSnapshotApiForZone("RegionOne");
+      ).getSnapshotApi("RegionOne");
 
       api.delete("67d03df1-ce5d-4ba7-adbe-492ceb80170b");
    }
@@ -256,7 +256,7 @@ public class SnapshotApiExpectTest extends BaseCinderApiExpectTest {
             responseWithKeystoneAccess,
             authenticatedGET().endpoint(endpoint).method("DELETE").build(),
             HttpResponse.builder().statusCode(404).build()
-      ).getSnapshotApiForZone("RegionOne");
+      ).getSnapshotApi("RegionOne");
 
       assertFalse(api.delete("67d03df1-ce5d-4ba7-adbe-492ceb80170b"));
    }
@@ -274,7 +274,7 @@ public class SnapshotApiExpectTest extends BaseCinderApiExpectTest {
                         .wrap("{\"badRequest\": {\"message\": \"Invalid volume: Volume Snapshot status must be available or error\", \"code\": 400}}"
                               .getBytes())))
                   .build()
-      ).getSnapshotApiForZone("RegionOne");
+      ).getSnapshotApi("RegionOne");
 
       api.delete("67d03df1-ce5d-4ba7-adbe-492ceb80170b");
    }

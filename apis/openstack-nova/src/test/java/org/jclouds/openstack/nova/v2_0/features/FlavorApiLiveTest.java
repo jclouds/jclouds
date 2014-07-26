@@ -36,13 +36,13 @@ public class FlavorApiLiveTest extends BaseNovaApiLiveTest {
 
    /**
     * Tests the listing of Flavors.
-    * 
+    *
     * @throws Exception
     */
    @Test(description = "GET /v${apiVersion}/{tenantId}/flavors")
    public void testListFlavors() throws Exception {
-      for (String zoneId : zones) {
-         FlavorApi flavorApi = api.getFlavorApiForZone(zoneId);
+      for (String regionId : regions) {
+         FlavorApi flavorApi = api.getFlavorApi(regionId);
          Set<? extends Resource> response = flavorApi.list().concat().toSet();
          assertNotNull(response);
          assertFalse(response.isEmpty());
@@ -56,13 +56,13 @@ public class FlavorApiLiveTest extends BaseNovaApiLiveTest {
 
    /**
     * Tests the listing of Flavors in detail.
-    * 
+    *
     * @throws Exception
     */
    @Test(description = "GET /v${apiVersion}/{tenantId}/flavors/detail")
    public void testListFlavorsInDetail() throws Exception {
-      for (String zoneId : zones) {
-         FlavorApi flavorApi = api.getFlavorApiForZone(zoneId);
+      for (String regionId : regions) {
+         FlavorApi flavorApi = api.getFlavorApi(regionId);
          Set<? extends Flavor> response = flavorApi.listInDetail().concat().toSet();
          assertNotNull(response);
          assertFalse(response.isEmpty());
@@ -79,13 +79,13 @@ public class FlavorApiLiveTest extends BaseNovaApiLiveTest {
 
    /**
     * Tests getting Flavors by id.
-    * 
+    *
     * @throws Exception
     */
    @Test(description = "GET /v${apiVersion}/{tenantId}/flavors/{id}", dependsOnMethods = { "testListFlavorsInDetail" })
    public void testGetFlavorById() throws Exception {
-      for (String zoneId : zones) {
-         FlavorApi flavorApi = api.getFlavorApiForZone(zoneId);
+      for (String regionId : regions) {
+         FlavorApi flavorApi = api.getFlavorApi(regionId);
          Set<? extends Flavor> response = flavorApi.listInDetail().concat().toSet();
          for (Flavor flavor : response) {
             Flavor details = flavorApi.get(flavor.getId());

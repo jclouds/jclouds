@@ -40,17 +40,17 @@ import org.jclouds.compute.domain.SecurityGroup;
 import org.jclouds.compute.extensions.SecurityGroupExtension;
 import org.jclouds.compute.functions.GroupNamingConvention;
 import org.jclouds.domain.Location;
-import org.jclouds.location.Zone;
+import org.jclouds.location.Region;
 import org.jclouds.net.domain.IpPermission;
 import org.jclouds.net.domain.IpProtocol;
 import org.jclouds.openstack.nova.v2_0.NovaApi;
 import org.jclouds.openstack.nova.v2_0.domain.Ingress;
 import org.jclouds.openstack.nova.v2_0.domain.SecurityGroupRule;
 import org.jclouds.openstack.nova.v2_0.domain.ServerWithSecurityGroups;
-import org.jclouds.openstack.nova.v2_0.domain.zonescoped.SecurityGroupInZone;
-import org.jclouds.openstack.nova.v2_0.domain.zonescoped.ZoneAndId;
-import org.jclouds.openstack.nova.v2_0.domain.zonescoped.ZoneAndName;
-import org.jclouds.openstack.nova.v2_0.domain.zonescoped.ZoneSecurityGroupNameAndPorts;
+import org.jclouds.openstack.nova.v2_0.domain.regionscoped.RegionAndId;
+import org.jclouds.openstack.nova.v2_0.domain.regionscoped.RegionAndName;
+import org.jclouds.openstack.nova.v2_0.domain.regionscoped.RegionSecurityGroupNameAndPorts;
+import org.jclouds.openstack.nova.v2_0.domain.regionscoped.SecurityGroupInRegion;
 import org.jclouds.openstack.nova.v2_0.extensions.SecurityGroupApi;
 import org.jclouds.openstack.nova.v2_0.extensions.ServerWithSecurityGroupsApi;
 
@@ -70,22 +70,22 @@ public class NovaSecurityGroupExtension implements SecurityGroupExtension {
 
    protected final NovaApi api;
    protected final ListeningExecutorService userExecutor;
-   protected final Supplier<Set<String>> zoneIds;
-   protected final Function<SecurityGroupInZone, SecurityGroup> groupConverter;
-   protected final LoadingCache<ZoneAndName, SecurityGroupInZone> groupCreator;
+   protected final Supplier<Set<String>> regionIds;
+   protected final Function<SecurityGroupInRegion, SecurityGroup> groupConverter;
+   protected final LoadingCache<RegionAndName, SecurityGroupInRegion> groupCreator;
    protected final GroupNamingConvention.Factory namingConvention;
 
    @Inject
    public NovaSecurityGroupExtension(NovaApi api,
                                     @Named(Constants.PROPERTY_USER_THREADS) ListeningExecutorService userExecutor,
-                                    @Zone Supplier<Set<String>> zoneIds,
-                                    Function<SecurityGroupInZone, SecurityGroup> groupConverter,
-                                    LoadingCache<ZoneAndName, SecurityGroupInZone> groupCreator,
+                                    @Region Supplier<Set<String>> regionIds,
+                                    Function<SecurityGroupInRegion, SecurityGroup> groupConverter,
+                                    LoadingCache<RegionAndName, SecurityGroupInRegion> groupCreator,
                                     GroupNamingConvention.Factory namingConvention) {
 
       this.api = checkNotNull(api, "api");
       this.userExecutor = checkNotNull(userExecutor, "userExecutor");
-      this.zoneIds = checkNotNull(zoneIds, "zoneIds");
+      this.regionIds = checkNotNull(regionIds, "regionIds");
       this.groupConverter = checkNotNull(groupConverter, "groupConverter");
       this.groupCreator = checkNotNull(groupCreator, "groupCreator");
       this.namingConvention = checkNotNull(namingConvention, "namingConvention");
@@ -93,7 +93,7 @@ public class NovaSecurityGroupExtension implements SecurityGroupExtension {
 
    @Override
    public Set<SecurityGroup> listSecurityGroups() {
-      Iterable<? extends SecurityGroupInZone> rawGroups = pollSecurityGroups();
+      Iterable<? extends SecurityGroupInRegion> rawGroups = pollSecurityGroups();
       Iterable<SecurityGroup> groups = transform(filter(rawGroups, notNull()),
               groupConverter);
       return ImmutableSet.copyOf(groups);
@@ -102,15 +102,15 @@ public class NovaSecurityGroupExtension implements SecurityGroupExtension {
 
    @Override
    public Set<SecurityGroup> listSecurityGroupsInLocation(final Location location) {
-      String zone = location.getId();
-      if (zone == null) {
+      String region = location.getId();
+      if (region == null) {
          return ImmutableSet.of();
       }
-      return listSecurityGroupsInLocation(zone);
+      return listSecurityGroupsInLocation(region);
    }
 
-   public Set<SecurityGroup> listSecurityGroupsInLocation(String zone) {
-      Iterable<? extends SecurityGroupInZone> rawGroups = pollSecurityGroupsByZone(zone);
+   public Set<SecurityGroup> listSecurityGroupsInLocation(String region) {
+      Iterable<? extends SecurityGroupInRegion> rawGroups = pollSecurityGroupsByRegion(region);
       Iterable<SecurityGroup> groups = transform(filter(rawGroups, notNull()),
               groupConverter);
       return ImmutableSet.copyOf(groups);
@@ -118,12 +118,12 @@ public class NovaSecurityGroupExtension implements SecurityGroupExtension {
 
    @Override
    public Set<SecurityGroup> listSecurityGroupsForNode(String id) {
-      ZoneAndId zoneAndId = ZoneAndId.fromSlashEncoded(checkNotNull(id, "id"));
-      String zone = zoneAndId.getZone();
-      String instanceId = zoneAndId.getId();
+      RegionAndId regionAndId = RegionAndId.fromSlashEncoded(checkNotNull(id, "id"));
+      String region = regionAndId.getRegion();
+      String instanceId = regionAndId.getId();
 
-      Optional<? extends ServerWithSecurityGroupsApi> serverApi = api.getServerWithSecurityGroupsExtensionForZone(zone);
-      Optional<? extends SecurityGroupApi> sgApi = api.getSecurityGroupExtensionForZone(zone);
+      Optional<? extends ServerWithSecurityGroupsApi> serverApi = api.getServerWithSecurityGroupsApi(region);
+      Optional<? extends SecurityGroupApi> sgApi = api.getSecurityGroupApi(region);
 
       if (!serverApi.isPresent() || !sgApi.isPresent()) {
          return ImmutableSet.of();
@@ -135,54 +135,54 @@ public class NovaSecurityGroupExtension implements SecurityGroupExtension {
       }
 
       Set<String> groupNames = instance.getSecurityGroupNames();
-      Set<? extends SecurityGroupInZone> rawGroups =
-              sgApi.get().list().filter(nameIn(groupNames)).transform(groupToGroupInZone(zone)).toSet();
+      Set<? extends SecurityGroupInRegion> rawGroups =
+              sgApi.get().list().filter(nameIn(groupNames)).transform(groupToGroupInRegion(region)).toSet();
 
       return ImmutableSet.copyOf(transform(filter(rawGroups, notNull()), groupConverter));
    }
 
    @Override
    public SecurityGroup getSecurityGroupById(String id) {
-      ZoneAndId zoneAndId = ZoneAndId.fromSlashEncoded(checkNotNull(id, "id"));
-      String zone = zoneAndId.getZone();
-      String groupId = zoneAndId.getId();
+      RegionAndId regionAndId = RegionAndId.fromSlashEncoded(checkNotNull(id, "id"));
+      String region = regionAndId.getRegion();
+      String groupId = regionAndId.getId();
 
-      Optional<? extends SecurityGroupApi> sgApi = api.getSecurityGroupExtensionForZone(zone);
+      Optional<? extends SecurityGroupApi> sgApi = api.getSecurityGroupApi(region);
 
       if (!sgApi.isPresent()) {
          return null;
       }
 
-      SecurityGroupInZone rawGroup = new SecurityGroupInZone(sgApi.get().get(groupId), zone);
+      SecurityGroupInRegion rawGroup = new SecurityGroupInRegion(sgApi.get().get(groupId), region);
 
       return groupConverter.apply(rawGroup);
    }
 
    @Override
    public SecurityGroup createSecurityGroup(String name, Location location) {
-      String zone = location.getId();
-      if (zone == null) {
+      String region = location.getId();
+      if (region == null) {
          return null;
       }
-      return createSecurityGroup(name, zone);
+      return createSecurityGroup(name, region);
    }
 
-   public SecurityGroup createSecurityGroup(String name, String zone) {
+   public SecurityGroup createSecurityGroup(String name, String region) {
       String markerGroup = namingConvention.create().sharedNameForGroup(name);
-      ZoneSecurityGroupNameAndPorts zoneAndName = new ZoneSecurityGroupNameAndPorts(zone, markerGroup, ImmutableSet.<Integer> of());
+      RegionSecurityGroupNameAndPorts regionAndName = new RegionSecurityGroupNameAndPorts(region, markerGroup, ImmutableSet.<Integer> of());
 
-      SecurityGroupInZone rawGroup = groupCreator.getUnchecked(zoneAndName);
+      SecurityGroupInRegion rawGroup = groupCreator.getUnchecked(regionAndName);
       return groupConverter.apply(rawGroup);
    }
 
    @Override
    public boolean removeSecurityGroup(String id) {
       checkNotNull(id, "id");
-      ZoneAndId zoneAndId = ZoneAndId.fromSlashEncoded(id);
-      String zone = zoneAndId.getZone();
-      String groupId = zoneAndId.getId();
+      RegionAndId regionAndId = RegionAndId.fromSlashEncoded(id);
+      String region = regionAndId.getRegion();
+      String groupId = regionAndId.getId();
 
-      Optional<? extends SecurityGroupApi> sgApi = api.getSecurityGroupExtensionForZone(zone);
+      Optional<? extends SecurityGroupApi> sgApi = api.getSecurityGroupApi(region);
 
       if (!sgApi.isPresent()) {
          return false;
@@ -194,16 +194,16 @@ public class NovaSecurityGroupExtension implements SecurityGroupExtension {
 
       sgApi.get().delete(groupId);
       // TODO: test this clear happens
-      groupCreator.invalidate(new ZoneSecurityGroupNameAndPorts(zone, groupId, ImmutableSet.<Integer> of()));
+      groupCreator.invalidate(new RegionSecurityGroupNameAndPorts(region, groupId, ImmutableSet.<Integer> of()));
       return true;
    }
 
    @Override
    public SecurityGroup addIpPermission(IpPermission ipPermission, SecurityGroup group) {
-      String zone = group.getLocation().getId();
-      ZoneAndId groupZoneAndId = ZoneAndId.fromSlashEncoded(group.getId());
-      String id = groupZoneAndId.getId();
-      Optional<? extends SecurityGroupApi> sgApi = api.getSecurityGroupExtensionForZone(zone);
+      String region = group.getLocation().getId();
+      RegionAndId groupRegionAndId = RegionAndId.fromSlashEncoded(group.getId());
+      String id = groupRegionAndId.getId();
+      Optional<? extends SecurityGroupApi> sgApi = api.getSecurityGroupApi(region);
 
       if (!sgApi.isPresent()) {
          return null;
@@ -222,9 +222,9 @@ public class NovaSecurityGroupExtension implements SecurityGroupExtension {
       }
 
       if (ipPermission.getGroupIds().size() > 0) {
-         for (String zoneAndGroupRaw : ipPermission.getGroupIds()) {
-            ZoneAndId zoneAndId = ZoneAndId.fromSlashEncoded(zoneAndGroupRaw);
-            String groupId = zoneAndId.getId();
+         for (String regionAndGroupRaw : ipPermission.getGroupIds()) {
+            RegionAndId regionAndId = RegionAndId.fromSlashEncoded(regionAndGroupRaw);
+            String groupId = regionAndId.getId();
             sgApi.get().createRuleAllowingSecurityGroupId(id,
                     Ingress.builder()
                             .ipProtocol(ipPermission.getIpProtocol())
@@ -235,7 +235,7 @@ public class NovaSecurityGroupExtension implements SecurityGroupExtension {
          }
       }
 
-      return getSecurityGroupById(ZoneAndId.fromZoneAndId(zone, id).slashEncode());
+      return getSecurityGroupById(RegionAndId.fromRegionAndId(region, id).slashEncode());
    }
 
    @Override
@@ -256,11 +256,11 @@ public class NovaSecurityGroupExtension implements SecurityGroupExtension {
 
    @Override
    public SecurityGroup removeIpPermission(IpPermission ipPermission, SecurityGroup group) {
-      String zone = group.getLocation().getId();
-      ZoneAndId groupZoneAndId = ZoneAndId.fromSlashEncoded(group.getId());
-      String id = groupZoneAndId.getId();
+      String region = group.getLocation().getId();
+      RegionAndId groupRegionAndId = RegionAndId.fromSlashEncoded(group.getId());
+      String id = groupRegionAndId.getId();
 
-      Optional<? extends SecurityGroupApi> sgApi = api.getSecurityGroupExtensionForZone(zone);
+      Optional<? extends SecurityGroupApi> sgApi = api.getSecurityGroupApi(region);
 
       if (!sgApi.isPresent()) {
          return null;
@@ -291,7 +291,7 @@ public class NovaSecurityGroupExtension implements SecurityGroupExtension {
          }
       }
 
-      return getSecurityGroupById(ZoneAndId.fromZoneAndId(zone, id).slashEncode());
+      return getSecurityGroupById(RegionAndId.fromRegionAndId(region, id).slashEncode());
    }
 
    @Override
@@ -330,41 +330,41 @@ public class NovaSecurityGroupExtension implements SecurityGroupExtension {
       return false;
    }
 
-   protected Iterable<? extends SecurityGroupInZone> pollSecurityGroups() {
-      Iterable<? extends Set<? extends SecurityGroupInZone>> groups
-              = transform(zoneIds.get(), allSecurityGroupsInZone());
+   protected Iterable<? extends SecurityGroupInRegion> pollSecurityGroups() {
+      Iterable<? extends Set<? extends SecurityGroupInRegion>> groups
+              = transform(regionIds.get(), allSecurityGroupsInRegion());
 
       return concat(groups);
    }
 
 
-   protected Iterable<? extends SecurityGroupInZone> pollSecurityGroupsByZone(String zone) {
-      return allSecurityGroupsInZone().apply(zone);
+   protected Iterable<? extends SecurityGroupInRegion> pollSecurityGroupsByRegion(String region) {
+      return allSecurityGroupsInRegion().apply(region);
    }
 
-   protected Function<String, Set<? extends SecurityGroupInZone>> allSecurityGroupsInZone() {
-      return new Function<String, Set<? extends SecurityGroupInZone>>() {
+   protected Function<String, Set<? extends SecurityGroupInRegion>> allSecurityGroupsInRegion() {
+      return new Function<String, Set<? extends SecurityGroupInRegion>>() {
 
          @Override
-         public Set<? extends SecurityGroupInZone> apply(final String from) {
-            Optional<? extends SecurityGroupApi> sgApi = api.getSecurityGroupExtensionForZone(from);
+         public Set<? extends SecurityGroupInRegion> apply(final String from) {
+            Optional<? extends SecurityGroupApi> sgApi = api.getSecurityGroupApi(from);
 
             if (!sgApi.isPresent()) {
                return ImmutableSet.of();
             }
 
 
-            return sgApi.get().list().transform(groupToGroupInZone(from)).toSet();
+            return sgApi.get().list().transform(groupToGroupInRegion(from)).toSet();
          }
 
       };
    }
 
-   protected Function<org.jclouds.openstack.nova.v2_0.domain.SecurityGroup, SecurityGroupInZone> groupToGroupInZone(final String zone) {
-      return new Function<org.jclouds.openstack.nova.v2_0.domain.SecurityGroup, SecurityGroupInZone>() {
+   protected Function<org.jclouds.openstack.nova.v2_0.domain.SecurityGroup, SecurityGroupInRegion> groupToGroupInRegion(final String region) {
+      return new Function<org.jclouds.openstack.nova.v2_0.domain.SecurityGroup, SecurityGroupInRegion>() {
          @Override
-         public SecurityGroupInZone apply(org.jclouds.openstack.nova.v2_0.domain.SecurityGroup group) {
-            return new SecurityGroupInZone(group, zone);
+         public SecurityGroupInRegion apply(org.jclouds.openstack.nova.v2_0.domain.SecurityGroup group) {
+            return new SecurityGroupInRegion(group, region);
          }
       };
    }

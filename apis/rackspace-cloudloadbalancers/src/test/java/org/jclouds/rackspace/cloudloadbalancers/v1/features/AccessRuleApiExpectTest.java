@@ -41,10 +41,10 @@ public class AccessRuleApiExpectTest extends BaseCloudLoadBalancerApiExpectTest<
       URI endpoint = URI.create("https://dfw.loadbalancers.api.rackspacecloud.com/v1.0/123123/loadbalancers/2000/accesslist");
       AccessRuleApi api = requestsSendResponses(
             rackspaceAuthWithUsernameAndApiKey,
-            responseWithAccess, 
+            responseWithAccess,
             authenticatedGET().endpoint(endpoint).build(),
             HttpResponse.builder().statusCode(OK.getStatusCode()).payload(payloadFromResource("/accesslist-list.json")).build()
-      ).getAccessRuleApiForZoneAndLoadBalancer("DFW", 2000);
+      ).getAccessRuleApi("DFW", 2000);
 
       Iterable<AccessRuleWithId> accessList = api.list();
       assertEquals(accessList, getAccessRules());
@@ -54,15 +54,15 @@ public class AccessRuleApiExpectTest extends BaseCloudLoadBalancerApiExpectTest<
       URI endpoint = URI.create("https://dfw.loadbalancers.api.rackspacecloud.com/v1.0/123123/loadbalancers/2000/accesslist");
       AccessRuleApi api = requestsSendResponses(
             rackspaceAuthWithUsernameAndApiKey,
-            responseWithAccess, 
+            responseWithAccess,
             authenticatedGET().method(POST).endpoint(endpoint).payload(payloadFromResource("/accesslist-create.json")).build(),
             HttpResponse.builder().statusCode(OK.getStatusCode()).build()
-      ).getAccessRuleApiForZoneAndLoadBalancer("DFW", 2000);
-   
+      ).getAccessRuleApi("DFW", 2000);
+
       AccessRule accessRule1 = AccessRule.deny("206.160.163.21");
       AccessRule accessRule2 = AccessRule.deny("206.160.165.11");
       AccessRule accessRule3 = AccessRule.deny("206.160.163.22");
-      
+
       List<AccessRule> accessList = ImmutableList.<AccessRule> of(accessRule1, accessRule2, accessRule3);
       api.create(accessList);
    }
@@ -71,10 +71,10 @@ public class AccessRuleApiExpectTest extends BaseCloudLoadBalancerApiExpectTest<
       URI endpoint = URI.create("https://dfw.loadbalancers.api.rackspacecloud.com/v1.0/123123/loadbalancers/2000/accesslist/23");
       AccessRuleApi api = requestsSendResponses(
             rackspaceAuthWithUsernameAndApiKey,
-            responseWithAccess, 
+            responseWithAccess,
             authenticatedGET().method(DELETE).endpoint(endpoint).replaceHeader(ACCEPT, WILDCARD).build(),
             HttpResponse.builder().statusCode(OK.getStatusCode()).build()
-      ).getAccessRuleApiForZoneAndLoadBalancer("DFW", 2000);
+      ).getAccessRuleApi("DFW", 2000);
 
       assertTrue(api.delete(23));
    }
@@ -83,10 +83,10 @@ public class AccessRuleApiExpectTest extends BaseCloudLoadBalancerApiExpectTest<
       URI endpoint = URI.create("https://dfw.loadbalancers.api.rackspacecloud.com/v1.0/123123/loadbalancers/2000/accesslist?id=23&id=24");
       AccessRuleApi api = requestsSendResponses(
             rackspaceAuthWithUsernameAndApiKey,
-            responseWithAccess, 
+            responseWithAccess,
             authenticatedGET().method(DELETE).endpoint(endpoint).replaceHeader(ACCEPT, WILDCARD).build(),
             HttpResponse.builder().statusCode(OK.getStatusCode()).build()
-      ).getAccessRuleApiForZoneAndLoadBalancer("DFW", 2000);
+      ).getAccessRuleApi("DFW", 2000);
 
       List<Integer> accessRuleIds = ImmutableList.<Integer> of(23, 24);
       assertTrue(api.delete(accessRuleIds));
@@ -96,10 +96,10 @@ public class AccessRuleApiExpectTest extends BaseCloudLoadBalancerApiExpectTest<
       URI endpoint = URI.create("https://dfw.loadbalancers.api.rackspacecloud.com/v1.0/123123/loadbalancers/2000/accesslist");
       AccessRuleApi api = requestsSendResponses(
             rackspaceAuthWithUsernameAndApiKey,
-            responseWithAccess, 
+            responseWithAccess,
             authenticatedGET().method(DELETE).endpoint(endpoint).replaceHeader(ACCEPT, WILDCARD).build(),
             HttpResponse.builder().statusCode(OK.getStatusCode()).build()
-      ).getAccessRuleApiForZoneAndLoadBalancer("DFW", 2000);
+      ).getAccessRuleApi("DFW", 2000);
 
       assertTrue(api.deleteAll());
    }

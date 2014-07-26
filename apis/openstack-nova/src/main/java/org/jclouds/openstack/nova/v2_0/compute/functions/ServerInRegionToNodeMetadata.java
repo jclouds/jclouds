@@ -53,8 +53,8 @@ import org.jclouds.logging.Logger;
 import org.jclouds.openstack.nova.v2_0.domain.Address;
 import org.jclouds.openstack.nova.v2_0.domain.Server;
 import org.jclouds.openstack.nova.v2_0.domain.Server.Status;
-import org.jclouds.openstack.nova.v2_0.domain.zonescoped.ServerInZone;
-import org.jclouds.openstack.nova.v2_0.domain.zonescoped.ZoneAndId;
+import org.jclouds.openstack.nova.v2_0.domain.regionscoped.RegionAndId;
+import org.jclouds.openstack.nova.v2_0.domain.regionscoped.ServerInRegion;
 import org.jclouds.openstack.v2_0.domain.Link;
 import org.jclouds.util.InetAddresses2;
 
@@ -67,11 +67,11 @@ import com.google.common.net.InetAddresses;
  * A function for transforming a nova-specific Server into a generic
  * NodeMetadata object.
  */
-public class ServerInZoneToNodeMetadata implements Function<ServerInZone, NodeMetadata> {
+public class ServerInRegionToNodeMetadata implements Function<ServerInRegion, NodeMetadata> {
    @Resource
    @Named(ComputeServiceConstants.COMPUTE_LOGGER)
    protected Logger logger = Logger.NULL;
-   
+
    protected Map<Status, org.jclouds.compute.domain.NodeMetadata.Status> toPortableNodeStatus;
    protected final Supplier<Map<String, Location>> locationIndex;
    protected final Supplier<Set<? extends Image>> images;
@@ -79,7 +79,7 @@ public class ServerInZoneToNodeMetadata implements Function<ServerInZone, NodeMe
    protected final GroupNamingConvention nodeNamingConvention;
 
    @Inject
-   public ServerInZoneToNodeMetadata(Map<Server.Status, NodeMetadata.Status> toPortableNodeStatus,
+   public ServerInRegionToNodeMetadata(Map<Server.Status, NodeMetadata.Status> toPortableNodeStatus,
             Supplier<Map<String, Location>> locationIndex, @Memoized Supplier<Set<? extends Image>> images,
             @Memoized Supplier<Set<? extends Hardware>> hardwares, GroupNamingConvention.Factory namingConvention) {
       this.toPortableNodeStatus = checkNotNull(toPortableNodeStatus, "toPortableNodeStatus");
@@ -90,27 +90,27 @@ public class ServerInZoneToNodeMetadata implements Function<ServerInZone, NodeMe
    }
 
    @Override
-   public NodeMetadata apply(ServerInZone serverInZone) {
-      Location zone = locationIndex.get().get(serverInZone.getZone());
-      checkState(zone != null, "location %s not in locationIndex: %s", serverInZone.getZone(), locationIndex.get());
-      Server from = serverInZone.getServer();
+   public NodeMetadata apply(ServerInRegion serverInRegion) {
+      Location region = locationIndex.get().get(serverInRegion.getRegion());
+      checkState(region != null, "location %s not in locationIndex: %s", serverInRegion.getRegion(), locationIndex.get());
+      Server from = serverInRegion.getServer();
 
       NodeMetadataBuilder builder = new NodeMetadataBuilder();
-      builder.id(serverInZone.slashEncode());
+      builder.id(serverInRegion.slashEncode());
       builder.providerId(from.getId());
       builder.name(from.getName());
       builder.hostname(from.getName());
       builder.location(from.getHostId() != null ? new LocationBuilder().scope(LocationScope.HOST).id(from.getHostId())
-            .description(from.getHostId()).parent(zone).build() : zone);
+            .description(from.getHostId()).parent(region).build() : region);
       builder.group(groupFromMapOrName(from.getMetadata(), from.getName(), nodeNamingConvention));
       addMetadataAndParseTagsFromCommaDelimitedValue(builder, from.getMetadata());
 
       if (from.getImage() != null) {
-         builder.imageId(ZoneAndId.fromZoneAndId(serverInZone.getZone(), from.getImage().getId()).slashEncode());
+         builder.imageId(RegionAndId.fromRegionAndId(serverInRegion.getRegion(), from.getImage().getId()).slashEncode());
       }
 
-      builder.operatingSystem(findOperatingSystemForServerOrNull(serverInZone));
-      builder.hardware(findHardwareForServerOrNull(serverInZone));
+      builder.operatingSystem(findOperatingSystemForServerOrNull(serverInRegion));
+      builder.hardware(findHardwareForServerOrNull(serverInRegion));
       builder.status(toPortableNodeStatus.get(from.getStatus()));
 
       Set<Address> addresses = newHashSet(from.getAddresses().values());
@@ -140,16 +140,16 @@ public class ServerInZoneToNodeMetadata implements Function<ServerInZone, NodeMe
             builder.uri(link.getHref());
          }
       }
-      
+
       return builder.build();
    }
-   
+
    private static final Predicate<Address> isPrivateAddress = new Predicate<Address>() {
       public boolean apply(Address in) {
          return InetAddresses2.IsPrivateIPAddress.INSTANCE.apply(in.getAddr());
       }
    };
-   
+
    public static final Predicate<String> isInet4Address = new Predicate<String>() {
       @Override
       public boolean apply(String input) {
@@ -172,15 +172,15 @@ public class ServerInZoneToNodeMetadata implements Function<ServerInZone, NodeMe
       }
    }
 
-   protected Hardware findHardwareForServerOrNull(ServerInZone serverInZone) {
-      return findObjectOfTypeForServerOrNull(hardwares.get(), "hardware", serverInZone.getServer().getFlavor().getId(),
-            serverInZone);
+   protected Hardware findHardwareForServerOrNull(ServerInRegion serverInRegion) {
+      return findObjectOfTypeForServerOrNull(hardwares.get(), "hardware", serverInRegion.getServer().getFlavor().getId(),
+            serverInRegion);
    }
 
-   protected OperatingSystem findOperatingSystemForServerOrNull(ServerInZone serverInZone) {
-      if (serverInZone.getServer().getImage() != null) {
+   protected OperatingSystem findOperatingSystemForServerOrNull(ServerInRegion serverInRegion) {
+      if (serverInRegion.getServer().getImage() != null) {
          Image image = findObjectOfTypeForServerOrNull(
-               images.get(), "image", serverInZone.getServer().getImage().getId(), serverInZone);
+               images.get(), "image", serverInRegion.getServer().getImage().getId(), serverInRegion);
 
          return (image != null) ? image.getOperatingSystem() : null;
       } else {
@@ -190,16 +190,16 @@ public class ServerInZoneToNodeMetadata implements Function<ServerInZone, NodeMe
    }
 
    public <T extends ComputeMetadata> T findObjectOfTypeForServerOrNull(Set<? extends T> supply, String type,
-         final String objectId, final ZoneAndId serverInZone) {
+         final String objectId, final RegionAndId serverInRegion) {
       try {
          return find(supply, new Predicate<T>() {
             @Override
             public boolean apply(T input) {
-               return input.getId().equals(ZoneAndId.fromZoneAndId(serverInZone.getZone(), objectId).slashEncode());
+               return input.getId().equals(RegionAndId.fromRegionAndId(serverInRegion.getRegion(), objectId).slashEncode());
             }
          });
       } catch (NoSuchElementException e) {
-         logger.trace("could not find %s with id(%s) for server(%s)", type, objectId, serverInZone);
+         logger.trace("could not find %s with id(%s) for server(%s)", type, objectId, serverInRegion);
       }
       return null;
    }

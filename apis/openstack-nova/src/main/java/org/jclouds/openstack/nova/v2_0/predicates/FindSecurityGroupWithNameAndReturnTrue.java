@@ -28,8 +28,8 @@ import javax.inject.Singleton;
 import org.jclouds.logging.Logger;
 import org.jclouds.openstack.nova.v2_0.NovaApi;
 import org.jclouds.openstack.nova.v2_0.domain.SecurityGroup;
-import org.jclouds.openstack.nova.v2_0.domain.zonescoped.SecurityGroupInZone;
-import org.jclouds.openstack.nova.v2_0.domain.zonescoped.ZoneAndName;
+import org.jclouds.openstack.nova.v2_0.domain.regionscoped.SecurityGroupInRegion;
+import org.jclouds.openstack.nova.v2_0.domain.regionscoped.RegionAndName;
 import org.jclouds.openstack.nova.v2_0.extensions.SecurityGroupApi;
 import org.jclouds.rest.ResourceNotFoundException;
 
@@ -42,7 +42,7 @@ import com.google.inject.Inject;
  * AtomicReference is so that we can return the securityGroup that matched.
  */
 @Singleton
-public class FindSecurityGroupWithNameAndReturnTrue implements Predicate<AtomicReference<ZoneAndName>> {
+public class FindSecurityGroupWithNameAndReturnTrue implements Predicate<AtomicReference<RegionAndName>> {
 
    private final NovaApi novaApi;
 
@@ -54,24 +54,24 @@ public class FindSecurityGroupWithNameAndReturnTrue implements Predicate<AtomicR
       this.novaApi = checkNotNull(novaApi, "novaApi");
    }
 
-   public boolean apply(AtomicReference<ZoneAndName> securityGroupInZoneRef) {
-      checkNotNull(securityGroupInZoneRef, "securityGroupRef");
-      final ZoneAndName securityGroupInZone = checkNotNull(securityGroupInZoneRef.get(), "securityGroupInZone");
+   public boolean apply(AtomicReference<RegionAndName> securityGroupInRegionRef) {
+      checkNotNull(securityGroupInRegionRef, "securityGroupRef");
+      final RegionAndName securityGroupInRegion = checkNotNull(securityGroupInRegionRef.get(), "securityGroupInRegion");
 
-      Optional<? extends SecurityGroupApi> api = novaApi.getSecurityGroupExtensionForZone(securityGroupInZone.getZone());
+      Optional<? extends SecurityGroupApi> api = novaApi.getSecurityGroupApi(securityGroupInRegion.getRegion());
       checkArgument(api.isPresent(), "Security groups are required, but the extension is not available!");
 
-      logger.trace("looking for security group %s", securityGroupInZone.slashEncode());
+      logger.trace("looking for security group %s", securityGroupInRegion.slashEncode());
       try {
          SecurityGroup returnVal = Iterables.find(api.get().list(), new Predicate<SecurityGroup>() {
 
             @Override
             public boolean apply(SecurityGroup input) {
-               return input.getName().equals(securityGroupInZone.getName());
+               return input.getName().equals(securityGroupInRegion.getName());
             }
 
          });
-         securityGroupInZoneRef.set(new SecurityGroupInZone(returnVal, securityGroupInZone.getZone()));
+         securityGroupInRegionRef.set(new SecurityGroupInRegion(returnVal, securityGroupInRegion.getRegion()));
          return true;
       } catch (ResourceNotFoundException e) {
          return false;

@@ -23,7 +23,7 @@ import java.net.URI;
 import java.util.Properties;
 
 import org.jclouds.loadbalancer.LoadBalancerServiceContext;
-import org.jclouds.openstack.keystone.v2_0.config.KeystoneAuthenticationModule.ZoneModule;
+import org.jclouds.openstack.keystone.v2_0.config.KeystoneAuthenticationModule.RegionModule;
 import org.jclouds.rackspace.cloudidentity.v2_0.ServiceType;
 import org.jclouds.rackspace.cloudidentity.v2_0.config.CloudIdentityAuthenticationApiModule;
 import org.jclouds.rackspace.cloudidentity.v2_0.config.CloudIdentityAuthenticationModule;
@@ -35,7 +35,7 @@ import org.jclouds.rest.internal.BaseHttpApiMetadata;
 import com.google.common.collect.ImmutableSet;
 import com.google.inject.Module;
 /**
- * Implementation of {@link ApiMetadata} for CloudLoadBalancers 1.0 API
+ * Implementation of {@link org.jclouds.apis.ApiMetadata} for the Rackspace Cloud Load Balancers v1.0 API.
  */
 public class CloudLoadBalancersApiMetadata extends BaseHttpApiMetadata<CloudLoadBalancersApi> {
 
@@ -74,7 +74,7 @@ public class CloudLoadBalancersApiMetadata extends BaseHttpApiMetadata<CloudLoad
                .defaultModules(ImmutableSet.<Class<? extends Module>>builder()
                             .add(CloudIdentityAuthenticationApiModule.class)
                             .add(CloudIdentityAuthenticationModule.class)
-                            .add(ZoneModule.class)
+                            .add(RegionModule.class)
                             .add(CloudLoadBalancersHttpApiModule.class)
                             .add(CloudLoadBalancersLoadBalancerContextModule.class).build());
       }

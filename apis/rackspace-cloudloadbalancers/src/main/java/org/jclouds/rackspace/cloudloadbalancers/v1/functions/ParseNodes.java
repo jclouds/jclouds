@@ -76,17 +76,17 @@ public class ParseNodes extends ParseJson<Nodes> {
          String path = request.getEndpoint().getPath();
          int lastSlash = path.lastIndexOf('/');
          int secondLastSlash = path.lastIndexOf('/', lastSlash - 1);
-         
+
          lbId = Integer.valueOf(path.substring(secondLastSlash + 1, lastSlash));
-         
+
          return super.setContext(request);
       }
 
       @Override
       protected Function<Object, IterableWithMarker<Node>> markerToNextForArg0(Optional<Object> arg0) {
-         String zone = arg0.get().toString();
-         final NodeApi nodeApi = api.getNodeApiForZoneAndLoadBalancer(zone, lbId);
-         
+         String region = arg0.get().toString();
+         final NodeApi nodeApi = api.getNodeApi(region, lbId);
+
          return new Function<Object, IterableWithMarker<Node>>() {
 
             @Override

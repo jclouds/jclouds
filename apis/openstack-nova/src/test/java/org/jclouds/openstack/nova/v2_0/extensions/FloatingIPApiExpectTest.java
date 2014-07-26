@@ -41,9 +41,9 @@ public class FloatingIPApiExpectTest extends BaseNovaApiExpectTest {
       NovaApi apiWhenExtensionNotInList = requestsSendResponses(keystoneAuthWithUsernameAndPasswordAndTenantName,
             responseWithKeystoneAccess, extensionsOfNovaRequest, extensionsOfNovaResponse);
 
-      assertEquals(apiWhenExtensionNotInList.getConfiguredZones(), ImmutableSet.of("az-1.region-a.geo-1", "az-2.region-a.geo-1", "az-3.region-a.geo-1"));
+      assertEquals(apiWhenExtensionNotInList.getConfiguredRegions(), ImmutableSet.of("az-1.region-a.geo-1", "az-2.region-a.geo-1", "az-3.region-a.geo-1"));
 
-      assertTrue(apiWhenExtensionNotInList.getFloatingIPExtensionForZone("az-1.region-a.geo-1").isPresent());
+      assertTrue(apiWhenExtensionNotInList.getFloatingIPApi("az-1.region-a.geo-1").isPresent());
 
    }
 
@@ -52,9 +52,9 @@ public class FloatingIPApiExpectTest extends BaseNovaApiExpectTest {
       NovaApi apiWhenExtensionNotInList = requestsSendResponses(keystoneAuthWithUsernameAndPasswordAndTenantName,
             responseWithKeystoneAccess, extensionsOfNovaRequest, unmatchedExtensionsOfNovaResponse);
 
-      assertEquals(apiWhenExtensionNotInList.getConfiguredZones(), ImmutableSet.of("az-1.region-a.geo-1", "az-2.region-a.geo-1", "az-3.region-a.geo-1"));
+      assertEquals(apiWhenExtensionNotInList.getConfiguredRegions(), ImmutableSet.of("az-1.region-a.geo-1", "az-2.region-a.geo-1", "az-3.region-a.geo-1"));
 
-      assertFalse(apiWhenExtensionNotInList.getFloatingIPExtensionForZone("az-1.region-a.geo-1").isPresent());
+      assertFalse(apiWhenExtensionNotInList.getFloatingIPApi("az-1.region-a.geo-1").isPresent());
 
    }
 
@@ -72,9 +72,9 @@ public class FloatingIPApiExpectTest extends BaseNovaApiExpectTest {
       NovaApi apiWhenFloatingIPsExist = requestsSendResponses(keystoneAuthWithUsernameAndPasswordAndTenantName,
             responseWithKeystoneAccess, extensionsOfNovaRequest, extensionsOfNovaResponse, list, listResponse);
 
-      assertEquals(apiWhenFloatingIPsExist.getConfiguredZones(), ImmutableSet.of("az-1.region-a.geo-1", "az-2.region-a.geo-1", "az-3.region-a.geo-1"));
+      assertEquals(apiWhenFloatingIPsExist.getConfiguredRegions(), ImmutableSet.of("az-1.region-a.geo-1", "az-2.region-a.geo-1", "az-3.region-a.geo-1"));
 
-      assertEquals(apiWhenFloatingIPsExist.getFloatingIPExtensionForZone("az-1.region-a.geo-1").get().list()
+      assertEquals(apiWhenFloatingIPsExist.getFloatingIPApi("az-1.region-a.geo-1").get().list()
             .toString(), new ParseFloatingIPListTest().expected().toString());
    }
 
@@ -91,7 +91,7 @@ public class FloatingIPApiExpectTest extends BaseNovaApiExpectTest {
       NovaApi apiWhenNoServersExist = requestsSendResponses(keystoneAuthWithUsernameAndPasswordAndTenantName,
             responseWithKeystoneAccess, extensionsOfNovaRequest, extensionsOfNovaResponse, list, listResponse);
 
-      assertTrue(apiWhenNoServersExist.getFloatingIPExtensionForZone("az-1.region-a.geo-1").get().list().isEmpty());
+      assertTrue(apiWhenNoServersExist.getFloatingIPApi("az-1.region-a.geo-1").get().list().isEmpty());
    }
 
    public void testGetFloatingIPWhenResponseIs2xx() throws Exception {
@@ -108,7 +108,7 @@ public class FloatingIPApiExpectTest extends BaseNovaApiExpectTest {
       NovaApi apiWhenFloatingIPsExist = requestsSendResponses(keystoneAuthWithUsernameAndPasswordAndTenantName,
             responseWithKeystoneAccess, extensionsOfNovaRequest, extensionsOfNovaResponse, get, getResponse);
 
-      assertEquals(apiWhenFloatingIPsExist.getFloatingIPExtensionForZone("az-1.region-a.geo-1").get().get("1")
+      assertEquals(apiWhenFloatingIPsExist.getFloatingIPApi("az-1.region-a.geo-1").get().get("1")
             .toString(), new ParseFloatingIPTest().expected().toString());
    }
 
@@ -125,7 +125,7 @@ public class FloatingIPApiExpectTest extends BaseNovaApiExpectTest {
       NovaApi apiWhenNoServersExist = requestsSendResponses(keystoneAuthWithUsernameAndPasswordAndTenantName,
             responseWithKeystoneAccess, extensionsOfNovaRequest, extensionsOfNovaResponse, get, getResponse);
 
-      assertNull(apiWhenNoServersExist.getFloatingIPExtensionForZone("az-1.region-a.geo-1").get().get("1"));
+      assertNull(apiWhenNoServersExist.getFloatingIPApi("az-1.region-a.geo-1").get().get("1"));
    }
 
    public void testAllocateWhenResponseIs2xx() throws Exception {
@@ -144,7 +144,7 @@ public class FloatingIPApiExpectTest extends BaseNovaApiExpectTest {
             responseWithKeystoneAccess, extensionsOfNovaRequest, extensionsOfNovaResponse, createFloatingIP,
             createFloatingIPResponse);
 
-      assertEquals(apiWhenFloatingIPsExist.getFloatingIPExtensionForZone("az-1.region-a.geo-1").get().create().toString(),
+      assertEquals(apiWhenFloatingIPsExist.getFloatingIPApi("az-1.region-a.geo-1").get().create().toString(),
             new ParseFloatingIPTest().expected().toString());
 
    }
@@ -164,7 +164,7 @@ public class FloatingIPApiExpectTest extends BaseNovaApiExpectTest {
             responseWithKeystoneAccess, extensionsOfNovaRequest, extensionsOfNovaResponse, createFloatingIP,
             createFloatingIPResponse);
 
-      assertNull(apiWhenNoServersExist.getFloatingIPExtensionForZone("az-1.region-a.geo-1").get().create());
+      assertNull(apiWhenNoServersExist.getFloatingIPApi("az-1.region-a.geo-1").get().create());
    }
 
    public void testAllocateWithPoolNameWhenResponseIs2xx() throws Exception {
@@ -183,7 +183,7 @@ public class FloatingIPApiExpectTest extends BaseNovaApiExpectTest {
             responseWithKeystoneAccess, extensionsOfNovaRequest, extensionsOfNovaResponse, createFloatingIP,
             createFloatingIPResponse);
 
-      assertEquals(apiWhenFloatingIPsExist.getFloatingIPExtensionForZone("az-1.region-a.geo-1").get().allocateFromPool("myPool").toString(),
+      assertEquals(apiWhenFloatingIPsExist.getFloatingIPApi("az-1.region-a.geo-1").get().allocateFromPool("myPool").toString(),
             new ParseFloatingIPTest().expected().toString());
    }
 }

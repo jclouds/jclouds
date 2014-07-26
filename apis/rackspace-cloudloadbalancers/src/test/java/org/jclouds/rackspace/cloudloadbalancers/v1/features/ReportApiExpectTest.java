@@ -40,53 +40,53 @@ import com.google.common.collect.Iterables;
 public class ReportApiExpectTest extends BaseCloudLoadBalancerApiExpectTest<CloudLoadBalancersApi> {
    public void testListBillableLoadBalancers() {
       Calendar calendar = Calendar.getInstance();
-      calendar.add(Calendar.DATE, -7);      
+      calendar.add(Calendar.DATE, -7);
       Date aWeekAgo = calendar.getTime();
       Date today = new Date();
-      
+
       String query = new StringBuilder()
          .append("?startTime=")
          .append(new DateParser().apply(aWeekAgo))
          .append("&endTime=")
          .append(new DateParser().apply(today))
          .toString();
-            
+
       URI endpoint = URI.create("https://dfw.loadbalancers.api.rackspacecloud.com/v1.0/123123/loadbalancers/billable" + query);
       ReportApi api = requestsSendResponses(
             rackspaceAuthWithUsernameAndApiKey,
-            responseWithAccess, 
+            responseWithAccess,
             authenticatedGET().endpoint(endpoint).build(),
             HttpResponse.builder().statusCode(OK.getStatusCode()).payload(payloadFromResource("/report-billable-list.json")).build()
-      ).getReportApiForZone("DFW");
-            
+      ).getReportApi("DFW");
+
       FluentIterable<LoadBalancer> loadBalancers = api.listBillableLoadBalancers(aWeekAgo, today).concat();
-      
+
       assertEquals(Iterables.size(loadBalancers), 2);
    }
 
    public void testGetHistoricalUsage() {
       Calendar calendar = Calendar.getInstance();
-      calendar.add(Calendar.DATE, -7);      
+      calendar.add(Calendar.DATE, -7);
       Date aWeekAgo = calendar.getTime();
       Date today = new Date();
-      
+
       String query = new StringBuilder()
          .append("?startTime=")
          .append(new DateParser().apply(aWeekAgo))
          .append("&endTime=")
          .append(new DateParser().apply(today))
          .toString();
-            
+
       URI endpoint = URI.create("https://dfw.loadbalancers.api.rackspacecloud.com/v1.0/123123/loadbalancers/usage" + query);
       ReportApi api = requestsSendResponses(
             rackspaceAuthWithUsernameAndApiKey,
-            responseWithAccess, 
+            responseWithAccess,
             authenticatedGET().endpoint(endpoint).build(),
             HttpResponse.builder().statusCode(OK.getStatusCode()).payload(payloadFromResource("/report-historical-get.json")).build()
-      ).getReportApiForZone("DFW");
+      ).getReportApi("DFW");
 
       HistoricalUsage historicalUsage = api.getHistoricalUsage(aWeekAgo, today);
-      
+
       assertEquals(historicalUsage.getAccountId(), 717071);
       assertEquals(Iterables.get(historicalUsage.getAccountUsage(), 0).getNumLoadBalancers(), 2);
       assertEquals(Iterables.size(historicalUsage.getLoadBalancerInfo()), 2);
@@ -94,27 +94,27 @@ public class ReportApiExpectTest extends BaseCloudLoadBalancerApiExpectTest<Clou
 
    public void testListLoadBalancerUsage() {
       Calendar calendar = Calendar.getInstance();
-      calendar.add(Calendar.DATE, -7);      
+      calendar.add(Calendar.DATE, -7);
       Date aWeekAgo = calendar.getTime();
       Date today = new Date();
-      
+
       String query = new StringBuilder()
          .append("?startTime=")
          .append(new DateParser().apply(aWeekAgo))
          .append("&endTime=")
          .append(new DateParser().apply(today))
          .toString();
-            
+
       URI endpoint = URI.create("https://dfw.loadbalancers.api.rackspacecloud.com/v1.0/123123/loadbalancers/2000/usage" + query);
       ReportApi api = requestsSendResponses(
             rackspaceAuthWithUsernameAndApiKey,
-            responseWithAccess, 
+            responseWithAccess,
             authenticatedGET().endpoint(endpoint).build(),
             HttpResponse.builder().statusCode(OK.getStatusCode()).payload(payloadFromResource("/report-loadbalancerusage-list.json")).build()
-      ).getReportApiForZone("DFW");
+      ).getReportApi("DFW");
 
       FluentIterable<LoadBalancerUsage> loadBalancerUsages = api.listLoadBalancerUsage(2000, aWeekAgo, today).concat();
-      
+
       assertEquals(Iterables.size(loadBalancerUsages), 25);
    }
 
@@ -122,46 +122,46 @@ public class ReportApiExpectTest extends BaseCloudLoadBalancerApiExpectTest<Clou
       URI endpoint = URI.create("https://dfw.loadbalancers.api.rackspacecloud.com/v1.0/123123/loadbalancers/2000/usage/current");
       ReportApi api = requestsSendResponses(
             rackspaceAuthWithUsernameAndApiKey,
-            responseWithAccess, 
+            responseWithAccess,
             authenticatedGET().endpoint(endpoint).build(),
             HttpResponse.builder().statusCode(OK.getStatusCode()).payload(payloadFromResource("/report-loadbalancerusage-list.json")).build()
-      ).getReportApiForZone("DFW");
-            
+      ).getReportApi("DFW");
+
       FluentIterable<LoadBalancerUsage> loadBalancerUsages = api.listCurrentLoadBalancerUsage(2000).concat();
-      
+
       assertEquals(Iterables.size(loadBalancerUsages), 25);
    }
-   
+
    public void testGetLoadBalancerStats() {
       URI endpoint = URI.create("https://dfw.loadbalancers.api.rackspacecloud.com/v1.0/123123/loadbalancers/2000/stats");
       ReportApi api = requestsSendResponses(
             rackspaceAuthWithUsernameAndApiKey,
-            responseWithAccess, 
+            responseWithAccess,
             authenticatedGET().endpoint(endpoint).build(),
             HttpResponse.builder().statusCode(OK.getStatusCode()).payload(payloadFromResource("/report-loadbalancerstats-get.json")).build()
-      ).getReportApiForZone("DFW");
-            
+      ).getReportApi("DFW");
+
       LoadBalancerStats loadBalancerStats = api.getLoadBalancerStats(2000);
-      
+
       assertEquals(loadBalancerStats.getConnectTimeOut(), 2);
       assertEquals(loadBalancerStats.getConnectError(), 0);
       assertEquals(loadBalancerStats.getConnectFailure(), 0);
       assertEquals(loadBalancerStats.getDataTimedOut(), 10);
       assertEquals(loadBalancerStats.getKeepAliveTimedOut(), 0);
       assertEquals(loadBalancerStats.getMaxConn(), 22);
-   }   
+   }
 
    public void testListProtocols() {
       URI endpoint = URI.create("https://dfw.loadbalancers.api.rackspacecloud.com/v1.0/123123/loadbalancers/protocols");
       ReportApi api = requestsSendResponses(
             rackspaceAuthWithUsernameAndApiKey,
-            responseWithAccess, 
+            responseWithAccess,
             authenticatedGET().endpoint(endpoint).build(),
             HttpResponse.builder().statusCode(OK.getStatusCode()).payload(payloadFromResource("/report-protocols-list.json")).build()
-      ).getReportApiForZone("DFW");
-            
+      ).getReportApi("DFW");
+
       Iterable<Protocol> protocols = api.listProtocols();
-      
+
       assertEquals(Iterables.size(protocols), 20);
    }
 
@@ -169,13 +169,13 @@ public class ReportApiExpectTest extends BaseCloudLoadBalancerApiExpectTest<Clou
       URI endpoint = URI.create("https://dfw.loadbalancers.api.rackspacecloud.com/v1.0/123123/loadbalancers/algorithms");
       ReportApi api = requestsSendResponses(
             rackspaceAuthWithUsernameAndApiKey,
-            responseWithAccess, 
+            responseWithAccess,
             authenticatedGET().endpoint(endpoint).build(),
             HttpResponse.builder().statusCode(OK.getStatusCode()).payload(payloadFromResource("/report-algorithms-list.json")).build()
-      ).getReportApiForZone("DFW");
-            
+      ).getReportApi("DFW");
+
       Iterable<String> algorithms = api.listAlgorithms();
-      
+
       assertEquals(Iterables.size(algorithms), 5);
    }
 }

@@ -42,28 +42,28 @@ public class FlavorApiLiveTest extends BaseTroveApiLiveTest {
 
     @Test
     public void testListFlavorsByAccount() {
-        for (String zone : api.getConfiguredZones()) {
-            FlavorApi flavorApi = api.getFlavorApiForZone(zone);
+        for (String region : api.getConfiguredRegions()) {
+            FlavorApi flavorApi = api.getFlavorApi(region);
 
-            FluentIterable<Flavor> response = flavorApi.list( api.getCurrentTenantId().get().getId() ); // tenant id, but referred to as account id. 
+            FluentIterable<Flavor> response = flavorApi.list( api.getCurrentTenantId().get().getId() ); // tenant id, but referred to as account id.
             for (Flavor flavor : response) {
                 checkFlavor(flavor);
-            }  
-        }   
+            }
+        }
     }
 
     @Test
     public void testListFlavorsByAccountWhenAccountIdNotFound() {
-        for (String zone : api.getConfiguredZones()) {
-            FlavorApi flavorApi = api.getFlavorApiForZone(zone);
+        for (String region : api.getConfiguredRegions()) {
+            FlavorApi flavorApi = api.getFlavorApi(region);
             assertTrue(flavorApi.list("9999").isEmpty());
         }
     }
 
     @Test
     public void testGetFlavor() {
-        for (String zone : api.getConfiguredZones()) {
-            FlavorApi flavorApi = api.getFlavorApiForZone(zone);           
+        for (String region : api.getConfiguredRegions()) {
+            FlavorApi flavorApi = api.getFlavorApi(region);
             for (Flavor flavor : flavorApi.list()) {
                 Flavor flavorFromGet = flavorApi.get(flavor.getId());
                 assertEquals(flavorFromGet.getId(), flavor.getId());
@@ -76,9 +76,9 @@ public class FlavorApiLiveTest extends BaseTroveApiLiveTest {
 
     @Test
     public void testGetFlavorWhenNotFound() {
-        for (String zone : api.getConfiguredZones()) {
-            FlavorApi flavorApi = api.getFlavorApiForZone(zone);
+        for (String region : api.getConfiguredRegions()) {
+            FlavorApi flavorApi = api.getFlavorApi(region);
             assertNull(flavorApi.get(9999));
         }
-    }   
+    }
 }

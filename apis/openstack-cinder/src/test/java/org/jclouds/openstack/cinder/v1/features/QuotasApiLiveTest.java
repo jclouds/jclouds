@@ -16,15 +16,16 @@
  */
 package org.jclouds.openstack.cinder.v1.features;
 
-import com.google.common.collect.Iterables;
+import static org.testng.Assert.assertTrue;
+
+import java.util.concurrent.ExecutionException;
+
 import org.jclouds.openstack.cinder.v1.domain.VolumeQuota;
 import org.jclouds.openstack.cinder.v1.internal.BaseCinderApiLiveTest;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
-import java.util.concurrent.ExecutionException;
-
-import static org.testng.Assert.assertTrue;
+import com.google.common.collect.Iterables;
 
 @Test(groups = "live", testName = "QuotasApiLiveTest", singleThreaded = true)
 public class QuotasApiLiveTest extends BaseCinderApiLiveTest {
@@ -39,8 +40,8 @@ public class QuotasApiLiveTest extends BaseCinderApiLiveTest {
    @BeforeClass(groups = {"integration", "live"})
    public void setupContext() {
       super.setup();
-      String zone = Iterables.getFirst(api.getConfiguredZones(), "nova");
-      quotaApi = api.getQuotaApi(zone);
+      String region = Iterables.getFirst(api.getConfiguredRegions(), "nova");
+      quotaApi = api.getQuotaApi(region);
    }
 
    public void testGetStorageQuotas() throws ExecutionException, InterruptedException {

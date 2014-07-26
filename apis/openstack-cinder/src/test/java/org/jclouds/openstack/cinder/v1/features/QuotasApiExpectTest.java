@@ -16,14 +16,14 @@
  */
 package org.jclouds.openstack.cinder.v1.features;
 
+import static org.testng.Assert.assertEquals;
+
+import java.net.URI;
+
 import org.jclouds.http.HttpResponse;
 import org.jclouds.openstack.cinder.v1.domain.VolumeQuota;
 import org.jclouds.openstack.cinder.v1.internal.BaseCinderApiExpectTest;
 import org.testng.annotations.Test;
-
-import java.net.URI;
-
-import static org.testng.Assert.assertEquals;
 
 @Test(groups = "unit", testName = "QuotaApiExpectTest")
 public class QuotasApiExpectTest extends BaseCinderApiExpectTest {

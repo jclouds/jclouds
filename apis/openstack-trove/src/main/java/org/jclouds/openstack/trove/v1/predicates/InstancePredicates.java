@@ -33,24 +33,24 @@ import com.google.common.base.Predicate;
  * <pre>
  * {@code
  * Instance instance = instanceApi.create(100);
- * 
+ *
  * RetryablePredicate<String> awaitAvailable = RetryablePredicate.create(
  *    InstancePredicates.available(instanceApi), 600, 10, 10, TimeUnit.SECONDS);
- * 
+ *
  * if (!awaitAvailable.apply(instance.getId())) {
- *    throw new TimeoutException("Timeout on instance: " + instance); 
- * }    
+ *    throw new TimeoutException("Timeout on instance: " + instance);
+ * }
  * }
  * </pre>
- * 
+ *
  * You can also use the static convenience methods as follows.
- * 
+ *
  * <pre>
  * {@code
  * Instance instance = instanceApi.create(100);
- * 
+ *
  * if (!InstancePredicates.awaitAvailable(instanceApi).apply(instance.getId())) {
- *    throw new TimeoutException("Timeout on instance: " + instance);     
+ *    throw new TimeoutException("Timeout on instance: " + instance);
  * }
  * }
  * </pre>
@@ -58,8 +58,8 @@ import com.google.common.base.Predicate;
 public class InstancePredicates {
    /**
     * Wait until an Instance is Available.
-    * 
-    * @param instanceApi The InstanceApi in the zone where your Instance resides.
+    *
+    * @param instanceApi The InstanceApi in the region where your Instance resides.
     * @return RetryablePredicate That will check the status every 5 seconds for a maxiumum of 10 minutes.
     */
    public static Predicate<Instance> awaitAvailable(InstanceApi instanceApi) {
@@ -69,8 +69,8 @@ public class InstancePredicates {
 
    /**
     * Wait until an Instance no longer exists.
-    * 
-    * @param instanceApi The InstanceApi in the zone where your Instance resides.
+    *
+    * @param instanceApi The InstanceApi in the region where your Instance resides.
     * @return RetryablePredicate That will check whether the Instance exists.
     * every 5 seconds for a maxiumum of 10 minutes.
     */
@@ -78,11 +78,11 @@ public class InstancePredicates {
       DeletedPredicate deletedPredicate = new DeletedPredicate(instanceApi);
       return retry(deletedPredicate, 600, 5, 5, SECONDS);
    }
-   
+
    /**
     * Wait until instance is in the status specified.
-    * 
-    * @param instanceApi The InstanceApi in the zone where your Instance resides.
+    *
+    * @param instanceApi The InstanceApi in the region where your Instance resides.
     * @param status Wait until instance in in this status.
     * @param maxWaitInSec Maximum time to wait.
     * @param periodInSec Interval between retries.
@@ -93,7 +93,7 @@ public class InstancePredicates {
       StatusUpdatedPredicate statusPredicate = new StatusUpdatedPredicate(instanceApi, status);
       return retry(statusPredicate, maxWaitInSec, periodInSec, periodInSec, SECONDS);
    }
-   
+
    private static class StatusUpdatedPredicate implements Predicate<Instance> {
       private InstanceApi instanceApi;
       private Status status;
@@ -109,14 +109,14 @@ public class InstancePredicates {
       @Override
       public boolean apply(Instance instance) {
          checkNotNull(instance, "instance must be defined");
-         
+
          if (status.equals(instance.getStatus())) {
             return true;
          }
          else {
             Instance instanceUpdated = instanceApi.get(instance.getId());
             checkNotNull(instanceUpdated, "Instance %s not found.", instance.getId());
-            
+
             return status.equals(instanceUpdated.getStatus());
          }
       }

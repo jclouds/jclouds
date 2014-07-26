@@ -35,8 +35,8 @@ public class HPCloudBlockStorageProviderMetadataExpectTest extends BaseCinderApi
       this.credential = "secretKey";
    }
 
-   public void testCanGetConfiguredZones() {
-      
+   public void testCanGetConfiguredRegions() {
+
       HttpRequest authenticate = HttpRequest.builder().method("POST")
             .endpoint("https://region-a.geo-1.identity.hpcloudsvc.com:35357/v2.0/tokens")
             .addHeader("Accept", "application/json")
@@ -51,7 +51,7 @@ public class HPCloudBlockStorageProviderMetadataExpectTest extends BaseCinderApi
 
       CinderApi whenNovaRegionExists = requestSendsResponse(authenticate, authenticationResponse);
 
-      assertEquals(whenNovaRegionExists.getConfiguredZones(), ImmutableSet.of("region-a.geo-1", "region-b.geo-1"));
+      assertEquals(whenNovaRegionExists.getConfiguredRegions(), ImmutableSet.of("region-a.geo-1", "region-b.geo-1"));
 
    }
 

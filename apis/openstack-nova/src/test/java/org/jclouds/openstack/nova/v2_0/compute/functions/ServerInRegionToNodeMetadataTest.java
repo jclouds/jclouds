@@ -38,7 +38,7 @@ import org.jclouds.domain.LocationBuilder;
 import org.jclouds.domain.LocationScope;
 import org.jclouds.openstack.nova.v2_0.compute.config.NovaComputeServiceContextModule;
 import org.jclouds.openstack.nova.v2_0.domain.Server;
-import org.jclouds.openstack.nova.v2_0.domain.zonescoped.ServerInZone;
+import org.jclouds.openstack.nova.v2_0.domain.regionscoped.ServerInRegion;
 import org.jclouds.openstack.nova.v2_0.parse.ParseServerTest;
 import org.jclouds.openstack.nova.v2_0.parse.ParseServerWithoutImageTest;
 import org.jclouds.openstack.v2_0.domain.Link;
@@ -55,15 +55,15 @@ import com.google.inject.Guice;
  * Tests for the function for transforming a nova specific Server into a generic
  * NodeMetadata object.
  */
-@Test(testName = "ServerInZoneToNodeMetadataTest")
-public class ServerInZoneToNodeMetadataTest {
+@Test(testName = "ServerInRegionToNodeMetadataTest")
+public class ServerInRegionToNodeMetadataTest {
 
    Location provider = new LocationBuilder().scope(LocationScope.PROVIDER).id("openstack-nova")
          .description("openstack-nova").build();
-   Location zone = new LocationBuilder().id("az-1.region-a.geo-1").description("az-1.region-a.geo-1")
-         .scope(LocationScope.ZONE).parent(provider).build();
+   Location region = new LocationBuilder().id("az-1.region-a.geo-1").description("az-1.region-a.geo-1")
+         .scope(LocationScope.REGION).parent(provider).build();
    Supplier<Map<String, Location>> locationIndex = Suppliers.<Map<String, Location>> ofInstance(ImmutableMap
-         .<String, Location> of("az-1.region-a.geo-1", zone));
+         .<String, Location> of("az-1.region-a.geo-1", region));
 
    GroupNamingConvention.Factory namingConvention = Guice.createInjector().getInstance(GroupNamingConvention.Factory.class);
 
@@ -71,10 +71,10 @@ public class ServerInZoneToNodeMetadataTest {
    public void testWhenNoHardwareOrImageMatchServerScopedIdsImageIdIsStillSet() {
 
       Hardware existingHardware = new HardwareBuilder().id("az-1.region-a.geo-1/FOOOOOOOO").providerId("FOOOOOOOO")
-            .location(zone).build();
+            .location(region).build();
       Image existingImage = new ImageBuilder().id("az-1.region-a.geo-1/FOOOOOOOO")
             .operatingSystem(OperatingSystem.builder().family(OsFamily.LINUX).description("foobuntu").build())
-            .providerId("FOOOOOOOO").description("foobuntu").location(zone).status(Image.Status.AVAILABLE).build();
+            .providerId("FOOOOOOOO").description("foobuntu").location(region).status(Image.Status.AVAILABLE).build();
 
       checkHardwareAndImageStatus(null, existingHardware, "az-1.region-a.geo-1/52415800-8b69-11e0-9b19-734f6f006e54",
             null, existingImage);
@@ -84,11 +84,11 @@ public class ServerInZoneToNodeMetadataTest {
    public void testWhenNoHardwareAndImageMatchServerScopedIdsHardwareOperatingSystemAndImageIdAreSet() {
 
       Hardware existingHardware = new HardwareBuilder().id("az-1.region-a.geo-1/52415800-8b69-11e0-9b19-734f216543fd")
-            .providerId("52415800-8b69-11e0-9b19-734f216543fd").location(zone).build();
+            .providerId("52415800-8b69-11e0-9b19-734f216543fd").location(region).build();
       Image existingImage = new ImageBuilder().id("az-1.region-a.geo-1/52415800-8b69-11e0-9b19-734f6f006e54")
             .operatingSystem(OperatingSystem.builder().family(OsFamily.LINUX).description("foobuntu").build())
             .providerId("52415800-8b69-11e0-9b19-734f6f006e54").description("foobuntu").status(Image.Status.AVAILABLE)
-            .location(zone).build();
+            .location(region).build();
 
       checkHardwareAndImageStatus(existingHardware, existingHardware, existingImage.getId(),
             existingImage.getOperatingSystem(), existingImage);
@@ -97,11 +97,11 @@ public class ServerInZoneToNodeMetadataTest {
    @Test
    public void testNullAccessIPs() {
       Hardware existingHardware = new HardwareBuilder().id("az-1.region-a.geo-1/52415800-8b69-11e0-9b19-734f216543fd")
-            .providerId("52415800-8b69-11e0-9b19-734f216543fd").location(zone).build();
+            .providerId("52415800-8b69-11e0-9b19-734f216543fd").location(region).build();
       Image existingImage = new ImageBuilder().id("az-1.region-a.geo-1/52415800-8b69-11e0-9b19-734f6f006e54")
             .operatingSystem(OperatingSystem.builder().family(OsFamily.LINUX).description("foobuntu").build())
             .providerId("52415800-8b69-11e0-9b19-734f6f006e54").description("foobuntu").status(Image.Status.AVAILABLE)
-            .location(zone).build();
+            .location(region).build();
 
       Set<Image> images = existingImage == null ? ImmutableSet.<Image> of() : ImmutableSet.of(existingImage);
       Set<Hardware> hardwares = existingHardware == null ? ImmutableSet.<Hardware> of() : ImmutableSet
@@ -111,14 +111,14 @@ public class ServerInZoneToNodeMetadataTest {
             .accessIPv6(null)
             .build();
 
-      ServerInZone serverInZoneToConvert = new ServerInZone(serverToConvert, "az-1.region-a.geo-1");
+      ServerInRegion serverInRegionToConvert = new ServerInRegion(serverToConvert, "az-1.region-a.geo-1");
 
-      ServerInZoneToNodeMetadata converter = new ServerInZoneToNodeMetadata(
+      ServerInRegionToNodeMetadata converter = new ServerInRegionToNodeMetadata(
             NovaComputeServiceContextModule.toPortableNodeStatus, locationIndex, Suppliers
             .<Set<? extends Image>> ofInstance(images), Suppliers
             .<Set<? extends Hardware>> ofInstance(hardwares), namingConvention);
 
-      NodeMetadata convertedNodeMetadata = converter.apply(serverInZoneToConvert);
+      NodeMetadata convertedNodeMetadata = converter.apply(serverInRegionToConvert);
 
       assertNotNull(convertedNodeMetadata.getPrivateAddresses());
       assertEquals(convertedNodeMetadata.getPrivateAddresses(), ImmutableSet.of("10.176.42.16"));
@@ -131,11 +131,11 @@ public class ServerInZoneToNodeMetadataTest {
    @Test
    public void testDuplicateAccessIPs() {
       Hardware existingHardware = new HardwareBuilder().id("az-1.region-a.geo-1/52415800-8b69-11e0-9b19-734f216543fd")
-            .providerId("52415800-8b69-11e0-9b19-734f216543fd").location(zone).build();
+            .providerId("52415800-8b69-11e0-9b19-734f216543fd").location(region).build();
       Image existingImage = new ImageBuilder().id("az-1.region-a.geo-1/52415800-8b69-11e0-9b19-734f6f006e54")
             .operatingSystem(OperatingSystem.builder().family(OsFamily.LINUX).description("foobuntu").build())
             .providerId("52415800-8b69-11e0-9b19-734f6f006e54").description("foobuntu").status(Image.Status.AVAILABLE)
-            .location(zone).build();
+            .location(region).build();
 
       Set<Image> images = existingImage == null ? ImmutableSet.<Image> of() : ImmutableSet.of(existingImage);
       Set<Hardware> hardwares = existingHardware == null ? ImmutableSet.<Hardware> of() : ImmutableSet
@@ -145,14 +145,14 @@ public class ServerInZoneToNodeMetadataTest {
             .accessIPv6("::babe:67.23.10.132")
             .build();
 
-      ServerInZone serverInZoneToConvert = new ServerInZone(serverToConvert, "az-1.region-a.geo-1");
+      ServerInRegion serverInRegionToConvert = new ServerInRegion(serverToConvert, "az-1.region-a.geo-1");
 
-      ServerInZoneToNodeMetadata converter = new ServerInZoneToNodeMetadata(
+      ServerInRegionToNodeMetadata converter = new ServerInRegionToNodeMetadata(
             NovaComputeServiceContextModule.toPortableNodeStatus, locationIndex, Suppliers
             .<Set<? extends Image>> ofInstance(images), Suppliers
             .<Set<? extends Hardware>> ofInstance(hardwares), namingConvention);
 
-      NodeMetadata convertedNodeMetadata = converter.apply(serverInZoneToConvert);
+      NodeMetadata convertedNodeMetadata = converter.apply(serverInRegionToConvert);
 
       assertNotNull(convertedNodeMetadata.getPrivateAddresses());
       assertEquals(convertedNodeMetadata.getPrivateAddresses(), ImmutableSet.of("10.176.42.16"));
@@ -165,11 +165,11 @@ public class ServerInZoneToNodeMetadataTest {
    @Test
    public void testAlternateAccessIPs() {
       Hardware existingHardware = new HardwareBuilder().id("az-1.region-a.geo-1/52415800-8b69-11e0-9b19-734f216543fd")
-            .providerId("52415800-8b69-11e0-9b19-734f216543fd").location(zone).build();
+            .providerId("52415800-8b69-11e0-9b19-734f216543fd").location(region).build();
       Image existingImage = new ImageBuilder().id("az-1.region-a.geo-1/52415800-8b69-11e0-9b19-734f6f006e54")
             .operatingSystem(OperatingSystem.builder().family(OsFamily.LINUX).description("foobuntu").build())
             .providerId("52415800-8b69-11e0-9b19-734f6f006e54").description("foobuntu").status(Image.Status.AVAILABLE)
-            .location(zone).build();
+            .location(region).build();
 
       Set<Image> images = existingImage == null ? ImmutableSet.<Image> of() : ImmutableSet.of(existingImage);
       Set<Hardware> hardwares = existingHardware == null ? ImmutableSet.<Hardware> of() : ImmutableSet
@@ -179,14 +179,14 @@ public class ServerInZoneToNodeMetadataTest {
             .accessIPv6("::babe:76.32.1.231")
             .build();
 
-      ServerInZone serverInZoneToConvert = new ServerInZone(serverToConvert, "az-1.region-a.geo-1");
+      ServerInRegion serverInRegionToConvert = new ServerInRegion(serverToConvert, "az-1.region-a.geo-1");
 
-      ServerInZoneToNodeMetadata converter = new ServerInZoneToNodeMetadata(
+      ServerInRegionToNodeMetadata converter = new ServerInRegionToNodeMetadata(
             NovaComputeServiceContextModule.toPortableNodeStatus, locationIndex, Suppliers
             .<Set<? extends Image>> ofInstance(images), Suppliers
             .<Set<? extends Hardware>> ofInstance(hardwares), namingConvention);
 
-      NodeMetadata convertedNodeMetadata = converter.apply(serverInZoneToConvert);
+      NodeMetadata convertedNodeMetadata = converter.apply(serverInRegionToConvert);
 
       assertNotNull(convertedNodeMetadata.getPrivateAddresses());
       assertEquals(convertedNodeMetadata.getPrivateAddresses(), ImmutableSet.of("10.176.42.16"));
@@ -206,22 +206,22 @@ public class ServerInZoneToNodeMetadataTest {
    @Test
    public void testServerWithoutImage() {
       Hardware existingHardware = new HardwareBuilder().id("az-1.region-a.geo-1/52415800-8b69-11e0-9b19-734f216543fd")
-            .providerId("52415800-8b69-11e0-9b19-734f216543fd").location(zone).build();
+            .providerId("52415800-8b69-11e0-9b19-734f216543fd").location(region).build();
       Image existingImage = new ImageBuilder().id("az-1.region-a.geo-1/52415800-8b69-11e0-9b19-734f6f006e54")
             .operatingSystem(OperatingSystem.builder().family(OsFamily.LINUX).description("foobuntu").build())
             .providerId("52415800-8b69-11e0-9b19-734f6f006e54").description("foobuntu").status(Image.Status.AVAILABLE)
-            .location(zone).build();
+            .location(region).build();
 
       Server serverToConvert = new ParseServerWithoutImageTest().expected();
-      ServerInZone serverInZoneToConvert = new ServerInZone(serverToConvert, "az-1.region-a.geo-1");
+      ServerInRegion serverInRegionToConvert = new ServerInRegion(serverToConvert, "az-1.region-a.geo-1");
 
-      ServerInZoneToNodeMetadata converter = new ServerInZoneToNodeMetadata(
+      ServerInRegionToNodeMetadata converter = new ServerInRegionToNodeMetadata(
             NovaComputeServiceContextModule.toPortableNodeStatus, locationIndex,
             Suppliers.<Set<? extends Image>> ofInstance(ImmutableSet.of(existingImage)),
             Suppliers.<Set<? extends Hardware>> ofInstance(ImmutableSet.of(existingHardware)),
             namingConvention);
 
-      NodeMetadata convertedNodeMetadata = converter.apply(serverInZoneToConvert);
+      NodeMetadata convertedNodeMetadata = converter.apply(serverInRegionToConvert);
 
       assertNull(convertedNodeMetadata.getImageId());
    }
@@ -235,16 +235,16 @@ public class ServerInZoneToNodeMetadataTest {
             .of(existingHardware);
       Server serverToConvert = new ParseServerTest().expected();
 
-      ServerInZone serverInZoneToConvert = new ServerInZone(serverToConvert, "az-1.region-a.geo-1");
+      ServerInRegion serverInRegionToConvert = new ServerInRegion(serverToConvert, "az-1.region-a.geo-1");
 
-      ServerInZoneToNodeMetadata converter = new ServerInZoneToNodeMetadata(
+      ServerInRegionToNodeMetadata converter = new ServerInRegionToNodeMetadata(
                NovaComputeServiceContextModule.toPortableNodeStatus, locationIndex, Suppliers
                         .<Set<? extends Image>> ofInstance(images), Suppliers
                         .<Set<? extends Hardware>> ofInstance(hardwares), namingConvention);
 
-      NodeMetadata convertedNodeMetadata = converter.apply(serverInZoneToConvert);
+      NodeMetadata convertedNodeMetadata = converter.apply(serverInRegionToConvert);
 
-      assertEquals(serverInZoneToConvert.slashEncode(), convertedNodeMetadata.getId());
+      assertEquals(serverInRegionToConvert.slashEncode(), convertedNodeMetadata.getId());
       assertEquals(serverToConvert.getId(), convertedNodeMetadata.getProviderId());
 
       assertEquals(convertedNodeMetadata.getLocation().getScope(), LocationScope.HOST);
@@ -279,26 +279,26 @@ public class ServerInZoneToNodeMetadataTest {
    }
 
    @Test
-   public void testNewServerWithoutHostIdSetsZoneAsLocation() {
+   public void testNewServerWithoutHostIdSetsRegionAsLocation() {
 
       Set<Image> images = ImmutableSet.<Image> of();
       Set<Hardware> hardwares = ImmutableSet.<Hardware> of();
 
       Server serverToConvert = expectedServer();
 
-      ServerInZone serverInZoneToConvert = new ServerInZone(serverToConvert, "az-1.region-a.geo-1");
+      ServerInRegion serverInRegionToConvert = new ServerInRegion(serverToConvert, "az-1.region-a.geo-1");
 
-      ServerInZoneToNodeMetadata converter = new ServerInZoneToNodeMetadata(
+      ServerInRegionToNodeMetadata converter = new ServerInRegionToNodeMetadata(
                NovaComputeServiceContextModule.toPortableNodeStatus, locationIndex, Suppliers
                         .<Set<? extends Image>> ofInstance(images), Suppliers
                         .<Set<? extends Hardware>> ofInstance(hardwares), namingConvention);
 
-      NodeMetadata convertedNodeMetadata = converter.apply(serverInZoneToConvert);
+      NodeMetadata convertedNodeMetadata = converter.apply(serverInRegionToConvert);
 
-      assertEquals(serverInZoneToConvert.slashEncode(), convertedNodeMetadata.getId());
+      assertEquals(serverInRegionToConvert.slashEncode(), convertedNodeMetadata.getId());
       assertEquals(serverToConvert.getId(), convertedNodeMetadata.getProviderId());
 
-      assertEquals(convertedNodeMetadata.getLocation(), zone);
+      assertEquals(convertedNodeMetadata.getLocation(), region);
 
       URI expectedURI = URI.create("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v2/37936628937291/servers/71752");
       assertEquals(convertedNodeMetadata.getUri(), expectedURI);

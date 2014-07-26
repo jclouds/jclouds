@@ -37,25 +37,25 @@ import org.testng.annotations.Test;
 public class ErrorPageApiExpectTest extends BaseCloudLoadBalancerApiExpectTest<CloudLoadBalancersApi> {
    public String contentExpected;
    public String contentEscaped;
-   
+
    public ErrorPageApiExpectTest() {
       super();
-      
+
       contentExpected = getContentExpected();
       contentEscaped = getContentEscaped();
    }
-   
+
    public void testGetErrorPage() {
       URI endpoint = URI.create("https://dfw.loadbalancers.api.rackspacecloud.com/v1.0/123123/loadbalancers/2000/errorpage");
       ErrorPageApi api = requestsSendResponses(
             rackspaceAuthWithUsernameAndApiKey,
-            responseWithAccess, 
+            responseWithAccess,
             authenticatedGET().endpoint(endpoint).build(),
             HttpResponse.builder()
                .statusCode(OK.getStatusCode())
                .payload(payloadFromStringWithContentType("{\"errorpage\":{\"content\":\"" + contentEscaped + "\"}}", APPLICATION_JSON))
                .build()
-      ).getErrorPageApiForZoneAndLoadBalancer("DFW", 2000);
+      ).getErrorPageApi("DFW", 2000);
 
       String content = api.get();
       assertEquals(content, contentExpected);
@@ -65,7 +65,7 @@ public class ErrorPageApiExpectTest extends BaseCloudLoadBalancerApiExpectTest<C
       URI endpoint = URI.create("https://dfw.loadbalancers.api.rackspacecloud.com/v1.0/123123/loadbalancers/2000/errorpage");
       ErrorPageApi api = requestsSendResponses(
             rackspaceAuthWithUsernameAndApiKey,
-            responseWithAccess, 
+            responseWithAccess,
             authenticatedGET()
                .method(PUT)
                .endpoint(endpoint)
@@ -73,8 +73,8 @@ public class ErrorPageApiExpectTest extends BaseCloudLoadBalancerApiExpectTest<C
                .payload(payloadFromStringWithContentType("{\"errorpage\":{\"content\":\"" + contentEscaped + "\"}}", APPLICATION_JSON))
                .build(),
             HttpResponse.builder().statusCode(OK.getStatusCode()).build()
-      ).getErrorPageApiForZoneAndLoadBalancer("DFW", 2000);
-      
+      ).getErrorPageApi("DFW", 2000);
+
       api.create(contentEscaped);
    }
 
@@ -82,31 +82,31 @@ public class ErrorPageApiExpectTest extends BaseCloudLoadBalancerApiExpectTest<C
       URI endpoint = URI.create("https://dfw.loadbalancers.api.rackspacecloud.com/v1.0/123123/loadbalancers/2000/errorpage");
       ErrorPageApi api = requestsSendResponses(
             rackspaceAuthWithUsernameAndApiKey,
-            responseWithAccess, 
+            responseWithAccess,
             authenticatedGET().method(DELETE).endpoint(endpoint).replaceHeader(ACCEPT, WILDCARD).build(),
             HttpResponse.builder().statusCode(OK.getStatusCode()).build()
-      ).getErrorPageApiForZoneAndLoadBalancer("DFW", 2000);
+      ).getErrorPageApi("DFW", 2000);
 
       assertTrue(api.delete());
    }
-   
+
    public static String getContentExpected() {
       String contentExpected;
-      
+
       try {
          contentExpected = Strings2.toStringAndClose(ErrorPageApiExpectTest.class.getResourceAsStream("/errorpage.html"));
       }
       catch (IOException e) {
          throw new RuntimeException("Could not read in /errorpage.html", e);
       }
-      
+
       return contentExpected;
    }
-   
+
    public static String getContentEscaped() {
-      String contentEscaped = getContentExpected().replaceAll("\"", "\\\\\"");      
+      String contentEscaped = getContentExpected().replaceAll("\"", "\\\\\"");
       contentEscaped = contentEscaped.replaceAll("\n", "\\\\n");
-      
+
       return contentEscaped;
    }
 }

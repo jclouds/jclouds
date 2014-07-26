@@ -32,35 +32,35 @@ public class ContentCachingApiExpectTest extends BaseCloudLoadBalancerApiExpectT
       URI endpoint = URI.create("https://dfw.loadbalancers.api.rackspacecloud.com/v1.0/123123/loadbalancers/2000/contentcaching");
       ContentCachingApi api = requestsSendResponses(
             rackspaceAuthWithUsernameAndApiKey,
-            responseWithAccess, 
+            responseWithAccess,
             authenticatedGET().endpoint(endpoint).build(),
             HttpResponse.builder().statusCode(OK.getStatusCode()).payload(payloadFromResource("/contentcaching-enable.json")).build()
-      ).getContentCachingApiForZoneAndLoadBalancer("DFW", 2000);
-      
+      ).getContentCachingApi("DFW", 2000);
+
       assertTrue(api.isContentCaching());
    }
-   
+
    public void testEnableContentCaching() {
       URI endpoint = URI.create("https://dfw.loadbalancers.api.rackspacecloud.com/v1.0/123123/loadbalancers/2000/contentcaching");
       ContentCachingApi api = requestsSendResponses(
             rackspaceAuthWithUsernameAndApiKey,
-            responseWithAccess, 
+            responseWithAccess,
             authenticatedGET().method(PUT).endpoint(endpoint).payload(payloadFromResource("/contentcaching-enable.json")).build(),
             HttpResponse.builder().statusCode(OK.getStatusCode()).build()
-      ).getContentCachingApiForZoneAndLoadBalancer("DFW", 2000);
-      
+      ).getContentCachingApi("DFW", 2000);
+
       api.enable();
    }
-   
+
    public void testDisableContentCaching() {
       URI endpoint = URI.create("https://dfw.loadbalancers.api.rackspacecloud.com/v1.0/123123/loadbalancers/2000/contentcaching");
       ContentCachingApi api = requestsSendResponses(
             rackspaceAuthWithUsernameAndApiKey,
-            responseWithAccess, 
+            responseWithAccess,
             authenticatedGET().method(PUT).endpoint(endpoint).payload(payloadFromResource("/contentcaching-disable.json")).build(),
             HttpResponse.builder().statusCode(OK.getStatusCode()).build()
-      ).getContentCachingApiForZoneAndLoadBalancer("DFW", 2000);
-      
+      ).getContentCachingApi("DFW", 2000);
+
       api.disable();
-   }   
+   }
 }

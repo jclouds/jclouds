@@ -42,29 +42,29 @@ import com.google.common.collect.Maps;
 public class InstanceApiLiveTest extends BaseTroveApiLiveTest {
 
     private static Map<String, List<Instance>> created = Maps.newHashMap();
-    
+
     @Override
     @BeforeClass(groups = { "integration", "live" })
     public void setup() {
         super.setup();
         TroveUtils utils = new TroveUtils(api);
-        for (String zone : api.getConfiguredZones()) {
-            List<Instance> zoneList = Lists.newArrayList();
-            InstanceApi instanceApi = api.getInstanceApiForZone(zone);
-            zoneList.add(utils.getWorkingInstance(zone, "first_instance_testing_" + zone, "1", 1));
-            Instance second = utils.getWorkingInstance(zone, "second_instance_testing_" + zone, "1", 1);
+        for (String region : api.getConfiguredRegions()) {
+            List<Instance> regionList = Lists.newArrayList();
+            InstanceApi instanceApi = api.getInstanceApi(region);
+            regionList.add(utils.getWorkingInstance(region, "first_instance_testing_" + region, "1", 1));
+            Instance second = utils.getWorkingInstance(region, "second_instance_testing_" + region, "1", 1);
             instanceApi.enableRoot(second.getId());
-            zoneList.add(second);            
-            created.put(zone, zoneList);
+            regionList.add(second);
+            created.put(region, regionList);
         }
     }
-    
+
     @Override
     @AfterClass(groups = { "integration", "live" })
     public void tearDown(){
-        for (String zone : api.getConfiguredZones()) {
-            InstanceApi instanceApi = api.getInstanceApiForZone(zone);
-            for (Instance instance : created.get(zone)){
+        for (String region : api.getConfiguredRegions()) {
+            InstanceApi instanceApi = api.getInstanceApi(region);
+            for (Instance instance : created.get(region)){
                 if (!instanceApi.delete(instance.getId()))
                     throw new RuntimeException("Could not delete a database instance after tests!");
             }
@@ -79,20 +79,20 @@ public class InstanceApiLiveTest extends BaseTroveApiLiveTest {
 
     @Test
     public void testListInstances() {
-        for (String zone : api.getConfiguredZones()) {
-            InstanceApi instanceApi = api.getInstanceApiForZone(zone);
-            FluentIterable<Instance> response = instanceApi.list(); 
+        for (String region : api.getConfiguredRegions()) {
+            InstanceApi instanceApi = api.getInstanceApi(region);
+            FluentIterable<Instance> response = instanceApi.list();
             assertFalse(response.isEmpty());
             for (Instance instance : response) {
                 checkInstance(instance);
-            }  
-        }   
-    }    
+            }
+        }
+    }
 
     @Test
     public void testGetInstance() {
-        for (String zone : api.getConfiguredZones()) {
-            InstanceApi instanceApi = api.getInstanceApiForZone(zone);           
+        for (String region : api.getConfiguredRegions()) {
+            InstanceApi instanceApi = api.getInstanceApi(region);
             for (Instance instance : instanceApi.list()) {
                 Instance instanceFromGet = instanceApi.get(instance.getId());
                 assertNotNull(instanceFromGet.getHostname());
@@ -109,24 +109,24 @@ public class InstanceApiLiveTest extends BaseTroveApiLiveTest {
 
     @Test
     public void testGetInstanceWhenNotFound() {
-        for (String zone : api.getConfiguredZones()) {
-            InstanceApi instanceApi = api.getInstanceApiForZone(zone);
+        for (String region : api.getConfiguredRegions()) {
+            InstanceApi instanceApi = api.getInstanceApi(region);
             assertNull(instanceApi.get("9999"));
         }
-    }   
-    
+    }
+
     @Test
     public void testGetRootStatus() {
-        for (String zone : api.getConfiguredZones()) {
-            InstanceApi instanceApi = api.getInstanceApiForZone(zone);
+        for (String region : api.getConfiguredRegions()) {
+            InstanceApi instanceApi = api.getInstanceApi(region);
             Iterator<Instance> iterator = instanceApi.list().iterator();
             Instance first;
             Instance second;
             do {
-               first = iterator.next(); 
+               first = iterator.next();
             } while(!first.getName().contains("instance_testing"));
             do {
-               second = iterator.next(); 
+               second = iterator.next();
             } while(!second.getName().contains("instance_testing"));
             assertTrue(instanceApi.isRooted(first.getId()) || instanceApi.isRooted(second.getId()));
         }

@@ -46,7 +46,7 @@ public class EndpointIdIsRandomExpectTest extends BaseNovaApiExpectTest {
       return overrides;
    }
 
-   public void testVersionMatchOnConfiguredZonesWhenResponseIs2xx() {
+   public void testVersionMatchOnConfiguredRegionsWhenResponseIs2xx() {
 
       HttpRequest authenticate = HttpRequest
             .builder()
@@ -63,7 +63,7 @@ public class EndpointIdIsRandomExpectTest extends BaseNovaApiExpectTest {
 
       NovaApi whenNovaRegionExists = requestSendsResponse(authenticate, authenticationResponse);
 
-      assertEquals(whenNovaRegionExists.getConfiguredZones(), ImmutableSet.of("RegionOne"));
+      assertEquals(whenNovaRegionExists.getConfiguredRegions(), ImmutableSet.of("RegionOne"));
 
    }
 

@@ -45,9 +45,9 @@ import org.jclouds.openstack.nova.v2_0.compute.functions.AllocateAndAddFloatingI
 import org.jclouds.openstack.nova.v2_0.compute.options.NodeAndNovaTemplateOptions;
 import org.jclouds.openstack.nova.v2_0.compute.options.NovaTemplateOptions;
 import org.jclouds.openstack.nova.v2_0.domain.KeyPair;
-import org.jclouds.openstack.nova.v2_0.domain.zonescoped.SecurityGroupInZone;
-import org.jclouds.openstack.nova.v2_0.domain.zonescoped.ZoneAndName;
-import org.jclouds.openstack.nova.v2_0.domain.zonescoped.ZoneSecurityGroupNameAndPorts;
+import org.jclouds.openstack.nova.v2_0.domain.regionscoped.SecurityGroupInRegion;
+import org.jclouds.openstack.nova.v2_0.domain.regionscoped.RegionAndName;
+import org.jclouds.openstack.nova.v2_0.domain.regionscoped.RegionSecurityGroupNameAndPorts;
 
 import com.google.common.base.Function;
 import com.google.common.base.Throwables;
@@ -64,8 +64,8 @@ public class ApplyNovaTemplateOptionsCreateNodesWithGroupEncodedIntoNameThenAddT
          CreateNodesWithGroupEncodedIntoNameThenAddToSet {
 
    private final AllocateAndAddFloatingIpToNode createAndAddFloatingIpToNode;
-   private final LoadingCache<ZoneAndName, SecurityGroupInZone> securityGroupCache;
-   private final LoadingCache<ZoneAndName, KeyPair> keyPairCache;
+   private final LoadingCache<RegionAndName, SecurityGroupInRegion> securityGroupCache;
+   private final LoadingCache<RegionAndName, KeyPair> keyPairCache;
    private final NovaApi novaApi;
 
    @Inject
@@ -76,8 +76,8 @@ public class ApplyNovaTemplateOptionsCreateNodesWithGroupEncodedIntoNameThenAddT
             CustomizeNodeAndAddToGoodMapOrPutExceptionIntoBadMap.Factory customizeNodeAndAddToGoodMapOrPutExceptionIntoBadMapFactory,
             @Named(Constants.PROPERTY_USER_THREADS) ListeningExecutorService userExecutor,
             AllocateAndAddFloatingIpToNode createAndAddFloatingIpToNode,
-            LoadingCache<ZoneAndName, SecurityGroupInZone> securityGroupCache,
-            LoadingCache<ZoneAndName, KeyPair> keyPairCache, NovaApi novaApi) {
+            LoadingCache<RegionAndName, SecurityGroupInRegion> securityGroupCache,
+            LoadingCache<RegionAndName, KeyPair> keyPairCache, NovaApi novaApi) {
       super(addNodeWithTagStrategy, listNodesStrategy, namingConvention, userExecutor,
                customizeNodeAndAddToGoodMapOrPutExceptionIntoBadMapFactory);
       this.securityGroupCache = checkNotNull(securityGroupCache, "securityGroupCache");
@@ -97,21 +97,21 @@ public class ApplyNovaTemplateOptionsCreateNodesWithGroupEncodedIntoNameThenAddT
 
       assert template.getOptions().equals(templateOptions) : "options didn't clone properly";
 
-      String zone = mutableTemplate.getLocation().getId();
+      String region = mutableTemplate.getLocation().getId();
 
       if (templateOptions.shouldAutoAssignFloatingIp()) {
-         checkArgument(novaApi.getFloatingIPExtensionForZone(zone).isPresent(),
+         checkArgument(novaApi.getFloatingIPApi(region).isPresent(),
                   "Floating IPs are required by options, but the extension is not available! options: %s",
                   templateOptions);
       }
 
-      boolean keyPairExtensionPresent = novaApi.getKeyPairExtensionForZone(zone).isPresent();
+      boolean keyPairExtensionPresent = novaApi.getKeyPairApi(region).isPresent();
       if (templateOptions.shouldGenerateKeyPair()) {
          checkArgument(keyPairExtensionPresent,
                   "Key Pairs are required by options, but the extension is not available! options: %s", templateOptions);
-         KeyPair keyPair = keyPairCache.getUnchecked(ZoneAndName.fromZoneAndName(zone, namingConvention.create()
+         KeyPair keyPair = keyPairCache.getUnchecked(RegionAndName.fromRegionAndName(region, namingConvention.create()
                   .sharedNameForGroup(group)));
-         keyPairCache.asMap().put(ZoneAndName.fromZoneAndName(zone, keyPair.getName()), keyPair);
+         keyPairCache.asMap().put(RegionAndName.fromRegionAndName(region, keyPair.getName()), keyPair);
          templateOptions.keyPairName(keyPair.getName());
       } else if (templateOptions.getKeyPairName() != null) {
          checkArgument(keyPairExtensionPresent,
@@ -120,11 +120,11 @@ public class ApplyNovaTemplateOptionsCreateNodesWithGroupEncodedIntoNameThenAddT
             String pem = templateOptions.getLoginPrivateKey();
             KeyPair keyPair = KeyPair.builder().name(templateOptions.getKeyPairName())
                      .fingerprint(fingerprintPrivateKey(pem)).privateKey(pem).build();
-            keyPairCache.asMap().put(ZoneAndName.fromZoneAndName(zone, keyPair.getName()), keyPair);
+            keyPairCache.asMap().put(RegionAndName.fromRegionAndName(region, keyPair.getName()), keyPair);
          }
       }
 
-      boolean securityGroupExtensionPresent = novaApi.getSecurityGroupExtensionForZone(zone).isPresent();
+      boolean securityGroupExtensionPresent = novaApi.getSecurityGroupApi(region).isPresent();
       List<Integer> inboundPorts = Ints.asList(templateOptions.getInboundPorts());
       if (!templateOptions.getGroups().isEmpty()) {
          checkArgument(securityGroupExtensionPresent,
@@ -134,7 +134,7 @@ public class ApplyNovaTemplateOptionsCreateNodesWithGroupEncodedIntoNameThenAddT
          if (templateOptions.getGroups().isEmpty() && !inboundPorts.isEmpty()) {
             String securityGroupName = namingConvention.create().sharedNameForGroup(group);
             try {
-               securityGroupCache.get(new ZoneSecurityGroupNameAndPorts(zone, securityGroupName, inboundPorts));
+               securityGroupCache.get(new RegionSecurityGroupNameAndPorts(region, securityGroupName, inboundPorts));
             } catch (ExecutionException e) {
                throw Throwables.propagate(e.getCause());
             }

@@ -37,70 +37,70 @@ import com.google.common.collect.Iterables;
 @Test(groups = "live", singleThreaded = true, testName = "ConnectionApiLiveTest")
 public class ConnectionApiLiveTest extends BaseCloudLoadBalancersApiLiveTest {
    private LoadBalancer lb;
-   private String zone;
+   private String region;
 
    public void testCreateLoadBalancer() {
       AddNode addNode = AddNode.builder().address("192.168.1.1").port(8080).build();
       CreateLoadBalancer createLB = CreateLoadBalancer.builder()
             .name(prefix + "-jclouds").protocol("HTTP").port(80).virtualIPType(Type.PUBLIC).node(addNode).build();
 
-      zone = Iterables.getFirst(api.getConfiguredZones(), null);
-      lb = api.getLoadBalancerApiForZone(zone).create(createLB);
-      
-      assertTrue(awaitAvailable(api.getLoadBalancerApiForZone(zone)).apply(lb));
+      region = Iterables.getFirst(api.getConfiguredRegions(), null);
+      lb = api.getLoadBalancerApi(region).create(createLB);
+
+      assertTrue(awaitAvailable(api.getLoadBalancerApi(region)).apply(lb));
    }
 
    @Test(dependsOnMethods = "testCreateLoadBalancer")
    public void testCreateAndGetConnectionThrottling() throws Exception {
-      api.getConnectionApiForZoneAndLoadBalancer(zone, lb.getId()).createOrUpdateConnectionThrottle(
+      api.getConnectionApi(region, lb.getId()).createOrUpdateConnectionThrottle(
             ConnectionApiExpectTest.getConnectionThrottle());
-      assertTrue(awaitAvailable(api.getLoadBalancerApiForZone(zone)).apply(lb));
-      
-      ConnectionThrottle connectionThrottle = 
-            api.getConnectionApiForZoneAndLoadBalancer(zone, lb.getId()).getConnectionThrottle();
+      assertTrue(awaitAvailable(api.getLoadBalancerApi(region)).apply(lb));
+
+      ConnectionThrottle connectionThrottle =
+            api.getConnectionApi(region, lb.getId()).getConnectionThrottle();
 
       assertEquals(connectionThrottle, ConnectionApiExpectTest.getConnectionThrottle());
    }
-   
+
    @Test(dependsOnMethods = "testCreateAndGetConnectionThrottling")
    public void testRemoveAndGetConnectionThrottle() throws Exception {
-      assertTrue(api.getConnectionApiForZoneAndLoadBalancer(zone, lb.getId()).deleteConnectionThrottle());
-      assertTrue(awaitAvailable(api.getLoadBalancerApiForZone(zone)).apply(lb));
-      
-      ConnectionThrottle connectionThrottle = 
-            api.getConnectionApiForZoneAndLoadBalancer(zone, lb.getId()).getConnectionThrottle();
-      
+      assertTrue(api.getConnectionApi(region, lb.getId()).deleteConnectionThrottle());
+      assertTrue(awaitAvailable(api.getLoadBalancerApi(region)).apply(lb));
+
+      ConnectionThrottle connectionThrottle =
+            api.getConnectionApi(region, lb.getId()).getConnectionThrottle();
+
       assertNull(connectionThrottle);
    }
-   
+
    @Test(dependsOnMethods = "testRemoveAndGetConnectionThrottle")
    public void testEnableAndIsConnectionLogging() throws Exception {
-      api.getConnectionApiForZoneAndLoadBalancer(zone, lb.getId()).enableConnectionLogging();
-      assertTrue(awaitAvailable(api.getLoadBalancerApiForZone(zone)).apply(lb));
-      
-      boolean isConnectionLogging = 
-            api.getConnectionApiForZoneAndLoadBalancer(zone, lb.getId()).isConnectionLogging();
-      
+      api.getConnectionApi(region, lb.getId()).enableConnectionLogging();
+      assertTrue(awaitAvailable(api.getLoadBalancerApi(region)).apply(lb));
+
+      boolean isConnectionLogging =
+            api.getConnectionApi(region, lb.getId()).isConnectionLogging();
+
       assertTrue(isConnectionLogging);
    }
-   
+
    @Test(dependsOnMethods = "testEnableAndIsConnectionLogging")
    public void testDisableAndIsConnectionLogging() throws Exception {
-      api.getConnectionApiForZoneAndLoadBalancer(zone, lb.getId()).disableConnectionLogging();
-      assertTrue(awaitAvailable(api.getLoadBalancerApiForZone(zone)).apply(lb));
-      
-      boolean isConnectionLogging = 
-            api.getConnectionApiForZoneAndLoadBalancer(zone, lb.getId()).isConnectionLogging();
-      
+      api.getConnectionApi(region, lb.getId()).disableConnectionLogging();
+      assertTrue(awaitAvailable(api.getLoadBalancerApi(region)).apply(lb));
+
+      boolean isConnectionLogging =
+            api.getConnectionApi(region, lb.getId()).isConnectionLogging();
+
       assertFalse(isConnectionLogging);
    }
 
    @Override
    @AfterGroups(groups = "live")
    protected void tearDown() {
-      assertTrue(awaitAvailable(api.getLoadBalancerApiForZone(zone)).apply(lb));
-      api.getLoadBalancerApiForZone(zone).delete(lb.getId());
-      assertTrue(awaitDeleted(api.getLoadBalancerApiForZone(zone)).apply(lb));
+      assertTrue(awaitAvailable(api.getLoadBalancerApi(region)).apply(lb));
+      api.getLoadBalancerApi(region).delete(lb.getId());
+      assertTrue(awaitDeleted(api.getLoadBalancerApi(region)).apply(lb));
       super.tearDown();
    }
 }

@@ -43,10 +43,10 @@ public class SSLTerminationApiExpectTest extends BaseCloudLoadBalancerApiExpectT
       URI endpoint = URI.create("https://dfw.loadbalancers.api.rackspacecloud.com/v1.0/123123/loadbalancers/2000/ssltermination");
       SSLTerminationApi api = requestsSendResponses(
             rackspaceAuthWithUsernameAndApiKey,
-            responseWithAccess, 
+            responseWithAccess,
             authenticatedGET().endpoint(endpoint).build(),
             HttpResponse.builder().statusCode(OK.getStatusCode()).payload(payloadFromResource("/ssltermination-get.json")).build()
-      ).getSSLTerminationApiForZoneAndLoadBalancer("DFW", 2000);
+      ).getSSLTerminationApi("DFW", 2000);
 
       SSLTermination sslTermination = api.get();
       assertEquals(sslTermination, getSSLTermination());
@@ -56,10 +56,10 @@ public class SSLTerminationApiExpectTest extends BaseCloudLoadBalancerApiExpectT
       URI endpoint = URI.create("https://dfw.loadbalancers.api.rackspacecloud.com/v1.0/123123/loadbalancers/2000/ssltermination");
       SSLTerminationApi api = requestsSendResponses(
             rackspaceAuthWithUsernameAndApiKey,
-            responseWithAccess, 
+            responseWithAccess,
             authenticatedGET().endpoint(endpoint).build(),
             HttpResponse.builder().statusCode(NOT_FOUND.getStatusCode()).build()
-      ).getSSLTerminationApiForZoneAndLoadBalancer("DFW", 2000);
+      ).getSSLTerminationApi("DFW", 2000);
 
       SSLTermination sslTermination = api.get();
       assertNull(sslTermination);
@@ -69,15 +69,15 @@ public class SSLTerminationApiExpectTest extends BaseCloudLoadBalancerApiExpectT
       URI endpoint = URI.create("https://dfw.loadbalancers.api.rackspacecloud.com/v1.0/123123/loadbalancers/2000/ssltermination");
       SSLTerminationApi api = requestsSendResponses(
             rackspaceAuthWithUsernameAndApiKey,
-            responseWithAccess, 
+            responseWithAccess,
             authenticatedGET()
                .method(PUT)
                .endpoint(endpoint)
                .payload(payloadFromResourceWithContentType("/ssltermination-create.json", APPLICATION_JSON))
                .build(),
             HttpResponse.builder().statusCode(OK.getStatusCode()).build()
-      ).getSSLTerminationApiForZoneAndLoadBalancer("DFW", 2000);
-      
+      ).getSSLTerminationApi("DFW", 2000);
+
       api.createOrUpdate(getSSLTermination());
    }
 
@@ -85,10 +85,10 @@ public class SSLTerminationApiExpectTest extends BaseCloudLoadBalancerApiExpectT
       URI endpoint = URI.create("https://dfw.loadbalancers.api.rackspacecloud.com/v1.0/123123/loadbalancers/2000/ssltermination");
       SSLTerminationApi api = requestsSendResponses(
             rackspaceAuthWithUsernameAndApiKey,
-            responseWithAccess, 
+            responseWithAccess,
             authenticatedGET().method(DELETE).endpoint(endpoint).replaceHeader(ACCEPT, WILDCARD).build(),
             HttpResponse.builder().statusCode(OK.getStatusCode()).build()
-      ).getSSLTerminationApiForZoneAndLoadBalancer("DFW", 2000);
+      ).getSSLTerminationApi("DFW", 2000);
 
       assertTrue(api.delete());
    }
@@ -100,7 +100,7 @@ public class SSLTerminationApiExpectTest extends BaseCloudLoadBalancerApiExpectT
             SSLTerminationApiExpectTest.class.getResourceAsStream("/ssltermination-privatekey.txt"));
       String intermediateCertificate = Strings2.toStringAndClose(
             SSLTerminationApiExpectTest.class.getResourceAsStream("/ssltermination-intermediatecertificate.txt"));
-      
+
       SSLTermination sslTermination = SSLTermination.builder()
             .enabled(true)
             .secureTrafficOnly(false)

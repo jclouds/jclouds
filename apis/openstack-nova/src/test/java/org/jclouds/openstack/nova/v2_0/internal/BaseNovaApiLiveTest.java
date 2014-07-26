@@ -19,10 +19,6 @@ package org.jclouds.openstack.nova.v2_0.internal;
 import java.util.Properties;
 import java.util.Set;
 
-import com.google.common.collect.ComparisonChain;
-import com.google.common.collect.ImmutableSet;
-import com.google.common.collect.Iterables;
-import com.google.common.collect.Ordering;
 import org.jclouds.apis.BaseApiLiveTest;
 import org.jclouds.openstack.keystone.v2_0.config.KeystoneProperties;
 import org.jclouds.openstack.nova.v2_0.NovaApi;
@@ -40,6 +36,10 @@ import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
 import com.google.common.base.Throwables;
+import com.google.common.collect.ComparisonChain;
+import com.google.common.collect.ImmutableSet;
+import com.google.common.collect.Iterables;
+import com.google.common.collect.Ordering;
 
 /**
  * Tests behavior of {@code NovaApi}
@@ -52,23 +52,23 @@ public class BaseNovaApiLiveTest extends BaseApiLiveTest<NovaApi> {
       provider = "openstack-nova";
    }
 
-   protected Set<String> zones;
+   protected Set<String> regions;
 
    @BeforeClass(groups = { "integration", "live" })
    @Override
    public void setup() {
       super.setup();
 
-      String testZone = System.getProperty("test." + provider + ".zone");
+      String testRegion = System.getProperty("test." + provider + ".region");
 
-      if (testZone != null) {
-         zones = ImmutableSet.of(testZone);
+      if (testRegion != null) {
+         regions = ImmutableSet.of(testRegion);
       } else {
-         zones = api.getConfiguredZones();
+         regions = api.getConfiguredRegions();
       }
 
-      for (String zone : zones) {
-         ServerApi serverApi = api.getServerApiForZone(zone);
+      for (String region : regions) {
+         ServerApi serverApi = api.getServerApi(region);
          for (Resource server : serverApi.list().concat()) {
             if (server.getName().equals(hostName))
                serverApi.delete(server.getId());
@@ -84,13 +84,13 @@ public class BaseNovaApiLiveTest extends BaseApiLiveTest<NovaApi> {
       return props;
    }
 
-   protected Server createServerInZone(String zoneId) {
-      return createServerInZone(zoneId, new CreateServerOptions());
+   protected Server createServerInRegion(String regionId) {
+      return createServerInRegion(regionId, new CreateServerOptions());
    }
 
-   protected Server createServerInZone(String zoneId, CreateServerOptions options) {
-      ServerApi serverApi = api.getServerApiForZone(zoneId);
-      ServerCreated server = serverApi.create(hostName, imageIdForZone(zoneId), flavorRefForZone(zoneId), options);
+   protected Server createServerInRegion(String regionId, CreateServerOptions options) {
+      ServerApi serverApi = api.getServerApi(regionId);
+      ServerCreated server = serverApi.create(hostName, imageIdForRegion(regionId), flavorRefForRegion(regionId), options);
       blockUntilServerInState(server.getId(), serverApi, Status.ACTIVE);
       return serverApi.get(server.getId());
    }
@@ -113,15 +113,15 @@ public class BaseNovaApiLiveTest extends BaseApiLiveTest<NovaApi> {
       }
    }
 
-   protected String imageIdForZone(String zoneId) {
-      ImageApi imageApi = api.getImageApiForZone(zoneId);
+   protected String imageIdForRegion(String regionId) {
+      ImageApi imageApi = api.getImageApi(regionId);
 
       // Get the first image from the list as it tends to be "lighter" and faster to start
       return Iterables.get(imageApi.list().concat(), 0).getId();
    }
 
-   protected String flavorRefForZone(String zoneId) {
-      FlavorApi flavorApi = api.getFlavorApiForZone(zoneId);
+   protected String flavorRefForRegion(String regionId) {
+      FlavorApi flavorApi = api.getFlavorApi(regionId);
       return DEFAULT_FLAVOR_ORDERING.min(flavorApi.listInDetail().concat()).getId();
    }
 

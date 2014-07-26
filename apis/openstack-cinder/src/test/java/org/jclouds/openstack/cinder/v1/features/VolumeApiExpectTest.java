@@ -53,7 +53,7 @@ public class VolumeApiExpectTest extends BaseCinderApiExpectTest {
             responseWithKeystoneAccess, 
             authenticatedGET().endpoint(endpoint).build(),
             HttpResponse.builder().statusCode(200).payload(payloadFromResource("/volume_list_simple.json")).build()
-      ).getVolumeApiForZone("RegionOne");
+      ).getVolumeApi("RegionOne");
 
       Set<? extends Volume> volumes = api.list().toSet();
       assertEquals(volumes, ImmutableSet.of(testVolume()));
@@ -66,7 +66,7 @@ public class VolumeApiExpectTest extends BaseCinderApiExpectTest {
             responseWithKeystoneAccess, 
             authenticatedGET().endpoint(endpoint).build(),
             HttpResponse.builder().statusCode(404).build()
-      ).getVolumeApiForZone("RegionOne");
+      ).getVolumeApi("RegionOne");
 
       Set<? extends Volume> volumes = api.list().toSet();
       assertTrue(volumes.isEmpty());
@@ -79,7 +79,7 @@ public class VolumeApiExpectTest extends BaseCinderApiExpectTest {
             responseWithKeystoneAccess,
             authenticatedGET().endpoint(endpoint).build(),
             HttpResponse.builder().statusCode(200).payload(payloadFromResource("/volume_list_details.json")).build()
-      ).getVolumeApiForZone("RegionOne");
+      ).getVolumeApi("RegionOne");
 
       Set<? extends Volume> volumes = api.listInDetail().toSet();
       assertEquals(volumes, ImmutableSet.of(testVolume()));
@@ -92,7 +92,7 @@ public class VolumeApiExpectTest extends BaseCinderApiExpectTest {
             responseWithKeystoneAccess,
             authenticatedGET().endpoint(endpoint).build(),
             HttpResponse.builder().statusCode(404).build()
-      ).getVolumeApiForZone("RegionOne");
+      ).getVolumeApi("RegionOne");
 
       Set<? extends Volume> volumes = api.listInDetail().toSet();
       assertTrue(volumes.isEmpty());
@@ -108,7 +108,7 @@ public class VolumeApiExpectTest extends BaseCinderApiExpectTest {
                   .payload(payloadFromResourceWithContentType("/volume_create.json", MediaType.APPLICATION_JSON))
                   .build(),
             HttpResponse.builder().statusCode(200).payload(payloadFromResource("/volume_create_response.json")).build()
-      ).getVolumeApiForZone("RegionOne");
+      ).getVolumeApi("RegionOne");
 
       CreateVolumeOptions options = CreateVolumeOptions.Builder
             .name("jclouds-test-volume")
@@ -129,7 +129,7 @@ public class VolumeApiExpectTest extends BaseCinderApiExpectTest {
                   .payload(payloadFromResourceWithContentType("/volume_create.json", MediaType.APPLICATION_JSON))
                .build(),
             HttpResponse.builder().statusCode(404).payload(payloadFromResource("/volume_create_response.json")).build()
-      ).getVolumeApiForZone("RegionOne");
+      ).getVolumeApi("RegionOne");
 
       CreateVolumeOptions options = CreateVolumeOptions.Builder
             .name("jclouds-test-volume")
@@ -144,7 +144,7 @@ public class VolumeApiExpectTest extends BaseCinderApiExpectTest {
             responseWithKeystoneAccess,
             authenticatedGET().endpoint(endpoint).build(),
             HttpResponse.builder().statusCode(200).payload(payloadFromResource("/volume_get.json")).build()
-      ).getVolumeApiForZone("RegionOne");
+      ).getVolumeApi("RegionOne");
 
       Volume volume = api.get("60761c60-0f56-4499-b522-ff13e120af10");
       assertEquals(volume, testVolume());
@@ -163,7 +163,7 @@ public class VolumeApiExpectTest extends BaseCinderApiExpectTest {
             responseWithKeystoneAccess,
             authenticatedGET().endpoint(endpoint).build(),
             HttpResponse.builder().statusCode(404).build()
-      ).getVolumeApiForZone("RegionOne");
+      ).getVolumeApi("RegionOne");
 
       assertNull(api.get("60761c60-0f56-4499-b522-ff13e120af10"));
    }
@@ -175,7 +175,7 @@ public class VolumeApiExpectTest extends BaseCinderApiExpectTest {
             responseWithKeystoneAccess,
             authenticatedGET().endpoint(endpoint).method("DELETE").build(),
             HttpResponse.builder().statusCode(202).build()
-      ).getVolumeApiForZone("RegionOne");
+      ).getVolumeApi("RegionOne");
 
       assertTrue(api.delete("60761c60-0f56-4499-b522-ff13e120af10"));
    }
@@ -187,7 +187,7 @@ public class VolumeApiExpectTest extends BaseCinderApiExpectTest {
             responseWithKeystoneAccess,
             authenticatedGET().endpoint(endpoint).method("DELETE").build(),
             HttpResponse.builder().statusCode(404).build()
-      ).getVolumeApiForZone("RegionOne");
+      ).getVolumeApi("RegionOne");
 
       assertFalse(api.delete("60761c60-0f56-4499-b522-ff13e120af10"));
    }

@@ -74,17 +74,17 @@ public abstract class BaseApiLiveTest<A extends Closeable> {
    }
 
    /**
-    * This helps live testing against specific zones only.
-    * @param zones A list of zones, usually from getConfiguredZones()
-    * @return a set of zones in the given set that are also contained in the set specified by the test.live.zones system property
+    * This helps live testing against specific regions only.
+    * @param regions A list of regions, usually from getConfiguredRegions()
+    * @return a set of regions in the given set that are also contained in the set specified by the test.live.regions system property
     */
-   protected Set<String> filterZones(Set<String> zones) {
-      String zonesToList = System.getProperty("test.live.zones");
-      if (zonesToList == null) {
-         return zones; // no filter applied
+   protected Set<String> filterRegions(Set<String> regions) {
+      String regionsToList = System.getProperty("test.live.regions");
+      if (regionsToList == null) {
+         return regions; // no filter applied
       }
-      Set<String> zoneFilter = Sets.newHashSet(Splitter.on(',').split(zonesToList));
-      return Sets.intersection(zones, zoneFilter);
+      Set<String> regionFilter = Sets.newHashSet(Splitter.on(',').split(regionsToList));
+      return Sets.intersection(regions, regionFilter);
    }
 
    @BeforeClass(groups = { "integration", "live" })
@@ -115,7 +115,7 @@ public abstract class BaseApiLiveTest<A extends Closeable> {
          return null;
       }
    }
-   
+
    /**
     * @see org.jclouds.apis.Apis#withId
     */
@@ -151,7 +151,7 @@ public abstract class BaseApiLiveTest<A extends Closeable> {
                   "either createApiMetadata or createProviderMetadata must be overridden")));
       return builder;
    }
-   
+
    @AfterClass(groups = { "integration", "live" })
    protected void tearDown() {
       closeQuietly(api);

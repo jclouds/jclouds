@@ -27,7 +27,7 @@ import org.jclouds.compute.domain.SecurityGroup;
 import org.jclouds.domain.Location;
 import org.jclouds.domain.LocationBuilder;
 import org.jclouds.domain.LocationScope;
-import org.jclouds.openstack.nova.v2_0.domain.zonescoped.SecurityGroupInZone;
+import org.jclouds.openstack.nova.v2_0.domain.regionscoped.SecurityGroupInRegion;
 import org.testng.annotations.Test;
 
 import com.google.common.base.Supplier;
@@ -35,56 +35,56 @@ import com.google.common.base.Suppliers;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 
-@Test(groups = "unit", testName = "NovaSecurityGroupInZoneToSecurityGroupTest")
-public class NovaSecurityGroupInZoneToSecurityGroupTest {
+@Test(groups = "unit", testName = "NovaSecurityGroupInRegionToSecurityGroupTest")
+public class NovaSecurityGroupInRegionToSecurityGroupTest {
 
    Location provider = new LocationBuilder().scope(LocationScope.PROVIDER).id("openstack-nova")
            .description("openstack-nova").build();
-   Location zone = new LocationBuilder().id("az-1.region-a.geo-1").description("az-1.region-a.geo-1")
-           .scope(LocationScope.ZONE).parent(provider).build();
+   Location region = new LocationBuilder().id("az-1.region-a.geo-1").description("az-1.region-a.geo-1")
+           .scope(LocationScope.REGION).parent(provider).build();
    Supplier<Map<String, Location>> locationIndex = Suppliers.<Map<String, Location>> ofInstance(ImmutableMap
-           .<String, Location>of("az-1.region-a.geo-1", zone));
+           .<String, Location>of("az-1.region-a.geo-1", region));
 
 
    @Test
    public void testApplyWithGroup() {
-      NovaSecurityGroupInZoneToSecurityGroup parser = createGroupParser();
+      NovaSecurityGroupInRegionToSecurityGroup parser = createGroupParser();
 
-      SecurityGroupInZone origGroup = new SecurityGroupInZone(securityGroupWithGroup(), zone.getId());
+      SecurityGroupInRegion origGroup = new SecurityGroupInRegion(securityGroupWithGroup(), region.getId());
 
       SecurityGroup newGroup = parser.apply(origGroup);
 
-      assertEquals(newGroup.getId(), origGroup.getZone() + "/" + origGroup.getSecurityGroup().getId());
+      assertEquals(newGroup.getId(), origGroup.getRegion() + "/" + origGroup.getSecurityGroup().getId());
       assertEquals(newGroup.getProviderId(), origGroup.getSecurityGroup().getId());
       assertEquals(newGroup.getName(), origGroup.getSecurityGroup().getName());
       assertEquals(newGroup.getOwnerId(), origGroup.getSecurityGroup().getTenantId());
       assertEquals(newGroup.getIpPermissions(), ImmutableSet.copyOf(transform(origGroup.getSecurityGroup().getRules(),
               NovaSecurityGroupToSecurityGroupTest.ruleConverter)));
-      assertEquals(newGroup.getLocation().getId(), origGroup.getZone());
+      assertEquals(newGroup.getLocation().getId(), origGroup.getRegion());
    }
 
    @Test
    public void testApplyWithCidr() {
 
-      NovaSecurityGroupInZoneToSecurityGroup parser = createGroupParser();
+      NovaSecurityGroupInRegionToSecurityGroup parser = createGroupParser();
 
-      SecurityGroupInZone origGroup = new SecurityGroupInZone(securityGroupWithCidr(), zone.getId());
+      SecurityGroupInRegion origGroup = new SecurityGroupInRegion(securityGroupWithCidr(), region.getId());
 
       SecurityGroup newGroup = parser.apply(origGroup);
 
-      assertEquals(newGroup.getId(), origGroup.getZone() + "/" + origGroup.getSecurityGroup().getId());
+      assertEquals(newGroup.getId(), origGroup.getRegion() + "/" + origGroup.getSecurityGroup().getId());
       assertEquals(newGroup.getProviderId(), origGroup.getSecurityGroup().getId());
       assertEquals(newGroup.getName(), origGroup.getSecurityGroup().getName());
       assertEquals(newGroup.getOwnerId(), origGroup.getSecurityGroup().getTenantId());
       assertEquals(newGroup.getIpPermissions(), ImmutableSet.copyOf(transform(origGroup.getSecurityGroup().getRules(),
               NovaSecurityGroupToSecurityGroupTest.ruleConverter)));
-      assertEquals(newGroup.getLocation().getId(), origGroup.getZone());
+      assertEquals(newGroup.getLocation().getId(), origGroup.getRegion());
    }
 
-   private NovaSecurityGroupInZoneToSecurityGroup createGroupParser() {
+   private NovaSecurityGroupInRegionToSecurityGroup createGroupParser() {
       NovaSecurityGroupToSecurityGroup baseParser = new NovaSecurityGroupToSecurityGroup(NovaSecurityGroupToSecurityGroupTest.ruleConverter);
 
-      NovaSecurityGroupInZoneToSecurityGroup parser = new NovaSecurityGroupInZoneToSecurityGroup(baseParser, locationIndex);
+      NovaSecurityGroupInRegionToSecurityGroup parser = new NovaSecurityGroupInRegionToSecurityGroup(baseParser, locationIndex);
 
       return parser;
    }

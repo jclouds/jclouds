@@ -34,7 +34,7 @@ public class BaseCloudLoadBalancersApiLiveTest extends BaseApiLiveTest<CloudLoad
    @Override
    public void setup() {
       super.setup();
-      Logger.getAnonymousLogger().info("running against zones " + api.getConfiguredZones());
+      Logger.getAnonymousLogger().info("running against regions " + api.getConfiguredRegions());
    }
 
    @Override

@@ -34,11 +34,11 @@ import com.google.common.util.concurrent.Futures;
 
 @Test(groups = "unit", testName = "NovaImageExtensionExpectTest")
 public class NovaImageExtensionExpectTest extends BaseNovaComputeServiceExpectTest {
-   
+
    @Override
    protected Properties setupProperties() {
       Properties overrides = super.setupProperties();
-      overrides.setProperty("jclouds.zones", "az-1.region-a.geo-1");
+      overrides.setProperty("jclouds.regions", "az-1.region-a.geo-1");
       return overrides;
    }
 
@@ -58,7 +58,7 @@ public class NovaImageExtensionExpectTest extends BaseNovaComputeServiceExpectTe
                payloadFromStringWithContentType(
                      "{\"createImage\":{\"name\":\"test\", \"metadata\": {}}}",
                      "application/json")).build();
-   
+
    HttpResponse createImageResponse = HttpResponse.builder().statusCode(202)
          .addHeader("Location", "https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v2/3456/images/52415800-8b69-11e0-9b19-734f5736d2a2")
          .build();
@@ -67,7 +67,7 @@ public class NovaImageExtensionExpectTest extends BaseNovaComputeServiceExpectTe
          .endpoint("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v2/3456/images/52415800-8b69-11e0-9b19-734f5736d2a2")
          .addHeader("Accept", "application/json")
          .addHeader("X-Auth-Token", authToken).build();
-   
+
    HttpResponse getImageResponse = HttpResponse.builder().statusCode(200)
          .payload(payloadFromResource("/image_active.json")).build();
 
@@ -79,7 +79,7 @@ public class NovaImageExtensionExpectTest extends BaseNovaComputeServiceExpectTe
       requestResponseMap.put(getImage, getImageResponse).build();
 
       ImageExtension apiThatCreatesImage = requestsSendResponses(requestResponseMap.build()).getImageExtension().get();
-      
+
       ImageTemplate newImageTemplate = apiThatCreatesImage.buildImageTemplateFromNode("test", "az-1.region-a.geo-1/71752");
 
       Image image = Futures.getUnchecked(apiThatCreatesImage.createImage(newImageTemplate));

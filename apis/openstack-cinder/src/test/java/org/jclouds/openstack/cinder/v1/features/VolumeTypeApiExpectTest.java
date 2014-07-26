@@ -46,7 +46,7 @@ public class VolumeTypeApiExpectTest extends BaseCinderApiExpectTest {
             responseWithKeystoneAccess,
             authenticatedGET().endpoint(endpoint).build(),
             HttpResponse.builder().statusCode(200).payload(payloadFromResource("/volume_type_list_simple.json")).build()
-      ).getVolumeTypeApiForZone("RegionOne");
+      ).getVolumeTypeApi("RegionOne");
 
       Set<? extends VolumeType> types = api.list().toSet();
       assertEquals(types, ImmutableSet.of(testVolumeType()));
@@ -59,7 +59,7 @@ public class VolumeTypeApiExpectTest extends BaseCinderApiExpectTest {
             responseWithKeystoneAccess,
             authenticatedGET().endpoint(endpoint).build(),
             HttpResponse.builder().statusCode(200).payload(payloadFromResource("/volume_type_get.json")).build()
-      ).getVolumeTypeApiForZone("RegionOne");
+      ).getVolumeTypeApi("RegionOne");
 
       VolumeType type = api.get("1");
       assertEquals(type, testVolumeType());
@@ -72,7 +72,7 @@ public class VolumeTypeApiExpectTest extends BaseCinderApiExpectTest {
             responseWithKeystoneAccess,
             authenticatedGET().endpoint(endpoint).build(),
             HttpResponse.builder().statusCode(404).build()
-      ).getVolumeTypeApiForZone("RegionOne");
+      ).getVolumeTypeApi("RegionOne");
 
       assertNull(api.get("X"));
    }

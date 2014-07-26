@@ -44,17 +44,17 @@ public class VolumeAttachmentApiLiveTest extends BaseNovaApiLiveTest {
 
    private Optional<? extends VolumeApi> volumeApi;
    private Optional<? extends VolumeAttachmentApi> volumeAttachmentApi;
-   
-   private String zone;
+
+   private String region;
    private Volume testVolume;
 
    @BeforeClass(groups = {"integration", "live"})
    @Override
    public void setup() {
       super.setup();
-      zone = Iterables.getLast(api.getConfiguredZones(), "nova");
-      volumeApi = api.getVolumeExtensionForZone(zone);
-      volumeAttachmentApi = api.getVolumeAttachmentExtensionForZone(zone);
+      region = Iterables.getLast(api.getConfiguredRegions(), "nova");
+      volumeApi = api.getVolumeApi(region);
+      volumeAttachmentApi = api.getVolumeAttachmentApi(region);
    }
 
    @AfterClass(groups = { "integration", "live" })
@@ -80,7 +80,7 @@ public class VolumeAttachmentApiLiveTest extends BaseNovaApiLiveTest {
          CreateVolumeOptions options = CreateVolumeOptions.Builder
                .name("jclouds-test-volume")
                .description("description of test volume")
-               .availabilityZone(zone);
+               .availabilityZone(region);
 
          testVolume = volumeApi.get().create(1, options);
          assertTrue(retry(new Predicate<VolumeApi>() {
@@ -96,9 +96,9 @@ public class VolumeAttachmentApiLiveTest extends BaseNovaApiLiveTest {
       if (volumeApi.isPresent()) {
          String server_id = null;
          try {
-            final String serverId = server_id = createServerInZone(zone).getId();
+            final String serverId = server_id = createServerInRegion(region).getId();
 
-            Set<? extends VolumeAttachment> attachments = 
+            Set<? extends VolumeAttachment> attachments =
                   volumeAttachmentApi.get().listAttachmentsOnServer(serverId).toSet();
             assertNotNull(attachments);
             final int before = attachments.size();
@@ -146,7 +146,7 @@ public class VolumeAttachmentApiLiveTest extends BaseNovaApiLiveTest {
 
          } finally {
             if (server_id != null)
-               api.getServerApiForZone(zone).delete(server_id);
+               api.getServerApi(region).delete(server_id);
          }
 
       }

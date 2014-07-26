@@ -41,7 +41,7 @@ public class ServerWithSecurityGroupsApiExpectTest extends BaseNovaApiExpectTest
             responseWithKeystoneAccess, extensionsOfNovaRequest, extensionsOfNovaResponse,
             authenticatedGET().endpoint(endpoint).build(),
             HttpResponse.builder().statusCode(200).payload(payloadFromResource("/server_with_security_groups.json")).build()
-      ).getServerWithSecurityGroupsExtensionForZone("az-1.region-a.geo-1").get();
+      ).getServerWithSecurityGroupsApi("az-1.region-a.geo-1").get();
 
       ServerWithSecurityGroups server = api.get("8d0a6ca5-8849-4b3d-b86e-f24c92490ebb");
       assertEquals(server.getId(), "8d0a6ca5-8849-4b3d-b86e-f24c92490ebb");
@@ -55,7 +55,7 @@ public class ServerWithSecurityGroupsApiExpectTest extends BaseNovaApiExpectTest
             responseWithKeystoneAccess, extensionsOfNovaRequest, extensionsOfNovaResponse,
             authenticatedGET().endpoint(endpoint).build(),
             HttpResponse.builder().statusCode(404).build()
-      ).getServerWithSecurityGroupsExtensionForZone("az-1.region-a.geo-1").get();
+      ).getServerWithSecurityGroupsApi("az-1.region-a.geo-1").get();
       assertNull(api.get("8d0a6ca5-8849-4b3d-b86e-f24c92490ebb"));
    }
 }

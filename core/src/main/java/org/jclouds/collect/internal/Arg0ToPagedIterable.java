@@ -46,9 +46,9 @@ public abstract class Arg0ToPagedIterable<T, I extends Arg0ToPagedIterable<T, I>
 
    /**
     * Used to propagate caller {@code arg0} to a callee during an advance in a {@link PagedIterable}. For example, in
-    * the call {@code api.getUserApiForZone(zone).list()}, the caller arg0 is the value of {@code zone}, and the callee
+    * the call {@code api.getUserApi(region).list()}, the caller arg0 is the value of {@code region}, and the callee
     * is {@code UserApi.list()}
-    * 
+    *
     */
    public abstract static class FromCaller<T, I extends FromCaller<T, I>> extends Arg0ToPagedIterable<T, I> {
       @Override

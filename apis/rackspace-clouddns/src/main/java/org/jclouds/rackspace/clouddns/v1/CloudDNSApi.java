@@ -54,11 +54,11 @@ public interface CloudDNSApi extends Closeable {
    /**
     * Returns the current status of a job.
     * </p>
-    * Operations that create, update, or delete resources may take some time to process. Therefore they return 
-    * a Job containing information, which allows the status and response information of the job to be 
+    * Operations that create, update, or delete resources may take some time to process. Therefore they return
+    * a Job containing information, which allows the status and response information of the job to be
     * retrieved at a later point in time.
     * </p>
-    * You likely won't need to use this method directly. Use {@link JobPredicates#awaitComplete(CloudDNSApi, Job)}. 
+    * You likely won't need to use this method directly. Use {@link JobPredicates#awaitComplete(CloudDNSApi, Job)}.
     *
     * @return null, if not found.
     */
@@ -91,11 +91,29 @@ public interface CloudDNSApi extends Closeable {
     */
    @Delegate
    @Path("/domains/{domainId}")
-   RecordApi getRecordApiForDomain(@PathParam("domainId") int domainId);
+   RecordApi getRecordApi(@PathParam("domainId") int domainId);
 
    /**
     * Provides access to Reverse DNS features.
     */
    @Delegate
+   ReverseDNSApi getReverseDNSApi(@PayloadParam("serviceName") @PathParam("serviceName") String serviceName);
+
+   /**
+    * Provides access to Record features.
+    * @deprecated Please use {@link #getRecordApi(int)} as this method will be removed in jclouds 3.0.
+    */
+   @Deprecated
+   @Delegate
+   @Path("/domains/{domainId}")
+   RecordApi getRecordApiForDomain(@PathParam("domainId") int domainId);
+
+   /**
+    * Provides access to Reverse DNS features.
+    * @deprecated Please use {@link #getReverseDNSApi(String)} as this method will be removed in jclouds 3.0.
+    */
+   @Deprecated
+   @Delegate
    ReverseDNSApi getReverseDNSApiForService(@PayloadParam("serviceName") @PathParam("serviceName") String serviceName);
+
 }

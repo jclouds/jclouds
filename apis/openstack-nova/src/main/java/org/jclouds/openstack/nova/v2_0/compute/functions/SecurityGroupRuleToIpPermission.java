@@ -32,8 +32,8 @@ import org.jclouds.domain.Location;
 import org.jclouds.logging.Logger;
 import org.jclouds.net.domain.IpPermission;
 import org.jclouds.openstack.nova.v2_0.domain.SecurityGroupRule;
-import org.jclouds.openstack.nova.v2_0.domain.zonescoped.SecurityGroupInZone;
-import org.jclouds.openstack.nova.v2_0.domain.zonescoped.ZoneAndName;
+import org.jclouds.openstack.nova.v2_0.domain.regionscoped.SecurityGroupInRegion;
+import org.jclouds.openstack.nova.v2_0.domain.regionscoped.RegionAndName;
 
 import com.google.common.base.Function;
 import com.google.common.base.Predicate;
@@ -50,16 +50,16 @@ public class SecurityGroupRuleToIpPermission implements Function<SecurityGroupRu
    @Resource
    @Named(ComputeServiceConstants.COMPUTE_LOGGER)
    protected Logger logger = Logger.NULL;
-   protected final Predicate<AtomicReference<ZoneAndName>> returnSecurityGroupExistsInZone;
+   protected final Predicate<AtomicReference<RegionAndName>> returnSecurityGroupExistsInRegion;
    protected final Supplier<Map<String, Location>> locationIndex;
-   LoadingCache<ZoneAndName, SecurityGroupInZone> groupMap;
+   LoadingCache<RegionAndName, SecurityGroupInRegion> groupMap;
 
    @Inject
-   public SecurityGroupRuleToIpPermission(@Named("SECURITYGROUP_PRESENT") Predicate<AtomicReference<ZoneAndName>> returnSecurityGroupExistsInZone,
+   public SecurityGroupRuleToIpPermission(@Named("SECURITYGROUP_PRESENT") Predicate<AtomicReference<RegionAndName>> returnSecurityGroupExistsInRegion,
                                           Supplier<Map<String, Location>> locationIndex,
-                                          LoadingCache<ZoneAndName, SecurityGroupInZone> groupMap) {
-      this.returnSecurityGroupExistsInZone = checkNotNull(returnSecurityGroupExistsInZone,
-              "returnSecurityGroupExistsInZone");
+                                          LoadingCache<RegionAndName, SecurityGroupInRegion> groupMap) {
+      this.returnSecurityGroupExistsInRegion = checkNotNull(returnSecurityGroupExistsInRegion,
+              "returnSecurityGroupExistsInRegion");
       this.locationIndex = checkNotNull(locationIndex, "locationIndex");
       this.groupMap = checkNotNull(groupMap, "groupMap");
    }
@@ -71,26 +71,26 @@ public class SecurityGroupRuleToIpPermission implements Function<SecurityGroupRu
       builder.fromPort(rule.getFromPort());
       builder.toPort(rule.getToPort());
       if (rule.getGroup() != null) {
-         String zone = getFirst(filter(locationIndex.get().keySet(), isSecurityGroupInZone(rule.getGroup().getName())),
+         String region = getFirst(filter(locationIndex.get().keySet(), isSecurityGroupInRegion(rule.getGroup().getName())),
                  null);
-         if (zone != null) {
-            SecurityGroupInZone group = groupMap.getUnchecked(ZoneAndName.fromZoneAndName(zone, rule.getGroup().getName()));
-            builder.groupId(zone + "/" + group.getSecurityGroup().getId());
+         if (region != null) {
+            SecurityGroupInRegion group = groupMap.getUnchecked(RegionAndName.fromRegionAndName(region, rule.getGroup().getName()));
+            builder.groupId(region + "/" + group.getSecurityGroup().getId());
          }
       }
       if (rule.getIpRange() != null)
          builder.cidrBlock(rule.getIpRange());
-      
+
       return builder.build();
    }
 
-   protected Predicate<String> isSecurityGroupInZone(final String groupName) {
+   protected Predicate<String> isSecurityGroupInRegion(final String groupName) {
       return new Predicate<String>() {
 
          @Override
-         public boolean apply(String zone) {
-            AtomicReference<ZoneAndName> securityGroupInZoneRef = Atomics.newReference(ZoneAndName.fromZoneAndName(zone, groupName));
-            return returnSecurityGroupExistsInZone.apply(securityGroupInZoneRef);
+         public boolean apply(String region) {
+            AtomicReference<RegionAndName> securityGroupInRegionRef = Atomics.newReference(RegionAndName.fromRegionAndName(region, groupName));
+            return returnSecurityGroupExistsInRegion.apply(securityGroupInRegionRef);
          }
       };
    }

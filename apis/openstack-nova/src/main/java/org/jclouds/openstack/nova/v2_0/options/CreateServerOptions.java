@@ -360,7 +360,7 @@ public class CreateServerOptions implements MapBinder {
     * <p/>
     * <h3>Note</h3>
     * <p/>
-    * This requires that {@link NovaApi#getSecurityGroupExtensionForZone(String)} to return
+    * This requires that {@link NovaApi#getSecurityGroupExtensionApi(String)} to return
     * {@link Optional#isPresent present}
     */
    public Set<String> getSecurityGroupNames() {
@@ -376,7 +376,7 @@ public class CreateServerOptions implements MapBinder {
    public Set<String> getNetworks() {
       return networks;
    }
-   
+
    /**
     * Get custom networks specified for the server.
     *
@@ -429,7 +429,7 @@ public class CreateServerOptions implements MapBinder {
 
    /**
     * Determines if a configuration drive will be attached to the server or not.
-    * This can be used for cloud-init or other configuration purposes.  
+    * This can be used for cloud-init or other configuration purposes.
     */
    public boolean getConfigDrive() {
       return configDrive;

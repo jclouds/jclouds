@@ -34,24 +34,24 @@ import com.google.common.base.Predicate;
  * <pre>
  * {@code
  * Volume volume = volumeApi.create(100);
- * 
+ *
  * RetryablePredicate<String> awaitAvailable = RetryablePredicate.create(
  *    VolumePredicates.available(volumeApi), 600, 10, 10, TimeUnit.SECONDS);
- * 
+ *
  * if (!awaitAvailable.apply(volume.getId())) {
- *    throw new TimeoutException("Timeout on volume: " + volume); 
- * }    
+ *    throw new TimeoutException("Timeout on volume: " + volume);
+ * }
  * }
  * </pre>
- * 
+ *
  * You can also use the static convenience methods as so.
- * 
+ *
  * <pre>
  * {@code
  * Volume volume = volumeApi.create(100);
- * 
+ *
  * if (!VolumePredicates.awaitAvailable(volumeApi).apply(volume.getId())) {
- *    throw new TimeoutException("Timeout on volume: " + volume);     
+ *    throw new TimeoutException("Timeout on volume: " + volume);
  * }
  * }
  * </pre>
@@ -59,19 +59,19 @@ import com.google.common.base.Predicate;
 public class VolumePredicates {
    /**
     * Wait until a Volume is Available.
-    * 
-    * @param volumeApi The VolumeApi in the zone where your Volume resides.
+    *
+    * @param volumeApi The VolumeApi in the region where your Volume resides.
     * @return RetryablePredicate That will check the status every 5 seconds for a maxiumum of 10 minutes.
     */
    public static Predicate<Volume> awaitAvailable(VolumeApi volumeApi) {
       StatusUpdatedPredicate statusPredicate = new StatusUpdatedPredicate(volumeApi, Volume.Status.AVAILABLE);
       return retry(statusPredicate, 600, 5, 5, SECONDS);
    }
-   
+
    /**
     * Wait until a Volume is In Use.
-    * 
-    * @param volumeApi The VolumeApi in the zone where your Volume resides.
+    *
+    * @param volumeApi The VolumeApi in the region where your Volume resides.
     * @return RetryablePredicate That will check the status every 5 seconds for a maxiumum of 10 minutes.
     */
    public static Predicate<Volume> awaitInUse(VolumeApi volumeApi) {
@@ -81,22 +81,22 @@ public class VolumePredicates {
 
    /**
     * Wait until a Volume no longer exists.
-    * 
-    * @param volumeApi The VolumeApi in the zone where your Volume resides.
-    * @return RetryablePredicate That will check the whether the Volume exists 
+    *
+    * @param volumeApi The VolumeApi in the region where your Volume resides.
+    * @return RetryablePredicate That will check the whether the Volume exists
     * every 5 seconds for a maxiumum of 10 minutes.
     */
    public static Predicate<Volume> awaitDeleted(VolumeApi volumeApi) {
       DeletedPredicate deletedPredicate = new DeletedPredicate(volumeApi);
       return retry(deletedPredicate, 600, 5, 5, SECONDS);
    }
-   
+
    public static Predicate<Volume> awaitStatus(
          VolumeApi volumeApi, Volume.Status status, long maxWaitInSec, long periodInSec) {
       StatusUpdatedPredicate statusPredicate = new StatusUpdatedPredicate(volumeApi, status);
       return retry(statusPredicate, maxWaitInSec, periodInSec, periodInSec, SECONDS);
    }
-   
+
    private static class StatusUpdatedPredicate implements Predicate<Volume> {
       private VolumeApi volumeApi;
       private Status status;
@@ -112,14 +112,14 @@ public class VolumePredicates {
       @Override
       public boolean apply(Volume volume) {
          checkNotNull(volume, "volume must be defined");
-         
+
          if (status.equals(volume.getStatus())) {
             return true;
          }
          else {
             Volume volumeUpdated = volumeApi.get(volume.getId());
             checkNotNull(volumeUpdated, "Volume %s not found.", volume.getId());
-            
+
             return status.equals(volumeUpdated.getStatus());
          }
       }

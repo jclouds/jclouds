@@ -31,7 +31,7 @@ import org.jclouds.logging.Logger;
 import com.google.common.util.concurrent.Uninterruptibles;
 
 /**
- * 
+ *
  * Helper methods for dealing with instances that get created with errors.
  */
 public class TroveUtils {
@@ -45,11 +45,11 @@ public class TroveUtils {
 
    /**
     * Create an ACTIVE operational instance.
-    * 
+    *
     * @see InstanceApi#create(String, int, String)
-    * 
-    * @param zone
-    *           The instance zone or region.
+    *
+    * @param region
+    *           The instance region.
     * @param name
     *           Instance name.
     * @param flavorId
@@ -58,8 +58,8 @@ public class TroveUtils {
     *           Size of the instance.
     * @return Instance object in active state or NULL.
     */
-   public Instance getWorkingInstance(String zone, String name, String flavorId, int size) {
-      InstanceApi instanceApi = api.getInstanceApiForZone(zone);
+   public Instance getWorkingInstance(String region, String name, String flavorId, int size) {
+      InstanceApi instanceApi = api.getInstanceApi(region);
       for (int retries = 0; retries < 10; retries++) {
          Instance instance = null;
          try {
@@ -78,19 +78,19 @@ public class TroveUtils {
          }
          instanceApi.delete(instance.getId());
          InstancePredicates.awaitDeleted(instanceApi).apply(instance);
-         
+
       }
       return null;
    }
 
    /**
     * This will return a small working instance.
-    * 
-    * @param zone The zone where the instance should be created.
+    *
+    * @param region The region where the instance should be created.
     * @return A working database instance.
     */
-   public Instance getWorkingInstance(String zone) {
-      return getWorkingInstance(zone, UUID.randomUUID().toString(), "1", 1);
+   public Instance getWorkingInstance(String region) {
+      return getWorkingInstance(region, UUID.randomUUID().toString(), "1", 1);
    }
 
    private Instance awaitAvailable(Instance instance, InstanceApi iapi) {

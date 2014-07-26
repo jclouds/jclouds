@@ -26,8 +26,8 @@ import java.util.concurrent.atomic.AtomicReference;
 import org.jclouds.http.HttpRequest;
 import org.jclouds.http.HttpResponse;
 import org.jclouds.openstack.nova.v2_0.NovaApi;
-import org.jclouds.openstack.nova.v2_0.domain.zonescoped.SecurityGroupInZone;
-import org.jclouds.openstack.nova.v2_0.domain.zonescoped.ZoneAndName;
+import org.jclouds.openstack.nova.v2_0.domain.regionscoped.RegionAndName;
+import org.jclouds.openstack.nova.v2_0.domain.regionscoped.SecurityGroupInRegion;
 import org.jclouds.openstack.nova.v2_0.internal.BaseNovaApiExpectTest;
 import org.jclouds.openstack.nova.v2_0.parse.ParseSecurityGroupListTest;
 import org.jclouds.openstack.nova.v2_0.predicates.FindSecurityGroupWithNameAndReturnTrue;
@@ -56,14 +56,14 @@ public class FindSecurityGroupWithNameAndReturnTrueExpectTest extends BaseNovaAp
       FindSecurityGroupWithNameAndReturnTrue predicate = new FindSecurityGroupWithNameAndReturnTrue(
                apiWhenSecurityGroupsExist);
 
-      AtomicReference<ZoneAndName> securityGroupInZoneRef = Atomics.newReference(ZoneAndName
-               .fromZoneAndName("az-1.region-a.geo-1", "name1"));
+      AtomicReference<RegionAndName> securityGroupInRegionRef = Atomics.newReference(RegionAndName
+               .fromRegionAndName("az-1.region-a.geo-1", "name1"));
 
       // we can find it
-      assertTrue(predicate.apply(securityGroupInZoneRef));
+      assertTrue(predicate.apply(securityGroupInRegionRef));
 
       // the reference is now up to date, and includes the actual group found.
-      assertEquals(securityGroupInZoneRef.get().toString(), new SecurityGroupInZone(Iterables
+      assertEquals(securityGroupInRegionRef.get().toString(), new SecurityGroupInRegion(Iterables
                .getOnlyElement(new ParseSecurityGroupListTest().expected()), "az-1.region-a.geo-1").toString());
 
    }
@@ -84,15 +84,15 @@ public class FindSecurityGroupWithNameAndReturnTrueExpectTest extends BaseNovaAp
       FindSecurityGroupWithNameAndReturnTrue predicate = new FindSecurityGroupWithNameAndReturnTrue(
                apiWhenSecurityGroupsExist);
 
-      ZoneAndName zoneAndGroup = ZoneAndName.fromZoneAndName("az-1.region-a.geo-1", "name2");
+      RegionAndName regionAndGroup = RegionAndName.fromRegionAndName("az-1.region-a.geo-1", "name2");
 
-      AtomicReference<ZoneAndName> securityGroupInZoneRef = Atomics.newReference(zoneAndGroup);
+      AtomicReference<RegionAndName> securityGroupInRegionRef = Atomics.newReference(regionAndGroup);
 
       // we cannot find it
-      assertFalse(predicate.apply(securityGroupInZoneRef));
+      assertFalse(predicate.apply(securityGroupInRegionRef));
 
       // the reference is the same
-      assertEquals(securityGroupInZoneRef.get(), zoneAndGroup);
+      assertEquals(securityGroupInRegionRef.get(), regionAndGroup);
 
    }
 }

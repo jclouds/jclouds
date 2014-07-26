@@ -38,15 +38,15 @@ import com.google.common.collect.Iterables;
 public class ServerWithSecurityGroupsApiLiveTest extends BaseNovaApiLiveTest {
    private ServerApi serverApi;
    private Optional<? extends ServerWithSecurityGroupsApi> apiOption;
-   private String zone;
+   private String region;
 
    @BeforeGroups(groups = {"integration", "live"})
    @Override
    public void setup() {
       super.setup();
-      zone = Iterables.getLast(api.getConfiguredZones(), "nova");
-      serverApi = api.getServerApiForZone(zone);
-      apiOption = api.getServerWithSecurityGroupsExtensionForZone(zone);
+      region = Iterables.getLast(api.getConfiguredRegions(), "nova");
+      serverApi = api.getServerApi(region);
+      apiOption = api.getServerWithSecurityGroupsApi(region);
    }
 
    public void testGetServer() {
@@ -62,8 +62,8 @@ public class ServerWithSecurityGroupsApiLiveTest extends BaseNovaApiLiveTest {
          // Create a new server to verify the groups work as expected
          Server testServer = null;
          try {
-            testServer = createServerInZone(zone);
-            
+            testServer = createServerInRegion(region);
+
             ServerWithSecurityGroups results = apiOption.get().get(testServer.getId());
             assertEquals(results.getId(), testServer.getId());
             assertEquals(results.getSecurityGroupNames(), ImmutableSet.of("default"));

@@ -17,8 +17,8 @@
 package org.jclouds.rackspace.cloudblockstorage.us;
 
 import static org.jclouds.location.reference.LocationConstants.ISO3166_CODES;
-import static org.jclouds.location.reference.LocationConstants.PROPERTY_ZONE;
-import static org.jclouds.location.reference.LocationConstants.PROPERTY_ZONES;
+import static org.jclouds.location.reference.LocationConstants.PROPERTY_REGION;
+import static org.jclouds.location.reference.LocationConstants.PROPERTY_REGIONS;
 import static org.jclouds.openstack.keystone.v2_0.config.KeystoneProperties.CREDENTIAL_TYPE;
 
 import java.net.URI;
@@ -27,7 +27,7 @@ import java.util.Properties;
 import org.jclouds.openstack.cinder.v1.CinderApiMetadata;
 import org.jclouds.openstack.cinder.v1.config.CinderHttpApiModule;
 import org.jclouds.openstack.cinder.v1.config.CinderParserModule;
-import org.jclouds.openstack.keystone.v2_0.config.KeystoneAuthenticationModule.ZoneModule;
+import org.jclouds.openstack.keystone.v2_0.config.KeystoneAuthenticationModule.RegionModule;
 import org.jclouds.providers.ProviderMetadata;
 import org.jclouds.providers.internal.BaseProviderMetadata;
 import org.jclouds.rackspace.cloudidentity.v2_0.config.CloudIdentityAuthenticationApiModule;
@@ -62,15 +62,15 @@ public class CloudBlockStorageUSProviderMetadata extends BaseProviderMetadata {
    public static Properties defaultProperties() {
       Properties properties = new Properties();
       properties.setProperty(CREDENTIAL_TYPE, CloudIdentityCredentialTypes.API_KEY_CREDENTIALS);
-      properties.setProperty(PROPERTY_ZONES, "ORD,DFW,IAD,SYD,HKG");
-      properties.setProperty(PROPERTY_ZONE + ".ORD." + ISO3166_CODES, "US-IL");
-      properties.setProperty(PROPERTY_ZONE + ".DFW." + ISO3166_CODES, "US-TX");
-      properties.setProperty(PROPERTY_ZONE + ".IAD." + ISO3166_CODES, "US-VA");
-      properties.setProperty(PROPERTY_ZONE + ".SYD." + ISO3166_CODES, "AU-NSW");
-      properties.setProperty(PROPERTY_ZONE + ".HKG." + ISO3166_CODES, "HK");
+      properties.setProperty(PROPERTY_REGIONS, "ORD,DFW,IAD,SYD,HKG");
+      properties.setProperty(PROPERTY_REGION + ".ORD." + ISO3166_CODES, "US-IL");
+      properties.setProperty(PROPERTY_REGION + ".DFW." + ISO3166_CODES, "US-TX");
+      properties.setProperty(PROPERTY_REGION + ".IAD." + ISO3166_CODES, "US-VA");
+      properties.setProperty(PROPERTY_REGION + ".SYD." + ISO3166_CODES, "AU-NSW");
+      properties.setProperty(PROPERTY_REGION + ".HKG." + ISO3166_CODES, "HK");
       return properties;
    }
-   
+
    public static class Builder extends BaseProviderMetadata.Builder {
 
       protected Builder() {
@@ -85,7 +85,7 @@ public class CloudBlockStorageUSProviderMetadata extends BaseProviderMetadata {
                   .defaultModules(ImmutableSet.<Class<? extends Module>>builder()
                                               .add(CloudIdentityAuthenticationApiModule.class)
                                               .add(CloudIdentityAuthenticationModule.class)
-                                              .add(ZoneModule.class)
+                                              .add(RegionModule.class)
                                               .add(CinderParserModule.class)
                                               .add(CinderHttpApiModule.class).build())
                   .build())

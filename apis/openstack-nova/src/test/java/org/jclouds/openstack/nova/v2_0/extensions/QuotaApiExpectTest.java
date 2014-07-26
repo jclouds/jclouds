@@ -42,7 +42,7 @@ public class QuotaApiExpectTest extends BaseNovaApiExpectTest {
       QuotaApi api = requestsSendResponses(keystoneAuthWithUsernameAndPasswordAndTenantName,
             responseWithKeystoneAccess, extensionsOfNovaRequest, extensionsOfNovaResponse,
             authenticatedGET().endpoint(endpoint).build(),
-            HttpResponse.builder().statusCode(200).payload(payloadFromResource("/quotas.json")).build()).getQuotaExtensionForZone("az-1.region-a.geo-1").get();
+            HttpResponse.builder().statusCode(200).payload(payloadFromResource("/quotas.json")).build()).getQuotaApi("az-1.region-a.geo-1").get();
 
       assertEquals(api.getByTenant("demo"), getTestQuotas());
    }
@@ -52,7 +52,7 @@ public class QuotaApiExpectTest extends BaseNovaApiExpectTest {
       QuotaApi api = requestsSendResponses(keystoneAuthWithUsernameAndPasswordAndTenantName,
             responseWithKeystoneAccess, extensionsOfNovaRequest, extensionsOfNovaResponse,
             authenticatedGET().endpoint(endpoint).build(),
-            HttpResponse.builder().statusCode(404).build()).getQuotaExtensionForZone("az-1.region-a.geo-1").get();
+            HttpResponse.builder().statusCode(404).build()).getQuotaApi("az-1.region-a.geo-1").get();
       assertNull(api.getByTenant("demo"));
    }
 
@@ -61,7 +61,7 @@ public class QuotaApiExpectTest extends BaseNovaApiExpectTest {
       QuotaApi api = requestsSendResponses(keystoneAuthWithUsernameAndPasswordAndTenantName,
             responseWithKeystoneAccess, extensionsOfNovaRequest, extensionsOfNovaResponse,
             authenticatedGET().endpoint(endpoint).build(),
-            HttpResponse.builder().statusCode(200).payload(payloadFromResource("/quotas.json")).build()).getQuotaExtensionForZone("az-1.region-a.geo-1").get();
+            HttpResponse.builder().statusCode(200).payload(payloadFromResource("/quotas.json")).build()).getQuotaApi("az-1.region-a.geo-1").get();
 
       assertEquals(api.getDefaultsForTenant("demo"), getTestQuotas());
    }
@@ -71,7 +71,7 @@ public class QuotaApiExpectTest extends BaseNovaApiExpectTest {
       QuotaApi api = requestsSendResponses(keystoneAuthWithUsernameAndPasswordAndTenantName,
             responseWithKeystoneAccess, extensionsOfNovaRequest, extensionsOfNovaResponse,
             authenticatedGET().endpoint(endpoint).build(),
-            HttpResponse.builder().statusCode(404).build()).getQuotaExtensionForZone("az-1.region-a.geo-1").get();
+            HttpResponse.builder().statusCode(404).build()).getQuotaApi("az-1.region-a.geo-1").get();
       assertNull(api.getDefaultsForTenant("demo"));
    }
 
@@ -85,7 +85,7 @@ public class QuotaApiExpectTest extends BaseNovaApiExpectTest {
                   .addHeader("Accept", "application/json")
                   .payload(payloadFromResourceWithContentType("/quotas.json", MediaType.APPLICATION_JSON))
                   .build(),
-            HttpResponse.builder().statusCode(200).build()).getQuotaExtensionForZone("az-1.region-a.geo-1").get();
+            HttpResponse.builder().statusCode(200).build()).getQuotaApi("az-1.region-a.geo-1").get();
 
       assertTrue(api.updateQuotaOfTenant(getTestQuotas(), "demo"));
    }
@@ -100,7 +100,7 @@ public class QuotaApiExpectTest extends BaseNovaApiExpectTest {
                   .addHeader("Accept", "application/json")
                   .payload(payloadFromResourceWithContentType("/quotas.json", MediaType.APPLICATION_JSON))
                   .build(),
-            HttpResponse.builder().statusCode(404).build()).getQuotaExtensionForZone("az-1.region-a.geo-1").get();
+            HttpResponse.builder().statusCode(404).build()).getQuotaApi("az-1.region-a.geo-1").get();
 
       api.updateQuotaOfTenant(getTestQuotas(), "demo");
    }

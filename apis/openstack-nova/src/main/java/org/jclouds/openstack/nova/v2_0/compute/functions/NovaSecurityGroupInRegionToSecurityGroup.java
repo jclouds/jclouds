@@ -30,7 +30,7 @@ import org.jclouds.compute.domain.SecurityGroupBuilder;
 import org.jclouds.compute.reference.ComputeServiceConstants;
 import org.jclouds.domain.Location;
 import org.jclouds.logging.Logger;
-import org.jclouds.openstack.nova.v2_0.domain.zonescoped.SecurityGroupInZone;
+import org.jclouds.openstack.nova.v2_0.domain.regionscoped.SecurityGroupInRegion;
 
 import com.google.common.base.Function;
 import com.google.common.base.Supplier;
@@ -42,7 +42,7 @@ import com.google.inject.Inject;
  * SecurityGroup object.
  */
 @Singleton
-public class NovaSecurityGroupInZoneToSecurityGroup implements Function<SecurityGroupInZone, SecurityGroup> {
+public class NovaSecurityGroupInRegionToSecurityGroup implements Function<SecurityGroupInRegion, SecurityGroup> {
    @Resource
    @Named(ComputeServiceConstants.COMPUTE_LOGGER)
    protected Logger logger = Logger.NULL;
@@ -51,22 +51,22 @@ public class NovaSecurityGroupInZoneToSecurityGroup implements Function<Security
    protected final Supplier<Map<String, Location>> locationIndex;
 
    @Inject
-   public NovaSecurityGroupInZoneToSecurityGroup(Function<org.jclouds.openstack.nova.v2_0.domain.SecurityGroup, SecurityGroup> baseConverter,
+   public NovaSecurityGroupInRegionToSecurityGroup(Function<org.jclouds.openstack.nova.v2_0.domain.SecurityGroup, SecurityGroup> baseConverter,
                                                  Supplier<Map<String, Location>> locationIndex) {
       this.baseConverter = checkNotNull(baseConverter, "baseConverter");
       this.locationIndex = checkNotNull(locationIndex, "locationIndex");
    }
 
    @Override
-   public SecurityGroup apply(SecurityGroupInZone group) {
+   public SecurityGroup apply(SecurityGroupInRegion group) {
       SecurityGroupBuilder builder = SecurityGroupBuilder.fromSecurityGroup(baseConverter.apply(group.getSecurityGroup()));
 
-      Location zone = locationIndex.get().get(group.getZone());
-      checkState(zone != null, "location %s not in locationIndex: %s", group.getZone(), locationIndex.get());
+      Location region = locationIndex.get().get(group.getRegion());
+      checkState(region != null, "location %s not in locationIndex: %s", group.getRegion(), locationIndex.get());
 
-      builder.location(zone);
+      builder.location(region);
 
-      builder.id(group.getZone() + "/" + group.getSecurityGroup().getId());
+      builder.id(group.getRegion() + "/" + group.getSecurityGroup().getId());
 
       return builder.build();
    }

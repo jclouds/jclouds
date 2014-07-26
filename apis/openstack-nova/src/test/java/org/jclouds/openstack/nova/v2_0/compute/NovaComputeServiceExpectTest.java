@@ -50,17 +50,17 @@ import com.google.inject.TypeLiteral;
  */
 @Test(groups = "unit", testName = "NovaComputeServiceExpectTest")
 public class NovaComputeServiceExpectTest extends BaseNovaComputeServiceExpectTest {
-   
+
    @Override
    protected Properties setupProperties() {
       Properties overrides = super.setupProperties();
-      // only specify limited zones so that we don't have to configure requests for multiple zones.
+      // only specify limited regions so that we don't have to configure requests for multiple regions.
       // since we are doing tests with keystone responses from hpcloud and also openstack, we have
-      // to whitelist one zone from each
-      overrides.setProperty("jclouds.zones", "az-1.region-a.geo-1,RegionOne");
+      // to whitelist one region from each
+      overrides.setProperty("jclouds.regions", "az-1.region-a.geo-1,RegionOne");
       return overrides;
    }
-   
+
    public void testListLocationsWhenResponseIs2xx() throws Exception {
 
       Map<HttpRequest, HttpResponse> requestResponseMap = ImmutableMap.<HttpRequest, HttpResponse> builder()
@@ -189,7 +189,7 @@ public class NovaComputeServiceExpectTest extends BaseNovaComputeServiceExpectTe
 
    HttpResponse securityGroupWithPort22 = HttpResponse.builder().statusCode(200)
          .payload(payloadFromResource("/securitygroup_details_port22.json")).build();
-   
+
    HttpRequest create = HttpRequest
          .builder()
          .method("POST")

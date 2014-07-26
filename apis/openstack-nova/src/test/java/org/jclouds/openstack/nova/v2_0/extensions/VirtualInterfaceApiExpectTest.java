@@ -41,7 +41,7 @@ public class VirtualInterfaceApiExpectTest extends BaseNovaApiExpectTest {
             responseWithKeystoneAccess, extensionsOfNovaRequest, extensionsOfNovaResponse,
             authenticatedGET().endpoint(endpoint).build(),
             HttpResponse.builder().statusCode(200).payload(payloadFromResource("/virtual_interfaces_list.json")).build()
-      ).getVirtualInterfaceExtensionForZone("az-1.region-a.geo-1").get();
+      ).getVirtualInterfaceApi("az-1.region-a.geo-1").get();
 
       VirtualInterface vif = Iterables.getOnlyElement(api.listOnServer("1"));
       assertEquals(vif.getId(), "02315827-b05c-4668-9c05-75c68838074a");
@@ -55,7 +55,7 @@ public class VirtualInterfaceApiExpectTest extends BaseNovaApiExpectTest {
             responseWithKeystoneAccess, extensionsOfNovaRequest, extensionsOfNovaResponse,
             authenticatedGET().endpoint(endpoint).build(),
             HttpResponse.builder().statusCode(404).build()
-      ).getVirtualInterfaceExtensionForZone("az-1.region-a.geo-1").get();
+      ).getVirtualInterfaceApi("az-1.region-a.geo-1").get();
 
       assertTrue(api.listOnServer("1").isEmpty());
    }

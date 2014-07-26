@@ -69,9 +69,9 @@ public class ParseLoadBalancerUsages extends ParseJson<LoadBalancerUsages> {
 
       @Override
       protected Function<Object, IterableWithMarker<LoadBalancerUsage>> markerToNextForArg0(Optional<Object> arg0) {
-         String zone = arg0.get().toString();
-         final ReportApi reportApi = api.getReportApiForZone(zone);
-         
+         String region = arg0.get().toString();
+         final ReportApi reportApi = api.getReportApi(region);
+
          return new Function<Object, IterableWithMarker<LoadBalancerUsage>>() {
 
             @Override

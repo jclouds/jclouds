@@ -35,22 +35,21 @@ import com.google.common.collect.Iterables;
 @Test(groups = "live", testName = "VirtualInterfaceApiLiveTest", singleThreaded = true)
 public class VirtualInterfaceApiLiveTest extends BaseNovaApiLiveTest {
    private Optional<? extends VirtualInterfaceApi> apiOption;
-   private String zone;
-
+   private String region;
 
    @BeforeClass(groups = {"integration", "live"})
    @Override
    public void setup() {
       super.setup();
-      zone = Iterables.getLast(api.getConfiguredZones(), "nova");
-      apiOption = api.getVirtualInterfaceExtensionForZone(zone);
+      region = Iterables.getLast(api.getConfiguredRegions(), "nova");
+      apiOption = api.getVirtualInterfaceApi(region);
    }
 
    public void testListVirtualInterfaces() {
       if (apiOption.isPresent()) {
          Server testServer = null;
          try {
-            testServer = createServerInZone(zone);
+            testServer = createServerInRegion(region);
             Set<? extends VirtualInterface> results = apiOption.get().listOnServer(testServer.getId()).toSet();
             for (VirtualInterface vif : results) {
                assertNotNull(vif.getId());
@@ -58,7 +57,7 @@ public class VirtualInterfaceApiLiveTest extends BaseNovaApiLiveTest {
             }
          } finally {
             if (testServer != null) {
-               api.getServerApiForZone(zone).delete(testServer.getId());
+               api.getServerApi(region).delete(testServer.getId());
             }
          }
    }

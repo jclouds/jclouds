@@ -43,7 +43,7 @@ import com.google.common.collect.Iterables;
 public class VolumeTypeApiLiveTest extends BaseNovaApiLiveTest {
 
    private Optional<? extends VolumeTypeApi> volumeTypeOption;
-   private String zone;
+   private String region;
 
    private VolumeType testVolumeType;
 
@@ -51,8 +51,8 @@ public class VolumeTypeApiLiveTest extends BaseNovaApiLiveTest {
    @Override
    public void setup() {
       super.setup();
-      zone = Iterables.getLast(api.getConfiguredZones(), "nova");
-      volumeTypeOption = api.getVolumeTypeExtensionForZone(zone);
+      region = Iterables.getLast(api.getConfiguredRegions(), "nova");
+      volumeTypeOption = api.getVolumeTypeApi(region);
    }
 
 

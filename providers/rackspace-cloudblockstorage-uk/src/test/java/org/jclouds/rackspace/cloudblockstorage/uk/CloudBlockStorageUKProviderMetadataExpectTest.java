@@ -38,15 +38,15 @@ public class CloudBlockStorageUKProviderMetadataExpectTest extends BaseCinderApi
       this.credential = "myApiKey";
    }
 
-   public void testCanGetConfiguredZones() {
-      
+   public void testCanGetConfiguredRegions() {
+
       HttpRequest authenticate = HttpRequest.builder().method("POST")
             .endpoint("https://lon.identity.api.rackspacecloud.com/v2.0/tokens")
             .addHeader("Accept", "application/json")
             .payload(payloadFromStringWithContentType(
                      "{\"auth\":{\"RAX-KSKEY:apiKeyCredentials\":{\"username\":\"myUsername\",\"apiKey\":\"myApiKey\"}}}"
                      , "application/json")).build();
-      
+
 
       HttpResponse authenticationResponse = HttpResponse.builder()
             .statusCode(200)
@@ -55,7 +55,7 @@ public class CloudBlockStorageUKProviderMetadataExpectTest extends BaseCinderApi
 
       CinderApi whenNovaRegionExists = requestSendsResponse(authenticate, authenticationResponse);
 
-      assertEquals(whenNovaRegionExists.getConfiguredZones(), ImmutableSet.of("LON"));
+      assertEquals(whenNovaRegionExists.getConfiguredRegions(), ImmutableSet.of("LON"));
 
    }
 

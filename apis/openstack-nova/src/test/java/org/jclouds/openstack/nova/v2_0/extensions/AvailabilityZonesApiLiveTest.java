@@ -18,9 +18,11 @@ package org.jclouds.openstack.nova.v2_0.extensions;
 
 import com.google.common.base.Optional;
 import com.google.common.collect.FluentIterable;
-import org.jclouds.openstack.nova.v2_0.domain.zonescoped.AvailabilityZone;
+
+import org.jclouds.openstack.nova.v2_0.domain.regionscoped.AvailabilityZone;
 import org.jclouds.openstack.nova.v2_0.internal.BaseNovaApiLiveTest;
 import org.testng.annotations.Test;
+
 import static org.testng.Assert.assertNotNull;
 import static org.testng.Assert.assertTrue;
 

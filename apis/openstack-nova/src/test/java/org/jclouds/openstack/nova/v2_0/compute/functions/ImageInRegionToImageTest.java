@@ -28,7 +28,7 @@ import org.jclouds.domain.LocationBuilder;
 import org.jclouds.domain.LocationScope;
 import org.jclouds.openstack.nova.v2_0.compute.config.NovaComputeServiceContextModule;
 import org.jclouds.openstack.nova.v2_0.domain.Image;
-import org.jclouds.openstack.nova.v2_0.domain.zonescoped.ImageInZone;
+import org.jclouds.openstack.nova.v2_0.domain.regionscoped.ImageInRegion;
 import org.testng.annotations.Test;
 
 import com.google.common.base.Function;
@@ -40,30 +40,30 @@ import com.google.common.collect.ImmutableMap;
 /**
  * Tests the function that transforms nova-specific images to generic images.
  */
-@Test(testName = "ImageInZoneToHardwareTest")
-public class ImageInZoneToImageTest {
+@Test(testName = "ImageInRegionToHardwareTest")
+public class ImageInRegionToImageTest {
 
    Location provider = new LocationBuilder().scope(LocationScope.PROVIDER).id("openstack-nova").description(
             "openstack-nova").build();
-   Location zone = new LocationBuilder().id("az-1.region-a.geo-1").description("az-1.region-a.geo-1").scope(
-            LocationScope.ZONE).parent(provider).build();
+   Location region = new LocationBuilder().id("az-1.region-a.geo-1").description("az-1.region-a.geo-1").scope(
+            LocationScope.REGION).parent(provider).build();
    Supplier<Map<String, Location>> locationIndex = Suppliers.<Map<String, Location>> ofInstance(ImmutableMap
-            .<String, Location> of("az-1.region-a.geo-1", zone));
-   
+            .<String, Location> of("az-1.region-a.geo-1", region));
+
    @Test
    public void testConversionWhereLocationFound() {
       UUID id = UUID.randomUUID();
       Image novaImageToConvert = Image.builder().id(id.toString()).name("Test Image " + id).status(Image.Status.DELETED).build();
       OperatingSystem operatingSystem = new OperatingSystem(OsFamily.UBUNTU, "My Test OS", "My Test Version", "x86",
                "My Test OS", true);
-      ImageInZoneToImage converter = new ImageInZoneToImage(NovaComputeServiceContextModule.toPortableImageStatus,
+      ImageInRegionToImage converter = new ImageInRegionToImage(NovaComputeServiceContextModule.toPortableImageStatus,
                constant(operatingSystem), locationIndex);
 
-      ImageInZone novaImageInZoneToConvert = new ImageInZone(novaImageToConvert, "az-1.region-a.geo-1");
+      ImageInRegion novaImageInRegionToConvert = new ImageInRegion(novaImageToConvert, "az-1.region-a.geo-1");
 
-      org.jclouds.compute.domain.Image convertedImage = converter.apply(novaImageInZoneToConvert);
+      org.jclouds.compute.domain.Image convertedImage = converter.apply(novaImageInRegionToConvert);
 
-      assertEquals(convertedImage.getId(), novaImageInZoneToConvert.slashEncode());
+      assertEquals(convertedImage.getId(), novaImageInRegionToConvert.slashEncode());
       assertEquals(convertedImage.getProviderId(), novaImageToConvert.getId());
       assertEquals(convertedImage.getLocation(), locationIndex.get().get("az-1.region-a.geo-1"));
 
@@ -78,12 +78,12 @@ public class ImageInZoneToImageTest {
       Image novaImageToConvert = Image.builder().id(id.toString()).name("Test Image " + id).build();
       OperatingSystem operatingSystem = new OperatingSystem(OsFamily.UBUNTU, "My Test OS", "My Test Version", "x86",
                "My Test OS", true);
-      ImageInZoneToImage converter = new ImageInZoneToImage(NovaComputeServiceContextModule.toPortableImageStatus,
+      ImageInRegionToImage converter = new ImageInRegionToImage(NovaComputeServiceContextModule.toPortableImageStatus,
                constant(operatingSystem), locationIndex);
 
-      ImageInZone novaImageInZoneToConvert = new ImageInZone(novaImageToConvert, "South");
+      ImageInRegion novaImageInRegionToConvert = new ImageInRegion(novaImageToConvert, "South");
 
-      converter.apply(novaImageInZoneToConvert);
+      converter.apply(novaImageInRegionToConvert);
    }
 
    @SuppressWarnings("unchecked")

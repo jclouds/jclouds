@@ -35,7 +35,7 @@ import org.jclouds.logging.Logger;
 import org.jclouds.openstack.nova.v2_0.NovaApi;
 import org.jclouds.openstack.nova.v2_0.compute.options.NodeAndNovaTemplateOptions;
 import org.jclouds.openstack.nova.v2_0.domain.FloatingIP;
-import org.jclouds.openstack.nova.v2_0.domain.zonescoped.ZoneAndId;
+import org.jclouds.openstack.nova.v2_0.domain.regionscoped.RegionAndId;
 import org.jclouds.openstack.nova.v2_0.extensions.FloatingIPApi;
 import org.jclouds.rest.InsufficientResourcesException;
 
@@ -60,11 +60,11 @@ public class AllocateAndAddFloatingIpToNode implements
 
    private final Predicate<AtomicReference<NodeMetadata>> nodeRunning;
    private final NovaApi novaApi;
-   private final LoadingCache<ZoneAndId, Iterable<? extends FloatingIP>> floatingIpCache;
+   private final LoadingCache<RegionAndId, Iterable<? extends FloatingIP>> floatingIpCache;
 
    @Inject
    public AllocateAndAddFloatingIpToNode(@Named(TIMEOUT_NODE_RUNNING) Predicate<AtomicReference<NodeMetadata>> nodeRunning,
-            NovaApi novaApi, @Named("FLOATINGIP") LoadingCache<ZoneAndId, Iterable<? extends FloatingIP>> floatingIpCache) {
+            NovaApi novaApi, @Named("FLOATINGIP") LoadingCache<RegionAndId, Iterable<? extends FloatingIP>> floatingIpCache) {
       this.nodeRunning = checkNotNull(nodeRunning, "nodeRunning");
       this.novaApi = checkNotNull(novaApi, "novaApi");
       this.floatingIpCache = checkNotNull(floatingIpCache, "floatingIpCache");
@@ -75,8 +75,8 @@ public class AllocateAndAddFloatingIpToNode implements
       checkState(nodeRunning.apply(input.get().getNodeMetadata()), "node never achieved state running %s", input.get().getNodeMetadata());
       NodeMetadata node = input.get().getNodeMetadata().get();
       // node's location is a host
-      String zoneId = node.getLocation().getParent().getId();
-      FloatingIPApi floatingIpApi = novaApi.getFloatingIPExtensionForZone(zoneId).get();
+      String regionId = node.getLocation().getParent().getId();
+      FloatingIPApi floatingIpApi = novaApi.getFloatingIPApi(regionId).get();
       Optional<Set<String>> poolNames = input.get().getNovaTemplateOptions().get().getFloatingIpPoolNames();
 
       Optional<FloatingIP> ip = allocateFloatingIPForNode(floatingIpApi, poolNames, node.getId());
@@ -87,7 +87,7 @@ public class AllocateAndAddFloatingIpToNode implements
 
       floatingIpApi.addToServer(ip.get().getIp(), node.getProviderId());
       input.get().getNodeMetadata().set(NodeMetadataBuilder.fromNodeMetadata(node).publicAddresses(ImmutableSet.of(ip.get().getIp())).build());
-      floatingIpCache.invalidate(ZoneAndId.fromSlashEncoded(node.getId()));
+      floatingIpCache.invalidate(RegionAndId.fromSlashEncoded(node.getId()));
       return input.get().getNodeMetadata();
    }
 

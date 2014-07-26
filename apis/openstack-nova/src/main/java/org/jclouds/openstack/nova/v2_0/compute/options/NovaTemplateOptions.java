@@ -196,10 +196,10 @@ public class NovaTemplateOptions extends TemplateOptions implements Cloneable {
 
    /**
     * <h3>Note</h3>
-    * 
-    * This requires that {@link NovaApi#getExtensionForZone(String)} to return
+    *
+    * This requires that {@link NovaApi#getExtensionForRegion(String)} to return
     * {@link Optional#isPresent present}
-    * 
+    *
     * @return true if auto assignment of a floating ip to each vm is enabled
     */
    public boolean shouldAutoAssignFloatingIp() {
@@ -229,7 +229,7 @@ public class NovaTemplateOptions extends TemplateOptions implements Cloneable {
    /**
     * <h3>Note</h3>
     *
-    * This requires that {@link NovaApi#getKeyPairExtensionForZone(String)} to return
+    * This requires that {@link NovaApi#getKeyPairExtensionApi(String)} to return
     * {@link Optional#isPresent present}
     *
     * @return true if auto generation of keypairs is enabled
@@ -241,7 +241,7 @@ public class NovaTemplateOptions extends TemplateOptions implements Cloneable {
    /**
     * if unset, generate a default group prefixed with {@link jclouds#} according
     * to {@link #getInboundPorts()}
-    * 
+    *
     * @see org.jclouds.openstack.nova.v2_0.options.CreateServerOptions#getSecurityGroupNames
     * @deprecated Use {@link TemplateOptions#getGroups()} instead.
     */
@@ -301,14 +301,14 @@ public class NovaTemplateOptions extends TemplateOptions implements Cloneable {
       }
 
       /**
-       * @see NovaTemplateOptions#shouldGenerateKeyPair() 
+       * @see NovaTemplateOptions#shouldGenerateKeyPair()
        */
       public static NovaTemplateOptions generateKeyPair(boolean enable) {
          return new NovaTemplateOptions().generateKeyPair(enable);
       }
 
       /**
-       * @see NovaTemplateOptions#getKeyPairName() 
+       * @see NovaTemplateOptions#getKeyPairName()
        */
       public static NovaTemplateOptions keyPairName(String keyPairName) {
          return new NovaTemplateOptions().keyPairName(keyPairName);
@@ -645,8 +645,8 @@ public class NovaTemplateOptions extends TemplateOptions implements Cloneable {
    }
 
    /**
-    * OpenStack can be configured to write metadata to a special configuration drive that will be 
-    * attached to the instance when it boots. The instance can retrieve any information that would 
+    * OpenStack can be configured to write metadata to a special configuration drive that will be
+    * attached to the instance when it boots. The instance can retrieve any information that would
     * normally be available through the metadata service by mounting this disk and reading files from it.
     * To enable the config drive, set this parameter to "true".
     * This has to be enabled for user data cases.

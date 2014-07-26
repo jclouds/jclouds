@@ -51,7 +51,7 @@ public class CloudLoadBalancersDestroyLoadBalancerStrategy implements DestroyLoa
       String[] parts = checkNotNull(id, "id").split("/");
       String region = parts[0];
       int lbId = Integer.parseInt(parts[1]);
-      client.getLoadBalancerApiForZone(region).delete(lbId);
+      client.getLoadBalancerApi(region).delete(lbId);
       return getLoadBalancer.getLoadBalancer(id);
    }
 }

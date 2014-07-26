@@ -49,9 +49,9 @@ public class HostAggregateApiLiveTest extends BaseNovaApiLiveTest {
    @Override
    public void setup() {
       super.setup();
-      String zone = Iterables.getLast(api.getConfiguredZones(), "nova");
-      apiOption = api.getHostAggregateExtensionForZone(zone);
-      hostAdminOption = api.getHostAdministrationExtensionForZone(zone);
+      String region = Iterables.getLast(api.getConfiguredRegions(), "nova");
+      apiOption = api.getHostAggregateApi(region);
+      hostAdminOption = api.getHostAdministrationApi(region);
    }
 
    @AfterClass(groups = { "integration", "live" })
@@ -99,7 +99,7 @@ public class HostAggregateApiLiveTest extends BaseNovaApiLiveTest {
          )) {
             // Apply changes
             HostAggregate details = api.setMetadata(testAggregate.getId(), theMetaData);
-            
+
             //  bug in openstack - metadata values are never removed, so we just checking what we've set
             for (Map.Entry<String, String> entry : theMetaData.entrySet()) {
                assertEquals(details.getMetadata().get(entry.getKey()), entry.getValue());

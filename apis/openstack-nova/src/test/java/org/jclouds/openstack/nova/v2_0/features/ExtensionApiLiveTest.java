@@ -35,13 +35,13 @@ public class ExtensionApiLiveTest extends BaseNovaApiLiveTest {
 
     /**
      * Tests the listing of Extensions.
-     * 
+     *
      * @throws Exception
      */
     @Test(description = "GET /v${apiVersion}/{tenantId}/extensions")
     public void testListExtensions() throws Exception {
-       for (String zoneId : zones) {
-          ExtensionApi extensionApi = api.getExtensionApiForZone(zoneId);
+       for (String regionId : regions) {
+          ExtensionApi extensionApi = api.getExtensionApi(regionId);
           Set<? extends Extension> response = extensionApi.list();
           assertNotNull(response);
           assertFalse(response.isEmpty());
@@ -58,13 +58,13 @@ public class ExtensionApiLiveTest extends BaseNovaApiLiveTest {
 
     /**
      * Tests retrieval of Extensions using their alias.
-     * 
+     *
      * @throws Exception
      */
     @Test(description = "GET /v${apiVersion}/{tenantId}/extensions/{alias}", dependsOnMethods = { "testListExtensions" })
     public void testGetExtensionByAlias() throws Exception {
-       for (String zoneId : zones) {
-           ExtensionApi extensionApi = api.getExtensionApiForZone(zoneId);
+       for (String regionId : regions) {
+           ExtensionApi extensionApi = api.getExtensionApi(regionId);
            Set<? extends Extension> response = extensionApi.list();
            for (Extension extension : response) {
               Extension details = extensionApi.get(extension.getId());

@@ -28,7 +28,7 @@ import org.jclouds.compute.reference.ComputeServiceConstants;
 import org.jclouds.logging.Logger;
 import org.jclouds.openstack.nova.v2_0.NovaApi;
 import org.jclouds.openstack.nova.v2_0.domain.KeyPair;
-import org.jclouds.openstack.nova.v2_0.domain.zonescoped.ZoneAndName;
+import org.jclouds.openstack.nova.v2_0.domain.regionscoped.RegionAndName;
 import org.jclouds.openstack.nova.v2_0.extensions.KeyPairApi;
 
 import com.google.common.base.Optional;
@@ -36,7 +36,7 @@ import com.google.common.cache.CacheLoader;
 import com.google.inject.Inject;
 
 @Singleton
-public class CreateUniqueKeyPair extends CacheLoader<ZoneAndName, KeyPair> {
+public class CreateUniqueKeyPair extends CacheLoader<RegionAndName, KeyPair> {
    @Resource
    @Named(ComputeServiceConstants.COMPUTE_LOGGER)
    protected Logger logger = Logger.NULL;
@@ -50,15 +50,15 @@ public class CreateUniqueKeyPair extends CacheLoader<ZoneAndName, KeyPair> {
    }
 
    @Override
-   public KeyPair load(ZoneAndName zoneAndName) {
-      String zoneId = checkNotNull(zoneAndName, "zoneAndName").getZone();
-      String prefix = zoneAndName.getName();
+   public KeyPair load(RegionAndName regionAndName) {
+      String regionId = checkNotNull(regionAndName, "regionAndName").getRegion();
+      String prefix = regionAndName.getName();
 
-      Optional<? extends KeyPairApi> api = novaApi.getKeyPairExtensionForZone(zoneId);
-      checkArgument(api.isPresent(), "Key pairs are required, but the extension is not available in zone %s!",
-            zoneId);
+      Optional<? extends KeyPairApi> api = novaApi.getKeyPairApi(regionId);
+      checkArgument(api.isPresent(), "Key pairs are required, but the extension is not available in region %s!",
+            regionId);
 
-      logger.debug(">> creating keyPair zone(%s) prefix(%s)", zoneId, prefix);
+      logger.debug(">> creating keyPair region(%s) prefix(%s)", regionId, prefix);
 
       KeyPair keyPair = null;
       while (keyPair == null) {

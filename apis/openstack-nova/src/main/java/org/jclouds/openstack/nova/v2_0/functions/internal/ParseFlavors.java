@@ -71,8 +71,8 @@ public class ParseFlavors extends ParseJson<Flavors> {
 
       @Override
       protected Function<Object, IterableWithMarker<Resource>> markerToNextForArg0(Optional<Object> arg0) {
-         String zone = arg0.get().toString();
-         final FlavorApi flavorApi = api.getFlavorApiForZone(zone);
+         String region = arg0.get().toString();
+         final FlavorApi flavorApi = api.getFlavorApi(region);
          return new Function<Object, IterableWithMarker<Resource>>() {
 
             @SuppressWarnings("unchecked")

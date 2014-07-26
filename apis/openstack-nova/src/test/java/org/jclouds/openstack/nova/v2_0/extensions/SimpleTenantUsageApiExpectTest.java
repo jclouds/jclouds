@@ -52,10 +52,10 @@ public class SimpleTenantUsageApiExpectTest extends BaseNovaApiExpectTest {
             .endpoint(endpoint).build(),
             HttpResponse.builder().statusCode(200)
                   .payload(payloadFromResource("/simple_tenant_usages.json")).build())
-            .getSimpleTenantUsageExtensionForZone("az-1.region-a.geo-1").get();
-      
+            .getSimpleTenantUsageApi("az-1.region-a.geo-1").get();
+
       Set<? extends SimpleTenantUsage> results = api.list().toSet();
-      
+
       SimpleTenantUsage usage = Iterables.getOnlyElement(results);
       assertEquals(usage.getTenantId(), "f8535069c3fb404cb61c873b1a0b4921");
       assertEquals(usage.getTotalHours(), 4.888888888888889e-07);
@@ -78,11 +78,11 @@ public class SimpleTenantUsageApiExpectTest extends BaseNovaApiExpectTest {
                   .endpoint(endpoint).build(),
             HttpResponse.builder().statusCode(200)
                   .payload(payloadFromResource("/simple_tenant_usage.json")).build())
-            .getSimpleTenantUsageExtensionForZone("az-1.region-a.geo-1").get();
+            .getSimpleTenantUsageApi("az-1.region-a.geo-1").get();
 
       SimpleTenantUsage usage = api.get("test-1234");
       assertEquals(usage.getTenantId(), "f8535069c3fb404cb61c873b1a0b4921");
-      
+
       SimpleTenantUsage expected = SimpleTenantUsage.builder().tenantId("f8535069c3fb404cb61c873b1a0b4921").totalHours(4.833333333333333E-7).totalLocalGbUsage(1.933333333333333E-05)
             .start(dateService.iso8601DateParse("2012-04-18 13:32:07.255743")).stop(dateService.iso8601DateParse("2012-04-18 13:32:07.255743"))
             .totalMemoryMbUsage(0.0014847999999999999).totalVcpusUsage(7.249999999999999E-07).serverUsages(
@@ -90,7 +90,7 @@ public class SimpleTenantUsageApiExpectTest extends BaseNovaApiExpectTest {
                   SimpleServerUsage.builder().hours(2.4166666666666665e-07).uptime(91149).flavorLocalGb(50).instanceName("test1").tenantId("f8535069c3fb404cb61c873b1a0b4921").flavorVcpus(2).flavorMemoryMb(4096).instanceStatus(SimpleServerUsage.Status.ACTIVE).flavorName("m1.medium").instanceCreated(this.dateService.iso8601SecondsDateParse("2012-04-17T12:12:58")).build(),
                   SimpleServerUsage.builder().hours(2.4166666666666665e-07).uptime(84710).flavorLocalGb(30).instanceName("mish_test").tenantId("f8535069c3fb404cb61c873b1a0b4921").flavorVcpus(1).flavorMemoryMb(2048).instanceStatus(SimpleServerUsage.Status.ACTIVE).flavorName("m1.small").instanceCreated(this.dateService.iso8601SecondsDateParse("2012-04-17T14:00:17")).build()
             )).build();
-      
+
       assertEquals(usage, expected);
    }
 

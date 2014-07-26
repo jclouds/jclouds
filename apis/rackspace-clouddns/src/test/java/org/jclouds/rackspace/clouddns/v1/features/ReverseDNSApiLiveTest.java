@@ -87,11 +87,11 @@ public class ReverseDNSApiLiveTest extends BaseCloudDNSApiLiveTest {
       serverId = nodeMetadata.getId();
       serverURI = nodeMetadata.getUri();
 
-      ServerApi serverApi = nova.getServerApiForZone(nodeMetadata.getLocation().getParent().getId());
+      ServerApi serverApi = nova.getServerApi(nodeMetadata.getLocation().getParent().getId());
       Server server = serverApi.get(nodeMetadata.getProviderId());
       serverIPv4 = server.getAccessIPv4();
       serverIPv6 = server.getAccessIPv6();
-      
+
       System.out.println("serverURI = " + serverURI);
       System.out.println("serverIPv4 = " + serverIPv4);
       System.out.println("serverIPv6 = " + serverIPv6);
@@ -122,7 +122,7 @@ public class ReverseDNSApiLiveTest extends BaseCloudDNSApiLiveTest {
 
       List<Record> createRecords = ImmutableList.of(createPTRRecordIPv4, createPTRRecordIPv6);
       Set<RecordDetail> records = awaitComplete(api,
-            api.getReverseDNSApiForService(CLOUD_SERVERS_OPEN_STACK).create(serverURI, createRecords));
+            api.getReverseDNSApi(CLOUD_SERVERS_OPEN_STACK).create(serverURI, createRecords));
 
       Date now = new Date();
       RecordDetail ptrRecordIPv4 = null;
@@ -163,7 +163,7 @@ public class ReverseDNSApiLiveTest extends BaseCloudDNSApiLiveTest {
 
    @Test(dependsOnMethods = "testCreateReverseDNSRecords")
    public void testListReverseDNSRecords() throws Exception {
-      Set<RecordDetail> records = api.getReverseDNSApiForService(CLOUD_SERVERS_OPEN_STACK).list(serverURI).concat()
+      Set<RecordDetail> records = api.getReverseDNSApi(CLOUD_SERVERS_OPEN_STACK).list(serverURI).concat()
             .toSet();
       assertEquals(records.size(), 2);
    }
@@ -175,9 +175,9 @@ public class ReverseDNSApiLiveTest extends BaseCloudDNSApiLiveTest {
 
       Map<String, Record> idsToRecords = ImmutableMap.<String, Record> of(ptrRecordIPv4Id, updatePTRRecordIPv4);
 
-      awaitComplete(api, api.getReverseDNSApiForService(CLOUD_SERVERS_OPEN_STACK).update(serverURI, idsToRecords));
+      awaitComplete(api, api.getReverseDNSApi(CLOUD_SERVERS_OPEN_STACK).update(serverURI, idsToRecords));
 
-      RecordDetail record = api.getReverseDNSApiForService(CLOUD_SERVERS_OPEN_STACK).get(serverURI, ptrRecordIPv4Id);
+      RecordDetail record = api.getReverseDNSApi(CLOUD_SERVERS_OPEN_STACK).get(serverURI, ptrRecordIPv4Id);
       Date now = new Date();
 
       assertNotNull(record.getId());
@@ -193,16 +193,16 @@ public class ReverseDNSApiLiveTest extends BaseCloudDNSApiLiveTest {
 
    @Test(dependsOnMethods = "testUpdateAndGetReverseDNSRecords")
    public void testDeleteReverseDNSRecord() throws Exception {
-      awaitComplete(api, api.getReverseDNSApiForService(CLOUD_SERVERS_OPEN_STACK).delete(serverURI, serverIPv4));
+      awaitComplete(api, api.getReverseDNSApi(CLOUD_SERVERS_OPEN_STACK).delete(serverURI, serverIPv4));
 
-      assertNull(api.getReverseDNSApiForService(CLOUD_SERVERS_OPEN_STACK).get(serverURI, ptrRecordIPv4Id));
+      assertNull(api.getReverseDNSApi(CLOUD_SERVERS_OPEN_STACK).get(serverURI, ptrRecordIPv4Id));
    }
 
    @Test(dependsOnMethods = "testUpdateAndGetReverseDNSRecords")
    public void testDeleteReverseDNSRecords() throws Exception {
-      awaitComplete(api, api.getReverseDNSApiForService(CLOUD_SERVERS_OPEN_STACK).deleteAll(serverURI));
+      awaitComplete(api, api.getReverseDNSApi(CLOUD_SERVERS_OPEN_STACK).deleteAll(serverURI));
 
-      assertNull(api.getReverseDNSApiForService(CLOUD_SERVERS_OPEN_STACK).get(serverURI, ptrRecordIPv6Id));
+      assertNull(api.getReverseDNSApi(CLOUD_SERVERS_OPEN_STACK).get(serverURI, ptrRecordIPv6Id));
    }
 
    @Override
