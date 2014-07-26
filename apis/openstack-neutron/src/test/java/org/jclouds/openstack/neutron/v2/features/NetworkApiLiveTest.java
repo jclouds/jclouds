@@ -38,16 +38,16 @@ import static org.testng.Assert.assertTrue;
 public class NetworkApiLiveTest extends BaseNeutronApiLiveTest {
 
    public void testCreateUpdateAndDeleteNetwork() {
-      for (String zone : api.getConfiguredRegions()) {
-         NetworkApi networkApi = api.getNetworkApiForZone(zone);
+      for (String region : api.getConfiguredRegions()) {
+         NetworkApi networkApi = api.getNetworkApi(region);
          Network net = networkApi.create(Network.createOptions("jclouds-test").networkType(NetworkType.LOCAL).build());
          Network test = networkApi.create(Network.createOptions("jclouds-test").build());
          assertNotNull(net);
 
          /* List and get tests */
-         Network networkList = api.getNetworkApiForZone(zone).list().concat().toSet().iterator().next();
+         Network networkList = api.getNetworkApi(region).list().concat().toSet().iterator().next();
          assertNotNull(networkList);
-         Network networkGet = api.getNetworkApiForZone(zone).get(networkList.getId());
+         Network networkGet = api.getNetworkApi(region).get(networkList.getId());
          assertEquals(networkList, networkGet);
          /****/
 
@@ -75,8 +75,8 @@ public class NetworkApiLiveTest extends BaseNeutronApiLiveTest {
    }
 
    public void testBulkCreateNetwork() {
-      for (String zone : api.getConfiguredRegions()) {
-         NetworkApi networkApi = api.getNetworkApiForZone(zone);
+      for (String region : api.getConfiguredRegions()) {
+         NetworkApi networkApi = api.getNetworkApi(region);
          Set<Network> nets = networkApi.createBulk(
                ImmutableList.of(
                   Network.createOptions("jclouds-live-test-1").networkType(NetworkType.LOCAL).adminStateUp(true).build(),

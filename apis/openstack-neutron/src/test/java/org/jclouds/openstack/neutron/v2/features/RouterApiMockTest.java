@@ -56,7 +56,7 @@ public class RouterApiMockTest extends BaseNeutronApiMockTest {
 
       try {
          NeutronApi neutronApi = api(server.getUrl("/").toString(), "openstack-neutron", overrides);
-         RouterApi api = neutronApi.getRouterExtensionForZone("RegionOne").get();
+         RouterApi api = neutronApi.getRouterExtensionApi("RegionOne").get();
 
          Router.CreateOptions createRouter = Router.createOptions().name("another_router").adminStateUp(true)
                .externalGatewayInfo(ExternalGatewayInfo.builder().networkId("8ca37218-28ff-41cb-9b10-039601ea7e6b").build())
@@ -94,7 +94,7 @@ public class RouterApiMockTest extends BaseNeutronApiMockTest {
 
       try {
          NeutronApi neutronApi = api(server.getUrl("/").toString(), "openstack-neutron", overrides);
-         RouterApi api = neutronApi.getRouterExtensionForZone("RegionOne").get();
+         RouterApi api = neutronApi.getRouterExtensionApi("RegionOne").get();
 
          Router.CreateOptions createRouter = Router.createOptions().name("another_router").adminStateUp(true)
                .externalGatewayInfo(ExternalGatewayInfo.builder().networkId("8ca37218-28ff-41cb-9b10-039601ea7e6b").build())
@@ -115,7 +115,7 @@ public class RouterApiMockTest extends BaseNeutronApiMockTest {
 
       try {
          NeutronApi neutronApi = api(server.getUrl("/").toString(), "openstack-neutron", overrides);
-         RouterApi api = neutronApi.getRouterExtensionForZone("RegionOne").get();
+         RouterApi api = neutronApi.getRouterExtensionApi("RegionOne").get();
 
          Routers routers = api.list(PaginationOptions.Builder.limit(2).marker("abcdefg"));
 
@@ -130,7 +130,7 @@ public class RouterApiMockTest extends BaseNeutronApiMockTest {
           */
          assertNotNull(routers);
          assertEquals(routers.size(), 2);
-         assertEquals(routers.first().get().getId(),"a9254bdb-2613-4a13-ac4c-adc581fba50d");
+         assertEquals(routers.first().get().getId(), "a9254bdb-2613-4a13-ac4c-adc581fba50d");
       } finally {
          server.shutdown();
       }
@@ -143,7 +143,7 @@ public class RouterApiMockTest extends BaseNeutronApiMockTest {
 
       try {
          NeutronApi neutronApi = api(server.getUrl("/").toString(), "openstack-neutron", overrides);
-         RouterApi api = neutronApi.getRouterExtensionForZone("RegionOne").get();
+         RouterApi api = neutronApi.getRouterExtensionApi("RegionOne").get();
 
          Routers routers = api.list(PaginationOptions.Builder.limit(2).marker("abcdefg"));
 
@@ -171,7 +171,7 @@ public class RouterApiMockTest extends BaseNeutronApiMockTest {
 
       try {
          NeutronApi neutronApi = api(server.getUrl("/").toString(), "openstack-neutron", overrides);
-         RouterApi api = neutronApi.getRouterExtensionForZone("RegionOne").get();
+         RouterApi api = neutronApi.getRouterExtensionApi("RegionOne").get();
 
          // Note: Lazy! Have to actually look at the collection.
          List<Router> routers = api.list().concat().toList();
@@ -189,8 +189,8 @@ public class RouterApiMockTest extends BaseNeutronApiMockTest {
           */
          assertNotNull(routers);
          assertEquals(routers.size(), 4);
-         assertEquals(routers.get(0).getId(),"a9254bdb-2613-4a13-ac4c-adc581fba50d");
-         assertEquals(routers.get(3).getId(),"a9254bdb-2613-4a13-ac4c-adc581fba50d_4");
+         assertEquals(routers.get(0).getId(), "a9254bdb-2613-4a13-ac4c-adc581fba50d");
+         assertEquals(routers.get(3).getId(), "a9254bdb-2613-4a13-ac4c-adc581fba50d_4");
       } finally {
          server.shutdown();
       }
@@ -203,7 +203,7 @@ public class RouterApiMockTest extends BaseNeutronApiMockTest {
 
       try {
          NeutronApi neutronApi = api(server.getUrl("/").toString(), "openstack-neutron", overrides);
-         RouterApi api = neutronApi.getRouterExtensionForZone("RegionOne").get();
+         RouterApi api = neutronApi.getRouterExtensionApi("RegionOne").get();
 
          // Note: Lazy! Have to actually look at the collection.
          List<Router> routers = api.list().concat().toList();
@@ -233,7 +233,7 @@ public class RouterApiMockTest extends BaseNeutronApiMockTest {
 
       try {
          NeutronApi neutronApi = api(server.getUrl("/").toString(), "openstack-neutron", overrides);
-         RouterApi api = neutronApi.getRouterExtensionForZone("RegionOne").get();
+         RouterApi api = neutronApi.getRouterExtensionApi("RegionOne").get();
 
          Router router = api.get("12345");
 
@@ -266,7 +266,7 @@ public class RouterApiMockTest extends BaseNeutronApiMockTest {
 
       try {
          NeutronApi neutronApi = api(server.getUrl("/").toString(), "openstack-neutron", overrides);
-         RouterApi api = neutronApi.getRouterExtensionForZone("RegionOne").get();
+         RouterApi api = neutronApi.getRouterExtensionApi("RegionOne").get();
 
          Router router = api.get("12345");
 
@@ -293,7 +293,7 @@ public class RouterApiMockTest extends BaseNeutronApiMockTest {
 
       try {
          NeutronApi neutronApi = api(server.getUrl("/").toString(), "openstack-neutron", overrides);
-         RouterApi api = neutronApi.getRouterExtensionForZone("RegionOne").get();
+         RouterApi api = neutronApi.getRouterExtensionApi("RegionOne").get();
 
          Router.UpdateOptions updateOptions = Router.updateOptions()
                .externalGatewayInfo(
@@ -331,7 +331,7 @@ public class RouterApiMockTest extends BaseNeutronApiMockTest {
 
       try {
          NeutronApi neutronApi = api(server.getUrl("/").toString(), "openstack-neutron", overrides);
-         RouterApi api = neutronApi.getRouterExtensionForZone("RegionOne").get();
+         RouterApi api = neutronApi.getRouterExtensionApi("RegionOne").get();
 
          Router.UpdateOptions updateOptions = Router.updateOptions()
                .externalGatewayInfo(
@@ -363,7 +363,7 @@ public class RouterApiMockTest extends BaseNeutronApiMockTest {
 
       try {
          NeutronApi neutronApi = api(server.getUrl("/").toString(), "openstack-neutron", overrides);
-         RouterApi api = neutronApi.getRouterExtensionForZone("RegionOne").get();
+         RouterApi api = neutronApi.getRouterExtensionApi("RegionOne").get();
 
          boolean result = api.delete("12345");
 
@@ -390,7 +390,7 @@ public class RouterApiMockTest extends BaseNeutronApiMockTest {
 
       try {
          NeutronApi neutronApi = api(server.getUrl("/").toString(), "openstack-neutron", overrides);
-         RouterApi api = neutronApi.getRouterExtensionForZone("RegionOne").get();
+         RouterApi api = neutronApi.getRouterExtensionApi("RegionOne").get();
 
          boolean result = api.delete("12345");
 
@@ -417,7 +417,7 @@ public class RouterApiMockTest extends BaseNeutronApiMockTest {
 
       try {
          NeutronApi neutronApi = api(server.getUrl("/").toString(), "openstack-neutron", overrides);
-         RouterApi api = neutronApi.getRouterExtensionForZone("RegionOne").get();
+         RouterApi api = neutronApi.getRouterExtensionApi("RegionOne").get();
 
          RouterInterface routerInterface = api.addInterfaceForSubnet("12345", "a2f1f29d-571b-4533-907f-5803ab96ead1");
 
@@ -446,7 +446,7 @@ public class RouterApiMockTest extends BaseNeutronApiMockTest {
 
       try {
          NeutronApi neutronApi = api(server.getUrl("/").toString(), "openstack-neutron", overrides);
-         RouterApi api = neutronApi.getRouterExtensionForZone("RegionOne").get();
+         RouterApi api = neutronApi.getRouterExtensionApi("RegionOne").get();
 
          RouterInterface routerInterface = api.addInterfaceForSubnet("12345", "a2f1f29d-571b-4533-907f-5803ab96ead1");
 
@@ -473,7 +473,7 @@ public class RouterApiMockTest extends BaseNeutronApiMockTest {
 
       try {
          NeutronApi neutronApi = api(server.getUrl("/").toString(), "openstack-neutron", overrides);
-         RouterApi api = neutronApi.getRouterExtensionForZone("RegionOne").get();
+         RouterApi api = neutronApi.getRouterExtensionApi("RegionOne").get();
 
          RouterInterface routerInterface = api.addInterfaceForPort("12345", "portid");
 
@@ -502,7 +502,7 @@ public class RouterApiMockTest extends BaseNeutronApiMockTest {
 
       try {
          NeutronApi neutronApi = api(server.getUrl("/").toString(), "openstack-neutron", overrides);
-         RouterApi api = neutronApi.getRouterExtensionForZone("RegionOne").get();
+         RouterApi api = neutronApi.getRouterExtensionApi("RegionOne").get();
 
          RouterInterface routerInterface = api.addInterfaceForPort("12345", "portid");
 
@@ -529,7 +529,7 @@ public class RouterApiMockTest extends BaseNeutronApiMockTest {
 
       try {
          NeutronApi neutronApi = api(server.getUrl("/").toString(), "openstack-neutron", overrides);
-         RouterApi api = neutronApi.getRouterExtensionForZone("RegionOne").get();
+         RouterApi api = neutronApi.getRouterExtensionApi("RegionOne").get();
 
          boolean result = api.removeInterfaceForSubnet("12345", "a2f1f29d-571b-4533-907f-5803ab96ead1");
 
@@ -556,7 +556,7 @@ public class RouterApiMockTest extends BaseNeutronApiMockTest {
 
       try {
          NeutronApi neutronApi = api(server.getUrl("/").toString(), "openstack-neutron", overrides);
-         RouterApi api = neutronApi.getRouterExtensionForZone("RegionOne").get();
+         RouterApi api = neutronApi.getRouterExtensionApi("RegionOne").get();
 
          boolean result = api.removeInterfaceForSubnet("12345", "a2f1f29d-571b-4533-907f-5803ab96ead1");
 
@@ -583,7 +583,7 @@ public class RouterApiMockTest extends BaseNeutronApiMockTest {
 
       try {
          NeutronApi neutronApi = api(server.getUrl("/").toString(), "openstack-neutron", overrides);
-         RouterApi api = neutronApi.getRouterExtensionForZone("RegionOne").get();
+         RouterApi api = neutronApi.getRouterExtensionApi("RegionOne").get();
 
          boolean result = api.removeInterfaceForPort("12345", "portid");
 
@@ -610,7 +610,7 @@ public class RouterApiMockTest extends BaseNeutronApiMockTest {
 
       try {
          NeutronApi neutronApi = api(server.getUrl("/").toString(), "openstack-neutron", overrides);
-         RouterApi api = neutronApi.getRouterExtensionForZone("RegionOne").get();
+         RouterApi api = neutronApi.getRouterExtensionApi("RegionOne").get();
 
          boolean result = api.removeInterfaceForPort("12345", "portid");
 

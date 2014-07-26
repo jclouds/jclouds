@@ -18,22 +18,23 @@
  */
 package org.jclouds.openstack.neutron.v2;
 
-import com.google.common.collect.ImmutableSet;
-import com.google.inject.Module;
-import org.jclouds.apis.ApiMetadata;
-import org.jclouds.openstack.keystone.v2_0.config.AuthenticationApiModule;
-import org.jclouds.openstack.keystone.v2_0.config.CredentialTypes;
-import org.jclouds.openstack.keystone.v2_0.config.KeystoneAuthenticationModule;
-import org.jclouds.openstack.keystone.v2_0.config.KeystoneAuthenticationModule.ZoneModule;
-import org.jclouds.openstack.neutron.v2.config.NeutronHttpApiModule;
-import org.jclouds.openstack.v2_0.ServiceType;
-import org.jclouds.rest.internal.BaseHttpApiMetadata;
+import static org.jclouds.openstack.keystone.v2_0.config.KeystoneProperties.CREDENTIAL_TYPE;
+import static org.jclouds.openstack.keystone.v2_0.config.KeystoneProperties.SERVICE_TYPE;
 
 import java.net.URI;
 import java.util.Properties;
 
-import static org.jclouds.openstack.keystone.v2_0.config.KeystoneProperties.CREDENTIAL_TYPE;
-import static org.jclouds.openstack.keystone.v2_0.config.KeystoneProperties.SERVICE_TYPE;
+import org.jclouds.apis.ApiMetadata;
+import org.jclouds.openstack.keystone.v2_0.config.AuthenticationApiModule;
+import org.jclouds.openstack.keystone.v2_0.config.CredentialTypes;
+import org.jclouds.openstack.keystone.v2_0.config.KeystoneAuthenticationModule;
+import org.jclouds.openstack.keystone.v2_0.config.KeystoneAuthenticationModule.RegionModule;
+import org.jclouds.openstack.neutron.v2.config.NeutronHttpApiModule;
+import org.jclouds.openstack.v2_0.ServiceType;
+import org.jclouds.rest.internal.BaseHttpApiMetadata;
+
+import com.google.common.collect.ImmutableSet;
+import com.google.inject.Module;
 
 /**
  * Implementation of {@link org.jclouds.apis.ApiMetadata} for Neutron 2.0 API
@@ -77,7 +78,7 @@ public class NeutronApiMetadata extends BaseHttpApiMetadata<NeutronApi> {
             .defaultModules(ImmutableSet.<Class<? extends Module>>builder()
                .add(AuthenticationApiModule.class)
                .add(KeystoneAuthenticationModule.class)
-               .add(ZoneModule.class)
+               .add(RegionModule.class)
                .add(NeutronHttpApiModule.class).build());
       }
 

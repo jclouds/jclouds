@@ -59,7 +59,7 @@ public class PortApiMockTest extends BaseNeutronApiMockTest {
 
       try {
          NeutronApi neutronApi = api(server.getUrl("/").toString(), "openstack-neutron", overrides);
-         PortApi api = neutronApi.getPortApiForZone("RegionOne");
+         PortApi api = neutronApi.getPortApi("RegionOne");
 
          Port.CreateOptions createPort = Port.createOptions("6aeaf34a-c482-4bd3-9dc3-7faf36412f12")
                .name("port1")
@@ -80,8 +80,8 @@ public class PortApiMockTest extends BaseNeutronApiMockTest {
           * Check response
           */
          assertNotNull(port);
-         assertEquals(port.getAllowedAddressPairs().iterator().next().getIpAddress(),"192.168.1.1");
-         assertEquals(port.getAllowedAddressPairs().iterator().next().getMacAddress(),"12:12");
+         assertEquals(port.getAllowedAddressPairs().iterator().next().getIpAddress(), "192.168.1.1");
+         assertEquals(port.getAllowedAddressPairs().iterator().next().getMacAddress(), "12:12");
          assertEquals(port.getName(), "port1");
          assertEquals(port.getStatus(), NetworkStatus.ACTIVE);
          assertEquals(port.getId(), "ebe69f1e-bc26-4db5-bed0-c0afb4afe3db");
@@ -106,13 +106,13 @@ public class PortApiMockTest extends BaseNeutronApiMockTest {
 
       try {
          NeutronApi neutronApi = api(server.getUrl("/").toString(), "openstack-neutron", overrides);
-         PortApi api = neutronApi.getPortApiForZone("RegionOne");
+         PortApi api = neutronApi.getPortApi("RegionOne");
 
          Port.CreateOptions createPort = Port.createOptions("6aeaf34a-c482-4bd3-9dc3-7faf36412f12")
                .name("port1")
                .adminStateUp(true)
                .deviceId("d6b4d3a5-c700-476f-b609-1493dd9dadc0")
-               .allowedAddressPairs(ImmutableSet.of(AddressPair.createOptions("12","111.222.333.444").build()))
+               .allowedAddressPairs(ImmutableSet.of(AddressPair.createOptions("12", "111.222.333.444").build()))
                .build();
 
          Port port = api.create(createPort);
@@ -128,7 +128,7 @@ public class PortApiMockTest extends BaseNeutronApiMockTest {
 
       try {
          NeutronApi neutronApi = api(server.getUrl("/").toString(), "openstack-neutron", overrides);
-         PortApi api = neutronApi.getPortApiForZone("RegionOne");
+         PortApi api = neutronApi.getPortApi("RegionOne");
 
          Ports ports = api.list(PaginationOptions.Builder.limit(2).marker("abcdefg"));
 
@@ -143,7 +143,7 @@ public class PortApiMockTest extends BaseNeutronApiMockTest {
           */
          assertNotNull(ports);
          assertEquals(ports.size(), 2);
-         assertEquals(ports.first().get().getId(),"24e6637e-c521-45fc-8b8b-d7331aa3c99f");
+         assertEquals(ports.first().get().getId(), "24e6637e-c521-45fc-8b8b-d7331aa3c99f");
       } finally {
          server.shutdown();
       }
@@ -156,7 +156,7 @@ public class PortApiMockTest extends BaseNeutronApiMockTest {
 
       try {
          NeutronApi neutronApi = api(server.getUrl("/").toString(), "openstack-neutron", overrides);
-         PortApi api = neutronApi.getPortApiForZone("RegionOne");
+         PortApi api = neutronApi.getPortApi("RegionOne");
 
          Ports ports = api.list(PaginationOptions.Builder.limit(2).marker("abcdefg"));
 
@@ -183,7 +183,7 @@ public class PortApiMockTest extends BaseNeutronApiMockTest {
 
       try {
          NeutronApi neutronApi = api(server.getUrl("/").toString(), "openstack-neutron", overrides);
-         PortApi api = neutronApi.getPortApiForZone("RegionOne");
+         PortApi api = neutronApi.getPortApi("RegionOne");
 
          // Note: Lazy! Have to actually look at the collection.
          List<Port> ports = api.list().concat().toList();
@@ -201,8 +201,8 @@ public class PortApiMockTest extends BaseNeutronApiMockTest {
           */
          assertNotNull(ports);
          assertEquals(ports.size(), 4);
-         assertEquals(ports.get(0).getId(),"24e6637e-c521-45fc-8b8b-d7331aa3c99f");
-         assertEquals(ports.get(3).getId(),"e54dfd9b-ce6e-47f7-af47-1609cfd1cdb0_4");
+         assertEquals(ports.get(0).getId(), "24e6637e-c521-45fc-8b8b-d7331aa3c99f");
+         assertEquals(ports.get(3).getId(), "e54dfd9b-ce6e-47f7-af47-1609cfd1cdb0_4");
       } finally {
          server.shutdown();
       }
@@ -215,7 +215,7 @@ public class PortApiMockTest extends BaseNeutronApiMockTest {
 
       try {
          NeutronApi neutronApi = api(server.getUrl("/").toString(), "openstack-neutron", overrides);
-         PortApi api = neutronApi.getPortApiForZone("RegionOne");
+         PortApi api = neutronApi.getPortApi("RegionOne");
 
          // Note: Lazy! Have to actually look at the collection.
          List<Port> ports = api.list().concat().toList();
@@ -244,7 +244,7 @@ public class PortApiMockTest extends BaseNeutronApiMockTest {
 
       try {
          NeutronApi neutronApi = api(server.getUrl("/").toString(), "openstack-neutron", overrides);
-         PortApi api = neutronApi.getPortApiForZone("RegionOne");
+         PortApi api = neutronApi.getPortApi("RegionOne");
 
          Port.CreateOptions createPort1 = Port.createOptions("64239a54-dcc4-4b39-920b-b37c2144effa")
                .name("port1")
@@ -289,7 +289,7 @@ public class PortApiMockTest extends BaseNeutronApiMockTest {
 
       try {
          NeutronApi neutronApi = api(server.getUrl("/").toString(), "openstack-neutron", overrides);
-         PortApi api = neutronApi.getPortApiForZone("RegionOne");
+         PortApi api = neutronApi.getPortApi("RegionOne");
 
          Port.CreateOptions createPort1 = Port.createOptions("64239a54-dcc4-4b39-920b-b37c2144effa")
                .name("port1")
@@ -319,7 +319,7 @@ public class PortApiMockTest extends BaseNeutronApiMockTest {
 
       try {
          NeutronApi neutronApi = api(server.getUrl("/").toString(), "openstack-neutron", overrides);
-         PortApi api = neutronApi.getPortApiForZone("RegionOne");
+         PortApi api = neutronApi.getPortApi("RegionOne");
 
          Port port = api.get("12345");
 
@@ -355,7 +355,7 @@ public class PortApiMockTest extends BaseNeutronApiMockTest {
 
       try {
          NeutronApi neutronApi = api(server.getUrl("/").toString(), "openstack-neutron", overrides);
-         PortApi api = neutronApi.getPortApiForZone("RegionOne");
+         PortApi api = neutronApi.getPortApi("RegionOne");
 
          Port port = api.get("12345");
 
@@ -382,7 +382,7 @@ public class PortApiMockTest extends BaseNeutronApiMockTest {
 
       try {
          NeutronApi neutronApi = api(server.getUrl("/").toString(), "openstack-neutron", overrides);
-         PortApi api = neutronApi.getPortApiForZone("RegionOne");
+         PortApi api = neutronApi.getPortApi("RegionOne");
 
          Port.UpdateOptions updatePort = Port.updateOptions()
                .securityGroups(
@@ -415,10 +415,10 @@ public class PortApiMockTest extends BaseNeutronApiMockTest {
 
       try {
          NeutronApi neutronApi = api(server.getUrl("/").toString(), "openstack-neutron", overrides);
-         PortApi api = neutronApi.getPortApiForZone("RegionOne");
+         PortApi api = neutronApi.getPortApi("RegionOne");
 
          Port.UpdateOptions updatePort = Port.updateOptions()
-               .securityGroups(ImmutableSet.of("85cc3048-abc3-43cc-89b3-377341426ac5","c5ab5c29-2c99-44cb-a4b8-e70a88b77799"))
+               .securityGroups(ImmutableSet.of("85cc3048-abc3-43cc-89b3-377341426ac5", "c5ab5c29-2c99-44cb-a4b8-e70a88b77799"))
                .build();
 
          Port port = api.update("12345", updatePort);
@@ -445,7 +445,7 @@ public class PortApiMockTest extends BaseNeutronApiMockTest {
 
       try {
          NeutronApi neutronApi = api(server.getUrl("/").toString(), "openstack-neutron", overrides);
-         PortApi api = neutronApi.getPortApiForZone("RegionOne");
+         PortApi api = neutronApi.getPortApi("RegionOne");
 
          boolean result = api.delete("12345");
 
@@ -471,7 +471,7 @@ public class PortApiMockTest extends BaseNeutronApiMockTest {
 
       try {
          NeutronApi neutronApi = api(server.getUrl("/").toString(), "openstack-neutron", overrides);
-         PortApi api = neutronApi.getPortApiForZone("RegionOne");
+         PortApi api = neutronApi.getPortApi("RegionOne");
 
          boolean result = api.delete("12345");
 

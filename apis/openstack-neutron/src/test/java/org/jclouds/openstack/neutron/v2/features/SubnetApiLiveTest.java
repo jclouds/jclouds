@@ -42,11 +42,11 @@ import static org.testng.Assert.assertTrue;
 public class SubnetApiLiveTest extends BaseNeutronApiLiveTest {
 
    public void testCreateUpdateAndDeleteSubnet() {
-      for (String zone : api.getConfiguredRegions()) {
-         NetworkApi networkApi = api.getNetworkApiForZone(zone);
+      for (String region : api.getConfiguredRegions()) {
+         NetworkApi networkApi = api.getNetworkApi(region);
          String networkId = networkApi.create(Network.createOptions("jclouds-live-test").networkType(NetworkType.LOCAL).build()).getId();
 
-         SubnetApi subnetApi = api.getSubnetApiForZone(zone);
+         SubnetApi subnetApi = api.getSubnetApi(region);
          ImmutableSet<AllocationPool> allocationPools = ImmutableSet.of(
             AllocationPool.builder().start("a3:bc00::10").end("a3:bc00::20").build(),
             AllocationPool.builder().start("a3:bc00::50").end("a3:bc00::90").build()
@@ -58,9 +58,9 @@ public class SubnetApiLiveTest extends BaseNeutronApiLiveTest {
          assertNotNull(subnet);
 
          /* Test list and get */
-         Subnet subnetList = api.getSubnetApiForZone(zone).list().concat().toSet().iterator().next();
+         Subnet subnetList = api.getSubnetApi(region).list().concat().toSet().iterator().next();
          assertNotNull(subnetList);
-         Subnet subnetGet = api.getSubnetApiForZone(zone).get(subnetList.getId());
+         Subnet subnetGet = api.getSubnetApi(region).get(subnetList.getId());
          assertEquals(subnetList, subnetGet);
          /***/
 
@@ -89,11 +89,11 @@ public class SubnetApiLiveTest extends BaseNeutronApiLiveTest {
    }
 
    public void testBulkCreateSubnet() {
-      for (String zone : api.getConfiguredRegions()) {
-         NetworkApi networkApi = api.getNetworkApiForZone(zone);
+      for (String region : api.getConfiguredRegions()) {
+         NetworkApi networkApi = api.getNetworkApi(region);
          String networkId = networkApi.create(Network.createOptions("jclouds-live-test").networkType(NetworkType.LOCAL).build()).getId();
 
-         SubnetApi subnetApi = api.getSubnetApiForZone(zone);
+         SubnetApi subnetApi = api.getSubnetApi(region);
          Set<? extends Subnet> subnets = subnetApi.createBulk(
                ImmutableList.of(
                   Subnet.createOptions("jclouds-live-test-1", "a3:bd01::/48").ipVersion(6).networkId(networkId).build(),

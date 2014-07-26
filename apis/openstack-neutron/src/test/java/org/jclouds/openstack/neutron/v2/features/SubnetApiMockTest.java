@@ -53,7 +53,7 @@ public class SubnetApiMockTest extends BaseNeutronApiMockTest {
 
       try {
          NeutronApi neutronApi = api(server.getUrl("/").toString(), "openstack-neutron", overrides);
-         SubnetApi api = neutronApi.getSubnetApiForZone("RegionOne");
+         SubnetApi api = neutronApi.getSubnetApi("RegionOne");
 
          Subnet.CreateOptions createSubnet = Subnet.createOptions("1234567890", "10.0.3.0/24")
                .name("jclouds-wibble")
@@ -72,7 +72,7 @@ public class SubnetApiMockTest extends BaseNeutronApiMockTest {
           * Check response
           */
          assertNotNull(subnet);
-         assertEquals(subnet.getName(),"jclouds-wibble");
+         assertEquals(subnet.getName(), "jclouds-wibble");
          assertEquals(subnet.getIpVersion().intValue(), 4);
          assertEquals(subnet.getCidr(), "10.0.3.0/24");
          assertEquals(subnet.getTenantId(), "1234567890");
@@ -90,7 +90,7 @@ public class SubnetApiMockTest extends BaseNeutronApiMockTest {
 
       try {
          NeutronApi neutronApi = api(server.getUrl("/").toString(), "openstack-neutron", overrides);
-         SubnetApi api = neutronApi.getSubnetApiForZone("RegionOne");
+         SubnetApi api = neutronApi.getSubnetApi("RegionOne");
 
          Subnet.CreateOptions createSubnet = Subnet.createOptions("1234567890", "cidr")
                .name("jclouds-wibble")
@@ -110,7 +110,7 @@ public class SubnetApiMockTest extends BaseNeutronApiMockTest {
 
       try {
          NeutronApi neutronApi = api(server.getUrl("/").toString(), "openstack-neutron", overrides);
-         SubnetApi api = neutronApi.getSubnetApiForZone("RegionOne");
+         SubnetApi api = neutronApi.getSubnetApi("RegionOne");
 
          Subnets subnets = api.list(PaginationOptions.Builder.limit(2).marker("abcdefg"));
 
@@ -124,7 +124,7 @@ public class SubnetApiMockTest extends BaseNeutronApiMockTest {
           * Check response
           */
          assertNotNull(subnets);
-         assertEquals(subnets.first().get().getId(),"16dba3bc-f3fa-4775-afdc-237e12c72f6a");
+         assertEquals(subnets.first().get().getId(), "16dba3bc-f3fa-4775-afdc-237e12c72f6a");
       } finally {
          server.shutdown();
       }
@@ -137,7 +137,7 @@ public class SubnetApiMockTest extends BaseNeutronApiMockTest {
 
       try {
          NeutronApi neutronApi = api(server.getUrl("/").toString(), "openstack-neutron", overrides);
-         SubnetApi api = neutronApi.getSubnetApiForZone("RegionOne");
+         SubnetApi api = neutronApi.getSubnetApi("RegionOne");
 
          Subnets subnets = api.list(PaginationOptions.Builder.limit(2).marker("abcdefg"));
 
@@ -164,7 +164,7 @@ public class SubnetApiMockTest extends BaseNeutronApiMockTest {
 
       try {
          NeutronApi neutronApi = api(server.getUrl("/").toString(), "openstack-neutron", overrides);
-         SubnetApi api = neutronApi.getSubnetApiForZone("RegionOne");
+         SubnetApi api = neutronApi.getSubnetApi("RegionOne");
 
          // Note: Lazy! Have to actually look at the collection.
          List<Subnet> subnets = api.list().concat().toList();
@@ -182,8 +182,8 @@ public class SubnetApiMockTest extends BaseNeutronApiMockTest {
           */
          assertNotNull(subnets);
          assertEquals(subnets.size(), 4);
-         assertEquals(subnets.get(0).getId(),"16dba3bc-f3fa-4775-afdc-237e12c72f6a");
-         assertEquals(subnets.get(3).getId(),"6ba4c788-661f-49ab-9bf8-5f10cbbb2f57");
+         assertEquals(subnets.get(0).getId(), "16dba3bc-f3fa-4775-afdc-237e12c72f6a");
+         assertEquals(subnets.get(3).getId(), "6ba4c788-661f-49ab-9bf8-5f10cbbb2f57");
       } finally {
          server.shutdown();
       }
@@ -196,7 +196,7 @@ public class SubnetApiMockTest extends BaseNeutronApiMockTest {
 
       try {
          NeutronApi neutronApi = api(server.getUrl("/").toString(), "openstack-neutron", overrides);
-         SubnetApi api = neutronApi.getSubnetApiForZone("RegionOne");
+         SubnetApi api = neutronApi.getSubnetApi("RegionOne");
 
          // Note: Lazy! Have to actually look at the collection.
          List<Subnet> subnets = api.list().concat().toList();
@@ -224,7 +224,7 @@ public class SubnetApiMockTest extends BaseNeutronApiMockTest {
 
       try {
          NeutronApi neutronApi = api(server.getUrl("/").toString(), "openstack-neutron", overrides);
-         SubnetApi api = neutronApi.getSubnetApiForZone("RegionOne");
+         SubnetApi api = neutronApi.getSubnetApi("RegionOne");
 
          Subnet subnet = api.get("12345");
 
@@ -239,9 +239,9 @@ public class SubnetApiMockTest extends BaseNeutronApiMockTest {
           * Check response
           */
          assertNotNull(subnet);
-         assertEquals(subnet.getName(),"jclouds-wibble");
-         assertEquals(subnet.getId(),"624312ff-d14b-4ba3-9834-1c78d23d574d");
-         assertEquals(subnet.getTenantId(),"1234567890");
+         assertEquals(subnet.getName(), "jclouds-wibble");
+         assertEquals(subnet.getId(), "624312ff-d14b-4ba3-9834-1c78d23d574d");
+         assertEquals(subnet.getTenantId(), "1234567890");
          assertEquals(subnet.getIPv6AddressMode(), IPv6DHCPMode.SLAAC);
       } finally {
          server.shutdown();
@@ -255,7 +255,7 @@ public class SubnetApiMockTest extends BaseNeutronApiMockTest {
 
       try {
          NeutronApi neutronApi = api(server.getUrl("/").toString(), "openstack-neutron", overrides);
-         SubnetApi api = neutronApi.getSubnetApiForZone("RegionOne");
+         SubnetApi api = neutronApi.getSubnetApi("RegionOne");
 
          Subnet subnet = api.get("12345");
 
@@ -282,7 +282,7 @@ public class SubnetApiMockTest extends BaseNeutronApiMockTest {
 
       try {
          NeutronApi neutronApi = api(server.getUrl("/").toString(), "openstack-neutron", overrides);
-         SubnetApi api = neutronApi.getSubnetApiForZone("RegionOne");
+         SubnetApi api = neutronApi.getSubnetApi("RegionOne");
 
          Subnet.CreateOptions createSubnet1 = Subnet.createOptions("e6031bc2-901a-4c66-82da-f4c32ed89406",
                "192.168.199.0/24")
@@ -331,7 +331,7 @@ public class SubnetApiMockTest extends BaseNeutronApiMockTest {
 
       try {
          NeutronApi neutronApi = api(server.getUrl("/").toString(), "openstack-neutron", overrides);
-         SubnetApi api = neutronApi.getSubnetApiForZone("RegionOne");
+         SubnetApi api = neutronApi.getSubnetApi("RegionOne");
 
          Subnet.CreateOptions createSubnet1 = Subnet.createOptions("e6031bc2-901a-4c66-82da-f4c32ed89406",
                "192.168.199.0/24")
@@ -356,7 +356,7 @@ public class SubnetApiMockTest extends BaseNeutronApiMockTest {
 
       try {
          NeutronApi neutronApi = api(server.getUrl("/").toString(), "openstack-neutron", overrides);
-         SubnetApi api = neutronApi.getSubnetApiForZone("RegionOne");
+         SubnetApi api = neutronApi.getSubnetApi("RegionOne");
 
          Subnet.UpdateOptions updateSubnet = Subnet.updateOptions()
                .name("new_name")
@@ -376,9 +376,9 @@ public class SubnetApiMockTest extends BaseNeutronApiMockTest {
           * Check response
           */
          assertNotNull(subnet);
-         assertEquals(subnet.getName(),"new_name");
-         assertEquals(subnet.getId(),"9436e561-47bf-436a-b1f1-fe23a926e031");
-         assertEquals(subnet.getTenantId(),"c1210485b2424d48804aad5d39c61b8f");
+         assertEquals(subnet.getName(), "new_name");
+         assertEquals(subnet.getId(), "9436e561-47bf-436a-b1f1-fe23a926e031");
+         assertEquals(subnet.getTenantId(), "c1210485b2424d48804aad5d39c61b8f");
       } finally {
          server.shutdown();
       }
@@ -391,7 +391,7 @@ public class SubnetApiMockTest extends BaseNeutronApiMockTest {
 
       try {
          NeutronApi neutronApi = api(server.getUrl("/").toString(), "openstack-neutron", overrides);
-         SubnetApi api = neutronApi.getSubnetApiForZone("RegionOne");
+         SubnetApi api = neutronApi.getSubnetApi("RegionOne");
 
          Subnet.UpdateOptions updateSubnet = Subnet.updateOptions()
                .name("new_name")
@@ -423,7 +423,7 @@ public class SubnetApiMockTest extends BaseNeutronApiMockTest {
 
       try {
          NeutronApi neutronApi = api(server.getUrl("/").toString(), "openstack-neutron", overrides);
-         SubnetApi api = neutronApi.getSubnetApiForZone("RegionOne");
+         SubnetApi api = neutronApi.getSubnetApi("RegionOne");
 
          boolean result = api.delete("12345");
 
@@ -450,7 +450,7 @@ public class SubnetApiMockTest extends BaseNeutronApiMockTest {
 
       try {
          NeutronApi neutronApi = api(server.getUrl("/").toString(), "openstack-neutron", overrides);
-         SubnetApi api = neutronApi.getSubnetApiForZone("RegionOne");
+         SubnetApi api = neutronApi.getSubnetApi("RegionOne");
 
          boolean result = api.delete("12345");
 

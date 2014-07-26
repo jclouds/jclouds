@@ -54,7 +54,7 @@ public class NetworkApiMockTest extends BaseNeutronApiMockTest {
 
       try {
          NeutronApi neutronApi = api(server.getUrl("/").toString(), "openstack-neutron", overrides);
-         NetworkApi api = neutronApi.getNetworkApiForZone("RegionOne");
+         NetworkApi api = neutronApi.getNetworkApi("RegionOne");
 
          Network.CreateOptions createNetwork = Network.createOptions("jclouds-wibble")
                .networkType(NetworkType.LOCAL)
@@ -72,7 +72,7 @@ public class NetworkApiMockTest extends BaseNeutronApiMockTest {
           * Check response
           */
          assertNotNull(network);
-         assertEquals(network.getName(),"jclouds-wibble");
+         assertEquals(network.getName(), "jclouds-wibble");
          assertEquals(network.getNetworkType(), NetworkType.LOCAL);
          assertEquals(network.getTenantId(), "1234567890");
          assertEquals(network.getStatus(), NetworkStatus.ACTIVE);
@@ -90,7 +90,7 @@ public class NetworkApiMockTest extends BaseNeutronApiMockTest {
 
       try {
          NeutronApi neutronApi = api(server.getUrl("/").toString(), "openstack-neutron", overrides);
-         NetworkApi api = neutronApi.getNetworkApiForZone("RegionOne");
+         NetworkApi api = neutronApi.getNetworkApi("RegionOne");
 
          Network.CreateOptions createNetwork = Network.createOptions("jclouds-wibble")
                .networkType(NetworkType.LOCAL)
@@ -109,7 +109,7 @@ public class NetworkApiMockTest extends BaseNeutronApiMockTest {
 
       try {
          NeutronApi neutronApi = api(server.getUrl("/").toString(), "openstack-neutron", overrides);
-         NetworkApi api = neutronApi.getNetworkApiForZone("RegionOne");
+         NetworkApi api = neutronApi.getNetworkApi("RegionOne");
 
          Networks networks = api.list(PaginationOptions.Builder.limit(2).marker("abcdefg"));
 
@@ -123,7 +123,7 @@ public class NetworkApiMockTest extends BaseNeutronApiMockTest {
           * Check response
           */
          assertNotNull(networks);
-         assertEquals(networks.first().get().getId(),"396f12f8-521e-4b91-8e21-2e003500433a");
+         assertEquals(networks.first().get().getId(), "396f12f8-521e-4b91-8e21-2e003500433a");
       } finally {
          server.shutdown();
       }
@@ -137,7 +137,7 @@ public class NetworkApiMockTest extends BaseNeutronApiMockTest {
 
       try {
          NeutronApi neutronApi = api(server.getUrl("/").toString(), "openstack-neutron", overrides);
-         NetworkApi api = neutronApi.getNetworkApiForZone("RegionOne");
+         NetworkApi api = neutronApi.getNetworkApi("RegionOne");
 
          Networks networks = api.list(PaginationOptions.Builder.limit(2).marker("abcdefg"));
 
@@ -164,7 +164,7 @@ public class NetworkApiMockTest extends BaseNeutronApiMockTest {
 
       try {
          NeutronApi neutronApi = api(server.getUrl("/").toString(), "openstack-neutron", overrides);
-         NetworkApi api = neutronApi.getNetworkApiForZone("RegionOne");
+         NetworkApi api = neutronApi.getNetworkApi("RegionOne");
 
          // Note: Lazy! Have to actually look at the collection.
          List<Network> networks = api.list().concat().toList();
@@ -184,8 +184,8 @@ public class NetworkApiMockTest extends BaseNeutronApiMockTest {
           * Check response
           */
          assertNotNull(networks);
-         assertEquals(networks.get(0).getId(),"396f12f8-521e-4b91-8e21-2e003500433a");
-         assertEquals(networks.get(3).getId(),"71c1e68c-171a-4aa2-aca5-50ea153a3718_2");
+         assertEquals(networks.get(0).getId(), "396f12f8-521e-4b91-8e21-2e003500433a");
+         assertEquals(networks.get(3).getId(), "71c1e68c-171a-4aa2-aca5-50ea153a3718_2");
       } finally {
          server.shutdown();
       }
@@ -198,7 +198,7 @@ public class NetworkApiMockTest extends BaseNeutronApiMockTest {
 
       try {
          NeutronApi neutronApi = api(server.getUrl("/").toString(), "openstack-neutron", overrides);
-         NetworkApi api = neutronApi.getNetworkApiForZone("RegionOne");
+         NetworkApi api = neutronApi.getNetworkApi("RegionOne");
 
          // Note: Lazy! Have to actually look at the collection.
          List<Network> networks = api.list().concat().toList();
@@ -227,7 +227,7 @@ public class NetworkApiMockTest extends BaseNeutronApiMockTest {
 
       try {
          NeutronApi neutronApi = api(server.getUrl("/").toString(), "openstack-neutron", overrides);
-         NetworkApi api = neutronApi.getNetworkApiForZone("RegionOne");
+         NetworkApi api = neutronApi.getNetworkApi("RegionOne");
 
          Network network = api.get("12345");
 
@@ -242,8 +242,8 @@ public class NetworkApiMockTest extends BaseNeutronApiMockTest {
           * Check response
           */
          assertNotNull(network);
-         assertEquals(network.getName(),"jclouds-wibble");
-         assertEquals(network.getId(),"624312ff-d14b-4ba3-9834-1c78d23d574d");
+         assertEquals(network.getName(), "jclouds-wibble");
+         assertEquals(network.getId(), "624312ff-d14b-4ba3-9834-1c78d23d574d");
       } finally {
          server.shutdown();
       }
@@ -256,7 +256,7 @@ public class NetworkApiMockTest extends BaseNeutronApiMockTest {
 
       try {
          NeutronApi neutronApi = api(server.getUrl("/").toString(), "openstack-neutron", overrides);
-         NetworkApi api = neutronApi.getNetworkApiForZone("RegionOne");
+         NetworkApi api = neutronApi.getNetworkApi("RegionOne");
 
          Network network = api.get("12345");
 
@@ -283,7 +283,7 @@ public class NetworkApiMockTest extends BaseNeutronApiMockTest {
 
       try {
          NeutronApi neutronApi = api(server.getUrl("/").toString(), "openstack-neutron", overrides);
-         NetworkApi api = neutronApi.getNetworkApiForZone("RegionOne");
+         NetworkApi api = neutronApi.getNetworkApi("RegionOne");
 
          Network.CreateOptions createNetwork1 = Network.createOptions("jclouds-wibble")
                .networkType(NetworkType.LOCAL)
@@ -330,7 +330,7 @@ public class NetworkApiMockTest extends BaseNeutronApiMockTest {
 
       try {
          NeutronApi neutronApi = api(server.getUrl("/").toString(), "openstack-neutron", overrides);
-         NetworkApi api = neutronApi.getNetworkApiForZone("RegionOne");
+         NetworkApi api = neutronApi.getNetworkApi("RegionOne");
 
          Network.CreateOptions createNetwork1 = Network.createOptions("jclouds-wibble")
                .networkType(NetworkType.LOCAL)
@@ -353,7 +353,7 @@ public class NetworkApiMockTest extends BaseNeutronApiMockTest {
 
       try {
          NeutronApi neutronApi = api(server.getUrl("/").toString(), "openstack-neutron", overrides);
-         NetworkApi api = neutronApi.getNetworkApiForZone("RegionOne");
+         NetworkApi api = neutronApi.getNetworkApi("RegionOne");
 
          Network.UpdateOptions updateNetwork = Network.updateOptions()
                .name("jclouds-wibble-updated")
@@ -366,14 +366,14 @@ public class NetworkApiMockTest extends BaseNeutronApiMockTest {
           * Check request
           */
          assertAuthentication(server);
-         assertRequest(server.takeRequest(), "PUT", "/v2.0/networks/123456","/network_update_request.json");
+         assertRequest(server.takeRequest(), "PUT", "/v2.0/networks/123456", "/network_update_request.json");
 
          /*
           * Check response
           */
          assertNotNull(network);
-         assertEquals(network.getName(),"updated_name");
-         assertEquals(network.getId(),"fc68ea2c-b60b-4b4f-bd82-94ec81110766");
+         assertEquals(network.getName(), "updated_name");
+         assertEquals(network.getId(), "fc68ea2c-b60b-4b4f-bd82-94ec81110766");
       } finally {
          server.shutdown();
       }
@@ -386,7 +386,7 @@ public class NetworkApiMockTest extends BaseNeutronApiMockTest {
 
       try {
          NeutronApi neutronApi = api(server.getUrl("/").toString(), "openstack-neutron", overrides);
-         NetworkApi api = neutronApi.getNetworkApiForZone("RegionOne");
+         NetworkApi api = neutronApi.getNetworkApi("RegionOne");
 
          Network.UpdateOptions updateNetwork = Network.updateOptions()
                .name("jclouds-wibble-updated")
@@ -417,7 +417,7 @@ public class NetworkApiMockTest extends BaseNeutronApiMockTest {
 
       try {
          NeutronApi neutronApi = api(server.getUrl("/").toString(), "openstack-neutron", overrides);
-         NetworkApi api = neutronApi.getNetworkApiForZone("RegionOne");
+         NetworkApi api = neutronApi.getNetworkApi("RegionOne");
 
          boolean result = api.delete("123456");
 
@@ -443,7 +443,7 @@ public class NetworkApiMockTest extends BaseNeutronApiMockTest {
 
       try {
          NeutronApi neutronApi = api(server.getUrl("/").toString(), "openstack-neutron", overrides);
-         NetworkApi api = neutronApi.getNetworkApiForZone("RegionOne");
+         NetworkApi api = neutronApi.getNetworkApi("RegionOne");
 
          boolean result = api.delete("123456");
 

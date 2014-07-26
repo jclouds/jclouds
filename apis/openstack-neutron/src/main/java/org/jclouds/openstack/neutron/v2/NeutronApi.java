@@ -18,11 +18,12 @@
  */
 package org.jclouds.openstack.neutron.v2;
 
-import com.google.common.base.Optional;
-import com.google.inject.Provides;
+import java.io.Closeable;
+import java.util.Set;
+
 import org.jclouds.javax.annotation.Nullable;
-import org.jclouds.location.Zone;
-import org.jclouds.location.functions.ZoneToEndpoint;
+import org.jclouds.location.Region;
+import org.jclouds.location.functions.RegionToEndpoint;
 import org.jclouds.openstack.neutron.v2.extensions.RouterApi;
 import org.jclouds.openstack.neutron.v2.features.NetworkApi;
 import org.jclouds.openstack.neutron.v2.features.PortApi;
@@ -31,51 +32,47 @@ import org.jclouds.openstack.v2_0.features.ExtensionApi;
 import org.jclouds.rest.annotations.Delegate;
 import org.jclouds.rest.annotations.EndpointParam;
 
-import java.io.Closeable;
-import java.util.Set;
+import com.google.common.base.Optional;
+import com.google.inject.Provides;
 
 /**
- * Provides synchronous access to Neutron.
- * <p/>
- *
- * @see <a href="http://docs.openstack.org/api/openstack-network/2.0/content/">api doc</a>
+ * Provides synchronous access to the OpenStack Networking (Neutron) v2 API
  */
 public interface NeutronApi extends Closeable {
    /**
-    * @return the Zone codes configured
+    * @return the Region codes configured
     */
    @Provides
-   @Zone
+   @Region
    Set<String> getConfiguredRegions();
 
    /**
     * Provides synchronous access to Extension features.
     */
    @Delegate
-   ExtensionApi getExtensionApiForZone(
-           @EndpointParam(parser = ZoneToEndpoint.class) @Nullable String zone);
+   ExtensionApi getExtensionApi(@EndpointParam(parser = RegionToEndpoint.class) @Nullable String region);
 
    /**
     * Provides synchronous access to Network features.
     */
    @Delegate
-   NetworkApi getNetworkApiForZone(@EndpointParam(parser = ZoneToEndpoint.class) @Nullable String zone);
+   NetworkApi getNetworkApi(@EndpointParam(parser = RegionToEndpoint.class) @Nullable String region);
 
    /**
     * Provides synchronous access to Subnet features
     */
    @Delegate
-   SubnetApi getSubnetApiForZone(@EndpointParam(parser = ZoneToEndpoint.class) @Nullable String zone);
+   SubnetApi getSubnetApi(@EndpointParam(parser = RegionToEndpoint.class) @Nullable String region);
 
    /**
     * Provides synchronous access to Port features.
     */
    @Delegate
-   PortApi getPortApiForZone(@EndpointParam(parser = ZoneToEndpoint.class) @Nullable String zone);
+   PortApi getPortApi(@EndpointParam(parser = RegionToEndpoint.class) @Nullable String region);
 
    /**
     * Provides synchronous access to Router features.
     */
    @Delegate
-   Optional<? extends RouterApi> getRouterExtensionForZone(@EndpointParam(parser = ZoneToEndpoint.class) @Nullable String zone);
+   Optional<? extends RouterApi> getRouterExtensionApi(@EndpointParam(parser = RegionToEndpoint.class) @Nullable String region);
 }

@@ -41,10 +41,10 @@ import static org.testng.Assert.assertTrue;
 public class RouterApiLiveTest extends BaseNeutronApiLiveTest {
 
    public void testCreateUpdateAndDeleteRouter() {
-      for (String zone : api.getConfiguredRegions()) {
-         RouterApi routerApi = api.getRouterExtensionForZone(zone).get();
-         NetworkApi networkApi = api.getNetworkApiForZone(zone);
-         SubnetApi subnetApi = api.getSubnetApiForZone(zone);
+      for (String region : api.getConfiguredRegions()) {
+         RouterApi routerApi = api.getRouterExtensionApi(region).get();
+         NetworkApi networkApi = api.getNetworkApi(region);
+         SubnetApi subnetApi = api.getSubnetApi(region);
 
          Network network = networkApi.create(
                Network.createOptions("jclouds-network-test").external(true).networkType(NetworkType.LOCAL).build());
@@ -58,9 +58,9 @@ public class RouterApiLiveTest extends BaseNeutronApiLiveTest {
          assertNotNull(router);
 
          /* List and Get test */
-         Set<Router> routers = api.getRouterExtensionForZone(zone).get().list().concat().toSet();
+         Set<Router> routers = api.getRouterExtensionApi(region).get().list().concat().toSet();
          Router routerList = routers.iterator().next();
-         Router routerGet = api.getRouterExtensionForZone(zone).get().get(routerList.getId());
+         Router routerGet = api.getRouterExtensionApi(region).get().get(routerList.getId());
 
          assertNotNull(routerGet);
          assertEquals(routerGet, routerList);
@@ -88,10 +88,10 @@ public class RouterApiLiveTest extends BaseNeutronApiLiveTest {
    }
 
    public void testCreateAndDeleteRouterInterfaceForSubnet() {
-      for (String zone : api.getConfiguredRegions()) {
-         RouterApi routerApi = api.getRouterExtensionForZone(zone).get();
-         NetworkApi networkApi = api.getNetworkApiForZone(zone);
-         SubnetApi subnetApi = api.getSubnetApiForZone(zone);
+      for (String region : api.getConfiguredRegions()) {
+         RouterApi routerApi = api.getRouterExtensionApi(region).get();
+         NetworkApi networkApi = api.getNetworkApi(region);
+         SubnetApi subnetApi = api.getSubnetApi(region);
 
          Network network = networkApi.create(Network.createOptions("jclouds-network-test").external(true).networkType(NetworkType.LOCAL).build());
          assertNotNull(network);
@@ -125,11 +125,11 @@ public class RouterApiLiveTest extends BaseNeutronApiLiveTest {
    }
 
    public void testCreateAndDeleteRouterInterfaceForPort() {
-      for (String zone : api.getConfiguredRegions()) {
-         RouterApi routerApi = api.getRouterExtensionForZone(zone).get();
-         NetworkApi networkApi = api.getNetworkApiForZone(zone);
-         SubnetApi subnetApi = api.getSubnetApiForZone(zone);
-         PortApi portApi = api.getPortApiForZone(zone);
+      for (String region : api.getConfiguredRegions()) {
+         RouterApi routerApi = api.getRouterExtensionApi(region).get();
+         NetworkApi networkApi = api.getNetworkApi(region);
+         SubnetApi subnetApi = api.getSubnetApi(region);
+         PortApi portApi = api.getPortApi(region);
 
          Network network = networkApi.create(Network.createOptions("jclouds-network-test").external(true).networkType(NetworkType.LOCAL).build());
          assertNotNull(network);

@@ -65,12 +65,12 @@ public class NeutronHttpApiModule extends HttpApiModule<NeutronApi> {
 
    @Provides
    @Singleton
-   public LoadingCache<String, Set<? extends Extension>> provideExtensionsByZone(final Provider<NeutronApi> quantumApi) {
+   public LoadingCache<String, Set<? extends Extension>> provideExtensionsByRegion(final Provider<NeutronApi> neutronApi) {
       return CacheBuilder.newBuilder().expireAfterWrite(23, TimeUnit.HOURS)
             .build(new CacheLoader<String, Set<? extends Extension>>() {
                @Override
                public Set<? extends Extension> load(String key) throws Exception {
-                  return quantumApi.get().getExtensionApiForZone(key).list();
+                  return neutronApi.get().getExtensionApi(key).list();
                }
             });
    }

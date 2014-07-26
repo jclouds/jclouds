@@ -43,8 +43,8 @@ public class NetworksToPagedIterable extends Arg0ToPagedIterable.FromCaller<Netw
 
    @Override
    protected Function<Object, IterableWithMarker<Network>> markerToNextForArg0(Optional<Object> arg0) {
-      String zone = arg0.isPresent() ? arg0.get().toString() : null;
-      final NetworkApi networkApi = api.getNetworkApiForZone(zone);
+      String region = arg0.isPresent() ? arg0.get().toString() : null;
+      final NetworkApi networkApi = api.getNetworkApi(region);
       return new Function<Object, IterableWithMarker<Network>>() {
 
          @SuppressWarnings("unchecked")

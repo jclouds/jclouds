@@ -43,8 +43,8 @@ public class SubnetsToPagedIterable extends Arg0ToPagedIterable.FromCaller<Subne
 
    @Override
    protected Function<Object, IterableWithMarker<Subnet>> markerToNextForArg0(Optional<Object> arg0) {
-      String zone = arg0.isPresent() ? arg0.get().toString() : null;
-      final SubnetApi subnetApi = api.getSubnetApiForZone(zone);
+      String region = arg0.isPresent() ? arg0.get().toString() : null;
+      final SubnetApi subnetApi = api.getSubnetApi(region);
       return new Function<Object, IterableWithMarker<Subnet>>() {
 
          @SuppressWarnings("unchecked")

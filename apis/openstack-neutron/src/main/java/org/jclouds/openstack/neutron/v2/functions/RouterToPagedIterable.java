@@ -45,8 +45,8 @@ public class RouterToPagedIterable extends Arg0ToPagedIterable.FromCaller<Router
 
    @Override
    protected Function<Object, IterableWithMarker<Router>> markerToNextForArg0(Optional<Object> arg0) {
-      String zone = arg0.isPresent() ? arg0.get().toString() : null;
-      final RouterApi routerApi = api.getRouterExtensionForZone(zone).get();
+      String region = arg0.isPresent() ? arg0.get().toString() : null;
+      final RouterApi routerApi = api.getRouterExtensionApi(region).get();
       return new Function<Object, IterableWithMarker<Router>>() {
 
          @SuppressWarnings("unchecked")

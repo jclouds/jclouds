@@ -43,10 +43,10 @@ import static org.testng.Assert.assertTrue;
 public class PortApiLiveTest extends BaseNeutronApiLiveTest {
 
    public void testCreateUpdateAndDeletePort() {
-      for (String zone : api.getConfiguredRegions()) {
-         NetworkApi networkApi = api.getNetworkApiForZone(zone);
-         SubnetApi subnetApi = api.getSubnetApiForZone(zone);
-         PortApi portApi = api.getPortApiForZone(zone);
+      for (String region : api.getConfiguredRegions()) {
+         NetworkApi networkApi = api.getNetworkApi(region);
+         SubnetApi subnetApi = api.getSubnetApi(region);
+         PortApi portApi = api.getPortApi(region);
          String networkId = networkApi.create(
                Network.createOptions("JClouds-Live-Network").networkType(NetworkType.LOCAL).build()).getId();
          String ipv4SubnetId = subnetApi.create(Subnet.createOptions(networkId, "198.51.100.0/24").ipVersion(4)
@@ -64,9 +64,9 @@ public class PortApiLiveTest extends BaseNeutronApiLiveTest {
                .fixedIps(ImmutableSet.copyOf(getFixedAddresses(ipv6SubnetId))).build()).getId();
 
          /* List and get test */
-         Port portList = api.getPortApiForZone(zone).list().concat().toSet().iterator().next();
+         Port portList = api.getPortApi(region).list().concat().toSet().iterator().next();
          assertNotNull(portList);
-         Port portGet = api.getPortApiForZone(zone).get(portList.getId());
+         Port portGet = api.getPortApi(region).get(portList.getId());
          assertEquals(portList, portGet);
          /****/
 
@@ -96,10 +96,10 @@ public class PortApiLiveTest extends BaseNeutronApiLiveTest {
    }
 
    public void testBulkCreatePort() {
-      for (String zone : api.getConfiguredRegions()) {
-         NetworkApi networkApi = api.getNetworkApiForZone(zone);
-         SubnetApi subnetApi = api.getSubnetApiForZone(zone);
-         PortApi portApi = api.getPortApiForZone(zone);
+      for (String region : api.getConfiguredRegions()) {
+         NetworkApi networkApi = api.getNetworkApi(region);
+         SubnetApi subnetApi = api.getSubnetApi(region);
+         PortApi portApi = api.getPortApi(region);
 
          String networkId = networkApi.create(
                Network.createOptions("JClouds-Live-Network").networkType(NetworkType.LOCAL).build()).getId();

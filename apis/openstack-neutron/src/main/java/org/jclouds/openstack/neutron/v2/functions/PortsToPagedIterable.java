@@ -43,8 +43,8 @@ public class PortsToPagedIterable extends Arg0ToPagedIterable.FromCaller<Port, P
 
    @Override
    protected Function<Object, IterableWithMarker<Port>> markerToNextForArg0(Optional<Object> arg0) {
-      String zone = arg0.isPresent() ? arg0.get().toString() : null;
-      final PortApi portApi = api.getPortApiForZone(zone);
+      String region = arg0.isPresent() ? arg0.get().toString() : null;
+      final PortApi portApi = api.getPortApi(region);
       return new Function<Object, IterableWithMarker<Port>>() {
 
          @SuppressWarnings("unchecked")
