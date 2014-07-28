@@ -25,7 +25,6 @@ import org.jclouds.javax.annotation.Nullable;
 
 import javax.inject.Named;
 import java.beans.ConstructorProperties;
-import java.util.Map;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -123,16 +122,15 @@ public class Port {
          "admin_state_up", "mac_address", "fixed_ips", "device_id", "device_owner", "tenant_id", "security_groups",
          "allowed_address_pairs", "extra_dhcp_opts", "binding:vnic_type", "binding:host_id", "binding:profile",
          "port_security_enabled", "n1kv:profile_id", "mac_learning_enabled", "rxtx_factor"})
-   protected Port(String id, NetworkStatus status, VIFType vifType, Map<String, Object> vifDetails, String qosQueueId,
+   protected Port(String id, NetworkStatus status, VIFType vifType, ImmutableMap<String, Object> vifDetails, String qosQueueId,
          String name, String networkId, Boolean adminStateUp, String macAddress, ImmutableSet<IP> fixedIps, String deviceId,
          String deviceOwner, String tenantId, ImmutableSet<String> securityGroups, ImmutableSet<AddressPair> allowedAddressPairs,
-         ImmutableSet<ExtraDhcpOption> extraDhcpOptions, VNICType vnicType, String hostId, Map<String, Object> profile,
+         ImmutableSet<ExtraDhcpOption> extraDhcpOptions, VNICType vnicType, String hostId, ImmutableMap<String, Object> profile,
          Boolean portSecurity, String profileId, Boolean macLearning, Integer qosRxtxFactor) {
       this.id = id;
       this.status = status;
       this.vifType = vifType;
-      // This will not be needed once jclouds core supports ImmutableMap deserialization
-      this.vifDetails = vifDetails !=null ? ImmutableMap.copyOf(vifDetails) : null;
+      this.vifDetails = vifDetails;
       this.qosQueueId = qosQueueId;
       this.name = name;
       this.networkId = networkId;
@@ -147,7 +145,7 @@ public class Port {
       this.extraDhcpOptions = extraDhcpOptions;
       this.vnicType = vnicType;
       this.hostId = hostId;
-      this.profile = profile != null ? ImmutableMap.copyOf(profile) : null;
+      this.profile = profile;
       this.portSecurity = portSecurity;
       this.profileId = profileId;
       this.macLearning = macLearning;
