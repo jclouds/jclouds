@@ -173,6 +173,20 @@ public class SimpleDateFormatDateService implements DateService {
    }
 
    @Override
+   public Date iso8601DateOrSecondsDateParse(String toParse)
+         throws IllegalArgumentException {
+      try {
+         return iso8601DateParse(toParse);
+      } catch (IllegalArgumentException orig) {
+         try {
+            return iso8601SecondsDateParse(toParse);
+         } catch (IllegalArgumentException ignored) {
+            throw orig;
+         }
+      }
+   }
+
+   @Override
    public String iso8601SecondsDateFormat(Date date) {
       synchronized (iso8601SecondsSimpleDateFormat) {
          String parsed = iso8601SecondsSimpleDateFormat.format(date);
@@ -203,20 +217,6 @@ public class SimpleDateFormatDateService implements DateService {
             return rfc1123SimpleDateFormat.parse(toParse);
          } catch (ParseException pe) {
             throw new IllegalArgumentException("Error parsing data at " + pe.getErrorOffset(), pe);
-         }
-      }
-   }
-
-   @Override
-   public Date iso8601DateParseWithOptionalTZ(String toParse)
-         throws IllegalArgumentException {
-      try {
-         return iso8601DateParse(toParse);
-      } catch (IllegalArgumentException orig) {
-         try {
-            return iso8601SecondsDateParse(toParse);
-         } catch (IllegalArgumentException ie) {
-            throw orig;
          }
       }
    }

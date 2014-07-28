@@ -131,7 +131,21 @@ public class JodaDateService implements DateService {
       toParse = adjustTz(toParse);
       return iso8601SecondsDateFormatter.parseDateTime(toParse).toDate();
    }
-   
+
+   @Override
+   public Date iso8601DateOrSecondsDateParse(String toParse)
+         throws IllegalArgumentException {
+      try {
+         return iso8601DateParse(toParse);
+      } catch (IllegalArgumentException orig) {
+         try {
+            return iso8601SecondsDateParse(toParse);
+         } catch (IllegalArgumentException ignored) {
+            throw orig;
+         }
+      }
+   }
+
    @Override
    public final String rfc1123DateFormat(Date dateTime) {
       return rfc1123DateFormat.print(new DateTime(dateTime));
@@ -145,19 +159,5 @@ public class JodaDateService implements DateService {
    @Override
    public final Date rfc1123DateParse(String toParse) {
       return rfc1123DateFormat.parseDateTime(toParse).toDate();
-   }
-
-   @Override
-   public Date iso8601DateParseWithOptionalTZ(String toParse)
-         throws IllegalArgumentException {
-      try {
-         return iso8601DateParse(toParse);
-      } catch (IllegalArgumentException orig) {
-         try {
-            return iso8601SecondsDateParse(toParse);
-         } catch (IllegalArgumentException ie) {
-            throw orig;
-         }
-      }
    }
 }

@@ -98,7 +98,7 @@ public class ListBucketHandler extends ParseSax.HandlerWithResult<ListBucketResp
          builder.uri(uriBuilder(getRequest().getEndpoint()).clearQuery().appendPath(currentKey).build());
       } else if (qName.equals("LastModified")) {
          builder.lastModified(dateParser
-               .iso8601DateParseWithOptionalTZ(currentOrNull(currentText)));
+               .iso8601DateOrSecondsDateParse(currentOrNull(currentText)));
       } else if (qName.equals("ETag")) {
          String currentETag = currentOrNull(currentText);
          builder.eTag(currentETag);

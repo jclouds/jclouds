@@ -110,12 +110,19 @@ public class DateServiceTest extends PerformanceTest {
    }
 
    @Test
-   public void testIso8601OptionalTZDateParse() {
+   public void testIso8601DateOrSecondsDateParse() {
       Date dsDate = dateService
-            .iso8601DateParseWithOptionalTZ(testData[0].iso8601SecondsDateString);
-      Date secondsDate = dateService
-            .iso8601SecondsDateParse(testData[0].iso8601SecondsDateString);
-      assertEquals(dsDate, secondsDate);
+            .iso8601DateOrSecondsDateParse(testData[0].iso8601DateString);
+      assertEquals(dsDate, testData[0].date);
+
+      Date dsSecondsDate = dateService
+            .iso8601DateOrSecondsDateParse(testData[0].iso8601SecondsDateString);
+      assertEquals(dsSecondsDate, testData[0].date);
+   }
+
+   @Test(expectedExceptions = IllegalArgumentException.class)
+   public void testIso8601DateOrSecondsDateParseIllegal() {
+      dateService.iso8601DateOrSecondsDateParse("-1");
    }
 
    @Test

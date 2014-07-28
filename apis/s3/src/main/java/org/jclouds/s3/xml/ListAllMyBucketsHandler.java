@@ -70,7 +70,7 @@ public class ListAllMyBucketsHandler extends ParseSax.HandlerWithResult<Set<Buck
          currentName = currentOrNull(currentText);
       } else if (qName.equals("CreationDate")) {
          currentCreationDate = dateParser
-               .iso8601DateParseWithOptionalTZ(currentOrNull(currentText));
+               .iso8601DateOrSecondsDateParse(currentOrNull(currentText));
       }
       currentText = new StringBuilder();
    }
