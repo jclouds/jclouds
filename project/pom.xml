@@ -494,9 +494,11 @@
             <ignoredResource>virtualhardwaresection.xml</ignoredResource>
             <ignoredResource>logback.xml</ignoredResource>
             <ignoredResource>amzn_images.xml</ignoredResource>
+            <ignoredResource>test</ignoredResource>
             <ignoredResource>test.jks</ignoredResource>
             <ignoredResource>CreateInternetService-options-test.xml</ignoredResource>
             <ignoredResource>.gitattributes</ignoredResource>
+            <ignoredResource>functions/.gitattributes</ignoredResource>
             <ignoredResource>OSGI-OPT/bnd.bnd</ignoredResource>
             <!-- For bouncycastle -->
             <ignoredResource>META-INF/BCKEY.DSA</ignoredResource>
