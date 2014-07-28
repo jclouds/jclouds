@@ -1,4 +1,0 @@
-{
-    "webserver": "http://localhost:4000/roles/webserver",
-    "smtpserver": "http://localhost:4000/roles/smtpserver"
-}
