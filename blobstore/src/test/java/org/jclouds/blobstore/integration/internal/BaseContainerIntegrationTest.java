@@ -311,7 +311,7 @@ public class BaseContainerIntegrationTest extends BaseBlobStoreIntegrationTest {
       try {
          assertTrue(view.getBlobStore().deleteContainerIfEmpty(containerName));
          assertNotExists(containerName);
-         // verify that false is returned even if the container does not exist
+         // verify that true is returned even if the container does not exist
          assertTrue(view.getBlobStore().deleteContainerIfEmpty(containerName));
       } finally {
          // this container is now deleted, so we can't reuse it directly
