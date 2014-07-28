@@ -394,7 +394,8 @@ public class LocalAsyncBlobStore extends BaseAsyncBlobStore {
       try {
          return immediateFuture(storageStrategy.putBlob(containerName, blob));
       } catch (IOException e) {
-         if (e.getMessage().startsWith("MD5 hash code mismatch")) {
+         String message = e.getMessage();
+         if (message != null && message.startsWith("MD5 hash code mismatch")) {
             HttpResponseException exception = returnResponseException(400);
             exception.initCause(e);
             throw exception;
