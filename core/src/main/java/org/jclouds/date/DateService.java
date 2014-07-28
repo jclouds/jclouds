@@ -85,7 +85,7 @@ public interface DateService {
     * @return the Date object of the parsed string.
     * @throws IllegalArgumentException
     */
-   Date iso8601DateParseWithOptionalTZ(String toParse)
+   Date iso8601DateOrSecondsDateParse(String toParse)
          throws IllegalArgumentException;
 
    String rfc1123DateFormat(Date date);
