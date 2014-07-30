@@ -16,6 +16,7 @@
  */
 package org.jclouds.blobstore.integration.internal;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static com.google.common.base.Charsets.UTF_8;
 import static com.google.common.base.Throwables.propagateIfPossible;
 import static com.google.common.collect.Iterables.get;
@@ -62,6 +63,48 @@ public class BaseContainerIntegrationTest extends BaseBlobStoreIntegrationTest {
 
          view.getBlobStore().createContainerInLocation(null, containerName);
          assertEquals(view.getBlobStore().countBlobs(containerName), 1);
+      } finally {
+         returnContainer(containerName);
+      }
+   }
+
+   @Test
+   public void testListMarkerAfterLastKey() throws Exception {
+      String key = "hello";
+      String containerName = getContainerName();
+      try {
+         addBlobToContainer(containerName,
+         // NOTE all metadata in jclouds comes out as lowercase, in an effort to
+         // normalize the providers.
+               view.getBlobStore().blobBuilder(key).userMetadata(ImmutableMap.of("Adrian", "powderpuff"))
+                     .payload(TEST_STRING).contentType(MediaType.TEXT_PLAIN)
+                     .contentMD5(md5().hashString(TEST_STRING, UTF_8).asBytes())
+                     .build());
+         validateContent(containerName, key);
+
+         PageSet<? extends StorageMetadata> container = view.getBlobStore().list(containerName, afterMarker(key));
+         assertThat(container).isEmpty();
+      } finally {
+         returnContainer(containerName);
+      }
+   }
+
+   @Test
+   public void testListContainerWithZeroMaxResults() throws Exception {
+      String key = "hello";
+      String containerName = getContainerName();
+      try {
+         addBlobToContainer(containerName,
+         // NOTE all metadata in jclouds comes out as lowercase, in an effort to
+         // normalize the providers.
+               view.getBlobStore().blobBuilder(key).userMetadata(ImmutableMap.of("Adrian", "powderpuff"))
+                     .payload(TEST_STRING).contentType(MediaType.TEXT_PLAIN)
+                     .contentMD5(md5().hashString(TEST_STRING, UTF_8).asBytes())
+                     .build());
+         validateContent(containerName, key);
+
+         PageSet<? extends StorageMetadata> container = view.getBlobStore().list(containerName, maxResults(0));
+         assertThat(container).isEmpty();
       } finally {
          returnContainer(containerName);
       }

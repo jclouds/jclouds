@@ -20,9 +20,10 @@ import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.base.Preconditions.checkState;
 import static com.google.common.base.Throwables.getCausalChain;
 import static com.google.common.base.Throwables.propagate;
-import static com.google.common.collect.Iterables.find;
+import static com.google.common.collect.Iterables.filter;
 import static com.google.common.collect.Iterables.size;
 import static com.google.common.collect.Iterables.transform;
+import static com.google.common.collect.Iterables.tryFind;
 import static com.google.common.collect.Sets.filter;
 import static com.google.common.collect.Sets.newTreeSet;
 import static org.jclouds.blobstore.options.ListContainerOptions.Builder.recursive;
@@ -75,6 +76,7 @@ import org.jclouds.io.Payload;
 import org.jclouds.logging.Logger;
 
 import com.google.common.base.Function;
+import com.google.common.base.Optional;
 import com.google.common.base.Predicate;
 import com.google.common.base.Supplier;
 import com.google.common.collect.ImmutableMap;
@@ -241,12 +243,17 @@ public final class LocalBlobStore implements BlobStore {
       if (options != null) {
          if (options.getMarker() != null) {
             final String finalMarker = options.getMarker();
-            StorageMetadata lastMarkerMetadata = find(contents, new Predicate<StorageMetadata>() {
+            Optional<StorageMetadata> lastMarkerMetadata = tryFind(contents, new Predicate<StorageMetadata>() {
                public boolean apply(StorageMetadata metadata) {
                   return metadata.getName().compareTo(finalMarker) > 0;
                }
             });
-            contents = contents.tailSet(lastMarkerMetadata);
+            if (lastMarkerMetadata.isPresent()) {
+               contents = contents.tailSet(lastMarkerMetadata.get());
+            } else {
+               // marker is after last key or container is empty
+               contents.clear();
+            }
          }
 
          final String prefix = options.getDir();
@@ -262,7 +269,7 @@ public final class LocalBlobStore implements BlobStore {
          if (!contents.isEmpty()) {
             StorageMetadata lastElement = contents.last();
             contents = newTreeSet(Iterables.limit(contents, maxResults));
-            if (!contents.contains(lastElement)) {
+            if (maxResults != 0 && !contents.contains(lastElement)) {
                // Partial listing
                marker = contents.last().getName();
             }
