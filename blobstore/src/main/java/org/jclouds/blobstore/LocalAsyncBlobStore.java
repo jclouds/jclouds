@@ -388,7 +388,7 @@ public class LocalAsyncBlobStore extends BaseAsyncBlobStore {
 
       logger.debug("Put blob with key [%s] to container [%s]", blobKey, containerName);
       if (!storageStrategy.containerExists(containerName)) {
-         return Futures.immediateFailedFuture(new IllegalStateException("containerName not found: " + containerName));
+         return Futures.immediateFailedFuture(cnfe(containerName));
       }
 
       try {
