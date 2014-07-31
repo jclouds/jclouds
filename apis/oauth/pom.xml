@@ -93,6 +93,12 @@
             <artifactId>maven-surefire-plugin</artifactId>
             <executions>
               <execution>
+                <id>default-test</id>
+                <configuration>
+                  <skipTests>true</skipTests>
+                </configuration>
+              </execution>
+              <execution>
                 <id>integration</id>
                 <phase>integration-test</phase>
                 <goals>
@@ -105,7 +111,7 @@
                     <test.oauth.endpoint>${test.oauth.endpoint}</test.oauth.endpoint>
                     <test.oauth.api-version>${test.oauth.api-version}</test.oauth.api-version>
                     <test.oauth.build-version>${test.oauth.build-version}</test.oauth.build-version>
-                    <test.jclouds.oauth.signature-or-mac-algorithm>${test.jclouds.oauth.signature-or-mac-algorithm&gt;}</test.jclouds.oauth.signature-or-mac-algorithm>
+                    <test.jclouds.oauth.signature-or-mac-algorithm>${test.jclouds.oauth.signature-or-mac-algorithm}</test.jclouds.oauth.signature-or-mac-algorithm>
                     <test.jclouds.oauth.audience>${test.jclouds.oauth.audience}</test.jclouds.oauth.audience>
                     <test.jclouds.oauth.scopes>${test.jclouds.oauth.scopes}</test.jclouds.oauth.scopes>
                   </systemPropertyVariables>

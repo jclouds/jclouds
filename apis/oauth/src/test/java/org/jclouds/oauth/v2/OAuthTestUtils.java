@@ -46,7 +46,7 @@ public class OAuthTestUtils {
       }
    }
 
-   public static String setCredentialFromPemFile(Properties overrides, String key) {
+   public static String setCredential(Properties overrides, String key) {
       String val = null;
       String credentialFromFile = null;
       String testKey = "test." + key;
@@ -54,7 +54,11 @@ public class OAuthTestUtils {
       if (System.getProperties().containsKey(testKey)) {
          val = System.getProperty(testKey);
       }
-      checkNotNull(val, String.format("the property %s must be set (pem private key path)", testKey));
+      checkNotNull(val, String.format("the property %s must be set (pem private key file path or private key as a string)", testKey));
+
+      if (val.startsWith("-----BEGIN")) {
+         return val;
+      }
 
       try {
          credentialFromFile = Files.toString(new File(val), Charsets.UTF_8);
