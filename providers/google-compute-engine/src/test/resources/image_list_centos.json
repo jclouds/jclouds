@@ -1,0 +1,183 @@
+{
+    "kind": "compute#imageList",
+    "selfLink": "https://www.googleapis.com/compute/v1/projects/centos-cloud/global/images",
+    "id": "projects/centos-cloud/global/images",
+    "items": [
+        {
+            "kind": "compute#image",
+            "selfLink": "https://www.googleapis.com/compute/v1/projects/centos-cloud/global/images/centos-6-v20131120",
+            "id": "11748647391859510935",
+            "creationTimestamp": "2013-11-25T15:13:50.611-08:00",
+            "name": "centos-6-v20131120",
+            "description": "SCSI-enabled CentOS 6 built on 2013-11-20",
+            "sourceType": "RAW",
+            "rawDisk": {
+                "source": "",
+                "containerType": "TAR"
+            },
+            "deprecated": {
+                "state": "DEPRECATED",
+                "replacement": "https://www.googleapis.com/compute/v1/projects/centos-cloud/global/images/centos-6-v20140318"
+            },
+            "status": "READY",
+            "archiveSizeBytes": "269993565",
+            "diskSizeGb": "10"
+        },
+        {
+            "kind": "compute#image",
+            "selfLink": "https://www.googleapis.com/compute/v1/projects/centos-cloud/global/images/centos-6-v20140318",
+            "id": "11743140967858608122",
+            "creationTimestamp": "2014-03-19T15:01:13.388-07:00",
+            "name": "centos-6-v20140318",
+            "description": "CentOS 6.5 x86_64 built on 2014-03-18",
+            "sourceType": "RAW",
+            "rawDisk": {
+                "source": "",
+                "containerType": "TAR"
+            },
+            "deprecated": {
+                "state": "DEPRECATED",
+                "replacement": "https://www.googleapis.com/compute/v1/projects/centos-cloud/global/images/centos-6-v20140408"
+            },
+            "status": "READY",
+            "archiveSizeBytes": "341230444",
+            "diskSizeGb": "10"
+        },
+        {
+            "kind": "compute#image",
+            "selfLink": "https://www.googleapis.com/compute/v1/projects/centos-cloud/global/images/centos-6-v20140408",
+            "id": "18033188469723077298",
+            "creationTimestamp": "2014-04-09T10:31:57.518-07:00",
+            "name": "centos-6-v20140408",
+            "description": "CentOS 6.5 x86_64 built on 2014-04-08",
+            "sourceType": "RAW",
+            "rawDisk": {
+                "source": "",
+                "containerType": "TAR"
+            },
+            "deprecated": {
+                "state": "DEPRECATED",
+                "replacement": "https://www.googleapis.com/compute/v1/projects/centos-cloud/global/images/centos-6-v20140415"
+            },
+            "status": "READY",
+            "archiveSizeBytes": "342252847",
+            "diskSizeGb": "10"
+        },
+        {
+            "kind": "compute#image",
+            "selfLink": "https://www.googleapis.com/compute/v1/projects/centos-cloud/global/images/centos-6-v20140415",
+            "id": "10463166969914166288",
+            "creationTimestamp": "2014-04-22T12:05:16.927-07:00",
+            "name": "centos-6-v20140415",
+            "description": "CentOS 6.5 x86_64 built on 2014-04-15",
+            "sourceType": "RAW",
+            "rawDisk": {
+                "source": "",
+                "containerType": "TAR"
+            },
+            "deprecated": {
+                "state": "DEPRECATED",
+                "replacement": "https://www.googleapis.com/compute/v1/projects/centos-cloud/global/images/centos-6-v20140522"
+            },
+            "status": "READY",
+            "archiveSizeBytes": "1026663807",
+            "diskSizeGb": "10"
+        },
+        {
+            "kind": "compute#image",
+            "selfLink": "https://www.googleapis.com/compute/v1/projects/centos-cloud/global/images/centos-6-v20140522",
+            "id": "14390164727436022001",
+            "creationTimestamp": "2014-06-03T10:21:42.109-07:00",
+            "name": "centos-6-v20140522",
+            "description": "CentOS 6.5 x86_64 built on 2014-05-22",
+            "sourceType": "RAW",
+            "rawDisk": {
+                "source": "",
+                "containerType": "TAR"
+            },
+            "deprecated": {
+                "state": "DEPRECATED",
+                "replacement": "https://www.googleapis.com/compute/v1/projects/centos-cloud/global/images/centos-6-v20140606"
+            },
+            "status": "READY",
+            "archiveSizeBytes": "1028292810",
+            "diskSizeGb": "10"
+        },
+        {
+            "kind": "compute#image",
+            "selfLink": "https://www.googleapis.com/compute/v1/projects/centos-cloud/global/images/centos-6-v20140605",
+            "id": "16310166269920012092",
+            "creationTimestamp": "2014-06-05T11:04:45.767-07:00",
+            "name": "centos-6-v20140605",
+            "description": "CentOS 6.5 x86_64 built on 2014-06-05",
+            "sourceType": "RAW",
+            "rawDisk": {
+                "source": "",
+                "containerType": "TAR"
+            },
+            "deprecated": {
+                "state": "DEPRECATED",
+                "replacement": "https://www.googleapis.com/compute/v1/projects/centos-cloud/global/images/centos-6-v20140606"
+            },
+            "status": "READY",
+            "archiveSizeBytes": "1028745777",
+            "diskSizeGb": "10"
+        },
+        {
+            "kind": "compute#image",
+            "selfLink": "https://www.googleapis.com/compute/v1/projects/centos-cloud/global/images/centos-6-v20140606",
+            "id": "6290630306542078308",
+            "creationTimestamp": "2014-06-06T13:16:42.265-07:00",
+            "name": "centos-6-v20140606",
+            "description": "CentOS 6.5 x86_64 built on 2014-06-06",
+            "sourceType": "RAW",
+            "rawDisk": {
+                "source": "",
+                "containerType": "TAR"
+            },
+            "deprecated": {
+                "state": "DEPRECATED",
+                "replacement": "https://www.googleapis.com/compute/v1/projects/centos-cloud/global/images/centos-6-v20140619"
+            },
+            "status": "READY",
+            "archiveSizeBytes": "1028757792",
+            "diskSizeGb": "10"
+        },
+        {
+            "kind": "compute#image",
+            "selfLink": "https://www.googleapis.com/compute/v1/projects/centos-cloud/global/images/centos-6-v20140619",
+            "id": "3614861379648377676",
+            "creationTimestamp": "2014-06-24T13:28:11.552-07:00",
+            "name": "centos-6-v20140619",
+            "description": "CentOS 6.5 x86_64 built on 2014-06-19",
+            "sourceType": "RAW",
+            "rawDisk": {
+                "source": "",
+                "containerType": "TAR"
+            },
+            "deprecated": {
+                "state": "DEPRECATED",
+                "replacement": "https://www.googleapis.com/compute/v1/projects/centos-cloud/global/images/centos-6-v20140718"
+            },
+            "status": "READY",
+            "archiveSizeBytes": "1029860991",
+            "diskSizeGb": "10"
+        },
+        {
+            "kind": "compute#image",
+            "selfLink": "https://www.googleapis.com/compute/v1/projects/centos-cloud/global/images/centos-6-v20140718",
+            "id": "16259951858818091437",
+            "creationTimestamp": "2014-07-24T09:02:18.298-07:00",
+            "name": "centos-6-v20140718",
+            "description": "CentOS 6.5 x86_64 built on 2014-07-18",
+            "sourceType": "RAW",
+            "rawDisk": {
+                "source": "",
+                "containerType": "TAR"
+            },
+            "status": "READY",
+            "archiveSizeBytes": "1031630715",
+            "diskSizeGb": "10"
+        }
+    ]
+}

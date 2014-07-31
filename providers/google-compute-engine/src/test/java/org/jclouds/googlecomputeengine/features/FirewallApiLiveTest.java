@@ -33,6 +33,7 @@ import org.testng.annotations.Test;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Lists;
 
+@Test(groups = "live", testName = "FirewallApiLiveTest")
 public class FirewallApiLiveTest extends BaseGoogleComputeEngineApiLiveTest {
 
    private static final String FIREWALL_NAME = "firewall-api-live-test-firewall";

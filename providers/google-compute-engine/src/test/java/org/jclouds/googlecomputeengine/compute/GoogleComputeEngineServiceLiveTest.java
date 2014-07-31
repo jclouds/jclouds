@@ -17,7 +17,7 @@
 package org.jclouds.googlecomputeengine.compute;
 
 import static com.google.common.collect.Iterables.contains;
-import static org.jclouds.oauth.v2.OAuthTestUtils.setCredentialFromPemFile;
+import static org.jclouds.oauth.v2.OAuthTestUtils.setCredential;
 import static org.testng.Assert.assertFalse;
 import static org.testng.Assert.assertTrue;
 import java.util.Properties;
@@ -51,7 +51,7 @@ public class GoogleComputeEngineServiceLiveTest extends BaseComputeServiceLiveTe
    @Override
    protected Properties setupProperties() {
       Properties props = super.setupProperties();
-      setCredentialFromPemFile(props, provider + ".credential");
+      setCredential(props, provider + ".credential");
       return props;
    }
 

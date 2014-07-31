@@ -31,6 +31,7 @@ import org.testng.annotations.Test;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 
+@Test(groups = "live", testName = "RouteApiLiveTest")
 public class RouteApiLiveTest extends BaseGoogleComputeEngineApiLiveTest {
 
    private static final String DEST_RANGE = "20.10.0.0/16";

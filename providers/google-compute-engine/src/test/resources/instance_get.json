@@ -44,7 +44,7 @@
          },
          {
             "key": "jclouds-image",
-            "value": "https://www.googleapis.com/compute/v1/projects/centos-cloud/global/images/gcel-12-04-v20121106"
+            "value": "https://www.googleapis.com/compute/v1/projects/debian-cloud/global/images/debian-7-wheezy-v20140718"
          },
          {
             "key": "jclouds-delete-boot-disk",

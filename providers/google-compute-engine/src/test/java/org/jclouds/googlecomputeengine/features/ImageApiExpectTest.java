@@ -52,7 +52,7 @@ public class ImageApiExpectTest extends BaseGoogleComputeEngineApiExpectTest {
            .addHeader("Authorization", "Bearer " + TOKEN).build();
 
    public static final HttpResponse LIST_CENTOS_IMAGES_RESPONSE = HttpResponse.builder().statusCode(200)
-           .payload(staticPayloadFromResource("/image_list_single_page.json")).build();
+         .payload(staticPayloadFromResource("/image_list_centos.json")).build();
 
    public static final HttpRequest LIST_DEBIAN_IMAGES_REQUEST = HttpRequest
            .builder()
@@ -63,7 +63,7 @@ public class ImageApiExpectTest extends BaseGoogleComputeEngineApiExpectTest {
 
    public static final HttpResponse LIST_DEBIAN_IMAGES_RESPONSE =
       HttpResponse.builder().statusCode(200)
-                  .payload(staticPayloadFromResource("/image_list_empty.json")).build();
+            .payload(staticPayloadFromResource("/image_list_debian.json")).build();
 
    public void testGetImageResponseIs2xx() throws Exception {
       HttpRequest get = HttpRequest

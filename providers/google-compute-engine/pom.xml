@@ -108,6 +108,12 @@
                         <artifactId>maven-surefire-plugin</artifactId>
                         <executions>
                             <execution>
+                                <id>default-test</id>
+                                <configuration>
+                                    <skipTests>true</skipTests>
+                                </configuration>
+                            </execution>
+                            <execution>
                                 <id>integration</id>
                                 <phase>integration-test</phase>
                                 <goals>

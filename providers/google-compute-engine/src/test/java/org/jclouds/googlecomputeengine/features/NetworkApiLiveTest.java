@@ -30,6 +30,7 @@ import org.testng.annotations.Test;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 
+@Test(groups = "live", testName = "NetworkApiLiveTest")
 public class NetworkApiLiveTest extends BaseGoogleComputeEngineApiLiveTest {
 
    private static final String NETWORK_NAME = "network-api-live-test-network";

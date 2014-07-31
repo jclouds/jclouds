@@ -20,8 +20,8 @@
          "kind": "compute#image",
          "id": "13037721421359523565",
          "creationTimestamp": "2012-11-09T11:40:51.994-08:00",
-         "selfLink": "https://www.googleapis.com/compute/v1/projects/centos-cloud/global/images/gcel-12-04-v20121106",
-         "name": "gcel-12-04-v20121106",
+         "selfLink": "https://www.googleapis.com/compute/v1/projects/debian-cloud/global/images/debian-7-wheezy-v20140718",
+         "name": "debian-7-wheezy-v20140718",
          "description": "SCSI-enabled GCEL 12.04 LTS; Created Tue, 06 Nov 2012 00:00:00 +0000",
          "sourceType": "RAW",
          "rawDisk": {

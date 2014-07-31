@@ -158,7 +158,7 @@ public class InstanceInZoneToNodeMetadataTest {
          .metadata(Metadata.builder()
                .items(ImmutableMap.of("aKey", "aValue",
                   "jclouds-image",
-                  "https://www.googleapis.com/compute/v1/projects/centos-cloud/global/images/gcel-12-04-v20121106",
+                  "https://www.googleapis.com/compute/v1/projects/debian-cloud/global/images/debian-7-wheezy-v20140718",
                   "jclouds-delete-boot-disk", "true"))
                .fingerprint("efgh")
                .build())
@@ -167,8 +167,7 @@ public class InstanceInZoneToNodeMetadataTest {
 
       images = ImmutableSet.of(new ImageBuilder()
          .id("1")
-         .uri(URI.create("https://www.googleapis.com/compute/v1/projects/centos-cloud/global/images/"
-               + "gcel-12-04-v20121106"))
+         .uri(URI.create("https://www.googleapis.com/compute/v1/projects/debian-cloud/global/images/debian-7-wheezy-v20140718"))
          .providerId("1")
          .name("mock image")
          .status(AVAILABLE)

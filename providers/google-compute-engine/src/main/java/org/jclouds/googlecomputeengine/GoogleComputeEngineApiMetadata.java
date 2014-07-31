@@ -63,8 +63,7 @@ public class GoogleComputeEngineApiMetadata extends BaseHttpApiMetadata<GoogleCo
       properties.put(AUDIENCE, "https://accounts.google.com/o/oauth2/token");
       properties.put(SIGNATURE_OR_MAC_ALGORITHM, "RS256");
       properties.put(PROPERTY_SESSION_INTERVAL, 3600);
-      properties.setProperty(TEMPLATE, "osFamily=GCEL,osVersionMatches=1[012].[01][04],locationId=us-central1-a," +
-              "loginUser=jclouds");
+      properties.setProperty(TEMPLATE, "osFamily=DEBIAN,osVersionMatches=7\\..*,locationId=us-central1-a,loginUser=jclouds");
       properties.put(OPERATION_COMPLETE_INTERVAL, 500);
       properties.put(OPERATION_COMPLETE_TIMEOUT, 600000);
       return properties;

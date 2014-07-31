@@ -183,7 +183,7 @@ public class GoogleComputeEngineServiceExpectTest extends BaseGoogleComputeEngin
               .builder()
               .method("POST")
               .endpoint("https://www.googleapis.com/compute/v1/projects/myproject/zones/us-central1-a/disks"
-                                + "?sourceImage=https%3A//www.googleapis.com/compute/v1/projects/centos-cloud/global/images/gcel-12-04-v20121106")
+                                + "?sourceImage=https%3A//www.googleapis.com/compute/v1/projects/debian-cloud/global/images/debian-7-wheezy-v20140718")
               .addHeader("Accept", "application/json")
               .addHeader("Authorization", "Bearer " + TOKEN)
               .payload(payloadFromStringWithContentType("{\"name\":\"" + instanceName + "-" + GCE_BOOT_DISK_SUFFIX + "\","
@@ -226,7 +226,7 @@ public class GoogleComputeEngineServiceExpectTest extends BaseGoogleComputeEngin
                                                         "\"value\":\"jclouds:" +
                                                         publicKey + " jclouds@localhost\"},{\"key\":\"jclouds-group\"," +
                                                         "\"value\":\"" + groupName + "\"},{\"key\":\"jclouds-image\",\"value\":\"https://www.googleapis" +
-                                                        ".com/compute/v1/projects/centos-cloud/global/images/gcel-12-04-v20121106\"}," +
+                                                        ".com/compute/v1/projects/debian-cloud/global/images/debian-7-wheezy-v20140718\"}," +
                                                         "{\"key\":\"jclouds-delete-boot-disk\",\"value\":\"true\"}]}}",
                                                         MediaType.APPLICATION_JSON)).build();
    }
@@ -568,7 +568,7 @@ public class GoogleComputeEngineServiceExpectTest extends BaseGoogleComputeEngin
       GoogleComputeEngineTemplateOptions options = computeService.templateOptions().as(GoogleComputeEngineTemplateOptions.class);
       options.tags(ImmutableSet.of("aTag"));
       NodeMetadata node = getOnlyElement(computeService.createNodesInGroup("test", 1, options));
-      assertEquals(node.getImageId(), "gcel-12-04-v20121106");
+      assertEquals(node.getImageId(), "debian-7-wheezy-v20140718");
    }
 }
 
