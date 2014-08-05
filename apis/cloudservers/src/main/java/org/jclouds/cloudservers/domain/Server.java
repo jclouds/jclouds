@@ -23,8 +23,9 @@ import java.util.Map;
 
 import org.jclouds.javax.annotation.Nullable;
 
+import com.google.common.base.MoreObjects;
+import com.google.common.base.MoreObjects.ToStringHelper;
 import com.google.common.base.Objects;
-import com.google.common.base.Objects.ToStringHelper;
 import com.google.common.collect.ImmutableMap;
 
 /**
@@ -289,7 +290,7 @@ public class Server {
    }
    
    protected ToStringHelper string() {
-      return Objects.toStringHelper(this)
+      return MoreObjects.toStringHelper(this)
             .add("id", id).add("name", name).add("metadata", metadata).add("addresses", addresses).add("adminPass", adminPass).add("flavorId", flavorId).add("hostId", hostId).add("imageId", imageId).add("sharedIpGroupId", sharedIpGroupId).add("progress", progress).add("status", status);
    }
    

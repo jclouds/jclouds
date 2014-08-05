@@ -17,7 +17,7 @@
 package org.jclouds.rest.internal;
 
 import static com.google.common.base.Objects.equal;
-import static com.google.common.base.Objects.toStringHelper;
+import static com.google.common.base.MoreObjects.toStringHelper;
 import static com.google.common.base.Preconditions.checkState;
 import static com.google.common.base.Throwables.propagate;
 import static com.google.common.util.concurrent.Futures.transform;
@@ -42,6 +42,7 @@ import org.jclouds.rest.config.InvocationConfig;
 
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Function;
+import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
 import com.google.common.base.Optional;
 import com.google.common.reflect.Invokable;
@@ -267,6 +268,6 @@ public class InvokeSyncToAsyncHttpMethod implements Function<Invocation, Object>
 
    @Override
    public String toString() {
-      return Objects.toStringHelper("").omitNullValues().add("annotationParser", annotationProcessor).toString();
+      return MoreObjects.toStringHelper("").omitNullValues().add("annotationParser", annotationProcessor).toString();
    }
 }

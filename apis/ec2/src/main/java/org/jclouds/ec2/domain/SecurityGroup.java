@@ -23,8 +23,9 @@ import java.util.Set;
 import org.jclouds.javax.annotation.Nullable;
 import org.jclouds.net.domain.IpPermission;
 
+import com.google.common.base.MoreObjects;
+import com.google.common.base.MoreObjects.ToStringHelper;
 import com.google.common.base.Objects;
-import com.google.common.base.Objects.ToStringHelper;
 import com.google.common.collect.ForwardingSet;
 import com.google.common.collect.ImmutableSet;
 
@@ -211,7 +212,7 @@ public class SecurityGroup extends ForwardingSet<IpPermission> {
    }
 
    protected ToStringHelper string() {
-      return Objects.toStringHelper(this).omitNullValues().add("region", region).add("id", id).add("name", name)
+      return MoreObjects.toStringHelper(this).omitNullValues().add("region", region).add("id", id).add("name", name)
             .add("ownerId", ownerId).add("description", description)
             .add("ipPermissions", ipPermissions.size() == 0 ? null : ipPermissions);
    }

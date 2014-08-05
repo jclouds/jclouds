@@ -16,8 +16,9 @@
  */
 package org.jclouds.rackspace.cloudloadbalancers.v1.domain;
 
+import com.google.common.base.MoreObjects;
+import com.google.common.base.MoreObjects.ToStringHelper;
 import com.google.common.base.Objects;
-import com.google.common.base.Objects.ToStringHelper;
 
 /**
  * The same as {@link AccessRule} but this will have an id as assigned by the Cloud Load Balancers service.
@@ -50,7 +51,7 @@ public class AccessRuleWithId extends AccessRule {
    }
    
    protected ToStringHelper string() {
-      return Objects.toStringHelper(this).omitNullValues()
+      return MoreObjects.toStringHelper(this).omitNullValues()
             .add("id", id).add("address", getAddress()).add("type", getType());
    }
    

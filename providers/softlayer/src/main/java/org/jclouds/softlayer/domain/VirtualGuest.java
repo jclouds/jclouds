@@ -24,6 +24,7 @@ import java.util.Set;
 import org.jclouds.javax.annotation.Nullable;
 
 import com.google.common.base.CaseFormat;
+import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
 import com.google.common.collect.ImmutableSet;
 
@@ -797,7 +798,7 @@ public class VirtualGuest {
 
    @Override
    public String toString() {
-      return Objects.toStringHelper(this)
+      return MoreObjects.toStringHelper(this)
               .add("accountId", accountId)
               .add("createDate", createDate)
               .add("dedicatedAccountHostOnly", dedicatedAccountHostOnly)

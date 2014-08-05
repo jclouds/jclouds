@@ -22,8 +22,9 @@ import java.beans.ConstructorProperties;
 
 import javax.inject.Named;
 
+import com.google.common.base.MoreObjects;
+import com.google.common.base.MoreObjects.ToStringHelper;
 import com.google.common.base.Objects;
-import com.google.common.base.Objects.ToStringHelper;
 
 /**
  * Represents the set of limits (quotas) returned by the Quota Extension
@@ -344,7 +345,7 @@ public class Quota {
    }
    
    protected ToStringHelper string() {
-      return Objects.toStringHelper(this)
+      return MoreObjects.toStringHelper(this)
             .add("id", id).add("metadataItems", metadataItems).add("injectedFileContentBytes", injectedFileContentBytes).add("volumes", volumes).add("gigabytes", gigabytes).add("ram", ram).add("floatingIps", floatingIps).add("instances", instances).add("injectedFiles", injectedFiles).add("cores", cores).add("securityGroups", securityGroups).add("securityGroupRules", securityGroupRules).add("keyPairs", keyPairs);
    }
    

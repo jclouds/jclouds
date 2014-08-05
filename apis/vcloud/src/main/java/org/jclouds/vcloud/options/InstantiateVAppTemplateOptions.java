@@ -23,8 +23,9 @@ import java.util.Set;
 
 import org.jclouds.vcloud.domain.network.NetworkConfig;
 
+import com.google.common.base.MoreObjects;
+import com.google.common.base.MoreObjects.ToStringHelper;
 import com.google.common.base.Objects;
-import com.google.common.base.Objects.ToStringHelper;
 import com.google.common.collect.Sets;
 
 public class InstantiateVAppTemplateOptions {
@@ -159,7 +160,7 @@ public class InstantiateVAppTemplateOptions {
    }
    
    protected ToStringHelper string() {
-      ToStringHelper toString = Objects.toStringHelper("").omitNullValues();
+      ToStringHelper toString = MoreObjects.toStringHelper("").omitNullValues();
       toString.add("customizeOnInstantiate", customizeOnInstantiate).add("description", description);
       if (networkConfig.size() > 0)
          toString.add("networkConfig", networkConfig);

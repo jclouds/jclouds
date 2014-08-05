@@ -82,7 +82,7 @@ public class InvokeMappedHttpMethodTest {
    @SuppressWarnings("unchecked")
    private Function<HttpRequest, Function<HttpResponse, ?>> transformerForRequest = Function.class.cast(Functions
          .constant(Functions.identity()));
-   private ListeningExecutorService userThreads = MoreExecutors.sameThreadExecutor();
+   private ListeningExecutorService userThreads = MoreExecutors.newDirectExecutorService();
 
    private HttpResponse response = HttpResponse.builder().statusCode(200).payload("foo").build();
    private HttpCommandExecutorService http;

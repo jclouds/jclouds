@@ -42,7 +42,7 @@ import java.util.Map.Entry;
 import java.util.Set;
 
 import static com.google.common.base.Objects.equal;
-import static com.google.common.base.Objects.toStringHelper;
+import static com.google.common.base.MoreObjects.toStringHelper;
 
 /**
  * Eliminates null values when deserializing Collections, Maps, and Multimaps

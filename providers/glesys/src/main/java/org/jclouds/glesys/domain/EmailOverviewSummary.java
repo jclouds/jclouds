@@ -19,8 +19,9 @@ package org.jclouds.glesys.domain;
 import java.beans.ConstructorProperties;
 
 import com.google.common.annotations.Beta;
+import com.google.common.base.MoreObjects;
+import com.google.common.base.MoreObjects.ToStringHelper;
 import com.google.common.base.Objects;
-import com.google.common.base.Objects.ToStringHelper;
 
 /**
  * Summary information of e-mail settings and limits for a GleSYS account
@@ -158,7 +159,7 @@ public class EmailOverviewSummary {
    }
 
    protected ToStringHelper string() {
-      return Objects.toStringHelper("")
+      return MoreObjects.toStringHelper("")
             .add("accounts", accounts).add("maxAccounts", maxAccounts).add("aliases", aliases).add("maxAliases", maxAliases);
    }
 

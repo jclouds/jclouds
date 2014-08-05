@@ -16,7 +16,7 @@
  */
 package org.jclouds.openstack.swift.blobstore.strategy.internal;
 
-import static com.google.common.util.concurrent.MoreExecutors.sameThreadExecutor;
+import static com.google.common.util.concurrent.MoreExecutors.newDirectExecutorService;
 import static org.jclouds.Constants.PROPERTY_MAX_RETRIES;
 import static org.jclouds.Constants.PROPERTY_SO_TIMEOUT;
 import static org.testng.Assert.assertEquals;
@@ -97,8 +97,8 @@ public class SequentialMultipartUploadStrategyMockTest {
       }
    }
 
-   private static final Set<Module> modules = ImmutableSet.<Module> of(new ExecutorServiceModule(sameThreadExecutor(),
-         sameThreadExecutor()));
+   private static final Set<Module> modules = ImmutableSet.<Module> of(new ExecutorServiceModule(newDirectExecutorService(),
+         newDirectExecutorService()));
 
    static SequentialMultipartUploadStrategy mockSequentialMultipartUploadStrategy(String uri, int partSize) {
       Properties overrides = new Properties();

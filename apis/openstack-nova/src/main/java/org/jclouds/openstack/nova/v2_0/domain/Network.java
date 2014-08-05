@@ -18,8 +18,9 @@ package org.jclouds.openstack.nova.v2_0.domain;
 
 import java.beans.ConstructorProperties;
 
+import com.google.common.base.MoreObjects;
+import com.google.common.base.MoreObjects.ToStringHelper;
 import com.google.common.base.Objects;
-import com.google.common.base.Objects.ToStringHelper;
 
 import static com.google.common.base.Preconditions.checkArgument;
 
@@ -81,7 +82,7 @@ public class Network implements Comparable<Network> {
    }
 
    protected ToStringHelper string() {
-      return Objects.toStringHelper(this)
+      return MoreObjects.toStringHelper(this)
             .add("networkUuid", networkUuid)
             .add("portUuid", portUuid)
             .add("fixedIp", fixedIp);

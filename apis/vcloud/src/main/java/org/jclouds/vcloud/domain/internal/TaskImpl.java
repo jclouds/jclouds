@@ -28,7 +28,7 @@ import org.jclouds.vcloud.domain.Task;
 import org.jclouds.vcloud.domain.TaskStatus;
 import org.jclouds.vcloud.domain.VCloudError;
 
-import com.google.common.base.Objects;
+import com.google.common.base.MoreObjects;
 
 public class TaskImpl extends ReferenceTypeImpl implements Task {
 
@@ -82,7 +82,7 @@ public class TaskImpl extends ReferenceTypeImpl implements Task {
 
    @Override
    public String toString() {
-      return Objects.toStringHelper("").omitNullValues().add("href", getHref()).add("name", getName())
+      return MoreObjects.toStringHelper("").omitNullValues().add("href", getHref()).add("name", getName())
             .add("owner", owner).add("operation", operation).add("startTime", startTime).add("endTime", endTime)
             .add("expiryTime", expiryTime).add("error", error).toString();
    }

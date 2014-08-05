@@ -21,6 +21,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 import org.jclouds.javax.annotation.Nullable;
 
+import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
 
 /**
@@ -116,7 +117,7 @@ public class FirewallRule {
 
    @Override
    public String toString() {
-      return Objects.toStringHelper("").omitNullValues().add("enabled", enabled).add("description", description)
+      return MoreObjects.toStringHelper("").omitNullValues().add("enabled", enabled).add("description", description)
             .add("policy", policy).add("protocols", protocols).add("port", port).add("destinationIp", destinationIp)
             .toString();
    }

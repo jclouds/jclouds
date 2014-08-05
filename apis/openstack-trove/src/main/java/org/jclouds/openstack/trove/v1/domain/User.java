@@ -21,8 +21,9 @@ import java.beans.ConstructorProperties;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import com.google.common.base.MoreObjects;
+import com.google.common.base.MoreObjects.ToStringHelper;
 import com.google.common.base.Objects;
-import com.google.common.base.Objects.ToStringHelper;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Lists;
@@ -138,7 +139,7 @@ public class User implements Comparable<User>{
    }
 
    protected ToStringHelper string() {
-      return Objects.toStringHelper(this)
+      return MoreObjects.toStringHelper(this)
             .add("name", name)
             .add("password", password)
             .add("host", host)

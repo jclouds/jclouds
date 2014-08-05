@@ -16,7 +16,7 @@
  */
 package org.jclouds.sqs.features;
 
-import static com.google.common.util.concurrent.MoreExecutors.sameThreadExecutor;
+import static com.google.common.util.concurrent.MoreExecutors.newDirectExecutorService;
 import static org.jclouds.providers.AnonymousProviderMetadata.forClientMappedToAsyncClientOnEndpoint;
 import static org.jclouds.sqs.reference.SQSParameters.ACTION;
 import static org.testng.Assert.assertEquals;
@@ -98,7 +98,7 @@ public class PermissionApiLiveTest extends BaseSQSApiLiveTest {
       return ContextBuilder.newBuilder(
                   forClientMappedToAsyncClientOnEndpoint(AnonymousAttributesApi.class,
                         AnonymousAttributesAsyncApi.class, queue.toASCIIString()))
-            .modules(ImmutableSet.<Module> of(new ExecutorServiceModule(sameThreadExecutor(), sameThreadExecutor())))
+            .modules(ImmutableSet.<Module> of(new ExecutorServiceModule(newDirectExecutorService(), newDirectExecutorService())))
             .buildApi(AnonymousAttributesApi.class);
    }
 

@@ -20,8 +20,9 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 import java.beans.ConstructorProperties;
 
+import com.google.common.base.MoreObjects;
+import com.google.common.base.MoreObjects.ToStringHelper;
 import com.google.common.base.Objects;
-import com.google.common.base.Objects.ToStringHelper;
 
 /**
  * Information on an Email Account Quota size
@@ -116,7 +117,7 @@ public class EmailQuota {
    }
 
    protected ToStringHelper string() {
-      return Objects.toStringHelper("").add("max", max).add("unit", unit);
+      return MoreObjects.toStringHelper("").add("max", max).add("unit", unit);
    }
 
    @Override

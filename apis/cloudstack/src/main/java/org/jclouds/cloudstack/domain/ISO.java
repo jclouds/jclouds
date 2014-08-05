@@ -23,8 +23,9 @@ import java.util.Date;
 
 import org.jclouds.javax.annotation.Nullable;
 
+import com.google.common.base.MoreObjects;
+import com.google.common.base.MoreObjects.ToStringHelper;
 import com.google.common.base.Objects;
-import com.google.common.base.Objects.ToStringHelper;
 
 /**
  * Class ISO
@@ -747,7 +748,7 @@ public class ISO {
    }
 
    protected ToStringHelper string() {
-      return Objects.toStringHelper(this)
+      return MoreObjects.toStringHelper(this)
             .add("id", id).add("account", account).add("accountId", accountId).add("bootable", bootable)
             .add("checksum", checksum).add("created", created).add("crossZones", crossZones).add("displayText", displayText)
             .add("domain", domain).add("domainid", domainid).add("format", format).add("hostId", hostId).add("hostName", hostName)

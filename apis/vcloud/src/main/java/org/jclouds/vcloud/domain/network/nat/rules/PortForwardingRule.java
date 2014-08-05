@@ -22,6 +22,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 import org.jclouds.vcloud.domain.network.nat.NatProtocol;
 import org.jclouds.vcloud.domain.network.nat.NatRule;
 
+import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
 
 /**
@@ -102,7 +103,7 @@ public class PortForwardingRule implements NatRule {
 
    @Override
    public String toString() {
-      return Objects.toStringHelper("").omitNullValues().add("externalIP", externalIP)
+      return MoreObjects.toStringHelper("").omitNullValues().add("externalIP", externalIP)
             .add("externalPort", externalPort).add("internalIP", internalIP).add("internalPort", internalPort)
             .add("protocol", protocol).toString();
    }

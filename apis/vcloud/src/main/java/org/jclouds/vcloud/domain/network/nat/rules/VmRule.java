@@ -23,6 +23,7 @@ import org.jclouds.javax.annotation.Nullable;
 import org.jclouds.vcloud.domain.network.nat.NatProtocol;
 import org.jclouds.vcloud.domain.network.nat.NatRule;
 
+import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
 
 /**
@@ -119,7 +120,7 @@ public class VmRule implements NatRule {
 
    @Override
    public String toString() {
-      return Objects.toStringHelper("").omitNullValues().add("externalIP", externalIP)
+      return MoreObjects.toStringHelper("").omitNullValues().add("externalIP", externalIP)
             .add("externalPort", externalPort).add("vAppScopedLocalId", vAppScopedLocalId).add("vmNicId", vmNicId)
             .add("internalPort", internalPort).add("protocol", protocol).toString();
    }

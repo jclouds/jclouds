@@ -18,7 +18,7 @@ package org.jclouds.rackspace.cloudloadbalancers.v1.domain;
 
 import java.beans.ConstructorProperties;
 
-import com.google.common.base.Objects;
+import com.google.common.base.MoreObjects;
 
 public final class LoadBalancerStats {
    private final int connectTimeOut;
@@ -84,7 +84,7 @@ public final class LoadBalancerStats {
 
    @Override
    public String toString() {
-      return Objects.toStringHelper(this).omitNullValues().add("connectTimeOut", connectTimeOut)
+      return MoreObjects.toStringHelper(this).omitNullValues().add("connectTimeOut", connectTimeOut)
             .add("connectError", connectError).add("connectFailure", connectFailure).add("dataTimedOut", dataTimedOut)
             .add("keepAliveTimedOut", keepAliveTimedOut).add("maxConn", maxConn).toString();
    }

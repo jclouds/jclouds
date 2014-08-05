@@ -23,8 +23,9 @@ import java.util.Date;
 
 import org.jclouds.javax.annotation.Nullable;
 
+import com.google.common.base.MoreObjects;
+import com.google.common.base.MoreObjects.ToStringHelper;
 import com.google.common.base.Objects;
-import com.google.common.base.Objects.ToStringHelper;
 
 /**
  * Class ISOExtraction
@@ -353,7 +354,7 @@ public class ISOExtraction {
    }
 
    protected ToStringHelper string() {
-      return Objects.toStringHelper(this)
+      return MoreObjects.toStringHelper(this)
             .add("id", id).add("accountId", accountId).add("created", created).add("extractId", extractId).add("extractMode", extractMode)
             .add("name", name).add("state", state).add("status", status).add("storageType", storageType).add("uploadPercentage", uploadPercentage)
             .add("url", url).add("zoneId", zoneId).add("zoneName", zoneName);

@@ -18,6 +18,7 @@ package org.jclouds.compute.domain;
 
 import org.jclouds.compute.config.CustomizationResponse;
 
+import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
 
 public class ExecResponse implements CustomizationResponse {
@@ -62,7 +63,7 @@ public class ExecResponse implements CustomizationResponse {
 
    @Override
    public String toString() {
-      return Objects.toStringHelper("").add("output", output).add("error", error).add("exitStatus", exitStatus)
+      return MoreObjects.toStringHelper("").add("output", output).add("error", error).add("exitStatus", exitStatus)
             .toString();
    }
 

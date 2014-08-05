@@ -19,6 +19,7 @@ package org.jclouds.vcloud.domain.network;
 import static com.google.common.base.Objects.equal;
 import static com.google.common.base.Preconditions.checkNotNull;
 
+import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
 
 /**
@@ -68,7 +69,7 @@ public class IpRange {
 
    @Override
    public String toString() {
-      return  Objects.toStringHelper("").omitNullValues().add("startAddress", startAddress)
+      return  MoreObjects.toStringHelper("").omitNullValues().add("startAddress", startAddress)
             .add("endAddress", endAddress).toString();
    }
 

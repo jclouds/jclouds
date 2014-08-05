@@ -30,7 +30,7 @@ import org.jclouds.openstack.nova.v2_0.domain.zonescoped.ZoneAndId;
 import org.jclouds.openstack.nova.v2_0.extensions.FloatingIPApi;
 
 import com.google.common.base.Function;
-import com.google.common.base.Objects;
+import com.google.common.base.MoreObjects;
 import com.google.common.cache.LoadingCache;
 
 /**
@@ -67,6 +67,6 @@ public class RemoveFloatingIpFromNodeAndDeallocate implements Function<ZoneAndId
 
    @Override
    public String toString() {
-      return Objects.toStringHelper("RemoveFloatingIpFromNodeAndDecreate").toString();
+      return MoreObjects.toStringHelper("RemoveFloatingIpFromNodeAndDecreate").toString();
    }
 }

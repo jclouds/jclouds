@@ -25,8 +25,9 @@ import org.jclouds.compute.domain.Template;
 import org.jclouds.compute.options.TemplateOptions;
 import org.jclouds.domain.Location;
 
+import com.google.common.base.MoreObjects;
+import com.google.common.base.MoreObjects.ToStringHelper;
 import com.google.common.base.Objects;
-import com.google.common.base.Objects.ToStringHelper;
 
 public class TemplateImpl implements Template {
 
@@ -96,7 +97,7 @@ public class TemplateImpl implements Template {
    }
 
    protected ToStringHelper string() {
-      ToStringHelper helper = Objects.toStringHelper("").omitNullValues().add("image", image).add("hardware", hardware)
+      ToStringHelper helper = MoreObjects.toStringHelper("").omitNullValues().add("image", image).add("hardware", hardware)
                .add("location", location);
       if (!options.equals(defaultOptions()))
          helper.add("options", options);

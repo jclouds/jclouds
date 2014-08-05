@@ -18,7 +18,7 @@ package org.jclouds.rest.internal;
 import static com.google.common.base.Throwables.propagate;
 import static com.google.common.hash.Hashing.md5;
 import static com.google.common.net.HttpHeaders.TRANSFER_ENCODING;
-import static com.google.common.util.concurrent.MoreExecutors.sameThreadExecutor;
+import static com.google.common.util.concurrent.MoreExecutors.newDirectExecutorService;
 import static com.google.inject.name.Names.named;
 import static org.easymock.EasyMock.createMock;
 import static org.jclouds.Constants.PROPERTY_IO_WORKER_THREADS;
@@ -78,8 +78,8 @@ public abstract class BaseRestApiTest {
 
       @Override
       protected void configure() {
-         bind(ListeningExecutorService.class).annotatedWith(named(PROPERTY_USER_THREADS)).toInstance(sameThreadExecutor());
-         bind(ListeningExecutorService.class).annotatedWith(named(PROPERTY_IO_WORKER_THREADS)).toInstance(sameThreadExecutor());
+         bind(ListeningExecutorService.class).annotatedWith(named(PROPERTY_USER_THREADS)).toInstance(newDirectExecutorService());
+         bind(ListeningExecutorService.class).annotatedWith(named(PROPERTY_IO_WORKER_THREADS)).toInstance(newDirectExecutorService());
          bind(HttpCommandExecutorService.class).toInstance(mock);
       }
 

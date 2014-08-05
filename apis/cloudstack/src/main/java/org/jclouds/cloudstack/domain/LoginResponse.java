@@ -20,8 +20,9 @@ import java.beans.ConstructorProperties;
 
 import org.jclouds.javax.annotation.Nullable;
 
+import com.google.common.base.MoreObjects;
+import com.google.common.base.MoreObjects.ToStringHelper;
 import com.google.common.base.Objects;
-import com.google.common.base.Objects.ToStringHelper;
 
 /**
  * Representation of the login API call response
@@ -326,7 +327,7 @@ public class LoginResponse {
    }
 
    protected ToStringHelper string() {
-      return Objects.toStringHelper(this)
+      return MoreObjects.toStringHelper(this)
             .add("username", username).add("userId", userId).add("password", password).add("domainId", domainId).add("timeout", timeout).add("registered", registered).add("accountName", accountName).add("firstName", firstName).add("lastName", lastName).add("accountType", accountType).add("timezone", timezone).add("timezoneOffset", timezoneOffset).add("sessionKey", sessionKey).add("jSessionId", jSessionId);
    }
 

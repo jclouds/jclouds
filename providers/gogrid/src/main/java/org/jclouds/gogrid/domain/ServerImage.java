@@ -24,8 +24,9 @@ import java.util.Set;
 
 import org.jclouds.javax.annotation.Nullable;
 
+import com.google.common.base.MoreObjects;
+import com.google.common.base.MoreObjects.ToStringHelper;
 import com.google.common.base.Objects;
-import com.google.common.base.Objects.ToStringHelper;
 import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.primitives.Longs;
@@ -365,7 +366,7 @@ public class ServerImage implements Comparable<ServerImage> {
    }
    
    protected ToStringHelper string() {
-      return Objects.toStringHelper(this)
+      return MoreObjects.toStringHelper(this)
             .add("id", id).add("name", name).add("friendlyName", friendlyName).add("description", description).add("os", os).add("architecture", architecture).add("type", type).add("state", state).add("price", price).add("location", location).add("isActive", isActive).add("isPublic", isPublic).add("createdTime", createdTime).add("updatedTime", updatedTime).add("billingTokens", billingTokens).add("owner", owner);
    }
    

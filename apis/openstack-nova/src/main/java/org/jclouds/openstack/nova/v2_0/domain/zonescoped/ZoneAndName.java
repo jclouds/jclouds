@@ -23,7 +23,8 @@ import static com.google.common.base.Preconditions.checkNotNull;
 import com.google.common.base.Function;
 import com.google.common.base.Objects;
 import com.google.common.base.Splitter;
-import com.google.common.base.Objects.ToStringHelper;
+import com.google.common.base.MoreObjects;
+import com.google.common.base.MoreObjects.ToStringHelper;
 import com.google.common.collect.Iterables;
 
 /**
@@ -104,6 +105,6 @@ public class ZoneAndName {
    }
 
    protected ToStringHelper string() {
-      return Objects.toStringHelper("").add("zoneId", zoneId).add("name", name);
+      return MoreObjects.toStringHelper("").add("zoneId", zoneId).add("name", name);
    }
 }

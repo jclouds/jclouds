@@ -20,6 +20,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 import java.beans.ConstructorProperties;
 
+import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
 
 public final class LoadBalancerInfo {
@@ -64,7 +65,7 @@ public final class LoadBalancerInfo {
 
    @Override
    public String toString() {
-      return Objects.toStringHelper(this).omitNullValues().add("loadBalancerId", loadBalancerId)
+      return MoreObjects.toStringHelper(this).omitNullValues().add("loadBalancerId", loadBalancerId)
             .add("loadBalancerName", loadBalancerName).add("loadBalancerUsage", loadBalancerUsageRecords).toString();
    }
 }

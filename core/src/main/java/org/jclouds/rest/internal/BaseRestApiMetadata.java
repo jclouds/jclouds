@@ -26,7 +26,7 @@ import org.jclouds.apis.internal.BaseApiMetadata;
 import org.jclouds.rest.RestApiMetadata;
 
 import com.google.common.annotations.Beta;
-import com.google.common.base.Objects.ToStringHelper;
+import com.google.common.base.MoreObjects.ToStringHelper;
 import com.google.common.reflect.TypeParameter;
 import com.google.common.reflect.TypeToken;
 

@@ -24,8 +24,9 @@ import java.util.Set;
 
 import org.jclouds.javax.annotation.Nullable;
 
+import com.google.common.base.MoreObjects;
+import com.google.common.base.MoreObjects.ToStringHelper;
 import com.google.common.base.Objects;
-import com.google.common.base.Objects.ToStringHelper;
 import com.google.common.collect.ImmutableSet;
 
 /**
@@ -435,7 +436,7 @@ public class ServiceOffering implements Comparable<ServiceOffering> {
    }
 
    protected ToStringHelper string() {
-      return Objects.toStringHelper(this)
+      return MoreObjects.toStringHelper(this)
             .add("id", id).add("name", name).add("displayText", displayText).add("created", created).add("domain", domain)
             .add("domainId", domainId).add("cpuNumber", cpuNumber).add("cpuSpeed", cpuSpeed).add("memory", memory)
             .add("haSupport", haSupport).add("storageType", storageType).add("tags", getTags()).add("defaultUse", defaultUse)

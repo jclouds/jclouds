@@ -22,6 +22,7 @@ import java.util.Date;
 
 import org.jclouds.domain.Credentials;
 
+import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
 import com.google.common.base.Optional;
 
@@ -93,7 +94,7 @@ public final class SessionCredentials extends Credentials {
 
    @Override
    public String toString() {
-      return Objects.toStringHelper(this).omitNullValues().add("accessKeyId", identity)
+      return MoreObjects.toStringHelper(this).omitNullValues().add("accessKeyId", identity)
             .add("sessionToken", sessionToken).add("expiration", expiration.orNull()).toString();
    }
 

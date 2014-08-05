@@ -18,8 +18,9 @@ package org.jclouds.cloudservers.domain;
 
 import java.beans.ConstructorProperties;
 
+import com.google.common.base.MoreObjects;
+import com.google.common.base.MoreObjects.ToStringHelper;
 import com.google.common.base.Objects;
-import com.google.common.base.Objects.ToStringHelper;
 
 /**
  * Class ShareIp
@@ -108,7 +109,7 @@ public class ShareIp {
    }
    
    protected ToStringHelper string() {
-      return Objects.toStringHelper(this)
+      return MoreObjects.toStringHelper(this)
             .add("configureServer", configureServer).add("sharedIpGroupId", sharedIpGroupId);
    }
    

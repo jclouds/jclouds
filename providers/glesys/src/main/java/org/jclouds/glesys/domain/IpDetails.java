@@ -23,8 +23,9 @@ import java.util.List;
 
 import org.jclouds.javax.annotation.Nullable;
 
+import com.google.common.base.MoreObjects;
+import com.google.common.base.MoreObjects.ToStringHelper;
 import com.google.common.base.Objects;
-import com.google.common.base.Objects.ToStringHelper;
 import com.google.common.collect.ImmutableList;
 
 /**
@@ -310,7 +311,7 @@ public class IpDetails {
    }
 
    protected ToStringHelper string() {
-      return Objects.toStringHelper("")
+      return MoreObjects.toStringHelper("")
             .add("datacenter", datacenter).add("ipversion", version).add("ptr", ptr).add("platform", platform)
             .add("address", address).add("netmask", netmask).add("broadcast", broadcast).add("gateway", gateway)
             .add("nameServers", nameServers).add("serverId", serverId).add("cost", cost).add("reserved", reserved);

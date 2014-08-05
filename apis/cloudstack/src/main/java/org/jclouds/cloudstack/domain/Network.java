@@ -25,8 +25,9 @@ import java.util.Set;
 
 import org.jclouds.javax.annotation.Nullable;
 
+import com.google.common.base.MoreObjects;
+import com.google.common.base.MoreObjects.ToStringHelper;
 import com.google.common.base.Objects;
-import com.google.common.base.Objects.ToStringHelper;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.ImmutableSortedSet;
@@ -728,7 +729,7 @@ public class Network {
    }
 
    protected ToStringHelper string() {
-      return Objects.toStringHelper(this)
+      return MoreObjects.toStringHelper(this)
             .add("id", id).add("account", account).add("broadcastDomainType", broadcastDomainType).add("broadcastURI", broadcastURI)
             .add("displayText", displayText).add("DNS1", DNS1).add("DNS2", DNS2).add("domain", domain).add("domainId", domainId)
             .add("endIP", endIP).add("gateway", gateway).add("isDefault", isDefault).add("isShared", isShared).add("isSystem", isSystem)

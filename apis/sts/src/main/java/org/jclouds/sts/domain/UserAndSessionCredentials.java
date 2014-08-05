@@ -20,6 +20,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 import org.jclouds.aws.domain.SessionCredentials;
 
+import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
 
 public final class UserAndSessionCredentials {
@@ -121,7 +122,7 @@ public final class UserAndSessionCredentials {
 
    @Override
    public String toString() {
-      return Objects.toStringHelper(this).add("user", user).add("credentials", credentials)
+      return MoreObjects.toStringHelper(this).add("user", user).add("credentials", credentials)
             .add("packedPolicySize", packedPolicySize).toString();
    }
 }

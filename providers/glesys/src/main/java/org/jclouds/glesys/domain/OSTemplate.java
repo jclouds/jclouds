@@ -20,8 +20,9 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 import java.beans.ConstructorProperties;
 
+import com.google.common.base.MoreObjects;
+import com.google.common.base.MoreObjects.ToStringHelper;
 import com.google.common.base.Objects;
-import com.google.common.base.Objects.ToStringHelper;
 
 /**
  * Operating system template
@@ -175,7 +176,7 @@ public class OSTemplate {
    }
 
    protected ToStringHelper string() {
-      return Objects.toStringHelper("")
+      return MoreObjects.toStringHelper("")
             .add("name", name).add("minDiskSize", minDiskSize).add("minMemSize", minMemSize).add("os", os).add("platform", platform);
    }
 

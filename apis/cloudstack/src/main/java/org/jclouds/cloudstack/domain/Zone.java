@@ -23,8 +23,9 @@ import java.util.List;
 
 import org.jclouds.javax.annotation.Nullable;
 
+import com.google.common.base.MoreObjects;
+import com.google.common.base.MoreObjects.ToStringHelper;
 import com.google.common.base.Objects;
-import com.google.common.base.Objects.ToStringHelper;
 import com.google.common.collect.ImmutableList;
 
 public class Zone implements Comparable<Zone> {
@@ -414,7 +415,7 @@ public class Zone implements Comparable<Zone> {
    }
 
    protected ToStringHelper string() {
-      return Objects.toStringHelper(this)
+      return MoreObjects.toStringHelper(this)
             .add("id", id).add("description", description).add("displayText", displayText).add("DNS1", DNS1).add("DNS2", DNS2)
             .add("domain", domain).add("domainId", domainId).add("guestCIDRAddress", guestCIDRAddress).add("internalDNS1", internalDNS1)
             .add("internalDNS2", internalDNS2).add("name", name).add("networkType", networkType).add("VLAN", VLAN)

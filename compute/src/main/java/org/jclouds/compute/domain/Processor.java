@@ -18,8 +18,9 @@ package org.jclouds.compute.domain;
 
 import static com.google.common.base.Objects.equal;
 
+import com.google.common.base.MoreObjects;
+import com.google.common.base.MoreObjects.ToStringHelper;
 import com.google.common.base.Objects;
-import com.google.common.base.Objects.ToStringHelper;
 import com.google.common.collect.ComparisonChain;
 
 /**
@@ -80,7 +81,7 @@ public class Processor implements Comparable<Processor> {
    }
 
    protected ToStringHelper string() {
-      return Objects.toStringHelper("").omitNullValues().add("cores", cores).add("speed", speed);
+      return MoreObjects.toStringHelper("").omitNullValues().add("cores", cores).add("speed", speed);
    }
 
 }

@@ -22,8 +22,9 @@ import org.jclouds.compute.domain.NodeMetadata;
 import org.jclouds.scriptbuilder.domain.Statement;
 
 import com.google.common.annotations.Beta;
+import com.google.common.base.MoreObjects;
+import com.google.common.base.MoreObjects.ToStringHelper;
 import com.google.common.base.Objects;
-import com.google.common.base.Objects.ToStringHelper;
 
 /**
 
@@ -67,7 +68,7 @@ public class StatementOnNode {
    }
 
    protected ToStringHelper string() {
-      return Objects.toStringHelper(this).add("statement", statement).add("node", node.getId());
+      return MoreObjects.toStringHelper(this).add("statement", statement).add("node", node.getId());
    }
 
 }

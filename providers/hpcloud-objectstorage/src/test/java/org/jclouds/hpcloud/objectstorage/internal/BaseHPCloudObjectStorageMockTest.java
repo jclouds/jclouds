@@ -16,7 +16,7 @@
  */
 package org.jclouds.hpcloud.objectstorage.internal;
 
-import static com.google.common.util.concurrent.MoreExecutors.sameThreadExecutor;
+import static com.google.common.util.concurrent.MoreExecutors.newDirectExecutorService;
 import static org.jclouds.Constants.PROPERTY_MAX_RETRIES;
 
 import java.io.IOException;
@@ -46,7 +46,7 @@ public class BaseHPCloudObjectStorageMockTest {
             .credentials("jclouds:joe", "letmein") //
             .endpoint(uri) //
             .overrides(overrides) //
-            .modules(ImmutableSet.<Module> of(new ExecutorServiceModule(sameThreadExecutor(), sameThreadExecutor()))) //
+            .modules(ImmutableSet.<Module> of(new ExecutorServiceModule(newDirectExecutorService(), newDirectExecutorService()))) //
             .buildApi(HPCloudObjectStorageApi.class);
    }
 

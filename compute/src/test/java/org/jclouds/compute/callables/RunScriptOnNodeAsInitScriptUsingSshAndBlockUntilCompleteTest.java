@@ -16,7 +16,7 @@
  */
 package org.jclouds.compute.callables;
 
-import static com.google.common.util.concurrent.MoreExecutors.sameThreadExecutor;
+import static com.google.common.util.concurrent.MoreExecutors.newDirectExecutorService;
 import static com.google.inject.name.Names.named;
 import static org.easymock.EasyMock.createMock;
 import static org.easymock.EasyMock.expect;
@@ -52,7 +52,7 @@ import com.google.inject.assistedinject.FactoryModuleBuilder;
 
 @Test(groups = "unit", singleThreaded = true, testName = "RunScriptOnNodeAsInitScriptUsingSshAndBlockUntilCompleteTest")
 public class RunScriptOnNodeAsInitScriptUsingSshAndBlockUntilCompleteTest {
-   Injector injector = Guice.createInjector(new ExecutorServiceModule(sameThreadExecutor(), sameThreadExecutor()),
+   Injector injector = Guice.createInjector(new ExecutorServiceModule(newDirectExecutorService(), newDirectExecutorService()),
          new AbstractModule() {
             protected void configure() {
                bindConstant().annotatedWith(named(PROPERTY_USER_THREADS)).to(1);

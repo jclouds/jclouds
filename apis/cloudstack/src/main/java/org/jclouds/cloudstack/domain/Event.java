@@ -23,8 +23,9 @@ import java.util.Date;
 
 import org.jclouds.javax.annotation.Nullable;
 
+import com.google.common.base.MoreObjects;
+import com.google.common.base.MoreObjects.ToStringHelper;
 import com.google.common.base.Objects;
-import com.google.common.base.Objects.ToStringHelper;
 
 /**
  * Class Event
@@ -313,7 +314,7 @@ public class Event implements Comparable<Event> {
    }
 
    protected ToStringHelper string() {
-      return Objects.toStringHelper(this)
+      return MoreObjects.toStringHelper(this)
             .add("id", id).add("account", account).add("description", description).add("created", created)
             .add("domain", domain).add("domainId", domainId).add("level", level).add("parentId", parentId)
             .add("state", state).add("type", type).add("username", username);

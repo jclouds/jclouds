@@ -20,8 +20,9 @@ import java.beans.ConstructorProperties;
 
 import org.jclouds.javax.annotation.Nullable;
 
+import com.google.common.base.MoreObjects;
+import com.google.common.base.MoreObjects.ToStringHelper;
 import com.google.common.base.Objects;
-import com.google.common.base.Objects.ToStringHelper;
 
 /**
  * A backup schedule can be defined to create server images at regular intervals (daily and weekly).
@@ -131,7 +132,7 @@ public class BackupSchedule {
    }
    
    protected ToStringHelper string() {
-      return Objects.toStringHelper(this)
+      return MoreObjects.toStringHelper(this)
             .add("daily", daily).add("enabled", enabled).add("weekly", weekly);
    }
    

@@ -18,8 +18,9 @@ package org.jclouds.ec2.domain;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
+import com.google.common.base.MoreObjects;
+import com.google.common.base.MoreObjects.ToStringHelper;
 import com.google.common.base.Objects;
-import com.google.common.base.Objects.ToStringHelper;
 import com.google.common.base.Optional;
 
 /**
@@ -187,7 +188,7 @@ public class Tag {
    }
 
    protected ToStringHelper string() {
-      return Objects.toStringHelper(this).omitNullValues().add("resourceId", resourceId)
+      return MoreObjects.toStringHelper(this).omitNullValues().add("resourceId", resourceId)
             .add("resourceType", resourceType).add("key", key).add("value", value.orNull());
    }
 

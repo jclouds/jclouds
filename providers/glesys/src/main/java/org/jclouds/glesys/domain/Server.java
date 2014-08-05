@@ -21,8 +21,9 @@ import static com.google.common.base.Preconditions.checkNotNull;
 import java.beans.ConstructorProperties;
 
 import com.google.common.base.CaseFormat;
+import com.google.common.base.MoreObjects;
+import com.google.common.base.MoreObjects.ToStringHelper;
 import com.google.common.base.Objects;
-import com.google.common.base.Objects.ToStringHelper;
 
 /**
  * Listing of a server.
@@ -176,7 +177,7 @@ public class Server {
    }
 
    protected ToStringHelper string() {
-      return Objects.toStringHelper("").add("id", id).add("hostname", hostname).add("datacenter", datacenter)
+      return MoreObjects.toStringHelper("").add("id", id).add("hostname", hostname).add("datacenter", datacenter)
             .add("platform", platform);
    }
 

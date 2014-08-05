@@ -26,8 +26,9 @@ import org.jclouds.http.HttpRequest;
 import org.jclouds.rest.MapBinder;
 import org.jclouds.rest.binders.BindToJsonPayload;
 
+import com.google.common.base.MoreObjects;
+import com.google.common.base.MoreObjects.ToStringHelper;
 import com.google.common.base.Objects;
-import com.google.common.base.Objects.ToStringHelper;
 import com.google.common.collect.ImmutableMap;
 
 public class UpdateTenantOptions implements MapBinder {
@@ -57,7 +58,7 @@ public class UpdateTenantOptions implements MapBinder {
    }
 
    protected ToStringHelper string() {
-      ToStringHelper toString = Objects.toStringHelper("").omitNullValues();
+      ToStringHelper toString = MoreObjects.toStringHelper("").omitNullValues();
       toString.add("name", name);
       toString.add("description", description);
       toString.add("enabled", Boolean.valueOf(enabled));

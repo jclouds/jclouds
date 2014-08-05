@@ -16,6 +16,7 @@
  */
 package org.jclouds.cloudwatch.domain;
 
+import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
 import com.google.common.collect.Sets;
 import org.jclouds.javax.annotation.Nullable;
@@ -95,7 +96,7 @@ public class Metric {
     */
    @Override
    public String toString() {
-      return Objects.toStringHelper(this)
+      return MoreObjects.toStringHelper(this)
                     .add("namespace", namespace)
                     .add("metricName", metricName)
                     .add("dimension", dimensions).toString();

@@ -22,8 +22,9 @@ import java.net.URI;
 
 import org.jclouds.vcloud.domain.ReferenceType;
 
+import com.google.common.base.MoreObjects;
+import com.google.common.base.MoreObjects.ToStringHelper;
 import com.google.common.base.Objects;
-import com.google.common.base.Objects.ToStringHelper;
 
 /**
  * Location of a Rest resource
@@ -80,6 +81,6 @@ public class ReferenceTypeImpl implements ReferenceType {
    }
 
    protected ToStringHelper string() {
-      return Objects.toStringHelper("").omitNullValues().add("href", href).add("name", name).add("type", type);
+      return MoreObjects.toStringHelper("").omitNullValues().add("href", href).add("name", name).add("type", type);
    }
 }

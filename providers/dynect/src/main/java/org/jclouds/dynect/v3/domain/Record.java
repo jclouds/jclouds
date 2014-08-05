@@ -24,7 +24,7 @@ import java.util.Map;
 
 import javax.inject.Named;
 
-import com.google.common.base.Objects.ToStringHelper;
+import com.google.common.base.MoreObjects.ToStringHelper;
 
 public class Record<D extends Map<String, Object>> extends RecordId {
 

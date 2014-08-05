@@ -21,6 +21,7 @@ import java.util.Date;
 
 import org.jclouds.javax.annotation.Nullable;
 
+import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
 import com.google.common.base.Optional;
 
@@ -88,7 +89,7 @@ public class Subdomain {
 
    @Override
    public String toString() {
-      return Objects.toStringHelper(this).omitNullValues().add("id", id).add("name", name).add("email", emailAddress)
+      return MoreObjects.toStringHelper(this).omitNullValues().add("id", id).add("name", name).add("email", emailAddress)
             .add("comment", comment.orNull()).add("created", created).add("updated", updated).toString();
    }
 }

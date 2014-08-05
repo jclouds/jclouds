@@ -21,8 +21,9 @@ import static com.google.common.base.Preconditions.checkNotNull;
 import java.beans.ConstructorProperties;
 import java.util.Set;
 
+import com.google.common.base.MoreObjects;
+import com.google.common.base.MoreObjects.ToStringHelper;
 import com.google.common.base.Objects;
-import com.google.common.base.Objects.ToStringHelper;
 import com.google.common.collect.ImmutableSet;
 
 /**
@@ -205,7 +206,7 @@ public class AllowedArgumentsForCreateServer {
    }
 
    protected ToStringHelper string() {
-      return Objects.toStringHelper("").add("diskSizesInGB", diskSizesInGB).add("memorySizesInMB", memorySizesInMB)
+      return MoreObjects.toStringHelper("").add("diskSizesInGB", diskSizesInGB).add("memorySizesInMB", memorySizesInMB)
             .add("cpuCoreOptions", cpuCoreOptions).add("templateNames", templateNames)
             .add("transfersInGB", transfersInGB).add("dataCenters", dataCenters);
    }

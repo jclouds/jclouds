@@ -31,7 +31,7 @@ import org.jclouds.ssh.SshClient;
 
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Function;
-import com.google.common.base.Objects;
+import com.google.common.base.MoreObjects;
 import com.google.common.base.Predicates;
 import com.google.common.collect.ImmutableSet;
 
@@ -131,7 +131,7 @@ public class SudoAwareInitManager {
 
    @Override
    public String toString() {
-      return Objects.toStringHelper(this).add("node", node.getId()).add("name", init.getInstanceName())
+      return MoreObjects.toStringHelper(this).add("node", node.getId()).add("name", init.getInstanceName())
             .add("runAsRoot", runAsRoot).toString();
    }
 

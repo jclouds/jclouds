@@ -89,7 +89,7 @@ import org.jclouds.vcloud.predicates.TaskSuccess;
 import org.jclouds.vcloud.xml.ovf.VCloudResourceAllocationSettingDataHandler;
 
 import com.google.common.base.Function;
-import com.google.common.base.Objects;
+import com.google.common.base.MoreObjects;
 import com.google.common.base.Predicate;
 import com.google.common.base.Supplier;
 import com.google.common.base.Suppliers;
@@ -125,7 +125,7 @@ public class VCloudHttpApiModule extends HttpApiModule<VCloudApi> {
                   
                   @Override
                   public String toString() {
-                     return Objects.toStringHelper(login).add("method", "login").toString();
+                     return MoreObjects.toStringHelper(login).add("method", "login").toString();
                   }
                }, seconds, TimeUnit.SECONDS);
    }

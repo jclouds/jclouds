@@ -23,8 +23,9 @@ import java.beans.ConstructorProperties;
 import org.jclouds.openstack.keystone.v2_0.config.CredentialType;
 import org.jclouds.openstack.keystone.v2_0.config.CredentialTypes;
 
+import com.google.common.base.MoreObjects;
+import com.google.common.base.MoreObjects.ToStringHelper;
 import com.google.common.base.Objects;
-import com.google.common.base.Objects.ToStringHelper;
 
 /**
  * Api AccessKey Credentials
@@ -127,7 +128,7 @@ public class ApiAccessKeyCredentials {
    }
 
    protected ToStringHelper string() {
-      return Objects.toStringHelper(this)
+      return MoreObjects.toStringHelper(this)
             .add("accessKey", accessKey).add("secretKey", secretKey);
    }
 

@@ -20,6 +20,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 import java.beans.ConstructorProperties;
 
+import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
 
 public final class Protocol {
@@ -58,6 +59,6 @@ public final class Protocol {
 
    @Override
    public String toString() {
-      return Objects.toStringHelper(this).omitNullValues().add("name", name).add("port", port).toString();
+      return MoreObjects.toStringHelper(this).omitNullValues().add("name", name).add("port", port).toString();
    }
 }
