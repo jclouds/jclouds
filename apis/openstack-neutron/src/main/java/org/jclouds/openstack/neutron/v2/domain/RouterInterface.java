@@ -21,6 +21,7 @@ package org.jclouds.openstack.neutron.v2.domain;
 import com.google.common.base.Objects;
 
 import javax.inject.Named;
+import java.beans.ConstructorProperties;
 
 /**
  * A Neutron Router Interface
@@ -36,6 +37,7 @@ public class RouterInterface {
    @Named("port_id")
    protected final String portId;
 
+   @ConstructorProperties({"subnet_id", "port_id"})
    protected RouterInterface(String subnetId, String portId) {
       this.subnetId = subnetId;
       this.portId = portId;

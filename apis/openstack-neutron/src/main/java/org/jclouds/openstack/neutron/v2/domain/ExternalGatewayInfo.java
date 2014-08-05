@@ -21,6 +21,7 @@ package org.jclouds.openstack.neutron.v2.domain;
 import com.google.common.base.Objects;
 
 import javax.inject.Named;
+import java.beans.ConstructorProperties;
 
 /**
  * Information on the external gateway for the router
@@ -32,6 +33,7 @@ public class ExternalGatewayInfo {
    @Named("enable_snat")
    protected final Boolean enableSnat;
 
+   @ConstructorProperties({"network_id", "enable_snat"})
    protected ExternalGatewayInfo(String networkId, Boolean enableSnat) {
       this.networkId = networkId;
       this.enableSnat = enableSnat;

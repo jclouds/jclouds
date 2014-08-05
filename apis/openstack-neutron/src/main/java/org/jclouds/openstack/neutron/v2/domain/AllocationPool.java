@@ -20,6 +20,8 @@ package org.jclouds.openstack.neutron.v2.domain;
 
 import com.google.common.base.Objects;
 
+import java.beans.ConstructorProperties;
+
 /**
  * A Neutron Subnet Allocation Pool
  * Contains a start and an end IP address describing the pool.
@@ -33,6 +35,7 @@ public class AllocationPool {
    protected final String start;
    protected final String end;
 
+   @ConstructorProperties({"start", "end"})
    protected AllocationPool(String start, String end) {
       this.start = start;
       this.end = end;

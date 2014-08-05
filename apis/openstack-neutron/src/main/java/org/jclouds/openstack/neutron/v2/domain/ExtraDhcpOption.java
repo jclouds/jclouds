@@ -21,6 +21,7 @@ package org.jclouds.openstack.neutron.v2.domain;
 import com.google.common.base.Objects;
 
 import javax.inject.Named;
+import java.beans.ConstructorProperties;
 
 /**
  * This is used to provide additional DHCP-related options to Subnet. This is
@@ -40,6 +41,7 @@ public class ExtraDhcpOption {
    @Named("opt_value")
    protected final String optionValue;
 
+   @ConstructorProperties({"id", "opt_name", "opt_value"})
    protected ExtraDhcpOption(String id, String optionName, String optionValue) {
       this.id = id;
       this.optionName = optionName;

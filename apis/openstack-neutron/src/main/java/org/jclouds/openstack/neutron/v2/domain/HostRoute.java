@@ -22,6 +22,7 @@ import com.google.common.base.Objects;
 import com.google.common.base.Objects.ToStringHelper;
 
 import javax.inject.Named;
+import java.beans.ConstructorProperties;
 
 /**
  * A Neutron Subnet Host Route
@@ -35,6 +36,7 @@ public class HostRoute {
    @Named("nexthop")
    private final String nextHop;
 
+   @ConstructorProperties({"destination", "nexthop"})
    protected HostRoute(String destinationCidr, String nextHop) {
       this.destinationCidr = destinationCidr;
       this.nextHop = nextHop;

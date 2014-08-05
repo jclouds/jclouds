@@ -21,6 +21,7 @@ package org.jclouds.openstack.neutron.v2.domain;
 import com.google.common.base.Objects;
 
 import javax.inject.Named;
+import java.beans.ConstructorProperties;
 
 /**
  * Describes an IP address
@@ -32,6 +33,7 @@ public class IP {
    @Named("subnet_id")
    protected final String subnetId;
 
+   @ConstructorProperties({"ip_address", "subnet_id"})
    protected IP(String ipAddress, String subnetId) {
       this.ipAddress = ipAddress;
       this.subnetId = subnetId;

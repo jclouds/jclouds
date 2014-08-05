@@ -21,6 +21,7 @@ package org.jclouds.openstack.neutron.v2.domain;
 import com.google.common.base.Objects;
 
 import javax.inject.Named;
+import java.beans.ConstructorProperties;
 
 /**
  * A Neutron Network Segment
@@ -39,6 +40,7 @@ public class NetworkSegment {
    @Named("provider:segmentation_id")
    protected final int segmentationId;
 
+   @ConstructorProperties({"provider:network_type", "provider:physical_network", "provider:segmentation_id"})
    protected NetworkSegment(NetworkType networkType, String physicalNetwork, int segmentationId) {
       this.networkType = networkType;
       this.physicalNetwork = physicalNetwork;
