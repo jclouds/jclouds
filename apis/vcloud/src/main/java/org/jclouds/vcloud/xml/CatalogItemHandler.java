@@ -64,7 +64,7 @@ public class CatalogItemHandler extends ParseSax.HandlerWithResult<CatalogItem> 
          properties.put(key, currentOrNull());
          key = null;
       }
-      currentText = new StringBuilder();
+      currentText.setLength(0);
    }
 
    public void characters(char ch[], int start, int length) {

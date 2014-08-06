@@ -83,7 +83,7 @@ public class AccessControlListHandler extends ParseSax.HandlerWithResult<AccessC
       } else if (qName.equals("Permission")) {
          currentPermission = currentOrNull(currentText);
       }
-      currentText = new StringBuilder();
+      currentText.setLength(0);
    }
 
    public void characters(char ch[], int start, int length) {

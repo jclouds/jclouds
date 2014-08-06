@@ -68,7 +68,7 @@ public class ListAlarmsForMetricResponseHandler
          }
       }
 
-      currentText = new StringBuilder();
+      currentText.setLength(0);
    }
 
    @Override

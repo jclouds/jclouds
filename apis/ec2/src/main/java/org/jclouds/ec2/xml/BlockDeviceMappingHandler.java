@@ -69,7 +69,7 @@ public class BlockDeviceMappingHandler extends
           this.attachmentStatus = null;
           this.attachTime = null;
       }
-      currentText = new StringBuilder();
+      currentText.setLength(0);
    }
 
    public void characters(char ch[], int start, int length) {

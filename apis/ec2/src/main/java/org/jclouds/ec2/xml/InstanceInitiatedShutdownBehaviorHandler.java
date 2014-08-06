@@ -38,7 +38,7 @@ public class InstanceInitiatedShutdownBehaviorHandler extends
       if (qName.equalsIgnoreCase("value")) {
          this.behavior = InstanceInitiatedShutdownBehavior.fromValue(currentText.toString().trim());
       }
-      currentText = new StringBuilder();
+      currentText.setLength(0);
    }
 
    public void characters(char ch[], int start, int length) {

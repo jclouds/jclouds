@@ -74,7 +74,7 @@ public class DescribeSubnetsResponseHandler extends
          subnetHandler.endElement(uri, name, qName);
       }
 
-      currentText = new StringBuilder();
+      currentText.setLength(0);
    }
 
    @Override

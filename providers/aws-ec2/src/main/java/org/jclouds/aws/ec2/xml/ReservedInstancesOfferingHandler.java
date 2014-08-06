@@ -80,7 +80,7 @@ public class ReservedInstancesOfferingHandler extends
       } else if (qName.equalsIgnoreCase("usagePrice")) {
          this.usagePrice = Float.parseFloat(currentText.toString().trim());
       }
-      currentText = new StringBuilder();
+      currentText.setLength(0);
    }
 
    public void characters(char ch[], int start, int length) {

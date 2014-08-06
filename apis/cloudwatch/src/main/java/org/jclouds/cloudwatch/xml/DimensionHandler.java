@@ -54,7 +54,7 @@ public class DimensionHandler extends ParseSax.HandlerForGeneratedRequestWithRes
       } else if (qName.equals("Value")) {
          value = SaxUtils.currentOrNull(currentText);
       }
-      currentText = new StringBuilder();
+      currentText.setLength(0);
    }
 
    /**

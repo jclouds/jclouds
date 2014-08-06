@@ -128,7 +128,7 @@ public class VAppTemplateHandler extends ParseSax.HandlerWithResult<VAppTemplate
       } else if (equalsOrSuffix(qName, "ovfDescriptorUploaded")) {
          ovfDescriptorUploaded = Boolean.parseBoolean(currentOrNull());
       }
-      currentText = new StringBuilder();
+      currentText.setLength(0);
    }
 
    public void characters(char ch[], int start, int length) {

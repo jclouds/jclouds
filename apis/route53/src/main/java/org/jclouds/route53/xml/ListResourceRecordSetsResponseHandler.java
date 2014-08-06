@@ -82,7 +82,7 @@ public class ListResourceRecordSetsResponseHandler extends
       } else if (qName.equals("NextRecordIdentifier")) {
          builder.nextRecordIdentifier(currentOrNull(currentText));
       }
-      currentText = new StringBuilder();
+      currentText.setLength(0);
    }
 
    @Override

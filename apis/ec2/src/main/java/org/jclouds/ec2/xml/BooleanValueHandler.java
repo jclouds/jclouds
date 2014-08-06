@@ -36,7 +36,7 @@ public class BooleanValueHandler extends ParseSax.HandlerWithResult<Boolean> {
       if (qName.equalsIgnoreCase("value")) {
          this.value = Boolean.parseBoolean(currentText.toString().trim());
       }
-      currentText = new StringBuilder();
+      currentText.setLength(0);
    }
 
    public void characters(char ch[], int start, int length) {

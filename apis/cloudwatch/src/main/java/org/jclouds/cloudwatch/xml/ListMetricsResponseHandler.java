@@ -84,7 +84,7 @@ public class ListMetricsResponseHandler extends ParseSax.HandlerForGeneratedRequ
          nextToken = SaxUtils.currentOrNull(currentText);
       }
 
-      currentText = new StringBuilder();
+      currentText.setLength(0);
    }
 
    /**

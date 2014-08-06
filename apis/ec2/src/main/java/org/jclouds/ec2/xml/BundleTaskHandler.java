@@ -98,7 +98,7 @@ public class BundleTaskHandler extends ParseSax.HandlerForGeneratedRequestWithRe
       } else if (qName.equals("updateTime")) {
          updateTime = dateCodec.toDate(currentText.toString().trim());
       }
-      currentText = new StringBuilder();
+      currentText.setLength(0);
    }
 
    public void characters(char ch[], int start, int length) {

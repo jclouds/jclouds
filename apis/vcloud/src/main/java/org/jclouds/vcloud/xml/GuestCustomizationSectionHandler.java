@@ -75,7 +75,7 @@ public class GuestCustomizationSectionHandler extends ParseSax.HandlerWithResult
 
    public void startElement(String uri, String localName, String qName, Attributes attrs) {
       Map<String, String> attributes = SaxUtils.cleanseAttributes(attrs);
-      this.currentText = new StringBuilder();
+      this.currentText.setLength(0);
       if (qName.endsWith("GuestCustomizationSection")) {
          guest = newReferenceType(attributes);
       } else if (qName.endsWith("Link") && "edit".equals(attributes.get("rel"))) {
@@ -120,7 +120,7 @@ public class GuestCustomizationSectionHandler extends ParseSax.HandlerWithResult
       } else if (qName.endsWith("Name")) {
          this.name = currentOrNull();
       }
-      currentText = new StringBuilder();
+      currentText.setLength(0);
    }
 
    public void characters(char ch[], int start, int length) {

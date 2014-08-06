@@ -60,7 +60,7 @@ public class DeleteResultHandler extends ParseSax.HandlerForGeneratedRequestWith
       }
 
       if (parsingDeletedEntry) {
-         deletedEntryAccumulator = new StringBuilder();
+         deletedEntryAccumulator.setLength(0);
       } else if (parsingErrorEntry) {
          errorEntryHandler.startElement(uri, name, qName, attributes);
       }

@@ -135,7 +135,7 @@ public class ListBucketHandler extends ParseSax.HandlerWithResult<ListBucketResp
       } else if (qName.equals("IsTruncated")) {
          this.isTruncated = Boolean.parseBoolean(currentOrNull(currentText));
       }
-      currentText = new StringBuilder();
+      currentText.setLength(0);
    }
 
    public void characters(char ch[], int start, int length) {

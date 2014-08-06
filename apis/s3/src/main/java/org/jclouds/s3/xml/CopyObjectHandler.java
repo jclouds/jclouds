@@ -56,7 +56,7 @@ public class CopyObjectHandler extends ParseSax.HandlerWithResult<ObjectMetadata
       } else if (qName.equals("CopyObjectResult")) {
          metadata = new CopyObjectResult(currentLastModified, currentETag);
       }
-      currentText = new StringBuilder();
+      currentText.setLength(0);
    }
 
    public void characters(char ch[], int start, int length) {

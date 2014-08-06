@@ -64,7 +64,7 @@ public class SessionCredentialsHandler extends ParseSax.HandlerForGeneratedReque
             builder.expiration(dateService.iso8601DateParse(currentOrNull(currentText)));
          }
       }
-      currentText = new StringBuilder();
+      currentText.setLength(0);
    }
 
    @Override

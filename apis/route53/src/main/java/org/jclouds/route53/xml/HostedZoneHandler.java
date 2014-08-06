@@ -54,7 +54,7 @@ public class HostedZoneHandler extends ParseSax.HandlerForGeneratedRequestWithRe
       } else if (qName.equals("ResourceRecordSetCount")) {
          builder.resourceRecordSetCount(Integer.parseInt(currentOrNull(currentText)));
       }
-      currentText = new StringBuilder();
+      currentText.setLength(0);
    }
 
    @Override

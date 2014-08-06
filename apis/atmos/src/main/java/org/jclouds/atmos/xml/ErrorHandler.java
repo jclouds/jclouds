@@ -39,7 +39,7 @@ public class ErrorHandler extends ParseSax.HandlerWithResult<AtmosError> {
       } else if (qName.equals("Message")) {
          this.message = currentText.toString().trim();
       }
-      currentText = new StringBuilder();
+      currentText.setLength(0);
    }
 
    public void characters(char ch[], int start, int length) {

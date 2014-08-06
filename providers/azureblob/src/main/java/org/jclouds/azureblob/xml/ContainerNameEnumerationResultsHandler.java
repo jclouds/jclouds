@@ -183,7 +183,7 @@ public class ContainerNameEnumerationResultsHandler extends ParseSax.HandlerWith
             currentExpires = contentMetadataCodec.parseExpires(trimmedCurrentText);
          }
       }
-      currentText = new StringBuilder();
+      currentText.setLength(0);
    }
 
    public void characters(char ch[], int start, int length) {

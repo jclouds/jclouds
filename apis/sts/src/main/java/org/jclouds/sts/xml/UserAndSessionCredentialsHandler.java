@@ -83,7 +83,7 @@ public class UserAndSessionCredentialsHandler extends ParseSax.HandlerForGenerat
       } else if (qName.equals("PackedPolicySize")) {
          builder.packedPolicySize(Integer.parseInt(currentOrNull(currentText)));
       }
-      currentText = new StringBuilder();
+      currentText.setLength(0);
    }
 
    @Override

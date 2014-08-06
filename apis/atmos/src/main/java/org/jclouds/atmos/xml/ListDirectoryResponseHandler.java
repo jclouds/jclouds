@@ -55,7 +55,7 @@ public class ListDirectoryResponseHandler extends ParseSax.HandlerWithResult<Set
       } else if (qName.equals("DirectoryEntry")) {
          entries.add(new DirectoryEntry(currentObjectId, currentType, currentName));
       }
-      currentText = new StringBuilder();
+      currentText.setLength(0);
    }
 
    public void characters(char ch[], int start, int length) {

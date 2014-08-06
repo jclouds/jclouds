@@ -57,7 +57,7 @@ public class PlacementGroupHandler extends
       } else if (qName.equals("state")) {
          state = PlacementGroup.State.fromValue(currentText.toString().trim());
       }
-      currentText = new StringBuilder();
+      currentText.setLength(0);
    }
 
    public void characters(char ch[], int start, int length) {

@@ -90,7 +90,7 @@ public class BlobBlocksResultsHandler extends ParseSax.HandlerWithResult<ListBlo
          size = Long.parseLong(currentText.toString().trim());
          inSize = false;
       }
-      currentText = new StringBuilder();
+      currentText.setLength(0);
    }
 
    public void characters(char ch[], int start, int length) {

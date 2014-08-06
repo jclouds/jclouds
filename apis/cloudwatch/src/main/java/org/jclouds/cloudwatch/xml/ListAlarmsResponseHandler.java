@@ -72,7 +72,7 @@ public class ListAlarmsResponseHandler
          nextToken = SaxUtils.currentOrNull(currentText);
       }
 
-      currentText = new StringBuilder();
+      currentText.setLength(0);
    }
 
    @Override

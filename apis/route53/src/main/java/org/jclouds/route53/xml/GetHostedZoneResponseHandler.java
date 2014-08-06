@@ -82,7 +82,7 @@ public class GetHostedZoneResponseHandler extends ParseSax.HandlerForGeneratedRe
          nameServers.add(currentOrNull(currentText));
       }
 
-      currentText = new StringBuilder();
+      currentText.setLength(0);
    }
 
    @Override

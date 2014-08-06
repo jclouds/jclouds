@@ -38,7 +38,7 @@ public class AllocateAddressResponseHandler extends HandlerWithResult<String> {
       if (qName.equals("publicIp")) {
          ipAddress = currentOrNull();
       }
-      currentText = new StringBuilder();
+      currentText.setLength(0);
    }
 
    public void characters(char ch[], int start, int length) {

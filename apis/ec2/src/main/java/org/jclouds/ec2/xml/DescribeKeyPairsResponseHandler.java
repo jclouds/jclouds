@@ -74,7 +74,7 @@ public class DescribeKeyPairsResponseHandler extends ParseSax.HandlerForGenerate
       } else if (qName.equals("keyName")) {
          builder.keyName(currentOrNull(currentText));
       }
-      currentText = new StringBuilder();
+      currentText.setLength(0);
    }
 
    public void characters(char ch[], int start, int length) {

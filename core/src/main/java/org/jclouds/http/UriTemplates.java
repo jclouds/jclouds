@@ -54,7 +54,7 @@ public class UriTemplates {
                builder.append(value);
             else
                builder.append('{').append(key).append('}');
-            var = new StringBuilder();
+            var.setLength(0);
             break;
          default:
             if (inVar)

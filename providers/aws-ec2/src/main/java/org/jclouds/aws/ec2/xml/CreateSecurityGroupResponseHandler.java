@@ -31,7 +31,7 @@ public class CreateSecurityGroupResponseHandler extends ParseSax.HandlerWithResu
       if (qName.equals("groupId")) {
          id = currentText.toString().trim();
       }
-      currentText = new StringBuilder();
+      currentText.setLength(0);
    }
 
    public void characters(char ch[], int start, int length) {

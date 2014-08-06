@@ -37,7 +37,7 @@ public class InvalidChangeBatchHandler extends ParseSax.HandlerForGeneratedReque
       if (qName.equals("Message")) {
          builder.add(currentOrNull(currentText));
       }
-      currentText = new StringBuilder();
+      currentText.setLength(0);
    }
 
    @Override

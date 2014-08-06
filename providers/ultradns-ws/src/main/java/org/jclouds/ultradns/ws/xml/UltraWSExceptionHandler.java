@@ -42,7 +42,7 @@ public class UltraWSExceptionHandler extends ParseSax.HandlerForGeneratedRequest
       } else if (equalsOrSuffix(qName, "errorDescription")) {
          description = currentOrNull(currentText);
       }
-      currentText = new StringBuilder();
+      currentText.setLength(0);
    }
 
    @Override

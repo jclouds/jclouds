@@ -87,7 +87,7 @@ public class CatalogHandler extends ParseSax.HandlerWithResult<Catalog> {
       } else if (SaxUtils.equalsOrSuffix(qName, "IsPublished")) {
          published = Boolean.parseBoolean(currentOrNull());
       }
-      currentText = new StringBuilder();
+      currentText.setLength(0);
    }
 
    public void characters(char ch[], int start, int length) {

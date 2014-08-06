@@ -79,7 +79,7 @@ public abstract class ElementTextHandler extends ParseSax.HandlerForGeneratedReq
       if (equalsOrSuffix(qName, textElement)) {
          text = currentOrNull(currentText);
       }
-      currentText = new StringBuilder();
+      currentText.setLength(0);
    }
 
    @Override

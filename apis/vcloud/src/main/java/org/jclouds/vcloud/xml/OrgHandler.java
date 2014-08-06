@@ -95,7 +95,7 @@ public class OrgHandler extends ParseSax.HandlerWithResult<Org> {
       } else if (qName.endsWith("FullName")) {
          fullName = currentOrNull();
       }
-      currentText = new StringBuilder();
+      currentText.setLength(0);
    }
 
    public void characters(char ch[], int start, int length) {

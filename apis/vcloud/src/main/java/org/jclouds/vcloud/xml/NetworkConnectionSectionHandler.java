@@ -82,7 +82,7 @@ public class NetworkConnectionSectionHandler extends ParseSax.HandlerWithResult<
       } else if (qName.endsWith("PrimaryNetworkConnectionIndex")) {
          this.primaryNetworkConnectionIndex = Integer.valueOf(currentOrNull());
       }
-      currentText = new StringBuilder();
+      currentText.setLength(0);
    }
 
    @Override

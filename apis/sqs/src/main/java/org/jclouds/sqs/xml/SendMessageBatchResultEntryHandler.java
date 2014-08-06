@@ -59,7 +59,7 @@ public class SendMessageBatchResultEntryHandler extends
       } else if (qName.equals("MD5OfMessageBody")) {
          builder.md5(HashCode.fromBytes(base16().lowerCase().decode(currentOrNull(currentText))));
       }
-      currentText = new StringBuilder();
+      currentText.setLength(0);
    }
 
    @Override

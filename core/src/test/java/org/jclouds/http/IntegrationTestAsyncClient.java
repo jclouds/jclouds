@@ -179,7 +179,7 @@ public interface IntegrationTestAsyncClient extends Closeable {
          if (qName.equals("bar")) {
             bar = currentText.toString();
          }
-         currentText = new StringBuilder();
+         currentText.setLength(0);
       }
 
       @Override

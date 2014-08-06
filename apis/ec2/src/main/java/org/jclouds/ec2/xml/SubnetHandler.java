@@ -78,7 +78,7 @@ public class SubnetHandler extends ParseSax.HandlerForGeneratedRequestWithResult
       } else if (equalsOrSuffix(qName, "availabilityZone")) {
          builder.availabilityZone(currentOrNull(currentText));
       }
-      currentText = new StringBuilder();
+      currentText.setLength(0);
    }
 
    @Override

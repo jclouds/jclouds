@@ -55,7 +55,7 @@ public class AttributesHandler extends ParseSax.HandlerForGeneratedRequestWithRe
          builder.put(this.name, currentOrNull(currentText));
          this.name = null;
       }
-      currentText = new StringBuilder();
+      currentText.setLength(0);
    }
 
    @Override

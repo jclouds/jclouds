@@ -48,7 +48,7 @@ public class GetPasswordDataResponseHandler extends ParseSax.HandlerWithResult<P
       } else if (qName.equals("passwordData")) {
          builder.passwordData(currentText.toString().trim());
       }
-      currentText = new StringBuilder();
+      currentText.setLength(0);
    }
 
    public void characters(char ch[], int start, int length) {

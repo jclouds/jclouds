@@ -62,7 +62,7 @@ public class MessageHandler extends ParseSax.HandlerForGeneratedRequestWithResul
          builder.addAttribute(this.name, currentOrNull(currentText));
          this.name = null;
       }
-      currentText = new StringBuilder();
+      currentText.setLength(0);
    }
 
    @Override

@@ -132,7 +132,7 @@ public class SpotInstanceHandler extends ParseSax.HandlerForGeneratedRequestWith
       } else if (qName.equals("productDescription")) {
          builder.productDescription(currentOrNull(currentText));
       }
-      currentText = new StringBuilder();
+      currentText.setLength(0);
    }
 
    @Override

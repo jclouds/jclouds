@@ -45,7 +45,7 @@ public class MonitoringStateHandler extends
          this.instanceId = null;
          this.state = null;
       }
-      currentText = new StringBuilder();
+      currentText.setLength(0);
    }
 
    public void characters(char ch[], int start, int length) {

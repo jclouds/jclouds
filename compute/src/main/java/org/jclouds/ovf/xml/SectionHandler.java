@@ -61,7 +61,7 @@ public class SectionHandler<T extends Section<T>, B extends Section.Builder<T>> 
       if (equalsOrSuffix(qName, "Info")) {
          builder.info(currentOrNull(currentText));
       }
-      currentText = new StringBuilder();
+      currentText.setLength(0);
    }
 
    public void characters(char ch[], int start, int length) {

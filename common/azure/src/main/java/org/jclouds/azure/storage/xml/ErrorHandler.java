@@ -44,7 +44,7 @@ public class ErrorHandler extends ParseSax.HandlerWithResult<AzureStorageError> 
       } else if (!qName.equals("Error")) {
          error.getDetails().put(qName, currentText.toString());
       }
-      currentText = new StringBuilder();
+      currentText.setLength(0);
    }
 
    public void characters(char ch[], int start, int length) {

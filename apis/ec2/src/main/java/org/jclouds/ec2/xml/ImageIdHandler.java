@@ -39,7 +39,7 @@ public class ImageIdHandler extends ParseSax.HandlerWithResult<String> {
       if (qName.equalsIgnoreCase("ImageId")) {
          this.imageId = currentText.toString().trim();
       }
-      currentText = new StringBuilder();
+      currentText.setLength(0);
    }
 
    public void characters(char ch[], int start, int length) {

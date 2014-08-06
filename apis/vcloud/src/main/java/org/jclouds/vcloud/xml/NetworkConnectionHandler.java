@@ -70,7 +70,7 @@ public class NetworkConnectionHandler extends ParseSax.HandlerWithResult<Network
       } else if (qName.endsWith("IpAddressAllocationMode")) {
          this.ipAddressAllocationMode = IpAddressAllocationMode.valueOf(currentOrNull());
       }
-      currentText = new StringBuilder();
+      currentText.setLength(0);
    }
 
    public void characters(char ch[], int start, int length) {

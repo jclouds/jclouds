@@ -54,7 +54,7 @@ public class TaskHandler extends ParseSax.HandlerForGeneratedRequestWithResult<T
       } else if (equalsOrSuffix(qName, "resultUrl")) {
          builder.resultUrl(URI.create(currentOrNull(currentText)));
       }
-      currentText = new StringBuilder();
+      currentText.setLength(0);
    }
 
    @Override

@@ -44,7 +44,7 @@ public class GetConsoleOutputResponseHandler extends ParseSax.HandlerWithResult<
        if (qName.equalsIgnoreCase("output")) {
           this.output = new String(base64().decode(whitespace.matcher(currentText).replaceAll("")), UTF_8);
        }
-       currentText = new StringBuilder();
+       currentText.setLength(0);
     }
 
     @Override

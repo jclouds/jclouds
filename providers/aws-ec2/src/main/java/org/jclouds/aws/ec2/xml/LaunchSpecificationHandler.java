@@ -124,7 +124,7 @@ public class LaunchSpecificationHandler extends HandlerForGeneratedRequestWithRe
          if (monitoringEnabled != null)
             builder.monitoringEnabled(Boolean.valueOf(monitoringEnabled));
       }
-      currentText = new StringBuilder();
+      currentText.setLength(0);
    }
 
    public void characters(char ch[], int start, int length) {

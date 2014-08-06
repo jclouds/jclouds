@@ -73,7 +73,7 @@ public class DatapointHandler extends ParseSax.HandlerForGeneratedRequestWithRes
       } else if (qName.equals("CustomUnit")) {
          customUnit = currentText.toString().trim();
       }
-      currentText = new StringBuilder();
+      currentText.setLength(0);
    }
 
    private Double doubleOrNull() {

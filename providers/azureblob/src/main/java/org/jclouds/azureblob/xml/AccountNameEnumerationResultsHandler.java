@@ -114,7 +114,7 @@ public class AccountNameEnumerationResultsHandler extends
       } else if (qName.equals("Etag")) {
          currentETag = currentText.toString().trim();
       }
-      currentText = new StringBuilder();
+      currentText.setLength(0);
    }
 
    public void characters(char ch[], int start, int length) {

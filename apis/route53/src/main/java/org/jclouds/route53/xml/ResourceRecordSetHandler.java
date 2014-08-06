@@ -62,7 +62,7 @@ public class ResourceRecordSetHandler extends ParseSax.HandlerForGeneratedReques
       } else if (qName.equals("Region")) {
          builder.region(currentOrNull(currentText));
       }
-      currentText = new StringBuilder();
+      currentText.setLength(0);
    }
 
    @Override

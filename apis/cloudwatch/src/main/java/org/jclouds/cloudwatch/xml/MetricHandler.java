@@ -96,7 +96,7 @@ public class MetricHandler extends ParseSax.HandlerForGeneratedRequestWithResult
          namespace = SaxUtils.currentOrNull(currentText);
       }
 
-      currentText = new StringBuilder();
+      currentText.setLength(0);
    }
 
    /**

@@ -41,7 +41,7 @@ public class ItemListHandler extends ParseSax.HandlerForGeneratedRequestWithResu
       if (equalsOrSuffix(qName, "item")) {
          items.add(currentOrNull(currentText));
       }
-      currentText = new StringBuilder();
+      currentText.setLength(0);
    }
 
    @Override

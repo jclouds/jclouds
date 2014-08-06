@@ -95,7 +95,7 @@ public class ResourceAllocationSettingDataHandler extends ParseSax.HandlerWithRe
             builder.hostResource(current);
          }
       }
-      currentText = new StringBuilder();
+      currentText.setLength(0);
    }
 
    public void characters(char ch[], int start, int length) {

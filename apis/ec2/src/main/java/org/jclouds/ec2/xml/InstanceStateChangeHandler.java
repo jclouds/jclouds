@@ -97,7 +97,7 @@ public class InstanceStateChangeHandler extends
          this.previousState = null;
       }
 
-      currentText = new StringBuilder();
+      currentText.setLength(0);
    }
 
    public void characters(char ch[], int start, int length) {

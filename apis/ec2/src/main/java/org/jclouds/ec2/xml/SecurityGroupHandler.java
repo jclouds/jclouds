@@ -113,7 +113,7 @@ public class SecurityGroupHandler extends ParseSax.HandlerForGeneratedRequestWit
       } else if (equalsOrSuffix(qName, "groupDescription")) {
          builder.description(currentOrNull(currentText));
       }
-      currentText = new StringBuilder();
+      currentText.setLength(0);
    }
 
    protected void endItem(String uri, String name, String qName) throws SAXException {

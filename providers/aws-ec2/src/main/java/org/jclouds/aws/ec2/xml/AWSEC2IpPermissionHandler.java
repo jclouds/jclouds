@@ -72,7 +72,7 @@ public class AWSEC2IpPermissionHandler extends ParseSax.HandlerForGeneratedReque
             builder.tenantIdGroupNamePair(userId, groupId);
          userId = groupId = null;
       }
-      currentText = new StringBuilder();
+      currentText.setLength(0);
    }
 
    private static String currentOrNegative(StringBuilder currentText) {

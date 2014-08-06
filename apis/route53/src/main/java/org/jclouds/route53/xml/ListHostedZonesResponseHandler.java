@@ -82,7 +82,7 @@ public class ListHostedZonesResponseHandler extends
          afterMarker = currentOrNull(currentText);
       }
 
-      currentText = new StringBuilder();
+      currentText.setLength(0);
    }
 
    @Override

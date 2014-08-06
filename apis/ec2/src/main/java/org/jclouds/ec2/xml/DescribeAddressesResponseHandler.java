@@ -61,7 +61,7 @@ public class DescribeAddressesResponseHandler extends
          ipAddress = null;
          instanceId = null;
       }
-      currentText = new StringBuilder();
+      currentText.setLength(0);
    }
 
    public void characters(char ch[], int start, int length) {

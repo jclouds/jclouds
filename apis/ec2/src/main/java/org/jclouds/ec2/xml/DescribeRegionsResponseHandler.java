@@ -54,7 +54,7 @@ public class DescribeRegionsResponseHandler extends ParseSax.HandlerWithResult<M
          this.region = null;
          this.regionEndpoint = null;
       }
-      currentText = new StringBuilder();
+      currentText.setLength(0);
    }
 
    public void characters(char ch[], int start, int length) {

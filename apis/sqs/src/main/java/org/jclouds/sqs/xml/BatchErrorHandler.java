@@ -53,7 +53,7 @@ public class BatchErrorHandler extends ParseSax.HandlerForGeneratedRequestWithRe
       } else if (qName.equals("Message")) {
          builder.message(currentOrNull(currentText));
       }
-      currentText = new StringBuilder();
+      currentText.setLength(0);
    }
 
    @Override

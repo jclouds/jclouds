@@ -50,7 +50,7 @@ public class NovaCreateVolumeResponseHandler extends CreateVolumeResponseHandler
          } else {
             volumeStatus = Volume.Status.fromValue(statusString);
          }
-         currentText = new StringBuilder();
+         currentText.setLength(0);
       } else {
          super.endElement(uri, name, qName);
       }

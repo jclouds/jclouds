@@ -208,7 +208,7 @@ public abstract class BaseAWSReservationHandler<T> extends HandlerForGeneratedRe
          this.attachTime = null;
          this.deleteOnTermination = true;
       }
-      currentText = new StringBuilder();
+      currentText.setLength(0);
    }
    
    protected void inItem() {

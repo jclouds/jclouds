@@ -71,7 +71,7 @@ public class ListAllMyBucketsHandler extends ParseSax.HandlerWithResult<Set<Buck
          currentCreationDate = dateParser
                .iso8601DateOrSecondsDateParse(currentOrNull(currentText));
       }
-      currentText = new StringBuilder();
+      currentText.setLength(0);
    }
 
    public void characters(char ch[], int start, int length) {

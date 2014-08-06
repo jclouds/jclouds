@@ -98,7 +98,7 @@ public class DescribeSecurityGroupsResponseHandler extends
       } else if (inSecurityGroupInfo) {
          securityGroupHandler.endElement(uri, name, qName);
       }
-      currentText = new StringBuilder();
+      currentText.setLength(0);
    }
 
    protected void endItem(String uri, String name, String qName) throws SAXException {

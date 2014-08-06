@@ -72,7 +72,7 @@ public class IpPermissionHandler extends ParseSax.HandlerForGeneratedRequestWith
             builder.tenantIdGroupNamePair(userId, groupId);
          userId = groupId = null;
       }
-      currentText = new StringBuilder();
+      currentText.setLength(0);
    }
 
    private static String currentOrNegative(StringBuilder currentText) {

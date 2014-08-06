@@ -48,7 +48,7 @@ public class TagSetHandler extends ParseSax.HandlerForGeneratedRequestWithResult
          key = null;
          value = null;
       }
-      currentText = new StringBuilder();
+      currentText.setLength(0);
    }
 
    @Override

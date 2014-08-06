@@ -48,7 +48,7 @@ public abstract class TextFromSingleElementHandler<V> extends ParseSax.HandlerFo
       if (qName.equals(elementName)) {
          text = currentOrNull(currentText);
       }
-      currentText = new StringBuilder();
+      currentText.setLength(0);
    }
 
    @Override

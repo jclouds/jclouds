@@ -165,7 +165,7 @@ public class MetricAlarmHandler extends ParseSax.HandlerForGeneratedRequestWithR
          unit = Unit.fromValue(SaxUtils.currentOrNull(currentText));
       }
 
-      currentText = new StringBuilder();
+      currentText.setLength(0);
    }
 
    @Override

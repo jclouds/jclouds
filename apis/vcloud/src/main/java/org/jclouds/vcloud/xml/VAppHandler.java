@@ -131,7 +131,7 @@ public class VAppHandler extends ParseSax.HandlerWithResult<VApp> {
       } else if (equalsOrSuffix(qName, "ovfDescriptorUploaded")) {
          ovfDescriptorUploaded = Boolean.parseBoolean(SaxUtils.currentOrNull(currentText));
       }
-      currentText = new StringBuilder();
+      currentText.setLength(0);
    }
 
    public void characters(char ch[], int start, int length) {

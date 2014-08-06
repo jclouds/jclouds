@@ -72,7 +72,7 @@ public class GetMetricStatisticsResponseHandlerV2 extends ParseSax.HandlerWithRe
          label = SaxUtils.currentOrNull(currentText);
       }
 
-      currentText = new StringBuilder();
+      currentText.setLength(0);
    }
 
    public void characters(char ch[], int start, int length) {

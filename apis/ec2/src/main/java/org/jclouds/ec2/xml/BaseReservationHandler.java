@@ -178,7 +178,7 @@ public abstract class BaseReservationHandler<T> extends HandlerForGeneratedReque
          this.attachTime = null;
          this.deleteOnTermination = true;
       }
-      currentText = new StringBuilder();
+      currentText.setLength(0);
    }
 
 

@@ -47,7 +47,7 @@ public class ErrorEntryHandler extends ParseSax.HandlerForGeneratedRequestWithRe
       } else if (equalsOrSuffix(qName, "Message")) {
          message = accumulator.toString().trim();
       }
-      accumulator = new StringBuilder();
+      accumulator.setLength(0);
    }
 
    @Override

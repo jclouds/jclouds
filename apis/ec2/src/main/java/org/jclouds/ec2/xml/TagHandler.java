@@ -62,7 +62,7 @@ public class TagHandler extends ParseSax.HandlerForGeneratedRequestWithResult<Ta
          // empty is same as not present
          builder.value(Strings.emptyToNull(currentOrNull(currentText)));
       }
-      currentText = new StringBuilder();
+      currentText.setLength(0);
    }
 
    /**

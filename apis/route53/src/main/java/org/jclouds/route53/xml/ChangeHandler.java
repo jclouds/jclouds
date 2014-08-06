@@ -71,7 +71,7 @@ public class ChangeHandler extends ParseSax.HandlerForGeneratedRequestWithResult
       } else if (qName.equals("SubmittedAt")) {
          submittedAt = dateService.iso8601DateParse(currentOrNull(currentText));
       }
-      currentText = new StringBuilder();
+      currentText.setLength(0);
    }
 
    @Override

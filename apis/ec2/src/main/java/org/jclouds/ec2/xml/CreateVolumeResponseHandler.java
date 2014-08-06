@@ -145,7 +145,7 @@ public class CreateVolumeResponseHandler extends ParseSax.HandlerForGeneratedReq
          }
 
       }
-      currentText = new StringBuilder();
+      currentText.setLength(0);
    }
 
    private Volume newVolume() {
