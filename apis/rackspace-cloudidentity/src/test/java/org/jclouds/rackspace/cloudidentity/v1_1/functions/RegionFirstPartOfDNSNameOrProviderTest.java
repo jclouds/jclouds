@@ -21,7 +21,6 @@ import static org.testng.Assert.assertEquals;
 import java.net.URI;
 
 import org.jclouds.rackspace.cloudidentity.v1_1.domain.Endpoint;
-import org.jclouds.rackspace.cloudidentity.v1_1.functions.RegionFirstPartOfDNSNameOrProvider;
 import org.testng.annotations.Test;
 
 @Test(groups = "unit", testName = "RegionFirstPartOfDNSNameOrProviderTest")

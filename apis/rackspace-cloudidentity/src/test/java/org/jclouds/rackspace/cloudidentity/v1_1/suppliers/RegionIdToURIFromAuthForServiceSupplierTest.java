@@ -26,7 +26,6 @@ import org.jclouds.location.Provider;
 import org.jclouds.location.suppliers.RegionIdToURISupplier;
 import org.jclouds.rackspace.cloudidentity.v1_1.domain.Auth;
 import org.jclouds.rackspace.cloudidentity.v1_1.parse.ParseAuthTest;
-import org.jclouds.rackspace.cloudidentity.v1_1.suppliers.RegionIdToURIFromAuthForServiceSupplier;
 import org.testng.annotations.Test;
 
 import com.google.common.base.Supplier;
