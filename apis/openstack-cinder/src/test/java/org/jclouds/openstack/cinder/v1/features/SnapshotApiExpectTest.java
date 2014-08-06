@@ -17,8 +17,8 @@
 package org.jclouds.openstack.cinder.v1.features;
 
 import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertNull;
 import static org.testng.Assert.assertFalse;
+import static org.testng.Assert.assertNull;
 import static org.testng.Assert.assertTrue;
 
 import java.net.URI;
@@ -29,6 +29,7 @@ import javax.ws.rs.core.MediaType;
 import org.jclouds.date.DateService;
 import org.jclouds.date.internal.SimpleDateFormatDateService;
 import org.jclouds.http.HttpResponse;
+import org.jclouds.io.Payloads;
 import org.jclouds.openstack.cinder.v1.domain.Snapshot;
 import org.jclouds.openstack.cinder.v1.domain.Volume;
 import org.jclouds.openstack.cinder.v1.internal.BaseCinderApiExpectTest;
@@ -39,6 +40,7 @@ import org.testng.annotations.Test;
 
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Iterables;
+import com.google.common.io.ByteSource;
 
 /**
  * Tests SnapshotApi Guice wiring and parsing
@@ -144,7 +146,7 @@ public class SnapshotApiExpectTest extends BaseCinderApiExpectTest {
                   .build(),
             HttpResponse.builder().statusCode(200).payload(payloadFromResource("/snapshot_create_response.json")).build()
       ).getSnapshotApiForZone("RegionOne");
-      
+
       CreateSnapshotOptions options = CreateSnapshotOptions.Builder
             .name("jclouds-test-snapshot")
             .description("jclouds test snapshot")
@@ -166,7 +168,7 @@ public class SnapshotApiExpectTest extends BaseCinderApiExpectTest {
                   .build(),
             HttpResponse.builder().statusCode(404).build()
       ).getSnapshotApiForZone("RegionOne");
-      
+
       CreateSnapshotOptions options = CreateSnapshotOptions.Builder
             .name("jclouds-test-snapshot")
             .description("jclouds test snapshot")
@@ -187,10 +189,12 @@ public class SnapshotApiExpectTest extends BaseCinderApiExpectTest {
                   .build(),
             HttpResponse.builder()
                   .statusCode(400)
-                  .payload("{\"badRequest\": {\"message\": \"Invalid volume: must be available\", \"code\": 400}}")
+                  .payload(Payloads.newByteSourcePayload(ByteSource
+                        .wrap("{\"badRequest\": {\"message\": \"Invalid volume: must be available\", \"code\": 400}}"
+                              .getBytes())))
                   .build()
       ).getSnapshotApiForZone("RegionOne");
-      
+
       CreateSnapshotOptions options = CreateSnapshotOptions.Builder
             .name("jclouds-test-snapshot")
             .description("jclouds test snapshot")
@@ -266,7 +270,9 @@ public class SnapshotApiExpectTest extends BaseCinderApiExpectTest {
             authenticatedGET().endpoint(endpoint).method("DELETE").build(),
             HttpResponse.builder()
                   .statusCode(400)
-                  .payload("{\"badRequest\": {\"message\": \"Invalid volume: Volume Snapshot status must be available or error\", \"code\": 400}}")
+                  .payload(Payloads.newByteSourcePayload(ByteSource
+                        .wrap("{\"badRequest\": {\"message\": \"Invalid volume: Volume Snapshot status must be available or error\", \"code\": 400}}"
+                              .getBytes())))
                   .build()
       ).getSnapshotApiForZone("RegionOne");
 
