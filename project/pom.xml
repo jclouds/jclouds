@@ -84,7 +84,7 @@
     <url>https://git-wip-us.apache.org/repos/asf?p=jclouds.git</url>
     <tag>HEAD</tag>
   </scm>
-  
+
   <repositories>
     <repository>
       <id>apache-snapshots</id>
@@ -340,7 +340,7 @@
           <arguments>-Pdoc -Papache-release ${arguments}</arguments>
         </configuration>
       </plugin>
-      
+
       <plugin>
         <groupId>org.apache.rat</groupId>
         <artifactId>apache-rat-plugin</artifactId>
@@ -361,7 +361,7 @@
             <exclude>**/src/test/resources/**/*.txt</exclude>
             <exclude>**/src/test/resources/**/*.gz</exclude>
             <exclude>**/src/test/resources/**/*.xml</exclude>
-            
+
             <!-- META-INF/services files -->
             <exclude>**/services/*LoggingModule</exclude>
             <exclude>**/services/*ApiMetadata</exclude>
@@ -671,10 +671,25 @@
       <plugin>
         <artifactId>maven-checkstyle-plugin</artifactId>
         <version>2.12.1</version>
+        <executions>
+          <execution>
+          <id>checkstyle</id>
+          <phase>validate</phase>
+            <goals>
+              <goal>check</goal>
+            </goals>
+          <configuration>
+            <failOnViolation>true</failOnViolation>
+          </configuration>
+        </execution>
+        </executions>
         <configuration>
           <!-- configLocation configured via profiles -->
           <violationSeverity>warning</violationSeverity>
           <includeTestSourceDirectory>true</includeTestSourceDirectory>
+          <failOnViolation>true</failOnViolation>
+          <failsOnError>true</failsOnError>
+          <violationSeverity>warning</violationSeverity>
         </configuration>
       </plugin>
     </plugins>
@@ -947,7 +962,7 @@
                 <configuration>
                   <descriptors>
                     <descriptor>src-descriptor.xml</descriptor>
-                    <descriptor>provided-dependencies-descriptor.xml</descriptor>                                        
+                    <descriptor>provided-dependencies-descriptor.xml</descriptor>
                     <descriptor>jar-with-dependencies-no-core-no-apis-descriptor.xml</descriptor>
                   </descriptors>
                 </configuration>
@@ -963,7 +978,7 @@
           </plugin>
         </plugins>
       </build>
-    </profile>        
+    </profile>
     <profile>
       <id>site</id>
       <build>
@@ -1019,7 +1034,18 @@
             <artifactId>maven-checkstyle-plugin</artifactId>
             <configuration>
               <configLocation>../resources/checkstyle.xml</configLocation>
+              <failOnViolation>true</failOnViolation>
+              <failsOnError>true</failsOnError>
+              <violationSeverity>warning</violationSeverity>
             </configuration>
+            <executions>
+              <execution>
+                <phase>validate</phase>
+                <goals>
+                  <goal>check</goal>
+                </goals>
+              </execution>
+            </executions>
           </plugin>
         </plugins>
       </build>
@@ -1046,9 +1072,20 @@
             <configuration>
               <!-- jclouds-resources has the checkstyle config in the classpath -->
               <configLocation>resources/checkstyle.xml</configLocation>
+              <failOnViolation>true</failOnViolation>
+              <failsOnError>true</failsOnError>
+              <violationSeverity>warning</violationSeverity>
             </configuration>
+            <executions>
+              <execution>
+                <phase>validate</phase>
+                <goals>
+                  <goal>check</goal>
+                </goals>
+              </execution>
+            </executions>
           </plugin>
-        </plugins>            
+        </plugins>
       </build>
     </profile>
     <profile>
