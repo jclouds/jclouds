@@ -83,7 +83,7 @@ public class AtmosClientTest extends BaseRestAnnotationProcessingTest<AtmosClien
       GeneratedHttpRequest request = processor.createRequest(method, ImmutableList.<Object> of("directory"));
 
       assertRequestLineEquals(request, "GET https://accesspoint.atmosonline.com/rest/namespace/directory/ HTTP/1.1");
-      assertNonPayloadHeadersEqual(request, HttpHeaders.ACCEPT + ": text/xml\n");
+      assertNonPayloadHeadersEqual(request, HttpHeaders.ACCEPT + ": text/xml\nx-emc-include-meta: 1\n");
       assertPayloadEquals(request, null, null, false);
 
       assertResponseParserClassEquals(method, request, ParseDirectoryListFromContentAndHeaders.class);
@@ -113,7 +113,7 @@ public class AtmosClientTest extends BaseRestAnnotationProcessingTest<AtmosClien
       GeneratedHttpRequest request = processor.createRequest(method, ImmutableList.<Object> of("directory", new ListOptions().limit(1).token("asda")));
 
       assertRequestLineEquals(request, "GET https://accesspoint.atmosonline.com/rest/namespace/directory/ HTTP/1.1");
-      assertNonPayloadHeadersEqual(request, HttpHeaders.ACCEPT + ": text/xml\nx-emc-limit: 1\nx-emc-token: asda\n");
+      assertNonPayloadHeadersEqual(request, HttpHeaders.ACCEPT + ": text/xml\nx-emc-include-meta: 1\nx-emc-limit: 1\nx-emc-token: asda\n");
       assertPayloadEquals(request, null, null, false);
 
       assertResponseParserClassEquals(method, request, ParseDirectoryListFromContentAndHeaders.class);

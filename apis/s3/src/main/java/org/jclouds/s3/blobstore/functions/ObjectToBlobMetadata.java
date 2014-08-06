@@ -74,6 +74,7 @@ public class ObjectToBlobMetadata implements Function<ObjectMetadata, MutableBlo
       } else {
          to.setType(StorageType.BLOB);
       }
+      to.setSize(from.getContentMetadata().getContentLength());
       return to;
    }
 }

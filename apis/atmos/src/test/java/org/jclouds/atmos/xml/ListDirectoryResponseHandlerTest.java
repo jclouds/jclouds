@@ -47,9 +47,9 @@ public class ListDirectoryResponseHandlerTest extends BaseHandlerTest {
       ParseSax<Set<DirectoryEntry>> parser = createParser();
       Set<DirectoryEntry> expected = Sets.newTreeSet();
       expected.add(new DirectoryEntry("4980cdb2a411106a04a4538c92a1b204ad92077de6e3",
-               FileType.DIRECTORY, "adriancole-blobstore-2096685753"));
+               FileType.DIRECTORY, "adriancole-blobstore-2096685753", 0));
       expected.add(new DirectoryEntry("4980cdb2a410105404980d99e53a0504ad93939e7dc3",
-               FileType.DIRECTORY, "adriancole-blobstore247496608"));
+               FileType.DIRECTORY, "adriancole-blobstore247496608", 0));
       Set<DirectoryEntry> result = parser.parse(is);
       assertEquals(result, expected);
    }

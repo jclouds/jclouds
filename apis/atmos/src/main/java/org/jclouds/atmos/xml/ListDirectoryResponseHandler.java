@@ -35,6 +35,10 @@ public class ListDirectoryResponseHandler extends ParseSax.HandlerWithResult<Set
    private Set<DirectoryEntry> entries = Sets.newLinkedHashSet();
    private String currentObjectId;
    private FileType currentType;
+   private String currentFileName;
+   private long currentSize;
+
+   // metadata parsing
    private String currentName;
 
    private StringBuilder currentText = new StringBuilder();
@@ -49,11 +53,17 @@ public class ListDirectoryResponseHandler extends ParseSax.HandlerWithResult<Set
       } else if (qName.equals("FileType")) {
          currentType = FileType.fromValue(currentText.toString().trim());
       } else if (qName.equals("Filename")) {
+         currentFileName = currentText.toString().trim();
+         if (currentFileName.equals(""))
+            currentFileName = null;
+      } else if (qName.equals("Name")) {
          currentName = currentText.toString().trim();
-         if (currentName.equals(""))
-            currentName = null;
+      } else if (qName.equals("Value")) {
+         if (currentName.equals("size")) {
+            currentSize = Long.parseLong(currentText.toString().trim());
+         }
       } else if (qName.equals("DirectoryEntry")) {
-         entries.add(new DirectoryEntry(currentObjectId, currentType, currentName));
+         entries.add(new DirectoryEntry(currentObjectId, currentType, currentFileName, currentSize));
       }
       currentText.setLength(0);
    }

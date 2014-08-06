@@ -46,4 +46,7 @@ public interface MutableStorageMetadata extends MutableResourceMetadata<StorageT
     */
    void setLastModified(@Nullable Date lastModified);
 
+   /** @see #getSize */
+   void setSize(@Nullable Long size);
+
 }

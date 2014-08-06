@@ -88,6 +88,7 @@ public interface AtmosClient extends Closeable {
    @ResponseParser(ParseDirectoryListFromContentAndHeaders.class)
    @Fallback(ThrowContainerNotFoundOn404.class)
    @Consumes(MediaType.TEXT_XML)
+   @Headers(keys = "x-emc-include-meta", values = "1")
    BoundedSet<? extends DirectoryEntry> listDirectory(
          @PathParam("directoryName") String directoryName, ListOptions... options);
 

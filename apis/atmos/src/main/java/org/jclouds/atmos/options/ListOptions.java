@@ -19,13 +19,18 @@ package org.jclouds.atmos.options;
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.base.Preconditions.checkState;
 
+import java.util.Collection;
+
 import org.jclouds.http.options.BaseHttpRequestOptions;
+
+import com.google.common.collect.ImmutableList;
 
 /**
  * Options used to control paginated results (aka list commands).
  */
 public class ListOptions extends BaseHttpRequestOptions {
    public static final ListOptions NONE = new ListOptions();
+   private static final Collection<String> INCLUDE_META = ImmutableList.of(Integer.toString(1));
 
    /**
     * specifies the position to resume listing
@@ -57,7 +62,7 @@ public class ListOptions extends BaseHttpRequestOptions {
     * limit.
     */
    public ListOptions includeMeta() {
-      headers.put("x-emc-include-meta", Integer.toString(1));
+      headers.replaceValues("x-emc-include-meta", INCLUDE_META);
       return this;
    }
 

@@ -307,6 +307,7 @@ public class FilesystemStorageStrategyImpl implements LocalStorageStrategy {
       Blob blob = builder.build();
       blob.getMetadata().setContainer(container);
       blob.getMetadata().setLastModified(new Date(file.lastModified()));
+      blob.getMetadata().setSize(file.length());
       if (blob.getPayload().getContentMetadata().getContentMD5() != null)
          blob.getMetadata().setETag(base16().lowerCase().encode(blob.getPayload().getContentMetadata().getContentMD5()));
       return blob;

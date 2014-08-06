@@ -26,6 +26,7 @@ import org.jclouds.openstack.keystone.v2_0.config.KeystoneProperties;
 import org.jclouds.openstack.swift.CommonSwiftClient;
 import org.jclouds.openstack.swift.domain.ContainerMetadata;
 import org.jclouds.openstack.swift.options.CreateContainerOptions;
+import org.testng.SkipException;
 import org.testng.annotations.Test;
 
 import com.google.common.collect.ImmutableList;
@@ -93,5 +94,11 @@ public class SwiftContainerIntegrationLiveTest extends BaseContainerIntegrationT
       } finally {
          returnContainer(containerName);
       }
+   }
+
+   @Test(groups = { "integration", "live" })
+   public void testListContainerGetBlobSize() throws Exception {
+      // use new Swift provider instead
+      throw new SkipException("Intentionally not implemented for the legacy Swift provider");
    }
 }

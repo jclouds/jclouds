@@ -92,4 +92,6 @@ public interface StorageMetadata extends ResourceMetadata<StorageType> {
     */
    Date getLastModified();
 
+   /** Size of the resource, possibly null. */
+   Long getSize();
 }

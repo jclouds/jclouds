@@ -71,6 +71,7 @@ public class BlobPropertiesToBlobMetadata implements Function<BlobProperties, Mu
       } else {
          to.setType(StorageType.BLOB);
       }
+      to.setSize(from.getContentMetadata().getContentLength());
       return to;
    }
 }

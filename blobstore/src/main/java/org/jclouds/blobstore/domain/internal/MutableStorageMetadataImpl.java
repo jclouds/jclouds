@@ -32,6 +32,7 @@ public class MutableStorageMetadataImpl extends MutableResourceMetadataImpl<Stor
    private String eTag;
    private Date creationDate;
    private Date lastModified;
+   private Long size;
 
    public MutableStorageMetadataImpl() {
       super();
@@ -41,6 +42,7 @@ public class MutableStorageMetadataImpl extends MutableResourceMetadataImpl<Stor
       super(from);
       this.eTag = from.getETag();
       this.lastModified = from.getLastModified();
+      this.size = from.getSize();
    }
 
    /**
@@ -85,4 +87,13 @@ public class MutableStorageMetadataImpl extends MutableResourceMetadataImpl<Stor
       this.eTag = eTag;
    }
 
+   @Override
+   public Long getSize() {
+      return size;
+   }
+
+   @Override
+   public void setSize(Long size) {
+      this.size = size;
+   }
 }

@@ -192,6 +192,7 @@ public class TransientStorageStrategy implements LocalStorageStrategy {
       blob.getMetadata().setUri(
             uriBuilder(new StringBuilder("mem://").append(containerName)).path(in.getMetadata().getName()).build());
       blob.getMetadata().setLastModified(new Date());
+      blob.getMetadata().setSize((long) input.length);
       String eTag = base16().lowerCase().encode(contentMd5.asBytes());
       blob.getMetadata().setETag(eTag);
       // Set HTTP headers to match metadata

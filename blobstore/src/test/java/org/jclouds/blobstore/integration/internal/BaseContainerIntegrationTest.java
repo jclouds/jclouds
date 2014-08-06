@@ -35,6 +35,8 @@ import java.util.concurrent.TimeoutException;
 
 import javax.ws.rs.core.MediaType;
 
+import com.google.common.io.ByteSource;
+
 import org.jclouds.blobstore.domain.Blob;
 import org.jclouds.blobstore.domain.BlobMetadata;
 import org.jclouds.blobstore.domain.PageSet;
@@ -373,6 +375,30 @@ public class BaseContainerIntegrationTest extends BaseBlobStoreIntegrationTest {
          returnContainer(containerName);
       }
 
+   }
+
+   @Test(groups = { "integration", "live" })
+   public void testListContainerGetBlobSize() throws Exception {
+      String containerName = getContainerName();
+      try {
+         ByteSource byteSource = ByteSource.wrap(new byte[42]);
+
+         for (int i = 0; i < 2; i++) {
+            view.getBlobStore().putBlob(containerName, view.getBlobStore()
+                  .blobBuilder(i + "")
+                  .payload(byteSource)
+                  .contentLength(byteSource.size())
+                  .build());
+         }
+
+         PageSet<? extends StorageMetadata> container = view.getBlobStore().list(containerName);
+
+         for (StorageMetadata metadata : container) {
+            assertEquals(metadata.getSize(), Long.valueOf(byteSource.size()));
+         }
+      } finally {
+         returnContainer(containerName);
+      }
    }
 
    protected void addAlphabetUnderRoot(String containerName) throws InterruptedException {

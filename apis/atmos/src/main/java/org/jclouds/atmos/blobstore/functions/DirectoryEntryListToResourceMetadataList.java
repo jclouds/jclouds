@@ -26,6 +26,7 @@ import org.jclouds.blobstore.domain.PageSet;
 import org.jclouds.blobstore.domain.StorageMetadata;
 import org.jclouds.blobstore.domain.StorageType;
 import org.jclouds.blobstore.domain.internal.BlobMetadataImpl;
+import org.jclouds.blobstore.domain.internal.MutableBlobMetadataImpl;
 import org.jclouds.blobstore.domain.internal.PageSetImpl;
 import org.jclouds.blobstore.domain.internal.StorageMetadataImpl;
 import org.jclouds.domain.Location;
@@ -56,10 +57,14 @@ public class DirectoryEntryListToResourceMetadataList implements
                      if (type == StorageType.FOLDER)
                         return new StorageMetadataImpl(type, from.getObjectID(), from.getObjectName(), defaultLocation
                                  .get(), null, null, null, null, ImmutableMap.<String, String>of());
-                     else
-                        return new BlobMetadataImpl(from.getObjectID(), from.getObjectName(), defaultLocation.get(),
+                     else {
+                        BlobMetadataImpl metadata = new BlobMetadataImpl(from.getObjectID(), from.getObjectName(), defaultLocation.get(),
                                  null, null, null, null, ImmutableMap.<String, String>of(), null,
                                  null, new BaseMutableContentMetadata());
+                        MutableBlobMetadataImpl mutable = new MutableBlobMetadataImpl(metadata);
+                        mutable.setSize(from.getSize());
+                        return mutable;
+                     }
                   }
 
                }), from.getToken());

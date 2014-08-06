@@ -48,6 +48,7 @@ import org.jclouds.blobstore.LocalStorageStrategy;
 import org.jclouds.blobstore.domain.Blob;
 import org.jclouds.blobstore.domain.BlobBuilder;
 import org.jclouds.blobstore.domain.BlobMetadata;
+import org.jclouds.blobstore.domain.MutableBlobMetadata;
 import org.jclouds.blobstore.domain.MutableStorageMetadata;
 import org.jclouds.blobstore.domain.PageSet;
 import org.jclouds.blobstore.domain.StorageMetadata;
@@ -225,7 +226,9 @@ public final class LocalBlobStore implements BlobStore {
                   checkState(oldBlob != null, "blob " + key + " is not present although it was in the list of "
                         + containerName);
                   checkState(oldBlob.getMetadata() != null, "blob " + containerName + "/" + key + " has no metadata");
-                  return BlobStoreUtils.copy(oldBlob.getMetadata());
+                  MutableBlobMetadata md = BlobStoreUtils.copy(oldBlob.getMetadata());
+                  md.setSize(oldBlob.getMetadata().getSize());
+                  return md;
                }
             }));
 

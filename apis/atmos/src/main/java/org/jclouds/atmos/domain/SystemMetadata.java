@@ -38,7 +38,7 @@ public class SystemMetadata extends DirectoryEntry {
 
    public SystemMetadata(@Nullable byte [] contentmd5, Date atime, Date ctime, String gid, Date itime, Date mtime, int nlink,
             String objectid, String objname, String policyname, long size, FileType type, String uid) {
-      super(objectid, type, objname);
+      super(objectid, type, objname, size);
       this.contentmd5 = contentmd5;
       this.atime = atime;
       this.ctime = ctime;

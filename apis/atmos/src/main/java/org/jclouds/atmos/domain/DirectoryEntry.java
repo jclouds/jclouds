@@ -16,6 +16,8 @@
  */
 package org.jclouds.atmos.domain;
 
+import com.google.common.base.Objects;
+
 /**
  * Metadata of a Atmos Online object
  */
@@ -23,11 +25,13 @@ public class DirectoryEntry implements Comparable<DirectoryEntry> {
    private final String objectid;
    private final FileType type;
    private final String objname;
+   private final long size;
 
-   public DirectoryEntry(String objectid, FileType type, String objname) {
+   public DirectoryEntry(String objectid, FileType type, String objname, long size) {
       this.objectid = objectid;
       this.objname = objname;
       this.type = type;
+      this.size = size;
    }
 
    public String getObjectID() {
@@ -42,6 +46,10 @@ public class DirectoryEntry implements Comparable<DirectoryEntry> {
       return type;
    }
 
+   public long getSize() {
+      return size;
+   }
+
    public int compareTo(DirectoryEntry o) {
       if (getObjectName() == null)
          return -1;
@@ -50,12 +58,7 @@ public class DirectoryEntry implements Comparable<DirectoryEntry> {
 
    @Override
    public int hashCode() {
-      final int prime = 31;
-      int result = 1;
-      result = prime * result + ((objectid == null) ? 0 : objectid.hashCode());
-      result = prime * result + ((objname == null) ? 0 : objname.hashCode());
-      result = prime * result + ((type == null) ? 0 : type.hashCode());
-      return result;
+      return Objects.hashCode(objectid, objname, type, size);
    }
 
    @Override
@@ -67,27 +70,15 @@ public class DirectoryEntry implements Comparable<DirectoryEntry> {
       if (getClass() != obj.getClass())
          return false;
       DirectoryEntry other = (DirectoryEntry) obj;
-      if (objectid == null) {
-         if (other.objectid != null)
-            return false;
-      } else if (!objectid.equals(other.objectid))
-         return false;
-      if (objname == null) {
-         if (other.objname != null)
-            return false;
-      } else if (!objname.equals(other.objname))
-         return false;
-      if (type == null) {
-         if (other.type != null)
-            return false;
-      } else if (!type.equals(other.type))
-         return false;
-      return true;
+      return Objects.equal(objectid, other.objectid) &&
+            Objects.equal(objname, other.objname) &&
+            Objects.equal(type, other.type) &&
+            Objects.equal(size, other.size);
    }
 
    @Override
    public String toString() {
       return "DirectoryEntry [type=" + type + ", objectid=" + objectid + ", objname=" + objname
-               + "]";
+               + ", size=" + size + "]";
    }
 }
