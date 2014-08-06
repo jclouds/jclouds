@@ -16,6 +16,7 @@
  */
 package org.jclouds.docker.domain;
 
+import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
 import com.google.gson.annotations.SerializedName;
 
@@ -78,7 +79,7 @@ public class Port {
 
    @Override
    public String toString() {
-      return Objects.toStringHelper(this)
+      return MoreObjects.toStringHelper(this)
               .add("privatePort", privatePort)
               .add("publicPort", publicPort)
               .add("type", type)

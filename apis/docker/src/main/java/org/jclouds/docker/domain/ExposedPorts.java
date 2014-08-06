@@ -22,6 +22,7 @@ import java.util.Set;
 
 import org.jclouds.javax.annotation.Nullable;
 
+import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
 import com.google.common.collect.ImmutableSet;
 import com.google.gson.annotations.SerializedName;
@@ -65,7 +66,7 @@ public class ExposedPorts {
 
    @Override
    public String toString() {
-      return Objects.toStringHelper(this)
+      return MoreObjects.toStringHelper(this)
               .add("portAndProtocol", portAndProtocol)
               .add("hostPorts", hostPorts)
               .toString();

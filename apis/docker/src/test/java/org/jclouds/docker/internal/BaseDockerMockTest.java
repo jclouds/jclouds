@@ -16,7 +16,7 @@
  */
 package org.jclouds.docker.internal;
 
-import static com.google.common.util.concurrent.MoreExecutors.sameThreadExecutor;
+import static com.google.common.util.concurrent.MoreExecutors.newDirectExecutorService;
 import static org.jclouds.http.utils.Queries.encodeQueryLine;
 import static org.jclouds.util.Strings2.toStringAndClose;
 import static org.testng.Assert.assertEquals;
@@ -45,8 +45,8 @@ import com.squareup.okhttp.mockwebserver.RecordedRequest;
  * Base class for all Docker mock tests.
  */
 public class BaseDockerMockTest {
-   private final Set<Module> modules = ImmutableSet.<Module> of(new ExecutorServiceModule(sameThreadExecutor(),
-         sameThreadExecutor()));
+   private final Set<Module> modules = ImmutableSet.<Module> of(new ExecutorServiceModule(newDirectExecutorService(),
+         newDirectExecutorService()));
 
    protected String provider;
 

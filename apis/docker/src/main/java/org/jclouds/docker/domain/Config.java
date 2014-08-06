@@ -16,6 +16,7 @@
  */
 package org.jclouds.docker.domain;
 
+import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
@@ -245,7 +246,7 @@ public class Config {
 
    @Override
    public String toString() {
-      return Objects.toStringHelper(this)
+      return MoreObjects.toStringHelper(this)
               .add("hostname", hostname)
               .add("domainName", domainName)
               .add("user", user)
