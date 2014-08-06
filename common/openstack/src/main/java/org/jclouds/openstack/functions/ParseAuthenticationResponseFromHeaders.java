@@ -20,7 +20,6 @@ import static com.google.common.base.Preconditions.checkNotNull;
 import static org.jclouds.http.HttpUtils.releasePayload;
 import static org.jclouds.http.Uris.uriBuilder;
 import static org.jclouds.openstack.reference.AuthHeaders.AUTH_TOKEN;
-import static org.jclouds.openstack.reference.AuthHeaders.URL_SUFFIX;
 
 import java.net.URI;
 import java.util.Map.Entry;
@@ -31,6 +30,7 @@ import org.jclouds.http.HttpRequest;
 import org.jclouds.http.HttpResponse;
 import org.jclouds.logging.Logger;
 import org.jclouds.openstack.domain.AuthenticationResponse;
+import org.jclouds.openstack.reference.AuthHeaders;
 import org.jclouds.rest.InvocationContext;
 
 import com.google.common.annotations.VisibleForTesting;
@@ -58,8 +58,14 @@ public class ParseAuthenticationResponseFromHeaders implements Function<HttpResp
       // HTTP headers are case insensitive (RFC 2616) so we must allow for that when looking an header names for the URL keyword
       Builder<String, URI> builder = ImmutableMap.builder();
       for (Entry<String, String> entry : from.getHeaders().entries()) {
-         if (entry.getKey().toLowerCase().endsWith(URL_SUFFIX.toLowerCase()))
-            builder.put(entry.getKey(), getURI(entry.getValue()));
+         String header = entry.getKey();
+         if (header.equalsIgnoreCase(AuthHeaders.STORAGE_URL)) {
+            builder.put(AuthHeaders.STORAGE_URL, getURI(entry.getValue()));
+         } else if (header.equalsIgnoreCase(AuthHeaders.SERVER_MANAGEMENT_URL)) {
+            builder.put(AuthHeaders.SERVER_MANAGEMENT_URL, getURI(entry.getValue()));
+         } else if (header.equalsIgnoreCase(AuthHeaders.CDN_MANAGEMENT_URL)) {
+            builder.put(AuthHeaders.CDN_MANAGEMENT_URL, getURI(entry.getValue()));
+         }
       }
       AuthenticationResponse response = new AuthenticationResponse(checkNotNull(from.getFirstHeaderOrNull(AUTH_TOKEN),
                AUTH_TOKEN), builder.build());
