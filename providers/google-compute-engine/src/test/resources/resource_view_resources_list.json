@@ -1,0 +1,6 @@
+{
+   "members": [
+      "https://googleapis.com/compute/projects/myproject/zones/us-central1-a/instances/jclouds-test-1",
+      "https://googleapis.com/compute/projects/myproject/zones/us-central1-a/instances/jclouds-test-2"
+   ]
+}

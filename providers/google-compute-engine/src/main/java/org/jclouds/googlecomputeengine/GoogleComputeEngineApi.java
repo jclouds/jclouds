@@ -39,6 +39,8 @@ import org.jclouds.googlecomputeengine.features.RegionApi;
 import org.jclouds.googlecomputeengine.features.RouteApi;
 import org.jclouds.googlecomputeengine.features.SnapshotApi;
 import org.jclouds.googlecomputeengine.features.TargetPoolApi;
+import org.jclouds.googlecomputeengine.features.TargetHttpProxyApi;
+import org.jclouds.googlecomputeengine.features.UrlMapApi;
 import org.jclouds.googlecomputeengine.features.ZoneApi;
 import org.jclouds.rest.annotations.Delegate;
 import org.jclouds.rest.annotations.Endpoint;

@@ -54,8 +54,22 @@ public class BaseGoogleComputeEngineApiLiveTest extends BaseApiLiveTest<GoogleCo
    protected static final String IMAGE_API_URL_SUFFIX = "/global/images/";
    protected static final String DISK_TYPE_API_URL_SUFFIX = "/diskTypes/";
 
+   protected static final String BACKEND_SERVICE_API_URL_SUFFIX = "/global/backendServices/";
+   protected static final String URL_MAP_API_URL_SUFFIX = "/global/urlMaps/";
+   protected static final String HEALTH_CHECK_API_URL_SUFFIX = "/global/httpHealthChecks/";
+   protected static final String RESOURCE_VIEW_API_URL_PREFIX = "https://www.googleapis.com/resourceviews/"
+                                                                + "v1beta1/projects/";
+   protected static final String RESOURCE_VIEW_API_URL_SUFFIX = "/resourceViews/";
+   protected static final String TARGET_HTTP_PROXY_API_URL_SUFFIX = "/global/targetHttpProxies/";
+   protected static final String GOOGLE_PROJECT = "google";
+
    protected Predicate<AtomicReference<Operation>> operationDone;
    protected URI projectUrl;
+
+   protected Supplier<String> userProject;
+   protected Predicate<AtomicReference<Operation>> globalOperationDonePredicate;
+   protected Predicate<AtomicReference<Operation>> regionOperationDonePredicate;
+   protected Predicate<AtomicReference<Operation>> zoneOperationDonePredicate;
 
    public BaseGoogleComputeEngineApiLiveTest() {
       provider = "google-compute-engine";
@@ -114,6 +128,29 @@ public class BaseGoogleComputeEngineApiLiveTest extends BaseApiLiveTest<GoogleCo
       return URI.create(projectUrl + IMAGE_API_URL_SUFFIX + image);
    }
 
+   //TODO (broudy): refactor all these functions to not take project once compiling correctly!
+   protected URI getHealthCheckUrl(String project, String healthCheck) {
+      return URI.create(projectUrl + HEALTH_CHECK_API_URL_SUFFIX + healthCheck);
+   }
+
+   protected URI getInstanceUrl(String project, String instanceName) {
+      return URI.create(projectUrl + ZONE_API_URL_SUFFIX + DEFAULT_ZONE_NAME + "/instances/" + instanceName);
+   }
+
+   // TODO (broudy): duplicate! remove!
+   protected URI getGatewayUrl(String project, String gateway) {
+      return URI.create(projectUrl + GATEWAY_API_URL_SUFFIX + gateway);
+   }
+
+   protected URI getTargetHttpProxyUrl(String project, String targetHttpProxy) {
+      return URI.create(projectUrl + TARGET_HTTP_PROXY_API_URL_SUFFIX + targetHttpProxy);
+   }
+
+   // TODO (broudy): duplicate! remove!
+   protected URI getImageUrl(String project, String image){
+      return URI.create(projectUrl + IMAGE_API_URL_SUFFIX + image);
+   }
+
    protected URI getDefaultMachineTypeUrl() {
       return getMachineTypeUrl(DEFAULT_MACHINE_TYPE_NAME);
    }
@@ -125,6 +162,24 @@ public class BaseGoogleComputeEngineApiLiveTest extends BaseApiLiveTest<GoogleCo
 
    protected URI getDiskUrl(String diskName) {
       return URI.create(projectUrl + ZONE_API_URL_SUFFIX + DEFAULT_ZONE_NAME + "/disks/" + diskName);
+   }
+
+      protected URI getDiskUrl(String project, String diskName) {
+      return URI.create(projectUrl + ZONE_API_URL_SUFFIX + DEFAULT_ZONE_NAME + "/disks/" + diskName);
+   }
+
+   protected URI getBackendServiceUrl(String project, String backendService) {
+      return URI.create(projectUrl + BACKEND_SERVICE_API_URL_SUFFIX
+                  + backendService);
+   }
+
+   protected URI getUrlMapUrl(String project, String urlMap) {
+      return URI.create(projectUrl + URL_MAP_API_URL_SUFFIX + urlMap);
+   }
+
+   protected URI getResourceViewInZoneUrl(String project, String resourceView) {
+      return URI.create(RESOURCE_VIEW_API_URL_PREFIX + project + ZONE_API_URL_SUFFIX
+                        + DEFAULT_ZONE_NAME + RESOURCE_VIEW_API_URL_SUFFIX + resourceView);
    }
 }
 

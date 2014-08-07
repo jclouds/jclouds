@@ -1,0 +1,17 @@
+{
+   "result": {
+      "loadSucceeded": false,
+      "loadErrors": [
+         "jclouds-test"
+      ],
+      "testPassed": false,
+      "testFailures": [
+         {
+            "host": "jclouds-test",
+            "path": "/test/path",
+            "expectedService": "https://www.googleapis.com/compute/v1/projects/myproject/global/backendServices/jclouds-test",
+            "actualService": "https://www.googleapis.com/compute/v1/projects/myproject/global/backendServices/jclouds-test-2"
+         }
+      ]
+   } 
+}
