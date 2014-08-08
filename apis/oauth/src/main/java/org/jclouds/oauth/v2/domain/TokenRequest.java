@@ -16,10 +16,11 @@
  */
 package org.jclouds.oauth.v2.domain;
 
+import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
 
+import static com.google.common.base.MoreObjects.toStringHelper;
 import static com.google.common.base.Objects.equal;
-import static com.google.common.base.Objects.toStringHelper;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
@@ -122,7 +123,7 @@ public class TokenRequest {
       return string().toString();
    }
 
-   protected Objects.ToStringHelper string() {
+   protected MoreObjects.ToStringHelper string() {
       return toStringHelper(this).omitNullValues().add("header", header)
               .add("claimSet", claimSet);
    }
