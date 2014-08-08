@@ -16,11 +16,12 @@
  */
 package org.jclouds.googlecloudstorage.domain.internal;
 
+import static com.google.common.base.MoreObjects.toStringHelper;
 import static com.google.common.base.Objects.equal;
-import static com.google.common.base.Objects.toStringHelper;
 
 import java.util.Set;
 
+import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
 import com.google.common.collect.ImmutableSet;
 
@@ -76,7 +77,7 @@ public class BucketCors {
                && equal(this.responseHeader, that.responseHeader) && equal(this.maxAgeSeconds, that.maxAgeSeconds);
    }
 
-   protected Objects.ToStringHelper string() {
+   protected MoreObjects.ToStringHelper string() {
       return toStringHelper(this).omitNullValues().add("origin", origin).add("method", method).add("responseHeader", responseHeader)
                .add("maxAgeSeconds", maxAgeSeconds);
    }

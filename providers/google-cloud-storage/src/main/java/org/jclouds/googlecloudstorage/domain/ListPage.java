@@ -16,8 +16,8 @@
  */
 package org.jclouds.googlecloudstorage.domain;
 
+import static com.google.common.base.MoreObjects.toStringHelper;
 import static com.google.common.base.Objects.equal;
-import static com.google.common.base.Objects.toStringHelper;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 import java.beans.ConstructorProperties;
@@ -26,6 +26,7 @@ import java.util.Iterator;
 import org.jclouds.collect.IterableWithMarker;
 import org.jclouds.googlecloudstorage.domain.Resource.Kind;
 
+import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
 import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableSet;
@@ -76,7 +77,7 @@ public class ListPage<T> extends IterableWithMarker<T> {
       return equal(this.kind, that.kind) && equal(this.items, that.items);
    }
 
-   protected Objects.ToStringHelper string() {
+   protected MoreObjects.ToStringHelper string() {
       return toStringHelper(this).omitNullValues().add("kind", kind).add("nextPageToken", nextPageToken)
                .add("items", items);
    }

@@ -22,15 +22,15 @@ package org.jclouds.googlecloudstorage.domain;
  * @see <a href= "https://developers.google.com/storage/docs/json_api/v1/bucketAccessControls/list"/>
  */
 
+import static com.google.common.base.MoreObjects.toStringHelper;
 import static com.google.common.base.Objects.equal;
-import static com.google.common.base.Objects.toStringHelper;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 import java.util.Set;
 
 import org.jclouds.googlecloudstorage.domain.Resource.Kind;
 
-import com.google.common.base.Objects;
+import com.google.common.base.MoreObjects;
 import com.google.common.collect.ImmutableSet;
 
 public class ListBucketAccessControls {
@@ -63,7 +63,7 @@ public class ListBucketAccessControls {
 
    }
 
-   protected Objects.ToStringHelper string() {
+   protected MoreObjects.ToStringHelper string() {
       return toStringHelper(this).omitNullValues().add("kind", kind).add("items", items);
 
    }

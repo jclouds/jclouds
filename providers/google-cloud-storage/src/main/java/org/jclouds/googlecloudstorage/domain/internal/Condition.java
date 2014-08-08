@@ -16,12 +16,13 @@
  */
 package org.jclouds.googlecloudstorage.domain.internal;
 
-import static com.google.common.base.Objects.toStringHelper;
+import static com.google.common.base.MoreObjects.toStringHelper;
 
 import java.util.Date;
 
 import org.jclouds.javax.annotation.Nullable;
 
+import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
 
 /**
@@ -95,7 +96,7 @@ public class Condition {
       return true;
    }
 
-   protected Objects.ToStringHelper string() {
+   protected MoreObjects.ToStringHelper string() {
       return toStringHelper(this).add("age", age).add("createdBefore", createdBefore).add("isLive", isLive)
                .add("numNewerVersions", numNewerVersions);
    }

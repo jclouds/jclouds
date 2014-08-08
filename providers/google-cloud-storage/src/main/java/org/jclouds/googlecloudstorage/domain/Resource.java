@@ -16,9 +16,9 @@
  */
 package org.jclouds.googlecloudstorage.domain;
 
-import static com.google.common.base.Objects.ToStringHelper;
+import static com.google.common.base.MoreObjects.ToStringHelper;
+import static com.google.common.base.MoreObjects.toStringHelper;
 import static com.google.common.base.Objects.equal;
-import static com.google.common.base.Objects.toStringHelper;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 import java.beans.ConstructorProperties;

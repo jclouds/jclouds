@@ -35,7 +35,7 @@ import org.jclouds.googlecloudstorage.domain.internal.Website;
 
 import org.jclouds.javax.annotation.Nullable;
 
-import com.google.common.base.Objects;
+import com.google.common.base.MoreObjects;
 import com.google.common.collect.ImmutableSet;
 
 /**
@@ -151,7 +151,7 @@ public class Bucket extends Resource {
 
    }
 
-   protected Objects.ToStringHelper string() {
+   protected MoreObjects.ToStringHelper string() {
       return super.string().omitNullValues().add("name", name).add("timeCreated", timeCreated)
                .add("projectNumber", projectNumber).add("metageneration", metageneration).add("acl", acl)
                .add("defaultObjectAcl", defaultObjectAcl).add("owner", owner).add("location", location)
