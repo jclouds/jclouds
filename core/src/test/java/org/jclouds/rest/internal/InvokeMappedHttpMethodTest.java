@@ -130,7 +130,7 @@ public class InvokeMappedHttpMethodTest {
 
    public void testAsyncMethodSubmitsRequest() throws Exception {
       expect(http.submit(new HttpCommand(getRequest))).andReturn(future);
-      future.addListener(anyObject(Runnable.class), eq(userThreads));
+      future.addListener(anyObject(Runnable.class), eq(MoreExecutors.directExecutor()));
       replay(http, timeLimiter, fallback, config, future);
       invokeHttpMethod.apply(asyncGet);
    }
