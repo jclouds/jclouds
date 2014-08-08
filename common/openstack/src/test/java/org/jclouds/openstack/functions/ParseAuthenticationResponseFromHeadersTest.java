@@ -23,9 +23,9 @@ import java.net.URI;
 import org.jclouds.Constants;
 import org.jclouds.http.HttpResponse;
 import org.jclouds.openstack.domain.AuthenticationResponse;
-import org.jclouds.openstack.reference.AuthHeaders;
 import org.testng.annotations.Test;
 
+import com.google.common.collect.ImmutableMap;
 import com.google.inject.AbstractModule;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
@@ -53,16 +53,11 @@ public class ParseAuthenticationResponseFromHeadersTest {
       HttpResponse response = HttpResponse.builder().statusCode(204).message("No Content")
                                           .addHeader("X-Auth-Token", "token")
                                           .addHeader("X-Storage-Token", "token")
-                                          .addHeader("X-Storage-Url", "http://127.0.0.1:8080/v1/token")
-                                          .addHeader("X-CDN-Management-Url", "http://127.0.0.1:8080/cdn-mgmt")
-                                          .addHeader("X-Server-Management-Url", "http://127.0.0.1:8080/srv-mgmt")
-                                          .build();
+                                          .addHeader("X-Storage-Url", "http://127.0.0.1:8080/v1/token").build();
 
       AuthenticationResponse md = parser.apply(response);
-      assertEquals(md.getAuthToken(), "token");
-      assertEquals(md.getServices().get(AuthHeaders.STORAGE_URL), URI.create("http://fooman:8080/v1/token"));
-      assertEquals(md.getServices().get(AuthHeaders.CDN_MANAGEMENT_URL), URI.create("http://fooman:8080/cdn-mgmt"));
-      assertEquals(md.getServices().get(AuthHeaders.SERVER_MANAGEMENT_URL), URI.create("http://fooman:8080/srv-mgmt"));
+      assertEquals(md, new AuthenticationResponse("token", ImmutableMap.<String, URI> of("X-Storage-Url", 
+               URI.create("http://fooman:8080/v1/token"))));
    }
 
    public void testHandleHeadersCaseInsensitively() {
@@ -72,14 +67,9 @@ public class ParseAuthenticationResponseFromHeadersTest {
       HttpResponse response = HttpResponse.builder().statusCode(204).message("No Content")
               .addHeader("x-auth-token", "token")
               .addHeader("x-storage-token", "token")
-              .addHeader("x-storage-url", "http://127.0.0.1:8080/v1/token")
-              .addHeader("x-cdn-management-url", "http://127.0.0.1:8080/cdn-mgmt")
-              .addHeader("x-server-management-url", "http://127.0.0.1:8080/srv-mgmt")
-              .build();
+              .addHeader("x-storage-url", "http://127.0.0.1:8080/v1/token").build();
       AuthenticationResponse md = parser.apply(response);
-      assertEquals(md.getAuthToken(), "token");
-      assertEquals(md.getServices().get(AuthHeaders.STORAGE_URL), URI.create("http://fooman:8080/v1/token"));
-      assertEquals(md.getServices().get(AuthHeaders.CDN_MANAGEMENT_URL), URI.create("http://fooman:8080/cdn-mgmt"));
-      assertEquals(md.getServices().get(AuthHeaders.SERVER_MANAGEMENT_URL), URI.create("http://fooman:8080/srv-mgmt"));
+      assertEquals(md, new AuthenticationResponse("token", ImmutableMap.<String, URI> of("x-storage-url", 
+              URI.create("http://fooman:8080/v1/token"))));
    }
 }
