@@ -18,8 +18,9 @@
  */
 package org.jclouds.openstack.neutron.v2.domain;
 
+import com.google.common.base.MoreObjects;
+import com.google.common.base.MoreObjects.ToStringHelper;
 import com.google.common.base.Objects;
-import com.google.common.base.Objects.ToStringHelper;
 
 import javax.inject.Named;
 import java.beans.ConstructorProperties;
@@ -70,7 +71,7 @@ public class HostRoute {
    }
 
    protected ToStringHelper string() {
-      return Objects.toStringHelper(this)
+      return MoreObjects.toStringHelper(this)
             .add("destinationCidr", destinationCidr).add("nextHop", nextHop);
    }
 

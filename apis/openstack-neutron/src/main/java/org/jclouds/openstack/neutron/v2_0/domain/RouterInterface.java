@@ -17,6 +17,7 @@
 
 package org.jclouds.openstack.neutron.v2_0.domain;
 
+import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
 
 import java.beans.ConstructorProperties;
@@ -66,8 +67,8 @@ public class RouterInterface {
       return Objects.equal(this.subnetId, that.subnetId) && Objects.equal(this.portId, that.portId);
    }
 
-   protected Objects.ToStringHelper string() {
-      return Objects.toStringHelper(this)
+   protected MoreObjects.ToStringHelper string() {
+      return MoreObjects.toStringHelper(this)
          .add("subnetId", subnetId).add("portId", portId);
    }
 

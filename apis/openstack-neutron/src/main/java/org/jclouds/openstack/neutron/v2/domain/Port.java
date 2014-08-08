@@ -18,6 +18,7 @@
  */
 package org.jclouds.openstack.neutron.v2.domain;
 
+import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
@@ -427,7 +428,7 @@ public class Port {
 
    @Override
    public String toString() {
-      return Objects.toStringHelper(this)
+      return MoreObjects.toStringHelper(this)
             .add("id", id)
             .add("status", status)
             .add("vifType", vifType)

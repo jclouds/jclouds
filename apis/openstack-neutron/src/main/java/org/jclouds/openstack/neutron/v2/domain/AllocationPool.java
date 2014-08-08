@@ -18,6 +18,7 @@
  */
 package org.jclouds.openstack.neutron.v2.domain;
 
+import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
 
 import java.beans.ConstructorProperties;
@@ -70,8 +71,8 @@ public class AllocationPool {
       return Objects.equal(this.start, that.start) && Objects.equal(this.end, that.end);
    }
 
-   protected Objects.ToStringHelper string() {
-      return Objects.toStringHelper(this).add("start", start).add("end", end);
+   protected MoreObjects.ToStringHelper string() {
+      return MoreObjects.toStringHelper(this).add("start", start).add("end", end);
    }
 
    @Override

@@ -18,6 +18,7 @@
  */
 package org.jclouds.openstack.neutron.v2.domain;
 
+import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
 import com.google.common.collect.ImmutableSet;
 import org.jclouds.javax.annotation.Nullable;
@@ -339,7 +340,7 @@ public class Network {
 
    @Override
    public String toString() {
-      return Objects.toStringHelper(this)
+      return MoreObjects.toStringHelper(this)
             .add("id", id)
             .add("status", status)
             .add("subnets", subnets)

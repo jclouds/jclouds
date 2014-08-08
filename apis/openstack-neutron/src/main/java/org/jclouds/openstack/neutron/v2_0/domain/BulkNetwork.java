@@ -17,6 +17,7 @@
 
 package org.jclouds.openstack.neutron.v2_0.domain;
 
+import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
 
 import java.beans.ConstructorProperties;
@@ -106,8 +107,8 @@ public class BulkNetwork {
          && Objects.equal(this.segmentationId, that.segmentationId);
    }
 
-   protected Objects.ToStringHelper string() {
-      return Objects.toStringHelper(this)
+   protected MoreObjects.ToStringHelper string() {
+      return MoreObjects.toStringHelper(this)
          .add("name", name).add("adminStateUp", adminStateUp).add("external", external)
          .add("networkType", networkType).add("physicalNetworkName", physicalNetworkName)
          .add("segmentationId", segmentationId);

@@ -17,8 +17,8 @@
 
 package org.jclouds.openstack.neutron.v2_0.domain;
 
+import com.google.common.base.MoreObjects.ToStringHelper;
 import com.google.common.base.Objects;
-import com.google.common.base.Objects.ToStringHelper;
 import com.google.common.base.Strings;
 
 import java.beans.ConstructorProperties;

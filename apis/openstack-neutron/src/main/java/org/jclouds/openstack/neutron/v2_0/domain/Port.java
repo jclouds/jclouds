@@ -17,6 +17,7 @@
 
 package org.jclouds.openstack.neutron.v2_0.domain;
 
+import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
 
 import java.beans.ConstructorProperties;
@@ -123,7 +124,7 @@ public class Port extends ReferenceWithName {
          && Objects.equal(this.macAddress, that.macAddress);
    }
 
-   protected Objects.ToStringHelper string() {
+   protected MoreObjects.ToStringHelper string() {
       return super.string()
          .add("state", state).add("adminStateUp", adminStateUp).add("networkId", networkId).add("deviceId", deviceId)
          .add("deviceOwner", deviceOwner).add("fixedIps", fixedIps).add("macAddress", macAddress);

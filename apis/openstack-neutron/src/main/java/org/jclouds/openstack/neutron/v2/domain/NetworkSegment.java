@@ -18,6 +18,7 @@
  */
 package org.jclouds.openstack.neutron.v2.domain;
 
+import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
 
 import javax.inject.Named;
@@ -85,8 +86,8 @@ public class NetworkSegment {
             && Objects.equal(this.segmentationId, that.segmentationId);
    }
 
-   protected Objects.ToStringHelper string() {
-      return Objects.toStringHelper(this).add("networkType", networkType).add("physicalNetwork", physicalNetwork)
+   protected MoreObjects.ToStringHelper string() {
+      return MoreObjects.toStringHelper(this).add("networkType", networkType).add("physicalNetwork", physicalNetwork)
             .add("segmentationId", segmentationId);
    }
 

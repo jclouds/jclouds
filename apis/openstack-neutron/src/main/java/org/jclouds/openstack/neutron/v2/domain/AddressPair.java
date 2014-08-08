@@ -18,6 +18,7 @@
  */
 package org.jclouds.openstack.neutron.v2.domain;
 
+import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
 
 import javax.inject.Named;
@@ -85,8 +86,8 @@ public class AddressPair  {
       return Objects.equal(this.macAddress, that.macAddress) && Objects.equal(this.ipAddress, that.ipAddress);
    }
 
-   protected Objects.ToStringHelper string() {
-      return Objects.toStringHelper(this).add("macAddress", macAddress).add("ipAddress", ipAddress);
+   protected MoreObjects.ToStringHelper string() {
+      return MoreObjects.toStringHelper(this).add("macAddress", macAddress).add("ipAddress", ipAddress);
    }
 
    @Override

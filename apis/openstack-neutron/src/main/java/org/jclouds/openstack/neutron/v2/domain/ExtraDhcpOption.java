@@ -18,6 +18,7 @@
  */
 package org.jclouds.openstack.neutron.v2.domain;
 
+import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
 
 import javax.inject.Named;
@@ -85,8 +86,8 @@ public class ExtraDhcpOption {
             && Objects.equal(this.optionValue, that.optionValue);
    }
 
-   protected Objects.ToStringHelper string() {
-      return Objects.toStringHelper(this).add("id", id).add("optionName", optionName).add("optionValue", optionValue);
+   protected MoreObjects.ToStringHelper string() {
+      return MoreObjects.toStringHelper(this).add("id", id).add("optionName", optionName).add("optionValue", optionValue);
    }
 
    @Override

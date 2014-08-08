@@ -17,6 +17,7 @@
 
 package org.jclouds.openstack.neutron.v2_0.domain;
 
+import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
 import com.google.common.collect.ImmutableSet;
 
@@ -119,8 +120,8 @@ public class BulkPort {
          && Objects.equal(this.macAddress, that.macAddress);
    }
 
-   protected Objects.ToStringHelper string() {
-      return Objects.toStringHelper(this)
+   protected MoreObjects.ToStringHelper string() {
+      return MoreObjects.toStringHelper(this)
          .add("name", name).add("networkId", networkId).add("adminStateUp", adminStateUp)
          .add("deviceId", deviceId).add("deviceOwner", deviceOwner).add("fixedIps", fixedIps).add("macAddress", macAddress);
    }

@@ -17,6 +17,7 @@
 
 package org.jclouds.openstack.neutron.v2_0.domain;
 
+import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
 
 import java.beans.ConstructorProperties;
@@ -79,7 +80,7 @@ public class Router extends ReferenceWithName {
          && Objects.equal(this.externalGatewayInfo, that.externalGatewayInfo);
    }
 
-   protected Objects.ToStringHelper string() {
+   protected MoreObjects.ToStringHelper string() {
       return super.string()
          .add("adminStateUp", adminStateUp).add("state", state).add("externalGatewayInfo", externalGatewayInfo != null ? externalGatewayInfo.toString() : "");
    }

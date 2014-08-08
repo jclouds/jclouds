@@ -17,6 +17,7 @@
 
 package org.jclouds.openstack.neutron.v2_0.domain;
 
+import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
 
 import java.beans.ConstructorProperties;
@@ -68,8 +69,8 @@ public class Reference {
       return Objects.equal(this.id, that.id) && Objects.equal(this.tenantId, that.tenantId);
    }
 
-   protected Objects.ToStringHelper string() {
-      return Objects.toStringHelper(this)
+   protected MoreObjects.ToStringHelper string() {
+      return MoreObjects.toStringHelper(this)
          .add("id", id).add("tenantId", tenantId);
    }
 

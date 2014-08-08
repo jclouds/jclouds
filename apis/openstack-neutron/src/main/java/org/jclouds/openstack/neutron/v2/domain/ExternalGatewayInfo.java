@@ -18,6 +18,7 @@
  */
 package org.jclouds.openstack.neutron.v2.domain;
 
+import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
 
 import javax.inject.Named;
@@ -87,7 +88,7 @@ public class ExternalGatewayInfo {
 
    @Override
    public String toString() {
-      return Objects.toStringHelper(this)
+      return MoreObjects.toStringHelper(this)
             .add("networkId", networkId)
             .add("enableSnat", enableSnat)
             .toString();
