@@ -16,8 +16,8 @@
  */
 package org.jclouds.googlecomputeengine.domain;
 
+import static com.google.common.base.MoreObjects.toStringHelper;
 import static com.google.common.base.Objects.equal;
-import static com.google.common.base.Objects.toStringHelper;
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.base.Preconditions.checkState;
 import static com.google.common.collect.Range.closed;
@@ -31,6 +31,7 @@ import java.util.Set;
 import org.jclouds.net.domain.IpProtocol;
 
 import com.google.common.annotations.Beta;
+import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.RangeSet;
@@ -113,7 +114,7 @@ public final class Firewall extends Resource {
    /**
     * {@inheritDoc}
     */
-   protected Objects.ToStringHelper string() {
+   protected MoreObjects.ToStringHelper string() {
       return super.string()
               .add("network", network)
               .add("sourceRanges", sourceRanges)
@@ -305,7 +306,7 @@ public final class Firewall extends Resource {
       /**
        * {@inheritDoc}
        */
-      public Objects.ToStringHelper string() {
+      public MoreObjects.ToStringHelper string() {
          return toStringHelper(this)
                  .add("IpProtocol", ipProtocol).add("ports", ports);
       }

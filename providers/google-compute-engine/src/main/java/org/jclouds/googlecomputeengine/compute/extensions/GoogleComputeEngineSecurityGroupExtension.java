@@ -157,7 +157,7 @@ public class GoogleComputeEngineSecurityGroupExtension implements SecurityGroupE
 
       NetworkAndAddressRange nAr = new NetworkAndAddressRange(name, DEFAULT_INTERNAL_NETWORK_RANGE, null);
 
-      Network nw = networkCreator.apply(nAr);
+      Network nw = networkCreator.getUnchecked(nAr);
 
       return groupConverter.apply(nw);
    }

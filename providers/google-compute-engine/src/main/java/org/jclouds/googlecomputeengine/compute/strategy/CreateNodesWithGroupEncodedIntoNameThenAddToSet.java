@@ -134,7 +134,7 @@ public class CreateNodesWithGroupEncodedIntoNameThenAddToSet extends
 
       String networkName = templateOptions.getNetworkName().or(sharedResourceName);
 
-      return networkMap.apply(new NetworkAndAddressRange(networkName, DEFAULT_INTERNAL_NETWORK_RANGE, null));
+      return networkMap.getUnchecked(new NetworkAndAddressRange(networkName, DEFAULT_INTERNAL_NETWORK_RANGE, null));
    }
 
    /**

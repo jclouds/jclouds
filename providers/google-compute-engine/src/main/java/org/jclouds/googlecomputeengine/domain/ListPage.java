@@ -16,8 +16,8 @@
  */
 package org.jclouds.googlecomputeengine.domain;
 
+import static com.google.common.base.MoreObjects.toStringHelper;
 import static com.google.common.base.Objects.equal;
-import static com.google.common.base.Objects.toStringHelper;
 import static com.google.common.base.Preconditions.checkNotNull;
 import static org.jclouds.googlecomputeengine.domain.Resource.Kind;
 
@@ -27,6 +27,7 @@ import java.util.Iterator;
 
 import org.jclouds.collect.IterableWithMarker;
 
+import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
 import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableSet;
@@ -98,7 +99,7 @@ public class ListPage<T> extends IterableWithMarker<T> {
    /**
     * {@inheritDoc}
     */
-   protected Objects.ToStringHelper string() {
+   protected MoreObjects.ToStringHelper string() {
       return toStringHelper(this)
               .omitNullValues()
               .add("kind", kind)

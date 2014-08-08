@@ -16,8 +16,8 @@
  */
 package org.jclouds.googlecomputeengine.domain;
 
+import static com.google.common.base.MoreObjects.toStringHelper;
 import static com.google.common.base.Objects.equal;
-import static com.google.common.base.Objects.toStringHelper;
 import static com.google.common.base.Optional.fromNullable;
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -28,6 +28,7 @@ import java.util.Map;
 import java.util.Set;
 
 import com.google.common.annotations.Beta;
+import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
 import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableMap;
@@ -140,7 +141,7 @@ public final class Route extends Resource {
    /**
     * {@inheritDoc}
     */
-   protected Objects.ToStringHelper string() {
+   protected MoreObjects.ToStringHelper string() {
       return super.string()
               .add("network", network)
               .add("tags", tags)
@@ -359,7 +360,7 @@ public final class Route extends Resource {
       /**
        * {@inheritDoc}
        */
-      protected Objects.ToStringHelper string() {
+      protected MoreObjects.ToStringHelper string() {
          return toStringHelper(this)
                  .add("code", code)
                  .add("message", message)

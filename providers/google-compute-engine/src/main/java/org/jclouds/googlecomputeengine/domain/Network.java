@@ -25,7 +25,7 @@ import java.net.URI;
 import java.util.Date;
 
 import com.google.common.annotations.Beta;
-import com.google.common.base.Objects;
+import com.google.common.base.MoreObjects;
 import com.google.common.base.Optional;
 
 /**
@@ -71,7 +71,7 @@ public final class Network extends Resource {
    /**
     * {@inheritDoc}
     */
-   protected Objects.ToStringHelper string() {
+   protected MoreObjects.ToStringHelper string() {
       return super.string()
               .omitNullValues()
               .add("IPv4Range", IPv4Range)

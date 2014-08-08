@@ -25,6 +25,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Lists;
@@ -420,8 +421,8 @@ public class InstanceTemplate {
    /**
     * {@inheritDoc}
     */
-   protected Objects.ToStringHelper string() {
-      Objects.ToStringHelper toString = Objects.toStringHelper("")
+   protected MoreObjects.ToStringHelper string() {
+      MoreObjects.ToStringHelper toString = MoreObjects.toStringHelper("")
               .omitNullValues();
       toString.add("description", description);
       if (disks.size() > 0)

@@ -73,7 +73,7 @@ import org.jclouds.http.HttpResponse;
 import org.jclouds.logging.Logger;
 
 import com.google.common.base.Function;
-import com.google.common.base.Objects;
+import com.google.common.base.MoreObjects;
 import com.google.common.base.Optional;
 import com.google.common.base.Predicate;
 import com.google.common.base.Supplier;
@@ -288,8 +288,8 @@ public class GoogleComputeEngineServiceAdapter implements ComputeServiceAdapter<
 
    @Override
    public Image getImage(String id) {
-      return Objects.firstNonNull(api.getImageApiForProject(userProject.get()).get(id),
-                                  Objects.firstNonNull(api.getImageApiForProject(DEBIAN_PROJECT).get(id),
+      return MoreObjects.firstNonNull(api.getImageApiForProject(userProject.get()).get(id),
+                                  MoreObjects.firstNonNull(api.getImageApiForProject(DEBIAN_PROJECT).get(id),
                                           api.getImageApiForProject(CENTOS_PROJECT).get(id)));
 
    }

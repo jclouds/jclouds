@@ -16,8 +16,8 @@
  */
 package org.jclouds.googlecomputeengine.domain.internal;
 
+import static com.google.common.base.MoreObjects.toStringHelper;
 import static com.google.common.base.Objects.equal;
-import static com.google.common.base.Objects.toStringHelper;
 import static com.google.common.base.Optional.fromNullable;
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -25,8 +25,8 @@ import java.beans.ConstructorProperties;
 
 import org.jclouds.javax.annotation.Nullable;
 
+import com.google.common.base.MoreObjects.ToStringHelper;
 import com.google.common.base.Objects;
-import com.google.common.base.Objects.ToStringHelper;
 import com.google.common.base.Optional;
 
 /**

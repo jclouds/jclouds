@@ -21,8 +21,9 @@ import static com.google.common.base.Preconditions.checkNotNull;
 import java.beans.ConstructorProperties;
 
 import com.google.common.annotations.Beta;
+import com.google.common.base.MoreObjects;
+import com.google.common.base.MoreObjects.ToStringHelper;
 import com.google.common.base.Objects;
-import com.google.common.base.Objects.ToStringHelper;
 
 /**
  * Quotas assigned to a given project or region.
@@ -88,7 +89,7 @@ public class Quota {
     * {@inheritDoc}
     */
    public ToStringHelper string() {
-      return Objects.toStringHelper(this)
+      return MoreObjects.toStringHelper(this)
               .omitNullValues()
               .add("metric", metric)
               .add("usage", usage)

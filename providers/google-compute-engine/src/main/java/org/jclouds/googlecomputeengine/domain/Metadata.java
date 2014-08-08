@@ -16,14 +16,15 @@
  */
 package org.jclouds.googlecomputeengine.domain;
 
+import static com.google.common.base.MoreObjects.toStringHelper;
 import static com.google.common.base.Objects.equal;
-import static com.google.common.base.Objects.toStringHelper;
 
 import java.beans.ConstructorProperties;
 import java.util.Map;
 
 import org.jclouds.javax.annotation.Nullable;
 
+import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
 import com.google.common.collect.ImmutableMap;
 
@@ -80,7 +81,7 @@ public class Metadata {
    /**
     * {@inheritDoc}
     */
-   protected Objects.ToStringHelper string() {
+   protected MoreObjects.ToStringHelper string() {
       return toStringHelper(this)
               .add("items", items)
               .add("fingerprint", fingerprint);
