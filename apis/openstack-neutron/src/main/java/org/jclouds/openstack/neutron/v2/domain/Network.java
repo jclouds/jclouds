@@ -25,7 +25,6 @@ import org.jclouds.javax.annotation.Nullable;
 
 import javax.inject.Named;
 import java.beans.ConstructorProperties;
-import java.util.Set;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -381,7 +380,7 @@ public class Network {
       return new UpdateBuilder();
    }
 
-   private static abstract class Builder<ParameterizedBuilderType> {
+   private abstract static class Builder<ParameterizedBuilderType> {
       protected Network network;
 
       /**

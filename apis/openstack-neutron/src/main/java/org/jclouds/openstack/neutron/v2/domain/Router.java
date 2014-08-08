@@ -172,7 +172,7 @@ public class Router {
             .toString();
    }
 
-   private static abstract class Builder<ParameterizedBuilderType> {
+   private abstract static class Builder<ParameterizedBuilderType> {
       protected Router router;
 
       /**
