@@ -18,7 +18,6 @@ package org.jclouds.date.internal;
 import static org.jclouds.date.internal.DateUtils.findTZ;
 import static org.jclouds.date.internal.DateUtils.trimTZ;
 import static org.jclouds.date.internal.DateUtils.trimToMillis;
-import static org.jclouds.util.SaxUtils.currentOrNull;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
