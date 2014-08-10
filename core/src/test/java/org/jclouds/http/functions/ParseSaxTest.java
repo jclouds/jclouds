@@ -52,11 +52,6 @@ public class ParseSaxTest extends BaseHandlerTest {
    ParseSax<String> createParser() {
       return factory.create(injector.getInstance(TestHandler.class));
    }
-
-   @DataProvider
-   public Object[][] runUnderJava6() {
-       return TestUtils.isJava6() ? SINGLE_NO_ARG_INVOCATION : NO_INVOCATIONS;
-   }
    
    @DataProvider
    public Object[][] runUnderJava7() {
@@ -128,32 +123,6 @@ public class ParseSaxTest extends BaseHandlerTest {
          parser.addDetailsAndPropagate(response, input);
       } catch (RuntimeException e) {
          assertEquals(e.getMessage(), "request: GET http://foohost HTTP/1.1; response: HTTP/1.1 304 Not Modified; cause: java.lang.Exception: foo");
-         assertEquals(e.getCause(), input);
-      }
-   }
-
-   @Test(dataProvider = "runUnderJava6")
-   public void testAddDetailsAndPropagateOkWithValidRequestResponseWithSAXParseException() throws ExecutionException,
-         InterruptedException, TimeoutException, IOException {
-
-      ParseSax<String> parser = createParser();
-      HttpRequest request = HttpRequest.builder().method("GET").endpoint("http://foohost").build();
-      HttpResponse response = HttpResponse.builder().statusCode(304).message("Not Modified").build();
-      Locator locator = createMock(Locator.class);
-      expect(locator.getColumnNumber()).andReturn(1);
-      expect(locator.getLineNumber()).andReturn(1);
-      expect(locator.getPublicId()).andReturn("publicId");
-      expect(locator.getSystemId()).andReturn("systemId");
-      replay(locator);
-      Exception input = new SAXParseException("foo", locator);
-      verify(locator);
-
-      try {
-         parser.setContext(request);
-         parser.addDetailsAndPropagate(response, input);
-      } catch (RuntimeException e) {
-         assertEquals(e.getMessage(),
-               "request: GET http://foohost HTTP/1.1; response: HTTP/1.1 304 Not Modified; error at 1:1 in document systemId; cause: org.xml.sax.SAXParseException: foo");
          assertEquals(e.getCause(), input);
       }
    }
