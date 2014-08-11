@@ -128,7 +128,7 @@ public class BaseChefService implements ChefService {
       this.runListForGroup = checkNotNull(runListForGroup, "runListForGroup");
       this.listEnvironments = checkNotNull(listEnvironments, "listEnvironments");
       this.listNodesInEnvironment = checkNotNull(listNodesInEnvironment, "listNodesInEnvironment");
-      this.listCookbookVersionsInEnvironment = checkNotNull(listCookbookVersionsInEnvironment,"listCookbookVersionsInEnvironment");
+      this.listCookbookVersionsInEnvironment = checkNotNull(listCookbookVersionsInEnvironment, "listCookbookVersionsInEnvironment");
       this.json = checkNotNull(json, "json");
       this.crypto = checkNotNull(crypto, "crypto");
    }
