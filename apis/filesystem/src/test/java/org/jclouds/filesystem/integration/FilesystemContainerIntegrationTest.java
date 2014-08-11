@@ -19,6 +19,7 @@ package org.jclouds.filesystem.integration;
 import static org.jclouds.blobstore.options.ListContainerOptions.Builder.maxResults;
 import static org.testng.Assert.assertEquals;
 
+import java.io.IOException;
 import java.util.Properties;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeoutException;
@@ -78,6 +79,14 @@ public class FilesystemContainerIntegrationTest extends BaseContainerIntegration
       } finally {
          returnContainer(containerName);
       }
+   }
+
+   // Mac OS X HFS+ does not support UserDefinedFileAttributeView:
+   // https://bugs.openjdk.java.net/browse/JDK-8030048
+   @Test(dataProvider = "ignoreOnMacOSX")
+   @Override
+   public void testWithDetails() throws InterruptedException, IOException {
+      super.testWithDetails();
    }
 
    @Override
@@ -144,6 +153,12 @@ public class FilesystemContainerIntegrationTest extends BaseContainerIntegration
    @Test(dataProvider = "ignoreOnWindows")
    public void testListContainerMaxResults() throws InterruptedException {
       super.testListContainerMaxResults();
+   }
+
+   @DataProvider
+   public Object[][] ignoreOnMacOSX() {
+      return org.jclouds.utils.TestUtils.isMacOSX() ? TestUtils.NO_INVOCATIONS
+            : TestUtils.SINGLE_NO_ARG_INVOCATION;
    }
 
    @DataProvider

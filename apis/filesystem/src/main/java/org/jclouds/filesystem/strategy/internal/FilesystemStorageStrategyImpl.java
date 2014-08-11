@@ -16,6 +16,9 @@
  */
 package org.jclouds.filesystem.strategy.internal;
 
+import static java.nio.file.Files.getFileAttributeView;
+import static java.nio.file.Files.getFileStore;
+
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.base.Strings.isNullOrEmpty;
 import static com.google.common.io.BaseEncoding.base16;
@@ -23,6 +26,7 @@ import static com.google.common.io.BaseEncoding.base16;
 import java.io.File;
 import java.io.IOException;
 import java.nio.ByteBuffer;
+import java.nio.file.Path;
 import java.nio.file.attribute.UserDefinedFileAttributeView;
 import java.nio.charset.StandardCharsets;
 import java.util.Date;
@@ -196,47 +200,58 @@ public class FilesystemStorageStrategyImpl implements LocalStorageStrategy {
       BlobBuilder builder = blobBuilders.get();
       builder.name(key);
       File file = getFileForBlobKey(container, key);
+      Path path = file.toPath();
       ByteSource byteSource = Files.asByteSource(file);
       try {
-         UserDefinedFileAttributeView view = java.nio.file.Files.getFileAttributeView(
-            file.toPath(), UserDefinedFileAttributeView.class);
-         Set<String> attributes = ImmutableSet.copyOf(view.list());
-
-         String contentDisposition = readStringAttributeIfPresent(view, attributes, XATTR_CONTENT_DISPOSITION);
-         String contentEncoding = readStringAttributeIfPresent(view, attributes, XATTR_CONTENT_ENCODING);
-         String contentLanguage = readStringAttributeIfPresent(view, attributes, XATTR_CONTENT_LANGUAGE);
-         String contentType = readStringAttributeIfPresent(view, attributes, XATTR_CONTENT_TYPE);
+         String contentDisposition = null;
+         String contentEncoding = null;
+         String contentLanguage = null;
+         String contentType = null;
          HashCode hashCode = null;
-         if (attributes.contains(XATTR_CONTENT_MD5)) {
-            ByteBuffer buf = ByteBuffer.allocate(view.size(XATTR_CONTENT_MD5));
-            view.read(XATTR_CONTENT_MD5, buf);
-            hashCode = HashCode.fromBytes(buf.array());
-         }
          Date expires = null;
-         if (attributes.contains(XATTR_EXPIRES)) {
-            ByteBuffer buf = ByteBuffer.allocate(view.size(XATTR_EXPIRES));
-            view.read(XATTR_EXPIRES, buf);
-            buf.flip();
-            expires = new Date(buf.asLongBuffer().get());
-         }
          ImmutableMap.Builder<String, String> userMetadata = ImmutableMap.builder();
-         for (String attribute : attributes) {
-            if (!attribute.startsWith(XATTR_USER_METADATA_PREFIX)) {
-               continue;
-            }
-            String value = readStringAttributeIfPresent(view, attributes, attribute);
-            userMetadata.put(attribute.substring(XATTR_USER_METADATA_PREFIX.length()), value);
-         }
 
-         builder.payload(byteSource)
-            .contentDisposition(contentDisposition)
-            .contentEncoding(contentEncoding)
-            .contentLanguage(contentLanguage)
-            .contentLength(byteSource.size())
-            .contentMD5(hashCode)
-            .contentType(contentType)
-            .expires(expires)
-            .userMetadata(userMetadata.build());
+         if (getFileStore(file.toPath()).supportsFileAttributeView(UserDefinedFileAttributeView.class)) {
+            UserDefinedFileAttributeView view = getFileAttributeView(path, UserDefinedFileAttributeView.class);
+            Set<String> attributes = ImmutableSet.copyOf(view.list());
+
+            contentDisposition = readStringAttributeIfPresent(view, attributes, XATTR_CONTENT_DISPOSITION);
+            contentEncoding = readStringAttributeIfPresent(view, attributes, XATTR_CONTENT_ENCODING);
+            contentLanguage = readStringAttributeIfPresent(view, attributes, XATTR_CONTENT_LANGUAGE);
+            contentType = readStringAttributeIfPresent(view, attributes, XATTR_CONTENT_TYPE);
+            if (attributes.contains(XATTR_CONTENT_MD5)) {
+               ByteBuffer buf = ByteBuffer.allocate(view.size(XATTR_CONTENT_MD5));
+               view.read(XATTR_CONTENT_MD5, buf);
+               hashCode = HashCode.fromBytes(buf.array());
+            }
+            if (attributes.contains(XATTR_EXPIRES)) {
+               ByteBuffer buf = ByteBuffer.allocate(view.size(XATTR_EXPIRES));
+               view.read(XATTR_EXPIRES, buf);
+               buf.flip();
+               expires = new Date(buf.asLongBuffer().get());
+            }
+            for (String attribute : attributes) {
+               if (!attribute.startsWith(XATTR_USER_METADATA_PREFIX)) {
+                  continue;
+               }
+               String value = readStringAttributeIfPresent(view, attributes, attribute);
+               userMetadata.put(attribute.substring(XATTR_USER_METADATA_PREFIX.length()), value);
+            }
+
+            builder.payload(byteSource)
+               .contentDisposition(contentDisposition)
+               .contentEncoding(contentEncoding)
+               .contentLanguage(contentLanguage)
+               .contentLength(byteSource.size())
+               .contentMD5(hashCode)
+               .contentType(contentType)
+               .expires(expires)
+               .userMetadata(userMetadata.build());
+         } else {
+            builder.payload(byteSource)
+               .contentLength(byteSource.size())
+               .contentMD5(byteSource.hash(Hashing.md5()).asBytes());
+         }
       } catch (IOException e) {
          throw Throwables.propagate(e);
       }
@@ -256,6 +271,7 @@ public class FilesystemStorageStrategyImpl implements LocalStorageStrategy {
       filesystemContainerNameValidator.validate(containerName);
       filesystemBlobKeyValidator.validate(blobKey);
       File outputFile = getFileForBlobKey(containerName, blobKey);
+      Path outputPath = outputFile.toPath();
       HashingInputStream his = null;
       try {
          Files.createParentDirs(outputFile);
@@ -269,21 +285,22 @@ public class FilesystemStorageStrategyImpl implements LocalStorageStrategy {
          }
          payload.getContentMetadata().setContentMD5(actualHashCode);
 
-         UserDefinedFileAttributeView view = java.nio.file.Files.getFileAttributeView(
-            outputFile.toPath(), UserDefinedFileAttributeView.class);
-         view.write(XATTR_CONTENT_MD5, ByteBuffer.wrap(actualHashCode.asBytes()));
-         writeStringAttributeIfPresent(view, XATTR_CONTENT_DISPOSITION, metadata.getContentDisposition());
-         writeStringAttributeIfPresent(view, XATTR_CONTENT_ENCODING, metadata.getContentEncoding());
-         writeStringAttributeIfPresent(view, XATTR_CONTENT_LANGUAGE, metadata.getContentLanguage());
-         writeStringAttributeIfPresent(view, XATTR_CONTENT_TYPE, metadata.getContentType());
-         Date expires = metadata.getExpires();
-         if (expires != null) {
-            ByteBuffer buf = ByteBuffer.allocate(Longs.BYTES).putLong(expires.getTime());
-            buf.flip();
-            view.write(XATTR_EXPIRES, buf);
-         }
-         for (Map.Entry<String, String> entry : blob.getMetadata().getUserMetadata().entrySet()) {
-            writeStringAttributeIfPresent(view, XATTR_USER_METADATA_PREFIX + entry.getKey(), entry.getValue());
+         if (getFileStore(outputPath).supportsFileAttributeView(UserDefinedFileAttributeView.class)) {
+            UserDefinedFileAttributeView view = getFileAttributeView(outputPath, UserDefinedFileAttributeView.class);
+            view.write(XATTR_CONTENT_MD5, ByteBuffer.wrap(actualHashCode.asBytes()));
+            writeStringAttributeIfPresent(view, XATTR_CONTENT_DISPOSITION, metadata.getContentDisposition());
+            writeStringAttributeIfPresent(view, XATTR_CONTENT_ENCODING, metadata.getContentEncoding());
+            writeStringAttributeIfPresent(view, XATTR_CONTENT_LANGUAGE, metadata.getContentLanguage());
+            writeStringAttributeIfPresent(view, XATTR_CONTENT_TYPE, metadata.getContentType());
+            Date expires = metadata.getExpires();
+            if (expires != null) {
+               ByteBuffer buf = ByteBuffer.allocate(Longs.BYTES).putLong(expires.getTime());
+               buf.flip();
+               view.write(XATTR_EXPIRES, buf);
+            }
+            for (Map.Entry<String, String> entry : blob.getMetadata().getUserMetadata().entrySet()) {
+               writeStringAttributeIfPresent(view, XATTR_USER_METADATA_PREFIX + entry.getKey(), entry.getValue());
+            }
          }
          return base16().lowerCase().encode(actualHashCode.asBytes());
       } catch (IOException ex) {

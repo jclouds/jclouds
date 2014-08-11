@@ -29,6 +29,11 @@ public class TestUtils {
     public static final Object[][] NO_INVOCATIONS = new Object[0][0];
     public static final Object[][] SINGLE_NO_ARG_INVOCATION = { new Object[0] };
 
+    public static boolean isMacOSX() {
+        String osName = System.getProperty("os.name");
+        return osName.contains("OS X");
+    }
+
     public static ByteSource randomByteSource() {
         return randomByteSource(0);
     }

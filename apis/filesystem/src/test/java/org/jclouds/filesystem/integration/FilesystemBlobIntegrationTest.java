@@ -16,8 +16,11 @@
  */
 package org.jclouds.filesystem.integration;
 
+import java.io.IOException;
 import java.util.Properties;
 
+import org.jclouds.blobstore.domain.Blob;
+import org.jclouds.blobstore.domain.BlobMetadata;
 import org.jclouds.blobstore.integration.internal.BaseBlobIntegrationTest;
 import org.jclouds.blobstore.integration.internal.BaseBlobStoreIntegrationTest;
 import org.jclouds.filesystem.reference.FilesystemConstants;
@@ -36,5 +39,40 @@ public class FilesystemBlobIntegrationTest extends BaseBlobIntegrationTest {
       Properties props = super.setupProperties();
       props.setProperty(FilesystemConstants.PROPERTY_BASEDIR, TestUtils.TARGET_BASE_DIR);
       return props;
+   }
+
+   // Mac OS X HFS+ does not support UserDefinedFileAttributeView:
+   // https://bugs.openjdk.java.net/browse/JDK-8030048
+   @Override
+   public void checkContentMetadata(Blob blob) {
+      if (!org.jclouds.utils.TestUtils.isMacOSX()) {
+         super.checkContentMetadata(blob);
+      }
+   }
+
+   // Mac OS X HFS+ does not support UserDefinedFileAttributeView:
+   // https://bugs.openjdk.java.net/browse/JDK-8030048
+   @Override
+   protected void checkContentDisposition(Blob blob, String contentDisposition) {
+      if (!org.jclouds.utils.TestUtils.isMacOSX()) {
+         super.checkContentDisposition(blob, contentDisposition);
+      }
+   }
+
+   // Mac OS X HFS+ does not support UserDefinedFileAttributeView:
+   // https://bugs.openjdk.java.net/browse/JDK-8030048
+   @Override
+   protected void validateMetadata(BlobMetadata metadata) throws IOException {
+      if (!org.jclouds.utils.TestUtils.isMacOSX()) {
+         super.validateMetadata(metadata);
+      }
+   }
+
+   // Mac OS X HFS+ does not support UserDefinedFileAttributeView:
+   // https://bugs.openjdk.java.net/browse/JDK-8030048
+   @Test(dataProvider = "ignoreOnMacOSX")
+   @Override
+   public void testCreateBlobWithExpiry() throws InterruptedException {
+      super.testCreateBlobWithExpiry();
    }
 }
