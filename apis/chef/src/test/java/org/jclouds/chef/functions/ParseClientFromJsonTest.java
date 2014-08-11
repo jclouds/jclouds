@@ -33,6 +33,7 @@ import org.jclouds.crypto.Pems;
 import org.jclouds.encryption.internal.JCECrypto;
 import org.jclouds.http.HttpResponse;
 import org.jclouds.http.functions.ParseJson;
+import org.jclouds.io.ByteStreams2;
 import org.jclouds.io.Payloads;
 import org.jclouds.io.payloads.RSADecryptingPayload;
 import org.jclouds.io.payloads.RSAEncryptingPayload;
@@ -43,7 +44,6 @@ import org.testng.annotations.Test;
 
 import com.google.common.base.Charsets;
 import com.google.common.io.ByteSource;
-import com.google.common.io.ByteStreams;
 import com.google.inject.AbstractModule;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
@@ -84,11 +84,11 @@ public class ParseClientFromJsonTest {
       Client user = Client.builder().certificate(certificate).orgname("jclouds").clientname("adriancole-jcloudstest")
             .name("adriancole-jcloudstest").isValidator(false).privateKey(privateKey).build();
 
-      byte[] encrypted = ByteStreams.toByteArray(new RSAEncryptingPayload(new JCECrypto(), Payloads.newPayload("fooya"), user
-            .getCertificate().getPublicKey()));
+      byte[] encrypted = ByteStreams2.toByteArrayAndClose(new RSAEncryptingPayload(new JCECrypto(), Payloads.newPayload("fooya"), user
+            .getCertificate().getPublicKey()).openStream());
 
       assertEquals(
-            ByteStreams.toByteArray(new RSADecryptingPayload(new JCECrypto(), Payloads.newPayload(encrypted), user.getPrivateKey())),
+            ByteStreams2.toByteArrayAndClose(new RSADecryptingPayload(new JCECrypto(), Payloads.newPayload(encrypted), user.getPrivateKey()).openStream()),
             "fooya".getBytes());
 
       assertEquals(

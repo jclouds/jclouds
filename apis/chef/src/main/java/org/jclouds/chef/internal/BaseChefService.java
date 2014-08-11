@@ -57,6 +57,7 @@ import org.jclouds.chef.strategy.ListNodesInEnvironment;
 import org.jclouds.chef.strategy.UpdateAutomaticAttributesOnNode;
 import org.jclouds.crypto.Crypto;
 import org.jclouds.domain.JsonBall;
+import org.jclouds.io.ByteStreams2;
 import org.jclouds.io.Payloads;
 import org.jclouds.io.payloads.RSADecryptingPayload;
 import org.jclouds.io.payloads.RSAEncryptingPayload;
@@ -67,7 +68,6 @@ import org.jclouds.scriptbuilder.domain.Statement;
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Supplier;
 import com.google.common.collect.Maps;
-import com.google.common.io.ByteStreams;
 import com.google.common.io.InputSupplier;
 
 @Singleton
@@ -140,14 +140,14 @@ public class BaseChefService implements ChefService {
 
    @Override
    public byte[] encrypt(InputSupplier<? extends InputStream> supplier) throws IOException {
-      return ByteStreams.toByteArray(new RSAEncryptingPayload(crypto, Payloads.newPayload(supplier.getInput()), privateKey
-                  .get()));
+      return ByteStreams2.toByteArrayAndClose(new RSAEncryptingPayload(crypto, Payloads.newPayload(supplier.getInput()), privateKey
+                  .get()).openStream());
    }
 
    @Override
    public byte[] decrypt(InputSupplier<? extends InputStream> supplier) throws IOException {
-      return ByteStreams.toByteArray(new RSADecryptingPayload(crypto, Payloads.newPayload(supplier.getInput()), privateKey
-                  .get()));
+      return ByteStreams2.toByteArrayAndClose(new RSADecryptingPayload(crypto, Payloads.newPayload(supplier.getInput()), privateKey
+                  .get()).openStream());
    }
 
    @VisibleForTesting

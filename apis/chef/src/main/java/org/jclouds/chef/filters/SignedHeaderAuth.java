@@ -21,7 +21,6 @@ import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.hash.Hashing.sha1;
 import static com.google.common.io.BaseEncoding.base64;
-import static com.google.common.io.ByteStreams.toByteArray;
 
 import java.io.IOException;
 import java.security.PrivateKey;
@@ -190,7 +189,7 @@ public class SignedHeaderAuth implements HttpRequestFilter {
 
    public String sign(String toSign) {
       try {
-         byte[] encrypted = toByteArray(new RSAEncryptingPayload(crypto, Payloads.newStringPayload(toSign), supplyKey.get()));
+         byte[] encrypted = ByteStreams2.toByteArrayAndClose(new RSAEncryptingPayload(crypto, Payloads.newStringPayload(toSign), supplyKey.get()).openStream());
          return base64().encode(encrypted);
       } catch (IOException e) {
          throw new HttpException("error signing request", e);
