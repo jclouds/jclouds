@@ -18,6 +18,7 @@ package org.jclouds.openstack.neutron.v2.domain;
 
 import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
+import org.jclouds.javax.annotation.Nullable;
 
 import javax.inject.Named;
 import java.beans.ConstructorProperties;
@@ -41,6 +42,7 @@ public class IP {
    /**
     * @return the ipAddress of the IP
     */
+   @Nullable
    public String getIpAddress() {
       return ipAddress;
    }
@@ -48,6 +50,7 @@ public class IP {
    /**
     * @return the subnetId of the IP
     */
+   @Nullable
    public String getSubnetId() {
       return subnetId;
    }

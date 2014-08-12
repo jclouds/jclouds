@@ -18,6 +18,7 @@ package org.jclouds.openstack.neutron.v2.domain;
 
 import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
+import org.jclouds.javax.annotation.Nullable;
 
 import javax.inject.Named;
 import java.beans.ConstructorProperties;
@@ -50,6 +51,7 @@ public class ExtraDhcpOption {
    /**
     * @return the id of the ExtraDhcpOption
     */
+   @Nullable
    public String getId() {
       return id;
    }
@@ -57,6 +59,7 @@ public class ExtraDhcpOption {
    /**
     * @return the optionName of the ExtraDhcpOption
     */
+   @Nullable
    public String getOptionName() {
       return optionName;
    }
@@ -64,6 +67,7 @@ public class ExtraDhcpOption {
    /**
     * @return the optionValue of the ExtraDhcpOption
     */
+   @Nullable
    public String getOptionValue() {
       return optionValue;
    }

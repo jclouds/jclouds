@@ -18,6 +18,7 @@ package org.jclouds.openstack.neutron.v2.domain;
 
 import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
+import org.jclouds.javax.annotation.Nullable;
 
 import javax.inject.Named;
 import java.beans.ConstructorProperties;
@@ -58,6 +59,7 @@ public class AddressPair  {
    /**
     * @return the macAddress of the AddressPair
     */
+   @Nullable
    public String getMacAddress() {
       return macAddress;
    }
@@ -65,6 +67,7 @@ public class AddressPair  {
    /**
     * @return the ipAddress of the AddressPair
     */
+   @Nullable
    public String getIpAddress() {
       return ipAddress;
    }

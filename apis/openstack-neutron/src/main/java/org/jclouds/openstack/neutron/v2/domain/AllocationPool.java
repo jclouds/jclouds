@@ -18,6 +18,7 @@ package org.jclouds.openstack.neutron.v2.domain;
 
 import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
+import org.jclouds.javax.annotation.Nullable;
 
 import java.beans.ConstructorProperties;
 
@@ -43,6 +44,7 @@ public class AllocationPool {
    /**
     * @return the start of the AllocationPool
     */
+   @Nullable
    public String getStart() {
       return start;
    }
@@ -50,6 +52,7 @@ public class AllocationPool {
    /**
     * @return the end of the AllocationPool
     */
+   @Nullable
    public String getEnd() {
       return end;
    }

@@ -19,6 +19,7 @@ package org.jclouds.openstack.neutron.v2.domain;
 import com.google.common.base.MoreObjects;
 import com.google.common.base.MoreObjects.ToStringHelper;
 import com.google.common.base.Objects;
+import org.jclouds.javax.annotation.Nullable;
 
 import javax.inject.Named;
 import java.beans.ConstructorProperties;
@@ -44,6 +45,7 @@ public class HostRoute {
    /**
     * @return the destination CIDR for this route.
     */
+   @Nullable
    public String getDestinationCidr() {
       return destinationCidr;
    }
@@ -51,6 +53,7 @@ public class HostRoute {
    /**
     * @return the IP of the next hop to forward traffic to.
     */
+   @Nullable
    public String getNextHop() {
       return nextHop;
    }

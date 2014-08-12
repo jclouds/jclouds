@@ -18,6 +18,7 @@ package org.jclouds.openstack.neutron.v2.domain;
 
 import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
+import org.jclouds.javax.annotation.Nullable;
 
 import javax.inject.Named;
 import java.beans.ConstructorProperties;
@@ -37,10 +38,10 @@ public class NetworkSegment {
    @Named("provider:physical_network")
    protected final String physicalNetwork;
    @Named("provider:segmentation_id")
-   protected final int segmentationId;
+   protected final Integer segmentationId;
 
    @ConstructorProperties({"provider:network_type", "provider:physical_network", "provider:segmentation_id"})
-   protected NetworkSegment(NetworkType networkType, String physicalNetwork, int segmentationId) {
+   protected NetworkSegment(NetworkType networkType, String physicalNetwork, Integer segmentationId) {
       this.networkType = networkType;
       this.physicalNetwork = physicalNetwork;
       this.segmentationId = segmentationId;
@@ -49,6 +50,7 @@ public class NetworkSegment {
    /**
     * @return the networkType of the NetworkSegment
     */
+   @Nullable
    public NetworkType getNetworkType() {
       return networkType;
    }
@@ -56,6 +58,7 @@ public class NetworkSegment {
    /**
     * @return the physicalNetwork of the NetworkSegment
     */
+   @Nullable
    public String getPhysicalNetwork() {
       return physicalNetwork;
    }
@@ -63,7 +66,8 @@ public class NetworkSegment {
    /**
     * @return the segmentationId of the NetworkSegment
     */
-   public int getSegmentationId() {
+   @Nullable
+   public Integer getSegmentationId() {
       return segmentationId;
    }
 
@@ -111,7 +115,7 @@ public class NetworkSegment {
    public static class Builder {
       protected NetworkType networkType;
       protected String physicalNetwork;
-      protected int segmentationId;
+      protected Integer segmentationId;
 
       /**
        * Provide the networkType to the NetworkSegment's Builder.

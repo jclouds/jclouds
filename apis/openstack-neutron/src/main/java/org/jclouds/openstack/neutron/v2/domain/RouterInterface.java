@@ -18,6 +18,7 @@ package org.jclouds.openstack.neutron.v2.domain;
 
 import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
+import org.jclouds.javax.annotation.Nullable;
 
 import javax.inject.Named;
 import java.beans.ConstructorProperties;
@@ -45,6 +46,7 @@ public class RouterInterface {
    /**
     * @return the subnetId of the RouterInterface
     */
+   @Nullable
    public String getSubnetId() {
       return subnetId;
    }
@@ -52,6 +54,7 @@ public class RouterInterface {
    /**
     * @return the portId of the RouterInterface
     */
+   @Nullable
    public String getPortId() {
       return portId;
    }
