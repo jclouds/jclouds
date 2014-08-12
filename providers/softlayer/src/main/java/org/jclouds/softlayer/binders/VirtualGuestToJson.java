@@ -19,7 +19,7 @@ package org.jclouds.softlayer.binders;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
-import com.google.common.collect.ImmutableSortedSet;
+import com.google.common.collect.Lists;
 import org.jclouds.http.HttpRequest;
 import org.jclouds.json.Json;
 import org.jclouds.rest.Binder;
@@ -28,7 +28,9 @@ import org.jclouds.softlayer.domain.VirtualGuestBlockDevice;
 import org.jclouds.softlayer.domain.VirtualGuestNetworkComponent;
 
 import javax.inject.Inject;
+import java.util.Collections;
 import java.util.Comparator;
+import java.util.List;
 import java.util.Set;
 
 import static com.google.common.base.Preconditions.checkArgument;
@@ -87,15 +89,16 @@ public class VirtualGuestToJson implements Binder {
       return json.toJson(ImmutableMap.of("parameters", ImmutableList.of(templateObject)));
    }
 
-   private Set<BlockDevice> getBlockDevices(VirtualGuest virtualGuest) {
+   private List<BlockDevice> getBlockDevices(VirtualGuest virtualGuest) {
       if (virtualGuest.getVirtualGuestBlockDevices() == null) {
          return null;
       }
-      ImmutableSortedSet.Builder<BlockDevice> blockDevices = ImmutableSortedSet.orderedBy(new BlockDevicesComparator());
+      List<BlockDevice> blockDevices = Lists.newArrayList();
       for (VirtualGuestBlockDevice blockDevice : virtualGuest.getVirtualGuestBlockDevices()) {
          blockDevices.add(new BlockDevice(blockDevice.getDevice(), blockDevice.getVirtualDiskImage().getCapacity()));
       }
-      return blockDevices.build();
+      Collections.sort(blockDevices, new BlockDevicesComparator());
+      return ImmutableList.copyOf(blockDevices);
    }
 
    private Set<NetworkComponent> getNetworkComponents(VirtualGuest virtualGuest) {
@@ -120,12 +123,12 @@ public class VirtualGuestToJson implements Binder {
       private final boolean localDiskFlag;
       private final Datacenter datacenter;
       private final Set<NetworkComponent> networkComponents;
-      private final Set<BlockDevice> blockDevices;
+      private final List<BlockDevice> blockDevices;
 
       private TemplateObject(String hostname, String domain, int startCpus, int maxMemory, boolean hourlyBillingFlag,
                          String operatingSystemReferenceCode, BlockDeviceTemplateGroup blockDeviceTemplateGroup,
                          boolean localDiskFlag, Datacenter datacenter, Set<NetworkComponent> networkComponents,
-                         Set<BlockDevice> blockDevices) {
+                         List<BlockDevice> blockDevices) {
          this.hostname = hostname;
          this.domain = domain;
          this.startCpus = startCpus;

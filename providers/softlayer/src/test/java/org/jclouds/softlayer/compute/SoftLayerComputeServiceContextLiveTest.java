@@ -16,8 +16,12 @@
  */
 package org.jclouds.softlayer.compute;
 
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableSet;
+import static org.testng.Assert.assertEquals;
+import java.util.Set;
+
+import javax.annotation.Resource;
+import javax.inject.Named;
+
 import org.jclouds.ContextBuilder;
 import org.jclouds.compute.ComputeServiceContext;
 import org.jclouds.compute.RunNodesException;
@@ -37,11 +41,8 @@ import org.jclouds.ssh.SshClient;
 import org.jclouds.sshj.config.SshjSshClientModule;
 import org.testng.annotations.Test;
 
-import javax.annotation.Resource;
-import javax.inject.Named;
-import java.util.Set;
-
-import static org.testng.Assert.assertEquals;
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableSet;
 
 @Test(groups = "live", testName = "SoftLayerComputeServiceContextLiveTest")
 public class SoftLayerComputeServiceContextLiveTest extends BaseComputeServiceContextLiveTest {
@@ -65,23 +66,16 @@ public class SoftLayerComputeServiceContextLiveTest extends BaseComputeServiceCo
               .build(ComputeServiceContext.class);
 
       TemplateBuilder templateBuilder = context.getComputeService().templateBuilder();
-      //templateBuilder.minDisk(15d);
-      //templateBuilder.hardwareId("cpu=1,memory=4096,disk=100,type=SAN");
-      //templateBuilder.hardwareId("cpu=1,memory=4096,disk=100,type=LOCAL");
       templateBuilder.imageId("CENTOS_6_64");
-      //templateBuilder.osFamily(OsFamily.CENTOS);
-      //templateBuilder.imageId("7bcd78dc-eb11-4e1b-8d93-111c62ed5fd1");
-      //templateBuilder.locationId("dal01");
-      //templateBuilder.minRam(8192);
+      templateBuilder.locationId("ams01");
 
       Template template = templateBuilder.build();
       // test passing custom options
       SoftLayerTemplateOptions options = template.getOptions().as(SoftLayerTemplateOptions.class);
       options.domainName("live.org");
-      //options.diskType("SAN");
-      //options.portSpeed(10);
       // multi-disk option
-      options.blockDevices(ImmutableSet.of(100));
+      options.blockDevices(ImmutableList.of(25, 400, 400));
+      options.diskType("SAN");
       //tags
       options.tags(ImmutableList.of("jclouds"));
 
