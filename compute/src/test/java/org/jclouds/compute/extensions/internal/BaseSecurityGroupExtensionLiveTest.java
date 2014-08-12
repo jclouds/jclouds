@@ -135,21 +135,18 @@ public abstract class BaseSecurityGroupExtensionLiveTest extends BaseComputeServ
 
       SecurityGroup group = optGroup.get();
 
-      IpPermission.Builder builder = IpPermission.builder();
+      IpPermission portRangeIpPermission = createPortRangePermission();
+      IpPermission singlePortIpPermission = createSinglePortPermission();
 
-      builder.ipProtocol(IpProtocol.TCP);
-      builder.fromPort(10);
-      builder.toPort(20);
-      builder.cidrBlock("0.0.0.0/0");
+      Set<IpPermission> expectedPermissions = ImmutableSet.of(portRangeIpPermission, singlePortIpPermission);
 
-      IpPermission perm = builder.build();
+      SecurityGroup onePermissionAdded = securityGroupExtension.get().addIpPermission(portRangeIpPermission, group);
+      SecurityGroup twoPermissionsAdded = securityGroupExtension.get().addIpPermission(singlePortIpPermission,
+            onePermissionAdded);
 
-      SecurityGroup newGroup = securityGroupExtension.get().addIpPermission(perm, group);
-
-      assertEquals(Iterables.getOnlyElement(newGroup.getIpPermissions()), perm,
-              "Expecting IpPermission " + perm + " but group was " + newGroup);
+      assertEquals(twoPermissionsAdded.getIpPermissions(), expectedPermissions);
    }
-   
+
    @Test(groups = { "integration", "live" }, singleThreaded = true, dependsOnMethods = "testAddIpPermission")
    public void testRemoveIpPermission() {
       skipIfSecurityGroupsNotSupported();
@@ -165,19 +162,14 @@ public abstract class BaseSecurityGroupExtensionLiveTest extends BaseComputeServ
 
       SecurityGroup group = optGroup.get();
 
-      IpPermission.Builder builder = IpPermission.builder();
+      IpPermission portRangeIpPermission = createPortRangePermission();
+      IpPermission singlePortIpPermission = createSinglePortPermission();
 
-      builder.ipProtocol(IpProtocol.TCP);
-      builder.fromPort(10);
-      builder.toPort(20);
-      builder.cidrBlock("0.0.0.0/0");
+      SecurityGroup newGroup = securityGroupExtension.get().removeIpPermission(portRangeIpPermission, group);
+      SecurityGroup emptyGroup = securityGroupExtension.get().removeIpPermission(singlePortIpPermission, newGroup);
 
-      IpPermission perm = builder.build();
-
-      SecurityGroup newGroup = securityGroupExtension.get().removeIpPermission(perm, group);
-
-      assertEquals(Iterables.size(newGroup.getIpPermissions()), 0,
-              "Group should have no permissions, but has " + Iterables.size(newGroup.getIpPermissions()));
+      assertEquals(Iterables.size(emptyGroup.getIpPermissions()), 0, "Group should have no permissions, but has "
+            + Iterables.size(emptyGroup.getIpPermissions()));
    }
 
    @Test(groups = { "integration", "live" }, singleThreaded = true, dependsOnMethods = "testRemoveIpPermission")
@@ -355,6 +347,27 @@ public abstract class BaseSecurityGroupExtensionLiveTest extends BaseComputeServ
       });
    }
 
+   private IpPermission createPortRangePermission() {
+      IpPermission.Builder builder = IpPermission.builder();
+
+      builder.ipProtocol(IpProtocol.TCP);
+      builder.fromPort(10);
+      builder.toPort(20);
+      builder.cidrBlock("0.0.0.0/0");
+
+      return builder.build();
+   }
+
+   private IpPermission createSinglePortPermission() {
+      IpPermission.Builder builder = IpPermission.builder();
+
+      builder.ipProtocol(IpProtocol.UDP);
+      builder.fromPort(41);
+      builder.toPort(41);
+      builder.cidrBlock("1.1.1.1/32");
+
+      return builder.build();
+   }
 
    private void cleanup() {
       if (securityGroupsSupported) {
