@@ -19,6 +19,7 @@ package org.jclouds.softlayer.domain;
 import static com.google.common.base.Preconditions.checkNotNull;
 import java.beans.ConstructorProperties;
 import java.util.Date;
+import java.util.List;
 import java.util.Set;
 
 import org.jclouds.javax.annotation.Nullable;
@@ -26,6 +27,7 @@ import org.jclouds.javax.annotation.Nullable;
 import com.google.common.base.CaseFormat;
 import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 
 /**
@@ -126,7 +128,7 @@ public class VirtualGuest {
       protected PowerState powerState;
       protected SoftwareLicense softwareLicense;
       protected int activeTransactionCount;
-      protected Set<VirtualGuestBlockDevice> blockDevices;
+      protected List<VirtualGuestBlockDevice> blockDevices;
       protected boolean localDiskFlag;
       protected VirtualGuestBlockDeviceTemplateGroup blockDeviceTemplateGroup;
       protected Set<VirtualGuestNetworkComponent> networkComponents;
@@ -351,13 +353,13 @@ public class VirtualGuest {
       /**
        * @see VirtualGuest#getVirtualGuestBlockDevices()
        */
-      public T blockDevices(Set<VirtualGuestBlockDevice> blockDevices) {
-         this.blockDevices = ImmutableSet.copyOf(checkNotNull(blockDevices, "blockDevices"));
+      public T blockDevices(List<VirtualGuestBlockDevice> blockDevices) {
+         this.blockDevices = ImmutableList.copyOf(checkNotNull(blockDevices, "blockDevices"));
          return self();
       }
 
       public T blockDevices(VirtualGuestBlockDevice... in) {
-         return blockDevices(ImmutableSet.copyOf(checkNotNull(in, "blockDevices")));
+         return blockDevices(ImmutableList.copyOf(checkNotNull(in, "blockDevices")));
       }
 
       public T localDiskFlag(boolean localDiskFlag) {
@@ -466,7 +468,7 @@ public class VirtualGuest {
    private final PowerState powerState;
    private final SoftwareLicense softwareLicense;
    private final int activeTransactionCount;
-   private final Set<VirtualGuestBlockDevice> blockDevices;
+   private final List<VirtualGuestBlockDevice> blockDevices;
    private final boolean localDiskFlag;
    private final VirtualGuestBlockDeviceTemplateGroup blockDeviceTemplateGroup;
    private final Set<VirtualGuestNetworkComponent> networkComponents;
@@ -486,7 +488,7 @@ public class VirtualGuest {
                           @Nullable String primaryBackendIpAddress, @Nullable String primaryIpAddress, @Nullable BillingItem billingItem,
                           @Nullable OperatingSystem operatingSystem, @Nullable String operatingSystemReferenceCode,
                           @Nullable Datacenter datacenter, @Nullable PowerState powerState, @Nullable SoftwareLicense softwareLicense,
-                          int activeTransactionCount, @Nullable Set<VirtualGuestBlockDevice> blockDevices,
+                          int activeTransactionCount, @Nullable List<VirtualGuestBlockDevice> blockDevices,
                           boolean localDiskFlag, @Nullable VirtualGuestBlockDeviceTemplateGroup blockDeviceTemplateGroup,
                           @Nullable Set<VirtualGuestNetworkComponent> networkComponents,
                           @Nullable Set<TagReference> tagReferences ) {
@@ -727,7 +729,7 @@ public class VirtualGuest {
    }
 
    @Nullable
-   public Set<VirtualGuestBlockDevice> getVirtualGuestBlockDevices() {
+   public List<VirtualGuestBlockDevice> getVirtualGuestBlockDevices() {
       return blockDevices;
    }
 
