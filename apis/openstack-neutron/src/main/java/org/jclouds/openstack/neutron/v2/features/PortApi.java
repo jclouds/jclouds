@@ -48,7 +48,7 @@ import javax.ws.rs.core.MediaType;
 import java.util.List;
 
 /**
- * Provides synchronous access to Port operations on the openstack Neutron API.
+ * Provides access to Port operations for the OpenStack Networking (Neutron) v2 API.
  * <p/>
  * A port represents a virtual switch port on a logical network switch where all the interfaces attached to a given network are connected.
  * <p/>

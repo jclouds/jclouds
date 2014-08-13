@@ -53,7 +53,7 @@ import static org.jclouds.Fallbacks.EmptyPagedIterableOnNotFoundOr404;
 import static org.jclouds.openstack.keystone.v2_0.KeystoneFallbacks.EmptyPaginatedCollectionOnNotFoundOr404;
 
 /**
- * Provides synchronous access to Subnet operations on the Openstack Neutron API.
+ * Provides access to Subnet operations for the OpenStack Networking (Neutron) v2 API.
  *
 
  * @see <a href=

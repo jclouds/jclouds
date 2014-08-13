@@ -20,7 +20,6 @@ package org.jclouds.openstack.neutron.v2_0;
 import java.io.Closeable;
 import java.util.Set;
 
-import org.jclouds.javax.annotation.Nullable;
 import org.jclouds.location.Region;
 import org.jclouds.location.Zone;
 import org.jclouds.location.functions.RegionToEndpoint;
@@ -37,7 +36,7 @@ import com.google.common.base.Optional;
 import com.google.inject.Provides;
 
 /**
- * Provides synchronous access to Neutron.
+ * Provides access to the OpenStack Networking (Neutron) v2 API.
  * <p/>
  *
  * @deprecated Please use {@link org.jclouds.openstack.neutron.v2.NeutronApi} as this
@@ -54,35 +53,34 @@ public interface NeutronApi extends Closeable {
    Set<String> getConfiguredRegions();
 
    /**
-    * Provides synchronous access to Extension features.
+    * Provides access to Extension features.
     */
    @Delegate
-   ExtensionApi getExtensionApi(
-           @EndpointParam(parser = RegionToEndpoint.class) @Nullable String region);
+   ExtensionApi getExtensionApi(@EndpointParam(parser = RegionToEndpoint.class) String region);
 
    /**
-    * Provides synchronous access to Network features.
+    * Provides access to Network features.
     */
    @Delegate
-   NetworkApi getNetworkApi(@EndpointParam(parser = RegionToEndpoint.class) @Nullable String region);
+   NetworkApi getNetworkApi(@EndpointParam(parser = RegionToEndpoint.class) String region);
 
    /**
-    * Provides synchronous access to Subnet features
+    * Provides access to Subnet features.
     */
    @Delegate
-   SubnetApi getSubnetApi(@EndpointParam(parser = RegionToEndpoint.class) @Nullable String region);
+   SubnetApi getSubnetApi(@EndpointParam(parser = RegionToEndpoint.class) String region);
 
    /**
-    * Provides synchronous access to Port features.
+    * Provides access to Port features.
     */
    @Delegate
-   PortApi getPortApi(@EndpointParam(parser = RegionToEndpoint.class) @Nullable String region);
+   PortApi getPortApi(@EndpointParam(parser = RegionToEndpoint.class) String region);
 
    /**
-    * Provides synchronous access to Router features.
+    * Provides access to Router features.
     */
    @Delegate
-   Optional<? extends RouterApi> getRouterApi(@EndpointParam(parser = RegionToEndpoint.class) @Nullable String region);
+   Optional<? extends RouterApi> getRouterApi(@EndpointParam(parser = RegionToEndpoint.class) String region);
 
    /**
     * @return the Zone codes configured
@@ -94,43 +92,43 @@ public interface NeutronApi extends Closeable {
    Set<String> getConfiguredZones();
 
    /**
-    * Provides synchronous access to Extension features.
+    * Provides access to Extension features.
     * @deprecated Please use {@link #getExtensionApi(String)} as this method will be removed in jclouds 3.0.
     */
    @Deprecated
    @Delegate
    ExtensionApi getExtensionApiForZone(
-           @EndpointParam(parser = ZoneToEndpoint.class) @Nullable String zone);
+           @EndpointParam(parser = ZoneToEndpoint.class) String zone);
 
    /**
-    * Provides synchronous access to Network features.
+    * Provides access to Network features.
     * @deprecated Please use {@link #getNetworkApi(String)} as this method will be removed in jclouds 3.0.
     */
    @Deprecated
    @Delegate
-   NetworkApi getNetworkApiForZone(@EndpointParam(parser = ZoneToEndpoint.class) @Nullable String zone);
+   NetworkApi getNetworkApiForZone(@EndpointParam(parser = ZoneToEndpoint.class) String zone);
 
    /**
-    * Provides synchronous access to Subnet features.
+    * Provides access to Subnet features.
     * @deprecated Please use {@link #getSubnetApi(String)} as this method will be removed in jclouds 3.0.
     */
    @Deprecated
    @Delegate
-   SubnetApi getSubnetApiForZone(@EndpointParam(parser = ZoneToEndpoint.class) @Nullable String zone);
+   SubnetApi getSubnetApiForZone(@EndpointParam(parser = ZoneToEndpoint.class) String zone);
 
    /**
-    * Provides synchronous access to Port features.
+    * Provides access to Port features.
     * @deprecated Please use {@link #getPortApi(String)} as this method will be removed in jclouds 3.0.
     */
    @Deprecated
    @Delegate
-   PortApi getPortApiForZone(@EndpointParam(parser = ZoneToEndpoint.class) @Nullable String zone);
+   PortApi getPortApiForZone(@EndpointParam(parser = ZoneToEndpoint.class) String zone);
 
    /**
-    * Provides synchronous access to Router features.
+    * Provides access to Router features.
     * @deprecated Please use {@link #getRouterApi(String)} as this method will be removed in jclouds 3.0.
     */
    @Deprecated
    @Delegate
-   Optional<? extends RouterApi> getRouterExtensionForZone(@EndpointParam(parser = ZoneToEndpoint.class) @Nullable String zone);
+   Optional<? extends RouterApi> getRouterExtensionForZone(@EndpointParam(parser = ZoneToEndpoint.class) String zone);
 }

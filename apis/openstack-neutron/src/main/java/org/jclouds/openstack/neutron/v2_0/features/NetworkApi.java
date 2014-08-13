@@ -52,7 +52,7 @@ import static org.jclouds.Fallbacks.EmptyPagedIterableOnNotFoundOr404;
 import static org.jclouds.openstack.keystone.v2_0.KeystoneFallbacks.EmptyPaginatedCollectionOnNotFoundOr404;
 
 /**
- * Provides synchronous access to Network operations on the openstack Neutron API.
+ * Provides access to Network operations for the OpenStack Networking (Neutron) v2 API.
  * <p/>
  * Each tenant can define one or more networks. A network is a virtual isolated layer-2 broadcast domain reserved to the
  * tenant. A tenant can create several ports for a network, and plug virtual interfaces into these ports.

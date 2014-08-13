@@ -17,7 +17,16 @@
 
 package org.jclouds.openstack.neutron.v2_0.extensions;
 
-import com.google.common.collect.ImmutableSet;
+import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
+import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertFalse;
+import static org.testng.Assert.assertNull;
+import static org.testng.Assert.assertTrue;
+
+import java.util.Set;
+
+import javax.ws.rs.core.MediaType;
+
 import org.jclouds.http.HttpResponse;
 import org.jclouds.openstack.neutron.v2_0.domain.ExternalGatewayInfo;
 import org.jclouds.openstack.neutron.v2_0.domain.ReferenceWithName;
@@ -31,19 +40,11 @@ import org.jclouds.openstack.neutron.v2_0.parse.ParseRouterTest;
 import org.jclouds.rest.AuthorizationException;
 import org.testng.annotations.Test;
 
-import javax.ws.rs.core.MediaType;
-import java.util.Set;
-
-import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
-import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertFalse;
-import static org.testng.Assert.assertNull;
-import static org.testng.Assert.assertTrue;
+import com.google.common.collect.ImmutableSet;
 
 /**
  * Tests parsing and Guice wiring of RouterApi
  *
- * @author Nick Livens
  */
 @Test(groups = "unit", testName = "RouterApiExpectTest")
 public class RouterApiExpectTest extends BaseNeutronApiExpectTest {

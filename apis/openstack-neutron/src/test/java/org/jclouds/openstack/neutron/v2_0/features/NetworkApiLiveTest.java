@@ -16,9 +16,12 @@
  */
 package org.jclouds.openstack.neutron.v2_0.features;
 
-import com.google.common.base.Predicate;
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.Sets;
+import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertNotNull;
+import static org.testng.Assert.assertTrue;
+
+import java.util.Set;
+
 import org.jclouds.openstack.neutron.v2_0.domain.BulkNetwork;
 import org.jclouds.openstack.neutron.v2_0.domain.Network;
 import org.jclouds.openstack.neutron.v2_0.domain.NetworkType;
@@ -30,16 +33,13 @@ import org.jclouds.openstack.neutron.v2_0.options.UpdateNetworkOptions;
 import org.jclouds.openstack.neutron.v2_0.util.PredicateUtil;
 import org.testng.annotations.Test;
 
-import java.util.Set;
-
-import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertNotNull;
-import static org.testng.Assert.assertTrue;
+import com.google.common.base.Predicate;
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.Sets;
 
 /**
  * Tests parsing and Guice wiring of NetworkApi
  *
- * @author Nick Livens
  */
 @Test(groups = "live", testName = "NetworkApiLiveTest")
 public class NetworkApiLiveTest extends BaseNeutronApiLiveTest {

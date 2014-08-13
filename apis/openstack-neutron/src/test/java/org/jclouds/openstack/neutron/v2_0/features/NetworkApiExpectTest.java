@@ -16,8 +16,16 @@
  */
 package org.jclouds.openstack.neutron.v2_0.features;
 
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableSet;
+import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
+import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertFalse;
+import static org.testng.Assert.assertNull;
+import static org.testng.Assert.assertTrue;
+
+import java.util.Set;
+
+import javax.ws.rs.core.MediaType;
+
 import org.jclouds.http.HttpResponse;
 import org.jclouds.openstack.neutron.v2_0.domain.BulkNetwork;
 import org.jclouds.openstack.neutron.v2_0.domain.Network;
@@ -31,19 +39,12 @@ import org.jclouds.openstack.neutron.v2_0.parse.ParseNetworkTest;
 import org.jclouds.rest.AuthorizationException;
 import org.testng.annotations.Test;
 
-import javax.ws.rs.core.MediaType;
-import java.util.Set;
-
-import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
-import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertFalse;
-import static org.testng.Assert.assertNull;
-import static org.testng.Assert.assertTrue;
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableSet;
 
 /**
  * Tests parsing and Guice wiring of NetworkApi
  *
- * @author Nick Livens
  */
 @Test(groups = "unit", testName = "NetworkApiExpectTest")
 public class NetworkApiExpectTest extends BaseNeutronApiExpectTest {

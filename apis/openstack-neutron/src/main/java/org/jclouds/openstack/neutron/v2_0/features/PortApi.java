@@ -54,7 +54,7 @@ import static org.jclouds.Fallbacks.EmptyPagedIterableOnNotFoundOr404;
 import static org.jclouds.openstack.keystone.v2_0.KeystoneFallbacks.EmptyPaginatedCollectionOnNotFoundOr404;
 
 /**
- * Provides synchronous access to Port operations on the openstack Neutron API.
+ * Provides access to Port operations for the OpenStack Networking (Neutron) v2 API.
  * <p/>
  * A port represents a virtual switch port on a logical network switch where all the interfaces attached to a given network are connected.
  * <p/>

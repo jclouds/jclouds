@@ -17,6 +17,12 @@
 
 package org.jclouds.openstack.neutron.v2_0.extensions;
 
+import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertNotNull;
+import static org.testng.Assert.assertTrue;
+
+import java.util.Set;
+
 import org.jclouds.openstack.neutron.v2_0.domain.ExternalGatewayInfo;
 import org.jclouds.openstack.neutron.v2_0.domain.Network;
 import org.jclouds.openstack.neutron.v2_0.domain.NetworkType;
@@ -34,16 +40,9 @@ import org.jclouds.openstack.neutron.v2_0.options.CreateRouterOptions;
 import org.jclouds.openstack.neutron.v2_0.options.UpdateRouterOptions;
 import org.testng.annotations.Test;
 
-import java.util.Set;
-
-import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertNotNull;
-import static org.testng.Assert.assertTrue;
-
 /**
  * Tests parsing and Guice wiring of RouterApi
  *
- * @author Nick Livens
  */
 @Test(groups = "live", testName = "RouterApiLiveTest")
 public class RouterApiLiveTest extends BaseNeutronApiLiveTest {

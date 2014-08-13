@@ -52,7 +52,7 @@ import org.jclouds.rest.annotations.WrapWith;
 import com.google.common.annotations.Beta;
 
 /**
- * Provides synchronous access to Router operations on the OpenStack Neutron API.
+ * Provides access to Router operations for the OpenStack Networking (Neutron) v2 API.
  * <p/>
  * A logical entity for forwarding packets across internal subnets and NATting them on external
  * networks through an appropriate external gateway.

@@ -16,30 +16,31 @@
  */
 package org.jclouds.openstack.neutron.v2_0.functions;
 
-import com.google.common.annotations.Beta;
-import com.google.common.base.Function;
-import com.google.common.base.Optional;
-import com.google.inject.TypeLiteral;
+import static com.google.common.base.Preconditions.checkNotNull;
+
+import java.beans.ConstructorProperties;
+
+import javax.inject.Inject;
+import javax.inject.Singleton;
+
 import org.jclouds.collect.IterableWithMarker;
 import org.jclouds.collect.internal.Arg0ToPagedIterable;
 import org.jclouds.http.functions.ParseJson;
 import org.jclouds.json.Json;
-import org.jclouds.openstack.v2_0.domain.PaginatedCollection;
 import org.jclouds.openstack.neutron.v2_0.NeutronApi;
 import org.jclouds.openstack.neutron.v2_0.domain.ReferenceWithName;
 import org.jclouds.openstack.neutron.v2_0.features.NetworkApi;
 import org.jclouds.openstack.neutron.v2_0.functions.ParseNetworks.Networks;
 import org.jclouds.openstack.v2_0.domain.Link;
+import org.jclouds.openstack.v2_0.domain.PaginatedCollection;
 import org.jclouds.openstack.v2_0.options.PaginationOptions;
 
-import javax.inject.Inject;
-import javax.inject.Singleton;
-import java.beans.ConstructorProperties;
-
-import static com.google.common.base.Preconditions.checkNotNull;
+import com.google.common.annotations.Beta;
+import com.google.common.base.Function;
+import com.google.common.base.Optional;
+import com.google.inject.TypeLiteral;
 
 /**
- * @author Nick Livens
  */
 @Beta
 @Singleton

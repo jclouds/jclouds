@@ -19,7 +19,6 @@ package org.jclouds.openstack.neutron.v2;
 import java.io.Closeable;
 import java.util.Set;
 
-import org.jclouds.javax.annotation.Nullable;
 import org.jclouds.location.Region;
 import org.jclouds.location.functions.RegionToEndpoint;
 import org.jclouds.openstack.neutron.v2.extensions.RouterApi;
@@ -34,7 +33,7 @@ import com.google.common.base.Optional;
 import com.google.inject.Provides;
 
 /**
- * Provides synchronous access to the OpenStack Networking (Neutron) v2 API
+ * Provides access to the OpenStack Networking (Neutron) v2 API.
  */
 public interface NeutronApi extends Closeable {
    /**
@@ -45,45 +44,45 @@ public interface NeutronApi extends Closeable {
    Set<String> getConfiguredRegions();
 
    /**
-    * Provides synchronous access to Extension features.
+    * Provides access to Extension features.
     */
    @Delegate
-   ExtensionApi getExtensionApi(@EndpointParam(parser = RegionToEndpoint.class) @Nullable String region);
+   ExtensionApi getExtensionApi(@EndpointParam(parser = RegionToEndpoint.class) String region);
 
    /**
-    * Provides synchronous access to Network features.
+    * Provides access to Network features.
     */
    @Delegate
-   NetworkApi getNetworkApi(@EndpointParam(parser = RegionToEndpoint.class) @Nullable String region);
+   NetworkApi getNetworkApi(@EndpointParam(parser = RegionToEndpoint.class) String region);
 
    /**
-    * Provides synchronous access to Subnet features
+    * Provides access to Subnet features.
     */
    @Delegate
-   SubnetApi getSubnetApi(@EndpointParam(parser = RegionToEndpoint.class) @Nullable String region);
+   SubnetApi getSubnetApi(@EndpointParam(parser = RegionToEndpoint.class) String region);
 
    /**
-    * Provides synchronous access to Port features.
+    * Provides access to Port features.
     */
    @Delegate
-   PortApi getPortApi(@EndpointParam(parser = RegionToEndpoint.class) @Nullable String region);
+   PortApi getPortApi(@EndpointParam(parser = RegionToEndpoint.class) String region);
 
    /**
-    * Provides synchronous access to Router features.
+    * Provides access to Router features.
     *
     * <h3>NOTE</h3>
     * This API is an extension that may or may not be present in your OpenStack cloud. Use the Optional return type
     * to determine if it is present.
     */
    @Delegate
-   Optional<? extends RouterApi> getRouterApi(@EndpointParam(parser = RegionToEndpoint.class) @Nullable String region);
+   Optional<? extends RouterApi> getRouterApi(@EndpointParam(parser = RegionToEndpoint.class) String region);
 
    /**
-    * Provides synchronous access to Router features.
+    * Provides access to Router features.
     * @deprecated Please use {@link #getRouterApi(String)} as this method will be removed in jclouds 3.0.
     */
    @Deprecated
    @Delegate
-   Optional<? extends RouterApi> getRouterExtensionApi(@EndpointParam(parser = RegionToEndpoint.class) @Nullable String region);
+   Optional<? extends RouterApi> getRouterExtensionApi(@EndpointParam(parser = RegionToEndpoint.class) String region);
 
 }

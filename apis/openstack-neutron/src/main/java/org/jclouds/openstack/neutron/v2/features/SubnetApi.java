@@ -48,7 +48,7 @@ import javax.ws.rs.core.MediaType;
 import java.util.List;
 
 /**
- * Provides synchronous access to Subnet operations on the Openstack Neutron API.
+ * Provides access to Subnet operations for the OpenStack Networking (Neutron) v2 API.
  *
  * @see <a href=
  *      "http://docs.openstack.org/api/openstack-network/2.0/content/Subnets.html">api doc</a>
