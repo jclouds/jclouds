@@ -16,7 +16,6 @@
  */
 package org.jclouds.rackspace.cloudfiles.v1;
 
-import org.jclouds.javax.annotation.Nullable;
 import org.jclouds.openstack.swift.v1.SwiftApi;
 import org.jclouds.rackspace.cloudfiles.v1.features.CDNApi;
 import org.jclouds.rackspace.cloudfiles.v1.functions.RegionToCDNEndpoint;
@@ -47,7 +46,7 @@ public interface CloudFilesApi extends SwiftApi {
     * @return the {@link CDNApi} for the specified region.
     */
    @Delegate
-   CDNApi getCDNApi(@EndpointParam(parser = RegionToCDNEndpoint.class) @Nullable String region);
+   CDNApi getCDNApi(@EndpointParam(parser = RegionToCDNEndpoint.class) String region);
 
    /**
     * Provides access to Cloud Files CDN features.
@@ -60,5 +59,5 @@ public interface CloudFilesApi extends SwiftApi {
     */
    @Deprecated
    @Delegate
-   CDNApi cdnApiInRegion(@EndpointParam(parser = RegionToCDNEndpoint.class) @Nullable String region);
+   CDNApi cdnApiInRegion(@EndpointParam(parser = RegionToCDNEndpoint.class) String region);
 }

@@ -39,7 +39,6 @@ import org.jclouds.Fallbacks.FalseOnNotFoundOr404;
 import org.jclouds.Fallbacks.NullOnNotFoundOr404;
 import org.jclouds.javax.annotation.Nullable;
 import org.jclouds.openstack.keystone.v2_0.filters.AuthenticateRequest;
-import org.jclouds.rackspace.cloudfiles.v1.CloudFilesApi;
 import org.jclouds.rackspace.cloudfiles.v1.binders.BindCDNPurgeEmailAddressesToHeaders;
 import org.jclouds.rackspace.cloudfiles.v1.domain.CDNContainer;
 import org.jclouds.rackspace.cloudfiles.v1.functions.ParseCDNContainerFromHeaders;
@@ -60,12 +59,12 @@ import com.google.common.collect.FluentIterable;
  * Provides access to the Rackspace Cloud Files CDN API features.
  *
  * <h3>NOTE</h3>
- * Before a container can be CDN enabled, it must exist in the storage system. 
- * To CDN enable the container, perform PUT request against it using the <code>publicURL</code> 
- * noted in the service catalog for Cloud Files during Authentication and set the 
+ * Before a container can be CDN enabled, it must exist in the storage system.
+ * To CDN enable the container, perform PUT request against it using the <code>publicURL</code>
+ * noted in the service catalog for Cloud Files during Authentication and set the
  * <code>X-CDN-Enabled</code> header to <code>true</code>.
- * 
- * @see {@link CloudFilesApi#getCDNApiForRegion(String)}
+ *
+ * @see {@link org.jclouds.rackspace.cloudfiles.v1.CloudFilesApi#getCDNApi(String)}
  */
 @Beta
 @RequestFilters(AuthenticateRequest.class)
@@ -74,7 +73,7 @@ public interface CDNApi extends Closeable {
 
    /**
     * Lists up to 10,000 CDN containers.
-    * 
+    *
     * @return a list of CDN enabled containers ordered by name.
     */
    @Named("cdn:list")
@@ -86,10 +85,10 @@ public interface CDNApi extends Closeable {
 
    /**
     * Lists CDN containers, with the given options.
-    * 
+    *
     * @param options
     *           the options to control output.
-    * 
+    *
     * @return a list of CDN enabled containers ordered by name.
     */
    @Named("cdn:list")
@@ -101,10 +100,10 @@ public interface CDNApi extends Closeable {
 
    /**
     * Gets the specified CDN Container.
-    * 
+    *
     * @param containerName
     *           the name of the CDN Container
-    * 
+    *
     * @return the CDNContainer or null, if not found.
     */
    @Named("cdn:get")
@@ -117,10 +116,10 @@ public interface CDNApi extends Closeable {
 
    /**
     * Enables the {@link CDNContainer}.
-    * 
+    *
     * @param containerName
     *           corresponds to {@link CDNContainer#getName()}.
-    *           
+    *
     * @return the CDN container {@link URI} or {@code null}, if not found.
     */
    @Named("cdn:enable")
@@ -134,12 +133,12 @@ public interface CDNApi extends Closeable {
 
    /**
     * Enables the {@link CDNContainer} with a TTL.
-    * 
+    *
     * @param containerName
     *           corresponds to {@link CDNContainer#getName()}.
     * @param ttl
     *           the TTL for the CDN Container.
-    *           
+    *
     * @return the CDN container {@link URI} or {@code null}, if not found.
     */
    @Named("cdn:enable")
@@ -149,15 +148,15 @@ public interface CDNApi extends Closeable {
    @Path("/{containerName}")
    @Headers(keys = CDN_ENABLED, values = "true")
    @Nullable
-   URI enable(@PathParam("containerName") String containerName, 
+   URI enable(@PathParam("containerName") String containerName,
          @HeaderParam(CDN_TTL) int ttl);
 
    /**
     * Disables the {@link CDNContainer}.
-    * 
+    *
     * @param containerName
     *           corresponds to {@link CDNContainer#getName()}.
-    *           
+    *
     * @return {@code true} if the container was disabled, {@code false} if not.
     */
    @Named("cdn:disable")
@@ -169,14 +168,14 @@ public interface CDNApi extends Closeable {
 
    /**
     * Purges an object from the CDN.
-    * 
+    *
     * @param containerName
     *           corresponds to {@link CDNContainer#getName()}.
     * @param objectName
     *           the object in the {@link CDNContainer} to purge.
     * @param emails
     *           the email addresses to notify after purging.
-    * 
+    *
     * @return {@code true} if the object was successfully purged, {@code false} if not.
     */
    @Named("cdn:purge")
@@ -184,16 +183,16 @@ public interface CDNApi extends Closeable {
    @Fallback(FalseOnNotFoundOr404.class)
    @Path("/{containerName}/{objectName}")
    @Headers(keys = CloudFilesHeaders.CDN_PURGE_OBJECT_EMAIL, values = "{email}")
-   boolean purgeObject(@PathParam("containerName") String containerName, 
-         @PathParam("objectName") String objectName, 
+   boolean purgeObject(@PathParam("containerName") String containerName,
+         @PathParam("objectName") String objectName,
          @BinderParam(BindCDNPurgeEmailAddressesToHeaders.class) Iterable<String> emails);
 
    /**
     * Updates a CDN container with the supplied {@link UpdateCDNContainerOptions} options.
-    * 
+    *
     * @param containerName
     *           corresponds to {@link CDNContainer#getName()}.
-    *           
+    *
     * @param options
     *           the {@link UpdateCDNContainerOptions} options.
     */

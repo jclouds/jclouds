@@ -57,11 +57,11 @@ public class ParseCDNContainerFromHeaders implements Function<HttpResponse, CDNC
       String enabled = checkNotNull(from.getFirstHeaderOrNull(CDN_ENABLED), CDN_ENABLED);
       String logRetention = checkNotNull(from.getFirstHeaderOrNull(CDN_LOG_RETENTION), CDN_LOG_RETENTION);
       String ttl = checkNotNull(from.getFirstHeaderOrNull(CDN_TTL), CDN_TTL);
-      
+
       // just need the name from the path
       List<String> parts = newArrayList(Splitter.on('/').split(request.getEndpoint().getPath()));
-      checkArgument(parts.size() > 0);
-      
+      checkArgument(!parts.isEmpty());
+
       return CDNContainer.builder().name(parts.get(parts.size() - 1))
             .enabled(Boolean.parseBoolean(enabled))
             .logRetention(Boolean.parseBoolean(logRetention))

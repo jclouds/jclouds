@@ -34,15 +34,15 @@ import com.google.common.base.Function;
 import com.google.common.base.Supplier;
 
 /**
- * This class ensures that the correct Cloud Files CDN endpoint is retrieved from the endpoint 
- * supplier. The CDN API should never be instantiated directly, but rather accessed through the 
+ * This class ensures that the correct Cloud Files CDN endpoint is retrieved from the endpoint
+ * supplier. The CDN API should never be instantiated directly, but rather accessed through the
  * {@link CloudFilesApi#cdnApiInRegion(String)} API.
  * <p/>
  * <h3>NOTE</h3>
  * The Cloud Files Service Type will always default to OpenStack Object Storage ("object-storage").
  * <p/>
- * 
- * 
+ *
+ *
  * @see CloudFilesApi#cdnApiInRegion(String)
  * @see CDNApi
  * @see RegionToEndpoint
@@ -53,7 +53,7 @@ import com.google.common.base.Supplier;
  *      Service Access Endpoints</a>
  */
 @Singleton
-public class RegionToCDNEndpoint implements Function<Object, URI> { 
+public class RegionToCDNEndpoint implements Function<Object, URI> {
 
    private final Supplier<Map<String, Supplier<URI>>> endpointsSupplier;
 
@@ -65,7 +65,7 @@ public class RegionToCDNEndpoint implements Function<Object, URI> {
    public URI apply(@Nullable Object from) {
       checkArgument(from != null && from instanceof String, "you must specify a region, as a String argument");
       Map<String, Supplier<URI>> regionToEndpoint = endpointsSupplier.get();
-      checkState(regionToEndpoint.size() > 0, "no region name to endpoint mappings configured!");
+      checkState(!regionToEndpoint.isEmpty(), "no region name to endpoint mappings configured!");
       checkArgument(regionToEndpoint.containsKey(from),
             "requested location %s, which is not in the configured locations: %s", from, regionToEndpoint);
       return regionToEndpoint.get(from).get();
