@@ -31,7 +31,7 @@ import com.google.common.collect.UnmodifiableIterator;
 
 /**
  * continues to supply iterables until the last was empty
- * 
+ *
  * @param <E>
  */
 @Beta
@@ -40,7 +40,7 @@ public class AdvanceUntilEmptyIterable<E> extends FluentIterable<FluentIterable<
    public static <E> AdvanceUntilEmptyIterable<E> create(Supplier<FluentIterable<E>> nextIterable) {
       return new AdvanceUntilEmptyIterable<E>(nextIterable);
    }
-   
+
    private final AdvanceUntilEmptyIterator<E> iterator;
 
    protected AdvanceUntilEmptyIterable(Supplier<FluentIterable<E>> nextIterable) {
@@ -73,7 +73,7 @@ public class AdvanceUntilEmptyIterable<E> extends FluentIterable<FluentIterable<
             } finally {
                unread = false;
             }
-         else if (current.size() > 0)
+         else if (!current.isEmpty())
             return current = nextIterable.get();
          else
             return endOfData();
@@ -108,17 +108,17 @@ public class AdvanceUntilEmptyIterable<E> extends FluentIterable<FluentIterable<
          return MoreObjects.toStringHelper("").omitNullValues().add("current", current).add("unread", unread).toString();
       }
    }
-   
+
    /**
     * Combines all the pages into a single unmodifiable iterable. ex.
-    * 
+    *
     * <pre>
     * FluentIterable<StorageMetadata> blobs = blobstore.list(...).concat();
     * for (StorageMetadata blob : blobs) {
     *     process(blob);
     * }
     * </pre>
-    * 
+    *
     * @see Iterators#concat
     */
    public FluentIterable<E> concat() {

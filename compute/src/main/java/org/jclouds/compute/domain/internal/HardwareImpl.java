@@ -109,7 +109,7 @@ public class HardwareImpl extends ComputeMetadataImpl implements Hardware {
    protected ToStringHelper string() {
       ToStringHelper helper = computeToStringPrefix();
       helper.add("processors", processors).add("ram", ram);
-      if (volumes.size() > 0)
+      if (!volumes.isEmpty())
          helper.add("volumes", volumes);
       helper.add("hypervisor", hypervisor);
       helper.add("supportsImage", supportsImage);

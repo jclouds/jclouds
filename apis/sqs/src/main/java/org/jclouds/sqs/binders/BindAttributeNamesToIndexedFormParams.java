@@ -42,7 +42,7 @@ public class BindAttributeNamesToIndexedFormParams implements Binder {
          builder.put("AttributeName." + (i++ + 1), o.toString());
       }
       ImmutableMultimap<String, String> forms = builder.build();
-      return (R) (forms.size() == 0 ? request : request.toBuilder().replaceFormParams(forms).build());
+      return (R) (forms.isEmpty() ? request : request.toBuilder().replaceFormParams(forms).build());
    }
 
 }

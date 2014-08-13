@@ -44,9 +44,9 @@ import com.google.inject.Provides;
 
 /**
  * Configures {@link ListeningExecutorService}.
- * 
+ *
  * Note that this uses threads.
- * 
+ *
  * <p>
  * This extends the underlying Future to expose a description (the task's toString) and the submission context (stack
  * trace). The submission stack trace is appended to relevant stack traces on exceptions that are returned, so the user
@@ -68,7 +68,7 @@ public class ExecutorServiceModule extends AbstractModule {
       @Override
       public void close() throws IOException {
          List<Runnable> runnables = service.shutdownNow();
-         if (runnables.size() > 0)
+         if (!runnables.isEmpty())
             logger.warn("when shutting down executor %s, runnables outstanding: %s", service, runnables);
       }
    }
@@ -80,12 +80,12 @@ public class ExecutorServiceModule extends AbstractModule {
       this.userExecutorFromConstructor = null;
       this.ioExecutorFromConstructor = null;
    }
-   
+
    public ExecutorServiceModule(@Named(PROPERTY_USER_THREADS) ExecutorService userExecutor,
          @Named(PROPERTY_IO_WORKER_THREADS) ExecutorService ioExecutor) {
       this(listeningDecorator(userExecutor), listeningDecorator(ioExecutor));
    }
-   
+
    public ExecutorServiceModule(@Named(PROPERTY_USER_THREADS) ListeningExecutorService userExecutor,
          @Named(PROPERTY_IO_WORKER_THREADS) ListeningExecutorService ioExecutor) {
       this.userExecutorFromConstructor = WithSubmissionTrace.wrap(userExecutor);

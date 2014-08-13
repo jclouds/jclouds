@@ -58,7 +58,7 @@ public class AlarmApiLiveTest extends BaseCloudWatchApiLiveTest {
    protected void beforeClass() throws Exception {
       IterableWithMarker<Metric> metrics = metricApi().list(new ListMetricsOptions().metricName(metricName));
 
-      if (Iterables.size(metrics) == 0) {
+      if (Iterables.isEmpty(metrics)) {
          metricApi().putMetricsInNamespace(ImmutableSet.of(
                MetricDatum.builder()
                           .metricName(metricName)
@@ -92,7 +92,7 @@ public class AlarmApiLiveTest extends BaseCloudWatchApiLiveTest {
    @AfterClass
    protected void afterClass() throws Exception {
       IterableWithMarker<Alarm> alarms = api().list(new ListAlarmsOptions().alarmName(alarmName)).get(0);
-      if (Iterables.size(alarms) > 0) {
+      if (!Iterables.isEmpty(alarms)) {
          api().delete(ImmutableSet.of(alarmName));
       }
    }
@@ -249,7 +249,7 @@ public class AlarmApiLiveTest extends BaseCloudWatchApiLiveTest {
 
       success = retry(new Predicate<ListAlarmsOptions>() {
          public boolean apply(ListAlarmsOptions options) {
-            return Iterables.size(api().list(options).get(0)) == 0;
+            return Iterables.isEmpty(api().list(options).get(0));
          }
       }, 5, 1, MINUTES).apply(dmo);
 

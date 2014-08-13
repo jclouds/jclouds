@@ -46,25 +46,25 @@ import com.google.common.collect.Multimap;
 /**
  * Functions on {@code String}s and {@link URI}s. Strings can be level 1 <a
  * href="http://tools.ietf.org/html/rfc6570">RFC6570</a> form.
- * 
+ *
  * ex.
- * 
+ *
  * <pre>
  *  https://api.github.com/repos/{user}
  * </pre>
- * 
+ *
  * <h4>Reminder</h4>
- * 
+ *
  * Unresolved <a href="http://tools.ietf.org/html/rfc6570">RFC6570</a> templates are not supported by
  * {@link URI#create(String)} and result in an {@link IllegalArgumentException}.
- * 
+ *
  * <h4>Limitations</h4>
- * 
+ *
  * In order to reduce complexity not needed in jclouds, this doesn't support {@link URI#getUserInfo()},
  * {@link URI#getFragment()}, or {@code matrix} params. Matrix params can be achieved via adding {@code ;} refs in the
  * http path directly. Moreover, since jclouds only uses level 1 templates, this doesn't support the additional forms
  * noted in the RFC.
- * 
+ *
  * @since 1.6
  */
 @Beta
@@ -88,13 +88,13 @@ public final class Uris {
 
    /**
     * Mutable URI builder that can be in level 1 <a href="http://tools.ietf.org/html/rfc6570">RFC6570</a> template form.
-    * 
+    *
     * ex.
-    * 
+    *
     * <pre>
     *  https://api.github.com/repos/{user}
     * </pre>
-    * 
+    *
     */
    public static final class UriBuilder {
       // colon for urns, semicolon & equals for matrix params
@@ -114,7 +114,7 @@ public final class Uris {
          this.skipPathEncoding = ImmutableSet.copyOf(checkNotNull(skipPathEncoding, "skipPathEncoding"));
          return this;
       }
-      
+
       /**
        * @param scheme
        *           scheme to set or replace
@@ -207,10 +207,10 @@ public final class Uris {
       /**
        * <a href="http://tools.ietf.org/html/rfc6570">RFC6570</a> templates have variables defined in curly braces.
        * Curly brace characters are unparsable via {@link URI#create} and result in an {@link IllegalArgumentException}.
-       * 
+       *
        * This implementation temporarily replaces curly braces with double parenthesis so that it can reuse
        * {@link URI#create}.
-       * 
+       *
        * @param uri
        *           template which may have template parameters inside
        */
@@ -307,7 +307,7 @@ public final class Uris {
             b.append(':').append(port);
          if (path != null)
             b.append(urlEncode(UriTemplates.expand(path, variables), skipPathEncoding));
-         if (query.size() > 0)
+         if (!query.isEmpty())
             b.append('?').append(encodeQueryLine(query));
          return b.toString();
       }
@@ -326,7 +326,7 @@ public final class Uris {
             b.append(':').append(port);
          if (path != null)
             b.append(path);
-         if (query.size() > 0)
+         if (!query.isEmpty())
             b.append('?').append(buildQueryLine(query));
          return b.toString();
       }
@@ -376,8 +376,8 @@ public final class Uris {
 
    /**
     * Mutable and permits null values. Url decodes all mutations except {@link Multimap#putAll(Multimap)}
-    * 
-    * 
+    *
+    *
     */
    static final class DecodingMultimap extends ForwardingMultimap<String, Object> {
 

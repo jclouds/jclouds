@@ -67,7 +67,7 @@ public class OrgAndVDCToLocationSupplier extends JustProvider implements Locatio
    protected Builder<Location> buildJustProviderOrVDCs() {
       Builder<Location> locations = ImmutableSet.builder();
       Location provider = Iterables.getOnlyElement(super.get());
-      if (orgNameToResource.get().size() == 0)
+      if (orgNameToResource.get().isEmpty())
          return locations.add(provider);
       Map<String, Supplier<Set<String>>> isoCodesById = isoCodesByIdSupplier.get();
       for (ReferenceType org : orgNameToResource.get().values()) {

@@ -76,7 +76,7 @@ public class InstantiateVAppTemplateOptions {
    /**
     * {@networkConfig VAppTemplate}s have internal networks that can be
     * connected in order to access the internet or other external networks.
-    * 
+    *
     * <h4>default behaviour if you don't use this option</h4> By default, we
     * connect the first internal {@networkConfig
     * org.jclouds.vcloud.domain.VAppTemplate#getNetworkSection network in the
@@ -153,16 +153,16 @@ public class InstantiateVAppTemplateOptions {
    public int hashCode() {
       return Objects.hashCode(networkConfig, customizeOnInstantiate, description, deploy, powerOn);
    }
-   
+
    @Override
    public String toString() {
       return string().toString();
    }
-   
+
    protected ToStringHelper string() {
       ToStringHelper toString = MoreObjects.toStringHelper("").omitNullValues();
       toString.add("customizeOnInstantiate", customizeOnInstantiate).add("description", description);
-      if (networkConfig.size() > 0)
+      if (!networkConfig.isEmpty())
          toString.add("networkConfig", networkConfig);
       if (!deploy)
          toString.add("deploy", deploy);

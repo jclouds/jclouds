@@ -61,7 +61,7 @@ import com.google.common.collect.TreeRangeSet;
 import com.google.common.primitives.Ints;
 
 public class ComputeServiceUtils {
-   
+
    /**
     * status as a string which optionally includes the backend status
     */
@@ -70,12 +70,12 @@ public class ComputeServiceUtils {
          return resource.getStatus().toString();
       return String.format("%s[%s]", resource.getStatus(), resource.getBackendStatus());
    }
-   
+
    public static final Pattern DELIMITED_BY_HYPHEN_ENDING_IN_HYPHEN_HEX = Pattern.compile("(.+)-[0-9a-f]+");
 
    /**
     * build a shell script that invokes the contents of the http request in bash.
-    * 
+    *
     * @return a shell script that will invoke the http request
     */
    public static Statement execHttpResponse(HttpRequest request) {
@@ -88,7 +88,7 @@ public class ComputeServiceUtils {
 
    /**
     * build a shell script that invokes the contents of the http request in bash.
-    * 
+    *
     * @return a shell script that will invoke the http request
     */
    public static Statement extractTargzIntoDirectory(HttpRequest targz, String directory) {
@@ -102,7 +102,7 @@ public class ComputeServiceUtils {
 
    /**
     * build a shell script that invokes the contents of the http request in bash.
-    * 
+    *
     * @return a shell script that will invoke the http request
     */
    public static Statement extractZipIntoDirectory(HttpRequest zip, String directory) {
@@ -177,7 +177,7 @@ public class ComputeServiceUtils {
          }
       });
    }
-   
+
    /**
     * For cloud apis that have a pattern of using empty strings as tags, return a map that contains
     * that.
@@ -204,7 +204,7 @@ public class ComputeServiceUtils {
    public static Map<String, String> metadataAndTagsAsCommaDelimitedValue(TemplateOptions options) {
       Builder<String, String> builder = ImmutableMap.<String, String> builder();
       builder.putAll(options.getUserMetadata());
-      if (options.getTags().size() > 0)
+      if (!options.getTags().isEmpty())
          builder.put("jclouds_tags", Joiner.on(',').join(options.getTags()));
       return builder.build();
    }
@@ -266,11 +266,11 @@ public class ComputeServiceUtils {
       Set<Integer> sortedPorts = ImmutableSortedSet.copyOf(Ints.asList(ports));
 
       RangeSet<Integer> ranges = TreeRangeSet.create();
-      
+
       for (Integer port : sortedPorts) {
          ranges.add(Range.closedOpen(port, port + 1));
       }
-      
+
       Map<Integer, Integer> portRanges = Maps.newHashMap();
 
       for (Range<Integer> r : ranges.asRanges()) {

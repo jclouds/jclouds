@@ -80,7 +80,7 @@ import com.google.inject.Injector;
  * Adapted from the following sources: {@link http://gist.github.com/249915}, {@link http
  * ://www.capsunlock.net/2009/12/create-ebs-boot-ami.html}
  * <p/>
- * 
+ *
  * Generally disabled, as it incurs higher fees.
  */
 @Test(groups = "live", enabled = false, singleThreaded = true, testName = "EBSBootEC2ApiLiveTest")
@@ -334,7 +334,7 @@ public class EBSBootEC2ApiLiveTest extends BaseComputeServiceContextLiveTest {
    void testAMIFromBundle() {
       volume = Iterables.getOnlyElement(client.getElasticBlockStoreApi().get().describeVolumesInRegion(
             volume.getRegion(), volume.getId()));
-      if (volume.getAttachments().size() > 0) {
+      if (!volume.getAttachments().isEmpty()) {
          // should be cleanly unmounted, so force is not necessary.
          client.getElasticBlockStoreApi().get().detachVolumeInRegion(instance.getRegion(), volume.getId(), false);
          System.out.printf("%d: %s awaiting detachment to complete%n", System.currentTimeMillis(), volume.getId());
@@ -483,7 +483,7 @@ public class EBSBootEC2ApiLiveTest extends BaseComputeServiceContextLiveTest {
 
    /**
     * this tests "personality" as the file looked up was sent during instance creation
-    * 
+    *
     * @throws UnknownHostException
     */
    private void sshPing(RunningInstance newDetails) throws UnknownHostException {

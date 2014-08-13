@@ -141,7 +141,7 @@ public class StubComputeServiceAdapter implements JCloudsNativeComputeServiceAda
       NodeMetadata node = builder.build();
       nodes.put(node.getId(), node);
 
-      if (template.getOptions().getGroups().size() > 0) {
+      if (!template.getOptions().getGroups().isEmpty()) {
          final String groupId = Iterables.getFirst(template.getOptions().getGroups(), "0");
          Optional<SecurityGroup> secGroup = Iterables.tryFind(securityGroupExtension.get().listSecurityGroups(),
                                                               new Predicate<SecurityGroup>() {
@@ -155,7 +155,7 @@ public class StubComputeServiceAdapter implements JCloudsNativeComputeServiceAda
             groupsForNodes.put(node.getId(), secGroup.get());
          }
       }
-      
+
       setStateOnNodeAfterDelay(Status.RUNNING, node, 100);
       return new NodeWithInitialCredentials(node);
    }
@@ -184,12 +184,12 @@ public class StubComputeServiceAdapter implements JCloudsNativeComputeServiceAda
          }
       return images.build();
    }
-   
+
    @Override
    public Image getImage(String id) {
       return find(listImages(), ImagePredicates.idEquals(id), null);
    }
-   
+
    @Override
    public Iterable<NodeMetadata> listNodes() {
       return nodes.values();
@@ -219,7 +219,7 @@ public class StubComputeServiceAdapter implements JCloudsNativeComputeServiceAda
       setStateOnNodeAfterDelay(Status.PENDING, node, 0);
       setStateOnNodeAfterDelay(Status.TERMINATED, node, 50);
       groupsForNodes.removeAll(id);
-      
+
       ioExecutor.execute(new Runnable() {
 
          @Override

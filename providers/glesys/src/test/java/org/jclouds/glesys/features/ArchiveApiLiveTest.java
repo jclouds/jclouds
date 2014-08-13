@@ -40,7 +40,7 @@ public class ArchiveApiLiveTest extends BaseGleSYSApiLiveTest {
    @BeforeClass(groups = { "integration", "live" })
    public void setup() {
       super.setup();
-      
+
       archiveApi = api.getArchiveApi();
       archiveUser = identity.toLowerCase() + "_test9";
       archiveCounter = retry(new Predicate<Integer>() {
@@ -49,7 +49,7 @@ public class ArchiveApiLiveTest extends BaseGleSYSApiLiveTest {
          }
       }, 30, 1, SECONDS);
    }
-   
+
    @AfterClass(groups = { "integration", "live" })
    protected void tearDown() {
       int before = archiveApi.list().size();
@@ -68,22 +68,22 @@ public class ArchiveApiLiveTest extends BaseGleSYSApiLiveTest {
       ArchiveAllowedArguments args = archiveApi.getAllowedArguments();
       assertNotNull(args);
       assertNotNull(args.getSizes());
-      assertTrue(args.getSizes().size() > 0);
-      
+      assertTrue(!args.getSizes().isEmpty());
+
       for (int size : args.getSizes()) {
          assertTrue(size > 0);
       }
    }
-   
+
    @Test
    public void testCreateArchive() throws Exception {
       try {
          archiveApi.delete(archiveUser);
       } catch (Exception ex) {
       }
-      
+
       int before = archiveApi.list().size();
-      
+
       archiveApi.createWithCredentialsAndSize(archiveUser, "password", 10);
 
       assertTrue(archiveCounter.apply(before + 1));
@@ -97,7 +97,7 @@ public class ArchiveApiLiveTest extends BaseGleSYSApiLiveTest {
 
    @Test(dependsOnMethods = "testCreateArchive")
    public void testChangePassword() throws Exception {
-      archiveApi.changePassword(archiveUser, "newpassword");      
+      archiveApi.changePassword(archiveUser, "newpassword");
       // TODO assert something useful!
    }
 

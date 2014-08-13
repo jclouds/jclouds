@@ -45,7 +45,7 @@ public class ListOfKeyValuesDelimitedByBlankLinesToListOfMaps implements Functio
                   }
                }
             }
-            if (map.size() != 0)
+            if (!map.isEmpty())
                maps.add(map);
          }
       }

@@ -130,7 +130,7 @@ public class EC2CreateNodesInGroupThenAddToSet implements CreateNodesInGroupThen
       Template mutableTemplate = template.clone();
 
       Set<RunningInstance> started = runInstancesAndWarnOnInvisible(group, count, mutableTemplate);
-      if (started.size() == 0) {
+      if (started.isEmpty()) {
          logger.warn("<< unable to start instances(%s)", mutableTemplate);
          return ImmutableMap.of();
       }
@@ -151,7 +151,7 @@ public class EC2CreateNodesInGroupThenAddToSet implements CreateNodesInGroupThen
       Set<RunningInstance> started = createKeyPairAndSecurityGroupsAsNeededThenRunInstances(group, count,
             mutableTemplate);
       Set<RegionAndName> startedIds = ImmutableSet.copyOf(transform(started, instanceToRegionAndName));
-      if (startedIds.size() == 0) {
+      if (startedIds.isEmpty()) {
          return ImmutableSet.copyOf(started);
       }
       logger.debug("<< started instances(%s)", startedIds);
@@ -161,7 +161,7 @@ public class EC2CreateNodesInGroupThenAddToSet implements CreateNodesInGroupThen
 
       // add an exception for each of the nodes we cannot customize
       Set<RegionAndName> invisibleIds = difference(startedIds, visibleIds);
-      if (invisibleIds.size() > 0) {
+      if (!invisibleIds.isEmpty()) {
          logger.warn("<< not api visible instances(%s)", invisibleIds);
       }
       return started;

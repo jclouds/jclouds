@@ -39,7 +39,7 @@ public class UnwrapOnlyJsonValueInSet<T> implements Function<HttpResponse, T> {
    @Override
    public T apply(HttpResponse arg0) {
       Set<T> set = json.apply(arg0);
-      if (set == null || set.size() == 0)
+      if (set == null || set.isEmpty())
          return null;
       return Iterables.getOnlyElement(set);
    }

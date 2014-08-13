@@ -26,7 +26,7 @@ public class OnlyElementOrNull<T> implements Function<Iterable<T>, T> {
 
    @Override
    public T apply(Iterable<T> arg0) {
-      if (arg0 == null || Iterables.size(arg0) == 0)
+      if (arg0 == null || Iterables.isEmpty(arg0))
          return null;
       return Iterables.getOnlyElement(arg0);
    }

@@ -214,7 +214,7 @@ public class SecurityGroup extends ForwardingSet<IpPermission> {
    protected ToStringHelper string() {
       return MoreObjects.toStringHelper(this).omitNullValues().add("region", region).add("id", id).add("name", name)
             .add("ownerId", ownerId).add("description", description)
-            .add("ipPermissions", ipPermissions.size() == 0 ? null : ipPermissions);
+            .add("ipPermissions", ipPermissions.isEmpty() ? null : ipPermissions);
    }
 
    @Override

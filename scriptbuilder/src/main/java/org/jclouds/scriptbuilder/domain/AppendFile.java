@@ -90,7 +90,7 @@ public class AppendFile implements Statement {
       this.path = checkNotNull(path, "PATH");
       this.lines = checkNotNull(lines, "lines");
       this.delimiter = checkNotNull(delimiter, "delimiter");
-      checkState(Iterables.size(lines) > 0, "you must pass something to execute");
+      checkState(!Iterables.isEmpty(lines), "you must pass something to execute");
       this.expandVariables = expandVariables;
    }
 

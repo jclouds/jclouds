@@ -92,9 +92,9 @@ public class CreateServerOptions implements MapBinder {
       ServerRequest server = new ServerRequest(checkNotNull(postParams.get("name"), "name parameter not present").toString(),
                Integer.parseInt(checkNotNull(postParams.get("imageId"), "imageId parameter not present").toString()),
                Integer.parseInt(checkNotNull(postParams.get("flavorId"), "flavorId parameter not present").toString()));
-      if (metadata.size() > 0)
+      if (!metadata.isEmpty())
          server.metadata = metadata;
-      if (files.size() > 0)
+      if (!files.isEmpty())
          server.personality = files;
       if (sharedIpGroupId != null)
          server.sharedIpGroupId = this.sharedIpGroupId;
@@ -130,16 +130,16 @@ public class CreateServerOptions implements MapBinder {
     * group. Any server in a group can share one or more public IPs with any other server in the
     * group. With the exception of the first server in a shared IP group, servers must be launched
     * into shared IP groups. A server may only be a member of one shared IP group.
-    * 
+    *
     * <p/>
     * Servers in the same shared IP group can share public IPs for various high availability and
     * load balancing configurations. To launch an HA server, include the optional sharedIpGroupId
     * element and the server will be launched into that shared IP group.
     * <p />
-    * 
+    *
     * Note: sharedIpGroupId is an optional parameter and for optimal performance, should ONLY be
     * specified when intending to share IPs between servers.
-    * 
+    *
     * @see #withSharedIp(String)
     */
    public CreateServerOptions withSharedIpGroup(int id) {
@@ -177,7 +177,7 @@ public class CreateServerOptions implements MapBinder {
     * specify that the target server network configuration be modified). Shared IP addresses can be
     * used with many standard heartbeat facilities (e.g. keepalived) that monitor for failure and
     * manage IP failover.
-    * 
+    *
     * <p/>
     * If you intend to use a shared IP on the server being created and have no need for a separate
     * public IP address, you may launch the server into a shared IP group and specify an IP address

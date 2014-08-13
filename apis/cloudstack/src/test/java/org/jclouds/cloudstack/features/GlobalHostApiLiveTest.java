@@ -41,7 +41,7 @@ public class GlobalHostApiLiveTest extends BaseCloudStackApiLiveTest {
       skipIfNotGlobalAdmin();
 
       Set<Host> hosts = globalAdminClient.getHostClient().listHosts();
-      assert hosts.size() > 0 : hosts;
+      assert !hosts.isEmpty() : hosts;
 
       for (Host host : hosts) {
          checkHost(host);
@@ -68,7 +68,7 @@ public class GlobalHostApiLiveTest extends BaseCloudStackApiLiveTest {
       skipIfNotGlobalAdmin();
 
       Set<Cluster> clusters = globalAdminClient.getHostClient().listClusters();
-      assert clusters.size() > 0 : clusters;
+      assert !clusters.isEmpty() : clusters;
 
       for (Cluster cluster : clusters) {
          checkCluster(cluster);

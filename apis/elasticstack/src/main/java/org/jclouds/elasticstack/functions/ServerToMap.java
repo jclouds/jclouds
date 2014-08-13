@@ -60,7 +60,7 @@ public class ServerToMap implements Function<Server, Map<String, String>> {
          builder.put("smp", "auto");
       builder.put("mem", from.getMem() + "");
       builder.put("persistent", from.isPersistent() + "");
-      if (from.getBootDeviceIds().size() != 0)
+      if (!from.getBootDeviceIds().isEmpty())
          builder.put("boot", Joiner.on(' ').join(from.getBootDeviceIds()));
       for (Entry<String, ? extends Device> entry : from.getDevices().entrySet()) {
          builder.put(entry.getKey(), entry.getValue().getDriveUuid());
@@ -89,7 +89,7 @@ public class ServerToMap implements Function<Server, Map<String, String>> {
          builder.put("password", from.getVnc().getPassword());
       if (from.getVnc().isTls())
          builder.put("vnc:tls", "on");
-      if (from.getTags().size() != 0)
+      if (!from.getTags().isEmpty())
          builder.put("tags", Joiner.on(' ').join(from.getTags()));
       for (Entry<String, String> entry : from.getUserMetadata().entrySet())
          builder.put("user:" + entry.getKey(), entry.getValue());

@@ -27,7 +27,7 @@ import org.jclouds.location.predicates.RegionIdFilter;
 import org.jclouds.location.suppliers.fromconfig.RegionIdsFromConfiguration;
 
 /**
- * 
+ *
  * If there are regions configured in {@link RegionIdsFromConfiguration}, return
  * true if that set contains the input param. If there aren't, return true.
  */
@@ -44,11 +44,11 @@ public class AnyOrConfiguredRegionId implements RegionIdFilter {
    @Override
    public boolean apply(String input) {
       Set<String> idsInConfig = idsInConfigSupplier.get();
-      if (idsInConfig.size() == 0)
+      if (idsInConfig.isEmpty())
          return true;
       return idsInConfig.contains(input);
    }
-   
+
    @Override
    public String toString() {
       return "anyOrConfiguredRegionId(" + idsInConfigSupplier + ")";

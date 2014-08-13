@@ -45,7 +45,7 @@ import com.google.inject.Inject;
  * Key-value implementations of BlobStore, such as S3, do not have directories. In following the
  * rackspace cloud files project, we use an empty object '#{dirpath}' with content type set to
  * 'application/directory'.
- * 
+ *
  * <p/>
  * To interoperate with other S3 tools, we accept the following ways to tell if the directory
  * exists:
@@ -57,7 +57,7 @@ import com.google.inject.Inject;
  * <li>if both a file with the name of a directory and a marker for that directory exists, then the
  * *file masks the directory*, and the directory is never returned.</li>
  * </ul>
- * 
+ *
  * @see MarkerFileMkdirStrategy
  */
 @Singleton
@@ -103,7 +103,7 @@ public class MarkersDeleteDirectoryStrategy implements DeleteDirectoryStrategy {
       } catch (TimeoutException te) {
          throw propagate(te);
       }
-      if (exceptions.size() > 0)
+      if (!exceptions.isEmpty())
          throw new BlobRuntimeException(String.format("error %s: %s", message, exceptions));
       assert !blobstore.directoryExists(containerName, directory) : String.format(
                "still exists %s: %s", message, exceptions);

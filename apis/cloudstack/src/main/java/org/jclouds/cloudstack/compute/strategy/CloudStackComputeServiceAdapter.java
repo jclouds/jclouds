@@ -164,7 +164,7 @@ public class CloudStackComputeServiceAdapter implements
       } else if (templateOptions.getDomainId() != null) {
           options.domainId(templateOptions.getDomainId());
       }
-      
+
       OptionsConverter optionsConverter = optionsConverters.get(zone.getNetworkType());
       options = optionsConverter.apply(templateOptions, networks, zoneId, options);
 
@@ -174,7 +174,7 @@ public class CloudStackComputeServiceAdapter implements
          options.ipOnDefaultNetwork(templateOptions.getIpOnDefaultNetwork());
       }
 
-      if (templateOptions.getIpsToNetworks().size() > 0) {
+      if (!templateOptions.getIpsToNetworks().isEmpty()) {
          options.ipsToNetworks(templateOptions.getIpsToNetworks());
       }
 
@@ -211,8 +211,8 @@ public class CloudStackComputeServiceAdapter implements
       if (supportsSecurityGroups().apply(zone)) {
          List<Integer> inboundPorts = Ints.asList(templateOptions.getInboundPorts());
 
-         if (templateOptions.getSecurityGroupIds().size() == 0
-             && inboundPorts.size() > 0
+         if (templateOptions.getSecurityGroupIds().isEmpty()
+             && !inboundPorts.isEmpty()
              && templateOptions.shouldGenerateSecurityGroup()) {
             String securityGroupName = namingConvention.create().sharedNameForGroup(group);
             SecurityGroup sg = securityGroupCache.getUnchecked(ZoneSecurityGroupNamePortsCidrs.builder()
@@ -223,7 +223,7 @@ public class CloudStackComputeServiceAdapter implements
             options.securityGroupId(sg.getId());
          }
       }
-      
+
       String templateId = template.getImage().getId();
       String serviceOfferingId = template.getHardware().getId();
 
@@ -241,7 +241,7 @@ public class CloudStackComputeServiceAdapter implements
          assert vm.getPassword() != null : vm;
          credentialsBuilder.password(vm.getPassword());
       }
-      
+
       try {
           if (templateOptions.shouldSetupStaticNat()) {
              Capabilities capabilities = client.getConfigurationApi().listCapabilities();

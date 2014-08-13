@@ -67,7 +67,7 @@ public class DirectionalGroupApiLiveTest extends BaseUltraDNSWSApiLiveTest {
       for (AccountLevelGroup group : api().listAccountLevelGroups()) {
          DirectionalGroup withRegions = api().get(group.getId());
          assertEquals(withRegions.getName(), group.getName());
-         assertTrue(withRegions.size() > 0);
+         assertTrue(!withRegions.isEmpty());
       }
    }
 

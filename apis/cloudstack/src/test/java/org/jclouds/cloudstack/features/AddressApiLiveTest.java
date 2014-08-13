@@ -42,7 +42,7 @@ public class AddressApiLiveTest extends BaseCloudStackApiLiveTest {
 
    @BeforeGroups(groups = "live")
    void networksEnabled() {
-      networksEnabled = client.getNetworkApi().listNetworks().size() > 0;
+      networksEnabled = !client.getNetworkApi().listNetworks().isEmpty();
    }
 
    private PublicIPAddress ip = null;

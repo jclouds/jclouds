@@ -39,7 +39,7 @@ public class KeyValuesDelimitedByBlankLinesToStaticIPInfo implements Function<Ht
    @Override
    public StaticIPInfo apply(HttpResponse response) {
       Set<StaticIPInfo> drives = setParser.apply(response);
-      if (drives.size() == 0)
+      if (drives.isEmpty())
          return null;
       return Iterables.get(drives, 0);
    }

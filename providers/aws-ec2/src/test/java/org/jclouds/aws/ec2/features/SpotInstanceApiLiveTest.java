@@ -134,7 +134,7 @@ public class SpotInstanceApiLiveTest  extends BaseComputeServiceContextLiveTest 
       for (String region : Region.DEFAULT_REGIONS) {
          Set<Spot> spots = client.getSpotInstanceApi().get().describeSpotPriceHistoryInRegion(region, from(new Date()));
          assertNotNull(spots);
-         assert spots.size() > 0;
+         assert !spots.isEmpty();
          for (Spot spot : spots) {
             assert spot.getSpotPrice() > 0 : spots;
             assertEquals(spot.getRegion(), region);
@@ -143,7 +143,7 @@ public class SpotInstanceApiLiveTest  extends BaseComputeServiceContextLiveTest 
                               "Windows", "Windows (Amazon VPC)")).apply(spot.getProductDescription()) : spot;
             assert in(
                      ImmutableSet.of("c1.medium", "c1.xlarge", "cc1.4xlarge", "cg1.4xlarge", "cc2.8xlarge", "m1.large",
-                              "m1.small", "m1.medium", "m1.xlarge", "m2.2xlarge", "m2.4xlarge", "m2.xlarge", "m3.xlarge", 
+                              "m1.small", "m1.medium", "m1.xlarge", "m2.2xlarge", "m2.4xlarge", "m2.xlarge", "m3.xlarge",
                               "m3.2xlarge", "t1.micro", "cr1.8xlarge")).apply(
                      spot.getInstanceType()) : spot;
 

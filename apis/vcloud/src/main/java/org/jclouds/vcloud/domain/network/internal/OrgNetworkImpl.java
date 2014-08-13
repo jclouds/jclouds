@@ -189,9 +189,9 @@ public class OrgNetworkImpl extends ReferenceTypeImpl implements OrgNetwork {
    public ToStringHelper string() {
       ToStringHelper helper = super.string().add("org", org).add("description", description)
             .add("configuration", configuration).add("networkPool", networkPool);
-      if (allowedExternalIpAddresses.size() > 0)
+      if (!allowedExternalIpAddresses.isEmpty())
          helper.add("allowedExternalIpAddresses", allowedExternalIpAddresses);
-      if (tasks.size() > 0)
+      if (!tasks.isEmpty())
          helper.add("tasks", tasks);
       return helper;
    }

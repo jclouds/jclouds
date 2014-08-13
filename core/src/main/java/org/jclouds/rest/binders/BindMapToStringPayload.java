@@ -44,7 +44,7 @@ public class BindMapToStringPayload implements MapBinder {
       checkArgument(invoked.isAnnotationPresent(Payload.class),
             "method %s must have @Payload annotation to use this binder", invoked);
       String payload = invoked.getAnnotation(Payload.class).value();
-      if (postParams.size() > 0) {
+      if (!postParams.isEmpty()) {
          payload = urlDecode(expand(payload, postParams));
       }
       return (R) request.toBuilder().payload(payload).build();

@@ -22,7 +22,7 @@ import com.google.common.collect.Maps;
 
 /**
  * When an Azure Storage request is in error, the client receives an error response.
- * 
+ *
  * @see <a href="http://msdn.microsoft.com/en-us/library/dd573365.aspx" />
  */
 public class AzureStorageError {
@@ -46,7 +46,7 @@ public class AzureStorageError {
          sb.append(", stringSigned='").append(stringSigned).append('\'');
       if (getSignature() != null)
          sb.append(", signature='").append(getSignature()).append('\'');
-      if (details.size() != 0)
+      if (!details.isEmpty())
          sb.append(", context='").append(details.toString()).append('\'').append('}');
       return sb.toString();
    }

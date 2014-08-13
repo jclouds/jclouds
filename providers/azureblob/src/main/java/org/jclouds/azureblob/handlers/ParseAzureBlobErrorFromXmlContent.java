@@ -51,7 +51,7 @@ public class ParseAzureBlobErrorFromXmlContent extends ParseAzureStorageErrorFro
                List<String> parts = Lists.newArrayList(Splitter.on('/').split(
                         command.getCurrentRequest().getEndpoint().getPath()));
                parts.remove("");
-               if (parts.size() > 0) {
+               if (!parts.isEmpty()) {
                   String container = parts.remove(0);
                   String query = command.getCurrentRequest().getEndpoint().getQuery();
                   if (query != null && query.indexOf("container") != -1) {

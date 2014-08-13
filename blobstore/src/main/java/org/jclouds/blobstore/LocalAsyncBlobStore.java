@@ -467,7 +467,7 @@ public class LocalAsyncBlobStore extends BaseAsyncBlobStore {
          }
          blob = copyBlob(blob);
 
-         if (options.getRanges() != null && options.getRanges().size() > 0) {
+         if (options.getRanges() != null && !options.getRanges().isEmpty()) {
             byte[] data;
             try {
                data = ByteStreams2.toByteArrayAndClose(blob.getPayload().openStream());

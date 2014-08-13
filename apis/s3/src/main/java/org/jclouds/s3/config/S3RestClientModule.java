@@ -86,7 +86,7 @@ public class S3RestClientModule<S extends S3Client, A extends S3AsyncClient> ext
    protected CacheLoader<String, Optional<String>> bucketToRegion(@Region Supplier<Set<String>> regionSupplier,
             final S3Client client) {
       Set<String> regions = regionSupplier.get();
-      if (regions.size() == 0) {
+      if (regions.isEmpty()) {
          return new CacheLoader<String, Optional<String>>() {
 
             @Override

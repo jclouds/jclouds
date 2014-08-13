@@ -45,7 +45,7 @@ public class FirewallService {
 
    /**
     * @return Firewall rules for the network
-    * 
+    *
     * @since vcloud api 0.8
     */
    public List<FirewallRule> getFirewallRules() {
@@ -54,7 +54,7 @@ public class FirewallService {
 
    /**
     * @return true if the service is enabled
-    * 
+    *
     * @since vcloud api 0.9
     */
    @Nullable
@@ -80,7 +80,7 @@ public class FirewallService {
    @Override
    public String toString() {
       ToStringHelper helper = MoreObjects.toStringHelper("").omitNullValues().add("enabled", enabled);
-      if (firewallRules.size() > 0)
+      if (!firewallRules.isEmpty())
          helper.add("firewallRules", firewallRules);
       return helper.toString();
    }

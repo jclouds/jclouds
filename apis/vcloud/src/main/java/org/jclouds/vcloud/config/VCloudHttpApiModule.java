@@ -122,7 +122,7 @@ public class VCloudHttpApiModule extends HttpApiModule<VCloudApi> {
                   public VCloudSession get() {
                      return login.login();
                   }
-                  
+
                   @Override
                   public String toString() {
                      return MoreObjects.toStringHelper(login).add("method", "login").toString();
@@ -362,7 +362,7 @@ public class VCloudHttpApiModule extends HttpApiModule<VCloudApi> {
          @Override
          public URI get() {
             SortedMap<String, URI> versions = versionService.getSupportedVersions();
-            checkState(versions.size() > 0, "No versions present");
+            checkState(!versions.isEmpty(), "No versions present");
             checkState(versions.containsKey(version), "version " + version + " not present in: " + versions);
             return versions.get(version);
          }

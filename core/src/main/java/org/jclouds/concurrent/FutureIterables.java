@@ -52,15 +52,15 @@ import com.google.inject.Inject;
  */
 @Beta
 public class FutureIterables {
-   
+
    @Inject(optional = true)
    @Named(Constants.PROPERTY_MAX_RETRIES)
    private static int maxRetries = 5;
-   
+
    @Inject(optional = true)
    @Named(Constants.PROPERTY_RETRY_DELAY_START)
    private static long delayStart = 50L;
-   
+
    @Inject(optional = true)
    private static BackoffLimitedRetryHandler retryHandler = BackoffLimitedRetryHandler.INSTANCE;
 
@@ -69,7 +69,7 @@ public class FutureIterables {
                String logPrefix) {
       return transformParallel(fromIterable, function, exec, maxTime, logger, logPrefix, retryHandler, maxRetries);
    }
-   
+
    @SuppressWarnings("unchecked")
    public static <F, T> Iterable<T> transformParallel(Iterable<F> fromIterable,
          Function<? super F, ListenableFuture<? extends T>> function, ListeningExecutorService exec, @Nullable Long maxTime, Logger logger,
@@ -77,7 +77,7 @@ public class FutureIterables {
       Map<F, Exception> exceptions = newHashMap();
       Map<F, ListenableFuture<? extends T>> responses = newHashMap();
       for (int i = 0; i < maxRetries; i++) {
-         
+
          for (F from : fromIterable) {
             ListenableFuture<? extends T> to = function.apply(from);
             responses.put(from, to);
@@ -87,7 +87,7 @@ public class FutureIterables {
          } catch (TimeoutException te) {
             throw propagate(te);
          }
-         if (exceptions.size() > 0 && !any(exceptions.values(), containsThrowable(AuthorizationException.class))) {
+         if (!exceptions.isEmpty() && !any(exceptions.values(), containsThrowable(AuthorizationException.class))) {
             fromIterable = exceptions.keySet();
             retryHandler.imposeBackoffExponentialDelay(delayStart, 2, i + 1, maxRetries,
                   String.format("error %s: %s: %s", logPrefix, fromIterable, exceptions));
@@ -96,18 +96,18 @@ public class FutureIterables {
          }
       }
       //make sure we propagate any authorization exception so that we don't lock out accounts
-      if (exceptions.size() > 0)
+      if (!exceptions.isEmpty())
          return propagateAuthorizationOrOriginalException(new TransformParallelException(Map.class.cast(responses),
                exceptions, logPrefix));
-      
+
       return unwrap(responses.values());
    }
-   
+
    public static <F> Map<F, Exception> awaitCompletion(Map<F, ? extends ListenableFuture<?>> responses,
          ListeningExecutorService exec, @Nullable Long maxTime, final Logger logger, final String logPrefix)
          throws TimeoutException {
       final ConcurrentMap<F, Exception> errorMap = newConcurrentMap();
-      if (responses.size() == 0)
+      if (responses.isEmpty())
          return errorMap;
       final int total = responses.size();
       final CountDownLatch doneSignal = new CountDownLatch(total);
@@ -116,7 +116,7 @@ public class FutureIterables {
       final long start = System.currentTimeMillis();
       for (final Entry<F, ? extends ListenableFuture<?>> future : responses.entrySet()) {
          future.getValue().addListener(new Runnable() {
-            
+
             @Override
             public void run() {
                try {
@@ -130,7 +130,7 @@ public class FutureIterables {
 	               doneSignal.countDown();
                }
             }
-            
+
             @Override
             public String toString() {
                return "callGetOnFuture(" + future.getKey() + "," + future.getValue() + ")";
@@ -164,7 +164,7 @@ public class FutureIterables {
       }
       return errorMap;
    }
-   
+
    private static <T> Iterable<T> unwrap(Iterable<ListenableFuture<? extends T>> values) {
       return transform(values, new Function<ListenableFuture<? extends T>, T>() {
          @Override
@@ -178,20 +178,20 @@ public class FutureIterables {
             }
             return null;
          }
-         
+
          @Override
          public String toString() {
             return "callGetOnFuture()";
          }
       });
    }
-   
+
    private static void logException(Logger logger, String logPrefix, int total, int complete, int errors, long start,
          Exception e) {
       String message = message(logPrefix, total, complete, errors, start);
       logger.error(e, message);
    }
-   
+
    private static String message(String prefix, int size, int complete, int errors, long start) {
       return String.format("%s, completed: %d/%d, errors: %d, rate: %dms/op", prefix, complete, size, errors,
             (long) ((System.currentTimeMillis() - start) / ((double) size)));

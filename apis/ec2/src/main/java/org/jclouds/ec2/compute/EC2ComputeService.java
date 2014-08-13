@@ -164,7 +164,7 @@ public class EC2ComputeService extends BaseComputeService {
          return in.getProviderId();
       }
    };
-   
+
    private Set<NodeMetadata> addTagsAndNamesToInstancesInRegion(Map<String, String> common, Set<String> nodeNames,
                                                                 Set<? extends NodeMetadata> input, String region,
                                                                 String group) {
@@ -219,8 +219,8 @@ public class EC2ComputeService extends BaseComputeService {
       checkNotNull(emptyToNull(region), "region must be defined");
       checkNotNull(emptyToNull(group), "group must be defined");
       String groupName = namingConvention.create().sharedNameForGroup(group);
-      
-      if (client.getSecurityGroupApi().get().describeSecurityGroupsInRegion(region, groupName).size() > 0) {
+
+      if (!client.getSecurityGroupApi().get().describeSecurityGroupsInRegion(region, groupName).isEmpty()) {
          logger.debug(">> deleting securityGroup(%s)", groupName);
          client.getSecurityGroupApi().get().deleteSecurityGroupInRegion(region, groupName);
          // TODO: test this clear happens
@@ -240,7 +240,7 @@ public class EC2ComputeService extends BaseComputeService {
          Predicate<String> keyNameMatcher = namingConvention.create().containsGroup(group);
          String oldKeyNameRegex = String.format("jclouds#%s#%s#%s", group, region, "[0-9a-f]+").replace('#', delimiter);
          // old keypair pattern too verbose as it has an unnecessary region qualifier
-         
+
          if (keyNameMatcher.apply(keyName) || keyName.matches(oldKeyNameRegex)) {
             Set<String> instancesUsingKeyPair = extractIdsFromInstances(concat(client.getInstanceApi().get()
                   .describeInstancesInRegionWithFilter(region, ImmutableMultimap.<String, String>builder()
@@ -248,7 +248,7 @@ public class EC2ComputeService extends BaseComputeService {
                           .put("instance-state-name", InstanceState.SHUTTING_DOWN.toString())
                           .put("key-name", keyPair.getKeyName()).build())));
 
-            if (instancesUsingKeyPair.size() > 0) {
+            if (!instancesUsingKeyPair.isEmpty()) {
                logger.debug("<< inUse keyPair(%s), by (%s)", keyPair.getKeyName(), instancesUsingKeyPair);
             } else {
                logger.debug(">> deleting keyPair(%s)", keyPair.getKeyName());
@@ -292,12 +292,12 @@ public class EC2ComputeService extends BaseComputeService {
       // For issue #445, tries to delete security groups first: ec2 throws exception if in use, but
       // deleting a key pair does not.
       // This is "belt-and-braces" because deleteKeyPair also does extractIdsFromInstances & usingKeyPairAndNotDead
-      // for us to check if any instances are using the key-pair before we delete it. 
-      // There is (probably?) still a race if someone is creating instances at the same time as deleting them: 
-      // we may delete the key-pair just when the node-being-created was about to rely on the incidental 
+      // for us to check if any instances are using the key-pair before we delete it.
+      // There is (probably?) still a race if someone is creating instances at the same time as deleting them:
+      // we may delete the key-pair just when the node-being-created was about to rely on the incidental
       // resources existing.
 
-      // Also in #445, in aws-ec2 the deleteSecurityGroup sometimes fails after terminating the final VM using a 
+      // Also in #445, in aws-ec2 the deleteSecurityGroup sometimes fails after terminating the final VM using a
       // given security group, if called very soon after the VM's state reports terminated. Empirically, it seems that
       // waiting a small time (e.g. enabling logging or debugging!) then the tests pass. We therefore retry.
       // TODO: this could be moved to a config module, also the narrative above made more concise

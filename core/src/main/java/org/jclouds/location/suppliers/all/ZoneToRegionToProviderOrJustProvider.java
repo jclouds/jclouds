@@ -70,7 +70,7 @@ public class ZoneToRegionToProviderOrJustProvider implements LocationsSupplier {
    public Set<? extends Location> get() {
       Set<? extends Location> regionsOrJustProvider = regionToProviderOrJustProvider.get();
       Set<String> zoneIds = zoneIdsSupplier.get();
-      if (zoneIds.size() == 0)
+      if (zoneIds.isEmpty())
          return regionsOrJustProvider;
       Map<String, Location> zoneIdToParent = setParentOfZoneToRegionOrProvider(zoneIds, regionsOrJustProvider);
       Map<String, Supplier<Set<String>>> isoCodesById = isoCodesByIdSupplier.get();
@@ -121,7 +121,7 @@ public class ZoneToRegionToProviderOrJustProvider implements LocationsSupplier {
       }
 
       SetView<String> orphans = Sets.difference(zoneIds, zoneIdToParent.keySet());
-      if (orphans.size() > 0) {
+      if (!orphans.isEmpty()) {
          // any unmatched zones should have their parents set to the provider
          checkState(
                   provider != null,
@@ -130,7 +130,7 @@ public class ZoneToRegionToProviderOrJustProvider implements LocationsSupplier {
          for (String orphanedZoneId : orphans)
             zoneIdToParent.put(orphanedZoneId, provider);
       }
-      
+
       checkState(zoneIdToParent.keySet().containsAll(zoneIds), "orphaned zones: %s ", Sets.difference(zoneIds,
                zoneIdToParent.keySet()));
       return zoneIdToParent;

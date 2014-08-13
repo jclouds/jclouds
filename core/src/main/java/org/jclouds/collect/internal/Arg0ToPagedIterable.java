@@ -34,7 +34,7 @@ public abstract class Arg0ToPagedIterable<T, I extends Arg0ToPagedIterable<T, I>
 
    @Override
    protected Function<Object, IterableWithMarker<T>> markerToNextForArgs(List<Object> args) {
-      Optional<Object> arg0 = Optional.fromNullable(args.size() > 0 ? args.get(0) : null);
+      Optional<Object> arg0 = Optional.fromNullable(!args.isEmpty() ? args.get(0) : null);
       return markerToNextForArg0(arg0);
    }
 

@@ -100,7 +100,7 @@ public class ScriptBuilder implements Statement, AcceptsStatementVisitor {
     * <li>variable exports</li>
     * <li>case/switch</li>
     * </ol>
-    * 
+    *
     * @param osFamily
     *           whether to write a cmd or bash script.
     */
@@ -130,7 +130,7 @@ public class ScriptBuilder implements Statement, AcceptsStatementVisitor {
    }
 
    public static void writeFunctions(Map<String, String> functionsToWrite, OsFamily osFamily, StringBuilder builder) {
-      if (functionsToWrite.size() > 0) {
+      if (!functionsToWrite.isEmpty()) {
          builder.append(ShellToken.BEGIN_FUNCTIONS.to(osFamily));
          for (String function : functionsToWrite.values()) {
             builder.append(Utils.replaceTokens(function, ShellToken.tokenValueMap(osFamily)));

@@ -77,11 +77,11 @@ public class HostedZoneApiLiveTest extends BaseRoute53ApiLiveTest {
       try {
          checkHostedZone(newHostedZone.getZone());
          assertEquals(newHostedZone.getChange().getStatus(), PENDING, "invalid status on zone " + newHostedZone);
-         assertTrue(newHostedZone.getNameServers().size() > 0, "no name servers for zone " + newHostedZone);
+         assertTrue(!newHostedZone.getNameServers().isEmpty(), "no name servers for zone " + newHostedZone);
          assertEquals(newHostedZone.getZone().getName(), name);
          assertEquals(newHostedZone.getZone().getCallerReference(), nonce);
          assertEquals(newHostedZone.getZone().getComment().get(), comment);
-         
+
          assertTrue(inSync.apply(newHostedZone.getChange()), "zone didn't sync " + newHostedZone);
       } finally {
          Change delete = api().delete(newHostedZone.getZone().getId());

@@ -95,7 +95,7 @@ public class BindInstantiateVAppTemplateParamsToXmlPayload implements MapBinder 
       InstantiateVAppTemplateOptions options = findOptionsInArgsOrNull(gRequest);
 
       if (options != null) {
-         if (options.getNetworkConfig().size() > 0)
+         if (!options.getNetworkConfig().isEmpty())
             networkConfig = ImmutableSet
                      .copyOf(transform(options.getNetworkConfig(), networkConfigDecorator));
       } else {
@@ -125,7 +125,7 @@ public class BindInstantiateVAppTemplateParamsToXmlPayload implements MapBinder 
          VAppTemplate vAppTemplate = templateCache.getUnchecked(template);
          checkArgument(vAppTemplate != null, "vAppTemplate %s not found!", template);
          vms = vAppTemplate.getChildren();
-         checkArgument(vms.size() > 0, "no vms found in vAppTemplate %s", vAppTemplate);
+         checkArgument(!vms.isEmpty(), "no vms found in vAppTemplate %s", vAppTemplate);
       }
       return vms;
    }

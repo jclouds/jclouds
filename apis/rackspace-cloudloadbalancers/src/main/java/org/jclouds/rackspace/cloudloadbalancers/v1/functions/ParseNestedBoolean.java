@@ -43,10 +43,10 @@ public class ParseNestedBoolean implements Function<HttpResponse, Boolean>, Invo
    @Override
    public Boolean apply(HttpResponse response) {
       Map<String, Map<String, Boolean>> map = json.apply(response);
-      
-      if (map == null || map.size() == 0)
+
+      if (map == null || map.isEmpty())
          throw new HttpResponseException("Unexpected JSON format returned.", null, response);
-      
+
       return Iterables.get(Iterables.get(map.values(), 0).values(), 0);
    }
 

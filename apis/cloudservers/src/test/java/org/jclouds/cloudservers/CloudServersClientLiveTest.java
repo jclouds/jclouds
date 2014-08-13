@@ -94,8 +94,8 @@ public class CloudServersClientLiveTest extends BaseComputeServiceContextLiveTes
    public void testLimits() throws Exception {
       Limits response = client.getLimits();
       assert null != response;
-      assertTrue(response.getAbsolute().size() > 0);
-      assertTrue(response.getRate().size() > 0);
+      assertTrue(!response.getAbsolute().isEmpty());
+      assertTrue(!response.getRate().isEmpty());
    }
 
    public void testListServers() throws Exception {

@@ -51,7 +51,7 @@ public class VolumeDetached implements Predicate<Attachment> {
               .getRegion(), attachment.getVolumeId()));
 
       /*If attachment size is 0 volume is detached for sure.*/
-      if (volume.getAttachments().size() == 0) {
+      if (volume.getAttachments().isEmpty()) {
          return true;
       }
 

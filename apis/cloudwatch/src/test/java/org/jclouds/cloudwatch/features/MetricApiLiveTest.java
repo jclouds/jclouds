@@ -166,7 +166,7 @@ public class MetricApiLiveTest extends BaseCloudWatchApiLiveTest {
                                                  .unit(Unit.PERCENT).build();
                GetMetricStatisticsResponse response = api().getMetricStatistics(options);
 
-               if (response.size() > 0) {
+               if (!response.isEmpty()) {
                   checkNotNull(response.getLabel());
 
                   for (Datapoint datapoint : response) {
@@ -200,13 +200,13 @@ public class MetricApiLiveTest extends BaseCloudWatchApiLiveTest {
 
       performDefaultMetricsTests(response);
 
-      if (Iterables.size(response) > 0) {
+      if (!Iterables.isEmpty(response)) {
          Metric metric = response.iterator().next();
 
          testMetricName = metric.getMetricName();
          testNamespace = metric.getNamespace();
 
-         if (metric.getDimensions().size() > 0) {
+         if (!metric.getDimensions().isEmpty()) {
             Dimension dimension = metric.getDimensions().iterator().next();
 
             testDimensionName = dimension.getName();
@@ -217,7 +217,7 @@ public class MetricApiLiveTest extends BaseCloudWatchApiLiveTest {
             for (Metric metric1 : response) {
                Set<Dimension> dimensions = metric1.getDimensions();
 
-               if (dimensions.size() > 0) {
+               if (!dimensions.isEmpty()) {
                   Dimension dimension = metric.getDimensions().iterator().next();
 
                   testDimensionName = dimension.getName();

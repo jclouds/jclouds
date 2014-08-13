@@ -136,14 +136,14 @@ public class AWSEC2SecurityGroupExtension extends EC2SecurityGroupExtension {
       builder.ipProtocol(protocol);
       builder.fromPort(startPort);
       builder.toPort(endPort);
-      
-      if (Iterables.size(ipRanges) > 0) {
+
+      if (!Iterables.isEmpty(ipRanges)) {
          for (String cidr : ipRanges) {
             builder.cidrBlock(cidr);
          }
       }
 
-      if (tenantIdGroupNamePairs.size() > 0) {
+      if (!tenantIdGroupNamePairs.isEmpty()) {
          for (String userId : tenantIdGroupNamePairs.keySet()) {
             for (String groupString : tenantIdGroupNamePairs.get(userId)) {
                String[] parts = AWSUtils.parseHandle(groupString);
@@ -157,7 +157,7 @@ public class AWSEC2SecurityGroupExtension extends EC2SecurityGroupExtension {
 
       return getSecurityGroupById(group.getId());
    }
-      
+
    @Override
    public SecurityGroup removeIpPermission(IpPermission ipPermission, SecurityGroup group) {
       String region = AWSUtils.getRegionFromLocationOrNull(group.getLocation());
@@ -181,14 +181,14 @@ public class AWSEC2SecurityGroupExtension extends EC2SecurityGroupExtension {
       builder.ipProtocol(protocol);
       builder.fromPort(startPort);
       builder.toPort(endPort);
-      
-      if (Iterables.size(ipRanges) > 0) {
+
+      if (!Iterables.isEmpty(ipRanges)) {
          for (String cidr : ipRanges) {
             builder.cidrBlock(cidr);
          }
       }
 
-      if (tenantIdGroupNamePairs.size() > 0) {
+      if (!tenantIdGroupNamePairs.isEmpty()) {
          for (String userId : tenantIdGroupNamePairs.keySet()) {
             for (String groupString : tenantIdGroupNamePairs.get(userId)) {
                String[] parts = AWSUtils.parseHandle(groupString);

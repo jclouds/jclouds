@@ -207,7 +207,7 @@ public class ParallelMultipartUploadStrategy implements AsyncMultipartUploadStra
                                 }
                                 latch.await();
                                 // handling retries
-                                while (errors.get() <= maxRetries && toRetry.size() > 0) {
+                                while (errors.get() <= maxRetries && !toRetry.isEmpty()) {
                                     int atOnce = Math.min(Math.min(toRetry.size(), errors.get()), parallelDegree);
                                     CountDownLatch retryLatch = new CountDownLatch(atOnce);
                                     for (int i = 0; i < atOnce; i++) {

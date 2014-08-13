@@ -75,7 +75,7 @@ public class CreateSecurityGroupIfNeeded implements Function<ZoneSecurityGroupNa
 
          logger.debug("<< created securityGroup(%s)", securityGroup);
          ImmutableSet<String> cidrs;
-         if (input.getCidrs().size() > 0) {
+         if (!input.getCidrs().isEmpty()) {
             cidrs = ImmutableSet.copyOf(input.getCidrs());
          } else {
             cidrs = ImmutableSet.of("0.0.0.0/0");

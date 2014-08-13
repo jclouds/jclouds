@@ -43,7 +43,7 @@ public class DomainUserApiLiveTest extends BaseCloudStackApiLiveTest {
 
       Set<User> users = domainAdminClient.getUserClient().listUsers();
 
-      assert users.size() > 0;
+      assert !users.isEmpty();
       assert users.contains(user); // contains the current user
 
       for (User user : users) {

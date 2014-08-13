@@ -65,11 +65,11 @@ public class CreateFirewallRulesForIP {
    public Set<FirewallRule> apply(PublicIPAddress ip, Iterable<Integer> ports) {
       return apply(ip, "tcp", ports);
    }
-    
+
    public Set<FirewallRule> apply(PublicIPAddress ip, String protocol, Iterable<Integer> ports) {
       checkState(ip.getVirtualMachineId() != null,
             "ip %s should be static NATed to a virtual machine before applying rules", ip);
-      if (Iterables.size(ports) == 0)
+      if (Iterables.isEmpty(ports))
          return ImmutableSet.<FirewallRule> of();
       Builder<AsyncCreateResponse> responses = ImmutableSet.builder();
       for (int port : ports) {

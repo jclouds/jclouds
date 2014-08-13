@@ -89,7 +89,7 @@ public class GlobalUserApiLiveTest extends BaseCloudStackApiLiveTest {
       CloudStackApi client = context.getApi();
       Set<Account> accounts = client.getAccountApi().listAccounts();
 
-      assert accounts.size() > 0;
+      assert !accounts.isEmpty();
 
       context.close();
    }

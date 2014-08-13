@@ -37,18 +37,18 @@ public class SecurityGroup extends ComputeMetadataImpl {
 
    private final Set<IpPermission> ipPermissions;
    private final String ownerId;
-   
+
    public SecurityGroup(String providerId, String name, String id, @Nullable Location location, URI uri,
                         Map<String, String> userMetadata, Set<String> tags,
                         Iterable<IpPermission> ipPermissions,
-                        @Nullable String ownerId) { 
+                        @Nullable String ownerId) {
       super(ComputeType.SECURITYGROUP, providerId, name, id, location, uri, userMetadata, tags);
       this.ipPermissions = ImmutableSet.copyOf(checkNotNull(ipPermissions, "ipPermissions"));
       this.ownerId = ownerId;
    }
 
    /**
-    * 
+    *
     * @return The set of @{link IpPermission}s for this security group
     */
    public Set<IpPermission> getIpPermissions() {
@@ -62,11 +62,11 @@ public class SecurityGroup extends ComputeMetadataImpl {
    public String getOwnerId() {
       return ownerId;
    }
-   
+
    @Override
    protected ToStringHelper string() {
       ToStringHelper helper = computeToStringPrefix();
-      if (ipPermissions.size() > 0)
+      if (!ipPermissions.isEmpty())
          helper.add("ipPermissions", ipPermissions);
       return addComputeToStringSuffix(helper);
    }

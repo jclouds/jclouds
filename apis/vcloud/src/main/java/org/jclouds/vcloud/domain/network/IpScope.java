@@ -72,7 +72,7 @@ public class IpScope {
 
    /**
     * @return IP address of the network gateway
-    * 
+    *
     * @since vcloud api 0.8
     */
    @Nullable
@@ -82,7 +82,7 @@ public class IpScope {
 
    /**
     * @return netmask to apply to addresses on the network
-    * 
+    *
     * @since vcloud api 0.8
     */
    @Nullable
@@ -92,7 +92,7 @@ public class IpScope {
 
    /**
     * @return IP address of the primary DNS server for this network
-    * 
+    *
     * @since vcloud api 0.9
     */
    @Nullable
@@ -102,7 +102,7 @@ public class IpScope {
 
    /**
     * @return IP address of the secondary DNS server for this network
-    * 
+    *
     * @since vcloud api 0.9
     */
    @Nullable
@@ -112,7 +112,7 @@ public class IpScope {
 
    /**
     * @return suffix to be applied when resolving hostnames that are not fully‐qualified.
-    * 
+    *
     * @since vcloud api 0.9
     */
    @Nullable
@@ -122,7 +122,7 @@ public class IpScope {
 
    /**
     * @return A container for IpRange elements.
-    * 
+    *
     * @since vcloud api 0.9
     */
    public Set<IpRange> getIpRanges() {
@@ -131,7 +131,7 @@ public class IpScope {
 
    /**
     * @return A list of addresses allocated from any of the specified IpRanges
-    * 
+    *
     * @since vcloud api 0.9
     */
    public Set<String> getAllocatedIpAddresses() {
@@ -161,9 +161,9 @@ public class IpScope {
    public String toString() {
       ToStringHelper helper = MoreObjects.toStringHelper("").omitNullValues().add("inherited", inherited).add("gateway", gateway)
             .add("netmask", netmask).add("dns1", dns1).add("dns2", dns2).add("dnsSuffix", dnsSuffix);
-      if (ipRanges.size() > 0)
+      if (!ipRanges.isEmpty())
          helper.add("ipRanges", ipRanges);
-      if (allocatedIpAddresses.size() > 0)
+      if (!allocatedIpAddresses.isEmpty())
          helper.add("allocatedIpAddresses", allocatedIpAddresses);
       return helper.toString();
    }

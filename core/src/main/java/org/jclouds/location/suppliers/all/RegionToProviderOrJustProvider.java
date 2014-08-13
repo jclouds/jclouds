@@ -55,7 +55,7 @@ public class RegionToProviderOrJustProvider implements Supplier<Set<? extends Lo
       Location provider = Iterables.getOnlyElement(justProvider.get());
       Set<String> regions = regionsSupplier.get();
       Map<String, Supplier<Set<String>>> isoCodesById = isoCodesByIdSupplier.get();
-      if (regions.size() == 0)
+      if (regions.isEmpty())
          return locations.add(provider).build();
       else
          for (String region : regions) {

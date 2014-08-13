@@ -54,11 +54,11 @@ public class BindLaunchSpecificationToFormParams implements Binder, Function<Lau
          builder.put("LaunchSpecification.Placement.AvailabilityZone", launchSpec.getAvailabilityZone());
 
       AWSRunInstancesOptions options = new AWSRunInstancesOptions();
-      if (launchSpec.getBlockDeviceMappings().size() > 0)
+      if (!launchSpec.getBlockDeviceMappings().isEmpty())
          options.withBlockDeviceMappings(launchSpec.getBlockDeviceMappings());
-      if (launchSpec.getSecurityGroupNames().size() > 0)
+      if (!launchSpec.getSecurityGroupNames().isEmpty())
          options.withSecurityGroups(launchSpec.getSecurityGroupNames());
-      if (launchSpec.getSecurityGroupIds().size() > 0)
+      if (!launchSpec.getSecurityGroupIds().isEmpty())
          options.withSecurityGroupIds(launchSpec.getSecurityGroupIds());
       options.asType(checkNotNull(launchSpec.getInstanceType(), "instanceType"));
       if (launchSpec.getSubnetId() != null)

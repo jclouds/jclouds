@@ -161,7 +161,7 @@ public class AWSEC2ComputeServiceLiveTest extends EC2ComputeServiceLiveTest {
                                                              .period(60)
                                                              .statistic(Statistics.AVERAGE)
                                                              .build());
-            assert datapoints.size() > 0 : instance;
+            assert !datapoints.isEmpty() : instance;
          } finally {
             monitoringApi.close();
          }

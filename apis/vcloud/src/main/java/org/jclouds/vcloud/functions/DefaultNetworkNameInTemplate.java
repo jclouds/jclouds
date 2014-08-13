@@ -39,7 +39,7 @@ public class DefaultNetworkNameInTemplate implements Function<VAppTemplate, Stri
    public String apply(VAppTemplate vAppTemplate) {
       checkArgument(vAppTemplate != null, "vAppTemplate was null!");
       Set<Network> networks = vAppTemplate.getNetworkSection().getNetworks();
-      checkArgument(networks.size() > 0, "no networks found in vAppTemplate %s", vAppTemplate);
+      checkArgument(!networks.isEmpty(), "no networks found in vAppTemplate %s", vAppTemplate);
       if (networks.size() > 1)
          logger.warn("multiple networks found for %s, choosing first from: %s", vAppTemplate.getName(), networks);
       return get(networks, 0).getName();

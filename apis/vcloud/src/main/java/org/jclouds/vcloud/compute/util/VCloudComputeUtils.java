@@ -44,7 +44,7 @@ public class VCloudComputeUtils {
 
    public static CIMOperatingSystem toComputeOs(VApp vApp) {
       // TODO we need to change the design so that it doesn't assume single-vms
-      return vApp.getChildren().size() > 0 ? toComputeOs(Iterables.get(vApp.getChildren(), 0)) : null;
+      return !vApp.getChildren().isEmpty() ? toComputeOs(Iterables.get(vApp.getChildren(), 0)) : null;
    }
 
    public static CIMOperatingSystem toComputeOs(Vm vm) {
@@ -52,7 +52,7 @@ public class VCloudComputeUtils {
    }
 
    public static String getVirtualSystemIdentifierOfFirstVMIn(VApp vApp) {
-      return vApp.getChildren().size() > 0 ? getVirtualSystemIdentifierOf(Iterables.get(vApp.getChildren(), 0)) : null;
+      return !vApp.getChildren().isEmpty() ? getVirtualSystemIdentifierOf(Iterables.get(vApp.getChildren(), 0)) : null;
    }
 
    public static String getVirtualSystemIdentifierOf(Vm vm) {
@@ -62,11 +62,11 @@ public class VCloudComputeUtils {
    }
 
    public static LoginCredentials getCredentialsFrom(VApp vApp) {
-      return vApp.getChildren().size() > 0 ? getCredentialsFrom(Iterables.get(vApp.getChildren(), 0)) : null;
+      return !vApp.getChildren().isEmpty() ? getCredentialsFrom(Iterables.get(vApp.getChildren(), 0)) : null;
    }
 
    public static LoginCredentials getCredentialsFrom(VAppTemplate vApp) {
-      return vApp.getChildren().size() > 0 ? getCredentialsFrom(Iterables.get(vApp.getChildren(), 0)) : null;
+      return !vApp.getChildren().isEmpty() ? getCredentialsFrom(Iterables.get(vApp.getChildren(), 0)) : null;
    }
 
    public static LoginCredentials getCredentialsFrom(Vm vm) {
@@ -78,7 +78,7 @@ public class VCloudComputeUtils {
 
    public static Set<String> getIpsFromVApp(VApp vApp) {
       // TODO make this work with composite vApps
-      if (vApp.getChildren().size() == 0)
+      if (vApp.getChildren().isEmpty())
          return ImmutableSet.of();
       Builder<String> ips = ImmutableSet.builder();
       Vm vm = Iterables.get(vApp.getChildren(), 0);

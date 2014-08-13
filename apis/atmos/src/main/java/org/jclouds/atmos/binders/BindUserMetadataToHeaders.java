@@ -35,7 +35,7 @@ import com.google.common.collect.Multimaps;
 
 @Singleton
 public class BindUserMetadataToHeaders implements Binder, Function<UserMetadata, Map<String, String>> {
-   
+
    @SuppressWarnings("unchecked")
    @Override
    public <R extends HttpRequest> R bindToRequest(R request, Object input) {
@@ -48,19 +48,19 @@ public class BindUserMetadataToHeaders implements Binder, Function<UserMetadata,
    @Override
    public Map<String, String> apply(UserMetadata md) {
       Builder<String, String> headers = ImmutableMap.builder();
-      if (md.getMetadata().size() > 0) {
+      if (!md.getMetadata().isEmpty()) {
          String header = Joiner.on(',').withKeyValueSeparator("=").join(md.getMetadata());
          headers.put("x-emc-meta", header);
       }
-      if (md.getListableMetadata().size() > 0) {
+      if (!md.getListableMetadata().isEmpty()) {
          String header = Joiner.on(',').withKeyValueSeparator("=").join(md.getListableMetadata());
          headers.put("x-emc-listable-meta", header);
       }
-      if (md.getTags().size() > 0) {
+      if (!md.getTags().isEmpty()) {
          String header = Joiner.on(',').join(md.getTags());
          headers.put("x-emc-tags", header);
       }
-      if (md.getListableTags().size() > 0) {
+      if (!md.getListableTags().isEmpty()) {
          String header = Joiner.on(',').join(md.getListableTags());
          headers.put("x-emc-listable-tags", header);
       }

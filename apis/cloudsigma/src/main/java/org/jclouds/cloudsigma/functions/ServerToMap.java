@@ -45,7 +45,7 @@ public class ServerToMap implements Function<Server, Map<String, String>> {
          builder.put("smp", "auto");
       builder.put("mem", from.getMem() + "");
       builder.put("persistent", from.isPersistent() + "");
-      if (from.getBootDeviceIds().size() != 0)
+      if (!from.getBootDeviceIds().isEmpty())
          builder.put("boot", Joiner.on(' ').join(from.getBootDeviceIds()));
       for (Entry<String, ? extends Device> entry : from.getDevices().entrySet()) {
          builder.put(entry.getKey(), entry.getValue().getDriveUuid());
@@ -67,7 +67,7 @@ public class ServerToMap implements Function<Server, Map<String, String>> {
          builder.put("vnc:password", from.getVnc().getPassword());
       if (from.getVnc().isTls())
          builder.put("vnc:tls", "on");
-      if (from.getUse().size() != 0)
+      if (!from.getUse().isEmpty())
          builder.put("use", Joiner.on(' ').join(from.getUse()));
       return builder.build();
    }

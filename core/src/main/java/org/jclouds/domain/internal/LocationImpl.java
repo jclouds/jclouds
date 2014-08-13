@@ -62,9 +62,9 @@ public class LocationImpl implements Location {
             .add("description", description);
       if (parent != null)
          helper.add("parent", parent.getId());
-      if (iso3166Codes.size() > 0)
+      if (!iso3166Codes.isEmpty())
          helper.add("iso3166Codes", iso3166Codes);
-      if (metadata.size() > 0)
+      if (!metadata.isEmpty())
          helper.add("metadata", metadata);
       return helper.toString();
    }

@@ -43,13 +43,13 @@ public final class Invocation {
 
    /**
     * invocation without arguments.
-    * 
+    *
     * @throws IllegalArgumentException
     *            if in invokable requires arguments
     */
    public static Invocation create(Invokable<?, ?> invokable) {
       checkArgument(
-            invokable.getParameters().size() == 0 || (invokable.getParameters().size() == 1 && invokable.isVarArgs()),
+            invokable.getParameters().isEmpty() || (invokable.getParameters().size() == 1 && invokable.isVarArgs()),
             "please specify arguments to %s", invokable);
       return create(invokable, ImmutableList.of());
    }
@@ -71,7 +71,7 @@ public final class Invocation {
 
    /**
     * arguments applied to {@link #getInvokable()} during {@link Invokable#invoke(Object, Object...)}
-    * 
+    *
     * @param args
     *           as these represent parameters, can contain nulls
     */

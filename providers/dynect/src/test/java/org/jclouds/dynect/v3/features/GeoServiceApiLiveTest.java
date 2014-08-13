@@ -43,8 +43,8 @@ public class GeoServiceApiLiveTest extends BaseDynECTApiLiveTest {
    static void checkGeoService(GeoService service) {
       assertNotNull(service.getName(), "Name cannot be null " + service);
       assertTrue(service.getTTL() >= 0, "TTL cannot be negative " + service);
-      assertTrue(service.getNodes().size() > 0, "Nodes must be assigned " + service);
-      assertTrue(service.getGroups().size() > 0, "Groups must be assigned " + service);
+      assertTrue(!service.getNodes().isEmpty(), "Nodes must be assigned " + service);
+      assertTrue(!service.getGroups().isEmpty(), "Groups must be assigned " + service);
       for (GeoRegionGroup group : service.getGroups())
          GeoRegionGroupApiLiveTest.checkGeoRegionGroup(group);
    }

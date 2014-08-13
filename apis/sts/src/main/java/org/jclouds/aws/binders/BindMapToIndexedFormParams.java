@@ -67,7 +67,7 @@ public class BindMapToIndexedFormParams implements Binder {
          amazonOneBasedIndex++;
       }
       Multimap<String, String> forms = Multimaps.forMap(builder.build());
-      return forms.size() == 0 ? request : (R) request.toBuilder().replaceFormParams(forms).build();
+      return forms.isEmpty() ? request : (R) request.toBuilder().replaceFormParams(forms).build();
    }
 
 }

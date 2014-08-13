@@ -68,7 +68,7 @@ public class TemplateOptions extends RunScriptOptions implements Cloneable {
          to.inboundPorts(this.getInboundPorts());
       if (this.getRunScript() != null)
          to.runScript(this.getRunScript());
-      if (this.getGroups().size() > 0)
+      if (!this.getGroups().isEmpty())
          to.securityGroups(this.getGroups());
       if (this.getPrivateKey() != null)
          to.installPrivateKey(this.getPrivateKey());
@@ -76,9 +76,9 @@ public class TemplateOptions extends RunScriptOptions implements Cloneable {
          to.authorizePublicKey(this.getPublicKey());
       if (this.getPort() != -1)
          to.blockOnPort(this.getPort(), this.getSeconds());
-      if (this.getUserMetadata().size() > 0)
+      if (!this.getUserMetadata().isEmpty())
          to.userMetadata(this.getUserMetadata());
-      if (this.getTags().size() > 0)
+      if (!this.getTags().isEmpty())
          to.tags(getTags());
       if (!this.getNodeNames().isEmpty())
          to.nodeNames(getNodeNames());
@@ -353,7 +353,7 @@ public class TemplateOptions extends RunScriptOptions implements Cloneable {
    private static final Set<Integer> DEFAULT_INBOUND_PORTS = ImmutableSet.of(22);
 
    public static final TemplateOptions NONE = new ImmutableTemplateOptions(new TemplateOptions());
-   
+
    protected Set<Integer> inboundPorts = DEFAULT_INBOUND_PORTS;
 
    protected Statement script;
@@ -406,7 +406,7 @@ public class TemplateOptions extends RunScriptOptions implements Cloneable {
          toString.add("privateKeyPresent", true);
       if (!blockUntilRunning)
          toString.add("blockUntilRunning", blockUntilRunning);
-      if (tags.size() != 0)
+      if (!tags.isEmpty())
          toString.add("tags", tags);
       if (!nodeNames.isEmpty())
          toString.add("nodeNames", nodeNames);
@@ -465,16 +465,16 @@ public class TemplateOptions extends RunScriptOptions implements Cloneable {
    /**
     * This script will be executed as the root user upon system startup. This
     * script gets a prologue, so no #!/bin/bash required, path set up, etc
-    * 
+    *
     */
    public TemplateOptions runScript(String script) {
       return runScript(Statements.exec(script));
    }
-   
+
    /**
     * This script will be executed as the root user upon system startup. This
     * script gets a prologue, so no #!/bin/bash required, path set up, etc
-    * 
+    *
     */
    public TemplateOptions runScript(Statement script) {
       this.script = checkNotNull(script, "script");
@@ -682,7 +682,7 @@ public class TemplateOptions extends RunScriptOptions implements Cloneable {
          TemplateOptions options = new TemplateOptions();
          return options.runScript(script);
       }
-      
+
       /**
        * @see TemplateOptions#runScript(String)
        */
@@ -694,7 +694,7 @@ public class TemplateOptions extends RunScriptOptions implements Cloneable {
       /**
        * please use alternative that uses the {@link org.jclouds.io.Payload}
        * object
-       * 
+       *
        * @see org.jclouds.io.Payloads
        * @see #installPrivateKey(Payload)
        */
@@ -706,7 +706,7 @@ public class TemplateOptions extends RunScriptOptions implements Cloneable {
       /**
        * please use alternative that uses the {@link org.jclouds.io.Payload}
        * object
-       * 
+       *
        * @see #authorizePublicKey(String)
        */
       public static TemplateOptions authorizePublicKey(String rsaKey) {
@@ -736,13 +736,13 @@ public class TemplateOptions extends RunScriptOptions implements Cloneable {
       }
 
    }
-   
+
    /**
     * <h4>Note</h4> As of version 1.1.0, this option is incompatible with
     * {@link TemplateOptions#runScript(Statement)} and
     * {@link RunScriptOptions#blockOnComplete(boolean)}, as all current
     * implementations utilize ssh in order to execute scripts.
-    * 
+    *
     * @param blockUntilRunning
     *           (default true) whether to block until the nodes in this template
     *           are in {@link Status#RUNNING} state
@@ -755,7 +755,7 @@ public class TemplateOptions extends RunScriptOptions implements Cloneable {
    }
 
    /**
-    * 
+    *
     * @param userMetadata
     *           user-defined metadata to assign to this server
     */
@@ -765,7 +765,7 @@ public class TemplateOptions extends RunScriptOptions implements Cloneable {
    }
 
    /**
-    * 
+    *
     * @param key
     *           key to place into the metadata map
     * @param value
@@ -782,7 +782,7 @@ public class TemplateOptions extends RunScriptOptions implements Cloneable {
    public Map<String, String> getUserMetadata() {
       return userMetadata;
    }
-   
+
    @Override
    public TemplateOptions blockOnPort(int port, int seconds) {
       return TemplateOptions.class.cast(super.blockOnPort(port, seconds));

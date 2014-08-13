@@ -95,13 +95,13 @@ public class AWSEC2ComputeServiceContextModule extends BaseComputeServiceContext
    protected void installDependencies() {
       install(new AWSEC2ComputeServiceDependenciesModule());
    }
-   
+
    @Override
    protected boolean shouldEagerlyParseImages(Injector injector) {
       Map<String, String> queries = injector.getInstance(Key.get(new TypeLiteral<Map<String, String>>() {
       }, ImageQuery.class));
       // If no queries defined, then will never lookup all images
-      return queries.size() > 0;
+      return !queries.isEmpty();
    }
 
    // duplicates EC2ComputeServiceContextModule; but that's easiest thing to do with guice; could extract to common util
@@ -143,7 +143,7 @@ public class AWSEC2ComputeServiceContextModule extends BaseComputeServiceContext
             };
             return new SetAndThrowAuthorizationExceptionSupplier<Image>(rawSupplier, authException).get();
          }
-         
+
       });
    }
 
@@ -157,7 +157,7 @@ public class AWSEC2ComputeServiceContextModule extends BaseComputeServiceContext
    /**
     * With amazon linux 2011.09, ssh starts after package updates, which slows the boot process and
     * runs us out of ssh retries (context property {@code "jclouds.ssh.max-retries"}).
-    * 
+    *
     * @see <a href="http://aws.amazon.com/amazon-linux-ami/latest-release-notes/" />
     * @see AWSEC2PropertiesBuilder#defaultProperties
     */
@@ -165,7 +165,7 @@ public class AWSEC2ComputeServiceContextModule extends BaseComputeServiceContext
    protected TemplateOptions provideTemplateOptions(Injector injector, TemplateOptions options) {
       return options.as(EC2TemplateOptions.class).userData("#cloud-config\nrepo_upgrade: none\n".getBytes());
    }
-   
+
    @Override
    protected Optional<ImageExtension> provideImageExtension(Injector i) {
       return Optional.of(i.getInstance(ImageExtension.class));

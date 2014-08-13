@@ -35,9 +35,7 @@ public class MapToProfileInfo implements Function<Map<String, String>, ProfileIn
 
    @Override
    public ProfileInfo apply(Map<String, String> from) {
-      if (from.size() == 0)
-         return null;
-      if (from.size() == 0)
+      if (from.isEmpty())
          return null;
       ProfileInfo.Builder builder = new ProfileInfo.Builder();
       builder.uuid(from.get("uuid"));

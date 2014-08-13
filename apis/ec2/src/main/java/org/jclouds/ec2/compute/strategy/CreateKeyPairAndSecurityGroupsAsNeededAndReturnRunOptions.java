@@ -90,7 +90,7 @@ public class CreateKeyPairAndSecurityGroupsAsNeededAndReturnRunOptions {
 
          Set<BlockDeviceMapping> blockDeviceMappings = EC2TemplateOptions.class.cast(template.getOptions())
                   .getBlockDeviceMappings();
-         if (blockDeviceMappings.size() > 0) {
+         if (!blockDeviceMappings.isEmpty()) {
             checkState("ebs".equals(template.getImage().getUserMetadata().get("rootDeviceType")),
                      "BlockDeviceMapping only available on ebs boot");
             instanceOptions.withBlockDeviceMappings(blockDeviceMappings);
@@ -188,7 +188,7 @@ public class CreateKeyPairAndSecurityGroupsAsNeededAndReturnRunOptions {
    }
 
    protected boolean userSpecifiedTheirOwnGroups(TemplateOptions options) {
-      return options instanceof EC2TemplateOptions && EC2TemplateOptions.class.cast(options).getGroups().size() > 0;
+      return options instanceof EC2TemplateOptions && !EC2TemplateOptions.class.cast(options).getGroups().isEmpty();
    }
 
    // allows us to mock this method

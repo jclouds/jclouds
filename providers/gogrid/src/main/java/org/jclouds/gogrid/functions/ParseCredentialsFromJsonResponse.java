@@ -47,6 +47,6 @@ public class ParseCredentialsFromJsonResponse implements
       checkState(!(returnVal.size() > 1),
             "expecting only 1 credential in response, but had more: "
                   + returnVal.keySet());
-      return (returnVal.size() > 0) ? Iterables.getOnlyElement(returnVal.values()) : null;
+      return (!returnVal.isEmpty()) ? Iterables.getOnlyElement(returnVal.values()) : null;
    }
 }

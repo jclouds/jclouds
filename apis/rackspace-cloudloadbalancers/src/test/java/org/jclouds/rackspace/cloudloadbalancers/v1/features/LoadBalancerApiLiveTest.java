@@ -122,7 +122,7 @@ public class LoadBalancerApiLiveTest extends BaseCloudLoadBalancersApiLiveTest {
             assert lb.getStatus() != null : lb;
             assert lb.getCreated() != null : lb;
             assert lb.getUpdated() != null : lb;
-            assert lb.getVirtualIPs().size() > 0 : lb;
+            assert !lb.getVirtualIPs().isEmpty() : lb;
             // node info not available during list;
             assert lb.getNodes().size() == 0 : lb;
 
@@ -139,7 +139,7 @@ public class LoadBalancerApiLiveTest extends BaseCloudLoadBalancersApiLiveTest {
                assertEquals(getDetails.getUpdated(), lb.getUpdated());
                assertEquals(getDetails.getVirtualIPs(), lb.getVirtualIPs());
                // node info not available during list;
-               assert getDetails.getNodes().size() > 0 : lb;
+               assert !getDetails.getNodes().isEmpty() : lb;
             } catch (AssertionError e) {
                throw new AssertionError(String.format("%s\n%s - %s", e.getMessage(), getDetails, lb));
             }

@@ -46,7 +46,7 @@ public class RegionToEndpoint implements Function<Object, URI> {
    public URI apply(@Nullable Object from) {
       checkArgument(from != null && from instanceof String, "you must specify a region, as a String argument");
       Map<String, Supplier<URI>> regionToEndpoint = regionToEndpointSupplier.get();
-      checkState(regionToEndpoint.size() > 0, "no region name to endpoint mappings configured!");
+      checkState(!regionToEndpoint.isEmpty(), "no region name to endpoint mappings configured!");
       checkArgument(regionToEndpoint.containsKey(from),
                "requested location %s, which is not in the configured locations: %s", from, regionToEndpoint);
       return regionToEndpoint.get(from).get();

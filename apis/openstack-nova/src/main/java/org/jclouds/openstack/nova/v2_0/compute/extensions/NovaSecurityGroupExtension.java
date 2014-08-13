@@ -209,7 +209,7 @@ public class NovaSecurityGroupExtension implements SecurityGroupExtension {
          return null;
       }
 
-      if (ipPermission.getCidrBlocks().size() > 0) {
+      if (!ipPermission.getCidrBlocks().isEmpty()) {
          for (String cidr : ipPermission.getCidrBlocks()) {
             sgApi.get().createRuleAllowingCidrBlock(id,
                     Ingress.builder()
@@ -221,7 +221,7 @@ public class NovaSecurityGroupExtension implements SecurityGroupExtension {
          }
       }
 
-      if (ipPermission.getGroupIds().size() > 0) {
+      if (!ipPermission.getGroupIds().isEmpty()) {
          for (String regionAndGroupRaw : ipPermission.getGroupIds()) {
             RegionAndId regionAndId = RegionAndId.fromSlashEncoded(regionAndGroupRaw);
             String groupId = regionAndId.getId();
@@ -268,7 +268,7 @@ public class NovaSecurityGroupExtension implements SecurityGroupExtension {
 
       org.jclouds.openstack.nova.v2_0.domain.SecurityGroup securityGroup = sgApi.get().get(id);
 
-      if (ipPermission.getCidrBlocks().size() > 0) {
+      if (!ipPermission.getCidrBlocks().isEmpty()) {
          for (String cidr : ipPermission.getCidrBlocks()) {
             for (SecurityGroupRule rule : filter(securityGroup.getRules(),
                     and(ruleCidr(cidr), ruleProtocol(ipPermission.getIpProtocol()),
@@ -279,7 +279,7 @@ public class NovaSecurityGroupExtension implements SecurityGroupExtension {
          }
       }
 
-      if (ipPermission.getGroupIds().size() > 0) {
+      if (!ipPermission.getGroupIds().isEmpty()) {
          for (String groupId : ipPermission.getGroupIds()) {
             for (SecurityGroupRule rule : filter(securityGroup.getRules(),
                     and(ruleGroup(groupId), ruleProtocol(ipPermission.getIpProtocol()),

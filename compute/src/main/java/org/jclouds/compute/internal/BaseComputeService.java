@@ -218,7 +218,7 @@ public class BaseComputeService implements ComputeService {
       Function<NodeMetadata, NodeMetadata> fn = persistNodeCredentials.always(template.getOptions().getRunScript());
       badNodes = Maps2.transformKeys(badNodes, fn);
       goodNodes = ImmutableSet.copyOf(Iterables.transform(goodNodes, fn));
-      if (executionExceptions.size() > 0 || badNodes.size() > 0) {
+      if (!executionExceptions.isEmpty() || !badNodes.isEmpty()) {
          throw new RunNodesException(group, count, template, goodNodes, executionExceptions, badNodes);
       }
       return goodNodes;
@@ -270,13 +270,13 @@ public class BaseComputeService implements ComputeService {
 
             }, userExecutor, null, logger, "destroyNodesMatching(" + filter + ")"));
       logger.debug("<< destroyed(%d)", destroyNodes.size());
-      
+
       cleanUpIncidentalResourcesOfDeadNodes(destroyNodes);
       return destroyNodes;
    }
 
    /**
-    * 
+    *
     * @param id
     * @return node that was deleted or null if it wasn't found
     */
@@ -298,7 +298,7 @@ public class BaseComputeService implements ComputeService {
             }
          }
       }, timeouts.nodeTerminated, 1000, MILLISECONDS);
-      
+
       boolean successful = tester.apply(id) && (node.get() == null || nodeTerminated.apply(node));
       if (successful)
          credentialStore.remove("node#" + id);
@@ -309,7 +309,7 @@ public class BaseComputeService implements ComputeService {
    protected void cleanUpIncidentalResourcesOfDeadNodes(Set<? extends NodeMetadata> deadNodes) {
       // no-op; to be overridden
    }
-   
+
    Iterable<? extends NodeMetadata> nodesMatchingFilterAndNotTerminated(Predicate<NodeMetadata> filter) {
       return filter(detailsOnAllNodes(), and(checkNotNull(filter, "filter"), not(TERMINATED)));
    }
@@ -321,7 +321,7 @@ public class BaseComputeService implements ComputeService {
    Iterable<? extends NodeMetadata> nodesMatchingFilterAndNotTerminatedExceptionIfNotFound(
          Predicate<NodeMetadata> filter) {
       Iterable<? extends NodeMetadata> nodes = nodesMatchingFilterAndNotTerminated(filter);
-      if (Iterables.size(nodes) == 0)
+      if (Iterables.isEmpty(nodes))
          throw new NoSuchElementException("no nodes matched filter: " + filter);
       return nodes;
    }
@@ -578,7 +578,7 @@ public class BaseComputeService implements ComputeService {
 
       Iterable<? extends RunScriptOnNode> scriptRunners = transformNodesIntoInitializedScriptRunners(
             nodesMatchingFilterAndNotTerminatedExceptionIfNotFound(filter), runScript, options, badNodes);
-      if (Iterables.size(scriptRunners) > 0) {
+      if (!Iterables.isEmpty(scriptRunners)) {
          for (RunScriptOnNode runner : scriptRunners) {
             responses.put(runner.getNode(), userExecutor.submit(new RunScriptOnNodeAndAddToGoodMapOrPutExceptionIntoBadMap(
                   runner, goodNodes, badNodes)));
@@ -594,7 +594,7 @@ public class BaseComputeService implements ComputeService {
       badNodes = Maps2.transformKeys(badNodes, fn);
       goodNodes = Maps2.transformKeys(goodNodes, fn);
 
-      if (exceptions.size() > 0 || badNodes.size() > 0) {
+      if (!exceptions.isEmpty() || !badNodes.isEmpty()) {
          throw new RunScriptOnNodesException(runScript, options, goodNodes, exceptions, badNodes);
       }
       return goodNodes;
@@ -649,7 +649,7 @@ public class BaseComputeService implements ComputeService {
    public ListenableFuture<ExecResponse> submitScriptOnNode(String id, String runScript, RunScriptOptions options) {
       return submitScriptOnNode(id, Statements.literal(checkNotNull(runScript, "runScript")), options);
    }
-   
+
    /**
     * {@inheritDoc}
     */
@@ -733,7 +733,7 @@ public class BaseComputeService implements ComputeService {
       }
 
    }
-   
+
    /**
     * {@inheritDoc}
     */

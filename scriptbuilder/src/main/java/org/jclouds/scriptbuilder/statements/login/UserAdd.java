@@ -72,7 +72,7 @@ public class UserAdd implements Statement {
          this.cryptFunction = cryptFunction;
          return this;
       }
-      
+
       /**
        * See --home in `man useradd`.
        */
@@ -164,7 +164,7 @@ public class UserAdd implements Statement {
       this.shell = checkNotNull(shell, "shell");
       this.fullName = fullName;
    }
-   
+
    private final Function<String, String> cryptFunction;
    private final String home;
    private final String defaultHome;
@@ -201,14 +201,14 @@ public class UserAdd implements Statement {
       }
 
       userAddOptions.put("-s", shell);
-      if (groups.size() > 0) {
+      if (!groups.isEmpty()) {
          for (String group : groups)
             statements.add(Statements.exec("groupadd -f " + group));
 
          List<String> groups = Lists.newArrayList(this.groups);
          String primaryGroup = groups.remove(0);
          userAddOptions.put("-g", primaryGroup);
-         if (groups.size() > 0)
+         if (!groups.isEmpty())
             userAddOptions.put("-G", Joiner.on(',').join(groups));
 
       }
@@ -226,9 +226,9 @@ public class UserAdd implements Statement {
 
       statements.add(Statements.exec(String.format("useradd %s %s", options, login)));
 
-      if (authorizeRSAPublicKeys.size() > 0 || installRSAPrivateKey != null) {
+      if (!authorizeRSAPublicKeys.isEmpty() || installRSAPrivateKey != null) {
          String sshDir = homeDir + "{fs}.ssh";
-         if (authorizeRSAPublicKeys.size() > 0)
+         if (!authorizeRSAPublicKeys.isEmpty())
             statements.add(new AuthorizeRSAPublicKeys(sshDir, authorizeRSAPublicKeys));
          if (installRSAPrivateKey != null)
             statements.add(new InstallRSAPrivateKey(sshDir, installRSAPrivateKey));

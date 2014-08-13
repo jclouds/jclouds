@@ -136,11 +136,11 @@ public class CreateServerOptions implements MapBinder {
    protected ToStringHelper string() {
       ToStringHelper toString = MoreObjects.toStringHelper("").omitNullValues();
       toString.add("keyName", keyName);
-      if (securityGroupNames.size() > 0)
+      if (!securityGroupNames.isEmpty())
          toString.add("securityGroupNames", securityGroupNames);
-      if (metadata.size() > 0)
+      if (!metadata.isEmpty())
          toString.add("metadata", metadata);
-      if (personality.size() > 0)
+      if (!personality.isEmpty())
          toString.add("personality", personality);
       if (adminPass != null)
          toString.add("adminPassPresent", true);
@@ -191,9 +191,9 @@ public class CreateServerOptions implements MapBinder {
       ServerRequest server = new ServerRequest(checkNotNull(postParams.get("name"), "name parameter not present").toString(),
             checkNotNull(postParams.get("imageRef"), "imageRef parameter not present").toString(),
             checkNotNull(postParams.get("flavorRef"), "flavorRef parameter not present").toString());
-      if (metadata.size() > 0)
+      if (!metadata.isEmpty())
          server.metadata = metadata;
-      if (personality.size() > 0)
+      if (!personality.isEmpty())
          server.personality = personality;
       if (keyName != null)
          server.key_name = keyName;
@@ -203,7 +203,7 @@ public class CreateServerOptions implements MapBinder {
          server.user_data = base64().encode(userData);
       if (configDrive)
          server.configDrive = "true";
-      if (securityGroupNames.size() > 0) {
+      if (!securityGroupNames.isEmpty()) {
          server.securityGroupNames = Sets.newLinkedHashSet();
          for (String groupName : securityGroupNames) {
             server.securityGroupNames.add(new NamedThingy(groupName));

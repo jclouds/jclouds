@@ -46,7 +46,7 @@ public class OnlyReferenceTypeFirstWithNameMatchingConfigurationKeyOrDefault imp
    @Override
    public ReferenceType apply(Iterable<ReferenceType> referenceTypes) {
       checkNotNull(referenceTypes, "referenceTypes");
-      checkArgument(Iterables.size(referenceTypes) > 0,
+      checkArgument(!Iterables.isEmpty(referenceTypes),
             "No referenceTypes corresponding to configuration key %s present", configurationKey);
       if (Iterables.size(referenceTypes) == 1)
          return Iterables.getLast(referenceTypes);

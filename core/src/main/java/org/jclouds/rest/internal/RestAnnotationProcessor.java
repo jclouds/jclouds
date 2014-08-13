@@ -274,7 +274,7 @@ public class RestAnnotationProcessor implements Function<Invocation, HttpRequest
             payload = Payloads.newStringPayload(stringPayload);
       }
 
-      if (queryParams.size() > 0) {
+      if (!queryParams.isEmpty()) {
          uriBuilder.query(queryParams);
       }
 
@@ -291,12 +291,12 @@ public class RestAnnotationProcessor implements Function<Invocation, HttpRequest
       List<? extends Part> parts = getParts(invocation, ImmutableMultimap.<String, Object> builder()
             .putAll(tokenValues).putAll(formParams).build());
 
-      if (parts.size() > 0) {
-         if (formParams.size() > 0) {
+      if (!parts.isEmpty()) {
+         if (!formParams.isEmpty()) {
             parts = newLinkedList(concat(transform(formParams.entries(), ENTRY_TO_PART), parts));
          }
          payload = new MultipartForm(MultipartForm.BOUNDARY, parts);
-      } else if (formParams.size() > 0) {
+      } else if (!formParams.isEmpty()) {
          payload = Payloads.newUrlEncodedFormPayload(transformValues(formParams, NullableToStringFunction.INSTANCE));
       } else if (headers.containsKey(CONTENT_TYPE) && !HttpRequest.NON_PAYLOAD_METHODS.contains(requestMethod)) {
          if (payload == null)

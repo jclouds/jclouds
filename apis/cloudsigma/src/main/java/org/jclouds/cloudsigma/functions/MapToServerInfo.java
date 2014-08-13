@@ -51,7 +51,7 @@ public class MapToServerInfo implements Function<Map<String, String>, ServerInfo
 
    @Override
    public ServerInfo apply(Map<String, String> from) {
-      if (from.size() == 0)
+      if (from.isEmpty())
          return null;
       ServerInfo.Builder builder = new ServerInfo.Builder();
       builder.name(from.get("name"));

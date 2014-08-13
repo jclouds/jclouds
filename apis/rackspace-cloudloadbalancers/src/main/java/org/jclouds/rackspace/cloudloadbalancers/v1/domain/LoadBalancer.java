@@ -126,15 +126,15 @@ public class LoadBalancer extends BaseLoadBalancer<Node, LoadBalancer> {
    }
 
    /**
-    * Broken out as a separate field because when LoadBalancers are returned from 
+    * Broken out as a separate field because when LoadBalancers are returned from
     * {@link LoadBalancerApi#list()}, no Nodes are returned (so you can't rely on getNodes().size())
     * but a nodeCount is returned. When {@link LoadBalancerApi#get(int)} is called, nodes are
     * returned but no nodeCount is returned.
-    *  
-    * @return The number of Nodes in this LoadBalancer 
+    *
+    * @return The number of Nodes in this LoadBalancer
     */
    public int getNodeCount() {
-      return nodes.size() > 0 ? nodes.size() : nodeCount;
+      return !nodes.isEmpty() ? nodes.size() : nodeCount;
    }
 
    /**
@@ -165,7 +165,7 @@ public class LoadBalancer extends BaseLoadBalancer<Node, LoadBalancer> {
    public Metadata getMetadata() {
       return metadata;
    }
-   
+
    public URI getUri() {
       return uri;
    }
@@ -343,7 +343,7 @@ public class LoadBalancer extends BaseLoadBalancer<Node, LoadBalancer> {
          this.metadata = checkNotNull(metadata, "metadata");
          return this;
       }
-      
+
       public Builder uri(URI uri) {
          this.uri = uri;
          return this;

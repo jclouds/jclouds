@@ -122,7 +122,7 @@ public class AWSEC2ComputeService extends EC2ComputeService {
       // http://docs.amazonwebservices.com/AWSEC2/latest/UserGuide/index.html?using_cluster_computing.html
       String placementGroup = String.format("jclouds#%s#%s", group, region);
       try {
-         if (client.getPlacementGroupApi().get().describePlacementGroupsInRegion(region, placementGroup).size() > 0) {
+         if (!client.getPlacementGroupApi().get().describePlacementGroupsInRegion(region, placementGroup).isEmpty()) {
             logger.debug(">> deleting placementGroup(%s)", placementGroup);
             try {
                client.getPlacementGroupApi().get().deletePlacementGroupInRegion(region, placementGroup);

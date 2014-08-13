@@ -44,10 +44,10 @@ public class ParseSessionPersistence implements Function<HttpResponse, SessionPe
    @Override
    public SessionPersistence apply(HttpResponse response) {
       Map<String, Map<String, SessionPersistence>> map = json.apply(response);
-      
-      if (map == null || map.size() == 0)
+
+      if (map == null || map.isEmpty())
          throw new HttpResponseException("Unexpected connection logging format returned.", null, response);
-      else if (Iterables.get(map.values(), 0).size() == 0)
+      else if (Iterables.get(map.values(), 0).isEmpty())
          return null;
       else
          return Iterables.get(Iterables.get(map.values(), 0).values(), 0);

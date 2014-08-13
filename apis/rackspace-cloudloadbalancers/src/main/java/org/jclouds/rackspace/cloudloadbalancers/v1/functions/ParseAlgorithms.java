@@ -45,17 +45,17 @@ public class ParseAlgorithms implements Function<HttpResponse, List<String>>, In
    @Override
    public List<String> apply(HttpResponse response) {
       Map<String, List<Map<String, String>>> map = json.apply(response);
-      
-      if (map == null || map.size() == 0)
+
+      if (map == null || map.isEmpty())
          throw new HttpResponseException("Unexpected JSON format returned.", null, response);
-      
+
       List<Map<String, String>> list = Iterables.get(map.values(), 0);
       List<String> algorithms = Lists.newArrayList();
-      
+
       for (Map<String, String> nameAlgorithmPair : list) {
          algorithms.add(Iterables.get(nameAlgorithmPair.values(), 0));
       }
-      
+
       return algorithms;
    }
 

@@ -62,7 +62,7 @@ public class HttpMessage extends PayloadEnclosingImpl {
          this.payload = payload;
          return self();
       }
-      
+
       /**
        * @see HttpMessage#getPayload()
        * @deprecated see payload(ByteSource.wrap(byte[]))
@@ -80,7 +80,7 @@ public class HttpMessage extends PayloadEnclosingImpl {
          this.payload = Payloads.newByteSourcePayload(checkNotNull(payload, "payload"));
          return self();
       }
-      
+
       /**
        * @see HttpMessage#getPayload()
        * @deprecated see payload(Files.asByteSource(File))
@@ -90,7 +90,7 @@ public class HttpMessage extends PayloadEnclosingImpl {
          this.payload = Payloads.newFilePayload(checkNotNull(payload, "payload"));
          return self();
       }
-      
+
       /**
        * @see HttpMessage#getPayload()
        */
@@ -98,7 +98,7 @@ public class HttpMessage extends PayloadEnclosingImpl {
          this.payload = Payloads.newInputStreamPayload(checkNotNull(payload, "payload"));
          return self();
       }
-      
+
       /**
        * @see HttpMessage#getPayload()
        * @deprecated see payload(ByteSource.wrap(String.getBytes()))
@@ -111,7 +111,7 @@ public class HttpMessage extends PayloadEnclosingImpl {
 
       /**
        * replaces all headers with the the supplied multimap.
-       * 
+       *
        * @see HttpMessage#getHeaders()
        */
       public T headers(Multimap<String, String> headers) {
@@ -119,10 +119,10 @@ public class HttpMessage extends PayloadEnclosingImpl {
          this.headers.putAll(checkNotNull(headers, "headers"));
          return self();
       }
-      
+
       /**
        * replace all headers that have the same keys as the input multimap
-       * 
+       *
        * @see HttpMessage#getHeaders()
        */
       public T replaceHeaders(Multimap<String, String> headers) {
@@ -132,10 +132,10 @@ public class HttpMessage extends PayloadEnclosingImpl {
          this.headers.putAll(Multimaps2.replaceEntries(oldHeaders, headers));
          return self();
       }
-      
+
       /**
        * replace all headers that have the same keys as the input multimap
-       * 
+       *
        * @see HttpMessage#getHeaders()
        */
       public T removeHeader(String name) {
@@ -145,11 +145,11 @@ public class HttpMessage extends PayloadEnclosingImpl {
          this.headers.putAll(Multimaps2.withoutKey(oldHeaders, name));
          return self();
       }
-      
+
       /**
        * Note that if there's an existing header of the same name, this will only add the new value,
        * not replace it.
-       * 
+       *
        * @see HttpMessage#getHeaders()
        */
       public T addHeader(String name, String ... values) {
@@ -159,7 +159,7 @@ public class HttpMessage extends PayloadEnclosingImpl {
 
       /**
        * Replace header.
-       * 
+       *
        * @see HttpMessage#getHeaders()
        */
       public T replaceHeader(String name, String ... values) {
@@ -167,7 +167,7 @@ public class HttpMessage extends PayloadEnclosingImpl {
          checkNotNull(values, "values of %s", name);
          return replaceHeaders(ImmutableMultimap.<String, String> builder().putAll(name, values).build());
       }
-      
+
       public HttpMessage build() {
          return new HttpMessage(headers.build(), payload);
       }
@@ -202,8 +202,8 @@ public class HttpMessage extends PayloadEnclosingImpl {
     */
    public String getFirstHeaderOrNull(String string) {
       Collection<String> values = headers.get(string);
-      if (values.size() == 0) {
-         Multimap<String, String> lowerCaseHeaders = Multimaps2.transformKeys(getHeaders(), new ToLowerCase()); 
+      if (values.isEmpty()) {
+         Multimap<String, String> lowerCaseHeaders = Multimaps2.transformKeys(getHeaders(), new ToLowerCase());
          values = lowerCaseHeaders.get(string.toLowerCase());
       }
       return (values.size() >= 1) ? values.iterator().next() : null;

@@ -46,7 +46,7 @@ public class ZoneToEndpoint implements Function<Object, URI> {
    public URI apply(@Nullable Object from) {
       checkArgument(from != null && from instanceof String, "you must specify a zone, as a String argument");
       Map<String, Supplier<URI>> zoneToEndpoint = zoneToEndpointSupplier.get();
-      checkState(zoneToEndpoint.size() > 0, "no zone name to endpoint mappings configured!");
+      checkState(!zoneToEndpoint.isEmpty(), "no zone name to endpoint mappings configured!");
       checkArgument(zoneToEndpoint.containsKey(from),
                "requested location %s, which is not in the configured locations: %s", from, zoneToEndpoint);
       return zoneToEndpoint.get(from).get();

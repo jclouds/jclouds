@@ -143,7 +143,7 @@ public class FirewallApiLiveTest extends BaseCloudStackApiLiveTest {
       Set<FirewallRule> rules = client.getFirewallApi().listFirewallRules();
 
       assert rules != null;
-      assertTrue(rules.size() > 0);
+      assertTrue(!rules.isEmpty());
 
       for (FirewallRule rule : rules) {
          checkFirewallRule(rule);
@@ -172,7 +172,7 @@ public class FirewallApiLiveTest extends BaseCloudStackApiLiveTest {
       Set<FirewallRule> rules = client.getFirewallApi().listEgressFirewallRules();
 
       assert rules != null;
-      assertTrue(rules.size() > 0);
+      assertTrue(!rules.isEmpty());
 
       for (FirewallRule rule : rules) {
          checkEgressFirewallRule(rule);

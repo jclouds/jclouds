@@ -35,7 +35,7 @@ public class BindCIDRsToCommaDelimitedQueryParam implements Binder {
    public <R extends HttpRequest> R bindToRequest(R request, Object input) {
       checkArgument(input instanceof Iterable<?>, "this binder is only valid for Iterables!");
       Iterable<String> cidrs = (Iterable<String>) checkNotNull(input, "cidr list");
-      checkArgument(Iterables.size(cidrs) > 0, "you must specify at least one cidr range");
+      checkArgument(!Iterables.isEmpty(cidrs), "you must specify at least one cidr range");
       return (R) request.toBuilder().replaceQueryParam("cidrlist", Joiner.on(',').join(cidrs)).build();
    }
 }

@@ -43,7 +43,7 @@ public class CreateDriveRequestToMap implements Function<Drive, Map<String, Stri
       builder.putAll(baseDriveToMap.apply(from));
       if (from instanceof CreateDriveRequest) {
          CreateDriveRequest create = CreateDriveRequest.class.cast(from);
-         if (create.getAvoid().size() != 0)
+         if (!create.getAvoid().isEmpty())
             builder.put("avoid", Joiner.on(' ').join(create.getAvoid()));
          if (create.getEncryptionCipher() != null)
             builder.put("encryption:cipher", create.getEncryptionCipher());

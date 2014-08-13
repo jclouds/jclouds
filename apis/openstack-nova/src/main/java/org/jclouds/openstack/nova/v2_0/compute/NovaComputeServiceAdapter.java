@@ -164,15 +164,15 @@ public class NovaComputeServiceAdapter implements
    public Iterable<ImageInRegion> listImages() {
       Builder<ImageInRegion> builder = ImmutableSet.builder();
       Set<String> regions = regionIds.get();
-      checkState(regions.size() > 0, "no regions found in supplier %s", regionIds);
+      checkState(!regions.isEmpty(), "no regions found in supplier %s", regionIds);
       for (final String regionId : regions) {
          Set<? extends Image> images = novaApi.getImageApi(regionId).listInDetail().concat().toSet();
-         if (images.size() == 0) {
+         if (images.isEmpty()) {
             logger.debug("no images found in region %s", regionId);
             continue;
          }
          Iterable<? extends Image> active = filter(images, ImagePredicates.statusEquals(Image.Status.ACTIVE));
-         if (images.size() == 0) {
+         if (images.isEmpty()) {
             logger.debug("no images with status active in region %s; non-active: %s", regionId,
                      transform(active, new Function<Image, String>() {
 

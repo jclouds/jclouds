@@ -40,7 +40,7 @@ import com.google.common.collect.ImmutableMap.Builder;
 import com.google.common.collect.ImmutableSet;
 
 /**
- * 
+ *
  * looks for properties bound to the naming convention jclouds.location.region.{@code regionId}
  * .zones
  */
@@ -67,7 +67,7 @@ public class RegionIdToZoneIdsFromConfiguration implements RegionIdToZoneIdsSupp
    @Override
    public Map<String, Supplier<Set<String>>> get() {
       Set<String> regions = regionsSupplier.get();
-      if (regions.size() == 0) {
+      if (regions.isEmpty()) {
          logger.debug("no regions configured for provider %s", provider);
          return ImmutableMap.of();
       }

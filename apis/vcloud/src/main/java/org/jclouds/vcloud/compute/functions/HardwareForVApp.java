@@ -53,7 +53,7 @@ public class HardwareForVApp implements Function<VApp, Hardware> {
    public Hardware apply(VApp from) {
       checkNotNull(from, "VApp");
       // TODO make this work with composite vApps
-      Vm vm = from.getChildren().size() == 0 ? null : Iterables.get(from.getChildren(), 0);
+      Vm vm = from.getChildren().isEmpty() ? null : Iterables.get(from.getChildren(), 0);
       if (vm == null)
          return null;
 

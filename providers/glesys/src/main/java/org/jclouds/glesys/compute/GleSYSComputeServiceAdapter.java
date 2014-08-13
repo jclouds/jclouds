@@ -112,7 +112,7 @@ public class GleSYSComputeServiceAdapter implements ComputeServiceAdapter<Server
       template.getOptions().userMetadata(ComputeServiceConstants.NODE_GROUP_KEY, group);
 
       Map<String, String> md = metadataAndTagsAsCommaDelimitedValue(template.getOptions());
-      if (md.size() > 0) {
+      if (!md.isEmpty()) {
          String description = Joiner.on('\n').withKeyValueSeparator("=").join(md);
          // TODO: get glesys to stop stripping out equals and commas!
          createServerOptions.description(base16().lowerCase().encode(description.getBytes(UTF_8)));
@@ -127,7 +127,7 @@ public class GleSYSComputeServiceAdapter implements ComputeServiceAdapter<Server
       builder.transferGB(templateOptions.getTransferGB());
       ServerSpec spec = builder.build();
 
-      
+
       // use random root password unless one was provided via template options
       String password = templateOptions.hasRootPassword() ? templateOptions.getRootPassword() : getRandomPassword();
 
@@ -168,7 +168,7 @@ public class GleSYSComputeServiceAdapter implements ComputeServiceAdapter<Server
                            templatesSupportedBuilder.add(template.getName());
                      }
                      ImmutableSet<String> templatesSupported = templatesSupportedBuilder.build();
-                     if (templatesSupported.size() > 0)
+                     if (!templatesSupported.isEmpty())
                         hardwareToReturn.add(new HardwareBuilder()
                               .ids(String.format(
                                     "datacenter(%s)platform(%s)cpuCores(%d)memorySizeMB(%d)diskSizeGB(%d)", datacenter,
@@ -187,7 +187,7 @@ public class GleSYSComputeServiceAdapter implements ComputeServiceAdapter<Server
    public Set<OSTemplate> listImages() {
       return api.getServerApi().listTemplates().toSet();
    }
-   
+
    // cheat until we have a getTemplate command
    @Override
    public OSTemplate getImage(final String id) {
@@ -197,10 +197,10 @@ public class GleSYSComputeServiceAdapter implements ComputeServiceAdapter<Server
          public boolean apply(OSTemplate input) {
             return input.getName().equals(id);
          }
-         
+
       }, null);
    }
-   
+
    @Override
    public Iterable<ServerDetails> listNodes() {
       return api.getServerApi().list().transform(new Function<Server, ServerDetails>() {

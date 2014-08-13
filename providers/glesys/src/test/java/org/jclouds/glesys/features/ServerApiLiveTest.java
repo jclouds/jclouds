@@ -53,7 +53,7 @@ import com.google.common.collect.FluentIterable;
 @Test(groups = "live", testName = "ServerApiLiveTest", singleThreaded = true)
 public class ServerApiLiveTest extends BaseGleSYSApiWithAServerLiveTest {
    public static final String testHostName2 = "jclouds-test2";
-   
+
    @BeforeClass(groups = { "integration", "live" })
    @Override
    public void setup() {
@@ -78,14 +78,14 @@ public class ServerApiLiveTest extends BaseGleSYSApiWithAServerLiveTest {
    public void makeSureServerIsRunning() throws Exception {
       serverStatusChecker.apply(Server.State.RUNNING);
    }
-   
+
    @Test
    public void testAllowedArguments() throws Exception {
       Map<String, AllowedArgumentsForCreateServer> templates = serverApi.getAllowedArgumentsForCreateByPlatform();
-      
+
       assertTrue(templates.containsKey("OpenVZ"));
       assertTrue(templates.containsKey("Xen"));
-      
+
       checkAllowedArguments(templates.get("OpenVZ"));
       checkAllowedArguments(templates.get("Xen"));
    }
@@ -93,15 +93,15 @@ public class ServerApiLiveTest extends BaseGleSYSApiWithAServerLiveTest {
    private void checkAllowedArguments(AllowedArgumentsForCreateServer t) {
       assertNotNull(t);
 
-      assert t.getDataCenters().size() > 0 : t;
-      assert t.getCpuCoreOptions().getAllowedUnits().size() > 0 : t;
-      assert t.getDiskSizesInGB().getAllowedUnits().size() > 0 : t;
-      assert t.getMemorySizesInMB().getAllowedUnits().size() > 0 : t;
-      assert t.getTemplateNames().size() > 0 : t;
-      assert t.getTransfersInGB().getAllowedUnits().size() > 0 : t;
-      assert t.getTransfersInGB().getAllowedUnits().size() > 0 : t;
+      assert !t.getDataCenters().isEmpty() : t;
+      assert !t.getCpuCoreOptions().getAllowedUnits().isEmpty() : t;
+      assert !t.getDiskSizesInGB().getAllowedUnits().isEmpty() : t;
+      assert !t.getMemorySizesInMB().getAllowedUnits().isEmpty() : t;
+      assert !t.getTemplateNames().isEmpty() : t;
+      assert !t.getTransfersInGB().getAllowedUnits().isEmpty() : t;
+      assert !t.getTransfersInGB().getAllowedUnits().isEmpty() : t;
    }
-   
+
    public void testListTemplates() throws Exception {
       FluentIterable<OSTemplate> oSTemplates = serverApi.listTemplates();
 
@@ -109,7 +109,7 @@ public class ServerApiLiveTest extends BaseGleSYSApiWithAServerLiveTest {
          checkTemplate(oSTemplate);
       }
    }
-   
+
    private void checkTemplate(OSTemplate t) {
       assertNotNull(t);
       assertNotNull(t.getName());
@@ -119,11 +119,11 @@ public class ServerApiLiveTest extends BaseGleSYSApiWithAServerLiveTest {
       assert t.getMinDiskSize() > 0 : t;
       assert t.getMinMemSize() > 0 : t;
     }
-   
+
    public void testListServers() throws Exception {
       FluentIterable<Server> response = serverApi.list();
       assertNotNull(response);
-      assertTrue(response.size() > 0);
+      assertTrue(!response.isEmpty());
 
       for (Server server : response) {
          ServerDetails newDetails = serverApi.get(server.getId());
@@ -172,7 +172,7 @@ public class ServerApiLiveTest extends BaseGleSYSApiWithAServerLiveTest {
       assertTrue(serverStatusChecker.apply(Server.State.RUNNING));
 
       serverApi.reboot(serverId);
-      
+
       assertTrue(serverStatusChecker.apply(Server.State.RUNNING));
    }
 
@@ -240,10 +240,10 @@ public class ServerApiLiveTest extends BaseGleSYSApiWithAServerLiveTest {
       assertNotNull(testServer2.getId());
       assertEquals(testServer2.getHostname(), "jclouds-test2");
       assertTrue(testServer2.getIps().isEmpty());
-      
+
       testServerId2 = testServer2.getId();
 
-      Predicate<State> cloneChecker = statusChecker(serverApi, testServerId2); 
+      Predicate<State> cloneChecker = statusChecker(serverApi, testServerId2);
       assertTrue(cloneChecker.apply(Server.State.STOPPED));
 
       serverApi.start(testServer2.getId());
@@ -279,15 +279,15 @@ public class ServerApiLiveTest extends BaseGleSYSApiWithAServerLiveTest {
       assertNotNull(status.getState());
       assertNotNull(status.getUptime());
 
-      
+
       for (ResourceStatus usage : new ResourceStatus[] { status.getCpu(), status.getDisk(), status.getMemory() }) {
          assertNotNull(usage);
          assert usage.getMax() >= 0.0 : status;
          assert usage.getUsage() >= 0.0 : status;
-         
+
          assertNotNull(usage.getUnit());
       }
-      
+
       assertNotNull(status.getUptime());
       assert status.getUptime().getCurrent() > 0 : status;
       assertNotNull(status.getUptime().getUnit());

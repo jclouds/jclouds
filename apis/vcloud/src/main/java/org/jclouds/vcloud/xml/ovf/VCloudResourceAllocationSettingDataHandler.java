@@ -71,11 +71,11 @@ public class VCloudResourceAllocationSettingDataHandler extends ResourceAllocati
       Map<String, String> attributes = SaxUtils.cleanseAttributes(attrs);
       if (qName.endsWith("Link")) {
          this.edit = Utils.newReferenceType(attributes);
-      } else if (qName.endsWith("HostResource") && attributes.size() > 0) {
+      } else if (qName.endsWith("HostResource") && !attributes.isEmpty()) {
          capacity = Long.parseLong(attributes.get("capacity"));
          busType = Integer.parseInt(attributes.get("busType"));
          busSubType = attributes.get("busSubType");
-      } else if (qName.endsWith("Connection") && attributes.size() > 0) {
+      } else if (qName.endsWith("Connection") && !attributes.isEmpty()) {
          ipAddress = attributes.get("ipAddress");
          primaryNetworkConnection = Boolean.parseBoolean(attributes.get("primaryNetworkConnection"));
          ipAddressingMode = attributes.get("ipAddressingMode");

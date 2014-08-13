@@ -47,10 +47,10 @@ public class ParseNode implements Function<HttpResponse, Node>, InvocationContex
    @Override
    public Node apply(HttpResponse response) {
       Map<String, NodeWithCLBMetadata> map = json.apply(response);
-      
-      if (map == null || map.size() == 0)
+
+      if (map == null || map.isEmpty())
          return null;
-      
+
       NodeWithCLBMetadata nodeWithCLBMetadata = Iterables.get(map.values(), 0);
       Node node = Node.builder()
             .address(nodeWithCLBMetadata.getAddress())
@@ -62,7 +62,7 @@ public class ParseNode implements Function<HttpResponse, Node>, InvocationContex
             .status(nodeWithCLBMetadata.status)
             .metadata(ParseMetadata.transformCLBMetadataToMetadata(nodeWithCLBMetadata.metadata))
             .build();
-      
+
       return node;
    }
 
@@ -70,7 +70,7 @@ public class ParseNode implements Function<HttpResponse, Node>, InvocationContex
    public ParseNode setContext(HttpRequest request) {
       return this;
    }
-   
+
    /**
     * This class is here only to deal with the metadata format in CLB.
     */

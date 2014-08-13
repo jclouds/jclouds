@@ -39,7 +39,7 @@ public class KeyValuesDelimitedByBlankLinesToServerInfo implements Function<Http
    @Override
    public ServerInfo apply(HttpResponse response) {
       Set<ServerInfo> drives = setParser.apply(response);
-      if (drives.size() == 0)
+      if (drives.isEmpty())
          return null;
       return Iterables.get(drives, 0);
    }

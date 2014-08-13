@@ -61,7 +61,7 @@ public class ParseLoadBalancers implements Function<HttpResponse, IterableWithMa
    public IterableWithMarker<LoadBalancer> apply(HttpResponse arg0) {
       LoadBalancers lbs = json.apply(arg0);
 
-      if (lbs.size() == 0)
+      if (lbs.isEmpty())
          return IterableWithMarkers.EMPTY;
 
       Iterable<LoadBalancer> transform = Iterables.transform(lbs, convertLB);

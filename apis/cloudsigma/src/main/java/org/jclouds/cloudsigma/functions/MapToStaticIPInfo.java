@@ -35,9 +35,7 @@ public class MapToStaticIPInfo implements Function<Map<String, String>, StaticIP
 
    @Override
    public StaticIPInfo apply(Map<String, String> from) {
-      if (from.size() == 0)
-         return null;
-      if (from.size() == 0)
+      if (from.isEmpty())
          return null;
       StaticIPInfo.Builder builder = new StaticIPInfo.Builder();
       builder.ip(from.get("resource"));

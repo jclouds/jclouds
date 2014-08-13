@@ -62,7 +62,7 @@ public class RecordApiLiveTest extends BaseDynECTApiLiveTest {
 
    private void checkRecord(Record<? extends Map<String, Object>> record) {
       checkRecordId(record);
-      assertTrue(record.getRData().size() > 0, "RData entries should be present for cannot be zero for Record: "
+      assertTrue(!record.getRData().isEmpty(), "RData entries should be present for cannot be zero for Record: "
             + record);
       checkNotNull(record.getTTL(), "TTL cannot be null for RecordId: %s", record);
    }

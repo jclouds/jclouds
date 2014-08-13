@@ -156,7 +156,7 @@ public abstract class BaseComputeServiceLiveTest extends BaseComputeServiceConte
       // wait a maximum of 60 seconds for port 8080 to open.
       openSocketFinder = context.utils().injector().getInstance(OpenSocketFinder.class);
    }
-   
+
    @Override
    protected void initializeContext() {
       super.initializeContext();
@@ -203,7 +203,7 @@ public abstract class BaseComputeServiceLiveTest extends BaseComputeServiceConte
       Template defaultTemplate = view.getComputeService().templateBuilder().build();
       assertEquals(view.getComputeService().getImage(defaultTemplate.getImage().getId()), defaultTemplate.getImage());
    }
-   
+
    // since surefire and eclipse don't otherwise guarantee the order, we are
    // starting this one alphabetically before create2nodes..
    @Test(enabled = true, dependsOnMethods = { "testCompareSizes" })
@@ -476,7 +476,7 @@ public abstract class BaseComputeServiceLiveTest extends BaseComputeServiceConte
          }
       }
    }
-   
+
    @Test(enabled = true, dependsOnMethods = "testCreateAnotherNodeWithANewContextToEnsureSharedMemIsntRequired")
    public void testCredentialsCache() throws Exception {
       initializeContext();
@@ -606,12 +606,12 @@ public abstract class BaseComputeServiceLiveTest extends BaseComputeServiceConte
    public void testListNodesByIds() throws Exception {
       Set<String> nodeIds = copyOf(transform(nodes,
          new Function<NodeMetadata, String>() {
-                                                
+
             @Override
             public String apply(NodeMetadata from) {
                return from.getId();
             }
-            
+
          }));
 
       SortedSet<NodeMetadata> listedNodes = ImmutableSortedSet.copyOf(client.listNodesByIds(nodeIds));
@@ -635,7 +635,7 @@ public abstract class BaseComputeServiceLiveTest extends BaseComputeServiceConte
          // assert nodeMetadata.getName() != null : nodeMetadata;
          if (nodeMetadata.getStatus() == Status.RUNNING) {
             assert nodeMetadata.getPublicAddresses() != null : nodeMetadata;
-            assert nodeMetadata.getPublicAddresses().size() > 0 || nodeMetadata.getPrivateAddresses().size() > 0 : nodeMetadata;
+            assert !nodeMetadata.getPublicAddresses().isEmpty() || !nodeMetadata.getPrivateAddresses().isEmpty() : nodeMetadata;
             assertNotNull(nodeMetadata.getPrivateAddresses());
          }
       }
@@ -674,7 +674,7 @@ public abstract class BaseComputeServiceLiveTest extends BaseComputeServiceConte
       ExecResponse exec = client.runScriptOnNode(node.getId(), process, runAsRoot(false).wrapInInitScript(false));
       stats.backgroundProcessMilliseconds = watch.elapsed(TimeUnit.MILLISECONDS);
       watch.reset().start();
-      
+
       HostAndPort socket = null;
       try {
          socket = openSocketFinder.findOpenSocketOnNode(node, 8080, 600, TimeUnit.SECONDS);
@@ -709,7 +709,7 @@ public abstract class BaseComputeServiceLiveTest extends BaseComputeServiceConte
    protected void createAndRunAServiceInGroup(String group) throws RunNodesException {
       // note that some cloud providers do not support mixed case tag names
       ImmutableMap<String, String> userMetadata = ImmutableMap.<String, String> of("test", group);
-      
+
       ImmutableSet<String> tags = ImmutableSet. of(group);
       Stopwatch watch = Stopwatch.createStarted();
 

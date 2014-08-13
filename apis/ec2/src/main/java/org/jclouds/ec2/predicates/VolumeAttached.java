@@ -30,7 +30,7 @@ import com.google.common.collect.Sets;
 import com.google.inject.Inject;
 
 /**
- * 
+ *
  * Tests to see if a volume is attached.
  */
 @Singleton
@@ -49,7 +49,7 @@ public class VolumeAttached implements Predicate<Attachment> {
       logger.trace("looking for volume %s", attachment.getVolumeId());
       Volume volume = Iterables.getOnlyElement(client.describeVolumesInRegion(attachment
                .getRegion(), attachment.getVolumeId()));
-      if (volume.getAttachments().size() == 0) {
+      if (volume.getAttachments().isEmpty()) {
          return false;
       }
       Attachment lastAttachment = Sets.newTreeSet(volume.getAttachments()).last();

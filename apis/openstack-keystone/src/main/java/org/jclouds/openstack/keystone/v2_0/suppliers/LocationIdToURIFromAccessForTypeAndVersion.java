@@ -18,9 +18,10 @@ package org.jclouds.openstack.keystone.v2_0.suppliers;
 
 import static com.google.common.collect.Iterables.any;
 import static com.google.common.collect.Iterables.concat;
-import static com.google.common.collect.Iterables.size;
+import static com.google.common.collect.Iterables.isEmpty;
 import static com.google.common.collect.Iterables.tryFind;
 import static com.google.common.collect.Multimaps.index;
+
 
 import java.net.URI;
 import java.util.Collection;
@@ -93,12 +94,12 @@ public class LocationIdToURIFromAccessForTypeAndVersion implements Supplier<Map<
    @Override
    public Map<String, Supplier<URI>> get() {
       FluentIterable<Service> services = FluentIterable.from(access.get()).filter(apiTypeEquals);
-      if (services.toSet().size() == 0)
+      if (services.isEmpty())
          throw new NoSuchElementException(String.format("apiType %s not found in catalog %s", apiType, services));
 
       Iterable<Endpoint> endpoints = concat(services);
 
-      if (size(endpoints) == 0)
+      if (isEmpty(endpoints))
          throw new NoSuchElementException(
                String.format("no endpoints for apiType %s in services %s", apiType, services));
 

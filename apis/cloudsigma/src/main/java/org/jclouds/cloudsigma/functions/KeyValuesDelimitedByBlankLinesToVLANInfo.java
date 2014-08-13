@@ -39,7 +39,7 @@ public class KeyValuesDelimitedByBlankLinesToVLANInfo implements Function<HttpRe
    @Override
    public VLANInfo apply(HttpResponse response) {
       Set<VLANInfo> drives = setParser.apply(response);
-      if (drives.size() == 0)
+      if (drives.isEmpty())
          return null;
       return Iterables.get(drives, 0);
    }

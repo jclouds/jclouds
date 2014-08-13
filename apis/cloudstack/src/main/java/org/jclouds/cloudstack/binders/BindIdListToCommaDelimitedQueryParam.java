@@ -35,7 +35,7 @@ public class BindIdListToCommaDelimitedQueryParam implements Binder {
    public <R extends HttpRequest> R bindToRequest(R request, Object input) {
       checkArgument(input instanceof Iterable<?>, "this binder is only valid for Iterables!");
       Iterable<Long> numbers = (Iterable<Long>) checkNotNull(input, "list of Longs");
-      checkArgument(Iterables.size(numbers) > 0, "you must specify at least one element");
+      checkArgument(!Iterables.isEmpty(numbers), "you must specify at least one element");
       return (R) request.toBuilder().replaceQueryParam("ids", Joiner.on(',').join(numbers)).build();
    }
 }

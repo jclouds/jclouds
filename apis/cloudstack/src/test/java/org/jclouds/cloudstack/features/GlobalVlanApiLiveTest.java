@@ -98,17 +98,17 @@ public class GlobalVlanApiLiveTest extends BaseCloudStackApiLiveTest {
                                                            return network.getNetworkOfferingId().equals(offering.getId());
                                                         }
                                                      });
-         
-         if (suitableNetworks.size() > 0) {
+
+         if (!suitableNetworks.isEmpty()) {
             network = Iterables.get(suitableNetworks, 0);
             usingExistingNetwork = true;
-         
+
          } else if (network == null) {
             network = client.getNetworkApi().createNetworkInZone(zone.getId(),
                                                                  offering.getId(), "net-" + prefix, "jclouds test " + prefix);
             usingExistingNetwork = false;
          }
-         
+
          range = globalAdminClient.getVlanClient().createVlanIPRange("172.19.1.1", "172.19.1.199", CreateVlanIPRangeOptions.Builder
                                                                      .accountInDomain(user.getAccount(), user.getDomainId())
                                                                      .forVirtualNetwork(true)

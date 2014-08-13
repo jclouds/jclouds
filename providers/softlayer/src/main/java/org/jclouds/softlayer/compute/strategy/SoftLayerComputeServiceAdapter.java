@@ -465,7 +465,7 @@ public class SoftLayerComputeServiceAdapter implements
          boolean hasBackendIp = newGuest.getPrimaryBackendIpAddress() != null;
          boolean hasPrimaryIp = newGuest.getPrimaryIpAddress() != null;
          boolean hasPasswords = newGuest.getOperatingSystem() != null
-               && newGuest.getOperatingSystem().getPasswords().size() > 0;
+               && !newGuest.getOperatingSystem().getPasswords().isEmpty();
 
          return hasBackendIp && hasPrimaryIp && hasPasswords;
       }

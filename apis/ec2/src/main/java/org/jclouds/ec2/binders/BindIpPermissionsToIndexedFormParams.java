@@ -39,7 +39,7 @@ public class BindIpPermissionsToIndexedFormParams implements Binder {
       for (IpPermission perm : (Iterable<IpPermission>) input)
          formBuilder.putAll(IpPermissions.buildFormParametersForIndex(index++, perm));
       ImmutableMultimap<String, String> forms = formBuilder.build();
-      return forms.size() == 0 ? request : (R) request.toBuilder().replaceFormParams(forms).build();
+      return forms.isEmpty() ? request : (R) request.toBuilder().replaceFormParams(forms).build();
    }
 
 }

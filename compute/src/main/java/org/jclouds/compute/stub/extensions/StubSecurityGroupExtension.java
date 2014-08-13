@@ -61,7 +61,7 @@ public class StubSecurityGroupExtension implements SecurityGroupExtension {
    public StubSecurityGroupExtension(ConcurrentMap<String, SecurityGroup> groups,
                                      @Named(Constants.PROPERTY_IO_WORKER_THREADS) ListeningExecutorService ioExecutor,
                                      Supplier<Location> location,
-                                     @Named("GROUP_ID") Provider<Integer> groupIdProvider, 
+                                     @Named("GROUP_ID") Provider<Integer> groupIdProvider,
                                      JustProvider locationSupplier,
                                      Multimap<String, SecurityGroup> groupsForNodes) {
       this.groups = groups;
@@ -96,7 +96,7 @@ public class StubSecurityGroupExtension implements SecurityGroupExtension {
    public SecurityGroup getSecurityGroupById(String id) {
       return groups.get(id);
    }
-   
+
    @Override
    public SecurityGroup createSecurityGroup(String name, Location location) {
       SecurityGroupBuilder builder = new SecurityGroupBuilder();
@@ -149,13 +149,13 @@ public class StubSecurityGroupExtension implements SecurityGroupExtension {
       ipBuilder.ipProtocol(protocol);
       ipBuilder.fromPort(startPort);
       ipBuilder.toPort(endPort);
-      if (tenantIdGroupNamePairs.size() > 0) {
+      if (!tenantIdGroupNamePairs.isEmpty()) {
          ipBuilder.tenantIdGroupNamePairs(tenantIdGroupNamePairs);
       }
-      if (Iterables.size(ipRanges) > 0) {
+      if (!Iterables.isEmpty(ipRanges)) {
          ipBuilder.cidrBlocks(ipRanges);
       }
-      if (Iterables.size(groupIds) > 0) {
+      if (!Iterables.isEmpty(groupIds)) {
          ipBuilder.groupIds(groupIds);
       }
 
@@ -175,7 +175,7 @@ public class StubSecurityGroupExtension implements SecurityGroupExtension {
 
       return newGroup;
    }
-      
+
    @Override
    public SecurityGroup removeIpPermission(IpPermission ipPermission, SecurityGroup group) {
       SecurityGroupBuilder builder = SecurityGroupBuilder.fromSecurityGroup(checkNotNull(group, "group"));
@@ -183,7 +183,7 @@ public class StubSecurityGroupExtension implements SecurityGroupExtension {
       builder.ipPermissions();
 
       builder.ipPermissions(filter(group.getIpPermissions(), not(equalTo(ipPermission))));
-                            
+
       SecurityGroup newGroup = builder.build();
 
       if (groups.containsKey(newGroup.getId())) {
@@ -194,7 +194,7 @@ public class StubSecurityGroupExtension implements SecurityGroupExtension {
 
       return newGroup;
    }
-   
+
 
    @Override
    public SecurityGroup removeIpPermission(IpProtocol protocol, int startPort, int endPort,
@@ -206,13 +206,13 @@ public class StubSecurityGroupExtension implements SecurityGroupExtension {
       ipBuilder.ipProtocol(protocol);
       ipBuilder.fromPort(startPort);
       ipBuilder.toPort(endPort);
-      if (tenantIdGroupNamePairs.size() > 0) {
+      if (!tenantIdGroupNamePairs.isEmpty()) {
          ipBuilder.tenantIdGroupNamePairs(tenantIdGroupNamePairs);
       }
-      if (Iterables.size(ipRanges) > 0) {
+      if (!Iterables.isEmpty(ipRanges)) {
          ipBuilder.cidrBlocks(ipRanges);
       }
-      if (Iterables.size(groupIds) > 0) {
+      if (!Iterables.isEmpty(groupIds)) {
          ipBuilder.groupIds(groupIds);
       }
 
@@ -223,7 +223,7 @@ public class StubSecurityGroupExtension implements SecurityGroupExtension {
       builder.ipPermissions();
 
       builder.ipPermissions(filter(group.getIpPermissions(), not(equalTo(perm))));
-      
+
       SecurityGroup newGroup = builder.build();
 
       if (groups.containsKey(newGroup.getId())) {

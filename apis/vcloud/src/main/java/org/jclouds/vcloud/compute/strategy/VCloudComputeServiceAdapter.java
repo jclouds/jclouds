@@ -179,13 +179,13 @@ public class VCloudComputeServiceAdapter implements ComputeServiceAdapter<VApp, 
       URI id = URI.create(in);
       return client.getVAppApi().getVApp(id);
    }
-   
+
    @Override
    public VAppTemplate getImage(String in) {
       URI id = URI.create(in);
       return client.getVAppTemplateApi().getVAppTemplate(id);
    }
-   
+
    @Override
    public void destroyNode(String id) {
       URI vappId = URI.create(checkNotNull(id, "node.id"));
@@ -215,7 +215,7 @@ public class VCloudComputeServiceAdapter implements ComputeServiceAdapter<VApp, 
 
    VApp waitForPendingTasksToComplete(URI vappId) {
       VApp vApp = client.getVAppApi().getVApp(vappId);
-      if (vApp.getTasks().size() == 0)
+      if (vApp.getTasks().isEmpty())
          return vApp;
       for (Task task : vApp.getTasks())
          waitForTask(task);
@@ -224,7 +224,7 @@ public class VCloudComputeServiceAdapter implements ComputeServiceAdapter<VApp, 
 
    VApp cancelAnyRunningTasks(URI vappId) {
       VApp vApp = client.getVAppApi().getVApp(vappId);
-      if (vApp.getTasks().size() == 0)
+      if (vApp.getTasks().isEmpty())
          return vApp;
       for (Task task : vApp.getTasks()) {
          try {
@@ -238,7 +238,7 @@ public class VCloudComputeServiceAdapter implements ComputeServiceAdapter<VApp, 
    }
 
    public void waitForTask(Task task) {
-      if (!successTester.apply(task.getHref())) 
+      if (!successTester.apply(task.getHref()))
          throw new TaskStillRunningException(task);
    }
 

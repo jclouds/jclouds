@@ -35,11 +35,11 @@ import com.google.common.collect.ImmutableSet;
 */
 public class SecurityGroup {
 
-   public static Builder<?> builder() { 
+   public static Builder<?> builder() {
       return new ConcreteBuilder();
    }
-   
-   public Builder<?> toBuilder() { 
+
+   public Builder<?> toBuilder() {
       return new ConcreteBuilder().fromSecurityGroup(this);
    }
 
@@ -51,8 +51,8 @@ public class SecurityGroup {
       protected String name;
       protected String description;
       protected Set<SecurityGroupRule> rules = ImmutableSet.of();
-   
-      /** 
+
+      /**
        * @see SecurityGroup#getId()
        */
       public T id(String id) {
@@ -60,7 +60,7 @@ public class SecurityGroup {
          return self();
       }
 
-      /** 
+      /**
        * @see SecurityGroup#getTenantId()
        */
       public T tenantId(String tenantId) {
@@ -68,7 +68,7 @@ public class SecurityGroup {
          return self();
       }
 
-      /** 
+      /**
        * @see SecurityGroup#getName()
        */
       public T name(String name) {
@@ -76,7 +76,7 @@ public class SecurityGroup {
          return self();
       }
 
-      /** 
+      /**
        * @see SecurityGroup#getDescription()
        */
       public T description(String description) {
@@ -84,11 +84,11 @@ public class SecurityGroup {
          return self();
       }
 
-      /** 
+      /**
        * @see SecurityGroup#getRules()
        */
       public T rules(Set<SecurityGroupRule> rules) {
-         this.rules = ImmutableSet.copyOf(checkNotNull(rules, "rules"));      
+         this.rules = ImmutableSet.copyOf(checkNotNull(rules, "rules"));
          return self();
       }
 
@@ -99,7 +99,7 @@ public class SecurityGroup {
       public SecurityGroup build() {
          return new SecurityGroup(id, tenantId, name, description, rules);
       }
-      
+
       public T fromSecurityGroup(SecurityGroup in) {
          return this
                   .id(in.getId())
@@ -133,7 +133,7 @@ public class SecurityGroup {
       this.name = name;
       this.description = description;
       // if empty, leave null so this doesn't serialize to json
-      this.rules = checkNotNull(rules, "rules").size() == 0 ? null : ImmutableSet.copyOf(rules);
+      this.rules = checkNotNull(rules, "rules").isEmpty() ? null : ImmutableSet.copyOf(rules);
    }
 
    public String getId() {
@@ -175,12 +175,12 @@ public class SecurityGroup {
                && Objects.equal(this.description, that.description)
                && Objects.equal(this.rules, that.rules);
    }
-   
+
    protected ToStringHelper string() {
       return MoreObjects.toStringHelper(this)
             .add("id", id).add("tenantId", tenantId).add("name", name).add("description", description).add("rules", rules);
    }
-   
+
    @Override
    public String toString() {
       return string().toString();

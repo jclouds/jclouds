@@ -167,9 +167,9 @@ public class NodeMetadataImpl extends ComputeMetadataImpl implements NodeMetadat
       ToStringHelper helper = computeToStringPrefix();
       helper.add("group", getGroup()).add("imageId", getImageId()).add("os", getOperatingSystem())
                .add("status", formatStatus(this)).add("loginPort", getLoginPort()).add("hostname", getHostname());
-      if (getPrivateAddresses().size() > 0)
+      if (!getPrivateAddresses().isEmpty())
          helper.add("privateAddresses", getPrivateAddresses());
-      if (getPublicAddresses().size() > 0)
+      if (!getPublicAddresses().isEmpty())
          helper.add("publicAddresses", getPublicAddresses());
       helper.add("hardware", getHardware()).add("loginUser", credentials != null ? credentials.identity : null);
       return addComputeToStringSuffix(helper);

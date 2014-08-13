@@ -42,7 +42,7 @@ public class JoinOnComma implements Function<Object, String> {
       }
       checkArgument(o instanceof Iterable<?>, "you must pass an iterable or array");
       Iterable<?> toJoin = (Iterable<?>) o;
-      checkArgument(Iterables.size(toJoin) > 0, "you must pass an iterable or array with elements");
+      checkArgument(!Iterables.isEmpty(toJoin), "you must pass an iterable or array with elements");
       return Joiner.on(',').join(toJoin);
    }
 }

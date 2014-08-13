@@ -85,7 +85,7 @@ public class InstantiateVAppTemplateWithGroupEncodedIntoNameThenCustomizeDeployA
       this.networkConfigurationForNetworkAndOptions = networkConfigurationForNetworkAndOptions;
       this.buildVersion = buildVersion;
    }
-   
+
    /**
     * per john ellis at bluelock, vCloud Director 1.5 is more strict than earlier versions.
     * <p/>
@@ -95,19 +95,19 @@ public class InstantiateVAppTemplateWithGroupEncodedIntoNameThenCustomizeDeployA
     */
    public static enum ComputerNameValidator  {
       INSTANCE;
-      
+
       private DnsNameValidator validator;
 
       ComputerNameValidator() {
          this.validator = new  DnsNameValidator(3, 15);
       }
-      
+
       public void validate(@Nullable String t) throws IllegalArgumentException {
          this.validator.validate(t);
       }
 
    }
-   
+
    public NodeAndInitialCredentials<VApp> createNodeWithGroupEncodedIntoName(String group, String name, Template template) {
       // no sense waiting until failures occur later
       ComputerNameValidator.INSTANCE.validate(name);
@@ -156,11 +156,11 @@ public class InstantiateVAppTemplateWithGroupEncodedIntoNameThenCustomizeDeployA
                getCredentialsFrom(vAppResponse));
 
    }
-  
+
    @VisibleForTesting
    protected VApp instantiateVAppFromTemplate(String name, Template template) {
       VCloudTemplateOptions vOptions = VCloudTemplateOptions.class.cast(template.getOptions());
-      
+
       URI templateId = URI.create(template.getImage().getId());
 
       VAppTemplate vAppTemplate = vAppTemplates.getUnchecked(templateId);
@@ -175,7 +175,7 @@ public class InstantiateVAppTemplateWithGroupEncodedIntoNameThenCustomizeDeployA
 
       Network networkToConnect = get(vAppTemplate.getNetworkSection().getNetworks(), 0);
 
-      
+
       NetworkConfig config = networkConfigurationForNetworkAndOptions.apply(networkToConnect, vOptions);
 
       // note that in VCD 1.5, the network name after instantiation will be the same as the parent
@@ -217,7 +217,7 @@ public class InstantiateVAppTemplateWithGroupEncodedIntoNameThenCustomizeDeployA
       }
 
    };
-   
+
    public void waitForTask(Task task) {
       if (!successTester.apply(task.getHref())) {
          throw new TaskStillRunningException(task);
@@ -251,7 +251,7 @@ public class InstantiateVAppTemplateWithGroupEncodedIntoNameThenCustomizeDeployA
       Vm vm = get(vApp.getChildren(), 0);
 
       NetworkConnectionSection net = vm.getNetworkConnectionSection();
-      checkArgument(net.getConnections().size() > 0, "no connections on vm %s", vm);
+      checkArgument(!net.getConnections().isEmpty(), "no connections on vm %s", vm);
 
       NetworkConnection toConnect = findWithPoolAllocationOrFirst(net);
 

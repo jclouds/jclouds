@@ -84,7 +84,7 @@ public class VirtualMachineApiLiveTest extends BaseCloudStackApiLiveTest {
    public static VirtualMachine createVirtualMachine(CloudStackApi client, String defaultTemplate,
          Predicate<String> jobComplete, Predicate<VirtualMachine> virtualMachineRunning) {
       Set<Network> networks = client.getNetworkApi().listNetworks(isDefault(true));
-      if (networks.size() > 0) {
+      if (!networks.isEmpty()) {
          Network network = get(filter(networks, new Predicate<Network>() {
             @Override
             public boolean apply(Network network) {
@@ -367,7 +367,7 @@ public class VirtualMachineApiLiveTest extends BaseCloudStackApiLiveTest {
       // assert vm.getRootDeviceType() != null : vm;
       if (vm.getJobId() != null)
          assert vm.getJobStatus() != null : vm;
-      assert vm.getNICs() != null && vm.getNICs().size() > 0 : vm;
+      assert vm.getNICs() != null && !vm.getNICs().isEmpty() : vm;
       for (NIC nic : vm.getNICs()) {
          assert nic.getId() != null : vm;
          assert nic.getNetworkId() != null : vm;

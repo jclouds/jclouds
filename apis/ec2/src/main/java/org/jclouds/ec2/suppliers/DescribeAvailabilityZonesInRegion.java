@@ -70,7 +70,7 @@ public class DescribeAvailabilityZonesInRegion implements RegionIdToZoneIdsSuppl
                }
 
             }));
-            if (zones.size() > 0)
+            if (!zones.isEmpty())
                map.put(region, zones);
          } catch (HttpResponseException e) {
             // TODO: this should be in retry handler, not here.

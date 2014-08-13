@@ -63,7 +63,7 @@ public class ValidateVAppTemplateAndReturnEnvelopeOrThrowIllegalArgumentExceptio
       Envelope ovf;
       try {
          ovf = envelopes.get(from.getHref());
-         checkArgument(ovf.getVirtualSystem().getVirtualHardwareSections().size() > 0,
+         checkArgument(!ovf.getVirtualSystem().getVirtualHardwareSections().isEmpty(),
                   "no hardware sections exist in ovf %s", ovf);
       } catch (ExecutionException e) {
          throw new IllegalArgumentException("no ovf envelope found for: " + from, e);

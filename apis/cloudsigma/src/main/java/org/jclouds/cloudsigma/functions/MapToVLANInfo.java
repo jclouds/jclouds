@@ -34,9 +34,7 @@ public class MapToVLANInfo implements Function<Map<String, String>, VLANInfo> {
 
    @Override
    public VLANInfo apply(Map<String, String> from) {
-      if (from.size() == 0)
-         return null;
-      if (from.size() == 0)
+      if (from.isEmpty())
          return null;
       VLANInfo.Builder builder = new VLANInfo.Builder();
       builder.uuid(from.get("resource"));

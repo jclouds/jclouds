@@ -121,11 +121,11 @@ public class AWSEC2CreateSecurityGroupIfNeeded extends CacheLoader<RegionAndName
 
          Set<IpPermission> perms = permissions.build();
 
-         if (perms.size() > 0) {
+         if (!perms.isEmpty()) {
             logger.debug(">> authorizing securityGroup region(%s) name(%s) IpPermissions(%s)", region, name, perms);
             securityApi.authorizeSecurityGroupIngressInRegion(region, id, perms);
             logger.debug("<< authorized securityGroup(%s)", name);
-         }            
+         }
 
       } catch (IllegalStateException e) {
          logger.debug("<< reused securityGroup(%s)", name);

@@ -70,11 +70,11 @@ public class EC2TemplateOptions extends TemplateOptions implements Cloneable {
       super.copyTo(to);
       if (to instanceof EC2TemplateOptions) {
          EC2TemplateOptions eTo = EC2TemplateOptions.class.cast(to);
-         if (getGroups().size() > 0)
+         if (!getGroups().isEmpty())
             eTo.securityGroups(getGroups());
          if (getKeyPair() != null)
             eTo.keyPair(getKeyPair());
-         if (getBlockDeviceMappings().size() > 0)
+         if (!getBlockDeviceMappings().isEmpty())
             eTo.blockDeviceMappings(getBlockDeviceMappings());
          if (!shouldAutomaticallyCreateKeyPair())
             eTo.noKeyPair();
@@ -119,15 +119,15 @@ public class EC2TemplateOptions extends TemplateOptions implements Cloneable {
    @Override
    public ToStringHelper string() {
       ToStringHelper toString = super.string();
-      if (groupNames.size() != 0)
+      if (!groupNames.isEmpty())
          toString.add("groupNames", groupNames);
       if (noKeyPair)
          toString.add("noKeyPair", noKeyPair);
       toString.add("keyPair", keyPair);
-      if (userData != null && userData.size() > 0)
+      if (userData != null && !userData.isEmpty())
          toString.add("userDataCksum", Hashing.crc32().hashBytes(Bytes.toArray(userData)));
       ImmutableSet<BlockDeviceMapping> mappings = blockDeviceMappings.build();
-      if (mappings.size() != 0)
+      if (!mappings.isEmpty())
          toString.add("blockDeviceMappings", mappings);
       if (maxCount != null && maxCount.intValue() > 0)
          toString.add("maxCount", maxCount);
@@ -139,7 +139,7 @@ public class EC2TemplateOptions extends TemplateOptions implements Cloneable {
    public static final EC2TemplateOptions NONE = new EC2TemplateOptions();
 
    /**
-    * 
+    *
     * @see EC2TemplateOptions#securityGroups(Iterable<String>)
     */
    public EC2TemplateOptions securityGroups(String... groupNames) {
@@ -150,7 +150,7 @@ public class EC2TemplateOptions extends TemplateOptions implements Cloneable {
     * Specifies the security groups to be used for nodes with this template
     */
    public EC2TemplateOptions securityGroups(Iterable<String> groupNames) {
-      checkArgument(Iterables.size(groupNames) > 0, "you must specify at least one security group");
+      checkArgument(!Iterables.isEmpty(groupNames), "you must specify at least one security group");
       for (String groupId : groupNames)
          checkNotNull(emptyToNull(groupId), "all security groups must be non-empty");
       this.groupNames = ImmutableSet.copyOf(groupNames);
@@ -425,7 +425,7 @@ public class EC2TemplateOptions extends TemplateOptions implements Cloneable {
          EC2TemplateOptions options = new EC2TemplateOptions();
          return options.runScript(script);
       }
-      
+
       public static EC2TemplateOptions runScript(String script) {
          EC2TemplateOptions options = new EC2TemplateOptions();
          return options.runScript(script);
@@ -477,7 +477,7 @@ public class EC2TemplateOptions extends TemplateOptions implements Cloneable {
    public EC2TemplateOptions authorizePublicKey(String publicKey) {
       return EC2TemplateOptions.class.cast(super.authorizePublicKey(publicKey));
    }
-   
+
    /**
     * {@inheritDoc}
     */
@@ -485,7 +485,7 @@ public class EC2TemplateOptions extends TemplateOptions implements Cloneable {
    public EC2TemplateOptions installPrivateKey(String privateKey) {
       return EC2TemplateOptions.class.cast(super.installPrivateKey(privateKey));
    }
-   
+
    /**
     * {@inheritDoc}
     */
@@ -629,7 +629,7 @@ public class EC2TemplateOptions extends TemplateOptions implements Cloneable {
    public EC2TemplateOptions blockOnComplete(boolean blockOnComplete) {
       return EC2TemplateOptions.class.cast(super.blockOnComplete(blockOnComplete));
    }
-   
+
    /**
     * @return groupNames the user specified to run instances with, or zero
     *         length set to create an implicit group

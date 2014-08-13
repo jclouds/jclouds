@@ -164,7 +164,7 @@ public class TemplateBuilderImpl implements TemplateBuilder {
          }
 
       };
-   } 
+   }
 
    final Predicate<ComputeMetadata> locationPredicate = new NullEqualToIsParentOrIsGrandparentOfCurrentLocation(new Supplier<Location>() {
 
@@ -172,7 +172,7 @@ public class TemplateBuilderImpl implements TemplateBuilder {
       public Location get() {
          return location;
       }
-      
+
    });
 
    private final Predicate<Image> idPredicate = new Predicate<Image>() {
@@ -345,7 +345,7 @@ public class TemplateBuilderImpl implements TemplateBuilder {
          return "imageName(" + imageName + ")";
       }
    };
-   
+
    private final Predicate<Image> imageDescriptionPredicate = new Predicate<Image>() {
       @Override
       public boolean apply(Image input) {
@@ -366,7 +366,7 @@ public class TemplateBuilderImpl implements TemplateBuilder {
          return "imageDescription(" + imageDescription + ")";
       }
    };
-   
+
    private final Predicate<Hardware> hardwareIdPredicate = new Predicate<Hardware>() {
       @Override
       public boolean apply(Hardware input) {
@@ -386,7 +386,7 @@ public class TemplateBuilderImpl implements TemplateBuilder {
          return "hardwareId(" + hardwareId + ")";
       }
    };
-   
+
    private final Predicate<Hardware> hypervisorPredicate = new Predicate<Hardware>() {
       @Override
       public boolean apply(Hardware input) {
@@ -471,7 +471,7 @@ public class TemplateBuilderImpl implements TemplateBuilder {
             : Predicates.<Hardware> and(predicates);
       return hardwarePredicate;
    }
-   
+
    static final Ordering<Hardware> DEFAULT_SIZE_ORDERING = new Ordering<Hardware>() {
       public int compare(Hardware left, Hardware right) {
          return ComparisonChain.start().compare(getCores(left), getCores(right)).compare(left.getRam(), right.getRam())
@@ -651,9 +651,9 @@ public class TemplateBuilderImpl implements TemplateBuilder {
       public String apply(Image arg0) {
          return arg0.getId();
       }
-      
+
    };
-   
+
 
    private static final Function<Hardware, String> hardwareToId = new Function<Hardware, String>() {
 
@@ -661,7 +661,7 @@ public class TemplateBuilderImpl implements TemplateBuilder {
       public String apply(Hardware arg0) {
          return arg0.getId();
       }
-      
+
    };
    /**
     * {@inheritDoc}
@@ -679,9 +679,9 @@ public class TemplateBuilderImpl implements TemplateBuilder {
          options = optionsProvider.get();
       logger.debug(">> searching params(%s)", this);
       Set<? extends Image> images = getImages();
-      checkState(images.size() > 0, "no images present!");
+      checkState(!images.isEmpty(), "no images present!");
       Set<? extends Hardware> hardwaresToSearch = hardwares.get();
-      checkState(hardwaresToSearch.size() > 0, "no hardware profiles present!");
+      checkState(!hardwaresToSearch.isEmpty(), "no hardware profiles present!");
 
       Image image = null;
       if (imageId != null) {
@@ -689,19 +689,19 @@ public class TemplateBuilderImpl implements TemplateBuilder {
          if (currentLocationWiderThan(image.getLocation()))
             this.location = image.getLocation();
       }
-      
+
       Hardware hardware = null;
       if (hardwareId != null) {
          hardware = findHardwareWithId(hardwaresToSearch);
          if (currentLocationWiderThan(hardware.getLocation()))
             this.location = hardware.getLocation();
       }
-      
+
       // if the user hasn't specified a location id, or an image or hardware
       // with location, let's search scoped to the implicit one
       if (location == null)
          location = defaultLocation.get();
-      
+
       if (image == null) {
          Iterable<? extends Image> supportedImages = findSupportedImages(images);
          if (hardware == null)
@@ -776,7 +776,7 @@ public class TemplateBuilderImpl implements TemplateBuilder {
 
    protected Hardware resolveHardware(Set<? extends Hardware> hardwarel, final Iterable<? extends Image> images) {
       Ordering<Hardware> hardwareOrdering = hardwareSorter();
-      
+
       Iterable<Predicate<Image>> supportsImagePredicates = Iterables.transform(hardwarel,
                new Function<Hardware, Predicate<Image>>() {
 
@@ -786,7 +786,7 @@ public class TemplateBuilderImpl implements TemplateBuilder {
                   }
 
                });
-      
+
       Predicate<Image> supportsImagePredicate = Iterables.size(supportsImagePredicates) == 1 ? Iterables
                .getOnlyElement(supportsImagePredicates) : Predicates.<Image>or(supportsImagePredicates);
 
@@ -823,7 +823,7 @@ public class TemplateBuilderImpl implements TemplateBuilder {
    }
 
    /**
-    * 
+    *
     * @param hardware
     * @param supportedImages
     * @throws NoSuchElementException
@@ -855,7 +855,7 @@ public class TemplateBuilderImpl implements TemplateBuilder {
          return null;
       }
    }
-   
+
    /**
     * Like Ordering, but handle the case where there are multiple valid maximums
     */
@@ -910,7 +910,7 @@ public class TemplateBuilderImpl implements TemplateBuilder {
          osPredicates.add(os64BitPredicate);
       if (osArch != null)
          osPredicates.add(osArchPredicate);
-      if (osPredicates.size() > 0)
+      if (!osPredicates.isEmpty())
          predicates.add(new Predicate<Image>() {
 
             @Override
@@ -976,7 +976,7 @@ public class TemplateBuilderImpl implements TemplateBuilder {
       this.imageDescription = descriptionRegex;
       return this;
    }
-   
+
    /**
     * {@inheritDoc}
     */
@@ -1076,7 +1076,7 @@ public class TemplateBuilderImpl implements TemplateBuilder {
       this.hypervisor = null;
       return this;
    }
-   
+
    /**
     * {@inheritDoc}
     */
@@ -1085,7 +1085,7 @@ public class TemplateBuilderImpl implements TemplateBuilder {
       this.hypervisor = hypervisor;
       return this;
    }
-   
+
    /**
     * {@inheritDoc}
     */
@@ -1099,8 +1099,8 @@ public class TemplateBuilderImpl implements TemplateBuilder {
    @VisibleForTesting
    boolean nothingChangedExceptOptions() {
       return osFamily == null && location == null && imageId == null && hardwareId == null && hypervisor == null
-            && osName == null && imagePredicate == null && imageChooser == null && osDescription == null 
-            && imageVersion == null && osVersion == null && osArch == null && os64Bit == null && imageName == null 
+            && osName == null && imagePredicate == null && imageChooser == null && osDescription == null
+            && imageVersion == null && osVersion == null && osArch == null && os64Bit == null && imageName == null
             && imageDescription == null && minCores == 0 && minRam == 0 && minDisk == 0 && !biggest && !fastest;
    }
 

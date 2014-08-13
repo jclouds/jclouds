@@ -47,7 +47,7 @@ public class DriveClaimed implements Predicate<DriveInfo> {
       if (drive == null)
          return false;
       logger.trace("%s: looking for drive claims: currently: %s", drive.getUuid(), drive.getClaimed());
-      return drive.getClaimed().size() > 0;
+      return !drive.getClaimed().isEmpty();
    }
 
    private DriveInfo refresh(DriveInfo drive) {

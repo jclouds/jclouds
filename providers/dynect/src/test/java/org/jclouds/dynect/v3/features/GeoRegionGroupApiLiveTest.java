@@ -47,8 +47,8 @@ public class GeoRegionGroupApiLiveTest extends BaseDynECTApiLiveTest {
 
    static void checkGeoRegionGroup(GeoRegionGroup group) {
       assertNotNull(group.getName(), "Name cannot be null " + group);
-      assertTrue(group.getCountries().size() > 0, "countries must be assigned " + group);
-      assertTrue(group.getRecordSets().size() > 0, "RecordSets must be assigned " + group);
+      assertTrue(!group.getCountries().isEmpty(), "countries must be assigned " + group);
+      assertTrue(!group.getRecordSets().isEmpty(), "RecordSets must be assigned " + group);
       for (RecordSet recordSet : group.getRecordSets())
          checkRecordSet(recordSet);
    }
@@ -63,7 +63,7 @@ public class GeoRegionGroupApiLiveTest extends BaseDynECTApiLiveTest {
    static void checkValue(Value value) {
       assertNotNull(value.getLabel(), "Label cannot be null " + value);
       assertNotNull(value.getWeight(), "Weight cannot be null " + value);
-      assertTrue(value.getRData().size() > 0, "RData entries should be present: " + value);
+      assertTrue(!value.getRData().isEmpty(), "RData entries should be present: " + value);
    }
 
    protected GeoRegionGroupApi api(String serviceName) {

@@ -77,7 +77,7 @@ public class EC2SecurityGroupExtension implements SecurityGroupExtension {
                                     @Memoized Supplier<Set<? extends Location>> locations,
                                     @Named("SECURITY") LoadingCache<RegionAndName, String> groupCreator,
                                     GroupNamingConvention.Factory namingConvention) {
-                                    
+
       this.client = checkNotNull(client, "client");
       this.userExecutor = checkNotNull(userExecutor, "userExecutor");
       this.regions = checkNotNull(regions, "regions");
@@ -111,24 +111,24 @@ public class EC2SecurityGroupExtension implements SecurityGroupExtension {
                                                  groupConverter);
       return ImmutableSet.copyOf(groups);
    }
-   
+
    @Override
    public Set<SecurityGroup> listSecurityGroupsForNode(String id) {
       checkNotNull(id, "id");
       String[] parts = AWSUtils.parseHandle(id);
       String region = parts[0];
       String instanceId = parts[1];
-      
+
       RunningInstance instance = getOnlyElement(Iterables.concat(client.getInstanceApi().get().describeInstancesInRegion(region, instanceId)));
 
       if (instance == null) {
          return ImmutableSet.of();
       }
-      
+
       Set<String> groupNames = instance.getGroupNames();
       Set<? extends org.jclouds.ec2.domain.SecurityGroup> rawGroups =
          client.getSecurityGroupApi().get().describeSecurityGroupsInRegion(region, Iterables.toArray(groupNames, String.class));
-      
+
       return ImmutableSet.copyOf(transform(filter(rawGroups, notNull()), groupConverter));
    }
 
@@ -141,7 +141,7 @@ public class EC2SecurityGroupExtension implements SecurityGroupExtension {
 
       Set<? extends org.jclouds.ec2.domain.SecurityGroup> rawGroups =
          client.getSecurityGroupApi().get().describeSecurityGroupsInRegion(region, groupId);
-      
+
       return getOnlyElement(transform(filter(rawGroups, notNull()), groupConverter));
    }
 
@@ -154,7 +154,7 @@ public class EC2SecurityGroupExtension implements SecurityGroupExtension {
          return null;
       }
    }
-   
+
    public SecurityGroup createSecurityGroup(String name, String region) {
       String markerGroup = namingConvention.create().sharedNameForGroup(name);
       RegionNameAndIngressRules regionAndName = new RegionNameAndIngressRules(region, markerGroup, new int[] {},
@@ -171,8 +171,8 @@ public class EC2SecurityGroupExtension implements SecurityGroupExtension {
       String[] parts = AWSUtils.parseHandle(id);
       String region = parts[0];
       String groupName = parts[1];
-      
-      if (client.getSecurityGroupApi().get().describeSecurityGroupsInRegion(region, groupName).size() > 0) {
+
+      if (!client.getSecurityGroupApi().get().describeSecurityGroupsInRegion(region, groupName).isEmpty()) {
          client.getSecurityGroupApi().get().deleteSecurityGroupInRegion(region, groupName);
          // TODO: test this clear happens
          groupCreator.invalidate(new RegionNameAndIngressRules(region, groupName, null, false));
@@ -188,7 +188,7 @@ public class EC2SecurityGroupExtension implements SecurityGroupExtension {
       String region = AWSUtils.getRegionFromLocationOrNull(group.getLocation());
       String name = group.getName();
 
-      if (ipPermission.getCidrBlocks().size() > 0) {
+      if (!ipPermission.getCidrBlocks().isEmpty()) {
          for (String cidr : ipPermission.getCidrBlocks()) {
             client.getSecurityGroupApi().get().
                authorizeSecurityGroupIngressInRegion(region,
@@ -200,7 +200,7 @@ public class EC2SecurityGroupExtension implements SecurityGroupExtension {
          }
       }
 
-      if (ipPermission.getTenantIdGroupNamePairs().size() > 0) {
+      if (!ipPermission.getTenantIdGroupNamePairs().isEmpty()) {
          for (String userId : ipPermission.getTenantIdGroupNamePairs().keySet()) {
             for (String groupName : ipPermission.getTenantIdGroupNamePairs().get(userId)) {
                client.getSecurityGroupApi().get().
@@ -222,7 +222,7 @@ public class EC2SecurityGroupExtension implements SecurityGroupExtension {
       String region = AWSUtils.getRegionFromLocationOrNull(group.getLocation());
       String name = group.getName();
 
-      if (Iterables.size(ipRanges) > 0) {
+      if (!Iterables.isEmpty(ipRanges)) {
          for (String cidr : ipRanges) {
             client.getSecurityGroupApi().get().
                authorizeSecurityGroupIngressInRegion(region,
@@ -234,7 +234,7 @@ public class EC2SecurityGroupExtension implements SecurityGroupExtension {
          }
       }
 
-      if (tenantIdGroupNamePairs.size() > 0) {
+      if (!tenantIdGroupNamePairs.isEmpty()) {
          for (String userId : tenantIdGroupNamePairs.keySet()) {
             for (String groupName : tenantIdGroupNamePairs.get(userId)) {
                client.getSecurityGroupApi().get().
@@ -244,16 +244,16 @@ public class EC2SecurityGroupExtension implements SecurityGroupExtension {
             }
          }
       }
-      
+
       return getSecurityGroupById(new RegionAndName(region, group.getName()).slashEncode());
    }
-      
+
    @Override
    public SecurityGroup removeIpPermission(IpPermission ipPermission, SecurityGroup group) {
       String region = AWSUtils.getRegionFromLocationOrNull(group.getLocation());
       String name = group.getName();
 
-      if (ipPermission.getCidrBlocks().size() > 0) {
+      if (!ipPermission.getCidrBlocks().isEmpty()) {
          for (String cidr : ipPermission.getCidrBlocks()) {
             client.getSecurityGroupApi().get().
                revokeSecurityGroupIngressInRegion(region,
@@ -265,7 +265,7 @@ public class EC2SecurityGroupExtension implements SecurityGroupExtension {
          }
       }
 
-      if (ipPermission.getTenantIdGroupNamePairs().size() > 0) {
+      if (!ipPermission.getTenantIdGroupNamePairs().isEmpty()) {
          for (String userId : ipPermission.getTenantIdGroupNamePairs().keySet()) {
             for (String groupName : ipPermission.getTenantIdGroupNamePairs().get(userId)) {
                client.getSecurityGroupApi().get().
@@ -287,7 +287,7 @@ public class EC2SecurityGroupExtension implements SecurityGroupExtension {
       String region = AWSUtils.getRegionFromLocationOrNull(group.getLocation());
       String name = group.getName();
 
-      if (Iterables.size(ipRanges) > 0) {
+      if (!Iterables.isEmpty(ipRanges)) {
          for (String cidr : ipRanges) {
             client.getSecurityGroupApi().get().
                revokeSecurityGroupIngressInRegion(region,
@@ -299,7 +299,7 @@ public class EC2SecurityGroupExtension implements SecurityGroupExtension {
          }
       }
 
-      if (tenantIdGroupNamePairs.size() > 0) {
+      if (!tenantIdGroupNamePairs.isEmpty()) {
          for (String userId : tenantIdGroupNamePairs.keySet()) {
             for (String groupName : tenantIdGroupNamePairs.get(userId)) {
                client.getSecurityGroupApi().get().
@@ -309,7 +309,7 @@ public class EC2SecurityGroupExtension implements SecurityGroupExtension {
             }
          }
       }
-      
+
       return getSecurityGroupById(new RegionAndName(region, group.getName()).slashEncode());
    }
 
@@ -336,23 +336,23 @@ public class EC2SecurityGroupExtension implements SecurityGroupExtension {
    protected Iterable<? extends org.jclouds.ec2.domain.SecurityGroup> pollSecurityGroups() {
       Iterable<? extends Set<? extends org.jclouds.ec2.domain.SecurityGroup>> groups
          = transform(regions.get(), allSecurityGroupsInRegion());
-      
+
       return concat(groups);
    }
 
-   
+
    protected Iterable<? extends org.jclouds.ec2.domain.SecurityGroup> pollSecurityGroupsByRegion(String region) {
       return allSecurityGroupsInRegion().apply(region);
    }
 
    protected Function<String, Set<? extends org.jclouds.ec2.domain.SecurityGroup>> allSecurityGroupsInRegion() {
       return new Function<String, Set<? extends org.jclouds.ec2.domain.SecurityGroup>>() {
-         
+
          @Override
          public Set<? extends org.jclouds.ec2.domain.SecurityGroup> apply(String from) {
             return client.getSecurityGroupApi().get().describeSecurityGroupsInRegion(from);
          }
-         
+
       };
    }
 

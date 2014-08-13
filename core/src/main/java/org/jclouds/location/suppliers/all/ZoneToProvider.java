@@ -61,7 +61,7 @@ public class ZoneToProvider implements LocationsSupplier {
    public Set<? extends Location> get() {
       Location provider = Iterables.getOnlyElement(justProvider.get());
       Set<String> zoneIds = zoneIdsSupplier.get();
-      checkState(zoneIds.size() > 0, "no zones found for provider %s, using supplier %s", provider, zoneIdsSupplier);
+      checkState(!zoneIds.isEmpty(), "no zones found for provider %s, using supplier %s", provider, zoneIdsSupplier);
       Map<String, Supplier<Set<String>>> isoCodesById = isoCodesByIdSupplier.get();
 
       Builder<Location> locations = ImmutableSet.builder();

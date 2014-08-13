@@ -51,7 +51,7 @@ public class SupplyKeyMatchingValueOrNull<K, V> implements Supplier<K> {
       // eagerly get all the values, so we can see which is default
       Map<K, V> map = Maps.transformValues(supplier.get(), Suppliers.<V> supplierFunction());
       K region = ImmutableBiMap.copyOf(map).inverse().get(uri);
-      if (region == null && map.size() > 0) {
+      if (region == null && !map.isEmpty()) {
          region = Iterables.get(map.keySet(), 0);
          logger.warn("failed to find key for value %s in %s; choosing first: %s", uri, map, region);
       }

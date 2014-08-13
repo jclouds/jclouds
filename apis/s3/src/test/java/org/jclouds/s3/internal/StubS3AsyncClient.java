@@ -51,6 +51,7 @@ import org.jclouds.http.options.GetOptions;
 import org.jclouds.javax.annotation.Nullable;
 import org.jclouds.lifecycle.Closer;
 import org.jclouds.s3.S3AsyncClient;
+import org.jclouds.s3.blobstore.S3AsyncBlobStore;
 import org.jclouds.s3.blobstore.functions.BlobToObject;
 import org.jclouds.s3.blobstore.functions.BlobToObjectMetadata;
 import org.jclouds.s3.blobstore.functions.BucketToContainerListOptions;
@@ -223,7 +224,7 @@ public class StubS3AsyncClient implements S3AsyncClient {
     * to match S3 which substitutes each email address grantee with that user's corresponding ID. In
     * short, although you can PUT email address grantees, these are actually subsequently returned
     * by S3 as canonical user grantees.
-    * 
+    *
     * @param acl
     * @return
     */
@@ -258,7 +259,7 @@ public class StubS3AsyncClient implements S3AsyncClient {
    public ListenableFuture<Boolean> deleteBucketIfEmpty(String bucketName) {
       Boolean returnVal = true;
       if (containerToBlobs.containsKey(bucketName)) {
-         if (containerToBlobs.get(bucketName).size() == 0)
+         if (containerToBlobs.get(bucketName).isEmpty())
             containerToBlobs.remove(bucketName);
          else
             returnVal = false;

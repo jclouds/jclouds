@@ -108,7 +108,7 @@ public class BindLoggersAnnotatedWithResource implements TypeListener {
 
         Class<? super I> type = injectableType.getRawType();
         Set<Field> loggerFields = getLoggerFieldsAnnotatedWithResource(type);
-        if (loggerFields.size() == 0)
+        if (loggerFields.isEmpty())
             return;
 
         Logger logger = loggerFactory.getLogger(type.getName());

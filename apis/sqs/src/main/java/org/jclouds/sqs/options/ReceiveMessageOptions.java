@@ -25,7 +25,7 @@ import com.google.common.collect.Multimap;
 
 /**
  * Options used to receive a message from a queue.
- * 
+ *
  * @see <a
  *      href="http://docs.amazonwebservices.com/AWSSimpleQueueService/2011-10-01/APIReference/Query_QueryReceiveMessage.html"
  *      >docs</a>
@@ -39,10 +39,10 @@ public class ReceiveMessageOptions extends BaseHttpRequestOptions implements Clo
     * The duration (in seconds) that the received messages are hidden from
     * subsequent retrieve requests after being retrieved by a ReceiveMessage
     * request.
-    * 
+    *
     * @param visibilityTimeout
     *           Constraints: 0 to 43200 (maximum 12 hours)
-    * 
+    *
     *           Default: The visibility timeout for the queue
     */
    public ReceiveMessageOptions visibilityTimeout(Integer visibilityTimeout) {
@@ -52,18 +52,18 @@ public class ReceiveMessageOptions extends BaseHttpRequestOptions implements Clo
 
    /**
     * The attribute you want to get.
-    * 
+    *
     * All - returns all values.
-    * 
+    *
     * SenderId - returns the AWS account number (or the IP address, if anonymous
     * access is allowed) of the sender.
-    * 
+    *
     * SentTimestamp - returns the time when the message was sent (epoch time in
     * milliseconds).
-    * 
+    *
     * ApproximateReceiveCount - returns the number of times a message has been
     * received but not deleted.
-    * 
+    *
     * ApproximateFirstReceiveTimestamp - returns the time when the message was
     * first received (epoch time in milliseconds).
     */
@@ -110,7 +110,7 @@ public class ReceiveMessageOptions extends BaseHttpRequestOptions implements Clo
       if (visibilityTimeout != null)
          params.put("VisibilityTimeout", visibilityTimeout.toString());
       ImmutableSet<String> attributes = this.attributes.build();
-      if (attributes.size() > 0) {
+      if (!attributes.isEmpty()) {
          int nameIndex = 1;
          for (String attribute : attributes) {
             params.put("AttributeName." + nameIndex, attribute);
@@ -156,6 +156,6 @@ public class ReceiveMessageOptions extends BaseHttpRequestOptions implements Clo
    public String toString() {
       ImmutableSet<String> attributes = this.attributes.build();
       return MoreObjects.toStringHelper(this).omitNullValues().add("visibilityTimeout", visibilityTimeout)
-            .add("attributes", attributes.size() > 0 ? attributes : null).toString();
+            .add("attributes", !attributes.isEmpty() ? attributes : null).toString();
    }
 }

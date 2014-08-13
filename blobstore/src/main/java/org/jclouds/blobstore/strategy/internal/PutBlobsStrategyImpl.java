@@ -74,7 +74,7 @@ public class PutBlobsStrategyImpl implements PutBlobsStrategy {
       } catch (TimeoutException te) {
          throw propagate(te);
       }
-      if (exceptions.size() > 0)
+      if (!exceptions.isEmpty())
          throw new BlobRuntimeException(String.format("error putting into container %s: %s",
                   containerName, exceptions));
    }

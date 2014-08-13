@@ -39,7 +39,7 @@ public class KeyValuesDelimitedByBlankLinesToProfileInfo implements Function<Htt
    @Override
    public ProfileInfo apply(HttpResponse response) {
       Set<ProfileInfo> drives = setParser.apply(response);
-      if (drives.size() == 0)
+      if (drives.isEmpty())
          return null;
       return Iterables.get(drives, 0);
    }

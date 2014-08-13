@@ -51,7 +51,7 @@ public class ParseLoadBalancer implements Function<HttpResponse, LoadBalancer>, 
    public LoadBalancer apply(HttpResponse arg0) {
       checkState(convertLB != null, "convertLB should be set by InvocationContext");
       Map<String, LB> map = json.apply(arg0);
-      if (map == null || map.size() == 0)
+      if (map == null || map.isEmpty())
          return null;
       LB lb = Iterables.get(map.values(), 0);
       return convertLB.apply(lb);
@@ -64,9 +64,9 @@ public class ParseLoadBalancer implements Function<HttpResponse, LoadBalancer>, 
 
    ParseLoadBalancer setEndpointAndRegion(URI endpoint) {
       String region = endpoint.getHost().substring(0, endpoint.getHost().indexOf('.'));
-      
+
       this.convertLB = factory.createForEndpointAndRegion(endpoint, region);
-      
+
       return this;
    }
 }

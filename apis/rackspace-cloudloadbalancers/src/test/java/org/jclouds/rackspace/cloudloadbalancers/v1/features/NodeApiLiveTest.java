@@ -51,7 +51,7 @@ public class NodeApiLiveTest extends BaseCloudLoadBalancersApiLiveTest {
    private Map<LoadBalancer, Set<Node>> nodes = Maps.newHashMap();
 
    public void testCreateLoadBalancers() {
-      assertTrue(api.getConfiguredRegions().size() > 0, "Need to have some regions!");
+      assertTrue(!api.getConfiguredRegions().isEmpty(), "Need to have some regions!");
       Logger.getAnonymousLogger().info("running against regions " + api.getConfiguredRegions());
       for (String region : api.getConfiguredRegions()) {
          Logger.getAnonymousLogger().info("starting lb in region " + region);

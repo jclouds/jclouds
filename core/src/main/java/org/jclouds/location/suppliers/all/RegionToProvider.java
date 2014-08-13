@@ -56,7 +56,7 @@ public class RegionToProvider implements LocationsSupplier {
       Builder<Location> locations = ImmutableSet.builder();
       Location provider = Iterables.getOnlyElement(justProvider.get());
       Set<String> regions = regionsSupplier.get();
-      checkState(regions.size() > 0, "no regions found for provider %s, using supplier %s", provider, regionsSupplier);
+      checkState(!regions.isEmpty(), "no regions found for provider %s, using supplier %s", provider, regionsSupplier);
       Map<String, Supplier<Set<String>>> isoCodesById = isoCodesByIdSupplier.get();
       for (String region : regions) {
          LocationBuilder builder = new LocationBuilder().scope(LocationScope.REGION).id(region).description(region)

@@ -79,7 +79,7 @@ public class AWSEC2TemplateOptions extends EC2TemplateOptions implements Cloneab
             eTo.noPlacementGroup();
          if (getPlacementGroup() != null)
             eTo.placementGroup(getPlacementGroup());
-         if (getGroupIds().size() > 0)
+         if (!getGroupIds().isEmpty())
             eTo.securityGroupIds(getGroupIds());
          if (getSpotPrice() != null)
             eTo.spotPrice(getSpotPrice());
@@ -131,7 +131,7 @@ public class AWSEC2TemplateOptions extends EC2TemplateOptions implements Cloneab
       toString.add("spotPrice", spotPrice);
       if (spotOptions != RequestSpotInstancesOptions.NONE)
          toString.add("spotOptions", spotOptions);
-      if (groupIds.size() != 0)
+      if (!groupIds.isEmpty())
          toString.add("groupIds", groupIds);
       toString.add("iamInstanceProfileArn", iamInstanceProfileArn);
       toString.add("iamInstanceProfileName", iamInstanceProfileName);
@@ -142,7 +142,7 @@ public class AWSEC2TemplateOptions extends EC2TemplateOptions implements Cloneab
 
    /**
     * Enable Cloudwatch monitoring
-    * 
+    *
     * @see CloudWatchClient
     */
    public AWSEC2TemplateOptions enableMonitoring() {
@@ -212,7 +212,7 @@ public class AWSEC2TemplateOptions extends EC2TemplateOptions implements Cloneab
    }
 
    /**
-    * 
+    *
     * @see AWSEC2TemplateOptions#securityGroupIds(Iterable<String>)
     */
    public AWSEC2TemplateOptions securityGroupIds(String... groupIds) {
@@ -223,7 +223,7 @@ public class AWSEC2TemplateOptions extends EC2TemplateOptions implements Cloneab
     * Specifies the security group ids to be used for nodes with this template
     */
    public AWSEC2TemplateOptions securityGroupIds(Iterable<String> groupIds) {
-      checkArgument(Iterables.size(groupIds) > 0, "you must specify at least one security group");
+      checkArgument(!Iterables.isEmpty(groupIds), "you must specify at least one security group");
       for (String groupId : groupIds)
          checkNotNull(emptyToNull(groupId), "all security groups must be non-empty");
       this.groupIds = ImmutableSet.copyOf(groupIds);
@@ -685,7 +685,7 @@ public class AWSEC2TemplateOptions extends EC2TemplateOptions implements Cloneab
    public AWSEC2TemplateOptions runScript(Statement script) {
       return AWSEC2TemplateOptions.class.cast(super.runScript(script));
    }
-   
+
    /**
     * {@inheritDoc}
     */
@@ -771,7 +771,7 @@ public class AWSEC2TemplateOptions extends EC2TemplateOptions implements Cloneab
 
    /**
     * The Amazon resource name (ARN) of the IAM Instance Profile (IIP) to associate with the instance.
-    * 
+    *
     * @see org.jclouds.aws.ec2.options.AWSRunInstancesOptions#withIAMInstanceProfileArn(String)
     */
    @SinceApiVersion("2012-06-01")
@@ -781,7 +781,7 @@ public class AWSEC2TemplateOptions extends EC2TemplateOptions implements Cloneab
 
    /**
     * The name of the IAM Instance Profile (IIP) to associate with the instance.
-    * 
+    *
     * @see org.jclouds.aws.ec2.options.AWSRunInstancesOptions#withIAMInstanceProfileName(String)
     */
    @SinceApiVersion("2012-06-01")

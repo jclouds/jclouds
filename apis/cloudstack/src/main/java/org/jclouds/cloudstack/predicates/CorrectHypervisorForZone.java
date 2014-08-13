@@ -76,7 +76,7 @@ public class CorrectHypervisorForZone implements Function<String, Predicate<Temp
       } catch (NullPointerException e) {
          throw new IllegalArgumentException("unknown zone: " + zoneId);
       }
-      if (acceptableHypervisorsInZone.size() == 0)
+      if (acceptableHypervisorsInZone.isEmpty())
          return Predicates.alwaysFalse();
       return new Predicate<Template>() {
 

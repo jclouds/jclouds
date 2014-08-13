@@ -41,8 +41,8 @@ import com.google.common.collect.Multimap;
  * <p/>
  * <code>
  * import static org.jclouds.http.options.GetOptions.Builder.*
- * 
- * 
+ *
+ *
  * // this will get the first megabyte of an object.
  * blob = client.get("objectName",range(0,1024));
  * <code>
@@ -92,11 +92,11 @@ public class GetOptions extends BaseHttpRequestOptions {
    /**
     * For use in the header Range
     * <p />
-    * 
+    *
     * @see GetOptions#range(long, long)
     */
    public String getRange() {
-      return (ranges.size() > 0) ? String.format("bytes=%s", Joiner.on(",").join(ranges)) : null;
+      return (!ranges.isEmpty()) ? String.format("bytes=%s", Joiner.on(",").join(ranges)) : null;
    }
 
    /**
@@ -117,7 +117,7 @@ public class GetOptions extends BaseHttpRequestOptions {
     * <p />
     * Return the object only if it has been modified since the specified time, otherwise return a
     * 304 (not modified).
-    * 
+    *
     * @see #ifModifiedSince(Date)
     */
    public String getIfModifiedSince() {
@@ -142,7 +142,7 @@ public class GetOptions extends BaseHttpRequestOptions {
     * <p />
     * Return the object only if it has not been modified since the specified time, otherwise return
     * a 412 (precondition failed).
-    * 
+    *
     * @see #ifUnmodifiedSince(Date)
     */
    public String getIfUnmodifiedSince() {
@@ -151,10 +151,10 @@ public class GetOptions extends BaseHttpRequestOptions {
 
    /**
     * The object's eTag hash should match the parameter <code>eTag</code>.
-    * 
+    *
     * <p />
     * Not compatible with {@link #ifETagDoesntMatch(byte[])} or {@link #ifModifiedSince(Date)}
-    * 
+    *
     * @param eTag
     *           hash representing the payload
     */
@@ -170,7 +170,7 @@ public class GetOptions extends BaseHttpRequestOptions {
     * <p />
     * Return the object only if its payload tag (ETag) is the same as the eTag specified, otherwise
     * return a 412 (precondition failed).
-    * 
+    *
     * @see #ifETagMatches(String)
     */
    public String getIfMatch() {
@@ -181,7 +181,7 @@ public class GetOptions extends BaseHttpRequestOptions {
     * The object should not have a eTag hash corresponding with the parameter <code>eTag</code>.
     * <p />
     * Not compatible with {@link #ifETagMatches(String)} or {@link #ifUnmodifiedSince(Date)}
-    * 
+    *
     * @param eTag
     *           hash representing the payload
     */
@@ -197,7 +197,7 @@ public class GetOptions extends BaseHttpRequestOptions {
     * <p />
     * Return the object only if its payload tag (ETag) is different from the one specified,
     * otherwise return a 304 (not modified).
-    * 
+    *
     * @see #ifETagDoesntMatch(String)
     */
    public String getIfNoneMatch() {

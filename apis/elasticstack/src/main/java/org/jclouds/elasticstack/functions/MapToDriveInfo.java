@@ -40,7 +40,7 @@ public class MapToDriveInfo implements Function<Map<String, String>, DriveInfo> 
 
    @Override
    public DriveInfo apply(Map<String, String> from) {
-      if (from.size() == 0)
+      if (from.isEmpty())
          return null;
       DriveInfo.Builder builder = new DriveInfo.Builder();
       builder.name(from.get("name"));

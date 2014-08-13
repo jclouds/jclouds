@@ -184,12 +184,12 @@ public class InitScript extends ForwardingObject implements Statement, AcceptsSt
       this.exports = ImmutableMap.<String, String> copyOf(checkNotNull(exports, "exports"));
       this.init = checkNotNull(init, "init");
       this.run = checkNotNull(run, "run");
-      checkArgument(run.delegate().size() > 0, "you must specify at least one statement to run");
+      checkArgument(!run.delegate().isEmpty(), "you must specify at least one statement to run");
       this.delegate = makeInitScriptStatement(instanceName, instanceHome, logDir, exports, init, run);
    }
 
    /**
-    * 
+    *
     * @param exports keys are the variables to export in UPPER_UNDERSCORE case format
     */
    public static ScriptBuilder makeInitScriptStatement(String instanceName, String instanceHome, String logDir,
@@ -244,7 +244,7 @@ public class InitScript extends ForwardingObject implements Statement, AcceptsSt
    }
 
    /**
-    * 
+    *
     * @return what will be bound to the INSTANCE_NAME variable, and uniquely
     *         identifies the process
     */
@@ -253,13 +253,13 @@ public class InitScript extends ForwardingObject implements Statement, AcceptsSt
    }
 
    /**
-    * default {@code /tmp/$INSTANCE_NAME} 
+    * default {@code /tmp/$INSTANCE_NAME}
     * <br/>
     * <h3>note</h3> The parent directory
     * should be set with unix sticky-bit or otherwise made available to all
     * users. Otherwise, new instances by other users may fail due to not being
     * able to create a directory.  This is why the default is set to {@code /tmp}
-    * 
+    *
     * @return what will be bound to the INSTANCE_HOME variable, and represents
     *         the working directory of the instance
     */
@@ -269,7 +269,7 @@ public class InitScript extends ForwardingObject implements Statement, AcceptsSt
 
    /**
     * default {@code $INSTANCE_HOME}
-    * 
+    *
     * @return what will be bound to the LOG_DIR variable, and represents where
     *         stdout and stderr.logs are written.
     */
@@ -278,7 +278,7 @@ public class InitScript extends ForwardingObject implements Statement, AcceptsSt
    }
 
    /**
-    * 
+    *
     * @return statements that will be executed upon the init command
     */
    public StatementList getInitStatement() {
@@ -286,7 +286,7 @@ public class InitScript extends ForwardingObject implements Statement, AcceptsSt
    }
 
    /**
-    * 
+    *
     * @return statements that will be executed upon the run or start commands
     */
    public StatementList getRunStatement() {

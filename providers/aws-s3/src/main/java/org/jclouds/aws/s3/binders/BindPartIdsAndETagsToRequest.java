@@ -40,7 +40,7 @@ public class BindPartIdsAndETagsToRequest implements Binder {
       checkNotNull(request, "request");
 
       Map<Integer, String> map = (Map<Integer, String>) input;
-      checkArgument(map.size() != 0, "Please send parts");
+      checkArgument(!map.isEmpty(), "Please send parts");
       StringBuilder content = new StringBuilder();
       content.append("<CompleteMultipartUpload>");
       for (Entry<Integer, String> entry : map.entrySet()) {

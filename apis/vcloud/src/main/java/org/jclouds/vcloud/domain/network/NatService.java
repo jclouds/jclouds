@@ -53,7 +53,7 @@ public class NatService {
 
    /**
     * @return Nat rules for the network
-    * 
+    *
     * @since vcloud api 0.8
     */
    public List<NatRule> getNatRules() {
@@ -62,7 +62,7 @@ public class NatService {
 
    /**
     * @return true if the service is enabled
-    * 
+    *
     * @since vcloud api 0.9
     */
    public boolean isEnabled() {
@@ -71,7 +71,7 @@ public class NatService {
 
    /**
     * @return specifies how Network Address Translation is implemented by the NAT service
-    * 
+    *
     * @since vcloud api 0.9
     */
    @Nullable
@@ -81,7 +81,7 @@ public class NatService {
 
    /**
     * @return specifies how packets are handled by the NAT service.
-    * 
+    *
     * @since vcloud api 0.9
     */
    @Nullable
@@ -109,7 +109,7 @@ public class NatService {
    public String toString() {
       ToStringHelper helper = MoreObjects.toStringHelper("").omitNullValues().add("enabled", enabled)
             .add("type", type).add("policy", policy);
-      if (natRules.size() > 0)
+      if (!natRules.isEmpty())
          helper.add("natRules", natRules);
       return helper.toString();
    }

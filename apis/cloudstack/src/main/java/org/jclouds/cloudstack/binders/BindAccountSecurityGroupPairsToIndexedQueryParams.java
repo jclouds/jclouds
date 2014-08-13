@@ -41,7 +41,7 @@ public class BindAccountSecurityGroupPairsToIndexedQueryParams implements Binder
    public <R extends HttpRequest> R bindToRequest(R request, Object input) {
       checkArgument(input instanceof Multimap<?, ?>, "this binder is only valid for Multimaps!");
       Multimap<String, String> pairs = (Multimap<String, String>) checkNotNull(input, "account group pairs");
-      checkArgument(pairs.size() > 0, "you must specify at least one account, group pair");
+      checkArgument(!pairs.isEmpty(), "you must specify at least one account, group pair");
 
       Multimap<String, String> existingParams = queryParser().apply(request.getEndpoint().getQuery());
       Builder<String, String> map = ImmutableMultimap.<String, String> builder().putAll(existingParams);

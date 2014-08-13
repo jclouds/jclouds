@@ -98,7 +98,7 @@ public class BYONComputeServiceAdapter implements JCloudsNativeComputeServiceAda
                      return arg0.getLocationId();
                   }
                }), Predicates.notNull()));
-      if (zones.size() == 0)
+      if (zones.isEmpty())
          return locations.add(provider).build();
       else
          for (String zone : zones) {
@@ -110,7 +110,7 @@ public class BYONComputeServiceAdapter implements JCloudsNativeComputeServiceAda
 
    @Override
    public NodeMetadata getNode(String id) {
-      
+
       Node node = null;
       try {
          node = nodes.get().getUnchecked(id);
@@ -124,7 +124,7 @@ public class BYONComputeServiceAdapter implements JCloudsNativeComputeServiceAda
    public Image getImage(final String id) {
       throw new UnsupportedOperationException();
    }
-   
+
    @Override
    public void destroyNode(final String id) {
       throw new UnsupportedOperationException();

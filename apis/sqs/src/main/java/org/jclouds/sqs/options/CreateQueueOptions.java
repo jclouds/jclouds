@@ -28,7 +28,7 @@ import com.google.common.collect.Multimap;
 
 /**
  * Options used to receive a message from a queue.
- * 
+ *
  * @see <a
  *      href="http://docs.amazonwebservices.com/AWSSimpleQueueService/2011-10-01/APIReference/Query_QueryCreateQueue.html"
  *      >docs</a>
@@ -41,10 +41,10 @@ public class CreateQueueOptions extends BaseHttpRequestOptions implements Clonea
     * The duration (in seconds) that the received messages are hidden from
     * subsequent retrieve requests after being retrieved by a CreateQueue
     * request.
-    * 
+    *
     * @param visibilityTimeout
     *           Constraints: 0 to 43200 (maximum 12 hours)
-    * 
+    *
     *           Default: The visibility timeout for the queue
     */
    public CreateQueueOptions visibilityTimeout(int visibilityTimeout) {
@@ -94,7 +94,7 @@ public class CreateQueueOptions extends BaseHttpRequestOptions implements Clonea
    public Multimap<String, String> buildFormParameters() {
       Multimap<String, String> params = super.buildFormParameters();
       ImmutableMap<String, String> attributes = this.attributes.build();
-      if (attributes.size() > 0) {
+      if (!attributes.isEmpty()) {
          int nameIndex = 1;
          for (Entry<String, String> attribute : attributes.entrySet()) {
             params.put("Attribute." + nameIndex + ".Name", attribute.getKey());
@@ -139,7 +139,7 @@ public class CreateQueueOptions extends BaseHttpRequestOptions implements Clonea
    @Override
    public String toString() {
       ImmutableMap<String, String> attributes = this.attributes.build();
-      return MoreObjects.toStringHelper(this).omitNullValues().add("attributes", attributes.size() > 0 ? attributes : null)
+      return MoreObjects.toStringHelper(this).omitNullValues().add("attributes", !attributes.isEmpty() ? attributes : null)
             .toString();
    }
 }

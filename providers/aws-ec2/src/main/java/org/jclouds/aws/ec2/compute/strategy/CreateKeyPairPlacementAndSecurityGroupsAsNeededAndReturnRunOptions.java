@@ -67,7 +67,7 @@ public class CreateKeyPairPlacementAndSecurityGroupsAsNeededAndReturnRunOptions 
          Provider<RunInstancesOptions> optionsProvider,
          @Named("PLACEMENT") LoadingCache<RegionAndName, String> placementGroupMap,
          CreatePlacementGroupIfNeeded createPlacementGroupIfNeeded,
-         Function<RegionNameAndPublicKeyMaterial, KeyPair> importExistingKeyPair, 
+         Function<RegionNameAndPublicKeyMaterial, KeyPair> importExistingKeyPair,
          GroupNamingConvention.Factory namingConvention) {
       super(makeKeyPair, credentialsMap, securityGroupMap, optionsProvider, namingConvention);
       this.placementGroupMap = placementGroupMap;
@@ -166,7 +166,7 @@ public class CreateKeyPairPlacementAndSecurityGroupsAsNeededAndReturnRunOptions 
    @Override
    protected boolean userSpecifiedTheirOwnGroups(TemplateOptions options) {
       return options instanceof AWSEC2TemplateOptions
-            && AWSEC2TemplateOptions.class.cast(options).getGroupIds().size() > 0
+            && !AWSEC2TemplateOptions.class.cast(options).getGroupIds().isEmpty()
             || super.userSpecifiedTheirOwnGroups(options);
    }
 
@@ -174,7 +174,7 @@ public class CreateKeyPairPlacementAndSecurityGroupsAsNeededAndReturnRunOptions 
    protected void addSecurityGroups(String region, String group, Template template, RunInstancesOptions instanceOptions) {
       AWSEC2TemplateOptions awsTemplateOptions = AWSEC2TemplateOptions.class.cast(template.getOptions());
       AWSRunInstancesOptions awsInstanceOptions = AWSRunInstancesOptions.class.cast(instanceOptions);
-      if (awsTemplateOptions.getGroupIds().size() > 0)
+      if (!awsTemplateOptions.getGroupIds().isEmpty())
          awsInstanceOptions.withSecurityGroupIds(awsTemplateOptions.getGroupIds());
       String subnetId = awsTemplateOptions.getSubnetId();
       if (subnetId != null) {

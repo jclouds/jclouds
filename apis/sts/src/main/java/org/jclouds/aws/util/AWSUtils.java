@@ -130,7 +130,7 @@ public class AWSUtils {
          builder.put(prefix + "." + (i++ + 1), checkNotNull(o.toString(), prefix.toLowerCase() + "s[" + i + "]"));
       }
       ImmutableMultimap<String, String> forms = builder.build();
-      return forms.size() == 0 ? request : (R) request.toBuilder().replaceFormParams(forms).build();
+      return forms.isEmpty() ? request : (R) request.toBuilder().replaceFormParams(forms).build();
    }
 
    public static <R extends HttpRequest> R indexStringArrayToFormValuesWithPrefix(R request, String prefix, Object input) {
@@ -142,7 +142,7 @@ public class AWSUtils {
          builder.put(prefix + "." + (i + 1), checkNotNull(values[i], prefix.toLowerCase() + "s[" + i + "]"));
       }
       ImmutableMultimap<String, String> forms = builder.build();
-      return forms.size() == 0 ? request : (R) request.toBuilder().replaceFormParams(forms).build();
+      return forms.isEmpty() ? request : (R) request.toBuilder().replaceFormParams(forms).build();
    }
 
    public static <R extends HttpRequest> R indexMapToFormValuesWithPrefix(R request, String prefix, String keySuffix, String valueSuffix, Object input) {
@@ -158,7 +158,7 @@ public class AWSUtils {
          i++;
       }
       ImmutableMultimap<String, String> forms = builder.build();
-      return forms.size() == 0 ? request : (R) request.toBuilder().replaceFormParams(forms).build();
+      return forms.isEmpty() ? request : (R) request.toBuilder().replaceFormParams(forms).build();
    }
 
    public static <R extends HttpRequest> R indexMultimapToFormValuesWithPrefix(R request, String prefix, String keySuffix, String valueSuffix, Object input) {

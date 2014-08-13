@@ -76,7 +76,7 @@ public class CloudStackExperimentLiveTest extends BaseCloudStackApiLiveTest {
       Network network = null;
       Set<? extends NodeMetadata> nodes = null;
       try {
-         assert view.getComputeService().listAssignableLocations().size() > 0;
+         assert !view.getComputeService().listAssignableLocations().isEmpty();
 
          Template template = view.getComputeService().templateBuilder().build();
 
@@ -103,7 +103,7 @@ public class CloudStackExperimentLiveTest extends BaseCloudStackApiLiveTest {
          // launch the VM
          nodes = view.getComputeService().createNodesInGroup(group, 1, template);
 
-         assert nodes.size() > 0;
+         assert !nodes.isEmpty();
 
       } catch (RunNodesException e) {
          Logger.getAnonymousLogger().log(Level.SEVERE, "error creating nodes", e);
