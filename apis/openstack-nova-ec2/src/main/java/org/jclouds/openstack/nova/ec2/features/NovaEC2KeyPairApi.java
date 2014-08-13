@@ -28,7 +28,6 @@ import org.jclouds.ec2.domain.KeyPair;
 import org.jclouds.ec2.features.KeyPairApi;
 import org.jclouds.ec2.functions.EncodedRSAPublicKeyToBase64;
 import org.jclouds.ec2.xml.KeyPairResponseHandler;
-import org.jclouds.javax.annotation.Nullable;
 import org.jclouds.location.functions.RegionToEndpointOrProviderIfNull;
 import org.jclouds.rest.annotations.EndpointParam;
 import org.jclouds.rest.annotations.FormParams;
@@ -46,12 +45,12 @@ public interface NovaEC2KeyPairApi extends KeyPairApi {
     * this with CreateKeyPair, in which AWS creates the key pair and gives the keys to you (Nova
     * keeps a copy of the public key). With ImportKeyPair, you create the key pair and give Nova just
     * the public key. The private key is never transferred between you and Nova.
-    * 
+    *
     * <p/>
     * You can easily create an RSA key pair on Windows and Linux using the ssh-keygen command line
     * tool (provided with the standard OpenSSH installation). Standard library support for RSA key
     * pair creation is also available in Java, Ruby, Python, and many other programming languages.
-    * 
+    *
     * <p/>
     * <h4>Supported Formats</h4>
     * <ul>
@@ -63,7 +62,7 @@ public interface NovaEC2KeyPairApi extends KeyPairApi {
     * <p/>
     * Supported lengths: 1024, 2048, and 4096.
     * <p/>
-    * 
+    *
     * @param region
     *           region to import the key into
     * @param keyName
@@ -79,7 +78,7 @@ public interface NovaEC2KeyPairApi extends KeyPairApi {
    @FormParams(keys = ACTION, values = "ImportKeyPair")
    @XMLResponseParser(KeyPairResponseHandler.class)
    KeyPair importKeyPairInRegion(
-         @EndpointParam(parser = RegionToEndpointOrProviderIfNull.class) @Nullable String region,
+         @EndpointParam(parser = RegionToEndpointOrProviderIfNull.class) String region,
          @FormParam("KeyName") String keyName,
          @FormParam("PublicKeyMaterial") @ParamParser(EncodedRSAPublicKeyToBase64.class) String publicKeyMaterial);
 }

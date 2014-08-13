@@ -22,7 +22,6 @@ import java.util.Set;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 
-import org.jclouds.javax.annotation.Nullable;
 import org.jclouds.location.Region;
 import org.jclouds.location.functions.RegionToEndpoint;
 import org.jclouds.openstack.keystone.v2_0.domain.Tenant;
@@ -54,20 +53,20 @@ public interface TroveApi extends Closeable {
     * Provides access to Flavor features.
     */
    @Delegate
-   FlavorApi getFlavorApi(@EndpointParam(parser = RegionToEndpoint.class) @Nullable String region);
+   FlavorApi getFlavorApi(@EndpointParam(parser = RegionToEndpoint.class) String region);
 
    /**
     * Provides access to Instance features.
     */
    @Delegate
-   InstanceApi getInstanceApi(@EndpointParam(parser = RegionToEndpoint.class) @Nullable String region);
+   InstanceApi getInstanceApi(@EndpointParam(parser = RegionToEndpoint.class) String region);
 
    /**
     * Provides access to User features.
     */
    @Delegate
    @Path("/instances/{instanceId}")
-   UserApi getUserApi(@EndpointParam(parser = RegionToEndpoint.class) @Nullable String region,
+   UserApi getUserApi(@EndpointParam(parser = RegionToEndpoint.class) String region,
          @PathParam("instanceId") String instanceId);
 
    /**
@@ -75,7 +74,7 @@ public interface TroveApi extends Closeable {
     */
    @Delegate
    @Path("/instances/{instanceId}")
-   DatabaseApi getDatabaseApi(@EndpointParam(parser = RegionToEndpoint.class) @Nullable String region,
+   DatabaseApi getDatabaseApi(@EndpointParam(parser = RegionToEndpoint.class) String region,
          @PathParam("instanceId") String instanceId);
 
    /**
@@ -98,7 +97,7 @@ public interface TroveApi extends Closeable {
    @Deprecated
    @Delegate
    FlavorApi getFlavorApiForZone(
-         @EndpointParam(parser = RegionToEndpoint.class) @Nullable String zone);
+         @EndpointParam(parser = RegionToEndpoint.class) String zone);
 
    /**
     * Provides access to Instance features.
@@ -108,7 +107,7 @@ public interface TroveApi extends Closeable {
    @Deprecated
    @Delegate
    InstanceApi getInstanceApiForZone(
-         @EndpointParam(parser = RegionToEndpoint.class) @Nullable String zone);
+         @EndpointParam(parser = RegionToEndpoint.class) String zone);
 
    /**
     * Provides access to User features.
@@ -118,7 +117,7 @@ public interface TroveApi extends Closeable {
    @Deprecated
    @Delegate
    @Path("/instances/{instanceId}")
-   UserApi getUserApiForZoneAndInstance(@EndpointParam(parser = RegionToEndpoint.class) @Nullable String zone,
+   UserApi getUserApiForZoneAndInstance(@EndpointParam(parser = RegionToEndpoint.class) String zone,
          @PathParam("instanceId") String instanceId);
 
    /**
@@ -129,7 +128,7 @@ public interface TroveApi extends Closeable {
    @Deprecated
    @Delegate
    @Path("/instances/{instanceId}")
-   DatabaseApi getDatabaseApiForZoneAndInstance(@EndpointParam(parser = RegionToEndpoint.class) @Nullable String zone,
+   DatabaseApi getDatabaseApiForZoneAndInstance(@EndpointParam(parser = RegionToEndpoint.class) String zone,
          @PathParam("instanceId") String instanceId);
 
    /**

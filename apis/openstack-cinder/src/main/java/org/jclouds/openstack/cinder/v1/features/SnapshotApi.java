@@ -43,7 +43,7 @@ import org.jclouds.rest.annotations.SkipEncoding;
 import com.google.common.collect.FluentIterable;
 
 /**
- * Provides synchronous access to Volume Snapshots API.
+ * Provides access to Volume Snapshots API.
  *
  */
 @SkipEncoding({'/', '='})

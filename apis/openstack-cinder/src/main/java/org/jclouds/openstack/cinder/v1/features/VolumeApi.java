@@ -43,7 +43,7 @@ import org.jclouds.rest.annotations.SkipEncoding;
 import com.google.common.collect.FluentIterable;
 
 /**
- * Provides synchronous access to the Volume API.
+ * Provides access to the Volume API.
  *
  * This API strictly handles creating and managing Volumes. To attach a Volume to a Server you need to use the
  * @see VolumeAttachmentApi

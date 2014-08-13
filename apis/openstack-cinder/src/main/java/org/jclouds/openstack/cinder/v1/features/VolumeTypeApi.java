@@ -36,7 +36,7 @@ import org.jclouds.rest.annotations.SkipEncoding;
 import com.google.common.collect.FluentIterable;
 
 /**
- * Provides synchronous access to the OpenStack Block Storage (Cinder) v1 Volume Types API.
+ * Provides access to the OpenStack Block Storage (Cinder) v1 Volume Types API.
  *
  */
 @SkipEncoding({'/', '='})

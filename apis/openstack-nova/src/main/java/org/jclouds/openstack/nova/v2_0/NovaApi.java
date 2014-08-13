@@ -19,7 +19,6 @@ package org.jclouds.openstack.nova.v2_0;
 import java.io.Closeable;
 import java.util.Set;
 
-import org.jclouds.javax.annotation.Nullable;
 import org.jclouds.location.Region;
 import org.jclouds.location.functions.RegionToEndpoint;
 import org.jclouds.openstack.nova.v2_0.extensions.AvailabilityZoneApi;
@@ -66,25 +65,25 @@ public interface NovaApi extends Closeable {
     * Provides access to Server features.
     */
    @Delegate
-   ServerApi getServerApi(@EndpointParam(parser = RegionToEndpoint.class) @Nullable String region);
+   ServerApi getServerApi(@EndpointParam(parser = RegionToEndpoint.class) String region);
 
    /**
     * Provides access to Flavor features.
     */
    @Delegate
-   FlavorApi getFlavorApi(@EndpointParam(parser = RegionToEndpoint.class) @Nullable String region);
+   FlavorApi getFlavorApi(@EndpointParam(parser = RegionToEndpoint.class) String region);
 
    /**
     * Provides access to Extension features.
     */
    @Delegate
-   ExtensionApi getExtensionApi(@EndpointParam(parser = RegionToEndpoint.class) @Nullable String region);
+   ExtensionApi getExtensionApi(@EndpointParam(parser = RegionToEndpoint.class) String region);
 
    /**
     * Provides access to Image features.
     */
    @Delegate
-   ImageApi getImageApi(@EndpointParam(parser = RegionToEndpoint.class) @Nullable String region);
+   ImageApi getImageApi(@EndpointParam(parser = RegionToEndpoint.class) String region);
 
    /**
     * Provides access to Availability Zone features.
@@ -95,7 +94,7 @@ public interface NovaApi extends Closeable {
     */
    @Delegate
    Optional<? extends AvailabilityZoneApi> getAvailabilityZoneApi(
-         @EndpointParam(parser = RegionToEndpoint.class) @Nullable String region);
+         @EndpointParam(parser = RegionToEndpoint.class) String region);
 
    /**
     * Provides access to Floating IP features.
@@ -106,7 +105,7 @@ public interface NovaApi extends Closeable {
     */
    @Delegate
    Optional<? extends FloatingIPApi> getFloatingIPApi(
-         @EndpointParam(parser = RegionToEndpoint.class) @Nullable String region);
+         @EndpointParam(parser = RegionToEndpoint.class) String region);
 
    /**
     * Provides access to Security Group features.
@@ -117,7 +116,7 @@ public interface NovaApi extends Closeable {
     */
    @Delegate
    Optional<? extends SecurityGroupApi> getSecurityGroupApi(
-         @EndpointParam(parser = RegionToEndpoint.class) @Nullable String region);
+         @EndpointParam(parser = RegionToEndpoint.class) String region);
 
    /**
     * Provides access to Key Pair features.
@@ -128,7 +127,7 @@ public interface NovaApi extends Closeable {
     */
    @Delegate
    Optional<? extends KeyPairApi> getKeyPairApi(
-         @EndpointParam(parser = RegionToEndpoint.class) @Nullable String region);
+         @EndpointParam(parser = RegionToEndpoint.class) String region);
 
    /**
     * Provides access to Host Administration features.
@@ -139,7 +138,7 @@ public interface NovaApi extends Closeable {
     */
    @Delegate
    Optional<? extends HostAdministrationApi> getHostAdministrationApi(
-         @EndpointParam(parser = RegionToEndpoint.class) @Nullable String region);
+         @EndpointParam(parser = RegionToEndpoint.class) String region);
 
    /**
     * Provides access to Simple Tenant Usage features.
@@ -150,7 +149,7 @@ public interface NovaApi extends Closeable {
     */
    @Delegate
    Optional<? extends SimpleTenantUsageApi> getSimpleTenantUsageApi(
-         @EndpointParam(parser = RegionToEndpoint.class) @Nullable String region);
+         @EndpointParam(parser = RegionToEndpoint.class) String region);
 
    /**
     * Provides access to Virtual Interface features.
@@ -161,7 +160,7 @@ public interface NovaApi extends Closeable {
     */
    @Delegate
    Optional<? extends VirtualInterfaceApi> getVirtualInterfaceApi(
-         @EndpointParam(parser = RegionToEndpoint.class) @Nullable String region);
+         @EndpointParam(parser = RegionToEndpoint.class) String region);
 
    /**
     * Provides access to Server Extra Data features.
@@ -172,7 +171,7 @@ public interface NovaApi extends Closeable {
     */
    @Delegate
    Optional<? extends ServerWithSecurityGroupsApi> getServerWithSecurityGroupsApi(
-         @EndpointParam(parser = RegionToEndpoint.class) @Nullable String region);
+         @EndpointParam(parser = RegionToEndpoint.class) String region);
 
    /**
     * Provides access to Server Admin Actions features.
@@ -183,7 +182,7 @@ public interface NovaApi extends Closeable {
     */
    @Delegate
    Optional<? extends ServerAdminApi> getServerAdminApi(
-         @EndpointParam(parser = RegionToEndpoint.class) @Nullable String region);
+         @EndpointParam(parser = RegionToEndpoint.class) String region);
 
    /**
     * Provides access to Aggregate features.
@@ -194,7 +193,7 @@ public interface NovaApi extends Closeable {
     */
    @Delegate
    Optional<? extends HostAggregateApi> getHostAggregateApi(
-         @EndpointParam(parser = RegionToEndpoint.class) @Nullable String region);
+         @EndpointParam(parser = RegionToEndpoint.class) String region);
 
    /**
     * Provides access to Flavor extra specs features.
@@ -205,7 +204,7 @@ public interface NovaApi extends Closeable {
     */
    @Delegate
    Optional<? extends FlavorExtraSpecsApi> getFlavorExtraSpecsApi(
-         @EndpointParam(parser = RegionToEndpoint.class) @Nullable String region);
+         @EndpointParam(parser = RegionToEndpoint.class) String region);
 
    /**
     * Provides access to Quota features.
@@ -216,7 +215,7 @@ public interface NovaApi extends Closeable {
     */
    @Delegate
    Optional<? extends QuotaApi> getQuotaApi(
-         @EndpointParam(parser = RegionToEndpoint.class) @Nullable String region);
+         @EndpointParam(parser = RegionToEndpoint.class) String region);
 
    /**
     * Provides access to Volume features.
@@ -227,7 +226,7 @@ public interface NovaApi extends Closeable {
     */
    @Delegate
    Optional<? extends VolumeApi> getVolumeApi(
-         @EndpointParam(parser = RegionToEndpoint.class) @Nullable String region);
+         @EndpointParam(parser = RegionToEndpoint.class) String region);
 
    /**
     * Provides access to Volume Attachment features.
@@ -238,7 +237,7 @@ public interface NovaApi extends Closeable {
     */
    @Delegate
    Optional<? extends VolumeAttachmentApi> getVolumeAttachmentApi(
-         @EndpointParam(parser = RegionToEndpoint.class) @Nullable String region);
+         @EndpointParam(parser = RegionToEndpoint.class) String region);
 
    /**
     * Provides access to Volume Type features.
@@ -249,7 +248,7 @@ public interface NovaApi extends Closeable {
     */
    @Delegate
    Optional<? extends VolumeTypeApi> getVolumeTypeApi(
-         @EndpointParam(parser = RegionToEndpoint.class) @Nullable String region);
+         @EndpointParam(parser = RegionToEndpoint.class) String region);
 
    /**
     * Provides access to Console features.
@@ -260,7 +259,7 @@ public interface NovaApi extends Closeable {
     */
    @Delegate
    Optional<? extends ConsolesApi> getConsolesApi(
-         @EndpointParam(parser = RegionToEndpoint.class) @Nullable String region);
+         @EndpointParam(parser = RegionToEndpoint.class) String region);
 
    /**
     * @return the Zone codes configured
@@ -278,7 +277,7 @@ public interface NovaApi extends Closeable {
    @Deprecated
    @Delegate
    ServerApi getServerApiForZone(
-         @EndpointParam(parser = RegionToEndpoint.class) @Nullable String zone);
+         @EndpointParam(parser = RegionToEndpoint.class) String zone);
 
    /**
     * Provides access to Flavor features.
@@ -287,7 +286,7 @@ public interface NovaApi extends Closeable {
    @Deprecated
    @Delegate
    FlavorApi getFlavorApiForZone(
-         @EndpointParam(parser = RegionToEndpoint.class) @Nullable String zone);
+         @EndpointParam(parser = RegionToEndpoint.class) String zone);
 
    /**
     * Provides access to Extension features.
@@ -297,7 +296,7 @@ public interface NovaApi extends Closeable {
    @Deprecated
    @Delegate
    ExtensionApi getExtensionApiForZone(
-         @EndpointParam(parser = RegionToEndpoint.class) @Nullable String zone);
+         @EndpointParam(parser = RegionToEndpoint.class) String zone);
 
    /**
     * Provides access to Image features.
@@ -307,7 +306,7 @@ public interface NovaApi extends Closeable {
    @Deprecated
    @Delegate
    ImageApi getImageApiForZone(
-         @EndpointParam(parser = RegionToEndpoint.class) @Nullable String zone);
+         @EndpointParam(parser = RegionToEndpoint.class) String zone);
 
    /**
     * Provides access to Floating IP features.
@@ -317,7 +316,7 @@ public interface NovaApi extends Closeable {
    @Deprecated
    @Delegate
    Optional<? extends FloatingIPApi> getFloatingIPExtensionForZone(
-         @EndpointParam(parser = RegionToEndpoint.class) @Nullable String zone);
+         @EndpointParam(parser = RegionToEndpoint.class) String zone);
 
    /**
     * Provides access to Security Group features.
@@ -327,7 +326,7 @@ public interface NovaApi extends Closeable {
    @Deprecated
    @Delegate
    Optional<? extends SecurityGroupApi> getSecurityGroupExtensionForZone(
-         @EndpointParam(parser = RegionToEndpoint.class) @Nullable String zone);
+         @EndpointParam(parser = RegionToEndpoint.class) String zone);
 
    /**
     * Provides access to Key Pair features.
@@ -337,7 +336,7 @@ public interface NovaApi extends Closeable {
    @Deprecated
    @Delegate
    Optional<? extends KeyPairApi> getKeyPairExtensionForZone(
-         @EndpointParam(parser = RegionToEndpoint.class) @Nullable String zone);
+         @EndpointParam(parser = RegionToEndpoint.class) String zone);
 
    /**
     * Provides access to Host Administration features.
@@ -347,7 +346,7 @@ public interface NovaApi extends Closeable {
    @Deprecated
    @Delegate
    Optional<? extends HostAdministrationApi> getHostAdministrationExtensionForZone(
-         @EndpointParam(parser = RegionToEndpoint.class) @Nullable String zone);
+         @EndpointParam(parser = RegionToEndpoint.class) String zone);
 
    /**
     * Provides access to Simple Tenant Usage features.
@@ -357,7 +356,7 @@ public interface NovaApi extends Closeable {
    @Deprecated
    @Delegate
    Optional<? extends SimpleTenantUsageApi> getSimpleTenantUsageExtensionForZone(
-         @EndpointParam(parser = RegionToEndpoint.class) @Nullable String zone);
+         @EndpointParam(parser = RegionToEndpoint.class) String zone);
 
    /**
     * Provides access to Virtual Interface features.
@@ -367,7 +366,7 @@ public interface NovaApi extends Closeable {
    @Deprecated
    @Delegate
    Optional<? extends VirtualInterfaceApi> getVirtualInterfaceExtensionForZone(
-         @EndpointParam(parser = RegionToEndpoint.class) @Nullable String zone);
+         @EndpointParam(parser = RegionToEndpoint.class) String zone);
 
    /**
     * Provides access to Server Extra Data features.
@@ -377,7 +376,7 @@ public interface NovaApi extends Closeable {
    @Deprecated
    @Delegate
    Optional<? extends ServerWithSecurityGroupsApi> getServerWithSecurityGroupsExtensionForZone(
-         @EndpointParam(parser = RegionToEndpoint.class) @Nullable String zone);
+         @EndpointParam(parser = RegionToEndpoint.class) String zone);
 
    /**
     * Provides access to Server Admin Actions features.
@@ -387,7 +386,7 @@ public interface NovaApi extends Closeable {
    @Deprecated
    @Delegate
    Optional<? extends ServerAdminApi> getServerAdminExtensionForZone(
-         @EndpointParam(parser = RegionToEndpoint.class) @Nullable String zone);
+         @EndpointParam(parser = RegionToEndpoint.class) String zone);
 
    /**
     * Provides access to Aggregate features.
@@ -397,7 +396,7 @@ public interface NovaApi extends Closeable {
    @Deprecated
    @Delegate
    Optional<? extends HostAggregateApi> getHostAggregateExtensionForZone(
-         @EndpointParam(parser = RegionToEndpoint.class) @Nullable String zone);
+         @EndpointParam(parser = RegionToEndpoint.class) String zone);
 
    /**
     * Provides access to Flavor extra specs features.
@@ -407,7 +406,7 @@ public interface NovaApi extends Closeable {
    @Deprecated
    @Delegate
    Optional<? extends FlavorExtraSpecsApi> getFlavorExtraSpecsExtensionForZone(
-         @EndpointParam(parser = RegionToEndpoint.class) @Nullable String zone);
+         @EndpointParam(parser = RegionToEndpoint.class) String zone);
 
    /**
     * Provides access to Quota features.
@@ -417,7 +416,7 @@ public interface NovaApi extends Closeable {
    @Deprecated
    @Delegate
    Optional<? extends QuotaApi> getQuotaExtensionForZone(
-         @EndpointParam(parser = RegionToEndpoint.class) @Nullable String zone);
+         @EndpointParam(parser = RegionToEndpoint.class) String zone);
 
    /**
     * Provides access to Volume features.
@@ -427,7 +426,7 @@ public interface NovaApi extends Closeable {
    @Deprecated
    @Delegate
    Optional<? extends VolumeApi> getVolumeExtensionForZone(
-         @EndpointParam(parser = RegionToEndpoint.class) @Nullable String zone);
+         @EndpointParam(parser = RegionToEndpoint.class) String zone);
 
    /**
     * Provides access to Volume Attachment features.
@@ -437,7 +436,7 @@ public interface NovaApi extends Closeable {
    @Deprecated
    @Delegate
    Optional<? extends VolumeAttachmentApi> getVolumeAttachmentExtensionForZone(
-         @EndpointParam(parser = RegionToEndpoint.class) @Nullable String zone);
+         @EndpointParam(parser = RegionToEndpoint.class) String zone);
 
    /**
     * Provides access to Volume Type features.
@@ -447,15 +446,15 @@ public interface NovaApi extends Closeable {
    @Deprecated
    @Delegate
    Optional<? extends VolumeTypeApi> getVolumeTypeExtensionForZone(
-         @EndpointParam(parser = RegionToEndpoint.class) @Nullable String zone);
+         @EndpointParam(parser = RegionToEndpoint.class) String zone);
 
    /**
-    * Provides synchronous access to Console features.
+    * Provides access to Console features.
     * @deprecated Please use {@link #getConsolesApi(String region)} as this method will be removed
     *             in jclouds 3.0.
     */
    @Deprecated
    @Delegate
    Optional<? extends ConsolesApi> getConsolesExtensionForZone(
-         @EndpointParam(parser = RegionToEndpoint.class) @Nullable String zone);
+         @EndpointParam(parser = RegionToEndpoint.class) String zone);
 }

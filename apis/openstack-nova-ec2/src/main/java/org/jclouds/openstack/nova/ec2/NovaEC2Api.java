@@ -17,7 +17,6 @@
 package org.jclouds.openstack.nova.ec2;
 
 import org.jclouds.ec2.EC2Api;
-import org.jclouds.javax.annotation.Nullable;
 import org.jclouds.location.functions.RegionToEndpointOrProviderIfNull;
 import org.jclouds.openstack.nova.ec2.features.NovaEC2KeyPairApi;
 import org.jclouds.rest.annotations.Delegate;
@@ -26,7 +25,7 @@ import org.jclouds.rest.annotations.EndpointParam;
 import com.google.common.base.Optional;
 
 /**
- * Provides synchronous access to EC2 services.
+ * Provides access to EC2 services.
  */
 public interface NovaEC2Api extends EC2Api {
 
@@ -36,10 +35,10 @@ public interface NovaEC2Api extends EC2Api {
    @Delegate
    @Override
    Optional<? extends NovaEC2KeyPairApi> getKeyPairApi();
-   
+
    @Delegate
    @Override
    Optional<? extends NovaEC2KeyPairApi> getKeyPairApiForRegion(
-            @EndpointParam(parser = RegionToEndpointOrProviderIfNull.class) @Nullable String region);
+            @EndpointParam(parser = RegionToEndpointOrProviderIfNull.class) String region);
 
 }

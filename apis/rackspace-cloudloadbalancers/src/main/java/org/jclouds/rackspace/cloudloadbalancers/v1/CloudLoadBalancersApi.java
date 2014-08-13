@@ -22,7 +22,6 @@ import java.util.Set;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 
-import org.jclouds.javax.annotation.Nullable;
 import org.jclouds.location.Region;
 import org.jclouds.location.functions.RegionToEndpoint;
 import org.jclouds.rackspace.cloudloadbalancers.v1.features.AccessRuleApi;
@@ -58,7 +57,7 @@ public interface CloudLoadBalancersApi extends Closeable {
     */
    @Delegate
    LoadBalancerApi getLoadBalancerApi(
-         @EndpointParam(parser = RegionToEndpoint.class) @Nullable String region);
+         @EndpointParam(parser = RegionToEndpoint.class) String region);
 
    /**
     * Provides access to Node features.
@@ -66,7 +65,7 @@ public interface CloudLoadBalancersApi extends Closeable {
    @Delegate
    @Path("/loadbalancers/{lbId}")
    NodeApi getNodeApi(
-         @EndpointParam(parser = RegionToEndpoint.class) @Nullable String region, @PathParam("lbId") int lbId);
+         @EndpointParam(parser = RegionToEndpoint.class) String region, @PathParam("lbId") int lbId);
 
    /**
     * Provides access to Access Rule features.
@@ -74,7 +73,7 @@ public interface CloudLoadBalancersApi extends Closeable {
    @Delegate
    @Path("/loadbalancers/{lbId}")
    AccessRuleApi getAccessRuleApi(
-         @EndpointParam(parser = RegionToEndpoint.class) @Nullable String region, @PathParam("lbId") int lbId);
+         @EndpointParam(parser = RegionToEndpoint.class) String region, @PathParam("lbId") int lbId);
 
    /**
     * Provides access to Virtual IP features.
@@ -82,7 +81,7 @@ public interface CloudLoadBalancersApi extends Closeable {
    @Delegate
    @Path("/loadbalancers/{lbId}")
    VirtualIPApi getVirtualIPApi(
-         @EndpointParam(parser = RegionToEndpoint.class) @Nullable String region, @PathParam("lbId") int lbId);
+         @EndpointParam(parser = RegionToEndpoint.class) String region, @PathParam("lbId") int lbId);
 
    /**
     * Provides access to Connection features.
@@ -90,7 +89,7 @@ public interface CloudLoadBalancersApi extends Closeable {
    @Delegate
    @Path("/loadbalancers/{lbId}")
    ConnectionApi getConnectionApi(
-         @EndpointParam(parser = RegionToEndpoint.class) @Nullable String region, @PathParam("lbId") int lbId);
+         @EndpointParam(parser = RegionToEndpoint.class) String region, @PathParam("lbId") int lbId);
 
    /**
     * Provides access to Health Monitor features.
@@ -98,7 +97,7 @@ public interface CloudLoadBalancersApi extends Closeable {
    @Delegate
    @Path("/loadbalancers/{lbId}")
    HealthMonitorApi getHealthMonitorApi(
-         @EndpointParam(parser = RegionToEndpoint.class) @Nullable String region, @PathParam("lbId") int lbId);
+         @EndpointParam(parser = RegionToEndpoint.class) String region, @PathParam("lbId") int lbId);
 
    /**
     * Provides access to Session Persistence features.
@@ -106,7 +105,7 @@ public interface CloudLoadBalancersApi extends Closeable {
    @Delegate
    @Path("/loadbalancers/{lbId}")
    SessionPersistenceApi getSessionPersistenceApi(
-         @EndpointParam(parser = RegionToEndpoint.class) @Nullable String region, @PathParam("lbId") int lbId);
+         @EndpointParam(parser = RegionToEndpoint.class) String region, @PathParam("lbId") int lbId);
 
    /**
     * Provides access to Content Caching features.
@@ -114,7 +113,7 @@ public interface CloudLoadBalancersApi extends Closeable {
    @Delegate
    @Path("/loadbalancers/{lbId}")
    ContentCachingApi getContentCachingApi(
-         @EndpointParam(parser = RegionToEndpoint.class) @Nullable String region, @PathParam("lbId") int lbId);
+         @EndpointParam(parser = RegionToEndpoint.class) String region, @PathParam("lbId") int lbId);
 
    /**
     * Provides access to SSL Termination features.
@@ -122,7 +121,7 @@ public interface CloudLoadBalancersApi extends Closeable {
    @Delegate
    @Path("/loadbalancers/{lbId}")
    SSLTerminationApi getSSLTerminationApi(
-         @EndpointParam(parser = RegionToEndpoint.class) @Nullable String region, @PathParam("lbId") int lbId);
+         @EndpointParam(parser = RegionToEndpoint.class) String region, @PathParam("lbId") int lbId);
 
    /**
     * Provides access to Error Page features.
@@ -130,13 +129,13 @@ public interface CloudLoadBalancersApi extends Closeable {
    @Delegate
    @Path("/loadbalancers/{lbId}")
    ErrorPageApi getErrorPageApi(
-         @EndpointParam(parser = RegionToEndpoint.class) @Nullable String region, @PathParam("lbId") int lbId);
+         @EndpointParam(parser = RegionToEndpoint.class) String region, @PathParam("lbId") int lbId);
 
    /**
     * Provides access to Report features.
     */
    @Delegate
-   ReportApi getReportApi(@EndpointParam(parser = RegionToEndpoint.class) @Nullable String region);
+   ReportApi getReportApi(@EndpointParam(parser = RegionToEndpoint.class) String region);
 
    /**
     * @return the Zone codes configured
@@ -154,7 +153,7 @@ public interface CloudLoadBalancersApi extends Closeable {
    @Deprecated
    @Delegate
    LoadBalancerApi getLoadBalancerApiForZone(
-         @EndpointParam(parser = RegionToEndpoint.class) @Nullable String zone);
+         @EndpointParam(parser = RegionToEndpoint.class) String zone);
 
    /**
     * Provides access to Node features.
@@ -165,7 +164,7 @@ public interface CloudLoadBalancersApi extends Closeable {
    @Delegate
    @Path("/loadbalancers/{lbId}")
    NodeApi getNodeApiForZoneAndLoadBalancer(
-         @EndpointParam(parser = RegionToEndpoint.class) @Nullable String zone, @PathParam("lbId") int lbId);
+         @EndpointParam(parser = RegionToEndpoint.class) String zone, @PathParam("lbId") int lbId);
 
    /**
     * Provides access to Access Rule features.
@@ -176,7 +175,7 @@ public interface CloudLoadBalancersApi extends Closeable {
    @Delegate
    @Path("/loadbalancers/{lbId}")
    AccessRuleApi getAccessRuleApiForZoneAndLoadBalancer(
-         @EndpointParam(parser = RegionToEndpoint.class) @Nullable String zone, @PathParam("lbId") int lbId);
+         @EndpointParam(parser = RegionToEndpoint.class) String zone, @PathParam("lbId") int lbId);
 
    /**
     * Provides access to Virtual IP features.
@@ -187,7 +186,7 @@ public interface CloudLoadBalancersApi extends Closeable {
    @Delegate
    @Path("/loadbalancers/{lbId}")
    VirtualIPApi getVirtualIPApiForZoneAndLoadBalancer(
-         @EndpointParam(parser = RegionToEndpoint.class) @Nullable String zone, @PathParam("lbId") int lbId);
+         @EndpointParam(parser = RegionToEndpoint.class) String zone, @PathParam("lbId") int lbId);
 
    /**
     * Provides access to Connection features.
@@ -198,7 +197,7 @@ public interface CloudLoadBalancersApi extends Closeable {
    @Delegate
    @Path("/loadbalancers/{lbId}")
    ConnectionApi getConnectionApiForZoneAndLoadBalancer(
-         @EndpointParam(parser = RegionToEndpoint.class) @Nullable String zone, @PathParam("lbId") int lbId);
+         @EndpointParam(parser = RegionToEndpoint.class) String zone, @PathParam("lbId") int lbId);
 
    /**
     * Provides access to Health Monitor features.
@@ -209,7 +208,7 @@ public interface CloudLoadBalancersApi extends Closeable {
    @Delegate
    @Path("/loadbalancers/{lbId}")
    HealthMonitorApi getHealthMonitorApiForZoneAndLoadBalancer(
-         @EndpointParam(parser = RegionToEndpoint.class) @Nullable String zone, @PathParam("lbId") int lbId);
+         @EndpointParam(parser = RegionToEndpoint.class) String zone, @PathParam("lbId") int lbId);
 
    /**
     * Provides access to Session Persistence features.
@@ -220,7 +219,7 @@ public interface CloudLoadBalancersApi extends Closeable {
    @Delegate
    @Path("/loadbalancers/{lbId}")
    SessionPersistenceApi getSessionPersistenceApiForZoneAndLoadBalancer(
-         @EndpointParam(parser = RegionToEndpoint.class) @Nullable String zone, @PathParam("lbId") int lbId);
+         @EndpointParam(parser = RegionToEndpoint.class) String zone, @PathParam("lbId") int lbId);
 
    /**
     * Provides access to Content Caching features.
@@ -231,7 +230,7 @@ public interface CloudLoadBalancersApi extends Closeable {
    @Delegate
    @Path("/loadbalancers/{lbId}")
    ContentCachingApi getContentCachingApiForZoneAndLoadBalancer(
-         @EndpointParam(parser = RegionToEndpoint.class) @Nullable String zone, @PathParam("lbId") int lbId);
+         @EndpointParam(parser = RegionToEndpoint.class) String zone, @PathParam("lbId") int lbId);
 
    /**
     * Provides access to SSL Termination features.
@@ -242,7 +241,7 @@ public interface CloudLoadBalancersApi extends Closeable {
    @Delegate
    @Path("/loadbalancers/{lbId}")
    SSLTerminationApi getSSLTerminationApiForZoneAndLoadBalancer(
-         @EndpointParam(parser = RegionToEndpoint.class) @Nullable String zone, @PathParam("lbId") int lbId);
+         @EndpointParam(parser = RegionToEndpoint.class) String zone, @PathParam("lbId") int lbId);
 
    /**
     * Provides access to Error Page features.
@@ -253,7 +252,7 @@ public interface CloudLoadBalancersApi extends Closeable {
    @Delegate
    @Path("/loadbalancers/{lbId}")
    ErrorPageApi getErrorPageApiForZoneAndLoadBalancer(
-         @EndpointParam(parser = RegionToEndpoint.class) @Nullable String zone, @PathParam("lbId") int lbId);
+         @EndpointParam(parser = RegionToEndpoint.class) String zone, @PathParam("lbId") int lbId);
 
    /**
     * Provides access to Report features.
@@ -262,5 +261,5 @@ public interface CloudLoadBalancersApi extends Closeable {
    @Deprecated
    @Delegate
    ReportApi getReportApiForZone(
-         @EndpointParam(parser = RegionToEndpoint.class) @Nullable String zone);
+         @EndpointParam(parser = RegionToEndpoint.class) String zone);
 }

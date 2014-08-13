@@ -19,7 +19,6 @@ package org.jclouds.openstack.cinder.v1;
 import java.io.Closeable;
 import java.util.Set;
 
-import org.jclouds.javax.annotation.Nullable;
 import org.jclouds.location.Region;
 import org.jclouds.location.functions.RegionToEndpoint;
 import org.jclouds.openstack.cinder.v1.domain.Snapshot;
@@ -37,7 +36,7 @@ import org.jclouds.rest.annotations.EndpointParam;
 import com.google.inject.Provides;
 
 /**
- * Provides synchronous access to OpenStack Block Storage (Cinder) v1 API.
+ * Provides access to OpenStack Block Storage (Cinder) v1 API.
  */
 public interface CinderApi extends Closeable {
 
@@ -49,34 +48,34 @@ public interface CinderApi extends Closeable {
    Set<String> getConfiguredRegions();
 
    /**
-    * Provides synchronous access to {@link Extension} features.
+    * Provides access to {@link Extension} features.
     */
    @Delegate
-   ExtensionApi getExtensionApi(@EndpointParam(parser = RegionToEndpoint.class) @Nullable String region);
+   ExtensionApi getExtensionApi(@EndpointParam(parser = RegionToEndpoint.class) String region);
 
    /**
-    * Provides synchronous access to {@link Volume} features.
+    * Provides access to {@link Volume} features.
     */
    @Delegate
-   VolumeApi getVolumeApi(@EndpointParam(parser = RegionToEndpoint.class) @Nullable String region);
+   VolumeApi getVolumeApi(@EndpointParam(parser = RegionToEndpoint.class) String region);
 
    /**
-    * Provides synchronous access to {@link VolumeType} features.
+    * Provides access to {@link VolumeType} features.
     */
    @Delegate
-   VolumeTypeApi getVolumeTypeApi(@EndpointParam(parser = RegionToEndpoint.class) @Nullable String region);
+   VolumeTypeApi getVolumeTypeApi(@EndpointParam(parser = RegionToEndpoint.class) String region);
 
    /**
-    * Provides synchronous access to {@link Snapshot} features.
+    * Provides access to {@link Snapshot} features.
     */
    @Delegate
-   SnapshotApi getSnapshotApi(@EndpointParam(parser = RegionToEndpoint.class) @Nullable String region);
+   SnapshotApi getSnapshotApi(@EndpointParam(parser = RegionToEndpoint.class) String region);
 
    /**
-    * Provides synchronous access to quota features.
+    * Provides access to quota features.
     */
    @Delegate
-   QuotaApi getQuotaApi(@EndpointParam(parser = RegionToEndpoint.class) @Nullable String region);
+   QuotaApi getQuotaApi(@EndpointParam(parser = RegionToEndpoint.class) String region);
 
    /**
     * @return the Zone codes configured
@@ -88,43 +87,43 @@ public interface CinderApi extends Closeable {
    Set<String> getConfiguredZones();
 
    /**
-    * Provides synchronous access to Extension features.
+    * Provides access to Extension features.
     * @deprecated Please use {@link #getExtensionApi(String region)} as this method will be removed
     *             in jclouds 3.0.
     */
    @Deprecated
    @Delegate
    ExtensionApi getExtensionApiForZone(
-         @EndpointParam(parser = RegionToEndpoint.class) @Nullable String zone);
+         @EndpointParam(parser = RegionToEndpoint.class) String zone);
 
    /**
-    * Provides synchronous access to Volume features.
+    * Provides access to Volume features.
     * @deprecated Please use {@link #getVolumeApi(String region)} as this method will be removed
     *             in jclouds 3.0.
     */
    @Deprecated
    @Delegate
    VolumeApi getVolumeApiForZone(
-         @EndpointParam(parser = RegionToEndpoint.class) @Nullable String zone);
+         @EndpointParam(parser = RegionToEndpoint.class) String zone);
 
    /**
-    * Provides synchronous access to VolumeType features.
+    * Provides access to VolumeType features.
     * @deprecated Please use {@link #getVolumeTypeApi(String region)} as this method will be removed
     *             in jclouds 3.0.
     */
    @Deprecated
    @Delegate
    VolumeTypeApi getVolumeTypeApiForZone(
-         @EndpointParam(parser = RegionToEndpoint.class) @Nullable String zone);
+         @EndpointParam(parser = RegionToEndpoint.class) String zone);
 
    /**
-    * Provides synchronous access to Snapshot features.
+    * Provides access to Snapshot features.
     * @deprecated Please use {@link #getSnapshotApi(String)} as this method will be removed
     *             in jclouds 3.0.
     */
    @Deprecated
    @Delegate
    SnapshotApi getSnapshotApiForZone(
-         @EndpointParam(parser = RegionToEndpoint.class) @Nullable String zone);
+         @EndpointParam(parser = RegionToEndpoint.class) String zone);
 
 }
