@@ -101,17 +101,8 @@ public class AddressPair  {
     * In this case, both parameters are required.
     * @return the Builder for AddressPair
     */
-   public static Builder createOptions(String macAddress, String ipAddress) {
+   public static Builder builder(String macAddress, String ipAddress) {
       return new Builder(macAddress, ipAddress);
-   }
-
-   /**
-    * Returns a builder, but requires the user to specify any parameters required when updating a resource.
-    * In this case, there are none.
-    * @return the Builder for AddressPair
-    */
-   public static Builder updateOptions() {
-      return new Builder();
    }
 
    /**

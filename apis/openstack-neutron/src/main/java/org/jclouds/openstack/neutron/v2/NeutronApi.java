@@ -25,6 +25,7 @@ import org.jclouds.Constants;
 import org.jclouds.location.Region;
 import org.jclouds.location.functions.RegionToEndpoint;
 import org.jclouds.openstack.neutron.v2.extensions.RouterApi;
+import org.jclouds.openstack.neutron.v2.extensions.SecurityGroupApi;
 import org.jclouds.openstack.neutron.v2.features.NetworkApi;
 import org.jclouds.openstack.neutron.v2.features.PortApi;
 import org.jclouds.openstack.neutron.v2.features.SubnetApi;
@@ -89,4 +90,13 @@ public interface NeutronApi extends Closeable {
    @Delegate
    Optional<? extends RouterApi> getRouterExtensionApi(@EndpointParam(parser = RegionToEndpoint.class) String region);
 
+   /**
+    * Provides access to SecurityGroup features.
+    *
+    * <h3>NOTE</h3>
+    * This API is an extension that may or may not be present in your OpenStack cloud. Use the Optional return type
+    * to determine if it is present.
+    */
+   @Delegate
+   Optional<SecurityGroupApi> getSecurityGroupApi(@EndpointParam(parser = RegionToEndpoint.class) String region);
 }

@@ -1,0 +1,6 @@
+{
+    "security_group": {
+        "name": "new-webservers",
+        "description": "security group for webservers"
+    }
+}

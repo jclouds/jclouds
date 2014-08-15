@@ -1,0 +1,34 @@
+{
+    "security_group": {
+        "description": "security group for webservers",
+        "id": "2076db17-a522-4506-91de-c6dd8e837028",
+        "name": "new-webservers",
+        "security_group_rules": [
+            {
+                "direction": "egress",
+                "ethertype": "IPv4",
+                "id": "38ce2d8e-e8f1-48bd-83c2-d33cb9f50c3d",
+                "port_range_max": null,
+                "port_range_min": null,
+                "protocol": null,
+                "remote_group_id": null,
+                "remote_ip_prefix": null,
+                "security_group_id": "2076db17-a522-4506-91de-c6dd8e837028",
+                "tenant_id": "e4f50856753b4dc6afee5fa6b9b6c550"
+            },
+            {
+                "direction": "egress",
+                "ethertype": "IPv6",
+                "id": "565b9502-12de-4ffd-91e9-68885cff6ae1",
+                "port_range_max": null,
+                "port_range_min": null,
+                "protocol": null,
+                "remote_group_id": null,
+                "remote_ip_prefix": null,
+                "security_group_id": "2076db17-a522-4506-91de-c6dd8e837028",
+                "tenant_id": "e4f50856753b4dc6afee5fa6b9b6c550"
+            }
+        ],
+        "tenant_id": "e4f50856753b4dc6afee5fa6b9b6c550"
+    }
+}
