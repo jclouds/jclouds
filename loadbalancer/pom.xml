@@ -33,7 +33,7 @@
   <properties>
     <jclouds.osgi.export>org.jclouds.loadbalancer*;version="${project.version}"</jclouds.osgi.export>
     <jclouds.osgi.import>org.jclouds*;version="${project.version}",*</jclouds.osgi.import>
-    <jclouds.osgi.fragment>jclouds-core;bundle-version="[1.3,2)"</jclouds.osgi.fragment>
+    <jclouds.osgi.fragment>jclouds-core;bundle-version="[1.3,3)"</jclouds.osgi.fragment>
   </properties>
 
   <!-- bootstrapping: need to fetch the project POM -->
