@@ -53,7 +53,7 @@ public class GoogleComputeEngineServiceLiveTest extends BaseComputeServiceLiveTe
    @Override
    protected Properties setupProperties() {
       Properties props = super.setupProperties();
-      if(!System.getProperty(OAuthProperties.CREDENTIAL_TYPE, "")
+      if (!System.getProperty(OAuthProperties.CREDENTIAL_TYPE, "")
             .equalsIgnoreCase(CredentialType.BEARER_TOKEN_CREDENTIALS.toString())) {
       setCredential(props, provider + ".credential");
       }
