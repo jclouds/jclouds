@@ -45,7 +45,7 @@ See http://code.google.com/p/jclouds for details."
            [org.jclouds ContextBuilder]
            [org.jclouds.blobstore
             AsyncBlobStore domain.BlobBuilder BlobStore BlobStoreContext
-            domain.BlobMetadata domain.StorageMetadata
+            domain.BlobMetadata domain.StorageMetadata domain.PageSet
             domain.Blob domain.internal.BlobBuilderImpl options.PutOptions
             options.PutOptions$Builder
             options.CreateContainerOptions options.ListContainerOptions]
@@ -53,6 +53,7 @@ See http://code.google.com/p/jclouds for details."
            java.util.Arrays
            [java.security DigestOutputStream MessageDigest]
            com.google.common.collect.ImmutableSet
+           com.google.common.net.MediaType
            com.google.common.io.ByteSource))
 
 ;;
@@ -76,8 +77,8 @@ See http://code.google.com/p/jclouds for details."
   ByteSource
   (payload [bs] (Payloads/newByteSourcePayload bs)))
 
-;; something in clojure 1.3 (namespaces?) does not like a private type called byte-array-type, 
-;; so we refer to (class (make-array ...)) directly; and it only parses if it is its own block, 
+;; something in clojure 1.3 (namespaces?) does not like a private type called byte-array-type,
+;; so we refer to (class (make-array ...)) directly; and it only parses if it is its own block,
 ;; hence separating it from the above
 (extend-protocol PayloadSource
   (class (make-array Byte/TYPE 0))
@@ -89,16 +90,17 @@ Options for communication style
      :sync and :async.
 Options can also be specified for extension modules
      :log4j :enterprise :ning :apachehc :bouncycastle :joda :gae"
-  [#^String provider #^String provider-identity #^String provider-credential
+  [^String provider ^String provider-identity ^String provider-credential
    & options]
   (let [module-keys (set (keys module-lookup))
         ext-modules (filter #(module-keys %) options)
         opts (apply hash-map (filter #(not (module-keys %)) options))]
-    (let [context (.. (ContextBuilder/newBuilder provider)
+    (let [^BlobStoreContext
+          context (.. (ContextBuilder/newBuilder provider)
                       (credentials provider-identity provider-credential)
                       (modules (apply modules (concat ext-modules (opts :extensions))))
-                      (overrides (reduce #(do (.put %1 (name (first %2)) (second %2)) %1)
-                        (Properties.) (dissoc opts :extensions)))
+                      (overrides (reduce #(do (.put ^Properties %1 (name (first %2)) (second %2)) %1)
+                                         (Properties.) (dissoc opts :extensions)))
                       (buildView BlobStoreContext))]
       (if (some #(= :async %) options)
         (.getAsyncBlobStore context)
@@ -106,8 +108,8 @@ Options can also be specified for extension modules
 
 (defn blobstore-context
   "Returns a blobstore context from a blobstore."
-  [blobstore]
-  (.getContext blobstore))
+  [^BlobStore blobstore]
+  (.getContext ^BlobStore blobstore))
 
 (defn blob?
   [object]
@@ -124,14 +126,14 @@ Options can also be specified for extension modules
 
 (defn containers
   "List all containers in a blobstore."
-  [blobstore] (.list blobstore))
+  [^BlobStore blobstore] (.list ^BlobStore blobstore))
 
-(def #^{:private true} list-option-map
-     {:after-marker #(.afterMarker %1 %2)
-      :in-directory #(.inDirectory %1 %2)
-      :max-results #(.maxResults %1 %2)
-      :with-details #(when %2 (.withDetails %1))
-      :recursive #(when %2 (.recursive %1))})
+(def ^{:private true} list-option-map
+  {:after-marker #(.afterMarker ^ListContainerOptions %1 ^String %2)
+   :in-directory #(.inDirectory ^ListContainerOptions %1 %2)
+   :max-results #(.maxResults ^ListContainerOptions %1 ^Integer %2)
+   :with-details #(when %2 (.withDetails ^ListContainerOptions %1))
+   :recursive #(when %2 (.recursive ^ListContainerOptions %1))})
 
 (defn blobs
   "Returns a set of blobs in the given container, as directed by the
@@ -142,7 +144,7 @@ Options can also be specified for extension modules
      :max-results n
      :with-details true
      :recursive true"
-  [blobstore container-name & args]
+  [^BlobStore blobstore container-name & args]
   (let [options (apply hash-map args)
         list-options (reduce
                       (fn [lco [k v]]
@@ -153,19 +155,19 @@ Options can also be specified for extension modules
     (.list blobstore container-name list-options)))
 
 (defn- container-seq-chunk
-  [blobstore container prefix marker]
+  [^BlobStore blobstore container prefix marker]
   (apply blobs blobstore container
          (concat (when prefix
                    [:in-directory prefix])
                  (when (string? marker)
                    [:after-marker marker]))))
 
-(defn- container-seq-chunks [blobstore container prefix marker]
+(defn- container-seq-chunks [^BlobStore blobstore container prefix marker]
   (when marker ;; When getNextMarker returns null, there's no more.
     (let [chunk (container-seq-chunk blobstore container prefix marker)]
       (lazy-seq (cons chunk
                       (container-seq-chunks blobstore container prefix
-                                            (.getNextMarker chunk)))))))
+                                            (.getNextMarker ^PageSet chunk)))))))
 
 (defn- concat-elements
   "Make a lazy concatenation of the lazy sequences contained in coll.
@@ -177,9 +179,9 @@ Options can also be specified for extension modules
 
 (defn container-seq
   "Returns a lazy seq of all blobs in the given container."
-  ([blobstore container]
+  ([^BlobStore blobstore container]
      (container-seq blobstore container nil))
-  ([blobstore container prefix]
+  ([^BlobStore blobstore container prefix]
      ;; :start has no special meaning, it is just a non-null (null indicates
      ;; end), non-string (markers are strings).
      (concat-elements (container-seq-chunks blobstore container prefix
@@ -250,7 +252,7 @@ Options can also be specified for extension modules
   [^BlobStore blobstore container-name path]
   (.blobMetadata blobstore container-name path))
 
-(defn get-blob
+(defn ^Blob get-blob
   "Get blob from given path"
   [^BlobStore blobstore container-name path]
   (.getBlob blobstore container-name path))
@@ -272,14 +274,14 @@ Options can also be specified for extension modules
 
 (defn sign-delete
   "Get a signed http DELETE request for manipulating a blob in another
-   applicaiton, Ex. curl."
+  application, Ex. curl."
   [^BlobStore blobstore container-name name]
   (.signRemoveBlob (.. blobstore getContext getSigner) container-name name))
 
 (defn get-blob-stream
   "Get an inputstream from the blob at a given path"
   [^BlobStore blobstore container-name path]
-  (.getInput (.getPayload (get-blob blobstore container-name path))))
+  (.getInput ^Payload (.getPayload (get-blob blobstore container-name path))))
 
 (defn remove-blob
   "Remove blob from given path"
@@ -323,8 +325,8 @@ Options can also be specified for extension modules
   location-id uri last-modified)
 (define-accessors BlobMetadata "blob" content-type)
 
-(defn blob-etag [blob]
+(defn blob-etag [^Blob blob]
   (.getETag blob))
 
-(defn blob-md5 [blob]
+(defn blob-md5 [^Blob blob]
   (.getContentMD5 blob))
