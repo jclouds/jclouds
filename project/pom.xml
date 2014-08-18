@@ -998,7 +998,6 @@
             <artifactId>maven-checkstyle-plugin</artifactId>
             <configuration>
               <configLocation>../resources/checkstyle.xml</configLocation>
-              <headerLocation>../resources/copyright_header.txt</headerLocation>
             </configuration>
           </plugin>
         </plugins>
@@ -1026,7 +1025,6 @@
             <configuration>
               <!-- jclouds-resources has the checkstyle config in the classpath -->
               <configLocation>resources/checkstyle.xml</configLocation>
-              <headerLocation>resources/copyright_header.txt</headerLocation>
             </configuration>
           </plugin>
         </plugins>            
