@@ -20,6 +20,7 @@ import static com.google.common.io.BaseEncoding.base16;
 import static org.jclouds.http.Uris.uriBuilder;
 import static org.jclouds.util.SaxUtils.currentOrNull;
 
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import javax.inject.Inject;
@@ -63,7 +64,7 @@ public class ListBucketHandler extends ParseSax.HandlerWithResult<ListBucketResp
    private boolean isTruncated;
 
    /** Some blobs have a non-hex suffix when created by multi-part uploads such Amazon S3. */
-   private static final Pattern MULTIPART_BLOB_ETAG = Pattern.compile("[0-9a-f]+-[0-9]+");
+   private static final Pattern ETAG_CONTENT_MD5_PATTERN = Pattern.compile("\"([0-9a-f]+)\"");
 
    @Inject
    public ListBucketHandler(DateService dateParser) {
@@ -101,9 +102,9 @@ public class ListBucketHandler extends ParseSax.HandlerWithResult<ListBucketResp
       } else if (qName.equals("ETag")) {
          String currentETag = currentOrNull(currentText);
          builder.eTag(currentETag);
-         currentETag = currentETag.replace("\"", "");
-         if (!MULTIPART_BLOB_ETAG.matcher(currentETag).matches()) {
-            builder.contentMD5(base16().lowerCase().decode(currentETag));
+         Matcher matcher = ETAG_CONTENT_MD5_PATTERN.matcher(currentETag);
+         if (matcher.matches()) {
+            builder.contentMD5(base16().lowerCase().decode(matcher.group(1)));
          }
       } else if (qName.equals("Size")) {
          builder.contentLength(Long.valueOf(currentOrNull(currentText)));
