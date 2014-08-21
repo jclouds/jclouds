@@ -229,6 +229,9 @@ public class LocalAsyncBlobStore extends BaseAsyncBlobStore {
     */
    @Override
    public ListenableFuture<Void> removeBlob(final String container, final String key) {
+      if (!storageStrategy.containerExists(container)) {
+         return Futures.immediateFailedFuture(cnfe(container));
+      }
       storageStrategy.removeBlob(container, key);
       return immediateFuture(null);
    }
