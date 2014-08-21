@@ -23,6 +23,7 @@
     <groupId>org.apache.jclouds</groupId>
     <artifactId>jclouds-project</artifactId>
     <version>2.0.0-SNAPSHOT</version>
+    <relativePath />
   </parent>
 
   <!-- TODO: when out of labs, switch to org.jclouds.provider -->
@@ -39,7 +40,7 @@
     <test.rackspace-cloudfiles-us.api-version>1</test.rackspace-cloudfiles-us.api-version>
     <test.rackspace-cloudfiles-us.build-version />
     <test.rackspace-cloudfiles-us.identity>${test.rackspace-us.identity}</test.rackspace-cloudfiles-us.identity>
-    <test.rackspace-cloudfiles-us.credential>${test.rackspace-us.credential}</test.rackspace-cloudfiles-us.credential>    
+    <test.rackspace-cloudfiles-us.credential>${test.rackspace-us.credential}</test.rackspace-cloudfiles-us.credential>
     <jclouds.osgi.export>org.jclouds.rackspace.cloudfiles.us*;version="${project.version}"</jclouds.osgi.export>
     <jclouds.osgi.import>
       org.jclouds.rest.internal;version="${jclouds.version}",
@@ -87,7 +88,7 @@
       <artifactId>rackspace-cloudfiles</artifactId>
       <version>${project.parent.version}</version>
     </dependency>
-    <dependency>    
+    <dependency>
       <groupId>org.apache.jclouds.api</groupId>
       <artifactId>openstack-keystone</artifactId>
       <version>${project.parent.version}</version>
