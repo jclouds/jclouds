@@ -23,6 +23,12 @@ import static org.testng.Assert.assertTrue;
 
 import java.util.Set;
 
+import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertNotNull;
+import static org.testng.Assert.assertTrue;
+
+import java.util.Set;
+
 import org.jclouds.openstack.neutron.v2.domain.ExternalGatewayInfo;
 import org.jclouds.openstack.neutron.v2.domain.Network;
 import org.jclouds.openstack.neutron.v2.domain.NetworkType;
@@ -44,7 +50,7 @@ public class RouterApiLiveTest extends BaseNeutronApiLiveTest {
 
    public void testCreateUpdateAndDeleteRouter() {
       for (String region : api.getConfiguredRegions()) {
-         RouterApi routerApi = api.getRouterExtensionApi(region).get();
+         RouterApi routerApi = api.getRouterApi(region).get();
          NetworkApi networkApi = api.getNetworkApi(region);
          SubnetApi subnetApi = api.getSubnetApi(region);
 
@@ -60,9 +66,9 @@ public class RouterApiLiveTest extends BaseNeutronApiLiveTest {
          assertNotNull(router);
 
          /* List and Get test */
-         Set<Router> routers = api.getRouterExtensionApi(region).get().list().concat().toSet();
+         Set<Router> routers = api.getRouterApi(region).get().list().concat().toSet();
          Router routerList = routers.iterator().next();
-         Router routerGet = api.getRouterExtensionApi(region).get().get(routerList.getId());
+         Router routerGet = api.getRouterApi(region).get().get(routerList.getId());
 
          assertNotNull(routerGet);
          assertEquals(routerGet, routerList);
@@ -91,7 +97,7 @@ public class RouterApiLiveTest extends BaseNeutronApiLiveTest {
 
    public void testCreateAndDeleteRouterInterfaceForSubnet() {
       for (String region : api.getConfiguredRegions()) {
-         RouterApi routerApi = api.getRouterExtensionApi(region).get();
+         RouterApi routerApi = api.getRouterApi(region).get();
          NetworkApi networkApi = api.getNetworkApi(region);
          SubnetApi subnetApi = api.getSubnetApi(region);
 
@@ -128,7 +134,7 @@ public class RouterApiLiveTest extends BaseNeutronApiLiveTest {
 
    public void testCreateAndDeleteRouterInterfaceForPort() {
       for (String region : api.getConfiguredRegions()) {
-         RouterApi routerApi = api.getRouterExtensionApi(region).get();
+         RouterApi routerApi = api.getRouterApi(region).get();
          NetworkApi networkApi = api.getNetworkApi(region);
          SubnetApi subnetApi = api.getSubnetApi(region);
          PortApi portApi = api.getPortApi(region);

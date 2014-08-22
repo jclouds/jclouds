@@ -24,13 +24,13 @@ import org.jclouds.openstack.v2_0.domain.PaginatedCollection;
 import com.google.common.collect.ImmutableSet;
 
 /**
- * A collection of Ports
+ * A collection of Floating IPs
  */
-public class Ports extends PaginatedCollection<Port> {
-   public static final Ports EMPTY = new Ports(ImmutableSet.<Port> of(), ImmutableSet.<Link> of());
+public class FloatingIPs extends PaginatedCollection<FloatingIP> {
+   public static final FloatingIPs EMPTY = new FloatingIPs(ImmutableSet.<FloatingIP> of(), ImmutableSet.<Link> of());
 
-   @ConstructorProperties({"ports", "ports_links"})
-   protected Ports(Iterable<Port> ports, Iterable<Link> portsLinks) {
-      super(ports, portsLinks);
+   @ConstructorProperties({"floatingips", "floatingips_links"})
+   protected FloatingIPs(Iterable<FloatingIP> floatingIPs, Iterable<Link> floatingIPsLinks) {
+      super(floatingIPs, floatingIPsLinks);
    }
 }

@@ -16,48 +16,47 @@
  */
 package org.jclouds.openstack.neutron.v2.functions;
 
-import static com.google.common.base.Preconditions.checkNotNull;
-
-import javax.inject.Inject;
-
+import com.google.common.base.Function;
+import com.google.common.base.Optional;
 import org.jclouds.collect.IterableWithMarker;
 import org.jclouds.collect.internal.Arg0ToPagedIterable;
 import org.jclouds.openstack.neutron.v2.NeutronApi;
-import org.jclouds.openstack.neutron.v2.domain.Router;
-import org.jclouds.openstack.neutron.v2.extensions.RouterApi;
+import org.jclouds.openstack.neutron.v2.domain.FloatingIP;
+import org.jclouds.openstack.neutron.v2.extensions.FloatingIPApi;
 import org.jclouds.openstack.v2_0.options.PaginationOptions;
 
-import com.google.common.base.Function;
-import com.google.common.base.Optional;
+import javax.inject.Inject;
+
+import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
- * Ensures Routers works as PagedIterable.
+ * Ensures Floating IPs works as PagedIterable.
  */
-public class RouterToPagedIterable extends Arg0ToPagedIterable.FromCaller<Router, RouterToPagedIterable> {
+public class FloatingIPsToPagedIterable extends Arg0ToPagedIterable.FromCaller<FloatingIP, FloatingIPsToPagedIterable> {
 
    private final NeutronApi api;
 
    @Inject
-   protected RouterToPagedIterable(NeutronApi api) {
+   protected FloatingIPsToPagedIterable(NeutronApi api) {
       this.api = checkNotNull(api, "api");
    }
 
    @Override
-   protected Function<Object, IterableWithMarker<Router>> markerToNextForArg0(Optional<Object> arg0) {
+   protected Function<Object, IterableWithMarker<FloatingIP>> markerToNextForArg0(Optional<Object> arg0) {
       String region = arg0.isPresent() ? arg0.get().toString() : null;
-      final RouterApi routerApi = api.getRouterApi(region).get();
-      return new Function<Object, IterableWithMarker<Router>>() {
+      final FloatingIPApi floatingIPApi = api.getFloatingIPApi(region).get();
+      return new Function<Object, IterableWithMarker<FloatingIP>>() {
 
          @SuppressWarnings("unchecked")
          @Override
-         public IterableWithMarker<Router> apply(Object input) {
+         public IterableWithMarker<FloatingIP> apply(Object input) {
             PaginationOptions paginationOptions = PaginationOptions.class.cast(input);
-            return IterableWithMarker.class.cast(routerApi.list(paginationOptions));
+            return IterableWithMarker.class.cast(floatingIPApi.list(paginationOptions));
          }
 
          @Override
          public String toString() {
-            return "listRouters()";
+            return "listfloatingIPs()";
          }
       };
    }

@@ -22,8 +22,10 @@ import java.util.Set;
 import javax.ws.rs.Path;
 
 import org.jclouds.Constants;
+
 import org.jclouds.location.Region;
 import org.jclouds.location.functions.RegionToEndpoint;
+import org.jclouds.openstack.neutron.v2.extensions.FloatingIPApi;
 import org.jclouds.openstack.neutron.v2.extensions.RouterApi;
 import org.jclouds.openstack.neutron.v2.extensions.SecurityGroupApi;
 import org.jclouds.openstack.neutron.v2.features.NetworkApi;
@@ -80,15 +82,17 @@ public interface NeutronApi extends Closeable {
     * to determine if it is present.
     */
    @Delegate
-   Optional<? extends RouterApi> getRouterApi(@EndpointParam(parser = RegionToEndpoint.class) String region);
+   Optional<RouterApi> getRouterApi(@EndpointParam(parser = RegionToEndpoint.class) String region);
 
    /**
-    * Provides access to Router features.
-    * @deprecated Please use {@link #getRouterApi(String)} as this method will be removed in jclouds 3.0.
+    * Provides access to Floating IP features.
+    *
+    * <h3>NOTE</h3>
+    * This API is an extension that may or may not be present in your OpenStack cloud. Use the Optional return type
+    * to determine if it is present.
     */
-   @Deprecated
    @Delegate
-   Optional<? extends RouterApi> getRouterExtensionApi(@EndpointParam(parser = RegionToEndpoint.class) String region);
+   Optional<FloatingIPApi> getFloatingIPApi(@EndpointParam(parser = RegionToEndpoint.class) String region);
 
    /**
     * Provides access to SecurityGroup features.

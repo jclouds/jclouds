@@ -16,19 +16,20 @@
  */
 package org.jclouds.openstack.neutron.v2.domain;
 
-import com.google.common.collect.ImmutableSet;
+import java.beans.ConstructorProperties;
+
 import org.jclouds.openstack.v2_0.domain.Link;
 import org.jclouds.openstack.v2_0.domain.PaginatedCollection;
 
-import java.beans.ConstructorProperties;
+import com.google.common.collect.ImmutableSet;
 
 /**
- * A collection of Networks
+ * A collection of Subnets
  */
 public class Subnets extends PaginatedCollection<Subnet> {
    public static final Subnets EMPTY = new Subnets(ImmutableSet.<Subnet> of(), ImmutableSet.<Link> of());
 
-   @ConstructorProperties({ "subnets", "subnets_links" })
+   @ConstructorProperties({"subnets", "subnets_links"})
    protected Subnets(Iterable<Subnet> subnets, Iterable<Link> subnetsLinks) {
       super(subnets, subnetsLinks);
    }

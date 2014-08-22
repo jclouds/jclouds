@@ -16,19 +16,20 @@
  */
 package org.jclouds.openstack.neutron.v2.domain;
 
-import com.google.common.collect.ImmutableSet;
+import java.beans.ConstructorProperties;
+
 import org.jclouds.openstack.v2_0.domain.Link;
 import org.jclouds.openstack.v2_0.domain.PaginatedCollection;
 
-import java.beans.ConstructorProperties;
+import com.google.common.collect.ImmutableSet;
 
 /**
- * A collection of Networks
+ * A collection of Routers
  */
 public class Routers extends PaginatedCollection<Router> {
    public static final Routers EMPTY = new Routers(ImmutableSet.<Router> of(), ImmutableSet.<Link> of());
 
-   @ConstructorProperties({ "routers", "routers_links" })
+   @ConstructorProperties({"routers", "routers_links"})
    protected Routers(Iterable<Router> routers, Iterable<Link> routersLinks) {
       super(routers, routersLinks);
    }

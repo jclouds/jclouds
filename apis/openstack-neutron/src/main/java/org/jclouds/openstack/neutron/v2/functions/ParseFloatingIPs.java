@@ -14,23 +14,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.jclouds.openstack.neutron.v2.domain;
+package org.jclouds.openstack.neutron.v2.functions;
 
-import java.beans.ConstructorProperties;
+import com.google.inject.TypeLiteral;
+import org.jclouds.http.functions.ParseJson;
+import org.jclouds.json.Json;
+import org.jclouds.openstack.neutron.v2.domain.FloatingIPs;
 
-import org.jclouds.openstack.v2_0.domain.Link;
-import org.jclouds.openstack.v2_0.domain.PaginatedCollection;
-
-import com.google.common.collect.ImmutableSet;
+import javax.inject.Inject;
+import javax.inject.Singleton;
 
 /**
- * A collection of Ports
+ * Used by jclouds to provide more specific collections and fallbacks.
  */
-public class Ports extends PaginatedCollection<Port> {
-   public static final Ports EMPTY = new Ports(ImmutableSet.<Port> of(), ImmutableSet.<Link> of());
+@Singleton
+public class ParseFloatingIPs extends ParseJson<FloatingIPs> {
 
-   @ConstructorProperties({"ports", "ports_links"})
-   protected Ports(Iterable<Port> ports, Iterable<Link> portsLinks) {
-      super(ports, portsLinks);
+   @Inject
+   public ParseFloatingIPs(Json json) {
+      super(json, TypeLiteral.get(FloatingIPs.class));
    }
 }

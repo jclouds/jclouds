@@ -16,11 +16,12 @@
  */
 package org.jclouds.openstack.neutron.v2.domain;
 
-import com.google.common.collect.ImmutableSet;
+import java.beans.ConstructorProperties;
+
 import org.jclouds.openstack.v2_0.domain.Link;
 import org.jclouds.openstack.v2_0.domain.PaginatedCollection;
 
-import java.beans.ConstructorProperties;
+import com.google.common.collect.ImmutableSet;
 
 /**
  * A collection of Networks
@@ -28,7 +29,7 @@ import java.beans.ConstructorProperties;
 public class Networks extends PaginatedCollection<Network> {
    public static final Networks EMPTY = new Networks(ImmutableSet.<Network> of(), ImmutableSet.<Link> of());
 
-   @ConstructorProperties({ "networks", "networks_links" })
+   @ConstructorProperties({"networks", "networks_links"})
    protected Networks(Iterable<Network> networks, Iterable<Link> networksLinks) {
       super(networks, networksLinks);
    }
