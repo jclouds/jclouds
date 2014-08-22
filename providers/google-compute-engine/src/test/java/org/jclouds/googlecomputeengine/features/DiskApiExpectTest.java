@@ -30,6 +30,7 @@ import org.jclouds.googlecomputeengine.parse.ParseDiskTest;
 import org.jclouds.googlecomputeengine.parse.ParseOperationTest;
 import org.jclouds.http.HttpRequest;
 import org.jclouds.http.HttpResponse;
+import org.jclouds.rest.ResourceNotFoundException;
 import org.testng.annotations.Test;
 
 @Test(groups = "unit")
@@ -132,6 +133,7 @@ public class DiskApiExpectTest extends BaseGoogleComputeEngineApiExpectTest {
       assertEquals(api.createSnapshotInZone("us-central1-a", "testimage1", "test-snap"), new ParseOperationTest().expected());
    }
 
+   @Test(expectedExceptions = ResourceNotFoundException.class)
    public void testCreateSnapshotResponseIs4xx() {
       HttpRequest createSnapshotRequest = HttpRequest
               .builder()
@@ -149,7 +151,7 @@ public class DiskApiExpectTest extends BaseGoogleComputeEngineApiExpectTest {
               TOKEN_RESPONSE, createSnapshotRequest,
               createSnapshotResponse).getDiskApiForProject("myproject");
 
-      assertNull(api.createSnapshotInZone("us-central1-a", "testimage1", "test-snap"));
+      api.createSnapshotInZone("us-central1-a", "testimage1", "test-snap");
    }
 
    public void testDeleteDiskResponseIs2xx() {

@@ -23,6 +23,7 @@ import static org.testng.Assert.assertTrue;
 import java.net.URI;
 import java.util.List;
 import java.util.Properties;
+import java.util.Set;
 
 import org.jclouds.collect.PagedIterable;
 import org.jclouds.googlecomputeengine.GoogleComputeEngineApi;
@@ -41,6 +42,7 @@ import org.testng.annotations.Test;
 
 import com.google.common.base.Predicate;
 import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 import com.google.inject.Module;
@@ -55,6 +57,7 @@ public class InstanceApiLiveTest extends BaseGoogleComputeEngineApiLiveTest {
    private static final String IPV4_RANGE = "10.0.0.0/8";
    private static final String METADATA_ITEM_KEY = "instanceLiveTestTestProp";
    private static final String METADATA_ITEM_VALUE = "instanceLiveTestTestValue";
+   private static final Set<String> TAGS = ImmutableSet.of("instanceLiveTestTag1", "instanceLiveTestTag2");
    private static final String ATTACH_DISK_NAME = "instance-api-live-test-attach-disk";
    private static final String ATTACH_DISK_DEVICE_NAME = "attach-disk-1";
 
@@ -144,7 +147,19 @@ public class InstanceApiLiveTest extends BaseGoogleComputeEngineApiLiveTest {
       assertEquals(modifiedInstance.getMetadata().getItems().get(METADATA_ITEM_KEY),
               METADATA_ITEM_VALUE);
       assertNotNull(modifiedInstance.getMetadata().getFingerprint());
+   }
 
+   @Test(groups = "live", dependsOnMethods = "testListInstance")
+   public void testSetTagsForInstance() {
+      Instance originalInstance = api().getInZone(DEFAULT_ZONE_NAME, INSTANCE_NAME);
+      assertZoneOperationDoneSucessfully(api().setTagsInZone(DEFAULT_ZONE_NAME, INSTANCE_NAME, TAGS,
+              originalInstance.getMetadata().getFingerprint()),
+              TIME_WAIT);
+
+      Instance modifiedInstance = api().getInZone(DEFAULT_ZONE_NAME, INSTANCE_NAME);
+
+      assertTrue(modifiedInstance.getTags().getItems().containsAll(TAGS));
+      assertNotNull(modifiedInstance.getTags().getFingerprint());
    }
 
    @Test(groups = "live", dependsOnMethods = "testSetMetadataForInstance")

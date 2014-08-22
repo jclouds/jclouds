@@ -41,9 +41,11 @@ import org.jclouds.googlecomputeengine.parse.ParseInstanceTest;
 import org.jclouds.googlecomputeengine.parse.ParseOperationTest;
 import org.jclouds.http.HttpRequest;
 import org.jclouds.http.HttpResponse;
+import org.jclouds.rest.ResourceNotFoundException;
 import org.testng.annotations.Test;
 
 import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.ImmutableSet;
 
 @Test(groups = "unit")
 public class InstanceApiExpectTest extends BaseGoogleComputeEngineApiExpectTest {
@@ -263,6 +265,7 @@ public class InstanceApiExpectTest extends BaseGoogleComputeEngineApiExpectTest 
               new ParseOperationTest().expected());
    }
 
+   @Test(expectedExceptions = ResourceNotFoundException.class)
    public void testSetInstanceMetadataResponseIs4xx() {
       HttpRequest setMetadata = HttpRequest
               .builder()
@@ -279,7 +282,48 @@ public class InstanceApiExpectTest extends BaseGoogleComputeEngineApiExpectTest 
       InstanceApi api = requestsSendResponses(requestForScopes(COMPUTE_SCOPE),
               TOKEN_RESPONSE, setMetadata, setMetadataResponse).getInstanceApiForProject("myproject");
 
-      assertNull(api.setMetadataInZone("us-central1-a", "test-1", ImmutableMap.of("foo", "bar"), "efgh"));
+      api.setMetadataInZone("us-central1-a", "test-1", ImmutableMap.of("foo", "bar"), "efgh");
+   }
+
+   public void testSetInstanceTagsResponseIs2xx() {
+      HttpRequest setTags = HttpRequest
+              .builder()
+              .method("POST")
+              .endpoint("https://www.googleapis" +
+                      ".com/compute/v1/projects/myproject/zones/us-central1-a/instances/test-1/setTags")
+              .addHeader("Accept", "application/json")
+              .addHeader("Authorization", "Bearer " + TOKEN)
+              .payload(payloadFromResourceWithContentType("/instance_set_tags.json", MediaType.APPLICATION_JSON))
+              .build();
+
+      HttpResponse setTagsResponse = HttpResponse.builder().statusCode(200)
+              .payload(payloadFromResource("/zone_operation.json")).build();
+
+      InstanceApi api = requestsSendResponses(requestForScopes(COMPUTE_SCOPE),
+              TOKEN_RESPONSE, setTags, setTagsResponse).getInstanceApiForProject("myproject");
+
+      assertEquals(api.setTagsInZone("us-central1-a", "test-1", ImmutableSet.of("foo", "bar"), "efgh"),
+              new ParseOperationTest().expected());
+   }
+
+   @Test(expectedExceptions = ResourceNotFoundException.class)
+   public void testSetInstanceTagsResponseIs4xx() {
+      HttpRequest setTags = HttpRequest
+              .builder()
+              .method("POST")
+              .endpoint("https://www.googleapis" +
+                      ".com/compute/v1/projects/myproject/zones/us-central1-a/instances/test-1/setTags")
+              .addHeader("Accept", "application/json")
+              .addHeader("Authorization", "Bearer " + TOKEN)
+              .payload(payloadFromResourceWithContentType("/instance_set_tags.json", MediaType.APPLICATION_JSON))
+              .build();
+
+      HttpResponse setTagsResponse = HttpResponse.builder().statusCode(404).build();
+
+      InstanceApi api = requestsSendResponses(requestForScopes(COMPUTE_SCOPE),
+              TOKEN_RESPONSE, setTags, setTagsResponse).getInstanceApiForProject("myproject");
+
+      api.setTagsInZone("us-central1-a", "test-1", ImmutableSet.of("foo", "bar"), "efgh");
    }
 
    public void testResetInstanceResponseIs2xx() {
@@ -301,6 +345,7 @@ public class InstanceApiExpectTest extends BaseGoogleComputeEngineApiExpectTest 
               new ParseOperationTest().expected());
    }
 
+   @Test(expectedExceptions = ResourceNotFoundException.class)
    public void testResetInstanceResponseIs4xx() {
       HttpRequest reset = HttpRequest
               .builder()
@@ -315,7 +360,7 @@ public class InstanceApiExpectTest extends BaseGoogleComputeEngineApiExpectTest 
       InstanceApi api = requestsSendResponses(requestForScopes(COMPUTE_SCOPE),
               TOKEN_RESPONSE, reset, resetResponse).getInstanceApiForProject("myproject");
 
-      assertNull(api.resetInZone("us-central1-a", "test-1"));
+      api.resetInZone("us-central1-a", "test-1");
    }
 
    public void testAttachDiskResponseIs2xx() {
@@ -343,6 +388,7 @@ public class InstanceApiExpectTest extends BaseGoogleComputeEngineApiExpectTest 
               new ParseOperationTest().expected());
    }
 
+   @Test(expectedExceptions = ResourceNotFoundException.class)
    public void testAttachDiskResponseIs4xx() {
       HttpRequest attach = HttpRequest
               .builder()
@@ -359,11 +405,11 @@ public class InstanceApiExpectTest extends BaseGoogleComputeEngineApiExpectTest 
       InstanceApi api = requestsSendResponses(requestForScopes(COMPUTE_SCOPE),
               TOKEN_RESPONSE, attach, attachResponse).getInstanceApiForProject("myproject");
 
-      assertNull(api.attachDiskInZone("us-central1-a", "test-1",
+      api.attachDiskInZone("us-central1-a", "test-1",
               new AttachDiskOptions()
                       .mode(DiskMode.READ_ONLY)
                       .source(URI.create("https://www.googleapis.com/compute/v1/projects/myproject/zones/us-central1-a/disks/testimage1"))
-                      .type(DiskType.PERSISTENT)));
+                      .type(DiskType.PERSISTENT));
 
    }
 
@@ -388,6 +434,7 @@ public class InstanceApiExpectTest extends BaseGoogleComputeEngineApiExpectTest 
               new ParseOperationTest().expected());
    }
 
+   @Test(expectedExceptions = ResourceNotFoundException.class)
    public void testDetachDiskResponseIs4xx() {
       HttpRequest detach = HttpRequest
               .builder()
@@ -404,7 +451,7 @@ public class InstanceApiExpectTest extends BaseGoogleComputeEngineApiExpectTest 
       InstanceApi api = requestsSendResponses(requestForScopes(COMPUTE_SCOPE),
               TOKEN_RESPONSE, detach, detachResponse).getInstanceApiForProject("myproject");
 
-      assertNull(api.detachDiskInZone("us-central1-a", "test-1", "test-disk-1"));
+      api.detachDiskInZone("us-central1-a", "test-1", "test-disk-1");
    }
 
 }

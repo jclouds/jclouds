@@ -235,7 +235,7 @@ public interface DiskApi {
     *
     * @param zone the zone the disk is in.
     * @param diskName the name of the disk.
-    * @param snapshotName the name for the snapshot to be craeted.
+    * @param snapshotName the name for the snapshot to be created.
     *
     * @return an Operation resource. To check on the status of an operation, poll the Operations resource returned to
     *         you, and look for the status field.
@@ -245,9 +245,7 @@ public interface DiskApi {
    @Consumes(MediaType.APPLICATION_JSON)
    @Path("/zones/{zone}/disks/{disk}/createSnapshot")
    @OAuthScopes(COMPUTE_SCOPE)
-   @Fallback(NullOnNotFoundOr404.class)
    @MapBinder(BindToJsonPayload.class)
-   @Nullable
    Operation createSnapshotInZone(@PathParam("zone") String zone,
                                   @PathParam("disk") String diskName,
                                   @PayloadParam("name") String snapshotName);

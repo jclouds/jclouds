@@ -264,15 +264,13 @@ public interface InstanceApi {
     * @param zone         the zone the instance is in
     * @param instanceName the instance name
     * @return an Operation resource. To check on the status of an operation, poll the Operations resource returned to
-    *         you, and look for the status field.  If the instance did not exist the result is null.
+    *         you, and look for the status field.
     */
    @Named("Instances:reset")
    @POST
    @Consumes(MediaType.APPLICATION_JSON)
    @Path("/zones/{zone}/instances/{instance}/reset")
    @OAuthScopes(COMPUTE_SCOPE)
-   @Fallback(NullOnNotFoundOr404.class)
-   @Nullable
    Operation resetInZone(@PathParam("zone") String zone,
                          @PathParam("instance") String instanceName);
 
@@ -292,8 +290,6 @@ public interface InstanceApi {
    @Produces(MediaType.APPLICATION_JSON)
    @Path("/zones/{zone}/instances/{instance}/attachDisk")
    @OAuthScopes(COMPUTE_SCOPE)
-   @Fallback(NullOnNotFoundOr404.class)
-   @Nullable
    Operation attachDiskInZone(@PathParam("zone") String zone,
                               @PathParam("instance") String instanceName,
                               @BinderParam(BindToJsonPayload.class) AttachDiskOptions attachDiskOptions);
@@ -313,8 +309,6 @@ public interface InstanceApi {
    @Consumes(MediaType.APPLICATION_JSON)
    @Path("/zones/{zone}/instances/{instance}/detachDisk")
    @OAuthScopes(COMPUTE_SCOPE)
-   @Fallback(NullOnNotFoundOr404.class)
-   @Nullable
    Operation detachDiskInZone(@PathParam("zone") String zone,
                               @PathParam("instance") String instanceName,
                               @QueryParam("deviceName") String deviceName);
@@ -345,9 +339,7 @@ public interface InstanceApi {
    @OAuthScopes(COMPUTE_SCOPE)
    @Consumes(MediaType.APPLICATION_JSON)
    @Produces(MediaType.APPLICATION_JSON)
-   @Fallback(NullOnNotFoundOr404.class)
    @MapBinder(MetadataBinder.class)
-   @Nullable
    Operation setMetadataInZone(@PathParam("zone") String zone,
                                @PathParam("instance") String instanceName,
                                @PayloadParam("items") Map<String, String> metadata,
@@ -369,9 +361,7 @@ public interface InstanceApi {
    @OAuthScopes(COMPUTE_SCOPE)
    @Consumes(MediaType.APPLICATION_JSON)
    @Produces(MediaType.APPLICATION_JSON)
-   @Fallback(NullOnNotFoundOr404.class)
    @MapBinder(BindToJsonPayload.class)
-   @Nullable
    Operation setTagsInZone(@PathParam("zone") String zone,
                            @PathParam("instance") String instanceName,
                            @PayloadParam("items") Set<String> items,
