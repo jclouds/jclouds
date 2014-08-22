@@ -57,7 +57,7 @@ import java.util.List;
  *      "http://docs.openstack.org/api/openstack-network/2.0/content/Ports.html">api doc</a>
  */
 @Beta
-@Path("/v2.0/ports")
+@Path("/ports")
 @RequestFilters(AuthenticateRequest.class)
 @Consumes(MediaType.APPLICATION_JSON)
 public interface PortApi {

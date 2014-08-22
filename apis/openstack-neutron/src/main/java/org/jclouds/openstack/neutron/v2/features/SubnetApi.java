@@ -53,7 +53,7 @@ import java.util.List;
  * @see <a href=
  *      "http://docs.openstack.org/api/openstack-network/2.0/content/Subnets.html">api doc</a>
  */
-@Path("/v2.0/subnets")
+@Path("/subnets")
 @RequestFilters(AuthenticateRequest.class)
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)

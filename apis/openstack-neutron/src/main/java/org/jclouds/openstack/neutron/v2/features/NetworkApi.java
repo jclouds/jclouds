@@ -58,7 +58,7 @@ import javax.ws.rs.core.MediaType;
  *      "http://docs.openstack.org/api/openstack-network/2.0/content/Networks.html">api doc</a>
  */
 @Beta
-@Path("/v2.0/networks")
+@Path("/networks")
 @RequestFilters(AuthenticateRequest.class)
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)

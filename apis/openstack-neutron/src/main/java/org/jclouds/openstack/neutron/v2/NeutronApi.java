@@ -19,6 +19,9 @@ package org.jclouds.openstack.neutron.v2;
 import java.io.Closeable;
 import java.util.Set;
 
+import javax.ws.rs.Path;
+
+import org.jclouds.Constants;
 import org.jclouds.location.Region;
 import org.jclouds.location.functions.RegionToEndpoint;
 import org.jclouds.openstack.neutron.v2.extensions.RouterApi;
@@ -35,6 +38,7 @@ import com.google.inject.Provides;
 /**
  * Provides access to the OpenStack Networking (Neutron) v2 API.
  */
+@Path("{" + Constants.PROPERTY_API_VERSION + "}")
 public interface NeutronApi extends Closeable {
    /**
     * @return the Region codes configured

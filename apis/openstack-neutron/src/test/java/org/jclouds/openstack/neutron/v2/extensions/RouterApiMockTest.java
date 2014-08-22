@@ -14,25 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.jclouds.openstack.neutron.v2.features;
-
-import com.squareup.okhttp.mockwebserver.MockResponse;
-import com.squareup.okhttp.mockwebserver.MockWebServer;
-import org.jclouds.openstack.neutron.v2.NeutronApi;
-import org.jclouds.openstack.neutron.v2.domain.ExternalGatewayInfo;
-import org.jclouds.openstack.neutron.v2.domain.NetworkStatus;
-import org.jclouds.openstack.neutron.v2.domain.Router;
-import org.jclouds.openstack.neutron.v2.domain.RouterInterface;
-import org.jclouds.openstack.neutron.v2.domain.Routers;
-import org.jclouds.openstack.neutron.v2.extensions.RouterApi;
-import org.jclouds.openstack.neutron.v2.internal.BaseNeutronApiMockTest;
-import org.jclouds.openstack.v2_0.options.PaginationOptions;
-import org.jclouds.rest.ResourceNotFoundException;
-import org.testng.annotations.Test;
-
-import java.io.IOException;
-import java.net.URISyntaxException;
-import java.util.List;
+package org.jclouds.openstack.neutron.v2.extensions;
 
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertFalse;
@@ -40,6 +22,24 @@ import static org.testng.Assert.assertNotNull;
 import static org.testng.Assert.assertNull;
 import static org.testng.Assert.assertTrue;
 import static org.testng.Assert.fail;
+
+import java.io.IOException;
+import java.net.URISyntaxException;
+import java.util.List;
+
+import org.jclouds.openstack.neutron.v2.NeutronApi;
+import org.jclouds.openstack.neutron.v2.domain.ExternalGatewayInfo;
+import org.jclouds.openstack.neutron.v2.domain.NetworkStatus;
+import org.jclouds.openstack.neutron.v2.domain.Router;
+import org.jclouds.openstack.neutron.v2.domain.RouterInterface;
+import org.jclouds.openstack.neutron.v2.domain.Routers;
+import org.jclouds.openstack.neutron.v2.internal.BaseNeutronApiMockTest;
+import org.jclouds.openstack.v2_0.options.PaginationOptions;
+import org.jclouds.rest.ResourceNotFoundException;
+import org.testng.annotations.Test;
+
+import com.squareup.okhttp.mockwebserver.MockResponse;
+import com.squareup.okhttp.mockwebserver.MockWebServer;
 
 /**
  * Tests NetworkApi Guice wiring and parsing

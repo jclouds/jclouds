@@ -16,13 +16,13 @@
  */
 package org.jclouds.openstack.neutron.v2.internal;
 
-import org.jclouds.openstack.keystone.v2_0.config.CredentialTypes;
-import org.jclouds.openstack.neutron.v2.NeutronApi;
-import org.jclouds.openstack.v2_0.internal.BaseOpenStackMockTest;
+import static org.jclouds.openstack.keystone.v2_0.config.KeystoneProperties.CREDENTIAL_TYPE;
 
 import java.util.Properties;
 
-import static org.jclouds.openstack.keystone.v2_0.config.KeystoneProperties.CREDENTIAL_TYPE;
+import org.jclouds.openstack.keystone.v2_0.config.CredentialTypes;
+import org.jclouds.openstack.neutron.v2.NeutronApi;
+import org.jclouds.openstack.v2_0.internal.BaseOpenStackMockTest;
 
 /**
  * Base class for writing Neutron Mock tests

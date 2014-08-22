@@ -70,7 +70,7 @@ public class NeutronApiMetadata extends BaseHttpApiMetadata<NeutronApi> {
             .credentialName("${password}")
             .endpointName("Neutron base url ending in /v2.0/")
             .documentation(URI.create("http://docs.openstack.org/api/openstack-network/2.0/content/"))
-            .version("2.0")
+            .version("v2.0")
             .defaultEndpoint("http://localhost:5000/v2.0/")
             .defaultProperties(NeutronApiMetadata.defaultProperties())
             .defaultModules(ImmutableSet.<Class<? extends Module>>builder()
