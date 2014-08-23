@@ -133,7 +133,7 @@ public class BaseOpenStackMockTest<A extends Closeable> {
 
    /**
     * Get a string from a resource
-    * 
+    *
     * @param resourceName
     *           The name of the resource.
     * @return The content of the resource
@@ -157,14 +157,23 @@ public class BaseOpenStackMockTest<A extends Closeable> {
          Throwables.propagate(e);
       }
    }
-   
+
    /**
-    * Ensures server received authentication request.
+    * Ensures server received an extensions request. Most OpenStack APIs that expose an {@link ExtensionApi}
+    * should use this method.
     */
    public void assertExtensions(MockWebServer server) {
+      assertExtensions(server, "");
+   }
+
+   /**
+    * Ensures server received a <i>versioned</i> extensions request. This is necessary for testing APIs whose version
+    * is not included in the Endpoint's {@link Endpoint#getPublicURL() publicURL}.
+    */
+   public void assertExtensions(MockWebServer server, String path) {
       assertTrue(server.getRequestCount() >= 1);
       try {
-         assertEquals(server.takeRequest().getRequestLine(), "GET /extensions HTTP/1.1");
+         assertEquals(server.takeRequest().getRequestLine(), "GET " + path + "/extensions HTTP/1.1");
       } catch (InterruptedException e) {
          Throwables.propagate(e);
       }
@@ -172,7 +181,7 @@ public class BaseOpenStackMockTest<A extends Closeable> {
 
    /**
     * Ensures the request has a json header.
-    * 
+    *
     * @param request
     * @see RecordedRequest
     */
@@ -182,7 +191,7 @@ public class BaseOpenStackMockTest<A extends Closeable> {
 
    /**
     * Ensures the request has a json header for the proper REST methods.
-    * 
+    *
     * @param request
     * @param method
     *           The request method (such as GET).
@@ -198,7 +207,7 @@ public class BaseOpenStackMockTest<A extends Closeable> {
    /**
     * Ensures the request is json and has the same contents as the resource
     * file provided.
-    * 
+    *
     * @param request
     * @param method
     *           The request method (such as GET).
