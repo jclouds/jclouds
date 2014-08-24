@@ -25,9 +25,9 @@ import static org.testng.AssertJUnit.assertNull;
 import javax.ws.rs.core.MediaType;
 
 import org.jclouds.googlecloudstorage.domain.BucketAccessControls;
-import org.jclouds.googlecloudstorage.domain.BucketTemplate;
 import org.jclouds.googlecloudstorage.domain.DomainResourceRefferences.Projection;
 import org.jclouds.googlecloudstorage.domain.DomainResourceRefferences.Role;
+import org.jclouds.googlecloudstorage.domain.templates.BucketTemplate;
 import org.jclouds.googlecloudstorage.internal.BaseGoogleCloudStorageApiExpectTest;
 import org.jclouds.googlecloudstorage.options.GetBucketOptions;
 import org.jclouds.googlecloudstorage.options.ListOptions;

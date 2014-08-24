@@ -18,9 +18,10 @@ package org.jclouds.googlecloudstorage.config;
 
 import java.lang.reflect.Type;
 import java.util.Map;
+
 import javax.inject.Singleton;
 
-import org.jclouds.googlecloudstorage.domain.BucketTemplate;
+import org.jclouds.googlecloudstorage.domain.templates.BucketTemplate;
 import org.jclouds.json.config.GsonModule.DateAdapter;
 import org.jclouds.json.config.GsonModule.Iso8601DateAdapter;
 import org.jclouds.oauth.v2.domain.ClaimSet;

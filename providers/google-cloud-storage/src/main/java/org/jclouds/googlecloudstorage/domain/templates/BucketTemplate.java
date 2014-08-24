@@ -15,10 +15,12 @@
  * limitations under the License.
  */
 
-package org.jclouds.googlecloudstorage.domain;
+package org.jclouds.googlecloudstorage.domain.templates;
 
 import java.util.Set;
 
+import org.jclouds.googlecloudstorage.domain.BucketAccessControls;
+import org.jclouds.googlecloudstorage.domain.DefaultObjectAccessControls;
 import org.jclouds.googlecloudstorage.domain.DomainResourceRefferences.Location;
 import org.jclouds.googlecloudstorage.domain.DomainResourceRefferences.StorageClass;
 import org.jclouds.googlecloudstorage.domain.internal.BucketCors;

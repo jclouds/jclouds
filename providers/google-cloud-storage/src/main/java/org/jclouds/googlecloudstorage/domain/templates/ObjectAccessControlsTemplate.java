@@ -14,26 +14,26 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.jclouds.googlecloudstorage.domain;
+package org.jclouds.googlecloudstorage.domain.templates;
 
 import org.jclouds.googlecloudstorage.domain.DomainResourceRefferences.ObjectRole;
 
 /**
- * Represents a Object Access Control Resource
+ * Represents a Object Access Control Resource.
  *
  * @see <a href= "https://developers.google.com/storage/docs/json_api/v1/objectAccessControls"/>
  */
-public class DefaultObjectAccessControlsTemplate {
+public class ObjectAccessControlsTemplate {
 
-   private String entity;
-   private ObjectRole role;
+   protected String entity;
+   protected ObjectRole role;
 
-   public DefaultObjectAccessControlsTemplate role(ObjectRole role) {
+   public ObjectAccessControlsTemplate role(ObjectRole role) {
       this.role = role;
       return this;
    }
 
-   public DefaultObjectAccessControlsTemplate entity(String entity) {
+   public ObjectAccessControlsTemplate entity(String entity) {
       this.entity = entity;
       return this;
    }
@@ -50,16 +50,16 @@ public class DefaultObjectAccessControlsTemplate {
       return new Builder();
    }
 
-   public static DefaultObjectAccessControlsTemplate fromObjectAccessControlsTemplate(
-            DefaultObjectAccessControlsTemplate objectAccessControlsTemplate) {
+   public static ObjectAccessControlsTemplate fromObjectAccessControlsTemplate(
+            ObjectAccessControlsTemplate objectAccessControlsTemplate) {
       return Builder.fromObjectAccessControlsTemplate(objectAccessControlsTemplate);
    }
 
    public static class Builder {
 
-      public static DefaultObjectAccessControlsTemplate fromObjectAccessControlsTemplate(
-               DefaultObjectAccessControlsTemplate in) {
-         return new DefaultObjectAccessControlsTemplate().role(in.getRole()).entity(in.getEntity());
+      public static ObjectAccessControlsTemplate fromObjectAccessControlsTemplate(ObjectAccessControlsTemplate in) {
+         return new ObjectAccessControlsTemplate().role(in.getRole()).entity(in.getEntity());
       }
+
    }
 }

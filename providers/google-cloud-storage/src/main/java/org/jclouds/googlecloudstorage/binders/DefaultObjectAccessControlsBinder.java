@@ -14,13 +14,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.jclouds.googlecloudstorage.handlers;
+package org.jclouds.googlecloudstorage.binders;
 
 import java.util.Map;
 
 import javax.inject.Inject;
 
-import org.jclouds.googlecloudstorage.domain.DefaultObjectAccessControlsTemplate;
+import org.jclouds.googlecloudstorage.domain.templates.DefaultObjectAccessControlsTemplate;
 import org.jclouds.http.HttpRequest;
 import org.jclouds.rest.MapBinder;
 import org.jclouds.rest.binders.BindToJsonPayload;

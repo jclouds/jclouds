@@ -22,12 +22,12 @@ import static org.testng.Assert.assertNotNull;
 import java.util.UUID;
 
 import org.jclouds.googlecloudstorage.domain.Bucket;
-import org.jclouds.googlecloudstorage.domain.BucketTemplate;
 import org.jclouds.googlecloudstorage.domain.DefaultObjectAccessControls;
-import org.jclouds.googlecloudstorage.domain.DefaultObjectAccessControlsTemplate;
 import org.jclouds.googlecloudstorage.domain.DomainResourceRefferences.ObjectRole;
 import org.jclouds.googlecloudstorage.domain.ListDefaultObjectAccessControls;
 import org.jclouds.googlecloudstorage.domain.Resource.Kind;
+import org.jclouds.googlecloudstorage.domain.templates.BucketTemplate;
+import org.jclouds.googlecloudstorage.domain.templates.DefaultObjectAccessControlsTemplate;
 import org.jclouds.googlecloudstorage.internal.BaseGoogleCloudStorageApiLiveTest;
 import org.testng.annotations.Test;
 
