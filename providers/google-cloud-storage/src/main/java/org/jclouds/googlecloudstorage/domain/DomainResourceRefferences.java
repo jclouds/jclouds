@@ -85,4 +85,21 @@ public final class DomainResourceRefferences {
          return valueOf(CaseFormat.LOWER_CAMEL.to(CaseFormat.UPPER_UNDERSCORE, predefinedAcl));
       }
    }
+
+   public enum DestinationPredefinedAcl {
+      AUTHENTICATED_READ, BUCKET_OWNER_FULLCONTROL, BUCKET_OWNER_READ, PRIVATE, PROJECT_PRIVATE, PUBLIC_READ;
+
+      public String value() {
+         return CaseFormat.UPPER_UNDERSCORE.to(CaseFormat.LOWER_CAMEL, name());
+      }
+
+      @Override
+      public String toString() {
+         return value();
+      }
+
+      public static DestinationPredefinedAcl fromValue(String destinationPredefinedAcl) {
+         return valueOf(CaseFormat.LOWER_CAMEL.to(CaseFormat.UPPER_UNDERSCORE, destinationPredefinedAcl));
+      }
+   }
 }

@@ -24,6 +24,7 @@ import org.jclouds.googlecloudstorage.features.BucketAccessControlsApi;
 import org.jclouds.googlecloudstorage.features.BucketApi;
 import org.jclouds.googlecloudstorage.features.DefaultObjectAccessControlsApi;
 import org.jclouds.googlecloudstorage.features.ObjectAccessControlsApi;
+import org.jclouds.googlecloudstorage.features.ObjectApi;
 import org.jclouds.rest.annotations.Delegate;
 
 /**
@@ -37,27 +38,34 @@ public interface GoogleCloudStorageApi extends Closeable {
     * Provides access to Default Object Access Control features on bucket
     */
    @Delegate
-   @Path("")
+   @Path("/storage/v1")
    DefaultObjectAccessControlsApi getDefaultObjectAccessControlsApi();
 
    /**
     * Provides access to Bucket Access Control features
     */
    @Delegate
-   @Path("")
+   @Path("/storage/v1")
    BucketAccessControlsApi getBucketAccessControlsApi();
 
    /**
     * Provides access to Bucket features
     */
    @Delegate
-   @Path("")
+   @Path("/storage/v1")
    BucketApi getBucketApi();
 
    /**
     * Provides access to Object Access Control features
     */
    @Delegate
-   @Path("")
+   @Path("/storage/v1")
    ObjectAccessControlsApi getObjectAccessControlsApi();
+
+   /**
+    * Provides access to Google Cloud Storage Object features
+    */
+   @Delegate
+   @Path("")
+   ObjectApi getObjectApi();
 }

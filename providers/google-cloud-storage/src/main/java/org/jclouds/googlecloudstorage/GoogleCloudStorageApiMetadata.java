@@ -70,7 +70,7 @@ public class GoogleCloudStorageApiMetadata extends BaseHttpApiMetadata<GoogleClo
                .credentialName("Private key literal associated with the Google API client_id")
                .documentation(URI.create("https://developers.google.com/storage/docs/json_api"))
                .version("v1")
-               .defaultEndpoint("https://www.googleapis.com/storage/v1")
+               .defaultEndpoint("https://www.googleapis.com")
                .defaultProperties(GoogleCloudStorageApiMetadata.defaultProperties())
                .view(typeToken(BlobStoreContext.class))
                .defaultModules(
