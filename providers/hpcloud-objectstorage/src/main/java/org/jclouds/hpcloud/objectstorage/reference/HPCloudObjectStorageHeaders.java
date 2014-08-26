@@ -24,7 +24,7 @@ import org.jclouds.openstack.swift.reference.SwiftHeaders;
  * 
  * @see <a href="https://manage.hpcloud.com/pages/build/docs/objectstorage-lvs/api" />
  */
-public interface HPCloudObjectStorageHeaders extends SwiftHeaders {
+public final class HPCloudObjectStorageHeaders extends SwiftHeaders {
 
    public static final String CDN_ENABLED = "X-Cdn-Enabled";
    public static final String CDN_LOG_RETENTION = "X-Log-Retention";
@@ -33,4 +33,7 @@ public interface HPCloudObjectStorageHeaders extends SwiftHeaders {
    public static final String CDN_URI = "X-Cdn-Uri";
    public static final String CDN_USER_AGENT_ACL = "X-User-Agent-ACL";
 
+   private HPCloudObjectStorageHeaders() {
+      throw new AssertionError("intentionally unimplemented");
+   }
 }

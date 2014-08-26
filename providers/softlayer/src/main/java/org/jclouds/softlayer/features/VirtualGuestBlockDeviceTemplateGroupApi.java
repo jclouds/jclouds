@@ -42,7 +42,7 @@ import org.jclouds.softlayer.domain.VirtualGuestBlockDeviceTemplateGroup;
 @Consumes(MediaType.APPLICATION_JSON)
 public interface VirtualGuestBlockDeviceTemplateGroupApi {
 
-   public static String LIST_PUBLIC_IMAGES_MASK = "children.blockDevices.diskImage.softwareReferences.softwareDescription";
+   String LIST_PUBLIC_IMAGES_MASK = "children.blockDevices.diskImage.softwareReferences.softwareDescription";
 
    /**
     * @return public images

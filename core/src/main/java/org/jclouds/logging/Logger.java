@@ -38,12 +38,12 @@ public interface Logger {
    /**
     * Assign to member to avoid NPE when no logging module is configured.
     */
-   public static final Logger NULL = new NullLogger();
+   Logger NULL = new NullLogger();
 
    /**
     * Assign to member to avoid NPE when no logging module is configured.
     */
-   public static final Logger CONSOLE = new ConsoleLogger();
+   Logger CONSOLE = new ConsoleLogger();
 
    String getCategory();
 

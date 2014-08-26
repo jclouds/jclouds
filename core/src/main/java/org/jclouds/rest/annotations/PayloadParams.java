@@ -34,7 +34,7 @@ import java.lang.annotation.Target;
 @Retention(RUNTIME)
 public @interface PayloadParams {
 
-   public static final String NULL = "MAP_PAYLOAD_NULL";
+   String NULL = "MAP_PAYLOAD_NULL";
 
    String[] keys();
 

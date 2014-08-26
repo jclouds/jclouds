@@ -32,12 +32,12 @@ import com.google.common.hash.HashCode;
 import com.google.common.collect.ImmutableSet;
 
 public interface ContentMetadata {
-   public static final Set<String> HTTP_HEADERS = ImmutableSet.of(CONTENT_LENGTH, CONTENT_MD5, CONTENT_TYPE,
+   Set<String> HTTP_HEADERS = ImmutableSet.of(CONTENT_LENGTH, CONTENT_MD5, CONTENT_TYPE,
             CONTENT_DISPOSITION, CONTENT_ENCODING, CONTENT_LANGUAGE, EXPIRES);
 
    // See http://stackoverflow.com/questions/10584647/simpledateformat-parse-is-one-hour-out-using-rfc-1123-gmt-in-summer
    // for why not using "zzz"
-   public static final String RFC1123_DATE_PATTERN = "EEE, dd MMM yyyyy HH:mm:ss Z";
+   String RFC1123_DATE_PATTERN = "EEE, dd MMM yyyyy HH:mm:ss Z";
    
    /**
     * Returns the total size of the payload, or the chunk that's available.

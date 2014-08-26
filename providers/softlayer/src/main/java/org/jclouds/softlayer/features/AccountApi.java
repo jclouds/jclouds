@@ -43,8 +43,8 @@ import org.jclouds.softlayer.domain.VirtualGuestBlockDeviceTemplateGroup;
 @Consumes(MediaType.APPLICATION_JSON)
 public interface AccountApi {
 
-   public static String GUEST_MASK = "children.blockDevices.diskImage.softwareReferences.softwareDescription";
-   public static String LIST_GUEST_MASK = "powerState;operatingSystem.passwords;datacenter;billingItem;blockDevices" +
+   String GUEST_MASK = "children.blockDevices.diskImage.softwareReferences.softwareDescription";
+   String LIST_GUEST_MASK = "powerState;operatingSystem.passwords;datacenter;billingItem;blockDevices" +
            ".diskImage;tagReferences";
 
    /**

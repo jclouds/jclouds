@@ -32,7 +32,7 @@ import java.lang.annotation.Target;
 @Retention(RUNTIME)
 public @interface QueryParams {
 
-   public static final String NULL = "QUERY_NULL";
+   String NULL = "QUERY_NULL";
 
    String [] keys();
 

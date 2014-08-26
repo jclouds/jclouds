@@ -24,7 +24,7 @@ import org.jclouds.openstack.swift.reference.SwiftHeaders;
  * 
  * @see <a href="http://www.rackspacecloud.com/cf-devguide-20090311.pdf" />
  */
-public interface CloudFilesHeaders extends SwiftHeaders {
+public final class CloudFilesHeaders extends SwiftHeaders {
 
    public static final String CDN_ENABLED = "X-CDN-Enabled";
    public static final String CDN_LOG_RETENTION = "X-Log-Retention";
@@ -37,4 +37,8 @@ public interface CloudFilesHeaders extends SwiftHeaders {
    public static final String CDN_CONTAINER_PURGE_OBJECT_EMAIL = "X-Purge-Email";
    public static final String CDN_WEBSITE_INDEX = "X-Container-Meta-Web-Index";
    public static final String CDN_WEBSITE_ERROR = "X-Container-Meta-Web-Error";
+
+   private CloudFilesHeaders() {
+      throw new AssertionError("intentionally unimplemented");
+   }
 }

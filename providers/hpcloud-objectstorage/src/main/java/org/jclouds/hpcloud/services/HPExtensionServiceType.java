@@ -26,7 +26,7 @@ import org.jclouds.openstack.services.ServiceType;
  * @see <a href="http://docs.openstack.org/api/openstack-typeentity-service/2.0/content/Identity-Service-Concepts-e1362.html"
  *      />
  */
-public interface HPExtensionServiceType extends ServiceType {
+public final class HPExtensionServiceType extends ServiceType {
    /**
     * CDN
     */
@@ -36,4 +36,7 @@ public interface HPExtensionServiceType extends ServiceType {
     */
    public static final String BLOCK_STORE = "hpext:block-store";
 
+   private HPExtensionServiceType() {
+      throw new AssertionError("intentionally unimplemented");
+   }
 }

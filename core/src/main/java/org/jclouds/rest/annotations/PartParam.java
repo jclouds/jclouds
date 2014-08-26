@@ -29,8 +29,8 @@ import java.lang.annotation.Target;
 @Retention(RUNTIME)
 public @interface PartParam {
    // hacks as nulls are not allowed as default values
-   public static String NO_FILENAME = "---NO_FILENAME---";
-   public static String NO_CONTENT_TYPE = "---NO_CONTENT_TYPE---";
+   String NO_FILENAME = "---NO_FILENAME---";
+   String NO_CONTENT_TYPE = "---NO_CONTENT_TYPE---";
 
    String name();
 

@@ -21,7 +21,7 @@ package org.jclouds.http;
  * 500) based on the request's replayable status and the number of attempts already performed.
  */
 public interface HttpRetryHandler {
-   public static final HttpRetryHandler ALWAYS_RETRY = new HttpRetryHandler() {
+   HttpRetryHandler ALWAYS_RETRY = new HttpRetryHandler() {
       public boolean shouldRetryRequest(HttpCommand command, HttpResponse response) {
          return true;
       }
@@ -32,7 +32,7 @@ public interface HttpRetryHandler {
       }
    };
 
-   public static final HttpRetryHandler NEVER_RETRY = new HttpRetryHandler() {
+   HttpRetryHandler NEVER_RETRY = new HttpRetryHandler() {
       public boolean shouldRetryRequest(HttpCommand command, HttpResponse response) {
          return false;
       }

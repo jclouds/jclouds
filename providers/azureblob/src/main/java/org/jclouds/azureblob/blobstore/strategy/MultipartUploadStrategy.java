@@ -25,10 +25,10 @@ import org.jclouds.blobstore.domain.Blob;
 @ImplementedBy(AzureBlobBlockUploadStrategy.class)
 public interface MultipartUploadStrategy {
    /* Maximum number of blocks per upload */
-   public static final int MAX_NUMBER_OF_BLOCKS = 50000;
+   int MAX_NUMBER_OF_BLOCKS = 50000;
 
    /* Maximum block size */
-   public static final long MAX_BLOCK_SIZE = 4L * 1024 * 1024;
+   long MAX_BLOCK_SIZE = 4L * 1024 * 1024;
 
    String execute(String container, Blob blob);
 }

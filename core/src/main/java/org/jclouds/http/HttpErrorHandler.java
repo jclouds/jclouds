@@ -21,7 +21,7 @@ package org.jclouds.http;
  * HttpResponse.
  */
 public interface HttpErrorHandler {
-   public static final HttpErrorHandler NOOP = new HttpErrorHandler() {
+   HttpErrorHandler NOOP = new HttpErrorHandler() {
       public void handleError(HttpCommand command, HttpResponse response) {
          if (response.getPayload() != null)
             response.getPayload().release();

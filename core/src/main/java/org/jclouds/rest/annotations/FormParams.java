@@ -32,7 +32,7 @@ import java.lang.annotation.Target;
 @Retention(RUNTIME)
 public @interface FormParams {
 
-   public static final String NULL = "FORM_NULL";
+   String NULL = "FORM_NULL";
 
    String[] keys();
 

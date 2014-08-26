@@ -16,7 +16,7 @@
  */
 package org.jclouds.openstack.swift.reference;
 
-public interface SwiftHeaders {
+public class SwiftHeaders {
 
    public static final String ACCOUNT_TEMPORARY_URL_KEY = "X-Account-Meta-Temp-Url-Key";
    public static final String ACCOUNT_BYTES_USED = "X-Account-Bytes-Used";
@@ -33,4 +33,7 @@ public interface SwiftHeaders {
    public static final String CONTAINER_READ = "X-Container-Read";
    public static final String CONTAINER_WRITE = "X-Container-Write";
 
+   protected SwiftHeaders() {
+      throw new AssertionError("intentionally unimplemented");
+   }
 }

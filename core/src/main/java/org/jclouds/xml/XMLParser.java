@@ -28,7 +28,7 @@ import com.google.inject.ImplementedBy;
 @ImplementedBy(JAXBParser.class)
 public interface XMLParser {
    /** The default xml header. */
-   static final String DEFAULT_XML_HEADER = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>";
+   String DEFAULT_XML_HEADER = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>";
 
    /**
     * Serialize the object into xml.

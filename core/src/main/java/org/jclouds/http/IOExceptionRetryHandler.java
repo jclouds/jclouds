@@ -25,7 +25,7 @@ import com.google.inject.ImplementedBy;
 @ImplementedBy(BackoffLimitedRetryHandler.class)
 public interface IOExceptionRetryHandler {
 
-   public static final IOExceptionRetryHandler ALWAYS_RETRY = new IOExceptionRetryHandler() {
+   IOExceptionRetryHandler ALWAYS_RETRY = new IOExceptionRetryHandler() {
       public boolean shouldRetryRequest(HttpCommand command, IOException response) {
          return true;
       }
@@ -36,7 +36,7 @@ public interface IOExceptionRetryHandler {
       }
    };
 
-   public static final IOExceptionRetryHandler NEVER_RETRY = new IOExceptionRetryHandler() {
+   IOExceptionRetryHandler NEVER_RETRY = new IOExceptionRetryHandler() {
       public boolean shouldRetryRequest(HttpCommand command, IOException response) {
          return false;
       }

@@ -49,7 +49,7 @@ import org.jclouds.softlayer.domain.VirtualGuest;
 @Consumes(MediaType.APPLICATION_JSON)
 public interface VirtualGuestApi {
 
-   public static String GUEST_MASK = "id;hostname;domain;fullyQualifiedDomainName;powerState;maxCpu;maxMemory;" +
+   String GUEST_MASK = "id;hostname;domain;fullyQualifiedDomainName;powerState;maxCpu;maxMemory;" +
            "statusId;operatingSystem.passwords;primaryBackendIpAddress;primaryIpAddress;activeTransactionCount;" +
            "blockDevices.diskImage;datacenter;tagReferences";
 

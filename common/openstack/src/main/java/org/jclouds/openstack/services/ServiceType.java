@@ -24,7 +24,7 @@ package org.jclouds.openstack.services;
  * @see <a href="http://docs.openstack.org/api/openstack-typeentity-service/2.0/content/Identity-Service-Concepts-e1362.html"
  *      />
  */
-public interface ServiceType {
+public class ServiceType {
    /**
     * Object Storage (Swift)
     */
@@ -45,4 +45,8 @@ public interface ServiceType {
     * Network Service (Quantum)
     */
    public static final String NETWORK = "network";
+
+   protected ServiceType() {
+      throw new AssertionError("intentionally unimplemented");
+   }
 }
