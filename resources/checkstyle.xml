@@ -46,7 +46,8 @@
             <property name="processJavadoc" value="true"/>
         </module>
         <module name="WhitespaceAfter">
-            <property name="tokens" value="COMMA"/>
+            <!-- TYPECAST disabled -->
+            <property name="tokens" value="COMMA, SEMI"/>
         </module>
         <module name="WhitespaceAround">
           <property name="ignoreEnhancedForColon" value="false" />
