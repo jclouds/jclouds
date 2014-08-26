@@ -54,7 +54,7 @@ public class VAppImpl extends ReferenceTypeImpl implements VApp {
             @Nullable VCloudNetworkSection networkSection) {
       super(name, type, id);
       this.status = checkNotNull(status, "status");
-      this.vdc = vdc;// TODO: once <1.0 is killed check not null
+      this.vdc = vdc;  // TODO: once <1.0 is killed check not null
       this.description = description;
       Iterables.addAll(this.tasks, checkNotNull(tasks, "tasks"));
       this.ovfDescriptorUploaded = ovfDescriptorUploaded;

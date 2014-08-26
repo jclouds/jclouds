@@ -299,12 +299,12 @@ public class RunningInstance implements Comparable<RunningInstance> {
       this.ipAddress = ipAddress;
       this.kernelId = kernelId;
       this.keyName = keyName;
-      this.launchTime = launchTime;// nullable on spot.
-      this.availabilityZone = availabilityZone;// nullable on spot.
+      this.launchTime = launchTime;  // nullable on spot.
+      this.availabilityZone = availabilityZone;  // nullable on spot.
       this.virtualizationType = virtualizationType;
       this.platform = platform;
-      this.privateDnsName = privateDnsName;// nullable on runinstances.
-      this.privateIpAddress = privateIpAddress;// nullable on runinstances.
+      this.privateDnsName = privateDnsName;  // nullable on runinstances.
+      this.privateIpAddress = privateIpAddress;  // nullable on runinstances.
       this.ramdiskId = ramdiskId;
       this.reason = reason;
       this.rootDeviceType = checkNotNull(rootDeviceType, "rootDeviceType for %s/%s", region, instanceId);

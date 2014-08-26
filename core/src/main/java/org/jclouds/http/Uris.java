@@ -244,7 +244,7 @@ public final class Uris {
          if (uri.length() < 5) // skip encoding if there's no valid variables set. ex. ((a)) is the left valid
             return uri.toString();
 
-         char last = uri.charAt(0);// duplicates even if there are no special characters, but only requires 1 scan
+         char last = uri.charAt(0);  // duplicates even if there are no special characters, but only requires 1 scan
          StringBuilder builder = new StringBuilder();
          for (char c : Lists.charactersOf(uri)) {
             switch (c) {

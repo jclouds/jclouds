@@ -100,7 +100,7 @@ public class ConvertToGaeRequestTest {
       HttpRequest request = HttpRequest.builder().method(HttpMethod.GET).endpoint(endPoint).build();
       HTTPRequest gaeRequest = req.apply(request);
       assert gaeRequest.getPayload() == null;
-      assertEquals(gaeRequest.getHeaders().size(), 1);// user agent
+      assertEquals(gaeRequest.getHeaders().size(), 1);  // user agent
       assertEquals(gaeRequest.getHeaders().get(0).getName(), HttpHeaders.USER_AGENT);
       assertEquals(gaeRequest.getHeaders().get(0).getValue(), "jclouds/1.0 urlfetch/1.4.3");
    }

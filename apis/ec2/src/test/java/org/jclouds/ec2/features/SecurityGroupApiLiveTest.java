@@ -286,7 +286,7 @@ public class SecurityGroupApiLiveTest extends BaseComputeServiceContextLiveTest 
    protected void ensureGroupsExist(String group1Name, String group2Name) {
       Set<SecurityGroup> twoResults = client.describeSecurityGroupsInRegion(null, group1Name, group2Name);
       assertNotNull(twoResults);
-      assertTrue(twoResults.size() >= 2);// in VPC could be multiple groups with the same name
+      assertTrue(twoResults.size() >= 2);  // in VPC could be multiple groups with the same name
 
       assertTrue(all(twoResults, compose(in(ImmutableSet.of(group1Name, group2Name)),
             new Function<SecurityGroup, String>() {

@@ -50,7 +50,7 @@ public class CatalogImpl extends LinkedHashMap<String, ReferenceType> implements
             Map<String, ReferenceType> contents, Iterable<Task> tasks, boolean published, boolean readOnly) {
       this.name = checkNotNull(name, "name");
       this.type = checkNotNull(type, "type");
-      this.org = org;// TODO: once <1.0 is killed check not null
+      this.org = org;  // TODO: once <1.0 is killed check not null
       this.description = description;
       this.href = checkNotNull(href, "href");
       putAll(checkNotNull(contents, "contents"));

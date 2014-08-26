@@ -86,7 +86,7 @@ public class AWSSecurityGroupApiLiveTest extends SecurityGroupApiLiveTest {
                group1Name, group1Name);
          final String group2Id = AWSSecurityGroupApi.class.cast(client).createSecurityGroupInRegionAndReturnId(null,
                group2Name, group2Name);
-         Thread.sleep(100);// eventual consistent
+         Thread.sleep(100);  // eventual consistent
          ensureGroupsExist(group1Name, group2Name);
          AWSSecurityGroupApi.class.cast(client).authorizeSecurityGroupIngressInRegion(null, group1Id,
                IpPermissions.permit(IpProtocol.TCP).port(80));

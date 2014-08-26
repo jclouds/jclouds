@@ -143,7 +143,7 @@ public class BaseLoadBalancerService implements LoadBalancerService {
                return false;
             }
          }
-      }, 3000, 1000, MILLISECONDS);// TODO make timeouts class like ComputeServiceconstants
+      }, 3000, 1000, MILLISECONDS);  // TODO make timeouts class like ComputeServiceconstants
       boolean successful = tester.apply(id) && loadBalancer.get() == null; // TODO add load
                                                                            // balancerTerminated
       // retryable predicate

@@ -70,7 +70,7 @@ public class SshjSshClientModule extends AbstractModule {
       @Override
       public SshClient create(HostAndPort socket, LoginCredentials credentials) {
          SshClient client = new SshjSshClient(backoffLimitedRetryHandler, socket, credentials, timeout, getAgentConnector());
-         injector.injectMembers(client);// add logger
+         injector.injectMembers(client);  // add logger
          return client;
       }
 

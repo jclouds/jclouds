@@ -66,10 +66,10 @@ public class BaseLoadBalancer<N extends BaseNode<N>, T extends BaseLoadBalancer<
          @Nullable Map<String, Boolean> connectionLogging, @Nullable ConnectionThrottle connectionThrottle,
          @Nullable HealthMonitor healthMonitor) {
       this.name = checkNotNull(name, "name");
-      this.protocol = protocol;// null on deleted LB
-      this.port = port;// null on deleted LB
+      this.protocol = protocol;  // null on deleted LB
+      this.port = port;  // null on deleted LB
       this.nodes = ImmutableSortedSet.copyOf(checkNotNull(nodes, "nodes"));
-      this.algorithm = algorithm;// null on deleted LB
+      this.algorithm = algorithm;  // null on deleted LB
       this.timeout = timeout;
       this.halfClosed = halfClosed;
       this.sessionPersistence = sessionPersistence;

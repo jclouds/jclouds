@@ -95,8 +95,8 @@ public class KeyPair implements Comparable<KeyPair> {
       this.region = checkNotNull(region, "region");
       this.keyName = checkNotNull(keyName, "keyName");
       this.sha1OfPrivateKey = checkNotNull(sha1OfPrivateKey, "sha1OfPrivateKey");
-      this.keyMaterial = keyMaterial;// nullable on list
-      this.fingerprint = fingerprint;// nullable on list
+      this.keyMaterial = keyMaterial;  // nullable on list
+      this.fingerprint = fingerprint;  // nullable on list
    }
 
    /**

@@ -175,7 +175,7 @@ final class ASN1Codec {
       try {
          return s.read();
       } catch (IOException e) {
-         throw propagate(e);// impossible as we are only using a byte array
+         throw propagate(e);  // impossible as we are only using a byte array
       }
    }
 

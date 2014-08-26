@@ -144,7 +144,7 @@ public class AtmosAsyncBlobStore extends BaseAsyncBlobStore {
    public ListenableFuture<Void> createDirectory(String container, String directory) {
       return transform(async.createDirectory(container + "/" + directory), new Function<URI, Void>() {
          public Void apply(URI from) {
-            return null;// no etag
+            return null;  // no etag
          }
       }, userExecutor);
    }

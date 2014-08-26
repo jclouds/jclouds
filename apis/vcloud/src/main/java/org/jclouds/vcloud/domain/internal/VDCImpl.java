@@ -62,13 +62,13 @@ public class VDCImpl extends ReferenceTypeImpl implements VDC {
             int networkQuota, int vmQuota, boolean isEnabled) {
       super(name, type, id);
       this.status = checkNotNull(status, "status");
-      this.org = org;// TODO: once <1.0 is killed check not null
+      this.org = org;  // TODO: once <1.0 is killed check not null
       this.description = description;
       Iterables.addAll(this.tasks, checkNotNull(tasks, "tasks"));
       this.allocationModel = checkNotNull(allocationModel, "allocationModel");
-      this.storageCapacity = storageCapacity;// TODO: once <1.0 is killed check not null
-      this.cpuCapacity = cpuCapacity;// TODO: once <1.0 is killed check not null
-      this.memoryCapacity = memoryCapacity;// TODO: once <1.0 is killed check not null
+      this.storageCapacity = storageCapacity;  // TODO: once <1.0 is killed check not null
+      this.cpuCapacity = cpuCapacity;  // TODO: once <1.0 is killed check not null
+      this.memoryCapacity = memoryCapacity;  // TODO: once <1.0 is killed check not null
       this.resourceEntities.putAll(checkNotNull(resourceEntities, "resourceEntities"));
       this.availableNetworks.putAll(checkNotNull(availableNetworks, "availableNetworks"));
       this.nicQuota = nicQuota;

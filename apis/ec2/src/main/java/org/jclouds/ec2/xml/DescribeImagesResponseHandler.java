@@ -91,7 +91,7 @@ public class DescribeImagesResponseHandler extends ParseSax.HandlerForGeneratedR
    private Hypervisor hypervisor = Hypervisor.XEN;
 
    private int volumeSize;
-   private boolean deleteOnTermination = true;// correct default is true.
+   private boolean deleteOnTermination = true;  // correct default is true.
    private boolean encrypted = false;
    private String volumeType;
    private Integer iops;

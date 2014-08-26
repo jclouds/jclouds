@@ -290,4 +290,5 @@ public interface GridServerApi {
    @OnlyElement
    @Path("/grid/server/edit")
    Server editServerType(@QueryParam("id") long id,
-                         @QueryParam("server.type") String newType);}
+                         @QueryParam("server.type") String newType);
+}

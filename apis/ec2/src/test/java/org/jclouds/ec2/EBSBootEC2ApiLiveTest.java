@@ -193,21 +193,12 @@ public class EBSBootEC2ApiLiveTest extends BaseComputeServiceContextLiveTest {
          try {
             System.out.printf("%d: running instance%n", System.currentTimeMillis());
             Reservation<? extends RunningInstance> reservation = client.getInstanceApi().get().runInstancesInRegion(
-                  null, null, // allow
-                  // ec2
-                  // to
-                  // chose
-                  // an
-                  // availability
-                  // zone
+                  null, null, // allow ec2 to chose an availability zone
                   imageId, 1, // minimum instances
                   1, // maximum instances
-                  withKeyName(keyPair.getKeyName())// key I created above
-                        .asType(InstanceType.M1_SMALL)// smallest instance
-                        // size
-                        .withSecurityGroup(securityGroupName));// group I
-            // created
-            // above
+                  withKeyName(keyPair.getKeyName())  // key created above
+                        .asType(InstanceType.M1_SMALL)  // smallest instance size
+                        .withSecurityGroup(securityGroupName)); // group created above
             instance = Iterables.getOnlyElement(reservation);
          } catch (HttpResponseException htpe) {
             if (htpe.getResponse().getStatusCode() == 400)

@@ -35,7 +35,7 @@ public class BlockDeviceMappingHandler extends
    private Map<String, BlockDevice> ebsBlockDevices = Maps.newHashMap();
    private String deviceName;
    private String volumeId;
-   private boolean deleteOnTermination = true;// correct default is true.
+   private boolean deleteOnTermination = true;  // correct default is true.
    private Attachment.Status attachmentStatus;
    private Date attachTime;
 

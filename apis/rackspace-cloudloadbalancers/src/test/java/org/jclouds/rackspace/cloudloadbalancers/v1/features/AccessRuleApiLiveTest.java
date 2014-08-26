@@ -71,7 +71,7 @@ public class AccessRuleApiLiveTest extends BaseCloudLoadBalancersApiLiveTest {
       CreateLoadBalancer createLB = CreateLoadBalancer.builder()
             .name(prefix + "-jclouds").protocol("HTTP").port(80).virtualIPType(Type.PUBLIC).node(addNode).build();
 
-      region = "ORD";//Iterables.getFirst(api.getConfiguredRegions(), null);
+      region = "ORD";  //Iterables.getFirst(api.getConfiguredRegions(), null);
       lb = api.getLoadBalancerApi(region).create(createLB);
 
       assertTrue(awaitAvailable(api.getLoadBalancerApi(region)).apply(lb));

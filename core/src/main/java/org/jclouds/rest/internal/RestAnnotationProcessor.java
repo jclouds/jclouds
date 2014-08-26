@@ -254,7 +254,7 @@ public class RestAnnotationProcessor implements Function<Invocation, HttpRequest
 
       Payload payload = null;
       for (HttpRequestOptions options : findOptionsIn(invocation)) {
-         injector.injectMembers(options);// TODO test case
+         injector.injectMembers(options);  // TODO test case
          for (Entry<String, String> header : options.buildRequestHeaders().entries()) {
             headers.put(header.getKey(), replaceTokens(header.getValue(), tokenValues));
          }
@@ -490,7 +490,7 @@ public class RestAnnotationProcessor implements Function<Invocation, HttpRequest
             invocation.getInvokable());
       Parameter endpointParam = get(endpointParams, 0);
       Function<Object, URI> parser = injector.getInstance(endpointParam.getAnnotation(EndpointParam.class).parser());
-      int position = endpointParam.hashCode();// guava issue 1243
+      int position = endpointParam.hashCode();  // guava issue 1243
       try {
          URI returnVal = parser.apply(invocation.getArgs().get(position));
          checkArgument(returnVal != null,

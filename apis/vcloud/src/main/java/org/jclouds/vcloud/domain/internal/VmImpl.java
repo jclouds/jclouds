@@ -60,7 +60,7 @@ public class VmImpl extends ReferenceTypeImpl implements Vm {
             @Nullable GuestCustomizationSection guestCustomization, @Nullable String vAppScopedLocalId) {
       super(name, type, id);
       this.status = status;
-      this.vApp = vApp;// TODO: once <1.0 is killed check not null
+      this.vApp = vApp;  // TODO: once <1.0 is killed check not null
       this.description = description;
       Iterables.addAll(this.tasks, checkNotNull(tasks, "tasks"));
       this.hardware = hardware;

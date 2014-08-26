@@ -145,7 +145,7 @@ public class DynECTParserModule extends AbstractModule {
 
    private static class CreepyGeoService {
       String name;
-      String active;// creepy part
+      String active;  // creepy part
       int ttl;
       List<Node> nodes;
       List<GeoRegionGroup> groups;
