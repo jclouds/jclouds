@@ -16,24 +16,23 @@
  */
 package org.jclouds.openstack.nova.v2_0.options;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+
 import java.util.Date;
 
 import org.jclouds.openstack.v2_0.options.PaginationOptions;
 
 /**
  * Options used to control the amount of detail in the request.
- * 
+ *
  * @see PaginationOptions
- * @see <a href="http://wiki.openstack.org/OpenStackAPI_1-1" />
  */
 public class ListOptions extends PaginationOptions {
 
    public static final ListOptions NONE = new ListOptions();
 
    /**
-    * unless used, only the name and id will be returned per row.
-    * 
-    * @return
+    * Provides detailed results for list operations.
     */
    public ListOptions withDetails() {
       this.pathSuffix = "/detail";
@@ -44,19 +43,9 @@ public class ListOptions extends PaginationOptions {
     * {@inheritDoc}
     */
    @Override
-   public ListOptions changesSince(Date ifModifiedSince) {
-      super.changesSince(ifModifiedSince);
-      return this;
-   }
-
-   /**
-    * {@inheritDoc}
-    */
-   @Override
    public ListOptions limit(int limit) {
       super.limit(limit);
       return this;
-
    }
 
    /**
@@ -65,6 +54,14 @@ public class ListOptions extends PaginationOptions {
    @Override
    public ListOptions marker(String marker) {
       super.marker(marker);
+      return this;
+   }
+
+   /**
+    * Checks for any changes since the given date.
+    */
+   public ListOptions changesSince(Date changesSince) {
+      this.queryParameters.put("changes-since", checkNotNull(changesSince, "changesSince").getTime() / 1000 + "");
       return this;
    }
 
@@ -87,15 +84,25 @@ public class ListOptions extends PaginationOptions {
       }
 
       /**
-       * @see PaginationOptions#limit(long)
+       * @see PaginationOptions#limit(int)
        */
-      public static ListOptions maxResults(int maxKeys) {
+      public static ListOptions limit(int limit) {
          ListOptions options = new ListOptions();
-         return options.limit(maxKeys);
+         return options.limit(limit);
       }
 
       /**
-       * @see PaginationOptions#changesSince(Date)
+       *
+       * @see PaginationOptions#limit(int)
+       * @deprecated Please use {@link #limit(int)} as this builder method will be removed in 2.0.
+       */
+      @Deprecated
+      public static ListOptions maxResults(int maxKeys) {
+         return limit(maxKeys);
+      }
+
+      /**
+       * @see ListOptions#changesSince(Date)
        */
       public static ListOptions changesSince(Date since) {
          ListOptions options = new ListOptions();

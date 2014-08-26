@@ -21,15 +21,13 @@ import static com.google.common.base.Preconditions.checkState;
 
 import java.util.Date;
 
-import com.google.common.collect.Multimap;
 import org.jclouds.http.options.BaseHttpRequestOptions;
+
+import com.google.common.collect.Multimap;
 
 /**
  * Options used to control paginated results (aka list commands).
- * 
- * @see <a href=
- *      "http://docs.openstack.org/api/openstack-compute/2/content/Paginated_Collections-d1e664.html"
- *      />
+ *
  */
 public class PaginationOptions extends BaseHttpRequestOptions {
    /**
@@ -43,10 +41,15 @@ public class PaginationOptions extends BaseHttpRequestOptions {
    }
 
    /**
-    * Only return objects changed since this time.
+    * Only return objects changed since a specified time.
+    *
+    * @deprecated The {@code changes-since} query does not apply to all OpenStack APIs. Please refer to the OpenStack
+    *             Nova {@code ListOptions.changesSince(Date)} and Glance {@code ListImageOptions.changesSince(Date)}.
+    *             This option will be removed in 2.1.
     */
-   public PaginationOptions changesSince(Date ifModifiedSince) {
-      this.queryParameters.put("changes-since", checkNotNull(ifModifiedSince, "ifModifiedSince").getTime() / 1000 + "");
+   @Deprecated
+   public PaginationOptions changesSince(Date changesSince) {
+      this.queryParameters.put("changes-since", checkNotNull(changesSince, "changesSince").getTime() / 1000 + "");
       return this;
    }
 
@@ -84,6 +87,18 @@ public class PaginationOptions extends BaseHttpRequestOptions {
       }
 
       /**
+       * @see PaginationOptions#changesSince(Date)
+       * @deprecated The {@code changes-since} query does not apply to all OpenStack APIs. Please refer to the OpenStack
+       *             Nova {@code ListOptions.changesSince(Date)} and Glance {@code ListImageOptions.changesSince(Date)}.
+       *             This option will be removed in 2.1.
+       */
+      @Deprecated
+      public static PaginationOptions changesSince(Date changesSince) {
+         PaginationOptions options = new PaginationOptions();
+         return options.changesSince(changesSince);
+      }
+
+      /**
        * @see PaginationOptions#marker(String)
        */
       public static PaginationOptions marker(String marker) {
@@ -92,20 +107,11 @@ public class PaginationOptions extends BaseHttpRequestOptions {
       }
 
       /**
-       * @see PaginationOptions#limit
+       * @see PaginationOptions#limit(int)
        */
       public static PaginationOptions limit(int limit) {
          PaginationOptions options = new PaginationOptions();
          return options.limit(limit);
       }
-
-      /**
-       * @see PaginationOptions#changesSince(Date)
-       */
-      public static PaginationOptions changesSince(Date since) {
-         PaginationOptions options = new PaginationOptions();
-         return options.changesSince(since);
-      }
-
    }
 }

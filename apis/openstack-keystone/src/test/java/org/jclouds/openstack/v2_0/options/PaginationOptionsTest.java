@@ -16,12 +16,9 @@
  */
 package org.jclouds.openstack.v2_0.options;
 
-import static org.jclouds.openstack.v2_0.options.PaginationOptions.Builder.changesSince;
 import static org.jclouds.openstack.v2_0.options.PaginationOptions.Builder.limit;
 import static org.jclouds.openstack.v2_0.options.PaginationOptions.Builder.marker;
 import static org.testng.Assert.assertEquals;
-
-import java.util.Date;
 
 import org.testng.annotations.Test;
 
@@ -33,13 +30,6 @@ import com.google.common.collect.ImmutableList;
 @Test(groups = "unit", testName = "PaginationOptionsTest")
 public class PaginationOptionsTest {
 
-   public void testChangesSince() {
-      Date ifModifiedSince = new Date();
-      PaginationOptions options = new PaginationOptions().changesSince(ifModifiedSince);
-      assertEquals(ImmutableList.of(ifModifiedSince.getTime() / 1000 + ""),
-               options.buildQueryParameters().get("changes-since"));
-   }
-
    public void testMarker() {
       String marker = "52415800-8b69-11e0-9b19-734f6f006e54";
       PaginationOptions options = new PaginationOptions().marker(marker);
@@ -50,13 +40,6 @@ public class PaginationOptionsTest {
       int limit = 1;
       PaginationOptions options = new PaginationOptions().limit(limit);
       assertEquals(ImmutableList.of("1"), options.buildQueryParameters().get("limit"));
-   }
-
-   public void testChangesSinceStatic() {
-      Date ifModifiedSince = new Date();
-      PaginationOptions options = changesSince(ifModifiedSince);
-      assertEquals(ImmutableList.of(ifModifiedSince.getTime() / 1000 + ""),
-               options.buildQueryParameters().get("changes-since"));
    }
 
    public void testMarkerStatic() {
