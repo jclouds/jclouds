@@ -710,7 +710,7 @@ public abstract class BaseComputeServiceLiveTest extends BaseComputeServiceConte
       // note that some cloud providers do not support mixed case tag names
       ImmutableMap<String, String> userMetadata = ImmutableMap.<String, String> of("test", group);
 
-      ImmutableSet<String> tags = ImmutableSet. of(group);
+      ImmutableSet<String> tags = ImmutableSet.of(group);
       Stopwatch watch = Stopwatch.createStarted();
 
       template = buildTemplate(client.templateBuilder());

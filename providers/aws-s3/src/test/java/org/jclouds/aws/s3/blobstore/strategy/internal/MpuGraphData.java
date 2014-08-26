@@ -25,7 +25,7 @@ public class MpuGraphData {
 
    private static void calculate(long length, MultipartUploadSlicingAlgorithm algorithm) {
       System.out.println("" + length + " " + algorithm.getParts() + " "
-            + algorithm.calculateChunkSize(length) + " " + + algorithm.getRemaining());
+            + algorithm.calculateChunkSize(length) + " " + algorithm.getRemaining());
    }
 
    private static void foreach(long from, long to1, long to2, long to3, MultipartUploadSlicingAlgorithm algorithm) {
