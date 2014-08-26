@@ -19,12 +19,9 @@ package org.jclouds.openstack.cinder.v1;
 import java.io.Closeable;
 import java.util.Set;
 
+import org.jclouds.javax.annotation.Nullable;
 import org.jclouds.location.Zone;
 import org.jclouds.location.functions.ZoneToEndpoint;
-import org.jclouds.openstack.cinder.v1.domain.Snapshot;
-import org.jclouds.openstack.cinder.v1.domain.Volume;
-import org.jclouds.openstack.cinder.v1.domain.VolumeType;
-import org.jclouds.javax.annotation.Nullable;
 import org.jclouds.openstack.cinder.v1.extensions.AvailabilityZoneApi;
 import org.jclouds.openstack.cinder.v1.features.QuotaApi;
 import org.jclouds.openstack.cinder.v1.features.SnapshotApi;
@@ -55,7 +52,7 @@ public interface CinderApi extends Closeable {
    @Provides
    @Zone
    Set<String> getConfiguredZones();
-   
+
    /**
     * Provides synchronous access to Extension features.
     */
@@ -76,7 +73,7 @@ public interface CinderApi extends Closeable {
    @Delegate
    VolumeTypeApi getVolumeTypeApiForZone(
          @EndpointParam(parser = ZoneToEndpoint.class) @Nullable String zone);
-   
+
    /**
     * Provides synchronous access to Snapshot features.
     */
