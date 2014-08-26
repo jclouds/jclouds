@@ -228,7 +228,7 @@ public class ComputeServiceUtils {
             return osVersionMap.get(family).get(in);
          if (osVersionMap.get(family).containsValue(in))
             return in;
-         CONTAINS_SUBSTRING contains = new CONTAINS_SUBSTRING(in.replace('-', '.'));
+         ContainsSubstring contains = new ContainsSubstring(in.replace('-', '.'));
          try {
             String key = Iterables.find(osVersionMap.get(family).keySet(), contains);
             return osVersionMap.get(family).get(key);
@@ -242,10 +242,10 @@ public class ComputeServiceUtils {
       return "";
    }
 
-   static final class CONTAINS_SUBSTRING implements Predicate<String> {
+   static final class ContainsSubstring implements Predicate<String> {
       private final String in;
 
-      CONTAINS_SUBSTRING(String in) {
+      ContainsSubstring(String in) {
          this.in = in;
       }
 
