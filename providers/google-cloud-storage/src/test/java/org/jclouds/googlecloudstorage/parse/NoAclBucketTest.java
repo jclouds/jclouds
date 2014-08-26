@@ -32,7 +32,7 @@ public class NoAclBucketTest extends BaseGoogleCloudStorageParseTest<Bucket> {
 
    @Override
    public String resource() {
-      return "/noAcl_bucket.json";
+      return "/no_acl_bucket.json";
    }
 
    @Override

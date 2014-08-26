@@ -38,7 +38,7 @@ public class DefaultObjectAclListTest extends BaseGoogleCloudStorageParseTest<Li
 
    @Override
    public String resource() {
-      return "/default_objectacl_list.json";
+      return "/default_object_acl_list.json";
    }
 
    @Override

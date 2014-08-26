@@ -29,7 +29,7 @@ public class BucketAclGetTest extends BaseGoogleCloudStorageParseTest<BucketAcce
 
    @Override
    public String resource() {
-      return "/bucketacl_get.json";
+      return "/bucket_acl_get.json";
    }
 
    @Override

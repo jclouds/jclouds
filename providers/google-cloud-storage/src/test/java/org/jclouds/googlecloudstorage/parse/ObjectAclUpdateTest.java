@@ -29,7 +29,7 @@ public class ObjectAclUpdateTest extends BaseGoogleCloudStorageParseTest<ObjectA
 
    @Override
    public String resource() {
-      return "/objectacl_update_response.json";
+      return "/object_acl_update_response.json";
    }
 
    @Override

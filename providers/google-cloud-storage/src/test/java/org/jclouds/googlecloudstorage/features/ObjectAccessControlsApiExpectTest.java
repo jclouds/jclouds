@@ -58,10 +58,10 @@ public class ObjectAccessControlsApiExpectTest extends BaseGoogleCloudStorageApi
             .addHeader("Authorization", "Bearer " + TOKEN).build();
 
    public final HttpResponse GET_OBJECT_ACL_RESPONSE = HttpResponse.builder().statusCode(200)
-            .payload(staticPayloadFromResource("/objectacl_get.json")).build();
+            .payload(staticPayloadFromResource("/object_acl_get.json")).build();
 
    public final HttpResponse CREATE_OBJECT_ACL_RESPONSE = HttpResponse.builder().statusCode(200)
-            .payload(staticPayloadFromResource("/objectacl_insert_response.json")).build();
+            .payload(staticPayloadFromResource("/object_acl_insert_response.json")).build();
 
    public final HttpRequest LIST_OBJECT_ACL_REQUEST = HttpRequest.builder().method("GET")
             .endpoint("https://www.googleapis.com/storage/v1/b/jcloudtestbucket/o/foo.txt/acl")
@@ -73,7 +73,7 @@ public class ObjectAccessControlsApiExpectTest extends BaseGoogleCloudStorageApi
             .addHeader("Authorization", "Bearer " + TOKEN).build();
 
    public final HttpResponse LIST_OBJECT_ACL_RESPONSE = HttpResponse.builder().statusCode(200)
-            .payload(staticPayloadFromResource("/objectacl_list.json")).build();
+            .payload(staticPayloadFromResource("/object_acl_list.json")).build();
 
    // Test getObjectAccessControls
    public void testGetObjectaclWithNoOptionsResponseIs2xx() throws Exception {
@@ -145,7 +145,7 @@ public class ObjectAccessControlsApiExpectTest extends BaseGoogleCloudStorageApi
                .endpoint("https://www.googleapis.com/storage/v1/b/jcloudtestbucket/o/foo.txt/acl")
                .addHeader("Accept", "application/json")
                .addHeader("Authorization", "Bearer " + TOKEN)
-               .payload(payloadFromResourceWithContentType("/objectacl_insert_requestpayload.json",
+               .payload(payloadFromResourceWithContentType("/object_acl_insert_request_payload.json",
                         MediaType.APPLICATION_JSON)).build();
 
       ObjectAccessControlsApi api = requestsSendResponses(requestForScopes(STORAGE_FULLCONTROL_SCOPE), TOKEN_RESPONSE,
@@ -167,7 +167,7 @@ public class ObjectAccessControlsApiExpectTest extends BaseGoogleCloudStorageApi
                .addHeader("Accept", "application/json")
                .addHeader("Authorization", "Bearer " + TOKEN)
                .addQueryParam("generation", "100")
-               .payload(payloadFromResourceWithContentType("/objectacl_insert_requestpayload.json",
+               .payload(payloadFromResourceWithContentType("/object_acl_insert_request_payload.json",
                         MediaType.APPLICATION_JSON)).build();
 
       ObjectAccessControlsApi api = requestsSendResponses(requestForScopes(STORAGE_FULLCONTROL_SCOPE), TOKEN_RESPONSE,
@@ -190,11 +190,11 @@ public class ObjectAccessControlsApiExpectTest extends BaseGoogleCloudStorageApi
                .endpoint("https://www.googleapis.com/storage/v1/b/jcloudtestbucket/o/foo.txt/acl/allUsers")
                .addHeader("Accept", "application/json")
                .addHeader("Authorization", "Bearer " + TOKEN)
-               .payload(payloadFromResourceWithContentType("/objectacl_request_payload.json",
+               .payload(payloadFromResourceWithContentType("/object_acl_request_payload.json",
                         MediaType.APPLICATION_JSON)).build();
 
       HttpResponse updateResponse = HttpResponse.builder().statusCode(200)
-               .payload(staticPayloadFromResource("/objectacl_update_initial.json")).build();
+               .payload(staticPayloadFromResource("/object_acl_update_initial.json")).build();
 
       ObjectAccessControlsApi api = requestsSendResponses(requestForScopes(STORAGE_FULLCONTROL_SCOPE), TOKEN_RESPONSE,
                update, updateResponse).getObjectAccessControlsApi();
@@ -214,11 +214,11 @@ public class ObjectAccessControlsApiExpectTest extends BaseGoogleCloudStorageApi
                .addQueryParam("generation", "100")
                .addHeader("Accept", "application/json")
                .addHeader("Authorization", "Bearer " + TOKEN)
-               .payload(payloadFromResourceWithContentType("/objectacl_request_payload.json",
+               .payload(payloadFromResourceWithContentType("/object_acl_request_payload.json",
                         MediaType.APPLICATION_JSON)).build();
 
       HttpResponse updateResponse = HttpResponse.builder().statusCode(200)
-               .payload(staticPayloadFromResource("/objectacl_update_initial.json")).build();
+               .payload(staticPayloadFromResource("/object_acl_update_initial.json")).build();
 
       ObjectAccessControlsApi api = requestsSendResponses(requestForScopes(STORAGE_FULLCONTROL_SCOPE), TOKEN_RESPONSE,
                update, updateResponse).getObjectAccessControlsApi();
@@ -239,11 +239,11 @@ public class ObjectAccessControlsApiExpectTest extends BaseGoogleCloudStorageApi
                .endpoint("https://www.googleapis.com/storage/v1/b/jcloudtestbucket/o/foo.txt/acl/allUsers")
                .addHeader("Accept", "application/json")
                .addHeader("Authorization", "Bearer " + TOKEN)
-               .payload(payloadFromResourceWithContentType("/objectacl_request_payload.json",
+               .payload(payloadFromResourceWithContentType("/object_acl_request_payload.json",
                         MediaType.APPLICATION_JSON)).build();
 
       HttpResponse patchResponse = HttpResponse.builder().statusCode(200)
-               .payload(staticPayloadFromResource("/objectacl_update_initial.json")).build();
+               .payload(staticPayloadFromResource("/object_acl_update_initial.json")).build();
 
       ObjectAccessControlsApi api = requestsSendResponses(requestForScopes(STORAGE_FULLCONTROL_SCOPE), TOKEN_RESPONSE,
                patchRequest, patchResponse).getObjectAccessControlsApi();
@@ -263,11 +263,11 @@ public class ObjectAccessControlsApiExpectTest extends BaseGoogleCloudStorageApi
                .addQueryParam("generation", "100")
                .addHeader("Accept", "application/json")
                .addHeader("Authorization", "Bearer " + TOKEN)
-               .payload(payloadFromResourceWithContentType("/objectacl_request_payload.json",
+               .payload(payloadFromResourceWithContentType("/object_acl_request_payload.json",
                         MediaType.APPLICATION_JSON)).build();
 
       HttpResponse patchResponse = HttpResponse.builder().statusCode(200)
-               .payload(staticPayloadFromResource("/objectacl_update_initial.json")).build();
+               .payload(staticPayloadFromResource("/object_acl_update_initial.json")).build();
 
       ObjectAccessControlsApi api = requestsSendResponses(requestForScopes(STORAGE_FULLCONTROL_SCOPE), TOKEN_RESPONSE,
                patchRequest, patchResponse).getObjectAccessControlsApi();

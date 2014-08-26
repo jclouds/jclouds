@@ -46,17 +46,17 @@ public class BucketAccessControlsApiExpectTest extends BaseGoogleCloudStorageApi
             .addHeader("Accept", "application/json").addHeader("Authorization", "Bearer " + TOKEN).build();
 
    private final HttpResponse GET_BUCKETACL_RESPONSE = HttpResponse.builder().statusCode(200)
-            .payload(staticPayloadFromResource("/bucketacl_get.json")).build();
+            .payload(staticPayloadFromResource("/bucket_acl_get.json")).build();
 
    private  final HttpResponse CREATE_BUCKETACL_RESPONSE = HttpResponse.builder().statusCode(200)
-            .payload(staticPayloadFromResource("/bucketacl_insert_response.json")).build();
+            .payload(staticPayloadFromResource("/bucket_acl_insert_response.json")).build();
 
    private final HttpRequest LIST_BUCKETACL_REQUEST = HttpRequest.builder().method("GET")
             .endpoint("https://www.googleapis.com/storage/v1/b/jcloudtestbucket/acl")
             .addHeader("Accept", "application/json").addHeader("Authorization", "Bearer " + TOKEN).build();
 
    private final HttpResponse LIST_BUCKETACL_RESPONSE = HttpResponse.builder().statusCode(200)
-            .payload(staticPayloadFromResource("/bucketacl_list.json")).build();
+            .payload(staticPayloadFromResource("/bucket_acl_list.json")).build();
 
    // Test getBucketAccessControls
    public void testGetBucketAclResponseIs2xx() throws Exception {
@@ -105,7 +105,7 @@ public class BucketAccessControlsApiExpectTest extends BaseGoogleCloudStorageApi
                .endpoint("https://www.googleapis.com/storage/v1/b/jcloudtestbucket/acl")
                .addHeader("Accept", "application/json")
                .addHeader("Authorization", "Bearer " + TOKEN)
-               .payload(payloadFromResourceWithContentType("/bucketacl_insert_response.json",
+               .payload(payloadFromResourceWithContentType("/bucket_acl_insert_response.json",
                         MediaType.APPLICATION_JSON)).build();
 
       BucketAccessControlsApi api = requestsSendResponses(requestForScopes(STORAGE_FULLCONTROL_SCOPE), TOKEN_RESPONSE,
@@ -157,11 +157,11 @@ public class BucketAccessControlsApiExpectTest extends BaseGoogleCloudStorageApi
                .endpoint("https://www.googleapis.com/storage/v1/b/jcloudtestbucket/acl/allUsers")
                .addHeader("Accept", "application/json")
                .addHeader("Authorization", "Bearer " + TOKEN)
-               .payload(payloadFromResourceWithContentType("/bucketacl_update_response.json",
+               .payload(payloadFromResourceWithContentType("/bucket_acl_update_response.json",
                         MediaType.APPLICATION_JSON)).build();
 
       HttpResponse updateResponse = HttpResponse.builder().statusCode(200)
-               .payload(staticPayloadFromResource("/bucketacl_update_initial.json")).build();
+               .payload(staticPayloadFromResource("/bucket_acl_update_initial.json")).build();
 
       BucketAccessControlsApi api = requestsSendResponses(requestForScopes(STORAGE_FULLCONTROL_SCOPE), TOKEN_RESPONSE,
                update, updateResponse).getBucketAccessControlsApi();
@@ -182,11 +182,11 @@ public class BucketAccessControlsApiExpectTest extends BaseGoogleCloudStorageApi
                .endpoint("https://www.googleapis.com/storage/v1/b/jcloudtestbucket/acl/allUsers")
                .addHeader("Accept", "application/json")
                .addHeader("Authorization", "Bearer " + TOKEN)
-               .payload(payloadFromResourceWithContentType("/bucketacl_update_response.json",
+               .payload(payloadFromResourceWithContentType("/bucket_acl_update_response.json",
                         MediaType.APPLICATION_JSON)).build();
 
       HttpResponse patchResponse = HttpResponse.builder().statusCode(200)
-               .payload(staticPayloadFromResource("/bucketacl_update_initial.json")).build();
+               .payload(staticPayloadFromResource("/bucket_acl_update_initial.json")).build();
 
       BucketAccessControlsApi api = requestsSendResponses(requestForScopes(STORAGE_FULLCONTROL_SCOPE), TOKEN_RESPONSE,
                patchRequest, patchResponse).getBucketAccessControlsApi();

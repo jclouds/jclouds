@@ -27,7 +27,7 @@ public class DefaultObjectAclInsertTest extends BaseGoogleCloudStorageParseTest<
 
    @Override
    public String resource() {
-      return "/default_objectacl_insert_response.json";
+      return "/default_object_acl_insert_response.json";
    }
 
    @Override

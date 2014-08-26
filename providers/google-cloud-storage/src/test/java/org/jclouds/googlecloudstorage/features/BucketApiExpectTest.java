@@ -55,7 +55,7 @@ public class BucketApiExpectTest extends BaseGoogleCloudStorageApiExpectTest {
             .addHeader("Accept", "application/json").addHeader("Authorization", "Bearer " + TOKEN).build();
 
    private final HttpResponse BUCKET_RESPONSE = HttpResponse.builder().statusCode(200)
-            .payload(staticPayloadFromResource("/noAcl_bucket.json")).build();
+            .payload(staticPayloadFromResource("/no_acl_bucket.json")).build();
 
    public static final HttpRequest LIST_BUCKET_REQUEST = HttpRequest.builder().method("GET")
             .endpoint("https://www.googleapis.com/storage/v1/b").addQueryParam("project", EXPECTED_TEST_PROJECT_NUMBER)
@@ -67,7 +67,7 @@ public class BucketApiExpectTest extends BaseGoogleCloudStorageApiExpectTest {
             .addHeader("Accept", "application/json").addHeader("Authorization", "Bearer " + TOKEN).build();
 
    private final HttpResponse LIST_BUCKET_RESPONSE = HttpResponse.builder().statusCode(200)
-            .payload(staticPayloadFromResource("/noAcl_bucket_list.json")).build();
+            .payload(staticPayloadFromResource("/no_acl_bucket_list.json")).build();
 
    // Test getBucket without options
    public void testGetBucketWithNoOptionsResponseIs2xx() throws Exception {
@@ -139,7 +139,7 @@ public class BucketApiExpectTest extends BaseGoogleCloudStorageApiExpectTest {
                .addHeader("Accept", "application/json")
                .addQueryParam("project", EXPECTED_TEST_PROJECT_NUMBER)
                .addHeader("Authorization", "Bearer " + TOKEN)
-               .payload(payloadFromResourceWithContentType("/bucket_insert_requestpayload.json",
+               .payload(payloadFromResourceWithContentType("/bucket_insert_request_payload.json",
                         MediaType.APPLICATION_JSON)).build();
 
       BucketApi api = requestsSendResponses(requestForScopes(STORAGE_FULLCONTROL_SCOPE), TOKEN_RESPONSE,
@@ -164,7 +164,7 @@ public class BucketApiExpectTest extends BaseGoogleCloudStorageApiExpectTest {
                .endpoint("https://www.googleapis.com/storage/v1/b/" + EXPECTED_TEST_BUCKET)
                .addHeader("Accept", "application/json")
                .addHeader("Authorization", "Bearer " + TOKEN)
-               .payload(payloadFromResourceWithContentType("/bucket_update_requestpayload.json",
+               .payload(payloadFromResourceWithContentType("/bucket_update_request_payload.json",
                         MediaType.APPLICATION_JSON)).build();
 
       HttpResponse updateResponse = HttpResponse.builder().statusCode(200)
@@ -192,7 +192,7 @@ public class BucketApiExpectTest extends BaseGoogleCloudStorageApiExpectTest {
                .addHeader("Authorization", "Bearer " + TOKEN)
                .addQueryParam("projection", Projection.NO_ACL.toString())
                .addQueryParam("ifMetagenerationNotMatch", "100")
-               .payload(payloadFromResourceWithContentType("/bucket_update_requestpayload.json",
+               .payload(payloadFromResourceWithContentType("/bucket_update_request_payload.json",
                         MediaType.APPLICATION_JSON)).build();
 
       HttpResponse updateResponse = HttpResponse.builder().statusCode(200)
@@ -217,7 +217,7 @@ public class BucketApiExpectTest extends BaseGoogleCloudStorageApiExpectTest {
                .endpoint("https://www.googleapis.com/storage/v1/b/" + EXPECTED_TEST_BUCKET)
                .addHeader("Accept", "application/json")
                .addHeader("Authorization", "Bearer " + TOKEN)
-               .payload(payloadFromResourceWithContentType("/bucket_update_requestpayload.json",
+               .payload(payloadFromResourceWithContentType("/bucket_update_request_payload.json",
                         MediaType.APPLICATION_JSON)).build();
 
       HttpResponse patchResponse = HttpResponse.builder().statusCode(200)
@@ -245,7 +245,7 @@ public class BucketApiExpectTest extends BaseGoogleCloudStorageApiExpectTest {
                .addHeader("Authorization", "Bearer " + TOKEN)
                .addQueryParam("projection", Projection.NO_ACL.toString())
                .addQueryParam("ifMetagenerationNotMatch", "100")
-               .payload(payloadFromResourceWithContentType("/bucket_update_requestpayload.json",
+               .payload(payloadFromResourceWithContentType("/bucket_update_request_payload.json",
                         MediaType.APPLICATION_JSON)).build();
 
       HttpResponse patchResponse = HttpResponse.builder().statusCode(200)

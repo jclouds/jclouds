@@ -41,7 +41,7 @@ public class NoAclBucketListTest extends BaseGoogleCloudStorageParseTest<ListPag
 
    @Override
    public String resource() {
-      return "/noAcl_bucket_list.json";
+      return "/no_acl_bucket_list.json";
    }
 
    @Override

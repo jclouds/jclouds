@@ -48,17 +48,17 @@ public class DefaultObjectAccessControlsApiExpectTest extends BaseGoogleCloudSto
             .addHeader("Accept", "application/json").addHeader("Authorization", "Bearer " + TOKEN).build();
 
    private final HttpResponse GET_DEFAULT_OBJECT_ACL_RESPONSE = HttpResponse.builder().statusCode(200)
-            .payload(staticPayloadFromResource("/default_objectacl_get.json")).build();
+            .payload(staticPayloadFromResource("/default_object_acl_get.json")).build();
 
    private final HttpResponse CREATE_DEFAULT_OBJECT_ACL_RESPONSE = HttpResponse.builder().statusCode(200)
-            .payload(staticPayloadFromResource("/default_objectacl_insert_response.json")).build();
+            .payload(staticPayloadFromResource("/default_object_acl_insert_response.json")).build();
 
    public  final HttpRequest LIST_DEFAULT_OBJECT_ACL_REQUEST = HttpRequest.builder().method("GET")
             .endpoint("https://www.googleapis.com/storage/v1/b/jcloudtestbucket/defaultObjectAcl")
             .addHeader("Accept", "application/json").addHeader("Authorization", "Bearer " + TOKEN).build();
 
    private final HttpResponse LIST_DEFAULT_OBJECT_ACL_RESPONSE = HttpResponse.builder().statusCode(200)
-            .payload(staticPayloadFromResource("/default_objectacl_list.json")).build();
+            .payload(staticPayloadFromResource("/default_object_acl_list.json")).build();
 
    // Test getDefaultObjectAccessControls
    public void testGetDefaultObjectAclResponseIs2xx() throws Exception {
@@ -109,7 +109,7 @@ public class DefaultObjectAccessControlsApiExpectTest extends BaseGoogleCloudSto
                .endpoint("https://www.googleapis.com/storage/v1/b/jcloudtestbucket/defaultObjectAcl")
                .addHeader("Accept", "application/json")
                .addHeader("Authorization", "Bearer " + TOKEN)
-               .payload(payloadFromResourceWithContentType("/default_objectacl_insert_requestpayload.json",
+               .payload(payloadFromResourceWithContentType("/default_object_acl_insert_request_payload.json",
                         MediaType.APPLICATION_JSON)).build();
 
       DefaultObjectAccessControlsApi api = requestsSendResponses(requestForScopes(STORAGE_FULLCONTROL_SCOPE),
@@ -157,11 +157,11 @@ public class DefaultObjectAccessControlsApiExpectTest extends BaseGoogleCloudSto
                .endpoint("https://www.googleapis.com/storage/v1/b/jcloudtestbucket/defaultObjectAcl/allUsers")
                .addHeader("Accept", "application/json")
                .addHeader("Authorization", "Bearer " + TOKEN)
-               .payload(payloadFromResourceWithContentType("/default_objectacl_update_requestpayload.json",
+               .payload(payloadFromResourceWithContentType("/default_object_acl_update_request_payload.json",
                         MediaType.APPLICATION_JSON)).build();
 
       HttpResponse updateResponse = HttpResponse.builder().statusCode(200)
-               .payload(staticPayloadFromResource("/default_objectacl_update_initial.json")).build();
+               .payload(staticPayloadFromResource("/default_object_acl_update_initial.json")).build();
 
       DefaultObjectAccessControlsApi api = requestsSendResponses(requestForScopes(STORAGE_FULLCONTROL_SCOPE),
                TOKEN_RESPONSE, update, updateResponse).getDefaultObjectAccessControlsApi();
@@ -182,11 +182,11 @@ public class DefaultObjectAccessControlsApiExpectTest extends BaseGoogleCloudSto
                .addHeader("Accept", "application/json")
                .addHeader("Authorization", "Bearer " + TOKEN)
                .addQueryParam("role", ObjectRole.OWNER.toString())
-               .payload(payloadFromResourceWithContentType("/default_objectacl_update_requestpayload.json",
+               .payload(payloadFromResourceWithContentType("/default_object_acl_update_request_payload.json",
                         MediaType.APPLICATION_JSON)).build();
 
       HttpResponse updateResponse = HttpResponse.builder().statusCode(200)
-               .payload(staticPayloadFromResource("/default_objectacl_update_initial.json")).build();
+               .payload(staticPayloadFromResource("/default_object_acl_update_initial.json")).build();
 
       DefaultObjectAccessControlsApi api = requestsSendResponses(requestForScopes(STORAGE_FULLCONTROL_SCOPE),
                TOKEN_RESPONSE, update, updateResponse).getDefaultObjectAccessControlsApi();
@@ -206,11 +206,11 @@ public class DefaultObjectAccessControlsApiExpectTest extends BaseGoogleCloudSto
                .endpoint("https://www.googleapis.com/storage/v1/b/jcloudtestbucket/defaultObjectAcl/allUsers")
                .addHeader("Accept", "application/json")
                .addHeader("Authorization", "Bearer " + TOKEN)
-               .payload(payloadFromResourceWithContentType("/default_objectacl_update_requestpayload.json",
+               .payload(payloadFromResourceWithContentType("/default_object_acl_update_request_payload.json",
                         MediaType.APPLICATION_JSON)).build();
 
       HttpResponse updateResponse = HttpResponse.builder().statusCode(200)
-               .payload(staticPayloadFromResource("/default_objectacl_update_initial.json")).build();
+               .payload(staticPayloadFromResource("/default_object_acl_update_initial.json")).build();
 
       DefaultObjectAccessControlsApi api = requestsSendResponses(requestForScopes(STORAGE_FULLCONTROL_SCOPE),
                TOKEN_RESPONSE, update, updateResponse).getDefaultObjectAccessControlsApi();

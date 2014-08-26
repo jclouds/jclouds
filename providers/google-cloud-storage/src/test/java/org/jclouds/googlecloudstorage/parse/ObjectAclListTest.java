@@ -43,7 +43,7 @@ public class ObjectAclListTest extends BaseGoogleCloudStorageParseTest<ListObjec
 
    @Override
    public String resource() {
-      return "/objectacl_list.json";
+      return "/object_acl_list.json";
    }
 
    @Override

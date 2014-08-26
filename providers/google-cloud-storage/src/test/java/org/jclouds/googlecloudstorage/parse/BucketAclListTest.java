@@ -47,7 +47,7 @@ public class BucketAclListTest extends BaseGoogleCloudStorageParseTest<ListBucke
 
    @Override
    public String resource() {
-      return "/bucketacl_list.json";
+      return "/bucket_acl_list.json";
    }
 
    @Override

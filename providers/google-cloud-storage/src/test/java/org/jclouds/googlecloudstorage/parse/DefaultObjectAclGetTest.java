@@ -29,7 +29,7 @@ public class DefaultObjectAclGetTest extends BaseGoogleCloudStorageParseTest<Def
 
    @Override
    public String resource() {
-      return "/default_objectacl_get.json";
+      return "/default_object_acl_get.json";
    }
 
    @Override

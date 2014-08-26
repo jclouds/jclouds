@@ -29,7 +29,7 @@ public class BucketAclInsertTest extends BaseGoogleCloudStorageParseTest<BucketA
 
    @Override
    public String resource() {
-      return "/bucketacl_insert_response.json";
+      return "/bucket_acl_insert_response.json";
    }
 
    @Override
