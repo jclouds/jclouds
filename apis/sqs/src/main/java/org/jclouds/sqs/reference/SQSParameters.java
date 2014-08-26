@@ -22,7 +22,7 @@ package org.jclouds.sqs.reference;
  * @see <a href="http://docs.amazonwebservices.com/AWSSimpleQueueService/2011-10-01/APIReference/Query_QueryParams.html"
  *      />
  */
-public interface SQSParameters {
+public final class SQSParameters {
 
    /**
     * The action to perform. For example: CreateQueue.
@@ -67,4 +67,8 @@ public interface SQSParameters {
     * For more information, see Query Request Authentication in the Amazon SQS Developer Guide.
     */
    public static final String SIGNATURE_VERSION = "SignatureVersion";
+
+   private SQSParameters() {
+      throw new AssertionError("intentionally unimplemented");
+   }
 }

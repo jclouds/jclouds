@@ -16,7 +16,7 @@
  */
 package org.jclouds.gogrid.reference;
 
-public interface GoGridQueryParams {
+public final class GoGridQueryParams {
 
    public static final String ID_KEY = "id";
    public static final String NAME_KEY = "name";
@@ -60,4 +60,8 @@ public interface GoGridQueryParams {
    public static final String IMAGE_DESCRIPTION_KEY = "description";
 
    public static final String LOOKUP_LIST_KEY = "lookup";
+
+   private GoGridQueryParams() {
+      throw new AssertionError("intentionally unimplemented");
+   }
 }

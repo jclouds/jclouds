@@ -16,10 +16,13 @@
  */
 package org.jclouds.openstack.v2_0.reference;
 
-public interface AuthHeaders {
+public final class AuthHeaders {
 
    public static final String AUTH_USER = "X-Auth-User";
    public static final String AUTH_KEY = "X-Auth-Key";
    public static final String AUTH_TOKEN = "X-Auth-Token";
 
+   private AuthHeaders() {
+      throw new AssertionError("intentionally unimplemented");
+   }
 }

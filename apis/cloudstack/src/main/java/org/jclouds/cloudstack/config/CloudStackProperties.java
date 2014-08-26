@@ -20,7 +20,7 @@ package org.jclouds.cloudstack.config;
 /**
  * Configuration properties and constants used in CloudStack connections.
  */
-public interface CloudStackProperties {
+public final class CloudStackProperties {
 
    /**
     * Type of credentials specified during {@link ComputeServiceContextBuilder#overrides}. If
@@ -45,4 +45,8 @@ public interface CloudStackProperties {
     * delete the keypair(s) when the last node in the group is destroyed.
     */
    public static final String AUTO_GENERATE_KEYPAIRS = "jclouds.cloudstack.auto-generate-keypairs";
+
+   private CloudStackProperties() {
+      throw new AssertionError("intentionally unimplemented");
+   }
 }

@@ -19,7 +19,7 @@ package org.jclouds.softlayer.reference;
 /**
  * Configuration properties and constants used in SoftLayer connections.
  */
-public interface SoftLayerConstants {
+public final class SoftLayerConstants {
 
    public static final String SOFTLAYER_PROVIDER_NAME = "softlayer";
 
@@ -40,4 +40,7 @@ public interface SoftLayerConstants {
     */
    public static final String PROPERTY_SOFTLAYER_INCLUDE_PUBLIC_IMAGES = "jclouds.softlayer.include_public_images";
 
+   private SoftLayerConstants() {
+      throw new AssertionError("intentionally unimplemented");
+   }
 }

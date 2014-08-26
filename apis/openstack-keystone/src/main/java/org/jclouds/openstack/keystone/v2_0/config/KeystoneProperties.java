@@ -19,7 +19,7 @@ package org.jclouds.openstack.keystone.v2_0.config;
 /**
  * Configuration properties and constants used in Keystone connections.
  */
-public interface KeystoneProperties {
+public final class KeystoneProperties {
 
    /**
     * Type of credentials used to log into the auth service.
@@ -68,4 +68,8 @@ public interface KeystoneProperties {
     * @see ServiceType
     */
    public static final String SERVICE_TYPE = "jclouds.keystone.service-type";
+
+   private KeystoneProperties() {
+      throw new AssertionError("intentionally unimplemented");
+   }
 }

@@ -23,7 +23,7 @@ import javax.ws.rs.core.MediaType;
  * 
  * @see MediaType
  */
-public interface VCloudMediaType {
+public final class VCloudMediaType {
    /**
     * "application/vnd.vmware.vcloud.error+xml"
     */
@@ -209,4 +209,7 @@ public interface VCloudMediaType {
     */
    public static final MediaType RASDITEM_XML_TYPE = new MediaType("application", "vnd.vmware.vcloud.rasdItem+xml");
 
+   private VCloudMediaType() {
+      throw new AssertionError("intentionally unimplemented");
+   }
 }

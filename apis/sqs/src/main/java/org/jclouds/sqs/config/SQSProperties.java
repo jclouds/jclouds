@@ -20,7 +20,7 @@ package org.jclouds.sqs.config;
 /**
  * Configuration properties and constants used in SQS connections.
  */
-public interface SQSProperties {
+public final class SQSProperties {
 
    /**
     * Integer property.
@@ -41,4 +41,7 @@ public interface SQSProperties {
     */
    public static final String CREATE_QUEUE_RETRY_INTERVAL = "jclouds.sqs.create-queue.retry-interval";
 
+   private SQSProperties() {
+      throw new AssertionError("intentionally unimplemented");
+   }
 }

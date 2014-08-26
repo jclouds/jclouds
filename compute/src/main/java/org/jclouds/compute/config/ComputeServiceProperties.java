@@ -16,7 +16,7 @@
  */
 package org.jclouds.compute.config;
 
-public interface ComputeServiceProperties {
+public final class ComputeServiceProperties {
    public static final String RESOURCENAME_PREFIX = "jclouds.compute.resourcename-prefix";
    public static final String RESOURCENAME_DELIMITER = "jclouds.compute.resourcename-delimiter";
 
@@ -109,4 +109,7 @@ public interface ComputeServiceProperties {
     */
    public static final String SOCKET_FINDER_ALLOWED_INTERFACES = "jclouds.compute.socket-finder-allowed-interfaces";
 
+   private ComputeServiceProperties() {
+      throw new AssertionError("intentionally unimplemented");
+   }
 }

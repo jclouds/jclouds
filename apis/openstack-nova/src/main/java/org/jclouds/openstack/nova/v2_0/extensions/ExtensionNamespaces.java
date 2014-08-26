@@ -21,7 +21,7 @@ package org.jclouds.openstack.nova.v2_0.extensions;
  *
  * @see <a href= "http://nova.openstack.org/api_ext/" />
  */
-public interface ExtensionNamespaces {
+public final class ExtensionNamespaces {
    /**
     * Keypair Support
     */
@@ -110,4 +110,8 @@ public interface ExtensionNamespaces {
     * Consoles extension
     */
    public static final String CONSOLES = "http://docs.openstack.org/compute/ext/os-consoles/api/v2";
+
+   private ExtensionNamespaces() {
+      throw new AssertionError("intentionally unimplemented");
+   }
 }

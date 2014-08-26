@@ -24,7 +24,7 @@ package org.jclouds.sqs.domain;
  *      "http://docs.amazonwebservices.com/AWSSimpleQueueService/latest/SQSDeveloperGuide/acp-overview.html#PermissionTypes"
  *      />
  */
-public interface Attribute {
+public final class Attribute {
 
    /**
     * approximate number of visible messages in a queue.
@@ -82,4 +82,8 @@ public interface Attribute {
     * delayed.
     */
    public static final String DELAY_SECONDS = "DelaySeconds";
+
+   private Attribute() {
+      throw new AssertionError("intentionally unimplemented");
+   }
 }

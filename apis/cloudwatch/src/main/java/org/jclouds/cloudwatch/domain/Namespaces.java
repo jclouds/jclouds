@@ -21,7 +21,7 @@ package org.jclouds.cloudwatch.domain;
  *
  * @see <a href="http://docs.amazonwebservices.com/AmazonCloudWatch/latest/DeveloperGuide/CW_Support_For_AWS.html#aws-namespaces" />
  */
-public interface Namespaces {
+public final class Namespaces {
 
    public static final String AUTO_SCALING = "AWS/AutoScaling";
    public static final String DYNAMODB = "AWS/DynamoDB";
@@ -34,4 +34,7 @@ public interface Namespaces {
    public static final String SQS = "AWS/SQS";
    public static final String STORAGE_GATEWAY = "AWS/StorageGateway";
 
+   private Namespaces() {
+      throw new AssertionError("intentionally unimplemented");
+   }
 }

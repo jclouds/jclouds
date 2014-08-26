@@ -23,7 +23,7 @@ package org.jclouds.s3.reference;
  *      href="http://docs.amazonwebservices.com/AmazonS3/latest/index.html?RESTAuthentication.html"
  *      />
  */
-public interface S3Headers {
+public final class S3Headers {
 
    /**
     * Amazon S3 has clones, which often replace this with their particular tag.
@@ -126,4 +126,8 @@ public interface S3Headers {
     * Instruction file header to be placed in the metadata of instruction files
     */
    public static final String CRYPTO_INSTRUCTION_FILE = HEADER_PREFIX + "crypto-instr-file";
+
+   private S3Headers() {
+      throw new AssertionError("intentionally unimplemented");
+   }
 }

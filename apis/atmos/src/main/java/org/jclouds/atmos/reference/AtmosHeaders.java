@@ -21,7 +21,7 @@ package org.jclouds.atmos.reference;
  * 
  * @see <a href="https://community.emc.com/community/labs/atmos_online" />
  */
-public interface AtmosHeaders {
+public final class AtmosHeaders {
 
    public static final String SIGNATURE = "x-emc-signature";
    public static final String LISTABLE_META = "x-emc-listable-meta";
@@ -34,5 +34,8 @@ public interface AtmosHeaders {
    public static final String UID = "x-emc-uid";
    public static final String TOKEN = "x-emc-token";
    public static final String CHECKSUM = "x-emc-wschecksum";
-   
+
+   private AtmosHeaders() {
+      throw new AssertionError("intentionally unimplemented");
+   }
 }

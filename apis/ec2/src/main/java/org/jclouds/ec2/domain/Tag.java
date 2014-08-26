@@ -37,7 +37,7 @@ public class Tag {
    /**
     * Describes the well-known resource types that can be tagged.
     */
-   public interface ResourceType {
+   public static final class ResourceType {
       public static final String CUSTOMER_GATEWAY = "customer-gateway";
       public static final String DHCP_OPTIONS = "dhcp-options";
       public static final String IMAGE = "image";
@@ -54,6 +54,10 @@ public class Tag {
       public static final String VPC = "vpc";
       public static final String VPN_CONNECTION = "vpn-connection";
       public static final String VPN_GATEWAY = "vpn-gateway";
+
+      private ResourceType() {
+         throw new AssertionError("intentionally unimplemented");
+      }
    }
    
    public static Builder builder() {

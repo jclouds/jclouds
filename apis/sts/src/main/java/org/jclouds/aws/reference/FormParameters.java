@@ -21,7 +21,7 @@ package org.jclouds.aws.reference;
  * 
  * @see <a href="http://docs.amazonwebservices.com/AWSEC2/latest/APIReference/Query-Common-Parameters.html"/>
  */
-public interface FormParameters {
+public final class FormParameters {
 
    /**
     * Indicates the action to perform. Example: RunInstances
@@ -72,4 +72,8 @@ public interface FormParameters {
     * 
     */
    public static final String SIGNATURE_VERSION = "SignatureVersion";
+
+   private FormParameters() {
+      throw new AssertionError("intentionally unimplemented");
+   }
 }

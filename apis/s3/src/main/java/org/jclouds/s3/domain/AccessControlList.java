@@ -247,12 +247,16 @@ public class AccessControlList {
    // Class and Enum declarations to represent Grants, Grantees and Permissions //
    // /////////////////////////////////////////////////////////////////////////////
 
-   public interface Permission {
+   public static final class Permission {
       public static final String READ = "READ";
       public static final String WRITE = "WRITE";
       public static final String READ_ACP = "READ_ACP";
       public static final String WRITE_ACP = "WRITE_ACP";
       public static final String FULL_CONTROL = "FULL_CONTROL";
+
+      private Permission() {
+         throw new AssertionError("intentionally unimplemented");
+      }
    };
 
    public static class Grant implements Comparable<Grant> {
@@ -417,11 +421,15 @@ public class AccessControlList {
       }
    }
 
-   public interface GroupGranteeURI {
+   public static final class GroupGranteeURI {
       public static final URI ALL_USERS = URI.create("http://acs.amazonaws.com/groups/global/AllUsers");
       public static final URI AUTHENTICATED_USERS = URI
                .create("http://acs.amazonaws.com/groups/global/AuthenticatedUsers");
       public static final URI LOG_DELIVERY = URI.create("http://acs.amazonaws.com/groups/s3/LogDelivery");
+
+      private GroupGranteeURI() {
+         throw new AssertionError("intentionally unimplemented");
+      }
    }
 
    public static class GroupGrantee extends Grantee {

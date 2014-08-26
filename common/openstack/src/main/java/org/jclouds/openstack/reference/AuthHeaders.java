@@ -21,7 +21,7 @@ package org.jclouds.openstack.reference;
  * 
  * @see <a href="http://docs.rackspacecloud.com/servers/api/cs-devguide-latest.pdf" />
  */
-public interface AuthHeaders {
+public final class AuthHeaders {
 
    public static final String AUTH_USER = "X-Auth-User";
    public static final String AUTH_KEY = "X-Auth-Key";
@@ -34,4 +34,7 @@ public interface AuthHeaders {
    public static final String SERVER_MANAGEMENT_URL = "X-Server-Management" + URL_SUFFIX;
    public static final String STORAGE_URL = "X-Storage" + URL_SUFFIX;
 
+   private AuthHeaders() {
+      throw new AssertionError("intentionally unimplemented");
+   }
 }

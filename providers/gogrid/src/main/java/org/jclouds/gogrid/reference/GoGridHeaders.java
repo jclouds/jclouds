@@ -16,6 +16,10 @@
  */
 package org.jclouds.gogrid.reference;
 
-public interface GoGridHeaders {
+public final class GoGridHeaders {
     public static final String VERSION = "v";
+
+   private GoGridHeaders() {
+      throw new AssertionError("intentionally unimplemented");
+   }
 }
