@@ -16,3 +16,4 @@ TAGS
 .metadata/
 atlassian-ide-plugin.xml
 .DS_Store
+.java-version
