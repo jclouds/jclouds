@@ -154,7 +154,7 @@ public class BaseChefService implements ChefService {
    String buildBootstrapConfiguration(BootstrapConfig bootstrapConfig) {
       checkNotNull(bootstrapConfig, "bootstrapConfig must not be null");
 
-      Map<String, Object> configMap = Maps.newHashMap();
+      Map<String, Object> configMap = Maps.newLinkedHashMap();
       configMap.put("run_list", bootstrapConfig.getRunList());
 
       if (bootstrapConfig.getEnvironment().isPresent()) {

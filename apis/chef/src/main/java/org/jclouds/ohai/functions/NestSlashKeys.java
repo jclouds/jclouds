@@ -94,7 +94,7 @@ public class NestSlashKeys implements Function<Multimap<String, Supplier<JsonBal
    @VisibleForTesting
    void mergeAsPeer(String key, JsonBall value, Map<String, JsonBall> insertionContext) {
       Map<String, JsonBall> immutableValueContext = json.fromJson(insertionContext.get(key).toString(), mapLiteral);
-      Map<String, JsonBall> valueContext = Maps.newHashMap(immutableValueContext);
+      Map<String, JsonBall> valueContext = Maps.newLinkedHashMap(immutableValueContext);
       Map<String, JsonBall> toPut = json.<Map<String, JsonBall>> fromJson(value.toString(), mapLiteral);
       Set<String> uniques = Sets.difference(toPut.keySet(), valueContext.keySet());
       for (String k : uniques) {
@@ -135,7 +135,7 @@ public class NestSlashKeys implements Function<Multimap<String, Supplier<JsonBal
 
       checkArgument(rootValue.matches("^\\{.*\\}$"), "value must be a hash: %s", rootValue);
       Map<String, JsonBall> immutableInsertionContext = json.fromJson(rootValue, mapLiteral);
-      Map<String, JsonBall> insertionContext = Maps.newHashMap(immutableInsertionContext);
+      Map<String, JsonBall> insertionContext = Maps.newLinkedHashMap(immutableInsertionContext);
       if (keyParts.size() == 1) {
          if (!insertionContext.containsKey(keyParts.get(0))) {
             insertionContext.put(keyParts.get(0), toInsert);

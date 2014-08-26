@@ -84,7 +84,7 @@ public class BaseChefServiceTest {
       BootstrapConfig bootstrapConfig = BootstrapConfig.builder().runList(runlist)
             .attributes(new JsonBall("{\"tomcat6\":{\"ssl_port\":8433}}")).build();
       String config = chefService.buildBootstrapConfiguration(bootstrapConfig);
-      assertEquals(config, "{\"tomcat6\":{\"ssl_port\":8433},\"run_list\":[\"recipe[apache2]\",\"role[webserver]\"]}");
+      assertEquals(config, "{\"run_list\":[\"recipe[apache2]\",\"role[webserver]\"],\"tomcat6\":{\"ssl_port\":8433}}");
    }
 
    public void testBuildBootstrapConfigurationWithRunlistAndAttributesAndEnvironment() {
@@ -93,7 +93,7 @@ public class BaseChefServiceTest {
             .attributes(new JsonBall("{\"tomcat6\":{\"ssl_port\":8433}}")).environment("env").build();
       String config = chefService.buildBootstrapConfiguration(bootstrapConfig);
       assertEquals(config,
-            "{\"tomcat6\":{\"ssl_port\":8433},\"environment\":\"env\",\"run_list\":[\"recipe[apache2]\",\"role[webserver]\"]}");
+            "{\"run_list\":[\"recipe[apache2]\",\"role[webserver]\"],\"environment\":\"env\",\"tomcat6\":{\"ssl_port\":8433}}");
    }
 
 }
