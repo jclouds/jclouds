@@ -91,7 +91,7 @@ public class MachineTypeInZoneToHardware implements Function<MachineTypeInZone, 
       for (MachineType.ScratchDisk disk : input.getScratchDisks()) {
          volumes.add(new VolumeBuilder()
                  .type(Volume.Type.LOCAL)
-                 .size(new Integer(disk.getDiskGb()).floatValue())
+                 .size(Integer.valueOf(disk.getDiskGb()).floatValue())
                  .bootDevice(true)
                  .durable(false).build());
       }
