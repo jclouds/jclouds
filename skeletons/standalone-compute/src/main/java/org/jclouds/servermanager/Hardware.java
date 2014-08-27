@@ -44,10 +44,18 @@ public class Hardware {
    }
 
    @Override
-   public boolean equals(Object that) {
-      if (that == null)
+   public boolean equals(Object obj) {
+      if (obj == null)
          return false;
-      return Objects.equal(this.toString(), that.toString());
+      if (!(obj instanceof Hardware)) {
+         return false;
+      }
+      Hardware that = (Hardware) obj;
+      return Objects.equal(this.id, that.id)
+         && Objects.equal(this.name, that.name)
+         && Objects.equal(this.cores, that.cores)
+         && Objects.equal(this.ram, that.ram)
+         && Objects.equal(this.disk, that.disk);
    }
 
    @Override

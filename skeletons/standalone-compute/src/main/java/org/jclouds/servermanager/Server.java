@@ -46,10 +46,23 @@ public class Server {
    }
 
    @Override
-   public boolean equals(Object that) {
-      if (that == null)
+   public boolean equals(Object obj) {
+      if (obj == null)
          return false;
-      return Objects.equal(this.toString(), that.toString());
+      if (!(obj instanceof Server)) {
+         return false;
+      }
+      Server that = (Server) obj;
+      return Objects.equal(this.id, that.id)
+         && Objects.equal(this.name, that.name)
+         && Objects.equal(this.status, that.status)
+         && Objects.equal(this.datacenter, that.datacenter)
+         && Objects.equal(this.imageId, that.imageId)
+         && Objects.equal(this.hardwareId, that.hardwareId)
+         && Objects.equal(this.publicAddress, that.publicAddress)
+         && Objects.equal(this.privateAddress, that.privateAddress)
+         && Objects.equal(this.loginUser, that.loginUser)
+         && Objects.equal(this.password, that.password);
    }
 
    @Override

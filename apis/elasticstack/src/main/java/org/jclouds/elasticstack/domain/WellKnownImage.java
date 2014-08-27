@@ -135,10 +135,20 @@ public class WellKnownImage {
    }
 
    @Override
-   public boolean equals(Object that) {
-      if (that == null)
+   public boolean equals(Object obj) {
+      if (obj == null)
          return false;
-      return Objects.equal(this.toString(), that.toString());
+      if (!(obj instanceof WellKnownImage)){
+         return false;
+      }
+      WellKnownImage that = (WellKnownImage) obj;
+      return Objects.equal(this.loginUser, that.loginUser)
+         && Objects.equal(this.uuid, that.uuid)
+         && Objects.equal(this.description, that.description)
+         && Objects.equal(this.osFamily, that.osFamily)
+         && Objects.equal(this.osVersion, that.osVersion)
+         && Objects.equal(this.size, that.size)
+         && Objects.equal(this.is64bit, that.is64bit);
    }
 
    @Override

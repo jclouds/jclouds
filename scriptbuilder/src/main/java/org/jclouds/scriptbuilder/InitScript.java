@@ -299,10 +299,14 @@ public class InitScript extends ForwardingObject implements Statement, AcceptsSt
    }
 
    @Override
-   public boolean equals(Object that) {
-      if (that == null)
+   public boolean equals(Object obj) {
+      if (obj == null)
          return false;
-      return equal(this.toString(), that.toString());
+      if (!(obj instanceof InitScript)) {
+         return false;
+      }
+      InitScript that = (InitScript) obj;
+      return equal(this.instanceName, that.instanceName);
    }
 
    @Override

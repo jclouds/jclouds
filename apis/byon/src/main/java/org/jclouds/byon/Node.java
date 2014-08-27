@@ -272,10 +272,30 @@ public class Node {
    }
 
    @Override
-   public boolean equals(Object that) {
-      if (that == null)
+   public boolean equals(Object obj) {
+      if (obj == null)
          return false;
-      return Objects.equal(this.toString(), that.toString());
+      if (!(obj instanceof Node)) {
+         return false;
+      }
+      Node that = (Node) obj;
+      return Objects.equal(this.id, that.id)
+         && Objects.equal(this.name, that.name)
+         && Objects.equal(this.description, that.description)
+         && Objects.equal(this.hostname, that.hostname)
+         && Objects.equal(this.locationId, that.locationId)
+         && Objects.equal(this.osArch, that.osArch)
+         && Objects.equal(this.osFamily, that.osFamily)
+         && Objects.equal(this.osDescription, that.osDescription)
+         && Objects.equal(this.osVersion, that.osVersion)
+         && Objects.equal(this.loginPort, that.loginPort)
+         && Objects.equal(this.os64Bit, that.os64Bit)
+         && Objects.equal(this.group, that.group)
+         && Objects.equal(this.tags, that.tags)
+         && Objects.equal(this.metadata, that.metadata)
+         && Objects.equal(this.username, that.username)
+         // not comparing credential and credentialUrl
+         && Objects.equal(this.sudoPassword, that.sudoPassword);
    }
 
    @Override

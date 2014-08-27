@@ -74,7 +74,7 @@ public class CreateRecord<D extends Map<String, Object>> {
    public boolean equals(Object obj) {
       if (this == obj)
          return true;
-      if (obj == null || !obj.getClass().equals(CreateRecord.class))
+      if (obj == null || !(obj instanceof CreateRecord))
          return false;
       CreateRecord<?> that = CreateRecord.class.cast(obj);
       return equal(this.fqdn, that.fqdn) && equal(this.type, that.type) && equal(this.ttl, that.ttl)

@@ -38,10 +38,15 @@ public class Datacenter {
    }
 
    @Override
-   public boolean equals(Object that) {
-      if (that == null)
+   public boolean equals(Object obj) {
+      if (obj == null)
          return false;
-      return Objects.equal(this.toString(), that.toString());
+      if (!(obj instanceof Datacenter)) {
+         return false;
+      }
+      Datacenter that = (Datacenter) obj;
+      return Objects.equal(this.id, that.id)
+         && Objects.equal(this.name, that.name);
    }
 
    @Override

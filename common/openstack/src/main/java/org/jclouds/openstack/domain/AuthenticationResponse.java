@@ -48,10 +48,15 @@ public class AuthenticationResponse {
    }
 
    @Override
-   public boolean equals(Object that) {
-      if (that == null)
+   public boolean equals(Object obj) {
+      if (obj == null)
          return false;
-      return Objects.equal(this.toString(), that.toString());
+      if (!(obj instanceof AuthenticationResponse)) {
+         return false;
+      }
+      AuthenticationResponse that = (AuthenticationResponse) obj;
+      return Objects.equal(this.authToken, that.authToken)
+         && Objects.equal(this.services, that.services);
    }
 
    @Override
