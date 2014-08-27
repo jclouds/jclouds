@@ -21,6 +21,7 @@ import java.util.Set;
 
 import org.jclouds.location.Region;
 import org.jclouds.location.functions.RegionToEndpoint;
+import org.jclouds.openstack.nova.v2_0.extensions.AttachInterfaceApi;
 import org.jclouds.openstack.nova.v2_0.extensions.AvailabilityZoneApi;
 import org.jclouds.openstack.nova.v2_0.extensions.ConsolesApi;
 import org.jclouds.openstack.nova.v2_0.extensions.FlavorExtraSpecsApi;
@@ -272,6 +273,13 @@ public interface NovaApi extends Closeable {
    @Delegate
    Optional<FloatingIPPoolApi> getFloatingIPPoolApi(
          @EndpointParam(parser = RegionToEndpoint.class) String region);
+
+	/**
+	 * Provides access to attach interface features.
+	 */
+	@Delegate
+	Optional<? extends AttachInterfaceApi> getAttachInterfaceApi(
+			@EndpointParam(parser = RegionToEndpoint.class) String region);
 
    /**
     * @return the Zone codes configured
