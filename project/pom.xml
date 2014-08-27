@@ -806,6 +806,27 @@
           <groupId>org.codehaus.mojo</groupId>
           <artifactId>findbugs-maven-plugin</artifactId>
           <version>3.0.0</version>
+          <configuration>
+            <omitVisitors>
+              CheckRelaxingNullnessAnnotation,
+              CloneIdiom,
+              DefaultEncodingDetector,
+              EqualsOperandShouldHaveClassCompatibleWithThis,
+              FindBadCast2,
+              FindHEmismatch,
+              FindMaskedFields,
+              FindNullDeref,
+              FindReturnRef,
+              FindUnsatisfiedObligation,
+              FormatStringChecker,
+              MethodReturnCheck,
+              Naming,
+              NoteUnconditionalParamDerefs,
+              RuntimeExceptionCapture,
+              SwitchFallthrough,
+              UnreadFields,
+            </omitVisitors>
+          </configuration>
         </plugin>
         <plugin>
           <groupId>org.sonatype.maven.plugin</groupId>
