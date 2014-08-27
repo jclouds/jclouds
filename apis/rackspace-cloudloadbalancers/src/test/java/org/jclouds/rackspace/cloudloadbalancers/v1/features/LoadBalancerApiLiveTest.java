@@ -184,7 +184,7 @@ public class LoadBalancerApiLiveTest extends BaseCloudLoadBalancersApiLiveTest {
       assertEquals(lb.getRegion(), region);
       assertEquals(lb.getName(), name);
       assertEquals(lb.getProtocol(), "HTTP");
-      assertEquals(lb.getPort(), new Integer(80));
+      assertEquals(lb.getPort(), Integer.valueOf(80));
       assertEquals(Iterables.get(lb.getVirtualIPs(), 0).getType(), Type.PUBLIC);
    }
 
