@@ -17,6 +17,7 @@
 package org.jclouds.ec2.compute.strategy;
 
 import static com.google.common.io.BaseEncoding.base64;
+import static org.easymock.EasyMock.anyObject;
 import static org.easymock.EasyMock.createMock;
 import static org.easymock.EasyMock.expect;
 import static org.easymock.EasyMock.replay;
@@ -356,8 +357,7 @@ public class CreateKeyPairAndSecurityGroupsAsNeededAndReturnRunOptionsTest {
       expect(options.getKeyPair()).andReturn(userSuppliedKeyPair);
       expect(options.shouldAutomaticallyCreateKeyPair()).andReturn(shouldAutomaticallyCreateKeyPair);
       expect(keyPair.getKeyName()).andReturn(systemGeneratedKeyPairName).atLeastOnce();
-      expect(strategy.credentialsMap.containsKey(new RegionAndName(region, group))).andReturn(true);
-      expect(strategy.credentialsMap.get(new RegionAndName(region, group))).andReturn(keyPair);
+      expect(strategy.credentialsMap.putIfAbsent(anyObject(RegionAndName.class), anyObject(KeyPair.class))).andReturn(keyPair);
       expect(options.getRunScript()).andReturn(null);
 
       // replay mocks
@@ -557,6 +557,7 @@ public class CreateKeyPairAndSecurityGroupsAsNeededAndReturnRunOptionsTest {
       LoadingCache<RegionAndName, String> securityGroupMap = createMock(LoadingCache.class);
       GroupNamingConvention.Factory namingConventionFactory = createMock(GroupNamingConvention.Factory.class);
       GroupNamingConvention namingConvention = createMock(GroupNamingConvention.class);
+      expect(makeKeyPair.apply(anyObject(RegionAndName.class))).andReturn(null).anyTimes();
       expect(namingConventionFactory.create()).andReturn(namingConvention).anyTimes();
       expect(namingConvention.sharedNameForGroup("group")).andReturn("jclouds#group").anyTimes();
       replay(namingConventionFactory);

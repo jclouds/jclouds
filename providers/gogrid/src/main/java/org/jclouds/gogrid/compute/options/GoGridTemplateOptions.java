@@ -52,10 +52,6 @@ public class GoGridTemplateOptions extends TemplateOptions implements Cloneable 
    @Override
    public void copyTo(TemplateOptions to) {
       super.copyTo(to);
-      if (to instanceof GoGridTemplateOptions) {
-         @SuppressWarnings("unused")
-         GoGridTemplateOptions eTo = GoGridTemplateOptions.class.cast(to);
-      }
    }
 
    public static final GoGridTemplateOptions NONE = new GoGridTemplateOptions();

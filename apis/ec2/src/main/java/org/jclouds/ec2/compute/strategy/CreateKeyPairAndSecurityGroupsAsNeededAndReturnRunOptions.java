@@ -147,17 +147,15 @@ public class CreateKeyPairAndSecurityGroupsAsNeededAndReturnRunOptions {
    // base EC2 driver currently does not support key import
    protected String createOrImportKeyPair(String region, String group, TemplateOptions options) {
       RegionAndName regionAndGroup = new RegionAndName(region, group);
-      KeyPair keyPair;
+      KeyPair keyPair = makeKeyPair.apply(new RegionAndName(region, group));
       // make sure that we don't request multiple keys simultaneously
-      synchronized (credentialsMap) {
-         // if there is already a keypair for the group specified, use it
-         if (credentialsMap.containsKey(regionAndGroup))
-            return credentialsMap.get(regionAndGroup).getKeyName();
-
-         // otherwise create a new keypair and key it under the group and also the regular keyname
-         keyPair = makeKeyPair.apply(new RegionAndName(region, group));
-         credentialsMap.put(regionAndGroup, keyPair);
+      // if there is already a keypair for the group specified, use it
+      // otherwise create a new keypair and key it under the group and also the regular keyname
+      KeyPair origValue = credentialsMap.putIfAbsent(regionAndGroup, keyPair);
+      if (origValue != null) {
+         return origValue.getKeyName();
       }
+
       credentialsMap.put(new RegionAndName(region, keyPair.getKeyName()), keyPair);
       return keyPair.getKeyName();
    }
