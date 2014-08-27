@@ -16,6 +16,7 @@
  */
 package org.jclouds.filesystem.utils;
 
+import static org.jclouds.utils.TestUtils.randomByteSource;
 import static org.testng.Assert.assertFalse;
 import static org.testng.Assert.assertTrue;
 
@@ -214,9 +215,9 @@ public class TestUtils {
         }
         Random random = new Random();
         for (File file : IMAGE_RESOURCES) {
-            byte[] buffer = new byte[random.nextInt(2 * 1024 * 1024)];
-            random.nextBytes(buffer);
-            ByteSource.wrap(buffer).copyTo(Files.asByteSink(file));
+            int length = random.nextInt(2 * 1024 * 1024);
+            ByteSource byteSource = randomByteSource().slice(0, length);
+            byteSource.copyTo(Files.asByteSink(file));
         }
     }
 

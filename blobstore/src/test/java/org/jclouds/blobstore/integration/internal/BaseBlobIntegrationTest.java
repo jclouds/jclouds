@@ -630,11 +630,7 @@ public class BaseBlobIntegrationTest extends BaseBlobStoreIntegrationTest {
    }
 
    /** @return ByteSource containing a random length 0..length of random bytes. */
-   @SuppressWarnings("unchecked")
    private static ByteSource createTestInput(int length) {
-      Random random = new Random();
-      byte[] buffer = new byte[random.nextInt(length)];
-      random.nextBytes(buffer);
-      return ByteSource.wrap(buffer);
+      return TestUtils.randomByteSource().slice(0, new Random().nextInt(length));
    }
 }
