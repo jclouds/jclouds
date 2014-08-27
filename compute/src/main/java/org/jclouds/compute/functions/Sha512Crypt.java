@@ -160,7 +160,7 @@ public class Sha512Crypt {
 
          if (shadowPrefix.startsWith(sha512_rounds_prefix)) {
             String num = shadowPrefix.substring(sha512_rounds_prefix.length(), shadowPrefix.indexOf('$'));
-            int srounds = Integer.valueOf(num).intValue();
+            int srounds = Integer.parseInt(num);
             shadowPrefix = shadowPrefix.substring(shadowPrefix.indexOf('$') + 1);
             rounds = Math.max(ROUNDS_MIN, Math.min(srounds, ROUNDS_MAX));
          }

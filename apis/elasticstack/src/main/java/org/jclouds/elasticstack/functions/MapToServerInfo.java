@@ -63,16 +63,16 @@ public class MapToServerInfo implements Function<Map<String, String>, ServerInfo
 
 
       if (from.containsKey("smp:cores")) {
-            builder.smp(Integer.valueOf(from.get("smp:cores")));
+            builder.smp(Integer.parseInt(from.get("smp:cores")));
       } else if (from.containsKey("smp") && !"auto".equals(from.get("smp"))) {
-            builder.smp(Integer.valueOf(from.get("smp")));
+            builder.smp(Integer.parseInt(from.get("smp")));
       }
 
       builder.cpu(Integer.parseInt(from.get("cpu")));
       builder.mem(Integer.parseInt(from.get("mem")));
       builder.user(from.get("user"));
       if (from.containsKey("started"))
-         builder.started(new Date(Long.valueOf(from.get("started"))));
+         builder.started(new Date(Long.parseLong(from.get("started"))));
       builder.uuid(from.get("server"));
       if (from.containsKey("boot"))
          builder.bootDeviceIds(Splitter.on(' ').split(from.get("boot")));

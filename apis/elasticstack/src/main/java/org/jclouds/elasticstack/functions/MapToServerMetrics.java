@@ -38,13 +38,13 @@ public class MapToServerMetrics implements Function<Map<String, String>, ServerM
    public ServerMetrics apply(Map<String, String> from) {
       ServerMetrics.Builder metricsBuilder = new ServerMetrics.Builder();
       if (from.containsKey("tx:packets"))
-         metricsBuilder.txPackets(Long.valueOf(from.get("tx:packets")));
+         metricsBuilder.txPackets(Long.parseLong(from.get("tx:packets")));
       if (from.containsKey("tx"))
-         metricsBuilder.tx(Long.valueOf(from.get("tx")));
+         metricsBuilder.tx(Long.parseLong(from.get("tx")));
       if (from.containsKey("rx:packets"))
-         metricsBuilder.rxPackets(Long.valueOf(from.get("rx:packets")));
+         metricsBuilder.rxPackets(Long.parseLong(from.get("rx:packets")));
       if (from.containsKey("rx"))
-         metricsBuilder.rx(Long.valueOf(from.get("rx")));
+         metricsBuilder.rx(Long.parseLong(from.get("rx")));
       metricsBuilder.driveMetrics(mapToDriveMetrics.apply(from));
 
       ServerMetrics metrics = metricsBuilder.build();

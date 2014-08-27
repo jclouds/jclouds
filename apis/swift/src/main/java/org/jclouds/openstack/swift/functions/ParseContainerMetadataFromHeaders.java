@@ -43,8 +43,8 @@ public class ParseContainerMetadataFromHeaders implements Function<HttpResponse,
    public ContainerMetadata apply(HttpResponse from) {
       return ContainerMetadata.builder().name(request.getInvocation().getArgs().get(0).toString())
             .readACL(from.getFirstHeaderOrNull(SwiftHeaders.CONTAINER_READ))
-            .bytes(Long.valueOf(from.getFirstHeaderOrNull(SwiftHeaders.CONTAINER_BYTES_USED)))
-            .count(Long.valueOf(from.getFirstHeaderOrNull(SwiftHeaders.CONTAINER_OBJECT_COUNT)))
+            .bytes(Long.parseLong(from.getFirstHeaderOrNull(SwiftHeaders.CONTAINER_BYTES_USED)))
+            .count(Long.parseLong(from.getFirstHeaderOrNull(SwiftHeaders.CONTAINER_OBJECT_COUNT)))
             .metadata(extractUserMetadata(from)).build();
    }
 

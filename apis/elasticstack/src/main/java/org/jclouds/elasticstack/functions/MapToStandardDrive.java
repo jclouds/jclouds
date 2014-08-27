@@ -53,9 +53,9 @@ public class MapToStandardDrive implements Function<Map<String, String>, Standar
       if (from.containsKey("readers"))
          builder.readers(Splitter.on(' ').split(from.get("readers")));
       if (from.containsKey("size"))
-         builder.size(Long.valueOf(from.get("size")));
+         builder.size(Long.parseLong(from.get("size")));
       if (from.containsKey("rawsize"))
-         builder.rawSize(Long.valueOf(from.get("rawsize")));
+         builder.rawSize(Long.parseLong(from.get("rawsize")));
       if (from.containsKey("format"))
          builder.format(ImageConversionType.fromValue(from.get("format")));
       Map<String, String> metadata = Maps.newLinkedHashMap();

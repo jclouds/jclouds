@@ -150,31 +150,31 @@ public class GoGridComputeServiceAdapter implements ComputeServiceAdapter<Server
 
    @Override
    public Server getNode(String id) {
-      return Iterables.getOnlyElement(client.getServerServices().getServersById(Long.valueOf(checkNotNull(id, "id"))),
+      return Iterables.getOnlyElement(client.getServerServices().getServersById(Long.parseLong(checkNotNull(id, "id"))),
                null);
    }
 
    @Override
    public ServerImage getImage(String id) {
-      return Iterables.getOnlyElement(client.getImageServices().getImagesById(Long.valueOf(checkNotNull(id, "id"))),
+      return Iterables.getOnlyElement(client.getImageServices().getImagesById(Long.parseLong(checkNotNull(id, "id"))),
                null);
    }
    
    @Override
    public void destroyNode(String id) {
-      client.getServerServices().deleteById(Long.valueOf(id));
+      client.getServerServices().deleteById(Long.parseLong(id));
    }
 
    @Override
    public void rebootNode(String id) {
       executeCommandOnServer(PowerCommand.RESTART, id);
-      Server server = Iterables.getOnlyElement(client.getServerServices().getServersById(Long.valueOf(id)));
+      Server server = Iterables.getOnlyElement(client.getServerServices().getServersById(Long.parseLong(id)));
       client.getServerServices().power(server.getName(), PowerCommand.START);
       serverLatestJobCompletedShort.apply(server);
    }
 
    private boolean executeCommandOnServer(PowerCommand command, String id) {
-      Server server = Iterables.getOnlyElement(client.getServerServices().getServersById(Long.valueOf(id)));
+      Server server = Iterables.getOnlyElement(client.getServerServices().getServersById(Long.parseLong(id)));
       client.getServerServices().power(server.getName(), command);
       return serverLatestJobCompleted.apply(server);
    }

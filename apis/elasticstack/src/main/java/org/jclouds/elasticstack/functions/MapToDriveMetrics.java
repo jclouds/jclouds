@@ -68,13 +68,13 @@ public class MapToDriveMetrics implements Function<Map<String, String>, Map<Stri
    protected DriveMetrics buildMetrics(String key, Map<String, String> from) {
       DriveMetrics.Builder builder = new DriveMetrics.Builder();
       if (from.containsKey(key + ":read:bytes"))
-         builder.readBytes(Long.valueOf(from.get(key + ":read:bytes")));
+         builder.readBytes(Long.parseLong(from.get(key + ":read:bytes")));
       if (from.containsKey(key + ":read:requests"))
-         builder.readRequests(Long.valueOf(from.get(key + ":read:requests")));
+         builder.readRequests(Long.parseLong(from.get(key + ":read:requests")));
       if (from.containsKey(key + ":write:bytes"))
-         builder.writeBytes(Long.valueOf(from.get(key + ":write:bytes")));
+         builder.writeBytes(Long.parseLong(from.get(key + ":write:bytes")));
       if (from.containsKey(key + ":write:requests"))
-         builder.writeRequests(Long.valueOf(from.get(key + ":write:requests")));
+         builder.writeRequests(Long.parseLong(from.get(key + ":write:requests")));
       return builder.build();
    }
 }

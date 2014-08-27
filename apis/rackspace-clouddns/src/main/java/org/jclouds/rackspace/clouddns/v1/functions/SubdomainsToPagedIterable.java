@@ -44,7 +44,7 @@ public class SubdomainsToPagedIterable extends Arg0ToPagedIterable<Subdomain, Su
 
    @Override
    protected Function<Object, IterableWithMarker<Subdomain>> markerToNextForArg0(Optional<Object> domainId) {
-      return new ListSubdomainsUnderDomainIdAtMarker(api, Integer.valueOf(domainId.get().toString()));
+      return new ListSubdomainsUnderDomainIdAtMarker(api, Integer.parseInt(domainId.get().toString()));
    }
 
    private static class ListSubdomainsUnderDomainIdAtMarker implements Function<Object, IterableWithMarker<Subdomain>> {

@@ -138,13 +138,13 @@ public class MetricAlarmHandler extends ParseSax.HandlerForGeneratedRequestWithR
       } else if (qName.equals("ComparisonOperator")) {
          comparisonOperator = ComparisonOperator.fromValue(SaxUtils.currentOrNull(currentText));
       } else if (qName.equals("EvaluationPeriods")) {
-         evaluationPeriods = Integer.valueOf(SaxUtils.currentOrNull(currentText));
+         evaluationPeriods = Integer.parseInt(SaxUtils.currentOrNull(currentText));
       } else if (qName.equals("MetricName")) {
          metricName = SaxUtils.currentOrNull(currentText);
       } else if (qName.equals("Namespace")) {
          namespace = SaxUtils.currentOrNull(currentText);
       } else if (qName.equals("Period")) {
-         period = Integer.valueOf(SaxUtils.currentOrNull(currentText));
+         period = Integer.parseInt(SaxUtils.currentOrNull(currentText));
       } else if (qName.equals("StateReason")) {
          stateReason = SaxUtils.currentOrNull(currentText);
       } else if (qName.equals("StateReasonData")) {

@@ -102,9 +102,9 @@ public class JcloudsVersion {
                 version, SEMANTIC_VERSION_PATTERN);
         this.version = version;
         // a match will produce three or five matching groups (alpha/beta/release candidate identifier and version optional)
-        majorVersion = Integer.valueOf(versionMatcher.group(1));
-        minorVersion = Integer.valueOf(versionMatcher.group(2));
-        patchVersion = Integer.valueOf(versionMatcher.group(3));
+        majorVersion = Integer.parseInt(versionMatcher.group(1));
+        minorVersion = Integer.parseInt(versionMatcher.group(2));
+        patchVersion = Integer.parseInt(versionMatcher.group(3));
 
         String alphaOrBetaOrReleaseCandidateVersionIfPresent = versionMatcher.group(4);
         if (alphaOrBetaOrReleaseCandidateVersionIfPresent != null) {

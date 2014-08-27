@@ -77,7 +77,7 @@ public class ParseNodes extends ParseJson<Nodes> {
          int lastSlash = path.lastIndexOf('/');
          int secondLastSlash = path.lastIndexOf('/', lastSlash - 1);
 
-         lbId = Integer.valueOf(path.substring(secondLastSlash + 1, lastSlash));
+         lbId = Integer.parseInt(path.substring(secondLastSlash + 1, lastSlash));
 
          return super.setContext(request);
       }
