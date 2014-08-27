@@ -121,7 +121,7 @@ public class S3RestClientModule<S extends S3Client, A extends S3AsyncClient> ext
                try {
                   return Optional.fromNullable(client.getBucketLocation(bucket));
                } catch (ContainerNotFoundException e) {
-                  return null;
+                  return Optional.absent();
                }
             }
 

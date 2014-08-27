@@ -64,7 +64,7 @@ public class BaseVirtualSystemHandler<T extends BaseVirtualSystem<T>, B extends 
    @Inject(optional = true)
    protected void setExtensionHandlers(
             @Named("VirtualSystem") Map<String, Provider<? extends SectionHandler>> extensionHandlers) {
-      extensionHandlers = ImmutableMap.<String, Provider<? extends SectionHandler>> builder().putAll(
+      this.extensionHandlers = ImmutableMap.<String, Provider<? extends SectionHandler>> builder().putAll(
                this.extensionHandlers).putAll(extensionHandlers).build();
    }
 

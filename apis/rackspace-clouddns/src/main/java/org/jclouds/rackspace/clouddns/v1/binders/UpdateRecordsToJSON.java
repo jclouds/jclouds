@@ -66,8 +66,9 @@ public class UpdateRecordsToJSON implements Binder {
    static List<UpdateRecord> toUpdateRecordList(Map<String, Record> idsToRecords) {
       List<UpdateRecord> updateRecords = Lists.newArrayList();
 
-      for (String recordId : idsToRecords.keySet()) {
-         Record record = idsToRecords.get(recordId);
+      for (Map.Entry<String, Record> entry : idsToRecords.entrySet()) {
+         String recordId = entry.getKey();
+         Record record = entry.getValue();
          
          UpdateRecord updateRecord = new UpdateRecord();
          updateRecord.id = recordId;

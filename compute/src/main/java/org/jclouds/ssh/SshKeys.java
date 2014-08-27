@@ -55,6 +55,7 @@ import com.google.common.collect.ImmutableMap.Builder;
 import com.google.common.hash.HashCode;
 import com.google.common.hash.Hashing;
 import com.google.common.io.ByteSource;
+import com.google.common.io.ByteStreams;
 
 /**
  * Utilities for ssh key pairs
@@ -115,7 +116,7 @@ public class SshKeys {
       int byte4 = in.read();
       int length = (byte1 << 24) + (byte2 << 16) + (byte3 << 8) + (byte4 << 0);
       byte[] val = new byte[length];
-      in.read(val, 0, length);
+      ByteStreams.readFully(in, val);
       return val;
    }
 
