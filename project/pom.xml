@@ -805,7 +805,7 @@
         <plugin>
           <groupId>org.codehaus.mojo</groupId>
           <artifactId>findbugs-maven-plugin</artifactId>
-          <version>2.5.4</version>
+          <version>3.0.0</version>
         </plugin>
         <plugin>
           <groupId>org.sonatype.maven.plugin</groupId>
