@@ -35,6 +35,7 @@ import org.jclouds.Fallbacks.FalseOnNotFoundOr404;
 import org.jclouds.Fallbacks.NullOnNotFoundOr404;
 import org.jclouds.Fallbacks.TrueOnNotFoundOr404;
 import org.jclouds.googlecloudstorage.binders.ComposeObjectBinder;
+import org.jclouds.googlecloudstorage.binders.MultipartUploadBinder;
 import org.jclouds.googlecloudstorage.binders.UploadBinder;
 import org.jclouds.googlecloudstorage.domain.GCSObject;
 import org.jclouds.googlecloudstorage.domain.ListPage;
@@ -458,5 +459,28 @@ public interface ObjectApi {
    GCSObject copyObject(@PathParam("destinationBucket") String destinationBucket,
             @PathParam("destinationObject") String destinationObject, @PathParam("sourceBucket") String sourceBucket,
             @PathParam("sourceObject") String sourceObject, CopyObjectOptions options);
+
+   /**
+    * Stores a new object with metadata.
+    *
+    * @see https://developers.google.com/storage/docs/json_api/v1/how-tos/upload#multipart
+    *
+    * @param bucketName
+    *           Name of the bucket in which the object to be stored
+    * @param objectTemplate
+    *           Supply an {@link ObjectTemplate}.
+    *
+    * @return a {@link GCSObject}
+    */
+
+   @Named("Object:multipartUpload")
+   @POST
+   @QueryParams(keys = "uploadType", values = "multipart")
+   @Consumes(MediaType.APPLICATION_JSON)
+   @Path("/upload/storage/v1/b/{bucket}/o")
+   @OAuthScopes(STORAGE_FULLCONTROL_SCOPE)
+   @MapBinder(MultipartUploadBinder.class)
+   GCSObject multipartUpload(@PathParam("bucket") String bucketName,
+            @PayloadParam("template") ObjectTemplate objectTemplate, @PayloadParam("payload") Payload payload);
 
 }

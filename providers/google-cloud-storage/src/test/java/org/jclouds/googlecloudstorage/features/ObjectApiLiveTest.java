@@ -18,6 +18,8 @@ package org.jclouds.googlecloudstorage.features;
 
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.entry;
 
 import java.io.IOException;
 import java.util.Set;
@@ -55,6 +57,7 @@ import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
 import com.beust.jcommander.internal.Sets;
+import com.google.common.collect.ImmutableMap;
 import com.google.common.hash.HashCode;
 import com.google.common.hash.HashFunction;
 import com.google.common.hash.Hashing;
@@ -66,6 +69,7 @@ public class ObjectApiLiveTest extends BaseGoogleCloudStorageApiLiveTest {
    private static final String BUCKET_NAME2 = "jcloudobjectdestination" + UUID.randomUUID();
    private static final String UPLOAD_OBJECT_NAME = "objectOperation.txt";
    private static final String UPLOAD_OBJECT_NAME2 = "jcloudslogo.jpg";
+   private static final String MULTIPART_UPLOAD_OBJECT = "multipart_related.jpg";
    private static final String COPIED_OBJECT_NAME = "copyofObjectOperation.txt";
    private static final String COMPOSED_OBJECT = "ComposedObject1.txt";
    private static final String COMPOSED_OBJECT2 = "ComposedObject2.json";
@@ -196,7 +200,7 @@ public class ObjectApiLiveTest extends BaseGoogleCloudStorageApiLiveTest {
       assertEquals(gcsObject.getName(), COPIED_OBJECT_NAME);
       assertEquals(gcsObject.getContentType(), "text/plain");
 
-      //Test for data
+      // Test for data
 
       PayloadEnclosingImpl impl = api().download(BUCKET_NAME2, COPIED_OBJECT_NAME);
       assertNotNull(impl);
@@ -365,12 +369,53 @@ public class ObjectApiLiveTest extends BaseGoogleCloudStorageApiLiveTest {
    }
 
    @Test(groups = "live", dependsOnMethods = "testPatchObjectsWithOptions")
+   public void testMultipartJpegUpload() throws IOException {
+      long contentLength = 32 * 1024L;
+      ByteSource byteSource = TestUtils.randomByteSource().slice(0, contentLength);
+      ByteSourcePayload payload = Payloads.newByteSourcePayload(byteSource);
+      PayloadEnclosingImpl payloadImpl = new PayloadEnclosingImpl(payload);
+
+      ObjectTemplate template = new ObjectTemplate();
+
+      ObjectAccessControls oacl = ObjectAccessControls.builder().bucket(BUCKET_NAME).entity("allUsers")
+               .role(ObjectRole.OWNER).build();
+
+      // This would trigger server side validation of md5
+      hcMd5 = byteSource.hash(Hashing.md5());
+
+      // This would trigger server side validation of crc32c
+      hcCrc32c = byteSource.hash(Hashing.crc32c());
+
+      template.contentType("image/jpeg").addAcl(oacl).size(contentLength).name(MULTIPART_UPLOAD_OBJECT)
+               .contentLanguage("en").contentDisposition("attachment").md5Hash(hcMd5)
+               .customMetadata("custommetakey1", "custommetavalue1").crc32c(hcCrc32c)
+               .customMetadata(ImmutableMap.of("Adrian", "powderpuff"));
+
+      GCSObject gcsObject = api().multipartUpload(BUCKET_NAME, template, payloadImpl.getPayload());
+
+      assertThat(gcsObject.getBucket()).isEqualTo(BUCKET_NAME);
+      assertThat(gcsObject.getName()).isEqualTo(MULTIPART_UPLOAD_OBJECT);
+      assertThat(gcsObject.getMd5HashCode()).isEqualTo(hcMd5);
+      assertThat(gcsObject.getCrc32cHashcode()).isEqualTo(hcCrc32c);
+
+      assertThat(gcsObject.getAllMetadata()).contains(entry("custommetakey1", "custommetavalue1"),
+               entry("Adrian", "powderpuff")).doesNotContainKey("adrian");
+
+      PayloadEnclosingImpl impl = api().download(BUCKET_NAME, MULTIPART_UPLOAD_OBJECT);
+
+      assertThat(ByteStreams2.toByteArrayAndClose(impl.getPayload().openStream())).isEqualTo(
+               ByteStreams2.toByteArrayAndClose(payloadImpl.getPayload().openStream()));
+   }
+
+   @Test(groups = "live", dependsOnMethods = "testMultipartJpegUpload")
    public void testDeleteObject() {
       api().deleteObject(BUCKET_NAME2, UPLOAD_OBJECT_NAME);
       api().deleteObject(BUCKET_NAME2, COMPOSED_OBJECT2);
       api().deleteObject(BUCKET_NAME2, COMPOSED_OBJECT);
       api().deleteObject(BUCKET_NAME2, COPIED_OBJECT_NAME);
+      api().deleteObject(BUCKET_NAME, UPLOAD_OBJECT_NAME);
       api().deleteObject(BUCKET_NAME, UPLOAD_OBJECT_NAME2);
+      api().deleteObject(BUCKET_NAME, MULTIPART_UPLOAD_OBJECT);
    }
 
    @Test(groups = "live", dependsOnMethods = "testPatchObjectsWithOptions")
