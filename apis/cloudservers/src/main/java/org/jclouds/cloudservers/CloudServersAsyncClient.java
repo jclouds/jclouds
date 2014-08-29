@@ -70,9 +70,9 @@ import com.google.common.util.concurrent.ListenableFuture;
  *
  * @see CloudServersClient
  *
- * @deprecated The Rackspace First-Gen Cloud Servers product has been retired and this API should not be used. Please
- *             use the {@code rackspace-cloudservers-uk} and {@code rackspace-cloudservers-us} providers as this
- *             API will be removed in jclouds 2.0.
+ * @deprecated The Rackspace First-Gen Cloud Servers product has been deprecated. Please refer to the
+ *             <a href="http://jclouds.apache.org/guides/rackspace">Rackspace Getting Started Guide</a>
+ *             for accessing the Rackspace Cloud. This API will be removed in 2.0.
  */
 @Deprecated
 @RequestFilters({ AuthenticateRequest.class, AddTimestampQuery.class })
