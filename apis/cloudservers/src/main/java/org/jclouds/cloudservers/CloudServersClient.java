@@ -38,25 +38,29 @@ import org.jclouds.cloudservers.options.RebuildServerOptions;
  * <p/>
  * All commands return a Future of the result from Cloud Servers. Any exceptions incurred during
  * processing will be backend in an {@link ExecutionException} as documented in {@link Future#get()}.
- * 
+ *
  * @see CloudServersAsyncClient
- * @see <a href="http://docs.rackspacecloud.com/servers/api/cs-devguide-latest.pdf" />
+ *
+ * @deprecated The Rackspace First-Gen Cloud Servers product has been deprecated. Please refer to the
+ *             <a href="http://jclouds.apache.org/guides/rackspace">Rackspace Getting Started Guide</a>
+ *             for accessing the Rackspace Cloud. This API will be removed in 2.0.
  */
+@Deprecated
 public interface CloudServersClient extends Closeable {
    /**
     * All accounts, by default, have a preconfigured set of thresholds (or limits) to manage
     * capacity and prevent abuse of the system. The system recognizes two kinds of limits: rate
     * limits and absolute limits. Rate limits are thresholds that are reset after a certain amount
     * of time passes. Absolute limits are fixed.
-    * 
+    *
     * @return limits on the account
     */
    Limits getLimits();
 
    /**
-    * 
+    *
     * List all servers (IDs and names only)
-    * 
+    *
     * This operation provides a list of servers associated with your identity. Servers that have
     * been deleted are not included in this list.
     * <p/>
@@ -66,20 +70,20 @@ public interface CloudServersClient extends Closeable {
    Set<Server> listServers(ListOptions... options);
 
    /**
-    * 
+    *
     * This operation returns details of the specified server.
-    * 
+    *
     * @return null, if the server is not found
     * @see Server
     */
    Server getServer(@PathParam("id") int id);
 
    /**
-    * 
+    *
     * This operation deletes a cloud server instance from the system.
     * <p/>
     * Note: When a server is deleted, all images created from that server are also removed.
-    * 
+    *
     * @return false if the server is not found
     * @see Server
     */
@@ -93,7 +97,7 @@ public interface CloudServersClient extends Closeable {
     * ACTIVE - REBOOT - ACTIVE (soft reboot)
     * <p/>
     * ACTIVE - HARD_REBOOT - ACTIVE (hard reboot)
-    * 
+    *
     * @param rebootType
     *           With a soft reboot, the operating system is signaled to restart, which allows for a
     *           graceful shutdown of all processes. A hard reboot is the equivalent of power cycling
@@ -149,7 +153,7 @@ public interface CloudServersClient extends Closeable {
     * which will return a progress attribute (0-100% completion). A password will be randomly
     * generated for you and returned in the response object. For security reasons, it will not be
     * returned in subsequent GET calls against a given server ID.
-    * 
+    *
     * @param options
     *           - used to specify extra files, metadata, or ip parameters during server creation.
     */
@@ -165,7 +169,7 @@ public interface CloudServersClient extends Closeable {
     * <p/>
     * ACTIVE - REBUILD - ERROR (on error)
     * <p/>
-    * 
+    *
     * @param options
     *           - imageId is an optional argument. If it is not specified, the server is rebuilt
     *           with the original imageId.
@@ -178,11 +182,11 @@ public interface CloudServersClient extends Closeable {
     * This operation shares an IP from an existing server in the specified shared IP group to
     * another specified server in the same group. The operation modifies cloud network restrictions
     * to allow IP traffic for the given IP to/from the server specified.
-    * 
+    *
     * <p/>
     * Status Transition: ACTIVE - SHARE_IP - ACTIVE (if configureServer is true) ACTIVE -
     * SHARE_IP_NO_CONFIG - ACTIVE
-    * 
+    *
     * @param configureServer
     *           <p/>
     *           if set to true, the server is configured with the new address, though the address is
@@ -198,7 +202,7 @@ public interface CloudServersClient extends Closeable {
     * This operation removes a shared IP address from the specified server.
     * <p/>
     * Status Transition: ACTIVE - DELETE_IP - ACTIVE
-    * 
+    *
     * @param addressToShare
     * @param serverToTosignBindressTo
     * @return
@@ -209,7 +213,7 @@ public interface CloudServersClient extends Closeable {
     * This operation allows you to change the administrative password.
     * <p/>
     * Status Transition: ACTIVE - PASSWORD - ACTIVE
-    * 
+    *
     */
    void changeAdminPass(int id, String adminPass);
 
@@ -218,66 +222,66 @@ public interface CloudServersClient extends Closeable {
     * the server in the Cloud Servers system and does not change the server host name itself.
     * <p/>
     * Status Transition: ACTIVE - PASSWORD - ACTIVE
-    * 
+    *
     */
    void renameServer(int id, String newName);
 
    /**
-    * 
+    *
     * List available flavors (IDs and names only)
-    * 
+    *
     * in order to retrieve all details, pass the option {@link ListOptions#withDetails()
     * withDetails()}
     */
    Set<Flavor> listFlavors(ListOptions... options);
 
    /**
-    * 
+    *
     * This operation returns details of the specified flavor.
-    * 
+    *
     * @return null, if the flavor is not found
     * @see Flavor
     */
    Flavor getFlavor(int id);
 
    /**
-    * 
+    *
     * List available images (IDs and names only)
-    * 
+    *
     * in order to retrieve all details, pass the option {@link ListOptions#withDetails()
     * withDetails()}
     */
    Set<Image> listImages(ListOptions... options);
 
    /**
-    * 
+    *
     * This operation returns details of the specified image.
-    * 
+    *
     * @return null, if the image is not found
-    * 
+    *
     * @see Image
     */
    Image getImage(int id);
 
    /**
-    * 
+    *
     * This operation deletes an image from the system.
     * <p/>
     * Note: Images are immediately removed. Currently, there are no state transitions to track the
     * delete operation.
-    * 
+    *
     * @return false if the image is not found
     * @see Image
     */
    boolean deleteImage(int id);
 
    /**
-    * 
+    *
     * This operation creates a new image for the given server ID. Once complete, a new image will be
     * available that can be used to rebuild or create servers. Specifying the same image name as an
     * existing custom image replaces the image. The image creation status can be queried by
     * performing a GET on /images/id and examining the status and progress attributes.
-    * 
+    *
     * Status Transition:
     * <p/>
     * QUEUED - PREPARING - SAVING - ACTIVE
@@ -286,7 +290,7 @@ public interface CloudServersClient extends Closeable {
     * <p/>
     * Note: At present, image creation is an asynchronous operation, so coordinating the creation
     * with data quiescence, etc. is currently not possible.
-    * 
+    *
     * @throws ResourceNotFoundException
     *            if the server is not found
     * @see Image
@@ -294,20 +298,20 @@ public interface CloudServersClient extends Closeable {
    Image createImageFromServer(String imageName, int serverId);
 
    /**
-    * 
+    *
     * List shared IP groups (IDs and names only)
-    * 
+    *
     * in order to retrieve all details, pass the option {@link ListOptions#withDetails()
     * withDetails()}
     */
    Set<SharedIpGroup> listSharedIpGroups(ListOptions... options);
 
    /**
-    * 
+    *
     * This operation returns details of the specified shared IP group.
-    * 
+    *
     * @return null, if the shared ip group is not found
-    * 
+    *
     * @see SharedIpGroup
     */
    SharedIpGroup getSharedIpGroup(int id);
@@ -324,7 +328,7 @@ public interface CloudServersClient extends Closeable {
     * This operation deletes the specified shared IP group. This operation will ONLY succeed if 1)
     * there are no active servers in the group (i.e. they have all been terminated) or 2) no servers
     * in the group are actively sharing IPs.
-    * 
+    *
     * @return false if the shared ip group is not found
     * @see SharedIpGroup
     */
@@ -332,7 +336,7 @@ public interface CloudServersClient extends Closeable {
 
    /**
     * List the backup schedule for the specified server
-    * 
+    *
     * @throws ResourceNotFoundException
     *            , if the server doesn't exist
     */
@@ -342,34 +346,34 @@ public interface CloudServersClient extends Closeable {
     * Delete backup schedule for the specified server.
     * <p/>
     * Web Hosting #119571 currently disables the schedule, not deletes it.
-    * 
+    *
     * @return false if the schedule is not found
     */
    boolean deleteBackupSchedule(int serverId);
 
    /**
     * Enable/update the backup schedule for the specified server
-    * 
+    *
     */
    void replaceBackupSchedule(int id, BackupSchedule backupSchedule);
 
    /**
     * List all server addresses
-    * 
+    *
     * returns empty set if the server doesn't exist
     */
    Addresses getAddresses(int serverId);
 
    /**
     * List all public server addresses
-    * 
+    *
     * returns empty set if the server doesn't exist
     */
    Set<String> listPublicAddresses(int serverId);
 
    /**
     * List all private server addresses
-    * 
+    *
     * returns empty set if the server doesn't exist
     */
    Set<String> listPrivateAddresses(int serverId);
