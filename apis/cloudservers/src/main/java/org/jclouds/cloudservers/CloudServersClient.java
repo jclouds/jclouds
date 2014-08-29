@@ -18,6 +18,7 @@ package org.jclouds.cloudservers;
 
 import java.io.Closeable;
 import java.util.Set;
+
 import javax.ws.rs.PathParam;
 
 import org.jclouds.cloudservers.domain.Addresses;
