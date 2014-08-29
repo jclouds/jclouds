@@ -46,6 +46,8 @@ public class GoogleCloudStorageErrorHandler implements HttpErrorHandler {
       String message412 = "PreconditionFailed: At least one of the pre-conditions you specified did not hold.\n";
 
       switch (response.getStatusCode()) {
+         case 308:
+            return;
          case 401:
          case 403:
             exception = new AuthorizationException(message, exception);

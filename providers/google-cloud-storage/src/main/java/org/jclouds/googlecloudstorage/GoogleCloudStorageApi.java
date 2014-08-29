@@ -25,6 +25,7 @@ import org.jclouds.googlecloudstorage.features.BucketApi;
 import org.jclouds.googlecloudstorage.features.DefaultObjectAccessControlsApi;
 import org.jclouds.googlecloudstorage.features.ObjectAccessControlsApi;
 import org.jclouds.googlecloudstorage.features.ObjectApi;
+import org.jclouds.googlecloudstorage.features.ResumableUploadApi;
 import org.jclouds.rest.annotations.Delegate;
 
 /**
@@ -68,4 +69,11 @@ public interface GoogleCloudStorageApi extends Closeable {
    @Delegate
    @Path("")
    ObjectApi getObjectApi();
+
+   /**
+    * Provides access to Google Cloud Storage ResumableUpload features
+    */
+   @Delegate
+   @Path("")
+   ResumableUploadApi getResumableUploadApi();
 }
