@@ -67,11 +67,12 @@ import com.google.common.util.concurrent.ListenableFuture;
  * All commands return a ListenableFuture of the result from Cloud Servers. Any exceptions incurred
  * during processing will be backend in an {@link ExecutionException} as documented in
  * {@link ListenableFuture#get()}.
- * 
+ *
  * @see CloudServersClient
- * @see <a href="http://docs.rackspacecloud.com/servers/api/cs-devguide-latest.pdf" />
- * @deprecated please use {@code org.jclouds.ContextBuilder#buildApi(CloudServersClient.class)} as
- *             {@link CloudServersAsyncClient} interface will be removed in jclouds 1.7.
+ *
+ * @deprecated The Rackspace First-Gen Cloud Servers product has been retired and this API should not be used. Please
+ *             use the {@code rackspace-cloudservers-uk} and {@code rackspace-cloudservers-us} providers as this
+ *             API will be removed in jclouds 2.0.
  */
 @Deprecated
 @RequestFilters({ AuthenticateRequest.class, AddTimestampQuery.class })
