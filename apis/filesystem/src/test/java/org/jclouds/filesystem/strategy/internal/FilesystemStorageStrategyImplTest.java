@@ -16,6 +16,8 @@
  */
 package org.jclouds.filesystem.strategy.internal;
 
+import static org.jclouds.utils.TestUtils.isMacOSX;
+import static org.jclouds.utils.TestUtils.randomByteSource;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertFalse;
 import static org.testng.Assert.assertNotNull;
@@ -43,8 +45,10 @@ import org.jclouds.io.payloads.InputStreamPayload;
 import org.jclouds.util.Throwables2;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
+import org.testng.SkipException;
 import org.testng.annotations.Test;
 
+import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import com.google.common.io.ByteSource;
@@ -524,6 +528,35 @@ public class FilesystemStorageStrategyImplTest {
          fail("Wrong container name not recognized");
       } catch (IllegalArgumentException e) {
       }
+   }
+
+   public void testOverwriteBlobMetadata() throws Exception {
+      if (isMacOSX()) {
+         throw new SkipException("blob metadata not supported on Mac OS X");
+      }
+      String blobKey = TestUtils.createRandomBlobKey("writePayload-", ".img");
+
+      // write blob
+      Blob blob = new BlobBuilderImpl()
+            .name(blobKey)
+            .payload(randomByteSource().slice(0, 1024))
+            .userMetadata(ImmutableMap.of("key1", "value1"))
+            .build();
+      storageStrategy.putBlob(CONTAINER_NAME, blob);
+
+      blob = storageStrategy.getBlob(CONTAINER_NAME, blobKey);
+      assertEquals(blob.getMetadata().getUserMetadata().get("key1"), "value1");
+
+      // overwrite blob
+      blob = new BlobBuilderImpl()
+            .name(blobKey)
+            .payload(randomByteSource().slice(0, 1024))
+            // no metadata
+            .build();
+      storageStrategy.putBlob(CONTAINER_NAME, blob);
+
+      blob = storageStrategy.getBlob(CONTAINER_NAME, blobKey);
+      assertFalse(blob.getMetadata().getUserMetadata().containsKey("key1"));
    }
 
    // ---------------------------------------------------------- Private methods

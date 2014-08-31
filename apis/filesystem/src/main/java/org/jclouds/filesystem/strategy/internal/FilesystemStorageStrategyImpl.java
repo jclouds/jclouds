@@ -276,6 +276,7 @@ public class FilesystemStorageStrategyImpl implements LocalStorageStrategy {
       try {
          Files.createParentDirs(outputFile);
          his = new HashingInputStream(Hashing.md5(), payload.openStream());
+         outputFile.delete();
          Files.asByteSink(outputFile).writeFrom(his);
          HashCode actualHashCode = his.hash();
          HashCode expectedHashCode = payload.getContentMetadata().getContentMD5AsHashCode();
