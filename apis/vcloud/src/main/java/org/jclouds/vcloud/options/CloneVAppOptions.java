@@ -72,9 +72,6 @@ public class CloneVAppOptions extends CloneOptions {
          return new CloneVAppOptions().powerOn();
       }
 
-      /**
-       * {@inheritDoc}
-       */
       public static CloneVAppOptions description(String description) {
          return new CloneVAppOptions().description(description);
       }

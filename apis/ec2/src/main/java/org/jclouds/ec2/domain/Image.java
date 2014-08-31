@@ -353,6 +353,7 @@ public class Image implements Comparable<Image> {
    /**
     * {@inheritDoc}
     */
+   @Override
    public int compareTo(Image o) {
       return (this == o) ? 0 : getId().compareTo(o.getId());
    }

@@ -52,6 +52,7 @@ public class PublicIpInstanceIdPair implements Comparable<PublicIpInstanceIdPair
    /**
     * {@inheritDoc}
     */
+   @Override
    public int compareTo(PublicIpInstanceIdPair o) {
       return (this == o) ? 0 : getPublicIp().compareTo(o.getPublicIp());
    }

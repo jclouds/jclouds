@@ -61,6 +61,7 @@ public class BaseHttpRequestOptions implements HttpRequestOptions {
    /**
     * {@inheritDoc}
     */
+   @Override
    public Multimap<String, String> buildRequestHeaders() {
       return headers;
    }
@@ -68,6 +69,7 @@ public class BaseHttpRequestOptions implements HttpRequestOptions {
    /**
     * {@inheritDoc}
     */
+   @Override
    public Multimap<String, String> buildQueryParameters() {
       return queryParameters;
    }

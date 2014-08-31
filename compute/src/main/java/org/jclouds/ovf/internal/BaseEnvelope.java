@@ -36,9 +36,6 @@ public class BaseEnvelope<V extends BaseVirtualSystem<V>, E extends BaseEnvelope
       return new Builder<V, E>();
    }
 
-   /**
-    * {@inheritDoc}
-    */
    public Builder<V, E> toBuilder() {
       return new Builder<V, E>().fromEnvelope(this);
    }
@@ -109,9 +106,6 @@ public class BaseEnvelope<V extends BaseVirtualSystem<V>, E extends BaseEnvelope
          return this;
       }
 
-      /**
-       * {@inheritDoc}
-       */
       @SuppressWarnings("unchecked")
       public E build() {
          return (E) new BaseEnvelope<V, E>(diskSections, networkSections, additionalSections, virtualSystem);

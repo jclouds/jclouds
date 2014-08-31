@@ -26,9 +26,6 @@ public class CloneVAppTemplateOptions extends CloneOptions {
    }
 
    public static class Builder {
-      /**
-       * {@inheritDoc}
-       */
       public static CloneVAppTemplateOptions description(String description) {
          return new CloneVAppTemplateOptions().description(description);
       }

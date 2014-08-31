@@ -145,6 +145,7 @@ public class ListContainerOptions extends ListOptions implements Cloneable {
    /**
     * {@inheritDoc}
     */
+   @Override
    public ListContainerOptions afterMarker(String marker) {
       return (ListContainerOptions) super.afterMarker(marker);
    }
@@ -152,6 +153,7 @@ public class ListContainerOptions extends ListOptions implements Cloneable {
    /**
     * {@inheritDoc}
     */
+   @Override
    public ListContainerOptions maxResults(int maxKeys) {
       return (ListContainerOptions) super.maxResults(maxKeys);
    }

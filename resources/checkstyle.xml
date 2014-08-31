@@ -36,6 +36,7 @@
             <property name="max" value="120"/>
         </module>
 -->
+        <module name="MissingOverride"/>
         <module name="ModifierOrder"/>
         <module name="MultipleVariableDeclarations"/>
         <module name="NoWhitespaceAfter">

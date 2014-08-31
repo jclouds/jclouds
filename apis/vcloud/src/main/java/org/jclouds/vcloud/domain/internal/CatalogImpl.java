@@ -86,6 +86,7 @@ public class CatalogImpl extends LinkedHashMap<String, ReferenceType> implements
    /**
     * {@inheritDoc}
     */
+   @Override
    public String getDescription() {
       return description;
    }

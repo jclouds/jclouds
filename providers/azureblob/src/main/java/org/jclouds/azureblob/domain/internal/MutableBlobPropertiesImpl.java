@@ -71,7 +71,7 @@ public class MutableBlobPropertiesImpl implements MutableBlobProperties {
    }
 
    /**
-    *{@inheritDoc}
+    * Set the blob type.
     */
    public void setType(BlobType type) {
       this.type = type;
@@ -80,6 +80,7 @@ public class MutableBlobPropertiesImpl implements MutableBlobProperties {
    /**
     *{@inheritDoc}
     */
+   @Override
    public String getName() {
       return name;
    }
@@ -87,6 +88,7 @@ public class MutableBlobPropertiesImpl implements MutableBlobProperties {
    /**
     *{@inheritDoc}
     */
+   @Override
    public Date getLastModified() {
       return lastModified;
    }
@@ -94,6 +96,7 @@ public class MutableBlobPropertiesImpl implements MutableBlobProperties {
    /**
     *{@inheritDoc}
     */
+   @Override
    public String getETag() {
       return eTag;
    }
@@ -101,6 +104,7 @@ public class MutableBlobPropertiesImpl implements MutableBlobProperties {
    /**
     *{@inheritDoc}
     */
+   @Override
    public int compareTo(BlobProperties o) {
       return (this == o) ? 0 : getName().compareTo(o.getName());
    }
@@ -108,6 +112,7 @@ public class MutableBlobPropertiesImpl implements MutableBlobProperties {
    /**
     *{@inheritDoc}
     */
+   @Override
    public Map<String, String> getMetadata() {
       return metadata;
    }
@@ -123,6 +128,7 @@ public class MutableBlobPropertiesImpl implements MutableBlobProperties {
    /**
     *{@inheritDoc}
     */
+   @Override
    public void setETag(String eTag) {
       this.eTag = eTag;
    }
@@ -130,6 +136,7 @@ public class MutableBlobPropertiesImpl implements MutableBlobProperties {
    /**
     *{@inheritDoc}
     */
+   @Override
    public void setName(String name) {
       this.name = name;
    }
@@ -137,6 +144,7 @@ public class MutableBlobPropertiesImpl implements MutableBlobProperties {
    /**
     *{@inheritDoc}
     */
+   @Override
    public void setLastModified(Date lastModified) {
       this.lastModified = lastModified;
    }
@@ -144,6 +152,7 @@ public class MutableBlobPropertiesImpl implements MutableBlobProperties {
    /**
     *{@inheritDoc}
     */
+   @Override
    public void setMetadata(Map<String, String> metadata) {
       this.metadata = metadata;
    }

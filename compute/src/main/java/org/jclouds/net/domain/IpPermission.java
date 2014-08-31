@@ -168,6 +168,7 @@ public class IpPermission implements Comparable<IpPermission> {
    /**
     * {@inheritDoc}
     */
+   @Override
    public int compareTo(IpPermission o) {
       return (this == o) ? 0 : getIpProtocol().compareTo(o.getIpProtocol());
    }

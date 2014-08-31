@@ -113,6 +113,7 @@ public class KeyPair implements Comparable<KeyPair> {
    /**
     * {@inheritDoc}
     */
+   @Override
    public int compareTo(KeyPair o) {
       return (this == o) ? 0 : getKeyName().compareTo(o.getKeyName());
    }

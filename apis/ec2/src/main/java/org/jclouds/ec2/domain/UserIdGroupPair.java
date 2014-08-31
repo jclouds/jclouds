@@ -43,6 +43,7 @@ public class UserIdGroupPair implements Comparable<UserIdGroupPair> {
    /**
     * {@inheritDoc}
     */
+   @Override
    public int compareTo(UserIdGroupPair o) {
       return (this == o) ? 0 : getUserId().compareTo(o.getUserId());
    }

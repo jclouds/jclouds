@@ -31,6 +31,7 @@ public class BundleTask implements Comparable<BundleTask> {
    /**
     * {@inheritDoc}
     */
+   @Override
    public int compareTo(BundleTask o) {
       return (this == o) ? 0 : getBundleId().compareTo(o.getBundleId());
    }

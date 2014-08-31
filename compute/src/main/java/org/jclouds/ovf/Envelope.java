@@ -30,6 +30,7 @@ public class Envelope extends BaseEnvelope<VirtualSystem, Envelope> {
    /**
     * {@inheritDoc}
     */
+   @Override
    public Builder toBuilder() {
       return new Builder().fromEnvelope(this);
    }
@@ -39,6 +40,7 @@ public class Envelope extends BaseEnvelope<VirtualSystem, Envelope> {
       /**
        * {@inheritDoc}
        */
+      @Override
       public Envelope build() {
          return new Envelope(diskSections, networkSections, additionalSections, virtualSystem);
       }

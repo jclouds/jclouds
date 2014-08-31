@@ -164,6 +164,7 @@ public class ObjectInfoImpl implements ObjectInfo {
    /**
     * {@inheritDoc}
     */
+   @Override
    public String getName() {
       return this.name;
    }
@@ -172,6 +173,7 @@ public class ObjectInfoImpl implements ObjectInfo {
     * {@inheritDoc}
     */
    @Nullable
+   @Override
    public String getContainer() {
       return this.container;
    }
@@ -180,6 +182,7 @@ public class ObjectInfoImpl implements ObjectInfo {
     * {@inheritDoc}
     */
    @Nullable
+   @Override
    public URI getUri() {
       return this.uri;
    }
@@ -188,6 +191,7 @@ public class ObjectInfoImpl implements ObjectInfo {
     * {@inheritDoc}
     */
    @Nullable
+   @Override
    public byte[] getHash() {
       return this.hash;
    }
@@ -196,6 +200,7 @@ public class ObjectInfoImpl implements ObjectInfo {
     * {@inheritDoc}
     */
    @Nullable
+   @Override
    public Long getBytes() {
       return this.bytes;
    }
@@ -204,6 +209,7 @@ public class ObjectInfoImpl implements ObjectInfo {
     * {@inheritDoc}
     */
    @Nullable
+   @Override
    public String getContentType() {
       return this.contentType;
    }
@@ -212,6 +218,7 @@ public class ObjectInfoImpl implements ObjectInfo {
     * {@inheritDoc}
     */
    @Nullable
+   @Override
    public Date getLastModified() {
       return this.lastModified;
    }
