@@ -26,7 +26,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import java.io.IOException;
 import java.util.UUID;
 
-import org.jclouds.googlecloudstorage.domain.DomainResourceRefferences.ObjectRole;
+import org.jclouds.googlecloudstorage.domain.DomainResourceReferences.ObjectRole;
 import org.jclouds.googlecloudstorage.domain.Bucket;
 import org.jclouds.googlecloudstorage.domain.DomainUtils;
 import org.jclouds.googlecloudstorage.domain.ResumableUpload;

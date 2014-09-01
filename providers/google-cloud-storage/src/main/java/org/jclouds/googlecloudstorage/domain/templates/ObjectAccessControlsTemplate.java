@@ -16,7 +16,7 @@
  */
 package org.jclouds.googlecloudstorage.domain.templates;
 
-import org.jclouds.googlecloudstorage.domain.DomainResourceRefferences.ObjectRole;
+import org.jclouds.googlecloudstorage.domain.DomainResourceReferences.ObjectRole;
 
 /**
  * Represents a Object Access Control Resource.

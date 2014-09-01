@@ -18,7 +18,7 @@ package org.jclouds.googlecloudstorage.options;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
-import org.jclouds.googlecloudstorage.domain.DomainResourceRefferences.PredefinedAcl;
+import org.jclouds.googlecloudstorage.domain.DomainResourceReferences.PredefinedAcl;
 import org.jclouds.http.options.BaseHttpRequestOptions;
 
 /**

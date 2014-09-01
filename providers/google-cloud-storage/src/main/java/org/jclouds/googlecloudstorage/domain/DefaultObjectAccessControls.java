@@ -21,7 +21,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 import java.net.URI;
 
-import org.jclouds.googlecloudstorage.domain.DomainResourceRefferences.ObjectRole;
+import org.jclouds.googlecloudstorage.domain.DomainResourceReferences.ObjectRole;
 import org.jclouds.googlecloudstorage.domain.internal.ProjectTeam;
 import org.jclouds.javax.annotation.Nullable;
 

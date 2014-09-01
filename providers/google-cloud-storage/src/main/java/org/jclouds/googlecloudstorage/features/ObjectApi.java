@@ -255,6 +255,8 @@ public interface ObjectApi {
    @Produces(MediaType.APPLICATION_JSON)
    @Path("storage/v1/b/{bucket}/o")
    @OAuthScopes(STORAGE_FULLCONTROL_SCOPE)
+   @Fallback(NullOnNotFoundOr404.class)
+   @Nullable
    ListPage<GCSObject> listObjects(@PathParam("bucket") String bucketName);
 
    /**
@@ -272,6 +274,8 @@ public interface ObjectApi {
    @Produces(MediaType.APPLICATION_JSON)
    @Path("storage/v1/b/{bucket}/o")
    @OAuthScopes(STORAGE_FULLCONTROL_SCOPE)
+   @Fallback(NullOnNotFoundOr404.class)
+   @Nullable
    ListPage<GCSObject> listObjects(@PathParam("bucket") String bucketName, ListObjectOptions options);
 
    /**

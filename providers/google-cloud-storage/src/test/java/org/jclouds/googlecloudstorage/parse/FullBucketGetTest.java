@@ -23,12 +23,12 @@ import javax.ws.rs.core.MediaType;
 
 import org.jclouds.date.internal.SimpleDateFormatDateService;
 import org.jclouds.googlecloudstorage.domain.BucketAccessControls;
-import org.jclouds.googlecloudstorage.domain.DomainResourceRefferences.Location;
-import org.jclouds.googlecloudstorage.domain.DomainResourceRefferences.ObjectRole;
+import org.jclouds.googlecloudstorage.domain.DomainResourceReferences.Location;
+import org.jclouds.googlecloudstorage.domain.DomainResourceReferences.ObjectRole;
 import org.jclouds.googlecloudstorage.domain.Bucket;
 import org.jclouds.googlecloudstorage.domain.DefaultObjectAccessControls;
-import org.jclouds.googlecloudstorage.domain.DomainResourceRefferences.Role;
-import org.jclouds.googlecloudstorage.domain.DomainResourceRefferences.StorageClass;
+import org.jclouds.googlecloudstorage.domain.DomainResourceReferences.Role;
+import org.jclouds.googlecloudstorage.domain.DomainResourceReferences.StorageClass;
 import org.jclouds.googlecloudstorage.domain.internal.BucketCors;
 import org.jclouds.googlecloudstorage.domain.internal.Owner;
 import org.jclouds.googlecloudstorage.domain.internal.ProjectTeam;

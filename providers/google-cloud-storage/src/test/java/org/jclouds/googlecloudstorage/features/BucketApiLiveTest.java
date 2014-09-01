@@ -20,18 +20,19 @@ import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
 import static org.testng.Assert.assertSame;
 import static org.testng.Assert.assertTrue;
+import static org.testng.Assert.assertNull;
 
 import java.util.Iterator;
 import java.util.List;
 
 import org.jclouds.googlecloudstorage.domain.BucketAccessControls;
-import org.jclouds.googlecloudstorage.domain.DomainResourceRefferences.Location;
-import org.jclouds.googlecloudstorage.domain.DomainResourceRefferences.ObjectRole;
-import org.jclouds.googlecloudstorage.domain.DomainResourceRefferences.Projection;
+import org.jclouds.googlecloudstorage.domain.DomainResourceReferences.Location;
+import org.jclouds.googlecloudstorage.domain.DomainResourceReferences.ObjectRole;
+import org.jclouds.googlecloudstorage.domain.DomainResourceReferences.Projection;
 import org.jclouds.googlecloudstorage.domain.Bucket;
 import org.jclouds.googlecloudstorage.domain.DefaultObjectAccessControls;
-import org.jclouds.googlecloudstorage.domain.DomainResourceRefferences.Role;
-import org.jclouds.googlecloudstorage.domain.DomainResourceRefferences.StorageClass;
+import org.jclouds.googlecloudstorage.domain.DomainResourceReferences.Role;
+import org.jclouds.googlecloudstorage.domain.DomainResourceReferences.StorageClass;
 import org.jclouds.googlecloudstorage.domain.ListPage;
 import org.jclouds.googlecloudstorage.domain.Resource.Kind;
 import org.jclouds.googlecloudstorage.domain.internal.BucketCors;
@@ -43,7 +44,6 @@ import org.jclouds.googlecloudstorage.options.DeleteBucketOptions;
 import org.jclouds.googlecloudstorage.options.GetBucketOptions;
 import org.jclouds.googlecloudstorage.options.InsertBucketOptions;
 import org.jclouds.googlecloudstorage.options.UpdateBucketOptions;
-import org.jclouds.rest.ResourceNotFoundException;
 import org.testng.annotations.Test;
 
 import com.google.common.collect.Lists;
@@ -94,13 +94,13 @@ public class BucketApiLiveTest extends BaseGoogleCloudStorageApiLiveTest {
       assertTrue(response.getVersioning().isEnabled());
    }
 
-   @Test(groups = "live", dependsOnMethods = { "testCreateBucket" }, expectedExceptions = { IllegalStateException.class })
+   @Test(groups = "live", dependsOnMethods = { "testCreateBucket" })
    public void testCreateAlreadyExistBucket() {
 
       BucketTemplate template = new BucketTemplate().name(BUCKET_NAME).location(Location.US_CENTRAL2)
                .storageClass(StorageClass.DURABLE_REDUCED_AVAILABILITY);
 
-      api().createBucket(PROJECT_NUMBER, template);
+      assertNull(api().createBucket(PROJECT_NUMBER, template));
    }
 
    @Test(groups = "live")
@@ -204,13 +204,13 @@ public class BucketApiLiveTest extends BaseGoogleCloudStorageApiLiveTest {
 
    @Test(groups = "live", dependsOnMethods = { "testListBucket", "testGetBucket", "testUpdateBucket" })
    public void testDeleteBucket() {
-      api().deleteBucket(BUCKET_NAME);
-      api().deleteBucket(LOG_BUCKET_NAME);
+      assertTrue(api().deleteBucket(BUCKET_NAME));
+      assertTrue(api().deleteBucket(LOG_BUCKET_NAME));
    }
 
-   @Test(groups = "live", dependsOnMethods = { "testDeleteBucket" }, expectedExceptions = { ResourceNotFoundException.class })
+   @Test(groups = "live", dependsOnMethods = { "testDeleteBucket" })
    public void testDeleteNotExistingBucket() {
-      api().deleteBucket(BUCKET_NAME);
+      assertTrue(api().deleteBucket(BUCKET_NAME));
    }
 
    @Test(groups = "live", dependsOnMethods = { "testGetBucketWithOptions" })
@@ -222,5 +222,4 @@ public class BucketApiLiveTest extends BaseGoogleCloudStorageApiLiveTest {
       api().deleteBucket(BUCKET_NAME_WITHOPTIONS, options);
 
    }
-
 }

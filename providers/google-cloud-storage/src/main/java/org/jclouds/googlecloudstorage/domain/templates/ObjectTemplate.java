@@ -134,13 +134,19 @@ public class ObjectTemplate {
    }
 
    public HashCode getCrc32cHashcode() {
-      HashCode hc = HashCode.fromBytes(DomainUtils.reverse(BaseEncoding.base64().decode(crc32c)));
-      return hc;
+      if (crc32c != null) {
+         HashCode hc = HashCode.fromBytes(DomainUtils.reverse(BaseEncoding.base64().decode(crc32c)));
+         return hc;
+      }
+      return null;
    }
 
    public HashCode getMd5HashCode() {
-      HashCode hc = HashCode.fromBytes(BaseEncoding.base64().decode(md5Hash));
-      return hc;
+      if (md5Hash != null) {
+         HashCode hc = HashCode.fromBytes(BaseEncoding.base64().decode(md5Hash));
+         return hc;
+      }
+      return null;
    }
 
    public Map<String, String> getAllCustomMetadata() {

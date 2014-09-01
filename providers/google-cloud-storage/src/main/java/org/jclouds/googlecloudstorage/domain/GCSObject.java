@@ -24,7 +24,7 @@ import java.util.Date;
 import java.util.Map;
 import java.util.Set;
 
-import org.jclouds.googlecloudstorage.domain.DomainResourceRefferences.StorageClass;
+import org.jclouds.googlecloudstorage.domain.DomainResourceReferences.StorageClass;
 import org.jclouds.googlecloudstorage.domain.internal.Owner;
 
 import com.google.common.base.MoreObjects;
@@ -132,8 +132,11 @@ public class GCSObject extends Resource {
    }
 
    public HashCode getMd5HashCode() {
-      HashCode hc = HashCode.fromBytes(BaseEncoding.base64().decode(md5Hash));
-      return hc;
+      if (md5Hash != null) {
+         HashCode hc = HashCode.fromBytes(BaseEncoding.base64().decode(md5Hash));
+         return hc;
+      }
+      return null;
    }
 
    public URI getMediaLink() {
@@ -173,8 +176,12 @@ public class GCSObject extends Resource {
    }
 
    public HashCode getCrc32cHashcode() {
-      HashCode hc = HashCode.fromBytes(DomainUtils.reverse(BaseEncoding.base64().decode(crc32c)));
-      return hc;
+      if (crc32c != null) {
+         HashCode hc = HashCode.fromBytes(DomainUtils.reverse(BaseEncoding.base64().decode(crc32c)));
+         return hc;
+      }
+      return null;
+
    }
 
    public Integer getComponentCount() {

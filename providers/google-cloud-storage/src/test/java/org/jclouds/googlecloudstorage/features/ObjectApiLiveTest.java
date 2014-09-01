@@ -28,9 +28,9 @@ import java.util.UUID;
 import javax.ws.rs.core.MediaType;
 
 import org.jclouds.googlecloudstorage.domain.Bucket;
-import org.jclouds.googlecloudstorage.domain.DomainResourceRefferences.DestinationPredefinedAcl;
-import org.jclouds.googlecloudstorage.domain.DomainResourceRefferences.ObjectRole;
-import org.jclouds.googlecloudstorage.domain.DomainResourceRefferences.Projection;
+import org.jclouds.googlecloudstorage.domain.DomainResourceReferences.DestinationPredefinedAcl;
+import org.jclouds.googlecloudstorage.domain.DomainResourceReferences.ObjectRole;
+import org.jclouds.googlecloudstorage.domain.DomainResourceReferences.Projection;
 import org.jclouds.googlecloudstorage.domain.GCSObject;
 import org.jclouds.googlecloudstorage.domain.ListPage;
 import org.jclouds.googlecloudstorage.domain.ObjectAccessControls;

@@ -18,7 +18,7 @@ package org.jclouds.googlecloudstorage.options;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
-import org.jclouds.googlecloudstorage.domain.DomainResourceRefferences.Projection;
+import org.jclouds.googlecloudstorage.domain.DomainResourceReferences.Projection;
 import org.jclouds.http.options.BaseHttpRequestOptions;
 
 public class ListObjectOptions extends BaseHttpRequestOptions {

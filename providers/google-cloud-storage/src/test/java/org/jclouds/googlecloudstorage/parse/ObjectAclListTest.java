@@ -21,7 +21,7 @@ import java.net.URI;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.core.MediaType;
 
-import org.jclouds.googlecloudstorage.domain.DomainResourceRefferences.ObjectRole;
+import org.jclouds.googlecloudstorage.domain.DomainResourceReferences.ObjectRole;
 import org.jclouds.googlecloudstorage.domain.ListObjectAccessControls;
 import org.jclouds.googlecloudstorage.domain.ObjectAccessControls;
 import org.jclouds.googlecloudstorage.domain.Resource.Kind;

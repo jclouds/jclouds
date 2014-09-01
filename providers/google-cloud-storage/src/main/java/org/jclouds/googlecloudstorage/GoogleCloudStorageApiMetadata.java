@@ -26,7 +26,9 @@ import static org.jclouds.reflect.Reflection2.typeToken;
 
 import java.net.URI;
 import java.util.Properties;
+
 import org.jclouds.blobstore.BlobStoreContext;
+import org.jclouds.googlecloudstorage.blobstore.config.GCSBlobStoreContextModule;
 import org.jclouds.googlecloudstorage.config.GoogleCloudStorageHttpApiModule;
 import org.jclouds.googlecloudstorage.config.GoogleCloudStorageParserModule;
 import org.jclouds.googlecloudstorage.config.OAuthModuleWithoutTypeAdapters;
@@ -65,18 +67,19 @@ public class GoogleCloudStorageApiMetadata extends BaseHttpApiMetadata<GoogleClo
    public static class Builder extends BaseHttpApiMetadata.Builder<GoogleCloudStorageApi, Builder> {
       protected Builder() {
          id(GCS_PROVIDER_NAME)
-               .name("Google Cloud Storage Api ")
-               .identityName("Email associated with the Google API client_id")
-               .credentialName("Private key literal associated with the Google API client_id")
-               .documentation(URI.create("https://developers.google.com/storage/docs/json_api"))
-               .version("v1")
-               .defaultEndpoint("https://www.googleapis.com")
-               .defaultProperties(GoogleCloudStorageApiMetadata.defaultProperties())
-               .view(typeToken(BlobStoreContext.class))
-               .defaultModules(
-                     ImmutableSet.<Class<? extends Module>> builder().add(GoogleCloudStorageParserModule.class)
-                           .add(OAuthAuthenticationModule.class).add(OAuthModuleWithoutTypeAdapters.class)
-                           .add(GoogleCloudStorageHttpApiModule.class).build());
+                  .name("Google Cloud Storage Api ")
+                  .identityName("Email associated with the Google API client_id")
+                  .credentialName("Private key literal associated with the Google API client_id")
+                  .documentation(URI.create("https://developers.google.com/storage/docs/json_api"))
+                  .version("v1")
+                  .defaultEndpoint("https://www.googleapis.com")
+                  .defaultProperties(GoogleCloudStorageApiMetadata.defaultProperties())
+                  .view(typeToken(BlobStoreContext.class))
+                  .defaultModules(
+                           ImmutableSet.<Class<? extends Module>> of(GoogleCloudStorageParserModule.class,
+                                    OAuthAuthenticationModule.class, OAuthModuleWithoutTypeAdapters.class,
+                                    GoogleCloudStorageHttpApiModule.class, GCSBlobStoreContextModule.class));
+
       }
 
       @Override

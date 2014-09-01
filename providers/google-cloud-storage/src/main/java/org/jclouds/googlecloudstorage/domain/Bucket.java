@@ -24,8 +24,8 @@ import java.net.URI;
 import java.util.Date;
 import java.util.Set;
 
-import org.jclouds.googlecloudstorage.domain.DomainResourceRefferences.Location;
-import org.jclouds.googlecloudstorage.domain.DomainResourceRefferences.StorageClass;
+import org.jclouds.googlecloudstorage.domain.DomainResourceReferences.Location;
+import org.jclouds.googlecloudstorage.domain.DomainResourceReferences.StorageClass;
 import org.jclouds.googlecloudstorage.domain.internal.BucketCors;
 import org.jclouds.googlecloudstorage.domain.internal.BucketLifeCycle;
 import org.jclouds.googlecloudstorage.domain.internal.Logging;

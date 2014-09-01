@@ -23,7 +23,7 @@ import java.util.UUID;
 
 import org.jclouds.googlecloudstorage.domain.Bucket;
 import org.jclouds.googlecloudstorage.domain.BucketAccessControls;
-import org.jclouds.googlecloudstorage.domain.DomainResourceRefferences.Role;
+import org.jclouds.googlecloudstorage.domain.DomainResourceReferences.Role;
 import org.jclouds.googlecloudstorage.domain.ListBucketAccessControls;
 import org.jclouds.googlecloudstorage.domain.Resource.Kind;
 import org.jclouds.googlecloudstorage.domain.templates.BucketTemplate;

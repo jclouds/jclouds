@@ -18,9 +18,9 @@ package org.jclouds.googlecloudstorage.domain;
 
 import com.google.common.base.CaseFormat;
 
-public final class DomainResourceRefferences {
+public final class DomainResourceReferences {
 
-   private DomainResourceRefferences() {
+   private DomainResourceReferences() {
    }
 
    public enum Role {
@@ -35,7 +35,7 @@ public final class DomainResourceRefferences {
       ASIA, EU, US, ASIA_EAST1, US_CENTRAL1, US_CENTRAL2, US_EAST1, US_EAST2, US_EAST3, US_WEST1;
 
       public String value() {
-         return name().replace('_', '-');       
+         return name().replace('_', '-');
       }
 
       @Override
@@ -44,7 +44,7 @@ public final class DomainResourceRefferences {
       }
 
       public static Location fromValue(String location) {
-         return valueOf(location.replace('-', '_'));      
+         return valueOf(location.replace('-', '_'));
       }
    }
 

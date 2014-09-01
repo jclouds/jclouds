@@ -23,8 +23,8 @@ import javax.ws.rs.core.MediaType;
 
 import org.jclouds.date.internal.SimpleDateFormatDateService;
 import org.jclouds.googlecloudstorage.domain.Bucket;
-import org.jclouds.googlecloudstorage.domain.DomainResourceRefferences.Location;
-import org.jclouds.googlecloudstorage.domain.DomainResourceRefferences.StorageClass;
+import org.jclouds.googlecloudstorage.domain.DomainResourceReferences.Location;
+import org.jclouds.googlecloudstorage.domain.DomainResourceReferences.StorageClass;
 import org.jclouds.googlecloudstorage.domain.internal.Owner;
 import org.jclouds.googlecloudstorage.internal.BaseGoogleCloudStorageParseTest;
 

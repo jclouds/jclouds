@@ -16,6 +16,10 @@
  */
 package org.jclouds.googlecloudstorage.reference;
 
+import org.jclouds.domain.Location;
+import org.jclouds.domain.LocationBuilder;
+import org.jclouds.domain.LocationScope;
+
 import com.google.common.annotations.Beta;
 
 public final class GoogleCloudStorageConstants {
@@ -46,4 +50,7 @@ public final class GoogleCloudStorageConstants {
 
    @Beta
    public static final String OPERATION_COMPLETE_INTERVAL = "jclouds.google-cloud-storage.operation-complete-interval";
+
+   public static final Location GOOGLE_PROVIDER_LOCATION = new LocationBuilder().scope(LocationScope.PROVIDER).id
+            (GCS_PROVIDER_NAME).description(GCS_PROVIDER_NAME).build();
 }
