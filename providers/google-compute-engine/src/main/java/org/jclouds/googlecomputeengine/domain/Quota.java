@@ -85,9 +85,6 @@ public class Quota {
       return Objects.equal(this.metric, that.metric);
    }
 
-   /**
-    * {@inheritDoc}
-    */
    public ToStringHelper string() {
       return MoreObjects.toStringHelper(this)
               .omitNullValues()

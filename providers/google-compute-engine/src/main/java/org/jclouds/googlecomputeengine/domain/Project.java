@@ -74,6 +74,7 @@ public class Project extends Resource {
    /**
     * {@inheritDoc}
     */
+   @Override
    protected MoreObjects.ToStringHelper string() {
       return super.string()
               .add("commonInstanceMetadata", commonInstanceMetadata)

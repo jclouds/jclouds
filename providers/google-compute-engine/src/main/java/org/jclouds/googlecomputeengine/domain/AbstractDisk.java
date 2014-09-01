@@ -59,6 +59,7 @@ public abstract class AbstractDisk extends Resource {
    /**
     * {@inheritDoc}
     */
+   @Override
    protected MoreObjects.ToStringHelper string() {
       return super.string()
               .omitNullValues()

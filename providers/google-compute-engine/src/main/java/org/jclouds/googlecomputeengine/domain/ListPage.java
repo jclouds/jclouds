@@ -96,9 +96,6 @@ public class ListPage<T> extends IterableWithMarker<T> {
               && equal(this.id, that.id);
    }
 
-   /**
-    * {@inheritDoc}
-    */
    protected MoreObjects.ToStringHelper string() {
       return toStringHelper(this)
               .omitNullValues()

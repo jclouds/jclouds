@@ -100,6 +100,7 @@ public final class Address extends Resource {
    /**
     * {@inheritDoc}
     */
+   @Override
    protected MoreObjects.ToStringHelper string() {
       return super.string()
               .omitNullValues()

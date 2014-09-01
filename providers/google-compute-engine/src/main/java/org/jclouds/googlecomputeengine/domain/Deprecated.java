@@ -105,9 +105,6 @@ public class Deprecated {
               && equal(this.deleted, that.deleted);
    }
 
-   /**
-    * {@inheritDoc}
-    */
    protected MoreObjects.ToStringHelper string() {
       return toStringHelper(this)
               .omitNullValues()

@@ -91,6 +91,7 @@ public final class Zone extends Resource {
    /**
     * {@inheritDoc}
     */
+   @Override
    protected MoreObjects.ToStringHelper string() {
       return super.string()
               .add("status", status)
@@ -251,9 +252,6 @@ public final class Zone extends Resource {
                  && equal(this.endTime, that.endTime);
       }
 
-      /**
-       * {@inheritDoc}
-       */
       protected MoreObjects.ToStringHelper string() {
          return toStringHelper(this)
                  .omitNullValues()

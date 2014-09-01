@@ -78,6 +78,7 @@ public final class Image extends Resource {
    /**
     * {@inheritDoc}
     */
+   @Override
    protected MoreObjects.ToStringHelper string() {
       return super.string()
               .omitNullValues()
@@ -215,9 +216,6 @@ public final class Image extends Resource {
                  && equal(this.sha1Checksum, that.sha1Checksum);
       }
 
-      /**
-       * {@inheritDoc}
-       */
       protected MoreObjects.ToStringHelper string() {
          return toStringHelper(this)
                  .omitNullValues()

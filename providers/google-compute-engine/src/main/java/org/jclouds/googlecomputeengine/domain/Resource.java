@@ -169,9 +169,6 @@ public class Resource {
               && equal(this.name, that.name);
    }
 
-   /**
-    * {@inheritDoc}
-    */
    protected ToStringHelper string() {
       return toStringHelper(this)
               .omitNullValues()

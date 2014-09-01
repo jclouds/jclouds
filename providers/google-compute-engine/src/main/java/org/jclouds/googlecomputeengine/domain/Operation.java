@@ -204,6 +204,7 @@ public class Operation extends Resource {
    /**
     * {@inheritDoc}
     */
+   @Override
    protected MoreObjects.ToStringHelper string() {
       return super.string()
               .omitNullValues()
@@ -487,9 +488,6 @@ public class Operation extends Resource {
                  && equal(this.message, that.message);
       }
 
-      /**
-       * {@inheritDoc}
-       */
       protected MoreObjects.ToStringHelper string() {
          return toStringHelper(this)
                  .omitNullValues()

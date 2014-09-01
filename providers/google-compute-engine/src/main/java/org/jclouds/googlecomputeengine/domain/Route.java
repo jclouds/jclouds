@@ -141,6 +141,7 @@ public final class Route extends Resource {
    /**
     * {@inheritDoc}
     */
+   @Override
    protected MoreObjects.ToStringHelper string() {
       return super.string()
               .add("network", network)
@@ -357,9 +358,6 @@ public final class Route extends Resource {
                  && equal(this.data, that.data);
       }
 
-      /**
-       * {@inheritDoc}
-       */
       protected MoreObjects.ToStringHelper string() {
          return toStringHelper(this)
                  .add("code", code)

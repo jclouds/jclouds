@@ -142,6 +142,7 @@ public final class MachineType extends Resource {
    /**
     * {@inheritDoc}
     */
+   @Override
    protected MoreObjects.ToStringHelper string() {
       return super.string()
               .add("guestCpus", guestCpus)
@@ -313,9 +314,6 @@ public final class MachineType extends Resource {
          return equal(this.diskGb, that.diskGb);
       }
 
-      /**
-       * {@inheritDoc}
-       */
       protected MoreObjects.ToStringHelper string() {
          return toStringHelper(this)
                  .add("diskGb", diskGb);

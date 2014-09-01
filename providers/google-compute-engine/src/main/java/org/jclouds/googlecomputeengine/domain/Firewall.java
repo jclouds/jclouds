@@ -114,6 +114,7 @@ public final class Firewall extends Resource {
    /**
     * {@inheritDoc}
     */
+   @Override
    protected MoreObjects.ToStringHelper string() {
       return super.string()
               .add("network", network)
@@ -303,9 +304,6 @@ public final class Firewall extends Resource {
                  && equal(this.ports, that.ports);
       }
 
-      /**
-       * {@inheritDoc}
-       */
       public MoreObjects.ToStringHelper string() {
          return toStringHelper(this)
                  .add("IpProtocol", ipProtocol).add("ports", ports);

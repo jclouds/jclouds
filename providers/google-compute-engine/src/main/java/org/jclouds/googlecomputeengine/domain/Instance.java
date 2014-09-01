@@ -167,6 +167,7 @@ public class Instance extends Resource {
    /**
     * {@inheritDoc}
     */
+   @Override
    protected MoreObjects.ToStringHelper string() {
       return super.string()
               .omitNullValues()
@@ -387,9 +388,6 @@ public class Instance extends Resource {
                  && equal(this.fingerprint, that.fingerprint);
       }
 
-      /**
-       * {@inheritDoc}
-       */
       protected MoreObjects.ToStringHelper string() {
          return toStringHelper(this)
                  .add("items", items)
@@ -493,9 +491,6 @@ public class Instance extends Resource {
          return equal(this.index, that.index);
       }
 
-      /**
-       * {@inheritDoc}
-       */
       protected MoreObjects.ToStringHelper string() {
          return toStringHelper(this).add("index", index);
       }
@@ -594,6 +589,7 @@ public class Instance extends Resource {
       /**
        * {@inheritDoc}
        */
+      @Override
       protected MoreObjects.ToStringHelper string() {
          return toStringHelper(this).add("boot", boot);
       }
@@ -744,9 +740,6 @@ public class Instance extends Resource {
                  && equal(this.network, that.network);
       }
 
-      /**
-       * {@inheritDoc}
-       */
       protected MoreObjects.ToStringHelper string() {
          return toStringHelper(this)
                  .add("name", name)
@@ -898,9 +891,6 @@ public class Instance extends Resource {
                     && equal(this.natIP, that.natIP);
          }
 
-         /**
-          * {@inheritDoc}
-          */
          protected MoreObjects.ToStringHelper string() {
             return toStringHelper(this)
                     .add("name", name).add("type", type).add("natIP", natIP);
@@ -1016,9 +1006,6 @@ public class Instance extends Resource {
          return equal(this.selfLink, that.selfLink);
       }
 
-      /**
-       * {@inheritDoc}
-       */
       protected MoreObjects.ToStringHelper string() {
          return toStringHelper(this).add("selfLink", selfLink).add("contents", contents);
       }
@@ -1124,9 +1111,6 @@ public class Instance extends Resource {
                  && equal(this.scopes, that.scopes);
       }
 
-      /**
-       * {@inheritDoc}
-       */
       protected MoreObjects.ToStringHelper string() {
          return toStringHelper(this).add("email", email).add("scopes", scopes);
       }

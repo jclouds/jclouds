@@ -70,6 +70,7 @@ public final class Snapshot extends AbstractDisk {
    /**
     * {@inheritDoc}
     */
+   @Override
    protected MoreObjects.ToStringHelper string() {
       return super.string()
               .omitNullValues()

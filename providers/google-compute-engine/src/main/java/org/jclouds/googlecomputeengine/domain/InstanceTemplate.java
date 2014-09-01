@@ -418,9 +418,6 @@ public class InstanceTemplate {
       return Objects.hashCode(description, image, disks, networkInterfaces, metadata, serviceAccounts);
    }
 
-   /**
-    * {@inheritDoc}
-    */
    protected MoreObjects.ToStringHelper string() {
       MoreObjects.ToStringHelper toString = MoreObjects.toStringHelper("")
               .omitNullValues();

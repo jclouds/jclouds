@@ -78,9 +78,6 @@ public class Metadata {
               && equal(this.fingerprint, that.fingerprint);
    }
 
-   /**
-    * {@inheritDoc}
-    */
    protected MoreObjects.ToStringHelper string() {
       return toStringHelper(this)
               .add("items", items)
