@@ -20,7 +20,7 @@ package org.jclouds.chef.config;
 /**
  * Configuration properties and constants used in Chef connections.
  */
-public interface ChefProperties {
+public final class ChefProperties {
 
    /**
     * The name of the Chef logger.
@@ -107,4 +107,7 @@ public interface ChefProperties {
     */
    public static final String CHEF_USE_OMNIBUS = "chef.use-omnibus";
 
+   private ChefProperties() {
+      throw new AssertionError("intentionally unimplemented");
+   }
 }
