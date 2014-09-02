@@ -19,7 +19,6 @@ package org.jclouds.cloudstack.handlers;
 import static org.jclouds.http.HttpUtils.releasePayload;
 
 import javax.annotation.PreDestroy;
-import javax.annotation.Resource;
 
 import org.jclouds.cloudstack.domain.LoginResponse;
 import org.jclouds.cloudstack.features.SessionApi;
@@ -27,7 +26,6 @@ import org.jclouds.domain.Credentials;
 import org.jclouds.http.HttpCommand;
 import org.jclouds.http.HttpResponse;
 import org.jclouds.http.handlers.BackoffLimitedRetryHandler;
-import org.jclouds.logging.Logger;
 
 import com.google.common.cache.LoadingCache;
 import com.google.inject.Inject;
@@ -38,9 +36,6 @@ import com.google.inject.Singleton;
  */
 @Singleton
 public class InvalidateSessionAndRetryOn401AndLogoutOnClose extends BackoffLimitedRetryHandler {
-   @Resource
-   protected Logger logger = Logger.NULL;
-
    private final LoadingCache<Credentials, LoginResponse> authenticationResponseCache;
    private final SessionApi sessionClient;
 
