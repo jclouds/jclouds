@@ -35,8 +35,8 @@ import org.jclouds.openstack.nova.v2_0.compute.options.NovaTemplateOptions;
 import org.jclouds.openstack.nova.v2_0.domain.KeyPair;
 import org.jclouds.openstack.nova.v2_0.domain.Network;
 import org.jclouds.openstack.nova.v2_0.domain.Server;
-import org.jclouds.openstack.nova.v2_0.domain.regionscoped.ServerInRegion;
 import org.jclouds.openstack.nova.v2_0.domain.regionscoped.RegionAndName;
+import org.jclouds.openstack.nova.v2_0.domain.regionscoped.ServerInRegion;
 import org.jclouds.openstack.nova.v2_0.internal.BaseNovaComputeServiceContextExpectTest;
 import org.testng.annotations.Test;
 

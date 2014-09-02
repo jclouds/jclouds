@@ -32,7 +32,6 @@ import org.jclouds.openstack.nova.v2_0.domain.SecurityGroupRule;
 import com.google.common.base.Function;
 import com.google.inject.Inject;
 
-
 /**
  * A function for transforming a Nova-specific SecurityGroup into a generic
  * SecurityGroup object.
@@ -44,7 +43,7 @@ public class NovaSecurityGroupToSecurityGroup implements Function<org.jclouds.op
    protected Logger logger = Logger.NULL;
 
    protected Function<SecurityGroupRule, IpPermission> ruleToPermission;
-   
+
    @Inject
    public NovaSecurityGroupToSecurityGroup(Function<SecurityGroupRule, IpPermission> ruleToPermission) {
       this.ruleToPermission = ruleToPermission;
@@ -53,7 +52,7 @@ public class NovaSecurityGroupToSecurityGroup implements Function<org.jclouds.op
    @Override
    public SecurityGroup apply(org.jclouds.openstack.nova.v2_0.domain.SecurityGroup group) {
       SecurityGroupBuilder builder = new SecurityGroupBuilder();
-      
+
       builder.id(group.getId());
       builder.providerId(group.getId());
       builder.ownerId(group.getTenantId());

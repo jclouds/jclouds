@@ -45,9 +45,9 @@ import org.jclouds.openstack.nova.v2_0.compute.functions.AllocateAndAddFloatingI
 import org.jclouds.openstack.nova.v2_0.compute.options.NodeAndNovaTemplateOptions;
 import org.jclouds.openstack.nova.v2_0.compute.options.NovaTemplateOptions;
 import org.jclouds.openstack.nova.v2_0.domain.KeyPair;
-import org.jclouds.openstack.nova.v2_0.domain.regionscoped.SecurityGroupInRegion;
 import org.jclouds.openstack.nova.v2_0.domain.regionscoped.RegionAndName;
 import org.jclouds.openstack.nova.v2_0.domain.regionscoped.RegionSecurityGroupNameAndPorts;
+import org.jclouds.openstack.nova.v2_0.domain.regionscoped.SecurityGroupInRegion;
 
 import com.google.common.base.Function;
 import com.google.common.base.Throwables;

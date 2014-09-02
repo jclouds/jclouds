@@ -23,7 +23,7 @@ import com.google.common.collect.ImmutableSet;
 import org.jclouds.http.HttpRequest;
 import org.jclouds.http.HttpResponse;
 import org.jclouds.openstack.nova.v2_0.NovaApi;
-import org.jclouds.openstack.nova.v2_0.domain.regionscoped.AvailabilityZone;
+import org.jclouds.openstack.nova.v2_0.domain.zonescoped.AvailabilityZone;
 import org.jclouds.openstack.nova.v2_0.internal.BaseNovaApiExpectTest;
 import org.testng.annotations.Test;
 

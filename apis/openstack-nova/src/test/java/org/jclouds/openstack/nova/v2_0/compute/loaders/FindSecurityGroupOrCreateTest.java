@@ -22,9 +22,9 @@ import static org.testng.Assert.fail;
 
 import java.util.concurrent.atomic.AtomicReference;
 
-import org.jclouds.openstack.nova.v2_0.domain.regionscoped.SecurityGroupInRegion;
 import org.jclouds.openstack.nova.v2_0.domain.regionscoped.RegionAndName;
 import org.jclouds.openstack.nova.v2_0.domain.regionscoped.RegionSecurityGroupNameAndPorts;
+import org.jclouds.openstack.nova.v2_0.domain.regionscoped.SecurityGroupInRegion;
 import org.testng.annotations.Test;
 
 import com.google.common.base.Function;

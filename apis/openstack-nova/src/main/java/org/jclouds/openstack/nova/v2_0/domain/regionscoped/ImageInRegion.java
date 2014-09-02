@@ -20,6 +20,9 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 import org.jclouds.openstack.nova.v2_0.domain.Image;
 
+import com.google.common.base.MoreObjects;
+import com.google.common.base.MoreObjects.ToStringHelper;
+
 public class ImageInRegion extends RegionAndId {
    protected final Image image;
 
@@ -36,8 +39,13 @@ public class ImageInRegion extends RegionAndId {
    // interchangeably as Map keys
 
    @Override
+   protected ToStringHelper string() {
+      return super.string().add("image", image);
+   }
+
+   @Override
    public String toString() {
-      return "[image=" + image + ", regionId=" + regionId + "]";
+      return string().toString();
    }
 
 }

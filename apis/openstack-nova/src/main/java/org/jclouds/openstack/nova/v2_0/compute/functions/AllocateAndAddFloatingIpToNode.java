@@ -15,6 +15,7 @@
  * limitations under the License.
  */
 package org.jclouds.openstack.nova.v2_0.compute.functions;
+
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.base.Preconditions.checkState;
 import static org.jclouds.compute.config.ComputeServiceProperties.TIMEOUT_NODE_RUNNING;

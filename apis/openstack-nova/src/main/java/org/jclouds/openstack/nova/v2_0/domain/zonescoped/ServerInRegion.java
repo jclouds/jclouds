@@ -14,14 +14,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.jclouds.openstack.nova.v2_0.domain.regionscoped;
+package org.jclouds.openstack.nova.v2_0.domain.zonescoped;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
 import org.jclouds.openstack.nova.v2_0.domain.Server;
 
-import com.google.common.base.MoreObjects.ToStringHelper;
-
+/**
+ * @deprecated This package has been replaced with {@link org.jclouds.openstack.nova.v2_0.domain.regionscoped}.
+ *             Please use {@link org.jclouds.openstack.nova.v2_0.domain.regionscoped.ServerInRegion ServerInRegion},
+ *             as this class will be removed in jclouds 2.1.0.
+ */
+@Deprecated
 public class ServerInRegion extends RegionAndId {
    protected final Server server;
 
@@ -38,13 +42,8 @@ public class ServerInRegion extends RegionAndId {
    // interchangeably as Map keys
 
    @Override
-   protected ToStringHelper string() {
-      return super.string().add("server", server);
-   }
-
-   @Override
    public String toString() {
-      return string().toString();
+      return "[server=" + server + ", regionId=" + regionId + "]";
    }
 
 }

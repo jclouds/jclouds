@@ -71,11 +71,11 @@ import org.jclouds.openstack.nova.v2_0.domain.SecurityGroupRule;
 import org.jclouds.openstack.nova.v2_0.domain.Server;
 import org.jclouds.openstack.nova.v2_0.domain.regionscoped.FlavorInRegion;
 import org.jclouds.openstack.nova.v2_0.domain.regionscoped.ImageInRegion;
-import org.jclouds.openstack.nova.v2_0.domain.regionscoped.SecurityGroupInRegion;
-import org.jclouds.openstack.nova.v2_0.domain.regionscoped.ServerInRegion;
 import org.jclouds.openstack.nova.v2_0.domain.regionscoped.RegionAndId;
 import org.jclouds.openstack.nova.v2_0.domain.regionscoped.RegionAndName;
 import org.jclouds.openstack.nova.v2_0.domain.regionscoped.RegionSecurityGroupNameAndPorts;
+import org.jclouds.openstack.nova.v2_0.domain.regionscoped.SecurityGroupInRegion;
+import org.jclouds.openstack.nova.v2_0.domain.regionscoped.ServerInRegion;
 import org.jclouds.openstack.nova.v2_0.predicates.FindSecurityGroupWithNameAndReturnTrue;
 
 import com.google.common.annotations.VisibleForTesting;
@@ -108,9 +108,9 @@ public class NovaComputeServiceContextModule extends
       super.configure();
       bind(new TypeLiteral<ComputeServiceAdapter<ServerInRegion, FlavorInRegion, ImageInRegion, Location>>() {
       }).to(NovaComputeServiceAdapter.class);
-     
+
       bind(ComputeService.class).to(NovaComputeService.class);
-      
+
       bind(new TypeLiteral<Function<ServerInRegion, NodeMetadata>>() {
       }).to(ServerInRegionToNodeMetadata.class);
 
@@ -154,7 +154,7 @@ public class NovaComputeServiceContextModule extends
 
       bind(new TypeLiteral<CacheLoader<RegionAndName, KeyPair>>() {
       }).to(CreateUniqueKeyPair.class);
-      
+
       bind(new TypeLiteral<ImageExtension>() {
       }).to(NovaImageExtension.class);
 
@@ -185,7 +185,7 @@ public class NovaComputeServiceContextModule extends
             CacheLoader<RegionAndName, SecurityGroupInRegion> in) {
       return CacheBuilder.newBuilder().build(in);
    }
-   
+
    @Override
    protected Map<OsFamily, LoginCredentials> osFamilyToCredentials(Injector injector) {
       return ImmutableMap.of(OsFamily.WINDOWS, LoginCredentials.builder().user("Administrator").build(),
@@ -264,7 +264,7 @@ public class NovaComputeServiceContextModule extends
    protected Map<Server.Status, NodeMetadata.Status> toPortableNodeStatus() {
       return toPortableNodeStatus;
    }
-   
+
    @VisibleForTesting
    public static final Map<org.jclouds.openstack.nova.v2_0.domain.Image.Status, Image.Status> toPortableImageStatus = ImmutableMap
             .<org.jclouds.openstack.nova.v2_0.domain.Image.Status, Image.Status> builder()
@@ -280,7 +280,7 @@ public class NovaComputeServiceContextModule extends
    protected Map<org.jclouds.openstack.nova.v2_0.domain.Image.Status, Image.Status> toPortableImageStatus() {
       return toPortableImageStatus;
    }
-   
+
    @Override
    protected Optional<ImageExtension> provideImageExtension(Injector i) {
       return Optional.of(i.getInstance(ImageExtension.class));

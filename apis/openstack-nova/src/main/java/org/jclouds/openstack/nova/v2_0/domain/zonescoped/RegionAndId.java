@@ -14,19 +14,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.jclouds.openstack.nova.v2_0.domain.regionscoped;
+package org.jclouds.openstack.nova.v2_0.domain.zonescoped;
 
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 
-import com.google.common.base.MoreObjects;
-import com.google.common.base.MoreObjects.ToStringHelper;
 import com.google.common.base.Objects;
 import com.google.common.base.Splitter;
 import com.google.common.collect.Iterables;
 
+/**
+ * @deprecated This package has been replaced with {@link org.jclouds.openstack.nova.v2_0.domain.regionscoped}.
+ *             Please use {@link org.jclouds.openstack.nova.v2_0.domain.regionscoped.RegionAndId RegionAndId},
+ *             as this class will be removed in jclouds 2.1.0.
+ */
+@Deprecated
 public class RegionAndId {
-
    public static RegionAndId fromSlashEncoded(String id) {
       Iterable<String> parts = Splitter.on('/').split(checkNotNull(id, "id"));
       checkArgument(Iterables.size(parts) == 2, "id must be in format regionId/id");
@@ -53,14 +56,6 @@ public class RegionAndId {
       this.id = checkNotNull(id, "id");
    }
 
-   public String getRegion() {
-      return regionId;
-   }
-
-   public String getId() {
-      return id;
-   }
-
    @Override
    public int hashCode() {
       return Objects.hashCode(regionId, id);
@@ -78,13 +73,17 @@ public class RegionAndId {
       return Objects.equal(regionId, other.regionId) && Objects.equal(id, other.id);
    }
 
-   protected ToStringHelper string() {
-      return MoreObjects.toStringHelper(this).add("regionId", regionId).add("id", id);
+   public String getRegion() {
+      return regionId;
+   }
+
+   public String getId() {
+      return id;
    }
 
    @Override
    public String toString() {
-      return string().toString();
+      return "[regionId=" + regionId + ", id=" + id + "]";
    }
 
 }

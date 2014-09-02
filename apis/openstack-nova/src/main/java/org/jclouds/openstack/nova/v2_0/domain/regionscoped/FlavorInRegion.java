@@ -20,24 +20,32 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 import org.jclouds.openstack.nova.v2_0.domain.Flavor;
 
-public class FlavorInRegion extends RegionAndId {
-   protected final Flavor image;
+import com.google.common.base.MoreObjects;
+import com.google.common.base.MoreObjects.ToStringHelper;
 
-   public FlavorInRegion(Flavor image, String regionId) {
-      super(regionId, checkNotNull(image, "image").getId());
-      this.image = image;
+public class FlavorInRegion extends RegionAndId {
+   protected final Flavor flavor;
+
+   public FlavorInRegion(Flavor flavor, String regionId) {
+      super(regionId, checkNotNull(flavor, "flavor").getId());
+      this.flavor = flavor;
    }
 
    public Flavor getFlavor() {
-      return image;
+      return flavor;
    }
 
    // superclass hashCode/equals are good enough, and help us use RegionAndId and FlavorInRegion
    // interchangeably as Map keys
 
    @Override
+   protected ToStringHelper string() {
+      return super.string().add("flavor", flavor);
+   }
+
+   @Override
    public String toString() {
-      return "[image=" + image + ", regionId=" + regionId + "]";
+      return string().toString();
    }
 
 }

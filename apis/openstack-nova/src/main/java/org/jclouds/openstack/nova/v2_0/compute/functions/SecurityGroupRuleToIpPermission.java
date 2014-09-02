@@ -32,15 +32,14 @@ import org.jclouds.domain.Location;
 import org.jclouds.logging.Logger;
 import org.jclouds.net.domain.IpPermission;
 import org.jclouds.openstack.nova.v2_0.domain.SecurityGroupRule;
-import org.jclouds.openstack.nova.v2_0.domain.regionscoped.SecurityGroupInRegion;
 import org.jclouds.openstack.nova.v2_0.domain.regionscoped.RegionAndName;
+import org.jclouds.openstack.nova.v2_0.domain.regionscoped.SecurityGroupInRegion;
 
 import com.google.common.base.Function;
 import com.google.common.base.Predicate;
 import com.google.common.base.Supplier;
 import com.google.common.cache.LoadingCache;
 import com.google.common.util.concurrent.Atomics;
-
 
 /**
  * A function for transforming a nova-specific SecurityGroupRule into a generic

@@ -14,17 +14,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.jclouds.openstack.nova.v2_0.domain.regionscoped;
+package org.jclouds.openstack.nova.v2_0.domain.zonescoped;
 
 import static com.google.common.base.Objects.equal;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 import java.util.Set;
 
-import com.google.common.base.MoreObjects.ToStringHelper;
 import com.google.common.base.Objects;
+import com.google.common.base.MoreObjects.ToStringHelper;
 import com.google.common.collect.ImmutableSet;
 
+/**
+ * @deprecated This package has been replaced with {@link org.jclouds.openstack.nova.v2_0.domain.regionscoped}.
+ *             Please use {@link org.jclouds.openstack.nova.v2_0.domain.regionscoped.RegionSecurityGroupNameAndPorts RegionSecurityGroupNameAndPorts},
+ *             as this class will be removed in jclouds 2.1.0.
+ */
+@Deprecated
 public class RegionSecurityGroupNameAndPorts extends RegionAndName {
    protected final Set<Integer> ports;
 
@@ -53,13 +59,7 @@ public class RegionSecurityGroupNameAndPorts extends RegionAndName {
    }
 
    @Override
-   protected ToStringHelper string() {
+   public ToStringHelper string() {
       return super.string().add("ports", ports);
    }
-
-   @Override
-   public String toString() {
-      return string().toString();
-   }
-
 }

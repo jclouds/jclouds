@@ -36,7 +36,6 @@ import com.google.common.base.Function;
 import com.google.common.base.Supplier;
 import com.google.inject.Inject;
 
-
 /**
  * A function for transforming a Nova-specific SecurityGroup into a generic
  * SecurityGroup object.

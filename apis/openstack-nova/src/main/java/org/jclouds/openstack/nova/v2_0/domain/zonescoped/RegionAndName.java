@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.jclouds.openstack.nova.v2_0.domain.regionscoped;
+package org.jclouds.openstack.nova.v2_0.domain.zonescoped;
 
 import static com.google.common.base.Objects.equal;
 import static com.google.common.base.Preconditions.checkArgument;
@@ -29,21 +29,30 @@ import com.google.common.collect.Iterables;
 
 /**
  * Helpful when looking for resources by region and name
+ *
+ * @deprecated This package has been replaced with {@link org.jclouds.openstack.nova.v2_0.domain.regionscoped}.
+ *             Please use {@link org.jclouds.openstack.nova.v2_0.domain.regionscoped.RegionAndName RegionAndName},
+ *             as this class will be removed in jclouds 2.1.0.
  */
+@Deprecated
 public class RegionAndName {
 
    public static final Function<RegionAndName, String> NAME_FUNCTION = new Function<RegionAndName, String>() {
+
       @Override
       public String apply(RegionAndName input) {
          return input.getName();
       }
+
    };
 
    public static final Function<RegionAndName, String> REGION_FUNCTION = new Function<RegionAndName, String>() {
+
       @Override
       public String apply(RegionAndName input) {
          return input.getRegion();
       }
+
    };
 
    public static RegionAndName fromSlashEncoded(String name) {
@@ -95,13 +104,12 @@ public class RegionAndName {
       return Objects.hashCode(regionId, name);
    }
 
-   protected ToStringHelper string() {
-      return MoreObjects.toStringHelper(this).add("regionId", regionId).add("name", name);
-   }
-
    @Override
    public String toString() {
       return string().toString();
    }
 
+   protected ToStringHelper string() {
+      return MoreObjects.toStringHelper("").add("regionId", regionId).add("name", name);
+   }
 }
