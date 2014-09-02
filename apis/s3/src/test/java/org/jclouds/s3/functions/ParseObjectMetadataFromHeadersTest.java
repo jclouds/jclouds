@@ -38,6 +38,7 @@ import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
 
 import com.google.common.collect.ImmutableMap;
+import com.google.common.hash.HashCode;
 import com.google.common.net.HttpHeaders;
 import com.google.inject.AbstractModule;
 import com.google.inject.Guice;
@@ -51,7 +52,7 @@ public class ParseObjectMetadataFromHeadersTest {
       HttpResponse http = HttpResponse.builder().statusCode(400).message("boa").payload("")
                                       .addHeader(S3Headers.USER_METADATA_PREFIX + "foo", "bar")
                                       .addHeader(HttpHeaders.LAST_MODIFIED, lastModified)
-                                      .addHeader(HttpHeaders.ETAG, "\"abcd\"")
+                                      .addHeader(HttpHeaders.ETAG, "\"00000000000000000000000000000000\"")
                                       .addHeader(HttpHeaders.CACHE_CONTROL, "cacheControl").build();
       http.getPayload().getContentMetadata().setContentLength(1025l);
       http.getPayload().getContentMetadata().setContentDisposition("contentDisposition");
@@ -60,13 +61,14 @@ public class ParseObjectMetadataFromHeadersTest {
 
       MutableObjectMetadata response = parser.apply(http);
 
+      HashCode hashCode = HashCode.fromBytes(new byte[16]);
       MutableObjectMetadataImpl expects = new MutableObjectMetadataImpl();
       expects.setCacheControl("cacheControl");
       expects.getContentMetadata().setContentDisposition("contentDisposition");
       expects.getContentMetadata().setContentEncoding("encoding");
       expects.getContentMetadata().setContentType(MediaType.APPLICATION_OCTET_STREAM);
       expects.getContentMetadata().setContentLength(1025l);
-      expects.getContentMetadata().setContentMD5(base16().lowerCase().decode("abcd"));
+      expects.getContentMetadata().setContentMD5(hashCode);
       expects.setETag("\"abcd\"");
       expects.setKey("key");
       expects.setLastModified(now);
@@ -110,7 +112,7 @@ public class ParseObjectMetadataFromHeadersTest {
       HttpResponse http = HttpResponse.builder().statusCode(400).message("boa").payload("")
                                       .addHeader(S3Headers.USER_METADATA_PREFIX + "foo", "bar")
                                       .addHeader(HttpHeaders.LAST_MODIFIED, lastModified)
-                                      .addHeader(S3Headers.AMZ_ETAG, "\"abcd\"")
+                                      .addHeader(S3Headers.AMZ_ETAG, "\"00000000000000000000000000000000\"")
                                       .addHeader(HttpHeaders.CACHE_CONTROL, "cacheControl").build();
       
       http.getPayload().getContentMetadata().setContentLength(1025l);
@@ -120,11 +122,12 @@ public class ParseObjectMetadataFromHeadersTest {
 
       MutableObjectMetadata response = parser.apply(http);
 
+      HashCode hashCode = HashCode.fromBytes(new byte[16]);
       MutableObjectMetadataImpl expects = new MutableObjectMetadataImpl();
       expects.setCacheControl("cacheControl");
       expects.getContentMetadata().setContentDisposition("contentDisposition");
       expects.getContentMetadata().setContentEncoding("encoding");
-      expects.getContentMetadata().setContentMD5(base16().lowerCase().decode("abcd"));
+      expects.getContentMetadata().setContentMD5(hashCode);
       expects.getContentMetadata().setContentType(MediaType.APPLICATION_OCTET_STREAM);
       expects.getContentMetadata().setContentLength(1025l);
       expects.setETag("\"abcd\"");

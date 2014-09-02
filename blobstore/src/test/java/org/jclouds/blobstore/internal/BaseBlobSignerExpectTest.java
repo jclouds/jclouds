@@ -33,6 +33,7 @@ import org.testng.annotations.Test;
 
 import com.google.common.base.Function;
 import com.google.common.collect.ImmutableMap;
+import com.google.common.hash.HashCode;
 import com.google.inject.Module;
 
 public abstract class BaseBlobSignerExpectTest extends BaseRestClientExpectTest<BlobStore> {
@@ -85,8 +86,9 @@ public abstract class BaseBlobSignerExpectTest extends BaseRestClientExpectTest<
 
    @Test
    public void testSignPutBlob() throws Exception {
+      HashCode hashCode = HashCode.fromBytes(new byte[16]);
       BlobStore signPutBlob = requestsSendResponses(init());
-      Blob blob = signPutBlob.blobBuilder("name").forSigning().contentLength(2l).contentMD5(new byte[] { 0, 2, 4, 8 })
+      Blob blob = signPutBlob.blobBuilder("name").forSigning().contentLength(2l).contentMD5(hashCode)
             .contentType("text/plain").expires(new Date(1000)).build();
       HttpRequest compare = putBlob();
       compare.setPayload(blob.getPayload());

@@ -72,7 +72,7 @@ public class HPCloudObjectStorageBlobSignerExpectTest extends BaseBlobSignerExpe
    protected HttpRequest putBlob() {
       return HttpRequest.builder().method("PUT")
             .endpoint("https://region-a.geo-1.objects.hpcloudsvc.com/v1/myTenantId/container/name")
-            .addHeader("ETag", "00020408")
+            .addHeader("ETag", "00000000000000000000000000000000")
             .addHeader("Expect", "100-continue")
             .addHeader("X-Auth-Token", "myToken")
             .addHeader("X-Delete-At", "1")

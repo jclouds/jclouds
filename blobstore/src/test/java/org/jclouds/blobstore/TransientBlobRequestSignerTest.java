@@ -31,6 +31,7 @@ import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
 import com.google.common.base.Charsets;
+import com.google.common.hash.HashCode;
 import com.google.common.hash.Hashing;
 import com.google.common.io.ByteSource;
 
@@ -72,18 +73,22 @@ public class TransientBlobRequestSignerTest extends BaseAsyncClientTest<LocalAsy
 
    public void testSignPutBlob() throws ArrayIndexOutOfBoundsException, SecurityException, IllegalArgumentException,
             NoSuchMethodException, IOException {
-      Blob blob = blobFactory.get().name(blobName).forSigning().contentLength(2l).contentMD5(new byte[] { 0, 2, 4, 8 })
+      HashCode hashCode = HashCode.fromBytes(new byte[16]);
+      Blob blob = blobFactory.get().name(blobName).forSigning().contentLength(2l).contentMD5(hashCode)
                .contentType("text/plain").build();
 
-      assertEquals(blob.getPayload().getContentMetadata().getContentMD5(), new byte[] { 0, 2, 4, 8 });
+      assertEquals(blob.getPayload().getContentMetadata().getContentMD5AsHashCode(), hashCode);
 
       HttpRequest request = signer.signPutBlob(containerName, blob);
 
       assertRequestLineEquals(request, "PUT " + fullUrl + " HTTP/1.1");
       assertNonPayloadHeadersEqual(
                request,
-               "Authorization: Basic aWRlbnRpdHk6Y3JlZGVudGlhbA==\nContent-Length: 2\nContent-MD5: AAIECA==\nContent-Type: text/plain\n");
-      assertContentHeadersEqual(request, "text/plain", null, null, null, 2L, new byte[] { 0, 2, 4, 8 }, null);
+               "Authorization: Basic aWRlbnRpdHk6Y3JlZGVudGlhbA==\n" +
+               "Content-Length: 2\n" +
+               "Content-MD5: AAAAAAAAAAAAAAAAAAAAAA==\n" +
+               "Content-Type: text/plain\n");
+      assertContentHeadersEqual(request, "text/plain", null, null, null, 2L, hashCode.asBytes(), null);
 
       assertEquals(request.getFilters().size(), 0);
    }

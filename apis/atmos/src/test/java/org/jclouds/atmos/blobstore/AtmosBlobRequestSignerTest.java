@@ -37,6 +37,7 @@ import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
 import com.google.common.base.Supplier;
+import com.google.common.hash.HashCode;
 import com.google.inject.Module;
 
 /**
@@ -83,11 +84,12 @@ public class AtmosBlobRequestSignerTest extends BaseAsyncClientTest<AtmosAsyncCl
 
    public void testSignPutBlob() throws ArrayIndexOutOfBoundsException, SecurityException, IllegalArgumentException,
             NoSuchMethodException, IOException {
+      HashCode hashCode = HashCode.fromBytes(new byte[16]);
       Blob blob = blobFactory.create(null);
       blob.getMetadata().setName("name");
       blob.setPayload("");
       blob.getPayload().getContentMetadata().setContentLength(2l);
-      blob.getPayload().getContentMetadata().setContentMD5(new byte[] { 0, 2, 4, 8 });
+      blob.getPayload().getContentMetadata().setContentMD5(hashCode.asBytes());
       blob.getPayload().getContentMetadata().setContentType("text/plain");
       blob.getPayload().getContentMetadata().setExpires(new Date(1000));
       
@@ -100,11 +102,11 @@ public class AtmosBlobRequestSignerTest extends BaseAsyncClientTest<AtmosAsyncCl
                "Accept: */*\n" +
                "Date: Thu, 05 Jun 2008 16:38:19 GMT\n" +
                "Expect: 100-continue\n" +
-               "x-emc-signature: DTzbKA9a0TAawWFEbC4D76wTq3A=\n" +
+               "x-emc-signature: OlAHsoIDCsO5YmqjRxOIM5sp3r0=\n" +
                "x-emc-uid: identity\n" +
-               "x-emc-wschecksum: MD5/0/00020408\n");
+               "x-emc-wschecksum: MD5/0/00000000000000000000000000000000\n");
 
-      assertContentHeadersEqual(request, "text/plain", null, null, null, 2L, new byte[] { 0, 2, 4, 8 }, new Date(1000));
+      assertContentHeadersEqual(request, "text/plain", null, null, null, 2L, hashCode.asBytes(), new Date(1000));
 
       assertEquals(request.getFilters().size(), 0);
    }

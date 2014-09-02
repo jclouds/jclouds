@@ -22,6 +22,7 @@ import org.jclouds.io.payloads.BaseImmutableContentMetadata;
 import org.jclouds.javax.annotation.Nullable;
 
 import com.google.common.base.Objects;
+import com.google.common.base.Preconditions;
 import com.google.common.hash.HashCode;
 
 public class ContentMetadataBuilder {
@@ -51,6 +52,7 @@ public class ContentMetadataBuilder {
 
    public ContentMetadataBuilder contentMD5(@Nullable HashCode contentMD5) {
       if (contentMD5 != null) {
+         Preconditions.checkArgument(contentMD5.bits() == 128, "MD5 hash must have 128 bits, was: %s", contentMD5.bits());
          this.contentMD5 = contentMD5;
       }
       return this;

@@ -82,7 +82,7 @@ public class AWSS3BlobSignerExpectTest extends S3BlobSignerExpectTest {
             .addHeader("Host", HOST)
             .addHeader("Expect", "100-continue")
             .addHeader("Date", "Thu, 05 Jun 2008 16:38:19 GMT")
-            .addHeader("Authorization", "AWS identity:j9Dy/lmmvlCKjA4lkqZenLxMkR4=").build();
+            .addHeader("Authorization", "AWS identity:zM2oT+71KcoOSxv1SU5L12UXnT8=").build();
    }
 
    @Override

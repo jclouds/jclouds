@@ -63,6 +63,7 @@ import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Lists;
 import com.google.common.reflect.Invokable;
 import com.google.inject.Module;
+
 // NOTE:without testName, this will not call @Before* and fail w/NPE during
 // surefire
 @Test(groups = "unit", testName = "AWSS3AsyncClientTest")
@@ -166,11 +167,13 @@ public class AWSS3AsyncClientTest extends S3AsyncClientTest<AWSS3AsyncClient> {
       Invokable<?, ?> method = method(AWSS3AsyncClient.class, "initiateMultipartUpload", String.class, ObjectMetadata.class,
             PutObjectOptions[].class);
       GeneratedHttpRequest request = processor.createRequest(method, ImmutableList.<Object> of("bucket", ObjectMetadataBuilder.create().key("foo")
-            .contentMD5(new byte[] { 1, 2, 3, 4 }).build()));
+            .contentMD5(new byte[16]).build()));
 
       assertRequestLineEquals(request, "POST https://bucket." + url + "/foo?uploads HTTP/1.1");
-      assertNonPayloadHeadersEqual(request, "Content-MD5: AQIDBA==\nContent-Type: binary/octet-stream\nHost: bucket."
-            + url + "\n");
+      assertNonPayloadHeadersEqual(request,
+            "Content-MD5: AAAAAAAAAAAAAAAAAAAAAA==\n" +
+            "Content-Type: binary/octet-stream\n" +
+            "Host: bucket." + url + "\n");
       assertPayloadEquals(request, null, null, false);
 
       // as this is a payload-related command, but with no payload, be careful
@@ -180,8 +183,11 @@ public class AWSS3AsyncClientTest extends S3AsyncClientTest<AWSS3AsyncClient> {
 
       assertRequestLineEquals(request, "POST https://bucket." + url + "/foo?uploads HTTP/1.1");
       assertNonPayloadHeadersEqual(request,
-            "Authorization: AWS identity:Sp1FX4svL9P2u2bFJwroaYpSANo=\nContent-MD5: AQIDBA==\n"
-                  + "Content-Type: binary/octet-stream\nDate: 2009-11-08T15:54:08.897Z\nHost: bucket." + url + "\n");
+            "Authorization: AWS identity:972m/Bqn2L5FIaB+wWDeY83mGvU=\n" +
+            "Content-MD5: AAAAAAAAAAAAAAAAAAAAAA==\n" +
+            "Content-Type: binary/octet-stream\n" +
+            "Date: 2009-11-08T15:54:08.897Z\n" +
+            "Host: bucket." + url + "\n");
       assertPayloadEquals(request, null, null, false);
 
       assertResponseParserClassEquals(method, request, UploadIdFromHttpResponseViaRegex.class);

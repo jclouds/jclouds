@@ -77,7 +77,7 @@ public class S3BlobSignerExpectTest extends BaseBlobSignerExpectTest {
             .endpoint("https://s3.amazonaws.com/container/name")
             .addHeader("Expect", "100-continue")
             .addHeader("Date", "Thu, 05 Jun 2008 16:38:19 GMT")
-            .addHeader("Authorization", "AWS identity:j9Dy/lmmvlCKjA4lkqZenLxMkR4=").build();
+            .addHeader("Authorization", "AWS identity:zM2oT+71KcoOSxv1SU5L12UXnT8=").build();
    }
 
    @Override
@@ -93,7 +93,7 @@ public class S3BlobSignerExpectTest extends BaseBlobSignerExpectTest {
             .endpoint("https://s3.amazonaws.com/container/name")
             .addHeader("Expect", "100-continue")
             .addHeader("Date", "Thu, 05 Jun 2008 16:38:19 GMT")
-            .addHeader("Authorization", "AWS identity:0uvBv1wEskuhFHYJF/L6kEV9A7o=").build();
+            .addHeader("Authorization", "AWS identity:zM2oT+71KcoOSxv1SU5L12UXnT8=").build();
    }
 
    @Override

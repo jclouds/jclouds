@@ -157,7 +157,7 @@ public class ConvertToGaeRequestTest {
 
    private void testHoot(HttpRequest request) throws IOException {
       request.getPayload().getContentMetadata().setContentType("text/plain");
-      request.getPayload().getContentMetadata().setContentMD5(new byte[] { 1, 2, 3, 4 });
+      request.getPayload().getContentMetadata().setContentMD5(new byte[16]);
       HTTPRequest gaeRequest = req.apply(request);
 
       StringBuilder builder = new StringBuilder();
@@ -166,7 +166,10 @@ public class ConvertToGaeRequestTest {
       }
       assertEquals(builder.toString(),
       // note content-length is prohibited in gae
-            "User-Agent: jclouds/1.0 urlfetch/1.4.3\nExpect: 100-continue\nContent-Type: text/plain\nContent-MD5: AQIDBA==\n");
+            "User-Agent: jclouds/1.0 urlfetch/1.4.3\n" +
+            "Expect: 100-continue\n" +
+            "Content-Type: text/plain\n" +
+            "Content-MD5: AAAAAAAAAAAAAAAAAAAAAA==\n");
       assertEquals(new String(gaeRequest.getPayload()), "hoot!");
    }
 }

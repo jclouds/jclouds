@@ -35,6 +35,7 @@ import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
 import com.google.common.base.Supplier;
+import com.google.common.hash.HashCode;
 import com.google.inject.Module;
 
 /**
@@ -80,11 +81,12 @@ public class AzureBlobRequestSignerTest extends BaseAsyncClientTest<AzureBlobAsy
 
    public void testSignPutBlob() throws ArrayIndexOutOfBoundsException, SecurityException, IllegalArgumentException,
             NoSuchMethodException, IOException {
+      HashCode hashCode = HashCode.fromBytes(new byte[16]);
       Blob blob = blobFactory.create(null);
       blob.getMetadata().setName("name");
       blob.setPayload("");
       blob.getPayload().getContentMetadata().setContentLength(2l);
-      blob.getPayload().getContentMetadata().setContentMD5(new byte[] { 0, 2, 4, 8 });
+      blob.getPayload().getContentMetadata().setContentMD5(hashCode);
       blob.getPayload().getContentMetadata().setContentType("text/plain");
       blob.getPayload().getContentMetadata().setExpires(new Date(1000));
 
@@ -93,8 +95,12 @@ public class AzureBlobRequestSignerTest extends BaseAsyncClientTest<AzureBlobAsy
       assertRequestLineEquals(request, "PUT https://identity.blob.core.windows.net/container/name HTTP/1.1");
       assertNonPayloadHeadersEqual(
                request,
-               "Authorization: SharedKeyLite identity:ssvK6ZB8GMqRcp1lBpY9vIzbLKL9Goxh7wZ2YhfHNzQ=\nDate: Thu, 05 Jun 2008 16:38:19 GMT\nExpect: 100-continue\nx-ms-blob-type: BlockBlob\nx-ms-version: 2009-09-19\n");
-      assertContentHeadersEqual(request, "text/plain", null, null, null, 2L, new byte[] { 0, 2, 4, 8 }, new Date(1000));
+               "Authorization: SharedKeyLite identity:8kilG1mKxSWaKMLIQPI/aBlTFvaRRbmGOBqKaE+/R5A=\n" +
+               "Date: Thu, 05 Jun 2008 16:38:19 GMT\n" +
+               "Expect: 100-continue\n" +
+               "x-ms-blob-type: BlockBlob\n" +
+               "x-ms-version: 2009-09-19\n");
+      assertContentHeadersEqual(request, "text/plain", null, null, null, 2L, hashCode.asBytes(), new Date(1000));
 
       assertEquals(request.getFilters().size(), 0);
    }
