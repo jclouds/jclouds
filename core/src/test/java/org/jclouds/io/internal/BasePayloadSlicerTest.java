@@ -24,7 +24,6 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.util.Iterator;
 
-import org.jclouds.io.ByteSources;
 import org.jclouds.io.Payload;
 import org.jclouds.io.PayloadSlicer;
 import org.jclouds.io.payloads.ByteSourcePayload;
@@ -33,7 +32,6 @@ import org.jclouds.util.Strings2;
 import org.testng.annotations.Test;
 
 import com.google.common.base.Charsets;
-import com.google.common.collect.Iterables;
 import com.google.common.io.ByteSource;
 
 @Test
@@ -71,14 +69,46 @@ public class BasePayloadSlicerTest {
    }
 
    @Test
-   public void testIterableSliceWithRepeatingByteSource() throws IOException {
-      String content = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz\n"; /* 53 chars */
-      byte[] contentBytes = content.getBytes(Charsets.UTF_8);
-      ByteSource byteSource = ByteSources.repeatingArrayByteSource(contentBytes).slice(0, 1024);
+   public void testIterableSliceWithRepeatingByteSourceSmallerPartSize() throws IOException {
       PayloadSlicer slicer = new BasePayloadSlicer();
+      ByteSource byteSource = ByteSource.wrap("aaaaaaaaaabbbbbbbbbbccccc".getBytes(Charsets.UTF_8)); /* 25 chars */
       Payload payload = new ByteSourcePayload(byteSource);
 
-      assertEquals(Iterables.size(slicer.slice(payload, 100)), 11);
-      assertEquals(Iterables.size(slicer.slice(payload, 53)), 20);
+      Iterator<Payload> iter = slicer.slice(payload, 10).iterator();
+      Payload part;
+
+      assertTrue(iter.hasNext(), "Not enough results");
+      part = iter.next();
+      assertEquals(Strings2.toStringAndClose(part.getInput()), "aaaaaaaaaa");
+      assertEquals(part.getContentMetadata().getContentLength(), Long.valueOf(10));
+
+      assertTrue(iter.hasNext(), "Not enough results");
+      part = iter.next();
+      assertEquals(Strings2.toStringAndClose(part.getInput()), "bbbbbbbbbb");
+      assertEquals(part.getContentMetadata().getContentLength(), Long.valueOf(10));
+
+      assertTrue(iter.hasNext(), "Not enough results");
+      part = iter.next();
+      assertEquals(Strings2.toStringAndClose(part.getInput()), "ccccc");
+      assertEquals(part.getContentMetadata().getContentLength(), Long.valueOf(5));
+
+      assertFalse(iter.hasNext());
+   }
+
+   @Test
+   public void testIterableSliceWithRepeatingByteSourceLargerPartSize() throws IOException {
+      PayloadSlicer slicer = new BasePayloadSlicer();
+      ByteSource byteSource = ByteSource.wrap("aaaaaaaaaabbbbbbbbbbccccc".getBytes(Charsets.UTF_8)); /* 25 chars */
+      Payload payload = new ByteSourcePayload(byteSource);
+
+      Iterator<Payload> iter = slicer.slice(payload, 50).iterator();
+      Payload part;
+
+      assertTrue(iter.hasNext(), "Not enough results");
+      part = iter.next();
+      assertEquals(Strings2.toStringAndClose(part.getInput()), "aaaaaaaaaabbbbbbbbbbccccc");
+      assertEquals(part.getContentMetadata().getContentLength(), Long.valueOf(25));
+
+      assertFalse(iter.hasNext());
    }
 }
