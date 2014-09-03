@@ -18,6 +18,7 @@ package org.jclouds.aws.ec2.compute.strategy;
 
 import static com.google.common.base.Charsets.UTF_8;
 import static com.google.common.io.BaseEncoding.base64;
+import static org.easymock.EasyMock.anyObject;
 import static org.easymock.EasyMock.createMock;
 import static org.easymock.EasyMock.expect;
 import static org.easymock.EasyMock.replay;
@@ -559,8 +560,7 @@ public class CreateKeyPairPlacementAndSecurityGroupsAsNeededAndReturnRunOptionsT
       // setup expectations
       expect(options.getKeyPair()).andReturn(userSuppliedKeyPair);
       expect(options.shouldAutomaticallyCreateKeyPair()).andReturn(shouldAutomaticallyCreateKeyPair);
-      expect(strategy.credentialsMap.containsKey(new RegionAndName(region, group))).andReturn(true);
-      expect(strategy.credentialsMap.get(new RegionAndName(region, group))).andReturn(keyPair);
+      expect(strategy.credentialsMap.putIfAbsent(anyObject(RegionAndName.class), anyObject(KeyPair.class))).andReturn(keyPair);
       expect(options.getPublicKey()).andReturn(null).times(2);
       expect(keyPair.getKeyName()).andReturn(systemGeneratedKeyPairName).atLeastOnce();
       expect(options.getRunScript()).andReturn(null);
@@ -934,6 +934,7 @@ public class CreateKeyPairPlacementAndSecurityGroupsAsNeededAndReturnRunOptionsT
       GroupNamingConvention namingConvention = createMock(GroupNamingConvention.class);
       expect(namingConventionFactory.create()).andReturn(namingConvention).anyTimes();
       expect(namingConvention.sharedNameForGroup("group")).andReturn("jclouds#group").anyTimes();
+      expect(makeKeyPair.apply(anyObject(RegionAndName.class))).andReturn(null).anyTimes();
       replay(namingConventionFactory);
       replay(namingConvention);
 
