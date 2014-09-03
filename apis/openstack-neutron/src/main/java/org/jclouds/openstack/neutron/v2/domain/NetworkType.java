@@ -18,10 +18,7 @@
 package org.jclouds.openstack.neutron.v2.domain;
 
 /**
- * Enumerates supported Network types. 
- * 
- * @see <a href=
- *      "http://docs.openstack.org/api/openstack-network/2.0/content/provider_ext.html">api doc</a>
+ * Enumerates supported Network types.
  */
 public enum NetworkType {
    /**
@@ -37,15 +34,15 @@ public enum NetworkType {
     */
    VLAN("vlan"),
    /**
-    * Used to describe a Virtual Extensible LAN (VXLAN) network. 
-    * It uses a VLAN-like encapsulation technique to encapsulate MAC-based 
+    * Used to describe a Virtual Extensible LAN (VXLAN) network.
+    * It uses a VLAN-like encapsulation technique to encapsulate MAC-based
     * OSI layer 2 Ethernet frames within layer 4 UDP packets.
     */
    VXLAN("vxlan"),
    /**
-    * Used to describe a GRE tunnel network. A virtual network realized as 
-    * packets encapsulated using Generic Routing Encapsulation. GRE tunnel 
-    * packets are routed by the compute node hosts, so GRE tunnels are not 
+    * Used to describe a GRE tunnel network. A virtual network realized as
+    * packets encapsulated using Generic Routing Encapsulation. GRE tunnel
+    * packets are routed by the compute node hosts, so GRE tunnels are not
     * associated by the openvswitch plugin with specific physical networks.
     */
    GRE("gre"),
@@ -65,7 +62,7 @@ public enum NetworkType {
       return name;
    }
 
-   /**
+   /*
     * This provides GSON enum support in jclouds.
     * @param name The string representation of this enum value.
     * @return The corresponding enum value.

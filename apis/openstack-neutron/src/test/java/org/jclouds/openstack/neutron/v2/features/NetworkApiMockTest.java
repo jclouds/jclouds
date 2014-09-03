@@ -56,7 +56,7 @@ public class NetworkApiMockTest extends BaseNeutronApiMockTest {
          NeutronApi neutronApi = api(server.getUrl("/").toString(), "openstack-neutron", overrides);
          NetworkApi api = neutronApi.getNetworkApi("RegionOne");
 
-         Network.CreateOptions createNetwork = Network.createOptions("jclouds-wibble")
+         Network.CreateNetwork createNetwork = Network.createBuilder("jclouds-wibble")
                .networkType(NetworkType.LOCAL)
                .build();
 
@@ -92,7 +92,7 @@ public class NetworkApiMockTest extends BaseNeutronApiMockTest {
          NeutronApi neutronApi = api(server.getUrl("/").toString(), "openstack-neutron", overrides);
          NetworkApi api = neutronApi.getNetworkApi("RegionOne");
 
-         Network.CreateOptions createNetwork = Network.createOptions("jclouds-wibble")
+         Network.CreateNetwork createNetwork = Network.createBuilder("jclouds-wibble")
                .networkType(NetworkType.LOCAL)
                .build();
 
@@ -285,11 +285,11 @@ public class NetworkApiMockTest extends BaseNeutronApiMockTest {
          NeutronApi neutronApi = api(server.getUrl("/").toString(), "openstack-neutron", overrides);
          NetworkApi api = neutronApi.getNetworkApi("RegionOne");
 
-         Network.CreateOptions createNetwork1 = Network.createOptions("jclouds-wibble")
+         Network.CreateNetwork createNetwork1 = Network.createBuilder("jclouds-wibble")
                .networkType(NetworkType.LOCAL)
                .build();
 
-         Network.CreateOptions createNetwork2 = Network.createOptions("jclouds-wibble2")
+         Network.CreateNetwork createNetwork2 = Network.createBuilder("jclouds-wibble2")
                .networkType(NetworkType.LOCAL)
                .build();
 
@@ -332,11 +332,11 @@ public class NetworkApiMockTest extends BaseNeutronApiMockTest {
          NeutronApi neutronApi = api(server.getUrl("/").toString(), "openstack-neutron", overrides);
          NetworkApi api = neutronApi.getNetworkApi("RegionOne");
 
-         Network.CreateOptions createNetwork1 = Network.createOptions("jclouds-wibble")
+         Network.CreateNetwork createNetwork1 = Network.createBuilder("jclouds-wibble")
                .networkType(NetworkType.LOCAL)
                .build();
 
-         Network.CreateOptions createNetwork2 = Network.createOptions("jclouds-wibble2")
+         Network.CreateNetwork createNetwork2 = Network.createBuilder("jclouds-wibble2")
                .networkType(NetworkType.LOCAL)
                .build();
 
@@ -355,7 +355,7 @@ public class NetworkApiMockTest extends BaseNeutronApiMockTest {
          NeutronApi neutronApi = api(server.getUrl("/").toString(), "openstack-neutron", overrides);
          NetworkApi api = neutronApi.getNetworkApi("RegionOne");
 
-         Network.UpdateOptions updateNetwork = Network.updateOptions()
+         Network.UpdateNetwork updateNetwork = Network.updateBuilder()
                .name("jclouds-wibble-updated")
                .networkType(NetworkType.LOCAL)
                .build();
@@ -388,7 +388,7 @@ public class NetworkApiMockTest extends BaseNeutronApiMockTest {
          NeutronApi neutronApi = api(server.getUrl("/").toString(), "openstack-neutron", overrides);
          NetworkApi api = neutronApi.getNetworkApi("RegionOne");
 
-         Network.UpdateOptions updateNetwork = Network.updateOptions()
+         Network.UpdateNetwork updateNetwork = Network.updateBuilder()
                .name("jclouds-wibble-updated")
                .networkType(NetworkType.LOCAL)
                .build();

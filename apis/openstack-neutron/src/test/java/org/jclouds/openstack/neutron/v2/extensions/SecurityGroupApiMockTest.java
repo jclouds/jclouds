@@ -59,7 +59,7 @@ public class SecurityGroupApiMockTest extends BaseNeutronApiMockTest {
          NeutronApi neutronApi = api(server.getUrl("/").toString(), "openstack-neutron", overrides);
          SecurityGroupApi api = neutronApi.getSecurityGroupApi("RegionOne").get();
 
-         SecurityGroup.CreateOptions createSecurityGroup = SecurityGroup.createOptions().name("new-webservers")
+         SecurityGroup.CreateSecurityGroup createSecurityGroup = SecurityGroup.createBuilder().name("new-webservers")
                .description("security group for webservers")
                .build();
 
@@ -101,7 +101,7 @@ public class SecurityGroupApiMockTest extends BaseNeutronApiMockTest {
          NeutronApi neutronApi = api(server.getUrl("/").toString(), "openstack-neutron", overrides);
          SecurityGroupApi api = neutronApi.getSecurityGroupApi("RegionOne").get();
 
-         SecurityGroup.CreateOptions createSecurityGroup = SecurityGroup.createOptions().name("new-webservers")
+         SecurityGroup.CreateSecurityGroup createSecurityGroup = SecurityGroup.createBuilder().name("new-webservers")
                .description("security group for webservers")
                .build();
 
@@ -121,7 +121,7 @@ public class SecurityGroupApiMockTest extends BaseNeutronApiMockTest {
          NeutronApi neutronApi = api(server.getUrl("/").toString(), "openstack-neutron", overrides);
          SecurityGroupApi api = neutronApi.getSecurityGroupApi("RegionOne").get();
 
-         Rule.CreateOptions createSecurityGroupRule = Rule.createOptions(
+         Rule.CreateRule createSecurityGroupRule = Rule.createBuilder(
                RuleDirection.INGRESS, "a7734e61-b545-452d-a3cd-0189cbd9747a")
                .portRangeMin(80)
                .portRangeMax(80)
@@ -168,7 +168,7 @@ public class SecurityGroupApiMockTest extends BaseNeutronApiMockTest {
          NeutronApi neutronApi = api(server.getUrl("/").toString(), "openstack-neutron", overrides);
          SecurityGroupApi api = neutronApi.getSecurityGroupApi("RegionOne").get();
 
-         Rule.CreateOptions createSecurityGroupRule = Rule.createOptions(
+         Rule.CreateRule createSecurityGroupRule = Rule.createBuilder(
                RuleDirection.INGRESS, "a7734e61-b545-452d-a3cd-0189cbd9747a")
                .portRangeMin(80)
                .portRangeMax(80)
@@ -205,6 +205,7 @@ public class SecurityGroupApiMockTest extends BaseNeutronApiMockTest {
           */
          assertNotNull(securityGroups);
          assertEquals(securityGroups.size(), 2);
+         // Ensures the full collection is parsed and ordering is preserved.
          assertEquals(securityGroups.first().get().getId(), "85cc3048-abc3-43cc-89b3-377341426ac5");
          assertEquals(securityGroups.get(1).getId(), "85cc3048-abc3-43cc-89b3-377341426ac52");
       } finally {
@@ -261,6 +262,7 @@ public class SecurityGroupApiMockTest extends BaseNeutronApiMockTest {
           */
          assertNotNull(rules);
          assertEquals(rules.size(), 4);
+         // Ensures the full collection is parsed and ordering is preserved.
          assertEquals(rules.first().get().getId(), "3c0e45ff-adaf-4124-b083-bf390e5482ff");
          assertEquals(rules.get(3).getId(), "f7d45c89-008e-4bab-88ad-d6811724c51c");
       } finally {
@@ -321,6 +323,7 @@ public class SecurityGroupApiMockTest extends BaseNeutronApiMockTest {
           */
          assertNotNull(securityGroups);
          assertEquals(securityGroups.size(), 4);
+         // Ensures ordering is preserved and both pages are parsed.
          assertEquals(securityGroups.get(0).getId(), "85cc3048-abc3-43cc-89b3-377341426ac5");
          assertEquals(securityGroups.get(3).getId(), "85cc3048-abc3-43cc-89b3-377341426ac524");
 
@@ -385,6 +388,7 @@ public class SecurityGroupApiMockTest extends BaseNeutronApiMockTest {
           */
          assertNotNull(rules);
          assertEquals(rules.size(), 8);
+         // Ensures both pages are tested and ordering is preserved.
          assertEquals(rules.get(0).getId(), "3c0e45ff-adaf-4124-b083-bf390e5482ff");
          assertEquals(rules.get(7).getId(), "f7d45c89-008e-4bab-88ad-d6811724c51c2");
 

@@ -95,7 +95,7 @@ public class SecurityGroup {
     * @return The collection of rules for this Security Group.
     */
    public ImmutableList<Rule> getRules() {
-      return rules!=null ? rules : ImmutableList.<Rule>of();
+      return rules != null ? rules : ImmutableList.<Rule>of();
    }
 
    @Override
@@ -137,7 +137,7 @@ public class SecurityGroup {
    /**
     * @return the Builder for creating a new SecurityGroup
     */
-   public static CreateBuilder createOptions() {
+   public static CreateBuilder createBuilder() {
       return new CreateBuilder();
    }
 
@@ -198,8 +198,8 @@ public class SecurityGroup {
       /**
        * @return a CreateOptions constructed with this Builder.
        */
-      public CreateOptions build() {
-         return new CreateOptions(securityGroup);
+      public CreateSecurityGroup build() {
+         return new CreateSecurityGroup(securityGroup);
       }
 
       protected CreateBuilder self() {
@@ -211,8 +211,8 @@ public class SecurityGroup {
     * Create and Update options - extend the domain class, passed to API update and create calls.
     * Essentially the same as the domain class. Ensure validation and safe typing.
     */
-   public static class CreateOptions extends SecurityGroup {
-      private CreateOptions(SecurityGroup securityGroup) {
+   public static class CreateSecurityGroup extends SecurityGroup {
+      private CreateSecurityGroup(SecurityGroup securityGroup) {
          super(securityGroup);
       }
    }

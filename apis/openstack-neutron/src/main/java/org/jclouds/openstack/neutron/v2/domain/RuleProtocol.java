@@ -48,7 +48,7 @@ public enum RuleProtocol {
       return name;
    }
 
-   /**
+   /*
     * This provides GSON enum support in jclouds.
     * */
    public static RuleProtocol fromValue(String name){

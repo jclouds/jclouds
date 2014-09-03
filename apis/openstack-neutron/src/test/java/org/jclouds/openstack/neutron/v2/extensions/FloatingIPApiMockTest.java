@@ -54,7 +54,7 @@ public class FloatingIPApiMockTest extends BaseNeutronApiMockTest {
          NeutronApi neutronApi = api(server.getUrl("/").toString(), "openstack-neutron", overrides);
          FloatingIPApi api = neutronApi.getFloatingIPApi("RegionOne").get();
 
-         FloatingIP.CreateOptions createFip = FloatingIP.createOptions("376da547-b977-4cfe-9cba-275c80debf57")
+         FloatingIP.CreateFloatingIP createFip = FloatingIP.createBuilder("376da547-b977-4cfe-9cba-275c80debf57")
                .portId("ce705c24-c1ef-408a-bda3-7bbd946164ab")
                .build();
 
@@ -94,7 +94,7 @@ public class FloatingIPApiMockTest extends BaseNeutronApiMockTest {
          NeutronApi neutronApi = api(server.getUrl("/").toString(), "openstack-neutron", overrides);
          FloatingIPApi api = neutronApi.getFloatingIPApi("RegionOne").get();
 
-         FloatingIP.CreateOptions createFip = FloatingIP.createOptions("376da547-b977-4cfe-9cba-275c80debf57")
+         FloatingIP.CreateFloatingIP createFip = FloatingIP.createBuilder("376da547-b977-4cfe-9cba-275c80debf57")
                .portId("ce705c24-c1ef-408a-bda3-7bbd946164ab")
                .build();
 
@@ -295,11 +295,11 @@ public class FloatingIPApiMockTest extends BaseNeutronApiMockTest {
          NeutronApi neutronApi = api(server.getUrl("/").toString(), "openstack-neutron", overrides);
          FloatingIPApi api = neutronApi.getFloatingIPApi("RegionOne").get();
 
-         FloatingIP.UpdateOptions updateOptions = FloatingIP.updateOptions()
+         FloatingIP.UpdateFloatingIP updateFloatingIP = FloatingIP.updateBuilder()
                .portId("fc861431-0e6c-4842-a0ed-e2363f9bc3a8")
                .build();
 
-         FloatingIP floatingIP = api.update("12345", updateOptions);
+         FloatingIP floatingIP = api.update("12345", updateFloatingIP);
 
          /*
           * Check request
@@ -328,9 +328,9 @@ public class FloatingIPApiMockTest extends BaseNeutronApiMockTest {
          NeutronApi neutronApi = api(server.getUrl("/").toString(), "openstack-neutron", overrides);
          FloatingIPApi api = neutronApi.getFloatingIPApi("RegionOne").get();
 
-         FloatingIP.UpdateOptions updateOptions = FloatingIP.updateOptions().build();
+         FloatingIP.UpdateFloatingIP updateFloatingIP = FloatingIP.updateBuilder().build();
 
-         FloatingIP floatingIP = api.update("12345", updateOptions);
+         FloatingIP floatingIP = api.update("12345", updateFloatingIP);
 
          /*
           * Check request
@@ -359,11 +359,11 @@ public class FloatingIPApiMockTest extends BaseNeutronApiMockTest {
          NeutronApi neutronApi = api(server.getUrl("/").toString(), "openstack-neutron", overrides);
          FloatingIPApi api = neutronApi.getFloatingIPApi("RegionOne").get();
 
-         FloatingIP.UpdateOptions updateOptions = FloatingIP.updateOptions()
+         FloatingIP.UpdateFloatingIP updateFloatingIP = FloatingIP.updateBuilder()
                .portId("fc861431-0e6c-4842-a0ed-e2363f9bc3a8")
                .build();
 
-         FloatingIP floatingIP = api.update("12345", updateOptions);
+         FloatingIP floatingIP = api.update("12345", updateFloatingIP);
 
          /*
           * Check request

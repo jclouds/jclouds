@@ -111,7 +111,7 @@ public interface RouterApi {
    @Named("router:create")
    @POST
    @SelectJson("router")
-   Router create(@WrapWith("router") Router.CreateOptions router);
+   Router create(@WrapWith("router") Router.CreateRouter router);
 
    /**
     * Update a router
@@ -126,7 +126,7 @@ public interface RouterApi {
    @SelectJson("router")
    @Fallback(NullOnNotFoundOr404.class)
    @Nullable
-   Router update(@PathParam("id") String id, @WrapWith("router") Router.UpdateOptions router);
+   Router update(@PathParam("id") String id, @WrapWith("router") Router.UpdateRouter router);
 
    /**
     * Deletes the specified router

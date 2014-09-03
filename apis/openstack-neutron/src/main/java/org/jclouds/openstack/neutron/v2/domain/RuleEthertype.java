@@ -44,7 +44,7 @@ public enum RuleEthertype {
       return name;
    }
 
-   /**
+   /*
     * This provides GSON enum support in jclouds.
     * */
    public static RuleEthertype fromValue(String name){

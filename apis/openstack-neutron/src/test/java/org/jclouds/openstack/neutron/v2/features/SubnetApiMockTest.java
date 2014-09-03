@@ -55,7 +55,7 @@ public class SubnetApiMockTest extends BaseNeutronApiMockTest {
          NeutronApi neutronApi = api(server.getUrl("/").toString(), "openstack-neutron", overrides);
          SubnetApi api = neutronApi.getSubnetApi("RegionOne");
 
-         Subnet.CreateOptions createSubnet = Subnet.createOptions("1234567890", "10.0.3.0/24")
+         Subnet.CreateSubnet createSubnet = Subnet.createBuilder("1234567890", "10.0.3.0/24")
                .name("jclouds-wibble")
                .ipVersion(4)
                .build();
@@ -92,7 +92,7 @@ public class SubnetApiMockTest extends BaseNeutronApiMockTest {
          NeutronApi neutronApi = api(server.getUrl("/").toString(), "openstack-neutron", overrides);
          SubnetApi api = neutronApi.getSubnetApi("RegionOne");
 
-         Subnet.CreateOptions createSubnet = Subnet.createOptions("1234567890", "cidr")
+         Subnet.CreateSubnet createSubnet = Subnet.createBuilder("1234567890", "cidr")
                .name("jclouds-wibble")
                .ipVersion(4)
                .build();
@@ -284,12 +284,12 @@ public class SubnetApiMockTest extends BaseNeutronApiMockTest {
          NeutronApi neutronApi = api(server.getUrl("/").toString(), "openstack-neutron", overrides);
          SubnetApi api = neutronApi.getSubnetApi("RegionOne");
 
-         Subnet.CreateOptions createSubnet1 = Subnet.createOptions("e6031bc2-901a-4c66-82da-f4c32ed89406",
+         Subnet.CreateSubnet createSubnet1 = Subnet.createBuilder("e6031bc2-901a-4c66-82da-f4c32ed89406",
                "192.168.199.0/24")
                .ipVersion(4)
                .build();
 
-         Subnet.CreateOptions createSubnet2 = Subnet.createOptions("64239a54-dcc4-4b39-920b-b37c2144effa",
+         Subnet.CreateSubnet createSubnet2 = Subnet.createBuilder("64239a54-dcc4-4b39-920b-b37c2144effa",
                "10.56.4.0/22")
                .ipVersion(4)
                .build();
@@ -333,12 +333,12 @@ public class SubnetApiMockTest extends BaseNeutronApiMockTest {
          NeutronApi neutronApi = api(server.getUrl("/").toString(), "openstack-neutron", overrides);
          SubnetApi api = neutronApi.getSubnetApi("RegionOne");
 
-         Subnet.CreateOptions createSubnet1 = Subnet.createOptions("e6031bc2-901a-4c66-82da-f4c32ed89406",
+         Subnet.CreateSubnet createSubnet1 = Subnet.createBuilder("e6031bc2-901a-4c66-82da-f4c32ed89406",
                "192.168.199.0/24")
                .ipVersion(4)
                .build();
 
-         Subnet.CreateOptions createSubnet2 = Subnet.createOptions("64239a54-dcc4-4b39-920b-b37c2144effa",
+         Subnet.CreateSubnet createSubnet2 = Subnet.createBuilder("64239a54-dcc4-4b39-920b-b37c2144effa",
                "10.56.4.0/22")
                .ipVersion(4)
                .build();
@@ -358,7 +358,7 @@ public class SubnetApiMockTest extends BaseNeutronApiMockTest {
          NeutronApi neutronApi = api(server.getUrl("/").toString(), "openstack-neutron", overrides);
          SubnetApi api = neutronApi.getSubnetApi("RegionOne");
 
-         Subnet.UpdateOptions updateSubnet = Subnet.updateOptions()
+         Subnet.UpdateSubnet updateSubnet = Subnet.updateBuilder()
                .name("new_name")
                .gatewayIp("10.0.3.254")
                .build();
@@ -393,7 +393,7 @@ public class SubnetApiMockTest extends BaseNeutronApiMockTest {
          NeutronApi neutronApi = api(server.getUrl("/").toString(), "openstack-neutron", overrides);
          SubnetApi api = neutronApi.getSubnetApi("RegionOne");
 
-         Subnet.UpdateOptions updateSubnet = Subnet.updateOptions()
+         Subnet.UpdateSubnet updateSubnet = Subnet.updateBuilder()
                .name("new_name")
                .gatewayIp("10.0.3.254")
                .build();

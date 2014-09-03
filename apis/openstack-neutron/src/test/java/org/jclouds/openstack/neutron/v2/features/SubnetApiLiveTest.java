@@ -44,7 +44,7 @@ public class SubnetApiLiveTest extends BaseNeutronApiLiveTest {
    public void testCreateUpdateAndDeleteSubnet() {
       for (String region : api.getConfiguredRegions()) {
          NetworkApi networkApi = api.getNetworkApi(region);
-         String networkId = networkApi.create(Network.createOptions("jclouds-live-test").networkType(NetworkType.LOCAL).build()).getId();
+         String networkId = networkApi.create(Network.createBuilder("jclouds-live-test").networkType(NetworkType.LOCAL).build()).getId();
 
          SubnetApi subnetApi = api.getSubnetApi(region);
          ImmutableSet<AllocationPool> allocationPools = ImmutableSet.of(
@@ -54,7 +54,7 @@ public class SubnetApiLiveTest extends BaseNeutronApiLiveTest {
          ImmutableSet<HostRoute> hostRoutes = ImmutableSet.of(
             HostRoute.builder().destinationCidr("a3:bc00::/48").nextHop("a3:bc00::0004").build()
          );
-         Subnet subnet = subnetApi.create(Subnet.createOptions(networkId, "a3:bc00::/48").ipVersion(6).allocationPools(allocationPools).hostRoutes(hostRoutes).build());
+         Subnet subnet = subnetApi.create(Subnet.createBuilder(networkId, "a3:bc00::/48").ipVersion(6).allocationPools(allocationPools).hostRoutes(hostRoutes).build());
          assertNotNull(subnet);
 
          /* Test list and get */
@@ -71,7 +71,7 @@ public class SubnetApiLiveTest extends BaseNeutronApiLiveTest {
          assertTrue(retrievedSubnet.getDnsNameservers().isEmpty());
          assertEquals(retrievedSubnet.getAllocationPools().size(), 2);
          assertEquals(retrievedSubnet.getHostRoutes().size(), 1);
-         assertNotNull(subnetApi.update(retrievedSubnet.getId(), Subnet.updateOptions().name("jclouds-live-test-update").build()));
+         assertNotNull(subnetApi.update(retrievedSubnet.getId(), Subnet.updateBuilder().name("jclouds-live-test-update").build()));
 
          retrievedSubnet = subnetApi.get(retrievedSubnet.getId());
 
@@ -79,7 +79,7 @@ public class SubnetApiLiveTest extends BaseNeutronApiLiveTest {
          assertEquals(retrievedSubnet.getName(), "jclouds-live-test-update");
          assertTrue(retrievedSubnet.getDnsNameservers().isEmpty());
 
-         Subnet subnet2 = subnetApi.create(Subnet.createOptions(networkId, "a3:bd01::/48").ipVersion(6).build());
+         Subnet subnet2 = subnetApi.create(Subnet.createBuilder(networkId, "a3:bd01::/48").ipVersion(6).build());
          assertNotNull(subnet2);
 
          assertTrue(subnetApi.delete(subnet.getId()));
@@ -91,14 +91,14 @@ public class SubnetApiLiveTest extends BaseNeutronApiLiveTest {
    public void testBulkCreateSubnet() {
       for (String region : api.getConfiguredRegions()) {
          NetworkApi networkApi = api.getNetworkApi(region);
-         String networkId = networkApi.create(Network.createOptions("jclouds-live-test").networkType(NetworkType.LOCAL).build()).getId();
+         String networkId = networkApi.create(Network.createBuilder("jclouds-live-test").networkType(NetworkType.LOCAL).build()).getId();
 
          SubnetApi subnetApi = api.getSubnetApi(region);
          Set<? extends Subnet> subnets = subnetApi.createBulk(
                ImmutableList.of(
-                  Subnet.createOptions("jclouds-live-test-1", "a3:bd01::/48").ipVersion(6).networkId(networkId).build(),
-                  Subnet.createOptions("jclouds-live-test-2", "a3:bd02::/48").ipVersion(6).networkId(networkId).build(),
-                  Subnet.createOptions("jclouds-live-test-3", "a3:bd03::/48").ipVersion(6).networkId(networkId).build()
+                  Subnet.createBuilder("jclouds-live-test-1", "a3:bd01::/48").ipVersion(6).networkId(networkId).build(),
+                  Subnet.createBuilder("jclouds-live-test-2", "a3:bd02::/48").ipVersion(6).networkId(networkId).build(),
+                  Subnet.createBuilder("jclouds-live-test-3", "a3:bd03::/48").ipVersion(6).networkId(networkId).build()
                )
          ).toSet();
          Set<Subnet> existingSubnets = subnetApi.list().concat().toSet();

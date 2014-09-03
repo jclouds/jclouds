@@ -48,19 +48,19 @@ public class PortApiLiveTest extends BaseNeutronApiLiveTest {
          SubnetApi subnetApi = api.getSubnetApi(region);
          PortApi portApi = api.getPortApi(region);
          String networkId = networkApi.create(
-               Network.createOptions("JClouds-Live-Network").networkType(NetworkType.LOCAL).build()).getId();
-         String ipv4SubnetId = subnetApi.create(Subnet.createOptions(networkId, "198.51.100.0/24").ipVersion(4)
+               Network.createBuilder("JClouds-Live-Network").networkType(NetworkType.LOCAL).build()).getId();
+         String ipv4SubnetId = subnetApi.create(Subnet.createBuilder(networkId, "198.51.100.0/24").ipVersion(4)
                .name("JClouds-Live-IPv4-Subnet").build()).getId();
-         String ipv6SubnetId = subnetApi.create(Subnet.createOptions(networkId, "a1ca:1e1:c:107d::/96").ipVersion(6)
+         String ipv6SubnetId = subnetApi.create(Subnet.createBuilder(networkId, "a1ca:1e1:c:107d::/96").ipVersion(6)
                .name("JClouds-Live-IPv6-Subnet").build()).getId();
 
          assertNotNull(networkId);
          assertNotNull(ipv4SubnetId);
          assertNotNull(ipv6SubnetId);
 
-         String ipv4PortId = portApi.create(Port.createOptions(networkId).name("JClouds-Live-IPv4-Port")
+         String ipv4PortId = portApi.create(Port.createBuilder(networkId).name("JClouds-Live-IPv4-Port")
                .fixedIps(ImmutableSet.copyOf(getFixedAddresses(ipv4SubnetId))).build()).getId();
-         String ipv6PortId = portApi.create(Port.createOptions(networkId).name("JClouds-Live-IPv6-Port")
+         String ipv6PortId = portApi.create(Port.createBuilder(networkId).name("JClouds-Live-IPv6-Port")
                .fixedIps(ImmutableSet.copyOf(getFixedAddresses(ipv6SubnetId))).build()).getId();
 
          /* List and get test */
@@ -83,7 +83,7 @@ public class PortApiLiveTest extends BaseNeutronApiLiveTest {
          assertEquals(ipv6Port.getId(), ipv6PortId);
          assertEquals(ipv6Port.getName(), "JClouds-Live-IPv6-Port");
 
-         assertNotNull(portApi.update(ipv4PortId, Port.updateOptions().name("Updated").build()));
+         assertNotNull(portApi.update(ipv4PortId, Port.updateBuilder().name("Updated").build()));
          Port updatedIpv4Port = portApi.get(ipv4PortId);
          assertEquals(updatedIpv4Port.getName(), "Updated");
 
@@ -102,10 +102,10 @@ public class PortApiLiveTest extends BaseNeutronApiLiveTest {
          PortApi portApi = api.getPortApi(region);
 
          String networkId = networkApi.create(
-               Network.createOptions("JClouds-Live-Network").networkType(NetworkType.LOCAL).build()).getId();
-         String ipv4SubnetId = subnetApi.create(Subnet.createOptions(networkId, "198.51.100.0/24").ipVersion(4)
+               Network.createBuilder("JClouds-Live-Network").networkType(NetworkType.LOCAL).build()).getId();
+         String ipv4SubnetId = subnetApi.create(Subnet.createBuilder(networkId, "198.51.100.0/24").ipVersion(4)
                .name("JClouds-Live-IPv4-Subnet").build()).getId();
-         String ipv6SubnetId = subnetApi.create(Subnet.createOptions(networkId, "a1ca:1e1:c:107d::/96").ipVersion(6)
+         String ipv6SubnetId = subnetApi.create(Subnet.createBuilder(networkId, "a1ca:1e1:c:107d::/96").ipVersion(6)
                .name("JClouds-Live-IPv6-Subnet").build()).getId();
 
          assertNotNull(networkId);
@@ -114,13 +114,13 @@ public class PortApiLiveTest extends BaseNeutronApiLiveTest {
 
          Set<? extends Port> ports = portApi.createBulk(
                ImmutableList.of(
-                     Port.createOptions(networkId).name("JClouds-Live-IPv4-Subnet-1")
+                     Port.createBuilder(networkId).name("JClouds-Live-IPv4-Subnet-1")
                            .fixedIps(ImmutableSet.copyOf(getFixedAddresses(ipv4SubnetId))).build(),
-                     Port.createOptions(networkId).name("JClouds-Live-IPv4-Subnet-2")
+                     Port.createBuilder(networkId).name("JClouds-Live-IPv4-Subnet-2")
                            .fixedIps(ImmutableSet.copyOf(getFixedAddresses(ipv4SubnetId))).build(),
-                     Port.createOptions(networkId).name("JClouds-Live-IPv6-Subnet-1")
+                     Port.createBuilder(networkId).name("JClouds-Live-IPv6-Subnet-1")
                            .fixedIps(ImmutableSet.copyOf(getFixedAddresses(ipv6SubnetId))).build(),
-                     Port.createOptions(networkId).name("JClouds-Live-IPv6-Subnet-2")
+                     Port.createBuilder(networkId).name("JClouds-Live-IPv6-Subnet-2")
                            .fixedIps(ImmutableSet.copyOf(getFixedAddresses(ipv6SubnetId))).build()
                )
          ).toSet();

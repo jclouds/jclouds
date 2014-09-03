@@ -166,14 +166,14 @@ public class FloatingIP {
    /**
     * @return the Builder for creating a new floating IP
     */
-   public static CreateBuilder createOptions(String floatingNetworkId) {
+   public static CreateBuilder createBuilder(String floatingNetworkId) {
       return new CreateBuilder(floatingNetworkId);
    }
 
    /**
     * @return the Builder for updating a floating IP
     */
-   public static UpdateBuilder updateOptions() {
+   public static UpdateBuilder updateBuilder() {
       return new UpdateBuilder();
    }
 
@@ -260,8 +260,8 @@ public class FloatingIP {
       /**
        * @return a CreateOptions constructed with this Builder.
        */
-      public CreateOptions build() {
-         return new CreateOptions(floatingIP);
+      public CreateFloatingIP build() {
+         return new CreateFloatingIP(floatingIP);
       }
 
       protected CreateBuilder self() {
@@ -294,8 +294,8 @@ public class FloatingIP {
       /**
        * @return a UpdateOptions constructed with this Builder.
        */
-      public UpdateOptions build() {
-         return new UpdateOptions(floatingIP);
+      public UpdateFloatingIP build() {
+         return new UpdateFloatingIP(floatingIP);
       }
 
       protected UpdateBuilder self() {
@@ -303,13 +303,13 @@ public class FloatingIP {
       }
    }
 
-   public static class CreateOptions extends FloatingIP {
-      private CreateOptions(FloatingIP floatingIP) {
+   public static class CreateFloatingIP extends FloatingIP {
+      private CreateFloatingIP(FloatingIP floatingIP) {
          super(floatingIP);
       }
    }
-   public static class UpdateOptions extends FloatingIP {
-      private UpdateOptions(FloatingIP floatingIP) {
+   public static class UpdateFloatingIP extends FloatingIP {
+      private UpdateFloatingIP(FloatingIP floatingIP) {
          super(floatingIP);
       }
    }

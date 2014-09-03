@@ -107,7 +107,7 @@ public interface PortApi {
    @Named("port:create")
    @POST
    @SelectJson("port")
-   Port create(@WrapWith("port") Port.CreateOptions port);
+   Port create(@WrapWith("port") Port.CreatePort port);
 
    /**
     * Create multiple ports
@@ -118,7 +118,7 @@ public interface PortApi {
    @Named("port:createBulk")
    @POST
    @SelectJson("ports")
-   FluentIterable<Port> createBulk(@WrapWith("ports") List<Port.CreateOptions> ports);
+   FluentIterable<Port> createBulk(@WrapWith("ports") List<Port.CreatePort> ports);
 
    /**
     * Update a port
@@ -132,7 +132,7 @@ public interface PortApi {
    @Path("/{id}")
    @SelectJson("port")
    @Fallback(Fallbacks.NullOnNotFoundOr404.class)
-   Port update(@PathParam("id") String id, @WrapWith("port") Port.UpdateOptions port);
+   Port update(@PathParam("id") String id, @WrapWith("port") Port.UpdatePort port);
 
    /**
     * Delete a port

@@ -16,16 +16,18 @@
  */
 package org.jclouds.openstack.neutron.v2.domain;
 
-import com.google.common.base.MoreObjects;
-import com.google.common.base.Objects;
-import com.google.common.collect.ImmutableSet;
-import org.jclouds.javax.annotation.Nullable;
+import static com.google.common.base.Preconditions.checkNotNull;
 
-import javax.inject.Named;
 import java.beans.ConstructorProperties;
 import java.util.Collection;
 
-import static com.google.common.base.Preconditions.checkNotNull;
+import javax.inject.Named;
+
+import org.jclouds.javax.annotation.Nullable;
+
+import com.google.common.base.MoreObjects;
+import com.google.common.base.Objects;
+import com.google.common.collect.ImmutableSet;
 
 /**
  * A Neutron subnet
@@ -266,14 +268,14 @@ public class Subnet {
    /**
     * @return the Builder for creating a new Router
     */
-   public static CreateBuilder createOptions(String networkId, String cidr) {
+   public static CreateBuilder createBuilder(String networkId, String cidr) {
       return new CreateBuilder(networkId, cidr);
    }
 
    /**
     * @return the Builder for updating a Router
     */
-   public static UpdateBuilder updateOptions() {
+   public static UpdateBuilder updateBuilder() {
       return new UpdateBuilder();
    }
 
@@ -404,8 +406,8 @@ public class Subnet {
       /**
        * @return a CreateOptions constructed with this Builder.
        */
-      public CreateOptions build() {
-         return new CreateOptions(subnet);
+      public CreateSubnet build() {
+         return new CreateSubnet(subnet);
       }
 
       protected CreateBuilder self() {
@@ -426,8 +428,8 @@ public class Subnet {
       /**
        * @return a UpdateOptions constructed with this Builder.
        */
-      public UpdateOptions build() {
-         return new UpdateOptions(subnet);
+      public UpdateSubnet build() {
+         return new UpdateSubnet(subnet);
       }
 
       protected UpdateBuilder self() {
@@ -439,11 +441,11 @@ public class Subnet {
     * Create and Update options - extend the domain class, passed to API update and create calls.
     * Essentially the same as the domain class. Ensure validation and safe typing.
     */
-   public static class CreateOptions extends Subnet {
+   public static class CreateSubnet extends Subnet {
       /**
        * Copy constructor
        */
-      private CreateOptions(Subnet subnet) {
+      private CreateSubnet(Subnet subnet) {
          super(subnet);
          checkNotNull(subnet.networkId, "networkId should not be null");
          checkNotNull(subnet.cidr, "cidr should not be null");
@@ -454,11 +456,11 @@ public class Subnet {
     * Create and Update options - extend the domain class, passed to API update and create calls.
     * Essentially the same as the domain class. Ensure validation and safe typing.
     */
-   public static class UpdateOptions extends Subnet {
+   public static class UpdateSubnet extends Subnet {
       /**
        * Copy constructor
        */
-      private UpdateOptions(Subnet subnet) {
+      private UpdateSubnet(Subnet subnet) {
          super(subnet);
       }
    }

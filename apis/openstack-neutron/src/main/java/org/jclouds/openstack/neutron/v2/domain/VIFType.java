@@ -45,7 +45,7 @@ public enum VIFType {
       return name;
    }
 
-   /**
+   /*
     * This provides GSON enum support in jclouds.
     * */
    public static VIFType fromValue(String name){

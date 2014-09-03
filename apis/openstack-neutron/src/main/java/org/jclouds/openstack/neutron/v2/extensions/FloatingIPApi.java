@@ -101,19 +101,19 @@ public interface FloatingIPApi {
    /**
     * Creates a floating IP.
     *
-    * @param createOptions Options for creating a Floating IP
+    * @param createFloatingIP Options for creating a Floating IP
     * @return the newly created Floating IP
     */
    @Named("floatingip:create")
    @POST
    @SelectJson("floatingip")
-   FloatingIP create(@WrapWith("floatingip") FloatingIP.CreateOptions createOptions);
+   FloatingIP create(@WrapWith("floatingip") FloatingIP.CreateFloatingIP createFloatingIP);
 
    /**
     * Update a Floating IP
     *
     * @param id the id of the Floating IP to update
-    * @param updateOptions Contains only the attributes to update
+    * @param updateFloatingIP Contains only the attributes to update
     * @return The modified Floating IP
     */
    @Named("floatingip:update")
@@ -122,7 +122,7 @@ public interface FloatingIPApi {
    @SelectJson("floatingip")
    @Fallback(NullOnNotFoundOr404.class)
    @Nullable
-   FloatingIP update(@PathParam("id") String id, @WrapWith("floatingip") FloatingIP.UpdateOptions updateOptions);
+   FloatingIP update(@PathParam("id") String id, @WrapWith("floatingip") FloatingIP.UpdateFloatingIP updateFloatingIP);
 
    /**
     * Deletes the specified floatingIP

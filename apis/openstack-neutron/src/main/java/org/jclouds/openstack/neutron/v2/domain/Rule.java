@@ -16,13 +16,15 @@
  */
 package org.jclouds.openstack.neutron.v2.domain;
 
+import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
-import static com.google.common.base.Preconditions.checkState;
 
 import java.beans.ConstructorProperties;
+
 import javax.inject.Named;
 
 import org.jclouds.javax.annotation.Nullable;
+
 import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
 
@@ -216,7 +218,7 @@ public class Rule {
    /**
     * @return the Builder for creating a new SecurityGroupRule
     */
-   public static CreateBuilder createOptions(RuleDirection direction, String securityGroupId) {
+   public static CreateBuilder createBuilder(RuleDirection direction, String securityGroupId) {
       return new CreateBuilder(direction, securityGroupId);
    }
 
@@ -348,8 +350,8 @@ public class Rule {
       /**
        * @return a CreateOptions constructed with this Builder.
        */
-      public CreateOptions build() {
-         return new CreateOptions(rule);
+      public CreateRule build() {
+         return new CreateRule(rule);
       }
 
       protected CreateBuilder self() {
@@ -361,14 +363,14 @@ public class Rule {
     * Create and Update options - extend the domain class, passed to API update and create calls.
     * Essentially the same as the domain class. Ensure validation and safe typing.
     */
-   public static class CreateOptions extends Rule {
-      private CreateOptions(Rule rule) {
+   public static class CreateRule extends Rule {
+      private CreateRule(Rule rule) {
          super(rule);
-         checkNotNull(rule.getDirection(), "direction should not be null");
-         checkNotNull(rule.getSecurityGroupId(), "security group id should not be null");
-         checkState(rule.getPortRangeMax()>= rule.getPortRangeMin(),
+         checkNotNull(this.getDirection(), "direction should not be null");
+         checkNotNull(this.getSecurityGroupId(), "security group id should not be null");
+         checkArgument(this.getPortRangeMax() >= this.getPortRangeMin(),
                "port range max should be greater than or equal to port range min");
-         checkState(rule.getRemoteGroupId()==null || rule.getRemoteIpPrefix()==null,
+         checkArgument(this.getRemoteGroupId() == null || this.getRemoteIpPrefix() == null,
                "You can specify either remote_group_id or remote_ip_prefix in the request body.");
       }
    }

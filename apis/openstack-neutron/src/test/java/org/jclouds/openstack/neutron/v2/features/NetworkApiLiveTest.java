@@ -40,8 +40,8 @@ public class NetworkApiLiveTest extends BaseNeutronApiLiveTest {
    public void testCreateUpdateAndDeleteNetwork() {
       for (String region : api.getConfiguredRegions()) {
          NetworkApi networkApi = api.getNetworkApi(region);
-         Network net = networkApi.create(Network.createOptions("jclouds-test").networkType(NetworkType.LOCAL).build());
-         Network test = networkApi.create(Network.createOptions("jclouds-test").build());
+         Network net = networkApi.create(Network.createBuilder("jclouds-test").networkType(NetworkType.LOCAL).build());
+         Network test = networkApi.create(Network.createBuilder("jclouds-test").build());
          assertNotNull(net);
 
          /* List and get tests */
@@ -57,7 +57,7 @@ public class NetworkApiLiveTest extends BaseNeutronApiLiveTest {
          assertEquals(network.getName(), "jclouds-test");
          assertEquals(network.getNetworkType(), NetworkType.LOCAL);
          assertTrue(network.getSubnets().isEmpty());
-         assertNotNull(networkApi.update(net.getId(), Network.updateOptions().name("jclouds-live-test").build()));
+         assertNotNull(networkApi.update(net.getId(), Network.updateBuilder().name("jclouds-live-test").build()));
 
          network = networkApi.get(net.getId());
 
@@ -65,7 +65,7 @@ public class NetworkApiLiveTest extends BaseNeutronApiLiveTest {
          assertEquals(network.getName(), "jclouds-live-test");
          assertTrue(network.getSubnets().isEmpty());
 
-         Network net2 = networkApi.create(Network.createOptions("jclouds-test2").networkType(NetworkType.LOCAL).build());
+         Network net2 = networkApi.create(Network.createBuilder("jclouds-test2").networkType(NetworkType.LOCAL).build());
          assertNotNull(net2);
 
          assertTrue(networkApi.delete(net.getId()));
@@ -79,9 +79,9 @@ public class NetworkApiLiveTest extends BaseNeutronApiLiveTest {
          NetworkApi networkApi = api.getNetworkApi(region);
          Set<Network> nets = networkApi.createBulk(
                ImmutableList.of(
-                  Network.createOptions("jclouds-live-test-1").networkType(NetworkType.LOCAL).adminStateUp(true).build(),
-                  Network.createOptions("jclouds-live-test-2").networkType(NetworkType.LOCAL).adminStateUp(false).build(),
-                  Network.createOptions("jclouds-live-test-3").networkType(NetworkType.LOCAL).adminStateUp(false).build()
+                  Network.createBuilder("jclouds-live-test-1").networkType(NetworkType.LOCAL).adminStateUp(true).build(),
+                  Network.createBuilder("jclouds-live-test-2").networkType(NetworkType.LOCAL).adminStateUp(false).build(),
+                  Network.createBuilder("jclouds-live-test-3").networkType(NetworkType.LOCAL).adminStateUp(false).build()
                )
          ).toSet();
          Set<Network> existingNets = networkApi.list().concat().toSet();

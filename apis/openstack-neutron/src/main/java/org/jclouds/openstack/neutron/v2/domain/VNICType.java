@@ -39,7 +39,7 @@ public enum VNICType {
       return name;
    }
 
-   /**
+   /*
     * This provides GSON enum support in jclouds.
     * */
    public static VNICType fromValue(String name){

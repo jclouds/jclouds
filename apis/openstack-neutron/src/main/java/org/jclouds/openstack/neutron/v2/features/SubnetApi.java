@@ -104,7 +104,7 @@ public interface SubnetApi {
    @Named("subnet:create")
    @POST
    @SelectJson("subnet")
-   Subnet create(@WrapWith("subnet") Subnet.CreateOptions subnet);
+   Subnet create(@WrapWith("subnet") Subnet.CreateSubnet subnet);
 
    /**
     * Create multiple subnets
@@ -115,7 +115,7 @@ public interface SubnetApi {
    @Named("subnet:createBulk")
    @POST
    @SelectJson("subnets")
-   FluentIterable<Subnet> createBulk(@WrapWith("subnets") List<Subnet.CreateOptions> subnets);
+   FluentIterable<Subnet> createBulk(@WrapWith("subnets") List<Subnet.CreateSubnet> subnets);
 
    /**
     * Update a subnet
@@ -128,7 +128,7 @@ public interface SubnetApi {
    @Path("/{id}")
    @SelectJson("subnet")
    @Fallback(Fallbacks.NullOnNotFoundOr404.class)
-   Subnet update(@PathParam("id") String id, @WrapWith("subnet") Subnet.UpdateOptions subnet);
+   Subnet update(@PathParam("id") String id, @WrapWith("subnet") Subnet.UpdateSubnet subnet);
 
    /**
     * Delete a subnet

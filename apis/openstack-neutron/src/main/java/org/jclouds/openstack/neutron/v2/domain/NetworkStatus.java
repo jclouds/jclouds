@@ -17,6 +17,9 @@
 
 package org.jclouds.openstack.neutron.v2.domain;
 
+/**
+ * Enumerates Network Status.
+ */
 public enum NetworkStatus {
    ACTIVE("active"),
    DOWN("down"),
@@ -38,7 +41,7 @@ public enum NetworkStatus {
       return name();
    }
 
-   /**
+   /*
     * This provides GSON enum support in jclouds.
     * @param name The string representation of this enum value.
     * @return The corresponding enum value.

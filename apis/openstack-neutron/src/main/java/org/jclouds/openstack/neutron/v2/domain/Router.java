@@ -16,12 +16,14 @@
  */
 package org.jclouds.openstack.neutron.v2.domain;
 
-import com.google.common.base.MoreObjects;
-import com.google.common.base.Objects;
-import org.jclouds.javax.annotation.Nullable;
+import java.beans.ConstructorProperties;
 
 import javax.inject.Named;
-import java.beans.ConstructorProperties;
+
+import org.jclouds.javax.annotation.Nullable;
+
+import com.google.common.base.MoreObjects;
+import com.google.common.base.Objects;
 
 /**
  * A Neutron Router
@@ -125,14 +127,14 @@ public class Router {
    /**
     * @return the Builder for creating a new Router
     */
-   public static CreateBuilder createOptions() {
+   public static CreateBuilder createBuilder() {
       return new CreateBuilder();
    }
 
    /**
     * @return the Builder for updating a Router
     */
-   public static UpdateBuilder updateOptions() {
+   public static UpdateBuilder updateBuilder() {
       return new UpdateBuilder();
    }
 
@@ -237,8 +239,8 @@ public class Router {
       /**
        * @return a CreateOptions constructed with this Builder.
        */
-      public CreateOptions build() {
-         return new CreateOptions(router);
+      public CreateRouter build() {
+         return new CreateRouter(router);
       }
 
       protected CreateBuilder self() {
@@ -256,8 +258,8 @@ public class Router {
       /**
        * @return a UpdateOptions constructed with this Builder.
        */
-      public UpdateOptions build() {
-         return new UpdateOptions(router);
+      public UpdateRouter build() {
+         return new UpdateRouter(router);
       }
 
       protected UpdateBuilder self() {
@@ -265,19 +267,19 @@ public class Router {
       }
    }
 
-   public static class CreateOptions extends Router{
+   public static class CreateRouter extends Router{
       /**
        * Copy constructor
        */
-      private CreateOptions(Router router) {
+      private CreateRouter(Router router) {
          super(router);
       }
    }
-   public static class UpdateOptions extends Router{
+   public static class UpdateRouter extends Router{
       /**
        * Copy constructor
        */
-      private UpdateOptions(Router router) {
+      private UpdateRouter(Router router) {
          super(router);
       }
    }

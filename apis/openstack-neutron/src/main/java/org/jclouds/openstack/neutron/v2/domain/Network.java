@@ -16,15 +16,17 @@
  */
 package org.jclouds.openstack.neutron.v2.domain;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+
+import java.beans.ConstructorProperties;
+
+import javax.inject.Named;
+
+import org.jclouds.javax.annotation.Nullable;
+
 import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
 import com.google.common.collect.ImmutableSet;
-import org.jclouds.javax.annotation.Nullable;
-
-import javax.inject.Named;
-import java.beans.ConstructorProperties;
-
-import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * A Neutron network
@@ -367,14 +369,14 @@ public class Network {
    /**
     * @return the Builder for creating a new Router
     */
-   public static CreateBuilder createOptions(String name) {
+   public static CreateBuilder createBuilder(String name) {
       return new CreateBuilder(name);
    }
 
    /**
     * @return the Builder for updating a Router
     */
-   public static UpdateBuilder updateOptions() {
+   public static UpdateBuilder updateBuilder() {
       return new UpdateBuilder();
    }
 
@@ -585,8 +587,8 @@ public class Network {
       /**
        * @return a CreateOptions constructed with this Builder.
        */
-      public CreateOptions build() {
-         return new CreateOptions(network);
+      public CreateNetwork build() {
+         return new CreateNetwork(network);
       }
 
       protected CreateBuilder self() {
@@ -607,8 +609,8 @@ public class Network {
       /**
        * @return a UpdateOptions constructed with this Builder.
        */
-      public UpdateOptions build() {
-         return new UpdateOptions(network);
+      public UpdateNetwork build() {
+         return new UpdateNetwork(network);
       }
 
       protected UpdateBuilder self() {
@@ -620,11 +622,11 @@ public class Network {
     * Create and Update options - extend the domain class, passed to API update and create calls.
     * Essentially the same as the domain class. Ensure validation and safe typing.
     */
-   public static class CreateOptions extends Network {
+   public static class CreateNetwork extends Network {
       /**
        * Copy constructor
        */
-      private CreateOptions(Network network) {
+      private CreateNetwork(Network network) {
          super(network);
          checkNotNull(network.name, "name should not be null");
       }
@@ -634,11 +636,11 @@ public class Network {
     * Create and Update options - extend the domain class, passed to API update and create calls.
     * Essentially the same as the domain class. Ensure validation and safe typing.
     */
-   public static class UpdateOptions extends Network  {
+   public static class UpdateNetwork extends Network  {
       /**
        * Copy constructor
        */
-      private UpdateOptions(Network network) {
+      private UpdateNetwork(Network network) {
          super(network);
       }
    }

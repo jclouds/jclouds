@@ -40,7 +40,7 @@ public enum IPv6DHCPMode {
       return name;
    }
 
-   /**
+   /*
     * This provides GSON enum support in jclouds.
     * */
    public static IPv6DHCPMode fromValue(String name){

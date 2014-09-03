@@ -27,17 +27,6 @@ import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.List;
 
-import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertFalse;
-import static org.testng.Assert.assertNotNull;
-import static org.testng.Assert.assertNull;
-import static org.testng.Assert.assertTrue;
-import static org.testng.Assert.fail;
-
-import java.io.IOException;
-import java.net.URISyntaxException;
-import java.util.List;
-
 import org.jclouds.openstack.neutron.v2.NeutronApi;
 import org.jclouds.openstack.neutron.v2.domain.ExternalGatewayInfo;
 import org.jclouds.openstack.neutron.v2.domain.NetworkStatus;
@@ -69,7 +58,7 @@ public class RouterApiMockTest extends BaseNeutronApiMockTest {
          NeutronApi neutronApi = api(server.getUrl("/").toString(), "openstack-neutron", overrides);
          RouterApi api = neutronApi.getRouterApi("RegionOne").get();
 
-         Router.CreateOptions createRouter = Router.createOptions().name("another_router").adminStateUp(true)
+         Router.CreateRouter createRouter = Router.createBuilder().name("another_router").adminStateUp(true)
                .externalGatewayInfo(ExternalGatewayInfo.builder().networkId("8ca37218-28ff-41cb-9b10-039601ea7e6b").build())
                .build();
 
@@ -107,11 +96,11 @@ public class RouterApiMockTest extends BaseNeutronApiMockTest {
          NeutronApi neutronApi = api(server.getUrl("/").toString(), "openstack-neutron", overrides);
          RouterApi api = neutronApi.getRouterApi("RegionOne").get();
 
-         Router.CreateOptions createRouter = Router.createOptions().name("another_router").adminStateUp(true)
+         Router.CreateRouter createRouter = Router.createBuilder().name("another_router").adminStateUp(true)
                .externalGatewayInfo(ExternalGatewayInfo.builder().networkId("8ca37218-28ff-41cb-9b10-039601ea7e6b").build())
                .build();
 
-         Router router = api.create(createRouter);
+         api.create(createRouter);
          fail("Should have failed with not found exception");
 
       } finally {
@@ -306,12 +295,12 @@ public class RouterApiMockTest extends BaseNeutronApiMockTest {
          NeutronApi neutronApi = api(server.getUrl("/").toString(), "openstack-neutron", overrides);
          RouterApi api = neutronApi.getRouterApi("RegionOne").get();
 
-         Router.UpdateOptions updateOptions = Router.updateOptions()
+         Router.UpdateRouter updateRouter = Router.updateBuilder()
                .externalGatewayInfo(
                      ExternalGatewayInfo.builder().networkId("8ca37218-28ff-41cb-9b10-039601ea7e6b").build())
                .build();
 
-         Router router = api.update("12345", updateOptions);
+         Router router = api.update("12345", updateRouter);
 
          /*
           * Check request
@@ -344,12 +333,12 @@ public class RouterApiMockTest extends BaseNeutronApiMockTest {
          NeutronApi neutronApi = api(server.getUrl("/").toString(), "openstack-neutron", overrides);
          RouterApi api = neutronApi.getRouterApi("RegionOne").get();
 
-         Router.UpdateOptions updateOptions = Router.updateOptions()
+         Router.UpdateRouter updateRouter = Router.updateBuilder()
                .externalGatewayInfo(
                      ExternalGatewayInfo.builder().networkId("8ca37218-28ff-41cb-9b10-039601ea7e6b").build())
                .build();
 
-         Router router = api.update("12345", updateOptions);
+         Router router = api.update("12345", updateRouter);
 
          /*
           * Check request

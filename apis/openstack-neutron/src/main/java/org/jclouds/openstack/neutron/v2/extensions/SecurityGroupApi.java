@@ -100,7 +100,7 @@ public interface SecurityGroupApi {
    SecurityGroup getSecurityGroup(@PathParam("id") String id);
 
    /**
-    * Create a new SecurityGroup.
+    * Creates a new SecurityGroup.
     *
     * @param securityGroup Describes the security group to be created.
     * @return a reference of the newly-created security group
@@ -109,7 +109,7 @@ public interface SecurityGroupApi {
    @Named("secuity-group:create")
    @POST
    @SelectJson("security_group")
-   SecurityGroup create(@WrapWith("security_group") SecurityGroup.CreateOptions securityGroup);
+   SecurityGroup create(@WrapWith("security_group") SecurityGroup.CreateSecurityGroup securityGroup);
 
    /**
     * Deletes the specified Security Group.
@@ -161,7 +161,7 @@ public interface SecurityGroupApi {
    Rule get(@PathParam("id") String id);
 
    /**
-    * Create a new Security Group Rule.
+    * Creates a new Security Group Rule.
     *
     * @param securityGroupRule Describes the security group rule to be created.
     * @return a reference of the newly-created security group rule.
@@ -170,7 +170,7 @@ public interface SecurityGroupApi {
    @Named("security-group-rule:create")
    @POST
    @SelectJson("security_group_rule")
-   Rule create(@WrapWith("security_group_rule") Rule.CreateOptions securityGroupRule);
+   Rule create(@WrapWith("security_group_rule") Rule.CreateRule securityGroupRule);
 
    /**
     * Deletes the specified Security Group Rule.

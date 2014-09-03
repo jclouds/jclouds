@@ -44,7 +44,7 @@ public enum RuleDirection {
       return name;
    }
 
-   /**
+   /*
     * This provides GSON enum support in jclouds.
     * */
    public static RuleDirection fromValue(String name){

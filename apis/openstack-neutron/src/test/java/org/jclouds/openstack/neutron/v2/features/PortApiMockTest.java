@@ -61,7 +61,7 @@ public class PortApiMockTest extends BaseNeutronApiMockTest {
          NeutronApi neutronApi = api(server.getUrl("/").toString(), "openstack-neutron", overrides);
          PortApi api = neutronApi.getPortApi("RegionOne");
 
-         Port.CreateOptions createPort = Port.createOptions("6aeaf34a-c482-4bd3-9dc3-7faf36412f12")
+         Port.CreatePort createPort = Port.createBuilder("6aeaf34a-c482-4bd3-9dc3-7faf36412f12")
                .name("port1")
                .adminStateUp(true)
                .deviceId("d6b4d3a5-c700-476f-b609-1493dd9dadc0")
@@ -108,7 +108,7 @@ public class PortApiMockTest extends BaseNeutronApiMockTest {
          NeutronApi neutronApi = api(server.getUrl("/").toString(), "openstack-neutron", overrides);
          PortApi api = neutronApi.getPortApi("RegionOne");
 
-         Port.CreateOptions createPort = Port.createOptions("6aeaf34a-c482-4bd3-9dc3-7faf36412f12")
+         Port.CreatePort createPort = Port.createBuilder("6aeaf34a-c482-4bd3-9dc3-7faf36412f12")
                .name("port1")
                .adminStateUp(true)
                .deviceId("d6b4d3a5-c700-476f-b609-1493dd9dadc0")
@@ -246,14 +246,14 @@ public class PortApiMockTest extends BaseNeutronApiMockTest {
          NeutronApi neutronApi = api(server.getUrl("/").toString(), "openstack-neutron", overrides);
          PortApi api = neutronApi.getPortApi("RegionOne");
 
-         Port.CreateOptions createPort1 = Port.createOptions("64239a54-dcc4-4b39-920b-b37c2144effa")
+         Port.CreatePort createPort1 = Port.createBuilder("64239a54-dcc4-4b39-920b-b37c2144effa")
                .name("port1")
                .adminStateUp(true)
                .deviceId("24df1d04-d5cb-41e1-8de5-61ed77c558df")
                .securityGroups(ImmutableSet.of("dbc107f4-afcd-4d5a-9352-f68f82241d5b"))
                .build();
 
-         Port.CreateOptions createPort2 = Port.createOptions("e6031bc2-901a-4c66-82da-f4c32ed89406")
+         Port.CreatePort createPort2 = Port.createBuilder("e6031bc2-901a-4c66-82da-f4c32ed89406")
                .name("port2")
                .adminStateUp(false)
                .securityGroups(
@@ -291,14 +291,14 @@ public class PortApiMockTest extends BaseNeutronApiMockTest {
          NeutronApi neutronApi = api(server.getUrl("/").toString(), "openstack-neutron", overrides);
          PortApi api = neutronApi.getPortApi("RegionOne");
 
-         Port.CreateOptions createPort1 = Port.createOptions("64239a54-dcc4-4b39-920b-b37c2144effa")
+         Port.CreatePort createPort1 = Port.createBuilder("64239a54-dcc4-4b39-920b-b37c2144effa")
                .name("port1")
                .adminStateUp(true)
                .deviceId("24df1d04-d5cb-41e1-8de5-61ed77c558df")
                .securityGroups(ImmutableSet.of("dbc107f4-afcd-4d5a-9352-f68f82241d5b"))
                .build();
 
-         Port.CreateOptions createPort2 = Port.createOptions("e6031bc2-901a-4c66-82da-f4c32ed89406")
+         Port.CreatePort createPort2 = Port.createBuilder("e6031bc2-901a-4c66-82da-f4c32ed89406")
                .name("port2")
                .adminStateUp(false)
                .securityGroups(
@@ -384,7 +384,7 @@ public class PortApiMockTest extends BaseNeutronApiMockTest {
          NeutronApi neutronApi = api(server.getUrl("/").toString(), "openstack-neutron", overrides);
          PortApi api = neutronApi.getPortApi("RegionOne");
 
-         Port.UpdateOptions updatePort = Port.updateOptions()
+         Port.UpdatePort updatePort = Port.updateBuilder()
                .securityGroups(
                      ImmutableSet.of("85cc3048-abc3-43cc-89b3-377341426ac5", "c5ab5c29-2c99-44cb-a4b8-e70a88b77799"))
                .build();
@@ -417,7 +417,7 @@ public class PortApiMockTest extends BaseNeutronApiMockTest {
          NeutronApi neutronApi = api(server.getUrl("/").toString(), "openstack-neutron", overrides);
          PortApi api = neutronApi.getPortApi("RegionOne");
 
-         Port.UpdateOptions updatePort = Port.updateOptions()
+         Port.UpdatePort updatePort = Port.updateBuilder()
                .securityGroups(ImmutableSet.of("85cc3048-abc3-43cc-89b3-377341426ac5", "c5ab5c29-2c99-44cb-a4b8-e70a88b77799"))
                .build();
 

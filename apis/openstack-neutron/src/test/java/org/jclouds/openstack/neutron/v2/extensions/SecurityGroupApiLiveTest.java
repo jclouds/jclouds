@@ -40,49 +40,60 @@ public class SecurityGroupApiLiveTest extends BaseNeutronApiLiveTest {
     */
    public void testCreateUpdateAndDeleteSecurityGroup() {
       for (String region : api.getConfiguredRegions()) {
-         SecurityGroupApi sgApi = api.getSecurityGroupApi(region).get();
+         SecurityGroupApi sgApi = null;
+         Rule rule = null;
+         SecurityGroup securityGroup = null;
 
-         SecurityGroup securityGroup = sgApi.create(
-               SecurityGroup.createOptions().name("jclouds-test").description("jclouds test security group").build());
-         assertNotNull(securityGroup);
+         try {
+            sgApi = api.getSecurityGroupApi(region).get();
 
-         Rule rule = sgApi.create(
-               Rule.createOptions(RuleDirection.EGRESS, securityGroup.getId())
-                     .ethertype(RuleEthertype.IPV6)
-                     .portRangeMax(90)
-                     .portRangeMin(80)
-                     .protocol(RuleProtocol.TCP)
-                     .build());
+            securityGroup = sgApi.create(
+                  SecurityGroup.createBuilder().name("jclouds-test").description("jclouds test security group")
+                        .build());
+            assertNotNull(securityGroup);
 
-         assertNotNull(rule);
+            rule = sgApi.create(
+                  Rule.createBuilder(RuleDirection.EGRESS, securityGroup.getId())
+                        .ethertype(RuleEthertype.IPV6)
+                        .portRangeMax(90)
+                        .portRangeMin(80)
+                        .protocol(RuleProtocol.TCP)
+                        .build());
 
-         // Refresh
-         securityGroup = sgApi.getSecurityGroup(securityGroup.getId());
+            assertNotNull(rule);
 
-         assertEquals(securityGroup.getName(), "jclouds-test");
-         assertEquals(securityGroup.getDescription(), "jclouds test security group");
+            // Refresh
+            securityGroup = sgApi.getSecurityGroup(securityGroup.getId());
 
-         assertEquals(securityGroup.getRules().size(), 3, "Expected 2 default rules");
+            assertEquals(securityGroup.getName(), "jclouds-test");
+            assertEquals(securityGroup.getDescription(), "jclouds test security group");
 
-         Rule newSecGroupRule = null;
-         for(Rule sgr : securityGroup.getRules()) {
-            if(sgr.getId().equals(rule.getId())) {
-               newSecGroupRule = sgr;
-               break;
+            assertEquals(securityGroup.getRules().size(), 3);
+
+            Rule newSecGroupRule = null;
+
+            for (Rule sgr : securityGroup.getRules()) {
+               if (sgr.getId().equals(rule.getId())) {
+                  newSecGroupRule = sgr;
+                  break;
+               }
+            }
+            assertNotNull(newSecGroupRule, "Did not find the new rule in the group.");
+
+            assertEquals(rule, newSecGroupRule);
+
+            assertEquals(rule.getEthertype(), RuleEthertype.IPV6);
+            assertEquals(rule.getProtocol(), RuleProtocol.TCP);
+            assertEquals(rule.getPortRangeMax().intValue(), 90);
+            assertEquals(rule.getPortRangeMin().intValue(), 80);
+            assertEquals(rule.getDirection(), RuleDirection.EGRESS);
+         } finally {
+            try {
+               assertTrue(sgApi.deleteRule(rule.getId()));
+            } finally {
+               assertTrue(sgApi.deleteSecurityGroup(securityGroup.getId()));
             }
          }
-         assertNotNull(newSecGroupRule, "Did not find the new rule in the group.");
-
-         assertEquals(rule, newSecGroupRule);
-
-         assertEquals(rule.getEthertype(), RuleEthertype.IPV6);
-         assertEquals(rule.getProtocol(), RuleProtocol.TCP);
-         assertEquals(rule.getPortRangeMax().intValue(), 90);
-         assertEquals(rule.getPortRangeMin().intValue(), 80);
-         assertEquals(rule.getDirection(), RuleDirection.EGRESS);
-
-         assertTrue(sgApi.deleteRule(rule.getId()));
-         assertTrue(sgApi.deleteSecurityGroup(securityGroup.getId()));
       }
    }
 }

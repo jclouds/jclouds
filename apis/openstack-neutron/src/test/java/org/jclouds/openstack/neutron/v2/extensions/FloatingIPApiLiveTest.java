@@ -54,13 +54,13 @@ public class FloatingIPApiLiveTest extends BaseNeutronApiLiveTest {
 
          try {
             network = networkApi.create(
-                  Network.createOptions("jclouds-network-test").external(true).networkType(NetworkType.LOCAL).build());
+                  Network.createBuilder("jclouds-network-test").external(true).networkType(NetworkType.LOCAL).build());
             assertNotNull(network);
 
-            ipv4SubnetId = subnetApi.create(Subnet.createOptions(network.getId(), "198.51.100.0/24").ipVersion(4)
+            ipv4SubnetId = subnetApi.create(Subnet.createBuilder(network.getId(), "198.51.100.0/24").ipVersion(4)
                   .name("JClouds-Live-IPv4-Subnet").build()).getId();
 
-            floatingIPApi.create(FloatingIP.createOptions(network.getId()).build());
+            floatingIPApi.create(FloatingIP.createBuilder(network.getId()).build());
 
             /* List and Get test */
             Set<FloatingIP> floatingIPs = floatingIPApi.list().concat().toSet();
