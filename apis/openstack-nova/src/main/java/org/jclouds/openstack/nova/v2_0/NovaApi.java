@@ -93,7 +93,7 @@ public interface NovaApi extends Closeable {
     * to determine if it is present.
     */
    @Delegate
-   Optional<? extends AvailabilityZoneApi> getAvailabilityZoneApi(
+   Optional<AvailabilityZoneApi> getAvailabilityZoneApi(
          @EndpointParam(parser = RegionToEndpoint.class) String region);
 
    /**
@@ -104,7 +104,7 @@ public interface NovaApi extends Closeable {
     * to determine if it is present.
     */
    @Delegate
-   Optional<? extends FloatingIPApi> getFloatingIPApi(
+   Optional<FloatingIPApi> getFloatingIPApi(
          @EndpointParam(parser = RegionToEndpoint.class) String region);
 
    /**
@@ -115,7 +115,7 @@ public interface NovaApi extends Closeable {
     * to determine if it is present.
     */
    @Delegate
-   Optional<? extends SecurityGroupApi> getSecurityGroupApi(
+   Optional<SecurityGroupApi> getSecurityGroupApi(
          @EndpointParam(parser = RegionToEndpoint.class) String region);
 
    /**
@@ -126,7 +126,7 @@ public interface NovaApi extends Closeable {
     * to determine if it is present.
     */
    @Delegate
-   Optional<? extends KeyPairApi> getKeyPairApi(
+   Optional<KeyPairApi> getKeyPairApi(
          @EndpointParam(parser = RegionToEndpoint.class) String region);
 
    /**
@@ -137,7 +137,7 @@ public interface NovaApi extends Closeable {
     * to determine if it is present.
     */
    @Delegate
-   Optional<? extends HostAdministrationApi> getHostAdministrationApi(
+   Optional<HostAdministrationApi> getHostAdministrationApi(
          @EndpointParam(parser = RegionToEndpoint.class) String region);
 
    /**
@@ -148,7 +148,7 @@ public interface NovaApi extends Closeable {
     * to determine if it is present.
     */
    @Delegate
-   Optional<? extends SimpleTenantUsageApi> getSimpleTenantUsageApi(
+   Optional<SimpleTenantUsageApi> getSimpleTenantUsageApi(
          @EndpointParam(parser = RegionToEndpoint.class) String region);
 
    /**
@@ -159,7 +159,7 @@ public interface NovaApi extends Closeable {
     * to determine if it is present.
     */
    @Delegate
-   Optional<? extends VirtualInterfaceApi> getVirtualInterfaceApi(
+   Optional<VirtualInterfaceApi> getVirtualInterfaceApi(
          @EndpointParam(parser = RegionToEndpoint.class) String region);
 
    /**
@@ -170,7 +170,7 @@ public interface NovaApi extends Closeable {
     * to determine if it is present.
     */
    @Delegate
-   Optional<? extends ServerWithSecurityGroupsApi> getServerWithSecurityGroupsApi(
+   Optional<ServerWithSecurityGroupsApi> getServerWithSecurityGroupsApi(
          @EndpointParam(parser = RegionToEndpoint.class) String region);
 
    /**
@@ -181,7 +181,7 @@ public interface NovaApi extends Closeable {
     * to determine if it is present.
     */
    @Delegate
-   Optional<? extends ServerAdminApi> getServerAdminApi(
+   Optional<ServerAdminApi> getServerAdminApi(
          @EndpointParam(parser = RegionToEndpoint.class) String region);
 
    /**
@@ -192,7 +192,7 @@ public interface NovaApi extends Closeable {
     * to determine if it is present.
     */
    @Delegate
-   Optional<? extends HostAggregateApi> getHostAggregateApi(
+   Optional<HostAggregateApi> getHostAggregateApi(
          @EndpointParam(parser = RegionToEndpoint.class) String region);
 
    /**
@@ -203,7 +203,7 @@ public interface NovaApi extends Closeable {
     * to determine if it is present.
     */
    @Delegate
-   Optional<? extends FlavorExtraSpecsApi> getFlavorExtraSpecsApi(
+   Optional<FlavorExtraSpecsApi> getFlavorExtraSpecsApi(
          @EndpointParam(parser = RegionToEndpoint.class) String region);
 
    /**
@@ -214,7 +214,7 @@ public interface NovaApi extends Closeable {
     * to determine if it is present.
     */
    @Delegate
-   Optional<? extends QuotaApi> getQuotaApi(
+   Optional<QuotaApi> getQuotaApi(
          @EndpointParam(parser = RegionToEndpoint.class) String region);
 
    /**
@@ -225,7 +225,7 @@ public interface NovaApi extends Closeable {
     * to determine if it is present.
     */
    @Delegate
-   Optional<? extends VolumeApi> getVolumeApi(
+   Optional<VolumeApi> getVolumeApi(
          @EndpointParam(parser = RegionToEndpoint.class) String region);
 
    /**
@@ -236,7 +236,7 @@ public interface NovaApi extends Closeable {
     * to determine if it is present.
     */
    @Delegate
-   Optional<? extends VolumeAttachmentApi> getVolumeAttachmentApi(
+   Optional<VolumeAttachmentApi> getVolumeAttachmentApi(
          @EndpointParam(parser = RegionToEndpoint.class) String region);
 
    /**
@@ -247,7 +247,7 @@ public interface NovaApi extends Closeable {
     * to determine if it is present.
     */
    @Delegate
-   Optional<? extends VolumeTypeApi> getVolumeTypeApi(
+   Optional<VolumeTypeApi> getVolumeTypeApi(
          @EndpointParam(parser = RegionToEndpoint.class) String region);
 
    /**
@@ -258,7 +258,7 @@ public interface NovaApi extends Closeable {
     * to determine if it is present.
     */
    @Delegate
-   Optional<? extends ConsolesApi> getConsolesApi(
+   Optional<ConsolesApi> getConsolesApi(
          @EndpointParam(parser = RegionToEndpoint.class) String region);
 
    /**
