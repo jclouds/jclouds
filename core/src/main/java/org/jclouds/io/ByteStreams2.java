@@ -51,15 +51,4 @@ public class ByteStreams2 {
          Closeables.closeQuietly(input);
       }
    }
-
-   @Deprecated
-   public static ByteSource asByteSource(final Payload payload) {
-      checkNotNull(payload, "payload");
-      return new ByteSource() {
-         @Override
-         public InputStream openStream() throws IOException {
-            return payload.openStream();
-         }
-      };
-   }
 }

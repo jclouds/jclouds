@@ -31,7 +31,6 @@ import java.util.NoSuchElementException;
 
 import javax.inject.Singleton;
 
-import org.jclouds.io.ByteStreams2;
 import org.jclouds.io.ContentMetadata;
 import org.jclouds.io.Payload;
 import org.jclouds.io.PayloadSlicer;
@@ -156,7 +155,7 @@ public class BasePayloadSlicer implements PayloadSlicer {
    }
 
    protected Payload doSlice(Payload content, long offset, long length) {
-      return doSlice(ByteStreams2.asByteSource(content), offset, length);
+      return doSlice(content.getInput(), offset, length);
    }
 
    protected Payload doSlice(String content, long offset, long length) {
