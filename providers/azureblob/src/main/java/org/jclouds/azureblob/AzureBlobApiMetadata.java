@@ -76,7 +76,7 @@ public class AzureBlobApiMetadata extends BaseRestApiMetadata {
          .name("Microsoft Azure Blob Service API")
          .identityName("Account Name")
          .credentialName("Access Key")
-         .version("2009-09-19")
+         .version("2012-02-12")
          .defaultEndpoint("https://${jclouds.identity}.blob.core.windows.net")
          .documentation(URI.create("http://msdn.microsoft.com/en-us/library/dd135733.aspx"))
          .defaultProperties(AzureBlobApiMetadata.defaultProperties())

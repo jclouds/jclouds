@@ -60,7 +60,9 @@ public class AzureBlobRequestSignerTest extends BaseAsyncClientTest<AzureBlobAsy
       assertRequestLineEquals(request, "GET https://identity.blob.core.windows.net/container/name HTTP/1.1");
       assertNonPayloadHeadersEqual(
                request,
-               "Authorization: SharedKeyLite identity:nutCr98JWBu7wbe1p9rDiyOXg3o6UqI4tEZ29bctKEU=\nDate: Thu, 05 Jun 2008 16:38:19 GMT\nx-ms-version: 2009-09-19\n");
+               "Authorization: SharedKeyLite identity:3rx56J9eAw/0GH2pym1hBmMGQmGju4DkVDcRsBWBtAk=\n" +
+               "Date: Thu, 05 Jun 2008 16:38:19 GMT\n" +
+               "x-ms-version: 2012-02-12\n");
       assertPayloadEquals(request, null, null, false);
 
       assertEquals(request.getFilters().size(), 0);
@@ -73,7 +75,9 @@ public class AzureBlobRequestSignerTest extends BaseAsyncClientTest<AzureBlobAsy
       assertRequestLineEquals(request, "DELETE https://identity.blob.core.windows.net/container/name HTTP/1.1");
       assertNonPayloadHeadersEqual(
                request,
-               "Authorization: SharedKeyLite identity:GRixvGXJ05tuWANrM5xeWOAAVqfztvmPLpwCRcWPZEk=\nDate: Thu, 05 Jun 2008 16:38:19 GMT\nx-ms-version: 2009-09-19\n");
+               "Authorization: SharedKeyLite identity:EN3SE/jB9anhgqIqJMmrTCzZpuqjL41BIZnaE9PEBaU=\n" +
+               "Date: Thu, 05 Jun 2008 16:38:19 GMT\n" +
+               "x-ms-version: 2012-02-12\n");
       assertPayloadEquals(request, null, null, false);
 
       assertEquals(request.getFilters().size(), 0);
@@ -95,11 +99,11 @@ public class AzureBlobRequestSignerTest extends BaseAsyncClientTest<AzureBlobAsy
       assertRequestLineEquals(request, "PUT https://identity.blob.core.windows.net/container/name HTTP/1.1");
       assertNonPayloadHeadersEqual(
                request,
-               "Authorization: SharedKeyLite identity:8kilG1mKxSWaKMLIQPI/aBlTFvaRRbmGOBqKaE+/R5A=\n" +
+               "Authorization: SharedKeyLite identity:V0gyrdMZzwQrCvxEfq6eBe8PL233yJ91+aNcISEzjfE=\n" +
                "Date: Thu, 05 Jun 2008 16:38:19 GMT\n" +
                "Expect: 100-continue\n" +
                "x-ms-blob-type: BlockBlob\n" +
-               "x-ms-version: 2009-09-19\n");
+               "x-ms-version: 2012-02-12\n");
       assertContentHeadersEqual(request, "text/plain", null, null, null, 2L, hashCode.asBytes(), new Date(1000));
 
       assertEquals(request.getFilters().size(), 0);

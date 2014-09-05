@@ -64,7 +64,7 @@ public class AzureBlobAsyncClientTest extends BaseAsyncClientTest<AzureBlobAsync
       GeneratedHttpRequest request = processor.createRequest(method, ImmutableList.of());
 
       assertRequestLineEquals(request, "GET https://identity.blob.core.windows.net/?comp=list HTTP/1.1");
-      assertNonPayloadHeadersEqual(request, "x-ms-version: 2009-09-19\n");
+      assertNonPayloadHeadersEqual(request, "x-ms-version: 2012-02-12\n");
       assertPayloadEquals(request, null, null, false);
 
       assertResponseParserClassEquals(method, request, ParseSax.class);
@@ -79,7 +79,7 @@ public class AzureBlobAsyncClientTest extends BaseAsyncClientTest<AzureBlobAsync
 
       assertRequestLineEquals(request,
                "GET https://identity.blob.core.windows.net/?comp=list&maxresults=1&marker=marker&prefix=prefix HTTP/1.1");
-      assertNonPayloadHeadersEqual(request, "x-ms-version: 2009-09-19\n");
+      assertNonPayloadHeadersEqual(request, "x-ms-version: 2012-02-12\n");
       assertPayloadEquals(request, null, null, false);
 
       assertResponseParserClassEquals(method, request, ParseSax.class);
@@ -94,7 +94,7 @@ public class AzureBlobAsyncClientTest extends BaseAsyncClientTest<AzureBlobAsync
 
       assertRequestLineEquals(request,
                "PUT https://identity.blob.core.windows.net/container?restype=container HTTP/1.1");
-      assertNonPayloadHeadersEqual(request, "x-ms-version: 2009-09-19\n");
+      assertNonPayloadHeadersEqual(request, "x-ms-version: 2012-02-12\n");
       assertPayloadEquals(request, null, null, false);
 
       assertResponseParserClassEquals(method, request, ReturnTrueIf2xx.class);
@@ -108,7 +108,7 @@ public class AzureBlobAsyncClientTest extends BaseAsyncClientTest<AzureBlobAsync
 
       assertRequestLineEquals(request,
                "DELETE https://identity.blob.core.windows.net/container?restype=container HTTP/1.1");
-      assertNonPayloadHeadersEqual(request, "x-ms-version: 2009-09-19\n");
+      assertNonPayloadHeadersEqual(request, "x-ms-version: 2012-02-12\n");
       assertPayloadEquals(request, null, null, false);
 
       assertResponseParserClassEquals(method, request, ReleasePayloadAndReturn.class);
@@ -125,7 +125,9 @@ public class AzureBlobAsyncClientTest extends BaseAsyncClientTest<AzureBlobAsync
       assertRequestLineEquals(request,
                "PUT https://identity.blob.core.windows.net/container?restype=container HTTP/1.1");
       assertNonPayloadHeadersEqual(request,
-               "x-ms-blob-public-access: blob\nx-ms-meta-foo: bar\nx-ms-version: 2009-09-19\n");
+               "x-ms-blob-public-access: blob\n" +
+               "x-ms-meta-foo: bar\n" +
+               "x-ms-version: 2012-02-12\n");
       assertPayloadEquals(request, null, null, false);
 
       assertResponseParserClassEquals(method, request, ReturnTrueIf2xx.class);
@@ -139,7 +141,7 @@ public class AzureBlobAsyncClientTest extends BaseAsyncClientTest<AzureBlobAsync
       GeneratedHttpRequest request = processor.createRequest(method, ImmutableList.of());
 
       assertRequestLineEquals(request, "PUT https://identity.blob.core.windows.net/$root?restype=container HTTP/1.1");
-      assertNonPayloadHeadersEqual(request, "x-ms-version: 2009-09-19\n");
+      assertNonPayloadHeadersEqual(request, "x-ms-version: 2012-02-12\n");
       assertPayloadEquals(request, null, null, false);
 
       assertResponseParserClassEquals(method, request, ReturnTrueIf2xx.class);
@@ -152,7 +154,7 @@ public class AzureBlobAsyncClientTest extends BaseAsyncClientTest<AzureBlobAsync
       GeneratedHttpRequest request = processor.createRequest(method, ImmutableList.of());
 
       assertRequestLineEquals(request, "DELETE https://identity.blob.core.windows.net/$root?restype=container HTTP/1.1");
-      assertNonPayloadHeadersEqual(request, "x-ms-version: 2009-09-19\n");
+      assertNonPayloadHeadersEqual(request, "x-ms-version: 2012-02-12\n");
       assertPayloadEquals(request, null, null, false);
 
       assertResponseParserClassEquals(method, request, ReleasePayloadAndReturn.class);
@@ -167,7 +169,9 @@ public class AzureBlobAsyncClientTest extends BaseAsyncClientTest<AzureBlobAsync
 
       assertRequestLineEquals(request, "PUT https://identity.blob.core.windows.net/$root?restype=container HTTP/1.1");
       assertNonPayloadHeadersEqual(request,
-               "x-ms-blob-public-access: blob\nx-ms-meta-foo: bar\nx-ms-version: 2009-09-19\n");
+               "x-ms-blob-public-access: blob\n" +
+               "x-ms-meta-foo: bar\n" +
+               "x-ms-version: 2012-02-12\n");
       assertPayloadEquals(request, null, null, false);
 
       assertResponseParserClassEquals(method, request, ReturnTrueIf2xx.class);
@@ -181,7 +185,7 @@ public class AzureBlobAsyncClientTest extends BaseAsyncClientTest<AzureBlobAsync
 
       assertRequestLineEquals(request,
                "GET https://identity.blob.core.windows.net/container?restype=container&comp=list HTTP/1.1");
-      assertNonPayloadHeadersEqual(request, "x-ms-version: 2009-09-19\n");
+      assertNonPayloadHeadersEqual(request, "x-ms-version: 2012-02-12\n");
       assertPayloadEquals(request, null, null, false);
 
       assertResponseParserClassEquals(method, request, ParseSax.class);
@@ -195,7 +199,7 @@ public class AzureBlobAsyncClientTest extends BaseAsyncClientTest<AzureBlobAsync
 
       assertRequestLineEquals(request,
                "GET https://identity.blob.core.windows.net/$root?restype=container&comp=list HTTP/1.1");
-      assertNonPayloadHeadersEqual(request, "x-ms-version: 2009-09-19\n");
+      assertNonPayloadHeadersEqual(request, "x-ms-version: 2012-02-12\n");
       assertPayloadEquals(request, null, null, false);
 
       assertResponseParserClassEquals(method, request, ParseSax.class);
@@ -209,7 +213,7 @@ public class AzureBlobAsyncClientTest extends BaseAsyncClientTest<AzureBlobAsync
 
       assertRequestLineEquals(request,
                "HEAD https://identity.blob.core.windows.net/container?restype=container HTTP/1.1");
-      assertNonPayloadHeadersEqual(request, "x-ms-version: 2009-09-19\n");
+      assertNonPayloadHeadersEqual(request, "x-ms-version: 2012-02-12\n");
       assertPayloadEquals(request, null, null, false);
 
       assertResponseParserClassEquals(method, request, ParseContainerPropertiesFromHeaders.class);
@@ -223,7 +227,7 @@ public class AzureBlobAsyncClientTest extends BaseAsyncClientTest<AzureBlobAsync
 
       assertRequestLineEquals(request,
                "HEAD https://identity.blob.core.windows.net/container?restype=container&comp=acl HTTP/1.1");
-      assertNonPayloadHeadersEqual(request, "x-ms-version: 2009-09-19\n");
+      assertNonPayloadHeadersEqual(request, "x-ms-version: 2012-02-12\n");
       assertPayloadEquals(request, null, null, false);
 
       assertResponseParserClassEquals(method, request, ParsePublicAccessHeader.class);
@@ -238,7 +242,9 @@ public class AzureBlobAsyncClientTest extends BaseAsyncClientTest<AzureBlobAsync
 
       assertRequestLineEquals(request,
                "PUT https://identity.blob.core.windows.net/container?restype=container&comp=metadata HTTP/1.1");
-      assertNonPayloadHeadersEqual(request, "x-ms-meta-key: value\nx-ms-version: 2009-09-19\n");
+      assertNonPayloadHeadersEqual(request,
+               "x-ms-meta-key: value\n" +
+               "x-ms-version: 2012-02-12\n");
       assertPayloadEquals(request, null, null, false);
 
       assertResponseParserClassEquals(method, request, ReleasePayloadAndReturn.class);
@@ -251,7 +257,7 @@ public class AzureBlobAsyncClientTest extends BaseAsyncClientTest<AzureBlobAsync
       GeneratedHttpRequest request = processor.createRequest(method, ImmutableList.<Object> of("container", "blob"));
 
       assertRequestLineEquals(request, "GET https://identity.blob.core.windows.net/container/blob HTTP/1.1");
-      assertNonPayloadHeadersEqual(request, "x-ms-version: 2009-09-19\n");
+      assertNonPayloadHeadersEqual(request, "x-ms-version: 2012-02-12\n");
       assertPayloadEquals(request, null, null, false);
 
       assertResponseParserClassEquals(method, request, ParseBlobFromHeadersAndHttpContent.class);
@@ -265,7 +271,9 @@ public class AzureBlobAsyncClientTest extends BaseAsyncClientTest<AzureBlobAsync
 
       assertRequestLineEquals(request,
                "PUT https://identity.blob.core.windows.net/container/blob?comp=metadata HTTP/1.1");
-      assertNonPayloadHeadersEqual(request, "x-ms-meta-key: value\nx-ms-version: 2009-09-19\n");
+      assertNonPayloadHeadersEqual(request,
+               "x-ms-meta-key: value\n" +
+               "x-ms-version: 2012-02-12\n");
       assertPayloadEquals(request, null, null, false);
 
       assertResponseParserClassEquals(method, request, ReleasePayloadAndReturn.class);

@@ -92,7 +92,7 @@ import com.google.inject.Provides;
  */
 @Deprecated
 @RequestFilters(SharedKeyLiteAuthentication.class)
-@Headers(keys = AzureStorageHeaders.VERSION, values = "2009-09-19")
+@Headers(keys = AzureStorageHeaders.VERSION, values = "2012-02-12")
 @SkipEncoding({ '/', '$' })
 @Path("/")
 public interface AzureBlobAsyncClient {
