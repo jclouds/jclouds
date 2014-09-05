@@ -16,7 +16,6 @@
  */
 package org.jclouds.s3.functions;
 
-import static com.google.common.io.BaseEncoding.base16;
 import static org.easymock.EasyMock.createMock;
 import static org.jclouds.aws.reference.AWSConstants.PROPERTY_HEADER_TAG;
 import static org.jclouds.blobstore.reference.BlobStoreConstants.PROPERTY_USER_METADATA_PREFIX;
