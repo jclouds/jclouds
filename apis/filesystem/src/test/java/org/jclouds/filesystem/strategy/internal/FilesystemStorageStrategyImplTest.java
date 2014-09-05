@@ -16,7 +16,7 @@
  */
 package org.jclouds.filesystem.strategy.internal;
 
-import static org.jclouds.utils.TestUtils.isMacOSX;
+import static java.nio.file.Files.getFileStore;
 import static org.jclouds.utils.TestUtils.randomByteSource;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertFalse;
@@ -27,6 +27,8 @@ import static org.testng.Assert.fail;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.nio.file.Paths;
+import java.nio.file.attribute.UserDefinedFileAttributeView;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
@@ -531,8 +533,8 @@ public class FilesystemStorageStrategyImplTest {
    }
 
    public void testOverwriteBlobMetadata() throws Exception {
-      if (isMacOSX()) {
-         throw new SkipException("blob metadata not supported on Mac OS X");
+      if (!getFileStore(Paths.get(TestUtils.TARGET_BASE_DIR)).supportsFileAttributeView(UserDefinedFileAttributeView.class)) {
+         throw new SkipException("Filesystem does not support xattr");
       }
       String blobKey = TestUtils.createRandomBlobKey("writePayload-", ".img");
 
