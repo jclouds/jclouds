@@ -21,6 +21,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 import static org.jclouds.http.HttpUtils.closeClientButKeepContentStream;
 import static org.jclouds.util.Closeables2.closeQuietly;
 
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringReader;
@@ -91,9 +92,11 @@ public class ParseSax<T> implements Function<HttpResponse, T>, InvocationContext
    private T convertStreamToStringAndParse(HttpResponse response) {
       String from = null;
       try {
-         from = new String(closeClientButKeepContentStream(response));
+         byte[] fromBytes = closeClientButKeepContentStream(response);
+         from = new String(fromBytes);
          validateXml(from);
-         return doParse(new InputSource(new StringReader(from)));
+         // Use InputStream to skip over byte order mark.
+         return doParse(new InputSource(new ByteArrayInputStream(fromBytes)));
       } catch (Exception e) {
          return addDetailsAndPropagate(response, e, from);
       }
