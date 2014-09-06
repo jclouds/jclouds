@@ -30,6 +30,7 @@
         <module name="IllegalInstantiation">
             <property name="classes" value="java.lang.Boolean,java.lang.Short,java.lang.Integer,java.lang.Long"/>
         </module>
+        <module name="InterfaceIsType"/>
 <!--
         jclouds prefers 120 character line lengths but has many files with
         longer lines
