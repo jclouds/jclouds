@@ -23,6 +23,7 @@ import org.jclouds.blobstore.domain.Blob;
 import org.jclouds.blobstore.domain.BlobAccess;
 import org.jclouds.blobstore.domain.BlobBuilder;
 import org.jclouds.blobstore.domain.ContainerAccess;
+import org.jclouds.blobstore.options.CopyOptions;
 import org.jclouds.blobstore.options.CreateContainerOptions;
 import org.jclouds.blobstore.options.ListContainerOptions;
 import org.jclouds.blobstore.options.PutOptions;
@@ -103,6 +104,12 @@ public final class ReadOnlyBlobStore extends ForwardingBlobStore {
    @Override
    public String putBlob(String containerName, Blob blob,
          PutOptions putOptions) {
+      throw new UnsupportedOperationException("Read-only BlobStore");
+   }
+
+   @Override
+   public String copyBlob(String fromContainer, String fromName, String toContainer, String toName,
+         CopyOptions options) {
       throw new UnsupportedOperationException("Read-only BlobStore");
    }
 

@@ -32,6 +32,7 @@ import org.jclouds.blobstore.domain.BlobMetadata;
 import org.jclouds.blobstore.domain.ContainerAccess;
 import org.jclouds.blobstore.domain.PageSet;
 import org.jclouds.blobstore.domain.StorageMetadata;
+import org.jclouds.blobstore.options.CopyOptions;
 import org.jclouds.blobstore.options.CreateContainerOptions;
 import org.jclouds.blobstore.options.GetOptions;
 import org.jclouds.blobstore.options.ListContainerOptions;
@@ -159,6 +160,12 @@ public abstract class ForwardingBlobStore extends ForwardingObject
    public String putBlob(String containerName, Blob blob,
          PutOptions putOptions) {
       return delegate().putBlob(containerName, blob, putOptions);
+   }
+
+   @Override
+   public String copyBlob(String fromContainer, String fromName, String toContainer, String toName,
+         CopyOptions options) {
+      return delegate().copyBlob(fromContainer, fromName, toContainer, toName, options);
    }
 
    @Override

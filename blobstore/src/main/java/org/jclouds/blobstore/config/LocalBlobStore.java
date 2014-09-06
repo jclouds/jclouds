@@ -30,7 +30,9 @@ import static org.jclouds.blobstore.options.ListContainerOptions.Builder.recursi
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.Date;
+import java.util.Map;
 import java.util.Set;
 import java.util.SortedSet;
 import java.util.regex.Pattern;
@@ -57,6 +59,7 @@ import org.jclouds.blobstore.domain.StorageType;
 import org.jclouds.blobstore.domain.internal.MutableStorageMetadataImpl;
 import org.jclouds.blobstore.domain.internal.PageSetImpl;
 import org.jclouds.blobstore.domain.internal.StorageMetadataImpl;
+import org.jclouds.blobstore.options.CopyOptions;
 import org.jclouds.blobstore.options.CreateContainerOptions;
 import org.jclouds.blobstore.options.GetOptions;
 import org.jclouds.blobstore.options.ListContainerOptions;
@@ -75,11 +78,13 @@ import org.jclouds.io.ContentMetadata;
 import org.jclouds.io.ContentMetadataCodec;
 import org.jclouds.io.Payload;
 import org.jclouds.logging.Logger;
+import org.jclouds.util.Closeables2;
 
 import com.google.common.base.Function;
 import com.google.common.base.Optional;
 import com.google.common.base.Predicate;
 import com.google.common.base.Supplier;
+import com.google.common.base.Throwables;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Iterables;
 
@@ -490,6 +495,42 @@ public final class LocalBlobStore implements BlobStore {
          logger.error(e, "An error occurred storing the new blob with name [%s] to container [%s].", blobKey,
                containerName);
          throw propagate(e);
+      }
+   }
+
+   @Override
+   public String copyBlob(String fromContainer, String fromName, String toContainer, String toName,
+         CopyOptions options) {
+      Blob blob = getBlob(fromContainer, fromName);
+      if (blob == null) {
+         throw new KeyNotFoundException(fromContainer, fromName, "while copying");
+      }
+
+      InputStream is = null;
+      try {
+         is = blob.getPayload().openStream();
+         ContentMetadata metadata = blob.getMetadata().getContentMetadata();
+         BlobBuilder.PayloadBlobBuilder builder = blobBuilder(toName)
+               .payload(is)
+               .contentDisposition(metadata.getContentDisposition())
+               .contentEncoding(metadata.getContentEncoding())
+               .contentLanguage(metadata.getContentLanguage())
+               .contentType(metadata.getContentType());
+         Long contentLength = metadata.getContentLength();
+         if (contentLength != null) {
+            builder.contentLength(contentLength);
+         }
+         Optional<Map<String, String>> userMetadata = options.getUserMetadata();
+         if (userMetadata.isPresent()) {
+            builder.userMetadata(userMetadata.get());
+         } else {
+            builder.userMetadata(blob.getMetadata().getUserMetadata());
+         }
+         return putBlob(toContainer, builder.build());
+      } catch (IOException ioe) {
+         throw Throwables.propagate(ioe);
+      } finally {
+         Closeables2.closeQuietly(is);
       }
    }
 

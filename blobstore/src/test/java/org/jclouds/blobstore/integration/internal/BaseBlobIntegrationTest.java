@@ -57,6 +57,7 @@ import org.jclouds.blobstore.domain.BlobMetadata;
 import org.jclouds.blobstore.domain.PageSet;
 import org.jclouds.blobstore.domain.StorageMetadata;
 import org.jclouds.blobstore.domain.StorageType;
+import org.jclouds.blobstore.options.CopyOptions;
 import org.jclouds.blobstore.options.PutOptions;
 import org.jclouds.crypto.Crypto;
 import org.jclouds.encryption.internal.JCECrypto;
@@ -82,6 +83,7 @@ import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Maps;
 import com.google.common.hash.HashCode;
+import com.google.common.io.ByteStreams;
 import com.google.common.io.ByteSource;
 import com.google.common.io.Files;
 import com.google.common.util.concurrent.ListenableFuture;
@@ -726,6 +728,81 @@ public class BaseBlobIntegrationTest extends BaseBlobStoreIntegrationTest {
 
       } finally {
          returnContainer(container);
+      }
+   }
+
+   @Test(groups = { "integration", "live" })
+   public void testCopyBlobCopyMetadata() throws Exception {
+      BlobStore blobStore = view.getBlobStore();
+      String fromName = "source";
+      String toName = "to";
+      ByteSource payload = TestUtils.randomByteSource().slice(0, 1024);
+      Map<String, String> userMetadata = ImmutableMap.of("key1", "value1", "key2", "value2");
+      PayloadBlobBuilder blobBuilder = blobStore
+            .blobBuilder(fromName)
+            .payload(payload)
+            .contentLength(payload.size());
+      addContentMetadata(blobBuilder);
+      blobBuilder.userMetadata(userMetadata);
+      Blob blob = blobBuilder.build();
+
+      String fromContainer = getContainerName();
+      String toContainer = getContainerName();
+      try {
+         blobStore.putBlob(fromContainer, blob);
+         blobStore.copyBlob(fromContainer, fromName, toContainer, toName, CopyOptions.NONE);
+         Blob toBlob = blobStore.getBlob(toContainer, toName);
+         InputStream is = null;
+         try {
+            is = toBlob.getPayload().openStream();
+            assertEquals(ByteStreams.toByteArray(is), payload.read());
+         } finally {
+            Closeables2.closeQuietly(is);
+         }
+         // TODO: Swift does not preserve system metadata
+         //checkContentMetadata(toBlob);
+         assertThat(toBlob.getMetadata().getUserMetadata()).isEqualTo(userMetadata);
+      } finally {
+         returnContainer(toContainer);
+         returnContainer(fromContainer);
+      }
+   }
+
+   @Test(groups = { "integration", "live" })
+   public void testCopyBlobReplaceMetadata() throws Exception {
+      BlobStore blobStore = view.getBlobStore();
+      String fromName = "source";
+      String toName = "to";
+      ByteSource payload = TestUtils.randomByteSource().slice(0, 1024);
+      PayloadBlobBuilder blobBuilder = blobStore
+            .blobBuilder(fromName)
+            .payload(payload)
+            .contentLength(payload.size());
+      addContentMetadata(blobBuilder);
+      Blob blob = blobBuilder.build();
+
+      String fromContainer = getContainerName();
+      String toContainer = getContainerName();
+      try {
+         blobStore.putBlob(fromContainer, blob);
+         Map<String, String> userMetadata = ImmutableMap.of("key1", "value1", "key2", "value2");
+         blobStore.copyBlob(fromContainer, fromName, toContainer, toName,
+               CopyOptions.builder().userMetadata(userMetadata).build());
+         Blob toBlob = blobStore.getBlob(toContainer, toName);
+         InputStream is = null;
+         try {
+            is = toBlob.getPayload().openStream();
+            assertEquals(ByteStreams.toByteArray(is), payload.read());
+         } finally {
+            Closeables2.closeQuietly(is);
+         }
+         // TODO: S3 overrideMetadataWith also overrides system metadata
+         // TODO: Swift does not preserve system metadata
+         //checkContentMetadata(toBlob);
+         assertThat(toBlob.getMetadata().getUserMetadata()).isEqualTo(userMetadata);
+      } finally {
+         returnContainer(toContainer);
+         returnContainer(fromContainer);
       }
    }
 
