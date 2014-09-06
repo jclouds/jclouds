@@ -17,12 +17,11 @@
 package org.jclouds.openstack.swift.blobstore.strategy.internal;
 
 import org.jclouds.blobstore.domain.Blob;
-import org.jclouds.openstack.swift.blobstore.strategy.MultipartUpload;
 
 import com.google.inject.ImplementedBy;
 
 @ImplementedBy(SequentialMultipartUploadStrategy.class)
-public interface MultipartUploadStrategy extends MultipartUpload {
+public interface MultipartUploadStrategy {
 
     String execute(String container, Blob blob);
 }

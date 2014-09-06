@@ -21,49 +21,53 @@ package org.jclouds.openstack.v2_0;
  * A service provides one or more endpoints through which users can access resources and perform
  * (presumably useful) operations.
  */
-public interface ServiceType {
+public final class ServiceType {
    /**
     * Object Storage (Swift)
     */
-   String OBJECT_STORE = "object-store";
+   public static final String OBJECT_STORE = "object-store";
 
    /**
     * Compute (Nova)
     */
-   String COMPUTE = "compute";
+   public static final String COMPUTE = "compute";
 
    /**
     * Image Service (Glance)
     */
-   String IMAGE = "image";
+   public static final String IMAGE = "image";
 
    /**
     * Identity Service (Keystone)
     */
-   String IDENTITY = "identity";
+   public static final String IDENTITY = "identity";
 
    /**
     * Network Service (Neutron)
     */
-   String NETWORK = "network";
+   public static final String NETWORK = "network";
 
    /**
     * Block Storage (Cinder)
     */
-   String BLOCK_STORAGE = "volume";
+   public static final String BLOCK_STORAGE = "volume";
 
    /**
     * Database Service (Trove)
     */
-   String DATABASE = "database";
+   public static final String DATABASE = "database";
 
    /**
     * Queues Service (Marconi)
     */
-   String QUEUES = "queuing";
+   public static final String QUEUES = "queuing";
 
    /**
     * Orchestration Service (Heat)
     */
-   String ORCHESTRATION = "orchestration";
+   public static final String ORCHESTRATION = "orchestration";
+
+   private ServiceType() {
+      throw new AssertionError("intentionally unimplemented");
+   }
 }

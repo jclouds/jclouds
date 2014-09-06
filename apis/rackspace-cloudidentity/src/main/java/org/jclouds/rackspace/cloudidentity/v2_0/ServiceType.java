@@ -20,49 +20,53 @@ package org.jclouds.rackspace.cloudidentity.v2_0;
  * An Rackspace service, such as Cloud Load Balancers, DNS, etc.
  * A service provides one or more endpoints through which users can access resources and perform operations.
  */
-public interface ServiceType {
+public final class ServiceType {
    /**
     * Cloud Load Balancers
     */
-   String LOAD_BALANCERS = "rax:load-balancer";
+   public static final String LOAD_BALANCERS = "rax:load-balancer";
 
    /**
     * Cloud DNS
     */
-   String DNS = "rax:dns";
+   public static final String DNS = "rax:dns";
 
    /**
     * Cloud Queues
     */
-   String QUEUES = "rax:queues";
+   public static final String QUEUES = "rax:queues";
 
    /**
     * Cloud Files CDN
     */
-   String OBJECT_CDN = "rax:object-cdn";
+   public static final String OBJECT_CDN = "rax:object-cdn";
 
    /**
     * Auto Scale
     */
-   String AUTO_SCALE = "rax:autoscale";
+   public static final String AUTO_SCALE = "rax:autoscale";
 
    /**
     * Cloud Backup
     */
-   String BACKUP = "rax:backup";
+   public static final String BACKUP = "rax:backup";
 
    /**
     * Cloud Databases
     */
-   String DATABASES = "rax:database";
+   public static final String DATABASES = "rax:database";
 
    /**
     * Cloud Monitoring
     */
-   String MONITORING = "rax:monitor";
+   public static final String MONITORING = "rax:monitor";
 
    /**
     * Cloud Big Data
     */
-   String BIG_DATA = "rax:bigdata";
+   public static final String BIG_DATA = "rax:bigdata";
+
+   private ServiceType() {
+      throw new AssertionError("intentionally unimplemented");
+   }
 }

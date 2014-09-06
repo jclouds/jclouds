@@ -16,18 +16,22 @@
  */
 package org.jclouds.openstack.swift.blobstore.strategy;
 
-public interface MultipartUpload {
+public final class MultipartUpload {
 
     /* Maximum number of parts per upload */
-    int MAX_NUMBER_OF_PARTS = 10000;
+    public static final int MAX_NUMBER_OF_PARTS = 10000;
     /* Maximum number of parts returned for a list parts request */
-    int MAX_LIST_PARTS_RETURNED = 1000;
+    public static final int MAX_LIST_PARTS_RETURNED = 1000;
     /* Maximum number of multipart uploads returned in a list multipart uploads request */
-    int MAX_LIST_MPU_RETURNED = 1000;
+    public static final int MAX_LIST_MPU_RETURNED = 1000;
 
     /*
     * part size 5 MB to 5 GB, last part can be < 5 MB
     */
-    long MIN_PART_SIZE = 5242880L;
-    long MAX_PART_SIZE = 5368709120L;
+    public static final long MIN_PART_SIZE = 5242880L;
+    public static final long MAX_PART_SIZE = 5368709120L;
+
+   private MultipartUpload() {
+      throw new AssertionError("intentionally unimplemented");
+   }
 }
