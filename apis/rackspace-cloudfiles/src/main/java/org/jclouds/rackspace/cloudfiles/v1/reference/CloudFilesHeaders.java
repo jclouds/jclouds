@@ -21,20 +21,24 @@ import org.jclouds.openstack.swift.v1.reference.SwiftHeaders;
 /**
  * Additional headers specified by Rackspace Cloud Files.
  */
-public interface CloudFilesHeaders extends SwiftHeaders {
+public final class CloudFilesHeaders {
    // Access logs
-   String CONTAINER_ACCESS_LOG_DELIVERY = CONTAINER_METADATA_PREFIX + "Access-Log-Delivery";
+   public static final String CONTAINER_ACCESS_LOG_DELIVERY = SwiftHeaders.CONTAINER_METADATA_PREFIX + "Access-Log-Delivery";
 
    // Common CDN Headers
-   String CDN_ENABLED = "X-Cdn-Enabled";
-   String CDN_LOG_RETENTION = "X-Log-Retention";
-   String CDN_TTL = "X-Ttl";
-   String CDN_URI = "X-Cdn-Uri";
-   String CDN_SSL_URI = "X-Cdn-Ssl-Uri";
-   String CDN_STREAMING_URI = "X-Cdn-Streaming-Uri";
-   String CDN_IOS_URI = "X-Cdn-Ios-Uri";
+   public static final String CDN_ENABLED = "X-Cdn-Enabled";
+   public static final String CDN_LOG_RETENTION = "X-Log-Retention";
+   public static final String CDN_TTL = "X-Ttl";
+   public static final String CDN_URI = "X-Cdn-Uri";
+   public static final String CDN_SSL_URI = "X-Cdn-Ssl-Uri";
+   public static final String CDN_STREAMING_URI = "X-Cdn-Streaming-Uri";
+   public static final String CDN_IOS_URI = "X-Cdn-Ios-Uri";
 
    // CDN Purge
-   String CDN_PURGE_OBJECT_EMAIL = "X-Purge-Email";
-   String CDN_PURGE_OBJECT_FAILED = "X-Purge-Failed-Reason";
+   public static final String CDN_PURGE_OBJECT_EMAIL = "X-Purge-Email";
+   public static final String CDN_PURGE_OBJECT_FAILED = "X-Purge-Failed-Reason";
+
+   private CloudFilesHeaders() {
+      throw new AssertionError("intentionally unimplemented");
+   }
 }

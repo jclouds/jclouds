@@ -20,8 +20,12 @@ package org.jclouds.rackspace.cloudfiles.v1.reference;
 /**
  * Constants specified by Rackspace Cloud Files.
  */
-public interface CloudFilesConstants {
-   int CDN_TTL_MIN = 900;
-   int CDN_TTL_MAX = 31536000;
-   int CDN_TTL_DEFAULT = 259200;
+public final class CloudFilesConstants {
+   public static final int CDN_TTL_MIN = 900;
+   public static final int CDN_TTL_MAX = 31536000;
+   public static final int CDN_TTL_DEFAULT = 259200;
+
+   private CloudFilesConstants() {
+      throw new AssertionError("intentionally unimplemented");
+   }
 }
