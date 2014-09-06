@@ -21,7 +21,6 @@ import static com.google.common.base.Preconditions.checkNotNull;
 import java.io.File;
 import java.io.InputStream;
 
-import org.jclouds.io.payloads.ByteArrayPayload;
 import org.jclouds.io.payloads.ByteSourcePayload;
 import org.jclouds.io.payloads.FilePayload;
 import org.jclouds.io.payloads.InputStreamPayload;
@@ -63,14 +62,6 @@ public class Payloads {
 
    public static InputStreamPayload newInputStreamPayload(InputStream data) {
       return new InputStreamPayload(checkNotNull(data, "data"));
-   }
-
-   /**
-    * @deprecated see newPayload(ByteSource)
-    */
-   @Deprecated
-   public static ByteArrayPayload newByteArrayPayload(byte[] data) {
-      return new ByteArrayPayload(checkNotNull(data, "data"));
    }
 
    public static ByteSourcePayload newByteSourcePayload(ByteSource data) {
