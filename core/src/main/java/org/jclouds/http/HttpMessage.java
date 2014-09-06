@@ -69,7 +69,7 @@ public class HttpMessage extends PayloadEnclosingImpl {
        */
       @Deprecated
       public T payload(byte [] payload) {
-         this.payload = Payloads.newByteArrayPayload(checkNotNull(payload, "payload"));
+         this.payload = Payloads.newPayload(checkNotNull(payload, "payload"));
          return self();
       }
 

@@ -36,7 +36,6 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpPut;
 import org.apache.http.client.methods.HttpRequestBase;
 import org.apache.http.client.methods.HttpUriRequest;
-import org.apache.http.entity.ByteArrayEntity;
 import org.apache.http.entity.FileEntity;
 import org.apache.http.entity.InputStreamEntity;
 import org.apache.http.entity.StringEntity;
@@ -48,7 +47,6 @@ import org.jclouds.io.ContentMetadataCodec;
 import org.jclouds.io.MutableContentMetadata;
 import org.jclouds.io.Payload;
 import org.jclouds.io.payloads.BasePayload;
-import org.jclouds.io.payloads.ByteArrayPayload;
 import org.jclouds.io.payloads.DelegatingPayload;
 import org.jclouds.io.payloads.FilePayload;
 import org.jclouds.io.payloads.StringPayload;
@@ -139,10 +137,6 @@ public class ApacheHCUtils {
       } else if (payload instanceof FilePayload) {
          apacheRequest.setEntity(new FileEntity((File) payload.getRawContent(), payload.getContentMetadata()
                .getContentType()));
-      } else if (payload instanceof ByteArrayPayload) {
-         ByteArrayEntity Entity = new ByteArrayEntity((byte[]) payload.getRawContent());
-         Entity.setContentType(payload.getContentMetadata().getContentType());
-         apacheRequest.setEntity(Entity);
       } else {
          InputStream inputStream = payload.getInput();
          if (payload.getContentMetadata().getContentLength() == null)

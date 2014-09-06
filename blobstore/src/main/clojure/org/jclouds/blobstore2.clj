@@ -82,7 +82,7 @@ See http://code.google.com/p/jclouds for details."
 ;; hence separating it from the above
 (extend-protocol PayloadSource
   (class (make-array Byte/TYPE 0))
-  (payload [ba] (Payloads/newByteArrayPayload ba)))
+  (payload [ba] (Payloads/newPayload ba)))
 
 (defn blobstore
   "Create a logged in context.
