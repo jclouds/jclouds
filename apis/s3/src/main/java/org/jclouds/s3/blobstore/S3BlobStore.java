@@ -21,6 +21,7 @@ import static com.google.common.base.Preconditions.checkState;
 import static org.jclouds.util.Predicates2.retry;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import javax.inject.Inject;
@@ -37,6 +38,7 @@ import org.jclouds.blobstore.domain.PageSet;
 import org.jclouds.blobstore.domain.StorageMetadata;
 import org.jclouds.blobstore.functions.BlobToHttpGetOptions;
 import org.jclouds.blobstore.internal.BaseBlobStore;
+import org.jclouds.blobstore.options.CopyOptions;
 import org.jclouds.blobstore.options.CreateContainerOptions;
 import org.jclouds.blobstore.options.ListContainerOptions;
 import org.jclouds.blobstore.options.PutOptions;
@@ -57,12 +59,14 @@ import org.jclouds.s3.domain.AccessControlList.GroupGranteeURI;
 import org.jclouds.s3.domain.AccessControlList.Permission;
 import org.jclouds.s3.domain.BucketMetadata;
 import org.jclouds.s3.domain.CannedAccessPolicy;
+import org.jclouds.s3.options.CopyObjectOptions;
 import org.jclouds.s3.options.ListBucketOptions;
 import org.jclouds.s3.options.PutBucketOptions;
 import org.jclouds.s3.options.PutObjectOptions;
 import org.jclouds.s3.util.S3Utils;
 
 import com.google.common.base.Function;
+import com.google.common.base.Optional;
 import com.google.common.base.Predicate;
 import com.google.common.base.Supplier;
 import com.google.common.cache.CacheLoader;
@@ -271,6 +275,24 @@ public class S3BlobStore extends BaseBlobStore {
          // nulls not permitted from cache loader
       }
       return sync.putObject(container, blob2Object.apply(blob), options);
+   }
+
+   @Override
+   public String copyBlob(String fromContainer, String fromName, String toContainer, String toName,
+         CopyOptions options) {
+      CopyObjectOptions s3Options = new CopyObjectOptions();
+
+      // TODO: content disposition
+      // TODO: content encoding
+      // TODO: content language
+      // TODO: content type
+
+      Optional<Map<String, String>> userMetadata = options.getUserMetadata();
+      if (userMetadata.isPresent()) {
+         s3Options.overrideMetadataWith(userMetadata.get());
+      }
+
+      return sync.copyObject(fromContainer, fromName, toContainer, toName, s3Options).getETag();
    }
 
    /**
