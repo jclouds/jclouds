@@ -27,6 +27,7 @@ import org.jclouds.blobstore.domain.BlobMetadata;
 import org.jclouds.blobstore.domain.ContainerAccess;
 import org.jclouds.blobstore.domain.PageSet;
 import org.jclouds.blobstore.domain.StorageMetadata;
+import org.jclouds.blobstore.options.CopyOptions;
 import org.jclouds.blobstore.options.CreateContainerOptions;
 import org.jclouds.blobstore.options.GetOptions;
 import org.jclouds.blobstore.options.ListContainerOptions;
@@ -228,6 +229,18 @@ public interface BlobStore {
     *            if the container doesn't exist
     */
    String putBlob(String container, Blob blob, PutOptions options);
+
+   /**
+    * Copy blob from one container to another.  Some providers implement this
+    * more efficiently than corresponding getBlob and putBlob operations.
+    *
+    * Note: options are currently ignored
+    *
+    * @return ETag of new blob
+    * @throws ContainerNotFoundException if either container does not exist
+    */
+   String copyBlob(String fromContainer, String fromName, String toContainer, String toName,
+         CopyOptions options);
 
    /**
     * Retrieves the metadata of a {@code Blob} at location {@code container/name}

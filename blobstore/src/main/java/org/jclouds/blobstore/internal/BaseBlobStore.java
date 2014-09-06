@@ -21,6 +21,9 @@ import static com.google.common.base.Preconditions.checkState;
 import static org.jclouds.blobstore.options.ListContainerOptions.Builder.recursive;
 import static org.jclouds.util.Predicates2.retry;
 
+import java.io.InputStream;
+import java.io.IOException;
+import java.util.Map;
 import java.util.Set;
 
 import javax.inject.Inject;
@@ -28,17 +31,23 @@ import javax.inject.Inject;
 import org.jclouds.blobstore.BlobStore;
 import org.jclouds.blobstore.BlobStoreContext;
 import org.jclouds.blobstore.ContainerNotFoundException;
+import org.jclouds.blobstore.KeyNotFoundException;
 import org.jclouds.blobstore.domain.Blob;
 import org.jclouds.blobstore.domain.BlobBuilder;
 import org.jclouds.blobstore.domain.PageSet;
 import org.jclouds.blobstore.domain.StorageMetadata;
+import org.jclouds.blobstore.options.CopyOptions;
 import org.jclouds.blobstore.options.ListContainerOptions;
 import org.jclouds.blobstore.util.BlobUtils;
 import org.jclouds.collect.Memoized;
 import org.jclouds.domain.Location;
+import org.jclouds.io.ContentMetadata;
+import org.jclouds.util.Closeables2;
 
+import com.google.common.base.Optional;
 import com.google.common.base.Predicate;
 import com.google.common.base.Supplier;
+import com.google.common.base.Throwables;
 
 public abstract class BaseBlobStore implements BlobStore {
 
@@ -231,4 +240,39 @@ public abstract class BaseBlobStore implements BlobStore {
     */
    protected abstract boolean deleteAndVerifyContainerGone(String container);
 
+   @Override
+   public String copyBlob(String fromContainer, String fromName, String toContainer, String toName,
+         CopyOptions options) {
+      Blob blob = getBlob(fromContainer, fromName);
+      if (blob == null) {
+         throw new KeyNotFoundException(fromContainer, fromName, "while copying");
+      }
+
+      InputStream is = null;
+      try {
+         is = blob.getPayload().openStream();
+         ContentMetadata metadata = blob.getMetadata().getContentMetadata();
+         BlobBuilder.PayloadBlobBuilder builder = blobBuilder(toName)
+               .payload(is)
+               .contentDisposition(metadata.getContentDisposition())
+               .contentEncoding(metadata.getContentEncoding())
+               .contentLanguage(metadata.getContentLanguage())
+               .contentType(metadata.getContentType());
+         Long contentLength = metadata.getContentLength();
+         if (contentLength != null) {
+            builder.contentLength(contentLength);
+         }
+         Optional<Map<String, String>> userMetadata = options.getUserMetadata();
+         if (userMetadata.isPresent()) {
+            builder.userMetadata(userMetadata.get());
+         } else {
+            builder.userMetadata(blob.getMetadata().getUserMetadata());
+         }
+         return putBlob(toContainer, builder.build());
+      } catch (IOException ioe) {
+         throw Throwables.propagate(ioe);
+      } finally {
+         Closeables2.closeQuietly(is);
+      }
+   }
 }
