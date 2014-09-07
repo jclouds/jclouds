@@ -26,6 +26,7 @@ import static org.jclouds.blobstore.BlobStoreFallbacks.NullOnContainerNotFound;
 import static org.jclouds.blobstore.BlobStoreFallbacks.NullOnKeyNotFound;
 
 import java.io.Closeable;
+import java.net.URI;
 import java.util.List;
 import java.util.Map;
 
@@ -57,6 +58,7 @@ import org.jclouds.azureblob.functions.ParseBlobFromHeadersAndHttpContent;
 import org.jclouds.azureblob.functions.ParseBlobPropertiesFromHeaders;
 import org.jclouds.azureblob.functions.ParseContainerPropertiesFromHeaders;
 import org.jclouds.azureblob.functions.ParsePublicAccessHeader;
+import org.jclouds.azureblob.options.CopyBlobOptions;
 import org.jclouds.azureblob.options.CreateContainerOptions;
 import org.jclouds.azureblob.options.ListBlobsOptions;
 import org.jclouds.azureblob.predicates.validators.BlockIdValidator;
@@ -442,4 +444,15 @@ public interface AzureBlobClient extends Closeable {
          @PathParam("container") @ParamValidators(ContainerNameValidator.class) String container,
          @PathParam("name") String name);
 
+   /**
+    * @throws ContainerNotFoundException if the container is not present.
+    */
+   @Named("CopyBlob")
+   @PUT
+   @Path("{toContainer}/{toName}")
+   @Headers(keys = AzureStorageHeaders.COPY_SOURCE, values = "{copySource}")
+   void copyBlob(
+         @PathParam("copySource") URI copySource,
+         @PathParam("toContainer") @ParamValidators(ContainerNameValidator.class) String toContainer, @PathParam("toName") String toName,
+         @BinderParam(BindAzureCopyOptionsToRequest.class) CopyBlobOptions options);
 }

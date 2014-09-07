@@ -24,6 +24,13 @@ package org.jclouds.azure.storage.reference;
 public final class AzureStorageHeaders {
 
    public static final String USER_METADATA_PREFIX = "x-ms-meta-";
+
+   public static final String COPY_SOURCE = "x-ms-copy-source";
+   public static final String COPY_SOURCE_IF_MODIFIED_SINCE = "x-ms-source-if-modified-since";
+   public static final String COPY_SOURCE_IF_UNMODIFIED_SINCE = "x-ms-source-if-unmodified-since";
+   public static final String COPY_SOURCE_IF_MATCH = "x-ms-source-if-match";
+   public static final String COPY_SOURCE_IF_NONE_MATCH = "x-ms-source-if-none-match";
+
    public static final String REQUEST_ID = "x-ms-request-id";
    public static final String VERSION = "x-ms-version";
 

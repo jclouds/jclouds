@@ -22,6 +22,8 @@ import static org.jclouds.reflect.Reflection2.method;
 import static org.testng.Assert.assertEquals;
 
 import java.io.IOException;
+import java.net.URI;
+import java.util.Date;
 import java.util.Map;
 
 import org.jclouds.Fallbacks.TrueOnNotFoundOr404;
@@ -33,6 +35,7 @@ import org.jclouds.azureblob.domain.PublicAccess;
 import org.jclouds.azureblob.functions.ParseBlobFromHeadersAndHttpContent;
 import org.jclouds.azureblob.functions.ParseContainerPropertiesFromHeaders;
 import org.jclouds.azureblob.functions.ParsePublicAccessHeader;
+import org.jclouds.azureblob.options.CopyBlobOptions;
 import org.jclouds.azureblob.options.CreateContainerOptions;
 import org.jclouds.azureblob.options.ListBlobsOptions;
 import org.jclouds.azureblob.xml.AccountNameEnumerationResultsHandler;
@@ -302,6 +305,102 @@ public class AzureBlobClientTest extends BaseRestAnnotationProcessingTest<AzureB
       assertResponseParserClassEquals(method, request, ParseETagHeader.class);
       assertSaxResponseParserClassEquals(method, null);
       assertFallbackClassEquals(method, null);
+   }
+
+   public void testCopyBlob() throws Exception {
+      Invokable<?, ?> method = method(AzureBlobClient.class, "copyBlob", URI.class, String.class, String.class, CopyBlobOptions.class);
+      GeneratedHttpRequest request = processor.createRequest(method, ImmutableList.<Object> of(
+               URI.create("https://identity.blob.core.windows.net/fromcontainer/fromblob"), "tocontainer", "toblob", CopyBlobOptions.NONE));
+
+      assertRequestLineEquals(request,
+               "PUT https://identity.blob.core.windows.net/tocontainer/toblob HTTP/1.1");
+      checkFilters(request);
+      assertNonPayloadHeadersEqual(request,
+               "x-ms-copy-source: https://identity.blob.core.windows.net/fromcontainer/fromblob\n" +
+               "x-ms-version: 2013-08-15\n");
+      assertPayloadEquals(request, null, null, false);
+   }
+
+   public void testCopyBlobOverwriteUserMetadata() throws Exception {
+      CopyBlobOptions options = CopyBlobOptions.builder().overrideUserMetadata(ImmutableMap.of("foo", "bar")).build();
+      Invokable<?, ?> method = method(AzureBlobClient.class, "copyBlob", URI.class, String.class, String.class, CopyBlobOptions.class);
+      GeneratedHttpRequest request = processor.createRequest(method, ImmutableList.<Object> of(
+               URI.create("https://identity.blob.core.windows.net/fromcontainer/fromblob"), "tocontainer", "toblob", options));
+
+      assertRequestLineEquals(request,
+               "PUT https://identity.blob.core.windows.net/tocontainer/toblob HTTP/1.1");
+      checkFilters(request);
+      assertNonPayloadHeadersEqual(request,
+               "x-ms-copy-source: https://identity.blob.core.windows.net/fromcontainer/fromblob\n" +
+               "x-ms-meta-foo: bar\n" +
+               "x-ms-version: 2013-08-15\n");
+      assertPayloadEquals(request, null, null, false);
+   }
+
+   public void testCopyBlobIfModifiedSince() throws Exception {
+      CopyBlobOptions options = CopyBlobOptions.builder().ifModifiedSince(new Date(1000)).build();
+      Invokable<?, ?> method = method(AzureBlobClient.class, "copyBlob", URI.class, String.class, String.class, CopyBlobOptions.class);
+      GeneratedHttpRequest request = processor.createRequest(method, ImmutableList.<Object> of(
+               URI.create("https://identity.blob.core.windows.net/fromcontainer/fromblob"), "tocontainer", "toblob", options));
+
+      assertRequestLineEquals(request,
+               "PUT https://identity.blob.core.windows.net/tocontainer/toblob HTTP/1.1");
+      checkFilters(request);
+      assertNonPayloadHeadersEqual(request,
+               "x-ms-copy-source: https://identity.blob.core.windows.net/fromcontainer/fromblob\n" +
+               "x-ms-source-if-modified-since: Thu, 01 Jan 1970 00:00:01 GMT\n" +
+               "x-ms-version: 2013-08-15\n");
+      assertPayloadEquals(request, null, null, false);
+   }
+
+   public void testCopyBlobIfUnmodifiedSince() throws Exception {
+      CopyBlobOptions options = CopyBlobOptions.builder().ifUnmodifiedSince(new Date(1000)).build();
+      Invokable<?, ?> method = method(AzureBlobClient.class, "copyBlob", URI.class, String.class, String.class, CopyBlobOptions.class);
+      GeneratedHttpRequest request = processor.createRequest(method, ImmutableList.<Object> of(
+               URI.create("https://identity.blob.core.windows.net/fromcontainer/fromblob"), "tocontainer", "toblob", options));
+
+      assertRequestLineEquals(request,
+               "PUT https://identity.blob.core.windows.net/tocontainer/toblob HTTP/1.1");
+      checkFilters(request);
+      assertNonPayloadHeadersEqual(request,
+               "x-ms-copy-source: https://identity.blob.core.windows.net/fromcontainer/fromblob\n" +
+               "x-ms-source-if-unmodified-since: Thu, 01 Jan 1970 00:00:01 GMT\n" +
+               "x-ms-version: 2013-08-15\n");
+      assertPayloadEquals(request, null, null, false);
+   }
+
+   public void testCopyBlobIfMatch() throws Exception {
+      String eTag = "0x8CEB669D794AFE2";
+      CopyBlobOptions options = CopyBlobOptions.builder().ifMatch(eTag).build();
+      Invokable<?, ?> method = method(AzureBlobClient.class, "copyBlob", URI.class, String.class, String.class, CopyBlobOptions.class);
+      GeneratedHttpRequest request = processor.createRequest(method, ImmutableList.<Object> of(
+               URI.create("https://identity.blob.core.windows.net/fromcontainer/fromblob"), "tocontainer", "toblob", options));
+
+      assertRequestLineEquals(request,
+               "PUT https://identity.blob.core.windows.net/tocontainer/toblob HTTP/1.1");
+      checkFilters(request);
+      assertNonPayloadHeadersEqual(request,
+               "x-ms-copy-source: https://identity.blob.core.windows.net/fromcontainer/fromblob\n" +
+               "x-ms-source-if-match: " + eTag + "\n" +
+               "x-ms-version: 2013-08-15\n");
+      assertPayloadEquals(request, null, null, false);
+   }
+
+   public void testCopyBlobIfNoneMatch() throws Exception {
+      String eTag = "0x8CEB669D794AFE2";
+      CopyBlobOptions options = CopyBlobOptions.builder().ifNoneMatch(eTag).build();
+      Invokable<?, ?> method = method(AzureBlobClient.class, "copyBlob", URI.class, String.class, String.class, CopyBlobOptions.class);
+      GeneratedHttpRequest request = processor.createRequest(method, ImmutableList.<Object> of(
+               URI.create("https://identity.blob.core.windows.net/fromcontainer/fromblob"), "tocontainer", "toblob", options));
+
+      assertRequestLineEquals(request,
+               "PUT https://identity.blob.core.windows.net/tocontainer/toblob HTTP/1.1");
+      checkFilters(request);
+      assertNonPayloadHeadersEqual(request,
+               "x-ms-copy-source: https://identity.blob.core.windows.net/fromcontainer/fromblob\n" +
+               "x-ms-source-if-none-match: " + eTag + "\n" +
+               "x-ms-version: 2013-08-15\n");
+      assertPayloadEquals(request, null, null, false);
    }
 
    @Override
