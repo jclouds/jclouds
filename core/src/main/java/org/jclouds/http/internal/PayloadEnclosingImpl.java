@@ -26,6 +26,8 @@ import org.jclouds.io.Payload;
 import org.jclouds.io.PayloadEnclosing;
 import org.jclouds.javax.annotation.Nullable;
 
+import com.google.common.io.ByteSource;
+
 public class PayloadEnclosingImpl implements PayloadEnclosing {
    protected Payload payload;
 
@@ -84,6 +86,14 @@ public class PayloadEnclosingImpl implements PayloadEnclosing {
     */
    @Override
    public void setPayload(File data) {
+      setPayload(newPayload(checkNotNull(data, "data")));
+   }
+
+   /**
+    * {@inheritDoc}
+    */
+   @Override
+   public void setPayload(ByteSource data) {
       setPayload(newPayload(checkNotNull(data, "data")));
    }
 

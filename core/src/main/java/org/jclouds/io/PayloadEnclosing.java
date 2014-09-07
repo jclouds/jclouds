@@ -21,6 +21,8 @@ import java.io.InputStream;
 
 import org.jclouds.javax.annotation.Nullable;
 
+import com.google.common.io.ByteSource;
+
 public interface PayloadEnclosing {
 
    /**
@@ -28,8 +30,8 @@ public interface PayloadEnclosing {
     * attempt to discover it.
     * 
     * @param data
-    *           typically InputStream for downloads, or File, byte [], String, or InputStream for
-    *           uploads.
+    *           typically InputStream for downloads, or File, byte[], String, InputStream,
+    *           of ByteSource for uploads.
     */
    void setPayload(Payload data);
 
@@ -40,6 +42,8 @@ public interface PayloadEnclosing {
    void setPayload(InputStream data);
 
    void setPayload(String data);
+
+   void setPayload(ByteSource data);
 
    @Nullable
    Payload getPayload();
