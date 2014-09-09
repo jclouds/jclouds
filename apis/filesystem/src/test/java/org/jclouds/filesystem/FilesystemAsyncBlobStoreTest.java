@@ -620,11 +620,7 @@ public class FilesystemAsyncBlobStoreTest {
     }
 
     public void testDeleteContainer_NotExistingContainer() {
-        try {
-            blobStore.deleteContainer(CONTAINER_NAME);
-            fail("No error when container doesn't exist");
-        } catch (Exception e) {
-        }
+        blobStore.deleteContainer(CONTAINER_NAME);
     }
 
     public void testDeleteContainer_EmptyContanier() {

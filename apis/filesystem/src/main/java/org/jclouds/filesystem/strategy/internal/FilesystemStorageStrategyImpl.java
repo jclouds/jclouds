@@ -131,6 +131,9 @@ public class FilesystemStorageStrategyImpl implements LocalStorageStrategy {
    @Override
    public void deleteContainer(String container) {
       filesystemContainerNameValidator.validate(container);
+      if (!containerExists(container)) {
+         return;
+      }
       deleteDirectory(container, null);
    }
 

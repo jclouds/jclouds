@@ -282,12 +282,8 @@ public class FilesystemStorageStrategyImplTest {
       TestUtils.directoryExists(CONTAINER_NAME, false);
    }
 
-   public void testDeleteContainer_ErrorWhenNotExists() {
-      try {
-         storageStrategy.deleteContainer(CONTAINER_NAME);
-         fail("Exception not throwed");
-      } catch (Exception e) {
-      }
+   public void testDeleteContainerNoErrorWhenNotExists() {
+      storageStrategy.deleteContainer(CONTAINER_NAME);
    }
 
    public void testGetAllContainerNames() {
