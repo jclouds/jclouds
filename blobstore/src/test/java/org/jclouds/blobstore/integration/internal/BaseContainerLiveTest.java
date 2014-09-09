@@ -25,6 +25,7 @@ import static org.testng.Assert.assertTrue;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
+import java.nio.charset.StandardCharsets;
 import java.util.Collections;
 import java.util.List;
 import java.util.logging.Logger;
@@ -35,16 +36,18 @@ import org.jclouds.blobstore.domain.BlobMetadata;
 import org.jclouds.blobstore.domain.StorageMetadata;
 import org.jclouds.domain.Location;
 import org.jclouds.javax.annotation.Nullable;
+import org.jclouds.io.ByteStreams2;
 import org.jclouds.predicates.SocketOpen;
 import org.jclouds.util.Strings2;
+import org.jclouds.utils.TestUtils;
 import org.testng.SkipException;
 import org.testng.annotations.Test;
 
 import com.google.common.base.Predicate;
 import com.google.common.base.Predicates;
-import com.google.common.base.Strings;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
+import com.google.common.io.ByteSource;
 
 public class BaseContainerLiveTest extends BaseBlobStoreIntegrationTest {
 
@@ -100,7 +103,7 @@ public class BaseContainerLiveTest extends BaseBlobStoreIntegrationTest {
    public void testPublicAccessInNonDefaultLocation() throws InterruptedException, MalformedURLException, IOException {
       Location nonDefault = findNonDefaultLocationOrSkip(view.getBlobStore(), defaultLocation);
 
-      String payload = "my data";
+      ByteSource payload = ByteSource.wrap("my data".getBytes(StandardCharsets.UTF_8));
       runCreateContainerInLocation(payload, nonDefault);
    }
 
@@ -108,11 +111,11 @@ public class BaseContainerLiveTest extends BaseBlobStoreIntegrationTest {
    public void testPublicAccessInNonDefaultLocationWithBigBlob() throws InterruptedException, MalformedURLException,
             IOException {
       Location nonDefault = findNonDefaultLocationOrSkip(view.getBlobStore(), defaultLocation);
-      String payload = Strings.repeat("a", 1024 * 1024); // 1MB
+      ByteSource payload = TestUtils.randomByteSource().slice(0, 1024 * 1024);
       runCreateContainerInLocation(payload, nonDefault);
    }
 
-   private void runCreateContainerInLocation(String payload, Location nonDefault) throws InterruptedException,
+   private void runCreateContainerInLocation(ByteSource payload, Location nonDefault) throws InterruptedException,
             IOException {
       String blobName = "hello";
       BlobStore blobStore = view.getBlobStore();
@@ -124,12 +127,15 @@ public class BaseContainerLiveTest extends BaseBlobStoreIntegrationTest {
          assertConsistencyAwareContainerExists(containerName);
          assertConsistencyAwareContainerInLocation(containerName, nonDefault);
 
-         blobStore.putBlob(containerName, blobStore.blobBuilder(blobName).payload(payload).build());
+         blobStore.putBlob(containerName, blobStore.blobBuilder(blobName)
+            .payload(payload)
+            .contentLength(payload.size())
+            .build());
 
          assertConsistencyAwareContainerSize(containerName, 1);
 
          BlobMetadata metadata = view.getBlobStore().blobMetadata(containerName, blobName);
-         assertEquals(Strings2.toStringAndClose(view.utils().http().get(metadata.getPublicUri())), payload);
+         assertEquals(ByteStreams2.toByteArrayAndClose(view.utils().http().get(metadata.getPublicUri())), payload.read());
 
          assertConsistencyAwareBlobInLocation(containerName, blobName, nonDefault);
 
