@@ -43,7 +43,6 @@ public final class MachineType extends Resource {
 
    private final Integer guestCpus;
    private final Integer memoryMb;
-   private final Integer imageSpaceGb;
    private final List<ScratchDisk> scratchDisks;
    private final Integer maximumPersistentDisks;
    private final Long maximumPersistentDisksSizeGb;
@@ -52,17 +51,15 @@ public final class MachineType extends Resource {
 
    @ConstructorProperties({
            "id", "creationTimestamp", "selfLink", "name", "description", "guestCpus", "memoryMb",
-           "imageSpaceGb", "scratchDisks", "maximumPersistentDisks", "maximumPersistentDisksSizeGb", "zone",
-           "deprecated"
+           "scratchDisks", "maximumPersistentDisks", "maximumPersistentDisksSizeGb", "zone", "deprecated"
    })
    private MachineType(String id, Date creationTimestamp, URI selfLink, String name, String description,
-                       int guestCpus, int memoryMb, int imageSpaceGb, List<ScratchDisk> scratchDisks,
+                       int guestCpus, int memoryMb, List<ScratchDisk> scratchDisks,
                        int maximumPersistentDisks, long maximumPersistentDisksSizeGb, String zone,
                        @Nullable Deprecated deprecated) {
       super(Kind.MACHINE_TYPE, id, creationTimestamp, selfLink, name, description);
       this.guestCpus = checkNotNull(guestCpus, "guestCpus of %s", name);
       this.memoryMb = checkNotNull(memoryMb, "memoryMb of %s", name);
-      this.imageSpaceGb = checkNotNull(imageSpaceGb, "imageSpaceGb of %s", name);
       this.scratchDisks = scratchDisks == null ? ImmutableList.<ScratchDisk>of() : scratchDisks;
       this.maximumPersistentDisks = checkNotNull(maximumPersistentDisks, "maximumPersistentDisks of %s", name);
       this.maximumPersistentDisksSizeGb = maximumPersistentDisksSizeGb;
@@ -82,13 +79,6 @@ public final class MachineType extends Resource {
     */
    public int getMemoryMb() {
       return memoryMb;
-   }
-
-   /**
-    * @return space allotted for the image, defined in GB.
-    */
-   public int getImageSpaceGb() {
-      return imageSpaceGb;
    }
 
    /**
@@ -147,7 +137,6 @@ public final class MachineType extends Resource {
       return super.string()
               .add("guestCpus", guestCpus)
               .add("memoryMb", memoryMb)
-              .add("imageSpaceGb", imageSpaceGb)
               .add("scratchDisks", scratchDisks)
               .add("maximumPersistentDisks", maximumPersistentDisks)
               .add("maximumPersistentDisksSizeGb", maximumPersistentDisksSizeGb)
@@ -261,13 +250,12 @@ public final class MachineType extends Resource {
 
       public MachineType build() {
          return new MachineType(id, creationTimestamp, selfLink, name, description, guestCpus, memoryMb,
-                 imageSpaceGb, scratchDisks.build(), maximumPersistentDisks, maximumPersistentDisksSizeGb,
-                 zone, deprecated);
+                 scratchDisks.build(), maximumPersistentDisks, maximumPersistentDisksSizeGb, zone, deprecated);
       }
 
 
       public Builder fromMachineType(MachineType in) {
-         return super.fromResource(in).memoryMb(in.getMemoryMb()).imageSpaceGb(in.getImageSpaceGb()).scratchDisks(in
+         return super.fromResource(in).memoryMb(in.getMemoryMb()).scratchDisks(in
                  .getScratchDisks()).maximumPersistentDisks(in.getMaximumPersistentDisks())
                  .maximumPersistentDisksSizeGb(in.getMaximumPersistentDisksSizeGb()).zone(in.getZone())
                  .deprecated(in.getDeprecated().orNull());

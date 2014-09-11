@@ -214,7 +214,7 @@ public class GoogleComputeEngineServiceExpectTest extends BaseGoogleComputeEngin
               .addHeader("Authorization", "Bearer " + TOKEN)
               .payload(payloadFromStringWithContentType("{\"name\":\"" + instanceName + "\"," +
                                                         "\"machineType\":\"https://www.googleapis" +
-                                                        ".com/compute/v1/projects/myproject/zones/us-central1-a/machineTypes/n1-standard-1\"," +
+                                                        ".com/compute/v1/projects/myproject/zones/us-central1-a/machineTypes/f1-micro\"," +
                                                         "\"serviceAccounts\":[]," +
                                                         "\"networkInterfaces\":[{\"network\":\"https://www.googleapis" +
                                                         ".com/compute/v1/projects/myproject/global/networks/" + networkName + "\"," +

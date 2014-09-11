@@ -11,7 +11,6 @@
            "description": "1 vCPU (shared physical core) and 0.6 GB RAM",
            "guestCpus": 1,
            "memoryMb": 614,
-           "imageSpaceGb": 0,
            "maximumPersistentDisks": 4,
            "maximumPersistentDisksSizeGb": "3072",
            "zone": "us-central1-a",
@@ -26,7 +25,6 @@
          "description": "1 vCPU, 3.75 GB RAM, and a 10 GB ephemeral root disk",
          "guestCpus": 1,
          "memoryMb": 3840,
-         "imageSpaceGb": 10,
          "maximumPersistentDisks": 16,
          "maximumPersistentDisksSizeGb": "128",
          "zone": "us-central1-a"
@@ -40,7 +38,6 @@
          "description": "8 vCPUs, 30 GB RAM, a 10 GB ephemeral root disk, and 2 extra 1770 GB ephemeral disks",
          "guestCpus": 8,
          "memoryMb": 30720,
-         "imageSpaceGb": 10,
          "scratchDisks": [
             {
                "diskGb": 1770

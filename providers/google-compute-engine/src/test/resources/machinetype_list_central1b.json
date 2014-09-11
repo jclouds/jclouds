@@ -12,7 +12,6 @@
          "description": "1 vCPU, 3.75 GB RAM, and a 10 GB ephemeral root disk",
          "guestCpus": 1,
          "memoryMb": 3840,
-         "imageSpaceGb": 10,
          "maximumPersistentDisks": 16,
          "maximumPersistentDisksSizeGb": "128",
          "zone": "us-central1-b"
@@ -26,7 +25,6 @@
          "description": "8 vCPUs, 30 GB RAM, a 10 GB ephemeral root disk, and 2 extra 1770 GB ephemeral disks",
          "guestCpus": 8,
          "memoryMb": 30720,
-         "imageSpaceGb": 10,
          "scratchDisks": [
             {
                "diskGb": 1770
