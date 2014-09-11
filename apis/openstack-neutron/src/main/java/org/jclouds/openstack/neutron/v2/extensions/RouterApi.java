@@ -39,7 +39,9 @@ import org.jclouds.openstack.neutron.v2.fallbacks.EmptyRoutersFallback;
 import org.jclouds.openstack.neutron.v2.functions.ParseRouters;
 import org.jclouds.openstack.neutron.v2.functions.RouterToPagedIterable;
 import org.jclouds.openstack.neutron.v2.options.EmptyOptions;
+import org.jclouds.openstack.v2_0.ServiceType;
 import org.jclouds.openstack.v2_0.options.PaginationOptions;
+import org.jclouds.openstack.v2_0.services.Extension;
 import org.jclouds.rest.annotations.Fallback;
 import org.jclouds.rest.annotations.MapBinder;
 import org.jclouds.rest.annotations.PayloadParam;
@@ -64,6 +66,7 @@ import com.google.common.annotations.Beta;
 @Path("/routers")
 @RequestFilters(AuthenticateRequest.class)
 @Consumes(MediaType.APPLICATION_JSON)
+@Extension(of = ServiceType.NETWORK, namespace = ExtensionNamespaces.L3_ROUTER)
 public interface RouterApi {
 
    /**

@@ -51,6 +51,7 @@ public class RouterApiMockTest extends BaseNeutronApiMockTest {
    public void testCreateRouter() throws IOException, InterruptedException, URISyntaxException {
       MockWebServer server = mockOpenStackServer();
       server.enqueue(addCommonHeaders(new MockResponse().setBody(stringFromResource("/access.json"))));
+      server.enqueue(addCommonHeaders(new MockResponse().setBody(stringFromResource("/extension_list.json"))));
       server.enqueue(addCommonHeaders(
             new MockResponse().setResponseCode(201).setBody(stringFromResource("/router_create_response.json"))));
 
@@ -67,7 +68,9 @@ public class RouterApiMockTest extends BaseNeutronApiMockTest {
          /*
           * Check request
           */
+         assertEquals(server.getRequestCount(), 3);
          assertAuthentication(server);
+         assertExtensions(server, "/v2.0");
          assertRequest(server.takeRequest(), "POST", "/v2.0/routers", "/router_create_request.json");
 
          /*
@@ -89,6 +92,7 @@ public class RouterApiMockTest extends BaseNeutronApiMockTest {
    public void testCreateRouterFail() throws IOException, InterruptedException, URISyntaxException {
       MockWebServer server = mockOpenStackServer();
       server.enqueue(addCommonHeaders(new MockResponse().setBody(stringFromResource("/access.json"))));
+      server.enqueue(addCommonHeaders(new MockResponse().setBody(stringFromResource("/extension_list.json"))));
       server.enqueue(addCommonHeaders(
             new MockResponse().setResponseCode(404)));
 
@@ -111,6 +115,7 @@ public class RouterApiMockTest extends BaseNeutronApiMockTest {
    public void testListSpecificPageRouter() throws IOException, InterruptedException, URISyntaxException {
       MockWebServer server = mockOpenStackServer();
       server.enqueue(addCommonHeaders(new MockResponse().setBody(stringFromResource("/access.json"))));
+      server.enqueue(addCommonHeaders(new MockResponse().setBody(stringFromResource("/extension_list.json"))));
       server.enqueue(addCommonHeaders(new MockResponse().setResponseCode(200).setBody(stringFromResource("/router_list_response_paged1.json"))));
 
       try {
@@ -122,7 +127,9 @@ public class RouterApiMockTest extends BaseNeutronApiMockTest {
          /*
           * Check request
           */
+         assertEquals(server.getRequestCount(), 3);
          assertAuthentication(server);
+         assertExtensions(server, "/v2.0");
          assertRequest(server.takeRequest(), "GET", "/v2.0/routers?limit=2&marker=abcdefg");
 
          /*
@@ -139,6 +146,7 @@ public class RouterApiMockTest extends BaseNeutronApiMockTest {
    public void testListSpecificPageRouterFail() throws IOException, InterruptedException, URISyntaxException {
       MockWebServer server = mockOpenStackServer();
       server.enqueue(addCommonHeaders(new MockResponse().setBody(stringFromResource("/access.json"))));
+      server.enqueue(addCommonHeaders(new MockResponse().setBody(stringFromResource("/extension_list.json"))));
       server.enqueue(addCommonHeaders(new MockResponse().setResponseCode(404)));
 
       try {
@@ -150,7 +158,9 @@ public class RouterApiMockTest extends BaseNeutronApiMockTest {
          /*
           * Check request
           */
+         assertEquals(server.getRequestCount(), 3);
          assertAuthentication(server);
+         assertExtensions(server, "/v2.0");
          assertRequest(server.takeRequest(), "GET", "/v2.0/routers?limit=2&marker=abcdefg");
 
          /*
@@ -166,6 +176,7 @@ public class RouterApiMockTest extends BaseNeutronApiMockTest {
    public void testListPagedRouter() throws IOException, InterruptedException, URISyntaxException {
       MockWebServer server = mockOpenStackServer();
       server.enqueue(addCommonHeaders(new MockResponse().setBody(stringFromResource("/access.json"))));
+      server.enqueue(addCommonHeaders(new MockResponse().setBody(stringFromResource("/extension_list.json"))));
       server.enqueue(addCommonHeaders(new MockResponse().setResponseCode(200).setBody(stringFromResource("/router_list_response_paged1.json"))));
       server.enqueue(addCommonHeaders(new MockResponse().setResponseCode(200).setBody(stringFromResource("/router_list_response_paged2.json"))));
 
@@ -179,8 +190,9 @@ public class RouterApiMockTest extends BaseNeutronApiMockTest {
          /*
           * Check request
           */
-         assertEquals(server.getRequestCount(), 3);
+         assertEquals(server.getRequestCount(), 4);
          assertAuthentication(server);
+         assertExtensions(server, "/v2.0");
          assertRequest(server.takeRequest(), "GET", "/v2.0/routers");
          assertRequest(server.takeRequest(), "GET", "/v2.0/routers?marker=71c1e68c-171a-4aa2-aca5-50ea153a3718");
 
@@ -199,6 +211,7 @@ public class RouterApiMockTest extends BaseNeutronApiMockTest {
    public void testListPagedRouterFail() throws IOException, InterruptedException, URISyntaxException {
       MockWebServer server = mockOpenStackServer();
       server.enqueue(addCommonHeaders(new MockResponse().setBody(stringFromResource("/access.json"))));
+      server.enqueue(addCommonHeaders(new MockResponse().setBody(stringFromResource("/extension_list.json"))));
       server.enqueue(addCommonHeaders(new MockResponse().setResponseCode(404)));
 
       try {
@@ -211,8 +224,9 @@ public class RouterApiMockTest extends BaseNeutronApiMockTest {
          /*
           * Check request
           */
-         assertEquals(server.getRequestCount(), 2);
+         assertEquals(server.getRequestCount(), 3);
          assertAuthentication(server);
+         assertExtensions(server, "/v2.0");
          assertRequest(server.takeRequest(), "GET", "/v2.0/routers");
 
          /*
@@ -228,6 +242,7 @@ public class RouterApiMockTest extends BaseNeutronApiMockTest {
    public void testGetRouter() throws IOException, InterruptedException, URISyntaxException {
       MockWebServer server = mockOpenStackServer();
       server.enqueue(addCommonHeaders(new MockResponse().setBody(stringFromResource("/access.json"))));
+      server.enqueue(addCommonHeaders(new MockResponse().setBody(stringFromResource("/extension_list.json"))));
       server.enqueue(addCommonHeaders(
             new MockResponse().setResponseCode(201).setBody(stringFromResource("/router_get_response.json"))));
 
@@ -240,7 +255,9 @@ public class RouterApiMockTest extends BaseNeutronApiMockTest {
          /*
           * Check request
           */
+         assertEquals(server.getRequestCount(), 3);
          assertAuthentication(server);
+         assertExtensions(server, "/v2.0");
          assertRequest(server.takeRequest(), "GET", "/v2.0/routers/12345");
 
          /*
@@ -261,6 +278,7 @@ public class RouterApiMockTest extends BaseNeutronApiMockTest {
    public void testGetRouterFail() throws IOException, InterruptedException, URISyntaxException {
       MockWebServer server = mockOpenStackServer();
       server.enqueue(addCommonHeaders(new MockResponse().setBody(stringFromResource("/access.json"))));
+      server.enqueue(addCommonHeaders(new MockResponse().setBody(stringFromResource("/extension_list.json"))));
       server.enqueue(addCommonHeaders(
             new MockResponse().setResponseCode(404)));
 
@@ -273,7 +291,9 @@ public class RouterApiMockTest extends BaseNeutronApiMockTest {
          /*
           * Check request
           */
+         assertEquals(server.getRequestCount(), 3);
          assertAuthentication(server);
+         assertExtensions(server, "/v2.0");
          assertRequest(server.takeRequest(), "GET", "/v2.0/routers/12345");
 
          /*
@@ -288,6 +308,7 @@ public class RouterApiMockTest extends BaseNeutronApiMockTest {
    public void testUpdateRouter() throws IOException, InterruptedException, URISyntaxException {
       MockWebServer server = mockOpenStackServer();
       server.enqueue(addCommonHeaders(new MockResponse().setBody(stringFromResource("/access.json"))));
+      server.enqueue(addCommonHeaders(new MockResponse().setBody(stringFromResource("/extension_list.json"))));
       server.enqueue(addCommonHeaders(
             new MockResponse().setResponseCode(201).setBody(stringFromResource("/router_update_response.json"))));
 
@@ -305,7 +326,9 @@ public class RouterApiMockTest extends BaseNeutronApiMockTest {
          /*
           * Check request
           */
+         assertEquals(server.getRequestCount(), 3);
          assertAuthentication(server);
+         assertExtensions(server, "/v2.0");
          assertRequest(server.takeRequest(), "PUT", "/v2.0/routers/12345", "/router_update_request.json");
 
          /*
@@ -326,6 +349,7 @@ public class RouterApiMockTest extends BaseNeutronApiMockTest {
    public void testUpdateRouterFail() throws IOException, InterruptedException, URISyntaxException {
       MockWebServer server = mockOpenStackServer();
       server.enqueue(addCommonHeaders(new MockResponse().setBody(stringFromResource("/access.json"))));
+      server.enqueue(addCommonHeaders(new MockResponse().setBody(stringFromResource("/extension_list.json"))));
       server.enqueue(addCommonHeaders(
             new MockResponse().setResponseCode(404)));
 
@@ -343,7 +367,9 @@ public class RouterApiMockTest extends BaseNeutronApiMockTest {
          /*
           * Check request
           */
+         assertEquals(server.getRequestCount(), 3);
          assertAuthentication(server);
+         assertExtensions(server, "/v2.0");
          assertRequest(server.takeRequest(), "PUT", "/v2.0/routers/12345", "/router_update_request.json");
 
          /*
@@ -358,6 +384,7 @@ public class RouterApiMockTest extends BaseNeutronApiMockTest {
    public void testDeleteRouter() throws IOException, InterruptedException, URISyntaxException {
       MockWebServer server = mockOpenStackServer();
       server.enqueue(addCommonHeaders(new MockResponse().setBody(stringFromResource("/access.json"))));
+      server.enqueue(addCommonHeaders(new MockResponse().setBody(stringFromResource("/extension_list.json"))));
       server.enqueue(addCommonHeaders(
             new MockResponse().setResponseCode(201)));
 
@@ -370,7 +397,9 @@ public class RouterApiMockTest extends BaseNeutronApiMockTest {
          /*
           * Check request
           */
+         assertEquals(server.getRequestCount(), 3);
          assertAuthentication(server);
+         assertExtensions(server, "/v2.0");
          assertRequest(server.takeRequest(), "DELETE", "/v2.0/routers/12345");
 
          /*
@@ -385,6 +414,7 @@ public class RouterApiMockTest extends BaseNeutronApiMockTest {
    public void testDeleteRouterFail() throws IOException, InterruptedException, URISyntaxException {
       MockWebServer server = mockOpenStackServer();
       server.enqueue(addCommonHeaders(new MockResponse().setBody(stringFromResource("/access.json"))));
+      server.enqueue(addCommonHeaders(new MockResponse().setBody(stringFromResource("/extension_list.json"))));
       server.enqueue(addCommonHeaders(
             new MockResponse().setResponseCode(404)));
 
@@ -397,7 +427,9 @@ public class RouterApiMockTest extends BaseNeutronApiMockTest {
          /*
           * Check request
           */
+         assertEquals(server.getRequestCount(), 3);
          assertAuthentication(server);
+         assertExtensions(server, "/v2.0");
          assertRequest(server.takeRequest(), "DELETE", "/v2.0/routers/12345");
 
          /*
@@ -412,6 +444,7 @@ public class RouterApiMockTest extends BaseNeutronApiMockTest {
    public void testAddRouterInterfaceForSubnet() throws IOException, InterruptedException, URISyntaxException {
       MockWebServer server = mockOpenStackServer();
       server.enqueue(addCommonHeaders(new MockResponse().setBody(stringFromResource("/access.json"))));
+      server.enqueue(addCommonHeaders(new MockResponse().setBody(stringFromResource("/extension_list.json"))));
       server.enqueue(addCommonHeaders(
             new MockResponse().setResponseCode(201).setBody(stringFromResource("/router_add_interface_response.json"))));
 
@@ -425,6 +458,7 @@ public class RouterApiMockTest extends BaseNeutronApiMockTest {
           * Check request
           */
          assertAuthentication(server);
+         assertExtensions(server, "/v2.0");
          assertRequest(server.takeRequest(), "PUT", "/v2.0/routers/12345/add_router_interface", "/router_add_interface_request.json");
 
          /*
@@ -441,6 +475,7 @@ public class RouterApiMockTest extends BaseNeutronApiMockTest {
    public void testAddRouterInterfaceForSubnetFail() throws IOException, InterruptedException, URISyntaxException {
       MockWebServer server = mockOpenStackServer();
       server.enqueue(addCommonHeaders(new MockResponse().setBody(stringFromResource("/access.json"))));
+      server.enqueue(addCommonHeaders(new MockResponse().setBody(stringFromResource("/extension_list.json"))));
       server.enqueue(addCommonHeaders(
             new MockResponse().setResponseCode(404)));
 
@@ -453,7 +488,9 @@ public class RouterApiMockTest extends BaseNeutronApiMockTest {
          /*
           * Check request
           */
+         assertEquals(server.getRequestCount(), 3);
          assertAuthentication(server);
+         assertExtensions(server, "/v2.0");
          assertRequest(server.takeRequest(), "PUT", "/v2.0/routers/12345/add_router_interface", "/router_add_interface_request.json");
 
          /*
@@ -468,6 +505,7 @@ public class RouterApiMockTest extends BaseNeutronApiMockTest {
    public void testAddRouterInterfaceForPort() throws IOException, InterruptedException, URISyntaxException {
       MockWebServer server = mockOpenStackServer();
       server.enqueue(addCommonHeaders(new MockResponse().setBody(stringFromResource("/access.json"))));
+      server.enqueue(addCommonHeaders(new MockResponse().setBody(stringFromResource("/extension_list.json"))));
       server.enqueue(addCommonHeaders(
             new MockResponse().setResponseCode(201).setBody(stringFromResource("/router_add_interface_response.json"))));
 
@@ -480,7 +518,9 @@ public class RouterApiMockTest extends BaseNeutronApiMockTest {
          /*
           * Check request
           */
+         assertEquals(server.getRequestCount(), 3);
          assertAuthentication(server);
+         assertExtensions(server, "/v2.0");
          assertRequest(server.takeRequest(), "PUT", "/v2.0/routers/12345/add_router_interface", "/router_add_interface_port_request.json");
 
          /*
@@ -497,6 +537,7 @@ public class RouterApiMockTest extends BaseNeutronApiMockTest {
    public void testAddRouterInterfaceForPortFail() throws IOException, InterruptedException, URISyntaxException {
       MockWebServer server = mockOpenStackServer();
       server.enqueue(addCommonHeaders(new MockResponse().setBody(stringFromResource("/access.json"))));
+      server.enqueue(addCommonHeaders(new MockResponse().setBody(stringFromResource("/extension_list.json"))));
       server.enqueue(addCommonHeaders(
             new MockResponse().setResponseCode(404)));
 
@@ -509,7 +550,9 @@ public class RouterApiMockTest extends BaseNeutronApiMockTest {
          /*
           * Check request
           */
+         assertEquals(server.getRequestCount(), 3);
          assertAuthentication(server);
+         assertExtensions(server, "/v2.0");
          assertRequest(server.takeRequest(), "PUT", "/v2.0/routers/12345/add_router_interface", "/router_add_interface_port_request.json");
 
          /*
@@ -524,6 +567,7 @@ public class RouterApiMockTest extends BaseNeutronApiMockTest {
    public void testRemoveRouterInterfaceForSubnet() throws IOException, InterruptedException, URISyntaxException {
       MockWebServer server = mockOpenStackServer();
       server.enqueue(addCommonHeaders(new MockResponse().setBody(stringFromResource("/access.json"))));
+      server.enqueue(addCommonHeaders(new MockResponse().setBody(stringFromResource("/extension_list.json"))));
       server.enqueue(addCommonHeaders(
             new MockResponse().setResponseCode(201)));
 
@@ -536,7 +580,9 @@ public class RouterApiMockTest extends BaseNeutronApiMockTest {
          /*
           * Check request
           */
+         assertEquals(server.getRequestCount(), 3);
          assertAuthentication(server);
+         assertExtensions(server, "/v2.0");
          assertRequest(server.takeRequest(), "PUT", "/v2.0/routers/12345/remove_router_interface", "/router_remove_interface_subnet_request.json");
 
          /*
@@ -551,6 +597,7 @@ public class RouterApiMockTest extends BaseNeutronApiMockTest {
    public void testRemoveRouterInterfaceForSubnetFail() throws IOException, InterruptedException, URISyntaxException {
       MockWebServer server = mockOpenStackServer();
       server.enqueue(addCommonHeaders(new MockResponse().setBody(stringFromResource("/access.json"))));
+      server.enqueue(addCommonHeaders(new MockResponse().setBody(stringFromResource("/extension_list.json"))));
       server.enqueue(addCommonHeaders(
             new MockResponse().setResponseCode(404)));
 
@@ -563,7 +610,9 @@ public class RouterApiMockTest extends BaseNeutronApiMockTest {
          /*
           * Check request
           */
+         assertEquals(server.getRequestCount(), 3);
          assertAuthentication(server);
+         assertExtensions(server, "/v2.0");
          assertRequest(server.takeRequest(), "PUT", "/v2.0/routers/12345/remove_router_interface", "/router_remove_interface_subnet_request.json");
 
          /*
@@ -578,6 +627,7 @@ public class RouterApiMockTest extends BaseNeutronApiMockTest {
    public void testRemoveRouterInterfaceForPort() throws IOException, InterruptedException, URISyntaxException {
       MockWebServer server = mockOpenStackServer();
       server.enqueue(addCommonHeaders(new MockResponse().setBody(stringFromResource("/access.json"))));
+      server.enqueue(addCommonHeaders(new MockResponse().setBody(stringFromResource("/extension_list.json"))));
       server.enqueue(addCommonHeaders(
             new MockResponse().setResponseCode(201)));
 
@@ -590,7 +640,9 @@ public class RouterApiMockTest extends BaseNeutronApiMockTest {
          /*
           * Check request
           */
+         assertEquals(server.getRequestCount(), 3);
          assertAuthentication(server);
+         assertExtensions(server, "/v2.0");
          assertRequest(server.takeRequest(), "PUT", "/v2.0/routers/12345/remove_router_interface", "/router_remove_interface_port_request.json");
 
          /*
@@ -605,6 +657,7 @@ public class RouterApiMockTest extends BaseNeutronApiMockTest {
    public void testRemoveRouterInterfaceForPortFail() throws IOException, InterruptedException, URISyntaxException {
       MockWebServer server = mockOpenStackServer();
       server.enqueue(addCommonHeaders(new MockResponse().setBody(stringFromResource("/access.json"))));
+      server.enqueue(addCommonHeaders(new MockResponse().setBody(stringFromResource("/extension_list.json"))));
       server.enqueue(addCommonHeaders(
             new MockResponse().setResponseCode(404)));
 
@@ -617,7 +670,9 @@ public class RouterApiMockTest extends BaseNeutronApiMockTest {
          /*
           * Check request
           */
+         assertEquals(server.getRequestCount(), 3);
          assertAuthentication(server);
+         assertExtensions(server, "/v2.0");
          assertRequest(server.takeRequest(), "PUT", "/v2.0/routers/12345/remove_router_interface", "/router_remove_interface_port_request.json");
 
          /*

@@ -41,13 +41,16 @@ import org.jclouds.openstack.neutron.v2.functions.ParseRules;
 import org.jclouds.openstack.neutron.v2.functions.ParseSecurityGroups;
 import org.jclouds.openstack.neutron.v2.functions.RulesToPagedIterable;
 import org.jclouds.openstack.neutron.v2.functions.SecurityGroupsToPagedIterable;
+import org.jclouds.openstack.v2_0.ServiceType;
 import org.jclouds.openstack.v2_0.options.PaginationOptions;
+import org.jclouds.openstack.v2_0.services.Extension;
 import org.jclouds.rest.annotations.Fallback;
 import org.jclouds.rest.annotations.RequestFilters;
 import org.jclouds.rest.annotations.ResponseParser;
 import org.jclouds.rest.annotations.SelectJson;
 import org.jclouds.rest.annotations.Transform;
 import org.jclouds.rest.annotations.WrapWith;
+
 import com.google.common.annotations.Beta;
 
 /**
@@ -61,6 +64,7 @@ import com.google.common.annotations.Beta;
 @RequestFilters(AuthenticateRequest.class)
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
+@Extension(of = ServiceType.NETWORK, namespace = ExtensionNamespaces.SECURITY_GROUPS)
 public interface SecurityGroupApi {
    /**
     * Groups

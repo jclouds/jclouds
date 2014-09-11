@@ -37,7 +37,9 @@ import org.jclouds.openstack.neutron.v2.domain.FloatingIPs;
 import org.jclouds.openstack.neutron.v2.fallbacks.EmptyFloatingIPsFallback;
 import org.jclouds.openstack.neutron.v2.functions.FloatingIPsToPagedIterable;
 import org.jclouds.openstack.neutron.v2.functions.ParseFloatingIPs;
+import org.jclouds.openstack.v2_0.ServiceType;
 import org.jclouds.openstack.v2_0.options.PaginationOptions;
+import org.jclouds.openstack.v2_0.services.Extension;
 import org.jclouds.rest.annotations.Fallback;
 import org.jclouds.rest.annotations.RequestFilters;
 import org.jclouds.rest.annotations.ResponseParser;
@@ -59,6 +61,7 @@ import com.google.common.annotations.Beta;
 @Path("/floatingips")
 @RequestFilters(AuthenticateRequest.class)
 @Consumes(MediaType.APPLICATION_JSON)
+@Extension(of = ServiceType.NETWORK, namespace = ExtensionNamespaces.L3_ROUTER)
 public interface FloatingIPApi {
 
    /**

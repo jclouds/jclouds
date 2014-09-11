@@ -52,6 +52,7 @@ public class SecurityGroupApiMockTest extends BaseNeutronApiMockTest {
    public void testCreateSecurityGroup() throws IOException, InterruptedException, URISyntaxException {
       MockWebServer server = mockOpenStackServer();
       server.enqueue(addCommonHeaders(new MockResponse().setBody(stringFromResource("/access.json"))));
+      server.enqueue(addCommonHeaders(new MockResponse().setBody(stringFromResource("/extension_list.json"))));
       server.enqueue(addCommonHeaders(
             new MockResponse().setResponseCode(201).setBody(stringFromResource("/security_group_create_response.json"))));
 
@@ -68,7 +69,9 @@ public class SecurityGroupApiMockTest extends BaseNeutronApiMockTest {
          /*
           * Check request
           */
+         assertEquals(server.getRequestCount(), 3);
          assertAuthentication(server);
+         assertExtensions(server, "/v2.0");
          assertRequest(server.takeRequest(), "POST", "/v2.0/security-groups", "/security_group_create_request.json");
 
          /*
@@ -94,6 +97,7 @@ public class SecurityGroupApiMockTest extends BaseNeutronApiMockTest {
    public void testCreateSecurityGroupFail() throws IOException, InterruptedException, URISyntaxException {
       MockWebServer server = mockOpenStackServer();
       server.enqueue(addCommonHeaders(new MockResponse().setBody(stringFromResource("/access.json"))));
+      server.enqueue(addCommonHeaders(new MockResponse().setBody(stringFromResource("/extension_list.json"))));
       server.enqueue(addCommonHeaders(
             new MockResponse().setResponseCode(404)));
 
@@ -114,6 +118,7 @@ public class SecurityGroupApiMockTest extends BaseNeutronApiMockTest {
    public void testCreateSecurityGroupRule() throws IOException, InterruptedException, URISyntaxException {
       MockWebServer server = mockOpenStackServer();
       server.enqueue(addCommonHeaders(new MockResponse().setBody(stringFromResource("/access.json"))));
+      server.enqueue(addCommonHeaders(new MockResponse().setBody(stringFromResource("/extension_list.json"))));
       server.enqueue(addCommonHeaders(
             new MockResponse().setResponseCode(201).setBody(stringFromResource("/security_group_rule_create_response.json"))));
 
@@ -135,7 +140,9 @@ public class SecurityGroupApiMockTest extends BaseNeutronApiMockTest {
          /*
           * Check request
           */
+         assertEquals(server.getRequestCount(), 3);
          assertAuthentication(server);
+         assertExtensions(server, "/v2.0");
          assertRequest(server.takeRequest(), "POST", "/v2.0/security-group-rules", "/security_group_rule_create_request.json");
 
          /*
@@ -161,6 +168,7 @@ public class SecurityGroupApiMockTest extends BaseNeutronApiMockTest {
    public void testCreateSecurityGroupRuleFail() throws IOException, InterruptedException, URISyntaxException {
       MockWebServer server = mockOpenStackServer();
       server.enqueue(addCommonHeaders(new MockResponse().setBody(stringFromResource("/access.json"))));
+      server.enqueue(addCommonHeaders(new MockResponse().setBody(stringFromResource("/extension_list.json"))));
       server.enqueue(addCommonHeaders(
             new MockResponse().setResponseCode(404)));
 
@@ -186,6 +194,7 @@ public class SecurityGroupApiMockTest extends BaseNeutronApiMockTest {
    public void testListSpecificPageSecurityGroup() throws IOException, InterruptedException, URISyntaxException {
       MockWebServer server = mockOpenStackServer();
       server.enqueue(addCommonHeaders(new MockResponse().setBody(stringFromResource("/access.json"))));
+      server.enqueue(addCommonHeaders(new MockResponse().setBody(stringFromResource("/extension_list.json"))));
       server.enqueue(addCommonHeaders(new MockResponse().setResponseCode(200).setBody(stringFromResource("/security_group_list_response_paged1.json"))));
 
       try {
@@ -197,7 +206,9 @@ public class SecurityGroupApiMockTest extends BaseNeutronApiMockTest {
          /*
           * Check request
           */
+         assertEquals(server.getRequestCount(), 3);
          assertAuthentication(server);
+         assertExtensions(server, "/v2.0");
          assertRequest(server.takeRequest(), "GET", "/v2.0/security-groups?limit=2&marker=abcdefg");
 
          /*
@@ -216,6 +227,7 @@ public class SecurityGroupApiMockTest extends BaseNeutronApiMockTest {
    public void testListSpecificPageSecurityGroupFail() throws IOException, InterruptedException, URISyntaxException {
       MockWebServer server = mockOpenStackServer();
       server.enqueue(addCommonHeaders(new MockResponse().setBody(stringFromResource("/access.json"))));
+      server.enqueue(addCommonHeaders(new MockResponse().setBody(stringFromResource("/extension_list.json"))));
       server.enqueue(addCommonHeaders(new MockResponse().setResponseCode(404)));
 
       try {
@@ -227,7 +239,9 @@ public class SecurityGroupApiMockTest extends BaseNeutronApiMockTest {
          /*
           * Check request
           */
+         assertEquals(server.getRequestCount(), 3);
          assertAuthentication(server);
+         assertExtensions(server, "/v2.0");
          assertRequest(server.takeRequest(), "GET", "/v2.0/security-groups?limit=2&marker=abcdefg");
 
          /*
@@ -243,6 +257,7 @@ public class SecurityGroupApiMockTest extends BaseNeutronApiMockTest {
    public void testListSpecificPageSecurityGroupRule() throws IOException, InterruptedException, URISyntaxException {
       MockWebServer server = mockOpenStackServer();
       server.enqueue(addCommonHeaders(new MockResponse().setBody(stringFromResource("/access.json"))));
+      server.enqueue(addCommonHeaders(new MockResponse().setBody(stringFromResource("/extension_list.json"))));
       server.enqueue(addCommonHeaders(new MockResponse().setResponseCode(200).setBody(stringFromResource("/security_group_rule_list_response_paged1.json"))));
 
       try {
@@ -254,7 +269,9 @@ public class SecurityGroupApiMockTest extends BaseNeutronApiMockTest {
          /*
           * Check request
           */
+         assertEquals(server.getRequestCount(), 3);
          assertAuthentication(server);
+         assertExtensions(server, "/v2.0");
          assertRequest(server.takeRequest(), "GET", "/v2.0/security-group-rules?limit=2&marker=abcdefg");
 
          /*
@@ -273,6 +290,7 @@ public class SecurityGroupApiMockTest extends BaseNeutronApiMockTest {
    public void testListSpecificPageSecurityGroupRuleFail() throws IOException, InterruptedException, URISyntaxException {
       MockWebServer server = mockOpenStackServer();
       server.enqueue(addCommonHeaders(new MockResponse().setBody(stringFromResource("/access.json"))));
+      server.enqueue(addCommonHeaders(new MockResponse().setBody(stringFromResource("/extension_list.json"))));
       server.enqueue(addCommonHeaders(new MockResponse().setResponseCode(404)));
 
       try {
@@ -284,7 +302,9 @@ public class SecurityGroupApiMockTest extends BaseNeutronApiMockTest {
          /*
           * Check request
           */
+         assertEquals(server.getRequestCount(), 3);
          assertAuthentication(server);
+         assertExtensions(server, "/v2.0");
          assertRequest(server.takeRequest(), "GET", "/v2.0/security-group-rules?limit=2&marker=abcdefg");
 
          /*
@@ -300,6 +320,7 @@ public class SecurityGroupApiMockTest extends BaseNeutronApiMockTest {
    public void testListPagedSecurityGroups() throws IOException, InterruptedException, URISyntaxException {
       MockWebServer server = mockOpenStackServer();
       server.enqueue(addCommonHeaders(new MockResponse().setBody(stringFromResource("/access.json"))));
+      server.enqueue(addCommonHeaders(new MockResponse().setBody(stringFromResource("/extension_list.json"))));
       server.enqueue(addCommonHeaders(new MockResponse().setResponseCode(200).setBody(stringFromResource("/security_group_list_response_paged1.json"))));
       server.enqueue(addCommonHeaders(new MockResponse().setResponseCode(200).setBody(stringFromResource("/security_group_list_response_paged2.json"))));
 
@@ -313,8 +334,9 @@ public class SecurityGroupApiMockTest extends BaseNeutronApiMockTest {
          /*
           * Check request
           */
-         assertEquals(server.getRequestCount(), 3);
+         assertEquals(server.getRequestCount(), 4);
          assertAuthentication(server);
+         assertExtensions(server, "/v2.0");
          assertRequest(server.takeRequest(), "GET", "/v2.0/security-groups");
          assertRequest(server.takeRequest(), "GET", "/v2.0/security-groups?marker=71c1e68c-171a-4aa2-aca5-50ea153a3718");
 
@@ -335,6 +357,7 @@ public class SecurityGroupApiMockTest extends BaseNeutronApiMockTest {
    public void testListPagedSecurityGroupsFail() throws IOException, InterruptedException, URISyntaxException {
       MockWebServer server = mockOpenStackServer();
       server.enqueue(addCommonHeaders(new MockResponse().setBody(stringFromResource("/access.json"))));
+      server.enqueue(addCommonHeaders(new MockResponse().setBody(stringFromResource("/extension_list.json"))));
       server.enqueue(addCommonHeaders(new MockResponse().setResponseCode(404)));
 
       try {
@@ -347,8 +370,9 @@ public class SecurityGroupApiMockTest extends BaseNeutronApiMockTest {
          /*
           * Check request
           */
-         assertEquals(server.getRequestCount(), 2);
+         assertEquals(server.getRequestCount(), 3);
          assertAuthentication(server);
+         assertExtensions(server, "/v2.0");
          assertRequest(server.takeRequest(), "GET", "/v2.0/security-groups");
 
          /*
@@ -365,6 +389,7 @@ public class SecurityGroupApiMockTest extends BaseNeutronApiMockTest {
    public void testListPagedSecurityGroupRules() throws IOException, InterruptedException, URISyntaxException {
       MockWebServer server = mockOpenStackServer();
       server.enqueue(addCommonHeaders(new MockResponse().setBody(stringFromResource("/access.json"))));
+      server.enqueue(addCommonHeaders(new MockResponse().setBody(stringFromResource("/extension_list.json"))));
       server.enqueue(addCommonHeaders(new MockResponse().setResponseCode(200).setBody(stringFromResource("/security_group_rule_list_response_paged1.json"))));
       server.enqueue(addCommonHeaders(new MockResponse().setResponseCode(200).setBody(stringFromResource("/security_group_rule_list_response_paged2.json"))));
 
@@ -378,8 +403,9 @@ public class SecurityGroupApiMockTest extends BaseNeutronApiMockTest {
          /*
           * Check request
           */
-         assertEquals(server.getRequestCount(), 3);
+         assertEquals(server.getRequestCount(), 4);
          assertAuthentication(server);
+         assertExtensions(server, "/v2.0");
          assertRequest(server.takeRequest(), "GET", "/v2.0/security-group-rules");
          assertRequest(server.takeRequest(), "GET", "/v2.0/security-group-rules?marker=71c1e68c-171a-4aa2-aca5-50ea153a3718");
 
@@ -400,6 +426,7 @@ public class SecurityGroupApiMockTest extends BaseNeutronApiMockTest {
    public void testListPagedSecurityGroupRulesFail() throws IOException, InterruptedException, URISyntaxException {
       MockWebServer server = mockOpenStackServer();
       server.enqueue(addCommonHeaders(new MockResponse().setBody(stringFromResource("/access.json"))));
+      server.enqueue(addCommonHeaders(new MockResponse().setBody(stringFromResource("/extension_list.json"))));
       server.enqueue(addCommonHeaders(new MockResponse().setResponseCode(404)));
 
       try {
@@ -412,8 +439,9 @@ public class SecurityGroupApiMockTest extends BaseNeutronApiMockTest {
          /*
           * Check request
           */
-         assertEquals(server.getRequestCount(), 2);
+         assertEquals(server.getRequestCount(), 3);
          assertAuthentication(server);
+         assertExtensions(server, "/v2.0");
          assertRequest(server.takeRequest(), "GET", "/v2.0/security-group-rules");
 
          /*
@@ -430,6 +458,7 @@ public class SecurityGroupApiMockTest extends BaseNeutronApiMockTest {
    public void testGetSecurityGroup() throws IOException, InterruptedException, URISyntaxException {
       MockWebServer server = mockOpenStackServer();
       server.enqueue(addCommonHeaders(new MockResponse().setBody(stringFromResource("/access.json"))));
+      server.enqueue(addCommonHeaders(new MockResponse().setBody(stringFromResource("/extension_list.json"))));
       server.enqueue(addCommonHeaders(
             new MockResponse().setResponseCode(201).setBody(stringFromResource("/security_group_get_response.json"))));
 
@@ -442,7 +471,9 @@ public class SecurityGroupApiMockTest extends BaseNeutronApiMockTest {
          /*
           * Check request
           */
+         assertEquals(server.getRequestCount(), 3);
          assertAuthentication(server);
+         assertExtensions(server, "/v2.0");
          assertRequest(server.takeRequest(), "GET", "/v2.0/security-groups/12345");
 
          /*
@@ -463,6 +494,7 @@ public class SecurityGroupApiMockTest extends BaseNeutronApiMockTest {
    public void testGetSecurityGroupFail() throws IOException, InterruptedException, URISyntaxException {
       MockWebServer server = mockOpenStackServer();
       server.enqueue(addCommonHeaders(new MockResponse().setBody(stringFromResource("/access.json"))));
+      server.enqueue(addCommonHeaders(new MockResponse().setBody(stringFromResource("/extension_list.json"))));
       server.enqueue(addCommonHeaders(
             new MockResponse().setResponseCode(404)));
 
@@ -475,7 +507,9 @@ public class SecurityGroupApiMockTest extends BaseNeutronApiMockTest {
          /*
           * Check request
           */
+         assertEquals(server.getRequestCount(), 3);
          assertAuthentication(server);
+         assertExtensions(server, "/v2.0");
          assertRequest(server.takeRequest(), "GET", "/v2.0/security-groups/12345");
 
          /*
@@ -491,6 +525,7 @@ public class SecurityGroupApiMockTest extends BaseNeutronApiMockTest {
    public void testGetSecurityGroupRule() throws IOException, InterruptedException, URISyntaxException {
       MockWebServer server = mockOpenStackServer();
       server.enqueue(addCommonHeaders(new MockResponse().setBody(stringFromResource("/access.json"))));
+      server.enqueue(addCommonHeaders(new MockResponse().setBody(stringFromResource("/extension_list.json"))));
       server.enqueue(addCommonHeaders(
             new MockResponse().setResponseCode(201).setBody(stringFromResource("/security_group_rule_get_response.json"))));
 
@@ -503,7 +538,9 @@ public class SecurityGroupApiMockTest extends BaseNeutronApiMockTest {
          /*
           * Check request
           */
+         assertEquals(server.getRequestCount(), 3);
          assertAuthentication(server);
+         assertExtensions(server, "/v2.0");
          assertRequest(server.takeRequest(), "GET", "/v2.0/security-group-rules/12345");
 
          /*
@@ -524,6 +561,7 @@ public class SecurityGroupApiMockTest extends BaseNeutronApiMockTest {
    public void testGetSecurityGroupRuleFail() throws IOException, InterruptedException, URISyntaxException {
       MockWebServer server = mockOpenStackServer();
       server.enqueue(addCommonHeaders(new MockResponse().setBody(stringFromResource("/access.json"))));
+      server.enqueue(addCommonHeaders(new MockResponse().setBody(stringFromResource("/extension_list.json"))));
       server.enqueue(addCommonHeaders(
             new MockResponse().setResponseCode(404)));
 
@@ -536,7 +574,9 @@ public class SecurityGroupApiMockTest extends BaseNeutronApiMockTest {
          /*
           * Check request
           */
+         assertEquals(server.getRequestCount(), 3);
          assertAuthentication(server);
+         assertExtensions(server, "/v2.0");
          assertRequest(server.takeRequest(), "GET", "/v2.0/security-group-rules/12345");
 
          /*
@@ -552,6 +592,7 @@ public class SecurityGroupApiMockTest extends BaseNeutronApiMockTest {
    public void testDeleteSecurityGroup() throws IOException, InterruptedException, URISyntaxException {
       MockWebServer server = mockOpenStackServer();
       server.enqueue(addCommonHeaders(new MockResponse().setBody(stringFromResource("/access.json"))));
+      server.enqueue(addCommonHeaders(new MockResponse().setBody(stringFromResource("/extension_list.json"))));
       server.enqueue(addCommonHeaders(
             new MockResponse().setResponseCode(201)));
 
@@ -564,7 +605,9 @@ public class SecurityGroupApiMockTest extends BaseNeutronApiMockTest {
          /*
           * Check request
           */
+         assertEquals(server.getRequestCount(), 3);
          assertAuthentication(server);
+         assertExtensions(server, "/v2.0");
          assertRequest(server.takeRequest(), "DELETE", "/v2.0/security-groups/12345");
 
          /*
@@ -579,6 +622,7 @@ public class SecurityGroupApiMockTest extends BaseNeutronApiMockTest {
    public void testDeleteSecurityGroupFail() throws IOException, InterruptedException, URISyntaxException {
       MockWebServer server = mockOpenStackServer();
       server.enqueue(addCommonHeaders(new MockResponse().setBody(stringFromResource("/access.json"))));
+      server.enqueue(addCommonHeaders(new MockResponse().setBody(stringFromResource("/extension_list.json"))));
       server.enqueue(addCommonHeaders(
             new MockResponse().setResponseCode(404)));
 
@@ -591,7 +635,9 @@ public class SecurityGroupApiMockTest extends BaseNeutronApiMockTest {
          /*
           * Check request
           */
+         assertEquals(server.getRequestCount(), 3);
          assertAuthentication(server);
+         assertExtensions(server, "/v2.0");
          assertRequest(server.takeRequest(), "DELETE", "/v2.0/security-groups/12345");
 
          /*
@@ -606,6 +652,7 @@ public class SecurityGroupApiMockTest extends BaseNeutronApiMockTest {
    public void testDeleteSecurityGroupRule() throws IOException, InterruptedException, URISyntaxException {
       MockWebServer server = mockOpenStackServer();
       server.enqueue(addCommonHeaders(new MockResponse().setBody(stringFromResource("/access.json"))));
+      server.enqueue(addCommonHeaders(new MockResponse().setBody(stringFromResource("/extension_list.json"))));
       server.enqueue(addCommonHeaders(
             new MockResponse().setResponseCode(201)));
 
@@ -618,7 +665,9 @@ public class SecurityGroupApiMockTest extends BaseNeutronApiMockTest {
          /*
           * Check request
           */
+         assertEquals(server.getRequestCount(), 3);
          assertAuthentication(server);
+         assertExtensions(server, "/v2.0");
          assertRequest(server.takeRequest(), "DELETE", "/v2.0/security-group-rules/12345");
 
          /*
@@ -633,6 +682,7 @@ public class SecurityGroupApiMockTest extends BaseNeutronApiMockTest {
    public void testDeleteSecurityGroupRuleFail() throws IOException, InterruptedException, URISyntaxException {
       MockWebServer server = mockOpenStackServer();
       server.enqueue(addCommonHeaders(new MockResponse().setBody(stringFromResource("/access.json"))));
+      server.enqueue(addCommonHeaders(new MockResponse().setBody(stringFromResource("/extension_list.json"))));
       server.enqueue(addCommonHeaders(
             new MockResponse().setResponseCode(404)));
 
@@ -645,7 +695,9 @@ public class SecurityGroupApiMockTest extends BaseNeutronApiMockTest {
          /*
           * Check request
           */
+         assertEquals(server.getRequestCount(), 3);
          assertAuthentication(server);
+         assertExtensions(server, "/v2.0");
          assertRequest(server.takeRequest(), "DELETE", "/v2.0/security-group-rules/12345");
 
          /*

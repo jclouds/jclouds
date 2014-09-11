@@ -16,12 +16,13 @@
  */
 package org.jclouds.openstack.neutron.v2.config;
 
-import com.google.common.cache.CacheBuilder;
-import com.google.common.cache.CacheLoader;
-import com.google.common.cache.LoadingCache;
-import com.google.common.collect.ImmutableMultimap;
-import com.google.common.collect.Multimap;
-import com.google.inject.Provides;
+import java.net.URI;
+import java.util.Set;
+import java.util.concurrent.TimeUnit;
+
+import javax.inject.Provider;
+import javax.inject.Singleton;
+
 import org.jclouds.http.HttpErrorHandler;
 import org.jclouds.http.annotation.ClientError;
 import org.jclouds.http.annotation.Redirection;
@@ -29,6 +30,7 @@ import org.jclouds.http.annotation.ServerError;
 import org.jclouds.json.config.GsonModule.DateAdapter;
 import org.jclouds.json.config.GsonModule.Iso8601DateAdapter;
 import org.jclouds.openstack.neutron.v2.NeutronApi;
+import org.jclouds.openstack.neutron.v2.extensions.ExtensionNamespaces;
 import org.jclouds.openstack.neutron.v2.handlers.NeutronErrorHandler;
 import org.jclouds.openstack.v2_0.domain.Extension;
 import org.jclouds.openstack.v2_0.functions.PresentWhenExtensionAnnotationNamespaceEqualsAnyNamespaceInExtensionsSet;
@@ -36,11 +38,12 @@ import org.jclouds.rest.ConfiguresHttpApi;
 import org.jclouds.rest.config.HttpApiModule;
 import org.jclouds.rest.functions.ImplicitOptionalConverter;
 
-import javax.inject.Provider;
-import javax.inject.Singleton;
-import java.net.URI;
-import java.util.Set;
-import java.util.concurrent.TimeUnit;
+import com.google.common.cache.CacheBuilder;
+import com.google.common.cache.CacheLoader;
+import com.google.common.cache.LoadingCache;
+import com.google.common.collect.ImmutableMultimap;
+import com.google.common.collect.Multimap;
+import com.google.inject.Provides;
 
 /**
  * Configures the Neutron connection.
@@ -60,6 +63,10 @@ public class NeutronHttpApiModule extends HttpApiModule<NeutronApi> {
    @Singleton
    public Multimap<URI, URI> aliases() {
        return ImmutableMultimap.<URI, URI>builder()
+          .put(URI.create(ExtensionNamespaces.L3_ROUTER),
+               URI.create("http://docs.openstack.org/ext/neutron/router/api/v1.0"))
+          .put(URI.create(ExtensionNamespaces.SECURITY_GROUPS),
+               URI.create("http://docs.openstack.org/ext/securitygroups/api/v2.0"))
           .build();
    }
 

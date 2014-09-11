@@ -47,6 +47,7 @@ public class FloatingIPApiMockTest extends BaseNeutronApiMockTest {
    public void testCreateFloatingIP() throws IOException, InterruptedException, URISyntaxException {
       MockWebServer server = mockOpenStackServer();
       server.enqueue(addCommonHeaders(new MockResponse().setBody(stringFromResource("/access.json"))));
+      server.enqueue(addCommonHeaders(new MockResponse().setBody(stringFromResource("/extension_list.json"))));
       server.enqueue(addCommonHeaders(
             new MockResponse().setResponseCode(201).setBody(stringFromResource("/floatingip_create_response.json"))));
 
@@ -63,7 +64,9 @@ public class FloatingIPApiMockTest extends BaseNeutronApiMockTest {
          /*
           * Check request
           */
+         assertEquals(server.getRequestCount(), 3);
          assertAuthentication(server);
+         assertExtensions(server, "/v2.0");
          assertRequest(server.takeRequest(), "POST", "/v2.0/floatingips", "/floatingip_create_request.json");
 
          /*
@@ -87,6 +90,7 @@ public class FloatingIPApiMockTest extends BaseNeutronApiMockTest {
    public void testCreateFloatingIPFail() throws IOException, InterruptedException, URISyntaxException {
       MockWebServer server = mockOpenStackServer();
       server.enqueue(addCommonHeaders(new MockResponse().setBody(stringFromResource("/access.json"))));
+      server.enqueue(addCommonHeaders(new MockResponse().setBody(stringFromResource("/extension_list.json"))));
       server.enqueue(addCommonHeaders(
             new MockResponse().setResponseCode(404)));
 
@@ -107,6 +111,7 @@ public class FloatingIPApiMockTest extends BaseNeutronApiMockTest {
    public void testListSpecificPageFloatingIP() throws IOException, InterruptedException, URISyntaxException {
       MockWebServer server = mockOpenStackServer();
       server.enqueue(addCommonHeaders(new MockResponse().setBody(stringFromResource("/access.json"))));
+      server.enqueue(addCommonHeaders(new MockResponse().setBody(stringFromResource("/extension_list.json"))));
       server.enqueue(addCommonHeaders(new MockResponse().setResponseCode(200).setBody(stringFromResource("/floatingip_list_response_paged1.json"))));
 
       try {
@@ -118,7 +123,9 @@ public class FloatingIPApiMockTest extends BaseNeutronApiMockTest {
          /*
           * Check request
           */
+         assertEquals(server.getRequestCount(), 3);
          assertAuthentication(server);
+         assertExtensions(server, "/v2.0");
          assertRequest(server.takeRequest(), "GET", "/v2.0/floatingips?limit=2&marker=abcdefg");
 
          /*
@@ -136,6 +143,7 @@ public class FloatingIPApiMockTest extends BaseNeutronApiMockTest {
    public void testListSpecificPageFloatingIPFail() throws IOException, InterruptedException, URISyntaxException {
       MockWebServer server = mockOpenStackServer();
       server.enqueue(addCommonHeaders(new MockResponse().setBody(stringFromResource("/access.json"))));
+      server.enqueue(addCommonHeaders(new MockResponse().setBody(stringFromResource("/extension_list.json"))));
       server.enqueue(addCommonHeaders(new MockResponse().setResponseCode(404)));
 
       try {
@@ -147,7 +155,9 @@ public class FloatingIPApiMockTest extends BaseNeutronApiMockTest {
          /*
           * Check request
           */
+         assertEquals(server.getRequestCount(), 3);
          assertAuthentication(server);
+         assertExtensions(server, "/v2.0");
          assertRequest(server.takeRequest(), "GET", "/v2.0/floatingips?limit=2&marker=abcdefg");
 
          /*
@@ -163,6 +173,7 @@ public class FloatingIPApiMockTest extends BaseNeutronApiMockTest {
    public void testListPagedFloatingIP() throws IOException, InterruptedException, URISyntaxException {
       MockWebServer server = mockOpenStackServer();
       server.enqueue(addCommonHeaders(new MockResponse().setBody(stringFromResource("/access.json"))));
+      server.enqueue(addCommonHeaders(new MockResponse().setBody(stringFromResource("/extension_list.json"))));
       server.enqueue(addCommonHeaders(new MockResponse().setResponseCode(200).setBody(stringFromResource("/floatingip_list_response_paged1.json"))));
       server.enqueue(addCommonHeaders(new MockResponse().setResponseCode(200).setBody(stringFromResource("/floatingip_list_response_paged2.json"))));
 
@@ -176,8 +187,9 @@ public class FloatingIPApiMockTest extends BaseNeutronApiMockTest {
          /*
           * Check request
           */
-         assertEquals(server.getRequestCount(), 3);
+         assertEquals(server.getRequestCount(), 4);
          assertAuthentication(server);
+         assertExtensions(server, "/v2.0");
          assertRequest(server.takeRequest(), "GET", "/v2.0/floatingips");
          assertRequest(server.takeRequest(), "GET", "/v2.0/floatingips?marker=71c1e68c-171a-4aa2-aca5-50ea153a3718");
 
@@ -196,6 +208,7 @@ public class FloatingIPApiMockTest extends BaseNeutronApiMockTest {
    public void testListPagedFloatingIPFail() throws IOException, InterruptedException, URISyntaxException {
       MockWebServer server = mockOpenStackServer();
       server.enqueue(addCommonHeaders(new MockResponse().setBody(stringFromResource("/access.json"))));
+      server.enqueue(addCommonHeaders(new MockResponse().setBody(stringFromResource("/extension_list.json"))));
       server.enqueue(addCommonHeaders(new MockResponse().setResponseCode(404)));
 
       try {
@@ -208,8 +221,9 @@ public class FloatingIPApiMockTest extends BaseNeutronApiMockTest {
          /*
           * Check request
           */
-         assertEquals(server.getRequestCount(), 2);
+         assertEquals(server.getRequestCount(), 3);
          assertAuthentication(server);
+         assertExtensions(server, "/v2.0");
          assertRequest(server.takeRequest(), "GET", "/v2.0/floatingips");
 
          /*
@@ -225,6 +239,7 @@ public class FloatingIPApiMockTest extends BaseNeutronApiMockTest {
    public void testGetFloatingIP() throws IOException, InterruptedException, URISyntaxException {
       MockWebServer server = mockOpenStackServer();
       server.enqueue(addCommonHeaders(new MockResponse().setBody(stringFromResource("/access.json"))));
+      server.enqueue(addCommonHeaders(new MockResponse().setBody(stringFromResource("/extension_list.json"))));
       server.enqueue(addCommonHeaders(
             new MockResponse().setResponseCode(201).setBody(stringFromResource("/floatingip_get_response.json"))));
 
@@ -237,7 +252,9 @@ public class FloatingIPApiMockTest extends BaseNeutronApiMockTest {
          /*
           * Check request
           */
+         assertEquals(server.getRequestCount(), 3);
          assertAuthentication(server);
+         assertExtensions(server, "/v2.0");
          assertRequest(server.takeRequest(), "GET", "/v2.0/floatingips/12345");
 
          /*
@@ -260,6 +277,7 @@ public class FloatingIPApiMockTest extends BaseNeutronApiMockTest {
    public void testGetFloatingIPFail() throws IOException, InterruptedException, URISyntaxException {
       MockWebServer server = mockOpenStackServer();
       server.enqueue(addCommonHeaders(new MockResponse().setBody(stringFromResource("/access.json"))));
+      server.enqueue(addCommonHeaders(new MockResponse().setBody(stringFromResource("/extension_list.json"))));
       server.enqueue(addCommonHeaders(
             new MockResponse().setResponseCode(404)));
 
@@ -272,7 +290,9 @@ public class FloatingIPApiMockTest extends BaseNeutronApiMockTest {
          /*
           * Check request
           */
+         assertEquals(server.getRequestCount(), 3);
          assertAuthentication(server);
+         assertExtensions(server, "/v2.0");
          assertRequest(server.takeRequest(), "GET", "/v2.0/floatingips/12345");
 
          /*
@@ -288,6 +308,7 @@ public class FloatingIPApiMockTest extends BaseNeutronApiMockTest {
    public void testUpdateFloatingIP() throws IOException, InterruptedException, URISyntaxException {
       MockWebServer server = mockOpenStackServer();
       server.enqueue(addCommonHeaders(new MockResponse().setBody(stringFromResource("/access.json"))));
+      server.enqueue(addCommonHeaders(new MockResponse().setBody(stringFromResource("/extension_list.json"))));
       server.enqueue(addCommonHeaders(
             new MockResponse().setResponseCode(201).setBody(stringFromResource("/floatingip_update_response.json"))));
 
@@ -304,7 +325,9 @@ public class FloatingIPApiMockTest extends BaseNeutronApiMockTest {
          /*
           * Check request
           */
+         assertEquals(server.getRequestCount(), 3);
          assertAuthentication(server);
+         assertExtensions(server, "/v2.0");
          assertRequest(server.takeRequest(), "PUT", "/v2.0/floatingips/12345", "/floatingip_update_request.json");
 
          /*
@@ -321,6 +344,7 @@ public class FloatingIPApiMockTest extends BaseNeutronApiMockTest {
    public void testUpdateFloatingIPDissociate() throws IOException, InterruptedException, URISyntaxException {
       MockWebServer server = mockOpenStackServer();
       server.enqueue(addCommonHeaders(new MockResponse().setBody(stringFromResource("/access.json"))));
+      server.enqueue(addCommonHeaders(new MockResponse().setBody(stringFromResource("/extension_list.json"))));
       server.enqueue(addCommonHeaders(
             new MockResponse().setResponseCode(201).setBody(stringFromResource("/floatingip_update_dissociate_response.json"))));
 
@@ -335,7 +359,9 @@ public class FloatingIPApiMockTest extends BaseNeutronApiMockTest {
          /*
           * Check request
           */
+         assertEquals(server.getRequestCount(), 3);
          assertAuthentication(server);
+         assertExtensions(server, "/v2.0");
          assertRequest(server.takeRequest(), "PUT", "/v2.0/floatingips/12345", "/floatingip_update_dissociate_request.json");
 
          /*
@@ -352,6 +378,7 @@ public class FloatingIPApiMockTest extends BaseNeutronApiMockTest {
    public void testUpdateFloatingIPFail() throws IOException, InterruptedException, URISyntaxException {
       MockWebServer server = mockOpenStackServer();
       server.enqueue(addCommonHeaders(new MockResponse().setBody(stringFromResource("/access.json"))));
+      server.enqueue(addCommonHeaders(new MockResponse().setBody(stringFromResource("/extension_list.json"))));
       server.enqueue(addCommonHeaders(
             new MockResponse().setResponseCode(404)));
 
@@ -368,7 +395,9 @@ public class FloatingIPApiMockTest extends BaseNeutronApiMockTest {
          /*
           * Check request
           */
+         assertEquals(server.getRequestCount(), 3);
          assertAuthentication(server);
+         assertExtensions(server, "/v2.0");
          assertRequest(server.takeRequest(), "PUT", "/v2.0/floatingips/12345", "/floatingip_update_request.json");
 
          /*
@@ -383,6 +412,7 @@ public class FloatingIPApiMockTest extends BaseNeutronApiMockTest {
    public void testDeleteFloatingIP() throws IOException, InterruptedException, URISyntaxException {
       MockWebServer server = mockOpenStackServer();
       server.enqueue(addCommonHeaders(new MockResponse().setBody(stringFromResource("/access.json"))));
+      server.enqueue(addCommonHeaders(new MockResponse().setBody(stringFromResource("/extension_list.json"))));
       server.enqueue(addCommonHeaders(
             new MockResponse().setResponseCode(201)));
 
@@ -395,7 +425,9 @@ public class FloatingIPApiMockTest extends BaseNeutronApiMockTest {
          /*
           * Check request
           */
+         assertEquals(server.getRequestCount(), 3);
          assertAuthentication(server);
+         assertExtensions(server, "/v2.0");
          assertRequest(server.takeRequest(), "DELETE", "/v2.0/floatingips/12345");
 
          /*
@@ -410,6 +442,7 @@ public class FloatingIPApiMockTest extends BaseNeutronApiMockTest {
    public void testDeleteFloatingIPFail() throws IOException, InterruptedException, URISyntaxException {
       MockWebServer server = mockOpenStackServer();
       server.enqueue(addCommonHeaders(new MockResponse().setBody(stringFromResource("/access.json"))));
+      server.enqueue(addCommonHeaders(new MockResponse().setBody(stringFromResource("/extension_list.json"))));
       server.enqueue(addCommonHeaders(
             new MockResponse().setResponseCode(404)));
 
@@ -422,7 +455,9 @@ public class FloatingIPApiMockTest extends BaseNeutronApiMockTest {
          /*
           * Check request
           */
+         assertEquals(server.getRequestCount(), 3);
          assertAuthentication(server);
+         assertExtensions(server, "/v2.0");
          assertRequest(server.takeRequest(), "DELETE", "/v2.0/floatingips/12345");
 
          /*
