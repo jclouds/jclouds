@@ -404,7 +404,7 @@ public class Subnet {
       }
 
       /**
-       * @return a CreateOptions constructed with this Builder.
+       * @return a CreateSubnet constructed with this Builder.
        */
       public CreateSubnet build() {
          return new CreateSubnet(subnet);
@@ -426,7 +426,7 @@ public class Subnet {
       }
 
       /**
-       * @return a UpdateOptions constructed with this Builder.
+       * @return a UpdateSubnet constructed with this Builder.
        */
       public UpdateSubnet build() {
          return new UpdateSubnet(subnet);

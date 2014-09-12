@@ -258,7 +258,7 @@ public class FloatingIP {
       }
 
       /**
-       * @return a CreateOptions constructed with this Builder.
+       * @return a CreateFloatingIP constructed with this Builder.
        */
       public CreateFloatingIP build() {
          return new CreateFloatingIP(floatingIP);
@@ -292,7 +292,7 @@ public class FloatingIP {
       }
 
       /**
-       * @return a UpdateOptions constructed with this Builder.
+       * @return a UpdateFloatingIP constructed with this Builder.
        */
       public UpdateFloatingIP build() {
          return new UpdateFloatingIP(floatingIP);

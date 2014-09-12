@@ -196,7 +196,7 @@ public class SecurityGroup {
       }
 
       /**
-       * @return a CreateOptions constructed with this Builder.
+       * @return a CreateSecurityGroup constructed with this Builder.
        */
       public CreateSecurityGroup build() {
          return new CreateSecurityGroup(securityGroup);

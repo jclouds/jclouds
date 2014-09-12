@@ -237,7 +237,7 @@ public class Router {
       }
 
       /**
-       * @return a CreateOptions constructed with this Builder.
+       * @return a CreateRouter constructed with this Builder.
        */
       public CreateRouter build() {
          return new CreateRouter(router);
@@ -256,7 +256,7 @@ public class Router {
       }
 
       /**
-       * @return a UpdateOptions constructed with this Builder.
+       * @return a UpdateRouter constructed with this Builder.
        */
       public UpdateRouter build() {
          return new UpdateRouter(router);

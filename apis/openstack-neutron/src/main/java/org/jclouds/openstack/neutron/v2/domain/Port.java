@@ -702,7 +702,7 @@ public class Port {
       }
 
       /**
-       * @return a CreateOptions constructed with this Builder.
+       * @return a CreatePort constructed with this Builder.
        */
       public CreatePort build() {
          return new CreatePort(port);
@@ -724,7 +724,7 @@ public class Port {
       }
 
       /**
-       * @return a UpdateOptions constructed with this Builder.
+       * @return a UpdatePort constructed with this Builder.
        */
       public UpdatePort build() {
          return new UpdatePort(port);
