@@ -196,6 +196,13 @@ public class NovaTemplateOptionsTest {
    }
 
    @Test
+   public void testAvailabilityZone() {
+      NovaTemplateOptions options = new NovaTemplateOptions();
+      options.availabilityZone("nova");
+      assertEquals(options.getAvailabilityZone(), "nova");
+   }
+
+   @Test
    public void testDiskConfig() {
        NovaTemplateOptions options = new NovaTemplateOptions();
        options.diskConfig(Server.DISK_CONFIG_AUTO);

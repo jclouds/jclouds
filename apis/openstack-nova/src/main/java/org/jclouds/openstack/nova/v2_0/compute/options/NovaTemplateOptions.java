@@ -78,6 +78,7 @@ public class NovaTemplateOptions extends TemplateOptions implements Cloneable {
 
          eTo.configDrive(getConfigDrive());
          eTo.novaNetworks(getNovaNetworks());
+         eTo.availabilityZone(getAvailabilityZone());
       }
    }
 
@@ -89,6 +90,7 @@ public class NovaTemplateOptions extends TemplateOptions implements Cloneable {
    protected String diskConfig;
    protected boolean configDrive;
    protected Set<Network> novaNetworks;
+   protected String availabilityZone;
 
    @Override
    public boolean equals(Object o) {
@@ -104,12 +106,14 @@ public class NovaTemplateOptions extends TemplateOptions implements Cloneable {
             && Arrays.equals(this.userData, that.userData)
             && equal(this.diskConfig, that.diskConfig)
             && equal(this.configDrive, that.configDrive)
-            && equal(this.novaNetworks, that.novaNetworks);
+            && equal(this.novaNetworks, that.novaNetworks)
+            && equal(this.availabilityZone, that.availabilityZone);
    }
 
    @Override
    public int hashCode() {
-      return Objects.hashCode(super.hashCode(), autoAssignFloatingIp, floatingIpPoolNames, generateKeyPair, keyPairName, userData, diskConfig, configDrive, novaNetworks);
+      return Objects.hashCode(super.hashCode(), autoAssignFloatingIp, floatingIpPoolNames, generateKeyPair, keyPairName, 
+              userData, diskConfig, configDrive, novaNetworks, availabilityZone);
    }
 
    @Override
@@ -126,6 +130,7 @@ public class NovaTemplateOptions extends TemplateOptions implements Cloneable {
       toString.add("diskConfig", diskConfig);
       toString.add("configDrive", configDrive);
       toString.add("novaNetworks", novaNetworks);
+      toString.add("availabilityZone", availabilityZone);
       return toString;
    }
 
@@ -207,6 +212,14 @@ public class NovaTemplateOptions extends TemplateOptions implements Cloneable {
    }
 
    /**
+    * @see CreateServerOptions#getAvailabilityZone()
+    */
+   public NovaTemplateOptions availabilityZone(String availabilityZone) {
+      this.availabilityZone = availabilityZone;
+      return this;
+   }
+
+   /**
     * The floating IP pool name(s) to use when allocating a FloatingIP. Applicable
     * only if #shouldAutoAssignFloatingIp() returns true. If not set will attempt to
     * use whatever FloatingIP(s) can be found regardless of which pool they originated
@@ -273,6 +286,13 @@ public class NovaTemplateOptions extends TemplateOptions implements Cloneable {
     */
    public Set<Network> getNovaNetworks() {
       return novaNetworks;
+   }
+
+   /**
+    * @see CreateServerOptions#getAvailabilityZone()
+    */
+   public String getAvailabilityZone() {
+      return availabilityZone;
    }
 
    public static class Builder {
@@ -466,6 +486,14 @@ public class NovaTemplateOptions extends TemplateOptions implements Cloneable {
       public static NovaTemplateOptions novaNetworks(Set<Network> novaNetworks) {
          NovaTemplateOptions options = new NovaTemplateOptions();
          return NovaTemplateOptions.class.cast(options.novaNetworks(novaNetworks));
+      }
+
+      /**
+       * @see NovaTemplateOptions#getAvailabilityZone()
+       */
+      public static NovaTemplateOptions availabilityZone(String availabilityZone) {
+         NovaTemplateOptions options = new NovaTemplateOptions();
+         return options.availabilityZone(availabilityZone);
       }
    }
 
