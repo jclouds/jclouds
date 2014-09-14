@@ -345,6 +345,11 @@ public class CreateServerOptions implements MapBinder {
       return keyName;
    }
 
+   /**
+    * The availability zone in which to launch the server.
+    *
+    * @return the availability zone to be used
+    */
    public String getAvailabilityZone() {
       return availabilityZone;
    }

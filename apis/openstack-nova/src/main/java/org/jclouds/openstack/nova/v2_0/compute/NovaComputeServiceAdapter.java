@@ -109,6 +109,7 @@ public class NovaComputeServiceAdapter implements
       options.userData(templateOptions.getUserData());
       options.diskConfig(templateOptions.getDiskConfig());
       options.configDrive(templateOptions.getConfigDrive());
+      options.availabilityZone(templateOptions.getAvailabilityZone());
       if (templateOptions.getNovaNetworks() != null) {
          options.novaNetworks(templateOptions.getNovaNetworks());
       }
