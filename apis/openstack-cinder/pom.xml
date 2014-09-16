@@ -86,7 +86,7 @@
       <scope>test</scope>
     </dependency>
   </dependencies>
-  
+
   <profiles>
     <profile>
       <id>live</id>
@@ -110,8 +110,6 @@
                     <test.openstack-cinder.identity>${test.openstack-cinder.identity}</test.openstack-cinder.identity>
                     <test.openstack-cinder.credential>${test.openstack-cinder.credential}</test.openstack-cinder.credential>
                     <test.jclouds.keystone.credential-type>${test.jclouds.keystone.credential-type}</test.jclouds.keystone.credential-type>
-                    <jclouds.blobstore.httpstream.url>${jclouds.blobstore.httpstream.url}</jclouds.blobstore.httpstream.url>
-                    <jclouds.blobstore.httpstream.md5>${jclouds.blobstore.httpstream.md5}</jclouds.blobstore.httpstream.md5>
                   </systemPropertyVariables>
                 </configuration>
               </execution>

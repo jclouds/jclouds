@@ -52,15 +52,6 @@
         </layout>
     </appender>
     <!-- A time/date based rolling appender -->
-    <appender name="BLOBSTOREFILE" class="org.apache.log4j.DailyRollingFileAppender">
-        <param name="File" value="target/test-data/jclouds-blobstore.log" />
-        <param name="Append" value="true" />
-        <param name="DatePattern" value="'.'yyyy-MM-dd" />
-        <param name="Threshold" value="TRACE" />
-        <layout class="org.apache.log4j.PatternLayout">
-            <param name="ConversionPattern" value="%d %-5p [%c] (%t) %m%n" />
-        </layout>
-    </appender>
 
     <!-- A time/date based rolling appender -->
     <appender name="COMPUTEFILE" class="org.apache.log4j.DailyRollingFileAppender">
@@ -121,10 +112,6 @@
     <appender name="ASYNCWIRE" class="org.apache.log4j.AsyncAppender">
         <appender-ref ref="WIREFILE" />
     </appender>
-
-    <appender name="ASYNCBLOBSTORE" class="org.apache.log4j.AsyncAppender">
-        <appender-ref ref="BLOBSTOREFILE" />
-    </appender>
     <!-- ================ -->
     <!-- Limit categories -->
     <!-- ================ -->
@@ -146,10 +133,6 @@
     <category name="jclouds.wire">
         <priority value="DEBUG" />
         <appender-ref ref="ASYNCWIRE" />
-    </category>
-    <category name="jclouds.blobstore">
-        <priority value="DEBUG" />
-        <appender-ref ref="ASYNCBLOBSTORE" />
     </category>
     <category name="jclouds.compute">
         <priority value="TRACE" />
