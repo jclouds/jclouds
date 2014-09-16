@@ -54,6 +54,7 @@ import org.jclouds.io.ContentMetadataCodec;
 import org.jclouds.rest.ConfiguresHttpApi;
 import org.jclouds.rest.config.HttpApiModule;
 
+import com.google.common.base.Charsets;
 import com.google.common.base.Function;
 import com.google.common.base.Supplier;
 import com.google.common.util.concurrent.ListeningExecutorService;
@@ -118,7 +119,7 @@ public class DynECTHttpApiModule extends HttpApiModule<DynECTApi> {
          HttpResponse response = super.invoke(connection);
          if (response.getStatusCode() == 200) {
             byte[] data = closeClientButKeepContentStream(response);
-            String message = data != null ? new String(data, "UTF-8") : null;
+            String message = data != null ? new String(data, Charsets.UTF_8) : null;
             if (message != null && !message.startsWith("{\"status\": \"success\"")) {
                response = response.toBuilder().statusCode(400).build();
             }
