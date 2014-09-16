@@ -280,7 +280,7 @@ public class JavaUrlHttpCommandExecutorService extends BaseHttpCommandExecutorSe
          // HttpUrlConnection strips Content-Length: 0 without setDoOutput(true)
          String method = connection.getRequestMethod();
          if ("POST".equals(method) || "PUT".equals(method)) {
-            connection.setFixedLengthStreamingMode(0);
+            connection.setFixedLengthStreamingMode(0L);
             connection.setDoOutput(true);
          }
       }

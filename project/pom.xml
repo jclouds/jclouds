@@ -434,6 +434,7 @@
             <exclude>**/.gitignore</exclude>
             <exclude>**/.gitattributes</exclude>
             <exclude>**/.java-version</exclude>
+            <exclude>**/modernizer_exclusions.txt</exclude>
 
             <!-- Temporary files generated on CloudBees slaves -->
             <exclude>.repository/**</exclude>
@@ -712,6 +713,24 @@
           <failOnViolation>true</failOnViolation>
           <failsOnError>true</failsOnError>
           <violationSeverity>warning</violationSeverity>
+        </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.gaul</groupId>
+        <artifactId>modernizer-maven-plugin</artifactId>
+        <version>1.1.0</version>
+        <executions>
+          <execution>
+            <id>modernizer</id>
+            <phase>validate</phase>
+            <goals>
+              <goal>modernizer</goal>
+            </goals>
+          </execution>
+        </executions>
+        <configuration>
+          <javaVersion>1.7</javaVersion>
+          <exclusionsFile>resources/modernizer_exclusions.txt</exclusionsFile>
         </configuration>
       </plugin>
     </plugins>
@@ -1106,6 +1125,17 @@
                 </goals>
               </execution>
             </executions>
+          </plugin>
+          <plugin>
+            <groupId>org.gaul</groupId>
+            <artifactId>modernizer-maven-plugin</artifactId>
+            <dependencies>
+              <dependency>
+                <groupId>org.apache.jclouds</groupId>
+                <artifactId>jclouds-resources</artifactId>
+                <version>${project.version}</version>
+              </dependency>
+            </dependencies>
           </plugin>
         </plugins>
       </build>
