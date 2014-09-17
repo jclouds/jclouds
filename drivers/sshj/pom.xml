@@ -113,6 +113,28 @@
       <groupId>com.jcraft</groupId>
       <artifactId>jsch.agentproxy.connector-factory</artifactId>
       <version>0.0.7</version>
+      <exclusions>
+        <!-- provided versions are LGPL-only -->
+        <exclusion>
+          <groupId>net.java.dev.jna</groupId>
+          <artifactId>jna</artifactId>
+        </exclusion>
+        <exclusion>
+          <groupId>net.java.dev.jna</groupId>
+          <artifactId>platform</artifactId>
+        </exclusion>
+      </exclusions>
+    </dependency>
+    <!-- dual-licensed under LGPL and ASL 2 -->
+    <dependency>
+      <groupId>net.java.dev.jna</groupId>
+      <artifactId>jna</artifactId>
+      <version>4.0.0</version>
+    </dependency>
+    <dependency>
+      <groupId>net.java.dev.jna</groupId>
+      <artifactId>jna-platform</artifactId>
+      <version>4.0.0</version>
     </dependency>
   </dependencies>
 
