@@ -16,6 +16,7 @@
  */
 package org.jclouds.docker.binders;
 
+import com.google.common.base.Charsets;
 import com.google.common.io.CharStreams;
 import org.jclouds.http.HttpRequest;
 import org.testng.annotations.Test;
@@ -37,7 +38,7 @@ public class BindInputStreamToRequestTest {
 
       HttpRequest request = HttpRequest.builder().method("GET").endpoint("http://test").build();
       request = binder.bindToRequest(request, File.createTempFile("dockerfile", ""));
-      String rawContent = CharStreams.toString(new InputStreamReader((FileInputStream) request.getPayload().getRawContent(), "UTF-8"));
+      String rawContent = CharStreams.toString(new InputStreamReader((FileInputStream) request.getPayload().getRawContent(), Charsets.UTF_8));
       assertTrue(rawContent.startsWith("Dockerfile"));
       assertEquals(request.getPayload().getContentMetadata().getContentType(), "application/tar");
    }
@@ -48,7 +49,7 @@ public class BindInputStreamToRequestTest {
 
       HttpRequest request = HttpRequest.builder().method("GET").endpoint("http://test").build();
       request = binder.bindToRequest(request, new Object());
-      String rawContent = CharStreams.toString(new InputStreamReader((FileInputStream) request.getPayload().getRawContent(), "UTF-8"));
+      String rawContent = CharStreams.toString(new InputStreamReader((FileInputStream) request.getPayload().getRawContent(), Charsets.UTF_8));
       assertTrue(rawContent.startsWith("Dockerfile"));
       assertEquals(request.getPayload().getContentMetadata().getContentType(), "application/tar");
    }
@@ -59,7 +60,7 @@ public class BindInputStreamToRequestTest {
 
       HttpRequest request = HttpRequest.builder().method("GET").endpoint("http://test").build();
       request = binder.bindToRequest(request, null);
-      String rawContent = CharStreams.toString(new InputStreamReader((FileInputStream) request.getPayload().getRawContent(), "UTF-8"));
+      String rawContent = CharStreams.toString(new InputStreamReader((FileInputStream) request.getPayload().getRawContent(), Charsets.UTF_8));
       assertTrue(rawContent.startsWith("Dockerfile"));
       assertEquals(request.getPayload().getContentMetadata().getContentType(), "application/tar");
    }
