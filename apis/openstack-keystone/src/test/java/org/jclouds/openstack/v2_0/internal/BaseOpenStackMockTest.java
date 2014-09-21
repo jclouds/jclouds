@@ -34,6 +34,7 @@ import org.jclouds.ContextBuilder;
 import org.jclouds.concurrent.config.ExecutorServiceModule;
 import org.jclouds.util.Strings2;
 
+import com.google.common.base.Charsets;
 import com.google.common.base.Throwables;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.net.HttpHeaders;
@@ -223,7 +224,7 @@ public class BaseOpenStackMockTest<A extends Closeable> {
       JsonElement requestJson = null;  // to be compared
       JsonElement resourceJson;        // to be compared
       try {
-         requestJson = parser.parse(new String(request.getBody(), "UTF-8"));
+         requestJson = parser.parse(new String(request.getBody(), Charsets.UTF_8));
       } catch (Exception e) {
          Throwables.propagate(e);
       }

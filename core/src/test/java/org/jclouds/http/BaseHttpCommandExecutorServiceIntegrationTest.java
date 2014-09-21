@@ -42,6 +42,7 @@ import org.testng.annotations.BeforeClass;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
+import com.google.common.base.Charsets;
 import com.google.common.base.Throwables;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Multimap;
@@ -299,7 +300,7 @@ public abstract class BaseHttpCommandExecutorServiceIntegrationTest extends Base
          String result = client.post("", "foo");
          // Verify that the body is properly populated
          RecordedRequest request = server.takeRequest();
-         assertEquals(new String(request.getBody(), "UTF-8"), "foo");
+         assertEquals(new String(request.getBody(), Charsets.UTF_8), "foo");
          assertEquals(result, "fooPOST");
       } finally {
          close(client, true);
@@ -315,7 +316,7 @@ public abstract class BaseHttpCommandExecutorServiceIntegrationTest extends Base
          client.postNothing("");
          assertEquals(server.getRequestCount(), 1);
          RecordedRequest request = server.takeRequest();
-         assertEquals(new String(request.getBody(), "UTF-8"), "");
+         assertEquals(new String(request.getBody(), Charsets.UTF_8), "");
       } finally {
          close(client, true);
          server.shutdown();
@@ -333,9 +334,9 @@ public abstract class BaseHttpCommandExecutorServiceIntegrationTest extends Base
          assertEquals(result, "fooPOST");
          // Verify that the body was properly sent in the two requests
          RecordedRequest request = server.takeRequest();
-         assertEquals(new String(request.getBody(), "UTF-8"), "foo");
+         assertEquals(new String(request.getBody(), Charsets.UTF_8), "foo");
          request = server.takeRequest();
-         assertEquals(new String(request.getBody(), "UTF-8"), "foo");
+         assertEquals(new String(request.getBody(), Charsets.UTF_8), "foo");
       } finally {
          close(client, true);
          server.shutdown();
@@ -356,9 +357,9 @@ public abstract class BaseHttpCommandExecutorServiceIntegrationTest extends Base
          assertEquals(redirectTarget.getRequestCount(), 1);
          // Verify that the body was populated after the redirect
          RecordedRequest request = server.takeRequest();
-         assertEquals(new String(request.getBody(), "UTF-8"), "foo");
+         assertEquals(new String(request.getBody(), Charsets.UTF_8), "foo");
          request = redirectTarget.takeRequest();
-         assertEquals(new String(request.getBody(), "UTF-8"), "foo");
+         assertEquals(new String(request.getBody(), Charsets.UTF_8), "foo");
       } finally {
          close(client, true);
          redirectTarget.shutdown();
@@ -374,7 +375,7 @@ public abstract class BaseHttpCommandExecutorServiceIntegrationTest extends Base
          String result = client.postAsInputStream("", "foo");
          // Verify that the body is properly populated
          RecordedRequest request = server.takeRequest();
-         assertEquals(new String(request.getBody(), "UTF-8"), "foo");
+         assertEquals(new String(request.getBody(), Charsets.UTF_8), "foo");
          assertEquals(result, "fooPOST");
       } finally {
          close(client, true);
@@ -405,7 +406,7 @@ public abstract class BaseHttpCommandExecutorServiceIntegrationTest extends Base
          String result = client.postJson("", "foo");
          // Verify that the body is properly populated
          RecordedRequest request = server.takeRequest();
-         assertEquals(new String(request.getBody(), "UTF-8"), "{\"key\":\"foo\"}");
+         assertEquals(new String(request.getBody(), Charsets.UTF_8), "{\"key\":\"foo\"}");
          assertEquals(result, "fooPOSTJSON");
       } finally {
          close(client, true);
@@ -491,7 +492,7 @@ public abstract class BaseHttpCommandExecutorServiceIntegrationTest extends Base
          String result = client.upload("", "foo");
          // Verify that the body is properly populated
          RecordedRequest request = server.takeRequest();
-         assertEquals(new String(request.getBody(), "UTF-8"), "foo");
+         assertEquals(new String(request.getBody(), Charsets.UTF_8), "foo");
          assertEquals(result, "fooPUT");
       } finally {
          close(client, true);
@@ -513,9 +514,9 @@ public abstract class BaseHttpCommandExecutorServiceIntegrationTest extends Base
          assertEquals(redirectTarget.getRequestCount(), 1);
          // Verify that the body was populated after the redirect
          RecordedRequest request = server.takeRequest();
-         assertEquals(new String(request.getBody(), "UTF-8"), "foo");
+         assertEquals(new String(request.getBody(), Charsets.UTF_8), "foo");
          request = redirectTarget.takeRequest();
-         assertEquals(new String(request.getBody(), "UTF-8"), "foo");
+         assertEquals(new String(request.getBody(), Charsets.UTF_8), "foo");
       } finally {
          close(client, true);
          redirectTarget.shutdown();
@@ -531,7 +532,7 @@ public abstract class BaseHttpCommandExecutorServiceIntegrationTest extends Base
          client.putNothing("");
          assertEquals(server.getRequestCount(), 1);
          RecordedRequest request = server.takeRequest();
-         assertEquals(new String(request.getBody(), "UTF-8"), "");
+         assertEquals(new String(request.getBody(), Charsets.UTF_8), "");
       } finally {
          close(client, true);
          server.shutdown();
@@ -549,9 +550,9 @@ public abstract class BaseHttpCommandExecutorServiceIntegrationTest extends Base
          assertEquals(result, "fooPUT");
          // Verify that the body was properly sent in the two requests
          RecordedRequest request = server.takeRequest();
-         assertEquals(new String(request.getBody(), "UTF-8"), "foo");
+         assertEquals(new String(request.getBody(), Charsets.UTF_8), "foo");
          request = server.takeRequest();
-         assertEquals(new String(request.getBody(), "UTF-8"), "foo");
+         assertEquals(new String(request.getBody(), Charsets.UTF_8), "foo");
       } finally {
          close(client, true);
          server.shutdown();

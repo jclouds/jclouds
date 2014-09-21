@@ -36,6 +36,7 @@ import org.jclouds.rest.annotations.PATCH;
 import org.jclouds.rest.binders.BindToStringPayload;
 import org.testng.annotations.Test;
 
+import com.google.common.base.Charsets;
 import com.google.inject.Module;
 import com.squareup.okhttp.mockwebserver.MockResponse;
 import com.squareup.okhttp.mockwebserver.MockWebServer;
@@ -80,7 +81,7 @@ public class OkHttpCommandExecutorServiceTest extends BaseHttpCommandExecutorSer
          // Verify that the body is properly populated
          RecordedRequest request = server.takeRequest();
          assertEquals(request.getMethod(), "PATCH");
-         assertEquals(new String(request.getBody(), "UTF-8"), "foo");
+         assertEquals(new String(request.getBody(), Charsets.UTF_8), "foo");
          assertEquals(result, "fooPATCH");
       } finally {
          close(api, true);
@@ -100,10 +101,10 @@ public class OkHttpCommandExecutorServiceTest extends BaseHttpCommandExecutorSer
          // Verify that the body was properly sent in the two requests
          RecordedRequest request = server.takeRequest();
          assertEquals(request.getMethod(), "PATCH");
-         assertEquals(new String(request.getBody(), "UTF-8"), "foo");
+         assertEquals(new String(request.getBody(), Charsets.UTF_8), "foo");
          request = server.takeRequest();
          assertEquals(request.getMethod(), "PATCH");
-         assertEquals(new String(request.getBody(), "UTF-8"), "foo");
+         assertEquals(new String(request.getBody(), Charsets.UTF_8), "foo");
       } finally {
          close(api, true);
          server.shutdown();
@@ -125,10 +126,10 @@ public class OkHttpCommandExecutorServiceTest extends BaseHttpCommandExecutorSer
          // Verify that the body was populated after the redirect
          RecordedRequest request = server.takeRequest();
          assertEquals(request.getMethod(), "PATCH");
-         assertEquals(new String(request.getBody(), "UTF-8"), "foo");
+         assertEquals(new String(request.getBody(), Charsets.UTF_8), "foo");
          request = redirectTarget.takeRequest();
          assertEquals(request.getMethod(), "PATCH");
-         assertEquals(new String(request.getBody(), "UTF-8"), "foo");
+         assertEquals(new String(request.getBody(), Charsets.UTF_8), "foo");
       } finally {
          close(api, true);
          redirectTarget.shutdown();
@@ -145,7 +146,7 @@ public class OkHttpCommandExecutorServiceTest extends BaseHttpCommandExecutorSer
          assertEquals(server.getRequestCount(), 1);
          RecordedRequest request = server.takeRequest();
          assertEquals(request.getMethod(), "PATCH");
-         assertEquals(new String(request.getBody(), "UTF-8"), "");
+         assertEquals(new String(request.getBody(), Charsets.UTF_8), "");
       } finally {
          close(api, true);
          server.shutdown();
