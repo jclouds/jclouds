@@ -722,7 +722,7 @@
         <executions>
           <execution>
             <id>modernizer</id>
-            <phase>validate</phase>
+            <phase>verify</phase>
             <goals>
               <goal>modernizer</goal>
             </goals>
