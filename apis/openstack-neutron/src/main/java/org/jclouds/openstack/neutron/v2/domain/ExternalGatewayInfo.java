@@ -110,7 +110,13 @@ public class ExternalGatewayInfo {
          return this;
       }
 
-      public Builder enableSnat(boolean enableSnat) {
+      /**
+       * Provide the enableSnat status to the ExternalGatewayInfo's Builder.
+       *
+       * @return the Builder.
+       * @see ExternalGatewayInfo#getEnableSnat()
+       */
+      public Builder enableSnat(Boolean enableSnat) {
          this.enableSnat = enableSnat;
          return this;
       }

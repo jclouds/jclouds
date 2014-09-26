@@ -63,7 +63,7 @@ public class PortApiMockTest extends BaseNeutronApiMockTest {
 
          Port.CreatePort createPort = Port.createBuilder("6aeaf34a-c482-4bd3-9dc3-7faf36412f12")
                .name("port1")
-               .adminStateUp(true)
+               .adminStateUp(Boolean.TRUE)
                .deviceId("d6b4d3a5-c700-476f-b609-1493dd9dadc0")
                .allowedAddressPairs(ImmutableSet.of(AddressPair.builder("12", "111.222.333.444").build()))
                .build();
@@ -110,7 +110,7 @@ public class PortApiMockTest extends BaseNeutronApiMockTest {
 
          Port.CreatePort createPort = Port.createBuilder("6aeaf34a-c482-4bd3-9dc3-7faf36412f12")
                .name("port1")
-               .adminStateUp(true)
+               .adminStateUp(Boolean.TRUE)
                .deviceId("d6b4d3a5-c700-476f-b609-1493dd9dadc0")
                .allowedAddressPairs(ImmutableSet.of(AddressPair.builder("12", "111.222.333.444").build()))
                .build();
@@ -248,14 +248,14 @@ public class PortApiMockTest extends BaseNeutronApiMockTest {
 
          Port.CreatePort createPort1 = Port.createBuilder("64239a54-dcc4-4b39-920b-b37c2144effa")
                .name("port1")
-               .adminStateUp(true)
+               .adminStateUp(Boolean.TRUE)
                .deviceId("24df1d04-d5cb-41e1-8de5-61ed77c558df")
                .securityGroups(ImmutableSet.of("dbc107f4-afcd-4d5a-9352-f68f82241d5b"))
                .build();
 
          Port.CreatePort createPort2 = Port.createBuilder("e6031bc2-901a-4c66-82da-f4c32ed89406")
                .name("port2")
-               .adminStateUp(false)
+               .adminStateUp(Boolean.FALSE)
                .securityGroups(
                      ImmutableSet.of("8bf3f7cc-8471-40b1-815f-9da47e79775b", "dbc107f4-afcd-4d5a-9352-f68f82241d5b"))
                .build();
@@ -293,14 +293,14 @@ public class PortApiMockTest extends BaseNeutronApiMockTest {
 
          Port.CreatePort createPort1 = Port.createBuilder("64239a54-dcc4-4b39-920b-b37c2144effa")
                .name("port1")
-               .adminStateUp(true)
+               .adminStateUp(Boolean.TRUE)
                .deviceId("24df1d04-d5cb-41e1-8de5-61ed77c558df")
                .securityGroups(ImmutableSet.of("dbc107f4-afcd-4d5a-9352-f68f82241d5b"))
                .build();
 
          Port.CreatePort createPort2 = Port.createBuilder("e6031bc2-901a-4c66-82da-f4c32ed89406")
                .name("port2")
-               .adminStateUp(false)
+               .adminStateUp(Boolean.FALSE)
                .securityGroups(
                      ImmutableSet.of("8bf3f7cc-8471-40b1-815f-9da47e79775b", "dbc107f4-afcd-4d5a-9352-f68f82241d5b"))
                .build();

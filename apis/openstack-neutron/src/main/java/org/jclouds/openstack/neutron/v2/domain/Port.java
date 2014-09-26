@@ -253,7 +253,7 @@ public class Port {
     * @return the administrative state of port. If false, port does not forward packets.
     */
    @Nullable
-   public boolean isAdminStateUp() {
+   public Boolean getAdminStateUp() {
       return adminStateUp;
    }
 
@@ -355,7 +355,7 @@ public class Port {
     * @return the portSecurity of the Port
     */
    @Nullable
-   public Boolean isPortSecurity() {
+   public Boolean getPortSecurity() {
       return portSecurity;
    }
 
@@ -371,7 +371,7 @@ public class Port {
     * @return the macLearning of the Port
     */
    @Nullable
-   public Boolean isMacLearning() {
+   public Boolean getMacLearning() {
       return macLearning;
    }
 
@@ -511,9 +511,9 @@ public class Port {
        * Provide the adminStateUp to the Port's Builder.
        *
        * @return the Builder.
-       * @see Port#isAdminStateUp()
+       * @see Port#getAdminStateUp()
        */
-      public ParameterizedBuilderType adminStateUp(boolean adminStateUp) {
+      public ParameterizedBuilderType adminStateUp(Boolean adminStateUp) {
          port.adminStateUp = adminStateUp;
          return self();
       }
@@ -648,9 +648,9 @@ public class Port {
        * Provide the portSecurity to the Port's Builder.
        *
        * @return the Builder.
-       * @see Port#isPortSecurity()
+       * @see Port#getPortSecurity()
        */
-      public ParameterizedBuilderType portSecurity(boolean portSecurity) {
+      public ParameterizedBuilderType portSecurity(Boolean portSecurity) {
          port.portSecurity = portSecurity;
          return self();
       }
@@ -670,9 +670,9 @@ public class Port {
        * Provide the macLearning to the Port's Builder.
        *
        * @return the Builder.
-       * @see Port#isMacLearning()
+       * @see Port#getMacLearning()
        */
-      public ParameterizedBuilderType macLearning(boolean macLearning) {
+      public ParameterizedBuilderType macLearning(Boolean macLearning) {
          port.macLearning = macLearning;
          return self();
       }

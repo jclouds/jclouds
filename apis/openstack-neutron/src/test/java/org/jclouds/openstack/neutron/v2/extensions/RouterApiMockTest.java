@@ -59,7 +59,7 @@ public class RouterApiMockTest extends BaseNeutronApiMockTest {
          NeutronApi neutronApi = api(server.getUrl("/").toString(), "openstack-neutron", overrides);
          RouterApi api = neutronApi.getRouterApi("RegionOne").get();
 
-         Router.CreateRouter createRouter = Router.createBuilder().name("another_router").adminStateUp(true)
+         Router.CreateRouter createRouter = Router.createBuilder().name("another_router").adminStateUp(Boolean.TRUE)
                .externalGatewayInfo(ExternalGatewayInfo.builder().networkId("8ca37218-28ff-41cb-9b10-039601ea7e6b").build())
                .build();
 
@@ -80,7 +80,7 @@ public class RouterApiMockTest extends BaseNeutronApiMockTest {
          assertEquals(router.getName(), "another_router");
          assertEquals(router.getExternalGatewayInfo().getNetworkId(), "8ca37218-28ff-41cb-9b10-039601ea7e6b");
          assertEquals(router.getStatus(), NetworkStatus.ACTIVE);
-         assertEquals(router.isAdminStateUp().booleanValue(), true);
+         assertEquals(router.getAdminStateUp(), Boolean.TRUE);
          assertEquals(router.getId(), "8604a0de-7f6b-409a-a47c-a1cc7bc77b2e");
          assertEquals(router.getTenantId(), "6b96ff0cb17a4b859e1e575d221683d3");
       } finally {
@@ -100,7 +100,7 @@ public class RouterApiMockTest extends BaseNeutronApiMockTest {
          NeutronApi neutronApi = api(server.getUrl("/").toString(), "openstack-neutron", overrides);
          RouterApi api = neutronApi.getRouterApi("RegionOne").get();
 
-         Router.CreateRouter createRouter = Router.createBuilder().name("another_router").adminStateUp(true)
+         Router.CreateRouter createRouter = Router.createBuilder().name("another_router").adminStateUp(Boolean.TRUE)
                .externalGatewayInfo(ExternalGatewayInfo.builder().networkId("8ca37218-28ff-41cb-9b10-039601ea7e6b").build())
                .build();
 
@@ -267,7 +267,7 @@ public class RouterApiMockTest extends BaseNeutronApiMockTest {
          assertEquals(router.getName(), "router1");
          assertEquals(router.getExternalGatewayInfo().getNetworkId(), "3c5bcddd-6af9-4e6b-9c3e-c153e521cab8");
          assertEquals(router.getStatus(), NetworkStatus.ACTIVE);
-         assertEquals(router.isAdminStateUp().booleanValue(), true);
+         assertEquals(router.getAdminStateUp(), Boolean.TRUE);
          assertEquals(router.getId(), "a9254bdb-2613-4a13-ac4c-adc581fba50d");
          assertEquals(router.getTenantId(), "33a40233088643acb66ff6eb0ebea679");
       } finally {
@@ -338,7 +338,7 @@ public class RouterApiMockTest extends BaseNeutronApiMockTest {
          assertEquals(router.getName(), "another_router");
          assertEquals(router.getExternalGatewayInfo().getNetworkId(), "8ca37218-28ff-41cb-9b10-039601ea7e6b");
          assertEquals(router.getStatus(), NetworkStatus.ACTIVE);
-         assertEquals(router.isAdminStateUp().booleanValue(), true);
+         assertEquals(router.getAdminStateUp(), Boolean.TRUE);
          assertEquals(router.getId(), "8604a0de-7f6b-409a-a47c-a1cc7bc77b2e");
          assertEquals(router.getTenantId(), "6b96ff0cb17a4b859e1e575d221683d3");
       } finally {

@@ -112,7 +112,7 @@ public class Router {
     * @return the adminStateUp of the Router
     */
    @Nullable
-   public Boolean isAdminStateUp() {
+   public Boolean getAdminStateUp() {
       return adminStateUp;
    }
 
@@ -210,9 +210,9 @@ public class Router {
        * Provide the adminStateUp to the Router's Builder.
        *
        * @return the Builder.
-       * @see Router#isAdminStateUp()
+       * @see Router#getAdminStateUp()
        */
-      public ParameterizedBuilderType adminStateUp(boolean adminStateUp) {
+      public ParameterizedBuilderType adminStateUp(Boolean adminStateUp) {
          router.adminStateUp = adminStateUp;
          return self();
       }
