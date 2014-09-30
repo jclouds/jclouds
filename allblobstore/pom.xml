@@ -40,11 +40,6 @@
     </dependency>
     <dependency>
       <groupId>org.apache.jclouds.provider</groupId>
-      <artifactId>ninefold-storage</artifactId>
-      <version>${project.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>org.apache.jclouds.provider</groupId>
       <artifactId>cloudonestorage</artifactId>
       <version>${project.version}</version>
     </dependency>

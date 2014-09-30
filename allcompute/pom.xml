@@ -140,11 +140,6 @@
     </dependency>
     <dependency>
       <groupId>org.apache.jclouds.provider</groupId>
-      <artifactId>ninefold-compute</artifactId>
-      <version>${project.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>org.apache.jclouds.provider</groupId>
       <artifactId>hpcloud-compute</artifactId>
       <version>${project.version}</version>
     </dependency>

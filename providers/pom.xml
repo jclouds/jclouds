@@ -36,7 +36,6 @@
     <module>aws-ec2</module>
     <module>aws-sqs</module>
     <module>aws-cloudwatch</module>
-    <module>ninefold-storage</module>
     <module>cloudonestorage</module>
     <module>bluelock-vcloud-zone01</module>
     <module>elastichosts-lon-p</module>
@@ -54,7 +53,6 @@
     <module>greenhousedata-element-vcloud</module>
     <module>go2cloud-jhb1</module>
     <module>softlayer</module>
-    <module>ninefold-compute</module>
     <module>hpcloud-compute</module>
     <module>hpcloud-blockstorage</module>
     <module>hpcloud-objectstorage</module>
