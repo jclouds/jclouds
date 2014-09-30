@@ -31,7 +31,6 @@
   <name>jclouds apis project</name>
   <modules>
     <module>cloudwatch</module>
-    <module>cloudsigma</module>
     <module>cloudstack</module>
     <module>filesystem</module>
     <module>byon</module>
