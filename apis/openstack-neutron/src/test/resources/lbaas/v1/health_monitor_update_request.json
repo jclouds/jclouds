@@ -1,0 +1,11 @@
+{
+    "health_monitor": {
+        "delay": 1,
+        "max_retries": 1,
+        "timeout": 1,
+        "http_method": "HEAD",
+        "url_path": "/index.html",
+        "expected_codes": "201",
+        "admin_state_up": false
+    }
+}

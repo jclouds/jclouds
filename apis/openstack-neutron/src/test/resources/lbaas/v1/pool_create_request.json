@@ -1,0 +1,8 @@
+{
+    "pool": {
+        "subnet_id":"8032909d-47a1-4715-90af-5153ffe39861",
+        "lb_method":"ROUND_ROBIN",
+        "protocol":"TCP",
+        "name":"NewPool"
+    }
+}

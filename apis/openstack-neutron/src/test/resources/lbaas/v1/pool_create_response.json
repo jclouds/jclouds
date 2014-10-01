@@ -1,0 +1,18 @@
+{
+    "pool": {
+        "status": "PENDING_CREATE",
+        "lb_method": "ROUND_ROBIN",
+        "protocol": "TCP",
+        "provider": "HAPROXY",
+        "description": "",
+        "health_monitors": [],
+        "health_monitors_status": [],
+        "subnet_id": "8032909d-47a1-4715-90af-5153ffe39861",
+        "tenant_id": "83657cfcdfe44cd5920adaf26c48ceea",
+        "admin_state_up": true,
+        "name": "NewPool",
+        "members": [],
+        "id": "a224402b-794b-4c0c-9d08-d95640a6f5a1",
+        "vip_id": null
+    }
+}

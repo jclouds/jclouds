@@ -14,26 +14,25 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.jclouds.openstack.neutron.v2.extensions;
+package org.jclouds.openstack.neutron.v2.functions.lbaas.v1;
+
+import javax.inject.Inject;
+import javax.inject.Singleton;
+
+import org.jclouds.http.functions.ParseJson;
+import org.jclouds.json.Json;
+import org.jclouds.openstack.neutron.v2.domain.lbaas.v1.VIPs;
+
+import com.google.inject.TypeLiteral;
 
 /**
- * Extension Namespaces for OpenStack Networking (Neutron).
+ * Used by jclouds to provide more specific collections and fallbacks.
  */
-public final class ExtensionNamespaces {
-   /**
-    * Neutron Layer-3 Router Extension
-    */
-   public static final String L3_ROUTER = "http://docs.openstack.org/ext/neutron/router/api/v1.0";
-   /**
-    * Neutron Security Groups Extension
-    */
-   public static final String SECURITY_GROUPS = "http://docs.openstack.org/ext/securitygroups/api/v2.0";
-   /**
-    * LBaaS Extension.
-    */
-   public static final String LBAAS = "http://wiki.openstack.org/neutron/LBaaS/API_1.0";
+@Singleton
+public class ParseVIPs extends ParseJson<VIPs> {
 
-   private ExtensionNamespaces() {
-      throw new AssertionError("intentionally unimplemented");
+   @Inject
+   public ParseVIPs(Json json) {
+      super(json, TypeLiteral.get(VIPs.class));
    }
 }

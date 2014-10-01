@@ -14,26 +14,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.jclouds.openstack.neutron.v2.extensions;
+package org.jclouds.openstack.neutron.v2.domain.lbaas.v1;
+
+import java.beans.ConstructorProperties;
+
+import org.jclouds.openstack.v2_0.domain.Link;
+import org.jclouds.openstack.v2_0.domain.PaginatedCollection;
+
+import com.google.common.collect.ImmutableSet;
 
 /**
- * Extension Namespaces for OpenStack Networking (Neutron).
+ * A collection of of Neutron LBaaS v1 Pools.
  */
-public final class ExtensionNamespaces {
-   /**
-    * Neutron Layer-3 Router Extension
-    */
-   public static final String L3_ROUTER = "http://docs.openstack.org/ext/neutron/router/api/v1.0";
-   /**
-    * Neutron Security Groups Extension
-    */
-   public static final String SECURITY_GROUPS = "http://docs.openstack.org/ext/securitygroups/api/v2.0";
-   /**
-    * LBaaS Extension.
-    */
-   public static final String LBAAS = "http://wiki.openstack.org/neutron/LBaaS/API_1.0";
+public class Pools extends PaginatedCollection<Pool> {
+   public static final Pools EMPTY = new Pools(ImmutableSet.<Pool> of(), ImmutableSet.<Link> of());
 
-   private ExtensionNamespaces() {
-      throw new AssertionError("intentionally unimplemented");
+   @ConstructorProperties({ "pools", "pools_links" })
+   protected Pools(Iterable<Pool> pools, Iterable<Link> poolsLinks) {
+      super(pools, poolsLinks);
    }
 }

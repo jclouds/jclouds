@@ -1,0 +1,20 @@
+{
+    "health_monitors": [
+        {
+            "status": "ACTIVE",
+            "admin_state_up": true,
+            "tenant_id": "4fd44f30292945e481c7b8a0c8908869",
+            "delay": 10,
+            "max_retries": 1,
+            "timeout": 1,
+            "type": "PING",
+            "id": "466c8345-28d8-4f84-a246-e04380b0461d"
+        }
+    ],
+    "health_monitors_links": [
+        {
+            "href": "/v2.0/lb/health_monitors.json?marker=396f12f8-521e-4b91-8e21-2e003500433a",
+            "rel": "next"
+        }
+    ]
+}
