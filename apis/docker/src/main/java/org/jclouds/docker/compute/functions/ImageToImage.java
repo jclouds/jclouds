@@ -19,6 +19,7 @@ package org.jclouds.docker.compute.functions;
 import com.google.common.base.Function;
 import com.google.common.base.Splitter;
 import com.google.common.collect.Iterables;
+
 import org.jclouds.compute.domain.Image;
 import org.jclouds.compute.domain.ImageBuilder;
 import org.jclouds.compute.domain.OperatingSystem;
@@ -44,6 +45,7 @@ public class ImageToImage implements Function<org.jclouds.docker.domain.Image, o
    @Override
    public Image apply(org.jclouds.docker.domain.Image from) {
       checkNotNull(from, "image");
+
       String description = checkNotNull(Iterables.getFirst(from.repoTags(), "image must have at least one repo tag"));
 
       OsFamily osFamily = osFamily().apply(description);

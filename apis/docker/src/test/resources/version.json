@@ -1,0 +1,9 @@
+{
+    "ApiVersion": "1.15",
+    "Arch": "amd64",
+    "GitCommit": "c78088f",
+    "GoVersion": "go1.3.3",
+    "KernelVersion": "3.16.4-tinycore64",
+    "Os": "linux",
+    "Version": "1.3.0"
+}

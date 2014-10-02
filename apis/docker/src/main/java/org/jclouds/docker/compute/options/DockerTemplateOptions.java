@@ -215,7 +215,7 @@ public class DockerTemplateOptions extends TemplateOptions implements Cloneable 
       }
 
       /**
-       * @see DockerTemplateOptions#memory(int)
+       * @see DockerTemplateOptions#memory
        */
       public static DockerTemplateOptions memory(int memory) {
          DockerTemplateOptions options = new DockerTemplateOptions();

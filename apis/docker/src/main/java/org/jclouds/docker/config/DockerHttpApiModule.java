@@ -16,14 +16,23 @@
  */
 package org.jclouds.docker.config;
 
+import java.security.KeyStore;
+
+import javax.net.ssl.SSLContext;
+
 import org.jclouds.docker.DockerApi;
 import org.jclouds.docker.handlers.DockerErrorHandler;
+import org.jclouds.docker.suppliers.KeyStoreSupplier;
+import org.jclouds.docker.suppliers.SSLContextWithKeysSupplier;
 import org.jclouds.http.HttpErrorHandler;
 import org.jclouds.http.annotation.ClientError;
 import org.jclouds.http.annotation.Redirection;
 import org.jclouds.http.annotation.ServerError;
 import org.jclouds.rest.ConfiguresHttpApi;
 import org.jclouds.rest.config.HttpApiModule;
+
+import com.google.common.base.Supplier;
+import com.google.inject.TypeLiteral;
 
 /**
  * Configures the Docker connection.
@@ -36,5 +45,19 @@ public class DockerHttpApiModule extends HttpApiModule<DockerApi> {
       bind(HttpErrorHandler.class).annotatedWith(Redirection.class).to(DockerErrorHandler.class);
       bind(HttpErrorHandler.class).annotatedWith(ClientError.class).to(DockerErrorHandler.class);
       bind(HttpErrorHandler.class).annotatedWith(ServerError.class).to(DockerErrorHandler.class);
+   }
+
+   /**
+    * This configures SSL certificate authentication when the Docker daemon is set to use an encrypted TCP socket
+    */
+   @Override
+   protected void configure() {
+      super.configure();
+      bind(new TypeLiteral<Supplier<SSLContext>>() {
+      }).to(new TypeLiteral<SSLContextWithKeysSupplier>() {
+      });
+      bind(new TypeLiteral<Supplier<KeyStore>>() {
+      }).to(new TypeLiteral<KeyStoreSupplier>() {
+      });
    }
 }

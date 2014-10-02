@@ -48,10 +48,11 @@ public abstract class Image {
    public abstract List<String> repoTags();
 
    @SerializedNames({ "Id", "Parent", "Created", "Container", "DockerVersion", "Architecture", "Os", "Size",
-         "VirtualSize", "RepoTags", "Architecture" })
+         "VirtualSize", "RepoTags" })
    public static Image create(String id, String parent, String created, String container, String dockerVersion,
          String architecture, String os, long size, long virtualSize, List<String> repoTags) {
       return new AutoValue_Image(id, parent, created, container, dockerVersion, architecture, os, size, virtualSize,
             copyOf(repoTags));
    }
+
 }

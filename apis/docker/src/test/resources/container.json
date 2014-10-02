@@ -1,81 +1,129 @@
 {
-  "Args": [
-    "-c",
-    "yum -y install openssh-server openssh-clients"
-  ],
-  "Config": {
-    "AttachStderr": false,
-    "AttachStdin": false,
-    "AttachStdout": false,
-    "Cmd": [
-      "/bin/sh",
-      "-c",
-      "yum -y install openssh-server openssh-clients"
+    "Args": [
+        "-iface",
+        "ethwe",
+        "-wait",
+        "5",
+        "-name",
+        "7a:63:a2:39:7b:0f"
     ],
-    "CpuShares": 0,
-    "Cpuset": "",
-    "Domainname": "",
-    "Entrypoint": [ "/usr/bin/sshd", "-d" ],
-    "Env": [
-      "HOME=/",
-      "PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
-    ],
-    "ExposedPorts": null,
-    "Hostname": "9088c45a9592",
-    "Image": "1e2d12a45cd57ae3fe3c31ede149d800aaf6a711c61646fad340080f531775c8",
-    "Memory": 0,
-    "MemorySwap": 0,
-    "NetworkDisabled": false,
-    "OnBuild": [],
-    "OpenStdin": false,
-    "PortSpecs": null,
-    "StdinOnce": false,
-    "Tty": false,
-    "User": "",
-    "Volumes": null,
-    "WorkingDir": ""
-  },
-  "Created": "2014-06-18T08:49:25.36448943Z",
-  "Driver": "aufs",
-  "ExecDriver": "native-0.2",
-  "HostConfig": {
-    "Binds": null,
-    "ContainerIDFile": "",
-    "Dns": null,
-    "DnsSearch": null,
-    "Links": null,
-    "LxcConf": null,
-    "NetworkMode": "",
-    "PortBindings": null,
-    "Privileged": false,
-    "PublishAllPorts": false,
-    "VolumesFrom": null
-  },
-  "HostnamePath": "/mnt/sda1/var/lib/docker/containers/be1d295c091720abc9a3105219ab75a0a7367d74156cc6048aa599fcc7d650e2/hostname",
-  "HostsPath": "/mnt/sda1/var/lib/docker/containers/be1d295c091720abc9a3105219ab75a0a7367d74156cc6048aa599fcc7d650e2/hosts",
-  "Id": "be1d295c091720abc9a3105219ab75a0a7367d74156cc6048aa599fcc7d650e2",
-  "Image": "1e2d12a45cd57ae3fe3c31ede149d800aaf6a711c61646fad340080f531775c8",
-  "MountLabel": "",
-  "Name": "/tender_lumiere",
-  "NetworkSettings": {
-    "Bridge": "docker0",
-    "Gateway": "172.17.42.1",
-    "IPAddress": "172.17.0.100",
-    "IPPrefixLen": 16,
-    "PortMapping": null,
-    "Ports": {}
-  },
-  "Path": "/bin/sh",
-  "ProcessLabel": "",
-  "ResolvConfPath": "/mnt/sda1/var/lib/docker/containers/be1d295c091720abc9a3105219ab75a0a7367d74156cc6048aa599fcc7d650e2/resolv.conf",
-  "State": {
-    "ExitCode": 0,
-    "FinishedAt": "0001-01-01T00:00:00Z",
-    "Paused": false,
-    "Pid": 16422,
-    "Running": true,
-    "StartedAt": "2014-06-18T08:49:25.63685385Z"
-  },
-  "Volumes": {},
-  "VolumesRW": {}
+    "Config": {
+        "AttachStderr": false,
+        "AttachStdin": false,
+        "AttachStdout": false,
+        "Cmd": [
+            "-name",
+            "7a:63:a2:39:7b:0f"
+        ],
+        "CpuShares": 0,
+        "Cpuset": "",
+        "Domainname": "",
+        "Entrypoint": [
+            "/home/weave/weaver",
+            "-iface",
+            "ethwe",
+            "-wait",
+            "5"
+        ],
+        "Env": [
+            "PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
+        ],
+        "ExposedPorts": {
+            "6783/tcp": {},
+            "6783/udp": {}
+        },
+        "Hostname": "6c9932f478bd",
+        "Image": "zettio/weave",
+        "Memory": 0,
+        "MemorySwap": 0,
+        "NetworkDisabled": false,
+        "OnBuild": null,
+        "OpenStdin": false,
+        "PortSpecs": null,
+        "SecurityOpt": null,
+        "StdinOnce": false,
+        "Tty": false,
+        "User": "",
+        "Volumes": null,
+        "WorkingDir": "/home/weave"
+    },
+    "Created": "2014-10-31T17:00:21.544197943Z",
+    "Driver": "aufs",
+    "ExecDriver": "native-0.2",
+    "HostConfig": {
+        "Binds": null,
+        "CapAdd": null,
+        "CapDrop": null,
+        "ContainerIDFile": "",
+        "Devices": [],
+        "Dns": null,
+        "DnsSearch": null,
+        "ExtraHosts": null,
+        "Links": null,
+        "LxcConf": [],
+        "NetworkMode": "bridge",
+        "PortBindings": {
+            "6783/tcp": [
+                {
+                    "HostIp": "",
+                    "HostPort": "6783"
+                }
+            ],
+            "6783/udp": [
+                {
+                    "HostIp": "",
+                    "HostPort": "6783"
+                }
+            ]
+        },
+        "Privileged": true,
+        "PublishAllPorts": false,
+        "RestartPolicy": {
+            "MaximumRetryCount": 0,
+            "Name": ""
+        },
+        "VolumesFrom": null
+    },
+    "HostnamePath": "/var/lib/docker/containers/6c9932f478bd761f32ddb54ed28ab42ab6fac6f2a279f561ea31503ee9d39524/hostname",
+    "HostsPath": "/var/lib/docker/containers/6c9932f478bd761f32ddb54ed28ab42ab6fac6f2a279f561ea31503ee9d39524/hosts",
+    "Id": "6c9932f478bd761f32ddb54ed28ab42ab6fac6f2a279f561ea31503ee9d39524",
+    "Image": "57e570db16baba1e8c0d6f3c15868ddb400f64ff76ec948e65c3ca3f15fb3587",
+    "MountLabel": "",
+    "Name": "/weave",
+    "NetworkSettings": {
+        "Bridge": "docker0",
+        "Gateway": "172.17.42.1",
+        "IPAddress": "172.17.0.7",
+        "IPPrefixLen": 16,
+        "MacAddress": "02:42:ac:11:00:07",
+        "PortMapping": null,
+        "Ports": {
+            "6783/tcp": [
+                {
+                    "HostIp": "0.0.0.0",
+                    "HostPort": "6783"
+                }
+            ],
+            "6783/udp": [
+                {
+                    "HostIp": "0.0.0.0",
+                    "HostPort": "6783"
+                }
+            ]
+        }
+    },
+    "Path": "/home/weave/weaver",
+    "ProcessLabel": "",
+    "ResolvConfPath": "/var/lib/docker/containers/6c9932f478bd761f32ddb54ed28ab42ab6fac6f2a279f561ea31503ee9d39524/resolv.conf",
+    "State": {
+        "ExitCode": 0,
+        "FinishedAt": "0001-01-01T00:00:00Z",
+        "Paused": false,
+        "Pid": 3939,
+        "Restarting": false,
+        "Running": true,
+        "StartedAt": "2014-10-31T17:00:21.802008706Z"
+    },
+    "Volumes": {},
+    "VolumesRW": {}
 }

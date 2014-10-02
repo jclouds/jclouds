@@ -58,8 +58,8 @@ public class BaseDockerMockTest {
       return ContextBuilder.newBuilder(provider)
             .credentials("clientid", "apikey")
             .endpoint(url.toString())
-            .modules(modules) 
-            .overrides(setupProperties()) 
+            .modules(modules)
+            .overrides(setupProperties())
             .buildApi(DockerApi.class);
    }
 

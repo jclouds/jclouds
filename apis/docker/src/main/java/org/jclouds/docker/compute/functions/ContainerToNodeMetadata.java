@@ -100,7 +100,6 @@ public class ContainerToNodeMetadata implements Function<Container, NodeMetadata
           Image image = images.get().get(imageId);
           builder.operatingSystem(image.getOperatingSystem());
       }
-
       return builder.build();
    }
 

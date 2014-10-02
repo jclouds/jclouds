@@ -16,55 +16,52 @@
  */
 package org.jclouds.docker.features;
 
-import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertFalse;
 import static org.testng.Assert.assertNotNull;
-import static org.testng.Assert.assertNull;
 import static org.testng.Assert.assertTrue;
 
 import java.io.IOException;
-import java.net.URISyntaxException;
+import java.io.InputStream;
+import java.util.List;
 
 import org.jclouds.docker.compute.BaseDockerApiLiveTest;
 import org.jclouds.docker.domain.Config;
 import org.jclouds.docker.domain.Container;
+import org.jclouds.docker.domain.ContainerSummary;
 import org.jclouds.docker.domain.Image;
-import org.jclouds.docker.options.BuildOptions;
 import org.jclouds.docker.options.CreateImageOptions;
-import org.jclouds.docker.options.DeleteImageOptions;
-import org.jclouds.rest.ResourceNotFoundException;
+import org.jclouds.docker.options.ListContainerOptions;
+import org.testng.annotations.AfterClass;
+import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
-import com.google.common.base.Splitter;
 import com.google.common.collect.ImmutableList;
-import com.google.common.collect.Iterables;
 
 @Test(groups = "live", testName = "RemoteApiLiveTest", singleThreaded = true)
-public class RemoteApiLiveTest extends BaseDockerApiLiveTest {
+public class ContainerApiLiveTest extends BaseDockerApiLiveTest {
 
-   private static final String BUSYBOX_IMAGE = "busybox";
    private Container container = null;
-   private Image image = null;
+   protected static final String BUSYBOX_IMAGE_TAG = "busybox:ubuntu-12.04";
+   protected Image image = null;
 
-   @Test
-   public void testVersion() {
-      assertEquals(api().getVersion().version(), "1.0.0");
-   }
-
-   @Test(dependsOnMethods = "testVersion")
-   public void testCreateImage() throws IOException, InterruptedException {
-      CreateImageOptions options = CreateImageOptions.Builder.fromImage(BUSYBOX_IMAGE);
-      consumeStream(api().createImage(options));
-      image = api().inspectImage(BUSYBOX_IMAGE);
+   @BeforeClass
+   protected void init() {
+      if (api.getImageApi().inspectImage(BUSYBOX_IMAGE_TAG) == null) {
+         CreateImageOptions options = CreateImageOptions.Builder.fromImage(BUSYBOX_IMAGE_TAG);
+         InputStream createImageStream = api.getImageApi().createImage(options);
+         consumeStream(createImageStream);
+      }
+      image = api.getImageApi().inspectImage(BUSYBOX_IMAGE_TAG);
       assertNotNull(image);
    }
 
-   @Test(dependsOnMethods = "testCreateImage")
-   public void testListImages() {
-      assertNotNull(api().listImages());
+   @AfterClass
+   protected void tearDown() {
+      if (image != null) {
+         api.getImageApi().deleteImage(BUSYBOX_IMAGE_TAG);
+      }
    }
 
-   @Test(dependsOnMethods = "testListImages")
    public void testCreateContainer() throws IOException, InterruptedException {
       Config containerConfig = Config.builder().image(image.id())
               .cmd(ImmutableList.of("/bin/sh", "-c", "while true; do echo hello world; sleep 1; done"))
@@ -86,30 +83,23 @@ public class RemoteApiLiveTest extends BaseDockerApiLiveTest {
       assertFalse(api().inspectContainer(container.id()).state().running());
    }
 
+   @Test
+   public void testListContainers() {
+      List<ContainerSummary> containerSummaries = api().listContainers(ListContainerOptions.Builder.all(true));
+      for (ContainerSummary containerSummary : containerSummaries) {
+         assertNotNull(containerSummary.id());
+         assertNotNull(containerSummary.image());
+         assertFalse(containerSummary.names().isEmpty());
+      }
+   }
+
    @Test(dependsOnMethods = "testStopContainer", expectedExceptions = NullPointerException.class)
    public void testRemoveContainer() {
       api().removeContainer(container.id());
       assertFalse(api().inspectContainer(container.id()).state().running());
    }
 
-   @Test(dependsOnMethods = "testRemoveContainer", expectedExceptions = ResourceNotFoundException.class)
-   public void testDeleteImage() {
-      consumeStream(api().deleteImage(image.id()));
-      assertNull(api().inspectImage(image.id()));
-   }
-
-   public void testBuildImage() throws IOException, InterruptedException, URISyntaxException {
-      BuildOptions options = BuildOptions.Builder.tag("testBuildImage").verbose(false).nocache(false);
-      String buildStream = consumeStream(api().build(tarredDockerfile(), options));
-      Iterable<String> splitted = Splitter.on("\n").split(buildStream.replace("\r", "").trim());
-      String lastStreamedLine = Iterables.getLast(splitted).trim();
-      String rawImageId = Iterables.getLast(Splitter.on("Successfully built ").split(lastStreamedLine));
-      String imageId = rawImageId.substring(0, 11);
-      Image image = api().inspectImage(imageId);
-      api().deleteImage(image.id(), DeleteImageOptions.Builder.force(true));
-   }
-
-   private RemoteApi api() {
-      return api.getRemoteApi();
+   private ContainerApi api() {
+      return api.getContainerApi();
    }
 }

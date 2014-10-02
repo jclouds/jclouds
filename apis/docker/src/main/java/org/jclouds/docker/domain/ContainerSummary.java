@@ -16,30 +16,34 @@
  */
 package org.jclouds.docker.domain;
 
+import static org.jclouds.docker.internal.NullSafeCopies.copyOf;
+import java.util.List;
+
 import org.jclouds.json.SerializedNames;
 
 import com.google.auto.value.AutoValue;
 
+// TODO it may be redundant (we already have Container value class)
 @AutoValue
-public abstract class Version {
+public abstract class ContainerSummary {
 
-   public abstract String apiVersion();
+   public abstract String id();
 
-   public abstract String arch();
+   public abstract List<String> names();
 
-   public abstract String gitCommit();
+   public abstract String created();
 
-   public abstract String goVersion();
+   public abstract String image();
 
-   public abstract String kernelVersion();
+   public abstract String command();
 
-   public abstract String os();
+   public abstract List<Port> ports();
 
-   public abstract String version();
+   public abstract String status();
 
-   @SerializedNames({ "ApiVersion", "Arch", "GitCommit", "GoVersion", "KernelVersion", "Os", "Version" })
-   public static Version create(String apiVersion, String arch, String gitCommit, String goVersion,
-                                String kernelVersion, String os, String version) {
-      return new AutoValue_Version(apiVersion, arch, gitCommit, goVersion, kernelVersion, os, version);
+   @SerializedNames({"Id", "Names", "Created", "Image", "Command", "Ports", "Status"})
+   public static ContainerSummary create(String id, List<String> names, String created, String image, String command, List<Port> ports, String status) {
+      return new AutoValue_ContainerSummary(id, copyOf(names), created, image, command, copyOf(ports), status);
    }
+
 }

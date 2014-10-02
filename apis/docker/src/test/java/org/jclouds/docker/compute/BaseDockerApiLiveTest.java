@@ -31,6 +31,7 @@ import org.jboss.shrinkwrap.api.asset.ClassLoaderAsset;
 import org.jboss.shrinkwrap.api.exporter.TarExporter;
 import org.jclouds.Constants;
 import org.jclouds.apis.BaseApiLiveTest;
+import org.jclouds.compute.config.ComputeServiceProperties;
 import org.jclouds.docker.DockerApi;
 import org.jclouds.io.Payload;
 import org.jclouds.io.Payloads;
@@ -58,6 +59,7 @@ public class BaseDockerApiLiveTest extends BaseApiLiveTest<DockerApi> {
       Properties overrides = super.setupProperties();
       overrides.setProperty(Constants.PROPERTY_MAX_RETRIES, "15");
       overrides.setProperty("jclouds.ssh.retry-auth", "true");
+      overrides.setProperty(ComputeServiceProperties.IMAGE_LOGIN_USER, "root:password");
       return overrides;
    }
 

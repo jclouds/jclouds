@@ -33,6 +33,7 @@ import com.google.common.collect.ImmutableList;
  */
 @Test(groups = "unit", testName = "ImageToImageTest")
 public class ImageToImageTest {
+
    private ImageToImage function;
 
    private org.jclouds.docker.domain.Image image;

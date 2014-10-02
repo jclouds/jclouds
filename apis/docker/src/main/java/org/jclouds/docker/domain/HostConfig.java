@@ -35,7 +35,7 @@ public abstract class HostConfig {
 
    public abstract List<String> binds();
 
-   public abstract Map<String, String> lxcConf();
+   public abstract List<Map<String, String>> lxcConf();
 
    public abstract boolean privileged();
 
@@ -53,7 +53,7 @@ public abstract class HostConfig {
 
    @SerializedNames({ "ContainerIDFile", "Binds", "LxcConf", "Privileged", "Dns", "DnsSearch", "PortBindings",
            "Links", "PublishAllPorts", "VolumesFrom" })
-   public static HostConfig create(String containerIDFile, List<String> binds, Map<String, String> lxcConf,
+   public static HostConfig create(String containerIDFile, List<String> binds, List<Map<String, String>> lxcConf,
          boolean privileged, String dns, String dnsSearch, Map<String, List<Map<String, String>>> portBindings,
          List<String> links, boolean publishAllPorts, List<String> volumesFrom) {
       return new AutoValue_HostConfig(containerIDFile, copyOf(binds), copyOf(lxcConf), privileged, dns, dnsSearch,
@@ -72,7 +72,7 @@ public abstract class HostConfig {
 
       private String containerIDFile;
       private List<String> binds = Lists.newArrayList();
-      private Map<String, String> lxcConf = Maps.newLinkedHashMap();
+      private List<Map<String, String>> lxcConf = Lists.newArrayList();
       private boolean privileged;
       private String dns;
       private String dnsSearch;
@@ -91,8 +91,8 @@ public abstract class HostConfig {
          return this;
       }
 
-      public Builder lxcConf(Map<String, String> lxcConf) {
-         this.lxcConf.putAll(checkNotNull(lxcConf, "lxcConf"));
+      public Builder lxcConf(List<Map<String, String>> lxcConf) {
+         this.lxcConf.addAll(checkNotNull(lxcConf, "lxcConf"));
          return this;
       }
 

@@ -123,6 +123,7 @@ public abstract class Config {
       private List<String> entrypoint = ImmutableList.of();
       private boolean networkDisabled;
       private List<String> onBuild = ImmutableList.of();
+      private Map<String, String> restartPolicy = ImmutableMap.of();
 
       public Builder hostname(String hostname) {
          this.hostname = hostname;
@@ -236,6 +237,11 @@ public abstract class Config {
 
       public Builder onBuild(List<String> onBuild) {
          this.onBuild = ImmutableList.copyOf(checkNotNull(onBuild, "onBuild"));
+         return this;
+      }
+
+      public Builder restartPolicy(Map<String, String> restartPolicy) {
+         this.restartPolicy = ImmutableMap.copyOf(restartPolicy);
          return this;
       }
 

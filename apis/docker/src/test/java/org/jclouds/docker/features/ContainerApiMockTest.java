@@ -16,50 +16,45 @@
  */
 package org.jclouds.docker.features;
 
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableMultimap;
-import com.squareup.okhttp.mockwebserver.MockResponse;
-import com.squareup.okhttp.mockwebserver.MockWebServer;
-import org.jclouds.docker.DockerApi;
-import org.jclouds.docker.domain.Config;
-import org.jclouds.docker.domain.Container;
-import org.jclouds.docker.internal.BaseDockerMockTest;
-import org.jclouds.docker.options.BuildOptions;
-import org.jclouds.docker.options.CreateImageOptions;
-import org.jclouds.docker.options.ListContainerOptions;
-import org.jclouds.io.Payload;
-import org.jclouds.io.Payloads;
-import org.jclouds.rest.ResourceNotFoundException;
-import org.testng.annotations.Test;
-
-import java.io.File;
-import java.io.FileInputStream;
-import java.util.Set;
-
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
 import static org.testng.Assert.assertTrue;
 import static org.testng.Assert.fail;
+import java.util.List;
+
+import org.jclouds.docker.DockerApi;
+import org.jclouds.docker.domain.Config;
+import org.jclouds.docker.domain.Container;
+import org.jclouds.docker.domain.ContainerSummary;
+import org.jclouds.docker.internal.BaseDockerMockTest;
+import org.jclouds.docker.options.ListContainerOptions;
+import org.jclouds.rest.ResourceNotFoundException;
+import org.testng.annotations.Test;
+
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableMultimap;
+import com.squareup.okhttp.mockwebserver.MockResponse;
+import com.squareup.okhttp.mockwebserver.MockWebServer;
 
 /**
- * Mock tests for the {@link org.jclouds.docker.DockerApi} class.
+ * Mock tests for the {@link org.jclouds.docker.features.ContainerApi} class.
  */
-@Test(groups = "unit", testName = "RemoteApiMockTest")
-public class RemoteApiMockTest extends BaseDockerMockTest {
+@Test(groups = "unit", testName = "ContainerApiMockTest")
+public class ContainerApiMockTest extends BaseDockerMockTest {
 
    public void testListContainers() throws Exception {
       MockWebServer server = mockWebServer();
       server.enqueue(new MockResponse().setBody(payloadFromResource("/containers.json")));
 
-      DockerApi api = api(server.getUrl("/"));
-      RemoteApi remoteApi = api.getRemoteApi();
+      DockerApi dockerApi = api(server.getUrl("/"));
+      ContainerApi api = dockerApi.getContainerApi();
 
       try {
-         Set<Container> containers = remoteApi.listContainers();
+         List<ContainerSummary> containerSummaries = api.listContainers();
          assertRequestHasCommonFields(server.takeRequest(), "/containers/json");
-         assertEquals(containers.size(), 1);
+         assertEquals(containerSummaries.size(), 1);
       } finally {
-         api.close();
+         dockerApi.close();
          server.shutdown();
       }
    }
@@ -67,16 +62,14 @@ public class RemoteApiMockTest extends BaseDockerMockTest {
    public void testListNonexistentContainers() throws Exception {
       MockWebServer server = mockWebServer();
       server.enqueue(new MockResponse().setResponseCode(404));
-
-      DockerApi api = api(server.getUrl("/"));
-      RemoteApi remoteApi = api.getRemoteApi();
-
+      DockerApi dockerApi = api(server.getUrl("/"));
+      ContainerApi api = dockerApi.getContainerApi();
       try {
-         Set<Container> containers = remoteApi.listContainers();
+         List<ContainerSummary> containerSummaries = api.listContainers();
          assertRequestHasCommonFields(server.takeRequest(), "/containers/json");
-         assertTrue(containers.isEmpty());
+         assertTrue(containerSummaries.isEmpty());
       } finally {
-         api.close();
+         dockerApi.close();
          server.shutdown();
       }
    }
@@ -86,14 +79,14 @@ public class RemoteApiMockTest extends BaseDockerMockTest {
    public void testListAllContainers() throws Exception {
       MockWebServer server = mockWebServer();
       server.enqueue(new MockResponse().setBody(payloadFromResource("/containers.json")));
-      DockerApi api = api(server.getUrl("/"));
-      RemoteApi remoteApi = api.getRemoteApi();
+      DockerApi dockerApi = api(server.getUrl("/"));
+      ContainerApi api = dockerApi.getContainerApi();
       try {
-         Set<Container> containers = remoteApi.listContainers(ListContainerOptions.Builder.all(true));
+         List<ContainerSummary> containerSummaries = api.listContainers(ListContainerOptions.Builder.all(true));
          assertRequestHasParameters(server.takeRequest(), "/containers/json", ImmutableMultimap.of("all", "true"));
-         assertEquals(containers.size(), 1);
+         assertEquals(containerSummaries.size(), 1);
       } finally {
-         api.close();
+         dockerApi.close();
          server.shutdown();
       }
    }
@@ -101,20 +94,20 @@ public class RemoteApiMockTest extends BaseDockerMockTest {
    public void testGetContainer() throws Exception {
       MockWebServer server = mockWebServer();
       server.enqueue(new MockResponse().setBody(payloadFromResource("/container.json")));
-      DockerApi api = api(server.getUrl("/"));
-      RemoteApi remoteApi = api.getRemoteApi();
+      DockerApi dockerApi = api(server.getUrl("/"));
+      ContainerApi api = dockerApi.getContainerApi();
       String containerId = "b03d4cd15b76f8876110615cdeed15eadf77c9beb408d62f1687dcc69192cd6d";
       try {
-         Container container = remoteApi.inspectContainer(containerId);
+         Container container = api.inspectContainer(containerId);
          assertRequestHasCommonFields(server.takeRequest(), "/containers/" + containerId + "/json");
          assertNotNull(container);
          assertNotNull(container.id(), containerId);
          assertNotNull(container.config());
          assertNotNull(container.hostConfig());
-         assertEquals(container.name(), "/tender_lumiere");
+         assertTrue(container.name().contains("/weave"));
          assertEquals(container.state().running(), true);
       } finally {
-         api.close();
+         dockerApi.close();
          server.shutdown();
       }
    }
@@ -122,14 +115,14 @@ public class RemoteApiMockTest extends BaseDockerMockTest {
    public void testGetNonExistingContainer() throws Exception {
       MockWebServer server = mockWebServer();
       server.enqueue(new MockResponse().setResponseCode(404));
-      DockerApi api = api(server.getUrl("/"));
-      RemoteApi remoteApi = api.getRemoteApi();
+      DockerApi dockerApi = api(server.getUrl("/"));
+      ContainerApi api = dockerApi.getContainerApi();
       String containerId = "notExisting";
       try {
-         remoteApi.inspectContainer(containerId);
+         Container container = api.inspectContainer(containerId);
          assertRequestHasCommonFields(server.takeRequest(), "/containers/" + containerId + "/json");
       } finally {
-         api.close();
+         dockerApi.close();
          server.shutdown();
       }
    }
@@ -137,9 +130,8 @@ public class RemoteApiMockTest extends BaseDockerMockTest {
    public void testCreateContainer() throws Exception {
       MockWebServer server = mockWebServer();
       server.enqueue(new MockResponse().setBody(payloadFromResource("/container-creation.json")));
-
-      DockerApi api = api(server.getUrl("/"));
-      RemoteApi remoteApi = api.getRemoteApi();
+      DockerApi dockerApi = api(server.getUrl("/"));
+      ContainerApi api = dockerApi.getContainerApi();
       Config containerConfig = Config.builder().cmd(ImmutableList.of("date"))
               .attachStdin(false)
               .attachStderr(true)
@@ -148,12 +140,12 @@ public class RemoteApiMockTest extends BaseDockerMockTest {
               .image("base")
               .build();
       try {
-         Container container = remoteApi.createContainer("test", containerConfig);
+         Container container = api.createContainer("test", containerConfig);
          assertRequestHasCommonFields(server.takeRequest(), "POST", "/containers/create?name=test");
          assertNotNull(container);
          assertEquals(container.id(), "c6c74153ae4b1d1633d68890a68d89c40aa5e284a1ea016cbc6ef0e634ee37b2");
       } finally {
-         api.close();
+         dockerApi.close();
          server.shutdown();
       }
    }
@@ -161,16 +153,15 @@ public class RemoteApiMockTest extends BaseDockerMockTest {
    public void testRemoveContainer() throws Exception {
       MockWebServer server = mockWebServer();
       server.enqueue(new MockResponse().setResponseCode(204));
-
-      DockerApi api = api(server.getUrl("/"));
-      RemoteApi remoteApi = api.getRemoteApi();
+      DockerApi dockerApi = api(server.getUrl("/"));
+      ContainerApi api = dockerApi.getContainerApi();
       String containerId = "6d35806c1bd2b25cd92bba2d2c2c5169dc2156f53ab45c2b62d76e2d2fee14a9";
 
       try {
-         remoteApi.removeContainer(containerId);
+         api.removeContainer(containerId);
          assertRequestHasCommonFields(server.takeRequest(), "DELETE", "/containers/" + containerId);
       } finally {
-         api.close();
+         dockerApi.close();
          server.shutdown();
       }
    }
@@ -178,16 +169,16 @@ public class RemoteApiMockTest extends BaseDockerMockTest {
    public void testRemoveNonExistingContainer() throws Exception {
       MockWebServer server = mockWebServer();
       server.enqueue(new MockResponse().setResponseCode(404));
-      DockerApi api = api(server.getUrl("/"));
-      RemoteApi remoteApi = api.getRemoteApi();
+      DockerApi dockerApi = api(server.getUrl("/"));
+      ContainerApi api = dockerApi.getContainerApi();
       String containerId = "nonExisting";
       try {
-         remoteApi.removeContainer(containerId);
+         api.removeContainer(containerId);
          fail("Remove container must fail on 404");
       } catch (ResourceNotFoundException ex) {
          // Expected exception
       } finally {
-         api.close();
+         dockerApi.close();
          server.shutdown();
       }
    }
@@ -195,13 +186,13 @@ public class RemoteApiMockTest extends BaseDockerMockTest {
    public void testStartContainer() throws Exception {
       MockWebServer server = mockWebServer();
       server.enqueue(new MockResponse().setResponseCode(200));
-      DockerApi api = api(server.getUrl("/"));
-      RemoteApi remoteApi = api.getRemoteApi();
+      DockerApi dockerApi = api(server.getUrl("/"));
+      ContainerApi api = dockerApi.getContainerApi();
       try {
-         remoteApi.startContainer("1");
+         api.startContainer("1");
          assertRequestHasCommonFields(server.takeRequest(), "POST", "/containers/1/start");
       } finally {
-         api.close();
+         dockerApi.close();
          server.shutdown();
       }
    }
@@ -209,17 +200,17 @@ public class RemoteApiMockTest extends BaseDockerMockTest {
    public void testStartNonExistingContainer() throws Exception {
       MockWebServer server = mockWebServer();
       server.enqueue(new MockResponse().setResponseCode(404));
-      DockerApi api = api(server.getUrl("/"));
-      RemoteApi remoteApi = api.getRemoteApi();
+      DockerApi dockerApi = api(server.getUrl("/"));
+      ContainerApi api = dockerApi.getContainerApi();
       try {
          try {
-            remoteApi.startContainer("1");
+            api.startContainer("1");
             fail("Start container must fail on 404");
          } catch (ResourceNotFoundException ex) {
             // Expected exception
          }
       } finally {
-         api.close();
+         dockerApi.close();
          server.shutdown();
       }
    }
@@ -227,13 +218,13 @@ public class RemoteApiMockTest extends BaseDockerMockTest {
    public void testStopContainer() throws Exception {
       MockWebServer server = mockWebServer();
       server.enqueue(new MockResponse().setResponseCode(200));
-      DockerApi api = api(server.getUrl("/"));
-      RemoteApi remoteApi = api.getRemoteApi();
+      DockerApi dockerApi = api(server.getUrl("/"));
+      ContainerApi api = dockerApi.getContainerApi();
       try {
-         remoteApi.stopContainer("1");
+         api.stopContainer("1");
          assertRequestHasCommonFields(server.takeRequest(), "POST", "/containers/1/stop");
       } finally {
-         api.close();
+         dockerApi.close();
          server.shutdown();
       }
    }
@@ -241,97 +232,17 @@ public class RemoteApiMockTest extends BaseDockerMockTest {
    public void testStopNonExistingContainer() throws Exception {
       MockWebServer server = mockWebServer();
       server.enqueue(new MockResponse().setResponseCode(404));
-      DockerApi api = api(server.getUrl("/"));
-      RemoteApi remoteApi = api.getRemoteApi();
+      DockerApi dockerApi = api(server.getUrl("/"));
+      ContainerApi api = dockerApi.getContainerApi();
       try {
-         remoteApi.stopContainer("1");
+         api.stopContainer("1");
          fail("Stop container must fail on 404");
       } catch (ResourceNotFoundException ex) {
          // Expected exception
       } finally {
-         api.close();
+         dockerApi.close();
          server.shutdown();
       }
    }
 
-   public void testCreateImage() throws Exception {
-      MockWebServer server = mockWebServer();
-      server.enqueue(new MockResponse().setResponseCode(200));
-      DockerApi api = api(server.getUrl("/"));
-      RemoteApi remoteApi = api.getRemoteApi();
-      try {
-         remoteApi.createImage(CreateImageOptions.Builder.fromImage("base"));
-         assertRequestHasParameters(server.takeRequest(), "POST", "/images/create", ImmutableMultimap.of("fromImage",
-                 "base"));
-      } finally {
-         api.close();
-         server.shutdown();
-      }
-   }
-
-   public void testCreateImageFailure() throws Exception {
-      MockWebServer server = mockWebServer();
-      server.enqueue(new MockResponse().setResponseCode(404));
-      DockerApi api = api(server.getUrl("/"));
-      RemoteApi remoteApi = api.getRemoteApi();
-      try {
-         remoteApi.createImage(CreateImageOptions.Builder.fromImage("base"));
-         fail("Create image must fail on 404");
-      } catch (ResourceNotFoundException ex) {
-         // Expected exception
-      } finally {
-         api.close();
-         server.shutdown();
-      }
-   }
-
-   public void testDeleteImage() throws Exception {
-      MockWebServer server = mockWebServer();
-      server.enqueue(new MockResponse().setResponseCode(204));
-      DockerApi api = api(server.getUrl("/"));
-      RemoteApi remoteApi = api.getRemoteApi();
-      try {
-         remoteApi.deleteImage("1");
-         assertRequestHasCommonFields(server.takeRequest(), "DELETE", "/images/1");
-      } finally {
-         api.close();
-         server.shutdown();
-      }
-   }
-
-   public void testDeleteNotExistingImage() throws Exception {
-      MockWebServer server = mockWebServer();
-      server.enqueue(new MockResponse().setResponseCode(404));
-      DockerApi api = api(server.getUrl("/"));
-      RemoteApi remoteApi = api.getRemoteApi();
-      try {
-         remoteApi.deleteImage("1");
-         fail("Delete image must fail on 404");
-      } catch (ResourceNotFoundException ex) {
-         // Expected exception
-      } finally {
-         api.close();
-         server.shutdown();
-      }
-   }
-
-   public void testBuildContainerUsingPayload() throws Exception {
-      MockWebServer server = mockWebServer();
-      server.enqueue(new MockResponse().setResponseCode(200));
-      DockerApi api = api(server.getUrl("/"));
-      RemoteApi remoteApi = api.getRemoteApi();
-
-      File file = File.createTempFile("docker", "tmp");
-      FileInputStream data = new FileInputStream(file);
-      Payload payload = Payloads.newInputStreamPayload(data);
-      payload.getContentMetadata().setContentLength(file.length());
-
-      try {
-         remoteApi.build(payload, BuildOptions.NONE);
-         assertRequestHasCommonFields(server.takeRequest(), "POST", "/build");
-      } finally {
-         api.close();
-         server.shutdown();
-      }
-   }
 }

@@ -7,6 +7,10 @@ providers, it supports the same portable abstractions offered by jclouds.
 Please follow these steps to configure your workstation for jclouds-docker:
 
 - install the latest Docker release (please visit https://docs.docker.com/installation/)
+If you are using boot2docker, notice that from version v1.3.0 the Docker daemon is set to use an encrypted TCP socket (--tls, or --tlsverify), 
+then you need to create a p12 certificate using the following command:
+      
+      `openssl pkcs12 -export -out $HOME/.jclouds/docker.p12 -inkey $HOME/.boot2docker/certs/boot2docker-vm/key.pem -in $HOME/.boot2docker/certs/boot2docker-vm/cert.pem -certfile $HOME/.boot2docker/certs/boot2docker-vm/ca.pem`
 
 #How it works
 
@@ -41,8 +45,8 @@ Please follow these steps to configure your workstation for jclouds-docker:
 As jclouds docker support is quite new, issues may occasionally arise. Please follow these steps to get things going again:
 
 1. Remove all containers
-
-      `$ docker ps -a -q | xargs docker stop | xargs docker rm`
+    
+    `$ docker ps -aq | xargs docker rm -f`
 2. remove all the images
 
-    `$ docker images -q | xargs docker rmi`
+    `$ docker images -q | xargs docker rmi -f`

@@ -16,22 +16,22 @@
  */
 package org.jclouds.docker;
 
-import org.jclouds.docker.features.RemoteApi;
+import org.jclouds.docker.features.ContainerApi;
+import org.jclouds.docker.features.ImageApi;
+import org.jclouds.docker.features.MiscApi;
 import org.jclouds.rest.annotations.Delegate;
 
 import java.io.Closeable;
 
-/**
- * Provides synchronous access to Docker Remote API.
- *
- * @see <a href="https://docs.docker.com/reference/api/docker_remote_api/"></a>
- */
 public interface DockerApi extends Closeable {
 
-   /**
-    * Provides synchronous access to Docker Remote API features.
-    */
    @Delegate
-   RemoteApi getRemoteApi();
+   MiscApi getMiscApi();
+
+   @Delegate
+   ContainerApi getContainerApi();
+
+   @Delegate
+   ImageApi getImageApi();
 
 }
