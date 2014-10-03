@@ -16,6 +16,5 @@
  */
 /**
  * This package contains HttpRequestFilters needed to operate the REST api.
- * @see <a href="http://docs.amazonwebservices.com/AmazonS3/latest/RESTAuthentication.html" />
  */
 package org.jclouds.s3.filters;

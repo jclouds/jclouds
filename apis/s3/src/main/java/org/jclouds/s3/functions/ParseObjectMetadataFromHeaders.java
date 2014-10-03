@@ -37,12 +37,7 @@ import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Function;
 import com.google.common.net.HttpHeaders;
 
-/**
- * This parses @{link {@link org.jclouds.s3.domain.internal.MutableObjectMetadata} from HTTP
- * headers.
- * 
- * @see <a href="http://docs.amazonwebservices.com/AmazonS3/latest/RESTObjectGET.html" />
- */
+/** This parses {@ link MutableObjectMetadata} from HTTP headers. */
 public class ParseObjectMetadataFromHeaders implements Function<HttpResponse, MutableObjectMetadata>,
          InvocationContext<ParseObjectMetadataFromHeaders> {
    private final ParseSystemAndUserMetadataFromHeaders blobMetadataParser;
@@ -61,10 +56,7 @@ public class ParseObjectMetadataFromHeaders implements Function<HttpResponse, Mu
    // used as content-md5, so filter etags that contain hyphens
    static final Pattern MD5_FROM_ETAG = Pattern.compile("^\"?([0-9a-f]+)\"?$");
 
-   /**
-    * parses the http response headers to create a new
-    * {@link org.jclouds.s3.domain.internal.MutableObjectMetadata} object.
-    */
+   /** parses the http response headers to create a new {@link MutableObjectMetadata} object. */
    public MutableObjectMetadata apply(HttpResponse from) {
       BlobMetadata base = blobMetadataParser.apply(from);
       MutableObjectMetadata to = blobToObjectMetadata.apply(base);

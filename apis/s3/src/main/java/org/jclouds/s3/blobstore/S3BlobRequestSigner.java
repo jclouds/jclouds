@@ -30,7 +30,7 @@ import org.jclouds.http.HttpRequest;
 import org.jclouds.http.options.GetOptions;
 import org.jclouds.reflect.Invocation;
 import org.jclouds.rest.internal.RestAnnotationProcessor;
-import org.jclouds.s3.S3AsyncClient;
+import org.jclouds.s3.S3Client;
 import org.jclouds.s3.blobstore.functions.BlobToObject;
 import org.jclouds.s3.domain.S3Object;
 import org.jclouds.s3.options.PutObjectOptions;
@@ -39,7 +39,7 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.reflect.Invokable;
 
 @Singleton
-public class S3BlobRequestSigner<T extends S3AsyncClient> implements BlobRequestSigner {
+public class S3BlobRequestSigner<T extends S3Client> implements BlobRequestSigner {
    protected final RestAnnotationProcessor processor;
    protected final BlobToObject blobToObject;
    protected final BlobToHttpGetOptions blob2HttpGetOptions;

@@ -22,10 +22,10 @@ import java.io.File;
 
 import org.jclouds.blobstore.binders.BindMapToHeadersWithPrefix;
 import org.jclouds.http.HttpRequest;
-import org.jclouds.s3.S3AsyncClient;
+import org.jclouds.s3.S3Client;
 import org.jclouds.s3.domain.ObjectMetadata;
 import org.jclouds.s3.domain.ObjectMetadataBuilder;
-import org.jclouds.s3.internal.BaseS3AsyncClientTest;
+import org.jclouds.s3.internal.BaseS3ClientTest;
 import org.testng.annotations.Test;
 
 import com.google.common.collect.ImmutableMap;
@@ -36,7 +36,7 @@ import com.google.common.collect.ImmutableMultimap;
  */
 // NOTE:without testName, this will not call @Before* and fail w/NPE during surefire
 @Test(groups = "unit", testName = "BindObjectMetadataToRequestTest")
-public class BindObjectMetadataToRequestTest extends BaseS3AsyncClientTest<S3AsyncClient> {
+public class BindObjectMetadataToRequestTest extends BaseS3ClientTest<S3Client> {
 
    @Test
    public void testPassWithMinimumDetailsAndPayload5GB() {

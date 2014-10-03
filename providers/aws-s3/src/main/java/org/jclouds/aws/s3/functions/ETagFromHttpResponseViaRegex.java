@@ -27,9 +27,6 @@ import org.jclouds.http.functions.ReturnStringIf2xx;
 
 import com.google.common.base.Function;
 
-/**
- * @see <a href="http://docs.amazonwebservices.com/AmazonS3/latest/API/mpUploadComplete.html" />
- */
 @Singleton
 public class ETagFromHttpResponseViaRegex implements Function<HttpResponse, String> {
    private static Pattern pattern = Pattern.compile("<ETag>([\\S&&[^<]]+)</ETag>");

@@ -15,7 +15,6 @@
  * limitations under the License.
  */
 package org.jclouds.s3.config;
-import static org.jclouds.reflect.Reflection2.typeToken;
 
 import java.net.URI;
 import java.util.Set;
@@ -25,7 +24,7 @@ import javax.inject.Named;
 import javax.inject.Singleton;
 
 import org.jclouds.Constants;
-import org.jclouds.aws.config.AWSRestClientModule;
+import org.jclouds.aws.config.AWSHttpApiModule;
 import org.jclouds.aws.handlers.AWSClientErrorRetryHandler;
 import org.jclouds.aws.handlers.AWSServerErrorRetryHandler;
 import org.jclouds.blobstore.ContainerNotFoundException;
@@ -40,10 +39,9 @@ import org.jclouds.http.annotation.Redirection;
 import org.jclouds.http.annotation.ServerError;
 import org.jclouds.location.Region;
 import org.jclouds.location.functions.RegionToEndpointOrProviderIfNull;
-import org.jclouds.rest.ConfiguresRestClient;
+import org.jclouds.rest.ConfiguresHttpApi;
 import org.jclouds.rest.RequestSigner;
 import org.jclouds.s3.Bucket;
-import org.jclouds.s3.S3AsyncClient;
 import org.jclouds.s3.S3Client;
 import org.jclouds.s3.blobstore.functions.BucketsToStorageMetadata;
 import org.jclouds.s3.domain.BucketMetadata;
@@ -60,7 +58,6 @@ import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
 import com.google.common.collect.Iterables;
-import com.google.common.reflect.TypeToken;
 import com.google.inject.Provides;
 import com.google.inject.Scopes;
 import com.google.inject.TypeLiteral;
@@ -68,16 +65,16 @@ import com.google.inject.TypeLiteral;
 /**
  * Configures the S3 connection, including logging and http transport.
  */
-@ConfiguresRestClient
-public class S3RestClientModule<S extends S3Client, A extends S3AsyncClient> extends AWSRestClientModule<S, A> {
+@ConfiguresHttpApi
+public class S3HttpApiModule<S extends S3Client> extends AWSHttpApiModule<S> {
 
    @SuppressWarnings("unchecked")
-   public S3RestClientModule() {
-      this(TypeToken.class.cast(typeToken(S3Client.class)), TypeToken.class.cast(typeToken(S3AsyncClient.class)));
+   public S3HttpApiModule() {
+      this(Class.class.cast(S3Client.class));
    }
 
-   protected S3RestClientModule(TypeToken<S> syncClientType, TypeToken<A> asyncClientType) {
-      super(syncClientType, asyncClientType);
+   protected S3HttpApiModule(Class<S> syncClientType) {
+      super(syncClientType);
    }
 
    @Provides

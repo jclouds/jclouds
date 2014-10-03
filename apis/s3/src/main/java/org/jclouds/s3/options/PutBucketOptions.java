@@ -44,12 +44,8 @@ import com.google.common.collect.Multimap;
  * import org.jclouds.s3.S3Client;
  * <p/>
  * S3Client connection = // get connection
- * Future<Boolean> createdInEu = connection.putBucketIfNotExists("bucketName",createIn(EU));
+ * boolean createdInEu = connection.putBucketIfNotExists("bucketName",createIn(EU));
  * <code>
- * 
- * @see <a
- *      href="http://docs.amazonwebservices.com/AmazonS3/2006-03-01/index.html?RESTBucketPUT.html?"
- *      />
  */
 public class PutBucketOptions extends BaseHttpRequestOptions {
    private CannedAccessPolicy acl = CannedAccessPolicy.PRIVATE;

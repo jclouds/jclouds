@@ -27,10 +27,6 @@ import org.jclouds.io.ContentMetadata;
  * and consist of a {@link org.jclouds.s3.domain.S3Object#getData() value}, a
  * {@link S3Object#getKey key}, {@link ObjectMetadata#getUserMetadata() metadata}, and an access
  * control policy.
- * 
- * @see <a href="http://docs.amazonwebservices.com/AmazonS3/2006-03-01/index.html?UsingObjects.html"
- * 
- * @see <a href= "http://docs.amazonwebservices.com/AmazonS3/2006-03-01/UsingMetadata.html" />
  */
 public interface ObjectMetadata extends Comparable<ObjectMetadata> {
 

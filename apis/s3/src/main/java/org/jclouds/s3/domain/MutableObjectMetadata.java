@@ -26,14 +26,10 @@ import org.jclouds.s3.domain.internal.MutableObjectMetadataImpl;
 import com.google.inject.ImplementedBy;
 
 /**
- * /** Amazon S3 is designed to store objects. Objects are stored in {@link S3BucketListing buckets}
- * and consist of a {@link org.jclouds.s3.domain.S3Object#getData() value}, a
- * {@link S3Object#getKey key}, {@link MutableObjectMetadata#getUserMetadata() metadata}, and an
+ * /** Amazon S3 is designed to store objects. Objects are stored in {@link ListBucketResponse buckets}
+ * and consist of a {@link S3Object#getPayload()} value}, a
+ * {@link MutableObjectMetadata#getKey key}, {@link MutableObjectMetadata#getUserMetadata() metadata}, and an
  * access control policy.
- * 
- * @see <a href="http://docs.amazonwebservices.com/AmazonS3/2006-03-01/index.html?UsingObjects.html"
- * 
- * @see <a href= "http://docs.amazonwebservices.com/AmazonS3/2006-03-01/UsingMetadata.html" />
  */
 @ImplementedBy(MutableObjectMetadataImpl.class)
 public interface MutableObjectMetadata extends ObjectMetadata {
@@ -42,8 +38,6 @@ public interface MutableObjectMetadata extends ObjectMetadata {
     * The key is the handle that you assign to an object that allows you retrieve it later. A key is
     * a sequence of Unicode characters whose UTF-8 encoding is at most 1024 bytes long. Each object
     * in a bucket must have a unique key.
-    * 
-    * @see <a href= "http://docs.amazonwebservices.com/AmazonHTTP/2006-03-01/UsingKeys.html" />
     */
    void setKey(String key);
 
@@ -63,7 +57,7 @@ public interface MutableObjectMetadata extends ObjectMetadata {
 
    /**
     * Can be used to specify caching behavior along the request/reply chain.
-    * 
+    *
     * @link http://www.w3.org/Protocols/rfc2616/rfc2616-sec14.html?sec14.9.
     */
    void setCacheControl(String cacheControl);

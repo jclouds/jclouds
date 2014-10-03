@@ -24,7 +24,7 @@ import java.net.URLEncoder;
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
 
-import org.jclouds.aws.s3.AWSS3AsyncClient;
+import org.jclouds.aws.s3.AWSS3Client;
 import org.jclouds.blobstore.domain.Blob;
 import org.jclouds.blobstore.functions.BlobToHttpGetOptions;
 import org.jclouds.date.DateService;
@@ -44,7 +44,7 @@ import com.google.common.net.HttpHeaders;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 
-public class AWSS3BlobRequestSigner extends S3BlobRequestSigner<AWSS3AsyncClient> {
+public class AWSS3BlobRequestSigner extends S3BlobRequestSigner<AWSS3Client> {
    public static final String TEMPORARY_SIGNATURE_PARAM = "Signature";
 
    private final RequestAuthorizeSignature authSigner;
@@ -54,7 +54,7 @@ public class AWSS3BlobRequestSigner extends S3BlobRequestSigner<AWSS3AsyncClient
 
    @Inject
    public AWSS3BlobRequestSigner(RestAnnotationProcessor processor, BlobToObject blobToObject,
-         BlobToHttpGetOptions blob2HttpGetOptions, Class<AWSS3AsyncClient> interfaceClass,
+         BlobToHttpGetOptions blob2HttpGetOptions, Class<AWSS3Client> interfaceClass,
          @org.jclouds.location.Provider Supplier<Credentials> credentials,
          RequestAuthorizeSignature authSigner, @TimeStamp Provider<String> timeStampProvider,
          DateService dateService) throws SecurityException, NoSuchMethodException {

@@ -16,13 +16,6 @@
  */
 package org.jclouds.s3.reference;
 
-/**
- * Additional headers specified by Amazon S3 REST API.
- * 
- * @see <a
- *      href="http://docs.amazonwebservices.com/AmazonS3/latest/index.html?RESTAuthentication.html"
- *      />
- */
 public interface S3Headers {
 
    /**

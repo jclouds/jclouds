@@ -19,10 +19,9 @@ package org.jclouds.s3.blobstore;
 import org.jclouds.blobstore.internal.BaseBlobSignerExpectTest;
 import org.jclouds.date.TimeStamp;
 import org.jclouds.http.HttpRequest;
-import org.jclouds.rest.ConfiguresRestClient;
-import org.jclouds.s3.S3AsyncClient;
+import org.jclouds.rest.ConfiguresHttpApi;
 import org.jclouds.s3.S3Client;
-import org.jclouds.s3.config.S3RestClientModule;
+import org.jclouds.s3.config.S3HttpApiModule;
 import org.testng.SkipException;
 import org.testng.annotations.Test;
 
@@ -106,11 +105,11 @@ public class S3BlobSignerExpectTest extends BaseBlobSignerExpectTest {
 
    @Override
    protected Module createModule() {
-      return new TestS3RestClientModule();
+      return new TestS3HttpApiModule();
    }
 
-   @ConfiguresRestClient
-   private static final class TestS3RestClientModule extends S3RestClientModule<S3Client, S3AsyncClient> {
+   @ConfiguresHttpApi
+   private static final class TestS3HttpApiModule extends S3HttpApiModule<S3Client> {
 
       @Override
       protected String provideTimeStamp(@TimeStamp Supplier<String> cache) {

@@ -67,10 +67,6 @@ import com.google.common.collect.Multimap;
  * ifSourceModifiedSince(new Date().minusDays(1))
  * );
  * <code>
- * 
- * @see <a
- *      href="http://docs.amazonwebservices.com/AmazonS3/2006-03-01/index.html?RESTObjectCOPY.html?"
- *      />
  */
 public class CopyObjectOptions extends BaseHttpRequestOptions {
    private static final DateService dateService = new SimpleDateFormatDateService();
@@ -121,7 +117,6 @@ public class CopyObjectOptions extends BaseHttpRequestOptions {
     * conditional copy headers.
     * 
     * @return valid HTTP date
-    * @see <a href="http://rfc.net/rfc2616.html?s3.3"/>
     * @see CopyObjectOptions#ifSourceModifiedSince(Date)
     */
    public String getIfModifiedSince() {
@@ -138,7 +133,6 @@ public class CopyObjectOptions extends BaseHttpRequestOptions {
     * conditional copy headers.
     * 
     * @return valid HTTP date
-    * @see <a href="http://rfc.net/rfc2616.html?s3.3"/>
     * @see CopyObjectOptions#ifSourceUnmodifiedSince(Date)
     */
    public String getIfUnmodifiedSince() {

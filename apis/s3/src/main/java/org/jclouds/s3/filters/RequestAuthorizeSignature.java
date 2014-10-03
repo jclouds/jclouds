@@ -67,10 +67,6 @@ import com.google.common.net.HttpHeaders;
 
 /**
  * Signs the S3 request.
- * 
- * @see <a href=
- *      "http://docs.amazonwebservices.com/AmazonS3/2006-03-01/dev/index.html?RESTAuthentication.html"
- *      />
  */
 @Singleton
 public class RequestAuthorizeSignature implements HttpRequestFilter, RequestSigner {

@@ -36,9 +36,6 @@ import com.google.common.collect.Sets;
  * has been granted to a specific {@link Grantee}. If an payload tries to access or modify an item
  * in S3, the operation will be denied unless the item has ACL settings that explicitly permit that
  * payload to perform that action.
- * 
- * 
- * @see <a href="http://docs.amazonwebservices.com/AmazonS3/2006-03-01/RESTAccessPolicy.html"/>
  */
 public class AccessControlList {
 

@@ -16,11 +16,51 @@
  */
 package org.jclouds.s3;
 
+import static com.google.common.net.HttpHeaders.EXPECT;
+import static org.jclouds.blobstore.attr.BlobScopes.CONTAINER;
+import static org.jclouds.s3.S3Fallbacks.TrueOn404OrNotFoundFalseOnIllegalState;
+
 import java.io.Closeable;
 import java.util.Set;
 
+import javax.inject.Named;
+import javax.ws.rs.DELETE;
+import javax.ws.rs.GET;
+import javax.ws.rs.HEAD;
+import javax.ws.rs.PUT;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
+import javax.ws.rs.core.MediaType;
+
+import org.jclouds.Fallbacks.VoidOnNotFoundOr404;
+import org.jclouds.blobstore.BlobStoreFallbacks.FalseOnContainerNotFound;
+import org.jclouds.blobstore.BlobStoreFallbacks.FalseOnKeyNotFound;
+import org.jclouds.blobstore.BlobStoreFallbacks.NullOnKeyNotFound;
+import org.jclouds.blobstore.BlobStoreFallbacks.ThrowContainerNotFoundOn404;
+import org.jclouds.blobstore.BlobStoreFallbacks.ThrowKeyNotFoundOn404;
+import org.jclouds.blobstore.attr.BlobScope;
+import org.jclouds.http.functions.ParseETagHeader;
 import org.jclouds.http.options.GetOptions;
 import org.jclouds.javax.annotation.Nullable;
+import org.jclouds.rest.annotations.BinderParam;
+import org.jclouds.rest.annotations.Endpoint;
+import org.jclouds.rest.annotations.EndpointParam;
+import org.jclouds.rest.annotations.Fallback;
+import org.jclouds.rest.annotations.Headers;
+import org.jclouds.rest.annotations.ParamParser;
+import org.jclouds.rest.annotations.ParamValidators;
+import org.jclouds.rest.annotations.QueryParams;
+import org.jclouds.rest.annotations.RequestFilters;
+import org.jclouds.rest.annotations.ResponseParser;
+import org.jclouds.rest.annotations.VirtualHost;
+import org.jclouds.rest.annotations.XMLResponseParser;
+import org.jclouds.s3.binders.BindACLToXMLPayload;
+import org.jclouds.s3.binders.BindAsHostPrefixIfConfigured;
+import org.jclouds.s3.binders.BindBucketLoggingToXmlPayload;
+import org.jclouds.s3.binders.BindNoBucketLoggingToXmlPayload;
+import org.jclouds.s3.binders.BindPayerToXmlPayload;
+import org.jclouds.s3.binders.BindS3ObjectMetadataToRequest;
 import org.jclouds.s3.domain.AccessControlList;
 import org.jclouds.s3.domain.BucketLogging;
 import org.jclouds.s3.domain.BucketMetadata;
@@ -28,22 +68,34 @@ import org.jclouds.s3.domain.ListBucketResponse;
 import org.jclouds.s3.domain.ObjectMetadata;
 import org.jclouds.s3.domain.Payer;
 import org.jclouds.s3.domain.S3Object;
+import org.jclouds.s3.fallbacks.FalseIfBucketAlreadyOwnedByYouOrOperationAbortedWhenBucketExists;
+import org.jclouds.s3.filters.RequestAuthorizeSignature;
+import org.jclouds.s3.functions.AssignCorrectHostnameForBucket;
+import org.jclouds.s3.functions.BindRegionToXmlPayload;
+import org.jclouds.s3.functions.DefaultEndpointThenInvalidateRegion;
+import org.jclouds.s3.functions.ObjectKey;
+import org.jclouds.s3.functions.ParseObjectFromHeadersAndHttpContent;
+import org.jclouds.s3.functions.ParseObjectMetadataFromHeaders;
 import org.jclouds.s3.options.CopyObjectOptions;
 import org.jclouds.s3.options.ListBucketOptions;
 import org.jclouds.s3.options.PutBucketOptions;
 import org.jclouds.s3.options.PutObjectOptions;
+import org.jclouds.s3.predicates.validators.BucketNameValidator;
+import org.jclouds.s3.xml.AccessControlListHandler;
+import org.jclouds.s3.xml.BucketLoggingHandler;
+import org.jclouds.s3.xml.CopyObjectHandler;
+import org.jclouds.s3.xml.ListAllMyBucketsHandler;
+import org.jclouds.s3.xml.ListBucketHandler;
+import org.jclouds.s3.xml.LocationConstraintHandler;
+import org.jclouds.s3.xml.PayerHandler;
 
 import com.google.inject.Provides;
 
 /**
  * Provides access to S3 via their REST API.
- * <p/>
- * All commands return a Future of the result from S3. Any exceptions incurred during
- * processing will be backend in an {@link ExecutionException} as documented in
- * {@link Future#get()}.
- * 
- * @see <a href="http://docs.amazonwebservices.com/AmazonS3/2006-03-01/RESTAPI.html" />
  */
+@RequestFilters(RequestAuthorizeSignature.class)
+@BlobScope(CONTAINER)
 public interface S3Client extends Closeable {
 
    /**
@@ -60,14 +112,14 @@ public interface S3Client extends Closeable {
     * anonymous user, you can request the object without an authorization header.
     * 
     * <p />
-    * This command allows you to specify {@link GetObjectOptions} to control delivery of content.
+    * This command allows you to specify {@link GetOptions} to control delivery of content.
     * 
     * <h2>Note</h2>
     * If you specify any of the below options, you will receive partial content:
     * <ul>
-    * <li>{@link GetObjectOptions#range}</li>
-    * <li>{@link GetObjectOptions#startAt}</li>
-    * <li>{@link GetObjectOptions#tail}</li>
+    * <li>{@link GetOptions#range}</li>
+    * <li>{@link GetOptions#startAt}</li>
+    * <li>{@link GetOptions#tail}</li>
     * </ul>
     * 
     * @param bucketName
@@ -75,20 +127,23 @@ public interface S3Client extends Closeable {
     * @param key
     *           unique key in the s3Bucket identifying the object
     * @return Future reference to a fully populated S3Object including data stored in S3
-    *         or {@link S3Object#NOT_FOUND} if not present.
+    *         or null if not present.
     * 
     * @throws org.jclouds.http.HttpResponseException
     *            if the conditions requested set were not satisfied by the object on the server.
-    * @see #getObject(String, String)
-    * @see GetObjectOptions
     */
-   S3Object getObject(String bucketName, String key, GetOptions... options);
+   @Named("GetObject")
+   @GET
+   @Path("/{key}")
+   @Fallback(NullOnKeyNotFound.class)
+   @ResponseParser(ParseObjectFromHeadersAndHttpContent.class)
+   S3Object getObject(@Bucket @EndpointParam(parser = AssignCorrectHostnameForBucket.class) @BinderParam(
+         BindAsHostPrefixIfConfigured.class) @ParamValidators(BucketNameValidator.class) String bucketName,
+         @PathParam("key") String key, GetOptions... options);
 
    /**
     * Retrieves the {@link org.jclouds.s3.domain.internal.BucketListObjectMetadata metadata} of
-    * the object associated with the key or
-    * {@link org.jclouds.s3.domain.internal.BucketListObjectMetadata#NOT_FOUND} if not
-    * available.
+    * the object associated with the key or null if not available.
     * 
     * <p/>
     * The HEAD operation is used to retrieve information about a specific object or object size,
@@ -96,21 +151,26 @@ public interface S3Client extends Closeable {
     * object metadata, and don't want to waste bandwidth on the object data.
     * 
     * 
-    * @param bucketName
-    *           namespace of the metadata you are retrieving
-    * @param key
-    *           unique key in the s3Bucket identifying the object
-    * @return metadata associated with the key or
-    *         {@link org.jclouds.s3.domain.internal.BucketListObjectMetadata#NOT_FOUND} if not
-    *         present;
-    * @see #getObject(String, String)
-    * @see <a
-    *      href="http://docs.amazonwebservices.com/AmazonS3/2006-03-01/index.html?RESTObjectHEAD.html"
-    *      />
+    * @param bucketName namespace of the metadata you are retrieving
+    * @param key unique key in the s3Bucket identifying the object
+    * @return metadata associated with the key or null if not present.
     */
-   ObjectMetadata headObject(String bucketName, String key);
+   @Named("GetObject")
+   @HEAD
+   @Path("/{key}")
+   @Fallback(NullOnKeyNotFound.class)
+   @ResponseParser(ParseObjectMetadataFromHeaders.class)
+   ObjectMetadata headObject(@Bucket @EndpointParam(parser = AssignCorrectHostnameForBucket.class) @BinderParam(
+         BindAsHostPrefixIfConfigured.class) @ParamValidators(BucketNameValidator.class) String bucketName,
+         @PathParam("key") String key);
 
-   boolean objectExists(String bucketName, String key);
+   @Named("GetObject")
+   @HEAD
+   @Path("/{key}")
+   @Fallback(FalseOnKeyNotFound.class)
+   boolean objectExists(@Bucket @EndpointParam(parser = AssignCorrectHostnameForBucket.class) @BinderParam(
+         BindAsHostPrefixIfConfigured.class) @ParamValidators(BucketNameValidator.class) String bucketName,
+         @PathParam("key") String key);
 
    /**
     * Removes the object and metadata associated with the key.
@@ -125,10 +185,14 @@ public interface S3Client extends Closeable {
     *           unique key in the s3Bucket identifying the object
     * @throws org.jclouds.http.HttpResponseException
     *            if the bucket is not available
-    * @see <a href="http://docs.amazonwebservices.com/AmazonS3/2006-03-01/index.html?
-    *      RESTObjectDELETE.html" />
     */
-   void deleteObject(String bucketName, String key);
+   @Named("DeleteObject")
+   @DELETE
+   @Path("/{key}")
+   @Fallback(VoidOnNotFoundOr404.class)
+   void deleteObject(@Bucket @EndpointParam(parser = AssignCorrectHostnameForBucket.class) @BinderParam(
+         BindAsHostPrefixIfConfigured.class) @ParamValidators(BucketNameValidator.class) String bucketName,
+         @PathParam("key") String key);
 
    /**
     * Store data by creating or overwriting an object.
@@ -149,11 +213,16 @@ public interface S3Client extends Closeable {
     * @throws org.jclouds.http.HttpResponseException
     *            if the conditions requested set are not satisfied by the object on the server.
     * @see org.jclouds.s3.domain.CannedAccessPolicy#PRIVATE
-    * @see <a
-    *      href="http://docs.amazonwebservices.com/AmazonS3/2006-03-01/index.html?RESTObjectPUT.html"
-    *      />
     */
-   String putObject(String bucketName, S3Object object, PutObjectOptions... options);
+   @Named("PutObject")
+   @PUT
+   @Path("/{key}")
+   @Headers(keys = EXPECT, values = "100-continue")
+   @ResponseParser(ParseETagHeader.class)
+   String putObject(@Bucket @EndpointParam(parser = AssignCorrectHostnameForBucket.class) @BinderParam(
+         BindAsHostPrefixIfConfigured.class) @ParamValidators(BucketNameValidator.class) String bucketName,
+         @PathParam("key") @ParamParser(ObjectKey.class) @BinderParam(BindS3ObjectMetadataToRequest.class)
+         S3Object object, PutObjectOptions... options);
 
    /**
     * Create and name your own bucket in which to store your objects.
@@ -171,12 +240,15 @@ public interface S3Client extends Closeable {
     * @return true, if the bucket was created or false, if the container was already present
     * 
     * @see PutBucketOptions
-    * @see <a
-    *      href="http://docs.amazonwebservices.com/AmazonS3/2006-03-01/index.html?RESTBucketPUT.html"
-    *      />
-    * 
     */
-   boolean putBucketInRegion(@Nullable String region, @Bucket String bucketName, PutBucketOptions... options);
+   @Named("CreateBucket")
+   @PUT
+   @Path("/")
+   @Endpoint(Bucket.class)
+   @Fallback(FalseIfBucketAlreadyOwnedByYouOrOperationAbortedWhenBucketExists.class)
+   boolean putBucketInRegion(@BinderParam(BindRegionToXmlPayload.class) @Nullable String region,
+         @Bucket @BinderParam(BindAsHostPrefixIfConfigured.class) @ParamValidators(BucketNameValidator.class)
+         String bucketName, PutBucketOptions... options);
 
    /**
     * Deletes the bucket, if it is empty.
@@ -187,20 +259,26 @@ public interface S3Client extends Closeable {
     * Only the owner of a bucket can delete it, regardless of the bucket's access control policy.
     * 
     * 
-    * @param bucketName
-    *           what to delete
+    * @param bucketName what to delete
     * @return false, if the bucket was not empty and therefore not deleted
-    * @see org.jclouds.s3.commands.DeleteBucket
-    * @see <a href=
-    *      "http://docs.amazonwebservices.com/AmazonS3/2006-03-01/index.html?RESTBucketDELETE.html"
-    *      />
     */
-   boolean deleteBucketIfEmpty(String bucketName);
+   @Named("DeleteBucket")
+   @DELETE
+   @Path("/")
+   @Fallback(TrueOn404OrNotFoundFalseOnIllegalState.class)
+   boolean deleteBucketIfEmpty(@Bucket @EndpointParam(parser = DefaultEndpointThenInvalidateRegion.class) @BinderParam(
+         BindAsHostPrefixIfConfigured.class) @ParamValidators(BucketNameValidator.class) String bucketName);
+
 
    /**
     * Issues a HEAD command to determine if the bucket exists or not.
     */
-   boolean bucketExists(String bucketName);
+   @Named("BucketExists")
+   @HEAD
+   @Path("/")
+   @Fallback(FalseOnContainerNotFound.class)
+   boolean bucketExists(@Bucket @EndpointParam(parser = AssignCorrectHostnameForBucket.class) @BinderParam(
+         BindAsHostPrefixIfConfigured.class) @ParamValidators(BucketNameValidator.class) String bucketName);
 
    /**
     * Retrieve a {@code S3Bucket} listing. A GET request operation using a bucket URI lists
@@ -210,28 +288,30 @@ public interface S3Client extends Closeable {
     * To list the keys of a bucket, you must have READ access to the bucket.
     * <p/>
     * 
-    * @param bucketName
-    *           namespace of the objects you wish to list
-    * @return Future reference to a fully populated S3Bucket including metadata of the
-    *         S3Objects it contains or {@link BoundedList<ObjectMetadata>#NOT_FOUND} if not present.
+    * @param bucketName namespace of the objects you wish to list
+    * @return potentially empty or partial list of the bucket.
     * @see ListBucketOptions
-    * 
-    * @see <a
-    *      href="http://docs.amazonwebservices.com/AmazonS3/2006-03-01/index.html?RESTBucketGET.html"
-    *      />
     */
-   ListBucketResponse listBucket(String bucketName, ListBucketOptions... options);
+   @Named("ListBucket")
+   @GET
+   @Path("/")
+   @XMLResponseParser(ListBucketHandler.class)
+   ListBucketResponse listBucket(@Bucket @EndpointParam(parser = AssignCorrectHostnameForBucket.class) @BinderParam(
+         BindAsHostPrefixIfConfigured.class) @ParamValidators(BucketNameValidator.class) String bucketName,
+         ListBucketOptions... options);
 
    /**
     * Returns a list of all of the buckets owned by the authenticated sender of the request.
     * 
     * @return list of all of the buckets owned by the authenticated sender of the request.
-    * @see <a
-    *      href="http://docs.amazonwebservices.com/AmazonS3/2006-03-01/index.html?RESTServiceGET.html"
-    *      />
-    * 
     */
+   @Named("ListAllMyBuckets")
+   @GET
+   @XMLResponseParser(ListAllMyBucketsHandler.class)
+   @Path("/")
+   @VirtualHost
    Set<BucketMetadata> listOwnedBuckets();
+
 
    /**
     * Copies one object to another bucket, retaining UserMetadata from the source. The destination
@@ -239,24 +319,29 @@ public interface S3Client extends Closeable {
     * in Amazon S3.
     * <p/>
     * When copying an object, you can preserve all metadata (default) or
-    * {@link CopyObjectOptions#overrideMetadataWith(com.google.common.collect.Multimap) specify new
+    * {@link CopyObjectOptions#overrideMetadataWith(java.util.Map)} specify new
     * metadata}. However, the ACL is not preserved and is set to private for the user making the
     * request. To override the default ACL setting,
     * {@link CopyObjectOptions#overrideAcl(org.jclouds.s3.domain.CannedAccessPolicy) specify a
     * new ACL} when generating a copy request.
     * 
     * @return metadata populated with lastModified and eTag of the new object
-    * @see org.jclouds.s3.commands.CopyObject
-    * @see <a
-    *      href="http://docs.amazonwebservices.com/AmazonS3/2006-03-01/index.html?RESTObjectCOPY.html"
-    *      />
     * @throws org.jclouds.http.HttpResponseException
     *            if the conditions requested set are not satisfied by the object on the server.
     * @see CopyObjectOptions
     * @see org.jclouds.s3.domain.CannedAccessPolicy
     */
-   ObjectMetadata copyObject(String sourceBucket, String sourceObject, String destinationBucket,
-            String destinationObject, CopyObjectOptions... options);
+   @Named("PutObject")
+   @PUT
+   @Path("/{destinationObject}")
+   @Headers(keys = "x-amz-copy-source", values = "/{sourceBucket}/{sourceObject}")
+   @XMLResponseParser(CopyObjectHandler.class)
+   ObjectMetadata copyObject(@PathParam("sourceBucket") String sourceBucket,
+         @PathParam("sourceObject") String sourceObject,
+         @Bucket @EndpointParam(parser = AssignCorrectHostnameForBucket.class) @BinderParam(
+               BindAsHostPrefixIfConfigured.class) @ParamValidators(BucketNameValidator.class) String destinationBucket,
+         @PathParam("destinationObject") String destinationObject, CopyObjectOptions... options);
+
 
    /**
     * 
@@ -266,10 +351,16 @@ public interface S3Client extends Closeable {
     * To list a bucket's ACL, you must have READ_ACP access to the item.
     * 
     * @return access permissions of the bucket
-    * 
-    * @see <a href="http://docs.amazonwebservices.com/AmazonS3/2006-03-01/RESTAccessPolicy.html"/>
     */
-   AccessControlList getBucketACL(String bucketName);
+   @Named("GetBucketAcl")
+   @GET
+   @QueryParams(keys = "acl")
+   @XMLResponseParser(AccessControlListHandler.class)
+   @Fallback(ThrowContainerNotFoundOn404.class)
+   @Path("/")
+   AccessControlList getBucketACL(@Bucket @EndpointParam(parser = AssignCorrectHostnameForBucket.class) @BinderParam(
+         BindAsHostPrefixIfConfigured.class) @ParamValidators(BucketNameValidator.class) String bucketName);
+
 
    /**
     * Update a bucket's Access Control List settings.
@@ -285,10 +376,14 @@ public interface S3Client extends Closeable {
     *           the ACL to apply to the bucket. This acl object <strong>must</strong include a valid
     *           owner identifier string in {@link AccessControlList#getOwner()}.
     * @return true if the bucket's Access Control List was updated successfully.
-    * 
-    * @see <a href="http://docs.amazonwebservices.com/AmazonS3/2006-03-01/RESTAccessPolicy.html"/>
     */
-   boolean putBucketACL(String bucketName, AccessControlList acl);
+   @Named("PutBucketAcl")
+   @PUT
+   @Path("/")
+   @QueryParams(keys = "acl")
+   boolean putBucketACL(@Bucket @EndpointParam(parser = AssignCorrectHostnameForBucket.class) @BinderParam(
+         BindAsHostPrefixIfConfigured.class) @ParamValidators(BucketNameValidator.class) String bucketName,
+         @BinderParam(BindACLToXMLPayload.class) AccessControlList acl);
 
    /**
     * A GET request operation directed at an object or bucket URI with the "acl" parameter retrieves
@@ -297,10 +392,16 @@ public interface S3Client extends Closeable {
     * To list a object's ACL, you must have READ_ACP access to the item.
     * 
     * @return access permissions of the object
-    * 
-    * @see <a href="http://docs.amazonwebservices.com/AmazonS3/2006-03-01/RESTAccessPolicy.html"/>
     */
-   AccessControlList getObjectACL(String bucketName, String key);
+   @Named("GetObjectAcl")
+   @GET
+   @QueryParams(keys = "acl")
+   @Path("/{key}")
+   @XMLResponseParser(AccessControlListHandler.class)
+   @Fallback(ThrowKeyNotFoundOn404.class)
+   AccessControlList getObjectACL(@Bucket @EndpointParam(parser = AssignCorrectHostnameForBucket.class) @BinderParam(
+         BindAsHostPrefixIfConfigured.class) @ParamValidators(BucketNameValidator.class) String bucketName,
+         @PathParam("key") String key);
 
    /**
     * Update an object's Access Control List settings.
@@ -310,18 +411,23 @@ public interface S3Client extends Closeable {
     * <p />
     * To set a bucket or object's ACL, you must have WRITE_ACP or FULL_CONTROL access to the item.
     * 
-    * @param bucket
+    * @param bucketName
     *           the bucket containing the object to be updated
-    * @param objectKey
+    * @param key
     *           the key of the object whose Access Control List settings will be updated.
     * @param acl
     *           the ACL to apply to the object. This acl object <strong>must</strong include a valid
     *           owner identifier string in {@link AccessControlList#getOwner()}.
     * @return true if the object's Access Control List was updated successfully.
-    * 
-    * @see <a href="http://docs.amazonwebservices.com/AmazonS3/2006-03-01/RESTAccessPolicy.html"/>
     */
-   boolean putObjectACL(String bucketName, String key, AccessControlList acl);
+   @Named("PutObjectAcl")
+   @PUT
+   @QueryParams(keys = "acl")
+   @Path("/{key}")
+   boolean putObjectACL(@Bucket @EndpointParam(parser = AssignCorrectHostnameForBucket.class) @BinderParam(
+         BindAsHostPrefixIfConfigured.class) @ParamValidators(BucketNameValidator.class) String bucketName,
+         @PathParam("key") String key, @BinderParam(BindACLToXMLPayload.class) AccessControlList acl);
+
 
    /**
     * A GET location request operation using a bucket URI lists the location constraint of the
@@ -329,16 +435,20 @@ public interface S3Client extends Closeable {
     * <p/>
     * To view the location constraint of a bucket, you must be the bucket owner.
     * 
-    * @param bucket
+    * @param bucketName
     *           the bucket you wish to know where exists
     * 
     * @return location of the bucket
-    * 
-    * @see <a href=
-    *      "http://docs.amazonwebservices.com/AmazonS3/latest/index.html?RESTBucketLocationGET.html"
-    *      />
     */
-   String getBucketLocation(String bucketName);
+   @Named("GetBucketLocation")
+   @GET
+   @QueryParams(keys = "location")
+   @Path("/")
+   @Endpoint(Bucket.class)
+   @XMLResponseParser(LocationConstraintHandler.class)
+   String getBucketLocation(@Bucket @BinderParam(BindAsHostPrefixIfConfigured.class) @ParamValidators(
+         BucketNameValidator.class) String bucketName);
+
 
    /**
     * A GET request operation on a requestPayment resource returns the request payment configuration
@@ -349,14 +459,17 @@ public interface S3Client extends Closeable {
     * @param bucketName
     *           the bucket you wish to know the payer status
     * 
-    * @return {@link Payer.REQUESTER} for a Requester Pays bucket, and {@link Payer.BUCKET_OWNER},
+    * @return {@link Payer#REQUESTER} for a Requester Pays bucket, and {@link Payer#BUCKET_OWNER},
     *         for a normal bucket.
-    * 
-    * @see <a href=
-    *      "http://docs.amazonwebservices.com/AmazonS3/latest/index.html?RESTrequestPaymentGET.html"
-    *      />
     */
-   Payer getBucketPayer(String bucketName);
+   @Named("GetBucketRequestPayment")
+   @GET
+   @QueryParams(keys = "requestPayment")
+   @Path("/")
+   @XMLResponseParser(PayerHandler.class)
+   Payer getBucketPayer(@Bucket @EndpointParam(parser = AssignCorrectHostnameForBucket.class) @BinderParam(
+         BindAsHostPrefixIfConfigured.class) @ParamValidators(BucketNameValidator.class) String bucketName);
+
 
    /**
     * The PUT request operation with a requestPayment URI configures an existing bucket to be
@@ -371,14 +484,19 @@ public interface S3Client extends Closeable {
     *           the bucket you wish to know the payer status
     * 
     * @param payer
-    *           {@link Payer.REQUESTER} for a Requester Pays bucket, and {@link Payer.BUCKET_OWNER},
+    *           {@link Payer#REQUESTER} for a Requester Pays bucket, and {@link Payer#BUCKET_OWNER},
     *           for a normal bucket.
-    * 
-    * @see <a href=
-    *      "http://docs.amazonwebservices.com/AmazonS3/latest/index.html?RESTrequestPaymentPUT.html"
-    *      />
     */
-   void setBucketPayer(String bucketName, Payer payer);
+   @Named("PutBucketRequestPayment")
+   @PUT
+   @QueryParams(keys = "requestPayment")
+   @Path("/")
+   void setBucketPayer(
+         @Bucket @EndpointParam(parser = AssignCorrectHostnameForBucket.class) @BinderParam(
+               BindAsHostPrefixIfConfigured.class) @ParamValidators(BucketNameValidator.class) String bucketName,
+         @BinderParam(BindPayerToXmlPayload.class) Payer payer);
+
+
 
    /**
     * Inspects the logging status for a bucket.
@@ -387,11 +505,16 @@ public interface S3Client extends Closeable {
     * @param bucketName
     *           the bucket you wish to know the logging status
     * @return bucketLogging configuration or null, if not configured
-    * 
-    * @see <a href= "http://docs.amazonwebservices.com/AmazonS3/latest/index.html?ServerLogs.html"
-    *      />
     */
-   BucketLogging getBucketLogging(String bucketName);
+   @Named("GetBucketLogging")
+   @GET
+   @QueryParams(keys = "logging")
+   @XMLResponseParser(BucketLoggingHandler.class)
+   @Fallback(ThrowContainerNotFoundOn404.class)
+   @Path("/")
+   BucketLogging getBucketLogging(@Bucket @EndpointParam(parser = AssignCorrectHostnameForBucket.class) @BinderParam(
+         BindAsHostPrefixIfConfigured.class) @ParamValidators(BucketNameValidator.class) String bucketName);
+
 
    /**
     * Enables logging for a bucket.
@@ -400,19 +523,26 @@ public interface S3Client extends Closeable {
     *           the bucket you wish to enable logging for
     * @param logging
     *           configuration including destination, prefix, and access rules
-    * @see <a href= "http://docs.amazonwebservices.com/AmazonS3/latest/index.html?ServerLogs.html"
-    *      />
     */
-   void enableBucketLogging(String bucketName, BucketLogging logging);
+   @Named("PutBucketLogging")
+   @PUT
+   @Path("/")
+   @QueryParams(keys = "logging")
+   void enableBucketLogging(@Bucket @EndpointParam(parser = AssignCorrectHostnameForBucket.class) @BinderParam(
+         BindAsHostPrefixIfConfigured.class) @ParamValidators(BucketNameValidator.class) String bucketName,
+         @BinderParam(BindBucketLoggingToXmlPayload.class) BucketLogging logging);
 
    /**
     * Disables logging for a bucket.
     * 
     * @param bucketName
     *           the bucket you wish to disable logging for
-    * 
-    * @see <a href= "http://docs.amazonwebservices.com/AmazonS3/latest/index.html?ServerLogs.html"
-    *      />
     */
-   void disableBucketLogging(String bucketName);
+   @Named("PutBucketLogging")
+   @PUT
+   @Path("/")
+   @QueryParams(keys = "logging")
+   @Produces(MediaType.TEXT_XML)
+   void disableBucketLogging(@Bucket @EndpointParam(parser = AssignCorrectHostnameForBucket.class) @BinderParam(
+               BindNoBucketLoggingToXmlPayload.class) @ParamValidators(BucketNameValidator.class) String bucketName);
 }

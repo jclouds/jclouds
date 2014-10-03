@@ -20,7 +20,6 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import org.jclouds.Context;
-import org.jclouds.aws.s3.blobstore.AWSS3AsyncBlobStore;
 import org.jclouds.aws.s3.blobstore.AWSS3BlobStore;
 import org.jclouds.aws.s3.blobstore.AWSS3BlobStoreContext;
 import org.jclouds.blobstore.AsyncBlobStore;
@@ -49,10 +48,4 @@ public class AWSS3BlobStoreContextImpl extends S3BlobStoreContextImpl implements
    public AWSS3BlobStore getBlobStore() {
       return AWSS3BlobStore.class.cast(super.getBlobStore());
    }
-
-   @Override
-   public AWSS3AsyncBlobStore getAsyncBlobStore() {
-      return AWSS3AsyncBlobStore.class.cast(super.getAsyncBlobStore());
-   }
-
 }

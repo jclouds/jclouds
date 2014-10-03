@@ -33,10 +33,6 @@ import com.google.common.cache.LoadingCache;
  * Parses the response from Amazon S3 GET Bucket Location
  * <p/>
  * Region is the document we expect to parse.
- * 
- * @see <a href=
- *      "http://docs.amazonwebservices.com/AmazonS3/latest/RESTBucketLocationGET.html"
- *      />
  */
 public class LocationConstraintHandler extends ParseSax.HandlerWithResult<String> {
    private final LoadingCache<String, Optional<String>> bucketToRegion;

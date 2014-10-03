@@ -16,16 +16,17 @@
  */
 package org.jclouds.aws.s3.binders;
 
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableSet;
+import static org.testng.Assert.assertEquals;
+
+import javax.ws.rs.core.MediaType;
+
 import org.jclouds.http.HttpRequest;
 import org.jclouds.io.Payload;
 import org.jclouds.io.Payloads;
 import org.testng.annotations.Test;
 
-import javax.ws.rs.core.MediaType;
-
-import static org.testng.Assert.assertEquals;
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableSet;
 
 public class BindIterableAsPayloadToDeleteRequestTest {
 

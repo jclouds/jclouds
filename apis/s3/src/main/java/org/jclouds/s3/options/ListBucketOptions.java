@@ -31,12 +31,8 @@ import org.jclouds.http.options.BaseHttpRequestOptions;
  * import static org.jclouds.s3.commands.options.GetBucketOptions.Builder.*
  * <p/>
  * S3Client connection = // get connection
- * Future<S3Bucket> bucket = connection.listBucket("bucketName",withPrefix("home/users").maxKeys(1000));
+ * ListBucketResponse bucket = connection.listBucket("bucketName",withPrefix("home/users").maxKeys(1000));
  * <code>
- * 
- * @see <a
- *      href="http://docs.amazonwebservices.com/AmazonS3/2006-03-01/index.html?RESTBucketGET.html?"
- *      />
  */
 public class ListBucketOptions extends BaseHttpRequestOptions implements Cloneable {
    public static final ListBucketOptions NONE = new ListBucketOptions();

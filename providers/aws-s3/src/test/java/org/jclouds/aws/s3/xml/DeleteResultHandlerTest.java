@@ -16,13 +16,13 @@
  */
 package org.jclouds.aws.s3.xml;
 
-import org.jclouds.aws.s3.domain.DeleteResult;
-import org.jclouds.http.functions.BaseHandlerTest;
-import org.testng.annotations.Test;
+import static org.testng.Assert.assertEquals;
 
 import java.io.InputStream;
 
-import static org.testng.Assert.assertEquals;
+import org.jclouds.aws.s3.domain.DeleteResult;
+import org.jclouds.http.functions.BaseHandlerTest;
+import org.testng.annotations.Test;
 
 // NOTE:without testName, this will not call @Before* and fail w/NPE during surefire
 @Test(groups = "unit", testName = "DeleteResultHandlerTest")

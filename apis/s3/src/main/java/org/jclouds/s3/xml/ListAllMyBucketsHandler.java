@@ -34,10 +34,6 @@ import com.google.common.collect.Sets;
  * Parses the following XML document:
  * <p/>
  * SetAllMyBucketsResult xmlns="http://doc.s3.amazonaws.com/2006-03-01"
- * 
- * @see <a
- *      href="http://docs.amazonwebservices.com/AmazonS3/2006-03-01/index.html?RESTServiceGET.html"
- *      />
  */
 public class ListAllMyBucketsHandler extends ParseSax.HandlerWithResult<Set<BucketMetadata>> {
 

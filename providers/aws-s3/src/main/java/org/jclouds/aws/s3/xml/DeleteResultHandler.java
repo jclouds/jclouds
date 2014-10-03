@@ -16,14 +16,15 @@
  */
 package org.jclouds.aws.s3.xml;
 
-import com.google.common.collect.ImmutableMap;
-import com.google.common.collect.ImmutableSet;
+import static org.jclouds.util.SaxUtils.equalsOrSuffix;
+
 import org.jclouds.aws.s3.domain.DeleteResult;
 import org.jclouds.http.functions.ParseSax;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 
-import static org.jclouds.util.SaxUtils.equalsOrSuffix;
+import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.ImmutableSet;
 
 public class DeleteResultHandler extends ParseSax.HandlerForGeneratedRequestWithResult<DeleteResult> {
 

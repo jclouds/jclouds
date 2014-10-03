@@ -36,8 +36,6 @@ import com.google.common.collect.Sets;
  * Parses the following XML document:
  * <p/>
  * BucketLoggingStatus xmlns="http://s3.amazonaws.com/doc/2006-03-01/"
- * 
- * @see <a href="http://docs.amazonwebservices.com/AmazonS3/latest/index.html?ServerLogs.html"/>
  */
 public class BucketLoggingHandler extends ParseSax.HandlerWithResult<BucketLogging> {
    private Set<Grant> targetGrants = Sets.newHashSet();

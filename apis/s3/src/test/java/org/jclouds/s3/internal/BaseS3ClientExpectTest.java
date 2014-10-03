@@ -17,12 +17,11 @@
 package org.jclouds.s3.internal;
 
 import org.jclouds.date.TimeStamp;
-import org.jclouds.rest.ConfiguresRestClient;
+import org.jclouds.rest.ConfiguresHttpApi;
 import org.jclouds.rest.internal.BaseRestClientExpectTest;
 import org.jclouds.s3.S3ApiMetadata;
-import org.jclouds.s3.S3AsyncClient;
 import org.jclouds.s3.S3Client;
-import org.jclouds.s3.config.S3RestClientModule;
+import org.jclouds.s3.config.S3HttpApiModule;
 
 import com.google.common.base.Supplier;
 import com.google.inject.Module;
@@ -31,8 +30,8 @@ public abstract class BaseS3ClientExpectTest extends BaseRestClientExpectTest<S3
 
    protected static final String CONSTANT_DATE = "2009-11-08T15:54:08.897Z";
 
-      @ConfiguresRestClient
-   private static final class TestS3RestClientModule extends S3RestClientModule<S3Client, S3AsyncClient> {
+   @ConfiguresHttpApi
+   private static final class TestS3HttpApiModule extends S3HttpApiModule<S3Client> {
 
       @Override
       protected String provideTimeStamp(@TimeStamp Supplier<String> cache) {
@@ -42,7 +41,7 @@ public abstract class BaseS3ClientExpectTest extends BaseRestClientExpectTest<S3
 
    @Override
    protected Module createModule() {
-      return new TestS3RestClientModule();
+      return new TestS3HttpApiModule();
    }
    
    @Override

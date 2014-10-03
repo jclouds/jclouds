@@ -23,26 +23,16 @@ import java.util.Properties;
 
 import org.jclouds.aws.s3.blobstore.AWSS3BlobStoreContext;
 import org.jclouds.aws.s3.blobstore.config.AWSS3BlobStoreContextModule;
-import org.jclouds.aws.s3.config.AWSS3RestClientModule;
+import org.jclouds.aws.s3.config.AWSS3HttpApiModule;
 import org.jclouds.s3.S3ApiMetadata;
 
 import com.google.common.collect.ImmutableSet;
-import com.google.common.reflect.TypeToken;
 import com.google.inject.Module;
 
 /**
- * Implementation of {@link ApiMetadata} for the Amazon-specific S3 API
+ * Implementation of {@link S3ApiMetadata} for the Amazon-specific S3 API
  */
 public class AWSS3ApiMetadata extends S3ApiMetadata {
-   
-   /**
-    * @deprecated please use {@code org.jclouds.ContextBuilder#buildApi(AWSS3Client.class)} as
-    *             {@link AWSS3AsyncClient} interface will be removed in jclouds 1.7.
-    */
-   @Deprecated
-   public static final TypeToken<org.jclouds.rest.RestContext<AWSS3Client, AWSS3AsyncClient>> CONTEXT_TOKEN = new TypeToken<org.jclouds.rest.RestContext<AWSS3Client, AWSS3AsyncClient>>() {
-      private static final long serialVersionUID = 1L;
-   };
 
    @Override
    public Builder toBuilder() {
@@ -63,16 +53,14 @@ public class AWSS3ApiMetadata extends S3ApiMetadata {
       return properties;
    }
 
-   public static class Builder extends S3ApiMetadata.Builder<Builder> {
-      @SuppressWarnings("deprecation")
+   public static class Builder extends S3ApiMetadata.Builder<AWSS3Client, Builder> {
       protected Builder() {
-         super(AWSS3Client.class, AWSS3AsyncClient.class);
+         super(AWSS3Client.class);
          id("aws-s3")
          .name("Amazon-specific S3 API")
          .defaultProperties(AWSS3ApiMetadata.defaultProperties())
-         .context(CONTEXT_TOKEN)
          .view(typeToken(AWSS3BlobStoreContext.class))
-         .defaultModules(ImmutableSet.<Class<? extends Module>>of(AWSS3RestClientModule.class, AWSS3BlobStoreContextModule.class));
+         .defaultModules(ImmutableSet.<Class<? extends Module>>of(AWSS3HttpApiModule.class, AWSS3BlobStoreContextModule.class));
       }
       
       @Override

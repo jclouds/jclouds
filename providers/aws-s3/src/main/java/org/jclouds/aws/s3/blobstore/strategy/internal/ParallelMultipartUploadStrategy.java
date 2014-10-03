@@ -36,10 +36,8 @@ import javax.annotation.Resource;
 import javax.inject.Named;
 
 import org.jclouds.Constants;
-import org.jclouds.aws.s3.AWSS3ApiMetadata;
-import org.jclouds.aws.s3.AWSS3AsyncClient;
 import org.jclouds.aws.s3.AWSS3Client;
-import org.jclouds.aws.s3.blobstore.AWSS3AsyncBlobStore;
+import org.jclouds.aws.s3.blobstore.AWSS3BlobStore;
 import org.jclouds.aws.s3.blobstore.strategy.AsyncMultipartUploadStrategy;
 import org.jclouds.blobstore.domain.Blob;
 import org.jclouds.blobstore.internal.BlobRuntimeException;
@@ -92,14 +90,14 @@ public class ParallelMultipartUploadStrategy implements AsyncMultipartUploadStra
    @Inject(optional = true)
    @Named(Constants.PROPERTY_REQUEST_TIMEOUT)
    protected Long maxTime;
-   
-   protected final AWSS3AsyncBlobStore ablobstore;
+
+   protected final AWSS3BlobStore blobstore;
    protected final PayloadSlicer slicer;
 
    @Inject
-   public ParallelMultipartUploadStrategy(AWSS3AsyncBlobStore ablobstore, PayloadSlicer slicer,
+   public ParallelMultipartUploadStrategy(AWSS3BlobStore blobstore, PayloadSlicer slicer,
          @Named(Constants.PROPERTY_IO_WORKER_THREADS) ListeningExecutorService ioExecutor) {
-      this.ablobstore = checkNotNull(ablobstore, "ablobstore");
+      this.blobstore = checkNotNull(blobstore, "blobstore");
       this.slicer = checkNotNull(slicer, "slicer");
       this.ioExecutor = checkNotNull(ioExecutor, "ioExecutor");
    }
@@ -116,11 +114,15 @@ public class ParallelMultipartUploadStrategy implements AsyncMultipartUploadStra
          latch.countDown();
          return;
       }
-      final AWSS3AsyncClient client = ablobstore.getContext().unwrap(AWSS3ApiMetadata.CONTEXT_TOKEN).getAsyncApi();
-      Payload chunkedPart = slicer.slice(payload, offset, size);
+      final AWSS3Client client = blobstore.getContext().unwrapApi(AWSS3Client.class);
+      final Payload chunkedPart = slicer.slice(payload, offset, size);
       logger.debug(String.format("async uploading part %s of %s to container %s with uploadId %s", part, key, container, uploadId));
       final long start = System.currentTimeMillis();
-      final ListenableFuture<String> futureETag = client.uploadPart(container, key, part, uploadId, chunkedPart);
+      final ListenableFuture<String> futureETag = ioExecutor.submit(new Callable<String>() {
+         @Override public String call() throws Exception {
+            return client.uploadPart(container, key, part, uploadId, chunkedPart);
+         }
+      });
       futureETag.addListener(new Runnable() {
          @Override
          public void run() {
@@ -164,8 +166,7 @@ public class ParallelMultipartUploadStrategy implements AsyncMultipartUploadStra
                   long chunkSize = algorithm.getChunkSize();
                   long remaining = algorithm.getRemaining();
                   if (parts > 0) {
-                     AWSS3Client client = ablobstore
-                           .getContext().unwrap(AWSS3ApiMetadata.CONTEXT_TOKEN).getApi();
+                     final AWSS3Client client = blobstore.getContext().unwrapApi(AWSS3Client.class);
                      String uploadId = null;
                      final Map<Integer, ListenableFuture<String>> futureParts = 
                         new ConcurrentHashMap<Integer, ListenableFuture<String>>();
@@ -240,9 +241,13 @@ public class ParallelMultipartUploadStrategy implements AsyncMultipartUploadStra
                      // Issue 936: don't just call putBlob, as that will see options=multiPart and 
                      // recursively call this execute method again; instead mark as not multipart
                      // because it can all fit in one go.
-                     PutOptions nonMultipartOptions = PutOptions.Builder.multipart(false);
-                     ListenableFuture<String> futureETag = ablobstore.putBlob(container, blob, nonMultipartOptions);
-                     return maxTime != null ? 
+                     final PutOptions nonMultipartOptions = PutOptions.Builder.multipart(false);
+                     ListenableFuture<String> futureETag = ioExecutor.submit(new Callable<String>() {
+                        @Override public String call() throws Exception {
+                           return blobstore.putBlob(container, blob, nonMultipartOptions);
+                        }
+                     });
+                     return maxTime != null ?
                            futureETag.get(maxTime, TimeUnit.SECONDS) : futureETag.get();
                   }
                }

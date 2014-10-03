@@ -73,7 +73,7 @@ public class AWSS3ClientLiveTest extends S3ClientLiveTest {
 
    @Override
    public AWSS3Client getApi() {
-      return view.unwrap(AWSS3ApiMetadata.CONTEXT_TOKEN).getApi();
+      return view.unwrapApi(AWSS3Client.class);
    }
 
    @BeforeClass(groups = { "integration", "live" })
@@ -171,7 +171,7 @@ public class AWSS3ClientLiveTest extends S3ClientLiveTest {
          blobStore.putBlob(containerName, blob,
             storageClass(StorageClass.REDUCED_REDUNDANCY));
 
-         S3Client s3Client = S3Client.class.cast(view.unwrap(AWSS3ApiMetadata.CONTEXT_TOKEN).getApi());
+         S3Client s3Client = view.unwrapApi(S3Client.class);
          ListBucketResponse response = s3Client.listBucket(containerName, withPrefix(blobName));
 
          ObjectMetadata metadata = response.iterator().next();

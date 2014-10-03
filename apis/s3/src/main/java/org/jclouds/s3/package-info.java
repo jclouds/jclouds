@@ -16,7 +16,5 @@
  */
 /**
  * This package contains an Amazon S3 client implemented by {@link org.jclouds.http.HttpCommandExecutorService} commands.
- *
- * @see <a href="http://amazon.com/s3"/>
  */
 package org.jclouds.s3;

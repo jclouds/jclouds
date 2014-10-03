@@ -21,8 +21,8 @@ import static org.testng.Assert.assertEquals;
 import java.io.IOException;
 
 import org.jclouds.http.HttpRequest;
-import org.jclouds.s3.S3AsyncClient;
-import org.jclouds.s3.internal.BaseS3AsyncClientTest;
+import org.jclouds.s3.S3Client;
+import org.jclouds.s3.internal.BaseS3ClientTest;
 import org.testng.annotations.Test;
 
 /**
@@ -30,7 +30,7 @@ import org.testng.annotations.Test;
  */
 // NOTE:without testName, this will not call @Before* and fail w/NPE during surefire
 @Test(groups = "unit", testName = "BindNoBucketLoggingToXmlPayloadTest")
-public class BindNoBucketLoggingToXmlPayloadTest extends BaseS3AsyncClientTest<S3AsyncClient> {
+public class BindNoBucketLoggingToXmlPayloadTest extends BaseS3ClientTest<S3Client> {
 
    public void testApplyInputStream() throws IOException {
 

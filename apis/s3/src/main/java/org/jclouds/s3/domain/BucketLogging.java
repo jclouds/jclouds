@@ -26,8 +26,6 @@ import com.google.common.collect.Sets;
 /**
  * Each Amazon S3 bucket has an associated XML sub-resource that you can read and write in order to
  * inspect or change the logging status for that bucket.
- * 
- * @see <a href="http://docs.amazonwebservices.com/AmazonS3/latest/index.html?ServerLogs.html"/>
  */
 public class BucketLogging {
    private final String targetBucket;

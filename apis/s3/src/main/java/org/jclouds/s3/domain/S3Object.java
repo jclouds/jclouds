@@ -23,11 +23,8 @@ import com.google.common.collect.Multimap;
 
 /**
  * Amazon S3 is designed to store objects. Objects are stored in buckets and consist of a
- * {@link ObjectMetadataS3Object#getInput() value}, a {@link ObjectMetadata#getKey key},
+ * {@link PayloadEnclosing#getPayload() value}, a {@link ObjectMetadata#getKey key},
  * {@link ObjectMetadata#getUserMetadata() metadata}, and an access control policy.
- * 
- * @see <a href="http://docs.amazonwebservices.com/AmazonS3/2006-03-01/index.html?UsingObjects.html"
- *      />
  */
 public interface S3Object extends PayloadEnclosing, Comparable<S3Object> {
    public interface Factory {
