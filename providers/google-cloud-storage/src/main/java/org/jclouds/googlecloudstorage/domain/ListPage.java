@@ -30,6 +30,7 @@ import org.jclouds.googlecloudstorage.domain.Resource.Kind;
 import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
 import com.google.common.base.Optional;
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 
 /**
@@ -47,7 +48,7 @@ public class ListPage<T> extends IterableWithMarker<T> {
 
       this.kind = checkNotNull(kind, "kind");
       this.nextPageToken = nextPageToken;
-      this.items = items != null ? ImmutableSet.copyOf(items) : ImmutableSet.<T> of();
+      this.items = items != null ? ImmutableList.copyOf(items) : ImmutableList.<T> of();
       this.prefixes = prefixes != null ? prefixes : ImmutableSet.<String> of();
     }
 
@@ -110,7 +111,7 @@ public class ListPage<T> extends IterableWithMarker<T> {
 
       private Kind kind;
       private String nextPageToken;
-      private ImmutableSet.Builder<T> items = ImmutableSet.builder();
+      private ImmutableList.Builder<T> items = ImmutableList.builder();
       private ImmutableSet.Builder<String> prefixes = ImmutableSet.builder();
 
       public Builder<T> kind(Kind kind) {

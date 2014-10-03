@@ -27,8 +27,6 @@ import org.jclouds.googlecloudstorage.domain.ObjectAccessControls;
 import org.jclouds.googlecloudstorage.domain.Resource.Kind;
 import org.jclouds.googlecloudstorage.internal.BaseGoogleCloudStorageParseTest;
 
-import com.google.common.collect.ImmutableSet;
-
 public class ObjectAclListTest extends BaseGoogleCloudStorageParseTest<ListObjectAccessControls> {
 
    private ObjectAccessControls item1 = ObjectAccessControls
@@ -49,7 +47,7 @@ public class ObjectAclListTest extends BaseGoogleCloudStorageParseTest<ListObjec
    @Override
    @Consumes(MediaType.APPLICATION_JSON)
    public ListObjectAccessControls expected() {
-      return ListObjectAccessControls.builder().kind(Kind.OBJECT_ACCESS_CONTROLS).items(ImmutableSet.of(item1)).build();
+      return ListObjectAccessControls.builder().kind(Kind.OBJECT_ACCESS_CONTROLS).addItems(item1).build();
    }
 
 }
