@@ -16,8 +16,6 @@
  */
 package org.jclouds.googlecomputeengine.parse;
 
-import java.net.URI;
-
 import javax.ws.rs.Consumes;
 import javax.ws.rs.core.MediaType;
 
@@ -38,8 +36,6 @@ public class ParseOperationListTest extends BaseGoogleComputeEngineParseTest<Lis
    public ListPage<Operation> expected() {
       return ListPage.<Operation>builder()
               .kind(Resource.Kind.OPERATION_LIST)
-              .id("projects/myproject/global/operations")
-              .selfLink(URI.create("https://www.googleapis.com/compute/v1/projects/myproject/global/operations"))
               .addItem(new ParseOperationTest().expected())
               .build();
    }

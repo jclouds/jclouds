@@ -28,8 +28,6 @@ import org.jclouds.googlecomputeengine.domain.Zone;
 import org.jclouds.googlecomputeengine.internal.BaseGoogleComputeEngineParseTest;
 import org.testng.annotations.Test;
 
-import com.google.common.collect.ImmutableSet;
-
 @Test(groups = "unit")
 public class ParseZoneListTest extends BaseGoogleComputeEngineParseTest<ListPage<Zone>> {
 
@@ -42,29 +40,26 @@ public class ParseZoneListTest extends BaseGoogleComputeEngineParseTest<ListPage
    @Consumes(MediaType.APPLICATION_JSON)
    public ListPage<Zone> expected() {
       return ListPage.<Zone>builder()
-              .kind(Resource.Kind.ZONE_LIST)
-              .id("projects/myproject/zones")
-              .selfLink(URI.create("https://www.googleapis.com/compute/v1/projects/myproject/zones"))
-              .items(ImmutableSet.of(
-                      new ParseZoneTest().expected()
-                      , Zone.builder()
-                      .id("13024414164050619686")
-                      .creationTimestamp(new SimpleDateFormatDateService().iso8601DateParse
-                              ("2012-10-24T20:13:19.271"))
-                      .selfLink(URI.create("https://www.googleapis" +
-                              ".com/compute/v1/projects/myproject/zones/us-central1-b"))
-                      .name("us-central1-b")
-                      .description("us-central1-b")
-                      .status(Zone.Status.UP)
-                      .addMaintenanceWindow(Zone.MaintenanceWindow.builder()
-                              .name("2013-02-17-planned-outage")
-                              .description("maintenance zone")
-                              .beginTime(new SimpleDateFormatDateService().iso8601DateParse
-                                      ("2013-02-17T08:00:00.000"))
-                              .endTime(new SimpleDateFormatDateService().iso8601DateParse
-                                      ("2013-03-03T08:00:00.000"))
-                              .build())
-                      .build()))
-              .build();
+                     .kind(Resource.Kind.ZONE_LIST)
+                     .addItem(new ParseZoneTest().expected())
+                     .addItem(Zone.builder()
+                                  .id("13024414164050619686")
+                                  .creationTimestamp(new SimpleDateFormatDateService().iso8601DateParse
+                                    ("2012-10-24T20:13:19.271"))
+                                  .selfLink(URI.create("https://www.googleapis" +
+                                    ".com/compute/v1/projects/myproject/zones/us-central1-b"))
+                                  .name("us-central1-b")
+                                  .description("us-central1-b")
+                                  .status(Zone.Status.UP)
+                                  .addMaintenanceWindow(Zone.MaintenanceWindow.builder()
+                                          .name("2013-02-17-planned-outage")
+                                          .description("maintenance zone")
+                                          .beginTime(new SimpleDateFormatDateService().iso8601DateParse
+                                                  ("2013-02-17T08:00:00.000"))
+                                          .endTime(new SimpleDateFormatDateService().iso8601DateParse
+                                                  ("2013-03-03T08:00:00.000"))
+                                          .build())
+                                  .build())
+                    .build();
    }
 }

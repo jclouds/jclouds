@@ -74,8 +74,6 @@ public class ZoneOperationApiExpectTest extends BaseGoogleComputeEngineApiExpect
    private ListPage<Operation> expectedList() {
       return ListPage.<Operation>builder()
               .kind(Resource.Kind.OPERATION_LIST)
-              .id("projects/myproject/zones/us-central1-a/operations")
-              .selfLink(URI.create("https://www.googleapis.com/compute/v1/projects/myproject/zones/us-central1-a/operations"))
               .addItem(expected())
               .build();
    }

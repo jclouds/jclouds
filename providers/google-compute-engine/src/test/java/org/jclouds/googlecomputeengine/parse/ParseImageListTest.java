@@ -29,8 +29,6 @@ import org.jclouds.googlecomputeengine.domain.Resource;
 import org.jclouds.googlecomputeengine.internal.BaseGoogleComputeEngineParseTest;
 import org.testng.annotations.Test;
 
-import com.google.common.collect.ImmutableSet;
-
 @Test(groups = "unit")
 public class ParseImageListTest extends BaseGoogleComputeEngineParseTest<ListPage<Image>> {
 
@@ -44,9 +42,7 @@ public class ParseImageListTest extends BaseGoogleComputeEngineParseTest<ListPag
    public ListPage<Image> expected() {
       return ListPage.<Image>builder()
               .kind(Resource.Kind.IMAGE_LIST)
-              .id("projects/centos-cloud/global/images")
-              .selfLink(URI.create("https://www.googleapis.com/compute/v1/projects/centos-cloud/global/images"))
-              .items(ImmutableSet.of(Image.builder()
+              .addItem(Image.builder()
                       .id("12941197498378735318")
                       .creationTimestamp(new SimpleDateFormatDateService().iso8601DateParse("2012-07-16T22:16:13.468"))
                       .selfLink(URI.create("https://www.googleapis" +
@@ -63,9 +59,7 @@ public class ParseImageListTest extends BaseGoogleComputeEngineParseTest<ListPag
                                       .source("")
                                       .containerType("TAR")
                                       .build()
-                      ).build()
-
-              ))
+                      ).build())
               .build();
    }
 }

@@ -30,7 +30,6 @@ import org.jclouds.googlecomputeengine.internal.BaseGoogleComputeEngineParseTest
 
 public class ParseMachineTypeListTest extends BaseGoogleComputeEngineParseTest<ListPage<MachineType>> {
 
-
    @Override
    public String resource() {
       return "/machinetype_list.json";
@@ -42,8 +41,6 @@ public class ParseMachineTypeListTest extends BaseGoogleComputeEngineParseTest<L
       SimpleDateFormatDateService dateService = new SimpleDateFormatDateService();
       return ListPage.<MachineType>builder()
               .kind(MACHINE_TYPE_LIST)
-              .id("projects/myproject/machineTypes")
-              .selfLink(URI.create("https://www.googleapis.com/compute/v1/projects/myproject/zones/us-central1-a/machineTypes"))
               .addItem(MachineType.builder()
                       .id("4618642685664990776")
                       .creationTimestamp(dateService.iso8601DateParse("2013-04-25T13:32:49.088-07:00"))

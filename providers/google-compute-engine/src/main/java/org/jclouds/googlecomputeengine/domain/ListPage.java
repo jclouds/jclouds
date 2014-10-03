@@ -22,7 +22,6 @@ import static com.google.common.base.Preconditions.checkNotNull;
 import static org.jclouds.googlecomputeengine.domain.Resource.Kind;
 
 import java.beans.ConstructorProperties;
-import java.net.URI;
 import java.util.Iterator;
 
 import org.jclouds.collect.IterableWithMarker;
@@ -30,7 +29,7 @@ import org.jclouds.collect.IterableWithMarker;
 import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
 import com.google.common.base.Optional;
-import com.google.common.collect.ImmutableSet;
+import com.google.common.collect.ImmutableList;
 
 /**
  * The collection returned from any <code>listFirstPage()</code> method.
@@ -38,32 +37,18 @@ import com.google.common.collect.ImmutableSet;
 public class ListPage<T> extends IterableWithMarker<T> {
 
    private final Kind kind;
-   private final String id;
-   private final URI selfLink;
    private final String nextPageToken;
    private final Iterable<T> items;
 
-   @ConstructorProperties({
-           "kind", "id", "selfLink", "nextPageToken", "items"
-   })
-   protected ListPage(Kind kind, String id, URI selfLink, String nextPageToken, Iterable<T> items) {
-      this.id = checkNotNull(id, "id");
-      this.kind = checkNotNull(kind, "kind of %id", id);
-      this.selfLink = checkNotNull(selfLink, "selfLink of %id", id);
+   @ConstructorProperties({ "kind", "nextPageToken", "items" })
+   protected ListPage(Kind kind, String nextPageToken, Iterable<T> items) {
+      this.kind = checkNotNull(kind, "kind");
       this.nextPageToken = nextPageToken;
-      this.items = items != null ? ImmutableSet.copyOf(items) : ImmutableSet.<T>of();
+      this.items = items != null ? ImmutableList.copyOf(items) : ImmutableList.<T>of();
    }
 
    public Kind getKind() {
       return kind;
-   }
-
-   public String getId() {
-      return id;
-   }
-
-   public URI getSelfLink() {
-      return selfLink;
    }
 
    @Override
@@ -76,39 +61,26 @@ public class ListPage<T> extends IterableWithMarker<T> {
       return checkNotNull(items, "items").iterator();
    }
 
-   /**
-    * {@inheritDoc}
-    */
    @Override
    public int hashCode() {
-      return Objects.hashCode(kind, id);
+      return Objects.hashCode(kind, items);
    }
 
-   /**
-    * {@inheritDoc}
-    */
    @Override
    public boolean equals(Object obj) {
-      if (this == obj) return true;
-      if (obj == null || getClass() != obj.getClass()) return false;
+      if (this == obj)
+         return true;
+      if (obj == null || getClass() != obj.getClass())
+         return false;
       ListPage<?> that = ListPage.class.cast(obj);
-      return equal(this.kind, that.kind)
-              && equal(this.id, that.id);
+      return equal(this.kind, that.kind) && equal(this.items, that.items);
    }
 
    protected MoreObjects.ToStringHelper string() {
-      return toStringHelper(this)
-              .omitNullValues()
-              .add("kind", kind)
-              .add("id", id)
-              .add("selfLink", selfLink)
-              .add("nextPageToken", nextPageToken)
-              .add("items", items);
+      return toStringHelper(this).omitNullValues().add("kind", kind).add("nextPageToken", nextPageToken)
+            .add("items", items);
    }
 
-   /**
-    * {@inheritDoc}
-    */
    @Override
    public String toString() {
       return string().toString();
@@ -125,23 +97,11 @@ public class ListPage<T> extends IterableWithMarker<T> {
    public static final class Builder<T> {
 
       private Kind kind;
-      private String id;
-      private URI selfLink;
       private String nextPageToken;
-      private ImmutableSet.Builder<T> items = ImmutableSet.builder();
+      private ImmutableList.Builder<T> items = ImmutableList.builder();
 
       public Builder<T> kind(Kind kind) {
          this.kind = kind;
-         return this;
-      }
-
-      public Builder<T> id(String id) {
-         this.id = id;
-         return this;
-      }
-
-      public Builder<T> selfLink(URI selfLink) {
-         this.selfLink = selfLink;
          return this;
       }
 
@@ -161,14 +121,12 @@ public class ListPage<T> extends IterableWithMarker<T> {
       }
 
       public ListPage<T> build() {
-         return new ListPage<T>(kind, id, selfLink, nextPageToken, items.build());
+         return new ListPage<T>(kind, nextPageToken, items.build());
       }
 
       public Builder<T> fromPagedList(ListPage<T> in) {
          return this
                  .kind(in.getKind())
-                 .id(in.getId())
-                 .selfLink(in.getSelfLink())
                  .nextPageToken((String) in.nextMarker().orNull())
                  .items(in);
 

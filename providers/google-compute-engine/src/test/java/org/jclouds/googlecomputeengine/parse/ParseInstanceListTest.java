@@ -16,8 +16,6 @@
  */
 package org.jclouds.googlecomputeengine.parse;
 
-import java.net.URI;
-
 import javax.ws.rs.Consumes;
 import javax.ws.rs.core.MediaType;
 
@@ -25,8 +23,6 @@ import org.jclouds.googlecomputeengine.domain.Instance;
 import org.jclouds.googlecomputeengine.domain.ListPage;
 import org.jclouds.googlecomputeengine.domain.Resource;
 import org.jclouds.googlecomputeengine.internal.BaseGoogleComputeEngineParseTest;
-
-import com.google.common.collect.ImmutableSet;
 
 public class ParseInstanceListTest extends BaseGoogleComputeEngineParseTest<ListPage<Instance>> {
 
@@ -40,9 +36,7 @@ public class ParseInstanceListTest extends BaseGoogleComputeEngineParseTest<List
    public ListPage<Instance> expected() {
       return ListPage.<Instance>builder()
               .kind(Resource.Kind.INSTANCE_LIST)
-              .id("projects/myproject/zones/us-central1-a/instances")
-              .selfLink(URI.create("https://www.googleapis.com/compute/v1/projects/myproject/zones/us-central1-a/instances"))
-              .items(ImmutableSet.of(new ParseInstanceTest().expected()))
+              .addItem(new ParseInstanceTest().expected())
               .build();
    }
 }

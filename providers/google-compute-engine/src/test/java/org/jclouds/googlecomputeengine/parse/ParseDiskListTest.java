@@ -28,8 +28,6 @@ import org.jclouds.googlecomputeengine.domain.Resource;
 import org.jclouds.googlecomputeengine.internal.BaseGoogleComputeEngineParseTest;
 import org.testng.annotations.Test;
 
-import com.google.common.collect.ImmutableSet;
-
 @Test(groups = "unit")
 public class ParseDiskListTest extends BaseGoogleComputeEngineParseTest<ListPage<Disk>> {
 
@@ -43,9 +41,7 @@ public class ParseDiskListTest extends BaseGoogleComputeEngineParseTest<ListPage
    public ListPage<Disk> expected() {
       return ListPage.<Disk>builder()
               .kind(Resource.Kind.DISK_LIST)
-              .id("projects/myproject/zones/us-central1-a/disks")
-              .selfLink(URI.create("https://www.googleapis.com/compute/v1/projects/myproject/zones/us-central1-a/disks"))
-              .items(ImmutableSet.of(Disk.builder()
+              .addItem(Disk.builder()
                       .id("13050421646334304115")
                       .creationTimestamp(new SimpleDateFormatDateService().iso8601DateParse("2012-11-25T01:38:48.306"))
                       .selfLink(URI.create("https://www.googleapis" +
@@ -56,6 +52,6 @@ public class ParseDiskListTest extends BaseGoogleComputeEngineParseTest<ListPage
                               ".com/compute/v1/projects/myproject/zones/us-central1-a"))
                       .status("READY")
                       .build())
-              ).build();
+              .build();
    }
 }

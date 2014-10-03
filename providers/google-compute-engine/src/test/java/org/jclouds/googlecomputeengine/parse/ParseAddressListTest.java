@@ -28,8 +28,6 @@ import org.jclouds.googlecomputeengine.domain.Resource.Kind;
 import org.jclouds.googlecomputeengine.internal.BaseGoogleComputeEngineParseTest;
 import org.testng.annotations.Test;
 
-import com.google.common.collect.ImmutableSet;
-
 @Test(groups = "unit")
 public class ParseAddressListTest extends BaseGoogleComputeEngineParseTest<ListPage<Address>> {
 
@@ -43,10 +41,8 @@ public class ParseAddressListTest extends BaseGoogleComputeEngineParseTest<ListP
    public ListPage<Address> expected() {
       return ListPage.<Address>builder()
               .kind(Kind.ADDRESS_LIST)
-              .id("projects/myproject/regions/us-central1/addresses")
-              .selfLink(URI.create("https://www.googleapis.com/compute/v1/projects/myproject/regions/us-central1/addresses"))
-              .items(ImmutableSet.of(new ParseAddressTest().expected(),
-                      Address.builder()
+              .addItem(new ParseAddressTest().expected())
+              .addItem(Address.builder()
                               .id("4881363978908129158")
                               .creationTimestamp(new SimpleDateFormatDateService().iso8601DateParse("2013-07-26T14:08:21.552-07:00"))
                               .status("RESERVED")
@@ -56,6 +52,6 @@ public class ParseAddressListTest extends BaseGoogleComputeEngineParseTest<ListP
                               .address("173.255.118.115")
                               .selfLink(URI.create("https://www.googleapis.com/compute/v1/projects/myproject/regions/us-central1/addresses/test-ip2"))
                               .build())
-              ).build();
+              .build();
    }
 }

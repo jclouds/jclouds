@@ -16,8 +16,6 @@
  */
 package org.jclouds.googlecomputeengine.parse;
 
-import java.net.URI;
-
 import javax.ws.rs.Consumes;
 import javax.ws.rs.core.MediaType;
 
@@ -25,8 +23,6 @@ import org.jclouds.googlecomputeengine.domain.ListPage;
 import org.jclouds.googlecomputeengine.domain.Network;
 import org.jclouds.googlecomputeengine.domain.Resource;
 import org.jclouds.googlecomputeengine.internal.BaseGoogleComputeEngineParseTest;
-
-import com.google.common.collect.ImmutableSet;
 
 public class ParseNetworkListTest extends BaseGoogleComputeEngineParseTest<ListPage<Network>> {
 
@@ -40,10 +36,7 @@ public class ParseNetworkListTest extends BaseGoogleComputeEngineParseTest<ListP
    public ListPage<Network> expected() {
       return ListPage.<Network>builder()
               .kind(Resource.Kind.NETWORK_LIST)
-              .id("projects/myproject/networks")
-              .selfLink(URI.create("https://www.googleapis.com/compute/v1/projects/myproject/networks"))
-              .items(ImmutableSet.of(new ParseNetworkTest().expected()))
+              .addItem(new ParseNetworkTest().expected())
               .build();
-
    }
 }

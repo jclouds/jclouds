@@ -28,7 +28,7 @@ import org.jclouds.googlecomputeengine.domain.Route;
 import org.jclouds.googlecomputeengine.internal.BaseGoogleComputeEngineParseTest;
 import org.testng.annotations.Test;
 
-import com.google.common.collect.ImmutableSet;
+import com.google.common.collect.ImmutableList;
 
 @Test(groups = "unit")
 public class ParseRouteListTest extends BaseGoogleComputeEngineParseTest<ListPage<Route>> {
@@ -43,9 +43,7 @@ public class ParseRouteListTest extends BaseGoogleComputeEngineParseTest<ListPag
    public ListPage<Route> expected() {
       return ListPage.<Route>builder()
               .kind(Kind.ROUTE_LIST)
-              .id("projects/myproject/global/routes")
-              .selfLink(URI.create("https://www.googleapis.com/compute/v1/projects/myproject/global/routes"))
-              .items(ImmutableSet.of(new ParseRouteTest().expected(),
+              .items(ImmutableList.of(new ParseRouteTest().expected(),
                       Route.builder()
                               .selfLink(URI.create("https://www.googleapis.com/compute/v1/projects/myproject/global/routes/default-route-fc92a41ecb5a8d17"))
                               .id("507025480040058551")

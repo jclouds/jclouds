@@ -77,8 +77,6 @@ public class RegionOperationApiExpectTest extends BaseGoogleComputeEngineApiExpe
    private ListPage<Operation> expectedList() {
       return ListPage.<Operation>builder()
               .kind(Resource.Kind.OPERATION_LIST)
-              .id("projects/myproject/regions/us-central1/operations")
-              .selfLink(URI.create("https://www.googleapis.com/compute/v1/projects/myproject/regions/us-central1/operations"))
               .addItem(expected())
               .build();
    }
@@ -190,6 +188,4 @@ public class RegionOperationApiExpectTest extends BaseGoogleComputeEngineApiExpe
 
       assertTrue(regionOperationApi.listInRegion("us-central1").concat().isEmpty());
    }
-
-
 }
