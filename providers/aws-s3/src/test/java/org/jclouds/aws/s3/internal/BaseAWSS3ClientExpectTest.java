@@ -18,10 +18,10 @@ package org.jclouds.aws.s3.internal;
 
 import org.jclouds.aws.s3.AWSS3Client;
 import org.jclouds.aws.s3.AWSS3ProviderMetadata;
-import org.jclouds.aws.s3.config.AWSS3RestClientModule;
+import org.jclouds.aws.s3.config.AWSS3HttpApiModule;
 import org.jclouds.date.TimeStamp;
 import org.jclouds.providers.ProviderMetadata;
-import org.jclouds.rest.ConfiguresRestClient;
+import org.jclouds.rest.ConfiguresHttpApi;
 import org.jclouds.rest.internal.BaseRestClientExpectTest;
 
 import com.google.common.base.Supplier;
@@ -44,8 +44,8 @@ public class BaseAWSS3ClientExpectTest extends BaseRestClientExpectTest<AWSS3Cli
       return new AWSS3ProviderMetadata();
    }
 
-      @ConfiguresRestClient
-   private static final class TestAWSS3RestClientModule extends AWSS3RestClientModule {
+      @ConfiguresHttpApi
+   private static final class TestAWSS3HttpApiModule extends AWSS3HttpApiModule {
       @Override
       protected String provideTimeStamp(@TimeStamp Supplier<String> cache) {
          return CONSTANT_DATE;
@@ -54,7 +54,7 @@ public class BaseAWSS3ClientExpectTest extends BaseRestClientExpectTest<AWSS3Cli
 
    @Override
    protected Module createModule() {
-      return new TestAWSS3RestClientModule();
+      return new TestAWSS3HttpApiModule();
    }
 
 }

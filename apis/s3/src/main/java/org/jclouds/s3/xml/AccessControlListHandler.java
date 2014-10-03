@@ -33,8 +33,6 @@ import org.xml.sax.Attributes;
  * Parses the following XML document:
  * <p/>
  * AccessControlPolicy xmlns="http://s3.amazonaws.com/doc/2006-03-01/"
- * 
- * @see <a href="http://docs.amazonwebservices.com/AmazonS3/2006-03-01/RESTAccessPolicy.html"/>
  */
 public class AccessControlListHandler extends ParseSax.HandlerWithResult<AccessControlList> {
    private AccessControlList acl = new AccessControlList();

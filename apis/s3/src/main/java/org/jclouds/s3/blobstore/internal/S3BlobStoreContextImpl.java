@@ -27,7 +27,6 @@ import org.jclouds.blobstore.attr.ConsistencyModel;
 import org.jclouds.blobstore.internal.BlobStoreContextImpl;
 import org.jclouds.location.Provider;
 import org.jclouds.rest.Utils;
-import org.jclouds.s3.blobstore.S3AsyncBlobStore;
 import org.jclouds.s3.blobstore.S3BlobStore;
 import org.jclouds.s3.blobstore.S3BlobStoreContext;
 
@@ -49,10 +48,4 @@ public class S3BlobStoreContextImpl extends BlobStoreContextImpl implements S3Bl
    public S3BlobStore getBlobStore() {
       return S3BlobStore.class.cast(super.getBlobStore());
    }
-
-   @Override
-   public S3AsyncBlobStore getAsyncBlobStore() {
-      return S3AsyncBlobStore.class.cast(super.getAsyncBlobStore());
-   }
-
 }

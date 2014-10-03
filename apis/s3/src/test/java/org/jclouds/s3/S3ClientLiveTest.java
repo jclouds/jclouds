@@ -16,8 +16,6 @@
  */
 package org.jclouds.s3;
 
-import static org.jclouds.s3.internal.StubS3AsyncClient.TEST_ACL_EMAIL;
-import static org.jclouds.s3.internal.StubS3AsyncClient.TEST_ACL_ID;
 import static org.jclouds.s3.options.CopyObjectOptions.Builder.ifSourceETagDoesntMatch;
 import static org.jclouds.s3.options.CopyObjectOptions.Builder.ifSourceETagMatches;
 import static org.jclouds.s3.options.CopyObjectOptions.Builder.ifSourceModifiedSince;
@@ -57,12 +55,16 @@ import com.google.common.collect.Maps;
 
 @Test(groups = { "integration", "live" })
 public class S3ClientLiveTest extends BaseBlobStoreIntegrationTest {
+   public static final String TEST_ACL_ID = "1a405254c932b52e5b5caaa88186bc431a1bacb9ece631f835daddaf0c47677c";
+   public static final String TEST_ACL_EMAIL = "james@misterm.org";
+   public static final String DEFAULT_OWNER_ID = "abc123";
+
    public S3ClientLiveTest() {
       this.provider = "s3";
    }
    
    public S3Client getApi() {
-      return view.unwrap(S3ApiMetadata.CONTEXT_TOKEN).getApi();
+      return view.unwrapApi(S3Client.class);
    }
 
    /**

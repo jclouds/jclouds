@@ -37,8 +37,6 @@ import java.util.Set;
  * addressable using the REST API under the domain bucketname.s3.amazonaws.com. For example, if the
  * object homepage.html?is stored in the Amazon S3 bucket mybucket its address would be
  * http://mybucket.s3.amazonaws.com/homepage.html?
- * 
- * @see <a href="http://docs.amazonwebservices.com/AmazonS3/2006-03-01/index.html" />
  */
 public interface ListBucketResponse extends Set<ObjectMetadata> {
 

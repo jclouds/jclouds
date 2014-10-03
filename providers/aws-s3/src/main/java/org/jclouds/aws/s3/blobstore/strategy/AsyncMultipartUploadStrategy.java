@@ -23,9 +23,6 @@ import org.jclouds.blobstore.options.PutOptions;
 import com.google.common.util.concurrent.ListenableFuture;
 import com.google.inject.ImplementedBy;
 
-/**
- * @see <a href="http://docs.amazonwebservices.com/AmazonS3/latest/dev/index.html?qfacts.html">AWS Documentation</a>
- */
 @ImplementedBy(ParallelMultipartUploadStrategy.class)
 public interface AsyncMultipartUploadStrategy {
    

@@ -16,14 +16,15 @@
  */
 package org.jclouds.aws.s3.xml;
 
-import com.google.common.collect.Maps;
+import static org.jclouds.util.SaxUtils.equalsOrSuffix;
+
+import java.util.Map;
+
 import org.jclouds.aws.s3.domain.DeleteResult;
 import org.jclouds.http.functions.ParseSax;
 import org.xml.sax.SAXException;
 
-import java.util.Map;
-
-import static org.jclouds.util.SaxUtils.equalsOrSuffix;
+import com.google.common.collect.Maps;
 
 public class ErrorEntryHandler extends ParseSax.HandlerForGeneratedRequestWithResult<Map.Entry<String, DeleteResult.Error>> {
 

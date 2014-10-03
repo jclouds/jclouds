@@ -16,23 +16,21 @@
  */
 package org.jclouds.aws.s3.domain;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+
+import java.util.Map;
+import java.util.Set;
+
 import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
 import com.google.common.collect.ForwardingSet;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 
-import java.util.Map;
-import java.util.Set;
-
-import static com.google.common.base.Preconditions.checkNotNull;
-
 /**
  * Multi-object delete API response
  * <p/>
  * Contains a list of the keys that were deleted
- *
- * @see <a href="http://docs.amazonwebservices.com/AmazonS3/latest/API/multiobjectdeleteapi.html" />
  */
 public class DeleteResult extends ForwardingSet<String> {
 

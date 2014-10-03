@@ -25,8 +25,6 @@ import org.jclouds.s3.domain.Payer;
  * Parses the response from Amazon S3 GET Request Payment
   * <p/>
  * RequestPaymentConfiguration is the document we expect to parse.
- * 
- * @see <a href= "http://docs.amazonwebservices.com/AmazonS3/latest/RESTrequestPaymentGET.html" />
  */
 public class PayerHandler extends ParseSax.HandlerWithResult<Payer> {
    private StringBuilder currentText = new StringBuilder();

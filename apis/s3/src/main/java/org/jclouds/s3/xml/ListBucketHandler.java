@@ -41,10 +41,6 @@ import com.google.common.collect.ImmutableSet.Builder;
  * Parses the following XML document:
  * <p/>
  * ListBucketResult xmlns="http://s3.amazonaws.com/doc/2006-03-01"
- * 
- * @see <a
- *      href="http://docs.amazonwebservices.com/AmazonS3/2006-03-01/index.html?RESTBucketGET.html"
- *      />
  */
 public class ListBucketHandler extends ParseSax.HandlerWithResult<ListBucketResponse> {
    private Builder<ObjectMetadata> contents = ImmutableSet.builder();

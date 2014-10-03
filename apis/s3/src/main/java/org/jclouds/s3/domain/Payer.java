@@ -52,9 +52,6 @@ import com.google.common.base.CaseFormat;
  * You cannot use a Requester Pays bucket as the target bucket for end user logging, or vice versa.
  * However, you can turn on end user logging on a Requester Pays bucket where the target bucket is a
  * non Requester Pays bucket.
- * 
- * @see <a href=
- *      "http://docs.amazonwebservices.com/AmazonS3/latest/index.html?RESTrequestPaymentGET.html" />
  */
 public enum Payer {
    REQUESTER, BUCKET_OWNER, UNRECOGNIZED;

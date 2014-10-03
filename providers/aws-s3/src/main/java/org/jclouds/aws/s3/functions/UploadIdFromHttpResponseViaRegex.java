@@ -27,11 +27,6 @@ import org.jclouds.http.functions.ReturnStringIf2xx;
 
 import com.google.common.base.Function;
 
-/**
- * @see <a
- *      href="http://docs.amazonwebservices.com/AmazonS3/latest/API/index.html?mpUploadInitiate.html"
- *      />
- */
 @Singleton
 public class UploadIdFromHttpResponseViaRegex implements Function<HttpResponse, String> {
    Pattern pattern = Pattern.compile("<UploadId>([\\S&&[^<]]+)</UploadId>");

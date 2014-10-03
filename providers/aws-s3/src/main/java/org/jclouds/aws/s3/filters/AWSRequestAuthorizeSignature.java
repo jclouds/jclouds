@@ -38,13 +38,7 @@ import org.jclouds.s3.filters.RequestAuthorizeSignature;
 
 import com.google.common.base.Supplier;
 
-/**
- * Signs the AWS S3 request, supporting temporary signatures.
- * 
- * @see <a href=
- *      "http://docs.amazonwebservices.com/AmazonS3/2006-03-01/dev/index.html?RESTAuthentication.html"
- *      />
- */
+/** Signs the AWS S3 request, supporting temporary signatures. */
 @Singleton
 public class AWSRequestAuthorizeSignature extends RequestAuthorizeSignature {
 

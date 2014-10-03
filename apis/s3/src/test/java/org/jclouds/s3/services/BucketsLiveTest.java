@@ -16,6 +16,18 @@
  */
 package org.jclouds.s3.services;
 
+import static org.jclouds.s3.S3ClientLiveTest.TEST_ACL_EMAIL;
+import static org.jclouds.s3.S3ClientLiveTest.TEST_ACL_ID;
+import static org.jclouds.s3.domain.AccessControlList.GroupGranteeURI.ALL_USERS;
+import static org.jclouds.s3.domain.AccessControlList.GroupGranteeURI.LOG_DELIVERY;
+import static org.jclouds.s3.domain.AccessControlList.Permission.FULL_CONTROL;
+import static org.jclouds.s3.domain.AccessControlList.Permission.READ;
+import static org.jclouds.s3.domain.AccessControlList.Permission.READ_ACP;
+import static org.jclouds.s3.domain.AccessControlList.Permission.WRITE;
+import static org.jclouds.s3.domain.AccessControlList.Permission.WRITE_ACP;
+import static org.jclouds.s3.domain.CannedAccessPolicy.PUBLIC_READ;
+import static org.jclouds.s3.domain.Payer.BUCKET_OWNER;
+import static org.jclouds.s3.domain.Payer.REQUESTER;
 import static org.jclouds.s3.options.ListBucketOptions.Builder.afterMarker;
 import static org.jclouds.s3.options.ListBucketOptions.Builder.delimiter;
 import static org.jclouds.s3.options.ListBucketOptions.Builder.maxResults;
@@ -34,21 +46,15 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeoutException;
 
 import org.jclouds.blobstore.integration.internal.BaseBlobStoreIntegrationTest;
-import org.jclouds.s3.S3ApiMetadata;
 import org.jclouds.s3.S3Client;
 import org.jclouds.s3.domain.AccessControlList;
 import org.jclouds.s3.domain.AccessControlList.CanonicalUserGrantee;
 import org.jclouds.s3.domain.AccessControlList.EmailAddressGrantee;
 import org.jclouds.s3.domain.AccessControlList.Grant;
-import org.jclouds.s3.domain.AccessControlList.GroupGranteeURI;
-import org.jclouds.s3.domain.AccessControlList.Permission;
 import org.jclouds.s3.domain.BucketLogging;
 import org.jclouds.s3.domain.BucketMetadata;
-import org.jclouds.s3.domain.CannedAccessPolicy;
 import org.jclouds.s3.domain.ListBucketResponse;
-import org.jclouds.s3.domain.Payer;
 import org.jclouds.s3.domain.S3Object;
-import org.jclouds.s3.internal.StubS3AsyncClient;
 import org.jclouds.util.Strings2;
 import org.testng.annotations.Test;
 
@@ -58,13 +64,14 @@ import com.google.common.collect.Iterables;
 
 @Test(groups = { "integration", "live" })
 public class BucketsLiveTest extends BaseBlobStoreIntegrationTest {
+
    public BucketsLiveTest() {
       this.provider = "s3";
       BaseBlobStoreIntegrationTest.SANITY_CHECK_RETURNED_BUCKET_NAME = true;
    }
 
    public S3Client getApi() {
-      return view.unwrap(S3ApiMetadata.CONTEXT_TOKEN).getApi();
+      return view.unwrapApi(S3Client.class);
    }
 
    /**
@@ -94,7 +101,7 @@ public class BucketsLiveTest extends BaseBlobStoreIntegrationTest {
          assertEquals(acl.getGrants().size(), 1);
          assertNotNull(acl.getOwner());
          String ownerId = acl.getOwner().getId();
-         assertTrue(acl.hasPermission(ownerId, Permission.FULL_CONTROL));
+         assertTrue(acl.hasPermission(ownerId, FULL_CONTROL));
       } finally {
          returnContainer(bucketName);
       }
@@ -109,7 +116,7 @@ public class BucketsLiveTest extends BaseBlobStoreIntegrationTest {
          AccessControlList acl = getApi().getBucketACL(bucketName);
          String ownerId = acl.getOwner().getId();
          assertEquals(acl.getGrants().size(), 1);
-         assertTrue(acl.hasPermission(ownerId, Permission.FULL_CONTROL));
+         assertTrue(acl.hasPermission(ownerId, FULL_CONTROL));
 
          addGrantsToACL(acl);
          assertEquals(acl.getGrants().size(), 4);
@@ -129,26 +136,26 @@ public class BucketsLiveTest extends BaseBlobStoreIntegrationTest {
 
       assertEquals(acl.getGrants().size(), 4, acl.toString());
 
-      assertTrue(acl.hasPermission(ownerId, Permission.FULL_CONTROL), acl.toString());
-      assertTrue(acl.hasPermission(GroupGranteeURI.ALL_USERS, Permission.READ), acl.toString());
-      assertTrue(acl.hasPermission(ownerId, Permission.WRITE_ACP), acl.toString());
+      assertTrue(acl.hasPermission(ownerId, FULL_CONTROL), acl.toString());
+      assertTrue(acl.hasPermission(ALL_USERS, READ), acl.toString());
+      assertTrue(acl.hasPermission(ownerId, WRITE_ACP), acl.toString());
       // EmailAddressGrantee is replaced by a CanonicalUserGrantee, so we cannot test by email addr
-      assertTrue(acl.hasPermission(StubS3AsyncClient.TEST_ACL_ID, Permission.READ_ACP), acl.toString());
+      assertTrue(acl.hasPermission(TEST_ACL_ID, READ_ACP), acl.toString());
    }
 
    private void addGrantsToACL(AccessControlList acl) {
       String ownerId = acl.getOwner().getId();
-      acl.addPermission(GroupGranteeURI.ALL_USERS, Permission.READ);
-      acl.addPermission(new EmailAddressGrantee(StubS3AsyncClient.TEST_ACL_EMAIL), Permission.READ_ACP);
-      acl.addPermission(new CanonicalUserGrantee(ownerId), Permission.WRITE_ACP);
+      acl.addPermission(ALL_USERS, READ);
+      acl.addPermission(new EmailAddressGrantee(TEST_ACL_EMAIL), READ_ACP);
+      acl.addPermission(new CanonicalUserGrantee(ownerId), WRITE_ACP);
    }
 
    public void testPublicReadAccessPolicy() throws Exception {
       String bucketName = getScratchContainerName();
       try {
-         getApi().putBucketInRegion(null, bucketName, withBucketAcl(CannedAccessPolicy.PUBLIC_READ));
+         getApi().putBucketInRegion(null, bucketName, withBucketAcl(PUBLIC_READ));
          AccessControlList acl = getApi().getBucketACL(bucketName);
-         assertTrue(acl.hasPermission(GroupGranteeURI.ALL_USERS, Permission.READ), acl.toString());
+         assertTrue(acl.hasPermission(ALL_USERS, READ), acl.toString());
          // TODO: I believe that the following should work based on the above acl assertion passing.
          // However, it fails on 403
          // URL url = new URL(String.format("http://%s.s3.amazonaws.com", bucketName));
@@ -173,23 +180,23 @@ public class BucketsLiveTest extends BaseBlobStoreIntegrationTest {
    public void testBucketPayer() throws Exception {
       final String bucketName = getContainerName();
       try {
-         assertEquals(Payer.BUCKET_OWNER, getApi().getBucketPayer(bucketName));
-         getApi().setBucketPayer(bucketName, Payer.REQUESTER);
+         assertEquals(BUCKET_OWNER, getApi().getBucketPayer(bucketName));
+         getApi().setBucketPayer(bucketName, REQUESTER);
          assertConsistencyAware(new Runnable() {
             public void run() {
                try {
-                  assertEquals(Payer.REQUESTER, getApi().getBucketPayer(bucketName));
+                  assertEquals(REQUESTER, getApi().getBucketPayer(bucketName));
 
                } catch (Exception e) {
                   Throwables.propagateIfPossible(e);
                }
             }
          });
-         getApi().setBucketPayer(bucketName, Payer.BUCKET_OWNER);
+         getApi().setBucketPayer(bucketName, BUCKET_OWNER);
          assertConsistencyAware(new Runnable() {
             public void run() {
                try {
-                  assertEquals(Payer.BUCKET_OWNER, getApi().getBucketPayer(bucketName));
+                  assertEquals(BUCKET_OWNER, getApi().getBucketPayer(bucketName));
                } catch (Exception e) {
                   Throwables.propagateIfPossible(e);
                }
@@ -208,8 +215,7 @@ public class BucketsLiveTest extends BaseBlobStoreIntegrationTest {
 
          setupAclForBucketLoggingTarget(targetBucket);
          final BucketLogging logging = new BucketLogging(targetBucket, "access_log-",
-               ImmutableSet.<Grant> of(new Grant(new EmailAddressGrantee(StubS3AsyncClient.TEST_ACL_EMAIL),
-                     Permission.FULL_CONTROL)));
+               ImmutableSet.<Grant> of(new Grant(new EmailAddressGrantee(TEST_ACL_EMAIL), FULL_CONTROL)));
 
          getApi().enableBucketLogging(bucketName, logging);
 
@@ -226,7 +232,7 @@ public class BucketsLiveTest extends BaseBlobStoreIntegrationTest {
                   }
                   // EmailAddressGrantee is replaced by a CanonicalUserGrantee, so we cannot test by
                   // email addr
-                  assertTrue(acl.hasPermission(StubS3AsyncClient.TEST_ACL_ID, Permission.FULL_CONTROL), acl.toString());
+                  assertTrue(acl.hasPermission(TEST_ACL_ID, FULL_CONTROL), acl.toString());
                   assertEquals(logging.getTargetBucket(), newLogging.getTargetBucket());
                   assertEquals(logging.getTargetPrefix(), newLogging.getTargetPrefix());
                } catch (Exception e) {
@@ -251,10 +257,9 @@ public class BucketsLiveTest extends BaseBlobStoreIntegrationTest {
    }
 
    private void setupAclForBucketLoggingTarget(final String targetBucket) {
-      // http://docs.amazonwebservices.com/AmazonS3/latest/LoggingHowTo.html
       AccessControlList acl = getApi().getBucketACL(targetBucket);
-      acl.addPermission(GroupGranteeURI.LOG_DELIVERY, Permission.WRITE);
-      acl.addPermission(GroupGranteeURI.LOG_DELIVERY, Permission.READ_ACP);
+      acl.addPermission(LOG_DELIVERY, WRITE);
+      acl.addPermission(LOG_DELIVERY, READ_ACP);
       assertTrue(getApi().putBucketACL(targetBucket, acl));
    }
 

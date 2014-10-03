@@ -17,19 +17,16 @@
 package org.jclouds.aws.s3.config;
 
 import static org.jclouds.aws.domain.Region.US_STANDARD;
-import static org.jclouds.reflect.Reflection2.typeToken;
 
 import javax.inject.Singleton;
 
-import org.jclouds.aws.s3.AWSS3AsyncClient;
 import org.jclouds.aws.s3.AWSS3Client;
 import org.jclouds.aws.s3.filters.AWSRequestAuthorizeSignature;
 import org.jclouds.aws.s3.predicates.validators.AWSS3BucketNameValidator;
 import org.jclouds.location.Region;
-import org.jclouds.rest.ConfiguresRestClient;
-import org.jclouds.s3.S3AsyncClient;
+import org.jclouds.rest.ConfiguresHttpApi;
 import org.jclouds.s3.S3Client;
-import org.jclouds.s3.config.S3RestClientModule;
+import org.jclouds.s3.config.S3HttpApiModule;
 import org.jclouds.s3.filters.RequestAuthorizeSignature;
 import org.jclouds.s3.predicates.validators.BucketNameValidator;
 
@@ -41,11 +38,11 @@ import com.google.inject.Scopes;
 /**
  * Configures the S3 connection.
  */
-@ConfiguresRestClient
-public class AWSS3RestClientModule extends S3RestClientModule<AWSS3Client, AWSS3AsyncClient> {
+@ConfiguresHttpApi
+public class AWSS3HttpApiModule extends S3HttpApiModule<AWSS3Client> {
    
-   public AWSS3RestClientModule() {
-      super(typeToken(AWSS3Client.class), typeToken(AWSS3AsyncClient.class));
+   public AWSS3HttpApiModule() {
+      super(AWSS3Client.class);
    }
    
    @Override
@@ -67,12 +64,6 @@ public class AWSS3RestClientModule extends S3RestClientModule<AWSS3Client, AWSS3
    @Singleton
    @Provides
    S3Client provide(AWSS3Client in) {
-      return in;
-   }
-
-   @Singleton
-   @Provides
-   S3AsyncClient provide(AWSS3AsyncClient in) {
       return in;
    }
 }

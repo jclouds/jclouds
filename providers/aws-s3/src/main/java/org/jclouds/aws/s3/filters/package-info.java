@@ -14,8 +14,5 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-/**
- * This package contains HttpRequestFilters needed to operate the REST api.
- * @see <a href="http://docs.amazonwebservices.com/AmazonS3/latest/RESTAuthentication.html" />
- */
+/** This package contains HttpRequestFilters needed to operate the REST api. */
 package org.jclouds.aws.s3.filters;

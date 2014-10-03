@@ -21,9 +21,6 @@ package org.jclouds.s3.domain;
  * The owner of a bucket or object cannot be changed. However, if the object is overwritten by
  * another user (deleted and rewritten), the new object will have a new owner.
  * <p/>
- * 
- * @see <a href="http://docs.amazonwebservices.com/AmazonS3/2006-03-01/index.html?
- *      RESTAccessPolicy.html" />
  */
 public class CanonicalUser {
    private final String id;
@@ -40,7 +37,7 @@ public class CanonicalUser {
 
    /**
     * To locate the CanonicalUser ID for a user, the user must perform the
-    * {@link org.jclouds.s3.blobstore.S3AsyncBlobStore#list(String)} and retrieve
+    * {@link org.jclouds.s3.blobstore.S3BlobStore#list(String)} and retrieve
     * {@link BucketMetadata#getOwner()}
     */
    public String getId() {

@@ -46,12 +46,8 @@ import com.google.common.collect.Multimap;
  * import org.jclouds.s3.S3Client;
  * 
  * S3Client connection = // get connection
- * Future<Boolean> publicly readable = connection.putObject("bucketName",new S3Object("key","value"), withAcl(CannedAccessPolicy.PUBLIC_READ));
+ * boolean publiclyReadable = connection.putObject("bucketName",new S3Object("key","value"), withAcl(CannedAccessPolicy.PUBLIC_READ));
  * <code>
- * 
- * @see <a
- *      href="http://docs.amazonwebservices.com/AmazonS3/2006-03-01/index.html?RESTObjectPUT.html?"
- *      />
  */
 public class PutObjectOptions extends BaseHttpRequestOptions {
    public static final PutObjectOptions NONE = new PutObjectOptions();

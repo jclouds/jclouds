@@ -25,8 +25,8 @@ import java.io.IOException;
 import java.util.Properties;
 
 import org.jclouds.http.HttpRequest;
-import org.jclouds.s3.S3AsyncClient;
-import org.jclouds.s3.internal.BaseS3AsyncClientTest;
+import org.jclouds.s3.S3Client;
+import org.jclouds.s3.internal.BaseS3ClientTest;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
@@ -37,7 +37,7 @@ import com.google.common.reflect.Invokable;
  */
 // NOTE:without testName, this will not call @Before* and fail w/NPE during surefire
 @Test(groups = "unit", testName = "BindAsHostPrefixIfConfiguredTest")
-public class BindAsHostPrefixIfConfiguredTest extends BaseS3AsyncClientTest<S3AsyncClient> {
+public class BindAsHostPrefixIfConfiguredTest extends BaseS3ClientTest<S3Client> {
 
    public void testBucket() throws IOException {
 
@@ -57,7 +57,7 @@ public class BindAsHostPrefixIfConfiguredTest extends BaseS3AsyncClientTest<S3As
       request = binder.bindToRequest(request, "testbucket.example.com");
       assertEquals(request.getRequestLine(), "GET http://euc/services/Walrus/testbucket.example.com HTTP/1.1");
 
-      Invokable<?, ?> method = method(S3AsyncClient.class, "deleteObject", String.class, String.class);
+      Invokable<?, ?> method = method(S3Client.class, "deleteObject", String.class, String.class);
       request = processor.createRequest(method, ImmutableList.<Object> of("testbucket.example.com", "test.jpg"));
 
       assertRequestLineEquals(request, "DELETE http://euc/services/Walrus/testbucket.example.com/test.jpg HTTP/1.1");

@@ -26,7 +26,4 @@ public interface AWSS3BlobStoreContext extends S3BlobStoreContext {
 
    @Override
    AWSS3BlobStore getBlobStore();
-
-   @Override
-   AWSS3AsyncBlobStore getAsyncBlobStore();
 }

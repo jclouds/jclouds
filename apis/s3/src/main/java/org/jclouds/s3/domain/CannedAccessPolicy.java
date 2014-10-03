@@ -30,9 +30,6 @@ package org.jclouds.s3.domain;
  * is written with the private access control policy (even if, in the case of an
  * object, the object already exists with some other pre-existing access control
  * policy).
- * 
- * @see <a href="http://docs.amazonwebservices.com/AmazonS3/2006-03-01/index.html?
- *      RESTAccessPolicy.html" />
  */
 public enum CannedAccessPolicy {
 

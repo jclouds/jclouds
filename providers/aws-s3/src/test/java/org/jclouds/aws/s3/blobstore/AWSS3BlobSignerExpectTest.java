@@ -18,12 +18,12 @@ package org.jclouds.aws.s3.blobstore;
 
 import static org.testng.Assert.assertEquals;
 
-import org.jclouds.aws.s3.config.AWSS3RestClientModule;
+import org.jclouds.aws.s3.config.AWSS3HttpApiModule;
 import org.jclouds.blobstore.BlobStore;
 import org.jclouds.blobstore.domain.Blob;
 import org.jclouds.date.TimeStamp;
 import org.jclouds.http.HttpRequest;
-import org.jclouds.rest.ConfiguresRestClient;
+import org.jclouds.rest.ConfiguresHttpApi;
 import org.jclouds.s3.blobstore.S3BlobSignerExpectTest;
 import org.testng.annotations.Test;
 
@@ -116,11 +116,11 @@ public class AWSS3BlobSignerExpectTest extends S3BlobSignerExpectTest {
 
    @Override
    protected Module createModule() {
-      return new TestAWSS3RestClientModule();
+      return new TestAWSS3HttpApiModule();
    }
 
-   @ConfiguresRestClient
-   private static final class TestAWSS3RestClientModule extends AWSS3RestClientModule {
+   @ConfiguresHttpApi
+   private static final class TestAWSS3HttpApiModule extends AWSS3HttpApiModule {
       @Override
       @TimeStamp
       protected String provideTimeStamp(@TimeStamp Supplier<String> cache) {

@@ -24,7 +24,7 @@ import java.util.Map;
 import java.util.Set;
 
 import org.jclouds.Fallbacks.VoidOnNotFoundOr404;
-import org.jclouds.aws.s3.config.AWSS3RestClientModule;
+import org.jclouds.aws.s3.config.AWSS3HttpApiModule;
 import org.jclouds.aws.s3.filters.AWSRequestAuthorizeSignature;
 import org.jclouds.aws.s3.functions.ETagFromHttpResponseViaRegex;
 import org.jclouds.aws.s3.functions.UploadIdFromHttpResponseViaRegex;
@@ -39,11 +39,10 @@ import org.jclouds.http.functions.ReturnTrueIf2xx;
 import org.jclouds.io.Payload;
 import org.jclouds.io.Payloads;
 import org.jclouds.location.Region;
-import org.jclouds.rest.ConfiguresRestClient;
+import org.jclouds.rest.ConfiguresHttpApi;
 import org.jclouds.rest.internal.GeneratedHttpRequest;
-import org.jclouds.s3.S3AsyncClient;
-import org.jclouds.s3.S3AsyncClientTest;
 import org.jclouds.s3.S3Client;
+import org.jclouds.s3.S3ClientTest;
 import org.jclouds.s3.domain.ObjectMetadata;
 import org.jclouds.s3.domain.ObjectMetadataBuilder;
 import org.jclouds.s3.domain.S3Object;
@@ -66,8 +65,8 @@ import com.google.inject.Module;
 
 // NOTE:without testName, this will not call @Before* and fail w/NPE during
 // surefire
-@Test(groups = "unit", testName = "AWSS3AsyncClientTest")
-public class AWSS3AsyncClientTest extends S3AsyncClientTest<AWSS3AsyncClient> {
+@Test(groups = "unit", testName = "AWSS3ClientTest")
+public class AWSS3ClientTest extends S3ClientTest<AWSS3Client> {
 
    @Override
    protected void checkFilters(HttpRequest request) {
@@ -79,14 +78,14 @@ public class AWSS3AsyncClientTest extends S3AsyncClientTest<AWSS3AsyncClient> {
    public void testCopyObjectInvalidName() throws ArrayIndexOutOfBoundsException, SecurityException,
                                                   IllegalArgumentException, NoSuchMethodException, IOException {
       // For AWS S3, S3AsyncClientTest#testCopyObjectInvalidName() will not throw an exception
-      Invokable<?, ?> method = method(S3AsyncClient.class, "copyObject", String.class, String.class, String.class,
+      Invokable<?, ?> method = method(AWSS3Client.class, "copyObject", String.class, String.class, String.class,
                                                     String.class,
                                                     CopyObjectOptions[].class);
       processor.createRequest(method, ImmutableList.<Object> of("sourceBucket", "sourceObject", "destinationbucket", "destinationObject"));
    }
 
    public void testGetBucketLocationEUIsStillDefault() throws SecurityException, NoSuchMethodException, IOException {
-      Invokable<?, ?> method = method(AWSS3AsyncClient.class, "getBucketLocation", String.class);
+      Invokable<?, ?> method = method(AWSS3Client.class, "getBucketLocation", String.class);
       GeneratedHttpRequest request = processor.createRequest(method, ImmutableList.<Object> of("bucket-eu-west-1"));
 
       assertRequestLineEquals(request, "GET https://bucket-eu-west-1.s3.amazonaws.com/?location HTTP/1.1");
@@ -104,7 +103,7 @@ public class AWSS3AsyncClientTest extends S3AsyncClientTest<AWSS3AsyncClient> {
    public void testPutObject() throws ArrayIndexOutOfBoundsException, SecurityException, IllegalArgumentException,
          NoSuchMethodException, IOException {
 
-      Invokable<?, ?> method = method(AWSS3AsyncClient.class, "putObject", String.class, S3Object.class,
+      Invokable<?, ?> method = method(AWSS3Client.class, "putObject", String.class, S3Object.class,
             PutObjectOptions[].class);
       GeneratedHttpRequest request = processor.createRequest(method, ImmutableList.<Object> of("bucket",
             blobToS3Object.apply(BindBlobToMultipartFormTest.TEST_BLOB)));
@@ -122,7 +121,7 @@ public class AWSS3AsyncClientTest extends S3AsyncClientTest<AWSS3AsyncClient> {
 
    @Override
    public void testGetBucketLocation() throws SecurityException, NoSuchMethodException, IOException {
-      Invokable<?, ?> method = method(AWSS3AsyncClient.class, "getBucketLocation", String.class);
+      Invokable<?, ?> method = method(AWSS3Client.class, "getBucketLocation", String.class);
       GeneratedHttpRequest request = processor.createRequest(method, ImmutableList.<Object> of("bucket"));
 
       assertRequestLineEquals(request, "GET https://bucket.s3.amazonaws.com/?location HTTP/1.1");
@@ -147,7 +146,7 @@ public class AWSS3AsyncClientTest extends S3AsyncClientTest<AWSS3AsyncClient> {
    @Override
    public void testPutBucketDefault() throws ArrayIndexOutOfBoundsException, SecurityException,
          IllegalArgumentException, NoSuchMethodException, IOException {
-      Invokable<?, ?> method = method(AWSS3AsyncClient.class, "putBucketInRegion", String.class, String.class,
+      Invokable<?, ?> method = method(AWSS3Client.class, "putBucketInRegion", String.class, String.class,
             PutBucketOptions[].class);
       GeneratedHttpRequest request = processor.createRequest(method, Lists.<Object> newArrayList((String) null, "bucket"));
 
@@ -164,7 +163,7 @@ public class AWSS3AsyncClientTest extends S3AsyncClientTest<AWSS3AsyncClient> {
 
    public void testInitiateMultipartUpload() throws SecurityException, NegativeArraySizeException,
          NoSuchMethodException {
-      Invokable<?, ?> method = method(AWSS3AsyncClient.class, "initiateMultipartUpload", String.class, ObjectMetadata.class,
+      Invokable<?, ?> method = method(AWSS3Client.class, "initiateMultipartUpload", String.class, ObjectMetadata.class,
             PutObjectOptions[].class);
       GeneratedHttpRequest request = processor.createRequest(method, ImmutableList.<Object> of("bucket", ObjectMetadataBuilder.create().key("foo")
             .contentMD5(new byte[16]).build()));
@@ -198,7 +197,7 @@ public class AWSS3AsyncClientTest extends S3AsyncClientTest<AWSS3AsyncClient> {
    }
 
    public void testAbortMultipartUpload() throws SecurityException, NegativeArraySizeException, NoSuchMethodException {
-      Invokable<?, ?> method = method(AWSS3AsyncClient.class, "abortMultipartUpload", String.class, String.class, String.class);
+      Invokable<?, ?> method = method(AWSS3Client.class, "abortMultipartUpload", String.class, String.class, String.class);
       GeneratedHttpRequest request = processor.createRequest(method, ImmutableList.<Object> of("bucket", "foo", "asdsadasdas", 1,
             Payloads.newStringPayload("")));
 
@@ -214,7 +213,7 @@ public class AWSS3AsyncClientTest extends S3AsyncClientTest<AWSS3AsyncClient> {
    }
 
    public void testUploadPart() throws SecurityException, NegativeArraySizeException, NoSuchMethodException {
-      Invokable<?, ?> method = method(AWSS3AsyncClient.class, "uploadPart", String.class, String.class, int.class,
+      Invokable<?, ?> method = method(AWSS3Client.class, "uploadPart", String.class, String.class, int.class,
             String.class, Payload.class);
       GeneratedHttpRequest request = processor.createRequest(method, ImmutableList.<Object> of("bucket", "foo", 1, "asdsadasdas",
             Payloads.newStringPayload("")));
@@ -232,7 +231,7 @@ public class AWSS3AsyncClientTest extends S3AsyncClientTest<AWSS3AsyncClient> {
 
    public void testCompleteMultipartUpload() throws SecurityException, NegativeArraySizeException,
          NoSuchMethodException {
-      Invokable<?, ?> method = method(AWSS3AsyncClient.class, "completeMultipartUpload", String.class, String.class,
+      Invokable<?, ?> method = method(AWSS3Client.class, "completeMultipartUpload", String.class, String.class,
             String.class, Map.class);
       GeneratedHttpRequest request = processor.createRequest(method, ImmutableList.<Object> of("bucket", "foo", "asdsadasdas",
             ImmutableMap.<Integer, String> of(1, "\"a54357aff0632cce46d942af68356b38\"")));
@@ -253,7 +252,7 @@ public class AWSS3AsyncClientTest extends S3AsyncClientTest<AWSS3AsyncClient> {
 
    public void testPutBucketEu() throws ArrayIndexOutOfBoundsException, SecurityException, IllegalArgumentException,
          NoSuchMethodException, IOException {
-      Invokable<?, ?> method = method(AWSS3AsyncClient.class, "putBucketInRegion", String.class, String.class,
+      Invokable<?, ?> method = method(AWSS3Client.class, "putBucketInRegion", String.class, String.class,
             PutBucketOptions[].class);
       GeneratedHttpRequest request = processor.createRequest(method, ImmutableList.<Object> of("EU", "bucket"));
 
@@ -270,8 +269,8 @@ public class AWSS3AsyncClientTest extends S3AsyncClientTest<AWSS3AsyncClient> {
       checkFilters(request);
    }
 
-   @ConfiguresRestClient
-   private static final class TestAWSS3RestClientModule extends AWSS3RestClientModule {
+   @ConfiguresHttpApi
+   private static final class TestAWSS3HttpApiModule extends AWSS3HttpApiModule {
 
       @Override
       protected CacheLoader<String, Optional<String>> bucketToRegion(@Region Supplier<Set<String>> regionSupplier,
@@ -298,7 +297,7 @@ public class AWSS3AsyncClientTest extends S3AsyncClientTest<AWSS3AsyncClient> {
 
    @Override
    protected Module createModule() {
-      return new TestAWSS3RestClientModule();
+      return new TestAWSS3HttpApiModule();
    }
    
    @Override

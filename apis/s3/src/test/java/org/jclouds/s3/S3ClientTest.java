@@ -35,10 +35,10 @@ import org.jclouds.http.functions.ParseSax;
 import org.jclouds.http.functions.ReleasePayloadAndReturn;
 import org.jclouds.http.functions.ReturnTrueIf2xx;
 import org.jclouds.http.options.GetOptions;
-import org.jclouds.rest.ConfiguresRestClient;
+import org.jclouds.rest.ConfiguresHttpApi;
 import org.jclouds.rest.internal.GeneratedHttpRequest;
 import org.jclouds.s3.S3Fallbacks.TrueOn404OrNotFoundFalseOnIllegalState;
-import org.jclouds.s3.config.S3RestClientModule;
+import org.jclouds.s3.config.S3HttpApiModule;
 import org.jclouds.s3.domain.AccessControlList;
 import org.jclouds.s3.domain.AccessControlList.EmailAddressGrantee;
 import org.jclouds.s3.domain.AccessControlList.Grant;
@@ -50,7 +50,7 @@ import org.jclouds.s3.domain.S3Object;
 import org.jclouds.s3.fallbacks.FalseIfBucketAlreadyOwnedByYouOrOperationAbortedWhenBucketExists;
 import org.jclouds.s3.functions.ParseObjectFromHeadersAndHttpContent;
 import org.jclouds.s3.functions.ParseObjectMetadataFromHeaders;
-import org.jclouds.s3.internal.BaseS3AsyncClientTest;
+import org.jclouds.s3.internal.BaseS3ClientTest;
 import org.jclouds.s3.options.CopyObjectOptions;
 import org.jclouds.s3.options.ListBucketOptions;
 import org.jclouds.s3.options.PutBucketOptions;
@@ -72,16 +72,16 @@ import com.google.common.collect.Lists;
 import com.google.common.reflect.Invokable;
 import com.google.inject.Module;
 /**
- * Tests behavior of {@code S3AsyncClient}
+ * Tests behavior of {@code S3Client}
  */
 // NOTE:without testName, this will not call @Before* and fail w/NPE during surefire
-@Test(groups = "unit", testName = "S3AsyncClientTest")
-public abstract class S3AsyncClientTest<T extends S3AsyncClient> extends BaseS3AsyncClientTest<T> {
+@Test(groups = "unit", testName = "S3ClientTest")
+public abstract class S3ClientTest<T extends S3Client> extends BaseS3ClientTest<T> {
 
    protected String url = "s3.amazonaws.com";
 
    public void testAllRegions() throws SecurityException, NoSuchMethodException, IOException {
-      Invokable<?, ?> method = method(S3AsyncClient.class, "putBucketInRegion", String.class, String.class,
+      Invokable<?, ?> method = method(S3Client.class, "putBucketInRegion", String.class, String.class,
                PutBucketOptions[].class);
       for (String region : Region.DEFAULT_S3) {
          processor.createRequest(method, ImmutableList.<Object> of(region, "bucket-" + region));
@@ -89,7 +89,7 @@ public abstract class S3AsyncClientTest<T extends S3AsyncClient> extends BaseS3A
    }
 
    public void testGetBucketLocation() throws SecurityException, NoSuchMethodException, IOException {
-      Invokable<?, ?> method = method(S3AsyncClient.class, "getBucketLocation", String.class);
+      Invokable<?, ?> method = method(S3Client.class, "getBucketLocation", String.class);
       GeneratedHttpRequest request = processor.createRequest(method, ImmutableList.<Object> of("bucket"));
 
       assertRequestLineEquals(request, "GET https://bucket." + url + "/?location HTTP/1.1");
@@ -112,7 +112,7 @@ public abstract class S3AsyncClientTest<T extends S3AsyncClient> extends BaseS3A
    }
 
    public void testGetBucketPayer() throws SecurityException, NoSuchMethodException, IOException {
-      Invokable<?, ?> method = method(S3AsyncClient.class, "getBucketPayer", String.class);
+      Invokable<?, ?> method = method(S3Client.class, "getBucketPayer", String.class);
       GeneratedHttpRequest request = processor.createRequest(method, ImmutableList.<Object> of("bucket"));
 
       assertRequestLineEquals(request, "GET https://bucket." + url + "/?requestPayment HTTP/1.1");
@@ -127,7 +127,7 @@ public abstract class S3AsyncClientTest<T extends S3AsyncClient> extends BaseS3A
    }
 
    public void testSetBucketPayerOwner() throws SecurityException, NoSuchMethodException, IOException {
-      Invokable<?, ?> method = method(S3AsyncClient.class, "setBucketPayer", String.class, Payer.class);
+      Invokable<?, ?> method = method(S3Client.class, "setBucketPayer", String.class, Payer.class);
       GeneratedHttpRequest request = processor.createRequest(method, ImmutableList.<Object> of("bucket", Payer.BUCKET_OWNER));
 
       assertRequestLineEquals(request, "PUT https://bucket." + url + "/?requestPayment HTTP/1.1");
@@ -143,7 +143,7 @@ public abstract class S3AsyncClientTest<T extends S3AsyncClient> extends BaseS3A
    }
 
    public void testSetBucketPayerRequester() throws SecurityException, NoSuchMethodException, IOException {
-      Invokable<?, ?> method = method(S3AsyncClient.class, "setBucketPayer", String.class, Payer.class);
+      Invokable<?, ?> method = method(S3Client.class, "setBucketPayer", String.class, Payer.class);
       GeneratedHttpRequest request = processor.createRequest(method, ImmutableList.<Object> of("bucket", Payer.REQUESTER));
 
       assertRequestLineEquals(request, "PUT https://bucket." + url + "/?requestPayment HTTP/1.1");
@@ -159,7 +159,7 @@ public abstract class S3AsyncClientTest<T extends S3AsyncClient> extends BaseS3A
    }
 
    public void testListBucket() throws SecurityException, NoSuchMethodException, IOException {
-      Invokable<?, ?> method = method(S3AsyncClient.class, "listBucket", String.class,
+      Invokable<?, ?> method = method(S3Client.class, "listBucket", String.class,
                ListBucketOptions[].class);
       GeneratedHttpRequest request = processor.createRequest(method, ImmutableList.<Object> of("bucket"));
 
@@ -175,7 +175,7 @@ public abstract class S3AsyncClientTest<T extends S3AsyncClient> extends BaseS3A
    }
 
    public void testBucketExists() throws SecurityException, NoSuchMethodException, IOException {
-      Invokable<?, ?> method = method(S3AsyncClient.class, "bucketExists", String.class);
+      Invokable<?, ?> method = method(S3Client.class, "bucketExists", String.class);
       GeneratedHttpRequest request = processor.createRequest(method, ImmutableList.<Object> of("bucket"));
 
       assertRequestLineEquals(request, "HEAD https://bucket." + url + "/ HTTP/1.1");
@@ -192,7 +192,7 @@ public abstract class S3AsyncClientTest<T extends S3AsyncClient> extends BaseS3A
    @Test(expectedExceptions = IllegalArgumentException.class)
    public void testCopyObjectInvalidName() throws ArrayIndexOutOfBoundsException, SecurityException,
             IllegalArgumentException, NoSuchMethodException, IOException {
-      Invokable<?, ?> method = method(S3AsyncClient.class, "copyObject", String.class, String.class, String.class,
+      Invokable<?, ?> method = method(S3Client.class, "copyObject", String.class, String.class, String.class,
                String.class, CopyObjectOptions[].class);
       processor.createRequest(method, ImmutableList.<Object> of("sourceBucket", "sourceObject", "destinationBucket", "destinationObject"));
 
@@ -200,7 +200,7 @@ public abstract class S3AsyncClientTest<T extends S3AsyncClient> extends BaseS3A
 
    public void testCopyObject() throws ArrayIndexOutOfBoundsException, SecurityException, IllegalArgumentException,
             NoSuchMethodException, IOException {
-      Invokable<?, ?> method = method(S3AsyncClient.class, "copyObject", String.class, String.class, String.class,
+      Invokable<?, ?> method = method(S3Client.class, "copyObject", String.class, String.class, String.class,
                String.class, CopyObjectOptions[].class);
       GeneratedHttpRequest request = processor.createRequest(method, ImmutableList.<Object> of("sourceBucket", "sourceObject", "destinationbucket",
                "destinationObject"));
@@ -218,7 +218,7 @@ public abstract class S3AsyncClientTest<T extends S3AsyncClient> extends BaseS3A
    }
 
    public void testDeleteBucketIfEmpty() throws SecurityException, NoSuchMethodException, IOException {
-      Invokable<?, ?> method = method(S3AsyncClient.class, "deleteBucketIfEmpty", String.class);
+      Invokable<?, ?> method = method(S3Client.class, "deleteBucketIfEmpty", String.class);
       GeneratedHttpRequest request = processor.createRequest(method, ImmutableList.<Object> of("bucket"));
 
       assertRequestLineEquals(request, "DELETE https://bucket." + url + "/ HTTP/1.1");
@@ -233,7 +233,7 @@ public abstract class S3AsyncClientTest<T extends S3AsyncClient> extends BaseS3A
    }
 
    public void testDeleteObject() throws SecurityException, NoSuchMethodException, IOException {
-      Invokable<?, ?> method = method(S3AsyncClient.class, "deleteObject", String.class, String.class);
+      Invokable<?, ?> method = method(S3Client.class, "deleteObject", String.class, String.class);
       GeneratedHttpRequest request = processor.createRequest(method, ImmutableList.<Object> of("bucket", "object"));
 
       assertRequestLineEquals(request, "DELETE https://bucket." + url + "/object HTTP/1.1");
@@ -249,7 +249,7 @@ public abstract class S3AsyncClientTest<T extends S3AsyncClient> extends BaseS3A
 
    public void testGetBucketACL() throws SecurityException, NoSuchMethodException, IOException {
 
-      Invokable<?, ?> method = method(S3AsyncClient.class, "getBucketACL", String.class);
+      Invokable<?, ?> method = method(S3Client.class, "getBucketACL", String.class);
       GeneratedHttpRequest request = processor.createRequest(method, ImmutableList.<Object> of("bucket"));
 
       assertRequestLineEquals(request, "GET https://bucket." + url + "/?acl HTTP/1.1");
@@ -265,7 +265,7 @@ public abstract class S3AsyncClientTest<T extends S3AsyncClient> extends BaseS3A
 
    public void testGetObject() throws ArrayIndexOutOfBoundsException, SecurityException, IllegalArgumentException,
             NoSuchMethodException, IOException {
-      Invokable<?, ?> method = method(S3AsyncClient.class, "getObject", String.class, String.class, GetOptions[].class);
+      Invokable<?, ?> method = method(S3Client.class, "getObject", String.class, String.class, GetOptions[].class);
       GeneratedHttpRequest request = processor.createRequest(method, ImmutableList.<Object> of("bucket", "object"));
 
       assertRequestLineEquals(request, "GET https://bucket." + url + "/object HTTP/1.1");
@@ -281,7 +281,7 @@ public abstract class S3AsyncClientTest<T extends S3AsyncClient> extends BaseS3A
 
    public void testGetObjectACL() throws SecurityException, NoSuchMethodException, IOException {
 
-      Invokable<?, ?> method = method(S3AsyncClient.class, "getObjectACL", String.class, String.class);
+      Invokable<?, ?> method = method(S3Client.class, "getObjectACL", String.class, String.class);
       GeneratedHttpRequest request = processor.createRequest(method, ImmutableList.<Object> of("bucket", "object"));
 
       assertRequestLineEquals(request, "GET https://bucket." + url + "/object?acl HTTP/1.1");
@@ -297,7 +297,7 @@ public abstract class S3AsyncClientTest<T extends S3AsyncClient> extends BaseS3A
 
    public void testObjectExists() throws SecurityException, NoSuchMethodException, IOException {
 
-      Invokable<?, ?> method = method(S3AsyncClient.class, "objectExists", String.class, String.class);
+      Invokable<?, ?> method = method(S3Client.class, "objectExists", String.class, String.class);
       GeneratedHttpRequest request = processor.createRequest(method, ImmutableList.<Object> of("bucket", "object"));
 
       assertRequestLineEquals(request, "HEAD https://bucket." + url + "/object HTTP/1.1");
@@ -313,7 +313,7 @@ public abstract class S3AsyncClientTest<T extends S3AsyncClient> extends BaseS3A
 
    public void testHeadObject() throws SecurityException, NoSuchMethodException, IOException {
 
-      Invokable<?, ?> method = method(S3AsyncClient.class, "headObject", String.class, String.class);
+      Invokable<?, ?> method = method(S3Client.class, "headObject", String.class, String.class);
       GeneratedHttpRequest request = processor.createRequest(method, ImmutableList.<Object> of("bucket", "object"));
 
       assertRequestLineEquals(request, "HEAD https://bucket." + url + "/object HTTP/1.1");
@@ -328,7 +328,7 @@ public abstract class S3AsyncClientTest<T extends S3AsyncClient> extends BaseS3A
    }
 
    public void testListOwnedBuckets() throws SecurityException, NoSuchMethodException, IOException {
-      Invokable<?, ?> method = method(S3AsyncClient.class, "listOwnedBuckets");
+      Invokable<?, ?> method = method(S3Client.class, "listOwnedBuckets");
       GeneratedHttpRequest request = processor.createRequest(method, ImmutableList.of());
 
       assertRequestLineEquals(request, "GET https://" + url + "/ HTTP/1.1");
@@ -343,12 +343,12 @@ public abstract class S3AsyncClientTest<T extends S3AsyncClient> extends BaseS3A
    }
 
    public void testNewS3Object() throws SecurityException, NoSuchMethodException, IOException {
-      Invokable<?, ?> method = method(S3AsyncClient.class, "newS3Object");
+      Invokable<?, ?> method = method(S3Client.class, "newS3Object");
       assertEquals(method.getReturnType().getRawType(), S3Object.class);
    }
 
    public void testPutBucketACL() throws SecurityException, NoSuchMethodException, IOException {
-      Invokable<?, ?> method = method(S3AsyncClient.class, "putBucketACL", String.class, AccessControlList.class);
+      Invokable<?, ?> method = method(S3Client.class, "putBucketACL", String.class, AccessControlList.class);
       GeneratedHttpRequest request = processor.createRequest(method, ImmutableList.<Object> of("bucket", AccessControlList.fromCannedAccessPolicy(
                CannedAccessPolicy.PRIVATE, "1234")));
 
@@ -370,7 +370,7 @@ public abstract class S3AsyncClientTest<T extends S3AsyncClient> extends BaseS3A
 
    public void testPutBucketDefault() throws ArrayIndexOutOfBoundsException, SecurityException,
             IllegalArgumentException, NoSuchMethodException, IOException {
-      Invokable<?, ?> method = method(S3AsyncClient.class, "putBucketInRegion", String.class, String.class,
+      Invokable<?, ?> method = method(S3Client.class, "putBucketInRegion", String.class, String.class,
                PutBucketOptions[].class);
       GeneratedHttpRequest request = processor.createRequest(method, Lists.<Object> newArrayList((String) null, "bucket"));
 
@@ -388,7 +388,7 @@ public abstract class S3AsyncClientTest<T extends S3AsyncClient> extends BaseS3A
    public void testPutObject() throws ArrayIndexOutOfBoundsException, SecurityException, IllegalArgumentException,
             NoSuchMethodException, IOException {
 
-      Invokable<?, ?> method = method(S3AsyncClient.class, "putObject", String.class, S3Object.class, PutObjectOptions[].class);
+      Invokable<?, ?> method = method(S3Client.class, "putObject", String.class, S3Object.class, PutObjectOptions[].class);
       GeneratedHttpRequest request = processor.createRequest(method, ImmutableList.<Object> of("bucket", blobToS3Object
                .apply(BindBlobToMultipartFormTest.TEST_BLOB)));
 
@@ -404,7 +404,7 @@ public abstract class S3AsyncClientTest<T extends S3AsyncClient> extends BaseS3A
    }
 
    public void testPutObjectACL() throws SecurityException, NoSuchMethodException, IOException {
-      Invokable<?, ?> method = method(S3AsyncClient.class, "putObjectACL", String.class, String.class, AccessControlList.class);
+      Invokable<?, ?> method = method(S3Client.class, "putObjectACL", String.class, String.class, AccessControlList.class);
       GeneratedHttpRequest request = processor.createRequest(method, ImmutableList.<Object> of("bucket", "key", AccessControlList.fromCannedAccessPolicy(
                CannedAccessPolicy.PRIVATE, "1234")));
 
@@ -425,7 +425,7 @@ public abstract class S3AsyncClientTest<T extends S3AsyncClient> extends BaseS3A
    }
 
    public void testGetBucketLogging() throws SecurityException, NoSuchMethodException, IOException {
-      Invokable<?, ?> method = method(S3AsyncClient.class, "getBucketLogging", String.class);
+      Invokable<?, ?> method = method(S3Client.class, "getBucketLogging", String.class);
       GeneratedHttpRequest request = processor.createRequest(method, ImmutableList.<Object> of("bucket"));
 
       assertRequestLineEquals(request, "GET https://bucket." + url + "/?logging HTTP/1.1");
@@ -440,7 +440,7 @@ public abstract class S3AsyncClientTest<T extends S3AsyncClient> extends BaseS3A
    }
 
    public void testDisableBucketLogging() throws SecurityException, NoSuchMethodException, IOException {
-      Invokable<?, ?> method = method(S3AsyncClient.class, "disableBucketLogging", String.class);
+      Invokable<?, ?> method = method(S3Client.class, "disableBucketLogging", String.class);
       GeneratedHttpRequest request = processor.createRequest(method, ImmutableList.<Object> of("bucket"));
 
       assertRequestLineEquals(request, "PUT https://bucket." + url + "/?logging HTTP/1.1");
@@ -456,7 +456,7 @@ public abstract class S3AsyncClientTest<T extends S3AsyncClient> extends BaseS3A
    }
 
    public void testEnableBucketLoggingOwner() throws SecurityException, NoSuchMethodException, IOException {
-      Invokable<?, ?> method = method(S3AsyncClient.class, "enableBucketLogging", String.class, BucketLogging.class);
+      Invokable<?, ?> method = method(S3Client.class, "enableBucketLogging", String.class, BucketLogging.class);
       GeneratedHttpRequest request = processor
                .createRequest(method, ImmutableList.<Object> of("bucket", new BucketLogging("mylogs", "access_log-", ImmutableSet
                         .<Grant> of(new Grant(new EmailAddressGrantee("adrian@jclouds.org"), Permission.FULL_CONTROL)))));
@@ -473,8 +473,8 @@ public abstract class S3AsyncClientTest<T extends S3AsyncClient> extends BaseS3A
       checkFilters(request);
    }
 
-   @ConfiguresRestClient
-   private static final class TestS3RestClientModule extends S3RestClientModule<S3Client, S3AsyncClient> {
+   @ConfiguresHttpApi
+   private static final class TestS3HttpApiModule extends S3HttpApiModule<S3Client> {
 
       @Override
       protected String provideTimeStamp(@TimeStamp Supplier<String> cache) {
@@ -484,7 +484,7 @@ public abstract class S3AsyncClientTest<T extends S3AsyncClient> extends BaseS3A
 
    @Override
    protected Module createModule() {
-      return new TestS3RestClientModule();
+      return new TestS3HttpApiModule();
    }
 
 }

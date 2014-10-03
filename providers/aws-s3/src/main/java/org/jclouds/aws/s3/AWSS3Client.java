@@ -16,18 +16,53 @@
  */
 package org.jclouds.aws.s3;
 
+import static org.jclouds.Fallbacks.VoidOnNotFoundOr404;
+import static org.jclouds.blobstore.attr.BlobScopes.CONTAINER;
+
 import java.util.Map;
+
+import javax.inject.Named;
+import javax.ws.rs.DELETE;
+import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.QueryParam;
+
+import org.jclouds.aws.s3.binders.BindIterableAsPayloadToDeleteRequest;
+import org.jclouds.aws.s3.binders.BindObjectMetadataToRequest;
+import org.jclouds.aws.s3.binders.BindPartIdsAndETagsToRequest;
 import org.jclouds.aws.s3.domain.DeleteResult;
+import org.jclouds.aws.s3.functions.ETagFromHttpResponseViaRegex;
+import org.jclouds.aws.s3.functions.ObjectMetadataKey;
+import org.jclouds.aws.s3.functions.UploadIdFromHttpResponseViaRegex;
+import org.jclouds.aws.s3.xml.DeleteResultHandler;
+import org.jclouds.blobstore.attr.BlobScope;
+import org.jclouds.http.functions.ParseETagHeader;
 import org.jclouds.io.Payload;
+import org.jclouds.rest.annotations.BinderParam;
+import org.jclouds.rest.annotations.EndpointParam;
+import org.jclouds.rest.annotations.Fallback;
+import org.jclouds.rest.annotations.ParamParser;
+import org.jclouds.rest.annotations.ParamValidators;
+import org.jclouds.rest.annotations.QueryParams;
+import org.jclouds.rest.annotations.RequestFilters;
+import org.jclouds.rest.annotations.ResponseParser;
+import org.jclouds.rest.annotations.XMLResponseParser;
+import org.jclouds.s3.Bucket;
 import org.jclouds.s3.S3Client;
+import org.jclouds.s3.binders.BindAsHostPrefixIfConfigured;
 import org.jclouds.s3.domain.ObjectMetadata;
+import org.jclouds.s3.filters.RequestAuthorizeSignature;
+import org.jclouds.s3.functions.AssignCorrectHostnameForBucket;
 import org.jclouds.s3.options.PutObjectOptions;
+import org.jclouds.s3.predicates.validators.BucketNameValidator;
 
 /**
  * Provides access to amazon-specific S3 features
- *
- * @see AWSS3AsyncClient
  */
+@RequestFilters(RequestAuthorizeSignature.class)
+@BlobScope(CONTAINER)
 public interface AWSS3Client extends S3Client {
 
    /**
@@ -48,8 +83,15 @@ public interface AWSS3Client extends S3Client {
     *           controls optional parameters such as canned ACL
     * @return ID for the initiated multipart upload.
     */
-   String initiateMultipartUpload(String bucketName, ObjectMetadata objectMetadata, PutObjectOptions... options);
-
+   @Named("PutObject")
+   @POST
+   @QueryParams(keys = "uploads")
+   @Path("/{key}")
+   @ResponseParser(UploadIdFromHttpResponseViaRegex.class)
+   String initiateMultipartUpload(@Bucket @EndpointParam(parser = AssignCorrectHostnameForBucket.class) @BinderParam(
+         BindAsHostPrefixIfConfigured.class) @ParamValidators(BucketNameValidator.class) String bucketName,
+         @PathParam("key") @ParamParser(ObjectMetadataKey.class) @BinderParam(BindObjectMetadataToRequest.class)
+         ObjectMetadata objectMetadata, PutObjectOptions... options);
 
    /**
     * This operation aborts a multipart upload. After a multipart upload is aborted, no additional
@@ -66,7 +108,13 @@ public interface AWSS3Client extends S3Client {
     * @param uploadId
     *           id of the multipart upload in progress.
     */
-   void abortMultipartUpload(String bucketName, String key, String uploadId);
+   @Named("AbortMultipartUpload")
+   @DELETE
+   @Path("/{key}")
+   @Fallback(VoidOnNotFoundOr404.class)
+   void abortMultipartUpload(@Bucket @EndpointParam(parser = AssignCorrectHostnameForBucket.class) @BinderParam(
+         BindAsHostPrefixIfConfigured.class) @ParamValidators(BucketNameValidator.class) String bucketName,
+         @PathParam("key") String key, @QueryParam("uploadId") String uploadId);
 
    /**
     * This operation uploads a part in a multipart upload. You must initiate a multipart upload (see
@@ -98,10 +146,15 @@ public interface AWSS3Client extends S3Client {
     * @param part
     *           contains the data to create or overwrite
     * @return ETag of the content uploaded
-    * @see <a href="http://docs.amazonwebservices.com/AmazonS3/latest/API/mpUploadUploadPart.html"
-    *      />
     */
-   String uploadPart(String bucketName, String key, int partNumber, String uploadId, Payload part);
+   @Named("PutObject")
+   @PUT
+   @Path("/{key}")
+   @ResponseParser(ParseETagHeader.class)
+   String uploadPart(@Bucket @EndpointParam(parser = AssignCorrectHostnameForBucket.class) @BinderParam(
+         BindAsHostPrefixIfConfigured.class) @ParamValidators(BucketNameValidator.class) String bucketName,
+         @PathParam("key") String key, @QueryParam("partNumber") int partNumber,
+         @QueryParam("uploadId") String uploadId, Payload part);
 
    /**
     *
@@ -135,7 +188,14 @@ public interface AWSS3Client extends S3Client {
     *           a map of part id to eTag from the {@link #uploadPart} command.
     * @return ETag of the content uploaded
     */
-   String completeMultipartUpload(String bucketName, String key, String uploadId, Map<Integer, String> parts);
+   @Named("PutObject")
+   @POST
+   @Path("/{key}")
+   @ResponseParser(ETagFromHttpResponseViaRegex.class)
+   String completeMultipartUpload(@Bucket @EndpointParam(parser = AssignCorrectHostnameForBucket.class) @BinderParam(
+         BindAsHostPrefixIfConfigured.class) @ParamValidators(BucketNameValidator.class) String bucketName,
+         @PathParam("key") String key, @QueryParam("uploadId") String uploadId,
+         @BinderParam(BindPartIdsAndETagsToRequest.class) Map<Integer, String> parts);
 
    /**
     * The Multi-Object Delete operation enables you to delete multiple objects from a bucket using a 
@@ -151,11 +211,17 @@ public interface AWSS3Client extends S3Client {
     * By default, the operation uses verbose mode in which the response includes the result of
     * deletion of each key in your request.
     * 
-    * @see <a href="http://docs.amazonwebservices.com/AmazonS3/latest/API/multiobjectdeleteapi.html" />
     * @param bucketName
     *           namespace of the objects you are deleting
     * @param keys
     *           set of unique keys identifying objects
     */
-   DeleteResult deleteObjects(String bucketName, Iterable<String> keys);
+   @Named("DeleteObject")
+   @POST
+   @Path("/")
+   @QueryParams(keys = "delete")
+   @XMLResponseParser(DeleteResultHandler.class)
+   DeleteResult deleteObjects(@Bucket @EndpointParam(parser = AssignCorrectHostnameForBucket.class) @BinderParam(
+         BindAsHostPrefixIfConfigured.class) @ParamValidators(BucketNameValidator.class) String bucketName,
+         @BinderParam(BindIterableAsPayloadToDeleteRequest.class) Iterable<String> keys);
 }

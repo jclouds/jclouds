@@ -27,12 +27,11 @@ import org.jclouds.domain.Credentials;
 import org.jclouds.http.HttpRequest;
 import org.jclouds.logging.config.NullLoggingModule;
 import org.jclouds.reflect.Invocation;
-import org.jclouds.rest.ConfiguresRestClient;
+import org.jclouds.rest.ConfiguresHttpApi;
 import org.jclouds.rest.internal.BaseRestApiTest.MockModule;
 import org.jclouds.rest.internal.GeneratedHttpRequest;
-import org.jclouds.s3.S3AsyncClient;
 import org.jclouds.s3.S3Client;
-import org.jclouds.s3.config.S3RestClientModule;
+import org.jclouds.s3.config.S3HttpApiModule;
 import org.testng.annotations.Test;
 
 import com.google.common.base.Supplier;
@@ -50,11 +49,11 @@ public class RequestAuthorizeSignatureWithSessionCredentialsTest {
    public static Injector injector(Credentials creds) {
       return ContextBuilder.newBuilder("s3")
             .credentialsSupplier(Suppliers.<Credentials> ofInstance(creds))
-            .modules(ImmutableList.<Module> of(new MockModule(), new NullLoggingModule(), new TestS3RestClientModule())).buildInjector();
+            .modules(ImmutableList.<Module> of(new MockModule(), new NullLoggingModule(), new TestS3HttpApiModule())).buildInjector();
    }
 
-   @ConfiguresRestClient
-   private static final class TestS3RestClientModule extends S3RestClientModule<S3Client, S3AsyncClient> {
+   @ConfiguresHttpApi
+   private static final class TestS3HttpApiModule extends S3HttpApiModule<S3Client> {
 
       @Override
       protected String provideTimeStamp(@TimeStamp Supplier<String> cache) {
@@ -72,7 +71,7 @@ public class RequestAuthorizeSignatureWithSessionCredentialsTest {
       .sessionToken("AQoEXAMPLEH4aoAH0gNCAPyJxz4BlCFFxWNE1OPTgk5TthT")
       .expiration(new SimpleDateFormatDateService().iso8601DateParse("2011-07-11T19:55:29.611Z")).build();
 
-   Invocation invocation = Invocation.create(method(S3AsyncClient.class, "bucketExists", String.class),
+   Invocation invocation = Invocation.create(method(S3Client.class, "bucketExists", String.class),
                                              ImmutableList.<Object> of("foo"));
 
    HttpRequest bucketFooExists = GeneratedHttpRequest.builder().method("GET")

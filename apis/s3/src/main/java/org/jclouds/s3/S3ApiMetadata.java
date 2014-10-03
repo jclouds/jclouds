@@ -29,14 +29,14 @@ import java.net.URI;
 import java.util.Properties;
 
 import org.jclouds.apis.ApiMetadata;
+import org.jclouds.rest.internal.BaseHttpApiMetadata;
 import org.jclouds.rest.internal.BaseRestApiMetadata;
 import org.jclouds.s3.blobstore.S3BlobStoreContext;
 import org.jclouds.s3.blobstore.config.S3BlobStoreContextModule;
-import org.jclouds.s3.config.S3RestClientModule;
+import org.jclouds.s3.config.S3HttpApiModule;
 import org.jclouds.s3.reference.S3Headers;
 
 import com.google.common.collect.ImmutableSet;
-import com.google.common.reflect.TypeToken;
 import com.google.inject.Module;
 
 /**
@@ -44,9 +44,8 @@ import com.google.inject.Module;
  * 
  * <h3>note</h3>
  * <p/>
- * This class allows overriding of types {@code S}(client) and {@code A}
- * (asyncClient), so that children can add additional methods not declared here,
- * such as new features from AWS.
+ * This class allows overriding of types {@code A}(api), so that children can
+ * add additional methods not declared here, such as new features from AWS.
  * <p/>
  * 
  * As this is a popular api, we also allow overrides for type {@code C}
@@ -54,19 +53,10 @@ import com.google.inject.Module;
  * not present in the base api. For example, you could make a subtype for
  * context, that exposes admin operations.
  */
-public class S3ApiMetadata extends BaseRestApiMetadata {
-   
-   /**
-    * @deprecated please use {@code org.jclouds.ContextBuilder#buildClient(S3Client.class)} as
-    *             {@link S3AsyncClient} interface will be removed in jclouds 1.7.
-    */
-   @Deprecated
-   public static final TypeToken<org.jclouds.rest.RestContext<? extends S3Client, ? extends S3AsyncClient>> CONTEXT_TOKEN = new TypeToken<org.jclouds.rest.RestContext<? extends S3Client, ? extends S3AsyncClient>>() {
-      private static final long serialVersionUID = 1L;
-   };
+public class S3ApiMetadata extends BaseHttpApiMetadata {
 
    @Override
-   public Builder<?> toBuilder() {
+   public Builder<?, ?> toBuilder() {
       return new ConcreteBuilder().fromApiMetadata(this);
    }
 
@@ -74,7 +64,7 @@ public class S3ApiMetadata extends BaseRestApiMetadata {
       this(new ConcreteBuilder());
    }
 
-   protected S3ApiMetadata(Builder<?> builder) {
+   protected S3ApiMetadata(Builder<?, ?> builder) {
       super(builder);
    }
 
@@ -90,14 +80,15 @@ public class S3ApiMetadata extends BaseRestApiMetadata {
       return properties;
    }
    
-   public abstract static class Builder<T extends Builder<T>> extends BaseRestApiMetadata.Builder<T> {
-      @SuppressWarnings("deprecation")
+   public abstract static class Builder<A extends S3Client, T extends Builder<A, T>> extends
+         BaseHttpApiMetadata.Builder<A, T> {
+
       protected Builder() {
-         this(S3Client.class, S3AsyncClient.class);
+         this(Class.class.cast(S3Client.class));
       }
 
-      protected Builder(Class<?> syncClient, Class<?> asyncClient) {
-         super(syncClient, asyncClient);
+      protected Builder(Class<A> syncClient) {
+         super(syncClient);
          id("s3")
          .name("Amazon Simple Storage Service (S3) API")
          .identityName("Access Key ID")
@@ -106,9 +97,8 @@ public class S3ApiMetadata extends BaseRestApiMetadata {
          .documentation(URI.create("http://docs.amazonwebservices.com/AmazonS3/latest/API"))
          .version("2006-03-01")
          .defaultProperties(S3ApiMetadata.defaultProperties())
-         .context(CONTEXT_TOKEN)
          .view(typeToken(S3BlobStoreContext.class))
-         .defaultModules(ImmutableSet.<Class<? extends Module>>of(S3RestClientModule.class, S3BlobStoreContextModule.class));
+         .defaultModules(ImmutableSet.<Class<? extends Module>>of(S3HttpApiModule.class, S3BlobStoreContextModule.class));
       }
 
       @Override
@@ -117,7 +107,7 @@ public class S3ApiMetadata extends BaseRestApiMetadata {
       }
    }
    
-   private static class ConcreteBuilder extends Builder<ConcreteBuilder> {
+   private static class ConcreteBuilder extends Builder<S3Client, ConcreteBuilder> {
       @Override
       protected ConcreteBuilder self() {
          return this;

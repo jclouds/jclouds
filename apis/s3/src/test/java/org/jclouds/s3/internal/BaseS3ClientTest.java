@@ -23,14 +23,14 @@ import java.io.IOException;
 import org.jclouds.http.HttpRequest;
 import org.jclouds.rest.internal.BaseAsyncClientTest;
 import org.jclouds.s3.S3ApiMetadata;
-import org.jclouds.s3.S3AsyncClient;
+import org.jclouds.s3.S3Client;
 import org.jclouds.s3.blobstore.functions.BlobToObject;
 import org.jclouds.s3.filters.RequestAuthorizeSignature;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
 @Test(groups = "unit")
-public abstract class BaseS3AsyncClientTest<T extends S3AsyncClient> extends BaseAsyncClientTest<T> {
+public abstract class BaseS3ClientTest<T extends S3Client> extends BaseAsyncClientTest<T> {
 
    protected BlobToObject blobToS3Object;
    protected RequestAuthorizeSignature filter;
@@ -50,7 +50,7 @@ public abstract class BaseS3AsyncClientTest<T extends S3AsyncClient> extends Bas
       filter = injector.getInstance(RequestAuthorizeSignature.class);
    }
 
-   public BaseS3AsyncClientTest() {
+   public BaseS3ClientTest() {
       super();
    }
 
