@@ -694,18 +694,6 @@
       <plugin>
         <artifactId>maven-checkstyle-plugin</artifactId>
         <version>2.13</version>
-        <executions>
-          <execution>
-          <id>checkstyle</id>
-          <phase>validate</phase>
-            <goals>
-              <goal>check</goal>
-            </goals>
-          <configuration>
-            <failOnViolation>true</failOnViolation>
-          </configuration>
-        </execution>
-        </executions>
         <configuration>
           <!-- configLocation configured via profiles -->
           <violationSeverity>warning</violationSeverity>
@@ -1070,14 +1058,6 @@
               <failsOnError>true</failsOnError>
               <violationSeverity>warning</violationSeverity>
             </configuration>
-            <executions>
-              <execution>
-                <phase>validate</phase>
-                <goals>
-                  <goal>check</goal>
-                </goals>
-              </execution>
-            </executions>
           </plugin>
         </plugins>
       </build>
@@ -1110,14 +1090,6 @@
               <resourceExcludes>checkstyle.xml</resourceExcludes>
               <violationSeverity>warning</violationSeverity>
             </configuration>
-            <executions>
-              <execution>
-                <phase>validate</phase>
-                <goals>
-                  <goal>check</goal>
-                </goals>
-              </execution>
-            </executions>
           </plugin>
           <plugin>
             <groupId>org.gaul</groupId>
