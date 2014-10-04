@@ -77,7 +77,7 @@ public class KeystoneAuthenticationModule extends AbstractModule {
     * <li>add this module to your {@link org.jclouds.apis.ApiMetadata#getDefaultModules()}</li>
     * <li>create a service-specific annotation, such as {@code @CloudDNS}, and make sure that has the meta-annotation
     * {@link javax.inject.Qualifier}</li>
-    * <li>add the above annotation to any {@link AsyncApi} classes by placing it on the type. ex.
+    * <li>add the above annotation to any {@code Api} classes by placing it on the type. ex.
     * {@code @Endpoint(CloudDNS.class)}</li>
     * <li>add the following to your {@link org.jclouds.rest.config.RestClientModule}</li>
     *

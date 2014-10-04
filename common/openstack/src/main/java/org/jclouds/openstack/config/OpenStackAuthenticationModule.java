@@ -17,7 +17,7 @@
 package org.jclouds.openstack.config;
 
 import static com.google.common.base.Suppliers.memoizeWithExpiration;
-import static org.jclouds.rest.config.BinderUtils.bindSyncToAsyncHttpApi;
+import static org.jclouds.rest.config.BinderUtils.bindHttpApi;
 
 import java.util.Date;
 import java.util.concurrent.ExecutionException;
@@ -36,7 +36,6 @@ import org.jclouds.openstack.domain.AuthenticationResponse;
 import org.jclouds.openstack.functions.URIFromAuthenticationResponseForService;
 import org.jclouds.openstack.handlers.RetryOnRenew;
 import org.jclouds.openstack.internal.Authentication;
-import org.jclouds.openstack.internal.OpenStackAuthAsyncClient;
 import org.jclouds.openstack.internal.OpenStackAuthClient;
 
 import com.google.common.base.Supplier;
@@ -55,7 +54,7 @@ public class OpenStackAuthenticationModule extends AbstractModule {
    @Override
    protected void configure() {
       // OpenStackAuthClient is used directly for filters and retry handlers, so let's bind it explicitly
-      bindSyncToAsyncHttpApi(binder(), OpenStackAuthClient.class, OpenStackAuthAsyncClient.class);
+      bindHttpApi(binder(), OpenStackAuthClient.class);
       install(new FactoryModuleBuilder().build(URIFromAuthenticationResponseForService.Factory.class));
       bind(HttpRetryHandler.class).annotatedWith(ClientError.class).to(RetryOnRenew.class);
    }
