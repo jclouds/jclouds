@@ -23,28 +23,15 @@ import java.net.URI;
 import java.util.Properties;
 
 import org.jclouds.azureblob.blobstore.config.AzureBlobStoreContextModule;
-import org.jclouds.azureblob.config.AzureBlobRestClientModule;
+import org.jclouds.azureblob.config.AzureBlobHttpApiModule;
 import org.jclouds.blobstore.BlobStoreContext;
-import org.jclouds.rest.internal.BaseRestApiMetadata;
+import org.jclouds.rest.internal.BaseHttpApiMetadata;
 
 import com.google.common.collect.ImmutableSet;
-import com.google.common.reflect.TypeToken;
 import com.google.inject.Module;
 
-/**
- * Implementation of {@link ApiMetadata} for Microsoft Azure Blob Service API
- */
-public class AzureBlobApiMetadata extends BaseRestApiMetadata {
+public class AzureBlobApiMetadata extends BaseHttpApiMetadata {
 
-   /**
-    * @deprecated please use {@code org.jclouds.ContextBuilder#buildApi(AzureBlobClient.class)} as
-    *             {@link AzureBlobAsyncClient} interface will be removed in jclouds 1.7.
-    */
-   @Deprecated
-   public static final TypeToken<org.jclouds.rest.RestContext<AzureBlobClient, AzureBlobAsyncClient>> CONTEXT_TOKEN = new TypeToken<org.jclouds.rest.RestContext<AzureBlobClient, AzureBlobAsyncClient>>() {
-      private static final long serialVersionUID = 1L;
-   };
-   
    private static Builder builder() {
       return new Builder();
    }
@@ -63,15 +50,14 @@ public class AzureBlobApiMetadata extends BaseRestApiMetadata {
    }
   
    public static Properties defaultProperties() {
-      Properties properties = BaseRestApiMetadata.defaultProperties();
+      Properties properties = BaseHttpApiMetadata.defaultProperties();
       properties.setProperty(PROPERTY_USER_METADATA_PREFIX, "x-ms-meta-");
       return properties;
    }
    
-   public static class Builder extends BaseRestApiMetadata.Builder<Builder> {
-      @SuppressWarnings("deprecation")
+   public static class Builder extends BaseHttpApiMetadata.Builder<AzureBlobClient, Builder> {
       protected Builder() {
-         super(AzureBlobClient.class, AzureBlobAsyncClient.class);
+         super(AzureBlobClient.class);
          id("azureblob")
          .name("Microsoft Azure Blob Service API")
          .identityName("Account Name")
@@ -81,7 +67,7 @@ public class AzureBlobApiMetadata extends BaseRestApiMetadata {
          .documentation(URI.create("http://msdn.microsoft.com/en-us/library/dd135733.aspx"))
          .defaultProperties(AzureBlobApiMetadata.defaultProperties())
          .view(typeToken(BlobStoreContext.class))
-         .defaultModules(ImmutableSet.<Class<? extends Module>>of(AzureBlobRestClientModule.class, AzureBlobStoreContextModule.class));
+         .defaultModules(ImmutableSet.<Class<? extends Module>>of(AzureBlobHttpApiModule.class, AzureBlobStoreContextModule.class));
       }
       
       @Override

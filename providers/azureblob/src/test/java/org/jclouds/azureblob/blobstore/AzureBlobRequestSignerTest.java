@@ -21,15 +21,15 @@ import static org.testng.Assert.assertEquals;
 import java.io.IOException;
 import java.util.Date;
 
-import org.jclouds.azureblob.AzureBlobAsyncClient;
+import org.jclouds.azureblob.AzureBlobClient;
 import org.jclouds.azureblob.AzureBlobProviderMetadata;
-import org.jclouds.azureblob.config.AzureBlobRestClientModule;
+import org.jclouds.azureblob.config.AzureBlobHttpApiModule;
 import org.jclouds.blobstore.BlobRequestSigner;
 import org.jclouds.blobstore.domain.Blob;
 import org.jclouds.blobstore.domain.Blob.Factory;
 import org.jclouds.date.TimeStamp;
 import org.jclouds.http.HttpRequest;
-import org.jclouds.rest.ConfiguresRestClient;
+import org.jclouds.rest.ConfiguresHttpApi;
 import org.jclouds.rest.internal.BaseAsyncClientTest;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
@@ -43,7 +43,7 @@ import com.google.inject.Module;
  */
 // NOTE:without testName, this will not call @Before* and fail w/NPE during surefire
 @Test(groups = "unit", testName = "AzureBlobRequestSignerTest")
-public class AzureBlobRequestSignerTest extends BaseAsyncClientTest<AzureBlobAsyncClient> {
+public class AzureBlobRequestSignerTest extends BaseAsyncClientTest<AzureBlobClient> {
 
    public AzureBlobRequestSignerTest() {
       // this is base64 decoded in the signer;
@@ -122,11 +122,11 @@ public class AzureBlobRequestSignerTest extends BaseAsyncClientTest<AzureBlobAsy
 
    @Override
    protected Module createModule() {
-      return new TestAzureBlobRestClientModule();
+      return new TestAzureBlobHttpApiModule();
    }
 
-      @ConfiguresRestClient
-   private static final class TestAzureBlobRestClientModule extends AzureBlobRestClientModule {
+      @ConfiguresHttpApi
+   private static final class TestAzureBlobHttpApiModule extends AzureBlobHttpApiModule {
       @Override
       protected void configure() {
          super.configure();

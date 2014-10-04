@@ -16,32 +16,75 @@
  */
 package org.jclouds.azureblob;
 
+import static com.google.common.net.HttpHeaders.EXPECT;
+import static org.jclouds.Fallbacks.TrueOnNotFoundOr404;
+import static org.jclouds.Fallbacks.VoidOnNotFoundOr404;
+import static org.jclouds.azureblob.AzureBlobFallbacks.FalseIfContainerAlreadyExists;
+import static org.jclouds.blobstore.BlobStoreFallbacks.FalseOnContainerNotFound;
+import static org.jclouds.blobstore.BlobStoreFallbacks.FalseOnKeyNotFound;
+import static org.jclouds.blobstore.BlobStoreFallbacks.NullOnContainerNotFound;
+import static org.jclouds.blobstore.BlobStoreFallbacks.NullOnKeyNotFound;
+
+import java.io.Closeable;
 import java.util.List;
 import java.util.Map;
+
+import javax.inject.Named;
+import javax.ws.rs.DELETE;
+import javax.ws.rs.GET;
+import javax.ws.rs.HEAD;
+import javax.ws.rs.PUT;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.QueryParam;
+
 import org.jclouds.azure.storage.domain.BoundedSet;
+import org.jclouds.azure.storage.filters.SharedKeyLiteAuthentication;
 import org.jclouds.azure.storage.options.ListOptions;
+import org.jclouds.azure.storage.reference.AzureStorageHeaders;
+import org.jclouds.azureblob.binders.BindAzureBlobMetadataToRequest;
+import org.jclouds.azureblob.binders.BindAzureBlocksToRequest;
 import org.jclouds.azureblob.domain.AzureBlob;
 import org.jclouds.azureblob.domain.BlobProperties;
 import org.jclouds.azureblob.domain.ContainerProperties;
 import org.jclouds.azureblob.domain.ListBlobBlocksResponse;
 import org.jclouds.azureblob.domain.ListBlobsResponse;
 import org.jclouds.azureblob.domain.PublicAccess;
+import org.jclouds.azureblob.functions.BlobName;
+import org.jclouds.azureblob.functions.ParseBlobFromHeadersAndHttpContent;
+import org.jclouds.azureblob.functions.ParseBlobPropertiesFromHeaders;
+import org.jclouds.azureblob.functions.ParseContainerPropertiesFromHeaders;
+import org.jclouds.azureblob.functions.ParsePublicAccessHeader;
 import org.jclouds.azureblob.options.CreateContainerOptions;
 import org.jclouds.azureblob.options.ListBlobsOptions;
+import org.jclouds.azureblob.predicates.validators.BlockIdValidator;
+import org.jclouds.azureblob.predicates.validators.ContainerNameValidator;
+import org.jclouds.azureblob.xml.AccountNameEnumerationResultsHandler;
+import org.jclouds.azureblob.xml.BlobBlocksResultsHandler;
+import org.jclouds.azureblob.xml.ContainerNameEnumerationResultsHandler;
+import org.jclouds.blobstore.binders.BindMapToHeadersWithPrefix;
+import org.jclouds.http.functions.ParseETagHeader;
 import org.jclouds.http.options.GetOptions;
+import org.jclouds.io.Payload;
+import org.jclouds.rest.annotations.BinderParam;
+import org.jclouds.rest.annotations.Fallback;
+import org.jclouds.rest.annotations.Headers;
+import org.jclouds.rest.annotations.ParamParser;
+import org.jclouds.rest.annotations.ParamValidators;
+import org.jclouds.rest.annotations.QueryParams;
+import org.jclouds.rest.annotations.RequestFilters;
+import org.jclouds.rest.annotations.ResponseParser;
+import org.jclouds.rest.annotations.SkipEncoding;
+import org.jclouds.rest.annotations.XMLResponseParser;
 
 import com.google.inject.Provides;
-import org.jclouds.io.Payload;
 
-/**
- * Provides access to Azure Blob via their REST API.
- * <p/>
- * All commands return a Future of the result from Azure Blob. Any exceptions incurred during
- * processing will be backend in an {@link ExecutionException} as documented in {@link Future#get()}.
- * 
- * @see <a href="http://msdn.microsoft.com/en-us/library/dd135733.aspx" />
- */
-public interface AzureBlobClient {
+/** Provides access to Azure Blob via their REST API.  */
+@RequestFilters(SharedKeyLiteAuthentication.class)
+@Headers(keys = AzureStorageHeaders.VERSION, values = "{jclouds.api-version}")
+@SkipEncoding({ '/', '$' })
+@Path("/")
+public interface AzureBlobClient extends Closeable {
    @Provides
    AzureBlob newBlob();
 
@@ -54,7 +97,12 @@ public interface AzureBlobClient {
     *           controls the number or type of results requested
     * @see ListOptions
     */
+   @Named("ListContainers")
+   @GET
+   @XMLResponseParser(AccountNameEnumerationResultsHandler.class)
+   @QueryParams(keys = "comp", values = "list")
    BoundedSet<ContainerProperties> listContainers(ListOptions... listOptions);
+
 
    /**
     * The Create Container operation creates a new container under the specified identity. If the
@@ -68,18 +116,38 @@ public interface AzureBlobClient {
     * @see CreateContainerOptions
     * 
     */
-   boolean createContainer(String container, CreateContainerOptions... options);
+   @Named("CreateContainer")
+   @PUT
+   @Path("{container}")
+   @Fallback(FalseIfContainerAlreadyExists.class)
+   @QueryParams(keys = "restype", values = "container")
+   boolean createContainer(@PathParam("container") @ParamValidators(ContainerNameValidator.class) String container,
+         CreateContainerOptions... options);
+
 
    /**
     * The Get Container Properties operation returns all user-defined metadata and system properties
     * for the specified container. The data returned does not include the container's list of blobs.
     */
-   ContainerProperties getContainerProperties(String container);
+   @Named("GetContainerProperties")
+   @HEAD
+   @Path("{container}")
+   @QueryParams(keys = "restype", values = "container")
+   @ResponseParser(ParseContainerPropertiesFromHeaders.class)
+   @Fallback(NullOnContainerNotFound.class)
+   ContainerProperties getContainerProperties(
+         @PathParam("container") @ParamValidators(ContainerNameValidator.class) String container);
+
 
    /**
     * Issues a HEAD command to determine if the container exists or not.
     */
-   boolean containerExists(String container);
+   @Named("GetContainerProperties")
+   @HEAD
+   @Path("{container}")
+   @QueryParams(keys = "restype", values = "container")
+   @Fallback(FalseOnContainerNotFound.class)
+   boolean containerExists(@PathParam("container") @ParamValidators(ContainerNameValidator.class) String container);
 
    /**
     * The Set Container Metadata operation sets one or more user-defined name/value pairs for the
@@ -93,7 +161,14 @@ public interface AzureBlobClient {
     * <p/>
     * Calling Set Container Metadata updates the ETag for the container.
     */
-   void setResourceMetadata(String container, Map<String, String> metadata);
+   @Named("SetContainerMetadata")
+   @PUT
+   @Path("{container}")
+   @QueryParams(keys = { "restype", "comp" }, values = { "container", "metadata" })
+   void setResourceMetadata(
+         @PathParam("container") @ParamValidators(ContainerNameValidator.class) String container,
+         @BinderParam(BindMapToHeadersWithPrefix.class) Map<String, String> metadata);
+
 
    /**
     * The Delete Container operation marks the specified container for deletion. The container and
@@ -108,7 +183,12 @@ public interface AzureBlobClient {
     * 404 (Not Found) while the container is being deleted.
     * 
     */
-   void deleteContainer(String container);
+   @Named("DeleteContainer")
+   @DELETE
+   @Path("{container}")
+   @Fallback(VoidOnNotFoundOr404.class)
+   @QueryParams(keys = "restype", values = "container")
+   void deleteContainer(@PathParam("container") @ParamValidators(ContainerNameValidator.class) String container);
 
    /**
     * The root container is a default container that may be inferred from a URL requesting a blob
@@ -121,15 +201,25 @@ public interface AzureBlobClient {
     * @see CreateContainerOptions
     * 
     */
+   @Named("CreateContainer")
+   @PUT
+   @Path("$root")
+   @Fallback(FalseIfContainerAlreadyExists.class)
+   @QueryParams(keys = "restype", values = "container")
    boolean createRootContainer(CreateContainerOptions... options);
 
    /**
-    * 
-    * 
-    * @param container
-    * @return whether data in the container may be accessed publicly and the level of access
+    * Returns whether data in the container may be accessed publicly and the level of access
     */
-   PublicAccess getPublicAccessForContainer(String container);
+   @Named("GetContainerACL")
+   @HEAD
+   @Path("{container}")
+   @QueryParams(keys = { "restype", "comp" }, values = { "container", "acl" })
+   @ResponseParser(ParsePublicAccessHeader.class)
+   @Fallback(NullOnContainerNotFound.class)
+   PublicAccess getPublicAccessForContainer(
+         @PathParam("container") @ParamValidators(ContainerNameValidator.class) String container);
+
 
    /**
     * The Delete Container operation marks the specified container for deletion. The container and
@@ -142,9 +232,14 @@ public interface AzureBlobClient {
     * operations, including operations on any blobs under the container, will fail with status code
     * 404 (Not Found) while the container is being deleted.
     * 
-    * @see deleteContainer(String)
-    * @see createRootContainer(CreateContainerOptions)
+    * @see #deleteContainer(String)
+    * @see #createRootContainer(CreateContainerOptions...)
     */
+   @Named("DeleteContainer")
+   @DELETE
+   @Path("$root")
+   @Fallback(TrueOnNotFoundOr404.class)
+   @QueryParams(keys = "restype", values = "container")
    void deleteRootContainer();
 
    /**
@@ -182,8 +277,20 @@ public interface AzureBlobClient {
     * <p/>
     * Blobs are listed in alphabetical order in the response body.
     */
-   ListBlobsResponse listBlobs(String container, ListBlobsOptions... options);
+   @Named("ListBlobs")
+   @GET
+   @XMLResponseParser(ContainerNameEnumerationResultsHandler.class)
+   @Path("{container}")
+   @QueryParams(keys = { "restype", "comp" }, values = { "container", "list" })
+   ListBlobsResponse listBlobs(@PathParam("container") @ParamValidators(ContainerNameValidator.class) String container,
+         ListBlobsOptions... options);
 
+
+   @Named("ListBlobs")
+   @GET
+   @XMLResponseParser(ContainerNameEnumerationResultsHandler.class)
+   @Path("$root")
+   @QueryParams(keys = { "restype", "comp" }, values = { "container", "list" })
    ListBlobsResponse listBlobs(ListBlobsOptions... options);
 
    /**
@@ -201,57 +308,107 @@ public interface AzureBlobClient {
     * (Request Payload Too Large). The Blob service also returns additional information about the
     * error in the response, including the maximum blob size permitted in bytes.
     */
-   String putBlob(String container, AzureBlob object);
+   @Named("PutBlob")
+   @PUT
+   @Path("{container}/{name}")
+   @Headers(keys = EXPECT, values = "100-continue")
+   @ResponseParser(ParseETagHeader.class)
+   String putBlob(@PathParam("container") @ParamValidators(ContainerNameValidator.class) String container,
+         @PathParam("name") @ParamParser(BlobName.class) @BinderParam(BindAzureBlobMetadataToRequest.class)
+         AzureBlob object);
+
 
    /**
     * The Get Blob operation reads or downloads a blob from the system, including its metadata and
     * properties.
     */
-   AzureBlob getBlob(String container, String name, GetOptions... options);
+   @Named("GetBlob")
+   @GET
+   @ResponseParser(ParseBlobFromHeadersAndHttpContent.class)
+   @Fallback(NullOnKeyNotFound.class)
+   @Path("{container}/{name}")
+   AzureBlob getBlob(@PathParam("container") @ParamValidators(ContainerNameValidator.class) String container,
+         @PathParam("name") String name, GetOptions... options);
 
    /**
     *  The Put Block operation creates a block blob on Azure which can be later assembled into
     *  a single, large blob object with the Put Block List operation.
-    *
-    *  @see <a href="http://msdn.microsoft.com/en-us/library/windowsazure/dd135726.aspx">Put Blob</a>
     */
-   void putBlock(String container, String name, String blockId, Payload object);
+   @Named("PutBlock")
+   @PUT
+   @Path("{container}/{name}")
+   @QueryParams(keys = { "comp" }, values = { "block" })
+   void putBlock(@PathParam("container") @ParamValidators(ContainerNameValidator.class) String container,
+         @PathParam("name") String name,
+         @QueryParam("blockid") @ParamValidators(BlockIdValidator.class) String blockId, Payload part);
 
 
    /**
     *  The Put Block List assembles a list of blocks previously uploaded with Put Block into a single
     *  blob. Blocks are either already committed to a blob or uncommitted. The blocks ids passed here
     *  are searched for first in the uncommitted block list; then committed using the "latest" strategy.
-    *
-    *  @see <a href="http://msdn.microsoft.com/en-us/library/windowsazure/dd179467.aspx">Put Block List</a>
     */
-   String putBlockList(String container, String name, List<String> blockIdList);
+   @Named("PutBlockList")
+   @PUT
+   @Path("{container}/{name}")
+   @ResponseParser(ParseETagHeader.class)
+   @QueryParams(keys = { "comp" }, values = { "blocklist" })
+   String putBlockList(@PathParam("container") @ParamValidators(ContainerNameValidator.class) String container,
+         @PathParam("name") String name,
+         @BinderParam(BindAzureBlocksToRequest.class) List<String> blockIdList);
 
-   /**
-    * Get Block ID List for a blob
-    *
-    * @see <a href="http://msdn.microsoft.com/en-us/library/windowsazure/dd179400.aspx">Get Block List</a>
-    */
-   ListBlobBlocksResponse getBlockList(String container, String name);
+   @Named("GetBlockList")
+   @GET
+   @Path("{container}/{name}")
+   @XMLResponseParser(BlobBlocksResultsHandler.class)
+   @QueryParams(keys = { "comp" }, values = { "blocklist" })
+   ListBlobBlocksResponse getBlockList(
+         @PathParam("container") @ParamValidators(ContainerNameValidator.class) String container,
+         @PathParam("name") String name);
+
 
    /**
     * The Get Blob Properties operation returns all user-defined metadata, standard HTTP properties,
     * and system properties for the blob. It does not return the content of the blob.
     */
-   BlobProperties getBlobProperties(String container, String name);
+   @Named("GetBlobProperties")
+   @HEAD
+   @ResponseParser(ParseBlobPropertiesFromHeaders.class)
+   @Fallback(NullOnKeyNotFound.class)
+   @Path("{container}/{name}")
+   BlobProperties getBlobProperties(
+         @PathParam("container") @ParamValidators(ContainerNameValidator.class) String container,
+         @PathParam("name") String name);
 
-   void setBlobMetadata(String container, String name, Map<String, String> metadata);
+
+   @Named("SetBlobMetadata")
+   @PUT
+   @Path("{container}/{name}")
+   @QueryParams(keys = { "comp" }, values = { "metadata" })
+   void setBlobMetadata(
+         @PathParam("container") @ParamValidators(ContainerNameValidator.class) String container,
+         @PathParam("name") String name, @BinderParam(BindMapToHeadersWithPrefix.class) Map<String, String> metadata);
 
    /**
     * The Delete Blob operation marks the specified blob for deletion. The blob is later deleted
     * during garbage collection.
     */
-   void deleteBlob(String container, String name);
-
+   @Named("DeleteBlob")
+   @DELETE
+   @Fallback(VoidOnNotFoundOr404.class)
+   @Path("{container}/{name}")
+   void deleteBlob(
+         @PathParam("container") @ParamValidators(ContainerNameValidator.class) String container,
+         @PathParam("name") String name);
    /**
-    * @throws ContainerNotFoundException
-    *            if the container is not present.
+    * @throws org.jclouds.blobstore.ContainerNotFoundException if the container is not present.
     */
-   boolean blobExists(String container, String name);
+   @Named("GetBlobProperties")
+   @HEAD
+   @Fallback(FalseOnKeyNotFound.class)
+   @Path("{container}/{name}")
+   boolean blobExists(
+         @PathParam("container") @ParamValidators(ContainerNameValidator.class) String container,
+         @PathParam("name") String name);
 
 }

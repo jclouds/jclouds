@@ -30,7 +30,7 @@ import com.google.common.collect.Multimap;
  * needed):
  * <p/>
  * <code>
- * import static org.jclouds.azure.storage.options.CreateOptions.Builder.*
+ * import static CreateOptions.Builder.*
  * import org.jclouds.azure.storage.queue.AzureQueueClient;
  * <p/>
  * AzureQueueClient connection = // get connection

@@ -20,7 +20,7 @@ import static org.testng.Assert.assertEquals;
 
 import java.io.File;
 
-import org.jclouds.azureblob.AzureBlobAsyncClient;
+import org.jclouds.azureblob.AzureBlobClient;
 import org.jclouds.azureblob.AzureBlobProviderMetadata;
 import org.jclouds.azureblob.domain.AzureBlob;
 import org.jclouds.http.HttpRequest;
@@ -31,12 +31,8 @@ import org.testng.annotations.Test;
 
 import com.google.common.collect.ImmutableMap;
 
-/**
- * Tests behavior of {@code BindAzureBlobMetadataToRequest}
- */
-// NOTE:without testName, this will not call @Before* and fail w/NPE during surefire
 @Test(groups = "unit", testName = "BindAzureBlobMetadataToRequestTest")
-public class BindAzureBlobMetadataToRequestTest extends BaseAsyncClientTest<AzureBlobAsyncClient> {
+public class BindAzureBlobMetadataToRequestTest extends BaseAsyncClientTest<AzureBlobClient> {
 
    @Test
    public void testPassWithMinimumDetailsAndPayload64MB() {

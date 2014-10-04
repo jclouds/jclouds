@@ -23,7 +23,7 @@ import static org.jclouds.reflect.Reflection2.method;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
-import org.jclouds.azureblob.AzureBlobAsyncClient;
+import org.jclouds.azureblob.AzureBlobClient;
 import org.jclouds.azureblob.blobstore.functions.BlobToAzureBlob;
 import org.jclouds.azureblob.domain.AzureBlob;
 import org.jclouds.blobstore.BlobRequestSigner;
@@ -53,9 +53,9 @@ public class AzureBlobRequestSigner implements BlobRequestSigner {
       this.processor = checkNotNull(processor, "processor");
       this.blobToBlob = checkNotNull(blobToBlob, "blobToBlob");
       this.blob2HttpGetOptions = checkNotNull(blob2HttpGetOptions, "blob2HttpGetOptions");
-      this.getMethod = method(AzureBlobAsyncClient.class, "getBlob", String.class, String.class, GetOptions[].class);
-      this.deleteMethod = method(AzureBlobAsyncClient.class, "deleteBlob", String.class, String.class);
-      this.createMethod = method(AzureBlobAsyncClient.class, "putBlob", String.class, AzureBlob.class);
+      this.getMethod = method(AzureBlobClient.class, "getBlob", String.class, String.class, GetOptions[].class);
+      this.deleteMethod = method(AzureBlobClient.class, "deleteBlob", String.class, String.class);
+      this.createMethod = method(AzureBlobClient.class, "putBlob", String.class, AzureBlob.class);
    }
 
    @Override
