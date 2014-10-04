@@ -33,15 +33,12 @@ import org.testng.annotations.Test;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.reflect.Invokable;
-/**
- * Tests behavior of {@code OpenStackAuthAsyncClient}
- */
-// NOTE:without testName, this will not call @Before* and fail w/NPE during surefire
-@Test(groups = "unit", testName = "OpenStackAuthAsyncClientTest")
-public class OpenStackAuthAsyncClientTest extends BaseAsyncClientTest<OpenStackAuthAsyncClient> {
+
+@Test(groups = "unit", testName = "OpenStackAuthClientTest")
+public class OpenStackAuthClientTest extends BaseAsyncClientTest<OpenStackAuthClient> {
 
    public void testAuthenticate() throws SecurityException, NoSuchMethodException, IOException {
-      Invokable<?, ?> method = method(OpenStackAuthAsyncClient.class, "authenticate", String.class, String.class);
+      Invokable<?, ?> method = method(OpenStackAuthClient.class, "authenticate", String.class, String.class);
       GeneratedHttpRequest httpRequest = processor.createRequest(method, ImmutableList.<Object> of("foo", "bar"));
 
       assertRequestLineEquals(httpRequest, "GET http://localhost:8080/v1.0 HTTP/1.1");
@@ -55,7 +52,7 @@ public class OpenStackAuthAsyncClientTest extends BaseAsyncClientTest<OpenStackA
    }
 
    public void testAuthenticateStorage() throws SecurityException, NoSuchMethodException, IOException {
-      Invokable<?, ?> method = method(OpenStackAuthAsyncClient.class, "authenticateStorage", String.class, String.class);
+      Invokable<?, ?> method = method(OpenStackAuthClient.class, "authenticateStorage", String.class, String.class);
       GeneratedHttpRequest httpRequest = processor.createRequest(method, ImmutableList.<Object> of("foo", "bar"));
 
       assertRequestLineEquals(httpRequest, "GET http://localhost:8080/v1.0 HTTP/1.1");

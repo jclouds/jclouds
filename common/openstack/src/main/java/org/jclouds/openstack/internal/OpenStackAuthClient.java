@@ -15,6 +15,8 @@
  * limitations under the License.
  */
 package org.jclouds.openstack.internal;
+import java.io.Closeable;
+
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.HeaderParam;
@@ -25,6 +27,7 @@ import org.jclouds.openstack.domain.AuthenticationResponse;
 import org.jclouds.openstack.functions.ParseAuthenticationResponseFromHeaders;
 import org.jclouds.openstack.reference.AuthHeaders;
 import org.jclouds.rest.annotations.ResponseParser;
+import org.jclouds.rest.annotations.VirtualHost;
 
 import com.google.inject.name.Named;
 
@@ -32,7 +35,8 @@ import com.google.inject.name.Named;
  * Provides access to OpenStack auth.
  */
 @Path("/v{" + Constants.PROPERTY_API_VERSION + "}")
-public interface OpenStackAuthClient {
+@VirtualHost
+public interface OpenStackAuthClient  extends Closeable {
 
    @Named("authenticate")
    @GET

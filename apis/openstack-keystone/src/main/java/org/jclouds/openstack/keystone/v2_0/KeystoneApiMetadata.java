@@ -40,15 +40,6 @@ import com.google.inject.Module;
  */
 public class KeystoneApiMetadata extends BaseHttpApiMetadata<KeystoneApi> {
 
-   /**
-    * @deprecated please use {@code org.jclouds.ContextBuilder#buildApi(KeystoneApi.class)} as
-    *             {@link KeystoneAsyncApi} interface will be removed in jclouds 1.7.
-    */
-   @Deprecated
-   public static final TypeToken<org.jclouds.rest.RestContext<KeystoneApi, KeystoneAsyncApi>> CONTEXT_TOKEN = new TypeToken<org.jclouds.rest.RestContext<KeystoneApi, KeystoneAsyncApi>>() {
-      private static final long serialVersionUID = 1L;
-   };
-
    @Override
    public Builder<?> toBuilder() {
       return new ConcreteBuilder().fromApiMetadata(this);
