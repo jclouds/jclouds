@@ -31,6 +31,7 @@ import java.util.Set;
 
 import org.jclouds.ContextBuilder;
 import org.jclouds.concurrent.config.ExecutorServiceModule;
+import org.jclouds.http.okhttp.config.OkHttpCommandExecutorServiceModule;
 import org.jclouds.s3.domain.S3Object;
 import org.testng.annotations.Test;
 
@@ -44,13 +45,11 @@ import com.squareup.okhttp.mockwebserver.RecordedRequest;
 @Test(singleThreaded = true)
 public class S3ClientMockTest {
 
-   private static final Set<Module> modules = ImmutableSet.<Module> of(
+   private static final Set<Module> modules = ImmutableSet.<Module> of(new OkHttpCommandExecutorServiceModule(),
          new ExecutorServiceModule(sameThreadExecutor(), sameThreadExecutor()));
 
    static S3Client getS3Client(URL server) {
       Properties overrides = new Properties();
-      // prevent expect-100 bug http://code.google.com/p/mockwebserver/issues/detail?id=6
-      overrides.setProperty(PROPERTY_SO_TIMEOUT, "0");
       overrides.setProperty(PROPERTY_MAX_RETRIES, "1");
       return ContextBuilder.newBuilder("s3")
                            .credentials("accessKey", "secretKey")
@@ -62,8 +61,6 @@ public class S3ClientMockTest {
 
    public void testZeroLengthPutHasContentLengthHeader() throws IOException, InterruptedException {
       MockWebServer server = new MockWebServer();
-      server.enqueue(new MockResponse().addHeader(ETAG, "ABCDEF"));
-      // hangs on Java 7 without this additional response ?!?
       server.enqueue(new MockResponse().addHeader(ETAG, "ABCDEF"));
       server.play();
 
@@ -77,7 +74,6 @@ public class S3ClientMockTest {
       RecordedRequest request = server.takeRequest();
       assertEquals(request.getRequestLine(), "PUT /bucket/object HTTP/1.1");
       assertEquals(request.getHeaders(CONTENT_LENGTH), ImmutableList.of("0"));
-      // will fail unless -Dsun.net.http.allowRestrictedHeaders=true is set
       assertEquals(request.getHeaders(EXPECT), ImmutableList.of("100-continue"));
       server.shutdown();
    }
@@ -96,7 +92,6 @@ public class S3ClientMockTest {
 
       RecordedRequest request = server.takeRequest();
       assertEquals(request.getRequestLine(), "PUT /bucket/someDir/fileName HTTP/1.1");
-      // will fail unless -Dsun.net.http.allowRestrictedHeaders=true is set
       assertEquals(request.getHeaders(EXPECT), ImmutableList.of("100-continue"));
 
       server.shutdown();
