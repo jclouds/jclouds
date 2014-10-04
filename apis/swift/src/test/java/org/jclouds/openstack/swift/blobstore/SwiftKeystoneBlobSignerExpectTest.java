@@ -26,13 +26,13 @@ import org.jclouds.apis.ApiMetadata;
 import org.jclouds.blobstore.internal.BaseBlobSignerExpectTest;
 import org.jclouds.http.HttpRequest;
 import org.jclouds.http.HttpResponse;
+import org.jclouds.openstack.keystone.v2_0.config.AuthenticationApiModule;
 import org.jclouds.openstack.keystone.v2_0.config.KeystoneAuthenticationModule;
-import org.jclouds.openstack.keystone.v2_0.config.MappedAuthenticationApiModule;
 import org.jclouds.openstack.swift.SwiftKeystoneApiMetadata;
 import org.jclouds.openstack.swift.blobstore.config.SwiftBlobStoreContextModule;
 import org.jclouds.openstack.swift.blobstore.config.TemporaryUrlExtensionModule.SwiftKeystoneTemporaryUrlExtensionModule;
-import org.jclouds.openstack.swift.config.SwiftKeystoneRestClientModule;
-import org.jclouds.openstack.swift.config.SwiftRestClientModule.KeystoneStorageEndpointModule;
+import org.jclouds.openstack.swift.config.SwiftHttpApiModule.KeystoneStorageEndpointModule;
+import org.jclouds.openstack.swift.config.SwiftKeystoneHttpApiModule;
 import org.testng.annotations.Test;
 
 import com.google.common.collect.ImmutableMap;
@@ -139,10 +139,10 @@ public class SwiftKeystoneBlobSignerExpectTest extends BaseBlobSignerExpectTest 
    protected ApiMetadata createApiMetadata() {
       return new SwiftKeystoneApiMetadata().toBuilder()
                                    .defaultModules(ImmutableSet.<Class<? extends Module>>builder()
-                                         .add(MappedAuthenticationApiModule.class)
+                                         .add(AuthenticationApiModule.class)
                                          .add(KeystoneStorageEndpointModule.class)
                                          .add(KeystoneAuthenticationModule.RegionModule.class)
-                                         .add(SwiftKeystoneRestClientModule.class)
+                                         .add(SwiftKeystoneHttpApiModule.class)
                                          .add(SwiftBlobStoreContextModule.class)
                                          .add(StaticTimeAndTemporaryUrlKeyModule.class).build()).build();
    }

@@ -14,20 +14,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.jclouds.openstack.swift.extensions;
+package org.jclouds.openstack.swift.config;
 
-import org.jclouds.openstack.keystone.v2_0.filters.AuthenticateRequest;
-import org.jclouds.openstack.swift.Storage;
-import org.jclouds.rest.annotations.Endpoint;
-import org.jclouds.rest.annotations.RequestFilters;
+import org.jclouds.openstack.swift.CommonSwiftClient;
+import org.jclouds.openstack.swift.SwiftKeystoneClient;
+import org.jclouds.rest.ConfiguresHttpApi;
 
-/**
- * Only purpose is to override the auth filter with one that works in keystone
- *
- * @see TemporaryUrlKeyApi
- */
-@RequestFilters(AuthenticateRequest.class)
-@Endpoint(Storage.class)
-public interface KeystoneTemporaryUrlKeyAsyncApi extends TemporaryUrlKeyAsyncApi {
+import com.google.inject.Scopes;
 
+@ConfiguresHttpApi
+public class SwiftKeystoneHttpApiModule extends SwiftHttpApiModule<SwiftKeystoneClient> {
+
+   public SwiftKeystoneHttpApiModule() {
+      super(SwiftKeystoneClient.class);
+   }
+
+   protected void bindResolvedClientsToCommonSwift() {
+      bind(CommonSwiftClient.class).to(SwiftKeystoneClient.class).in(Scopes.SINGLETON);
+  }
 }

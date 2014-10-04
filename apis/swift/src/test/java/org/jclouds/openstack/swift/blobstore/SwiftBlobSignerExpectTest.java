@@ -30,7 +30,7 @@ import org.jclouds.openstack.swift.CommonSwiftClientTest.StorageEndpointModule;
 import org.jclouds.openstack.swift.SwiftApiMetadata;
 import org.jclouds.openstack.swift.blobstore.config.SwiftBlobStoreContextModule;
 import org.jclouds.openstack.swift.blobstore.config.TemporaryUrlExtensionModule.SwiftTemporaryUrlExtensionModule;
-import org.jclouds.openstack.swift.config.SwiftRestClientModule;
+import org.jclouds.openstack.swift.config.SwiftHttpApiModule;
 import org.testng.annotations.Test;
 
 import com.google.common.collect.ImmutableMap;
@@ -139,7 +139,7 @@ public class SwiftBlobSignerExpectTest extends BaseBlobSignerExpectTest {
             .defaultModules(
                   ImmutableSet.<Class<? extends Module>> builder()
                         .add(StorageEndpointModule.class)
-                        .add(SwiftRestClientModule.class)
+                        .add(SwiftHttpApiModule.class)
                         .add(SwiftBlobStoreContextModule.class)
                         .add(StaticTimeAndTemporaryUrlKeyModule.class).build()).build();
    }

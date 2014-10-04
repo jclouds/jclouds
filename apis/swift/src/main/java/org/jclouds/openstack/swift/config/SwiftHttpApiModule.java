@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 package org.jclouds.openstack.swift.config;
-import static org.jclouds.reflect.Reflection2.typeToken;
+
 import static org.jclouds.util.Suppliers2.getLastValueInMap;
 import static org.jclouds.util.Suppliers2.getValueInMapOrNull;
 
@@ -38,35 +38,28 @@ import org.jclouds.openstack.functions.URIFromAuthenticationResponseForService;
 import org.jclouds.openstack.keystone.v2_0.config.KeystoneAuthenticationModule;
 import org.jclouds.openstack.reference.AuthHeaders;
 import org.jclouds.openstack.services.ServiceType;
-import org.jclouds.openstack.swift.CommonSwiftAsyncClient;
 import org.jclouds.openstack.swift.CommonSwiftClient;
 import org.jclouds.openstack.swift.Storage;
-import org.jclouds.openstack.swift.SwiftAsyncClient;
 import org.jclouds.openstack.swift.SwiftClient;
 import org.jclouds.openstack.swift.handlers.ParseSwiftErrorFromHttpResponse;
-import org.jclouds.rest.ConfiguresRestClient;
+import org.jclouds.rest.ConfiguresHttpApi;
 import org.jclouds.rest.annotations.ApiVersion;
-import org.jclouds.rest.config.RestClientModule;
+import org.jclouds.rest.config.HttpApiModule;
 
 import com.google.common.base.Supplier;
-import com.google.common.collect.ImmutableMap;
-import com.google.common.reflect.TypeToken;
 import com.google.inject.Provides;
 import com.google.inject.Scopes;
 
-@ConfiguresRestClient
-public class SwiftRestClientModule<S extends CommonSwiftClient, A extends CommonSwiftAsyncClient> extends
-      RestClientModule<S, A> {
+@ConfiguresHttpApi
+public class SwiftHttpApiModule<S extends CommonSwiftClient> extends HttpApiModule<S> {
 
    @SuppressWarnings("unchecked")
-   public SwiftRestClientModule() {
-      this(TypeToken.class.cast(typeToken(SwiftClient.class)), TypeToken.class.cast(typeToken(SwiftAsyncClient.class)),
-            ImmutableMap.<Class<?>, Class<?>> of());
+   public SwiftHttpApiModule() {
+      this(Class.class.cast(SwiftClient.class));
    }
 
-   protected SwiftRestClientModule(TypeToken<S> syncClientType, TypeToken<A> asyncClientType,
-         Map<Class<?>, Class<?>> sync2Async) {
-      super(syncClientType, asyncClientType, sync2Async);
+   protected SwiftHttpApiModule(Class<S> syncClientType) {
+      super(syncClientType);
    }
 
    public static class StorageEndpointModule extends OpenStackAuthenticationModule {
@@ -110,7 +103,6 @@ public class SwiftRestClientModule<S extends CommonSwiftClient, A extends Common
 
    protected void bindResolvedClientsToCommonSwift() {
       bind(CommonSwiftClient.class).to(SwiftClient.class).in(Scopes.SINGLETON);
-      bind(CommonSwiftAsyncClient.class).to(SwiftAsyncClient.class).in(Scopes.SINGLETON);
    }
 
    @Override

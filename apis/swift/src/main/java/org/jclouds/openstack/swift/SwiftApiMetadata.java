@@ -27,30 +27,17 @@ import java.util.Properties;
 import org.jclouds.blobstore.BlobStoreContext;
 import org.jclouds.openstack.swift.blobstore.config.SwiftBlobStoreContextModule;
 import org.jclouds.openstack.swift.blobstore.config.TemporaryUrlExtensionModule.SwiftTemporaryUrlExtensionModule;
-import org.jclouds.openstack.swift.config.SwiftRestClientModule;
-import org.jclouds.openstack.swift.config.SwiftRestClientModule.StorageEndpointModule;
-import org.jclouds.rest.internal.BaseRestApiMetadata;
+import org.jclouds.openstack.swift.config.SwiftHttpApiModule;
+import org.jclouds.openstack.swift.config.SwiftHttpApiModule.StorageEndpointModule;
+import org.jclouds.rest.internal.BaseHttpApiMetadata;
 
 import com.google.common.collect.ImmutableSet;
-import com.google.common.reflect.TypeToken;
 import com.google.inject.Module;
 
-/**
- * Implementation of {@link ApiMetadata} for OpenStack Swift
- */
-public class SwiftApiMetadata extends BaseRestApiMetadata {
-
-   /**
-    * @deprecated please use {@code org.jclouds.ContextBuilder#buildApi(SwiftClient.class)} as
-    *             {@link SwiftAsyncClient} interface will be removed in jclouds 2.0.
-    */
-   @Deprecated
-   public static final TypeToken<org.jclouds.rest.RestContext<? extends SwiftClient, ? extends SwiftAsyncClient>> CONTEXT_TOKEN = new TypeToken<org.jclouds.rest.RestContext<? extends SwiftClient, ? extends SwiftAsyncClient>>() {
-      private static final long serialVersionUID = 1L;
-   };
+public class SwiftApiMetadata extends BaseHttpApiMetadata {
 
    @Override
-   public Builder<?> toBuilder() {
+   public Builder<?, ?> toBuilder() {
       return new ConcreteBuilder().fromApiMetadata(this);
    }
 
@@ -58,12 +45,12 @@ public class SwiftApiMetadata extends BaseRestApiMetadata {
       this(new ConcreteBuilder());
    }
 
-   protected SwiftApiMetadata(Builder<?> builder) {
+   protected SwiftApiMetadata(Builder<?, ?> builder) {
       super(builder);
    }
 
    public static Properties defaultProperties() {
-      Properties properties = BaseRestApiMetadata.defaultProperties();
+      Properties properties = BaseHttpApiMetadata.defaultProperties();
       properties.setProperty(PROPERTY_USER_METADATA_PREFIX, "X-Object-Meta-");
       properties.setProperty(PROPERTY_REGIONS, "DEFAULT");
       // Keystone 1.1 expires tokens after 24 hours and allows renewal 1 hour
@@ -73,14 +60,15 @@ public class SwiftApiMetadata extends BaseRestApiMetadata {
       return properties;
    }
 
-   public abstract static class Builder<T extends Builder<T>> extends BaseRestApiMetadata.Builder<T> {
-      @SuppressWarnings("deprecation")
+   public abstract static class Builder<A extends CommonSwiftClient, T extends Builder<A, T>> extends
+         BaseHttpApiMetadata.Builder<A, T> {
+
       protected Builder() {
-         this(SwiftClient.class, SwiftAsyncClient.class);
+         this(Class.class.cast(SwiftClient.class));
       }
-      
-      protected Builder(Class<?> syncClient, Class<?> asyncClient) {
-         super(syncClient, asyncClient);
+
+      protected Builder(Class<A> syncClient) {
+         super(syncClient);
          id("swift")
          .name("OpenStack Swift with SwiftAuth")
          .identityName("tenantId:user")
@@ -89,10 +77,9 @@ public class SwiftApiMetadata extends BaseRestApiMetadata {
          .version("1.0")
          .defaultProperties(SwiftApiMetadata.defaultProperties())
          .view(typeToken(BlobStoreContext.class))
-         .context(CONTEXT_TOKEN)
          .defaultModules(ImmutableSet.<Class<? extends Module>>builder()
                                      .add(StorageEndpointModule.class)
-                                     .add(SwiftRestClientModule.class)
+                                     .add(SwiftHttpApiModule.class)
                                      .add(SwiftBlobStoreContextModule.class)
                                      .add(SwiftTemporaryUrlExtensionModule.class).build());
       }
@@ -103,7 +90,7 @@ public class SwiftApiMetadata extends BaseRestApiMetadata {
       }
    }
    
-   private static class ConcreteBuilder extends Builder<ConcreteBuilder> {
+   private static class ConcreteBuilder extends Builder<SwiftClient, ConcreteBuilder> {
       @Override
       protected ConcreteBuilder self() {
          return this;

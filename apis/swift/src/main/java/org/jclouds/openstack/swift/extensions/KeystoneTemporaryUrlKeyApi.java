@@ -14,21 +14,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.jclouds.openstack.swift;
+package org.jclouds.openstack.swift.extensions;
 
-import org.jclouds.openstack.filters.AuthenticateRequest;
+import org.jclouds.openstack.keystone.v2_0.filters.AuthenticateRequest;
+import org.jclouds.openstack.swift.Storage;
 import org.jclouds.rest.annotations.Endpoint;
 import org.jclouds.rest.annotations.RequestFilters;
 
 /**
- * Functionality that's in Swift, and not in CloudFiles.
- * 
- * 
- * @deprecated Please use {@code org.jclouds.ContextBuilder#buildApi(SwiftClient.class)}, as
- *             {@link SwiftAsyncClient} will be removed in jclouds 2.0.
+ * Only purpose is to override the auth filter with one that works in keystone
  */
-@Deprecated
 @RequestFilters(AuthenticateRequest.class)
 @Endpoint(Storage.class)
-public interface SwiftAsyncClient extends CommonSwiftAsyncClient {
+public interface KeystoneTemporaryUrlKeyApi extends TemporaryUrlKeyApi {
+
 }
