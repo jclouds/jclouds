@@ -27,8 +27,8 @@ import org.jclouds.blobstore.internal.BaseBlobSignerExpectTest;
 import org.jclouds.cloudfiles.CloudFilesApiMetadata;
 import org.jclouds.cloudfiles.CloudFilesApiMetadata.CloudFilesTemporaryUrlExtensionModule;
 import org.jclouds.cloudfiles.blobstore.config.CloudFilesBlobStoreContextModule;
-import org.jclouds.cloudfiles.config.CloudFilesRestClientModule;
-import org.jclouds.cloudfiles.config.CloudFilesRestClientModule.StorageAndCDNManagementEndpointModule;
+import org.jclouds.cloudfiles.config.CloudFilesHttpApiModule;
+import org.jclouds.cloudfiles.config.CloudFilesHttpApiModule.StorageAndCDNManagementEndpointModule;
 import org.jclouds.http.HttpRequest;
 import org.jclouds.http.HttpResponse;
 import org.testng.annotations.Test;
@@ -142,7 +142,7 @@ public class CloudFilesBlobSignerExpectTest extends BaseBlobSignerExpectTest {
             .defaultModules(
                   ImmutableSet.<Class<? extends Module>> builder()
                       .add(StorageAndCDNManagementEndpointModule.class)
-                      .add(CloudFilesRestClientModule.class)
+                      .add(CloudFilesHttpApiModule.class)
                       .add(CloudFilesBlobStoreContextModule.class)
                       .add(StaticTimeAndTemporaryUrlKeyModule.class).build()).build();
    }

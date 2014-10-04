@@ -16,23 +16,59 @@
  */
 package org.jclouds.cloudfiles;
 
+import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
+import static org.jclouds.blobstore.BlobStoreFallbacks.NullOnContainerNotFound;
+import static org.jclouds.cloudfiles.reference.CloudFilesHeaders.CDN_CONTAINER_PURGE_OBJECT_EMAIL;
+import static org.jclouds.cloudfiles.reference.CloudFilesHeaders.CDN_ENABLED;
+import static org.jclouds.cloudfiles.reference.CloudFilesHeaders.CDN_LOG_RETENTION;
+import static org.jclouds.cloudfiles.reference.CloudFilesHeaders.CDN_TTL;
+import static org.jclouds.cloudfiles.reference.CloudFilesHeaders.CDN_WEBSITE_ERROR;
+import static org.jclouds.cloudfiles.reference.CloudFilesHeaders.CDN_WEBSITE_INDEX;
+
 import java.net.URI;
 import java.util.Set;
 
-import org.jclouds.cloudfiles.domain.ContainerCDNMetadata;
-import org.jclouds.cloudfiles.options.ListCdnContainerOptions;
-import org.jclouds.openstack.swift.SwiftClient;
+import javax.inject.Named;
+import javax.ws.rs.Consumes;
+import javax.ws.rs.DELETE;
+import javax.ws.rs.GET;
+import javax.ws.rs.HEAD;
+import javax.ws.rs.HeaderParam;
+import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 
-/**
- * Provides access to Cloud Files via their REST API.
- *
- * @see <a href="http://docs.rackspace.com/files/api/v1/cf-devguide/content/index.html">Cloud Files</a>
- */
+import org.jclouds.cloudfiles.binders.BindIterableToHeadersWithPurgeCDNObjectEmail;
+import org.jclouds.cloudfiles.domain.ContainerCDNMetadata;
+import org.jclouds.cloudfiles.functions.ParseCdnUriFromHeaders;
+import org.jclouds.cloudfiles.functions.ParseContainerCDNMetadataFromHeaders;
+import org.jclouds.cloudfiles.options.ListCdnContainerOptions;
+import org.jclouds.openstack.filters.AuthenticateRequest;
+import org.jclouds.openstack.swift.Storage;
+import org.jclouds.openstack.swift.SwiftClient;
+import org.jclouds.rest.annotations.BinderParam;
+import org.jclouds.rest.annotations.Endpoint;
+import org.jclouds.rest.annotations.Fallback;
+import org.jclouds.rest.annotations.Headers;
+import org.jclouds.rest.annotations.QueryParams;
+import org.jclouds.rest.annotations.RequestFilters;
+import org.jclouds.rest.annotations.ResponseParser;
+
+/** Provides access to Cloud Files via their REST API. */
+@RequestFilters(AuthenticateRequest.class)
+@Endpoint(Storage.class)
 public interface CloudFilesClient extends SwiftClient {
 
    /**
     * Retrieve a list of existing CDN-enabled containers.
     */
+   @Named("ListCDNEnabledContainers")
+   @GET
+   @Consumes(APPLICATION_JSON)
+   @QueryParams(keys = "format", values = "json")
+   @Path("/")
+   @Endpoint(CDNManagement.class)
    Set<ContainerCDNMetadata> listCDNContainers(ListCdnContainerOptions... options);
 
    /**
@@ -45,7 +81,13 @@ public interface CloudFilesClient extends SwiftClient {
     * whether the container is currently marked to allow public serving of objects via CDN. The log_retention setting
     * specifies whether the CDN access logs should be collected and stored in the Cloud Files storage system.
     */
-   ContainerCDNMetadata getCDNMetadata(String container);
+   @Named("ListCDNEnabledContainerMetadata")
+   @HEAD
+   @ResponseParser(ParseContainerCDNMetadataFromHeaders.class)
+   @Fallback(NullOnContainerNotFound.class)
+   @Path("/{container}")
+   @Endpoint(CDNManagement.class)
+   ContainerCDNMetadata getCDNMetadata(@PathParam("container") String container);
 
    /**
     * Before a container can be CDN-enabled, it must exist in the storage system. When a container is CDN-enabled, any
@@ -62,37 +104,80 @@ public interface CloudFilesClient extends SwiftClient {
     * will stay populated on CDN edge servers for the entire period. The most popular objects stay cached based on the
     * edge location's logic.    
     */
-   URI enableCDN(String container, long ttl, boolean logRetention);
+   @Named("CDNEnableContainer")
+   @PUT
+   @Path("/{container}")
+   @Headers(keys = CDN_ENABLED, values = "True")
+   @ResponseParser(ParseCdnUriFromHeaders.class)
+   @Endpoint(CDNManagement.class)
+   URI enableCDN(@PathParam("container") String container,
+                 @HeaderParam(CDN_TTL) long ttl,
+                 @HeaderParam(CDN_LOG_RETENTION) boolean logRetention);
+
 
    /**
     * @see CloudFilesClient#enableCDN(String, long, boolean)
     */
-   URI enableCDN(String container, long ttl);
+   @Named("CDNEnableContainer")
+   @PUT
+   @Path("/{container}")
+   @Headers(keys = CDN_ENABLED, values = "True")
+   @ResponseParser(ParseCdnUriFromHeaders.class)
+   @Endpoint(CDNManagement.class)
+   URI enableCDN(@PathParam("container") String container, @HeaderParam(CDN_TTL) long ttl);
    
    /**
     * @see CloudFilesClient#enableCDN(String, long, boolean)
     */
-   URI enableCDN(String container);
+   @Named("CDNEnableContainer")
+   @PUT
+   @Path("/{container}")
+   @Headers(keys = CDN_ENABLED, values = "True")
+   @ResponseParser(ParseCdnUriFromHeaders.class)
+   @Endpoint(CDNManagement.class)
+   URI enableCDN(@PathParam("container") String container);
    
    /**
     * @see CloudFilesClient#enableCDN(String, long, boolean)
     */
-   URI updateCDN(String container, long ttl, boolean logRetention);
+   @Named("UpdateCDNEnabledContainerMetadata")
+   @POST
+   @Path("/{container}")
+   @ResponseParser(ParseCdnUriFromHeaders.class)
+   @Endpoint(CDNManagement.class)
+   URI updateCDN(@PathParam("container") String container,
+                 @HeaderParam(CDN_TTL) long ttl,
+                 @HeaderParam(CDN_LOG_RETENTION) boolean logRetention);
 
    /**
     * @see CloudFilesClient#enableCDN(String, long, boolean)
     */
-   URI updateCDN(String container, boolean logRetention);
+   @Named("UpdateCDNEnabledContainerMetadata")
+   @POST
+   @Path("/{container}")
+   @ResponseParser(ParseCdnUriFromHeaders.class)
+   @Endpoint(CDNManagement.class)
+   URI updateCDN(@PathParam("container") String container, @HeaderParam(CDN_LOG_RETENTION) boolean logRetention);
 
    /**
     * @see CloudFilesClient#enableCDN(String, long, boolean)
     */
-   URI updateCDN(String container, long ttl);
+   @Named("UpdateCDNEnabledContainerMetadata")
+   @POST
+   @Path("/{container}")
+   @ResponseParser(ParseCdnUriFromHeaders.class)
+   @Endpoint(CDNManagement.class)
+   URI updateCDN(@PathParam("container") String container, @HeaderParam(CDN_TTL) long ttl);
 
    /**
     * Remove the container from the CDN. Please note, however, that objects remain public until their TTL expires.
     */
-   boolean disableCDN(String container);
+   @Named("DisableCDNEnabledContainer")
+   @POST
+   @Path("/{container}")
+   @Headers(keys = CDN_ENABLED, values = "False")
+   @Endpoint(CDNManagement.class)
+   boolean disableCDN(@PathParam("container") String container);
    
    /**
     * You can purge a CDN-enabled object when you find it absolutely necessary to remove the object from public access
@@ -107,12 +192,23 @@ public interface CloudFilesClient extends SwiftClient {
     * (2) by creating a support ticket to purge entire containers. The 25-object limit does not apply when purging an
     * entire container via Support.    
     */
-   boolean purgeCDNObject(String container, String object, Iterable<String> emails);
+   @Named("PurgeCDNEnabledObject")
+   @DELETE
+   @Path("/{container}/{object}")
+   @Headers(keys = CDN_CONTAINER_PURGE_OBJECT_EMAIL, values = "{email}")
+   @Endpoint(CDNManagement.class)
+   boolean purgeCDNObject(@PathParam("container") String container, @PathParam("object") String object,
+         @BinderParam(BindIterableToHeadersWithPurgeCDNObjectEmail.class) Iterable<String> emails);
+
    
    /**
     * @see CloudFilesClient#purgeCDNObject(String, String, Iterable)
     */
-   boolean purgeCDNObject(String container, String object);
+   @Named("PurgeCDNEnabledObject")
+   @DELETE
+   @Path("/{container}/{object}")
+   @Endpoint(CDNManagement.class)
+   boolean purgeCDNObject(@PathParam("container") String container, @PathParam("object") String object);
 
    /**
     * You may use your Cloud Files account to create a static website on the World Wide Web. First, you must CDN-enable
@@ -130,7 +226,11 @@ public interface CloudFilesClient extends SwiftClient {
     * is outside the scope of this documentation. Once you have your CNAME established, map your domain name to your
     * Cloud Files CDN URL to get your site up and running on the Web.    
     */
-   boolean setCDNStaticWebsiteIndex(String container, String index);
+   @Named("UpdateCDNEnabledContainerMetadata")
+   @POST
+   @Path("/{container}")
+   @Headers(keys = CDN_WEBSITE_INDEX, values = "{index}")
+   boolean setCDNStaticWebsiteIndex(@PathParam("container") String container, @PathParam("index") String index);
 
    /**
     * You may create and set custom error pages for visitors to your website; currently, only 401 (Unauthorized) and
@@ -143,5 +243,9 @@ public interface CloudFilesClient extends SwiftClient {
     * 
     * You need only set the error parameter once for your entire static website.    
     */
-   boolean setCDNStaticWebsiteError(String container, String error);
+   @Named("UpdateCDNEnabledContainerMetadata")
+   @POST
+   @Path("/{container}")
+   @Headers(keys = CDN_WEBSITE_ERROR, values = "{error}")
+   boolean setCDNStaticWebsiteError(@PathParam("container") String container, @PathParam("error") String error);
 }
