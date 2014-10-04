@@ -44,12 +44,6 @@
 
   <dependencies>
     <dependency>
-      <groupId>org.apache.jclouds.common</groupId>
-      <artifactId>azure-common</artifactId>
-      <version>${project.version}</version>
-      <type>jar</type>
-    </dependency>
-    <dependency>
       <groupId>org.apache.jclouds</groupId>
       <artifactId>jclouds-blobstore</artifactId>
       <version>${project.version}</version>
