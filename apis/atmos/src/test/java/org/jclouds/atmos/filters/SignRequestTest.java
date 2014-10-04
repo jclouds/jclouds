@@ -25,12 +25,12 @@ import java.security.NoSuchAlgorithmException;
 import javax.ws.rs.core.MediaType;
 
 import org.jclouds.ContextBuilder;
-import org.jclouds.atmos.config.AtmosRestClientModule;
+import org.jclouds.atmos.config.AtmosHttpApiModule;
 import org.jclouds.atmos.reference.AtmosHeaders;
 import org.jclouds.date.TimeStamp;
 import org.jclouds.http.HttpRequest;
 import org.jclouds.logging.config.NullLoggingModule;
-import org.jclouds.rest.ConfiguresRestClient;
+import org.jclouds.rest.ConfiguresHttpApi;
 import org.jclouds.rest.internal.BaseRestApiTest.MockModule;
 import org.jclouds.util.Strings2;
 import org.testng.annotations.BeforeClass;
@@ -93,15 +93,15 @@ public class SignRequestTest {
             .newBuilder("atmos")
             .credentials(UID, KEY)
             .modules(
-                  ImmutableSet.<Module> of(new MockModule(), new TestAtmosRestClientModule(), new NullLoggingModule()))
+                  ImmutableSet.<Module> of(new MockModule(), new TestAtmosHttpApiModule(), new NullLoggingModule()))
             .buildInjector();
 
       filter = injector.getInstance(SignRequest.class);
 
    }
 
-      @ConfiguresRestClient
-   private static final class TestAtmosRestClientModule extends AtmosRestClientModule {
+      @ConfiguresHttpApi
+   private static final class TestAtmosHttpApiModule extends AtmosHttpApiModule {
 
       @Override
       protected void configure() {

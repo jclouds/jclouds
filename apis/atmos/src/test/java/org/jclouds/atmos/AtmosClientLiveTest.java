@@ -63,7 +63,7 @@ public class AtmosClientLiveTest extends BaseBlobStoreIntegrationTest {
    }
 
    public AtmosClient getApi() {
-      return view.unwrap(AtmosApiMetadata.CONTEXT_TOKEN).getApi();
+      return view.unwrapApi(AtmosClient.class);
    }
 
    private static final class HeadMatches implements Runnable {

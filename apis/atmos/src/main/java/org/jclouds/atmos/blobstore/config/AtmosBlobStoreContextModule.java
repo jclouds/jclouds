@@ -21,13 +21,13 @@ import java.util.concurrent.TimeUnit;
 import javax.inject.Singleton;
 
 import org.jclouds.atmos.AtmosClient;
-import org.jclouds.atmos.blobstore.AtmosAsyncBlobStore;
 import org.jclouds.atmos.blobstore.AtmosBlobRequestSigner;
 import org.jclouds.atmos.blobstore.AtmosBlobStore;
 import org.jclouds.blobstore.AsyncBlobStore;
 import org.jclouds.blobstore.BlobRequestSigner;
 import org.jclouds.blobstore.BlobStore;
 import org.jclouds.blobstore.attr.ConsistencyModel;
+import org.jclouds.blobstore.internal.SubmissionAsyncBlobStore;
 
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
@@ -36,15 +36,12 @@ import com.google.inject.AbstractModule;
 import com.google.inject.Provides;
 import com.google.inject.Scopes;
 
-/**
- * Configures the {@link AtmosBlobStoreContext}; requires {@link AtmosAsyncBlobStore} bound.
- */
 public class AtmosBlobStoreContextModule extends AbstractModule {
 
    @Override
    protected void configure() {
       bind(ConsistencyModel.class).toInstance(ConsistencyModel.EVENTUAL);
-      bind(AsyncBlobStore.class).to(AtmosAsyncBlobStore.class).in(Scopes.SINGLETON);
+      bind(AsyncBlobStore.class).to(SubmissionAsyncBlobStore.class).in(Scopes.SINGLETON);
       bind(BlobStore.class).to(AtmosBlobStore.class).in(Scopes.SINGLETON);
       bind(BlobRequestSigner.class).to(AtmosBlobRequestSigner.class);
    }

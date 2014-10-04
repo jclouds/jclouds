@@ -16,57 +16,162 @@
  */
 package org.jclouds.atmos;
 
+import static com.google.common.net.HttpHeaders.EXPECT;
+import static org.jclouds.Fallbacks.FalseOnNotFoundOr404;
+import static org.jclouds.Fallbacks.NullOnNotFoundOr404;
+import static org.jclouds.blobstore.BlobStoreFallbacks.NullOnKeyAlreadyExists;
+import static org.jclouds.blobstore.BlobStoreFallbacks.ThrowContainerNotFoundOn404;
+import static org.jclouds.blobstore.BlobStoreFallbacks.ThrowKeyNotFoundOn404;
+
 import java.io.Closeable;
 import java.net.URI;
+
+import javax.inject.Named;
+import javax.ws.rs.Consumes;
+import javax.ws.rs.DELETE;
+import javax.ws.rs.GET;
+import javax.ws.rs.HEAD;
+import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
+import javax.ws.rs.core.MediaType;
+
+import org.jclouds.atmos.binders.BindMetadataToHeaders;
 import org.jclouds.atmos.domain.AtmosObject;
 import org.jclouds.atmos.domain.BoundedSet;
 import org.jclouds.atmos.domain.DirectoryEntry;
 import org.jclouds.atmos.domain.SystemMetadata;
 import org.jclouds.atmos.domain.UserMetadata;
+import org.jclouds.atmos.fallbacks.TrueOn404FalseOnPathNotEmpty;
+import org.jclouds.atmos.filters.SignRequest;
+import org.jclouds.atmos.functions.AtmosObjectName;
+import org.jclouds.atmos.functions.ParseDirectoryListFromContentAndHeaders;
+import org.jclouds.atmos.functions.ParseNullableURIFromListOrLocationHeaderIf20x;
+import org.jclouds.atmos.functions.ParseObjectFromHeadersAndHttpContent;
+import org.jclouds.atmos.functions.ParseSystemMetadataFromHeaders;
+import org.jclouds.atmos.functions.ParseUserMetadataFromHeaders;
+import org.jclouds.atmos.functions.ReturnTrueIfGroupACLIsOtherRead;
 import org.jclouds.atmos.options.ListOptions;
 import org.jclouds.atmos.options.PutOptions;
 import org.jclouds.http.options.GetOptions;
 import org.jclouds.javax.annotation.Nullable;
+import org.jclouds.rest.annotations.BinderParam;
+import org.jclouds.rest.annotations.Fallback;
+import org.jclouds.rest.annotations.Headers;
+import org.jclouds.rest.annotations.ParamParser;
+import org.jclouds.rest.annotations.QueryParams;
+import org.jclouds.rest.annotations.RequestFilters;
+import org.jclouds.rest.annotations.ResponseParser;
 
 import com.google.inject.Provides;
 
-/**
- * Provides access to EMC Atmos Online Storage resources via their REST API.
- * <p/>
- * 
- * @see AtmosAsyncClient
- * @see <a href="https://community.emc.com/community/labs/atmos_online" />
- */
+/** Provides access to EMC Atmos Online Storage resources via their REST API. */
+@RequestFilters(SignRequest.class)
+@Path("/rest/namespace")
 public interface AtmosClient extends Closeable {
-   /**
-    * Creates a default implementation of AtmosObject
-    */
+
    @Provides
    AtmosObject newObject();
 
+   @Named("ListDirectory")
+   @GET
+   @Path("/")
+   @ResponseParser(ParseDirectoryListFromContentAndHeaders.class)
+   @Consumes(MediaType.TEXT_XML)
    BoundedSet<? extends DirectoryEntry> listDirectories(ListOptions... options);
 
-   BoundedSet<? extends DirectoryEntry> listDirectory(String directoryName, ListOptions... options);
+   @Named("ListDirectory")
+   @GET
+   @Path("/{directoryName}/")
+   @ResponseParser(ParseDirectoryListFromContentAndHeaders.class)
+   @Fallback(ThrowContainerNotFoundOn404.class)
+   @Consumes(MediaType.TEXT_XML)
+   BoundedSet<? extends DirectoryEntry> listDirectory(
+         @PathParam("directoryName") String directoryName, ListOptions... options);
 
-   URI createDirectory(String directoryName, PutOptions... options);
+   @Named("CreateDirectory")
+   @POST
+   @Path("/{directoryName}/")
+   @Fallback(NullOnKeyAlreadyExists.class)
+   @Produces(MediaType.APPLICATION_OCTET_STREAM)
+   @Consumes(MediaType.WILDCARD)
+   URI createDirectory(@PathParam("directoryName") String directoryName, PutOptions... options);
 
    @Nullable
-   URI createFile(String parent, AtmosObject object, PutOptions... options);
+   @Named("CreateObject")
+   @POST
+   @Path("/{parent}/{name}")
+   @Headers(keys = EXPECT, values = "100-continue")
+   @ResponseParser(ParseNullableURIFromListOrLocationHeaderIf20x.class)
+   @Consumes(MediaType.WILDCARD)
+   URI createFile(@PathParam("parent") String parent, @PathParam("name") @ParamParser(AtmosObjectName.class)
+      @BinderParam(BindMetadataToHeaders.class) AtmosObject object, PutOptions... options);
 
-   void updateFile(String parent, AtmosObject object, PutOptions... options);
+   @Named("UpdateObject")
+   @PUT
+   @Path("/{parent}/{name}")
+   @Headers(keys = EXPECT, values = "100-continue")
+   @Fallback(ThrowKeyNotFoundOn404.class)
+   @Consumes(MediaType.WILDCARD)
+   void updateFile(@PathParam("parent") String parent, @PathParam("name") @ParamParser(AtmosObjectName.class)
+      @BinderParam(BindMetadataToHeaders.class) AtmosObject object, PutOptions... options);
 
-   AtmosObject readFile(String path, GetOptions... options);
+   @Named("ReadObject")
+   @GET
+   @ResponseParser(ParseObjectFromHeadersAndHttpContent.class)
+   @Fallback(NullOnNotFoundOr404.class)
+   @Path("/{path}")
+   @Consumes(MediaType.WILDCARD)
+   AtmosObject readFile(@PathParam("path") String path, GetOptions... options);
 
-   AtmosObject headFile(String path);
+   @Named("GetObjectMetadata")
+   @HEAD
+   @ResponseParser(ParseObjectFromHeadersAndHttpContent.class)
+   @Fallback(NullOnNotFoundOr404.class)
+   @Path("/{path}")
+   @Consumes(MediaType.WILDCARD)
+   AtmosObject headFile(@PathParam("path") String path);
 
-   SystemMetadata getSystemMetadata(String path);
+   @Named("GetSystemMetadata")
+   @HEAD
+   @ResponseParser(ParseSystemMetadataFromHeaders.class)
+   @Fallback(NullOnNotFoundOr404.class)
+   // currently throws 403 errors @QueryParams(keys = "metadata/system")
+   @Path("/{path}")
+   @Consumes(MediaType.WILDCARD)
+   SystemMetadata getSystemMetadata(@PathParam("path") String path);
 
-   UserMetadata getUserMetadata(String path);
+   @Named("GetUserMetadata")
+   @HEAD
+   @ResponseParser(ParseUserMetadataFromHeaders.class)
+   @Fallback(NullOnNotFoundOr404.class)
+   @Path("/{path}")
+   @QueryParams(keys = "metadata/user")
+   @Consumes(MediaType.WILDCARD)
+   UserMetadata getUserMetadata(@PathParam("path") String path);
 
-   void deletePath(String path);
+   @Named("DeleteObject")
+   @DELETE
+   @Fallback(TrueOn404FalseOnPathNotEmpty.class)
+   @Path("/{path}")
+   @Consumes(MediaType.WILDCARD)
+   boolean deletePath(@PathParam("path") String path);
 
-   boolean pathExists(String path);
+   @Named("GetObjectMetadata")
+   @HEAD
+   @Fallback(FalseOnNotFoundOr404.class)
+   @Path("/{path}")
+   @Consumes(MediaType.WILDCARD)
+   boolean pathExists(@PathParam("path") String path);
 
-   boolean isPublic(String path);
+   @Named("GetObjectMetadata")
+   @HEAD
+   @ResponseParser(ReturnTrueIfGroupACLIsOtherRead.class)
+   @Path("/{path}")
+   @Consumes(MediaType.WILDCARD)
+   @Fallback(FalseOnNotFoundOr404.class)
+   boolean isPublic(@PathParam("path") String path);
 
 }

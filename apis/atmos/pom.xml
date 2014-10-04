@@ -91,7 +91,6 @@
                 </goals>
                 <configuration>
                   <systemPropertyVariables>
-                    <test.initializer>${test.initializer}</test.initializer>
                     <jclouds.blobstore.httpstream.url>${jclouds.blobstore.httpstream.url}</jclouds.blobstore.httpstream.url>
                     <jclouds.blobstore.httpstream.md5>${jclouds.blobstore.httpstream.md5}</jclouds.blobstore.httpstream.md5>
                     <test.atmos.endpoint>${test.atmos.endpoint}</test.atmos.endpoint>
