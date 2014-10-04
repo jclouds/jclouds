@@ -23,15 +23,15 @@ import java.util.Date;
 
 import org.jclouds.apis.ApiMetadata;
 import org.jclouds.atmos.AtmosApiMetadata;
-import org.jclouds.atmos.AtmosAsyncClient;
-import org.jclouds.atmos.config.AtmosRestClientModule;
+import org.jclouds.atmos.AtmosClient;
+import org.jclouds.atmos.config.AtmosHttpApiModule;
 import org.jclouds.atmos.filters.SignRequest;
 import org.jclouds.blobstore.BlobRequestSigner;
 import org.jclouds.blobstore.domain.Blob;
 import org.jclouds.blobstore.domain.Blob.Factory;
 import org.jclouds.date.TimeStamp;
 import org.jclouds.http.HttpRequest;
-import org.jclouds.rest.ConfiguresRestClient;
+import org.jclouds.rest.ConfiguresHttpApi;
 import org.jclouds.rest.internal.BaseAsyncClientTest;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
@@ -44,7 +44,7 @@ import com.google.inject.Module;
  */
 // NOTE:without testName, this will not call @Before* and fail w/NPE during surefire
 @Test(groups = "unit", testName = "AtmosBlobRequestSignerTest")
-public class AtmosBlobRequestSignerTest extends BaseAsyncClientTest<AtmosAsyncClient> {
+public class AtmosBlobRequestSignerTest extends BaseAsyncClientTest<AtmosClient> {
 
    public AtmosBlobRequestSignerTest() {
       // this is base64 decoded in the signer;
@@ -124,11 +124,11 @@ public class AtmosBlobRequestSignerTest extends BaseAsyncClientTest<AtmosAsyncCl
 
    @Override
    protected Module createModule() {
-      return new TestAtmosRestClientModule();
+      return new TestAtmosHttpApiModule();
    }
 
-      @ConfiguresRestClient
-   private static final class TestAtmosRestClientModule extends AtmosRestClientModule {
+      @ConfiguresHttpApi
+   private static final class TestAtmosHttpApiModule extends AtmosHttpApiModule {
       @Override
       protected void configure() {
          super.configure();

@@ -15,6 +15,7 @@
  * limitations under the License.
  */
 package org.jclouds.atmos;
+
 import static org.jclouds.blobstore.reference.BlobStoreConstants.PROPERTY_USER_METADATA_PREFIX;
 import static org.jclouds.location.reference.LocationConstants.PROPERTY_REGIONS;
 import static org.jclouds.reflect.Reflection2.typeToken;
@@ -23,27 +24,15 @@ import java.net.URI;
 import java.util.Properties;
 
 import org.jclouds.atmos.blobstore.config.AtmosBlobStoreContextModule;
-import org.jclouds.atmos.config.AtmosRestClientModule;
+import org.jclouds.atmos.config.AtmosHttpApiModule;
 import org.jclouds.blobstore.BlobStoreContext;
+import org.jclouds.rest.internal.BaseHttpApiMetadata;
 import org.jclouds.rest.internal.BaseRestApiMetadata;
 
 import com.google.common.collect.ImmutableSet;
-import com.google.common.reflect.TypeToken;
 import com.google.inject.Module;
 
-/**
- * Implementation of {@link ApiMetadata} for EMC Atmos API
- */
-public class AtmosApiMetadata extends BaseRestApiMetadata {
-
-   /**
-    * @deprecated please use {@code org.jclouds.ContextBuilder#buildApi(AtmosClient.class)} as
-    *             {@link AtmosAsyncClient} interface will be removed in jclouds 1.7.
-    */
-   @Deprecated
-   public static final TypeToken<org.jclouds.rest.RestContext<AtmosClient, AtmosAsyncClient>> CONTEXT_TOKEN = new TypeToken<org.jclouds.rest.RestContext<AtmosClient, AtmosAsyncClient>>() {
-      private static final long serialVersionUID = 1L;
-   };
+public class AtmosApiMetadata extends BaseHttpApiMetadata {
    
    private static Builder builder() {
       return new Builder();
@@ -69,10 +58,9 @@ public class AtmosApiMetadata extends BaseRestApiMetadata {
       return properties;
    }
 
-   public static class Builder extends BaseRestApiMetadata.Builder<Builder> {
-      @SuppressWarnings("deprecation")
+   public static class Builder extends BaseHttpApiMetadata.Builder<AtmosClient, Builder> {
       protected Builder() {
-         super(AtmosClient.class, AtmosAsyncClient.class);
+         super(AtmosClient.class);
          id("atmos")
          .name("EMC's Atmos API")
          .identityName("Subtenant ID (UID)")
@@ -82,7 +70,7 @@ public class AtmosApiMetadata extends BaseRestApiMetadata {
          .defaultEndpoint("https://accesspoint.atmosonline.com")
          .defaultProperties(AtmosApiMetadata.defaultProperties())
          .view(typeToken(BlobStoreContext.class))
-         .defaultModules(ImmutableSet.<Class<? extends Module>>of(AtmosRestClientModule.class, AtmosBlobStoreContextModule.class));
+         .defaultModules(ImmutableSet.<Class<? extends Module>>of(AtmosHttpApiModule.class, AtmosBlobStoreContextModule.class));
       }
 
       @Override

@@ -22,7 +22,6 @@ import java.util.concurrent.TimeUnit;
 import javax.inject.Named;
 
 import org.jclouds.Constants;
-import org.jclouds.atmos.AtmosAsyncClient;
 import org.jclouds.atmos.AtmosClient;
 import org.jclouds.atmos.handlers.AtmosClientErrorRetryHandler;
 import org.jclouds.atmos.handlers.AtmosServerErrorRetryHandler;
@@ -34,8 +33,8 @@ import org.jclouds.http.HttpRetryHandler;
 import org.jclouds.http.annotation.ClientError;
 import org.jclouds.http.annotation.Redirection;
 import org.jclouds.http.annotation.ServerError;
-import org.jclouds.rest.ConfiguresRestClient;
-import org.jclouds.rest.config.RestClientModule;
+import org.jclouds.rest.ConfiguresHttpApi;
+import org.jclouds.rest.config.HttpApiModule;
 
 import com.google.common.base.Supplier;
 import com.google.common.base.Suppliers;
@@ -45,8 +44,8 @@ import com.google.inject.Provides;
  * Configures the EMC Atmos Online Storage authentication service connection, including logging and
  * http transport.
  */
-@ConfiguresRestClient
-public class AtmosRestClientModule extends RestClientModule<AtmosClient, AtmosAsyncClient> {
+@ConfiguresHttpApi
+public class AtmosHttpApiModule extends HttpApiModule<AtmosClient> {
 
    @Override
    protected void configure() {
