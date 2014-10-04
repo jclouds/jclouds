@@ -30,7 +30,6 @@ import java.security.SecureRandom;
 import java.util.Arrays;
 import java.util.Set;
 
-import com.google.common.io.BaseEncoding;
 import org.jclouds.azure.storage.AzureStorageResponseException;
 import org.jclouds.azure.storage.domain.BoundedSet;
 import org.jclouds.azure.storage.options.ListOptions;
@@ -55,10 +54,8 @@ import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.Iterables;
 import com.google.common.hash.Hashing;
+import com.google.common.io.BaseEncoding;
 
-/**
- * Tests behavior of {@code AzureBlobClient}
- */
 @Test(groups = "live", singleThreaded = true)
 public class AzureBlobClientLiveTest extends BaseBlobStoreIntegrationTest {
    public AzureBlobClientLiveTest() {
@@ -66,7 +63,7 @@ public class AzureBlobClientLiveTest extends BaseBlobStoreIntegrationTest {
    }
 
    public AzureBlobClient getApi() {
-      return view.unwrap(AzureBlobApiMetadata.CONTEXT_TOKEN).getApi();
+      return view.unwrapApi(AzureBlobClient.class);
    }
 
    @Test
@@ -100,8 +97,8 @@ public class AzureBlobClientLiveTest extends BaseBlobStoreIntegrationTest {
       long containerCount = response.size();
       assertTrue(containerCount >= 1);
       ListBlobsResponse list = getApi().listBlobs(privateContainer);
-      assertEquals(list.getUrl(), URI.create(String.format("https://%s.blob.core.windows.net/%s", view.unwrap(
-               AzureBlobApiMetadata.CONTEXT_TOKEN).getIdentity(), privateContainer)));
+      assertEquals(list.getUrl(), URI.create(String.format("https://%s.blob.core.windows.net/%s",
+            view.unwrap().getIdentity(), privateContainer)));
       // TODO .. check to see the container actually exists
    }
 
@@ -156,8 +153,8 @@ public class AzureBlobClientLiveTest extends BaseBlobStoreIntegrationTest {
          }
       }
       ListBlobsResponse list = getApi().listBlobs();
-      assertEquals(list.getUrl(), URI.create(String.format("https://%s.blob.core.windows.net/$root", view.unwrap(
-               AzureBlobApiMetadata.CONTEXT_TOKEN).getIdentity())));
+      assertEquals(list.getUrl(), URI.create(String.format("https://%s.blob.core.windows.net/$root",
+            view.unwrap().getIdentity())));
    }
 
    @Test

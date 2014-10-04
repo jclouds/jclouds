@@ -30,7 +30,6 @@
   <packaging>pom</packaging>
   <name>jclouds commons project</name>
   <modules>
-    <module>azure</module>
     <module>openstack</module>
   </modules>
 </project>

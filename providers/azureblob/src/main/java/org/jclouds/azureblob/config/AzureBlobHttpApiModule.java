@@ -16,26 +16,67 @@
  */
 package org.jclouds.azureblob.config;
 
-import org.jclouds.azure.storage.config.AzureStorageRestClientModule;
-import org.jclouds.azureblob.AzureBlobAsyncClient;
+import static org.jclouds.Constants.PROPERTY_SESSION_INTERVAL;
+import static org.jclouds.json.config.GsonModule.DateAdapter;
+import static org.jclouds.json.config.GsonModule.Iso8601DateAdapter;
+
+import java.util.concurrent.TimeUnit;
+
+import javax.inject.Named;
+
+import org.jclouds.azure.storage.handlers.AzureStorageClientErrorRetryHandler;
 import org.jclouds.azureblob.AzureBlobClient;
 import org.jclouds.azureblob.handlers.ParseAzureBlobErrorFromXmlContent;
+import org.jclouds.date.DateService;
+import org.jclouds.date.TimeStamp;
 import org.jclouds.http.HttpErrorHandler;
+import org.jclouds.http.HttpRetryHandler;
 import org.jclouds.http.annotation.ClientError;
 import org.jclouds.http.annotation.Redirection;
 import org.jclouds.http.annotation.ServerError;
-import org.jclouds.rest.ConfiguresRestClient;
+import org.jclouds.rest.ConfiguresHttpApi;
+import org.jclouds.rest.config.HttpApiModule;
+
+import com.google.common.base.Supplier;
+import com.google.common.base.Suppliers;
+import com.google.inject.Provides;
 
 /**
  * Configures the Azure Blob Service connection, including logging and http transport.
  */
-@ConfiguresRestClient
-public class AzureBlobRestClientModule extends AzureStorageRestClientModule<AzureBlobClient, AzureBlobAsyncClient> {
+@ConfiguresHttpApi
+public class AzureBlobHttpApiModule extends HttpApiModule<AzureBlobClient> {
 
    @Override
    protected void configure() {
       install(new AzureBlobModule());
+      bind(DateAdapter.class).to(Iso8601DateAdapter.class);
       super.configure();
+   }
+
+   @Provides
+   @TimeStamp
+   protected String provideTimeStamp(@TimeStamp Supplier<String> cache) {
+      return cache.get();
+   }
+
+   /**
+    * borrowing concurrency code to ensure that caching takes place properly
+    */
+   @Provides
+   @TimeStamp
+   protected Supplier<String> provideTimeStampCache(@Named(PROPERTY_SESSION_INTERVAL) long seconds,
+         final DateService dateService) {
+      return Suppliers.memoizeWithExpiration(new Supplier<String>() {
+         public String get() {
+            return dateService.rfc822DateFormat();
+         }
+      }, seconds, TimeUnit.SECONDS);
+   }
+
+   @Override
+   protected void bindRetryHandlers() {
+      bind(HttpRetryHandler.class).annotatedWith(ClientError.class).to(AzureStorageClientErrorRetryHandler.class);
    }
 
    @Override
@@ -44,5 +85,4 @@ public class AzureBlobRestClientModule extends AzureStorageRestClientModule<Azur
       bind(HttpErrorHandler.class).annotatedWith(ClientError.class).to(ParseAzureBlobErrorFromXmlContent.class);
       bind(HttpErrorHandler.class).annotatedWith(ServerError.class).to(ParseAzureBlobErrorFromXmlContent.class);
    }
-
 }
