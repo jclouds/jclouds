@@ -16,7 +16,6 @@
  */
 package org.jclouds.azure.storage.filters;
 
-import static org.jclouds.reflect.Reflection2.typeToken;
 import static org.testng.Assert.assertEquals;
 
 import java.io.IOException;
@@ -25,12 +24,8 @@ import java.net.URI;
 import javax.ws.rs.HttpMethod;
 
 import org.jclouds.ContextBuilder;
-import org.jclouds.azure.storage.config.AzureStorageRestClientModule;
 import org.jclouds.http.HttpRequest;
-import org.jclouds.http.IntegrationTestAsyncClient;
-import org.jclouds.http.IntegrationTestClient;
 import org.jclouds.logging.config.NullLoggingModule;
-import org.jclouds.rest.AnonymousRestApiMetadata;
 import org.jclouds.rest.internal.BaseRestApiTest.MockModule;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.DataProvider;
@@ -126,16 +121,10 @@ public class SharedKeyLiteAuthenticationTest {
    @BeforeClass
    protected void createFilter() throws IOException {
       injector = ContextBuilder
-            .newBuilder(
-                  AnonymousRestApiMetadata
-                        .forClientMappedToAsyncClient(IntegrationTestClient.class, IntegrationTestAsyncClient.class)
-                        .toBuilder().build())
+            .newBuilder("azureblob")
             .endpoint("https://${jclouds.identity}.blob.core.windows.net")
             .credentials(ACCOUNT, "credential")
-            .modules(
-                  ImmutableSet.<Module> of(new MockModule(), new NullLoggingModule(),
-                        new AzureStorageRestClientModule<IntegrationTestClient, IntegrationTestAsyncClient>(
-                              typeToken(IntegrationTestClient.class), typeToken(IntegrationTestAsyncClient.class))))
+            .modules(ImmutableSet.<Module> of(new MockModule(), new NullLoggingModule()))
             .buildInjector();
       filter = injector.getInstance(SharedKeyLiteAuthentication.class);
    }
