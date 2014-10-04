@@ -41,7 +41,7 @@ import org.jclouds.blobstore.functions.BlobToHttpGetOptions;
 import org.jclouds.crypto.Crypto;
 import org.jclouds.date.TimeStamp;
 import org.jclouds.domain.Credentials;
-import org.jclouds.hpcloud.objectstorage.HPCloudObjectStorageAsyncApi;
+import org.jclouds.hpcloud.objectstorage.HPCloudObjectStorageApi;
 import org.jclouds.http.HttpRequest;
 import org.jclouds.http.options.GetOptions;
 import org.jclouds.openstack.keystone.v2_0.domain.Access;
@@ -94,9 +94,9 @@ public class HPCloudObjectStorageBlobRequestSigner implements BlobRequestSigner 
       this.blobToObject = checkNotNull(blobToObject, "blobToObject");
       this.blob2HttpGetOptions = checkNotNull(blob2HttpGetOptions, "blob2HttpGetOptions");
 
-      this.getMethod = method(HPCloudObjectStorageAsyncApi.class, "getObject", String.class, String.class, GetOptions[].class);
-      this.deleteMethod = method(HPCloudObjectStorageAsyncApi.class, "removeObject", String.class, String.class);
-      this.createMethod = method(HPCloudObjectStorageAsyncApi.class, "putObject", String.class, SwiftObject.class);
+      this.getMethod = method(HPCloudObjectStorageApi.class, "getObject", String.class, String.class, GetOptions[].class);
+      this.deleteMethod = method(HPCloudObjectStorageApi.class, "removeObject", String.class, String.class);
+      this.createMethod = method(HPCloudObjectStorageApi.class, "putObject", String.class, SwiftObject.class);
    }
 
    @Override

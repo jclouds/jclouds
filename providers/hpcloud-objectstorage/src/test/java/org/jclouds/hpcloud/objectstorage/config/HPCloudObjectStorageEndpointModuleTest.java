@@ -78,7 +78,7 @@ public class HPCloudObjectStorageEndpointModuleTest {
 
    @Test
    public void testObjectStorageRegion() {
-      final HPCloudObjectStorageRestClientModule.HPCloudObjectStorageEndpointModule moduleToTest = new HPCloudObjectStorageRestClientModule.HPCloudObjectStorageEndpointModule();
+      final HPCloudObjectStorageHttpApiModule.HPCloudObjectStorageEndpointModule moduleToTest = new HPCloudObjectStorageHttpApiModule.HPCloudObjectStorageEndpointModule();
 
       for (int i = 1; i <= 3; i++) {
          Supplier<URI> resultingSupplier = moduleToTest.provideStorageUrl(mockFactory, apiVersion, String.format("region%1$s", i));
@@ -93,7 +93,7 @@ public class HPCloudObjectStorageEndpointModuleTest {
 
    @Test
    public void testCDNRegion() {
-      final HPCloudObjectStorageRestClientModule moduleToTest = new HPCloudObjectStorageRestClientModule();
+      final HPCloudObjectStorageHttpApiModule moduleToTest = new HPCloudObjectStorageHttpApiModule();
 
       for (int i = 1; i <= 3; i++) {
          Supplier<URI> resultingSupplier = moduleToTest.provideCDNUrl(mockCDNFactory, apiVersion, String.format("region%1$s", i));
@@ -111,7 +111,7 @@ public class HPCloudObjectStorageEndpointModuleTest {
     */
    @Test
    public void testObjectStorageUndefinedRegion() {
-      final HPCloudObjectStorageRestClientModule.HPCloudObjectStorageEndpointModule moduleToTest = new HPCloudObjectStorageRestClientModule.HPCloudObjectStorageEndpointModule();
+      final HPCloudObjectStorageHttpApiModule.HPCloudObjectStorageEndpointModule moduleToTest = new HPCloudObjectStorageHttpApiModule.HPCloudObjectStorageEndpointModule();
 
       Supplier<URI> resultingSupplier = moduleToTest.provideStorageUrl(mockFactory, apiVersion, "region-that-dne");
       assertNotNull(resultingSupplier);
@@ -121,7 +121,7 @@ public class HPCloudObjectStorageEndpointModuleTest {
 
    @Test
    public void testCDNUndefinedRegion() {
-      final HPCloudObjectStorageRestClientModule moduleToTest = new HPCloudObjectStorageRestClientModule();
+      final HPCloudObjectStorageHttpApiModule moduleToTest = new HPCloudObjectStorageHttpApiModule();
 
       Supplier<URI> resultingSupplier = moduleToTest.provideCDNUrl(mockCDNFactory, apiVersion, "region-that-dne");
       assertNotNull(resultingSupplier);

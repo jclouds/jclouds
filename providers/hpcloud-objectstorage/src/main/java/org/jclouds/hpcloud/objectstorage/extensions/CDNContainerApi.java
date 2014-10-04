@@ -16,40 +16,98 @@
  */
 package org.jclouds.hpcloud.objectstorage.extensions;
 
+import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
+import static org.jclouds.Fallbacks.EmptyFluentIterableOnNotFoundOr404;
+import static org.jclouds.blobstore.BlobStoreFallbacks.NullOnContainerNotFound;
+import static org.jclouds.hpcloud.objectstorage.reference.HPCloudObjectStorageHeaders.CDN_ENABLED;
+import static org.jclouds.hpcloud.objectstorage.reference.HPCloudObjectStorageHeaders.CDN_TTL;
+
 import java.net.URI;
+
+import javax.inject.Named;
+import javax.ws.rs.Consumes;
+import javax.ws.rs.GET;
+import javax.ws.rs.HEAD;
+import javax.ws.rs.HeaderParam;
+import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+
 import org.jclouds.hpcloud.objectstorage.domain.CDNContainer;
+import org.jclouds.hpcloud.objectstorage.functions.ParseCDNContainerFromHeaders;
+import org.jclouds.hpcloud.objectstorage.functions.ParseCDNUriFromHeaders;
 import org.jclouds.hpcloud.objectstorage.options.ListCDNContainerOptions;
+import org.jclouds.hpcloud.services.HPExtensionCDN;
+import org.jclouds.openstack.keystone.v2_0.filters.AuthenticateRequest;
+import org.jclouds.rest.annotations.Endpoint;
+import org.jclouds.rest.annotations.Fallback;
+import org.jclouds.rest.annotations.Headers;
+import org.jclouds.rest.annotations.QueryParams;
+import org.jclouds.rest.annotations.RequestFilters;
+import org.jclouds.rest.annotations.ResponseParser;
 
 import com.google.common.annotations.Beta;
 import com.google.common.collect.FluentIterable;
 
-/**
- * Provides synchronous access to HP Cloud Object Storage via the REST API.
- * 
- * <p/>
- * All commands return a ListenableFuture of the result. Any exceptions incurred during processing
- * will be backend in an {@link java.util.concurrent.ExecutionException} as documented in {@link ListenableFuture#get()}.
- * 
- * @see org.jclouds.hpcloud.objectstorage.HPCloudObjectStorageApi
- * @see <a href="https://manage.hpcloud.com/pages/build/docs/objectstorage-lvs/api">HP Cloud Object
- *      Storage API</a>
- * @see CDNContainerAsyncApi
- */
 @Beta
+@RequestFilters(AuthenticateRequest.class)
+@Endpoint(HPExtensionCDN.class)
 public interface CDNContainerApi  {
-   
+
+   @Beta
+   @Named("ListCDNEnabledContainers")
+   @GET
+   @Consumes(APPLICATION_JSON)
+   @QueryParams(keys = "format", values = "json")
+   @Fallback(EmptyFluentIterableOnNotFoundOr404.class)
+   @Path("/")
    FluentIterable<CDNContainer> list();
-   
+
+   @Beta
+   @Named("ListCDNEnabledContainers")
+   @GET
+   @Consumes(APPLICATION_JSON)
+   @QueryParams(keys = "format", values = "json")
+   @Fallback(EmptyFluentIterableOnNotFoundOr404.class)
+   @Path("/")
    FluentIterable<CDNContainer> list(ListCDNContainerOptions options);
 
-   CDNContainer get(String container);
+   @Beta
+   @Named("ListCDNEnabledContainerMetadata")
+   @HEAD
+   @ResponseParser(ParseCDNContainerFromHeaders.class)
+   @Fallback(NullOnContainerNotFound.class)
+   @Path("/{container}")
+   CDNContainer get(@PathParam("container") String container);
 
-   URI enable(String container, long ttl);
+   @Beta
+   @Named("CDNEnableContainer")
+   @PUT
+   @Path("/{container}")
+   @Headers(keys = CDN_ENABLED, values = "True")
+   @ResponseParser(ParseCDNUriFromHeaders.class)
+   URI enable(@PathParam("container") String container, @HeaderParam(CDN_TTL) long ttl);
 
-   URI enable(String container);
+   @Beta
+   @Named("CDNEnableContainer")
+   @PUT
+   @Path("/{container}")
+   @Headers(keys = CDN_ENABLED, values = "True")
+   @ResponseParser(ParseCDNUriFromHeaders.class)
+   URI enable(@PathParam("container") String container);
 
-   URI update(String container, long ttl);
-   
-   boolean disable(String container);
+   @Beta
+   @Named("UpdateCDNEnabledContainerMetadata")
+   @POST
+   @Path("/{container}")
+   @ResponseParser(ParseCDNUriFromHeaders.class)
+   URI update(@PathParam("container") String container, @HeaderParam(CDN_TTL) long ttl);
 
+   @Beta
+   @Named("DisableCDNEnabledContainer")
+   @PUT
+   @Path("/{container}")
+   @Headers(keys = CDN_ENABLED, values = "False")
+   boolean disable(@PathParam("container") String container);
 }

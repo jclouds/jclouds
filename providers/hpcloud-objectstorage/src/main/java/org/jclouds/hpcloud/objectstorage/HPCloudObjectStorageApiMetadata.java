@@ -16,45 +16,36 @@
  */
 package org.jclouds.hpcloud.objectstorage;
 
-import com.google.common.collect.ImmutableSet;
-import com.google.common.reflect.TypeToken;
-import com.google.inject.Module;
-import com.google.inject.name.Named;
-import org.jclouds.blobstore.BlobRequestSigner;
-import org.jclouds.hpcloud.objectstorage.blobstore.HPCloudObjectStorageBlobRequestSigner;
-import org.jclouds.hpcloud.objectstorage.blobstore.config.HPCloudObjectStorageBlobStoreContextModule;
-import org.jclouds.hpcloud.objectstorage.config.HPCloudObjectStorageRestClientModule;
-import org.jclouds.location.suppliers.RegionIdToURISupplier;
-import org.jclouds.openstack.keystone.v2_0.config.CredentialTypes;
-import org.jclouds.openstack.keystone.v2_0.config.MappedAuthenticationApiModule;
-import org.jclouds.openstack.keystone.v2_0.suppliers.RegionIdToAdminURISupplier;
-import org.jclouds.openstack.swift.SwiftKeystoneApiMetadata;
-import org.jclouds.openstack.swift.blobstore.config.TemporaryUrlExtensionModule;
-import org.jclouds.openstack.swift.extensions.KeystoneTemporaryUrlKeyAsyncApi;
-import org.jclouds.openstack.swift.extensions.TemporaryUrlKeyApi;
-import org.jclouds.rest.annotations.ApiVersion;
+import static org.jclouds.hpcloud.objectstorage.config.HPCloudObjectStorageHttpApiModule.HPCloudObjectStorageEndpointModule;
+import static org.jclouds.openstack.keystone.v2_0.config.KeystoneAuthenticationModule.RegionModule;
+import static org.jclouds.openstack.keystone.v2_0.config.KeystoneProperties.CREDENTIAL_TYPE;
+import static org.jclouds.openstack.keystone.v2_0.config.KeystoneProperties.SERVICE_TYPE;
+import static org.jclouds.rest.config.BinderUtils.bindHttpApi;
 
 import java.net.URI;
 import java.util.Properties;
 
-import static org.jclouds.hpcloud.objectstorage.config.HPCloudObjectStorageRestClientModule.HPCloudObjectStorageEndpointModule;
-import static org.jclouds.openstack.keystone.v2_0.config.KeystoneAuthenticationModule.RegionModule;
-import static org.jclouds.openstack.keystone.v2_0.config.KeystoneProperties.CREDENTIAL_TYPE;
-import static org.jclouds.openstack.keystone.v2_0.config.KeystoneProperties.SERVICE_TYPE;
-import static org.jclouds.rest.config.BinderUtils.bindSyncToAsyncHttpApi;
+import org.jclouds.blobstore.BlobRequestSigner;
+import org.jclouds.hpcloud.objectstorage.blobstore.HPCloudObjectStorageBlobRequestSigner;
+import org.jclouds.hpcloud.objectstorage.blobstore.config.HPCloudObjectStorageBlobStoreContextModule;
+import org.jclouds.hpcloud.objectstorage.config.HPCloudObjectStorageHttpApiModule;
+import org.jclouds.location.suppliers.RegionIdToURISupplier;
+import org.jclouds.openstack.keystone.v2_0.config.AuthenticationApiModule;
+import org.jclouds.openstack.keystone.v2_0.config.CredentialTypes;
+import org.jclouds.openstack.keystone.v2_0.suppliers.RegionIdToAdminURISupplier;
+import org.jclouds.openstack.swift.SwiftKeystoneApiMetadata;
+import org.jclouds.openstack.swift.blobstore.config.TemporaryUrlExtensionModule;
+import org.jclouds.openstack.swift.extensions.KeystoneTemporaryUrlKeyApi;
+import org.jclouds.openstack.swift.extensions.TemporaryUrlKeyApi;
+import org.jclouds.rest.annotations.ApiVersion;
+
+import com.google.common.collect.ImmutableSet;
+import com.google.inject.Module;
+import com.google.inject.name.Named;
 /**
  * Implementation of {@link org.jclouds.providers.ProviderMetadata} for HP Cloud Services Object Storage
  */
 public class HPCloudObjectStorageApiMetadata extends SwiftKeystoneApiMetadata {
-
-   /**
-    * @deprecated please use {@code org.jclouds.ContextBuilder#buildApi(HPCloudObjectStorageApi.class)} as
-    *             {@link HPCloudObjectStorageAsyncApi} interface will be removed in jclouds 1.7.
-    */
-   @Deprecated
-   public static final TypeToken<org.jclouds.rest.RestContext<HPCloudObjectStorageApi, HPCloudObjectStorageAsyncApi>> CONTEXT_TOKEN = new TypeToken<org.jclouds.rest.RestContext<HPCloudObjectStorageApi, HPCloudObjectStorageAsyncApi>>() {
-      private static final long serialVersionUID = 1L;
-   };
 
    @Override
    public Builder toBuilder() {
@@ -75,22 +66,20 @@ public class HPCloudObjectStorageApiMetadata extends SwiftKeystoneApiMetadata {
       return properties;
    }
 
-   public static class Builder extends SwiftKeystoneApiMetadata.Builder<Builder> {
-      @SuppressWarnings("deprecation")
+   public static class Builder extends SwiftKeystoneApiMetadata.Builder<HPCloudObjectStorageApi, Builder> {
       protected Builder() {
-         super(HPCloudObjectStorageApi.class, HPCloudObjectStorageAsyncApi.class);
+         super(HPCloudObjectStorageApi.class);
          id("hpcloud-objectstorage")
          .endpointName("identity service url ending in /v2.0/")
          .defaultEndpoint("https://region-a.geo-1.identity.hpcloudsvc.com:35357/v2.0/")
          .name("HP Cloud Services Object Storage API")
          .documentation(URI.create("https://build.hpcloud.com/object-storage/api"))
          .defaultProperties(HPCloudObjectStorageApiMetadata.defaultProperties())
-         .context(CONTEXT_TOKEN)
          .defaultModules(ImmutableSet.<Class<? extends Module>>builder()
-                                     .add(MappedAuthenticationApiModule.class)
+                                     .add(AuthenticationApiModule.class)
                                      .add(HPCloudObjectStorageEndpointModule.class)
                                      .add(IgnoreRegionVersionsModule.class)
-                                     .add(HPCloudObjectStorageRestClientModule.class)
+                                     .add(HPCloudObjectStorageHttpApiModule.class)
                                      .add(HPCloudObjectStorageBlobStoreContextModule.class)
                                      .add(HPCloudObjectStorageTemporaryUrlExtensionModule.class).build());
       }
@@ -110,14 +99,15 @@ public class HPCloudObjectStorageApiMetadata extends SwiftKeystoneApiMetadata {
     * Ensures keystone auth is used instead of swift auth
     */
    public static class HPCloudObjectStorageTemporaryUrlExtensionModule extends
-         TemporaryUrlExtensionModule<HPCloudObjectStorageAsyncApi> {
+         TemporaryUrlExtensionModule<HPCloudObjectStorageApi> {
       @Override
       protected void bindRequestSigner() {
          bind(BlobRequestSigner.class).to(HPCloudObjectStorageBlobRequestSigner.class);
       }
       @Override
       protected void bindTemporaryUrlKeyApi() {
-         bindSyncToAsyncHttpApi(binder(), TemporaryUrlKeyApi.class, KeystoneTemporaryUrlKeyAsyncApi.class);
+         bindHttpApi(binder(), KeystoneTemporaryUrlKeyApi.class);
+         bind(TemporaryUrlKeyApi.class).to(KeystoneTemporaryUrlKeyApi.class);
       }
    }
 

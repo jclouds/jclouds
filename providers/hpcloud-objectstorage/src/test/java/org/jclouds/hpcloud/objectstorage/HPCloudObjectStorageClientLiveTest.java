@@ -39,7 +39,7 @@ public class HPCloudObjectStorageClientLiveTest extends CommonSwiftClientLiveTes
    
    @Override
    public HPCloudObjectStorageApi getApi() {
-      return view.unwrap(HPCloudObjectStorageApiMetadata.CONTEXT_TOKEN).getApi();
+      return view.unwrapApi(HPCloudObjectStorageApi.class);
    }
 
    @Override
