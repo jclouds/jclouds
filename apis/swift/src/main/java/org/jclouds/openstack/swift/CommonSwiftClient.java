@@ -16,19 +16,56 @@
  */
 package org.jclouds.openstack.swift;
 
+import static com.google.common.net.HttpHeaders.EXPECT;
+import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
+import static org.jclouds.Fallbacks.VoidOnNotFoundOr404;
+import static org.jclouds.blobstore.BlobStoreFallbacks.FalseOnContainerNotFound;
+import static org.jclouds.blobstore.BlobStoreFallbacks.FalseOnKeyNotFound;
+import static org.jclouds.blobstore.BlobStoreFallbacks.NullOnContainerNotFound;
+import static org.jclouds.blobstore.BlobStoreFallbacks.NullOnKeyNotFound;
+import static org.jclouds.openstack.swift.reference.SwiftHeaders.OBJECT_COPY_FROM;
+
 import java.io.Closeable;
 import java.util.Map;
 import java.util.Set;
 
+import javax.inject.Named;
+import javax.ws.rs.Consumes;
+import javax.ws.rs.DELETE;
+import javax.ws.rs.GET;
+import javax.ws.rs.HEAD;
+import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+
+import org.jclouds.blobstore.binders.BindMapToHeadersWithPrefix;
 import org.jclouds.blobstore.domain.PageSet;
+import org.jclouds.http.functions.ParseETagHeader;
+import org.jclouds.http.functions.ReturnTrueIf201;
 import org.jclouds.http.options.GetOptions;
+import org.jclouds.openstack.swift.binders.BindIterableToHeadersWithContainerDeleteMetadataPrefix;
+import org.jclouds.openstack.swift.binders.BindMapToHeadersWithContainerMetadataPrefix;
+import org.jclouds.openstack.swift.binders.BindSwiftObjectMetadataToRequest;
 import org.jclouds.openstack.swift.domain.AccountMetadata;
 import org.jclouds.openstack.swift.domain.ContainerMetadata;
 import org.jclouds.openstack.swift.domain.MutableObjectInfoWithMetadata;
 import org.jclouds.openstack.swift.domain.ObjectInfo;
 import org.jclouds.openstack.swift.domain.SwiftObject;
+import org.jclouds.openstack.swift.functions.ObjectName;
+import org.jclouds.openstack.swift.functions.ParseAccountMetadataResponseFromHeaders;
+import org.jclouds.openstack.swift.functions.ParseContainerMetadataFromHeaders;
+import org.jclouds.openstack.swift.functions.ParseObjectFromHeadersAndHttpContent;
+import org.jclouds.openstack.swift.functions.ParseObjectInfoFromHeaders;
+import org.jclouds.openstack.swift.functions.ParseObjectInfoListFromJsonResponse;
 import org.jclouds.openstack.swift.options.CreateContainerOptions;
 import org.jclouds.openstack.swift.options.ListContainerOptions;
+import org.jclouds.rest.annotations.BinderParam;
+import org.jclouds.rest.annotations.Fallback;
+import org.jclouds.rest.annotations.Headers;
+import org.jclouds.rest.annotations.ParamParser;
+import org.jclouds.rest.annotations.QueryParams;
+import org.jclouds.rest.annotations.ResponseParser;
 
 import com.google.inject.Provides;
 
@@ -36,8 +73,8 @@ import com.google.inject.Provides;
  * Common features in OpenStack Swift.
  * 
  * 
- * @deprecated Please use {@code com.jclouds.openstack.swift.v1.SwiftApi} and related
- *             feature APIs in {@code com.jclouds.openstack.swift.v1.features.*} as noted in
+ * @deprecated Please use {@code org.jclouds.openstack.swift.v1.SwiftApi} and related
+ *             feature APIs in {@code org.jclouds.openstack.swift.v1.features.*} as noted in
  *             each method. This interface will be removed in jclouds 2.0.
  */
 @Deprecated
@@ -45,7 +82,7 @@ public interface CommonSwiftClient extends Closeable {
    
    /**
     * @deprecated This method will be replaced by
-    *             {@link com.jclouds.openstack.swift.v1.domain.SwiftObject#builder()}
+    *             {@link org.jclouds.openstack.swift.v1.domain.SwiftObject#builder()}
     */
    @Deprecated
    @Provides
@@ -62,9 +99,14 @@ public interface CommonSwiftClient extends Closeable {
     * 
     * @return the {@link AccountMetadata}
     * @deprecated This method will be replaced by
-    *             {@link com.jclouds.openstack.swift.v1.features.AccountApi#get()}
+    *             {@link org.jclouds.openstack.swift.v1.features.AccountApi#get()}
     */
    @Deprecated
+   @Named("GetAccountMetadata")
+   @HEAD
+   @Path("/")
+   @Consumes()
+   @ResponseParser(ParseAccountMetadataResponseFromHeaders.class)
    AccountMetadata getAccountStatistics();
 
    /**
@@ -96,10 +138,15 @@ public interface CommonSwiftClient extends Closeable {
     * list is exactly divisible by the limit, the last request will simply have no content.
     * 
     * @deprecated This method will be replaced by
-    *             {@link com.jclouds.openstack.swift.v1.features.ContainerApi#list()} and
-    *             {@link com.jclouds.openstack.swift.v1.features.ContainerApi#list(ListContainerOptions)}
+    *             {@link org.jclouds.openstack.swift.v1.features.ContainerApi#list()} and
+    *             {@link org.jclouds.openstack.swift.v1.features.ContainerApi#list(ListContainerOptions)}
     */
    @Deprecated
+   @Named("ListContainers")
+   @GET
+   @Consumes(APPLICATION_JSON)
+   @QueryParams(keys = "format", values = "json")
+   @Path("/")
    Set<ContainerMetadata> listContainers(ListContainerOptions... options);
 
    /**
@@ -109,10 +156,16 @@ public interface CommonSwiftClient extends Closeable {
     *           the container to get the metadata from
     * @return the {@link ContainerMetadata}
     * @deprecated This method will be replaced by
-    *             {@link com.jclouds.openstack.swift.v1.features.ContainerApi#get()}
+    *             {@link org.jclouds.openstack.swift.v1.features.ContainerApi#get()}
     */
    @Deprecated
-   ContainerMetadata getContainerMetadata(String container);
+   @Named("GetContainerMetadata")
+   @HEAD
+   @Path("/{container}")
+   @Consumes()
+   @ResponseParser(ParseContainerMetadataFromHeaders.class)
+   @Fallback(NullOnContainerNotFound.class)
+   ContainerMetadata getContainerMetadata(@PathParam("container") String container);
    
    /**
     * Set the {@link ContainerMetadata} on the given container.
@@ -124,10 +177,16 @@ public interface CommonSwiftClient extends Closeable {
     * @return {@code true}
     *            if the Container Metadata was successfully created or updated, false if not.
     * @deprecated This method will be replaced by
-    *             {@link com.jclouds.openstack.swift.v1.features.ContainerApi#updateMetadata()}
+    *             {@link org.jclouds.openstack.swift.v1.features.ContainerApi#updateMetadata()}
     */
    @Deprecated
-   boolean setContainerMetadata(String container, Map<String, String> containerMetadata);
+   @Named("UpdateContainerMetadata")
+   @POST
+   @Path("/{container}")
+   @Fallback(FalseOnContainerNotFound.class)
+   boolean setContainerMetadata(@PathParam("container") String container,
+         @BinderParam(BindMapToHeadersWithContainerMetadataPrefix.class) Map<String, String> containerMetadata);
+
    
    /**
     * Delete the metadata on the given container.
@@ -139,10 +198,15 @@ public interface CommonSwiftClient extends Closeable {
     * @return {@code true}
     *            if the Container was successfully deleted, false if not.
     * @deprecated This method will be replaced by
-    *             {@link com.jclouds.openstack.swift.v1.features.ContainerApi#deleteMetadata()}
+    *             {@link org.jclouds.openstack.swift.v1.features.ContainerApi#deleteMetadata()}
     */
    @Deprecated
-   boolean deleteContainerMetadata(String container, Iterable<String> metadataKeys);
+   @Named("UpdateContainerMetadata")
+   @POST
+   @Path("/{container}")
+   @Fallback(FalseOnContainerNotFound.class)
+   boolean deleteContainerMetadata(@PathParam("container") String container,
+         @BinderParam(BindIterableToHeadersWithContainerDeleteMetadataPrefix.class) Iterable<String> metadataKeys);
 
    /**
     * Create a container.
@@ -152,97 +216,164 @@ public interface CommonSwiftClient extends Closeable {
     * @return {@code true}
     *            if the Container was successfully created, false if not.
     * @deprecated This method will be replaced by
-    *             {@link com.jclouds.openstack.swift.v1.features.ContainerApi#createIfAbsent()}
+    *             {@link org.jclouds.openstack.swift.v1.features.ContainerApi#createIfAbsent()}
     */
    @Deprecated
-   boolean createContainer(String container);
+   @Named("CreateContainer")
+   @PUT
+   @ResponseParser(ReturnTrueIf201.class)
+   @Path("/{container}")
+   boolean createContainer(@PathParam("container") String container);
 
    /**
     * @deprecated This method will be replaced by
-    *             {@link com.jclouds.openstack.swift.v1.features.ContainerApi#createIfAbsent()}
+    *             {@link org.jclouds.openstack.swift.v1.features.ContainerApi#createIfAbsent()}
     */
    @Deprecated
    boolean createContainer(String container, CreateContainerOptions... options);
    
    /**
     * @deprecated This method will be replaced by
-    *             (@link com.jclouds.openstack.swift.v1.features.ContainerApi#deleteIfEmpty()}
+    *             (@link org.jclouds.openstack.swift.v1.features.ContainerApi#deleteIfEmpty()}
     */
    @Deprecated
-   boolean deleteContainerIfEmpty(String container);
+   @Named("DeleteContainer")
+   @DELETE
+   @Fallback(SwiftFallbacks.TrueOn404FalseOn409.class)
+   @Path("/{container}")
+   boolean deleteContainerIfEmpty(@PathParam("container") String container);
+   /**
+    * @deprecated This method will be replaced by
+    *             {@link org.jclouds.openstack.swift.v1.features.ContainerApi#head()}
+    */
+   @Deprecated
+   @Named("GetContainerMetadata")
+   @HEAD
+   @Path("/{container}")
+   @Consumes
+   @Fallback(FalseOnContainerNotFound.class)
+   boolean containerExists(@PathParam("container") String container);
 
    /**
     * @deprecated This method will be replaced by
-    *             {@link com.jclouds.openstack.swift.v1.features.ContainerApi#head()}
+    *             {@link org.jclouds.openstack.swift.v1.features.ObjectApi#list()} and
+    *             {@link org.jclouds.openstack.swift.v1.features.ObjectApi#list(ListContainerOptions)}
     */
    @Deprecated
-   boolean containerExists(String container);
+   @Named("ListObjects")
+   @GET
+   @QueryParams(keys = "format", values = "json")
+   @ResponseParser(ParseObjectInfoListFromJsonResponse.class)
+   @Path("/{container}")
+   PageSet<ObjectInfo> listObjects(@PathParam("container") String container,
+         ListContainerOptions... options);
 
    /**
     * @deprecated This method will be replaced by
-    *             {@link com.jclouds.openstack.swift.v1.features.ObjectApi#list()} and
-    *             {@link com.jclouds.openstack.swift.v1.features.ObjectApi#list(ListContainerOptions)}
+    *             {@link org.jclouds.openstack.swift.v1.features.ObjectApi#get()}
     */
    @Deprecated
-   PageSet<ObjectInfo> listObjects(String container, ListContainerOptions... options);
+   @Named("GetObject")
+   @GET
+   @ResponseParser(ParseObjectFromHeadersAndHttpContent.class)
+   @Fallback(NullOnKeyNotFound.class)
+   @Path("/{container}/{name}")
+   SwiftObject getObject(@PathParam("container") String container, @PathParam("name") String name,
+         GetOptions... options);
 
    /**
     * @deprecated This method will be replaced by
-    *             {@link com.jclouds.openstack.swift.v1.features.ObjectApi#get()}
+    *             {@link org.jclouds.openstack.swift.v1.features.ObjectApi@updateMetadata()}
     */
    @Deprecated
-   SwiftObject getObject(String container, String name, GetOptions... options);
+   @Named("UpdateObjectMetadata")
+   @POST
+   @Path("/{container}/{name}")
+   boolean setObjectInfo(@PathParam("container") String container,
+         @PathParam("name") String name,
+         @BinderParam(BindMapToHeadersWithPrefix.class) Map<String, String> userMetadata);
 
    /**
     * @deprecated This method will be replaced by
-    *             {@link com.jclouds.openstack.swift.v1.features.ObjectApi@updateMetadata()}
+    *             {@link org.jclouds.openstack.swift.v1.features.ObjectApi#head()}
     */
    @Deprecated
-   boolean setObjectInfo(String container, String name, Map<String, String> userMetadata);
+   @Named("GetObjectMetadata")
+   @HEAD
+   @ResponseParser(ParseObjectInfoFromHeaders.class)
+   @Fallback(NullOnKeyNotFound.class)
+   @Path("/{container}/{name}")
+   @Consumes
+   MutableObjectInfoWithMetadata getObjectInfo(@PathParam("container") String container,
+         @PathParam("name") String name);
 
    /**
     * @deprecated This method will be replaced by
-    *             {@link com.jclouds.openstack.swift.v1.features.ObjectApi#head()}
+    *             {@link org.jclouds.openstack.swift.v1.features.ObjectApi#replace()}
     */
    @Deprecated
-   MutableObjectInfoWithMetadata getObjectInfo(String container, String name);
+   @Named("PutObject")
+   @PUT
+   @Path("/{container}/{name}")
+   @Headers(keys = EXPECT, values = "100-continue")
+   @ResponseParser(ParseETagHeader.class)
+   String putObject(@PathParam("container") String container, @PathParam("name") @ParamParser(ObjectName.class)
+      @BinderParam(BindSwiftObjectMetadataToRequest.class) SwiftObject object);
 
-   /**
-    * @deprecated This method will be replaced by
-    *             {@link com.jclouds.openstack.swift.v1.features.ObjectApi#replace()}
-    */
-   @Deprecated
-   String putObject(String container, SwiftObject object);
 
    /**
     * @return True If the object was copied
     * @throws CopyObjectException If the object was not copied
     * @deprecated This method will be replaced by
-    *             {@link com.jclouds.openstack.swift.v1.features.ObjectApi#copy()}
+    *             {@link org.jclouds.openstack.swift.v1.features.ObjectApi#copy()}
     */
    @Deprecated
-   boolean copyObject(String sourceContainer, String sourceObject, String destinationContainer, String destinationObject);
-   
+   @Named("CopyObject")
+   @PUT
+   @Path("/{destinationContainer}/{destinationObject}")
+   @Headers(keys = OBJECT_COPY_FROM, values = "/{sourceContainer}/{sourceObject}")
+   @Fallback(FalseOnContainerNotFound.class)
+   boolean copyObject(@PathParam("sourceContainer") String sourceContainer,
+                      @PathParam("sourceObject") String sourceObject,
+                      @PathParam("destinationContainer") String destinationContainer,
+                      @PathParam("destinationObject") String destinationObject);
+
    /**
     * @deprecated This method will be replaced by
-    *             {@link com.jclouds.openstack.swift.v1.features.ObjectApi#delete()}
+    *             {@link org.jclouds.openstack.swift.v1.features.ObjectApi#delete()}
     */
    @Deprecated
-   void removeObject(String container, String name);
+   @Named("RemoveObject")
+   @DELETE
+   @Fallback(VoidOnNotFoundOr404.class)
+   @Path("/{container}/{name}")
+   void removeObject(@PathParam("container") String container, @PathParam("name") String name);
+
 
    /**
     * @throws org.jclouds.blobstore.ContainerNotFoundException
     *            if the container is not present
     * @deprecated This method will be replaced by
-    *             {@link com.jclouds.openstack.swift.v1.features.ObjectApi#head()}
+    *             {@link org.jclouds.openstack.swift.v1.features.ObjectApi#head()}
     */
    @Deprecated
-   boolean objectExists(String container, String name);
+   @Named("GetObjectMetadata")
+   @HEAD
+   @Fallback(FalseOnKeyNotFound.class)
+   @Path("/{container}/{name}")
+   @Consumes
+   boolean objectExists(@PathParam("container") String container, @PathParam("name") String name);
 
    /**
     * @deprecated This method will be replaced by
-    *             {@link com.jclouds.openstack.swift.v1.features.ObjectApi#replaceManifest()}
+    *             {@link org.jclouds.openstack.swift.v1.features.ObjectApi#replaceManifest()}
     */
    @Deprecated
-   String putObjectManifest(String container, String name);
+
+   @Named("PutObjectManifest")
+   @PUT
+   @Path("/{container}/{name}")
+   @ResponseParser(ParseETagHeader.class)
+   @Headers(keys = "X-Object-Manifest", values = "{container}/{name}/")
+   String putObjectManifest(@PathParam("container") String container, @PathParam("name") String name);
 }

@@ -43,10 +43,8 @@ import org.jclouds.blobstore.reference.BlobStoreConstants;
 import org.jclouds.io.Payload;
 import org.jclouds.io.PayloadSlicer;
 import org.jclouds.logging.Logger;
-import org.jclouds.openstack.swift.CommonSwiftAsyncClient;
 import org.jclouds.openstack.swift.CommonSwiftClient;
-import org.jclouds.openstack.swift.SwiftApiMetadata;
-import org.jclouds.openstack.swift.blobstore.SwiftAsyncBlobStore;
+import org.jclouds.openstack.swift.blobstore.SwiftBlobStore;
 import org.jclouds.openstack.swift.blobstore.functions.BlobToObject;
 import org.jclouds.util.Throwables2;
 
@@ -93,13 +91,13 @@ public class ParallelMultipartUploadStrategy implements AsyncMultipartUploadStra
 
     private final ListeningExecutorService ioExecutor;
 
-    protected final SwiftAsyncBlobStore ablobstore;
+    protected final SwiftBlobStore blobstore;
     protected final PayloadSlicer slicer;
 
     @Inject
-    public ParallelMultipartUploadStrategy(SwiftAsyncBlobStore ablobstore, PayloadSlicer slicer,
+    public ParallelMultipartUploadStrategy(SwiftBlobStore blobstore, PayloadSlicer slicer,
                                            @Named(Constants.PROPERTY_IO_WORKER_THREADS) ListeningExecutorService ioExecutor) {
-        this.ablobstore = checkNotNull(ablobstore, "ablobstore");
+        this.blobstore = checkNotNull(blobstore, "blobstore");
         this.slicer = checkNotNull(slicer, "slicer");
         this.ioExecutor = checkNotNull(ioExecutor, "ioExecutor");
     }
@@ -112,22 +110,26 @@ public class ParallelMultipartUploadStrategy implements AsyncMultipartUploadStra
                                      final Map<Integer, ListenableFuture<String>> futureParts,
                                      final AtomicInteger errors, final int maxRetries, final Map<Integer, Exception> errorMap,
                                      final Queue<Part> toRetry, final CountDownLatch latch,
-                                     BlobToObject blob2Object) {
+                                     final BlobToObject blob2Object) {
         if (errors.get() > maxRetries) {
             activeParts.remove(part); // remove part from the bounded-queue without blocking
             latch.countDown();
             return;
         }
-        final CommonSwiftAsyncClient client = ablobstore.getContext().unwrap(SwiftApiMetadata.CONTEXT_TOKEN).getAsyncApi();
+        final CommonSwiftClient client = blobstore.getContext().unwrapApi(CommonSwiftClient.class);
         Payload chunkedPart = slicer.slice(payload, offset, size);
         logger.debug(String.format("async uploading part %s of %s to container %s", part, key, container));
         final long start = System.currentTimeMillis();
         String blobPartName = blob.getMetadata().getName() + PART_SEPARATOR +
                 String.valueOf(part);
 
-        Blob blobPart = ablobstore.blobBuilder(blobPartName).payload(chunkedPart).
+        final Blob blobPart = blobstore.blobBuilder(blobPartName).payload(chunkedPart).
                 contentDisposition(blobPartName).build();
-        final ListenableFuture<String> futureETag = client.putObject(container, blob2Object.apply(blobPart));
+        final ListenableFuture<String> futureETag = ioExecutor.submit(new Callable<String>() {
+           @Override public String call() throws Exception {
+              return client.putObject(container, blob2Object.apply(blobPart));
+           }
+        });
         futureETag.addListener(new Runnable() {
             @Override
             public void run() {
@@ -171,7 +173,7 @@ public class ParallelMultipartUploadStrategy implements AsyncMultipartUploadStra
                         long chunkSize = algorithm.getChunkSize();
                         long remaining = algorithm.getRemaining();
                         if (parts > 0) {
-                            CommonSwiftClient client = ablobstore.getContext().unwrap(SwiftApiMetadata.CONTEXT_TOKEN).getApi();
+                            final CommonSwiftClient client = blobstore.getContext().unwrapApi(CommonSwiftClient.class);
                             final Map<Integer, ListenableFuture<String>> futureParts =
                                     new ConcurrentHashMap<Integer, ListenableFuture<String>>();
                             final Map<Integer, Exception> errorMap = Maps.newHashMap();
@@ -246,7 +248,11 @@ public class ParallelMultipartUploadStrategy implements AsyncMultipartUploadStra
                                 throw rtex;
                             }
                         } else {
-                            ListenableFuture<String> futureETag = ablobstore.putBlob(container, blob, options);
+                            ListenableFuture<String> futureETag = ioExecutor.submit(new Callable<String>() {
+                               @Override public String call() throws Exception {
+                                  return blobstore.putBlob(container, blob, options);
+                               }
+                            });
                             return maxTime != null ?
                                     futureETag.get(maxTime, TimeUnit.SECONDS) : futureETag.get();
                         }

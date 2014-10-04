@@ -32,7 +32,7 @@ import java.util.Map;
 
 import org.jclouds.location.suppliers.RegionIdToURISupplier;
 import org.jclouds.openstack.services.ServiceType;
-import org.jclouds.openstack.swift.config.SwiftRestClientModule.KeystoneStorageEndpointModule;
+import org.jclouds.openstack.swift.config.SwiftHttpApiModule.KeystoneStorageEndpointModule;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
 

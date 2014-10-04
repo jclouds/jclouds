@@ -40,7 +40,7 @@ import org.jclouds.date.TimeStamp;
 import org.jclouds.http.HttpRequest;
 import org.jclouds.http.HttpRequestFilter;
 import org.jclouds.http.options.GetOptions;
-import org.jclouds.openstack.swift.CommonSwiftAsyncClient;
+import org.jclouds.openstack.swift.CommonSwiftClient;
 import org.jclouds.openstack.swift.TemporaryUrlKey;
 import org.jclouds.openstack.swift.blobstore.functions.BlobToObject;
 import org.jclouds.openstack.swift.domain.SwiftObject;
@@ -56,7 +56,7 @@ import com.google.common.reflect.Invokable;
 import com.google.inject.Provider;
 
 @Singleton
-public class SwiftBlobSigner<T extends CommonSwiftAsyncClient> implements BlobRequestSigner {
+public class SwiftBlobSigner<T extends CommonSwiftClient> implements BlobRequestSigner {
 
    private final Function<Invocation, HttpRequest> processor;
    private final Crypto crypto;
@@ -75,7 +75,7 @@ public class SwiftBlobSigner<T extends CommonSwiftAsyncClient> implements BlobRe
     * create a signer for this subtype of swift
     * 
     * @param processor
-    *           bound to the current subclass of {@link CommonSwiftAsyncClient}
+    *           bound to the current subclass of {@link CommonSwiftClient}
     */
    @Inject
    protected SwiftBlobSigner(BlobToObject blobToObject, BlobToHttpGetOptions blob2HttpGetOptions, Crypto crypto,

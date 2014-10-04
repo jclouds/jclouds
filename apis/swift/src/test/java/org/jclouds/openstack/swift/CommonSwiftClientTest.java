@@ -34,7 +34,7 @@ import org.jclouds.openstack.reference.AuthHeaders;
 import org.jclouds.openstack.swift.blobstore.SwiftBlobSigner;
 import org.jclouds.openstack.swift.blobstore.config.SwiftBlobStoreContextModule;
 import org.jclouds.openstack.swift.blobstore.config.TemporaryUrlExtensionModule;
-import org.jclouds.openstack.swift.config.SwiftRestClientModule;
+import org.jclouds.openstack.swift.config.SwiftHttpApiModule;
 import org.jclouds.rest.internal.BaseAsyncClientTest;
 import org.testng.annotations.Test;
 
@@ -50,7 +50,7 @@ import com.google.inject.TypeLiteral;
  */
 // NOTE:without testName, this will not call @Before* and fail w/NPE during surefire
 @Test(groups = "unit", testName = "CommonSwiftClientTest")
-public abstract class CommonSwiftClientTest extends BaseAsyncClientTest<SwiftAsyncClient> {
+public abstract class CommonSwiftClientTest extends BaseAsyncClientTest<SwiftClient> {
 
    public static final long UNIX_EPOCH_TIMESTAMP = 123456789L;
    public static final String TEMPORARY_URL_KEY = "get-or-set-X-Account-Meta-Temp-Url-Key";
@@ -70,7 +70,7 @@ public abstract class CommonSwiftClientTest extends BaseAsyncClientTest<SwiftAsy
       }
    }
 
-   public static class StaticTimeAndTemporaryUrlKeyModule extends TemporaryUrlExtensionModule<SwiftAsyncClient> {
+   public static class StaticTimeAndTemporaryUrlKeyModule extends TemporaryUrlExtensionModule<SwiftClient> {
       @Override
       protected Long unixEpochTimestampProvider() {
          return UNIX_EPOCH_TIMESTAMP;
@@ -85,7 +85,7 @@ public abstract class CommonSwiftClientTest extends BaseAsyncClientTest<SwiftAsy
 
       @Override
       protected void bindRequestSigner() {
-         bind(BlobRequestSigner.class).to(new TypeLiteral<SwiftBlobSigner<SwiftAsyncClient>>() {
+         bind(BlobRequestSigner.class).to(new TypeLiteral<SwiftBlobSigner<SwiftClient>>() {
          });
       }
    }
@@ -95,7 +95,7 @@ public abstract class CommonSwiftClientTest extends BaseAsyncClientTest<SwiftAsy
       return new SwiftApiMetadata().toBuilder()
                                    .defaultModules(ImmutableSet.<Class<? extends Module>>builder()
                                          .add(StorageEndpointModule.class)
-                                         .add(SwiftRestClientModule.class)
+                                         .add(SwiftHttpApiModule.class)
                                          .add(SwiftBlobStoreContextModule.class)
                                          .add(StaticTimeAndTemporaryUrlKeyModule.class).build()).build();
    }

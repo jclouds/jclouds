@@ -16,6 +16,10 @@
  */
 package org.jclouds.openstack.swift;
 
+import org.jclouds.openstack.filters.AuthenticateRequest;
+import org.jclouds.rest.annotations.Endpoint;
+import org.jclouds.rest.annotations.RequestFilters;
+
 /**
  * Functionality that's in Swift, and not in CloudFiles.
  * 
@@ -25,5 +29,7 @@ package org.jclouds.openstack.swift;
  *             will be removed in jclouds 2.0.
  */
 @Deprecated
+@RequestFilters(AuthenticateRequest.class)
+@Endpoint(Storage.class)
 public interface SwiftClient extends CommonSwiftClient {
 }

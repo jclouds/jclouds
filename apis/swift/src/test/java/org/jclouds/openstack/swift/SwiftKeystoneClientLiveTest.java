@@ -27,6 +27,6 @@ public class SwiftKeystoneClientLiveTest extends CommonSwiftClientLiveTest<Commo
    
    @Override
    public CommonSwiftClient getApi() {
-      return view.unwrap(SwiftKeystoneApiMetadata.CONTEXT_TOKEN).getApi();
+      return view.unwrapApi(CommonSwiftClient.class);
    }
 }

@@ -16,42 +16,42 @@
  */
 package org.jclouds.openstack.swift.blobstore.config;
 
-import static org.jclouds.rest.config.BinderUtils.bindSyncToAsyncHttpApi;
 import static org.jclouds.Constants.PROPERTY_SESSION_INTERVAL;
+import static org.jclouds.rest.config.BinderUtils.bindHttpApi;
 
 import java.util.concurrent.TimeUnit;
+
 import javax.inject.Singleton;
 
 import org.jclouds.blobstore.BlobRequestSigner;
 import org.jclouds.date.TimeStamp;
-import org.jclouds.openstack.swift.CommonSwiftAsyncClient;
-import org.jclouds.openstack.swift.SwiftAsyncClient;
-import org.jclouds.openstack.swift.SwiftKeystoneAsyncClient;
+import org.jclouds.openstack.swift.CommonSwiftClient;
+import org.jclouds.openstack.swift.SwiftClient;
+import org.jclouds.openstack.swift.SwiftKeystoneClient;
 import org.jclouds.openstack.swift.TemporaryUrlKey;
 import org.jclouds.openstack.swift.blobstore.SwiftBlobSigner;
-import org.jclouds.openstack.swift.extensions.KeystoneTemporaryUrlKeyAsyncApi;
+import org.jclouds.openstack.swift.extensions.KeystoneTemporaryUrlKeyApi;
 import org.jclouds.openstack.swift.extensions.TemporaryUrlKeyApi;
-import org.jclouds.openstack.swift.extensions.TemporaryUrlKeyAsyncApi;
 import org.jclouds.openstack.swift.suppliers.ReturnOrFetchTemporaryUrlKey;
 
 import com.google.common.base.Supplier;
 import com.google.common.base.Suppliers;
 import com.google.inject.AbstractModule;
 import com.google.inject.Inject;
-import com.google.inject.name.Named;
 import com.google.inject.Provides;
 import com.google.inject.TypeLiteral;
+import com.google.inject.name.Named;
 
 /**
  * Isolates dependencies needed for {@link SwiftBlobSigner}
  */
-public abstract class TemporaryUrlExtensionModule<A extends CommonSwiftAsyncClient> extends AbstractModule {
+public abstract class TemporaryUrlExtensionModule<A extends CommonSwiftClient> extends AbstractModule {
 
-   public static class SwiftTemporaryUrlExtensionModule extends TemporaryUrlExtensionModule<SwiftAsyncClient> {
+   public static class SwiftTemporaryUrlExtensionModule extends TemporaryUrlExtensionModule<SwiftClient> {
 
       @Override
       protected void bindRequestSigner() {
-         bind(BlobRequestSigner.class).to(new TypeLiteral<SwiftBlobSigner<SwiftAsyncClient>>() {
+         bind(BlobRequestSigner.class).to(new TypeLiteral<SwiftBlobSigner<SwiftClient>>() {
          });
       }
 
@@ -62,15 +62,16 @@ public abstract class TemporaryUrlExtensionModule<A extends CommonSwiftAsyncClie
     *
     */
    public static class SwiftKeystoneTemporaryUrlExtensionModule extends
-         TemporaryUrlExtensionModule<SwiftKeystoneAsyncClient> {
+         TemporaryUrlExtensionModule<SwiftKeystoneClient> {
 
       protected void bindTemporaryUrlKeyApi() {
-         bindSyncToAsyncHttpApi(binder(), TemporaryUrlKeyApi.class, KeystoneTemporaryUrlKeyAsyncApi.class);
+         bindHttpApi(binder(), KeystoneTemporaryUrlKeyApi.class);
+         bind(TemporaryUrlKeyApi.class).to(KeystoneTemporaryUrlKeyApi.class);
       }
 
       @Override
       protected void bindRequestSigner() {
-         bind(BlobRequestSigner.class).to(new TypeLiteral<SwiftBlobSigner<SwiftKeystoneAsyncClient>>() {
+         bind(BlobRequestSigner.class).to(new TypeLiteral<SwiftBlobSigner<SwiftKeystoneClient>>() {
          });
       }
 
@@ -110,7 +111,6 @@ public abstract class TemporaryUrlExtensionModule<A extends CommonSwiftAsyncClie
    protected abstract void bindRequestSigner();
 
    protected void bindTemporaryUrlKeyApi() {
-      bindSyncToAsyncHttpApi(binder(), TemporaryUrlKeyApi.class, TemporaryUrlKeyAsyncApi.class);
+      bindHttpApi(binder(), TemporaryUrlKeyApi.class);
    }
-
 }

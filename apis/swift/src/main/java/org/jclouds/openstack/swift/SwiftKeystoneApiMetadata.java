@@ -16,42 +16,29 @@
  */
 package org.jclouds.openstack.swift;
 
-import static org.jclouds.location.reference.LocationConstants.PROPERTY_REGIONS;
 import static org.jclouds.location.reference.LocationConstants.PROPERTY_REGION;
+import static org.jclouds.location.reference.LocationConstants.PROPERTY_REGIONS;
 import static org.jclouds.openstack.keystone.v2_0.config.KeystoneProperties.CREDENTIAL_TYPE;
 import static org.jclouds.openstack.keystone.v2_0.config.KeystoneProperties.SERVICE_TYPE;
 
 import java.util.Properties;
 
+import org.jclouds.openstack.keystone.v2_0.config.AuthenticationApiModule;
 import org.jclouds.openstack.keystone.v2_0.config.CredentialTypes;
 import org.jclouds.openstack.keystone.v2_0.config.KeystoneAuthenticationModule;
-import org.jclouds.openstack.keystone.v2_0.config.MappedAuthenticationApiModule;
 import org.jclouds.openstack.services.ServiceType;
 import org.jclouds.openstack.swift.blobstore.config.SwiftBlobStoreContextModule;
 import org.jclouds.openstack.swift.blobstore.config.TemporaryUrlExtensionModule.SwiftKeystoneTemporaryUrlExtensionModule;
-import org.jclouds.openstack.swift.config.SwiftKeystoneRestClientModule;
-import org.jclouds.openstack.swift.config.SwiftRestClientModule.KeystoneStorageEndpointModule;
+import org.jclouds.openstack.swift.config.SwiftKeystoneHttpApiModule;
+import org.jclouds.openstack.swift.config.SwiftHttpApiModule.KeystoneStorageEndpointModule;
 
 import com.google.common.collect.ImmutableSet;
-import com.google.common.reflect.TypeToken;
 import com.google.inject.Module;
 
-/**
- * Implementation of {@link ApiMetadata} for OpenStack Swift authenticated with KeyStone
- */
 public class SwiftKeystoneApiMetadata extends SwiftApiMetadata {
 
-   /**
-    * @deprecated please use {@code org.jclouds.ContextBuilder#buildApi(SwiftKeystoneClient.class)} as
-    *             {@link SwiftKeystoneAsyncClient} interface will be removed in jclouds 2.0.
-    */
-   @Deprecated
-   public static final TypeToken<org.jclouds.rest.RestContext<SwiftKeystoneClient, SwiftKeystoneAsyncClient>> CONTEXT_TOKEN = new TypeToken<org.jclouds.rest.RestContext<SwiftKeystoneClient, SwiftKeystoneAsyncClient>>() {
-      private static final long serialVersionUID = 1L;
-   };
-
    @Override
-   public Builder<?> toBuilder() {
+   public Builder<?, ?> toBuilder() {
       return new ConcreteBuilder().fromApiMetadata(this);
    }
 
@@ -59,7 +46,7 @@ public class SwiftKeystoneApiMetadata extends SwiftApiMetadata {
       this(new ConcreteBuilder());
    }
 
-   protected SwiftKeystoneApiMetadata(Builder<?> builder) {
+   protected SwiftKeystoneApiMetadata(Builder<?, ?> builder) {
       super(builder);
    }
 
@@ -72,26 +59,27 @@ public class SwiftKeystoneApiMetadata extends SwiftApiMetadata {
       return properties;
    }
 
-   public abstract static class Builder<T extends Builder<T>> extends SwiftApiMetadata.Builder<T> {
+   public abstract static class Builder<A extends CommonSwiftClient, T extends Builder<A, T>>
+         extends SwiftApiMetadata.Builder<A, T> {
+
       protected Builder() {
-         this(SwiftKeystoneClient.class, SwiftKeystoneAsyncClient.class);
+         this(Class.class.cast(SwiftKeystoneClient.class));
       }
 
-      protected Builder(Class<?> syncClient, Class<?> asyncClient) {
-         super(syncClient, asyncClient);
+      protected Builder(Class<A> syncClient) {
+         super(syncClient);
          id("swift-keystone")
                .name("OpenStack Swift with Keystone authentication")
                .identityName("${tenantName}:${userName} or ${userName}, if your keystone supports a default tenant")
                .credentialName("${password}")
                .endpointName("KeyStone base url ending in /v2.0/")
                .defaultEndpoint("http://localhost:5000/v2.0/")
-               .context(CONTEXT_TOKEN)
                .defaultProperties(SwiftKeystoneApiMetadata.defaultProperties())
                .defaultModules(ImmutableSet.<Class<? extends Module>>builder()
-                                           .add(MappedAuthenticationApiModule.class)
+                                           .add(AuthenticationApiModule.class)
                                            .add(KeystoneStorageEndpointModule.class)
                                            .add(KeystoneAuthenticationModule.RegionModule.class)
-                                           .add(SwiftKeystoneRestClientModule.class)
+                                           .add(SwiftKeystoneHttpApiModule.class)
                                            .add(SwiftBlobStoreContextModule.class)
                                            .add(SwiftKeystoneTemporaryUrlExtensionModule.class).build());
       }
@@ -102,7 +90,7 @@ public class SwiftKeystoneApiMetadata extends SwiftApiMetadata {
       }
    }
    
-   private static class ConcreteBuilder extends Builder<ConcreteBuilder> {
+   private static class ConcreteBuilder extends Builder<SwiftKeystoneClient, ConcreteBuilder> {
       @Override
       protected ConcreteBuilder self() {
          return this;
