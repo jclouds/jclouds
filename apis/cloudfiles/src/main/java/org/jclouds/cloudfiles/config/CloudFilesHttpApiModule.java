@@ -16,42 +16,35 @@
  */
 package org.jclouds.cloudfiles.config;
 
-import static org.jclouds.reflect.Reflection2.typeToken;
-
 import java.net.URI;
 import java.util.Map;
 
 import javax.inject.Singleton;
 
 import org.jclouds.cloudfiles.CDNManagement;
-import org.jclouds.cloudfiles.CloudFilesAsyncClient;
 import org.jclouds.cloudfiles.CloudFilesClient;
 import org.jclouds.location.suppliers.RegionIdToURISupplier;
 import org.jclouds.openstack.keystone.v1_1.config.AuthenticationServiceModule;
 import org.jclouds.openstack.keystone.v1_1.suppliers.V1DefaultRegionIdSupplier;
-import org.jclouds.openstack.swift.CommonSwiftAsyncClient;
 import org.jclouds.openstack.swift.CommonSwiftClient;
 import org.jclouds.openstack.swift.Storage;
-import org.jclouds.openstack.swift.config.SwiftRestClientModule;
-import org.jclouds.rest.ConfiguresRestClient;
+import org.jclouds.openstack.swift.config.SwiftHttpApiModule;
+import org.jclouds.rest.ConfiguresHttpApi;
 
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Supplier;
-import com.google.common.collect.ImmutableMap;
 import com.google.inject.Provides;
 import com.google.inject.Scopes;
 
-@ConfiguresRestClient
-public class CloudFilesRestClientModule extends SwiftRestClientModule<CloudFilesClient, CloudFilesAsyncClient> {
-   public CloudFilesRestClientModule() {
-      super(typeToken(CloudFilesClient.class), typeToken(CloudFilesAsyncClient.class), ImmutableMap
-               .<Class<?>, Class<?>> of());
+@ConfiguresHttpApi
+public class CloudFilesHttpApiModule extends SwiftHttpApiModule<CloudFilesClient> {
+   public CloudFilesHttpApiModule() {
+      super(CloudFilesClient.class);
    }
 
    @Override
    protected void bindResolvedClientsToCommonSwift() {
       bind(CommonSwiftClient.class).to(CloudFilesClient.class).in(Scopes.SINGLETON);
-      bind(CommonSwiftAsyncClient.class).to(CloudFilesAsyncClient.class).in(Scopes.SINGLETON);
    }
 
    public static class StorageAndCDNManagementEndpointModule extends AuthenticationServiceModule {

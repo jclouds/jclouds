@@ -21,30 +21,17 @@ import java.util.Properties;
 
 import org.jclouds.blobstore.BlobRequestSigner;
 import org.jclouds.cloudfiles.blobstore.config.CloudFilesBlobStoreContextModule;
-import org.jclouds.cloudfiles.config.CloudFilesRestClientModule;
-import org.jclouds.cloudfiles.config.CloudFilesRestClientModule.StorageAndCDNManagementEndpointModule;
+import org.jclouds.cloudfiles.config.CloudFilesHttpApiModule;
+import org.jclouds.cloudfiles.config.CloudFilesHttpApiModule.StorageAndCDNManagementEndpointModule;
 import org.jclouds.openstack.swift.SwiftApiMetadata;
 import org.jclouds.openstack.swift.blobstore.SwiftBlobSigner;
 import org.jclouds.openstack.swift.blobstore.config.TemporaryUrlExtensionModule;
 
 import com.google.common.collect.ImmutableSet;
-import com.google.common.reflect.TypeToken;
 import com.google.inject.Module;
 import com.google.inject.TypeLiteral;
 
-/**
- * Implementation of {@link ApiMetadata} for Rackspace Cloud Files API
- */
 public class CloudFilesApiMetadata extends SwiftApiMetadata {
-
-   /**
-    * @deprecated please use {@code org.jclouds.ContextBuilder#buildApi(CloudFilesClient.class)} as
-    *             {@link CloudFilesAsyncClient} interface will be removed in jclouds 1.7.
-    */
-   @Deprecated
-   public static final TypeToken<org.jclouds.rest.RestContext<CloudFilesClient, CloudFilesAsyncClient>> CONTEXT_TOKEN = new TypeToken<org.jclouds.rest.RestContext<CloudFilesClient, CloudFilesAsyncClient>>() {
-      private static final long serialVersionUID = 1L;
-   };
 
    @Override
    public Builder toBuilder() {
@@ -64,20 +51,19 @@ public class CloudFilesApiMetadata extends SwiftApiMetadata {
       return properties;
    }
 
-   public static class Builder extends SwiftApiMetadata.Builder<Builder> {
-      @SuppressWarnings("deprecation")
+   public static class Builder extends SwiftApiMetadata.Builder<CloudFilesClient, Builder> {
+
       protected Builder() {
-         super(CloudFilesClient.class, CloudFilesAsyncClient.class);
+         super(CloudFilesClient.class);
          id("cloudfiles")
          .name("Rackspace Cloud Files API")
          .identityName("Username")
          .credentialName("API Key")
          .documentation(URI.create("http://docs.rackspacecloud.com/files/api/v1/cfdevguide_d5/content/ch01.html"))
          .defaultProperties(CloudFilesApiMetadata.defaultProperties())
-         .context(CONTEXT_TOKEN)
          .defaultModules(ImmutableSet.<Class<? extends Module>>builder()
                                      .add(StorageAndCDNManagementEndpointModule.class)
-                                     .add(CloudFilesRestClientModule.class)
+                                     .add(CloudFilesHttpApiModule.class)
                                      .add(CloudFilesBlobStoreContextModule.class)
                                      .add(CloudFilesTemporaryUrlExtensionModule.class).build());
       }
@@ -93,10 +79,10 @@ public class CloudFilesApiMetadata extends SwiftApiMetadata {
       }
    }
 
-   public static class CloudFilesTemporaryUrlExtensionModule extends TemporaryUrlExtensionModule<CloudFilesAsyncClient> {
+   public static class CloudFilesTemporaryUrlExtensionModule extends TemporaryUrlExtensionModule<CloudFilesClient> {
       @Override
       protected void bindRequestSigner() {
-         bind(BlobRequestSigner.class).to(new TypeLiteral<SwiftBlobSigner<CloudFilesAsyncClient>>() {
+         bind(BlobRequestSigner.class).to(new TypeLiteral<SwiftBlobSigner<CloudFilesClient>>() {
          });
       }
    }

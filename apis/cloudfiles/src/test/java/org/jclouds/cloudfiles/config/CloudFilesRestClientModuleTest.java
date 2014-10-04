@@ -31,16 +31,16 @@ public class CloudFilesRestClientModuleTest {
    @Test
    public void testWithKey() {
       assertEquals(
-            CloudFilesRestClientModule.<String, String> valueForKey(
-                  Suppliers.<Map<String, Supplier<String>>> ofInstance(ImmutableMap.of("foo",
-                        Suppliers.ofInstance("bar"))), Suppliers.ofInstance("foo")).get(), "bar");
+            CloudFilesHttpApiModule.<String, String> valueForKey(Suppliers
+                        .<Map<String, Supplier<String>>>ofInstance(ImmutableMap.of("foo", Suppliers.ofInstance("bar"))),
+                  Suppliers.ofInstance("foo")).get(), "bar");
    }
 
    @Test
    public void testWithKeyUnmatchedIsNull() {
       assertEquals(
-            CloudFilesRestClientModule.<String, String> valueForKey(
-                  Suppliers.<Map<String, Supplier<String>>> ofInstance(ImmutableMap.of("boo",
-                        Suppliers.ofInstance("bar"))), Suppliers.ofInstance("foo")).get(), null);
+            CloudFilesHttpApiModule.<String, String> valueForKey(Suppliers
+                        .<Map<String, Supplier<String>>>ofInstance(ImmutableMap.of("boo", Suppliers.ofInstance("bar"))),
+                  Suppliers.ofInstance("foo")).get(), null);
    }
 }
