@@ -30,11 +30,6 @@
   <dependencies>
     <dependency>
       <groupId>org.apache.jclouds.provider</groupId>
-      <artifactId>greenhousedata-element-vcloud</artifactId>
-      <version>${project.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>org.apache.jclouds.provider</groupId>
       <artifactId>aws-ec2</artifactId>
       <version>${project.version}</version>
     </dependency>
