@@ -16,13 +16,13 @@
  */
 package org.jclouds.googlecloudstorage.blobstore.config;
 
+import com.google.inject.AbstractModule;
+import com.google.inject.Scopes;
 import org.jclouds.blobstore.AsyncBlobStore;
 import org.jclouds.blobstore.BlobStore;
 import org.jclouds.blobstore.attr.ConsistencyModel;
-import org.jclouds.googlecloudstorage.blobstore.GCSAsyncBlobStore;
+import org.jclouds.blobstore.internal.SubmissionAsyncBlobStore;
 import org.jclouds.googlecloudstorage.blobstore.GCSBlobStore;
-import com.google.inject.AbstractModule;
-import com.google.inject.Scopes;
 
 public class GCSBlobStoreContextModule extends AbstractModule {
 
@@ -30,6 +30,6 @@ public class GCSBlobStoreContextModule extends AbstractModule {
    protected void configure() {
       bind(ConsistencyModel.class).toInstance(ConsistencyModel.EVENTUAL);
       bind(BlobStore.class).to(GCSBlobStore.class).in(Scopes.SINGLETON);
-      bind(AsyncBlobStore.class).to(GCSAsyncBlobStore.class).in(Scopes.SINGLETON);
+      bind(AsyncBlobStore.class).to(SubmissionAsyncBlobStore.class).in(Scopes.SINGLETON);
    }
 }
