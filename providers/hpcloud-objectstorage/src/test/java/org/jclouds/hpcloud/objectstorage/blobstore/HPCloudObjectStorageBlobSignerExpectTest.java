@@ -25,12 +25,12 @@ import org.jclouds.blobstore.internal.BaseBlobSignerExpectTest;
 import org.jclouds.hpcloud.objectstorage.HPCloudObjectStorageApiMetadata;
 import org.jclouds.hpcloud.objectstorage.HPCloudObjectStorageApiMetadata.HPCloudObjectStorageTemporaryUrlExtensionModule;
 import org.jclouds.hpcloud.objectstorage.blobstore.config.HPCloudObjectStorageBlobStoreContextModule;
-import org.jclouds.hpcloud.objectstorage.config.HPCloudObjectStorageRestClientModule;
+import org.jclouds.hpcloud.objectstorage.config.HPCloudObjectStorageHttpApiModule;
 import org.jclouds.http.HttpRequest;
 import org.jclouds.http.HttpResponse;
-import org.jclouds.openstack.keystone.v2_0.config.MappedAuthenticationApiModule;
+import org.jclouds.openstack.keystone.v2_0.config.AuthenticationApiModule;
 import org.jclouds.openstack.keystone.v2_0.config.KeystoneAuthenticationModule.RegionModule;
-import org.jclouds.openstack.swift.config.SwiftRestClientModule.KeystoneStorageEndpointModule;
+import org.jclouds.openstack.swift.config.SwiftHttpApiModule.KeystoneStorageEndpointModule;
 import org.testng.annotations.Test;
 
 import com.google.common.collect.ImmutableMap;
@@ -132,10 +132,10 @@ public class HPCloudObjectStorageBlobSignerExpectTest extends BaseBlobSignerExpe
    protected ApiMetadata createApiMetadata() {
       return new HPCloudObjectStorageApiMetadata().toBuilder()
                                    .defaultModules(ImmutableSet.<Class<? extends Module>>builder()
-                                         .add(MappedAuthenticationApiModule.class)
+                                         .add(AuthenticationApiModule.class)
                                          .add(KeystoneStorageEndpointModule.class)
                                          .add(RegionModule.class)
-                                         .add(HPCloudObjectStorageRestClientModule.class)
+                                         .add(HPCloudObjectStorageHttpApiModule.class)
                                          .add(HPCloudObjectStorageBlobStoreContextModule.class)
                                          .add(StaticTimeAndTemporaryUrlKeyModule.class).build()).build();
    }

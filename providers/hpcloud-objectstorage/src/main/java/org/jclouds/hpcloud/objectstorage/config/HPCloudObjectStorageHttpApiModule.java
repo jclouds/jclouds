@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 package org.jclouds.hpcloud.objectstorage.config;
-import static org.jclouds.reflect.Reflection2.typeToken;
+
 import static org.jclouds.util.Suppliers2.getLastValueInMap;
 import static org.jclouds.util.Suppliers2.getValueInMapOrNull;
 
@@ -26,9 +26,6 @@ import javax.inject.Named;
 import javax.inject.Singleton;
 
 import org.jclouds.hpcloud.objectstorage.HPCloudObjectStorageApi;
-import org.jclouds.hpcloud.objectstorage.HPCloudObjectStorageAsyncApi;
-import org.jclouds.hpcloud.objectstorage.extensions.CDNContainerApi;
-import org.jclouds.hpcloud.objectstorage.extensions.CDNContainerAsyncApi;
 import org.jclouds.hpcloud.services.HPExtensionCDN;
 import org.jclouds.hpcloud.services.HPExtensionServiceType;
 import org.jclouds.javax.annotation.Nullable;
@@ -36,32 +33,25 @@ import org.jclouds.location.reference.LocationConstants;
 import org.jclouds.location.suppliers.RegionIdToURISupplier;
 import org.jclouds.openstack.keystone.v2_0.config.KeystoneAuthenticationModule;
 import org.jclouds.openstack.services.ServiceType;
-import org.jclouds.openstack.swift.CommonSwiftAsyncClient;
 import org.jclouds.openstack.swift.CommonSwiftClient;
 import org.jclouds.openstack.swift.Storage;
-import org.jclouds.openstack.swift.config.SwiftRestClientModule;
-import org.jclouds.rest.ConfiguresRestClient;
+import org.jclouds.openstack.swift.config.SwiftHttpApiModule;
+import org.jclouds.rest.ConfiguresHttpApi;
 import org.jclouds.rest.annotations.ApiVersion;
 
 import com.google.common.base.Supplier;
-import com.google.common.collect.ImmutableMap;
 import com.google.inject.Provides;
 import com.google.inject.Scopes;
 
-@ConfiguresRestClient
-public class HPCloudObjectStorageRestClientModule extends
-         SwiftRestClientModule<HPCloudObjectStorageApi, HPCloudObjectStorageAsyncApi> {
-   public static final Map<Class<?>, Class<?>> DELEGATE_MAP = ImmutableMap.<Class<?>, Class<?>> builder().put(
-            CDNContainerApi.class, CDNContainerAsyncApi.class).build();
+@ConfiguresHttpApi
+public class HPCloudObjectStorageHttpApiModule extends SwiftHttpApiModule<HPCloudObjectStorageApi> {
 
-   public HPCloudObjectStorageRestClientModule() {
-      super(typeToken(HPCloudObjectStorageApi.class), typeToken(HPCloudObjectStorageAsyncApi.class),
-               DELEGATE_MAP);
+   public HPCloudObjectStorageHttpApiModule() {
+      super(HPCloudObjectStorageApi.class);
    }
 
    protected void bindResolvedClientsToCommonSwift() {
       bind(CommonSwiftClient.class).to(HPCloudObjectStorageApi.class).in(Scopes.SINGLETON);
-      bind(CommonSwiftAsyncClient.class).to(HPCloudObjectStorageAsyncApi.class).in(Scopes.SINGLETON);
    }
 
    private static Supplier<URI> getUriSupplier(String serviceType, String apiVersion,  RegionIdToURISupplier.Factory factory, String region) {
