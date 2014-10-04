@@ -23,14 +23,14 @@ import java.util.Properties;
 
 import org.jclouds.apis.ApiMetadata;
 import org.jclouds.cloudservers.CloudServersApiMetadata;
-import org.jclouds.cloudservers.config.CloudServersRestClientModule;
+import org.jclouds.cloudservers.config.CloudServersHttpApiModule;
 import org.jclouds.compute.ComputeServiceContext;
 import org.jclouds.date.internal.SimpleDateFormatDateService;
 import org.jclouds.http.HttpRequest;
 import org.jclouds.http.HttpResponse;
 import org.jclouds.openstack.keystone.v1_1.config.AuthenticationServiceModule;
 import org.jclouds.openstack.keystone.v1_1.internal.BaseKeystoneRestClientExpectTest;
-import org.jclouds.rest.ConfiguresRestClient;
+import org.jclouds.rest.ConfiguresHttpApi;
 
 import com.google.common.base.Function;
 import com.google.common.base.Supplier;
@@ -54,11 +54,11 @@ public abstract class BaseCloudServersComputeServiceExpectTest<T> extends BaseKe
 
    @Override
    protected Module createModule() {
-      return new TestCloudServersRestClientModule();
+      return new TestCloudServersHttpApiModule();
    }
 
-   @ConfiguresRestClient
-   protected static class TestCloudServersRestClientModule extends CloudServersRestClientModule {
+   @ConfiguresHttpApi
+   protected static class TestCloudServersHttpApiModule extends CloudServersHttpApiModule {
 
       @Override
       public Supplier<Date> provideCacheBusterDate() {

@@ -48,10 +48,6 @@ import com.google.inject.Injector;
 import com.google.inject.Provides;
 import com.google.inject.TypeLiteral;
 
-/**
- * Configures the {@link CloudServersComputeServiceContext}; requires {@link BaseComputeService}
- * bound.
- */
 public class CloudServersComputeServiceContextModule extends
          ComputeServiceAdapterContextModule<Server, Flavor, org.jclouds.cloudservers.domain.Image, Location> {
 
