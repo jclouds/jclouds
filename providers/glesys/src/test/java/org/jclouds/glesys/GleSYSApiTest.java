@@ -21,7 +21,7 @@ import java.util.concurrent.ExecutionException;
 
 import org.jclouds.http.HttpRequest;
 import org.jclouds.providers.ProviderMetadata;
-import org.jclouds.rest.internal.BaseAsyncApiTest;
+import org.jclouds.rest.internal.BaseRestAnnotationProcessingTest;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
@@ -31,7 +31,7 @@ import org.testng.annotations.Test;
 // NOTE:without testName, this will not call @Before* and fail w/NPE during
 // surefire
 @Test(groups = "unit", testName = "GleSYSApiTest")
-public class GleSYSApiTest extends BaseAsyncApiTest<GleSYSApi> {
+public class GleSYSApiTest extends BaseRestAnnotationProcessingTest<GleSYSApi> {
    private GleSYSApi syncApi;
 
    @Override

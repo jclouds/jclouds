@@ -25,7 +25,7 @@ import org.jclouds.apis.ApiMetadata;
 import org.jclouds.compute.ComputeService;
 import org.jclouds.http.HttpRequest;
 import org.jclouds.http.HttpResponse;
-import org.jclouds.rest.internal.BaseRestClientExpectTest;
+import org.jclouds.rest.internal.BaseRestApiExpectTest;
 import org.jclouds.vcloud.VCloudApiMetadata;
 import org.jclouds.vcloud.VCloudMediaType;
 
@@ -36,7 +36,7 @@ import com.google.inject.Module;
 /**
  * Base class for writing VCloud Expect tests for ComputeService operations
  */
-public abstract class BaseVCloudComputeServiceExpectTest extends BaseRestClientExpectTest<ComputeService> {
+public abstract class BaseVCloudComputeServiceExpectTest extends BaseRestApiExpectTest<ComputeService> {
    protected static final String ENDPOINT = "https://zone.myvcloud.com/api";
 
    protected HttpRequest versionsRequest = HttpRequest.builder().method("GET").endpoint(

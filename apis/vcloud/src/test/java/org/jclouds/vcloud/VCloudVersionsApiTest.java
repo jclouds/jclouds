@@ -15,6 +15,7 @@
  * limitations under the License.
  */
 package org.jclouds.vcloud;
+
 import static org.jclouds.reflect.Reflection2.method;
 import static org.testng.Assert.assertEquals;
 
@@ -24,7 +25,7 @@ import org.jclouds.http.HttpRequest;
 import org.jclouds.http.functions.ParseSax;
 import org.jclouds.providers.AnonymousProviderMetadata;
 import org.jclouds.providers.ProviderMetadata;
-import org.jclouds.rest.internal.BaseAsyncClientTest;
+import org.jclouds.rest.internal.BaseRestAnnotationProcessingTest;
 import org.jclouds.rest.internal.GeneratedHttpRequest;
 import org.jclouds.vcloud.xml.SupportedVersionsHandler;
 import org.testng.annotations.Test;
@@ -37,7 +38,7 @@ import com.google.common.reflect.Invokable;
  */
 // NOTE:without testName, this will not call @Before* and fail w/NPE during surefire
 @Test(groups = "unit", testName = "VCloudVersionsApiTest")
-public class VCloudVersionsApiTest extends BaseAsyncClientTest<VCloudVersionsApi> {
+public class VCloudVersionsApiTest extends BaseRestAnnotationProcessingTest<VCloudVersionsApi> {
 
    public void testVersions() throws SecurityException, NoSuchMethodException, IOException {
       Invokable<?, ?> method = method(VCloudVersionsApi.class, "getSupportedVersions");

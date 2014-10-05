@@ -32,7 +32,7 @@ import org.jclouds.blobstore.domain.Blob.Factory;
 import org.jclouds.date.TimeStamp;
 import org.jclouds.http.HttpRequest;
 import org.jclouds.rest.ConfiguresHttpApi;
-import org.jclouds.rest.internal.BaseAsyncClientTest;
+import org.jclouds.rest.internal.BaseRestAnnotationProcessingTest;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
@@ -44,7 +44,7 @@ import com.google.inject.Module;
  */
 // NOTE:without testName, this will not call @Before* and fail w/NPE during surefire
 @Test(groups = "unit", testName = "AtmosBlobRequestSignerTest")
-public class AtmosBlobRequestSignerTest extends BaseAsyncClientTest<AtmosClient> {
+public class AtmosBlobRequestSignerTest extends BaseRestAnnotationProcessingTest<AtmosClient> {
 
    public AtmosBlobRequestSignerTest() {
       // this is base64 decoded in the signer;

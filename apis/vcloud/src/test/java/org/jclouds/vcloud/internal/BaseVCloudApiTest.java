@@ -34,7 +34,7 @@ import org.jclouds.providers.AnonymousProviderMetadata;
 import org.jclouds.providers.ProviderMetadata;
 import org.jclouds.rest.AuthorizationException;
 import org.jclouds.rest.ConfiguresHttpApi;
-import org.jclouds.rest.internal.BaseAsyncClientTest;
+import org.jclouds.rest.internal.BaseRestAnnotationProcessingTest;
 import org.jclouds.vcloud.VCloudApiMetadata;
 import org.jclouds.vcloud.VCloudMediaType;
 import org.jclouds.vcloud.VCloudVersionsApi;
@@ -73,7 +73,7 @@ import com.google.inject.TypeLiteral;
  */
 // NOTE:without testName, this will not call @Before* and fail w/NPE during surefire
 @Test(groups = "unit", testName = "BaseVCloudApiTest")
-public abstract class BaseVCloudApiTest<T> extends BaseAsyncClientTest<T> {
+public abstract class BaseVCloudApiTest<T> extends BaseRestAnnotationProcessingTest<T> {
 
    @Override
    protected void checkFilters(HttpRequest request) {

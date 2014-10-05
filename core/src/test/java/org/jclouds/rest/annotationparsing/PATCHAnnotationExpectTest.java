@@ -27,7 +27,7 @@ import org.jclouds.http.HttpRequest;
 import org.jclouds.http.HttpResponse;
 import org.jclouds.providers.ProviderMetadata;
 import org.jclouds.rest.annotations.PATCH;
-import org.jclouds.rest.internal.BaseRestClientExpectTest;
+import org.jclouds.rest.internal.BaseRestApiExpectTest;
 import org.testng.annotations.Test;
 
 /**
@@ -35,7 +35,7 @@ import org.testng.annotations.Test;
  */
 @Test(groups = "unit", testName = "PATCHAnnotationExpectTest")
 public class PATCHAnnotationExpectTest extends
-      BaseRestClientExpectTest<PATCHAnnotationExpectTest.TestPATCHAnnotationApi> {
+      BaseRestApiExpectTest<PATCHAnnotationExpectTest.TestPATCHAnnotationApi> {
 
    interface TestPATCHAnnotationApi extends Closeable {
       @PATCH

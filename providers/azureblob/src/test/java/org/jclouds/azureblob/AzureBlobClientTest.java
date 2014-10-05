@@ -44,7 +44,7 @@ import org.jclouds.http.functions.ParseSax;
 import org.jclouds.http.functions.ReleasePayloadAndReturn;
 import org.jclouds.http.functions.ReturnTrueIf2xx;
 import org.jclouds.http.options.GetOptions;
-import org.jclouds.rest.internal.BaseAsyncClientTest;
+import org.jclouds.rest.internal.BaseRestAnnotationProcessingTest;
 import org.jclouds.rest.internal.GeneratedHttpRequest;
 import org.testng.annotations.Test;
 
@@ -54,7 +54,7 @@ import com.google.common.collect.ImmutableMultimap;
 import com.google.common.reflect.Invokable;
 
 @Test(groups = "unit", testName = "AzureBlobClientTest")
-public class AzureBlobClientTest extends BaseAsyncClientTest<AzureBlobClient> {
+public class AzureBlobClientTest extends BaseRestAnnotationProcessingTest<AzureBlobClient> {
 
    public void testListContainers() throws SecurityException, NoSuchMethodException, IOException {
       Invokable<?, ?> method = method(AzureBlobClient.class, "listContainers", ListOptions[].class);

@@ -23,14 +23,14 @@ import org.jclouds.hpcloud.objectstorage.HPCloudObjectStorageProviderMetadata;
 import org.jclouds.http.HttpRequest;
 import org.jclouds.http.HttpResponse;
 import org.jclouds.providers.ProviderMetadata;
-import org.jclouds.rest.internal.BaseRestClientExpectTest;
+import org.jclouds.rest.internal.BaseRestApiExpectTest;
 import org.testng.annotations.Test;
 
 import com.google.common.base.Function;
 import com.google.inject.Module;
 
 @Test(groups = "unit", testName = "HPCloudObjectStorageExpectTest")
-public class BaseHPCloudObjectStorageBlobStoreExpectTest extends BaseRestClientExpectTest<BlobStore> {
+public class BaseHPCloudObjectStorageBlobStoreExpectTest extends BaseRestApiExpectTest<BlobStore> {
 
 
     protected HttpRequest keystoneAuthWithUsernameAndPassword;

@@ -27,7 +27,7 @@ import org.jclouds.blobstore.config.LocalBlobStore;
 import org.jclouds.blobstore.domain.Blob;
 import org.jclouds.blobstore.domain.BlobBuilder;
 import org.jclouds.http.HttpRequest;
-import org.jclouds.rest.internal.BaseAsyncClientTest;
+import org.jclouds.rest.internal.BaseRestAnnotationProcessingTest;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
@@ -40,7 +40,7 @@ import com.google.common.io.ByteSource;
  */
 // NOTE:without testName, this will not call @Before* and fail w/NPE during surefire
 @Test(groups = "unit", testName = "TransientBlobRequestSignerTest")
-public class TransientBlobRequestSignerTest extends BaseAsyncClientTest<LocalBlobStore> {
+public class TransientBlobRequestSignerTest extends BaseRestAnnotationProcessingTest<LocalBlobStore> {
 
    private BlobRequestSigner signer;
    private Provider<BlobBuilder> blobFactory;

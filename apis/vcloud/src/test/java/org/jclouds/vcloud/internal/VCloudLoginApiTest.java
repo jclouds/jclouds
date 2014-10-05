@@ -27,7 +27,7 @@ import org.jclouds.http.filters.BasicAuthentication;
 import org.jclouds.location.Provider;
 import org.jclouds.providers.AnonymousProviderMetadata;
 import org.jclouds.providers.ProviderMetadata;
-import org.jclouds.rest.internal.BaseAsyncClientTest;
+import org.jclouds.rest.internal.BaseRestAnnotationProcessingTest;
 import org.jclouds.rest.internal.GeneratedHttpRequest;
 import org.jclouds.vcloud.endpoints.VCloudLogin;
 import org.jclouds.vcloud.functions.ParseLoginResponseFromHeaders;
@@ -45,7 +45,7 @@ import com.google.inject.Provides;
  */
 // NOTE:without testName, this will not call @Before* and fail w/NPE during surefire
 @Test(groups = "unit", testName = "VCloudLoginApiTest")
-public class VCloudLoginApiTest extends BaseAsyncClientTest<VCloudLoginApi> {
+public class VCloudLoginApiTest extends BaseRestAnnotationProcessingTest<VCloudLoginApi> {
 
    public void testLogin() throws SecurityException, NoSuchMethodException, IOException {
       Invokable<?, ?> method = method(VCloudLoginApi.class, "login");

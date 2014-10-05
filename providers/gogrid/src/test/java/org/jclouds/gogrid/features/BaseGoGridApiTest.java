@@ -25,21 +25,21 @@ import org.jclouds.gogrid.filters.SharedKeyLiteAuthentication;
 import org.jclouds.http.HttpRequest;
 import org.jclouds.providers.ProviderMetadata;
 import org.jclouds.rest.ConfiguresHttpApi;
-import org.jclouds.rest.internal.BaseAsyncClientTest;
+import org.jclouds.rest.internal.BaseRestAnnotationProcessingTest;
 import org.testng.annotations.Test;
 
 import com.google.common.base.Supplier;
 import com.google.inject.Module;
 
 @Test(groups = "unit")
-public abstract class BaseGoGridApiTest<T> extends BaseAsyncClientTest<T> {
+public abstract class BaseGoGridApiTest<T> extends BaseRestAnnotationProcessingTest<T> {
    @Override
    protected void checkFilters(HttpRequest request) {
       assertEquals(request.getFilters().size(), 1);
       assertEquals(request.getFilters().get(0).getClass(), SharedKeyLiteAuthentication.class);
    }
 
-      @ConfiguresHttpApi
+   @ConfiguresHttpApi
    protected static final class TestGoGridHttpApiModule extends GoGridHttpApiModule {
       @Override
       protected void configure() {

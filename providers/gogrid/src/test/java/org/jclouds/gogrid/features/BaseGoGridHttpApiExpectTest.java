@@ -20,18 +20,18 @@ import org.jclouds.date.TimeStamp;
 import org.jclouds.gogrid.GoGridApi;
 import org.jclouds.gogrid.config.GoGridHttpApiModule;
 import org.jclouds.rest.ConfiguresHttpApi;
-import org.jclouds.rest.internal.BaseRestClientExpectTest;
+import org.jclouds.rest.internal.BaseRestApiExpectTest;
 
 import com.google.common.base.Supplier;
 import com.google.inject.Module;
 
-public class BaseGoGridHttpApiExpectTest extends BaseRestClientExpectTest<GoGridApi> {
+public class BaseGoGridHttpApiExpectTest extends BaseRestApiExpectTest<GoGridApi> {
 
    public BaseGoGridHttpApiExpectTest() {
       provider = "gogrid";
    }
 
-      @ConfiguresHttpApi
+   @ConfiguresHttpApi
    protected static final class TestGoGridHttpApiModule extends GoGridHttpApiModule {
 
       @Override

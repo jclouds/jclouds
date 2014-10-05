@@ -40,7 +40,7 @@ import org.jclouds.location.config.LocationModule;
 import org.jclouds.location.suppliers.RegionIdToURISupplier;
 import org.jclouds.location.suppliers.RegionIdToZoneIdsSupplier;
 import org.jclouds.rest.ConfiguresHttpApi;
-import org.jclouds.rest.internal.BaseAsyncApiTest;
+import org.jclouds.rest.internal.BaseRestAnnotationProcessingTest;
 import org.jclouds.util.Suppliers2;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
@@ -55,7 +55,7 @@ import com.google.inject.Module;
 import com.google.inject.Provides;
 
 @Test(groups = "unit")
-public abstract class BaseEC2ApiTest<T> extends BaseAsyncApiTest<T> {
+public abstract class BaseEC2ApiTest<T> extends BaseRestAnnotationProcessingTest<T> {
    @ConfiguresHttpApi
    protected static class StubEC2HttpApiModule extends BaseEC2HttpApiModule<EC2Api> {
 

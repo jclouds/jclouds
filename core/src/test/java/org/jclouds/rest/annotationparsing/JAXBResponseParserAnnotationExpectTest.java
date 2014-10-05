@@ -33,7 +33,7 @@ import org.jclouds.http.HttpResponse;
 import org.jclouds.providers.ProviderMetadata;
 import org.jclouds.rest.annotations.JAXBResponseParser;
 import org.jclouds.rest.annotations.Transform;
-import org.jclouds.rest.internal.BaseRestClientExpectTest;
+import org.jclouds.rest.internal.BaseRestApiExpectTest;
 import org.testng.annotations.Test;
 
 import com.google.common.base.Function;
@@ -45,7 +45,7 @@ import com.google.common.util.concurrent.ListenableFuture;
  */
 @Test(groups = "unit", testName = "JAXBResponseParserAnnotationExpectTest")
 public class JAXBResponseParserAnnotationExpectTest extends
-      BaseRestClientExpectTest<JAXBResponseParserAnnotationExpectTest.TestJAXBApi> {
+      BaseRestApiExpectTest<JAXBResponseParserAnnotationExpectTest.TestJAXBApi> {
 
    @XmlRootElement(name = "test")
    public static class TestJAXBDomain {

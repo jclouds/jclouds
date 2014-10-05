@@ -26,13 +26,13 @@ import org.jclouds.azureblob.domain.AzureBlob;
 import org.jclouds.http.HttpRequest;
 import org.jclouds.io.Payload;
 import org.jclouds.io.Payloads;
-import org.jclouds.rest.internal.BaseAsyncClientTest;
+import org.jclouds.rest.internal.BaseRestAnnotationProcessingTest;
 import org.testng.annotations.Test;
 
 import com.google.common.collect.ImmutableMap;
 
 @Test(groups = "unit", testName = "BindAzureBlobMetadataToRequestTest")
-public class BindAzureBlobMetadataToRequestTest extends BaseAsyncClientTest<AzureBlobClient> {
+public class BindAzureBlobMetadataToRequestTest extends BaseRestAnnotationProcessingTest<AzureBlobClient> {
 
    @Test
    public void testPassWithMinimumDetailsAndPayload64MB() {

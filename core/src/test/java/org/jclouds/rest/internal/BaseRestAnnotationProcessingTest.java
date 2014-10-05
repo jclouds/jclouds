@@ -36,7 +36,7 @@ import com.google.inject.Injector;
 import com.google.inject.Module;
 
 @Test(groups = "unit")
-public abstract class BaseAsyncApiTest<T> extends BaseRestApiTest {
+public abstract class BaseRestAnnotationProcessingTest<T> extends BaseRestApiTest {
 
    protected RestAnnotationProcessor processor;
 

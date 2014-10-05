@@ -20,12 +20,12 @@ import java.util.Properties;
 
 import org.jclouds.http.HttpRequest;
 import org.jclouds.http.HttpResponse;
-import org.jclouds.rest.internal.BaseRestClientExpectTest;
+import org.jclouds.rest.internal.BaseRestApiExpectTest;
 
 /**
  * Base class for writing Swift Expect tests
  */
-public class BaseSwiftExpectTest<T> extends BaseRestClientExpectTest<T> {
+public class BaseSwiftExpectTest<T> extends BaseRestApiExpectTest<T> {
 
    protected String endpoint = "http://myhost:8080/auth";
    protected HttpRequest authRequest;
