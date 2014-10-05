@@ -18,22 +18,23 @@ package org.jclouds.openstack.swift.blobstore;
 
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
-import static org.jclouds.blobstore.util.BlobStoreUtils.createParentIfNeededAsync;
+import static org.jclouds.Constants.PROPERTY_USER_THREADS;
 import static org.jclouds.openstack.swift.options.ListContainerOptions.Builder.withPrefix;
 
 import java.util.Set;
 
 import javax.inject.Inject;
+import javax.inject.Named;
 import javax.inject.Provider;
 import javax.inject.Singleton;
 
-import com.google.common.annotations.VisibleForTesting;
 import org.jclouds.blobstore.BlobStoreContext;
 import org.jclouds.blobstore.domain.Blob;
 import org.jclouds.blobstore.domain.BlobMetadata;
 import org.jclouds.blobstore.domain.PageSet;
 import org.jclouds.blobstore.domain.StorageMetadata;
 import org.jclouds.blobstore.domain.internal.PageSetImpl;
+import org.jclouds.blobstore.functions.BlobName;
 import org.jclouds.blobstore.functions.BlobToHttpGetOptions;
 import org.jclouds.blobstore.internal.BaseBlobStore;
 import org.jclouds.blobstore.options.CreateContainerOptions;
@@ -56,13 +57,16 @@ import org.jclouds.openstack.swift.domain.ContainerMetadata;
 import org.jclouds.openstack.swift.domain.MutableObjectInfoWithMetadata;
 import org.jclouds.openstack.swift.domain.ObjectInfo;
 
+import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Function;
 import com.google.common.base.Strings;
 import com.google.common.base.Supplier;
 import com.google.common.collect.Iterables;
+import com.google.common.util.concurrent.ListeningExecutorService;
 
 @Singleton
 public class SwiftBlobStore extends BaseBlobStore {
+   private final ListeningExecutorService userExecutor;
    private final CommonSwiftClient sync;
    private final ContainerToResourceMetadata container2ResourceMd;
    private final BlobStoreListContainerOptionsToListContainerOptions container2ContainerListOptions;
@@ -75,7 +79,8 @@ public class SwiftBlobStore extends BaseBlobStore {
    private final Provider<MultipartUploadStrategy> multipartUploadStrategy;
 
    @Inject
-   protected SwiftBlobStore(BlobStoreContext context, BlobUtils blobUtils, Supplier<Location> defaultLocation,
+   protected SwiftBlobStore(@Named(PROPERTY_USER_THREADS) ListeningExecutorService userExecutor,
+            BlobStoreContext context, BlobUtils blobUtils, Supplier<Location> defaultLocation,
             @Memoized Supplier<Set<? extends Location>> locations, CommonSwiftClient sync,
             ContainerToResourceMetadata container2ResourceMd,
             BlobStoreListContainerOptionsToListContainerOptions container2ContainerListOptions,
@@ -84,6 +89,7 @@ public class SwiftBlobStore extends BaseBlobStore {
             Provider<FetchBlobMetadata> fetchBlobMetadataProvider,
             Provider<MultipartUploadStrategy> multipartUploadStrategy) {
       super(context, blobUtils, defaultLocation, locations);
+      this.userExecutor = userExecutor;
       this.sync = sync;
       this.container2ResourceMd = container2ResourceMd;
       this.container2ContainerListOptions = container2ContainerListOptions;
@@ -196,8 +202,28 @@ public class SwiftBlobStore extends BaseBlobStore {
     */
    @Override
    public String putBlob(String container, Blob blob) {
-      createParentIfNeededAsync(context.getAsyncBlobStore(), container, blob);
+      createParentIfNeededAsync(container, blob);
       return sync.putObject(container, blob2Object.apply(blob));
+   }
+
+   private static final BlobName blobName = new BlobName();
+
+   /** Legacy behavior which will not be carried forward in new blobstores. */
+   private void createParentIfNeededAsync(final String containerName, Blob blob) {
+      checkNotNull(containerName, "container");
+      checkNotNull(blob, "blob");
+      final String name = blobName.apply(blob);
+      if (name.indexOf('/') > 0) {
+         userExecutor.submit(new Runnable() {
+            @Override public void run() {
+               createDirectory(containerName, parseDirectoryFromPath(name));
+            }
+         });
+      }
+   }
+
+   private static String parseDirectoryFromPath(String path) {
+      return checkNotNull(path, "path").substring(0, path.lastIndexOf('/'));
    }
 
    /**

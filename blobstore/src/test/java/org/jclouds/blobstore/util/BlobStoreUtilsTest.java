@@ -16,11 +16,6 @@
  */
 package org.jclouds.blobstore.util;
 
-import static org.easymock.EasyMock.createMock;
-import static org.easymock.EasyMock.expect;
-import static org.easymock.EasyMock.replay;
-import static org.easymock.EasyMock.verify;
-import static org.jclouds.blobstore.util.BlobStoreUtils.createParentIfNeededAsync;
 import static org.jclouds.blobstore.util.BlobStoreUtils.getNameFor;
 import static org.jclouds.reflect.Reflection2.method;
 import static org.testng.Assert.assertEquals;
@@ -28,82 +23,15 @@ import static org.testng.Assert.assertEquals;
 import java.net.URI;
 import java.util.List;
 
-import org.jclouds.blobstore.AsyncBlobStore;
-import org.jclouds.blobstore.domain.Blob;
-import org.jclouds.blobstore.domain.MutableBlobMetadata;
 import org.jclouds.reflect.Invocation;
 import org.jclouds.rest.internal.GeneratedHttpRequest;
 import org.testng.annotations.Test;
 
 import com.google.common.base.Throwables;
 import com.google.common.collect.ImmutableList;
-/**
- * Tests behavior of {@code BlobStoreUtils}
- */
+
 @Test(groups = "unit")
 public class BlobStoreUtilsTest {
-
-   public void testCreateParentIfNeededAsyncNoPath() {
-      AsyncBlobStore asyncBlobStore = createMock(AsyncBlobStore.class);
-      String container = "container";
-      Blob blob = createMock(Blob.class);
-      MutableBlobMetadata md = createMock(MutableBlobMetadata.class);
-
-      expect(blob.getMetadata()).andReturn(md).atLeastOnce();
-      expect(md.getName()).andReturn("hello").atLeastOnce();
-
-      replay(asyncBlobStore);
-      replay(blob);
-      replay(md);
-
-      createParentIfNeededAsync(asyncBlobStore, container, blob);
-
-      verify(asyncBlobStore);
-      verify(blob);
-      verify(md);
-   }
-
-   public void testCreateParentIfNeededAsyncSinglePath() {
-      AsyncBlobStore asyncBlobStore = createMock(AsyncBlobStore.class);
-      String container = "container";
-      Blob blob = createMock(Blob.class);
-      MutableBlobMetadata md = createMock(MutableBlobMetadata.class);
-
-      expect(blob.getMetadata()).andReturn(md).atLeastOnce();
-      expect(md.getName()).andReturn("rootpath/hello").atLeastOnce();
-      expect(asyncBlobStore.createDirectory("container", "rootpath")).andReturn(null);
-
-      replay(asyncBlobStore);
-      replay(blob);
-      replay(md);
-
-      createParentIfNeededAsync(asyncBlobStore, container, blob);
-
-      verify(asyncBlobStore);
-      verify(blob);
-      verify(md);
-   }
-
-   public void testCreateParentIfNeededAsyncNestedPath() {
-      AsyncBlobStore asyncBlobStore = createMock(AsyncBlobStore.class);
-      String container = "container";
-      Blob blob = createMock(Blob.class);
-      MutableBlobMetadata md = createMock(MutableBlobMetadata.class);
-
-      expect(blob.getMetadata()).andReturn(md).atLeastOnce();
-      expect(md.getName()).andReturn("rootpath/subpath/hello").atLeastOnce();
-      expect(asyncBlobStore.createDirectory("container", "rootpath/subpath")).andReturn(null);
-
-      replay(asyncBlobStore);
-      replay(blob);
-      replay(md);
-
-      createParentIfNeededAsync(asyncBlobStore, container, blob);
-
-      verify(asyncBlobStore);
-      verify(blob);
-      verify(md);
-   }
 
    public void testGetKeyForAzureS3AndRackspace() {
       GeneratedHttpRequest request = requestForEndpointAndArgs(

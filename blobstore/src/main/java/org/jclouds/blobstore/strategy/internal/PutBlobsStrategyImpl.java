@@ -20,6 +20,7 @@ import static com.google.common.base.Throwables.propagate;
 import static org.jclouds.concurrent.FutureIterables.awaitCompletion;
 
 import java.util.Map;
+import java.util.concurrent.Callable;
 import java.util.concurrent.TimeoutException;
 
 import javax.annotation.Resource;
@@ -27,7 +28,7 @@ import javax.inject.Named;
 import javax.inject.Singleton;
 
 import org.jclouds.Constants;
-import org.jclouds.blobstore.AsyncBlobStore;
+import org.jclouds.blobstore.BlobStore;
 import org.jclouds.blobstore.domain.Blob;
 import org.jclouds.blobstore.internal.BlobRuntimeException;
 import org.jclouds.blobstore.reference.BlobStoreConstants;
@@ -42,7 +43,7 @@ import com.google.inject.Inject;
 @Singleton
 public class PutBlobsStrategyImpl implements PutBlobsStrategy {
 
-   private final AsyncBlobStore ablobstore;
+   private final BlobStore blobstore;
    private final ListeningExecutorService userExecutor;
    @Resource
    @Named(BlobStoreConstants.BLOBSTORE_LOGGER)
@@ -56,16 +57,20 @@ public class PutBlobsStrategyImpl implements PutBlobsStrategy {
 
    @Inject
    PutBlobsStrategyImpl(@Named(Constants.PROPERTY_USER_THREADS) ListeningExecutorService userExecutor,
-            AsyncBlobStore ablobstore) {
+            BlobStore blobstore) {
       this.userExecutor = userExecutor;
-      this.ablobstore = ablobstore;
+      this.blobstore = blobstore;
    }
 
    @Override
-   public void execute(String containerName, Iterable<? extends Blob> blobs) {
+   public void execute(final String containerName, Iterable<? extends Blob> blobs) {
       Map<Blob, ListenableFuture<?>> responses = Maps.newLinkedHashMap();
-      for (Blob blob : blobs) {
-         responses.put(blob, ablobstore.putBlob(containerName, blob));
+      for (final Blob blob : blobs) {
+         responses.put(blob, userExecutor.submit(new Callable<Object>() {
+            @Override public Object call() throws Exception {
+               return blobstore.putBlob(containerName, blob);
+            }
+         }));
       }
       Map<Blob, Exception> exceptions;
       try {

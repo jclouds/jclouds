@@ -32,7 +32,6 @@ import java.util.UUID;
 import org.jclouds.aws.AWSResponseException;
 import org.jclouds.aws.domain.Region;
 import org.jclouds.aws.s3.domain.DeleteResult;
-import org.jclouds.blobstore.AsyncBlobStore;
 import org.jclouds.blobstore.BlobStore;
 import org.jclouds.blobstore.KeyNotFoundException;
 import org.jclouds.blobstore.domain.Blob;
@@ -140,20 +139,6 @@ public class AWSS3ClientLiveTest extends S3ClientLiveTest {
          blobStore.createContainerInLocation(null, containerName);
          Blob blob = blobStore.blobBuilder("const.txt").payload(file).build();
          blobStore.putBlob(containerName, blob, PutOptions.Builder.multipart());
-
-      } finally {
-         returnContainer(containerName);
-      }
-   }
-
-   public void testMultipartAsynchronouslySmallBlob() throws IOException, InterruptedException, Exception {
-      String containerName = getContainerName();
-      
-      try {
-         AsyncBlobStore asyncBlobStore = view.getAsyncBlobStore();
-         asyncBlobStore.createContainerInLocation(null, containerName).get();
-         Blob blob = asyncBlobStore.blobBuilder("small").payload("small").build();
-         asyncBlobStore.putBlob(containerName, blob, PutOptions.Builder.multipart()).get();
 
       } finally {
          returnContainer(containerName);

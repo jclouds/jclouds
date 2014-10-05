@@ -18,12 +18,14 @@ package org.jclouds.blobstore.strategy.internal;
 
 import static org.jclouds.concurrent.FutureIterables.transformParallel;
 
+import java.util.concurrent.Callable;
+
 import javax.annotation.Resource;
 import javax.inject.Named;
 import javax.inject.Singleton;
 
 import org.jclouds.Constants;
-import org.jclouds.blobstore.AsyncBlobStore;
+import org.jclouds.blobstore.BlobStore;
 import org.jclouds.blobstore.domain.Blob;
 import org.jclouds.blobstore.domain.BlobMetadata;
 import org.jclouds.blobstore.options.ListContainerOptions;
@@ -47,7 +49,7 @@ public class GetAllBlobsInListAndRetryOnFailure implements GetBlobsInListStrateg
 
    protected final ListBlobsInContainer getAllBlobMetadata;
    protected final BackoffLimitedRetryHandler retryHandler;
-   protected final AsyncBlobStore ablobstore;
+   protected final BlobStore blobstore;
    protected final ListeningExecutorService userExecutor;
    @Resource
    @Named(BlobStoreConstants.BLOBSTORE_LOGGER)
@@ -61,9 +63,9 @@ public class GetAllBlobsInListAndRetryOnFailure implements GetBlobsInListStrateg
 
    @Inject
    GetAllBlobsInListAndRetryOnFailure(@Named(Constants.PROPERTY_USER_THREADS) ListeningExecutorService userExecutor,
-            ListBlobsInContainer getAllBlobMetadata, AsyncBlobStore ablobstore, BackoffLimitedRetryHandler retryHandler) {
+            ListBlobsInContainer getAllBlobMetadata, BlobStore blobstore, BackoffLimitedRetryHandler retryHandler) {
       this.userExecutor = userExecutor;
-      this.ablobstore = ablobstore;
+      this.blobstore = blobstore;
       this.getAllBlobMetadata = getAllBlobMetadata;
       this.retryHandler = retryHandler;
    }
@@ -73,8 +75,12 @@ public class GetAllBlobsInListAndRetryOnFailure implements GetBlobsInListStrateg
       return transformParallel(list, new Function<BlobMetadata, ListenableFuture<? extends Blob>>() {
 
          @Override
-         public ListenableFuture<Blob> apply(BlobMetadata from) {
-            return ablobstore.getBlob(container, from.getName());
+         public ListenableFuture<Blob> apply(final BlobMetadata from) {
+            return userExecutor.submit(new Callable<Blob>() {
+               @Override public Blob call() throws Exception {
+                  return blobstore.getBlob(container, from.getName());
+               }
+            });
          }
 
       }, userExecutor, maxTime, logger, String.format("getting from containerName: %s", container), retryHandler, 3);
