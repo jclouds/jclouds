@@ -24,11 +24,9 @@ import org.jclouds.azureblob.AzureBlobClient;
 import org.jclouds.azureblob.blobstore.AzureBlobRequestSigner;
 import org.jclouds.azureblob.blobstore.AzureBlobStore;
 import org.jclouds.azureblob.domain.PublicAccess;
-import org.jclouds.blobstore.AsyncBlobStore;
 import org.jclouds.blobstore.BlobRequestSigner;
 import org.jclouds.blobstore.BlobStore;
 import org.jclouds.blobstore.attr.ConsistencyModel;
-import org.jclouds.blobstore.internal.SubmissionAsyncBlobStore;
 
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
@@ -42,7 +40,6 @@ public class AzureBlobStoreContextModule extends AbstractModule {
    @Override
    protected void configure() {
       bind(ConsistencyModel.class).toInstance(ConsistencyModel.STRICT);
-      bind(AsyncBlobStore.class).to(SubmissionAsyncBlobStore.class).in(Scopes.SINGLETON);
       bind(BlobStore.class).to(AzureBlobStore.class).in(Scopes.SINGLETON);
       bind(BlobRequestSigner.class).to(AzureBlobRequestSigner.class);
    }

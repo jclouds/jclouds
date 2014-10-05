@@ -16,10 +16,8 @@
  */
 package org.jclouds.openstack.swift.blobstore.config;
 
-import org.jclouds.blobstore.AsyncBlobStore;
 import org.jclouds.blobstore.BlobStore;
 import org.jclouds.blobstore.attr.ConsistencyModel;
-import org.jclouds.blobstore.internal.SubmissionAsyncBlobStore;
 import org.jclouds.openstack.swift.blobstore.SwiftBlobStore;
 
 import com.google.inject.AbstractModule;
@@ -30,7 +28,6 @@ public class SwiftBlobStoreContextModule extends AbstractModule {
    @Override
    protected void configure() {
       bind(ConsistencyModel.class).toInstance(ConsistencyModel.EVENTUAL);
-      bind(AsyncBlobStore.class).to(SubmissionAsyncBlobStore.class).in(Scopes.SINGLETON);
       bind(BlobStore.class).to(SwiftBlobStore.class).in(Scopes.SINGLETON);
    }
 }

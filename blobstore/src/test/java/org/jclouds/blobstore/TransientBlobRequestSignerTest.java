@@ -23,6 +23,7 @@ import java.io.IOException;
 import javax.inject.Provider;
 
 import org.jclouds.apis.ApiMetadata;
+import org.jclouds.blobstore.config.LocalBlobStore;
 import org.jclouds.blobstore.domain.Blob;
 import org.jclouds.blobstore.domain.BlobBuilder;
 import org.jclouds.http.HttpRequest;
@@ -39,7 +40,7 @@ import com.google.common.io.ByteSource;
  */
 // NOTE:without testName, this will not call @Before* and fail w/NPE during surefire
 @Test(groups = "unit", testName = "TransientBlobRequestSignerTest")
-public class TransientBlobRequestSignerTest extends BaseAsyncClientTest<LocalAsyncBlobStore> {
+public class TransientBlobRequestSignerTest extends BaseAsyncClientTest<LocalBlobStore> {
 
    private BlobRequestSigner signer;
    private Provider<BlobBuilder> blobFactory;
