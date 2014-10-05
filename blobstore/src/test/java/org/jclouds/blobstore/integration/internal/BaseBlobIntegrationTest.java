@@ -24,6 +24,7 @@ import static org.jclouds.blobstore.options.GetOptions.Builder.ifModifiedSince;
 import static org.jclouds.blobstore.options.GetOptions.Builder.ifUnmodifiedSince;
 import static org.jclouds.blobstore.options.GetOptions.Builder.range;
 import static org.jclouds.concurrent.FutureIterables.awaitCompletion;
+import static org.jclouds.io.ByteStreams2.hashAndClose;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
 import static org.testng.Assert.assertNull;
@@ -55,7 +56,6 @@ import org.jclouds.blobstore.domain.StorageType;
 import org.jclouds.crypto.Crypto;
 import org.jclouds.encryption.internal.JCECrypto;
 import org.jclouds.http.HttpResponseException;
-import org.jclouds.io.ByteStreams2;
 import org.jclouds.io.Payload;
 import org.jclouds.io.Payloads;
 import org.jclouds.io.payloads.ByteSourcePayload;
@@ -67,7 +67,6 @@ import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
 import com.google.common.base.Charsets;
-import com.google.common.base.Function;
 import com.google.common.base.Predicate;
 import com.google.common.base.Throwables;
 import com.google.common.collect.ImmutableMap;
@@ -76,7 +75,6 @@ import com.google.common.collect.Maps;
 import com.google.common.hash.HashCode;
 import com.google.common.io.ByteSource;
 import com.google.common.io.Files;
-import com.google.common.util.concurrent.Futures;
 import com.google.common.util.concurrent.ListenableFuture;
 import com.google.common.util.concurrent.Uninterruptibles;
 
@@ -93,10 +91,6 @@ public class BaseBlobIntegrationTest extends BaseBlobStoreIntegrationTest {
       return oneHundredOneConstitutions;
    }
 
-   public static long getOneHundredOneConstitutionsLength() throws IOException {
-      return oneHundredOneConstitutions.size();
-   }
-
    /**
     * Attempt to capture the issue detailed in
     * http://groups.google.com/group/jclouds/browse_thread/thread/4a7c8d58530b287f
@@ -108,7 +102,7 @@ public class BaseBlobIntegrationTest extends BaseBlobStoreIntegrationTest {
       createTestInput(32 * 1024).copyTo(Files.asByteSink(payloadFile));
       
       final Payload testPayload = Payloads.newFilePayload(payloadFile);
-      final HashCode md5 = ByteStreams2.hashAndClose(testPayload.openStream(), md5());
+      final HashCode md5 = hashAndClose(testPayload.openStream(), md5());
       testPayload.getContentMetadata().setContentType("image/png");
       
       final AtomicInteger blobCount = new AtomicInteger();
@@ -127,7 +121,7 @@ public class BaseBlobIntegrationTest extends BaseBlobStoreIntegrationTest {
                   assertConsistencyAwareBlobExists(container, name);
                   blob = view.getBlobStore().getBlob(container, name);
 
-                  assertEquals(ByteStreams2.hashAndClose(blob.getPayload().openStream(), md5()), md5,
+                  assertEquals(hashAndClose(blob.getPayload().openStream(), md5()), md5,
                            String.format("md5 didn't match on %s/%s", container, name));
 
                   view.getBlobStore().removeBlob(container, name);
@@ -158,23 +152,19 @@ public class BaseBlobIntegrationTest extends BaseBlobStoreIntegrationTest {
          uploadByteSource(container, name, expectedContentDisposition, supplier);
          Map<Integer, ListenableFuture<?>> responses = Maps.newHashMap();
          for (int i = 0; i < 10; i++) {
-
-            responses.put(i, Futures.transform(view.getAsyncBlobStore().getBlob(container, name),
-                     new Function<Blob, Void>() {
-
-                        @Override
-                        public Void apply(Blob from) {
-                           try {
-                              validateMetadata(from.getMetadata(), container, name);
-                              assertEquals(ByteStreams2.hashAndClose(from.getPayload().openStream(), md5()), supplier.hash(md5()));
-                              checkContentDisposition(from, expectedContentDisposition);
-                           } catch (IOException e) {
-                              Throwables.propagate(e);
-                           }
-                           return null;
-                        }
-
-                     }, this.exec));
+            responses.put(i, this.exec.submit(new Callable<Void>() {
+               @Override public Void call() throws Exception {
+                  try {
+                     Blob blob = view.getBlobStore().getBlob(container, name);
+                     validateMetadata(blob.getMetadata(), container, name);
+                     assertEquals(hashAndClose(blob.getPayload().openStream(), md5()), supplier.hash(md5()));
+                     checkContentDisposition(blob, expectedContentDisposition);
+                  } catch (IOException e) {
+                     Throwables.propagate(e);
+                  }
+                  return null;
+               }
+            }));
          }
          Map<Integer, Exception> exceptions = awaitCompletion(responses, exec, 30000l, Logger.CONSOLE,
                   "get constitution");

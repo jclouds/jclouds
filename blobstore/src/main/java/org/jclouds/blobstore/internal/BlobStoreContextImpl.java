@@ -22,7 +22,6 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import org.jclouds.Context;
-import org.jclouds.blobstore.AsyncBlobStore;
 import org.jclouds.blobstore.BlobRequestSigner;
 import org.jclouds.blobstore.BlobStore;
 import org.jclouds.blobstore.BlobStoreContext;
@@ -36,7 +35,6 @@ import com.google.common.reflect.TypeToken;
 
 @Singleton
 public class BlobStoreContextImpl extends BaseView implements BlobStoreContext {
-   private final AsyncBlobStore ablobStore;
    private final BlobStore blobStore;
    private final ConsistencyModel consistencyModel;
    private final Utils utils;
@@ -44,12 +42,9 @@ public class BlobStoreContextImpl extends BaseView implements BlobStoreContext {
 
    @Inject
    public BlobStoreContextImpl(@Provider Context backend, @Provider TypeToken<? extends Context> backendType,
-            Utils utils, ConsistencyModel consistencyModel,
-            AsyncBlobStore ablobStore, BlobStore blobStore,
-            BlobRequestSigner blobRequestSigner) {
+         Utils utils, ConsistencyModel consistencyModel, BlobStore blobStore, BlobRequestSigner blobRequestSigner) {
       super(backend, backendType);
       this.consistencyModel = checkNotNull(consistencyModel, "consistencyModel");
-      this.ablobStore = checkNotNull(ablobStore, "ablobStore");
       this.blobStore = checkNotNull(blobStore, "blobStore");
       this.utils = checkNotNull(utils, "utils");
       this.blobRequestSigner = checkNotNull(blobRequestSigner, "blobRequestSigner");
@@ -63,11 +58,6 @@ public class BlobStoreContextImpl extends BaseView implements BlobStoreContext {
    @Override
    public BlobStore getBlobStore() {
       return blobStore;
-   }
-
-   @Override
-   public AsyncBlobStore getAsyncBlobStore() {
-      return ablobStore;
    }
 
    @Override

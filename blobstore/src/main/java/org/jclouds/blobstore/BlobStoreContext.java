@@ -39,16 +39,6 @@ public interface BlobStoreContext extends Closeable, View {
    BlobRequestSigner getSigner();
 
    /**
-    * @return a portable asynchronous interface for the BlobStore, which returns
-    *         {@code Future}s for each call.
-    * @deprecated will be removed in jclouds 1.7, as async interfaces are no
-    *             longer supported. Please use
-    *             {@link #getBlobStore()}
-    */
-   @Deprecated
-   AsyncBlobStore getAsyncBlobStore();
-
-   /**
     * @return a portable interface for the BlobStore.
     */
    BlobStore getBlobStore();
