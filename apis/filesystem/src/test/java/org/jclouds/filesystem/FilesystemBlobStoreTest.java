@@ -64,11 +64,8 @@ import com.google.common.io.ByteSource;
 import com.google.common.io.Files;
 import com.google.inject.CreationException;
 
-/**
- * Test class for {@link FilesystemAsyncBlobStore} class
- */
-@Test(groups = "unit", testName = "filesystem.FilesystemAsyncBlobStoreTest", singleThreaded = true)
-public class FilesystemAsyncBlobStoreTest {
+@Test(groups = "unit", testName = "FilesystemBlobStoreTest", singleThreaded = true)
+public class FilesystemBlobStoreTest {
 
     private static final String CONTAINER_NAME = "fun-blobstore-test";
     private static final String TARGET_CONTAINER_NAME = TestUtils.TARGET_BASE_DIR + CONTAINER_NAME;
@@ -162,9 +159,6 @@ public class FilesystemAsyncBlobStoreTest {
         assertTrue(containersRetrieved.isEmpty(), "List operation returns a not empty set of container");
     }
 
-    /**
-     * Test of list method, of class FilesystemAsyncBlobStore.
-     */
     public void testList_NoOptionSingleContainer() throws IOException {
         blobStore.createContainerInLocation(null, CONTAINER_NAME);
         // Testing list for an empty container
@@ -188,9 +182,6 @@ public class FilesystemAsyncBlobStoreTest {
         }
     }
 
-    /**
-     * Test of list method, of class FilesystemAsyncBlobStore.
-     */
     public void testList_NoOptionDoubleContainer() throws IOException {
         final String CONTAINER_NAME2 = "container2";
 
@@ -248,10 +239,6 @@ public class FilesystemAsyncBlobStoreTest {
         blobStore.clearContainer(CONTAINER_NAME);
     }
 
-    /**
-     * Integration test, because clearContainer is not redefined in
-     * {@link FilesystemAsyncBlobStore} class
-     */
     public void testClearContainer_NoOptions() throws IOException {
         final String CONTAINER_NAME2 = "containerToClear";
 
@@ -285,27 +272,15 @@ public class FilesystemAsyncBlobStoreTest {
         checkForContainerContent(CONTAINER_NAME2, null);
     }
 
-    /**
-     * Integration test, because countBlobs is not redefined in
-     * {@link FilesystemAsyncBlobStore} class
-     */
     public void testCountBlobs_NotExistingContainer() {
         blobStore.countBlobs(PROVIDER);
     }
 
-    /**
-     * Integration test, because countBlobs is not redefined in
-     * {@link FilesystemAsyncBlobStore} class
-     */
     public void testCountBlobs_NoOptionsEmptyContainer() {
         blobStore.createContainerInLocation(null, CONTAINER_NAME);
         blobStore.countBlobs(PROVIDER);
     }
 
-    /**
-     * Integration test, because countBlobs is not redefined in
-     * {@link FilesystemAsyncBlobStore} class
-     */
     public void testCountBlobs_NoOptions() {
         blobStore.createContainerInLocation(null, CONTAINER_NAME);
         blobStore.countBlobs(PROVIDER);
@@ -442,9 +417,6 @@ public class FilesystemAsyncBlobStoreTest {
         TestUtils.directoryExists(TARGET_CONTAINER_NAME + "/aa", false);
     }
 
-    /**
-     * Test of containerExists method, of class FilesystemAsyncBlobStore.
-     */
     public void testContainerExists() throws IOException {
         boolean result;
 
@@ -458,10 +430,6 @@ public class FilesystemAsyncBlobStoreTest {
         assertTrue(result, "Container doesn't exist");
     }
 
-    /**
-     * Test of createContainerInLocation method, of class
-     * FilesystemAsyncBlobStore.
-     */
     public void testCreateContainerInLocation() throws IOException {
         final String CONTAINER_NAME2 = "funambol-test-2";
         final String TARGET_CONTAINER_NAME2 = TestUtils.TARGET_BASE_DIR + CONTAINER_NAME2;
@@ -485,10 +453,6 @@ public class FilesystemAsyncBlobStoreTest {
         TestUtils.directoryExists(TestUtils.TARGET_BASE_DIR + CONTAINER_NAME2, true);
     }
 
-    /**
-     * Test of putBlob method, of class FilesystemAsyncBlobStore. with a simple
-     * filename - no path in the filename, eg filename.jpg
-     */
     public void testPutBlobSimpleName() {
         blobStore.createContainerInLocation(null, CONTAINER_NAME);
         putBlobAndCheckIt(TestUtils.createRandomBlobKey("putBlob-", ".jpg"));
@@ -518,9 +482,6 @@ public class FilesystemAsyncBlobStoreTest {
         putBlobAndCheckIt(TestUtils.createRandomBlobKey("putBlob-", ".jpg"));
     }
 
-    /**
-     * Test of blobExists method, of class FilesystemAsyncBlobStore.
-     */
     public void testBlobExists() throws IOException {
         boolean result;
         String blobKey;
@@ -562,9 +523,6 @@ public class FilesystemAsyncBlobStoreTest {
         }
     }
 
-    /**
-     * Test of getBlob method, of class FilesystemAsyncBlobStore.
-     */
     public void testGetBlob() throws IOException {
         String blobKey = TestUtils.createRandomBlobKey();
         GetOptions options = null;
