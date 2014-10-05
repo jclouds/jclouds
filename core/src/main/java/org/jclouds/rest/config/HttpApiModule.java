@@ -21,7 +21,6 @@ import static org.jclouds.rest.config.BinderUtils.bindHttpApi;
 
 import org.jclouds.reflect.Invocation;
 import org.jclouds.rest.ConfiguresHttpApi;
-import org.jclouds.rest.HttpAsyncClient;
 import org.jclouds.rest.HttpClient;
 import org.jclouds.rest.internal.InvokeHttpMethod;
 
@@ -56,8 +55,6 @@ public class HttpApiModule<A> extends RestModule {
       }).to(InvokeHttpMethod.class);
       bindHttpApi(binder(), api);
       bindHttpApi(binder(), HttpClient.class);
-      // TODO: remove when references are gone
-      bindHttpApi(binder(), HttpAsyncClient.class);
       bindErrorHandlers();
       bindRetryHandlers();
    }

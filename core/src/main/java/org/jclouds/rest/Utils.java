@@ -28,7 +28,6 @@ import org.jclouds.xml.XMLParser;
 
 import com.google.common.annotations.Beta;
 import com.google.common.eventbus.EventBus;
-import com.google.common.util.concurrent.ListeningExecutorService;
 import com.google.inject.ImplementedBy;
 import com.google.inject.Injector;
 
@@ -56,33 +55,11 @@ public interface Utils {
 
    Json json();
 
-   /**
-    * 
-    * @deprecated will be removed in jclouds 1.7, as async interfaces are no
-    *             longer supported.
-    */
-   @Deprecated
-   HttpAsyncClient asyncHttp();
-
    HttpClient http();
 
    Crypto crypto();
 
    DateService date();
-
-   /**
-    * @deprecated will be removed in jclouds 1.7, as async interfaces are no
-    *             longer supported.
-    */
-   @Deprecated
-   ListeningExecutorService userExecutor();
-
-   /**
-    * @deprecated will be removed in jclouds 1.7, as async interfaces are no
-    *             longer supported.
-    */
-   @Deprecated
-   ListeningExecutorService ioExecutor();
 
    EventBus eventBus();
 
@@ -92,5 +69,4 @@ public interface Utils {
    Injector injector();
 
    XMLParser xml();
-
 }
