@@ -44,7 +44,7 @@ See http://code.google.com/p/jclouds for details."
            java.util.Properties
            [org.jclouds ContextBuilder]
            [org.jclouds.blobstore
-            AsyncBlobStore domain.BlobBuilder BlobStore BlobStoreContext
+            domain.BlobBuilder BlobStore BlobStoreContext
             domain.BlobMetadata domain.StorageMetadata domain.PageSet
             domain.Blob domain.internal.BlobBuilderImpl options.PutOptions
             options.PutOptions$Builder
@@ -86,8 +86,6 @@ See http://code.google.com/p/jclouds for details."
 
 (defn blobstore
   "Create a logged in context.
-Options for communication style
-     :sync and :async.
 Options can also be specified for extension modules
      :log4j :enterprise :ning :apachehc :bouncycastle :joda :gae"
   [^String provider ^String provider-identity ^String provider-credential
@@ -102,9 +100,7 @@ Options can also be specified for extension modules
                       (overrides (reduce #(do (.put ^Properties %1 (name (first %2)) (second %2)) %1)
                                          (Properties.) (dissoc opts :extensions)))
                       (buildView BlobStoreContext))]
-      (if (some #(= :async %) options)
-        (.getAsyncBlobStore context)
-        (.getBlobStore context)))))
+    (.getBlobStore context))))
 
 (defn blobstore-context
   "Returns a blobstore context from a blobstore."
@@ -117,8 +113,7 @@ Options can also be specified for extension modules
 
 (defn blobstore?
   [object]
-  (or (instance? BlobStore object)
-      (instance? AsyncBlobStore object)))
+  (instance? BlobStore object))
 
 (defn blobstore-context?
   [object]
