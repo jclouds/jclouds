@@ -708,14 +708,7 @@
       <plugin>
         <artifactId>maven-checkstyle-plugin</artifactId>
         <version>2.13</version>
-        <configuration>
-          <!-- configLocation configured via profiles -->
-          <violationSeverity>warning</violationSeverity>
-          <includeTestSourceDirectory>true</includeTestSourceDirectory>
-          <failOnViolation>true</failOnViolation>
-          <failsOnError>true</failsOnError>
-          <violationSeverity>warning</violationSeverity>
-        </configuration>
+        <!-- configuration and dependencies set via profiles -->
       </plugin>
       <plugin>
         <groupId>org.gaul</groupId>
@@ -1074,6 +1067,7 @@
             <artifactId>maven-checkstyle-plugin</artifactId>
             <configuration>
               <configLocation>../resources/checkstyle.xml</configLocation>
+              <includeTestSourceDirectory>true</includeTestSourceDirectory>
               <failOnViolation>true</failOnViolation>
               <failsOnError>true</failsOnError>
               <violationSeverity>warning</violationSeverity>
@@ -1115,6 +1109,7 @@
             <configuration>
               <!-- jclouds-resources has the checkstyle config in the classpath -->
               <configLocation>resources/checkstyle.xml</configLocation>
+              <includeTestSourceDirectory>true</includeTestSourceDirectory>
               <failOnViolation>true</failOnViolation>
               <failsOnError>true</failsOnError>
               <!-- fails on itself as it uses the author tag in a module definition -->
