@@ -23,18 +23,13 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.jclouds.blobstore.AsyncBlobStore;
-import org.jclouds.blobstore.domain.Blob;
 import org.jclouds.blobstore.domain.MutableBlobMetadata;
 import org.jclouds.blobstore.domain.internal.MutableBlobMetadataImpl;
-import org.jclouds.blobstore.functions.BlobName;
 import org.jclouds.http.HttpRequest;
 import org.jclouds.http.HttpRequestFilter;
 import org.jclouds.rest.internal.GeneratedHttpRequest;
 
 import com.google.common.collect.Maps;
-import com.google.common.util.concurrent.Futures;
-import com.google.common.util.concurrent.ListenableFuture;
 
 public class BlobStoreUtils {
    public static <T> HttpRequest cleanRequest(HttpRequest returnVal) {
@@ -43,10 +38,6 @@ public class BlobStoreUtils {
          returnVal = filter.filter(returnVal);
       return HttpRequest.builder().method(returnVal.getMethod()).endpoint(returnVal.getEndpoint())
                .headers(returnVal.getHeaders()).payload(returnVal.getPayload()).build();
-   }
-
-   public static String parseDirectoryFromPath(String path) {
-      return checkNotNull(path, "path").substring(0, path.lastIndexOf('/'));
    }
 
    private static Pattern keyFromContainer = Pattern.compile("/?[^/]+/(.*)");
@@ -69,21 +60,6 @@ public class BlobStoreUtils {
          objectKey = objectKey.substring(1);
       }
       return objectKey;
-   }
-
-   private static final BlobName blobName = new BlobName();
-
-   public static ListenableFuture<Void> createParentIfNeededAsync(AsyncBlobStore asyncBlobStore, String container,
-         Blob blob) {
-      checkNotNull(asyncBlobStore, "asyncBlobStore");
-      checkNotNull(container, "container");
-
-      String name = blobName.apply(blob);
-      if (name.indexOf('/') > 0) {
-         return asyncBlobStore.createDirectory(container, parseDirectoryFromPath(name));
-      } else {
-         return Futures.immediateFuture(null);
-      }
    }
    
    public static MutableBlobMetadata copy(MutableBlobMetadata in) {

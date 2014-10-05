@@ -21,6 +21,7 @@ import static org.jclouds.concurrent.FutureIterables.awaitCompletion;
 
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.Callable;
 import java.util.concurrent.TimeoutException;
 
 import javax.annotation.Resource;
@@ -28,7 +29,6 @@ import javax.inject.Named;
 import javax.inject.Singleton;
 
 import org.jclouds.Constants;
-import org.jclouds.blobstore.AsyncBlobStore;
 import org.jclouds.blobstore.BlobStore;
 import org.jclouds.blobstore.internal.BlobRuntimeException;
 import org.jclouds.blobstore.reference.BlobStoreConstants;
@@ -63,7 +63,6 @@ import com.google.inject.Inject;
 @Singleton
 public class MarkersDeleteDirectoryStrategy implements DeleteDirectoryStrategy {
 
-   private final AsyncBlobStore ablobstore;
    private final BlobStore blobstore;
    private final ListeningExecutorService userExecutor;
    @Resource
@@ -77,23 +76,26 @@ public class MarkersDeleteDirectoryStrategy implements DeleteDirectoryStrategy {
    protected Long maxTime;
 
    @Inject
-   MarkersDeleteDirectoryStrategy(
-            @Named(Constants.PROPERTY_USER_THREADS) ListeningExecutorService userExecutor,
-            AsyncBlobStore ablobstore, BlobStore blobstore) {
+   MarkersDeleteDirectoryStrategy(@Named(Constants.PROPERTY_USER_THREADS) ListeningExecutorService userExecutor,
+            BlobStore blobstore) {
       this.userExecutor = userExecutor;
-      this.ablobstore = ablobstore;
       this.blobstore = blobstore;
    }
 
-   public void execute(String containerName, String directory) {
+   public void execute(final String containerName, String directory) {
       Set<String> names = Sets.newHashSet();
       names.add(directory);
       for (String suffix : BlobStoreConstants.DIRECTORY_SUFFIXES) {
          names.add(directory + suffix);
       }
       Map<String, ListenableFuture<?>> responses = Maps.newHashMap();
-      for (String name : names) {
-         responses.put(name, ablobstore.removeBlob(containerName, name));
+      for (final String name : names) {
+         responses.put(name, userExecutor.submit(new Callable<Void>() {
+            @Override public Void call() throws Exception {
+               blobstore.removeBlob(containerName, name);
+               return null;
+            }
+         }));
       }
       String message = String.format("deleting directory %s in containerName: %s", directory,
                containerName);

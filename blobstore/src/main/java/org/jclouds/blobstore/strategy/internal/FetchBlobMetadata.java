@@ -19,11 +19,13 @@ package org.jclouds.blobstore.strategy.internal;
 import static com.google.common.base.Preconditions.checkState;
 import static org.jclouds.concurrent.FutureIterables.transformParallel;
 
+import java.util.concurrent.Callable;
+
 import javax.annotation.Resource;
 import javax.inject.Named;
 
 import org.jclouds.Constants;
-import org.jclouds.blobstore.AsyncBlobStore;
+import org.jclouds.blobstore.BlobStore;
 import org.jclouds.blobstore.domain.BlobMetadata;
 import org.jclouds.blobstore.domain.PageSet;
 import org.jclouds.blobstore.domain.StorageMetadata;
@@ -49,7 +51,7 @@ import com.google.inject.Inject;
 public class FetchBlobMetadata implements Function<PageSet<? extends StorageMetadata>, PageSet<? extends StorageMetadata>> {
 
    protected final BackoffLimitedRetryHandler retryHandler;
-   protected final AsyncBlobStore ablobstore;
+   protected final BlobStore blobstore;
    protected final ListeningExecutorService userExecutor;
    @Resource
    @Named(BlobStoreConstants.BLOBSTORE_LOGGER)
@@ -64,10 +66,10 @@ public class FetchBlobMetadata implements Function<PageSet<? extends StorageMeta
    protected Long maxTime;
 
    @Inject
-   FetchBlobMetadata(@Named(Constants.PROPERTY_USER_THREADS) ListeningExecutorService userExecutor, AsyncBlobStore ablobstore,
+   FetchBlobMetadata(@Named(Constants.PROPERTY_USER_THREADS) ListeningExecutorService userExecutor, BlobStore blobstore,
             BackoffLimitedRetryHandler retryHandler) {
       this.userExecutor = userExecutor;
-      this.ablobstore = ablobstore;
+      this.blobstore = blobstore;
       this.retryHandler = retryHandler;
    }
 
@@ -89,8 +91,12 @@ public class FetchBlobMetadata implements Function<PageSet<? extends StorageMeta
       }), new Function<StorageMetadata, ListenableFuture<? extends BlobMetadata>>() {
 
          @Override
-         public ListenableFuture<BlobMetadata> apply(StorageMetadata from) {
-            return ablobstore.blobMetadata(container, from.getName());
+         public ListenableFuture<BlobMetadata> apply(final StorageMetadata from) {
+            return userExecutor.submit(new Callable<BlobMetadata>() {
+               @Override public BlobMetadata call() throws Exception {
+                  return blobstore.blobMetadata(container, from.getName());
+               }
+            });
          }
 
       }, userExecutor, maxTime, logger, String.format("getting metadata from containerName: %s", container)));
