@@ -98,6 +98,20 @@
     </repository>
   </repositories>
 
+  <!-- to allow downstream projects to access jclouds-resources in plugin config -->
+  <pluginRepositories>
+    <pluginRepository>
+      <id>apache-snapshots</id>
+      <url>https://repository.apache.org/content/repositories/snapshots</url>
+      <releases>
+        <enabled>false</enabled>
+      </releases>
+      <snapshots>
+        <enabled>true</enabled>
+      </snapshots>
+    </pluginRepository>
+  </pluginRepositories>
+
   <distributionManagement>
     <site>
       <id>jclouds-github-pages-site</id>
