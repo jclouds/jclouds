@@ -23,6 +23,7 @@ import org.jclouds.blobstore.domain.BlobBuilder;
 import org.jclouds.blobstore.domain.BlobMetadata;
 import org.jclouds.blobstore.domain.PageSet;
 import org.jclouds.blobstore.domain.StorageMetadata;
+import org.jclouds.blobstore.internal.SubmissionAsyncBlobStore;
 import org.jclouds.blobstore.options.CreateContainerOptions;
 import org.jclouds.blobstore.options.GetOptions;
 import org.jclouds.blobstore.options.ListContainerOptions;
@@ -31,6 +32,7 @@ import org.jclouds.domain.Location;
 import org.jclouds.javax.annotation.Nullable;
 
 import com.google.common.util.concurrent.ListenableFuture;
+import com.google.inject.ImplementedBy;
 
 /**
  * Provides hooks needed to run a blob store asynchronously
@@ -40,6 +42,7 @@ import com.google.common.util.concurrent.ListenableFuture;
  *             supported. Please use {@link org.jclouds.blobstore.BlobStore}
  */
 @Deprecated
+@ImplementedBy(SubmissionAsyncBlobStore.class)
 public interface AsyncBlobStore {
    /**
     * @see BlobStore#getContext

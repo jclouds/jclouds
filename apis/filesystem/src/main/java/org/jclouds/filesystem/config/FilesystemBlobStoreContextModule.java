@@ -16,12 +16,8 @@
  */
 package org.jclouds.filesystem.config;
 
-import static org.jclouds.rest.config.BinderUtils.bindSyncToAsyncApi;
-
-import org.jclouds.blobstore.AsyncBlobStore;
 import org.jclouds.blobstore.BlobRequestSigner;
 import org.jclouds.blobstore.BlobStore;
-import org.jclouds.blobstore.LocalAsyncBlobStore;
 import org.jclouds.blobstore.LocalBlobRequestSigner;
 import org.jclouds.blobstore.LocalStorageStrategy;
 import org.jclouds.blobstore.attr.ConsistencyModel;
@@ -41,11 +37,7 @@ public class FilesystemBlobStoreContextModule extends AbstractModule {
 
    @Override
    protected void configure() {
-      bind(AsyncBlobStore.class).to(LocalAsyncBlobStore.class).asEagerSingleton();
-      // forward all requests from TransientBlobStore to TransientAsyncBlobStore.  needs above binding as cannot proxy a class
-      bindSyncToAsyncApi(binder(), LocalBlobStore.class, AsyncBlobStore.class);
       bind(BlobStore.class).to(LocalBlobStore.class);
-
       install(new BlobStoreObjectModule());
       bind(ConsistencyModel.class).toInstance(ConsistencyModel.STRICT);
       bind(LocalStorageStrategy.class).to(FilesystemStorageStrategyImpl.class);

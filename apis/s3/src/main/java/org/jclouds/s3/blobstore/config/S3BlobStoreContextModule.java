@@ -22,11 +22,9 @@ import java.util.concurrent.TimeUnit;
 
 import javax.inject.Singleton;
 
-import org.jclouds.blobstore.AsyncBlobStore;
 import org.jclouds.blobstore.BlobRequestSigner;
 import org.jclouds.blobstore.BlobStore;
 import org.jclouds.blobstore.attr.ConsistencyModel;
-import org.jclouds.blobstore.internal.SubmissionAsyncBlobStore;
 import org.jclouds.domain.Location;
 import org.jclouds.s3.S3Client;
 import org.jclouds.s3.blobstore.S3BlobRequestSigner;
@@ -47,7 +45,6 @@ public class S3BlobStoreContextModule extends AbstractModule {
    @Override
    protected void configure() {
       bind(ConsistencyModel.class).toInstance(ConsistencyModel.EVENTUAL);
-      bind(AsyncBlobStore.class).to(SubmissionAsyncBlobStore.class).in(SINGLETON);
       bind(BlobStore.class).to(S3BlobStore.class).in(SINGLETON);
       bind(new TypeLiteral<Function<String, Location>>() {
       }).to(LocationFromBucketName.class);

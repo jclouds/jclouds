@@ -16,12 +16,8 @@
  */
 package org.jclouds.blobstore.config;
 
-import static org.jclouds.rest.config.BinderUtils.bindSyncToAsyncApi;
-
-import org.jclouds.blobstore.AsyncBlobStore;
 import org.jclouds.blobstore.BlobRequestSigner;
 import org.jclouds.blobstore.BlobStore;
-import org.jclouds.blobstore.LocalAsyncBlobStore;
 import org.jclouds.blobstore.LocalBlobRequestSigner;
 import org.jclouds.blobstore.LocalStorageStrategy;
 import org.jclouds.blobstore.TransientStorageStrategy;
@@ -29,15 +25,9 @@ import org.jclouds.blobstore.attr.ConsistencyModel;
 
 import com.google.inject.AbstractModule;
 
-/**
- * Configures the {@link TransientBlobStoreContext}; requires {@link TransientAsyncBlobStore} bound.
- */
 public class TransientBlobStoreContextModule extends AbstractModule {
    @Override
    protected void configure() {
-      bind(AsyncBlobStore.class).to(LocalAsyncBlobStore.class).asEagerSingleton();
-      // forward all requests from TransientBlobStore to TransientAsyncBlobStore.  needs above binding as cannot proxy a class
-      bindSyncToAsyncApi(binder(), LocalBlobStore.class, AsyncBlobStore.class);
       install(new BlobStoreObjectModule());
       bind(BlobStore.class).to(LocalBlobStore.class);
       bind(ConsistencyModel.class).toInstance(ConsistencyModel.STRICT);
