@@ -26,7 +26,7 @@ import org.jclouds.http.annotation.ServerError;
 import org.jclouds.http.handlers.BackoffLimitedRetryHandler;
 import org.jclouds.location.suppliers.ImplicitLocationSupplier;
 import org.jclouds.location.suppliers.implicit.OnlyLocationOrFirstZone;
-import org.jclouds.rest.ConfiguresRestClient;
+import org.jclouds.rest.ConfiguresHttpApi;
 import org.jclouds.rest.config.HttpApiModule;
 
 import com.google.inject.Scopes;
@@ -34,7 +34,7 @@ import com.google.inject.Scopes;
 /**
  * Configures the GleSYS connection.
  */
-@ConfiguresRestClient
+@ConfiguresHttpApi
 public class GleSYSHttpApiModule extends HttpApiModule<GleSYSApi> {
 
    @Override

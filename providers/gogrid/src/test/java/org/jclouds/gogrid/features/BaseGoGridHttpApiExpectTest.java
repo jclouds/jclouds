@@ -19,7 +19,7 @@ package org.jclouds.gogrid.features;
 import org.jclouds.date.TimeStamp;
 import org.jclouds.gogrid.GoGridApi;
 import org.jclouds.gogrid.config.GoGridHttpApiModule;
-import org.jclouds.rest.ConfiguresRestClient;
+import org.jclouds.rest.ConfiguresHttpApi;
 import org.jclouds.rest.internal.BaseRestClientExpectTest;
 
 import com.google.common.base.Supplier;
@@ -31,7 +31,7 @@ public class BaseGoGridHttpApiExpectTest extends BaseRestClientExpectTest<GoGrid
       provider = "gogrid";
    }
 
-      @ConfiguresRestClient
+      @ConfiguresHttpApi
    protected static final class TestGoGridHttpApiModule extends GoGridHttpApiModule {
 
       @Override

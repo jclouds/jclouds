@@ -40,7 +40,7 @@ import org.jclouds.http.HttpErrorHandler;
 import org.jclouds.http.annotation.ClientError;
 import org.jclouds.http.annotation.Redirection;
 import org.jclouds.http.annotation.ServerError;
-import org.jclouds.rest.ConfiguresRestClient;
+import org.jclouds.rest.ConfiguresHttpApi;
 import org.jclouds.rest.config.HttpApiModule;
 
 import com.google.common.base.Function;
@@ -49,7 +49,7 @@ import com.google.inject.TypeLiteral;
 /**
  * Configures the elasticstack connection.
  */
-@ConfiguresRestClient
+@ConfiguresHttpApi
 public class ElasticStackHttpApiModule extends HttpApiModule<ElasticStackApi> {
 
    @Override
