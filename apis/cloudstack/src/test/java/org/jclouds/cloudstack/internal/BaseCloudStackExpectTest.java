@@ -28,7 +28,7 @@ import org.jclouds.cloudstack.CloudStackApiMetadata;
 import org.jclouds.cloudstack.CloudStackContext;
 import org.jclouds.http.HttpRequest;
 import org.jclouds.http.HttpResponse;
-import org.jclouds.rest.internal.BaseRestClientExpectTest;
+import org.jclouds.rest.internal.BaseRestApiExpectTest;
 
 import com.google.common.base.Function;
 import com.google.inject.Module;
@@ -36,7 +36,7 @@ import com.google.inject.Module;
 /**
  * Base class for writing CloudStack Rest Client Expect tests
  */
-public abstract class BaseCloudStackExpectTest<S> extends BaseRestClientExpectTest<S> {
+public abstract class BaseCloudStackExpectTest<S> extends BaseRestApiExpectTest<S> {
 
    public BaseCloudStackExpectTest() {
       provider = "cloudstack";

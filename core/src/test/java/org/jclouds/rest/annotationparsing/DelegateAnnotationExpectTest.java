@@ -35,7 +35,7 @@ import org.jclouds.rest.annotations.Fallback;
 import org.jclouds.rest.annotations.Payload;
 import org.jclouds.rest.annotations.PayloadParam;
 import org.jclouds.rest.config.RestClientModule;
-import org.jclouds.rest.internal.BaseRestClientExpectTest;
+import org.jclouds.rest.internal.BaseRestApiExpectTest;
 import org.testng.annotations.Test;
 
 import com.google.common.collect.ImmutableMap;
@@ -46,7 +46,7 @@ import com.google.inject.Module;
  * Tests the ways that {@link Delegate}
  */
 @Test(groups = "unit", testName = "DelegateAnnotationExpectTest")
-public class DelegateAnnotationExpectTest extends BaseRestClientExpectTest<DelegateAnnotationExpectTest.DelegatingApi> {
+public class DelegateAnnotationExpectTest extends BaseRestApiExpectTest<DelegateAnnotationExpectTest.DelegatingApi> {
 
    interface DelegatingApi {
       @Delegate

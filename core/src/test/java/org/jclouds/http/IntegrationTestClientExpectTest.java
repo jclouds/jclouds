@@ -26,7 +26,7 @@ import javax.net.ssl.SSLException;
 
 import org.jclouds.providers.JcloudsTestBlobStoreProviderMetadata;
 import org.jclouds.providers.ProviderMetadata;
-import org.jclouds.rest.internal.BaseRestClientExpectTest;
+import org.jclouds.rest.internal.BaseRestApiExpectTest;
 import org.testng.annotations.Test;
 
 import com.google.common.base.Function;
@@ -37,7 +37,7 @@ import com.google.common.base.Function;
  */
 @Test(groups = "unit", testName = "IntegrationTestClientExpectTest")
 // only needed as IntegrationTestClient is not registered in rest.properties
-public class IntegrationTestClientExpectTest extends BaseRestClientExpectTest<IntegrationTestClient> {
+public class IntegrationTestClientExpectTest extends BaseRestApiExpectTest<IntegrationTestClient> {
    
    public void testRetryOnSSLExceptionClose() {
       // keeps track of request count

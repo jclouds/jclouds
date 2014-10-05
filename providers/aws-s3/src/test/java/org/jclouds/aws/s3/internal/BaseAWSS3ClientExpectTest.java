@@ -22,7 +22,7 @@ import org.jclouds.aws.s3.config.AWSS3HttpApiModule;
 import org.jclouds.date.TimeStamp;
 import org.jclouds.providers.ProviderMetadata;
 import org.jclouds.rest.ConfiguresHttpApi;
-import org.jclouds.rest.internal.BaseRestClientExpectTest;
+import org.jclouds.rest.internal.BaseRestApiExpectTest;
 
 import com.google.common.base.Supplier;
 import com.google.inject.Module;
@@ -30,7 +30,7 @@ import com.google.inject.Module;
 /**
  * Base class for writing Expect tests for AWS-S3
  */
-public class BaseAWSS3ClientExpectTest extends BaseRestClientExpectTest<AWSS3Client> {
+public class BaseAWSS3ClientExpectTest extends BaseRestApiExpectTest<AWSS3Client> {
 
    protected static final String CONSTANT_DATE = "2009-11-08T15:54:08.897Z";
    

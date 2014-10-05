@@ -47,7 +47,7 @@ import org.jclouds.http.functions.ReleasePayloadAndReturn;
 import org.jclouds.http.functions.ReturnTrueIf2xx;
 import org.jclouds.http.options.GetOptions;
 import org.jclouds.rest.ConfiguresHttpApi;
-import org.jclouds.rest.internal.BaseAsyncClientTest;
+import org.jclouds.rest.internal.BaseRestAnnotationProcessingTest;
 import org.jclouds.rest.internal.GeneratedHttpRequest;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
@@ -59,7 +59,7 @@ import com.google.common.reflect.Invokable;
 import com.google.inject.Module;
 
 @Test(groups = "unit", testName = "AtmosClientTest")
-public class AtmosClientTest extends BaseAsyncClientTest<AtmosClient> {
+public class AtmosClientTest extends BaseRestAnnotationProcessingTest<AtmosClient> {
 
    private BlobToObject blobToObject;
 

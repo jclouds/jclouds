@@ -23,12 +23,12 @@ import javax.ws.rs.core.MediaType;
 import org.jclouds.http.HttpRequest;
 import org.jclouds.http.HttpResponse;
 import org.jclouds.openstack.keystone.v2_0.internal.KeystoneFixture;
-import org.jclouds.rest.internal.BaseRestClientExpectTest;
+import org.jclouds.rest.internal.BaseRestApiExpectTest;
 
 /**
  * Base class for writing Swift Keystone Expect tests
  */
-public class BaseSwiftKeystoneExpectTest<T> extends BaseRestClientExpectTest<T>  {
+public class BaseSwiftKeystoneExpectTest<T> extends BaseRestApiExpectTest<T>  {
    protected HttpRequest keystoneAuthWithUsernameAndPassword;
    protected HttpRequest keystoneAuthWithUsernameAndPasswordAndTenantName;
    protected HttpRequest keystoneAuthWithAccessKeyAndSecretKeyAndTenantName;

@@ -25,11 +25,11 @@ import org.jclouds.http.HttpRequest;
 import org.jclouds.providers.AnonymousProviderMetadata;
 import org.jclouds.providers.ProviderMetadata;
 import org.jclouds.rest.ConfiguresHttpApi;
-import org.jclouds.rest.internal.BaseAsyncApiTest;
+import org.jclouds.rest.internal.BaseRestAnnotationProcessingTest;
 
 import com.google.inject.Module;
 
-public abstract class BaseCloudStackApiTest<T> extends BaseAsyncApiTest<T> {
+public abstract class BaseCloudStackApiTest<T> extends BaseRestAnnotationProcessingTest<T> {
 
    @ConfiguresHttpApi
    public static class CloudStackHttpApiModuleExtension extends CloudStackHttpApiModule {

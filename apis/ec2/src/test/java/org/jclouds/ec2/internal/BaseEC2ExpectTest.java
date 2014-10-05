@@ -26,7 +26,7 @@ import org.jclouds.date.DateService;
 import org.jclouds.date.internal.SimpleDateFormatDateService;
 import org.jclouds.http.HttpRequest;
 import org.jclouds.http.HttpResponse;
-import org.jclouds.rest.internal.BaseRestClientExpectTest;
+import org.jclouds.rest.internal.BaseRestApiExpectTest;
 import org.testng.annotations.BeforeClass;
 
 import com.google.common.base.Functions;
@@ -35,7 +35,7 @@ import com.google.common.collect.ImmutableMap.Builder;
 import com.google.common.collect.ImmutableSet;
 import com.google.inject.Injector;
 
-public abstract class BaseEC2ExpectTest<T> extends BaseRestClientExpectTest<T> {
+public abstract class BaseEC2ExpectTest<T> extends BaseRestApiExpectTest<T> {
    protected static final String CONSTANT_DATE = "2012-04-16T15:54:08.897Z";
    
    protected DateService dateService = new SimpleDateFormatDateService();

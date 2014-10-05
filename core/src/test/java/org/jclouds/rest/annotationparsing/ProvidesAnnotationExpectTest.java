@@ -31,7 +31,7 @@ import org.jclouds.providers.ProviderMetadata;
 import org.jclouds.rest.AuthorizationException;
 import org.jclouds.rest.ConfiguresRestClient;
 import org.jclouds.rest.config.RestClientModule;
-import org.jclouds.rest.internal.BaseRestClientExpectTest;
+import org.jclouds.rest.internal.BaseRestApiExpectTest;
 import org.testng.annotations.Test;
 
 import com.google.common.collect.ImmutableMap;
@@ -45,7 +45,7 @@ import com.google.inject.name.Names;
  * Tests that we can add {@link Provides} methods on interfaces
  */
 @Test(groups = "unit", testName = "ProvidesAnnotationExpectTest")
-public class ProvidesAnnotationExpectTest extends BaseRestClientExpectTest<ProvidesAnnotationExpectTest.ProvidingApi> {
+public class ProvidesAnnotationExpectTest extends BaseRestApiExpectTest<ProvidesAnnotationExpectTest.ProvidingApi> {
 
    interface ProvidingApi extends Closeable {
       @Provides

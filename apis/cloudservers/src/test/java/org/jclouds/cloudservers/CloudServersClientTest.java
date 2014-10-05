@@ -62,7 +62,7 @@ import org.jclouds.openstack.keystone.v1_1.config.AuthenticationServiceModule.Ge
 import org.jclouds.openstack.keystone.v1_1.domain.Auth;
 import org.jclouds.openstack.keystone.v1_1.parse.ParseAuthTest;
 import org.jclouds.rest.ConfiguresHttpApi;
-import org.jclouds.rest.internal.BaseAsyncClientTest;
+import org.jclouds.rest.internal.BaseRestAnnotationProcessingTest;
 import org.jclouds.rest.internal.GeneratedHttpRequest;
 import org.testng.annotations.Test;
 
@@ -73,7 +73,7 @@ import com.google.inject.Module;
 import com.google.inject.Provides;
 
 @Test(groups = "unit", singleThreaded = true, testName = "CloudServersClientTest")
-public class CloudServersClientTest extends BaseAsyncClientTest<CloudServersClient> {
+public class CloudServersClientTest extends BaseRestAnnotationProcessingTest<CloudServersClient> {
 
    public void testCreateServer() throws IOException, SecurityException, NoSuchMethodException {
       Invokable<?, ?> method = method(CloudServersClient.class, "createServer", String.class, int.class, int.class,

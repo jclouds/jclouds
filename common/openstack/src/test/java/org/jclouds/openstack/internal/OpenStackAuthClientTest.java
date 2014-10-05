@@ -27,7 +27,7 @@ import org.jclouds.http.IntegrationTestAsyncClient;
 import org.jclouds.http.IntegrationTestClient;
 import org.jclouds.openstack.functions.ParseAuthenticationResponseFromHeaders;
 import org.jclouds.rest.AnonymousRestApiMetadata;
-import org.jclouds.rest.internal.BaseAsyncClientTest;
+import org.jclouds.rest.internal.BaseRestAnnotationProcessingTest;
 import org.jclouds.rest.internal.GeneratedHttpRequest;
 import org.testng.annotations.Test;
 
@@ -35,7 +35,7 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.reflect.Invokable;
 
 @Test(groups = "unit", testName = "OpenStackAuthClientTest")
-public class OpenStackAuthClientTest extends BaseAsyncClientTest<OpenStackAuthClient> {
+public class OpenStackAuthClientTest extends BaseRestAnnotationProcessingTest<OpenStackAuthClient> {
 
    public void testAuthenticate() throws SecurityException, NoSuchMethodException, IOException {
       Invokable<?, ?> method = method(OpenStackAuthClient.class, "authenticate", String.class, String.class);

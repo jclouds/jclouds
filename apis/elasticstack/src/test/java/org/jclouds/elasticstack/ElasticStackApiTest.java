@@ -46,7 +46,7 @@ import org.jclouds.http.filters.BasicAuthentication;
 import org.jclouds.http.functions.ReleasePayloadAndReturn;
 import org.jclouds.io.Payload;
 import org.jclouds.io.Payloads;
-import org.jclouds.rest.internal.BaseAsyncClientTest;
+import org.jclouds.rest.internal.BaseRestAnnotationProcessingTest;
 import org.jclouds.rest.internal.GeneratedHttpRequest;
 import org.testng.annotations.Test;
 
@@ -61,7 +61,7 @@ import com.google.inject.Scopes;
  */
 // NOTE:without testName, this will not call @Before* and fail w/NPE during surefire
 @Test(groups = "unit", testName = "ElasticStackApiTest")
-public class ElasticStackApiTest extends BaseAsyncClientTest<ElasticStackApi> {
+public class ElasticStackApiTest extends BaseRestAnnotationProcessingTest<ElasticStackApi> {
    public void testListServers() throws SecurityException, NoSuchMethodException, IOException {
       Invokable<?, ?> method = method(ElasticStackApi.class, "listServers");
       GeneratedHttpRequest httpRequest = processor.createRequest(method, ImmutableList.of());

@@ -19,6 +19,7 @@ package org.jclouds.rest.internal;
 import org.testng.annotations.Test;
 
 @Test(groups = "unit")
-public abstract class BaseAsyncClientTest<T> extends BaseAsyncApiTest<T> {
+// TODO: remove once abiquo no longer uses this.
+public abstract class BaseAsyncClientTest<T> extends BaseRestAnnotationProcessingTest<T> {
 
 }

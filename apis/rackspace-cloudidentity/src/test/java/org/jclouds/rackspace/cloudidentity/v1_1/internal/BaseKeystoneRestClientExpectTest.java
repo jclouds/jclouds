@@ -19,14 +19,14 @@ package org.jclouds.rackspace.cloudidentity.v1_1.internal;
 import org.jclouds.http.HttpRequest;
 import org.jclouds.http.HttpResponse;
 import org.jclouds.rackspace.cloudidentity.v1_1.config.AuthenticationServiceModule;
-import org.jclouds.rest.internal.BaseRestClientExpectTest;
+import org.jclouds.rest.internal.BaseRestApiExpectTest;
 
 import com.google.common.net.HttpHeaders;
 
 /**
  * Base class for writing KeyStone Rest Client Expect tests
  */
-public class BaseKeystoneRestClientExpectTest<S> extends BaseRestClientExpectTest<S> {
+public class BaseKeystoneRestClientExpectTest<S> extends BaseRestApiExpectTest<S> {
 
    protected String endpoint = "http://localhost:5000";
 

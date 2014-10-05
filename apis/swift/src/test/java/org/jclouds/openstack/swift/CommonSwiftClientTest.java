@@ -35,7 +35,7 @@ import org.jclouds.openstack.swift.blobstore.SwiftBlobSigner;
 import org.jclouds.openstack.swift.blobstore.config.SwiftBlobStoreContextModule;
 import org.jclouds.openstack.swift.blobstore.config.TemporaryUrlExtensionModule;
 import org.jclouds.openstack.swift.config.SwiftHttpApiModule;
-import org.jclouds.rest.internal.BaseAsyncClientTest;
+import org.jclouds.rest.internal.BaseRestAnnotationProcessingTest;
 import org.testng.annotations.Test;
 
 import com.google.common.base.Supplier;
@@ -50,7 +50,7 @@ import com.google.inject.TypeLiteral;
  */
 // NOTE:without testName, this will not call @Before* and fail w/NPE during surefire
 @Test(groups = "unit", testName = "CommonSwiftClientTest")
-public abstract class CommonSwiftClientTest extends BaseAsyncClientTest<SwiftClient> {
+public abstract class CommonSwiftClientTest extends BaseRestAnnotationProcessingTest<SwiftClient> {
 
    public static final long UNIX_EPOCH_TIMESTAMP = 123456789L;
    public static final String TEMPORARY_URL_KEY = "get-or-set-X-Account-Meta-Temp-Url-Key";

@@ -18,7 +18,7 @@ package org.jclouds.s3.internal;
 
 import org.jclouds.date.TimeStamp;
 import org.jclouds.rest.ConfiguresHttpApi;
-import org.jclouds.rest.internal.BaseRestClientExpectTest;
+import org.jclouds.rest.internal.BaseRestApiExpectTest;
 import org.jclouds.s3.S3ApiMetadata;
 import org.jclouds.s3.S3Client;
 import org.jclouds.s3.config.S3HttpApiModule;
@@ -26,7 +26,7 @@ import org.jclouds.s3.config.S3HttpApiModule;
 import com.google.common.base.Supplier;
 import com.google.inject.Module;
 
-public abstract class BaseS3ClientExpectTest extends BaseRestClientExpectTest<S3Client> {
+public abstract class BaseS3ClientExpectTest extends BaseRestApiExpectTest<S3Client> {
 
    protected static final String CONSTANT_DATE = "2009-11-08T15:54:08.897Z";
 

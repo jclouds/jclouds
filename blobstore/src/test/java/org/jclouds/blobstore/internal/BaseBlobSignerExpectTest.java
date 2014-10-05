@@ -28,7 +28,7 @@ import org.jclouds.blobstore.domain.Blob;
 import org.jclouds.blobstore.options.GetOptions;
 import org.jclouds.http.HttpRequest;
 import org.jclouds.http.HttpResponse;
-import org.jclouds.rest.internal.BaseRestClientExpectTest;
+import org.jclouds.rest.internal.BaseRestApiExpectTest;
 import org.testng.annotations.Test;
 
 import com.google.common.base.Function;
@@ -36,7 +36,7 @@ import com.google.common.collect.ImmutableMap;
 import com.google.common.hash.HashCode;
 import com.google.inject.Module;
 
-public abstract class BaseBlobSignerExpectTest extends BaseRestClientExpectTest<BlobStore> {
+public abstract class BaseBlobSignerExpectTest extends BaseRestApiExpectTest<BlobStore> {
 
    /**
     * define the requests and responses needed to initialize the blobstore. For
