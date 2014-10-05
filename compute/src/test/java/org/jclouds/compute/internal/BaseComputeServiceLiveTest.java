@@ -33,6 +33,7 @@ import static java.lang.String.format;
 import static java.lang.System.currentTimeMillis;
 import static java.util.concurrent.TimeUnit.SECONDS;
 import static java.util.logging.Logger.getAnonymousLogger;
+import static org.jclouds.Constants.PROPERTY_USER_THREADS;
 import static org.jclouds.compute.options.RunScriptOptions.Builder.nameTask;
 import static org.jclouds.compute.options.RunScriptOptions.Builder.wrapInInitScript;
 import static org.jclouds.compute.options.TemplateOptions.Builder.overrideLoginCredentials;
@@ -62,6 +63,8 @@ import java.util.concurrent.CancellationException;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
+
+import javax.inject.Named;
 
 import org.jclouds.compute.ComputeService;
 import org.jclouds.compute.ComputeServiceContext;
@@ -111,7 +114,9 @@ import com.google.common.util.concurrent.Futures;
 import com.google.common.util.concurrent.ListenableFuture;
 import com.google.common.util.concurrent.ListeningExecutorService;
 import com.google.common.util.concurrent.MoreExecutors;
+import com.google.inject.Key;
 import com.google.inject.Module;
+import com.google.inject.name.Names;
 
 @Test(groups = { "integration", "live" }, singleThreaded = true)
 public abstract class BaseComputeServiceLiveTest extends BaseComputeServiceContextLiveTest {
@@ -448,7 +453,8 @@ public abstract class BaseComputeServiceLiveTest extends BaseComputeServiceConte
       final long timeoutMs = 20 * 60 * 1000;
       List<String> groups = Lists.newArrayList();
       List<ListenableFuture<NodeMetadata>> futures = Lists.newArrayList();
-      ListeningExecutorService userExecutor = MoreExecutors.listeningDecorator(context.utils().userExecutor());
+      ListeningExecutorService userExecutor = context.utils().injector()
+            .getInstance(Key.get(ListeningExecutorService.class, Names.named(PROPERTY_USER_THREADS)));
 
       try {
          for (int i = 0; i < 2; i++) {
