@@ -37,8 +37,6 @@ import org.jclouds.rest.annotations.Endpoint;
  * Usually this is not directly used by a client, which instead specifies
  * OAuthAuthenticator as a request filter, which in turn uses this class to
  * perform token requests.
- * 
- * @see OAuthAsyncApi
  */
 @Endpoint(Authentication.class)
 public interface OAuthApi extends Closeable {
