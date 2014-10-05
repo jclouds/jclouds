@@ -1112,8 +1112,6 @@
               <includeTestSourceDirectory>true</includeTestSourceDirectory>
               <failOnViolation>true</failOnViolation>
               <failsOnError>true</failsOnError>
-              <!-- fails on itself as it uses the author tag in a module definition -->
-              <resourceExcludes>checkstyle.xml</resourceExcludes>
               <violationSeverity>warning</violationSeverity>
             </configuration>
           </plugin>
