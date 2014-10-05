@@ -31,7 +31,7 @@ import org.jclouds.http.annotation.ClientError;
 import org.jclouds.http.annotation.Redirection;
 import org.jclouds.http.annotation.ServerError;
 import org.jclouds.location.suppliers.ImplicitLocationSupplier;
-import org.jclouds.rest.ConfiguresRestClient;
+import org.jclouds.rest.ConfiguresHttpApi;
 import org.jclouds.rest.config.HttpApiModule;
 
 import com.google.common.base.Supplier;
@@ -42,7 +42,7 @@ import com.google.inject.Scopes;
 /**
  * Configures the GoGrid connection.
  */
-@ConfiguresRestClient
+@ConfiguresHttpApi
 public class GoGridHttpApiModule extends HttpApiModule<GoGridApi> {
 
    @Provides
