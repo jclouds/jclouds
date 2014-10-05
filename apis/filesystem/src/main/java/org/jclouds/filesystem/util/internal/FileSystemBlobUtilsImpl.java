@@ -30,7 +30,7 @@ import com.google.inject.Inject;
 
 /**
  * Implements the {@link BlobUtils} interfaced and act as a bridge to
- * {@link LocalStorageStrategy} when used inside {@link AsyncBlobStore}
+ * {@link LocalStorageStrategy} when used inside {@link BlobStore}
  */
 public class FileSystemBlobUtilsImpl implements BlobUtils {
 
