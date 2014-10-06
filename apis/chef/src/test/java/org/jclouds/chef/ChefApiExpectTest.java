@@ -31,7 +31,7 @@ import org.jclouds.chef.options.SearchOptions;
 import org.jclouds.date.TimeStamp;
 import org.jclouds.http.HttpRequest;
 import org.jclouds.http.HttpResponse;
-import org.jclouds.rest.ConfiguresRestClient;
+import org.jclouds.rest.ConfiguresHttpApi;
 import org.testng.annotations.Test;
 
 import com.google.common.base.Supplier;
@@ -260,11 +260,11 @@ public class ChefApiExpectTest extends BaseChefApiExpectTest<ChefApi> {
 
    @Override
    protected Module createModule() {
-      return new TestChefRestClientModule();
+      return new TestChefHttpApiModule();
    }
 
-   @ConfiguresRestClient
-   static class TestChefRestClientModule extends ChefHttpApiModule {
+   @ConfiguresHttpApi
+   static class TestChefHttpApiModule extends ChefHttpApiModule {
       @Override
       protected String provideTimeStamp(@TimeStamp Supplier<String> cache) {
          return "timestamp";

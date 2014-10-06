@@ -40,7 +40,6 @@ import org.jclouds.crypto.Crypto;
 import org.jclouds.domain.JsonBall;
 import org.jclouds.rest.ConfiguresHttpApi;
 import org.jclouds.rest.config.RestModule;
-import org.jclouds.rest.config.SyncToAsyncHttpInvocationModule;
 
 import com.google.common.base.Optional;
 import com.google.common.base.Supplier;
@@ -58,7 +57,6 @@ public class TransientChefApiModule extends AbstractModule {
    @Override
    protected void configure() {
       install(new RestModule());
-      install(new SyncToAsyncHttpInvocationModule());
       bind(ChefApi.class).to(TransientChefApi.class);
       bind(LocalBlobStore.class).annotatedWith(Names.named("databags"))
             .toInstance(
