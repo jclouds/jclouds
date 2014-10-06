@@ -30,7 +30,6 @@ import java.util.Properties;
 
 import org.jclouds.apis.ApiMetadata;
 import org.jclouds.rest.internal.BaseHttpApiMetadata;
-import org.jclouds.rest.internal.BaseRestApiMetadata;
 import org.jclouds.s3.blobstore.S3BlobStoreContext;
 import org.jclouds.s3.blobstore.config.S3BlobStoreContextModule;
 import org.jclouds.s3.config.S3HttpApiModule;
@@ -69,7 +68,7 @@ public class S3ApiMetadata extends BaseHttpApiMetadata {
    }
 
    public static Properties defaultProperties() {
-      Properties properties = BaseRestApiMetadata.defaultProperties();
+      Properties properties = BaseHttpApiMetadata.defaultProperties();
       properties.setProperty(PROPERTY_AUTH_TAG, "AWS");
       properties.setProperty(PROPERTY_HEADER_TAG, S3Headers.DEFAULT_AMAZON_HEADERTAG);
       properties.setProperty(PROPERTY_S3_SERVICE_PATH, "/");
