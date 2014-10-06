@@ -16,17 +16,16 @@
  */
 package org.jclouds.openstack.internal;
 
+import static org.jclouds.providers.AnonymousProviderMetadata.forApiOnEndpoint;
 import static org.jclouds.reflect.Reflection2.method;
 
 import java.io.IOException;
 
-import org.jclouds.apis.ApiMetadata;
 import org.jclouds.fallbacks.MapHttp4xxCodesToExceptions;
 import org.jclouds.http.HttpRequest;
-import org.jclouds.http.IntegrationTestAsyncClient;
 import org.jclouds.http.IntegrationTestClient;
 import org.jclouds.openstack.functions.ParseAuthenticationResponseFromHeaders;
-import org.jclouds.rest.AnonymousRestApiMetadata;
+import org.jclouds.providers.ProviderMetadata;
 import org.jclouds.rest.internal.BaseRestAnnotationProcessingTest;
 import org.jclouds.rest.internal.GeneratedHttpRequest;
 import org.testng.annotations.Test;
@@ -41,7 +40,7 @@ public class OpenStackAuthClientTest extends BaseRestAnnotationProcessingTest<Op
       Invokable<?, ?> method = method(OpenStackAuthClient.class, "authenticate", String.class, String.class);
       GeneratedHttpRequest httpRequest = processor.createRequest(method, ImmutableList.<Object> of("foo", "bar"));
 
-      assertRequestLineEquals(httpRequest, "GET http://localhost:8080/v1.0 HTTP/1.1");
+      assertRequestLineEquals(httpRequest, "GET http://localhost:8080/v1 HTTP/1.1");
       assertNonPayloadHeadersEqual(httpRequest, "Accept: */*\nHost: localhost:8080\nX-Auth-Key: bar\nX-Auth-User: foo\n");
       assertPayloadEquals(httpRequest, null, null, false);
 
@@ -55,7 +54,7 @@ public class OpenStackAuthClientTest extends BaseRestAnnotationProcessingTest<Op
       Invokable<?, ?> method = method(OpenStackAuthClient.class, "authenticateStorage", String.class, String.class);
       GeneratedHttpRequest httpRequest = processor.createRequest(method, ImmutableList.<Object> of("foo", "bar"));
 
-      assertRequestLineEquals(httpRequest, "GET http://localhost:8080/v1.0 HTTP/1.1");
+      assertRequestLineEquals(httpRequest, "GET http://localhost:8080/v1 HTTP/1.1");
       assertNonPayloadHeadersEqual(httpRequest, "Accept: */*\nHost: localhost:8080\nX-Storage-Pass: bar\nX-Storage-User: foo\n");
       assertPayloadEquals(httpRequest, null, null, false);
 
@@ -66,9 +65,8 @@ public class OpenStackAuthClientTest extends BaseRestAnnotationProcessingTest<Op
    }
 
    @Override
-   public ApiMetadata createApiMetadata() {
-      return AnonymousRestApiMetadata.forClientMappedToAsyncClient(IntegrationTestClient.class, IntegrationTestAsyncClient.class).toBuilder().defaultEndpoint(
-            "http://localhost:8080").version("1.0").build();
+   public ProviderMetadata createProviderMetadata() {
+      return forApiOnEndpoint(IntegrationTestClient.class, "http://localhost:8080");
    }
 
    @Override
