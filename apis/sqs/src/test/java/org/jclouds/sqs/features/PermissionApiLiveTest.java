@@ -17,7 +17,7 @@
 package org.jclouds.sqs.features;
 
 import static com.google.common.util.concurrent.MoreExecutors.newDirectExecutorService;
-import static org.jclouds.providers.AnonymousProviderMetadata.forClientMappedToAsyncClientOnEndpoint;
+import static org.jclouds.providers.AnonymousProviderMetadata.forApiOnEndpoint;
 import static org.jclouds.sqs.reference.SQSParameters.ACTION;
 import static org.testng.Assert.assertEquals;
 
@@ -39,7 +39,6 @@ import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
 import com.google.common.collect.ImmutableSet;
-import com.google.common.util.concurrent.ListenableFuture;
 import com.google.inject.Module;
 
 @Test(groups = "live", singleThreaded = true, testName = "PermissionApiLiveTest")
@@ -57,15 +56,11 @@ public class PermissionApiLiveTest extends BaseSQSApiLiveTest {
    }
 
    interface AnonymousAttributesApi extends Closeable {
-      String getQueueArn();
-   }
-
-   interface AnonymousAttributesAsyncApi extends Closeable {
       @POST
       @Path("/")
       @FormParams(keys = { ACTION, "AttributeName.1" }, values = { "GetQueueAttributes", "QueueArn" })
       @XMLResponseParser(ValueHandler.class)
-      ListenableFuture<String> getQueueArn();
+      String getQueueArn();
    }
 
    public void testAddAnonymousPermission() throws InterruptedException {
@@ -95,9 +90,7 @@ public class PermissionApiLiveTest extends BaseSQSApiLiveTest {
    }
 
    private AnonymousAttributesApi getAnonymousAttributesApi(URI queue) {
-      return ContextBuilder.newBuilder(
-                  forClientMappedToAsyncClientOnEndpoint(AnonymousAttributesApi.class,
-                        AnonymousAttributesAsyncApi.class, queue.toASCIIString()))
+      return ContextBuilder.newBuilder(forApiOnEndpoint(AnonymousAttributesApi.class, queue.toASCIIString()))
             .modules(ImmutableSet.<Module> of(new ExecutorServiceModule(newDirectExecutorService(), newDirectExecutorService())))
             .buildApi(AnonymousAttributesApi.class);
    }
