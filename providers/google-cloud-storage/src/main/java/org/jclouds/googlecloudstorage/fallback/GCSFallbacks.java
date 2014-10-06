@@ -18,17 +18,12 @@ package org.jclouds.googlecloudstorage.fallback;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.base.Throwables.propagate;
-import static com.google.common.util.concurrent.Futures.immediateFuture;
+
 import org.jclouds.Fallback;
-import com.google.common.util.concurrent.ListenableFuture;
 
 public final class GCSFallbacks {
 
    public static final class NullOnBucketAlreadyExists implements Fallback<Object> {
-      public ListenableFuture<Object> create(Throwable t) throws Exception {
-         return immediateFuture(createOrPropagate(t));
-      }
-
       public Object createOrPropagate(Throwable t) throws Exception {
          if (checkNotNull(t, "throwable") instanceof IllegalStateException) {
             return null;
