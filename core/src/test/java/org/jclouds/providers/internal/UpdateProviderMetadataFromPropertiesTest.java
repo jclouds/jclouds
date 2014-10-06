@@ -17,14 +17,13 @@
 package org.jclouds.providers.internal;
 
 import static org.jclouds.Constants.PROPERTY_ISO3166_CODES;
+import static org.jclouds.providers.AnonymousProviderMetadata.forApiOnEndpoint;
 import static org.testng.Assert.assertEquals;
 
 import java.util.Properties;
 
 import org.jclouds.Constants;
-import org.jclouds.http.IntegrationTestAsyncClient;
 import org.jclouds.http.IntegrationTestClient;
-import org.jclouds.providers.AnonymousProviderMetadata;
 import org.jclouds.providers.ProviderMetadata;
 import org.testng.annotations.Test;
 
@@ -35,8 +34,7 @@ public class UpdateProviderMetadataFromPropertiesTest {
 
    @Test
    public void testProviderMetadataWithUpdatedEndpointUpdatesAndRetainsAllDefaultPropertiesExceptEndpoint() {
-      ProviderMetadata md = AnonymousProviderMetadata.forClientMappedToAsyncClientOnEndpoint(
-               IntegrationTestClient.class, IntegrationTestAsyncClient.class, "http://localhost");
+      ProviderMetadata md = forApiOnEndpoint(IntegrationTestClient.class, "http://localhost");
 
       Properties props = new Properties();
       props.putAll(md.getDefaultProperties());
@@ -50,8 +48,7 @@ public class UpdateProviderMetadataFromPropertiesTest {
    
    @Test
    public void testProviderMetadataWithUpdatedIso3166CodesUpdatesAndRetainsAllDefaultPropertiesExceptIso3166Codes() {
-      ProviderMetadata md = AnonymousProviderMetadata.forClientMappedToAsyncClientOnEndpoint(
-               IntegrationTestClient.class, IntegrationTestAsyncClient.class, "http://localhost");
+      ProviderMetadata md = forApiOnEndpoint(IntegrationTestClient.class, "http://localhost");
 
       Properties props = new Properties();
       props.putAll(md.getDefaultProperties());

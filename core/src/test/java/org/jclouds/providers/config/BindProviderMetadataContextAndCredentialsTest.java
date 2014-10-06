@@ -16,6 +16,7 @@
  */
 package org.jclouds.providers.config;
 
+import static org.jclouds.providers.AnonymousProviderMetadata.forApiOnEndpoint;
 import static org.testng.Assert.assertEquals;
 
 import java.util.Properties;
@@ -28,13 +29,11 @@ import org.jclouds.Context;
 import org.jclouds.apis.ApiMetadata;
 import org.jclouds.domain.Credentials;
 import org.jclouds.domain.LoginCredentials;
-import org.jclouds.http.IntegrationTestAsyncClient;
 import org.jclouds.http.IntegrationTestClient;
 import org.jclouds.internal.FilterStringsBoundToInjectorByName;
 import org.jclouds.javax.annotation.Nullable;
 import org.jclouds.location.Iso3166;
 import org.jclouds.location.Provider;
-import org.jclouds.providers.AnonymousProviderMetadata;
 import org.jclouds.providers.ProviderMetadata;
 import org.jclouds.rest.annotations.Api;
 import org.jclouds.rest.annotations.ApiVersion;
@@ -94,9 +93,8 @@ public class BindProviderMetadataContextAndCredentialsTest {
 
    @Test
    public void testExpectedBindingsWhenCredentialIsNotNull() {
+      ProviderMetadata md = forApiOnEndpoint(IntegrationTestClient.class, "http://localhost");
 
-      ProviderMetadata md = AnonymousProviderMetadata.forClientMappedToAsyncClientOnEndpoint(
-               IntegrationTestClient.class, IntegrationTestAsyncClient.class, "http://localhost");
       Supplier<Credentials> creds = Suppliers.<Credentials> ofInstance(LoginCredentials.builder().user("user")
             .password("password").build());
 
@@ -108,9 +106,8 @@ public class BindProviderMetadataContextAndCredentialsTest {
 
    @Test
    public void testExpectedBindingsWhenCredentialIsNull() {
+      ProviderMetadata md = forApiOnEndpoint(IntegrationTestClient.class, "http://localhost");
 
-      ProviderMetadata md = AnonymousProviderMetadata.forClientMappedToAsyncClientOnEndpoint(
-               IntegrationTestClient.class, IntegrationTestAsyncClient.class, "http://localhost");
       Supplier<Credentials> creds = Suppliers.<Credentials> ofInstance(LoginCredentials.builder().user("user").build());
 
       ExpectedBindings bindings = Guice.createInjector(new BindProviderMetadataContextAndCredentials(md, creds))
@@ -121,9 +118,8 @@ public class BindProviderMetadataContextAndCredentialsTest {
    
    @Test
    public void testExpectedBindingsWhenBuildVersionAbsent() {
+      ProviderMetadata md = forApiOnEndpoint(IntegrationTestClient.class, "http://localhost");
 
-      ProviderMetadata md = AnonymousProviderMetadata.forClientMappedToAsyncClientOnEndpoint(
-               IntegrationTestClient.class, IntegrationTestAsyncClient.class, "http://localhost");
       ApiMetadata apiMd = md.getApiMetadata().toBuilder().buildVersion(null).build();
       md = md.toBuilder().apiMetadata(apiMd).build();
       Supplier<Credentials> creds = Suppliers.<Credentials> ofInstance(LoginCredentials.builder().user("user").build());
@@ -135,9 +131,8 @@ public class BindProviderMetadataContextAndCredentialsTest {
 
    @Test
    public void testProviderOverridesApiMetadataProperty() {
+      ProviderMetadata md = forApiOnEndpoint(IntegrationTestClient.class, "http://localhost");
 
-      ProviderMetadata md = AnonymousProviderMetadata.forClientMappedToAsyncClientOnEndpoint(
-               IntegrationTestClient.class, IntegrationTestAsyncClient.class, "http://localhost");
       Properties defaultProps = md.getDefaultProperties();
       defaultProps.setProperty(Constants.PROPERTY_SESSION_INTERVAL, Integer.MAX_VALUE + "");
       md = md.toBuilder().defaultProperties(defaultProps).build();

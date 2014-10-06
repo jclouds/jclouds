@@ -22,14 +22,13 @@ import static org.easymock.EasyMock.createMock;
 import static org.easymock.EasyMock.expect;
 import static org.easymock.EasyMock.replay;
 import static org.easymock.EasyMock.verify;
+import static org.jclouds.providers.AnonymousProviderMetadata.forApiOnEndpoint;
 
 import org.jclouds.ContextBuilder;
 import org.jclouds.http.HttpCommand;
 import org.jclouds.http.HttpRequest;
 import org.jclouds.http.HttpResponse;
-import org.jclouds.http.IntegrationTestAsyncClient;
 import org.jclouds.http.IntegrationTestClient;
-import org.jclouds.providers.AnonymousProviderMetadata;
 import org.jclouds.rest.internal.BaseRestApiTest.MockModule;
 import org.testng.annotations.Test;
 
@@ -42,10 +41,8 @@ import com.google.inject.Module;
  */
 @Test(groups = "unit")
 public class RedirectionRetryHandlerTest {
-   Injector injector = ContextBuilder.newBuilder(
-            AnonymousProviderMetadata.forClientMappedToAsyncClientOnEndpoint(IntegrationTestClient.class,
-                     IntegrationTestAsyncClient.class, "http://localhost")).modules(
-            ImmutableSet.<Module> of(new MockModule())).buildInjector();
+   Injector injector = ContextBuilder.newBuilder(forApiOnEndpoint(IntegrationTestClient.class, "http://localhost"))
+         .modules(ImmutableSet.<Module>of(new MockModule())).buildInjector();
 
    @Test
    public void test302DoesNotRetry() {

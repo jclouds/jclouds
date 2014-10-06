@@ -20,7 +20,6 @@ import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.base.Strings.emptyToNull;
 
 import org.jclouds.View;
-import org.jclouds.rest.RestApiMetadata;
 
 import com.google.common.base.Predicate;
 import com.google.common.base.Predicates;
@@ -65,35 +64,6 @@ public class ApiPredicates {
          @Override
          public String toString() {
             return "id(" + id + ")";
-         }
-      };
-   }
-
-   /**
-    * Returns all apis with the given type.
-    * 
-    * @param type
-    *           the type of the api to return
-    * 
-    * @return the apis with the given type
-    */
-   public static Predicate<RestApiMetadata> apiAssignableFrom(final TypeToken<?> type) {
-      checkNotNull(type, "type must be defined");
-      return new Predicate<RestApiMetadata>() {
-         /**
-          * {@inheritDoc}
-          */
-         @Override
-         public boolean apply(RestApiMetadata apiMetadata) {
-            return type.isAssignableFrom(apiMetadata.getApi());
-         }
-
-         /**
-          * {@inheritDoc}
-          */
-         @Override
-         public String toString() {
-            return "contextAssignableFrom(" + type + ")";
          }
       };
    }

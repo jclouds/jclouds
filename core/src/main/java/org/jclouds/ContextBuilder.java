@@ -18,12 +18,10 @@ package org.jclouds;
 
 import static com.google.common.base.MoreObjects.toStringHelper;
 import static com.google.common.base.Preconditions.checkNotNull;
-import static com.google.common.base.Predicates.and;
 import static com.google.common.base.Predicates.containsPattern;
 import static com.google.common.base.Predicates.instanceOf;
 import static com.google.common.base.Predicates.not;
 import static com.google.common.base.Predicates.notNull;
-import static com.google.common.base.Predicates.or;
 import static com.google.common.base.Throwables.propagate;
 import static com.google.common.collect.Iterables.addAll;
 import static com.google.common.collect.Iterables.any;
@@ -43,6 +41,7 @@ import static org.jclouds.Constants.PROPERTY_IDENTITY;
 import static org.jclouds.Constants.PROPERTY_ISO3166_CODES;
 import static org.jclouds.Constants.PROPERTY_PROVIDER;
 import static org.jclouds.reflect.Reflection2.typeToken;
+import static org.jclouds.rest.config.BinderUtils.bindHttpApi;
 import static org.jclouds.util.Throwables2.propagateAuthorizationOrOriginalException;
 
 import java.io.Closeable;
@@ -60,7 +59,6 @@ import org.jclouds.concurrent.config.ExecutorServiceModule;
 import org.jclouds.config.BindApiContextWithWildcardExtendsExplicitAndRawType;
 import org.jclouds.config.BindNameToContext;
 import org.jclouds.config.BindPropertiesToExpandedValues;
-import org.jclouds.config.BindRestContextWithWildcardExtendsExplicitAndRawType;
 import org.jclouds.domain.Credentials;
 import org.jclouds.events.config.ConfiguresEventBus;
 import org.jclouds.events.config.EventBusModule;
@@ -74,16 +72,15 @@ import org.jclouds.providers.ProviderMetadata;
 import org.jclouds.providers.Providers;
 import org.jclouds.providers.config.BindProviderMetadataContextAndCredentials;
 import org.jclouds.providers.internal.UpdateProviderMetadataFromProperties;
+import org.jclouds.reflect.Invocation;
 import org.jclouds.rest.ConfiguresCredentialStore;
 import org.jclouds.rest.ConfiguresHttpApi;
-import org.jclouds.rest.ConfiguresRestClient;
 import org.jclouds.rest.HttpApiMetadata;
-import org.jclouds.rest.RestApiMetadata;
+import org.jclouds.rest.HttpClient;
 import org.jclouds.rest.config.CredentialStoreModule;
 import org.jclouds.rest.config.HttpApiModule;
-import org.jclouds.rest.config.SyncToAsyncHttpInvocationModule;
-import org.jclouds.rest.config.RestClientModule;
 import org.jclouds.rest.config.RestModule;
+import org.jclouds.rest.internal.InvokeHttpMethod;
 
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Function;
@@ -100,6 +97,7 @@ import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Iterables;
 import com.google.common.reflect.TypeToken;
 import com.google.common.util.concurrent.ExecutionList;
+import com.google.inject.AbstractModule;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 import com.google.inject.Key;
@@ -427,13 +425,6 @@ public class ContextBuilder {
          } catch (IllegalArgumentException ignored) {
 
          }
-      } else if (apiMetadata instanceof RestApiMetadata) {
-         try {
-            modules.add(new BindRestContextWithWildcardExtendsExplicitAndRawType(RestApiMetadata.class
-                  .cast(apiMetadata)));
-         } catch (IllegalArgumentException ignored) {
-
-         }
       }
    }
 
@@ -455,7 +446,7 @@ public class ContextBuilder {
 
                });
       if (restModuleSpecifiedByUser)
-         defaultModules = filter(defaultModules, and(not(configuresApi), not(configuresRest)));
+         defaultModules = filter(defaultModules, not(configuresApi));
       return defaultModules;
    }
 
@@ -493,19 +484,12 @@ public class ContextBuilder {
       }
    }
    private static boolean apiModulePresent(List<Module> modules) {
-      return any(modules, or(configuresApi, configuresRest));
+      return any(modules, configuresApi);
    }
 
    private static Predicate<Module> configuresApi = new Predicate<Module>() {
       public boolean apply(Module input) {
          return input.getClass().isAnnotationPresent(ConfiguresHttpApi.class);
-      }
-
-   };
-
-   private static Predicate<Module> configuresRest = new Predicate<Module>() {
-      public boolean apply(Module input) {
-         return input.getClass().isAnnotationPresent(ConfiguresRestClient.class);
       }
 
    };
@@ -516,12 +500,16 @@ public class ContextBuilder {
       if (apiMetadata instanceof HttpApiMetadata) {
          HttpApiMetadata api = HttpApiMetadata.class.cast(apiMetadata);
          modules.add(new HttpApiModule(api.getApi()));
-      } else if (apiMetadata instanceof RestApiMetadata) {
-         RestApiMetadata rest = RestApiMetadata.class.cast(apiMetadata);
-         modules.add(new RestClientModule(typeToken(rest.getApi()), typeToken(rest.getAsyncApi())));
       } else {
          modules.add(new RestModule());
-         modules.add(new SyncToAsyncHttpInvocationModule());
+         // Minimally bind HttpClient so that Utils works.
+         modules.add(new AbstractModule() {
+            @Override public void configure() {
+               bind(new TypeLiteral<Function<Invocation, Object>>() {
+               }).to(InvokeHttpMethod.class);
+               bindHttpApi(binder(), HttpClient.class);
+            }
+         });
       }
    }
 
@@ -570,12 +558,13 @@ public class ContextBuilder {
       )) {
          modules.add(new CredentialStoreModule());
       }
+
    }
 
    /**
     * Builds the base context for this api. Note that this may be of type {@link Closer}, if nothing
     * else was configured via {@link ApiMetadata#getContext()}. Typically, the type returned is
-    * {@link RestContext}
+    * {@link ApiContext}
     * 
     * @see ApiMetadata#getContext()
     * @see #build(TypeToken)

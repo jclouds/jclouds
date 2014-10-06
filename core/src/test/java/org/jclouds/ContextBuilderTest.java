@@ -17,6 +17,7 @@
 package org.jclouds;
 
 import static com.google.common.base.Suppliers.ofInstance;
+import static org.jclouds.providers.AnonymousProviderMetadata.forApiOnEndpoint;
 import static org.testng.Assert.assertEquals;
 
 import java.net.URI;
@@ -28,7 +29,6 @@ import java.util.Set;
 import org.jclouds.concurrent.config.ExecutorServiceModule;
 import org.jclouds.domain.Credentials;
 import org.jclouds.events.config.EventBusModule;
-import org.jclouds.http.IntegrationTestAsyncClient;
 import org.jclouds.http.IntegrationTestClient;
 import org.jclouds.http.config.ConfiguresHttpCommandExecutorService;
 import org.jclouds.http.config.JavaUrlHttpCommandExecutorServiceModule;
@@ -36,9 +36,7 @@ import org.jclouds.location.Provider;
 import org.jclouds.logging.config.LoggingModule;
 import org.jclouds.logging.config.NullLoggingModule;
 import org.jclouds.logging.jdk.config.JDKLoggingModule;
-import org.jclouds.providers.AnonymousProviderMetadata;
 import org.jclouds.providers.ProviderMetadata;
-import org.jclouds.rest.ConfiguresRestClient;
 import org.jclouds.rest.annotations.ApiVersion;
 import org.jclouds.rest.config.CredentialStoreModule;
 import org.testng.annotations.Test;
@@ -47,7 +45,6 @@ import com.google.common.base.Supplier;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Lists;
 import com.google.inject.AbstractModule;
-import com.google.inject.Binder;
 import com.google.inject.Key;
 import com.google.inject.Module;
 import com.google.inject.TypeLiteral;
@@ -65,8 +62,7 @@ public class ContextBuilderTest {
    }
 
    private ContextBuilder testContextBuilder() {
-      return ContextBuilder.newBuilder(AnonymousProviderMetadata.forClientMappedToAsyncClientOnEndpoint(
-            IntegrationTestClient.class, IntegrationTestAsyncClient.class, "http://localhost"));
+      return ContextBuilder.newBuilder(forApiOnEndpoint(IntegrationTestClient.class, "http://localhost"));
    }
 
    @Test
@@ -196,14 +192,6 @@ public class ContextBuilderTest {
       assertEquals(modules.size(), 2);
       assertEquals(modules.remove(0), loggingModule);
       assertEquals(modules.remove(0), httpModule);
-   }
-
-   @ConfiguresRestClient
-   static class ConfiguresClientModule implements Module {
-
-      public void configure(Binder arg0) {
-      }
-
    }
 
    @Test

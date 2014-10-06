@@ -27,6 +27,7 @@ import static com.google.common.util.concurrent.Uninterruptibles.sleepUninterrup
 import static javax.servlet.http.HttpServletResponse.SC_OK;
 import static org.jclouds.Constants.PROPERTY_RELAX_HOSTNAME;
 import static org.jclouds.Constants.PROPERTY_TRUST_ALL_CERTS;
+import static org.jclouds.providers.AnonymousProviderMetadata.forApiOnEndpoint;
 import static org.jclouds.util.Closeables2.closeQuietly;
 import static org.jclouds.util.Strings2.toStringAndClose;
 
@@ -52,7 +53,6 @@ import org.eclipse.jetty.server.ssl.SslSelectChannelConnector;
 import org.eclipse.jetty.util.ssl.SslContextFactory;
 import org.jclouds.ContextBuilder;
 import org.jclouds.io.ByteStreams2;
-import org.jclouds.providers.AnonymousProviderMetadata;
 import org.jclouds.utils.TestUtils;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
@@ -248,9 +248,7 @@ public abstract class BaseJettyTest {
       properties.setProperty(PROPERTY_TRUST_ALL_CERTS, "true");
       properties.setProperty(PROPERTY_RELAX_HOSTNAME, "true");
       return ContextBuilder
-            .newBuilder(
-                  AnonymousProviderMetadata.forClientMappedToAsyncClientOnEndpoint(IntegrationTestClient.class,
-                        IntegrationTestAsyncClient.class, "http://localhost:" + testPort))
+            .newBuilder(forApiOnEndpoint(IntegrationTestClient.class, "http://localhost:" + testPort))
             .modules(ImmutableSet.<Module> copyOf(connectionModules)).overrides(properties);
    }
 
