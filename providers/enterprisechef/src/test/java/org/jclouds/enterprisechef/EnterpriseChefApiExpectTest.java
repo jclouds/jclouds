@@ -33,7 +33,7 @@ import org.jclouds.enterprisechef.domain.User;
 import org.jclouds.http.HttpRequest;
 import org.jclouds.http.HttpResponse;
 import org.jclouds.providers.ProviderMetadata;
-import org.jclouds.rest.ConfiguresRestClient;
+import org.jclouds.rest.ConfiguresHttpApi;
 import org.jclouds.rest.ResourceNotFoundException;
 import org.testng.annotations.Test;
 
@@ -190,11 +190,11 @@ public class EnterpriseChefApiExpectTest extends BaseChefApiExpectTest<Enterpris
 
    @Override
    protected Module createModule() {
-      return new TestEnterpriseChefRestClientModule();
+      return new TestEnterpriseChefHttpApiModule();
    }
 
-   @ConfiguresRestClient
-   static class TestEnterpriseChefRestClientModule extends EnterpriseChefHttpApiModule {
+   @ConfiguresHttpApi
+   static class TestEnterpriseChefHttpApiModule extends EnterpriseChefHttpApiModule {
       @Override
       protected String provideTimeStamp(@TimeStamp Supplier<String> cache) {
          return "timestamp";
