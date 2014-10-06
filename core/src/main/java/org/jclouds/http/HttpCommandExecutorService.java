@@ -16,27 +16,14 @@
  */
 package org.jclouds.http;
 
-
-import com.google.common.util.concurrent.ListenableFuture;
-
 /**
  * Capable of invoking http commands.
  */
-public interface HttpCommandExecutorService { 
+public interface HttpCommandExecutorService {
 
-   /**
-    * Returns a potentially deferred {@code HttpResponse} from a server responding to the
-    * {@code command}. The output {@code ListenableFuture} need not be
-    * {@linkplain Future#isDone done}, making {@code HttpCommandExecutorService}
-    * suitable for asynchronous derivations.
-    * 
-    */
-   ListenableFuture<HttpResponse> submit(HttpCommand command);
-   
    /**
     * Returns a {@code HttpResponse} from the server which responded to the
     * {@code command}.
     */
    HttpResponse invoke(HttpCommand command);
-
 }

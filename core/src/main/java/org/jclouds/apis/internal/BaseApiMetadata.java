@@ -19,7 +19,6 @@ package org.jclouds.apis.internal;
 import static com.google.common.base.Objects.equal;
 import static com.google.common.base.Preconditions.checkNotNull;
 import static org.jclouds.Constants.PROPERTY_CONNECTION_TIMEOUT;
-import static org.jclouds.Constants.PROPERTY_IO_WORKER_THREADS;
 import static org.jclouds.Constants.PROPERTY_ISO3166_CODES;
 import static org.jclouds.Constants.PROPERTY_MAX_CONNECTIONS_PER_CONTEXT;
 import static org.jclouds.Constants.PROPERTY_MAX_CONNECTIONS_PER_HOST;
@@ -67,7 +66,6 @@ public abstract class BaseApiMetadata implements ApiMetadata {
       props.setProperty(PROPERTY_MAX_CONNECTIONS_PER_HOST, 0 + "");
       props.setProperty(PROPERTY_SO_TIMEOUT, 60000 + "");
       props.setProperty(PROPERTY_CONNECTION_TIMEOUT, 60000 + "");
-      props.setProperty(PROPERTY_IO_WORKER_THREADS, 20 + "");
       // Successfully tested 50 user threads with BlobStore.clearContainer.
       props.setProperty(PROPERTY_USER_THREADS, numUserThreads + "");
       props.setProperty(PROPERTY_SCHEDULER_THREADS, 10 + "");

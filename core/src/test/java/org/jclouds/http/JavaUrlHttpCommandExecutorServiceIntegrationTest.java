@@ -16,7 +16,6 @@
  */
 package org.jclouds.http;
 
-import static org.jclouds.Constants.PROPERTY_IO_WORKER_THREADS;
 import static org.jclouds.Constants.PROPERTY_MAX_CONNECTIONS_PER_CONTEXT;
 import static org.jclouds.Constants.PROPERTY_MAX_CONNECTIONS_PER_HOST;
 import static org.jclouds.Constants.PROPERTY_USER_THREADS;
@@ -41,8 +40,6 @@ public class JavaUrlHttpCommandExecutorServiceIntegrationTest extends BaseHttpCo
    protected void addOverrideProperties(Properties props) {
       props.setProperty(PROPERTY_MAX_CONNECTIONS_PER_CONTEXT, 50 + "");
       props.setProperty(PROPERTY_MAX_CONNECTIONS_PER_HOST, 0 + "");
-      // IO workers not used in this executor
-      props.setProperty(PROPERTY_IO_WORKER_THREADS, 0 + "");
       props.setProperty(PROPERTY_USER_THREADS, 5 + "");
    }
 

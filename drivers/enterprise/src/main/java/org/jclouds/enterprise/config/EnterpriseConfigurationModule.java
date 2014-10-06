@@ -30,8 +30,18 @@ import com.google.common.util.concurrent.ListeningExecutorService;
 @ConfiguresExecutorService
 public class EnterpriseConfigurationModule extends ExecutorServiceModule {
 
+   /**
+    * @deprecated {@code ioExecutor} is no longer used. This constructor will be removed in jclouds v2.
+    * Use {@link #EnterpriseConfigurationModule(ListeningExecutorService)} instead.
+    */
+   @Deprecated
    public EnterpriseConfigurationModule(ListeningExecutorService userExecutor, ListeningExecutorService ioExecutor) {
       super(userExecutor, ioExecutor);
+   }
+
+   @Deprecated
+   public EnterpriseConfigurationModule(ListeningExecutorService userExecutor) {
+      super(userExecutor);
    }
 
    public EnterpriseConfigurationModule() {

@@ -27,7 +27,6 @@ import javax.inject.Singleton;
 import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.SSLContext;
 
-import org.jclouds.Constants;
 import org.jclouds.http.HttpRequest;
 import org.jclouds.http.HttpUtils;
 import org.jclouds.http.IOExceptionRetryHandler;
@@ -40,7 +39,6 @@ import org.jclouds.io.ContentMetadataCodec;
 import com.google.common.base.Function;
 import com.google.common.base.Supplier;
 import com.google.common.net.HttpHeaders;
-import com.google.common.util.concurrent.ListeningExecutorService;
 import com.google.inject.Inject;
 import com.squareup.okhttp.OkHttpClient;
 
@@ -53,12 +51,11 @@ public class OkHttpCommandExecutorService extends JavaUrlHttpCommandExecutorServ
 
    @Inject
    public OkHttpCommandExecutorService(HttpUtils utils, ContentMetadataCodec contentMetadataCodec,
-         @Named(Constants.PROPERTY_IO_WORKER_THREADS) ListeningExecutorService ioExecutor,
          DelegatingRetryHandler retryHandler, IOExceptionRetryHandler ioRetryHandler,
          DelegatingErrorHandler errorHandler, HttpWire wire, @Named("untrusted") HostnameVerifier verifier,
          @Named("untrusted") Supplier<SSLContext> untrustedSSLContextProvider, Function<URI, Proxy> proxyForURI)
          throws SecurityException, NoSuchFieldException {
-      super(utils, contentMetadataCodec, ioExecutor, retryHandler, ioRetryHandler, errorHandler, wire, verifier,
+      super(utils, contentMetadataCodec, retryHandler, ioRetryHandler, errorHandler, wire, verifier,
             untrustedSSLContextProvider, proxyForURI);
    }
 

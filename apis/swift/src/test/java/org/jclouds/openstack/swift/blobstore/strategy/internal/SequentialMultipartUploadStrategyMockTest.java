@@ -97,8 +97,8 @@ public class SequentialMultipartUploadStrategyMockTest {
       }
    }
 
-   private static final Set<Module> modules = ImmutableSet.<Module> of(new ExecutorServiceModule(newDirectExecutorService(),
-         newDirectExecutorService()));
+   private static final Set<Module> modules = ImmutableSet.<Module> of(
+         new ExecutorServiceModule(newDirectExecutorService()));
 
    static SequentialMultipartUploadStrategy mockSequentialMultipartUploadStrategy(String uri, int partSize) {
       Properties overrides = new Properties();

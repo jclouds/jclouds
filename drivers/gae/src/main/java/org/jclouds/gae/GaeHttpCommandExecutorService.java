@@ -19,10 +19,8 @@ package org.jclouds.gae;
 import java.io.IOException;
 
 import javax.inject.Inject;
-import javax.inject.Named;
 import javax.inject.Singleton;
 
-import org.jclouds.Constants;
 import org.jclouds.JcloudsVersion;
 import org.jclouds.concurrent.SingleThreaded;
 import org.jclouds.http.HttpRequest;
@@ -39,7 +37,6 @@ import com.google.appengine.api.urlfetch.HTTPRequest;
 import com.google.appengine.api.urlfetch.HTTPResponse;
 import com.google.appengine.api.urlfetch.URLFetchService;
 import com.google.common.annotations.VisibleForTesting;
-import com.google.common.util.concurrent.ListeningExecutorService;
 
 /**
  * Google App Engine version of {@link HttpCommandExecutorService}
@@ -57,11 +54,10 @@ public class GaeHttpCommandExecutorService extends BaseHttpCommandExecutorServic
    @Inject
    public GaeHttpCommandExecutorService(URLFetchService urlFetchService, HttpUtils utils,
             ContentMetadataCodec contentMetadataCodec,
-            @Named(Constants.PROPERTY_IO_WORKER_THREADS) ListeningExecutorService ioExecutor,
             IOExceptionRetryHandler ioRetryHandler, DelegatingRetryHandler retryHandler,
             DelegatingErrorHandler errorHandler, HttpWire wire, ConvertToGaeRequest convertToGaeRequest,
             ConvertToJcloudsResponse convertToJcloudsResponse) {
-      super(utils, contentMetadataCodec, ioExecutor, retryHandler, ioRetryHandler, errorHandler, wire);
+      super(utils, contentMetadataCodec, retryHandler, ioRetryHandler, errorHandler, wire);
       this.urlFetchService = urlFetchService;
       this.convertToGaeRequest = convertToGaeRequest;
       this.convertToJcloudsResponse = convertToJcloudsResponse;

@@ -46,7 +46,7 @@ public class GoogleAppEngineConfigurationModule extends AbstractModule {
    private final Module userExecutorModule;
 
    public GoogleAppEngineConfigurationModule() {
-      this(new ExecutorServiceModule(newDirectExecutorService(), newDirectExecutorService()));
+      this(new ExecutorServiceModule(newDirectExecutorService()));
    }
 
    /**

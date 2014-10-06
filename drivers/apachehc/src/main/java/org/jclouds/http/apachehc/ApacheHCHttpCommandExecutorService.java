@@ -15,6 +15,7 @@
  * limitations under the License.
  */
 package org.jclouds.http.apachehc;
+
 import static com.google.common.hash.Hashing.md5;
 import static com.google.common.io.BaseEncoding.base64;
 import static org.jclouds.http.HttpUtils.filterOutContentHeaders;
@@ -22,14 +23,13 @@ import static org.jclouds.http.HttpUtils.filterOutContentHeaders;
 import java.io.IOException;
 import java.net.URI;
 
-import javax.inject.Named;
+import javax.inject.Inject;
 
 import org.apache.http.Header;
 import org.apache.http.HttpHost;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpUriRequest;
-import org.jclouds.Constants;
 import org.jclouds.http.HttpRequest;
 import org.jclouds.http.HttpResponse;
 import org.jclouds.http.HttpUtils;
@@ -38,18 +38,16 @@ import org.jclouds.http.handlers.DelegatingErrorHandler;
 import org.jclouds.http.handlers.DelegatingRetryHandler;
 import org.jclouds.http.internal.BaseHttpCommandExecutorService;
 import org.jclouds.http.internal.HttpWire;
-import org.jclouds.io.ContentMetadataCodec;
 import org.jclouds.io.ByteStreams2;
+import org.jclouds.io.ContentMetadataCodec;
 import org.jclouds.io.Payload;
 import org.jclouds.io.Payloads;
 
 import com.google.common.collect.LinkedHashMultimap;
 import com.google.common.collect.Multimap;
-import com.google.common.util.concurrent.ListeningExecutorService;
-import com.google.inject.Inject;
 
 /**
- * Simple implementation of a {@link HttpFutureCommandClient}, Apache Components HttpClient 4.x.
+ * Simple implementation of a {@link HttpCommandExecutorService}, Apache Components HttpClient 4.x.
  */
 public class ApacheHCHttpCommandExecutorService extends BaseHttpCommandExecutorService<HttpUriRequest> {
    private final HttpClient client;
@@ -57,10 +55,9 @@ public class ApacheHCHttpCommandExecutorService extends BaseHttpCommandExecutorS
 
    @Inject
    ApacheHCHttpCommandExecutorService(HttpUtils utils, ContentMetadataCodec contentMetadataCodec,
-         @Named(Constants.PROPERTY_IO_WORKER_THREADS) ListeningExecutorService ioExecutor,
          DelegatingRetryHandler retryHandler, IOExceptionRetryHandler ioRetryHandler,
          DelegatingErrorHandler errorHandler, HttpWire wire, HttpClient client) {
-      super(utils, contentMetadataCodec, ioExecutor, retryHandler, ioRetryHandler, errorHandler, wire);
+      super(utils, contentMetadataCodec, retryHandler, ioRetryHandler, errorHandler, wire);
       this.client = client;
       this.apacheHCUtils = new ApacheHCUtils(contentMetadataCodec);
    }

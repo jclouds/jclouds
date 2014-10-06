@@ -91,7 +91,7 @@ public class PermissionApiLiveTest extends BaseSQSApiLiveTest {
 
    private AnonymousAttributesApi getAnonymousAttributesApi(URI queue) {
       return ContextBuilder.newBuilder(forApiOnEndpoint(AnonymousAttributesApi.class, queue.toASCIIString()))
-            .modules(ImmutableSet.<Module> of(new ExecutorServiceModule(newDirectExecutorService(), newDirectExecutorService())))
+            .modules(ImmutableSet.<Module> of(new ExecutorServiceModule(newDirectExecutorService())))
             .buildApi(AnonymousAttributesApi.class);
    }
 

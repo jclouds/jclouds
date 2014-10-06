@@ -67,7 +67,7 @@ public class ParallelMultipartUploadStrategy implements AsyncMultipartUploadStra
    @VisibleForTesting
    static final int DEFAULT_MAX_PERCENT_RETRIES = 10;
 
-   private final ListeningExecutorService ioExecutor;
+   private final ListeningExecutorService executor;
 
    @Inject(optional = true)
    @Named("jclouds.mpu.parallel.degree")
@@ -96,10 +96,10 @@ public class ParallelMultipartUploadStrategy implements AsyncMultipartUploadStra
 
    @Inject
    public ParallelMultipartUploadStrategy(AWSS3BlobStore blobstore, PayloadSlicer slicer,
-         @Named(Constants.PROPERTY_IO_WORKER_THREADS) ListeningExecutorService ioExecutor) {
+         @Named(Constants.PROPERTY_USER_THREADS) ListeningExecutorService executor) {
       this.blobstore = checkNotNull(blobstore, "blobstore");
       this.slicer = checkNotNull(slicer, "slicer");
-      this.ioExecutor = checkNotNull(ioExecutor, "ioExecutor");
+      this.executor = checkNotNull(executor, "executor");
    }
 
    protected void prepareUploadPart(final String container, final String key,
@@ -118,7 +118,7 @@ public class ParallelMultipartUploadStrategy implements AsyncMultipartUploadStra
       final Payload chunkedPart = slicer.slice(payload, offset, size);
       logger.debug(String.format("async uploading part %s of %s to container %s with uploadId %s", part, key, container, uploadId));
       final long start = System.currentTimeMillis();
-      final ListenableFuture<String> futureETag = ioExecutor.submit(new Callable<String>() {
+      final ListenableFuture<String> futureETag = executor.submit(new Callable<String>() {
          @Override public String call() throws Exception {
             return client.uploadPart(container, key, part, uploadId, chunkedPart);
          }
@@ -148,13 +148,13 @@ public class ParallelMultipartUploadStrategy implements AsyncMultipartUploadStra
                latch.countDown();
             }
          }
-      }, ioExecutor);
+      }, executor);
       futureParts.put(part, futureETag);
    }
 
    @Override
    public ListenableFuture<String> execute(final String container, final Blob blob, final PutOptions options) {
-      return ioExecutor.submit(new Callable<String>() {
+      return executor.submit(new Callable<String>() {
                @Override
                public String call() throws Exception {
                   String key = blob.getMetadata().getName();
@@ -242,7 +242,7 @@ public class ParallelMultipartUploadStrategy implements AsyncMultipartUploadStra
                      // recursively call this execute method again; instead mark as not multipart
                      // because it can all fit in one go.
                      final PutOptions nonMultipartOptions = PutOptions.Builder.multipart(false);
-                     ListenableFuture<String> futureETag = ioExecutor.submit(new Callable<String>() {
+                     ListenableFuture<String> futureETag = executor.submit(new Callable<String>() {
                         @Override public String call() throws Exception {
                            return blobstore.putBlob(container, blob, nonMultipartOptions);
                         }

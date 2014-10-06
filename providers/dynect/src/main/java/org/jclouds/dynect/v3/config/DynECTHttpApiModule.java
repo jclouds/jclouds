@@ -30,7 +30,6 @@ import javax.inject.Singleton;
 import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.SSLContext;
 
-import org.jclouds.Constants;
 import org.jclouds.concurrent.SingleThreaded;
 import org.jclouds.dynect.v3.DynECTApi;
 import org.jclouds.dynect.v3.features.SessionApi;
@@ -57,7 +56,6 @@ import org.jclouds.rest.config.HttpApiModule;
 import com.google.common.base.Charsets;
 import com.google.common.base.Function;
 import com.google.common.base.Supplier;
-import com.google.common.util.concurrent.ListeningExecutorService;
 
 /**
  * Configures the DynECT connection.
@@ -102,12 +100,11 @@ public class DynECTHttpApiModule extends HttpApiModule<DynECTApi> {
 
       @Inject
       private SillyRabbit200sAreForSuccess(HttpUtils utils, ContentMetadataCodec contentMetadataCodec,
-            @Named(Constants.PROPERTY_IO_WORKER_THREADS) ListeningExecutorService ioExecutor,
             DelegatingRetryHandler retryHandler, IOExceptionRetryHandler ioRetryHandler,
             DelegatingErrorHandler errorHandler, HttpWire wire, @Named("untrusted") HostnameVerifier verifier,
             @Named("untrusted") Supplier<SSLContext> untrustedSSLContextProvider, Function<URI, Proxy> proxyForURI)
             throws SecurityException, NoSuchFieldException {
-         super(utils, contentMetadataCodec, ioExecutor, retryHandler, ioRetryHandler, errorHandler, wire, verifier,
+         super(utils, contentMetadataCodec, retryHandler, ioRetryHandler, errorHandler, wire, verifier,
                untrustedSSLContextProvider, proxyForURI);
       }
 

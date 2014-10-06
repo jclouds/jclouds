@@ -102,11 +102,4 @@ public class CurrentRequestExecutorServiceModule extends AbstractModule {
    protected ListeningExecutorService userExecutor() {
       return memoizedCurrentRequestExecutorService.get();
    }
-
-   @Provides
-   @Singleton
-   @Named(Constants.PROPERTY_IO_WORKER_THREADS)
-   protected ListeningExecutorService ioExecutor() {
-      return memoizedCurrentRequestExecutorService.get();
-   }
 }

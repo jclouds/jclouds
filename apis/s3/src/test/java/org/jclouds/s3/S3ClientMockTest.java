@@ -46,7 +46,7 @@ import com.squareup.okhttp.mockwebserver.RecordedRequest;
 public class S3ClientMockTest {
 
    private static final Set<Module> modules = ImmutableSet.<Module> of(new OkHttpCommandExecutorServiceModule(),
-         new ExecutorServiceModule(newDirectExecutorService(), newDirectExecutorService()));
+         new ExecutorServiceModule(newDirectExecutorService()));
 
    static S3Client getS3Client(URL server) {
       Properties overrides = new Properties();

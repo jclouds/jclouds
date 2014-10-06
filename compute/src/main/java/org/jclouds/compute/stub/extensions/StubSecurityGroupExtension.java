@@ -28,12 +28,10 @@ import javax.inject.Inject;
 import javax.inject.Named;
 import javax.inject.Provider;
 
-import org.jclouds.Constants;
 import org.jclouds.compute.domain.SecurityGroup;
 import org.jclouds.compute.domain.SecurityGroupBuilder;
 import org.jclouds.compute.extensions.SecurityGroupExtension;
 import org.jclouds.domain.Location;
-import org.jclouds.location.suppliers.all.JustProvider;
 import org.jclouds.net.domain.IpPermission;
 import org.jclouds.net.domain.IpProtocol;
 
@@ -42,7 +40,6 @@ import com.google.common.base.Supplier;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Multimap;
-import com.google.common.util.concurrent.ListeningExecutorService;
 
 /**
  * An extension to compute service to allow for the manipulation of {@link SecurityGroup}s. Implementation
@@ -52,23 +49,17 @@ public class StubSecurityGroupExtension implements SecurityGroupExtension {
 
    private final Supplier<Location> location;
    private final Provider<Integer> groupIdProvider;
-   private final Supplier<Set<? extends Location>> locationSupplier;
-   private final ListeningExecutorService ioExecutor;
    private final ConcurrentMap<String, SecurityGroup> groups;
    private final Multimap<String, SecurityGroup> groupsForNodes;
 
    @Inject
    public StubSecurityGroupExtension(ConcurrentMap<String, SecurityGroup> groups,
-                                     @Named(Constants.PROPERTY_IO_WORKER_THREADS) ListeningExecutorService ioExecutor,
                                      Supplier<Location> location,
                                      @Named("GROUP_ID") Provider<Integer> groupIdProvider,
-                                     JustProvider locationSupplier,
                                      Multimap<String, SecurityGroup> groupsForNodes) {
       this.groups = groups;
-      this.ioExecutor = ioExecutor;
       this.location = location;
       this.groupIdProvider = groupIdProvider;
-      this.locationSupplier = locationSupplier;
       this.groupsForNodes = groupsForNodes;
    }
 
