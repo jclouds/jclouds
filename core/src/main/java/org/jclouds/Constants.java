@@ -34,7 +34,10 @@ public final class Constants {
     * Integer property. default (20)
     * <p/>
     * Amount of threads servicing the I/O of http connections.
+    *
+    * @deprecated No longer used. Will be removed in jclouds v2
     */
+   @Deprecated
    public static final String PROPERTY_IO_WORKER_THREADS = "jclouds.io-worker-threads";
 
    /**

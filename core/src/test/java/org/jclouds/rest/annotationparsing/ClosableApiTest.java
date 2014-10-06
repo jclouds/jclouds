@@ -56,7 +56,7 @@ public class ClosableApiTest {
 
       DelegatingApi api = ContextBuilder.newBuilder(provider)
                                         .modules(ImmutableSet.<Module> builder()
-                                                             .add(new ExecutorServiceModule(executor, executor))
+                                                             .add(new ExecutorServiceModule(executor))
                                                              .build())
                                         .buildApi(DelegatingApi.class);
       api.close();

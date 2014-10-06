@@ -20,7 +20,6 @@ import static com.google.common.base.Throwables.propagate;
 import static com.google.common.collect.Iterables.filter;
 import static com.google.common.util.concurrent.MoreExecutors.sameThreadExecutor;
 import static com.google.inject.matcher.Matchers.any;
-import static org.jclouds.Constants.PROPERTY_IO_WORKER_THREADS;
 import static org.jclouds.Constants.PROPERTY_SCHEDULER_THREADS;
 import static org.jclouds.Constants.PROPERTY_USER_THREADS;
 import static org.jclouds.reflect.Reflection2.methods;
@@ -70,9 +69,6 @@ public class LifeCycleModule extends AbstractModule {
          @Inject
          @Named(PROPERTY_USER_THREADS)
          ListeningExecutorService userExecutor;
-         @Inject
-         @Named(PROPERTY_IO_WORKER_THREADS)
-         ListeningExecutorService ioExecutor;
          // ScheduledExecutor is defined in an optional module
          @Inject(optional = true)
          @Named(PROPERTY_SCHEDULER_THREADS)
@@ -81,8 +77,6 @@ public class LifeCycleModule extends AbstractModule {
          public void close() throws IOException {
             assert userExecutor != null;
             userExecutor.shutdownNow();
-            assert ioExecutor != null;
-            ioExecutor.shutdownNow();
             // ScheduledExecutor is defined in an optional module
             if (scheduledExecutor != null)
                scheduledExecutor.shutdownNow();

@@ -23,7 +23,6 @@ import static org.easymock.EasyMock.createMock;
 import static org.easymock.EasyMock.expect;
 import static org.easymock.EasyMock.replay;
 import static org.easymock.EasyMock.verify;
-import static org.jclouds.Constants.PROPERTY_IO_WORKER_THREADS;
 import static org.jclouds.Constants.PROPERTY_USER_THREADS;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotEquals;
@@ -55,7 +54,6 @@ public class ExecutorServiceModuleTest {
       ExecutorServiceModule module = new ExecutorServiceModule() {
          @Override
          protected void configure() {
-            bindConstant().annotatedWith(named(PROPERTY_IO_WORKER_THREADS)).to(1);
             bindConstant().annotatedWith(named(PROPERTY_USER_THREADS)).to(1);
             super.configure();
          }
@@ -63,18 +61,14 @@ public class ExecutorServiceModuleTest {
 
       injector = Guice.createInjector(module);
       assertNull(module.userExecutorFromConstructor);
-      assertNull(module.ioExecutorFromConstructor);
    }
 
    @AfterClass
    private void close() throws IOException {
       ListeningExecutorService user = injector.getInstance(Key.get(ListeningExecutorService.class,
             named(PROPERTY_USER_THREADS)));
-      ListeningExecutorService io = injector.getInstance(Key.get(ListeningExecutorService.class,
-            named(PROPERTY_IO_WORKER_THREADS)));
       injector.getInstance(Closer.class).close();
       assertTrue(user.isShutdown());
-      assertTrue(io.isShutdown());
    }
 
    @Test
@@ -95,23 +89,18 @@ public class ExecutorServiceModuleTest {
 
    @Test(timeOut = 5000)
    public void testExceptionInSubmitRunnableIncludesSubmissionTrace() throws Exception {
-      ListeningExecutorService user = injector.getInstance(Key.get(ListeningExecutorService.class,
+      ListeningExecutorService exec = injector.getInstance(Key.get(ListeningExecutorService.class,
             named(PROPERTY_USER_THREADS)));
-      ListeningExecutorService io = injector.getInstance(Key.get(ListeningExecutorService.class,
-            named(PROPERTY_IO_WORKER_THREADS)));
-
-      for (ListeningExecutorService exec : ImmutableList.of(user, io)) {
-         String submission = null;
-         try {
-            // this is sensitive to formatting as we are looking for the stack traces to match. if you wrap the below
-            // line again, you'll need to change incrementInitialElement to 3 line numbers instead of 2.
-            submission = getStackTraceAsString(incrementInitialElement(new RuntimeException(), 2)).replaceFirst(format(".*%s", LINE_SEPARATOR),
-                  "");
-            exec.submit(runnableThrowsRTE()).get();
-         } catch (ExecutionException e) {
-            assertTraceHasSubmission(getStackTraceAsString(e), submission);
-            assertTraceHasSubmission(getStackTraceAsString(e.getCause()), submission);
-         }
+      String submission = null;
+      try {
+         // this is sensitive to formatting as we are looking for the stack traces to match. if you wrap the below
+         // line again, you'll need to change incrementInitialElement to 3 line numbers instead of 2.
+         submission = getStackTraceAsString(incrementInitialElement(new RuntimeException(), 2)).replaceFirst(format(".*%s", LINE_SEPARATOR),
+               "");
+         exec.submit(runnableThrowsRTE()).get();
+      } catch (ExecutionException e) {
+         assertTraceHasSubmission(getStackTraceAsString(e), submission);
+         assertTraceHasSubmission(getStackTraceAsString(e.getCause()), submission);
       }
    }
 

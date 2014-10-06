@@ -66,9 +66,8 @@ public class StubComputeServiceAdapter implements JCloudsNativeComputeServiceAda
    private final Supplier<Location> location;
    private final ConcurrentMap<String, NodeMetadata> nodes;
    private final Multimap<String, SecurityGroup> groupsForNodes;
-   private final ListeningExecutorService ioExecutor;
+   private final ListeningExecutorService executor;
    private final Provider<Integer> idProvider;
-   private final Provider<Integer> groupIdProvider;
    private final String publicIpPrefix;
    private final String privateIpPrefix;
    private final String passwordPrefix;
@@ -78,14 +77,13 @@ public class StubComputeServiceAdapter implements JCloudsNativeComputeServiceAda
 
    @Inject
    public StubComputeServiceAdapter(ConcurrentMap<String, NodeMetadata> nodes,
-            @Named(Constants.PROPERTY_IO_WORKER_THREADS) ListeningExecutorService ioExecutor, Supplier<Location> location,
+            @Named(Constants.PROPERTY_USER_THREADS) ListeningExecutorService executor, Supplier<Location> location,
             @Named("NODE_ID") Provider<Integer> idProvider, @Named("PUBLIC_IP_PREFIX") String publicIpPrefix,
             @Named("PRIVATE_IP_PREFIX") String privateIpPrefix, @Named("PASSWORD_PREFIX") String passwordPrefix,
             JustProvider locationSupplier, Map<OsFamily, Map<String, String>> osToVersionMap,
-            Multimap<String, SecurityGroup> groupsForNodes, @Named("GROUP_ID") Provider<Integer> groupIdProvider,
-            Optional<SecurityGroupExtension> securityGroupExtension) {
+            Multimap<String, SecurityGroup> groupsForNodes, Optional<SecurityGroupExtension> securityGroupExtension) {
       this.nodes = nodes;
-      this.ioExecutor = ioExecutor;
+      this.executor = executor;
       this.location = location;
       this.idProvider = idProvider;
       this.publicIpPrefix = publicIpPrefix;
@@ -94,7 +92,6 @@ public class StubComputeServiceAdapter implements JCloudsNativeComputeServiceAda
       this.locationSupplier = locationSupplier;
       this.osToVersionMap = osToVersionMap;
       this.groupsForNodes = groupsForNodes;
-      this.groupIdProvider = groupIdProvider;
       this.securityGroupExtension = securityGroupExtension;
    }
 
@@ -106,7 +103,7 @@ public class StubComputeServiceAdapter implements JCloudsNativeComputeServiceAda
       if (millis == 0l)
          setStateOnNode(status, node);
       else
-         ioExecutor.execute(new Runnable() {
+         executor.execute(new Runnable() {
 
             @Override
             public void run() {
@@ -219,8 +216,8 @@ public class StubComputeServiceAdapter implements JCloudsNativeComputeServiceAda
       setStateOnNodeAfterDelay(Status.PENDING, node, 0);
       setStateOnNodeAfterDelay(Status.TERMINATED, node, 50);
       groupsForNodes.removeAll(id);
-      
-      ioExecutor.execute(new Runnable() {
+
+      executor.execute(new Runnable() {
 
          @Override
          public void run() {

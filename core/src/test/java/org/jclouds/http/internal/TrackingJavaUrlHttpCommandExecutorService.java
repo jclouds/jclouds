@@ -27,9 +27,7 @@ import javax.inject.Singleton;
 import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.SSLContext;
 
-import org.jclouds.Constants;
 import org.jclouds.http.HttpCommand;
-import org.jclouds.http.HttpResponse;
 import org.jclouds.http.HttpUtils;
 import org.jclouds.http.IOExceptionRetryHandler;
 import org.jclouds.http.handlers.DelegatingErrorHandler;
@@ -41,8 +39,6 @@ import com.google.common.base.Function;
 import com.google.common.base.Supplier;
 import com.google.common.collect.Iterables;
 import com.google.common.reflect.Invokable;
-import com.google.common.util.concurrent.ListenableFuture;
-import com.google.common.util.concurrent.ListeningExecutorService;
 import com.google.inject.AbstractModule;
 import com.google.inject.Module;
 import com.google.inject.TypeLiteral;
@@ -87,20 +83,12 @@ public class TrackingJavaUrlHttpCommandExecutorService extends JavaUrlHttpComman
 
    @Inject
    public TrackingJavaUrlHttpCommandExecutorService(HttpUtils utils, ContentMetadataCodec contentMetadataCodec,
-            @Named(Constants.PROPERTY_IO_WORKER_THREADS) ListeningExecutorService ioExecutor,
             DelegatingRetryHandler retryHandler, IOExceptionRetryHandler ioRetryHandler,
             DelegatingErrorHandler errorHandler, HttpWire wire, @Named("untrusted") HostnameVerifier verifier,
             @Named("untrusted") Supplier<SSLContext> untrustedSSLContextProvider, Function<URI, Proxy> proxyForURI,
             List<HttpCommand> commandsInvoked) throws SecurityException, NoSuchFieldException {
-      super(utils, contentMetadataCodec, ioExecutor, retryHandler, ioRetryHandler, errorHandler, wire, verifier,
-               untrustedSSLContextProvider, proxyForURI);
+      super(utils, contentMetadataCodec, retryHandler, ioRetryHandler, errorHandler, wire, verifier,
+            untrustedSSLContextProvider, proxyForURI);
       this.commandsInvoked = commandsInvoked;
    }
-
-   @Override
-   public ListenableFuture<HttpResponse> submit(HttpCommand command) {
-      commandsInvoked.add(command);
-      return super.submit(command);
-   }
-
 }

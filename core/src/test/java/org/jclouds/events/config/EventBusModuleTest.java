@@ -45,7 +45,6 @@ public class EventBusModuleTest {
         ExecutorServiceModule userExecutorModule = new ExecutorServiceModule() {
             @Override
             protected void configure() {
-               bindConstant().annotatedWith(Names.named(Constants.PROPERTY_IO_WORKER_THREADS)).to(1);
                bindConstant().annotatedWith(Names.named(Constants.PROPERTY_USER_THREADS)).to(1);
                super.configure();
             }

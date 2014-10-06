@@ -39,7 +39,7 @@ import com.squareup.okhttp.mockwebserver.MockWebServer;
 public class DynectApiMockTest {
    
    private static final Set<Module> modules = ImmutableSet.<Module> of(
-         new ExecutorServiceModule(sameThreadExecutor(), sameThreadExecutor()));
+         new ExecutorServiceModule(sameThreadExecutor()));
 
    static DynECTApi mockDynectApi(String uri) {
       Properties overrides = new Properties();

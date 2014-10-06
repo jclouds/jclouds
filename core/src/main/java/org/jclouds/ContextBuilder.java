@@ -540,7 +540,7 @@ public class ContextBuilder {
                return input.getClass().isAnnotationPresent(SingleThreaded.class);
             }
          })) {
-            modules.add(new ExecutorServiceModule(sameThreadExecutor(), sameThreadExecutor()));
+            modules.add(new ExecutorServiceModule(sameThreadExecutor()));
          } else {
             modules.add(new ExecutorServiceModule());
          }

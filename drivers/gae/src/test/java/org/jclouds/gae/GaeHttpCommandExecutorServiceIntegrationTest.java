@@ -39,7 +39,7 @@ import com.google.inject.Module;
  * Integration test for the URLFetchService
  */
 @Test
-public class AsyncGaeHttpCommandExecutorServiceIntegrationTest extends BaseHttpCommandExecutorServiceIntegrationTest {
+public class GaeHttpCommandExecutorServiceIntegrationTest extends BaseHttpCommandExecutorServiceIntegrationTest {
    
    @BeforeMethod
    public void setupApiProxy() {
@@ -82,7 +82,7 @@ public class AsyncGaeHttpCommandExecutorServiceIntegrationTest extends BaseHttpC
       }
 
       protected HttpCommandExecutorService providerHttpCommandExecutorService(Injector injector) {
-         return injector.getInstance(AsyncGaeHttpCommandExecutorService.class);
+         return injector.getInstance(GaeHttpCommandExecutorService.class);
       }
 
    }

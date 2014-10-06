@@ -17,7 +17,6 @@
 package org.jclouds.http.apachehc;
 
 import static org.jclouds.Constants.PROPERTY_CONNECTION_TIMEOUT;
-import static org.jclouds.Constants.PROPERTY_IO_WORKER_THREADS;
 import static org.jclouds.Constants.PROPERTY_MAX_CONNECTIONS_PER_CONTEXT;
 import static org.jclouds.Constants.PROPERTY_MAX_CONNECTIONS_PER_HOST;
 import static org.jclouds.Constants.PROPERTY_SO_TIMEOUT;
@@ -49,7 +48,6 @@ public class ApacheHCHttpCommandExecutorServiceTestDisabled extends BaseHttpComm
       props.setProperty(PROPERTY_MAX_CONNECTIONS_PER_HOST, 0 + "");
       props.setProperty(PROPERTY_CONNECTION_TIMEOUT, 100 + "");
       props.setProperty(PROPERTY_SO_TIMEOUT, 100 + "");
-      props.setProperty(PROPERTY_IO_WORKER_THREADS, 3 + "");
       props.setProperty(PROPERTY_USER_THREADS, 0 + "");
    }
 

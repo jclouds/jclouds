@@ -244,12 +244,6 @@ public class RestAnnotationProcessorTest extends BaseRestApiTest {
          ExecutionException {
       Injector child = injectorForCaller(new HttpCommandExecutorService() {
          int callCounter = 0;
-
-         @Override
-         public ListenableFuture<HttpResponse> submit(HttpCommand command) {
-            throw new AssertionError();
-         }
-
          @Override
          public HttpResponse invoke(HttpCommand command) {
             if (callCounter == 1)
@@ -279,19 +273,12 @@ public class RestAnnotationProcessorTest extends BaseRestApiTest {
    public void testDelegateWithPathParamIsLazyLoadedAndRequestIncludesEndpointVersionAndPath()
          throws InterruptedException, ExecutionException {
       Injector child = injectorForCaller(new HttpCommandExecutorService() {
-
-         @Override
-         public ListenableFuture<HttpResponse> submit(HttpCommand command) {
-            throw new AssertionError("jclouds no longer uses the submit method");
-         }
-
          @Override
          public HttpResponse invoke(HttpCommand command) {
             assertEquals(command.getCurrentRequest().getRequestLine(),
                   "GET http://howdyboys/testing/testing/thepathparam/client/1/foo HTTP/1.1");
             return HttpResponse.builder().build();
          }
-
       });
 
       try {
@@ -310,18 +297,11 @@ public class RestAnnotationProcessorTest extends BaseRestApiTest {
    public void testDelegateWithHeaderParamIsLazyLoadedAndRequestIncludesEndpointVersionAndHeader()
          throws InterruptedException, ExecutionException {
       Injector child = injectorForCaller(new HttpCommandExecutorService() {
-
-         @Override
-         public ListenableFuture<HttpResponse> submit(HttpCommand command) {
-            throw new AssertionError("jclouds no longer uses the submit method");
-         }
-
          @Override
          public HttpResponse invoke(HttpCommand command) {
             assertEquals(command.getCurrentRequest().getFirstHeaderOrNull("header"), "theheaderparam");
             return HttpResponse.builder().build();
          }
-
       });
 
       try {
@@ -338,12 +318,6 @@ public class RestAnnotationProcessorTest extends BaseRestApiTest {
    public void testDelegateWithoutProducesAndConsumes()
          throws InterruptedException, ExecutionException {
       Injector child = injectorForCaller(new HttpCommandExecutorService() {
-
-         @Override
-         public ListenableFuture<HttpResponse> submit(HttpCommand command) {
-            throw new AssertionError("jclouds no longer uses the submit method");
-         }
-
          @Override
          public HttpResponse invoke(HttpCommand command) {
             assertEquals(
@@ -352,7 +326,6 @@ public class RestAnnotationProcessorTest extends BaseRestApiTest {
             assertTrue(command.getCurrentRequest().getHeaders().get("Accept").contains(APPLICATION_JSON));
             return HttpResponse.builder().build();
          }
-
       });
 
       try {
@@ -368,12 +341,6 @@ public class RestAnnotationProcessorTest extends BaseRestApiTest {
    public void testDelegateWithProducesAndConsumesOnMethodIsLazyLoaded()
          throws InterruptedException, ExecutionException {
       Injector child = injectorForCaller(new HttpCommandExecutorService() {
-
-         @Override
-         public ListenableFuture<HttpResponse> submit(HttpCommand command) {
-            throw new AssertionError("jclouds no longer uses the submit method");
-         }
-
          @Override
          public HttpResponse invoke(HttpCommand command) {
             assertEquals(
@@ -398,12 +365,6 @@ public class RestAnnotationProcessorTest extends BaseRestApiTest {
    public void testDelegateWithProducesAndConsumesOnClassIsLazyLoaded()
          throws InterruptedException, ExecutionException {
       Injector child = injectorForCaller(new HttpCommandExecutorService() {
-
-         @Override
-         public ListenableFuture<HttpResponse> submit(HttpCommand command) {
-            throw new AssertionError("jclouds no longer uses the submit method");
-         }
-
          @Override
          public HttpResponse invoke(HttpCommand command) {
             assertEquals(
@@ -412,7 +373,6 @@ public class RestAnnotationProcessorTest extends BaseRestApiTest {
             assertTrue(command.getCurrentRequest().getHeaders().get("Accept").contains(APPLICATION_XML));
             return HttpResponse.builder().build();
          }
-
       });
 
       try {
@@ -428,18 +388,11 @@ public class RestAnnotationProcessorTest extends BaseRestApiTest {
    public void testDelegateIsLazyLoadedAndRequestIncludesEndpointVersionAndPathOptionalPresent()
          throws InterruptedException, ExecutionException {
       Injector child = injectorForCaller(new HttpCommandExecutorService() {
-
-         @Override
-         public ListenableFuture<HttpResponse> submit(HttpCommand command) {
-            throw new AssertionError("jclouds no longer uses the submit method");
-         }
-
          @Override
          public HttpResponse invoke(HttpCommand command) {
             assertEquals(command.getCurrentRequest().getRequestLine(), "GET http://howdyboys/client/1/foo HTTP/1.1");
             return HttpResponse.builder().build();
          }
-
       });
 
       try {
@@ -458,18 +411,11 @@ public class RestAnnotationProcessorTest extends BaseRestApiTest {
    public void testDelegateIsLazyLoadedAndRequestIncludesEndpointVersionAndPath() throws InterruptedException,
          ExecutionException {
       Injector child = injectorForCaller(new HttpCommandExecutorService() {
-
-         @Override
-         public ListenableFuture<HttpResponse> submit(HttpCommand command) {
-            throw new AssertionError("jclouds no longer uses the submit method");
-         }
-
          @Override
          public HttpResponse invoke(HttpCommand command) {
             assertEquals(command.getCurrentRequest().getRequestLine(), "GET http://howdyboys/client/1/foo HTTP/1.1");
             return HttpResponse.builder().build();
          }
-
       });
 
       try {

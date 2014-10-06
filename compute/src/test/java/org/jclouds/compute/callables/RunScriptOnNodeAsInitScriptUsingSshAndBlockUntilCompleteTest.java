@@ -22,7 +22,6 @@ import static org.easymock.EasyMock.createMock;
 import static org.easymock.EasyMock.expect;
 import static org.easymock.EasyMock.replay;
 import static org.easymock.EasyMock.verify;
-import static org.jclouds.Constants.PROPERTY_IO_WORKER_THREADS;
 import static org.jclouds.Constants.PROPERTY_USER_THREADS;
 import static org.jclouds.compute.config.ComputeServiceProperties.TIMEOUT_SCRIPT_COMPLETE;
 import static org.jclouds.scriptbuilder.domain.Statements.exec;
@@ -52,11 +51,10 @@ import com.google.inject.assistedinject.FactoryModuleBuilder;
 
 @Test(groups = "unit", singleThreaded = true, testName = "RunScriptOnNodeAsInitScriptUsingSshAndBlockUntilCompleteTest")
 public class RunScriptOnNodeAsInitScriptUsingSshAndBlockUntilCompleteTest {
-   Injector injector = Guice.createInjector(new ExecutorServiceModule(sameThreadExecutor(), sameThreadExecutor()),
+   Injector injector = Guice.createInjector(new ExecutorServiceModule(sameThreadExecutor()),
          new AbstractModule() {
             protected void configure() {
                bindConstant().annotatedWith(named(PROPERTY_USER_THREADS)).to(1);
-               bindConstant().annotatedWith(named(PROPERTY_IO_WORKER_THREADS)).to(1);
                bindConstant().annotatedWith(named(TIMEOUT_SCRIPT_COMPLETE)).to(100);
                install(new FactoryModuleBuilder().build(BlockUntilInitScriptStatusIsZeroThenReturnOutput.Factory.class));
             }

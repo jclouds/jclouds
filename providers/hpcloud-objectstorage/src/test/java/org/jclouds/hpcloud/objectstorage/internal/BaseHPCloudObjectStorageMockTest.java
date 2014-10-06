@@ -46,7 +46,7 @@ public class BaseHPCloudObjectStorageMockTest {
             .credentials("jclouds:joe", "letmein") //
             .endpoint(uri) //
             .overrides(overrides) //
-            .modules(ImmutableSet.<Module> of(new ExecutorServiceModule(sameThreadExecutor(), sameThreadExecutor()))) //
+            .modules(ImmutableSet.<Module> of(new ExecutorServiceModule(sameThreadExecutor()))) //
             .buildApi(HPCloudObjectStorageApi.class);
    }
 

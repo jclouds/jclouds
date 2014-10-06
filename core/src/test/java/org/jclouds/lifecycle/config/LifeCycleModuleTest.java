@@ -17,7 +17,6 @@
 package org.jclouds.lifecycle.config;
 
 import static com.google.inject.name.Names.named;
-import static org.jclouds.Constants.PROPERTY_IO_WORKER_THREADS;
 import static org.jclouds.Constants.PROPERTY_USER_THREADS;
 
 import java.io.Closeable;
@@ -48,13 +47,11 @@ public class LifeCycleModuleTest {
    void testBindsExecutor() {
       Injector i = createInjector();
       assert i.getInstance(Key.get(ListeningExecutorService.class, named(PROPERTY_USER_THREADS))) != null;
-      assert i.getInstance(Key.get(ListeningExecutorService.class, named(PROPERTY_IO_WORKER_THREADS))) != null;
    }
 
    private Injector createInjector() {
       Injector i = Guice.createInjector(new AbstractModule() {
          protected void configure() {
-            bindConstant().annotatedWith(named(PROPERTY_IO_WORKER_THREADS)).to(1);
             bindConstant().annotatedWith(named(PROPERTY_USER_THREADS)).to(1);
          }
       }, new LifeCycleModule(), new ExecutorServiceModule());
@@ -90,14 +87,10 @@ public class LifeCycleModuleTest {
       ListeningExecutorService userExecutor = i.getInstance(Key.get(ListeningExecutorService.class,
             named(PROPERTY_USER_THREADS)));
       assert !userExecutor.isShutdown();
-      ListeningExecutorService ioExecutor = i.getInstance(Key.get(ListeningExecutorService.class,
-            named(PROPERTY_IO_WORKER_THREADS)));
-      assert !ioExecutor.isShutdown();
       Closer closer = i.getInstance(Closer.class);
       assert closer.getState() == Closer.State.AVAILABLE;
       closer.close();
       assert userExecutor.isShutdown();
-      assert ioExecutor.isShutdown();
       assert closer.getState() == Closer.State.DONE;
    }
 

@@ -23,7 +23,6 @@ import static org.jclouds.http.HttpUtils.wirePayloadIfEnabled;
 import static org.jclouds.util.Throwables2.getFirstThrowableOfType;
 
 import java.io.IOException;
-import java.util.concurrent.Callable;
 
 import javax.annotation.Resource;
 import javax.inject.Inject;
@@ -43,9 +42,6 @@ import org.jclouds.http.handlers.DelegatingRetryHandler;
 import org.jclouds.io.ContentMetadataCodec;
 import org.jclouds.logging.Logger;
 
-import com.google.common.util.concurrent.ListenableFuture;
-import com.google.common.util.concurrent.ListeningExecutorService;
-
 public abstract class BaseHttpCommandExecutorService<Q> implements HttpCommandExecutorService {
    protected final HttpUtils utils;
    protected final ContentMetadataCodec contentMetadataCodec;
@@ -53,7 +49,6 @@ public abstract class BaseHttpCommandExecutorService<Q> implements HttpCommandEx
    protected final DelegatingRetryHandler retryHandler;
    protected final IOExceptionRetryHandler ioRetryHandler;
    protected final DelegatingErrorHandler errorHandler;
-   protected final ListeningExecutorService ioExecutor;
 
    @Resource
    protected Logger logger = Logger.NULL;
@@ -65,7 +60,6 @@ public abstract class BaseHttpCommandExecutorService<Q> implements HttpCommandEx
 
    @Inject
    protected BaseHttpCommandExecutorService(HttpUtils utils, ContentMetadataCodec contentMetadataCodec,
-         @Named(Constants.PROPERTY_IO_WORKER_THREADS) ListeningExecutorService ioExecutor,
          DelegatingRetryHandler retryHandler, IOExceptionRetryHandler ioRetryHandler,
          DelegatingErrorHandler errorHandler, HttpWire wire) {
       this.utils = checkNotNull(utils, "utils");
@@ -73,7 +67,6 @@ public abstract class BaseHttpCommandExecutorService<Q> implements HttpCommandEx
       this.retryHandler = checkNotNull(retryHandler, "retryHandler");
       this.ioRetryHandler = checkNotNull(ioRetryHandler, "ioRetryHandler");
       this.errorHandler = checkNotNull(errorHandler, "errorHandler");
-      this.ioExecutor = checkNotNull(ioExecutor, "ioExecutor");
       this.wire = checkNotNull(wire, "wire");
    }
 
@@ -135,37 +128,6 @@ public abstract class BaseHttpCommandExecutorService<Q> implements HttpCommandEx
          errorHandler.handleError(command, response);
       }
       return shouldContinue;
-   }
-
-   @Override
-   public ListenableFuture<HttpResponse> submit(HttpCommand command) {
-      HttpRequest request = command.getCurrentRequest();
-      checkRequestHasContentLengthOrChunkedEncoding(request,
-            "if the request has a payload, it must be set to chunked encoding or specify a content length: " + request);
-      return ioExecutor.submit(new HttpResponseCallable(command));
-   }
-
-   public class HttpResponseCallable implements Callable<HttpResponse> {
-      private final HttpCommand command;
-
-      public HttpResponseCallable(HttpCommand command) {
-         this.command = command;
-      }
-
-      public HttpResponse call() throws Exception {
-         try {
-            return invoke(command);
-         } finally {
-            if (command.getException() != null)
-               throw command.getException();
-         }
-      }
-
-      @Override
-      public String toString() {
-         return command.toString();
-      }
-
    }
 
    protected abstract Q convert(HttpRequest request) throws IOException, InterruptedException;

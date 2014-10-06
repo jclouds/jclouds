@@ -17,7 +17,6 @@
 package org.jclouds.concurrent.config;
 
 import static com.google.common.util.concurrent.MoreExecutors.listeningDecorator;
-import static org.jclouds.Constants.PROPERTY_IO_WORKER_THREADS;
 import static org.jclouds.Constants.PROPERTY_USER_THREADS;
 import static org.jclouds.concurrent.DynamicExecutors.newScalingThreadPool;
 
@@ -74,22 +73,37 @@ public class ExecutorServiceModule extends AbstractModule {
    }
 
    final ListeningExecutorService userExecutorFromConstructor;
-   final ListeningExecutorService ioExecutorFromConstructor;
 
    public ExecutorServiceModule() {
       this.userExecutorFromConstructor = null;
-      this.ioExecutorFromConstructor = null;
    }
-   
+
+   /**
+    * @deprecated {@code ioExecutor} is no longer used. This constructor will be removed in jclouds v2.
+    * Use {@link #ExecutorServiceModule(ExecutorService)} instead.
+    */
+   @Deprecated
    public ExecutorServiceModule(@Named(PROPERTY_USER_THREADS) ExecutorService userExecutor,
-         @Named(PROPERTY_IO_WORKER_THREADS) ExecutorService ioExecutor) {
-      this(listeningDecorator(userExecutor), listeningDecorator(ioExecutor));
+         ExecutorService ioExecutor) {
+      this(userExecutor);
    }
-   
+
+   /**
+    * @deprecated {@code ioExecutor} is no longer used. This constructor will be removed in jclouds v2.
+    * Use {@link #ExecutorServiceModule(ListeningExecutorService)} instead.
+    */
+   @Deprecated
    public ExecutorServiceModule(@Named(PROPERTY_USER_THREADS) ListeningExecutorService userExecutor,
-         @Named(PROPERTY_IO_WORKER_THREADS) ListeningExecutorService ioExecutor) {
+         ListeningExecutorService ioExecutor) {
+      this(userExecutor);
+   }
+
+   public ExecutorServiceModule(@Named(PROPERTY_USER_THREADS) ExecutorService userExecutor) {
+      this(listeningDecorator(userExecutor));
+   }
+
+   public ExecutorServiceModule(@Named(PROPERTY_USER_THREADS) ListeningExecutorService userExecutor) {
       this.userExecutorFromConstructor = WithSubmissionTrace.wrap(userExecutor);
-      this.ioExecutorFromConstructor = WithSubmissionTrace.wrap(ioExecutor);
    }
 
    @Override
@@ -113,25 +127,8 @@ public class ExecutorServiceModule extends AbstractModule {
 
    @Provides
    @Singleton
-   @Named(PROPERTY_IO_WORKER_THREADS)
-   ListeningExecutorService provideListeningIOExecutorService(@Named(PROPERTY_IO_WORKER_THREADS) int count,
-         Closer closer) { // NO_UCD
-      if (ioExecutorFromConstructor != null)
-         return ioExecutorFromConstructor;
-      return shutdownOnClose(WithSubmissionTrace.wrap(newThreadPoolNamed("i/o thread %d", count)), closer);
-   }
-
-   @Provides
-   @Singleton
    @Named(PROPERTY_USER_THREADS)
    ExecutorService provideUserExecutorService(@Named(PROPERTY_USER_THREADS) ListeningExecutorService in) { // NO_UCD
-      return in;
-   }
-
-   @Provides
-   @Singleton
-   @Named(PROPERTY_IO_WORKER_THREADS)
-   ExecutorService provideIOExecutorService(@Named(PROPERTY_IO_WORKER_THREADS) ListeningExecutorService in) { // NO_UCD
       return in;
    }
 
