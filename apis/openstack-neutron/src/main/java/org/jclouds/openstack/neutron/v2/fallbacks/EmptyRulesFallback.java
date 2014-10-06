@@ -19,21 +19,14 @@ package org.jclouds.openstack.neutron.v2.fallbacks;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.base.Throwables.propagate;
-import static com.google.common.util.concurrent.Futures.immediateFuture;
 import static org.jclouds.http.HttpUtils.contains404;
 import static org.jclouds.util.Throwables2.getFirstThrowableOfType;
 
 import org.jclouds.Fallback;
 import org.jclouds.openstack.neutron.v2.domain.Rules;
 import org.jclouds.rest.ResourceNotFoundException;
-import com.google.common.util.concurrent.ListenableFuture;
 
 public class EmptyRulesFallback implements Fallback<Rules> {
-
-   public ListenableFuture<Rules> create(Throwable t) throws Exception {
-      return immediateFuture(createOrPropagate(t));
-   }
-
    @Override
    public Rules createOrPropagate(Throwable t) throws Exception {
       if ((getFirstThrowableOfType(checkNotNull(t, "throwable"), ResourceNotFoundException.class) != null)

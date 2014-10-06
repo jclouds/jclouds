@@ -19,7 +19,6 @@ package org.jclouds.openstack.neutron.v2.fallbacks.lbaas.v1;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.base.Throwables.propagate;
-import static com.google.common.util.concurrent.Futures.immediateFuture;
 import static org.jclouds.http.HttpUtils.contains404;
 import static org.jclouds.util.Throwables2.getFirstThrowableOfType;
 
@@ -27,14 +26,7 @@ import org.jclouds.Fallback;
 import org.jclouds.openstack.neutron.v2.domain.lbaas.v1.Members;
 import org.jclouds.rest.ResourceNotFoundException;
 
-import com.google.common.util.concurrent.ListenableFuture;
-
 public class EmptyMembersFallback implements Fallback<Members> {
-
-   public ListenableFuture<Members> create(Throwable t) throws Exception {
-      return immediateFuture(createOrPropagate(t));
-   }
-
    @Override
    public Members createOrPropagate(Throwable t) throws Exception {
       if ((getFirstThrowableOfType(checkNotNull(t, "throwable"), ResourceNotFoundException.class) != null)

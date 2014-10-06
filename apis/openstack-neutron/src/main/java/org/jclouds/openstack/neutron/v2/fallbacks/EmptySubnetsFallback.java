@@ -17,23 +17,16 @@
 
 package org.jclouds.openstack.neutron.v2.fallbacks;
 
-import com.google.common.util.concurrent.ListenableFuture;
+import static com.google.common.base.Preconditions.checkNotNull;
+import static com.google.common.base.Throwables.propagate;
+import static org.jclouds.http.HttpUtils.contains404;
+import static org.jclouds.util.Throwables2.getFirstThrowableOfType;
+
 import org.jclouds.Fallback;
 import org.jclouds.openstack.neutron.v2.domain.Subnets;
 import org.jclouds.rest.ResourceNotFoundException;
 
-import static com.google.common.base.Preconditions.checkNotNull;
-import static com.google.common.base.Throwables.propagate;
-import static com.google.common.util.concurrent.Futures.immediateFuture;
-import static org.jclouds.http.HttpUtils.contains404;
-import static org.jclouds.util.Throwables2.getFirstThrowableOfType;
-
 public class EmptySubnetsFallback implements Fallback<Subnets> {
-
-   public ListenableFuture<Subnets> create(Throwable t) throws Exception {
-      return immediateFuture(createOrPropagate(t));
-   }
-
    @Override
    public Subnets createOrPropagate(Throwable t) throws Exception {
       if ((getFirstThrowableOfType(checkNotNull(t, "throwable"), ResourceNotFoundException.class) != null)
