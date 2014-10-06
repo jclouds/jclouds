@@ -18,48 +18,31 @@ package org.jclouds.blobstore;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.base.Throwables.propagate;
-import static com.google.common.util.concurrent.Futures.immediateFuture;
 import static org.jclouds.http.HttpUtils.contains404;
 
 import org.jclouds.Fallback;
-
-import com.google.common.util.concurrent.ListenableFuture;
 
 public final class BlobStoreFallbacks {
    private BlobStoreFallbacks() {
    }
    
    public static final class ThrowContainerNotFoundOn404 implements Fallback<Object> {
-      public ListenableFuture<Object> create(Throwable t) throws Exception {
-         return immediateFuture(createOrPropagate(t));
-      }
-
       public Object createOrPropagate(Throwable t) throws Exception {
          if (contains404(checkNotNull(t, "throwable")))
             throw new ContainerNotFoundException(t);
          throw propagate(t);
       }
-
    }
 
    public static final class ThrowKeyNotFoundOn404 implements Fallback<Object> {
-      public ListenableFuture<Object> create(Throwable t) throws Exception {
-         return immediateFuture(createOrPropagate(t));
-      }
-
       public Object createOrPropagate(Throwable t) throws Exception {
          if (contains404(checkNotNull(t, "throwable")))
             throw new KeyNotFoundException(t);
          throw propagate(t);
       }
-
    }
 
    public static final class FalseOnContainerNotFound implements Fallback<Boolean> {
-      public ListenableFuture<Boolean> create(Throwable t) throws Exception {
-         return immediateFuture(createOrPropagate(t));
-      }
-
       public Boolean createOrPropagate(Throwable t) throws Exception {
          if (checkNotNull(t, "throwable") instanceof ContainerNotFoundException) {
             return false;
@@ -69,10 +52,6 @@ public final class BlobStoreFallbacks {
    }
 
    public static final class FalseOnKeyNotFound implements Fallback<Boolean> {
-      public ListenableFuture<Boolean> create(Throwable t) throws Exception {
-         return immediateFuture(createOrPropagate(t));
-      }
-
       public Boolean createOrPropagate(Throwable t) throws Exception {
          if (checkNotNull(t, "throwable") instanceof KeyNotFoundException) {
             return false;
@@ -82,10 +61,6 @@ public final class BlobStoreFallbacks {
    }
 
    public static final class NullOnContainerNotFound implements Fallback<Object> {
-      public ListenableFuture<Object> create(Throwable t) throws Exception {
-         return immediateFuture(createOrPropagate(t));
-      }
-
       public Object createOrPropagate(Throwable t) throws Exception {
          if (checkNotNull(t, "throwable") instanceof ContainerNotFoundException) {
             return null;
@@ -95,10 +70,6 @@ public final class BlobStoreFallbacks {
    }
 
    public static final class NullOnKeyNotFound implements Fallback<Object> {
-      public ListenableFuture<Object> create(Throwable t) throws Exception {
-         return immediateFuture(createOrPropagate(t));
-      }
-
       public Object createOrPropagate(Throwable t) throws Exception {
          if (checkNotNull(t, "throwable") instanceof KeyNotFoundException) {
             return null;
@@ -108,10 +79,6 @@ public final class BlobStoreFallbacks {
    }
 
    public static final class NullOnKeyAlreadyExists implements Fallback<Object> {
-      public ListenableFuture<Object> create(Throwable t) throws Exception {
-         return immediateFuture(createOrPropagate(t));
-      }
-
       public Object createOrPropagate(Throwable t) throws Exception {
          if (checkNotNull(t, "throwable") instanceof KeyAlreadyExistsException) {
             return null;

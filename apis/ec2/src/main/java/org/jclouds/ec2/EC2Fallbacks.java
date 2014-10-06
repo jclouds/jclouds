@@ -18,25 +18,18 @@ package org.jclouds.ec2;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.base.Throwables.propagate;
-import static com.google.common.util.concurrent.Futures.immediateFuture;
 
 import org.jclouds.Fallback;
 import org.jclouds.aws.AWSResponseException;
 
 import com.google.common.base.Predicates;
 import com.google.common.collect.ImmutableSet;
-import com.google.common.util.concurrent.ListenableFuture;
 
 public final class EC2Fallbacks {
    private EC2Fallbacks() {
    }
 
    public static final class VoidOnVolumeAvailable implements Fallback<Void> {
-      @Override
-      public ListenableFuture<Void> create(Throwable t) throws Exception {
-         return immediateFuture(createOrPropagate(t));
-      }
-
       @Override
       public Void createOrPropagate(Throwable t) throws Exception {
          if (checkNotNull(t, "throwable") instanceof AWSResponseException) {

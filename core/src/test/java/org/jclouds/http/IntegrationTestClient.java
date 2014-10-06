@@ -16,8 +16,6 @@
  */
 package org.jclouds.http;
 
-import static com.google.common.util.concurrent.Futures.immediateFuture;
-
 import java.io.Closeable;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -51,7 +49,6 @@ import org.jclouds.util.Strings2;
 
 import com.google.common.base.Function;
 import com.google.common.collect.Multimap;
-import com.google.common.util.concurrent.ListenableFuture;
 import com.google.inject.Provides;
 
 /**
@@ -89,10 +86,6 @@ public interface IntegrationTestClient extends Closeable {
    String downloadException(@PathParam("id") String id, HttpRequestOptions options);
 
    static class FooOnException implements org.jclouds.Fallback<String> {
-      public ListenableFuture<String> create(Throwable t) throws Exception {
-         return immediateFuture("foo");
-      }
-
       public String createOrPropagate(Throwable t) throws Exception {
          return "foo";
       }

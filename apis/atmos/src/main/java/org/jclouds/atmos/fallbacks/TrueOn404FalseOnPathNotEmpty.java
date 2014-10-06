@@ -17,7 +17,6 @@
 package org.jclouds.atmos.fallbacks;
 
 import static com.google.common.base.Throwables.propagate;
-import static com.google.common.util.concurrent.Futures.immediateFuture;
 import static org.jclouds.util.Throwables2.getFirstThrowableOfType;
 
 import org.jclouds.Fallback;
@@ -25,14 +24,7 @@ import org.jclouds.atmos.AtmosResponseException;
 import org.jclouds.atmos.reference.AtmosErrorCode;
 import org.jclouds.http.HttpUtils;
 
-import com.google.common.util.concurrent.ListenableFuture;
-
 public final class TrueOn404FalseOnPathNotEmpty implements Fallback<Boolean> {
-   @Override
-   public ListenableFuture<Boolean> create(Throwable t) throws Exception {
-      return immediateFuture(createOrPropagate(t));
-   }
-
    @Override
    public Boolean createOrPropagate(Throwable t) throws Exception {
       if (HttpUtils.contains404(t)) {

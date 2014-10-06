@@ -34,47 +34,42 @@ import com.google.common.net.HttpHeaders;
 public class HeaderToRetryAfterExceptionTest {
 
    @Test(expectedExceptions = RuntimeException.class)
-   public void testArbitraryExceptionDoesntConvert() {
-      fn.create(new RuntimeException());
+   public void testArbitraryExceptionDoesntConvert() throws Exception {
+      fn.createOrPropagate(new RuntimeException());
    }
    
-   public void testHttpResponseExceptionWithoutResponseDoesntPropagate() {
-      fn.create(new HttpResponseException("message", command, null));
+   public void testHttpResponseExceptionWithoutResponseDoesntPropagate() throws Exception {
+      fn.createOrPropagate(new HttpResponseException("message", command, null));
    }
 
-   public void testHttpResponseExceptionWithoutRetryAfterHeaderDoesntPropagate() {
-      fn.create(new HttpResponseException(command, HttpResponse.builder().statusCode(500).build()));
+   public void testHttpResponseExceptionWithoutRetryAfterHeaderDoesntPropagate() throws Exception {
+      fn.createOrPropagate(new HttpResponseException(command, HttpResponse.builder().statusCode(500).build()));
    }
 
-   public void testHttpResponseExceptionWithMalformedRetryAfterHeaderDoesntConvert() {
-      fn.create(new HttpResponseException(command, 
-            HttpResponse.builder()
-                        .statusCode(503)
-                        .addHeader(HttpHeaders.RETRY_AFTER, "Fri, 31 Dec 1999 23:59:59 ZBW").build()));
+   public void testHttpResponseExceptionWithMalformedRetryAfterHeaderDoesntConvert() throws Exception {
+      fn.createOrPropagate(new HttpResponseException(command,
+            HttpResponse.builder().statusCode(503).addHeader(HttpHeaders.RETRY_AFTER, "Fri, 31 Dec 1999 23:59:59 ZBW")
+                  .build()));
    }
    
    @Test(expectedExceptions = RetryAfterException.class, expectedExceptionsMessageRegExp = "retry now")
-   public void testHttpResponseExceptionWithRetryAfterDate() {
-      fn.create(new HttpResponseException(command, 
-            HttpResponse.builder()
-                        .statusCode(503)
-                        .addHeader(HttpHeaders.RETRY_AFTER, "Fri, 31 Dec 1999 23:59:59 GMT").build()));
+   public void testHttpResponseExceptionWithRetryAfterDate() throws Exception {
+      fn.createOrPropagate(new HttpResponseException(command,
+            HttpResponse.builder().statusCode(503).addHeader(HttpHeaders.RETRY_AFTER, "Fri, 31 Dec 1999 23:59:59 GMT")
+                  .build()));
    }
    
    @Test(expectedExceptions = RetryAfterException.class, expectedExceptionsMessageRegExp = "retry in 700 seconds")
-   public void testHttpResponseExceptionWithRetryAfterOffset() {
-      fn.create(new HttpResponseException(command, 
-            HttpResponse.builder()
-                        .statusCode(503)
-                        .addHeader(HttpHeaders.RETRY_AFTER, "700").build()));
+   public void testHttpResponseExceptionWithRetryAfterOffset() throws Exception {
+      fn.createOrPropagate(new HttpResponseException(command,
+            HttpResponse.builder().statusCode(503).addHeader(HttpHeaders.RETRY_AFTER, "700").build()));
    }
    
    @Test(expectedExceptions = RetryAfterException.class, expectedExceptionsMessageRegExp = "retry in 86400 seconds")
-   public void testHttpResponseExceptionWithRetryAfterPastIsZero() {
-      fn.create(new HttpResponseException(command, 
-            HttpResponse.builder()
-                        .statusCode(503)
-                        .addHeader(HttpHeaders.RETRY_AFTER, "Sun, 2 Jan 2000 00:00:00 GMT").build()));
+   public void testHttpResponseExceptionWithRetryAfterPastIsZero() throws Exception {
+      fn.createOrPropagate(new HttpResponseException(command,
+            HttpResponse.builder().statusCode(503).addHeader(HttpHeaders.RETRY_AFTER, "Sun, 2 Jan 2000 00:00:00 GMT")
+                  .build()));
    }
 
    public static HttpCommand command = new HttpCommand(HttpRequest.builder().method("GET").endpoint("http://stub").build());

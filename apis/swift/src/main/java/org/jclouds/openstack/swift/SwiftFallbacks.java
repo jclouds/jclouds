@@ -19,24 +19,16 @@ package org.jclouds.openstack.swift;
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.base.Predicates.equalTo;
 import static com.google.common.base.Throwables.propagate;
-import static com.google.common.util.concurrent.Futures.immediateFuture;
 import static org.jclouds.http.HttpUtils.contains404;
 import static org.jclouds.http.HttpUtils.returnValueOnCodeOrNull;
 
 import org.jclouds.Fallback;
-
-import com.google.common.util.concurrent.ListenableFuture;
 
 public final class SwiftFallbacks {
    private SwiftFallbacks() {
    }
 
    public static final class TrueOn404FalseOn409 implements Fallback<Boolean> {
-      @Override
-      public ListenableFuture<Boolean> create(Throwable t) throws Exception {
-         return immediateFuture(createOrPropagate(t));
-      }
-
       @Override
       public Boolean createOrPropagate(Throwable t) throws Exception {
          if (contains404(checkNotNull(t, "throwable")))
