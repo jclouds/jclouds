@@ -17,7 +17,10 @@
 package org.jclouds.cloudservers;
 
 import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
-import static org.jclouds.Fallbacks.*;
+import static org.jclouds.Fallbacks.EmptySetOnNotFoundOr404;
+import static org.jclouds.Fallbacks.FalseOnNotFoundOr404;
+import static org.jclouds.Fallbacks.NullOnNotFoundOr404;
+import static org.jclouds.Fallbacks.VoidOnNotFoundOr404;
 
 import java.io.Closeable;
 import java.util.Set;
@@ -30,9 +33,7 @@ import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
-import javax.ws.rs.core.MediaType;
 
-import org.jclouds.Fallbacks;
 import org.jclouds.cloudservers.binders.BindBackupScheduleToJsonPayload;
 import org.jclouds.cloudservers.domain.Addresses;
 import org.jclouds.cloudservers.domain.BackupSchedule;
@@ -58,8 +59,6 @@ import org.jclouds.rest.annotations.PayloadParam;
 import org.jclouds.rest.annotations.QueryParams;
 import org.jclouds.rest.annotations.RequestFilters;
 import org.jclouds.rest.annotations.Unwrap;
-
-import com.google.common.util.concurrent.ListenableFuture;
 
 /**
  * Provides access to Cloud Servers via their REST API.
