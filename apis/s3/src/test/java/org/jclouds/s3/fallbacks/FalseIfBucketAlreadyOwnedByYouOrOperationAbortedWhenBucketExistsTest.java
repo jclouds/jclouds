@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 package org.jclouds.s3.fallbacks;
-import static com.google.common.util.concurrent.Futures.getUnchecked;
+
 import static org.easymock.EasyMock.createMock;
 import static org.easymock.EasyMock.expect;
 import static org.easymock.EasyMock.replay;
@@ -55,8 +55,8 @@ public class FalseIfBucketAlreadyOwnedByYouOrOperationAbortedWhenBucketExistsTes
       replay(client);
 
       Exception e = getErrorWithCode("BucketAlreadyOwnedByYou");
-      assertFalse(getUnchecked(new FalseIfBucketAlreadyOwnedByYouOrOperationAbortedWhenBucketExists(client).setContext(
-            putBucket).create(e)));
+      assertFalse(new FalseIfBucketAlreadyOwnedByYouOrOperationAbortedWhenBucketExists(client).setContext(
+            putBucket).createOrPropagate(e));
       verify(client);
    }
 
@@ -66,8 +66,8 @@ public class FalseIfBucketAlreadyOwnedByYouOrOperationAbortedWhenBucketExistsTes
       expect(client.bucketExists("bucket")).andReturn(true);
       replay(client);
       Exception e = getErrorWithCode("OperationAborted");
-      assertFalse(getUnchecked(new FalseIfBucketAlreadyOwnedByYouOrOperationAbortedWhenBucketExists(client).setContext(
-            putBucket).create(e)));
+      assertFalse(new FalseIfBucketAlreadyOwnedByYouOrOperationAbortedWhenBucketExists(client).setContext(
+            putBucket).createOrPropagate(e));
       verify(client);
    }
 
@@ -77,7 +77,8 @@ public class FalseIfBucketAlreadyOwnedByYouOrOperationAbortedWhenBucketExistsTes
       expect(client.bucketExists("bucket")).andReturn(false);
       replay(client);
       Exception e = getErrorWithCode("OperationAborted");
-      new FalseIfBucketAlreadyOwnedByYouOrOperationAbortedWhenBucketExists(client).setContext(putBucket).create(e);
+      new FalseIfBucketAlreadyOwnedByYouOrOperationAbortedWhenBucketExists(client).setContext(putBucket)
+            .createOrPropagate(e);
    }
 
    @Test(expectedExceptions = IllegalStateException.class)
@@ -86,7 +87,7 @@ public class FalseIfBucketAlreadyOwnedByYouOrOperationAbortedWhenBucketExistsTes
       replay(client);
 
       Exception e = new IllegalStateException();
-      new FalseIfBucketAlreadyOwnedByYouOrOperationAbortedWhenBucketExists(client).create(e);
+      new FalseIfBucketAlreadyOwnedByYouOrOperationAbortedWhenBucketExists(client).createOrPropagate(e);
    }
 
    @Test(expectedExceptions = AWSResponseException.class)
@@ -94,7 +95,7 @@ public class FalseIfBucketAlreadyOwnedByYouOrOperationAbortedWhenBucketExistsTes
       S3Client client = createMock(S3Client.class);
       replay(client);
       Exception e = getErrorWithCode("blah");
-      new FalseIfBucketAlreadyOwnedByYouOrOperationAbortedWhenBucketExists(client).create(e);
+      new FalseIfBucketAlreadyOwnedByYouOrOperationAbortedWhenBucketExists(client).createOrPropagate(e);
    }
 
    private Exception getErrorWithCode(String code) {

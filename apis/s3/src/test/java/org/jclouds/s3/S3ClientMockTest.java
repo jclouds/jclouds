@@ -21,7 +21,6 @@ import static com.google.common.net.HttpHeaders.ETAG;
 import static com.google.common.net.HttpHeaders.EXPECT;
 import static com.google.common.util.concurrent.MoreExecutors.sameThreadExecutor;
 import static org.jclouds.Constants.PROPERTY_MAX_RETRIES;
-import static org.jclouds.Constants.PROPERTY_SO_TIMEOUT;
 import static org.testng.Assert.assertEquals;
 
 import java.io.IOException;

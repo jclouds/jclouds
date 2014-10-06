@@ -18,7 +18,6 @@ package org.jclouds.fallbacks;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.base.Throwables.propagate;
-import static com.google.common.util.concurrent.Futures.immediateFuture;
 import static java.util.concurrent.TimeUnit.MILLISECONDS;
 import static java.util.concurrent.TimeUnit.NANOSECONDS;
 
@@ -34,7 +33,6 @@ import com.google.common.annotations.Beta;
 import com.google.common.base.Optional;
 import com.google.common.base.Ticker;
 import com.google.common.net.HttpHeaders;
-import com.google.common.util.concurrent.ListenableFuture;
 
 /**
  * propagates as {@link RetryAfterException} if a Throwable is an
@@ -54,7 +52,7 @@ public final class HeaderToRetryAfterException implements PropagateIfRetryAfter 
     * 
     * @param ticker
     *           how to read current time
-    * @param dateParser
+    * @param dateCodec
     *           how to parse the {@link HttpHeaders#RETRY_AFTER} header, if it
     *           is a Date.
     * @return
@@ -76,13 +74,13 @@ public final class HeaderToRetryAfterException implements PropagateIfRetryAfter 
       this.dateCodec = checkNotNull(dateCodec, "dateCodec");
    }
 
-   @Override
-   public ListenableFuture<Object> create(Throwable t) {
+   @Override public Object createOrPropagate(Throwable t) throws Exception {
       if (!(t instanceof HttpResponseException))
          throw propagate(t);
       HttpResponse response = HttpResponseException.class.cast(t).getResponse();
-      if (response == null)
-         return immediateFuture(null);
+      if (response == null) {
+         return null;
+      }
 
       // https://tools.ietf.org/html/rfc2616#section-14.37
       String retryAfter = response.getFirstHeaderOrNull(HttpHeaders.RETRY_AFTER);
@@ -92,7 +90,7 @@ public final class HeaderToRetryAfterException implements PropagateIfRetryAfter 
             throw retryException.get();
       }
 
-      return immediateFuture(null);
+      return null;
    }
 
    /**

@@ -16,8 +16,8 @@
  */
 package org.jclouds.fallbacks;
 
-import com.google.common.util.concurrent.FutureFallback;
-import com.google.common.util.concurrent.ListenableFuture;
+import org.jclouds.Fallback;
+
 import com.google.inject.ImplementedBy;
 
 /**
@@ -25,12 +25,10 @@ import com.google.inject.ImplementedBy;
  * offset.
  */
 @ImplementedBy(HeaderToRetryAfterException.class)
-public interface PropagateIfRetryAfter extends FutureFallback<Object> {
+public interface PropagateIfRetryAfter extends Fallback<Object> {
    /**
-    * if input is not of type {@link org.jclouds.http.HttpResponseException}, this method propagates. Otherwise, immediate future of
+    * if input is not of type {@link org.jclouds.http.HttpResponseException}, this method propagates. Otherwise,
     * {@code null}, if didn't coerce to {@link org.jclouds.rest.RetryAfterException}
     */
-   @Override
-   ListenableFuture<Object> create(Throwable t);
-
+   @Override Object createOrPropagate(Throwable t) throws Exception;
 }

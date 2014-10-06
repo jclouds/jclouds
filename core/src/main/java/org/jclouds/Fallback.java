@@ -17,7 +17,6 @@
 package org.jclouds;
 
 import com.google.common.annotations.Beta;
-import com.google.common.util.concurrent.FutureFallback;
 
 /**
  * Provides a backup value to replace an earlier exception.
@@ -25,11 +24,10 @@ import com.google.common.util.concurrent.FutureFallback;
  * @param <V>
  *           the result type of the backup value
  * 
- * @see FutureFallback
  * @since 1.6
  */
 @Beta
-public interface Fallback<V> extends FutureFallback<V> {
+public interface Fallback<V> {
    /**
     * The exception is provided so that the {@code Fallback} implementation can
     * conditionally determine whether to propagate the exception or to attempt

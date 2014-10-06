@@ -17,13 +17,10 @@
 package org.jclouds.cloudstack.functions;
 
 import static com.google.common.base.Preconditions.checkNotNull;
-import static com.google.common.util.concurrent.Futures.immediateFuture;
 import static org.jclouds.Fallbacks.valOnNotFoundOr404;
 import static org.jclouds.util.Throwables2.getFirstThrowableOfType;
 
 import org.jclouds.Fallback;
-
-import com.google.common.util.concurrent.ListenableFuture;
 
 public final class CloudStackFallbacks {
    private CloudStackFallbacks() {
@@ -34,11 +31,6 @@ public final class CloudStackFallbacks {
     * have to ignore as there's no means for us to avoid the problem, or action to take.
     */
    public static final class VoidOnNotFoundOr404OrUnableToFindAccountOwner implements Fallback<Void> {
-      @Override
-      public ListenableFuture<Void> create(Throwable t) throws Exception {
-         return immediateFuture(createOrPropagate(t));
-      }
-
       @Override
       public Void createOrPropagate(Throwable t) throws Exception {
          IllegalStateException e = getFirstThrowableOfType(checkNotNull(t, "throwable"), IllegalStateException.class);

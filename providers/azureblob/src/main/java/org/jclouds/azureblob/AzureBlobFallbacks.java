@@ -18,23 +18,15 @@ package org.jclouds.azureblob;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.base.Throwables.propagate;
-import static com.google.common.util.concurrent.Futures.immediateFuture;
 
 import org.jclouds.Fallback;
 import org.jclouds.azure.storage.AzureStorageResponseException;
-
-import com.google.common.util.concurrent.ListenableFuture;
 
 public final class AzureBlobFallbacks {
    private AzureBlobFallbacks() {
    }
 
    public static final class FalseIfContainerAlreadyExists implements Fallback<Boolean> {
-      @Override
-      public ListenableFuture<Boolean> create(Throwable t) throws Exception {
-         return immediateFuture(createOrPropagate(t));
-      }
-
       @Override
       public Boolean createOrPropagate(Throwable t) throws Exception {
          if (checkNotNull(t, "throwable") instanceof AzureStorageResponseException) {

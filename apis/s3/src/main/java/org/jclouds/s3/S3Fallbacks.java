@@ -19,25 +19,17 @@ package org.jclouds.s3;
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.base.Predicates.equalTo;
 import static com.google.common.base.Throwables.propagate;
-import static com.google.common.util.concurrent.Futures.immediateFuture;
 import static org.jclouds.http.HttpUtils.returnValueOnCodeOrNull;
 import static org.jclouds.util.Throwables2.getFirstThrowableOfType;
 
 import org.jclouds.Fallback;
 import org.jclouds.blobstore.ContainerNotFoundException;
 
-import com.google.common.util.concurrent.ListenableFuture;
-
 public final class S3Fallbacks {
    private S3Fallbacks() {
    }
 
    public static final class TrueOn404OrNotFoundFalseOnIllegalState implements Fallback<Boolean> {
-      @Override
-      public ListenableFuture<Boolean> create(Throwable t) throws Exception {
-         return immediateFuture(createOrPropagate(t));
-      }
-
       @Override
       public Boolean createOrPropagate(Throwable t) throws Exception {
          if (getFirstThrowableOfType(checkNotNull(t, "throwable"), IllegalStateException.class) != null)

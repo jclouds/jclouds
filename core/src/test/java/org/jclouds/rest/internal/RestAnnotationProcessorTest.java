@@ -146,7 +146,6 @@ import com.google.common.io.ByteSource;
 import com.google.common.io.Files;
 import com.google.common.net.HttpHeaders;
 import com.google.common.reflect.Invokable;
-import com.google.common.util.concurrent.ListenableFuture;
 import com.google.inject.AbstractModule;
 import com.google.inject.ConfigurationException;
 import com.google.inject.Injector;

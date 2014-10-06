@@ -16,7 +16,6 @@
  */
 package org.jclouds.atmos.fallbacks;
 
-import static com.google.common.util.concurrent.Futures.getUnchecked;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNull;
 
@@ -30,23 +29,23 @@ public class EndpointIfAlreadyExistsTest {
 
    @Test
    public void testFoundIsNullWhenEndpointNotSet() throws Exception {
-      assertNull(getUnchecked(new EndpointIfAlreadyExists().create(new KeyAlreadyExistsException())));
+      assertNull(new EndpointIfAlreadyExists().createOrPropagate(new KeyAlreadyExistsException()));
    }
 
    @Test
    public void testFoundIsEndpointWhenSet() throws Exception {
       assertEquals(
-            getUnchecked(new EndpointIfAlreadyExists().setEndpoint(URI.create("foo")).create(
-                  new KeyAlreadyExistsException())), URI.create("foo"));
+            new EndpointIfAlreadyExists().setEndpoint(URI.create("foo")).createOrPropagate(
+                  new KeyAlreadyExistsException()), URI.create("foo"));
    }
 
    @Test(expectedExceptions = RuntimeException.class)
    public void testNotFoundPropagates() throws Exception {
-      new EndpointIfAlreadyExists().create(new RuntimeException());
+      new EndpointIfAlreadyExists().createOrPropagate(new RuntimeException());
    }
 
    @Test(expectedExceptions = NullPointerException.class)
    public void testNullIsBad() throws Exception {
-      new EndpointIfAlreadyExists().create(null);
+      new EndpointIfAlreadyExists().createOrPropagate(null);
    }
 }

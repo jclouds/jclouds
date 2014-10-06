@@ -31,27 +31,27 @@ public class MapHttp4xxCodesToExceptionsTest {
 
    @Test(expectedExceptions = AuthorizationException.class)
    public void test401ToAuthorizationException() throws Exception {
-      fn.create(new HttpResponseException(command, HttpResponse.builder().statusCode(401).build()));
+      fn.createOrPropagate(new HttpResponseException(command, HttpResponse.builder().statusCode(401).build()));
    }
 
    @Test(expectedExceptions = AuthorizationException.class)
    public void test403ToAuthorizationException() throws Exception {
-      fn.create(new HttpResponseException(command, HttpResponse.builder().statusCode(403).build()));
+      fn.createOrPropagate(new HttpResponseException(command, HttpResponse.builder().statusCode(403).build()));
    }
    
    @Test(expectedExceptions = ResourceNotFoundException.class)
    public void test404ToResourceNotFoundException() throws Exception {
-      fn.create(new HttpResponseException(command, HttpResponse.builder().statusCode(404).build()));
+      fn.createOrPropagate(new HttpResponseException(command, HttpResponse.builder().statusCode(404).build()));
    }
 
    @Test(expectedExceptions = IllegalStateException.class)
    public void test409ToIllegalStateException() throws Exception {
-      fn.create(new HttpResponseException(command, HttpResponse.builder().statusCode(409).build()));
+      fn.createOrPropagate(new HttpResponseException(command, HttpResponse.builder().statusCode(409).build()));
    }
    
    @Test(expectedExceptions = RetryAfterException.class, expectedExceptionsMessageRegExp = "retry now")
    public void testHttpResponseExceptionWithRetryAfterDate() throws Exception {
-      fn.create(new HttpResponseException(command, 
+      fn.createOrPropagate(new HttpResponseException(command,
             HttpResponse.builder()
                         .statusCode(503)
                         .addHeader(HttpHeaders.RETRY_AFTER, "Fri, 31 Dec 1999 23:59:59 GMT").build()));
@@ -59,7 +59,7 @@ public class MapHttp4xxCodesToExceptionsTest {
    
    @Test(expectedExceptions = RetryAfterException.class, expectedExceptionsMessageRegExp = "retry in 700 seconds")
    public void testHttpResponseExceptionWithRetryAfterOffset() throws Exception {
-      fn.create(new HttpResponseException(command, 
+      fn.createOrPropagate(new HttpResponseException(command,
             HttpResponse.builder()
                         .statusCode(503)
                         .addHeader(HttpHeaders.RETRY_AFTER, "700").build()));
@@ -67,7 +67,7 @@ public class MapHttp4xxCodesToExceptionsTest {
    
    @Test(expectedExceptions = RetryAfterException.class, expectedExceptionsMessageRegExp = "retry in 86400 seconds")
    public void testHttpResponseExceptionWithRetryAfterPastIsZero() throws Exception {
-      fn.create(new HttpResponseException(command, 
+      fn.createOrPropagate(new HttpResponseException(command,
             HttpResponse.builder()
                         .statusCode(503)
                         .addHeader(HttpHeaders.RETRY_AFTER, "Sun, 2 Jan 2000 00:00:00 GMT").build()));

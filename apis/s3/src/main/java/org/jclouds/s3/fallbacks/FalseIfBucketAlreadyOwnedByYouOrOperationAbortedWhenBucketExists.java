@@ -18,7 +18,6 @@ package org.jclouds.s3.fallbacks;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.base.Throwables.propagate;
-import static com.google.common.util.concurrent.Futures.immediateFuture;
 import static org.jclouds.s3.util.S3Utils.getBucketName;
 import static org.jclouds.util.Throwables2.getFirstThrowableOfType;
 
@@ -31,8 +30,6 @@ import org.jclouds.javax.annotation.Nullable;
 import org.jclouds.rest.InvocationContext;
 import org.jclouds.s3.S3Client;
 
-import com.google.common.util.concurrent.ListenableFuture;
-
 public class FalseIfBucketAlreadyOwnedByYouOrOperationAbortedWhenBucketExists implements Fallback<Boolean>,
       InvocationContext<FalseIfBucketAlreadyOwnedByYouOrOperationAbortedWhenBucketExists> {
 
@@ -42,11 +39,6 @@ public class FalseIfBucketAlreadyOwnedByYouOrOperationAbortedWhenBucketExists im
    @Inject
    FalseIfBucketAlreadyOwnedByYouOrOperationAbortedWhenBucketExists(S3Client client) {
       this.client = client;
-   }
-
-   @Override
-   public ListenableFuture<Boolean> create(Throwable t) throws Exception {
-      return immediateFuture(createOrPropagate(t));
    }
 
    @Override
