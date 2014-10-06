@@ -33,6 +33,7 @@ import org.jclouds.Fallbacks.NullOnNotFoundOr404;
 import org.jclouds.googlecloudstorage.binders.BucketAccessControlsBinder;
 import org.jclouds.googlecloudstorage.domain.BucketAccessControls;
 import org.jclouds.googlecloudstorage.domain.ListBucketAccessControls;
+import org.jclouds.googlecloudstorage.domain.templates.BucketAccessControlsTemplate;
 import org.jclouds.http.HttpResponse;
 import org.jclouds.javax.annotation.Nullable;
 import org.jclouds.oauth.v2.config.OAuthScopes;
@@ -84,8 +85,8 @@ public interface BucketAccessControlsApi {
     * @param bucketName
     *           Name of the bucket of which ACL to be created
     *
-    * @param bucketAccessControls
-    *           In the request body,supply a BucketAccessControls resource with role and entity
+    * @param template
+    *           In the request body,supply a {@link BucketAccessControlsTemplate} resource with role and entity
     *
     * @return If successful, this method returns a BucketAccessControls resource in the response body
     */
@@ -97,7 +98,7 @@ public interface BucketAccessControlsApi {
    @OAuthScopes(STORAGE_FULLCONTROL_SCOPE)
    @MapBinder(BucketAccessControlsBinder.class)
    BucketAccessControls createBucketAccessControls(@PathParam("bucket") String bucketName,
-            @PayloadParam("BACLInsert") BucketAccessControls bucketAccessControls);
+            @PayloadParam("template") BucketAccessControlsTemplate template);
 
    /**
     * Permanently deletes the ACL entry for the specified entity on the specified bucket.
@@ -143,9 +144,9 @@ public interface BucketAccessControlsApi {
     * @param entity
     *           The entity holding the permission. Can be user-userId, user-emailAddress, group-groupId,
     *           group-emailAddress, allUsers, or allAuthenticatedUsers. In the request body, supply a
-    *           BucketAccessControls resource with role
+    *           {@link BucketAccessControlsTemplate} resource with role
     *
-    * @return If successful, this method returns a BucketAccessControls resource in the response body
+    * @return If successful, this method returns a {@link BucketAccessControlsTemplate} resource in the response body
     */
 
    @Named("BucketAccessControls:update")
@@ -157,7 +158,7 @@ public interface BucketAccessControlsApi {
    @Fallback(NullOnNotFoundOr404.class)
    BucketAccessControls updateBucketAccessControls(@PathParam("bucket") String bucketName,
             @PathParam("entity") String entity,
-            @BinderParam(BindToJsonPayload.class) BucketAccessControls bucketAccessControls);
+            @BinderParam(BindToJsonPayload.class) BucketAccessControlsTemplate template);
 
    /**
     * Updates an ACL entry on the specified bucket.
@@ -168,8 +169,8 @@ public interface BucketAccessControlsApi {
     *           The entity holding the permission. Can be user-userId, user-emailAddress, group-groupId,
     *           group-emailAddress, allUsers, or allAuthenticatedUsers
     *
-    * @param bucketAccessControls
-    *           In the request body, supply a BucketAccessControls resource with role
+    * @param template
+    *           In the request body, supply a {@link BucketAccessControlsTemplate} resource with role
     *
     * @return If successful, this method returns a BucketAccessControls resource in the response body
     */
@@ -183,5 +184,5 @@ public interface BucketAccessControlsApi {
    @Fallback(NullOnNotFoundOr404.class)
    BucketAccessControls patchBucketAccessControls(@PathParam("bucket") String bucketName,
             @PathParam("entity") String entity,
-            @BinderParam(BindToJsonPayload.class) BucketAccessControls bucketAccessControls);
+            @BinderParam(BindToJsonPayload.class) BucketAccessControlsTemplate template);
 }
