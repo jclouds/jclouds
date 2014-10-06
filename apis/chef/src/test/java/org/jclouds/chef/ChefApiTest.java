@@ -56,8 +56,8 @@ import org.jclouds.http.functions.ReturnInputStream;
 import org.jclouds.io.Payload;
 import org.jclouds.io.payloads.StringPayload;
 import org.jclouds.reflect.Invocation;
-import org.jclouds.rest.ConfiguresRestClient;
-import org.jclouds.rest.internal.BaseAsyncApiTest;
+import org.jclouds.rest.ConfiguresHttpApi;
+import org.jclouds.rest.internal.BaseRestAnnotationProcessingTest;
 import org.jclouds.rest.internal.GeneratedHttpRequest;
 import org.testng.annotations.Test;
 
@@ -71,7 +71,7 @@ import com.google.inject.Module;
  * Tests annotation parsing of {@code ChefApi}.
  */
 @Test(groups = { "unit" })
-public class ChefApiTest extends BaseAsyncApiTest<ChefApi> {
+public class ChefApiTest extends BaseRestAnnotationProcessingTest<ChefApi> {
 
    public void testCommitSandbox() throws SecurityException, NoSuchMethodException, IOException {
 
@@ -713,7 +713,7 @@ public class ChefApiTest extends BaseAsyncApiTest<ChefApi> {
 
    @Override
    protected Module createModule() {
-      return new TestChefRestClientModule();
+      return new TestChefHttpApiModule();
    }
 
    @Override
@@ -723,8 +723,8 @@ public class ChefApiTest extends BaseAsyncApiTest<ChefApi> {
       return props;
    }
 
-   @ConfiguresRestClient
-   static class TestChefRestClientModule extends ChefHttpApiModule {
+   @ConfiguresHttpApi
+   static class TestChefHttpApiModule extends ChefHttpApiModule {
       @Override
       protected String provideTimeStamp(@TimeStamp Supplier<String> cache) {
          return "timestamp";
