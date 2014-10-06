@@ -27,7 +27,6 @@ import org.jclouds.atmos.blobstore.config.AtmosBlobStoreContextModule;
 import org.jclouds.atmos.config.AtmosHttpApiModule;
 import org.jclouds.blobstore.BlobStoreContext;
 import org.jclouds.rest.internal.BaseHttpApiMetadata;
-import org.jclouds.rest.internal.BaseRestApiMetadata;
 
 import com.google.common.collect.ImmutableSet;
 import com.google.inject.Module;
@@ -52,7 +51,7 @@ public class AtmosApiMetadata extends BaseHttpApiMetadata {
    }
 
    public static Properties defaultProperties() {
-      Properties properties = BaseRestApiMetadata.defaultProperties();
+      Properties properties = BaseHttpApiMetadata.defaultProperties();
       properties.setProperty(PROPERTY_REGIONS, "DEFAULT");
       properties.setProperty(PROPERTY_USER_METADATA_PREFIX, "X-Object-Meta-");
       return properties;
