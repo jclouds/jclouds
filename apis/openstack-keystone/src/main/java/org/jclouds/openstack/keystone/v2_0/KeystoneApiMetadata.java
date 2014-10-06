@@ -32,7 +32,6 @@ import org.jclouds.openstack.v2_0.ServiceType;
 import org.jclouds.rest.internal.BaseHttpApiMetadata;
 
 import com.google.common.collect.ImmutableSet;
-import com.google.common.reflect.TypeToken;
 import com.google.inject.Module;
 
 /**

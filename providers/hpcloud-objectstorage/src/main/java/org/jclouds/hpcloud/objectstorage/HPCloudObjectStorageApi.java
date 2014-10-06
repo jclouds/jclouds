@@ -42,7 +42,6 @@ import org.jclouds.rest.annotations.QueryParams;
 import org.jclouds.rest.annotations.RequestFilters;
 
 import com.google.common.base.Optional;
-import com.google.common.util.concurrent.ListenableFuture;
 import com.google.inject.Provides;
 
 /** Provides synchronous access to HP Cloud Object Storage via the REST API. */
