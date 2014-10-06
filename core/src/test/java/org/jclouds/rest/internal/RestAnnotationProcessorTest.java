@@ -18,8 +18,11 @@ package org.jclouds.rest.internal;
 
 import static com.google.common.base.Charsets.UTF_8;
 import static com.google.common.base.Preconditions.checkNotNull;
+import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
+import static javax.ws.rs.core.MediaType.APPLICATION_XML;
 import static org.jclouds.io.Payloads.newInputStreamPayload;
 import static org.jclouds.io.Payloads.newStringPayload;
+import static org.jclouds.providers.AnonymousProviderMetadata.forApiOnEndpoint;
 import static org.jclouds.reflect.Reflection2.method;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNull;
@@ -38,6 +41,7 @@ import java.lang.annotation.Target;
 import java.net.URI;
 import java.net.URLEncoder;
 import java.security.NoSuchAlgorithmException;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
@@ -45,6 +49,7 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
 import java.util.concurrent.ExecutionException;
+
 import javax.inject.Named;
 import javax.inject.Qualifier;
 import javax.inject.Singleton;
@@ -90,10 +95,8 @@ import org.jclouds.io.PayloadEnclosing;
 import org.jclouds.io.Payloads;
 import org.jclouds.javax.annotation.Nullable;
 import org.jclouds.logging.config.NullLoggingModule;
-import org.jclouds.providers.AnonymousProviderMetadata;
 import org.jclouds.reflect.Invocation;
-import org.jclouds.reflect.InvocationSuccess;
-import org.jclouds.rest.ConfiguresRestClient;
+import org.jclouds.rest.ConfiguresHttpApi;
 import org.jclouds.rest.InvocationContext;
 import org.jclouds.rest.annotations.BinderParam;
 import org.jclouds.rest.annotations.Delegate;
@@ -119,8 +122,7 @@ import org.jclouds.rest.annotations.WrapWith;
 import org.jclouds.rest.binders.BindAsHostPrefix;
 import org.jclouds.rest.binders.BindToJsonPayload;
 import org.jclouds.rest.binders.BindToStringPayload;
-import org.jclouds.rest.config.RestClientModule;
-import org.jclouds.rest.functions.ImplicitOptionalConverter;
+import org.jclouds.rest.config.HttpApiModule;
 import org.jclouds.util.Strings2;
 import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
@@ -144,7 +146,6 @@ import com.google.common.io.ByteSource;
 import com.google.common.io.Files;
 import com.google.common.net.HttpHeaders;
 import com.google.common.reflect.Invokable;
-import com.google.common.util.concurrent.Futures;
 import com.google.common.util.concurrent.ListenableFuture;
 import com.google.inject.AbstractModule;
 import com.google.inject.ConfigurationException;
@@ -152,19 +153,12 @@ import com.google.inject.Injector;
 import com.google.inject.Module;
 import com.google.inject.Provides;
 import com.google.inject.TypeLiteral;
-/**
- * Tests behavior of {@code RestAnnotationProcessor}
- */
-// NOTE:without testName, this will not call @Before* and fail w/NPE during
-// surefire
+
 @Test(groups = "unit", testName = "RestAnnotationProcessorTest")
 public class RestAnnotationProcessorTest extends BaseRestApiTest {
 
-   @ConfiguresRestClient
-   protected static class CallerModule extends RestClientModule<Caller, AsyncCaller> {
-      CallerModule() {
-         super(ImmutableMap.<Class<?>, Class<?>> of(Callee.class, AsyncCallee.class, Callee2.class, AsyncCallee2.class));
-      }
+   @ConfiguresHttpApi
+   protected static class CallerModule extends HttpApiModule<Caller> {
 
       @Override
       protected void configure() {
@@ -176,39 +170,37 @@ public class RestAnnotationProcessorTest extends BaseRestApiTest {
    }
 
    @Path("/client/{jclouds.api-version}")
-   public interface AsyncCallee extends Closeable {
+   public interface Callee extends Closeable {
       @GET
       @Path("/{path}")
-      ListenableFuture<Void> onePath(@PathParam("path") String path);
+      void onePath(@PathParam("path") String path);
 
       @POST
-      ListenableFuture<Void> testWithoutProducesAndConsumes();
+      void testWithoutProducesAndConsumes();
 
       @POST
-      @Produces(MediaType.APPLICATION_XML)
-      @Consumes(MediaType.APPLICATION_XML)
-      ListenableFuture<Void> testProducesAndConsumesOnMethod();
+      @Produces(APPLICATION_XML)
+      @Consumes(APPLICATION_XML)
+      void testProducesAndConsumesOnMethod();
    }
 
    @Path("/client/{jclouds.api-version}")
-   @Produces(MediaType.APPLICATION_XML)
-   @Consumes(MediaType.APPLICATION_XML)
-   public interface AsyncCalleeWithProducesAndConsumesOnClass extends Closeable {
+   @Produces(APPLICATION_XML)
+   @Consumes(APPLICATION_XML)
+   public interface CalleeWithProducesAndConsumesOnClass extends Closeable {
       @POST
-      ListenableFuture<Void> testProducesAndConsumesOnClass();
+      void testProducesAndConsumesOnClass();
    }
 
    @Path("/client/{jclouds.api-version}")
-   public interface AsyncCallee2 {
+   public interface Callee2 {
       @GET
       @Path("/{path}/2")
-      ListenableFuture<Void> onePath(@PathParam("path") String path);
+      void onePath(@PathParam("path") String path);
    }
 
    @Endpoint(Localhost2.class)
    public interface Caller extends Closeable {
-
-      // tests that we can pull from suppliers
       @Provides
       @Localhost2
       URI getURI();
@@ -233,96 +225,19 @@ public class RestAnnotationProcessorTest extends BaseRestApiTest {
       Callee getCalleeWithHeader(@EndpointParam URI endpoint, @HeaderParam("header") String header);
 
       @Delegate
+      @Produces(APPLICATION_JSON)
+      @Consumes(APPLICATION_JSON)
       Callee getCalleeWithoutProducesAndConsumes();
 
       @Delegate
+      @Produces(APPLICATION_JSON)
+      @Consumes(APPLICATION_JSON)
       Callee getCalleeWithProducesAndConsumesOnMethod();
 
       @Delegate
+      @Produces(APPLICATION_JSON)
+      @Consumes(APPLICATION_JSON)
       CalleeWithProducesAndConsumesOnClass getCalleeWithProducesAndConsumesOnClass();
-   }
-
-   public interface Callee extends Closeable {
-      void onePath(String path);
-      void testWithoutProducesAndConsumes();
-      void testProducesAndConsumesOnMethod();
-   }
-
-   public interface CalleeWithProducesAndConsumesOnClass extends Closeable {
-      void testProducesAndConsumesOnClass();
-   }
-
-   public interface Callee2 {
-      void onePath(String path);
-   }
-
-   public interface AsyncCaller extends Closeable {
-      @Provides
-      @Localhost2
-      URI getURI();
-
-      @Delegate
-      AsyncCallee getCallee();
-
-      @Delegate
-      AsyncCallee2 getCallee2();
-
-      @Delegate
-      AsyncCallee getCallee(@EndpointParam URI endpoint);
-
-      @Delegate
-      Optional<AsyncCallee> getOptionalCallee(@EndpointParam URI endpoint);
-
-      @Delegate
-      @Path("/testing/testing/{wibble}")
-      AsyncCallee getCalleeWithPath(@EndpointParam URI endpoint, @PathParam("wibble") String wibble);
-
-      @Delegate
-      AsyncCallee getCalleeWithHeader(@EndpointParam URI endpoint, @HeaderParam("header") String header);
-
-      @Delegate
-      @Produces(MediaType.APPLICATION_JSON)
-      @Consumes(MediaType.APPLICATION_JSON)
-      AsyncCallee getCalleeWithoutProducesAndConsumes();
-
-      @Delegate
-      @Produces(MediaType.APPLICATION_JSON)
-      @Consumes(MediaType.APPLICATION_JSON)
-      AsyncCallee getCalleeWithProducesAndConsumesOnMethod();
-
-      @Delegate
-      @Produces(MediaType.APPLICATION_JSON)
-      @Consumes(MediaType.APPLICATION_JSON)
-      AsyncCalleeWithProducesAndConsumesOnClass getCalleeWithProducesAndConsumesOnClass();
-   }
-
-   public void testAsyncDelegateIsLazyLoadedAndRequestIncludesVersionAndPath() throws InterruptedException,
-         ExecutionException {
-      Injector child = injectorForCaller(new HttpCommandExecutorService() {
-
-         @Override
-         public ListenableFuture<HttpResponse> submit(HttpCommand command) {
-            return Futures.immediateFuture(invoke(command));
-         }
-
-         @Override
-         public HttpResponse invoke(HttpCommand command) {
-            assertEquals(command.getCurrentRequest().getRequestLine(),
-                  "GET http://localhost:9999/client/1/foo HTTP/1.1");
-            return HttpResponse.builder().build();
-         }
-
-      });
-
-      try {
-         child.getInstance(AsyncCallee.class);
-         fail("Callee shouldn't be bound yet");
-      } catch (ConfigurationException e) {
-
-      }
-
-      child.getInstance(AsyncCaller.class).getCallee().onePath("foo").get();
-
    }
 
    public void testDelegateIsLazyLoadedAndRequestIncludesVersionAndPath() throws InterruptedException,
@@ -332,7 +247,7 @@ public class RestAnnotationProcessorTest extends BaseRestApiTest {
 
          @Override
          public ListenableFuture<HttpResponse> submit(HttpCommand command) {
-            return Futures.immediateFuture(invoke(command));
+            throw new AssertionError();
          }
 
          @Override
@@ -361,43 +276,13 @@ public class RestAnnotationProcessorTest extends BaseRestApiTest {
       child.getInstance(Caller.class).getCallee().onePath("foo");
    }
 
-   public void testAsyncDelegateIsLazyLoadedAndRequestIncludesEndpointVersionAndPath() throws InterruptedException,
-         ExecutionException {
-      Injector child = injectorForCaller(new HttpCommandExecutorService() {
-
-         @Override
-         public ListenableFuture<HttpResponse> submit(HttpCommand command) {
-            return Futures.immediateFuture(invoke(command));
-         }
-
-         @Override
-         public HttpResponse invoke(HttpCommand command) {
-            assertEquals(command.getCurrentRequest().getRequestLine(), "GET http://howdyboys/client/1/foo HTTP/1.1");
-            return HttpResponse.builder().build();
-         }
-
-      });
-
-      try {
-         child.getInstance(AsyncCallee.class);
-         fail("Callee shouldn't be bound yet");
-      } catch (ConfigurationException e) {
-
-      }
-
-      child.getInstance(AsyncCaller.class).getCallee(URI.create("http://howdyboys")).onePath("foo").get();
-
-      assertEquals(child.getInstance(AsyncCaller.class).getURI(), URI.create("http://localhost:1111"));
-
-   }
-
-   public void testAsyncDelegateWithPathParamIsLazyLoadedAndRequestIncludesEndpointVersionAndPath()
+   public void testDelegateWithPathParamIsLazyLoadedAndRequestIncludesEndpointVersionAndPath()
          throws InterruptedException, ExecutionException {
       Injector child = injectorForCaller(new HttpCommandExecutorService() {
 
          @Override
          public ListenableFuture<HttpResponse> submit(HttpCommand command) {
-            return Futures.immediateFuture(invoke(command));
+            throw new AssertionError("jclouds no longer uses the submit method");
          }
 
          @Override
@@ -410,25 +295,25 @@ public class RestAnnotationProcessorTest extends BaseRestApiTest {
       });
 
       try {
-         child.getInstance(AsyncCallee.class);
+         child.getInstance(Callee.class);
          fail("Callee shouldn't be bound yet");
       } catch (ConfigurationException e) {
 
       }
 
-      child.getInstance(AsyncCaller.class).getCalleeWithPath(URI.create("http://howdyboys"), "thepathparam")
-            .onePath("foo").get();
+      child.getInstance(Caller.class).getCalleeWithPath(URI.create("http://howdyboys"), "thepathparam")
+            .onePath("foo");
 
-      assertEquals(child.getInstance(AsyncCaller.class).getURI(), URI.create("http://localhost:1111"));
+      assertEquals(child.getInstance(Caller.class).getURI(), URI.create("http://localhost:1111"));
    }
 
-   public void testAsyncDelegateWithHeaderParamIsLazyLoadedAndRequestIncludesEndpointVersionAndHeader()
+   public void testDelegateWithHeaderParamIsLazyLoadedAndRequestIncludesEndpointVersionAndHeader()
          throws InterruptedException, ExecutionException {
       Injector child = injectorForCaller(new HttpCommandExecutorService() {
 
          @Override
          public ListenableFuture<HttpResponse> submit(HttpCommand command) {
-            return Futures.immediateFuture(invoke(command));
+            throw new AssertionError("jclouds no longer uses the submit method");
          }
 
          @Override
@@ -440,116 +325,113 @@ public class RestAnnotationProcessorTest extends BaseRestApiTest {
       });
 
       try {
-         child.getInstance(AsyncCallee.class);
+         child.getInstance(Callee.class);
          fail("Callee shouldn't be bound yet");
       } catch (ConfigurationException e) {
 
       }
 
-      child.getInstance(AsyncCaller.class).getCalleeWithHeader(URI.create("http://howdyboys"), "theheaderparam")
-            .onePath("foo").get();
+      child.getInstance(Caller.class).getCalleeWithHeader(URI.create("http://howdyboys"), "theheaderparam")
+            .onePath("foo");
    }
 
-   public void testAsyncDelegateWithoutProducesAndConsumes()
+   public void testDelegateWithoutProducesAndConsumes()
          throws InterruptedException, ExecutionException {
       Injector child = injectorForCaller(new HttpCommandExecutorService() {
 
          @Override
          public ListenableFuture<HttpResponse> submit(HttpCommand command) {
-            return Futures.immediateFuture(invoke(command));
+            throw new AssertionError("jclouds no longer uses the submit method");
          }
 
          @Override
          public HttpResponse invoke(HttpCommand command) {
             assertEquals(
                   command.getCurrentRequest().getPayload().getContentMetadata().getContentType(),
-                  MediaType.APPLICATION_JSON);
-            assertTrue(command.getCurrentRequest().getHeaders().get("Accept").contains(MediaType.APPLICATION_JSON));
+                  APPLICATION_JSON);
+            assertTrue(command.getCurrentRequest().getHeaders().get("Accept").contains(APPLICATION_JSON));
             return HttpResponse.builder().build();
          }
 
       });
 
       try {
-         child.getInstance(AsyncCallee.class);
+         child.getInstance(Callee.class);
          fail("Callee shouldn't be bound yet");
       } catch (ConfigurationException e) {
 
       }
 
-      child.getInstance(AsyncCaller.class).getCalleeWithoutProducesAndConsumes()
-            .testWithoutProducesAndConsumes().get();
+      child.getInstance(Caller.class).getCalleeWithoutProducesAndConsumes().testWithoutProducesAndConsumes();
    }
 
-   public void testAsyncDelegateWithProducesAndConsumesOnMethodIsLazyLoaded()
+   public void testDelegateWithProducesAndConsumesOnMethodIsLazyLoaded()
          throws InterruptedException, ExecutionException {
       Injector child = injectorForCaller(new HttpCommandExecutorService() {
 
          @Override
          public ListenableFuture<HttpResponse> submit(HttpCommand command) {
-            return Futures.immediateFuture(invoke(command));
+            throw new AssertionError("jclouds no longer uses the submit method");
          }
 
          @Override
          public HttpResponse invoke(HttpCommand command) {
             assertEquals(
                   command.getCurrentRequest().getPayload().getContentMetadata().getContentType(),
-                  MediaType.APPLICATION_XML);
-            assertTrue(command.getCurrentRequest().getHeaders().get("Accept").contains(MediaType.APPLICATION_XML));
+                  APPLICATION_XML);
+            assertTrue(command.getCurrentRequest().getHeaders().get("Accept").contains(APPLICATION_XML));
             return HttpResponse.builder().build();
          }
 
       });
 
       try {
-         child.getInstance(AsyncCallee.class);
+         child.getInstance(Callee.class);
          fail("Callee shouldn't be bound yet");
       } catch (ConfigurationException e) {
 
       }
 
-      child.getInstance(AsyncCaller.class).getCalleeWithProducesAndConsumesOnMethod()
-            .testProducesAndConsumesOnMethod().get();
+      child.getInstance(Caller.class).getCalleeWithProducesAndConsumesOnMethod().testProducesAndConsumesOnMethod();
    }
 
-   public void testAsyncDelegateWithProducesAndConsumesOnClassIsLazyLoaded()
+   public void testDelegateWithProducesAndConsumesOnClassIsLazyLoaded()
          throws InterruptedException, ExecutionException {
       Injector child = injectorForCaller(new HttpCommandExecutorService() {
 
          @Override
          public ListenableFuture<HttpResponse> submit(HttpCommand command) {
-            return Futures.immediateFuture(invoke(command));
+            throw new AssertionError("jclouds no longer uses the submit method");
          }
 
          @Override
          public HttpResponse invoke(HttpCommand command) {
             assertEquals(
                   command.getCurrentRequest().getPayload().getContentMetadata().getContentType(),
-                  MediaType.APPLICATION_XML);
-            assertTrue(command.getCurrentRequest().getHeaders().get("Accept").contains(MediaType.APPLICATION_XML));
+                  APPLICATION_XML);
+            assertTrue(command.getCurrentRequest().getHeaders().get("Accept").contains(APPLICATION_XML));
             return HttpResponse.builder().build();
          }
 
       });
 
       try {
-         child.getInstance(AsyncCallee.class);
+         child.getInstance(Callee.class);
          fail("Callee shouldn't be bound yet");
       } catch (ConfigurationException e) {
 
       }
 
-      child.getInstance(AsyncCaller.class).getCalleeWithProducesAndConsumesOnClass()
-            .testProducesAndConsumesOnClass().get();
+      child.getInstance(Caller.class).getCalleeWithProducesAndConsumesOnClass().testProducesAndConsumesOnClass();
    }
 
-   public void testAsyncDelegateIsLazyLoadedAndRequestIncludesEndpointVersionAndPathOptionalPresent()
+   public void testDelegateIsLazyLoadedAndRequestIncludesEndpointVersionAndPathOptionalPresent()
          throws InterruptedException, ExecutionException {
       Injector child = injectorForCaller(new HttpCommandExecutorService() {
 
          @Override
          public ListenableFuture<HttpResponse> submit(HttpCommand command) {
-            return Futures.immediateFuture(invoke(command));
+            throw new AssertionError("jclouds no longer uses the submit method");
          }
 
          @Override
@@ -561,59 +443,15 @@ public class RestAnnotationProcessorTest extends BaseRestApiTest {
       });
 
       try {
-         child.getInstance(AsyncCallee.class);
+         child.getInstance(Callee.class);
          fail("Callee shouldn't be bound yet");
       } catch (ConfigurationException e) {
 
       }
 
-      child.getInstance(AsyncCaller.class).getOptionalCallee(URI.create("http://howdyboys")).get().onePath("foo").get();
+      child.getInstance(Caller.class).getOptionalCallee(URI.create("http://howdyboys")).get().onePath("foo");
 
-      assertEquals(child.getInstance(AsyncCaller.class).getURI(), URI.create("http://localhost:1111"));
-
-   }
-
-   public void testAsyncDelegateIsLazyLoadedAndRequestIncludesEndpointVersionAndPathCanOverrideOptionalBehaviour()
-         throws InterruptedException, ExecutionException {
-      Injector child = injectorForCaller(new HttpCommandExecutorService() {
-
-         @Override
-         public ListenableFuture<HttpResponse> submit(HttpCommand command) {
-            return Futures.immediateFuture(invoke(command));
-         }
-
-         @Override
-         public HttpResponse invoke(HttpCommand command) {
-            assertEquals(command.getCurrentRequest().getRequestLine(), "GET http://howdyboys/client/1/foo HTTP/1.1");
-            return HttpResponse.builder().build();
-         }
-
-      }, new AbstractModule() {
-
-         @Override
-         protected void configure() {
-            bind(ImplicitOptionalConverter.class).toInstance(new ImplicitOptionalConverter() {
-
-               @Override
-               public Optional<Object> apply(InvocationSuccess input) {
-                  return Optional.absent();
-               }
-
-            });
-         }
-
-      });
-
-      try {
-         child.getInstance(AsyncCallee.class);
-         fail("Callee shouldn't be bound yet");
-      } catch (ConfigurationException e) {
-
-      }
-
-      assert !child.getInstance(AsyncCaller.class).getOptionalCallee(URI.create("http://howdyboys")).isPresent();
-
-      assertEquals(child.getInstance(AsyncCaller.class).getURI(), URI.create("http://localhost:1111"));
+      assertEquals(child.getInstance(Caller.class).getURI(), URI.create("http://localhost:1111"));
 
    }
 
@@ -623,7 +461,7 @@ public class RestAnnotationProcessorTest extends BaseRestApiTest {
 
          @Override
          public ListenableFuture<HttpResponse> submit(HttpCommand command) {
-            return Futures.immediateFuture(invoke(command));
+            throw new AssertionError("jclouds no longer uses the submit method");
          }
 
          @Override
@@ -646,13 +484,12 @@ public class RestAnnotationProcessorTest extends BaseRestApiTest {
    }
 
    private Injector injectorForCaller(HttpCommandExecutorService service, Module... modules) {
-      return ContextBuilder
-            .newBuilder(
-                  AnonymousProviderMetadata.forClientMappedToAsyncClientOnEndpoint(Caller.class, AsyncCaller.class,
-                        "http://localhost:9999"))
-            .modules(
-                  ImmutableSet.<Module> builder().add(new MockModule(service)).add(new NullLoggingModule())
-                        .add(new CallerModule()).addAll(ImmutableSet.<Module> copyOf(modules)).build()).buildInjector();
+      return ContextBuilder.newBuilder(forApiOnEndpoint(Caller.class, "http://localhost:9999"))
+                           .modules(ImmutableSet.<Module> builder()
+                                                .add(new MockModule(service))
+                                                .add(new NullLoggingModule())
+                                                .add(new CallerModule())
+                                                .addAll(Arrays.asList(modules)).build()).buildInjector();
 
    }
 
@@ -1256,12 +1093,12 @@ public class RestAnnotationProcessorTest extends BaseRestApiTest {
       @GET
       @Path("/")
       @Consumes("application/json")
-      ListenableFuture<Map<String, String>> testGeneric2();
+      Map<String, String> testGeneric2();
 
       @GET
       @Path("/")
       @Consumes("application/json")
-      ListenableFuture<? extends Map<String, String>> testGeneric3();
+      Map<String, String> testGeneric3();
 
       @GET
       @Path("/")
@@ -1283,30 +1120,30 @@ public class RestAnnotationProcessorTest extends BaseRestApiTest {
       @Path("/")
       @Unwrap
       @Consumes("application/json")
-      ListenableFuture<String> testUnwrap2();
+      String testUnwrap2();
 
       @GET
       @Path("/")
       @Unwrap
       @Consumes("application/json")
-      ListenableFuture<Set<String>> testUnwrap3();
+      Set<String> testUnwrap3();
 
       @GET
       @Path("/")
       @Unwrap
       @Consumes("application/json")
-      ListenableFuture<? extends Set<String>> testUnwrap4();
+      Set<String> testUnwrap4();
 
       @GET
       @Path("/")
       @SelectJson("jobid")
-      ListenableFuture<Long> selectLong();
+      Long selectLong();
 
       @GET
       @Path("/")
       @SelectJson("jobid")
       @Transform(AddOne.class)
-      ListenableFuture<Long> selectLongAddOne();
+      Long selectLongAddOne();
 
       static class AddOne implements Function<Long, Long> {
 
@@ -1321,7 +1158,7 @@ public class RestAnnotationProcessorTest extends BaseRestApiTest {
       @SelectJson("runit")
       @OnlyElement
       @Consumes("application/json")
-      ListenableFuture<String> selectOnlyElement();
+      String selectOnlyElement();
 
       @Target({ ElementType.METHOD })
       @Retention(RetentionPolicy.RUNTIME)
@@ -1331,11 +1168,11 @@ public class RestAnnotationProcessorTest extends BaseRestApiTest {
 
       @ROWDY
       @Path("/strings/{id}")
-      ListenableFuture<Boolean> rowdy(@PathParam("id") String path);
+      Boolean rowdy(@PathParam("id") String path);
 
       @ROWDY
       @Path("/ints/{id}")
-      ListenableFuture<Boolean> rowdy(@PathParam("id") int path);
+      Boolean rowdy(@PathParam("id") int path);
    }
 
    static class View {
@@ -1594,9 +1431,7 @@ public class RestAnnotationProcessorTest extends BaseRestApiTest {
       // Now let's create a new injector with the property set. Use that to create the annotation processor.
       Properties overrides = new Properties();
       overrides.setProperty(Constants.PROPERTY_STRIP_EXPECT_HEADER, "true");
-      Injector injector = ContextBuilder.newBuilder(
-            AnonymousProviderMetadata.forClientMappedToAsyncClientOnEndpoint(Callee.class, AsyncCallee.class,
-               "http://localhost:9999"))
+      Injector injector = ContextBuilder.newBuilder(forApiOnEndpoint(Callee.class, "http://localhost:9999"))
          .modules(ImmutableSet.<Module> of(new MockModule(), new NullLoggingModule(), new AbstractModule() {
             protected void configure() {
                bind(new TypeLiteral<Supplier<URI>>() {
@@ -1931,31 +1766,31 @@ public class RestAnnotationProcessorTest extends BaseRestApiTest {
 
    public interface TestTransformers {
       @GET
-      ListenableFuture<Integer> noTransformer();
+      Integer noTransformer();
 
       @GET
       @ResponseParser(ReturnStringIf2xx.class)
-      ListenableFuture<Void> oneTransformer();
+      void oneTransformer();
 
       @GET
       @ResponseParser(ReturnStringIf200Context.class)
-      ListenableFuture<Void> oneTransformerWithContext();
+      void oneTransformerWithContext();
 
       @GET
-      ListenableFuture<InputStream> futureInputStream();
+      InputStream futureInputStream();
 
       @GET
-      ListenableFuture<URI> futureUri();
+      URI futureUri();
 
       @PUT
-      ListenableFuture<Void> put(Payload payload);
+      void put(Payload payload);
 
       @PUT
       @Headers(keys = "Transfer-Encoding", values = "chunked")
-      ListenableFuture<Void> putXfer(Payload payload);
+      void putXfer(Payload payload);
 
       @PUT
-      ListenableFuture<Void> put(PayloadEnclosing payload);
+      void put(PayloadEnclosing payload);
    }
 
    public void testPutPayloadEnclosing() throws SecurityException, NoSuchMethodException, IOException {
@@ -2149,48 +1984,48 @@ public class RestAnnotationProcessorTest extends BaseRestApiTest {
       @GET
       @VirtualHost
       @Path("/{id}")
-      ListenableFuture<String> get(@PathParam("id") String id, HttpRequestOptions options);
+      String get(@PathParam("id") String id, HttpRequestOptions options);
 
       @GET
       @VirtualHost
       @Path("/{id}")
-      ListenableFuture<String> get(@PathParam("id") String id, HttpRequestOptions... options);
+      String get(@PathParam("id") String id, HttpRequestOptions... options);
 
       @GET
       @Path("/{id}")
       @ResponseParser(ReturnStringIf2xx.class)
-      ListenableFuture<String> get(@PathParam("id") String id, @HeaderParam(HttpHeaders.HOST) String host);
+      String get(@PathParam("id") String id, @HeaderParam(HttpHeaders.HOST) String host);
 
       @GET
       @Path("/{id}")
       @QueryParams(keys = "max-keys", values = "0")
-      ListenableFuture<String> getQuery(@PathParam("id") String id);
+      String getQuery(@PathParam("id") String id);
 
       @GET
       @Path("/{id}")
       @QueryParams(keys = "acl")
-      ListenableFuture<String> getQueryNull(@PathParam("id") String id);
+      String getQueryNull(@PathParam("id") String id);
 
       @GET
       @Path("/{id}")
       @QueryParams(keys = "acl", values = "")
-      ListenableFuture<String> getQueryEmpty(@PathParam("id") String id);
+      String getQueryEmpty(@PathParam("id") String id);
 
       @PUT
       @Path("/{id}")
-      ListenableFuture<String> put(@PathParam("id") @ParamParser(FirstCharacter.class) String id,
+      String put(@PathParam("id") @ParamParser(FirstCharacter.class) String id,
             @BinderParam(BindToStringPayload.class) String payload);
 
       @PUT
       @Path("/{id}")
       @VirtualHost
-      ListenableFuture<String> putOptions(@PathParam("id") String id, HttpRequestOptions options);
+      String putOptions(@PathParam("id") String id, HttpRequestOptions options);
 
       @PUT
       @Path("/{id}")
       @Headers(keys = "foo", values = "--{id}--")
       @ResponseParser(ReturnTrueIf2xx.class)
-      ListenableFuture<String> putHeader(@PathParam("id") String id,
+      String putHeader(@PathParam("id") String id,
             @BinderParam(BindToStringPayload.class) String payload);
    }
 
@@ -2335,7 +2170,7 @@ public class RestAnnotationProcessorTest extends BaseRestApiTest {
       @GET
       @Path("/{id}")
       @VirtualHost
-      public ListenableFuture<String> get(@PathParam("id") String id, String foo) {
+      public String get(@PathParam("id") String id, String foo) {
          return null;
       }
    }
@@ -2356,11 +2191,11 @@ public class RestAnnotationProcessorTest extends BaseRestApiTest {
       @GET
       @Path("/{id}")
       @VirtualHost
-      ListenableFuture<String> get(@PathParam("id") String id, String foo);
+      String get(@PathParam("id") String id, String foo);
 
       @GET
       @Path("/{id}")
-      ListenableFuture<String> getPrefix(@PathParam("id") String id, @BinderParam(BindAsHostPrefix.class) String foo);
+      String getPrefix(@PathParam("id") String id, @BinderParam(BindAsHostPrefix.class) String foo);
 
    }
 
@@ -2501,7 +2336,7 @@ public class RestAnnotationProcessorTest extends BaseRestApiTest {
 
       @PUT
       @Path("/{foo}")
-      ListenableFuture<Void> putWithPath(@PathParam("foo") String path,
+      void putWithPath(@PathParam("foo") String path,
             @BinderParam(BindToStringPayload.class) String content);
 
       @PUT
@@ -2653,9 +2488,7 @@ public class RestAnnotationProcessorTest extends BaseRestApiTest {
    @BeforeClass
    void setupFactory() {
       injector = ContextBuilder
-            .newBuilder(
-                  AnonymousProviderMetadata.forClientMappedToAsyncClientOnEndpoint(Callee.class, AsyncCallee.class,
-                        "http://localhost:9999"))
+            .newBuilder(forApiOnEndpoint(Callee.class, "http://localhost:9999"))
             .modules(ImmutableSet.<Module> of(new MockModule(), new NullLoggingModule(), new AbstractModule() {
                protected void configure() {
                   bind(new TypeLiteral<Supplier<URI>>() {

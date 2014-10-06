@@ -16,7 +16,7 @@
  */
 package org.jclouds.rest.annotationparsing;
 
-import static org.jclouds.providers.AnonymousProviderMetadata.forClientMappedToAsyncClientOnEndpoint;
+import static org.jclouds.providers.AnonymousProviderMetadata.forApiOnEndpoint;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertTrue;
 
@@ -38,7 +38,6 @@ import org.testng.annotations.Test;
 
 import com.google.common.base.Function;
 import com.google.common.base.Functions;
-import com.google.common.util.concurrent.ListenableFuture;
 
 /**
  * Tests the use of the {@link JAXBResponseParser} annotation.
@@ -67,36 +66,26 @@ public class JAXBResponseParserAnnotationExpectTest extends
    }
 
    public interface TestJAXBApi extends Closeable {
-      TestJAXBDomain jaxbGetWithAnnotation();
-
-      Object jaxbGetWithAnnotationAndCustomClass();
-
-      TestJAXBDomain jaxbGetWithAcceptHeader();
-
-      String jaxbGetWithTransformer();
-   }
-
-   public interface TestJAXBAsyncApi extends Closeable {
       @GET
       @Path("/jaxb/annotation")
       @JAXBResponseParser
-      ListenableFuture<TestJAXBDomain> jaxbGetWithAnnotation();
+      TestJAXBDomain jaxbGetWithAnnotation();
 
       @GET
       @Path("/jaxb/custom")
       @JAXBResponseParser(TestJAXBDomain.class)
-      ListenableFuture<Object> jaxbGetWithAnnotationAndCustomClass();
+      Object jaxbGetWithAnnotationAndCustomClass();
 
       @GET
       @Path("/jaxb/header")
       @Consumes(MediaType.APPLICATION_XML)
-      ListenableFuture<TestJAXBDomain> jaxbGetWithAcceptHeader();
+      TestJAXBDomain jaxbGetWithAcceptHeader();
 
       @GET
       @Path("/jaxb/transformer")
       @JAXBResponseParser(TestJAXBDomain.class)
       @Transform(ToString.class)
-      ListenableFuture<String> jaxbGetWithTransformer();
+      String jaxbGetWithTransformer();
    }
 
    private static class ToString implements Function<Object, String> {
@@ -150,7 +139,6 @@ public class JAXBResponseParserAnnotationExpectTest extends
 
    @Override
    public ProviderMetadata createProviderMetadata() {
-      return forClientMappedToAsyncClientOnEndpoint(TestJAXBApi.class, TestJAXBAsyncApi.class, "http://mock");
+      return forApiOnEndpoint(TestJAXBApi.class, "http://mock");
    }
-
 }

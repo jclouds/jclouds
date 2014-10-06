@@ -16,6 +16,7 @@
  */
 package org.jclouds.rest;
 
+import static org.jclouds.providers.AnonymousProviderMetadata.forApiOnEndpoint;
 import static org.jclouds.reflect.Reflection2.method;
 
 import javax.ws.rs.POST;
@@ -23,10 +24,8 @@ import javax.ws.rs.PathParam;
 
 import org.jclouds.ContextBuilder;
 import org.jclouds.http.HttpRequest;
-import org.jclouds.http.IntegrationTestAsyncClient;
 import org.jclouds.http.IntegrationTestClient;
 import org.jclouds.predicates.validators.AllLowerCaseValidator;
-import org.jclouds.providers.AnonymousProviderMetadata;
 import org.jclouds.reflect.Invocation;
 import org.jclouds.rest.annotations.ParamValidators;
 import org.jclouds.rest.internal.RestAnnotationProcessor;
@@ -109,10 +108,8 @@ public class InputParamValidatorTest {
 
    @BeforeClass
    void setupFactory() {
-      injector =  ContextBuilder
-            .newBuilder(
-                  AnonymousProviderMetadata.forClientMappedToAsyncClientOnEndpoint(IntegrationTestClient.class, IntegrationTestAsyncClient.class,
-                        "http://localhost:9999")).buildInjector();
+      injector = ContextBuilder.newBuilder(forApiOnEndpoint(IntegrationTestClient.class, "http://localhost:9999"))
+            .buildInjector();
       restAnnotationProcessor = injector.getInstance(RestAnnotationProcessor.class);
    }
 }

@@ -20,13 +20,13 @@ import static org.easymock.EasyMock.createMock;
 import static org.easymock.EasyMock.expect;
 import static org.easymock.EasyMock.replay;
 import static org.easymock.EasyMock.verify;
-import static org.jclouds.providers.AnonymousProviderMetadata.forClientMappedToAsyncClientOnEndpoint;
 
 import java.io.Closeable;
 import java.io.IOException;
 
 import org.jclouds.ContextBuilder;
 import org.jclouds.concurrent.config.ExecutorServiceModule;
+import org.jclouds.providers.AnonymousProviderMetadata;
 import org.jclouds.providers.ProviderMetadata;
 import org.testng.annotations.Test;
 
@@ -45,11 +45,7 @@ public class ClosableApiTest {
    interface DelegatingApi extends Closeable {
    }
 
-   interface DelegatingAsyncApi extends Closeable {
-   }
-
-   ProviderMetadata provider = forClientMappedToAsyncClientOnEndpoint(DelegatingApi.class, DelegatingAsyncApi.class,
-         "http://mock");
+   ProviderMetadata provider = AnonymousProviderMetadata.forApiOnEndpoint(DelegatingApi.class, "http://mock");
 
    public void testApiClosesExecutorServiceOnClose() throws IOException {
       ListeningExecutorService executor = createMock(ListeningExecutorService.class);

@@ -16,7 +16,7 @@
  */
 package org.jclouds.rest.annotationparsing;
 
-import static org.jclouds.providers.AnonymousProviderMetadata.forClientMappedToAsyncClientOnEndpoint;
+import static org.jclouds.providers.AnonymousProviderMetadata.forApiOnEndpoint;
 import static org.testng.Assert.assertTrue;
 
 import javax.ws.rs.FormParam;
@@ -29,17 +29,15 @@ import org.jclouds.Fallbacks.FalseOnNotFoundOr404;
 import org.jclouds.http.HttpRequest;
 import org.jclouds.http.HttpResponse;
 import org.jclouds.providers.ProviderMetadata;
-import org.jclouds.rest.ConfiguresRestClient;
+import org.jclouds.rest.ConfiguresHttpApi;
 import org.jclouds.rest.annotations.Delegate;
 import org.jclouds.rest.annotations.Fallback;
 import org.jclouds.rest.annotations.Payload;
 import org.jclouds.rest.annotations.PayloadParam;
-import org.jclouds.rest.config.RestClientModule;
+import org.jclouds.rest.config.HttpApiModule;
 import org.jclouds.rest.internal.BaseRestApiExpectTest;
 import org.testng.annotations.Test;
 
-import com.google.common.collect.ImmutableMap;
-import com.google.common.util.concurrent.ListenableFuture;
 import com.google.inject.Module;
 
 /**
@@ -57,35 +55,18 @@ public class DelegateAnnotationExpectTest extends BaseRestApiExpectTest<Delegate
       DiskApi getDiskApiForProject(@PayloadParam("project") @PathParam("project") String projectName);
    }
 
-   interface DelegatingAsyncApi {
-      @Delegate
-      DiskAsyncApi getDiskApiForProjectForm(@FormParam("project") String projectName);
-
-      @Delegate
-      @Path("/projects/{project}")
-      DiskAsyncApi getDiskApiForProject(@PayloadParam("project") @PathParam("project") String projectName);
-   }
-
    interface DiskApi {
-      void form();
-
-      void syncAll();
-
-      boolean exists(@PathParam("disk") String diskName);
-   }
-
-   interface DiskAsyncApi {
       @POST
-      ListenableFuture<Void> form();
+      void form();
 
       @POST
       @Payload("<Sync>{project}</Sync>")
-      ListenableFuture<Void> syncAll();
-      
+      void syncAll();
+
       @HEAD
       @Path("/disks/{disk}")
       @Fallback(FalseOnNotFoundOr404.class)
-      ListenableFuture<Boolean> exists(@PathParam("disk") String diskName);
+      boolean exists(@PathParam("disk") String diskName);
    }
 
    public void testDelegatingCallTakesIntoConsiderationAndCalleeFormParam() {
@@ -121,22 +102,16 @@ public class DelegateAnnotationExpectTest extends BaseRestApiExpectTest<Delegate
 
    @Override
    public ProviderMetadata createProviderMetadata() {
-      return forClientMappedToAsyncClientOnEndpoint(DelegatingApi.class, DelegatingAsyncApi.class, "http://mock");
+      return forApiOnEndpoint(DelegatingApi.class, "http://mock");
    }
 
    @Override
    protected Module createModule() {
-      return new DelegatingRestClientModule();
+      return new DelegatingHttpApiModule();
    }
 
-   @ConfiguresRestClient
-   static class DelegatingRestClientModule extends RestClientModule<DelegatingApi, DelegatingAsyncApi> {
-
-      public DelegatingRestClientModule() {
-         // right now, we have to define the delegates by hand as opposed to
-         // reflection looking for coordinated annotations
-         super(ImmutableMap.<Class<?>, Class<?>> of(DiskApi.class, DiskAsyncApi.class));
-      }
+   @ConfiguresHttpApi
+   static class DelegatingHttpApiModule extends HttpApiModule<DelegatingApi> {
    }
 
 }

@@ -18,14 +18,13 @@ package org.jclouds.apis;
 
 import java.net.URI;
 
-import org.jclouds.http.IntegrationTestAsyncClient;
 import org.jclouds.http.IntegrationTestClient;
-import org.jclouds.rest.internal.BaseRestApiMetadata;
+import org.jclouds.rest.internal.BaseHttpApiMetadata;
 
 /**
  * Implementation of @ link org.jclouds.types.ApiMetadata} for testing.
  */
-public class JcloudsTestYetAnotherComputeApiMetadata extends BaseRestApiMetadata {
+public class JcloudsTestYetAnotherComputeApiMetadata extends BaseHttpApiMetadata {
 
    public static Builder builder() {
       return new Builder();
@@ -44,10 +43,10 @@ public class JcloudsTestYetAnotherComputeApiMetadata extends BaseRestApiMetadata
       super(builder);
    }
 
-   public static class Builder extends BaseRestApiMetadata.Builder<Builder>  {
+   public static class Builder extends BaseHttpApiMetadata.Builder<IntegrationTestClient, Builder>  {
 
       protected Builder() {
-         super(IntegrationTestClient.class, IntegrationTestAsyncClient.class);
+         super(IntegrationTestClient.class);
          id("test-yet-another-compute-api")
          .view(Compute.class)
          .name("Test Yet Another Compute Api")

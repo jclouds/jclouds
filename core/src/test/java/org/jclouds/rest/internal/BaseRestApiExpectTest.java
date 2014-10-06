@@ -557,8 +557,6 @@ public abstract class BaseRestApiExpectTest<S> {
       ApiMetadata am = builder.getApiMetadata();
       if (am instanceof HttpApiMetadata) {
          this.api = HttpApiMetadata.class.cast(am).getApi();
-      } else if (am instanceof org.jclouds.rest.RestApiMetadata) {
-         this.api = org.jclouds.rest.RestApiMetadata.class.cast(am).getApi();
       } else {
          throw new UnsupportedOperationException("unsupported base type: " + am);
       }

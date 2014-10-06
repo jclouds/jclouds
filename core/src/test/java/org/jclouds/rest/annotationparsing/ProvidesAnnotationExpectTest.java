@@ -16,7 +16,6 @@
  */
 package org.jclouds.rest.annotationparsing;
 
-import static org.jclouds.providers.AnonymousProviderMetadata.forClientMappedToAsyncClientOnEndpoint;
 import static org.testng.Assert.assertEquals;
 
 import java.io.Closeable;
@@ -27,10 +26,11 @@ import javax.inject.Named;
 
 import org.jclouds.http.HttpRequest;
 import org.jclouds.http.HttpResponse;
+import org.jclouds.providers.AnonymousProviderMetadata;
 import org.jclouds.providers.ProviderMetadata;
 import org.jclouds.rest.AuthorizationException;
-import org.jclouds.rest.ConfiguresRestClient;
-import org.jclouds.rest.config.RestClientModule;
+import org.jclouds.rest.ConfiguresHttpApi;
+import org.jclouds.rest.config.HttpApiModule;
 import org.jclouds.rest.internal.BaseRestApiExpectTest;
 import org.testng.annotations.Test;
 
@@ -48,23 +48,6 @@ import com.google.inject.name.Names;
 public class ProvidesAnnotationExpectTest extends BaseRestApiExpectTest<ProvidesAnnotationExpectTest.ProvidingApi> {
 
    interface ProvidingApi extends Closeable {
-      @Provides
-      Set<String> set();
-
-      @Named("bar")
-      @Provides
-      Set<String> foo();
-
-      @Named("exception")
-      @Provides
-      Set<String> exception();
-
-      @Named("NoSuchElementException")
-      @Provides
-      Set<String> noSuchElementException();
-   }
-
-   interface ProvidingAsyncApi extends Closeable {
       @Provides
       Set<String> set();
 
@@ -110,16 +93,16 @@ public class ProvidesAnnotationExpectTest extends BaseRestApiExpectTest<Provides
 
    @Override
    public ProviderMetadata createProviderMetadata() {
-      return forClientMappedToAsyncClientOnEndpoint(ProvidingApi.class, ProvidingAsyncApi.class, "http://mock");
+      return AnonymousProviderMetadata.forApiOnEndpoint(ProvidingApi.class, "http://mock");
    }
 
    @Override
    protected Module createModule() {
-      return new ProvidingRestClientModule();
+      return new ProvidingHttpApiModule();
    }
 
-   @ConfiguresRestClient
-   static class ProvidingRestClientModule extends RestClientModule<ProvidingApi, ProvidingAsyncApi> {
+   @ConfiguresHttpApi
+   static class ProvidingHttpApiModule extends HttpApiModule<ProvidingApi> {
 
       @Override
       protected void configure() {
