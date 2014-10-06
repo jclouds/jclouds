@@ -40,6 +40,10 @@ public class BlobStoreUtils {
                .headers(returnVal.getHeaders()).payload(returnVal.getPayload()).build();
    }
 
+   public static String parseDirectoryFromPath(String path) {
+      return checkNotNull(path, "path").substring(0, path.lastIndexOf('/'));
+   }
+
    private static Pattern keyFromContainer = Pattern.compile("/?[^/]+/(.*)");
 
    public static String getNameFor(GeneratedHttpRequest request) {
