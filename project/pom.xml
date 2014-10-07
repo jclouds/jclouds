@@ -711,14 +711,11 @@
         <!-- configuration and dependencies set via profiles -->
         <executions>
           <execution>
-          <id>checkstyle</id>
-          <phase>validate</phase>
+            <id>checkstyle</id>
+            <phase>validate</phase>
             <goals>
               <goal>check</goal>
             </goals>
-            <configuration>
-              <failOnViolation>true</failOnViolation>
-            </configuration>
           </execution>
         </executions>
       </plugin>
