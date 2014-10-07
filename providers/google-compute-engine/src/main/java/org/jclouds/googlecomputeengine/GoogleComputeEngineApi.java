@@ -23,6 +23,7 @@ import javax.ws.rs.PathParam;
 
 import org.jclouds.googlecomputeengine.features.AddressApi;
 import org.jclouds.googlecomputeengine.features.DiskApi;
+import org.jclouds.googlecomputeengine.features.DiskTypeApi;
 import org.jclouds.googlecomputeengine.features.FirewallApi;
 import org.jclouds.googlecomputeengine.features.GlobalOperationApi;
 import org.jclouds.googlecomputeengine.features.ImageApi;
@@ -67,6 +68,15 @@ public interface GoogleComputeEngineApi extends Closeable {
    @Delegate
    @Path("/projects/{project}")
    DiskApi getDiskApiForProject(@PathParam("project") String projectName);
+
+   /**
+    * Provides access to DiskType features
+    *
+    *  @param projectName the name of the project
+    */
+   @Delegate
+   @Path("/projects/{project}")
+   DiskTypeApi getDiskTypeApiForProject(@PathParam("project") String projectName);
 
    /**
     * Provides access to Firewall features

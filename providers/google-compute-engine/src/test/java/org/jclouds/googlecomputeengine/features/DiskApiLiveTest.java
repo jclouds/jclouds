@@ -43,7 +43,6 @@ public class DiskApiLiveTest extends BaseGoogleComputeEngineApiLiveTest {
    @Test(groups = "live")
    public void testInsertDisk() {
       assertZoneOperationDoneSucessfully(api().createInZone(DISK_NAME, sizeGb, DEFAULT_ZONE_NAME), TIME_WAIT);
-
    }
 
    @Test(groups = "live", dependsOnMethods = "testInsertDisk")

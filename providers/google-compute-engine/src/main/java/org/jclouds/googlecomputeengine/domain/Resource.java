@@ -47,6 +47,8 @@ public class Resource {
       ADDRESS_LIST,
       DISK,
       DISK_LIST,
+      DISK_TYPE,
+      DISK_TYPE_LIST,
       FIREWALL,
       FIREWALL_LIST,
       IMAGE,
