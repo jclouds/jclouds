@@ -711,8 +711,8 @@
         <!-- configuration and dependencies set via profiles -->
         <executions>
           <execution>
-            <id>checkstyle</id>
-            <phase>validate</phase>
+            <id>default</id>
+            <phase>verify</phase>
             <goals>
               <goal>check</goal>
             </goals>
@@ -1081,14 +1081,6 @@
               <failsOnError>true</failsOnError>
               <violationSeverity>warning</violationSeverity>
             </configuration>
-            <executions>
-              <execution>
-                <phase>validate</phase>
-                <goals>
-                  <goal>check</goal>
-                </goals>
-              </execution>
-            </executions>
           </plugin>
           <plugin>
             <groupId>org.gaul</groupId>
@@ -1131,14 +1123,6 @@
               <failsOnError>true</failsOnError>
               <violationSeverity>warning</violationSeverity>
             </configuration>
-            <executions>
-              <execution>
-                <phase>validate</phase>
-                <goals>
-                  <goal>check</goal>
-                </goals>
-              </execution>
-            </executions>
           </plugin>
           <plugin>
             <groupId>org.gaul</groupId>
