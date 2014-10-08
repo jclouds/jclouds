@@ -153,10 +153,9 @@
                   <goal>test</goal>
                 </goals>
                 <configuration>
-                  <forkCount>5</forkCount>
-                  <reuseForks>true</reuseForks>
-                  <parallel>classes</parallel>
                   <systemPropertyVariables>
+                    <jclouds.blobstore.httpstream.url>${jclouds.blobstore.httpstream.url}</jclouds.blobstore.httpstream.url>
+                    <jclouds.blobstore.httpstream.md5>${jclouds.blobstore.httpstream.md5}</jclouds.blobstore.httpstream.md5>
                     <test.rackspace-cloudfiles-us.endpoint>${test.rackspace-cloudfiles-us.endpoint}</test.rackspace-cloudfiles-us.endpoint>
                     <test.rackspace-cloudfiles-us.api-version>${test.rackspace-cloudfiles-us.api-version}</test.rackspace-cloudfiles-us.api-version>
                     <test.rackspace-cloudfiles-us.build-version>${test.rackspace-cloudfiles-us.build-version}</test.rackspace-cloudfiles-us.build-version>
