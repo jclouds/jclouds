@@ -44,6 +44,7 @@ public class Host {
 
       protected String name;
       protected String service;
+      protected String zone;
    
       /** 
        * @see Host#getName()
@@ -61,14 +62,23 @@ public class Host {
          return self();
       }
 
+      /**
+       * @see Host#getZone()
+       */
+      public T zone(String zone) {
+         this.zone = zone;
+         return self();
+      }
+
       public Host build() {
-         return new Host(name, service);
+         return new Host(name, service, zone);
       }
       
       public T fromHost(Host in) {
          return this
                   .name(in.getName())
-                  .service(in.getService());
+                  .service(in.getService())
+                  .zone(in.getZone());
       }
    }
 
@@ -82,13 +92,15 @@ public class Host {
    @Named("host_name")
    private final String name;
    private final String service;
+   private final String zone;
 
    @ConstructorProperties({
-      "host_name", "service"
+      "host_name", "service", "zone"
    })
-   protected Host(@Nullable String name, @Nullable String service) {
+   protected Host(@Nullable String name, @Nullable String service, @Nullable String zone) {
       this.name = name;
       this.service = service;
+      this.zone = zone;
    }
 
    @Nullable
@@ -101,9 +113,13 @@ public class Host {
       return this.service;
    }
 
+   @Nullable
+   public String getZone() {
+      return this.zone;
+   }
    @Override
    public int hashCode() {
-      return Objects.hashCode(name, service);
+      return Objects.hashCode(name, service, zone);
    }
 
    @Override
@@ -112,12 +128,13 @@ public class Host {
       if (obj == null || getClass() != obj.getClass()) return false;
       Host that = Host.class.cast(obj);
       return Objects.equal(this.name, that.name)
-               && Objects.equal(this.service, that.service);
+               && Objects.equal(this.service, that.service)
+               && Objects.equal(this.zone, that.zone);
    }
    
    protected ToStringHelper string() {
       return MoreObjects.toStringHelper(this)
-            .add("name", name).add("service", service);
+            .add("name", name).add("service", service).add("zone", zone);
    }
    
    @Override
