@@ -16,8 +16,8 @@
  */
 package org.jclouds.openstack.swift.v1.options;
 
-import static org.jclouds.openstack.swift.v1.reference.SwiftHeaders.OBJECT_METADATA_PREFIX;
 import static org.jclouds.openstack.swift.v1.reference.SwiftHeaders.OBJECT_DELETE_AT;
+import static org.jclouds.openstack.swift.v1.reference.SwiftHeaders.OBJECT_METADATA_PREFIX;
 import static org.testng.Assert.assertEquals;
 
 import org.testng.annotations.Test;

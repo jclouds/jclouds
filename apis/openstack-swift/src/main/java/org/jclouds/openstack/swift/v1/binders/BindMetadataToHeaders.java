@@ -16,12 +16,11 @@
  */
 package org.jclouds.openstack.swift.v1.binders;
 
+import static com.google.common.base.Preconditions.checkArgument;
+import static com.google.common.base.Preconditions.checkNotNull;
 import static org.jclouds.openstack.swift.v1.reference.SwiftHeaders.ACCOUNT_METADATA_PREFIX;
 import static org.jclouds.openstack.swift.v1.reference.SwiftHeaders.CONTAINER_METADATA_PREFIX;
 import static org.jclouds.openstack.swift.v1.reference.SwiftHeaders.OBJECT_METADATA_PREFIX;
-
-import static com.google.common.base.Preconditions.checkArgument;
-import static com.google.common.base.Preconditions.checkNotNull;
 
 import java.util.Map;
 import java.util.Map.Entry;

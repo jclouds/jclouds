@@ -18,9 +18,9 @@ package org.jclouds.openstack.swift.v1.options;
 
 import static org.jclouds.openstack.swift.v1.reference.SwiftHeaders.CONTAINER_ACL_ANYBODY_READ;
 import static org.jclouds.openstack.swift.v1.reference.SwiftHeaders.CONTAINER_METADATA_PREFIX;
+import static org.jclouds.openstack.swift.v1.reference.SwiftHeaders.CONTAINER_QUOTA_BYTES;
 import static org.jclouds.openstack.swift.v1.reference.SwiftHeaders.CONTAINER_READ;
 import static org.jclouds.openstack.swift.v1.reference.SwiftHeaders.VERSIONS_LOCATION;
-import static org.jclouds.openstack.swift.v1.reference.SwiftHeaders.CONTAINER_QUOTA_BYTES;
 import static org.testng.Assert.assertEquals;
 
 import org.testng.annotations.Test;

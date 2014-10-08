@@ -45,10 +45,10 @@ import org.jclouds.rest.HttpClient;
 import org.testng.annotations.Test;
 
 import com.google.common.collect.Iterables;
-import com.google.common.io.ByteSource;
 import com.google.common.hash.Hashing;
-import com.google.common.net.MediaType;
+import com.google.common.io.ByteSource;
 import com.google.common.net.HttpHeaders;
+import com.google.common.net.MediaType;
 
 @Test(groups = "live")
 public class RegionScopedBlobStoreContextLiveTest extends BaseBlobStoreIntegrationTest {

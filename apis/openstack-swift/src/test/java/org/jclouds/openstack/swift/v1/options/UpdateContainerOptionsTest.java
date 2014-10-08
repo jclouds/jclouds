@@ -20,12 +20,12 @@ import static org.jclouds.openstack.swift.v1.reference.SwiftHeaders.CONTAINER_AC
 import static org.jclouds.openstack.swift.v1.reference.SwiftHeaders.CONTAINER_METADATA_PREFIX;
 import static org.jclouds.openstack.swift.v1.reference.SwiftHeaders.CONTAINER_QUOTA_BYTES;
 import static org.jclouds.openstack.swift.v1.reference.SwiftHeaders.CONTAINER_READ;
-import static org.jclouds.openstack.swift.v1.reference.SwiftHeaders.VERSIONS_LOCATION;
 import static org.jclouds.openstack.swift.v1.reference.SwiftHeaders.STATIC_WEB_DIRECTORY_TYPE;
 import static org.jclouds.openstack.swift.v1.reference.SwiftHeaders.STATIC_WEB_ERROR;
 import static org.jclouds.openstack.swift.v1.reference.SwiftHeaders.STATIC_WEB_INDEX;
 import static org.jclouds.openstack.swift.v1.reference.SwiftHeaders.STATIC_WEB_LISTINGS;
 import static org.jclouds.openstack.swift.v1.reference.SwiftHeaders.STATIC_WEB_LISTINGS_CSS;
+import static org.jclouds.openstack.swift.v1.reference.SwiftHeaders.VERSIONS_LOCATION;
 import static org.testng.Assert.assertEquals;
 
 import org.testng.annotations.Test;
