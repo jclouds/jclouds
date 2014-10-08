@@ -55,6 +55,11 @@
     </dependency>
     <dependency>
       <groupId>org.apache.jclouds.api</groupId>
+      <artifactId>openstack-swift</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.jclouds.api</groupId>
       <artifactId>cloudfiles</artifactId>
       <version>${project.version}</version>
     </dependency>
