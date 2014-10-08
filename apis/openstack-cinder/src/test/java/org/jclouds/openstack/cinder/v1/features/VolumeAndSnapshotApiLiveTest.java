@@ -95,6 +95,7 @@ public class VolumeAndSnapshotApiLiveTest extends BaseCinderApiLiveTest {
          assertNotNull(details);
          if (Objects.equal(details.getId(), testVolume.getId())) {
             foundIt = true;
+            break;
          }
       }
       assertTrue(foundIt, "Failed to find the volume we created in list() response");
@@ -117,8 +118,10 @@ public class VolumeAndSnapshotApiLiveTest extends BaseCinderApiLiveTest {
          assertEquals(details.getName(), vol.getName());
          assertEquals(details.getDescription(), vol.getDescription());
          assertEquals(details.getCreated(), vol.getCreated());
+         assertEquals(details.getTenantId(), vol.getTenantId());
          if (Objects.equal(details.getId(), testVolume.getId())) {
             foundIt = true;
+            break;
          }
       }
       assertTrue(foundIt, "Failed to find the volume we previously created in listInDetail() response");
@@ -141,7 +144,7 @@ public class VolumeAndSnapshotApiLiveTest extends BaseCinderApiLiveTest {
 
    @Test(dependsOnMethods = "testCreateSnapshot")
    public void testListSnapshots() {
-      Set<? extends Snapshot> snapshots = snapshotApi.list().toSet();
+      Set<? extends Snapshot> snapshots = snapshotApi.listInDetail().toSet();
       assertNotNull(snapshots);
       boolean foundIt = false;
       for (Snapshot snap : snapshots) {
@@ -152,8 +155,9 @@ public class VolumeAndSnapshotApiLiveTest extends BaseCinderApiLiveTest {
          assertNotNull(details);
          assertEquals(details.getId(), snap.getId());
          assertEquals(details.getVolumeId(), snap.getVolumeId());
+         assertEquals(details.getExtendedAttributes(), snap.getExtendedAttributes());
       }
-      assertTrue(foundIt, "Failed to find the snapshot we previously created in listSnapshots() response");
+     assertTrue(foundIt, "Failed to find the snapshot we previously created in listSnapshots() response");
    }
 
    @Test(dependsOnMethods = "testCreateSnapshot")

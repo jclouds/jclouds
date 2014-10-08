@@ -31,6 +31,7 @@ import org.jclouds.date.internal.SimpleDateFormatDateService;
 import org.jclouds.http.HttpResponse;
 import org.jclouds.io.Payloads;
 import org.jclouds.openstack.cinder.v1.domain.Snapshot;
+import org.jclouds.openstack.cinder.v1.domain.SnapshotExtendedAttributes;
 import org.jclouds.openstack.cinder.v1.domain.Volume;
 import org.jclouds.openstack.cinder.v1.internal.BaseCinderApiExpectTest;
 import org.jclouds.openstack.cinder.v1.options.CreateSnapshotOptions;
@@ -85,7 +86,7 @@ public class SnapshotApiExpectTest extends BaseCinderApiExpectTest {
       ).getSnapshotApi("RegionOne");
 
       Set<? extends Snapshot> snapshots = api.listInDetail().toSet();
-      assertEquals(snapshots, ImmutableSet.of(testSnapshot()));
+      assertEquals(snapshots, ImmutableSet.of(testSnapshotDetailed()));
 
       // double-check individual fields
       Snapshot snappy = Iterables.getOnlyElement(snapshots);
@@ -120,7 +121,7 @@ public class SnapshotApiExpectTest extends BaseCinderApiExpectTest {
       ).getSnapshotApi("RegionOne");
 
       Snapshot snapshot = api.get("67d03df1-ce5d-4ba7-adbe-492ceb80170b");
-      assertEquals(snapshot, testSnapshot());
+      assertEquals(snapshot, testSnapshotDetailed());
    }
 
    public void testGetSnapshotFail() {
@@ -300,6 +301,19 @@ public class SnapshotApiExpectTest extends BaseCinderApiExpectTest {
             .name("jclouds-test-snapshot")
             .size(1)
             .created(dateService.iso8601DateParse("2012-11-02T16:23:27.000000"))
+            .build();
+   }
+
+   protected Snapshot testSnapshotDetailed() {
+      return Snapshot.builder()
+            .id("67d03df1-ce5d-4ba7-adbe-492ceb80170b")
+            .volumeId("ea6f70ef-2784-40b9-9d14-d7f33c507c3f")
+            .description("jclouds test snapshot")
+            .status(Volume.Status.AVAILABLE)
+            .name("jclouds-test-snapshot")
+            .size(1)
+            .created(dateService.iso8601DateParse("2012-11-02T16:23:27.000000"))
+            .extendedAttributes(SnapshotExtendedAttributes.builder().projectId("cc03fd4f503f4d9c986b381b8abe6af5").progress("100%").build())
             .build();
    }
 }
