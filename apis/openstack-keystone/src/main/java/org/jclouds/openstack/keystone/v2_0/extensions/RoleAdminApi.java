@@ -31,10 +31,12 @@ import org.jclouds.Fallbacks.FalseOnNotFoundOr404;
 import org.jclouds.Fallbacks.NullOnNotFoundOr404;
 import org.jclouds.javax.annotation.Nullable;
 import org.jclouds.openstack.keystone.v2_0.domain.Role;
+import org.jclouds.openstack.keystone.v2_0.filters.AuthenticateRequest;
 import org.jclouds.openstack.v2_0.ServiceType;
 import org.jclouds.openstack.v2_0.services.Extension;
 import org.jclouds.rest.annotations.Fallback;
 import org.jclouds.rest.annotations.PayloadParam;
+import org.jclouds.rest.annotations.RequestFilters;
 import org.jclouds.rest.annotations.SelectJson;
 import org.jclouds.rest.annotations.WrapWith;
 
@@ -47,6 +49,7 @@ import com.google.common.collect.FluentIterable;
  */
 @Beta
 @Extension(of = ServiceType.IDENTITY, namespace = ExtensionNamespaces.OS_KSADM)
+@RequestFilters(AuthenticateRequest.class)
 @Path("OS-KSADM/roles")
 public interface RoleAdminApi {
 
