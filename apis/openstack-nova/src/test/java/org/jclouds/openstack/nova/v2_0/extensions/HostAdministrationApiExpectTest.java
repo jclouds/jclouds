@@ -53,12 +53,13 @@ public class HostAdministrationApiExpectTest extends BaseNovaApiExpectTest {
                   .endpoint(endpoint).build(),
             HttpResponse.builder().statusCode(200).payload(payloadFromResource("/hosts_list.json")).build()).getHostAdministrationExtensionForZone("az-1.region-a.geo-1").get();
       
-      Host expected = Host.builder().name("ubuntu").service("compute").build();
+      Host expected = Host.builder().name("ubuntu").service("compute").zone("nova").build();
 
       Set<? extends Host> result = api.list().toSet();
       Host host = Iterables.getOnlyElement(result);
       assertEquals(host.getName(), "ubuntu");
       assertEquals(host.getService(), "compute");
+      assertEquals(host.getZone(), "nova");
 
       assertEquals(host, expected);
    }
