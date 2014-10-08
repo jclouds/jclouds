@@ -82,7 +82,7 @@ public class VolumeApiExpectTest extends BaseCinderApiExpectTest {
       ).getVolumeApiForZone("RegionOne");
 
       Set<? extends Volume> volumes = api.listInDetail().toSet();
-      assertEquals(volumes, ImmutableSet.of(testVolume()));
+      assertEquals(volumes, ImmutableSet.of(testVolumeDetailed()));
    }
 
    public void testListVolumesInDetailFail() {
@@ -216,6 +216,21 @@ public class VolumeApiExpectTest extends BaseCinderApiExpectTest {
             .description("This is a test volume")
             .attachments(ImmutableSet.of(testAttachment()))
             .created(dateService.iso8601DateParse("2012-10-29T20:53:28.000000"))
+            .build();
+   }
+
+   protected Volume testVolumeDetailed() {
+      return Volume.builder()
+            .id("60761c60-0f56-4499-b522-ff13e120af10")
+            .size(1)
+            .name("test")
+            .zone("nova")
+            .status(Volume.Status.IN_USE)
+            .volumeType("None")
+            .description("This is a test volume")
+            .attachments(ImmutableSet.of(testAttachment()))
+            .created(dateService.iso8601DateParse("2012-10-29T20:53:28.000000"))
+            .tenantId("0ad7eca25ff847b2947a7865b82b851c")
             .build();
    }
 
