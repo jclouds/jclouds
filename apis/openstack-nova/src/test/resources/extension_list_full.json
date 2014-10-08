@@ -281,6 +281,14 @@
             "description": "1. Add availability_zone to the Create Server v1.1 API.\n       2. Add availability zones describing.\n    "
         },
         {
+            "updated":"2013-07-08T00:00:00+00:00",
+            "name":"BlockDeviceMappingV2Boot",
+            "links":[],
+            "namespace":"http://docs.openstack.org/compute/ext/block_device_mapping_v2_boot/api/v2",
+            "alias":"os-block-device-mapping-v2-boot",
+            "description":"Allow boot with the new BDM data format."
+        },
+        {
             "alias": "os-volume-attachment-update",
             "description": "Support for updating a volume attachment.",
             "links": [],

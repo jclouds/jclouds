@@ -200,8 +200,7 @@ public class ServerApiExpectTest extends BaseNovaApiExpectTest {
               new ParseCreatedServerTest().expected().toString());
    }
 
-   public void testCreateServerWithAttachedDiskWhenResponseIs202() throws Exception {
-
+   public void testCreateServerWithBootVolumeWhenResponseIs202() throws Exception {
       HttpRequest createServer = HttpRequest
          .builder()
          .method("POST")
@@ -209,9 +208,8 @@ public class ServerApiExpectTest extends BaseNovaApiExpectTest {
          .addHeader("Accept", "application/json")
          .addHeader("X-Auth-Token", authToken)
          .payload(payloadFromStringWithContentType(
-                  "{\"server\":{\"name\":\"test-e92\",\"imageRef\":\"1241\",\"flavorRef\":\"100\",\"block_device_mapping\":[{\"volume_size\":\"\",\"volume_id\":\"f0c907a5-a26b-48ba-b803-83f6b7450ba5\",\"delete_on_termination\":\"1\",\"device_name\":\"vdb\"}]}}", "application/json"))
+                  "{\"server\":{\"name\":\"test-e92\",\"imageRef\":\"\",\"flavorRef\":\"12345\",\"block_device_mapping_v2\":[{\"volume_size\":100,\"uuid\":\"f0c907a5-a26b-48ba-b803-83f6b7450ba5\",\"destination_type\":\"volume\",\"source_type\":\"image\"}]}}", "application/json"))
          .build();
-
 
       HttpResponse createServerResponse = HttpResponse.builder().statusCode(202).message("HTTP/1.1 202 Accepted")
          .payload(payloadFromResourceWithContentType("/new_server.json", "application/json; charset=UTF-8")).build();
@@ -220,10 +218,41 @@ public class ServerApiExpectTest extends BaseNovaApiExpectTest {
       NovaApi apiWithNewServer = requestsSendResponses(keystoneAuthWithUsernameAndPasswordAndTenantName,
             responseWithKeystoneAccess, createServer, createServerResponse);
 
-      BlockDeviceMapping blockDeviceMapping = BlockDeviceMapping.createOptions("f0c907a5-a26b-48ba-b803-83f6b7450ba5", "vdb").deleteOnTermination(true).build();
-      assertEquals(apiWithNewServer.getServerApi("az-1.region-a.geo-1").create("test-e92", "1241",
-               "100", new CreateServerOptions().blockDeviceMapping(ImmutableSet.of(blockDeviceMapping))).toString(),
+      BlockDeviceMapping blockDeviceMapping = BlockDeviceMapping.builder()
+            .uuid("f0c907a5-a26b-48ba-b803-83f6b7450ba5").sourceType("image").destinationType("volume")
+            .volumeSize(100).build();
+
+      assertEquals(apiWithNewServer.getServerApi("az-1.region-a.geo-1").create("test-e92", "",
+               "12345", new CreateServerOptions().blockDeviceMappings(ImmutableSet.of(blockDeviceMapping))).toString(),
               new ParseCreatedServerTest().expected().toString());
+   }
+
+   public void testCreateServerWithBootVolumeWhenResponseIs404() throws Exception {
+      HttpRequest createServer = HttpRequest
+            .builder()
+            .method("POST")
+            .endpoint("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v2/3456/servers")
+            .addHeader("Accept", "application/json")
+            .addHeader("X-Auth-Token", authToken)
+            .payload(payloadFromStringWithContentType(
+                     "{\"server\":{\"name\":\"test-e92\",\"imageRef\":\"\",\"flavorRef\":\"12345\",\"block_device_mapping_v2\":[{\"volume_size\":100,\"uuid\":\"f0c907a5-a26b-48ba-b803-83f6b7450ba5\",\"destination_type\":\"volume\",\"source_type\":\"image\"}]}}", "application/json"))
+            .build();
+
+      HttpResponse createServerResponse = HttpResponse.builder().statusCode(404).build();
+
+      NovaApi apiWithNewServer = requestsSendResponses(keystoneAuthWithUsernameAndPasswordAndTenantName,
+            responseWithKeystoneAccess, createServer, createServerResponse);
+
+      BlockDeviceMapping blockDeviceMapping = BlockDeviceMapping.builder()
+            .uuid("f0c907a5-a26b-48ba-b803-83f6b7450ba5").sourceType("image")
+            .destinationType("volume").volumeSize(100).build();
+
+      try {
+         apiWithNewServer.getServerApi("az-1.region-a.geo-1").create("test-e92", "", "12345", new CreateServerOptions().blockDeviceMappings(ImmutableSet.of(blockDeviceMapping)));
+         fail("Expected an exception.");
+      } catch (Exception e) {
+         // expected
+      }
    }
 
    public void testCreateServerWithDiskConfigAuto() throws Exception {

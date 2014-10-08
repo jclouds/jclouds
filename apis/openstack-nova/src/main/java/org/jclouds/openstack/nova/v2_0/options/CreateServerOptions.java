@@ -110,7 +110,7 @@ public class CreateServerOptions implements MapBinder {
    private Set<Network> novaNetworks = ImmutableSet.of();
    private String availabilityZone;
    private boolean configDrive;
-   private Set<BlockDeviceMapping> blockDeviceMapping = ImmutableSet.of();
+   private Set<BlockDeviceMapping> blockDeviceMappings = ImmutableSet.of();
 
    @Override
    public boolean equals(Object object) {
@@ -119,12 +119,14 @@ public class CreateServerOptions implements MapBinder {
       }
       if (object instanceof CreateServerOptions) {
          final CreateServerOptions other = CreateServerOptions.class.cast(object);
-         return equal(keyName, other.keyName) && equal(securityGroupNames, other.securityGroupNames)
-               && equal(metadata, other.metadata) && equal(personality, other.personality)
-               && equal(adminPass, other.adminPass) && equal(diskConfig, other.diskConfig)
-               && equal(adminPass, other.adminPass) && equal(networks, other.networks)
+         return equal(keyName, other.keyName) && equal(adminPass, other.adminPass)
+               && equal(securityGroupNames, other.securityGroupNames) && equal(metadata, other.metadata)
+               && equal(personality, other.personality)
+               && equal(diskConfig, other.diskConfig)
+               && equal(networks, other.networks)
                && equal(availabilityZone, other.availabilityZone)
-               && equal(configDrive, other.configDrive);
+               && equal(configDrive, other.configDrive)
+               && equal(blockDeviceMappings, other.blockDeviceMappings);
       } else {
          return false;
       }
@@ -132,11 +134,12 @@ public class CreateServerOptions implements MapBinder {
 
    @Override
    public int hashCode() {
-      return Objects.hashCode(keyName, securityGroupNames, metadata, personality, adminPass, networks, availabilityZone, configDrive);
+      return Objects.hashCode(keyName, adminPass, securityGroupNames, metadata, personality, networks, availabilityZone,
+            configDrive, blockDeviceMappings);
    }
 
    protected ToStringHelper string() {
-      ToStringHelper toString = MoreObjects.toStringHelper("").omitNullValues();
+      ToStringHelper toString = MoreObjects.toStringHelper(this);
       toString.add("keyName", keyName);
       if (!securityGroupNames.isEmpty())
          toString.add("securityGroupNames", securityGroupNames);
@@ -151,10 +154,10 @@ public class CreateServerOptions implements MapBinder {
       toString.add("userData", userData == null ? null : new String(userData));
       if (!networks.isEmpty())
          toString.add("networks", networks);
-      toString.add("availability_zone", availabilityZone == null ? null : availabilityZone);
+      toString.add("availabilityZone", availabilityZone == null ? null : availabilityZone);
       toString.add("configDrive", configDrive);
-      if (!blockDeviceMapping.isEmpty())
-         toString.add("blockDeviceMapping", blockDeviceMapping);
+      if (!blockDeviceMappings.isEmpty())
+         toString.add("blockDeviceMappings", blockDeviceMappings);
       return toString;
    }
 
@@ -181,8 +184,8 @@ public class CreateServerOptions implements MapBinder {
       Set<Map<String, String>> networks;
       @Named("config_drive")
       String configDrive;
-      @Named("block_device_mapping")
-      Set<BlockDeviceMapping> blockDeviceMapping;
+      @Named("block_device_mapping_v2")
+      Set<BlockDeviceMapping> blockDeviceMappings;
 
       private ServerRequest(String name, String imageRef, String flavorRef) {
          this.name = name;
@@ -218,11 +221,9 @@ public class CreateServerOptions implements MapBinder {
       if (adminPass != null) {
          server.adminPass = adminPass;
       }
-
       if (diskConfig != null) {
          server.diskConfig = diskConfig;
       }
-
       if (!networks.isEmpty() || !novaNetworks.isEmpty()) {
          server.networks = Sets.newLinkedHashSet(); // ensures ordering is preserved - helps testing and more intuitive for users.
          for (Network network : novaNetworks) {
@@ -243,9 +244,8 @@ public class CreateServerOptions implements MapBinder {
             server.networks.add(ImmutableMap.of("uuid", network));
          }
       }
-
-      if (!blockDeviceMapping.isEmpty()) {
-         server.blockDeviceMapping = blockDeviceMapping;
+      if (!blockDeviceMappings.isEmpty()) {
+         server.blockDeviceMappings = blockDeviceMappings;
       }
 
       return bindToRequest(request, ImmutableMap.of("server", server));
@@ -319,7 +319,7 @@ public class CreateServerOptions implements MapBinder {
     * Custom user-data can be also be supplied at launch time.
     * It is retrievable by the instance and is often used for launch-time configuration
     * by instance scripts.
-    * Pass userData unencdoed, as the value will be base64 encoded automatically.
+    * Pass userData unencoded, as the value will be base64 encoded automatically.
     */
    public CreateServerOptions userData(byte[] userData) {
       this.userData = userData;
@@ -340,21 +340,6 @@ public class CreateServerOptions implements MapBinder {
    /**
     * A keypair name can be defined when creating a server. This key will be
     * linked to the server and used to SSH connect to the machine
-    */
-   public String getKeyPairName() {
-      return keyName;
-   }
-
-   /**
-    * The availability zone in which to launch the server.
-    *
-    * @return the availability zone to be used
-    */
-   public String getAvailabilityZone() {
-      return availabilityZone;
-   }
-
-   /**
     * @see #getKeyPairName()
     */
    public CreateServerOptions keyPairName(String keyName) {
@@ -368,6 +353,75 @@ public class CreateServerOptions implements MapBinder {
    public CreateServerOptions availabilityZone(String availabilityZone) {
       this.availabilityZone = availabilityZone;
       return this;
+   }
+
+   /**
+    * @see #getSecurityGroupNames()
+    */
+   public CreateServerOptions securityGroupNames(String... securityGroupNames) {
+      return securityGroupNames(ImmutableSet.copyOf(checkNotNull(securityGroupNames, "securityGroupNames")));
+   }
+
+   /**
+    * @see #getSecurityGroupNames()
+    */
+   public CreateServerOptions securityGroupNames(Iterable<String> securityGroupNames) {
+      for (String groupName : checkNotNull(securityGroupNames, "securityGroupNames"))
+         checkNotNull(emptyToNull(groupName), "all security groups must be non-empty");
+      this.securityGroupNames = ImmutableSet.copyOf(securityGroupNames);
+      return this;
+   }
+
+   /**
+    * @see #getDiskConfig()
+    */
+   public CreateServerOptions diskConfig(String diskConfig) {
+      this.diskConfig = diskConfig;
+      return this;
+   }
+
+   /**
+    * @see #getNetworks()
+    */
+   public CreateServerOptions networks(Iterable<String> networks) {
+      this.networks = ImmutableSet.copyOf(networks);
+      return this;
+   }
+
+   /**
+    * @see #getNetworks()
+    * Overwrites networks supplied by {@link #networks(Iterable)}
+    */
+   public CreateServerOptions novaNetworks(Iterable<Network> networks) {
+      this.novaNetworks = ImmutableSet.copyOf(networks);
+      return this;
+   }
+
+   /**
+    * @see #getNetworks()
+    */
+   public CreateServerOptions networks(String... networks) {
+      return networks(ImmutableSet.copyOf(networks));
+   }
+
+   /**
+    * @see #getBlockDeviceMappings()
+    */
+   public CreateServerOptions blockDeviceMappings(Set<BlockDeviceMapping> blockDeviceMappings) {
+      this.blockDeviceMappings = ImmutableSet.copyOf(blockDeviceMappings);
+      return this;
+   }
+
+   /**
+    * A keypair name can be defined when creating a server. This key will be
+    * linked to the server and used to SSH connect to the machine
+    */
+   public String getKeyPairName() {
+      return keyName;
+   }
+
+   public String getAvailabilityZone() {
+      return availabilityZone;
    }
 
    /**
@@ -403,23 +457,6 @@ public class CreateServerOptions implements MapBinder {
    }
 
    /**
-    * @see #getSecurityGroupNames
-    */
-   public CreateServerOptions securityGroupNames(String... securityGroupNames) {
-      return securityGroupNames(ImmutableSet.copyOf(checkNotNull(securityGroupNames, "securityGroupNames")));
-   }
-
-   /**
-    * @see #getSecurityGroupNames
-    */
-   public CreateServerOptions securityGroupNames(Iterable<String> securityGroupNames) {
-      for (String groupName : checkNotNull(securityGroupNames, "securityGroupNames"))
-         checkNotNull(emptyToNull(groupName), "all security groups must be non-empty");
-      this.securityGroupNames = ImmutableSet.copyOf(securityGroupNames);
-      return this;
-   }
-
-   /**
     * When you create a server from an image with the diskConfig value set to
     * {@link Server#DISK_CONFIG_AUTO}, the server is built with a single partition that is expanded to
     * the disk size of the flavor selected. When you set the diskConfig attribute to
@@ -435,14 +472,6 @@ public class CreateServerOptions implements MapBinder {
    }
 
    /**
-    * @see #getDiskConfig
-    */
-   public CreateServerOptions diskConfig(String diskConfig) {
-      this.diskConfig = diskConfig;
-      return this;
-   }
-
-   /**
     * Determines if a configuration drive will be attached to the server or not.
     * This can be used for cloud-init or other configuration purposes.
     */
@@ -451,56 +480,24 @@ public class CreateServerOptions implements MapBinder {
    }
 
    /**
-    * @see #getNetworks
+    * Block devices that should be attached to the instance at boot time.
     */
-   public CreateServerOptions networks(Iterable<String> networks) {
-      this.networks = ImmutableSet.copyOf(networks);
-      return this;
-   }
-
-   /**
-    * @see #getNetworks
-    * Overwrites networks supplied by {@link #networks(Iterable)}
-    */
-   public CreateServerOptions novaNetworks(Iterable<Network> networks) {
-      this.novaNetworks = ImmutableSet.copyOf(networks);
-      return this;
-   }
-
-   /**
-    * @see #getNetworks
-    */
-   public CreateServerOptions networks(String... networks) {
-      return networks(ImmutableSet.copyOf(networks));
-   }
-
-   /**
-    * @see #getBlockDeviceMapping
-    */
-   public CreateServerOptions blockDeviceMapping(Set<BlockDeviceMapping> blockDeviceMapping) {
-      this.blockDeviceMapping = ImmutableSet.copyOf(blockDeviceMapping);
-      return this;
-   }
-
-   /**
-    * Block volumes that should be attached to the instance at boot time.
-    *
-    * @see  <a href="http://docs.openstack.org/trunk/openstack-ops/content/attach_block_storage.html">Attach Block Storage<a/>
-    */
-   public Set<BlockDeviceMapping> getBlockDeviceMapping() {
-      return blockDeviceMapping;
+   public Set<BlockDeviceMapping> getBlockDeviceMappings() {
+      return blockDeviceMappings;
    }
 
    public static class Builder {
-
       /**
-       * @see CreateServerOptions#writeFileToPath
+       * @see CreateServerOptions#writeFileToPath(byte[], String)
        */
       public static CreateServerOptions writeFileToPath(byte[] contents, String path) {
          CreateServerOptions options = new CreateServerOptions();
          return options.writeFileToPath(contents, path);
       }
 
+      /**
+       * @see CreateServerOptions#adminPass(String)
+       */
       public static CreateServerOptions adminPass(String adminPass) {
          CreateServerOptions options = new CreateServerOptions();
          return options.adminPass(adminPass);
@@ -515,7 +512,7 @@ public class CreateServerOptions implements MapBinder {
       }
 
       /**
-       * @see #getKeyPairName()
+       * @see CreateServerOptions#keyPairName(String)
        */
       public static CreateServerOptions keyPairName(String keyName) {
          CreateServerOptions options = new CreateServerOptions();
@@ -523,67 +520,62 @@ public class CreateServerOptions implements MapBinder {
       }
 
       /**
-       * @see CreateServerOptions#getSecurityGroupNames
+       * @see CreateServerOptions#securityGroupNames(String...)
        */
       public static CreateServerOptions securityGroupNames(String... groupNames) {
          CreateServerOptions options = new CreateServerOptions();
+         if (new CreateServerOptions().securityGroupNames(groupNames) == CreateServerOptions.class.cast(options.securityGroupNames(groupNames)))
+            System.out.println("They are fucking equal, dump the cast!!!");
          return CreateServerOptions.class.cast(options.securityGroupNames(groupNames));
       }
 
       /**
-       * @see CreateServerOptions#getSecurityGroupNames
+       * @see CreateServerOptions#securityGroupNames(Iterable)
        */
       public static CreateServerOptions securityGroupNames(Iterable<String> groupNames) {
-         CreateServerOptions options = new CreateServerOptions();
-         return CreateServerOptions.class.cast(options.securityGroupNames(groupNames));
+         return CreateServerOptions.class.cast(new CreateServerOptions().securityGroupNames(groupNames));
       }
 
       /**
-       * @see CreateServerOptions#getDiskConfig
+       * @see CreateServerOptions#diskConfig(String)
        */
       public static CreateServerOptions diskConfig(String diskConfig) {
-         CreateServerOptions options = new CreateServerOptions();
-         return CreateServerOptions.class.cast(options.diskConfig(diskConfig));
+         return CreateServerOptions.class.cast(new CreateServerOptions().diskConfig(diskConfig));
       }
 
       /**
-       * @see CreateServerOptions#getNetworks
+       * @see CreateServerOptions#networks(String...)
        */
       public static CreateServerOptions networks(String... networks) {
-         CreateServerOptions options = new CreateServerOptions();
-         return CreateServerOptions.class.cast(options.networks(networks));
+         return CreateServerOptions.class.cast(new CreateServerOptions().networks(networks));
       }
 
       /**
-       * @see CreateServerOptions#getNetworks
+       * @see CreateServerOptions#networks(Iterable)
        */
       public static CreateServerOptions networks(Iterable<String> networks) {
-         CreateServerOptions options = new CreateServerOptions();
-         return CreateServerOptions.class.cast(options.networks(networks));
+         return CreateServerOptions.class.cast(new CreateServerOptions().networks(networks));
       }
 
       /**
-       * @see CreateServerOptions#getNetworks
+       * @see CreateServerOptions#novaNetworks(Iterable)
        */
       public static CreateServerOptions novaNetworks(Iterable<Network> networks) {
-         CreateServerOptions options = new CreateServerOptions();
-         return CreateServerOptions.class.cast(options.novaNetworks(networks));
+         return CreateServerOptions.class.cast(new CreateServerOptions().novaNetworks(networks));
       }
 
       /**
-       * @see org.jclouds.openstack.nova.v2_0.options.CreateServerOptions#getAvailabilityZone()
+       * @see CreateServerOptions#availabilityZone(String)
        */
       public static CreateServerOptions availabilityZone(String availabilityZone) {
-         CreateServerOptions options = new CreateServerOptions();
-         return options.availabilityZone(availabilityZone);
+         return new CreateServerOptions().availabilityZone(availabilityZone);
       }
 
       /**
-       * @see org.jclouds.openstack.nova.v2_0.options.CreateServerOptions#getBlockDeviceMapping()
+       * @see CreateServerOptions#blockDeviceMappings(Set)
        */
-      public static CreateServerOptions blockDeviceMapping (Set<BlockDeviceMapping> blockDeviceMapping) {
-         CreateServerOptions options = new CreateServerOptions();
-         return options.blockDeviceMapping(blockDeviceMapping);
+      public static CreateServerOptions blockDeviceMappings(Set<BlockDeviceMapping> blockDeviceMappings) {
+         return new CreateServerOptions().blockDeviceMappings(blockDeviceMappings);
       }
    }
 

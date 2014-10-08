@@ -23,11 +23,9 @@ import static org.testng.Assert.assertTrue;
 
 import java.util.Set;
 
-import org.jclouds.openstack.nova.v2_0.domain.BlockDeviceMapping;
 import org.jclouds.openstack.nova.v2_0.domain.Volume;
 import org.jclouds.openstack.nova.v2_0.domain.VolumeAttachment;
 import org.jclouds.openstack.nova.v2_0.internal.BaseNovaApiLiveTest;
-import org.jclouds.openstack.nova.v2_0.options.CreateServerOptions;
 import org.jclouds.openstack.nova.v2_0.options.CreateVolumeOptions;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
@@ -36,7 +34,6 @@ import org.testng.annotations.Test;
 import com.google.common.base.Objects;
 import com.google.common.base.Optional;
 import com.google.common.base.Predicate;
-import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Iterables;
 
 /**
@@ -154,6 +151,7 @@ public class VolumeAttachmentApiLiveTest extends BaseNovaApiLiveTest {
       }
    }
 
+   /*
    @Test(dependsOnMethods = "testCreateVolume")
    public void testAttachmentAtBoot() {
       if (volumeApi.isPresent()) {
@@ -188,5 +186,5 @@ public class VolumeAttachmentApiLiveTest extends BaseNovaApiLiveTest {
             }
          }
       }
-   }
+   }*/
 }

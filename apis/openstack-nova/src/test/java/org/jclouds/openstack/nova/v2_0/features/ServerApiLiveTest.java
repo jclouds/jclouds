@@ -19,12 +19,11 @@ package org.jclouds.openstack.nova.v2_0.features;
 import static org.jclouds.openstack.nova.v2_0.domain.Server.Status.ACTIVE;
 import static org.jclouds.openstack.nova.v2_0.predicates.ServerPredicates.awaitActive;
 import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertFalse;
 import static org.testng.Assert.assertNotNull;
 import static org.testng.Assert.assertTrue;
 
-import com.google.common.base.Optional;
 import org.jclouds.http.HttpResponseException;
+import org.jclouds.openstack.nova.v2_0.domain.BlockDeviceMapping;
 import org.jclouds.openstack.nova.v2_0.domain.Network;
 import org.jclouds.openstack.nova.v2_0.domain.Server;
 import org.jclouds.openstack.nova.v2_0.domain.ServerCreated;
@@ -34,9 +33,11 @@ import org.jclouds.openstack.nova.v2_0.options.CreateServerOptions;
 import org.jclouds.openstack.nova.v2_0.options.RebuildServerOptions;
 import org.jclouds.openstack.v2_0.domain.Link.Relation;
 import org.jclouds.openstack.v2_0.domain.Resource;
+import org.jclouds.openstack.v2_0.features.ExtensionApi;
 import org.jclouds.openstack.v2_0.predicates.LinkPredicates;
 import org.testng.annotations.Test;
 
+import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Iterables;
 
@@ -132,6 +133,50 @@ public class ServerApiLiveTest extends BaseNovaApiLiveTest {
       }
    }
 
+   /**
+    * This test creates a new server with a boot device from an image.
+    *
+    * This needs to be supported by the provider, and is usually not supported.
+    *
+    * TODO: Configurable system properties for flavor/image refs.
+    */
+   @Test
+   public void testCreateWithBlockDeviceMapping() {
+      String serverId = null;
+      // Rackspace Performance Flavor
+      String flavorRef = "performance1-2";
+      // Rackspace CentOS 6.5 image
+      String imageRef = "3ab30cc6-c503-41d3-8a37-106fda7848a7";
+      for (String regionId : regions) {
+         ServerApi serverApi = api.getServerApi(regionId);
+         ExtensionApi extensionApi = api.getExtensionApi(regionId);
+
+         // check for the existence of the block mapping v2 boot extension
+         if (extensionApi.get("os-block-device-mapping-v2-boot") != null) {
+            try {
+               BlockDeviceMapping blockDeviceMappings = BlockDeviceMapping.builder()
+                     .uuid(imageRef).sourceType("image").destinationType("volume")
+                     .volumeSize(100).bootIndex(0).build();
+
+               CreateServerOptions options = CreateServerOptions.Builder
+                     .blockDeviceMappings(ImmutableSet.of(blockDeviceMappings));
+
+               ServerCreated server = serverApi.create(hostName, "", flavorRef, options);
+               serverId = server.getId();
+
+               awaitActive(serverApi).apply(server.getId());
+
+               Server serverCheck = serverApi.get(serverId);
+               assertEquals(serverCheck.getStatus(), ACTIVE);
+            } finally {
+               if (serverId != null) {
+                  serverApi.delete(serverId);
+               }
+            }
+         }
+      }
+   }
+
    @Test
    public void testCreateInWrongAvailabilityZone() {
       String serverId = null;
@@ -154,9 +199,7 @@ public class ServerApiLiveTest extends BaseNovaApiLiveTest {
 
    @Test
    public void testRebuildServer() {
-
       String serverId = null;
-
       for (String regionId : regions) {
          ServerApi serverApi = api.getServerApi(regionId);
          try {
@@ -213,6 +256,6 @@ public class ServerApiLiveTest extends BaseNovaApiLiveTest {
 
    private void checkServer(Server server) {
       checkResource(server);
-      assertFalse(server.getAddresses().isEmpty());
+      assertNotNull(server.getFlavor());
    }
 }

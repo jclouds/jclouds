@@ -17,9 +17,7 @@
 package org.jclouds.openstack.nova.v2_0.extensions;
 
 /**
- * Extension namespaces
- *
- * @see <a href= "http://nova.openstack.org/api_ext/" />
+ * OpenStack Nova Extension Namespaces
  */
 public final class ExtensionNamespaces {
    /**
@@ -34,7 +32,6 @@ public final class ExtensionNamespaces {
     * Volume attachment support
     */
    public static final String VOLUME_ATTACHMENTS = "http://docs.openstack.org/compute/ext/os-volume-attachment-update/api/v2";
-
    /**
     * Volume types support
     */
@@ -95,26 +92,27 @@ public final class ExtensionNamespaces {
     * Admin Action extension
     */
    public static final String ADMIN_ACTIONS = "http://docs.openstack.org/ext/admin-actions/api/v1.1";
-
    /**
     * Extended Server Status extension
     */
    public static final String EXTENDED_STATUS = "http://docs.openstack.org/compute/ext/extended_status/api/v1.1";
-
    /**
     * Disk Config extension
     */
    public static final String DISK_CONFIG = "http://docs.openstack.org/compute/ext/disk_config/api/v1.1";
-
    /**
     * Aggregates extension
     */
    public static final String AGGREGATES = "http://docs.openstack.org/ext/aggregates/api/v1.1";
-
    /**
     * Consoles extension
     */
    public static final String CONSOLES = "http://docs.openstack.org/compute/ext/os-consoles/api/v2";
+   /**
+    * Block Device Mapping v2 Boot Extension
+    */
+   public static final String BLOCK_DEVICE_MAPPING_V2_BOOT =
+         "http://docs.openstack.org/compute/ext/block_device_mapping_v2_boot/api/v2";
 
    private ExtensionNamespaces() {
       throw new AssertionError("intentionally unimplemented");
