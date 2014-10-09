@@ -18,9 +18,14 @@ package org.jclouds.openstack.cinder.v1;
 
 import java.io.Closeable;
 import java.util.Set;
-import org.jclouds.javax.annotation.Nullable;
+
 import org.jclouds.location.Zone;
 import org.jclouds.location.functions.ZoneToEndpoint;
+import org.jclouds.openstack.cinder.v1.domain.Snapshot;
+import org.jclouds.openstack.cinder.v1.domain.Volume;
+import org.jclouds.openstack.cinder.v1.domain.VolumeType;
+import org.jclouds.javax.annotation.Nullable;
+import org.jclouds.openstack.cinder.v1.extensions.AvailabilityZoneApi;
 import org.jclouds.openstack.cinder.v1.features.QuotaApi;
 import org.jclouds.openstack.cinder.v1.features.SnapshotApi;
 import org.jclouds.openstack.cinder.v1.features.VolumeApi;
@@ -37,6 +42,13 @@ import com.google.inject.Provides;
  * @see <a href="http://api.openstack.org/">API Doc</a>
  */
 public interface CinderApi extends Closeable {
+   /**
+    * Provides access to Availability Zone features
+    */
+   @Delegate
+   AvailabilityZoneApi getAvailabilityZoneApi(
+         @EndpointParam(parser = ZoneToEndpoint.class) @Nullable String zone);
+
    /**
     * @return the Zone codes configured
     */
