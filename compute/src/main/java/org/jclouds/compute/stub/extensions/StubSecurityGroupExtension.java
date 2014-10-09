@@ -245,4 +245,9 @@ public class StubSecurityGroupExtension implements SecurityGroupExtension {
    public boolean supportsPortRangesForGroups() {
       return true;
    }
+
+   @Override
+   public boolean supportsExclusionCidrBlocks() {
+      return true;
+   }
 }

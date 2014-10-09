@@ -42,7 +42,7 @@ public class IpPermissions extends IpPermission {
    protected IpPermissions(IpProtocol ipProtocol, int fromPort, int toPort,
          Multimap<String, String> userIdGroupPairs, Iterable<String> groupIds, Iterable<String> ipRanges) {
       super(ipProtocol, fromPort, toPort, userIdGroupPairs, groupIds, userIdGroupPairs.isEmpty() ? ipRanges
-            : ImmutableSet.<String> of());
+            : ImmutableSet.<String> of(), ImmutableSet.<String> of());
    }
 
    /**

@@ -46,10 +46,10 @@ public class DescribeSecurityGroupsResponseHandlerTest extends BaseEC2HandlerTes
       Set<SecurityGroup> expected = ImmutableSet.of(
             new SecurityGroup(defaultRegion, "sg-3c6ef654", "WebServers", "UYY3TLBUXIEON5NQVUUX6OMPWBZIQNFM", "Web Servers",
                   ImmutableSet.of(new IpPermission(IpProtocol.TCP, 80, 80, ImmutableMultimap.<String, String> of(),
-                        ImmutableSet.<String> of(), ImmutableSet.of("0.0.0.0/0")))),
+                        ImmutableSet.<String> of(), ImmutableSet.of("0.0.0.0/0"), ImmutableSet.<String> of()))),
             new SecurityGroup(defaultRegion, "sg-867309ab", "RangedPortsBySource", "UYY3TLBUXIEON5NQVUUX6OMPWBZIQNFM", "Group A",
                   ImmutableSet.of(new IpPermission(IpProtocol.TCP, 6000, 7000, ImmutableMultimap
-                        .<String, String> of(), ImmutableSet.<String> of(), ImmutableSet.<String> of()))));
+                        .<String, String> of(), ImmutableSet.<String> of(), ImmutableSet.<String> of(), ImmutableSet.<String> of()))));
 
       DescribeSecurityGroupsResponseHandler handler = injector.getInstance(DescribeSecurityGroupsResponseHandler.class);
       addDefaultRegionToHandler(handler);
@@ -70,9 +70,9 @@ public class DescribeSecurityGroupsResponseHandlerTest extends BaseEC2HandlerTes
             new SecurityGroup(defaultRegion, "sg-3c6ef654", "jclouds#cluster#world", "UYY3TLBUXIEON5NQVUUX6OMPWBZIQNFM", "Cluster",
                   ImmutableSet.of(
                         new IpPermission(IpProtocol.TCP, 22, 22, ImmutableMultimap.<String, String> of(),
-                              ImmutableSet.<String> of(), ImmutableSet.of("0.0.0.0/0")),
+                              ImmutableSet.<String> of(), ImmutableSet.of("0.0.0.0/0"), ImmutableSet.<String> of()),
                         new IpPermission(IpProtocol.ALL, -1, -1, userIdGroupPairs,
-                              ImmutableSet.<String> of(), ImmutableSet.<String> of()))));
+                              ImmutableSet.<String> of(), ImmutableSet.<String> of(), ImmutableSet.<String> of()))));
 
       DescribeSecurityGroupsResponseHandler handler = injector.getInstance(DescribeSecurityGroupsResponseHandler.class);
       addDefaultRegionToHandler(handler);

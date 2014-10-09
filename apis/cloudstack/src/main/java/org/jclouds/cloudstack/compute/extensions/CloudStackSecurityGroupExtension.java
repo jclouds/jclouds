@@ -279,4 +279,9 @@ public class CloudStackSecurityGroupExtension implements SecurityGroupExtension 
       return false;
    }
 
+    @Override
+    public boolean supportsExclusionCidrBlocks() {
+        return false;
+    }
+
 }

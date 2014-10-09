@@ -56,6 +56,7 @@ public class IpPermission implements Comparable<IpPermission> {
       private Multimap<String, String> tenantIdGroupNamePairs = LinkedHashMultimap.create();
       private Set<String> groupIds = Sets.newLinkedHashSet();
       private Set<String> cidrBlocks = Sets.newLinkedHashSet();
+      private Set<String> exclusionCidrBlocks = Sets.newLinkedHashSet();
 
       /**
        * 
@@ -113,16 +114,39 @@ public class IpPermission implements Comparable<IpPermission> {
        * @see IpPermission#getCidrBlocks()
        */
       public Builder cidrBlocks(Iterable<String> cidrBlocks) {
-         Iterables.addAll(this.cidrBlocks, transform(cidrBlocks,
-                                                     new Function<String, String>() {
-                                                        @Override
-                                                        public String apply(String input) {
-                                                           checkArgument(isCidrFormat(input),
-                                                                         "input %s is not a valid CIDR",
-                                                                         input);
-                                                           return input;
-                                                        }
-                                                     }));
+         Iterables.addAll(this.cidrBlocks, transform(cidrBlocks, new Function<String, String>() {
+            @Override
+            public String apply(String input) {
+               checkArgument(isCidrFormat(input), "input %s is not a valid CIDR", input);
+               return input;
+            }
+         }));
+         return this;
+      }
+
+      /**
+       * @see IpPermission#getExclusionCidrBlocks()
+       */
+      @Beta
+      public Builder exclusionCidrBlock(String exclusionCidrBlock) {
+         checkArgument(isCidrFormat(exclusionCidrBlock), "exclusionCidrBlock %s is not a valid CIDR",
+               exclusionCidrBlock);
+         this.exclusionCidrBlocks.add(exclusionCidrBlock);
+         return this;
+      }
+
+      /**
+       * @see IpPermission#getExclusionCidrBlocks()
+       */
+      @Beta
+      public Builder exclusionCidrBlocks(Iterable<String> exclusionCidrBlocks) {
+         Iterables.addAll(this.exclusionCidrBlocks, transform(exclusionCidrBlocks, new Function<String, String>() {
+            @Override
+            public String apply(String input) {
+               checkArgument(isCidrFormat(input), "input %s is not a valid CIDR", input);
+               return input;
+            }
+         }));
          return this;
       }
 
@@ -143,7 +167,8 @@ public class IpPermission implements Comparable<IpPermission> {
       }
 
       public IpPermission build() {
-         return new IpPermission(ipProtocol, fromPort, toPort, tenantIdGroupNamePairs, groupIds, cidrBlocks);
+         return new IpPermission(ipProtocol, fromPort, toPort, tenantIdGroupNamePairs, groupIds, cidrBlocks,
+               exclusionCidrBlocks);
       }
    }
 
@@ -153,16 +178,19 @@ public class IpPermission implements Comparable<IpPermission> {
    private final Set<String> groupIds;
    private final IpProtocol ipProtocol;
    private final Set<String> cidrBlocks;
+   private final Set<String> exclusionCidrBlocks;
 
    public IpPermission(IpProtocol ipProtocol, int fromPort, int toPort,
-            Multimap<String, String> tenantIdGroupNamePairs, Iterable<String> groupIds, Iterable<String> cidrBlocks) {
+         Multimap<String, String> tenantIdGroupNamePairs, Iterable<String> groupIds, Iterable<String> cidrBlocks,
+         Iterable<String> exclusionCidrBlocks) {
       this.fromPort = fromPort;
       this.toPort = toPort;
       this.tenantIdGroupNamePairs = ImmutableMultimap.copyOf(checkNotNull(tenantIdGroupNamePairs,
-               "tenantIdGroupNamePairs"));
+            "tenantIdGroupNamePairs"));
       this.ipProtocol = checkNotNull(ipProtocol, "ipProtocol");
       this.groupIds = ImmutableSet.copyOf(checkNotNull(groupIds, "groupIds"));
       this.cidrBlocks = ImmutableSet.copyOf(checkNotNull(cidrBlocks, "cidrBlocks"));
+      this.exclusionCidrBlocks = ImmutableSet.copyOf(checkNotNull(exclusionCidrBlocks, "exclusionCidrBlocks"));
    }
 
    /**
@@ -217,6 +245,14 @@ public class IpPermission implements Comparable<IpPermission> {
       return cidrBlocks;
    }
 
+   /**
+    * source of traffic is a all but this exclusionCidrBlocks
+    */
+   @Beta
+   public Set<String> getExclusionCidrBlocks() {
+      return exclusionCidrBlocks;
+   }
+
    @Override
    public boolean equals(Object o) {
       if (this == o)
@@ -226,13 +262,15 @@ public class IpPermission implements Comparable<IpPermission> {
          return false;
       IpPermission that = IpPermission.class.cast(o);
       return equal(this.ipProtocol, that.ipProtocol) && equal(this.fromPort, that.fromPort)
-               && equal(this.toPort, that.toPort) && equal(this.tenantIdGroupNamePairs, that.tenantIdGroupNamePairs)
-               && equal(this.groupIds, that.groupIds) && equal(this.cidrBlocks, that.cidrBlocks);
+            && equal(this.toPort, that.toPort) && equal(this.tenantIdGroupNamePairs, that.tenantIdGroupNamePairs)
+            && equal(this.groupIds, that.groupIds) && equal(this.cidrBlocks, that.cidrBlocks)
+            && equal(this.exclusionCidrBlocks, that.exclusionCidrBlocks);
    }
 
    @Override
    public int hashCode() {
-      return Objects.hashCode(ipProtocol, fromPort, toPort, tenantIdGroupNamePairs, groupIds, cidrBlocks);
+      return Objects.hashCode(ipProtocol, fromPort, toPort, tenantIdGroupNamePairs, groupIds, cidrBlocks,
+            exclusionCidrBlocks);
    }
 
    @Override
@@ -241,9 +279,9 @@ public class IpPermission implements Comparable<IpPermission> {
    }
 
    protected ToStringHelper string() {
-      return MoreObjects.toStringHelper("").add("ipProtocol", ipProtocol).add("fromPort", fromPort).add("toPort", toPort)
-               .add("tenantIdGroupNamePairs", tenantIdGroupNamePairs).add("groupIds", groupIds).add("cidrBlocks",
-                        cidrBlocks);
+      return MoreObjects.toStringHelper("").add("ipProtocol", ipProtocol).add("fromPort", fromPort)
+            .add("toPort", toPort).add("tenantIdGroupNamePairs", tenantIdGroupNamePairs).add("groupIds", groupIds)
+            .add("cidrBlocks", cidrBlocks).add("exclusionCidrBlocks", exclusionCidrBlocks);
    }
 
 }

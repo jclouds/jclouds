@@ -43,10 +43,24 @@ public class IpPermissionsTest {
    }
 
    @Test(expectedExceptions = IllegalArgumentException.class)
+   public void testAllProtocolInvalidExclusionCidr() {
+      IpPermissions authorization = IpPermissions.permitAnyProtocol();
+      assertEquals(authorization, IpPermission.builder().ipProtocol(IpProtocol.ALL).fromPort(1).toPort(65535)
+               .exclusionCidrBlock("a.0.0.0/0").build());
+   }
+
+   @Test(expectedExceptions = IllegalArgumentException.class)
    public void testAllProtocolInvalidCidrMultiple() {
       IpPermissions authorization = IpPermissions.permitAnyProtocol();
       assertEquals(authorization, IpPermission.builder().ipProtocol(IpProtocol.ALL).fromPort(1).toPort(65535)
                    .cidrBlocks(ImmutableSet.of("a.0.0.0/0", "0.0.0.0/0")).build());
+   }
+
+   @Test(expectedExceptions = IllegalArgumentException.class)
+   public void testAllProtocolInvalidExclusionCidrMultiple() {
+      IpPermissions authorization = IpPermissions.permitAnyProtocol();
+      assertEquals(authorization, IpPermission.builder().ipProtocol(IpProtocol.ALL).fromPort(1).toPort(65535)
+                   .exclusionCidrBlocks(ImmutableSet.of("a.0.0.0/0", "0.0.0.0/0")).build());
    }
 
    public void testAllProtocolCidrBound() {
@@ -55,10 +69,22 @@ public class IpPermissionsTest {
                .cidrBlock("1.1.1.1/32").build());
    }
 
+   public void testAllProtocolExclusionCidrBound() {
+      IpPermissions authorization = IpPermissions.permit(IpProtocol.ALL).exceptOriginatingFromCidrBlock("1.1.1.1/32");
+      assertEquals(authorization, IpPermission.builder().ipProtocol(IpProtocol.ALL).fromPort(1).toPort(65535)
+               .exclusionCidrBlock("1.1.1.1/32").build());
+   }
+
    public void testJustProtocolAndCidr() {
       IpPermissions authorization = IpPermissions.permit(IpProtocol.TCP).originatingFromCidrBlock("1.1.1.1/32");
       assertEquals(authorization, IpPermission.builder().ipProtocol(IpProtocol.TCP).fromPort(1).toPort(65535)
                .cidrBlock("1.1.1.1/32").build());
+   }
+
+   public void testJustProtocolAndExcludedCidr() {
+      IpPermissions authorization = IpPermissions.permit(IpProtocol.TCP).exceptOriginatingFromCidrBlock("1.1.1.1/32");
+      assertEquals(authorization, IpPermission.builder().ipProtocol(IpProtocol.TCP).fromPort(1).toPort(65535)
+               .exclusionCidrBlock("1.1.1.1/32").build());
    }
 
    public void testAnyProtocol() {
@@ -67,11 +93,24 @@ public class IpPermissionsTest {
                .cidrBlock("1.1.1.1/32").build());
    }
 
+   public void testAnyProtocolWithExcludedCidr() {
+      IpPermissions authorization = IpPermissions.permitAnyProtocol().exceptOriginatingFromCidrBlock("1.1.1.1/32");
+      assertEquals(authorization, IpPermission.builder().ipProtocol(IpProtocol.ALL).fromPort(1).toPort(65535)
+               .exclusionCidrBlock("1.1.1.1/32").build());
+   }
+
    public void testMultipleCidrs() {
       IpPermissions authorization = IpPermissions.permit(IpProtocol.TCP).originatingFromCidrBlocks(
                ImmutableSet.of("1.1.1.1/32", "1.1.1.2/32"));
       assertEquals(authorization, IpPermission.builder().ipProtocol(IpProtocol.TCP).fromPort(1).toPort(65535)
                .cidrBlocks(ImmutableSet.of("1.1.1.1/32", "1.1.1.2/32")).build());
+   }
+
+   public void testMultipleCidrsExclusions() {
+      IpPermissions authorization = IpPermissions.permit(IpProtocol.TCP).exceptOriginatingFromCidrBlocks(
+               ImmutableSet.of("1.1.1.1/32", "1.1.1.2/32"));
+      assertEquals(authorization, IpPermission.builder().ipProtocol(IpProtocol.TCP).fromPort(1).toPort(65535)
+               .exclusionCidrBlocks(ImmutableSet.of("1.1.1.1/32", "1.1.1.2/32")).build());
    }
 
    public void testProtocolFromAndToPortAndGroupIds() {

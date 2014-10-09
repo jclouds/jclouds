@@ -17,6 +17,7 @@
 package org.jclouds.compute.extensions.internal;
 
 import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertFalse;
 import static org.testng.Assert.assertTrue;
 
 import java.util.Set;
@@ -311,9 +312,57 @@ public abstract class BaseSecurityGroupExtensionLiveTest extends BaseComputeServ
       
    }
 */
+
+   @Test(groups = { "integration", "live" }, singleThreaded = true, dependsOnMethods = "testAddIpPermissionsFromSpec")
+   public void testAddIpPermissionWithCidrExclusionGroup() {
+      skipIfSecurityGroupsNotSupported();
+
+      ComputeService computeService = view.getComputeService();
+
+      Optional<SecurityGroupExtension> securityGroupExtension = computeService.getSecurityGroupExtension();
+      assertTrue(securityGroupExtension.isPresent(), "security group extension was not present");
+      if (!securityGroupExtension.get().supportsExclusionCidrBlocks()) {
+         throw new SkipException("Test cannot run without CIDR exclusion groups available.");
+      }
+
+      Optional<SecurityGroup> optGroup = getGroup(securityGroupExtension.get());
+      assertTrue(optGroup.isPresent());
+      SecurityGroup group = optGroup.get();
+
+      IpPermission cidrExclusionPermission = createCidrExclusionPermission();
+      Set<IpPermission> expectedPermissions = ImmutableSet.of(cidrExclusionPermission);
+
+      SecurityGroup securityGriupWithExclusion = securityGroupExtension.get().addIpPermission(cidrExclusionPermission, group);
+
+      assertTrue(securityGriupWithExclusion.getIpPermissions().containsAll(expectedPermissions));
+   }
+
+   @Test(groups = { "integration", "live" }, singleThreaded = true, dependsOnMethods = "testAddIpPermissionWithCidrExclusionGroup")
+   public void testRemoveIpPermissionWithCidrExclusionGroup() {
+      skipIfSecurityGroupsNotSupported();
+
+      ComputeService computeService = view.getComputeService();
+
+      Optional<SecurityGroupExtension> securityGroupExtension = computeService.getSecurityGroupExtension();
+      assertTrue(securityGroupExtension.isPresent(), "security group extension was not present");
+      if (!securityGroupExtension.get().supportsExclusionCidrBlocks()) {
+         throw new SkipException("Test cannot run without CIDR exclusion groups available.");
+      }
+
+      Optional<SecurityGroup> optGroup = getGroup(securityGroupExtension.get());
+      assertTrue(optGroup.isPresent());
+      SecurityGroup group = optGroup.get();
+
+      IpPermission cidrExclusionPermission = createCidrExclusionPermission();
+
+      SecurityGroup emptyGroup = securityGroupExtension.get().removeIpPermission(cidrExclusionPermission, group);
+
+      assertFalse(emptyGroup.getIpPermissions().contains(cidrExclusionPermission));
+   }
+
    // testDeleteSecurityGroup currently disabled until I can find a way to get it to delete the security group while a terminated
    // instance is still floating around in EC2. - abayer, 6/14/13
-   @Test(groups = { "integration", "live" }, singleThreaded = true, dependsOnMethods = "testAddIpPermissionsFromSpec")
+   @Test(groups = { "integration", "live" }, singleThreaded = true, dependsOnMethods = "testRemoveIpPermissionWithCidrExclusionGroup", alwaysRun = true)
    public void testDeleteSecurityGroup() {
       skipIfSecurityGroupsNotSupported();
 
@@ -329,7 +378,7 @@ public abstract class BaseSecurityGroupExtensionLiveTest extends BaseComputeServ
       SecurityGroup group = optGroup.get();
       assertTrue(securityGroupExtension.get().removeSecurityGroup(group.getId()));
    }
-   
+
    private Multimap<String, String> emptyMultimap() {
       return LinkedHashMultimap.create();
    }
@@ -354,6 +403,17 @@ public abstract class BaseSecurityGroupExtensionLiveTest extends BaseComputeServ
       builder.fromPort(10);
       builder.toPort(20);
       builder.cidrBlock("0.0.0.0/0");
+
+      return builder.build();
+   }
+
+   private IpPermission createCidrExclusionPermission() {
+      IpPermission.Builder builder = IpPermission.builder();
+
+      builder.ipProtocol(IpProtocol.TCP);
+      builder.fromPort(10);
+      builder.toPort(20);
+      builder.exclusionCidrBlock("10.0.0.0/8");
 
       return builder.build();
    }

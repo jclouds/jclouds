@@ -333,6 +333,11 @@ public class EC2SecurityGroupExtension implements SecurityGroupExtension {
       return false;
    }
 
+   @Override
+   public boolean supportsExclusionCidrBlocks() {
+      return false;
+   }
+
    protected Iterable<? extends org.jclouds.ec2.domain.SecurityGroup> pollSecurityGroups() {
       Iterable<? extends Set<? extends org.jclouds.ec2.domain.SecurityGroup>> groups
          = transform(regions.get(), allSecurityGroupsInRegion());

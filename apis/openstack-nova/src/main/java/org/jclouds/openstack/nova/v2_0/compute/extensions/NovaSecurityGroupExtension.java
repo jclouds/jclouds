@@ -330,6 +330,11 @@ public class NovaSecurityGroupExtension implements SecurityGroupExtension {
       return false;
    }
 
+   @Override
+   public boolean supportsExclusionCidrBlocks() {
+       return false;
+   }
+
    protected Iterable<? extends SecurityGroupInRegion> pollSecurityGroups() {
       Iterable<? extends Set<? extends SecurityGroupInRegion>> groups
               = transform(regionIds.get(), allSecurityGroupsInRegion());
@@ -368,4 +373,5 @@ public class NovaSecurityGroupExtension implements SecurityGroupExtension {
          }
       };
    }
+
 }

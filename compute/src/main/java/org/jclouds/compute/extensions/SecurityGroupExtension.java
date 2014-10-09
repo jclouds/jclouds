@@ -23,6 +23,7 @@ import org.jclouds.domain.Location;
 import org.jclouds.net.domain.IpPermission;
 import org.jclouds.net.domain.IpProtocol;
 
+import com.google.common.annotations.Beta;
 import com.google.common.collect.Multimap;
 
 /**
@@ -180,4 +181,10 @@ public interface SecurityGroupExtension {
     */
    boolean supportsPortRangesForGroups();
    
+   /**
+    * Returns true if this SecurityGroupExtension supports exclusion CIDR groups.
+    */
+   @Beta
+   boolean supportsExclusionCidrBlocks();
+
 }
