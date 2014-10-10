@@ -1,0 +1,7 @@
+{
+  "965f2db33d302ed4625d172e0bc36920" : "https://api.opscode.com/organizations/nacx/groups/965f2db33d302ed4625d172e0bc36920",
+  "admins" : "https://api.opscode.com/organizations/nacx/groups/admins",
+  "billing-admins" : "https://api.opscode.com/organizations/nacx/groups/billing-admins",
+  "clients" : "https://api.opscode.com/organizations/nacx/groups/clients",
+  "users" : "https://api.opscode.com/organizations/nacx/groups/users"
+}
