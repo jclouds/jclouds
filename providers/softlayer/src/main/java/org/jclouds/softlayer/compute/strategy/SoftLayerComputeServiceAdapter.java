@@ -35,7 +35,6 @@ import static org.jclouds.softlayer.reference.SoftLayerConstants.PROPERTY_SOFTLA
 import static org.jclouds.util.Predicates2.retry;
 import java.util.Comparator;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 import javax.annotation.Resource;
@@ -73,15 +72,12 @@ import org.jclouds.softlayer.domain.VirtualGuestNetworkComponent;
 import com.google.common.base.Function;
 import com.google.common.base.Optional;
 import com.google.common.base.Predicate;
-import com.google.common.base.Predicates;
 import com.google.common.base.Supplier;
 import com.google.common.collect.ComparisonChain;
 import com.google.common.collect.FluentIterable;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet.Builder;
 import com.google.common.collect.ImmutableSortedSet;
-import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 
 /**
@@ -151,7 +147,7 @@ public class SoftLayerComputeServiceAdapter implements
               .networkComponents(VirtualGuestNetworkComponent.builder().speed(portSpeed).build());
 
       // set operating system or blockDeviceTemplateGroup
-      Optional<OperatingSystem> optionalOperatingSystem = tryGetOperatingSystemFrom(imageId);
+      Optional<OperatingSystem> optionalOperatingSystem = tryExtractOperatingSystemFrom(imageId);
       if (optionalOperatingSystem.isPresent()) {
          virtualGuestBuilder.operatingSystem(optionalOperatingSystem.get());
       // the imageId specified is a the id of a public/private/flex image
@@ -191,45 +187,8 @@ public class SoftLayerComputeServiceAdapter implements
       }
       result = api.getVirtualGuestApi().getVirtualGuest(result.getId());
       Password pwd = get(result.getOperatingSystem().getPasswords(), 0);
-      return new NodeAndInitialCredentials<VirtualGuest>(result, result.getId() + "",
+      return new NodeAndInitialCredentials(result, result.getId() + "",
               LoginCredentials.builder().user(pwd.getUsername()).password(pwd.getPassword()).build());
-   }
-
-   /**
-    * This method will deliberately skip device position 1 as it is reserved to SWAP
-    * @param blockDeviceCapacities list of blockDevices to be attached
-    * @param diskType disks can be LOCAL or SAN
-    * @return
-    */
-   private List<VirtualGuestBlockDevice> getBlockDevices(List<Integer> blockDeviceCapacities, String diskType) {
-      List<VirtualGuestBlockDevice> blockDevices = Lists.newArrayList();
-      int devicePosition = 0;
-      for (int i = 0; i < blockDeviceCapacities.size(); i++) {
-         if (i > 0) { devicePosition = i + 1; }
-         blockDevices.add(VirtualGuestBlockDevice.builder()
-                    .device(devicePosition + "")
-                    .diskImage(VirtualDiskImage.builder()
-                            .capacity(blockDeviceCapacities.get(i))
-                            .typeId(Type.valueOf(diskType).ordinal())
-                            .build())
-                    .build());
-      }
-      return blockDevices;
-   }
-
-   private Optional<OperatingSystem> tryGetOperatingSystemFrom(final String imageId) {
-      Set<OperatingSystem> operatingSystemsAvailable = createObjectOptionsSupplier.get().getVirtualGuestOperatingSystems();
-      return tryFind(FluentIterable.from(operatingSystemsAvailable)
-              .filter(new Predicate<OperatingSystem>() {
-                 @Override
-                 public boolean apply(OperatingSystem input) {
-                    return input.getId().contains(imageId);
-                 }
-              }), Predicates.notNull());
-   }
-
-   private boolean isLocalDisk(String diskType) {
-      return diskType.equalsIgnoreCase(Type.LOCAL.name());
    }
 
    @Override
@@ -279,90 +238,39 @@ public class SoftLayerComputeServiceAdapter implements
       return hardware.build();
    }
 
-   private int getBootableDeviceType(Hardware hardware) {
-      List<? extends Volume> volumes = hardware.getVolumes();
-      Optional<? extends Volume> optionalBootableVolume = tryFind(volumes, new Predicate<Volume>() {
-         @Override
-         public boolean apply(Volume volume) {
-            return volume.getDevice().equals(BOOTABLE_DEVICE);
-         }
-      });
-      if (!optionalBootableVolume.isPresent()) {
-         return Type.LOCAL.ordinal();
-      }
-      return optionalBootableVolume.get().getType().ordinal();
-   }
-
    @Override
    public Set<OperatingSystem> listImages() {
       Set<OperatingSystem> result = Sets.newHashSet();
-      Set<SoftwareDescription> unfiltered = api.getSoftwareDescriptionApi().getAllObjects();
-      Set<OperatingSystem> operatingSystemsAvailable = createObjectOptionsSupplier.get()
-              .getVirtualGuestOperatingSystems();
-      for (OperatingSystem os : operatingSystemsAvailable) {
-         final String osReferenceCode = os.getOperatingSystemReferenceCode();
-         final String osId = os.getId();
-         result.addAll(FluentIterable.from(unfiltered)
-                         .filter(new Predicate<SoftwareDescription>() {
-                            @Override
-                            public boolean apply(SoftwareDescription input) {
-                               return isOperatingSystem(input) && input.getReferenceCode().equals(osReferenceCode);
-                            }
-                         })
-                         .transform(new SoftwareDescriptionToOperatingSystem(osId, osReferenceCode))
-                         .toSet()
-         );
-      }
+      Set<SoftwareDescription> allObjects = api.getSoftwareDescriptionApi().getAllObjects();
 
-      // list private images and transform them to OperatingSystem
+      // add private images
       Set<VirtualGuestBlockDeviceTemplateGroup> privateImages = api.getAccountApi().getBlockDeviceTemplateGroups();
-      Map<String, SoftwareDescription> privateImagesSoftwareDescriptions = extractSoftwareDescriptions(privateImages);
-      for (Map.Entry<String, SoftwareDescription> entry : privateImagesSoftwareDescriptions.entrySet()) {
-         OperatingSystem os = getOperatingSystem(entry);
-         if (os != null) {
-            result.add(os);
+      for (VirtualGuestBlockDeviceTemplateGroup privateImage : privateImages) {
+         Optional<OperatingSystem> operatingSystemOptional = tryExtractOperatingSystemFrom(privateImage);
+         if (operatingSystemOptional.isPresent()) {
+            result.add(operatingSystemOptional.get());
          }
       }
-      // list public images and transform them to OperatingSystem
+
       if (includePublicImages) {
          Set<VirtualGuestBlockDeviceTemplateGroup> publicImages = api.getVirtualGuestBlockDeviceTemplateGroupApi().getPublicImages();
-         Map<String, SoftwareDescription> publicImagesSoftwareDescriptions = extractSoftwareDescriptions(publicImages);
-         for (Map.Entry<String, SoftwareDescription> entry : publicImagesSoftwareDescriptions.entrySet()) {
-            OperatingSystem os = getOperatingSystem(entry);
-            if (os != null) {
-               result.add(os);
+         for (VirtualGuestBlockDeviceTemplateGroup publicImage : publicImages) {
+            Optional<OperatingSystem> operatingSystemOptional = tryExtractOperatingSystemFrom(publicImage);
+            if (operatingSystemOptional.isPresent()) {
+               result.add(operatingSystemOptional.get());
             }
          }
+      }
+
+      // add allObjects filtered by the available OS
+      for (OperatingSystem os : createObjectOptionsSupplier.get().getVirtualGuestOperatingSystems()) {
+         result.addAll(FluentIterable.from(allObjects)
+                 .filter(new IsOperatingSystem())
+                 .filter(new HasSameOsReferenceCode(os.getOperatingSystemReferenceCode()))
+                 .transform(new SoftwareDescriptionToOperatingSystem(os.getId()))
+                 .toSet());
       }
       return result;
-   }
-
-   private OperatingSystem getOperatingSystem(Map.Entry<String, SoftwareDescription> entry) {
-      SoftwareDescription softwareDescription = entry.getValue();
-      if (isOperatingSystem(softwareDescription)) {
-         String uuid = entry.getKey();
-         return OperatingSystem.builder()
-                 .id(uuid)
-                 .softwareLicense(SoftwareLicense.builder().softwareDescription(softwareDescription).build())
-                 .operatingSystemReferenceCode(softwareDescription.getReferenceCode())
-                 .build();
-      }
-      return null;
-   }
-
-   private Map<String, SoftwareDescription> extractSoftwareDescriptions(Set<VirtualGuestBlockDeviceTemplateGroup> images) {
-      Map<String, SoftwareDescription> softwareDescriptions = Maps.newHashMap();
-      for (VirtualGuestBlockDeviceTemplateGroup image : images) {
-         final String globalIdentifier = image.getGlobalIdentifier();
-         for (VirtualGuestBlockDeviceTemplateGroup child : image.getChildren()) {
-            for (VirtualGuestBlockDeviceTemplate blockDeviceTemplate : child.getBlockDevices()) {
-               for (VirtualDiskImageSoftware softwareReference : blockDeviceTemplate.getDiskImage().getSoftwareReferences()) {
-                  softwareDescriptions.put(globalIdentifier, softwareReference.getSoftwareDescription());
-               }
-            }
-         }
-      }
-      return softwareDescriptions;
    }
 
    @Override
@@ -445,8 +353,68 @@ public class SoftLayerComputeServiceAdapter implements
       api.getVirtualGuestApi().pauseVirtualGuest(Long.parseLong(id));
    }
 
-   private boolean isOperatingSystem(SoftwareDescription input) {
-      return input.getOperatingSystem() == 1;
+   /**
+    * This method will deliberately skip device position 1 as it is reserved to SWAP
+    * @param blockDeviceCapacities list of blockDevices to be attached
+    * @param diskType disks can be LOCAL or SAN
+    * @return
+    */
+   private static List<VirtualGuestBlockDevice> getBlockDevices(List<Integer> blockDeviceCapacities, String diskType) {
+      ImmutableList.Builder<VirtualGuestBlockDevice> blockDevicesBuilder = ImmutableList.builder();
+      int devicePosition = 0;
+      for (int i = 0; i < blockDeviceCapacities.size(); i++) {
+         if (i > 0) { devicePosition = i + 1; }
+         blockDevicesBuilder.add(VirtualGuestBlockDevice.builder()
+                 .device(devicePosition + "")
+                 .diskImage(VirtualDiskImage.builder()
+                         .capacity(blockDeviceCapacities.get(i))
+                         .typeId(Type.valueOf(diskType).ordinal())
+                         .build())
+                 .build());
+      }
+      return blockDevicesBuilder.build();
+   }
+
+   private static boolean isLocalDisk(String diskType) {
+      return diskType.equalsIgnoreCase(Type.LOCAL.name());
+   }
+
+   private static int getBootableDeviceType(Hardware hardware) {
+      List<? extends Volume> volumes = hardware.getVolumes();
+      Optional<? extends Volume> optionalBootableVolume = tryFind(volumes, new Predicate<Volume>() {
+         @Override
+         public boolean apply(Volume volume) {
+            return volume.getDevice().equals(BOOTABLE_DEVICE);
+         }
+      });
+      if (!optionalBootableVolume.isPresent()) {
+         return Type.LOCAL.ordinal();
+      }
+      return optionalBootableVolume.get().getType().ordinal();
+   }
+
+   private Optional<OperatingSystem> tryExtractOperatingSystemFrom(final String imageId) {
+      Set<OperatingSystem> operatingSystemsAvailable = createObjectOptionsSupplier.get().getVirtualGuestOperatingSystems();
+      return FluentIterable.from(operatingSystemsAvailable)
+              .filter(new Predicate<OperatingSystem>() {
+                 @Override
+                 public boolean apply(OperatingSystem input) {
+                    if (input == null) return false;
+                    return input.getId().contains(imageId);
+                 }
+              })
+              .first();
+   }
+
+   private Optional<OperatingSystem> tryExtractOperatingSystemFrom(VirtualGuestBlockDeviceTemplateGroup image) {
+      return FluentIterable.from(image.getChildren())
+              .transformAndConcat(new BlockDeviceTemplateGroupToBlockDeviceTemplateIterable())
+              .filter(new IsBootableDevice())
+              .transformAndConcat(new BlockDeviceTemplateToDiskImageSoftware())
+              .transform(new DiskImageSoftwareToSoftwareDescription())
+              .filter(new IsOperatingSystem())
+              .transform(new SoftwareDescriptionToOperatingSystem(image.getGlobalIdentifier()))
+              .first();
    }
 
    public static class VirtualGuestHasLoginDetailsPresent implements Predicate<VirtualGuest> {
@@ -465,7 +433,7 @@ public class SoftLayerComputeServiceAdapter implements
          boolean hasBackendIp = newGuest.getPrimaryBackendIpAddress() != null;
          boolean hasPrimaryIp = newGuest.getPrimaryIpAddress() != null;
          boolean hasPasswords = newGuest.getOperatingSystem() != null
-               && !newGuest.getOperatingSystem().getPasswords().isEmpty();
+                 && !newGuest.getOperatingSystem().getPasswords().isEmpty();
 
          return hasBackendIp && hasPrimaryIp && hasPasswords;
       }
@@ -473,19 +441,67 @@ public class SoftLayerComputeServiceAdapter implements
 
    private static class SoftwareDescriptionToOperatingSystem implements Function<SoftwareDescription, OperatingSystem> {
       private final String osId;
-      private final String operatingSystemReferenceCode;
 
-      public SoftwareDescriptionToOperatingSystem(String osId, String operatingSystemReferenceCode) {
+      public SoftwareDescriptionToOperatingSystem(String osId) {
          this.osId = osId;
-         this.operatingSystemReferenceCode = operatingSystemReferenceCode;
       }
 
       @Override
       public OperatingSystem apply(SoftwareDescription input) {
          return OperatingSystem.builder().id(osId)
-                 .softwareLicense(SoftwareLicense.builder().softwareDescription(input).build())
-                 .operatingSystemReferenceCode(operatingSystemReferenceCode)
-                 .build();
+                                         .softwareLicense(SoftwareLicense.builder().softwareDescription(input).build())
+                                         .operatingSystemReferenceCode(input.getReferenceCode())
+                                         .build();
+      }
+   }
+
+   private static class IsBootableDevice implements Predicate<VirtualGuestBlockDeviceTemplate> {
+      @Override
+      public boolean apply(VirtualGuestBlockDeviceTemplate blockDeviceTemplate) {
+         return blockDeviceTemplate.getDevice().equals(BOOTABLE_DEVICE);
+      }
+   }
+
+   private static class BlockDeviceTemplateGroupToBlockDeviceTemplateIterable implements Function<VirtualGuestBlockDeviceTemplateGroup,
+                         Iterable<VirtualGuestBlockDeviceTemplate>> {
+      @Override
+      public Iterable<VirtualGuestBlockDeviceTemplate> apply(VirtualGuestBlockDeviceTemplateGroup input) {
+         return input.getBlockDevices();
+      }
+   }
+
+   private static class BlockDeviceTemplateToDiskImageSoftware implements Function<VirtualGuestBlockDeviceTemplate, Iterable<VirtualDiskImageSoftware>> {
+      @Override
+      public Iterable<VirtualDiskImageSoftware> apply(VirtualGuestBlockDeviceTemplate bootableDevice) {
+         return bootableDevice.getDiskImage().getSoftwareReferences();
+      }
+   }
+
+   private static class DiskImageSoftwareToSoftwareDescription implements Function<VirtualDiskImageSoftware, SoftwareDescription> {
+      @Override
+      public SoftwareDescription apply(VirtualDiskImageSoftware software) {
+         return software.getSoftwareDescription();
+      }
+   }
+
+   private static class HasSameOsReferenceCode implements Predicate<SoftwareDescription> {
+      private final String osReferenceCode;
+
+      public HasSameOsReferenceCode(String osReferenceCode) {
+         this.osReferenceCode = osReferenceCode;
+      }
+
+      @Override
+      public boolean apply(SoftwareDescription input) {
+         return input.getReferenceCode().equals(osReferenceCode);
+      }
+   }
+
+   private class IsOperatingSystem implements Predicate<SoftwareDescription> {
+      @Override
+      public boolean apply(SoftwareDescription softwareDescription) {
+         // operatingSystem is set to '1' if this Software Description describes an Operating System.
+         return softwareDescription.getOperatingSystem() == 1;
       }
    }
 }

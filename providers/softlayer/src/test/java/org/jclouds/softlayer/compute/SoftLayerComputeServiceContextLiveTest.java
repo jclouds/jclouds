@@ -67,15 +67,18 @@ public class SoftLayerComputeServiceContextLiveTest extends BaseComputeServiceCo
 
       TemplateBuilder templateBuilder = context.getComputeService().templateBuilder();
       templateBuilder.imageId("CENTOS_6_64");
+      //templateBuilder.imageVersionMatches("6.5");
       templateBuilder.locationId("ams01");
+      // private image id should be a globalIdentifier of a VirtualGuestBlockDeviceTemplateGroup
+      //templateBuilder.imageId("3d7697d8-beef-437a-8921-5a2a18bc116f");
 
       Template template = templateBuilder.build();
       // test passing custom options
       SoftLayerTemplateOptions options = template.getOptions().as(SoftLayerTemplateOptions.class);
       options.domainName("live.org");
       // multi-disk option
-      options.blockDevices(ImmutableList.of(25, 400, 400));
-      options.diskType("SAN");
+      //options.blockDevices(ImmutableList.of(25, 400, 400));
+      //options.diskType("SAN");
       //tags
       options.tags(ImmutableList.of("jclouds"));
 
