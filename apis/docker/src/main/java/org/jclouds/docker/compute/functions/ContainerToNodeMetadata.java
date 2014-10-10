@@ -18,6 +18,7 @@ package org.jclouds.docker.compute.functions;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.collect.Iterables.getOnlyElement;
+
 import java.net.URI;
 import java.util.List;
 import java.util.Map;
@@ -86,9 +87,12 @@ public class ContainerToNodeMetadata implements Function<Container, NodeMetadata
       builder.publicAddresses(getPublicIpAddresses());
       builder.privateAddresses(getPrivateIpAddresses(container));
       builder.location(Iterables.getOnlyElement(locations.get()));
-      Image image = images.get().get(container.getImage());
-      builder.imageId(image.getId());
-      builder.operatingSystem(image.getOperatingSystem());
+      String imageId = container.getImage();
+      builder.imageId(imageId);
+      if (images.get().containsKey(imageId)) {
+          Image image = images.get().get(imageId);
+          builder.operatingSystem(image.getOperatingSystem());
+      }
 
       return builder.build();
    }
