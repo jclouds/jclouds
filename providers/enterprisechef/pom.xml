@@ -20,14 +20,14 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <parent>
-    <groupId>org.apache.jclouds.chef</groupId>
-    <artifactId>chef-project</artifactId>
+    <groupId>org.apache.jclouds</groupId>
+    <artifactId>jclouds-project</artifactId>
     <version>1.8.2-SNAPSHOT</version>
-    <relativePath>../project/pom.xml</relativePath>
+    <relativePath>../../project/pom.xml</relativePath>
   </parent>
   <groupId>org.apache.jclouds.provider</groupId>
   <artifactId>enterprisechef</artifactId>
-  <name>Apache jclouds Chef :: Enterprise</name>
+  <name>jclouds Enterprise Chef provider</name>
   <description>jclouds components to access Enterprise Chef</description>
 
   <properties>
@@ -38,7 +38,7 @@
     <test.enterprisechef.identity>YOUR_USER</test.enterprisechef.identity>
     <test.enterprisechef.credential>${user.home}/.chef/${test.enterprisechef.org}/${test.enterprisechef.identity}.pem</test.enterprisechef.credential>
     <jclouds.osgi.export>org.jclouds.enterprisechef*;version="${project.version}"</jclouds.osgi.export>
-    <jclouds.osgi.import>org.jclouds*;version="${jclouds.version}",*</jclouds.osgi.import>
+    <jclouds.osgi.import>org.jclouds*;version="${project.version}",*</jclouds.osgi.import>
   </properties>
 
   <dependencies>
@@ -57,20 +57,19 @@
     <dependency>
       <groupId>org.apache.jclouds</groupId>
       <artifactId>jclouds-core</artifactId>
-      <version>${jclouds.version}</version>
+      <version>${project.version}</version>
       <type>test-jar</type>
       <scope>test</scope>
     </dependency>
     <dependency>
       <groupId>org.apache.jclouds.driver</groupId>
       <artifactId>jclouds-slf4j</artifactId>
-      <version>${jclouds.version}</version>
+      <version>${project.version}</version>
       <scope>test</scope>
     </dependency>
     <dependency>
       <groupId>ch.qos.logback</groupId>
       <artifactId>logback-classic</artifactId>
-      <version>1.0.9</version>
       <scope>test</scope>
     </dependency>
   </dependencies>

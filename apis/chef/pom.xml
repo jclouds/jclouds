@@ -20,15 +20,15 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <parent>
-    <groupId>org.apache.jclouds.chef</groupId>
-    <artifactId>chef-project</artifactId>
+    <groupId>org.apache.jclouds</groupId>
+    <artifactId>jclouds-project</artifactId>
     <version>1.8.2-SNAPSHOT</version>
-    <relativePath>../project/pom.xml</relativePath>
+    <relativePath>../../project/pom.xml</relativePath>
   </parent>
   <groupId>org.apache.jclouds.api</groupId>
   <artifactId>chef</artifactId>
   <packaging>bundle</packaging>
-  <name>Apache jclouds Chef :: Core</name>
+  <name>jclouds Chef api</name>
   <description>jclouds components to access Chef</description>
 
   <properties>
@@ -38,8 +38,8 @@
     <test.chef.identity>chef-webui</test.chef.identity>
     <test.chef.credential>${user.home}/.chef/webui.pem</test.chef.credential>
     <jclouds.osgi.import>
-      org.jclouds;version=${jclouds.version},
-      org.jclouds*;version=${jclouds.version},
+      org.jclouds;version=${project.version},
+      org.jclouds*;version=${project.version},
       *
     </jclouds.osgi.import>
     <jclouds.osgi.export>
@@ -52,24 +52,24 @@
     <dependency>
       <groupId>org.apache.jclouds</groupId>
       <artifactId>jclouds-core</artifactId>
-      <version>${jclouds.version}</version>
+      <version>${project.version}</version>
     </dependency>
     <dependency>
       <groupId>org.apache.jclouds</groupId>
       <artifactId>jclouds-core</artifactId>
-      <version>${jclouds.version}</version>
+      <version>${project.version}</version>
       <type>test-jar</type>
       <scope>test</scope>
     </dependency>
     <dependency>
       <groupId>org.apache.jclouds</groupId>
       <artifactId>jclouds-scriptbuilder</artifactId>
-      <version>${jclouds.version}</version>
+      <version>${project.version}</version>
     </dependency>
     <dependency>
       <groupId>org.apache.jclouds</groupId>
       <artifactId>jclouds-scriptbuilder</artifactId>
-      <version>${jclouds.version}</version>
+      <version>${project.version}</version>
       <type>test-jar</type>
       <scope>test</scope>
     </dependency>
@@ -83,13 +83,13 @@
     <dependency>
       <groupId>org.apache.jclouds</groupId>
       <artifactId>jclouds-blobstore</artifactId>
-      <version>${jclouds.version}</version>
+      <version>${project.version}</version>
       <optional>true</optional>
     </dependency>
     <dependency>
       <groupId>org.apache.jclouds.driver</groupId>
       <artifactId>jclouds-slf4j</artifactId>
-      <version>${jclouds.version}</version>
+      <version>${project.version}</version>
       <scope>test</scope>
     </dependency>
     <dependency>

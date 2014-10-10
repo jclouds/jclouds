@@ -52,6 +52,7 @@
     <module>rackspace-clouddns</module>
     <module>sts</module>
     <module>route53</module>
+    <module>chef</module>
   </modules>
   <profiles>
     <profile>
