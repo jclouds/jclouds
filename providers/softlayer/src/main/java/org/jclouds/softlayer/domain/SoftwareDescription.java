@@ -80,7 +80,7 @@ public class SoftwareDescription {
       }
 
       /**
-       * @see SoftwareDescription#getOperatingSystem()
+       * @see SoftwareDescription#isOperatingSystem()
        */
       public Builder operatingSystem(int operatingSystem) {
          this.operatingSystem = operatingSystem;
