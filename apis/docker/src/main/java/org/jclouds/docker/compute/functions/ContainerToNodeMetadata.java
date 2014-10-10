@@ -48,6 +48,14 @@ import com.google.inject.Singleton;
 @Singleton
 public class ContainerToNodeMetadata implements Function<Container, NodeMetadata> {
 
+   /**
+    * This value is used when a container does not have an accessible
+    * login port (i.e. the SSH daemon is not running) due to being
+    * started outside jclouds. Client code should check for this value
+    * when accessing NodeMetadata from Docker.
+    */
+   public static final Integer NO_LOGIN_PORT = Integer.valueOf(-1);
+
    private final ProviderMetadata providerMetadata;
    private final Function<State, NodeMetadata.Status> toPortableStatus;
    private final GroupNamingConvention nodeNamingConvention;
@@ -125,6 +133,6 @@ public class ContainerToNodeMetadata implements Function<Container, NodeMetadata
             }
          }
       }
-      return -1;
+      return NO_LOGIN_PORT;
    }
 }
