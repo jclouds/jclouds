@@ -100,6 +100,10 @@ public class DockerComputeServiceAdapter implements
          containerConfigBuilder.memory(templateOptions.getMemory().get());
       }
 
+      if (templateOptions.getHostname().isPresent()) {
+         containerConfigBuilder.hostname(templateOptions.getHostname().get());
+      }
+
       if (templateOptions.getCpuShares().isPresent()) {
          containerConfigBuilder.cpuShares(templateOptions.getCpuShares().get());
       }
