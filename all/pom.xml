@@ -44,6 +44,11 @@
       <version>${project.version}</version>
     </dependency>
     <dependency>
+      <groupId>org.apache.jclouds.api</groupId>
+      <artifactId>chef</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+    <dependency>
       <groupId>org.apache.jclouds.provider</groupId>
       <artifactId>aws-cloudwatch</artifactId>
       <version>${project.version}</version>
@@ -101,6 +106,11 @@
     <dependency>
       <groupId>org.apache.jclouds.provider</groupId>
       <artifactId>dynect</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.jclouds.provider</groupId>
+      <artifactId>enterprisechef</artifactId>
       <version>${project.version}</version>
     </dependency>
     <dependency>
