@@ -16,7 +16,6 @@
  */
 package org.jclouds.docker.compute.options;
 
-import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
 import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableList;
@@ -54,6 +53,7 @@ public class DockerTemplateOptions extends TemplateOptions implements Cloneable 
    protected Optional<Integer> cpuShares = Optional.absent();
    protected Optional<List<String>> commands = Optional.absent();
    protected Optional<Map<String, String>> volumes = Optional.absent();
+   protected Optional<List<String>> env = Optional.absent();
 
    @Override
    public DockerTemplateOptions clone() {
@@ -83,8 +83,11 @@ public class DockerTemplateOptions extends TemplateOptions implements Cloneable 
             eTo.commands(commands.get());
          }
          if (cpuShares.isPresent()) {
-            eTo.cpuShares(cpuShares.get());
-         }
+             eTo.cpuShares(cpuShares.get());
+          }
+         if (env.isPresent()) {
+             eTo.env(env.get());
+          }
       }
    }
 
@@ -100,23 +103,25 @@ public class DockerTemplateOptions extends TemplateOptions implements Cloneable 
               equal(this.dns, that.dns) &&
               equal(this.memory, that.memory) &&
               equal(this.commands, that.commands) &&
-              equal(this.cpuShares, that.cpuShares);
+              equal(this.cpuShares, that.cpuShares) &&
+              equal(this.env, that.env);
    }
 
    @Override
    public int hashCode() {
-      return Objects.hashCode(super.hashCode(), volumes, hostname, dns, memory, commands, cpuShares);
+      return Objects.hashCode(super.hashCode(), volumes, hostname, dns, memory, commands, cpuShares, env);
    }
 
    @Override
    public String toString() {
-      return MoreObjects.toStringHelper(this)
+      return Objects.toStringHelper(this)
               .add("dns", dns)
               .add("hostname", hostname)
               .add("memory", memory)
               .add("cpuShares", cpuShares)
               .add("commands", commands)
               .add("volumes", volumes)
+              .add("env", env)
               .toString();
    }
 
@@ -158,6 +163,11 @@ public class DockerTemplateOptions extends TemplateOptions implements Cloneable 
       return this;
    }
 
+   public DockerTemplateOptions env(List<String> env) {
+      this.env = Optional.<List<String>> of(ImmutableList.copyOf(env));
+      return this;
+   }
+
    public Optional<Map<String, String>> getVolumes() {
       return volumes;
    }
@@ -174,15 +184,19 @@ public class DockerTemplateOptions extends TemplateOptions implements Cloneable 
 
    public Optional<Integer> getCpuShares() { return cpuShares; }
 
+   public Optional<List<String>> getEnv() {
+      return env;
+   }
+
    public static class Builder {
 
-      /**
-       * @see DockerTemplateOptions#volumes(java.util.Map)
-       */
-      public static DockerTemplateOptions volumes(Map<String, String> volumes) {
-         DockerTemplateOptions options = new DockerTemplateOptions();
-         return DockerTemplateOptions.class.cast(options.volumes(volumes));
-      }
+       /**
+        * @see DockerTemplateOptions#volumes(java.util.Map)
+        */
+       public static DockerTemplateOptions volumes(Map<String, String> volumes) {
+          DockerTemplateOptions options = new DockerTemplateOptions();
+          return DockerTemplateOptions.class.cast(options.volumes(volumes));
+       }
 
       /**
        * @see DockerTemplateOptions#dns(String)
@@ -227,6 +241,14 @@ public class DockerTemplateOptions extends TemplateOptions implements Cloneable 
       public static DockerTemplateOptions cpuShares(int cpuShares) {
          DockerTemplateOptions options = new DockerTemplateOptions();
          return DockerTemplateOptions.class.cast(options.cpuShares(cpuShares));
+      }
+
+      /**
+       * @see DockerTemplateOptions#env(java.util.List)
+       */
+      public static DockerTemplateOptions env(List<String> env) {
+         DockerTemplateOptions options = new DockerTemplateOptions();
+         return DockerTemplateOptions.class.cast(options.env(env));
       }
 
       // methods that only facilitate returning the correct object type
