@@ -97,8 +97,8 @@ public class AtmosBlobStore extends BaseBlobStore {
    }
 
    /**
-    * This implementation invokes {@link AtmosAsyncClient#deletePath} followed by
-    * {@link AtmosAsyncClient#pathExists} until it is true.
+    * This implementation invokes {@link AtmosClient#deletePath} followed by
+    * {@link AtmosClient#pathExists} until it is true.
     */
    protected boolean deleteAndVerifyContainerGone(final String container) {
       sync.deletePath(container + "/");

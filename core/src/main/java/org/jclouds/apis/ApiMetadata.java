@@ -256,7 +256,7 @@ public interface ApiMetadata {
    URI getDocumentation();
 
    /**
-    * @return the primary context of this api, for example {@code RestContext<EC2Client, EC2AsyncClient>}
+    * @return the primary context of this api, for example {@code ApiContext<EC2Api>}
     */
    TypeToken<? extends Context> getContext();
    

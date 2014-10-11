@@ -77,7 +77,7 @@ public class AWSS3ClientTest extends S3ClientTest<AWSS3Client> {
    @Override
    public void testCopyObjectInvalidName() throws ArrayIndexOutOfBoundsException, SecurityException,
                                                   IllegalArgumentException, NoSuchMethodException, IOException {
-      // For AWS S3, S3AsyncClientTest#testCopyObjectInvalidName() will not throw an exception
+      // For AWS S3, S3ClientTest#testCopyObjectInvalidName() will not throw an exception
       Invokable<?, ?> method = method(AWSS3Client.class, "copyObject", String.class, String.class, String.class,
                                                     String.class,
                                                     CopyObjectOptions[].class);

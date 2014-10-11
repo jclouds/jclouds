@@ -31,11 +31,10 @@
       :sshj 'org.jclouds.sshj.config.SshjSshClientModule
       :enterprise 'org.jclouds.enterprise.config.EnterpriseConfigurationModule
       :apachehc 'org.jclouds.http.apachehc.config.ApacheHCHttpCommandExecutorServiceModule
-      :ning 'org.jclouds.http.ning.config.NingHttpCommandExecutorServiceModule
+      :okhttp 'org.jclouds.http.okhttp.config.OkHttpCommandExecutorServiceModule
       :bouncycastle 'org.jclouds.encryption.bouncycastle.config.BouncyCastleCryptoModule
       :joda 'org.jclouds.date.joda.config.JodaDateServiceModule
-      :gae 'org.jclouds.gae.config.GoogleAppEngineConfigurationModule
-      :gae-async 'org.jclouds.gae.config.AsyncGoogleAppEngineConfigurationModule})
+      :gae 'org.jclouds.gae.config.GoogleAppEngineConfigurationModule})
 
 (defn- instantiate [sym]
   (let [loader (.getContextClassLoader (Thread/currentThread))]

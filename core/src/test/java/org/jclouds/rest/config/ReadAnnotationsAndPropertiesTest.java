@@ -34,7 +34,6 @@ import org.testng.annotations.Test;
 
 import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableList;
-import com.google.common.util.concurrent.ListenableFuture;
 import com.google.inject.AbstractModule;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
@@ -46,15 +45,9 @@ public class ReadAnnotationsAndPropertiesTest {
    public interface ThingApi {
       HttpResponse get();
 
-      HttpResponse namedGet();
-   }
-
-   public interface ThingAsyncApi {
-      ListenableFuture<HttpResponse> get();
-
       @Named("ns:get")
       @Fallback(FalseOnNotFoundOr404.class)
-      ListenableFuture<HttpResponse> namedGet();
+      HttpResponse namedGet();
    }
 
    private Invocation asyncGet;
@@ -63,14 +56,13 @@ public class ReadAnnotationsAndPropertiesTest {
 
    @BeforeClass
    void setupInvocations() throws SecurityException, NoSuchMethodException {
-      asyncGet = Invocation.create(method(ThingAsyncApi.class, "get"), ImmutableList.of());
-      asyncNamedGet = Invocation.create(method(ThingAsyncApi.class, "namedGet"), ImmutableList.of());
+      asyncGet = Invocation.create(method(ThingApi.class, "get"), ImmutableList.of());
+      asyncNamedGet = Invocation.create(method(ThingApi.class, "namedGet"), ImmutableList.of());
       defaultFallback = new NullOnNotFoundOr404();
    }
 
    /**
-    * this functionality will be removed once Named annotations are on all async
-    * classes.
+    * this functionality will be removed once Named annotations are on all classes.
     */
    public void testInvocationsSetDefaultTimeoutOnAsyncMethods() throws Exception {
       final Properties props = new Properties();

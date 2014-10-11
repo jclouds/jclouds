@@ -28,10 +28,7 @@ import org.testng.annotations.Test;
 
 import com.google.common.collect.Iterables;
 
-/**
- * Tests annotation parsing of {@code DatacenterAsyncClient}
- */
-@Test(groups = "unit")
+@Test(groups = "unit", testName = "DatacenterApiExpectTest")
 public class DatacenterApiExpectTest extends BaseSoftLayerApiExpectTest {
 
    public void testListDatacentersWhenResponseIs2xx() {

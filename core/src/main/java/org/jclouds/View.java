@@ -45,7 +45,7 @@ public interface View {
     * 
     * ex.
     * <pre>
-    * RestContext<NovaApi, NovaAsyncApi> backendApi = computeContext.unwrap(NovaApiMetadata.CONTEXT_TOKEN);
+    * ApiContext<NovaApi> backendApi = computeContext.unwrap(new TypeToken<ApiContext<NovaApi>>(){});
     * </pre>
     * @param type
     *           the type of the context to be returned. The backend context must

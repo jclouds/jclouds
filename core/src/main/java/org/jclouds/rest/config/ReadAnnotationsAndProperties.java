@@ -65,8 +65,7 @@ public class ReadAnnotationsAndProperties implements InvocationConfig {
          timeoutMillis = timeoutMillis.or(defaultMillis);
       } else {
          // TODO: remove old logic once Named annotations are on all methods
-         String className = invoked.getOwnerType().getRawType().getSimpleName().replace("AsyncClient", "Client")
-               .replace("AsyncApi", "Api");
+         String className = invoked.getOwnerType().getRawType().getSimpleName();
          timeoutMillis = timeoutMillis.or(fromNullable(timeouts.get(className))).or(defaultMillis);
       }
       if (timeoutMillis.isPresent())
@@ -81,8 +80,7 @@ public class ReadAnnotationsAndProperties implements InvocationConfig {
          return invoked.getAnnotation(Named.class).value();
       } else {
          // TODO: remove old logic once Named annotations are on all methods
-         String className = invoked.getOwnerType().getRawType().getSimpleName().replace("AsyncClient", "Client")
-               .replace("AsyncApi", "Api");
+         String className = invoked.getOwnerType().getRawType().getSimpleName();
          return className + "." + invoked.getName();
       }
    }

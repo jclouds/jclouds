@@ -20,14 +20,6 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 import com.google.common.base.CaseFormat;
 
-/**
- * 
- * The current state of the instance..
- * 
- * @see EC2AsyncClient#describeInstances
- * @see EC2AsyncClient#runInstances
- * @see EC2AsyncClient#terminateInstances
- */
 public enum InstanceState {
 
    /**

@@ -19,19 +19,14 @@ package org.jclouds.gae;
 import java.io.IOException;
 import java.util.Properties;
 
-import org.jclouds.concurrent.SingleThreaded;
-import org.jclouds.concurrent.config.ConfiguresExecutorService;
 import org.jclouds.gae.config.GoogleAppEngineConfigurationModule;
 import org.jclouds.http.BaseHttpCommandExecutorServiceIntegrationTest;
-import org.jclouds.http.HttpCommandExecutorService;
-import org.jclouds.http.config.ConfiguresHttpCommandExecutorService;
 import org.testng.SkipException;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import com.google.appengine.tools.development.testing.LocalServiceTestHelper;
 import com.google.appengine.tools.development.testing.LocalURLFetchServiceTestConfig;
-import com.google.inject.Injector;
 import com.google.inject.Module;
 
 /**
@@ -69,27 +64,10 @@ public class GaeHttpCommandExecutorServiceIntegrationTest extends BaseHttpComman
 
    protected Module createConnectionModule() {
       setupApiProxy();
-      return new AsyncGoogleAppEngineConfigurationModule();
-   }
-
-   @ConfiguresHttpCommandExecutorService
-   @ConfiguresExecutorService
-   @SingleThreaded
-   public class AsyncGoogleAppEngineConfigurationModule extends GoogleAppEngineConfigurationModule {
-
-      public AsyncGoogleAppEngineConfigurationModule() {
-         super();
-      }
-
-      protected HttpCommandExecutorService providerHttpCommandExecutorService(Injector injector) {
-         return injector.getInstance(GaeHttpCommandExecutorService.class);
-      }
-
+      return new GoogleAppEngineConfigurationModule();
    }
 
    @Override
    protected void addOverrideProperties(Properties props) {
-      
    }
-
 }

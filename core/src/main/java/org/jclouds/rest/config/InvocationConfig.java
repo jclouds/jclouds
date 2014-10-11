@@ -44,7 +44,7 @@ public interface InvocationConfig {
    String getCommandName(Invocation invocation);
 
    /**
-    * fallback used for Sync or Async commands.
+    * fallback used for commands when exceptions are encountered.
     */
    Fallback<?> getFallback(Invocation invocation);
 }

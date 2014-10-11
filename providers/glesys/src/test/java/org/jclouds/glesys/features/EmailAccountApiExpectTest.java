@@ -44,7 +44,7 @@ import com.google.common.collect.Iterables;
 /**
  * Tests annotation parsing of {@code EmailAccountApi}
  */
-@Test(groups = "unit", testName = "EmailAccountAsyncApiTest")
+@Test(groups = "unit", testName = "EmailAccountApiExpectTest")
 public class EmailAccountApiExpectTest extends BaseGleSYSApiExpectTest {
 
    public void testListWhenResponseIs2xx() throws Exception {

@@ -43,30 +43,30 @@ import com.google.common.collect.ImmutableList;
 public class PresentWhenApiVersionLexicographicallyAtOrAfterSinceApiVersionTest {
 
    // feature present in base api
-   interface KeyPairAsyncApi {
+   interface KeyPairApi {
 
    }
 
    @SinceApiVersion("2010-08-31")
-   interface TagAsyncApi {
+   interface TagApi {
 
    }
 
    @SinceApiVersion("2011-01-01")
-   interface VpcAsyncApi {
+   interface VpcApi {
 
    }
 
-   interface EC2AsyncApi {
+   interface EC2Api {
 
       @Delegate
-      Optional<TagAsyncApi> getTagApiForRegion(String region);
+      Optional<TagApi> getTagApiForRegion(String region);
 
       @Delegate
-      Optional<KeyPairAsyncApi> getKeyPairApiForRegion(String region);
+      Optional<KeyPairApi> getKeyPairApiForRegion(String region);
 
       @Delegate
-      Optional<VpcAsyncApi> getVpcApiForRegion(String region);
+      Optional<VpcApi> getVpcApiForRegion(String region);
 
    }
 
@@ -148,21 +148,21 @@ public class PresentWhenApiVersionLexicographicallyAtOrAfterSinceApiVersionTest 
    }
 
    InvocationSuccess getFloatingIPApi() {
-      return getApi("Tag", TagAsyncApi.class);
+      return getApi("Tag", TagApi.class);
    }
 
    InvocationSuccess getKeyPairApi() {
-      return getApi("KeyPair", KeyPairAsyncApi.class);
+      return getApi("KeyPair", KeyPairApi.class);
    }
 
    InvocationSuccess getVpcApi() {
-      return getApi("Vpc", VpcAsyncApi.class);
+      return getApi("Vpc", VpcApi.class);
    }
 
    InvocationSuccess getApi(String name, Class<?> target) {
       try {
          return InvocationSuccess.create(
-               Invocation.create(method(EC2AsyncApi.class, "get" + name + "ApiForRegion", String.class),
+               Invocation.create(method(EC2Api.class, "get" + name + "ApiForRegion", String.class),
                      ImmutableList.<Object> of("region")), "present");
       } catch (Exception e) {
          throw propagate(e);
