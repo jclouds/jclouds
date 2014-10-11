@@ -321,6 +321,11 @@ public class GoogleComputeEngineSecurityGroupExtension implements SecurityGroupE
       return true;
    }
 
+   @Override
+   public boolean supportsExclusionCidrBlocks() {
+       return false;
+   }
+
    private SecurityGroup groupForTagsInNetwork(Network nw, final Set <String> tags) {
       ListOptions opts = new Builder().filter("network eq .*/" + nw.getName());
       Set<Firewall> fws = api.getFirewallApiForProject(userProject.get()).list(opts).concat()
