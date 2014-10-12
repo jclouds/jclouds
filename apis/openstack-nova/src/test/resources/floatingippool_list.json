@@ -1,0 +1,7 @@
+{
+    "floating_ip_pools": [
+        {
+            "name": "VLAN867"
+        }
+    ]
+}
