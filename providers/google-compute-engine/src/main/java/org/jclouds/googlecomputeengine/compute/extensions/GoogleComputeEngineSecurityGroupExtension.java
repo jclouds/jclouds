@@ -323,7 +323,7 @@ public class GoogleComputeEngineSecurityGroupExtension implements SecurityGroupE
 
    @Override
    public boolean supportsExclusionCidrBlocks() {
-       return false;
+      return false;
    }
 
    private SecurityGroup groupForTagsInNetwork(Network nw, final Set <String> tags) {
