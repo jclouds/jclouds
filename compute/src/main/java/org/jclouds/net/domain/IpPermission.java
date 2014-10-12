@@ -246,7 +246,7 @@ public class IpPermission implements Comparable<IpPermission> {
    }
 
    /**
-    * source of traffic is a all but this exclusionCidrBlocks
+    * Traffic whose source matches any of these CIDR blocks will be blocked
     */
    @Beta
    public Set<String> getExclusionCidrBlocks() {
