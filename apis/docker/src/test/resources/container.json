@@ -15,7 +15,7 @@
     "CpuShares": 0,
     "Cpuset": "",
     "Domainname": "",
-    "Entrypoint": null,
+    "Entrypoint": [ "/usr/bin/sshd", "-d" ],
     "Env": [
       "HOME=/",
       "PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
