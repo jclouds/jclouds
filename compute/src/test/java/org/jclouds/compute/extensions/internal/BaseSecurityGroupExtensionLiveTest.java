@@ -332,9 +332,9 @@ public abstract class BaseSecurityGroupExtensionLiveTest extends BaseComputeServ
       IpPermission cidrExclusionPermission = createCidrExclusionPermission();
       Set<IpPermission> expectedPermissions = ImmutableSet.of(cidrExclusionPermission);
 
-      SecurityGroup securityGriupWithExclusion = securityGroupExtension.get().addIpPermission(cidrExclusionPermission, group);
+      SecurityGroup securityGroupWithExclusion = securityGroupExtension.get().addIpPermission(cidrExclusionPermission, group);
 
-      assertTrue(securityGriupWithExclusion.getIpPermissions().containsAll(expectedPermissions));
+      assertTrue(securityGroupWithExclusion.getIpPermissions().containsAll(expectedPermissions));
    }
 
    @Test(groups = { "integration", "live" }, singleThreaded = true, dependsOnMethods = "testAddIpPermissionWithCidrExclusionGroup")
