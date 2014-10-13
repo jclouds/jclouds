@@ -36,6 +36,7 @@ import org.jclouds.googlecomputeengine.internal.BaseGoogleComputeEngineApiLiveTe
 import org.jclouds.googlecomputeengine.options.AttachDiskOptions;
 import org.jclouds.googlecomputeengine.options.AttachDiskOptions.DiskMode;
 import org.jclouds.googlecomputeengine.options.AttachDiskOptions.DiskType;
+import org.jclouds.googlecomputeengine.options.DiskCreationOptions;
 import org.jclouds.googlecomputeengine.options.ListOptions;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.Test;
@@ -61,6 +62,7 @@ public class InstanceApiLiveTest extends BaseGoogleComputeEngineApiLiveTest {
    private static final String ATTACH_DISK_NAME = "instance-api-live-test-attach-disk";
    private static final String ATTACH_DISK_DEVICE_NAME = "attach-disk-1";
 
+   private static final int DEFAULT_DISK_SIZE_GB = 10;
    private static final int TIME_WAIT = 600;
 
    private InstanceTemplate instance;
@@ -110,16 +112,14 @@ public class InstanceApiLiveTest extends BaseGoogleComputeEngineApiLiveTest {
       assertGlobalOperationDoneSucessfully(api.getNetworkApiForProject(userProject.get()).createInIPv4Range
               (INSTANCE_NETWORK_NAME, IPV4_RANGE), TIME_WAIT);
 
-
+      DiskCreationOptions diskCreationOptions = new DiskCreationOptions().sourceImage(instance.getImage());
       assertZoneOperationDoneSucessfully(api.getDiskApiForProject(userProject.get())
-                                        .createFromImageInZone(instance.getImage().toString(),
-                                                               BOOT_DISK_NAME,
-                                                               DEFAULT_ZONE_NAME),
+                                        .createInZone(BOOT_DISK_NAME, DEFAULT_DISK_SIZE_GB, DEFAULT_ZONE_NAME, diskCreationOptions),
                                          TIME_WAIT);
 
 
       assertZoneOperationDoneSucessfully(diskApi().createInZone
-              ("instance-live-test-disk", 10, DEFAULT_ZONE_NAME), TIME_WAIT);
+              ("instance-live-test-disk", DEFAULT_DISK_SIZE_GB, DEFAULT_ZONE_NAME), TIME_WAIT);
 
       assertZoneOperationDoneSucessfully(api().createInZone(INSTANCE_NAME, DEFAULT_ZONE_NAME, instance), TIME_WAIT);
 

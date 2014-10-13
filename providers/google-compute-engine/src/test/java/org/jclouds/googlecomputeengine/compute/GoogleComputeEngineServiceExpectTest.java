@@ -182,12 +182,12 @@ public class GoogleComputeEngineServiceExpectTest extends BaseGoogleComputeEngin
       return HttpRequest
               .builder()
               .method("POST")
-              .endpoint("https://www.googleapis.com/compute/v1/projects/myproject/zones/us-central1-a/disks"
-                                + "?sourceImage=https%3A//www.googleapis.com/compute/v1/projects/debian-cloud/global/images/debian-7-wheezy-v20140718")
+              .endpoint("https://www.googleapis.com/compute/v1/projects/myproject/zones/us-central1-a/disks")
               .addHeader("Accept", "application/json")
               .addHeader("Authorization", "Bearer " + TOKEN)
               .payload(payloadFromStringWithContentType("{\"name\":\"" + instanceName + "-" + GCE_BOOT_DISK_SUFFIX + "\","
-                                                        + "\"sizeGb\":10}",
+                                                        + "\"sizeGb\":10,"
+                                                        + "\"sourceImage\":\"https://www.googleapis.com/compute/v1/projects/debian-cloud/global/images/debian-7-wheezy-v20140718\"}",
                                                         MediaType.APPLICATION_JSON)).build();
    }
 

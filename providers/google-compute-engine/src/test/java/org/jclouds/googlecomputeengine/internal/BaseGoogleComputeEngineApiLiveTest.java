@@ -60,6 +60,9 @@ public class BaseGoogleComputeEngineApiLiveTest extends BaseApiLiveTest<GoogleCo
 
    protected static final String IMAGE_API_URL_SUFFIX = "/global/images/";
 
+   protected static final String DISK_TYPE_API_URL_SUFFIX = "/diskTypes/";
+   protected static final String DEFAULT_DISK_NAME = "pd-standard";
+
    protected static final String GOOGLE_PROJECT = "google";
 
    protected Supplier<String> userProject;
@@ -116,6 +119,10 @@ public class BaseGoogleComputeEngineApiLiveTest extends BaseApiLiveTest<GoogleCo
 
    protected Operation waitZoneOperationDone(Operation operation, long maxWaitSeconds) {
       return waitOperationDone(zoneOperationDonePredicate, operation, maxWaitSeconds);
+   }
+
+   protected URI getDiskTypeUrl(String project, String zone, String diskType){
+      return URI.create(API_URL_PREFIX + project + ZONE_API_URL_SUFFIX + zone + DISK_TYPE_API_URL_SUFFIX + diskType);
    }
 
    protected URI getDefaultZoneUrl(String project) {

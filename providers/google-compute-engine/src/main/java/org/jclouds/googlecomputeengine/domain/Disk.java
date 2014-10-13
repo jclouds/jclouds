@@ -17,14 +17,18 @@
 package org.jclouds.googlecomputeengine.domain;
 
 import static com.google.common.base.Objects.equal;
+import static com.google.common.base.Optional.fromNullable;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 import java.beans.ConstructorProperties;
 import java.net.URI;
 import java.util.Date;
 
+import org.jclouds.javax.annotation.Nullable;
+
 import com.google.common.annotations.Beta;
 import com.google.common.base.MoreObjects;
+import com.google.common.base.Optional;
 
 /**
  * A persistent disk resource
@@ -35,15 +39,17 @@ import com.google.common.base.MoreObjects;
 public final class Disk extends AbstractDisk {
 
    private final URI zone;
+   private final Optional<URI> type;
 
    @ConstructorProperties({
            "id", "creationTimestamp", "selfLink", "name", "description", "sizeGb", "zone",
-           "status"
+           "status", "type"
    })
    private Disk(String id, Date creationTimestamp, URI selfLink, String name, String description,
-                Integer sizeGb, URI zone, String status) {
+                Integer sizeGb, URI zone, String status, @Nullable URI type) {
       super(Kind.DISK, id, creationTimestamp, selfLink, name, description, sizeGb, status);
       this.zone = checkNotNull(zone, "zone of %s", name);
+      this.type = fromNullable(type);
    }
 
    /**
@@ -51,6 +57,13 @@ public final class Disk extends AbstractDisk {
     */
    public URI getZone() {
       return zone;
+   }
+
+   /**
+    * @return URL of the disk type resource describing which disk type
+    */
+   public Optional<URI> getType(){
+      return type;
    }
 
    /**
@@ -95,12 +108,21 @@ public final class Disk extends AbstractDisk {
    public static final class Builder extends AbstractDisk.Builder<Builder> {
 
       private URI zone;
+      private URI type;
 
       /**
        * @see Disk#getZone()
        */
       public Builder zone(URI zone) {
          this.zone = zone;
+         return this;
+      }
+
+      /**
+       * @see Disk#getType()
+       */
+      public Builder type(URI type){
+         this.type = type;
          return this;
       }
 
@@ -111,12 +133,13 @@ public final class Disk extends AbstractDisk {
 
       public Disk build() {
          return new Disk(super.id, super.creationTimestamp, super.selfLink, super.name,
-                 super.description, super.sizeGb, zone, super.status);
+                 super.description, super.sizeGb, zone, super.status, type);
       }
 
       public Builder fromDisk(Disk in) {
          return super.fromAbstractDisk(in)
-                 .zone(in.getZone());
+                 .zone(in.getZone())
+                 .type(in.getType().orNull());
       }
 
    }

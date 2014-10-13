@@ -45,6 +45,7 @@ public class ParseDiskTest extends BaseGoogleComputeEngineParseTest<Disk> {
               .sizeGb(1)
               .zone(URI.create("https://www.googleapis.com/compute/v1/projects/myproject/zones/us-central1-a"))
               .status("READY")
+              .type(URI.create("https://www.googleapis.com/compute/v1/projects/myproject/zones/us-central1-a/diskTypes/pd-ssd"))
               .build();
    }
 }

@@ -32,6 +32,7 @@ import static org.jclouds.googlecomputeengine.GoogleComputeEngineConstants.OPERA
 import static org.jclouds.googlecomputeengine.domain.Instance.NetworkInterface.AccessConfig.Type;
 import static org.jclouds.googlecomputeengine.predicates.InstancePredicates.isBootDisk;
 import static org.jclouds.util.Predicates2.retry;
+
 import java.net.URI;
 import java.util.List;
 import java.util.Map;
@@ -69,6 +70,7 @@ import org.jclouds.googlecomputeengine.domain.Operation;
 import org.jclouds.googlecomputeengine.domain.SlashEncodedIds;
 import org.jclouds.googlecomputeengine.domain.Zone;
 import org.jclouds.googlecomputeengine.features.InstanceApi;
+import org.jclouds.googlecomputeengine.options.DiskCreationOptions;
 import org.jclouds.http.HttpResponse;
 import org.jclouds.logging.Logger;
 
@@ -239,11 +241,12 @@ public class GoogleComputeEngineServiceAdapter implements ComputeServiceAdapter<
 
       String diskName = instanceName + "-" + GCE_BOOT_DISK_SUFFIX;
 
+      DiskCreationOptions diskCreationOptions = new DiskCreationOptions().sourceImage(imageUri);
       Operation diskOperation = api.getDiskApiForProject(userProject.get())
-                                   .createFromImageWithSizeInZone(imageUri.toString(),
-                                                                  diskName,
-                                                                  diskSize,
-                                                                  template.getLocation().getId());
+                                   .createInZone(diskName,
+                                                 diskSize,
+                                                 template.getLocation().getId(),
+                                                 diskCreationOptions);
 
       waitOperationDone(diskOperation);
 

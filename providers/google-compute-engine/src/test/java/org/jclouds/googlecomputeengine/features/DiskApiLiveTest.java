@@ -19,11 +19,13 @@ package org.jclouds.googlecomputeengine.features;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
 
+import java.net.URI;
 import java.util.List;
 
 import org.jclouds.collect.PagedIterable;
 import org.jclouds.googlecomputeengine.domain.Disk;
 import org.jclouds.googlecomputeengine.internal.BaseGoogleComputeEngineApiLiveTest;
+import org.jclouds.googlecomputeengine.options.DiskCreationOptions;
 import org.jclouds.googlecomputeengine.options.ListOptions;
 import org.testng.annotations.Test;
 
@@ -33,6 +35,7 @@ import com.google.common.collect.Lists;
 public class DiskApiLiveTest extends BaseGoogleComputeEngineApiLiveTest {
 
    public static final String DISK_NAME = "disk-api-live-test-disk";
+   public static final String SSD_DISK_NAME = "disk-api-live-test-disk-ssd";
    public static final int TIME_WAIT = 30;
    public static final int sizeGb = 1;
 
@@ -79,4 +82,31 @@ public class DiskApiLiveTest extends BaseGoogleComputeEngineApiLiveTest {
       assertEquals(result.getZone(), getDefaultZoneUrl(userProject.get()));
    }
 
+   @Test(groups = "live")
+   public void testInsertSSDDisk() {
+      URI diskType = getDiskTypeUrl(userProject.get(), DEFAULT_ZONE_NAME, "pd-ssd");
+      DiskCreationOptions diskCreationOptions = new DiskCreationOptions().type(diskType);
+      assertZoneOperationDoneSucessfully(api().createInZone(SSD_DISK_NAME, sizeGb, DEFAULT_ZONE_NAME, diskCreationOptions), TIME_WAIT);
+   }
+
+   @Test(groups = "live", dependsOnMethods = "testInsertSSDDisk")
+   public void testGetSSDDisk() {
+
+      Disk disk = api().getInZone(DEFAULT_ZONE_NAME, SSD_DISK_NAME);
+      assertNotNull(disk);
+      assertSSDDiskEquals(disk);
+   }
+
+   @Test(groups = "live", dependsOnMethods = "testGetSSDDisk")
+   public void testDeleteSSDDisk() {
+
+      assertZoneOperationDoneSucessfully(api().deleteInZone(DEFAULT_ZONE_NAME, SSD_DISK_NAME), TIME_WAIT);
+   }
+
+   private void assertSSDDiskEquals(Disk result) {
+      assertEquals(result.getName(), SSD_DISK_NAME);
+      assertEquals(result.getSizeGb(), sizeGb);
+      assertEquals(result.getZone(), getDefaultZoneUrl(userProject.get()));
+      assertEquals(result.getType().orNull(), getDiskTypeUrl(userProject.get(), DEFAULT_ZONE_NAME, "pd-ssd"));
+   }
 }
