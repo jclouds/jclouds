@@ -84,6 +84,8 @@ public class OperatingSystems {
          }
       } else if (version.contains(" ")) {
          return version.substring(0, version.indexOf(" "));
+      } else if (version.matches("^(\\d+\\.)?(\\d+\\.)?(\\*|\\d+)$")) {
+         return version;
       }
       return null;
    }

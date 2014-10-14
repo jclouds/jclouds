@@ -33,6 +33,7 @@ import org.jclouds.domain.LoginCredentials;
 import org.jclouds.softlayer.SoftLayerApi;
 import org.jclouds.softlayer.compute.options.SoftLayerTemplateOptions;
 import org.jclouds.softlayer.compute.strategy.SoftLayerComputeServiceAdapter;
+import org.jclouds.softlayer.domain.Datacenter;
 import org.jclouds.softlayer.domain.VirtualGuest;
 import org.jclouds.softlayer.features.BaseSoftLayerApiLiveTest;
 import org.jclouds.ssh.SshClient;
@@ -67,7 +68,8 @@ public class SoftLayerComputeServiceAdapterLiveTest extends BaseSoftLayerApiLive
 
    @Test
    public void testListLocations() {
-      assertFalse(Iterables.isEmpty(adapter.listLocations()), "locations must not be empty");
+      Iterable<Datacenter> locations = adapter.listLocations();
+      assertFalse(Iterables.isEmpty(locations), "locations must not be empty");
    }
 
    @Test

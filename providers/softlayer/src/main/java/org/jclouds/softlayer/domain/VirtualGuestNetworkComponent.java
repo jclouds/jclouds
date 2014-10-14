@@ -50,6 +50,7 @@ public class VirtualGuestNetworkComponent {
       protected int port;
       protected int speed;
       protected String status;
+      protected NetworkVlan networkVlan;
 
       /**
        * @see org.jclouds.softlayer.domain.VirtualGuestNetworkComponent#getId()
@@ -120,9 +121,14 @@ public class VirtualGuestNetworkComponent {
          return this;
       }
 
+      public Builder networkVlan(NetworkVlan networkVlan) {
+         this.networkVlan = networkVlan;
+         return this;
+      }
+
       public VirtualGuestNetworkComponent build() {
          return new VirtualGuestNetworkComponent(id, uuid, guestId, networkId, macAddress, maxSpeed, name, port,
-                 speed, status);
+                 speed, status, networkVlan);
       }
 
       public Builder fromVirtualGuestNetworkComponent(VirtualGuestNetworkComponent in) {
@@ -135,7 +141,8 @@ public class VirtualGuestNetworkComponent {
                  .maxSpeed(in.getMaxSpeed())
                  .port(in.getPort())
                  .speed(in.getSpeed())
-                 .status(in.getStatus());
+                 .status(in.getStatus())
+                 .networkVlan(in.getNetworkVlan());
       }
    }
 
@@ -149,11 +156,13 @@ public class VirtualGuestNetworkComponent {
    private final int port;
    private final int speed;
    private final String status;
+   private final NetworkVlan networkVlan;
 
-   @ConstructorProperties({ "id", "uuid", "guestId", "networkId", "macAddress", "maxSpeed", "name", "port", "speed", "status" })
+   @ConstructorProperties({ "id", "uuid", "guestId", "networkId", "macAddress", "maxSpeed", "name", "port", "speed",
+           "status", "networkVlan" })
    protected VirtualGuestNetworkComponent(int id, String uuid, int guestId, int networkId, @Nullable String macAddress,
                                           int maxSpeed, @Nullable String name, int port, int speed,
-                                          @Nullable String status) {
+                                          @Nullable String status, @Nullable NetworkVlan networkVlan) {
       this.id = id;
       this.uuid = uuid;
       this.guestId = guestId;
@@ -164,6 +173,7 @@ public class VirtualGuestNetworkComponent {
       this.port = port;
       this.speed = speed;
       this.status = status;
+      this.networkVlan = networkVlan;
    }
 
    public int getId() {
@@ -206,6 +216,10 @@ public class VirtualGuestNetworkComponent {
       return status;
    }
 
+   public NetworkVlan getNetworkVlan() {
+      return networkVlan;
+   }
+
    @Override
    public boolean equals(Object o) {
       if (this == o) return true;
@@ -222,13 +236,14 @@ public class VirtualGuestNetworkComponent {
               Objects.equal(this.name, that.name) &&
               Objects.equal(this.port, that.port) &&
               Objects.equal(this.speed, that.speed) &&
-              Objects.equal(this.status, that.status);
+              Objects.equal(this.status, that.status) &&
+              Objects.equal(this.networkVlan, that.networkVlan);
    }
 
    @Override
    public int hashCode() {
       return Objects.hashCode(id, uuid, guestId, networkId, macAddress, maxSpeed,
-              name, port, speed, status);
+              name, port, speed, status, networkVlan);
    }
 
    @Override
@@ -244,6 +259,7 @@ public class VirtualGuestNetworkComponent {
               .add("port", port)
               .add("speed", speed)
               .add("status", status)
+              .add("networkVlan", networkVlan)
               .toString();
    }
 }

@@ -57,13 +57,16 @@ import org.jclouds.softlayer.SoftLayerApi;
 import org.jclouds.softlayer.compute.options.SoftLayerTemplateOptions;
 import org.jclouds.softlayer.domain.ContainerVirtualGuestConfiguration;
 import org.jclouds.softlayer.domain.Datacenter;
+import org.jclouds.softlayer.domain.NetworkVlan;
 import org.jclouds.softlayer.domain.OperatingSystem;
 import org.jclouds.softlayer.domain.Password;
+import org.jclouds.softlayer.domain.SecuritySshKey;
 import org.jclouds.softlayer.domain.SoftwareDescription;
 import org.jclouds.softlayer.domain.SoftwareLicense;
 import org.jclouds.softlayer.domain.VirtualDiskImage;
 import org.jclouds.softlayer.domain.VirtualDiskImageSoftware;
 import org.jclouds.softlayer.domain.VirtualGuest;
+import org.jclouds.softlayer.domain.VirtualGuestAttribute;
 import org.jclouds.softlayer.domain.VirtualGuestBlockDevice;
 import org.jclouds.softlayer.domain.VirtualGuestBlockDeviceTemplate;
 import org.jclouds.softlayer.domain.VirtualGuestBlockDeviceTemplateGroup;
@@ -91,7 +94,7 @@ public class SoftLayerComputeServiceAdapter implements
 
    private static final String BOOTABLE_DEVICE = "0";
    public static final String DEFAULT_DISK_TYPE = "LOCAL";
-   public static final int DEFAULT_PORT_SPEED = 100;
+   public static final int DEFAULT_MAX_PORT_SPEED = 100;
 
    @Resource
    @Named(ComputeServiceConstants.COMPUTE_LOGGER)
@@ -126,14 +129,14 @@ public class SoftLayerComputeServiceAdapter implements
       checkNotNull(template, "template was null");
       checkNotNull(template.getOptions(), "template options was null");
       checkArgument(template.getOptions().getClass().isAssignableFrom(SoftLayerTemplateOptions.class),
-            "options class %s should have been assignable from SoftLayerTemplateOptions", template.getOptions()
-                  .getClass());
+              "options class %s should have been assignable from SoftLayerTemplateOptions",
+              template.getOptions().getClass());
 
       SoftLayerTemplateOptions templateOptions = template.getOptions().as(SoftLayerTemplateOptions.class);
       String domainName = templateOptions.getDomainName();
       String diskType = templateOptions.getDiskType().or(DEFAULT_DISK_TYPE);
-      int portSpeed = templateOptions.getPortSpeed().or(DEFAULT_PORT_SPEED);
-
+      boolean hourlyBillingFlag = templateOptions.isHourlyBillingFlag().or(true);
+      int maxPortSpeed = templateOptions.getPortSpeed().or(DEFAULT_MAX_PORT_SPEED);
       final Datacenter datacenter = Datacenter.builder().name(template.getLocation().getId()).build();
       final String imageId = template.getImage().getId();
       int cores = (int) template.getHardware().getProcessors().get(0).getCores();
@@ -141,11 +144,10 @@ public class SoftLayerComputeServiceAdapter implements
       VirtualGuest.Builder virtualGuestBuilder = VirtualGuest.builder()
               .domain(domainName)
               .hostname(name)
+              .hourlyBillingFlag(hourlyBillingFlag)
               .startCpus(cores)
               .maxMemory(template.getHardware().getRam())
-              .datacenter(datacenter)
-              .networkComponents(VirtualGuestNetworkComponent.builder().speed(portSpeed).build());
-
+              .datacenter(datacenter);
       // set operating system or blockDeviceTemplateGroup
       Optional<OperatingSystem> optionalOperatingSystem = tryExtractOperatingSystemFrom(imageId);
       if (optionalOperatingSystem.isPresent()) {
@@ -161,6 +163,47 @@ public class SoftLayerComputeServiceAdapter implements
          List<VirtualGuestBlockDevice> blockDevices = getBlockDevices(templateOptions.getBlockDevices().get(), diskType);
          virtualGuestBuilder.blockDevices(blockDevices);
          virtualGuestBuilder.localDiskFlag(isLocalDisk(diskType));
+      }
+      // set dedicatedAccountHostOnlyFlag
+      if (templateOptions.isDedicatedAccountHostOnlyFlag().isPresent()) {
+         virtualGuestBuilder.dedicatedAccountHostOnly(templateOptions.isDedicatedAccountHostOnlyFlag().get());
+      }
+      // set privateNetworkOnlyFlag
+      if (templateOptions.isPrivateNetworkOnlyFlag().isPresent()) {
+         virtualGuestBuilder.privateNetworkOnlyFlag(templateOptions.isPrivateNetworkOnlyFlag().get());
+      }
+      // set primaryNetworkComponent.networkVlan.id
+      if (templateOptions.getPrimaryNetworkComponentNetworkVlanId().isPresent()) {
+         int primaryNetworkComponentNetworkVlanId = templateOptions.getPrimaryNetworkComponentNetworkVlanId().get();
+         virtualGuestBuilder.primaryNetworkComponent(
+                 VirtualGuestNetworkComponent.builder()
+                         .networkVlan(NetworkVlan.builder().id(primaryNetworkComponentNetworkVlanId).build())
+                         .speed(maxPortSpeed).build());
+      }
+      // set primaryBackendNetworkComponent.networkVlan.id
+      if (templateOptions.getPrimaryBackendNetworkComponentNetworkVlanId().isPresent()) {
+         int primaryBackendNetworkComponentNetworkVlanId = templateOptions.getPrimaryBackendNetworkComponentNetworkVlanId().get();
+         virtualGuestBuilder.primaryBackendNetworkComponent(
+                 VirtualGuestNetworkComponent.builder()
+                         .networkVlan(NetworkVlan.builder().id(primaryBackendNetworkComponentNetworkVlanId).build())
+                         .speed(maxPortSpeed).build());
+      }
+      // set postInstallScriptUri
+      if (templateOptions.getPostInstallScriptUri().isPresent()) {
+         // Specifies the uri location of the script to be downloaded and run after installation is complete.
+         virtualGuestBuilder.postInstallScriptUri(templateOptions.getPostInstallScriptUri().get());
+      }
+      // set userData
+      if (templateOptions.getUserData().isPresent()) {
+         virtualGuestBuilder.virtualGuestAttribute(VirtualGuestAttribute.builder().value(templateOptions.getUserData().get()).build());
+      }
+      // set sshKeys
+      if (templateOptions.getSshKeys().isPresent()) {
+         Set<SecuritySshKey> sshKeys = Sets.newHashSet();
+         for (int sshKeyId : templateOptions.getSshKeys().get()) {
+            sshKeys.add(SecuritySshKey.builder().id(sshKeyId).build());
+         }
+         virtualGuestBuilder.sshKeys(sshKeys);
       }
 
       VirtualGuest virtualGuest = virtualGuestBuilder.build();
@@ -429,13 +472,13 @@ public class SoftLayerComputeServiceAdapter implements
       public boolean apply(VirtualGuest guest) {
          checkNotNull(guest, "virtual guest was null");
 
-         VirtualGuest newGuest = client.getVirtualGuestApi().getVirtualGuest(guest.getId());
-         boolean hasBackendIp = newGuest.getPrimaryBackendIpAddress() != null;
-         boolean hasPrimaryIp = newGuest.getPrimaryIpAddress() != null;
-         boolean hasPasswords = newGuest.getOperatingSystem() != null
-                 && !newGuest.getOperatingSystem().getPasswords().isEmpty();
+         VirtualGuest virtualGuest = client.getVirtualGuestApi().getVirtualGuest(guest.getId());
+         boolean hasBackendIp = virtualGuest.getPrimaryBackendIpAddress() != null;
+         boolean hasPrimaryIp = virtualGuest.getPrimaryIpAddress() != null;
+         boolean hasPasswords = virtualGuest.getOperatingSystem() != null
+                 && !virtualGuest.getOperatingSystem().getPasswords().isEmpty();
 
-         return hasBackendIp && hasPrimaryIp && hasPasswords;
+         return virtualGuest.isPrivateNetworkOnly() ? hasBackendIp && hasPasswords : hasBackendIp && hasPrimaryIp && hasPasswords;
       }
    }
 

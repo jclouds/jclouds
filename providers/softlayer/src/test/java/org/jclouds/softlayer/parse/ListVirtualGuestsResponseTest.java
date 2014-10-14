@@ -54,7 +54,7 @@ public class ListVirtualGuestsResponseTest extends BaseSoftLayerParseTest<Set<Vi
                               .maxMemory(1024)
                               .metricPollDate(null)
                               .modifyDate(new SimpleDateFormatDateService().iso8601DateParse("2013-07-26T14:10:21.552-07:00"))
-                              .privateNetworkOnly(false)
+                              .privateNetworkOnlyFlag(false)
                               .startCpus(1)
                               .statusId(1001)
                               .uuid("92102aff-93c9-05f1-b3f2-50787e865344")

@@ -33,10 +33,7 @@ import org.jclouds.compute.internal.BaseComputeServiceContextLiveTest;
 import org.jclouds.compute.reference.ComputeServiceConstants;
 import org.jclouds.logging.Logger;
 import org.jclouds.logging.slf4j.config.SLF4JLoggingModule;
-import org.jclouds.softlayer.SoftLayerApi;
 import org.jclouds.softlayer.compute.options.SoftLayerTemplateOptions;
-import org.jclouds.softlayer.domain.VirtualGuest;
-import org.jclouds.softlayer.domain.VirtualGuestBlockDevice;
 import org.jclouds.ssh.SshClient;
 import org.jclouds.sshj.config.SshjSshClientModule;
 import org.testng.annotations.Test;
@@ -59,7 +56,6 @@ public class SoftLayerComputeServiceContextLiveTest extends BaseComputeServiceCo
    public void testLaunchClusterWithMinDisk() throws RunNodesException {
       int numNodes = 1;
       final String name = "node";
-
       ComputeServiceContext context = ContextBuilder.newBuilder("softlayer").credentials(identity, credential)
               .modules(ImmutableSet.of(new SLF4JLoggingModule(),
                       new SshjSshClientModule()))
@@ -67,10 +63,7 @@ public class SoftLayerComputeServiceContextLiveTest extends BaseComputeServiceCo
 
       TemplateBuilder templateBuilder = context.getComputeService().templateBuilder();
       templateBuilder.imageId("CENTOS_6_64");
-      //templateBuilder.imageVersionMatches("6.5");
-      templateBuilder.locationId("ams01");
-      // private image id should be a globalIdentifier of a VirtualGuestBlockDeviceTemplateGroup
-      //templateBuilder.imageId("3d7697d8-beef-437a-8921-5a2a18bc116f");
+      templateBuilder.locationId("dal01");
 
       Template template = templateBuilder.build();
       // test passing custom options
@@ -81,7 +74,6 @@ public class SoftLayerComputeServiceContextLiveTest extends BaseComputeServiceCo
       //options.diskType("SAN");
       //tags
       options.tags(ImmutableList.of("jclouds"));
-
       Set<? extends NodeMetadata> nodes = context.getComputeService().createNodesInGroup(name, numNodes, template);
       assertEquals(numNodes, nodes.size(), "wrong number of nodes");
       for (NodeMetadata node : nodes) {
@@ -90,13 +82,6 @@ public class SoftLayerComputeServiceContextLiveTest extends BaseComputeServiceCo
          client.connect();
          ExecResponse hello = client.exec("mount");
          logger.debug(hello.getOutput().trim());
-
-         VirtualGuest virtualGuest = context.unwrapApi(SoftLayerApi.class).getVirtualGuestApi()
-                 .getVirtualGuest(Long.parseLong(node.getId()));
-         for (VirtualGuestBlockDevice blockDevice : virtualGuest.getVirtualGuestBlockDevices()) {
-            logger.debug(blockDevice.toString());
-         }
-
          context.getComputeService().destroyNode(node.getId());
       }
    }

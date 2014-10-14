@@ -18,7 +18,6 @@ package org.jclouds.softlayer.compute;
 
 import com.google.common.base.Predicate;
 import com.google.common.base.Predicates;
-import com.google.common.collect.ImmutableSet;
 import org.jclouds.compute.ComputeServiceContext;
 import org.jclouds.compute.domain.OsFamily;
 import org.jclouds.compute.domain.OsFamilyVersion64Bit;
@@ -163,7 +162,7 @@ public class SoftLayerTemplateBuilderLiveTest extends BaseTemplateBuilderLiveTes
 
    @Override
    protected Set<String> getIso3166Codes() {
-      return ImmutableSet.<String> of("SG", "US-CA", "US-TX", "US-VA", "US-WA", "NL", "HK", "NSFTW-IL");
+      return createProviderMetadata().getIso3166Codes();
    }
 
    @BeforeClass(groups = "live")
