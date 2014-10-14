@@ -36,27 +36,24 @@ import com.google.common.base.Objects.ToStringHelper;
 */
 public class ServerExtendedAttributes {
 
-   public static String PREFIX;
-
-   public static Builder<?> builder() { 
+   public static Builder builder() {
       return new ConcreteBuilder();
    }
-   
-   public Builder<?> toBuilder() { 
+
+   public Builder toBuilder() {
       return new ConcreteBuilder().fromServerExtendedAttributes(this);
    }
 
-   public abstract static class Builder<T extends Builder<T>>  {
-      protected abstract T self();
+   public static class Builder {
 
       protected String instanceName;
       protected String hostName;
       protected String hypervisorHostName;
-   
+
       /** 
        * @see ServerExtendedAttributes#getInstanceName()
        */
-      public T instanceName(String instanceName) {
+      public Builder  instanceName(String instanceName) {
          this.instanceName = instanceName;
          return self();
       }
@@ -64,7 +61,7 @@ public class ServerExtendedAttributes {
       /** 
        * @see ServerExtendedAttributes#getHostName()
        */
-      public T hostName(String hostName) {
+      public Builder  hostName(String hostName) {
          this.hostName = hostName;
          return self();
       }
@@ -72,7 +69,7 @@ public class ServerExtendedAttributes {
       /** 
        * @see ServerExtendedAttributes#getHypervisorHostName()
        */
-      public T hypervisorHostName(String hypervisorHostName) {
+      public Builder  hypervisorHostName(String hypervisorHostName) {
          this.hypervisorHostName = hypervisorHostName;
          return self();
       }
@@ -81,15 +78,19 @@ public class ServerExtendedAttributes {
          return new ServerExtendedAttributes(instanceName, hostName, hypervisorHostName);
       }
       
-      public T fromServerExtendedAttributes(ServerExtendedAttributes in) {
+      public Builder  fromServerExtendedAttributes(ServerExtendedAttributes in) {
          return this
-                  .instanceName(in.getInstanceName())
-                  .hostName(in.getHostName())
-                  .hypervisorHostName(in.getHypervisorHostName());
+               .instanceName(in.getInstanceName())
+               .hostName(in.getHostName())
+               .hypervisorHostName(in.getHypervisorHostName());
+      }
+
+      protected Builder self(){
+         return this;
       }
    }
 
-   private static class ConcreteBuilder extends Builder<ConcreteBuilder> {
+   private static class ConcreteBuilder extends Builder {
       @Override
       protected ConcreteBuilder self() {
          return this;
@@ -103,9 +104,7 @@ public class ServerExtendedAttributes {
    @Named("OS-EXT-SRV-ATTR:hypervisor_hostname")
    private final String hypervisorHostName;
 
-   @ConstructorProperties({
-      "OS-EXT-SRV-ATTR:instance_name", "OS-EXT-SRV-ATTR:host", "OS-EXT-SRV-ATTR:hypervisor_hostname"
-   })
+   @ConstructorProperties({"OS-EXT-SRV-ATTR:instance_name", "OS-EXT-SRV-ATTR:host", "OS-EXT-SRV-ATTR:hypervisor_hostname"})
    protected ServerExtendedAttributes(@Nullable String instanceName, @Nullable String hostName, @Nullable String hypervisorHostName) {
       this.instanceName = instanceName;
       this.hostName = hostName;

@@ -12,6 +12,7 @@
         "status": "BUILD(scheduling)",
         "progress": 60,
         "OS-DCF:diskConfig": "AUTO",
+        "OS-EXT-AZ:availability_zone": "nova",
         "image": {
             "id": "52415800-8b69-11e0-9b19-734f6f006e54",
             "links": [
