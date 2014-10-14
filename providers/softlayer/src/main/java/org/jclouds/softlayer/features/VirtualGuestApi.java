@@ -51,7 +51,7 @@ public interface VirtualGuestApi {
 
    public static String GUEST_MASK = "id;hostname;domain;fullyQualifiedDomainName;powerState;maxCpu;maxMemory;" +
            "statusId;operatingSystem.passwords;primaryBackendIpAddress;primaryIpAddress;activeTransactionCount;" +
-           "blockDevices.diskImage;datacenter;tagReferences";
+           "blockDevices.diskImage;datacenter;tagReferences;privateNetworkOnlyFlag;sshKeys";
 
    /**
     * Enables the creation of computing instances on an account.

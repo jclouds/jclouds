@@ -42,7 +42,7 @@ public class VirtualGuestApiExpectTest extends BaseSoftLayerApiExpectTest {
    public void testGetVirtualGuestWhenResponseIs2xx() {
 
       HttpRequest getVirtualGuest = HttpRequest.builder().method("GET")
-              .endpoint("https://api.softlayer.com/rest/v3/SoftLayer_Virtual_Guest/3001812/getObject?objectMask=id%3Bhostname%3Bdomain%3BfullyQualifiedDomainName%3BpowerState%3BmaxCpu%3BmaxMemory%3BstatusId%3BoperatingSystem.passwords%3BprimaryBackendIpAddress%3BprimaryIpAddress%3BactiveTransactionCount%3BblockDevices.diskImage%3Bdatacenter%3BtagReferences")
+              .endpoint("https://api.softlayer.com/rest/v3/SoftLayer_Virtual_Guest/3001812/getObject?objectMask=id%3Bhostname%3Bdomain%3BfullyQualifiedDomainName%3BpowerState%3BmaxCpu%3BmaxMemory%3BstatusId%3BoperatingSystem.passwords%3BprimaryBackendIpAddress%3BprimaryIpAddress%3BactiveTransactionCount%3BblockDevices.diskImage%3Bdatacenter%3BtagReferences%3BprivateNetworkOnlyFlag%3BsshKeys")
               .addHeader("Accept", "application/json")
               .addHeader("Authorization", "Basic aWRlbnRpdHk6Y3JlZGVudGlhbA==").build();
 
@@ -58,7 +58,7 @@ public class VirtualGuestApiExpectTest extends BaseSoftLayerApiExpectTest {
    public void testGetVirtualGuestWhenResponseIs4xx() {
 
       HttpRequest getObjectRequest = HttpRequest.builder().method("GET")
-              .endpoint("https://api.softlayer.com/rest/v3/SoftLayer_Virtual_Guest/3001812/getObject?objectMask=id%3Bhostname%3Bdomain%3BfullyQualifiedDomainName%3BpowerState%3BmaxCpu%3BmaxMemory%3BstatusId%3BoperatingSystem.passwords%3BprimaryBackendIpAddress%3BprimaryIpAddress%3BactiveTransactionCount%3BblockDevices.diskImage%3Bdatacenter%3BtagReferences")
+              .endpoint("https://api.softlayer.com/rest/v3/SoftLayer_Virtual_Guest/3001812/getObject?objectMask=id%3Bhostname%3Bdomain%3BfullyQualifiedDomainName%3BpowerState%3BmaxCpu%3BmaxMemory%3BstatusId%3BoperatingSystem.passwords%3BprimaryBackendIpAddress%3BprimaryIpAddress%3BactiveTransactionCount%3BblockDevices.diskImage%3Bdatacenter%3BtagReferences%3BprivateNetworkOnlyFlag%3BsshKeys")
               .addHeader("Accept", "application/json")
               .addHeader("Authorization", "Basic aWRlbnRpdHk6Y3JlZGVudGlhbA==").build();
 
