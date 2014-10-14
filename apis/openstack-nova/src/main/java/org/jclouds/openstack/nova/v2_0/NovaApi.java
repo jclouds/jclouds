@@ -264,9 +264,13 @@ public interface NovaApi extends Closeable {
 
    /**
     * Provides access to Floating IP Pool features.
+    *
+    * <h3>NOTE</h3>
+    * This API is an extension that may or may not be present in your OpenStack cloud. Use the Optional return type
+    * to determine if it is present.
     */
    @Delegate
-   Optional<? extends FloatingIPPoolApi> getFloatingIPPoolApi(
+   Optional<FloatingIPPoolApi> getFloatingIPPoolApi(
          @EndpointParam(parser = RegionToEndpoint.class) String region);
 
    /**
