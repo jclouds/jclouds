@@ -23,7 +23,6 @@ import java.util.List;
 
 import org.jclouds.collect.PagedIterable;
 import org.jclouds.googlecomputeengine.domain.Disk;
-import org.jclouds.googlecomputeengine.domain.Project;
 import org.jclouds.googlecomputeengine.internal.BaseGoogleComputeEngineApiLiveTest;
 import org.jclouds.googlecomputeengine.options.ListOptions;
 import org.testng.annotations.Test;
@@ -43,7 +42,6 @@ public class DiskApiLiveTest extends BaseGoogleComputeEngineApiLiveTest {
 
    @Test(groups = "live")
    public void testInsertDisk() {
-      Project project = api.getProjectApi().get(userProject.get());
       assertZoneOperationDoneSucessfully(api().createInZone(DISK_NAME, sizeGb, DEFAULT_ZONE_NAME), TIME_WAIT);
 
    }

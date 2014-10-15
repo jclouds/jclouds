@@ -58,6 +58,8 @@ public class BaseGoogleComputeEngineApiLiveTest extends BaseApiLiveTest<GoogleCo
    protected static final String GATEWAY_API_URL_SUFFIX = "/global/gateways/";
    protected static final String DEFAULT_GATEWAY_NAME = "default-internet-gateway";
 
+   protected static final String IMAGE_API_URL_SUFFIX = "/global/images/";
+
    protected static final String GOOGLE_PROJECT = "google";
 
    protected Supplier<String> userProject;
@@ -134,6 +136,10 @@ public class BaseGoogleComputeEngineApiLiveTest extends BaseApiLiveTest<GoogleCo
 
    protected URI getGatewayUrl(String project, String gateway) {
       return URI.create(API_URL_PREFIX + project + GATEWAY_API_URL_SUFFIX + gateway);
+   }
+
+   protected URI getImageUrl(String project, String image){
+      return URI.create(API_URL_PREFIX + project + IMAGE_API_URL_SUFFIX + image);
    }
 
    protected URI getDefaultMachineTypeUrl(String project) {

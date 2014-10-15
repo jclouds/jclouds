@@ -23,8 +23,10 @@ import javax.inject.Named;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
+import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 
@@ -41,10 +43,13 @@ import org.jclouds.javax.annotation.Nullable;
 import org.jclouds.oauth.v2.config.OAuthScopes;
 import org.jclouds.oauth.v2.filters.OAuthAuthenticationFilter;
 import org.jclouds.rest.annotations.Fallback;
+import org.jclouds.rest.annotations.MapBinder;
+import org.jclouds.rest.annotations.PayloadParam;
 import org.jclouds.rest.annotations.RequestFilters;
 import org.jclouds.rest.annotations.ResponseParser;
 import org.jclouds.rest.annotations.SkipEncoding;
 import org.jclouds.rest.annotations.Transform;
+import org.jclouds.rest.binders.BindToJsonPayload;
 
 /**
  * Provides access to Images via their REST API.
@@ -163,5 +168,22 @@ public interface ImageApi {
    @Transform(ParseImages.ToPagedIterable.class)
    @Fallback(EmptyPagedIterableOnNotFoundOr404.class)
    PagedIterable<Image> list(ListOptions options);
+
+   /**
+    * Creates an image resource in the specified project from the provided persistent disk.
+    *
+    * @param imageName  the name of the created image
+    * @param sourceDisk fully qualified URL for the persistent disk to create the image from
+    * @return an Operation resource. To check on the status of an operation, poll the Operations resource returned to
+    *         you, and look for the status field.
+    */
+   @Named("Images:insert")
+   @POST
+   @Consumes(MediaType.APPLICATION_JSON)
+   @Produces(MediaType.APPLICATION_JSON)
+   @Path("/global/images")
+   @OAuthScopes(COMPUTE_SCOPE)
+   @MapBinder(BindToJsonPayload.class)
+   Operation createImageFromPD(@PayloadParam("name") String imageName, @PayloadParam("sourceDisk") String sourceDisk);
 
 }

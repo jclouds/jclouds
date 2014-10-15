@@ -39,7 +39,7 @@ import com.google.common.base.Optional;
 public final class Image extends Resource {
 
    private final String sourceType;
-   private final RawDisk rawDisk;
+   private final Optional<RawDisk> rawDisk;
    private final Optional<Deprecated> deprecated;
 
    @ConstructorProperties({
@@ -50,7 +50,7 @@ public final class Image extends Resource {
                    String sourceType, RawDisk rawDisk, Deprecated deprecated) {
       super(Kind.IMAGE, id, creationTimestamp, selfLink, name, description);
       this.sourceType = checkNotNull(sourceType, "sourceType of %s", name);
-      this.rawDisk = checkNotNull(rawDisk, "rawDisk of %s", name);
+      this.rawDisk = fromNullable(rawDisk);
       this.deprecated = fromNullable(deprecated);
    }
 
@@ -64,7 +64,7 @@ public final class Image extends Resource {
    /**
     * @return the raw disk image parameters.
     */
-   public RawDisk getRawDisk() {
+   public Optional<RawDisk> getRawDisk() {
       return rawDisk;
    }
 
@@ -146,7 +146,7 @@ public final class Image extends Resource {
       public Builder fromImage(Image in) {
          return super.fromResource(in)
                  .sourceType(in.getSourceType())
-                 .rawDisk(in.getRawDisk())
+                 .rawDisk(in.getRawDisk().orNull())
                  .deprecated(in.getDeprecated().orNull());
       }
 
@@ -188,7 +188,7 @@ public final class Image extends Resource {
       }
 
       /**
-       * @return an optional SHA1 checksum of the disk image before unpackaging; provided by the client when the disk
+       * @return an optional SHA1 checksum of the disk image before unpacking; provided by the client when the disk
        *         image is created.
        */
       public Optional<String> getSha1Checksum() {

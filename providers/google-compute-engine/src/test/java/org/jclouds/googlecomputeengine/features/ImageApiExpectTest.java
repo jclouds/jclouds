@@ -28,6 +28,7 @@ import org.jclouds.googlecomputeengine.parse.ParseImageTest;
 import org.jclouds.googlecomputeengine.parse.ParseOperationTest;
 import org.jclouds.http.HttpRequest;
 import org.jclouds.http.HttpResponse;
+import org.jclouds.rest.ResourceNotFoundException;
 import org.testng.annotations.Test;
 
 @Test(groups = "unit")
@@ -155,5 +156,48 @@ public class ImageApiExpectTest extends BaseGoogleComputeEngineApiExpectTest {
               TOKEN_RESPONSE, LIST_PROJECT_IMAGES_REQUEST, operationResponse).getImageApiForProject("myproject");
 
       assertTrue(imageApi.list().concat().isEmpty());
+   }
+
+   public void testCreateImageFromPdResponseIs2xx(){
+      HttpRequest createImage = HttpRequest
+            .builder()
+            .method("POST")
+            .endpoint("https://www.googleapis" +
+                    ".com/compute/v1/projects/myproject/global/images")
+            .addHeader("Accept", "application/json")
+            .addHeader("Authorization", "Bearer " + TOKEN)
+            .payload(payloadFromResource("/image_insert_from_pd.json"))
+            .build();
+
+      HttpResponse createImageResponse = HttpResponse.builder().statusCode(200)
+                                  .payload(payloadFromResource("/operation.json")).build();
+
+      ImageApi imageApi = requestsSendResponses(requestForScopes(COMPUTE_SCOPE),
+            TOKEN_RESPONSE, createImage, createImageResponse).getImageApiForProject("myproject");
+
+      assertEquals(imageApi.createImageFromPD("my-image", "https://www.googleapis.com/" +
+            "compute/v1/projects/myproject/zones/us-central1-a/disks/mydisk"),
+            new ParseOperationTest().expected());
+   }
+
+   @Test(expectedExceptions = ResourceNotFoundException.class)
+   public void testCreateImageFromPdResponseIs4xx() {
+      HttpRequest createImage = HttpRequest
+            .builder()
+            .method("POST")
+            .endpoint("https://www.googleapis" +
+                     ".com/compute/v1/projects/myproject/global/images")
+            .addHeader("Accept", "application/json")
+            .addHeader("Authorization", "Bearer " + TOKEN)
+            .payload(payloadFromResource("/image_insert_from_pd.json"))
+            .build();
+
+      HttpResponse createImageResponse = HttpResponse.builder().statusCode(404).build();
+
+      ImageApi imageApi = requestsSendResponses(requestForScopes(COMPUTE_SCOPE),
+              TOKEN_RESPONSE, createImage, createImageResponse).getImageApiForProject("myproject");
+
+      imageApi.createImageFromPD("my-image", "https://www.googleapis.com/" +
+                  "compute/v1/projects/myproject/zones/us-central1-a/disks/mydisk");
    }
 }
