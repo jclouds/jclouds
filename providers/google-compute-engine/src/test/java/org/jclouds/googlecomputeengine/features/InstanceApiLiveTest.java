@@ -57,7 +57,7 @@ public class InstanceApiLiveTest extends BaseGoogleComputeEngineApiLiveTest {
    private static final String IPV4_RANGE = "10.0.0.0/8";
    private static final String METADATA_ITEM_KEY = "instanceLiveTestTestProp";
    private static final String METADATA_ITEM_VALUE = "instanceLiveTestTestValue";
-   private static final Set<String> TAGS = ImmutableSet.of("instanceLiveTestTag1", "instanceLiveTestTag2");
+   private static final Set<String> TAGS = ImmutableSet.of("instance-live-test-tag1", "instance-live-test-tag2");
    private static final String ATTACH_DISK_NAME = "instance-api-live-test-attach-disk";
    private static final String ATTACH_DISK_DEVICE_NAME = "attach-disk-1";
 
@@ -153,7 +153,7 @@ public class InstanceApiLiveTest extends BaseGoogleComputeEngineApiLiveTest {
    public void testSetTagsForInstance() {
       Instance originalInstance = api().getInZone(DEFAULT_ZONE_NAME, INSTANCE_NAME);
       assertZoneOperationDoneSucessfully(api().setTagsInZone(DEFAULT_ZONE_NAME, INSTANCE_NAME, TAGS,
-              originalInstance.getMetadata().getFingerprint()),
+              originalInstance.getTags().getFingerprint()),
               TIME_WAIT);
 
       Instance modifiedInstance = api().getInZone(DEFAULT_ZONE_NAME, INSTANCE_NAME);
