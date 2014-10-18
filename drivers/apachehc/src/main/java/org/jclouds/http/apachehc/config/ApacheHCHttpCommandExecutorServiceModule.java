@@ -109,7 +109,7 @@ public class ApacheHCHttpCommandExecutorServiceModule extends AbstractModule {
 
    @Singleton
    @Provides
-   SSLContext newSSLSocketFactory(HttpUtils utils, @Named("untrusted") Supplier<SSLContext> untrustedSSLContextProvider)
+   SSLContext newSSLContext(HttpUtils utils, @Named("untrusted") Supplier<SSLContext> untrustedSSLContextProvider)
             throws NoSuchAlgorithmException, KeyManagementException {
       if (utils.trustAllCerts())
          return untrustedSSLContextProvider.get();
@@ -125,20 +125,12 @@ public class ApacheHCHttpCommandExecutorServiceModule extends AbstractModule {
             SSLContext context, Closer closer) throws NoSuchAlgorithmException, KeyManagementException {
 
       SchemeRegistry schemeRegistry = new SchemeRegistry();
-
-      Scheme http = new Scheme("http", PlainSocketFactory.getSocketFactory(), 80);
-      SSLSocketFactory sf = new SSLSocketFactory(context);
-
-      sf.setHostnameVerifier(verifier);
-
-      Scheme https = new Scheme("https", sf, 443);
-
-      SchemeRegistry sr = new SchemeRegistry();
-      sr.register(http);
-      sr.register(https);
-
       schemeRegistry.register(new Scheme("http", PlainSocketFactory.getSocketFactory(), 80));
+
+      SSLSocketFactory sf = new SSLSocketFactory(context);
+      sf.setHostnameVerifier(verifier);
       schemeRegistry.register(new Scheme("https", sf, 443));
+
       final ClientConnectionManager cm = new ThreadSafeClientConnManager(params, schemeRegistry);
       closer.addToClose(new Closeable() {
          @Override
