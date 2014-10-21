@@ -20,13 +20,14 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 import java.beans.ConstructorProperties;
 import java.util.Date;
-
-import com.google.common.base.Strings;
-import org.jclouds.javax.annotation.Nullable;
+import java.util.Set;
 
 import com.google.common.base.MoreObjects;
 import com.google.common.base.MoreObjects.ToStringHelper;
 import com.google.common.base.Objects;
+import com.google.common.base.Strings;
+import com.google.common.collect.ImmutableSet;
+import org.jclouds.javax.annotation.Nullable;
 
 public class Template implements Comparable<Template> {
    public enum Status {
@@ -166,6 +167,7 @@ public class Template implements Comparable<Template> {
       protected String hostName;
       protected String sourceTemplateId;
       protected String templateTag;
+      protected Set<Tag> tags = ImmutableSet.of();
 
       /**
        * @see Template#getId()
@@ -423,8 +425,20 @@ public class Template implements Comparable<Template> {
          return self();
       }
 
+      /**
+       * @see Template#getTags()
+       */
+      public T tags(Set<Tag> tags) {
+         this.tags = ImmutableSet.copyOf(checkNotNull(tags, "tags"));
+         return self();
+      }
+
+      public T tags(Tag... in) {
+         return tags(ImmutableSet.copyOf(in));
+      }
+
       public Template build() {
-         return new Template(id, displayText, domain, domainId, account, accountId, zone, zoneId, OSType, OSTypeId, name, type, status, format, hypervisor, size, created, removed, crossZones, bootable, extractable, featured, isPublic, ready, passwordEnabled, jobId, jobStatus, checksum, hostId, hostName, sourceTemplateId, templateTag);
+         return new Template(id, displayText, domain, domainId, account, accountId, zone, zoneId, OSType, OSTypeId, name, type, status, format, hypervisor, size, created, removed, crossZones, bootable, extractable, featured, isPublic, ready, passwordEnabled, jobId, jobStatus, checksum, hostId, hostName, sourceTemplateId, templateTag, tags);
       }
 
       public T fromTemplate(Template in) {
@@ -460,7 +474,8 @@ public class Template implements Comparable<Template> {
                .hostId(in.getHostId())
                .hostName(in.getHostName())
                .sourceTemplateId(in.getSourceTemplateId())
-               .templateTag(in.getTemplateTag());
+               .templateTag(in.getTemplateTag())
+               .tags(in.getTags());
       }
    }
 
@@ -503,12 +518,13 @@ public class Template implements Comparable<Template> {
    private final String hostName;
    private final String sourceTemplateId;
    private final String templateTag;
+   private final Set<Tag> tags;
 
    @ConstructorProperties({
          "id", "displaytext", "domain", "domainid", "account", "accountid", "zonename", "zoneid", "ostypename", "ostypeid",
          "name", "templatetype", "status", "format", "hypervisor", "size", "created", "removed", "crossZones", "bootable",
          "isextractable", "isfeatured", "ispublic", "isready", "passwordenabled", "jobid", "jobstatus", "checksum", "hostId",
-         "hostname", "sourcetemplateid", "templatetag"
+         "hostname", "sourcetemplateid", "templatetag", "tags"
    })
    protected Template(String id, @Nullable String displayText, @Nullable String domain, @Nullable String domainId,
                       @Nullable String account, @Nullable String accountId, @Nullable String zone, @Nullable String zoneId,
@@ -517,7 +533,8 @@ public class Template implements Comparable<Template> {
                       @Nullable Long size, @Nullable Date created, @Nullable Date removed, boolean crossZones,
                       boolean bootable, boolean extractable, boolean featured, boolean ispublic, boolean ready, boolean passwordEnabled,
                       @Nullable String jobId, @Nullable String jobStatus, @Nullable String checksum, @Nullable String hostId,
-                      @Nullable String hostName, @Nullable String sourceTemplateId, @Nullable String templateTag) {
+                      @Nullable String hostName, @Nullable String sourceTemplateId, @Nullable String templateTag,
+                      @Nullable Set<Tag> tags) {
       this.id = checkNotNull(id, "id");
       this.displayText = displayText;
       this.domain = domain;
@@ -550,6 +567,7 @@ public class Template implements Comparable<Template> {
       this.hostName = hostName;
       this.sourceTemplateId = sourceTemplateId;
       this.templateTag = templateTag;
+      this.tags = tags == null ? ImmutableSet.<Tag>of() : ImmutableSet.copyOf(tags);
    }
 
    /**
@@ -806,9 +824,17 @@ public class Template implements Comparable<Template> {
       return this.templateTag;
    }
 
+   /**
+    * @return the tags on this template
+    */
+   @Nullable
+   public Set<Tag> getTags() {
+      return this.tags;
+   }
+
    @Override
    public int hashCode() {
-      return Objects.hashCode(id, displayText, domain, domainId, account, accountId, zone, zoneId, OSType, OSTypeId, name, type, status, format, hypervisor, size, created, removed, crossZones, bootable, extractable, featured, ispublic, ready, passwordEnabled, jobId, jobStatus, checksum, hostId, hostName, sourceTemplateId, templateTag);
+      return Objects.hashCode(id, displayText, domain, domainId, account, accountId, zone, zoneId, OSType, OSTypeId, name, type, status, format, hypervisor, size, created, removed, crossZones, bootable, extractable, featured, ispublic, ready, passwordEnabled, jobId, jobStatus, checksum, hostId, hostName, sourceTemplateId, templateTag, tags);
    }
 
    @Override
@@ -847,12 +873,13 @@ public class Template implements Comparable<Template> {
             && Objects.equal(this.hostId, that.hostId)
             && Objects.equal(this.hostName, that.hostName)
             && Objects.equal(this.sourceTemplateId, that.sourceTemplateId)
-            && Objects.equal(this.templateTag, that.templateTag);
+            && Objects.equal(this.templateTag, that.templateTag)
+            && Objects.equal(this.tags, that.tags);
    }
 
    protected ToStringHelper string() {
       return MoreObjects.toStringHelper(this)
-            .add("id", id).add("displayText", displayText).add("domain", domain).add("domainId", domainId).add("account", account).add("accountId", accountId).add("zone", zone).add("zoneId", zoneId).add("OSType", OSType).add("OSTypeId", OSTypeId).add("name", name).add("type", type).add("status", status).add("format", format).add("hypervisor", hypervisor).add("size", size).add("created", created).add("removed", removed).add("crossZones", crossZones).add("bootable", bootable).add("extractable", extractable).add("featured", featured).add("ispublic", ispublic).add("ready", ready).add("passwordEnabled", passwordEnabled).add("jobId", jobId).add("jobStatus", jobStatus).add("checksum", checksum).add("hostId", hostId).add("hostName", hostName).add("sourceTemplateId", sourceTemplateId).add("templateTag", templateTag);
+            .add("id", id).add("displayText", displayText).add("domain", domain).add("domainId", domainId).add("account", account).add("accountId", accountId).add("zone", zone).add("zoneId", zoneId).add("OSType", OSType).add("OSTypeId", OSTypeId).add("name", name).add("type", type).add("status", status).add("format", format).add("hypervisor", hypervisor).add("size", size).add("created", created).add("removed", removed).add("crossZones", crossZones).add("bootable", bootable).add("extractable", extractable).add("featured", featured).add("ispublic", ispublic).add("ready", ready).add("passwordEnabled", passwordEnabled).add("jobId", jobId).add("jobStatus", jobStatus).add("checksum", checksum).add("hostId", hostId).add("hostName", hostName).add("sourceTemplateId", sourceTemplateId).add("templateTag", templateTag).add("tags", tags);
    }
 
    @Override

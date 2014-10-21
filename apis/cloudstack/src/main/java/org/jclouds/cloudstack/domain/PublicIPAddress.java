@@ -20,7 +20,9 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 import java.beans.ConstructorProperties;
 import java.util.Date;
+import java.util.Set;
 
+import com.google.common.collect.ImmutableSet;
 import org.jclouds.javax.annotation.Nullable;
 
 import com.google.common.base.CaseFormat;
@@ -85,6 +87,7 @@ public class PublicIPAddress {
       protected String zoneName;
       protected String jobId;
       protected Integer jobStatus;
+      protected Set<Tag> tags = ImmutableSet.of();
 
       /**
        * @see PublicIPAddress#getId()
@@ -254,8 +257,20 @@ public class PublicIPAddress {
          return self();
       }
 
+      /**
+       * @see PublicIPAddress#getTags()
+       */
+      public T tags(Set<Tag> tags) {
+         this.tags = ImmutableSet.copyOf(checkNotNull(tags, "tags"));
+         return self();
+      }
+
+      public T tags(Tag... in) {
+         return tags(ImmutableSet.copyOf(in));
+      }
+
       public PublicIPAddress build() {
-         return new PublicIPAddress(id, account, allocated, associatedNetworkId, domain, domainId, usesVirtualNetwork, IPAddress, isSourceNAT, isStaticNAT, networkId, state, virtualMachineDisplayName, virtualMachineId, virtualMachineName, VLANId, VLANName, zoneId, zoneName, jobId, jobStatus);
+         return new PublicIPAddress(id, account, allocated, associatedNetworkId, domain, domainId, usesVirtualNetwork, IPAddress, isSourceNAT, isStaticNAT, networkId, state, virtualMachineDisplayName, virtualMachineId, virtualMachineName, VLANId, VLANName, zoneId, zoneName, jobId, jobStatus, tags);
       }
 
       public T fromPublicIPAddress(PublicIPAddress in) {
@@ -280,7 +295,8 @@ public class PublicIPAddress {
                .zoneId(in.getZoneId())
                .zoneName(in.getZoneName())
                .jobId(in.getJobId())
-               .jobStatus(in.getJobStatus());
+               .jobStatus(in.getJobStatus())
+               .tags(in.getTags());
       }
    }
 
@@ -312,18 +328,19 @@ public class PublicIPAddress {
    private final String zoneName;
    private final String jobId;
    private final Integer jobStatus;
+   private final Set<Tag> tags;
 
    @ConstructorProperties({
          "id", "account", "allocated", "associatednetworkid", "domain", "domainid", "forvirtualnetwork", "ipaddress", "issourcenat",
          "isstaticnat", "networkid", "state", "virtualmachinedisplayname", "virtualmachineid", "virtualmachinename", "VLANid",
-         "VLANname", "zoneid", "zonename", "jobid", "jobstatus"
+         "VLANname", "zoneid", "zonename", "jobid", "jobstatus", "tags"
    })
    protected PublicIPAddress(String id, @Nullable String account, @Nullable Date allocated, @Nullable String associatedNetworkId,
                              @Nullable String domain, @Nullable String domainId, boolean usesVirtualNetwork, @Nullable String IPAddress,
                              boolean isSourceNAT, boolean isStaticNAT, @Nullable String networkId, @Nullable PublicIPAddress.State state,
                              @Nullable String virtualMachineDisplayName, @Nullable String virtualMachineId, @Nullable String virtualMachineName,
                              @Nullable String VLANId, @Nullable String VLANName, @Nullable String zoneId, @Nullable String zoneName,
-                             @Nullable String jobId, @Nullable Integer jobStatus) {
+                             @Nullable String jobId, @Nullable Integer jobStatus, @Nullable Set<Tag> tags) {
       this.id = checkNotNull(id, "id");
       this.account = account;
       this.allocated = allocated;
@@ -345,6 +362,7 @@ public class PublicIPAddress {
       this.zoneName = zoneName;
       this.jobId = jobId;
       this.jobStatus = jobStatus;
+      this.tags = tags != null ? ImmutableSet.copyOf(tags) : ImmutableSet.<Tag> of();
    }
 
    /**
@@ -517,9 +535,16 @@ public class PublicIPAddress {
       return this.jobStatus;
    }
 
+   /**
+    * @return the tags for the public IP address
+    */
+   public Set<Tag> getTags() {
+      return this.tags;
+   }
+
    @Override
    public int hashCode() {
-      return Objects.hashCode(id, account, allocated, associatedNetworkId, domain, domainId, usesVirtualNetwork, IPAddress, isSourceNAT, isStaticNAT, networkId, state, virtualMachineDisplayName, virtualMachineId, virtualMachineName, VLANId, VLANName, zoneId, zoneName, jobId, jobStatus);
+      return Objects.hashCode(id, account, allocated, associatedNetworkId, domain, domainId, usesVirtualNetwork, IPAddress, isSourceNAT, isStaticNAT, networkId, state, virtualMachineDisplayName, virtualMachineId, virtualMachineName, VLANId, VLANName, zoneId, zoneName, jobId, jobStatus, tags);
    }
 
    @Override
@@ -547,7 +572,8 @@ public class PublicIPAddress {
             && Objects.equal(this.zoneId, that.zoneId)
             && Objects.equal(this.zoneName, that.zoneName)
             && Objects.equal(this.jobId, that.jobId)
-            && Objects.equal(this.jobStatus, that.jobStatus);
+            && Objects.equal(this.jobStatus, that.jobStatus)
+            && Objects.equal(this.tags, that.tags);
    }
 
    protected ToStringHelper string() {
@@ -557,7 +583,7 @@ public class PublicIPAddress {
             .add("isSourceNAT", isSourceNAT).add("isStaticNAT", isStaticNAT).add("networkId", networkId).add("state", state)
             .add("virtualMachineDisplayName", virtualMachineDisplayName).add("virtualMachineId", virtualMachineId)
             .add("virtualMachineName", virtualMachineName).add("VLANId", VLANId).add("VLANName", VLANName).add("zoneId", zoneId)
-            .add("zoneName", zoneName).add("jobId", jobId).add("jobStatus", jobStatus);
+            .add("zoneName", zoneName).add("jobId", jobId).add("jobStatus", jobStatus).add("tags", tags);
    }
 
    @Override

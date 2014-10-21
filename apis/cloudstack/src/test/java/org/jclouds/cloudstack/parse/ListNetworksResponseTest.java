@@ -22,6 +22,7 @@ import java.util.Set;
 import org.jclouds.cloudstack.domain.GuestIPType;
 import org.jclouds.cloudstack.domain.Network;
 import org.jclouds.cloudstack.domain.NetworkService;
+import org.jclouds.cloudstack.domain.Tag;
 import org.jclouds.cloudstack.domain.TrafficType;
 import org.jclouds.json.BaseSetParserTest;
 import org.jclouds.rest.annotations.SelectJson;
@@ -75,13 +76,17 @@ public class ListNetworksResponseTest extends BaseSetParserTest<Network> {
                               NetworkService.builder().name("Gateway").build(),
                               NetworkService.builder().name("UserData").build(),
                               NetworkService.builder().name("Dhcp").build(),
-                              NetworkService.builder().name("Firewall").capabilities(ImmutableSortedMap.<String, String> naturalOrder()
+                              NetworkService.builder().name("Firewall").capabilities(ImmutableSortedMap.<String, String>naturalOrder()
                                     .put("SupportedSourceNatTypes", "per account").put("StaticNat", "true")
                                     .put("TrafficStatistics", "per public ip").put("PortForwarding", "true")
                                     .put("MultipleIps", "true").put("SupportedProtocols", "tcp,udp").build()).build(),
                               NetworkService.builder().name("Dns").build(),
                               NetworkService.builder().name("Lb").capabilities(ImmutableMap.of("SupportedLbAlgorithms",
-                                    "roundrobin,leastconn,source", "SupportedProtocols", "tcp, udp")).build()))
-                  .networkDomain("cs3cloud.internal").build());
+                                    "roundrobin,leastconn,source", "SupportedProtocols", "tcp, udp")).build()
+                        )
+                  )
+                  .networkDomain("cs3cloud.internal")
+                  .tags(Tag.builder().account("1").domain("ROOT").domainId("1").key("some-tag").resourceId("204")
+                        .resourceType(Tag.ResourceType.NETWORK).value("some-value").build()).build());
    }
 }

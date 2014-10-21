@@ -22,6 +22,7 @@ import java.util.Set;
 
 import org.jclouds.cloudstack.CloudStackContext;
 import org.jclouds.cloudstack.domain.Project;
+import org.jclouds.cloudstack.domain.Tag;
 import org.jclouds.cloudstack.internal.BaseCloudStackExpectTest;
 import org.jclouds.http.HttpRequest;
 import org.jclouds.http.HttpResponse;
@@ -50,22 +51,32 @@ public class ProjectApiExpectTest extends BaseCloudStackExpectTest<ProjectApi> {
             .build());
 
       Set<Project> projects = ImmutableSet.of(
-              Project.builder()
-                      .id("489da162-0b77-489d-b044-ce39aa018b1f")
-                      .account("thyde")
-                      .displayText("")
-                      .domain("ROOT")
-                      .domainId("41a4917b-7952-499d-ba7f-4c57464d3dc8")
-                      .name("NN-HA-T1")
-                      .state(Project.State.ACTIVE).build(),
-              Project.builder()
-                      .id("1c11f22c-15ac-4fa7-b833-4d748df317b7")
-                      .account("prasadm")
-                      .displayText("Hive")
-                      .domain("ROOT")
-                      .domainId("41a4917b-7952-499d-ba7f-4c57464d3dc8")
-                      .name("hive")
-                      .state(Project.State.ACTIVE).build());
+            Project.builder()
+                  .id("489da162-0b77-489d-b044-ce39aa018b1f")
+                  .account("thyde")
+                  .displayText("")
+                  .domain("ROOT")
+                  .domainId("41a4917b-7952-499d-ba7f-4c57464d3dc8")
+                  .name("NN-HA-T1")
+                  .state(Project.State.ACTIVE).build(),
+            Project.builder()
+                  .id("1c11f22c-15ac-4fa7-b833-4d748df317b7")
+                  .account("prasadm")
+                  .displayText("Hive")
+                  .domain("ROOT")
+                  .domainId("41a4917b-7952-499d-ba7f-4c57464d3dc8")
+                  .name("hive")
+                  .state(Project.State.ACTIVE)
+                  .tags(Tag.builder()
+                        .account("prasadm")
+                        .domain("ROOT")
+                        .domainId("41a4917b-7952-499d-ba7f-4c57464d3dc8")
+                        .key("some-tag")
+                        .resourceId("1c11f22c-15ac-4fa7-b833-4d748df317b7")
+                        .resourceType(Tag.ResourceType.PROJECT)
+                        .value("some-value")
+                        .build())
+                  .build());
 
       assertEquals(client.listProjects(), projects);
    }

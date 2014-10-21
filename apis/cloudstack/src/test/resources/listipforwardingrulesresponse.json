@@ -11,7 +11,8 @@
             "ipaddress": "10.27.27.64",
             "startport": 22,
             "endport": 22,
-            "state": "Active"
+            "state": "Active",
+            "tags":[{"account":1,"domain":"ROOT","domainid":1,"key":"some-tag","resourceid":66, "resourcetype":"PortForwardingRule", "value":"some-value"}]
         }]
     }
 }

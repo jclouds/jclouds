@@ -100,6 +100,7 @@ public class FirewallRule implements Comparable<FirewallRule> {
       protected String ipAddressId;
       protected FirewallRule.Protocol protocol;
       protected FirewallRule.State state;
+      protected Set<Tag> tags = ImmutableSet.of();
 
       /**
        * @see FirewallRule#getId()
@@ -185,8 +186,20 @@ public class FirewallRule implements Comparable<FirewallRule> {
          return self();
       }
 
+      /**
+       * @see FirewallRule#getTags()
+       */
+      public T tags(Set<Tag> tags) {
+         this.tags = ImmutableSet.copyOf(checkNotNull(tags, "tags"));
+         return self();
+      }
+
+      public T tags(Tag... in) {
+         return tags(ImmutableSet.copyOf(in));
+      }
+
       public FirewallRule build() {
-         return new FirewallRule(id, CIDRs, startPort, endPort, icmpCode, icmpType, ipAddress, ipAddressId, protocol, state);
+         return new FirewallRule(id, CIDRs, startPort, endPort, icmpCode, icmpType, ipAddress, ipAddressId, protocol, state, tags);
       }
 
       public T fromFirewallRule(FirewallRule in) {
@@ -200,7 +213,8 @@ public class FirewallRule implements Comparable<FirewallRule> {
                .ipAddress(in.getIpAddress())
                .ipAddressId(in.getIpAddressId())
                .protocol(in.getProtocol())
-               .state(in.getState());
+               .state(in.getState())
+               .tags(in.getTags());
       }
    }
 
@@ -221,14 +235,15 @@ public class FirewallRule implements Comparable<FirewallRule> {
    private final String ipAddressId;
    private final FirewallRule.Protocol protocol;
    private final FirewallRule.State state;
+   private final Set<Tag> tags;
 
    @ConstructorProperties({
-         "id", "cidrlist", "startport", "endport", "icmpcode", "icmptype", "ipaddress", "ipaddressid", "protocol", "state"
+         "id", "cidrlist", "startport", "endport", "icmpcode", "icmptype", "ipaddress", "ipaddressid", "protocol", "state", "tags"
    })
    private FirewallRule(String id, @Nullable String CIDRs, int startPort, int endPort, @Nullable String icmpCode,
                         @Nullable String icmpType, @Nullable String ipAddress, @Nullable String ipAddressId,
-                        @Nullable Protocol protocol, @Nullable State state) {
-      this(id, splitStringOnCommas(CIDRs), startPort, endPort, icmpCode, icmpType, ipAddress, ipAddressId, protocol, state);
+                        @Nullable Protocol protocol, @Nullable State state, @Nullable Set<Tag> tags) {
+      this(id, splitStringOnCommas(CIDRs), startPort, endPort, icmpCode, icmpType, ipAddress, ipAddressId, protocol, state, tags);
    }
 
    private static Set<String> splitStringOnCommas(String in) {
@@ -238,7 +253,7 @@ public class FirewallRule implements Comparable<FirewallRule> {
 
    protected FirewallRule(String id, @Nullable Iterable<String> CIDRs, int startPort, int endPort, @Nullable String icmpCode,
                           @Nullable String icmpType, @Nullable String ipAddress, @Nullable String ipAddressId,
-                          @Nullable FirewallRule.Protocol protocol, @Nullable FirewallRule.State state) {
+                          @Nullable FirewallRule.Protocol protocol, @Nullable FirewallRule.State state, @Nullable Set<Tag> tags) {
       this.id = checkNotNull(id, "id");
       this.CIDRs = CIDRs == null ? ImmutableSet.<String>of() : ImmutableSet.copyOf(CIDRs);
       this.startPort = startPort;
@@ -249,6 +264,7 @@ public class FirewallRule implements Comparable<FirewallRule> {
       this.ipAddressId = ipAddressId;
       this.protocol = protocol;
       this.state = state;
+      this.tags = tags == null ? ImmutableSet.<Tag>of() : ImmutableSet.copyOf(tags);
    }
 
    public String getId() {
@@ -297,9 +313,14 @@ public class FirewallRule implements Comparable<FirewallRule> {
       return this.state;
    }
 
+   @Nullable
+   public Set<Tag> getTags() {
+      return this.tags;
+   }
+
    @Override
    public int hashCode() {
-      return Objects.hashCode(id, CIDRs, startPort, endPort, icmpCode, icmpType, ipAddress, ipAddressId, protocol, state);
+      return Objects.hashCode(id, CIDRs, startPort, endPort, icmpCode, icmpType, ipAddress, ipAddressId, protocol, state, tags);
    }
 
    @Override
@@ -316,13 +337,15 @@ public class FirewallRule implements Comparable<FirewallRule> {
             && Objects.equal(this.ipAddress, that.ipAddress)
             && Objects.equal(this.ipAddressId, that.ipAddressId)
             && Objects.equal(this.protocol, that.protocol)
-            && Objects.equal(this.state, that.state);
+            && Objects.equal(this.state, that.state)
+            && Objects.equal(this.tags, that.tags);
    }
 
    protected ToStringHelper string() {
       return MoreObjects.toStringHelper(this)
             .add("id", id).add("CIDRs", CIDRs).add("startPort", startPort).add("endPort", endPort).add("icmpCode", icmpCode)
-            .add("icmpType", icmpType).add("ipAddress", ipAddress).add("ipAddressId", ipAddressId).add("protocol", protocol).add("state", state);
+            .add("icmpType", icmpType).add("ipAddress", ipAddress).add("ipAddressId", ipAddressId).add("protocol", protocol).add("state", state)
+            .add("tags", tags);
    }
 
    @Override

@@ -16,6 +16,8 @@
  */
 package org.jclouds.cloudstack.options;
 
+import java.util.Map;
+
 import org.jclouds.cloudstack.domain.NetworkType;
 import org.jclouds.cloudstack.domain.TrafficType;
 
@@ -33,8 +35,7 @@ public class ListNetworksOptions extends AccountInDomainOptions {
    public static final ListNetworksOptions NONE = new ListNetworksOptions();
 
    /**
-    * @param isDefault
-    *           true if network is default, false otherwise
+    * @param isDefault true if network is default, false otherwise
     */
    public ListNetworksOptions isDefault(boolean isDefault) {
       this.queryParameters.replaceValues("isdefault", ImmutableSet.of(isDefault + ""));
@@ -42,8 +43,7 @@ public class ListNetworksOptions extends AccountInDomainOptions {
    }
 
    /**
-    * @param isShared
-    *           true if network is shared, false otherwise
+    * @param isShared true if network is shared, false otherwise
     */
    public ListNetworksOptions isShared(boolean isShared) {
       this.queryParameters.replaceValues("isshared", ImmutableSet.of(isShared + ""));
@@ -51,8 +51,7 @@ public class ListNetworksOptions extends AccountInDomainOptions {
    }
 
    /**
-    * @param isSystem
-    *           true if network is system, false otherwise
+    * @param isSystem true if network is system, false otherwise
     */
    public ListNetworksOptions isSystem(boolean isSystem) {
       this.queryParameters.replaceValues("issystem", ImmutableSet.of(isSystem + ""));
@@ -60,8 +59,7 @@ public class ListNetworksOptions extends AccountInDomainOptions {
    }
 
    /**
-    * @param type
-    *           the type of the network
+    * @param type the type of the network
     */
    public ListNetworksOptions type(NetworkType type) {
       this.queryParameters.replaceValues("type", ImmutableSet.of(type.toString()));
@@ -69,8 +67,7 @@ public class ListNetworksOptions extends AccountInDomainOptions {
    }
 
    /**
-    * @param id
-    *           list networks by id
+    * @param id list networks by id
     */
    public ListNetworksOptions id(String id) {
       this.queryParameters.replaceValues("id", ImmutableSet.of(id + ""));
@@ -78,8 +75,7 @@ public class ListNetworksOptions extends AccountInDomainOptions {
    }
 
    /**
-    * @param zoneId
-    *           the Zone ID of the network
+    * @param zoneId the Zone ID of the network
     */
    public ListNetworksOptions zoneId(String zoneId) {
       this.queryParameters.replaceValues("zoneid", ImmutableSet.of(zoneId + ""));
@@ -88,8 +84,7 @@ public class ListNetworksOptions extends AccountInDomainOptions {
    }
 
    /**
-    * @param projectId
-    *           the project ID of the network
+    * @param projectId the project ID of the network
     */
    public ListNetworksOptions projectId(String projectId) {
       this.queryParameters.replaceValues("projectid", ImmutableSet.of(projectId + ""));
@@ -98,8 +93,7 @@ public class ListNetworksOptions extends AccountInDomainOptions {
    }
 
    /**
-    * @param trafficType
-    *           type of the traffic
+    * @param trafficType type of the traffic
     */
    public ListNetworksOptions trafficType(TrafficType trafficType) {
       this.queryParameters.replaceValues("traffictype", ImmutableSet.of(trafficType.toString()));
@@ -120,6 +114,21 @@ public class ListNetworksOptions extends AccountInDomainOptions {
    @Override
    public ListNetworksOptions domainId(String domainId) {
       return ListNetworksOptions.class.cast(super.domainId(domainId));
+   }
+
+   /**
+    * @param tags
+    *           Key/value pairs for tags that need to be matched.
+    */
+   public ListNetworksOptions tags(Map<String, String> tags) {
+      int count = 0;
+      for (Map.Entry<String, String> entry : tags.entrySet()) {
+         this.queryParameters.replaceValues(String.format("tags[%d].key", count), ImmutableSet.of(entry.getKey()));
+         this.queryParameters.replaceValues(String.format("tags[%d].value", count),
+               ImmutableSet.of(entry.getValue()));
+         count += 1;
+      }
+      return this;
    }
 
    public static class Builder {
@@ -202,6 +211,15 @@ public class ListNetworksOptions extends AccountInDomainOptions {
          ListNetworksOptions options = new ListNetworksOptions();
          return options.domainId(domainId);
       }
-   }
 
+      /**
+       * @see ListNetworksOptions#tags
+       */
+      public static ListNetworksOptions tags(Map<String, String> tags) {
+         ListNetworksOptions options = new ListNetworksOptions();
+         return options.tags(tags);
+      }
+   }
 }
+
+

@@ -20,7 +20,9 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 import java.beans.ConstructorProperties;
 import java.util.Date;
+import java.util.Set;
 
+import com.google.common.collect.ImmutableSet;
 import org.jclouds.javax.annotation.Nullable;
 
 import com.google.common.base.MoreObjects;
@@ -90,6 +92,7 @@ public class ISO {
       protected String templateType;
       protected String zoneId;
       protected String zoneName;
+      protected Set<Tag> tags = ImmutableSet.of();
 
       /**
        * @see ISO#getId()
@@ -347,11 +350,23 @@ public class ISO {
          return self();
       }
 
+      /**
+       * @see ISO#getTags()
+       */
+      public T tags(Set<Tag> tags) {
+         this.tags = ImmutableSet.copyOf(checkNotNull(tags, "tags"));
+         return self();
+      }
+
+      public T tags(Tag... in) {
+         return tags(ImmutableSet.copyOf(in));
+      }
+
       public ISO build() {
          return new ISO(id, account, accountId, bootable, checksum, created, crossZones, displayText, domain, domainid,
                format, hostId, hostName, hypervisor, isExtractable, isFeatured, isPublic, isReady, jobId, jobStatus, name,
                osTypeId, osTypeName, passwordEnabled, removed, size, sourceTemplateId, status, templateTag, templateType,
-               zoneId, zoneName);
+               zoneId, zoneName, tags);
       }
 
       public T fromISO(ISO in) {
@@ -387,7 +402,8 @@ public class ISO {
                .templateTag(in.getTemplateTag())
                .templateType(in.getTemplateType())
                .zoneId(in.getZoneId())
-               .zoneName(in.getZoneName());
+               .zoneName(in.getZoneName())
+               .tags(in.getTags());
       }
    }
 
@@ -430,9 +446,10 @@ public class ISO {
    private final String templateType;
    private final String zoneId;
    private final String zoneName;
+   private final Set<Tag> tags;
 
    @ConstructorProperties({
-         "id", "account", "accountid", "bootable", "checksum", "created", "crossZones", "displaytext", "domain", "domainid", "format", "hostid", "hostname", "hypervisor", "isextractable", "isfeatured", "ispublic", "isready", "jobid", "jobstatus", "name", "ostypeid", "ostypename", "passwordenabled", "removed", "size", "sourcetemplateid", "status", "templatetag", "templatetype", "zoneid", "zonename"
+         "id", "account", "accountid", "bootable", "checksum", "created", "crossZones", "displaytext", "domain", "domainid", "format", "hostid", "hostname", "hypervisor", "isextractable", "isfeatured", "ispublic", "isready", "jobid", "jobstatus", "name", "ostypeid", "ostypename", "passwordenabled", "removed", "size", "sourcetemplateid", "status", "templatetag", "templatetype", "zoneid", "zonename", "tags"
    })
    protected ISO(String id, @Nullable String account, @Nullable String accountId, boolean bootable, @Nullable String checksum,
                  @Nullable Date created, boolean crossZones, @Nullable String displayText, @Nullable String domain,
@@ -440,7 +457,8 @@ public class ISO {
                  @Nullable String hypervisor, boolean isExtractable, boolean isFeatured, boolean isPublic, boolean isReady,
                  @Nullable String jobId, @Nullable String jobStatus, @Nullable String name, @Nullable String osTypeId,
                  @Nullable String osTypeName, boolean passwordEnabled, @Nullable Date removed, long size, @Nullable String sourceTemplateId,
-                 @Nullable String status, @Nullable String templateTag, @Nullable String templateType, @Nullable String zoneId, @Nullable String zoneName) {
+                 @Nullable String status, @Nullable String templateTag, @Nullable String templateType, @Nullable String zoneId, @Nullable String zoneName,
+                 @Nullable Set<Tag> tags) {
       this.id = checkNotNull(id, "id");
       this.account = account;
       this.accountId = accountId;
@@ -473,6 +491,7 @@ public class ISO {
       this.templateType = templateType;
       this.zoneId = zoneId;
       this.zoneName = zoneName;
+      this.tags = tags == null ? ImmutableSet.<Tag>of() : ImmutableSet.copyOf(tags);
    }
 
    /**
@@ -701,11 +720,20 @@ public class ISO {
       return this.zoneName;
    }
 
+   /**
+    * @return Tags on this ISO
+    */
+   @Nullable
+   public Set<Tag> getTags() {
+      return this.tags;
+   }
+
    @Override
    public int hashCode() {
       return Objects.hashCode(id, account, accountId, bootable, checksum, created, crossZones, displayText, domain,
             domainid, format, hostId, hostName, hypervisor, isExtractable, isFeatured, isPublic, isReady, jobId, jobStatus,
-            name, osTypeId, osTypeName, passwordEnabled, removed, size, sourceTemplateId, status, templateTag, templateType, zoneId, zoneName);
+            name, osTypeId, osTypeName, passwordEnabled, removed, size, sourceTemplateId, status, templateTag, templateType, zoneId, zoneName,
+            tags);
    }
 
    @Override
@@ -744,7 +772,8 @@ public class ISO {
             && Objects.equal(this.templateTag, that.templateTag)
             && Objects.equal(this.templateType, that.templateType)
             && Objects.equal(this.zoneId, that.zoneId)
-            && Objects.equal(this.zoneName, that.zoneName);
+            && Objects.equal(this.zoneName, that.zoneName)
+            && Objects.equal(this.tags, that.tags);
    }
 
    protected ToStringHelper string() {
@@ -756,7 +785,7 @@ public class ISO {
             .add("isReady", isReady).add("jobId", jobId).add("jobStatus", jobStatus).add("name", name).add("osTypeId", osTypeId)
             .add("osTypeName", osTypeName).add("passwordEnabled", passwordEnabled).add("removed", removed).add("size", size)
             .add("sourceTemplateId", sourceTemplateId).add("status", status).add("templateTag", templateTag).add("templateType", templateType)
-            .add("zoneId", zoneId).add("zoneName", zoneName);
+            .add("zoneId", zoneId).add("zoneName", zoneName).add("tags", tags);
    }
 
    @Override

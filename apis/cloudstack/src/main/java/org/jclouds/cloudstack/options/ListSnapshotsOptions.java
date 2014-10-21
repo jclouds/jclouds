@@ -16,6 +16,8 @@
  */
 package org.jclouds.cloudstack.options;
 
+import java.util.Map;
+
 import org.jclouds.cloudstack.domain.Snapshot;
 
 import com.google.common.collect.ImmutableSet;
@@ -94,6 +96,21 @@ public class ListSnapshotsOptions extends AccountInDomainOptions {
       return this;
    }
 
+   /**
+    * @param tags
+    *           Key/value pairs for tags that need to be matched.
+    */
+   public ListSnapshotsOptions tags(Map<String, String> tags) {
+      int count = 0;
+      for (Map.Entry<String, String> entry : tags.entrySet()) {
+         this.queryParameters.replaceValues(String.format("tags[%d].key", count), ImmutableSet.of(entry.getKey()));
+         this.queryParameters.replaceValues(String.format("tags[%d].value", count),
+               ImmutableSet.of(entry.getValue()));
+         count += 1;
+      }
+      return this;
+   }
+
    public static class Builder {
 
       /**
@@ -165,6 +182,13 @@ public class ListSnapshotsOptions extends AccountInDomainOptions {
        */
       public static ListSnapshotsOptions projectId(String projectId) {
          return new ListSnapshotsOptions().projectId(projectId);
+      }
+
+      /**
+       * @see org.jclouds.cloudstack.options.ListSnapshotsOptions#tags(java.util.Map)
+       */
+      public static ListSnapshotsOptions tags(Map<String, String> tags) {
+         return new ListSnapshotsOptions().tags(tags);
       }
    }
 

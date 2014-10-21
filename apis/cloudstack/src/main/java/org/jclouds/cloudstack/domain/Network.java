@@ -76,9 +76,9 @@ public class Network {
       protected String VLAN;
       protected TrafficType trafficType;
       protected String zoneId;
-      protected ImmutableSet.Builder<String> tags = ImmutableSet.<String>builder();
       protected boolean securityGroupEnabled;
       protected Set<? extends NetworkService> services = ImmutableSortedSet.of();
+      protected Set<Tag> tags = ImmutableSet.of();
 
       /**
        * @see Network#getId()
@@ -298,23 +298,6 @@ public class Network {
       }
 
       /**
-       * @see Network#getTags()
-       */
-      public T tags(Iterable<String> tags) {
-         this.tags = ImmutableSet.<String>builder().addAll(tags);
-         return self();
-      }
-      
-      /**
-       * @see Network#getTags()
-       */
-      public T tag(String tag) {
-         this.tags.add(tag);
-         return self();
-      }
-      
-
-      /**
        * @see Network#isSecurityGroupEnabled()
        */
       public T securityGroupEnabled(boolean securityGroupEnabled) {
@@ -330,8 +313,20 @@ public class Network {
          return self();
       }
 
+      /**
+       * @see Network#getTags()
+       */
+      public T tags(Set<Tag> tags) {
+         this.tags = ImmutableSet.copyOf(checkNotNull(tags, "tags"));
+         return self();
+      }
+
+      public T tags(Tag... in) {
+         return tags(ImmutableSet.copyOf(in));
+      }
+
       public Network build() {
-         return new Network(id, account, broadcastDomainType, broadcastURI, displayText, DNS1, DNS2, domain, domainId, endIP, gateway, isDefault, isShared, isSystem, netmask, networkDomain, networkOfferingAvailability, networkOfferingDisplayText, networkOfferingId, networkOfferingName, related, startIP, name, state, guestIPType, VLAN, trafficType, zoneId, tags.build(), securityGroupEnabled, services);
+         return new Network(id, account, broadcastDomainType, broadcastURI, displayText, DNS1, DNS2, domain, domainId, endIP, gateway, isDefault, isShared, isSystem, netmask, networkDomain, networkOfferingAvailability, networkOfferingDisplayText, networkOfferingId, networkOfferingName, related, startIP, name, state, guestIPType, VLAN, trafficType, zoneId, tags, securityGroupEnabled, services);
       }
 
       public T fromNetwork(Network in) {
@@ -363,9 +358,9 @@ public class Network {
                .VLAN(in.getVLAN())
                .trafficType(in.getTrafficType())
                .zoneId(in.getZoneId())
-               .tags(in.getTags())
                .securityGroupEnabled(in.isSecurityGroupEnabled())
-               .services(in.getServices());
+               .services(in.getServices())
+               .tags(in.getTags());
       }
    }
 
@@ -404,7 +399,7 @@ public class Network {
    private final String VLAN;
    private final TrafficType trafficType;
    private final String zoneId;
-   private final Set<String> tags;
+   private final Set<Tag> tags;
    private final boolean securityGroupEnabled;
    private final Set<? extends NetworkService> services;
 
@@ -418,7 +413,7 @@ public class Network {
                      @Nullable String networkOfferingDisplayText, @Nullable String networkOfferingId, @Nullable String networkOfferingName,
                      @Nullable String related, @Nullable String startIP, @Nullable String name, @Nullable String state,
                      @Nullable GuestIPType guestIPType, @Nullable String VLAN, @Nullable TrafficType trafficType,
-                     @Nullable String zoneId, @Nullable Iterable<String> tags, boolean securityGroupEnabled, Set<? extends NetworkService> services) {
+                     @Nullable String zoneId, @Nullable Set<Tag> tags, boolean securityGroupEnabled, Set<? extends NetworkService> services) {
       this.id = checkNotNull(id, "id");
       this.account = account;
       this.broadcastDomainType = broadcastDomainType;
@@ -447,7 +442,7 @@ public class Network {
       this.VLAN = VLAN;
       this.trafficType = trafficType;
       this.zoneId = zoneId;
-      this.tags = tags != null ? ImmutableSet.copyOf(tags) : ImmutableSet.<String> of();
+      this.tags = tags != null ? ImmutableSet.copyOf(tags) : ImmutableSet.<Tag> of();
       this.securityGroupEnabled = securityGroupEnabled;
       this.services = ImmutableSortedSet.copyOf(services);
    }
@@ -667,7 +662,7 @@ public class Network {
    /**
     * @return the tags for the Network
     */
-   public Set<String> getTags() {
+   public Set<Tag> getTags() {
       return this.tags;
    }
 

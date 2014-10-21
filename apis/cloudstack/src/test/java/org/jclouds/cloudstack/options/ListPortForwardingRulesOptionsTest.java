@@ -16,11 +16,13 @@
  */
 package org.jclouds.cloudstack.options;
 
+import static org.jclouds.cloudstack.options.ListPortForwardingRulesOptions.Builder.tags;
 import static org.jclouds.cloudstack.options.ListPortForwardingRulesOptions.Builder.accountInDomain;
 import static org.jclouds.cloudstack.options.ListPortForwardingRulesOptions.Builder.domainId;
 import static org.jclouds.cloudstack.options.ListPortForwardingRulesOptions.Builder.ipAddressId;
 import static org.testng.Assert.assertEquals;
 
+import com.google.common.collect.ImmutableMap;
 import org.testng.annotations.Test;
 
 import com.google.common.collect.ImmutableList;
@@ -61,6 +63,22 @@ public class ListPortForwardingRulesOptionsTest {
    public void testDomainIdStatic() {
       ListPortForwardingRulesOptions options = domainId("6");
       assertEquals(ImmutableList.of("6"), options.buildQueryParameters().get("domainid"));
+   }
+
+   public void testTags() {
+      ListPortForwardingRulesOptions options = new ListPortForwardingRulesOptions().tags(ImmutableMap.of("tag1", "val1", "tag2", "val2"));
+      assertEquals(ImmutableList.of("tag1"), options.buildQueryParameters().get("tags[0].key"));
+      assertEquals(ImmutableList.of("tag2"), options.buildQueryParameters().get("tags[1].key"));
+      assertEquals(ImmutableList.of("val1"), options.buildQueryParameters().get("tags[0].value"));
+      assertEquals(ImmutableList.of("val2"), options.buildQueryParameters().get("tags[1].value"));
+   }
+
+   public void testTagsStatic() {
+      ListPortForwardingRulesOptions options = tags(ImmutableMap.of("tag1", "val1", "tag2", "val2"));
+      assertEquals(ImmutableList.of("tag1"), options.buildQueryParameters().get("tags[0].key"));
+      assertEquals(ImmutableList.of("tag2"), options.buildQueryParameters().get("tags[1].key"));
+      assertEquals(ImmutableList.of("val1"), options.buildQueryParameters().get("tags[0].value"));
+      assertEquals(ImmutableList.of("val2"), options.buildQueryParameters().get("tags[1].value"));
    }
 
 }

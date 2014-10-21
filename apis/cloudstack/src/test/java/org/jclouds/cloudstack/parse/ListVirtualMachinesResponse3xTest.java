@@ -20,6 +20,7 @@ import java.util.Set;
 
 import org.jclouds.cloudstack.domain.GuestIPType;
 import org.jclouds.cloudstack.domain.NIC;
+import org.jclouds.cloudstack.domain.Tag;
 import org.jclouds.cloudstack.domain.TrafficType;
 import org.jclouds.cloudstack.domain.VirtualMachine;
 import org.jclouds.date.internal.SimpleDateFormatDateService;
@@ -68,9 +69,19 @@ public class ListVirtualMachinesResponse3xTest extends BaseSetParserTest<Virtual
                              .publicIP("72.52.126.110")
                              .publicIPId("e202aafb-ab41-4dc0-80e9-9fcd64fbf45c")
             .nics(ImmutableSet.of(NIC.builder().id("48640c5e-90f3-45bd-abd2-a108ca8957ac").
-                                  networkId("c0d5db5b-f7d5-44e1-b854-21ecd1a09dbf").netmask("255.255.255.0").gateway("10.1.1.1")
-                                  .IPAddress("10.1.1.227").trafficType(TrafficType.GUEST).guestIPType(GuestIPType.ISOLATED)
-                                  .isDefault(true).build())).build());
+                  networkId("c0d5db5b-f7d5-44e1-b854-21ecd1a09dbf").netmask("255.255.255.0").gateway("10.1.1.1")
+                  .IPAddress("10.1.1.227").trafficType(TrafficType.GUEST).guestIPType(GuestIPType.ISOLATED)
+                  .isDefault(true).build()))
+            .tags(Tag.builder()
+                  .account("jcloud2")
+                  .domain("jCloud")
+                  .domainId("ea66e3a5-d007-42e8-a0de-ec5ce778a1d7")
+                  .key("some-tag")
+                  .resourceId("fee2ccb3-c1f2-4e7b-8465-42b390e10dff")
+                  .resourceType(Tag.ResourceType.USER_VM)
+                  .value("some-value")
+                  .build())
+            .build());
    }
 
 }

@@ -19,6 +19,7 @@ package org.jclouds.cloudstack.parse;
 import java.util.Set;
 
 import org.jclouds.cloudstack.domain.NetworkType;
+import org.jclouds.cloudstack.domain.Tag;
 import org.jclouds.cloudstack.domain.Zone;
 import org.jclouds.json.BaseSetParserTest;
 import org.jclouds.rest.annotations.SelectJson;
@@ -37,8 +38,26 @@ public class ListZonesResponseTest extends BaseSetParserTest<Zone> {
    @Override
    @SelectJson("zone")
    public Set<Zone> expected() {
-      return ImmutableSet.of(Zone.builder().id("1").name("San Jose 1").networkType(NetworkType.ADVANCED)
-            .securityGroupsEnabled(false).build(),
-            Zone.builder().id("2").name("Chicago").networkType(NetworkType.ADVANCED).securityGroupsEnabled(true).build());
+      return          ImmutableSet.of(
+            Zone.builder()
+                  .id("1")
+                  .name("San Jose 1")
+                  .networkType(NetworkType.ADVANCED)
+                  .securityGroupsEnabled(false).build(),
+            Zone.builder()
+                  .id("2")
+                  .name("Chicago")
+                  .networkType(NetworkType.ADVANCED)
+                  .securityGroupsEnabled(true)
+                  .tags(Tag.builder()
+                        .account("1")
+                        .domain("ROOT")
+                        .domainId("1")
+                        .key("some-tag")
+                        .resourceId("2")
+                        .resourceType(Tag.ResourceType.ZONE)
+                        .value("some-value")
+                        .build())
+                  .build());
    }
 }

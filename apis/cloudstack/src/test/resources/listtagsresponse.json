@@ -1,0 +1,16 @@
+{
+    "listtagsresponse": {
+        "count": 1,
+        "tag": [
+            {
+                "key": "test-tag",
+                "value": "true",
+                "resourcetype": "Template",
+                "resourceid": "54fe1d53-5d73-4184-8b62-948b9d8e08fb",
+                "account": "admin",
+                "domainid": "79dc06c4-4432-11e4-b70d-000c29e19aa0",
+                "domain": "ROOT"
+            }
+        ]
+    }
+}

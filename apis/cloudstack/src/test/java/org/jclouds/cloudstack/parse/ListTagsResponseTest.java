@@ -18,19 +18,17 @@ package org.jclouds.cloudstack.parse;
 
 import java.util.Set;
 
-import org.jclouds.cloudstack.domain.PortForwardingRule;
+import com.google.common.collect.ImmutableSet;
+import com.google.inject.Guice;
+import com.google.inject.Injector;
 import org.jclouds.cloudstack.domain.Tag;
 import org.jclouds.json.BaseSetParserTest;
 import org.jclouds.json.config.GsonModule;
 import org.jclouds.rest.annotations.SelectJson;
 import org.testng.annotations.Test;
 
-import com.google.common.collect.ImmutableSet;
-import com.google.inject.Guice;
-import com.google.inject.Injector;
-
 @Test(groups = "unit")
-public class ListPortForwardingRulesResponseTest extends BaseSetParserTest<PortForwardingRule> {
+public class ListTagsResponseTest extends BaseSetParserTest<Tag> {
 
    @Override
    protected Injector injector() {
@@ -47,22 +45,22 @@ public class ListPortForwardingRulesResponseTest extends BaseSetParserTest<PortF
 
    @Override
    public String resource() {
-      return "/listportforwardingrulesresponse.json";
+      return "/listtagsresponse.json";
    }
 
    @Override
-   @SelectJson("portforwardingrule")
-   public Set<PortForwardingRule> expected() {
-      Set<String> cidrs = ImmutableSet.of("0.0.0.0/1", "128.0.0.0/1");
-      return ImmutableSet.<PortForwardingRule> of(
-            PortForwardingRule.builder().id("15").privatePort(22).protocol(PortForwardingRule.Protocol.TCP)
-                  .publicPort(2022).virtualMachineId("3").virtualMachineName("i-3-3-VM").IPAddressId("3")
-                  .IPAddress("72.52.126.32").state(PortForwardingRule.State.ACTIVE)
-                  .CIDRs(cidrs).tags(Tag.builder().account("1").domain("ROOT").domainId("1").key("some-tag").resourceId("15")
-                  .resourceType(Tag.ResourceType.PORT_FORWARDING_RULE).value("some-value").build()).build(),
-            PortForwardingRule.builder().id("18").privatePort(22).protocol(PortForwardingRule.Protocol.TCP)
-                  .publicPort(22).virtualMachineId("89").virtualMachineName("i-3-89-VM").IPAddressId("34")
-                  .IPAddress("72.52.126.63").state(PortForwardingRule.State.ACTIVE).build());
+   @SelectJson("tag")
+   public Set<Tag> expected() {
+      return ImmutableSet.<Tag>of(
+            Tag.builder()
+                  .account("admin")
+                  .domain("ROOT")
+                  .domainId("79dc06c4-4432-11e4-b70d-000c29e19aa0")
+                  .key("test-tag")
+                  .resourceId("54fe1d53-5d73-4184-8b62-948b9d8e08fb")
+                  .resourceType(Tag.ResourceType.TEMPLATE)
+                  .value("true").build()
+      );
    }
 
 }

@@ -37,6 +37,7 @@ import org.jclouds.cloudstack.features.SSHKeyPairApi;
 import org.jclouds.cloudstack.features.SecurityGroupApi;
 import org.jclouds.cloudstack.features.SessionApi;
 import org.jclouds.cloudstack.features.SnapshotApi;
+import org.jclouds.cloudstack.features.TagApi;
 import org.jclouds.cloudstack.features.TemplateApi;
 import org.jclouds.cloudstack.features.VMGroupApi;
 import org.jclouds.cloudstack.features.VirtualMachineApi;
@@ -195,4 +196,10 @@ public interface CloudStackApi extends Closeable {
     */
    @Delegate
    ProjectApi getProjectApi();
+
+   /**
+    * Provides synchronous access to Tags
+    */
+   @Delegate
+   TagApi getTagApi();
 }

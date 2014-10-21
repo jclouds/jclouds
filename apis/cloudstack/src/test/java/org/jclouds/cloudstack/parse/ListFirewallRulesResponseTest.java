@@ -19,6 +19,7 @@ package org.jclouds.cloudstack.parse;
 import java.util.Set;
 
 import org.jclouds.cloudstack.domain.FirewallRule;
+import org.jclouds.cloudstack.domain.Tag;
 import org.jclouds.json.BaseSetParserTest;
 import org.jclouds.json.config.GsonModule;
 import org.jclouds.rest.annotations.SelectJson;
@@ -59,8 +60,10 @@ public class ListFirewallRulesResponseTest extends BaseSetParserTest<FirewallRul
          FirewallRule.builder().id("2016").protocol(FirewallRule.Protocol.TCP).startPort(22)
             .endPort(22).ipAddressId("2").ipAddress("10.27.27.51").state(FirewallRule.State.ACTIVE).CIDRs(CIDRs).build(),
          FirewallRule.builder().id("10").protocol(FirewallRule.Protocol.TCP).startPort(22)
-            .endPort(22).ipAddressId("8").ipAddress("10.27.27.57").state(FirewallRule.State.ACTIVE).CIDRs(CIDRs).build()
-      );
+            .endPort(22).ipAddressId("8").ipAddress("10.27.27.57").state(FirewallRule.State.ACTIVE).CIDRs(CIDRs)
+            .tags(Tag.builder().account("1").domain("ROOT").domainId("1").key("some-tag").resourceId("10")
+                        .resourceType(Tag.ResourceType.FIREWALL_RULE).value("some-value").build()).build()
+               );
    }
 
 }

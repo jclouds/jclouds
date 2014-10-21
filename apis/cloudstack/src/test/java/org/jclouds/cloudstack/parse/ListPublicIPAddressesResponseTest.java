@@ -19,6 +19,7 @@ package org.jclouds.cloudstack.parse;
 import java.util.Set;
 
 import org.jclouds.cloudstack.domain.PublicIPAddress;
+import org.jclouds.cloudstack.domain.Tag;
 import org.jclouds.date.internal.SimpleDateFormatDateService;
 import org.jclouds.json.BaseSetParserTest;
 import org.jclouds.rest.annotations.SelectJson;
@@ -41,7 +42,17 @@ public class ListPublicIPAddressesResponseTest extends BaseSetParserTest<PublicI
             .allocated(new SimpleDateFormatDateService().iso8601SecondsDateParse("2011-02-19T21:15:01-0800")).zoneId("1")
             .zoneName("San Jose 1").isSourceNAT(false).account("adrian").domainId("1").domain("ROOT")
             .usesVirtualNetwork(true).isStaticNAT(false).associatedNetworkId("204").networkId("200")
-            .state(PublicIPAddress.State.ALLOCATED).build());
+            .state(PublicIPAddress.State.ALLOCATED)
+            .tags(Tag.builder()
+                  .account("adrian")
+                  .domain("ROOT")
+                  .domainId("1")
+                  .key("some-tag")
+                  .resourceId("30")
+                  .resourceType(Tag.ResourceType.PUBLIC_IP_ADDRESS)
+                  .value("some-value")
+                  .build())
+            .build());
    }
 
 }

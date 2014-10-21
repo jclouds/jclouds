@@ -16,6 +16,8 @@
  */
 package org.jclouds.cloudstack.options;
 
+import java.util.Map;
+
 import com.google.common.collect.ImmutableSet;
 
 /**
@@ -126,6 +128,21 @@ public class ListVirtualMachinesOptions extends AccountInDomainOptions {
       return this;
    }
 
+   /**
+    * @param tags
+    *           Key/value pairs for tags that need to be matched.
+    */
+   public ListVirtualMachinesOptions tags(Map<String, String> tags) {
+      int count = 0;
+      for (Map.Entry<String, String> entry : tags.entrySet()) {
+         this.queryParameters.replaceValues(String.format("tags[%d].key", count), ImmutableSet.of(entry.getKey()));
+         this.queryParameters.replaceValues(String.format("tags[%d].value", count),
+               ImmutableSet.of(entry.getValue()));
+         count += 1;
+      }
+      return this;
+   }
+
    public static class Builder {
 
       /**
@@ -222,6 +239,14 @@ public class ListVirtualMachinesOptions extends AccountInDomainOptions {
       public static ListVirtualMachinesOptions usesVirtualNetwork(boolean usesVirtualNetwork) {
          ListVirtualMachinesOptions options = new ListVirtualMachinesOptions();
          return options.usesVirtualNetwork(usesVirtualNetwork);
+      }
+
+      /**
+       * @see ListVirtualMachinesOptions#tags
+       */
+      public static ListVirtualMachinesOptions tags(Map<String, String> tags) {
+         ListVirtualMachinesOptions options = new ListVirtualMachinesOptions();
+         return options.tags(tags);
       }
    }
 

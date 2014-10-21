@@ -22,16 +22,16 @@ import static org.testng.Assert.assertNull;
 import java.net.URI;
 import java.util.Set;
 
+import com.google.common.collect.ImmutableSet;
 import org.jclouds.cloudstack.CloudStackContext;
 import org.jclouds.cloudstack.domain.AsyncCreateResponse;
 import org.jclouds.cloudstack.domain.FirewallRule;
 import org.jclouds.cloudstack.domain.PortForwardingRule;
+import org.jclouds.cloudstack.domain.Tag;
 import org.jclouds.cloudstack.internal.BaseCloudStackExpectTest;
 import org.jclouds.http.HttpRequest;
 import org.jclouds.http.HttpResponse;
 import org.testng.annotations.Test;
-
-import com.google.common.collect.ImmutableSet;
 
 /**
  * Test the CloudStack FirewallApi
@@ -64,7 +64,8 @@ public class FirewallApiExpectTest extends BaseCloudStackExpectTest<FirewallApi>
                .CIDRs(CIDRs).build(),
             FirewallRule.builder().id("10").protocol(FirewallRule.Protocol.TCP).startPort(22)
             .endPort(22).ipAddressId("8").ipAddress("10.27.27.57").state(FirewallRule.State.ACTIVE)
-               .CIDRs(CIDRs).build()
+               .CIDRs(CIDRs).tags(Tag.builder().account("1").domain("ROOT").domainId("1").key("some-tag").resourceId("10")
+                  .resourceType(Tag.ResourceType.FIREWALL_RULE).value("some-value").build()).build()
          ));
    }
 
@@ -173,13 +174,16 @@ public class FirewallApiExpectTest extends BaseCloudStackExpectTest<FirewallApi>
       Set<String> cidrs = ImmutableSet.of("0.0.0.0/1", "128.0.0.0/1");
 
       assertEquals(client.listPortForwardingRules(),
-         ImmutableSet.<PortForwardingRule>of(
-            PortForwardingRule.builder().id("15").privatePort(22).protocol(PortForwardingRule.Protocol.TCP)
-               .publicPort(2022).virtualMachineId("3").virtualMachineName("i-3-3-VM").IPAddressId("3")
-               .IPAddress("72.52.126.32").state(PortForwardingRule.State.ACTIVE).CIDRs(cidrs).build(),
-            PortForwardingRule.builder().id("18").privatePort(22).protocol(PortForwardingRule.Protocol.TCP)
-               .publicPort(22).virtualMachineId("89").virtualMachineName("i-3-89-VM").IPAddressId("34")
-               .IPAddress("72.52.126.63").state(PortForwardingRule.State.ACTIVE).build())
+            ImmutableSet.<PortForwardingRule>of(
+                  PortForwardingRule.builder().id("18").privatePort(22).protocol(PortForwardingRule.Protocol.TCP)
+                        .publicPort(22).virtualMachineId("89").virtualMachineName("i-3-89-VM").IPAddressId("34")
+                        .IPAddress("72.52.126.63").state(PortForwardingRule.State.ACTIVE).build(),
+                  PortForwardingRule.builder().id("15").privatePort(22).protocol(PortForwardingRule.Protocol.TCP)
+                        .publicPort(2022).virtualMachineId("3").virtualMachineName("i-3-3-VM").IPAddressId("3")
+                        .IPAddress("72.52.126.32").state(PortForwardingRule.State.ACTIVE)
+                        .CIDRs(cidrs).tags(Tag.builder().account("1").domain("ROOT").domainId("1").key("some-tag").resourceId("15")
+                        .resourceType(Tag.ResourceType.PORT_FORWARDING_RULE).value("some-value").build()).build()
+                  )
       );
    }
 
@@ -216,9 +220,11 @@ public class FirewallApiExpectTest extends BaseCloudStackExpectTest<FirewallApi>
       Set<String> cidrs = ImmutableSet.of("0.0.0.0/1", "128.0.0.0/1");
 
       assertEquals(client.getPortForwardingRule("15"),
-         PortForwardingRule.builder().id("15").privatePort(22).protocol(PortForwardingRule.Protocol.TCP)
-            .publicPort(2022).virtualMachineId("3").virtualMachineName("i-3-3-VM").IPAddressId("3")
-            .IPAddress("72.52.126.32").state(PortForwardingRule.State.ACTIVE).CIDRs(cidrs).build());
+            PortForwardingRule.builder().id("15").privatePort(22).protocol(PortForwardingRule.Protocol.TCP)
+                  .publicPort(2022).virtualMachineId("3").virtualMachineName("i-3-3-VM").IPAddressId("3")
+                  .IPAddress("72.52.126.32").state(PortForwardingRule.State.ACTIVE)
+                  .CIDRs(cidrs).tags(Tag.builder().account("1").domain("ROOT").domainId("1").key("some-tag").resourceId("15")
+                  .resourceType(Tag.ResourceType.PORT_FORWARDING_RULE).value("some-value").build()).build());
    }
 
    public void testGetPortForwardingRuleWhenResponseIs404() {
@@ -296,15 +302,16 @@ public class FirewallApiExpectTest extends BaseCloudStackExpectTest<FirewallApi>
       Set<String> CIDRs  = ImmutableSet.of("0.0.0.0/0");
       assertEquals(client.listEgressFirewallRules(),
               ImmutableSet.of(
-                      FirewallRule.builder().id("2017").protocol(FirewallRule.Protocol.TCP).startPort(30)
-                              .endPort(35).ipAddressId("2").ipAddress("10.27.27.51").state(FirewallRule.State.ACTIVE)
-                              .CIDRs(CIDRs).build(),
-                      FirewallRule.builder().id("2016").protocol(FirewallRule.Protocol.TCP).startPort(22)
-                              .endPort(22).ipAddressId("2").ipAddress("10.27.27.51").state(FirewallRule.State.ACTIVE)
-                              .CIDRs(CIDRs).build(),
-                      FirewallRule.builder().id("10").protocol(FirewallRule.Protocol.TCP).startPort(22)
-                              .endPort(22).ipAddressId("8").ipAddress("10.27.27.57").state(FirewallRule.State.ACTIVE)
-                              .CIDRs(CIDRs).build()
+                    FirewallRule.builder().id("2017").protocol(FirewallRule.Protocol.TCP).startPort(30)
+                          .endPort(35).ipAddressId("2").ipAddress("10.27.27.51").state(FirewallRule.State.ACTIVE)
+                          .CIDRs(CIDRs).build(),
+                    FirewallRule.builder().id("2016").protocol(FirewallRule.Protocol.TCP).startPort(22)
+                          .endPort(22).ipAddressId("2").ipAddress("10.27.27.51").state(FirewallRule.State.ACTIVE)
+                          .CIDRs(CIDRs).build(),
+                    FirewallRule.builder().id("10").protocol(FirewallRule.Protocol.TCP).startPort(22)
+                          .endPort(22).ipAddressId("8").ipAddress("10.27.27.57").state(FirewallRule.State.ACTIVE)
+                          .CIDRs(CIDRs).tags(Tag.builder().account("1").domain("ROOT").domainId("1").key("some-tag").resourceId("10")
+                          .resourceType(Tag.ResourceType.FIREWALL_RULE).value("some-value").build()).build()
               ));
    }
 

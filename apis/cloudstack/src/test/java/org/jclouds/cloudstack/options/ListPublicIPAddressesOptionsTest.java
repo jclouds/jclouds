@@ -16,6 +16,7 @@
  */
 package org.jclouds.cloudstack.options;
 
+import static org.jclouds.cloudstack.options.ListPublicIPAddressesOptions.Builder.tags;
 import static org.jclouds.cloudstack.options.ListPublicIPAddressesOptions.Builder.IPAddress;
 import static org.jclouds.cloudstack.options.ListPublicIPAddressesOptions.Builder.VLANId;
 import static org.jclouds.cloudstack.options.ListPublicIPAddressesOptions.Builder.accountInDomain;
@@ -27,6 +28,7 @@ import static org.jclouds.cloudstack.options.ListPublicIPAddressesOptions.Builde
 import static org.jclouds.cloudstack.options.ListPublicIPAddressesOptions.Builder.zoneId;
 import static org.testng.Assert.assertEquals;
 
+import com.google.common.collect.ImmutableMap;
 import org.testng.annotations.Test;
 
 import com.google.common.collect.ImmutableList;
@@ -127,5 +129,21 @@ public class ListPublicIPAddressesOptionsTest {
    public void testDomainIdStatic() {
       ListPublicIPAddressesOptions options = domainId("6");
       assertEquals(ImmutableList.of("6"), options.buildQueryParameters().get("domainid"));
+   }
+
+   public void testTags() {
+      ListPublicIPAddressesOptions options = new ListPublicIPAddressesOptions().tags(ImmutableMap.of("tag1", "val1", "tag2", "val2"));
+      assertEquals(ImmutableList.of("tag1"), options.buildQueryParameters().get("tags[0].key"));
+      assertEquals(ImmutableList.of("tag2"), options.buildQueryParameters().get("tags[1].key"));
+      assertEquals(ImmutableList.of("val1"), options.buildQueryParameters().get("tags[0].value"));
+      assertEquals(ImmutableList.of("val2"), options.buildQueryParameters().get("tags[1].value"));
+   }
+
+   public void testTagsStatic() {
+      ListPublicIPAddressesOptions options = tags(ImmutableMap.of("tag1", "val1", "tag2", "val2"));
+      assertEquals(ImmutableList.of("tag1"), options.buildQueryParameters().get("tags[0].key"));
+      assertEquals(ImmutableList.of("tag2"), options.buildQueryParameters().get("tags[1].key"));
+      assertEquals(ImmutableList.of("val1"), options.buildQueryParameters().get("tags[0].value"));
+      assertEquals(ImmutableList.of("val2"), options.buildQueryParameters().get("tags[1].value"));
    }
 }

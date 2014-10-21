@@ -19,7 +19,9 @@ package org.jclouds.cloudstack.domain;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 import java.beans.ConstructorProperties;
+import java.util.Set;
 
+import com.google.common.collect.ImmutableSet;
 import org.jclouds.javax.annotation.Nullable;
 
 import com.google.common.base.CaseFormat;
@@ -68,6 +70,7 @@ public class Project implements Comparable<Project> {
       protected String domainId;
       protected String name;
       protected State state;
+      protected Set<Tag> tags = ImmutableSet.of();
 
       /**
        * @see org.jclouds.cloudstack.domain.Project#getId()
@@ -125,20 +128,32 @@ public class Project implements Comparable<Project> {
          return self();
       }
 
+      /**
+       * @see Project#getTags()
+       */
+      public T tags(Set<Tag> tags) {
+         this.tags = ImmutableSet.copyOf(checkNotNull(tags, "tags"));
+         return self();
+      }
+
+      public T tags(Tag... in) {
+         return tags(ImmutableSet.copyOf(in));
+      }
 
       public Project build() {
-         return new Project(id, account, displayText, domain, domainId, name, state);
+         return new Project(id, account, displayText, domain, domainId, name, state, tags);
       }
 
       public T fromDomain(Project in) {
          return this
-                 .id(in.getId())
-                 .account(in.getAccount())
-                 .displayText(in.getDisplayText())
-                 .domain(in.getDomain())
-                 .domainId(in.getDomainId())
-                 .name(in.getName())
-                 .state(in.getState());
+               .id(in.getId())
+               .account(in.getAccount())
+               .displayText(in.getDisplayText())
+               .domain(in.getDomain())
+               .domainId(in.getDomainId())
+               .name(in.getName())
+               .state(in.getState())
+               .tags(in.getTags());
       }
    }
 
@@ -156,12 +171,13 @@ public class Project implements Comparable<Project> {
    private final String domainId;
    private final String name;
    private final State state;
+   private final Set<Tag> tags;
 
    @ConstructorProperties({
-         "id", "account", "displaytext", "domain", "domainid", "name", "state"
+         "id", "account", "displaytext", "domain", "domainid", "name", "state", "tags"
    })
    protected Project(String id, String account, String displayText, String domain, String domainId,
-                     String name, State state) {
+                     String name, State state, @Nullable Set<Tag> tags) {
       this.id = checkNotNull(id, "id");
       this.account = account;
       this.displayText = displayText;
@@ -169,6 +185,7 @@ public class Project implements Comparable<Project> {
       this.domainId = domainId;
       this.name = name;
       this.state = checkNotNull(state, "state");
+      this.tags = tags != null ? ImmutableSet.copyOf(tags) : ImmutableSet.<Tag> of();
    }
 
    public String getId() {
@@ -204,9 +221,16 @@ public class Project implements Comparable<Project> {
       return this.state;
    }
 
+   /**
+    * @return the tags for the project
+    */
+   public Set<Tag> getTags() {
+      return this.tags;
+   }
+
    @Override
    public int hashCode() {
-      return Objects.hashCode(id, account, displayText, domain, domainId, name, state);
+      return Objects.hashCode(id, account, displayText, domain, domainId, name, state, tags);
    }
 
    @Override
@@ -220,13 +244,15 @@ public class Project implements Comparable<Project> {
             && Objects.equal(this.domain, that.domain)
             && Objects.equal(this.domainId, that.domainId)
             && Objects.equal(this.name, that.name)
-            && Objects.equal(this.state, that.state);
+            && Objects.equal(this.state, that.state)
+            && Objects.equal(this.tags, that.tags);
    }
 
    protected ToStringHelper string() {
       return MoreObjects.toStringHelper(this).omitNullValues()
             .add("id", id).add("account", account).add("displayText", displayText)
-              .add("domain", domain).add("domainId", domainId).add("name", name).add("state", state);
+            .add("domain", domain).add("domainId", domainId).add("name", name).add("state", state)
+            .add("tags", tags);
    }
 
    @Override
