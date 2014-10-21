@@ -16,6 +16,7 @@
  */
 package org.jclouds.cloudstack.options;
 
+import static org.jclouds.cloudstack.options.ListISOsOptions.Builder.tags;
 import static org.jclouds.cloudstack.options.ListISOsOptions.Builder.bootable;
 import static org.jclouds.cloudstack.options.ListISOsOptions.Builder.hypervisor;
 import static org.jclouds.cloudstack.options.ListISOsOptions.Builder.id;
@@ -32,6 +33,8 @@ import static org.testng.Assert.assertEquals;
 
 import java.util.Set;
 
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableMap;
 import org.jclouds.cloudstack.domain.ISO;
 import org.testng.annotations.Test;
 
@@ -163,5 +166,21 @@ public class ListISOsOptionsTest {
    public void testZoneIdStatic() {
       ListISOsOptions options = zoneId("6");
       assertEquals(ImmutableSet.of("6"), options.buildQueryParameters().get("zoneid"));
+   }
+
+   public void testTags() {
+      ListISOsOptions options = new ListISOsOptions().tags(ImmutableMap.of("tag1", "val1", "tag2", "val2"));
+      assertEquals(ImmutableList.of("tag1"), options.buildQueryParameters().get("tags[0].key"));
+      assertEquals(ImmutableList.of("tag2"), options.buildQueryParameters().get("tags[1].key"));
+      assertEquals(ImmutableList.of("val1"), options.buildQueryParameters().get("tags[0].value"));
+      assertEquals(ImmutableList.of("val2"), options.buildQueryParameters().get("tags[1].value"));
+   }
+
+   public void testTagsStatic() {
+      ListISOsOptions options = tags(ImmutableMap.of("tag1", "val1", "tag2", "val2"));
+      assertEquals(ImmutableList.of("tag1"), options.buildQueryParameters().get("tags[0].key"));
+      assertEquals(ImmutableList.of("tag2"), options.buildQueryParameters().get("tags[1].key"));
+      assertEquals(ImmutableList.of("val1"), options.buildQueryParameters().get("tags[0].value"));
+      assertEquals(ImmutableList.of("val2"), options.buildQueryParameters().get("tags[1].value"));
    }
 }

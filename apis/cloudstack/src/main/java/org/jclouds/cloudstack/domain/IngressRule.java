@@ -19,11 +19,12 @@ package org.jclouds.cloudstack.domain;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 import java.beans.ConstructorProperties;
-
-import org.jclouds.javax.annotation.Nullable;
+import java.util.Set;
 
 import com.google.common.base.Objects;
 import com.google.common.base.Objects.ToStringHelper;
+import com.google.common.collect.ImmutableSet;
+import org.jclouds.javax.annotation.Nullable;
 
 public class IngressRule implements Comparable<IngressRule> {
 
@@ -47,6 +48,7 @@ public class IngressRule implements Comparable<IngressRule> {
       protected String id;
       protected String securityGroupName;
       protected int startPort;
+      protected Set<Tag> tags = ImmutableSet.of();
 
       /**
        * @see IngressRule#getAccount()
@@ -120,8 +122,20 @@ public class IngressRule implements Comparable<IngressRule> {
          return self();
       }
 
+      /**
+       * @see IngressRule#getTags()
+       */
+      public T tags(Set<Tag> tags) {
+         this.tags = ImmutableSet.copyOf(checkNotNull(tags, "tags"));
+         return self();
+      }
+
+      public T tags(Tag... in) {
+         return tags(ImmutableSet.copyOf(in));
+      }
+
       public IngressRule build() {
-         return new IngressRule(account, CIDR, endPort, ICMPCode, ICMPType, protocol, id, securityGroupName, startPort);
+         return new IngressRule(account, CIDR, endPort, ICMPCode, ICMPType, protocol, id, securityGroupName, startPort, tags);
       }
 
       public T fromIngressRule(IngressRule in) {
@@ -134,7 +148,8 @@ public class IngressRule implements Comparable<IngressRule> {
                .protocol(in.getProtocol())
                .id(in.getId())
                .securityGroupName(in.getSecurityGroupName())
-               .startPort(in.getStartPort());
+               .startPort(in.getStartPort())
+               .tags(in.getTags());
       }
    }
 
@@ -154,12 +169,14 @@ public class IngressRule implements Comparable<IngressRule> {
    private final String id;
    private final String securityGroupName;
    private final int startPort;
+   private final Set<Tag> tags;
 
    @ConstructorProperties({
-         "account", "cidr", "endport", "icmpcode", "icmptype", "protocol", "ruleid", "securitygroupname", "startport"
+         "account", "cidr", "endport", "icmpcode", "icmptype", "protocol", "ruleid", "securitygroupname", "startport", "tags"
    })
    protected IngressRule(@Nullable String account, @Nullable String CIDR, int endPort, int ICMPCode, int ICMPType,
-                         @Nullable String protocol, String id, @Nullable String securityGroupName, int startPort) {
+                         @Nullable String protocol, String id, @Nullable String securityGroupName, int startPort,
+                         @Nullable Set<Tag> tags) {
       this.account = account;
       this.CIDR = CIDR;
       this.endPort = endPort;
@@ -169,6 +186,7 @@ public class IngressRule implements Comparable<IngressRule> {
       this.id = checkNotNull(id, "id");
       this.securityGroupName = securityGroupName;
       this.startPort = startPort;
+      this.tags = tags == null ? ImmutableSet.<Tag>of() : ImmutableSet.copyOf(tags);
    }
 
    /**
@@ -238,9 +256,17 @@ public class IngressRule implements Comparable<IngressRule> {
       return this.startPort;
    }
 
+   /**
+    * @return Tags on this rule
+    */
+   @Nullable
+   public Set<Tag> getTags() {
+      return this.tags;
+   }
+
    @Override
    public int hashCode() {
-      return Objects.hashCode(account, CIDR, endPort, ICMPCode, ICMPType, protocol, id, securityGroupName, startPort);
+      return Objects.hashCode(account, CIDR, endPort, ICMPCode, ICMPType, protocol, id, securityGroupName, startPort, tags);
    }
 
    @Override
@@ -256,13 +282,15 @@ public class IngressRule implements Comparable<IngressRule> {
             && Objects.equal(this.protocol, that.protocol)
             && Objects.equal(this.id, that.id)
             && Objects.equal(this.securityGroupName, that.securityGroupName)
-            && Objects.equal(this.startPort, that.startPort);
+            && Objects.equal(this.startPort, that.startPort)
+            && Objects.equal(this.tags, that.tags);
    }
 
    protected ToStringHelper string() {
       return Objects.toStringHelper(this)
             .add("account", account).add("CIDR", CIDR).add("endPort", endPort).add("ICMPCode", ICMPCode)
-            .add("ICMPType", ICMPType).add("protocol", protocol).add("id", id).add("securityGroupName", securityGroupName).add("startPort", startPort);
+            .add("ICMPType", ICMPType).add("protocol", protocol).add("id", id).add("securityGroupName", securityGroupName).add("startPort", startPort)
+            .add("tags", tags);
    }
 
    @Override

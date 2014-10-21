@@ -21,6 +21,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 import java.beans.ConstructorProperties;
 import java.util.Date;
 import java.util.Map;
+import java.util.Set;
 
 import org.jclouds.javax.annotation.Nullable;
 
@@ -151,6 +152,7 @@ public class Volume {
       protected VirtualMachine.State vmState;
       protected String zoneId;
       protected String zoneName;
+      protected Set<Tag> tags = ImmutableSet.of();
 
       /**
        * @see Volume#getId()
@@ -400,8 +402,20 @@ public class Volume {
          return self();
       }
 
+      /**
+       * @see Volume#getTags()
+       */
+      public T tags(Set<Tag> tags) {
+         this.tags = ImmutableSet.copyOf(checkNotNull(tags, "tags"));
+         return self();
+      }
+
+      public T tags(Tag... in) {
+         return tags(ImmutableSet.copyOf(in));
+      }
+
       public Volume build() {
-         return new Volume(id, account, attached, created, destroyed, deviceId, diskOfferingDisplayText, diskOfferingId, diskOfferingName, domain, domainId, hypervisor, isExtractable, jobId, jobStatus, name, serviceOfferingDisplayText, serviceOfferingId, serviceOfferingName, size, snapshotId, state, storage, storageType, type, virtualMachineId, vmDisplayName, vmName, vmState, zoneId, zoneName);
+         return new Volume(id, account, attached, created, destroyed, deviceId, diskOfferingDisplayText, diskOfferingId, diskOfferingName, domain, domainId, hypervisor, isExtractable, jobId, jobStatus, name, serviceOfferingDisplayText, serviceOfferingId, serviceOfferingName, size, snapshotId, state, storage, storageType, type, virtualMachineId, vmDisplayName, vmName, vmState, zoneId, zoneName, tags);
       }
 
       public T fromVolume(Volume in) {
@@ -436,7 +450,8 @@ public class Volume {
                .vmName(in.getVmName())
                .vmState(in.getVmState())
                .zoneId(in.getZoneId())
-               .zoneName(in.getZoneName());
+               .zoneName(in.getZoneName())
+               .tags(in.getTags());
       }
    }
 
@@ -478,9 +493,10 @@ public class Volume {
    private final VirtualMachine.State vmState;
    private final String zoneId;
    private final String zoneName;
+   private final Set<Tag> tags;
 
    @ConstructorProperties({
-         "id", "account", "attached", "created", "destroyed", "deviceid", "diskofferingdisplaytext", "diskofferingid", "diskofferingname", "domain", "domainid", "hypervisor", "isextractable", "jobid", "jobstatus", "name", "serviceofferingdisplaytext", "serviceofferingid", "serviceofferingname", "size", "snapshotid", "state", "storage", "storagetype", "type", "virtualmachineid", "vmdisplayname", "vmname", "vmstate", "zoneid", "zonename"
+         "id", "account", "attached", "created", "destroyed", "deviceid", "diskofferingdisplaytext", "diskofferingid", "diskofferingname", "domain", "domainid", "hypervisor", "isextractable", "jobid", "jobstatus", "name", "serviceofferingdisplaytext", "serviceofferingid", "serviceofferingname", "size", "snapshotid", "state", "storage", "storagetype", "type", "virtualmachineid", "vmdisplayname", "vmname", "vmstate", "zoneid", "zonename", "tags"
    })
    protected Volume(String id, @Nullable String account, @Nullable Date attached, @Nullable Date created, boolean destroyed,
                     @Nullable String deviceId, @Nullable String diskOfferingDisplayText, @Nullable String diskOfferingId,
@@ -490,7 +506,7 @@ public class Volume {
                     long size, @Nullable String snapshotId, @Nullable Volume.State state, @Nullable String storage,
                     @Nullable String storageType, @Nullable Volume.Type type, @Nullable String virtualMachineId,
                     @Nullable String vmDisplayName, @Nullable String vmName, @Nullable VirtualMachine.State vmState,
-                    @Nullable String zoneId, @Nullable String zoneName) {
+                    @Nullable String zoneId, @Nullable String zoneName, @Nullable Set<Tag> tags) {
       this.id = checkNotNull(id, "id");
       this.account = account;
       this.attached = attached;
@@ -522,6 +538,7 @@ public class Volume {
       this.vmState = vmState;
       this.zoneId = zoneId;
       this.zoneName = zoneName;
+      this.tags = tags != null ? ImmutableSet.copyOf(tags) : ImmutableSet.<Tag> of();
    }
 
    public String getId() {
@@ -675,9 +692,16 @@ public class Volume {
       return this.zoneName;
    }
 
+   /**
+    * @return the tags for the volume
+    */
+   public Set<Tag> getTags() {
+      return this.tags;
+   }
+
    @Override
    public int hashCode() {
-      return Objects.hashCode(id, account, attached, created, destroyed, deviceId, diskOfferingDisplayText, diskOfferingId, diskOfferingName, domain, domainId, hypervisor, isExtractable, jobId, jobStatus, name, serviceOfferingDisplayText, serviceOfferingId, serviceOfferingName, size, snapshotId, state, storage, storageType, type, virtualMachineId, vmDisplayName, vmName, vmState, zoneId, zoneName);
+      return Objects.hashCode(id, account, attached, created, destroyed, deviceId, diskOfferingDisplayText, diskOfferingId, diskOfferingName, domain, domainId, hypervisor, isExtractable, jobId, jobStatus, name, serviceOfferingDisplayText, serviceOfferingId, serviceOfferingName, size, snapshotId, state, storage, storageType, type, virtualMachineId, vmDisplayName, vmName, vmState, zoneId, zoneName, tags);
    }
 
    @Override
@@ -715,7 +739,8 @@ public class Volume {
             && Objects.equal(this.vmName, that.vmName)
             && Objects.equal(this.vmState, that.vmState)
             && Objects.equal(this.zoneId, that.zoneId)
-            && Objects.equal(this.zoneName, that.zoneName);
+            && Objects.equal(this.zoneName, that.zoneName)
+            && Objects.equal(this.tags, that.tags);
    }
 
    protected ToStringHelper string() {
@@ -727,7 +752,8 @@ public class Volume {
             .add("serviceOfferingDisplayText", serviceOfferingDisplayText).add("serviceOfferingId", serviceOfferingId)
             .add("serviceOfferingName", serviceOfferingName).add("size", size).add("snapshotId", snapshotId).add("state", state)
             .add("storage", storage).add("storageType", storageType).add("type", type).add("virtualMachineId", virtualMachineId)
-            .add("vmDisplayName", vmDisplayName).add("vmName", vmName).add("vmState", vmState).add("zoneId", zoneId).add("zoneName", zoneName);
+            .add("vmDisplayName", vmDisplayName).add("vmName", vmName).add("vmState", vmState).add("zoneId", zoneId).add("zoneName", zoneName)
+            .add("tags", tags);
    }
 
    @Override

@@ -16,6 +16,8 @@
  */
 package org.jclouds.cloudstack.options;
 
+import java.util.Map;
+
 import com.google.common.collect.ImmutableSet;
 
 /**
@@ -74,6 +76,22 @@ public class ListFirewallRulesOptions extends AccountInDomainOptions {
       this.queryParameters.replaceValues("pagesize", ImmutableSet.of(pageSize + ""));
       return this;
    }
+
+   /**
+    * @param tags
+    *           Key/value pairs for tags that need to be matched.
+    */
+   public ListFirewallRulesOptions tags(Map<String, String> tags) {
+      int count = 0;
+      for (Map.Entry<String, String> entry : tags.entrySet()) {
+         this.queryParameters.replaceValues(String.format("tags[%d].key", count), ImmutableSet.of(entry.getKey()));
+         this.queryParameters.replaceValues(String.format("tags[%d].value", count),
+               ImmutableSet.of(entry.getValue()));
+         count += 1;
+      }
+      return this;
+   }
+
 
    public static class Builder {
 
@@ -141,6 +159,13 @@ public class ListFirewallRulesOptions extends AccountInDomainOptions {
          return options.domainId(id);
       }
 
+      /**
+       * @see ListFirewallRulesOptions#tags
+       */
+      public static ListFirewallRulesOptions tags(Map<String, String> tags) {
+         ListFirewallRulesOptions options = new ListFirewallRulesOptions();
+         return options.tags(tags);
+      }
    }
 
    /**

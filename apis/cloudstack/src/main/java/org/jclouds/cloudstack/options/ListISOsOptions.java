@@ -16,6 +16,7 @@
  */
 package org.jclouds.cloudstack.options;
 
+import java.util.Map;
 import java.util.Set;
 
 import org.jclouds.cloudstack.domain.ISO;
@@ -138,6 +139,21 @@ public class ListISOsOptions extends AccountInDomainOptions {
       return this;
    }
 
+   /**
+    * @param tags
+    *           Key/value pairs for tags that need to be matched.
+    */
+   public ListISOsOptions tags(Map<String, String> tags) {
+      int count = 0;
+      for (Map.Entry<String, String> entry : tags.entrySet()) {
+         this.queryParameters.replaceValues(String.format("tags[%d].key", count), ImmutableSet.of(entry.getKey()));
+         this.queryParameters.replaceValues(String.format("tags[%d].value", count),
+               ImmutableSet.of(entry.getValue()));
+         count += 1;
+      }
+      return this;
+   }
+
    public static class Builder {
       /**
        * @param account the account of the ISO file. Must be used with the domainId parameter.
@@ -242,6 +258,13 @@ public class ListISOsOptions extends AccountInDomainOptions {
        */
       public static ListISOsOptions zoneId(String zoneId) {
          return new ListISOsOptions().zoneId(zoneId);
+      }
+
+      /**
+       * @param tags
+       */
+      public static ListISOsOptions tags(Map<String, String> tags) {
+         return new ListISOsOptions().tags(tags);
       }
    }
 }

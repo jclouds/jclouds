@@ -1,1 +1,29 @@
-{ "listzonesresponse" : { "zone" : [  {"id":1,"name":"San Jose 1","networktype":"Advanced","securitygroupsenabled":false}, {"id":2,"name":"Chicago","networktype":"Advanced","securitygroupsenabled":true} ] } }
+{ "listzonesresponse": {
+    "zone": [
+        {
+            "id": 1,
+            "name": "San Jose 1",
+            "networktype": "Advanced",
+            "securitygroupsenabled": false,
+            "tags": []
+        },
+        {
+            "id": 2,
+            "name": "Chicago",
+            "networktype": "Advanced",
+            "securitygroupsenabled": true,
+            "tags": [
+                {
+                    "account": 1,
+                    "domain": "ROOT",
+                    "domainid": 1,
+                    "key": "some-tag",
+                    "resourceid": 2,
+                    "resourcetype": "Zone",
+                    "value": "some-value"
+                }
+            ]
+
+        }
+    ]
+} }

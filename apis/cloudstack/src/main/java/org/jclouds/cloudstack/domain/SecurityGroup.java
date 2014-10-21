@@ -53,6 +53,7 @@ public class SecurityGroup implements Comparable<SecurityGroup> {
       protected String jobId;
       protected Integer jobStatus;
       protected Set<IngressRule> ingressRules;
+      protected Set<Tag> tags = ImmutableSet.of();
 
       /**
        * @see SecurityGroup#getId()
@@ -126,8 +127,20 @@ public class SecurityGroup implements Comparable<SecurityGroup> {
          return self();
       }
 
+      /**
+       * @see SecurityGroup#getTags()
+       */
+      public T tags(Set<Tag> tags) {
+         this.tags = ImmutableSet.copyOf(checkNotNull(tags, "tags"));
+         return self();
+      }
+
+      public T tags(Tag... in) {
+         return tags(ImmutableSet.copyOf(in));
+      }
+
       public SecurityGroup build() {
-         return new SecurityGroup(id, account, name, description, domain, domainId, jobId, jobStatus, ingressRules);
+         return new SecurityGroup(id, account, name, description, domain, domainId, jobId, jobStatus, ingressRules, tags);
       }
 
       public T fromSecurityGroup(SecurityGroup in) {
@@ -140,7 +153,8 @@ public class SecurityGroup implements Comparable<SecurityGroup> {
                .domainId(in.getDomainId())
                .jobId(in.getJobId())
                .jobStatus(in.getJobStatus())
-               .ingressRules(in.getIngressRules());
+               .ingressRules(in.getIngressRules())
+               .tags(in.getTags());
       }
    }
 
@@ -160,13 +174,14 @@ public class SecurityGroup implements Comparable<SecurityGroup> {
    private final String jobId;
    private final Integer jobStatus;
    private final Set<IngressRule> ingressRules;
+   private final Set<Tag> tags;
 
    @ConstructorProperties({
-         "id", "account", "name", "description", "domain", "domainid", "jobid", "jobstatus", "ingressrule"
+         "id", "account", "name", "description", "domain", "domainid", "jobid", "jobstatus", "ingressrule", "tags"
    })
    protected SecurityGroup(String id, @Nullable String account, @Nullable String name, @Nullable String description,
                            @Nullable String domain, @Nullable String domainId, @Nullable String jobId, @Nullable Integer jobStatus,
-                           @Nullable Set<IngressRule> ingressRules) {
+                           @Nullable Set<IngressRule> ingressRules, @Nullable Set<Tag> tags) {
       this.id = checkNotNull(id, "id");
       this.account = account;
       this.name = name;
@@ -176,6 +191,7 @@ public class SecurityGroup implements Comparable<SecurityGroup> {
       this.jobId = jobId;
       this.jobStatus = jobStatus;
       this.ingressRules = ingressRules == null ? ImmutableSet.<IngressRule>of() : ImmutableSortedSet.copyOf(ingressRules);
+      this.tags = tags != null ? ImmutableSet.copyOf(tags) : ImmutableSet.<Tag> of();
    }
 
    /**
@@ -250,9 +266,16 @@ public class SecurityGroup implements Comparable<SecurityGroup> {
       return this.ingressRules;
    }
 
+   /**
+    * @return the tags for the security group
+    */
+   public Set<Tag> getTags() {
+      return this.tags;
+   }
+
    @Override
    public int hashCode() {
-      return Objects.hashCode(id, account, name, description, domain, domainId, jobId, jobStatus, ingressRules);
+      return Objects.hashCode(id, account, name, description, domain, domainId, jobId, jobStatus, ingressRules, tags);
    }
 
    @Override
@@ -268,12 +291,14 @@ public class SecurityGroup implements Comparable<SecurityGroup> {
             && Objects.equal(this.domainId, that.domainId)
             && Objects.equal(this.jobId, that.jobId)
             && Objects.equal(this.jobStatus, that.jobStatus)
-            && Objects.equal(this.ingressRules, that.ingressRules);
+            && Objects.equal(this.ingressRules, that.ingressRules)
+            && Objects.equal(this.tags, that.tags);
    }
 
    protected ToStringHelper string() {
       return Objects.toStringHelper(this).add("id", id).add("account", account).add("name", name).add("description", description)
-            .add("domain", domain).add("domainId", domainId).add("jobId", jobId).add("jobStatus", jobStatus).add("ingressRules", ingressRules);
+            .add("domain", domain).add("domainId", domainId).add("jobId", jobId).add("jobStatus", jobStatus).add("ingressRules", ingressRules)
+            .add("tags", tags);
    }
 
    @Override

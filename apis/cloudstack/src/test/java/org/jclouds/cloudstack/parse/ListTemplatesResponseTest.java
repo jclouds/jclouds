@@ -18,6 +18,7 @@ package org.jclouds.cloudstack.parse;
 
 import java.util.Set;
 
+import org.jclouds.cloudstack.domain.Tag;
 import org.jclouds.cloudstack.domain.Template;
 import org.jclouds.cloudstack.domain.Template.Format;
 import org.jclouds.cloudstack.domain.Template.Type;
@@ -72,6 +73,8 @@ public class ListTemplatesResponseTest extends BaseSetParserTest<Template> {
                   .ready(true).passwordEnabled(false).format(Format.QCOW2).featured(false).crossZones(false)
                   .OSTypeId("14").OSType("CentOS 5.4 (64-bit)").account("rs3").zoneId("2").zone("Chicago")
                   .size(10737418240l).type(Type.USER).hypervisor("KVM").domain("ROOT").domainId("1").extractable(false)
+                  .tags(ImmutableSet.of(Tag.builder().account("rs3").domain("ROOT").domainId("1").key("some-tag")
+                        .resourceId("241").resourceType(Tag.ResourceType.TEMPLATE).value("some-value").build()))
                   .build());
    }
 }

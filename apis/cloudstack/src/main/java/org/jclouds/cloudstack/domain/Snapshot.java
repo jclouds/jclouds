@@ -20,7 +20,9 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 import java.beans.ConstructorProperties;
 import java.util.Date;
+import java.util.Set;
 
+import com.google.common.collect.ImmutableSet;
 import org.jclouds.javax.annotation.Nullable;
 
 import com.google.common.base.CaseFormat;
@@ -107,6 +109,7 @@ public class Snapshot {
       protected String volumeId;
       protected String volumeName;
       protected Volume.Type volumeType;
+      protected Set<Tag> tags = ImmutableSet.of();
 
       /**
        * @see Snapshot#getId()
@@ -220,9 +223,21 @@ public class Snapshot {
          return self();
       }
 
+      /**
+       * @see Snapshot#getTags()
+       */
+      public T tags(Set<Tag> tags) {
+         this.tags = ImmutableSet.copyOf(checkNotNull(tags, "tags"));
+         return self();
+      }
+
+      public T tags(Tag... in) {
+         return tags(ImmutableSet.copyOf(in));
+      }
+
       public Snapshot build() {
          return new Snapshot(id, account, created, domain, domainId, interval, jobId, jobStatus, name, snapshotType, state,
-               volumeId, volumeName, volumeType);
+               volumeId, volumeName, volumeType, tags);
       }
 
       public T fromSnapshot(Snapshot in) {
@@ -240,7 +255,8 @@ public class Snapshot {
                .state(in.getState())
                .volumeId(in.getVolumeId())
                .volumeName(in.getVolumeName())
-               .volumeType(in.getVolumeType());
+               .volumeType(in.getVolumeType())
+               .tags(in.getTags());
       }
    }
 
@@ -265,14 +281,15 @@ public class Snapshot {
    private final String volumeId;
    private final String volumeName;
    private final Volume.Type volumeType;
+   private final Set<Tag> tags;
 
    @ConstructorProperties({
-         "id", "account", "created", "domain", "domainid", "intervaltype", "jobid", "jobstatus", "name", "snapshottype", "state", "volumeid", "volumename", "volumetype"
+         "id", "account", "created", "domain", "domainid", "intervaltype", "jobid", "jobstatus", "name", "snapshottype", "state", "volumeid", "volumename", "volumetype", "tags"
    })
    protected Snapshot(String id, @Nullable String account, @Nullable Date created, @Nullable String domain, @Nullable String domainId,
                       @Nullable Snapshot.Interval interval, @Nullable String jobId, @Nullable String jobStatus, @Nullable String name,
                       @Nullable Snapshot.Type snapshotType, @Nullable Snapshot.State state, @Nullable String volumeId, @Nullable String volumeName,
-                      @Nullable Volume.Type volumeType) {
+                      @Nullable Volume.Type volumeType, @Nullable Set<Tag> tags) {
       this.id = checkNotNull(id, "id");
       this.account = account;
       this.created = created;
@@ -287,6 +304,7 @@ public class Snapshot {
       this.volumeId = volumeId;
       this.volumeName = volumeName;
       this.volumeType = volumeType;
+      this.tags = tags != null ? ImmutableSet.copyOf(tags) : ImmutableSet.<Tag> of();
    }
 
    /**
@@ -400,9 +418,16 @@ public class Snapshot {
       return this.volumeType;
    }
 
+   /**
+    * @return the tags for the snapshot
+    */
+   public Set<Tag> getTags() {
+      return this.tags;
+   }
+
    @Override
    public int hashCode() {
-      return Objects.hashCode(id, account, created, domain, domainId, interval, jobId, jobStatus, name, snapshotType, state, volumeId, volumeName, volumeType);
+      return Objects.hashCode(id, account, created, domain, domainId, interval, jobId, jobStatus, name, snapshotType, state, volumeId, volumeName, volumeType, tags);
    }
 
    @Override
@@ -423,14 +448,16 @@ public class Snapshot {
             && Objects.equal(this.state, that.state)
             && Objects.equal(this.volumeId, that.volumeId)
             && Objects.equal(this.volumeName, that.volumeName)
-            && Objects.equal(this.volumeType, that.volumeType);
+            && Objects.equal(this.volumeType, that.volumeType)
+            && Objects.equal(this.tags, that.tags);
    }
 
    protected ToStringHelper string() {
       return Objects.toStringHelper(this)
             .add("id", id).add("account", account).add("created", created).add("domain", domain).add("domainId", domainId)
             .add("interval", interval).add("jobId", jobId).add("jobStatus", jobStatus).add("name", name).add("snapshotType", snapshotType)
-            .add("state", state).add("volumeId", volumeId).add("volumeName", volumeName).add("volumeType", volumeType);
+            .add("state", state).add("volumeId", volumeId).add("volumeName", volumeName).add("volumeType", volumeType)
+            .add("tags", tags);
    }
 
    @Override

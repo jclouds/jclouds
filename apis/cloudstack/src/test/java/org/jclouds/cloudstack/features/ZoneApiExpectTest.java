@@ -22,6 +22,7 @@ import java.net.URI;
 
 import org.jclouds.cloudstack.CloudStackContext;
 import org.jclouds.cloudstack.domain.NetworkType;
+import org.jclouds.cloudstack.domain.Tag;
 import org.jclouds.cloudstack.domain.Zone;
 import org.jclouds.cloudstack.internal.BaseCloudStackExpectTest;
 import org.jclouds.http.HttpRequest;
@@ -61,10 +62,20 @@ public class ZoneApiExpectTest extends BaseCloudStackExpectTest<ZoneApi> {
                .networkType(NetworkType.ADVANCED)
                .securityGroupsEnabled(false).build(),
             Zone.builder()
-               .id("2")
-               .name("Chicago")
-               .networkType(NetworkType.ADVANCED)
-               .securityGroupsEnabled(true).build()));
+                  .id("2")
+                  .name("Chicago")
+                  .networkType(NetworkType.ADVANCED)
+                  .securityGroupsEnabled(true)
+                  .tags(Tag.builder()
+                        .account("1")
+                        .domain("ROOT")
+                        .domainId("1")
+                        .key("some-tag")
+                        .resourceId("2")
+                        .resourceType(Tag.ResourceType.ZONE)
+                        .value("some-value")
+                        .build())
+                  .build()));
    }
 
    public void testListZonesWhenResponseIs404() {

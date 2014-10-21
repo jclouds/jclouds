@@ -16,6 +16,7 @@
  */
 package org.jclouds.cloudstack.options;
 
+import static org.jclouds.cloudstack.options.ListNetworksOptions.Builder.tags;
 import static org.jclouds.cloudstack.options.ListNetworksOptions.Builder.accountInDomain;
 import static org.jclouds.cloudstack.options.ListNetworksOptions.Builder.domainId;
 import static org.jclouds.cloudstack.options.ListNetworksOptions.Builder.id;
@@ -27,6 +28,7 @@ import static org.jclouds.cloudstack.options.ListNetworksOptions.Builder.type;
 import static org.jclouds.cloudstack.options.ListNetworksOptions.Builder.zoneId;
 import static org.testng.Assert.assertEquals;
 
+import com.google.common.collect.ImmutableMap;
 import org.jclouds.cloudstack.domain.NetworkType;
 import org.jclouds.cloudstack.domain.TrafficType;
 import org.testng.annotations.Test;
@@ -139,4 +141,21 @@ public class ListNetworksOptionsTest {
       ListNetworksOptions options = type(NetworkType.ADVANCED);
       assertEquals(ImmutableList.of("Advanced"), options.buildQueryParameters().get("type"));
    }
+
+   public void testTags() {
+      ListNetworksOptions options = new ListNetworksOptions().tags(ImmutableMap.of("tag1", "val1", "tag2", "val2"));
+      assertEquals(ImmutableList.of("tag1"), options.buildQueryParameters().get("tags[0].key"));
+      assertEquals(ImmutableList.of("tag2"), options.buildQueryParameters().get("tags[1].key"));
+      assertEquals(ImmutableList.of("val1"), options.buildQueryParameters().get("tags[0].value"));
+      assertEquals(ImmutableList.of("val2"), options.buildQueryParameters().get("tags[1].value"));
+   }
+
+   public void testTagsStatic() {
+      ListNetworksOptions options = tags(ImmutableMap.of("tag1", "val1", "tag2", "val2"));
+      assertEquals(ImmutableList.of("tag1"), options.buildQueryParameters().get("tags[0].key"));
+      assertEquals(ImmutableList.of("tag2"), options.buildQueryParameters().get("tags[1].key"));
+      assertEquals(ImmutableList.of("val1"), options.buildQueryParameters().get("tags[0].value"));
+      assertEquals(ImmutableList.of("val2"), options.buildQueryParameters().get("tags[1].value"));
+   }
+
 }

@@ -20,6 +20,7 @@ import java.util.Set;
 
 import org.jclouds.cloudstack.domain.IngressRule;
 import org.jclouds.cloudstack.domain.SecurityGroup;
+import org.jclouds.cloudstack.domain.Tag;
 import org.jclouds.json.BaseSetParserTest;
 import org.jclouds.rest.annotations.SelectJson;
 import org.testng.annotations.Test;
@@ -54,7 +55,9 @@ public class ListSecurityGroupsResponseTest extends BaseSetParserTest<SecurityGr
                                     .securityGroupName("adriancole").account("adrian").build(),
 
                               IngressRule.builder().id("6").protocol("udp").startPort(11).endPort(11).CIDR("1.1.1.1/24")
-                                    .build())).build())
+                                    .build()
+                        )
+                  ).build())
             .add(SecurityGroup.builder().id("12").name("adriancole").account("adrian").domainId("1").domain("ROOT").build())
             .add(SecurityGroup.builder().id("15").name("2").description("description").account("adrian").domainId("1")
                   .domain("ROOT").build())
@@ -62,9 +65,9 @@ public class ListSecurityGroupsResponseTest extends BaseSetParserTest<SecurityGr
             .add(SecurityGroup.builder().id("14").name("1").description("description").account("adrian").domainId("1")
                   .domain("ROOT").ingressRules(ImmutableSet.of(
 
-                  IngressRule.builder().id("7").protocol("tcp").startPort(10).endPort(10).CIDR("1.1.1.1/24").build(),
+                        IngressRule.builder().id("7").protocol("tcp").startPort(10).endPort(10).CIDR("1.1.1.1/24").build(),
 
-                  IngressRule.builder().id("8").protocol("tcp").startPort(10).endPort(10).CIDR("2.2.2.2/16").build()))
+                        IngressRule.builder().id("8").protocol("tcp").startPort(10).endPort(10).CIDR("2.2.2.2/16").build()))
                   .build())
             .add(SecurityGroup
                   .builder()
@@ -76,13 +79,25 @@ public class ListSecurityGroupsResponseTest extends BaseSetParserTest<SecurityGr
                   .domain("ROOT")
                   .ingressRules(
                         ImmutableSet.of(IngressRule.builder().id("9").protocol("icmp").ICMPType(-1).ICMPCode(-1)
-                              .securityGroupName("1").account("adrian").build(),
+                                    .securityGroupName("1").account("adrian").build(),
 
-                        IngressRule.builder().id("10").protocol("tcp").startPort(22).endPort(22).securityGroupName("1")
-                              .account("adrian").build(),
+                              IngressRule.builder().id("10").protocol("tcp").startPort(22).endPort(22).securityGroupName("1")
+                                    .account("adrian").build(),
 
-                        IngressRule.builder().id("11").protocol("tcp").startPort(22).endPort(22).securityGroupName("2")
-                              .account("adrian").build())).build()).build();
+                              IngressRule.builder().id("11").protocol("tcp").startPort(22).endPort(22).securityGroupName("2")
+                                    .account("adrian").build()
+                        )
+                  )
+                  .tags(Tag.builder()
+                        .account("adrian")
+                        .domain("ROOT")
+                        .domainId("1")
+                        .key("some-tag")
+                        .resourceId("16")
+                        .resourceType(Tag.ResourceType.SECURITY_GROUP)
+                        .value("some-value")
+                        .build())
+                  .build()).build();
 
    }
 

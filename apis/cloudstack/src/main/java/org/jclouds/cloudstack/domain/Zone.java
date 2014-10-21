@@ -20,7 +20,9 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 import java.beans.ConstructorProperties;
 import java.util.List;
+import java.util.Set;
 
+import com.google.common.collect.ImmutableSet;
 import org.jclouds.javax.annotation.Nullable;
 
 import com.google.common.base.Objects;
@@ -57,6 +59,7 @@ public class Zone implements Comparable<Zone> {
       protected AllocationState allocationState;
       protected String dhcpProvider;
       protected String zoneToken;
+      protected Set<Tag> tags = ImmutableSet.of();
 
       /**
        * @see Zone#getId()
@@ -180,9 +183,21 @@ public class Zone implements Comparable<Zone> {
          return self();
       }
 
+      /**
+       * @see Zone#getTags()
+       */
+      public T tags(Set<Tag> tags) {
+         this.tags = ImmutableSet.copyOf(checkNotNull(tags, "tags"));
+         return self();
+      }
+
+      public T tags(Tag... in) {
+         return tags(ImmutableSet.copyOf(in));
+      }
+
       public Zone build() {
          return new Zone(id, description, displayText, DNS1, DNS2, domain, domainId, guestCIDRAddress, internalDNS1, internalDNS2,
-               name, networkType, VLAN, securityGroupsEnabled, allocationState, dhcpProvider, zoneToken);
+               name, networkType, VLAN, securityGroupsEnabled, allocationState, dhcpProvider, zoneToken, tags);
       }
 
       public T fromZone(Zone in) {
@@ -201,7 +216,8 @@ public class Zone implements Comparable<Zone> {
                .securityGroupsEnabled(in.isSecurityGroupsEnabled())
                .allocationState(in.getAllocationState())
                .dhcpProvider(in.getDhcpProvider())
-               .zoneToken(in.getZoneToken());
+               .zoneToken(in.getZoneToken())
+               .tags(in.getTags());
       }
    }
 
@@ -229,15 +245,16 @@ public class Zone implements Comparable<Zone> {
    private final AllocationState allocationState;
    private final String dhcpProvider;
    private final String zoneToken;
+   private final Set<Tag> tags;
 
    @ConstructorProperties({
-         "id", "description", "displaytext", "dns1", "dns2", "domain", "domainid", "guestcidraddress", "internaldns1", "internaldns2", "name", "networktype", "vlan", "securitygroupsenabled", "allocationstate", "dhcpprovider", "zonetoken"
+         "id", "description", "displaytext", "dns1", "dns2", "domain", "domainid", "guestcidraddress", "internaldns1", "internaldns2", "name", "networktype", "vlan", "securitygroupsenabled", "allocationstate", "dhcpprovider", "zonetoken", "tags"
    })
    protected Zone(String id, @Nullable String description, @Nullable String displayText, @Nullable String DNS1, @Nullable String DNS2,
                   @Nullable String domain, @Nullable String domainId, @Nullable String guestCIDRAddress, @Nullable String internalDNS1,
                   @Nullable String internalDNS2, @Nullable String name, @Nullable NetworkType networkType, @Nullable String VLAN,
                   boolean securityGroupsEnabled, @Nullable AllocationState allocationState, @Nullable String dhcpProvider,
-                  @Nullable String zoneToken) {
+                  @Nullable String zoneToken, @Nullable Set<Tag> tags) {
       this.id = checkNotNull(id, "id");
       this.description = description;
       this.displayText = displayText;
@@ -255,6 +272,7 @@ public class Zone implements Comparable<Zone> {
       this.allocationState = allocationState;
       this.dhcpProvider = dhcpProvider;
       this.zoneToken = zoneToken;
+      this.tags = tags != null ? ImmutableSet.copyOf(tags) : ImmutableSet.<Tag> of();
    }
 
    /**
@@ -383,10 +401,17 @@ public class Zone implements Comparable<Zone> {
       return this.zoneToken;
    }
 
+   /**
+    * @return the tags for the zone
+    */
+   public Set<Tag> getTags() {
+      return this.tags;
+   }
+
    @Override
    public int hashCode() {
       return Objects.hashCode(id, description, displayText, DNS1, DNS2, domain, domainId, guestCIDRAddress, internalDNS1,
-            internalDNS2, name, networkType, VLAN, securityGroupsEnabled, allocationState, dhcpProvider, zoneToken);
+            internalDNS2, name, networkType, VLAN, securityGroupsEnabled, allocationState, dhcpProvider, zoneToken, tags);
    }
 
    @Override
@@ -410,7 +435,8 @@ public class Zone implements Comparable<Zone> {
             && Objects.equal(this.securityGroupsEnabled, that.securityGroupsEnabled)
             && Objects.equal(this.allocationState, that.allocationState)
             && Objects.equal(this.dhcpProvider, that.dhcpProvider)
-            && Objects.equal(this.zoneToken, that.zoneToken);
+            && Objects.equal(this.zoneToken, that.zoneToken)
+            && Objects.equal(this.tags, that.tags);
    }
 
    protected ToStringHelper string() {
@@ -419,7 +445,7 @@ public class Zone implements Comparable<Zone> {
             .add("domain", domain).add("domainId", domainId).add("guestCIDRAddress", guestCIDRAddress).add("internalDNS1", internalDNS1)
             .add("internalDNS2", internalDNS2).add("name", name).add("networkType", networkType).add("VLAN", VLAN)
             .add("securityGroupsEnabled", securityGroupsEnabled).add("allocationState", allocationState).add("dhcpProvider", dhcpProvider)
-            .add("zoneToken", zoneToken);
+            .add("zoneToken", zoneToken).add("tags", tags);
    }
 
    @Override

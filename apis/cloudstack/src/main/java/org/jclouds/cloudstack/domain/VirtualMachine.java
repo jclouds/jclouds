@@ -110,6 +110,7 @@ public class VirtualMachine {
       protected Set<NIC> nics = ImmutableSet.of();
       protected String hypervisor;
       protected Set<SecurityGroup> securityGroups = ImmutableSet.of();
+      protected Set<Tag> tags = ImmutableSet.of();
 
       /**
        * @see VirtualMachine#getId()
@@ -463,12 +464,24 @@ public class VirtualMachine {
          return securityGroups(ImmutableSet.copyOf(in));
       }
 
+      /**
+       * @see VirtualMachine#getTags()
+       */
+      public T tags(Set<Tag> tags) {
+         this.tags = ImmutableSet.copyOf(checkNotNull(tags, "tags"));
+         return self();
+      }
+
+      public T tags(Tag... in) {
+         return tags(ImmutableSet.copyOf(in));
+      }
+
       public VirtualMachine build() {
          return new VirtualMachine(id, account, cpuCount, cpuSpeed, cpuUsed, displayName, created, domain, domainId,
                usesVirtualNetwork, group, groupId, guestOSId, HAEnabled, hostId, hostname, IPAddress, ISODisplayText, ISOId,
                ISOName, jobId, jobStatus, memory, name, networkKbsRead, networkKbsWrite, password, passwordEnabled, publicIP,
                publicIPId, rootDeviceId, rootDeviceType, serviceOfferingId, serviceOfferingName, state, templateDisplayText,
-               templateId, templateName, zoneId, zoneName, nics, hypervisor, securityGroups);
+               templateId, templateName, zoneId, zoneName, nics, hypervisor, securityGroups, tags);
       }
 
       public T fromVirtualMachine(VirtualMachine in) {
@@ -515,7 +528,8 @@ public class VirtualMachine {
                .zoneName(in.getZoneName())
                .nics(in.getNICs())
                .hypervisor(in.getHypervisor())
-               .securityGroups(in.getSecurityGroups());
+               .securityGroups(in.getSecurityGroups())
+               .tags(in.getTags());
       }
    }
 
@@ -569,9 +583,10 @@ public class VirtualMachine {
    private final Set<NIC> nics;
    private final String hypervisor;
    private final Set<SecurityGroup> securityGroups;
+   private final Set<Tag> tags;
 
    @ConstructorProperties({
-         "id", "account", "cpunumber", "cpuspeed", "cpuused", "displayname", "created", "domain", "domainid", "forvirtualnetwork", "group", "groupid", "guestosid", "haenable", "hostid", "hostname", "ipaddress", "isodisplaytext", "isoid", "isoname", "jobid", "jobstatus", "memory", "name", "networkkbsread", "networkkbswrite", "password", "passwordenabled", "publicip", "publicipid", "rootdeviceid", "rootdevicetype", "serviceofferingid", "serviceofferingname", "state", "templatedisplaytext", "templateid", "templatename", "zoneid", "zonename", "nic", "hypervisor", "securitygroup"
+         "id", "account", "cpunumber", "cpuspeed", "cpuused", "displayname", "created", "domain", "domainid", "forvirtualnetwork", "group", "groupid", "guestosid", "haenable", "hostid", "hostname", "ipaddress", "isodisplaytext", "isoid", "isoname", "jobid", "jobstatus", "memory", "name", "networkkbsread", "networkkbswrite", "password", "passwordenabled", "publicip", "publicipid", "rootdeviceid", "rootdevicetype", "serviceofferingid", "serviceofferingname", "state", "templatedisplaytext", "templateid", "templatename", "zoneid", "zonename", "nic", "hypervisor", "securitygroup", "tags"
    })
    protected VirtualMachine(String id, @Nullable String account, long cpuCount, long cpuSpeed, @Nullable String cpuUsed,
                             @Nullable String displayName, @Nullable Date created, @Nullable String domain, @Nullable String domainId,
@@ -583,7 +598,7 @@ public class VirtualMachine {
                             @Nullable String rootDeviceType, @Nullable String serviceOfferingId, @Nullable String serviceOfferingName,
                             @Nullable VirtualMachine.State state, @Nullable String templateDisplayText, @Nullable String templateId,
                             @Nullable String templateName, @Nullable String zoneId, @Nullable String zoneName, @Nullable Set<NIC> nics,
-                            @Nullable String hypervisor, @Nullable Set<SecurityGroup> securityGroups) {
+                            @Nullable String hypervisor, @Nullable Set<SecurityGroup> securityGroups, @Nullable Set<Tag> tags) {
       Preconditions.checkArgument(Strings.isNullOrEmpty(cpuUsed) || cpuUsed.matches("^[0-9\\.|,\\-]+%$"), "cpuUsed value should be a decimal number followed by %");
       this.id = checkNotNull(id, "id");
       this.account = account;
@@ -628,6 +643,7 @@ public class VirtualMachine {
       this.nics = nics == null ? ImmutableSet.<NIC>of() : ImmutableSet.copyOf(nics);
       this.hypervisor = hypervisor;
       this.securityGroups = securityGroups == null ? ImmutableSet.<SecurityGroup>of() : ImmutableSet.copyOf(securityGroups);
+      this.tags = tags != null ? ImmutableSet.copyOf(tags) : ImmutableSet.<Tag> of();
    }
 
    /**
@@ -970,9 +986,16 @@ public class VirtualMachine {
       return this.securityGroups;
    }
 
+   /**
+    * @return the tags for the virtual machine
+    */
+   public Set<Tag> getTags() {
+      return this.tags;
+   }
+
    @Override
    public int hashCode() {
-      return Objects.hashCode(id, account, cpuCount, cpuSpeed, cpuUsed, displayName, created, domain, domainId, usesVirtualNetwork, group, groupId, guestOSId, HAEnabled, hostId, hostname, IPAddress, ISODisplayText, ISOId, ISOName, jobId, jobStatus, memory, name, networkKbsRead, networkKbsWrite, password, passwordEnabled, publicIP, publicIPId, rootDeviceId, rootDeviceType, serviceOfferingId, serviceOfferingName, state, templateDisplayText, templateId, templateName, zoneId, zoneName, nics, hypervisor, securityGroups);
+      return Objects.hashCode(id, account, cpuCount, cpuSpeed, cpuUsed, displayName, created, domain, domainId, usesVirtualNetwork, group, groupId, guestOSId, HAEnabled, hostId, hostname, IPAddress, ISODisplayText, ISOId, ISOName, jobId, jobStatus, memory, name, networkKbsRead, networkKbsWrite, password, passwordEnabled, publicIP, publicIPId, rootDeviceId, rootDeviceType, serviceOfferingId, serviceOfferingName, state, templateDisplayText, templateId, templateName, zoneId, zoneName, nics, hypervisor, securityGroups, tags);
    }
 
    @Override
@@ -1022,7 +1045,8 @@ public class VirtualMachine {
             && Objects.equal(this.zoneName, that.zoneName)
             && Objects.equal(this.nics, that.nics)
             && Objects.equal(this.hypervisor, that.hypervisor)
-            && Objects.equal(this.securityGroups, that.securityGroups);
+            && Objects.equal(this.securityGroups, that.securityGroups)
+            && Objects.equal(this.tags, that.tags);
    }
 
    protected ToStringHelper string() {
@@ -1037,7 +1061,8 @@ public class VirtualMachine {
             .add("publicIP", publicIP).add("publicIPId", publicIPId).add("rootDeviceId", rootDeviceId).add("rootDeviceType", rootDeviceType)
             .add("serviceOfferingId", serviceOfferingId).add("serviceOfferingName", serviceOfferingName).add("state", state)
             .add("templateDisplayText", templateDisplayText).add("templateId", templateId).add("templateName", templateName)
-            .add("zoneId", zoneId).add("zoneName", zoneName).add("nics", nics).add("hypervisor", hypervisor).add("securityGroups", securityGroups);
+            .add("zoneId", zoneId).add("zoneName", zoneName).add("nics", nics).add("hypervisor", hypervisor).add("securityGroups", securityGroups)
+            .add("tags", tags);
    }
 
    @Override

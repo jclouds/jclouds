@@ -16,6 +16,7 @@
  */
 package org.jclouds.cloudstack.options;
 
+import static org.jclouds.cloudstack.options.ListSecurityGroupsOptions.Builder.tags;
 import static org.jclouds.cloudstack.options.ListSecurityGroupsOptions.Builder.accountInDomain;
 import static org.jclouds.cloudstack.options.ListSecurityGroupsOptions.Builder.domainId;
 import static org.jclouds.cloudstack.options.ListSecurityGroupsOptions.Builder.id;
@@ -23,6 +24,7 @@ import static org.jclouds.cloudstack.options.ListSecurityGroupsOptions.Builder.n
 import static org.jclouds.cloudstack.options.ListSecurityGroupsOptions.Builder.virtualMachineId;
 import static org.testng.Assert.assertEquals;
 
+import com.google.common.collect.ImmutableMap;
 import org.testng.annotations.Test;
 
 import com.google.common.collect.ImmutableList;
@@ -81,5 +83,21 @@ public class ListSecurityGroupsOptionsTest {
    public void testVirtualMachineIdStatic() {
       ListSecurityGroupsOptions options = virtualMachineId("6");
       assertEquals(ImmutableList.of("6"), options.buildQueryParameters().get("virtualmachineid"));
+   }
+
+   public void testTags() {
+      ListSecurityGroupsOptions options = new ListSecurityGroupsOptions().tags(ImmutableMap.of("tag1", "val1", "tag2", "val2"));
+      assertEquals(ImmutableList.of("tag1"), options.buildQueryParameters().get("tags[0].key"));
+      assertEquals(ImmutableList.of("tag2"), options.buildQueryParameters().get("tags[1].key"));
+      assertEquals(ImmutableList.of("val1"), options.buildQueryParameters().get("tags[0].value"));
+      assertEquals(ImmutableList.of("val2"), options.buildQueryParameters().get("tags[1].value"));
+   }
+
+   public void testTagsStatic() {
+      ListSecurityGroupsOptions options = tags(ImmutableMap.of("tag1", "val1", "tag2", "val2"));
+      assertEquals(ImmutableList.of("tag1"), options.buildQueryParameters().get("tags[0].key"));
+      assertEquals(ImmutableList.of("tag2"), options.buildQueryParameters().get("tags[1].key"));
+      assertEquals(ImmutableList.of("val1"), options.buildQueryParameters().get("tags[0].value"));
+      assertEquals(ImmutableList.of("val2"), options.buildQueryParameters().get("tags[1].value"));
    }
 }

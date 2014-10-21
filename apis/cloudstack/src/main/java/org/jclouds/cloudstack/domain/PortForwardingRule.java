@@ -100,6 +100,7 @@ public class PortForwardingRule implements Comparable<PortForwardingRule> {
       protected Set<String> CIDRs = ImmutableSet.of();
       protected int privateEndPort;
       protected int publicEndPort;
+      protected Set<Tag> tags = ImmutableSet.of();
 
       /**
        * @see PortForwardingRule#getId()
@@ -209,9 +210,21 @@ public class PortForwardingRule implements Comparable<PortForwardingRule> {
          return self();
       }
 
+      /**
+       * @see PortForwardingRule#getTags()
+       */
+      public T tags(Set<Tag> tags) {
+         this.tags = ImmutableSet.copyOf(checkNotNull(tags, "tags"));
+         return self();
+      }
+
+      public T tags(Tag... in) {
+         return tags(ImmutableSet.copyOf(in));
+      }
+
       public PortForwardingRule build() {
          return new PortForwardingRule(id, IPAddress, IPAddressId, privatePort, protocol, publicPort, state, virtualMachineDisplayName,
-               virtualMachineId, virtualMachineName, CIDRs, privateEndPort, publicEndPort);
+               virtualMachineId, virtualMachineName, CIDRs, privateEndPort, publicEndPort, tags);
       }
 
       public T fromPortForwardingRule(PortForwardingRule in) {
@@ -228,7 +241,8 @@ public class PortForwardingRule implements Comparable<PortForwardingRule> {
                .virtualMachineName(in.getVirtualMachineName())
                .CIDRs(in.getCIDRs())
                .privateEndPort(in.getPrivateEndPort())
-               .publicEndPort(in.getPublicEndPort());
+               .publicEndPort(in.getPublicEndPort())
+               .tags(in.getTags());
       }
    }
 
@@ -252,17 +266,18 @@ public class PortForwardingRule implements Comparable<PortForwardingRule> {
    private final Set<String> CIDRs;
    private final int privateEndPort;
    private final int publicEndPort;
+   private final Set<Tag> tags;
 
    @ConstructorProperties({
          "id", "ipaddress", "ipaddressid", "privateport", "protocol", "publicport", "state", "virtualmachinedisplayname",
-         "virtualmachineid", "virtualmachinename", "cidrlist", "privateendport", "publicendport"
+         "virtualmachineid", "virtualmachinename", "cidrlist", "privateendport", "publicendport", "tags"
    })
    private PortForwardingRule(String id, @Nullable String IPAddress, @Nullable String IPAddressId, int privatePort,
                               @Nullable Protocol protocol, int publicPort, @Nullable State state, @Nullable String virtualMachineDisplayName,
                               @Nullable String virtualMachineId, @Nullable String virtualMachineName, @Nullable String CIDRs,
-                              int privateEndPort, int publicEndPort) {
+                              int privateEndPort, int publicEndPort, @Nullable Set<Tag> tags) {
       this(id, IPAddress, IPAddressId, privatePort, protocol, publicPort, state, virtualMachineDisplayName, virtualMachineId,
-            virtualMachineName, splitStringOnCommas(CIDRs), privateEndPort, publicEndPort);
+            virtualMachineName, splitStringOnCommas(CIDRs), privateEndPort, publicEndPort, tags);
    }
 
    private static Set<String> splitStringOnCommas(String in) {
@@ -272,7 +287,8 @@ public class PortForwardingRule implements Comparable<PortForwardingRule> {
    protected PortForwardingRule(String id, @Nullable String IPAddress, @Nullable String IPAddressId, int privatePort,
                                 @Nullable Protocol protocol, int publicPort, @Nullable State state,
                                 @Nullable String virtualMachineDisplayName, @Nullable String virtualMachineId,
-                                @Nullable String virtualMachineName, @Nullable Set<String> CIDRs, int privateEndPort, int publicEndPort) {
+                                @Nullable String virtualMachineName, @Nullable Set<String> CIDRs, int privateEndPort,
+                                int publicEndPort, @Nullable Set<Tag> tags) {
       this.id = checkNotNull(id, "id");
       this.IPAddress = IPAddress;
       this.IPAddressId = IPAddressId;
@@ -286,6 +302,7 @@ public class PortForwardingRule implements Comparable<PortForwardingRule> {
       this.CIDRs = CIDRs == null ? ImmutableSet.<String>of() : ImmutableSet.copyOf(CIDRs);
       this.privateEndPort = privateEndPort;
       this.publicEndPort = publicEndPort;
+      this.tags = tags != null ? ImmutableSet.copyOf(tags) : ImmutableSet.<Tag> of();
    }
 
    /**
@@ -386,9 +403,16 @@ public class PortForwardingRule implements Comparable<PortForwardingRule> {
       return this.publicEndPort;
    }
 
+   /**
+    * @return the tags for the rule
+    */
+   public Set<Tag> getTags() {
+      return this.tags;
+   }
+
    @Override
    public int hashCode() {
-      return Objects.hashCode(id, IPAddress, IPAddressId, privatePort, protocol, publicPort, state, virtualMachineDisplayName, virtualMachineId, virtualMachineName, CIDRs, privateEndPort, publicEndPort);
+      return Objects.hashCode(id, IPAddress, IPAddressId, privatePort, protocol, publicPort, state, virtualMachineDisplayName, virtualMachineId, virtualMachineName, CIDRs, privateEndPort, publicEndPort, tags);
    }
 
    @Override
@@ -408,7 +432,8 @@ public class PortForwardingRule implements Comparable<PortForwardingRule> {
             && Objects.equal(this.virtualMachineName, that.virtualMachineName)
             && Objects.equal(this.CIDRs, that.CIDRs)
             && Objects.equal(this.privateEndPort, that.privateEndPort)
-            && Objects.equal(this.publicEndPort, that.publicEndPort);
+            && Objects.equal(this.publicEndPort, that.publicEndPort)
+            && Objects.equal(this.tags, that.tags);
    }
 
    protected ToStringHelper string() {
@@ -416,7 +441,7 @@ public class PortForwardingRule implements Comparable<PortForwardingRule> {
             .add("id", id).add("IPAddress", IPAddress).add("IPAddressId", IPAddressId).add("privatePort", privatePort)
             .add("protocol", protocol).add("publicPort", publicPort).add("state", state).add("virtualMachineDisplayName", virtualMachineDisplayName)
             .add("virtualMachineId", virtualMachineId).add("virtualMachineName", virtualMachineName).add("CIDRs", CIDRs)
-            .add("privateEndPort", privateEndPort).add("publicEndPort", publicEndPort);
+            .add("privateEndPort", privateEndPort).add("publicEndPort", publicEndPort).add("tags", tags);
    }
 
    @Override
