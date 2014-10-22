@@ -20,6 +20,7 @@ import java.util.Set;
 
 import org.jclouds.cloudstack.domain.GuestIPType;
 import org.jclouds.cloudstack.domain.NIC;
+import org.jclouds.cloudstack.domain.Tag;
 import org.jclouds.cloudstack.domain.TrafficType;
 import org.jclouds.cloudstack.domain.VirtualMachine;
 import org.jclouds.date.internal.SimpleDateFormatDateService;
@@ -69,7 +70,26 @@ public class ListVirtualMachinesResponseTest extends BaseSetParserTest<VirtualMa
             .jobStatus(0)
             .nics(ImmutableSet.of(NIC.builder().id("72").networkId("204").netmask("255.255.255.0").gateway("10.1.1.1")
                   .IPAddress("10.1.1.18").trafficType(TrafficType.GUEST).guestIPType(GuestIPType.VIRTUAL)
-                  .isDefault(true).build())).hypervisor("XenServer").build());
+                  .isDefault(true).build()))
+            .hypervisor("XenServer")
+            .tags(ImmutableSet.of(
+                  Tag.builder().account("adrian")
+                        .resourceId("54")
+                        .resourceType(Tag.ResourceType.USER_VM)
+                        .key("some-tag")
+                        .value("some-value")
+                        .domain("ROOT")
+                        .domainId("1")
+                        .build(),
+                  Tag.builder().account("adrian")
+                        .resourceId("54")
+                        .resourceType(Tag.ResourceType.USER_VM)
+                        .key("another-tag")
+                        .value("jclouds-empty-tag-placeholder")
+                        .domain("ROOT")
+                        .domainId("1")
+                        .build()))
+            .build());
    }
 
 }

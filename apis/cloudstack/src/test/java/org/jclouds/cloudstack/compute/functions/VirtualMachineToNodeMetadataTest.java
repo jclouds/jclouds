@@ -21,6 +21,7 @@ import static org.testng.Assert.assertEquals;
 import java.net.UnknownHostException;
 import java.util.Set;
 
+import com.google.common.collect.ImmutableMap;
 import org.jclouds.cloudstack.domain.GuestIPType;
 import org.jclouds.cloudstack.domain.IPForwardingRule;
 import org.jclouds.cloudstack.domain.NIC;
@@ -81,7 +82,11 @@ public class VirtualMachineToNodeMetadataTest {
                   .privateAddresses(ImmutableSet.of("10.1.1.18")).publicAddresses(ImmutableSet.of("1.1.1.1"))
                   .hardware(addHypervisor(ServiceOfferingToHardwareTest.one, "XenServer"))
                   .imageId(TemplateToImageTest.one.getId())
-                  .operatingSystem(TemplateToImageTest.one.getOperatingSystem()).build().toString());
+                  .operatingSystem(TemplateToImageTest.one.getOperatingSystem())
+                  .tags(ImmutableSet.of("another-tag"))
+                  .userMetadata(ImmutableMap.of("some-tag", "some-value"))
+                  .build().toString()
+      );
 
    }
 
@@ -177,7 +182,10 @@ public class VirtualMachineToNodeMetadataTest {
                   .privateAddresses(ImmutableSet.of("10.1.1.18"))
                   .hardware(addHypervisor(ServiceOfferingToHardwareTest.one, "XenServer"))
                   .imageId(TemplateToImageTest.one.getId())
-                  .operatingSystem(TemplateToImageTest.one.getOperatingSystem()).build().toString());
+                  .operatingSystem(TemplateToImageTest.one.getOperatingSystem())
+                  .tags(ImmutableSet.of("another-tag"))
+                  .userMetadata(ImmutableMap.of("some-tag", "some-value"))
+                  .build().toString());
    }
 
    protected Hardware addHypervisor(Hardware in, String hypervisor) {

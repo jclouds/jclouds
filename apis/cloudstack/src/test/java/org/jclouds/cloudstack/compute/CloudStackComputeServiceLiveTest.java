@@ -16,13 +16,10 @@
  */
 package org.jclouds.cloudstack.compute;
 
-import org.jclouds.compute.domain.NodeMetadata;
+import com.google.inject.Module;
 import org.jclouds.compute.internal.BaseComputeServiceLiveTest;
 import org.jclouds.sshj.config.SshjSshClientModule;
 import org.testng.annotations.Test;
-
-import com.google.common.collect.ImmutableMap;
-import com.google.inject.Module;
 
 /**
  * 
@@ -37,13 +34,6 @@ public class CloudStackComputeServiceLiveTest extends BaseComputeServiceLiveTest
    @Override
    protected Module getSshModule() {
       return new SshjSshClientModule();
-   }
-
-   // cloudstack does not support metadata
-   @Override
-   protected void checkUserMetadataContains(NodeMetadata node, ImmutableMap<String, String> userMetadata) {
-      assert node.getUserMetadata().equals(ImmutableMap.<String, String> of()) : String.format(
-            "node userMetadata did not match %s %s", userMetadata, node);
    }
 
    @Override

@@ -17,20 +17,33 @@
 package org.jclouds.cloudstack.compute.functions;
 
 import static com.google.common.base.Preconditions.checkNotNull;
+import static com.google.common.base.Predicates.equalTo;
+import static com.google.common.base.Predicates.not;
 import static com.google.common.collect.Iterables.filter;
 import static com.google.common.collect.Iterables.transform;
+import static com.google.common.collect.Maps.filterValues;
 import static com.google.common.collect.Sets.newHashSet;
 import static org.jclouds.location.predicates.LocationPredicates.idEquals;
 import static org.jclouds.util.InetAddresses2.isPrivateIPAddress;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
 import java.util.Map;
 import java.util.Set;
 
-import javax.inject.Inject;
-import javax.inject.Singleton;
-
+import com.google.common.base.Function;
+import com.google.common.base.Predicate;
+import com.google.common.base.Supplier;
+import com.google.common.base.Throwables;
+import com.google.common.cache.LoadingCache;
+import com.google.common.collect.FluentIterable;
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.Iterables;
+import com.google.common.util.concurrent.UncheckedExecutionException;
 import org.jclouds.cloudstack.domain.IPForwardingRule;
 import org.jclouds.cloudstack.domain.NIC;
+import org.jclouds.cloudstack.domain.Tag;
 import org.jclouds.cloudstack.domain.VirtualMachine;
 import org.jclouds.collect.Memoized;
 import org.jclouds.compute.domain.HardwareBuilder;
@@ -43,17 +56,6 @@ import org.jclouds.compute.functions.GroupNamingConvention;
 import org.jclouds.domain.Location;
 import org.jclouds.rest.ResourceNotFoundException;
 import org.jclouds.util.Throwables2;
-
-import com.google.common.base.Function;
-import com.google.common.base.Predicate;
-import com.google.common.base.Supplier;
-import com.google.common.base.Throwables;
-import com.google.common.cache.LoadingCache;
-import com.google.common.collect.FluentIterable;
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableMap;
-import com.google.common.collect.Iterables;
-import com.google.common.util.concurrent.UncheckedExecutionException;
 
 @Singleton
 public class VirtualMachineToNodeMetadata implements Function<VirtualMachine, NodeMetadata> {
@@ -119,10 +121,21 @@ public class VirtualMachineToNodeMetadata implements Function<VirtualMachine, No
          builder.operatingSystem(image.getOperatingSystem());
       }
 
+      if (!from.getTags().isEmpty()) {
+         ImmutableMap.Builder<String, String> tagsBuilder = ImmutableMap.<String, String>builder();
+
+         for (Tag tag : from.getTags()) {
+            tagsBuilder.put(tag.getKey(), tag.getValue());
+         }
+
+         Map<String, String> tagMap = tagsBuilder.build();
+         builder.tags(filterValues(tagMap, equalTo("jclouds-empty-tag-placeholder")).keySet())
+               .userMetadata(filterValues(tagMap, not(equalTo("jclouds-empty-tag-placeholder"))));
+      }
+
       builder.hardware(new HardwareBuilder()
         .ids(from.getServiceOfferingId() + "")
         .name(from.getServiceOfferingName() + "")
-         // .tags() TODO
         .processors(ImmutableList.of(new Processor(from.getCpuCount(), from.getCpuSpeed())))
         .ram((int)from.getMemory())//
         .hypervisor(from.getHypervisor())//
