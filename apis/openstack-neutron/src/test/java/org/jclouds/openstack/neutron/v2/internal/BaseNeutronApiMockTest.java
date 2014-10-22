@@ -17,6 +17,7 @@
 package org.jclouds.openstack.neutron.v2.internal;
 
 import static org.jclouds.openstack.keystone.v2_0.config.KeystoneProperties.CREDENTIAL_TYPE;
+import static org.jclouds.openstack.keystone.v2_0.config.KeystoneProperties.SERVICE_TYPE;
 
 import java.util.Properties;
 
@@ -30,12 +31,14 @@ import org.jclouds.openstack.v2_0.internal.BaseOpenStackMockTest;
  */
 public class BaseNeutronApiMockTest extends BaseOpenStackMockTest<NeutronApi> {
    protected Properties overrides;
+   protected String uriApiVersion = "/v2.0";
+
    /**
     * Base Mock Test
     */
    public BaseNeutronApiMockTest() {
       overrides = new Properties();
-      //overrides.setProperty(SERVICE_TYPE, "neutron");
+      overrides.setProperty(SERVICE_TYPE, "network");
       overrides.setProperty(CREDENTIAL_TYPE, CredentialTypes.PASSWORD_CREDENTIALS);
    }
 }

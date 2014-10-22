@@ -21,9 +21,7 @@ import java.util.Set;
 
 import javax.ws.rs.Path;
 
-import org.jclouds.Constants;
 import org.jclouds.location.Region;
-import org.jclouds.location.functions.RegionToEndpoint;
 import org.jclouds.openstack.neutron.v2.extensions.FloatingIPApi;
 import org.jclouds.openstack.neutron.v2.extensions.RouterApi;
 import org.jclouds.openstack.neutron.v2.extensions.SecurityGroupApi;
@@ -31,6 +29,7 @@ import org.jclouds.openstack.neutron.v2.extensions.lbaas.v1.LBaaSApi;
 import org.jclouds.openstack.neutron.v2.features.NetworkApi;
 import org.jclouds.openstack.neutron.v2.features.PortApi;
 import org.jclouds.openstack.neutron.v2.features.SubnetApi;
+import org.jclouds.openstack.neutron.v2.functions.VersionAwareRegionToEndpoint;
 import org.jclouds.openstack.v2_0.features.ExtensionApi;
 import org.jclouds.rest.annotations.Delegate;
 import org.jclouds.rest.annotations.EndpointParam;
@@ -40,8 +39,16 @@ import com.google.inject.Provides;
 
 /**
  * Provides access to the OpenStack Networking (Neutron) v2 API.
+ *
+ * The service-side API will always have a v2.0 in the path.
+ * However, the endpoint will sometimes contain a v2.0 and sometimes it will not.
+ * The @Path annotation here ensures the path is always added. The VersionAwareRegionToEndpoint ensures that the
+ * endpoint will always look the same.
+ *
+ * Cannot leave labs until fixed:
+ * TODO: https://issues.apache.org/jira/browse/JCLOUDS-773
  */
-@Path("{" + Constants.PROPERTY_API_VERSION + "}")
+@Path("v2.0")
 public interface NeutronApi extends Closeable {
    /**
     * @return the Region codes configured
@@ -54,25 +61,25 @@ public interface NeutronApi extends Closeable {
     * Provides access to Extension features.
     */
    @Delegate
-   ExtensionApi getExtensionApi(@EndpointParam(parser = RegionToEndpoint.class) String region);
+   ExtensionApi getExtensionApi(@EndpointParam(parser = VersionAwareRegionToEndpoint.class) String region);
 
    /**
     * Provides access to Network features.
     */
    @Delegate
-   NetworkApi getNetworkApi(@EndpointParam(parser = RegionToEndpoint.class) String region);
+   NetworkApi getNetworkApi(@EndpointParam(parser = VersionAwareRegionToEndpoint.class) String region);
 
    /**
     * Provides access to Subnet features.
     */
    @Delegate
-   SubnetApi getSubnetApi(@EndpointParam(parser = RegionToEndpoint.class) String region);
+   SubnetApi getSubnetApi(@EndpointParam(parser = VersionAwareRegionToEndpoint.class) String region);
 
    /**
     * Provides access to Port features.
     */
    @Delegate
-   PortApi getPortApi(@EndpointParam(parser = RegionToEndpoint.class) String region);
+   PortApi getPortApi(@EndpointParam(parser = VersionAwareRegionToEndpoint.class) String region);
 
    /**
     * Provides access to Router features.
@@ -82,7 +89,7 @@ public interface NeutronApi extends Closeable {
     * to determine if it is present.
     */
    @Delegate
-   Optional<RouterApi> getRouterApi(@EndpointParam(parser = RegionToEndpoint.class) String region);
+   Optional<RouterApi> getRouterApi(@EndpointParam(parser = VersionAwareRegionToEndpoint.class) String region);
 
    /**
     * Provides access to Floating IP features.
@@ -92,7 +99,7 @@ public interface NeutronApi extends Closeable {
     * to determine if it is present.
     */
    @Delegate
-   Optional<FloatingIPApi> getFloatingIPApi(@EndpointParam(parser = RegionToEndpoint.class) String region);
+   Optional<FloatingIPApi> getFloatingIPApi(@EndpointParam(parser = VersionAwareRegionToEndpoint.class) String region);
 
    /**
     * Provides access to SecurityGroup features.
@@ -102,7 +109,7 @@ public interface NeutronApi extends Closeable {
     * to determine if it is present.
     */
    @Delegate
-   Optional<SecurityGroupApi> getSecurityGroupApi(@EndpointParam(parser = RegionToEndpoint.class) String region);
+   Optional<SecurityGroupApi> getSecurityGroupApi(@EndpointParam(parser = VersionAwareRegionToEndpoint.class) String region);
 
    /**
     * Provides access to LBaaS features.
@@ -112,5 +119,5 @@ public interface NeutronApi extends Closeable {
     * to determine if it is present.
     */
    @Delegate
-   Optional<LBaaSApi> getLBaaSApi(@EndpointParam(parser = RegionToEndpoint.class) String region);
+   Optional<LBaaSApi> getLBaaSApi(@EndpointParam(parser = VersionAwareRegionToEndpoint.class) String region);
 }

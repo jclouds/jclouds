@@ -16,11 +16,17 @@
  */
 package org.jclouds.openstack.neutron.v2.features;
 
-import com.google.common.collect.FluentIterable;
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableSet;
-import com.squareup.okhttp.mockwebserver.MockResponse;
-import com.squareup.okhttp.mockwebserver.MockWebServer;
+import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertFalse;
+import static org.testng.Assert.assertNotNull;
+import static org.testng.Assert.assertNull;
+import static org.testng.Assert.assertTrue;
+
+import java.io.IOException;
+import java.net.URISyntaxException;
+import java.util.List;
+import java.util.Map;
+
 import org.jclouds.openstack.neutron.v2.NeutronApi;
 import org.jclouds.openstack.neutron.v2.domain.AddressPair;
 import org.jclouds.openstack.neutron.v2.domain.NetworkStatus;
@@ -33,16 +39,11 @@ import org.jclouds.openstack.v2_0.options.PaginationOptions;
 import org.jclouds.rest.ResourceNotFoundException;
 import org.testng.annotations.Test;
 
-import java.io.IOException;
-import java.net.URISyntaxException;
-import java.util.List;
-import java.util.Map;
-
-import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertFalse;
-import static org.testng.Assert.assertNotNull;
-import static org.testng.Assert.assertNull;
-import static org.testng.Assert.assertTrue;
+import com.google.common.collect.FluentIterable;
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableSet;
+import com.squareup.okhttp.mockwebserver.MockResponse;
+import com.squareup.okhttp.mockwebserver.MockWebServer;
 
 /**
  * Tests NetworkApi Guice wiring and parsing
@@ -74,7 +75,7 @@ public class PortApiMockTest extends BaseNeutronApiMockTest {
           * Check request
           */
          assertAuthentication(server);
-         assertRequest(server.takeRequest(), "POST", "/v2.0/ports", "/port_create_request.json");
+         assertRequest(server.takeRequest(), "POST", uriApiVersion + "/ports", "/port_create_request.json");
 
          /*
           * Check response
@@ -136,7 +137,7 @@ public class PortApiMockTest extends BaseNeutronApiMockTest {
           * Check request
           */
          assertAuthentication(server);
-         assertRequest(server.takeRequest(), "GET", "/v2.0/ports?limit=2&marker=abcdefg");
+         assertRequest(server.takeRequest(), "GET", uriApiVersion + "/ports?limit=2&marker=abcdefg");
 
          /*
           * Check response
@@ -164,7 +165,7 @@ public class PortApiMockTest extends BaseNeutronApiMockTest {
           * Check request
           */
          assertAuthentication(server);
-         assertRequest(server.takeRequest(), "GET", "/v2.0/ports?limit=2&marker=abcdefg");
+         assertRequest(server.takeRequest(), "GET", uriApiVersion + "/ports?limit=2&marker=abcdefg");
 
          /*
           * Check response
@@ -193,8 +194,8 @@ public class PortApiMockTest extends BaseNeutronApiMockTest {
           */
          assertEquals(server.getRequestCount(), 3);
          assertAuthentication(server);
-         assertRequest(server.takeRequest(), "GET", "/v2.0/ports");
-         assertRequest(server.takeRequest(), "GET", "/v2.0/ports?marker=71c1e68c-171a-4aa2-aca5-50ea153a3718");
+         assertRequest(server.takeRequest(), "GET", uriApiVersion + "/ports");
+         assertRequest(server.takeRequest(), "GET", uriApiVersion + "/ports?marker=71c1e68c-171a-4aa2-aca5-50ea153a3718");
 
          /*
           * Check response
@@ -225,7 +226,7 @@ public class PortApiMockTest extends BaseNeutronApiMockTest {
           */
          assertEquals(server.getRequestCount(), 2);
          assertAuthentication(server);
-         assertRequest(server.takeRequest(), "GET", "/v2.0/ports");
+         assertRequest(server.takeRequest(), "GET", uriApiVersion + "/ports");
 
          /*
           * Check response
@@ -266,7 +267,7 @@ public class PortApiMockTest extends BaseNeutronApiMockTest {
           * Check request
           */
          assertAuthentication(server);
-         assertRequest(server.takeRequest(), "POST", "/v2.0/ports", "/port_create_bulk_request.json");
+         assertRequest(server.takeRequest(), "POST", uriApiVersion + "/ports", "/port_create_bulk_request.json");
 
          /*
           * Check response
@@ -327,7 +328,7 @@ public class PortApiMockTest extends BaseNeutronApiMockTest {
           * Check request
           */
          assertAuthentication(server);
-         assertRequest(server.takeRequest(), "GET", "/v2.0/ports/12345");
+         assertRequest(server.takeRequest(), "GET", uriApiVersion + "/ports/12345");
 
          /*
           * Check response
@@ -363,7 +364,7 @@ public class PortApiMockTest extends BaseNeutronApiMockTest {
           * Check request
           */
          assertAuthentication(server);
-         assertRequest(server.takeRequest(), "GET", "/v2.0/ports/12345");
+         assertRequest(server.takeRequest(), "GET", uriApiVersion + "/ports/12345");
 
          /*
           * Check response
@@ -395,7 +396,7 @@ public class PortApiMockTest extends BaseNeutronApiMockTest {
           * Check request
           */
          assertAuthentication(server);
-         assertRequest(server.takeRequest(), "PUT", "/v2.0/ports/12345", "/port_update_request.json");
+         assertRequest(server.takeRequest(), "PUT", uriApiVersion + "/ports/12345", "/port_update_request.json");
 
          /*
           * Check response
@@ -427,7 +428,7 @@ public class PortApiMockTest extends BaseNeutronApiMockTest {
           * Check request
           */
          assertAuthentication(server);
-         assertRequest(server.takeRequest(), "PUT", "/v2.0/ports/12345", "/port_update_request.json");
+         assertRequest(server.takeRequest(), "PUT", uriApiVersion + "/ports/12345", "/port_update_request.json");
 
          /*
           * Check response
@@ -453,7 +454,7 @@ public class PortApiMockTest extends BaseNeutronApiMockTest {
           * Check request
           */
          assertAuthentication(server);
-         assertRequest(server.takeRequest(), "DELETE", "/v2.0/ports/12345");
+         assertRequest(server.takeRequest(), "DELETE", uriApiVersion + "/ports/12345");
 
          /*
           * Check response
@@ -479,7 +480,7 @@ public class PortApiMockTest extends BaseNeutronApiMockTest {
           * Check request
           */
          assertAuthentication(server);
-         assertRequest(server.takeRequest(), "DELETE", "/v2.0/ports/12345");
+         assertRequest(server.takeRequest(), "DELETE", uriApiVersion + "/ports/12345");
 
          /*
           * Check response

@@ -66,8 +66,8 @@ public class FloatingIPApiMockTest extends BaseNeutronApiMockTest {
           */
          assertEquals(server.getRequestCount(), 3);
          assertAuthentication(server);
-         assertExtensions(server, "/v2.0");
-         assertRequest(server.takeRequest(), "POST", "/v2.0/floatingips", "/floatingip_create_request.json");
+         assertExtensions(server, uriApiVersion + "");
+         assertRequest(server.takeRequest(), "POST", uriApiVersion + "/floatingips", "/floatingip_create_request.json");
 
          /*
           * Check response
@@ -125,8 +125,8 @@ public class FloatingIPApiMockTest extends BaseNeutronApiMockTest {
           */
          assertEquals(server.getRequestCount(), 3);
          assertAuthentication(server);
-         assertExtensions(server, "/v2.0");
-         assertRequest(server.takeRequest(), "GET", "/v2.0/floatingips?limit=2&marker=abcdefg");
+         assertExtensions(server, uriApiVersion + "");
+         assertRequest(server.takeRequest(), "GET", uriApiVersion + "/floatingips?limit=2&marker=abcdefg");
 
          /*
           * Check response
@@ -157,8 +157,8 @@ public class FloatingIPApiMockTest extends BaseNeutronApiMockTest {
           */
          assertEquals(server.getRequestCount(), 3);
          assertAuthentication(server);
-         assertExtensions(server, "/v2.0");
-         assertRequest(server.takeRequest(), "GET", "/v2.0/floatingips?limit=2&marker=abcdefg");
+         assertExtensions(server, uriApiVersion + "");
+         assertRequest(server.takeRequest(), "GET", uriApiVersion + "/floatingips?limit=2&marker=abcdefg");
 
          /*
           * Check response
@@ -189,9 +189,9 @@ public class FloatingIPApiMockTest extends BaseNeutronApiMockTest {
           */
          assertEquals(server.getRequestCount(), 4);
          assertAuthentication(server);
-         assertExtensions(server, "/v2.0");
-         assertRequest(server.takeRequest(), "GET", "/v2.0/floatingips");
-         assertRequest(server.takeRequest(), "GET", "/v2.0/floatingips?marker=71c1e68c-171a-4aa2-aca5-50ea153a3718");
+         assertExtensions(server, uriApiVersion + "");
+         assertRequest(server.takeRequest(), "GET", uriApiVersion + "/floatingips");
+         assertRequest(server.takeRequest(), "GET", uriApiVersion + "/floatingips?marker=71c1e68c-171a-4aa2-aca5-50ea153a3718");
 
          /*
           * Check response
@@ -223,8 +223,8 @@ public class FloatingIPApiMockTest extends BaseNeutronApiMockTest {
           */
          assertEquals(server.getRequestCount(), 3);
          assertAuthentication(server);
-         assertExtensions(server, "/v2.0");
-         assertRequest(server.takeRequest(), "GET", "/v2.0/floatingips");
+         assertExtensions(server, uriApiVersion + "");
+         assertRequest(server.takeRequest(), "GET", uriApiVersion + "/floatingips");
 
          /*
           * Check response
@@ -254,8 +254,8 @@ public class FloatingIPApiMockTest extends BaseNeutronApiMockTest {
           */
          assertEquals(server.getRequestCount(), 3);
          assertAuthentication(server);
-         assertExtensions(server, "/v2.0");
-         assertRequest(server.takeRequest(), "GET", "/v2.0/floatingips/12345");
+         assertExtensions(server, uriApiVersion + "");
+         assertRequest(server.takeRequest(), "GET", uriApiVersion + "/floatingips/12345");
 
          /*
           * Check response
@@ -292,8 +292,8 @@ public class FloatingIPApiMockTest extends BaseNeutronApiMockTest {
           */
          assertEquals(server.getRequestCount(), 3);
          assertAuthentication(server);
-         assertExtensions(server, "/v2.0");
-         assertRequest(server.takeRequest(), "GET", "/v2.0/floatingips/12345");
+         assertExtensions(server, uriApiVersion + "");
+         assertRequest(server.takeRequest(), "GET", uriApiVersion + "/floatingips/12345");
 
          /*
           * Check response
@@ -327,8 +327,8 @@ public class FloatingIPApiMockTest extends BaseNeutronApiMockTest {
           */
          assertEquals(server.getRequestCount(), 3);
          assertAuthentication(server);
-         assertExtensions(server, "/v2.0");
-         assertRequest(server.takeRequest(), "PUT", "/v2.0/floatingips/12345", "/floatingip_update_request.json");
+         assertExtensions(server, uriApiVersion + "");
+         assertRequest(server.takeRequest(), "PUT", uriApiVersion + "/floatingips/12345", "/floatingip_update_request.json");
 
          /*
           * Check response
@@ -361,8 +361,8 @@ public class FloatingIPApiMockTest extends BaseNeutronApiMockTest {
           */
          assertEquals(server.getRequestCount(), 3);
          assertAuthentication(server);
-         assertExtensions(server, "/v2.0");
-         assertRequest(server.takeRequest(), "PUT", "/v2.0/floatingips/12345", "/floatingip_update_dissociate_request.json");
+         assertExtensions(server, uriApiVersion + "");
+         assertRequest(server.takeRequest(), "PUT", uriApiVersion + "/floatingips/12345", "/floatingip_update_dissociate_request.json");
 
          /*
           * Check response
@@ -397,8 +397,8 @@ public class FloatingIPApiMockTest extends BaseNeutronApiMockTest {
           */
          assertEquals(server.getRequestCount(), 3);
          assertAuthentication(server);
-         assertExtensions(server, "/v2.0");
-         assertRequest(server.takeRequest(), "PUT", "/v2.0/floatingips/12345", "/floatingip_update_request.json");
+         assertExtensions(server, uriApiVersion + "");
+         assertRequest(server.takeRequest(), "PUT", uriApiVersion + "/floatingips/12345", "/floatingip_update_request.json");
 
          /*
           * Check response
@@ -427,8 +427,8 @@ public class FloatingIPApiMockTest extends BaseNeutronApiMockTest {
           */
          assertEquals(server.getRequestCount(), 3);
          assertAuthentication(server);
-         assertExtensions(server, "/v2.0");
-         assertRequest(server.takeRequest(), "DELETE", "/v2.0/floatingips/12345");
+         assertExtensions(server, uriApiVersion + "");
+         assertRequest(server.takeRequest(), "DELETE", uriApiVersion + "/floatingips/12345");
 
          /*
           * Check response
@@ -457,8 +457,8 @@ public class FloatingIPApiMockTest extends BaseNeutronApiMockTest {
           */
          assertEquals(server.getRequestCount(), 3);
          assertAuthentication(server);
-         assertExtensions(server, "/v2.0");
-         assertRequest(server.takeRequest(), "DELETE", "/v2.0/floatingips/12345");
+         assertExtensions(server, uriApiVersion + "");
+         assertRequest(server.takeRequest(), "DELETE", uriApiVersion + "/floatingips/12345");
 
          /*
           * Check response

@@ -71,8 +71,8 @@ public class SecurityGroupApiMockTest extends BaseNeutronApiMockTest {
           */
          assertEquals(server.getRequestCount(), 3);
          assertAuthentication(server);
-         assertExtensions(server, "/v2.0");
-         assertRequest(server.takeRequest(), "POST", "/v2.0/security-groups", "/security_group_create_request.json");
+         assertExtensions(server, uriApiVersion + "");
+         assertRequest(server.takeRequest(), "POST", uriApiVersion + "/security-groups", "/security_group_create_request.json");
 
          /*
           * Check response
@@ -142,8 +142,8 @@ public class SecurityGroupApiMockTest extends BaseNeutronApiMockTest {
           */
          assertEquals(server.getRequestCount(), 3);
          assertAuthentication(server);
-         assertExtensions(server, "/v2.0");
-         assertRequest(server.takeRequest(), "POST", "/v2.0/security-group-rules", "/security_group_rule_create_request.json");
+         assertExtensions(server, uriApiVersion + "");
+         assertRequest(server.takeRequest(), "POST", uriApiVersion + "/security-group-rules", "/security_group_rule_create_request.json");
 
          /*
           * Check response
@@ -208,8 +208,8 @@ public class SecurityGroupApiMockTest extends BaseNeutronApiMockTest {
           */
          assertEquals(server.getRequestCount(), 3);
          assertAuthentication(server);
-         assertExtensions(server, "/v2.0");
-         assertRequest(server.takeRequest(), "GET", "/v2.0/security-groups?limit=2&marker=abcdefg");
+         assertExtensions(server, uriApiVersion + "");
+         assertRequest(server.takeRequest(), "GET", uriApiVersion + "/security-groups?limit=2&marker=abcdefg");
 
          /*
           * Check response
@@ -241,8 +241,8 @@ public class SecurityGroupApiMockTest extends BaseNeutronApiMockTest {
           */
          assertEquals(server.getRequestCount(), 3);
          assertAuthentication(server);
-         assertExtensions(server, "/v2.0");
-         assertRequest(server.takeRequest(), "GET", "/v2.0/security-groups?limit=2&marker=abcdefg");
+         assertExtensions(server, uriApiVersion + "");
+         assertRequest(server.takeRequest(), "GET", uriApiVersion + "/security-groups?limit=2&marker=abcdefg");
 
          /*
           * Check response
@@ -271,8 +271,8 @@ public class SecurityGroupApiMockTest extends BaseNeutronApiMockTest {
           */
          assertEquals(server.getRequestCount(), 3);
          assertAuthentication(server);
-         assertExtensions(server, "/v2.0");
-         assertRequest(server.takeRequest(), "GET", "/v2.0/security-group-rules?limit=2&marker=abcdefg");
+         assertExtensions(server, uriApiVersion + "");
+         assertRequest(server.takeRequest(), "GET", uriApiVersion + "/security-group-rules?limit=2&marker=abcdefg");
 
          /*
           * Check response
@@ -304,8 +304,8 @@ public class SecurityGroupApiMockTest extends BaseNeutronApiMockTest {
           */
          assertEquals(server.getRequestCount(), 3);
          assertAuthentication(server);
-         assertExtensions(server, "/v2.0");
-         assertRequest(server.takeRequest(), "GET", "/v2.0/security-group-rules?limit=2&marker=abcdefg");
+         assertExtensions(server, uriApiVersion + "");
+         assertRequest(server.takeRequest(), "GET", uriApiVersion + "/security-group-rules?limit=2&marker=abcdefg");
 
          /*
           * Check response
@@ -336,9 +336,9 @@ public class SecurityGroupApiMockTest extends BaseNeutronApiMockTest {
           */
          assertEquals(server.getRequestCount(), 4);
          assertAuthentication(server);
-         assertExtensions(server, "/v2.0");
-         assertRequest(server.takeRequest(), "GET", "/v2.0/security-groups");
-         assertRequest(server.takeRequest(), "GET", "/v2.0/security-groups?marker=71c1e68c-171a-4aa2-aca5-50ea153a3718");
+         assertExtensions(server, uriApiVersion + "");
+         assertRequest(server.takeRequest(), "GET", uriApiVersion + "/security-groups");
+         assertRequest(server.takeRequest(), "GET", uriApiVersion + "/security-groups?marker=71c1e68c-171a-4aa2-aca5-50ea153a3718");
 
          /*
           * Check response
@@ -372,8 +372,8 @@ public class SecurityGroupApiMockTest extends BaseNeutronApiMockTest {
           */
          assertEquals(server.getRequestCount(), 3);
          assertAuthentication(server);
-         assertExtensions(server, "/v2.0");
-         assertRequest(server.takeRequest(), "GET", "/v2.0/security-groups");
+         assertExtensions(server, uriApiVersion + "");
+         assertRequest(server.takeRequest(), "GET", uriApiVersion + "/security-groups");
 
          /*
           * Check response
@@ -405,9 +405,9 @@ public class SecurityGroupApiMockTest extends BaseNeutronApiMockTest {
           */
          assertEquals(server.getRequestCount(), 4);
          assertAuthentication(server);
-         assertExtensions(server, "/v2.0");
-         assertRequest(server.takeRequest(), "GET", "/v2.0/security-group-rules");
-         assertRequest(server.takeRequest(), "GET", "/v2.0/security-group-rules?marker=71c1e68c-171a-4aa2-aca5-50ea153a3718");
+         assertExtensions(server, uriApiVersion + "");
+         assertRequest(server.takeRequest(), "GET", uriApiVersion + "/security-group-rules");
+         assertRequest(server.takeRequest(), "GET", uriApiVersion + "/security-group-rules?marker=71c1e68c-171a-4aa2-aca5-50ea153a3718");
 
          /*
           * Check response
@@ -441,8 +441,8 @@ public class SecurityGroupApiMockTest extends BaseNeutronApiMockTest {
           */
          assertEquals(server.getRequestCount(), 3);
          assertAuthentication(server);
-         assertExtensions(server, "/v2.0");
-         assertRequest(server.takeRequest(), "GET", "/v2.0/security-group-rules");
+         assertExtensions(server, uriApiVersion + "");
+         assertRequest(server.takeRequest(), "GET", uriApiVersion + "/security-group-rules");
 
          /*
           * Check response
@@ -473,8 +473,8 @@ public class SecurityGroupApiMockTest extends BaseNeutronApiMockTest {
           */
          assertEquals(server.getRequestCount(), 3);
          assertAuthentication(server);
-         assertExtensions(server, "/v2.0");
-         assertRequest(server.takeRequest(), "GET", "/v2.0/security-groups/12345");
+         assertExtensions(server, uriApiVersion + "");
+         assertRequest(server.takeRequest(), "GET", uriApiVersion + "/security-groups/12345");
 
          /*
           * Check response
@@ -509,8 +509,8 @@ public class SecurityGroupApiMockTest extends BaseNeutronApiMockTest {
           */
          assertEquals(server.getRequestCount(), 3);
          assertAuthentication(server);
-         assertExtensions(server, "/v2.0");
-         assertRequest(server.takeRequest(), "GET", "/v2.0/security-groups/12345");
+         assertExtensions(server, uriApiVersion + "");
+         assertRequest(server.takeRequest(), "GET", uriApiVersion + "/security-groups/12345");
 
          /*
           * Check response
@@ -540,8 +540,8 @@ public class SecurityGroupApiMockTest extends BaseNeutronApiMockTest {
           */
          assertEquals(server.getRequestCount(), 3);
          assertAuthentication(server);
-         assertExtensions(server, "/v2.0");
-         assertRequest(server.takeRequest(), "GET", "/v2.0/security-group-rules/12345");
+         assertExtensions(server, uriApiVersion + "");
+         assertRequest(server.takeRequest(), "GET", uriApiVersion + "/security-group-rules/12345");
 
          /*
           * Check response
@@ -576,8 +576,8 @@ public class SecurityGroupApiMockTest extends BaseNeutronApiMockTest {
           */
          assertEquals(server.getRequestCount(), 3);
          assertAuthentication(server);
-         assertExtensions(server, "/v2.0");
-         assertRequest(server.takeRequest(), "GET", "/v2.0/security-group-rules/12345");
+         assertExtensions(server, uriApiVersion + "");
+         assertRequest(server.takeRequest(), "GET", uriApiVersion + "/security-group-rules/12345");
 
          /*
           * Check response
@@ -607,8 +607,8 @@ public class SecurityGroupApiMockTest extends BaseNeutronApiMockTest {
           */
          assertEquals(server.getRequestCount(), 3);
          assertAuthentication(server);
-         assertExtensions(server, "/v2.0");
-         assertRequest(server.takeRequest(), "DELETE", "/v2.0/security-groups/12345");
+         assertExtensions(server, uriApiVersion + "");
+         assertRequest(server.takeRequest(), "DELETE", uriApiVersion + "/security-groups/12345");
 
          /*
           * Check response
@@ -637,8 +637,8 @@ public class SecurityGroupApiMockTest extends BaseNeutronApiMockTest {
           */
          assertEquals(server.getRequestCount(), 3);
          assertAuthentication(server);
-         assertExtensions(server, "/v2.0");
-         assertRequest(server.takeRequest(), "DELETE", "/v2.0/security-groups/12345");
+         assertExtensions(server, uriApiVersion + "");
+         assertRequest(server.takeRequest(), "DELETE", uriApiVersion + "/security-groups/12345");
 
          /*
           * Check response
@@ -667,8 +667,8 @@ public class SecurityGroupApiMockTest extends BaseNeutronApiMockTest {
           */
          assertEquals(server.getRequestCount(), 3);
          assertAuthentication(server);
-         assertExtensions(server, "/v2.0");
-         assertRequest(server.takeRequest(), "DELETE", "/v2.0/security-group-rules/12345");
+         assertExtensions(server, uriApiVersion + "");
+         assertRequest(server.takeRequest(), "DELETE", uriApiVersion + "/security-group-rules/12345");
 
          /*
           * Check response
@@ -697,8 +697,8 @@ public class SecurityGroupApiMockTest extends BaseNeutronApiMockTest {
           */
          assertEquals(server.getRequestCount(), 3);
          assertAuthentication(server);
-         assertExtensions(server, "/v2.0");
-         assertRequest(server.takeRequest(), "DELETE", "/v2.0/security-group-rules/12345");
+         assertExtensions(server, uriApiVersion + "");
+         assertRequest(server.takeRequest(), "DELETE", uriApiVersion + "/security-group-rules/12345");
 
          /*
           * Check response

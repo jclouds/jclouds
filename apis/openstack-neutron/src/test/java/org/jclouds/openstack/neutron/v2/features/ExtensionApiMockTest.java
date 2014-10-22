@@ -55,7 +55,7 @@ public class ExtensionApiMockTest extends BaseNeutronApiMockTest {
           */
          assertEquals(server.getRequestCount(), 2);
          assertAuthentication(server);
-         assertExtensions(server, "/v2.0");
+         assertExtensions(server, uriApiVersion + "");
 
          /*
           * Check response
@@ -83,7 +83,7 @@ public class ExtensionApiMockTest extends BaseNeutronApiMockTest {
           */
          assertEquals(server.getRequestCount(), 2);
          assertAuthentication(server);
-         assertRequest(server.takeRequest(), "GET", "/v2.0/extensions");
+         assertRequest(server.takeRequest(), "GET", uriApiVersion + "/extensions");
 
          /*
           * Check response
@@ -110,7 +110,7 @@ public class ExtensionApiMockTest extends BaseNeutronApiMockTest {
           */
          assertEquals(server.getRequestCount(), 2);
          assertAuthentication(server);
-         assertRequest(server.takeRequest(), "GET", "/v2.0/extensions/router");
+         assertRequest(server.takeRequest(), "GET", uriApiVersion + "/extensions/router");
 
          /*
           * Check response
@@ -137,7 +137,7 @@ public class ExtensionApiMockTest extends BaseNeutronApiMockTest {
           */
          assertEquals(server.getRequestCount(), 2);
          assertAuthentication(server);
-         assertRequest(server.takeRequest(), "GET", "/v2.0/extensions/router");
+         assertRequest(server.takeRequest(), "GET", uriApiVersion + "/extensions/router");
 
          /*
           * Check response

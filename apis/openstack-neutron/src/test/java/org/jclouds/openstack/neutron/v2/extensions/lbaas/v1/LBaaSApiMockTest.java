@@ -115,7 +115,7 @@ public class LBaaSApiMockTest extends BaseNeutronApiMockTest {
           */
          assertAuthentication(server);
          server.takeRequest();
-         assertRequest(server.takeRequest(), "POST", "/v2.0/lb/pools", "/lbaas/v1/pool_create_request.json");
+         assertRequest(server.takeRequest(), "POST", uriApiVersion + "/lb/pools", "/lbaas/v1/pool_create_request.json");
 
          /*
           * Check response
@@ -184,7 +184,7 @@ public class LBaaSApiMockTest extends BaseNeutronApiMockTest {
           */
          assertAuthentication(server);
          server.takeRequest();
-         assertRequest(server.takeRequest(), "GET", "/v2.0/lb/pools?limit=2&marker=abcdefg");
+         assertRequest(server.takeRequest(), "GET", uriApiVersion + "/lb/pools?limit=2&marker=abcdefg");
 
          /*
           * Check response
@@ -214,7 +214,7 @@ public class LBaaSApiMockTest extends BaseNeutronApiMockTest {
           */
          assertAuthentication(server);
          server.takeRequest();
-         assertRequest(server.takeRequest(), "GET", "/v2.0/lb/pools?limit=2&marker=abcdefg");
+         assertRequest(server.takeRequest(), "GET", uriApiVersion + "/lb/pools?limit=2&marker=abcdefg");
 
          /*
           * Check response
@@ -246,8 +246,8 @@ public class LBaaSApiMockTest extends BaseNeutronApiMockTest {
          assertEquals(server.getRequestCount(), 4);
          assertAuthentication(server);
          server.takeRequest();
-         assertRequest(server.takeRequest(), "GET", "/v2.0/lb/pools");
-         assertRequest(server.takeRequest(), "GET", "/v2.0/lb/pools?marker=71c1e68c-171a-4aa2-aca5-50ea153a3718");
+         assertRequest(server.takeRequest(), "GET", uriApiVersion + "/lb/pools");
+         assertRequest(server.takeRequest(), "GET", uriApiVersion + "/lb/pools?marker=71c1e68c-171a-4aa2-aca5-50ea153a3718");
 
          /*
           * Check response
@@ -280,7 +280,7 @@ public class LBaaSApiMockTest extends BaseNeutronApiMockTest {
          assertEquals(server.getRequestCount(), 3);
          assertAuthentication(server);
          server.takeRequest();
-         assertRequest(server.takeRequest(), "GET", "/v2.0/lb/pools");
+         assertRequest(server.takeRequest(), "GET", uriApiVersion + "/lb/pools");
 
          /*
           * Check response
@@ -309,7 +309,7 @@ public class LBaaSApiMockTest extends BaseNeutronApiMockTest {
           */
          assertAuthentication(server);
          server.takeRequest();
-         assertRequest(server.takeRequest(), "GET", "/v2.0/lb/pools/72741b06-df4d-4715-b142-276b6bce75ab");
+         assertRequest(server.takeRequest(), "GET", uriApiVersion + "/lb/pools/72741b06-df4d-4715-b142-276b6bce75ab");
 
          /*
           * Check response
@@ -355,7 +355,7 @@ public class LBaaSApiMockTest extends BaseNeutronApiMockTest {
           */
          assertAuthentication(server);
          server.takeRequest();
-         assertRequest(server.takeRequest(), "GET", "/v2.0/lb/pools/72741b06-df4d-4715-b142-276b6bce75ab");
+         assertRequest(server.takeRequest(), "GET", uriApiVersion + "/lb/pools/72741b06-df4d-4715-b142-276b6bce75ab");
 
          /*
           * Check response
@@ -386,7 +386,7 @@ public class LBaaSApiMockTest extends BaseNeutronApiMockTest {
           */
          assertAuthentication(server);
          server.takeRequest();
-         assertRequest(server.takeRequest(), "PUT", "/v2.0/lb/pools/72741b06-df4d-4715-b142-276b6bce75ab", "/lbaas/v1/pool_update_request.json");
+         assertRequest(server.takeRequest(), "PUT", uriApiVersion + "/lb/pools/72741b06-df4d-4715-b142-276b6bce75ab", "/lbaas/v1/pool_update_request.json");
 
          /*
           * Check response
@@ -437,7 +437,7 @@ public class LBaaSApiMockTest extends BaseNeutronApiMockTest {
           */
          assertAuthentication(server);
          server.takeRequest();
-         assertRequest(server.takeRequest(), "PUT", "/v2.0/lb/pools/72741b06-df4d-4715-b142-276b6bce75ab", "/lbaas/v1/pool_update_request.json");
+         assertRequest(server.takeRequest(), "PUT", uriApiVersion + "/lb/pools/72741b06-df4d-4715-b142-276b6bce75ab", "/lbaas/v1/pool_update_request.json");
 
          /*
           * Check response
@@ -465,7 +465,7 @@ public class LBaaSApiMockTest extends BaseNeutronApiMockTest {
           */
          assertAuthentication(server);
          server.takeRequest();
-         assertRequest(server.takeRequest(), "DELETE", "/v2.0/lb/pools/72741b06-df4d-4715-b142-276b6bce75ab");
+         assertRequest(server.takeRequest(), "DELETE", uriApiVersion + "/lb/pools/72741b06-df4d-4715-b142-276b6bce75ab");
 
          /*
           * Check response
@@ -493,7 +493,7 @@ public class LBaaSApiMockTest extends BaseNeutronApiMockTest {
           */
          assertAuthentication(server);
          server.takeRequest();
-         assertRequest(server.takeRequest(), "DELETE", "/v2.0/lb/pools/72741b06-df4d-4715-b142-276b6bce75ab");
+         assertRequest(server.takeRequest(), "DELETE", uriApiVersion + "/lb/pools/72741b06-df4d-4715-b142-276b6bce75ab");
 
          /*
           * Check response
@@ -524,7 +524,7 @@ public class LBaaSApiMockTest extends BaseNeutronApiMockTest {
           */
          assertAuthentication(server);
          server.takeRequest();
-         assertRequest(server.takeRequest(), "POST", "/v2.0/lb/members", "/lbaas/v1/member_create_request.json");
+         assertRequest(server.takeRequest(), "POST", uriApiVersion + "/lb/members", "/lbaas/v1/member_create_request.json");
 
          /*
           * Check response
@@ -584,7 +584,7 @@ public class LBaaSApiMockTest extends BaseNeutronApiMockTest {
           */
          assertAuthentication(server);
          server.takeRequest();
-         assertRequest(server.takeRequest(), "GET", "/v2.0/lb/members?limit=2&marker=abcdefg");
+         assertRequest(server.takeRequest(), "GET", uriApiVersion + "/lb/members?limit=2&marker=abcdefg");
 
          /*
           * Check response
@@ -614,7 +614,7 @@ public class LBaaSApiMockTest extends BaseNeutronApiMockTest {
           */
          assertAuthentication(server);
          server.takeRequest();
-         assertRequest(server.takeRequest(), "GET", "/v2.0/lb/members?limit=2&marker=abcdefg");
+         assertRequest(server.takeRequest(), "GET", uriApiVersion + "/lb/members?limit=2&marker=abcdefg");
 
          /*
           * Check response
@@ -646,8 +646,8 @@ public class LBaaSApiMockTest extends BaseNeutronApiMockTest {
          assertEquals(server.getRequestCount(), 4);
          assertAuthentication(server);
          server.takeRequest();
-         assertRequest(server.takeRequest(), "GET", "/v2.0/lb/members");
-         assertRequest(server.takeRequest(), "GET", "/v2.0/lb/members?marker=396f12f8-521e-4b91-8e21-2e003500433a");
+         assertRequest(server.takeRequest(), "GET", uriApiVersion + "/lb/members");
+         assertRequest(server.takeRequest(), "GET", uriApiVersion + "/lb/members?marker=396f12f8-521e-4b91-8e21-2e003500433a");
 
          /*
           * Check response
@@ -680,7 +680,7 @@ public class LBaaSApiMockTest extends BaseNeutronApiMockTest {
          assertEquals(server.getRequestCount(), 3);
          assertAuthentication(server);
          server.takeRequest();
-         assertRequest(server.takeRequest(), "GET", "/v2.0/lb/members");
+         assertRequest(server.takeRequest(), "GET", uriApiVersion + "/lb/members");
 
          /*
           * Check response
@@ -709,7 +709,7 @@ public class LBaaSApiMockTest extends BaseNeutronApiMockTest {
           */
          assertAuthentication(server);
          server.takeRequest();
-         assertRequest(server.takeRequest(), "GET", "/v2.0/lb/members/48a471ea-64f1-4eb6-9be7-dae6bbe40a0f");
+         assertRequest(server.takeRequest(), "GET", uriApiVersion + "/lb/members/48a471ea-64f1-4eb6-9be7-dae6bbe40a0f");
 
          /*
           * Check response
@@ -746,7 +746,7 @@ public class LBaaSApiMockTest extends BaseNeutronApiMockTest {
           */
          assertAuthentication(server);
          server.takeRequest();
-         assertRequest(server.takeRequest(), "GET", "/v2.0/lb/members/48a471ea-64f1-4eb6-9be7-dae6bbe40a0f");
+         assertRequest(server.takeRequest(), "GET", uriApiVersion + "/lb/members/48a471ea-64f1-4eb6-9be7-dae6bbe40a0f");
 
          /*
           * Check response
@@ -777,7 +777,7 @@ public class LBaaSApiMockTest extends BaseNeutronApiMockTest {
           */
          assertAuthentication(server);
          server.takeRequest();
-         assertRequest(server.takeRequest(), "PUT", "/v2.0/lb/members/48a471ea-64f1-4eb6-9be7-dae6bbe40a0f", "/lbaas/v1/member_update_request.json");
+         assertRequest(server.takeRequest(), "PUT", uriApiVersion + "/lb/members/48a471ea-64f1-4eb6-9be7-dae6bbe40a0f", "/lbaas/v1/member_update_request.json");
 
          /*
           * Check response
@@ -817,7 +817,7 @@ public class LBaaSApiMockTest extends BaseNeutronApiMockTest {
           */
          assertAuthentication(server);
          server.takeRequest();
-         assertRequest(server.takeRequest(), "PUT", "/v2.0/lb/members/48a471ea-64f1-4eb6-9be7-dae6bbe40a0f", "/lbaas/v1/member_update_request.json");
+         assertRequest(server.takeRequest(), "PUT", uriApiVersion + "/lb/members/48a471ea-64f1-4eb6-9be7-dae6bbe40a0f", "/lbaas/v1/member_update_request.json");
 
          /*
           * Check response
@@ -845,7 +845,7 @@ public class LBaaSApiMockTest extends BaseNeutronApiMockTest {
           */
          assertAuthentication(server);
          server.takeRequest();
-         assertRequest(server.takeRequest(), "DELETE", "/v2.0/lb/members/48a471ea-64f1-4eb6-9be7-dae6bbe40a0f");
+         assertRequest(server.takeRequest(), "DELETE", uriApiVersion + "/lb/members/48a471ea-64f1-4eb6-9be7-dae6bbe40a0f");
 
          /*
           * Check response
@@ -873,7 +873,7 @@ public class LBaaSApiMockTest extends BaseNeutronApiMockTest {
           */
          assertAuthentication(server);
          server.takeRequest();
-         assertRequest(server.takeRequest(), "DELETE", "/v2.0/lb/members/48a471ea-64f1-4eb6-9be7-dae6bbe40a0f");
+         assertRequest(server.takeRequest(), "DELETE", uriApiVersion + "/lb/members/48a471ea-64f1-4eb6-9be7-dae6bbe40a0f");
 
          /*
           * Check response
@@ -904,7 +904,7 @@ public class LBaaSApiMockTest extends BaseNeutronApiMockTest {
           */
          assertAuthentication(server);
          server.takeRequest();
-         assertRequest(server.takeRequest(), "POST", "/v2.0/lb/vips", "/lbaas/v1/vip_create_request.json");
+         assertRequest(server.takeRequest(), "POST", uriApiVersion + "/lb/vips", "/lbaas/v1/vip_create_request.json");
 
          /*
           * Check response
@@ -970,7 +970,7 @@ public class LBaaSApiMockTest extends BaseNeutronApiMockTest {
           */
          assertAuthentication(server);
          server.takeRequest();
-         assertRequest(server.takeRequest(), "GET", "/v2.0/lb/vips?limit=2&marker=abcdefg");
+         assertRequest(server.takeRequest(), "GET", uriApiVersion + "/lb/vips?limit=2&marker=abcdefg");
 
          /*
           * Check response
@@ -1000,7 +1000,7 @@ public class LBaaSApiMockTest extends BaseNeutronApiMockTest {
           */
          assertAuthentication(server);
          server.takeRequest();
-         assertRequest(server.takeRequest(), "GET", "/v2.0/lb/vips?limit=2&marker=abcdefg");
+         assertRequest(server.takeRequest(), "GET", uriApiVersion + "/lb/vips?limit=2&marker=abcdefg");
 
          /*
           * Check response
@@ -1032,8 +1032,8 @@ public class LBaaSApiMockTest extends BaseNeutronApiMockTest {
          assertEquals(server.getRequestCount(), 4);
          assertAuthentication(server);
          server.takeRequest();
-         assertRequest(server.takeRequest(), "GET", "/v2.0/lb/vips");
-         assertRequest(server.takeRequest(), "GET", "/v2.0/lb/vips?marker=396f12f8-521e-4b91-8e21-2e003500433a");
+         assertRequest(server.takeRequest(), "GET", uriApiVersion + "/lb/vips");
+         assertRequest(server.takeRequest(), "GET", uriApiVersion + "/lb/vips?marker=396f12f8-521e-4b91-8e21-2e003500433a");
 
          /*
           * Check response
@@ -1066,7 +1066,7 @@ public class LBaaSApiMockTest extends BaseNeutronApiMockTest {
          assertEquals(server.getRequestCount(), 3);
          assertAuthentication(server);
          server.takeRequest();
-         assertRequest(server.takeRequest(), "GET", "/v2.0/lb/vips");
+         assertRequest(server.takeRequest(), "GET", uriApiVersion + "/lb/vips");
 
          /*
           * Check response
@@ -1095,7 +1095,7 @@ public class LBaaSApiMockTest extends BaseNeutronApiMockTest {
           */
          assertAuthentication(server);
          server.takeRequest();
-         assertRequest(server.takeRequest(), "GET", "/v2.0/lb/vips/4ec89087-d057-4e2c-911f-60a3b47ee304");
+         assertRequest(server.takeRequest(), "GET", uriApiVersion + "/lb/vips/4ec89087-d057-4e2c-911f-60a3b47ee304");
 
          /*
           * Check response
@@ -1139,7 +1139,7 @@ public class LBaaSApiMockTest extends BaseNeutronApiMockTest {
           */
          assertAuthentication(server);
          server.takeRequest();
-         assertRequest(server.takeRequest(), "GET", "/v2.0/lb/vips/4ec89087-d057-4e2c-911f-60a3b47ee304");
+         assertRequest(server.takeRequest(), "GET", uriApiVersion + "/lb/vips/4ec89087-d057-4e2c-911f-60a3b47ee304");
 
          /*
           * Check response
@@ -1171,7 +1171,7 @@ public class LBaaSApiMockTest extends BaseNeutronApiMockTest {
           */
          assertAuthentication(server);
          server.takeRequest();
-         assertRequest(server.takeRequest(), "PUT", "/v2.0/lb/vips/c987d2be-9a3c-4ac9-a046-e8716b1350e2", "/lbaas/v1/vip_update_request.json");
+         assertRequest(server.takeRequest(), "PUT", uriApiVersion + "/lb/vips/c987d2be-9a3c-4ac9-a046-e8716b1350e2", "/lbaas/v1/vip_update_request.json");
 
          /*
           * Check response
@@ -1218,7 +1218,7 @@ public class LBaaSApiMockTest extends BaseNeutronApiMockTest {
           */
          assertAuthentication(server);
          server.takeRequest();
-         assertRequest(server.takeRequest(), "PUT", "/v2.0/lb/vips/c987d2be-9a3c-4ac9-a046-e8716b1350e2", "/lbaas/v1/vip_update_request.json");
+         assertRequest(server.takeRequest(), "PUT", uriApiVersion + "/lb/vips/c987d2be-9a3c-4ac9-a046-e8716b1350e2", "/lbaas/v1/vip_update_request.json");
 
          /*
           * Check response
@@ -1246,7 +1246,7 @@ public class LBaaSApiMockTest extends BaseNeutronApiMockTest {
           */
          assertAuthentication(server);
          server.takeRequest();
-         assertRequest(server.takeRequest(), "DELETE", "/v2.0/lb/vips/c987d2be-9a3c-4ac9-a046-e8716b1350e2");
+         assertRequest(server.takeRequest(), "DELETE", uriApiVersion + "/lb/vips/c987d2be-9a3c-4ac9-a046-e8716b1350e2");
 
          /*
           * Check response
@@ -1274,7 +1274,7 @@ public class LBaaSApiMockTest extends BaseNeutronApiMockTest {
           */
          assertAuthentication(server);
          server.takeRequest();
-         assertRequest(server.takeRequest(), "DELETE", "/v2.0/lb/vips/c987d2be-9a3c-4ac9-a046-e8716b1350e2");
+         assertRequest(server.takeRequest(), "DELETE", uriApiVersion + "/lb/vips/c987d2be-9a3c-4ac9-a046-e8716b1350e2");
 
          /*
           * Check response
@@ -1305,7 +1305,7 @@ public class LBaaSApiMockTest extends BaseNeutronApiMockTest {
           */
          assertAuthentication(server);
          server.takeRequest();
-         assertRequest(server.takeRequest(), "POST", "/v2.0/lb/health_monitors", "/lbaas/v1/health_monitor_create_request.json");
+         assertRequest(server.takeRequest(), "POST", uriApiVersion + "/lb/health_monitors", "/lbaas/v1/health_monitor_create_request.json");
 
          /*
           * Check response
@@ -1370,7 +1370,7 @@ public class LBaaSApiMockTest extends BaseNeutronApiMockTest {
           */
          assertAuthentication(server);
          server.takeRequest();
-         assertRequest(server.takeRequest(), "GET", "/v2.0/lb/health_monitors?limit=2&marker=abcdefg");
+         assertRequest(server.takeRequest(), "GET", uriApiVersion + "/lb/health_monitors?limit=2&marker=abcdefg");
 
          /*
           * Check response
@@ -1400,7 +1400,7 @@ public class LBaaSApiMockTest extends BaseNeutronApiMockTest {
           */
          assertAuthentication(server);
          server.takeRequest();
-         assertRequest(server.takeRequest(), "GET", "/v2.0/lb/health_monitors?limit=2&marker=abcdefg");
+         assertRequest(server.takeRequest(), "GET", uriApiVersion + "/lb/health_monitors?limit=2&marker=abcdefg");
 
          /*
           * Check response
@@ -1432,8 +1432,8 @@ public class LBaaSApiMockTest extends BaseNeutronApiMockTest {
          assertEquals(server.getRequestCount(), 4);
          assertAuthentication(server);
          server.takeRequest();
-         assertRequest(server.takeRequest(), "GET", "/v2.0/lb/health_monitors");
-         assertRequest(server.takeRequest(), "GET", "/v2.0/lb/health_monitors?marker=396f12f8-521e-4b91-8e21-2e003500433a");
+         assertRequest(server.takeRequest(), "GET", uriApiVersion + "/lb/health_monitors");
+         assertRequest(server.takeRequest(), "GET", uriApiVersion + "/lb/health_monitors?marker=396f12f8-521e-4b91-8e21-2e003500433a");
 
          /*
           * Check response
@@ -1466,7 +1466,7 @@ public class LBaaSApiMockTest extends BaseNeutronApiMockTest {
          assertEquals(server.getRequestCount(), 3);
          assertAuthentication(server);
          server.takeRequest();
-         assertRequest(server.takeRequest(), "GET", "/v2.0/lb/health_monitors");
+         assertRequest(server.takeRequest(), "GET", uriApiVersion + "/lb/health_monitors");
 
          /*
           * Check response
@@ -1495,7 +1495,7 @@ public class LBaaSApiMockTest extends BaseNeutronApiMockTest {
           */
          assertAuthentication(server);
          server.takeRequest();
-         assertRequest(server.takeRequest(), "GET", "/v2.0/lb/health_monitors/5d4b5228-33b0-4e60-b225-9b727c1a20e7");
+         assertRequest(server.takeRequest(), "GET", uriApiVersion + "/lb/health_monitors/5d4b5228-33b0-4e60-b225-9b727c1a20e7");
 
          /*
           * Check response
@@ -1537,7 +1537,7 @@ public class LBaaSApiMockTest extends BaseNeutronApiMockTest {
           */
          assertAuthentication(server);
          server.takeRequest();
-         assertRequest(server.takeRequest(), "GET", "/v2.0/lb/health_monitors/5d4b5228-33b0-4e60-b225-9b727c1a20e7");
+         assertRequest(server.takeRequest(), "GET", uriApiVersion + "/lb/health_monitors/5d4b5228-33b0-4e60-b225-9b727c1a20e7");
 
          /*
           * Check response
@@ -1568,7 +1568,7 @@ public class LBaaSApiMockTest extends BaseNeutronApiMockTest {
           */
          assertAuthentication(server);
          server.takeRequest();
-         assertRequest(server.takeRequest(), "PUT", "/v2.0/lb/health_monitors/466c8345-28d8-4f84-a246-e04380b0461d", "/lbaas/v1/health_monitor_update_request.json");
+         assertRequest(server.takeRequest(), "PUT", uriApiVersion + "/lb/health_monitors/466c8345-28d8-4f84-a246-e04380b0461d", "/lbaas/v1/health_monitor_update_request.json");
 
          /*
           * Check response
@@ -1613,7 +1613,7 @@ public class LBaaSApiMockTest extends BaseNeutronApiMockTest {
           */
          assertAuthentication(server);
          server.takeRequest();
-         assertRequest(server.takeRequest(), "PUT", "/v2.0/lb/health_monitors/466c8345-28d8-4f84-a246-e04380b0461d", "/lbaas/v1/health_monitor_update_request.json");
+         assertRequest(server.takeRequest(), "PUT", uriApiVersion + "/lb/health_monitors/466c8345-28d8-4f84-a246-e04380b0461d", "/lbaas/v1/health_monitor_update_request.json");
 
          /*
           * Check response
@@ -1641,7 +1641,7 @@ public class LBaaSApiMockTest extends BaseNeutronApiMockTest {
           */
          assertAuthentication(server);
          server.takeRequest();
-         assertRequest(server.takeRequest(), "DELETE", "/v2.0/lb/health_monitors/466c8345-28d8-4f84-a246-e04380b0461d");
+         assertRequest(server.takeRequest(), "DELETE", uriApiVersion + "/lb/health_monitors/466c8345-28d8-4f84-a246-e04380b0461d");
 
          /*
           * Check response
@@ -1669,7 +1669,7 @@ public class LBaaSApiMockTest extends BaseNeutronApiMockTest {
           */
          assertAuthentication(server);
          server.takeRequest();
-         assertRequest(server.takeRequest(), "DELETE", "/v2.0/lb/health_monitors/466c8345-28d8-4f84-a246-e04380b0461d");
+         assertRequest(server.takeRequest(), "DELETE", uriApiVersion + "/lb/health_monitors/466c8345-28d8-4f84-a246-e04380b0461d");
 
          /*
           * Check response
@@ -1697,7 +1697,7 @@ public class LBaaSApiMockTest extends BaseNeutronApiMockTest {
           */
          assertAuthentication(server);
          server.takeRequest();
-         assertRequest(server.takeRequest(), "POST", "/v2.0/lb/pools/72741b06-df4d-4715-b142-276b6bce75ab/health_monitors", "/lbaas/v1/pool_associate_health_monitor_request.json");
+         assertRequest(server.takeRequest(), "POST", uriApiVersion + "/lb/pools/72741b06-df4d-4715-b142-276b6bce75ab/health_monitors", "/lbaas/v1/pool_associate_health_monitor_request.json");
 
          /*
           * Check response
@@ -1745,7 +1745,7 @@ public class LBaaSApiMockTest extends BaseNeutronApiMockTest {
           */
          assertAuthentication(server);
          server.takeRequest();
-         assertRequest(server.takeRequest(), "DELETE", "/v2.0/lb/pools/72741b06-df4d-4715-b142-276b6bce75ab/health_monitors/5d4b5228-33b0-4e60-b225-9b727c1a20e7");
+         assertRequest(server.takeRequest(), "DELETE", uriApiVersion + "/lb/pools/72741b06-df4d-4715-b142-276b6bce75ab/health_monitors/5d4b5228-33b0-4e60-b225-9b727c1a20e7");
 
          /*
           * Check response
@@ -1773,7 +1773,7 @@ public class LBaaSApiMockTest extends BaseNeutronApiMockTest {
           */
          assertAuthentication(server);
          server.takeRequest();
-         assertRequest(server.takeRequest(), "DELETE", "/v2.0/lb/pools/72741b06-df4d-4715-b142-276b6bce75ab/health_monitors/5d4b5228-33b0-4e60-b225-9b727c1a20e7");
+         assertRequest(server.takeRequest(), "DELETE", uriApiVersion + "/lb/pools/72741b06-df4d-4715-b142-276b6bce75ab/health_monitors/5d4b5228-33b0-4e60-b225-9b727c1a20e7");
 
          /*
           * Check response

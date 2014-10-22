@@ -66,7 +66,7 @@ public class NetworkApiMockTest extends BaseNeutronApiMockTest {
           * Check request
           */
          assertAuthentication(server);
-         assertRequest(server.takeRequest(), "POST", "/v2.0/networks", "/network_create_request.json");
+         assertRequest(server.takeRequest(), "POST", uriApiVersion + "/networks", "/network_create_request.json");
 
          /*
           * Check response
@@ -117,7 +117,7 @@ public class NetworkApiMockTest extends BaseNeutronApiMockTest {
           * Check request
           */
          assertAuthentication(server);
-         assertRequest(server.takeRequest(), "GET", "/v2.0/networks?limit=2&marker=abcdefg");
+         assertRequest(server.takeRequest(), "GET", uriApiVersion + "/networks?limit=2&marker=abcdefg");
 
          /*
           * Check response
@@ -145,7 +145,7 @@ public class NetworkApiMockTest extends BaseNeutronApiMockTest {
           * Check request
           */
          assertAuthentication(server);
-         assertRequest(server.takeRequest(), "GET", "/v2.0/networks?limit=2&marker=abcdefg");
+         assertRequest(server.takeRequest(), "GET", uriApiVersion + "/networks?limit=2&marker=abcdefg");
 
          /*
           * Check response
@@ -177,8 +177,8 @@ public class NetworkApiMockTest extends BaseNeutronApiMockTest {
           */
          assertEquals(server.getRequestCount(), 3);
          assertAuthentication(server);
-         assertRequest(server.takeRequest(), "GET", "/v2.0/networks");
-         assertRequest(server.takeRequest(), "GET", "/v2.0/networks?marker=71c1e68c-171a-4aa2-aca5-50ea153a3718");
+         assertRequest(server.takeRequest(), "GET", uriApiVersion + "/networks");
+         assertRequest(server.takeRequest(), "GET", uriApiVersion + "/networks?marker=71c1e68c-171a-4aa2-aca5-50ea153a3718");
 
          /*
           * Check response
@@ -209,7 +209,7 @@ public class NetworkApiMockTest extends BaseNeutronApiMockTest {
           */
          assertEquals(server.getRequestCount(), 2);
          assertAuthentication(server);
-         assertRequest(server.takeRequest(), "GET", "/v2.0/networks");
+         assertRequest(server.takeRequest(), "GET", uriApiVersion + "/networks");
 
          /*
           * Check response
@@ -236,7 +236,7 @@ public class NetworkApiMockTest extends BaseNeutronApiMockTest {
           */
          assertEquals(server.getRequestCount(), 2);
          assertAuthentication(server);
-         assertRequest(server.takeRequest(), "GET", "/v2.0/networks/12345");
+         assertRequest(server.takeRequest(), "GET", uriApiVersion + "/networks/12345");
 
          /*
           * Check response
@@ -265,7 +265,7 @@ public class NetworkApiMockTest extends BaseNeutronApiMockTest {
           */
          assertEquals(server.getRequestCount(), 2);
          assertAuthentication(server);
-         assertRequest(server.takeRequest(), "GET", "/v2.0/networks/12345");
+         assertRequest(server.takeRequest(), "GET", uriApiVersion + "/networks/12345");
 
          /*
           * Check response
@@ -299,7 +299,7 @@ public class NetworkApiMockTest extends BaseNeutronApiMockTest {
           * Check request
           */
          assertAuthentication(server);
-         assertRequest(server.takeRequest(), "POST", "/v2.0/networks", "/network_bulk_create_request.json");
+         assertRequest(server.takeRequest(), "POST", uriApiVersion + "/networks", "/network_bulk_create_request.json");
 
          /*
           * Check response
@@ -366,7 +366,7 @@ public class NetworkApiMockTest extends BaseNeutronApiMockTest {
           * Check request
           */
          assertAuthentication(server);
-         assertRequest(server.takeRequest(), "PUT", "/v2.0/networks/123456", "/network_update_request.json");
+         assertRequest(server.takeRequest(), "PUT", uriApiVersion + "/networks/123456", "/network_update_request.json");
 
          /*
           * Check response
@@ -399,7 +399,7 @@ public class NetworkApiMockTest extends BaseNeutronApiMockTest {
           * Check request
           */
          assertAuthentication(server);
-         assertRequest(server.takeRequest(), "PUT", "/v2.0/networks/123456");
+         assertRequest(server.takeRequest(), "PUT", uriApiVersion + "/networks/123456");
 
          /*
           * Check response
@@ -425,7 +425,7 @@ public class NetworkApiMockTest extends BaseNeutronApiMockTest {
           * Check request
           */
          assertAuthentication(server);
-         assertRequest(server.takeRequest(), "DELETE", "/v2.0/networks/123456");
+         assertRequest(server.takeRequest(), "DELETE", uriApiVersion + "/networks/123456");
 
          /*
           * Check response
@@ -451,7 +451,7 @@ public class NetworkApiMockTest extends BaseNeutronApiMockTest {
           * Check request
           */
          assertAuthentication(server);
-         assertRequest(server.takeRequest(), "DELETE", "/v2.0/networks/123456");
+         assertRequest(server.takeRequest(), "DELETE", uriApiVersion + "/networks/123456");
 
          /*
           * Check response
