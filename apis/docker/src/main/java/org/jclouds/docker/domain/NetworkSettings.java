@@ -16,7 +16,6 @@
  */
 package org.jclouds.docker.domain;
 
-import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
 import com.google.common.collect.ImmutableMap;
 import com.google.gson.annotations.SerializedName;
@@ -100,7 +99,7 @@ public class NetworkSettings {
 
    @Override
    public String toString() {
-      return MoreObjects.toStringHelper(this)
+      return Objects.toStringHelper(this)
               .add("ipAddress", ipAddress)
               .add("ipPrefixLen", ipPrefixLen)
               .add("gateway", gateway)
