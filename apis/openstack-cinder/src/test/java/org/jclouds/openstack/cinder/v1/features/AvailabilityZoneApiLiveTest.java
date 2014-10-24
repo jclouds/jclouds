@@ -40,8 +40,8 @@ public class AvailabilityZoneApiLiveTest extends BaseCinderApiLiveTest {
    @BeforeClass(groups = {"integration", "live"})
    public void setupContext() {
       super.setup();
-      String zone = Iterables.getFirst(api.getConfiguredZones(), "regionOne");
-      availabilityZoneApi = api.getAvailabilityZoneApi(zone);
+      String region = Iterables.getFirst(api.getConfiguredRegions(), "regionOne");
+      availabilityZoneApi = api.getAvailabilityZoneApi(region);
    }
 
    public void testListAvailabilityZones() {
