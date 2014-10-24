@@ -17,6 +17,8 @@
 package org.jclouds.oauth.v2;
 
 import static org.jclouds.Constants.PROPERTY_SESSION_INTERVAL;
+import static org.jclouds.oauth.v2.config.CredentialType.SERVICE_ACCOUNT_CREDENTIALS;
+import static org.jclouds.oauth.v2.config.OAuthProperties.CREDENTIAL_TYPE;
 import static org.jclouds.oauth.v2.config.OAuthProperties.SIGNATURE_OR_MAC_ALGORITHM;
 
 import java.net.URI;
@@ -50,6 +52,7 @@ public class OAuthApiMetadata extends BaseHttpApiMetadata<OAuthApi> {
    public static Properties defaultProperties() {
       Properties properties = BaseHttpApiMetadata.defaultProperties();
       properties.put(SIGNATURE_OR_MAC_ALGORITHM, "RS256");
+      properties.put(CREDENTIAL_TYPE, SERVICE_ACCOUNT_CREDENTIALS);
       properties.put(PROPERTY_SESSION_INTERVAL, 3600);
       return properties;
    }

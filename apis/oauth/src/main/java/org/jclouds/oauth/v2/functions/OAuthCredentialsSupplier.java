@@ -30,16 +30,15 @@ import java.io.IOException;
 import java.security.GeneralSecurityException;
 import java.security.KeyFactory;
 import java.security.PrivateKey;
-
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.inject.Singleton;
 
 import org.jclouds.domain.Credentials;
 import org.jclouds.location.Provider;
+import org.jclouds.oauth.v2.config.CredentialType;
 import org.jclouds.oauth.v2.domain.OAuthCredentials;
 import org.jclouds.rest.AuthorizationException;
-
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Charsets;
 import com.google.common.base.Supplier;
@@ -77,16 +76,25 @@ public final class OAuthCredentialsSupplier implements Supplier<OAuthCredentials
    @VisibleForTesting
    static final class OAuthCredentialsForCredentials extends CacheLoader<Credentials, OAuthCredentials> {
       private final String keyFactoryAlgorithm;
+      private final CredentialType credentialType;
 
-      @Inject OAuthCredentialsForCredentials(@Named(SIGNATURE_OR_MAC_ALGORITHM) String signatureOrMacAlgorithm) {
+      @Inject OAuthCredentialsForCredentials(@Named(SIGNATURE_OR_MAC_ALGORITHM) String signatureOrMacAlgorithm,
+            CredentialType credentialType) {
          this.keyFactoryAlgorithm = OAUTH_ALGORITHM_NAMES_TO_KEYFACTORY_ALGORITHM_NAMES.get(checkNotNull(
                  signatureOrMacAlgorithm, "signatureOrMacAlgorithm"));
+         this.credentialType = credentialType;
       }
 
       @Override public OAuthCredentials load(Credentials in) {
          try {
             String identity = in.identity;
             String privateKeyInPemFormat = in.credential;
+
+            // If passing Bearer tokens, simply create and pass it along
+            if (credentialType == CredentialType.BEARER_TOKEN_CREDENTIALS) {
+               return new OAuthCredentials.Builder().identity(identity).credential(in.credential).build();
+            }
+
             if (keyFactoryAlgorithm.equals(NO_ALGORITHM)) {
                return new OAuthCredentials.Builder().identity(identity).credential(privateKeyInPemFormat).build();
             }

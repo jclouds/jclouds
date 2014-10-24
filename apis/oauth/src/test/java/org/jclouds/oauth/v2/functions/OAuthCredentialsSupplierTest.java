@@ -24,6 +24,7 @@ import org.testng.annotations.Test;
 
 import java.util.Properties;
 
+import static org.jclouds.oauth.v2.config.CredentialType.SERVICE_ACCOUNT_CREDENTIALS;
 import static org.jclouds.oauth.v2.functions.OAuthCredentialsSupplier.OAuthCredentialsForCredentials;
 import static org.testng.Assert.assertNotNull;
 
@@ -33,14 +34,14 @@ public class OAuthCredentialsSupplierTest {
    @Test(expectedExceptions = AuthorizationException.class)
    public void testAuthorizationExceptionIsThrownOnBadKeys() {
       OAuthCredentialsSupplier supplier = new OAuthCredentialsSupplier(Suppliers.ofInstance(new Credentials("MOMMA",
-              "MIA")), new OAuthCredentialsForCredentials("RS256"), "RS256");
+              "FileNotFoundCredential")), new OAuthCredentialsForCredentials("RS256", SERVICE_ACCOUNT_CREDENTIALS), "RS256");
       supplier.get();
    }
 
    @Test(expectedExceptions = IllegalArgumentException.class)
    public void testGSEChildExceptionsPropagateAsAuthorizationException() {
       OAuthCredentialsSupplier supplier = new OAuthCredentialsSupplier(Suppliers.ofInstance(new Credentials("MOMMA",
-              "MIA")), new OAuthCredentialsForCredentials("MOMMA"), "MOMMA");
+              "MIA")), new OAuthCredentialsForCredentials("MOMMA", SERVICE_ACCOUNT_CREDENTIALS), "MOMMA");
       supplier.get();
    }
 
@@ -49,7 +50,7 @@ public class OAuthCredentialsSupplierTest {
       Credentials validCredentials = new Credentials(propertied.getProperty("oauth.identity"),
               propertied.getProperty("oauth.credential"));
       OAuthCredentialsSupplier supplier = new OAuthCredentialsSupplier(Suppliers.ofInstance(validCredentials),
-              new OAuthCredentialsForCredentials("RS256"), "RS256");
+              new OAuthCredentialsForCredentials("RS256", SERVICE_ACCOUNT_CREDENTIALS), "RS256");
       assertNotNull(supplier.get());
    }
 }

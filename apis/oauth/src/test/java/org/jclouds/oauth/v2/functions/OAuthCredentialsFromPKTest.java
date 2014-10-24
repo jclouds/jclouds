@@ -17,6 +17,7 @@
 package org.jclouds.oauth.v2.functions;
 
 import static com.google.common.base.Suppliers.ofInstance;
+import static org.jclouds.oauth.v2.config.CredentialType.SERVICE_ACCOUNT_CREDENTIALS;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
 
@@ -46,7 +47,7 @@ public class OAuthCredentialsFromPKTest {
          CertificateException, InvalidKeySpecException {
       OAuthCredentialsSupplier loader = new OAuthCredentialsSupplier(ofInstance(new Credentials("foo",
             Files.asCharSource(new File("src/test/resources/testpk.pem"), Charsets.UTF_8).read())),
-            new OAuthCredentialsForCredentials("RS256"), "RS256");
+            new OAuthCredentialsForCredentials("RS256", SERVICE_ACCOUNT_CREDENTIALS), "RS256");
       return loader.get();
    }
 
