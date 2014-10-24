@@ -16,14 +16,13 @@
  */
 package org.jclouds.oauth.v2.domain;
 
-import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
 import org.jclouds.domain.Credentials;
 
 import java.security.PrivateKey;
 
-import static com.google.common.base.MoreObjects.toStringHelper;
 import static com.google.common.base.Objects.equal;
+import static com.google.common.base.Objects.toStringHelper;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
@@ -122,7 +121,7 @@ public class OAuthCredentials extends Credentials {
       return string().toString();
    }
 
-   protected MoreObjects.ToStringHelper string() {
+   protected Objects.ToStringHelper string() {
       return toStringHelper(this).omitNullValues().add("identity", identity)
               .add("credential", credential != null ? credential.hashCode() : null).add("privateKey",
                       privateKey.hashCode());
