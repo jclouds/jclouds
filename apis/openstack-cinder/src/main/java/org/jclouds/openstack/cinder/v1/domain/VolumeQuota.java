@@ -16,7 +16,6 @@
  */
 package org.jclouds.openstack.cinder.v1.domain;
 
-import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
 
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -80,8 +79,8 @@ public class VolumeQuota {
             && Objects.equal(this.snapshots, that.snapshots);
    }
 
-   protected MoreObjects.ToStringHelper string() {
-      return MoreObjects.toStringHelper(this)
+   protected Objects.ToStringHelper string() {
+      return Objects.toStringHelper(this)
             .add("id", id).add("volumes", volumes).add("gigabytes", gigabytes).add("snapshots", snapshots);
    }
 

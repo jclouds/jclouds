@@ -21,9 +21,8 @@ import java.net.URI;
 
 import org.jclouds.javax.annotation.Nullable;
 
-import com.google.common.base.MoreObjects;
-import com.google.common.base.MoreObjects.ToStringHelper;
 import com.google.common.base.Objects;
+import com.google.common.base.Objects.ToStringHelper;
 
 /**
  * An network-accessible address, usually described by URL, where a service may
@@ -332,7 +331,7 @@ public class Endpoint {
    }
 
    protected ToStringHelper string() {
-      return MoreObjects.toStringHelper(this).omitNullValues().add("id", id).add("versionId", versionId)
+      return Objects.toStringHelper(this).omitNullValues().add("id", id).add("versionId", versionId)
             .add("region", region).add("publicURL", publicURL).add("internalURL", internalURL)
             .add("adminURL", adminURL).add("versionInfo", versionInfo).add("versionList", versionList)
             .add("tenantId", tenantId);

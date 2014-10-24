@@ -20,9 +20,8 @@ import java.beans.ConstructorProperties;
 
 import org.jclouds.javax.annotation.Nullable;
 
-import com.google.common.base.MoreObjects;
-import com.google.common.base.MoreObjects.ToStringHelper;
 import com.google.common.base.Objects;
+import com.google.common.base.Objects.ToStringHelper;
 
 /**
  * The result of an operation.
@@ -115,7 +114,7 @@ public class JobResult {
    }
 
    protected ToStringHelper string() {
-      return MoreObjects.toStringHelper(this).add("success", success).add("displayText", displayText);
+      return Objects.toStringHelper(this).add("success", success).add("displayText", displayText);
    }
 
    @Override

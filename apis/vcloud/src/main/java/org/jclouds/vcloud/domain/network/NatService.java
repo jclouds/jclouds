@@ -26,9 +26,8 @@ import org.jclouds.vcloud.domain.network.nat.NatPolicy;
 import org.jclouds.vcloud.domain.network.nat.NatRule;
 import org.jclouds.vcloud.domain.network.nat.NatType;
 
-import com.google.common.base.MoreObjects;
-import com.google.common.base.MoreObjects.ToStringHelper;
 import com.google.common.base.Objects;
+import com.google.common.base.Objects.ToStringHelper;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 
@@ -107,7 +106,7 @@ public class NatService {
 
    @Override
    public String toString() {
-      ToStringHelper helper = MoreObjects.toStringHelper("").omitNullValues().add("enabled", enabled)
+      ToStringHelper helper = Objects.toStringHelper("").omitNullValues().add("enabled", enabled)
             .add("type", type).add("policy", policy);
       if (!natRules.isEmpty())
          helper.add("natRules", natRules);

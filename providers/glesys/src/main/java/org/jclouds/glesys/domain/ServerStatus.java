@@ -22,9 +22,8 @@ import java.beans.ConstructorProperties;
 
 import org.jclouds.javax.annotation.Nullable;
 
-import com.google.common.base.MoreObjects;
-import com.google.common.base.MoreObjects.ToStringHelper;
 import com.google.common.base.Objects;
+import com.google.common.base.Objects.ToStringHelper;
 
 /**
  * Detailed information server status including hardware usage (cpu, memory and disk), bandwidth and up-time.
@@ -182,7 +181,7 @@ public class ServerStatus {
    }
 
    protected ToStringHelper string() {
-      return MoreObjects.toStringHelper("")
+      return Objects.toStringHelper("")
             .add("state", state).add("cpu", cpu).add("memory", memory).add("disk", disk).add("uptime", uptime);
    }
 

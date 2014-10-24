@@ -27,7 +27,7 @@ import org.jclouds.domain.Location;
 import org.jclouds.javax.annotation.Nullable;
 import org.jclouds.net.domain.IpPermission;
 
-import com.google.common.base.MoreObjects.ToStringHelper;
+import com.google.common.base.Objects.ToStringHelper;
 import com.google.common.collect.ImmutableSet;
 
 /**

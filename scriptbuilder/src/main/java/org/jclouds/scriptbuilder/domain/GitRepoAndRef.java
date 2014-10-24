@@ -20,7 +20,6 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 import java.net.URI;
 
-import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
 import com.google.common.base.Optional;
 
@@ -146,7 +145,7 @@ public class GitRepoAndRef  {
     */
    @Override
    public String toString() {
-      return MoreObjects.toStringHelper(this).omitNullValues().add("repository", repository).add("branch", branch.orNull())
+      return Objects.toStringHelper(this).omitNullValues().add("repository", repository).add("branch", branch.orNull())
                .add("tag", tag.orNull()).toString();
    }
 

@@ -26,9 +26,8 @@ import org.jclouds.domain.Location;
 import org.jclouds.domain.LocationScope;
 import org.jclouds.javax.annotation.Nullable;
 
-import com.google.common.base.MoreObjects;
-import com.google.common.base.MoreObjects.ToStringHelper;
 import com.google.common.base.Objects;
+import com.google.common.base.Objects.ToStringHelper;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 
@@ -58,7 +57,7 @@ public class LocationImpl implements Location {
 
    @Override
    public String toString() {
-      ToStringHelper helper = MoreObjects.toStringHelper("").omitNullValues().add("scope", scope).add("id", id)
+      ToStringHelper helper = Objects.toStringHelper("").omitNullValues().add("scope", scope).add("id", id)
             .add("description", description);
       if (parent != null)
          helper.add("parent", parent.getId());

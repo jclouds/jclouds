@@ -18,7 +18,6 @@ package org.jclouds.vcloud.domain.network.firewall;
 
 import static com.google.common.base.Objects.equal;
 
-import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
 
 /**
@@ -66,7 +65,7 @@ public class FirewallProtocols {
 
    @Override
    public String toString() {
-      return MoreObjects.toStringHelper("").omitNullValues().add("tcp", tcp).add("udp", udp).toString();
+      return Objects.toStringHelper("").omitNullValues().add("tcp", tcp).add("udp", udp).toString();
    }
 
 }

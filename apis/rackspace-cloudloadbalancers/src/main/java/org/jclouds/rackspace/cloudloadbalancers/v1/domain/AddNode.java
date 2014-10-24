@@ -18,9 +18,8 @@ package org.jclouds.rackspace.cloudloadbalancers.v1.domain;
 
 import org.jclouds.rackspace.cloudloadbalancers.v1.domain.internal.BaseNode;
 
-import com.google.common.base.MoreObjects;
-import com.google.common.base.MoreObjects.ToStringHelper;
 import com.google.common.base.Objects;
+import com.google.common.base.Objects.ToStringHelper;
 
 /**
  * The nodes defined by the load balancer are responsible for servicing the requests received
@@ -57,7 +56,7 @@ public class AddNode extends BaseNode<AddNode> {
    }
 
    protected ToStringHelper string() {
-      return MoreObjects.toStringHelper(this).omitNullValues()
+      return Objects.toStringHelper(this).omitNullValues()
             .add("address", address).add("port", port).add("condition", condition).add("type", type).add("weight", weight);
    }
    

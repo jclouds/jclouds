@@ -26,9 +26,8 @@ import javax.inject.Named;
 
 import org.jclouds.javax.annotation.Nullable;
 
-import com.google.common.base.MoreObjects;
-import com.google.common.base.MoreObjects.ToStringHelper;
 import com.google.common.base.Objects;
+import com.google.common.base.Objects.ToStringHelper;
 import com.google.common.collect.ImmutableSet;
 
 /**
@@ -233,7 +232,7 @@ public class SimpleTenantUsage {
    }
    
    protected ToStringHelper string() {
-      return MoreObjects.toStringHelper(this)
+      return Objects.toStringHelper(this)
             .add("tenantId", tenantId).add("totalLocalGbUsage", totalLocalGbUsage).add("totalVcpusUsage", totalVcpusUsage).add("totalMemoryMbUsage", totalMemoryMbUsage).add("totalHours", totalHours).add("start", start).add("stop", stop).add("serverUsages", serverUsages);
    }
    

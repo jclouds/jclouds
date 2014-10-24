@@ -26,9 +26,8 @@ import javax.inject.Named;
 
 import org.jclouds.javax.annotation.Nullable;
 
-import com.google.common.base.MoreObjects;
-import com.google.common.base.MoreObjects.ToStringHelper;
 import com.google.common.base.Objects;
+import com.google.common.base.Objects.ToStringHelper;
 import com.google.common.collect.ImmutableSet;
 
 /**
@@ -131,7 +130,7 @@ public class Addresses {
    }
    
    protected ToStringHelper string() {
-      return MoreObjects.toStringHelper(this)
+      return Objects.toStringHelper(this)
             .add("publicAddresses", publicAddresses).add("privateAddresses", privateAddresses);
    }
    

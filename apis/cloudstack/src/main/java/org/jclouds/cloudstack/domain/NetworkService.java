@@ -24,9 +24,8 @@ import java.util.Set;
 
 import org.jclouds.javax.annotation.Nullable;
 
-import com.google.common.base.MoreObjects;
-import com.google.common.base.MoreObjects.ToStringHelper;
 import com.google.common.base.Objects;
+import com.google.common.base.Objects.ToStringHelper;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.ImmutableSortedMap;
 import com.google.common.collect.ImmutableSortedSet;
@@ -123,7 +122,7 @@ public class NetworkService implements Comparable<NetworkService> {
       }
 
       protected ToStringHelper string() {
-         return MoreObjects.toStringHelper(this)
+         return Objects.toStringHelper(this)
                .add("name", name).add("value", value);
       }
 
@@ -227,7 +226,7 @@ public class NetworkService implements Comparable<NetworkService> {
    }
 
    protected ToStringHelper string() {
-      return MoreObjects.toStringHelper(this).add("name", name).add("capabilities", capabilities);
+      return Objects.toStringHelper(this).add("name", name).add("capabilities", capabilities);
    }
 
    @Override

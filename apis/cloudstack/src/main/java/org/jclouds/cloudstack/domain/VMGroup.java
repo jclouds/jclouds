@@ -23,9 +23,8 @@ import java.util.Date;
 
 import org.jclouds.javax.annotation.Nullable;
 
-import com.google.common.base.MoreObjects;
-import com.google.common.base.MoreObjects.ToStringHelper;
 import com.google.common.base.Objects;
+import com.google.common.base.Objects.ToStringHelper;
 
 /**
  * Class VMGroup
@@ -205,7 +204,7 @@ public class VMGroup {
    }
 
    protected ToStringHelper string() {
-      return MoreObjects.toStringHelper(this)
+      return Objects.toStringHelper(this)
             .add("id", id).add("account", account).add("created", created).add("domain", domain).add("domainId", domainId).add("name", name);
    }
 

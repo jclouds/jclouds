@@ -23,7 +23,6 @@ import java.util.Date;
 
 import org.jclouds.ultradns.ws.domain.Zone.Type;
 
-import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
 
 public final class ZoneProperties {
@@ -95,7 +94,7 @@ public final class ZoneProperties {
 
    @Override
    public String toString() {
-      return MoreObjects.toStringHelper(this).add("name", name).add("type", type)
+      return Objects.toStringHelper(this).add("name", name).add("type", type)
             .add("modified", modified).add("resourceRecordCount", resourceRecordCount).toString();
    }
 

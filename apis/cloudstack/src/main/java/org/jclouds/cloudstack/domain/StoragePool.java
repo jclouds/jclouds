@@ -25,9 +25,8 @@ import java.util.Set;
 import org.jclouds.javax.annotation.Nullable;
 
 import com.google.common.base.CaseFormat;
-import com.google.common.base.MoreObjects;
-import com.google.common.base.MoreObjects.ToStringHelper;
 import com.google.common.base.Objects;
+import com.google.common.base.Objects.ToStringHelper;
 import com.google.common.collect.ImmutableSet;
 
 /**
@@ -467,7 +466,7 @@ public class StoragePool implements Comparable<StoragePool> {
    }
 
    protected ToStringHelper string() {
-      return MoreObjects.toStringHelper(this)
+      return Objects.toStringHelper(this)
             .add("id", id).add("name", name).add("path", path).add("tags", tags).add("state", state).add("type", type).add("zoneId", zoneId).add("zoneName", zoneName).add("podId", podId).add("podName", podName).add("clusterId", clusterId).add("clusterName", clusterName).add("created", created).add("diskSizeAllocated", diskSizeAllocated).add("diskSizeTotal", diskSizeTotal).add("ipAddress", ipAddress).add("jobId", jobId).add("jobStatus", jobStatus);
    }
 

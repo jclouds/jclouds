@@ -32,7 +32,7 @@ import org.jclouds.compute.domain.NodeMetadata;
 import org.jclouds.compute.reference.ComputeServiceConstants;
 import org.jclouds.logging.Logger;
 
-import com.google.common.base.MoreObjects;
+import com.google.common.base.Objects;
 import com.google.inject.assistedinject.AssistedInject;
 
 public class RunScriptOnNodeAndAddToGoodMapOrPutExceptionIntoBadMap implements Callable<ExecResponse> {
@@ -75,7 +75,7 @@ public class RunScriptOnNodeAndAddToGoodMapOrPutExceptionIntoBadMap implements C
 
    @Override
    public String toString() {
-      return MoreObjects.toStringHelper(this).add("runScriptOnNode", runScriptOnNode).add("goodNodes", goodNodes).add(
+      return Objects.toStringHelper(this).add("runScriptOnNode", runScriptOnNode).add("goodNodes", goodNodes).add(
                "badNodes", badNodes).toString();
    }
 

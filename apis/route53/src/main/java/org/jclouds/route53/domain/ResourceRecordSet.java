@@ -17,7 +17,7 @@
 package org.jclouds.route53.domain;
 
 import static com.google.common.base.Objects.equal;
-import static com.google.common.base.MoreObjects.toStringHelper;
+import static com.google.common.base.Objects.toStringHelper;
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -27,7 +27,7 @@ import org.jclouds.route53.domain.ResourceRecordSet.RecordSubset.Latency;
 import org.jclouds.route53.domain.ResourceRecordSet.RecordSubset.Weighted;
 
 import com.google.common.base.Objects;
-import com.google.common.base.MoreObjects.ToStringHelper;
+import com.google.common.base.Objects.ToStringHelper;
 import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableList;
 

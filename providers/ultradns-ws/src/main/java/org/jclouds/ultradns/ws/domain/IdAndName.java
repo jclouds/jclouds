@@ -21,7 +21,6 @@ import static com.google.common.base.Predicates.compose;
 import static com.google.common.base.Predicates.equalTo;
 
 import com.google.common.base.Function;
-import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
 import com.google.common.base.Predicate;
 
@@ -72,7 +71,7 @@ public final class IdAndName {
 
    @Override
    public String toString() {
-      return MoreObjects.toStringHelper("").add("id", id).add("name", name).toString();
+      return Objects.toStringHelper("").add("id", id).add("name", name).toString();
    }
 
    /**

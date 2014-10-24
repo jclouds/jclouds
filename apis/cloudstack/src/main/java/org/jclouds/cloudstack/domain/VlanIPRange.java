@@ -22,9 +22,8 @@ import java.beans.ConstructorProperties;
 
 import org.jclouds.javax.annotation.Nullable;
 
-import com.google.common.base.MoreObjects;
-import com.google.common.base.MoreObjects.ToStringHelper;
 import com.google.common.base.Objects;
+import com.google.common.base.Objects.ToStringHelper;
 
 /**
  * Represents the data object used in CloudStack's "Vlan" API.
@@ -352,7 +351,7 @@ public class VlanIPRange implements Comparable<VlanIPRange> {
    }
 
    protected ToStringHelper string() {
-      return MoreObjects.toStringHelper(this)
+      return Objects.toStringHelper(this)
             .add("id", id).add("description", description).add("forVirtualNetwork", forVirtualNetwork).add("zoneId", zoneId)
             .add("vlan", vlan).add("account", account).add("domainId", domainId).add("domain", domain).add("podId", podId)
             .add("podName", podName).add("gateway", gateway).add("netmask", netmask).add("startIP", startIP).add("endIP", endIP)

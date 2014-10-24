@@ -16,13 +16,12 @@
  */
 package org.jclouds.openstack.nova.v2_0.domain;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 import java.beans.ConstructorProperties;
 
-import com.google.common.base.MoreObjects;
-import com.google.common.base.MoreObjects.ToStringHelper;
 import com.google.common.base.Objects;
-
-import static com.google.common.base.Preconditions.checkArgument;
+import com.google.common.base.Objects.ToStringHelper;
 
 /**
  * Nova (or Neutron) network definition
@@ -82,7 +81,7 @@ public class Network implements Comparable<Network> {
    }
 
    protected ToStringHelper string() {
-      return MoreObjects.toStringHelper(this)
+      return Objects.toStringHelper(this)
             .add("networkUuid", networkUuid)
             .add("portUuid", portUuid)
             .add("fixedIp", fixedIp);

@@ -18,7 +18,7 @@ package org.jclouds.concurrent;
 
 import static com.google.common.collect.Maps.newHashMap;
 import static com.google.common.util.concurrent.Futures.immediateFailedFuture;
-import static com.google.common.util.concurrent.MoreExecutors.newDirectExecutorService;
+import static com.google.common.util.concurrent.MoreExecutors.sameThreadExecutor;
 import static org.jclouds.concurrent.FutureIterables.transformParallel;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.fail;
@@ -53,7 +53,7 @@ public class FutureIterablesTest {
                counter.incrementAndGet();
                return immediateFailedFuture(new AuthorizationException());
             }
-         }, newDirectExecutorService(), null, Logger.NULL, "");
+         }, sameThreadExecutor(), null, Logger.NULL, "");
          fail("Expected AuthorizationException");
       } catch (AuthorizationException e) {
          assertEquals(counter.get(), 2);
@@ -70,7 +70,7 @@ public class FutureIterablesTest {
                counter.incrementAndGet();
                return immediateFailedFuture(new RuntimeException());
             }
-         }, newDirectExecutorService(), null, Logger.CONSOLE, "");
+         }, sameThreadExecutor(), null, Logger.CONSOLE, "");
          fail("Expected TransformParallelException");
       } catch (TransformParallelException e) {
          assertEquals(e.getFromToException().size(), 2);

@@ -18,9 +18,8 @@ package org.jclouds.rackspace.cloudloadbalancers.v1.domain;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
-import com.google.common.base.MoreObjects;
-import com.google.common.base.MoreObjects.ToStringHelper;
 import com.google.common.base.Objects;
+import com.google.common.base.Objects.ToStringHelper;
 
 /**
  * @see VirtualIP
@@ -45,7 +44,7 @@ public class VirtualIPWithId extends VirtualIP {
    }
    
    protected ToStringHelper string() {
-      return MoreObjects.toStringHelper(this).omitNullValues()
+      return Objects.toStringHelper(this).omitNullValues()
             .add("id", id).add("address", address).add("ipVersion", getIpVersion()).add("type", getType());
    }
    

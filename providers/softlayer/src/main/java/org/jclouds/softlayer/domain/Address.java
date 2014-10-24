@@ -16,7 +16,6 @@
  */
 package org.jclouds.softlayer.domain;
 
-import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
 import com.google.inject.name.Named;
 import org.jclouds.javax.annotation.Nullable;
@@ -307,7 +306,7 @@ public class Address {
 
    @Override
    public String toString() {
-      return MoreObjects.toStringHelper(this)
+      return Objects.toStringHelper(this)
               .add("id", id)
               .add("country", country)
               .add("state", state)

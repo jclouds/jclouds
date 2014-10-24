@@ -22,9 +22,8 @@ import java.beans.ConstructorProperties;
 
 import org.jclouds.javax.annotation.Nullable;
 
-import com.google.common.base.MoreObjects;
-import com.google.common.base.MoreObjects.ToStringHelper;
 import com.google.common.base.Objects;
+import com.google.common.base.Objects.ToStringHelper;
 
 /**
  * A personality that a user assumes when performing a specific set of operations. A role includes a
@@ -193,7 +192,7 @@ public class Role {
    }
 
    protected ToStringHelper string() {
-      return MoreObjects.toStringHelper(this).omitNullValues()
+      return Objects.toStringHelper(this).omitNullValues()
             .add("id", id).add("name", name).add("description", description).add("serviceId", serviceId).add("tenantId", tenantId);
    }
 

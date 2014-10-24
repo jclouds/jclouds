@@ -20,7 +20,7 @@ import java.util.Map;
 
 import com.google.common.annotations.Beta;
 import com.google.common.base.Function;
-import com.google.common.base.MoreObjects;
+import com.google.common.base.Objects;
 import com.google.common.base.Supplier;
 import com.google.common.base.Suppliers;
 import com.google.common.base.Throwables;
@@ -91,7 +91,7 @@ public class Suppliers2 {
 
          @Override
          public String toString() {
-            return MoreObjects.toStringHelper(this).add("unlessNull", unlessNull).add("fallback", fallback).toString();
+            return Objects.toStringHelper(this).add("unlessNull", unlessNull).add("fallback", fallback).toString();
          }
       };
    }
@@ -117,7 +117,7 @@ public class Suppliers2 {
 
          @Override
          public String toString() {
-            return MoreObjects.toStringHelper(this).add("unlessThrowable", unlessThrowable)
+            return Objects.toStringHelper(this).add("unlessThrowable", unlessThrowable)
                      .add("throwable", throwable.getSimpleName()).add("fallback", fallback).toString();
          }
       };

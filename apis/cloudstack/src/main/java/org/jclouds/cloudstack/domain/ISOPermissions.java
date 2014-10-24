@@ -23,9 +23,8 @@ import java.util.Set;
 
 import org.jclouds.javax.annotation.Nullable;
 
-import com.google.common.base.MoreObjects;
-import com.google.common.base.MoreObjects.ToStringHelper;
 import com.google.common.base.Objects;
+import com.google.common.base.Objects.ToStringHelper;
 import com.google.common.collect.ImmutableSet;
 
 /**
@@ -166,7 +165,7 @@ public class ISOPermissions {
    }
 
    protected ToStringHelper string() {
-      return MoreObjects.toStringHelper(this)
+      return Objects.toStringHelper(this)
             .add("id", id).add("accounts", accounts).add("domainId", domainId).add("isPublic", isPublic);
    }
 

@@ -55,7 +55,7 @@ import org.jclouds.openstack.nova.v2_0.options.CreateServerOptions;
 import org.jclouds.openstack.nova.v2_0.predicates.ImagePredicates;
 
 import com.google.common.base.Function;
-import com.google.common.base.MoreObjects;
+import com.google.common.base.Objects;
 import com.google.common.base.Optional;
 import com.google.common.base.Predicate;
 import com.google.common.base.Supplier;
@@ -179,7 +179,7 @@ public class NovaComputeServiceAdapter implements
 
                         @Override
                         public String apply(Image input) {
-                           return MoreObjects.toStringHelper("").add("id", input.getId()).add("status", input.getStatus())
+                           return Objects.toStringHelper("").add("id", input.getId()).add("status", input.getStatus())
                                     .toString();
                         }
 

@@ -17,7 +17,7 @@
 package org.jclouds.rest.internal;
 
 import static com.google.common.base.Preconditions.checkNotNull;
-import static com.google.common.util.concurrent.MoreExecutors.newDirectExecutorService;
+import static com.google.common.util.concurrent.MoreExecutors.sameThreadExecutor;
 import static com.google.inject.name.Names.named;
 import static org.jclouds.Constants.PROPERTY_MAX_RETRIES;
 import static org.jclouds.Constants.PROPERTY_USER_THREADS;
@@ -224,7 +224,7 @@ public abstract class BaseRestApiExpectTest<S> {
 
       @Override
       public void configure() {
-         bind(ListeningExecutorService.class).annotatedWith(named(PROPERTY_USER_THREADS)).toInstance(newDirectExecutorService());
+         bind(ListeningExecutorService.class).annotatedWith(named(PROPERTY_USER_THREADS)).toInstance(sameThreadExecutor());
          bind(new TypeLiteral<Function<HttpRequest, HttpResponse>>() {
          }).toInstance(fn);
          bind(HttpCommandExecutorService.class).to(ExpectHttpCommandExecutorService.class);

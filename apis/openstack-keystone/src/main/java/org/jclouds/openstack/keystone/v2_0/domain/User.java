@@ -23,9 +23,8 @@ import java.util.Set;
 
 import org.jclouds.javax.annotation.Nullable;
 
-import com.google.common.base.MoreObjects;
-import com.google.common.base.MoreObjects.ToStringHelper;
 import com.google.common.base.Objects;
+import com.google.common.base.Objects.ToStringHelper;
 import com.google.common.collect.ForwardingSet;
 import com.google.common.collect.ImmutableSet;
 
@@ -208,7 +207,7 @@ public class User extends ForwardingSet<Role> {
    }
 
    protected ToStringHelper string() {
-      return MoreObjects.toStringHelper(this).omitNullValues().add("id", id).add("name", name).add("email", email)
+      return Objects.toStringHelper(this).omitNullValues().add("id", id).add("name", name).add("email", email)
             .add("enabled", enabled).add("roles", roles).add("tenanId", tenantId);
    }
 

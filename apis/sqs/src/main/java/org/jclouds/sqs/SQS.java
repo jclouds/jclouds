@@ -26,7 +26,7 @@ import org.jclouds.sqs.features.MessageApi;
 import org.jclouds.sqs.options.ReceiveMessageOptions;
 
 import com.google.common.annotations.Beta;
-import com.google.common.base.MoreObjects;
+import com.google.common.base.Objects;
 import com.google.common.base.Supplier;
 import com.google.common.collect.FluentIterable;
 
@@ -68,7 +68,7 @@ public class SQS {
          this.api = checkNotNull(api, "message api");
          checkArgument(max > 0, "max messages per request must be a positive number");
          this.max = max;
-         this.options = MoreObjects.firstNonNull(options, NO_OPTIONS);
+         this.options = Objects.firstNonNull(options, NO_OPTIONS);
       }
 
       @Override

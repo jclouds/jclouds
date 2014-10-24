@@ -21,10 +21,9 @@ import java.net.URI;
 
 import org.jclouds.javax.annotation.Nullable;
 
-import com.google.common.base.MoreObjects;
-import com.google.common.base.MoreObjects.ToStringHelper;
 import com.google.common.base.Objects;
 import com.google.common.base.Strings;
+import com.google.common.base.Objects.ToStringHelper;
 
 public class CDNContainer implements Comparable<CDNContainer> {
 
@@ -204,7 +203,7 @@ public class CDNContainer implements Comparable<CDNContainer> {
    }
 
    protected ToStringHelper string() {
-      return MoreObjects.toStringHelper(this).omitNullValues().add("name", name).add("cdnEnabled", cdnEnabled)
+      return Objects.toStringHelper(this).omitNullValues().add("name", name).add("cdnEnabled", cdnEnabled)
                .add("ttl", ttl).add("CDNUri", CDNUri).add("CDNSslUri", CDNSslUri).add("referrerAcl", referrerAcl)
                .add("useragentAcl", useragentAcl).add("logRetention", logRetention);
    }

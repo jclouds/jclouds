@@ -18,9 +18,8 @@ package org.jclouds.openstack.swift.domain;
 
 import java.beans.ConstructorProperties;
 
-import com.google.common.base.MoreObjects;
-import com.google.common.base.MoreObjects.ToStringHelper;
 import com.google.common.base.Objects;
+import com.google.common.base.Objects.ToStringHelper;
 
 public class AccountMetadata {
 
@@ -106,7 +105,7 @@ public class AccountMetadata {
    }
 
    protected ToStringHelper string() {
-      return MoreObjects.toStringHelper(this)
+      return Objects.toStringHelper(this)
             .add("containerCount", containerCount).add("bytes", bytes);
    }
 

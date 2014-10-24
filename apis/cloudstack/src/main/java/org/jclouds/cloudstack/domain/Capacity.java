@@ -24,9 +24,8 @@ import java.util.Map;
 import org.jclouds.javax.annotation.Nullable;
 
 import com.google.common.base.Function;
-import com.google.common.base.MoreObjects;
-import com.google.common.base.MoreObjects.ToStringHelper;
 import com.google.common.base.Objects;
+import com.google.common.base.Objects.ToStringHelper;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Maps;
 
@@ -267,7 +266,7 @@ public class Capacity implements Comparable<Capacity> {
    }
 
    protected ToStringHelper string() {
-      return MoreObjects.toStringHelper(this)
+      return Objects.toStringHelper(this)
             .add("capacityTotal", capacityTotal).add("capacityUsed", capacityUsed).add("percentUsed", percentUsed)
             .add("podId", podId).add("podName", podName).add("type", type).add("zoneId", zoneId).add("zoneName", zoneName);
    }

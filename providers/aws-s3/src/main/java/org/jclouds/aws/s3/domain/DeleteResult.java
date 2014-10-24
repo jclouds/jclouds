@@ -21,7 +21,6 @@ import static com.google.common.base.Preconditions.checkNotNull;
 import java.util.Map;
 import java.util.Set;
 
-import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
 import com.google.common.collect.ForwardingSet;
 import com.google.common.collect.ImmutableMap;
@@ -70,7 +69,7 @@ public class DeleteResult extends ForwardingSet<String> {
 
       @Override
       public String toString() {
-         return MoreObjects.toStringHelper(this).omitNullValues()
+         return Objects.toStringHelper(this).omitNullValues()
             .add("code", code).add("message", message).toString();
       }
    }
@@ -182,7 +181,7 @@ public class DeleteResult extends ForwardingSet<String> {
 
    @Override
    public String toString() {
-      return MoreObjects.toStringHelper(this).omitNullValues()
+      return Objects.toStringHelper(this).omitNullValues()
          .add("deleted", deleted).add("errors", errors).toString();
    }
 }

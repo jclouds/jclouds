@@ -20,7 +20,6 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 import java.beans.ConstructorProperties;
 
-import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
 
 public class Node {
@@ -71,6 +70,6 @@ public class Node {
 
    @Override
    public String toString() {
-      return MoreObjects.toStringHelper("").add("zone", zone).add("fqdn", fqdn).toString();
+      return Objects.toStringHelper("").add("zone", zone).add("fqdn", fqdn).toString();
    }
 }

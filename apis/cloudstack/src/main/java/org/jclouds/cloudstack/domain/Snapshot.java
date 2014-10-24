@@ -26,9 +26,8 @@ import com.google.common.collect.ImmutableSet;
 import org.jclouds.javax.annotation.Nullable;
 
 import com.google.common.base.CaseFormat;
-import com.google.common.base.MoreObjects;
-import com.google.common.base.MoreObjects.ToStringHelper;
 import com.google.common.base.Objects;
+import com.google.common.base.Objects.ToStringHelper;
 
 /**
  * Class Snapshot
@@ -454,7 +453,7 @@ public class Snapshot {
    }
 
    protected ToStringHelper string() {
-      return MoreObjects.toStringHelper(this)
+      return Objects.toStringHelper(this)
             .add("id", id).add("account", account).add("created", created).add("domain", domain).add("domainId", domainId)
             .add("interval", interval).add("jobId", jobId).add("jobStatus", jobStatus).add("name", name).add("snapshotType", snapshotType)
             .add("state", state).add("volumeId", volumeId).add("volumeName", volumeName).add("volumeType", volumeType)

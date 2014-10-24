@@ -20,7 +20,6 @@ import java.util.Iterator;
 
 import org.jclouds.javax.annotation.Nullable;
 
-import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
 import com.google.common.collect.FluentIterable;
 import com.google.common.collect.ImmutableSet;
@@ -81,7 +80,7 @@ public class GetMetricStatisticsResponse extends FluentIterable<Datapoint> {
     */
    @Override
    public String toString() {
-      return MoreObjects.toStringHelper(this)
+      return Objects.toStringHelper(this)
                     .add("label", label)
                     .add("datapoints", datapoints).toString();
    }

@@ -31,7 +31,7 @@ import org.jclouds.domain.Credentials;
 import org.jclouds.domain.LoginCredentials;
 import org.jclouds.javax.annotation.Nullable;
 
-import com.google.common.base.MoreObjects;
+import com.google.common.base.Objects;
 
 @Singleton
 public class ReturnCredentialsBoundToImage implements PopulateDefaultLoginCredentialsForImageStrategy {
@@ -67,6 +67,6 @@ public class ReturnCredentialsBoundToImage implements PopulateDefaultLoginCreden
    
    @Override
    public String toString() {
-      return MoreObjects.toStringHelper(this).toString();
+      return Objects.toStringHelper(this).toString();
    }
 }

@@ -19,7 +19,6 @@ package org.jclouds.softlayer.domain;
 import static com.google.common.base.Preconditions.checkNotNull;
 import java.beans.ConstructorProperties;
 
-import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
 
 public class Tag {
@@ -72,7 +71,7 @@ public class Tag {
 
    @Override
    public String toString() {
-      return MoreObjects.toStringHelper(this)
+      return Objects.toStringHelper(this)
               .add("accountId", accountId)
               .add("id", id)
               .add("internal", internal)

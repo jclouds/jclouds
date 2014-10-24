@@ -20,7 +20,6 @@ import java.net.URI;
 import java.util.Map;
 import java.util.Set;
 
-import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
@@ -300,7 +299,7 @@ public class Node {
 
    @Override
    public String toString() {
-      return MoreObjects.toStringHelper(this).add("id", id).add("name", name).add("description", description)
+      return Objects.toStringHelper(this).add("id", id).add("name", name).add("description", description)
             .add("locationId", locationId).add("hostname", hostname).add("osArch", osArch).add("osFamily", osFamily)
             .add("osDescription", osDescription).add("osVersion", osVersion).add("os64Bit", os64Bit)
             .add("group", group).add("loginPort", loginPort).add("tags", tags).add("metadata", metadata)

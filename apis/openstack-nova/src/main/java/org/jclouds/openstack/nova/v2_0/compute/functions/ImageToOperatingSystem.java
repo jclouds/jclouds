@@ -41,7 +41,7 @@ import org.jclouds.openstack.nova.v2_0.domain.Image;
 
 import com.google.common.base.CharMatcher;
 import com.google.common.base.Function;
-import com.google.common.base.MoreObjects;
+import com.google.common.base.Objects;
 import com.google.common.base.Predicate;
 import com.google.common.base.Splitter;
 
@@ -68,7 +68,7 @@ public class ImageToOperatingSystem implements Function<Image, OperatingSystem> 
       OsFamily osFamily = null;
       String osVersion = null;
 
-      String imageName = MoreObjects.firstNonNull(from.getName(), "unspecified");
+      String imageName = Objects.firstNonNull(from.getName(), "unspecified");
 
       boolean is64Bit = true;
 

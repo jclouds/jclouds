@@ -20,9 +20,8 @@ import java.beans.ConstructorProperties;
 
 import org.jclouds.javax.annotation.Nullable;
 
-import com.google.common.base.MoreObjects;
-import com.google.common.base.MoreObjects.ToStringHelper;
 import com.google.common.base.Objects;
+import com.google.common.base.Objects.ToStringHelper;
 
 /**
  * Class Capabilities
@@ -176,7 +175,7 @@ public class Capabilities {
    }
 
    protected ToStringHelper string() {
-      return MoreObjects.toStringHelper(this)
+      return Objects.toStringHelper(this)
             .add("cloudStackVersion", cloudStackVersion).add("securityGroupsEnabled", securityGroupsEnabled).add("canShareTemplates", canShareTemplates).add("firewallRuleUiEnabled", firewallRuleUiEnabled).add("supportELB", supportELB);
    }
 

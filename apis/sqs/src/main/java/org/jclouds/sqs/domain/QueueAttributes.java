@@ -20,7 +20,6 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 import java.util.Date;
 
-import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
 import com.google.common.base.Optional;
 
@@ -299,7 +298,7 @@ public class QueueAttributes {
     */
    @Override
    public String toString() {
-      return MoreObjects.toStringHelper(this).omitNullValues().add("queueArn", queueArn)
+      return Objects.toStringHelper(this).omitNullValues().add("queueArn", queueArn)
             .add("approximateNumberOfMessages", approximateNumberOfMessages)
             .add("approximateNumberOfMessagesNotVisible", approximateNumberOfMessagesNotVisible)
             .add("approximateNumberOfMessagesDelayed", approximateNumberOfMessagesDelayed)

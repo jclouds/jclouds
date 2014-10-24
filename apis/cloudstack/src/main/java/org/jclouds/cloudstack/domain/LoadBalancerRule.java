@@ -24,9 +24,8 @@ import java.util.Set;
 import org.jclouds.javax.annotation.Nullable;
 
 import com.google.common.base.CaseFormat;
-import com.google.common.base.MoreObjects;
-import com.google.common.base.MoreObjects.ToStringHelper;
 import com.google.common.base.Objects;
+import com.google.common.base.Objects.ToStringHelper;
 import com.google.common.collect.ImmutableSet;
 
 /**
@@ -432,7 +431,7 @@ public class LoadBalancerRule {
    }
 
    protected ToStringHelper string() {
-      return MoreObjects.toStringHelper(this)
+      return Objects.toStringHelper(this)
             .add("id", id).add("account", account).add("algorithm", algorithm).add("description", description).add("domain", domain).add("domainId", domainId).add("name", name).add("privatePort", privatePort).add("publicIP", publicIP).add("publicIPId", publicIPId).add("publicPort", publicPort).add("state", state).add("CIDRs", CIDRs).add("zoneId", zoneId);
    }
 

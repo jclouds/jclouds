@@ -22,9 +22,8 @@ import java.beans.ConstructorProperties;
 
 import org.jclouds.javax.annotation.Nullable;
 
-import com.google.common.base.MoreObjects;
-import com.google.common.base.MoreObjects.ToStringHelper;
 import com.google.common.base.Objects;
+import com.google.common.base.Objects.ToStringHelper;
 
 /**
  * Representation of the API configuration entry response
@@ -150,7 +149,7 @@ public class ConfigurationEntry implements Comparable<ConfigurationEntry> {
    }
 
    protected ToStringHelper string() {
-      return MoreObjects.toStringHelper(this)
+      return Objects.toStringHelper(this)
             .add("category", category).add("description", description).add("name", name).add("value", value);
    }
 

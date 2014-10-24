@@ -16,13 +16,12 @@
  */
 package org.jclouds.elasticstack.domain;
 
-import static com.google.common.base.MoreObjects.firstNonNull;
+import static com.google.common.base.Objects.firstNonNull;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 import org.jclouds.compute.domain.OsFamily;
 import org.jclouds.javax.annotation.Nullable;
 
-import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
 
 public class WellKnownImage {
@@ -153,7 +152,7 @@ public class WellKnownImage {
 
    @Override
    public String toString() {
-      return MoreObjects.toStringHelper(this).omitNullValues().add("uuid", uuid).add("description", description)
+      return Objects.toStringHelper(this).omitNullValues().add("uuid", uuid).add("description", description)
             .add("osFamily", osFamily).add("osVersion", osVersion).add("size", size).add("is64bit", is64bit)
             .add("loginUser", loginUser).toString();
    }

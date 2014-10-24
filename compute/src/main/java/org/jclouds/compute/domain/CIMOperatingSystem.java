@@ -21,7 +21,7 @@ import org.jclouds.javax.annotation.Nullable;
 import org.jclouds.ovf.Envelope;
 
 import com.google.common.annotations.Beta;
-import com.google.common.base.MoreObjects.ToStringHelper;
+import com.google.common.base.Objects.ToStringHelper;
 
 /**
  * Operating system based on DMTF CIM model.

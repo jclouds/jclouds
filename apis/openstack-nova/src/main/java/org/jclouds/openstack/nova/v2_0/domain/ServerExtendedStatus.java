@@ -22,9 +22,8 @@ import javax.inject.Named;
 
 import org.jclouds.javax.annotation.Nullable;
 
-import com.google.common.base.MoreObjects;
-import com.google.common.base.MoreObjects.ToStringHelper;
 import com.google.common.base.Objects;
+import com.google.common.base.Objects.ToStringHelper;
 
 /**
  * Additional attributes delivered by Extended Server Status extension (alias "OS-EXT-STS")
@@ -143,7 +142,7 @@ public class ServerExtendedStatus {
    }
    
    protected ToStringHelper string() {
-      return MoreObjects.toStringHelper(this)
+      return Objects.toStringHelper(this)
             .add("taskState", taskState).add("vmState", vmState).add("powerState", powerState);
    }
    

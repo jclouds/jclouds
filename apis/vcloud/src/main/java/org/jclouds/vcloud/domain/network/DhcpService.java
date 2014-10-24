@@ -20,7 +20,6 @@ import static com.google.common.base.Objects.equal;
 
 import org.jclouds.javax.annotation.Nullable;
 
-import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
 
 /**
@@ -100,7 +99,7 @@ public class DhcpService {
 
    @Override
    public String toString() {
-      return MoreObjects.toStringHelper("").omitNullValues().add("enabled", enabled)
+      return Objects.toStringHelper("").omitNullValues().add("enabled", enabled)
             .add("defaultLeaseTime", defaultLeaseTime).add("maxLeaseTime", maxLeaseTime).add("ipRange", ipRange)
             .toString();
    }

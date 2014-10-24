@@ -23,9 +23,8 @@ import java.net.URI;
 
 import org.jclouds.javax.annotation.Nullable;
 
-import com.google.common.base.MoreObjects;
-import com.google.common.base.MoreObjects.ToStringHelper;
 import com.google.common.base.Objects;
+import com.google.common.base.Objects.ToStringHelper;
 
 /**
  * Class NIC
@@ -311,7 +310,7 @@ public class NIC {
    }
 
    protected ToStringHelper string() {
-      return MoreObjects.toStringHelper(this)
+      return Objects.toStringHelper(this)
             .add("id", id).add("broadcastURI", broadcastURI).add("gateway", gateway).add("IPAddress", IPAddress)
             .add("isDefault", isDefault).add("isolationURI", isolationURI).add("netmask", netmask).add("macAddress", macAddress)
             .add("networkId", networkId).add("trafficType", trafficType).add("guestIPType", guestIPType);

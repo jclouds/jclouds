@@ -22,7 +22,6 @@ import java.beans.ConstructorProperties;
 import java.util.Date;
 import java.util.List;
 
-import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
 
 public class DomainChange {
@@ -66,7 +65,7 @@ public class DomainChange {
 
    @Override
    public String toString() {
-      return MoreObjects.toStringHelper(this).omitNullValues().add("from", from).add("to", to).add("changes", changes)
+      return Objects.toStringHelper(this).omitNullValues().add("from", from).add("to", to).add("changes", changes)
             .toString();
    }
 
@@ -132,7 +131,7 @@ public class DomainChange {
 
       @Override
       public String toString() {
-         return MoreObjects.toStringHelper(this).omitNullValues().add("domain", domain).add("action", action)
+         return Objects.toStringHelper(this).omitNullValues().add("domain", domain).add("action", action)
                .add("targetType", targetType).add("accountId", accountId).add("targetId", targetId)
                .add("changeDetails", changeDetails).toString();
       }
@@ -180,7 +179,7 @@ public class DomainChange {
 
       @Override
       public String toString() {
-         return MoreObjects.toStringHelper(this).omitNullValues().add("field", field).add("originalValue", originalValue)
+         return Objects.toStringHelper(this).omitNullValues().add("field", field).add("originalValue", originalValue)
                .add("newValue", newValue).toString();
       }
    }

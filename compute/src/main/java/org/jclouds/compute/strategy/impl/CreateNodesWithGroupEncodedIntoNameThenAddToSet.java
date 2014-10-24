@@ -16,7 +16,7 @@
  */
 package org.jclouds.compute.strategy.impl;
 
-import static com.google.common.base.MoreObjects.toStringHelper;
+import static com.google.common.base.Objects.toStringHelper;
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.collect.Iterables.any;
 import static com.google.common.collect.Maps.newLinkedHashMap;

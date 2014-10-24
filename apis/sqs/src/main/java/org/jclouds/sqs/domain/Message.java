@@ -20,7 +20,6 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 import java.util.Map;
 
-import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.hash.HashCode;
@@ -176,7 +175,7 @@ public class Message {
     */
    @Override
    public String toString() {
-      return MoreObjects.toStringHelper(this).omitNullValues().add("id", id).add("body", body).add("md5", md5)
+      return Objects.toStringHelper(this).omitNullValues().add("id", id).add("body", body).add("md5", md5)
             .add("receiptHandle", receiptHandle).add("attributes", attributes).toString();
    }
 

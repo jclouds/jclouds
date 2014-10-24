@@ -25,7 +25,6 @@ import org.jclouds.scriptbuilder.domain.OsFamily;
 import org.jclouds.scriptbuilder.domain.Statement;
 import org.jclouds.scriptbuilder.domain.Statements;
 
-import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
 import com.google.common.base.Optional;
 import com.google.common.base.Splitter;
@@ -191,7 +190,7 @@ public class CloneGitRepo implements Statement {
     */
    @Override
    public String toString() {
-      return MoreObjects.toStringHelper(this).omitNullValues().add("gitRepoAndRef", gitRepoAndRef)
+      return Objects.toStringHelper(this).omitNullValues().add("gitRepoAndRef", gitRepoAndRef)
             .add("directory", directory.orNull()).toString();
    }
 

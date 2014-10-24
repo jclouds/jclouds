@@ -24,9 +24,8 @@ import java.util.Set;
 import org.jclouds.javax.annotation.Nullable;
 
 import com.google.common.base.CaseFormat;
-import com.google.common.base.MoreObjects;
-import com.google.common.base.MoreObjects.ToStringHelper;
 import com.google.common.base.Objects;
+import com.google.common.base.Objects.ToStringHelper;
 import com.google.common.collect.ImmutableSet;
 
 /**
@@ -438,7 +437,7 @@ public class PortForwardingRule implements Comparable<PortForwardingRule> {
    }
 
    protected ToStringHelper string() {
-      return MoreObjects.toStringHelper(this)
+      return Objects.toStringHelper(this)
             .add("id", id).add("IPAddress", IPAddress).add("IPAddressId", IPAddressId).add("privatePort", privatePort)
             .add("protocol", protocol).add("publicPort", publicPort).add("state", state).add("virtualMachineDisplayName", virtualMachineDisplayName)
             .add("virtualMachineId", virtualMachineId).add("virtualMachineName", virtualMachineName).add("CIDRs", CIDRs)

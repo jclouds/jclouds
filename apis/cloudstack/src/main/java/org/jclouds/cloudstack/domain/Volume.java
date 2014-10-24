@@ -27,9 +27,8 @@ import org.jclouds.javax.annotation.Nullable;
 
 import com.google.common.base.CaseFormat;
 import com.google.common.base.Function;
-import com.google.common.base.MoreObjects;
-import com.google.common.base.MoreObjects.ToStringHelper;
 import com.google.common.base.Objects;
+import com.google.common.base.Objects.ToStringHelper;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Maps;
 
@@ -745,7 +744,7 @@ public class Volume {
    }
 
    protected ToStringHelper string() {
-      return MoreObjects.toStringHelper(this)
+      return Objects.toStringHelper(this)
             .add("id", id).add("account", account).add("attached", attached).add("created", created).add("destroyed", destroyed)
             .add("deviceId", deviceId).add("diskOfferingDisplayText", diskOfferingDisplayText).add("diskOfferingId", diskOfferingId)
             .add("diskOfferingName", diskOfferingName).add("domain", domain).add("domainId", domainId).add("hypervisor", hypervisor)

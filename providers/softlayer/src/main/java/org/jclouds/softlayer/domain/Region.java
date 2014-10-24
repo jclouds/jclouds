@@ -22,7 +22,6 @@ import java.beans.ConstructorProperties;
 
 import org.jclouds.javax.annotation.Nullable;
 
-import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
 
 /**
@@ -115,7 +114,7 @@ public class Region implements Comparable<Region> {
 
    @Override
    public String toString() {
-      return MoreObjects.toStringHelper(this)
+      return Objects.toStringHelper(this)
               .add("sortOrder", sortOrder)
               .add("keyname", keyname)
               .add("description", description)

@@ -19,7 +19,6 @@ package org.jclouds.softlayer.domain;
 import static com.google.common.base.Preconditions.checkNotNull;
 import java.beans.ConstructorProperties;
 
-import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
 
 /**
@@ -77,7 +76,7 @@ public class ProductItemPrice {
 
    @Override
    public String toString() {
-      return MoreObjects.toStringHelper(this)
+      return Objects.toStringHelper(this)
               .add("id", id)
               .add("hourlyRecurringFee", hourlyRecurringFee)
               .add("recurringFee", recurringFee)

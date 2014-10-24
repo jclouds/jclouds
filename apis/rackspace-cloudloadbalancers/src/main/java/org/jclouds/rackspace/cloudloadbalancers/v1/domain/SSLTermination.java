@@ -20,9 +20,8 @@ import java.beans.ConstructorProperties;
 
 import javax.inject.Named;
 
-import com.google.common.base.MoreObjects;
-import com.google.common.base.MoreObjects.ToStringHelper;
 import com.google.common.base.Objects;
+import com.google.common.base.Objects.ToStringHelper;
 import com.google.common.base.Optional;
 
 /**
@@ -187,7 +186,7 @@ public class SSLTermination {
    }
 
    protected ToStringHelper string() {
-      return MoreObjects.toStringHelper(this).omitNullValues().add("enabled", enabled)
+      return Objects.toStringHelper(this).omitNullValues().add("enabled", enabled)
             .add("secureTrafficOnly", secureTrafficOnly).add("securePort", securePort)
             .add("certificate", certificate.orNull()).add("privateKey", privateKey.orNull())
             .add("intermediateCertificate", intermediateCertificate.orNull());

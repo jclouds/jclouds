@@ -25,9 +25,8 @@ import javax.inject.Named;
 
 import org.jclouds.javax.annotation.Nullable;
 
-import com.google.common.base.MoreObjects;
-import com.google.common.base.MoreObjects.ToStringHelper;
 import com.google.common.base.Objects;
+import com.google.common.base.Objects.ToStringHelper;
 
 /**
  * Information the SimpleTenantUsage extension return data about each Server
@@ -300,7 +299,7 @@ public class SimpleServerUsage {
    }
    
    protected ToStringHelper string() {
-      return MoreObjects.toStringHelper(this)
+      return Objects.toStringHelper(this)
             .add("instanceName", instanceName).add("hours", hours).add("flavorMemoryMb", flavorMemoryMb).add("flavorLocalGb", flavorLocalGb).add("flavorVcpus", flavorVcpus).add("tenantId", tenantId).add("flavorName", flavorName).add("instanceCreated", instanceCreated).add("instanceTerminated", instanceTerminated).add("instanceStatus", instanceStatus).add("uptime", uptime);
    }
    

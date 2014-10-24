@@ -23,7 +23,7 @@ import org.jclouds.compute.domain.NodeMetadata;
 import org.jclouds.scriptbuilder.domain.Statement;
 
 import com.google.common.annotations.Beta;
-import com.google.common.base.MoreObjects.ToStringHelper;
+import com.google.common.base.Objects.ToStringHelper;
 
 /**
  * A statement that completed execution on a node.

@@ -20,7 +20,6 @@ import java.util.Set;
 
 import org.jclouds.javax.annotation.Nullable;
 
-import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
 import com.google.common.collect.ForwardingSet;
 import com.google.common.collect.ImmutableSet;
@@ -81,7 +80,7 @@ public class ListMetricsResponse extends ForwardingSet<Metric> {
     */
    @Override
    public String toString() {
-      return MoreObjects.toStringHelper(this)
+      return Objects.toStringHelper(this)
                     .add("metrics", metrics)
                     .add("nextToken", nextToken).toString();
    }

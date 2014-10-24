@@ -23,9 +23,8 @@ import java.util.Date;
 
 import org.jclouds.javax.annotation.Nullable;
 
-import com.google.common.base.MoreObjects;
-import com.google.common.base.MoreObjects.ToStringHelper;
 import com.google.common.base.Objects;
+import com.google.common.base.Objects.ToStringHelper;
 import com.google.common.primitives.Longs;
 
 /**
@@ -152,7 +151,7 @@ public class JobProperties implements Comparable<JobProperties> {
    }
    
    protected ToStringHelper string() {
-      return MoreObjects.toStringHelper(this)
+      return Objects.toStringHelper(this)
             .add("id", id).add("updatedOn", updatedOn).add("state", state).add("note", note);
    }
    

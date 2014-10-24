@@ -22,9 +22,8 @@ import java.beans.ConstructorProperties;
 
 import org.jclouds.javax.annotation.Nullable;
 
-import com.google.common.base.MoreObjects;
-import com.google.common.base.MoreObjects.ToStringHelper;
 import com.google.common.base.Objects;
+import com.google.common.base.Objects.ToStringHelper;
 
 /**
  * Class TemplateMetadata
@@ -223,7 +222,7 @@ public class TemplateMetadata {
    }
 
    protected ToStringHelper string() {
-      return MoreObjects.toStringHelper(this)
+      return Objects.toStringHelper(this)
             .add("name", name).add("osTypeId", osTypeId).add("displayText", displayText).add("snapshotId", snapshotId)
             .add("volumeId", volumeId).add("virtualMachineId", virtualMachineId).add("passwordEnabled", passwordEnabled);
    }

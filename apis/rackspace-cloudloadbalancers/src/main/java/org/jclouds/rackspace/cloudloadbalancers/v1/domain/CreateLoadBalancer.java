@@ -25,8 +25,8 @@ import java.util.Set;
 import org.jclouds.javax.annotation.Nullable;
 import org.jclouds.rackspace.cloudloadbalancers.v1.domain.internal.BaseLoadBalancer;
 
-import com.google.common.base.MoreObjects;
-import com.google.common.base.MoreObjects.ToStringHelper;
+import com.google.common.base.Objects;
+import com.google.common.base.Objects.ToStringHelper;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 
@@ -83,7 +83,7 @@ public class CreateLoadBalancer extends BaseLoadBalancer<AddNode, CreateLoadBala
    }
 
    protected ToStringHelper string() {
-      return MoreObjects.toStringHelper(this).omitNullValues().add("name", name).add("protocol", protocol)
+      return Objects.toStringHelper(this).omitNullValues().add("name", name).add("protocol", protocol)
             .add("port", port).add("nodes", nodes).add("timeout", timeout).add("algorithm", algorithm)
             .add("timeout", timeout).add("sessionPersistenceType", getSessionPersistenceType())
             .add("connectionLogging", isConnectionLogging()).add("connectionThrottle", connectionThrottle)

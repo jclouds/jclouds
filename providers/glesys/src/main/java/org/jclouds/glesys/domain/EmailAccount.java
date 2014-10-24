@@ -23,9 +23,8 @@ import java.util.Date;
 
 import org.jclouds.javax.annotation.Nullable;
 
-import com.google.common.base.MoreObjects;
-import com.google.common.base.MoreObjects.ToStringHelper;
 import com.google.common.base.Objects;
+import com.google.common.base.Objects.ToStringHelper;
 
 /**
  * Detailed information on an Email Account
@@ -256,7 +255,7 @@ public class EmailAccount {
    }
 
    protected ToStringHelper string() {
-      return MoreObjects.toStringHelper("")
+      return Objects.toStringHelper("")
             .add("account", account).add("quota", quota).add("antispamLevel", antispamLevel).add("antiVirus", antiVirus).add("autoRespond", autoRespond).add("autoRespondMessage", autoRespondMessage).add("autoRespondSaveEmail", autoRespondSaveEmail).add("created", created).add("modified", modified);
    }
 

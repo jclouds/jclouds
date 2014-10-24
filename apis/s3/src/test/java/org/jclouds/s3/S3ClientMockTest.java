@@ -19,7 +19,7 @@ package org.jclouds.s3;
 import static com.google.common.net.HttpHeaders.CONTENT_LENGTH;
 import static com.google.common.net.HttpHeaders.ETAG;
 import static com.google.common.net.HttpHeaders.EXPECT;
-import static com.google.common.util.concurrent.MoreExecutors.newDirectExecutorService;
+import static com.google.common.util.concurrent.MoreExecutors.sameThreadExecutor;
 import static org.jclouds.Constants.PROPERTY_MAX_RETRIES;
 import static org.testng.Assert.assertEquals;
 
@@ -45,7 +45,7 @@ import com.squareup.okhttp.mockwebserver.RecordedRequest;
 public class S3ClientMockTest {
 
    private static final Set<Module> modules = ImmutableSet.<Module> of(new OkHttpCommandExecutorServiceModule(),
-         new ExecutorServiceModule(newDirectExecutorService()));
+         new ExecutorServiceModule(sameThreadExecutor()));
 
    static S3Client getS3Client(URL server) {
       Properties overrides = new Properties();

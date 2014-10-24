@@ -22,9 +22,8 @@ import static com.google.common.base.Preconditions.checkNotNull;
 import org.jclouds.compute.domain.Volume;
 import org.jclouds.javax.annotation.Nullable;
 
-import com.google.common.base.MoreObjects;
-import com.google.common.base.MoreObjects.ToStringHelper;
 import com.google.common.base.Objects;
+import com.google.common.base.Objects.ToStringHelper;
 
 public class VolumeImpl implements Volume {
 
@@ -61,7 +60,7 @@ public class VolumeImpl implements Volume {
    }
 
    protected ToStringHelper string() {
-      return MoreObjects.toStringHelper("").omitNullValues().add("id", id).add("type", getType()).add("size", size)
+      return Objects.toStringHelper("").omitNullValues().add("id", id).add("type", getType()).add("size", size)
                .add("device", device).add("bootDevice", bootDevice).add("durable", durable);
    }
 

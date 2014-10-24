@@ -22,7 +22,6 @@ import static com.google.common.base.Preconditions.checkNotNull;
 import org.jclouds.javax.annotation.Nullable;
 import org.jclouds.vcloud.domain.network.nat.NatRule;
 
-import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
 
 /**
@@ -67,7 +66,7 @@ public class OneToOneVmRule implements NatRule {
 
    @Override
    public String toString() {
-      return MoreObjects.toStringHelper("").omitNullValues().add("mappingMode", mappingMode).add("externalIP", externalIP)
+      return Objects.toStringHelper("").omitNullValues().add("mappingMode", mappingMode).add("externalIP", externalIP)
             .add("vAppScopedVmId", vAppScopedVmId).add("vmNicId", vmNicId).toString();
    }
 

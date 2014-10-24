@@ -17,7 +17,7 @@
 package org.jclouds.compute.config;
 
 import static com.google.common.base.Functions.compose;
-import static com.google.common.base.MoreObjects.toStringHelper;
+import static com.google.common.base.Objects.toStringHelper;
 import static com.google.common.base.Predicates.notNull;
 
 import java.util.Set;

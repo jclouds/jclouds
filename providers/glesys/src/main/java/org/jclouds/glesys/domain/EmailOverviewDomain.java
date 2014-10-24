@@ -21,9 +21,8 @@ import static com.google.common.base.Preconditions.checkNotNull;
 import java.beans.ConstructorProperties;
 
 import com.google.common.annotations.Beta;
-import com.google.common.base.MoreObjects;
-import com.google.common.base.MoreObjects.ToStringHelper;
 import com.google.common.base.Objects;
+import com.google.common.base.Objects.ToStringHelper;
 
 /**
  * Detailed information about e-mail settings for a single domain
@@ -130,7 +129,7 @@ public class EmailOverviewDomain {
    }
 
    protected ToStringHelper string() {
-      return MoreObjects.toStringHelper("").add("domain", domain).add("accounts", accounts).add("aliases", aliases);
+      return Objects.toStringHelper("").add("domain", domain).add("accounts", accounts).add("aliases", aliases);
    }
 
    @Override

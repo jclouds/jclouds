@@ -24,9 +24,8 @@ import java.util.List;
 import org.jclouds.javax.annotation.Nullable;
 import org.jclouds.vcloud.domain.network.firewall.FirewallRule;
 
-import com.google.common.base.MoreObjects;
-import com.google.common.base.MoreObjects.ToStringHelper;
 import com.google.common.base.Objects;
+import com.google.common.base.Objects.ToStringHelper;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 
@@ -79,7 +78,7 @@ public class FirewallService {
 
    @Override
    public String toString() {
-      ToStringHelper helper = MoreObjects.toStringHelper("").omitNullValues().add("enabled", enabled);
+      ToStringHelper helper = Objects.toStringHelper("").omitNullValues().add("enabled", enabled);
       if (!firewallRules.isEmpty())
          helper.add("firewallRules", firewallRules);
       return helper.toString();

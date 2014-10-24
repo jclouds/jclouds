@@ -16,9 +16,9 @@
  */
 package org.jclouds.openstack.nova.v2_0.domain;
 
-import com.google.common.base.Objects;
-
 import java.beans.ConstructorProperties;
+
+import com.google.common.base.Objects;
 
 /**
  * A pool that holds a collection of floating IP's that can be allocated from it.

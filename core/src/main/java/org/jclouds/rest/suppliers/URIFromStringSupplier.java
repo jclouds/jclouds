@@ -17,7 +17,7 @@
 package org.jclouds.rest.suppliers;
 
 import static com.google.common.base.Objects.equal;
-import static com.google.common.base.MoreObjects.toStringHelper;
+import static com.google.common.base.Objects.toStringHelper;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 import java.net.URI;
@@ -25,7 +25,7 @@ import java.net.URI;
 import javax.inject.Inject;
 
 import com.google.common.base.Objects;
-import com.google.common.base.MoreObjects.ToStringHelper;
+import com.google.common.base.Objects.ToStringHelper;
 import com.google.common.base.Supplier;
 
 public class URIFromStringSupplier implements Supplier<URI> {

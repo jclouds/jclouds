@@ -16,7 +16,6 @@
  */
 package org.jclouds.cloudwatch.domain;
 
-import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
 import org.jclouds.javax.annotation.Nullable;
 
@@ -140,7 +139,7 @@ public class Datapoint {
 
    @Override
    public String toString() {
-      return MoreObjects.toStringHelper(this)
+      return Objects.toStringHelper(this)
                     .add("timestamp", timestamp)
                     .add("customUnit", customUnit)
                     .add("maximum", maximum)

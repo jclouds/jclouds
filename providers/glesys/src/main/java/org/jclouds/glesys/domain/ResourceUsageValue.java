@@ -21,9 +21,8 @@ import static com.google.common.base.Preconditions.checkNotNull;
 import java.beans.ConstructorProperties;
 import java.util.Date;
 
-import com.google.common.base.MoreObjects;
-import com.google.common.base.MoreObjects.ToStringHelper;
 import com.google.common.base.Objects;
+import com.google.common.base.Objects.ToStringHelper;
 
 /**
  * Detailed information on usage
@@ -115,7 +114,7 @@ public class ResourceUsageValue {
    }
 
    protected ToStringHelper string() {
-      return MoreObjects.toStringHelper("").add("value", value).add("timestamp", timestamp);
+      return Objects.toStringHelper("").add("value", value).add("timestamp", timestamp);
    }
 
    @Override

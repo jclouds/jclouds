@@ -18,7 +18,6 @@ package org.jclouds.sts.domain;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
-import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
 
 public final class User {
@@ -71,6 +70,6 @@ public final class User {
 
    @Override
    public String toString() {
-      return MoreObjects.toStringHelper(this).add("id", id).add("arn", arn).toString();
+      return Objects.toStringHelper(this).add("id", id).add("arn", arn).toString();
    }
 }

@@ -25,7 +25,6 @@ import org.jclouds.javax.annotation.Nullable;
 import org.jclouds.proxy.ProxyConfig;
 import org.jclouds.ssh.jsch.JschSshClient.Connection;
 
-import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
 import com.google.common.base.Optional;
 import com.google.common.net.HostAndPort;
@@ -254,7 +253,7 @@ public final class SessionConnection implements Connection<Session> {
 
    @Override
    public String toString() {
-      return MoreObjects.toStringHelper("").omitNullValues()
+      return Objects.toStringHelper("").omitNullValues()
             .add("hostAndPort", hostAndPort).add("loginUser", loginCredentials.getUser())
             .add("session", session != null ? session.hashCode() : null)
             .add("connectTimeout", connectTimeout)

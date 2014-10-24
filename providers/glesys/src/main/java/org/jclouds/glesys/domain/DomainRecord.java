@@ -22,9 +22,8 @@ import java.beans.ConstructorProperties;
 
 import org.jclouds.javax.annotation.Nullable;
 
-import com.google.common.base.MoreObjects;
-import com.google.common.base.MoreObjects.ToStringHelper;
 import com.google.common.base.Objects;
+import com.google.common.base.Objects.ToStringHelper;
 
 /**
  * DNS record data.
@@ -197,7 +196,7 @@ public class DomainRecord {
    }
 
    protected ToStringHelper string() {
-      return MoreObjects.toStringHelper("")
+      return Objects.toStringHelper("")
             .add("id", id).add("domainname", domainname).add("host", host).add("type", type).add("data", data)
             .add("ttl", ttl);
    }

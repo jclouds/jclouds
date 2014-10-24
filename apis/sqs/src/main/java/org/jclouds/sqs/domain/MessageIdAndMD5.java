@@ -18,7 +18,6 @@ package org.jclouds.sqs.domain;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
-import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
 import com.google.common.hash.HashCode;
 
@@ -110,7 +109,7 @@ public class MessageIdAndMD5 {
     */
    @Override
    public String toString() {
-      return MoreObjects.toStringHelper(this).omitNullValues().add("id", id).add("md5", md5).toString();
+      return Objects.toStringHelper(this).omitNullValues().add("id", id).add("md5", md5).toString();
    }
 
 }

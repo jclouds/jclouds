@@ -22,9 +22,8 @@ import java.beans.ConstructorProperties;
 
 import org.jclouds.javax.annotation.Nullable;
 
-import com.google.common.base.MoreObjects;
-import com.google.common.base.MoreObjects.ToStringHelper;
 import com.google.common.base.Objects;
+import com.google.common.base.Objects.ToStringHelper;
 import com.google.common.primitives.Longs;
 
 /**
@@ -185,7 +184,7 @@ public class Ip implements Comparable<Ip> {
    }
    
    protected ToStringHelper string() {
-      return MoreObjects.toStringHelper(this)
+      return Objects.toStringHelper(this)
             .add("id", id).add("ip", ip).add("subnet", subnet).add("isPublic", isPublic).add("state", state).add("datacenter", datacenter);
    }
    

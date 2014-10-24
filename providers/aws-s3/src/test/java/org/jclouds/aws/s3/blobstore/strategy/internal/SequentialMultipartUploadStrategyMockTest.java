@@ -16,7 +16,7 @@
  */
 package org.jclouds.aws.s3.blobstore.strategy.internal;
 
-import static com.google.common.util.concurrent.MoreExecutors.newDirectExecutorService;
+import static com.google.common.util.concurrent.MoreExecutors.sameThreadExecutor;
 import static org.jclouds.Constants.PROPERTY_MAX_RETRIES;
 import static org.jclouds.Constants.PROPERTY_SO_TIMEOUT;
 import static org.jclouds.s3.reference.S3Constants.PROPERTY_S3_VIRTUAL_HOST_BUCKETS;
@@ -128,7 +128,7 @@ public class SequentialMultipartUploadStrategyMockTest {
    }
 
    private static final Set<Module> modules = ImmutableSet.<Module>of(
-         new ExecutorServiceModule(newDirectExecutorService()));
+         new ExecutorServiceModule(sameThreadExecutor()));
 
    static SequentialMultipartUploadStrategy mockSequentialMultipartUploadStrategy(String uri, int partSize) {
       Properties overrides = new Properties();

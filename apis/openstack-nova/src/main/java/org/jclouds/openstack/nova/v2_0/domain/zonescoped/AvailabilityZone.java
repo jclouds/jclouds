@@ -16,11 +16,10 @@
  */
 package org.jclouds.openstack.nova.v2_0.domain.zonescoped;
 
-import com.google.common.base.MoreObjects;
+import java.beans.ConstructorProperties;
+
 import com.google.common.base.Objects;
 import com.google.gson.annotations.SerializedName;
-
-import java.beans.ConstructorProperties;
 
 public class AvailabilityZone {
 
@@ -55,8 +54,8 @@ public class AvailabilityZone {
       return Objects.equal(this.name, that.name) && Objects.equal(this.state, that.state);
    }
 
-   protected MoreObjects.ToStringHelper string() {
-      return MoreObjects.toStringHelper(this)
+   protected Objects.ToStringHelper string() {
+      return Objects.toStringHelper(this)
             .add("name", name)
             .add("state", state);
    }

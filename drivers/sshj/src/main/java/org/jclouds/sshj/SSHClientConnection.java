@@ -36,7 +36,6 @@ import org.jclouds.logging.Logger;
 import org.jclouds.sshj.SshjSshClient.Connection;
 
 import com.google.common.annotations.VisibleForTesting;
-import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
 import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableList;
@@ -236,7 +235,7 @@ public class SSHClientConnection implements Connection<SSHClient> {
 
    @Override
    public String toString() {
-      return MoreObjects.toStringHelper("").add("hostAndPort", hostAndPort).add("loginUser", loginCredentials.getUser())
+      return Objects.toStringHelper("").add("hostAndPort", hostAndPort).add("loginUser", loginCredentials.getUser())
                .add("ssh", ssh != null ? ssh.hashCode() : null).add("connectTimeout", connectTimeout).add(
                         "sessionTimeout", sessionTimeout).toString();
    }

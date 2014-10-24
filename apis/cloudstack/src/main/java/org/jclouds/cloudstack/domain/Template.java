@@ -22,12 +22,12 @@ import java.beans.ConstructorProperties;
 import java.util.Date;
 import java.util.Set;
 
-import com.google.common.base.MoreObjects;
-import com.google.common.base.MoreObjects.ToStringHelper;
+import org.jclouds.javax.annotation.Nullable;
+
 import com.google.common.base.Objects;
+import com.google.common.base.Objects.ToStringHelper;
 import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableSet;
-import org.jclouds.javax.annotation.Nullable;
 
 public class Template implements Comparable<Template> {
    public enum Status {
@@ -878,7 +878,7 @@ public class Template implements Comparable<Template> {
    }
 
    protected ToStringHelper string() {
-      return MoreObjects.toStringHelper(this)
+      return Objects.toStringHelper(this)
             .add("id", id).add("displayText", displayText).add("domain", domain).add("domainId", domainId).add("account", account).add("accountId", accountId).add("zone", zone).add("zoneId", zoneId).add("OSType", OSType).add("OSTypeId", OSTypeId).add("name", name).add("type", type).add("status", status).add("format", format).add("hypervisor", hypervisor).add("size", size).add("created", created).add("removed", removed).add("crossZones", crossZones).add("bootable", bootable).add("extractable", extractable).add("featured", featured).add("ispublic", ispublic).add("ready", ready).add("passwordEnabled", passwordEnabled).add("jobId", jobId).add("jobStatus", jobStatus).add("checksum", checksum).add("hostId", hostId).add("hostName", hostName).add("sourceTemplateId", sourceTemplateId).add("templateTag", templateTag).add("tags", tags);
    }
 

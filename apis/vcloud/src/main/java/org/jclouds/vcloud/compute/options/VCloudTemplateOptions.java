@@ -28,7 +28,7 @@ import org.jclouds.vcloud.domain.network.FenceMode;
 import org.jclouds.vcloud.domain.network.IpAddressAllocationMode;
 
 import com.google.common.base.Objects;
-import com.google.common.base.MoreObjects.ToStringHelper;
+import com.google.common.base.Objects.ToStringHelper;
 
 /**
  * Contains options supported in the {@code ComputeService#runNode} operation on

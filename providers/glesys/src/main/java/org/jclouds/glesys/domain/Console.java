@@ -20,9 +20,8 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 import java.beans.ConstructorProperties;
 
-import com.google.common.base.MoreObjects;
-import com.google.common.base.MoreObjects.ToStringHelper;
 import com.google.common.base.Objects;
+import com.google.common.base.Objects.ToStringHelper;
 
 /**
  * Connection information to connect to a server with VNC.
@@ -154,7 +153,7 @@ public class Console {
    }
 
    protected ToStringHelper string() {
-      return MoreObjects.toStringHelper("").add("host", host).add("port", port).add("protocol", protocol)
+      return Objects.toStringHelper("").add("host", host).add("port", port).add("protocol", protocol)
             .add("password", password);
    }
 

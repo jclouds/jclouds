@@ -24,9 +24,8 @@ import org.jclouds.javax.annotation.Nullable;
 import org.jclouds.net.domain.IpProtocol;
 
 import com.google.common.annotations.Beta;
-import com.google.common.base.MoreObjects;
-import com.google.common.base.MoreObjects.ToStringHelper;
 import com.google.common.base.Objects;
+import com.google.common.base.Objects.ToStringHelper;
 
 /**
  * Ingress access to a destination protocol on particular ports
@@ -148,7 +147,7 @@ public class Ingress {
    }
    
    protected ToStringHelper string() {
-      return MoreObjects.toStringHelper(this)
+      return Objects.toStringHelper(this)
             .add("ipProtocol", ipProtocol).add("fromPort", fromPort).add("toPort", toPort);
    }
    

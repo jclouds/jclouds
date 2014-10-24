@@ -19,9 +19,8 @@ package org.jclouds.ec2.compute.domain;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 import com.google.common.base.Function;
-import com.google.common.base.MoreObjects;
-import com.google.common.base.MoreObjects.ToStringHelper;
 import com.google.common.base.Objects;
+import com.google.common.base.Objects.ToStringHelper;
 
 public class RegionAndName {
 
@@ -68,7 +67,7 @@ public class RegionAndName {
    }
 
    protected ToStringHelper string() {
-      return MoreObjects.toStringHelper("").add("region", region).add("name", name);
+      return Objects.toStringHelper("").add("region", region).add("name", name);
    }
 
    private static enum RegionFunction implements Function<RegionAndName, String> {

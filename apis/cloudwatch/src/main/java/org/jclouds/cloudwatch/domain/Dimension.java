@@ -16,7 +16,6 @@
  */
 package org.jclouds.cloudwatch.domain;
 
-import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
 
 /**
@@ -75,7 +74,7 @@ public class Dimension {
     */
    @Override
    public String toString() {
-      return MoreObjects.toStringHelper(this)
+      return Objects.toStringHelper(this)
                     .add("name", name)
                     .add("value", value).toString();
    }

@@ -21,7 +21,6 @@ import static com.google.common.base.Preconditions.checkNotNull;
 import java.beans.ConstructorProperties;
 import java.util.Date;
 
-import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
 import com.google.common.base.Optional;
 
@@ -83,7 +82,7 @@ public final class AccountUsage {
 
    @Override
    public String toString() {
-      return MoreObjects.toStringHelper(this).omitNullValues().add("numPublicVIPs", numPublicVIPs)
+      return Objects.toStringHelper(this).omitNullValues().add("numPublicVIPs", numPublicVIPs)
             .add("numServiceNetVIPs", numServiceNetVIPs).add("numLoadBalancers", numLoadBalancers)
             .add("startTime", startTime).add("endTime", endTime.orNull()).toString();
    }

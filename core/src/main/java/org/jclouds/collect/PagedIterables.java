@@ -22,7 +22,6 @@ import java.util.Iterator;
 
 import com.google.common.annotations.Beta;
 import com.google.common.base.Function;
-import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
 import com.google.common.collect.AbstractIterator;
 import com.google.common.collect.ImmutableSet;
@@ -116,7 +115,7 @@ public class PagedIterables {
 
       @Override
       public String toString() {
-         return MoreObjects.toStringHelper("").add("current", current).add("unread", unread).toString();
+         return Objects.toStringHelper("").add("current", current).add("unread", unread).toString();
       }
    }
 

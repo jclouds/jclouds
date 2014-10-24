@@ -16,7 +16,7 @@
  */
 package org.jclouds.gae.config;
 
-import static com.google.common.util.concurrent.MoreExecutors.newDirectExecutorService;
+import static com.google.common.util.concurrent.MoreExecutors.sameThreadExecutor;
 
 import org.jclouds.concurrent.SingleThreaded;
 import org.jclouds.concurrent.config.ConfiguresExecutorService;
@@ -46,13 +46,12 @@ public class GoogleAppEngineConfigurationModule extends AbstractModule {
    private final Module userExecutorModule;
 
    public GoogleAppEngineConfigurationModule() {
-      this(new ExecutorServiceModule(newDirectExecutorService()));
+      this(new ExecutorServiceModule(sameThreadExecutor()));
    }
 
    /**
     * Used when you are creating multiple contexts in the same app.
     * 
-    * @param currentRequestExecutorService
     * @see CurrentRequestExecutorServiceModule#currentRequestExecutorService
     */
    public GoogleAppEngineConfigurationModule(Module userExecutorModule) {

@@ -52,7 +52,7 @@ import org.jclouds.rest.config.SetCaller;
 
 import com.google.common.annotations.Beta;
 import com.google.common.base.Function;
-import com.google.common.base.MoreObjects;
+import com.google.common.base.Objects;
 import com.google.common.base.Optional;
 import com.google.common.base.Predicate;
 import com.google.common.base.Supplier;
@@ -282,7 +282,7 @@ public class DelegatesToInvocationFunction<S, F extends Function<Invocation, Obj
 
    @Override
    public String toString() {
-      return MoreObjects.toStringHelper("").omitNullValues().add("ownerType", ownerType.getRawType().getSimpleName())
+      return Objects.toStringHelper("").omitNullValues().add("ownerType", ownerType.getRawType().getSimpleName())
             .add("methodInvoker", methodInvoker).toString();
    }
 }

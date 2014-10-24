@@ -31,7 +31,7 @@ import org.jclouds.openstack.nova.v2_0.domain.Image.Status;
 import org.jclouds.openstack.nova.v2_0.domain.regionscoped.ImageInRegion;
 
 import com.google.common.base.Function;
-import com.google.common.base.MoreObjects;
+import com.google.common.base.Objects;
 import com.google.common.base.Supplier;
 
 /**
@@ -63,6 +63,6 @@ public class ImageInRegionToImage implements Function<ImageInRegion, Image> {
 
    @Override
    public String toString() {
-      return MoreObjects.toStringHelper(this).toString();
+      return Objects.toStringHelper(this).toString();
    }
 }

@@ -21,7 +21,6 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 import org.jclouds.ultradns.ws.domain.DirectionalPool.Type;
 
-import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
 
 public final class AccountLevelGroup {
@@ -75,7 +74,7 @@ public final class AccountLevelGroup {
 
    @Override
    public String toString() {
-      return MoreObjects.toStringHelper(this).omitNullValues().add("id", id).add("name", name).add("type", type)
+      return Objects.toStringHelper(this).omitNullValues().add("id", id).add("name", name).add("type", type)
             .add("recordCount", recordCount).toString();
    }
 

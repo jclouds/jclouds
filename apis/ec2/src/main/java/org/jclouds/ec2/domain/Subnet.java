@@ -20,9 +20,8 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 import java.util.Map;
 
-import com.google.common.base.MoreObjects;
-import com.google.common.base.MoreObjects.ToStringHelper;
 import com.google.common.base.Objects;
+import com.google.common.base.Objects.ToStringHelper;
 import com.google.common.collect.ImmutableMap;
 
 /**
@@ -144,7 +143,7 @@ public final class Subnet {
    }
 
    private ToStringHelper string() {
-      return MoreObjects.toStringHelper(this).omitNullValues().add("subnetId", subnetId).add("subnetState", subnetState)
+      return Objects.toStringHelper(this).omitNullValues().add("subnetId", subnetId).add("subnetState", subnetState)
             .add("vpcId", vpcId).add("cidrBlock", cidrBlock).add("availableIpAddressCount", availableIpAddressCount)
             .add("availabilityZone", availabilityZone).add("tags", tags);
    }

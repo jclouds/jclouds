@@ -32,9 +32,8 @@ import org.jclouds.vcloud.domain.network.FenceMode;
 import org.jclouds.vcloud.domain.network.IpScope;
 import org.jclouds.vcloud.domain.network.OrgNetwork;
 
-import com.google.common.base.MoreObjects;
-import com.google.common.base.MoreObjects.ToStringHelper;
 import com.google.common.base.Objects;
+import com.google.common.base.Objects.ToStringHelper;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
@@ -131,7 +130,7 @@ public class OrgNetworkImpl extends ReferenceTypeImpl implements OrgNetwork {
 
       @Override
       public String toString() {
-         return MoreObjects.toStringHelper("").omitNullValues().add("ipScope", ipScope).add("parentNetwork", parentNetwork)
+         return Objects.toStringHelper("").omitNullValues().add("ipScope", ipScope).add("parentNetwork", parentNetwork)
                .add("fenceMode", fenceMode).add("features", features).toString();
       }
 
