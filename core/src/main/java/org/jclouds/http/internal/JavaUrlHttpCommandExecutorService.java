@@ -16,6 +16,7 @@
  */
 package org.jclouds.http.internal;
 
+import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.base.Throwables.propagate;
 import static com.google.common.io.ByteStreams.toByteArray;
@@ -177,10 +178,15 @@ public class JavaUrlHttpCommandExecutorService extends BaseHttpCommandExecutorSe
             connection.setChunkedStreamingMode(8196);
             writePayloadToConnection(payload, "streaming", connection);
          } else {
-            long length = checkNotNull(md.getContentLength(), "payload.getContentLength");
+            Long length = checkNotNull(md.getContentLength(), "payload.getContentLength");
+            // TODO: remove check after moving to JDK 7.
+            checkArgument(length <= Integer.MAX_VALUE,
+                  "Cannot transfer 2 GB or larger chunks due to JDK 1.6 limitations." +
+                  " Use chunked encoding or multi-part upload, if possible." +
+                  " For more information: http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=6755625");
             if (length > 0) {
-               connection.setRequestProperty(CONTENT_LENGTH, String.valueOf(length));
-               connection.setFixedLengthStreamingMode(length);
+               connection.setRequestProperty(CONTENT_LENGTH, length.toString());
+               connection.setFixedLengthStreamingMode(length.intValue());
                writePayloadToConnection(payload, length, connection);
             } else {
                writeNothing(connection);
