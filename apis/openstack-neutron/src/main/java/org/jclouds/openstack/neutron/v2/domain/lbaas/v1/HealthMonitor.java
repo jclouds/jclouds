@@ -22,7 +22,6 @@ import javax.inject.Named;
 
 import org.jclouds.javax.annotation.Nullable;
 
-import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
 import com.google.common.collect.ImmutableList;
 
@@ -226,7 +225,7 @@ public class HealthMonitor {
 
    @Override
    public String toString() {
-      return MoreObjects.toStringHelper(this).add("id", id).add("tenantId", tenantId).add("type", type)
+      return Objects.toStringHelper(this).add("id", id).add("tenantId", tenantId).add("type", type)
             .add("delay", delay).add("timeout", timeout).add("maxRetries", maxRetries).add("httpMethod", httpMethod)
             .add("urlPath", urlPath).add("expectedCodes", expectedCodes).add("pools", pools)
             .add("adminStateUp", adminStateUp).add("status", status).add("statusDescription", statusDescription)

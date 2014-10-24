@@ -17,7 +17,6 @@
 
 package org.jclouds.openstack.neutron.v2_0.domain;
 
-import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
 
 import java.beans.ConstructorProperties;
@@ -54,8 +53,8 @@ public class ExternalGatewayInfo {
       return Objects.equal(this.networkId, that.networkId);
    }
 
-   protected MoreObjects.ToStringHelper string() {
-      return MoreObjects.toStringHelper(this).add("networkId", networkId);
+   protected Objects.ToStringHelper string() {
+      return Objects.toStringHelper(this).add("networkId", networkId);
    }
 
    @Override

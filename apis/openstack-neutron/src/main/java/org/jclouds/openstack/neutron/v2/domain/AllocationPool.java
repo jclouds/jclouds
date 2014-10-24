@@ -16,11 +16,11 @@
  */
 package org.jclouds.openstack.neutron.v2.domain;
 
-import com.google.common.base.MoreObjects;
-import com.google.common.base.Objects;
+import java.beans.ConstructorProperties;
+
 import org.jclouds.javax.annotation.Nullable;
 
-import java.beans.ConstructorProperties;
+import com.google.common.base.Objects;
 
 /**
  * A Neutron Subnet Allocation Pool
@@ -72,8 +72,8 @@ public class AllocationPool {
       return Objects.equal(this.start, that.start) && Objects.equal(this.end, that.end);
    }
 
-   protected MoreObjects.ToStringHelper string() {
-      return MoreObjects.toStringHelper(this).add("start", start).add("end", end);
+   protected Objects.ToStringHelper string() {
+      return Objects.toStringHelper(this).add("start", start).add("end", end);
    }
 
    @Override

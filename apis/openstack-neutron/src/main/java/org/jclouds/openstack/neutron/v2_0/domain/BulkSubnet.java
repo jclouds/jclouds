@@ -17,7 +17,6 @@
 
 package org.jclouds.openstack.neutron.v2_0.domain;
 
-import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
 import com.google.common.collect.ImmutableSet;
 
@@ -142,8 +141,8 @@ public class BulkSubnet {
          && Objects.equal(this.hostRoutes, that.hostRoutes);
    }
 
-   protected MoreObjects.ToStringHelper string() {
-      return MoreObjects.toStringHelper(this)
+   protected Objects.ToStringHelper string() {
+      return Objects.toStringHelper(this)
          .add("name", name).add("networkId", networkId).add("gatewayIp", gatewayIp).add("ipVersion", ipVersion)
          .add("cidr", cidr).add("enableDhcp", enableDhcp).add("allocationPools", allocationPools)
          .add("dnsNameServers", dnsNameServers).add("hostRoutes", hostRoutes);

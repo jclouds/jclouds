@@ -17,7 +17,6 @@
 
 package org.jclouds.openstack.neutron.v2_0.domain;
 
-import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
 import com.google.common.collect.ImmutableSet;
 
@@ -136,7 +135,7 @@ public class Network extends ReferenceWithName {
          && Objects.equal(this.segmentationId, that.segmentationId);
    }
 
-   protected MoreObjects.ToStringHelper string() {
+   protected Objects.ToStringHelper string() {
       return super.string()
          .add("state", state).add("subnets", subnets).add("adminStateUp", adminStateUp).add("shared", shared).add("external", external)
          .add("networkType", networkType).add("physicalNetworkName", physicalNetworkName).add("segmentationId", segmentationId);

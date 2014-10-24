@@ -22,7 +22,6 @@ import javax.inject.Named;
 
 import org.jclouds.javax.annotation.Nullable;
 
-import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
 
 /**
@@ -74,8 +73,8 @@ public class SessionPersistence {
       return Objects.equal(this.type, that.type) && Objects.equal(this.cookieName, that.cookieName);
    }
 
-   protected MoreObjects.ToStringHelper string() {
-      return MoreObjects.toStringHelper(this).add("type", type).add("cookieName", cookieName);
+   protected Objects.ToStringHelper string() {
+      return Objects.toStringHelper(this).add("type", type).add("cookieName", cookieName);
    }
 
    @Override

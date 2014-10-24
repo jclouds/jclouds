@@ -16,12 +16,13 @@
  */
 package org.jclouds.openstack.neutron.v2.domain;
 
-import com.google.common.base.MoreObjects;
-import com.google.common.base.Objects;
-import org.jclouds.javax.annotation.Nullable;
+import java.beans.ConstructorProperties;
 
 import javax.inject.Named;
-import java.beans.ConstructorProperties;
+
+import org.jclouds.javax.annotation.Nullable;
+
+import com.google.common.base.Objects;
 
 /**
  * Describes an IP address
@@ -70,8 +71,8 @@ public class IP {
       return Objects.equal(this.ipAddress, that.ipAddress) && Objects.equal(this.subnetId, that.subnetId);
    }
 
-   protected MoreObjects.ToStringHelper string() {
-      return MoreObjects.toStringHelper(this).add("ipAddress", ipAddress).add("subnetId", subnetId);
+   protected Objects.ToStringHelper string() {
+      return Objects.toStringHelper(this).add("ipAddress", ipAddress).add("subnetId", subnetId);
    }
 
    @Override

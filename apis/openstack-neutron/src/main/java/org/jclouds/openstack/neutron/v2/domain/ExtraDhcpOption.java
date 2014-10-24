@@ -16,12 +16,13 @@
  */
 package org.jclouds.openstack.neutron.v2.domain;
 
-import com.google.common.base.MoreObjects;
-import com.google.common.base.Objects;
-import org.jclouds.javax.annotation.Nullable;
+import java.beans.ConstructorProperties;
 
 import javax.inject.Named;
-import java.beans.ConstructorProperties;
+
+import org.jclouds.javax.annotation.Nullable;
+
+import com.google.common.base.Objects;
 
 /**
  * This is used to provide additional DHCP-related options to Subnet. This is
@@ -88,8 +89,8 @@ public class ExtraDhcpOption {
             && Objects.equal(this.optionValue, that.optionValue);
    }
 
-   protected MoreObjects.ToStringHelper string() {
-      return MoreObjects.toStringHelper(this).add("id", id).add("optionName", optionName).add("optionValue", optionValue);
+   protected Objects.ToStringHelper string() {
+      return Objects.toStringHelper(this).add("id", id).add("optionName", optionName).add("optionValue", optionValue);
    }
 
    @Override

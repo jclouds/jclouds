@@ -16,12 +16,13 @@
  */
 package org.jclouds.openstack.neutron.v2.domain;
 
-import com.google.common.base.MoreObjects;
-import com.google.common.base.Objects;
-import org.jclouds.javax.annotation.Nullable;
+import java.beans.ConstructorProperties;
 
 import javax.inject.Named;
-import java.beans.ConstructorProperties;
+
+import org.jclouds.javax.annotation.Nullable;
+
+import com.google.common.base.Objects;
 
 /**
  * A Neutron Router Interface
@@ -74,8 +75,8 @@ public class RouterInterface {
       return Objects.equal(this.subnetId, that.subnetId) && Objects.equal(this.portId, that.portId);
    }
 
-   protected MoreObjects.ToStringHelper string() {
-      return MoreObjects.toStringHelper(this).add("subnetId", subnetId).add("portId", portId);
+   protected Objects.ToStringHelper string() {
+      return Objects.toStringHelper(this).add("subnetId", subnetId).add("portId", portId);
    }
 
    @Override

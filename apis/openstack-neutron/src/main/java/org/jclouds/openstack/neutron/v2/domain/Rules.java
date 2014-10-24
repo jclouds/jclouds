@@ -20,6 +20,7 @@ import java.beans.ConstructorProperties;
 
 import org.jclouds.openstack.v2_0.domain.Link;
 import org.jclouds.openstack.v2_0.domain.PaginatedCollection;
+
 import com.google.common.collect.ImmutableSet;
 
 /**
