@@ -156,11 +156,7 @@ public class ObjectApiLiveTest extends BaseGoogleCloudStorageApiLiveTest {
 
       assertEquals(gcsObject.getMd5HashCode(), hcMd5);
 
-      // crc32c validation
-      HashFunction hfCrc32c = Hashing.crc32c();
-      hcCrc32c = hfCrc32c.newHasher().putBytes(testSource.read()).hash();
-
-      assertEquals(gcsObject.getCrc32cHashcode(), hcCrc32c);
+      // TODO: crc32c validation without making a compile dep on guava 18+
    }
 
    @Test(groups = "live", dependsOnMethods = "testSimpleUpload")
@@ -383,8 +379,7 @@ public class ObjectApiLiveTest extends BaseGoogleCloudStorageApiLiveTest {
       // This would trigger server side validation of md5
       hcMd5 = byteSource.hash(Hashing.md5());
 
-      // This would trigger server side validation of crc32c
-      hcCrc32c = byteSource.hash(Hashing.crc32c());
+      // TODO: template.crc32c without making a compile dep on guava 18.
 
       template.contentType("image/jpeg").addAcl(oacl).size(contentLength).name(MULTIPART_UPLOAD_OBJECT)
                .contentLanguage("en").contentDisposition("attachment").md5Hash(hcMd5)
