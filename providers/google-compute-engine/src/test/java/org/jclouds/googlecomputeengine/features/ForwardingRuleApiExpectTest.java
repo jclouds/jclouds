@@ -17,6 +17,8 @@
 package org.jclouds.googlecomputeengine.features;
 
 import org.jclouds.googlecomputeengine.internal.BaseGoogleComputeEngineApiExpectTest;
+import org.jclouds.googlecomputeengine.options.ForwardingRuleCreationOptions;
+import org.jclouds.googlecomputeengine.options.ListOptions;
 import org.jclouds.googlecomputeengine.parse.ParseRegionOperationTest;
 import org.jclouds.googlecomputeengine.parse.ParseForwardingRuleListTest;
 import org.jclouds.googlecomputeengine.parse.ParseForwardingRuleTest;
@@ -39,129 +41,154 @@ public class ForwardingRuleApiExpectTest extends BaseGoogleComputeEngineApiExpec
 
    public void testGetForwardingRuleResponseIs2xx() throws Exception {
       HttpRequest get = HttpRequest
-              .builder()
-              .method("GET")
-              .endpoint("https://www.googleapis" +
-                      ".com/compute/v1/projects/myproject/regions/us-central1/forwardingRules/test-forwarding-rule")
-              .addHeader("Accept", "application/json")
-              .addHeader("Authorization", "Bearer " + TOKEN).build();
+            .builder()
+            .method("GET")
+            .endpoint("https://www.googleapis" +
+                  ".com/compute/v1/projects/myproject/regions/us-central1/forwardingRules/test-forwarding-rule")
+                  .addHeader("Accept", "application/json")
+                  .addHeader("Authorization", "Bearer " + TOKEN).build();
 
       HttpResponse operationResponse = HttpResponse.builder().statusCode(200)
-              .payload(payloadFromResource("/forwardingrule_get.json")).build();
+            .payload(payloadFromResource("/forwardingrule_get.json")).build();
 
       ForwardingRuleApi api = requestsSendResponses(requestForScopes(COMPUTE_READONLY_SCOPE),
-              TOKEN_RESPONSE, get, operationResponse).getForwardingRuleApi("myproject", "us-central1");
+            TOKEN_RESPONSE, get, operationResponse).getForwardingRuleApi("myproject", "us-central1");
 
       assertEquals(api.get("test-forwarding-rule"),
-              new ParseForwardingRuleTest().expected());
+            new ParseForwardingRuleTest().expected());
    }
 
    public void testGetForwardingRuleResponseIs4xx() throws Exception {
       HttpRequest get = HttpRequest
-              .builder()
-              .method("GET")
-              .endpoint("https://www.googleapis" +
-                      ".com/compute/v1/projects/myproject/regions/us-central1/forwardingRules/test-forwarding-rule")
-              .addHeader("Accept", "application/json")
-              .addHeader("Authorization", "Bearer " + TOKEN).build();
+            .builder()
+            .method("GET")
+            .endpoint("https://www.googleapis" +
+                  ".com/compute/v1/projects/myproject/regions/us-central1/forwardingRules/test-forwarding-rule")
+                  .addHeader("Accept", "application/json")
+                  .addHeader("Authorization", "Bearer " + TOKEN).build();
 
       HttpResponse operationResponse = HttpResponse.builder().statusCode(404).build();
 
       ForwardingRuleApi api = requestsSendResponses(requestForScopes(COMPUTE_READONLY_SCOPE),
-              TOKEN_RESPONSE, get, operationResponse).getForwardingRuleApi("myproject", "us-central1");
+            TOKEN_RESPONSE, get, operationResponse).getForwardingRuleApi("myproject", "us-central1");
 
       assertNull(api.get("test-forwarding-rule"));
    }
 
    public void testInsertForwardingRuleResponseIs2xx() {
       HttpRequest insert = HttpRequest
-              .builder()
-              .method("POST")
-              .endpoint("https://www.googleapis.com/compute/v1/projects/myproject/regions/us-central1/forwardingRules")
-              .addHeader("Accept", "application/json")
-              .addHeader("Authorization", "Bearer " + TOKEN)
-              .payload(payloadFromResourceWithContentType("/forwardingrule_insert.json", MediaType.APPLICATION_JSON))
-              .build();
+            .builder()
+            .method("POST")
+            .endpoint("https://www.googleapis.com/compute/v1/projects/myproject/regions/us-central1/forwardingRules")
+            .addHeader("Accept", "application/json")
+            .addHeader("Authorization", "Bearer " + TOKEN)
+            .payload(payloadFromResourceWithContentType("/forwardingrule_insert.json", MediaType.APPLICATION_JSON))
+            .build();
 
       HttpResponse insertForwardingRuleResponse = HttpResponse.builder().statusCode(200)
-              .payload(payloadFromResource("/region_operation.json")).build();
+            .payload(payloadFromResource("/region_operation.json")).build();
 
       ForwardingRuleApi api = requestsSendResponses(requestForScopes(COMPUTE_SCOPE),
-              TOKEN_RESPONSE, insert,
-              insertForwardingRuleResponse).getForwardingRuleApi("myproject", "us-central1");
-      assertEquals(api.create("test-forwarding-rule",
-              URI.create("https://www.googleapis.com/compute/v1/projects/myproject/regions/europe-west1/" +
-                      "targetPools/test-target-pool")), new ParseRegionOperationTest().expected());
+            TOKEN_RESPONSE, insert,
+            insertForwardingRuleResponse).getForwardingRuleApi("myproject", "us-central1");
+
+      ForwardingRuleCreationOptions forwardingRuleCreationOptions = new ForwardingRuleCreationOptions()
+      .target(URI.create("https://www.googleapis.com/compute/v1/projects/myproject/regions/"
+            + "europe-west1/targetPools/test-target-pool"));
+      assertEquals(api.create("test-forwarding-rule", forwardingRuleCreationOptions),
+            new ParseRegionOperationTest().expected());
    }
 
    public void testDeleteForwardingRuleResponseIs2xx() {
       HttpRequest delete = HttpRequest
-              .builder()
-              .method("DELETE")
-              .endpoint("https://www.googleapis" +
-                      ".com/compute/v1/projects/myproject/regions/us-central1/forwardingRules/test-forwarding-rule")
-              .addHeader("Accept", "application/json")
-              .addHeader("Authorization", "Bearer " + TOKEN).build();
+            .builder()
+            .method("DELETE")
+            .endpoint("https://www.googleapis" +
+                  ".com/compute/v1/projects/myproject/regions/us-central1/forwardingRules/test-forwarding-rule")
+                  .addHeader("Accept", "application/json")
+                  .addHeader("Authorization", "Bearer " + TOKEN).build();
 
       HttpResponse deleteResponse = HttpResponse.builder().statusCode(200)
-              .payload(payloadFromResource("/region_operation.json")).build();
+            .payload(payloadFromResource("/region_operation.json")).build();
 
       ForwardingRuleApi api = requestsSendResponses(requestForScopes(COMPUTE_SCOPE),
-              TOKEN_RESPONSE, delete, deleteResponse).getForwardingRuleApi("myproject", "us-central1");
+            TOKEN_RESPONSE, delete, deleteResponse).getForwardingRuleApi("myproject", "us-central1");
 
       assertEquals(api.delete("test-forwarding-rule"),
-              new ParseRegionOperationTest().expected());
+            new ParseRegionOperationTest().expected());
    }
 
    public void testDeleteForwardingRuleResponseIs4xx() {
       HttpRequest delete = HttpRequest
-              .builder()
-              .method("DELETE")
-              .endpoint("https://www.googleapis" +
-                      ".com/compute/v1/projects/myproject/regions/us-central1/forwardingRules/test-targetPool")
-              .addHeader("Accept", "application/json")
-              .addHeader("Authorization", "Bearer " + TOKEN).build();
+            .builder()
+            .method("DELETE")
+            .endpoint("https://www.googleapis" +
+                  ".com/compute/v1/projects/myproject/regions/us-central1/forwardingRules/test-targetPool")
+                  .addHeader("Accept", "application/json")
+                  .addHeader("Authorization", "Bearer " + TOKEN).build();
 
       HttpResponse deleteResponse = HttpResponse.builder().statusCode(404).build();
 
       ForwardingRuleApi api = requestsSendResponses(requestForScopes(COMPUTE_SCOPE),
-              TOKEN_RESPONSE, delete, deleteResponse).getForwardingRuleApi("myproject", "us-central1");
+            TOKEN_RESPONSE, delete, deleteResponse).getForwardingRuleApi("myproject", "us-central1");
 
       assertNull(api.delete("test-targetPool"));
    }
 
    public void testListForwardingRulesResponseIs2xx() {
       HttpRequest list = HttpRequest
-              .builder()
-              .method("GET")
-              .endpoint("https://www.googleapis.com/compute/v1/projects/myproject/regions/us-central1/forwardingRules")
-              .addHeader("Accept", "application/json")
-              .addHeader("Authorization", "Bearer " + TOKEN).build();
+            .builder()
+            .method("GET")
+            .endpoint("https://www.googleapis.com/compute/v1/projects/myproject/regions/us-central1/forwardingRules")
+            .addHeader("Accept", "application/json")
+            .addHeader("Authorization", "Bearer " + TOKEN).build();
 
       HttpResponse operationResponse = HttpResponse.builder().statusCode(200)
-              .payload(payloadFromResource("/forwardingrule_list.json")).build();
+            .payload(payloadFromResource("/forwardingrule_list.json")).build();
 
       ForwardingRuleApi api = requestsSendResponses(requestForScopes(COMPUTE_READONLY_SCOPE),
-              TOKEN_RESPONSE, list, operationResponse).getForwardingRuleApi("myproject", "us-central1");
+            TOKEN_RESPONSE, list, operationResponse).getForwardingRuleApi("myproject", "us-central1");
 
-      assertEquals(api.list().toString(),
-              new ParseForwardingRuleListTest().expected().toString());
+      ListOptions options = new ListOptions();
+      assertEquals(api.list(options).toString(),
+            new ParseForwardingRuleListTest().expected().toString());
    }
 
    public void testListForwardingRulesResponseIs4xx() {
       HttpRequest list = HttpRequest
-              .builder()
-              .method("GET")
-              .endpoint("https://www.googleapis.com/compute/v1/projects/myproject/regions/us-central1/forwardingRules")
-              .addHeader("Accept", "application/json")
-              .addHeader("Authorization", "Bearer " + TOKEN).build();
+            .builder()
+            .method("GET")
+            .endpoint("https://www.googleapis.com/compute/v1/projects/myproject/regions/us-central1/forwardingRules")
+            .addHeader("Accept", "application/json")
+            .addHeader("Authorization", "Bearer " + TOKEN).build();
 
       HttpResponse operationResponse = HttpResponse.builder().statusCode(404).build();
 
       ForwardingRuleApi api = requestsSendResponses(requestForScopes(COMPUTE_READONLY_SCOPE),
-              TOKEN_RESPONSE, list, operationResponse).getForwardingRuleApi("myproject", "us-central1");
+            TOKEN_RESPONSE, list, operationResponse).getForwardingRuleApi("myproject", "us-central1");
 
       assertTrue(api.list().concat().isEmpty());
+   }
+
+   public void testSetTargetForwardingRuleResponseIs2xx(){
+      String ruleName = "testForwardingRule";
+      HttpRequest setTarget = HttpRequest
+            .builder()
+            .method("POST")
+            .endpoint("https://www.googleapis.com/compute/v1/projects/myproject/regions/us-central1/forwardingRules/" + ruleName + "/setTarget")
+            .addHeader("Accept", "application/json")
+            .addHeader("Authorization", "Bearer " + TOKEN)
+            .payload(payloadFromResourceWithContentType("/forwardingrule_set_target.json", MediaType.APPLICATION_JSON))
+            .build();
+
+      HttpResponse setTargetResponse = HttpResponse.builder().statusCode(200)
+            .payload(payloadFromResource("/region_operation.json")).build();
+
+      ForwardingRuleApi api = requestsSendResponses(requestForScopes(COMPUTE_SCOPE),
+            TOKEN_RESPONSE, setTarget, setTargetResponse).getForwardingRuleApi("myproject", "us-central1");
+
+      String newTarget = "https://www.googleapis.com/compute/v1/projects/myproject/regions/europe-west1/targetPools/test-target-pool";
+      assertEquals(api.setTarget(ruleName, newTarget), new ParseRegionOperationTest().expected());
    }
 
 }

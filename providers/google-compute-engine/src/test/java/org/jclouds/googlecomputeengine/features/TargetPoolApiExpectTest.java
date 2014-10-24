@@ -16,13 +16,21 @@
  */
 package org.jclouds.googlecomputeengine.features;
 
+import java.net.URI;
+import java.util.Set;
+
 import org.jclouds.googlecomputeengine.internal.BaseGoogleComputeEngineApiExpectTest;
+import org.jclouds.googlecomputeengine.options.ListOptions;
+import org.jclouds.googlecomputeengine.options.TargetPoolCreationOptions;
 import org.jclouds.googlecomputeengine.parse.ParseRegionOperationTest;
 import org.jclouds.googlecomputeengine.parse.ParseTargetPoolListTest;
 import org.jclouds.googlecomputeengine.parse.ParseTargetPoolTest;
 import org.jclouds.http.HttpRequest;
 import org.jclouds.http.HttpResponse;
+import org.jclouds.rest.ResourceNotFoundException;
 import org.testng.annotations.Test;
+
+import com.google.common.collect.ImmutableSet;
 
 import javax.ws.rs.core.MediaType;
 
@@ -35,6 +43,12 @@ import static org.testng.AssertJUnit.assertNull;
 @Test(groups = "unit")
 public class TargetPoolApiExpectTest extends BaseGoogleComputeEngineApiExpectTest {
 
+   private static final Set<URI> INSTANCES = ImmutableSet.of(URI.create("https://www.googleapis.com/compute/v1/projects/myproject/zones/europe-west1-a/instances/test"));
+   
+   private static final Set<URI> HEALTH_CHECKS = ImmutableSet.of(URI.create("https://www.googleapis.com/compute/v1/projects/myproject/global/httpHealthChecks/health-check-1"));
+   
+   private static final URI TARGET_POOL = URI.create("https://www.googleapis.com/compute/v1/projects/myproject/regions/us-central1/targetPools/tpool");
+   
    public void testGetTargetPoolResponseIs2xx() throws Exception {
       HttpRequest get = HttpRequest
               .builder()
@@ -85,7 +99,8 @@ public class TargetPoolApiExpectTest extends BaseGoogleComputeEngineApiExpectTes
       TargetPoolApi api = requestsSendResponses(requestForScopes(COMPUTE_SCOPE),
               TOKEN_RESPONSE, insert,
               insertTargetPoolResponse).getTargetPoolApi("myproject", "us-central1");
-      assertEquals(api.create("test"), new ParseRegionOperationTest().expected());
+      TargetPoolCreationOptions targetPoolCreationOptions = new TargetPoolCreationOptions();
+      assertEquals(api.create("test", targetPoolCreationOptions), new ParseRegionOperationTest().expected());
    }
 
    public void testDeleteTargetPoolResponseIs2xx() {
@@ -136,7 +151,8 @@ public class TargetPoolApiExpectTest extends BaseGoogleComputeEngineApiExpectTes
       TargetPoolApi api = requestsSendResponses(requestForScopes(COMPUTE_READONLY_SCOPE),
               TOKEN_RESPONSE, list, operationResponse).getTargetPoolApi("myproject", "us-central1");
 
-      assertEquals(api.list().toString(),
+      ListOptions options = new ListOptions();
+      assertEquals(api.list(options).toString(),
               new ParseTargetPoolListTest().expected().toString());
    }
 
@@ -157,42 +173,167 @@ public class TargetPoolApiExpectTest extends BaseGoogleComputeEngineApiExpectTes
    }
 
    public void testAddInstanceResponseIs2xx() throws Exception {
-      HttpRequest addInstance = HttpRequest
-              .builder()
-              .method("POST")
-              .endpoint("https://www.googleapis.com/compute/v1/projects/myproject/regions/us-central1/targetPools/test/addInstance")
-              .addHeader("Accept", "application/json")
-              .addHeader("Authorization", "Bearer " + TOKEN)
-              .payload(payloadFromResourceWithContentType("/targetpool_addinstance.json", MediaType.APPLICATION_JSON))
-              .build();
-
+      HttpRequest addInstance = makeGenericRequest("POST", "addInstance", "/targetpool_addinstance.json");
       HttpResponse operationResponse = HttpResponse.builder().statusCode(200)
               .payload(payloadFromResource("/region_operation.json")).build();
 
       TargetPoolApi api = requestsSendResponses(requestForScopes(COMPUTE_SCOPE),
               TOKEN_RESPONSE, addInstance, operationResponse).getTargetPoolApi("myproject", "us-central1");
 
-      assertEquals(api.addInstance("test",
-              "https://www.googleapis.com/compute/v1/projects/myproject/zones/europe-west1-a/instances/test"),
+      assertEquals(api.addInstance("test", INSTANCES),
               new ParseRegionOperationTest().expected());
    }
 
+   @Test(expectedExceptions = ResourceNotFoundException.class)
    public void testAddInstanceResponseIs4xx() throws Exception {
-      HttpRequest addInstance = HttpRequest
-              .builder()
-              .method("POST")
-              .endpoint("https://www.googleapis.com/compute/v1/projects/myproject/regions/us-central1/targetPools/test/addInstance")
-              .addHeader("Accept", "application/json")
-              .addHeader("Authorization", "Bearer " + TOKEN)
-              .payload(payloadFromResourceWithContentType("/targetpool_addinstance.json", MediaType.APPLICATION_JSON))
-              .build();
-
+      HttpRequest addInstance = makeGenericRequest("POST", "addInstance", "/targetpool_addinstance.json");
       HttpResponse operationResponse = HttpResponse.builder().statusCode(404).build();
 
       TargetPoolApi api = requestsSendResponses(requestForScopes(COMPUTE_SCOPE),
               TOKEN_RESPONSE, addInstance, operationResponse).getTargetPoolApi("myproject", "us-central1");
 
-      assertNull(api.addInstance("test", "https://www.googleapis" +
-              ".com/compute/v1/projects/myproject/zones/europe-west1-a/instances/test"));
+      api.addInstance("test", INSTANCES);
+   }
+   
+   public void testRemoveInstanceResponseIs2xx(){
+      HttpRequest removeInstance = makeGenericRequest("POST", "removeInstance", "/targetpool_addinstance.json");
+      
+      HttpResponse operationResponse = HttpResponse.builder().statusCode(200)
+            .payload(payloadFromResource("/region_operation.json")).build();
+
+      TargetPoolApi api = requestsSendResponses(requestForScopes(COMPUTE_SCOPE),
+            TOKEN_RESPONSE, removeInstance, operationResponse).getTargetPoolApi("myproject", "us-central1");
+
+      assertEquals(api.removeInstance("test", INSTANCES),
+            new ParseRegionOperationTest().expected());
+   }
+   
+   @Test(expectedExceptions = ResourceNotFoundException.class)
+   public void testRemoveInstanceResponseIs4xx() throws Exception {
+      HttpRequest removeInstance = makeGenericRequest("POST", "removeInstance", "/targetpool_addinstance.json");
+      HttpResponse operationResponse = HttpResponse.builder().statusCode(404).build();
+
+      TargetPoolApi api = requestsSendResponses(requestForScopes(COMPUTE_SCOPE),
+              TOKEN_RESPONSE, removeInstance, operationResponse).getTargetPoolApi("myproject", "us-central1");
+
+      api.removeInstance("test", INSTANCES);
+   }
+   
+   public void testAddHealthCheckResponseIs2xx(){
+      HttpRequest addHealthCheck = makeGenericRequest("POST", "addHealthCheck", "/targetpool_changehealthcheck.json");
+      
+      HttpResponse operationResponse = HttpResponse.builder().statusCode(200)
+            .payload(payloadFromResource("/region_operation.json")).build();
+
+      TargetPoolApi api = requestsSendResponses(requestForScopes(COMPUTE_SCOPE),
+            TOKEN_RESPONSE, addHealthCheck, operationResponse).getTargetPoolApi("myproject", "us-central1");
+
+      assertEquals(api.addHealthCheck("test", HEALTH_CHECKS),
+            new ParseRegionOperationTest().expected());
+   }
+   
+   @Test(expectedExceptions = ResourceNotFoundException.class)
+   public void testAddHealthCheckResponseIs4xx() throws Exception {
+      HttpRequest addHealthCheck = makeGenericRequest("POST", "addHealthCheck", "/targetpool_changehealthcheck.json");
+      HttpResponse operationResponse = HttpResponse.builder().statusCode(404).build();
+
+      TargetPoolApi api = requestsSendResponses(requestForScopes(COMPUTE_SCOPE),
+              TOKEN_RESPONSE, addHealthCheck, operationResponse).getTargetPoolApi("myproject", "us-central1");
+
+      api.addHealthCheck("test", HEALTH_CHECKS);
+   }
+   
+   public void testRemoveHealthCheckResponseIs2xx(){
+      HttpRequest removeHealthCheck = makeGenericRequest("POST", "removeHealthCheck", "/targetpool_changehealthcheck.json");
+      
+      HttpResponse operationResponse = HttpResponse.builder().statusCode(200)
+            .payload(payloadFromResource("/region_operation.json")).build();
+
+      TargetPoolApi api = requestsSendResponses(requestForScopes(COMPUTE_SCOPE),
+            TOKEN_RESPONSE, removeHealthCheck, operationResponse).getTargetPoolApi("myproject", "us-central1");
+
+      assertEquals(api.removeHealthCheck("test", HEALTH_CHECKS),
+            new ParseRegionOperationTest().expected());
+   }
+   
+   @Test(expectedExceptions = ResourceNotFoundException.class)
+   public void testRemoveHealthCheckResponseIs4xx() throws Exception {
+      HttpRequest removeHealthCheck = makeGenericRequest("POST", "removeHealthCheck", "/targetpool_changehealthcheck.json");
+      HttpResponse operationResponse = HttpResponse.builder().statusCode(404).build();
+
+      TargetPoolApi api = requestsSendResponses(requestForScopes(COMPUTE_SCOPE),
+              TOKEN_RESPONSE, removeHealthCheck, operationResponse).getTargetPoolApi("myproject", "us-central1");
+
+      api.removeHealthCheck("test", HEALTH_CHECKS);
+   }
+   
+   public void testSetBackupResponseIs2xx(){
+      HttpRequest setBackup = HttpRequest
+            .builder()
+            .method("POST")
+            .endpoint("https://www.googleapis.com/compute/v1/projects/myproject/regions/us-central1/targetPools/testpool/setBackup")
+            .addHeader("Accept", "application/json")
+            .addHeader("Authorization", "Bearer " + TOKEN)
+            .payload(payloadFromResourceWithContentType("/targetpool_setbackup.json", MediaType.APPLICATION_JSON))
+            .build();
+      HttpResponse operationResponse = HttpResponse.builder().statusCode(200)
+            .payload(payloadFromResource("/region_operation.json")).build();
+
+      TargetPoolApi api = requestsSendResponses(requestForScopes(COMPUTE_SCOPE),
+            TOKEN_RESPONSE, setBackup, operationResponse).getTargetPoolApi("myproject", "us-central1");
+
+      assertEquals(api.setBackup("testpool", TARGET_POOL ),
+            new ParseRegionOperationTest().expected());
+   }
+   
+   public void testSetBackupWithFailoverRatioResponseIs2xx(){
+      HttpRequest setBackup = HttpRequest
+            .builder()
+            .method("POST")
+            .endpoint("https://www.googleapis.com/compute/v1/projects/myproject/regions/"
+                    + "us-central1/targetPools/testpool/setBackup?failoverRatio=0.5")
+            .addHeader("Accept", "application/json")
+            .addHeader("Authorization", "Bearer " + TOKEN)
+            .payload(payloadFromResourceWithContentType("/targetpool_setbackup.json", MediaType.APPLICATION_JSON))
+            .build();
+      HttpResponse operationResponse = HttpResponse.builder().statusCode(200)
+            .payload(payloadFromResource("/region_operation.json")).build();
+
+      TargetPoolApi api = requestsSendResponses(requestForScopes(COMPUTE_SCOPE),
+            TOKEN_RESPONSE, setBackup, operationResponse).getTargetPoolApi("myproject", "us-central1");
+
+      Float failoverRatio = Float.valueOf("0.5");
+      assertEquals(api.setBackup("testpool", failoverRatio, TARGET_POOL ),
+            new ParseRegionOperationTest().expected());
+   }
+   
+   @Test(expectedExceptions = ResourceNotFoundException.class)
+   public void testSetBackupResponseIs4xx() throws Exception {
+      HttpRequest setBackup = HttpRequest
+            .builder()
+            .method("POST")
+            .endpoint("https://www.googleapis.com/compute/v1/projects/myproject/regions/us-central1/targetPools/testpool/setBackup")
+            .addHeader("Accept", "application/json")
+            .addHeader("Authorization", "Bearer " + TOKEN)
+            .payload(payloadFromResourceWithContentType("/targetpool_setbackup.json", MediaType.APPLICATION_JSON))
+            .build();
+      HttpResponse operationResponse = HttpResponse.builder().statusCode(404).build();
+
+      TargetPoolApi api = requestsSendResponses(requestForScopes(COMPUTE_SCOPE),
+            TOKEN_RESPONSE, setBackup, operationResponse).getTargetPoolApi("myproject", "us-central1");
+
+      api.setBackup("testpool", TARGET_POOL );
+   }
+   
+   public HttpRequest makeGenericRequest(String method, String endpoint, String requestPayloadFile){
+      HttpRequest request = HttpRequest
+            .builder()
+            .method(method)
+            .endpoint("https://www.googleapis.com/compute/v1/projects/myproject/regions/us-central1/targetPools/test/" + endpoint)
+            .addHeader("Accept", "application/json")
+            .addHeader("Authorization", "Bearer " + TOKEN)
+            .payload(payloadFromResourceWithContentType(requestPayloadFile, MediaType.APPLICATION_JSON))
+            .build();
+      return request;
    }
 }

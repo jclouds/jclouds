@@ -25,11 +25,14 @@ import static org.testng.AssertJUnit.assertNull;
 import javax.ws.rs.core.MediaType;
 
 import org.jclouds.googlecomputeengine.internal.BaseGoogleComputeEngineApiExpectTest;
+import org.jclouds.googlecomputeengine.options.HttpHealthCheckCreationOptions;
+import org.jclouds.googlecomputeengine.options.ListOptions;
 import org.jclouds.googlecomputeengine.parse.ParseHttpHealthCheckListTest;
 import org.jclouds.googlecomputeengine.parse.ParseHttpHealthCheckTest;
 import org.jclouds.googlecomputeengine.parse.ParseRegionOperationTest;
 import org.jclouds.http.HttpRequest;
 import org.jclouds.http.HttpResponse;
+import org.jclouds.rest.ResourceNotFoundException;
 import org.testng.annotations.Test;
 
 @Test(groups = "unit")
@@ -85,9 +88,11 @@ public class HttpHealthCheckApiExpectTest extends BaseGoogleComputeEngineApiExpe
       HttpHealthCheckApi api = requestsSendResponses(requestForScopes(COMPUTE_SCOPE),
               TOKEN_RESPONSE, insert,
               insertHttpHealthCheckResponse).getHttpHealthCheckApi("myproject");
-      assertEquals(api.insert("http-health-check", 0, 0), new ParseRegionOperationTest().expected());
+      HttpHealthCheckCreationOptions options = new HttpHealthCheckCreationOptions().timeoutSec(0).unhealthyThreshold(0);
+      assertEquals(api.insert("http-health-check", options), new ParseRegionOperationTest().expected());
    }
 
+   @Test(expectedExceptions = ResourceNotFoundException.class)
    public void testInsertHttpHealthCheckResponseIs4xx() {
       HttpRequest create = HttpRequest
               .builder()
@@ -103,7 +108,9 @@ public class HttpHealthCheckApiExpectTest extends BaseGoogleComputeEngineApiExpe
       HttpHealthCheckApi api = requestsSendResponses(requestForScopes(COMPUTE_SCOPE),
               TOKEN_RESPONSE, create, insertHttpHealthCheckResponse).getHttpHealthCheckApi("myproject");
 
-      assertNull(api.insert("http-health-check", 0, 0));
+      HttpHealthCheckCreationOptions options = new HttpHealthCheckCreationOptions().timeoutSec(0).unhealthyThreshold(0);
+      
+      api.insert("http-health-check", options);
    }
 
    public void testDeleteHttpHealthCheckResponseIs2xx() {
@@ -154,7 +161,8 @@ public class HttpHealthCheckApiExpectTest extends BaseGoogleComputeEngineApiExpe
       HttpHealthCheckApi api = requestsSendResponses(requestForScopes(COMPUTE_READONLY_SCOPE),
               TOKEN_RESPONSE, list, operationResponse).getHttpHealthCheckApi("myproject");
 
-      assertEquals(api.list().toString(),
+      ListOptions options = new ListOptions();
+      assertEquals(api.list(options).toString(),
               new ParseHttpHealthCheckListTest().expected().toString());
    }
 
@@ -172,6 +180,91 @@ public class HttpHealthCheckApiExpectTest extends BaseGoogleComputeEngineApiExpe
               TOKEN_RESPONSE, list, operationResponse).getHttpHealthCheckApi("myproject");
 
       assertTrue(api.list().concat().isEmpty());
+   }
+   
+   public void testPatchHttpHealthChecksResponseIs2xx() {
+      String healthCheckName = "http-health-check";
+      HttpRequest patch = HttpRequest
+            .builder()
+            .method("PATCH")
+            .endpoint("https://www.googleapis.com/compute/v1/projects/myproject/global/httpHealthChecks/" + healthCheckName)
+            .addHeader("Accept", "application/json")
+            .addHeader("Authorization", "Bearer " + TOKEN)
+            .payload(payloadFromResourceWithContentType("/httphealthcheck_insert.json", MediaType.APPLICATION_JSON))
+            .build();
+
+    HttpResponse insertHttpHealthCheckResponse = HttpResponse.builder().statusCode(200)
+            .payload(payloadFromResource("/global_operation.json")).build();
+
+    HttpHealthCheckApi api = requestsSendResponses(requestForScopes(COMPUTE_SCOPE),
+            TOKEN_RESPONSE, patch,
+            insertHttpHealthCheckResponse).getHttpHealthCheckApi("myproject");
+    HttpHealthCheckCreationOptions options = new HttpHealthCheckCreationOptions().timeoutSec(0).unhealthyThreshold(0);
+    assertEquals(api.patch(healthCheckName, options), new ParseRegionOperationTest().expected());
+   }
+
+   @Test(expectedExceptions = ResourceNotFoundException.class)
+   public void testPatchHttpHealthChecksResponseIs4xx(){
+      String healthCheckName = "http-health-check";
+      HttpRequest patch = HttpRequest
+            .builder()
+            .method("PATCH")
+            .endpoint("https://www.googleapis.com/compute/v1/projects/myproject/global/httpHealthChecks/" + healthCheckName)
+            .addHeader("Accept", "application/json")
+            .addHeader("Authorization", "Bearer " + TOKEN)
+            .payload(payloadFromResourceWithContentType("/httphealthcheck_insert.json", MediaType.APPLICATION_JSON))
+            .build();
+
+    HttpResponse insertHttpHealthCheckResponse = HttpResponse.builder().statusCode(404).build();
+
+    HttpHealthCheckApi api = requestsSendResponses(requestForScopes(COMPUTE_SCOPE),
+            TOKEN_RESPONSE, patch,
+            insertHttpHealthCheckResponse).getHttpHealthCheckApi("myproject");
+    HttpHealthCheckCreationOptions options = new HttpHealthCheckCreationOptions().timeoutSec(0).unhealthyThreshold(0);
+    
+    api.patch(healthCheckName, options);
+ }
+
+   public void testUpdateHttpHealthChecksResponseIs2xx() {
+      String healthCheckName = "http-health-check";
+      HttpRequest patch = HttpRequest
+            .builder()
+            .method("PUT")
+            .endpoint("https://www.googleapis.com/compute/v1/projects/myproject/global/httpHealthChecks/" + healthCheckName)
+            .addHeader("Accept", "application/json")
+            .addHeader("Authorization", "Bearer " + TOKEN)
+            .payload(payloadFromResourceWithContentType("/httphealthcheck_insert.json", MediaType.APPLICATION_JSON))
+            .build();
+
+    HttpResponse insertHttpHealthCheckResponse = HttpResponse.builder().statusCode(200)
+            .payload(payloadFromResource("/global_operation.json")).build();
+
+    HttpHealthCheckApi api = requestsSendResponses(requestForScopes(COMPUTE_SCOPE),
+            TOKEN_RESPONSE, patch,
+            insertHttpHealthCheckResponse).getHttpHealthCheckApi("myproject");
+    HttpHealthCheckCreationOptions options = new HttpHealthCheckCreationOptions().timeoutSec(0).unhealthyThreshold(0);
+    assertEquals(api.update(healthCheckName, options), new ParseRegionOperationTest().expected());
+   }
+
+   @Test(expectedExceptions = ResourceNotFoundException.class)
+   public void testUpdateHttpHealthChecksResponseIs4xx() {
+      String healthCheckName = "http-health-check";
+      HttpRequest patch = HttpRequest
+            .builder()
+            .method("PUT")
+            .endpoint("https://www.googleapis.com/compute/v1/projects/myproject/global/httpHealthChecks/" + healthCheckName)
+            .addHeader("Accept", "application/json")
+            .addHeader("Authorization", "Bearer " + TOKEN)
+            .payload(payloadFromResourceWithContentType("/httphealthcheck_insert.json", MediaType.APPLICATION_JSON))
+            .build();
+
+    HttpResponse insertHttpHealthCheckResponse = HttpResponse.builder().statusCode(404).build();
+
+    HttpHealthCheckApi api = requestsSendResponses(requestForScopes(COMPUTE_SCOPE),
+            TOKEN_RESPONSE, patch,
+            insertHttpHealthCheckResponse).getHttpHealthCheckApi("myproject");
+    HttpHealthCheckCreationOptions options = new HttpHealthCheckCreationOptions().timeoutSec(0).unhealthyThreshold(0);
+    api.update(healthCheckName, options);
    }
 
 }

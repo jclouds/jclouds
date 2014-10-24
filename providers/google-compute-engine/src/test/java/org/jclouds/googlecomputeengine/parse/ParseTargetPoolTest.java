@@ -19,10 +19,12 @@ package org.jclouds.googlecomputeengine.parse;
 import org.jclouds.date.internal.SimpleDateFormatDateService;
 import org.jclouds.googlecomputeengine.domain.TargetPool;
 import org.jclouds.googlecomputeengine.internal.BaseGoogleComputeEngineParseTest;
+import org.jclouds.googlecomputeengine.options.TargetPoolCreationOptions.SessionAffinityValue;
 import org.testng.annotations.Test;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.core.MediaType;
+
 import java.net.URI;
 
 @Test(groups = "unit")
@@ -41,7 +43,7 @@ public class ParseTargetPoolTest extends BaseGoogleComputeEngineParseTest<Target
               .creationTimestamp(new SimpleDateFormatDateService().iso8601DateParse("2014-01-07T05:25:27.783-08:00"))
               .selfLink(URI.create("https://www.googleapis.com/compute/v1/projects/myproject/regions/us-central1/targetPools/test-targetpool"))
               .name("test-targetpool")
-              .sessionAffinity("NONE")
+              .sessionAffinity(SessionAffinityValue.NONE)
               .region(URI.create("https://www.googleapis.com/compute/v1/projects/myproject/regions/us-central1"))
               .build();
    }

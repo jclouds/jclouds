@@ -17,7 +17,7 @@
 package org.jclouds.googlecomputeengine.domain;
 
 import com.google.common.annotations.Beta;
-import com.google.common.base.MoreObjects;
+import com.google.common.base.Objects;
 import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableSet;
 
@@ -30,6 +30,7 @@ import static com.google.common.base.Objects.equal;
 import static com.google.common.base.Optional.fromNullable;
 import static com.google.common.base.Preconditions.checkNotNull;
 
+import org.jclouds.googlecomputeengine.options.TargetPoolCreationOptions.SessionAffinityValue;
 import org.jclouds.javax.annotation.Nullable;
 
 /**
@@ -41,17 +42,17 @@ public final class TargetPool extends Resource {
    private final URI region;
    private final Set<URI> healthChecks;
    private final Set<URI> instances;
-   private final Optional<String> sessionAffinity;
+   private final Optional<SessionAffinityValue> sessionAffinity;
    private final float failoverRatio;
-   private final Optional<String> backupPool;
+   private final Optional<URI> backupPool;
 
    @ConstructorProperties({
            "id", "creationTimestamp", "selfLink", "name", "description", "region", "healthChecks", "instances",
            "sessionAffinity", "failoverRatio", "backupPool"
    })
    private TargetPool(String id, Date creationTimestamp, URI selfLink, String name, String description,
-                      URI region, Set<URI> healthChecks, Set<URI> instances, @Nullable String sessionAffinity,
-                      float failoverRatio, @Nullable String backupPool) {
+                      URI region, Set<URI> healthChecks, Set<URI> instances, @Nullable SessionAffinityValue sessionAffinity,
+                      float failoverRatio, @Nullable URI backupPool) {
       super(Kind.TARGET_POOL, id, creationTimestamp, selfLink, name, description);
       this.region = checkNotNull(region, "region of %s", name);
       this.healthChecks = healthChecks == null ? ImmutableSet.<URI>of() : healthChecks;
@@ -94,7 +95,7 @@ public final class TargetPool extends Resource {
     * @return the session affinity option, determines the hash method that Google Compute Engine uses to
     * distribute traffic.
     */
-   public Optional<String> getSessionAffinity() {
+   public Optional<SessionAffinityValue> getSessionAffinity() {
       return sessionAffinity;
    }
 
@@ -123,7 +124,7 @@ public final class TargetPool extends Resource {
     * or to all VMs when no VM is healthy.
     * @return the backup pool
     */
-   public Optional<String> getBackupPool() {
+   public Optional<URI> getBackupPool() {
       return backupPool;
    }
 
@@ -144,7 +145,7 @@ public final class TargetPool extends Resource {
     * {@inheritDoc}
     */
    @Override
-   protected MoreObjects.ToStringHelper string() {
+   protected Objects.ToStringHelper string() {
       return super.string()
               .omitNullValues()
               .add("region", region)
@@ -163,9 +164,9 @@ public final class TargetPool extends Resource {
       private URI region;
       private ImmutableSet.Builder<URI> healthChecks = ImmutableSet.builder();
       private ImmutableSet.Builder<URI> instances = ImmutableSet.builder();
-      private String sessionAffinity;
+      private SessionAffinityValue sessionAffinity;
       private float failoverRatio;
-      private String backupPool;
+      private URI backupPool;
 
       /**
        * @see TargetPool#getRegion()
@@ -194,7 +195,7 @@ public final class TargetPool extends Resource {
       /**
        * @see TargetPool#getSessionAffinity()
        */
-      public Builder sessionAffinity(String sessionAffinity) {
+      public Builder sessionAffinity(SessionAffinityValue sessionAffinity) {
          this.sessionAffinity = sessionAffinity;
          return this;
       }
@@ -207,7 +208,7 @@ public final class TargetPool extends Resource {
          return this;
       }
 
-      public Builder backupPool(String backupPool) {
+      public Builder backupPool(URI backupPool) {
          this.backupPool = backupPool;
          return this;
       }

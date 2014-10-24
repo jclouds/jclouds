@@ -68,7 +68,7 @@ public class DiskTypeApiExpectTest extends BaseGoogleComputeEngineApiExpectTest 
               .payload(payloadFromResource("/disktype.json")).build();
 
       DiskTypeApi diskTypeApi = requestsSendResponses(requestForScopes(COMPUTE_READONLY_SCOPE),
-              TOKEN_RESPONSE, get, operationResponse).getDiskTypeApiForProject("myproject");
+              TOKEN_RESPONSE, get, operationResponse).getDiskTypeApi("myproject");
 
       assertEquals(diskTypeApi.getInZone("us-central1-a", "pd-standard"),
               new ParseDiskTypeTest().expected());
@@ -86,7 +86,7 @@ public class DiskTypeApiExpectTest extends BaseGoogleComputeEngineApiExpectTest 
       HttpResponse operationResponse = HttpResponse.builder().statusCode(404).build();
 
       DiskTypeApi diskTypeApi = requestsSendResponses(requestForScopes(COMPUTE_READONLY_SCOPE),
-              TOKEN_RESPONSE, get, operationResponse).getDiskTypeApiForProject("myproject");
+              TOKEN_RESPONSE, get, operationResponse).getDiskTypeApi("myproject");
 
       assertNull(diskTypeApi.getInZone("us-central1-a", "pd-standard"));
    }
@@ -94,7 +94,7 @@ public class DiskTypeApiExpectTest extends BaseGoogleComputeEngineApiExpectTest 
    public void testListDiskTypeNoOptionsResponseIs2xx() throws Exception {
 
       DiskTypeApi diskTypeApi = requestsSendResponses(requestForScopes(COMPUTE_READONLY_SCOPE),
-              TOKEN_RESPONSE, LIST_DISK_TYPES_REQUEST, LIST_DISK_TYPES_RESPONSE).getDiskTypeApiForProject
+              TOKEN_RESPONSE, LIST_DISK_TYPES_REQUEST, LIST_DISK_TYPES_RESPONSE).getDiskTypeApi
               ("myproject");
 
       assertEquals(diskTypeApi.listFirstPageInZone("us-central1-a").toString(),
@@ -106,7 +106,7 @@ public class DiskTypeApiExpectTest extends BaseGoogleComputeEngineApiExpectTest 
       HttpResponse operationResponse = HttpResponse.builder().statusCode(404).build();
 
       DiskTypeApi diskTypeApi = requestsSendResponses(requestForScopes(COMPUTE_READONLY_SCOPE),
-              TOKEN_RESPONSE, LIST_DISK_TYPES_REQUEST, operationResponse).getDiskTypeApiForProject("myproject");
+              TOKEN_RESPONSE, LIST_DISK_TYPES_REQUEST, operationResponse).getDiskTypeApi("myproject");
 
       assertTrue(diskTypeApi.listInZone("us-central1-a").concat().isEmpty());
    }

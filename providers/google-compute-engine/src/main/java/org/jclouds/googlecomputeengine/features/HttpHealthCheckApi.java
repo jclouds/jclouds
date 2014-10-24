@@ -20,9 +20,11 @@ import org.jclouds.Fallbacks.EmptyPagedIterableOnNotFoundOr404;
 import org.jclouds.Fallbacks.NullOnNotFoundOr404;
 import org.jclouds.collect.IterableWithMarker;
 import org.jclouds.collect.PagedIterable;
+import org.jclouds.googlecomputeengine.binders.HttpHealthCheckCreationBinder;
 import org.jclouds.googlecomputeengine.domain.HttpHealthCheck;
 import org.jclouds.googlecomputeengine.domain.Operation;
 import org.jclouds.googlecomputeengine.functions.internal.ParseHttpHealthChecks;
+import org.jclouds.googlecomputeengine.options.HttpHealthCheckCreationOptions;
 import org.jclouds.googlecomputeengine.options.ListOptions;
 import org.jclouds.javax.annotation.Nullable;
 import org.jclouds.oauth.v2.config.OAuthScopes;
@@ -42,6 +44,7 @@ import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
@@ -84,7 +87,6 @@ public interface HttpHealthCheckApi {
    @Produces(MediaType.APPLICATION_JSON)
    @OAuthScopes(COMPUTE_SCOPE)
    @MapBinder(BindToJsonPayload.class)
-   @Fallback(NullOnNotFoundOr404.class)
    Operation insert(@PayloadParam("name") String httpHealthCheckName);
 
    /**
@@ -98,10 +100,8 @@ public interface HttpHealthCheckApi {
    @POST
    @Produces(MediaType.APPLICATION_JSON)
    @OAuthScopes(COMPUTE_SCOPE)
-   @MapBinder(BindToJsonPayload.class)
-   @Fallback(NullOnNotFoundOr404.class)
-   Operation insert(@PayloadParam("name") String httpHealthCheckName, @PayloadParam("timeoutSec") int
-           timeoutSec, @PayloadParam("unhealthyThreshold") int unhealthyThreshold);
+   @MapBinder(HttpHealthCheckCreationBinder.class)
+   Operation insert(@PayloadParam("name") String name, @PayloadParam("options") HttpHealthCheckCreationOptions options);
 
    /**
     * Deletes the specified TargetPool resource.
@@ -142,10 +142,11 @@ public interface HttpHealthCheckApi {
    IterableWithMarker<HttpHealthCheck> list(ListOptions options);
 
    /**
-    * Changes target url for forwarding rule.
+    * Updates a HttpHealthCheck resource in the specified project
+    * using the data included in the request. This method supports patch semantics.
     *
-    * @param httpHealthCheck the name of the HttpHealthCheck resource to update.
-    *
+    * @param name the name of the HttpHealthCheck resource to update.
+    * @param options the options to set for the healthCheck
     * @return an Operation resource. To check on the status of an operation, poll the Operations resource returned to
     *         you, and look for the status field.
     */
@@ -153,8 +154,26 @@ public interface HttpHealthCheckApi {
    @PATCH
    @Path("/{httpHealthCheck}")
    @OAuthScopes(COMPUTE_SCOPE)
-   @Fallback(NullOnNotFoundOr404.class)
-   @MapBinder(BindToJsonPayload.class)
+   @MapBinder(HttpHealthCheckCreationBinder.class)
    @Nullable
-   Operation patch(@PathParam("httpHealthCheck") String httpHealthCheck);
+   Operation patch(@PathParam("httpHealthCheck") @PayloadParam("name") String name, @PayloadParam("options") HttpHealthCheckCreationOptions options);
+
+   /**
+    * Updates a HttpHealthCheck resource in the specified project using the data included in the request.
+    * Any options left blank will be overwritten!
+    * 
+    * @param name the name of the forwarding rule.
+    * @param options the options to set for the healthCheck
+    * @return an Operation resource. To check on the status of an operation, poll the Operations resource returned to
+    *         you, and look for the status field.
+    */
+   @Named("HttpHealthChecks:update")
+   @PUT
+   @Path("/{httpHealthCheck}")
+   @Produces(MediaType.APPLICATION_JSON)
+   @OAuthScopes(COMPUTE_SCOPE)
+   @MapBinder(HttpHealthCheckCreationBinder.class)
+   Operation update(@PathParam("httpHealthCheck") @PayloadParam("name") String name,
+                    @PayloadParam("options") HttpHealthCheckCreationOptions options);
+
 }

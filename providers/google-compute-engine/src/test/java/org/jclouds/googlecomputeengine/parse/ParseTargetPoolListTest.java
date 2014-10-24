@@ -17,15 +17,18 @@
 package org.jclouds.googlecomputeengine.parse;
 
 import com.google.common.collect.ImmutableSet;
+
 import org.jclouds.date.internal.SimpleDateFormatDateService;
 import org.jclouds.googlecomputeengine.domain.ListPage;
 import org.jclouds.googlecomputeengine.domain.Resource;
 import org.jclouds.googlecomputeengine.domain.TargetPool;
 import org.jclouds.googlecomputeengine.internal.BaseGoogleComputeEngineParseTest;
+import org.jclouds.googlecomputeengine.options.TargetPoolCreationOptions.SessionAffinityValue;
 import org.testng.annotations.Test;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.core.MediaType;
+
 import java.net.URI;
 
 @Test(groups = "unit")
@@ -47,7 +50,7 @@ public class ParseTargetPoolListTest extends BaseGoogleComputeEngineParseTest<Li
                       .selfLink(URI.create("https://www.googleapis.com/compute/v1/projects/myproject/regions/us-central1/targetPools/test-targetpool"))
                       .name("test-targetpool")
                       .region(URI.create("https://www.googleapis.com/compute/v1/projects/myproject/regions/us-central1"))
-                      .sessionAffinity("NONE")
+                      .sessionAffinity(SessionAffinityValue.NONE)
                       .build())
               ).build();
    }

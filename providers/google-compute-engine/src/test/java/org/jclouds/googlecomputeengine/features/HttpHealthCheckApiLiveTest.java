@@ -46,14 +46,14 @@ public class HttpHealthCheckApiLiveTest extends BaseGoogleComputeEngineApiLiveTe
       assertEquals(httpHealthCheck.getName(), HTTP_HEALTH_CHECK_NAME);
    }
 
-   @Test(groups = "live", dependsOnMethods = "testGetHttpHealthCheck")
+   @Test(groups = "live", dependsOnMethods = "testInsertHttpHealthCheck")
    public void testListHttpHealthCheck() {
       IterableWithMarker<HttpHealthCheck> httpHealthCheck = api().list(new ListOptions.Builder()
               .filter("name eq " + HTTP_HEALTH_CHECK_NAME));
       assertEquals(httpHealthCheck.toList().size(), 1);
    }
 
-   @Test(groups = "live", dependsOnMethods = "testListHttpHealthCheck")
+   @Test(groups = "live", dependsOnMethods = {"testListHttpHealthCheck", "testGetHttpHealthCheck"})
    public void testDeleteHttpHealthCheck() {
       assertGlobalOperationDoneSucessfully(api().delete(HTTP_HEALTH_CHECK_NAME), TIME_WAIT);
    }

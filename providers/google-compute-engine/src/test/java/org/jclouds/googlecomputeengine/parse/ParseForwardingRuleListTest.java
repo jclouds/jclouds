@@ -17,8 +17,10 @@
 package org.jclouds.googlecomputeengine.parse;
 
 import com.google.common.collect.ImmutableSet;
+
 import org.jclouds.date.internal.SimpleDateFormatDateService;
 import org.jclouds.googlecomputeengine.domain.ForwardingRule;
+import org.jclouds.googlecomputeengine.domain.ForwardingRule.IPProtocolOption;
 import org.jclouds.googlecomputeengine.domain.ListPage;
 import org.jclouds.googlecomputeengine.domain.Resource;
 import org.jclouds.googlecomputeengine.internal.BaseGoogleComputeEngineParseTest;
@@ -26,6 +28,7 @@ import org.testng.annotations.Test;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.core.MediaType;
+
 import java.net.URI;
 
 @Test(groups = "unit")
@@ -49,7 +52,7 @@ public class ParseForwardingRuleListTest extends BaseGoogleComputeEngineParseTes
                       .name("test-forwarding-rule")
                       .region(URI.create("https://www.googleapis.com/compute/v1/projects/myproject/regions/europe-west1"))
                       .ipAddress("23.251.129.77")
-                      .ipProtocol("TCP")
+                      .ipProtocol(IPProtocolOption.TCP)
                       .target(URI.create("https://www.googleapis" +
                               ".com/compute/v1/projects/myproject/regions/europe-west1/targetPools/test-target-pool"))
                       .portRange("1-65535")

@@ -20,7 +20,9 @@ import org.jclouds.collect.IterableWithMarker;
 import org.jclouds.googlecomputeengine.domain.ForwardingRule;
 import org.jclouds.googlecomputeengine.domain.TargetPool;
 import org.jclouds.googlecomputeengine.internal.BaseGoogleComputeEngineApiLiveTest;
+import org.jclouds.googlecomputeengine.options.ForwardingRuleCreationOptions;
 import org.jclouds.googlecomputeengine.options.ListOptions;
+import org.jclouds.googlecomputeengine.options.TargetPoolCreationOptions;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
@@ -49,7 +51,8 @@ public class ForwardingRuleApiLiveTest extends BaseGoogleComputeEngineApiLiveTes
 
    @BeforeClass
    public void init() {
-      assertRegionOperationDoneSucessfully(targetPoolApi().create(TARGETPOOL_NAME), TIME_WAIT);
+      TargetPoolCreationOptions targetPoolCreationOptions = new TargetPoolCreationOptions();
+      assertRegionOperationDoneSucessfully(targetPoolApi().create(TARGETPOOL_NAME, targetPoolCreationOptions), TIME_WAIT);
       targetPool = targetPoolApi().get(TARGETPOOL_NAME);
    }
 
@@ -60,7 +63,9 @@ public class ForwardingRuleApiLiveTest extends BaseGoogleComputeEngineApiLiveTes
 
    @Test(groups = "live")
    public void testInsertForwardingRule() {
-      assertRegionOperationDoneSucessfully(api().create(FORWARDING_RULE_NAME, targetPool.getSelfLink()), TIME_WAIT);
+      ForwardingRuleCreationOptions forwardingRuleCreationOptions = new ForwardingRuleCreationOptions()
+                                                                           .target(targetPool.getSelfLink());
+      assertRegionOperationDoneSucessfully(api().create(FORWARDING_RULE_NAME, forwardingRuleCreationOptions), TIME_WAIT);
    }
 
    @Test(groups = "live", dependsOnMethods = "testInsertForwardingRule")

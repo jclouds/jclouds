@@ -24,6 +24,8 @@ import org.jclouds.googlecomputeengine.domain.ForwardingRule;
 import org.jclouds.googlecomputeengine.domain.Operation;
 import org.jclouds.googlecomputeengine.functions.internal.ParseForwardingRules;
 import org.jclouds.googlecomputeengine.options.ListOptions;
+import org.jclouds.googlecomputeengine.options.ForwardingRuleCreationOptions;
+import org.jclouds.googlecomputeengine.binders.ForwardingRuleCreationBinder;
 import org.jclouds.javax.annotation.Nullable;
 import org.jclouds.oauth.v2.config.OAuthScopes;
 import org.jclouds.oauth.v2.filters.OAuthAuthenticator;
@@ -46,7 +48,6 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
-import java.net.URI;
 
 import static org.jclouds.googlecomputeengine.GoogleComputeEngineConstants.COMPUTE_READONLY_SCOPE;
 import static org.jclouds.googlecomputeengine.GoogleComputeEngineConstants.COMPUTE_SCOPE;
@@ -87,56 +88,10 @@ public interface ForwardingRuleApi {
    @Produces(MediaType.APPLICATION_JSON)
    @Path("/forwardingRules")
    @OAuthScopes(COMPUTE_SCOPE)
-   @MapBinder(BindToJsonPayload.class)
+   @MapBinder(ForwardingRuleCreationBinder.class)
    Operation create(@PayloadParam("name") String forwardingRuleName,
-                    @PayloadParam("target") URI targetSelfLink);
+                    @PayloadParam("options") ForwardingRuleCreationOptions options);
 
-   /**
-    * Creates a ForwardingRule resource in the specified project and region using the data included in the request.
-    *
-    * @param forwardingRuleName the name of the forwarding rule.
-    * @param targetSelfLink the URL of the target resource to receive the matched traffic. The target resource must live
-    *                       in the same region as this forwarding rule.
-    * @param portRange If IPProtocol is TCP or UDP, packets addressed to ports in the specified range will be
-    *                  forwarded to backend. By default, this is empty and all ports are allowed.
-    * @return an Operation resource. To check on the status of an operation, poll the Operations resource returned to
-    *         you, and look for the status field.
-    */
-   @Named("ForwardingRules:insert")
-   @POST
-   @Produces(MediaType.APPLICATION_JSON)
-   @Path("/forwardingRules")
-   @OAuthScopes(COMPUTE_SCOPE)
-   @MapBinder(BindToJsonPayload.class)
-   Operation create(@PayloadParam("name") String forwardingRuleName,
-                    @PayloadParam("target") URI targetSelfLink,
-                    @PayloadParam("portRange") String portRange);
-
-   /**
-    * Creates a ForwardingRule resource in the specified project and region using the data included in the request.
-    *
-    * @param forwardingRuleName the name of the forwarding rule.
-    * @param targetSelfLink the URL of the target resource to receive the matched traffic. The target resource must live
-    *                       in the same region as this forwarding rule.
-    * @param portRange If IPProtocol is TCP or UDP, packets addressed to ports in the specified range will be
-    *                  forwarded to backend. By default, this is empty and all ports are allowed.
-    * @param ipAddress the external IP address that this forwarding rule is serving on behalf of.  If this is a
-    *                  reserved address, the address must live in the same region as the forwarding rule. By default, this field is empty and an ephemeral IP is assigned to the ForwardingRule.
-    * @param ipProtocol the IP protocol to which this rule applies. If left empty, the default value used is TCP.
-    * @return an Operation resource. To check on the status of an operation, poll the Operations resource returned to
-    *         you, and look for the status field.
-    */
-   @Named("ForwardingRules:insert")
-   @POST
-   @Produces(MediaType.APPLICATION_JSON)
-   @Path("/forwardingRules")
-   @OAuthScopes(COMPUTE_SCOPE)
-   @MapBinder(BindToJsonPayload.class)
-   Operation create(@PayloadParam("name") String forwardingRuleName,
-                    @PayloadParam("target") URI targetSelfLink,
-                    @PayloadParam("portRange") String portRange,
-                    @PayloadParam("IPAddress") String ipAddress,
-                    @PayloadParam("IPProtocol") String ipProtocol);
 
    /**
     * Deletes the specified TargetPool resource.

@@ -77,7 +77,7 @@ public interface GoogleComputeEngineApi extends Closeable {
     */
    @Delegate
    @Path("/projects/{project}")
-   DiskTypeApi getDiskTypeApiForProject(@PathParam("project") String projectName);
+   DiskTypeApi getDiskTypeApi(@PathParam("project") String projectName);
 
    /**
     * Provides access to Firewall features

@@ -40,7 +40,7 @@ public class DiskTypeApiLiveTest extends BaseGoogleComputeEngineApiLiveTest {
    private DiskType diskType;
 
    private DiskTypeApi api() {
-      return api.getDiskTypeApiForProject(userProject.get());
+      return api.getDiskTypeApi(userProject.get());
    }
 
    @Test(groups = "live")

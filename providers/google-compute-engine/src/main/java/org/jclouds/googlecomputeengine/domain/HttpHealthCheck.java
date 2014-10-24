@@ -17,7 +17,7 @@
 package org.jclouds.googlecomputeengine.domain;
 
 import com.google.common.annotations.Beta;
-import com.google.common.base.MoreObjects;
+import com.google.common.base.Objects;
 import com.google.common.base.Optional;
 
 import java.beans.ConstructorProperties;
@@ -128,7 +128,7 @@ public class HttpHealthCheck extends Resource {
     * {@inheritDoc}
     */
    @Override
-   protected MoreObjects.ToStringHelper string() {
+   protected Objects.ToStringHelper string() {
       return super.string()
               .omitNullValues()
               .add("host", host.orNull())

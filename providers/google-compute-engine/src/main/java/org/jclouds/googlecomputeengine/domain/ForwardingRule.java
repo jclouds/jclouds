@@ -17,7 +17,7 @@
 package org.jclouds.googlecomputeengine.domain;
 
 import com.google.common.annotations.Beta;
-import com.google.common.base.MoreObjects;
+import com.google.common.base.Objects;
 import com.google.common.base.Optional;
 
 import java.beans.ConstructorProperties;
@@ -33,9 +33,25 @@ import org.jclouds.javax.annotation.Nullable;
 @Beta
 public class ForwardingRule extends Resource {
 
+
+   /**
+    * "AH": Specifies the IP Authentication Header protocol.
+    * "ESP": Specifies the IP Encapsulating Security Payload protocol.
+    * "SCTP": Specifies the Stream Control Transmission Protocol.
+    * "TCP": Specifies the Transmission Control Protocol.
+    * "UDP": Specifies the User Datagram Protocol.
+    */
+   public enum IPProtocolOption {
+      AH,
+      ESP,
+      SCTP,
+      TCP,
+      UDP
+   }
+
    private final URI region;
    private final Optional<String> ipAddress;
-   private final Optional<String> ipProtocol;
+   private final Optional<IPProtocolOption> ipProtocol;
    private final Optional<String> portRange;
    private final URI target;
 
@@ -44,7 +60,7 @@ public class ForwardingRule extends Resource {
            "portRange", "target"
    })
    private ForwardingRule(String id, Date creationTimestamp, URI selfLink, String name, String description,
-                      URI region, @Nullable String ipAddress, @Nullable String ipProtocol, @Nullable String portRange,
+                      URI region, @Nullable String ipAddress, @Nullable IPProtocolOption ipProtocol, @Nullable String portRange,
                       URI target) {
       super(Kind.FORWARDING_RULE, id, creationTimestamp, selfLink, name, description);
       this.region = checkNotNull(region, "region of %s", name);
@@ -77,7 +93,7 @@ public class ForwardingRule extends Resource {
    /**
     * @return the IP protocol to which this rule applies. If left empty, the default value used is TCP.
     */
-   public Optional<String> getIpProtocol() {
+   public Optional<IPProtocolOption> getIpProtocol() {
       return ipProtocol;
    }
 
@@ -114,7 +130,7 @@ public class ForwardingRule extends Resource {
     * {@inheritDoc}
     */
    @Override
-   protected MoreObjects.ToStringHelper string() {
+   protected Objects.ToStringHelper string() {
       return super.string()
               .omitNullValues()
               .add("region", region)
@@ -131,7 +147,7 @@ public class ForwardingRule extends Resource {
    public static final class Builder extends Resource.Builder<Builder> {
       private URI region;
       private String ipAddress;
-      private String ipProtocol;
+      private IPProtocolOption ipProtocol;
       private String portRange;
       private URI target;
 
@@ -154,7 +170,7 @@ public class ForwardingRule extends Resource {
       /**
        * @see org.jclouds.googlecomputeengine.domain.ForwardingRule#getIpProtocol()
        */
-      public Builder ipProtocol(String ipProtocol) {
+      public Builder ipProtocol(IPProtocolOption ipProtocol) {
          this.ipProtocol = ipProtocol;
          return this;
       }

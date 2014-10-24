@@ -20,15 +20,19 @@ import org.jclouds.collect.IterableWithMarker;
 import org.jclouds.googlecomputeengine.domain.TargetPool;
 import org.jclouds.googlecomputeengine.internal.BaseGoogleComputeEngineApiLiveTest;
 import org.jclouds.googlecomputeengine.options.ListOptions;
+import org.jclouds.googlecomputeengine.options.TargetPoolCreationOptions;
+import org.jclouds.googlecomputeengine.options.TargetPoolCreationOptions.SessionAffinityValue;
 import org.testng.annotations.Test;
 
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
+import static com.google.common.base.Optional.fromNullable;
 
 public class TargetPoolApiLiveTest extends BaseGoogleComputeEngineApiLiveTest {
 
    private static final String TARGETPOOL_NAME = "targetpool-api-live-test";
    private static final int TIME_WAIT = 30;
+   private static final String DESCRIPTION = "A New TargetPool!";
 
    private TargetPoolApi api() {
       return api.getTargetPoolApi(userProject.get(), DEFAULT_REGION_NAME);
@@ -36,7 +40,10 @@ public class TargetPoolApiLiveTest extends BaseGoogleComputeEngineApiLiveTest {
 
    @Test(groups = "live")
    public void testInsertTargetPool() {
-      assertRegionOperationDoneSucessfully(api().create(TARGETPOOL_NAME), TIME_WAIT);
+      TargetPoolCreationOptions targetPoolCreationOptions = new TargetPoolCreationOptions()
+      .description(DESCRIPTION)
+      .sessionAffinity(SessionAffinityValue.CLIENT_IP);
+      assertRegionOperationDoneSucessfully(api().create(TARGETPOOL_NAME, targetPoolCreationOptions), TIME_WAIT);
    }
 
    @Test(groups = "live", dependsOnMethods = "testInsertTargetPool")
@@ -44,9 +51,11 @@ public class TargetPoolApiLiveTest extends BaseGoogleComputeEngineApiLiveTest {
       TargetPool targetPool = api().get(TARGETPOOL_NAME);
       assertNotNull(targetPool);
       assertEquals(targetPool.getName(), TARGETPOOL_NAME);
+      assertEquals(targetPool.getDescription(), fromNullable(DESCRIPTION));
+      assertEquals(targetPool.getSessionAffinity(), fromNullable(SessionAffinityValue.CLIENT_IP));
    }
 
-   @Test(groups = "live", dependsOnMethods = "testGetTargetPool")
+   @Test(groups = "live", dependsOnMethods = "testInsertTargetPool")
    public void testListTargetPool() {
 
       IterableWithMarker<TargetPool> targetPool = api().list(new ListOptions.Builder()
@@ -54,8 +63,9 @@ public class TargetPoolApiLiveTest extends BaseGoogleComputeEngineApiLiveTest {
       assertEquals(targetPool.toList().size(), 1);
    }
 
-   @Test(groups = "live", dependsOnMethods = "testListTargetPool")
+   @Test(groups = "live", dependsOnMethods = {"testListTargetPool", "testGetTargetPool"})
    public void testDeleteTargetPool() {
       assertRegionOperationDoneSucessfully(api().delete(TARGETPOOL_NAME), TIME_WAIT);
    }
+
 }
