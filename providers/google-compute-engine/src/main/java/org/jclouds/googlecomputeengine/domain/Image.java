@@ -16,8 +16,8 @@
  */
 package org.jclouds.googlecomputeengine.domain;
 
-import static com.google.common.base.MoreObjects.toStringHelper;
 import static com.google.common.base.Objects.equal;
+import static com.google.common.base.Objects.toStringHelper;
 import static com.google.common.base.Optional.fromNullable;
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -26,7 +26,6 @@ import java.net.URI;
 import java.util.Date;
 
 import com.google.common.annotations.Beta;
-import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
 import com.google.common.base.Optional;
 
@@ -79,7 +78,7 @@ public final class Image extends Resource {
     * {@inheritDoc}
     */
    @Override
-   protected MoreObjects.ToStringHelper string() {
+   protected Objects.ToStringHelper string() {
       return super.string()
               .omitNullValues()
               .add("sourceType", sourceType)
@@ -216,7 +215,7 @@ public final class Image extends Resource {
                  && equal(this.sha1Checksum, that.sha1Checksum);
       }
 
-      protected MoreObjects.ToStringHelper string() {
+      protected Objects.ToStringHelper string() {
          return toStringHelper(this)
                  .omitNullValues()
                  .add("source", source)

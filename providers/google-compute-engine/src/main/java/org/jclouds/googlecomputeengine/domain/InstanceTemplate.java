@@ -25,7 +25,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Lists;
@@ -418,8 +417,8 @@ public class InstanceTemplate {
       return Objects.hashCode(description, image, disks, networkInterfaces, metadata, serviceAccounts);
    }
 
-   protected MoreObjects.ToStringHelper string() {
-      MoreObjects.ToStringHelper toString = MoreObjects.toStringHelper("")
+   protected Objects.ToStringHelper string() {
+      Objects.ToStringHelper toString = Objects.toStringHelper("")
               .omitNullValues();
       toString.add("description", description);
       if (disks.size() > 0)

@@ -27,7 +27,7 @@ import java.util.Date;
 import org.jclouds.javax.annotation.Nullable;
 
 import com.google.common.annotations.Beta;
-import com.google.common.base.MoreObjects;
+import com.google.common.base.Objects;
 import com.google.common.base.Optional;
 
 /**
@@ -83,7 +83,7 @@ public final class Disk extends AbstractDisk {
     * {@inheritDoc}
     */
    @Override
-   protected MoreObjects.ToStringHelper string() {
+   protected Objects.ToStringHelper string() {
       return super.string()
               .omitNullValues()
               .add("zone", zone);

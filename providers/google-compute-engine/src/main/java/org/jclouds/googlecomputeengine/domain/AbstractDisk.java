@@ -22,7 +22,7 @@ import java.net.URI;
 import java.util.Date;
 
 import com.google.common.annotations.Beta;
-import com.google.common.base.MoreObjects;
+import com.google.common.base.Objects;
 
 /**
  * A persistent disk resource
@@ -60,7 +60,7 @@ public abstract class AbstractDisk extends Resource {
     * {@inheritDoc}
     */
    @Override
-   protected MoreObjects.ToStringHelper string() {
+   protected Objects.ToStringHelper string() {
       return super.string()
               .omitNullValues()
               .add("sizeGb", sizeGb)

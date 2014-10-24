@@ -23,7 +23,7 @@ import java.beans.ConstructorProperties;
 import java.net.URI;
 import java.util.Date;
 
-import com.google.common.base.MoreObjects;
+import com.google.common.base.Objects;
 import com.google.common.base.Optional;
 
 /**
@@ -83,7 +83,7 @@ public final class DiskType extends Resource {
     * {@inheritDoc}
     */
    @Override
-   protected MoreObjects.ToStringHelper string() {
+   protected Objects.ToStringHelper string() {
       return super.string()
               .add("validDiskSize", validDiskSize.orNull())
               .add("defaultDiskSizeGb", defaultDiskSizeGb)

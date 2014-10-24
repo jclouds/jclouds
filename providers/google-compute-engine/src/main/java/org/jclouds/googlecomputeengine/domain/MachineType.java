@@ -16,10 +16,11 @@
  */
 package org.jclouds.googlecomputeengine.domain;
 
-import static com.google.common.base.MoreObjects.toStringHelper;
 import static com.google.common.base.Objects.equal;
+import static com.google.common.base.Objects.toStringHelper;
 import static com.google.common.base.Optional.fromNullable;
 import static com.google.common.base.Preconditions.checkNotNull;
+
 import java.beans.ConstructorProperties;
 import java.net.URI;
 import java.util.Date;
@@ -28,7 +29,6 @@ import java.util.List;
 import org.jclouds.javax.annotation.Nullable;
 
 import com.google.common.annotations.Beta;
-import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
 import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableList;
@@ -133,7 +133,7 @@ public final class MachineType extends Resource {
     * {@inheritDoc}
     */
    @Override
-   protected MoreObjects.ToStringHelper string() {
+   protected Objects.ToStringHelper string() {
       return super.string()
               .add("guestCpus", guestCpus)
               .add("memoryMb", memoryMb)
@@ -302,7 +302,7 @@ public final class MachineType extends Resource {
          return equal(this.diskGb, that.diskGb);
       }
 
-      protected MoreObjects.ToStringHelper string() {
+      protected Objects.ToStringHelper string() {
          return toStringHelper(this)
                  .add("diskGb", diskGb);
       }
