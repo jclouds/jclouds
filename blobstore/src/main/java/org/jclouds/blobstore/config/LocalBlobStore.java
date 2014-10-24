@@ -549,7 +549,7 @@ public final class LocalBlobStore implements BlobStore {
       try {
          Blob blob = getBlob(containerName, key);
          return blob != null ? (BlobMetadata) BlobStoreUtils.copy(blob.getMetadata()) : null;
-      } catch (Exception e) {
+      } catch (RuntimeException e) {
          if (size(Iterables.filter(getCausalChain(e), KeyNotFoundException.class)) >= 1)
             return null;
          throw e;
