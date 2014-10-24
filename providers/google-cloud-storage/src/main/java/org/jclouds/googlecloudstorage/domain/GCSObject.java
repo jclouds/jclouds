@@ -27,12 +27,11 @@ import java.util.Set;
 import org.jclouds.googlecloudstorage.domain.DomainResourceReferences.StorageClass;
 import org.jclouds.googlecloudstorage.domain.internal.Owner;
 
-import com.google.common.base.MoreObjects;
+import com.google.common.base.Objects;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.hash.HashCode;
 import com.google.common.io.BaseEncoding;
-import com.google.inject.Inject;
 
 /**
  * This class represent an object in a Google Cloud Storage Bucket.
@@ -62,7 +61,6 @@ public class GCSObject extends Resource {
    private final String crc32c;
    private final Integer componentCount;
 
-   @Inject
    private GCSObject(String id, URI selfLink, String etag, String name, String bucket, Long generation,
             Long metageneration, String contentType, Date updated, Date timeDeleted, StorageClass storageClass,
             Long size, String md5Hash, URI mediaLink, Map<String, String> metadata, String contentEncoding,
@@ -199,7 +197,7 @@ public class GCSObject extends Resource {
 
    }
 
-   protected MoreObjects.ToStringHelper string() {
+   protected Objects.ToStringHelper string() {
       return super.string().omitNullValues().add("name", name).add("bucket", bucket).add("generation", generation)
                .add("metageneration", metageneration).add("timeDeleted", timeDeleted).add("updated", updated)
                .add("storageClass", storageClass).add("size", size).add("md5Hash", md5Hash).add("mediaLink", mediaLink)

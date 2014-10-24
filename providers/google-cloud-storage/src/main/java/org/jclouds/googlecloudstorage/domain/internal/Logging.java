@@ -16,11 +16,10 @@
  */
 package org.jclouds.googlecloudstorage.domain.internal;
 
-import static com.google.common.base.MoreObjects.toStringHelper;
 import static com.google.common.base.Objects.equal;
+import static com.google.common.base.Objects.toStringHelper;
 import static com.google.common.base.Preconditions.checkNotNull;
 
-import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
 
 /**
@@ -63,7 +62,7 @@ public class Logging {
       return equal(this.logBucket, that.logBucket) && equal(this.logObjectPrefix, that.logObjectPrefix);
    }
 
-   protected MoreObjects.ToStringHelper string() {
+   protected Objects.ToStringHelper string() {
       return toStringHelper(this).add("logBucket", logBucket).add("logObjectPrefix", logObjectPrefix);
    }
 

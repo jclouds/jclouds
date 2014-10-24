@@ -16,9 +16,8 @@
  */
 package org.jclouds.googlecloudstorage.domain.internal;
 
-import static com.google.common.base.MoreObjects.toStringHelper;
+import static com.google.common.base.Objects.toStringHelper;
 
-import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
 
 /**
@@ -60,7 +59,7 @@ public final class Versioning {
       return true;
    }
 
-   protected MoreObjects.ToStringHelper string() {
+   protected Objects.ToStringHelper string() {
       return toStringHelper(this).add("enabled", enabled);
    }
 

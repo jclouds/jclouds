@@ -16,10 +16,9 @@
  */
 package org.jclouds.googlecloudstorage.domain.internal;
 
-import static com.google.common.base.MoreObjects.toStringHelper;
 import static com.google.common.base.Objects.equal;
+import static com.google.common.base.Objects.toStringHelper;
 
-import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
 
 /**
@@ -78,7 +77,7 @@ public final class ProjectTeam {
       return equal(this.projectNumber, that.projectNumber) && equal(this.team, that.team);
    }
 
-   protected MoreObjects.ToStringHelper string() {
+   protected Objects.ToStringHelper string() {
       return toStringHelper(this).add("projectNumber", projectNumber).add("team", team);
    }
 

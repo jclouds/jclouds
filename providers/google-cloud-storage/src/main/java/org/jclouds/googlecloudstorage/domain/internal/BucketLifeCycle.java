@@ -16,11 +16,10 @@
  */
 package org.jclouds.googlecloudstorage.domain.internal;
 
-import static com.google.common.base.MoreObjects.toStringHelper;
+import static com.google.common.base.Objects.toStringHelper;
 
 import java.util.Set;
 
-import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
 import com.google.common.collect.ImmutableSet;
 
@@ -64,7 +63,7 @@ public class BucketLifeCycle {
       return true;
    }
 
-   protected MoreObjects.ToStringHelper string() {
+   protected Objects.ToStringHelper string() {
       return toStringHelper(this).add("rule", rules);
    }
 

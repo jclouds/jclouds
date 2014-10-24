@@ -16,13 +16,12 @@
  */
 package org.jclouds.googlecloudstorage.domain.internal;
 
-import static com.google.common.base.MoreObjects.toStringHelper;
 import static com.google.common.base.Objects.equal;
+import static com.google.common.base.Objects.toStringHelper;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 import org.jclouds.javax.annotation.Nullable;
 
-import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
 
 /**
@@ -61,7 +60,7 @@ public class Owner {
       return equal(this.entity, that.entity);
    }
 
-   protected MoreObjects.ToStringHelper string() {
+   protected Objects.ToStringHelper string() {
       return toStringHelper(this).omitNullValues().add("entity", entity).add("entityId", entityId);
    }
 
