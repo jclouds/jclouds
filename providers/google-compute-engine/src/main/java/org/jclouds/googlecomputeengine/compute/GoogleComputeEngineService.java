@@ -161,7 +161,7 @@ public class GoogleComputeEngineService extends BaseComputeService {
          }
       };
 
-      Set<AtomicReference<Operation>> operations = Sets.newHashSet();
+      Set<AtomicReference<Operation>> operations = Sets.newLinkedHashSet();
       for (Firewall firewall : firewallApi.list().concat().filter(firewallBelongsToNetwork)) {
          operations.add(new AtomicReference<Operation>(firewallApi.delete(firewall.getName())));
       }

@@ -150,7 +150,7 @@ public class CreateNodesWithGroupEncodedIntoNameThenAddToSet extends
 
       String projectName = userProject.get();
       FirewallApi firewallApi = api.getFirewallApiForProject(projectName);
-      Set<AtomicReference<Operation>> operations = Sets.newHashSet();
+      Set<AtomicReference<Operation>> operations = Sets.newLinkedHashSet();
 
       for (Integer port : templateOptions.getInboundPorts()) {
          String name = naming.name(port);
