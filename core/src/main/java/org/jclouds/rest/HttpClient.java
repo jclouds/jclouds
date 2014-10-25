@@ -16,6 +16,7 @@
  */
 package org.jclouds.rest;
 
+import java.io.Closeable;
 import java.io.InputStream;
 import java.net.URI;
 
@@ -38,7 +39,7 @@ import org.jclouds.rest.annotations.ResponseParser;
 /**
  * Simple client
  */
-public interface HttpClient {
+public interface HttpClient extends Closeable {
    /**
     * @return eTag
     */

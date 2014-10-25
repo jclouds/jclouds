@@ -16,7 +16,6 @@
  */
 package org.jclouds.http.internal;
 
-import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.base.Throwables.propagate;
 import static com.google.common.io.ByteStreams.toByteArray;
@@ -65,14 +64,11 @@ import com.google.common.io.Closeables;
 import com.google.common.io.CountingOutputStream;
 import com.google.inject.Inject;
 
-/**
- * Basic implementation of a {@link HttpCommandExecutorService}.
- */
 @Singleton
 public class JavaUrlHttpCommandExecutorService extends BaseHttpCommandExecutorService<HttpURLConnection> {
 
-   public static final String DEFAULT_USER_AGENT = String.format("jclouds/%s java/%s", JcloudsVersion.get(), System
-            .getProperty("java.version"));
+   public static final String DEFAULT_USER_AGENT = String.format("jclouds/%s java/%s", JcloudsVersion.get(),
+         System.getProperty("java.version"));
 
    protected final Supplier<SSLContext> untrustedSSLContextProvider;
    protected final Function<URI, Proxy> proxyForURI;
@@ -82,13 +78,13 @@ public class JavaUrlHttpCommandExecutorService extends BaseHttpCommandExecutorSe
 
    @Inject
    public JavaUrlHttpCommandExecutorService(HttpUtils utils, ContentMetadataCodec contentMetadataCodec,
-            DelegatingRetryHandler retryHandler, IOExceptionRetryHandler ioRetryHandler,
-            DelegatingErrorHandler errorHandler, HttpWire wire, @Named("untrusted") HostnameVerifier verifier,
-            @Named("untrusted") Supplier<SSLContext> untrustedSSLContextProvider, Function<URI, Proxy> proxyForURI) 
-                  throws SecurityException, NoSuchFieldException {
+         DelegatingRetryHandler retryHandler, IOExceptionRetryHandler ioRetryHandler,
+         DelegatingErrorHandler errorHandler, HttpWire wire, @Named("untrusted") HostnameVerifier verifier,
+         @Named("untrusted") Supplier<SSLContext> untrustedSSLContextProvider, Function<URI, Proxy> proxyForURI) {
       super(utils, contentMetadataCodec, retryHandler, ioRetryHandler, errorHandler, wire);
-      if (utils.getMaxConnections() > 0)
+      if (utils.getMaxConnections() > 0) {
          System.setProperty("http.maxConnections", String.valueOf(checkNotNull(utils, "utils").getMaxConnections()));
+      }
       this.untrustedSSLContextProvider = checkNotNull(untrustedSSLContextProvider, "untrustedSSLContextProvider");
       this.verifier = checkNotNull(verifier, "verifier");
       this.proxyForURI = checkNotNull(proxyForURI, "proxyForURI");
@@ -179,14 +175,13 @@ public class JavaUrlHttpCommandExecutorService extends BaseHttpCommandExecutorSe
             writePayloadToConnection(payload, "streaming", connection);
          } else {
             Long length = checkNotNull(md.getContentLength(), "payload.getContentLength");
-            // TODO: remove check after moving to JDK 7.
-            checkArgument(length <= Integer.MAX_VALUE,
-                  "Cannot transfer 2 GB or larger chunks due to JDK 1.6 limitations." +
-                  " Use chunked encoding or multi-part upload, if possible." +
-                  " For more information: http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=6755625");
             if (length > 0) {
                connection.setRequestProperty(CONTENT_LENGTH, length.toString());
-               connection.setFixedLengthStreamingMode(length.intValue());
+               if (length <= Integer.MAX_VALUE) {
+                  connection.setFixedLengthStreamingMode(length.intValue());
+               } else {
+                  setFixedLengthStreamingMode(connection, length);
+               }
                writePayloadToConnection(payload, length, connection);
             } else {
                writeNothing(connection);
@@ -196,6 +191,17 @@ public class JavaUrlHttpCommandExecutorService extends BaseHttpCommandExecutorSe
          writeNothing(connection);
       }
       return connection;
+   }
+
+   /** Uses {@link HttpURLConnection#setFixedLengthStreamingMode(long)} if possible or throws if not. */
+   private static void setFixedLengthStreamingMode(HttpURLConnection connection, long length) {
+      try { // Not caching method as invocation is literally sending > 2GB, which means reflection isn't a limiter!
+         HttpURLConnection.class.getMethod("setFixedLengthStreamingMode", long.class).invoke(connection, length);
+      } catch (Exception e) {
+         throw new IllegalArgumentException("Cannot transfer 2 GB or larger chunks due to JDK 1.6 limitations." +
+               " Use chunked encoding or multi-part upload, if possible, or use a different http driver." +
+               " For more information: http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=6755625");
+      }
    }
 
    /**
