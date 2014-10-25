@@ -16,20 +16,29 @@
  */
 package org.jclouds.http;
 
+import static com.google.common.io.Closeables.close;
+import static com.google.common.net.HttpHeaders.CONTENT_LENGTH;
 import static org.jclouds.Constants.PROPERTY_MAX_CONNECTIONS_PER_CONTEXT;
 import static org.jclouds.Constants.PROPERTY_MAX_CONNECTIONS_PER_HOST;
 import static org.jclouds.Constants.PROPERTY_USER_THREADS;
+import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.fail;
 
 import java.util.Properties;
 
 import org.jclouds.http.config.JavaUrlHttpCommandExecutorServiceModule;
+import org.jclouds.io.Payload;
+import org.jclouds.io.payloads.StringPayload;
+import org.jclouds.rest.HttpClient;
+import org.jclouds.utils.TestUtils;
 import org.testng.annotations.Test;
 
 import com.google.inject.Module;
+import com.squareup.okhttp.mockwebserver.Dispatcher;
+import com.squareup.okhttp.mockwebserver.MockResponse;
+import com.squareup.okhttp.mockwebserver.MockWebServer;
+import com.squareup.okhttp.mockwebserver.RecordedRequest;
 
-/**
- * Tests the functionality of the {@link JavaUrlHttpCommandExecutorService}
- */
 @Test(groups = "integration")
 public class JavaUrlHttpCommandExecutorServiceIntegrationTest extends BaseHttpCommandExecutorServiceIntegrationTest {
 
@@ -43,4 +52,34 @@ public class JavaUrlHttpCommandExecutorServiceIntegrationTest extends BaseHttpCo
       props.setProperty(PROPERTY_USER_THREADS, 5 + "");
    }
 
+   @Test public void longContentLengthSupported() throws Exception {
+      long reallyLongContent = TestUtils.isJava6() ? Integer.MAX_VALUE : Long.MAX_VALUE;
+
+      // Setup a mock server that doesn't attempt to read the request payload.
+      MockWebServer server = new MockWebServer();
+      server.setDispatcher(new Dispatcher() {
+         @Override public MockResponse dispatch(RecordedRequest recordedRequest) {
+            return new MockResponse();
+         }
+      });
+      server.play();
+
+      HttpClient client =  api(HttpClient.class, server.getUrl("/").toString());
+
+      // Make a fake payload that has no data, but says there's a lot!
+      Payload fakePayload = new StringPayload("");
+      fakePayload.getContentMetadata().setContentLength(reallyLongContent);
+
+      try {
+         try {
+            client.post(server.getUrl("/").toURI(), fakePayload);
+            fail("Should have errored since we didn't sent that much data!");
+         } catch (HttpResponseException expected) {
+         }
+         assertEquals(server.takeRequest().getHeader(CONTENT_LENGTH), String.valueOf(reallyLongContent));
+      } finally {
+         close(client, true);
+         server.shutdown();
+      }
+   }
 }
