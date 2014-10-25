@@ -22,12 +22,9 @@ import static org.easymock.EasyMock.replay;
 import static org.easymock.EasyMock.verify;
 import static org.testng.Assert.assertEquals;
 
-import java.io.IOException;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.TimeoutException;
-
 import org.jclouds.http.HttpRequest;
 import org.jclouds.http.HttpResponse;
+import org.jclouds.utils.TestUtils;
 import org.testng.annotations.Test;
 import org.xml.sax.Locator;
 import org.xml.sax.SAXParseException;
@@ -50,8 +47,7 @@ public class ParseSaxTest extends BaseHandlerTest {
    }
    
    @Test
-   public void testAddDetailsAndPropagateOkWhenRequestWithNoDataAndRuntimeExceptionThrowsOriginalException()
-         throws ExecutionException, InterruptedException, TimeoutException, IOException {
+   public void testAddDetailsAndPropagateOkWhenRequestWithNoDataAndRuntimeExceptionThrowsOriginalException() {
 
       ParseSax<String> parser = createParser();
       Exception input = new RuntimeException("foo");
@@ -64,8 +60,7 @@ public class ParseSaxTest extends BaseHandlerTest {
    }
 
    @Test
-   public void testAddDetailsAndPropagateOkWhenRequestWithNoDataAndExceptionPropagates() throws ExecutionException,
-         InterruptedException, TimeoutException, IOException {
+   public void testAddDetailsAndPropagateOkWhenRequestWithNoDataAndExceptionPropagates() {
 
       ParseSax<String> parser = createParser();
       Exception input = new Exception("foo");
@@ -79,8 +74,7 @@ public class ParseSaxTest extends BaseHandlerTest {
    }
 
    @Test
-   public void testAddDetailsAndPropagateOkWhenRequestIsNotNullAndResponseIsNull() throws ExecutionException,
-         InterruptedException, TimeoutException, IOException {
+   public void testAddDetailsAndPropagateOkWhenRequestIsNotNullAndResponseIsNull() {
 
       ParseSax<String> parser = createParser();
       HttpRequest request = HttpRequest.builder().method("GET").endpoint("http://foohost").build(); 
@@ -96,8 +90,7 @@ public class ParseSaxTest extends BaseHandlerTest {
    }
    
    @Test
-   public void testAddDetailsAndPropagateOkWithValidRequestResponse() throws ExecutionException, InterruptedException,
-         TimeoutException, IOException {
+   public void testAddDetailsAndPropagateOkWithValidRequestResponse() {
 
       ParseSax<String> parser = createParser();
       HttpRequest request = HttpRequest.builder().method("GET").endpoint("http://foohost").build();
@@ -114,8 +107,7 @@ public class ParseSaxTest extends BaseHandlerTest {
    }
 
    @Test
-   public void testAddDetailsAndPropagateOkWithValidRequestResponseWithSAXParseException() throws ExecutionException,
-         InterruptedException, TimeoutException, IOException {
+   public void testAddDetailsAndPropagateOkWithValidRequestResponseWithSAXParseException() {
 
       ParseSax<String> parser = createParser();
       HttpRequest request = HttpRequest.builder().method("GET").endpoint("http://foohost").build();
@@ -133,8 +125,9 @@ public class ParseSaxTest extends BaseHandlerTest {
          parser.setContext(request);
          parser.addDetailsAndPropagate(response, input);
       } catch (RuntimeException e) {
-         assertEquals(e.getMessage(),
-               "request: GET http://foohost HTTP/1.1; response: HTTP/1.1 304 Not Modified; error at 1:1 in document systemId; cause: org.xml.sax.SAXParseExceptionpublicId: publicId; systemId: systemId; lineNumber: 1; columnNumber: 1; foo");
+         assertEquals(e.getMessage(), TestUtils.isJava6()
+               ? "request: GET http://foohost HTTP/1.1; response: HTTP/1.1 304 Not Modified; error at 1:1 in document systemId; cause: org.xml.sax.SAXParseException: foo"
+               : "request: GET http://foohost HTTP/1.1; response: HTTP/1.1 304 Not Modified; error at 1:1 in document systemId; cause: org.xml.sax.SAXParseExceptionpublicId: publicId; systemId: systemId; lineNumber: 1; columnNumber: 1; foo");
          assertEquals(e.getCause(), input);
       }
    }
