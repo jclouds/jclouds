@@ -32,7 +32,6 @@
   <modules>
     <module>cloudwatch</module>
     <module>cloudstack</module>
-    <module>filesystem</module>
     <module>byon</module>
     <module>s3</module>
     <module>ec2</module>
@@ -56,4 +55,15 @@
     <module>route53</module>
     <module>chef</module>
   </modules>
+  <profiles>
+    <profile>
+      <id>jre1.7</id>
+      <activation>
+        <jdk>1.7</jdk>
+      </activation>
+      <modules>
+        <module>filesystem</module>
+      </modules>
+    </profile>
+  </profiles>
 </project>
