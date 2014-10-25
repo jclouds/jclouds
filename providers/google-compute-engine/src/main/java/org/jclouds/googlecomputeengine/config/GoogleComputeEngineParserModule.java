@@ -38,10 +38,7 @@ import org.jclouds.googlecomputeengine.options.FirewallOptions;
 import org.jclouds.googlecomputeengine.options.RouteOptions;
 import org.jclouds.json.config.GsonModule;
 import org.jclouds.net.domain.IpProtocol;
-import org.jclouds.oauth.v2.domain.ClaimSet;
-import org.jclouds.oauth.v2.domain.Header;
-import org.jclouds.oauth.v2.json.ClaimSetTypeAdapter;
-import org.jclouds.oauth.v2.json.HeaderTypeAdapter;
+import org.jclouds.oauth.v2.config.OAuthParserModule;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Range;
@@ -54,24 +51,24 @@ import com.google.gson.JsonParseException;
 import com.google.gson.JsonPrimitive;
 import com.google.gson.JsonSerializationContext;
 import com.google.gson.JsonSerializer;
+import com.google.gson.TypeAdapterFactory;
 import com.google.inject.AbstractModule;
 import com.google.inject.Provides;
 
 public class GoogleComputeEngineParserModule extends AbstractModule {
 
-   @Override
-   protected void configure() {
+   @Override protected void configure() {
       bind(GsonModule.DateAdapter.class).to(GsonModule.Iso8601DateAdapter.class);
    }
 
-   @Provides
-   @Singleton
-   public Map<Type, Object> provideCustomAdapterBindings() {
+   @Provides @Singleton public Set<TypeAdapterFactory> typeAdapterFactories() {
+      return new OAuthParserModule().typeAdapterFactories();
+   }
+
+   @Provides @Singleton public Map<Type, Object> typeAdapters() {
       return new ImmutableMap.Builder<Type, Object>()
               .put(Metadata.class, new MetadataTypeAdapter())
               .put(Operation.class, new OperationTypeAdapter())
-              .put(Header.class, new HeaderTypeAdapter())
-              .put(ClaimSet.class, new ClaimSetTypeAdapter())
               .put(Project.class, new ProjectTypeAdapter())
               .put(Instance.class, new InstanceTypeAdapter())
               .put(InstanceTemplate.class, new InstanceTemplateTypeAdapter())
@@ -86,7 +83,6 @@ public class GoogleComputeEngineParserModule extends AbstractModule {
     *
     * @see <a href="https://developers.google.com/compute/docs/reference/v1/operations"/>
     */
-   @Singleton
    private static class OperationTypeAdapter implements JsonDeserializer<Operation> {
 
       @Override
@@ -124,7 +120,6 @@ public class GoogleComputeEngineParserModule extends AbstractModule {
       }
    }
 
-   @Singleton
    private static class InstanceTemplateTypeAdapter implements JsonSerializer<InstanceTemplate> {
 
       @Override
@@ -175,7 +170,6 @@ public class GoogleComputeEngineParserModule extends AbstractModule {
       }
    }
 
-   @Singleton
    private static class InstanceTypeAdapter implements JsonDeserializer<Instance> {
 
       @Override
@@ -218,12 +212,7 @@ public class GoogleComputeEngineParserModule extends AbstractModule {
       }
    }
 
-   /**
-    * Parser for Metadata.
-    */
-   @Singleton
    private static class MetadataTypeAdapter implements JsonDeserializer<Metadata>, JsonSerializer<Metadata> {
-
 
       @Override
       public Metadata deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws
@@ -265,9 +254,6 @@ public class GoogleComputeEngineParserModule extends AbstractModule {
       }
    }
 
-
-
-   @Singleton
    private static class ProjectTypeAdapter implements JsonDeserializer<Project> {
 
       @Override
@@ -291,7 +277,6 @@ public class GoogleComputeEngineParserModule extends AbstractModule {
       }
    }
 
-   @Singleton
    private static class FirewallOptionsTypeAdapter implements JsonSerializer<FirewallOptions> {
 
       @Override
@@ -323,7 +308,6 @@ public class GoogleComputeEngineParserModule extends AbstractModule {
       }
    }
 
-   @Singleton
    private static class RouteOptionsTypeAdapter implements JsonSerializer<RouteOptions> {
 
       @Override

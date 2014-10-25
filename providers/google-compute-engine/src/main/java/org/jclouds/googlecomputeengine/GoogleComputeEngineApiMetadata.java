@@ -32,16 +32,13 @@ import org.jclouds.compute.ComputeServiceContext;
 import org.jclouds.googlecomputeengine.compute.config.GoogleComputeEngineServiceContextModule;
 import org.jclouds.googlecomputeengine.config.GoogleComputeEngineHttpApiModule;
 import org.jclouds.googlecomputeengine.config.GoogleComputeEngineParserModule;
-import org.jclouds.googlecomputeengine.config.OAuthModuleWithoutTypeAdapters;
 import org.jclouds.oauth.v2.config.OAuthAuthenticationModule;
+import org.jclouds.oauth.v2.config.OAuthModule;
 import org.jclouds.rest.internal.BaseHttpApiMetadata;
 
 import com.google.common.collect.ImmutableSet;
 import com.google.inject.Module;
 
-/**
- * Implementation of {@link ApiMetadata} for GoogleCompute v1 API
- */
 public class GoogleComputeEngineApiMetadata extends BaseHttpApiMetadata<GoogleComputeEngineApi> {
 
    @Override
@@ -85,7 +82,7 @@ public class GoogleComputeEngineApiMetadata extends BaseHttpApiMetadata<GoogleCo
                          .add(GoogleComputeEngineHttpApiModule.class)
                          .add(GoogleComputeEngineParserModule.class)
                          .add(OAuthAuthenticationModule.class)
-                         .add(OAuthModuleWithoutTypeAdapters.class)
+                         .add(OAuthModule.class)
                          .add(GoogleComputeEngineServiceContextModule.class)
                          .build());
       }
