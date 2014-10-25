@@ -31,7 +31,6 @@ import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 
 import org.jclouds.Fallbacks.NullOnNotFoundOr404;
-import org.jclouds.googlecloudstorage.binders.ObjectAccessControlsBinder;
 import org.jclouds.googlecloudstorage.domain.ListObjectAccessControls;
 import org.jclouds.googlecloudstorage.domain.ObjectAccessControls;
 import org.jclouds.googlecloudstorage.domain.templates.ObjectAccessControlsTemplate;
@@ -40,9 +39,7 @@ import org.jclouds.oauth.v2.config.OAuthScopes;
 import org.jclouds.oauth.v2.filters.OAuthAuthenticator;
 import org.jclouds.rest.annotations.BinderParam;
 import org.jclouds.rest.annotations.Fallback;
-import org.jclouds.rest.annotations.MapBinder;
 import org.jclouds.rest.annotations.PATCH;
-import org.jclouds.rest.annotations.PayloadParam;
 import org.jclouds.rest.annotations.RequestFilters;
 import org.jclouds.rest.annotations.SkipEncoding;
 import org.jclouds.rest.binders.BindToJsonPayload;
@@ -126,9 +123,9 @@ public interface ObjectAccessControlsApi {
    @Produces(MediaType.APPLICATION_JSON)
    @Path("/b/{bucket}/o/{object}/acl")
    @OAuthScopes(STORAGE_FULLCONTROL_SCOPE)
-   @MapBinder(ObjectAccessControlsBinder.class)
    ObjectAccessControls createObjectAccessControls(@PathParam("bucket") String bucketName,
-            @PathParam("object") String objectName, @PayloadParam("template") ObjectAccessControlsTemplate template);
+            @PathParam("object") String objectName,
+            @BinderParam(BindToJsonPayload.class) ObjectAccessControlsTemplate template);
 
    /**
     * Creates a new acl entry for specified object
@@ -150,9 +147,9 @@ public interface ObjectAccessControlsApi {
    @Produces(MediaType.APPLICATION_JSON)
    @Path("/b/{bucket}/o/{object}/acl")
    @OAuthScopes(STORAGE_FULLCONTROL_SCOPE)
-   @MapBinder(ObjectAccessControlsBinder.class)
    ObjectAccessControls createObjectAccessControls(@PathParam("bucket") String bucketName,
-            @PathParam("object") String objectName, @PayloadParam("template") ObjectAccessControlsTemplate template,
+            @PathParam("object") String objectName,
+            @BinderParam(BindToJsonPayload.class) ObjectAccessControlsTemplate template,
             @QueryParam("generation") Long generation);
 
    /**

@@ -31,20 +31,17 @@ import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 
 import org.jclouds.Fallbacks.NullOnNotFoundOr404;
-import org.jclouds.googlecloudstorage.binders.DefaultObjectAccessControlsBinder;
 import org.jclouds.googlecloudstorage.domain.DefaultObjectAccessControls;
-import org.jclouds.googlecloudstorage.domain.ListDefaultObjectAccessControls;
 import org.jclouds.googlecloudstorage.domain.DomainResourceReferences.ObjectRole;
-import org.jclouds.http.HttpResponse;
+import org.jclouds.googlecloudstorage.domain.ListDefaultObjectAccessControls;
 import org.jclouds.googlecloudstorage.domain.templates.DefaultObjectAccessControlsTemplate;
+import org.jclouds.http.HttpResponse;
 import org.jclouds.javax.annotation.Nullable;
 import org.jclouds.oauth.v2.config.OAuthScopes;
 import org.jclouds.oauth.v2.filters.OAuthAuthenticationFilter;
 import org.jclouds.rest.annotations.BinderParam;
 import org.jclouds.rest.annotations.Fallback;
-import org.jclouds.rest.annotations.MapBinder;
 import org.jclouds.rest.annotations.PATCH;
-import org.jclouds.rest.annotations.PayloadParam;
 import org.jclouds.rest.annotations.RequestFilters;
 import org.jclouds.rest.annotations.SkipEncoding;
 import org.jclouds.rest.binders.BindToJsonPayload;
@@ -97,9 +94,8 @@ public interface DefaultObjectAccessControlsApi {
    @Produces(MediaType.APPLICATION_JSON)
    @Path("/b/{bucket}/defaultObjectAcl")
    @OAuthScopes(STORAGE_FULLCONTROL_SCOPE)
-   @MapBinder(DefaultObjectAccessControlsBinder.class)
    DefaultObjectAccessControls createDefaultObjectAccessControls(@PathParam("bucket") String bucketName,
-            @PayloadParam("template") DefaultObjectAccessControlsTemplate template);
+            @BinderParam(BindToJsonPayload.class) DefaultObjectAccessControlsTemplate template);
 
    /**
     * Permanently deletes the DefaultObjectAcessControl entry for the specified entity on the specified bucket.

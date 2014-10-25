@@ -24,9 +24,7 @@ import org.jclouds.rest.MapBinder;
 
 public class UploadBinder implements MapBinder {
 
-   @Override
-   public <R extends HttpRequest> R bindToRequest(R request, Map<String, Object> postParams)
-            throws IllegalArgumentException {
+   @Override public <R extends HttpRequest> R bindToRequest(R request, Map<String, Object> postParams) {
       Payload payload = (Payload) postParams.get("payload");
 
       request.getPayload().getContentMetadata().setContentType(payload.getContentMetadata().getContentType());
@@ -34,8 +32,7 @@ public class UploadBinder implements MapBinder {
       return bindToRequest(request, payload);
    }
 
-   @Override
-   public <R extends HttpRequest> R bindToRequest(R request, Object input) {
+   @Override public <R extends HttpRequest> R bindToRequest(R request, Object input) {
       return request;
    }
 }

@@ -34,7 +34,6 @@ import javax.ws.rs.core.MediaType;
 import org.jclouds.Fallbacks.FalseOnNotFoundOr404;
 import org.jclouds.Fallbacks.NullOnNotFoundOr404;
 import org.jclouds.Fallbacks.TrueOnNotFoundOr404;
-import org.jclouds.googlecloudstorage.binders.ComposeObjectBinder;
 import org.jclouds.googlecloudstorage.binders.MultipartUploadBinder;
 import org.jclouds.googlecloudstorage.binders.UploadBinder;
 import org.jclouds.googlecloudstorage.domain.GCSObject;
@@ -59,10 +58,10 @@ import org.jclouds.rest.annotations.Fallback;
 import org.jclouds.rest.annotations.MapBinder;
 import org.jclouds.rest.annotations.PATCH;
 import org.jclouds.rest.annotations.PayloadParam;
+import org.jclouds.rest.annotations.QueryParams;
 import org.jclouds.rest.annotations.RequestFilters;
 import org.jclouds.rest.annotations.ResponseParser;
 import org.jclouds.rest.annotations.SkipEncoding;
-import org.jclouds.rest.annotations.QueryParams;
 import org.jclouds.rest.binders.BindToJsonPayload;
 
 /**
@@ -387,10 +386,9 @@ public interface ObjectApi {
    @Consumes(MediaType.APPLICATION_JSON)
    @Path("storage/v1/b/{destinationBucket}/o/{destinationObject}/compose")
    @OAuthScopes(STORAGE_FULLCONTROL_SCOPE)
-   @MapBinder(ComposeObjectBinder.class)
    GCSObject composeObjects(@PathParam("destinationBucket") String destinationBucket,
             @PathParam("destinationObject") String destinationObject,
-            @PayloadParam("template") ComposeObjectTemplate composeObjectTemplate);
+            @BinderParam(BindToJsonPayload.class) ComposeObjectTemplate composeObjectTemplate);
 
    /**
     * Concatenates a list of existing objects into a new object in the same bucket.
@@ -411,10 +409,10 @@ public interface ObjectApi {
    @Consumes(MediaType.APPLICATION_JSON)
    @Path("storage/v1/b/{destinationBucket}/o/{destinationObject}/compose")
    @OAuthScopes(STORAGE_FULLCONTROL_SCOPE)
-   @MapBinder(ComposeObjectBinder.class)
    GCSObject composeObjects(@PathParam("destinationBucket") String destinationBucket,
             @PathParam("destinationObject") String destinationObject,
-            @PayloadParam("template") ComposeObjectTemplate composeObjectTemplate, ComposeObjectOptions options);
+            @BinderParam(BindToJsonPayload.class) ComposeObjectTemplate composeObjectTemplate,
+            ComposeObjectOptions options);
 
    /**
     * Copies an object to a specified location. Optionally overrides metadata.
@@ -485,6 +483,6 @@ public interface ObjectApi {
    @OAuthScopes(STORAGE_FULLCONTROL_SCOPE)
    @MapBinder(MultipartUploadBinder.class)
    GCSObject multipartUpload(@PathParam("bucket") String bucketName,
-            @PayloadParam("template") ObjectTemplate objectTemplate, @PayloadParam("payload") Payload payload);
-
+            @BinderParam(BindToJsonPayload.class) ObjectTemplate objectTemplate,
+            @PayloadParam("payload") Payload payload);
 }

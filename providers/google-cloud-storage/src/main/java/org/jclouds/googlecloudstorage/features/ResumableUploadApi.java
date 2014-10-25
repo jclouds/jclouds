@@ -29,7 +29,6 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 
-import org.jclouds.googlecloudstorage.binders.ResumableUploadBinder;
 import org.jclouds.googlecloudstorage.binders.UploadBinder;
 import org.jclouds.googlecloudstorage.domain.ResumableUpload;
 import org.jclouds.googlecloudstorage.domain.templates.ObjectTemplate;
@@ -38,12 +37,14 @@ import org.jclouds.googlecloudstorage.parser.ParseToResumableUpload;
 import org.jclouds.io.Payload;
 import org.jclouds.oauth.v2.config.OAuthScopes;
 import org.jclouds.oauth.v2.filters.OAuthAuthenticator;
+import org.jclouds.rest.annotations.BinderParam;
 import org.jclouds.rest.annotations.MapBinder;
 import org.jclouds.rest.annotations.PayloadParam;
 import org.jclouds.rest.annotations.QueryParams;
 import org.jclouds.rest.annotations.RequestFilters;
 import org.jclouds.rest.annotations.ResponseParser;
 import org.jclouds.rest.annotations.SkipEncoding;
+import org.jclouds.rest.binders.BindToJsonPayload;
 
 /**
  * Provides Resumable Upload support via Rest API
@@ -105,12 +106,11 @@ public interface ResumableUploadApi {
    @Consumes(MediaType.APPLICATION_JSON)
    @Path("/upload/storage/v1/b/{bucket}/o")
    @OAuthScopes(STORAGE_FULLCONTROL_SCOPE)
-   @MapBinder(ResumableUploadBinder.class)
    @ResponseParser(ParseToResumableUpload.class)
    ResumableUpload initResumableUpload(@PathParam("bucket") String bucketName,
             @HeaderParam("X-Upload-Content-Type") String contentType,
             @HeaderParam("X-Upload-Content-Length") Long contentLength,
-            @PayloadParam("template") ObjectTemplate metadata);
+            @BinderParam(BindToJsonPayload.class) ObjectTemplate metadata);
 
    /**
     * Stores a new object

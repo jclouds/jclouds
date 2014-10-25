@@ -30,7 +30,6 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
 import org.jclouds.Fallbacks.NullOnNotFoundOr404;
-import org.jclouds.googlecloudstorage.binders.BucketAccessControlsBinder;
 import org.jclouds.googlecloudstorage.domain.BucketAccessControls;
 import org.jclouds.googlecloudstorage.domain.ListBucketAccessControls;
 import org.jclouds.googlecloudstorage.domain.templates.BucketAccessControlsTemplate;
@@ -40,9 +39,7 @@ import org.jclouds.oauth.v2.config.OAuthScopes;
 import org.jclouds.oauth.v2.filters.OAuthAuthenticationFilter;
 import org.jclouds.rest.annotations.BinderParam;
 import org.jclouds.rest.annotations.Fallback;
-import org.jclouds.rest.annotations.MapBinder;
 import org.jclouds.rest.annotations.PATCH;
-import org.jclouds.rest.annotations.PayloadParam;
 import org.jclouds.rest.annotations.RequestFilters;
 import org.jclouds.rest.annotations.SkipEncoding;
 import org.jclouds.rest.binders.BindToJsonPayload;
@@ -96,9 +93,8 @@ public interface BucketAccessControlsApi {
    @Consumes(MediaType.APPLICATION_JSON)
    @Path("/b/{bucket}/acl")
    @OAuthScopes(STORAGE_FULLCONTROL_SCOPE)
-   @MapBinder(BucketAccessControlsBinder.class)
    BucketAccessControls createBucketAccessControls(@PathParam("bucket") String bucketName,
-            @PayloadParam("template") BucketAccessControlsTemplate template);
+            @BinderParam(BindToJsonPayload.class) BucketAccessControlsTemplate template);
 
    /**
     * Permanently deletes the ACL entry for the specified entity on the specified bucket.

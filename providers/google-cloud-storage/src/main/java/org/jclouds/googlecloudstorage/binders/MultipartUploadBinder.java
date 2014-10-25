@@ -16,10 +16,11 @@
  */
 package org.jclouds.googlecloudstorage.binders;
 
-import java.util.Map;
+import static com.google.common.base.Preconditions.checkNotNull;
+import static javax.ws.rs.core.HttpHeaders.CONTENT_TYPE;
+import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
 
-import javax.ws.rs.core.HttpHeaders;
-import javax.ws.rs.core.MediaType;
+import java.util.Map;
 
 import org.jclouds.googlecloudstorage.domain.templates.ObjectTemplate;
 import org.jclouds.http.HttpRequest;
@@ -32,40 +33,32 @@ import org.jclouds.rest.MapBinder;
 
 import com.google.gson.Gson;
 
-import static com.google.common.base.Preconditions.checkNotNull;
-
 public class MultipartUploadBinder implements MapBinder {
 
-   private final String BOUNDARY_HEADER = "multipart_boundary";
+   private static final String BOUNDARY_HEADER = "multipart_boundary";
 
-   @Override
-   public <R extends HttpRequest> R bindToRequest(R request, Map<String, Object> postParams)
-            throws IllegalArgumentException {
-
+   @Override public <R extends HttpRequest> R bindToRequest(R request, Map<String, Object> postParams) {
       ObjectTemplate template = (ObjectTemplate) postParams.get("template");
       Payload payload = (Payload) postParams.get("payload");
 
       String contentType = checkNotNull(template.getContentType(), "contentType");
-      Long length = checkNotNull(template.getSize(), "contetLength");
+      Long length = checkNotNull(template.getSize(), "contentLength");
 
       StringPayload jsonPayload = Payloads.newStringPayload(new Gson().toJson(template));
 
       payload.getContentMetadata().setContentLength(length);
 
-      Part jsonPart = Part.create("Metadata", jsonPayload,
-               new Part.PartOptions().contentType(MediaType.APPLICATION_JSON));
+      Part jsonPart = Part.create("Metadata", jsonPayload, new Part.PartOptions().contentType(APPLICATION_JSON));
       Part mediaPart = Part.create(template.getName(), payload, new Part.PartOptions().contentType(contentType));
 
       MultipartForm compPayload = new MultipartForm(BOUNDARY_HEADER, jsonPart, mediaPart);
       request.setPayload(compPayload);
       // HeaderPart
-      request.toBuilder().replaceHeader(HttpHeaders.CONTENT_TYPE, "Multipart/related; boundary= " + BOUNDARY_HEADER)
-               .build();
+      request.toBuilder().replaceHeader(CONTENT_TYPE, "Multipart/related; boundary= " + BOUNDARY_HEADER).build();
       return request;
    }
 
-   @Override
-   public <R extends HttpRequest> R bindToRequest(R request, Object input) {
+   @Override public <R extends HttpRequest> R bindToRequest(R request, Object input) {
       return request;
    }
 }

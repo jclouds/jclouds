@@ -35,7 +35,6 @@ import org.jclouds.Fallbacks.FalseOnNotFoundOr404;
 import org.jclouds.Fallbacks.NullOnNotFoundOr404;
 import org.jclouds.Fallbacks.TrueOnNotFoundOr404;
 import org.jclouds.blobstore.BlobStoreFallbacks.NullOnKeyAlreadyExists;
-import org.jclouds.googlecloudstorage.binders.BucketBinder;
 import org.jclouds.googlecloudstorage.domain.Bucket;
 import org.jclouds.googlecloudstorage.domain.ListPage;
 import org.jclouds.googlecloudstorage.domain.templates.BucketTemplate;
@@ -50,9 +49,7 @@ import org.jclouds.oauth.v2.config.OAuthScopes;
 import org.jclouds.oauth.v2.filters.OAuthAuthenticationFilter;
 import org.jclouds.rest.annotations.BinderParam;
 import org.jclouds.rest.annotations.Fallback;
-import org.jclouds.rest.annotations.MapBinder;
 import org.jclouds.rest.annotations.PATCH;
-import org.jclouds.rest.annotations.PayloadParam;
 import org.jclouds.rest.annotations.RequestFilters;
 import org.jclouds.rest.annotations.SkipEncoding;
 import org.jclouds.rest.binders.BindToJsonPayload;
@@ -136,9 +133,8 @@ public interface BucketApi {
    @Consumes(MediaType.APPLICATION_JSON)
    @Path("/b")
    @OAuthScopes(STORAGE_FULLCONTROL_SCOPE)
-   @MapBinder(BucketBinder.class)
    @Fallback(NullOnBucketAlreadyExists.class)
-   Bucket createBucket(@QueryParam("project") String projectId, @PayloadParam("template") BucketTemplate bucketTemplate);
+   Bucket createBucket(@QueryParam("project") String projectId, @BinderParam(BindToJsonPayload.class) BucketTemplate bucketTemplate);
 
    /**
     * Creates a new Bucket
@@ -158,10 +154,9 @@ public interface BucketApi {
    @Consumes(MediaType.APPLICATION_JSON)
    @Path("/b")
    @OAuthScopes(STORAGE_FULLCONTROL_SCOPE)
-   @MapBinder(BucketBinder.class)
    @Fallback(NullOnKeyAlreadyExists.class)
    Bucket createBucket(@QueryParam("project") String projectId,
-            @PayloadParam("template") BucketTemplate bucketTemplate, InsertBucketOptions options);
+            @BinderParam(BindToJsonPayload.class) BucketTemplate bucketTemplate, InsertBucketOptions options);
 
    /**
     * Permanently deletes an empty Bucket.If bucket is not empty 409 error to indicate the conflict.  
