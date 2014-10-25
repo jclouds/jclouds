@@ -16,15 +16,16 @@
  */
 package org.jclouds.oauth.v2.parse;
 
-import org.jclouds.json.BaseItemParserTest;
-import org.jclouds.oauth.v2.domain.Token;
-import org.testng.annotations.Test;
+import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
 
 import javax.ws.rs.Consumes;
-import javax.ws.rs.core.MediaType;
 
-@Test(groups = "unit")
-public class ParseTokenTest extends BaseItemParserTest<Token> {
+import org.jclouds.oauth.v2.domain.Token;
+import org.jclouds.oauth.v2.internal.BaseOAuthParseTest;
+import org.testng.annotations.Test;
+
+@Test(groups = "unit", testName = "ParseTokenTest")
+public class ParseTokenTest extends BaseOAuthParseTest<Token> {
 
    @Override
    public String resource() {
@@ -32,9 +33,8 @@ public class ParseTokenTest extends BaseItemParserTest<Token> {
    }
 
    @Override
-   @Consumes(MediaType.APPLICATION_JSON)
+   @Consumes(APPLICATION_JSON)
    public Token expected() {
-      return Token.builder().expiresIn(3600).tokenType("Bearer").accessToken
-              ("1/8xbJqaOZXSUZbHLl5EOtu1pxz3fmmetKx9W8CV4t79M").build();
+      return Token.create("1/8xbJqaOZXSUZbHLl5EOtu1pxz3fmmetKx9W8CV4t79M", "Bearer", 3600);
    }
 }

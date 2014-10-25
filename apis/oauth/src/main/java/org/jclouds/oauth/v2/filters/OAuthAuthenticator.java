@@ -54,7 +54,7 @@ public class OAuthAuthenticator implements OAuthAuthenticationFilter {
       TokenRequest tokenRequest = tokenRequestBuilder.apply(generatedHttpRequest);
       Token token = tokenFetcher.apply(tokenRequest);
       return request.toBuilder().addHeader("Authorization", String.format("%s %s",
-              token.getTokenType(), token.getAccessToken())).build();
+              token.tokenType(), token.accessToken())).build();
 
    }
 

@@ -16,35 +16,33 @@
  */
 package org.jclouds.oauth.v2;
 
-import com.google.common.base.Charsets;
-import com.google.common.base.Throwables;
-import com.google.common.io.Files;
-import org.jclouds.oauth.v2.config.CredentialType;
-import org.jclouds.oauth.v2.config.OAuthProperties;
+import static com.google.common.base.Preconditions.checkNotNull;
+import static com.google.common.base.Throwables.propagate;
+import static org.jclouds.oauth.v2.config.OAuthProperties.AUDIENCE;
+import static org.jclouds.util.Strings2.toStringAndClose;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.Properties;
 
-import static com.google.common.base.Preconditions.checkNotNull;
-import static org.jclouds.oauth.v2.config.OAuthProperties.AUDIENCE;
+import org.jclouds.oauth.v2.config.CredentialType;
+import org.jclouds.oauth.v2.config.OAuthProperties;
 
-/**
- * Utils for OAuth tests.
- */
+import com.google.common.base.Charsets;
+import com.google.common.io.Files;
+
 public class OAuthTestUtils {
 
    public static Properties defaultProperties(Properties properties) {
       try {
          properties = properties == null ? new Properties() : properties;
          properties.put("oauth.identity", "foo");
-         properties.put("oauth.credential",
-            Files.asCharSource(new File("src/test/resources/testpk.pem"), Charsets.UTF_8).read());
+         properties.put("oauth.credential", toStringAndClose(OAuthTestUtils.class.getResourceAsStream("/testpk.pem")));
          properties.put("oauth.endpoint", "http://localhost:5000/o/oauth2/token");
          properties.put(AUDIENCE, "https://accounts.google.com/o/oauth2/token");
          return properties;
       } catch (IOException e) {
-         throw Throwables.propagate(e);
+         throw propagate(e);
       }
    }
 
@@ -75,7 +73,7 @@ public class OAuthTestUtils {
       try {
          credentialFromFile = Files.toString(new File(val), Charsets.UTF_8);
       } catch (IOException e) {
-         throw Throwables.propagate(e);
+         throw propagate(e);
       }
       overrides.setProperty(key, credentialFromFile);
       return credentialFromFile;

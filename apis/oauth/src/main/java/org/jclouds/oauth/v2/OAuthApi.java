@@ -57,5 +57,4 @@ public interface OAuthApi extends Closeable {
    @POST
    @Consumes(MediaType.APPLICATION_JSON)
    Token authenticate(@BinderParam(OAuthTokenBinder.class) TokenRequest tokenRequest) throws AuthorizationException;
-
 }

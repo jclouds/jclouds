@@ -24,7 +24,6 @@ import static org.jclouds.io.Payloads.newUrlEncodedFormPayload;
 import java.util.Set;
 
 import javax.inject.Inject;
-import javax.inject.Singleton;
 
 import org.jclouds.http.HttpRequest;
 import org.jclouds.io.Payload;
@@ -45,7 +44,6 @@ import com.google.common.collect.ImmutableSet;
  * https://developers.google.com/accounts/docs/OAuth2ServiceAccount
  * <p/>
  */
-@Singleton
 public class JWTTokenRequestFormat implements TokenRequestFormat {
 
    private static final String ASSERTION_FORM_PARAM = "assertion";
@@ -55,18 +53,15 @@ public class JWTTokenRequestFormat implements TokenRequestFormat {
    private final Function<byte[], byte[]> signer;
    private final Json json;
 
-   @Inject
-   public JWTTokenRequestFormat(Function<byte[], byte[]> signer, Json json) {
+   @Inject JWTTokenRequestFormat(Function<byte[], byte[]> signer, Json json) {
       this.signer = signer;
       this.json = json;
    }
 
-   @SuppressWarnings("unchecked")
-   @Override
-   public <R extends HttpRequest> R formatRequest(R request, TokenRequest tokenRequest) {
+   @Override public <R extends HttpRequest> R formatRequest(R request, TokenRequest tokenRequest) {
 
-      String encodedHeader = json.toJson(tokenRequest.getHeader());
-      String encodedClaimSet = json.toJson(tokenRequest.getClaimSet());
+      String encodedHeader = json.toJson(tokenRequest.header());
+      String encodedClaimSet = json.toJson(tokenRequest.claimSet());
 
       encodedHeader = base64Url().omitPadding().encode(encodedHeader.getBytes(UTF_8));
       encodedClaimSet = base64Url().omitPadding().encode(encodedClaimSet.getBytes(UTF_8));
@@ -83,13 +78,11 @@ public class JWTTokenRequestFormat implements TokenRequestFormat {
       return (R) request.toBuilder().payload(payload).build();
    }
 
-   @Override
-   public String getTypeName() {
+   @Override public String type() {
       return "JWT";
    }
 
-   @Override
-   public Set<String> requiredClaims() {
+   @Override public Set<String> requiredClaims() {
       // exp and ist (expiration and emission times) are assumed mandatory already
       return ImmutableSet.of("iss", "scope", "aud");
    }

@@ -16,21 +16,10 @@
  */
 package org.jclouds.oauth.v2.config;
 
-import com.google.common.base.Function;
-import com.google.common.base.Supplier;
-import com.google.common.cache.CacheBuilder;
-import com.google.common.cache.CacheLoader;
-import com.google.common.cache.LoadingCache;
-import com.google.common.collect.ImmutableMap;
-import com.google.inject.AbstractModule;
-import com.google.inject.Inject;
-import com.google.inject.Provider;
-import com.google.inject.Provides;
-import com.google.inject.Singleton;
-import com.google.inject.TypeLiteral;
-import com.google.inject.name.Named;
-import org.jclouds.oauth.v2.domain.ClaimSet;
-import org.jclouds.oauth.v2.domain.Header;
+import static org.jclouds.Constants.PROPERTY_SESSION_INTERVAL;
+
+import java.util.concurrent.TimeUnit;
+
 import org.jclouds.oauth.v2.domain.OAuthCredentials;
 import org.jclouds.oauth.v2.domain.Token;
 import org.jclouds.oauth.v2.domain.TokenRequest;
@@ -41,28 +30,25 @@ import org.jclouds.oauth.v2.functions.BuildTokenRequest;
 import org.jclouds.oauth.v2.functions.FetchToken;
 import org.jclouds.oauth.v2.functions.OAuthCredentialsSupplier;
 import org.jclouds.oauth.v2.functions.SignOrProduceMacForToken;
-import org.jclouds.oauth.v2.json.ClaimSetTypeAdapter;
-import org.jclouds.oauth.v2.json.HeaderTypeAdapter;
 import org.jclouds.rest.internal.GeneratedHttpRequest;
 
-import java.lang.reflect.Type;
-import java.util.Map;
-import java.util.concurrent.TimeUnit;
+import com.google.common.base.Function;
+import com.google.common.base.Supplier;
+import com.google.common.cache.CacheBuilder;
+import com.google.common.cache.CacheLoader;
+import com.google.common.cache.LoadingCache;
+import com.google.inject.AbstractModule;
+import com.google.inject.Inject;
+import com.google.inject.Provider;
+import com.google.inject.Provides;
+import com.google.inject.Singleton;
+import com.google.inject.TypeLiteral;
+import com.google.inject.name.Named;
 
-import static org.jclouds.Constants.PROPERTY_SESSION_INTERVAL;
-
-/**
- * Base OAuth module
- */
 public class OAuthModule extends AbstractModule {
 
-
-   @Override
-   protected void configure() {
+   @Override protected void configure() {
       bind(new TypeLiteral<Function<byte[], byte[]>>() {}).to(SignOrProduceMacForToken.class);
-      bind(new TypeLiteral<Map<Type, Object>>() {}).toInstance(ImmutableMap.<Type, Object>of(
-            Header.class, new HeaderTypeAdapter(),
-            ClaimSet.class, new ClaimSetTypeAdapter()));
       bind(CredentialType.class).toProvider(CredentialTypeFromPropertyOrDefault.class);
       bind(new TypeLiteral<Supplier<OAuthCredentials>>() {}).to(OAuthCredentialsSupplier.class);
       bind(new TypeLiteral<Function<GeneratedHttpRequest, TokenRequest>>() {}).to(BuildTokenRequest.class);

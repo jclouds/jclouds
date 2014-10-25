@@ -34,6 +34,8 @@ import org.jclouds.oauth.v2.domain.TokenRequest;
 import org.jclouds.oauth.v2.internal.BaseOAuthApiLiveTest;
 import org.testng.annotations.Test;
 
+import com.google.common.collect.ImmutableMap;
+
 /**
  * A live test for authentication. Requires the following properties to be set:
  * - test.oauth.endpoint
@@ -62,17 +64,17 @@ public class OAuthApiLiveTest extends BaseOAuthApiLiveTest {
       checkState(OAuthConstants.OAUTH_ALGORITHM_NAMES_TO_SIGNATURE_ALGORITHM_NAMES.containsKey(signatureAlgorithm)
               , String.format("Algorithm not supported: " + signatureAlgorithm));
 
-      Header header = Header.builder().signerAlgorithm(signatureAlgorithm).type("JWT").build();
+      Header header = Header.create(signatureAlgorithm, "JWT");
 
       String scopes = getMandatoryProperty(properties, SCOPES);
       String audience = getMandatoryProperty(properties, AUDIENCE);
 
       long now = nowInSeconds();
 
-      ClaimSet claimSet = ClaimSet.builder().addClaim("aud", audience).addClaim("scope", scopes).addClaim("iss",
-              identity).emissionTime(now).expirationTime(now + 3600).build();
+      ClaimSet claimSet = ClaimSet.create(now, now + 3600,
+            ImmutableMap.of("aud", audience, "scope", scopes, "iss", identity));
 
-      TokenRequest tokenRequest = TokenRequest.builder().header(header).claimSet(claimSet).build();
+      TokenRequest tokenRequest = TokenRequest.create(header, claimSet);
       Token token = api.authenticate(tokenRequest);
 
       assertNotNull(token, "no token when authenticating " + tokenRequest);

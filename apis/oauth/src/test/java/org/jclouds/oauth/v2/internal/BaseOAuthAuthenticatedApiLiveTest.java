@@ -37,6 +37,7 @@ import org.jclouds.oauth.v2.domain.TokenRequest;
 import org.testng.annotations.Test;
 
 import com.google.common.base.Function;
+import com.google.common.collect.ImmutableMap;
 import com.google.common.reflect.TypeToken;
 import com.google.inject.Injector;
 import com.google.inject.Key;
@@ -75,18 +76,14 @@ public abstract class BaseOAuthAuthenticatedApiLiveTest<A extends Closeable> ext
       // obtain the scopes from the subclass
       String scopes = getScopes();
 
-      Header header = Header.builder().signerAlgorithm(signatureAlgorithm).type("JWT").build();
+      Header header = Header.create(signatureAlgorithm, "JWT");
 
       long now = SECONDS.convert(System.currentTimeMillis(), MILLISECONDS);
 
-      ClaimSet claimSet = ClaimSet.builder()
-                                  .addClaim("aud", audience)
-                                  .addClaim("scope", scopes)
-                                  .addClaim("iss", identity)
-                                  .emissionTime(now)
-                                  .expirationTime(now + 3600).build();
+      ClaimSet claimSet = ClaimSet.create(now, now + 3600,
+            ImmutableMap.of("aud", audience, "scope", scopes, "iss", identity));
 
-      TokenRequest tokenRequest = TokenRequest.builder().header(header).claimSet(claimSet).build();
+      TokenRequest tokenRequest = TokenRequest.create(header, claimSet);
 
       Token token = oauthApi.authenticate(tokenRequest);
 

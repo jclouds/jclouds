@@ -36,7 +36,7 @@ public interface TokenRequestFormat {
    /**
     * The name of the type of the token request, e.g., "JWT"
     */
-   String getTypeName();
+   String type();
 
    /**
     * The claims that must be present in the token request for it to be valid.

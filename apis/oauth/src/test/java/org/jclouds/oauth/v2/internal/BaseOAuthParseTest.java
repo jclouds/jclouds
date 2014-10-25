@@ -16,11 +16,15 @@
  */
 package org.jclouds.oauth.v2.internal;
 
-import org.jclouds.rest.internal.BaseRestApiExpectTest;
+import org.jclouds.json.BaseItemParserTest;
+import org.jclouds.json.config.GsonModule;
+import org.jclouds.oauth.v2.config.OAuthParserModule;
 
-public class BaseOAuthExpectTest<T> extends BaseRestApiExpectTest<T> {
+import com.google.inject.Guice;
+import com.google.inject.Injector;
 
-   public BaseOAuthExpectTest() {
-      provider = "oauth";
+public abstract class BaseOAuthParseTest<T> extends BaseItemParserTest<T> {
+   @Override protected Injector injector() {
+      return Guice.createInjector(new GsonModule(), new OAuthParserModule());
    }
 }

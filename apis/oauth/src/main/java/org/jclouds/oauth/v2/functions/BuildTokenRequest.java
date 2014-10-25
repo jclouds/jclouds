@@ -22,6 +22,8 @@ import static org.jclouds.oauth.v2.config.OAuthProperties.AUDIENCE;
 import static org.jclouds.oauth.v2.config.OAuthProperties.SCOPES;
 import static org.jclouds.oauth.v2.config.OAuthProperties.SIGNATURE_OR_MAC_ALGORITHM;
 
+import java.util.Collections;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 import javax.inject.Singleton;
@@ -38,7 +40,6 @@ import org.jclouds.rest.internal.GeneratedHttpRequest;
 import com.google.common.base.Function;
 import com.google.common.base.Joiner;
 import com.google.common.base.Supplier;
-import com.google.common.collect.ImmutableMap;
 import com.google.common.reflect.Invokable;
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
@@ -61,7 +62,7 @@ public class BuildTokenRequest implements Function<GeneratedHttpRequest, TokenRe
 
    @Inject(optional = true)
    @Named(ADDITIONAL_CLAIMS)
-   protected Map<String, String> additionalClaims = ImmutableMap.of();
+   protected Map<String, String> additionalClaims = Collections.emptyMap();
 
    @Inject(optional = true)
    @Named(SCOPES)
@@ -93,24 +94,20 @@ public class BuildTokenRequest implements Function<GeneratedHttpRequest, TokenRe
       long now = timeSourceMillisSinceEpoch.get() / 1000;
 
       // fetch the token
-      Header header = new Header.Builder()
-              .signerAlgorithm(signatureAlgorithm)
-              .type(tokenRequestFormat.getTypeName())
-              .build();
+      Header header = Header.create(signatureAlgorithm, tokenRequestFormat.type());
 
-      ClaimSet claimSet = new ClaimSet.Builder(this.tokenRequestFormat.requiredClaims())
-              .addClaim("iss", credentialsSupplier.get().identity)
-              .addClaim("scope", getOAuthScopes(request))
-              .addClaim("aud", assertionTargetDescription)
-              .emissionTime(now)
-              .expirationTime(now + tokenDuration)
-              .addAllClaims(additionalClaims)
-              .build();
+      Map<String, String> claims = new LinkedHashMap<String, String>();
+      claims.put("iss", credentialsSupplier.get().identity);
+      claims.put("scope", getOAuthScopes(request));
+      claims.put("aud", assertionTargetDescription);
+      claims.putAll(additionalClaims);
 
-      return new TokenRequest.Builder()
-              .header(header)
-              .claimSet(claimSet)
-              .build();
+      checkState(claims.keySet().containsAll(tokenRequestFormat.requiredClaims()),
+            "not all required claims were present");
+
+      ClaimSet claimSet = ClaimSet.create(now, now + tokenDuration, Collections.unmodifiableMap(claims));
+
+      return TokenRequest.create(header, claimSet);
    }
 
    protected String getOAuthScopes(GeneratedHttpRequest request) {

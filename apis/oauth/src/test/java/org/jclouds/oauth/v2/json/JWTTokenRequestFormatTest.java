@@ -34,6 +34,7 @@ import org.jclouds.util.Strings2;
 import org.testng.annotations.Test;
 
 import com.google.common.base.Splitter;
+import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Iterables;
 
 @Test(groups = "unit")
@@ -47,10 +48,10 @@ public class JWTTokenRequestFormatTest {
       TokenRequestFormat tokenRequestFormat = ContextBuilder.newBuilder(new OAuthApiMetadata()).overrides
               (OAuthTestUtils.defaultProperties(null)).build().utils()
               .injector().getInstance(TokenRequestFormat.class);
-      Header header = new Header.Builder().signerAlgorithm("a").type("b").build();
-      ClaimSet claimSet = new ClaimSet.Builder().addClaim("ist", STRING_THAT_GENERATES_URL_UNSAFE_BASE64_ENCODING)
-              .build();
-      TokenRequest tokenRequest = new TokenRequest.Builder().claimSet(claimSet).header(header).build();
+      Header header = Header.create("a", "b");
+      ClaimSet claimSet = ClaimSet.create(0, 0,
+            ImmutableMap.of("ist", STRING_THAT_GENERATES_URL_UNSAFE_BASE64_ENCODING));
+      TokenRequest tokenRequest = TokenRequest.create(header, claimSet);
       HttpRequest request = tokenRequestFormat.formatRequest(HttpRequest.builder().method("GET").endpoint
               ("http://localhost").build(), tokenRequest);
 
