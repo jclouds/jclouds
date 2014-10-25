@@ -42,7 +42,7 @@ import org.jclouds.googlecomputeengine.domain.ListPage;
 import org.jclouds.googlecomputeengine.domain.Operation;
 import org.jclouds.googlecomputeengine.functions.internal.PATCH;
 import org.jclouds.googlecomputeengine.functions.internal.ParseFirewalls;
-import org.jclouds.googlecomputeengine.handlers.FirewallBinder;
+import org.jclouds.googlecomputeengine.binders.FirewallBinder;
 import org.jclouds.googlecomputeengine.options.FirewallOptions;
 import org.jclouds.googlecomputeengine.options.ListOptions;
 import org.jclouds.javax.annotation.Nullable;

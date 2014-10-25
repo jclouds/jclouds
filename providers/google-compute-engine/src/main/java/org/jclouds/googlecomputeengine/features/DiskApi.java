@@ -39,7 +39,7 @@ import org.jclouds.googlecomputeengine.domain.ListPage;
 import org.jclouds.googlecomputeengine.domain.Operation;
 import org.jclouds.googlecomputeengine.functions.internal.ParseDisks;
 import org.jclouds.googlecomputeengine.options.DiskCreationOptions;
-import org.jclouds.googlecomputeengine.handlers.DiskCreationBinder;
+import org.jclouds.googlecomputeengine.binders.DiskCreationBinder;
 import org.jclouds.googlecomputeengine.options.ListOptions;
 import org.jclouds.javax.annotation.Nullable;
 import org.jclouds.oauth.v2.config.OAuthScopes;

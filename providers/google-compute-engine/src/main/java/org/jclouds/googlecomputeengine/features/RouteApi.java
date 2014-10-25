@@ -39,7 +39,7 @@ import org.jclouds.googlecomputeengine.domain.ListPage;
 import org.jclouds.googlecomputeengine.domain.Operation;
 import org.jclouds.googlecomputeengine.domain.Route;
 import org.jclouds.googlecomputeengine.functions.internal.ParseRoutes;
-import org.jclouds.googlecomputeengine.handlers.RouteBinder;
+import org.jclouds.googlecomputeengine.binders.RouteBinder;
 import org.jclouds.googlecomputeengine.options.ListOptions;
 import org.jclouds.googlecomputeengine.options.RouteOptions;
 import org.jclouds.javax.annotation.Nullable;

@@ -18,8 +18,6 @@ package org.jclouds.googlecomputeengine.handlers;
 
 import static org.jclouds.http.HttpUtils.closeClientButKeepContentStream;
 
-import javax.inject.Singleton;
-
 import org.jclouds.http.HttpCommand;
 import org.jclouds.http.HttpErrorHandler;
 import org.jclouds.http.HttpResponse;
@@ -30,7 +28,6 @@ import org.jclouds.rest.ResourceNotFoundException;
 /**
  * This will parse and set an appropriate exception on the command object.
  */
-@Singleton
 public class GoogleComputeEngineErrorHandler implements HttpErrorHandler {
    public void handleError(HttpCommand command, HttpResponse response) {
       // it is important to always read fully and close streams

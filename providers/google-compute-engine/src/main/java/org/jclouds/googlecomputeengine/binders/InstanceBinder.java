@@ -14,9 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.jclouds.googlecomputeengine.handlers;
-
-import static com.google.common.base.Preconditions.checkNotNull;
+package org.jclouds.googlecomputeengine.binders;
 
 import java.net.URI;
 import java.util.Map;
@@ -33,20 +31,18 @@ import com.google.common.base.Function;
 
 public class InstanceBinder implements MapBinder {
 
-   @Inject
-   private BindToJsonPayload jsonBinder;
+   private final BindToJsonPayload jsonBinder;
+   private final Function<String, URI> machineTypesToURI;
 
-   @Inject
-   @Named("machineTypeToURI")
-   Function<String, URI> machineTypesToURI;
+   @Inject InstanceBinder(BindToJsonPayload jsonBinder,
+         @Named("machineTypeToURI") Function<String, URI> machineTypesToURI) {
+      this.jsonBinder = jsonBinder;
+      this.machineTypesToURI = machineTypesToURI;
+   }
 
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   public <R extends HttpRequest> R bindToRequest(R request, Map<String, Object> postParams) {
-      InstanceTemplate template = (InstanceTemplate) checkNotNull(postParams.get("template"), "template");
-      template.name(checkNotNull(postParams.get("name"), "name").toString());
+   @Override public <R extends HttpRequest> R bindToRequest(R request, Map<String, Object> postParams) {
+      InstanceTemplate template = (InstanceTemplate) postParams.get("template");
+      template.name(postParams.get("name").toString());
 
       if (template.getMachineTypeName() != null) {
          template.machineType(machineTypesToURI.apply(template.getMachineTypeName()));
@@ -55,11 +51,7 @@ public class InstanceBinder implements MapBinder {
       return bindToRequest(request, template);
    }
 
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   public <R extends HttpRequest> R bindToRequest(R request, Object input) {
+   @Override public <R extends HttpRequest> R bindToRequest(R request, Object input) {
       return jsonBinder.bindToRequest(request, input);
    }
 }

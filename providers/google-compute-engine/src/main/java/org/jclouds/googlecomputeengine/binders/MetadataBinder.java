@@ -14,43 +14,34 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.jclouds.googlecomputeengine.handlers;
+package org.jclouds.googlecomputeengine.binders;
 
-import static com.google.common.base.Preconditions.checkNotNull;
-
-import java.net.URI;
 import java.util.Map;
 
 import javax.inject.Inject;
 
-import org.jclouds.googlecomputeengine.options.RouteOptions;
+import org.jclouds.googlecomputeengine.domain.Metadata;
 import org.jclouds.http.HttpRequest;
 import org.jclouds.rest.MapBinder;
 import org.jclouds.rest.binders.BindToJsonPayload;
 
-public class RouteBinder implements MapBinder {
+public class MetadataBinder implements MapBinder {
 
-   @Inject
-   private BindToJsonPayload jsonBinder;
+   private final BindToJsonPayload jsonBinder;
 
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   public <R extends HttpRequest> R bindToRequest(R request, Map<String, Object> postParams) {
-      RouteOptions options = (RouteOptions) checkNotNull(postParams.get("options"), "routeOptions");
-      String name = (String) checkNotNull(postParams.get("name"), "name");
-      URI network = (URI) checkNotNull(postParams.get("network"), "network");
-      options.name(name);
-      options.network(network);
-      return bindToRequest(request, options);
+   @Inject MetadataBinder(BindToJsonPayload jsonBinder){
+      this.jsonBinder = jsonBinder;
    }
 
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   public <R extends HttpRequest> R bindToRequest(R request, Object input) {
+   @Override public <R extends HttpRequest> R bindToRequest(R request, Map<String, Object> postParams) {
+      Metadata metadata = Metadata.builder()
+              .fingerprint(postParams.get("fingerprint").toString())
+              .items((Map<String, String>) postParams.get("items"))
+              .build();
+      return bindToRequest(request, metadata);
+   }
+
+   @Override public <R extends HttpRequest> R bindToRequest(R request, Object input) {
       return jsonBinder.bindToRequest(request, input);
    }
 }

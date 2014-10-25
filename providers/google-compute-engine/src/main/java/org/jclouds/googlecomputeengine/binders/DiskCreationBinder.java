@@ -14,35 +14,30 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.jclouds.googlecomputeengine.handlers;
-
-import static com.google.common.base.Preconditions.checkNotNull;
+package org.jclouds.googlecomputeengine.binders;
 
 import java.net.URI;
 import java.util.Map;
+
+import javax.inject.Inject;
 
 import org.jclouds.googlecomputeengine.options.DiskCreationOptions;
 import org.jclouds.http.HttpRequest;
 import org.jclouds.json.Json;
 import org.jclouds.rest.binders.BindToJsonPayload;
 
-import com.google.inject.Inject;
 
 public class DiskCreationBinder extends BindToJsonPayload {
 
-   @Inject
-   public DiskCreationBinder(Json jsonBinder) {
+   @Inject DiskCreationBinder(Json jsonBinder) {
       super(jsonBinder);
    }
 
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   public <R extends HttpRequest> R bindToRequest(R request, Map<String, Object> postParams) {
-      DiskCreationOptions options = (DiskCreationOptions) checkNotNull(postParams.get("options"), "diskCreationOptions");
-      String name = (String) checkNotNull(postParams.get("name"), "name");
-      int sizeGb = (int) checkNotNull(postParams.get("sizeGb"), "sizeGb");
+
+   @Override public <R extends HttpRequest> R bindToRequest(R request, Map<String, Object> postParams) {
+      DiskCreationOptions options = (DiskCreationOptions) postParams.get("options");
+      String name = postParams.get("name").toString();
+      int sizeGb = (Integer) postParams.get("sizeGb");
       DiskCreationBinderHelper diskCreationOptionsExtended = new DiskCreationBinderHelper(name, sizeGb, options);
       return super.bindToRequest(request, diskCreationOptionsExtended);
    }

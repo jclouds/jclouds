@@ -14,9 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.jclouds.googlecomputeengine.handlers;
-
-import static com.google.common.base.Preconditions.checkNotNull;
+package org.jclouds.googlecomputeengine.binders;
 
 import java.net.URI;
 import java.util.Map;
@@ -30,27 +28,20 @@ import org.jclouds.rest.binders.BindToJsonPayload;
 
 public class FirewallBinder implements MapBinder {
 
-   @Inject
-   private BindToJsonPayload jsonBinder;
+   private final BindToJsonPayload jsonBinder;
 
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   public <R extends HttpRequest> R bindToRequest(R request, Map<String, Object> postParams) {
-      FirewallOptions options = (FirewallOptions) checkNotNull(postParams.get("options"), "firewallOptions");
-      String name = (String) checkNotNull(postParams.get("name"), "name");
-      URI network = (URI) checkNotNull(postParams.get("network"), "network");
-      options.name(name);
-      options.network(network);
+   @Inject FirewallBinder(BindToJsonPayload jsonBinder){
+      this.jsonBinder = jsonBinder;
+   }
+
+   @Override public <R extends HttpRequest> R bindToRequest(R request, Map<String, Object> postParams) {
+      FirewallOptions options = (FirewallOptions) postParams.get("options");
+      options.name(postParams.get("name").toString());
+      options.network((URI) postParams.get("network"));
       return bindToRequest(request, options);
    }
 
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   public <R extends HttpRequest> R bindToRequest(R request, Object input) {
+   @Override public <R extends HttpRequest> R bindToRequest(R request, Object input) {
       return jsonBinder.bindToRequest(request, input);
    }
 }
