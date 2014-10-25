@@ -36,14 +36,14 @@ public class BucketTemplate {
 
    protected String name;
    protected Long projectNumber;
-   protected Set<BucketAccessControls> acl = Sets.newHashSet();
-   protected Set<DefaultObjectAccessControls> defaultObjectAccessControls = Sets.newHashSet();
+   protected Set<BucketAccessControls> acl = Sets.newLinkedHashSet();
+   protected Set<DefaultObjectAccessControls> defaultObjectAccessControls = Sets.newLinkedHashSet();
    protected Owner owner;
    protected Location location;
    protected Website website;
    protected Logging logging;
    protected Versioning versioning;
-   protected Set<BucketCors> cors = Sets.newHashSet();
+   protected Set<BucketCors> cors = Sets.newLinkedHashSet();
    protected BucketLifeCycle lifeCycle;
    protected StorageClass storageClass;
 

@@ -28,7 +28,7 @@ public class ComposeObjectTemplate {
 
    protected Kind kind;
    protected ObjectTemplate destination;
-   protected Set<GCSObject> sourceObjects = Sets.newHashSet();
+   protected Set<GCSObject> sourceObjects = Sets.newLinkedHashSet();
 
    public ComposeObjectTemplate() {
       this.kind = Kind.COMPOSE_REQUEST;

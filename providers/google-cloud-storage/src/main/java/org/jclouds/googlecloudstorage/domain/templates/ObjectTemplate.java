@@ -40,8 +40,8 @@ public class ObjectTemplate {
    protected String contentType;
    protected String crc32c;
    protected String md5Hash;
-   private Map<String, String> metadata = Maps.newHashMap();
-   protected Set<ObjectAccessControls> acl = Sets.newHashSet();
+   private Map<String, String> metadata = Maps.newLinkedHashMap();
+   protected Set<ObjectAccessControls> acl = Sets.newLinkedHashSet();
 
    public ObjectTemplate name(String name) {
       this.name = name;

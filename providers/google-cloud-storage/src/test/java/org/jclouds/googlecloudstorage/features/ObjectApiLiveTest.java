@@ -226,7 +226,7 @@ public class ObjectApiLiveTest extends BaseGoogleCloudStorageApiLiveTest {
                .role(ObjectRole.OWNER).build();
 
       ObjectTemplate destination = new ObjectTemplate().contentType("text/plain").addAcl(oacl);
-      Set<GCSObject> sourceList = Sets.newHashSet();
+      Set<GCSObject> sourceList = Sets.newLinkedHashSet();
       sourceList.add(api().getObject(BUCKET_NAME2, UPLOAD_OBJECT_NAME));
       sourceList.add(api().getObject(BUCKET_NAME2, COPIED_OBJECT_NAME));
 
@@ -245,7 +245,7 @@ public class ObjectApiLiveTest extends BaseGoogleCloudStorageApiLiveTest {
    @Test(groups = "live", dependsOnMethods = "testComposeObject")
    public void testComposeObjectWithOptions() {
       ObjectTemplate destination = new ObjectTemplate().contentType(MediaType.APPLICATION_JSON);
-      Set<GCSObject> sourceList = Sets.newHashSet();
+      Set<GCSObject> sourceList = Sets.newLinkedHashSet();
       sourceList.add(api().getObject(BUCKET_NAME2, UPLOAD_OBJECT_NAME));
       sourceList.add(api().getObject(BUCKET_NAME2, COPIED_OBJECT_NAME));
 

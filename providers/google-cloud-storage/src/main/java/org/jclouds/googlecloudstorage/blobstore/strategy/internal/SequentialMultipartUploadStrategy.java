@@ -70,7 +70,7 @@ public class SequentialMultipartUploadStrategy extends MultipartUploadStrategy {
       ObjectTemplate destination = blob2ObjectTemplate.apply(blob.getMetadata());
       ComposeObjectTemplate template = new ComposeObjectTemplate().destination(destination);
 
-      Set<GCSObject> sourceList = Sets.newHashSet();
+      Set<GCSObject> sourceList = Sets.newLinkedHashSet();
 
       String key = blob.getMetadata().getName();
       Payload payload = blob.getPayload();
