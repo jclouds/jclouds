@@ -18,42 +18,39 @@ package org.jclouds.googlecloudstorage.config;
 
 import java.lang.reflect.Type;
 import java.util.Map;
+import java.util.Set;
 
 import javax.inject.Singleton;
 
 import org.jclouds.googlecloudstorage.domain.templates.BucketTemplate;
-import org.jclouds.json.config.GsonModule.DateAdapter;
-import org.jclouds.json.config.GsonModule.Iso8601DateAdapter;
-import org.jclouds.oauth.v2.domain.ClaimSet;
-import org.jclouds.oauth.v2.domain.Header;
-import org.jclouds.oauth.v2.json.ClaimSetTypeAdapter;
-import org.jclouds.oauth.v2.json.HeaderTypeAdapter;
+import org.jclouds.json.config.GsonModule;
+import org.jclouds.oauth.v2.config.OAuthParserModule;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonSerializationContext;
 import com.google.gson.JsonSerializer;
+import com.google.gson.TypeAdapterFactory;
 import com.google.inject.AbstractModule;
 import com.google.inject.Provides;
 
 public class GoogleCloudStorageParserModule extends AbstractModule {
 
-   @Override
-   protected void configure() {
-      bind(DateAdapter.class).to(Iso8601DateAdapter.class);
+   @Override protected void configure() {
+      bind(GsonModule.DateAdapter.class).to(GsonModule.Iso8601DateAdapter.class);
    }
 
-   @Provides
-   @Singleton
-   public Map<Type, Object> provideCustomAdapterBindings() {
-      return new ImmutableMap.Builder<Type, Object>().put(Header.class, new HeaderTypeAdapter())
-               .put(ClaimSet.class, new ClaimSetTypeAdapter())
+   @Provides @Singleton public Set<TypeAdapterFactory> typeAdapterFactories() {
+      return new OAuthParserModule().typeAdapterFactories();
+   }
+
+   @Provides @Singleton public Map<Type, Object> typeAdapters() {
+      return new ImmutableMap.Builder<Type, Object>()
                .put(BucketTemplate.class, new BucketTemplateTypeAdapter())
                .build();
    }
 
-   @Singleton
    private static class BucketTemplateTypeAdapter implements JsonSerializer<BucketTemplate> {
 
       @Override
@@ -87,7 +84,5 @@ public class GoogleCloudStorageParserModule extends AbstractModule {
                      .storageClass(template.getStorageClass());
          }
       }
-
    }
-
 }

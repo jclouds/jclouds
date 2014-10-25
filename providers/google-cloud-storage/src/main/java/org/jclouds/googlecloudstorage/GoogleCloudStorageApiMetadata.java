@@ -31,8 +31,8 @@ import org.jclouds.blobstore.BlobStoreContext;
 import org.jclouds.googlecloudstorage.blobstore.config.GCSBlobStoreContextModule;
 import org.jclouds.googlecloudstorage.config.GoogleCloudStorageHttpApiModule;
 import org.jclouds.googlecloudstorage.config.GoogleCloudStorageParserModule;
-import org.jclouds.googlecloudstorage.config.OAuthModuleWithoutTypeAdapters;
 import org.jclouds.oauth.v2.config.OAuthAuthenticationModule;
+import org.jclouds.oauth.v2.config.OAuthModule;
 import org.jclouds.rest.internal.BaseHttpApiMetadata;
 
 import com.google.common.collect.ImmutableSet;
@@ -77,8 +77,8 @@ public class GoogleCloudStorageApiMetadata extends BaseHttpApiMetadata<GoogleClo
                   .view(typeToken(BlobStoreContext.class))
                   .defaultModules(
                            ImmutableSet.<Class<? extends Module>> of(GoogleCloudStorageParserModule.class,
-                                    OAuthAuthenticationModule.class, OAuthModuleWithoutTypeAdapters.class,
-                                    GoogleCloudStorageHttpApiModule.class, GCSBlobStoreContextModule.class));
+                                 OAuthAuthenticationModule.class, OAuthModule.class,
+                                 GoogleCloudStorageHttpApiModule.class, GCSBlobStoreContextModule.class));
 
       }
 
