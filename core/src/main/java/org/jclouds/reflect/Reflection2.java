@@ -72,6 +72,23 @@ public class Reflection2 {
    }
 
    /**
+    * returns an {@link Invokable} object that reflects a constructor present in the {@link TypeToken} type.
+    * 
+    * @param ownerType
+    *           corresponds to {@link Invokable#getOwnerType()}
+    * @param parameterTypes
+    *           corresponds to {@link Constructor#getParameterTypes()}
+    * 
+    * @throws IllegalArgumentException
+    *            if the constructor doesn't exist or a security exception occurred
+    */
+   @SuppressWarnings("unchecked")
+   public static <T> Invokable<T, T> constructor(Class<T> ownerType, Class<?>... parameterTypes) {
+      return (Invokable<T, T>) get(constructorForParams, new TypeTokenAndParameterTypes(typeToken(ownerType),
+            parameterTypes));
+   }
+
+   /**
     * return all constructors present in the class as {@link Invokable}s.
     * 
     * @param ownerType
