@@ -43,6 +43,7 @@ import com.google.common.collect.FluentIterable;
 import com.google.common.collect.Maps;
 import com.google.common.reflect.Invokable;
 import com.google.common.reflect.TypeToken;
+import com.google.gson.FieldNamingPolicy;
 import com.google.gson.FieldNamingStrategy;
 import com.google.gson.annotations.SerializedName;
 
@@ -162,10 +163,14 @@ public class NamingStrategies {
    public static class AnnotationFieldNamingStrategy extends AnnotationBasedNamingStrategy implements
          FieldNamingStrategy {
 
-      public AnnotationFieldNamingStrategy(Iterable<? extends NameExtractor<?>> extractors) {
+      private final FieldNamingPolicy fallback;
+
+      public AnnotationFieldNamingStrategy(Iterable<? extends NameExtractor<?>> extractors,
+            FieldNamingPolicy fallback) {
          super(extractors);
          checkArgument(extractors.iterator().hasNext(), "you must supply at least one name extractor, for example: "
                + ExtractSerializedName.class.getSimpleName());
+         this.fallback = checkNotNull(fallback, "fallback fieldNamingPolicy");
       }
 
       @Override
@@ -175,15 +180,16 @@ public class NamingStrategies {
                return annotationToNameExtractor.get(annotation.annotationType()).apply(annotation);
             }
          }
-         return null;
+         return fallback.translateName(f);
       }
    }
 
    public static class AnnotationOrNameFieldNamingStrategy extends AnnotationFieldNamingStrategy implements
          FieldNamingStrategy {
 
-      public AnnotationOrNameFieldNamingStrategy(Iterable<? extends NameExtractor<?>> extractors) {
-         super(extractors);
+      public AnnotationOrNameFieldNamingStrategy(Iterable<? extends NameExtractor<?>> extractors,
+            FieldNamingPolicy fallback) {
+         super(extractors, fallback);
       }
 
       @Override

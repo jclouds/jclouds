@@ -24,6 +24,7 @@ import com.google.common.collect.Sets;
 import com.google.common.primitives.Bytes;
 import com.google.gson.ExclusionStrategy;
 import com.google.gson.FieldAttributes;
+import com.google.gson.FieldNamingPolicy;
 import com.google.gson.FieldNamingStrategy;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -38,6 +39,7 @@ import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
 import com.google.inject.AbstractModule;
 import com.google.inject.ImplementedBy;
+import com.google.inject.Inject;
 import com.google.inject.Provides;
 import org.jclouds.date.DateService;
 import org.jclouds.domain.JsonBall;
@@ -63,7 +65,6 @@ import org.jclouds.json.internal.NullFilteringTypeAdapterFactories.SetTypeAdapte
 import org.jclouds.json.internal.NullHackJsonLiteralAdapter;
 import org.jclouds.json.internal.OptionalTypeAdapterFactory;
 
-import javax.inject.Inject;
 import javax.inject.Provider;
 import javax.inject.Singleton;
 import java.beans.ConstructorProperties;
@@ -78,10 +79,13 @@ import java.util.Set;
 
 import static com.google.common.io.BaseEncoding.base16;
 
-/**
- * Contains logic for parsing objects from Strings.
- */
 public class GsonModule extends AbstractModule {
+
+   /** Optionally override the fallback policy when name annotations aren't on fields. */
+   private static class FallbackFieldNamingPolicy {
+      @Inject(optional = true)
+      FieldNamingPolicy fallback = FieldNamingPolicy.IDENTITY;
+   }
 
    @SuppressWarnings("rawtypes")
    @Provides
@@ -92,10 +96,11 @@ public class GsonModule extends AbstractModule {
          MapTypeAdapterFactory map, MultimapTypeAdapterFactory multimap, IterableTypeAdapterFactory iterable,
          CollectionTypeAdapterFactory collection, ListTypeAdapterFactory list,
          ImmutableListTypeAdapterFactory immutableList, FluentIterableTypeAdapterFactory fluentIterable,
-         ImmutableMapTypeAdapterFactory immutableMap, DefaultExclusionStrategy exclusionStrategy) {
+         ImmutableMapTypeAdapterFactory immutableMap, DefaultExclusionStrategy exclusionStrategy,
+         FallbackFieldNamingPolicy fallbackFieldNamingPolicy) {
 
       FieldNamingStrategy serializationPolicy = new AnnotationOrNameFieldNamingStrategy(ImmutableSet.of(
-            new ExtractSerializedName(), new ExtractNamed()));
+            new ExtractSerializedName(), new ExtractNamed()), fallbackFieldNamingPolicy.fallback);
 
       GsonBuilder builder = new GsonBuilder().setFieldNamingStrategy(serializationPolicy)
                                              .setExclusionStrategies(exclusionStrategy);
