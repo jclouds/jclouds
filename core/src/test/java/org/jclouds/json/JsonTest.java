@@ -20,14 +20,17 @@ import static com.google.common.io.BaseEncoding.base16;
 import static com.google.common.primitives.Bytes.asList;
 import static org.testng.Assert.assertEquals;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
+import org.jclouds.javax.annotation.Nullable;
 import org.jclouds.json.config.GsonModule;
 import org.jclouds.json.config.GsonModule.DefaultExclusionStrategy;
 import org.testng.annotations.Test;
 
+import com.google.common.base.Objects;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.gson.FieldAttributes;
@@ -210,67 +213,73 @@ public class JsonTest {
                EnumInsideWithParser.Test.UNRECOGNIZED);
    }
 
-   private abstract static class SpinalCasedType {
+   private abstract static class UpperCamelCasedType {
       abstract String id();
 
-      abstract String contentType();
+      @Nullable abstract Map<String, String> volumes();
 
       // Currently, this only works for deserialization. Need to set a naming policy for serialization!
-      @SerializedNames({ "id", "content-type" })
-      private static SpinalCasedType create(String id, String contentType) {
-         return new SpinalCasedTypeImpl(id, contentType);
+      @SerializedNames({ "Id", "Volumes" })
+      private static UpperCamelCasedType create(String id, Map<String, String> volumes) {
+         return new UpperCamelCasedTypeImpl(id, volumes);
       }
    }
 
-   public void spinalCaseWithSerializedNames() {
+   public void upperCamelCaseWithSerializedNames() {
       Json json = Guice.createInjector(new GsonModule(), new AbstractModule() {
          @Override protected void configure() {
-            bind(FieldNamingPolicy.class).toInstance(FieldNamingPolicy.LOWER_CASE_WITH_DASHES);
+            bind(FieldNamingPolicy.class).toInstance(FieldNamingPolicy.UPPER_CAMEL_CASE);
          }
       }).getInstance(Json.class);
 
-      SpinalCasedType resource = SpinalCasedType.create("1234", "application/json");
-      String spinalJson = "{\"id\":\"1234\",\"content-type\":\"application/json\"}";
+      UpperCamelCasedType resource = UpperCamelCasedType.create("1234", Collections.<String, String>emptyMap());
+      String spinalJson = "{\"Id\":\"1234\",\"Volumes\":{}}";
 
       assertEquals(json.toJson(resource), spinalJson);
-      assertEquals(spinalJson, json.toJson(resource));
+      assertEquals(json.fromJson(spinalJson, UpperCamelCasedType.class), resource);
    }
 
-   private static class SpinalCasedTypeImpl extends SpinalCasedType {
-      private final String id;
-      private final String contentType;
+   public void upperCamelCaseWithSerializedNamesNullJsonValue() {
+      Json json = Guice.createInjector(new GsonModule(), new AbstractModule() {
+         @Override protected void configure() {
+            bind(FieldNamingPolicy.class).toInstance(FieldNamingPolicy.UPPER_CAMEL_CASE);
+         }
+      }).getInstance(Json.class);
 
-      private SpinalCasedTypeImpl(String id, String contentType) {
+      assertEquals(json.fromJson("{\"Id\":\"1234\",\"Volumes\":null}", UpperCamelCasedType.class),
+            UpperCamelCasedType.create("1234", null));
+   }
+
+   private static class UpperCamelCasedTypeImpl extends UpperCamelCasedType {
+      private final String id;
+      private final Map<String, String> volumes;
+
+      private UpperCamelCasedTypeImpl(String id, Map<String, String> volumes) {
          this.id = id;
-         this.contentType = contentType;
+         this.volumes = volumes;
       }
 
       @Override String id() {
          return id;
       }
 
-      @Override String contentType() {
-         return contentType;
+      @Override @Nullable Map<String, String> volumes() {
+         return volumes;
       }
 
       @Override public boolean equals(Object o) {
          if (o == this) {
             return true;
          }
-         if (o instanceof SpinalCasedType) {
-            SpinalCasedType that = (SpinalCasedType) o;
-            return (this.id.equals(that.id())) && (this.contentType.equals(that.contentType()));
+         if (o instanceof UpperCamelCasedType) {
+            UpperCamelCasedType that = (UpperCamelCasedType) o;
+            return Objects.equal(this.id, that.id()) && Objects.equal(this.volumes, that.volumes());
          }
          return false;
       }
 
       @Override public int hashCode() {
-         int h = 1;
-         h *= 1000003;
-         h ^= id.hashCode();
-         h *= 1000003;
-         h ^= contentType.hashCode();
-         return h;
+         return Objects.hashCode(id, volumes);
       }
    }
 }

@@ -128,8 +128,8 @@ public class Reflection2 {
    }
 
    /**
-    * This gets all declared constructors, not just public ones. makes them accessible, as well.
-    * This also includes factory methods on abstract types, defined static methods returning the same type.
+    * This gets all declared constructors or factory methods on abstract types, not just public ones, and makes them
+    * accessible.
     */
    private static LoadingCache<TypeToken<?>, Set<Invokable<?, ?>>> constructorsForTypeToken = CacheBuilder
          .newBuilder().build(new CacheLoader<TypeToken<?>, Set<Invokable<?, ?>>>() {
@@ -143,6 +143,7 @@ public class Reflection2 {
                if (Modifier.isAbstract(key.getRawType().getModifiers())) {
                   for (Invokable<?, Object> method : methods(key.getRawType())){
                      if (method.isStatic() && method.getReturnType().equals(key)) {
+                        method.setAccessible(true);
                         builder.add(method);
                      }
                   }
