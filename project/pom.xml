@@ -1026,17 +1026,6 @@
               <violationSeverity>warning</violationSeverity>
             </configuration>
           </plugin>
-          <plugin>
-            <groupId>org.gaul</groupId>
-            <artifactId>modernizer-maven-plugin</artifactId>
-            <configuration>
-              <javaVersion>${maven.compile.source}</javaVersion>
-              <!-- in jclouds-project use the local file. ${project.basedir}
-                required here as 1.1.0 of the modernizer plugin can't find the
-                exclusions file otherwise -->
-              <exclusionsFile>${project.basedir}/../resources/modernizer_exclusions.txt</exclusionsFile>
-            </configuration>
-          </plugin>
         </plugins>
       </build>
     </profile>
@@ -1062,21 +1051,6 @@
             <configuration>
               <!-- jclouds-resources has the checkstyle config in the classpath -->
               <configLocation>resources/checkstyle.xml</configLocation>
-            </configuration>
-          </plugin>
-          <plugin>
-            <groupId>org.gaul</groupId>
-            <artifactId>modernizer-maven-plugin</artifactId>
-            <dependencies>
-              <dependency>
-                <groupId>org.apache.jclouds</groupId>
-                <artifactId>jclouds-resources</artifactId>
-                <version>${project.version}</version>
-              </dependency>
-            </dependencies>
-            <configuration>
-              <javaVersion>${maven.compile.source}</javaVersion>
-              <exclusionsFile>resources/modernizer_exclusions.txt</exclusionsFile>
             </configuration>
           </plugin>
         </plugins>
