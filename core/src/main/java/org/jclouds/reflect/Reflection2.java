@@ -23,6 +23,7 @@ import static com.google.common.collect.Iterables.tryFind;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
 import java.lang.reflect.Type;
 import java.util.Arrays;
 import java.util.Collection;
@@ -68,23 +69,6 @@ public class Reflection2 {
    @SuppressWarnings("unchecked")
    public static <T> TypeToken<T> typeToken(Class<T> in) {
       return (TypeToken<T>) get(typeTokenForClass, checkNotNull(in, "class"));
-   }
-
-   /**
-    * returns an {@link Invokable} object that reflects a constructor present in the {@link TypeToken} type.
-    * 
-    * @param ownerType
-    *           corresponds to {@link Invokable#getOwnerType()}
-    * @param parameterTypes
-    *           corresponds to {@link Constructor#getParameterTypes()}
-    * 
-    * @throws IllegalArgumentException
-    *            if the constructor doesn't exist or a security exception occurred
-    */
-   @SuppressWarnings("unchecked")
-   public static <T> Invokable<T, T> constructor(Class<T> ownerType, Class<?>... parameterTypes) {
-      return (Invokable<T, T>) get(constructorForParams, new TypeTokenAndParameterTypes(typeToken(ownerType),
-            parameterTypes));
    }
 
    /**
@@ -144,7 +128,8 @@ public class Reflection2 {
    }
 
    /**
-    * this gets all declared constructors, not just public ones. makes them accessible, as well.
+    * This gets all declared constructors, not just public ones. makes them accessible, as well.
+    * This also includes factory methods on abstract types, defined static methods returning the same type.
     */
    private static LoadingCache<TypeToken<?>, Set<Invokable<?, ?>>> constructorsForTypeToken = CacheBuilder
          .newBuilder().build(new CacheLoader<TypeToken<?>, Set<Invokable<?, ?>>>() {
@@ -153,6 +138,14 @@ public class Reflection2 {
                for (Constructor<?> ctor : key.getRawType().getDeclaredConstructors()) {
                   ctor.setAccessible(true);
                   builder.add(key.constructor(ctor));
+               }
+               // Look for factory methods, if this is an abstract type.
+               if (Modifier.isAbstract(key.getRawType().getModifiers())) {
+                  for (Invokable<?, Object> method : methods(key.getRawType())){
+                     if (method.isStatic() && method.getReturnType().equals(key)) {
+                        builder.add(method);
+                     }
+                  }
                }
                return builder.build();
             }
