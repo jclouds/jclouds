@@ -166,7 +166,7 @@ public final class DeserializationConstructorAndReflectiveTypeAdapterFactory imp
                empty = false;
                String name = in.nextName();
                ParameterReader<?> parameter = parameterReaders.get(name);
-               if (parameter == null) {
+               if (parameter == null || in.peek() == JsonToken.NULL) {
                   in.skipValue();
                } else {
                   Object value = parameter.read(in);
