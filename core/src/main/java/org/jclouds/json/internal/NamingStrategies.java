@@ -32,6 +32,8 @@ import java.util.Map;
 
 import javax.inject.Named;
 
+import org.jclouds.json.SerializedNames;
+
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Function;
 import com.google.common.base.Joiner;
@@ -229,17 +231,25 @@ public class NamingStrategies {
       <T> String translateName(Invokable<T, T> c, int index) {
          String name = null;
 
-         if (markers.contains(ConstructorProperties.class) && c.getAnnotation(ConstructorProperties.class) != null) {
-            String[] names = c.getAnnotation(ConstructorProperties.class).value();
+         if ((markers.contains(ConstructorProperties.class) && c.getAnnotation(ConstructorProperties.class) != null)
+               || (markers.contains(SerializedNames.class) && c.getAnnotation(SerializedNames.class) != null)) {
+
+            String[] names = c.getAnnotation(SerializedNames.class) != null
+                  ? c.getAnnotation(SerializedNames.class).value()
+                  : c.getAnnotation(ConstructorProperties.class).value();
+
+            checkArgument(names.length == c.getParameters().size(), "Incorrect count of names on annotation of %s", c);
+
             if (names != null && names.length > index) {
                name = names[index];
             }
-         }
 
-         for (Annotation annotation : c.getParameters().get(index).getAnnotations()) {
-            if (annotationToNameExtractor.containsKey(annotation.annotationType())) {
-               name = annotationToNameExtractor.get(annotation.annotationType()).apply(annotation);
-               break;
+         } else {
+            for (Annotation annotation : c.getParameters().get(index).getAnnotations()) {
+               if (annotationToNameExtractor.containsKey(annotation.annotationType())) {
+                  name = annotationToNameExtractor.get(annotation.annotationType()).apply(annotation);
+                  break;
+               }
             }
          }
          return name;
