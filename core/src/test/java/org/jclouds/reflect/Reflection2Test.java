@@ -65,6 +65,25 @@ public class Reflection2Test {
             "[int arg0, float arg1]", "[int arg0]", "[int arg0, float arg1, boolean arg2]"));
    }
 
+   private abstract static class MyValue {
+      abstract String foo();
+
+      static MyValue create(String foo){
+         return null;
+      }
+   }
+
+   public void testConstructorsReturnsFactoryMethods() {
+      Set<String> ctorParams = FluentIterable.from(constructors(TypeToken.of(MyValue.class)))
+            .transform(new Function<Invokable<?, ?>, Iterable<Parameter>>() {
+               public Iterable<Parameter> apply(Invokable<?, ?> input) {
+                  return input.getParameters();
+               }
+            }).transform(toStringFunction()).toSet();
+
+      assertEquals(ctorParams, ImmutableSet.of("[]", "[java.lang.String arg0]"));
+   }
+
    public void testTypeTokenForClass() {
       assertEquals(typeToken(String.class), TypeToken.of(String.class));
    }

@@ -30,6 +30,7 @@ import java.util.Map;
 import javax.inject.Inject;
 import javax.inject.Named;
 
+import org.jclouds.json.internal.NamingStrategies.AnnotationConstructorNamingStrategy;
 import org.jclouds.json.internal.NamingStrategies.AnnotationOrNameFieldNamingStrategy;
 import org.jclouds.json.internal.NamingStrategies.ExtractNamed;
 import org.jclouds.json.internal.NamingStrategies.ExtractSerializedName;
@@ -61,7 +62,7 @@ public final class DeserializationConstructorAndReflectiveTypeAdapterFactoryTest
    static DeserializationConstructorAndReflectiveTypeAdapterFactory parameterizedCtorFactory() {
       FieldNamingStrategy serializationPolicy = new AnnotationOrNameFieldNamingStrategy(ImmutableSet.of(
             new ExtractSerializedName(), new ExtractNamed()));
-      NamingStrategies.AnnotationConstructorNamingStrategy deserializationPolicy = new NamingStrategies.AnnotationConstructorNamingStrategy(
+      AnnotationConstructorNamingStrategy deserializationPolicy = new AnnotationConstructorNamingStrategy(
             ImmutableSet.of(ConstructorProperties.class, Inject.class), ImmutableSet.of(new ExtractNamed()));
 
       return new DeserializationConstructorAndReflectiveTypeAdapterFactory(new ConstructorConstructor(ImmutableMap.<Type, InstanceCreator<?>>of()),
@@ -152,15 +153,58 @@ public final class DeserializationConstructorAndReflectiveTypeAdapterFactoryTest
         gson.fromJson("{\"bar\":1}", ValidatedConstructor.class);
     }
 
-   private static class GenericParamsCopiedIn {
+   private abstract static class ValueTypeWithFactory {
+      abstract List<String> foo();
+      abstract Map<String, String> bar();
+
+      @Inject
+      static ValueTypeWithFactory create(@Named("foo") List<String> foo, @Named("bar") Map<String, String> bar) {
+         return new GenericParamsCopiedIn(foo, bar);
+      }
+   }
+
+   private static class GenericParamsCopiedIn extends ValueTypeWithFactory {
       final List<String> foo;
       final Map<String, String> bar;
 
-      @Inject
-      GenericParamsCopiedIn(@Named("foo") List<String> foo, @Named("bar") Map<String, String> bar) {
+      @Inject GenericParamsCopiedIn(@Named("foo") List<String> foo, @Named("bar") Map<String, String> bar) {
          this.foo = Lists.newArrayList(foo);
          this.bar = Maps.newHashMap(bar);
       }
+
+      @Override List<String> foo() {
+         return foo;
+      }
+
+      @Override Map<String, String> bar() {
+         return bar;
+      }
+   }
+
+   public void testBuilderOnAbstractValueType() throws IOException {
+      TypeAdapter<ValueTypeWithFactory> adapter = parameterizedCtorFactory.create(gson,
+            TypeToken.get(ValueTypeWithFactory.class));
+      List<String> inputFoo = Lists.newArrayList();
+      inputFoo.add("one");
+      Map<String, String> inputBar = Maps.newHashMap();
+      inputBar.put("2", "two");
+
+      ValueTypeWithFactory toTest = adapter.fromJson("{ \"foo\":[\"one\"], \"bar\":{ \"2\":\"two\"}}");
+      assertEquals(inputFoo, toTest.foo());
+      assertNotSame(inputFoo, toTest.foo());
+      assertEquals(inputBar, toTest.bar());
+   }
+
+   private abstract static class ValueTypeWithFactoryMissingSerializedNames {
+      @Inject
+      static ValueTypeWithFactoryMissingSerializedNames create(List<String> foo, Map<String, String> bar) {
+         return null;
+      }
+   }
+
+   @Test(expectedExceptions = IllegalArgumentException.class, expectedExceptionsMessageRegExp = ".* parameter 0 failed to be named by AnnotationBasedNamingStrategy requiring one of javax.inject.Named")
+   public void testSerializedNameRequiredOnAllFactoryMethodParameters() {
+      parameterizedCtorFactory.create(gson, TypeToken.get(ValueTypeWithFactoryMissingSerializedNames.class));
    }
 
    public void testGenericParamsCopiedIn() throws IOException {
@@ -175,7 +219,6 @@ public final class DeserializationConstructorAndReflectiveTypeAdapterFactoryTest
       assertEquals(inputFoo, toTest.foo);
       assertNotSame(inputFoo, toTest.foo);
       assertEquals(inputBar, toTest.bar);
-
    }
 
    private static class RenamedFields {
@@ -259,5 +302,4 @@ public final class DeserializationConstructorAndReflectiveTypeAdapterFactoryTest
             .create(gson, TypeToken.get(ComposedObjects.class));
       assertNull(adapter.fromJson("{\"x\":{\"foo\":0,\"bar\":1}}"));
    }
-
 }
