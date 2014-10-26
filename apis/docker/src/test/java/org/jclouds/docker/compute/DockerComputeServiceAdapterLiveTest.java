@@ -61,7 +61,7 @@ public class DockerComputeServiceAdapterLiveTest extends BaseDockerApiLiveTest {
               .osDescriptionMatches("jclouds/default:latest").build();
 
       guest = adapter.createNodeWithGroupEncodedIntoName(group, name, template);
-      assertEquals(guest.getNodeId(), guest.getNode().getId() + "");
+      assertEquals(guest.getNodeId(), guest.getNode().id() + "");
    }
 
    public void testListHardwareProfiles() {
@@ -76,7 +76,7 @@ public class DockerComputeServiceAdapterLiveTest extends BaseDockerApiLiveTest {
    @AfterGroups(groups = "live")
    protected void tearDown() {
       if (guest != null) {
-         adapter.destroyNode(guest.getNode().getId() + "");
+         adapter.destroyNode(guest.getNode().id() + "");
       }
       super.tearDown();
    }

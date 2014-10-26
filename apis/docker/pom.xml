@@ -63,7 +63,12 @@
       <artifactId>commons-compress</artifactId>
       <version>1.5</version>
     </dependency>
-
+    <dependency>
+      <groupId>com.google.auto.value</groupId>
+      <artifactId>auto-value</artifactId>
+      <version>1.0-rc2</version>
+      <scope>provided</scope>
+    </dependency>
     <dependency>
       <groupId>org.apache.jclouds.driver</groupId>
       <artifactId>jclouds-sshj</artifactId>

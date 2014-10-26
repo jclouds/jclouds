@@ -16,15 +16,18 @@
  */
 package org.jclouds.docker.config;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import org.jclouds.docker.domain.Container;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Test;
-
-import static org.jclouds.docker.config.DockerParserModule.ContainerTypeAdapter;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
+
+import org.jclouds.docker.domain.Container;
+import org.jclouds.docker.domain.NetworkSettings;
+import org.jclouds.docker.domain.Port;
+import org.jclouds.json.Json;
+import org.jclouds.json.config.GsonModule;
+import org.testng.annotations.Test;
+
+import com.google.common.collect.ImmutableMap;
+import com.google.inject.Guice;
 
 /**
  * Unit tests for the {@link org.jclouds.docker.config.DockerParserModule} class.
@@ -32,21 +35,27 @@ import static org.testng.Assert.assertNotNull;
 @Test(groups = "unit", testName = "DockerParserModuleTest")
 public class DockerParserModuleTest {
 
-   private Gson gson;
+   private Json json = Guice.createInjector(new GsonModule(), new DockerParserModule()).getInstance(Json.class);
 
-   @BeforeMethod
-   public void setup() {
-      gson = new GsonBuilder()
-              .registerTypeAdapter(Container.class, new ContainerTypeAdapter())
-              .create();
-   }
-
-   @Test
    public void testContainerWithVolumesNull() {
-      Container container = gson.fromJson(
-              "{ \"Volumes\": null }", Container.class);
+      Container container = json.fromJson("{ \"Id\": \"foo\", \"Volumes\": null }", Container.class);
       assertNotNull(container);
-      assertEquals(container.getVolumes(), null);
+      assertEquals(container.id(), "foo");
+      assertEquals(container.volumes(), ImmutableMap.of());
    }
 
+   public void port() {
+      // Note IP, not Ip
+      String text = "{\"IP\":\"0.0.0.0\",\"PrivatePort\":4567,\"PublicPort\":49155,\"Type\":\"tcp\"}";
+      Port port = Port.create("0.0.0.0", 4567, 49155, "tcp");
+      assertEquals(json.fromJson(text, Port.class), port);
+      assertEquals(json.toJson(port), text);
+   }
+
+   public void networkSettings() {
+      String text = "{\"IPAddress\":\"XX.XX.206.98\",\"IPPrefixLen\":27,\"Gateway\":\"XX.XX.206.105\",\"Bridge\":\"public\",\"Ports\":{}}";
+      NetworkSettings settings = NetworkSettings.create("XX.XX.206.98", 27, "XX.XX.206.105", "public", null, null);
+      assertEquals(json.fromJson(text, NetworkSettings.class), settings);
+      assertEquals(json.toJson(settings), text);
+   }
 }

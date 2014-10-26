@@ -89,7 +89,7 @@ public class DockerComputeServiceAdapter implements
       }
 
       Config.Builder containerConfigBuilder = Config.builder()
-              .imageId(imageId)
+              .image(imageId)
               .exposedPorts(exposedPorts);
 
       if (templateOptions.getCommands().isPresent()) {
@@ -123,7 +123,7 @@ public class DockerComputeServiceAdapter implements
 
       logger.debug(">> creating new container with containerConfig(%s)", containerConfig);
       Container container = api.getRemoteApi().createContainer(name, containerConfig);
-      logger.trace("<< container(%s)", container.getId());
+      logger.trace("<< container(%s)", container.id());
 
       HostConfig.Builder hostConfigBuilder = HostConfig.builder()
               .publishAllPorts(true)
@@ -140,13 +140,13 @@ public class DockerComputeServiceAdapter implements
       }
       HostConfig hostConfig = hostConfigBuilder.build();
 
-      api.getRemoteApi().startContainer(container.getId(), hostConfig);
-      container = api.getRemoteApi().inspectContainer(container.getId());
-      if (container.getState().getExitCode() != 0) {
-         destroyNode(container.getId());
-         throw new IllegalStateException(String.format("Container %s has not started correctly", container.getId()));
+      api.getRemoteApi().startContainer(container.id(), hostConfig);
+      container = api.getRemoteApi().inspectContainer(container.id());
+      if (container.state().exitCode() != 0) {
+         destroyNode(container.id());
+         throw new IllegalStateException(String.format("Container %s has not started correctly", container.id()));
       }
-      return new NodeAndInitialCredentials<Container>(container, container.getId(),
+      return new NodeAndInitialCredentials<Container>(container, container.id(),
               LoginCredentials.builder().user(loginUser).password(loginUserPassword).build());
    }
 
@@ -166,9 +166,11 @@ public class DockerComputeServiceAdapter implements
       Set<Image> images = Sets.newHashSet();
       for (Image image : api.getRemoteApi().listImages()) {
          // less efficient than just listImages but returns richer json that needs repoTags coming from listImages
-         Image inspected = api.getRemoteApi().inspectImage(image.getId());
-         if (inspected.getRepoTags().isEmpty()) {
-            inspected = Image.builder().fromImage(inspected).repoTags(image.getRepoTags()).build();
+         Image inspected = api.getRemoteApi().inspectImage(image.id());
+         if (inspected.repoTags().isEmpty()) {
+            inspected = Image.create(inspected.id(), inspected.parent(), inspected.created(), inspected.container(),
+                  inspected.dockerVersion(), inspected.architecture(), inspected.os(), inspected.size(),
+                  inspected.virtualSize(), image.repoTags());
          }
          images.add(inspected);
       }
@@ -182,7 +184,7 @@ public class DockerComputeServiceAdapter implements
 
          @Override
          public boolean apply(Image input) {
-            return input.getId().equals(imageId);
+            return input.id().equals(imageId);
          }
       }, null);
    }
@@ -192,7 +194,7 @@ public class DockerComputeServiceAdapter implements
       Set<Container> containers = Sets.newHashSet();
       for (Container container : api.getRemoteApi().listContainers(ListContainerOptions.Builder.all(true))) {
          // less efficient than just listNodes but returns richer json
-         containers.add(api.getRemoteApi().inspectContainer(container.getId()));
+         containers.add(api.getRemoteApi().inspectContainer(container.id()));
       }
       return containers;
    }

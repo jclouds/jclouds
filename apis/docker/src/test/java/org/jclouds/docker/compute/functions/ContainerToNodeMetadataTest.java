@@ -21,6 +21,8 @@ import static org.easymock.EasyMock.expect;
 import static org.easymock.EasyMock.replay;
 import static org.easymock.EasyMock.verify;
 import static org.testng.Assert.assertEquals;
+
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -65,7 +67,7 @@ public class ContainerToNodeMetadataTest {
    public void setup() {
       Config containerConfig = Config.builder()
               .hostname("6d35806c1bd2")
-              .domainName("")
+              .domainname("")
               .user("")
               .memory(0)
               .memorySwap(0)
@@ -79,27 +81,27 @@ public class ContainerToNodeMetadataTest {
               .stdinOnce(false)
               .env(null)
               .cmd(ImmutableList.of("/usr/sbin/sshd", "-D"))
-              .imageId("jclouds/ubuntu")
+              .image("jclouds/ubuntu")
               .volumesFrom("")
               .workingDir("")
               .entrypoint(null)
               .networkDisabled(false)
               .build();
-      State state = State.builder()
-              .pid(3626)
-              .running(true)
-              .exitCode(0)
-              .startedAt("2014-03-24T20:28:37.537659054Z")
-              .finishedAt("0001-01-01T00:00:00Z")
-              .ghost(false)
-              .build();
+      State state = State.create( //
+            3626, // pid
+            true, // running
+            0, // exitCode
+            "2014-03-24T20:28:37.537659054Z", // startedAt
+            "0001-01-01T00:00:00Z", // finishedAt
+            false // ghost
+      );
       container = Container.builder()
               .id("6d35806c1bd2b25cd92bba2d2c2c5169dc2156f53ab45c2b62d76e2d2fee14a9")
               .name("/hopeful_mclean")
               .created("2014-03-22T07:16:45.784120972Z")
               .path("/usr/sbin/sshd")
-              .args(new String[] {"-D"})
-              .containerConfig(containerConfig)
+              .args(Arrays.asList("-D"))
+              .config(containerConfig)
               .state(state)
               .image("af0f59f1c19eef9471c3b8c8d587c39b8f130560b54f3766931b37d76d5de4b6")
               .networkSettings(NetworkSettings.builder()
@@ -190,12 +192,12 @@ public class ContainerToNodeMetadataTest {
    private Container mockContainer() {
       Container mockContainer = EasyMock.createMock(Container.class);
 
-      expect(mockContainer.getId()).andReturn(container.getId());
-      expect(mockContainer.getName()).andReturn(container.getName());
-      expect(mockContainer.getContainerConfig()).andReturn(container.getContainerConfig()).anyTimes();
-      expect(mockContainer.getNetworkSettings()).andReturn(container.getNetworkSettings()).anyTimes();
-      expect(mockContainer.getState()).andReturn(container.getState());
-      expect(mockContainer.getImage()).andReturn(container.getImage()).anyTimes();
+      expect(mockContainer.id()).andReturn(container.id());
+      expect(mockContainer.name()).andReturn(container.name());
+      expect(mockContainer.config()).andReturn(container.config()).anyTimes();
+      expect(mockContainer.networkSettings()).andReturn(container.networkSettings()).anyTimes();
+      expect(mockContainer.state()).andReturn(container.state());
+      expect(mockContainer.image()).andReturn(container.image()).anyTimes();
       replay(mockContainer);
 
       return mockContainer;

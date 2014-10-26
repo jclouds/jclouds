@@ -108,11 +108,11 @@ public class RemoteApiMockTest extends BaseDockerMockTest {
          Container container = remoteApi.inspectContainer(containerId);
          assertRequestHasCommonFields(server.takeRequest(), "/containers/" + containerId + "/json");
          assertNotNull(container);
-         assertNotNull(container.getId(), containerId);
-         assertNotNull(container.getContainerConfig());
-         assertNotNull(container.getHostConfig());
-         assertEquals(container.getName(), "/tender_lumiere");
-         assertEquals(container.getState().isRunning(), true);
+         assertNotNull(container.id(), containerId);
+         assertNotNull(container.config());
+         assertNotNull(container.hostConfig());
+         assertEquals(container.name(), "/tender_lumiere");
+         assertEquals(container.state().running(), true);
       } finally {
          api.close();
          server.shutdown();
@@ -126,7 +126,7 @@ public class RemoteApiMockTest extends BaseDockerMockTest {
       RemoteApi remoteApi = api.getRemoteApi();
       String containerId = "notExisting";
       try {
-         Container container = remoteApi.inspectContainer(containerId);
+         remoteApi.inspectContainer(containerId);
          assertRequestHasCommonFields(server.takeRequest(), "/containers/" + containerId + "/json");
       } finally {
          api.close();
@@ -145,13 +145,13 @@ public class RemoteApiMockTest extends BaseDockerMockTest {
               .attachStderr(true)
               .attachStdout(true)
               .tty(false)
-              .imageId("base")
+              .image("base")
               .build();
       try {
          Container container = remoteApi.createContainer("test", containerConfig);
          assertRequestHasCommonFields(server.takeRequest(), "POST", "/containers/create?name=test");
          assertNotNull(container);
-         assertEquals(container.getId(), "c6c74153ae4b1d1633d68890a68d89c40aa5e284a1ea016cbc6ef0e634ee37b2");
+         assertEquals(container.id(), "c6c74153ae4b1d1633d68890a68d89c40aa5e284a1ea016cbc6ef0e634ee37b2");
       } finally {
          api.close();
          server.shutdown();

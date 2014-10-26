@@ -46,7 +46,7 @@ public class StateToStatusTest {
 
       verify(mockState);
 
-      assertEquals(mockState.isRunning(), true);
+      assertEquals(mockState.running(), true);
       assertEquals(status, NodeMetadata.Status.RUNNING);
    }
 
@@ -57,14 +57,14 @@ public class StateToStatusTest {
 
       verify(mockState);
 
-      assertEquals(mockState.isRunning(), false);
+      assertEquals(mockState.running(), false);
       assertEquals(status, NodeMetadata.Status.TERMINATED);
    }
 
    private State mockStateRunning() {
       State mockState = EasyMock.createMock(State.class);
 
-      expect(mockState.isRunning()).andReturn(true).anyTimes();
+      expect(mockState.running()).andReturn(true).anyTimes();
       replay(mockState);
 
       return mockState;
@@ -73,7 +73,7 @@ public class StateToStatusTest {
    private State mockStateNotRunning() {
       State mockState = EasyMock.createMock(State.class);
 
-      expect(mockState.isRunning()).andReturn(false).anyTimes();
+      expect(mockState.running()).andReturn(false).anyTimes();
       replay(mockState);
 
       return mockState;

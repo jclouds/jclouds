@@ -76,26 +76,25 @@ public class ContainerToNodeMetadata implements Function<Container, NodeMetadata
 
    @Override
    public NodeMetadata apply(Container container) {
-      String name = cleanUpName(container.getName());
+      String name = cleanUpName(container.name());
       String group = nodeNamingConvention.extractGroup(name);
       NodeMetadataBuilder builder = new NodeMetadataBuilder();
-      builder.ids(container.getId())
+      builder.ids(container.id())
               .name(name)
               .group(group)
-              .hostname(container.getContainerConfig().getHostname())
+              .hostname(container.config().hostname())
                // TODO Set up hardware
               .hardware(new HardwareBuilder()
                       .id("")
-                      .ram(container.getContainerConfig().getMemory())
-                      .processor(new Processor(container.getContainerConfig().getCpuShares(), container.getContainerConfig().getCpuShares()))
+                      .ram(container.config().memory())
+                      .processor(new Processor(container.config().cpuShares(), container.config().cpuShares()))
                       .build());
-      builder.status(toPortableStatus.apply(container.getState()));
-      builder.imageId(container.getImage());
+      builder.status(toPortableStatus.apply(container.state()));
       builder.loginPort(getLoginPort(container));
       builder.publicAddresses(getPublicIpAddresses());
       builder.privateAddresses(getPrivateIpAddresses(container));
       builder.location(Iterables.getOnlyElement(locations.get()));
-      String imageId = container.getImage();
+      String imageId = container.image();
       builder.imageId(imageId);
       if (images.get().containsKey(imageId)) {
           Image image = images.get().get(imageId);
@@ -110,8 +109,8 @@ public class ContainerToNodeMetadata implements Function<Container, NodeMetadata
    }
 
    private Iterable<String> getPrivateIpAddresses(Container container) {
-      if (container.getNetworkSettings() == null) return ImmutableList.of();
-      return ImmutableList.of(container.getNetworkSettings().getIpAddress());
+      if (container.networkSettings() == null) return ImmutableList.of();
+      return ImmutableList.of(container.networkSettings().ipAddress());
    }
 
    private List<String> getPublicIpAddresses() {
@@ -120,16 +119,16 @@ public class ContainerToNodeMetadata implements Function<Container, NodeMetadata
    }
 
    protected static int getLoginPort(Container container) {
-      if (container.getNetworkSettings() != null) {
-          Map<String, List<Map<String, String>>> ports = container.getNetworkSettings().getPorts();
+      if (container.networkSettings() != null) {
+          Map<String, List<Map<String, String>>> ports = container.networkSettings().ports();
           if (ports != null && ports.containsKey("22/tcp")) {
             return Integer.parseInt(getOnlyElement(ports.get("22/tcp")).get("HostPort"));
           }
       // this is needed in case the container list is coming from listContainers
-      } else if (container.getPorts() != null) {
-         for (Port port : container.getPorts()) {
-            if (port.getPrivatePort() == 22) {
-               return port.getPublicPort();
+      } else if (container.ports() != null) {
+         for (Port port : container.ports()) {
+            if (port.privatePort() == 22) {
+               return port.publicPort();
             }
          }
       }

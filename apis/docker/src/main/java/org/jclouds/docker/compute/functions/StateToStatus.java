@@ -32,7 +32,7 @@ public class StateToStatus implements Function<State, Status> {
    @Override
    public Status apply(final State state) {
       if (state == null) return Status.UNRECOGNIZED;
-      return state.isRunning() ? Status.RUNNING : Status.TERMINATED;
+      return state.running() ? Status.RUNNING : Status.TERMINATED;
    }
 
 }

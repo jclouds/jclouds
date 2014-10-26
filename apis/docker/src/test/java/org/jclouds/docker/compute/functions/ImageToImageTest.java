@@ -39,14 +39,18 @@ public class ImageToImageTest {
 
    @BeforeMethod
    public void setup() {
-      image = org.jclouds.docker.domain.Image.builder()
-                                             .id("id")
-                                             .parent("parent")
-                                             .created("created")
-                                             .architecture("x86_64")
-                                             .repoTags(ImmutableList.of("repoTag1:version"))
-                                             .size(0l)
-                                             .build();
+      image = org.jclouds.docker.domain.Image.create(
+            "id", // id
+            "parent", // parent
+            "created", // created
+            null, // container
+            null, // dockerVersion
+            "x86_64", // architecture
+            null, // os
+            0l, // size
+            0l, // virtualSize
+            ImmutableList.of("repoTag1:version") // repoTags
+      );
       function = new ImageToImage();
    }
 
@@ -57,15 +61,15 @@ public class ImageToImageTest {
 
       verify(mockImage);
 
-      assertEquals(mockImage.getId(), image.getId().toString());
+      assertEquals(mockImage.id(), image.getId().toString());
    }
 
    private org.jclouds.docker.domain.Image mockImage() {
       org.jclouds.docker.domain.Image mockImage = EasyMock.createMock(org.jclouds.docker.domain.Image.class);
 
-      expect(mockImage.getId()).andReturn(image.getId()).anyTimes();
-      expect(mockImage.getRepoTags()).andReturn(image.getRepoTags()).anyTimes();
-      expect(mockImage.getArchitecture()).andReturn(image.getArchitecture()).anyTimes();
+      expect(mockImage.id()).andReturn(image.id()).anyTimes();
+      expect(mockImage.repoTags()).andReturn(image.repoTags()).anyTimes();
+      expect(mockImage.architecture()).andReturn(image.architecture()).anyTimes();
       replay(mockImage);
 
       return mockImage;

@@ -16,91 +16,22 @@
  */
 package org.jclouds.docker.domain;
 
-import static com.google.common.base.Preconditions.checkNotNull;
-import java.beans.ConstructorProperties;
-import java.util.Set;
+import static org.jclouds.docker.internal.NullSafeCopies.copyOf;
 
-import org.jclouds.javax.annotation.Nullable;
+import java.util.List;
 
-import com.google.common.base.Objects;
-import com.google.common.collect.ImmutableSet;
-import com.google.gson.annotations.SerializedName;
+import org.jclouds.json.SerializedNames;
 
-public class ExposedPorts {
+import com.google.auto.value.AutoValue;
 
-   @SerializedName("PortAndProtocol")
-   private final String portAndProtocol;
-   @SerializedName("HostPorts")
-   private final Set<String> hostPorts;
+@AutoValue
+public abstract class ExposedPorts {
+   public abstract String portAndProtocol();
 
-   @ConstructorProperties({ "PortAndProtocol", "HostPorts" })
-   protected ExposedPorts(String portAndProtocol, @Nullable Set<String> hostPorts) {
-      this.portAndProtocol = checkNotNull(portAndProtocol, "portAndProtocol");
-      this.hostPorts = hostPorts != null ? ImmutableSet.copyOf(hostPorts) : ImmutableSet.<String> of();
-   }
+   public abstract List<String> hostPorts();
 
-   public String getPortAndProtocol() {
-      return portAndProtocol;
-   }
-
-   public Set<String> getHostPorts() {
-      return hostPorts;
-   }
-
-   @Override
-   public boolean equals(Object o) {
-      if (this == o) return true;
-      if (o == null || getClass() != o.getClass()) return false;
-
-      ExposedPorts that = (ExposedPorts) o;
-
-      return Objects.equal(this.portAndProtocol, that.portAndProtocol) &&
-             Objects.equal(this.hostPorts, that.hostPorts);
-   }
-
-   @Override
-   public int hashCode() {
-      return Objects.hashCode(portAndProtocol, hostPorts);
-   }
-
-   @Override
-   public String toString() {
-      return Objects.toStringHelper(this)
-              .add("portAndProtocol", portAndProtocol)
-              .add("hostPorts", hostPorts)
-              .toString();
-   }
-
-   public static Builder builder() {
-      return new Builder();
-   }
-
-   public Builder toBuilder() {
-      return builder().fromExposedPorts(this);
-   }
-
-   public static final class Builder {
-
-      private String portAndProtocol;
-      private Set<String> hostPorts = ImmutableSet.of();
-
-      public Builder portAndProtocol(String portAndProtocol) {
-         this.portAndProtocol = portAndProtocol;
-         return this;
-      }
-
-      public Builder hostPorts(Set<String> hostPorts) {
-         this.hostPorts = ImmutableSet.copyOf(checkNotNull(hostPorts, "hostPorts"));
-         return this;
-      }
-
-      public ExposedPorts build() {
-         return new ExposedPorts(portAndProtocol, hostPorts);
-      }
-
-      public Builder fromExposedPorts(ExposedPorts in) {
-         return this.portAndProtocol(in.getPortAndProtocol())
-                 .hostPorts(in.getHostPorts());
-      }
+   @SerializedNames({ "PortAndProtocol", "HostPorts" })
+   public static ExposedPorts create(String portAndProtocol, List<String> hostPorts) {
+      return new AutoValue_ExposedPorts(portAndProtocol, copyOf(hostPorts));
    }
 }

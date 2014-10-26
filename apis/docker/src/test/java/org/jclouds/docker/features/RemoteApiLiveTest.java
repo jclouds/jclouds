@@ -50,7 +50,7 @@ public class RemoteApiLiveTest extends BaseDockerApiLiveTest {
 
    @Test
    public void testVersion() {
-      assertEquals(api().getVersion().getVersion(), "1.0.0");
+      assertEquals(api().getVersion().version(), "1.0.0");
    }
 
    @Test(dependsOnMethods = "testVersion")
@@ -69,37 +69,37 @@ public class RemoteApiLiveTest extends BaseDockerApiLiveTest {
 
    @Test(dependsOnMethods = "testListImages")
    public void testCreateContainer() throws IOException, InterruptedException {
-      Config containerConfig = Config.builder().imageId(image.getId())
+      Config containerConfig = Config.builder().image(image.id())
               .cmd(ImmutableList.of("/bin/sh", "-c", "while true; do echo hello world; sleep 1; done"))
               .build();
       container = api().createContainer("testCreateContainer", containerConfig);
       assertNotNull(container);
-      assertNotNull(container.getId());
+      assertNotNull(container.id());
    }
 
    @Test(dependsOnMethods = "testCreateContainer")
    public void testStartContainer() throws IOException, InterruptedException {
-      api().startContainer(container.getId());
-      assertTrue(api().inspectContainer(container.getId()).getState().isRunning());
+      api().startContainer(container.id());
+      assertTrue(api().inspectContainer(container.id()).state().running());
    }
 
    @Test(dependsOnMethods = "testStartContainer")
    public void testStopContainer() {
-      api().stopContainer(container.getId());
-      assertFalse(api().inspectContainer(container.getId()).getState().isRunning());
+      api().stopContainer(container.id());
+      assertFalse(api().inspectContainer(container.id()).state().running());
    }
 
    @Test(dependsOnMethods = "testStopContainer", expectedExceptions = NullPointerException.class)
    public void testRemoveContainer() {
-      api().removeContainer(container.getId());
-      assertFalse(api().inspectContainer(container.getId()).getState().isRunning());
+      api().removeContainer(container.id());
+      assertFalse(api().inspectContainer(container.id()).state().running());
    }
 
    @Test(dependsOnMethods = "testRemoveContainer", expectedExceptions = ResourceNotFoundException.class)
    public void testDeleteImage() {
-      InputStream deleteImageStream = api().deleteImage(image.getId());
+      InputStream deleteImageStream = api().deleteImage(image.id());
       consumeStream(deleteImageStream, false);
-      assertNull(api().inspectImage(image.getId()));
+      assertNull(api().inspectImage(image.id()));
    }
 
    public void testBuildImage() throws IOException, InterruptedException, URISyntaxException {
@@ -111,7 +111,7 @@ public class RemoteApiLiveTest extends BaseDockerApiLiveTest {
       String rawImageId = Iterables.getLast(Splitter.on("Successfully built ").split(lastStreamedLine));
       String imageId = rawImageId.substring(0, 11);
       Image image = api().inspectImage(imageId);
-      api().deleteImage(image.getId(), DeleteImageOptions.Builder.force(true));
+      api().deleteImage(image.id(), DeleteImageOptions.Builder.force(true));
    }
 
    private RemoteApi api() {

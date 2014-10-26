@@ -14,24 +14,26 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.jclouds.docker.domain;
+package org.jclouds.docker.internal;
 
-import org.jclouds.json.SerializedNames;
+import java.util.List;
+import java.util.Map;
 
-import com.google.auto.value.AutoValue;
+import org.jclouds.javax.annotation.Nullable;
 
-@AutoValue
-public abstract class Port {
-   public abstract String ip();
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableMap;
 
-   public abstract int privatePort();
+public class NullSafeCopies {
 
-   public abstract int publicPort();
+   public static <K, V> Map<K, V> copyOf(@Nullable Map<K, V> map) {
+      return map != null ? ImmutableMap.copyOf(map) : ImmutableMap.<K, V>of();
+   }
 
-   public abstract String type();
+   public static <E> List<E> copyOf(@Nullable List<E> list) {
+      return list != null ? ImmutableList.copyOf(list) : ImmutableList.<E>of();
+   }
 
-   @SerializedNames({ "IP", "PrivatePort", "PublicPort", "Type" })
-   public static Port create(String ip, int privatePort, int publicPort, String type) {
-      return new AutoValue_Port(ip, privatePort, publicPort, type);
+   private NullSafeCopies() {
    }
 }

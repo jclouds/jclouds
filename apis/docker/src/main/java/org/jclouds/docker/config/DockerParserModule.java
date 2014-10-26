@@ -16,47 +16,35 @@
  */
 package org.jclouds.docker.config;
 
-import com.google.common.collect.ImmutableMap;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.JsonDeserializationContext;
-import com.google.gson.JsonDeserializer;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParseException;
-import com.google.inject.AbstractModule;
-import com.google.inject.Provides;
-import org.jclouds.docker.domain.Container;
+import java.lang.reflect.Field;
+
 import org.jclouds.json.config.GsonModule;
 
-import javax.inject.Singleton;
-import java.lang.reflect.Type;
-import java.util.Map;
+import com.google.gson.FieldNamingPolicy;
+import com.google.gson.FieldNamingStrategy;
+import com.google.inject.AbstractModule;
 
 public class DockerParserModule extends AbstractModule {
-
-   @Override
-   protected void configure() {
+   @Override protected void configure() {
+      bind(FieldNamingStrategy.class).toInstance(FIELD_NAMING_STRATEGY);
       bind(GsonModule.DateAdapter.class).to(GsonModule.Iso8601DateAdapter.class);
    }
 
-   @Provides
-   @Singleton
-   public Map<Type, Object> provideCustomAdapterBindings() {
-      return new ImmutableMap.Builder<Type, Object>()
-              .put(Container.class, new ContainerTypeAdapter())
-              .build();
-   }
+   /** When serializing, Most fields are UpperCamelCase, with some exceptions. */
+   private static final FieldNamingStrategy FIELD_NAMING_STRATEGY = new FieldNamingStrategy() {
+      private final FieldNamingStrategy delegate = FieldNamingPolicy.UPPER_CAMEL_CASE;
 
-   protected static class ContainerTypeAdapter implements JsonDeserializer<Container> {
-
-      @Override
-      public Container deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws
-              JsonParseException {
-         Gson gson = new GsonBuilder().serializeNulls().create();
-         final JsonObject jsonObject = json.getAsJsonObject();
-         return gson.fromJson(jsonObject, Container.class);
+      @Override public String translateName(Field f) {
+         String result = delegate.translateName(f);
+         // IP not Ip as code wins over docs https://github.com/docker/docker/blob/master/daemon/network_settings.go
+         if (result.equals("IpAddress")) {
+            return "IPAddress";
+         } else if (result.equals("IpPrefixLen")) {
+            return "IPPrefixLen";
+         } else if (result.equals("Ip")) {
+            return "IP";
+         }
+         return result;
       }
-   }
-
+   };
 }
