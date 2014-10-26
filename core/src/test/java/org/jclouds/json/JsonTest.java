@@ -31,6 +31,7 @@ import org.testng.annotations.Test;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.gson.FieldAttributes;
+import com.google.gson.FieldNamingPolicy;
 import com.google.inject.AbstractModule;
 import com.google.inject.Guice;
 import com.google.inject.TypeLiteral;
@@ -209,4 +210,67 @@ public class JsonTest {
                EnumInsideWithParser.Test.UNRECOGNIZED);
    }
 
+   private abstract static class SpinalCasedType {
+      abstract String id();
+
+      abstract String contentType();
+
+      // Currently, this only works for deserialization. Need to set a naming policy for serialization!
+      @SerializedNames({ "id", "content-type" })
+      private static SpinalCasedType create(String id, String contentType) {
+         return new SpinalCasedTypeImpl(id, contentType);
+      }
+   }
+
+   public void spinalCaseWithSerializedNames() {
+      Json json = Guice.createInjector(new GsonModule(), new AbstractModule() {
+         @Override protected void configure() {
+            bind(FieldNamingPolicy.class).toInstance(FieldNamingPolicy.LOWER_CASE_WITH_DASHES);
+         }
+      }).getInstance(Json.class);
+
+      SpinalCasedType resource = SpinalCasedType.create("1234", "application/json");
+      String spinalJson = "{\"id\":\"1234\",\"content-type\":\"application/json\"}";
+
+      assertEquals(json.toJson(resource), spinalJson);
+      assertEquals(spinalJson, json.toJson(resource));
+   }
+
+   private static class SpinalCasedTypeImpl extends SpinalCasedType {
+      private final String id;
+      private final String contentType;
+
+      private SpinalCasedTypeImpl(String id, String contentType) {
+         this.id = id;
+         this.contentType = contentType;
+      }
+
+      @Override String id() {
+         return id;
+      }
+
+      @Override String contentType() {
+         return contentType;
+      }
+
+      @Override public boolean equals(Object o) {
+         if (o == this) {
+            return true;
+         }
+         if (o instanceof SpinalCasedType) {
+            SpinalCasedType that = (SpinalCasedType) o;
+            return (this.id.equals(that.id())) && (this.contentType.equals(that.contentType()));
+         }
+         return false;
+      }
+
+      @Override public int hashCode() {
+         int h = 1;
+         h *= 1000003;
+         h ^= id.hashCode();
+         h *= 1000003;
+         h ^= contentType.hashCode();
+         return h;
+      }
+   }
 }
