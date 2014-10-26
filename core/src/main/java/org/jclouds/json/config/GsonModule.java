@@ -42,6 +42,7 @@ import com.google.inject.Provides;
 import org.jclouds.date.DateService;
 import org.jclouds.domain.JsonBall;
 import org.jclouds.json.Json;
+import org.jclouds.json.SerializedNames;
 import org.jclouds.json.internal.DeserializationConstructorAndReflectiveTypeAdapterFactory;
 import org.jclouds.json.internal.EnumTypeAdapterThatReturnsFromValue;
 import org.jclouds.json.internal.GsonWrapper;
@@ -119,7 +120,8 @@ public class GsonModule extends AbstractModule {
       builder.registerTypeAdapterFactory(immutableMap);
 
       AnnotationConstructorNamingStrategy deserializationPolicy = new AnnotationConstructorNamingStrategy(
-            ImmutableSet.of(ConstructorProperties.class, Inject.class), ImmutableSet.of(new ExtractNamed()));
+            ImmutableSet.of(ConstructorProperties.class, SerializedNames.class, Inject.class),
+            ImmutableSet.of(new ExtractNamed()));
 
       builder.registerTypeAdapterFactory(new DeserializationConstructorAndReflectiveTypeAdapterFactory(
             new ConstructorConstructor(ImmutableMap.<Type, InstanceCreator<?>>of()), serializationPolicy, Excluder.DEFAULT, deserializationPolicy));

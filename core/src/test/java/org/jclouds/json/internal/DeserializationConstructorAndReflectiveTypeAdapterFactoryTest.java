@@ -30,6 +30,7 @@ import java.util.Map;
 import javax.inject.Inject;
 import javax.inject.Named;
 
+import org.jclouds.json.SerializedNames;
 import org.jclouds.json.internal.NamingStrategies.AnnotationConstructorNamingStrategy;
 import org.jclouds.json.internal.NamingStrategies.AnnotationOrNameFieldNamingStrategy;
 import org.jclouds.json.internal.NamingStrategies.ExtractNamed;
@@ -63,7 +64,8 @@ public final class DeserializationConstructorAndReflectiveTypeAdapterFactoryTest
       FieldNamingStrategy serializationPolicy = new AnnotationOrNameFieldNamingStrategy(ImmutableSet.of(
             new ExtractSerializedName(), new ExtractNamed()));
       AnnotationConstructorNamingStrategy deserializationPolicy = new AnnotationConstructorNamingStrategy(
-            ImmutableSet.of(ConstructorProperties.class, Inject.class), ImmutableSet.of(new ExtractNamed()));
+            ImmutableSet.of(ConstructorProperties.class, SerializedNames.class, Inject.class),
+            ImmutableSet.of(new ExtractNamed()));
 
       return new DeserializationConstructorAndReflectiveTypeAdapterFactory(new ConstructorConstructor(ImmutableMap.<Type, InstanceCreator<?>>of()),
             serializationPolicy, Excluder.DEFAULT, deserializationPolicy);
@@ -157,8 +159,8 @@ public final class DeserializationConstructorAndReflectiveTypeAdapterFactoryTest
       abstract List<String> foo();
       abstract Map<String, String> bar();
 
-      @Inject
-      static ValueTypeWithFactory create(@Named("foo") List<String> foo, @Named("bar") Map<String, String> bar) {
+      @SerializedNames({ "foo", "bar" })
+      static ValueTypeWithFactory create(List<String> foo, Map<String, String> bar) {
          return new GenericParamsCopiedIn(foo, bar);
       }
    }
@@ -196,14 +198,15 @@ public final class DeserializationConstructorAndReflectiveTypeAdapterFactoryTest
    }
 
    private abstract static class ValueTypeWithFactoryMissingSerializedNames {
-      @Inject
+      @SerializedNames({ "foo" })
       static ValueTypeWithFactoryMissingSerializedNames create(List<String> foo, Map<String, String> bar) {
          return null;
       }
    }
 
-   @Test(expectedExceptions = IllegalArgumentException.class, expectedExceptionsMessageRegExp = ".* parameter 0 failed to be named by AnnotationBasedNamingStrategy requiring one of javax.inject.Named")
-   public void testSerializedNameRequiredOnAllFactoryMethodParameters() {
+   @Test(expectedExceptions = IllegalArgumentException.class,
+         expectedExceptionsMessageRegExp = "Incorrect count of names on annotation of .*")
+   public void testSerializedNamesMustHaveCorrectCountOfNames() {
       parameterizedCtorFactory.create(gson, TypeToken.get(ValueTypeWithFactoryMissingSerializedNames.class));
    }
 
