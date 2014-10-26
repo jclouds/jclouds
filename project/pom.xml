@@ -214,6 +214,7 @@
     <jclouds.test.listener>org.jclouds.test.testng.UnitTestStatusListener</jclouds.test.listener>
     <test.ssh.keyfile />
     <sourceReleaseAssemblyDescriptor>source-release-zip-tar</sourceReleaseAssemblyDescriptor>
+    <guava.version>17.0</guava.version>
     <okhttp.version>1.6.0</okhttp.version>
     <surefire.version>2.17</surefire.version>
     <assertj-core.version>1.6.1</assertj-core.version>
