@@ -191,7 +191,7 @@
     <maven.compile.deprecation>true</maven.compile.deprecation>
     <maven.site.url.base>gitsite:git@github.com/jclouds/jclouds-maven-site.git</maven.site.url.base>
     <clojure.version>1.3.0</clojure.version>
-    <guava.version>17.0</guava.version>
+    <guava.version>16.0.1</guava.version>
     <okhttp.version>1.6.0</okhttp.version>
     <surefire.version>2.17</surefire.version>
     <assertj-core.version>1.6.1</assertj-core.version>
