@@ -16,6 +16,8 @@
  */
 package org.jclouds.docker.handlers;
 
+import static org.jclouds.util.Closeables2.closeQuietly;
+
 import java.io.IOException;
 
 import javax.annotation.Resource;
@@ -30,7 +32,6 @@ import org.jclouds.rest.ResourceNotFoundException;
 import org.jclouds.util.Strings2;
 
 import com.google.common.base.Throwables;
-import com.google.common.io.Closeables;
 
 /**
  * This will parse and set an appropriate exception on the command object.
@@ -80,12 +81,7 @@ public class DockerErrorHandler implements HttpErrorHandler {
                break;
          }
       } finally {
-         try {
-            Closeables.close(response.getPayload(), true);
-         } catch (IOException e) {
-            // This code will never be reached
-            throw Throwables.propagate(e);
-         }
+         closeQuietly(response.getPayload());
          command.setException(exception);
       }
    }
