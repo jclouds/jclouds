@@ -118,7 +118,14 @@ public class ElasticStackComputeServiceAdapter implements
       }
 
       logger.debug(">> imaging boot drive source(%s)", template.getImage().getId());
-      client.imageDrive(template.getImage().getId(), drive.getUuid(), ImageConversionType.GUNZIP);
+      try {
+         client.imageDrive(template.getImage().getId(), drive.getUuid(), ImageConversionType.GUNZIP);
+      } catch (IllegalStateException ex) {
+         logger.debug(">> could not image drive(%s). Cleaning up resources. [%s]", drive.getUuid(), ex.getMessage());
+         client.destroyDrive(drive.getUuid());
+         throw ex;
+      }
+
       boolean ready = driveNotClaimed.apply(drive);
       if (!ready) {
          client.destroyDrive(drive.getUuid());
