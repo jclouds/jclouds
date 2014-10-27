@@ -16,11 +16,11 @@
  */
 package org.jclouds.chef.internal;
 
-import static com.google.common.base.Throwables.propagate;
 import static com.google.common.collect.Iterables.any;
 import static com.google.common.collect.Iterables.isEmpty;
 import static com.google.common.hash.Hashing.md5;
 import static java.util.concurrent.TimeUnit.MILLISECONDS;
+import static org.jclouds.util.Closeables2.closeQuietly;
 import static org.jclouds.util.Predicates2.retry;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertFalse;
@@ -30,7 +30,6 @@ import static org.testng.Assert.assertTrue;
 import static org.testng.Assert.fail;
 
 import java.io.File;
-import java.io.IOException;
 import java.io.InputStream;
 import java.util.Collections;
 import java.util.List;
@@ -65,7 +64,6 @@ import com.google.common.base.Predicate;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.hash.Hashing;
-import com.google.common.io.Closeables;
 import com.google.common.io.Files;
 import com.google.common.primitives.Bytes;
 
@@ -531,12 +529,7 @@ public abstract class BaseChefApiLiveTest<A extends ChefApi> extends BaseChefLiv
          Client client = clientApi.getClient(identity);
          assertNotNull(client, "Client not found: " + identity);
       } finally {
-         try {
-            Closeables.close(clientApi, true);
-         } catch (IOException e) {
-            throw propagate(e);
-         }
+         closeQuietly(clientApi);
       }
    }
-
 }

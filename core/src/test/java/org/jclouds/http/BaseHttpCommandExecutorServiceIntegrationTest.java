@@ -18,10 +18,10 @@ package org.jclouds.http;
 
 import static com.google.common.hash.Hashing.md5;
 import static com.google.common.io.BaseEncoding.base64;
-import static com.google.common.io.Closeables.close;
 import static com.google.common.io.Files.asByteSource;
 import static org.jclouds.http.options.GetOptions.Builder.tail;
 import static org.jclouds.io.Payloads.newByteSourcePayload;
+import static org.jclouds.util.Closeables2.closeQuietly;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertFalse;
 import static org.testng.Assert.assertTrue;
@@ -85,7 +85,7 @@ public abstract class BaseHttpCommandExecutorServiceIntegrationTest extends Base
          assertEquals(request.getHeader("test"), "test");
          assertEquals(result, "test");
       } finally {
-         close(client, true);
+         closeQuietly(client);
          server.shutdown();
       }
    }
@@ -101,7 +101,7 @@ public abstract class BaseHttpCommandExecutorServiceIntegrationTest extends Base
          assertEquals(request.getHeader("test"), "test");
          assertEquals(result, "test");
       } finally {
-         close(client, true);
+         closeQuietly(client);
          server.shutdown();
       }
    }
@@ -113,7 +113,7 @@ public abstract class BaseHttpCommandExecutorServiceIntegrationTest extends Base
       try {
          assertEquals(client.download(""), XML);
       } finally {
-         close(client, true);
+         closeQuietly(client);
          server.shutdown();
       }
    }
@@ -127,7 +127,7 @@ public abstract class BaseHttpCommandExecutorServiceIntegrationTest extends Base
          assertEquals(server.getRequestCount(), 2);
          assertEquals(result, XML);
       } finally {
-         close(client, true);
+         closeQuietly(client);
          server.shutdown();
       }
    }
@@ -141,7 +141,7 @@ public abstract class BaseHttpCommandExecutorServiceIntegrationTest extends Base
                .endpoint(server.getUrl("/objects").toString()).build());
          assertEquals(Strings2.toStringAndClose(getStringResponse.getPayload().openStream()).trim(), XML);
       } finally {
-         close(client, true);
+         closeQuietly(client);
          server.shutdown();
       }
    }
@@ -161,7 +161,7 @@ public abstract class BaseHttpCommandExecutorServiceIntegrationTest extends Base
          assertTrue(URLDecoder.decode(request.getPath(), "UTF-8").endsWith(uri));
          assertEquals(result, XML);
       } finally {
-         close(client, true);
+         closeQuietly(client);
          server.shutdown();
       }
    }
@@ -174,7 +174,7 @@ public abstract class BaseHttpCommandExecutorServiceIntegrationTest extends Base
          String result = client.downloadException("", tail(1));
          assertEquals(result, "foo");
       } finally {
-         close(client, true);
+         closeQuietly(client);
          server.shutdown();
       }
    }
@@ -187,7 +187,7 @@ public abstract class BaseHttpCommandExecutorServiceIntegrationTest extends Base
          String result = client.synchException("", "");
          assertEquals(result, "foo");
       } finally {
-         close(client, true);
+         closeQuietly(client);
          server.shutdown();
       }
    }
@@ -205,7 +205,7 @@ public abstract class BaseHttpCommandExecutorServiceIntegrationTest extends Base
          assertEquals(server.getRequestCount(), 1);
          assertEquals(redirectTarget.getRequestCount(), 1);
       } finally {
-         close(client, true);
+         closeQuietly(client);
          redirectTarget.shutdown();
          server.shutdown();
       }
@@ -225,7 +225,7 @@ public abstract class BaseHttpCommandExecutorServiceIntegrationTest extends Base
          assertValidMd5(input, constitutionsMd5);
       } catch (RuntimeException e) {
       } finally {
-         close(input, true);
+         closeQuietly(input);
       }
    }
 
@@ -287,7 +287,7 @@ public abstract class BaseHttpCommandExecutorServiceIntegrationTest extends Base
          if (f != null && f.exists()) {
             f.delete();
          }
-         close(client, true);
+         closeQuietly(client);
          server.shutdown();
       }
    }
@@ -303,7 +303,7 @@ public abstract class BaseHttpCommandExecutorServiceIntegrationTest extends Base
          assertEquals(new String(request.getBody(), Charsets.UTF_8), "foo");
          assertEquals(result, "fooPOST");
       } finally {
-         close(client, true);
+         closeQuietly(client);
          server.shutdown();
       }
    }
@@ -318,7 +318,7 @@ public abstract class BaseHttpCommandExecutorServiceIntegrationTest extends Base
          RecordedRequest request = server.takeRequest();
          assertEquals(new String(request.getBody(), Charsets.UTF_8), "");
       } finally {
-         close(client, true);
+         closeQuietly(client);
          server.shutdown();
       }
    }
@@ -338,7 +338,7 @@ public abstract class BaseHttpCommandExecutorServiceIntegrationTest extends Base
          request = server.takeRequest();
          assertEquals(new String(request.getBody(), Charsets.UTF_8), "foo");
       } finally {
-         close(client, true);
+         closeQuietly(client);
          server.shutdown();
       }
    }
@@ -361,7 +361,7 @@ public abstract class BaseHttpCommandExecutorServiceIntegrationTest extends Base
          request = redirectTarget.takeRequest();
          assertEquals(new String(request.getBody(), Charsets.UTF_8), "foo");
       } finally {
-         close(client, true);
+         closeQuietly(client);
          redirectTarget.shutdown();
          server.shutdown();
       }
@@ -378,7 +378,7 @@ public abstract class BaseHttpCommandExecutorServiceIntegrationTest extends Base
          assertEquals(new String(request.getBody(), Charsets.UTF_8), "foo");
          assertEquals(result, "fooPOST");
       } finally {
-         close(client, true);
+         closeQuietly(client);
          server.shutdown();
       }
    }
@@ -393,7 +393,7 @@ public abstract class BaseHttpCommandExecutorServiceIntegrationTest extends Base
       } catch (Exception expected) {
          assertEquals(server.getRequestCount(), 1);
       } finally {
-         close(client, true);
+         closeQuietly(client);
          server.shutdown();
       }
    }
@@ -409,7 +409,7 @@ public abstract class BaseHttpCommandExecutorServiceIntegrationTest extends Base
          assertEquals(new String(request.getBody(), Charsets.UTF_8), "{\"key\":\"foo\"}");
          assertEquals(result, "fooPOSTJSON");
       } finally {
-         close(client, true);
+         closeQuietly(client);
          server.shutdown();
       }
    }
@@ -433,7 +433,7 @@ public abstract class BaseHttpCommandExecutorServiceIntegrationTest extends Base
          if (payload != null) {
             payload.release();
          }
-         close(client, true);
+         closeQuietly(client);
          server.shutdown();
       }
    }
@@ -456,7 +456,7 @@ public abstract class BaseHttpCommandExecutorServiceIntegrationTest extends Base
          if (payload != null) {
             payload.release();
          }
-         close(client, true);
+         closeQuietly(client);
          server.shutdown();
       }
    }
@@ -479,7 +479,7 @@ public abstract class BaseHttpCommandExecutorServiceIntegrationTest extends Base
          if (payload != null) {
             payload.release();
          }
-         close(client, true);
+         closeQuietly(client);
          server.shutdown();
       }
    }
@@ -495,7 +495,7 @@ public abstract class BaseHttpCommandExecutorServiceIntegrationTest extends Base
          assertEquals(new String(request.getBody(), Charsets.UTF_8), "foo");
          assertEquals(result, "fooPUT");
       } finally {
-         close(client, true);
+         closeQuietly(client);
          server.shutdown();
       }
    }
@@ -518,7 +518,7 @@ public abstract class BaseHttpCommandExecutorServiceIntegrationTest extends Base
          request = redirectTarget.takeRequest();
          assertEquals(new String(request.getBody(), Charsets.UTF_8), "foo");
       } finally {
-         close(client, true);
+         closeQuietly(client);
          redirectTarget.shutdown();
          server.shutdown();
       }
@@ -534,7 +534,7 @@ public abstract class BaseHttpCommandExecutorServiceIntegrationTest extends Base
          RecordedRequest request = server.takeRequest();
          assertEquals(new String(request.getBody(), Charsets.UTF_8), "");
       } finally {
-         close(client, true);
+         closeQuietly(client);
          server.shutdown();
       }
    }
@@ -554,7 +554,7 @@ public abstract class BaseHttpCommandExecutorServiceIntegrationTest extends Base
          request = server.takeRequest();
          assertEquals(new String(request.getBody(), Charsets.UTF_8), "foo");
       } finally {
-         close(client, true);
+         closeQuietly(client);
          server.shutdown();
       }
    }
@@ -566,7 +566,7 @@ public abstract class BaseHttpCommandExecutorServiceIntegrationTest extends Base
       try {
          assertTrue(client.exists(""));
       } finally {
-         close(client, true);
+         closeQuietly(client);
          server.shutdown();
       }
    }
@@ -579,7 +579,7 @@ public abstract class BaseHttpCommandExecutorServiceIntegrationTest extends Base
          assertTrue(client.exists(""));
          assertEquals(server.getRequestCount(), 2);
       } finally {
-         close(client, true);
+         closeQuietly(client);
          server.shutdown();
       }
    }
@@ -591,7 +591,7 @@ public abstract class BaseHttpCommandExecutorServiceIntegrationTest extends Base
       try {
          assertFalse(client.exists(""));
       } finally {
-         close(client, true);
+         closeQuietly(client);
          server.shutdown();
       }
    }
@@ -604,7 +604,7 @@ public abstract class BaseHttpCommandExecutorServiceIntegrationTest extends Base
          String result = client.downloadAndParse("");
          assertEquals(result, "whoppers");
       } finally {
-         close(client, true);
+         closeQuietly(client);
          server.shutdown();
       }
    }
@@ -625,7 +625,7 @@ public abstract class BaseHttpCommandExecutorServiceIntegrationTest extends Base
          long diff = System.currentTimeMillis() - now;
          assertTrue(diff < timeoutMillis / 2, "expected " + diff + " to be less than " + (timeoutMillis / 2));
       } finally {
-         close(client, true);
+         closeQuietly(client);
          server.shutdown();
       }
    }

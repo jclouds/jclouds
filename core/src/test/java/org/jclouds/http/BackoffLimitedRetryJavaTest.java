@@ -16,8 +16,8 @@
  */
 package org.jclouds.http;
 
-import static com.google.common.io.Closeables.close;
 import static org.jclouds.Constants.PROPERTY_MAX_RETRIES;
+import static org.jclouds.util.Closeables2.closeQuietly;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.fail;
 
@@ -62,7 +62,7 @@ public class BackoffLimitedRetryJavaTest extends BaseMockWebServerTest {
          client.download("");
          assertEquals(server.getRequestCount(), 1);
       } finally {
-         close(client, true);
+         closeQuietly(client);
          server.shutdown();
       }
    }
@@ -75,7 +75,7 @@ public class BackoffLimitedRetryJavaTest extends BaseMockWebServerTest {
          client.download("");
          assertEquals(server.getRequestCount(), 2);
       } finally {
-         close(client, true);
+         closeQuietly(client);
          server.shutdown();
       }
    }
@@ -93,7 +93,7 @@ public class BackoffLimitedRetryJavaTest extends BaseMockWebServerTest {
          client.download("");
          assertEquals(server.getRequestCount(), maxRetries);
       } finally {
-         close(client, true);
+         closeQuietly(client);
          server.shutdown();
       }
    }
@@ -114,7 +114,7 @@ public class BackoffLimitedRetryJavaTest extends BaseMockWebServerTest {
          assertEquals(ex.getResponse().getStatusCode(), 500);
          assertEquals(server.getRequestCount(), maxRetries + 1);
       } finally {
-         close(client, true);
+         closeQuietly(client);
          server.shutdown();
       }
    }
@@ -139,7 +139,7 @@ public class BackoffLimitedRetryJavaTest extends BaseMockWebServerTest {
             assertEquals(server.getRequestCount(), maxRetries + 3);
          }
       } finally {
-         close(client, true);
+         closeQuietly(client);
          server.shutdown();
       }
    }

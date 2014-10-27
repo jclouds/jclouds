@@ -19,9 +19,10 @@ package org.jclouds;
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 import static java.lang.String.format;
+import static org.jclouds.util.Closeables2.closeQuietly;
 
-import java.io.InputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.Properties;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -29,7 +30,6 @@ import java.util.regex.Pattern;
 import org.jclouds.javax.annotation.Nullable;
 
 import com.google.common.annotations.VisibleForTesting;
-import com.google.common.io.Closeables;
 
 public class JcloudsVersion {
     @VisibleForTesting
@@ -90,7 +90,7 @@ public class JcloudsVersion {
         } catch (IOException exception) {
             throw new IllegalStateException(format("Unable to load version resource file '%s'", VERSION_RESOURCE_FILE), exception);
         } finally {
-            Closeables.closeQuietly(is);
+            closeQuietly(is);
         }
         return checkNotNull(versionProperties.getProperty(VERSION_PROPERTY_NAME), VERSION_PROPERTY_NAME);
     }

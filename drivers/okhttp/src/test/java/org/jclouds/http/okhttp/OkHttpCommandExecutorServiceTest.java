@@ -16,10 +16,10 @@
  */
 package org.jclouds.http.okhttp;
 
-import static com.google.common.io.Closeables.close;
 import static org.jclouds.Constants.PROPERTY_MAX_CONNECTIONS_PER_CONTEXT;
 import static org.jclouds.Constants.PROPERTY_MAX_CONNECTIONS_PER_HOST;
 import static org.jclouds.Constants.PROPERTY_USER_THREADS;
+import static org.jclouds.util.Closeables2.closeQuietly;
 import static org.testng.Assert.assertEquals;
 
 import java.io.Closeable;
@@ -81,7 +81,7 @@ public class OkHttpCommandExecutorServiceTest extends BaseHttpCommandExecutorSer
          assertEquals(new String(request.getBody(), Charsets.UTF_8), "foo");
          assertEquals(result, "fooPATCH");
       } finally {
-         close(api, true);
+         closeQuietly(api);
          server.shutdown();
       }
    }
@@ -103,7 +103,7 @@ public class OkHttpCommandExecutorServiceTest extends BaseHttpCommandExecutorSer
          assertEquals(request.getMethod(), "PATCH");
          assertEquals(new String(request.getBody(), Charsets.UTF_8), "foo");
       } finally {
-         close(api, true);
+         closeQuietly(api);
          server.shutdown();
       }
    }
@@ -128,7 +128,7 @@ public class OkHttpCommandExecutorServiceTest extends BaseHttpCommandExecutorSer
          assertEquals(request.getMethod(), "PATCH");
          assertEquals(new String(request.getBody(), Charsets.UTF_8), "foo");
       } finally {
-         close(api, true);
+         closeQuietly(api);
          redirectTarget.shutdown();
          server.shutdown();
       }
@@ -145,7 +145,7 @@ public class OkHttpCommandExecutorServiceTest extends BaseHttpCommandExecutorSer
          assertEquals(request.getMethod(), "PATCH");
          assertEquals(new String(request.getBody(), Charsets.UTF_8), "");
       } finally {
-         close(api, true);
+         closeQuietly(api);
          server.shutdown();
       }
    }

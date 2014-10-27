@@ -20,28 +20,29 @@ package org.jclouds.util;
 import java.io.Closeable;
 import java.io.IOException;
 
-import com.google.common.base.Throwables;
-import com.google.common.io.Closeables;
-
 import org.jclouds.javax.annotation.Nullable;
 
-@Deprecated
-public class Closeables2 {
-   private Closeables2() {
+import com.google.common.annotations.Beta;
+
+/**
+ * Alternative to {@link com.google.common.io.Closeables}, which allows jclouds
+ * to avoid guava incompatibility on said class.
+ */
+@Beta
+public final class Closeables2 {
+
+   /** Closes the closable, swallowing any {@linkplain IOException}. */
+   public static void closeQuietly(@Nullable Closeable closeable) {
+      if (closeable == null) {
+         return;
+      }
+      try {
+         closeable.close();
+      } catch (IOException ignored) {
+      }
    }
 
-   /**
-    * Equivalent to calling {@code Closeables.close(closeable, true)}, but with no IOException in the signature.
-    *
-    * @param closeable the {@code Closeable} object to be closed, or null, in which case this method
-    *     does nothing
-    */
-   @Deprecated
-   public static void closeQuietly(@Nullable Closeable closeable) {
-      try {
-         Closeables.close(closeable, true);
-      } catch (IOException e) {
-         throw Throwables.propagate(e);
-      }
+   private Closeables2() {
+      throw new AssertionError("intentionally unimplemented");
    }
 }

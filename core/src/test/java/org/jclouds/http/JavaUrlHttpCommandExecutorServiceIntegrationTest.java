@@ -16,11 +16,11 @@
  */
 package org.jclouds.http;
 
-import static com.google.common.io.Closeables.close;
 import static com.google.common.net.HttpHeaders.CONTENT_LENGTH;
 import static org.jclouds.Constants.PROPERTY_MAX_CONNECTIONS_PER_CONTEXT;
 import static org.jclouds.Constants.PROPERTY_MAX_CONNECTIONS_PER_HOST;
 import static org.jclouds.Constants.PROPERTY_USER_THREADS;
+import static org.jclouds.util.Closeables2.closeQuietly;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.fail;
 
@@ -78,7 +78,7 @@ public class JavaUrlHttpCommandExecutorServiceIntegrationTest extends BaseHttpCo
          }
          assertEquals(server.takeRequest().getHeader(CONTENT_LENGTH), String.valueOf(reallyLongContent));
       } finally {
-         close(client, true);
+         closeQuietly(client);
          server.shutdown();
       }
    }

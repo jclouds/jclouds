@@ -16,9 +16,7 @@
  */
 package org.jclouds.chef.handlers;
 
-import static com.google.common.base.Throwables.propagate;
-
-import java.io.IOException;
+import static org.jclouds.util.Closeables2.closeQuietly;
 
 import javax.annotation.Resource;
 import javax.inject.Inject;
@@ -32,8 +30,6 @@ import org.jclouds.http.HttpResponseException;
 import org.jclouds.logging.Logger;
 import org.jclouds.rest.AuthorizationException;
 import org.jclouds.rest.ResourceNotFoundException;
-
-import com.google.common.io.Closeables;
 
 /**
  * This will parse and set an appropriate exception on the command object.
@@ -67,13 +63,7 @@ public class ChefErrorHandler implements HttpErrorHandler {
                break;
          }
       } finally {
-         if (response.getPayload() != null) {
-            try {
-               Closeables.close(response.getPayload().getInput(), true);
-            } catch (IOException e) {
-               throw propagate(e);
-            }
-         }
+         closeQuietly(response.getPayload());
          command.setException(exception);
       }
    }
