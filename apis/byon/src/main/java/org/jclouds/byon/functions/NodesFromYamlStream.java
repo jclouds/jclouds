@@ -17,9 +17,11 @@
 package org.jclouds.byon.functions;
 
 import static com.google.common.base.Preconditions.checkState;
+import static com.google.common.base.Throwables.propagate;
+import static org.jclouds.util.Closeables2.closeQuietly;
 
-import java.io.InputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.List;
 import java.util.Map;
 
@@ -34,14 +36,12 @@ import org.yaml.snakeyaml.constructor.Constructor;
 
 import com.google.common.base.Function;
 import com.google.common.base.Functions;
-import com.google.common.base.Throwables;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Maps;
 import com.google.common.io.ByteSource;
-import com.google.common.io.Closeables;
 
 /**
  * Parses the following syntax.
@@ -100,9 +100,9 @@ public class NodesFromYamlStream implements Function<ByteSource, LoadingCache<St
          in = source.openStream();
          config = (Config) yaml.load(in);
       } catch (IOException ioe) {
-         throw Throwables.propagate(ioe);
+         throw propagate(ioe);
       } finally {
-         Closeables.closeQuietly(in);
+         closeQuietly(in);
       }
       checkState(config != null, "missing config: class");
       checkState(config.nodes != null, "missing nodes: collection");

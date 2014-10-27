@@ -18,16 +18,17 @@
 package org.jclouds.io;
 
 import static com.google.common.base.Preconditions.checkNotNull;
+import static org.jclouds.util.Closeables2.closeQuietly;
 
 import java.io.IOException;
 import java.io.InputStream;
+
 import com.google.common.annotations.Beta;
 import com.google.common.hash.HashCode;
 import com.google.common.hash.HashFunction;
 import com.google.common.hash.HashingInputStream;
 import com.google.common.io.ByteSource;
 import com.google.common.io.ByteStreams;
-import com.google.common.io.Closeables;
 
 @Beta
 public class ByteStreams2 {
@@ -39,7 +40,7 @@ public class ByteStreams2 {
          ByteStreams.copy(his, ByteStreams.nullOutputStream());
          return his.hash();
       } finally {
-         Closeables.closeQuietly(input);
+         closeQuietly(input);
       }
    }
 
@@ -48,7 +49,7 @@ public class ByteStreams2 {
       try {
          return ByteStreams.toByteArray(input);
       } finally {
-         Closeables.closeQuietly(input);
+         closeQuietly(input);
       }
    }
 

@@ -19,12 +19,12 @@ package org.jclouds.http.internal;
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.base.Throwables.propagate;
 import static com.google.common.io.ByteStreams.toByteArray;
-import static com.google.common.io.Closeables.close;
 import static com.google.common.net.HttpHeaders.CONTENT_LENGTH;
 import static com.google.common.net.HttpHeaders.HOST;
 import static com.google.common.net.HttpHeaders.USER_AGENT;
 import static org.jclouds.http.HttpUtils.filterOutContentHeaders;
 import static org.jclouds.io.Payloads.newInputStreamPayload;
+import static org.jclouds.util.Closeables2.closeQuietly;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -60,7 +60,6 @@ import com.google.common.base.Supplier;
 import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.ImmutableMultimap.Builder;
 import com.google.common.io.ByteStreams;
-import com.google.common.io.Closeables;
 import com.google.common.io.CountingOutputStream;
 import com.google.inject.Inject;
 
@@ -99,13 +98,13 @@ public class JavaUrlHttpCommandExecutorService extends BaseHttpCommandExecutorSe
       } catch (IOException e) {
          in = bufferAndCloseStream(connection.getErrorStream());
       } catch (RuntimeException e) {
-         close(in, true);
-         throw propagate(e);
+         closeQuietly(in);
+         throw e;
       }
 
       int responseCode = connection.getResponseCode();
       if (responseCode == 204) {
-         close(in, true);
+         closeQuietly(in);
          in = null;
       }
       builder.statusCode(responseCode);
@@ -135,7 +134,7 @@ public class JavaUrlHttpCommandExecutorService extends BaseHttpCommandExecutorSe
             in = new ByteArrayInputStream(toByteArray(inputStream));
          }
       } finally {
-         close(inputStream, true);
+         closeQuietly(inputStream);
       }
       return in;
    }
@@ -314,7 +313,7 @@ public class JavaUrlHttpCommandExecutorService extends BaseHttpCommandExecutorSe
          logger.error(e, "error after writing %d/%s bytes to %s", out.getCount(), lengthDesc, connection.getURL());
          throw e;
       } finally {
-         Closeables.closeQuietly(is);
+         closeQuietly(is);
       }
    }
 

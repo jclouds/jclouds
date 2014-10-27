@@ -19,6 +19,7 @@ package org.jclouds.filesystem.strategy.internal;
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.base.Strings.isNullOrEmpty;
 import static com.google.common.io.BaseEncoding.base16;
+import static org.jclouds.util.Closeables2.closeQuietly;
 
 import java.io.File;
 import java.io.IOException;
@@ -52,7 +53,6 @@ import com.google.common.hash.HashCode;
 import com.google.common.hash.Hashing;
 import com.google.common.hash.HashingInputStream;
 import com.google.common.io.ByteSource;
-import com.google.common.io.Closeables;
 import com.google.common.io.Files;
 
 public class FilesystemStorageStrategyImpl implements LocalStorageStrategy {
@@ -226,7 +226,7 @@ public class FilesystemStorageStrategyImpl implements LocalStorageStrategy {
          }
          throw ex;
       } finally {
-         Closeables.closeQuietly(his);
+         closeQuietly(his);
          payload.release();
       }
    }
