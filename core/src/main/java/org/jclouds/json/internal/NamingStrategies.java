@@ -43,7 +43,6 @@ import com.google.common.collect.FluentIterable;
 import com.google.common.collect.Maps;
 import com.google.common.reflect.Invokable;
 import com.google.common.reflect.TypeToken;
-import com.google.gson.FieldNamingPolicy;
 import com.google.gson.FieldNamingStrategy;
 import com.google.gson.annotations.SerializedName;
 
@@ -163,10 +162,10 @@ public class NamingStrategies {
    public static class AnnotationFieldNamingStrategy extends AnnotationBasedNamingStrategy implements
          FieldNamingStrategy {
 
-      private final FieldNamingPolicy fallback;
+      private final FieldNamingStrategy fallback;
 
       public AnnotationFieldNamingStrategy(Iterable<? extends NameExtractor<?>> extractors,
-            FieldNamingPolicy fallback) {
+            FieldNamingStrategy fallback) {
          super(extractors);
          checkArgument(extractors.iterator().hasNext(), "you must supply at least one name extractor, for example: "
                + ExtractSerializedName.class.getSimpleName());
@@ -188,7 +187,7 @@ public class NamingStrategies {
          FieldNamingStrategy {
 
       public AnnotationOrNameFieldNamingStrategy(Iterable<? extends NameExtractor<?>> extractors,
-            FieldNamingPolicy fallback) {
+            FieldNamingStrategy fallback) {
          super(extractors, fallback);
       }
 
