@@ -16,6 +16,45 @@
  */
 package org.jclouds.json.config;
 
+import static com.google.common.io.BaseEncoding.base16;
+
+import java.beans.ConstructorProperties;
+import java.io.IOException;
+import java.lang.reflect.Type;
+import java.util.Date;
+import java.util.Enumeration;
+import java.util.List;
+import java.util.Map;
+import java.util.Properties;
+import java.util.Set;
+
+import javax.inject.Provider;
+import javax.inject.Singleton;
+
+import org.jclouds.date.DateService;
+import org.jclouds.domain.JsonBall;
+import org.jclouds.json.Json;
+import org.jclouds.json.SerializedNames;
+import org.jclouds.json.internal.DeserializationConstructorAndReflectiveTypeAdapterFactory;
+import org.jclouds.json.internal.EnumTypeAdapterThatReturnsFromValue;
+import org.jclouds.json.internal.GsonWrapper;
+import org.jclouds.json.internal.NamingStrategies.AnnotationConstructorNamingStrategy;
+import org.jclouds.json.internal.NamingStrategies.AnnotationOrNameFieldNamingStrategy;
+import org.jclouds.json.internal.NamingStrategies.ExtractNamed;
+import org.jclouds.json.internal.NamingStrategies.ExtractSerializedName;
+import org.jclouds.json.internal.NullFilteringTypeAdapterFactories.CollectionTypeAdapterFactory;
+import org.jclouds.json.internal.NullFilteringTypeAdapterFactories.FluentIterableTypeAdapterFactory;
+import org.jclouds.json.internal.NullFilteringTypeAdapterFactories.ImmutableListTypeAdapterFactory;
+import org.jclouds.json.internal.NullFilteringTypeAdapterFactories.ImmutableMapTypeAdapterFactory;
+import org.jclouds.json.internal.NullFilteringTypeAdapterFactories.ImmutableSetTypeAdapterFactory;
+import org.jclouds.json.internal.NullFilteringTypeAdapterFactories.IterableTypeAdapterFactory;
+import org.jclouds.json.internal.NullFilteringTypeAdapterFactories.ListTypeAdapterFactory;
+import org.jclouds.json.internal.NullFilteringTypeAdapterFactories.MapTypeAdapterFactory;
+import org.jclouds.json.internal.NullFilteringTypeAdapterFactories.MultimapTypeAdapterFactory;
+import org.jclouds.json.internal.NullFilteringTypeAdapterFactories.SetTypeAdapterFactory;
+import org.jclouds.json.internal.NullHackJsonLiteralAdapter;
+import org.jclouds.json.internal.OptionalTypeAdapterFactory;
+
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableMap.Builder;
 import com.google.common.collect.ImmutableSet;
@@ -41,50 +80,13 @@ import com.google.inject.AbstractModule;
 import com.google.inject.ImplementedBy;
 import com.google.inject.Inject;
 import com.google.inject.Provides;
-import org.jclouds.date.DateService;
-import org.jclouds.domain.JsonBall;
-import org.jclouds.json.Json;
-import org.jclouds.json.SerializedNames;
-import org.jclouds.json.internal.DeserializationConstructorAndReflectiveTypeAdapterFactory;
-import org.jclouds.json.internal.EnumTypeAdapterThatReturnsFromValue;
-import org.jclouds.json.internal.GsonWrapper;
-import org.jclouds.json.internal.NamingStrategies.AnnotationConstructorNamingStrategy;
-import org.jclouds.json.internal.NamingStrategies.AnnotationOrNameFieldNamingStrategy;
-import org.jclouds.json.internal.NamingStrategies.ExtractNamed;
-import org.jclouds.json.internal.NamingStrategies.ExtractSerializedName;
-import org.jclouds.json.internal.NullFilteringTypeAdapterFactories.ImmutableMapTypeAdapterFactory;
-import org.jclouds.json.internal.NullFilteringTypeAdapterFactories.CollectionTypeAdapterFactory;
-import org.jclouds.json.internal.NullFilteringTypeAdapterFactories.FluentIterableTypeAdapterFactory;
-import org.jclouds.json.internal.NullFilteringTypeAdapterFactories.ImmutableListTypeAdapterFactory;
-import org.jclouds.json.internal.NullFilteringTypeAdapterFactories.ImmutableSetTypeAdapterFactory;
-import org.jclouds.json.internal.NullFilteringTypeAdapterFactories.IterableTypeAdapterFactory;
-import org.jclouds.json.internal.NullFilteringTypeAdapterFactories.ListTypeAdapterFactory;
-import org.jclouds.json.internal.NullFilteringTypeAdapterFactories.MapTypeAdapterFactory;
-import org.jclouds.json.internal.NullFilteringTypeAdapterFactories.MultimapTypeAdapterFactory;
-import org.jclouds.json.internal.NullFilteringTypeAdapterFactories.SetTypeAdapterFactory;
-import org.jclouds.json.internal.NullHackJsonLiteralAdapter;
-import org.jclouds.json.internal.OptionalTypeAdapterFactory;
-
-import javax.inject.Provider;
-import javax.inject.Singleton;
-import java.beans.ConstructorProperties;
-import java.io.IOException;
-import java.lang.reflect.Type;
-import java.util.Date;
-import java.util.Enumeration;
-import java.util.List;
-import java.util.Map;
-import java.util.Properties;
-import java.util.Set;
-
-import static com.google.common.io.BaseEncoding.base16;
 
 public class GsonModule extends AbstractModule {
 
-   /** Optionally override the fallback policy when name annotations aren't on fields. */
-   private static class FallbackFieldNamingPolicy {
+   /** Optionally override the fallback field naming strategy when name annotations aren't on fields. */
+   private static class FallbackFieldNamingStrategy {
       @Inject(optional = true)
-      FieldNamingPolicy fallback = FieldNamingPolicy.IDENTITY;
+      FieldNamingStrategy fallback = FieldNamingPolicy.IDENTITY;
    }
 
    @SuppressWarnings("rawtypes")
@@ -97,10 +99,10 @@ public class GsonModule extends AbstractModule {
          CollectionTypeAdapterFactory collection, ListTypeAdapterFactory list,
          ImmutableListTypeAdapterFactory immutableList, FluentIterableTypeAdapterFactory fluentIterable,
          ImmutableMapTypeAdapterFactory immutableMap, DefaultExclusionStrategy exclusionStrategy,
-         FallbackFieldNamingPolicy fallbackFieldNamingPolicy) {
+         FallbackFieldNamingStrategy fallbackFieldNamingStrategy) {
 
       FieldNamingStrategy serializationPolicy = new AnnotationOrNameFieldNamingStrategy(ImmutableSet.of(
-            new ExtractSerializedName(), new ExtractNamed()), fallbackFieldNamingPolicy.fallback);
+            new ExtractSerializedName(), new ExtractNamed()), fallbackFieldNamingStrategy.fallback);
 
       GsonBuilder builder = new GsonBuilder().setFieldNamingStrategy(serializationPolicy)
                                              .setExclusionStrategies(exclusionStrategy);

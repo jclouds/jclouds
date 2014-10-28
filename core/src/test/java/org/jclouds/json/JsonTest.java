@@ -35,6 +35,7 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.gson.FieldAttributes;
 import com.google.gson.FieldNamingPolicy;
+import com.google.gson.FieldNamingStrategy;
 import com.google.inject.AbstractModule;
 import com.google.inject.Guice;
 import com.google.inject.TypeLiteral;
@@ -228,7 +229,7 @@ public class JsonTest {
    public void upperCamelCaseWithSerializedNames() {
       Json json = Guice.createInjector(new GsonModule(), new AbstractModule() {
          @Override protected void configure() {
-            bind(FieldNamingPolicy.class).toInstance(FieldNamingPolicy.UPPER_CAMEL_CASE);
+            bind(FieldNamingStrategy.class).toInstance(FieldNamingPolicy.UPPER_CAMEL_CASE);
          }
       }).getInstance(Json.class);
 
@@ -242,7 +243,7 @@ public class JsonTest {
    public void upperCamelCaseWithSerializedNamesNullJsonValue() {
       Json json = Guice.createInjector(new GsonModule(), new AbstractModule() {
          @Override protected void configure() {
-            bind(FieldNamingPolicy.class).toInstance(FieldNamingPolicy.UPPER_CAMEL_CASE);
+            bind(FieldNamingStrategy.class).toInstance(FieldNamingPolicy.UPPER_CAMEL_CASE);
          }
       }).getInstance(Json.class);
 
