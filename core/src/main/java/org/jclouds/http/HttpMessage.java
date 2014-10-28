@@ -64,9 +64,7 @@ public class HttpMessage extends PayloadEnclosingImpl {
       
       /**
        * @see HttpMessage#getPayload()
-       * @deprecated see payload(ByteSource.wrap(byte[]))
        */
-      @Deprecated
       public T payload(byte [] payload) {
          this.payload = Payloads.newByteArrayPayload(checkNotNull(payload, "payload"));
          return self();
@@ -82,9 +80,7 @@ public class HttpMessage extends PayloadEnclosingImpl {
       
       /**
        * @see HttpMessage#getPayload()
-       * @deprecated see payload(Files.asByteSource(File))
        */
-      @Deprecated
       public T payload(File payload) {
          this.payload = Payloads.newFilePayload(checkNotNull(payload, "payload"));
          return self();
@@ -100,9 +96,7 @@ public class HttpMessage extends PayloadEnclosingImpl {
       
       /**
        * @see HttpMessage#getPayload()
-       * @deprecated see payload(ByteSource.wrap(String.getBytes()))
        */
-      @Deprecated
       public T payload(String payload) {
          this.payload = Payloads.newStringPayload(checkNotNull(payload, "payload"));
          return self();

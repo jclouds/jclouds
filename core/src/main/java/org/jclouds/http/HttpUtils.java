@@ -64,7 +64,6 @@ import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Multimap;
 import com.google.common.collect.ImmutableSet.Builder;
-import com.google.common.io.ByteSource;
 import com.google.common.reflect.Invokable;
 import com.google.inject.Inject;
 
@@ -159,7 +158,7 @@ public class HttpUtils {
    public static byte[] closeClientButKeepContentStream(PayloadEnclosing response) {
       byte[] returnVal = toByteArrayOrNull(response);
       if (returnVal != null && !response.getPayload().isRepeatable()) {
-         Payload newPayload = Payloads.newByteSourcePayload(ByteSource.wrap(returnVal));
+         Payload newPayload = Payloads.newByteArrayPayload(returnVal);
          MutableContentMetadata fromMd = response.getPayload().getContentMetadata();
          MutableContentMetadata toMd = newPayload.getContentMetadata();
          copy(fromMd, toMd);
