@@ -16,6 +16,7 @@
  */
 package org.jclouds.docker;
 
+import com.google.auto.service.AutoService;
 import com.google.common.collect.ImmutableSet;
 import com.google.inject.Module;
 import org.jclouds.Constants;
@@ -33,9 +34,7 @@ import java.util.Properties;
 import static org.jclouds.compute.config.ComputeServiceProperties.TEMPLATE;
 import static org.jclouds.reflect.Reflection2.typeToken;
 
-/**
- * Implementation of {@link BaseHttpApiMetadata} for the Docker API
- */
+@AutoService(ApiMetadata.class)
 public class DockerApiMetadata extends BaseHttpApiMetadata<DockerApi> {
 
    @Override
