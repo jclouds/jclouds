@@ -186,11 +186,16 @@
   </developers>
 
   <properties>
-    <clojure.version>1.3.0</clojure.version>
     <maven.compile.source>1.6</maven.compile.source>
     <maven.compile.target>1.6</maven.compile.target>
     <maven.compile.deprecation>true</maven.compile.deprecation>
     <maven.site.url.base>gitsite:git@github.com/jclouds/jclouds-maven-site.git</maven.site.url.base>
+    <clojure.version>1.3.0</clojure.version>
+    <guava.version>17.0</guava.version>
+    <okhttp.version>1.6.0</okhttp.version>
+    <surefire.version>2.17</surefire.version>
+    <assertj-core.version>1.6.1</assertj-core.version>
+    <assertj-guava.version>1.2.0</assertj-guava.version>
     <http.proxyHost />
     <http.proxyPort />
     <jclouds.wire.httpstream.url>http://archive.apache.org/dist/commons/logging/binaries/commons-logging-1.1.1-bin.tar.gz</jclouds.wire.httpstream.url>
@@ -200,11 +205,6 @@
     <jclouds.test.listener>org.jclouds.test.testng.UnitTestStatusListener</jclouds.test.listener>
     <test.ssh.keyfile />
     <sourceReleaseAssemblyDescriptor>source-release-zip-tar</sourceReleaseAssemblyDescriptor>
-    <guava.version>17.0</guava.version>
-    <okhttp.version>1.6.0</okhttp.version>
-    <surefire.version>2.17</surefire.version>
-    <assertj-core.version>1.6.1</assertj-core.version>
-    <assertj-guava.version>1.2.0</assertj-guava.version>
   </properties>
 
   <dependencyManagement>
@@ -223,6 +223,11 @@
         <groupId>org.clojure</groupId>
         <artifactId>core.incubator</artifactId>
         <version>0.1.0</version>
+      </dependency>
+      <dependency>
+        <groupId>com.google.guava</groupId>
+        <artifactId>guava</artifactId>
+        <version>${guava.version}</version>
       </dependency>
       <dependency>
         <groupId>org.easymock</groupId>
