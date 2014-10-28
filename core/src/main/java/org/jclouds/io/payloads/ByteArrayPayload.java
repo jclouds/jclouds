@@ -22,10 +22,6 @@ import static com.google.common.base.Preconditions.checkNotNull;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 
-/**
- * @deprecated see ByteSourcePayload
- */
-@Deprecated
 public class ByteArrayPayload extends BasePayload<byte[]> {
    public ByteArrayPayload(byte[] content) {
       this(content, null);

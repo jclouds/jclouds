@@ -25,9 +25,7 @@ import com.google.common.base.Charsets;
  * This implementation converts the String to a byte array using UTF-8 encoding. If you wish to use
  * a different encoding, please use {@link ByteArrayPayload}.
  * 
- * @deprecated see ByteSourcePayload
  */
-@Deprecated
 public class StringPayload extends BasePayload<String> {
 
    private final byte[] bytes;

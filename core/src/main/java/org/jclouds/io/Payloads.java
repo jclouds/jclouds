@@ -35,10 +35,6 @@ public class Payloads {
    private Payloads() {
    }
 
-   /**
-    * @deprecated see newPayload(ByteSource) or newPayload(InputStream)
-    */
-   @Deprecated
    public static Payload newPayload(Object data) {
       checkNotNull(data, "data");
       if (data instanceof Payload) {
@@ -62,10 +58,6 @@ public class Payloads {
       return new InputStreamPayload(checkNotNull(data, "data"));
    }
 
-   /**
-    * @deprecated see newPayload(ByteSource)
-    */
-   @Deprecated
    public static ByteArrayPayload newByteArrayPayload(byte[] data) {
       return new ByteArrayPayload(checkNotNull(data, "data"));
    }
@@ -74,18 +66,10 @@ public class Payloads {
       return new ByteSourcePayload(checkNotNull(data, "data"));
    }
 
-   /**
-    * @deprecated see newPayload(ByteSource)
-    */
-   @Deprecated
    public static StringPayload newStringPayload(String data) {
       return new StringPayload(checkNotNull(data, "data"));
    }
 
-   /**
-    * @deprecated see newPayload(ByteSource)
-    */
-   @Deprecated
    public static FilePayload newFilePayload(File data) {
       return new FilePayload(checkNotNull(data, "data"));
    }
