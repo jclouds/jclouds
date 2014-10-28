@@ -357,6 +357,13 @@
       <resource>
         <directory>src/main/resources</directory>
       </resource>
+      <!-- For AutoService generated services. -->
+      <resource>
+        <directory>target/classes</directory>
+        <includes>
+          <include>META-INF/services/*</include>
+        </includes>
+      </resource>
     </resources>
     <testResources>
       <testResource>
