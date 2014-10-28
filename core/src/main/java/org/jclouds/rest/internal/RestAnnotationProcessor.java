@@ -300,7 +300,7 @@ public class RestAnnotationProcessor implements Function<Invocation, HttpRequest
          payload = Payloads.newUrlEncodedFormPayload(transformValues(formParams, NullableToStringFunction.INSTANCE));
       } else if (headers.containsKey(CONTENT_TYPE) && !HttpRequest.NON_PAYLOAD_METHODS.contains(requestMethod)) {
          if (payload == null)
-            payload = Payloads.newPayload(new byte[] {});
+            payload = Payloads.newByteArrayPayload(new byte[] {});
          payload.getContentMetadata().setContentType(get(headers.get(CONTENT_TYPE), 0));
       }
       if (payload != null) {

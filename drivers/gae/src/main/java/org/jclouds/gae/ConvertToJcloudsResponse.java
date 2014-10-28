@@ -43,7 +43,7 @@ public class ConvertToJcloudsResponse implements Function<HTTPResponse, HttpResp
    
    @Override
    public HttpResponse apply(HTTPResponse gaeResponse) {
-      Payload payload = gaeResponse.getContent() != null ? Payloads.newPayload(gaeResponse.getContent())
+      Payload payload = gaeResponse.getContent() != null ? Payloads.newByteArrayPayload(gaeResponse.getContent())
             : null;
       Multimap<String, String> headers = LinkedHashMultimap.create();
       String message = null;

@@ -45,10 +45,7 @@ public class Payloads {
       } else if (data instanceof InputStream) {
          return newInputStreamPayload((InputStream) data);
       } else if (data instanceof byte[]) {
-         byte[] array = (byte[]) data;
-         Payload payload = newByteSourcePayload(ByteSource.wrap(array));
-         payload.getContentMetadata().setContentLength((long) array.length);
-         return payload;
+         return newByteArrayPayload((byte[]) data);
       } else if (data instanceof ByteSource) {
          return newByteSourcePayload((ByteSource) data);
       } else if (data instanceof String) {

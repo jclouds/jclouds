@@ -33,9 +33,9 @@ import javax.inject.Singleton;
 
 import org.jclouds.io.ContentMetadata;
 import org.jclouds.io.Payload;
-import org.jclouds.io.Payloads;
 import org.jclouds.io.PayloadSlicer;
 import org.jclouds.io.payloads.BaseMutableContentMetadata;
+import org.jclouds.io.payloads.ByteArrayPayload;
 import org.jclouds.io.payloads.ByteSourcePayload;
 import org.jclouds.io.payloads.InputStreamPayload;
 
@@ -119,7 +119,7 @@ public class BasePayloadSlicer implements PayloadSlicer {
          Payload payload = null;
 
          if (content.length > 0) {
-            payload = Payloads.newPayload(content);
+            payload = new ByteArrayPayload(content);
             ContentMetadata cm = metaData.toBuilder().contentLength((long)content.length).contentMD5((HashCode) null).build();
             payload.setContentMetadata(BaseMutableContentMetadata.fromContentMetadata(cm));
          }

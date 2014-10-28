@@ -18,6 +18,7 @@ package org.jclouds.aws.s3;
 
 import static com.google.common.hash.Hashing.md5;
 import static org.jclouds.aws.s3.blobstore.options.AWSS3PutOptions.Builder.storageClass;
+import static org.jclouds.io.Payloads.newByteArrayPayload;
 import static org.jclouds.s3.options.ListBucketOptions.Builder.withPrefix;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
@@ -40,7 +41,6 @@ import org.jclouds.blobstore.options.PutOptions;
 import org.jclouds.domain.Location;
 import org.jclouds.io.ByteStreams2;
 import org.jclouds.io.Payload;
-import org.jclouds.io.Payloads;
 import org.jclouds.s3.S3Client;
 import org.jclouds.s3.S3ClientLiveTest;
 import org.jclouds.s3.domain.ListBucketResponse;
@@ -92,7 +92,7 @@ public class AWSS3ClientLiveTest extends S3ClientLiveTest {
          byte[] buffer = oneHundredOneConstitutions.read();
          assertEquals(oneHundredOneConstitutions.size(), (long) buffer.length);
 
-         Payload part1 = Payloads.newPayload(buffer);
+         Payload part1 = newByteArrayPayload(buffer);
          part1.getContentMetadata().setContentLength((long) buffer.length);
          part1.getContentMetadata().setContentMD5(oneHundredOneConstitutionsMD5);
 
