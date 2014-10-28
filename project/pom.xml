@@ -224,11 +224,6 @@
   <dependencyManagement>
     <dependencies>
       <dependency>
-        <groupId>com.jcraft</groupId>
-        <artifactId>jsch</artifactId>
-        <version>0.1.49</version>
-      </dependency>
-      <dependency>
         <groupId>org.clojure</groupId>
         <artifactId>clojure</artifactId>
         <version>${clojure.version}</version>
@@ -517,12 +512,12 @@
                 <dependency>
                   <groupId>com.jcraft</groupId>
                   <artifactId>jsch.agentproxy.core</artifactId>
-                  <version>0.0.7</version>
+                  <version>0.0.8</version>
                 </dependency>
                 <dependency>
                   <groupId>com.jcraft</groupId>
                   <artifactId>jsch.agentproxy.connector-factory</artifactId>
-                  <version>0.0.7</version>
+                  <version>0.0.8</version>
                 </dependency>
               </conflictingDependencies>
               <packages>
