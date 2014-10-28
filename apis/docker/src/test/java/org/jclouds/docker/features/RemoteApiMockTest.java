@@ -315,22 +315,6 @@ public class RemoteApiMockTest extends BaseDockerMockTest {
       }
    }
 
-   public void testBuildContainer() throws Exception {
-      MockWebServer server = mockWebServer();
-      server.enqueue(new MockResponse().setResponseCode(200));
-      DockerApi api = api(server.getUrl("/"));
-      RemoteApi remoteApi = api.getRemoteApi();
-      File dockerFile = File.createTempFile("docker", "tmp");
-      try {
-         remoteApi.build(dockerFile, BuildOptions.NONE);
-         assertRequestHasCommonFields(server.takeRequest(), "POST", "/build");
-      } finally {
-         dockerFile.delete();
-         api.close();
-         server.shutdown();
-      }
-   }
-
    public void testBuildContainerUsingPayload() throws Exception {
       MockWebServer server = mockWebServer();
       server.enqueue(new MockResponse().setResponseCode(200));
@@ -350,27 +334,4 @@ public class RemoteApiMockTest extends BaseDockerMockTest {
          server.shutdown();
       }
    }
-
-   public void testBuildNonexistentContainer() throws Exception {
-      MockWebServer server = mockWebServer();
-      server.enqueue(new MockResponse().setResponseCode(404));
-
-      DockerApi api = api(server.getUrl("/"));
-      RemoteApi remoteApi = api.getRemoteApi();
-
-      File dockerFile = File.createTempFile("docker", "tmp");
-      try {
-         try {
-            remoteApi.build(dockerFile, BuildOptions.NONE);
-            fail("Build container must fail on 404");
-         } catch (ResourceNotFoundException ex) {
-            // Expected exception
-         }
-      } finally {
-         dockerFile.delete();
-         api.close();
-         server.shutdown();
-      }
-   }
-
 }

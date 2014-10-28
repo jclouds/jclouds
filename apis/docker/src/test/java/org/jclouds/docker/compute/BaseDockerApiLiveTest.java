@@ -16,30 +16,30 @@
  */
 package org.jclouds.docker.compute;
 
-import com.google.common.base.Charsets;
-import com.google.common.collect.ImmutableSet;
-import com.google.common.io.CharStreams;
-import com.google.common.io.Closeables;
-import com.google.common.io.Files;
-import com.google.common.io.Resources;
-import com.google.inject.Module;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.util.Properties;
+
+import org.jboss.shrinkwrap.api.GenericArchive;
+import org.jboss.shrinkwrap.api.ShrinkWrap;
+import org.jboss.shrinkwrap.api.asset.ClassLoaderAsset;
+import org.jboss.shrinkwrap.api.exporter.TarExporter;
 import org.jclouds.Constants;
 import org.jclouds.apis.BaseApiLiveTest;
 import org.jclouds.docker.DockerApi;
-import org.jclouds.docker.features.internal.Archives;
 import org.jclouds.io.Payload;
 import org.jclouds.io.Payloads;
 import org.jclouds.sshj.config.SshjSshClientModule;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.net.URL;
-import java.util.Properties;
+import com.google.common.base.Charsets;
+import com.google.common.collect.ImmutableSet;
+import com.google.common.io.CharStreams;
+import com.google.common.io.Closeables;
+import com.google.inject.Module;
 
 @Test(groups = "live")
 public class BaseDockerApiLiveTest extends BaseApiLiveTest<DockerApi> {
@@ -72,20 +72,12 @@ public class BaseDockerApiLiveTest extends BaseApiLiveTest<DockerApi> {
       return result;
    }
 
-   protected Payload createPayload() throws IOException {
-      String folderPath = System.getProperty("user.dir") + "/docker/src/test/resources";
-      File parentDir = new File(folderPath + "/archive");
-      parentDir.mkdirs();
-      URL url = Resources.getResource("Dockerfile");
-      String content = Resources.toString(url, Charsets.UTF_8);
-      final File dockerfile = new File(parentDir.getAbsolutePath() + File.separator + "Dockerfile");
-      Files.write(content.getBytes(), dockerfile);
-      File archive = Archives.tar(parentDir, folderPath + "/archive/archive.tar");
-      FileInputStream data = new FileInputStream(archive);
-      Payload payload = Payloads.newInputStreamPayload(data);
-      payload.getContentMetadata().setContentLength(data.getChannel().size());
-      payload.getContentMetadata().setContentType("application/tar");
-      return payload;
-   }
+   public static Payload tarredDockerfile() throws IOException {
+      ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+      ShrinkWrap.create(GenericArchive.class, "archive.tar")
+            .add(new ClassLoaderAsset("Dockerfile"), "Dockerfile")
+            .as(TarExporter.class).exportTo(bytes);
 
+      return Payloads.newByteArrayPayload(bytes.toByteArray());
+   }
 }

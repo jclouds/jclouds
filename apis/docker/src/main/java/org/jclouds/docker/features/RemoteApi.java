@@ -17,7 +17,6 @@
 package org.jclouds.docker.features;
 
 import java.io.Closeable;
-import java.io.File;
 import java.io.InputStream;
 import java.util.Set;
 
@@ -32,7 +31,6 @@ import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 
 import org.jclouds.Fallbacks;
-import org.jclouds.docker.binders.BindInputStreamToRequest;
 import org.jclouds.docker.domain.Config;
 import org.jclouds.docker.domain.Container;
 import org.jclouds.docker.domain.HostConfig;
@@ -255,18 +253,4 @@ public interface RemoteApi extends Closeable {
    @Path("/build")
    @Headers(keys = "Content-Type", values = "application/tar")
    InputStream build(Payload inputStream, BuildOptions options);
-
-   /**
-    * Build an image from Dockerfile via stdin
-    *
-    * @param dockerFile The file to be compressed with one of the following algorithms: identity, gzip, bzip2, xz.*
-    * @param options the image build's options (@see BuildOptions)
-    * @return a stream of the build execution
-    */
-   @Named("image:build")
-   @POST
-   @Path("/build")
-   @Headers(keys = "Content-Type", values = "application/tar")
-   InputStream build(@BinderParam(BindInputStreamToRequest.class) File dockerFile, BuildOptions options);
-
 }

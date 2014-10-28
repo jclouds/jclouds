@@ -59,11 +59,6 @@
       <version>${project.version}</version>
     </dependency>
     <dependency>
-      <groupId>org.apache.commons</groupId>
-      <artifactId>commons-compress</artifactId>
-      <version>1.5</version>
-    </dependency>
-    <dependency>
       <groupId>com.google.auto.value</groupId>
       <artifactId>auto-value</artifactId>
       <version>1.0-rc2</version>
@@ -111,6 +106,13 @@
           <artifactId>bcprov-jdk15on</artifactId>
         </exclusion>
       </exclusions>
+    </dependency>
+    <dependency>
+      <groupId>org.jboss.shrinkwrap</groupId>
+      <artifactId>shrinkwrap-depchain</artifactId>
+      <version>1.2.2</version>
+      <type>pom</type>
+      <scope>test</scope>
     </dependency>
   </dependencies>
 

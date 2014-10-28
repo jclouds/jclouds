@@ -16,10 +16,16 @@
  */
 package org.jclouds.docker.features;
 
-import com.google.common.base.Splitter;
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.Iterables;
-import com.google.common.io.Resources;
+import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertFalse;
+import static org.testng.Assert.assertNotNull;
+import static org.testng.Assert.assertNull;
+import static org.testng.Assert.assertTrue;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URISyntaxException;
+
 import org.jclouds.docker.compute.BaseDockerApiLiveTest;
 import org.jclouds.docker.domain.Config;
 import org.jclouds.docker.domain.Container;
@@ -30,16 +36,9 @@ import org.jclouds.docker.options.DeleteImageOptions;
 import org.jclouds.rest.ResourceNotFoundException;
 import org.testng.annotations.Test;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.URISyntaxException;
-
-import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertFalse;
-import static org.testng.Assert.assertNotNull;
-import static org.testng.Assert.assertNull;
-import static org.testng.Assert.assertTrue;
+import com.google.common.base.Splitter;
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.Iterables;
 
 @Test(groups = "live", testName = "RemoteApiLiveTest", singleThreaded = true)
 public class RemoteApiLiveTest extends BaseDockerApiLiveTest {
@@ -104,7 +103,7 @@ public class RemoteApiLiveTest extends BaseDockerApiLiveTest {
 
    public void testBuildImage() throws IOException, InterruptedException, URISyntaxException {
       BuildOptions options = BuildOptions.Builder.tag("testBuildImage").verbose(false).nocache(false);
-      InputStream buildImageStream = api().build(new File(Resources.getResource("Dockerfile").toURI()), options);
+      InputStream buildImageStream = api().build(tarredDockerfile(), options);
       String buildStream = consumeStream(buildImageStream, false);
       Iterable<String> splitted = Splitter.on("\n").split(buildStream.replace("\r", "").trim());
       String lastStreamedLine = Iterables.getLast(splitted).trim();
@@ -117,5 +116,4 @@ public class RemoteApiLiveTest extends BaseDockerApiLiveTest {
    private RemoteApi api() {
       return api.getRemoteApi();
    }
-
 }
