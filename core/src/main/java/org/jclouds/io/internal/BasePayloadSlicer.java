@@ -34,11 +34,9 @@ import javax.inject.Singleton;
 import org.jclouds.io.ByteStreams2;
 import org.jclouds.io.ContentMetadata;
 import org.jclouds.io.Payload;
+import org.jclouds.io.Payloads;
 import org.jclouds.io.PayloadSlicer;
 import org.jclouds.io.payloads.BaseMutableContentMetadata;
-import org.jclouds.io.payloads.ByteArrayPayload;
-import org.jclouds.io.payloads.ByteSourcePayload;
-import org.jclouds.io.payloads.InputStreamPayload;
 
 import com.google.common.base.Charsets;
 import com.google.common.base.Throwables;
@@ -120,7 +118,7 @@ public class BasePayloadSlicer implements PayloadSlicer {
          Payload payload = null;
 
          if (content.length > 0) {
-            payload = new ByteArrayPayload(content);
+            payload = Payloads.newByteArrayPayload(content);
             ContentMetadata cm = metaData.toBuilder().contentLength((long)content.length).contentMD5((HashCode) null).build();
             payload.setContentMetadata(BaseMutableContentMetadata.fromContentMetadata(cm));
          }
@@ -173,19 +171,18 @@ public class BasePayloadSlicer implements PayloadSlicer {
       } catch (IOException ioe) {
          throw Throwables.propagate(ioe);
       }
-      return new InputStreamPayload(ByteStreams.limit(content, length));
+      return Payloads.newInputStreamPayload(ByteStreams.limit(content, length));
    }
 
    protected Payload doSlice(ByteSource content, long offset, long length) {
-      return new ByteSourcePayload(content.slice(offset, length));
+      return Payloads.newByteSourcePayload(content.slice(offset, length));
    }
 
    protected Payload doSlice(byte[] content, long offset, long length) {
-      Payload returnVal;
       checkArgument(offset <= Integer.MAX_VALUE, "offset is too big for an array");
       checkArgument(length <= Integer.MAX_VALUE, "length is too big for an array");
-      returnVal = new ByteSourcePayload(ByteSource.wrap(content).slice(offset, length));
-      return returnVal;
+      // TODO(adriancole): Make ByteArrayPayload carry offset, length as opposed to wrapping here.
+      return Payloads.newByteSourcePayload(ByteSource.wrap(content).slice(offset, length));
    }
 
    protected Payload copyMetadataAndSetLength(Payload input, Payload returnVal, long length) {
