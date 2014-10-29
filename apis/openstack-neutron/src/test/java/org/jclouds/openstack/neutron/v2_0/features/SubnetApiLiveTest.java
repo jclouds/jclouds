@@ -45,7 +45,7 @@ import com.google.common.collect.Sets;
  * Tests subnet api in combination with the network api
  *
  */
-@Test(groups = "live", testName = "SubnetApiLiveTest")
+@Test(groups = "live", testName = "SubnetApiLiveTest", singleThreaded = true)
 public class SubnetApiLiveTest extends BaseNeutronApiLiveTest {
 
    public void testGetAndListSubnets() {

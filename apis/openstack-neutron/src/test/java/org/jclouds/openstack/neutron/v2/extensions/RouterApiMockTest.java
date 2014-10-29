@@ -60,7 +60,10 @@ public class RouterApiMockTest extends BaseNeutronApiMockTest {
          RouterApi api = neutronApi.getRouterApi("RegionOne").get();
 
          Router.CreateRouter createRouter = Router.createBuilder().name("another_router").adminStateUp(Boolean.TRUE)
-               .externalGatewayInfo(ExternalGatewayInfo.builder().networkId("8ca37218-28ff-41cb-9b10-039601ea7e6b").build())
+               .externalGatewayInfo(ExternalGatewayInfo.builder()
+                     .networkId("8ca37218-28ff-41cb-9b10-039601ea7e6b")
+                     .enableSnat(true)
+                     .build())
                .build();
 
          Router router = api.create(createRouter);
@@ -79,6 +82,7 @@ public class RouterApiMockTest extends BaseNeutronApiMockTest {
          assertNotNull(router);
          assertEquals(router.getName(), "another_router");
          assertEquals(router.getExternalGatewayInfo().getNetworkId(), "8ca37218-28ff-41cb-9b10-039601ea7e6b");
+         assertEquals(router.getExternalGatewayInfo().getEnableSnat().booleanValue(), true);
          assertEquals(router.getStatus(), NetworkStatus.ACTIVE);
          assertEquals(router.getAdminStateUp(), Boolean.TRUE);
          assertEquals(router.getId(), "8604a0de-7f6b-409a-a47c-a1cc7bc77b2e");

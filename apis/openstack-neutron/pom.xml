@@ -38,7 +38,7 @@
     <!-- keystone endpoint -->
     <test.openstack-neutron.endpoint>http://localhost:5000/v2.0/</test.openstack-neutron.endpoint>
     <!-- keystone version -->
-    <test.openstack-neutron.api-version>2.0</test.openstack-neutron.api-version>
+    <test.openstack-neutron.api-version>v2.0</test.openstack-neutron.api-version>
     <test.openstack-neutron.build-version />
     <test.openstack-neutron.identity>FIXME_IDENTITY</test.openstack-neutron.identity>
     <test.openstack-neutron.credential>FIXME_CREDENTIALS</test.openstack-neutron.credential>

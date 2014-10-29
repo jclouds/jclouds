@@ -56,7 +56,7 @@ public class RouterApiLiveTest extends BaseNeutronApiLiveTest {
          assertNotNull(subnet);
 
          Router router = routerApi.create(Router.createBuilder().name("jclouds-router-test")
-            .externalGatewayInfo(ExternalGatewayInfo.builder().networkId(network.getId()).build()).build());
+            .externalGatewayInfo(ExternalGatewayInfo.builder().networkId(network.getId()).enableSnat(true).build()).build());
          assertNotNull(router);
 
          /* List and Get test */
@@ -72,7 +72,7 @@ public class RouterApiLiveTest extends BaseNeutronApiLiveTest {
 
          assertEquals(routerGet.getName(), router.getName());
          assertEquals(routerGet.getId(), router.getId());
-         assertEquals(routerGet.getExternalGatewayInfo(), router.getExternalGatewayInfo());
+         assertEquals(routerGet.getExternalGatewayInfo().getNetworkId(), router.getExternalGatewayInfo().getNetworkId());
 
          Router routerUpdate = routerApi.update(router.getId(), Router.updateBuilder().name("jclouds-router-test-rename").build());
          assertNotNull(routerUpdate);

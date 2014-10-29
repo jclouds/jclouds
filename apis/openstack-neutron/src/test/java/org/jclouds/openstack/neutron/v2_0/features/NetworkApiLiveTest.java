@@ -41,7 +41,7 @@ import com.google.common.collect.Sets;
  * Tests parsing and Guice wiring of NetworkApi
  *
  */
-@Test(groups = "live", testName = "NetworkApiLiveTest")
+@Test(groups = "live", testName = "NetworkApiLiveTest", singleThreaded = true)
 public class NetworkApiLiveTest extends BaseNeutronApiLiveTest {
 
    public void testGetAndListNetworks() {

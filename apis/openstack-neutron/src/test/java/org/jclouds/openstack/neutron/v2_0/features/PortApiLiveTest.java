@@ -45,7 +45,7 @@ import com.google.common.collect.Sets;
  * Tests PortApi in combination with the Network & SubnetApi
  *
  */
-@Test(groups = "live", testName = "PortApiLiveTest")
+@Test(groups = "live", testName = "PortApiLiveTest", singleThreaded = true)
 public class PortApiLiveTest extends BaseNeutronApiLiveTest {
 
    public void testGetAndListPorts() {

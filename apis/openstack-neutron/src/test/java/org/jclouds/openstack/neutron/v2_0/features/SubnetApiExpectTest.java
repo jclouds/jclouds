@@ -16,8 +16,14 @@
  */
 package org.jclouds.openstack.neutron.v2_0.features;
 
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableSet;
+import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
+import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertFalse;
+import static org.testng.Assert.assertNull;
+import static org.testng.Assert.assertTrue;
+
+import java.util.Set;
+
 import org.jclouds.http.HttpResponse;
 import org.jclouds.openstack.neutron.v2_0.domain.BulkSubnet;
 import org.jclouds.openstack.neutron.v2_0.domain.ReferenceWithName;
@@ -30,13 +36,8 @@ import org.jclouds.openstack.neutron.v2_0.parse.ParseSubnetTest;
 import org.jclouds.rest.AuthorizationException;
 import org.testng.annotations.Test;
 
-import java.util.Set;
-
-import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
-import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertFalse;
-import static org.testng.Assert.assertNull;
-import static org.testng.Assert.assertTrue;
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableSet;
 
 /**
  * Tests parsing and Guice wiring of SubnetApi
