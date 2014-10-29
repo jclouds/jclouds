@@ -17,35 +17,35 @@
 
 package org.jclouds.googlecloudstorage.domain.templates;
 
-import java.util.Set;
+import java.util.List;
 
+import org.jclouds.googlecloudstorage.domain.Bucket.Cors;
+import org.jclouds.googlecloudstorage.domain.Bucket.LifeCycle;
+import org.jclouds.googlecloudstorage.domain.Bucket.Logging;
+import org.jclouds.googlecloudstorage.domain.Bucket.Versioning;
+import org.jclouds.googlecloudstorage.domain.Bucket.Website;
 import org.jclouds.googlecloudstorage.domain.BucketAccessControls;
-import org.jclouds.googlecloudstorage.domain.DefaultObjectAccessControls;
 import org.jclouds.googlecloudstorage.domain.DomainResourceReferences.Location;
 import org.jclouds.googlecloudstorage.domain.DomainResourceReferences.StorageClass;
-import org.jclouds.googlecloudstorage.domain.internal.BucketCors;
-import org.jclouds.googlecloudstorage.domain.internal.BucketLifeCycle;
-import org.jclouds.googlecloudstorage.domain.internal.Logging;
-import org.jclouds.googlecloudstorage.domain.internal.Owner;
-import org.jclouds.googlecloudstorage.domain.internal.Versioning;
-import org.jclouds.googlecloudstorage.domain.internal.Website;
+import org.jclouds.googlecloudstorage.domain.ObjectAccessControls;
+import org.jclouds.googlecloudstorage.domain.Owner;
 
-import com.google.common.collect.Sets;
+import com.google.common.collect.Lists;
 
 public class BucketTemplate {
 
-   protected String name;
-   protected Long projectNumber;
-   protected Set<BucketAccessControls> acl = Sets.newLinkedHashSet();
-   protected Set<DefaultObjectAccessControls> defaultObjectAccessControls = Sets.newLinkedHashSet();
-   protected Owner owner;
-   protected Location location;
-   protected Website website;
-   protected Logging logging;
-   protected Versioning versioning;
-   protected Set<BucketCors> cors = Sets.newLinkedHashSet();
-   protected BucketLifeCycle lifeCycle;
-   protected StorageClass storageClass;
+   private String name;
+   private Long projectNumber;
+   private List<BucketAccessControls> acl = Lists.newArrayList();
+   private List<ObjectAccessControls> defaultObjectAccessControls = Lists.newArrayList();
+   private Owner owner;
+   private Location location;
+   private Website website;
+   private Logging logging;
+   private Versioning versioning;
+   private List<Cors> cors = Lists.newArrayList();
+   private LifeCycle lifeCycle;
+   private StorageClass storageClass;
 
    public BucketTemplate name(String name) {
       this.name = name;
@@ -82,7 +82,7 @@ public class BucketTemplate {
       return this;
    }
 
-   public BucketTemplate lifeCycle(BucketLifeCycle lifeCycle) {
+   public BucketTemplate lifeCycle(LifeCycle lifeCycle) {
       this.lifeCycle = lifeCycle;
       return this;
    }
@@ -97,97 +97,76 @@ public class BucketTemplate {
       return this;
    }
 
-   public BucketTemplate acl(Set<BucketAccessControls> acl) {
-
+   public BucketTemplate acl(List<BucketAccessControls> acl) {
       this.acl.addAll(acl);
       return this;
    }
 
-   public BucketTemplate addDefaultObjectAccessControls(DefaultObjectAccessControls oac) {
+   public BucketTemplate addDefaultObjectAccessControls(ObjectAccessControls oac) {
       this.defaultObjectAccessControls.add(oac);
       return this;
    }
 
-   public BucketTemplate defaultObjectAccessControls(Set<DefaultObjectAccessControls> defaultObjectAcl) {
+   public BucketTemplate defaultObjectAccessControls(List<ObjectAccessControls> defaultObjectAcl) {
       this.defaultObjectAccessControls.addAll(defaultObjectAcl);
       return this;
    }
 
-   public BucketTemplate addCORS(BucketCors cors) {
+   public BucketTemplate addCORS(Cors cors) {
       this.cors.add(cors);
       return this;
    }
 
-   public BucketTemplate cors(Set<BucketCors> cors) {
+   public BucketTemplate cors(List<Cors> cors) {
       this.cors.addAll(cors);
       return this;
    }
 
-   public Long getProjectNumber() {
+   public Long projectNumber() {
       return projectNumber;
    }
 
-   public String getName() {
+   public String name() {
       return name;
    }
 
-   public Set<BucketAccessControls> getAcl() {
+   public List<BucketAccessControls> acl() {
       return acl;
    }
 
-   public Set<DefaultObjectAccessControls> getDefaultObjectAccessControls() {
+   public List<ObjectAccessControls> defaultObjectAccessControls() {
       return defaultObjectAccessControls;
    }
 
-   public Owner getOwner() {
+   public Owner owner() {
       return owner;
    }
 
-   public Location getLocation() {
+   public Location location() {
       return location;
    }
 
-   public Website getWebsite() {
+   public Website website() {
       return website;
    }
 
-   public Logging getLogging() {
+   public Logging logging() {
       return logging;
    }
 
-   public Versioning getVersioning() {
+   public Versioning versioning() {
       return versioning;
    }
 
-   public Set<BucketCors> getCors() {
+   public List<Cors> cors() {
       return cors;
    }
 
-   public BucketLifeCycle getLifeCycle() {
+   public LifeCycle lifeCycle() {
       return lifeCycle;
    }
 
-   public StorageClass getStorageClass() {
+   public StorageClass storageClass() {
       return storageClass;
-   }
-
-   public static Builder builder() {
-      return new Builder();
-   }
-
-   public static BucketTemplate fromBucketsTemplate(BucketTemplate bucketTemplate) {
-      return Builder.fromBucketsTemplate(bucketTemplate);
-   }
-
-   public static class Builder {
-
-      public static BucketTemplate fromBucketsTemplate(BucketTemplate in) {
-         return new BucketTemplate().name(in.getName()).projectNumber(in.getProjectNumber()).acl(in.getAcl())
-                  .defaultObjectAccessControls(in.getDefaultObjectAccessControls()).owner(in.getOwner())
-                  .location(in.getLocation()).website(in.getWebsite()).logging(in.getLogging())
-                  .versioning(in.getVersioning()).cors(in.getCors()).lifeCycle(in.getLifeCycle())
-                  .storageClass(in.getStorageClass());
-      }
-
    }
 }

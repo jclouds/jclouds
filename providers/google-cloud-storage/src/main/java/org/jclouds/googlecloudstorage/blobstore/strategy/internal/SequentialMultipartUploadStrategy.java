@@ -18,7 +18,7 @@ package org.jclouds.googlecloudstorage.blobstore.strategy.internal;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
-import java.util.Set;
+import java.util.List;
 
 import javax.annotation.Resource;
 import javax.inject.Named;
@@ -36,7 +36,7 @@ import org.jclouds.io.Payload;
 import org.jclouds.io.PayloadSlicer;
 import org.jclouds.logging.Logger;
 
-import com.google.common.collect.Sets;
+import com.google.common.collect.Lists;
 import com.google.inject.Inject;
 
 public class SequentialMultipartUploadStrategy extends MultipartUploadStrategy {
@@ -68,9 +68,8 @@ public class SequentialMultipartUploadStrategy extends MultipartUploadStrategy {
    public String execute(String container, Blob blob) {
 
       ObjectTemplate destination = blob2ObjectTemplate.apply(blob.getMetadata());
-      ComposeObjectTemplate template = new ComposeObjectTemplate().destination(destination);
 
-      Set<GCSObject> sourceList = Sets.newLinkedHashSet();
+      List<GCSObject> sourceList = Lists.newArrayList();
 
       String key = blob.getMetadata().getName();
       Payload payload = blob.getPayload();
@@ -95,12 +94,12 @@ public class SequentialMultipartUploadStrategy extends MultipartUploadStrategy {
                      blob2ObjectTemplate.apply(blobPart.getMetadata()), blobPart.getPayload());
             sourceList.add(object);
          }
-         template = template.sourceObjects(sourceList);
-         return api.getObjectApi().composeObjects(container, key, template).getEtag();
+         ComposeObjectTemplate template = ComposeObjectTemplate.create(sourceList, destination);
+         return api.getObjectApi().composeObjects(container, key, template).etag();
       } else {
          return api.getObjectApi()
                   .multipartUpload(container, blob2ObjectTemplate.apply(blob.getMetadata()), blob.getPayload())
-                  .getEtag();
+                  .etag();
       }
    }
 }

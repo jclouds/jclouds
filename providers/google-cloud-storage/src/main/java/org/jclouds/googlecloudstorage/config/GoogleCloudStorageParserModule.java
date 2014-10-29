@@ -59,16 +59,16 @@ public class GoogleCloudStorageParserModule extends AbstractModule {
          JsonObject bucketTemplate = (JsonObject) context.serialize(template, BucketTemplateInternal.class);
 
          // deal with bucketAccessControls
-         if (!(src.getAcl() == null) && (src.getAcl().isEmpty())) {
+         if (!(src.acl() == null) && (src.acl().isEmpty())) {
             bucketTemplate.add("acl", null);
          }
          // deal with DefaultObjectAccessControls
-         if (!(src.getDefaultObjectAccessControls() == null) && (src.getDefaultObjectAccessControls().isEmpty())) {
+         if (!(src.defaultObjectAccessControls() == null) && (src.defaultObjectAccessControls().isEmpty())) {
             bucketTemplate.add("defaultObjectAccessControls", null);
          }
 
          // deal with Cors
-         if (!(src.getCors() == null) && (src.getCors().isEmpty())) {
+         if (!(src.cors() == null) && (src.cors().isEmpty())) {
             bucketTemplate.add("cors", null);
          }
 
@@ -77,11 +77,11 @@ public class GoogleCloudStorageParserModule extends AbstractModule {
 
       private static class BucketTemplateInternal extends BucketTemplate {
          private BucketTemplateInternal(BucketTemplate template) {
-            name(template.getName()).projectNumber(template.getProjectNumber()).acl(template.getAcl())
-                     .defaultObjectAccessControls(template.getDefaultObjectAccessControls()).owner(template.getOwner())
-                     .location(template.getLocation()).website(template.getWebsite()).logging(template.getLogging())
-                     .versioning(template.getVersioning()).cors(template.getCors()).lifeCycle(template.getLifeCycle())
-                     .storageClass(template.getStorageClass());
+            name(template.name()).projectNumber(template.projectNumber()).acl(template.acl())
+                  .defaultObjectAccessControls(template.defaultObjectAccessControls()).owner(template.owner())
+                  .location(template.location()).website(template.website()).logging(template.logging())
+                  .versioning(template.versioning()).cors(template.cors()).lifeCycle(template.lifeCycle())
+                  .storageClass(template.storageClass());
          }
       }
    }

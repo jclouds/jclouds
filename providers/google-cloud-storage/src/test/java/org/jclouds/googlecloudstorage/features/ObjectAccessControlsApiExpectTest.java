@@ -17,13 +17,13 @@
 
 package org.jclouds.googlecloudstorage.features;
 
+import static org.jclouds.googlecloudstorage.domain.DomainResourceReferences.ObjectRole.OWNER;
 import static org.jclouds.googlecloudstorage.reference.GoogleCloudStorageConstants.STORAGE_FULLCONTROL_SCOPE;
 import static org.testng.Assert.assertEquals;
 import static org.testng.AssertJUnit.assertNull;
 
 import javax.ws.rs.core.MediaType;
 
-import org.jclouds.googlecloudstorage.domain.DomainResourceReferences.ObjectRole;
 import org.jclouds.googlecloudstorage.domain.templates.ObjectAccessControlsTemplate;
 import org.jclouds.googlecloudstorage.internal.BaseGoogleCloudStorageApiExpectTest;
 import org.jclouds.googlecloudstorage.parse.ObjectAclGetTest;
@@ -151,8 +151,7 @@ public class ObjectAccessControlsApiExpectTest extends BaseGoogleCloudStorageApi
       ObjectAccessControlsApi api = requestsSendResponses(requestForScopes(STORAGE_FULLCONTROL_SCOPE), TOKEN_RESPONSE,
                insertRequest, CREATE_OBJECT_ACL_RESPONSE).getObjectAccessControlsApi();
 
-      ObjectAccessControlsTemplate template = new ObjectAccessControlsTemplate().entity(EXPECTED_TEST_USER_ENTITY)
-               .role(ObjectRole.OWNER);
+      ObjectAccessControlsTemplate template = ObjectAccessControlsTemplate.create(EXPECTED_TEST_USER_ENTITY, OWNER);
 
       assertEquals(api.createObjectAccessControls(EXPECTED_TEST_BUCKET, EXPECTED_TEST_OBJECT, template),
                new ObjectAclInsertTest().expected());
@@ -173,8 +172,8 @@ public class ObjectAccessControlsApiExpectTest extends BaseGoogleCloudStorageApi
       ObjectAccessControlsApi api = requestsSendResponses(requestForScopes(STORAGE_FULLCONTROL_SCOPE), TOKEN_RESPONSE,
                insertRequest, CREATE_OBJECT_ACL_RESPONSE).getObjectAccessControlsApi();
 
-      ObjectAccessControlsTemplate template = new ObjectAccessControlsTemplate().entity(
-               "user-00b4903a97adfde729f0650133a7379693099d8d85d6b1b18255ca70bf89e31d").role(ObjectRole.OWNER);
+      ObjectAccessControlsTemplate template = ObjectAccessControlsTemplate
+            .create("user-00b4903a97adfde729f0650133a7379693099d8d85d6b1b18255ca70bf89e31d", OWNER);
 
       assertEquals(
                api.createObjectAccessControls(EXPECTED_TEST_BUCKET, EXPECTED_TEST_OBJECT, template, Long.valueOf(100)),
@@ -199,8 +198,7 @@ public class ObjectAccessControlsApiExpectTest extends BaseGoogleCloudStorageApi
       ObjectAccessControlsApi api = requestsSendResponses(requestForScopes(STORAGE_FULLCONTROL_SCOPE), TOKEN_RESPONSE,
                update, updateResponse).getObjectAccessControlsApi();
 
-      ObjectAccessControlsTemplate template = new ObjectAccessControlsTemplate().entity("allUsers").role(
-               ObjectRole.OWNER);
+      ObjectAccessControlsTemplate template = ObjectAccessControlsTemplate.create("allUsers", OWNER);
 
       assertEquals(api.updateObjectAccessControls(EXPECTED_TEST_BUCKET, EXPECTED_TEST_OBJECT, "allUsers", template),
                new ObjectAclUpdateTest().expected());
@@ -223,8 +221,7 @@ public class ObjectAccessControlsApiExpectTest extends BaseGoogleCloudStorageApi
       ObjectAccessControlsApi api = requestsSendResponses(requestForScopes(STORAGE_FULLCONTROL_SCOPE), TOKEN_RESPONSE,
                update, updateResponse).getObjectAccessControlsApi();
 
-      ObjectAccessControlsTemplate template = new ObjectAccessControlsTemplate().entity("allUsers").role(
-               ObjectRole.OWNER);
+      ObjectAccessControlsTemplate template = ObjectAccessControlsTemplate.create("allUsers", OWNER);
 
       assertEquals(
                api.updateObjectAccessControls(EXPECTED_TEST_BUCKET, EXPECTED_TEST_OBJECT, "allUsers", template,
@@ -248,8 +245,7 @@ public class ObjectAccessControlsApiExpectTest extends BaseGoogleCloudStorageApi
       ObjectAccessControlsApi api = requestsSendResponses(requestForScopes(STORAGE_FULLCONTROL_SCOPE), TOKEN_RESPONSE,
                patchRequest, patchResponse).getObjectAccessControlsApi();
 
-      ObjectAccessControlsTemplate template = new ObjectAccessControlsTemplate().entity("allUsers").role(
-               ObjectRole.OWNER);
+      ObjectAccessControlsTemplate template = ObjectAccessControlsTemplate.create("allUsers", OWNER);
 
       assertEquals(api.patchObjectAccessControls(EXPECTED_TEST_BUCKET, EXPECTED_TEST_OBJECT, "allUsers", template),
                new ObjectAclUpdateTest().expected());
@@ -272,8 +268,7 @@ public class ObjectAccessControlsApiExpectTest extends BaseGoogleCloudStorageApi
       ObjectAccessControlsApi api = requestsSendResponses(requestForScopes(STORAGE_FULLCONTROL_SCOPE), TOKEN_RESPONSE,
                patchRequest, patchResponse).getObjectAccessControlsApi();
 
-      ObjectAccessControlsTemplate template = new ObjectAccessControlsTemplate().entity("allUsers").role(
-               ObjectRole.OWNER);
+      ObjectAccessControlsTemplate template = ObjectAccessControlsTemplate.create("allUsers", OWNER);
       assertEquals(
                api.patchObjectAccessControls(EXPECTED_TEST_BUCKET, EXPECTED_TEST_OBJECT, "allUsers", template,
                         Long.valueOf(100)), new ObjectAclUpdateTest().expected());

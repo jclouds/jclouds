@@ -14,25 +14,26 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.jclouds.googlecloudstorage.domain;
+package org.jclouds.googlecloudstorage.internal;
 
 import java.util.List;
+import java.util.Map;
 
-import com.google.common.collect.Lists;
-import com.google.common.primitives.Bytes;
+import org.jclouds.javax.annotation.Nullable;
 
-public final class DomainUtils {
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableMap;
 
-   private DomainUtils() {
+public class NullSafeCopies {
+
+   public static <K, V> Map<K, V> copyOf(@Nullable Map<K, V> map) {
+      return map != null ? ImmutableMap.copyOf(map) : ImmutableMap.<K, V>of();
    }
 
-   public static byte[] reverse(byte[] b) {
-      List<Byte> hashByte = Bytes.asList(b);
-      List<Byte> reversedList = Lists.reverse(hashByte);
-      return Bytes.toArray(reversedList);
+   public static <E> List<E> copyOf(@Nullable List<E> list) {
+      return list != null ? ImmutableList.copyOf(list) : ImmutableList.<E>of();
    }
 
-   public static String  generateContentRange(Long lowerLimit, Long upperLimit, Long totalSize) {
-      return  "bytes " + lowerLimit + "-" + upperLimit + "/" + totalSize;
+   private NullSafeCopies() {
    }
 }

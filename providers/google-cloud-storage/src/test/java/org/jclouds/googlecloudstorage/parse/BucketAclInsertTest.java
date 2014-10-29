@@ -16,13 +16,11 @@
  */
 package org.jclouds.googlecloudstorage.parse;
 
-import java.net.URI;
-
 import javax.ws.rs.Consumes;
 import javax.ws.rs.core.MediaType;
 
 import org.jclouds.googlecloudstorage.domain.BucketAccessControls;
-import org.jclouds.googlecloudstorage.domain.DomainResourceReferences.Role;
+import org.jclouds.googlecloudstorage.domain.BucketAccessControls.Role;
 import org.jclouds.googlecloudstorage.internal.BaseGoogleCloudStorageParseTest;
 
 public class BucketAclInsertTest extends BaseGoogleCloudStorageParseTest<BucketAccessControls> {
@@ -38,9 +36,7 @@ public class BucketAclInsertTest extends BaseGoogleCloudStorageParseTest<BucketA
       return BucketAccessControls
                .builder()
                .id("jcloudtestbucket/allAuthenticatedUsers")
-               .selfLink(
-                        URI.create("https://content.googleapis.com/storage/v1/b/jcloudtestbucket/acl/allAuthenticatedUsers"))
-               .bucket("jcloudtestbucket").entity("allAuthenticatedUsers").role(Role.WRITER).etag("CAQ=").build();
+               .bucket("jcloudtestbucket").entity("allAuthenticatedUsers").role(Role.WRITER).build();
 
    }
 }

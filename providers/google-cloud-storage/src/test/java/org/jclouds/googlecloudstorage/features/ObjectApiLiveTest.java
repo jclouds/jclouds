@@ -16,13 +16,14 @@
  */
 package org.jclouds.googlecloudstorage.features;
 
-import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertNotNull;
+import static com.google.common.io.BaseEncoding.base64;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.entry;
+import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertNotNull;
 
 import java.io.IOException;
-import java.util.Set;
+import java.util.List;
 import java.util.UUID;
 
 import javax.ws.rs.core.MediaType;
@@ -34,7 +35,6 @@ import org.jclouds.googlecloudstorage.domain.DomainResourceReferences.Projection
 import org.jclouds.googlecloudstorage.domain.GCSObject;
 import org.jclouds.googlecloudstorage.domain.ListPage;
 import org.jclouds.googlecloudstorage.domain.ObjectAccessControls;
-import org.jclouds.googlecloudstorage.domain.Resource.Kind;
 import org.jclouds.googlecloudstorage.domain.templates.BucketTemplate;
 import org.jclouds.googlecloudstorage.domain.templates.ComposeObjectTemplate;
 import org.jclouds.googlecloudstorage.domain.templates.ObjectTemplate;
@@ -56,12 +56,12 @@ import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
-import com.beust.jcommander.internal.Sets;
+import com.beust.jcommander.internal.Lists;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.hash.HashCode;
-import com.google.common.hash.HashFunction;
 import com.google.common.hash.Hashing;
 import com.google.common.io.ByteSource;
+import com.google.common.primitives.Bytes;
 
 public class ObjectApiLiveTest extends BaseGoogleCloudStorageApiLiveTest {
 
@@ -79,8 +79,8 @@ public class ObjectApiLiveTest extends BaseGoogleCloudStorageApiLiveTest {
 
    private Long metageneration;
    private Long generation;
-   private HashCode hcMd5;
-   private HashCode hcCrc32c;
+   private String md5Hash;
+   private String crc32c;
 
    private ObjectApi api() {
       return api.getObjectApi();
@@ -117,8 +117,8 @@ public class ObjectApiLiveTest extends BaseGoogleCloudStorageApiLiveTest {
                payload.getPayload().getContentMetadata().getContentLength(), payload.getPayload(), options);
 
       assertNotNull(gcsObject);
-      assertEquals(gcsObject.getBucket(), BUCKET_NAME);
-      assertEquals(gcsObject.getName(), UPLOAD_OBJECT_NAME);
+      assertEquals(gcsObject.bucket(), BUCKET_NAME);
+      assertEquals(gcsObject.name(), UPLOAD_OBJECT_NAME);
    }
 
    @Test(groups = "live", dependsOnMethods = "testSimpleUpload")
@@ -130,7 +130,7 @@ public class ObjectApiLiveTest extends BaseGoogleCloudStorageApiLiveTest {
       assertNotNull(meta);
       assertEquals(meta.getContentType(), "text/plain");
 
-      testPayload.getPayload().getContentMetadata().setContentDisposition("attachement");
+      testPayload.getPayload().getContentMetadata().setContentDisposition("attachment");
 
       assertEquals(ByteStreams2.toByteArrayAndClose(impl.getPayload().openStream()),
                ByteStreams2.toByteArrayAndClose(testPayload.getPayload().openStream()));
@@ -147,16 +147,14 @@ public class ObjectApiLiveTest extends BaseGoogleCloudStorageApiLiveTest {
       GCSObject gcsObject = api().simpleUpload(BUCKET_NAME, "image/jpeg", contentLength, payload, options);
 
       assertNotNull(gcsObject);
-      assertEquals(gcsObject.getBucket(), BUCKET_NAME);
-      assertEquals(gcsObject.getName(), UPLOAD_OBJECT_NAME2);
+      assertEquals(gcsObject.bucket(), BUCKET_NAME);
+      assertEquals(gcsObject.name(), UPLOAD_OBJECT_NAME2);
 
       // This is a client side validation of md5
-      HashFunction hf = Hashing.md5();
-      hcMd5 = hf.newHasher().putBytes(testSource.read()).hash();
+      md5Hash = base64().encode(testSource.hash(Hashing.md5()).asBytes());
+      // TODO: crc32c = without making a compile dep on guava 18.
 
-      assertEquals(gcsObject.getMd5HashCode(), hcMd5);
-
-      // TODO: crc32c validation without making a compile dep on guava 18+
+      checkHashCodes(gcsObject);
    }
 
    @Test(groups = "live", dependsOnMethods = "testSimpleUpload")
@@ -165,12 +163,12 @@ public class ObjectApiLiveTest extends BaseGoogleCloudStorageApiLiveTest {
 
       assertNotNull(gcsObject);
 
-      metageneration = gcsObject.getMetageneration();
-      generation = gcsObject.getGeneration();
+      metageneration = gcsObject.metageneration();
+      generation = gcsObject.generation();
 
-      assertEquals(gcsObject.getBucket(), BUCKET_NAME);
-      assertEquals(gcsObject.getName(), UPLOAD_OBJECT_NAME);
-      assertEquals(gcsObject.getContentType(), "text/plain");
+      assertEquals(gcsObject.bucket(), BUCKET_NAME);
+      assertEquals(gcsObject.name(), UPLOAD_OBJECT_NAME);
+      assertEquals(gcsObject.contentType(), "text/plain");
    }
 
    @Test(groups = "live", dependsOnMethods = "testGetObject")
@@ -181,10 +179,10 @@ public class ObjectApiLiveTest extends BaseGoogleCloudStorageApiLiveTest {
       GCSObject gcsObject = api().getObject(BUCKET_NAME, UPLOAD_OBJECT_NAME, options);
 
       assertNotNull(gcsObject);
-      assertNotNull(gcsObject.getAcl());
-      assertEquals(gcsObject.getBucket(), BUCKET_NAME);
-      assertEquals(gcsObject.getName(), UPLOAD_OBJECT_NAME);
-      assertEquals(gcsObject.getContentType(), "text/plain");
+      assertNotNull(gcsObject.acl());
+      assertEquals(gcsObject.bucket(), BUCKET_NAME);
+      assertEquals(gcsObject.name(), UPLOAD_OBJECT_NAME);
+      assertEquals(gcsObject.contentType(), "text/plain");
    }
 
    @Test(groups = "live", dependsOnMethods = "testGetObject")
@@ -192,9 +190,9 @@ public class ObjectApiLiveTest extends BaseGoogleCloudStorageApiLiveTest {
       GCSObject gcsObject = api().copyObject(BUCKET_NAME2, COPIED_OBJECT_NAME, BUCKET_NAME, UPLOAD_OBJECT_NAME);
 
       assertNotNull(gcsObject);
-      assertEquals(gcsObject.getBucket(), BUCKET_NAME2);
-      assertEquals(gcsObject.getName(), COPIED_OBJECT_NAME);
-      assertEquals(gcsObject.getContentType(), "text/plain");
+      assertEquals(gcsObject.bucket(), BUCKET_NAME2);
+      assertEquals(gcsObject.name(), COPIED_OBJECT_NAME);
+      assertEquals(gcsObject.contentType(), "text/plain");
 
       // Test for data
 
@@ -214,10 +212,10 @@ public class ObjectApiLiveTest extends BaseGoogleCloudStorageApiLiveTest {
                .copyObject(BUCKET_NAME2, UPLOAD_OBJECT_NAME, BUCKET_NAME, UPLOAD_OBJECT_NAME, options);
 
       assertNotNull(gcsObject);
-      assertNotNull(gcsObject.getAcl());
-      assertEquals(gcsObject.getBucket(), BUCKET_NAME2);
-      assertEquals(gcsObject.getName(), UPLOAD_OBJECT_NAME);
-      assertEquals(gcsObject.getContentType(), "text/plain");
+      assertNotNull(gcsObject.acl());
+      assertEquals(gcsObject.bucket(), BUCKET_NAME2);
+      assertEquals(gcsObject.name(), UPLOAD_OBJECT_NAME);
+      assertEquals(gcsObject.contentType(), "text/plain");
    }
 
    @Test(groups = "live", dependsOnMethods = "testCopyObjectWithOptions")
@@ -226,31 +224,29 @@ public class ObjectApiLiveTest extends BaseGoogleCloudStorageApiLiveTest {
                .role(ObjectRole.OWNER).build();
 
       ObjectTemplate destination = new ObjectTemplate().contentType("text/plain").addAcl(oacl);
-      Set<GCSObject> sourceList = Sets.newLinkedHashSet();
+      List<GCSObject> sourceList = Lists.newArrayList();
       sourceList.add(api().getObject(BUCKET_NAME2, UPLOAD_OBJECT_NAME));
       sourceList.add(api().getObject(BUCKET_NAME2, COPIED_OBJECT_NAME));
 
-      ComposeObjectTemplate requestTemplate = new ComposeObjectTemplate().sourceObjects(sourceList).destination(
-               destination);
+      ComposeObjectTemplate requestTemplate = ComposeObjectTemplate.create(sourceList, destination);
 
       GCSObject gcsObject = api().composeObjects(BUCKET_NAME2, COMPOSED_OBJECT, requestTemplate);
 
       assertNotNull(gcsObject);
-      assertNotNull(gcsObject.getAcl());
-      assertEquals(gcsObject.getBucket(), BUCKET_NAME2);
-      assertEquals(gcsObject.getName(), COMPOSED_OBJECT);
-      assertEquals(gcsObject.getContentType(), "text/plain");
+      assertNotNull(gcsObject.acl());
+      assertEquals(gcsObject.bucket(), BUCKET_NAME2);
+      assertEquals(gcsObject.name(), COMPOSED_OBJECT);
+      assertEquals(gcsObject.contentType(), "text/plain");
    }
 
    @Test(groups = "live", dependsOnMethods = "testComposeObject")
    public void testComposeObjectWithOptions() {
       ObjectTemplate destination = new ObjectTemplate().contentType(MediaType.APPLICATION_JSON);
-      Set<GCSObject> sourceList = Sets.newLinkedHashSet();
+      List<GCSObject> sourceList = Lists.newArrayList();
       sourceList.add(api().getObject(BUCKET_NAME2, UPLOAD_OBJECT_NAME));
       sourceList.add(api().getObject(BUCKET_NAME2, COPIED_OBJECT_NAME));
 
-      ComposeObjectTemplate requestTemplate = new ComposeObjectTemplate().sourceObjects(sourceList).destination(
-               destination);
+      ComposeObjectTemplate requestTemplate = ComposeObjectTemplate.create(sourceList, destination);
 
       ComposeObjectOptions options = new ComposeObjectOptions().destinationPredefinedAcl(
                DestinationPredefinedAcl.BUCKET_OWNER_READ).ifMetagenerationNotMatch(RANDOM_LONG);
@@ -258,10 +254,10 @@ public class ObjectApiLiveTest extends BaseGoogleCloudStorageApiLiveTest {
       GCSObject gcsObject = api().composeObjects(BUCKET_NAME2, COMPOSED_OBJECT2, requestTemplate, options);
 
       assertNotNull(gcsObject);
-      assertNotNull(gcsObject.getAcl());
-      assertEquals(gcsObject.getBucket(), BUCKET_NAME2);
-      assertEquals(gcsObject.getName(), COMPOSED_OBJECT2);
-      assertEquals(gcsObject.getContentType(), MediaType.APPLICATION_JSON);
+      assertNotNull(gcsObject.acl());
+      assertEquals(gcsObject.bucket(), BUCKET_NAME2);
+      assertEquals(gcsObject.name(), COMPOSED_OBJECT2);
+      assertEquals(gcsObject.contentType(), MediaType.APPLICATION_JSON);
    }
 
    @Test(groups = "live", dependsOnMethods = "testComposeObjectWithOptions")
@@ -270,7 +266,6 @@ public class ObjectApiLiveTest extends BaseGoogleCloudStorageApiLiveTest {
 
       assertNotNull(list);
       assertEquals(list.get(0) instanceof GCSObject, true);
-      assertEquals(list.getKind(), Kind.OBJECTS);
    }
 
    @Test(groups = "live", dependsOnMethods = "testComposeObjectWithOptions")
@@ -278,13 +273,12 @@ public class ObjectApiLiveTest extends BaseGoogleCloudStorageApiLiveTest {
       ListObjectOptions options = new ListObjectOptions().maxResults(1);
       ListPage<GCSObject> list = api().listObjects(BUCKET_NAME, options);
 
-      while (list.nextMarker().isPresent()) {
+      while (list.nextPageToken() != null) {
          assertNotNull(list);
          assertEquals(list.get(0) instanceof GCSObject, true);
          assertEquals(list.size(), 1);
-         assertEquals(list.getKind(), Kind.OBJECTS);
 
-         options = new ListObjectOptions().maxResults(1).pageToken(list.getNextPageToken());
+         options = new ListObjectOptions().maxResults(1).pageToken(list.nextPageToken());
          list = api().listObjects(BUCKET_NAME, options);
       }
    }
@@ -299,10 +293,10 @@ public class ObjectApiLiveTest extends BaseGoogleCloudStorageApiLiveTest {
       GCSObject gcsObject = api().updateObject(BUCKET_NAME, UPLOAD_OBJECT_NAME2, template);
 
       assertNotNull(gcsObject);
-      assertNotNull(gcsObject.getAcl());
-      assertEquals(gcsObject.getBucket(), BUCKET_NAME);
-      assertEquals(gcsObject.getName(), UPLOAD_OBJECT_NAME2);
-      assertEquals(gcsObject.getContentType(), "image/jpeg");
+      assertNotNull(gcsObject.acl());
+      assertEquals(gcsObject.bucket(), BUCKET_NAME);
+      assertEquals(gcsObject.name(), UPLOAD_OBJECT_NAME2);
+      assertEquals(gcsObject.contentType(), "image/jpeg");
    }
 
    @Test(groups = "live", dependsOnMethods = "testUpdateObject")
@@ -321,12 +315,12 @@ public class ObjectApiLiveTest extends BaseGoogleCloudStorageApiLiveTest {
       GCSObject gcsObject = api().updateObject(BUCKET_NAME, UPLOAD_OBJECT_NAME2, template, options);
 
       assertNotNull(gcsObject);
-      assertNotNull(gcsObject.getAcl());
-      assertEquals(gcsObject.getBucket(), BUCKET_NAME);
-      assertEquals(gcsObject.getName(), UPLOAD_OBJECT_NAME2);
-      assertEquals(gcsObject.getContentType(), "image/jpeg");
-      assertNotNull(gcsObject.getAllMetadata());
-      assertNotNull(gcsObject.getAllMetadata().get(METADATA_KEY), METADATA_VALUE);
+      assertNotNull(gcsObject.acl());
+      assertEquals(gcsObject.bucket(), BUCKET_NAME);
+      assertEquals(gcsObject.name(), UPLOAD_OBJECT_NAME2);
+      assertEquals(gcsObject.contentType(), "image/jpeg");
+      assertNotNull(gcsObject.metadata());
+      assertNotNull(gcsObject.metadata().get(METADATA_KEY), METADATA_VALUE);
    }
 
    @Test(groups = "live", dependsOnMethods = "testUpdateObjectWithOptions")
@@ -338,10 +332,10 @@ public class ObjectApiLiveTest extends BaseGoogleCloudStorageApiLiveTest {
       GCSObject gcsObject = api().patchObject(BUCKET_NAME, UPLOAD_OBJECT_NAME2, template);
 
       assertNotNull(gcsObject);
-      assertNotNull(gcsObject.getAcl());
-      assertEquals(gcsObject.getBucket(), BUCKET_NAME);
-      assertEquals(gcsObject.getName(), UPLOAD_OBJECT_NAME2);
-      assertEquals(gcsObject.getContentType(), "image/jpeg");
+      assertNotNull(gcsObject.acl());
+      assertEquals(gcsObject.bucket(), BUCKET_NAME);
+      assertEquals(gcsObject.name(), UPLOAD_OBJECT_NAME2);
+      assertEquals(gcsObject.contentType(), "image/jpeg");
    }
 
    @Test(groups = "live", dependsOnMethods = "testPatchObject")
@@ -352,16 +346,17 @@ public class ObjectApiLiveTest extends BaseGoogleCloudStorageApiLiveTest {
       UpdateObjectOptions options = new UpdateObjectOptions().ifMetagenerationNotMatch(RANDOM_LONG)
                .ifGenerationNotMatch(RANDOM_LONG);
 
+
       ObjectTemplate template = new ObjectTemplate().addAcl(oacl).contentType("image/jpeg")
                .contentDisposition("attachment");
       GCSObject gcsObject = api().patchObject(BUCKET_NAME, UPLOAD_OBJECT_NAME2, template, options);
 
       assertNotNull(gcsObject);
-      assertNotNull(gcsObject.getAcl());
-      assertEquals(gcsObject.getBucket(), BUCKET_NAME);
-      assertEquals(gcsObject.getName(), UPLOAD_OBJECT_NAME2);
-      assertEquals(gcsObject.getContentType(), "image/jpeg");
-      assertEquals(gcsObject.getContentDisposition(), "attachment");
+      assertNotNull(gcsObject.acl());
+      assertEquals(gcsObject.bucket(), BUCKET_NAME);
+      assertEquals(gcsObject.name(), UPLOAD_OBJECT_NAME2);
+      assertEquals(gcsObject.contentType(), "image/jpeg");
+      assertEquals(gcsObject.contentDisposition(), "attachment");
    }
 
    @Test(groups = "live", dependsOnMethods = "testPatchObjectsWithOptions")
@@ -377,29 +372,34 @@ public class ObjectApiLiveTest extends BaseGoogleCloudStorageApiLiveTest {
                .role(ObjectRole.OWNER).build();
 
       // This would trigger server side validation of md5
-      hcMd5 = byteSource.hash(Hashing.md5());
-
-      // TODO: template.crc32c without making a compile dep on guava 18.
+      md5Hash = base64().encode(byteSource.hash(Hashing.md5()).asBytes());
+      // TODO: crc32c = without making a compile dep on guava 18
 
       template.contentType("image/jpeg").addAcl(oacl).size(contentLength).name(MULTIPART_UPLOAD_OBJECT)
-               .contentLanguage("en").contentDisposition("attachment").md5Hash(hcMd5)
-               .customMetadata("custommetakey1", "custommetavalue1").crc32c(hcCrc32c)
+               .contentLanguage("en").contentDisposition("attachment").md5Hash(md5Hash)
+               .customMetadata("custommetakey1", "custommetavalue1").crc32c(crc32c)
                .customMetadata(ImmutableMap.of("Adrian", "powderpuff"));
 
       GCSObject gcsObject = api().multipartUpload(BUCKET_NAME, template, payloadImpl.getPayload());
 
-      assertThat(gcsObject.getBucket()).isEqualTo(BUCKET_NAME);
-      assertThat(gcsObject.getName()).isEqualTo(MULTIPART_UPLOAD_OBJECT);
-      assertThat(gcsObject.getMd5HashCode()).isEqualTo(hcMd5);
-      assertThat(gcsObject.getCrc32cHashcode()).isEqualTo(hcCrc32c);
+      assertThat(gcsObject.bucket()).isEqualTo(BUCKET_NAME);
+      assertThat(gcsObject.name()).isEqualTo(MULTIPART_UPLOAD_OBJECT);
+      checkHashCodes(gcsObject);
 
-      assertThat(gcsObject.getAllMetadata()).contains(entry("custommetakey1", "custommetavalue1"),
+      assertThat(gcsObject.metadata()).contains(entry("custommetakey1", "custommetavalue1"),
                entry("Adrian", "powderpuff")).doesNotContainKey("adrian");
 
       PayloadEnclosingImpl impl = api().download(BUCKET_NAME, MULTIPART_UPLOAD_OBJECT);
 
       assertThat(ByteStreams2.toByteArrayAndClose(impl.getPayload().openStream())).isEqualTo(
                ByteStreams2.toByteArrayAndClose(payloadImpl.getPayload().openStream()));
+   }
+
+   private void checkHashCodes(GCSObject gcsObject) {
+      assertEquals(HashCode.fromBytes(base64().decode(gcsObject.md5Hash())), md5Hash);
+      if (crc32c != null) {
+         assertEquals(HashCode.fromBytes(reverse(base64().decode(gcsObject.crc32c()))), crc32c);
+      }
    }
 
    @Test(groups = "live", dependsOnMethods = "testMultipartJpegUpload")
@@ -424,5 +424,11 @@ public class ObjectApiLiveTest extends BaseGoogleCloudStorageApiLiveTest {
    private void deleteBucket() {
       api.getBucketApi().deleteBucket(BUCKET_NAME);
       api.getBucketApi().deleteBucket(BUCKET_NAME2);
+   }
+
+   private static byte[] reverse(byte[] b) {
+      List<Byte> hashByte = Bytes.asList(b);
+      List<Byte> reversedList = com.google.common.collect.Lists.reverse(hashByte);
+      return Bytes.toArray(reversedList);
    }
 }

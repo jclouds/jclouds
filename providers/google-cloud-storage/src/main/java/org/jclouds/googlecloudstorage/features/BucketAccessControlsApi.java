@@ -18,6 +18,8 @@ package org.jclouds.googlecloudstorage.features;
 
 import static org.jclouds.googlecloudstorage.reference.GoogleCloudStorageConstants.STORAGE_FULLCONTROL_SCOPE;
 
+import java.util.List;
+
 import javax.inject.Named;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
@@ -31,7 +33,6 @@ import javax.ws.rs.core.MediaType;
 
 import org.jclouds.Fallbacks.NullOnNotFoundOr404;
 import org.jclouds.googlecloudstorage.domain.BucketAccessControls;
-import org.jclouds.googlecloudstorage.domain.ListBucketAccessControls;
 import org.jclouds.googlecloudstorage.domain.templates.BucketAccessControlsTemplate;
 import org.jclouds.http.HttpResponse;
 import org.jclouds.javax.annotation.Nullable;
@@ -41,6 +42,7 @@ import org.jclouds.rest.annotations.BinderParam;
 import org.jclouds.rest.annotations.Fallback;
 import org.jclouds.rest.annotations.PATCH;
 import org.jclouds.rest.annotations.RequestFilters;
+import org.jclouds.rest.annotations.SelectJson;
 import org.jclouds.rest.annotations.SkipEncoding;
 import org.jclouds.rest.binders.BindToJsonPayload;
 
@@ -130,7 +132,8 @@ public interface BucketAccessControlsApi {
    @OAuthScopes(STORAGE_FULLCONTROL_SCOPE)
    @Fallback(NullOnNotFoundOr404.class)
    @Nullable
-   ListBucketAccessControls listBucketAccessControls(@PathParam("bucket") String bucketName);
+   @SelectJson("items")
+   List<BucketAccessControls> listBucketAccessControls(@PathParam("bucket") String bucketName);
 
    /**
     * Updates an ACL entry on the specified bucket

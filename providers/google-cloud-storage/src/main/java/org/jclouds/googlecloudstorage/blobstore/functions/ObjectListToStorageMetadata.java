@@ -17,6 +17,9 @@
 package org.jclouds.googlecloudstorage.blobstore.functions;
 
 import java.util.Map;
+
+import javax.inject.Inject;
+
 import org.jclouds.blobstore.domain.BlobMetadata;
 import org.jclouds.blobstore.domain.PageSet;
 import org.jclouds.blobstore.domain.StorageMetadata;
@@ -25,26 +28,21 @@ import org.jclouds.blobstore.domain.internal.PageSetImpl;
 import org.jclouds.blobstore.domain.internal.StorageMetadataImpl;
 import org.jclouds.googlecloudstorage.domain.GCSObject;
 import org.jclouds.googlecloudstorage.domain.ListPage;
-import org.jclouds.googlecloudstorage.domain.Resource.Kind;
 
 import com.google.common.base.Function;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Iterables;
-import com.google.inject.Inject;
-import com.google.inject.Singleton;
 
-@Singleton
 public class ObjectListToStorageMetadata implements Function<ListPage<GCSObject>, PageSet<? extends StorageMetadata>> {
    private final ObjectToBlobMetadata object2blobMd;
 
-   @Inject
-   public ObjectListToStorageMetadata(ObjectToBlobMetadata object2blobMd) {
+   @Inject public ObjectListToStorageMetadata(ObjectToBlobMetadata object2blobMd) {
       this.object2blobMd = object2blobMd;
    }
 
    public PageSet<? extends StorageMetadata> apply(ListPage<GCSObject> from) {
       if (from == null) {
-         from = ListPage.<GCSObject> builder().kind(Kind.OBJECTS).build();
+         from = ListPage.create(null, null, null);
       }
 
       return new PageSetImpl<StorageMetadata>(Iterables.transform(Iterables.transform(from, object2blobMd),
@@ -59,7 +57,7 @@ public class ObjectListToStorageMetadata implements Function<ListPage<GCSObject>
                      }
                      return input;
                   }
-               }), from.getNextPageToken());
+               }), from.nextPageToken());
 
    }
 }

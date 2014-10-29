@@ -16,28 +16,26 @@
  */
 package org.jclouds.googlecloudstorage.parse;
 
-import java.net.URI;
+import java.util.Arrays;
+import java.util.List;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.core.MediaType;
 
 import org.jclouds.googlecloudstorage.domain.DomainResourceReferences.ObjectRole;
-import org.jclouds.googlecloudstorage.domain.ListObjectAccessControls;
 import org.jclouds.googlecloudstorage.domain.ObjectAccessControls;
-import org.jclouds.googlecloudstorage.domain.Resource.Kind;
 import org.jclouds.googlecloudstorage.internal.BaseGoogleCloudStorageParseTest;
+import org.jclouds.rest.annotations.SelectJson;
 
-public class ObjectAclListTest extends BaseGoogleCloudStorageParseTest<ListObjectAccessControls> {
+public class ObjectAclListTest extends BaseGoogleCloudStorageParseTest<List<ObjectAccessControls>> {
 
    private ObjectAccessControls item1 = ObjectAccessControls
             .builder()
             .id("jcloudtestbucket/foo.txt/1394121608485000/user-00b4903a97adfde729f0650133a7379693099d8d85d6b1b18255ca70bf89e31d")
-            .selfLink(
-                     URI.create("https://www.googleapis.com/storage/v1/b/jcloudtestbucket/o/foo.txt/acl/user-00b4903a97adfde729f0650133a7379693099d8d85d6b1b18255ca70bf89e31d"))
             .bucket("jcloudtestbucket").object("foo.txt").generation(Long.valueOf("1394121608485000"))
             .entity("user-00b4903a97adfde729f0650133a7379693099d8d85d6b1b18255ca70bf89e31d")
             .entityId("00b4903a97adfde729f0650133a7379693099d8d85d6b1b18255ca70bf89e31d").role(ObjectRole.OWNER)
-            .etag("CIix/dmj/rwCEAE=").build();
+            .build();
 
    @Override
    public String resource() {
@@ -46,8 +44,8 @@ public class ObjectAclListTest extends BaseGoogleCloudStorageParseTest<ListObjec
 
    @Override
    @Consumes(MediaType.APPLICATION_JSON)
-   public ListObjectAccessControls expected() {
-      return ListObjectAccessControls.builder().kind(Kind.OBJECT_ACCESS_CONTROLS).addItems(item1).build();
+   @SelectJson("items")
+   public List<ObjectAccessControls> expected() {
+      return Arrays.asList(item1);
    }
-
 }

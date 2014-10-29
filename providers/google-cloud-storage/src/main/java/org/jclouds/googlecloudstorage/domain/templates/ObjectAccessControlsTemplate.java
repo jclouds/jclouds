@@ -18,48 +18,16 @@ package org.jclouds.googlecloudstorage.domain.templates;
 
 import org.jclouds.googlecloudstorage.domain.DomainResourceReferences.ObjectRole;
 
-/**
- * Represents a Object Access Control Resource.
- *
- * @see <a href= "https://developers.google.com/storage/docs/json_api/v1/objectAccessControls"/>
- */
-public class ObjectAccessControlsTemplate {
+import com.google.auto.value.AutoValue;
 
-   protected String entity;
-   protected ObjectRole role;
+@AutoValue
+public abstract class ObjectAccessControlsTemplate {
 
-   public ObjectAccessControlsTemplate role(ObjectRole role) {
-      this.role = role;
-      return this;
-   }
+   public abstract String entity();
 
-   public ObjectAccessControlsTemplate entity(String entity) {
-      this.entity = entity;
-      return this;
-   }
+   public abstract ObjectRole role();
 
-   public String getEntity() {
-      return entity;
-   }
-
-   public ObjectRole getRole() {
-      return role;
-   }
-
-   public static Builder builder() {
-      return new Builder();
-   }
-
-   public static ObjectAccessControlsTemplate fromObjectAccessControlsTemplate(
-            ObjectAccessControlsTemplate objectAccessControlsTemplate) {
-      return Builder.fromObjectAccessControlsTemplate(objectAccessControlsTemplate);
-   }
-
-   public static class Builder {
-
-      public static ObjectAccessControlsTemplate fromObjectAccessControlsTemplate(ObjectAccessControlsTemplate in) {
-         return new ObjectAccessControlsTemplate().role(in.getRole()).entity(in.getEntity());
-      }
-
+   public static ObjectAccessControlsTemplate create(String entity, ObjectRole role) {
+      return new AutoValue_ObjectAccessControlsTemplate(entity, role);
    }
 }

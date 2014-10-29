@@ -16,8 +16,6 @@
  */
 package org.jclouds.googlecloudstorage.parse;
 
-import java.net.URI;
-
 import javax.ws.rs.Consumes;
 import javax.ws.rs.core.MediaType;
 
@@ -37,13 +35,10 @@ public class ObjectAclInsertTest extends BaseGoogleCloudStorageParseTest<ObjectA
    public ObjectAccessControls expected() {
       return ObjectAccessControls
                .builder()
-               .selfLink(
-                        URI.create("https://www.googleapis.com/storage/v1/b/jcloudtestbucket/o/foo.txt/acl/user-00b4903a97adfde729f0650133a7379693099d8d85d6b1b18255ca70bf89e31d"))
                .bucket("jcloudtestbucket").object("foo.txt")
                .entity("user-00b4903a97adfde729f0650133a7379693099d8d85d6b1b18255ca70bf89e31d")
                .entityId("00b4903a97adfde729f0650133a7379693099d8d85d6b1b18255ca70bf89e31d").role(ObjectRole.OWNER)
-               .etag("CIix/dmj/rwCEAE=").build();
-
+               .build();
    }
 
 }

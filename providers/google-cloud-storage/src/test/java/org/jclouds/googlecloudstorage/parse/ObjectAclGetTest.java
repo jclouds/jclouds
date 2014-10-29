@@ -16,15 +16,13 @@
  */
 package org.jclouds.googlecloudstorage.parse;
 
-import java.net.URI;
-
 import javax.ws.rs.Consumes;
 import javax.ws.rs.core.MediaType;
 
 import org.jclouds.googlecloudstorage.domain.DomainResourceReferences.ObjectRole;
 import org.jclouds.googlecloudstorage.domain.ObjectAccessControls;
-import org.jclouds.googlecloudstorage.domain.internal.ProjectTeam;
-import org.jclouds.googlecloudstorage.domain.internal.ProjectTeam.Team;
+import org.jclouds.googlecloudstorage.domain.ProjectTeam;
+import org.jclouds.googlecloudstorage.domain.ProjectTeam.Team;
 import org.jclouds.googlecloudstorage.internal.BaseGoogleCloudStorageParseTest;
 
 public class ObjectAclGetTest extends BaseGoogleCloudStorageParseTest<ObjectAccessControls> {
@@ -44,10 +42,7 @@ public class ObjectAclGetTest extends BaseGoogleCloudStorageParseTest<ObjectAcce
                .generation(1394121608485000L)
                .entity("project-owners-1082289308625")
                .role(ObjectRole.OWNER)
-               .etag("CIix/dmj/rwCEAE=")
-               .projectTeam(ProjectTeam.builder().projectNumber("1082289308625").team(Team.OWNERS).build())
-               .selfLink(
-                        URI.create("https://www.googleapis.com/storage/v1/b/jcloudtestbucket/o/foo.txt/acl/project-owners-1082289308625"))
+               .projectTeam(ProjectTeam.create("1082289308625", Team.OWNERS))
                .id("jcloudtestbucket/foo.txt/1394121608485000/project-owners-1082289308625").build();
    }
 

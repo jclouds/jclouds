@@ -17,31 +17,28 @@
 
 package org.jclouds.googlecloudstorage.domain.templates;
 
+import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
-import org.jclouds.googlecloudstorage.domain.DomainUtils;
 import org.jclouds.googlecloudstorage.domain.ObjectAccessControls;
 
+import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
-import com.google.common.collect.Sets;
-import com.google.common.hash.HashCode;
-import com.google.common.io.BaseEncoding;
 import com.google.common.net.MediaType;
 
 public class ObjectTemplate {
 
-   protected String name;
-   protected Long size;
-   protected String cacheControl;
-   protected String contentDisposition;
-   protected String contentEncoding;
-   protected String contentLanguage;
-   protected String contentType;
-   protected String crc32c;
-   protected String md5Hash;
+   private String name;
+   private Long size;
+   private String cacheControl;
+   private String contentDisposition;
+   private String contentEncoding;
+   private String contentLanguage;
+   private String contentType;
+   private String crc32c;
+   private String md5Hash;
    private Map<String, String> metadata = Maps.newLinkedHashMap();
-   protected Set<ObjectAccessControls> acl = Sets.newLinkedHashSet();
+   private List<ObjectAccessControls> acl = Lists.newArrayList();
 
    public ObjectTemplate name(String name) {
       this.name = name;
@@ -93,13 +90,13 @@ public class ObjectTemplate {
       return this;
    }
 
-   public ObjectTemplate crc32c(HashCode crc32c) {
-      this.crc32c = BaseEncoding.base64().encode(DomainUtils.reverse(crc32c.asBytes()));
+   public ObjectTemplate crc32c(String crc32c) {
+      this.crc32c = crc32c;
       return this;
    }
 
-   public ObjectTemplate md5Hash(HashCode md5Hash) {
-      this.md5Hash = BaseEncoding.base64().encode(md5Hash.asBytes());
+   public ObjectTemplate md5Hash(String md5Hash) {
+      this.md5Hash = crc32c;
       return this;
    }
 
@@ -108,80 +105,44 @@ public class ObjectTemplate {
       return this;
    }
 
-   public ObjectTemplate acl(Set<ObjectAccessControls> acl) {
+   public ObjectTemplate acl(List<ObjectAccessControls> acl) {
       this.acl.addAll(acl);
       return this;
    }
 
-   public String getCacheControl() {
+   public String cacheControl() {
       return cacheControl;
    }
 
-   public String getContentDisposition() {
+   public String contentDisposition() {
       return contentDisposition;
    }
 
-   public String getContentEncoding() {
+   public String contentEncoding() {
       return contentEncoding;
    }
 
-   public String getContentLanguage() {
+   public String contentLanguage() {
       return contentLanguage;
    }
 
-   public String getContentType() {
+   public String contentType() {
       return contentType;
    }
 
-   public HashCode getCrc32cHashcode() {
-      if (crc32c != null) {
-         HashCode hc = HashCode.fromBytes(DomainUtils.reverse(BaseEncoding.base64().decode(crc32c)));
-         return hc;
-      }
-      return null;
-   }
-
-   public HashCode getMd5HashCode() {
-      if (md5Hash != null) {
-         HashCode hc = HashCode.fromBytes(BaseEncoding.base64().decode(md5Hash));
-         return hc;
-      }
-      return null;
-   }
-
-   public Map<String, String> getAllCustomMetadata() {
+   public Map<String, String> metadata() {
       return metadata;
    }
 
-   public String getName() {
+   public String name() {
       return name;
    }
 
-   public Long getSize() {
+   public Long size() {
       return size;
    }
 
-   public Set<ObjectAccessControls> getAcl() {
+   public List<ObjectAccessControls> acl() {
       return acl;
-   }
-
-   public static Builder builder() {
-      return new Builder();
-   }
-
-   public static ObjectTemplate fromObjectTemplate(ObjectTemplate objectTemplate) {
-      return Builder.fromObjectTemplate(objectTemplate);
-   }
-
-   public static class Builder {
-
-      public static ObjectTemplate fromObjectTemplate(ObjectTemplate in) {
-         return new ObjectTemplate().name(in.getName()).size(in.getSize()).acl(in.getAcl())
-                  .cacheControl(in.getCacheControl()).contentDisposition(in.getContentDisposition())
-                  .contentEncoding(in.getContentEncoding()).contentLanguage(in.getContentLanguage())
-                  .contentType(in.getContentType()).md5Hash(in.getMd5HashCode())
-                  .customMetadata(in.getAllCustomMetadata()).crc32c(in.getCrc32cHashcode());
-
-      }
    }
 }

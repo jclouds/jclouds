@@ -41,15 +41,15 @@ public class MultipartUploadBinder implements MapBinder {
       ObjectTemplate template = (ObjectTemplate) postParams.get("template");
       Payload payload = (Payload) postParams.get("payload");
 
-      String contentType = checkNotNull(template.getContentType(), "contentType");
-      Long length = checkNotNull(template.getSize(), "contentLength");
+      String contentType = checkNotNull(template.cacheControl(), "contentType");
+      Long length = checkNotNull(template.size(), "contentLength");
 
       StringPayload jsonPayload = Payloads.newStringPayload(new Gson().toJson(template));
 
       payload.getContentMetadata().setContentLength(length);
 
       Part jsonPart = Part.create("Metadata", jsonPayload, new Part.PartOptions().contentType(APPLICATION_JSON));
-      Part mediaPart = Part.create(template.getName(), payload, new Part.PartOptions().contentType(contentType));
+      Part mediaPart = Part.create(template.name(), payload, new Part.PartOptions().contentType(contentType));
 
       MultipartForm compPayload = new MultipartForm(BOUNDARY_HEADER, jsonPart, mediaPart);
       request.setPayload(compPayload);

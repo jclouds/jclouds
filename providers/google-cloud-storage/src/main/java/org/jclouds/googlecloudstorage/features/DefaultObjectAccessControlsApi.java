@@ -18,6 +18,8 @@ package org.jclouds.googlecloudstorage.features;
 
 import static org.jclouds.googlecloudstorage.reference.GoogleCloudStorageConstants.STORAGE_FULLCONTROL_SCOPE;
 
+import java.util.List;
+
 import javax.inject.Named;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
@@ -31,10 +33,9 @@ import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 
 import org.jclouds.Fallbacks.NullOnNotFoundOr404;
-import org.jclouds.googlecloudstorage.domain.DefaultObjectAccessControls;
 import org.jclouds.googlecloudstorage.domain.DomainResourceReferences.ObjectRole;
-import org.jclouds.googlecloudstorage.domain.ListDefaultObjectAccessControls;
-import org.jclouds.googlecloudstorage.domain.templates.DefaultObjectAccessControlsTemplate;
+import org.jclouds.googlecloudstorage.domain.ObjectAccessControls;
+import org.jclouds.googlecloudstorage.domain.templates.ObjectAccessControlsTemplate;
 import org.jclouds.http.HttpResponse;
 import org.jclouds.javax.annotation.Nullable;
 import org.jclouds.oauth.v2.config.OAuthScopes;
@@ -43,6 +44,7 @@ import org.jclouds.rest.annotations.BinderParam;
 import org.jclouds.rest.annotations.Fallback;
 import org.jclouds.rest.annotations.PATCH;
 import org.jclouds.rest.annotations.RequestFilters;
+import org.jclouds.rest.annotations.SelectJson;
 import org.jclouds.rest.annotations.SkipEncoding;
 import org.jclouds.rest.binders.BindToJsonPayload;
 
@@ -75,8 +77,8 @@ public interface DefaultObjectAccessControlsApi {
    @OAuthScopes(STORAGE_FULLCONTROL_SCOPE)
    @Fallback(NullOnNotFoundOr404.class)
    @Nullable
-   DefaultObjectAccessControls getDefaultObjectAccessControls(@PathParam("bucket") String bucketName,
-            @PathParam("entity") String entity);
+   ObjectAccessControls getDefaultObjectAccessControls(@PathParam("bucket") String bucketName,
+         @PathParam("entity") String entity);
 
    /**
     * Creates a new ACL entry for specified object
@@ -94,8 +96,8 @@ public interface DefaultObjectAccessControlsApi {
    @Produces(MediaType.APPLICATION_JSON)
    @Path("/b/{bucket}/defaultObjectAcl")
    @OAuthScopes(STORAGE_FULLCONTROL_SCOPE)
-   DefaultObjectAccessControls createDefaultObjectAccessControls(@PathParam("bucket") String bucketName,
-            @BinderParam(BindToJsonPayload.class) DefaultObjectAccessControlsTemplate template);
+   ObjectAccessControls createDefaultObjectAccessControls(@PathParam("bucket") String bucketName,
+            @BinderParam(BindToJsonPayload.class) ObjectAccessControlsTemplate template);
 
    /**
     * Permanently deletes the DefaultObjectAcessControl entry for the specified entity on the specified bucket.
@@ -108,7 +110,6 @@ public interface DefaultObjectAccessControlsApi {
     *
     * @return If successful, this method returns an empty response body
     */
-
    @Named("DefaultObjectAccessControls:delete")
    @DELETE
    @Consumes(MediaType.APPLICATION_JSON)
@@ -124,10 +125,6 @@ public interface DefaultObjectAccessControlsApi {
     *
     * @param bucketName
     *           Name of the bucket which contains the object
-    * @param objectName
-    *           Name of the bucket of that ACL is related
-    * @param generation
-    *           If present, selects a specific revision of this object
     *
     * @return ListObjectAccessControls resource
     *
@@ -141,20 +138,18 @@ public interface DefaultObjectAccessControlsApi {
    @OAuthScopes(STORAGE_FULLCONTROL_SCOPE)
    @Fallback(NullOnNotFoundOr404.class)
    @Nullable
-   ListDefaultObjectAccessControls listDefaultObjectAccessControls(@PathParam("bucket") String bucketName);
+   @SelectJson("items")
+   List<ObjectAccessControls> listDefaultObjectAccessControls(@PathParam("bucket") String bucketName);
 
    /**
     * Retrieves ACL entries on a specified object
     *
     * @param bucketName
     *           Name of the bucket which contains the object
-    * @param generation
-    *           If present, selects a specific revision of this object
     *
     * @return DefaultObjectAccessControls resource
     *
     */
-
    @Named("DefaultObjectAccessControls:update")
    @PUT
    @Consumes(MediaType.APPLICATION_JSON)
@@ -162,22 +157,16 @@ public interface DefaultObjectAccessControlsApi {
    @Path("/b/{bucket}/defaultObjectAcl/{entity}")
    @OAuthScopes(STORAGE_FULLCONTROL_SCOPE)
    @Fallback(NullOnNotFoundOr404.class)
-   DefaultObjectAccessControls updateDefaultObjectAccessControls(@PathParam("bucket") String bucketName,
+   ObjectAccessControls updateDefaultObjectAccessControls(@PathParam("bucket") String bucketName,
             @PathParam("entity") String entity,
-            @BinderParam(BindToJsonPayload.class) DefaultObjectAccessControls payload);
+            @BinderParam(BindToJsonPayload.class) ObjectAccessControls payload);
 
    /**
     * Retrieves ACL entries on a specified object
     *
     * @param bucketName
     *           Name of the bucket which contains the object
-    * @param generation
-    *           If present, selects a specific revision of this object
-    *
-    * @return DefaultObjectAccessControls resource
-    *
     */
-
    @Named("DefaultObjectAccessControls:update")
    @PUT
    @Consumes(MediaType.APPLICATION_JSON)
@@ -185,9 +174,9 @@ public interface DefaultObjectAccessControlsApi {
    @Path("/b/{bucket}/defaultObjectAcl/{entity}")
    @OAuthScopes(STORAGE_FULLCONTROL_SCOPE)
    @Fallback(NullOnNotFoundOr404.class)
-   DefaultObjectAccessControls updateDefaultObjectAccessControls(@PathParam("bucket") String bucketName,
+   ObjectAccessControls updateDefaultObjectAccessControls(@PathParam("bucket") String bucketName,
             @PathParam("entity") String entity,
-            @BinderParam(BindToJsonPayload.class) DefaultObjectAccessControls payload,
+            @BinderParam(BindToJsonPayload.class) ObjectAccessControls payload,
             @QueryParam("role") ObjectRole role);
 
    /**
@@ -195,13 +184,7 @@ public interface DefaultObjectAccessControlsApi {
     *
     * @param bucketName
     *           Name of the bucket which contains the object
-    * @param generation
-    *           If present, selects a specific revision of this object
-    *
-    * @return DefaultObjectAccessControls resource
-    *
     */
-
    @Named("DefaultObjectAccessControls:patch")
    @PATCH
    @Consumes(MediaType.APPLICATION_JSON)
@@ -209,7 +192,7 @@ public interface DefaultObjectAccessControlsApi {
    @Path("/b/{bucket}/defaultObjectAcl/{entity}")
    @OAuthScopes(STORAGE_FULLCONTROL_SCOPE)
    @Fallback(NullOnNotFoundOr404.class)
-   DefaultObjectAccessControls patchDefaultObjectAccessControls(@PathParam("bucket") String bucketName,
+   ObjectAccessControls patchDefaultObjectAccessControls(@PathParam("bucket") String bucketName,
             @PathParam("entity") String entity,
-            @BinderParam(BindToJsonPayload.class) DefaultObjectAccessControls payload);
+            @BinderParam(BindToJsonPayload.class) ObjectAccessControls payload);
 }

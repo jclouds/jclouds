@@ -18,6 +18,8 @@ package org.jclouds.googlecloudstorage.features;
 
 import static org.jclouds.googlecloudstorage.reference.GoogleCloudStorageConstants.STORAGE_FULLCONTROL_SCOPE;
 
+import java.util.List;
+
 import javax.inject.Named;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
@@ -31,7 +33,6 @@ import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 
 import org.jclouds.Fallbacks.NullOnNotFoundOr404;
-import org.jclouds.googlecloudstorage.domain.ListObjectAccessControls;
 import org.jclouds.googlecloudstorage.domain.ObjectAccessControls;
 import org.jclouds.googlecloudstorage.domain.templates.ObjectAccessControlsTemplate;
 import org.jclouds.javax.annotation.Nullable;
@@ -41,6 +42,7 @@ import org.jclouds.rest.annotations.BinderParam;
 import org.jclouds.rest.annotations.Fallback;
 import org.jclouds.rest.annotations.PATCH;
 import org.jclouds.rest.annotations.RequestFilters;
+import org.jclouds.rest.annotations.SelectJson;
 import org.jclouds.rest.annotations.SkipEncoding;
 import org.jclouds.rest.binders.BindToJsonPayload;
 
@@ -93,7 +95,6 @@ public interface ObjectAccessControlsApi {
     *
     * @return an {@link ObjectAccessControls }
     */
-
    @Named("ObjectAccessControls:get")
    @GET
    @Consumes(MediaType.APPLICATION_JSON)
@@ -116,7 +117,6 @@ public interface ObjectAccessControlsApi {
     *
     * @return an {@link ObjectAccessControls }
     */
-
    @Named("ObjectAccessControls:insert")
    @POST
    @Consumes(MediaType.APPLICATION_JSON)
@@ -140,7 +140,6 @@ public interface ObjectAccessControlsApi {
     *
     * @return an {@link ObjectAccessControls }
     */
-
    @Named("ObjectAccessControls:insert")
    @POST
    @Consumes(MediaType.APPLICATION_JSON)
@@ -185,7 +184,6 @@ public interface ObjectAccessControlsApi {
     *           The entity holding the permission. Can be user-userId, user-emailAddress, group-groupId,
     *           group-emailAddress, allUsers, or allAuthenticatedUsers
     */
-
    @Named("ObjectAccessControls:delete")
    @DELETE
    @Consumes(MediaType.APPLICATION_JSON)
@@ -201,13 +199,7 @@ public interface ObjectAccessControlsApi {
     *           Name of the bucket which contains the object
     * @param objectName
     *           Name of the bucket of that acl is related
-    * @param generation
-    *           If present, selects a specific revision of this object
-    *
-    * @return {@link ListObjectAccessControls } resource
-    *
     */
-
    @Named("ObjectAccessControls:list")
    @GET
    @Consumes(MediaType.APPLICATION_JSON)
@@ -215,8 +207,9 @@ public interface ObjectAccessControlsApi {
    @Path("/b/{bucket}/o/{object}/acl")
    @OAuthScopes(STORAGE_FULLCONTROL_SCOPE)
    @Fallback(NullOnNotFoundOr404.class)
+   @SelectJson("items")
    @Nullable
-   ListObjectAccessControls listObjectAccessControls(@PathParam("bucket") String bucketName,
+   List<ObjectAccessControls> listObjectAccessControls(@PathParam("bucket") String bucketName,
             @PathParam("object") String objectName);
 
    /**
@@ -229,10 +222,7 @@ public interface ObjectAccessControlsApi {
     * @param generation
     *           If present, selects a specific revision of this object
     *
-    * @return a {@link ListObjectAccessControls }
-    *
     */
-
    @Named("ObjectAccessControls:list")
    @GET
    @Consumes(MediaType.APPLICATION_JSON)
@@ -240,8 +230,9 @@ public interface ObjectAccessControlsApi {
    @Path("/b/{bucket}/o/{object}/acl")
    @OAuthScopes(STORAGE_FULLCONTROL_SCOPE)
    @Fallback(NullOnNotFoundOr404.class)
+   @SelectJson("items")
    @Nullable
-   ListObjectAccessControls listObjectAccessControls(@PathParam("bucket") String bucketName,
+   List<ObjectAccessControls> listObjectAccessControls(@PathParam("bucket") String bucketName,
             @PathParam("object") String objectName, @QueryParam("generation") Long generation);
 
    /**

@@ -16,118 +16,28 @@
  */
 package org.jclouds.googlecloudstorage.domain;
 
-import static com.google.common.base.Objects.toStringHelper;
-import static com.google.common.base.Preconditions.checkArgument;
-import static com.google.common.base.Preconditions.checkNotNull;
-
 import org.jclouds.javax.annotation.Nullable;
 
-import com.google.common.base.Objects.ToStringHelper;
+import com.google.auto.value.AutoValue;
 
 /**
  * Represents results of resumable upload response.
  */
-public class ResumableUpload {
+@AutoValue
+public abstract class ResumableUpload {
 
-   protected final Integer statusCode;
-   protected final String uploadId;
-   protected final String contentLength;
-   protected final Long rangeUpperValue;
-   protected final Long rangeLowerValue;
+   public abstract int statusCode();
 
-   private ResumableUpload(Integer statusCode, @Nullable String uploadId, @Nullable String contentLength,
-            @Nullable Long rangeLowerValue, @Nullable Long rangeUpperValue) {
-      if (rangeLowerValue != null && rangeUpperValue != null) {
-         checkArgument(rangeLowerValue < rangeUpperValue, "lower range must less than upper range, was: %s - %s",
-                  rangeLowerValue, rangeUpperValue);
-      }
-      this.statusCode = checkNotNull(statusCode, "statusCode");
-      this.uploadId = uploadId;
-      this.contentLength = contentLength;
-      this.rangeUpperValue = rangeUpperValue;
-      this.rangeLowerValue = rangeLowerValue;
-   }
+   @Nullable public abstract String uploadId();
 
-   public String getUploadId() {
-      return uploadId;
-   }
+   @Nullable public abstract String contentLength();
 
-   public Integer getStatusCode() {
-      return statusCode;
-   }
+   @Nullable public abstract Long rangeUpperValue();
 
-   public String getContentLength() {
-      return contentLength;
-   }
+   @Nullable public abstract Long rangeLowerValue();
 
-   public Long getRangeUpperValue() {
-      return rangeUpperValue;
-   }
-
-   public Long getRangeLowerValue() {
-      return rangeLowerValue;
-   }
-
-   protected ToStringHelper string() {
-      return toStringHelper(this).add("statusCode", statusCode).add("uploadId", uploadId)
-               .add("contentLength", contentLength).add("rangeUpperValue", rangeUpperValue)
-               .add("rangeLowerValue", rangeLowerValue);
-   }
-
-   @Override
-   public String toString() {
-      return string().toString();
-   }
-
-   public static Builder builder() {
-      return new Builder();
-   }
-
-   public Builder toBuilder() {
-      return new Builder().fromResumableUpload(this);
-   }
-
-   public static final class Builder {
-
-      protected String uploadId;
-      protected Integer statusCode;
-      protected String contentLength;
-      protected Long rangeUpperValue;
-      protected Long rangeLowerValue;
-
-      public Builder uploadId(String uploadId) {
-         this.uploadId = uploadId;
-         return this;
-      }
-
-      public Builder statusCode(Integer statusCode) {
-         this.statusCode = statusCode;
-         return this;
-      }
-
-      public Builder contentLength(String contentLength) {
-         this.contentLength = contentLength;
-         return this;
-      }
-
-      public Builder rangeUpperValue(Long rangeUpperValue) {
-         this.rangeUpperValue = rangeUpperValue;
-         return this;
-      }
-
-      public Builder rangeLowerValue(Long rangeLowerValue) {
-         this.rangeLowerValue = rangeLowerValue;
-         return this;
-      }
-
-      public ResumableUpload build() {
-         return new ResumableUpload(statusCode, uploadId, contentLength, rangeLowerValue, rangeUpperValue);
-      }
-
-      public Builder fromResumableUpload(ResumableUpload in) {
-         return this.statusCode(in.getStatusCode()).uploadId(in.getUploadId()).contentLength(in.getContentLength())
-                  .rangeUpperValue(in.getRangeUpperValue()).rangeLowerValue(in.getRangeLowerValue());
-      }
-
+   public static ResumableUpload create(int statusCode, String uploadId, String contentLength, Long rangeLowerValue,
+         Long rangeUpperValue) {
+      return new AutoValue_ResumableUpload(statusCode, uploadId, contentLength, rangeLowerValue, rangeUpperValue);
    }
 }

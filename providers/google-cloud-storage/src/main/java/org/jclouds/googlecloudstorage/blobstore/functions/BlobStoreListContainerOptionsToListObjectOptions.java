@@ -16,14 +16,13 @@
  */
 package org.jclouds.googlecloudstorage.blobstore.functions;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+
 import org.jclouds.blobstore.options.ListContainerOptions;
 import org.jclouds.googlecloudstorage.options.ListObjectOptions;
 
 import com.google.common.base.Function;
-import com.google.inject.Singleton;
-import static com.google.common.base.Preconditions.checkNotNull;
 
-@Singleton
 public class BlobStoreListContainerOptionsToListObjectOptions implements
          Function<ListContainerOptions, ListObjectOptions> {
    public ListObjectOptions apply(ListContainerOptions from) {

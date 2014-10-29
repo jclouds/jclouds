@@ -14,20 +14,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.jclouds.googlecloudstorage.domain.templates;
+package org.jclouds.googlecloudstorage.domain;
 
-import org.jclouds.googlecloudstorage.domain.BucketAccessControls.Role;
+import org.jclouds.javax.annotation.Nullable;
+import org.jclouds.json.SerializedNames;
 
 import com.google.auto.value.AutoValue;
 
 @AutoValue
-public abstract class BucketAccessControlsTemplate {
-
+public abstract class Owner {
    public abstract String entity();
 
-   public abstract Role role();
+   @Nullable public abstract String entityId();
 
-   public static BucketAccessControlsTemplate create(String entity, Role role) {
-      return new AutoValue_BucketAccessControlsTemplate(entity, role);
+   @SerializedNames({"entity", "entityId"})
+   public static Owner create(String entity, String entityId) {
+      return new AutoValue_Owner(entity, entityId);
    }
 }

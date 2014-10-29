@@ -19,15 +19,14 @@ package org.jclouds.googlecloudstorage.features;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
 
+import java.util.List;
 import java.util.UUID;
 
 import org.jclouds.googlecloudstorage.domain.Bucket;
-import org.jclouds.googlecloudstorage.domain.DefaultObjectAccessControls;
 import org.jclouds.googlecloudstorage.domain.DomainResourceReferences.ObjectRole;
-import org.jclouds.googlecloudstorage.domain.ListDefaultObjectAccessControls;
-import org.jclouds.googlecloudstorage.domain.Resource.Kind;
+import org.jclouds.googlecloudstorage.domain.ObjectAccessControls;
 import org.jclouds.googlecloudstorage.domain.templates.BucketTemplate;
-import org.jclouds.googlecloudstorage.domain.templates.DefaultObjectAccessControlsTemplate;
+import org.jclouds.googlecloudstorage.domain.templates.ObjectAccessControlsTemplate;
 import org.jclouds.googlecloudstorage.internal.BaseGoogleCloudStorageApiLiveTest;
 import org.testng.annotations.Test;
 
@@ -48,56 +47,50 @@ public class DefaultObjectAccessControlsApiLiveTest extends BaseGoogleCloudStora
    @Test(groups = "live")
    public void testCreateDefaultObjectAcl() {
       createBucket(BUCKET_NAME);
-      DefaultObjectAccessControlsTemplate template = new DefaultObjectAccessControlsTemplate().entity("allUsers").role(
-               ObjectRole.READER);
+      ObjectAccessControlsTemplate template = ObjectAccessControlsTemplate.create("allUsers", ObjectRole.READER);
 
-      DefaultObjectAccessControls response = api().createDefaultObjectAccessControls(BUCKET_NAME, template);
+      ObjectAccessControls response = api().createDefaultObjectAccessControls(BUCKET_NAME, template);
 
       assertNotNull(response);
-      assertEquals(response.getEntity(), "allUsers");
-      assertEquals(response.getRole(), ObjectRole.READER);
+      assertEquals(response.entity(), "allUsers");
+      assertEquals(response.role(), ObjectRole.READER);
    }
 
    @Test(groups = "live", dependsOnMethods = "testCreateDefaultObjectAcl")
    public void testUpdateDefaultObjectAcl() {
-      DefaultObjectAccessControls defaultObjectAcl = DefaultObjectAccessControls.builder().bucket(BUCKET_NAME)
+      ObjectAccessControls defaultObjectAcl = ObjectAccessControls.builder().bucket(BUCKET_NAME)
                .entity("allUsers").role(ObjectRole.OWNER).build();
-      DefaultObjectAccessControls response = api().updateDefaultObjectAccessControls(BUCKET_NAME, "allUsers",
-               defaultObjectAcl);
+      ObjectAccessControls response = api().updateDefaultObjectAccessControls(BUCKET_NAME, "allUsers", defaultObjectAcl);
 
       assertNotNull(response);
-      assertEquals(response.getEntity(), "allUsers");
-      assertEquals(response.getRole(), ObjectRole.OWNER);
+      assertEquals(response.entity(), "allUsers");
+      assertEquals(response.role(), ObjectRole.OWNER);
    }
 
    @Test(groups = "live", dependsOnMethods = "testUpdateDefaultObjectAcl")
    public void testGetDefaultObjectAcl() {
-      DefaultObjectAccessControls response = api().getDefaultObjectAccessControls(BUCKET_NAME, "allUsers");
+      ObjectAccessControls response = api().getDefaultObjectAccessControls(BUCKET_NAME, "allUsers");
 
       assertNotNull(response);
-      assertEquals(response.getEntity(), "allUsers");
-      assertEquals(response.getRole(), ObjectRole.OWNER);
+      assertEquals(response.entity(), "allUsers");
+      assertEquals(response.role(), ObjectRole.OWNER);
    }
 
    @Test(groups = "live", dependsOnMethods = "testUpdateDefaultObjectAcl")
    public void testListDefaultObjectAcl() {
-      ListDefaultObjectAccessControls response = api().listDefaultObjectAccessControls(BUCKET_NAME);
-
+      List<ObjectAccessControls> response = api().listDefaultObjectAccessControls(BUCKET_NAME);
       assertNotNull(response);
-      assertEquals(response.getKind(), Kind.OBJECT_ACCESS_CONTROLS);
-      assertNotNull(response.getItems());
    }
 
    @Test(groups = "live", dependsOnMethods = "testUpdateDefaultObjectAcl")
    public void testPatchDefaultObjectAcl() {
-      DefaultObjectAccessControls defaultObjectAcl = DefaultObjectAccessControls.builder().bucket(BUCKET_NAME)
+      ObjectAccessControls defaultObjectAcl = ObjectAccessControls.builder().bucket(BUCKET_NAME)
                .entity("allUsers").role(ObjectRole.READER).build();
-      DefaultObjectAccessControls response = api().patchDefaultObjectAccessControls(BUCKET_NAME, "allUsers",
-               defaultObjectAcl);
+      ObjectAccessControls response = api().patchDefaultObjectAccessControls(BUCKET_NAME, "allUsers", defaultObjectAcl);
 
       assertNotNull(response);
-      assertEquals(response.getEntity(), "allUsers");
-      assertEquals(response.getRole(), ObjectRole.READER);
+      assertEquals(response.entity(), "allUsers");
+      assertEquals(response.role(), ObjectRole.READER);
    }
 
    @Test(groups = "live", dependsOnMethods = "testPatchDefaultObjectAcl")

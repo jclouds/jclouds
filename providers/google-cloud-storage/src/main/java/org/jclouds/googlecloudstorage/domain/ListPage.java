@@ -16,136 +16,43 @@
  */
 package org.jclouds.googlecloudstorage.domain;
 
-import static com.google.common.base.Objects.equal;
-import static com.google.common.base.Objects.toStringHelper;
-import static com.google.common.base.Preconditions.checkNotNull;
+import java.util.List;
 
-import java.beans.ConstructorProperties;
-import java.util.Iterator;
-import java.util.Set;
+import org.jclouds.javax.annotation.Nullable;
+import org.jclouds.json.SerializedNames;
 
-import org.jclouds.collect.IterableWithMarker;
-import org.jclouds.googlecloudstorage.domain.Resource.Kind;
-
-import com.google.common.base.Objects;
-import com.google.common.base.Optional;
+import com.google.common.collect.ForwardingList;
 import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableSet;
 
 /**
  * The collection returned from any <code>listFirstPage()</code> method.
  */
-public class ListPage<T> extends IterableWithMarker<T> {
+public class ListPage<T> extends ForwardingList<T> {
 
-   private final Kind kind;
+   private final List<T> items;
    private final String nextPageToken;
-   private final Iterable<T> items;
-   private final Set<String> prefixes;
+   private final List<String> prefixes;
 
-   @ConstructorProperties({ "kind", "nextPageToken", "items", "prefixes" })
-   protected ListPage(Kind kind, String nextPageToken, Iterable<T> items, Set<String> prefixes) {
-
-      this.kind = checkNotNull(kind, "kind");
-      this.nextPageToken = nextPageToken;
-      this.items = items != null ? ImmutableList.copyOf(items) : ImmutableList.<T> of();
-      this.prefixes = prefixes != null ? prefixes : ImmutableSet.<String> of();
-    }
-
-   public Kind getKind() {
-      return kind;
+   public static <T> ListPage<T> create(Iterable<T> items, String nextPageToken, List<String> prefixes) {
+      return new ListPage<T>(items, nextPageToken, prefixes);
    }
 
-   public String getNextPageToken() {
+   @SerializedNames({ "items", "nextPageToken", "prefixes" })
+   protected ListPage(Iterable<T> items, String nextPageToken, List<String> prefixes) {
+      this.items = items != null ? ImmutableList.copyOf(items) : ImmutableList.<T>of();
+      this.nextPageToken = nextPageToken;
+      this.prefixes = prefixes != null ? prefixes : ImmutableList.<String>of();
+   }
+
+   @Nullable public String nextPageToken() {
       return nextPageToken;
    }
 
-   public Set<String> getPrefixes() {
+   public List<String> prefixes() {
       return prefixes;
    }
 
-   @Override
-   public Optional<Object> nextMarker() {
-      return Optional.<Object> fromNullable(nextPageToken);
-   }
-
-   @Override
-   public Iterator<T> iterator() {
-      return checkNotNull(items, "items").iterator();
-   }
-
-   @Override
-   public int hashCode() {
-      return Objects.hashCode(kind, items);
-   }
-
-   @Override
-   public boolean equals(Object obj) {
-      if (this == obj)
-         return true;
-      if (obj == null || getClass() != obj.getClass())
-         return false;
-      ListPage<?> that = ListPage.class.cast(obj);
-      return equal(this.kind, that.kind) && equal(this.items, that.items);
-   }
-
-   protected Objects.ToStringHelper string() {
-      return toStringHelper(this).omitNullValues().add("kind", kind).add("nextPageToken", nextPageToken)
-               .add("items", items);
-   }
-
-   @Override
-   public String toString() {
-      return string().toString();
-   }
-
-   public static <T> Builder<T> builder() {
-      return new Builder<T>();
-   }
-
-   public Builder<T> toBuilder() {
-      return new Builder<T>().fromPagedList(this);
-   }
-
-   public static final class Builder<T> {
-
-      private Kind kind;
-      private String nextPageToken;
-      private ImmutableList.Builder<T> items = ImmutableList.builder();
-      private ImmutableSet.Builder<String> prefixes = ImmutableSet.builder();
-
-      public Builder<T> kind(Kind kind) {
-         this.kind = kind;
-         return this;
-      }
-
-      public Builder<T> addItem(T item) {
-         this.items.add(item);
-         return this;
-      }
-
-      public Builder<T> items(Iterable<T> items) {
-         this.items.addAll(items);
-         return this;
-      }
-
-      public Builder<T> prefixes(Set<String> prefixes) {
-         this.prefixes.addAll(prefixes);
-         return this;
-      }
-
-      public Builder<T> nextPageToken(String nextPageToken) {
-         this.nextPageToken = nextPageToken;
-         return this;
-      }
-
-      public ListPage<T> build() {
-         return new ListPage<T>(kind, nextPageToken, items.build(), prefixes.build());
-      }
-
-      public Builder<T> fromPagedList(ListPage<T> in) {
-         return this.kind(in.getKind()).nextPageToken((String) in.nextMarker().orNull()).items(in)
-                  .prefixes(in.getPrefixes());
-
-      }
+   @Override protected List<T> delegate() {
+      return items;
    }
 }

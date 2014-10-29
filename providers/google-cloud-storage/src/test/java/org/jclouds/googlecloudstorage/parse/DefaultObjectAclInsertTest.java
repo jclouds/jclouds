@@ -19,11 +19,11 @@ package org.jclouds.googlecloudstorage.parse;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.core.MediaType;
 
-import org.jclouds.googlecloudstorage.domain.DefaultObjectAccessControls;
 import org.jclouds.googlecloudstorage.domain.DomainResourceReferences.ObjectRole;
+import org.jclouds.googlecloudstorage.domain.ObjectAccessControls;
 import org.jclouds.googlecloudstorage.internal.BaseGoogleCloudStorageParseTest;
 
-public class DefaultObjectAclInsertTest extends BaseGoogleCloudStorageParseTest<DefaultObjectAccessControls> {
+public class DefaultObjectAclInsertTest extends BaseGoogleCloudStorageParseTest<ObjectAccessControls> {
 
    @Override
    public String resource() {
@@ -32,8 +32,7 @@ public class DefaultObjectAclInsertTest extends BaseGoogleCloudStorageParseTest<
 
    @Override
    @Consumes(MediaType.APPLICATION_JSON)
-   public DefaultObjectAccessControls expected() {
-      return DefaultObjectAccessControls.builder().entity("allUsers").role(ObjectRole.OWNER).etag("CAo=").build();
-
+   public ObjectAccessControls expected() {
+      return ObjectAccessControls.builder().entity("allUsers").role(ObjectRole.OWNER).build();
    }
 }

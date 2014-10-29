@@ -16,9 +16,9 @@
  */
 package org.jclouds.googlecloudstorage.blobstore.functions;
 
-import java.util.Map;
+import static com.google.common.io.BaseEncoding.base64;
 
-import javax.inject.Singleton;
+import java.util.Map;
 
 import org.jclouds.blobstore.domain.BlobMetadata;
 import org.jclouds.googlecloudstorage.domain.templates.ObjectTemplate;
@@ -27,7 +27,6 @@ import org.jclouds.io.ContentMetadata;
 import com.google.common.base.Function;
 import com.google.common.hash.HashCode;
 
-@Singleton
 public class BlobMetadataToObjectTemplate implements Function<BlobMetadata, ObjectTemplate> {
 
    public ObjectTemplate apply(BlobMetadata from) {
@@ -50,7 +49,7 @@ public class BlobMetadataToObjectTemplate implements Function<BlobMetadata, Obje
                .contentEncoding(contentEncoding).contentLanguage(contentLanguage)
                .contentDisposition(contentDisposition).name(name).customMetadata(userMeta);
       if (md5 != null) {
-         template.md5Hash(md5);
+         template.md5Hash(base64().encode(md5.asBytes()));
       }
       return template;
    }

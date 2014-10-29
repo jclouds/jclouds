@@ -16,6 +16,8 @@
  */
 package org.jclouds.googlecloudstorage.blobstore.functions;
 
+import javax.inject.Inject;
+
 import org.jclouds.blobstore.domain.MutableStorageMetadata;
 import org.jclouds.blobstore.domain.StorageMetadata;
 import org.jclouds.blobstore.domain.StorageType;
@@ -25,21 +27,17 @@ import org.jclouds.googlecloudstorage.domain.Bucket;
 
 import com.google.common.base.Function;
 import com.google.common.base.Supplier;
-import com.google.inject.Inject;
-import com.google.inject.Singleton;
 
-@Singleton
 public class BucketToStorageMetadata implements Function<Bucket, StorageMetadata> {
    private Supplier<Location> defaultLocation;
 
-   @Inject
-   BucketToStorageMetadata(Supplier<Location> defaultLocation) {
+   @Inject BucketToStorageMetadata(Supplier<Location> defaultLocation) {
       this.defaultLocation = defaultLocation;
    }
 
    public StorageMetadata apply(Bucket from) {
       MutableStorageMetadata to = new MutableStorageMetadataImpl();
-      to.setName(from.getName());
+      to.setName(from.name());
       to.setLocation(defaultLocation.get());
       to.setType(StorageType.CONTAINER);
       return to;

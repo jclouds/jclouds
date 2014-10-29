@@ -17,63 +17,22 @@
 
 package org.jclouds.googlecloudstorage.domain.templates;
 
-import java.util.Set;
+import java.util.List;
 
 import org.jclouds.googlecloudstorage.domain.GCSObject;
-import org.jclouds.googlecloudstorage.domain.Resource.Kind;
 
-import com.google.common.collect.Sets;
+import com.google.auto.value.AutoValue;
 
-public class ComposeObjectTemplate {
+@AutoValue
+public abstract class ComposeObjectTemplate {
 
-   protected Kind kind;
-   protected ObjectTemplate destination;
-   protected Set<GCSObject> sourceObjects = Sets.newLinkedHashSet();
+   private final String kind = "storage/composeRequest";
 
-   public ComposeObjectTemplate() {
-      this.kind = Kind.COMPOSE_REQUEST;
-   }
+   public abstract List<GCSObject> sourceObjects();
 
-   public ComposeObjectTemplate destination(ObjectTemplate destination) {
-      this.destination = destination;
-      return this;
-   }
+   public abstract ObjectTemplate destination();
 
-   public ComposeObjectTemplate addsourceObject(GCSObject sourceObject) {
-      this.sourceObjects.add(sourceObject);
-      return this;
-   }
-
-   public ComposeObjectTemplate sourceObjects(Set<GCSObject> sourceObjects) {
-      this.sourceObjects.addAll(sourceObjects);
-      return this;
-   }
-
-   public Kind getKind() {
-      return kind;
-   }
-
-   public ObjectTemplate getDestination() {
-      return destination;
-   }
-
-   public Set<GCSObject> getSourceObjects() {
-      return sourceObjects;
-   }
-
-   public static Builder builder() {
-      return new Builder();
-   }
-
-   public static ComposeObjectTemplate fromComposeObjectTemplate(ComposeObjectTemplate composeTemplate) {
-      return Builder.fromComposeObjectTemplate(composeTemplate);
-   }
-
-   public static class Builder {
-
-      public static ComposeObjectTemplate fromComposeObjectTemplate(ComposeObjectTemplate in) {
-         return new ComposeObjectTemplate().sourceObjects(in.getSourceObjects()).destination(in.getDestination());
-
-      }
+   public static ComposeObjectTemplate create(List<GCSObject> sourceObjects, ObjectTemplate destination) {
+      return new AutoValue_ComposeObjectTemplate(sourceObjects, destination);
    }
 }

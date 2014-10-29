@@ -16,23 +16,22 @@
  */
 package org.jclouds.googlecloudstorage.features;
 
-import static javax.ws.rs.core.Response.Status.OK;
 import static javax.ws.rs.core.Response.Status.CREATED;
-
-import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertNotNull;
-import static org.testng.Assert.assertNotEquals;
+import static javax.ws.rs.core.Response.Status.OK;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertNotEquals;
+import static org.testng.Assert.assertNotNull;
+
 import java.io.IOException;
 import java.util.UUID;
 
-import org.jclouds.googlecloudstorage.domain.DomainResourceReferences.ObjectRole;
 import org.jclouds.googlecloudstorage.domain.Bucket;
-import org.jclouds.googlecloudstorage.domain.DomainUtils;
+import org.jclouds.googlecloudstorage.domain.DomainResourceReferences.ObjectRole;
+import org.jclouds.googlecloudstorage.domain.ObjectAccessControls;
 import org.jclouds.googlecloudstorage.domain.ResumableUpload;
 import org.jclouds.googlecloudstorage.domain.templates.BucketTemplate;
 import org.jclouds.googlecloudstorage.domain.templates.ObjectTemplate;
-import org.jclouds.googlecloudstorage.domain.ObjectAccessControls;
 import org.jclouds.googlecloudstorage.internal.BaseGoogleCloudStorageApiLiveTest;
 import org.jclouds.io.Payloads;
 import org.jclouds.io.payloads.ByteSourcePayload;
@@ -80,22 +79,22 @@ public class ResumableUploadApiLiveTest extends BaseGoogleCloudStorageApiLiveTes
       ResumableUpload initResponse = api().initResumableUpload(BUCKET_NAME, "image/jpeg", contentLength, template);
 
       assertNotNull(initResponse);
-      assertEquals(initResponse.getStatusCode().intValue(), OK.getStatusCode());
-      assertNotNull(initResponse.getUploadId());
+      assertEquals(initResponse.statusCode(), OK.getStatusCode());
+      assertNotNull(initResponse.uploadId());
 
-      String uploadId = initResponse.getUploadId();
+      String uploadId = initResponse.uploadId();
 
       // Upload the payload
       ByteSourcePayload payload = Payloads.newByteSourcePayload(byteSource);
       ResumableUpload uploadResponse = api().upload(BUCKET_NAME, uploadId, "image/jpeg", byteSource.read().length + "",
                payload);
 
-      assertEquals(uploadResponse.getStatusCode().intValue(), OK.getStatusCode());
+      assertEquals(uploadResponse.statusCode(), OK.getStatusCode());
 
       // CheckStatus
       ResumableUpload status = api().checkStatus(BUCKET_NAME, uploadId, "bytes */*");
 
-      int code = status.getStatusCode();
+      int code = status.statusCode();
       assertNotEquals(code, INCOMPLETE);
    }
 
@@ -117,15 +116,15 @@ public class ResumableUploadApiLiveTest extends BaseGoogleCloudStorageApiLiveTes
       ResumableUpload initResponse = api().initResumableUpload(BUCKET_NAME, "application/pdf", contentLength, template);
 
       assertNotNull(initResponse);
-      assertEquals(initResponse.getStatusCode().intValue(), OK.getStatusCode());
-      assertNotNull(initResponse.getUploadId());
+      assertEquals(initResponse.statusCode(), OK.getStatusCode());
+      assertNotNull(initResponse.uploadId());
 
       // Get the upload_id for the session
-      String uploadId = initResponse.getUploadId();
+      String uploadId = initResponse.uploadId();
 
       // Check the status first
       ResumableUpload status = api().checkStatus(BUCKET_NAME, uploadId, "bytes */*");
-      int code = status.getStatusCode();
+      int code = status.statusCode();
       assertEquals(code, INCOMPLETE);
 
       // Uploads in 2 chunks.
@@ -137,16 +136,16 @@ public class ResumableUploadApiLiveTest extends BaseGoogleCloudStorageApiLiveTes
       // Uploading First chunk
       ByteSourcePayload payload = Payloads.newByteSourcePayload(byteSource.slice(offset, chunkSize));
       long length = byteSource.slice(offset, chunkSize).size();
-      String Content_Range = DomainUtils.generateContentRange(0L, length, totalSize);
+      String Content_Range = generateContentRange(0L, length, totalSize);
       ResumableUpload uploadResponse = api().chunkUpload(BUCKET_NAME, uploadId, "application/pdf", length,
                Content_Range, payload);
 
-      int code2 = uploadResponse.getStatusCode();
+      int code2 = uploadResponse.statusCode();
       assertEquals(code2, INCOMPLETE);
 
       // Read uploaded length
-      long lowerValue = uploadResponse.getRangeLowerValue();
-      long uploaded = uploadResponse.getRangeUpperValue();
+      long lowerValue = uploadResponse.rangeLowerValue();
+      long uploaded = uploadResponse.rangeUpperValue();
 
       assertThat(lowerValue).isEqualTo(0);
       assertThat(uploaded).isEqualTo(chunkSize - 1); // confirms chunk is totally uploaded
@@ -157,11 +156,11 @@ public class ResumableUploadApiLiveTest extends BaseGoogleCloudStorageApiLiveTes
       ByteSourcePayload payload2 = Payloads.newByteSourcePayload(byteSource.slice(uploaded + 1,
                byteSource.read().length - uploaded - 1));
       // Upload the 2nd chunk
-      String Content_Range2 = DomainUtils.generateContentRange(uploaded + 1, totalSize - 1, totalSize);
+      String Content_Range2 = generateContentRange(uploaded + 1, totalSize - 1, totalSize);
       ResumableUpload resumeResponse = api().chunkUpload(BUCKET_NAME, uploadId, "application/pdf", resumeLength,
                Content_Range2, payload2);
 
-      int code3 = resumeResponse.getStatusCode();
+      int code3 = resumeResponse.statusCode();
       assertThat(code3).isIn(OK.getStatusCode(), CREATED.getStatusCode()); // 200 or 201 if upload succeeded
    }
 
@@ -170,5 +169,9 @@ public class ResumableUploadApiLiveTest extends BaseGoogleCloudStorageApiLiveTes
       api.getObjectApi().deleteObject(BUCKET_NAME, UPLOAD_OBJECT_NAME);
       api.getObjectApi().deleteObject(BUCKET_NAME, CHUNKED_OBJECT_NAME);
       api.getBucketApi().deleteBucket(BUCKET_NAME);
+   }
+
+   private static String generateContentRange(Long lowerLimit, Long upperLimit, Long totalSize) {
+      return "bytes " + lowerLimit + "-" + upperLimit + "/" + totalSize;
    }
 }

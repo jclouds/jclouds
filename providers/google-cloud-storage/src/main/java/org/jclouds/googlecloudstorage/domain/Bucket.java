@@ -17,282 +17,165 @@
 
 package org.jclouds.googlecloudstorage.domain;
 
-import static com.google.common.base.Objects.equal;
-import static com.google.common.base.Preconditions.checkNotNull;
+import static org.jclouds.googlecloudstorage.internal.NullSafeCopies.copyOf;
 
-import java.net.URI;
 import java.util.Date;
-import java.util.Set;
+import java.util.List;
 
 import org.jclouds.googlecloudstorage.domain.DomainResourceReferences.Location;
 import org.jclouds.googlecloudstorage.domain.DomainResourceReferences.StorageClass;
-import org.jclouds.googlecloudstorage.domain.internal.BucketCors;
-import org.jclouds.googlecloudstorage.domain.internal.BucketLifeCycle;
-import org.jclouds.googlecloudstorage.domain.internal.Logging;
-import org.jclouds.googlecloudstorage.domain.internal.Owner;
-import org.jclouds.googlecloudstorage.domain.internal.Versioning;
-import org.jclouds.googlecloudstorage.domain.internal.Website;
-
 import org.jclouds.javax.annotation.Nullable;
+import org.jclouds.json.SerializedNames;
 
-import com.google.common.base.Objects;
-import com.google.common.collect.ImmutableSet;
+import com.google.auto.value.AutoValue;
 
 /**
  * The Bucket represents a bucket in Google Cloud Storage. There is a single global namespace shared by all buckets.
- * 
+ *
  * @see <a href = " https://developers.google.com/storage/docs/json_api/v1/buckets"/>
  */
-public class Bucket extends Resource {
+@AutoValue
+public abstract class Bucket {
+   @AutoValue
+   public abstract static class Cors {
+      public abstract List<String> origin();
 
-   private final String name;
-   private final Long projectNumber;
-   private final Date timeCreated;
-   private final Long metageneration;
-   private final Set<BucketAccessControls> acl;
-   private final Set<DefaultObjectAccessControls> defaultObjectAcl;
-   private final Owner owner;
-   private final Location location;
-   private final Website website;
-   private final Logging logging;
-   private final Versioning versioning;
-   private final Set<BucketCors> cors;
-   private final BucketLifeCycle lifeCycle;
-   private final StorageClass storageClass;
+      public abstract List<String> method();
 
-   private Bucket(String id,  URI selfLink, String name, String etag, @Nullable Long projectNumber, Date timeCreated,
-            Long metageneration, Set<BucketAccessControls> acl, Set<DefaultObjectAccessControls> defaultObjectAcl,
-            Owner owner, @Nullable Location location, @Nullable Website website, @Nullable Logging logging,
-            @Nullable Versioning versioning, Set<BucketCors> cors, @Nullable BucketLifeCycle lifeCycle,
-            @Nullable StorageClass storageClass) {
+      public abstract List<String> responseHeader();
 
-      super(Kind.BUCKET, id, selfLink, etag);
-      this.projectNumber = projectNumber;
-      this.timeCreated = checkNotNull(timeCreated, "timeCreated");
-      this.metageneration = checkNotNull(metageneration, "metageneration");
-      this.acl = acl.isEmpty() ? null : acl;
-      this.defaultObjectAcl = defaultObjectAcl.isEmpty() ? null : defaultObjectAcl;
-      this.owner = checkNotNull(owner, "Owner");
-      this.location = location;
-      this.website = website;
-      this.logging = logging;
-      this.versioning = versioning;
-      this.cors = cors.isEmpty() ? null : cors;
-      this.lifeCycle = lifeCycle;
-      this.storageClass = storageClass;
-      this.name = checkNotNull(name, "name");
-   }
+      public abstract Integer maxAgeSeconds();
 
-   public Long getProjectNumber() {
-      return projectNumber;
-   }
-
-   public String getName() {
-      return name;
-   }
-
-   public Date getTimeCreated() {
-      return timeCreated;
-   }
-
-   public Long getMetageneration() {
-      return metageneration;
-   }
-
-   public Set<BucketAccessControls> getAcl() {
-      return acl;
-   }
-
-   public Set<DefaultObjectAccessControls> getDefaultObjectAcl() {
-      return defaultObjectAcl;
-   }
-
-   public Owner getOwner() {
-      return owner;
-   }
-
-   public Location getLocation() {
-      return location;
-   }
-
-   public Website getWebsite() {
-      return website;
-   }
-
-   public Logging getLogging() {
-      return logging;
-   }
-
-   public Versioning getVersioning() {
-      return versioning;
-   }
-
-   public Set<BucketCors> getCors() {
-      return cors;
-   }
-
-   public BucketLifeCycle getLifeCycle() {
-      return lifeCycle;
-   }
-
-   public StorageClass getStorageClass() {
-      return storageClass;
-   }
-
-   @Override
-   public boolean equals(Object obj) {
-      if (this == obj)
-         return true;
-      if (obj == null || getClass() != obj.getClass())
-         return false;
-      Bucket that = Bucket.class.cast(obj);
-      return equal(this.kind, that.kind) && equal(this.name, that.name)
-               && equal(this.projectNumber, that.projectNumber);
-
-   }
-
-   protected Objects.ToStringHelper string() {
-      return super.string().omitNullValues().add("name", name).add("timeCreated", timeCreated)
-               .add("projectNumber", projectNumber).add("metageneration", metageneration).add("acl", acl)
-               .add("defaultObjectAcl", defaultObjectAcl).add("owner", owner).add("location", location)
-               .add("website", website).add("logging", logging).add("versioning", versioning).add("cors", cors)
-               .add("lifeCycle", lifeCycle).add("storageClass", storageClass);
-
-   }
-
-   @Override
-   public String toString() {
-      return string().toString();
-   }
-
-   public static Builder builder() {
-      return new Builder();
-   }
-
-   public Builder toBuilder() {
-      return new Builder().fromBucket(this);
-   }
-
-   public static final class Builder extends Resource.Builder<Builder> {
-
-      private String name;
-      private Long projectNumber;
-      private Date timeCreated;
-      private Long metageneration;
-      private ImmutableSet.Builder<BucketAccessControls> acl = ImmutableSet.builder();
-      private ImmutableSet.Builder<DefaultObjectAccessControls> defaultObjectAcl = ImmutableSet.builder();
-      private Owner owner;
-      private Location location;
-      private Website website;
-      private Logging logging;
-      private Versioning versioning;
-      private ImmutableSet.Builder<BucketCors> cors = ImmutableSet.builder();
-      private BucketLifeCycle lifeCycle;
-      private StorageClass storageClass;
-
-      public Builder name(String name) {
-         this.name = name;
-         return this;
-      }
-
-      public Builder projectNumber(Long projectNumber) {
-         this.projectNumber = projectNumber;
-         return this;
-      }
-
-      public Builder timeCreated(Date timeCreated) {
-         this.timeCreated = timeCreated;
-         return this;
-      }
-
-      public Builder metageneration(Long metageneration) {
-         this.metageneration = metageneration;
-         return this;
-      }
-
-      public Builder owner(Owner owner) {
-         this.owner = owner;
-         return this;
-      }
-
-      public Builder location(Location location) {
-         this.location = location;
-         return this;
-      }
-
-      public Builder website(Website website) {
-         this.website = website;
-         return this;
-      }
-
-      public Builder logging(Logging logging) {
-         this.logging = logging;
-         return this;
-      }
-
-      public Builder versioning(Versioning versioning) {
-         this.versioning = versioning;
-         return this;
-      }
-
-      public Builder lifeCycle(BucketLifeCycle lifeCycle) {
-         this.lifeCycle = lifeCycle;
-         return this;
-      }
-
-      public Builder storageClass(StorageClass storageClass) {
-         this.storageClass = storageClass;
-         return this;
-      }
-
-      public Builder addAcl(BucketAccessControls bucketAccessControls) {
-         this.acl.add(bucketAccessControls);
-         return this;
-      }
-
-      public Builder acl(Set<BucketAccessControls> acl) {
-         this.acl.addAll(acl);
-         return this;
-      }
-
-      public Builder addDefaultObjectAcl(DefaultObjectAccessControls defaultObjectAccessControls) {
-         this.defaultObjectAcl.add(defaultObjectAccessControls);
-         return this;
-      }
-
-      public Builder defaultObjectAcl(Set<DefaultObjectAccessControls> defaultObjectAcl) {
-         this.defaultObjectAcl.addAll(defaultObjectAcl);
-         return this;
-      }
-
-      public Builder addCORS(BucketCors cors) {
-         this.cors.add(cors);
-         return this;
-      }
-
-      public Builder cors(Set<BucketCors> cors) {
-         this.cors.addAll(cors);
-         return this;
-      }
-
-      @Override
-      protected Builder self() {
-         return this;
-      }
-
-      public Bucket build() {
-         return new Bucket(super.id, super.selfLink, name, super.etag, projectNumber, timeCreated, metageneration,
-                  acl.build(), defaultObjectAcl.build(), owner, location, website, logging, versioning, cors.build(),
-                  lifeCycle, storageClass);
-      }
-
-      public Builder fromBucket(Bucket in) {
-         return super.fromResource(in).name(in.getName()).projectNumber(in.getProjectNumber())
-                  .timeCreated(in.getTimeCreated()).metageneration(in.getMetageneration()).acl(in.getAcl())
-                  .defaultObjectAcl(in.getDefaultObjectAcl()).owner(in.getOwner()).location(in.getLocation())
-                  .website(in.getWebsite()).logging(in.getLogging()).versioning(in.getVersioning()).cors(in.getCors())
-                  .lifeCycle(in.getLifeCycle()).storageClass(in.getStorageClass());
+      @SerializedNames({ "origin", "method", "responseHeader", "maxAgeSeconds" })
+      public static Cors create(List<String> origin, List<String> method, List<String> responseHeader,
+            Integer maxAgeSeconds) {
+         return new AutoValue_Bucket_Cors(copyOf(origin), copyOf(method), copyOf(responseHeader), maxAgeSeconds);
       }
    }
 
+   @AutoValue
+   public abstract static class Logging {
+      public abstract String logBucket();
+
+      @Nullable public abstract String logObjectPrefix();
+
+      @SerializedNames({ "logBucket", "logObjectPrefix" })
+      public static Logging create(String logBucket, String logObjectPrefix) {
+         return new AutoValue_Bucket_Logging(logBucket, logObjectPrefix);
+      }
+   }
+
+   @AutoValue
+   public abstract static class LifeCycle {
+
+      @AutoValue
+      public abstract static class Rule {
+
+         @AutoValue
+         public abstract static class Action {
+            public abstract String type();
+
+            @SerializedNames("type")
+            public static Action create(String type) {
+               return new AutoValue_Bucket_LifeCycle_Rule_Action(type);
+            }
+         }
+
+         @AutoValue
+         public abstract static class Condition {
+            @Nullable public abstract Integer age();
+
+            @Nullable public abstract Date createdBefore();
+
+            @Nullable public abstract Boolean isLive();
+
+            @Nullable public abstract Integer numNewerVersions();
+
+            @SerializedNames({ "age", "createdBefore", "isLive", "numNewerVersions" })
+            public static Condition create(Integer age, Date createdBefore, Boolean isLive, Integer numNewerVersions) {
+               return new AutoValue_Bucket_LifeCycle_Rule_Condition(age, createdBefore, isLive, numNewerVersions);
+            }
+         }
+
+         public abstract Action action();
+
+         public abstract Condition condition();
+
+         @SerializedNames({ "action", "condition" })
+         public static Rule create(Action action, Condition condition) {
+            return new AutoValue_Bucket_LifeCycle_Rule(action, condition);
+         }
+      }
+
+      public abstract List<Rule> rules();
+
+      @SerializedNames("rules")
+      public static LifeCycle create(List<Rule> rules) {
+         return new AutoValue_Bucket_LifeCycle(copyOf(rules));
+      }
+   }
+
+   @AutoValue
+   public abstract static class Website {
+      @Nullable public abstract String mainPageSuffix();
+
+      @Nullable public abstract String notFoundPage();
+
+      @SerializedNames({ "mainPageSuffix", "notFoundPage" })
+      public static Website create(String mainPageSuffix, String notFoundPage) {
+         return new AutoValue_Bucket_Website(mainPageSuffix, notFoundPage);
+      }
+   }
+
+   @AutoValue
+   public abstract static class Versioning {
+      public abstract Boolean enabled();
+
+      @SerializedNames("enabled")
+      public static Versioning create(Boolean enabled) {
+         return new AutoValue_Bucket_Versioning(enabled);
+      }
+   }
+
+   public abstract String id();
+
+   public abstract String name();
+
+   @Nullable public abstract Long projectNumber();
+
+   public abstract Date timeCreated();
+
+   public abstract Long metageneration();
+
+   public abstract List<BucketAccessControls> acl();
+
+   public abstract List<ObjectAccessControls> defaultObjectAcl();
+
+   public abstract Owner owner();
+
+   @Nullable public abstract Location location();
+
+   @Nullable public abstract Website website();
+
+   @Nullable public abstract Logging logging();
+
+   @Nullable public abstract Versioning versioning();
+
+   public abstract List<Cors> cors();
+
+   @Nullable public abstract LifeCycle lifeCycle();
+
+   @Nullable public abstract StorageClass storageClass();
+
+   @SerializedNames(
+         { "id", "name", "projectNumber", "timeCreated", "metageneration", "acl", "defaultObjectAcl", "owner",
+               "location", "website", "logging", "versioning", "cors", "lifeCycle", "storageClass" })
+   public static Bucket create(String id, String name, Long projectNumber, Date timeCreated, Long metageneration,
+         List<BucketAccessControls> acl, List<ObjectAccessControls> defaultObjectAcl, Owner owner,
+         Location location, Website website, Logging logging, Versioning versioning, List<Cors> cors,
+         LifeCycle lifeCycle, StorageClass storageClass) {
+      return new AutoValue_Bucket(id, name, projectNumber, timeCreated, metageneration, copyOf(acl),
+            copyOf(defaultObjectAcl), owner, location, website, logging, versioning, copyOf(cors), lifeCycle,
+            storageClass);
+   }
 }

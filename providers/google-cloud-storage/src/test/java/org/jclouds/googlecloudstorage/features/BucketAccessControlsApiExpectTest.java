@@ -23,7 +23,7 @@ import static org.testng.AssertJUnit.assertNull;
 
 import javax.ws.rs.core.MediaType;
 
-import org.jclouds.googlecloudstorage.domain.DomainResourceReferences.Role;
+import org.jclouds.googlecloudstorage.domain.BucketAccessControls.Role;
 import org.jclouds.googlecloudstorage.domain.templates.BucketAccessControlsTemplate;
 import org.jclouds.googlecloudstorage.internal.BaseGoogleCloudStorageApiExpectTest;
 import org.jclouds.googlecloudstorage.parse.BucketAclGetTest;
@@ -109,11 +109,9 @@ public class BucketAccessControlsApiExpectTest extends BaseGoogleCloudStorageApi
       BucketAccessControlsApi api = requestsSendResponses(requestForScopes(STORAGE_FULLCONTROL_SCOPE), TOKEN_RESPONSE,
                insertRequest, CREATE_BUCKETACL_RESPONSE).getBucketAccessControlsApi();
 
-      BucketAccessControlsTemplate template = new BucketAccessControlsTemplate().entity("allAuthenticatedUsers").role(
-               Role.WRITER);
+      BucketAccessControlsTemplate template = BucketAccessControlsTemplate.create("allAuthenticatedUsers", Role.WRITER);
 
       assertEquals(api.createBucketAccessControls(EXPECTED_TEST_BUCKET, template), new BucketAclInsertTest().expected());
-
    }
 
    // Test deleteBucketAccessControls
@@ -160,7 +158,7 @@ public class BucketAccessControlsApiExpectTest extends BaseGoogleCloudStorageApi
       BucketAccessControlsApi api = requestsSendResponses(requestForScopes(STORAGE_FULLCONTROL_SCOPE), TOKEN_RESPONSE,
                update, updateResponse).getBucketAccessControlsApi();
 
-      BucketAccessControlsTemplate template = new BucketAccessControlsTemplate().entity("allUsers").role(Role.OWNER);
+      BucketAccessControlsTemplate template = BucketAccessControlsTemplate.create("allUsers", Role.OWNER);
 
       assertEquals(api.updateBucketAccessControls(EXPECTED_TEST_BUCKET, "allUsers", template),
                new BucketAclUpdateTest().expected());
@@ -183,7 +181,7 @@ public class BucketAccessControlsApiExpectTest extends BaseGoogleCloudStorageApi
       BucketAccessControlsApi api = requestsSendResponses(requestForScopes(STORAGE_FULLCONTROL_SCOPE), TOKEN_RESPONSE,
                patchRequest, patchResponse).getBucketAccessControlsApi();
 
-      BucketAccessControlsTemplate template = new BucketAccessControlsTemplate().entity("allUsers").role(Role.OWNER);
+      BucketAccessControlsTemplate template = BucketAccessControlsTemplate.create("allUsers", Role.OWNER);
 
       assertEquals(api.patchBucketAccessControls(EXPECTED_TEST_BUCKET, "allUsers", template),
                new BucketAclUpdateTest().expected());

@@ -16,13 +16,11 @@
  */
 package org.jclouds.googlecloudstorage.parse;
 
-import java.net.URI;
-
 import javax.ws.rs.Consumes;
 import javax.ws.rs.core.MediaType;
 
 import org.jclouds.googlecloudstorage.domain.BucketAccessControls;
-import org.jclouds.googlecloudstorage.domain.DomainResourceReferences.Role;
+import org.jclouds.googlecloudstorage.domain.BucketAccessControls.Role;
 import org.jclouds.googlecloudstorage.internal.BaseGoogleCloudStorageParseTest;
 
 public class BucketAclGetTest extends BaseGoogleCloudStorageParseTest<BucketAccessControls> {
@@ -36,8 +34,6 @@ public class BucketAclGetTest extends BaseGoogleCloudStorageParseTest<BucketAcce
    @Consumes(MediaType.APPLICATION_JSON)
    public BucketAccessControls expected() {
       return BucketAccessControls.builder().bucket("jcloudtestbucket").entity("allUsers").role(Role.READER)
-               .etag("CAM=")
-               .selfLink(URI.create("https://content.googleapis.com/storage/v1/b/jcloudtestbucket/acl/allUsers"))
                .id("jcloudtestbucket/allUsers").build();
    }
 }

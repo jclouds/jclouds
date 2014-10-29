@@ -16,8 +16,6 @@
  */
 package org.jclouds.googlecloudstorage.parse;
 
-import java.net.URI;
-
 import javax.ws.rs.Consumes;
 import javax.ws.rs.core.MediaType;
 
@@ -25,7 +23,7 @@ import org.jclouds.date.internal.SimpleDateFormatDateService;
 import org.jclouds.googlecloudstorage.domain.Bucket;
 import org.jclouds.googlecloudstorage.domain.DomainResourceReferences.Location;
 import org.jclouds.googlecloudstorage.domain.DomainResourceReferences.StorageClass;
-import org.jclouds.googlecloudstorage.domain.internal.Owner;
+import org.jclouds.googlecloudstorage.domain.Owner;
 import org.jclouds.googlecloudstorage.internal.BaseGoogleCloudStorageParseTest;
 
 public class NoAclBucketTest extends BaseGoogleCloudStorageParseTest<Bucket> {
@@ -38,12 +36,22 @@ public class NoAclBucketTest extends BaseGoogleCloudStorageParseTest<Bucket> {
    @Override
    @Consumes(MediaType.APPLICATION_JSON)
    public Bucket expected() {
-      return Bucket.builder().id("bhashbucket")
-               .selfLink(URI.create("https://content.googleapis.com/storage/v1/b/bhashbucket")).name("bhashbucket")
-               .projectNumber(Long.valueOf("1082289308625"))
-               .timeCreated(new SimpleDateFormatDateService().iso8601DateParse("2014-06-02T19:19:41.112z"))
-               .metageneration(Long.valueOf(87)).owner(Owner.builder().entity("project-owners-1082289308625").build())
-               .location(Location.US).storageClass(StorageClass.STANDARD).etag("CFc=").build();
+      return Bucket.create(
+            "bhashbucket", // id
+            "bhashbucket", // name
+            1082289308625l, // projectNumber
+            new SimpleDateFormatDateService().iso8601DateParse("2014-06-02T19:19:41.112z"), // timeCreated
+            87l, // metageneration
+            null, // acl
+            null, // defaultObjectAcl
+            Owner.create("project-owners-1082289308625", null), // owner
+            Location.US, // location
+            null, // website
+            null, // logging
+            null, // versioning
+            null, // cors
+            null, // lifeCycle
+            StorageClass.STANDARD // storageClass
+      );
    }
-
 }

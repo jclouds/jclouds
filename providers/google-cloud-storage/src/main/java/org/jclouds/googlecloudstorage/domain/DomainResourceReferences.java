@@ -23,10 +23,6 @@ public final class DomainResourceReferences {
    private DomainResourceReferences() {
    }
 
-   public enum Role {
-      READER, WRITER, OWNER
-   }
-
    public enum ObjectRole {
       READER, OWNER
    }

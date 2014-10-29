@@ -16,34 +16,30 @@
  */
 package org.jclouds.googlecloudstorage.parse;
 
-import java.net.URI;
+import java.util.List;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.core.MediaType;
 
 import org.jclouds.googlecloudstorage.domain.BucketAccessControls;
-import org.jclouds.googlecloudstorage.domain.DomainResourceReferences.Role;
-import org.jclouds.googlecloudstorage.domain.ListBucketAccessControls;
-import org.jclouds.googlecloudstorage.domain.Resource.Kind;
-import org.jclouds.googlecloudstorage.domain.internal.ProjectTeam;
-import org.jclouds.googlecloudstorage.domain.internal.ProjectTeam.Team;
+import org.jclouds.googlecloudstorage.domain.BucketAccessControls.Role;
+import org.jclouds.googlecloudstorage.domain.ProjectTeam;
+import org.jclouds.googlecloudstorage.domain.ProjectTeam.Team;
 import org.jclouds.googlecloudstorage.internal.BaseGoogleCloudStorageParseTest;
+import org.jclouds.rest.annotations.SelectJson;
 
-import com.google.common.collect.ImmutableSet;
+import com.google.common.collect.ImmutableList;
 
-public class BucketAclListTest extends BaseGoogleCloudStorageParseTest<ListBucketAccessControls> {
+public class BucketAclListTest extends BaseGoogleCloudStorageParseTest<List<BucketAccessControls>> {
 
    private BucketAccessControls item_1 = BucketAccessControls.builder().id("jcloudtestbucket/allUsers")
-            .selfLink(URI.create("https://content.googleapis.com/storage/v1/b/jcloudtestbucket/acl/allUsers"))
-            .bucket("jcloudtestbucket").entity("allUsers").role(Role.READER).etag("CAc=").build();
+            .bucket("jcloudtestbucket").entity("allUsers").role(Role.READER).build();
 
    private BucketAccessControls item_2 = BucketAccessControls
             .builder()
             .id("jcloudtestbucket/project-owners-1082289308625")
-            .selfLink(
-                     URI.create("https://content.googleapis.com/storage/v1/b/jcloudtestbucket/acl/project-owners-1082289308625"))
-            .projectTeam(ProjectTeam.builder().projectNumber("1082289308625").team(Team.OWNERS).build())
-            .bucket("jcloudtestbucket").entity("project-owners-1082289308625").role(Role.OWNER).etag("CAc=").build();
+            .projectTeam(ProjectTeam.create("1082289308625", Team.OWNERS))
+            .bucket("jcloudtestbucket").entity("project-owners-1082289308625").role(Role.OWNER).build();
 
    @Override
    public String resource() {
@@ -52,8 +48,8 @@ public class BucketAclListTest extends BaseGoogleCloudStorageParseTest<ListBucke
 
    @Override
    @Consumes(MediaType.APPLICATION_JSON)
-   public ListBucketAccessControls expected() {
-      return ListBucketAccessControls.builder().kind(Kind.BUCKET_ACCESS_CONTROLS)
-               .items(ImmutableSet.of(item_1, item_2)).build();
+   @SelectJson("items")
+   public List<BucketAccessControls> expected() {
+      return ImmutableList.of(item_1, item_2);
    }
 }

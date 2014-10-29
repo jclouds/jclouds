@@ -16,56 +16,45 @@
  */
 package org.jclouds.googlecloudstorage.blobstore.functions;
 
-import java.util.Map;
-
 import javax.inject.Inject;
-import javax.inject.Singleton;
 
 import org.jclouds.blobstore.domain.MutableBlobMetadata;
 import org.jclouds.blobstore.domain.StorageType;
 import org.jclouds.blobstore.domain.internal.MutableBlobMetadataImpl;
 import org.jclouds.blobstore.strategy.IfDirectoryReturnNameStrategy;
 import org.jclouds.googlecloudstorage.domain.GCSObject;
-import com.google.common.base.Function;
-import com.google.common.collect.ImmutableMap;
+import org.jclouds.javax.annotation.Nullable;
 
-@Singleton
+import com.google.common.base.Function;
+import com.google.common.hash.HashCode;
+import com.google.common.io.BaseEncoding;
+
 public class ObjectToBlobMetadata implements Function<GCSObject, MutableBlobMetadata> {
    private final IfDirectoryReturnNameStrategy ifDirectoryReturnName;
 
-   @Inject
-   public ObjectToBlobMetadata(IfDirectoryReturnNameStrategy ifDirectoryReturnName) {
+   @Inject public ObjectToBlobMetadata(IfDirectoryReturnNameStrategy ifDirectoryReturnName) {
       this.ifDirectoryReturnName = ifDirectoryReturnName;
    }
 
    public MutableBlobMetadata apply(GCSObject from) {
-      if (from == null)
+      if (from == null) {
          return null;
+      }
       MutableBlobMetadata to = new MutableBlobMetadataImpl();
-
-      if (from.getMd5HashCode() != null)
-         to.getContentMetadata().setContentMD5(from.getMd5HashCode());
-      if (from.getContentType() != null)
-         to.getContentMetadata().setContentType(from.getContentType());
-      if (from.getContentDisposition() != null)
-         to.getContentMetadata().setContentDisposition(from.getContentDisposition());
-      if (from.getContentEncoding() != null)
-         to.getContentMetadata().setContentEncoding(from.getContentEncoding());
-      if (from.getContentLanguage() != null)
-         to.getContentMetadata().setContentLanguage(from.getContentLanguage());
-      if (from.getSize() != null)
-         to.getContentMetadata().setContentLength(from.getSize());
-      if (from.getUpdated() != null)
-         to.setLastModified(from.getUpdated());
-      to.setContainer(from.getBucket());
-      Map<String, String> userMeta = from.getAllMetadata() == null ? ImmutableMap.<String, String> of() : from
-               .getAllMetadata();
-      to.setUserMetadata(userMeta);
-      to.setETag(from.getEtag());
-      to.setName(from.getName());
-      to.setUri(from.getSelfLink());
-      to.setId(from.getId());
-      to.setPublicUri(from.getMediaLink());
+      to.getContentMetadata().setContentMD5(toHashCode(from.md5Hash()));
+      to.getContentMetadata().setContentType(from.contentType());
+      to.getContentMetadata().setContentDisposition(from.contentDisposition());
+      to.getContentMetadata().setContentEncoding(from.contentEncoding());
+      to.getContentMetadata().setContentLanguage(from.contentLanguage());
+      to.getContentMetadata().setContentLength(from.size());
+      to.setLastModified(from.updated());
+      to.setContainer(from.bucket());
+      to.setUserMetadata(from.metadata());
+      to.setETag(from.etag());
+      to.setName(from.name());
+      to.setUri(from.selfLink());
+      to.setId(from.id());
+      to.setPublicUri(from.mediaLink());
 
       String directoryName = ifDirectoryReturnName.execute(to);
       if (directoryName != null) {
@@ -75,5 +64,9 @@ public class ObjectToBlobMetadata implements Function<GCSObject, MutableBlobMeta
          to.setType(StorageType.BLOB);
       }
       return to;
+   }
+
+   private static HashCode toHashCode(@Nullable String hashCode) {
+      return hashCode == null ? null : HashCode.fromBytes(BaseEncoding.base64().decode(hashCode));
    }
 }

@@ -16,6 +16,8 @@
  */
 package org.jclouds.googlecloudstorage.parser;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 import java.util.regex.Pattern;
 
 import org.jclouds.googlecloudstorage.domain.ResumableUpload;
@@ -41,16 +43,19 @@ public class ParseToResumableUpload implements Function<HttpResponse, ResumableU
       if (range != null) {
          upperLimit = getUpperLimitFromRange(range);
          lowerLimit = getLowerLimitFromRange(range);
+         if (lowerLimit != null && upperLimit != null) {
+            checkArgument(lowerLimit < upperLimit, "lower range must less than upper range, was: %s - %s", lowerLimit,
+                  upperLimit);
+         }
       }
 
-      return ResumableUpload.builder().statusCode(response.getStatusCode()).contentLength(contentLength)
-               .uploadId(uploadId).rangeUpperValue(upperLimit).rangeLowerValue(lowerLimit).build();
+      return ResumableUpload.create(response.getStatusCode(), contentLength, uploadId, upperLimit, lowerLimit);
    }
 
    // Return the Id of the Upload
    private String getUploadId(String sessionUri) {
       return Splitter.on(Pattern.compile("\\&")).trimResults().omitEmptyStrings().withKeyValueSeparator("=")
-               .split(sessionUri).get("upload_id");
+            .split(sessionUri).get("upload_id");
    }
 
    private long getUpperLimitFromRange(String range) {

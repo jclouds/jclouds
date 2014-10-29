@@ -14,20 +14,42 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.jclouds.googlecloudstorage.domain.templates;
+package org.jclouds.googlecloudstorage.domain;
 
-import org.jclouds.googlecloudstorage.domain.BucketAccessControls.Role;
+import org.jclouds.json.SerializedNames;
 
 import com.google.auto.value.AutoValue;
 
+/**
+ * The bucket's logging configuration, which defines the destination bucket and optional name prefix for the current
+ * bucket's logs.
+ */
 @AutoValue
-public abstract class BucketAccessControlsTemplate {
+public abstract class ProjectTeam {
 
-   public abstract String entity();
+   public enum Team {
+      OWNERS, EDITORS, VIEWERS;
 
-   public abstract Role role();
+      public String value() {
+         return name().toLowerCase();
+      }
 
-   public static BucketAccessControlsTemplate create(String entity, Role role) {
-      return new AutoValue_BucketAccessControlsTemplate(entity, role);
+      @Override
+      public String toString() {
+         return value();
+      }
+
+      public static Team fromValue(String team) {
+         return valueOf(team.toUpperCase());
+      }
+   }
+
+   public abstract String projectNumber();
+
+   public abstract Team team();
+
+   @SerializedNames({ "projectNumber", "team" })
+   public static ProjectTeam create(String projectNumber, Team team) {
+      return new AutoValue_ProjectTeam(projectNumber, team);
    }
 }

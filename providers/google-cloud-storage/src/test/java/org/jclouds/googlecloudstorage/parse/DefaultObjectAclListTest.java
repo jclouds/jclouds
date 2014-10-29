@@ -16,22 +16,24 @@
  */
 package org.jclouds.googlecloudstorage.parse;
 
+import java.util.Arrays;
+import java.util.List;
+
 import javax.ws.rs.Consumes;
 import javax.ws.rs.core.MediaType;
 
 import org.jclouds.googlecloudstorage.domain.DomainResourceReferences.ObjectRole;
-import org.jclouds.googlecloudstorage.domain.DefaultObjectAccessControls;
-import org.jclouds.googlecloudstorage.domain.ListDefaultObjectAccessControls;
-import org.jclouds.googlecloudstorage.domain.Resource.Kind;
-import org.jclouds.googlecloudstorage.domain.internal.ProjectTeam;
-import org.jclouds.googlecloudstorage.domain.internal.ProjectTeam.Team;
+import org.jclouds.googlecloudstorage.domain.ObjectAccessControls;
+import org.jclouds.googlecloudstorage.domain.ProjectTeam;
+import org.jclouds.googlecloudstorage.domain.ProjectTeam.Team;
 import org.jclouds.googlecloudstorage.internal.BaseGoogleCloudStorageParseTest;
+import org.jclouds.rest.annotations.SelectJson;
 
-public class DefaultObjectAclListTest extends BaseGoogleCloudStorageParseTest<ListDefaultObjectAccessControls> {
+public class DefaultObjectAclListTest extends BaseGoogleCloudStorageParseTest<List<ObjectAccessControls>> {
 
-   private DefaultObjectAccessControls item_1 = DefaultObjectAccessControls.builder()
+   private ObjectAccessControls item_1 = ObjectAccessControls.builder()
             .entity("project-owners-1082289308625").role(ObjectRole.OWNER)
-            .projectTeam(ProjectTeam.builder().projectNumber("1082289308625").team(Team.OWNERS).build()).etag("CAk=")
+            .projectTeam(ProjectTeam.create("1082289308625", Team.OWNERS))
             .build();
 
    @Override
@@ -41,7 +43,8 @@ public class DefaultObjectAclListTest extends BaseGoogleCloudStorageParseTest<Li
 
    @Override
    @Consumes(MediaType.APPLICATION_JSON)
-   public ListDefaultObjectAccessControls expected() {
-      return ListDefaultObjectAccessControls.builder().kind(Kind.OBJECT_ACCESS_CONTROLS).addItems(item_1).build();
+   @SelectJson("items")
+   public List<ObjectAccessControls> expected() {
+      return Arrays.asList(item_1);
    }
 }

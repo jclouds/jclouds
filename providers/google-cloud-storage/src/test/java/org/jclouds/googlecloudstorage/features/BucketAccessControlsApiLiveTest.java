@@ -19,13 +19,12 @@ package org.jclouds.googlecloudstorage.features;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
 
+import java.util.List;
 import java.util.UUID;
 
 import org.jclouds.googlecloudstorage.domain.Bucket;
 import org.jclouds.googlecloudstorage.domain.BucketAccessControls;
-import org.jclouds.googlecloudstorage.domain.DomainResourceReferences.Role;
-import org.jclouds.googlecloudstorage.domain.ListBucketAccessControls;
-import org.jclouds.googlecloudstorage.domain.Resource.Kind;
+import org.jclouds.googlecloudstorage.domain.BucketAccessControls.Role;
 import org.jclouds.googlecloudstorage.domain.templates.BucketAccessControlsTemplate;
 import org.jclouds.googlecloudstorage.domain.templates.BucketTemplate;
 import org.jclouds.googlecloudstorage.internal.BaseGoogleCloudStorageApiLiveTest;
@@ -48,21 +47,21 @@ public class BucketAccessControlsApiLiveTest extends BaseGoogleCloudStorageApiLi
    @Test(groups = "live")
    public void testCreateBucketAcl() {
       createBucket(BUCKET_NAME);
-      BucketAccessControlsTemplate bucketAcl = new BucketAccessControlsTemplate().entity("allUsers").role(Role.READER);
+      BucketAccessControlsTemplate bucketAcl = BucketAccessControlsTemplate.create("allUsers", Role.READER);
       BucketAccessControls response = api().createBucketAccessControls(BUCKET_NAME, bucketAcl);
 
       assertNotNull(response);
-      assertEquals(response.getId(), BUCKET_NAME + "/allUsers");
+      assertEquals(response.id(), BUCKET_NAME + "/allUsers");
    }
 
    @Test(groups = "live", dependsOnMethods = "testCreateBucketAcl")
    public void testUpdateBucketAcl() {
-      BucketAccessControlsTemplate template = new BucketAccessControlsTemplate().entity("allUsers").role(Role.WRITER);
+      BucketAccessControlsTemplate template = BucketAccessControlsTemplate.create("allUsers", Role.WRITER);
       BucketAccessControls response = api().updateBucketAccessControls(BUCKET_NAME, "allUsers", template);
 
       assertNotNull(response);
-      assertEquals(response.getId(), BUCKET_NAME + "/allUsers");
-      assertEquals(response.getRole(), Role.WRITER);
+      assertEquals(response.id(), BUCKET_NAME + "/allUsers");
+      assertEquals(response.role(), Role.WRITER);
    }
 
    @Test(groups = "live", dependsOnMethods = "testUpdateBucketAcl")
@@ -70,27 +69,25 @@ public class BucketAccessControlsApiLiveTest extends BaseGoogleCloudStorageApiLi
       BucketAccessControls response = api().getBucketAccessControls(BUCKET_NAME, "allUsers");
 
       assertNotNull(response);
-      assertEquals(response.getId(), BUCKET_NAME + "/allUsers");
-      assertEquals(response.getRole(), Role.WRITER);
+      assertEquals(response.id(), BUCKET_NAME + "/allUsers");
+      assertEquals(response.role(), Role.WRITER);
    }
 
    @Test(groups = "live", dependsOnMethods = "testUpdateBucketAcl")
    public void testListBucketAcl() {
-      ListBucketAccessControls response = api().listBucketAccessControls(BUCKET_NAME);
+      List<BucketAccessControls> response = api().listBucketAccessControls(BUCKET_NAME);
 
       assertNotNull(response);
-      assertEquals(response.getKind(), Kind.BUCKET_ACCESS_CONTROLS);
-      assertNotNull(response.getItems());
    }
 
    @Test(groups = "live", dependsOnMethods = "testUpdateBucketAcl")
    public void testPatchBucketAcl() {
-      BucketAccessControlsTemplate template = new BucketAccessControlsTemplate().entity("allUsers").role(Role.READER);
+      BucketAccessControlsTemplate template = BucketAccessControlsTemplate.create("allUsers", Role.READER);
       BucketAccessControls response = api().patchBucketAccessControls(BUCKET_NAME, "allUsers", template);
 
       assertNotNull(response);
-      assertEquals(response.getId(), BUCKET_NAME + "/allUsers");
-      assertEquals(response.getRole(), Role.READER);
+      assertEquals(response.id(), BUCKET_NAME + "/allUsers");
+      assertEquals(response.role(), Role.READER);
    }
 
    @Test(groups = "live", dependsOnMethods = "testPatchBucketAcl")
