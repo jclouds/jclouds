@@ -23,7 +23,6 @@ import static org.testng.Assert.assertNull;
 import static org.testng.Assert.assertTrue;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.net.URISyntaxException;
 
 import org.jclouds.docker.compute.BaseDockerApiLiveTest;
@@ -55,8 +54,7 @@ public class RemoteApiLiveTest extends BaseDockerApiLiveTest {
    @Test(dependsOnMethods = "testVersion")
    public void testCreateImage() throws IOException, InterruptedException {
       CreateImageOptions options = CreateImageOptions.Builder.fromImage(BUSYBOX_IMAGE);
-      InputStream createImageStream = api().createImage(options);
-      consumeStream(createImageStream, false);
+      consumeStream(api().createImage(options));
       image = api().inspectImage(BUSYBOX_IMAGE);
       assertNotNull(image);
    }
@@ -96,15 +94,13 @@ public class RemoteApiLiveTest extends BaseDockerApiLiveTest {
 
    @Test(dependsOnMethods = "testRemoveContainer", expectedExceptions = ResourceNotFoundException.class)
    public void testDeleteImage() {
-      InputStream deleteImageStream = api().deleteImage(image.id());
-      consumeStream(deleteImageStream, false);
+      consumeStream(api().deleteImage(image.id()));
       assertNull(api().inspectImage(image.id()));
    }
 
    public void testBuildImage() throws IOException, InterruptedException, URISyntaxException {
       BuildOptions options = BuildOptions.Builder.tag("testBuildImage").verbose(false).nocache(false);
-      InputStream buildImageStream = api().build(tarredDockerfile(), options);
-      String buildStream = consumeStream(buildImageStream, false);
+      String buildStream = consumeStream(api().build(tarredDockerfile(), options));
       Iterable<String> splitted = Splitter.on("\n").split(buildStream.replace("\r", "").trim());
       String lastStreamedLine = Iterables.getLast(splitted).trim();
       String rawImageId = Iterables.getLast(Splitter.on("Successfully built ").split(lastStreamedLine));

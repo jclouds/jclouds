@@ -16,6 +16,9 @@
  */
 package org.jclouds.docker.compute;
 
+import static com.google.common.base.Charsets.UTF_8;
+import static org.jclouds.util.Closeables2.closeQuietly;
+
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -32,10 +35,8 @@ import org.jclouds.docker.DockerApi;
 import org.jclouds.io.Payload;
 import org.jclouds.io.Payloads;
 import org.jclouds.sshj.config.SshjSshClientModule;
-import org.testng.Assert;
 import org.testng.annotations.Test;
 
-import com.google.common.base.Charsets;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.io.CharStreams;
 import com.google.inject.Module;
@@ -60,23 +61,14 @@ public class BaseDockerApiLiveTest extends BaseApiLiveTest<DockerApi> {
       return overrides;
    }
 
-   protected String consumeStream(InputStream stream, boolean swallowIOException) {
-      String result = null;
+   protected String consumeStream(InputStream stream) {
       try {
-         result = CharStreams.toString(new InputStreamReader(stream, Charsets.UTF_8));
+         return CharStreams.toString(new InputStreamReader(stream, UTF_8));
       } catch (IOException e) {
-         Assert.fail();
+         throw new AssertionError(e);
       } finally {
-         // TODO: remove swallowIOException over-optimization and just use Closeables2.closeQuietly
-         try {
-            stream.close();
-         } catch (IOException e) {
-            if (!swallowIOException) {
-               throw new RuntimeException(e);
-            }
-         }
+         closeQuietly(stream);
       }
-      return result;
    }
 
    public static Payload tarredDockerfile() throws IOException {
