@@ -20,24 +20,35 @@ import static com.google.common.io.BaseEncoding.base16;
 import static com.google.common.primitives.Bytes.asList;
 import static org.testng.Assert.assertEquals;
 
+import java.io.IOException;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
+import java.util.Set;
 
 import org.jclouds.javax.annotation.Nullable;
 import org.jclouds.json.config.GsonModule;
 import org.jclouds.json.config.GsonModule.DefaultExclusionStrategy;
 import org.testng.annotations.Test;
 
-import com.google.common.base.Objects;
+import com.google.auto.value.AutoValue;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.ImmutableSet;
 import com.google.gson.FieldAttributes;
 import com.google.gson.FieldNamingPolicy;
 import com.google.gson.FieldNamingStrategy;
+import com.google.gson.Gson;
+import com.google.gson.TypeAdapter;
+import com.google.gson.TypeAdapterFactory;
+import com.google.gson.reflect.TypeToken;
+import com.google.gson.stream.JsonReader;
+import com.google.gson.stream.JsonWriter;
 import com.google.inject.AbstractModule;
 import com.google.inject.Guice;
+import com.google.inject.Provides;
 import com.google.inject.TypeLiteral;
 
 @Test
@@ -214,7 +225,8 @@ public class JsonTest {
                EnumInsideWithParser.Test.UNRECOGNIZED);
    }
 
-   private abstract static class UpperCamelCasedType {
+   @AutoValue
+   abstract static class UpperCamelCasedType {
       abstract String id();
 
       @Nullable abstract Map<String, String> volumes();
@@ -222,7 +234,7 @@ public class JsonTest {
       // Currently, this only works for deserialization. Need to set a naming policy for serialization!
       @SerializedNames({ "Id", "Volumes" })
       private static UpperCamelCasedType create(String id, Map<String, String> volumes) {
-         return new UpperCamelCasedTypeImpl(id, volumes);
+         return new AutoValue_JsonTest_UpperCamelCasedType(id, volumes);
       }
    }
 
@@ -251,36 +263,75 @@ public class JsonTest {
             UpperCamelCasedType.create("1234", null));
    }
 
-   private static class UpperCamelCasedTypeImpl extends UpperCamelCasedType {
-      private final String id;
-      private final Map<String, String> volumes;
+   @AutoValue
+   abstract static class NestedCamelCasedType {
+      abstract UpperCamelCasedType item();
 
-      private UpperCamelCasedTypeImpl(String id, Map<String, String> volumes) {
-         this.id = id;
-         this.volumes = volumes;
+      abstract List<UpperCamelCasedType> items();
+
+      // Currently, this only works for deserialization. Need to set a naming policy for serialization!
+      @SerializedNames({ "Item", "Items" })
+      private static NestedCamelCasedType create(UpperCamelCasedType item, List<UpperCamelCasedType> items) {
+         return new AutoValue_JsonTest_NestedCamelCasedType(item, items);
       }
+   }
 
-      @Override String id() {
-         return id;
-      }
+   private final NestedCamelCasedType nested = NestedCamelCasedType
+         .create(UpperCamelCasedType.create("1234", Collections.<String, String>emptyMap()),
+               Arrays.asList(UpperCamelCasedType.create("5678", ImmutableMap.of("Foo", "Bar"))));
 
-      @Override @Nullable Map<String, String> volumes() {
-         return volumes;
-      }
-
-      @Override public boolean equals(Object o) {
-         if (o == this) {
-            return true;
+   public void nestedCamelCasedType() {
+      Json json = Guice.createInjector(new GsonModule(), new AbstractModule() {
+         @Override protected void configure() {
+            bind(FieldNamingStrategy.class).toInstance(FieldNamingPolicy.UPPER_CAMEL_CASE);
          }
-         if (o instanceof UpperCamelCasedType) {
-            UpperCamelCasedType that = (UpperCamelCasedType) o;
-            return Objects.equal(this.id, that.id()) && Objects.equal(this.volumes, that.volumes());
+      }).getInstance(Json.class);
+
+      String spinalJson = "{\"Item\":{\"Id\":\"1234\",\"Volumes\":{}},\"Items\":[{\"Id\":\"5678\",\"Volumes\":{\"Foo\":\"Bar\"}}]}";
+
+      assertEquals(json.toJson(nested), spinalJson);
+      assertEquals(json.fromJson(spinalJson, NestedCamelCasedType.class), nested);
+   }
+
+   public void nestedCamelCasedTypeOverriddenTypeAdapterFactory() {
+      Json json = Guice.createInjector(new GsonModule(), new AbstractModule() {
+         @Override protected void configure() {
          }
-         return false;
+
+         @Provides public Set<TypeAdapterFactory> typeAdapterFactories() {
+            return ImmutableSet.<TypeAdapterFactory>of(new NestedCamelCasedTypeAdapterFactory());
+         }
+      }).getInstance(Json.class);
+
+      assertEquals(json.toJson(nested), "{\"id\":\"1234\",\"count\":1}");
+      assertEquals(json.fromJson("{\"id\":\"1234\",\"count\":1}", NestedCamelCasedType.class), nested);
+   }
+
+   private class NestedCamelCasedTypeAdapterFactory extends TypeAdapter<NestedCamelCasedType>
+         implements TypeAdapterFactory {
+
+      @Override public <T> TypeAdapter<T> create(Gson gson, TypeToken<T> typeToken) {
+         if (!(NestedCamelCasedType.class.isAssignableFrom(typeToken.getRawType()))) {
+            return null;
+         }
+         return (TypeAdapter<T>) this;
       }
 
-      @Override public int hashCode() {
-         return Objects.hashCode(id, volumes);
+      @Override public void write(JsonWriter out, NestedCamelCasedType value) throws IOException {
+         out.beginObject();
+         out.name("id").value(value.item().id());
+         out.name("count").value(value.items().size());
+         out.endObject();
+      }
+
+      @Override public NestedCamelCasedType read(JsonReader in) throws IOException {
+         in.beginObject();
+         in.nextName();
+         in.nextString();
+         in.nextName();
+         in.nextInt();
+         in.endObject();
+         return nested;
       }
    }
 }

@@ -196,6 +196,7 @@
     <surefire.version>2.17</surefire.version>
     <assertj-core.version>1.6.1</assertj-core.version>
     <assertj-guava.version>1.2.0</assertj-guava.version>
+    <auto-value.version>1.0-rc2</auto-value.version>
     <http.proxyHost />
     <http.proxyPort />
     <jclouds.wire.httpstream.url>http://archive.apache.org/dist/commons/logging/binaries/commons-logging-1.1.1-bin.tar.gz</jclouds.wire.httpstream.url>
@@ -289,6 +290,11 @@
         <groupId>org.assertj</groupId>
         <artifactId>assertj-guava</artifactId>
         <version>${assertj-guava.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.google.auto.value</groupId>
+        <artifactId>auto-value</artifactId>
+        <version>${auto-value.version}</version>
       </dependency>
     </dependencies>
   </dependencyManagement>

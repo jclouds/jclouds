@@ -108,6 +108,11 @@
       <version>4.2.0</version>
       <scope>provided</scope>
     </dependency>
+    <dependency>
+      <groupId>com.google.auto.value</groupId>
+      <artifactId>auto-value</artifactId>
+      <scope>test</scope>
+    </dependency>
   </dependencies>
 
   <build>
