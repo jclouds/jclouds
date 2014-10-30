@@ -30,7 +30,7 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
-import org.jclouds.Fallbacks.NullOnNotFoundOr404;
+import org.jclouds.googlecomputeengine.GoogleComputeEngineFallbacks.NullOn400or404;
 import org.jclouds.googlecomputeengine.binders.MetadataBinder;
 import org.jclouds.googlecomputeengine.domain.Operation;
 import org.jclouds.googlecomputeengine.domain.Project;
@@ -59,7 +59,7 @@ public interface ProjectApi {
    @GET
    @OAuthScopes(COMPUTE_READONLY_SCOPE)
    @Consumes(MediaType.APPLICATION_JSON)
-   @Fallback(NullOnNotFoundOr404.class)
+   @Fallback(NullOn400or404.class)
    @Path("/projects/{project}")
    Project get(@PathParam("project") String projectName);
 

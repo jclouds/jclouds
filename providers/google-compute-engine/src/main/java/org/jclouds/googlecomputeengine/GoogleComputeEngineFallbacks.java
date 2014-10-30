@@ -16,14 +16,27 @@
  */
 package org.jclouds.googlecomputeengine;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+import static com.google.common.base.Predicates.in;
+import static com.google.common.base.Throwables.propagate;
+import static com.google.common.primitives.Ints.asList;
 import static org.jclouds.Fallbacks.valOnNotFoundOr404;
+import static org.jclouds.http.HttpUtils.returnValueOnCodeOrNull;
 
 import org.jclouds.Fallback;
 import org.jclouds.googlecomputeengine.domain.ListPage;
 
 public final class GoogleComputeEngineFallbacks {
+   public static class NullOn400or404 implements Fallback<Object> {
+      @Override public Object createOrPropagate(Throwable t) throws Exception {
+         Boolean returnVal = returnValueOnCodeOrNull(checkNotNull(t, "throwable"), false, in(asList(400, 404)));
+         if (returnVal != null)
+            return null;
+         throw propagate(t);
+      }
+   }
    public static final class EmptyListPageOnNotFoundOr404 implements Fallback<Object> {
-      public ListPage<Object> createOrPropagate(Throwable t) throws Exception {
+      @Override public ListPage<Object> createOrPropagate(Throwable t) throws Exception {
          return valOnNotFoundOr404(ListPage.create(null, null, null), t);
       }
    }
