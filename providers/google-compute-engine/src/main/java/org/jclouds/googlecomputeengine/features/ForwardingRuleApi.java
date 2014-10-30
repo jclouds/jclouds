@@ -16,6 +16,8 @@
  */
 package org.jclouds.googlecomputeengine.features;
 
+import java.net.URI;
+
 import org.jclouds.Fallbacks.EmptyPagedIterableOnNotFoundOr404;
 import org.jclouds.Fallbacks.NullOnNotFoundOr404;
 import org.jclouds.collect.IterableWithMarker;
@@ -47,7 +49,6 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
-
 
 import static org.jclouds.googlecomputeengine.GoogleComputeEngineConstants.COMPUTE_READONLY_SCOPE;
 import static org.jclouds.googlecomputeengine.GoogleComputeEngineConstants.COMPUTE_SCOPE;
@@ -148,5 +149,5 @@ public interface ForwardingRuleApi {
    @MapBinder(BindToJsonPayload.class)
    @Nullable
    Operation setTarget(@PathParam("forwardingRule") String forwardingRule,
-                       @PayloadParam("target") String target);
+                       @PayloadParam("target") URI target);
 }

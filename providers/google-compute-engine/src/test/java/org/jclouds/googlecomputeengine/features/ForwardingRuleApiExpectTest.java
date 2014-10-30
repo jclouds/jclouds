@@ -187,7 +187,8 @@ public class ForwardingRuleApiExpectTest extends BaseGoogleComputeEngineApiExpec
       ForwardingRuleApi api = requestsSendResponses(requestForScopes(COMPUTE_SCOPE),
             TOKEN_RESPONSE, setTarget, setTargetResponse).getForwardingRuleApi("myproject", "us-central1");
 
-      String newTarget = "https://www.googleapis.com/compute/v1/projects/myproject/regions/europe-west1/targetPools/test-target-pool";
+      URI newTarget = URI.create("https://www.googleapis.com/compute/v1/projects/"
+                               + "myproject/regions/europe-west1/targetPools/test-target-pool");
       assertEquals(api.setTarget(ruleName, newTarget), new ParseRegionOperationTest().expected());
    }
 

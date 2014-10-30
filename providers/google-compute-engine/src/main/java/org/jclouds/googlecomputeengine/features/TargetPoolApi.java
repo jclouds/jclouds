@@ -83,7 +83,7 @@ public interface TargetPoolApi {
     * Creates a TargetPool resource in the specified project and region using the data included in the request.
     *
     * @param targetPoolName the name of the targetPool.
-    * @param the options of the TargetPool to create. 
+    * @param the options of the TargetPool to create.
     * @return an Operation resource. To check on the status of an operation, poll the Operations resource returned to
     *         you, and look for the status field.
     */
@@ -204,13 +204,17 @@ public interface TargetPoolApi {
    @MapBinder(TargetPoolChangeHealthChecksBinder.class)
    @Nullable
    Operation removeHealthCheck(@PathParam("targetPool") String targetPool, @PayloadParam("healthChecks") Set<URI> healthChecks);
-   
+
 
    /**
     * Changes backup pool configurations.
     *
     * @param targetPool the name of the target pool.
     * @param target the URL of target pool for which you want to use as backup.
+    * WARNING: failoverRatio and BackupPool must either both be set or not set. This method
+    *          is only for updating the backup pool on a Target Pool that already has a
+    *          failoverRatio.
+    *          @see <a href = "https://cloud.google.com/compute/docs/reference/latest/targetPools/setBackup"/>
     *
     * @return an Operation resource. To check on the status of an operation, poll the Operations resource returned to
     *         you, and look for the status field.
@@ -222,7 +226,7 @@ public interface TargetPoolApi {
    @MapBinder(BindToJsonPayload.class)
    @Nullable
    Operation setBackup(@PathParam("targetPool") String targetPool, @PayloadParam("target") URI target);
-   
+
    /**
     * Changes backup pool configurations.
     *
