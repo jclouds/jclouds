@@ -27,7 +27,6 @@ import javax.inject.Singleton;
 
 import org.jclouds.collect.TransformingMap;
 import org.jclouds.domain.Credentials;
-import org.jclouds.domain.LoginCredentials;
 import org.jclouds.json.Json;
 import org.jclouds.logging.Logger;
 import org.jclouds.rest.ConfiguresCredentialStore;
@@ -69,62 +68,33 @@ public class CredentialStoreModule extends AbstractModule {
       }
    }
 
-   @Singleton
    public static class CredentialsToJsonByteSource implements Function<Credentials, ByteSource> {
       private final Json json;
 
-      @Inject
-      CredentialsToJsonByteSource(Json json) {
+      @Inject CredentialsToJsonByteSource(Json json) {
          this.json = json;
       }
 
-      @Override
-      public ByteSource apply(Credentials from) {
+      @Override public ByteSource apply(Credentials from) {
          checkNotNull(from, "inputCredentials");
-         if (from instanceof LoginCredentials) {
-            LoginCredentials login = LoginCredentials.class.cast(from);
-            JsonLoginCredentials val = new JsonLoginCredentials();
-            val.user = login.getUser();
-            val.password = login.getOptionalPassword().orNull();
-            val.privateKey = login.getOptionalPrivateKey().orNull();
-            if (login.shouldAuthenticateSudo())
-               val.authenticateSudo = login.shouldAuthenticateSudo();
-            return ByteSource.wrap(json.toJson(val).getBytes(Charsets.UTF_8));
-         }
          return ByteSource.wrap(json.toJson(from).getBytes(Charsets.UTF_8));
       }
    }
 
-   static class JsonLoginCredentials {
-      private String user;
-      private String password;
-      private String privateKey;
-      private Boolean authenticateSudo;
-   }
-
-   @Singleton
    public static class CredentialsFromJsonByteSource implements Function<ByteSource, Credentials> {
       @Resource
       protected Logger logger = Logger.NULL;
 
       private final Json json;
 
-      @Inject
-      CredentialsFromJsonByteSource(Json json) {
+      @Inject CredentialsFromJsonByteSource(Json json) {
          this.json = json;
       }
 
-      @Override
-      public Credentials apply(ByteSource from) {
+      @Override public Credentials apply(ByteSource from) {
          try {
             String creds = (checkNotNull(from)).asCharSource(Charsets.UTF_8).read();
-            if (creds.indexOf("\"user\":") == -1) {
-               return json.fromJson(creds, Credentials.class);
-            } else {
-               JsonLoginCredentials val = json.fromJson(creds, JsonLoginCredentials.class);
-               return LoginCredentials.builder().user(val.user).password(val.password).privateKey(val.privateKey)
-                     .authenticateSudo(Boolean.TRUE.equals(val.authenticateSudo)).build();
-            }
+            return json.fromJson(creds, Credentials.class);
          } catch (Exception e) {
             logger.warn(e, "ignoring problem retrieving credentials");
             return null;
