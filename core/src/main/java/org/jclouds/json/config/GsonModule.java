@@ -32,7 +32,9 @@ import javax.inject.Provider;
 import javax.inject.Singleton;
 
 import org.jclouds.date.DateService;
+import org.jclouds.domain.Credentials;
 import org.jclouds.domain.JsonBall;
+import org.jclouds.domain.LoginCredentials;
 import org.jclouds.json.Json;
 import org.jclouds.json.SerializedNames;
 import org.jclouds.json.internal.DeserializationConstructorAndReflectiveTypeAdapterFactory;
@@ -94,8 +96,9 @@ public class GsonModule extends AbstractModule {
    @Singleton
    Gson provideGson(TypeAdapter<JsonBall> jsonAdapter, DateAdapter adapter, ByteListAdapter byteListAdapter,
          ByteArrayAdapter byteArrayAdapter, PropertiesAdapter propertiesAdapter, JsonAdapterBindings bindings,
-         OptionalTypeAdapterFactory optional, SetTypeAdapterFactory set, ImmutableSetTypeAdapterFactory immutableSet,
-         MapTypeAdapterFactory map, MultimapTypeAdapterFactory multimap, IterableTypeAdapterFactory iterable,
+         CredentialsAdapterFactory credentialsAdapterFactory, OptionalTypeAdapterFactory optional,
+         SetTypeAdapterFactory set, ImmutableSetTypeAdapterFactory immutableSet, MapTypeAdapterFactory map,
+         MultimapTypeAdapterFactory multimap, IterableTypeAdapterFactory iterable,
          CollectionTypeAdapterFactory collection, ListTypeAdapterFactory list,
          ImmutableListTypeAdapterFactory immutableList, FluentIterableTypeAdapterFactory fluentIterable,
          ImmutableMapTypeAdapterFactory immutableMap, DefaultExclusionStrategy exclusionStrategy,
@@ -112,6 +115,7 @@ public class GsonModule extends AbstractModule {
       builder.registerTypeAdapter(Date.class, adapter.nullSafe());
       builder.registerTypeAdapter(byte[].class, byteArrayAdapter.nullSafe());
       builder.registerTypeAdapter(JsonBall.class, jsonAdapter.nullSafe());
+      builder.registerTypeAdapterFactory(credentialsAdapterFactory);
       builder.registerTypeAdapterFactory(optional);
       builder.registerTypeAdapterFactory(iterable);
       builder.registerTypeAdapterFactory(collection);
@@ -313,6 +317,68 @@ public class GsonModule extends AbstractModule {
          if (toParse == -1)
             return null;
          return new Date(toParse);
+      }
+   }
+
+   /** Special cases serialization for {@linkplain LoginCredentials} and normalizes all others. */
+   public static class CredentialsAdapterFactory extends TypeAdapter<Credentials> implements TypeAdapterFactory {
+
+      @Override public void write(JsonWriter out, Credentials credentials) throws IOException {
+         out.beginObject();
+         if (credentials instanceof LoginCredentials) {
+            LoginCredentials login = (LoginCredentials) credentials;
+            out.name("user");
+            out.value(login.getUser());
+            out.name("password");
+            out.value(login.getOptionalPassword().orNull());
+            out.name("privateKey");
+            out.value(login.getOptionalPrivateKey().orNull());
+            if (login.shouldAuthenticateSudo()) {
+               out.name("authenticateSudo");
+               out.value(login.shouldAuthenticateSudo());
+            }
+         } else {
+            out.name("identity");
+            out.value(credentials.identity);
+            out.name("credential");
+            out.value(credentials.credential);
+         }
+         out.endObject();
+      }
+
+      @Override public Credentials read(JsonReader in) throws IOException {
+         LoginCredentials.Builder builder = LoginCredentials.builder();
+         String identity = null;
+         String credential = null;
+         in.beginObject();
+         while (in.hasNext()) {
+            String name = in.nextName();
+            if (name.equals("identity")) {
+               identity = in.nextString();
+            } else if (name.equals("credential")) {
+               credential = in.nextString();
+            } else if (name.equals("user")) {
+               builder.user(in.nextString());
+            } else if (name.equals("password")) {
+               builder.password(in.nextString());
+            } else if (name.equals("privateKey")) {
+               builder.privateKey(in.nextString());
+            } else if (name.equals("authenticateSudo")) {
+               builder.authenticateSudo(in.nextBoolean());
+            } else {
+               in.skipValue();
+            }
+         }
+         in.endObject();
+         LoginCredentials result = builder.build();
+         return result != null ? result : new Credentials(identity, credential);
+      }
+
+      @Override public <T> TypeAdapter<T> create(Gson gson, TypeToken<T> typeToken) {
+         if (!(Credentials.class.isAssignableFrom(typeToken.getRawType()))) {
+            return null;
+         }
+         return (TypeAdapter<T>) this;
       }
    }
 
