@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.jclouds.oauth.v2.json;
+package org.jclouds.oauth.v2.binders;
 
 import static org.testng.Assert.assertNotNull;
 import static org.testng.Assert.assertSame;
@@ -29,7 +29,6 @@ import org.jclouds.oauth.v2.OAuthTestUtils;
 import org.jclouds.oauth.v2.domain.ClaimSet;
 import org.jclouds.oauth.v2.domain.Header;
 import org.jclouds.oauth.v2.domain.TokenRequest;
-import org.jclouds.oauth.v2.domain.TokenRequestFormat;
 import org.jclouds.util.Strings2;
 import org.testng.annotations.Test;
 
@@ -37,23 +36,23 @@ import com.google.common.base.Splitter;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Iterables;
 
-@Test(groups = "unit")
-public class JWTTokenRequestFormatTest {
+@Test(groups = "unit", testName = "OAuthTokenBinderTest")
+public class OAuthTokenBinderTest {
    public static final String STRING_THAT_GENERATES_URL_UNSAFE_BASE64_ENCODING = "§1234567890'+±!\"#$%&/()" +
          "=?*qwertyuiopº´WERTYUIOPªàsdfghjklç~ASDFGHJKLÇ^<zxcvbnm," +
          ".->ZXCVBNM;:_@€";
 
    public void testPayloadIsUrlSafe() throws IOException {
 
-      TokenRequestFormat tokenRequestFormat = ContextBuilder.newBuilder(new OAuthApiMetadata()).overrides
+      OAuthTokenBinder tokenRequestFormat = ContextBuilder.newBuilder(new OAuthApiMetadata()).overrides
               (OAuthTestUtils.defaultProperties(null)).build().utils()
-              .injector().getInstance(TokenRequestFormat.class);
+              .injector().getInstance(OAuthTokenBinder.class);
       Header header = Header.create("a", "b");
       ClaimSet claimSet = ClaimSet.create(0, 0,
             ImmutableMap.of("ist", STRING_THAT_GENERATES_URL_UNSAFE_BASE64_ENCODING));
       TokenRequest tokenRequest = TokenRequest.create(header, claimSet);
-      HttpRequest request = tokenRequestFormat.formatRequest(HttpRequest.builder().method("GET").endpoint
-              ("http://localhost").build(), tokenRequest);
+      HttpRequest request = tokenRequestFormat.bindToRequest(
+            HttpRequest.builder().method("GET").endpoint("http://localhost").build(), tokenRequest);
 
       assertNotNull(request.getPayload());
 

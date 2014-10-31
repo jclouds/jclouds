@@ -16,17 +16,18 @@
  */
 package org.jclouds.oauth.v2;
 
+import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
+
 import java.io.Closeable;
 
 import javax.inject.Named;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;
-import javax.ws.rs.core.MediaType;
 
+import org.jclouds.oauth.v2.binders.OAuthTokenBinder;
 import org.jclouds.oauth.v2.config.Authentication;
 import org.jclouds.oauth.v2.domain.Token;
 import org.jclouds.oauth.v2.domain.TokenRequest;
-import org.jclouds.oauth.v2.handlers.OAuthTokenBinder;
 import org.jclouds.rest.AuthorizationException;
 import org.jclouds.rest.annotations.BinderParam;
 import org.jclouds.rest.annotations.Endpoint;
@@ -55,6 +56,6 @@ public interface OAuthApi extends Closeable {
     */
    @Named("authenticate")
    @POST
-   @Consumes(MediaType.APPLICATION_JSON)
+   @Consumes(APPLICATION_JSON)
    Token authenticate(@BinderParam(OAuthTokenBinder.class) TokenRequest tokenRequest) throws AuthorizationException;
 }

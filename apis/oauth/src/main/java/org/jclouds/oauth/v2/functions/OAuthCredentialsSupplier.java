@@ -16,27 +16,6 @@
  */
 package org.jclouds.oauth.v2.functions;
 
-import com.google.common.annotations.VisibleForTesting;
-import com.google.common.base.Charsets;
-import com.google.common.base.Supplier;
-import com.google.common.cache.CacheBuilder;
-import com.google.common.cache.CacheLoader;
-import com.google.common.cache.LoadingCache;
-import com.google.common.io.ByteSource;
-import com.google.common.util.concurrent.UncheckedExecutionException;
-import org.jclouds.domain.Credentials;
-import org.jclouds.location.Provider;
-import org.jclouds.oauth.v2.domain.OAuthCredentials;
-import org.jclouds.rest.AuthorizationException;
-
-import javax.inject.Inject;
-import javax.inject.Named;
-import javax.inject.Singleton;
-import java.io.IOException;
-import java.security.GeneralSecurityException;
-import java.security.KeyFactory;
-import java.security.PrivateKey;
-
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.base.Throwables.propagate;
@@ -47,20 +26,42 @@ import static org.jclouds.oauth.v2.OAuthConstants.OAUTH_ALGORITHM_NAMES_TO_KEYFA
 import static org.jclouds.oauth.v2.config.OAuthProperties.SIGNATURE_OR_MAC_ALGORITHM;
 import static org.jclouds.util.Throwables2.getFirstThrowableOfType;
 
+import java.io.IOException;
+import java.security.GeneralSecurityException;
+import java.security.KeyFactory;
+import java.security.PrivateKey;
+
+import javax.inject.Inject;
+import javax.inject.Named;
+import javax.inject.Singleton;
+
+import org.jclouds.domain.Credentials;
+import org.jclouds.location.Provider;
+import org.jclouds.oauth.v2.domain.OAuthCredentials;
+import org.jclouds.rest.AuthorizationException;
+
+import com.google.common.annotations.VisibleForTesting;
+import com.google.common.base.Charsets;
+import com.google.common.base.Supplier;
+import com.google.common.cache.CacheBuilder;
+import com.google.common.cache.CacheLoader;
+import com.google.common.cache.LoadingCache;
+import com.google.common.io.ByteSource;
+import com.google.common.util.concurrent.UncheckedExecutionException;
+
 /**
  * Loads {@link OAuthCredentials} from a pem private key using the KeyFactory obtained from the JWT Algorithm
  * Name<->KeyFactory name mapping in OAuthConstants. The pem pk algorithm must match the KeyFactory algorithm.
  *
  * @see org.jclouds.oauth.v2.OAuthConstants#OAUTH_ALGORITHM_NAMES_TO_KEYFACTORY_ALGORITHM_NAMES
  */
-@Singleton
-public class OAuthCredentialsSupplier implements Supplier<OAuthCredentials> {
+@Singleton // due to cache
+public final class OAuthCredentialsSupplier implements Supplier<OAuthCredentials> {
 
    private final Supplier<Credentials> creds;
    private final LoadingCache<Credentials, OAuthCredentials> keyCache;
 
-   @Inject
-   public OAuthCredentialsSupplier(@Provider Supplier<Credentials> creds, OAuthCredentialsForCredentials loader,
+   @Inject OAuthCredentialsSupplier(@Provider Supplier<Credentials> creds, OAuthCredentialsForCredentials loader,
                                    @Named(SIGNATURE_OR_MAC_ALGORITHM) String signatureOrMacAlgorithm) {
       this.creds = creds;
       checkArgument(OAUTH_ALGORITHM_NAMES_TO_KEYFACTORY_ALGORITHM_NAMES.containsKey(signatureOrMacAlgorithm),
@@ -74,17 +75,15 @@ public class OAuthCredentialsSupplier implements Supplier<OAuthCredentials> {
     * so that the private key is only recalculated once.
     */
    @VisibleForTesting
-   static class OAuthCredentialsForCredentials extends CacheLoader<Credentials, OAuthCredentials> {
+   static final class OAuthCredentialsForCredentials extends CacheLoader<Credentials, OAuthCredentials> {
       private final String keyFactoryAlgorithm;
 
-      @Inject
-      public OAuthCredentialsForCredentials(@Named(SIGNATURE_OR_MAC_ALGORITHM) String signatureOrMacAlgorithm) {
+      @Inject OAuthCredentialsForCredentials(@Named(SIGNATURE_OR_MAC_ALGORITHM) String signatureOrMacAlgorithm) {
          this.keyFactoryAlgorithm = OAUTH_ALGORITHM_NAMES_TO_KEYFACTORY_ALGORITHM_NAMES.get(checkNotNull(
                  signatureOrMacAlgorithm, "signatureOrMacAlgorithm"));
       }
 
-      @Override
-      public OAuthCredentials load(Credentials in) {
+      @Override public OAuthCredentials load(Credentials in) {
          try {
             String identity = in.identity;
             String privateKeyInPemFormat = in.credential;
@@ -108,18 +107,16 @@ public class OAuthCredentialsSupplier implements Supplier<OAuthCredentials> {
       }
    }
 
-   @Override
-   public OAuthCredentials get() {
+   @Override public OAuthCredentials get() {
       try {
          // loader always throws UncheckedExecutionException so no point in using get()
          return keyCache.getUnchecked(checkNotNull(creds.get(), "credential supplier returned null"));
       } catch (UncheckedExecutionException e) {
-         Throwable authorizationException = getFirstThrowableOfType(e, AuthorizationException.class);
+         AuthorizationException authorizationException = getFirstThrowableOfType(e, AuthorizationException.class);
          if (authorizationException != null) {
-            throw (AuthorizationException) authorizationException;
+            throw authorizationException;
          }
-         throw propagate(e);
+         throw e;
       }
    }
-
 }

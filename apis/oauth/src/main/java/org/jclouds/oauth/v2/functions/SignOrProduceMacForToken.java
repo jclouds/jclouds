@@ -16,40 +16,42 @@
  */
 package org.jclouds.oauth.v2.functions;
 
-import com.google.common.base.Function;
-import com.google.common.base.Supplier;
-import com.google.common.base.Throwables;
-import org.jclouds.oauth.v2.domain.OAuthCredentials;
+import static com.google.common.base.Preconditions.checkState;
+import static com.google.common.base.Throwables.propagate;
+import static java.lang.String.format;
+import static org.jclouds.oauth.v2.OAuthConstants.NO_ALGORITHM;
+import static org.jclouds.oauth.v2.OAuthConstants.OAUTH_ALGORITHM_NAMES_TO_SIGNATURE_ALGORITHM_NAMES;
+import static org.jclouds.oauth.v2.config.OAuthProperties.SIGNATURE_OR_MAC_ALGORITHM;
 
-import javax.annotation.PostConstruct;
-import javax.crypto.Mac;
-import javax.inject.Inject;
-import javax.inject.Named;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.security.PrivateKey;
 import java.security.Signature;
 import java.security.SignatureException;
 
-import static com.google.common.base.Preconditions.checkState;
-import static java.lang.String.format;
-import static org.jclouds.oauth.v2.OAuthConstants.NO_ALGORITHM;
-import static org.jclouds.oauth.v2.OAuthConstants.OAUTH_ALGORITHM_NAMES_TO_SIGNATURE_ALGORITHM_NAMES;
-import static org.jclouds.oauth.v2.config.OAuthProperties.SIGNATURE_OR_MAC_ALGORITHM;
+import javax.annotation.PostConstruct;
+import javax.crypto.Mac;
+import javax.inject.Inject;
+import javax.inject.Named;
+
+import org.jclouds.oauth.v2.domain.OAuthCredentials;
+
+import com.google.common.base.Function;
+import com.google.common.base.Supplier;
+import com.google.inject.Singleton;
 
 /**
  * Function that signs/produces mac's for  OAuth tokens, provided a {@link Signature} or a {@link Mac} algorithm and
  * {@link PrivateKey}
  */
-public class SignOrProduceMacForToken implements Function<byte[], byte[]> {
+@Singleton // due to signatureOrMacFunction
+public final class SignOrProduceMacForToken implements Function<byte[], byte[]> {
 
    private final Supplier<OAuthCredentials> credentials;
    private final String signatureOrMacAlgorithm;
    private Function<byte[], byte[]> signatureOrMacFunction;
 
-
-   @Inject
-   public SignOrProduceMacForToken(@Named(SIGNATURE_OR_MAC_ALGORITHM) String signatureOrMacAlgorithm,
+   @Inject SignOrProduceMacForToken(@Named(SIGNATURE_OR_MAC_ALGORITHM) String signatureOrMacAlgorithm,
                                    Supplier<OAuthCredentials> credentials) {
       checkState(OAUTH_ALGORITHM_NAMES_TO_SIGNATURE_ALGORITHM_NAMES.containsKey(signatureOrMacAlgorithm),
               format("the signature algorithm %s is not supported", signatureOrMacAlgorithm));
@@ -74,14 +76,13 @@ public class SignOrProduceMacForToken implements Function<byte[], byte[]> {
       }
    }
 
-   @Override
-   public byte[] apply(byte[] input) {
+   @Override public byte[] apply(byte[] input) {
       return signatureOrMacFunction.apply(input);
    }
 
    private static class MessageAuthenticationCodeGenerator implements Function<byte[], byte[]> {
 
-      private Mac mac;
+      private final Mac mac;
 
       private MessageAuthenticationCodeGenerator(String macAlgorithm, PrivateKey privateKey) throws
               NoSuchAlgorithmException, InvalidKeyException {
@@ -89,8 +90,7 @@ public class SignOrProduceMacForToken implements Function<byte[], byte[]> {
          this.mac.init(privateKey);
       }
 
-      @Override
-      public byte[] apply(byte[] input) {
+      @Override public byte[] apply(byte[] input) {
          this.mac.update(input);
          return this.mac.doFinal();
       }
@@ -98,7 +98,7 @@ public class SignOrProduceMacForToken implements Function<byte[], byte[]> {
 
    private static class SignatureGenerator implements Function<byte[], byte[]> {
 
-      private Signature signature;
+      private final Signature signature;
 
       private SignatureGenerator(String signatureAlgorithm, PrivateKey privateKey) throws NoSuchAlgorithmException,
               InvalidKeyException {
@@ -106,13 +106,12 @@ public class SignOrProduceMacForToken implements Function<byte[], byte[]> {
          this.signature.initSign(privateKey);
       }
 
-      @Override
-      public byte[] apply(byte[] input) {
+      @Override public byte[] apply(byte[] input) {
          try {
             signature.update(input);
             return signature.sign();
          } catch (SignatureException e) {
-            throw Throwables.propagate(e);
+            throw propagate(e);
          }
       }
    }

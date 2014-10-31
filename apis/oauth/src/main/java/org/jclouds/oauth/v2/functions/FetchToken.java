@@ -16,26 +16,23 @@
  */
 package org.jclouds.oauth.v2.functions;
 
-import com.google.common.base.Function;
+import javax.inject.Inject;
+
 import org.jclouds.oauth.v2.OAuthApi;
 import org.jclouds.oauth.v2.domain.Token;
 import org.jclouds.oauth.v2.domain.TokenRequest;
 
-import javax.inject.Inject;
-import javax.inject.Singleton;
+import com.google.common.base.Function;
 
-@Singleton
-public class FetchToken implements Function<TokenRequest, Token> {
+public final class FetchToken implements Function<TokenRequest, Token> {
 
-   private OAuthApi oAuthApi;
+   private final OAuthApi oAuthApi;
 
-   @Inject
-   public FetchToken(OAuthApi oAuthApi) {
+   @Inject FetchToken(OAuthApi oAuthApi) {
       this.oAuthApi = oAuthApi;
    }
 
-   @Override
-   public Token apply(TokenRequest input) {
+   @Override public Token apply(TokenRequest input) {
       return this.oAuthApi.authenticate(input);
    }
 }

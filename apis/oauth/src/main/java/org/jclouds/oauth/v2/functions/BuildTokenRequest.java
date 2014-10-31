@@ -24,9 +24,8 @@ import static org.jclouds.oauth.v2.config.OAuthProperties.SIGNATURE_OR_MAC_ALGOR
 
 import java.util.Collections;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
-
-import javax.inject.Singleton;
 
 import org.jclouds.Constants;
 import org.jclouds.oauth.v2.config.OAuthScopes;
@@ -34,12 +33,12 @@ import org.jclouds.oauth.v2.domain.ClaimSet;
 import org.jclouds.oauth.v2.domain.Header;
 import org.jclouds.oauth.v2.domain.OAuthCredentials;
 import org.jclouds.oauth.v2.domain.TokenRequest;
-import org.jclouds.oauth.v2.domain.TokenRequestFormat;
 import org.jclouds.rest.internal.GeneratedHttpRequest;
 
 import com.google.common.base.Function;
 import com.google.common.base.Joiner;
 import com.google.common.base.Supplier;
+import com.google.common.collect.ImmutableList;
 import com.google.common.reflect.Invokable;
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
@@ -51,50 +50,47 @@ import com.google.inject.name.Named;
  * <p/>
  * TODO scopes etc should come from the REST method and not from a global property
  */
-@Singleton
-public class BuildTokenRequest implements Function<GeneratedHttpRequest, TokenRequest> {
+public final class BuildTokenRequest implements Function<GeneratedHttpRequest, TokenRequest> {
+   // exp and ist (expiration and emission times) are assumed mandatory already
+   private static final List<String> REQUIRED_CLAIMS = ImmutableList.of("iss", "scope", "aud");
 
    private final String assertionTargetDescription;
    private final String signatureAlgorithm;
-   private final TokenRequestFormat tokenRequestFormat;
    private final Supplier<OAuthCredentials> credentialsSupplier;
    private final long tokenDuration;
 
    @Inject(optional = true)
    @Named(ADDITIONAL_CLAIMS)
-   protected Map<String, String> additionalClaims = Collections.emptyMap();
+   private Map<String, String> additionalClaims = Collections.emptyMap();
 
    @Inject(optional = true)
    @Named(SCOPES)
-   protected String globalScopes = null;
+   private String globalScopes = null;
 
    // injectable so expect tests can override with a predictable value
    @Inject(optional = true)
-   protected Supplier<Long> timeSourceMillisSinceEpoch = new Supplier<Long>() {
+   private Supplier<Long> timeSourceMillisSinceEpoch = new Supplier<Long>() {
       @Override
       public Long get() {
          return System.currentTimeMillis();
       }
    };
-   
-   @Inject
-   public BuildTokenRequest(@Named(AUDIENCE) String assertionTargetDescription,
+
+   @Inject BuildTokenRequest(@Named(AUDIENCE) String assertionTargetDescription,
                             @Named(SIGNATURE_OR_MAC_ALGORITHM) String signatureAlgorithm,
-                            TokenRequestFormat tokenRequestFormat, Supplier<OAuthCredentials> credentialsSupplier,
+                            Supplier<OAuthCredentials> credentialsSupplier,
                             @Named(Constants.PROPERTY_SESSION_INTERVAL) long tokenDuration) {
       this.assertionTargetDescription = assertionTargetDescription;
       this.signatureAlgorithm = signatureAlgorithm;
-      this.tokenRequestFormat = tokenRequestFormat;
       this.credentialsSupplier = credentialsSupplier;
       this.tokenDuration = tokenDuration;
    }
 
-   @Override
-   public TokenRequest apply(GeneratedHttpRequest request) {
+   @Override public TokenRequest apply(GeneratedHttpRequest request) {
       long now = timeSourceMillisSinceEpoch.get() / 1000;
 
       // fetch the token
-      Header header = Header.create(signatureAlgorithm, tokenRequestFormat.type());
+      Header header = Header.create(signatureAlgorithm, "JWT");
 
       Map<String, String> claims = new LinkedHashMap<String, String>();
       claims.put("iss", credentialsSupplier.get().identity);
@@ -102,7 +98,7 @@ public class BuildTokenRequest implements Function<GeneratedHttpRequest, TokenRe
       claims.put("aud", assertionTargetDescription);
       claims.putAll(additionalClaims);
 
-      checkState(claims.keySet().containsAll(tokenRequestFormat.requiredClaims()),
+      checkState(claims.keySet().containsAll(REQUIRED_CLAIMS),
             "not all required claims were present");
 
       ClaimSet claimSet = ClaimSet.create(now, now + tokenDuration, Collections.unmodifiableMap(claims));
@@ -110,7 +106,7 @@ public class BuildTokenRequest implements Function<GeneratedHttpRequest, TokenRe
       return TokenRequest.create(header, claimSet);
    }
 
-   protected String getOAuthScopes(GeneratedHttpRequest request) {
+   private String getOAuthScopes(GeneratedHttpRequest request) {
       Invokable<?, ?> invokable = request.getInvocation().getInvokable();
       
       OAuthScopes classScopes = invokable.getOwnerType().getRawType().getAnnotation(OAuthScopes.class);

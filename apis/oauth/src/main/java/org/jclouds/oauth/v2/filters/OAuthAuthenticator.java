@@ -16,47 +16,41 @@
  */
 package org.jclouds.oauth.v2.filters;
 
-import com.google.common.base.Function;
-import com.google.common.cache.LoadingCache;
+import static com.google.common.base.Preconditions.checkState;
+
+import javax.inject.Inject;
+
 import org.jclouds.http.HttpException;
 import org.jclouds.http.HttpRequest;
 import org.jclouds.oauth.v2.domain.Token;
 import org.jclouds.oauth.v2.domain.TokenRequest;
 import org.jclouds.rest.internal.GeneratedHttpRequest;
 
-import javax.inject.Inject;
-import javax.inject.Singleton;
-
-import static com.google.common.base.Preconditions.checkState;
+import com.google.common.base.Function;
+import com.google.common.cache.LoadingCache;
 
 /**
  * To be used by client applications to embed an OAuth authentication in their REST requests.
  * <p/>
  * TODO when we're able to use the OAuthAuthentication an this should be used automatically
  */
-@Singleton
-public class OAuthAuthenticator implements OAuthAuthenticationFilter {
+public final class OAuthAuthenticator implements OAuthAuthenticationFilter {
 
    private Function<GeneratedHttpRequest, TokenRequest> tokenRequestBuilder;
    private Function<TokenRequest, Token> tokenFetcher;
 
-   @Inject
-   OAuthAuthenticator(Function<GeneratedHttpRequest, TokenRequest> tokenRequestBuilder, LoadingCache<TokenRequest,
-           Token> tokenFetcher) {
+   @Inject OAuthAuthenticator(Function<GeneratedHttpRequest, TokenRequest> tokenRequestBuilder,
+         LoadingCache<TokenRequest, Token> tokenFetcher) {
       this.tokenRequestBuilder = tokenRequestBuilder;
       this.tokenFetcher = tokenFetcher;
    }
 
-   @Override
-   public HttpRequest filter(HttpRequest request) throws HttpException {
+   @Override public HttpRequest filter(HttpRequest request) throws HttpException {
       checkState(request instanceof GeneratedHttpRequest, "request must be an instance of GeneratedHttpRequest");
       GeneratedHttpRequest generatedHttpRequest = GeneratedHttpRequest.class.cast(request);
       TokenRequest tokenRequest = tokenRequestBuilder.apply(generatedHttpRequest);
       Token token = tokenFetcher.apply(tokenRequest);
       return request.toBuilder().addHeader("Authorization", String.format("%s %s",
               token.tokenType(), token.accessToken())).build();
-
    }
-
-
 }

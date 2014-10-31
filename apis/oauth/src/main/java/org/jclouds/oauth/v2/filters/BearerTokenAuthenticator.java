@@ -16,26 +16,24 @@
  */
 package org.jclouds.oauth.v2.filters;
 
-import com.google.common.base.Supplier;
+import static java.lang.String.format;
+
+import javax.inject.Inject;
+
 import org.jclouds.http.HttpException;
 import org.jclouds.http.HttpRequest;
 import org.jclouds.oauth.v2.domain.OAuthCredentials;
 
-import javax.inject.Inject;
-import javax.inject.Singleton;
+import com.google.common.base.Supplier;
 
-@Singleton
-public class BearerTokenAuthenticator implements OAuthAuthenticationFilter {
+public final class BearerTokenAuthenticator implements OAuthAuthenticationFilter {
    private final Supplier<OAuthCredentials> creds;
 
-   @Inject
-   BearerTokenAuthenticator(final Supplier<OAuthCredentials> creds) {
+   @Inject BearerTokenAuthenticator(Supplier<OAuthCredentials> creds) {
       this.creds = creds;
    }
 
-   @Override
-   public HttpRequest filter(HttpRequest request) throws HttpException {
-      return request.toBuilder().addHeader("Authorization", String.format("%s %s",
-            "Bearer ", creds.get().credential)).build();
+   @Override public HttpRequest filter(HttpRequest request) throws HttpException {
+      return request.toBuilder().addHeader("Authorization", format("%s %s", "Bearer ", creds.get().credential)).build();
    }
 }

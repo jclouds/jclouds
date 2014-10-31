@@ -16,6 +16,9 @@
  */
 package org.jclouds.oauth.v2.handlers;
 
+import static javax.ws.rs.core.Response.Status;
+import static org.jclouds.http.HttpUtils.closeClientButKeepContentStream;
+
 import org.jclouds.http.HttpCommand;
 import org.jclouds.http.HttpErrorHandler;
 import org.jclouds.http.HttpResponse;
@@ -23,17 +26,8 @@ import org.jclouds.http.HttpResponseException;
 import org.jclouds.rest.AuthorizationException;
 import org.jclouds.rest.ResourceNotFoundException;
 
-import javax.inject.Singleton;
-
-import static javax.ws.rs.core.Response.Status;
-import static org.jclouds.http.HttpUtils.closeClientButKeepContentStream;
-
-/**
- * This will parse and set an appropriate exception on the command object.
- */
-@Singleton
-public class OAuthErrorHandler implements HttpErrorHandler {
-   public void handleError(HttpCommand command, HttpResponse response) {
+public final class OAuthErrorHandler implements HttpErrorHandler {
+   @Override public void handleError(HttpCommand command, HttpResponse response) {
       // it is important to always read fully and close streams
       byte[] data = closeClientButKeepContentStream(response);
       String message = data != null ? new String(data) : null;
