@@ -38,8 +38,6 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import com.google.gson.FieldAttributes;
-import com.google.gson.FieldNamingPolicy;
-import com.google.gson.FieldNamingStrategy;
 import com.google.gson.Gson;
 import com.google.gson.TypeAdapter;
 import com.google.gson.TypeAdapterFactory;
@@ -226,105 +224,110 @@ public class JsonTest {
    }
 
    @AutoValue
-   abstract static class UpperCamelCasedType {
+   abstract static class SerializedNamesType {
       abstract String id();
 
       @Nullable abstract Map<String, String> volumes();
 
-      // Currently, this only works for deserialization. Need to set a naming policy for serialization!
       @SerializedNames({ "Id", "Volumes" })
-      private static UpperCamelCasedType create(String id, Map<String, String> volumes) {
-         return new AutoValue_JsonTest_UpperCamelCasedType(id, volumes);
+      private static SerializedNamesType create(String id, Map<String, String> volumes) {
+         return new AutoValue_JsonTest_SerializedNamesType(id, volumes);
       }
    }
 
-   public void upperCamelCaseWithSerializedNames() {
-      Json json = Guice.createInjector(new GsonModule(), new AbstractModule() {
-         @Override protected void configure() {
-            bind(FieldNamingStrategy.class).toInstance(FieldNamingPolicy.UPPER_CAMEL_CASE);
-         }
-      }).getInstance(Json.class);
+   public void autoValueSerializedNames() {
+      Json json = Guice.createInjector(new GsonModule()).getInstance(Json.class);
 
-      UpperCamelCasedType resource = UpperCamelCasedType.create("1234", Collections.<String, String>emptyMap());
+      SerializedNamesType resource = SerializedNamesType.create("1234", Collections.<String, String>emptyMap());
       String spinalJson = "{\"Id\":\"1234\",\"Volumes\":{}}";
 
       assertEquals(json.toJson(resource), spinalJson);
-      assertEquals(json.fromJson(spinalJson, UpperCamelCasedType.class), resource);
-   }
-
-   public void upperCamelCaseWithSerializedNamesNullJsonValue() {
-      Json json = Guice.createInjector(new GsonModule(), new AbstractModule() {
-         @Override protected void configure() {
-            bind(FieldNamingStrategy.class).toInstance(FieldNamingPolicy.UPPER_CAMEL_CASE);
-         }
-      }).getInstance(Json.class);
-
-      assertEquals(json.fromJson("{\"Id\":\"1234\",\"Volumes\":null}", UpperCamelCasedType.class),
-            UpperCamelCasedType.create("1234", null));
+      assertEquals(json.fromJson(spinalJson, SerializedNamesType.class), resource);
    }
 
    @AutoValue
-   abstract static class NestedCamelCasedType {
-      abstract UpperCamelCasedType item();
+   abstract static class SerializedNamesTooFewType {
+      abstract String id();
 
-      abstract List<UpperCamelCasedType> items();
+      @Nullable abstract Map<String, String> volumes();
 
-      // Currently, this only works for deserialization. Need to set a naming policy for serialization!
-      @SerializedNames({ "Item", "Items" })
-      private static NestedCamelCasedType create(UpperCamelCasedType item, List<UpperCamelCasedType> items) {
-         return new AutoValue_JsonTest_NestedCamelCasedType(item, items);
+      @SerializedNames("Id") // TODO: check things like this with error-prone, not runtime!
+      private static SerializedNamesTooFewType create(String id, Map<String, String> volumes) {
+         return new AutoValue_JsonTest_SerializedNamesTooFewType(id, volumes);
       }
    }
 
-   private final NestedCamelCasedType nested = NestedCamelCasedType
-         .create(UpperCamelCasedType.create("1234", Collections.<String, String>emptyMap()),
-               Arrays.asList(UpperCamelCasedType.create("5678", ImmutableMap.of("Foo", "Bar"))));
+   /** Common problem. Someone adds a parameter, but forgets to add it to the names list. */
+   @Test(expectedExceptions = IllegalStateException.class, expectedExceptionsMessageRegExp = "Incorrect number .*")
+   public void autoValueSerializedNames_tooFew() {
+      Json json = Guice.createInjector(new GsonModule()).getInstance(Json.class);
+      json.toJson(SerializedNamesTooFewType.create("1234", null));
+   }
 
-   public void nestedCamelCasedType() {
-      Json json = Guice.createInjector(new GsonModule(), new AbstractModule() {
-         @Override protected void configure() {
-            bind(FieldNamingStrategy.class).toInstance(FieldNamingPolicy.UPPER_CAMEL_CASE);
-         }
-      }).getInstance(Json.class);
+   public void autoValueSerializedNames_nullValueInJson() {
+      Json json = Guice.createInjector(new GsonModule()).getInstance(Json.class);
+
+      assertEquals(json.fromJson("{\"Id\":\"1234\",\"Volumes\":null}", SerializedNamesType.class),
+            SerializedNamesType.create("1234", null));
+   }
+
+   @AutoValue
+   abstract static class NestedSerializedNamesType {
+      abstract SerializedNamesType item();
+
+      abstract List<SerializedNamesType> items();
+
+      @SerializedNames({ "Item", "Items" })
+      private static NestedSerializedNamesType create(SerializedNamesType item, List<SerializedNamesType> items) {
+         return new AutoValue_JsonTest_NestedSerializedNamesType(item, items);
+      }
+   }
+
+   private final NestedSerializedNamesType nested = NestedSerializedNamesType
+         .create(SerializedNamesType.create("1234", Collections.<String, String>emptyMap()),
+               Arrays.asList(SerializedNamesType.create("5678", ImmutableMap.of("Foo", "Bar"))));
+
+   public void autoValueSerializedNames_nestedType() {
+      Json json = Guice.createInjector(new GsonModule()).getInstance(Json.class);
 
       String spinalJson = "{\"Item\":{\"Id\":\"1234\",\"Volumes\":{}},\"Items\":[{\"Id\":\"5678\",\"Volumes\":{\"Foo\":\"Bar\"}}]}";
 
       assertEquals(json.toJson(nested), spinalJson);
-      assertEquals(json.fromJson(spinalJson, NestedCamelCasedType.class), nested);
+      assertEquals(json.fromJson(spinalJson, NestedSerializedNamesType.class), nested);
    }
 
-   public void nestedCamelCasedTypeOverriddenTypeAdapterFactory() {
+   public void autoValueSerializedNames_overriddenTypeAdapterFactory() {
       Json json = Guice.createInjector(new GsonModule(), new AbstractModule() {
          @Override protected void configure() {
          }
 
          @Provides public Set<TypeAdapterFactory> typeAdapterFactories() {
-            return ImmutableSet.<TypeAdapterFactory>of(new NestedCamelCasedTypeAdapterFactory());
+            return ImmutableSet.<TypeAdapterFactory>of(new NestedSerializedNamesTypeAdapterFactory());
          }
       }).getInstance(Json.class);
 
       assertEquals(json.toJson(nested), "{\"id\":\"1234\",\"count\":1}");
-      assertEquals(json.fromJson("{\"id\":\"1234\",\"count\":1}", NestedCamelCasedType.class), nested);
+      assertEquals(json.fromJson("{\"id\":\"1234\",\"count\":1}", NestedSerializedNamesType.class), nested);
    }
 
-   private class NestedCamelCasedTypeAdapterFactory extends TypeAdapter<NestedCamelCasedType>
+   private class NestedSerializedNamesTypeAdapterFactory extends TypeAdapter<NestedSerializedNamesType>
          implements TypeAdapterFactory {
 
       @Override public <T> TypeAdapter<T> create(Gson gson, TypeToken<T> typeToken) {
-         if (!(NestedCamelCasedType.class.isAssignableFrom(typeToken.getRawType()))) {
+         if (!(NestedSerializedNamesType.class.isAssignableFrom(typeToken.getRawType()))) {
             return null;
          }
          return (TypeAdapter<T>) this;
       }
 
-      @Override public void write(JsonWriter out, NestedCamelCasedType value) throws IOException {
+      @Override public void write(JsonWriter out, NestedSerializedNamesType value) throws IOException {
          out.beginObject();
          out.name("id").value(value.item().id());
          out.name("count").value(value.items().size());
          out.endObject();
       }
 
-      @Override public NestedCamelCasedType read(JsonReader in) throws IOException {
+      @Override public NestedSerializedNamesType read(JsonReader in) throws IOException {
          in.beginObject();
          in.nextName();
          in.nextString();

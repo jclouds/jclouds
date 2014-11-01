@@ -18,6 +18,7 @@ package org.jclouds.json.internal;
 
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
+import static com.google.common.base.Preconditions.checkState;
 import static com.google.common.base.Predicates.in;
 import static com.google.common.collect.Iterables.transform;
 import static com.google.common.collect.Iterables.tryFind;
@@ -26,6 +27,7 @@ import static org.jclouds.reflect.Reflection2.constructors;
 import java.beans.ConstructorProperties;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Map;
@@ -162,33 +164,47 @@ public class NamingStrategies {
    public static class AnnotationFieldNamingStrategy extends AnnotationBasedNamingStrategy implements
          FieldNamingStrategy {
 
-      private final FieldNamingStrategy fallback;
-
-      public AnnotationFieldNamingStrategy(Iterable<? extends NameExtractor<?>> extractors,
-            FieldNamingStrategy fallback) {
+      public AnnotationFieldNamingStrategy(Iterable<? extends NameExtractor<?>> extractors) {
          super(extractors);
          checkArgument(extractors.iterator().hasNext(), "you must supply at least one name extractor, for example: "
                + ExtractSerializedName.class.getSimpleName());
-         this.fallback = checkNotNull(fallback, "fallback fieldNamingPolicy");
       }
 
       @Override
       public String translateName(Field f) {
+         // Determining if AutoValue is tough, since annotations are SOURCE retention.
+         if (Modifier.isAbstract(f.getDeclaringClass().getSuperclass().getModifiers())) { // AutoValue means abstract.
+            for (Invokable<?, ?> target : constructors(TypeToken.of(f.getDeclaringClass().getSuperclass()))) {
+               SerializedNames names = target.getAnnotation(SerializedNames.class);
+               if (names != null && target.isStatic()) { // == factory method
+                  // Fields and constructor params are written by AutoValue in same order as methods are declared.
+                  // By contract, SerializedNames factory methods must declare its names in the same order,
+                  Field[] fields = f.getDeclaringClass().getDeclaredFields();
+                  checkState(fields.length == names.value().length, "Incorrect number of names on " + names);
+                  for (int i = 0; i < fields.length; i++) {
+                     if (fields[i].equals(f)) {
+                        return names.value()[i];
+                     }
+                  }
+                  // The input field was not a declared field. Accidentally placed on something not AutoValue?
+                  throw new IllegalStateException("Inconsistent state. Ensure type is AutoValue on " + target);
+               }
+            }
+         }
          for (Annotation annotation : f.getAnnotations()) {
             if (annotationToNameExtractor.containsKey(annotation.annotationType())) {
                return annotationToNameExtractor.get(annotation.annotationType()).apply(annotation);
             }
          }
-         return fallback.translateName(f);
+         return null;
       }
    }
 
    public static class AnnotationOrNameFieldNamingStrategy extends AnnotationFieldNamingStrategy implements
          FieldNamingStrategy {
 
-      public AnnotationOrNameFieldNamingStrategy(Iterable<? extends NameExtractor<?>> extractors,
-            FieldNamingStrategy fallback) {
-         super(extractors, fallback);
+      public AnnotationOrNameFieldNamingStrategy(Iterable<? extends NameExtractor<?>> extractors) {
+         super(extractors);
       }
 
       @Override

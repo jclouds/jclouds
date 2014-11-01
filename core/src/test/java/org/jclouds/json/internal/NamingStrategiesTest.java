@@ -36,7 +36,6 @@ import org.testng.annotations.Test;
 
 import com.google.common.collect.ImmutableSet;
 import com.google.common.reflect.Invokable;
-import com.google.gson.FieldNamingPolicy;
 import com.google.gson.FieldNamingStrategy;
 import com.google.gson.annotations.SerializedName;
 
@@ -101,18 +100,16 @@ public final class NamingStrategiesTest {
    }
    
    public void testAnnotationFieldNamingStrategy() throws Exception {
-      FieldNamingStrategy strategy = new AnnotationFieldNamingStrategy(ImmutableSet.of(new ExtractNamed()),
-            FieldNamingPolicy.UPPER_CAMEL_CASE);
+      FieldNamingStrategy strategy = new AnnotationFieldNamingStrategy(ImmutableSet.of(new ExtractNamed()));
 
-      assertEquals(strategy.translateName(SimpleTest.class.getDeclaredField("a")), "A"); // Per fallback!
-      assertEquals(strategy.translateName(SimpleTest.class.getDeclaredField("b")), "B"); // Per fallback!
+      assertEquals(strategy.translateName(SimpleTest.class.getDeclaredField("a")), null);
+      assertEquals(strategy.translateName(SimpleTest.class.getDeclaredField("b")), null);
       assertEquals(strategy.translateName(SimpleTest.class.getDeclaredField("c")), "cat");
       assertEquals(strategy.translateName(SimpleTest.class.getDeclaredField("d")), "dog");
    }
 
    public void testAnnotationOrNameFieldNamingStrategy() throws Exception {
-      FieldNamingStrategy strategy = new AnnotationOrNameFieldNamingStrategy(ImmutableSet.of(new ExtractNamed()),
-            FieldNamingPolicy.IDENTITY);
+      FieldNamingStrategy strategy = new AnnotationOrNameFieldNamingStrategy(ImmutableSet.of(new ExtractNamed()));
 
       assertEquals(strategy.translateName(SimpleTest.class.getDeclaredField("a")), "a");
       assertEquals(strategy.translateName(SimpleTest.class.getDeclaredField("b")), "b");

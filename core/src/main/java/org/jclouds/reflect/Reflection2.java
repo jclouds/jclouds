@@ -89,7 +89,7 @@ public class Reflection2 {
    }
 
    /**
-    * return all constructors present in the class as {@link Invokable}s.
+    * return all constructors or static factory methods present in the class as {@link Invokable}s.
     * 
     * @param ownerType
     *           corresponds to {@link Invokable#getOwnerType()}
