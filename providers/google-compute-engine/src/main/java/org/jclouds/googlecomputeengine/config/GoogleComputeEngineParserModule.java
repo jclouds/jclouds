@@ -16,20 +16,17 @@
  */
 package org.jclouds.googlecomputeengine.config;
 
-import com.google.common.collect.ImmutableMap;
-import com.google.common.collect.Range;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonDeserializationContext;
-import com.google.gson.JsonDeserializer;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParseException;
-import com.google.gson.JsonPrimitive;
-import com.google.gson.JsonSerializationContext;
-import com.google.gson.JsonSerializer;
-import com.google.gson.TypeAdapterFactory;
-import com.google.inject.AbstractModule;
-import com.google.inject.Provides;
+import static org.jclouds.googlecomputeengine.domain.Firewall.Rule;
+
+import java.beans.ConstructorProperties;
+import java.lang.reflect.Type;
+import java.net.URI;
+import java.util.Date;
+import java.util.Map;
+import java.util.Set;
+
+import javax.inject.Singleton;
+
 import org.jclouds.googlecomputeengine.domain.Firewall;
 import org.jclouds.googlecomputeengine.domain.Instance;
 import org.jclouds.googlecomputeengine.domain.InstanceTemplate;
@@ -41,27 +38,25 @@ import org.jclouds.googlecomputeengine.options.FirewallOptions;
 import org.jclouds.googlecomputeengine.options.RouteOptions;
 import org.jclouds.json.config.GsonModule;
 import org.jclouds.net.domain.IpProtocol;
-import org.jclouds.oauth.v2.config.OAuthParserModule;
 
-
-import javax.inject.Singleton;
-import java.beans.ConstructorProperties;
-import java.lang.reflect.Type;
-import java.net.URI;
-import java.util.Date;
-import java.util.Map;
-import java.util.Set;
-
-import static org.jclouds.googlecomputeengine.domain.Firewall.Rule;
+import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.Range;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonDeserializationContext;
+import com.google.gson.JsonDeserializer;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParseException;
+import com.google.gson.JsonPrimitive;
+import com.google.gson.JsonSerializationContext;
+import com.google.gson.JsonSerializer;
+import com.google.inject.AbstractModule;
+import com.google.inject.Provides;
 
 public class GoogleComputeEngineParserModule extends AbstractModule {
 
    @Override protected void configure() {
       bind(GsonModule.DateAdapter.class).to(GsonModule.Iso8601DateAdapter.class);
-   }
-
-   @Provides @Singleton public Set<TypeAdapterFactory> typeAdapterFactories() {
-      return new OAuthParserModule().typeAdapterFactories();
    }
 
    @Provides @Singleton public Map<Type, Object> typeAdapters() {

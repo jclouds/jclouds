@@ -31,7 +31,6 @@ import org.jclouds.http.HttpRequest;
 import org.jclouds.http.HttpResponse;
 import org.testng.annotations.Test;
 
-
 @Test(groups = "unit")
 public class ProjectApiExpectTest extends BaseGoogleComputeEngineApiExpectTest {
 
