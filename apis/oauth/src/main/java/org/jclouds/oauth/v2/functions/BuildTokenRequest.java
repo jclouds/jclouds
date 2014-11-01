@@ -21,15 +21,15 @@ import static org.jclouds.oauth.v2.OAuthConstants.ADDITIONAL_CLAIMS;
 import static org.jclouds.oauth.v2.config.OAuthProperties.AUDIENCE;
 import static org.jclouds.oauth.v2.config.OAuthProperties.SCOPES;
 import static org.jclouds.oauth.v2.config.OAuthProperties.SIGNATURE_OR_MAC_ALGORITHM;
+import static org.jclouds.oauth.v2.domain.Claims.EXPIRATION_TIME;
+import static org.jclouds.oauth.v2.domain.Claims.ISSUED_AT;
 
 import java.util.Collections;
 import java.util.LinkedHashMap;
-import java.util.List;
 import java.util.Map;
 
 import org.jclouds.Constants;
 import org.jclouds.oauth.v2.config.OAuthScopes;
-import org.jclouds.oauth.v2.domain.ClaimSet;
 import org.jclouds.oauth.v2.domain.Header;
 import org.jclouds.oauth.v2.domain.OAuthCredentials;
 import org.jclouds.oauth.v2.domain.TokenRequest;
@@ -38,7 +38,6 @@ import org.jclouds.rest.internal.GeneratedHttpRequest;
 import com.google.common.base.Function;
 import com.google.common.base.Joiner;
 import com.google.common.base.Supplier;
-import com.google.common.collect.ImmutableList;
 import com.google.common.reflect.Invokable;
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
@@ -51,9 +50,6 @@ import com.google.inject.name.Named;
  * TODO scopes etc should come from the REST method and not from a global property
  */
 public final class BuildTokenRequest implements Function<GeneratedHttpRequest, TokenRequest> {
-   // exp and ist (expiration and emission times) are assumed mandatory already
-   private static final List<String> REQUIRED_CLAIMS = ImmutableList.of("iss", "scope", "aud");
-
    private final String assertionTargetDescription;
    private final String signatureAlgorithm;
    private final Supplier<OAuthCredentials> credentialsSupplier;
@@ -92,18 +88,15 @@ public final class BuildTokenRequest implements Function<GeneratedHttpRequest, T
       // fetch the token
       Header header = Header.create(signatureAlgorithm, "JWT");
 
-      Map<String, String> claims = new LinkedHashMap<String, String>();
+      Map<String, Object> claims = new LinkedHashMap<String, Object>();
       claims.put("iss", credentialsSupplier.get().identity);
       claims.put("scope", getOAuthScopes(request));
       claims.put("aud", assertionTargetDescription);
+      claims.put(EXPIRATION_TIME, now + tokenDuration);
+      claims.put(ISSUED_AT, now);
       claims.putAll(additionalClaims);
 
-      checkState(claims.keySet().containsAll(REQUIRED_CLAIMS),
-            "not all required claims were present");
-
-      ClaimSet claimSet = ClaimSet.create(now, now + tokenDuration, Collections.unmodifiableMap(claims));
-
-      return TokenRequest.create(header, claimSet);
+      return TokenRequest.create(header, claims);
    }
 
    private String getOAuthScopes(GeneratedHttpRequest request) {

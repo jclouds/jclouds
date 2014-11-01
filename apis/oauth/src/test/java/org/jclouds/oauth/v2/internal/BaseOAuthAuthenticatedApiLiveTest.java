@@ -15,22 +15,25 @@
  * limitations under the License.
  */
 package org.jclouds.oauth.v2.internal;
+
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.base.Preconditions.checkState;
 import static java.util.concurrent.TimeUnit.MILLISECONDS;
 import static java.util.concurrent.TimeUnit.SECONDS;
 import static org.jclouds.oauth.v2.config.OAuthProperties.AUDIENCE;
 import static org.jclouds.oauth.v2.config.OAuthProperties.SIGNATURE_OR_MAC_ALGORITHM;
+import static org.jclouds.oauth.v2.domain.Claims.EXPIRATION_TIME;
+import static org.jclouds.oauth.v2.domain.Claims.ISSUED_AT;
 import static org.testng.Assert.assertNotNull;
 
 import java.io.Closeable;
+import java.util.Map;
 import java.util.Properties;
 
 import org.jclouds.apis.BaseApiLiveTest;
 import org.jclouds.config.ValueOfConfigurationKeyOrNull;
 import org.jclouds.oauth.v2.OAuthApi;
 import org.jclouds.oauth.v2.OAuthConstants;
-import org.jclouds.oauth.v2.domain.ClaimSet;
 import org.jclouds.oauth.v2.domain.Header;
 import org.jclouds.oauth.v2.domain.Token;
 import org.jclouds.oauth.v2.domain.TokenRequest;
@@ -80,10 +83,14 @@ public abstract class BaseOAuthAuthenticatedApiLiveTest<A extends Closeable> ext
 
       long now = SECONDS.convert(System.currentTimeMillis(), MILLISECONDS);
 
-      ClaimSet claimSet = ClaimSet.create(now, now + 3600,
-            ImmutableMap.of("aud", audience, "scope", scopes, "iss", identity));
+      Map<String, Object> claims = ImmutableMap.<String, Object>builder()
+            .put("iss", identity)
+            .put("scope", scopes)
+            .put("aud", audience)
+            .put(EXPIRATION_TIME, now + 3600)
+            .put(ISSUED_AT, now).build();
 
-      TokenRequest tokenRequest = TokenRequest.create(header, claimSet);
+      TokenRequest tokenRequest = TokenRequest.create(header, claims);
 
       Token token = oauthApi.authenticate(tokenRequest);
 

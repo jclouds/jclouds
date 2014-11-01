@@ -16,6 +16,8 @@
  */
 package org.jclouds.oauth.v2.domain;
 
+import org.jclouds.json.SerializedNames;
+
 import com.google.auto.value.AutoValue;
 
 /**
@@ -32,6 +34,7 @@ public abstract class Header {
    /** The type of the token, e.g., {@code JWT}. */
    public abstract String type();
 
+   @SerializedNames({ "alg", "typ" })
    public static Header create(String signerAlgorithm, String type){
       return new AutoValue_Header(signerAlgorithm, type);
    }

@@ -21,13 +21,15 @@ import static org.jclouds.oauth.v2.OAuthTestUtils.getMandatoryProperty;
 import static org.jclouds.oauth.v2.config.OAuthProperties.AUDIENCE;
 import static org.jclouds.oauth.v2.config.OAuthProperties.SCOPES;
 import static org.jclouds.oauth.v2.config.OAuthProperties.SIGNATURE_OR_MAC_ALGORITHM;
+import static org.jclouds.oauth.v2.domain.Claims.EXPIRATION_TIME;
+import static org.jclouds.oauth.v2.domain.Claims.ISSUED_AT;
 import static org.testng.Assert.assertNotNull;
 import static org.testng.Assert.assertTrue;
 
+import java.util.Map;
 import java.util.Properties;
 
 import org.jclouds.oauth.v2.OAuthConstants;
-import org.jclouds.oauth.v2.domain.ClaimSet;
 import org.jclouds.oauth.v2.domain.Header;
 import org.jclouds.oauth.v2.domain.Token;
 import org.jclouds.oauth.v2.domain.TokenRequest;
@@ -71,10 +73,14 @@ public class OAuthApiLiveTest extends BaseOAuthApiLiveTest {
 
       long now = nowInSeconds();
 
-      ClaimSet claimSet = ClaimSet.create(now, now + 3600,
-            ImmutableMap.of("aud", audience, "scope", scopes, "iss", identity));
+      Map<String, Object> claims = ImmutableMap.<String, Object>builder()
+         .put("iss", identity)
+         .put("scope", scopes)
+         .put("aud", audience)
+         .put(EXPIRATION_TIME, now + 3600)
+         .put(ISSUED_AT, now).build();
 
-      TokenRequest tokenRequest = TokenRequest.create(header, claimSet);
+      TokenRequest tokenRequest = TokenRequest.create(header, claims);
       Token token = api.authenticate(tokenRequest);
 
       assertNotNull(token, "no token when authenticating " + tokenRequest);

@@ -14,17 +14,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.jclouds.oauth.v2.internal;
+package org.jclouds.oauth.v2.domain;
 
-import org.jclouds.json.BaseItemParserTest;
-import org.jclouds.json.config.GsonModule;
-import org.jclouds.oauth.v2.config.OAuthParserModule;
+/**
+ * Description of Claims corresponding to a {@linkplain Token JWT Token}.
+ *
+ * @see <a href="https://tools.ietf.org/html/draft-ietf-oauth-json-web-token-30#section-4">registered list</a>
+ */
+public final class Claims {
+   /** The time at which the JWT was issued, in seconds since the epoch. */
+   public static final String ISSUED_AT = "iat";
 
-import com.google.inject.Guice;
-import com.google.inject.Injector;
+   /** The expiration time, in seconds since {@link #ISSUED_AT}. */
+   public static final String EXPIRATION_TIME = "exp";
 
-public abstract class BaseOAuthParseTest<T> extends BaseItemParserTest<T> {
-   @Override protected Injector injector() {
-      return Guice.createInjector(new GsonModule(), new OAuthParserModule());
+   private Claims(){
+      throw new AssertionError("intentionally unimplemented");
    }
 }

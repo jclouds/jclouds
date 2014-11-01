@@ -20,12 +20,12 @@ import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
 
 import javax.ws.rs.Consumes;
 
+import org.jclouds.json.BaseItemParserTest;
 import org.jclouds.oauth.v2.domain.Token;
-import org.jclouds.oauth.v2.internal.BaseOAuthParseTest;
 import org.testng.annotations.Test;
 
 @Test(groups = "unit", testName = "ParseTokenTest")
-public class ParseTokenTest extends BaseOAuthParseTest<Token> {
+public class ParseTokenTest extends BaseItemParserTest<Token> {
 
    @Override
    public String resource() {

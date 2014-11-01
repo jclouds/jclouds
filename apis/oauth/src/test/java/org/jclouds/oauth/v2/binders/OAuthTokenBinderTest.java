@@ -16,17 +16,19 @@
  */
 package org.jclouds.oauth.v2.binders;
 
+import static org.jclouds.oauth.v2.domain.Claims.EXPIRATION_TIME;
+import static org.jclouds.oauth.v2.domain.Claims.ISSUED_AT;
 import static org.testng.Assert.assertNotNull;
 import static org.testng.Assert.assertSame;
 import static org.testng.Assert.assertTrue;
 
 import java.io.IOException;
+import java.util.Map;
 
 import org.jclouds.ContextBuilder;
 import org.jclouds.http.HttpRequest;
 import org.jclouds.oauth.v2.OAuthApiMetadata;
 import org.jclouds.oauth.v2.OAuthTestUtils;
-import org.jclouds.oauth.v2.domain.ClaimSet;
 import org.jclouds.oauth.v2.domain.Header;
 import org.jclouds.oauth.v2.domain.TokenRequest;
 import org.jclouds.util.Strings2;
@@ -48,9 +50,13 @@ public class OAuthTokenBinderTest {
               (OAuthTestUtils.defaultProperties(null)).build().utils()
               .injector().getInstance(OAuthTokenBinder.class);
       Header header = Header.create("a", "b");
-      ClaimSet claimSet = ClaimSet.create(0, 0,
-            ImmutableMap.of("ist", STRING_THAT_GENERATES_URL_UNSAFE_BASE64_ENCODING));
-      TokenRequest tokenRequest = TokenRequest.create(header, claimSet);
+
+      Map<String, Object> claims = ImmutableMap.<String, Object>builder()
+            .put(ISSUED_AT, 0)
+            .put(EXPIRATION_TIME, 0)
+            .put("ist", STRING_THAT_GENERATES_URL_UNSAFE_BASE64_ENCODING).build();
+
+      TokenRequest tokenRequest = TokenRequest.create(header, claims);
       HttpRequest request = tokenRequestFormat.bindToRequest(
             HttpRequest.builder().method("GET").endpoint("http://localhost").build(), tokenRequest);
 

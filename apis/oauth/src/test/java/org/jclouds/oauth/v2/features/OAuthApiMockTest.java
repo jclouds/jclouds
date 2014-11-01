@@ -22,11 +22,14 @@ import static com.google.common.util.concurrent.MoreExecutors.sameThreadExecutor
 import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
 import static org.jclouds.Constants.PROPERTY_MAX_RETRIES;
 import static org.jclouds.oauth.v2.config.OAuthProperties.AUDIENCE;
+import static org.jclouds.oauth.v2.domain.Claims.EXPIRATION_TIME;
+import static org.jclouds.oauth.v2.domain.Claims.ISSUED_AT;
 import static org.jclouds.util.Strings2.toStringAndClose;
 import static org.testng.Assert.assertEquals;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.Map;
 import java.util.Properties;
 
 import org.jclouds.ContextBuilder;
@@ -34,7 +37,6 @@ import org.jclouds.concurrent.config.ExecutorServiceModule;
 import org.jclouds.oauth.v2.OAuthApi;
 import org.jclouds.oauth.v2.OAuthApiMetadata;
 import org.jclouds.oauth.v2.OAuthTestUtils;
-import org.jclouds.oauth.v2.domain.ClaimSet;
 import org.jclouds.oauth.v2.domain.Header;
 import org.jclouds.oauth.v2.domain.Token;
 import org.jclouds.oauth.v2.domain.TokenRequest;
@@ -61,9 +63,12 @@ public class OAuthApiMockTest {
 
    private static final Token TOKEN = Token.create("1/8xbJqaOZXSUZbHLl5EOtu1pxz3fmmetKx9W8CV4t79M", "Bearer", 3600);
 
-   private static final ClaimSet CLAIM_SET = ClaimSet.create(1328569781, 1328573381, ImmutableMap
-         .of("iss", "761326798069-r5mljlln1rd4lrbhg75efgigp36m78j5@developer.gserviceaccount.com", "scope",
-               "https://www.googleapis.com/auth/prediction", "aud", "https://accounts.google.com/o/oauth2/token"));
+   private static final Map<String, Object> CLAIMS = ImmutableMap.<String, Object>builder()
+         .put("iss", "761326798069-r5mljlln1rd4lrbhg75efgigp36m78j5@developer.gserviceaccount.com")
+         .put("scope", "https://www.googleapis.com/auth/prediction")
+         .put("aud", "https://accounts.google.com/o/oauth2/token")
+         .put(EXPIRATION_TIME, 1328573381)
+         .put(ISSUED_AT, 1328569781).build();
 
    private static final Header HEADER = Header.create("RS256", "JWT");
 
@@ -78,7 +83,7 @@ public class OAuthApiMockTest {
 
       OAuthApi api = api(server.getUrl("/"));
 
-      assertEquals(api.authenticate(TokenRequest.create(HEADER, CLAIM_SET)), TOKEN);
+      assertEquals(api.authenticate(TokenRequest.create(HEADER, CLAIMS)), TOKEN);
 
       RecordedRequest request = server.takeRequest();
       assertEquals(request.getMethod(), "POST");

@@ -16,6 +16,8 @@
  */
 package org.jclouds.oauth.v2.domain;
 
+import org.jclouds.json.SerializedNames;
+
 import com.google.auto.value.AutoValue;
 
 /**
@@ -32,8 +34,8 @@ public abstract class Token {
    /** In how many seconds this token expires. */
    public abstract long expiresIn();
 
-   public static Token
-   create(String accessToken, String tokenType, long expiresIn) {
+   @SerializedNames({"access_token", "token_type", "expires_in"})
+   public static Token create(String accessToken, String tokenType, long expiresIn) {
       return new AutoValue_Token(accessToken, tokenType, expiresIn);
    }
 }

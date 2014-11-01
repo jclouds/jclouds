@@ -16,14 +16,16 @@
  */
 package org.jclouds.oauth.v2.domain;
 
+import java.util.Map;
+
 import com.google.auto.value.AutoValue;
 
 @AutoValue
 public abstract class TokenRequest {
    public abstract Header header();
-   public abstract ClaimSet claimSet();
+   public abstract Map<String, Object> claimSet();
 
-   public static TokenRequest create(Header header, ClaimSet claimSet) {
-      return new AutoValue_TokenRequest(header, claimSet);
+   public static TokenRequest create(Header header, Map<String, Object> claims) {
+      return new AutoValue_TokenRequest(header, claims);
    }
 }
