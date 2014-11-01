@@ -18,20 +18,17 @@ package org.jclouds.googlecloudstorage.config;
 
 import java.lang.reflect.Type;
 import java.util.Map;
-import java.util.Set;
 
 import javax.inject.Singleton;
 
 import org.jclouds.googlecloudstorage.domain.templates.BucketTemplate;
 import org.jclouds.json.config.GsonModule;
-import org.jclouds.oauth.v2.config.OAuthParserModule;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonSerializationContext;
 import com.google.gson.JsonSerializer;
-import com.google.gson.TypeAdapterFactory;
 import com.google.inject.AbstractModule;
 import com.google.inject.Provides;
 
@@ -39,10 +36,6 @@ public class GoogleCloudStorageParserModule extends AbstractModule {
 
    @Override protected void configure() {
       bind(GsonModule.DateAdapter.class).to(GsonModule.Iso8601DateAdapter.class);
-   }
-
-   @Provides @Singleton public Set<TypeAdapterFactory> typeAdapterFactories() {
-      return new OAuthParserModule().typeAdapterFactories();
    }
 
    @Provides @Singleton public Map<Type, Object> typeAdapters() {
