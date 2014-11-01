@@ -16,10 +16,10 @@
  */
 package org.jclouds.googlecloudstorage.domain;
 
+import java.beans.ConstructorProperties;
 import java.util.List;
 
 import org.jclouds.javax.annotation.Nullable;
-import org.jclouds.json.SerializedNames;
 
 import com.google.common.collect.ForwardingList;
 import com.google.common.collect.ImmutableList;
@@ -27,7 +27,7 @@ import com.google.common.collect.ImmutableList;
 /**
  * The collection returned from any <code>listFirstPage()</code> method.
  */
-public class ListPage<T> extends ForwardingList<T> {
+public final class ListPage<T> extends ForwardingList<T> {
 
    private final List<T> items;
    private final String nextPageToken;
@@ -37,8 +37,8 @@ public class ListPage<T> extends ForwardingList<T> {
       return new ListPage<T>(items, nextPageToken, prefixes);
    }
 
-   @SerializedNames({ "items", "nextPageToken", "prefixes" })
-   protected ListPage(Iterable<T> items, String nextPageToken, List<String> prefixes) {
+   @ConstructorProperties({ "items", "nextPageToken", "prefixes" })
+   ListPage(Iterable<T> items, String nextPageToken, List<String> prefixes) {
       this.items = items != null ? ImmutableList.copyOf(items) : ImmutableList.<T>of();
       this.nextPageToken = nextPageToken;
       this.prefixes = prefixes != null ? prefixes : ImmutableList.<String>of();

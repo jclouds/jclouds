@@ -33,6 +33,7 @@ public abstract class BucketAccessControls {
       READER, WRITER, OWNER
    }
 
+   // TODO: ensure this is actually needed on input.
    public abstract String kind();
 
    public abstract String id();
@@ -51,10 +52,10 @@ public abstract class BucketAccessControls {
 
    @Nullable public abstract ProjectTeam projectTeam();
 
-   @SerializedNames({ "id", "bucket", "entity", "entityId", "role", "email", "domain", "projectTeam" })
-   public static BucketAccessControls create(String id, String bucket, String entity, String entityId, Role role,
+   @SerializedNames({ "kind", "id", "bucket", "entity", "entityId", "role", "email", "domain", "projectTeam" })
+   static BucketAccessControls create(String kind, String id, String bucket, String entity, String entityId, Role role,
          String email, String domain, ProjectTeam projectTeam) {
-      return new AutoValue_BucketAccessControls("storage#bucketAccessControl",
+      return new AutoValue_BucketAccessControls(kind,
             id == null ? (bucket + "/" + entity) : id, bucket, entity, entityId, role, email, domain, projectTeam);
    }
 
@@ -114,7 +115,8 @@ public abstract class BucketAccessControls {
       }
 
       public BucketAccessControls build() {
-         return BucketAccessControls.create(id, bucket, entity, entityId, role, email, domain, projectTeam);
+         return BucketAccessControls
+               .create("storage#bucketAccessControl", id, bucket, entity, entityId, role, email, domain, projectTeam);
       }
    }
 }
