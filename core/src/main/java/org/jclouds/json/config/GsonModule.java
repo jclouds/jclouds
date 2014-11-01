@@ -65,7 +65,6 @@ import com.google.common.collect.Sets;
 import com.google.common.primitives.Bytes;
 import com.google.gson.ExclusionStrategy;
 import com.google.gson.FieldAttributes;
-import com.google.gson.FieldNamingPolicy;
 import com.google.gson.FieldNamingStrategy;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -85,12 +84,6 @@ import com.google.inject.Provides;
 
 public class GsonModule extends AbstractModule {
 
-   /** Optionally override the fallback field naming strategy when name annotations aren't on fields. */
-   private static class FallbackFieldNamingStrategy {
-      @Inject(optional = true)
-      FieldNamingStrategy fallback = FieldNamingPolicy.IDENTITY;
-   }
-
    @SuppressWarnings("rawtypes")
    @Provides
    @Singleton
@@ -101,11 +94,10 @@ public class GsonModule extends AbstractModule {
          MultimapTypeAdapterFactory multimap, IterableTypeAdapterFactory iterable,
          CollectionTypeAdapterFactory collection, ListTypeAdapterFactory list,
          ImmutableListTypeAdapterFactory immutableList, FluentIterableTypeAdapterFactory fluentIterable,
-         ImmutableMapTypeAdapterFactory immutableMap, DefaultExclusionStrategy exclusionStrategy,
-         FallbackFieldNamingStrategy fallbackFieldNamingStrategy) {
+         ImmutableMapTypeAdapterFactory immutableMap, DefaultExclusionStrategy exclusionStrategy) {
 
       FieldNamingStrategy serializationPolicy = new AnnotationOrNameFieldNamingStrategy(ImmutableSet.of(
-            new ExtractSerializedName(), new ExtractNamed()), fallbackFieldNamingStrategy.fallback);
+            new ExtractSerializedName(), new ExtractNamed()));
 
       GsonBuilder builder = new GsonBuilder().setFieldNamingStrategy(serializationPolicy)
                                              .setExclusionStrategies(exclusionStrategy);
@@ -135,7 +127,8 @@ public class GsonModule extends AbstractModule {
             ImmutableSet.of(new ExtractNamed()));
 
       builder.registerTypeAdapterFactory(new DeserializationConstructorAndReflectiveTypeAdapterFactory(
-            new ConstructorConstructor(ImmutableMap.<Type, InstanceCreator<?>>of()), serializationPolicy, Excluder.DEFAULT, deserializationPolicy));
+            new ConstructorConstructor(ImmutableMap.<Type, InstanceCreator<?>>of()), serializationPolicy,
+            Excluder.DEFAULT, deserializationPolicy));
 
       // complicated (serializers/deserializers as they need context to operate)
       builder.registerTypeHierarchyAdapter(Enum.class, new EnumTypeAdapterThatReturnsFromValue());

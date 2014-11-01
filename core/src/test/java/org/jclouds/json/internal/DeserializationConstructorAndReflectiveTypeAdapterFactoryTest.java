@@ -43,7 +43,6 @@ import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
-import com.google.gson.FieldNamingPolicy;
 import com.google.gson.FieldNamingStrategy;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -63,7 +62,7 @@ public final class DeserializationConstructorAndReflectiveTypeAdapterFactoryTest
 
    static DeserializationConstructorAndReflectiveTypeAdapterFactory parameterizedCtorFactory() {
       FieldNamingStrategy serializationPolicy = new AnnotationOrNameFieldNamingStrategy(ImmutableSet.of(
-            new ExtractSerializedName(), new ExtractNamed()), FieldNamingPolicy.IDENTITY);
+            new ExtractSerializedName(), new ExtractNamed()));
       AnnotationConstructorNamingStrategy deserializationPolicy = new AnnotationConstructorNamingStrategy(
             ImmutableSet.of(ConstructorProperties.class, SerializedNames.class, Inject.class),
             ImmutableSet.of(new ExtractNamed()));
