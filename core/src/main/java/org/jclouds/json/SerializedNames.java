@@ -34,7 +34,7 @@ import com.google.common.annotations.Beta;
  *   abstract String id();
  *   @Nullable abstract Map<String, String> metadata();
  *
- *   @AutoValueSerializedNames({ "Id", "Metadata" }) // Note case format is controlled here!
+ *   @SerializedNames({ "Id", "Metadata" }) // Note case format is controlled here!
  *   static Resource create(String id, Map<String, String> metadata) {
  *     return new AutoValue_Resource(id, metadata);
  *   }
