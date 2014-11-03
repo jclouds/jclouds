@@ -16,11 +16,13 @@
  */
 package org.jclouds.googlecomputeengine.features;
 
-import org.jclouds.collect.IterableWithMarker;
+import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertNotNull;
+
 import org.jclouds.googlecomputeengine.domain.Address;
 import org.jclouds.googlecomputeengine.domain.ForwardingRule;
+import org.jclouds.googlecomputeengine.domain.ListPage;
 import org.jclouds.googlecomputeengine.domain.TargetPool;
-import org.jclouds.googlecomputeengine.domain.ForwardingRule.IPProtocolOption;
 import org.jclouds.googlecomputeengine.internal.BaseGoogleComputeEngineApiLiveTest;
 import org.jclouds.googlecomputeengine.options.ForwardingRuleCreationOptions;
 import org.jclouds.googlecomputeengine.options.ListOptions;
@@ -28,10 +30,6 @@ import org.jclouds.googlecomputeengine.options.TargetPoolCreationOptions;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
-
-import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertNotNull;
-import static com.google.common.base.Optional.fromNullable;
 
 public class ForwardingRuleApiLiveTest extends BaseGoogleComputeEngineApiLiveTest {
 
@@ -85,9 +83,9 @@ public class ForwardingRuleApiLiveTest extends BaseGoogleComputeEngineApiLiveTes
    public void testInsertForwardingRule() {
       ForwardingRuleCreationOptions forwardingRuleCreationOptions = new ForwardingRuleCreationOptions()
                                                                            .description(DESCRIPTION)
-                                                                           .ipAddress(address.getAddress())
-                                                                           .ipProtocol(IPProtocolOption.TCP)
-                                                                           .target(targetPool.getSelfLink());
+                                                                           .ipAddress(address.address())
+                                                                           .ipProtocol(ForwardingRule.IPProtocol.TCP)
+                                                                           .target(targetPool.selfLink());
       assertRegionOperationDoneSucessfully(api().create(FORWARDING_RULE_NAME, forwardingRuleCreationOptions), TIME_WAIT);
    }
 
@@ -95,28 +93,28 @@ public class ForwardingRuleApiLiveTest extends BaseGoogleComputeEngineApiLiveTes
    public void testGetForwardingRule() {
       ForwardingRule forwardingRule = api().get(FORWARDING_RULE_NAME);
       assertNotNull(forwardingRule);
-      assertEquals(forwardingRule.getName(), FORWARDING_RULE_NAME);
-      assertEquals(forwardingRule.getDescription(), fromNullable(DESCRIPTION));
-      assertEquals(forwardingRule.getIpAddress(), fromNullable(address.getAddress()));
-      assertEquals(forwardingRule.getIpProtocol(), fromNullable(IPProtocolOption.TCP));
-      assertEquals(forwardingRule.getTarget(), targetPool.getSelfLink());
+      assertEquals(forwardingRule.name(), FORWARDING_RULE_NAME);
+      assertEquals(forwardingRule.description(), DESCRIPTION);
+      assertEquals(forwardingRule.ipAddress(), address.address());
+      assertEquals(forwardingRule.ipProtocol(), ForwardingRule.IPProtocol.TCP);
+      assertEquals(forwardingRule.target(), targetPool.selfLink());
    }
 
    @Test(groups = "live", dependsOnMethods = "testGetForwardingRule")
    public void testSetTargetForwardingRule(){
-      assertRegionOperationDoneSucessfully(api().setTarget(FORWARDING_RULE_NAME, newTargetPool.getSelfLink()), TIME_WAIT);
+      assertRegionOperationDoneSucessfully(api().setTarget(FORWARDING_RULE_NAME, newTargetPool.selfLink()), TIME_WAIT);
       ForwardingRule forwardingRule = api().get(FORWARDING_RULE_NAME);
       assertNotNull(forwardingRule);
-      assertEquals(forwardingRule.getName(), FORWARDING_RULE_NAME);
-      assertEquals(forwardingRule.getTarget(), newTargetPool.getSelfLink());
+      assertEquals(forwardingRule.name(), FORWARDING_RULE_NAME);
+      assertEquals(forwardingRule.target(), newTargetPool.selfLink());
    }
 
    @Test(groups = "live", dependsOnMethods = "testInsertForwardingRule")
    public void testListForwardingRule() {
 
-      IterableWithMarker<ForwardingRule> forwardingRule = api().list(new ListOptions.Builder()
+      ListPage<ForwardingRule> forwardingRule = api().list(new ListOptions.Builder()
               .filter("name eq " + FORWARDING_RULE_NAME));
-      assertEquals(forwardingRule.toList().size(), 1);
+      assertEquals(forwardingRule.size(), 1);
    }
 
    @Test(groups = "live", dependsOnMethods = {"testListForwardingRule", "testSetTargetForwardingRule"}, alwaysRun = true)

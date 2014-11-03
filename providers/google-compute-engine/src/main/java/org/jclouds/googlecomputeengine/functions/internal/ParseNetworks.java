@@ -16,11 +16,10 @@
  */
 package org.jclouds.googlecomputeengine.functions.internal;
 
-import static com.google.common.base.Preconditions.checkNotNull;
-
 import javax.inject.Inject;
 
 import org.jclouds.collect.IterableWithMarker;
+import org.jclouds.collect.IterableWithMarkers;
 import org.jclouds.googlecomputeengine.GoogleComputeEngineApi;
 import org.jclouds.googlecomputeengine.domain.ListPage;
 import org.jclouds.googlecomputeengine.domain.Network;
@@ -31,31 +30,27 @@ import org.jclouds.json.Json;
 import com.google.common.base.Function;
 import com.google.inject.TypeLiteral;
 
-public class ParseNetworks extends ParseJson<ListPage<Network>> {
+public final class ParseNetworks extends ParseJson<ListPage<Network>> {
 
-   @Inject
-   public ParseNetworks(Json json) {
+   @Inject ParseNetworks(Json json) {
       super(json, new TypeLiteral<ListPage<Network>>() {
       });
    }
 
-   public static class ToPagedIterable extends BaseToPagedIterable<Network, ToPagedIterable> {
+   public static final class ToPagedIterable extends BaseToPagedIterable<Network, ToPagedIterable> {
 
       private final GoogleComputeEngineApi api;
 
-      @Inject
-      protected ToPagedIterable(GoogleComputeEngineApi api) {
-         this.api = checkNotNull(api, "api");
+      @Inject ToPagedIterable(GoogleComputeEngineApi api) {
+         this.api = api;
       }
 
-      @Override
-      protected Function<Object, IterableWithMarker<Network>> fetchNextPage(final String projectName,
-                                                                            final ListOptions options) {
+      @Override protected Function<Object, IterableWithMarker<Network>> fetchNextPage(final String projectName,
+            final ListOptions options) {
          return new Function<Object, IterableWithMarker<Network>>() {
-
-            @Override
-            public IterableWithMarker<Network> apply(Object input) {
-               return api.getNetworkApi(projectName).listAtMarker(input.toString(), options);
+            @Override public IterableWithMarker<Network> apply(Object input) {
+               ListPage<Network> result = api.getNetworkApi(projectName).listAtMarker(input.toString(), options);
+               return IterableWithMarkers.from(result, result.nextPageToken());
             }
          };
       }

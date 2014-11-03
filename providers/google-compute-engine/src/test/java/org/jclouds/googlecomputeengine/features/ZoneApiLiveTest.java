@@ -32,7 +32,6 @@ import org.jclouds.googlecomputeengine.options.ListOptions;
 import org.testng.annotations.Test;
 
 import com.google.common.collect.Iterables;
-import com.google.common.collect.Lists;
 
 public class ZoneApiLiveTest extends BaseGoogleComputeEngineApiLiveTest {
 
@@ -52,7 +51,7 @@ public class ZoneApiLiveTest extends BaseGoogleComputeEngineApiLiveTest {
       assertTrue(pageIterator.hasNext());
 
       IterableWithMarker<Zone> singlePageIterator = pageIterator.next();
-      List<Zone> zoneAsList = Lists.newArrayList(singlePageIterator);
+      List<Zone> zoneAsList = singlePageIterator.toList();
 
       assertSame(zoneAsList.size(), 1);
 
@@ -62,13 +61,13 @@ public class ZoneApiLiveTest extends BaseGoogleComputeEngineApiLiveTest {
 
    @Test(groups = "live", dependsOnMethods = "testListZone")
    public void testGetZone() {
-      Zone zone = api().get(this.zone.getName());
+      Zone zone = api().get(this.zone.name());
       assertNotNull(zone);
       assertZoneEquals(zone, this.zone);
    }
 
    private void assertZoneEquals(Zone result, Zone expected) {
-      assertEquals(result.getName(), expected.getName());
+      assertEquals(result.name(), expected.name());
    }
 
 }

@@ -16,11 +16,10 @@
  */
 package org.jclouds.googlecomputeengine.functions.internal;
 
-import static com.google.common.base.Preconditions.checkNotNull;
-
 import javax.inject.Inject;
 
 import org.jclouds.collect.IterableWithMarker;
+import org.jclouds.collect.IterableWithMarkers;
 import org.jclouds.googlecomputeengine.GoogleComputeEngineApi;
 import org.jclouds.googlecomputeengine.domain.ListPage;
 import org.jclouds.googlecomputeengine.domain.Zone;
@@ -31,31 +30,28 @@ import org.jclouds.json.Json;
 import com.google.common.base.Function;
 import com.google.inject.TypeLiteral;
 
-public class ParseZones extends ParseJson<ListPage<Zone>> {
+public final class ParseZones extends ParseJson<ListPage<Zone>> {
 
-   @Inject
-   public ParseZones(Json json) {
+   @Inject ParseZones(Json json) {
       super(json, new TypeLiteral<ListPage<Zone>>() {
       });
    }
 
-   public static class ToPagedIterable extends BaseToPagedIterable<Zone, ToPagedIterable> {
+   public static final class ToPagedIterable extends BaseToPagedIterable<Zone, ToPagedIterable> {
 
       private final GoogleComputeEngineApi api;
 
-      @Inject
-      protected ToPagedIterable(GoogleComputeEngineApi api) {
-         this.api = checkNotNull(api, "api");
+      @Inject ToPagedIterable(GoogleComputeEngineApi api) {
+         this.api = api;
       }
 
       @Override
       protected Function<Object, IterableWithMarker<Zone>> fetchNextPage(final String projectName,
-                                                                         final ListOptions options) {
+            final ListOptions options) {
          return new Function<Object, IterableWithMarker<Zone>>() {
-
-            @Override
-            public IterableWithMarker<Zone> apply(Object input) {
-               return api.getZoneApi(projectName).listAtMarker(input.toString(), options);
+            @Override public IterableWithMarker<Zone> apply(Object input) {
+               ListPage<Zone> result = api.getZoneApi(projectName).listAtMarker(input.toString(), options);
+               return IterableWithMarkers.from(result, result.nextPageToken());
             }
          };
       }

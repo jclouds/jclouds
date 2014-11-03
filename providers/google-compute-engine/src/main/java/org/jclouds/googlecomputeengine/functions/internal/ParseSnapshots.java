@@ -16,12 +16,10 @@
  */
 package org.jclouds.googlecomputeengine.functions.internal;
 
-import static com.google.common.base.Preconditions.checkNotNull;
-
 import javax.inject.Inject;
-import javax.inject.Singleton;
 
 import org.jclouds.collect.IterableWithMarker;
+import org.jclouds.collect.IterableWithMarkers;
 import org.jclouds.googlecomputeengine.GoogleComputeEngineApi;
 import org.jclouds.googlecomputeengine.domain.ListPage;
 import org.jclouds.googlecomputeengine.domain.Snapshot;
@@ -32,33 +30,27 @@ import org.jclouds.json.Json;
 import com.google.common.base.Function;
 import com.google.inject.TypeLiteral;
 
-@Singleton
-public class ParseSnapshots extends ParseJson<ListPage<Snapshot>> {
+public final class ParseSnapshots extends ParseJson<ListPage<Snapshot>> {
 
-   @Inject
-   public ParseSnapshots(Json json) {
+   @Inject ParseSnapshots(Json json) {
       super(json, new TypeLiteral<ListPage<Snapshot>>() {
       });
    }
 
-   public static class ToPagedIterable extends BaseToPagedIterable<Snapshot, ToPagedIterable> {
+   public static final class ToPagedIterable extends BaseToPagedIterable<Snapshot, ToPagedIterable> {
 
       private final GoogleComputeEngineApi api;
 
-      @Inject
-      protected ToPagedIterable(GoogleComputeEngineApi api) {
-         this.api = checkNotNull(api, "api");
+      @Inject ToPagedIterable(GoogleComputeEngineApi api) {
+         this.api = api;
       }
 
-      @Override
-      protected Function<Object, IterableWithMarker<Snapshot>> fetchNextPage(final String projectName,
-                                                                         final ListOptions options) {
+      @Override protected Function<Object, IterableWithMarker<Snapshot>> fetchNextPage(final String projectName,
+            final ListOptions options) {
          return new Function<Object, IterableWithMarker<Snapshot>>() {
-
-            @Override
-            public IterableWithMarker<Snapshot> apply(Object input) {
-               return api.getSnapshotApi(projectName)
-                       .listAtMarker(input.toString(), options);
+            @Override public IterableWithMarker<Snapshot> apply(Object input) {
+               ListPage<Snapshot> result = api.getSnapshotApi(projectName).listAtMarker(input.toString(), options);
+               return IterableWithMarkers.from(result, result.nextPageToken());
             }
          };
       }

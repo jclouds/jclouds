@@ -32,8 +32,6 @@ import org.jclouds.googlecomputeengine.options.ListOptions;
 import org.testng.annotations.Test;
 
 import com.google.common.collect.Iterables;
-import com.google.common.collect.Lists;
-
 
 public class DiskTypeApiLiveTest extends BaseGoogleComputeEngineApiLiveTest {
 
@@ -53,7 +51,7 @@ public class DiskTypeApiLiveTest extends BaseGoogleComputeEngineApiLiveTest {
       assertTrue(pageIterator.hasNext());
 
       IterableWithMarker<DiskType> singlePageIterator = pageIterator.next();
-      List<DiskType> diskTypeAsList = Lists.newArrayList(singlePageIterator);
+      List<DiskType> diskTypeAsList = singlePageIterator.toList();
 
       assertSame(diskTypeAsList.size(), 1);
 
@@ -62,16 +60,16 @@ public class DiskTypeApiLiveTest extends BaseGoogleComputeEngineApiLiveTest {
 
    @Test(groups = "live", dependsOnMethods = "testDiskType")
    public void testGetDiskType() {
-      DiskType diskType = api().getInZone(DEFAULT_ZONE_NAME, this.diskType.getName());
+      DiskType diskType = api().getInZone(DEFAULT_ZONE_NAME, this.diskType.name());
       assertNotNull(diskType);
       assertDiskTypeEquals(diskType, this.diskType);
    }
 
    private void assertDiskTypeEquals(DiskType result, DiskType expected) {
-      assertEquals(result.getName(), expected.getName());
-      assertEquals(result.getValidDiskSize(), expected.getValidDiskSize());
-      assertEquals(result.getZone(), expected.getZone());
-      assertEquals(result.getDefaultDiskSizeGb(), expected.getDefaultDiskSizeGb());
-      assertEquals(result.getSelfLink(), expected.getSelfLink());
+      assertEquals(result.name(), expected.name());
+      assertEquals(result.validDiskSize(), expected.validDiskSize());
+      assertEquals(result.zone(), expected.zone());
+      assertEquals(result.defaultDiskSizeGb(), expected.defaultDiskSizeGb());
+      assertEquals(result.selfLink(), expected.selfLink());
    }
 }

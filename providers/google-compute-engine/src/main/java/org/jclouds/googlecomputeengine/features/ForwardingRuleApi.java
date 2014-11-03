@@ -16,29 +16,10 @@
  */
 package org.jclouds.googlecomputeengine.features;
 
-import java.net.URI;
+import static org.jclouds.googlecomputeengine.GoogleComputeEngineConstants.COMPUTE_READONLY_SCOPE;
+import static org.jclouds.googlecomputeengine.GoogleComputeEngineConstants.COMPUTE_SCOPE;
 
-import org.jclouds.Fallbacks.EmptyPagedIterableOnNotFoundOr404;
-import org.jclouds.Fallbacks.NullOnNotFoundOr404;
-import org.jclouds.collect.IterableWithMarker;
-import org.jclouds.collect.PagedIterable;
-import org.jclouds.googlecomputeengine.domain.ForwardingRule;
-import org.jclouds.googlecomputeengine.domain.Operation;
-import org.jclouds.googlecomputeengine.functions.internal.ParseForwardingRules;
-import org.jclouds.googlecomputeengine.options.ListOptions;
-import org.jclouds.googlecomputeengine.options.ForwardingRuleCreationOptions;
-import org.jclouds.googlecomputeengine.binders.ForwardingRuleCreationBinder;
-import org.jclouds.javax.annotation.Nullable;
-import org.jclouds.oauth.v2.config.OAuthScopes;
-import org.jclouds.oauth.v2.filters.OAuthAuthenticator;
-import org.jclouds.rest.annotations.Fallback;
-import org.jclouds.rest.annotations.MapBinder;
-import org.jclouds.rest.annotations.PayloadParam;
-import org.jclouds.rest.annotations.RequestFilters;
-import org.jclouds.rest.annotations.ResponseParser;
-import org.jclouds.rest.annotations.SkipEncoding;
-import org.jclouds.rest.annotations.Transform;
-import org.jclouds.rest.binders.BindToJsonPayload;
+import java.net.URI;
 
 import javax.inject.Named;
 import javax.ws.rs.Consumes;
@@ -50,8 +31,28 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
-import static org.jclouds.googlecomputeengine.GoogleComputeEngineConstants.COMPUTE_READONLY_SCOPE;
-import static org.jclouds.googlecomputeengine.GoogleComputeEngineConstants.COMPUTE_SCOPE;
+import org.jclouds.Fallbacks.EmptyPagedIterableOnNotFoundOr404;
+import org.jclouds.Fallbacks.NullOnNotFoundOr404;
+import org.jclouds.collect.PagedIterable;
+import org.jclouds.googlecomputeengine.GoogleComputeEngineFallbacks.EmptyListPageOnNotFoundOr404;
+import org.jclouds.googlecomputeengine.binders.ForwardingRuleCreationBinder;
+import org.jclouds.googlecomputeengine.domain.ForwardingRule;
+import org.jclouds.googlecomputeengine.domain.ListPage;
+import org.jclouds.googlecomputeengine.domain.Operation;
+import org.jclouds.googlecomputeengine.functions.internal.ParseForwardingRules;
+import org.jclouds.googlecomputeengine.options.ForwardingRuleCreationOptions;
+import org.jclouds.googlecomputeengine.options.ListOptions;
+import org.jclouds.javax.annotation.Nullable;
+import org.jclouds.oauth.v2.config.OAuthScopes;
+import org.jclouds.oauth.v2.filters.OAuthAuthenticator;
+import org.jclouds.rest.annotations.Fallback;
+import org.jclouds.rest.annotations.MapBinder;
+import org.jclouds.rest.annotations.PayloadParam;
+import org.jclouds.rest.annotations.RequestFilters;
+import org.jclouds.rest.annotations.ResponseParser;
+import org.jclouds.rest.annotations.SkipEncoding;
+import org.jclouds.rest.annotations.Transform;
+import org.jclouds.rest.binders.BindToJsonPayload;
 
 /**
  * Provides access to ForwardingRules via their REST API.
@@ -128,8 +129,8 @@ public interface ForwardingRuleApi {
    @Path("/forwardingRules")
    @OAuthScopes(COMPUTE_READONLY_SCOPE)
    @ResponseParser(ParseForwardingRules.class)
-   @Fallback(EmptyPagedIterableOnNotFoundOr404.class)
-   IterableWithMarker<ForwardingRule> list(ListOptions options);
+   @Fallback(EmptyListPageOnNotFoundOr404.class)
+   ListPage<ForwardingRule> list(ListOptions options);
 
    /**
     * Changes the target url for a forwarding rule.

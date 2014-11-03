@@ -58,7 +58,7 @@ public class SnapshotApiLiveTest extends BaseGoogleComputeEngineApiLiveTest {
    public void testGetSnapshot() {
       Snapshot snapshot = api().get(SNAPSHOT_NAME);
 
-      assertEquals(snapshot.getName(), SNAPSHOT_NAME);
+      assertEquals(snapshot.name(), SNAPSHOT_NAME);
       assertSnapshotEquals(snapshot);
    }
 
@@ -83,10 +83,8 @@ public class SnapshotApiLiveTest extends BaseGoogleComputeEngineApiLiveTest {
    }
 
    private void assertSnapshotEquals(Snapshot result) {
-      assertEquals(result.getName(), SNAPSHOT_NAME);
-      assertEquals(result.getSourceDisk().orNull(), disk.getSelfLink());
-      assertEquals(result.getSizeGb(), disk.getSizeGb());
+      assertEquals(result.name(), SNAPSHOT_NAME);
+      assertEquals(result.sourceDisk(), disk.selfLink());
+      assertEquals(result.diskSizeGb(), disk.sizeGb());
    }
-
-
 }

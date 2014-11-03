@@ -17,7 +17,7 @@
 package org.jclouds.googlecomputeengine.options;
 
 import java.net.URI;
-import java.util.Set;
+import java.util.List;
 
 /**
  * Options for creating a Target Pool
@@ -36,8 +36,8 @@ public class TargetPoolCreationOptions{
       NONE
    }
 
-   private Set<URI> healthChecks;
-   private Set<URI> instances;
+   private List<URI> healthChecks;
+   private List<URI> instances;
    private SessionAffinityValue sessionAffinity;
    private Float failoverRatio;
    private URI backupPool;
@@ -48,17 +48,17 @@ public class TargetPoolCreationOptions{
     *
     * @return a set of HealthCheck URIs
     */
-   public Set<URI> getHealthChecks(){
+   public List<URI> getHealthChecks(){
       return healthChecks;
    }
 
    /**
-    * A Set of resource URIs to the member VMs serving this pool. 
+    * A List of resource URIs to the member VMs serving this pool.
     * They must live in zones contained in the same region as this pool.
     *
     * @return set of instance URIs
     */
-   public Set<URI> getInstances(){
+   public List<URI> getInstances(){
       return instances;
    }
 
@@ -103,7 +103,7 @@ public class TargetPoolCreationOptions{
    /**
     * @see TargetPoolCreationOptions#getHealthChecks()
     */
-   public TargetPoolCreationOptions healthChecks(Set<URI> healthChecks){
+   public TargetPoolCreationOptions healthChecks(List<URI> healthChecks){
       this.healthChecks = healthChecks;
       return this;
    }
@@ -111,7 +111,7 @@ public class TargetPoolCreationOptions{
    /**
     * @see TargetPoolCreationOptions#getInstances()
     */
-   public TargetPoolCreationOptions instances(Set<URI> instances){
+   public TargetPoolCreationOptions instances(List<URI> instances){
       this.instances = instances;
       return this;
    }

@@ -16,159 +16,44 @@
  */
 package org.jclouds.googlecomputeengine.domain;
 
-import static com.google.common.base.Preconditions.checkNotNull;
+import static org.jclouds.googlecomputeengine.internal.NullSafeCopies.copyOf;
 
-import java.beans.ConstructorProperties;
 import java.net.URI;
-import java.util.Date;
-import java.util.Set;
+import java.util.List;
 
 import org.jclouds.javax.annotation.Nullable;
+import org.jclouds.json.SerializedNames;
 
-import com.google.common.annotations.Beta;
-import com.google.common.base.Objects;
-import com.google.common.collect.ImmutableSet;
+import com.google.auto.value.AutoValue;
 
-/**
- * Represents a region resource.
- */
-@Beta
-public final class Region extends Resource {
+@AutoValue
+public abstract class Region {
 
    public enum Status {
       UP,
       DOWN
    }
 
-   private final Status status;
-   private final Set<URI> zones;
-   private final Set<Quota> quotas;
+   public abstract String id();
 
-   @ConstructorProperties({
-           "id", "creationTimestamp", "selfLink", "name", "description", "status",
-           "zones", "quotas"
-   })
-   private Region(String id, Date creationTimestamp, URI selfLink, String name, String description,
-                  Status status, Set<URI> zones, Set<Quota> quotas) {
-      super(Kind.REGION, id, creationTimestamp, selfLink, name, description);
-      this.status = checkNotNull(status, "status of %name", name);
-      this.zones = zones == null ? ImmutableSet.<URI>of() : ImmutableSet
-              .copyOf(zones);
-      this.quotas = quotas == null ? ImmutableSet.<Quota>of() : ImmutableSet.copyOf(quotas);
+   public abstract URI selfLink();
+
+   public abstract String name();
+
+   @Nullable public abstract String description();
+
+   public abstract Status status();
+
+   public abstract List<URI> zones();
+
+   public abstract List<Quota> quotas();
+
+   @SerializedNames({ "id", "selfLink", "name", "description", "status", "zones", "quotas" })
+   public static Region create(String id, URI selfLink, String name, String description, Status status, List<URI> zones,
+         List<Quota> quotas) {
+      return new AutoValue_Region(id, selfLink, name, description, status, copyOf(zones), copyOf(quotas));
    }
 
-   /**
-    * @return Status of the region. "UP" or "DOWN".
-    */
-   public Status getStatus() {
-      return status;
+   Region() {
    }
-
-   /**
-    * @return the zones that can be used in this region.
-    */
-   @Nullable
-   public Set<URI> getZones() {
-      return zones;
-   }
-
-   /**
-    * @return quotas assigned to this project.
-    */
-   public Set<Quota> getQuotas() {
-      return quotas;
-   }
-
-
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   protected Objects.ToStringHelper string() {
-      return super.string()
-              .add("status", status)
-              .add("zones", zones)
-              .add("quotas", quotas);
-   }
-
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   public String toString() {
-      return string().toString();
-   }
-
-   public static Builder builder() {
-      return new Builder();
-   }
-
-   public Builder toBuilder() {
-      return new Builder().fromRegion(this);
-   }
-
-   public static final class Builder extends Resource.Builder<Builder> {
-
-      private Status status;
-      private ImmutableSet.Builder<URI> zones = ImmutableSet.builder();
-      private ImmutableSet.Builder<Quota> quotas = ImmutableSet.builder();
-
-      /**
-       * @see org.jclouds.googlecomputeengine.domain.Region#getStatus()
-       */
-      public Builder status(Status status) {
-         this.status = status;
-         return this;
-      }
-
-      /**
-       * @see Region#getZones()
-       */
-      public Builder zone(URI zone) {
-         this.zones.add(checkNotNull(zone, "zone"));
-         return this;
-      }
-
-      /**
-       * @see Region#getZones()
-       */
-      public Builder zones(Set<URI> zones) {
-         this.zones.addAll(checkNotNull(zones, "zones"));
-         return this;
-      }
-
-      /**
-       * @see Region#getQuotas()
-       */
-      public Builder addQuota(String metric, double usage, double limit) {
-         this.quotas.add(Quota.builder().metric(metric).usage(usage).limit(limit).build());
-         return this;
-      }
-
-      /**
-       * @see Region#getQuotas()
-       */
-      public Builder quotas(Set<Quota> quotas) {
-         this.quotas.addAll(checkNotNull(quotas));
-         return this;
-      }
-
-      @Override
-      protected Builder self() {
-         return this;
-      }
-
-      public Region build() {
-         return new Region(super.id, super.creationTimestamp, super.selfLink, super.name,
-                 super.description, status, zones.build(), quotas.build());
-      }
-
-      public Builder fromRegion(Region in) {
-         return super.fromResource(in)
-                 .status(in.getStatus())
-                 .zones(in.getZones())
-                 .quotas(in.getQuotas());
-      }
-   }
-
 }

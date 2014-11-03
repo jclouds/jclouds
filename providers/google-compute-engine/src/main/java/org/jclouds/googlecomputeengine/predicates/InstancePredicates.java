@@ -16,7 +16,7 @@
  */
 package org.jclouds.googlecomputeengine.predicates;
 
-import org.jclouds.googlecomputeengine.domain.InstanceTemplate.PersistentDisk;
+import org.jclouds.googlecomputeengine.domain.templates.InstanceTemplate.PersistentDisk;
 
 import com.google.common.base.Predicate;
 
@@ -26,7 +26,7 @@ public class InstancePredicates {
       return new Predicate<PersistentDisk>() {
          @Override
          public boolean apply(PersistentDisk input) {
-            return input.isBoot();
+            return input.boot();
          }
       };
    }

@@ -32,7 +32,6 @@ import org.jclouds.googlecomputeengine.options.ListOptions;
 import org.testng.annotations.Test;
 
 import com.google.common.collect.Iterables;
-import com.google.common.collect.Lists;
 
 public class RegionApiLiveTest extends BaseGoogleComputeEngineApiLiveTest {
 
@@ -52,23 +51,21 @@ public class RegionApiLiveTest extends BaseGoogleComputeEngineApiLiveTest {
       assertTrue(pageIterator.hasNext());
 
       IterableWithMarker<Region> singlePageIterator = pageIterator.next();
-      List<Region> regionAsList = Lists.newArrayList(singlePageIterator);
+      List<Region> regionAsList = singlePageIterator.toList();
 
       assertSame(regionAsList.size(), 1);
 
       this.region = Iterables.getOnlyElement(regionAsList);
    }
 
-
    @Test(groups = "live", dependsOnMethods = "testListRegion")
    public void testGetRegion() {
-      Region region = api().get(this.region.getName());
+      Region region = api().get(this.region.name());
       assertNotNull(region);
       assertRegionEquals(region, this.region);
    }
 
    private void assertRegionEquals(Region result, Region expected) {
-      assertEquals(result.getName(), expected.getName());
+      assertEquals(result.name(), expected.name());
    }
-
 }

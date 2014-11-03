@@ -65,15 +65,14 @@ public class HttpHealthCheckCreationBinder extends BindToJsonPayload {
       
       private HttpHealthCheckBinderHelper(String name, HttpHealthCheckCreationOptions httpHealthCheckCreationOptions){
          this.name = name;
-         this.host = httpHealthCheckCreationOptions.getHost();
-         this.requestPath = httpHealthCheckCreationOptions.getHost();
-         this.port = httpHealthCheckCreationOptions.getPort();
-         this.checkIntervalSec = httpHealthCheckCreationOptions.getCheckIntervalSec();
-         this.timeoutSec = httpHealthCheckCreationOptions.getTimeoutSec();
-         this.unhealthyThreshold = httpHealthCheckCreationOptions.getUnhealthyThreshold();
-         this.healthyThreshold = httpHealthCheckCreationOptions.getHealthyThreshold();
-         this.description = httpHealthCheckCreationOptions.getDescription();
+         this.host = httpHealthCheckCreationOptions.host();
+         this.requestPath = httpHealthCheckCreationOptions.requestPath();
+         this.port = httpHealthCheckCreationOptions.port();
+         this.checkIntervalSec = httpHealthCheckCreationOptions.checkIntervalSec();
+         this.timeoutSec = httpHealthCheckCreationOptions.timeoutSec();
+         this.unhealthyThreshold = httpHealthCheckCreationOptions.unhealthyThreshold();
+         this.healthyThreshold = httpHealthCheckCreationOptions.healthyThreshold();
+         this.description = httpHealthCheckCreationOptions.description();
       }
    }
-
 }

@@ -28,6 +28,7 @@ import static org.jclouds.reflect.Reflection2.typeToken;
 import java.net.URI;
 import java.util.Properties;
 
+import org.jclouds.apis.ApiMetadata;
 import org.jclouds.compute.ComputeServiceContext;
 import org.jclouds.googlecomputeengine.compute.config.GoogleComputeEngineServiceContextModule;
 import org.jclouds.googlecomputeengine.config.GoogleComputeEngineHttpApiModule;
@@ -36,9 +37,11 @@ import org.jclouds.oauth.v2.config.OAuthAuthenticationModule;
 import org.jclouds.oauth.v2.config.OAuthModule;
 import org.jclouds.rest.internal.BaseHttpApiMetadata;
 
+import com.google.auto.service.AutoService;
 import com.google.common.collect.ImmutableSet;
 import com.google.inject.Module;
 
+@AutoService(ApiMetadata.class)
 public class GoogleComputeEngineApiMetadata extends BaseHttpApiMetadata<GoogleComputeEngineApi> {
 
    @Override

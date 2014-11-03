@@ -40,7 +40,6 @@ import java.util.Set;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicReference;
 
-import javax.annotation.Resource;
 import javax.inject.Named;
 
 import org.jclouds.collect.Memoized;
@@ -48,10 +47,12 @@ import org.jclouds.compute.ComputeServiceAdapter;
 import org.jclouds.compute.domain.Hardware;
 import org.jclouds.compute.domain.Template;
 import org.jclouds.compute.options.TemplateOptions;
-import org.jclouds.compute.reference.ComputeServiceConstants;
 import org.jclouds.domain.Location;
 import org.jclouds.domain.LoginCredentials;
 import org.jclouds.googlecomputeengine.GoogleComputeEngineApi;
+import org.jclouds.googlecomputeengine.compute.domain.InstanceInZone;
+import org.jclouds.googlecomputeengine.compute.domain.MachineTypeInZone;
+import org.jclouds.googlecomputeengine.compute.domain.SlashEncodedIds;
 import org.jclouds.googlecomputeengine.compute.functions.FirewallTagNamingConvention;
 import org.jclouds.googlecomputeengine.compute.options.GoogleComputeEngineTemplateOptions;
 import org.jclouds.googlecomputeengine.config.UserProject;
@@ -59,24 +60,17 @@ import org.jclouds.googlecomputeengine.domain.Disk;
 import org.jclouds.googlecomputeengine.domain.Image;
 import org.jclouds.googlecomputeengine.domain.Instance;
 import org.jclouds.googlecomputeengine.domain.Instance.AttachedDisk;
-import org.jclouds.googlecomputeengine.domain.Instance.PersistentAttachedDisk;
-import org.jclouds.googlecomputeengine.domain.InstanceInZone;
-import org.jclouds.googlecomputeengine.domain.InstanceTemplate;
-import org.jclouds.googlecomputeengine.domain.InstanceTemplate.PersistentDisk;
-import org.jclouds.googlecomputeengine.domain.InstanceTemplate.PersistentDisk.Mode;
+import org.jclouds.googlecomputeengine.domain.Instance.AttachedDisk.Mode;
 import org.jclouds.googlecomputeengine.domain.MachineType;
-import org.jclouds.googlecomputeengine.domain.MachineTypeInZone;
 import org.jclouds.googlecomputeengine.domain.Operation;
-import org.jclouds.googlecomputeengine.domain.SlashEncodedIds;
 import org.jclouds.googlecomputeengine.domain.Zone;
+import org.jclouds.googlecomputeengine.domain.templates.InstanceTemplate;
+import org.jclouds.googlecomputeengine.domain.templates.InstanceTemplate.PersistentDisk;
 import org.jclouds.googlecomputeengine.features.InstanceApi;
 import org.jclouds.googlecomputeengine.options.DiskCreationOptions;
-import org.jclouds.http.HttpResponse;
-import org.jclouds.logging.Logger;
 
 import com.google.common.base.Function;
 import com.google.common.base.Objects;
-import com.google.common.base.Optional;
 import com.google.common.base.Predicate;
 import com.google.common.base.Supplier;
 import com.google.common.collect.FluentIterable;
@@ -88,11 +82,7 @@ import com.google.common.util.concurrent.Atomics;
 import com.google.common.util.concurrent.UncheckedTimeoutException;
 import com.google.inject.Inject;
 
-public class GoogleComputeEngineServiceAdapter implements ComputeServiceAdapter<InstanceInZone, MachineTypeInZone, Image, Zone> {
-
-   @Resource
-   @Named(ComputeServiceConstants.COMPUTE_LOGGER)
-   protected Logger logger = Logger.NULL;
+public final class GoogleComputeEngineServiceAdapter implements ComputeServiceAdapter<InstanceInZone, MachineTypeInZone, Image, Zone> {
 
    private final GoogleComputeEngineApi api;
    private final Supplier<String> userProject;
@@ -103,8 +93,7 @@ public class GoogleComputeEngineServiceAdapter implements ComputeServiceAdapter<
    private final long operationCompleteCheckTimeout;
    private final FirewallTagNamingConvention.Factory firewallTagNamingConvention;
 
-   @Inject
-   public GoogleComputeEngineServiceAdapter(GoogleComputeEngineApi api,
+   @Inject GoogleComputeEngineServiceAdapter(GoogleComputeEngineApi api,
                                             @UserProject Supplier<String> userProject,
                                             Function<TemplateOptions,
                                                     ImmutableMap.Builder<String, String>> metatadaFromTemplateOptions,
@@ -113,18 +102,15 @@ public class GoogleComputeEngineServiceAdapter implements ComputeServiceAdapter<
                                             @Named(OPERATION_COMPLETE_TIMEOUT) Long operationCompleteCheckTimeout,
                                             @Memoized Supplier<Map<URI, ? extends Location>> zones,
                                             FirewallTagNamingConvention.Factory firewallTagNamingConvention) {
-      this.api = checkNotNull(api, "google compute api");
-      this.userProject = checkNotNull(userProject, "user project name");
-      this.metatadaFromTemplateOptions = checkNotNull(metatadaFromTemplateOptions,
-              "metadata from template options function");
-      this.operationCompleteCheckInterval = checkNotNull(operationCompleteCheckInterval,
-              "operation completed check interval");
-      this.operationCompleteCheckTimeout = checkNotNull(operationCompleteCheckTimeout,
-                                                        "operation completed check timeout");
+      this.api = api;
+      this.userProject = userProject;
+      this.metatadaFromTemplateOptions = metatadaFromTemplateOptions;
+      this.operationCompleteCheckInterval = operationCompleteCheckInterval;
+      this.operationCompleteCheckTimeout = operationCompleteCheckTimeout;
       this.retryOperationDonePredicate = retry(operationDonePredicate, operationCompleteCheckTimeout,
                                                operationCompleteCheckInterval, TimeUnit.MILLISECONDS);
-      this.zones = checkNotNull(zones, "zones");
-      this.firewallTagNamingConvention = checkNotNull(firewallTagNamingConvention, "firewallTagNamingConvention");
+      this.zones = zones;
+      this.firewallTagNamingConvention = firewallTagNamingConvention;
    }
 
    @Override
@@ -147,7 +133,7 @@ public class GoogleComputeEngineServiceAdapter implements ComputeServiceAdapter<
          Disk bootDisk = createBootDisk(template, name);
 
          disks.add(new PersistentDisk(Mode.READ_WRITE,
-                                      bootDisk.getSelfLink(),
+                                      bootDisk.selfLink(),
                                       null,
                                       true,
                                       true));
@@ -155,8 +141,7 @@ public class GoogleComputeEngineServiceAdapter implements ComputeServiceAdapter<
 
       disks.addAll(options.getDisks());
 
-      InstanceTemplate instanceTemplate = InstanceTemplate.builder()
-              .forMachineType(hardware.getUri());
+      InstanceTemplate instanceTemplate = new InstanceTemplate().machineType(hardware.getUri());
 
       if (options.isEnableNat()) {
          instanceTemplate.addNetworkInterface(options.getNetwork().get(), Type.ONE_TO_ONE_NAT);
@@ -199,8 +184,8 @@ public class GoogleComputeEngineServiceAdapter implements ComputeServiceAdapter<
       }, operationCompleteCheckTimeout, operationCompleteCheckInterval, MILLISECONDS).apply(instance);
 
       if (!options.getTags().isEmpty()) {
-         Operation tagsOperation = instanceApi.setTagsInZone(zone,
-                 name, options.getTags(), instance.get().getTags().getFingerprint());
+         Operation tagsOperation = instanceApi
+               .setTagsInZone(zone, name, options.getTags(), instance.get().tags().fingerprint());
 
          waitOperationDone(tagsOperation);
 
@@ -225,7 +210,7 @@ public class GoogleComputeEngineServiceAdapter implements ComputeServiceAdapter<
                        }
                     })
               .toSet();
-      instanceApi.setTagsInZone(zone, instance.get().getName(), tags, instance.get().getTags().getFingerprint());
+      instanceApi.setTagsInZone(zone, instance.get().name(), tags, instance.get().tags().fingerprint());
 
       InstanceInZone instanceInZone = new InstanceInZone(instance.get(), zone);
 
@@ -265,14 +250,14 @@ public class GoogleComputeEngineServiceAdapter implements ComputeServiceAdapter<
                  .filter(new Predicate<MachineType>() {
                     @Override
                     public boolean apply(MachineType input) {
-                       return !input.getDeprecated().isPresent();
+                       return input.deprecated() == null;
                     }
                  })
                  .transform(new Function<MachineType, MachineTypeInZone>() {
 
                     @Override
                     public MachineTypeInZone apply(MachineType arg0) {
-                       return new MachineTypeInZone(arg0, arg0.getZone());
+                       return new MachineTypeInZone(arg0, arg0.zone());
                     }
                  }));
       }
@@ -336,7 +321,7 @@ public class GoogleComputeEngineServiceAdapter implements ComputeServiceAdapter<
 
          @Override
          public boolean apply(InstanceInZone instanceInZone) {
-            return contains(ids, instanceInZone.getInstance().getName());
+            return contains(ids, instanceInZone.getInstance().name());
          }
       });
    }
@@ -345,32 +330,23 @@ public class GoogleComputeEngineServiceAdapter implements ComputeServiceAdapter<
    public void destroyNode(final String name) {
       SlashEncodedIds slashEncodedIds = SlashEncodedIds.fromSlashEncoded(name);
       String diskName = null;
-      try {
-         Instance instance = api.getInstanceApi(userProject.get()).getInZone(slashEncodedIds.getFirstId(),
-                                                                              slashEncodedIds.getSecondId());
-         if (instance.getMetadata().getItems().get(GCE_DELETE_BOOT_DISK_METADATA_KEY).equals("true")) {
-            Optional<AttachedDisk> disk = tryFind(instance.getDisks(), new Predicate<AttachedDisk>() {
-               @Override
-               public boolean apply(AttachedDisk input) {
-                  return PersistentAttachedDisk.class.isInstance(input) &&
-                         PersistentAttachedDisk.class.cast(input).isBoot();
-               }
-            });
-            if (disk.isPresent()) {
-               diskName = PersistentAttachedDisk.class.cast(disk.get()).getSourceDiskName();
+      Instance instance = api.getInstanceApi(userProject.get()).getInZone(slashEncodedIds.getFirstId(),
+                                                                           slashEncodedIds.getSecondId());
+      if (instance != null &&
+            "true".equals(instance.metadata().items().get(GCE_DELETE_BOOT_DISK_METADATA_KEY))) {
+         for (AttachedDisk input : instance.disks()) {
+            if (input.type() == AttachedDisk.Type.PERSISTENT && input.boot()){
+               String source = input.source().toASCIIString();
+               diskName = source.substring(source.lastIndexOf('/') + 1);
             }
          }
-      } catch (Exception e) {
-         // TODO: what exception actually gets thrown here if the instance doesn't really exist?
       }
       waitOperationDone(api.getInstanceApi(userProject.get()).deleteInZone(slashEncodedIds.getFirstId(),
               slashEncodedIds.getSecondId()));
 
       if (diskName != null) {
-         waitOperationDone(api.getDiskApi(userProject.get()).deleteInZone(slashEncodedIds.getFirstId(),
-                                                                                    diskName));
+         waitOperationDone(api.getDiskApi(userProject.get()).deleteInZone(slashEncodedIds.getFirstId(), diskName));
       }
-
    }
 
    @Override
@@ -433,11 +409,10 @@ public class GoogleComputeEngineServiceAdapter implements ComputeServiceAdapter<
       }
 
       // check if the operation failed
-      if (operationRef.get().getHttpError().isPresent()) {
-         HttpResponse response = operationRef.get().getHttpError().get();
-         throw new IllegalStateException("operation failed. Http Error Code: " + response.getStatusCode() +
-                 " HttpError: " + response.getMessage());
+      if (operationRef.get().httpErrorStatusCode() != null) {
+         throw new IllegalStateException(
+               "operation failed. Http Error Code: " + operationRef.get().httpErrorStatusCode() +
+                     " HttpError: " + operationRef.get().httpErrorMessage());
       }
    }
-
 }

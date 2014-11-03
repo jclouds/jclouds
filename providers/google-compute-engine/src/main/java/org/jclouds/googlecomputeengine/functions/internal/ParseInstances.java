@@ -16,11 +16,10 @@
  */
 package org.jclouds.googlecomputeengine.functions.internal;
 
-import static com.google.common.base.Preconditions.checkNotNull;
-
 import javax.inject.Inject;
 
 import org.jclouds.collect.IterableWithMarker;
+import org.jclouds.collect.IterableWithMarkers;
 import org.jclouds.googlecomputeengine.GoogleComputeEngineApi;
 import org.jclouds.googlecomputeengine.domain.Instance;
 import org.jclouds.googlecomputeengine.domain.ListPage;
@@ -31,33 +30,29 @@ import org.jclouds.json.Json;
 import com.google.common.base.Function;
 import com.google.inject.TypeLiteral;
 
-public class ParseInstances extends ParseJson<ListPage<Instance>> {
+public final class ParseInstances extends ParseJson<ListPage<Instance>> {
 
-   @Inject
-   public ParseInstances(Json json) {
+   @Inject ParseInstances(Json json) {
       super(json, new TypeLiteral<ListPage<Instance>>() {
       });
    }
 
-   public static class ToPagedIterable extends BaseWithZoneToPagedIterable<Instance, ToPagedIterable> {
+   public static final class ToPagedIterable extends BaseWithZoneToPagedIterable<Instance, ToPagedIterable> {
 
       private final GoogleComputeEngineApi api;
 
-      @Inject
-      protected ToPagedIterable(GoogleComputeEngineApi api) {
-         this.api = checkNotNull(api, "api");
+      @Inject ToPagedIterable(GoogleComputeEngineApi api) {
+         this.api = api;
       }
 
       @Override
-      protected Function<Object, IterableWithMarker<Instance>> fetchNextPage(final String project,
-                                                                             final String zone,
-                                                                             final ListOptions options) {
+      protected Function<Object, IterableWithMarker<Instance>> fetchNextPage(final String project, final String zone,
+            final ListOptions options) {
          return new Function<Object, IterableWithMarker<Instance>>() {
-
-            @Override
-            public IterableWithMarker<Instance> apply(Object input) {
-               return api.getInstanceApi(project)
-                       .listAtMarkerInZone(zone, input.toString(), options);
+            @Override public IterableWithMarker<Instance> apply(Object input) {
+               ListPage<Instance> result = api.getInstanceApi(project)
+                     .listAtMarkerInZone(zone, input.toString(), options);
+               return IterableWithMarkers.from(result, result.nextPageToken());
             }
          };
       }

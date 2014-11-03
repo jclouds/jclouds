@@ -16,12 +16,10 @@
  */
 package org.jclouds.googlecomputeengine.functions.internal;
 
-import static com.google.common.base.Preconditions.checkNotNull;
-
 import javax.inject.Inject;
-import javax.inject.Singleton;
 
 import org.jclouds.collect.IterableWithMarker;
+import org.jclouds.collect.IterableWithMarkers;
 import org.jclouds.googlecomputeengine.GoogleComputeEngineApi;
 import org.jclouds.googlecomputeengine.domain.Address;
 import org.jclouds.googlecomputeengine.domain.ListPage;
@@ -32,11 +30,9 @@ import org.jclouds.json.Json;
 import com.google.common.base.Function;
 import com.google.inject.TypeLiteral;
 
-@Singleton
-public class ParseAddresses extends ParseJson<ListPage<Address>> {
+public final class ParseAddresses extends ParseJson<ListPage<Address>> {
 
-   @Inject
-   public ParseAddresses(Json json) {
+   @Inject ParseAddresses(Json json) {
       super(json, new TypeLiteral<ListPage<Address>>() {
       });
    }
@@ -45,21 +41,18 @@ public class ParseAddresses extends ParseJson<ListPage<Address>> {
 
       private final GoogleComputeEngineApi api;
 
-      @Inject
-      protected ToPagedIterable(GoogleComputeEngineApi api) {
-         this.api = checkNotNull(api, "api");
+      @Inject ToPagedIterable(GoogleComputeEngineApi api) {
+         this.api = api;
       }
 
-      @Override
-      protected Function<Object, IterableWithMarker<Address>> fetchNextPage(final String projectName,
-                                                                            final String regionName,
-                                                                         final ListOptions options) {
+      @Override protected Function<Object, IterableWithMarker<Address>> fetchNextPage(final String projectName,
+            final String regionName, final ListOptions options) {
          return new Function<Object, IterableWithMarker<Address>>() {
 
-            @Override
-            public IterableWithMarker<Address> apply(Object input) {
-               return api.getAddressApi(projectName)
-                       .listAtMarkerInRegion(regionName, input.toString(), options);
+            @Override public IterableWithMarker<Address> apply(Object input) {
+               ListPage<Address> result = api.getAddressApi(projectName)
+                     .listAtMarkerInRegion(regionName, input.toString(), options);
+               return IterableWithMarkers.from(result, result.nextPageToken());
             }
          };
       }

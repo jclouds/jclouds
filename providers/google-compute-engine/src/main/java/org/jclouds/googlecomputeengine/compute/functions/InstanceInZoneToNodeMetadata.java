@@ -21,8 +21,8 @@ import static org.jclouds.compute.util.ComputeServiceUtils.groupFromMapOrName;
 import static org.jclouds.googlecomputeengine.GoogleComputeEngineConstants.GCE_IMAGE_METADATA_KEY;
 
 import java.net.URI;
+import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import javax.inject.Inject;
 
@@ -33,22 +33,20 @@ import org.jclouds.compute.domain.NodeMetadata;
 import org.jclouds.compute.domain.NodeMetadataBuilder;
 import org.jclouds.compute.functions.GroupNamingConvention;
 import org.jclouds.domain.Location;
-import org.jclouds.googlecomputeengine.GoogleComputeEngineApi;
-import org.jclouds.googlecomputeengine.config.UserProject;
+import org.jclouds.googlecomputeengine.compute.domain.InstanceInZone;
+import org.jclouds.googlecomputeengine.compute.domain.SlashEncodedIds;
 import org.jclouds.googlecomputeengine.domain.Instance;
-import org.jclouds.googlecomputeengine.domain.InstanceInZone;
-import org.jclouds.googlecomputeengine.domain.SlashEncodedIds;
 
 import com.google.common.base.Function;
 import com.google.common.base.Predicates;
 import com.google.common.base.Supplier;
 import com.google.common.collect.FluentIterable;
-import com.google.common.collect.ImmutableSet;
+import com.google.common.collect.ImmutableList;
 
 /**
  * Transforms a google compute domain Instance into a generic NodeMetatada object.
  */
-public class InstanceInZoneToNodeMetadata implements Function<InstanceInZone, NodeMetadata> {
+public final class InstanceInZoneToNodeMetadata implements Function<InstanceInZone, NodeMetadata> {
 
    private final Map<Instance.Status, NodeMetadata.Status> toPortableNodeStatus;
    private final GroupNamingConvention nodeNamingConvention;
@@ -56,60 +54,52 @@ public class InstanceInZoneToNodeMetadata implements Function<InstanceInZone, No
    private final Supplier<Map<URI, ? extends Hardware>> hardwares;
    private final Supplier<Map<URI, ? extends Location>> locations;
    private final FirewallTagNamingConvention.Factory firewallTagNamingConvention;
-   private final GoogleComputeEngineApi api;
-   private final Supplier<String> userProject;
 
-   @Inject
-   public InstanceInZoneToNodeMetadata(Map<Instance.Status, NodeMetadata.Status> toPortableNodeStatus,
+   @Inject InstanceInZoneToNodeMetadata(Map<Instance.Status, NodeMetadata.Status> toPortableNodeStatus,
                                  GroupNamingConvention.Factory namingConvention,
                                  @Memoized Supplier<Map<URI, ? extends Image>> images,
                                  @Memoized Supplier<Map<URI, ? extends Hardware>> hardwares,
                                  @Memoized Supplier<Map<URI, ? extends Location>> locations,
-                                 FirewallTagNamingConvention.Factory firewallTagNamingConvention,
-                                 GoogleComputeEngineApi api,
-                                 @UserProject Supplier<String> userProject) {
+                                 FirewallTagNamingConvention.Factory firewallTagNamingConvention) {
       this.toPortableNodeStatus = toPortableNodeStatus;
       this.nodeNamingConvention = namingConvention.createWithoutPrefix();
       this.images = images;
       this.hardwares = hardwares;
       this.locations = locations;
       this.firewallTagNamingConvention = checkNotNull(firewallTagNamingConvention, "firewallTagNamingConvention");
-      this.api = checkNotNull(api, "api");
-      this.userProject = checkNotNull(userProject, "userProject");
    }
 
-   @Override
-   public NodeMetadata apply(InstanceInZone instanceInZone) {
+   @Override public NodeMetadata apply(InstanceInZone instanceInZone) {
       Instance input = instanceInZone.getInstance();
 
-      String group = groupFromMapOrName(input.getMetadata().getItems(),
-                                               input.getName(), nodeNamingConvention);
-      FluentIterable<String> tags = FluentIterable.from(input.getTags().getItems());
+      String group = groupFromMapOrName(input.metadata().items(),
+                                               input.name(), nodeNamingConvention);
+      FluentIterable<String> tags = FluentIterable.from(input.tags().items());
       if (group != null) {
          tags = tags.filter(Predicates.not(firewallTagNamingConvention.get(group).isFirewallTag()));
       }
 
       NodeMetadataBuilder builder = new NodeMetadataBuilder();
 
-      builder.id(SlashEncodedIds.fromTwoIds(checkNotNull(locations.get().get(input.getZone()),
-                                                                "location for %s", input.getZone())
-                                                    .getId(), input.getName()).slashEncode())
-              .name(input.getName())
-              .providerId(input.getId())
-              .hostname(input.getName())
-              .location(checkNotNull(locations.get().get(input.getZone()), "location for %s", input.getZone()))
-              .hardware(hardwares.get().get(input.getMachineType()))
-              .status(toPortableNodeStatus.get(input.getStatus()))
+      builder.id(SlashEncodedIds.fromTwoIds(checkNotNull(locations.get().get(input.zone()),
+                                                                "location for %s", input.zone())
+                                                    .getId(), input.name()).slashEncode())
+              .name(input.name())
+              .providerId(input.id())
+              .hostname(input.name())
+              .location(checkNotNull(locations.get().get(input.zone()), "location for %s", input.zone()))
+              .hardware(hardwares.get().get(input.machineType()))
+              .status(toPortableNodeStatus.get(input.status()))
               .tags(tags)
-              .uri(input.getSelfLink())
-              .userMetadata(input.getMetadata().getItems())
+              .uri(input.selfLink())
+              .userMetadata(input.metadata().items())
               .group(group)
               .privateAddresses(collectPrivateAddresses(input))
               .publicAddresses(collectPublicAddresses(input));
 
-      if (input.getMetadata().getItems().containsKey(GCE_IMAGE_METADATA_KEY)) {
+      if (input.metadata().items().containsKey(GCE_IMAGE_METADATA_KEY)) {
          try {
-            URI imageUri = URI.create(input.getMetadata().getItems()
+            URI imageUri = URI.create(input.metadata().items()
                                               .get(GCE_IMAGE_METADATA_KEY));
 
             Map<URI, ? extends Image> imagesMap = images.get();
@@ -126,22 +116,22 @@ public class InstanceInZoneToNodeMetadata implements Function<InstanceInZone, No
       return builder.build();
    }
 
-   private Set<String> collectPrivateAddresses(Instance input) {
-      ImmutableSet.Builder<String> privateAddressesBuilder = ImmutableSet.builder();
-      for (Instance.NetworkInterface networkInterface : input.getNetworkInterfaces()) {
-         if (networkInterface.getNetworkIP().isPresent()) {
-            privateAddressesBuilder.add(networkInterface.getNetworkIP().get());
+   private List<String> collectPrivateAddresses(Instance input) {
+      ImmutableList.Builder<String> privateAddressesBuilder = ImmutableList.builder();
+      for (Instance.NetworkInterface networkInterface : input.networkInterfaces()) {
+         if (networkInterface.networkIP() != null) {
+            privateAddressesBuilder.add(networkInterface.networkIP());
          }
       }
       return privateAddressesBuilder.build();
    }
 
-   private Set<String> collectPublicAddresses(Instance input) {
-      ImmutableSet.Builder<String> publicAddressesBuilder = ImmutableSet.builder();
-      for (Instance.NetworkInterface networkInterface : input.getNetworkInterfaces()) {
-         for (Instance.NetworkInterface.AccessConfig accessConfig : networkInterface.getAccessConfigs()) {
-            if (accessConfig.getNatIP().isPresent()) {
-               publicAddressesBuilder.add(accessConfig.getNatIP().get());
+   private List<String> collectPublicAddresses(Instance input) {
+      ImmutableList.Builder<String> publicAddressesBuilder = ImmutableList.builder();
+      for (Instance.NetworkInterface networkInterface : input.networkInterfaces()) {
+         for (Instance.NetworkInterface.AccessConfig accessConfig : networkInterface.accessConfigs()) {
+            if (accessConfig.natIP() != null) {
+               publicAddressesBuilder.add(accessConfig.natIP());
             }
          }
       }

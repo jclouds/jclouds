@@ -26,10 +26,10 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 
-import org.jclouds.Fallbacks.EmptyIterableWithMarkerOnNotFoundOr404;
 import org.jclouds.Fallbacks.EmptyPagedIterableOnNotFoundOr404;
 import org.jclouds.Fallbacks.NullOnNotFoundOr404;
 import org.jclouds.collect.PagedIterable;
+import org.jclouds.googlecomputeengine.GoogleComputeEngineFallbacks.EmptyListPageOnNotFoundOr404;
 import org.jclouds.googlecomputeengine.domain.ListPage;
 import org.jclouds.googlecomputeengine.domain.MachineType;
 import org.jclouds.googlecomputeengine.functions.internal.ParseMachineTypes;
@@ -73,7 +73,7 @@ public interface MachineTypeApi {
    @Path("/zones/{zone}/machineTypes")
    @OAuthScopes(COMPUTE_READONLY_SCOPE)
    @ResponseParser(ParseMachineTypes.class)
-   @Fallback(EmptyIterableWithMarkerOnNotFoundOr404.class)
+   @Fallback(EmptyListPageOnNotFoundOr404.class)
    ListPage<MachineType> listFirstPageInZone(@PathParam("zone") String zone);
 
    /**
@@ -84,7 +84,7 @@ public interface MachineTypeApi {
    @Path("/zones/{zone}/machineTypes")
    @OAuthScopes(COMPUTE_READONLY_SCOPE)
    @ResponseParser(ParseMachineTypes.class)
-   @Fallback(EmptyIterableWithMarkerOnNotFoundOr404.class)
+   @Fallback(EmptyListPageOnNotFoundOr404.class)
    ListPage<MachineType> listAtMarkerInZone(@PathParam("zone") String zone, @QueryParam("pageToken") @Nullable String marker);
 
    /**
@@ -104,7 +104,7 @@ public interface MachineTypeApi {
    @Path("/zones/{zone}/machineTypes")
    @OAuthScopes(COMPUTE_READONLY_SCOPE)
    @ResponseParser(ParseMachineTypes.class)
-   @Fallback(EmptyIterableWithMarkerOnNotFoundOr404.class)
+   @Fallback(EmptyListPageOnNotFoundOr404.class)
    ListPage<MachineType> listAtMarkerInZone(@PathParam("zone") String zone,
                                             @QueryParam("pageToken") @Nullable String marker,
                                             ListOptions listOptions);

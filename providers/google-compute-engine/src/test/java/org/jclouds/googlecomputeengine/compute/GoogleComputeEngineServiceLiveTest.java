@@ -20,6 +20,7 @@ import static com.google.common.collect.Iterables.contains;
 import static org.jclouds.oauth.v2.OAuthTestUtils.setCredential;
 import static org.testng.Assert.assertFalse;
 import static org.testng.Assert.assertTrue;
+
 import java.util.Properties;
 import java.util.Set;
 
@@ -67,8 +68,8 @@ public class GoogleComputeEngineServiceLiveTest extends BaseComputeServiceLiveTe
       ImmutableSet.Builder<String> deprecatedMachineTypes = ImmutableSet.builder();
       for (MachineType machine : api.getMachineTypeApi(userProject.get())
               .listInZone(DEFAULT_ZONE_NAME).concat()) {
-         if (machine.getDeprecated().isPresent()) {
-            deprecatedMachineTypes.add(machine.getId());
+         if (machine.deprecated() != null) {
+            deprecatedMachineTypes.add(machine.id());
          }
       }
       ImmutableSet<String> deprecatedMachineTypeIds = deprecatedMachineTypes.build();

@@ -16,15 +16,17 @@
  */
 package org.jclouds.googlecomputeengine.parse;
 
+import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
+
 import java.net.URI;
 
 import javax.ws.rs.Consumes;
-import javax.ws.rs.core.MediaType;
 
-import org.jclouds.date.internal.SimpleDateFormatDateService;
 import org.jclouds.googlecomputeengine.domain.Network;
 import org.jclouds.googlecomputeengine.internal.BaseGoogleComputeEngineParseTest;
+import org.testng.annotations.Test;
 
+@Test(groups = "unit", testName = "ParseNetworkTest")
 public class ParseNetworkTest extends BaseGoogleComputeEngineParseTest<Network> {
 
    @Override
@@ -32,17 +34,15 @@ public class ParseNetworkTest extends BaseGoogleComputeEngineParseTest<Network> 
       return "/network_get.json";
    }
 
-   @Override
-   @Consumes(MediaType.APPLICATION_JSON)
+   @Override @Consumes(APPLICATION_JSON)
    public Network expected() {
-      return Network.builder()
-              .id("13024414170909937976")
-              .creationTimestamp(new SimpleDateFormatDateService().iso8601DateParse("2012-10-24T20:13:19.967"))
-              .selfLink(URI.create("https://www.googleapis.com/compute/v1/projects/myproject/networks/jclouds-test"))
-              .name("default")
-              .description("Default network for the project")
-              .IPv4Range("10.0.0.0/8")
-              .gatewayIPv4("10.0.0.1")
-              .build();
+      return Network.create( //
+            "13024414170909937976", // id
+            URI.create(BASE_URL + "/myproject/networks/jclouds-test"), // selfLink
+            "default", // name
+            "Default network for the project", // description
+            "10.0.0.0/8", // rangeIPv4
+            "10.0.0.1" // gatewayIPv4
+      );
    }
 }

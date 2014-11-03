@@ -35,9 +35,9 @@ public class RegionToLocation implements Function<Region, Location> {
    @Override
    public Location apply(Region input) {
       return new LocationBuilder()
-              .description(input.getDescription().orNull())
-              .metadata(ImmutableMap.of("selfLink", (Object) checkNotNull(input.getSelfLink(), "region URI")))
-              .id(input.getName())
+              .description(input.description())
+              .metadata(ImmutableMap.of("selfLink", (Object) checkNotNull(input.selfLink(), "region URI")))
+              .id(input.name())
               .scope(LocationScope.REGION)
               .parent(GOOGLE_PROVIDER_LOCATION)
               .build();

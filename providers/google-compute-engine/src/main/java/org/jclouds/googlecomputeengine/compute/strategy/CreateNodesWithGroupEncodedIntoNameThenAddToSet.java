@@ -16,14 +16,14 @@
  */
 package org.jclouds.googlecomputeengine.compute.strategy;
 
-import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.base.Preconditions.checkState;
-import static com.google.common.collect.ImmutableSet.of;
+import static com.google.common.collect.ImmutableList.of;
 import static java.util.concurrent.TimeUnit.MILLISECONDS;
 import static org.jclouds.googlecomputeengine.GoogleComputeEngineConstants.OPERATION_COMPLETE_INTERVAL;
 import static org.jclouds.googlecomputeengine.GoogleComputeEngineConstants.OPERATION_COMPLETE_TIMEOUT;
 import static org.jclouds.util.Predicates2.retry;
 
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicReference;
@@ -41,22 +41,23 @@ import org.jclouds.compute.strategy.CreateNodeWithGroupEncodedIntoName;
 import org.jclouds.compute.strategy.CustomizeNodeAndAddToGoodMapOrPutExceptionIntoBadMap;
 import org.jclouds.compute.strategy.ListNodesStrategy;
 import org.jclouds.googlecomputeengine.GoogleComputeEngineApi;
+import org.jclouds.googlecomputeengine.compute.domain.NetworkAndAddressRange;
 import org.jclouds.googlecomputeengine.compute.functions.FirewallTagNamingConvention;
 import org.jclouds.googlecomputeengine.compute.options.GoogleComputeEngineTemplateOptions;
 import org.jclouds.googlecomputeengine.config.UserProject;
 import org.jclouds.googlecomputeengine.domain.Firewall;
+import org.jclouds.googlecomputeengine.domain.Firewall.Rule;
 import org.jclouds.googlecomputeengine.domain.Network;
 import org.jclouds.googlecomputeengine.domain.Operation;
-import org.jclouds.googlecomputeengine.domain.internal.NetworkAndAddressRange;
 import org.jclouds.googlecomputeengine.features.FirewallApi;
 import org.jclouds.googlecomputeengine.options.FirewallOptions;
 
 import com.google.common.base.Predicate;
 import com.google.common.base.Supplier;
 import com.google.common.cache.LoadingCache;
-import com.google.common.collect.ImmutableSet;
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.Lists;
 import com.google.common.collect.Multimap;
-import com.google.common.collect.Sets;
 import com.google.common.util.concurrent.Atomics;
 import com.google.common.util.concurrent.ListenableFuture;
 import com.google.common.util.concurrent.ListeningExecutorService;
@@ -75,8 +76,7 @@ public class CreateNodesWithGroupEncodedIntoNameThenAddToSet extends
    private final long operationCompleteCheckTimeout;
    private final FirewallTagNamingConvention.Factory firewallTagNamingConvention;
 
-   @Inject
-   protected CreateNodesWithGroupEncodedIntoNameThenAddToSet(
+   @Inject CreateNodesWithGroupEncodedIntoNameThenAddToSet(
            CreateNodeWithGroupEncodedIntoName addNodeWithGroupStrategy,
            ListNodesStrategy listNodesStrategy,
            GroupNamingConvention.Factory namingConvention,
@@ -93,19 +93,16 @@ public class CreateNodesWithGroupEncodedIntoNameThenAddToSet extends
            FirewallTagNamingConvention.Factory firewallTagNamingConvention) {
       super(addNodeWithGroupStrategy, listNodesStrategy, namingConvention, userExecutor,
               customizeNodeAndAddToGoodMapOrPutExceptionIntoBadMapFactory);
-
-      this.api = checkNotNull(api, "google compute api");
-      this.userProject = checkNotNull(userProject, "user project name");
-      this.operationCompleteCheckInterval = checkNotNull(operationCompleteCheckInterval,
-              "operation completed check interval");
-      this.operationCompleteCheckTimeout = checkNotNull(operationCompleteCheckTimeout,
-              "operation completed check timeout");
-      this.operationDonePredicate = checkNotNull(operationDonePredicate, "operationDonePredicate");
-      this.networkMap = checkNotNull(networkMap, "networkMap");
-      this.firewallTagNamingConvention = checkNotNull(firewallTagNamingConvention, "firewallTagNamingConvention");
+      this.api = api;
+      this.userProject = userProject;
+      this.operationCompleteCheckInterval = operationCompleteCheckInterval;
+      this.operationCompleteCheckTimeout = operationCompleteCheckTimeout;
+      this.operationDonePredicate = operationDonePredicate;
+      this.networkMap = networkMap;
+      this.firewallTagNamingConvention = firewallTagNamingConvention;
    }
 
-   @Override
+   @Override // TODO: why synchronized?
    public synchronized Map<?, ListenableFuture<Void>> execute(String group, int count,
                                                               Template template,
                                                               Set<NodeMetadata> goodNodes,
@@ -121,7 +118,7 @@ public class CreateNodesWithGroupEncodedIntoNameThenAddToSet extends
       // get or insert the network and insert a firewall with the users configuration
       Network network = getOrCreateNetwork(templateOptions, sharedResourceName);
       getOrCreateFirewalls(templateOptions, network, firewallTagNamingConvention.get(group));
-      templateOptions.network(network.getSelfLink());
+      templateOptions.network(network.selfLink());
       templateOptions.userMetadata(ComputeServiceConstants.NODE_GROUP_KEY, group);
 
       return super.execute(group, count, mutableTemplate, goodNodes, badNodes, customizationResponses);
@@ -134,7 +131,7 @@ public class CreateNodesWithGroupEncodedIntoNameThenAddToSet extends
 
       String networkName = templateOptions.getNetworkName().or(sharedResourceName);
 
-      return networkMap.apply(new NetworkAndAddressRange(networkName, DEFAULT_INTERNAL_NETWORK_RANGE, null));
+      return networkMap.apply(NetworkAndAddressRange.create(networkName, DEFAULT_INTERNAL_NETWORK_RANGE, null));
    }
 
    /**
@@ -150,24 +147,24 @@ public class CreateNodesWithGroupEncodedIntoNameThenAddToSet extends
 
       String projectName = userProject.get();
       FirewallApi firewallApi = api.getFirewallApi(projectName);
-      Set<AtomicReference<Operation>> operations = Sets.newLinkedHashSet();
-
+      List<AtomicReference<Operation>> operations = Lists.newArrayList();
 
       for (Integer port : templateOptions.getInboundPorts()) {
          String name = naming.name(port);
          Firewall firewall = firewallApi.get(name);
          if (firewall == null) {
-            ImmutableSet<Firewall.Rule> rules = ImmutableSet.of(Firewall.Rule.permitTcpRule(port), Firewall.Rule.permitUdpRule(port));
+            List<String> ports = ImmutableList.of(String.valueOf(port));
+            List<Rule> rules = ImmutableList.of(Rule.create("tcp", ports), Rule.create("udp", ports));
             FirewallOptions firewallOptions = new FirewallOptions()
                     .name(name)
-                    .network(network.getSelfLink())
+                    .network(network.selfLink())
                     .allowedRules(rules)
                     .sourceTags(templateOptions.getTags())
                     .sourceRanges(of(DEFAULT_INTERNAL_NETWORK_RANGE, EXTERIOR_RANGE))
-                    .targetTags(ImmutableSet.of(name));
+                    .targetTags(ImmutableList.of(name));
             AtomicReference<Operation> operation = Atomics.newReference(firewallApi.createInNetwork(
-                    firewallOptions.getName(),
-                    network.getSelfLink(),
+                    firewallOptions.name(),
+                    network.selfLink(),
                     firewallOptions));
             operations.add(operation);
          }
@@ -176,7 +173,7 @@ public class CreateNodesWithGroupEncodedIntoNameThenAddToSet extends
       for (AtomicReference<Operation> operation : operations) {
          retry(operationDonePredicate, operationCompleteCheckTimeout, operationCompleteCheckInterval,
                  MILLISECONDS).apply(operation);
-         checkState(!operation.get().getHttpError().isPresent(),
+         checkState(operation.get().httpErrorStatusCode() == null,
                "Could not insert firewall, operation failed" + operation);
       }
    }

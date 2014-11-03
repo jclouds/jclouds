@@ -16,22 +16,18 @@
  */
 package org.jclouds.googlecomputeengine.parse;
 
-import com.google.common.collect.ImmutableSet;
-
-import org.jclouds.date.internal.SimpleDateFormatDateService;
-import org.jclouds.googlecomputeengine.domain.ListPage;
-import org.jclouds.googlecomputeengine.domain.Resource;
-import org.jclouds.googlecomputeengine.domain.TargetPool;
-import org.jclouds.googlecomputeengine.internal.BaseGoogleComputeEngineParseTest;
-import org.jclouds.googlecomputeengine.options.TargetPoolCreationOptions.SessionAffinityValue;
-import org.testng.annotations.Test;
+import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
 
 import javax.ws.rs.Consumes;
-import javax.ws.rs.core.MediaType;
 
-import java.net.URI;
+import org.jclouds.googlecomputeengine.domain.ListPage;
+import org.jclouds.googlecomputeengine.domain.TargetPool;
+import org.jclouds.googlecomputeengine.internal.BaseGoogleComputeEngineParseTest;
+import org.testng.annotations.Test;
 
-@Test(groups = "unit")
+import com.google.common.collect.ImmutableList;
+
+@Test(groups = "unit", testName = "ParseTargetPoolListTest")
 public class ParseTargetPoolListTest extends BaseGoogleComputeEngineParseTest<ListPage<TargetPool>> {
 
    @Override
@@ -39,19 +35,12 @@ public class ParseTargetPoolListTest extends BaseGoogleComputeEngineParseTest<Li
       return "/targetpool_list.json";
    }
 
-   @Override
-   @Consumes(MediaType.APPLICATION_JSON)
+   @Override @Consumes(APPLICATION_JSON)
    public ListPage<TargetPool> expected() {
-      return ListPage.<TargetPool>builder()
-              .kind(Resource.Kind.TARGET_POOL_LIST)
-              .items(ImmutableSet.of(TargetPool.builder()
-                      .id("5199309593612841404")
-                      .creationTimestamp(new SimpleDateFormatDateService().iso8601DateParse("2014-01-07T05:25:27.783-08:00"))
-                      .selfLink(URI.create("https://www.googleapis.com/compute/v1/projects/myproject/regions/us-central1/targetPools/test-targetpool"))
-                      .name("test-targetpool")
-                      .region(URI.create("https://www.googleapis.com/compute/v1/projects/myproject/regions/us-central1"))
-                      .sessionAffinity(SessionAffinityValue.NONE)
-                      .build())
-              ).build();
+      return ListPage.create( //
+            ImmutableList.of(new ParseTargetPoolTest().expected()), // items
+            null, // nextPageToken
+            null // prefixes
+      );
    }
 }

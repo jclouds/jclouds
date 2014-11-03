@@ -16,21 +16,20 @@
  */
 package org.jclouds.googlecomputeengine.parse;
 
+import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
+
 import java.net.URI;
 
 import javax.ws.rs.Consumes;
-import javax.ws.rs.core.MediaType;
 
-import org.jclouds.date.internal.SimpleDateFormatDateService;
 import org.jclouds.googlecomputeengine.domain.HttpHealthCheck;
 import org.jclouds.googlecomputeengine.domain.ListPage;
-import org.jclouds.googlecomputeengine.domain.Resource;
 import org.jclouds.googlecomputeengine.internal.BaseGoogleComputeEngineParseTest;
 import org.testng.annotations.Test;
 
-import com.google.common.collect.ImmutableSet;
+import com.google.common.collect.ImmutableList;
 
-@Test(groups = "unit")
+@Test(groups = "unit", testName = "ParseHttpHealthCheckListTest")
 public class ParseHttpHealthCheckListTest extends BaseGoogleComputeEngineParseTest<ListPage<HttpHealthCheck>> {
 
    @Override
@@ -38,45 +37,41 @@ public class ParseHttpHealthCheckListTest extends BaseGoogleComputeEngineParseTe
       return "/httphealthcheck_list.json";
    }
 
-   @Override
-   @Consumes(MediaType.APPLICATION_JSON)
+   @Override @Consumes(APPLICATION_JSON)
    public ListPage<HttpHealthCheck> expected() {
-      return ListPage.<HttpHealthCheck>builder()
-              .kind(Resource.Kind.HTTP_HEALTH_CHECK_LIST)
-              .items(ImmutableSet.of(HttpHealthCheck.builder()
-                              .id("2761502483700014319")
-                              .creationTimestamp(new SimpleDateFormatDateService().iso8601DateParse("2014-01-14T05:55:54.910-08:00"))
-                              .selfLink(URI.create("https://www.googleapis.com/compute/v1/projects/jclouds-gce/global/httpHealthChecks/http-health-check-api-live-test"))
-                              .name("http-health-check-api-live-test")
-                              .port(0)
-                              .checkIntervalSec(0)
-                              .timeoutSec(0)
-                              .unhealthyThreshold(0)
-                              .healthyThreshold(0)
-                              .build(),
-                      HttpHealthCheck.builder()
-                              .id("1035854271083519643")
-                              .creationTimestamp(new SimpleDateFormatDateService().iso8601DateParse("2014-01-08T14:38:29.363-08:00"))
-                              .selfLink(URI.create("https://www.googleapis.com/compute/v1/projects/jclouds-gce/global/httpHealthChecks/myname-andrea-kmzmi1bh-http-health-check"))
-                              .name("myname-andrea-kmzmi1bh-http-health-check")
-                              .port(0)
-                              .checkIntervalSec(0)
-                              .timeoutSec(5)
-                              .unhealthyThreshold(2)
-                              .healthyThreshold(0)
-                              .build(),
-                      HttpHealthCheck.builder()
-                              .id("7006563292274658743")
-                              .creationTimestamp(new SimpleDateFormatDateService().iso8601DateParse("2014-01-08T14:48:03.276-08:00"))
-                              .selfLink(URI.create("https://www.googleapis.com/compute/v1/projects/jclouds-gce/global/httpHealthChecks/myname-andrea-zk7gadwq-http-health-check"))
-                              .name("myname-andrea-zk7gadwq-http-health-check")
-                              .port(0)
-                              .checkIntervalSec(0)
-                              .timeoutSec(5)
-                              .unhealthyThreshold(2)
-                              .healthyThreshold(0)
-                              .build()
-              ))
-              .build();
+      HttpHealthCheck healthCheck1 = new ParseHttpHealthCheckTest().expected();
+      HttpHealthCheck healthCheck2 = HttpHealthCheck.create( //
+            "1035854271083519643", // id
+            URI.create(BASE_URL + "/jclouds-gce/global/httpHealthChecks/myname-andrea-kmzmi1bh-http-health-check"),
+            // selfLink
+            "myname-andrea-kmzmi1bh-http-health-check", // name
+            null, // description
+            null, // host
+            null, // requestPath
+            null,  // port
+            null,  // checkIntervalSec
+            5,  // timeoutSec
+            2,  // unhealthyThreshold
+            null // healthyThreshold
+      );
+      HttpHealthCheck healthCheck3 = HttpHealthCheck.create( //
+            "7006563292274658743", // id
+            URI.create(BASE_URL + "/jclouds-gce/global/httpHealthChecks/myname-andrea-zk7gadwq-http-health-check"),
+            // selfLink
+            "myname-andrea-zk7gadwq-http-health-check", // name
+            null, // description
+            null, // host
+            null, // requestPath
+            null,  // port
+            null,  // checkIntervalSec
+            5,  // timeoutSec
+            2,  // unhealthyThreshold
+            null // healthyThreshold
+      );
+      return ListPage.create( //
+            ImmutableList.of(healthCheck1, healthCheck2, healthCheck3), // items
+            null, // nextPageToken
+            null // prefixes
+      );
    }
 }

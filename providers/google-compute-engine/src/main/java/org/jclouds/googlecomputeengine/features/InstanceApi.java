@@ -20,7 +20,6 @@ import static org.jclouds.googlecomputeengine.GoogleComputeEngineConstants.COMPU
 import static org.jclouds.googlecomputeengine.GoogleComputeEngineConstants.COMPUTE_SCOPE;
 
 import java.util.Map;
-import java.util.Set;
 
 import javax.inject.Named;
 import javax.ws.rs.Consumes;
@@ -33,17 +32,17 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 
-import org.jclouds.Fallbacks.EmptyIterableWithMarkerOnNotFoundOr404;
 import org.jclouds.Fallbacks.EmptyPagedIterableOnNotFoundOr404;
 import org.jclouds.Fallbacks.NullOnNotFoundOr404;
 import org.jclouds.collect.PagedIterable;
-import org.jclouds.googlecomputeengine.domain.Instance;
-import org.jclouds.googlecomputeengine.domain.InstanceTemplate;
-import org.jclouds.googlecomputeengine.domain.ListPage;
-import org.jclouds.googlecomputeengine.domain.Operation;
-import org.jclouds.googlecomputeengine.functions.internal.ParseInstances;
+import org.jclouds.googlecomputeengine.GoogleComputeEngineFallbacks.EmptyListPageOnNotFoundOr404;
 import org.jclouds.googlecomputeengine.binders.InstanceBinder;
 import org.jclouds.googlecomputeengine.binders.MetadataBinder;
+import org.jclouds.googlecomputeengine.domain.Instance;
+import org.jclouds.googlecomputeengine.domain.ListPage;
+import org.jclouds.googlecomputeengine.domain.Operation;
+import org.jclouds.googlecomputeengine.domain.templates.InstanceTemplate;
+import org.jclouds.googlecomputeengine.functions.internal.ParseInstances;
 import org.jclouds.googlecomputeengine.options.AttachDiskOptions;
 import org.jclouds.googlecomputeengine.options.ListOptions;
 import org.jclouds.javax.annotation.Nullable;
@@ -135,7 +134,7 @@ public interface InstanceApi {
    @Path("/zones/{zone}/instances")
    @OAuthScopes(COMPUTE_READONLY_SCOPE)
    @ResponseParser(ParseInstances.class)
-   @Fallback(EmptyIterableWithMarkerOnNotFoundOr404.class)
+   @Fallback(EmptyListPageOnNotFoundOr404.class)
    ListPage<Instance> listFirstPageInZone(@PathParam("zone") String zone);
 
    /**
@@ -156,7 +155,7 @@ public interface InstanceApi {
    @Path("/zones/{zone}/instances")
    @OAuthScopes(COMPUTE_READONLY_SCOPE)
    @ResponseParser(ParseInstances.class)
-   @Fallback(EmptyIterableWithMarkerOnNotFoundOr404.class)
+   @Fallback(EmptyListPageOnNotFoundOr404.class)
    ListPage<Instance> listAtMarkerInZone(@PathParam("zone") String zone, @Nullable String marker,
                                          ListOptions listOptions);
 
@@ -169,7 +168,7 @@ public interface InstanceApi {
    @Path("/zones/{zone}/instances")
    @OAuthScopes(COMPUTE_READONLY_SCOPE)
    @ResponseParser(ParseInstances.class)
-   @Fallback(EmptyIterableWithMarkerOnNotFoundOr404.class)
+   @Fallback(EmptyListPageOnNotFoundOr404.class)
    ListPage<Instance> listAtMarkerInZone(@PathParam("zone") String zone,
                                          @Nullable String marker);
 
@@ -344,7 +343,7 @@ public interface InstanceApi {
                                @PayloadParam("fingerprint") String fingerprint);
 
    /**
-    * Sets items for an instance
+    * Lists items for an instance
     *
     * @param zone The zone the instance is in
     * @param instanceName the name of the instance
@@ -362,7 +361,7 @@ public interface InstanceApi {
    @MapBinder(BindToJsonPayload.class)
    Operation setTagsInZone(@PathParam("zone") String zone,
                            @PathParam("instance") String instanceName,
-                           @PayloadParam("items") Set<String> items,
+                           @PayloadParam("items") Iterable<String> items,
                            @PayloadParam("fingerprint") String fingerprint);
 
 }

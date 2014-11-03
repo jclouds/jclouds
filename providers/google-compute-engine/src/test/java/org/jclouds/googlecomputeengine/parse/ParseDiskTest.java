@@ -16,17 +16,17 @@
  */
 package org.jclouds.googlecomputeengine.parse;
 
+import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
+
 import java.net.URI;
 
 import javax.ws.rs.Consumes;
-import javax.ws.rs.core.MediaType;
 
-import org.jclouds.date.internal.SimpleDateFormatDateService;
 import org.jclouds.googlecomputeengine.domain.Disk;
 import org.jclouds.googlecomputeengine.internal.BaseGoogleComputeEngineParseTest;
 import org.testng.annotations.Test;
 
-@Test(groups = "unit")
+@Test(groups = "unit", testName = "ParseDiskTest")
 public class ParseDiskTest extends BaseGoogleComputeEngineParseTest<Disk> {
 
    @Override
@@ -34,18 +34,17 @@ public class ParseDiskTest extends BaseGoogleComputeEngineParseTest<Disk> {
       return "/disk_get.json";
    }
 
-   @Override
-   @Consumes(MediaType.APPLICATION_JSON)
+   @Override @Consumes(APPLICATION_JSON)
    public Disk expected() {
-      return Disk.builder()
-              .id("13050421646334304115")
-              .creationTimestamp(new SimpleDateFormatDateService().iso8601DateParse("2012-11-25T01:38:48.306"))
-              .selfLink(URI.create("https://www.googleapis.com/compute/v1/projects/myproject/zones/us-central1-a/disks/testimage1"))
-              .name("testimage1")
-              .sizeGb(1)
-              .zone(URI.create("https://www.googleapis.com/compute/v1/projects/myproject/zones/us-central1-a"))
-              .status("READY")
-              .type(URI.create("https://www.googleapis.com/compute/v1/projects/myproject/zones/us-central1-a/diskTypes/pd-ssd"))
-              .build();
+      return Disk.create( //
+            "13050421646334304115", // id
+            URI.create(BASE_URL + "/myproject/zones/us-central1-a"), // zone
+            "READY", // status
+            "testimage1", // name
+            null, // description
+            1, // sizeGb
+            URI.create(BASE_URL + "/myproject/zones/us-central1-a/disks/testimage1"), // selfLink
+            URI.create(BASE_URL + "/studied-point-720/zones/us-central1-a/diskTypes/pd-standard") // type
+      );
    }
 }

@@ -16,19 +16,20 @@
  */
 package org.jclouds.googlecomputeengine.parse;
 
+import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
+
 import java.net.URI;
 
 import javax.ws.rs.Consumes;
-import javax.ws.rs.core.MediaType;
 
-import org.jclouds.date.internal.SimpleDateFormatDateService;
 import org.jclouds.googlecomputeengine.domain.ListPage;
-import org.jclouds.googlecomputeengine.domain.Resource;
 import org.jclouds.googlecomputeengine.domain.Zone;
 import org.jclouds.googlecomputeengine.internal.BaseGoogleComputeEngineParseTest;
 import org.testng.annotations.Test;
 
-@Test(groups = "unit")
+import com.google.common.collect.ImmutableList;
+
+@Test(groups = "unit", testName = "ParseZoneListTest")
 public class ParseZoneListTest extends BaseGoogleComputeEngineParseTest<ListPage<Zone>> {
 
    @Override
@@ -36,30 +37,28 @@ public class ParseZoneListTest extends BaseGoogleComputeEngineParseTest<ListPage
       return "/zone_list.json";
    }
 
-   @Override
-   @Consumes(MediaType.APPLICATION_JSON)
+   @Override @Consumes(APPLICATION_JSON)
    public ListPage<Zone> expected() {
-      return ListPage.<Zone>builder()
-                     .kind(Resource.Kind.ZONE_LIST)
-                     .addItem(new ParseZoneTest().expected())
-                     .addItem(Zone.builder()
-                                  .id("13024414164050619686")
-                                  .creationTimestamp(new SimpleDateFormatDateService().iso8601DateParse
-                                    ("2012-10-24T20:13:19.271"))
-                                  .selfLink(URI.create("https://www.googleapis" +
-                                    ".com/compute/v1/projects/myproject/zones/us-central1-b"))
-                                  .name("us-central1-b")
-                                  .description("us-central1-b")
-                                  .status(Zone.Status.UP)
-                                  .addMaintenanceWindow(Zone.MaintenanceWindow.builder()
-                                          .name("2013-02-17-planned-outage")
-                                          .description("maintenance zone")
-                                          .beginTime(new SimpleDateFormatDateService().iso8601DateParse
-                                                  ("2013-02-17T08:00:00.000"))
-                                          .endTime(new SimpleDateFormatDateService().iso8601DateParse
-                                                  ("2013-03-03T08:00:00.000"))
-                                          .build())
-                                  .build())
-                    .build();
+      Zone zone1 = new ParseZoneTest().expected();
+      Zone zone2 = Zone.create( //
+            "13024414164050619686", // id
+            URI.create(BASE_URL + "/myproject/zones/us-central1-b"), // selfLink
+            "us-central1-b", // name
+            "us-central1-b", // description
+            Zone.Status.UP, // status
+            ImmutableList.of( // maintenanceWindows
+                  Zone.MaintenanceWindow.create( //
+                        "2013-02-17-planned-outage", // name
+                        "maintenance zone", // description
+                        parse("2013-02-17T08:00:00.000"), // beginTime
+                        parse("2013-03-03T08:00:00.000") // endTime)
+                  )), //
+            null // availableMachineTypes
+      );
+      return ListPage.create( //
+            ImmutableList.of(zone1, zone2), // items
+            null, // nextPageToken
+            null // prefixes
+      );
    }
 }

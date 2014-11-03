@@ -16,6 +16,9 @@
  */
 package org.jclouds.googlecomputeengine.internal;
 
+import java.util.Date;
+
+import org.jclouds.date.internal.SimpleDateFormatDateService;
 import org.jclouds.googlecomputeengine.config.GoogleComputeEngineParserModule;
 import org.jclouds.json.BaseItemParserTest;
 import org.jclouds.json.config.GsonModule;
@@ -25,9 +28,14 @@ import com.google.inject.Injector;
 
 public abstract class BaseGoogleComputeEngineParseTest<T> extends BaseItemParserTest<T> {
 
+   protected static final String BASE_URL = "https://www.googleapis.com/compute/v1/projects";
+
    @Override
    protected Injector injector() {
       return Guice.createInjector(new GsonModule(), new GoogleComputeEngineParserModule());
    }
 
+   protected static Date parse(String iso8601) {
+      return new SimpleDateFormatDateService().iso8601DateParse(iso8601);
+   }
 }

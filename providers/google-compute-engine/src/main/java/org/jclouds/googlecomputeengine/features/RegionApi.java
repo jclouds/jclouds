@@ -25,10 +25,10 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.core.MediaType;
 
-import org.jclouds.Fallbacks.EmptyIterableWithMarkerOnNotFoundOr404;
 import org.jclouds.Fallbacks.EmptyPagedIterableOnNotFoundOr404;
 import org.jclouds.Fallbacks.NullOnNotFoundOr404;
 import org.jclouds.collect.PagedIterable;
+import org.jclouds.googlecomputeengine.GoogleComputeEngineFallbacks.EmptyListPageOnNotFoundOr404;
 import org.jclouds.googlecomputeengine.domain.ListPage;
 import org.jclouds.googlecomputeengine.domain.Region;
 import org.jclouds.googlecomputeengine.functions.internal.ParseRegions;
@@ -70,7 +70,7 @@ public interface RegionApi {
    @Path("/regions")
    @OAuthScopes(COMPUTE_READONLY_SCOPE)
    @ResponseParser(ParseRegions.class)
-   @Fallback(EmptyIterableWithMarkerOnNotFoundOr404.class)
+   @Fallback(EmptyListPageOnNotFoundOr404.class)
    ListPage<Region> listFirstPage();
 
    /**
@@ -81,7 +81,7 @@ public interface RegionApi {
    @Path("/regions")
    @OAuthScopes(COMPUTE_READONLY_SCOPE)
    @ResponseParser(ParseRegions.class)
-   @Fallback(EmptyIterableWithMarkerOnNotFoundOr404.class)
+   @Fallback(EmptyListPageOnNotFoundOr404.class)
    ListPage<Region> listAtMarker(String marker);
 
    /**
@@ -100,7 +100,7 @@ public interface RegionApi {
    @Path("/regions")
    @OAuthScopes(COMPUTE_READONLY_SCOPE)
    @ResponseParser(ParseRegions.class)
-   @Fallback(EmptyIterableWithMarkerOnNotFoundOr404.class)
+   @Fallback(EmptyListPageOnNotFoundOr404.class)
    ListPage<Region> listAtMarker(String marker, ListOptions listOptions);
 
    /**

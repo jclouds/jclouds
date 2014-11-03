@@ -16,8 +16,9 @@
  */
 package org.jclouds.googlecomputeengine.parse;
 
+import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
+
 import javax.ws.rs.Consumes;
-import javax.ws.rs.core.MediaType;
 
 import org.jclouds.googlecomputeengine.domain.Metadata;
 import org.jclouds.googlecomputeengine.internal.BaseGoogleComputeEngineParseTest;
@@ -25,7 +26,7 @@ import org.testng.annotations.Test;
 
 import com.google.common.collect.ImmutableMap;
 
-@Test(groups = "unit")
+@Test(groups = "unit", testName = "ParseMetadataTest")
 public class ParseMetadataTest extends BaseGoogleComputeEngineParseTest<Metadata> {
 
    @Override
@@ -33,13 +34,9 @@ public class ParseMetadataTest extends BaseGoogleComputeEngineParseTest<Metadata
       return "/metadata.json";
    }
 
-   @Override
-   @Consumes(MediaType.APPLICATION_JSON)
+   @Override @Consumes(APPLICATION_JSON)
    public Metadata expected() {
-      return new Metadata("efgh",
-              ImmutableMap.<String, String>builder()
-                      .put("propA", "valueA")
-                      .put("propB", "valueB")
-                      .build());
+      return Metadata.create("efgh",
+            ImmutableMap.<String, String>builder().put("propA", "valueA").put("propB", "valueB").build());
    }
 }

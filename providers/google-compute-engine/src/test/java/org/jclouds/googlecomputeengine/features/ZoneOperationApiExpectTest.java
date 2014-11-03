@@ -22,23 +22,21 @@ import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNull;
 import static org.testng.Assert.assertTrue;
 
-import java.net.URI;
-
-import org.jclouds.date.internal.SimpleDateFormatDateService;
 import org.jclouds.googlecomputeengine.domain.ListPage;
 import org.jclouds.googlecomputeengine.domain.Operation;
-import org.jclouds.googlecomputeengine.domain.Resource;
 import org.jclouds.googlecomputeengine.internal.BaseGoogleComputeEngineApiExpectTest;
 import org.jclouds.googlecomputeengine.options.ListOptions;
+import org.jclouds.googlecomputeengine.parse.ParseZoneOperationTest;
 import org.jclouds.http.HttpRequest;
 import org.jclouds.http.HttpResponse;
 import org.testng.annotations.Test;
 
-@Test(groups = "unit")
+import com.google.common.collect.ImmutableList;
+
+@Test(groups = "unit", testName = "ZoneOperationApiExpectTest")
 public class ZoneOperationApiExpectTest extends BaseGoogleComputeEngineApiExpectTest {
 
-   private static final String OPERATIONS_URL_PREFIX = "https://www.googleapis" +
-           ".com/compute/v1/projects/myproject/zones/us-central1-a/operations";
+   private static final String OPERATIONS_URL_PREFIX = BASE_URL + "/myproject/zones/us-central1-a/operations";
 
    public static final HttpRequest GET_ZONE_OPERATION_REQUEST = HttpRequest
            .builder()
@@ -50,41 +48,13 @@ public class ZoneOperationApiExpectTest extends BaseGoogleComputeEngineApiExpect
    public static final HttpResponse GET_ZONE_OPERATION_RESPONSE = HttpResponse.builder().statusCode(200)
            .payload(staticPayloadFromResource("/zone_operation.json")).build();
 
-   private Operation expected() {
-      SimpleDateFormatDateService dateService = new SimpleDateFormatDateService();
-      return Operation.builder().id("13053095055850848306")
-              .selfLink(URI.create("https://www.googleapis" +
-                      ".com/compute/v1/projects/myproject/zones/us-central1-a/operations/operation-1354084865060-4cf88735faeb8" +
-                      "-bbbb12cb"))
-              .name("operation-1354084865060-4cf88735faeb8-bbbb12cb")
-              .targetLink(URI.create("https://www.googleapis" +
-                      ".com/compute/v1/projects/myproject/zones/us-central1-a/instances/instance-api-live-test-instance"))
-              .targetId("13053094017547040099")
-              .status(Operation.Status.DONE)
-              .user("user@developer.gserviceaccount.com")
-              .progress(100)
-              .insertTime(dateService.iso8601DateParse("2012-11-28T06:41:05.060"))
-              .startTime(dateService.iso8601DateParse("2012-11-28T06:41:05.142"))
-              .endTime(dateService.iso8601DateParse("2012-11-28T06:41:06.142"))
-              .operationType("insert")
-              .zone(URI.create("https://www.googleapis.com/compute/v1/projects/myproject/zones/us-central1-a"))
-              .build();
-   }
-
-   private ListPage<Operation> expectedList() {
-      return ListPage.<Operation>builder()
-              .kind(Resource.Kind.OPERATION_LIST)
-              .addItem(expected())
-              .build();
-   }
-
    public void testGetOperationResponseIs2xx() throws Exception {
 
       ZoneOperationApi zoneOperationApi = requestsSendResponses(requestForScopes(COMPUTE_READONLY_SCOPE),
               TOKEN_RESPONSE, GET_ZONE_OPERATION_REQUEST, GET_ZONE_OPERATION_RESPONSE).getZoneOperationApi("myproject");
 
       assertEquals(zoneOperationApi.getInZone("us-central1-a", "operation-1354084865060-4cf88735faeb8-bbbb12cb"),
-              expected());
+            new ParseZoneOperationTest().expected());
    }
 
    public void testGetOperationResponseIs4xx() throws Exception {
@@ -125,6 +95,14 @@ public class ZoneOperationApiExpectTest extends BaseGoogleComputeEngineApiExpect
               TOKEN_RESPONSE, delete, operationResponse).getZoneOperationApi("myproject");
 
       zoneOperationApi.deleteInZone("us-central1-a", "operation-1352178598164-4cdcc9d031510-4aa46279");
+   }
+
+   private static ListPage<Operation> expectedList() {
+      return ListPage.create( //
+            ImmutableList.of(new ParseZoneOperationTest().expected()), // items
+            null, // nextPageToken
+            null // prefixes
+      );
    }
 
    public void testListOperationWithNoOptionsResponseIs2xx() {
@@ -186,6 +164,4 @@ public class ZoneOperationApiExpectTest extends BaseGoogleComputeEngineApiExpect
 
       assertTrue(zoneOperationApi.listInZone("us-central1-a").concat().isEmpty());
    }
-
-
 }

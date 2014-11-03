@@ -11,7 +11,8 @@
          "name": "testimage1",
          "sizeGb": "1",
          "zone": "https://www.googleapis.com/compute/v1/projects/myproject/zones/us-central1-a",
-         "status": "READY"
+         "status": "READY",
+         "type": "https://www.googleapis.com/compute/v1/projects/studied-point-720/zones/us-central1-a/diskTypes/pd-standard"
       }
    ]
 }

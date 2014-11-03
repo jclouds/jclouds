@@ -34,7 +34,6 @@ import org.jclouds.googlecomputeengine.options.ListOptions;
 import org.testng.annotations.Test;
 
 import com.google.common.collect.Iterables;
-import com.google.common.collect.Lists;
 
 public class ImageApiLiveTest extends BaseGoogleComputeEngineApiLiveTest {
 
@@ -67,7 +66,7 @@ public class ImageApiLiveTest extends BaseGoogleComputeEngineApiLiveTest {
       assertTrue(pageIterator.hasNext());
 
       IterableWithMarker<Image> singlePageIterator = pageIterator.next();
-      List<Image> imageAsList = Lists.newArrayList(singlePageIterator);
+      List<Image> imageAsList = singlePageIterator.toList();
 
       assertSame(imageAsList.size(), 1);
 
@@ -77,20 +76,20 @@ public class ImageApiLiveTest extends BaseGoogleComputeEngineApiLiveTest {
 
    @Test(groups = "live", dependsOnMethods = "testListImage")
    public void testGetImage() {
-      Image image = api().get(this.image.getName());
+      Image image = api().get(this.image.name());
       assertNotNull(image);
       assertImageEquals(image, this.image);
    }
 
    private void assertImageEquals(Image result, Image expected) {
-      assertEquals(result.getName(), expected.getName());
+      assertEquals(result.name(), expected.name());
    }
 
    @Test(groups = "live")
    public void testInsertDisk() {
       assertZoneOperationDoneSucessfully(diskApi().createInZone(DISK_NAME, sizeGb, DEFAULT_ZONE_NAME), TIME_WAIT);
       Disk disk = diskApi().getInZone(DEFAULT_ZONE_NAME, DISK_NAME);
-      diskURI = disk.getSelfLink();
+      diskURI = disk.selfLink();
    }
 
    @Test(groups = "live", dependsOnMethods = "testInsertDisk")
@@ -111,10 +110,9 @@ public class ImageApiLiveTest extends BaseGoogleComputeEngineApiLiveTest {
    }
 
    private void assertImageEquals(Image result) {
-      assertEquals(result.getName(), IMAGE_NAME);
-      assertEquals(result.getSourceType(), "RAW");
-      assertEquals(result.getSelfLink(), getImageUrl(userProject.get(), IMAGE_NAME) );
+      assertEquals(result.name(), IMAGE_NAME);
+      assertEquals(result.sourceType(), "RAW");
+      assertEquals(result.selfLink(), getImageUrl(userProject.get(), IMAGE_NAME) );
    }
-
 }
 

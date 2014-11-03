@@ -29,9 +29,9 @@ import javax.inject.Singleton;
 
 import org.jclouds.domain.Credentials;
 import org.jclouds.googlecomputeengine.GoogleComputeEngineApi;
+import org.jclouds.googlecomputeengine.compute.domain.SlashEncodedIds;
 import org.jclouds.googlecomputeengine.domain.Operation;
 import org.jclouds.googlecomputeengine.domain.Project;
-import org.jclouds.googlecomputeengine.domain.SlashEncodedIds;
 import org.jclouds.googlecomputeengine.handlers.GoogleComputeEngineErrorHandler;
 import org.jclouds.googlecomputeengine.predicates.GlobalOperationDonePredicate;
 import org.jclouds.googlecomputeengine.predicates.RegionOperationDonePredicate;
@@ -112,7 +112,7 @@ public class GoogleComputeEngineHttpApiModule extends HttpApiModule<GoogleComput
                        }
                     }
                     Project project = api.getProjectApi().get(projectName);
-                    return project.getName();
+                    return project.name();
                  }
               }, creds), seconds, TimeUnit.SECONDS);
    }

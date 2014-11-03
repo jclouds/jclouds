@@ -16,146 +16,44 @@
  */
 package org.jclouds.googlecomputeengine.domain;
 
-import static com.google.common.base.Preconditions.checkNotNull;
+import static org.jclouds.googlecomputeengine.internal.NullSafeCopies.copyOf;
 
 import java.net.URI;
-import java.util.Date;
-import java.util.Set;
+import java.util.List;
 
 import org.jclouds.javax.annotation.Nullable;
+import org.jclouds.json.SerializedNames;
 
-import com.google.common.annotations.Beta;
-import com.google.common.base.Objects;
-import com.google.common.collect.ImmutableSet;
+import com.google.auto.value.AutoValue;
 
-/**
- * A Project resource is the root collection and settings resource for all Google Compute Engine resources.
- */
-@Beta
-public class Project extends Resource {
+/** The root collection and settings resource for all Google Compute Engine resources. */
+@AutoValue
+public abstract class Project {
 
-   private final Metadata commonInstanceMetadata;
-   private final Set<Quota> quotas;
-   private final Set<String> externalIpAddresses;
+   public abstract String id();
 
-   protected Project(String id, Date creationTimestamp, URI selfLink, String name, String description,
-                     Metadata commonInstanceMetadata, Set<Quota> quotas, Set<String> externalIpAddresses) {
-      super(Kind.PROJECT, id, creationTimestamp, selfLink, name, description);
-      this.commonInstanceMetadata = checkNotNull(commonInstanceMetadata, "commonInstanceMetadata");
-      this.quotas = quotas == null ? ImmutableSet.<Quota>of() : ImmutableSet.copyOf(quotas);
-      this.externalIpAddresses = externalIpAddresses == null ? ImmutableSet.<String>of() : ImmutableSet.copyOf
-              (externalIpAddresses);
+   public abstract URI selfLink();
+
+   public abstract String name();
+
+   @Nullable public abstract String description();
+
+   /** Key/value pairs available to all instances contained in this project. */
+   public abstract Metadata commonInstanceMetadata();
+
+   public abstract List<Quota> quotas();
+
+   /** Available IP addresses available for use in this project. */
+   public abstract List<String> externalIpAddresses();
+
+   @SerializedNames(
+         { "id", "selfLink", "name", "description", "commonInstanceMetadata", "quotas", "externalIpAddresses" })
+   public static Project create(String id, URI selfLink, String name, String description,
+         Metadata commonInstanceMetadata, List<Quota> quotas, List<String> externalIpAddresses) {
+      return new AutoValue_Project(id, selfLink, name, description, commonInstanceMetadata, copyOf(quotas),
+            copyOf(externalIpAddresses));
    }
 
-   /**
-    * @return metadata key/value pairs available to all instances contained in this project.
-    */
-   public Metadata getCommonInstanceMetadata() {
-      return commonInstanceMetadata;
+   Project() {
    }
-
-   /**
-    * @return quotas assigned to this project.
-    */
-   public Set<Quota> getQuotas() {
-      return quotas;
-   }
-
-   /**
-    * @return internet available IP addresses available for use in this project.
-    */
-   @Nullable
-   public Set<String> getExternalIpAddresses() {
-      return externalIpAddresses;
-   }
-
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   protected Objects.ToStringHelper string() {
-      return super.string()
-              .add("commonInstanceMetadata", commonInstanceMetadata)
-              .add("quotas", quotas)
-              .add("externalIpAddresses", externalIpAddresses);
-   }
-
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   public String toString() {
-      return string().toString();
-   }
-
-   public static Builder builder() {
-      return new Builder();
-   }
-
-   public Builder toBuilder() {
-      return new Builder().fromProject(this);
-   }
-
-   public static final class Builder extends Resource.Builder<Builder> {
-
-      private Metadata commonInstanceMetadata;
-      private ImmutableSet.Builder<Quota> quotas = ImmutableSet.builder();
-      private ImmutableSet.Builder<String> externalIpAddresses = ImmutableSet.builder();
-
-      /**
-       * @see Project#getCommonInstanceMetadata()
-       */
-      public Builder commonInstanceMetadata(Metadata commonInstanceMetadata) {
-         this.commonInstanceMetadata = commonInstanceMetadata;
-         return this;
-      }
-
-      /**
-       * @see Project#getQuotas()
-       */
-      public Builder addQuota(String metric, double usage, double limit) {
-         this.quotas.add(Quota.builder().metric(metric).usage(usage).limit(limit).build());
-         return this;
-      }
-
-      /**
-       * @see Project#getQuotas()
-       */
-      public Builder quotas(Set<Quota> quotas) {
-         this.quotas.addAll(checkNotNull(quotas));
-         return this;
-      }
-
-      /**
-       * @see Project#getExternalIpAddresses()
-       */
-      public Builder addExternalIpAddress(String externalIpAddress) {
-         this.externalIpAddresses.add(checkNotNull(externalIpAddress, "externalIpAddress"));
-         return this;
-      }
-
-      /**
-       * @see Project#getExternalIpAddresses()
-       */
-      public Builder externalIpAddresses(Set<String> externalIpAddresses) {
-         this.externalIpAddresses.addAll(checkNotNull(externalIpAddresses, "externalIpAddresses"));
-         return this;
-      }
-
-      @Override
-      protected Builder self() {
-         return this;
-      }
-
-      public Project build() {
-         return new Project(super.id, super.creationTimestamp, super.selfLink, super.name,
-                 super.description, commonInstanceMetadata, quotas.build(), externalIpAddresses.build());
-      }
-
-      public Builder fromProject(Project in) {
-         return super.fromResource(in).commonInstanceMetadata(in.getCommonInstanceMetadata()).quotas(in.getQuotas())
-                 .externalIpAddresses(in.getExternalIpAddresses());
-      }
-   }
-
 }

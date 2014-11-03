@@ -16,20 +16,22 @@
  */
 package org.jclouds.googlecomputeengine.parse;
 
+import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
+
 import java.net.URI;
-import java.util.Date;
 
 import javax.ws.rs.Consumes;
-import javax.ws.rs.core.MediaType;
 
 import org.jclouds.googlecomputeengine.domain.Metadata;
 import org.jclouds.googlecomputeengine.domain.Project;
+import org.jclouds.googlecomputeengine.domain.Quota;
 import org.jclouds.googlecomputeengine.internal.BaseGoogleComputeEngineParseTest;
 import org.testng.annotations.Test;
 
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 
-@Test(groups = "unit")
+@Test(groups = "unit", testName = "ParseProjectTest")
 public class ParseProjectTest extends BaseGoogleComputeEngineParseTest<Project> {
 
    @Override
@@ -37,31 +39,25 @@ public class ParseProjectTest extends BaseGoogleComputeEngineParseTest<Project> 
       return "/project.json";
    }
 
-   @Override
-   @Consumes(MediaType.APPLICATION_JSON)
+   @Override @Consumes(APPLICATION_JSON)
    public Project expected() {
-      return Project.builder()
-              .id("13024414184846275913")
-              .creationTimestamp(new Date(Long.parseLong("1351109596252")))
-              .selfLink(URI.create("https://www.googleapis.com/compute/v1/projects/myproject"))
-              .name("myproject")
-              .description("")
-              .commonInstanceMetadata(Metadata.builder()
-                      .items(ImmutableMap.<String, String>builder()
-                              .put("propA", "valueA")
-                              .put("propB", "valueB")
-                              .build())
-                      .fingerprint("efgh")
-                      .build())
-              .addQuota("INSTANCES", 0, 8)
-              .addQuota("CPUS", 0, 8)
-              .addQuota("EPHEMERAL_ADDRESSES", 0, 8)
-              .addQuota("DISKS", 0, 8)
-              .addQuota("DISKS_TOTAL_GB", 0, 100)
-              .addQuota("SNAPSHOTS", 0, 1000)
-              .addQuota("NETWORKS", 1, 5)
-              .addQuota("FIREWALLS", 2, 100)
-              .addQuota("IMAGES", 0, 100)
-              .build();
+      return Project.create( //
+            "13024414184846275913", // id
+            URI.create(BASE_URL + "/myproject"), // selfLink
+            "myproject", // name
+            "", // description
+            Metadata.create("efgh", ImmutableMap.of("propA", "valueA", "propB", "valueB")), // commonInstanceMetadata
+            ImmutableList.of( //
+                  Quota.create("INSTANCES", 0, 8), //
+                  Quota.create("CPUS", 0, 8), //
+                  Quota.create("EPHEMERAL_ADDRESSES", 0, 8), //
+                  Quota.create("DISKS", 0, 8), //
+                  Quota.create("DISKS_TOTAL_GB", 0, 100), //
+                  Quota.create("SNAPSHOTS", 0, 1000), //
+                  Quota.create("NETWORKS", 1, 5), //
+                  Quota.create("FIREWALLS", 2, 100), //
+                  Quota.create("IMAGES", 0, 100)), // quotas
+            null // externalIpAddresses
+      );
    }
 }

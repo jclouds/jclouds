@@ -32,31 +32,26 @@ import com.google.common.base.Predicate;
 import com.google.common.base.Supplier;
 import com.google.inject.Inject;
 
-/**
- * Tests that a Global Operation is done, returning the completed Operation when it is.
- */
-public class RegionOperationDonePredicate implements Predicate<AtomicReference<Operation>> {
+public final class RegionOperationDonePredicate implements Predicate<AtomicReference<Operation>> {
 
    private final GoogleComputeEngineApi api;
    private final Supplier<String> project;
    private final Supplier<Map<URI, Region>> regions;
 
-   @Inject
-   RegionOperationDonePredicate(GoogleComputeEngineApi api, @UserProject Supplier<String> project,
+   @Inject RegionOperationDonePredicate(GoogleComputeEngineApi api, @UserProject Supplier<String> project,
                                 @Memoized Supplier<Map<URI, Region>> regions) {
       this.api = api;
       this.project = project;
       this.regions = regions;
    }
 
-   @Override
-   public boolean apply(AtomicReference<Operation> input) {
+   @Override public boolean apply(AtomicReference<Operation> input) {
       checkNotNull(input, "input");
 
       Operation current = api.getRegionOperationApi(project.get())
-              .getInRegion(regions.get().get(input.get().getRegion().get()).getName(),
-              input.get().getName());
-      switch (current.getStatus()) {
+              .getInRegion(regions.get().get(input.get().region()).name(),
+              input.get().name());
+      switch (current.status()) {
          case DONE:
             input.set(current);
             return true;

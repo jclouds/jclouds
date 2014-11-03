@@ -16,19 +16,20 @@
  */
 package org.jclouds.googlecomputeengine.parse;
 
+import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
+
 import java.net.URI;
 
 import javax.ws.rs.Consumes;
-import javax.ws.rs.core.MediaType;
 
-import org.jclouds.date.internal.SimpleDateFormatDateService;
+import org.jclouds.googlecomputeengine.domain.Quota;
 import org.jclouds.googlecomputeengine.domain.Region;
 import org.jclouds.googlecomputeengine.internal.BaseGoogleComputeEngineParseTest;
 import org.testng.annotations.Test;
 
-import com.google.common.collect.ImmutableSet;
+import com.google.common.collect.ImmutableList;
 
-@Test(groups = "unit")
+@Test(groups = "unit", testName = "ParseRegionTest")
 public class ParseRegionTest extends BaseGoogleComputeEngineParseTest<Region> {
 
    @Override
@@ -36,27 +37,27 @@ public class ParseRegionTest extends BaseGoogleComputeEngineParseTest<Region> {
       return "/region_get.json";
    }
 
-   @Override
-   @Consumes(MediaType.APPLICATION_JSON)
+   @Override @Consumes(APPLICATION_JSON)
    public Region expected() {
-      return Region.builder()
-              .id("12912210600542709766")
-              .creationTimestamp(new SimpleDateFormatDateService().iso8601DateParse("2013-07-08T14:40:37.939-07:00"))
-              .selfLink(URI.create("https://www.googleapis.com/compute/v1/projects/myproject/regions/us-central1"))
-              .name("us-central1")
-              .description("us-central1")
-              .status(Region.Status.UP)
-              .zones(ImmutableSet.of(URI.create("https://www.googleapis.com/compute/v1/zones/us-central1-a"),
-                      URI.create("https://www.googleapis.com/compute/v1/zones/us-central1-b")))
-              .addQuota("INSTANCES", 0, 8)
-              .addQuota("CPUS", 0, 8)
-              .addQuota("EPHEMERAL_ADDRESSES", 0, 8)
-              .addQuota("DISKS", 0, 8)
-              .addQuota("DISKS_TOTAL_GB", 0, 100)
-              .addQuota("SNAPSHOTS", 0, 1000)
-              .addQuota("NETWORKS", 1, 5)
-              .addQuota("FIREWALLS", 2, 100)
-              .addQuota("IMAGES", 0, 100)
-              .build();
+      return Region.create( //
+            "12912210600542709766", // id
+            URI.create(BASE_URL + "/myproject/regions/us-central1"), // selfLink
+            "us-central1", // name
+            "us-central1", // description
+            Region.Status.UP, // status
+            ImmutableList.of(//
+                  URI.create("https://www.googleapis.com/compute/v1/zones/us-central1-a"),
+                  URI.create("https://www.googleapis.com/compute/v1/zones/us-central1-b")), // zones
+            ImmutableList.of( //
+                  Quota.create("INSTANCES", 0, 8), //
+                  Quota.create("CPUS", 0, 8), //
+                  Quota.create("EPHEMERAL_ADDRESSES", 0, 8), //
+                  Quota.create("DISKS", 0, 8), //
+                  Quota.create("DISKS_TOTAL_GB", 0, 100), //
+                  Quota.create("SNAPSHOTS", 0, 1000), //
+                  Quota.create("NETWORKS", 1, 5), //
+                  Quota.create("FIREWALLS", 2, 100), //
+                  Quota.create("IMAGES", 0, 100)) // quotas
+      );
    }
 }

@@ -16,20 +16,20 @@
  */
 package org.jclouds.googlecomputeengine.parse;
 
+import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
+
 import java.net.URI;
 
 import javax.ws.rs.Consumes;
-import javax.ws.rs.core.MediaType;
 
-import org.jclouds.date.internal.SimpleDateFormatDateService;
 import org.jclouds.googlecomputeengine.domain.Firewall;
 import org.jclouds.googlecomputeengine.domain.ListPage;
-import org.jclouds.googlecomputeengine.domain.Resource;
 import org.jclouds.googlecomputeengine.internal.BaseGoogleComputeEngineParseTest;
-import org.jclouds.net.domain.IpProtocol;
 import org.testng.annotations.Test;
 
-@Test(groups = "unit")
+import com.google.common.collect.ImmutableList;
+
+@Test(groups = "unit", testName = "ParseFirewallListTest")
 public class ParseFirewallListTest extends BaseGoogleComputeEngineParseTest<ListPage<Firewall>> {
 
    @Override
@@ -37,26 +37,24 @@ public class ParseFirewallListTest extends BaseGoogleComputeEngineParseTest<List
       return "/firewall_list.json";
    }
 
-   @Override
-   @Consumes(MediaType.APPLICATION_JSON)
+   @Override @Consumes(APPLICATION_JSON)
    public ListPage<Firewall> expected() {
-      return ListPage.<Firewall>builder()
-              .kind(Resource.Kind.FIREWALL_LIST)
-              .addItem(new ParseFirewallTest().expected())
-              .addItem(Firewall.builder()
-                      .id("12862241067393040785")
-                      .creationTimestamp(new SimpleDateFormatDateService().iso8601DateParse("2012-04-13T03:05:04.365"))
-                      .selfLink(URI.create("https://www.googleapis" +
-                              ".com/compute/v1/projects/google/global/firewalls/default-ssh"))
-                      .name("default-ssh")
-                      .description("SSH allowed from anywhere")
-                      .network(URI.create("https://www.googleapis" +
-                              ".com/compute/v1/projects/google/global/networks/default"))
-                      .addSourceRange("0.0.0.0/0")
-                      .addAllowed(Firewall.Rule.builder()
-                              .IpProtocol(IpProtocol.TCP)
-                              .addPort(22).build())
-                      .build())
-              .build();
+      Firewall firewall1 = new ParseFirewallTest().expected();
+      Firewall firewall2 = Firewall.create( //
+            "12862241067393040785", // id
+            URI.create(BASE_URL + "/google/global/firewalls/default-ssh"), // selfLink
+            "default-ssh", // name
+            "SSH allowed from anywhere", // description
+            URI.create(BASE_URL + "/google/global/networks/default"), // network
+            ImmutableList.of("0.0.0.0/0"), // sourceRanges
+            null, // sourceTags
+            null, // targetTags
+            ImmutableList.of(Firewall.Rule.create("tcp", ImmutableList.of("22"))) // allowed
+      );
+      return ListPage.create( //
+            ImmutableList.of(firewall1, firewall2), // items
+            null, // nextPageToken
+            null // prefixes
+      );
    }
 }

@@ -16,266 +16,66 @@
  */
 package org.jclouds.googlecomputeengine.domain;
 
-import static com.google.common.base.Objects.equal;
-import static com.google.common.base.Objects.toStringHelper;
-import static com.google.common.base.Optional.fromNullable;
-import static com.google.common.base.Preconditions.checkNotNull;
-
-import java.beans.ConstructorProperties;
 import java.net.URI;
-import java.util.Date;
 
-import com.google.common.annotations.Beta;
-import com.google.common.base.Objects;
-import com.google.common.base.Optional;
+import org.jclouds.javax.annotation.Nullable;
+import org.jclouds.json.SerializedNames;
 
-/**
- * Represents a disk image to use on an instance.
- */
-@Beta
-public final class Image extends Resource {
+import com.google.auto.value.AutoValue;
 
-   private final String sourceType;
-   private final Optional<RawDisk> rawDisk;
-   private final Optional<Deprecated> deprecated;
+@AutoValue
+public abstract class Image {
 
-   @ConstructorProperties({
-           "id", "creationTimestamp", "selfLink", "name", "description", "sourceType",
-           "rawDisk", "deprecated"
-   })
-   protected Image(String id, Date creationTimestamp, URI selfLink, String name, String description,
-                   String sourceType, RawDisk rawDisk, Deprecated deprecated) {
-      super(Kind.IMAGE, id, creationTimestamp, selfLink, name, description);
-      this.sourceType = checkNotNull(sourceType, "sourceType of %s", name);
-      this.rawDisk = fromNullable(rawDisk);
-      this.deprecated = fromNullable(deprecated);
-   }
-
-   /**
-    * @return must be RAW; provided by the client when the disk image is created.
-    */
-   public String getSourceType() {
-      return sourceType;
-   }
-
-   /**
-    * @return the raw disk image parameters.
-    */
-   public Optional<RawDisk> getRawDisk() {
-      return rawDisk;
-   }
-
-   /**
-    * @return the deprecation information for this image
-    */
-   public Optional<Deprecated> getDeprecated() {
-      return deprecated;
-   }
-
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   protected Objects.ToStringHelper string() {
-      return super.string()
-              .omitNullValues()
-              .add("sourceType", sourceType)
-              .add("rawDisk", rawDisk)
-              .add("deprecated", deprecated.orNull());
-   }
-
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   public String toString() {
-      return string().toString();
-   }
-
-   public static Builder builder() {
-      return new Builder();
-   }
-
-   public Builder toBuilder() {
-      return new Builder().fromImage(this);
-   }
-
-   public static final class Builder extends Resource.Builder<Builder> {
-
-      private String sourceType;
-      private RawDisk rawDisk;
-      private Deprecated deprecated;
+   @AutoValue
+   public abstract static class RawDisk {
+      /**
+       * The full Google Cloud Storage URL where the disk image is stored; provided by the client when the disk
+       * image is created.
+       */
+      public abstract URI source();
 
       /**
-       * @see Image#getSourceType()
+       * The format used to encode and transmit the block device.
        */
-      public Builder sourceType(String sourceType) {
-         this.sourceType = checkNotNull(sourceType, "sourceType");
-         return this;
-      }
+      public abstract String containerType();
 
       /**
-       * @see Image#getDeprecated()
+       * SHA1 checksum of the disk image before unpacking; provided by the client when the disk
+       * image is created.
        */
-      public Builder deprecated(Deprecated deprecated) {
-         this.deprecated = checkNotNull(deprecated, "deprecated");
-         return this;
+      @Nullable public abstract String sha1Checksum();
+
+      @SerializedNames({ "source", "containerType", "sha1Checksum" })
+      public static RawDisk create(URI source, String containerType, String sha1Checksum) {
+         return new AutoValue_Image_RawDisk(source, containerType, sha1Checksum);
       }
 
-      /**
-       * @see Image#getRawDisk()
-       */
-      public Builder rawDisk(RawDisk rawDisk) {
-         this.rawDisk = checkNotNull(rawDisk);
-         return this;
+      RawDisk() {
       }
-
-      @Override
-      protected Builder self() {
-         return this;
-      }
-
-      public Image build() {
-         return new Image(super.id, super.creationTimestamp, super.selfLink, super.name,
-                 super.description, sourceType, rawDisk, deprecated);
-      }
-
-      public Builder fromImage(Image in) {
-         return super.fromResource(in)
-                 .sourceType(in.getSourceType())
-                 .rawDisk(in.getRawDisk().orNull())
-                 .deprecated(in.getDeprecated().orNull());
-      }
-
    }
 
-   /**
-    * A raw disk image, usually the base for an image.
-    *
-    * @see <a href="https://developers.google.com/compute/docs/reference/v1/images"/>
-    */
-   public static class RawDisk {
+   public abstract String id();
 
-      private final String source;
-      private final String containerType;
-      private final Optional<String> sha1Checksum;
+   public abstract URI selfLink();
 
-      @ConstructorProperties({
-              "source", "containerType", "sha1Checksum"
-      })
-      private RawDisk(String source, String containerType, String sha1Checksum) {
-         this.source = checkNotNull(source, "source");
-         this.containerType = checkNotNull(containerType, "containerType");
-         this.sha1Checksum = fromNullable(sha1Checksum);
-      }
+   public abstract String name();
 
-      /**
-       * @return the full Google Cloud Storage URL where the disk image is stored; provided by the client when the disk
-       *         image is created.
-       */
-      public String getSource() {
-         return source;
-      }
+   @Nullable public abstract String description();
 
-      /**
-       * @return the format used to encode and transmit the block device.
-       */
-      public String getContainerType() {
-         return containerType;
-      }
+   /** Must be RAW; provided by the client when the disk image is created. */
+   // TODO: if this is true, why bother listing it?
+   public abstract String sourceType();
 
-      /**
-       * @return an optional SHA1 checksum of the disk image before unpacking; provided by the client when the disk
-       *         image is created.
-       */
-      public Optional<String> getSha1Checksum() {
-         return sha1Checksum;
-      }
+   @Nullable public abstract RawDisk rawDisk();
 
-      /**
-       * {@inheritDoc}
-       */
-      @Override
-      public int hashCode() {
-         return Objects.hashCode(source, containerType, sha1Checksum);
-      }
+   @Nullable public abstract Deprecated deprecated();
 
-      /**
-       * {@inheritDoc}
-       */
-      @Override
-      public boolean equals(Object obj) {
-         if (this == obj) return true;
-         if (obj == null || getClass() != obj.getClass()) return false;
-         RawDisk that = RawDisk.class.cast(obj);
-         return equal(this.source, that.source)
-                 && equal(this.containerType, that.containerType)
-                 && equal(this.sha1Checksum, that.sha1Checksum);
-      }
+   @SerializedNames({ "id", "selfLink", "name", "description", "sourceType", "rawDisk", "deprecated" })
+   public static Image create(String id, URI selfLink, String name, String description, String sourceType,
+         RawDisk rawDisk, Deprecated deprecated) {
+      return new AutoValue_Image(id, selfLink, name, description, sourceType, rawDisk, deprecated);
+   }
 
-      protected Objects.ToStringHelper string() {
-         return toStringHelper(this)
-                 .omitNullValues()
-                 .add("source", source)
-                 .add("containerType", containerType)
-                 .add("sha1Checksum", sha1Checksum.orNull());
-      }
-
-      /**
-       * {@inheritDoc}
-       */
-      @Override
-      public String toString() {
-         return string().toString();
-      }
-
-      public static Builder builder() {
-         return new Builder();
-      }
-
-      public Builder toBuilder() {
-         return builder().fromImageRawDisk(this);
-      }
-
-      public static class Builder {
-
-         private String source;
-         private String containerType;
-         private String sha1Checksum;
-
-         /**
-          * @see org.jclouds.googlecomputeengine.domain.Image.RawDisk#getSource()
-          */
-         public Builder source(String source) {
-            this.source = checkNotNull(source);
-            return this;
-         }
-
-         /**
-          * @see org.jclouds.googlecomputeengine.domain.Image.RawDisk#getContainerType()
-          */
-         public Builder containerType(String containerType) {
-            this.containerType = checkNotNull(containerType);
-            return this;
-         }
-
-         /**
-          * @see org.jclouds.googlecomputeengine.domain.Image.RawDisk#getSha1Checksum()
-          */
-         public Builder sha1Checksum(String sha1Checksum) {
-            this.sha1Checksum = sha1Checksum;
-            return this;
-         }
-
-         public RawDisk build() {
-            return new RawDisk(source, containerType, sha1Checksum);
-         }
-
-         public Builder fromImageRawDisk(RawDisk rawDisk) {
-            return new Builder().source(rawDisk.getSource())
-                    .containerType(rawDisk.getContainerType())
-                    .sha1Checksum(rawDisk.getSha1Checksum().orNull());
-         }
-      }
+   Image() {
    }
 }

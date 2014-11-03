@@ -16,14 +16,15 @@
  */
 package org.jclouds.googlecomputeengine.parse;
 
+import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
+
 import javax.ws.rs.Consumes;
-import javax.ws.rs.core.MediaType;
 
 import org.jclouds.googlecomputeengine.domain.Quota;
 import org.jclouds.googlecomputeengine.internal.BaseGoogleComputeEngineParseTest;
 import org.testng.annotations.Test;
 
-@Test(groups = "unit")
+@Test(groups = "unit", testName = "ParseQuotaTest")
 public class ParseQuotaTest extends BaseGoogleComputeEngineParseTest<Quota> {
 
    @Override
@@ -31,9 +32,8 @@ public class ParseQuotaTest extends BaseGoogleComputeEngineParseTest<Quota> {
       return "/quota.json";
    }
 
-   @Override
-   @Consumes(MediaType.APPLICATION_JSON)
+   @Override @Consumes(APPLICATION_JSON)
    public Quota expected() {
-      return Quota.builder().metric("INSTANCES").usage(0.0).limit(8.0).build();
+      return Quota.create("INSTANCES", 0.0, 8.0);
    }
 }

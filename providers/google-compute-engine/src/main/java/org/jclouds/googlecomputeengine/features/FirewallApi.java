@@ -33,16 +33,16 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 
-import org.jclouds.Fallbacks.EmptyIterableWithMarkerOnNotFoundOr404;
 import org.jclouds.Fallbacks.EmptyPagedIterableOnNotFoundOr404;
 import org.jclouds.Fallbacks.NullOnNotFoundOr404;
 import org.jclouds.collect.PagedIterable;
+import org.jclouds.googlecomputeengine.GoogleComputeEngineFallbacks.EmptyListPageOnNotFoundOr404;
+import org.jclouds.googlecomputeengine.binders.FirewallBinder;
 import org.jclouds.googlecomputeengine.domain.Firewall;
 import org.jclouds.googlecomputeengine.domain.ListPage;
 import org.jclouds.googlecomputeengine.domain.Operation;
 import org.jclouds.googlecomputeengine.functions.internal.PATCH;
 import org.jclouds.googlecomputeengine.functions.internal.ParseFirewalls;
-import org.jclouds.googlecomputeengine.binders.FirewallBinder;
 import org.jclouds.googlecomputeengine.options.FirewallOptions;
 import org.jclouds.googlecomputeengine.options.ListOptions;
 import org.jclouds.javax.annotation.Nullable;
@@ -157,7 +157,7 @@ public interface FirewallApi {
    @Path("/global/firewalls")
    @OAuthScopes(COMPUTE_READONLY_SCOPE)
    @ResponseParser(ParseFirewalls.class)
-   @Fallback(EmptyIterableWithMarkerOnNotFoundOr404.class)
+   @Fallback(EmptyListPageOnNotFoundOr404.class)
    ListPage<Firewall> listFirstPage();
 
    /**
@@ -169,7 +169,7 @@ public interface FirewallApi {
    @Path("/global/firewalls")
    @OAuthScopes(COMPUTE_READONLY_SCOPE)
    @ResponseParser(ParseFirewalls.class)
-   @Fallback(EmptyIterableWithMarkerOnNotFoundOr404.class)
+   @Fallback(EmptyListPageOnNotFoundOr404.class)
    ListPage<Firewall> listAtMarker(@QueryParam("pageToken") @Nullable String marker);
 
    /**
@@ -189,7 +189,7 @@ public interface FirewallApi {
    @Path("/global/firewalls")
    @OAuthScopes(COMPUTE_READONLY_SCOPE)
    @ResponseParser(ParseFirewalls.class)
-   @Fallback(EmptyIterableWithMarkerOnNotFoundOr404.class)
+   @Fallback(EmptyListPageOnNotFoundOr404.class)
    ListPage<Firewall> listAtMarker(@QueryParam("pageToken") @Nullable String marker, ListOptions options);
 
    /**

@@ -46,25 +46,15 @@ public class BaseGoogleComputeEngineApiLiveTest extends BaseApiLiveTest<GoogleCo
    protected static final String API_URL_PREFIX = "https://www.googleapis.com/compute/v1/projects/";
    protected static final String ZONE_API_URL_SUFFIX = "/zones/";
    protected static final String DEFAULT_ZONE_NAME = "us-central1-a";
-
-   protected static final String REGION_API_URL_SUFFIX = "/region/";
    protected static final String DEFAULT_REGION_NAME = "us-central1";
-
    protected static final String NETWORK_API_URL_SUFFIX = "/global/networks/";
    protected static final String DEFAULT_NETWORK_NAME = "live-test-network";
-
    protected static final String MACHINE_TYPE_API_URL_SUFFIX = "/machineTypes/";
    protected static final String DEFAULT_MACHINE_TYPE_NAME = "n1-standard-1";
-
    protected static final String GATEWAY_API_URL_SUFFIX = "/global/gateways/";
    protected static final String DEFAULT_GATEWAY_NAME = "default-internet-gateway";
-
    protected static final String IMAGE_API_URL_SUFFIX = "/global/images/";
-
    protected static final String DISK_TYPE_API_URL_SUFFIX = "/diskTypes/";
-   protected static final String DEFAULT_DISK_NAME = "pd-standard";
-
-   protected static final String GOOGLE_PROJECT = "google";
 
    protected Supplier<String> userProject;
    protected Predicate<AtomicReference<Operation>> globalOperationDonePredicate;
@@ -97,8 +87,8 @@ public class BaseGoogleComputeEngineApiLiveTest extends BaseApiLiveTest<GoogleCo
 
    protected Operation assertGlobalOperationDoneSucessfully(Operation operation, long maxWaitSeconds) {
       operation = waitGlobalOperationDone(operation, maxWaitSeconds);
-      assertEquals(operation.getStatus(), Operation.Status.DONE);
-      assertTrue(operation.getErrors().isEmpty());
+      assertEquals(operation.status(), Operation.Status.DONE);
+      assertTrue(operation.errors().isEmpty());
       return operation;
    }
 
@@ -108,8 +98,8 @@ public class BaseGoogleComputeEngineApiLiveTest extends BaseApiLiveTest<GoogleCo
 
    protected Operation assertRegionOperationDoneSucessfully(Operation operation, long maxWaitSeconds) {
       operation = waitRegionOperationDone(operation, maxWaitSeconds);
-      assertEquals(operation.getStatus(), Operation.Status.DONE);
-      assertTrue(operation.getErrors().isEmpty());
+      assertEquals(operation.status(), Operation.Status.DONE);
+      assertTrue(operation.errors().isEmpty());
       return operation;
    }
 
@@ -119,8 +109,8 @@ public class BaseGoogleComputeEngineApiLiveTest extends BaseApiLiveTest<GoogleCo
 
    protected Operation assertZoneOperationDoneSucessfully(Operation operation, long maxWaitSeconds) {
       operation = waitZoneOperationDone(operation, maxWaitSeconds);
-      assertEquals(operation.getStatus(), Operation.Status.DONE);
-      assertTrue(operation.getErrors().isEmpty());
+      assertEquals(operation.status(), Operation.Status.DONE);
+      assertTrue(operation.errors().isEmpty());
       return operation;
    }
 

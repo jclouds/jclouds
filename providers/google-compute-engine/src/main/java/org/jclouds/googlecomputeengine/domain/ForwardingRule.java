@@ -16,199 +16,68 @@
  */
 package org.jclouds.googlecomputeengine.domain;
 
-import com.google.common.annotations.Beta;
-import com.google.common.base.Objects;
-import com.google.common.base.Optional;
-
-import java.beans.ConstructorProperties;
 import java.net.URI;
-import java.util.Date;
-
-import static com.google.common.base.Objects.equal;
-import static com.google.common.base.Optional.fromNullable;
-import static com.google.common.base.Preconditions.checkNotNull;
 
 import org.jclouds.javax.annotation.Nullable;
+import org.jclouds.json.SerializedNames;
 
-@Beta
-public class ForwardingRule extends Resource {
+import com.google.auto.value.AutoValue;
 
+@AutoValue
+public abstract class ForwardingRule {
 
-   /**
-    * "AH": Specifies the IP Authentication Header protocol.
-    * "ESP": Specifies the IP Encapsulating Security Payload protocol.
-    * "SCTP": Specifies the Stream Control Transmission Protocol.
-    * "TCP": Specifies the Transmission Control Protocol.
-    * "UDP": Specifies the User Datagram Protocol.
-    */
-   public enum IPProtocolOption {
+   public enum IPProtocol {
+      /** IP Authentication Header protocol. */
       AH,
+      /** IP Encapsulating Security Payload protocol. */
       ESP,
+      /** Stream Control Transmission Protocol. */
       SCTP,
+      /** Transmission Control Protocol. */
       TCP,
+      /** Specifies the User Datagram Protocol. */
       UDP
    }
 
-   private final URI region;
-   private final Optional<String> ipAddress;
-   private final Optional<IPProtocolOption> ipProtocol;
-   private final Optional<String> portRange;
-   private final URI target;
+   public abstract String id();
 
-   @ConstructorProperties({
-           "id", "creationTimestamp", "selfLink", "name", "description", "region", "IPAddress", "IPProtocol",
-           "portRange", "target"
-   })
-   private ForwardingRule(String id, Date creationTimestamp, URI selfLink, String name, String description,
-                      URI region, @Nullable String ipAddress, @Nullable IPProtocolOption ipProtocol, @Nullable String portRange,
-                      URI target) {
-      super(Kind.FORWARDING_RULE, id, creationTimestamp, selfLink, name, description);
-      this.region = checkNotNull(region, "region of %s", name);
-      this.ipAddress = fromNullable(ipAddress);
-      this.ipProtocol = fromNullable(ipProtocol);
-      this.portRange = fromNullable(portRange);
-      this.target = checkNotNull(target, "target of %s", name);
-   }
+   public abstract URI selfLink();
 
-   public static Builder builder() {
-      return new Builder();
-   }
+   public abstract String name();
+
+   @Nullable public abstract String description();
+
+   public abstract URI region();
 
    /**
-    * @return URL of the region where the forwarding rule resides.
-    */
-   public URI getRegion() {
-      return region;
-   }
-
-   /**
-    * @return the external IP address that this forwarding rule is serving on behalf of. If this is a reserved
+    * The external IP address that this forwarding rule is serving on behalf of. If this is a reserved
     * address, the address must live in the same region as the forwarding rule. By default,
     * this field is empty and  an ephemeral IP is assigned to the ForwardingRule.
     */
-   public Optional<String> getIpAddress() {
-      return ipAddress;
-   }
+   @Nullable public abstract String ipAddress();
+
+   public abstract IPProtocol ipProtocol();
 
    /**
-    * @return the IP protocol to which this rule applies. If left empty, the default value used is TCP.
-    */
-   public Optional<IPProtocolOption> getIpProtocol() {
-      return ipProtocol;
-   }
-
-   /**
-    * @return If IPProtocol is TCP or UDP, packets addressed to ports in the specified range will be forwarded to
+    * If IPProtocol is TCP or UDP, packets addressed to ports in the specified range will be forwarded to
     * backend. By default, this is empty and all ports are allowed.
     */
-   public Optional<String> getPortRange() {
-      return portRange;
-   }
+   @Nullable public abstract String portRange();
 
    /**
-    * @return the URL of the target resource to receive the matched traffic. The target resource must live in the
+    * The URL of the target resource to receive the matched traffic. The target resource must live in the
     * same region as this forwarding rule.
     */
-   public URI getTarget() {
-      return target;
+   public abstract URI target();
+
+   @SerializedNames(
+         { "id", "selfLink", "name", "description", "region", "IPAddress", "IPProtocol", "portRange", "target" })
+   public static ForwardingRule create(String id, URI selfLink, String name, String description, URI region,
+         String ipAddress, IPProtocol ipProtocol, String portRange, URI target) {
+      return new AutoValue_ForwardingRule(id, selfLink, name, description, region, ipAddress,
+            ipProtocol == null ? IPProtocol.TCP : ipProtocol, portRange, target);
    }
 
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   public boolean equals(Object obj) {
-      if (this == obj) return true;
-      if (obj == null || getClass() != obj.getClass()) return false;
-      ForwardingRule that = ForwardingRule.class.cast(obj);
-      return equal(this.kind, that.kind)
-              && equal(this.name, that.name)
-              && equal(this.region, that.region);
+   ForwardingRule() {
    }
-
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   protected Objects.ToStringHelper string() {
-      return super.string()
-              .omitNullValues()
-              .add("region", region)
-              .add("ipAddress", ipAddress.orNull())
-              .add("ipProtocol", ipProtocol.orNull())
-              .add("portRange", portRange.orNull())
-              .add("target", target);
-   }
-
-   public Builder toBuilder() {
-      return new Builder().fromForwardingRule(this);
-   }
-
-   public static final class Builder extends Resource.Builder<Builder> {
-      private URI region;
-      private String ipAddress;
-      private IPProtocolOption ipProtocol;
-      private String portRange;
-      private URI target;
-
-      /**
-       * @see ForwardingRule#getRegion()
-       */
-      public Builder region(URI region) {
-         this.region = region;
-         return this;
-      }
-
-      /**
-       * @see org.jclouds.googlecomputeengine.domain.ForwardingRule#getIpAddress()
-       */
-      public Builder ipAddress(String ipAddress) {
-         this.ipAddress = ipAddress;
-         return this;
-      }
-
-      /**
-       * @see org.jclouds.googlecomputeengine.domain.ForwardingRule#getIpProtocol()
-       */
-      public Builder ipProtocol(IPProtocolOption ipProtocol) {
-         this.ipProtocol = ipProtocol;
-         return this;
-      }
-
-      /**
-       * @see org.jclouds.googlecomputeengine.domain.ForwardingRule#getPortRange()
-       */
-      public Builder portRange(String portRange) {
-         this.portRange = portRange;
-         return this;
-      }
-
-      /**
-       * @see org.jclouds.googlecomputeengine.domain.ForwardingRule#getTarget()
-       */
-      public Builder target(URI target) {
-         this.target = target;
-         return this;
-      }
-
-      @Override
-      protected Builder self() {
-         return this;
-      }
-
-      public ForwardingRule build() {
-         return new ForwardingRule(super.id, super.creationTimestamp, super.selfLink, super.name, super.description,
-                 region, ipAddress, ipProtocol, portRange, target);
-      }
-
-      public Builder fromForwardingRule(ForwardingRule in) {
-         return super.fromResource(in)
-                 .region(in.getRegion())
-                 .ipAddress(in.getIpAddress().orNull())
-                 .ipProtocol(in.getIpProtocol().orNull())
-                 .portRange(in.getPortRange().orNull())
-                 .target(in.getTarget());
-      }
-   }
-
 }

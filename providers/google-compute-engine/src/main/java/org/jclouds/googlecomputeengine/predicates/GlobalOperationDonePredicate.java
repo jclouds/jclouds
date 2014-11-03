@@ -28,25 +28,20 @@ import com.google.common.base.Predicate;
 import com.google.common.base.Supplier;
 import com.google.inject.Inject;
 
-/**
- * Tests that a Global Operation is done, returning the completed Operation when it is.
- */
-public class GlobalOperationDonePredicate implements Predicate<AtomicReference<Operation>> {
+public final class GlobalOperationDonePredicate implements Predicate<AtomicReference<Operation>> {
 
    private final GoogleComputeEngineApi api;
    private final Supplier<String> project;
 
-   @Inject
-   public GlobalOperationDonePredicate(GoogleComputeEngineApi api, @UserProject Supplier<String> project) {
+   @Inject GlobalOperationDonePredicate(GoogleComputeEngineApi api, @UserProject Supplier<String> project) {
       this.api = api;
       this.project = project;
    }
 
-   @Override
-   public boolean apply(AtomicReference<Operation> input) {
+   @Override public boolean apply(AtomicReference<Operation> input) {
       checkNotNull(input, "input");
-      Operation current = api.getGlobalOperationApi(project.get()).get(input.get().getName());
-      switch (current.getStatus()) {
+      Operation current = api.getGlobalOperationApi(project.get()).get(input.get().name());
+      switch (current.status()) {
          case DONE:
             input.set(current);
             return true;

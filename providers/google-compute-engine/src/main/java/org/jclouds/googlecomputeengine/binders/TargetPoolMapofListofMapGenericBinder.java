@@ -17,10 +17,8 @@
 package org.jclouds.googlecomputeengine.binders;
 
 import java.net.URI;
-import java.util.HashMap;
-import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import javax.inject.Inject;
 
@@ -29,33 +27,36 @@ import org.jclouds.json.Json;
 import org.jclouds.rest.binders.BindToJsonPayload;
 
 import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 
+class TargetPoolMapofListofMapGenericBinder extends BindToJsonPayload {
 
-public class TargetPoolMapofSetofMapGenericBinder extends BindToJsonPayload {
-
-   @Inject TargetPoolMapofSetofMapGenericBinder(Json jsonBinder) {
+   @Inject TargetPoolMapofListofMapGenericBinder(Json jsonBinder) {
       super(jsonBinder);
    }
+
    private String outterString;
    private String innerString;
-   
-   public void SetOuterString(String outterString){
+
+   public void outerString(String outterString) {
       this.outterString = outterString;
    }
-   
-   public void SetInnerString(String innerString){
+
+   public void innerString(String innerString) {
       this.innerString = innerString;
-   }   
-   
+   }
+
    /**
-    * For the addInstance request the request body is in an atypical form. 
+    * For the addInstance request the request body is in an atypical form.
+    *
     * @see <a href="https://cloud.google.com/compute/docs/reference/latest/targetPools/addInstance"/>
     */
    @Override public <R extends HttpRequest> R bindToRequest(R request, Map<String, Object> postParams) {
-      Set<URI> instances = (Set<URI>) postParams.get(outterString);
-      Map<String, Set<Map<String, URI>>> finalInstances = new HashMap<String, Set<Map<String, URI>>>();
-      Set<Map<String, URI>> innerInstances = new HashSet<Map<String, URI>>();
-      for (URI instance : instances){
+      List<URI> instances = (List<URI>) postParams.get(outterString);
+      Map<String, List<Map<String, URI>>> finalInstances = Maps.newLinkedHashMap();
+      List<Map<String, URI>> innerInstances = Lists.newArrayList();
+      for (URI instance : instances) {
          innerInstances.add(ImmutableMap.of(innerString, instance));
       }
       finalInstances.put(outterString, innerInstances);

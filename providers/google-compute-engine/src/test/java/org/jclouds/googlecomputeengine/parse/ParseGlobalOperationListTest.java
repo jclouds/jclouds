@@ -16,27 +16,31 @@
  */
 package org.jclouds.googlecomputeengine.parse;
 
+import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
+
 import javax.ws.rs.Consumes;
-import javax.ws.rs.core.MediaType;
 
 import org.jclouds.googlecomputeengine.domain.ListPage;
 import org.jclouds.googlecomputeengine.domain.Operation;
-import org.jclouds.googlecomputeengine.domain.Resource;
 import org.jclouds.googlecomputeengine.internal.BaseGoogleComputeEngineParseTest;
+import org.testng.annotations.Test;
 
-public class ParseOperationListTest extends BaseGoogleComputeEngineParseTest<ListPage<Operation>> {
+import com.google.common.collect.ImmutableList;
+
+@Test(groups = "unit", testName = "ParseGlobalOperationListTest")
+public class ParseGlobalOperationListTest extends BaseGoogleComputeEngineParseTest<ListPage<Operation>> {
 
    @Override
    public String resource() {
       return "/global_operation_list.json";
    }
 
-   @Override
-   @Consumes(MediaType.APPLICATION_JSON)
+   @Override @Consumes(APPLICATION_JSON)
    public ListPage<Operation> expected() {
-      return ListPage.<Operation>builder()
-              .kind(Resource.Kind.OPERATION_LIST)
-              .addItem(new ParseOperationTest().expected())
-              .build();
+      return ListPage.create( //
+            ImmutableList.of(new ParseGlobalOperationTest().expected()), // items
+            null, // nextPageToken
+            null // prefixes
+      );
    }
 }

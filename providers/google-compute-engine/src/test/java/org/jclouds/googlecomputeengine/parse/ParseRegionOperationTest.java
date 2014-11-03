@@ -16,16 +16,17 @@
  */
 package org.jclouds.googlecomputeengine.parse;
 
-import org.jclouds.date.internal.SimpleDateFormatDateService;
+import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
+
+import java.net.URI;
+
+import javax.ws.rs.Consumes;
+
 import org.jclouds.googlecomputeengine.domain.Operation;
 import org.jclouds.googlecomputeengine.internal.BaseGoogleComputeEngineParseTest;
 import org.testng.annotations.Test;
 
-import javax.ws.rs.Consumes;
-import javax.ws.rs.core.MediaType;
-import java.net.URI;
-
-@Test(groups = "unit")
+@Test(groups = "unit", testName = "ParseRegionOperationTest")
 public class ParseRegionOperationTest extends BaseGoogleComputeEngineParseTest<Operation> {
 
    @Override
@@ -33,23 +34,30 @@ public class ParseRegionOperationTest extends BaseGoogleComputeEngineParseTest<O
       return "/region_operation.json";
    }
 
-   @Override
-   @Consumes(MediaType.APPLICATION_JSON)
+   @Override @Consumes(APPLICATION_JSON)
    public Operation expected() {
-      SimpleDateFormatDateService dateService = new SimpleDateFormatDateService();
-      return Operation.builder().id("13053095055850848306")
-              .selfLink(URI.create("https://www.googleapis.com/compute/v1/projects/myproject/regions/us-central1/operations/operation-1354084865060-4cf88735faeb8-bbbb12cb"))
-              .name("operation-1354084865060-4cf88735faeb8-bbbb12cb")
-              .targetLink(URI.create("https://www.googleapis.com/compute/v1/projects/myproject/regions/us-central1/addresses/test-address"))
-              .targetId("13053094017547040099")
-              .status(Operation.Status.DONE)
-              .user("user@developer.gserviceaccount.com")
-              .progress(100)
-              .insertTime(dateService.iso8601DateParse("2012-11-28T06:41:05.060"))
-              .startTime(dateService.iso8601DateParse("2012-11-28T06:41:05.142"))
-              .endTime(dateService.iso8601DateParse("2012-11-28T06:41:06.142"))
-              .operationType("insert")
-              .region(URI.create("https://www.googleapis.com/compute/v1/projects/myproject/regions/us-central1"))
-              .build();
+      return Operation.create( //
+            "13053095055850848306", // id
+            URI.create(BASE_URL
+                  + "/myproject/regions/us-central1/operations/operation-1354084865060-4cf88735faeb8-bbbb12cb"),
+            "operation-1354084865060-4cf88735faeb8-bbbb12cb", // name
+            null, // description
+            URI.create(BASE_URL + "/myproject/regions/us-central1/addresses/test-address"), // targetLink
+            "13053094017547040099", // targetId
+            null, // clientOperationId
+            Operation.Status.DONE, // status
+            null, // statusMessage
+            "user@developer.gserviceaccount.com", // user
+            100, // progress
+            parse("2012-11-28T06:41:05.060"), // insertTime
+            parse("2012-11-28T06:41:05.142"), // startTime
+            parse("2012-11-28T06:41:06.142"), // endTime
+            null, // httpErrorStatusCode
+            null, // httpErrorMessage
+            "insert", // operationType
+            null, // errors
+            URI.create(BASE_URL + "/myproject/regions/us-central1"), // region
+            null // zone
+      );
    }
 }

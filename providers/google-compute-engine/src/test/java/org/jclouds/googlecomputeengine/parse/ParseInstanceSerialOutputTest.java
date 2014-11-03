@@ -16,23 +16,24 @@
  */
 package org.jclouds.googlecomputeengine.parse;
 
+import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
+import static org.jclouds.googlecomputeengine.domain.Instance.SerialPortOutput;
+
 import javax.ws.rs.Consumes;
-import javax.ws.rs.core.MediaType;
 
-import org.jclouds.googlecomputeengine.domain.Instance;
 import org.jclouds.googlecomputeengine.internal.BaseGoogleComputeEngineParseTest;
+import org.testng.annotations.Test;
 
-public class ParseInstanceSerialOutputTest extends BaseGoogleComputeEngineParseTest<Instance.SerialPortOutput> {
+@Test(groups = "unit", testName = "ParseInstanceSerialOutputTest")
+public class ParseInstanceSerialOutputTest extends BaseGoogleComputeEngineParseTest<SerialPortOutput> {
 
    @Override
    public String resource() {
       return "/instance_serial_port.json";
    }
 
-   @Override
-   @Consumes(MediaType.APPLICATION_JSON)
-   public Instance.SerialPortOutput expected() {
-      return Instance.SerialPortOutput.builder()
-              .contents("console output").build();
+   @Override @Consumes(APPLICATION_JSON)
+   public SerialPortOutput expected() {
+      return SerialPortOutput.create(null, "console output");
    }
 }

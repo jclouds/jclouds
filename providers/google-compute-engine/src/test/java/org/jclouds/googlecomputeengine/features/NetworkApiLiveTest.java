@@ -77,8 +77,7 @@ public class NetworkApiLiveTest extends BaseGoogleComputeEngineApiLiveTest {
    }
 
    private void assertNetworkEquals(Network result) {
-      assertEquals(result.getName(), NETWORK_NAME);
-      assertEquals(result.getIPv4Range(), IPV4_RANGE);
+      assertEquals(result.name(), NETWORK_NAME);
+      assertEquals(result.rangeIPv4(), IPV4_RANGE);
    }
-
 }

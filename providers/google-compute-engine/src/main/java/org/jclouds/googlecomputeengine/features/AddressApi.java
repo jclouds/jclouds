@@ -30,10 +30,10 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 
-import org.jclouds.Fallbacks.EmptyIterableWithMarkerOnNotFoundOr404;
 import org.jclouds.Fallbacks.EmptyPagedIterableOnNotFoundOr404;
 import org.jclouds.Fallbacks.NullOnNotFoundOr404;
 import org.jclouds.collect.PagedIterable;
+import org.jclouds.googlecomputeengine.GoogleComputeEngineFallbacks.EmptyListPageOnNotFoundOr404;
 import org.jclouds.googlecomputeengine.domain.Address;
 import org.jclouds.googlecomputeengine.domain.ListPage;
 import org.jclouds.googlecomputeengine.domain.Operation;
@@ -118,7 +118,7 @@ public interface AddressApi {
    @Path("/regions/{region}/addresses")
    @OAuthScopes(COMPUTE_READONLY_SCOPE)
    @ResponseParser(ParseAddresses.class)
-   @Fallback(EmptyIterableWithMarkerOnNotFoundOr404.class)
+   @Fallback(EmptyListPageOnNotFoundOr404.class)
    ListPage<Address> listFirstPageInRegion(@PathParam("region") String region);
 
    /**
@@ -130,7 +130,7 @@ public interface AddressApi {
    @Path("/regions/{region}/addresses")
    @OAuthScopes(COMPUTE_READONLY_SCOPE)
    @ResponseParser(ParseAddresses.class)
-   @Fallback(EmptyIterableWithMarkerOnNotFoundOr404.class)
+   @Fallback(EmptyListPageOnNotFoundOr404.class)
    ListPage<Address> listAtMarkerInRegion(@PathParam("region") String region, @QueryParam("pageToken") @Nullable String marker);
 
    /**
@@ -151,7 +151,7 @@ public interface AddressApi {
    @Path("/regions/{region}/addresses")
    @OAuthScopes(COMPUTE_READONLY_SCOPE)
    @ResponseParser(ParseAddresses.class)
-   @Fallback(EmptyIterableWithMarkerOnNotFoundOr404.class)
+   @Fallback(EmptyListPageOnNotFoundOr404.class)
    ListPage<Address> listAtMarkerInRegion(@PathParam("region") String region, @QueryParam("pageToken") @Nullable String marker, ListOptions listOptions);
 
    /**
@@ -181,5 +181,4 @@ public interface AddressApi {
    @Transform(ParseAddresses.ToPagedIterable.class)
    @Fallback(EmptyPagedIterableOnNotFoundOr404.class)
    PagedIterable<Address> listInRegion(@PathParam("region") String region, ListOptions options);
-
 }

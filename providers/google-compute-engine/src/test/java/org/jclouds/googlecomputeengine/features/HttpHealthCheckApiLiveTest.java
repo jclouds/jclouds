@@ -16,17 +16,16 @@
  */
 package org.jclouds.googlecomputeengine.features;
 
-import org.jclouds.collect.IterableWithMarker;
+import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertNotEquals;
+import static org.testng.Assert.assertNotNull;
+
 import org.jclouds.googlecomputeengine.domain.HttpHealthCheck;
+import org.jclouds.googlecomputeengine.domain.ListPage;
 import org.jclouds.googlecomputeengine.internal.BaseGoogleComputeEngineApiLiveTest;
 import org.jclouds.googlecomputeengine.options.HttpHealthCheckCreationOptions;
 import org.jclouds.googlecomputeengine.options.ListOptions;
 import org.testng.annotations.Test;
-
-import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertNotEquals;
-import static org.testng.Assert.assertNotNull;
-import static com.google.common.base.Optional.fromNullable;
 
 public class HttpHealthCheckApiLiveTest extends BaseGoogleComputeEngineApiLiveTest {
 
@@ -57,59 +56,59 @@ public class HttpHealthCheckApiLiveTest extends BaseGoogleComputeEngineApiLiveTe
    public void testGetHttpHealthCheck() {
       HttpHealthCheck httpHealthCheck = api().get(HTTP_HEALTH_CHECK_NAME);
       assertNotNull(httpHealthCheck);
-      assertEquals(httpHealthCheck.getName(), HTTP_HEALTH_CHECK_NAME);
-      assertEquals(httpHealthCheck.getPort(), fromNullable(options.getPort()));
-      assertEquals(httpHealthCheck.getCheckIntervalSec(), fromNullable(options.getCheckIntervalSec()));
-      assertEquals(httpHealthCheck.getTimeoutSec(), fromNullable(options.getTimeoutSec()));
-      assertEquals(httpHealthCheck.getHealthyThreshold(), fromNullable(options.getHealthyThreshold()));
-      assertEquals(httpHealthCheck.getUnhealthyThreshold(), fromNullable(options.getUnhealthyThreshold()));
-      assertEquals(httpHealthCheck.getDescription(), fromNullable(options.getDescription()));
+      assertEquals(httpHealthCheck.name(), HTTP_HEALTH_CHECK_NAME);
+      assertEquals(httpHealthCheck.port(), options.port().intValue());
+      assertEquals(httpHealthCheck.checkIntervalSec(), options.checkIntervalSec().intValue());
+      assertEquals(httpHealthCheck.timeoutSec(), options.timeoutSec().intValue());
+      assertEquals(httpHealthCheck.healthyThreshold(), options.healthyThreshold().intValue());
+      assertEquals(httpHealthCheck.unhealthyThreshold(), options.unhealthyThreshold().intValue());
+      assertEquals(httpHealthCheck.description(), options.description());
    }
 
    @Test(groups = "live", dependsOnMethods = "testInsertHttpHealthCheck")
    public void testListHttpHealthCheck() {
-      IterableWithMarker<HttpHealthCheck> httpHealthCheck = api().list(new ListOptions.Builder()
+      ListPage<HttpHealthCheck> httpHealthCheck = api().list(new ListOptions.Builder()
               .filter("name eq " + HTTP_HEALTH_CHECK_NAME));
-      assertEquals(httpHealthCheck.toList().size(), 1);
+      assertEquals(httpHealthCheck.size(), 1);
    }
 
    @Test(groups = "live", dependsOnMethods = "testGetHttpHealthCheck")
    public void testPatchHttpHealthCheck() {
       HttpHealthCheckCreationOptions newOptions = new HttpHealthCheckCreationOptions()
-         .port(options.getPort() + OFFSET)
-         .checkIntervalSec(options.getCheckIntervalSec() + OFFSET)
-         .timeoutSec(options.getTimeoutSec() + OFFSET);
+         .port(options.port() + OFFSET)
+         .checkIntervalSec(options.checkIntervalSec() + OFFSET)
+         .timeoutSec(options.timeoutSec() + OFFSET);
       assertGlobalOperationDoneSucessfully(api().patch(HTTP_HEALTH_CHECK_NAME, newOptions), TIME_WAIT);
 
       // Check changes happened and others unchanged.
       HttpHealthCheck httpHealthCheck = api().get(HTTP_HEALTH_CHECK_NAME);
       assertNotNull(httpHealthCheck);
-      assertEquals(httpHealthCheck.getName(), HTTP_HEALTH_CHECK_NAME);
-      assertEquals(httpHealthCheck.getPort(), fromNullable(newOptions.getPort()));
-      assertEquals(httpHealthCheck.getCheckIntervalSec(), fromNullable(newOptions.getCheckIntervalSec()));
-      assertEquals(httpHealthCheck.getTimeoutSec(), fromNullable(newOptions.getTimeoutSec()));
-      assertEquals(httpHealthCheck.getHealthyThreshold(), fromNullable(options.getHealthyThreshold()));
-      assertEquals(httpHealthCheck.getUnhealthyThreshold(), fromNullable(options.getUnhealthyThreshold()));
-      assertEquals(httpHealthCheck.getDescription(), fromNullable(options.getDescription()));
+      assertEquals(httpHealthCheck.name(), HTTP_HEALTH_CHECK_NAME);
+      assertEquals(httpHealthCheck.port(), newOptions.port().intValue());
+      assertEquals(httpHealthCheck.checkIntervalSec(), newOptions.checkIntervalSec().intValue());
+      assertEquals(httpHealthCheck.timeoutSec(), newOptions.timeoutSec().intValue());
+      assertEquals(httpHealthCheck.healthyThreshold(), options.healthyThreshold().intValue());
+      assertEquals(httpHealthCheck.unhealthyThreshold(), options.unhealthyThreshold().intValue());
+      assertEquals(httpHealthCheck.description(), options.description());
    }
 
    @Test(groups = "live", dependsOnMethods = "testPatchHttpHealthCheck")
    public void testUpdateHttpHealthCheck() {
       HttpHealthCheckCreationOptions newOptions = new HttpHealthCheckCreationOptions()
-         .checkIntervalSec(options.getCheckIntervalSec() - OFFSET)
-         .timeoutSec(options.getTimeoutSec() - OFFSET);
+         .checkIntervalSec(options.checkIntervalSec() - OFFSET)
+         .timeoutSec(options.timeoutSec() - OFFSET);
       assertGlobalOperationDoneSucessfully(api().update(HTTP_HEALTH_CHECK_NAME, newOptions), TIME_WAIT);
 
       // Check changes happened.
       HttpHealthCheck httpHealthCheck = api().get(HTTP_HEALTH_CHECK_NAME);
       assertNotNull(httpHealthCheck);
-      assertEquals(httpHealthCheck.getName(), HTTP_HEALTH_CHECK_NAME);
-      assertEquals(httpHealthCheck.getCheckIntervalSec(), fromNullable(newOptions.getCheckIntervalSec()));
-      assertEquals(httpHealthCheck.getTimeoutSec(), fromNullable(newOptions.getTimeoutSec()));
+      assertEquals(httpHealthCheck.name(), HTTP_HEALTH_CHECK_NAME);
+      assertEquals(httpHealthCheck.checkIntervalSec(), newOptions.checkIntervalSec().intValue());
+      assertEquals(httpHealthCheck.timeoutSec(), newOptions.timeoutSec().intValue());
       // Update overwrites unspecified parameters to their defaults.
-      assertNotEquals(httpHealthCheck.getHealthyThreshold(), fromNullable(options.getHealthyThreshold()));
-      assertNotEquals(httpHealthCheck.getUnhealthyThreshold(), fromNullable(options.getUnhealthyThreshold()));
-      assertNotEquals(httpHealthCheck.getDescription(), fromNullable(options.getDescription()));
+      assertNotEquals(httpHealthCheck.healthyThreshold(), options.healthyThreshold());
+      assertNotEquals(httpHealthCheck.unhealthyThreshold(), options.unhealthyThreshold());
+      assertNotEquals(httpHealthCheck.description(), options.description());
    }
 
    @Test(groups = "live", dependsOnMethods = {"testListHttpHealthCheck", "testUpdateHttpHealthCheck"})

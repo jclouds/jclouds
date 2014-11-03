@@ -31,14 +31,13 @@ import org.jclouds.http.HttpResponse;
 import org.jclouds.rest.ResourceNotFoundException;
 import org.testng.annotations.Test;
 
-@Test(groups = "unit")
+@Test(groups = "unit", testName = "ImageApiExpectTest")
 public class ImageApiExpectTest extends BaseGoogleComputeEngineApiExpectTest {
 
    public static final HttpRequest LIST_PROJECT_IMAGES_REQUEST = HttpRequest
            .builder()
            .method("GET")
-           .endpoint("https://www.googleapis" +
-                   ".com/compute/v1/projects/myproject/global/images")
+           .endpoint(BASE_URL + "/myproject/global/images")
            .addHeader("Accept", "application/json")
            .addHeader("Authorization", "Bearer " + TOKEN).build();
 
@@ -48,7 +47,7 @@ public class ImageApiExpectTest extends BaseGoogleComputeEngineApiExpectTest {
    public static final HttpRequest LIST_CENTOS_IMAGES_REQUEST = HttpRequest
            .builder()
            .method("GET")
-           .endpoint("https://www.googleapis.com/compute/v1/projects/centos-cloud/global/images")
+           .endpoint(BASE_URL + "/centos-cloud/global/images")
            .addHeader("Accept", "application/json")
            .addHeader("Authorization", "Bearer " + TOKEN).build();
 
@@ -58,7 +57,7 @@ public class ImageApiExpectTest extends BaseGoogleComputeEngineApiExpectTest {
    public static final HttpRequest LIST_DEBIAN_IMAGES_REQUEST = HttpRequest
            .builder()
            .method("GET")
-           .endpoint("https://www.googleapis.com/compute/v1/projects/debian-cloud/global/images")
+           .endpoint(BASE_URL + "/debian-cloud/global/images")
            .addHeader("Accept", "application/json")
            .addHeader("Authorization", "Bearer " + TOKEN).build();
 
@@ -70,8 +69,7 @@ public class ImageApiExpectTest extends BaseGoogleComputeEngineApiExpectTest {
       HttpRequest get = HttpRequest
               .builder()
               .method("GET")
-              .endpoint("https://www.googleapis" +
-                      ".com/compute/v1/projects/centos-cloud/global/images/centos-6-2-v20120326")
+              .endpoint(BASE_URL + "/centos-cloud/global/images/centos-6-2-v20120326")
               .addHeader("Accept", "application/json")
               .addHeader("Authorization", "Bearer " + TOKEN).build();
 
@@ -89,8 +87,7 @@ public class ImageApiExpectTest extends BaseGoogleComputeEngineApiExpectTest {
       HttpRequest get = HttpRequest
               .builder()
               .method("GET")
-              .endpoint("https://www.googleapis" +
-                      ".com/compute/v1/projects/centos-cloud/global/images/centos-6-2-v20120326")
+              .endpoint(BASE_URL + "/centos-cloud/global/images/centos-6-2-v20120326")
               .addHeader("Accept", "application/json")
               .addHeader("Authorization", "Bearer " + TOKEN).build();
 
@@ -106,8 +103,7 @@ public class ImageApiExpectTest extends BaseGoogleComputeEngineApiExpectTest {
       HttpRequest delete = HttpRequest
               .builder()
               .method("DELETE")
-              .endpoint("https://www.googleapis" +
-                      ".com/compute/v1/projects/myproject/global/images/centos-6-2-v20120326")
+              .endpoint(BASE_URL + "/myproject/global/images/centos-6-2-v20120326")
               .addHeader("Accept", "application/json")
               .addHeader("Authorization", "Bearer " + TOKEN).build();
 
@@ -125,8 +121,7 @@ public class ImageApiExpectTest extends BaseGoogleComputeEngineApiExpectTest {
       HttpRequest delete = HttpRequest
               .builder()
               .method("DELETE")
-              .endpoint("https://www.googleapis" +
-                      ".com/compute/v1/projects/myproject/global/images/centos-6-2-v20120326")
+              .endpoint(BASE_URL + "/myproject/global/images/centos-6-2-v20120326")
               .addHeader("Accept", "application/json")
               .addHeader("Authorization", "Bearer " + TOKEN).build();
 
@@ -162,8 +157,7 @@ public class ImageApiExpectTest extends BaseGoogleComputeEngineApiExpectTest {
       HttpRequest createImage = HttpRequest
             .builder()
             .method("POST")
-            .endpoint("https://www.googleapis" +
-                    ".com/compute/v1/projects/myproject/global/images")
+            .endpoint(BASE_URL + "/myproject/global/images")
             .addHeader("Accept", "application/json")
             .addHeader("Authorization", "Bearer " + TOKEN)
             .payload(payloadFromResource("/image_insert_from_pd.json"))
@@ -175,8 +169,7 @@ public class ImageApiExpectTest extends BaseGoogleComputeEngineApiExpectTest {
       ImageApi imageApi = requestsSendResponses(requestForScopes(COMPUTE_SCOPE),
             TOKEN_RESPONSE, createImage, createImageResponse).getImageApi("myproject");
 
-      assertEquals(imageApi.createImageFromPD("my-image", "https://www.googleapis.com/" +
-            "compute/v1/projects/myproject/zones/us-central1-a/disks/mydisk"),
+      assertEquals(imageApi.createImageFromPD("my-image", BASE_URL + "/myproject/zones/us-central1-a/disks/mydisk"),
             new ParseOperationTest().expected());
    }
 
@@ -185,8 +178,7 @@ public class ImageApiExpectTest extends BaseGoogleComputeEngineApiExpectTest {
       HttpRequest createImage = HttpRequest
             .builder()
             .method("POST")
-            .endpoint("https://www.googleapis" +
-                     ".com/compute/v1/projects/myproject/global/images")
+            .endpoint(BASE_URL + "/myproject/global/images")
             .addHeader("Accept", "application/json")
             .addHeader("Authorization", "Bearer " + TOKEN)
             .payload(payloadFromResource("/image_insert_from_pd.json"))
@@ -197,7 +189,6 @@ public class ImageApiExpectTest extends BaseGoogleComputeEngineApiExpectTest {
       ImageApi imageApi = requestsSendResponses(requestForScopes(COMPUTE_SCOPE),
               TOKEN_RESPONSE, createImage, createImageResponse).getImageApi("myproject");
 
-      imageApi.createImageFromPD("my-image", "https://www.googleapis.com/" +
-                  "compute/v1/projects/myproject/zones/us-central1-a/disks/mydisk");
+      imageApi.createImageFromPD("my-image", BASE_URL + "/myproject/zones/us-central1-a/disks/mydisk");
    }
 }

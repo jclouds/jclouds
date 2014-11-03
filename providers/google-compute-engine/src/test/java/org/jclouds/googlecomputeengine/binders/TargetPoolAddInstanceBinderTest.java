@@ -19,7 +19,7 @@ package org.jclouds.googlecomputeengine.binders;
 import static org.testng.Assert.assertEquals;
 
 import java.net.URI;
-import java.util.Set;
+import java.util.List;
 import java.util.Map;
 
 import org.jclouds.googlecomputeengine.internal.BaseGoogleComputeEngineExpectTest;
@@ -28,18 +28,14 @@ import org.jclouds.json.Json;
 import org.jclouds.json.internal.GsonWrapper;
 import org.testng.annotations.Test;
 
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
-import com.google.common.collect.ImmutableSet;
 import com.google.gson.Gson;
 
-
-/**
- * Tests behavior of {@code BindToJsonPayload}
- */
 @Test(groups = "unit", testName = "TargetPoolAddInstanceBinderTest")
 public class TargetPoolAddInstanceBinderTest extends BaseGoogleComputeEngineExpectTest<Object>{
 
-   private static final Set<URI> FAKE_INSTANCES = ImmutableSet.of(
+   private static final List<URI> FAKE_INSTANCES = ImmutableList.of(
                                        URI.create("https://www.googleapis.com/compute/v1/" +
                                                   "projects/project/zones/us-central1-a/instances/instance-1"),
                                        URI.create("https://www.googleapis.com/compute/v1/" +
@@ -58,8 +54,8 @@ public class TargetPoolAddInstanceBinderTest extends BaseGoogleComputeEngineExpe
       assertEquals(request.getPayload().getRawContent(),
                "{"
             + "\"instances\":["
-            + "{\"instance\":\"https://www.googleapis.com/compute/v1/projects/project/zones/us-central1-a/instances/instance-2\"},"
-            + "{\"instance\":\"https://www.googleapis.com/compute/v1/projects/project/zones/us-central1-a/instances/instance-1\"}"
+            + "{\"instance\":\"https://www.googleapis.com/compute/v1/projects/project/zones/us-central1-a/instances/instance-1\"},"
+            + "{\"instance\":\"https://www.googleapis.com/compute/v1/projects/project/zones/us-central1-a/instances/instance-2\"}"
             + "]"
             + "}");
       assertEquals(request.getPayload().getContentMetadata().getContentType(), "application/json");
@@ -71,5 +67,4 @@ public class TargetPoolAddInstanceBinderTest extends BaseGoogleComputeEngineExpe
       DiskCreationBinder binder = new DiskCreationBinder(json);
       binder.bindToRequest(HttpRequest.builder().method("GET").endpoint("http://momma").build(), null);
    }
-
 }

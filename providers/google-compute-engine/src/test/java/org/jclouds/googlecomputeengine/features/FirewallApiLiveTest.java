@@ -27,10 +27,9 @@ import org.jclouds.googlecomputeengine.domain.Firewall;
 import org.jclouds.googlecomputeengine.internal.BaseGoogleComputeEngineApiLiveTest;
 import org.jclouds.googlecomputeengine.options.FirewallOptions;
 import org.jclouds.googlecomputeengine.options.ListOptions;
-import org.jclouds.net.domain.IpProtocol;
 import org.testng.annotations.Test;
 
-import com.google.common.collect.ImmutableSet;
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 
 @Test(groups = "live", testName = "FirewallApiLiveTest")
@@ -53,17 +52,13 @@ public class FirewallApiLiveTest extends BaseGoogleComputeEngineApiLiveTest {
               (FIREWALL_NETWORK_NAME, IPV4_RANGE), TIME_WAIT);
 
       FirewallOptions firewall = new FirewallOptions()
-              .addAllowedRule(
-                      Firewall.Rule.builder()
-                              .IpProtocol(IpProtocol.TCP)
-                              .addPort(22).build())
+              .addAllowedRule(Firewall.Rule.create("tcp", ImmutableList.of("22")))
               .addSourceRange("10.0.0.0/8")
               .addSourceTag("tag1")
               .addTargetTag("tag2");
 
       assertGlobalOperationDoneSucessfully(api().createInNetwork(FIREWALL_NAME, getNetworkUrl(userProject.get(),
               FIREWALL_NETWORK_NAME), firewall), TIME_WAIT);
-
    }
 
    @Test(groups = "live", dependsOnMethods = "testInsertFirewall")
@@ -75,15 +70,9 @@ public class FirewallApiLiveTest extends BaseGoogleComputeEngineApiLiveTest {
               .addSourceRange("10.0.0.0/8")
               .addSourceTag("tag1")
               .addTargetTag("tag2")
-              .allowedRules(ImmutableSet.of(
-                      Firewall.Rule.builder()
-                              .IpProtocol(IpProtocol.TCP)
-                              .addPort(23)
-                              .build()));
-
+              .allowedRules(ImmutableList.of(Firewall.Rule.create("tcp", ImmutableList.of("23"))));
 
       assertGlobalOperationDoneSucessfully(api().update(FIREWALL_NAME, firewall), TIME_WAIT);
-
    }
 
    @Test(groups = "live", dependsOnMethods = "testUpdateFirewall")
@@ -92,21 +81,13 @@ public class FirewallApiLiveTest extends BaseGoogleComputeEngineApiLiveTest {
       FirewallOptions firewall = new FirewallOptions()
               .name(FIREWALL_NAME)
               .network(getNetworkUrl(userProject.get(), FIREWALL_NETWORK_NAME))
-              .allowedRules(ImmutableSet.of(
-                      Firewall.Rule.builder()
-                              .IpProtocol(IpProtocol.TCP)
-                              .addPort(22)
-                              .build(),
-                      Firewall.Rule.builder()
-                              .IpProtocol(IpProtocol.TCP)
-                              .addPort(23)
-                              .build()))
+              .allowedRules(ImmutableList.of(Firewall.Rule.create("tcp", ImmutableList.of("22")),
+                    Firewall.Rule.create("tcp", ImmutableList.of("23"))))
               .addSourceRange("10.0.0.0/8")
               .addSourceTag("tag1")
               .addTargetTag("tag2");
 
       assertGlobalOperationDoneSucessfully(api().update(FIREWALL_NAME, firewall), TIME_WAIT);
-
    }
 
    @Test(groups = "live", dependsOnMethods = "testPatchFirewall")
@@ -115,15 +96,8 @@ public class FirewallApiLiveTest extends BaseGoogleComputeEngineApiLiveTest {
       FirewallOptions patchedFirewall = new FirewallOptions()
               .name(FIREWALL_NAME)
               .network(getNetworkUrl(userProject.get(), FIREWALL_NETWORK_NAME))
-              .allowedRules(ImmutableSet.of(
-                      Firewall.Rule.builder()
-                              .IpProtocol(IpProtocol.TCP)
-                              .addPort(22)
-                              .build(),
-                      Firewall.Rule.builder()
-                              .IpProtocol(IpProtocol.TCP)
-                              .addPort(23)
-                              .build()))
+              .allowedRules(ImmutableList.of(Firewall.Rule.create("tcp", ImmutableList.of("22")),
+                    Firewall.Rule.create("tcp", ImmutableList.of("23"))))
               .addSourceRange("10.0.0.0/8")
               .addSourceTag("tag1")
               .addTargetTag("tag2");
@@ -154,11 +128,10 @@ public class FirewallApiLiveTest extends BaseGoogleComputeEngineApiLiveTest {
    }
 
    private void assertFirewallEquals(Firewall result, FirewallOptions expected) {
-      assertEquals(result.getName(), expected.getName());
-      assertEquals(getOnlyElement(result.getSourceRanges()), getOnlyElement(expected.getSourceRanges()));
-      assertEquals(getOnlyElement(result.getSourceTags()), getOnlyElement(expected.getSourceTags()));
-      assertEquals(getOnlyElement(result.getTargetTags()), getOnlyElement(expected.getTargetTags()));
-      assertEquals(result.getAllowed(), expected.getAllowed());
+      assertEquals(result.name(), expected.name());
+      assertEquals(getOnlyElement(result.sourceRanges()), getOnlyElement(expected.sourceRanges()));
+      assertEquals(getOnlyElement(result.sourceTags()), getOnlyElement(expected.sourceTags()));
+      assertEquals(getOnlyElement(result.targetTags()), getOnlyElement(expected.targetTags()));
+      assertEquals(result.allowed(), expected.getAllowed());
    }
-
 }

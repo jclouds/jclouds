@@ -59,7 +59,7 @@ public class ZoneOperationApiLiveTest extends BaseGoogleComputeEngineApiLiveTest
 
    @Test(groups = "live", dependsOnMethods = "testCreateOperations")
    public void testGetOperation() {
-      Operation operation = api().getInZone(DEFAULT_ZONE_NAME, addOperation.getName());
+      Operation operation = api().getInZone(DEFAULT_ZONE_NAME, addOperation.name());
       assertNotNull(operation);
       assertOperationEquals(operation, this.addOperation);
    }
@@ -73,9 +73,7 @@ public class ZoneOperationApiLiveTest extends BaseGoogleComputeEngineApiLiveTest
       // make sure that in spite of having only one result per page we get at least two results
       final AtomicInteger counter = new AtomicInteger();
       operations.firstMatch(new Predicate<IterableWithMarker<Operation>>() {
-
-         @Override
-         public boolean apply(IterableWithMarker<Operation> input) {
+         @Override public boolean apply(IterableWithMarker<Operation> input) {
             counter.addAndGet(Iterables.size(input));
             return counter.get() == 2;
          }
@@ -83,7 +81,7 @@ public class ZoneOperationApiLiveTest extends BaseGoogleComputeEngineApiLiveTest
    }
 
    private void assertOperationEquals(Operation result, Operation expected) {
-      assertEquals(result.getName(), expected.getName());
+      assertEquals(result.name(), expected.name());
    }
 
 

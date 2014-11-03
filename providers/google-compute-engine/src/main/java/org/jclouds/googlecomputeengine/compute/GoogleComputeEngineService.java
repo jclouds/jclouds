@@ -66,7 +66,6 @@ import org.jclouds.googlecomputeengine.domain.Firewall;
 import org.jclouds.googlecomputeengine.domain.Network;
 import org.jclouds.googlecomputeengine.domain.Operation;
 import org.jclouds.googlecomputeengine.features.FirewallApi;
-import org.jclouds.http.HttpResponse;
 import org.jclouds.scriptbuilder.functions.InitAdminAccess;
 
 import com.google.common.base.Function;
@@ -157,35 +156,35 @@ public class GoogleComputeEngineService extends BaseComputeService {
       Predicate<Firewall> firewallBelongsToNetwork = new Predicate<Firewall>() {
          @Override
          public boolean apply(Firewall input) {
-            return input != null && input.getNetwork().equals(network.getSelfLink());
+            return input != null && input.network().equals(network.selfLink());
          }
       };
 
       Set<AtomicReference<Operation>> operations = Sets.newLinkedHashSet();
       for (Firewall firewall : firewallApi.list().concat().filter(firewallBelongsToNetwork)) {
-         operations.add(new AtomicReference<Operation>(firewallApi.delete(firewall.getName())));
+         operations.add(new AtomicReference<Operation>(firewallApi.delete(firewall.name())));
       }
 
       for (AtomicReference<Operation> operation : operations) {
          retry(operationDonePredicate, operationCompleteCheckTimeout, operationCompleteCheckInterval,
                  MILLISECONDS).apply(operation);
 
-         if (operation.get().getHttpError().isPresent()) {
-            HttpResponse response = operation.get().getHttpError().get();
+         if (operation.get().httpErrorStatusCode() != null) {
             logger.warn("delete orphaned firewall %s failed. Http Error Code: %d HttpError: %s",
-                    operation.get().getTargetId(), response.getStatusCode(), response.getMessage());
+                  operation.get().targetId(), operation.get().httpErrorStatusCode(),
+                  operation.get().httpErrorMessage());
          }
       }
 
-      AtomicReference<Operation> operation = Atomics.newReference(api.getNetworkApi(project.get()).delete(resourceName));
+      AtomicReference<Operation> operation = Atomics
+            .newReference(api.getNetworkApi(project.get()).delete(resourceName));
 
-      retry(operationDonePredicate, operationCompleteCheckTimeout, operationCompleteCheckInterval,
-              MILLISECONDS).apply(operation);
+      retry(operationDonePredicate, operationCompleteCheckTimeout, operationCompleteCheckInterval, MILLISECONDS)
+            .apply(operation);
 
-      if (operation.get().getHttpError().isPresent()) {
-         HttpResponse response = operation.get().getHttpError().get();
-         logger.warn("delete orphaned network failed. Http Error Code: " + response.getStatusCode() +
-                 " HttpError: " + response.getMessage());
+      if (operation.get().httpErrorStatusCode() != null) {
+         logger.warn("delete orphaned network failed. Http Error Code: " + operation.get().httpErrorStatusCode() +
+               " HttpError: " + operation.get().httpErrorMessage());
       }
    }
 

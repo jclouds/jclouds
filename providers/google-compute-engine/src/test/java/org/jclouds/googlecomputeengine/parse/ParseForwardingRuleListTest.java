@@ -16,22 +16,18 @@
  */
 package org.jclouds.googlecomputeengine.parse;
 
-import com.google.common.collect.ImmutableSet;
+import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
 
-import org.jclouds.date.internal.SimpleDateFormatDateService;
+import javax.ws.rs.Consumes;
+
 import org.jclouds.googlecomputeengine.domain.ForwardingRule;
-import org.jclouds.googlecomputeengine.domain.ForwardingRule.IPProtocolOption;
 import org.jclouds.googlecomputeengine.domain.ListPage;
-import org.jclouds.googlecomputeengine.domain.Resource;
 import org.jclouds.googlecomputeengine.internal.BaseGoogleComputeEngineParseTest;
 import org.testng.annotations.Test;
 
-import javax.ws.rs.Consumes;
-import javax.ws.rs.core.MediaType;
+import com.google.common.collect.ImmutableList;
 
-import java.net.URI;
-
-@Test(groups = "unit")
+@Test(groups = "unit", testName = "ParseForwardingRuleListTest")
 public class ParseForwardingRuleListTest extends BaseGoogleComputeEngineParseTest<ListPage<ForwardingRule>> {
 
    @Override
@@ -39,24 +35,12 @@ public class ParseForwardingRuleListTest extends BaseGoogleComputeEngineParseTes
       return "/forwardingrule_list.json";
    }
 
-   @Override
-   @Consumes(MediaType.APPLICATION_JSON)
+   @Override @Consumes(APPLICATION_JSON)
    public ListPage<ForwardingRule> expected() {
-      return ListPage.<ForwardingRule>builder()
-              .kind(Resource.Kind.FORWARDING_RULE_LIST)
-              .items(ImmutableSet.of(ForwardingRule.builder()
-                      .id("6732523704970219884")
-                      .creationTimestamp(new SimpleDateFormatDateService().iso8601DateParse("2014-01-08T06:51:10.809-08:00"))
-                      .selfLink(URI.create("https://www.googleapis" +
-                              ".com/compute/v1/projects/myproject/regions/europe-west1/forwardingRules/test-forwarding-rule"))
-                      .name("test-forwarding-rule")
-                      .region(URI.create("https://www.googleapis.com/compute/v1/projects/myproject/regions/europe-west1"))
-                      .ipAddress("23.251.129.77")
-                      .ipProtocol(IPProtocolOption.TCP)
-                      .target(URI.create("https://www.googleapis" +
-                              ".com/compute/v1/projects/myproject/regions/europe-west1/targetPools/test-target-pool"))
-                      .portRange("1-65535")
-                      .build())
-              ).build();
+      return ListPage.create( //
+            ImmutableList.of(new ParseForwardingRuleTest().expected()), // items
+            null, // nextPageToken
+            null // prefixes
+      );
    }
 }

@@ -30,10 +30,10 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 
-import org.jclouds.Fallbacks.EmptyIterableWithMarkerOnNotFoundOr404;
 import org.jclouds.Fallbacks.EmptyPagedIterableOnNotFoundOr404;
 import org.jclouds.Fallbacks.NullOnNotFoundOr404;
 import org.jclouds.collect.PagedIterable;
+import org.jclouds.googlecomputeengine.GoogleComputeEngineFallbacks.EmptyListPageOnNotFoundOr404;
 import org.jclouds.googlecomputeengine.domain.Image;
 import org.jclouds.googlecomputeengine.domain.ListPage;
 import org.jclouds.googlecomputeengine.domain.Operation;
@@ -97,7 +97,7 @@ public interface ImageApi {
    @Path("/global/images")
    @OAuthScopes(COMPUTE_READONLY_SCOPE)
    @ResponseParser(ParseImages.class)
-   @Fallback(EmptyIterableWithMarkerOnNotFoundOr404.class)
+   @Fallback(EmptyListPageOnNotFoundOr404.class)
    ListPage<Image> listFirstPage();
 
    /**
@@ -109,7 +109,7 @@ public interface ImageApi {
    @Path("/global/images")
    @OAuthScopes(COMPUTE_READONLY_SCOPE)
    @ResponseParser(ParseImages.class)
-   @Fallback(EmptyIterableWithMarkerOnNotFoundOr404.class)
+   @Fallback(EmptyListPageOnNotFoundOr404.class)
    ListPage<Image> listAtMarker(@QueryParam("pageToken") @Nullable String marker);
 
    /**
@@ -129,7 +129,7 @@ public interface ImageApi {
    @Path("/global/images")
    @OAuthScopes(COMPUTE_READONLY_SCOPE)
    @ResponseParser(ParseImages.class)
-   @Fallback(EmptyIterableWithMarkerOnNotFoundOr404.class)
+   @Fallback(EmptyListPageOnNotFoundOr404.class)
    ListPage<Image> listAtMarker(@QueryParam("pageToken") @Nullable String marker, ListOptions listOptions);
 
    /**

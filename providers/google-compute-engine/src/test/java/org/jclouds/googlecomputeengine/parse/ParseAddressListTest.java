@@ -16,19 +16,20 @@
  */
 package org.jclouds.googlecomputeengine.parse;
 
+import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
+
 import java.net.URI;
 
 import javax.ws.rs.Consumes;
-import javax.ws.rs.core.MediaType;
 
-import org.jclouds.date.internal.SimpleDateFormatDateService;
 import org.jclouds.googlecomputeengine.domain.Address;
 import org.jclouds.googlecomputeengine.domain.ListPage;
-import org.jclouds.googlecomputeengine.domain.Resource.Kind;
 import org.jclouds.googlecomputeengine.internal.BaseGoogleComputeEngineParseTest;
 import org.testng.annotations.Test;
 
-@Test(groups = "unit")
+import com.google.common.collect.ImmutableList;
+
+@Test(groups = "unit", testName = "ParseAddressListTest")
 public class ParseAddressListTest extends BaseGoogleComputeEngineParseTest<ListPage<Address>> {
 
    @Override
@@ -36,22 +37,23 @@ public class ParseAddressListTest extends BaseGoogleComputeEngineParseTest<ListP
       return "/address_list.json";
    }
 
-   @Override
-   @Consumes(MediaType.APPLICATION_JSON)
+   @Override @Consumes(APPLICATION_JSON)
    public ListPage<Address> expected() {
-      return ListPage.<Address>builder()
-              .kind(Kind.ADDRESS_LIST)
-              .addItem(new ParseAddressTest().expected())
-              .addItem(Address.builder()
-                              .id("4881363978908129158")
-                              .creationTimestamp(new SimpleDateFormatDateService().iso8601DateParse("2013-07-26T14:08:21.552-07:00"))
-                              .status("RESERVED")
-                              .region(URI.create("https://www.googleapis.com/compute/v1/projects/myproject/regions/us-central1"))
-                              .name("test-ip2")
-                              .description("")
-                              .address("173.255.118.115")
-                              .selfLink(URI.create("https://www.googleapis.com/compute/v1/projects/myproject/regions/us-central1/addresses/test-ip2"))
-                              .build())
-              .build();
+      Address address1 = new ParseAddressTest().expected();
+      Address address2 = Address.create( //
+            "4881363978908129158", // id
+            URI.create(BASE_URL + "/myproject/regions/us-central1/addresses/test-ip2"), // selfLink
+            "test-ip2", // name
+            "", // description
+            "RESERVED", // status
+            null, // user
+            URI.create(BASE_URL + "/myproject/regions/us-central1"), // region
+            "173.255.118.115" // address
+      );
+      return ListPage.create( //
+            ImmutableList.of(address1, address2), // items
+            null, // nextPageToken
+            null // prefixes
+      );
    }
 }

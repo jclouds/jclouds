@@ -16,119 +16,44 @@
  */
 package org.jclouds.googlecomputeengine.domain;
 
-import static com.google.common.base.Objects.equal;
-import static com.google.common.base.Objects.toStringHelper;
-import static com.google.common.base.Preconditions.checkNotNull;
-import static org.jclouds.googlecomputeengine.domain.Resource.Kind;
+import static org.jclouds.googlecomputeengine.internal.NullSafeCopies.copyOf;
 
 import java.beans.ConstructorProperties;
-import java.util.Iterator;
+import java.util.List;
 
-import org.jclouds.collect.IterableWithMarker;
+import org.jclouds.javax.annotation.Nullable;
 
-import com.google.common.base.Objects;
-import com.google.common.base.Optional;
-import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ForwardingList;
 
 /**
  * The collection returned from any <code>listFirstPage()</code> method.
  */
-public class ListPage<T> extends IterableWithMarker<T> {
+public final class ListPage<T> extends ForwardingList<T> {
 
-   private final Kind kind;
+   private final List<T> items;
    private final String nextPageToken;
-   private final Iterable<T> items;
+   private final List<String> prefixes;
 
-   @ConstructorProperties({ "kind", "nextPageToken", "items" })
-   protected ListPage(Kind kind, String nextPageToken, Iterable<T> items) {
-      this.kind = checkNotNull(kind, "kind");
+   public static <T> ListPage<T> create(List<T> items, String nextPageToken, List<String> prefixes) {
+      return new ListPage<T>(items, nextPageToken, prefixes);
+   }
+
+   @ConstructorProperties({ "items", "nextPageToken", "prefixes" })
+   ListPage(List<T> items, String nextPageToken, List<String> prefixes) {
+      this.items = copyOf(items);
       this.nextPageToken = nextPageToken;
-      this.items = items != null ? ImmutableList.copyOf(items) : ImmutableList.<T>of();
+      this.prefixes = copyOf(prefixes);
    }
 
-   public Kind getKind() {
-      return kind;
+   @Nullable public String nextPageToken() {
+      return nextPageToken;
    }
 
-   @Override
-   public Optional<Object> nextMarker() {
-      return Optional.<Object>fromNullable(nextPageToken);
+   public List<String> prefixes() {
+      return prefixes;
    }
 
-   @Override
-   public Iterator<T> iterator() {
-      return checkNotNull(items, "items").iterator();
-   }
-
-   @Override
-   public int hashCode() {
-      return Objects.hashCode(kind, items);
-   }
-
-   @Override
-   public boolean equals(Object obj) {
-      if (this == obj)
-         return true;
-      if (obj == null || getClass() != obj.getClass())
-         return false;
-      ListPage<?> that = ListPage.class.cast(obj);
-      return equal(this.kind, that.kind) && equal(this.items, that.items);
-   }
-
-   protected Objects.ToStringHelper string() {
-      return toStringHelper(this).omitNullValues().add("kind", kind).add("nextPageToken", nextPageToken)
-            .add("items", items);
-   }
-
-   @Override
-   public String toString() {
-      return string().toString();
-   }
-
-   public static <T> Builder<T> builder() {
-      return new Builder<T>();
-   }
-
-   public Builder<T> toBuilder() {
-      return new Builder<T>().fromPagedList(this);
-   }
-
-   public static final class Builder<T> {
-
-      private Kind kind;
-      private String nextPageToken;
-      private ImmutableList.Builder<T> items = ImmutableList.builder();
-
-      public Builder<T> kind(Kind kind) {
-         this.kind = kind;
-         return this;
-      }
-
-      public Builder<T> addItem(T item) {
-         this.items.add(item);
-         return this;
-      }
-
-      public Builder<T> items(Iterable<T> items) {
-         this.items.addAll(items);
-         return this;
-      }
-
-      public Builder<T> nextPageToken(String nextPageToken) {
-         this.nextPageToken = nextPageToken;
-         return this;
-      }
-
-      public ListPage<T> build() {
-         return new ListPage<T>(kind, nextPageToken, items.build());
-      }
-
-      public Builder<T> fromPagedList(ListPage<T> in) {
-         return this
-                 .kind(in.getKind())
-                 .nextPageToken((String) in.nextMarker().orNull())
-                 .items(in);
-
-      }
+   @Override protected List<T> delegate() {
+      return items;
    }
 }

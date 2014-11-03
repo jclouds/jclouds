@@ -17,9 +17,9 @@
 package org.jclouds.googlecomputeengine.options;
 
 import java.net.URI;
-import java.util.Set;
+import java.util.List;
 
-import com.google.common.collect.ImmutableSet;
+import com.google.common.collect.ImmutableList;
 
 /**
  * Options to insert a route.
@@ -38,17 +38,17 @@ public class RouteOptions {
    private String description;
    private Integer priority;
 
-   private ImmutableSet.Builder<String> tags = ImmutableSet.builder();
+   private ImmutableList.Builder<String> tags = ImmutableList.builder();
 
    /**
-    * @see org.jclouds.googlecomputeengine.domain.Route#getName()
+    * @see org.jclouds.googlecomputeengine.domain.Route#name()
     */
-   public String getName() {
+   public String name() {
       return name;
    }
 
    /**
-    * @see org.jclouds.googlecomputeengine.domain.Route#getName()
+    * @see org.jclouds.googlecomputeengine.domain.Route#name()
     */
    public RouteOptions name(String name) {
       this.name = name;
@@ -178,7 +178,7 @@ public class RouteOptions {
    /**
     * @see org.jclouds.googlecomputeengine.domain.Route#getTags()
     */
-   public Set<String> getTags() {
+   public List<String> getTags() {
       return tags.build();
    }
 
@@ -193,8 +193,8 @@ public class RouteOptions {
    /**
     * @see org.jclouds.googlecomputeengine.domain.Route#getTags()
     */
-   public RouteOptions tags(Set<String> tags) {
-      this.tags = ImmutableSet.builder();
+   public RouteOptions tags(List<String> tags) {
+      this.tags = ImmutableList.builder();
       this.tags.addAll(tags);
       return this;
    }

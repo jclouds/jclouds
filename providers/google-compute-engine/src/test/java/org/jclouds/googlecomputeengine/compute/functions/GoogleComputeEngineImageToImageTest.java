@@ -25,36 +25,38 @@ import org.jclouds.compute.domain.OsFamily;
 import org.jclouds.googlecomputeengine.domain.Image;
 import org.testng.annotations.Test;
 
-@Test(groups = "unit")
+@Test(groups = "unit", testName = "GoogleComputeEngineImageToImageTest")
 public class GoogleComputeEngineImageToImageTest {
-
-   Image.Builder imageBuilder = Image.builder()
-           .id("1234")
-           .selfLink(URI.create("http://test.com"))
-           .sourceType("RAW")
-           .description("")
-           .rawDisk(Image.RawDisk.builder().source("").containerType("TAR").build());
-
    public void testArbitratyImageName() {
       GoogleComputeEngineImageToImage imageToImage = new GoogleComputeEngineImageToImage();
-      Image image = imageBuilder.name("arbitratyname").build();
+      Image image = image("arbitratyname");
       org.jclouds.compute.domain.Image transformed = imageToImage.apply(image);
-      assertEquals(transformed.getName(), image.getName());
-      assertEquals(transformed.getId(), image.getName());
-      assertEquals(transformed.getProviderId(), image.getId());
+      assertEquals(transformed.getName(), image.name());
+      assertEquals(transformed.getId(), image.name());
+      assertEquals(transformed.getProviderId(), image.id());
       assertSame(transformed.getOperatingSystem().getFamily(), OsFamily.LINUX);
    }
 
    public void testWellFormedImageName() {
       GoogleComputeEngineImageToImage imageToImage = new GoogleComputeEngineImageToImage();
-      Image image = imageBuilder.name("ubuntu-12-04-v123123").build();
+      Image image = image("ubuntu-12-04-v123123");
       org.jclouds.compute.domain.Image transformed = imageToImage.apply(image);
-      assertEquals(transformed.getName(), image.getName());
-      assertEquals(transformed.getId(), image.getName());
-      assertEquals(transformed.getProviderId(), image.getId());
+      assertEquals(transformed.getName(), image.name());
+      assertEquals(transformed.getId(), image.name());
+      assertEquals(transformed.getProviderId(), image.id());
       assertSame(transformed.getOperatingSystem().getFamily(), OsFamily.UBUNTU);
       assertEquals(transformed.getOperatingSystem().getVersion(), "12.04");
    }
 
-
+   private static Image image(String name) {
+      return Image.create( //
+            "1234", // id
+            URI.create("http://test.com/1234"), // selfLink
+            name, // name
+            "", // description
+            "RAW", // sourceType
+            Image.RawDisk.create(URI.create("foo"), "TAR", null), // rawDisk
+            null // deprecated
+      );
+   }
 }

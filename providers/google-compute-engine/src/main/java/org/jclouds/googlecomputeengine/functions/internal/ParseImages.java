@@ -16,11 +16,10 @@
  */
 package org.jclouds.googlecomputeengine.functions.internal;
 
-import static com.google.common.base.Preconditions.checkNotNull;
-
 import javax.inject.Inject;
 
 import org.jclouds.collect.IterableWithMarker;
+import org.jclouds.collect.IterableWithMarkers;
 import org.jclouds.googlecomputeengine.GoogleComputeEngineApi;
 import org.jclouds.googlecomputeengine.domain.Image;
 import org.jclouds.googlecomputeengine.domain.ListPage;
@@ -31,31 +30,27 @@ import org.jclouds.json.Json;
 import com.google.common.base.Function;
 import com.google.inject.TypeLiteral;
 
-public class ParseImages extends ParseJson<ListPage<Image>> {
+public final class ParseImages extends ParseJson<ListPage<Image>> {
 
-   @Inject
-   public ParseImages(Json json) {
+   @Inject ParseImages(Json json) {
       super(json, new TypeLiteral<ListPage<Image>>() {
       });
    }
 
-   public static class ToPagedIterable extends BaseToPagedIterable<Image, ToPagedIterable> {
+   public static final class ToPagedIterable extends BaseToPagedIterable<Image, ToPagedIterable> {
 
       private final GoogleComputeEngineApi api;
 
-      @Inject
-      protected ToPagedIterable(GoogleComputeEngineApi api) {
-         this.api = checkNotNull(api, "api");
+      @Inject ToPagedIterable(GoogleComputeEngineApi api) {
+         this.api = api;
       }
 
-      @Override
-      protected Function<Object, IterableWithMarker<Image>> fetchNextPage(final String projectName,
-                                                                          final ListOptions options) {
+      @Override protected Function<Object, IterableWithMarker<Image>> fetchNextPage(final String projectName,
+            final ListOptions options) {
          return new Function<Object, IterableWithMarker<Image>>() {
-
-            @Override
-            public IterableWithMarker<Image> apply(Object input) {
-               return api.getImageApi(projectName).listAtMarker(input.toString(), options);
+            @Override public IterableWithMarker<Image> apply(Object input) {
+               ListPage<Image> result = api.getImageApi(projectName).listAtMarker(input.toString(), options);
+               return IterableWithMarkers.from(result, result.nextPageToken());
             }
          };
       }

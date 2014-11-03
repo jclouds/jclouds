@@ -24,17 +24,16 @@ import static org.testng.Assert.assertTrue;
 
 import org.jclouds.googlecomputeengine.internal.BaseGoogleComputeEngineApiExpectTest;
 import org.jclouds.googlecomputeengine.options.ListOptions;
-import org.jclouds.googlecomputeengine.parse.ParseOperationListTest;
-import org.jclouds.googlecomputeengine.parse.ParseOperationTest;
+import org.jclouds.googlecomputeengine.parse.ParseGlobalOperationListTest;
+import org.jclouds.googlecomputeengine.parse.ParseGlobalOperationTest;
 import org.jclouds.http.HttpRequest;
 import org.jclouds.http.HttpResponse;
 import org.testng.annotations.Test;
 
-@Test(groups = "unit")
+@Test(groups = "unit", testName = "GlobalOperationApiExpectTest")
 public class GlobalOperationApiExpectTest extends BaseGoogleComputeEngineApiExpectTest {
 
-   private static final String OPERATIONS_URL_PREFIX = "https://www.googleapis" +
-           ".com/compute/v1/projects/myproject/global/operations";
+   private static final String OPERATIONS_URL_PREFIX = BASE_URL + "/myproject/global/operations";
 
    public static final HttpRequest GET_GLOBAL_OPERATION_REQUEST = HttpRequest
            .builder()
@@ -52,7 +51,7 @@ public class GlobalOperationApiExpectTest extends BaseGoogleComputeEngineApiExpe
               TOKEN_RESPONSE, GET_GLOBAL_OPERATION_REQUEST, GET_GLOBAL_OPERATION_RESPONSE).getGlobalOperationApi("myproject");
 
       assertEquals(operationApi.get("operation-1354084865060-4cf88735faeb8-bbbb12cb"),
-              new ParseOperationTest().expected());
+              new ParseGlobalOperationTest().expected());
    }
 
    public void testGetOperationResponseIs4xx() throws Exception {
@@ -110,7 +109,7 @@ public class GlobalOperationApiExpectTest extends BaseGoogleComputeEngineApiExpe
               TOKEN_RESPONSE, get, operationResponse).getGlobalOperationApi("myproject");
 
       assertEquals(globalOperationApi.listFirstPage().toString(),
-              new ParseOperationListTest().expected().toString());
+              new ParseGlobalOperationListTest().expected().toString());
    }
 
    public void testListOperationWithPaginationOptionsResponseIs2xx() {
@@ -135,7 +134,7 @@ public class GlobalOperationApiExpectTest extends BaseGoogleComputeEngineApiExpe
       assertEquals(globalOperationApi.listAtMarker("CglPUEVSQVRJT04SOzU5MDQyMTQ4Nzg1Mi5vcGVyYXRpb24tMTM1Mj" +
               "I0NDI1ODAzMC00Y2RkYmU2YTJkNmIwLWVkMzIyMzQz",
               new ListOptions.Builder().filter("status eq done").maxResults(3)).toString(),
-              new ParseOperationListTest().expected().toString());
+              new ParseGlobalOperationListTest().expected().toString());
    }
 
    public void testListOperationWithPaginationOptionsResponseIs4xx() {
@@ -153,6 +152,4 @@ public class GlobalOperationApiExpectTest extends BaseGoogleComputeEngineApiExpe
 
       assertTrue(globalOperationApi.list().concat().isEmpty());
    }
-
-
 }

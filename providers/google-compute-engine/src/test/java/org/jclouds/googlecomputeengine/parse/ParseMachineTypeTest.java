@@ -16,41 +16,41 @@
  */
 package org.jclouds.googlecomputeengine.parse;
 
+import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
+import static org.jclouds.googlecomputeengine.domain.MachineType.ScratchDisk;
+
 import java.net.URI;
 
 import javax.ws.rs.Consumes;
-import javax.ws.rs.core.MediaType;
 
-import org.jclouds.date.internal.SimpleDateFormatDateService;
 import org.jclouds.googlecomputeengine.domain.MachineType;
 import org.jclouds.googlecomputeengine.internal.BaseGoogleComputeEngineParseTest;
+import org.testng.annotations.Test;
 
+import com.google.common.collect.ImmutableList;
+
+@Test(groups = "unit", testName = "ParseMachineTypeTest")
 public class ParseMachineTypeTest extends BaseGoogleComputeEngineParseTest<MachineType> {
-
 
    @Override
    public String resource() {
       return "/machinetype.json";
    }
 
-   @Override
-   @Consumes(MediaType.APPLICATION_JSON)
+   @Override @Consumes(APPLICATION_JSON)
    public MachineType expected() {
-      SimpleDateFormatDateService dateService = new SimpleDateFormatDateService();
-      return MachineType.builder()
-              .id("12907738072351752276")
-              .creationTimestamp(dateService.iso8601DateParse("2012-06-07T20:48:14.670"))
-              .selfLink(URI.create("https://www.googleapis.com/compute/v1/projects/myproject/zones/us-central1-a/machineTypes/n1" +
-                      "-standard-1"))
-              .zone("us-central1-a")
-              .name("n1-standard-1")
-              .description("1 vCPU, 3.75 GB RAM, and a 10 GB ephemeral root disk")
-              .guestCpus(1)
-              .memoryMb(3840)
-              .addScratchDisk(1770)
-              .addScratchDisk(1770)
-              .maximumPersistentDisks(16)
-              .maximumPersistentDisksSizeGb(128)
-              .build();
+      return MachineType.create( //
+            "12907738072351752276", // id
+            URI.create(BASE_URL + "/myproject/zones/us-central1-a/machineTypes/n1-standard-1"), // selfLink
+            "n1-standard-1", // name
+            "1 vCPU, 3.75 GB RAM, and a 10 GB ephemeral root disk", // description
+            1, // guestCpus
+            3840, // memoryMb
+            ImmutableList.of(ScratchDisk.create(1770), ScratchDisk.create(1770)), // scratchDisks
+            16, // maximumPersistentDisks
+            128, // maximumPersistentDisksSizeGb
+            "us-central1-a", // zone
+            null // deprecated
+      );
    }
 }

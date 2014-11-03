@@ -29,7 +29,6 @@ import java.util.concurrent.atomic.AtomicReference;
 import javax.inject.Named;
 import javax.inject.Singleton;
 
-import com.google.inject.Scopes;
 import org.jclouds.collect.Memoized;
 import org.jclouds.compute.ComputeService;
 import org.jclouds.compute.ComputeServiceAdapter;
@@ -45,8 +44,13 @@ import org.jclouds.domain.Location;
 import org.jclouds.googlecomputeengine.GoogleComputeEngineApi;
 import org.jclouds.googlecomputeengine.compute.GoogleComputeEngineService;
 import org.jclouds.googlecomputeengine.compute.GoogleComputeEngineServiceAdapter;
+import org.jclouds.googlecomputeengine.compute.domain.InstanceInZone;
+import org.jclouds.googlecomputeengine.compute.domain.MachineTypeInZone;
+import org.jclouds.googlecomputeengine.compute.domain.NetworkAndAddressRange;
 import org.jclouds.googlecomputeengine.compute.extensions.GoogleComputeEngineSecurityGroupExtension;
 import org.jclouds.googlecomputeengine.compute.functions.BuildInstanceMetadata;
+import org.jclouds.googlecomputeengine.compute.functions.CreateNetworkIfNeeded;
+import org.jclouds.googlecomputeengine.compute.functions.FindNetworkOrCreate;
 import org.jclouds.googlecomputeengine.compute.functions.FirewallTagNamingConvention;
 import org.jclouds.googlecomputeengine.compute.functions.FirewallToIpPermission;
 import org.jclouds.googlecomputeengine.compute.functions.GoogleComputeEngineImageToImage;
@@ -56,7 +60,6 @@ import org.jclouds.googlecomputeengine.compute.functions.NetworkToSecurityGroup;
 import org.jclouds.googlecomputeengine.compute.functions.OrphanedGroupsFromDeadNodes;
 import org.jclouds.googlecomputeengine.compute.functions.RegionToLocation;
 import org.jclouds.googlecomputeengine.compute.functions.ZoneToLocation;
-import org.jclouds.googlecomputeengine.compute.loaders.FindNetworkOrCreate;
 import org.jclouds.googlecomputeengine.compute.options.GoogleComputeEngineTemplateOptions;
 import org.jclouds.googlecomputeengine.compute.predicates.AllNodesInGroupTerminated;
 import org.jclouds.googlecomputeengine.compute.strategy.CreateNodesWithGroupEncodedIntoNameThenAddToSet;
@@ -66,13 +69,9 @@ import org.jclouds.googlecomputeengine.config.UserProject;
 import org.jclouds.googlecomputeengine.domain.Firewall;
 import org.jclouds.googlecomputeengine.domain.Image;
 import org.jclouds.googlecomputeengine.domain.Instance;
-import org.jclouds.googlecomputeengine.domain.InstanceInZone;
-import org.jclouds.googlecomputeengine.domain.MachineTypeInZone;
 import org.jclouds.googlecomputeengine.domain.Network;
 import org.jclouds.googlecomputeengine.domain.Region;
 import org.jclouds.googlecomputeengine.domain.Zone;
-import org.jclouds.googlecomputeengine.domain.internal.NetworkAndAddressRange;
-import org.jclouds.googlecomputeengine.functions.CreateNetworkIfNeeded;
 import org.jclouds.net.domain.IpPermission;
 import org.jclouds.rest.AuthorizationException;
 import org.jclouds.rest.suppliers.MemoizedRetryOnTimeOutButNotOnAuthorizationExceptionSupplier;
@@ -88,6 +87,7 @@ import com.google.common.cache.LoadingCache;
 import com.google.common.collect.ImmutableMap;
 import com.google.inject.Injector;
 import com.google.inject.Provides;
+import com.google.inject.Scopes;
 import com.google.inject.TypeLiteral;
 
 public class GoogleComputeEngineServiceContextModule
@@ -240,7 +240,7 @@ public class GoogleComputeEngineServiceContextModule
                             new Function<Region, URI>() {
                                @Override
                                public URI apply(Region input) {
-                                  return input.getSelfLink();
+                                  return input.selfLink();
                                }
                             });
                  }

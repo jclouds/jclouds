@@ -16,7 +16,11 @@
  */
 package org.jclouds.googlecomputeengine;
 
-import com.google.common.annotations.Beta;
+import java.io.Closeable;
+
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+
 import org.jclouds.googlecomputeengine.features.AddressApi;
 import org.jclouds.googlecomputeengine.features.DiskApi;
 import org.jclouds.googlecomputeengine.features.DiskTypeApi;
@@ -38,9 +42,7 @@ import org.jclouds.googlecomputeengine.features.ZoneApi;
 import org.jclouds.googlecomputeengine.features.ZoneOperationApi;
 import org.jclouds.rest.annotations.Delegate;
 
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import java.io.Closeable;
+import com.google.common.annotations.Beta;
 
 
 /**

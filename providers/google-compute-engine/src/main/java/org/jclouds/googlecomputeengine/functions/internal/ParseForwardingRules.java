@@ -16,9 +16,10 @@
  */
 package org.jclouds.googlecomputeengine.functions.internal;
 
-import com.google.common.base.Function;
-import com.google.inject.TypeLiteral;
+import javax.inject.Inject;
+
 import org.jclouds.collect.IterableWithMarker;
+import org.jclouds.collect.IterableWithMarkers;
 import org.jclouds.googlecomputeengine.GoogleComputeEngineApi;
 import org.jclouds.googlecomputeengine.domain.ForwardingRule;
 import org.jclouds.googlecomputeengine.domain.ListPage;
@@ -26,16 +27,12 @@ import org.jclouds.googlecomputeengine.options.ListOptions;
 import org.jclouds.http.functions.ParseJson;
 import org.jclouds.json.Json;
 
-import javax.inject.Inject;
-import javax.inject.Singleton;
+import com.google.common.base.Function;
+import com.google.inject.TypeLiteral;
 
-import static com.google.common.base.Preconditions.checkNotNull;
+public final class ParseForwardingRules extends ParseJson<ListPage<ForwardingRule>> {
 
-@Singleton
-public class ParseForwardingRules extends ParseJson<ListPage<ForwardingRule>> {
-
-   @Inject
-   public ParseForwardingRules(Json json) {
+   @Inject ParseForwardingRules(Json json) {
       super(json, new TypeLiteral<ListPage<ForwardingRule>>() {
       });
    }
@@ -44,20 +41,17 @@ public class ParseForwardingRules extends ParseJson<ListPage<ForwardingRule>> {
 
       private final GoogleComputeEngineApi api;
 
-      @Inject
-      protected ToPagedIterable(GoogleComputeEngineApi api) {
-         this.api = checkNotNull(api, "api");
+      @Inject ToPagedIterable(GoogleComputeEngineApi api) {
+         this.api = api;
       }
 
-      @Override
-      protected Function<Object, IterableWithMarker<ForwardingRule>> fetchNextPage(final String projectName,
-                                                                         final String regionName,
-                                                                         final ListOptions options) {
+      @Override protected Function<Object, IterableWithMarker<ForwardingRule>> fetchNextPage(final String projectName,
+            final String regionName,
+            final ListOptions options) {
          return new Function<Object, IterableWithMarker<ForwardingRule>>() {
-
-            @Override
-            public IterableWithMarker<ForwardingRule> apply(Object input) {
-               return api.getForwardingRuleApi(projectName, regionName).list(options);
+            @Override public IterableWithMarker<ForwardingRule> apply(Object input) {
+               ListPage<ForwardingRule> result = api.getForwardingRuleApi(projectName, regionName).list(options);
+               return IterableWithMarkers.from(result, result.nextPageToken());
             }
          };
       }

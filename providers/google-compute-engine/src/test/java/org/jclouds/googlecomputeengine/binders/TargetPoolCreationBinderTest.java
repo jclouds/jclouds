@@ -19,7 +19,7 @@ package org.jclouds.googlecomputeengine.binders;
 import static org.testng.Assert.assertEquals;
 
 import java.net.URI;
-import java.util.Set;
+import java.util.List;
 import java.util.Map;
 
 import org.jclouds.googlecomputeengine.internal.BaseGoogleComputeEngineExpectTest;
@@ -30,8 +30,8 @@ import org.jclouds.json.Json;
 import org.jclouds.json.internal.GsonWrapper;
 import org.testng.annotations.Test;
 
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
-import com.google.common.collect.ImmutableSet;
 import com.google.gson.Gson;
 
 
@@ -41,8 +41,8 @@ import com.google.gson.Gson;
 @Test(groups = "unit", testName = "TargetPoolCreationBinderTest")
 public class TargetPoolCreationBinderTest extends BaseGoogleComputeEngineExpectTest<Object>{
 
-   private static final Set<URI> FAKE_HEALTH_CHECKS = ImmutableSet.of(URI.create("https://www.googleapis.com/compute/v1/projects/" +
-                                       "debian-cloud/global/images/backports-debian-7-wheezy-v20141017"));
+   private static final List<URI> FAKE_HEALTH_CHECKS = ImmutableList.of(
+         URI.create("https://www.googleapis.com/compute/v1/projects/debian-cloud/global/images/backports-debian-7-wheezy-v20141017"));
    private static SessionAffinityValue SESSION_AFFINITY = SessionAffinityValue.CLIENT_IP_PROTO;
    private static float FAILOVER_RATIO = (float) 0.4;
    private static String DESCRIPTION = "This is a test!";

@@ -16,121 +16,27 @@
  */
 package org.jclouds.googlecomputeengine.domain;
 
-import static com.google.common.base.Objects.equal;
-import static com.google.common.base.Objects.toStringHelper;
+import static org.jclouds.googlecomputeengine.internal.NullSafeCopies.copyOf;
 
-import java.beans.ConstructorProperties;
 import java.util.Map;
 
 import org.jclouds.javax.annotation.Nullable;
 
-import com.google.common.base.Objects;
-import com.google.common.collect.ImmutableMap;
+import com.google.auto.value.AutoValue;
 
-/**
- * Metadata for an instance or project, with their fingerprint.
- */
-public class Metadata {
-   @Nullable
-   private final String fingerprint;
-   private final Map<String, String> items;
+/** Metadata for an instance or project, with their fingerprint. */
+@AutoValue
+public abstract class Metadata {
+   /** The fingerprint for the items - needed for updating them. */
+   @Nullable public abstract String fingerprint();
 
-   @ConstructorProperties({"fingerprint", "items"})
-   public Metadata(@Nullable String fingerprint, @Nullable Map<String, String> items) {
-      this.fingerprint = fingerprint;
-      this.items = items == null ? ImmutableMap.<String, String>of() : items;
+   public abstract Map<String, String> items();
+
+   // No SerializedNames as custom-parsed.
+   public static Metadata create(String fingerprint, Map<String, String> items) {
+      return new AutoValue_Metadata(fingerprint, copyOf(items));
    }
 
-   /**
-    * @return an optional map of metadata key/value pairs for this instance/project
-    */
-   public Map<String, String> getItems() {
-      return items;
-   }
-
-   /**
-    * Gets the fingerprint for the items - needed for updating them.
-    *
-    * @return the fingerprint string for the items.
-    */
-   public String getFingerprint() {
-      return fingerprint;
-   }
-
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   public int hashCode() {
-      return Objects.hashCode(fingerprint, items);
-   }
-
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   public boolean equals(Object obj) {
-      if (this == obj) return true;
-      if (obj == null || getClass() != obj.getClass()) return false;
-      Metadata that = Metadata.class.cast(obj);
-      return equal(this.items, that.items)
-              && equal(this.fingerprint, that.fingerprint);
-   }
-
-   protected Objects.ToStringHelper string() {
-      return toStringHelper(this)
-              .add("items", items)
-              .add("fingerprint", fingerprint);
-   }
-
-   public static Builder builder() {
-      return new Builder();
-   }
-
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   public String toString() {
-      return string().toString();
-   }
-
-   public static final class Builder {
-
-      private ImmutableMap.Builder<String, String> items = ImmutableMap.builder();
-      private String fingerprint;
-
-      /**
-       * @see Metadata#getItems()
-       */
-      public Builder addItem(String key, String value) {
-         this.items.put(key, value);
-         return this;
-      }
-
-      /**
-       * @see Metadata#getItems()
-       */
-      public Builder items(Map<String, String> items) {
-         this.items.putAll(items);
-         return this;
-      }
-
-      /**
-       * @see org.jclouds.googlecomputeengine.domain.Metadata#getFingerprint()
-       */
-      public Builder fingerprint(String fingerprint) {
-         this.fingerprint = fingerprint;
-         return this;
-      }
-
-      public Metadata build() {
-         return new Metadata(this.fingerprint, this.items.build());
-      }
-
-      public Builder fromMetadata(Metadata in) {
-         return this.fingerprint(in.getFingerprint())
-                 .items(in.getItems());
-      }
+   Metadata() {
    }
 }

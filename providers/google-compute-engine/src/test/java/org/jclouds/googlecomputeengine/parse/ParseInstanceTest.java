@@ -16,18 +16,25 @@
  */
 package org.jclouds.googlecomputeengine.parse;
 
+import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
+
 import java.net.URI;
 
 import javax.ws.rs.Consumes;
-import javax.ws.rs.core.MediaType;
 
-import org.jclouds.date.internal.SimpleDateFormatDateService;
 import org.jclouds.googlecomputeengine.domain.Instance;
+import org.jclouds.googlecomputeengine.domain.Instance.AttachedDisk;
+import org.jclouds.googlecomputeengine.domain.Instance.NetworkInterface;
+import org.jclouds.googlecomputeengine.domain.Instance.ServiceAccount;
 import org.jclouds.googlecomputeengine.domain.Metadata;
+import org.jclouds.googlecomputeengine.domain.Tags;
 import org.jclouds.googlecomputeengine.internal.BaseGoogleComputeEngineParseTest;
+import org.testng.annotations.Test;
 
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 
+@Test(groups = "unit", testName = "ParseInstanceTest")
 public class ParseInstanceTest extends BaseGoogleComputeEngineParseTest<Instance> {
 
    @Override
@@ -35,47 +42,38 @@ public class ParseInstanceTest extends BaseGoogleComputeEngineParseTest<Instance
       return "/instance_get.json";
    }
 
-   @Override
-   @Consumes(MediaType.APPLICATION_JSON)
+   @Override @Consumes(APPLICATION_JSON)
    public Instance expected() {
-      return Instance.builder()
-              .id("13051190678907570425")
-              .creationTimestamp(new SimpleDateFormatDateService().iso8601DateParse("2012-11-25T23:48:20.758"))
-              .selfLink(URI.create("https://www.googleapis" +
-                      ".com/compute/v1/projects/myproject/zones/us-central1-a/instances/test-0"))
-              .description("desc")
-              .name("test-0")
-              .machineType(URI.create("https://www.googleapis.com/compute/v1/projects/myproject/zones/us-central1-a/machineTypes/n1" +
-                      "-standard-1"))
-              .status(Instance.Status.RUNNING)
-              .zone(URI.create("https://www.googleapis.com/compute/v1/projects/myproject/zones/us-central1-a"))
-              .addNetworkInterface(
-                      Instance.NetworkInterface.builder()
-                              .name("nic0")
-                              .networkIP("10.240.121.115")
-                              .network(URI.create("https://www.googleapis" +
-                                      ".com/compute/v1/projects/myproject/global/networks/default"))
-                              .build()
-              )
-              .addDisk(
-                      Instance.PersistentAttachedDisk.builder()
-                              .index(0)
-                              .mode(Instance.PersistentAttachedDisk.Mode.READ_WRITE)
-                              .deviceName("test")
-                              .source(URI.create("https://www.googleapis" +
-                                      ".com/compute/v1/projects/myproject/zones/us-central1-a/disks/test"))
-                              .boot(true)
-                              .build()
-              )
-              .tags(Instance.Tags.builder().fingerprint("abcd").addItem("aTag").build())
-              .metadata(Metadata.builder()
-                      .items(ImmutableMap.of("aKey", "aValue",
-                                             "jclouds-image",
-                                             "https://www.googleapis.com/compute/v1/projects/debian-cloud/global/images/debian-7-wheezy-v20140718",
-                                             "jclouds-delete-boot-disk", "true"))
-                      .fingerprint("efgh")
-                      .build())
-              .addServiceAccount(Instance.ServiceAccount.builder().email("default").addScopes("myscope").build())
-              .build();
+      return Instance.create( //
+            "13051190678907570425", // id
+            URI.create(BASE_URL + "/myproject/zones/us-central1-a/instances/test-0"), // selfLink
+            "test-0", // name
+            "desc", // description
+            Tags.create("abcd", ImmutableList.of("aTag", "Group-port-42")), // tags
+            URI.create(BASE_URL + "/myproject/zones/us-central1-a/machineTypes/n1-standard-1"), // machineType
+            Instance.Status.RUNNING, // status
+            null, // statusMessage
+            URI.create(BASE_URL + "/myproject/zones/us-central1-a"), // zone
+            ImmutableList.of(NetworkInterface.create( //
+                  "nic0", // name
+                  URI.create(BASE_URL + "/myproject/global/networks/default"), // network
+                  "10.240.121.115", // networkIP
+                  null // accessConfigs
+            )), // networkInterfaces
+            ImmutableList.of(AttachedDisk.create( //
+                  0, // index
+                  AttachedDisk.Type.PERSISTENT, // type
+                  AttachedDisk.Mode.READ_WRITE, // mode
+                  URI.create(BASE_URL + "/myproject/zones/us-central1-a/disks/test"), // source
+                  "test", // deviceName
+                  false, // autoDelete
+                  true// boot
+            )), // disks
+            Metadata.create("efgh", ImmutableMap.<String, String>builder() //
+                  .put("aKey", "aValue") //
+                  .put("jclouds-image", BASE_URL + "/debian-cloud/global/images/debian-7-wheezy-v20140718") //
+                  .put("jclouds-delete-boot-disk", "true").build()), // metadata
+            ImmutableList.of(ServiceAccount.create("default", ImmutableList.of("myscope"))) // serviceAccounts
+      );
    }
 }

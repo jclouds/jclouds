@@ -35,9 +35,9 @@ public class ZoneToLocation implements Function<Zone, Location> {
    @Override
    public Location apply(Zone input) {
       return new LocationBuilder()
-              .description(input.getDescription().orNull())
-              .metadata(ImmutableMap.of("selfLink", (Object) checkNotNull(input.getSelfLink(), "zone URI")))
-              .id(input.getName())
+              .description(input.description())
+              .metadata(ImmutableMap.of("selfLink", (Object) checkNotNull(input.selfLink(), "zone URI")))
+              .id(input.name())
               .scope(LocationScope.ZONE)
               .parent(GOOGLE_PROVIDER_LOCATION)
               .build();

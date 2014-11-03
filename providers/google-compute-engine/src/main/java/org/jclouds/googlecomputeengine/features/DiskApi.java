@@ -30,16 +30,16 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 
-import org.jclouds.Fallbacks.EmptyIterableWithMarkerOnNotFoundOr404;
 import org.jclouds.Fallbacks.EmptyPagedIterableOnNotFoundOr404;
 import org.jclouds.Fallbacks.NullOnNotFoundOr404;
 import org.jclouds.collect.PagedIterable;
+import org.jclouds.googlecomputeengine.GoogleComputeEngineFallbacks.EmptyListPageOnNotFoundOr404;
+import org.jclouds.googlecomputeengine.binders.DiskCreationBinder;
 import org.jclouds.googlecomputeengine.domain.Disk;
 import org.jclouds.googlecomputeengine.domain.ListPage;
 import org.jclouds.googlecomputeengine.domain.Operation;
 import org.jclouds.googlecomputeengine.functions.internal.ParseDisks;
 import org.jclouds.googlecomputeengine.options.DiskCreationOptions;
-import org.jclouds.googlecomputeengine.binders.DiskCreationBinder;
 import org.jclouds.googlecomputeengine.options.ListOptions;
 import org.jclouds.javax.annotation.Nullable;
 import org.jclouds.oauth.v2.config.OAuthScopes;
@@ -145,7 +145,7 @@ public interface DiskApi {
    @Path("/zones/{zone}/disks")
    @OAuthScopes(COMPUTE_READONLY_SCOPE)
    @ResponseParser(ParseDisks.class)
-   @Fallback(EmptyIterableWithMarkerOnNotFoundOr404.class)
+   @Fallback(EmptyListPageOnNotFoundOr404.class)
    ListPage<Disk> listFirstPageInZone(@PathParam("zone") String zone);
 
    /**
@@ -157,7 +157,7 @@ public interface DiskApi {
    @Path("/zones/{zone}/disks")
    @OAuthScopes(COMPUTE_READONLY_SCOPE)
    @ResponseParser(ParseDisks.class)
-   @Fallback(EmptyIterableWithMarkerOnNotFoundOr404.class)
+   @Fallback(EmptyListPageOnNotFoundOr404.class)
    ListPage<Disk> listAtMarkerInZone(@PathParam("zone") String zone, @QueryParam("pageToken") @Nullable String marker);
 
    /**
@@ -178,7 +178,7 @@ public interface DiskApi {
    @Path("/zones/{zone}/disks")
    @OAuthScopes(COMPUTE_READONLY_SCOPE)
    @ResponseParser(ParseDisks.class)
-   @Fallback(EmptyIterableWithMarkerOnNotFoundOr404.class)
+   @Fallback(EmptyListPageOnNotFoundOr404.class)
    ListPage<Disk> listAtMarkerInZone(@PathParam("zone") String zone, @QueryParam("pageToken") @Nullable String marker, ListOptions listOptions);
 
    /**

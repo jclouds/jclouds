@@ -16,17 +16,19 @@
  */
 package org.jclouds.googlecomputeengine.parse;
 
+import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
+
 import java.net.URI;
 
 import javax.ws.rs.Consumes;
-import javax.ws.rs.core.MediaType;
 
-import org.jclouds.date.internal.SimpleDateFormatDateService;
 import org.jclouds.googlecomputeengine.domain.Zone;
 import org.jclouds.googlecomputeengine.internal.BaseGoogleComputeEngineParseTest;
 import org.testng.annotations.Test;
 
-@Test(groups = "unit")
+import com.google.common.collect.ImmutableList;
+
+@Test(groups = "unit", testName = "ParseZoneTest")
 public class ParseZoneTest extends BaseGoogleComputeEngineParseTest<Zone> {
 
    @Override
@@ -34,22 +36,22 @@ public class ParseZoneTest extends BaseGoogleComputeEngineParseTest<Zone> {
       return "/zone_get.json";
    }
 
-   @Override
-   @Consumes(MediaType.APPLICATION_JSON)
+   @Override @Consumes(APPLICATION_JSON)
    public Zone expected() {
-      return Zone.builder()
-              .id("13020128040171887099")
-              .creationTimestamp(new SimpleDateFormatDateService().iso8601DateParse("2012-10-19T16:42:54.131"))
-              .selfLink(URI.create("https://www.googleapis.com/compute/v1/projects/myproject/zones/us-central1-a"))
-              .name("us-central1-a")
-              .description("us-central1-a")
-              .status(Zone.Status.DOWN)
-              .addMaintenanceWindow(Zone.MaintenanceWindow.builder()
-                      .name("2012-11-10-planned-outage")
-                      .description("maintenance zone")
-                      .beginTime(new SimpleDateFormatDateService().iso8601DateParse("2012-11-10T20:00:00.000"))
-                      .endTime(new SimpleDateFormatDateService().iso8601DateParse("2012-12-02T20:00:00.000"))
-                      .build())
-              .build();
+      return Zone.create( //
+            "13020128040171887099", // id
+            URI.create(BASE_URL + "/myproject/zones/us-central1-a"), // selfLink
+            "us-central1-a", // name
+            "us-central1-a", // description
+            Zone.Status.DOWN, // status
+            ImmutableList.of( // maintenanceWindows
+                  Zone.MaintenanceWindow.create( //
+                        "2012-11-10-planned-outage", // name
+                        "maintenance zone", // description
+                        parse("2012-11-10T20:00:00.000"), // beginTime
+                        parse("2012-12-02T20:00:00.000") // endTime)
+                  )), //
+            null // availableMachineTypes
+      );
    }
 }

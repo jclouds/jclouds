@@ -16,20 +16,17 @@
  */
 package org.jclouds.googlecomputeengine.parse;
 
-import java.net.URI;
-
 import javax.ws.rs.Consumes;
 import javax.ws.rs.core.MediaType;
 
-import org.jclouds.date.internal.SimpleDateFormatDateService;
-import org.jclouds.googlecomputeengine.domain.Deprecated;
 import org.jclouds.googlecomputeengine.domain.Image;
 import org.jclouds.googlecomputeengine.domain.ListPage;
-import org.jclouds.googlecomputeengine.domain.Resource;
 import org.jclouds.googlecomputeengine.internal.BaseGoogleComputeEngineParseTest;
 import org.testng.annotations.Test;
 
-@Test(groups = "unit")
+import com.google.common.collect.ImmutableList;
+
+@Test(groups = "unit", testName = "ParseImageListTest")
 public class ParseImageListTest extends BaseGoogleComputeEngineParseTest<ListPage<Image>> {
 
    @Override
@@ -37,29 +34,12 @@ public class ParseImageListTest extends BaseGoogleComputeEngineParseTest<ListPag
       return "/image_list.json";
    }
 
-   @Override
-   @Consumes(MediaType.APPLICATION_JSON)
+   @Override @Consumes(MediaType.APPLICATION_JSON)
    public ListPage<Image> expected() {
-      return ListPage.<Image>builder()
-              .kind(Resource.Kind.IMAGE_LIST)
-              .addItem(Image.builder()
-                      .id("12941197498378735318")
-                      .creationTimestamp(new SimpleDateFormatDateService().iso8601DateParse("2012-07-16T22:16:13.468"))
-                      .selfLink(URI.create("https://www.googleapis" +
-                              ".com/compute/v1/projects/centos-cloud/global/images/centos-6-2-v20120326"))
-                      .name("centos-6-2-v20120326")
-                      .description("DEPRECATED. CentOS 6.2 image; Created Mon, 26 Mar 2012 21:19:09 +0000")
-                      .sourceType("RAW")
-                      .deprecated(Deprecated.builder()
-                              .state("DEPRECATED")
-                              .replacement(URI.create("https://www.googleapis.com/compute/v1/projects/centos-cloud/global/images/centos-6-v20130104"))
-                              .build())
-                      .rawDisk(
-                              Image.RawDisk.builder()
-                                      .source("")
-                                      .containerType("TAR")
-                                      .build()
-                      ).build())
-              .build();
+      return ListPage.create( //
+            ImmutableList.of(new ParseImageTest().expected()), // items
+            null, // nextPageToken
+            null // prefixes
+      );
    }
 }

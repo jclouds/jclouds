@@ -21,16 +21,14 @@ import java.net.URI;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.core.MediaType;
 
-import org.jclouds.date.internal.SimpleDateFormatDateService;
 import org.jclouds.googlecomputeengine.domain.ListPage;
-import org.jclouds.googlecomputeengine.domain.Resource.Kind;
 import org.jclouds.googlecomputeengine.domain.Route;
 import org.jclouds.googlecomputeengine.internal.BaseGoogleComputeEngineParseTest;
 import org.testng.annotations.Test;
 
 import com.google.common.collect.ImmutableList;
 
-@Test(groups = "unit")
+@Test(groups = "unit", testName = "ParseRouteListTest")
 public class ParseRouteListTest extends BaseGoogleComputeEngineParseTest<ListPage<Route>> {
 
    @Override
@@ -38,23 +36,28 @@ public class ParseRouteListTest extends BaseGoogleComputeEngineParseTest<ListPag
       return "/route_list.json";
    }
 
-   @Override
-   @Consumes(MediaType.APPLICATION_JSON)
+   @Override @Consumes(MediaType.APPLICATION_JSON)
    public ListPage<Route> expected() {
-      return ListPage.<Route>builder()
-              .kind(Kind.ROUTE_LIST)
-              .items(ImmutableList.of(new ParseRouteTest().expected(),
-                      Route.builder()
-                              .selfLink(URI.create("https://www.googleapis.com/compute/v1/projects/myproject/global/routes/default-route-fc92a41ecb5a8d17"))
-                              .id("507025480040058551")
-                              .creationTimestamp(new SimpleDateFormatDateService().iso8601DateParse("2013-07-08T14:40:38.502-07:00"))
-                              .name("default-route-fc92a41ecb5a8d17")
-                              .description("Default route to the Internet.")
-                              .network(URI.create("https://www.googleapis.com/compute/v1/projects/myproject/global/networks/default"))
-                              .destRange("0.0.0.0/0")
-                              .priority(1000)
-                              .nextHopGateway(URI.create("https://www.googleapis.com/compute/v1/projects/myproject/global/gateways/default-internet-gateway"))
-                              .build())
-              ).build();
+      Route route1 = new ParseRouteTest().expected();
+      Route route2 = Route.create( //
+            "507025480040058551", // id
+            URI.create(BASE_URL + "/myproject/global/routes/default-route-fc92a41ecb5a8d17"), // selfLink
+            "default-route-fc92a41ecb5a8d17", // name
+            "Default route to the Internet.", // description
+            URI.create(BASE_URL + "/myproject/global/networks/default"), // network
+            null, // tags
+            "0.0.0.0/0", // destRange
+            1000, // priority
+            null, // nextHopInstance
+            null, // nextHopIp
+            null, // nextHopNetwork
+            URI.create(BASE_URL + "/myproject/global/gateways/default-internet-gateway"), // nextHopGateway
+            null // warnings
+      );
+      return ListPage.create( //
+            ImmutableList.of(route1, route2), // items
+            null, // nextPageToken
+            null // prefixes
+      );
    }
 }

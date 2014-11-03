@@ -60,7 +60,7 @@ public class RegionOperationApiLiveTest extends BaseGoogleComputeEngineApiLiveTe
 
    @Test(groups = "live", dependsOnMethods = "testCreateOperations")
    public void testGetOperation() {
-      Operation operation = api().getInRegion(DEFAULT_REGION_NAME, addOperation.getName());
+      Operation operation = api().getInRegion(DEFAULT_REGION_NAME, addOperation.name());
       assertNotNull(operation);
       assertOperationEquals(operation, this.addOperation);
    }
@@ -74,9 +74,7 @@ public class RegionOperationApiLiveTest extends BaseGoogleComputeEngineApiLiveTe
       // make sure that in spite of having only one result per page we get at least two results
       final AtomicInteger counter = new AtomicInteger();
       operations.firstMatch(new Predicate<IterableWithMarker<Operation>>() {
-
-         @Override
-         public boolean apply(IterableWithMarker<Operation> input) {
+         @Override public boolean apply(IterableWithMarker<Operation> input) {
             counter.addAndGet(Iterables.size(input));
             return counter.get() == 2;
          }
@@ -84,7 +82,7 @@ public class RegionOperationApiLiveTest extends BaseGoogleComputeEngineApiLiveTe
    }
 
    private void assertOperationEquals(Operation result, Operation expected) {
-      assertEquals(result.getName(), expected.getName());
+      assertEquals(result.name(), expected.name());
    }
 
 

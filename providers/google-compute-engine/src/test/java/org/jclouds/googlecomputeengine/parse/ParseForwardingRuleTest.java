@@ -16,18 +16,17 @@
  */
 package org.jclouds.googlecomputeengine.parse;
 
-import org.jclouds.date.internal.SimpleDateFormatDateService;
-import org.jclouds.googlecomputeengine.domain.ForwardingRule;
-import org.jclouds.googlecomputeengine.domain.ForwardingRule.IPProtocolOption;
-import org.jclouds.googlecomputeengine.internal.BaseGoogleComputeEngineParseTest;
-import org.testng.annotations.Test;
-
-import javax.ws.rs.Consumes;
-import javax.ws.rs.core.MediaType;
+import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
 
 import java.net.URI;
 
-@Test(groups = "unit")
+import javax.ws.rs.Consumes;
+
+import org.jclouds.googlecomputeengine.domain.ForwardingRule;
+import org.jclouds.googlecomputeengine.internal.BaseGoogleComputeEngineParseTest;
+import org.testng.annotations.Test;
+
+@Test(groups = "unit", testName = "ParseForwardingRuleTest")
 public class ParseForwardingRuleTest extends BaseGoogleComputeEngineParseTest<ForwardingRule> {
 
    @Override
@@ -35,19 +34,18 @@ public class ParseForwardingRuleTest extends BaseGoogleComputeEngineParseTest<Fo
       return "/forwardingrule_get.json";
    }
 
-   @Override
-   @Consumes(MediaType.APPLICATION_JSON)
+   @Override @Consumes(APPLICATION_JSON)
    public ForwardingRule expected() {
-      return ForwardingRule.builder()
-              .id("6732523704970219884")
-              .creationTimestamp(new SimpleDateFormatDateService().iso8601DateParse("2014-01-08T06:51:10.809-08:00"))
-              .selfLink(URI.create("https://www.googleapis.com/compute/v1/projects/myproject/regions/europe-west1/forwardingRules/test-forwarding-rule"))
-              .name("test-forwarding-rule")
-              .region(URI.create("https://www.googleapis.com/compute/v1/projects/myproject/regions/europe-west1"))
-              .target(URI.create("https://www.googleapis.com/compute/v1/projects/myproject/regions/europe-west1/targetPools/test-target-pool"))
-              .ipAddress("23.251.129.77")
-              .ipProtocol(IPProtocolOption.TCP)
-              .portRange("1-65535")
-              .build();
+      return ForwardingRule.create( //
+            "6732523704970219884", // id
+            URI.create(BASE_URL + "/myproject/regions/europe-west1/forwardingRules/test-forwarding-rule"), // selfLink
+            "test-forwarding-rule", // name
+            null, // description
+            URI.create(BASE_URL + "/myproject/regions/europe-west1"), // region
+            "23.251.129.77", // ipAddress
+            ForwardingRule.IPProtocol.TCP, // ipProtocol
+            "1-65535", // portRange
+            URI.create(BASE_URL + "/myproject/regions/europe-west1/targetPools/test-target-pool") // target
+      );
    }
 }

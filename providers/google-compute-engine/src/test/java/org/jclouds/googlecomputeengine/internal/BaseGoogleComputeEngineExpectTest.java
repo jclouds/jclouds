@@ -27,6 +27,7 @@ import static org.jclouds.crypto.Pems.privateKeySpec;
 import static org.jclouds.crypto.Pems.publicKeySpec;
 import static org.jclouds.crypto.PemsTest.PRIVATE_KEY;
 import static org.jclouds.crypto.PemsTest.PUBLIC_KEY;
+import static org.jclouds.util.Strings2.toStringAndClose;
 
 import java.io.IOException;
 import java.net.URI;
@@ -44,10 +45,9 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import javax.ws.rs.core.MediaType;
 
-import org.jclouds.collect.PagedIterable;
-import org.jclouds.collect.PagedIterables;
+import org.jclouds.apis.ApiMetadata;
 import org.jclouds.crypto.Crypto;
-import org.jclouds.googlecomputeengine.domain.ListPage;
+import org.jclouds.googlecomputeengine.GoogleComputeEngineApiMetadata;
 import org.jclouds.http.HttpRequest;
 import org.jclouds.http.HttpResponse;
 import org.jclouds.io.Payload;
@@ -55,7 +55,6 @@ import org.jclouds.oauth.v2.OAuthConstants;
 import org.jclouds.oauth.v2.config.OAuthProperties;
 import org.jclouds.rest.internal.BaseRestApiExpectTest;
 import org.jclouds.ssh.SshKeys;
-import org.jclouds.util.Strings2;
 
 import com.google.common.base.Joiner;
 import com.google.common.base.Supplier;
@@ -66,6 +65,7 @@ import com.google.inject.Module;
 import com.google.inject.TypeLiteral;
 
 public class BaseGoogleComputeEngineExpectTest<T> extends BaseRestApiExpectTest<T> {
+   protected static final String BASE_URL = "https://www.googleapis.com/compute/v1/projects";
 
    private static final String header = "{\"alg\":\"none\",\"typ\":\"JWT\"}";
 
@@ -92,14 +92,17 @@ public class BaseGoogleComputeEngineExpectTest<T> extends BaseRestApiExpectTest<
       provider = "google-compute-engine";
    }
 
+   @Override protected ApiMetadata createApiMetadata(){
+      return new GoogleComputeEngineApiMetadata();
+   }
+
    @Override
    protected Module createModule() {
-
 
       return new Module() {
          @Override
          public void configure(Binder binder) {
-            // Predicatable time
+            // Predictable time
             binder.bind(new TypeLiteral<Supplier<Long>>() {}).toInstance(Suppliers.ofInstance(0L));
             try {
                KeyFactory keyfactory = KeyFactory.getInstance("RSA");
@@ -174,22 +177,12 @@ public class BaseGoogleComputeEngineExpectTest<T> extends BaseRestApiExpectTest<
               .build();
    }
 
-   /**
-    * Parse tests don't apply @Transform so we need to apply the transformation to PagedIterable on the result of
-    * expected()
-    */
-   protected <T> PagedIterable<T> toPagedIterable(ListPage<T> list) {
-      return PagedIterables.of(list);
-   }
-
    protected static Payload staticPayloadFromResource(String resource) {
       try {
-         return payloadFromString(Strings2.toStringAndClose(BaseGoogleComputeEngineExpectTest.class.getResourceAsStream
-                 (resource)));
+         return payloadFromString(
+               toStringAndClose(BaseGoogleComputeEngineExpectTest.class.getResourceAsStream(resource)));
       } catch (IOException e) {
          throw propagate(e);
       }
    }
-
-
 }

@@ -17,8 +17,8 @@
 package org.jclouds.googlecomputeengine.binders;
 
 import java.net.URI;
+import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import javax.inject.Inject;
 
@@ -50,9 +50,9 @@ public class TargetPoolCreationBinder extends BindToJsonPayload {
       @SuppressWarnings("unused")
       private String name;
       @SuppressWarnings("unused")
-      private Set<URI> healthChecks;
+      private List<URI> healthChecks;
       @SuppressWarnings("unused")
-      private Set<URI> instances;
+      private List<URI> instances;
       @SuppressWarnings("unused")
       private SessionAffinityValue sessionAffinity;
       @SuppressWarnings("unused")

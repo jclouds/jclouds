@@ -26,6 +26,8 @@ import static org.jclouds.googlecomputeengine.predicates.NetworkFirewallPredicat
 import static org.jclouds.googlecomputeengine.predicates.NetworkFirewallPredicates.providesIpPermission;
 import static org.jclouds.util.Predicates2.retry;
 
+import java.util.Collection;
+import java.util.List;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -37,14 +39,14 @@ import org.jclouds.compute.extensions.SecurityGroupExtension;
 import org.jclouds.compute.functions.GroupNamingConvention;
 import org.jclouds.domain.Location;
 import org.jclouds.googlecomputeengine.GoogleComputeEngineApi;
+import org.jclouds.googlecomputeengine.compute.domain.NetworkAndAddressRange;
+import org.jclouds.googlecomputeengine.compute.domain.SlashEncodedIds;
 import org.jclouds.googlecomputeengine.config.UserProject;
 import org.jclouds.googlecomputeengine.domain.Firewall;
 import org.jclouds.googlecomputeengine.domain.Instance;
 import org.jclouds.googlecomputeengine.domain.Instance.NetworkInterface;
 import org.jclouds.googlecomputeengine.domain.Network;
 import org.jclouds.googlecomputeengine.domain.Operation;
-import org.jclouds.googlecomputeengine.domain.SlashEncodedIds;
-import org.jclouds.googlecomputeengine.domain.internal.NetworkAndAddressRange;
 import org.jclouds.googlecomputeengine.options.FirewallOptions;
 import org.jclouds.googlecomputeengine.options.ListOptions;
 import org.jclouds.googlecomputeengine.options.ListOptions.Builder;
@@ -59,11 +61,13 @@ import com.google.common.cache.LoadingCache;
 import com.google.common.collect.FluentIterable;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Iterables;
+import com.google.common.collect.Lists;
 import com.google.common.collect.Multimap;
 import com.google.common.util.concurrent.Atomics;
 
 /**
- * An extension to compute service to allow for the manipulation of {@link org.jclouds.compute.domain.SecurityGroup}s. Implementation
+ * An extension to compute service to allow for the manipulation of {@link org.jclouds.compute.domain.SecurityGroup}s.
+ * Implementation
  * is optional by providers.
  */
 public class GoogleComputeEngineSecurityGroupExtension implements SecurityGroupExtension {
@@ -79,22 +83,20 @@ public class GoogleComputeEngineSecurityGroupExtension implements SecurityGroupE
 
    @Inject
    public GoogleComputeEngineSecurityGroupExtension(GoogleComputeEngineApi api,
-                                                    @UserProject Supplier<String> userProject,
-                                                    GroupNamingConvention.Factory namingConvention,
-                                                    LoadingCache<NetworkAndAddressRange, Network> networkCreator,
-                                                    Function<Network, SecurityGroup> groupConverter,
-                                                    @Named("global") Predicate<AtomicReference<Operation>> operationDonePredicate,
-                                                    @Named(OPERATION_COMPLETE_INTERVAL) Long operationCompleteCheckInterval,
-                                                    @Named(OPERATION_COMPLETE_TIMEOUT) Long operationCompleteCheckTimeout) {
+         @UserProject Supplier<String> userProject, GroupNamingConvention.Factory namingConvention,
+         LoadingCache<NetworkAndAddressRange, Network> networkCreator, Function<Network, SecurityGroup> groupConverter,
+         @Named("global") Predicate<AtomicReference<Operation>> operationDonePredicate,
+         @Named(OPERATION_COMPLETE_INTERVAL) Long operationCompleteCheckInterval,
+         @Named(OPERATION_COMPLETE_TIMEOUT) Long operationCompleteCheckTimeout) {
       this.api = checkNotNull(api, "api");
       this.userProject = checkNotNull(userProject, "userProject");
       this.namingConvention = checkNotNull(namingConvention, "namingConvention");
       this.networkCreator = checkNotNull(networkCreator, "networkCreator");
       this.groupConverter = checkNotNull(groupConverter, "groupConverter");
       this.operationCompleteCheckInterval = checkNotNull(operationCompleteCheckInterval,
-              "operation completed check interval");
+            "operation completed check interval");
       this.operationCompleteCheckTimeout = checkNotNull(operationCompleteCheckTimeout,
-              "operation completed check timeout");
+            "operation completed check timeout");
       this.operationDonePredicate = checkNotNull(operationDonePredicate, "operationDonePredicate");
    }
 
@@ -112,8 +114,8 @@ public class GoogleComputeEngineSecurityGroupExtension implements SecurityGroupE
    public Set<SecurityGroup> listSecurityGroupsForNode(String id) {
       SlashEncodedIds slashEncodedIds = SlashEncodedIds.fromSlashEncoded(id);
 
-      Instance instance = api.getInstanceApi(userProject.get()).getInZone(slashEncodedIds.getFirstId(),
-              slashEncodedIds.getSecondId());
+      Instance instance = api.getInstanceApi(userProject.get())
+            .getInZone(slashEncodedIds.getFirstId(), slashEncodedIds.getSecondId());
 
       if (instance == null) {
          return ImmutableSet.of();
@@ -121,12 +123,11 @@ public class GoogleComputeEngineSecurityGroupExtension implements SecurityGroupE
 
       ImmutableSet.Builder builder = ImmutableSet.builder();
 
-
-      for (NetworkInterface nwInterface : instance.getNetworkInterfaces()) {
-         String networkUrl = nwInterface.getNetwork().getPath();
+      for (NetworkInterface nwInterface : instance.networkInterfaces()) {
+         String networkUrl = nwInterface.network().getPath();
          Network nw = api.getNetworkApi(userProject.get()).get(networkUrl.substring(networkUrl.lastIndexOf('/') + 1));
 
-         SecurityGroup grp = groupForTagsInNetwork(nw, instance.getTags().getItems());
+         SecurityGroup grp = groupForTagsInNetwork(nw, instance.tags().items());
          if (grp != null) {
             builder.add(grp);
          }
@@ -155,7 +156,7 @@ public class GoogleComputeEngineSecurityGroupExtension implements SecurityGroupE
    public SecurityGroup createSecurityGroup(String name) {
       checkNotNull(name, "name");
 
-      NetworkAndAddressRange nAr = new NetworkAndAddressRange(name, DEFAULT_INTERNAL_NETWORK_RANGE, null);
+      NetworkAndAddressRange nAr = NetworkAndAddressRange.create(name, DEFAULT_INTERNAL_NETWORK_RANGE, null);
 
       Network nw = networkCreator.apply(nAr);
 
@@ -174,22 +175,23 @@ public class GoogleComputeEngineSecurityGroupExtension implements SecurityGroupE
       FluentIterable<Firewall> fws = api.getFirewallApi(userProject.get()).list(options).concat();
 
       for (Firewall fw : fws) {
-         AtomicReference<Operation> operation = Atomics.newReference(api.getFirewallApi(userProject.get())
-                 .delete(fw.getName()));
+         AtomicReference<Operation> operation = Atomics
+               .newReference(api.getFirewallApi(userProject.get()).delete(fw.name()));
 
-         retry(operationDonePredicate, operationCompleteCheckTimeout, operationCompleteCheckInterval,
-                 MILLISECONDS).apply(operation);
+         retry(operationDonePredicate, operationCompleteCheckTimeout, operationCompleteCheckInterval, MILLISECONDS)
+               .apply(operation);
 
-         checkState(!operation.get().getHttpError().isPresent(), "Could not delete firewall, operation failed" + operation);
+         checkState(operation.get().httpErrorStatusCode() == null,
+               "Could not delete firewall, operation failed" + operation);
       }
 
-      AtomicReference<Operation> operation = Atomics.newReference(
-              api.getNetworkApi(userProject.get()).delete(id));
+      AtomicReference<Operation> operation = Atomics.newReference(api.getNetworkApi(userProject.get()).delete(id));
 
-      retry(operationDonePredicate, operationCompleteCheckTimeout, operationCompleteCheckInterval,
-                 MILLISECONDS).apply(operation);
+      retry(operationDonePredicate, operationCompleteCheckTimeout, operationCompleteCheckInterval, MILLISECONDS)
+            .apply(operation);
 
-      checkState(!operation.get().getHttpError().isPresent(), "Could not insert network, operation failed" + operation);
+      checkState(operation.get().httpErrorStatusCode() == null,
+            "Could not insert network, operation failed" + operation);
 
       return true;
    }
@@ -218,35 +220,32 @@ public class GoogleComputeEngineSecurityGroupExtension implements SecurityGroupE
       if (!ipPermission.getCidrBlocks().isEmpty()) {
          fwOptions.sourceRanges(ipPermission.getCidrBlocks());
       }
-      Firewall.Rule.Builder ruleBuilder = Firewall.Rule.builder();
-      ruleBuilder.IpProtocol(ipPermission.getIpProtocol());
+      List<String> ports = Lists.newArrayList();
       if (ipPermission.getFromPort() > 0) {
          if (ipPermission.getFromPort() == ipPermission.getToPort()) {
-            ruleBuilder.addPort(ipPermission.getToPort());
+            ports.add(String.valueOf(ipPermission.getToPort()));
          } else {
-            ruleBuilder.addPortRange(ipPermission.getFromPort(), ipPermission.getToPort());
+            ports.add(ipPermission.getFromPort() + "-" + ipPermission.getToPort());
          }
       }
-      fwOptions.addAllowedRule(ruleBuilder.build());
+      fwOptions.addAllowedRule(Firewall.Rule.create(ipPermission.getIpProtocol().value().toLowerCase(), ports));
 
-      AtomicReference<Operation> operation = Atomics.newReference(api.getFirewallApi(userProject
-              .get()).createInNetwork(
-              uniqueFwName,
-              group.getUri(),
-              fwOptions));
+      AtomicReference<Operation> operation = Atomics.newReference(
+            api.getFirewallApi(userProject.get()).createInNetwork(uniqueFwName, group.getUri(), fwOptions));
 
-      retry(operationDonePredicate, operationCompleteCheckTimeout, operationCompleteCheckInterval,
-              MILLISECONDS).apply(operation);
+      retry(operationDonePredicate, operationCompleteCheckTimeout, operationCompleteCheckInterval, MILLISECONDS)
+            .apply(operation);
 
-      checkState(!operation.get().getHttpError().isPresent(), "Could not insert firewall, operation failed" + operation);
+      checkState(operation.get().httpErrorStatusCode() == null,
+            "Could not insert firewall, operation failed" + operation);
 
       return getSecurityGroupById(group.getId());
    }
 
    @Override
    public SecurityGroup addIpPermission(IpProtocol protocol, int fromPort, int toPort,
-           Multimap<String, String> tenantIdGroupNamePairs, Iterable<String> cidrBlocks,
-           Iterable<String> groupIds, SecurityGroup group) {
+         Multimap<String, String> tenantIdGroupNamePairs, Iterable<String> cidrBlocks, Iterable<String> groupIds,
+         SecurityGroup group) {
 
       IpPermission.Builder permBuilder = IpPermission.builder();
       permBuilder.ipProtocol(protocol);
@@ -272,13 +271,14 @@ public class GoogleComputeEngineSecurityGroupExtension implements SecurityGroupE
 
       for (Firewall fw : fws) {
          if (equalsIpPermission(ipPermission).apply(fw)) {
-            AtomicReference<Operation> operation = Atomics.newReference(api.getFirewallApi(userProject.get())
-                    .delete(fw.getName()));
+            AtomicReference<Operation> operation = Atomics
+                  .newReference(api.getFirewallApi(userProject.get()).delete(fw.name()));
 
-            retry(operationDonePredicate, operationCompleteCheckTimeout, operationCompleteCheckInterval,
-                    MILLISECONDS).apply(operation);
+            retry(operationDonePredicate, operationCompleteCheckTimeout, operationCompleteCheckInterval, MILLISECONDS)
+                  .apply(operation);
 
-            checkState(!operation.get().getHttpError().isPresent(), "Could not delete firewall, operation failed" + operation);
+            checkState(operation.get().httpErrorStatusCode() == null,
+                  "Could not delete firewall, operation failed" + operation);
          }
       }
 
@@ -287,8 +287,8 @@ public class GoogleComputeEngineSecurityGroupExtension implements SecurityGroupE
 
    @Override
    public SecurityGroup removeIpPermission(IpProtocol protocol, int fromPort, int toPort,
-                                        Multimap<String, String> tenantIdGroupNamePairs, Iterable<String> cidrBlocks,
-                                        Iterable<String> groupIds, SecurityGroup group) {
+         Multimap<String, String> tenantIdGroupNamePairs, Iterable<String> cidrBlocks, Iterable<String> groupIds,
+         SecurityGroup group) {
 
       IpPermission.Builder permBuilder = IpPermission.builder();
       permBuilder.ipProtocol(protocol);
@@ -326,17 +326,15 @@ public class GoogleComputeEngineSecurityGroupExtension implements SecurityGroupE
       return false;
    }
 
-   private SecurityGroup groupForTagsInNetwork(Network nw, final Set <String> tags) {
-      ListOptions opts = new Builder().filter("network eq .*/" + nw.getName());
-      Set<Firewall> fws = api.getFirewallApi(userProject.get()).list(opts).concat()
-              .filter(new Predicate<Firewall>() {
-                 @Override
-                 public boolean apply(final Firewall input) {
-                    // If any of the targetTags on the firewall apply or the firewall has no target tags...
-                    return Iterables.any(input.getTargetTags(), Predicates.in(tags))
-                            || Predicates.equalTo(0).apply(input.getTargetTags().size());
-                 }
-              }).toSet();
+   private SecurityGroup groupForTagsInNetwork(Network nw, final Collection<String> tags) {
+      ListOptions opts = new Builder().filter("network eq .*/" + nw.name());
+      List<Firewall> fws = api.getFirewallApi(userProject.get()).list(opts).concat().filter(new Predicate<Firewall>() {
+         @Override public boolean apply(final Firewall input) {
+            // If any of the targetTags on the firewall apply or the firewall has no target tags...
+            return Iterables.any(input.targetTags(), Predicates.in(tags)) || Predicates.equalTo(0)
+                  .apply(input.targetTags().size());
+         }
+      }).toList();
 
       if (fws.isEmpty()) {
          return null;

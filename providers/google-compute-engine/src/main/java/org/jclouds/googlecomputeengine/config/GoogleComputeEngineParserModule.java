@@ -18,42 +18,38 @@ package org.jclouds.googlecomputeengine.config;
 
 import static org.jclouds.googlecomputeengine.domain.Firewall.Rule;
 
-import java.beans.ConstructorProperties;
+import java.io.IOException;
 import java.lang.reflect.Type;
-import java.net.URI;
-import java.util.Date;
 import java.util.Map;
 import java.util.Set;
 
 import javax.inject.Singleton;
 
 import org.jclouds.googlecomputeengine.domain.Firewall;
-import org.jclouds.googlecomputeengine.domain.Instance;
-import org.jclouds.googlecomputeengine.domain.InstanceTemplate;
 import org.jclouds.googlecomputeengine.domain.Metadata;
-import org.jclouds.googlecomputeengine.domain.Operation;
-import org.jclouds.googlecomputeengine.domain.Project;
-import org.jclouds.googlecomputeengine.domain.Quota;
+import org.jclouds.googlecomputeengine.domain.templates.InstanceTemplate;
 import org.jclouds.googlecomputeengine.options.FirewallOptions;
 import org.jclouds.googlecomputeengine.options.RouteOptions;
 import org.jclouds.json.config.GsonModule;
-import org.jclouds.net.domain.IpProtocol;
 
 import com.google.common.collect.ImmutableMap;
-import com.google.common.collect.Range;
+import com.google.common.collect.ImmutableSet;
+import com.google.gson.Gson;
 import com.google.gson.JsonArray;
-import com.google.gson.JsonDeserializationContext;
-import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import com.google.gson.JsonParseException;
 import com.google.gson.JsonPrimitive;
 import com.google.gson.JsonSerializationContext;
 import com.google.gson.JsonSerializer;
+import com.google.gson.TypeAdapter;
+import com.google.gson.TypeAdapterFactory;
+import com.google.gson.reflect.TypeToken;
+import com.google.gson.stream.JsonReader;
+import com.google.gson.stream.JsonWriter;
 import com.google.inject.AbstractModule;
 import com.google.inject.Provides;
 
-public class GoogleComputeEngineParserModule extends AbstractModule {
+public final class GoogleComputeEngineParserModule extends AbstractModule {
 
    @Override protected void configure() {
       bind(GsonModule.DateAdapter.class).to(GsonModule.Iso8601DateAdapter.class);
@@ -61,89 +57,37 @@ public class GoogleComputeEngineParserModule extends AbstractModule {
 
    @Provides @Singleton public Map<Type, Object> typeAdapters() {
       return new ImmutableMap.Builder<Type, Object>()
-              .put(Metadata.class, new MetadataTypeAdapter())
-              .put(Operation.class, new OperationTypeAdapter())
-              .put(Project.class, new ProjectTypeAdapter())
-              .put(Instance.class, new InstanceTypeAdapter())
-              .put(InstanceTemplate.class, new InstanceTemplateTypeAdapter())
-              .put(FirewallOptions.class, new FirewallOptionsTypeAdapter())
-              .put(RouteOptions.class, new RouteOptionsTypeAdapter())
-              .put(Rule.class, new RuleTypeAdapter())
-              .build();
+            .put(InstanceTemplate.class, new InstanceTemplateTypeAdapter())
+            .put(FirewallOptions.class, new FirewallOptionsTypeAdapter())
+            .put(RouteOptions.class, new RouteOptionsTypeAdapter()).build();
    }
 
-   /**
-    * Parser for operations that unwraps errors avoiding an extra intermediate object.
-    *
-    * @see <a href="https://developers.google.com/compute/docs/reference/v1/operations"/>
-    */
-   private static class OperationTypeAdapter implements JsonDeserializer<Operation> {
-
-      @Override
-      public Operation deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws
-              JsonParseException {
-         Operation.Builder operationBuilder = ((Operation) context.deserialize(json,
-                 OperationInternal.class)).toBuilder();
-         JsonObject error = json.getAsJsonObject().getAsJsonObject("error");
-         if (error != null) {
-            JsonArray array = error.getAsJsonArray("errors");
-            if (array != null) {
-               for (JsonElement element : array) {
-                  operationBuilder.addError((Operation.Error) context.deserialize(element, Operation.Error.class));
-               }
-            }
-         }
-         return operationBuilder.build();
-      }
-
-      private static class OperationInternal extends Operation {
-         @ConstructorProperties({
-                 "id", "creationTimestamp", "selfLink", "name", "description", "targetLink", "targetId",
-                 "clientOperationId", "status", "statusMessage", "user", "progress", "insertTime", "startTime",
-                 "endTime", "httpErrorStatusCode", "httpErrorMessage", "operationType", "region", "zone"
-         })
-         private OperationInternal(String id, Date creationTimestamp, URI selfLink, String name,
-                                   String description, URI targetLink, String targetId, String clientOperationId,
-                                   Status status, String statusMessage, String user, int progress, Date insertTime,
-                                   Date startTime, Date endTime, int httpErrorStatusCode, String httpErrorMessage,
-                                   String operationType, URI region, URI zone) {
-            super(id, creationTimestamp, selfLink, name, description, targetLink, targetId, clientOperationId,
-                    status, statusMessage, user, progress, insertTime, startTime, endTime, httpErrorStatusCode,
-                    httpErrorMessage, operationType, null, region, zone);
-         }
-      }
+   // TODO: change jclouds core to use collaborative set bindings
+   @Provides @Singleton public Set<TypeAdapterFactory> typeAdapterFactories() {
+      return ImmutableSet.<TypeAdapterFactory>of(new MetadataTypeAdapter());
    }
 
    private static class InstanceTemplateTypeAdapter implements JsonSerializer<InstanceTemplate> {
 
-      @Override
-      public JsonElement serialize(InstanceTemplate src, Type typeOfSrc, JsonSerializationContext context) {
+      @Override public JsonElement serialize(InstanceTemplate src, Type typeOfSrc, JsonSerializationContext context) {
          InstanceTemplateInternal template = new InstanceTemplateInternal(src);
          JsonObject instance = (JsonObject) context.serialize(template, InstanceTemplateInternal.class);
 
          // deal with network
          JsonArray networkInterfaces = new JsonArray();
-         for (InstanceTemplate.NetworkInterface networkInterface : template.getNetworkInterfaces()){
+         for (InstanceTemplate.NetworkInterface networkInterface : template.networkInterfaces()) {
             networkInterfaces.add(context.serialize(networkInterface, InstanceTemplate.NetworkInterface.class));
          }
          instance.add("networkInterfaces", networkInterfaces);
 
          // deal with persistent disks
-         if (src.getDisks() != null && !src.getDisks().isEmpty()) {
-            JsonArray disks = new JsonArray();
-            for (InstanceTemplate.PersistentDisk persistentDisk : src.getDisks()) {
-               JsonObject disk = (JsonObject) context.serialize(persistentDisk, InstanceTemplate.PersistentDisk.class);
-               disk.addProperty("type", "PERSISTENT");
-               disks.add(disk);
-            }
-            instance.add("disks", disks);
+         if (!src.disks().isEmpty()) {
+            instance.add("disks", context.serialize(src.disks()));
          }
 
          // deal with metadata
-         if (src.getMetadata() != null && !src.getMetadata().isEmpty()) {
-            Metadata metadata = Metadata.builder()
-                    .items(src.getMetadata())
-                    .build();
+         if (!src.metadata().isEmpty()) {
+            Metadata metadata = Metadata.create(null, src.metadata());
             JsonObject metadataJson = (JsonObject) context.serialize(metadata);
             instance.add("metadata", metadataJson);
             return instance;
@@ -154,142 +98,95 @@ public class GoogleComputeEngineParserModule extends AbstractModule {
 
       private static class InstanceTemplateInternal extends InstanceTemplate {
          private InstanceTemplateInternal(InstanceTemplate template) {
-            super(template.getMachineType());
-            name(template.getName());
-            description(template.getDescription());
-            image(template.getImage());
-            serviceAccounts(template.getServiceAccounts());
-            networkInterfaces(template.getNetworkInterfaces());
+            machineType(template.machineType());
+            name(template.name());
+            description(template.description());
+            image(template.image());
+            serviceAccounts(template.serviceAccounts());
+            networkInterfaces(template.networkInterfaces());
          }
       }
    }
 
-   private static class InstanceTypeAdapter implements JsonDeserializer<Instance> {
+   private static class MetadataTypeAdapter extends SubtypeAdapterFactory<Metadata> {
 
-      @Override
-      public Instance deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws
-              JsonParseException {
-         Instance.Builder instanceBuilder = ((Instance) context.deserialize(json,
-                 InstanceInternal.class)).toBuilder();
-         JsonObject object = (JsonObject) json;
-         if (object.get("disks") != null) {
-            JsonArray disks = (JsonArray) object.get("disks");
-            for (JsonElement element : disks) {
-               JsonObject disk = (JsonObject) element;
-               if (disk.get("type").getAsString().equals("PERSISTENT")) {
-                  instanceBuilder.addDisk((Instance.PersistentAttachedDisk) context.deserialize(disk,
-                          Instance.PersistentAttachedDisk.class));
-               } else {
-                  instanceBuilder.addDisk((Instance.AttachedDisk) context.deserialize(disk,
-                          Instance.AttachedDisk.class));
-               }
-            }
-
-         }
-
-         return Instance.builder().fromInstance(instanceBuilder.build()).build();
+      private MetadataTypeAdapter() {
+         super(Metadata.class);
       }
 
-
-      private static class InstanceInternal extends Instance {
-         @ConstructorProperties({
-                 "id", "creationTimestamp", "selfLink", "name", "description", "tags", "machineType",
-                 "status", "statusMessage", "zone", "networkInterfaces", "metadata", "serviceAccounts"
-         })
-         private InstanceInternal(String id, Date creationTimestamp, URI selfLink, String name, String description,
-                                  Tags tags, URI machineType, Status status, String statusMessage,
-                                  URI zone, Set<NetworkInterface> networkInterfaces, Metadata metadata,
-                                  Set<ServiceAccount> serviceAccounts) {
-            super(id, creationTimestamp, selfLink, name, description, tags, machineType,
-                    status, statusMessage, zone, networkInterfaces, null, metadata, serviceAccounts);
+      @Override public void write(JsonWriter out, Metadata src) throws IOException {
+         out.beginObject();
+         out.name("kind").value("compute#metadata");
+         out.name("items");
+         out.beginArray();
+         for (Map.Entry<String, String> entry : src.items().entrySet()) {
+            out.beginObject();
+            out.name("key").value(entry.getKey());
+            out.name("value").value(entry.getValue());
+            out.endObject();
          }
+         out.endArray();
+         if (src.fingerprint() != null) {
+            out.name("fingerprint").value(src.fingerprint());
+         }
+         out.endObject();
       }
-   }
 
-   private static class MetadataTypeAdapter implements JsonDeserializer<Metadata>, JsonSerializer<Metadata> {
-
-      @Override
-      public Metadata deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws
-              JsonParseException {
-         ImmutableMap.Builder<String, String> builder = ImmutableMap.builder();
-         JsonObject metadata = json.getAsJsonObject();
-         JsonArray items = metadata.getAsJsonArray("items");
-         if (items != null) {
-            for (JsonElement element : items) {
-               JsonObject object = element.getAsJsonObject();
-               builder.put(object.get("key").getAsString(), object.get("value").getAsString());
-            }
-         }
+      @Override public Metadata read(JsonReader in) throws IOException {
          String fingerprint = null;
-         if (metadata.getAsJsonPrimitive("fingerprint") != null) {
-            fingerprint = metadata.getAsJsonPrimitive("fingerprint").getAsString();
-         } else {
-            fingerprint = "";
+         ImmutableMap.Builder<String, String> builder = ImmutableMap.builder();
+         in.beginObject();
+         while (in.hasNext()) {
+            String name = in.nextName();
+            if (name.equals("items")) {
+               in.beginArray();
+               while (in.hasNext()) {
+                  in.beginObject();
+                  String key = null;
+                  String value = null;
+                  while (in.hasNext()) {
+                     name = in.nextName();
+                     if (name.equals("key")) {
+                        key = in.nextString();
+                     } else if (name.equals("value")) {
+                        value = in.nextString();
+                     } else {
+                        in.skipValue();
+                     }
+                  }
+                  builder.put(key, value);
+                  in.endObject();
+               }
+               in.endArray();
+            } else if (name.equals("fingerprint")) {
+               fingerprint = in.nextString();
+            } else {
+               in.skipValue();
+            }
          }
-         return new Metadata(fingerprint, builder.build());
-      }
-
-      @Override
-      public JsonElement serialize(Metadata src, Type typeOfSrc, JsonSerializationContext context) {
-         JsonObject metadataObject = new JsonObject();
-         metadataObject.add("kind", new JsonPrimitive("compute#metadata"));
-         JsonArray items = new JsonArray();
-         for (Map.Entry<String, String> entry : src.getItems().entrySet()) {
-            JsonObject object = new JsonObject();
-            object.addProperty("key", entry.getKey());
-            object.addProperty("value", entry.getValue());
-            items.add(object);
-         }
-         metadataObject.add("items", items);
-         if (src.getFingerprint() != null) {
-            metadataObject.addProperty("fingerprint", src.getFingerprint());
-         }
-         return metadataObject;
-      }
-   }
-
-   private static class ProjectTypeAdapter implements JsonDeserializer<Project> {
-
-      @Override
-      public Project deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws
-              JsonParseException {
-         return Project.builder().fromProject((Project) context.deserialize(json, ProjectInternal.class)).build();
-      }
-
-      private static class ProjectInternal extends Project {
-
-         @ConstructorProperties({
-                 "id", "creationTimestamp", "selfLink", "name", "description", "commonInstanceMetadata", "quotas",
-                 "externalIpAddresses"
-         })
-         private ProjectInternal(String id, Date creationTimestamp, URI selfLink, String name, String description,
-                                 Metadata commonInstanceMetadata, Set<Quota> quotas, Set<String> externalIpAddresses) {
-            super(id, creationTimestamp, selfLink, name, description, commonInstanceMetadata, quotas,
-                    externalIpAddresses);
-         }
-
+         in.endObject();
+         return Metadata.create(fingerprint, builder.build());
       }
    }
 
    private static class FirewallOptionsTypeAdapter implements JsonSerializer<FirewallOptions> {
 
-      @Override
-      public JsonElement serialize(FirewallOptions src, Type typeOfSrc, JsonSerializationContext context) {
+      @Override public JsonElement serialize(FirewallOptions src, Type typeOfSrc, JsonSerializationContext context) {
          JsonObject firewall = new JsonObject();
-         if (src.getName() != null) {
-            firewall.addProperty("name", src.getName());
+         if (src.name() != null) {
+            firewall.addProperty("name", src.name());
          }
-         if (src.getNetwork() != null) {
-            firewall.addProperty("network", src.getNetwork().toString());
+         if (src.network() != null) {
+            firewall.addProperty("network", src.network().toString());
          }
-         if (!src.getSourceRanges().isEmpty()) {
-            firewall.add("sourceRanges", buildArrayOfStrings(src.getSourceRanges()));
+         if (!src.sourceRanges().isEmpty()) {
+            firewall.add("sourceRanges", buildArrayOfStrings(src.sourceRanges()));
          }
-         if (!src.getSourceTags().isEmpty()) {
-            firewall.add("sourceTags", buildArrayOfStrings(src.getSourceTags()));
+         if (!src.sourceTags().isEmpty()) {
+            firewall.add("sourceTags", buildArrayOfStrings(src.sourceTags()));
          }
-         if (!src.getTargetTags().isEmpty()) {
-            firewall.add("targetTags", buildArrayOfStrings(src.getTargetTags()));
+         if (!src.targetTags().isEmpty()) {
+            firewall.add("targetTags", buildArrayOfStrings(src.targetTags()));
          }
          if (!src.getAllowed().isEmpty()) {
             JsonArray rules = new JsonArray();
@@ -304,11 +201,10 @@ public class GoogleComputeEngineParserModule extends AbstractModule {
 
    private static class RouteOptionsTypeAdapter implements JsonSerializer<RouteOptions> {
 
-      @Override
-      public JsonElement serialize(RouteOptions src, Type typeOfSrc, JsonSerializationContext context) {
+      @Override public JsonElement serialize(RouteOptions src, Type typeOfSrc, JsonSerializationContext context) {
          JsonObject route = new JsonObject();
-         if (src.getName() != null) {
-            route.addProperty("name", src.getName());
+         if (src.name() != null) {
+            route.addProperty("name", src.name());
          }
          if (src.getNetwork() != null) {
             route.addProperty("network", src.getNetwork().toString());
@@ -341,7 +237,7 @@ public class GoogleComputeEngineParserModule extends AbstractModule {
       }
    }
 
-   private static JsonArray buildArrayOfStrings(Set<String> strings) {
+   private static JsonArray buildArrayOfStrings(Iterable<String> strings) {
       JsonArray array = new JsonArray();
       for (String string : strings) {
          array.add(new JsonPrimitive(string));
@@ -349,43 +245,18 @@ public class GoogleComputeEngineParserModule extends AbstractModule {
       return array;
    }
 
+   private abstract static class SubtypeAdapterFactory<T> extends TypeAdapter<T> implements TypeAdapterFactory {
+      private final Class<T> baseClass;
 
-   private static class RuleTypeAdapter implements JsonDeserializer<Firewall.Rule>, JsonSerializer<Firewall.Rule> {
-
-      @Override
-      public Firewall.Rule deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws
-              JsonParseException {
-         JsonObject rule = json.getAsJsonObject();
-         Rule.Builder builder = Rule.builder();
-         builder.IpProtocol(IpProtocol.fromValue(rule.get("IPProtocol").getAsString()));
-         if (rule.get("ports") != null) {
-            JsonArray ports = (JsonArray) rule.get("ports");
-            for (JsonElement port : ports) {
-               String portAsString = port.getAsString();
-               if (portAsString.contains("-")) {
-                  String[] split = portAsString.split("-");
-                  builder.addPortRange(Integer.parseInt(split[0]), Integer.parseInt(split[1]));
-               } else {
-                  builder.addPort(Integer.parseInt(portAsString));
-               }
-            }
-         }
-         return builder.build();
+      private SubtypeAdapterFactory(Class<T> baseClass) {
+         this.baseClass = baseClass;
       }
 
-      @Override
-      public JsonElement serialize(Firewall.Rule src, Type typeOfSrc, JsonSerializationContext context) {
-         JsonObject ruleObject = new JsonObject();
-         ruleObject.addProperty("IPProtocol", src.getIpProtocol().value());
-         if (src.getPorts() != null && !src.getPorts().isEmpty()) {
-            JsonArray ports = new JsonArray();
-            for (Range<Integer> range : src.getPorts().asRanges()) {
-               ports.add(new JsonPrimitive(range.lowerEndpoint() == range.upperEndpoint() ? range.lowerEndpoint() + "" :
-                       range.lowerEndpoint() + "-" + range.upperEndpoint()));
-            }
-            ruleObject.add("ports", ports);
+      @Override public <T> TypeAdapter<T> create(Gson gson, TypeToken<T> typeToken) {
+         if (!(baseClass.isAssignableFrom(typeToken.getRawType()))) {
+            return null;
          }
-         return ruleObject;
+         return (TypeAdapter<T>) this;
       }
    }
 }

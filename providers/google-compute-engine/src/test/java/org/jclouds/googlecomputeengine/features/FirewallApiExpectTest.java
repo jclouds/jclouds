@@ -29,7 +29,7 @@ import static org.testng.AssertJUnit.assertNull;
 
 import java.io.IOException;
 import java.net.URI;
-import java.util.Set;
+import java.util.List;
 
 import javax.ws.rs.core.MediaType;
 
@@ -42,20 +42,18 @@ import org.jclouds.googlecomputeengine.parse.ParseOperationTest;
 import org.jclouds.http.HttpRequest;
 import org.jclouds.http.HttpResponse;
 import org.jclouds.io.Payload;
-import org.jclouds.net.domain.IpProtocol;
 import org.testng.annotations.Test;
 
 import com.google.common.base.Function;
-import com.google.common.collect.ImmutableSet;
+import com.google.common.collect.ImmutableList;
 
-@Test(groups = "unit")
+@Test(groups = "unit", testName = "FirewallApiExpectTest")
 public class FirewallApiExpectTest extends BaseGoogleComputeEngineApiExpectTest {
 
    public static final HttpRequest GET_FIREWALL_REQUEST = HttpRequest
            .builder()
            .method("GET")
-           .endpoint("https://www.googleapis" +
-                   ".com/compute/v1/projects/myproject/global/firewalls/jclouds-test")
+           .endpoint(BASE_URL + "/myproject/global/firewalls/jclouds-test")
            .addHeader("Accept", "application/json")
            .addHeader("Authorization", "Bearer " + TOKEN).build();
 
@@ -70,13 +68,12 @@ public class FirewallApiExpectTest extends BaseGoogleComputeEngineApiExpectTest 
       assertEquals(api.get("jclouds-test"), new ParseFirewallTest().expected());
    }
 
-
    public static Payload firewallPayloadFirewallOfName(String firewallName,
                                                        String networkName,
-                                                       Set<String> sourceRanges,
-                                                       Set<String> sourceTags,
-                                                       Set<String> targetTags,
-                                                       Set<String> portRanges) throws IOException {
+                                                       List<String> sourceRanges,
+                                                       List<String> sourceTags,
+                                                       List<String> targetTags,
+                                                       List<String> portRanges) throws IOException {
       Function<String, String> addQuotes = new Function<String, String>() {
          @Override
          public String apply(String input) {
@@ -104,8 +101,7 @@ public class FirewallApiExpectTest extends BaseGoogleComputeEngineApiExpectTest 
       HttpRequest get = HttpRequest
               .builder()
               .method("GET")
-              .endpoint("https://www.googleapis" +
-                      ".com/compute/v1/projects/myproject/global/firewalls/jclouds-test")
+              .endpoint(BASE_URL + "/myproject/global/firewalls/jclouds-test")
               .addHeader("Accept", "application/json")
               .addHeader("Authorization", "Bearer " + TOKEN).build();
 
@@ -122,16 +118,16 @@ public class FirewallApiExpectTest extends BaseGoogleComputeEngineApiExpectTest 
       HttpRequest request = HttpRequest
               .builder()
               .method("POST")
-              .endpoint("https://www.googleapis.com/compute/v1/projects/myproject/global/firewalls")
+              .endpoint(BASE_URL + "/myproject/global/firewalls")
               .addHeader("Accept", "application/json")
               .addHeader("Authorization", "Bearer " + TOKEN)
               .payload(firewallPayloadFirewallOfName(
                       "myfw",
                       "default",
-                      ImmutableSet.<String>of("10.0.1.0/32"),
-                      ImmutableSet.<String>of("tag1"),
-                      ImmutableSet.<String>of("tag2"),
-                      ImmutableSet.<String>of("22", "23-24")))
+                      ImmutableList.of("10.0.1.0/32"),
+                      ImmutableList.of("tag1"),
+                      ImmutableList.of("tag2"),
+                      ImmutableList.of("22", "23-24")))
               .build();
 
       HttpResponse insertFirewallResponse = HttpResponse.builder().statusCode(200)
@@ -140,13 +136,9 @@ public class FirewallApiExpectTest extends BaseGoogleComputeEngineApiExpectTest 
       FirewallApi api = requestsSendResponses(requestForScopes(COMPUTE_SCOPE),
               TOKEN_RESPONSE, request, insertFirewallResponse).getFirewallApi("myproject");
 
-      assertEquals(api.createInNetwork("myfw", URI.create("https://www.googleapis" +
-              ".com/compute/v1/projects/myproject/global/networks/default"),
+      assertEquals(api.createInNetwork("myfw", URI.create(BASE_URL + "/myproject/global/networks/default"),
               new FirewallOptions()
-                      .addAllowedRule(Firewall.Rule.builder()
-                              .IpProtocol(IpProtocol.TCP)
-                              .addPort(22)
-                              .addPortRange(23, 24).build())
+                      .addAllowedRule(Firewall.Rule.create("tcp", ImmutableList.of("22", "23-24")))
                       .addSourceTag("tag1")
                       .addSourceRange("10.0.1.0/32")
                       .addTargetTag("tag2")), new ParseOperationTest().expected());
@@ -157,16 +149,16 @@ public class FirewallApiExpectTest extends BaseGoogleComputeEngineApiExpectTest 
       HttpRequest update = HttpRequest
               .builder()
               .method("PUT")
-              .endpoint("https://www.googleapis.com/compute/v1/projects/myproject/global/firewalls/myfw")
+              .endpoint(BASE_URL + "/myproject/global/firewalls/myfw")
               .addHeader("Accept", "application/json")
               .addHeader("Authorization", "Bearer " + TOKEN)
               .payload(firewallPayloadFirewallOfName(
                       "myfw",
                       "default",
-                      ImmutableSet.<String>of("10.0.1.0/32"),
-                      ImmutableSet.<String>of("tag1"),
-                      ImmutableSet.<String>of("tag2"),
-                      ImmutableSet.<String>of("22", "23-24")))
+                      ImmutableList.of("10.0.1.0/32"),
+                      ImmutableList.of("tag1"),
+                      ImmutableList.of("tag2"),
+                      ImmutableList.of("22", "23-24")))
               .build();
 
       HttpResponse updateFirewallResponse = HttpResponse.builder().statusCode(200)
@@ -179,12 +171,8 @@ public class FirewallApiExpectTest extends BaseGoogleComputeEngineApiExpectTest 
       assertEquals(api.update("myfw",
               new FirewallOptions()
                       .name("myfw")
-                      .network(URI.create("https://www.googleapis" +
-                              ".com/compute/v1/projects/myproject/global/networks/default"))
-                      .addAllowedRule(Firewall.Rule.builder()
-                              .IpProtocol(IpProtocol.TCP)
-                              .addPort(22)
-                              .addPortRange(23, 24).build())
+                      .network(URI.create(BASE_URL + "/myproject/global/networks/default"))
+                      .addAllowedRule(Firewall.Rule.create("tcp", ImmutableList.of("22", "23-24")))
                       .addSourceTag("tag1")
                       .addSourceRange("10.0.1.0/32")
                       .addTargetTag("tag2")), new ParseOperationTest().expected());
@@ -194,16 +182,16 @@ public class FirewallApiExpectTest extends BaseGoogleComputeEngineApiExpectTest 
       HttpRequest update = HttpRequest
               .builder()
               .method("PATCH")
-              .endpoint("https://www.googleapis.com/compute/v1/projects/myproject/global/firewalls/myfw")
+              .endpoint(BASE_URL + "/myproject/global/firewalls/myfw")
               .addHeader("Accept", "application/json")
               .addHeader("Authorization", "Bearer " + TOKEN)
               .payload(firewallPayloadFirewallOfName(
                       "myfw",
                       "default",
-                      ImmutableSet.<String>of("10.0.1.0/32"),
-                      ImmutableSet.<String>of("tag1"),
-                      ImmutableSet.<String>of("tag2"),
-                      ImmutableSet.<String>of("22", "23-24")))
+                      ImmutableList.of("10.0.1.0/32"),
+                      ImmutableList.of("tag1"),
+                      ImmutableList.of("tag2"),
+                      ImmutableList.of("22", "23-24")))
               .build();
 
       HttpResponse updateFirewallResponse = HttpResponse.builder().statusCode(200)
@@ -216,12 +204,8 @@ public class FirewallApiExpectTest extends BaseGoogleComputeEngineApiExpectTest 
       assertEquals(api.patch("myfw",
               new FirewallOptions()
                       .name("myfw")
-                      .network(URI.create("https://www.googleapis" +
-                              ".com/compute/v1/projects/myproject/global/networks/default"))
-                      .addAllowedRule(Firewall.Rule.builder()
-                              .IpProtocol(IpProtocol.TCP)
-                              .addPort(22)
-                              .addPortRange(23, 24).build())
+                      .network(URI.create(BASE_URL + "/myproject/global/networks/default"))
+                      .addAllowedRule(Firewall.Rule.create("tcp", ImmutableList.of("22", "23-24")))
                       .addSourceTag("tag1")
                       .addSourceRange("10.0.1.0/32")
                       .addTargetTag("tag2")), new ParseOperationTest().expected());
@@ -231,8 +215,7 @@ public class FirewallApiExpectTest extends BaseGoogleComputeEngineApiExpectTest 
       HttpRequest delete = HttpRequest
               .builder()
               .method("DELETE")
-              .endpoint("https://www.googleapis" +
-                      ".com/compute/v1/projects/myproject/global/firewalls/default-allow-internal")
+              .endpoint(BASE_URL + "/myproject/global/firewalls/default-allow-internal")
               .addHeader("Accept", "application/json")
               .addHeader("Authorization", "Bearer " + TOKEN).build();
 
@@ -250,8 +233,7 @@ public class FirewallApiExpectTest extends BaseGoogleComputeEngineApiExpectTest 
       HttpRequest delete = HttpRequest
               .builder()
               .method("DELETE")
-              .endpoint("https://www.googleapis" +
-                      ".com/compute/v1/projects/myproject/global/firewalls/default-allow-internal")
+              .endpoint(BASE_URL + "/myproject/global/firewalls/default-allow-internal")
               .addHeader("Accept", "application/json")
               .addHeader("Authorization", "Bearer " + TOKEN).build();
 
@@ -267,8 +249,7 @@ public class FirewallApiExpectTest extends BaseGoogleComputeEngineApiExpectTest 
       HttpRequest list = HttpRequest
               .builder()
               .method("GET")
-              .endpoint("https://www.googleapis" +
-                      ".com/compute/v1/projects/myproject/global/firewalls")
+              .endpoint(BASE_URL + "/myproject/global/firewalls")
               .addHeader("Accept", "application/json")
               .addHeader("Authorization", "Bearer " + TOKEN).build();
 
@@ -286,8 +267,7 @@ public class FirewallApiExpectTest extends BaseGoogleComputeEngineApiExpectTest 
       HttpRequest list = HttpRequest
               .builder()
               .method("GET")
-              .endpoint("https://www.googleapis" +
-                      ".com/compute/v1/projects/myproject/global/firewalls")
+              .endpoint(BASE_URL + "/myproject/global/firewalls")
               .addHeader("Accept", "application/json")
               .addHeader("Authorization", "Bearer " + TOKEN).build();
 

@@ -16,17 +16,17 @@
  */
 package org.jclouds.googlecomputeengine.parse;
 
+import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
+
 import java.net.URI;
 
 import javax.ws.rs.Consumes;
-import javax.ws.rs.core.MediaType;
 
-import org.jclouds.date.internal.SimpleDateFormatDateService;
 import org.jclouds.googlecomputeengine.domain.Address;
 import org.jclouds.googlecomputeengine.internal.BaseGoogleComputeEngineParseTest;
 import org.testng.annotations.Test;
 
-@Test(groups = "unit")
+@Test(groups = "unit", testName = "ParseAddressTest")
 public class ParseAddressTest extends BaseGoogleComputeEngineParseTest<Address> {
 
    @Override
@@ -34,18 +34,17 @@ public class ParseAddressTest extends BaseGoogleComputeEngineParseTest<Address> 
       return "/address_get.json";
    }
 
-   @Override
-   @Consumes(MediaType.APPLICATION_JSON)
+   @Override @Consumes(APPLICATION_JSON)
    public Address expected() {
-      return Address.builder()
-              .id("4439373783165447583")
-              .creationTimestamp(new SimpleDateFormatDateService().iso8601DateParse("2013-07-26T13:57:20.204-07:00"))
-              .status("RESERVED")
-              .region(URI.create("https://www.googleapis.com/compute/v1/projects/myproject/regions/us-central1"))
-              .name("test-ip1")
-              .description("")
-              .address("173.255.115.190")
-              .selfLink(URI.create("https://www.googleapis.com/compute/v1/projects/myproject/regions/us-central1/addresses/test-ip1"))
-              .build();
+      return Address.create( //
+            "4439373783165447583", // id
+            URI.create(BASE_URL + "/myproject/regions/us-central1/addresses/test-ip1"), // selfLink
+            "test-ip1", // name
+            "", // description
+            "RESERVED", // status
+            null, // user
+            URI.create(BASE_URL + "/myproject/regions/us-central1"), // region
+            "173.255.115.190" // address
+      );
    }
 }

@@ -18,9 +18,7 @@ package org.jclouds.googlecomputeengine.internal;
 
 import java.util.Properties;
 
-import org.jclouds.apis.ApiMetadata;
 import org.jclouds.compute.ComputeServiceContext;
-import org.jclouds.googlecomputeengine.GoogleComputeEngineApiMetadata;
 import org.jclouds.http.HttpRequest;
 import org.jclouds.http.HttpResponse;
 
@@ -30,9 +28,7 @@ import com.google.inject.Module;
 public abstract class BaseGoogleComputeEngineServiceContextExpectTest<T> extends BaseGoogleComputeEngineExpectTest<T> implements
         Function<ComputeServiceContext, T> {
 
-
-   @Override
-   public T createClient(Function<HttpRequest, HttpResponse> fn, Module module, Properties props) {
+   @Override public T createClient(Function<HttpRequest, HttpResponse> fn, Module module, Properties props) {
       return apply(createComputeServiceContext(fn, module, props));
    }
 
@@ -40,10 +36,4 @@ public abstract class BaseGoogleComputeEngineServiceContextExpectTest<T> extends
                                                              Properties props) {
       return createInjector(fn, module, props).getInstance(ComputeServiceContext.class);
    }
-
-   @Override
-   protected ApiMetadata createApiMetadata() {
-      return new GoogleComputeEngineApiMetadata();
-   }
-
 }

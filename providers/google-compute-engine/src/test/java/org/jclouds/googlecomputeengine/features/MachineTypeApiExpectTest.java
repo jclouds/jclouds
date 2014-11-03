@@ -28,13 +28,13 @@ import org.jclouds.http.HttpRequest;
 import org.jclouds.http.HttpResponse;
 import org.testng.annotations.Test;
 
-@Test(groups = "unit")
+@Test(groups = "unit", testName = "MachineTypeApiExpectTest")
 public class MachineTypeApiExpectTest extends BaseGoogleComputeEngineApiExpectTest {
 
    public static final HttpRequest LIST_MACHINE_TYPES_REQUEST = HttpRequest
            .builder()
            .method("GET")
-           .endpoint("https://www.googleapis.com/compute/v1/projects/myproject/zones/us-central1-a/machineTypes")
+           .endpoint(BASE_URL + "/myproject/zones/us-central1-a/machineTypes")
            .addHeader("Accept", "application/json")
            .addHeader("Authorization", "Bearer " + TOKEN).build();
 
@@ -46,7 +46,7 @@ public class MachineTypeApiExpectTest extends BaseGoogleComputeEngineApiExpectTe
    public static final HttpRequest LIST_CENTRAL1B_MACHINE_TYPES_REQUEST = HttpRequest
            .builder()
            .method("GET")
-           .endpoint("https://www.googleapis.com/compute/v1/projects/myproject/zones/us-central1-b/machineTypes")
+           .endpoint(BASE_URL + "/myproject/zones/us-central1-b/machineTypes")
            .addHeader("Accept", "application/json")
            .addHeader("Authorization", "Bearer " + TOKEN).build();
 
@@ -59,8 +59,7 @@ public class MachineTypeApiExpectTest extends BaseGoogleComputeEngineApiExpectTe
       HttpRequest get = HttpRequest
               .builder()
               .method("GET")
-              .endpoint("https://www.googleapis" +
-                      ".com/compute/v1/projects/myproject/zones/us-central1-a/machineTypes/n1-standard-1")
+              .endpoint(BASE_URL + "/myproject/zones/us-central1-a/machineTypes/n1-standard-1")
               .addHeader("Accept", "application/json")
               .addHeader("Authorization", "Bearer " + TOKEN).build();
 
@@ -78,8 +77,7 @@ public class MachineTypeApiExpectTest extends BaseGoogleComputeEngineApiExpectTe
       HttpRequest get = HttpRequest
               .builder()
               .method("GET")
-              .endpoint("https://www.googleapis" +
-                      ".com/compute/v1/projects/myproject/zones/us-central1-a/machineTypes/n1-standard-1")
+              .endpoint(BASE_URL + "/myproject/zones/us-central1-a/machineTypes/n1-standard-1")
               .addHeader("Accept", "application/json")
               .addHeader("Authorization", "Bearer " + TOKEN).build();
 

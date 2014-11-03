@@ -28,10 +28,10 @@ import org.jclouds.http.HttpRequest;
 import org.jclouds.http.HttpResponse;
 import org.testng.annotations.Test;
 
-@Test(groups = "unit")
+@Test(groups = "unit", testName = "ZoneApiExpectTest")
 public class ZoneApiExpectTest extends BaseGoogleComputeEngineApiExpectTest {
 
-   public static final String ZONES_URL_PREFIX = "https://www.googleapis.com/compute/v1/projects/myproject/zones";
+   public static final String ZONES_URL_PREFIX = BASE_URL + "/myproject/zones";
 
    public static final HttpRequest GET_ZONE_REQ = HttpRequest
            .builder()

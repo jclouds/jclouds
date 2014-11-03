@@ -16,19 +16,19 @@
  */
 package org.jclouds.googlecomputeengine.parse;
 
+import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
+
 import java.net.URI;
 
 import javax.ws.rs.Consumes;
-import javax.ws.rs.core.MediaType;
 
-import org.jclouds.date.internal.SimpleDateFormatDateService;
 import org.jclouds.googlecomputeengine.domain.Route;
 import org.jclouds.googlecomputeengine.internal.BaseGoogleComputeEngineParseTest;
 import org.testng.annotations.Test;
 
-import com.google.common.collect.ImmutableSet;
+import com.google.common.collect.ImmutableList;
 
-@Test(groups = "unit")
+@Test(groups = "unit", testName = "ParseRouteTest")
 public class ParseRouteTest extends BaseGoogleComputeEngineParseTest<Route> {
 
    @Override
@@ -36,21 +36,22 @@ public class ParseRouteTest extends BaseGoogleComputeEngineParseTest<Route> {
       return "/route_get.json";
    }
 
-   @Override
-   @Consumes(MediaType.APPLICATION_JSON)
+   @Override @Consumes(APPLICATION_JSON)
    public Route expected() {
-      return Route.builder()
-              .selfLink(URI.create("https://www.googleapis.com/compute/v1/projects/myproject/global/routes/default-route-c99ebfbed0e1f375"))
-              .id("7241926205630356071")
-              .name("default-route-c99ebfbed0e1f375")
-              .creationTimestamp(new SimpleDateFormatDateService().iso8601DateParse("2013-07-08T14:40:38.502-07:00"))
-              .description("Default route to the virtual network.")
-              .network(URI.create("https://www.googleapis.com/compute/v1/projects/myproject/global/networks/default"))
-              .destRange("10.240.0.0/16")
-              .priority(1000)
-              .nextHopNetwork(URI.create("https://www.googleapis.com/compute/v1/projects/myproject/global/networks/default"))
-              .tags(ImmutableSet.of("fooTag", "barTag"))
-              .build();
-
+      return Route.create( //
+            "7241926205630356071", // id
+            URI.create(BASE_URL + "/myproject/global/routes/default-route-c99ebfbed0e1f375"), // selfLink
+            "default-route-c99ebfbed0e1f375", // name
+            "Default route to the virtual network.", // description
+            URI.create(BASE_URL + "/myproject/global/networks/default"), // network
+            ImmutableList.of("fooTag", "barTag"), // tags
+            "10.240.0.0/16", // destRange
+            1000, // priority
+            null, // nextHopInstance
+            null, // nextHopIp
+            URI.create(BASE_URL + "/myproject/global/networks/default"), // nextHopNetwork
+            null, // nextHopGateway
+            null // warnings
+      );
    }
 }

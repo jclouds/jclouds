@@ -77,9 +77,9 @@ public class DiskApiLiveTest extends BaseGoogleComputeEngineApiLiveTest {
    }
 
    private void assertDiskEquals(Disk result) {
-      assertEquals(result.getName(), DISK_NAME);
-      assertEquals(result.getSizeGb(), sizeGb);
-      assertEquals(result.getZone(), getDefaultZoneUrl(userProject.get()));
+      assertEquals(result.name(), DISK_NAME);
+      assertEquals(result.sizeGb(), sizeGb);
+      assertEquals(result.zone(), getDefaultZoneUrl(userProject.get()));
    }
 
    @Test(groups = "live")
@@ -104,9 +104,9 @@ public class DiskApiLiveTest extends BaseGoogleComputeEngineApiLiveTest {
    }
 
    private void assertSSDDiskEquals(Disk result) {
-      assertEquals(result.getName(), SSD_DISK_NAME);
-      assertEquals(result.getSizeGb(), sizeGb);
-      assertEquals(result.getZone(), getDefaultZoneUrl(userProject.get()));
-      assertEquals(result.getType().orNull(), getDiskTypeUrl(userProject.get(), DEFAULT_ZONE_NAME, "pd-ssd"));
+      assertEquals(result.name(), SSD_DISK_NAME);
+      assertEquals(result.sizeGb(), sizeGb);
+      assertEquals(result.zone(), getDefaultZoneUrl(userProject.get()));
+      assertEquals(result.type(), getDiskTypeUrl(userProject.get(), DEFAULT_ZONE_NAME, "pd-ssd"));
    }
 }

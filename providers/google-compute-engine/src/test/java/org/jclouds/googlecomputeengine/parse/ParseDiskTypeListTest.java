@@ -16,18 +16,20 @@
  */
 package org.jclouds.googlecomputeengine.parse;
 
-import static org.jclouds.googlecomputeengine.domain.Resource.Kind.DISK_TYPE_LIST;
+import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
 
 import java.net.URI;
 
 import javax.ws.rs.Consumes;
-import javax.ws.rs.core.MediaType;
 
-import org.jclouds.date.internal.SimpleDateFormatDateService;
-import org.jclouds.googlecomputeengine.domain.ListPage;
 import org.jclouds.googlecomputeengine.domain.DiskType;
+import org.jclouds.googlecomputeengine.domain.ListPage;
 import org.jclouds.googlecomputeengine.internal.BaseGoogleComputeEngineParseTest;
+import org.testng.annotations.Test;
 
+import com.google.common.collect.ImmutableList;
+
+@Test(groups = "unit", testName = "ParseDiskTypeListTest")
 public class ParseDiskTypeListTest extends BaseGoogleComputeEngineParseTest<ListPage<DiskType>> {
 
    @Override
@@ -35,30 +37,23 @@ public class ParseDiskTypeListTest extends BaseGoogleComputeEngineParseTest<List
       return "/disktype_list.json";
    }
 
-   @Override
-   @Consumes(MediaType.APPLICATION_JSON)
+   @Override @Consumes(APPLICATION_JSON)
    public ListPage<DiskType> expected() {
-      SimpleDateFormatDateService dateService = new SimpleDateFormatDateService();
-      return ListPage.<DiskType>builder()
-              .kind(DISK_TYPE_LIST)
-              .addItem(DiskType.builder()
-                      .creationTimestamp(dateService.iso8601DateParse("2014-06-02T11:07:28.530-07:00"))
-                      .name("pd-standard")
-                      .description("Standard Persistent Disk")
-                      .validDiskSize("10GB-10TB")
-                      .zone("https://content.googleapis.com/compute/v1/projects/studied-point-720/zones/us-central1-a")
-                      .selfLink(URI.create("https://content.googleapis.com/compute/v1/projects/studied-point-720/zones/us-central1-a/diskTypes/pd-standard"))
-                      .defaultDiskSizeGb(500)
-                      .build())
-              .addItem(DiskType.builder()
-                      .creationTimestamp(dateService.iso8601DateParse("2014-06-02T11:07:28.529-07:00"))
-                      .name("pd-ssd")
-                      .description("SSD Persistent Disk")
-                      .validDiskSize("10GB-1TB")
-                      .zone("https://content.googleapis.com/compute/v1/projects/studied-point-720/zones/us-central1-a")
-                      .selfLink(URI.create("https://content.googleapis.com/compute/v1/projects/studied-point-720/zones/us-central1-a/diskTypes/pd-ssd"))
-                      .defaultDiskSizeGb(100)
-                      .build())
-              .build();
+      String contentBaseUrl = BASE_URL.replace("www", "content");
+      DiskType diskType1 = DiskType.create( //
+            "pd-standard", // name
+            "Standard Persistent Disk", // description
+            "10GB-10TB", // validDiskSize
+            null, // deprecated
+            URI.create(contentBaseUrl + "/studied-point-720/zones/us-central1-a"), // zone
+            URI.create(contentBaseUrl + "/studied-point-720/zones/us-central1-a/diskTypes/pd-standard"), // selfLink
+            500 // defaultDiskSizeGb
+      );
+      DiskType diskType2 = new ParseDiskTypeTest().expected();
+      return ListPage.create( //
+            ImmutableList.of(diskType1, diskType2), // items
+            null, // nextPageToken
+            null // prefixes
+      );
    }
 }

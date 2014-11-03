@@ -16,10 +16,11 @@
  */
 package org.jclouds.googlecomputeengine.compute.functions;
 
-import com.google.common.base.Predicate;
+import javax.inject.Inject;
+
 import org.jclouds.compute.functions.GroupNamingConvention;
 
-import javax.inject.Inject;
+import com.google.common.base.Predicate;
 
 /**
  * The convention for naming instance tags that firewall rules recognise.

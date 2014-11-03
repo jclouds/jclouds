@@ -16,9 +16,8 @@
  */
 package org.jclouds.googlecomputeengine.compute.functions;
 
-import static org.easymock.EasyMock.createMock;
-import static org.testng.Assert.assertEquals;
 import static org.jclouds.compute.domain.Image.Status.AVAILABLE;
+import static org.testng.Assert.assertEquals;
 
 import java.net.URI;
 import java.util.Map;
@@ -35,14 +34,12 @@ import org.jclouds.compute.domain.Processor;
 import org.jclouds.compute.domain.Volume.Type;
 import org.jclouds.compute.domain.VolumeBuilder;
 import org.jclouds.compute.functions.GroupNamingConvention;
-import org.jclouds.date.internal.SimpleDateFormatDateService;
 import org.jclouds.domain.Location;
 import org.jclouds.domain.LocationBuilder;
 import org.jclouds.domain.LocationScope;
-import org.jclouds.googlecomputeengine.GoogleComputeEngineApi;
+import org.jclouds.googlecomputeengine.compute.domain.InstanceInZone;
 import org.jclouds.googlecomputeengine.domain.Instance;
-import org.jclouds.googlecomputeengine.domain.InstanceInZone;
-import org.jclouds.googlecomputeengine.domain.Metadata;
+import org.jclouds.googlecomputeengine.parse.ParseInstanceTest;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
@@ -127,43 +124,7 @@ public class InstanceInZoneToNodeMetadataTest {
 
    @BeforeMethod
    public final void setup() {
-      instance = Instance.builder()
-         .id("13051190678907570425")
-         .creationTimestamp(new SimpleDateFormatDateService().iso8601DateParse("2012-11-25T23:48:20.758"))
-         .selfLink(URI.create("https://www.googleapis"
-            + ".com/compute/v1/projects/myproject/zones/us-central1-a/instances/test-0"))
-         .description("desc")
-         .name("test-0")
-         .machineType(URI.create("https://www.googleapis.com/compute/v1/projects/myproject/zones/us-central1-a/"
-               + "machineTypes/n1-standard-1"))
-         .status(Instance.Status.RUNNING)
-         .zone(URI.create("https://www.googleapis.com/compute/v1/projects/myproject/zones/us-central1-a"))
-         .addNetworkInterface(
-               Instance.NetworkInterface.builder()
-                  .name("nic0")
-                  .networkIP("10.240.121.115")
-                  .network(URI.create("https://www.googleapis"
-                        + ".com/compute/v1/projects/myproject/global/networks/default"))
-                  .build())
-         .addDisk(
-               Instance.PersistentAttachedDisk.builder()
-               .index(0)
-               .mode(Instance.PersistentAttachedDisk.Mode.READ_WRITE)
-               .deviceName("test")
-               .source(URI.create("https://www.googleapis"
-                  + ".com/compute/v1/projects/myproject/zones/us-central1-a/disks/test"))
-               .boot(true)
-               .build())
-         .tags(Instance.Tags.builder().fingerprint("abcd").addItem("aTag").addItem("Group-port-42").build())
-         .metadata(Metadata.builder()
-               .items(ImmutableMap.of("aKey", "aValue",
-                  "jclouds-image",
-                  "https://www.googleapis.com/compute/v1/projects/debian-cloud/global/images/debian-7-wheezy-v20140718",
-                  "jclouds-delete-boot-disk", "true"))
-               .fingerprint("efgh")
-               .build())
-               .addServiceAccount(Instance.ServiceAccount.builder().email("default").addScopes("myscope").build())
-               .build();
+      instance = new ParseInstanceTest().expected();
 
       images = ImmutableSet.of(new ImageBuilder()
          .id("1")
@@ -232,13 +193,6 @@ public class InstanceInZoneToNodeMetadataTest {
          }
       };
 
-      Supplier<String> userProjectSupplier = new Supplier<String>() {
-         @Override
-         public String get() {
-            return "userProject";
-         }
-      };
-
       GroupNamingConvention.Factory namingConventionFactory =
          new GroupNamingConvention.Factory() {
             @Override
@@ -259,9 +213,7 @@ public class InstanceInZoneToNodeMetadataTest {
             imageSupplier,
             hardwareSupplier,
             locationSupplier,
-            new FirewallTagNamingConvention.Factory(namingConventionFactory),
-            createMock(GoogleComputeEngineApi.class),
-            userProjectSupplier);
+            new FirewallTagNamingConvention.Factory(namingConventionFactory));
    }
 
    @Test

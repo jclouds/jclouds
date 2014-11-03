@@ -16,18 +16,20 @@
  */
 package org.jclouds.googlecomputeengine.parse;
 
+import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
+
 import java.net.URI;
 
 import javax.ws.rs.Consumes;
-import javax.ws.rs.core.MediaType;
 
-import org.jclouds.date.internal.SimpleDateFormatDateService;
 import org.jclouds.googlecomputeengine.domain.Firewall;
+import org.jclouds.googlecomputeengine.domain.Firewall.Rule;
 import org.jclouds.googlecomputeengine.internal.BaseGoogleComputeEngineParseTest;
-import org.jclouds.net.domain.IpProtocol;
 import org.testng.annotations.Test;
 
-@Test(groups = "unit")
+import com.google.common.collect.ImmutableList;
+
+@Test(groups = "unit", testName = "ParseFirewallTest")
 public class ParseFirewallTest extends BaseGoogleComputeEngineParseTest<Firewall> {
 
    @Override
@@ -35,26 +37,21 @@ public class ParseFirewallTest extends BaseGoogleComputeEngineParseTest<Firewall
       return "/firewall_get.json";
    }
 
-   @Override
-   @Consumes(MediaType.APPLICATION_JSON)
+   @Override @Consumes(APPLICATION_JSON)
    public Firewall expected() {
-      return Firewall.builder()
-              .id("12862241031274216284")
-              .creationTimestamp(new SimpleDateFormatDateService().iso8601DateParse("2012-04-13T03:05:02.855"))
-              .selfLink(URI.create("https://www.googleapis.com/compute/v1/projects/myproject/global/firewalls/jclouds-test"))
-              .name("jclouds-test")
-              .description("Internal traffic from default allowed")
-              .network(URI.create("https://www.googleapis.com/compute/v1/projects/myproject/global/networks/jclouds-test"))
-              .addSourceRange("10.0.0.0/8")
-              .addAllowed(Firewall.Rule.builder()
-                      .IpProtocol(IpProtocol.TCP)
-                      .addPortRange(1, 65535).build())
-              .addAllowed(Firewall.Rule.builder()
-                      .IpProtocol(IpProtocol.UDP)
-                      .addPortRange(1, 65535).build())
-              .addAllowed(Firewall.Rule.builder()
-                      .IpProtocol(IpProtocol.ICMP).build())
-              .build();
-
+      return Firewall.create( //
+            "12862241031274216284", // id
+            URI.create(BASE_URL + "/myproject/global/firewalls/jclouds-test"), // selfLink
+            "jclouds-test", // name
+            "Internal traffic from default allowed", // description
+            URI.create(BASE_URL + "/myproject/global/networks/jclouds-test"), // network
+            ImmutableList.of("10.0.0.0/8"), // sourceRanges
+            null, // sourceTags
+            null, // targetTags
+            ImmutableList.of( // allowed
+                  Rule.create("tcp", ImmutableList.of("1-65535")), //
+                  Rule.create("udp", ImmutableList.of("1-65535")), //
+                  Rule.create("icmp", null) //
+            ));
    }
 }

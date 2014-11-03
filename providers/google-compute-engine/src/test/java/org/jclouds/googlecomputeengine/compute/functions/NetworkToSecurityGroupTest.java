@@ -25,7 +25,6 @@ import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertTrue;
 
 import java.net.URI;
-import java.util.Date;
 
 import org.jclouds.collect.IterableWithMarkers;
 import org.jclouds.collect.PagedIterables;
@@ -62,20 +61,19 @@ public class NetworkToSecurityGroupTest {
       ListOptions options = new Builder().filter("network eq .*/jclouds-test");
       expect(api.getFirewallApi(projectSupplier.get()))
               .andReturn(fwApi);
-      expect(fwApi.list(options)).andReturn(PagedIterables.of(IterableWithMarkers.from(ImmutableSet.of(FirewallToIpPermissionTest.fwForTest()))));
+      expect(fwApi.list(options)).andReturn(
+            PagedIterables.onlyPage(IterableWithMarkers.from(ImmutableSet.of(FirewallToIpPermissionTest.fwForTest()))));
 
       replay(api, fwApi);
-      Network.Builder builder = Network.builder();
 
-      builder.id("abcd");
-      builder.selfLink(URI.create("https://www.googleapis.com/compute/v1/projects/myproject/global/networks/jclouds-test"));
-      builder.creationTimestamp(new Date());
-      builder.description("some description");
-      builder.gatewayIPv4("1.2.3.4");
-      builder.IPv4Range("0.0.0.0/0");
-      builder.name("jclouds-test");
-
-      Network network = builder.build();
+      Network network = Network.create( //
+            "abcd", // id
+            URI.create("https://www.googleapis.com/compute/v1/projects/myproject/global/networks/jclouds-test"),
+            "jclouds-test", // name
+            "some description", // description
+            "0.0.0.0/0", // rangeIPv4
+            "1.2.3.4" // gatewayIPv4
+      );
 
       NetworkToSecurityGroup netToSg = new NetworkToSecurityGroup(fwToPerm, api, projectSupplier);
 

@@ -55,7 +55,8 @@
    },
    "tags": {
       "items": [
-         "aTag"
+         "aTag",
+         "Group-port-42"
       ],
       "fingerprint": "abcd"
    }

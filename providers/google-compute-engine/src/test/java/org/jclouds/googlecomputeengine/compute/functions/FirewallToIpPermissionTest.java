@@ -20,7 +20,6 @@ import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertTrue;
 
 import java.net.URI;
-import java.util.Date;
 
 import org.jclouds.googlecomputeengine.domain.Firewall;
 import org.jclouds.net.domain.IpPermission;
@@ -29,45 +28,45 @@ import org.testng.annotations.Test;
 
 import com.google.common.base.Predicate;
 import com.google.common.base.Predicates;
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Iterables;
 
+@Test
 public class FirewallToIpPermissionTest {
 
-   @Test
    public void testApply() {
-
       Firewall fw = fwForTest();
 
       FirewallToIpPermission converter = new FirewallToIpPermission();
 
       Iterable<IpPermission> perms = converter.apply(fw);
 
-      assertEquals(Iterables.size(perms), 3, "There should be three IpPermissions but there is only " + Iterables.size(perms));
+      assertEquals(Iterables.size(perms), 3,
+            "There should be three IpPermissions but there is only " + Iterables.size(perms));
 
-      assertTrue(Iterables.any(perms, Predicates.and(hasProtocol(IpProtocol.TCP),
-              hasStartAndEndPort(1, 10))), "No permission found for TCP, ports 1-10");
-      assertTrue(Iterables.any(perms, Predicates.and(hasProtocol(IpProtocol.TCP),
-              hasStartAndEndPort(33, 33))), "No permission found for TCP, port 33");
-      assertTrue(Iterables.any(perms, hasProtocol(IpProtocol.ICMP)),
-              "No permission found for ICMP");
+      assertTrue(Iterables.any(perms, Predicates.and(hasProtocol(IpProtocol.TCP), hasStartAndEndPort(1, 10))),
+            "No permission found for TCP, ports 1-10");
+      assertTrue(Iterables.any(perms, Predicates.and(hasProtocol(IpProtocol.TCP), hasStartAndEndPort(33, 33))),
+            "No permission found for TCP, port 33");
+      assertTrue(Iterables.any(perms, hasProtocol(IpProtocol.ICMP)), "No permission found for ICMP");
    }
 
    public static Firewall fwForTest() {
-      Firewall.Builder builder = Firewall.builder();
-
-      builder.addSourceRange("0.0.0.0/0");
-      builder.addAllowed(Firewall.Rule.builder().IpProtocol(IpProtocol.TCP)
-              .addPortRange(1, 10).build());
-      builder.addAllowed(Firewall.Rule.builder().IpProtocol(IpProtocol.TCP)
-              .addPort(33).build());
-      builder.addAllowed(Firewall.Rule.builder().IpProtocol(IpProtocol.ICMP).build());
-      builder.id("abcd");
-      builder.selfLink(URI.create("https://www.googleapis.com/compute/v1/projects/myproject/global/firewalls/jclouds-test"));
-      builder.network(URI.create("https://www.googleapis.com/compute/v1/projects/myproject/global/networks/jclouds-test"));
-      builder.creationTimestamp(new Date());
-      builder.name("jclouds-test");
-
-      return builder.build();
+      String baseUrl = "https://www.googleapis.com/compute/v1/projects";
+      return Firewall.create( //
+            "abcd", // id
+            URI.create(baseUrl + "/myproject/global/firewalls/jclouds-test"), // selfLink
+            "jclouds-test", // name
+            null, // description
+            URI.create(baseUrl + "/myproject/global/networks/jclouds-test"), // network
+            ImmutableList.of("0.0.0.0/0"), // sourceRanges
+            null, // sourceTags
+            null, // targetTags
+            ImmutableList.of( // allowed
+                  Firewall.Rule.create("tcp", ImmutableList.of("1-10")), //
+                  Firewall.Rule.create("tcp", ImmutableList.of("33")), //
+                  Firewall.Rule.create("icmp", ImmutableList.<String>of()) //
+            ));
    }
 
    public static Predicate<IpPermission> hasProtocol(final IpProtocol protocol) {
@@ -89,5 +88,4 @@ public class FirewallToIpPermissionTest {
          }
       };
    }
-
 }

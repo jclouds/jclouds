@@ -23,11 +23,11 @@ import org.jclouds.json.Json;
 /**
  * Binder used for adding and deleting healthChecks from a target pool.
  */
-public class TargetPoolChangeHealthChecksBinder extends TargetPoolMapofSetofMapGenericBinder {
+public final class TargetPoolChangeHealthChecksBinder extends TargetPoolMapofListofMapGenericBinder {
 
    @Inject TargetPoolChangeHealthChecksBinder(Json jsonBinder) {
       super(jsonBinder);
-      super.SetOuterString("healthChecks");
-      super.SetInnerString("healthCheck");
+      super.outerString("healthChecks");
+      super.innerString("healthCheck");
    }
 }

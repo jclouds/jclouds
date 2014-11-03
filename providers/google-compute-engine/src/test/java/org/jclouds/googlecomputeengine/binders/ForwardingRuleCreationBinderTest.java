@@ -21,7 +21,7 @@ import static org.testng.Assert.assertEquals;
 import java.net.URI;
 import java.util.Map;
 
-import org.jclouds.googlecomputeengine.domain.ForwardingRule.IPProtocolOption;
+import org.jclouds.googlecomputeengine.domain.ForwardingRule;
 import org.jclouds.googlecomputeengine.internal.BaseGoogleComputeEngineExpectTest;
 import org.jclouds.googlecomputeengine.options.ForwardingRuleCreationOptions;
 import org.jclouds.http.HttpRequest;
@@ -53,7 +53,7 @@ public class ForwardingRuleCreationBinderTest extends BaseGoogleComputeEngineExp
       ForwardingRuleCreationOptions forwardingRuleCreationOptions = new ForwardingRuleCreationOptions()
                                                                   .description(DESCRIPTION)
                                                                   .ipAddress(IP_ADDRESS)
-                                                                  .ipProtocol(IPProtocolOption.SCTP)
+                                                                  .ipProtocol(ForwardingRule.IPProtocol.SCTP)
                                                                   .portRange(PORT_RANGE)
                                                                   .target(TARGET);
 

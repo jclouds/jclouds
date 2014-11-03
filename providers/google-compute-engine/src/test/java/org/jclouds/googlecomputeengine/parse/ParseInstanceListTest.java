@@ -16,14 +16,18 @@
  */
 package org.jclouds.googlecomputeengine.parse;
 
+import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
+
 import javax.ws.rs.Consumes;
-import javax.ws.rs.core.MediaType;
 
 import org.jclouds.googlecomputeengine.domain.Instance;
 import org.jclouds.googlecomputeengine.domain.ListPage;
-import org.jclouds.googlecomputeengine.domain.Resource;
 import org.jclouds.googlecomputeengine.internal.BaseGoogleComputeEngineParseTest;
+import org.testng.annotations.Test;
 
+import com.google.common.collect.ImmutableList;
+
+@Test(groups = "unit", testName = "ParseInstanceListTest")
 public class ParseInstanceListTest extends BaseGoogleComputeEngineParseTest<ListPage<Instance>> {
 
    @Override
@@ -31,12 +35,12 @@ public class ParseInstanceListTest extends BaseGoogleComputeEngineParseTest<List
       return "/instance_list.json";
    }
 
-   @Override
-   @Consumes(MediaType.APPLICATION_JSON)
+   @Override @Consumes(APPLICATION_JSON)
    public ListPage<Instance> expected() {
-      return ListPage.<Instance>builder()
-              .kind(Resource.Kind.INSTANCE_LIST)
-              .addItem(new ParseInstanceTest().expected())
-              .build();
+      return ListPage.create( //
+            ImmutableList.of(new ParseInstanceTest().expected()), // items
+            null, // nextPageToken
+            null // prefixes
+      );
    }
 }

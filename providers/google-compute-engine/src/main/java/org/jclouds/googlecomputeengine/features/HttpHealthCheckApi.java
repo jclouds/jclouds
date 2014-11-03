@@ -16,12 +16,27 @@
  */
 package org.jclouds.googlecomputeengine.features;
 
+import static org.jclouds.googlecomputeengine.GoogleComputeEngineConstants.COMPUTE_READONLY_SCOPE;
+import static org.jclouds.googlecomputeengine.GoogleComputeEngineConstants.COMPUTE_SCOPE;
+import static org.jclouds.googlecomputeengine.GoogleComputeEngineFallbacks.EmptyListPageOnNotFoundOr404;
+
+import javax.inject.Named;
+import javax.ws.rs.Consumes;
+import javax.ws.rs.DELETE;
+import javax.ws.rs.GET;
+import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
+import javax.ws.rs.core.MediaType;
+
 import org.jclouds.Fallbacks.EmptyPagedIterableOnNotFoundOr404;
 import org.jclouds.Fallbacks.NullOnNotFoundOr404;
-import org.jclouds.collect.IterableWithMarker;
 import org.jclouds.collect.PagedIterable;
 import org.jclouds.googlecomputeengine.binders.HttpHealthCheckCreationBinder;
 import org.jclouds.googlecomputeengine.domain.HttpHealthCheck;
+import org.jclouds.googlecomputeengine.domain.ListPage;
 import org.jclouds.googlecomputeengine.domain.Operation;
 import org.jclouds.googlecomputeengine.functions.internal.ParseHttpHealthChecks;
 import org.jclouds.googlecomputeengine.options.HttpHealthCheckCreationOptions;
@@ -38,20 +53,6 @@ import org.jclouds.rest.annotations.ResponseParser;
 import org.jclouds.rest.annotations.SkipEncoding;
 import org.jclouds.rest.annotations.Transform;
 import org.jclouds.rest.binders.BindToJsonPayload;
-
-import javax.inject.Named;
-import javax.ws.rs.Consumes;
-import javax.ws.rs.DELETE;
-import javax.ws.rs.GET;
-import javax.ws.rs.POST;
-import javax.ws.rs.PUT;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
-import javax.ws.rs.core.MediaType;
-
-import static org.jclouds.googlecomputeengine.GoogleComputeEngineConstants.COMPUTE_READONLY_SCOPE;
-import static org.jclouds.googlecomputeengine.GoogleComputeEngineConstants.COMPUTE_SCOPE;
 
 /**
  * Provides access to HttpHealthChecks via their REST API.
@@ -92,7 +93,7 @@ public interface HttpHealthCheckApi {
    /**
     * Creates a HttpHealthCheck resource in the specified project and region using the data included in the request.
     *
-    * @param httpHealthCheckName the name of the forwarding rule.
+    * @param name the name of the forwarding rule.
     * @return an Operation resource. To check on the status of an operation, poll the Operations resource returned to
     *         you, and look for the status field.
     */
@@ -132,14 +133,14 @@ public interface HttpHealthCheckApi {
 
    /**
     * @param options @see org.jclouds.googlecomputeengine.options.ListOptions
-    * @return IterableWithMarker
+    * @return ListPage
     */
    @Named("HttpHealthChecks:list")
    @GET
    @OAuthScopes(COMPUTE_READONLY_SCOPE)
    @ResponseParser(ParseHttpHealthChecks.class)
-   @Fallback(EmptyPagedIterableOnNotFoundOr404.class)
-   IterableWithMarker<HttpHealthCheck> list(ListOptions options);
+   @Fallback(EmptyListPageOnNotFoundOr404.class)
+   ListPage<HttpHealthCheck> list(ListOptions options);
 
    /**
     * Updates a HttpHealthCheck resource in the specified project
@@ -156,7 +157,8 @@ public interface HttpHealthCheckApi {
    @OAuthScopes(COMPUTE_SCOPE)
    @MapBinder(HttpHealthCheckCreationBinder.class)
    @Nullable
-   Operation patch(@PathParam("httpHealthCheck") @PayloadParam("name") String name, @PayloadParam("options") HttpHealthCheckCreationOptions options);
+   Operation patch(@PathParam("httpHealthCheck") @PayloadParam("name") String name,
+         @PayloadParam("options") HttpHealthCheckCreationOptions options);
 
    /**
     * Updates a HttpHealthCheck resource in the specified project using the data included in the request.

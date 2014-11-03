@@ -23,11 +23,11 @@ import org.jclouds.json.Json;
 /**
  * Binder used for adding and deleting instances from a target pool.
  */
-public class TargetPoolChangeInstancesBinder extends TargetPoolMapofSetofMapGenericBinder {
+public final class TargetPoolChangeInstancesBinder extends TargetPoolMapofListofMapGenericBinder {
 
    @Inject TargetPoolChangeInstancesBinder(Json jsonBinder) {
       super(jsonBinder);
-      super.SetOuterString("instances");
-      super.SetInnerString("instance");
+      super.outerString("instances");
+      super.innerString("instance");
    }
 }

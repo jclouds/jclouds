@@ -16,17 +16,19 @@
  */
 package org.jclouds.googlecomputeengine.parse;
 
+import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
+import static org.jclouds.googlecomputeengine.domain.Image.RawDisk;
+
 import java.net.URI;
 
 import javax.ws.rs.Consumes;
-import javax.ws.rs.core.MediaType;
 
-import org.jclouds.date.internal.SimpleDateFormatDateService;
+import org.jclouds.googlecomputeengine.domain.Deprecated;
 import org.jclouds.googlecomputeengine.domain.Image;
 import org.jclouds.googlecomputeengine.internal.BaseGoogleComputeEngineParseTest;
 import org.testng.annotations.Test;
 
-@Test(groups = "unit")
+@Test(groups = "unit", testName = "ParseImageTest")
 public class ParseImageTest extends BaseGoogleComputeEngineParseTest<Image> {
 
    @Override
@@ -34,22 +36,21 @@ public class ParseImageTest extends BaseGoogleComputeEngineParseTest<Image> {
       return "/image_get.json";
    }
 
-   @Override
-   @Consumes(MediaType.APPLICATION_JSON)
+   @Override @Consumes(APPLICATION_JSON)
    public Image expected() {
-      return Image.builder()
-              .id("12941197498378735318")
-              .creationTimestamp(new SimpleDateFormatDateService().iso8601DateParse("2012-07-16T22:16:13.468"))
-              .selfLink(URI.create("https://www.googleapis.com/compute/v1/projects/centos-cloud/global/images/centos-6-2" +
-                      "-v20120326"))
-              .name("centos-6-2-v20120326")
-              .description("DEPRECATED. CentOS 6.2 image; Created Mon, 26 Mar 2012 21:19:09 +0000")
-              .sourceType("RAW")
-              .rawDisk(
-                      Image.RawDisk.builder()
-                              .source("")
-                              .containerType("TAR")
-                              .build()
-              ).build();
+      return Image.create( //
+            "12941197498378735318", // id
+            URI.create(BASE_URL + "/centos-cloud/global/images/centos-6-2-v20120326"), // selfLink
+            "centos-6-2-v20120326", // name
+            "DEPRECATED. CentOS 6.2 image; Created Mon, 26 Mar 2012 21:19:09 +0000", // description
+            "RAW", // sourceType
+            RawDisk.create(URI.create(""), "TAR", null), // rawDisk
+            Deprecated.create( // deprecated
+                  "DEPRECATED", // state
+                  URI.create(BASE_URL + "/centos-cloud/global/images/centos-6-v20130104"), // replacement
+                  null, // deprecated
+                  null, // obsolete
+                  null // deleted
+            ));
    }
 }

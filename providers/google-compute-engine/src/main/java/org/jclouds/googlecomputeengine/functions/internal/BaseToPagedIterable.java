@@ -20,6 +20,7 @@ import static com.google.common.base.Predicates.instanceOf;
 import static com.google.common.collect.Iterables.tryFind;
 
 import org.jclouds.collect.IterableWithMarker;
+import org.jclouds.collect.IterableWithMarkers;
 import org.jclouds.collect.PagedIterable;
 import org.jclouds.collect.PagedIterables;
 import org.jclouds.googlecomputeengine.domain.ListPage;
@@ -40,18 +41,20 @@ public abstract class BaseToPagedIterable<T, I extends BaseToPagedIterable<T, I>
 
    @Override
    public PagedIterable<T> apply(ListPage<T> input) {
-      if (input.nextMarker() == null)
-         return PagedIterables.of(input);
+      if (input.nextPageToken() == null) {
+         return PagedIterables.onlyPage(IterableWithMarkers.from(input));
+      }
 
       Optional<Object> project = tryFind(request.getCaller().get().getArgs(), instanceOf(String.class));
 
       Optional<Object> listOptions = tryFind(request.getInvocation().getArgs(), instanceOf(ListOptions.class));
 
-      assert project.isPresent() : String.format("programming error, method %s should have a string param for the "
-              + "project", request.getCaller().get().getInvokable());
+      assert project.isPresent() :
+            String.format("programming error, method %s should have a string param for the " + "project",
+                  request.getCaller().get().getInvokable());
 
-      return PagedIterables.advance(
-              input, fetchNextPage(project.get().toString(), (ListOptions) listOptions.orNull()));
+      return PagedIterables.advance(IterableWithMarkers.from(input, input.nextPageToken()),
+            fetchNextPage(project.get().toString(), (ListOptions) listOptions.orNull()));
    }
 
    protected abstract Function<Object, IterableWithMarker<T>> fetchNextPage(String projectName,

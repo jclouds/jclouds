@@ -16,35 +16,35 @@
  */
 package org.jclouds.googlecomputeengine.parse;
 
+import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
+
 import java.net.URI;
 
 import javax.ws.rs.Consumes;
-import javax.ws.rs.core.MediaType;
 
-import org.jclouds.date.internal.SimpleDateFormatDateService;
 import org.jclouds.googlecomputeengine.domain.DiskType;
 import org.jclouds.googlecomputeengine.internal.BaseGoogleComputeEngineParseTest;
+import org.testng.annotations.Test;
 
+@Test(groups = "unit", testName = "ParseDiskTypeTest")
 public class ParseDiskTypeTest extends BaseGoogleComputeEngineParseTest<DiskType> {
-
 
    @Override
    public String resource() {
       return "/disktype.json";
    }
 
-   @Override
-   @Consumes(MediaType.APPLICATION_JSON)
+   @Override @Consumes(APPLICATION_JSON)
    public DiskType expected() {
-      SimpleDateFormatDateService dateService = new SimpleDateFormatDateService();
-      return DiskType.builder()
-              .creationTimestamp(dateService.iso8601DateParse("2014-06-02T11:07:28.529-07:00"))
-              .name("pd-ssd")
-              .description("SSD Persistent Disk")
-              .validDiskSize("10GB-1TB")
-              .zone("https://content.googleapis.com/compute/v1/projects/studied-point-720/zones/us-central1-a")
-              .selfLink(URI.create("https://content.googleapis.com/compute/v1/projects/studied-point-720/zones/us-central1-a/diskTypes/pd-ssd"))
-              .defaultDiskSizeGb(100)
-              .build();
+      String contentBaseUrl = BASE_URL.replace("www", "content");
+      return DiskType.create( //
+            "pd-ssd", // name
+            "SSD Persistent Disk", // description
+            "10GB-1TB", // validDiskSize
+            null, // deprecated
+            URI.create(contentBaseUrl + "/studied-point-720/zones/us-central1-a"), // zone
+            URI.create(contentBaseUrl + "/studied-point-720/zones/us-central1-a/diskTypes/pd-ssd"), // selfLink
+            100 // defaultDiskSizeGb
+      );
    }
 }

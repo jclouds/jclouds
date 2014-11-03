@@ -16,17 +16,17 @@
  */
 package org.jclouds.googlecomputeengine.parse;
 
+import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
+
 import java.net.URI;
 
 import javax.ws.rs.Consumes;
-import javax.ws.rs.core.MediaType;
 
-import org.jclouds.date.internal.SimpleDateFormatDateService;
 import org.jclouds.googlecomputeengine.domain.HttpHealthCheck;
 import org.jclouds.googlecomputeengine.internal.BaseGoogleComputeEngineParseTest;
 import org.testng.annotations.Test;
 
-@Test(groups = "unit")
+@Test(groups = "unit", testName = "ParseHttpHealthCheckTest")
 public class ParseHttpHealthCheckTest extends BaseGoogleComputeEngineParseTest<HttpHealthCheck> {
 
    @Override
@@ -34,20 +34,20 @@ public class ParseHttpHealthCheckTest extends BaseGoogleComputeEngineParseTest<H
       return "/httphealthcheck_get.json";
    }
 
-   @Override
-   @Consumes(MediaType.APPLICATION_JSON)
+   @Override @Consumes(APPLICATION_JSON)
    public HttpHealthCheck expected() {
-      return HttpHealthCheck.builder()
-              .id("2761502483700014319")
-              .creationTimestamp(new SimpleDateFormatDateService().iso8601DateParse("2014-01-14T05:55:54.910-08:00"))
-              .selfLink(URI.create("https://www.googleapis.com/compute/v1/projects/jclouds-gce/global/httpHealthChecks/http-health-check-api-live-test"))
-              .name("http-health-check-api-live-test")
-              .port(0)
-              .checkIntervalSec(0)
-              .timeoutSec(0)
-              .unhealthyThreshold(0)
-              .healthyThreshold(0)
-              .build();
-
+      return HttpHealthCheck.create( //
+            "2761502483700014319", // id
+            URI.create(BASE_URL + "/jclouds-gce/global/httpHealthChecks/http-health-check-api-live-test"), // selfLink
+            "http-health-check-api-live-test", // name
+            null, // description
+            null, // host
+            null, // requestPath
+            null,  // port
+            null,  // checkIntervalSec
+            null,  // timeoutSec
+            null,  // unhealthyThreshold
+            null // healthyThreshold
+      );
    }
 }

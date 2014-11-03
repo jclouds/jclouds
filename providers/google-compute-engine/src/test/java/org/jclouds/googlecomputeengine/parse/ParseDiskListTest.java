@@ -16,19 +16,18 @@
  */
 package org.jclouds.googlecomputeengine.parse;
 
-import java.net.URI;
+import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
 
 import javax.ws.rs.Consumes;
-import javax.ws.rs.core.MediaType;
 
-import org.jclouds.date.internal.SimpleDateFormatDateService;
 import org.jclouds.googlecomputeengine.domain.Disk;
 import org.jclouds.googlecomputeengine.domain.ListPage;
-import org.jclouds.googlecomputeengine.domain.Resource;
 import org.jclouds.googlecomputeengine.internal.BaseGoogleComputeEngineParseTest;
 import org.testng.annotations.Test;
 
-@Test(groups = "unit")
+import com.google.common.collect.ImmutableList;
+
+@Test(groups = "unit", testName = "ParseDiskListTest")
 public class ParseDiskListTest extends BaseGoogleComputeEngineParseTest<ListPage<Disk>> {
 
    @Override
@@ -36,22 +35,12 @@ public class ParseDiskListTest extends BaseGoogleComputeEngineParseTest<ListPage
       return "/disk_list.json";
    }
 
-   @Override
-   @Consumes(MediaType.APPLICATION_JSON)
+   @Override @Consumes(APPLICATION_JSON)
    public ListPage<Disk> expected() {
-      return ListPage.<Disk>builder()
-              .kind(Resource.Kind.DISK_LIST)
-              .addItem(Disk.builder()
-                      .id("13050421646334304115")
-                      .creationTimestamp(new SimpleDateFormatDateService().iso8601DateParse("2012-11-25T01:38:48.306"))
-                      .selfLink(URI.create("https://www.googleapis" +
-                              ".com/compute/v1/projects/myproject/zones/us-central1-a/disks/testimage1"))
-                      .name("testimage1")
-                      .sizeGb(1)
-                      .zone(URI.create("https://www.googleapis" +
-                              ".com/compute/v1/projects/myproject/zones/us-central1-a"))
-                      .status("READY")
-                      .build())
-              .build();
+      return ListPage.create( //
+            ImmutableList.of(new ParseDiskTest().expected()), // items
+            null, // nextPageToken
+            null // prefixes
+      );
    }
 }

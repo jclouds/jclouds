@@ -35,27 +35,25 @@ import com.google.inject.Inject;
 /**
  * Tests that a Zone Operation is done, returning the completed Operation when it is.
  */
-public class ZoneOperationDonePredicate implements Predicate<AtomicReference<Operation>> {
+public final class ZoneOperationDonePredicate implements Predicate<AtomicReference<Operation>> {
 
    private final GoogleComputeEngineApi api;
    private final Supplier<String> project;
    private final Supplier<Map<URI, ? extends Location>> zones;
 
-   @Inject
-   ZoneOperationDonePredicate(GoogleComputeEngineApi api, @UserProject Supplier<String> project,
-                              @Memoized Supplier<Map<URI, ? extends Location>> zones) {
+   @Inject ZoneOperationDonePredicate(GoogleComputeEngineApi api, @UserProject Supplier<String> project,
+         @Memoized Supplier<Map<URI, ? extends Location>> zones) {
       this.api = api;
       this.project = project;
       this.zones = zones;
    }
 
-   @Override
-   public boolean apply(AtomicReference<Operation> input) {
-      checkNotNull(input, "input");
-      Operation current = api.getZoneOperationApi(project.get())
-              .getInZone(zones.get().get(input.get().getZone().get()).getId(),
-                      input.get().getName());
-      switch (current.getStatus()) {
+   @Override public boolean apply(AtomicReference<Operation> input) {
+      checkNotNull(input.get(), "input");
+      URI zone = checkNotNull(input.get().zone(), "zone of %s", input.get());
+      String locationId = checkNotNull(zones.get().get(zone), "location of %s", zone).getId();
+      Operation current = api.getZoneOperationApi(project.get()).getInZone(locationId, input.get().name());
+      switch (current.status()) {
          case DONE:
             input.set(current);
             return true;

@@ -23,15 +23,13 @@ import static org.testng.Assert.assertTrue;
 import java.net.URI;
 import java.util.List;
 import java.util.Properties;
-import java.util.Set;
 
 import org.jclouds.collect.PagedIterable;
 import org.jclouds.googlecomputeengine.GoogleComputeEngineApi;
 import org.jclouds.googlecomputeengine.domain.Image;
 import org.jclouds.googlecomputeengine.domain.Instance;
 import org.jclouds.googlecomputeengine.domain.Instance.AttachedDisk;
-import org.jclouds.googlecomputeengine.domain.Instance.PersistentAttachedDisk;
-import org.jclouds.googlecomputeengine.domain.InstanceTemplate;
+import org.jclouds.googlecomputeengine.domain.templates.InstanceTemplate;
 import org.jclouds.googlecomputeengine.internal.BaseGoogleComputeEngineApiLiveTest;
 import org.jclouds.googlecomputeengine.options.AttachDiskOptions;
 import org.jclouds.googlecomputeengine.options.AttachDiskOptions.DiskMode;
@@ -42,8 +40,8 @@ import org.testng.annotations.AfterClass;
 import org.testng.annotations.Test;
 
 import com.google.common.base.Predicate;
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
-import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 import com.google.inject.Module;
@@ -58,7 +56,7 @@ public class InstanceApiLiveTest extends BaseGoogleComputeEngineApiLiveTest {
    private static final String IPV4_RANGE = "10.0.0.0/8";
    private static final String METADATA_ITEM_KEY = "instanceLiveTestTestProp";
    private static final String METADATA_ITEM_VALUE = "instanceLiveTestTestValue";
-   private static final Set<String> TAGS = ImmutableSet.of("instance-live-test-tag1", "instance-live-test-tag2");
+   private static final List<String> TAGS = ImmutableList.of("instance-live-test-tag1", "instance-live-test-tag2");
    private static final String ATTACH_DISK_NAME = "instance-api-live-test-attach-disk";
    private static final String ATTACH_DISK_DEVICE_NAME = "attach-disk-1";
 
@@ -77,21 +75,21 @@ public class InstanceApiLiveTest extends BaseGoogleComputeEngineApiLiveTest {
                            @Override
                            public boolean apply(Image input) {
                               // filter out all deprecated images
-                              return !(input.getDeprecated().isPresent() && input.getDeprecated().get().getState().isPresent());
+                              return !(input.deprecated() != null && input.deprecated().state() != null);
                            }
                         })
                         .first()
                         .get()
-                        .getSelfLink();
-      instance = InstanceTemplate.builder()
-              .forMachineType(getDefaultMachineTypeUrl(userProject.get()))
+                        .selfLink();
+      instance = new InstanceTemplate()
+              .machineType(getDefaultMachineTypeUrl(userProject.get()))
               .addNetworkInterface(getNetworkUrl(userProject.get(), INSTANCE_NETWORK_NAME),
                                    Instance.NetworkInterface.AccessConfig.Type.ONE_TO_ONE_NAT)
               .addMetadata("mykey", "myvalue")
               .description("a description")
-              .addDisk(InstanceTemplate.PersistentDisk.Mode.READ_WRITE, getDiskUrl(userProject.get(), BOOT_DISK_NAME),
+              .addDisk(Instance.AttachedDisk.Mode.READ_WRITE, getDiskUrl(userProject.get(), BOOT_DISK_NAME),
                        null, true, true)
-              .addDisk(InstanceTemplate.PersistentDisk.Mode.READ_WRITE, getDiskUrl(userProject.get(), DISK_NAME))
+              .addDisk(Instance.AttachedDisk.Mode.READ_WRITE, getDiskUrl(userProject.get(), DISK_NAME))
               .image(imageUri);
 
       return api;
@@ -112,7 +110,7 @@ public class InstanceApiLiveTest extends BaseGoogleComputeEngineApiLiveTest {
       assertGlobalOperationDoneSucessfully(api.getNetworkApi(userProject.get()).createInIPv4Range
               (INSTANCE_NETWORK_NAME, IPV4_RANGE), TIME_WAIT);
 
-      DiskCreationOptions diskCreationOptions = new DiskCreationOptions().sourceImage(instance.getImage());
+      DiskCreationOptions diskCreationOptions = new DiskCreationOptions().sourceImage(instance.image());
       assertZoneOperationDoneSucessfully(api.getDiskApi(userProject.get())
                                         .createInZone(BOOT_DISK_NAME, DEFAULT_DISK_SIZE_GB, DEFAULT_ZONE_NAME, diskCreationOptions),
                                          TIME_WAIT);
@@ -138,28 +136,28 @@ public class InstanceApiLiveTest extends BaseGoogleComputeEngineApiLiveTest {
       Instance originalInstance = api().getInZone(DEFAULT_ZONE_NAME, INSTANCE_NAME);
       assertZoneOperationDoneSucessfully(api().setMetadataInZone(DEFAULT_ZONE_NAME, INSTANCE_NAME,
               ImmutableMap.of(METADATA_ITEM_KEY, METADATA_ITEM_VALUE),
-              originalInstance.getMetadata().getFingerprint()),
+              originalInstance.metadata().fingerprint()),
               TIME_WAIT);
 
       Instance modifiedInstance = api().getInZone(DEFAULT_ZONE_NAME, INSTANCE_NAME);
 
-      assertTrue(modifiedInstance.getMetadata().getItems().containsKey(METADATA_ITEM_KEY));
-      assertEquals(modifiedInstance.getMetadata().getItems().get(METADATA_ITEM_KEY),
+      assertTrue(modifiedInstance.metadata().items().containsKey(METADATA_ITEM_KEY));
+      assertEquals(modifiedInstance.metadata().items().get(METADATA_ITEM_KEY),
               METADATA_ITEM_VALUE);
-      assertNotNull(modifiedInstance.getMetadata().getFingerprint());
+      assertNotNull(modifiedInstance.metadata().fingerprint());
    }
 
    @Test(groups = "live", dependsOnMethods = "testListInstance")
    public void testSetTagsForInstance() {
       Instance originalInstance = api().getInZone(DEFAULT_ZONE_NAME, INSTANCE_NAME);
       assertZoneOperationDoneSucessfully(api().setTagsInZone(DEFAULT_ZONE_NAME, INSTANCE_NAME, TAGS,
-              originalInstance.getTags().getFingerprint()),
+              originalInstance.tags().fingerprint()),
               TIME_WAIT);
 
       Instance modifiedInstance = api().getInZone(DEFAULT_ZONE_NAME, INSTANCE_NAME);
 
-      assertTrue(modifiedInstance.getTags().getItems().containsAll(TAGS));
-      assertNotNull(modifiedInstance.getTags().getFingerprint());
+      assertTrue(modifiedInstance.tags().items().containsAll(TAGS));
+      assertNotNull(modifiedInstance.tags().fingerprint());
    }
 
    @Test(groups = "live", dependsOnMethods = "testSetMetadataForInstance")
@@ -176,14 +174,13 @@ public class InstanceApiLiveTest extends BaseGoogleComputeEngineApiLiveTest {
 
       Instance modifiedInstance = api().getInZone(DEFAULT_ZONE_NAME, INSTANCE_NAME);
 
-      assertTrue(modifiedInstance.getDisks().size() > originalInstance.getDisks().size());
-      assertTrue(Iterables.any(modifiedInstance.getDisks(), new Predicate<AttachedDisk>() {
+      assertTrue(modifiedInstance.disks().size() > originalInstance.disks().size());
+      assertTrue(Iterables.any(modifiedInstance.disks(), new Predicate<AttachedDisk>() {
 
          @Override
          public boolean apply(AttachedDisk disk) {
-            return disk instanceof PersistentAttachedDisk &&
-                   ((PersistentAttachedDisk) disk).getDeviceName().isPresent() &&
-                   ((PersistentAttachedDisk) disk).getDeviceName().get().equals(ATTACH_DISK_DEVICE_NAME);
+            return disk.type() == AttachedDisk.Type.PERSISTENT &&
+                  ATTACH_DISK_DEVICE_NAME.equals(disk.deviceName());
          }
       }));
    }
@@ -196,7 +193,7 @@ public class InstanceApiLiveTest extends BaseGoogleComputeEngineApiLiveTest {
 
       Instance modifiedInstance = api().getInZone(DEFAULT_ZONE_NAME, INSTANCE_NAME);
 
-      assertTrue(modifiedInstance.getDisks().size() < originalInstance.getDisks().size());
+      assertTrue(modifiedInstance.disks().size() < originalInstance.disks().size());
 
       assertZoneOperationDoneSucessfully(diskApi().deleteInZone(DEFAULT_ZONE_NAME, ATTACH_DISK_NAME), TIME_WAIT);
    }
@@ -234,8 +231,8 @@ public class InstanceApiLiveTest extends BaseGoogleComputeEngineApiLiveTest {
    }
 
    private void assertInstanceEquals(Instance result, InstanceTemplate expected) {
-      assertEquals(result.getName(), expected.getName());
-      assertEquals(result.getMetadata().getItems(), expected.getMetadata());
+      assertEquals(result.name(), expected.name());
+      assertEquals(result.metadata().items(), expected.metadata());
    }
 
    @AfterClass(groups = { "integration", "live" })

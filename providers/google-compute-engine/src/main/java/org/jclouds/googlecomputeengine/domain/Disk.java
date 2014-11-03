@@ -16,130 +16,38 @@
  */
 package org.jclouds.googlecomputeengine.domain;
 
-import static com.google.common.base.Objects.equal;
-import static com.google.common.base.Optional.fromNullable;
-import static com.google.common.base.Preconditions.checkNotNull;
-
-import java.beans.ConstructorProperties;
 import java.net.URI;
-import java.util.Date;
 
 import org.jclouds.javax.annotation.Nullable;
+import org.jclouds.json.SerializedNames;
 
-import com.google.common.annotations.Beta;
-import com.google.common.base.Objects;
-import com.google.common.base.Optional;
+import com.google.auto.value.AutoValue;
 
-/**
- * A persistent disk resource
- */
-@Beta
-public final class Disk extends AbstractDisk {
+@AutoValue
+public abstract class Disk {
+   public abstract String id();
 
-   private final URI zone;
-   private final Optional<URI> type;
+   public abstract URI zone();
 
-   @ConstructorProperties({
-           "id", "creationTimestamp", "selfLink", "name", "description", "sizeGb", "zone",
-           "status", "type"
-   })
-   private Disk(String id, Date creationTimestamp, URI selfLink, String name, String description,
-                Integer sizeGb, URI zone, String status, @Nullable URI type) {
-      super(Kind.DISK, id, creationTimestamp, selfLink, name, description, sizeGb, status);
-      this.zone = checkNotNull(zone, "zone of %s", name);
-      this.type = fromNullable(type);
+   public abstract String status(); // TODO: enum
+
+   public abstract String name();
+
+   @Nullable public abstract String description();
+
+   public abstract int sizeGb();
+
+   public abstract URI selfLink();
+
+   /** URL of the corresponding disk type resource. */
+   @Nullable public abstract URI type();
+
+   @SerializedNames({ "id", "zone", "status", "name", "description", "sizeGb", "selfLink", "type" })
+   public static Disk create(String id, URI zone, String status, String name, String description, int sizeGb,
+         URI selfLink, URI type) {
+      return new AutoValue_Disk(id, zone, status, name, description, sizeGb, selfLink, type);
    }
 
-   /**
-    * @return URL for the zone where the persistent disk resides.
-    */
-   public URI getZone() {
-      return zone;
+   Disk(){
    }
-
-   /**
-    * @return URL of the disk type resource describing which disk type
-    */
-   public Optional<URI> getType(){
-      return type;
-   }
-
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   public boolean equals(Object obj) {
-      if (this == obj) return true;
-      if (obj == null || getClass() != obj.getClass()) return false;
-      Disk that = Disk.class.cast(obj);
-      return equal(this.kind, that.kind)
-              && equal(this.name, that.name)
-              && equal(this.zone, that.zone);
-   }
-
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   protected Objects.ToStringHelper string() {
-      return super.string()
-              .omitNullValues()
-              .add("zone", zone);
-   }
-
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   public String toString() {
-      return string().toString();
-   }
-
-   public static Builder builder() {
-      return new Builder();
-   }
-
-   public Builder toBuilder() {
-      return new Builder().fromDisk(this);
-   }
-
-   public static final class Builder extends AbstractDisk.Builder<Builder> {
-
-      private URI zone;
-      private URI type;
-
-      /**
-       * @see Disk#getZone()
-       */
-      public Builder zone(URI zone) {
-         this.zone = zone;
-         return this;
-      }
-
-      /**
-       * @see Disk#getType()
-       */
-      public Builder type(URI type){
-         this.type = type;
-         return this;
-      }
-
-      @Override
-      protected Builder self() {
-         return this;
-      }
-
-      public Disk build() {
-         return new Disk(super.id, super.creationTimestamp, super.selfLink, super.name,
-                 super.description, super.sizeGb, zone, super.status, type);
-      }
-
-      public Builder fromDisk(Disk in) {
-         return super.fromAbstractDisk(in)
-                 .zone(in.getZone())
-                 .type(in.getType().orNull());
-      }
-
-   }
-
 }

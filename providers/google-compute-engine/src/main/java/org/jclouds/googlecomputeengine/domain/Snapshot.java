@@ -16,119 +16,48 @@
  */
 package org.jclouds.googlecomputeengine.domain;
 
-import static com.google.common.base.Optional.fromNullable;
-import static com.google.common.base.Preconditions.checkNotNull;
-
-import java.beans.ConstructorProperties;
 import java.net.URI;
-import java.util.Date;
 
-import com.google.common.annotations.Beta;
-import com.google.common.base.Objects;
-import com.google.common.base.Optional;
+import org.jclouds.javax.annotation.Nullable;
+import org.jclouds.json.SerializedNames;
 
-/**
- * A Persistent Disk Snapshot resource.
- */
-@Beta
-public final class Snapshot extends AbstractDisk {
+import com.google.auto.value.AutoValue;
 
-   private final Optional<URI> sourceDisk;
-   private final String sourceDiskId;
+@AutoValue
+public abstract class Snapshot {
 
-   @ConstructorProperties({
-           "id", "creationTimestamp", "selfLink", "name", "description", "diskSizeGb",
-           "status", "sourceDisk", "sourceDiskId"
-   })
-   private Snapshot(String id, Date creationTimestamp, URI selfLink, String name, String description,
-                    Integer sizeGb, String status, URI sourceDisk, String sourceDiskId) {
-      super(Kind.SNAPSHOT, id, creationTimestamp, selfLink, name, description, sizeGb, status);
-      this.sourceDisk = fromNullable(sourceDisk);
-      this.sourceDiskId = checkNotNull(sourceDiskId, "sourceDiskId of %s", name);
-   }
+   public abstract String id();
+
+   public abstract URI selfLink();
+
+   public abstract String name();
+
+   @Nullable public abstract String description();
+
+   public abstract int diskSizeGb();
+
+   public abstract String status();
 
    /**
-    * @return The source disk used to insert this snapshot. Once the source disk
-    *   has been deleted from the system, this field will be cleared, and will
-    *   not be set even if a disk with the same name has been re-created (output only).
+    * The source disk used to insert this snapshot. Once the source disk
+    * has been deleted from the system, this field will be cleared, and will
+    * not be set even if a disk with the same name has been re-created (output only).
     */
-   public Optional<URI> getSourceDisk() {
-      return sourceDisk;
-   }
+   @Nullable public abstract URI sourceDisk();
 
    /**
-    * @return The ID value of the disk used to insert this snapshot. This value
-    *   may be used to determine whether the snapshot was taken from the current
-    *   or a previous instance of a given disk name.
+    * The ID value of the disk used to insert this snapshot. This value
+    * may be used to determine whether the snapshot was taken from the current
+    * or a previous instance of a given disk name.
     */
-   public String getSourceDiskId() {
-      return sourceDiskId;
+   public abstract String sourceDiskId();
+
+   @SerializedNames({ "id", "selfLink", "name", "description", "diskSizeGb", "status", "sourceDisk", "sourceDiskId" })
+   public static Snapshot create(String id, URI selfLink, String name, String description, int diskSizeGb, String status,
+         URI sourceDisk, String sourceDiskId) {
+      return new AutoValue_Snapshot(id, selfLink, name, description, diskSizeGb, status, sourceDisk, sourceDiskId);
    }
 
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   protected Objects.ToStringHelper string() {
-      return super.string()
-              .omitNullValues()
-              .add("sourceDisk", sourceDisk.orNull())
-              .add("sourceDiskId", sourceDiskId);
+   Snapshot() {
    }
-
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   public String toString() {
-      return string().toString();
-   }
-
-   public static Builder builder() {
-      return new Builder();
-   }
-
-   public Builder toBuilder() {
-      return new Builder().fromSnapshot(this);
-   }
-
-   public static final class Builder extends AbstractDisk.Builder<Builder> {
-
-      private URI sourceDisk;
-      private String sourceDiskId;
-
-      /**
-       * @see Snapshot#getSourceDisk()
-       */
-      public Builder sourceDisk(URI sourceDisk) {
-         this.sourceDisk = sourceDisk;
-         return this;
-      }
-
-      /**
-       * @see Snapshot#getSourceDiskId()
-       */
-      public Builder sourceDiskId(String sourceDiskId) {
-         this.sourceDiskId = sourceDiskId;
-         return this;
-      }
-
-      @Override
-      protected Builder self() {
-         return this;
-      }
-
-      public Snapshot build() {
-         return new Snapshot(super.id, super.creationTimestamp, super.selfLink, super.name,
-                 super.description, super.sizeGb, super.status, sourceDisk, sourceDiskId);
-      }
-
-      public Builder fromSnapshot(Snapshot in) {
-         return super.fromAbstractDisk(in)
-                 .sourceDisk(in.getSourceDisk().orNull())
-                 .sourceDiskId(in.getSourceDiskId());
-      }
-
-   }
-
 }

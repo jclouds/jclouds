@@ -48,7 +48,7 @@ public class AddressApiLiveTest extends BaseGoogleComputeEngineApiLiveTest {
    public void testGetAddress() {
       Address address = api().getInRegion(DEFAULT_REGION_NAME, ADDRESS_NAME);
       assertNotNull(address);
-      assertEquals(address.getName(), ADDRESS_NAME);
+      assertEquals(address.name(), ADDRESS_NAME);
    }
 
    @Test(groups = "live", dependsOnMethods = "testGetAddress")

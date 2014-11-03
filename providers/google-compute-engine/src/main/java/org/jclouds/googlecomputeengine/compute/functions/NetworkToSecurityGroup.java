@@ -61,14 +61,14 @@ public class NetworkToSecurityGroup implements Function<Network, SecurityGroup> 
    public SecurityGroup apply(Network network)  {
       SecurityGroupBuilder builder = new SecurityGroupBuilder();
 
-      builder.id(network.getName());
-      builder.providerId(network.getId());
-      builder.name(network.getName());
-      builder.uri(network.getSelfLink());
+      builder.id(network.name());
+      builder.providerId(network.id());
+      builder.name(network.name());
+      builder.uri(network.selfLink());
 
       ImmutableSet.Builder permBuilder = ImmutableSet.builder();
 
-      ListOptions options = new ListOptions.Builder().filter("network eq .*/" + network.getName());
+      ListOptions options = new ListOptions.Builder().filter("network eq .*/" + network.name());
 
       for (Firewall fw : api.getFirewallApi(project.get()).list(options).concat()) {
          permBuilder.addAll(firewallToPerms.apply(fw));

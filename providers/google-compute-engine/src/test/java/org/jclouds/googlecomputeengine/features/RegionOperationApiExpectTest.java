@@ -22,26 +22,23 @@ import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNull;
 import static org.testng.Assert.assertTrue;
 
-import java.net.URI;
-
-import org.jclouds.date.internal.SimpleDateFormatDateService;
 import org.jclouds.googlecomputeengine.domain.ListPage;
 import org.jclouds.googlecomputeengine.domain.Operation;
-import org.jclouds.googlecomputeengine.domain.Resource;
 import org.jclouds.googlecomputeengine.internal.BaseGoogleComputeEngineApiExpectTest;
 import org.jclouds.googlecomputeengine.options.ListOptions;
+import org.jclouds.googlecomputeengine.parse.ParseRegionOperationTest;
 import org.jclouds.http.HttpRequest;
 import org.jclouds.http.HttpResponse;
 import org.testng.annotations.Test;
 
-@Test(groups = "unit")
+import com.google.common.collect.ImmutableList;
+
+@Test(groups = "unit", testName = "RegionOperationApiExpectTest")
 public class RegionOperationApiExpectTest extends BaseGoogleComputeEngineApiExpectTest {
 
-   private static final String OPERATIONS_URL_PREFIX = "https://www.googleapis" +
-           ".com/compute/v1/projects/myproject/regions/us-central1/operations";
+   private static final String OPERATIONS_URL_PREFIX = BASE_URL + "/myproject/regions/us-central1/operations";
 
-   private static final String DELETE_OPERATIONS_URL_PREFIX = "https://www.googleapis" +
-           ".com/compute/v1/projects/myproject/regions/us-central1/operations";
+   private static final String DELETE_OPERATIONS_URL_PREFIX = BASE_URL + "/myproject/regions/us-central1/operations";
 
    public static final HttpRequest GET_OPERATION_REQUEST = HttpRequest
            .builder()
@@ -53,32 +50,12 @@ public class RegionOperationApiExpectTest extends BaseGoogleComputeEngineApiExpe
    public static final HttpResponse GET_OPERATION_RESPONSE = HttpResponse.builder().statusCode(200)
            .payload(staticPayloadFromResource("/region_operation.json")).build();
 
-   private Operation expected() {
-      SimpleDateFormatDateService dateService = new SimpleDateFormatDateService();
-      return Operation.builder().id("13053095055850848306")
-              .selfLink(URI.create("https://www.googleapis" +
-                      ".com/compute/v1/projects/myproject/regions/us-central1/operations/operation-1354084865060-4cf88735faeb8" +
-                      "-bbbb12cb"))
-              .name("operation-1354084865060-4cf88735faeb8-bbbb12cb")
-              .targetLink(URI.create("https://www.googleapis" +
-                      ".com/compute/v1/projects/myproject/regions/us-central1/addresses/test-address"))
-              .targetId("13053094017547040099")
-              .status(Operation.Status.DONE)
-              .user("user@developer.gserviceaccount.com")
-              .progress(100)
-              .insertTime(dateService.iso8601DateParse("2012-11-28T06:41:05.060"))
-              .startTime(dateService.iso8601DateParse("2012-11-28T06:41:05.142"))
-              .endTime(dateService.iso8601DateParse("2012-11-28T06:41:06.142"))
-              .operationType("insert")
-              .region(URI.create("https://www.googleapis.com/compute/v1/projects/myproject/regions/us-central1"))
-              .build();
-   }
-
    private ListPage<Operation> expectedList() {
-      return ListPage.<Operation>builder()
-              .kind(Resource.Kind.OPERATION_LIST)
-              .addItem(expected())
-              .build();
+      return ListPage.create( //
+            ImmutableList.of(new ParseRegionOperationTest().expected()), // items
+            null, // nextPageToken
+            null // prefixes
+      );
    }
 
    public void testGetOperationResponseIs2xx() throws Exception {
@@ -87,7 +64,7 @@ public class RegionOperationApiExpectTest extends BaseGoogleComputeEngineApiExpe
               TOKEN_RESPONSE, GET_OPERATION_REQUEST, GET_OPERATION_RESPONSE).getRegionOperationApi("myproject");
 
       assertEquals(regionOperationApi.getInRegion("us-central1", "operation-1354084865060-4cf88735faeb8-bbbb12cb"),
-              expected());
+            new ParseRegionOperationTest().expected());
    }
 
    public void testGetOperationResponseIs4xx() throws Exception {

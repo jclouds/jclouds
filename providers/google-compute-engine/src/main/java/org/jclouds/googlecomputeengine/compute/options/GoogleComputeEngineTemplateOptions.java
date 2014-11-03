@@ -20,18 +20,18 @@ import static com.google.common.base.Optional.fromNullable;
 import static org.jclouds.googlecomputeengine.domain.Instance.ServiceAccount;
 
 import java.net.URI;
+import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import org.jclouds.compute.options.TemplateOptions;
 import org.jclouds.domain.LoginCredentials;
 import org.jclouds.googlecomputeengine.domain.Instance;
-import org.jclouds.googlecomputeengine.domain.InstanceTemplate.PersistentDisk;
+import org.jclouds.googlecomputeengine.domain.templates.InstanceTemplate.PersistentDisk;
 import org.jclouds.scriptbuilder.domain.Statement;
 
 import com.google.common.base.Optional;
 import com.google.common.collect.Iterables;
-import com.google.common.collect.Sets;
+import com.google.common.collect.Lists;
 
 /**
  * Instance options specific to Google Compute Engine.
@@ -39,10 +39,9 @@ import com.google.common.collect.Sets;
 public class GoogleComputeEngineTemplateOptions extends TemplateOptions {
 
    private Optional<URI> network = Optional.absent();
-   private Optional<String> networkName = Optional.absent();
-   private Set<Instance.ServiceAccount> serviceAccounts = Sets.newLinkedHashSet();
+   private List<Instance.ServiceAccount> serviceAccounts = Lists.newArrayList();
    private boolean enableNat = true;
-   private Set<PersistentDisk> disks = Sets.newLinkedHashSet();
+   private List<PersistentDisk> disks = Lists.newArrayList();
    private Optional<Long> bootDiskSize = Optional.absent();
    private boolean keepBootDisk = false;
 
@@ -96,14 +95,14 @@ public class GoogleComputeEngineTemplateOptions extends TemplateOptions {
     * @see #getServiceAccounts()
     * @see ServiceAccount
     */
-   public GoogleComputeEngineTemplateOptions serviceAccounts(Set<ServiceAccount> serviceAccounts) {
-      this.serviceAccounts = Sets.newLinkedHashSet(serviceAccounts);
+   public GoogleComputeEngineTemplateOptions serviceAccounts(List<ServiceAccount> serviceAccounts) {
+      this.serviceAccounts = Lists.newArrayList(serviceAccounts);
       return this;
    }
 
    /**
     * @see #getDisks()
-    * @see org.jclouds.googlecomputeengine.domain.InstanceTemplate.PersistentDisk
+    * @see org.jclouds.googlecomputeengine.domain.templates.InstanceTemplate.PersistentDisk
     */
    public GoogleComputeEngineTemplateOptions addDisk(PersistentDisk disk) {
       this.disks.add(disk);
@@ -112,10 +111,10 @@ public class GoogleComputeEngineTemplateOptions extends TemplateOptions {
 
    /**
     * @see #getDisks()
-    * @see org.jclouds.googlecomputeengine.domain.InstanceTemplate.PersistentDisk
+    * @see org.jclouds.googlecomputeengine.domain.templates.InstanceTemplate.PersistentDisk
     */
-   public GoogleComputeEngineTemplateOptions disks(Set<PersistentDisk> disks) {
-      this.disks = Sets.newLinkedHashSet(disks);
+   public GoogleComputeEngineTemplateOptions disks(List<PersistentDisk> disks) {
+      this.disks = Lists.newArrayList(disks);
       return this;
    }
 
@@ -330,14 +329,14 @@ public class GoogleComputeEngineTemplateOptions extends TemplateOptions {
    /**
     * @return the ServiceAccounts to enable in the instances.
     */
-   public Set<Instance.ServiceAccount> getServiceAccounts() {
+   public List<Instance.ServiceAccount> getServiceAccounts() {
       return serviceAccounts;
    }
 
    /**
     * @return the PersistentDisks for this instance.
     */
-   public Set<PersistentDisk> getDisks() {
+   public List<PersistentDisk> getDisks() {
       return disks;
    }
 

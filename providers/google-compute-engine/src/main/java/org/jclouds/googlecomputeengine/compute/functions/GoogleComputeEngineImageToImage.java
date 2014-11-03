@@ -33,23 +33,17 @@ import com.google.common.base.Function;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Lists;
 
-/**
- * Transforms a google compute domain specific image to a generic Image object.
- */
-public class GoogleComputeEngineImageToImage implements Function<Image, org.jclouds.compute.domain.Image> {
-
-
-   @Override
-   public org.jclouds.compute.domain.Image apply(Image image) {
+public final class GoogleComputeEngineImageToImage implements Function<Image, org.jclouds.compute.domain.Image> {
+   @Override public org.jclouds.compute.domain.Image apply(Image image) {
       ImageBuilder builder = new ImageBuilder()
-              .id(image.getName())
-              .name(image.getName())
-              .providerId(image.getId())
-              .description(image.getDescription().orNull())
+              .id(image.name())
+              .name(image.name())
+              .providerId(image.id())
+              .description(image.description())
               .status(Status.AVAILABLE)
-              .uri(image.getSelfLink());
+              .uri(image.selfLink());
 
-      List<String> splits = Lists.newArrayList(image.getName().split("-"));
+      List<String> splits = Lists.newArrayList(image.name().split("-"));
       OperatingSystem.Builder osBuilder = defaultOperatingSystem(image);
       if (splits == null || splits.size() == 0 || splits.size() < 3) {
          return builder.operatingSystem(osBuilder.build()).build();
@@ -63,18 +57,14 @@ public class GoogleComputeEngineImageToImage implements Function<Image, org.jclo
       String version = on(".").join(limit(skip(splits, 1), splits.size() - 2));
       osBuilder.version(version);
 
-      if (image.getDeprecated().isPresent()) {
-         builder.userMetadata(ImmutableMap.of("deprecatedState", image.getDeprecated().get().getState().orNull()));
+      if (image.deprecated() != null) {
+         builder.userMetadata(ImmutableMap.of("deprecatedState", image.deprecated().state()));
       }
       builder.version(getLast(splits));
       return builder.operatingSystem(osBuilder.build()).build();
    }
 
    private OperatingSystem.Builder defaultOperatingSystem(Image image) {
-      return OperatingSystem.builder()
-              .family(OsFamily.LINUX)
-              .is64Bit(true)
-              .description(image.getName());
+      return OperatingSystem.builder().family(OsFamily.LINUX).is64Bit(true).description(image.name());
    }
-
 }

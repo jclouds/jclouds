@@ -21,7 +21,7 @@ import java.util.Map;
 
 import javax.inject.Inject;
 
-import org.jclouds.googlecomputeengine.domain.ForwardingRule.IPProtocolOption;
+import org.jclouds.googlecomputeengine.domain.ForwardingRule;
 import org.jclouds.googlecomputeengine.options.ForwardingRuleCreationOptions;
 import org.jclouds.http.HttpRequest;
 import org.jclouds.json.Json;
@@ -55,7 +55,7 @@ public class ForwardingRuleCreationBinder extends BindToJsonPayload {
       @SuppressWarnings("unused")
       private String IPAddress;
       @SuppressWarnings("unused")
-      private IPProtocolOption IPProtocol;
+      private ForwardingRule.IPProtocol IPProtocol;
       @SuppressWarnings("unused")
       private String portRange;
       @SuppressWarnings("unused")

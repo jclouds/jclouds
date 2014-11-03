@@ -16,162 +16,46 @@
  */
 package org.jclouds.googlecomputeengine.domain;
 
-import java.beans.ConstructorProperties;
 import java.net.URI;
-import java.util.Date;
 
-import com.google.common.annotations.Beta;
-import com.google.common.base.Objects;
-import com.google.common.base.Optional;
+import org.jclouds.javax.annotation.Nullable;
+import org.jclouds.json.SerializedNames;
 
-import static com.google.common.base.Objects.equal;
-import static com.google.common.base.Optional.fromNullable;
-import static com.google.common.base.Preconditions.checkNotNull;
+import com.google.auto.value.AutoValue;
 
-/**
- * Represents an Address resource.
- */
-@Beta
-public final class Address extends Resource {
+@AutoValue
+public abstract class Address {
 
-   private final String status;
-   private final Optional<URI> user;
-   private final URI region;
-   private final String address;
+   public abstract String id();
 
-   @ConstructorProperties({
-           "id", "creationTimestamp", "selfLink", "name", "description", "status", "user",
-           "region", "address"
-   })
-   private Address(String id, Date creationTimestamp, URI selfLink, String name, String description,
-                   String status, URI user, URI region, String address) {
-      super(Kind.ADDRESS, id, creationTimestamp, selfLink, name, description);
-      this.status = checkNotNull(status, "status of %s", name);
-      this.user = fromNullable(user);
-      this.region = checkNotNull(region, "region of %s", name);
-      this.address = checkNotNull(address, "address of %s", name);
-   }
+   public abstract URI selfLink();
+
+   public abstract String name();
+
+   @Nullable public abstract String description();
 
    /**
-    * @return The status of the address. Valid items are RESERVED and IN USE.
-    *   A reserved address is currently available to the project and can be
-    *   used by a resource. An in-use address is currently being used by a resource.
+    * The status of the address. Valid items are RESERVED and IN USE.
+    * A reserved address is currently available to the project and can be
+    * used by a resource. An in-use address is currently being used by a resource.
     */
-   public String getStatus() {
-      return status;
+   public abstract String status(); // TODO: enum
+
+   /** URL of the resource currently using this address. */
+   @Nullable public abstract URI user();
+
+   /** URL of the region where the address resides. */
+   public abstract URI region();
+
+   /** The IP address represented by this resource. */
+   public abstract String address();
+
+   @SerializedNames({ "id", "selfLink", "name", "description", "status", "user", "region", "address" })
+   public static Address create(String id, URI selfLink, String name, String description, String status, URI user,
+         URI region, String address) {
+      return new AutoValue_Address(id, selfLink, name, description, status, user, region, address);
    }
 
-   /**
-    * @return URL of the resource currently using this address.
-    */
-   public Optional<URI> getUser() {
-      return user;
+   Address() {
    }
-
-   /**
-    * @return URL of the region where the address resides.
-    */
-   public URI getRegion() {
-      return region;
-   }
-
-   /**
-    * @return The IP address represented by this resource.
-    */
-   public String getAddress() {
-      return address;
-   }
-
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   public boolean equals(Object obj) {
-      if (this == obj) return true;
-      if (obj == null || getClass() != obj.getClass()) return false;
-      Address that = Address.class.cast(obj);
-      return equal(this.kind, that.kind)
-              && equal(this.name, that.name)
-              && equal(this.region, that.region);
-   }
-
-   /**
-    * {@inheritDoc}
-    */
-   @SuppressWarnings("deprecation")
-   @Override
-   protected Objects.ToStringHelper string() {
-      return super.string()
-              .omitNullValues()
-              .add("status", status)
-              .add("user", user.orNull())
-              .add("region", region)
-              .add("address", address);
-   }
-
-   public static Builder builder() {
-      return new Builder();
-   }
-
-   public Builder toBuilder() {
-      return new Builder().fromAddress(this);
-   }
-
-   public static final class Builder extends Resource.Builder<Builder> {
-      private String status;
-      private URI user;
-      private URI region;
-      private String address;
-
-      /**
-       * @see org.jclouds.googlecomputeengine.domain.Address#getStatus()
-       */
-      public Builder status(String status) {
-         this.status = status;
-         return this;
-      }
-
-      /**
-       * @see org.jclouds.googlecomputeengine.domain.Address#getUser()
-       */
-      public Builder user(URI user) {
-         this.user = user;
-         return this;
-      }
-
-      /**
-       * @see org.jclouds.googlecomputeengine.domain.Address#getRegion()
-       */
-      public Builder region(URI region) {
-         this.region = region;
-         return this;
-      }
-
-      /**
-       * @see org.jclouds.googlecomputeengine.domain.Address#getAddress()
-       */
-      public Builder address(String address) {
-         this.address = address;
-         return this;
-      }
-
-      @Override
-      protected Builder self() {
-         return this;
-      }
-
-      public Address build() {
-         return new Address(super.id, super.creationTimestamp, super.selfLink, super.name,
-                 super.description, status, user, region, address);
-      }
-
-      public Builder fromAddress(Address in) {
-         return super.fromResource(in)
-                 .status(in.getStatus())
-                 .user(in.getUser().orNull())
-                 .region(in.getRegion())
-                 .address(in.getAddress());
-      }
-   }
-
 }

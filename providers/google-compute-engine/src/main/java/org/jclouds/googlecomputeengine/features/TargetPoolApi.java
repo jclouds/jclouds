@@ -16,32 +16,11 @@
  */
 package org.jclouds.googlecomputeengine.features;
 
-import java.net.URI;
-import java.util.Set;
+import static org.jclouds.googlecomputeengine.GoogleComputeEngineConstants.COMPUTE_READONLY_SCOPE;
+import static org.jclouds.googlecomputeengine.GoogleComputeEngineConstants.COMPUTE_SCOPE;
 
-import org.jclouds.Fallbacks.EmptyPagedIterableOnNotFoundOr404;
-import org.jclouds.Fallbacks.NullOnNotFoundOr404;
-import org.jclouds.collect.IterableWithMarker;
-import org.jclouds.collect.PagedIterable;
-import org.jclouds.googlecomputeengine.domain.Operation;
-import org.jclouds.googlecomputeengine.domain.TargetPool;
-import org.jclouds.googlecomputeengine.functions.internal.ParseTargetPools;
-import org.jclouds.googlecomputeengine.options.ListOptions;
-import org.jclouds.googlecomputeengine.options.TargetPoolCreationOptions;
-import org.jclouds.googlecomputeengine.binders.TargetPoolChangeHealthChecksBinder;
-import org.jclouds.googlecomputeengine.binders.TargetPoolChangeInstancesBinder;
-import org.jclouds.googlecomputeengine.binders.TargetPoolCreationBinder;
-import org.jclouds.javax.annotation.Nullable;
-import org.jclouds.oauth.v2.config.OAuthScopes;
-import org.jclouds.oauth.v2.filters.OAuthAuthenticator;
-import org.jclouds.rest.annotations.Fallback;
-import org.jclouds.rest.annotations.MapBinder;
-import org.jclouds.rest.annotations.PayloadParam;
-import org.jclouds.rest.annotations.RequestFilters;
-import org.jclouds.rest.annotations.ResponseParser;
-import org.jclouds.rest.annotations.SkipEncoding;
-import org.jclouds.rest.annotations.Transform;
-import org.jclouds.rest.binders.BindToJsonPayload;
+import java.net.URI;
+import java.util.List;
 
 import javax.inject.Named;
 import javax.ws.rs.Consumes;
@@ -54,8 +33,30 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 
-import static org.jclouds.googlecomputeengine.GoogleComputeEngineConstants.COMPUTE_READONLY_SCOPE;
-import static org.jclouds.googlecomputeengine.GoogleComputeEngineConstants.COMPUTE_SCOPE;
+import org.jclouds.Fallbacks.EmptyPagedIterableOnNotFoundOr404;
+import org.jclouds.Fallbacks.NullOnNotFoundOr404;
+import org.jclouds.collect.PagedIterable;
+import org.jclouds.googlecomputeengine.GoogleComputeEngineFallbacks.EmptyListPageOnNotFoundOr404;
+import org.jclouds.googlecomputeengine.binders.TargetPoolChangeHealthChecksBinder;
+import org.jclouds.googlecomputeengine.binders.TargetPoolChangeInstancesBinder;
+import org.jclouds.googlecomputeengine.binders.TargetPoolCreationBinder;
+import org.jclouds.googlecomputeengine.domain.ListPage;
+import org.jclouds.googlecomputeengine.domain.Operation;
+import org.jclouds.googlecomputeengine.domain.TargetPool;
+import org.jclouds.googlecomputeengine.functions.internal.ParseTargetPools;
+import org.jclouds.googlecomputeengine.options.ListOptions;
+import org.jclouds.googlecomputeengine.options.TargetPoolCreationOptions;
+import org.jclouds.javax.annotation.Nullable;
+import org.jclouds.oauth.v2.config.OAuthScopes;
+import org.jclouds.oauth.v2.filters.OAuthAuthenticator;
+import org.jclouds.rest.annotations.Fallback;
+import org.jclouds.rest.annotations.MapBinder;
+import org.jclouds.rest.annotations.PayloadParam;
+import org.jclouds.rest.annotations.RequestFilters;
+import org.jclouds.rest.annotations.ResponseParser;
+import org.jclouds.rest.annotations.SkipEncoding;
+import org.jclouds.rest.annotations.Transform;
+import org.jclouds.rest.binders.BindToJsonPayload;
 
 /**
  * Provides access to TargetPools via their REST API.
@@ -82,8 +83,8 @@ public interface TargetPoolApi {
    /**
     * Creates a TargetPool resource in the specified project and region using the data included in the request.
     *
-    * @param targetPoolName the name of the targetPool.
-    * @param the options of the TargetPool to create.
+    * @param name the name of the targetPool.
+    * @param options options of the TargetPool to create.
     * @return an Operation resource. To check on the status of an operation, poll the Operations resource returned to
     *         you, and look for the status field.
     */
@@ -93,8 +94,7 @@ public interface TargetPoolApi {
    @Path("/targetPools")
    @OAuthScopes(COMPUTE_SCOPE)
    @MapBinder(TargetPoolCreationBinder.class)
-   Operation create(@PayloadParam("name") String targetPoolName,
-                    @PayloadParam("options") TargetPoolCreationOptions targetPoolCreationOptions);
+   Operation create(@PayloadParam("name") String name, @PayloadParam("options") TargetPoolCreationOptions options);
 
    /**
     * Deletes the specified TargetPool resource.
@@ -126,15 +126,15 @@ public interface TargetPoolApi {
 
    /**
     * @param options @see org.jclouds.googlecomputeengine.options.ListOptions
-    * @return IterableWithMarker
+    * @return ListPage
     */
    @Named("TargetPools:list")
    @GET
    @Path("/targetPools")
    @OAuthScopes(COMPUTE_READONLY_SCOPE)
    @ResponseParser(ParseTargetPools.class)
-   @Fallback(EmptyPagedIterableOnNotFoundOr404.class)
-   IterableWithMarker<TargetPool> list(ListOptions options);
+   @Fallback(EmptyListPageOnNotFoundOr404.class)
+   ListPage<TargetPool> list(ListOptions options);
 
    /**
     * Adds instance to the targetPool.
@@ -151,7 +151,7 @@ public interface TargetPoolApi {
    @OAuthScopes(COMPUTE_SCOPE)
    @MapBinder(TargetPoolChangeInstancesBinder.class)
    @Nullable
-   Operation addInstance(@PathParam("targetPool") String targetPool, @PayloadParam("instances") Set<URI> instances);
+   Operation addInstance(@PathParam("targetPool") String targetPool, @PayloadParam("instances") List<URI> instances);
 
    /**
     * Removes instance URL from targetPool.
@@ -168,7 +168,7 @@ public interface TargetPoolApi {
    @OAuthScopes(COMPUTE_SCOPE)
    @MapBinder(TargetPoolChangeInstancesBinder.class)
    @Nullable
-   Operation removeInstance(@PathParam("targetPool") String targetPool, @PayloadParam("instances") Set<URI> instances);
+   Operation removeInstance(@PathParam("targetPool") String targetPool, @PayloadParam("instances") List<URI> instances);
 
    /**
     * Adds health check URL to targetPool.
@@ -185,7 +185,7 @@ public interface TargetPoolApi {
    @OAuthScopes(COMPUTE_SCOPE)
    @MapBinder(TargetPoolChangeHealthChecksBinder.class)
    @Nullable
-   Operation addHealthCheck(@PathParam("targetPool") String targetPool, @PayloadParam("healthChecks") Set<URI> healthChecks);
+   Operation addHealthCheck(@PathParam("targetPool") String targetPool, @PayloadParam("healthChecks") List<URI> healthChecks);
 
 
    /**
@@ -203,7 +203,7 @@ public interface TargetPoolApi {
    @OAuthScopes(COMPUTE_SCOPE)
    @MapBinder(TargetPoolChangeHealthChecksBinder.class)
    @Nullable
-   Operation removeHealthCheck(@PathParam("targetPool") String targetPool, @PayloadParam("healthChecks") Set<URI> healthChecks);
+   Operation removeHealthCheck(@PathParam("targetPool") String targetPool, @PayloadParam("healthChecks") List<URI> healthChecks);
 
 
    /**
@@ -243,5 +243,4 @@ public interface TargetPoolApi {
    @MapBinder(BindToJsonPayload.class)
    @Nullable
    Operation setBackup(@PathParam("targetPool") String targetPool, @QueryParam("failoverRatio") Float failoverRatio, @PayloadParam("target") URI target);
-
 }

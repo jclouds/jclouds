@@ -16,9 +16,6 @@
  */
 package org.jclouds.googlecomputeengine.options;
 
-/**
- * Options for creating a Health Check
- */
 public class HttpHealthCheckCreationOptions {
 
    private String host;
@@ -34,7 +31,7 @@ public class HttpHealthCheckCreationOptions {
     * The value of the host header in the HTTP health check request.
     * @return host
     */
-   public String getHost(){
+   public String host(){
       return host;
    }
 
@@ -42,7 +39,7 @@ public class HttpHealthCheckCreationOptions {
     * The request path of the HTTP health check request. The default value is /.
     * @return requestPath
     */
-   public String getRequestPath(){
+   public String requestPath(){
       return requestPath;
    }
 
@@ -50,7 +47,7 @@ public class HttpHealthCheckCreationOptions {
     * The TCP port number for the HTTP health check request. The default value is 80.
     * @return port
     */
-   public Integer getPort(){
+   public Integer port(){
       return port;
    }
 
@@ -58,7 +55,7 @@ public class HttpHealthCheckCreationOptions {
     * How often (in seconds) to send a health check. The default value is 5 seconds.
     * @return checkIntervalSec
     */
-   public Integer getCheckIntervalSec(){
+   public Integer checkIntervalSec(){
       return checkIntervalSec;
    }
 
@@ -66,7 +63,7 @@ public class HttpHealthCheckCreationOptions {
     * How long (in seconds) to wait before claiming failure. The default value is 5 seconds. 
     * @return timeoutSec
     */
-   public Integer getTimeoutSec(){
+   public Integer timeoutSec(){
       return timeoutSec;
    }
 
@@ -75,7 +72,7 @@ public class HttpHealthCheckCreationOptions {
     * The default value is 2.
     * @return unhealthyThreashold
     */
-   public Integer getUnhealthyThreshold(){
+   public Integer unhealthyThreshold(){
       return unhealthyThreshold;
    }
 
@@ -84,7 +81,7 @@ public class HttpHealthCheckCreationOptions {
     * The default value is 2.
     * @return healthyThreashold
     */
-   public Integer getHealthyThreshold(){
+   public Integer healthyThreshold(){
       return healthyThreshold;
    }
 
@@ -92,12 +89,12 @@ public class HttpHealthCheckCreationOptions {
     * An optional textual description of the TargetPool.
     * @return description, provided by the client.
     */
-   public String getDescription(){
+   public String description(){
       return description;
    }
 
    /**
-    * @see HttpHealthCheckCreationOptions#getHost()
+    * @see HttpHealthCheckCreationOptions#host()
     */
    public HttpHealthCheckCreationOptions host(String host){
       this.host = host;
@@ -105,7 +102,7 @@ public class HttpHealthCheckCreationOptions {
    }
 
    /**
-    * @see HttpHealthCheckCreationOptions#getRequestPath()
+    * @see HttpHealthCheckCreationOptions#requestPath()
     */
    public HttpHealthCheckCreationOptions requestPath(String requestPath){
       this.requestPath = requestPath;
@@ -113,7 +110,7 @@ public class HttpHealthCheckCreationOptions {
    }
 
    /**
-    * @see HttpHealthCheckCreationOptions#getPort()
+    * @see HttpHealthCheckCreationOptions#port()
     */
    public HttpHealthCheckCreationOptions port(Integer port){
       this.port = port;
@@ -121,7 +118,7 @@ public class HttpHealthCheckCreationOptions {
    }
 
    /**
-    * @see HttpHealthCheckCreationOptions#getCheckIntervalSec()
+    * @see HttpHealthCheckCreationOptions#checkIntervalSec()
     */
    public HttpHealthCheckCreationOptions checkIntervalSec(Integer checkIntervalSec){
       this.checkIntervalSec = checkIntervalSec;
@@ -129,7 +126,7 @@ public class HttpHealthCheckCreationOptions {
    }
 
    /**
-    * @see HttpHealthCheckCreationOptions#getTimeoutSec()
+    * @see HttpHealthCheckCreationOptions#timeoutSec()
     */
    public HttpHealthCheckCreationOptions timeoutSec(Integer timeoutSec){
       this.timeoutSec = timeoutSec;
@@ -137,7 +134,7 @@ public class HttpHealthCheckCreationOptions {
    }
 
    /**
-    * @see HttpHealthCheckCreationOptions#getUnhealthyThreshold()
+    * @see HttpHealthCheckCreationOptions#unhealthyThreshold()
     */
    public HttpHealthCheckCreationOptions unhealthyThreshold(Integer unhealthyThreshold){
       this.unhealthyThreshold = unhealthyThreshold;
@@ -145,7 +142,7 @@ public class HttpHealthCheckCreationOptions {
    }
 
    /**
-    * @see HttpHealthCheckCreationOptions#getHealthyThreshold()
+    * @see HttpHealthCheckCreationOptions#healthyThreshold()
     */
    public HttpHealthCheckCreationOptions healthyThreshold(Integer healthyThreshold){
       this.healthyThreshold = healthyThreshold;
@@ -153,7 +150,7 @@ public class HttpHealthCheckCreationOptions {
    }
 
    /**
-    * @see HttpHealthCheckCreationOptions#getDescription()
+    * @see HttpHealthCheckCreationOptions#description()
     */
    public HttpHealthCheckCreationOptions description(String description){
       this.description = description;

@@ -18,7 +18,7 @@ package org.jclouds.googlecomputeengine.options;
 
 import java.net.URI;
 
-import org.jclouds.googlecomputeengine.domain.ForwardingRule.IPProtocolOption;
+import org.jclouds.googlecomputeengine.domain.ForwardingRule;
 
 /**
  * Options for creating a Forwarding Rule
@@ -27,7 +27,7 @@ public class ForwardingRuleCreationOptions{
 
    private String description;
    private String ipAddress;
-   private IPProtocolOption ipProtocol;
+   private ForwardingRule.IPProtocol ipProtocol;
    private String portRange;
    private URI target;
    
@@ -51,7 +51,7 @@ public class ForwardingRuleCreationOptions{
     * The IP protocol to which this rule applies
     * @return ipProtocol
     */
-   public IPProtocolOption getIPProtocol(){
+   public ForwardingRule.IPProtocol getIPProtocol(){
       return ipProtocol;
    }
 
@@ -92,7 +92,7 @@ public class ForwardingRuleCreationOptions{
    /**
     * @see ForwardingRuleCreationOptions#getIPProtocol()
     */
-   public ForwardingRuleCreationOptions ipProtocol(IPProtocolOption ipProtocol){
+   public ForwardingRuleCreationOptions ipProtocol(ForwardingRule.IPProtocol ipProtocol){
       this.ipProtocol = ipProtocol;
       return this;
    }

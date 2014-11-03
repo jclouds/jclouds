@@ -28,10 +28,10 @@ import org.jclouds.http.HttpRequest;
 import org.jclouds.http.HttpResponse;
 import org.testng.annotations.Test;
 
-@Test(groups = "unit")
+@Test(groups = "unit", testName = "SnapshotApiExpectTest")
 public class SnapshotApiExpectTest extends BaseGoogleComputeEngineApiExpectTest {
 
-   public static final String SNAPSHOT_URL_PREFIX = "https://www.googleapis.com/compute/v1/projects/myproject/global/snapshots";
+   public static final String SNAPSHOT_URL_PREFIX = BASE_URL + "/myproject/global/snapshots";
 
    public static final HttpRequest GET_SNAPSHOT_REQ = HttpRequest
            .builder()

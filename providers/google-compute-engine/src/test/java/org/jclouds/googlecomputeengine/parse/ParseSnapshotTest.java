@@ -16,17 +16,17 @@
  */
 package org.jclouds.googlecomputeengine.parse;
 
+import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
+
 import java.net.URI;
 
 import javax.ws.rs.Consumes;
-import javax.ws.rs.core.MediaType;
 
-import org.jclouds.date.internal.SimpleDateFormatDateService;
 import org.jclouds.googlecomputeengine.domain.Snapshot;
 import org.jclouds.googlecomputeengine.internal.BaseGoogleComputeEngineParseTest;
 import org.testng.annotations.Test;
 
-@Test(groups = "unit")
+@Test(groups = "unit", testName = "ParseSnapshotTest")
 public class ParseSnapshotTest extends BaseGoogleComputeEngineParseTest<Snapshot> {
 
    @Override
@@ -34,19 +34,17 @@ public class ParseSnapshotTest extends BaseGoogleComputeEngineParseTest<Snapshot
       return "/snapshot_get.json";
    }
 
-   @Override
-   @Consumes(MediaType.APPLICATION_JSON)
+   @Override @Consumes(APPLICATION_JSON)
    public Snapshot expected() {
-      return Snapshot.builder()
-              .selfLink(URI.create("https://www.googleapis.com/compute/v1/projects/myproject/global/snapshots/test-snap"))
-              .id("9734455566806191190")
-              .creationTimestamp(new SimpleDateFormatDateService().iso8601DateParse("2013-07-26T12:54:23.173-07:00"))
-              .status("READY")
-              .sizeGb(10)
-              .sourceDisk(URI.create("https://www.googleapis.com/compute/v1/projects/myproject/zones/us-central1-a/disks/testimage1"))
-              .name("test-snap")
-              .description("")
-              .sourceDiskId("8243603669926824540")
-              .build();
+      return Snapshot.create( //
+            "9734455566806191190", // id
+            URI.create(BASE_URL + "/myproject/global/snapshots/test-snap"), // selfLink
+            "test-snap", // name
+            "", // description
+            10, // sizeGb
+            "READY", // status
+            URI.create(BASE_URL + "/myproject/zones/us-central1-a/disks/testimage1"), // sourceDisk
+            "8243603669926824540"// sourceDiskId
+      );
    }
 }

@@ -89,9 +89,8 @@ public class RouteApiLiveTest extends BaseGoogleComputeEngineApiLiveTest {
    }
 
    private void assertRouteEquals(Route result) {
-      assertEquals(result.getName(), ROUTE_NAME);
-      assertEquals(result.getDestRange(), DEST_RANGE);
-      assertEquals(result.getNextHopGateway().orNull(), getGatewayUrl(userProject.get(), DEFAULT_GATEWAY_NAME));
+      assertEquals(result.name(), ROUTE_NAME);
+      assertEquals(result.destRange(), DEST_RANGE);
+      assertEquals(result.nextHopGateway(), getGatewayUrl(userProject.get(), DEFAULT_GATEWAY_NAME));
    }
-
 }

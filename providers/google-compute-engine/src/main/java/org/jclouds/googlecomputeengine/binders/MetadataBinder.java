@@ -25,19 +25,17 @@ import org.jclouds.http.HttpRequest;
 import org.jclouds.rest.MapBinder;
 import org.jclouds.rest.binders.BindToJsonPayload;
 
-public class MetadataBinder implements MapBinder {
+public final class MetadataBinder implements MapBinder {
 
    private final BindToJsonPayload jsonBinder;
 
-   @Inject MetadataBinder(BindToJsonPayload jsonBinder){
+   @Inject MetadataBinder(BindToJsonPayload jsonBinder) {
       this.jsonBinder = jsonBinder;
    }
 
    @Override public <R extends HttpRequest> R bindToRequest(R request, Map<String, Object> postParams) {
-      Metadata metadata = Metadata.builder()
-              .fingerprint(postParams.get("fingerprint").toString())
-              .items((Map<String, String>) postParams.get("items"))
-              .build();
+      Metadata metadata = Metadata
+            .create(postParams.get("fingerprint").toString(), (Map<String, String>) postParams.get("items"));
       return bindToRequest(request, metadata);
    }
 

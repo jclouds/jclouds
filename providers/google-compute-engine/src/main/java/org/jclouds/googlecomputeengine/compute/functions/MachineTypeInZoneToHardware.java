@@ -31,9 +31,9 @@ import org.jclouds.compute.domain.Processor;
 import org.jclouds.compute.domain.Volume;
 import org.jclouds.compute.domain.VolumeBuilder;
 import org.jclouds.domain.Location;
+import org.jclouds.googlecomputeengine.compute.domain.MachineTypeInZone;
+import org.jclouds.googlecomputeengine.compute.domain.SlashEncodedIds;
 import org.jclouds.googlecomputeengine.domain.MachineType;
-import org.jclouds.googlecomputeengine.domain.MachineTypeInZone;
-import org.jclouds.googlecomputeengine.domain.SlashEncodedIds;
 
 import com.google.common.base.Function;
 import com.google.common.base.Predicate;
@@ -59,34 +59,34 @@ public class MachineTypeInZoneToHardware implements Function<MachineTypeInZone, 
       Iterable<? extends Location> zonesForMachineType = filter(locations.get().values(), new Predicate<Location>() {
          @Override
          public boolean apply(Location l) {
-            return l.getId().equals(input.getMachineType().getZone());
+            return l.getId().equals(input.machineType().zone());
          }
       });
 
       Location location = checkNotNull(getOnlyElement(zonesForMachineType),
               "location for %s",
-              input.getMachineType().getZone());
+              input.machineType().zone());
 
       return new HardwareBuilder()
-              .id(SlashEncodedIds.fromTwoIds(input.getMachineType().getZone(), input.getMachineType().getName()).slashEncode())
+              .id(SlashEncodedIds.fromTwoIds(input.machineType().zone(), input.machineType().name()).slashEncode())
               .location(location)
-              .name(input.getMachineType().getName())
+              .name(input.machineType().name())
               .hypervisor("kvm")
-              .processor(new Processor(input.getMachineType().getGuestCpus(), 1.0))
-              .providerId(input.getMachineType().getId())
-              .ram(input.getMachineType().getMemoryMb())
-              .uri(input.getMachineType().getSelfLink())
-              .volumes(collectVolumes(input.getMachineType()))
+              .processor(new Processor(input.machineType().guestCpus(), 1.0))
+              .providerId(input.machineType().id())
+              .ram(input.machineType().memoryMb())
+              .uri(input.machineType().selfLink())
+              .volumes(collectVolumes(input.machineType()))
               .supportsImage(Predicates.<Image>alwaysTrue())
               .build();
    }
 
    private Iterable<Volume> collectVolumes(MachineType input) {
       ImmutableSet.Builder<Volume> volumes = ImmutableSet.builder();
-      for (MachineType.ScratchDisk disk : input.getScratchDisks()) {
+      for (MachineType.ScratchDisk disk : input.scratchDisks()) {
          volumes.add(new VolumeBuilder()
                  .type(Volume.Type.LOCAL)
-                 .size(Integer.valueOf(disk.getDiskGb()).floatValue())
+                 .size(Float.valueOf(disk.diskGb()))
                  .bootDevice(true)
                  .durable(false).build());
       }

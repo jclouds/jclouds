@@ -30,10 +30,10 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 
-import org.jclouds.Fallbacks.EmptyIterableWithMarkerOnNotFoundOr404;
 import org.jclouds.Fallbacks.EmptyPagedIterableOnNotFoundOr404;
 import org.jclouds.Fallbacks.NullOnNotFoundOr404;
 import org.jclouds.collect.PagedIterable;
+import org.jclouds.googlecomputeengine.GoogleComputeEngineFallbacks.EmptyListPageOnNotFoundOr404;
 import org.jclouds.googlecomputeengine.domain.ListPage;
 import org.jclouds.googlecomputeengine.domain.Network;
 import org.jclouds.googlecomputeengine.domain.Operation;
@@ -134,7 +134,7 @@ public interface NetworkApi {
    @Path("/global/networks")
    @OAuthScopes(COMPUTE_READONLY_SCOPE)
    @ResponseParser(ParseNetworks.class)
-   @Fallback(EmptyIterableWithMarkerOnNotFoundOr404.class)
+   @Fallback(EmptyListPageOnNotFoundOr404.class)
    ListPage<Network> listFirstPage();
 
    /**
@@ -146,7 +146,7 @@ public interface NetworkApi {
    @Path("/global/networks")
    @OAuthScopes(COMPUTE_READONLY_SCOPE)
    @ResponseParser(ParseNetworks.class)
-   @Fallback(EmptyIterableWithMarkerOnNotFoundOr404.class)
+   @Fallback(EmptyListPageOnNotFoundOr404.class)
    ListPage<Network> listAtMarker(@QueryParam("pageToken") @Nullable String marker);
 
    /**
@@ -166,7 +166,7 @@ public interface NetworkApi {
    @Path("/global/networks")
    @OAuthScopes(COMPUTE_READONLY_SCOPE)
    @ResponseParser(ParseNetworks.class)
-   @Fallback(EmptyIterableWithMarkerOnNotFoundOr404.class)
+   @Fallback(EmptyListPageOnNotFoundOr404.class)
    ListPage<Network> listAtMarker(@QueryParam("pageToken") @Nullable String marker,
                                   ListOptions options);
 

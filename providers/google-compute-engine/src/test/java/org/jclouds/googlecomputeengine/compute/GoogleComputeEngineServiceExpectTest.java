@@ -22,10 +22,10 @@ import static org.jclouds.googlecomputeengine.GoogleComputeEngineConstants.COMPU
 import static org.jclouds.googlecomputeengine.GoogleComputeEngineConstants.GCE_BOOT_DISK_SUFFIX;
 import static org.jclouds.googlecomputeengine.features.GlobalOperationApiExpectTest.GET_GLOBAL_OPERATION_REQUEST;
 import static org.jclouds.googlecomputeengine.features.GlobalOperationApiExpectTest.GET_GLOBAL_OPERATION_RESPONSE;
-import static org.jclouds.googlecomputeengine.features.ImageApiExpectTest.LIST_DEBIAN_IMAGES_REQUEST;
-import static org.jclouds.googlecomputeengine.features.ImageApiExpectTest.LIST_DEBIAN_IMAGES_RESPONSE;
 import static org.jclouds.googlecomputeengine.features.ImageApiExpectTest.LIST_CENTOS_IMAGES_REQUEST;
 import static org.jclouds.googlecomputeengine.features.ImageApiExpectTest.LIST_CENTOS_IMAGES_RESPONSE;
+import static org.jclouds.googlecomputeengine.features.ImageApiExpectTest.LIST_DEBIAN_IMAGES_REQUEST;
+import static org.jclouds.googlecomputeengine.features.ImageApiExpectTest.LIST_DEBIAN_IMAGES_RESPONSE;
 import static org.jclouds.googlecomputeengine.features.ImageApiExpectTest.LIST_PROJECT_IMAGES_REQUEST;
 import static org.jclouds.googlecomputeengine.features.ImageApiExpectTest.LIST_PROJECT_IMAGES_RESPONSE;
 import static org.jclouds.googlecomputeengine.features.InstanceApiExpectTest.LIST_CENTRAL1B_INSTANCES_REQUEST;
@@ -75,10 +75,8 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 
-
-@Test(groups = "unit")
+@Test(groups = "unit", testName = "GoogleComputeEngineServiceExpectTest")
 public class GoogleComputeEngineServiceExpectTest extends BaseGoogleComputeEngineServiceExpectTest {
-
 
    private HttpRequest INSERT_NETWORK_REQUEST = HttpRequest
            .builder()
@@ -87,20 +85,6 @@ public class GoogleComputeEngineServiceExpectTest extends BaseGoogleComputeEngin
            .addHeader("Accept", "application/json")
            .addHeader("Authorization", "Bearer " + TOKEN)
            .payload(payloadFromStringWithContentType("{\"name\":\"jclouds-test\",\"IPv4Range\":\"10.0.0.0/8\"}",
-                   MediaType.APPLICATION_JSON))
-           .build();
-
-   private HttpRequest INSERT_FIREWALL_REQUEST = HttpRequest
-           .builder()
-           .method("POST")
-           .endpoint("https://www.googleapis.com/compute/v1/projects/myproject/global/firewalls")
-           .addHeader("Accept", "application/json")
-           .addHeader("Authorization", "Bearer " + TOKEN)
-           .payload(payloadFromStringWithContentType("{\"name\":\"jclouds-test\",\"network\":\"https://www.googleapis" +
-                   ".com/compute/v1/projects/myproject/global/networks/jclouds-test\"," +
-                   "\"sourceRanges\":[\"10.0.0.0/8\",\"0.0.0.0/0\"],\"sourceTags\":[\"aTag\"],\"allowed\":[{\"IPProtocol\":\"tcp\"," +
-                   "\"ports\":[\"22\"]}," +
-                   "{\"IPProtocol\":\"udp\",\"ports\":[\"22\"]}]}",
                    MediaType.APPLICATION_JSON))
            .build();
 
@@ -202,33 +186,20 @@ public class GoogleComputeEngineServiceExpectTest extends BaseGoogleComputeEngin
               .addHeader("Authorization", "Bearer " + TOKEN).build();
    }
 
-
-
-   private HttpRequest createInstanceRequestForInstance(String instanceName, String groupName,
-                                                        String networkName, String publicKey) {
-      return HttpRequest
-              .builder()
-              .method("POST")
-              .endpoint("https://www.googleapis.com/compute/v1/projects/myproject/zones/us-central1-a/instances")
-              .addHeader("Accept", "application/json")
-              .addHeader("Authorization", "Bearer " + TOKEN)
-              .payload(payloadFromStringWithContentType("{\"name\":\"" + instanceName + "\"," +
-                                                        "\"machineType\":\"https://www.googleapis" +
-                                                        ".com/compute/v1/projects/myproject/zones/us-central1-a/machineTypes/f1-micro\"," +
-                                                        "\"serviceAccounts\":[]," +
-                                                        "\"networkInterfaces\":[{\"network\":\"https://www.googleapis" +
-                                                        ".com/compute/v1/projects/myproject/global/networks/" + networkName + "\"," +
-                                                        "\"accessConfigs\":[{\"type\":\"ONE_TO_ONE_NAT\"}]}]," +
-                                                        "\"disks\":[{\"mode\":\"READ_WRITE\",\"source\":\"https://www.googleapis.com/" +
-                                                        "compute/v1/projects/myproject/zones/us-central1-a/disks/" + instanceName +
-                                                        "-" + GCE_BOOT_DISK_SUFFIX + "\",\"deleteOnTerminate\":true,\"boot\":true,\"type\":\"PERSISTENT\"}]," +
-                                                        "\"metadata\":{\"kind\":\"compute#metadata\",\"items\":[{\"key\":\"sshKeys\"," +
-                                                        "\"value\":\"jclouds:" +
-                                                        publicKey + " jclouds@localhost\"},{\"key\":\"jclouds-group\"," +
-                                                        "\"value\":\"" + groupName + "\"},{\"key\":\"jclouds-image\",\"value\":\"https://www.googleapis" +
-                                                        ".com/compute/v1/projects/debian-cloud/global/images/debian-7-wheezy-v20140718\"}," +
-                                                        "{\"key\":\"jclouds-delete-boot-disk\",\"value\":\"true\"}]}}",
-                                                        MediaType.APPLICATION_JSON)).build();
+   private HttpRequest createInstanceRequestForInstance(String instanceName, String groupName, String networkName,
+         String publicKey) {
+      return HttpRequest.builder().method("POST")
+            .endpoint("https://www.googleapis.com/compute/v1/projects/myproject/zones/us-central1-a/instances")
+            .addHeader("Accept", "application/json").addHeader("Authorization", "Bearer " + TOKEN).payload(
+                  payloadFromStringWithContentType("{\"name\":\"" + instanceName
+                              + "\",\"machineType\":\"https://www.googleapis.com/compute/v1/projects/myproject/zones/us-central1-a/machineTypes/f1-micro\",\"serviceAccounts\":[],\"disks\":[{\"type\":\"PERSISTENT\",\"mode\":\"READ_WRITE\",\"source\":\"https://www.googleapis.com/compute/v1/projects/myproject/zones/us-central1-a/disks/"
+                              + instanceName + "-" + GCE_BOOT_DISK_SUFFIX
+                              + "\",\"autoDelete\":true,\"boot\":true}],\"networkInterfaces\":[{\"network\":\"https://www.googleapis.com/compute/v1/projects/myproject/global/networks/"
+                              + networkName
+                              + "\",\"accessConfigs\":[{\"type\":\"ONE_TO_ONE_NAT\"}]}],\"metadata\":{\"kind\":\"compute#metadata\",\"items\":[{\"key\":\"sshKeys\",\"value\":\"jclouds:"
+                              + publicKey + " jclouds@localhost\"},{\"key\":\"jclouds-group\",\"value\":\"" + groupName
+                              + "\"},{\"key\":\"jclouds-image\",\"value\":\"https://www.googleapis.com/compute/v1/projects/debian-cloud/global/images/debian-7-wheezy-v20140718\"},{\"key\":\"jclouds-delete-boot-disk\",\"value\":\"true\"}]}}",
+                        MediaType.APPLICATION_JSON)).build();
    }
 
    private HttpRequest getInstanceRequestForInstance(String instanceName) {

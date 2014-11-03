@@ -16,19 +16,20 @@
  */
 package org.jclouds.googlecomputeengine.parse;
 
+import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
+
 import java.net.URI;
 
 import javax.ws.rs.Consumes;
-import javax.ws.rs.core.MediaType;
 
-import org.jclouds.date.internal.SimpleDateFormatDateService;
 import org.jclouds.googlecomputeengine.domain.ListPage;
-import org.jclouds.googlecomputeengine.domain.Resource.Kind;
 import org.jclouds.googlecomputeengine.domain.Snapshot;
 import org.jclouds.googlecomputeengine.internal.BaseGoogleComputeEngineParseTest;
 import org.testng.annotations.Test;
 
-@Test(groups = "unit")
+import com.google.common.collect.ImmutableList;
+
+@Test(groups = "unit", testName = "ParseSnapshotListTest")
 public class ParseSnapshotListTest extends BaseGoogleComputeEngineParseTest<ListPage<Snapshot>> {
 
    @Override
@@ -36,26 +37,24 @@ public class ParseSnapshotListTest extends BaseGoogleComputeEngineParseTest<List
       return "/snapshot_list.json";
    }
 
-   @Override
-   @Consumes(MediaType.APPLICATION_JSON)
+   @Override @Consumes(APPLICATION_JSON)
    public ListPage<Snapshot> expected() {
-      return ListPage.<Snapshot>builder()
-              .kind(Kind.SNAPSHOT_LIST)
-              .addItem(new ParseSnapshotTest().expected())
-              .addItem(Snapshot.builder()
-                               .selfLink(URI.create("https://www.googleapis" +
-                                     ".com/compute/v1/projects/myproject/global/snapshots/test-snap2"))
-                               .id("13895715048576107883")
-                               .creationTimestamp(new SimpleDateFormatDateService().iso8601DateParse
-                                     ("2013-07-26T12:57:01.927-07:00"))
-                               .status("READY")
-                               .sizeGb(10)
-                               .sourceDisk(URI.create("https://www.googleapis.com/compute/v1/projects/myproject" +
-                                     "/zones/us-central1-a/disks/testimage1"))
-                               .name("test-snap2")
-                               .description("")
-                               .sourceDiskId("8243603669926824540")
-                               .build())
-              .build();
+      Snapshot snapshot1 = new ParseSnapshotTest().expected();
+      Snapshot snapshot2 = Snapshot.create( //
+            "13895715048576107883", // id
+            URI.create(BASE_URL + "/myproject/global/snapshots/test-snap2"), // selfLink
+            "test-snap2", // name
+            "", // description
+            10, // sizeGb
+            "READY", // status
+            URI.create(BASE_URL + "/myproject/zones/us-central1-a/disks/testimage1"), // sourceDisk
+            "8243603669926824540"// sourceDiskId
+      );
+      return ListPage.create( //
+            ImmutableList.of(snapshot1, snapshot2), // items
+            null, // nextPageToken
+            null // prefixes
+      );
    }
+
 }

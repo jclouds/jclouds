@@ -16,9 +16,12 @@
  */
 package org.jclouds.googlecomputeengine.functions.internal;
 
-import com.google.common.base.Function;
-import com.google.inject.TypeLiteral;
+import static com.google.common.base.Preconditions.checkNotNull;
+
+import javax.inject.Inject;
+
 import org.jclouds.collect.IterableWithMarker;
+import org.jclouds.collect.IterableWithMarkers;
 import org.jclouds.googlecomputeengine.GoogleComputeEngineApi;
 import org.jclouds.googlecomputeengine.domain.ListPage;
 import org.jclouds.googlecomputeengine.domain.TargetPool;
@@ -26,16 +29,12 @@ import org.jclouds.googlecomputeengine.options.ListOptions;
 import org.jclouds.http.functions.ParseJson;
 import org.jclouds.json.Json;
 
-import javax.inject.Inject;
-import javax.inject.Singleton;
+import com.google.common.base.Function;
+import com.google.inject.TypeLiteral;
 
-import static com.google.common.base.Preconditions.checkNotNull;
+public final class ParseTargetPools extends ParseJson<ListPage<TargetPool>> {
 
-@Singleton
-public class ParseTargetPools extends ParseJson<ListPage<TargetPool>> {
-
-   @Inject
-   public ParseTargetPools(Json json) {
+   @Inject ParseTargetPools(Json json) {
       super(json, new TypeLiteral<ListPage<TargetPool>>() {
       });
    }
@@ -44,21 +43,19 @@ public class ParseTargetPools extends ParseJson<ListPage<TargetPool>> {
 
       private final GoogleComputeEngineApi api;
 
-      @Inject
-      protected ToPagedIterable(GoogleComputeEngineApi api) {
+      @Inject ToPagedIterable(GoogleComputeEngineApi api) {
          this.api = checkNotNull(api, "api");
       }
 
-      @Override
-      protected Function<Object, IterableWithMarker<TargetPool>> fetchNextPage(final String projectName,
+      @Override protected Function<Object, IterableWithMarker<TargetPool>> fetchNextPage(final String projectName,
                                                                          final String regionName,
                                                                          final ListOptions options) {
          return new Function<Object, IterableWithMarker<TargetPool>>() {
 
             @Override
             public IterableWithMarker<TargetPool> apply(Object input) {
-               return api.getTargetPoolApi(projectName, regionName)
-                       .list(options);
+               ListPage<TargetPool> result = api.getTargetPoolApi(projectName, regionName).list(options);
+               return IterableWithMarkers.from(result, result.nextPageToken());
             }
          };
       }

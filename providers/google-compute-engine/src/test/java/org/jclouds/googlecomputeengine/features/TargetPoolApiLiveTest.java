@@ -16,16 +16,20 @@
  */
 package org.jclouds.googlecomputeengine.features;
 
-import java.net.URI;
-import java.util.HashSet;
-import java.util.Set;
+import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertNotEquals;
+import static org.testng.Assert.assertNotNull;
 
-import org.jclouds.collect.IterableWithMarker;
+import java.net.URI;
+import java.util.ArrayList;
+import java.util.List;
+
 import org.jclouds.googlecomputeengine.domain.HttpHealthCheck;
 import org.jclouds.googlecomputeengine.domain.Image;
 import org.jclouds.googlecomputeengine.domain.Instance;
-import org.jclouds.googlecomputeengine.domain.InstanceTemplate;
+import org.jclouds.googlecomputeengine.domain.ListPage;
 import org.jclouds.googlecomputeengine.domain.TargetPool;
+import org.jclouds.googlecomputeengine.domain.templates.InstanceTemplate;
 import org.jclouds.googlecomputeengine.internal.BaseGoogleComputeEngineApiLiveTest;
 import org.jclouds.googlecomputeengine.options.DiskCreationOptions;
 import org.jclouds.googlecomputeengine.options.HttpHealthCheckCreationOptions;
@@ -36,11 +40,6 @@ import org.testng.annotations.AfterClass;
 import org.testng.annotations.Test;
 
 import com.google.common.base.Predicate;
-
-import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertNotEquals;
-import static org.testng.Assert.assertNotNull;
-import static com.google.common.base.Optional.fromNullable;
 
 public class TargetPoolApiLiveTest extends BaseGoogleComputeEngineApiLiveTest {
 
@@ -60,8 +59,8 @@ public class TargetPoolApiLiveTest extends BaseGoogleComputeEngineApiLiveTest {
    private static final int DEFAULT_DISK_SIZE_GB = 10;
    private static final int TIME_WAIT_LONG = 600;
 
-   private Set<URI> instances;
-   private Set<URI> httpHealthChecks;
+   private List<URI> instances;
+   private List<URI> httpHealthChecks;
 
    private TargetPoolApi api() {
       return api.getTargetPoolApi(userProject.get(), DEFAULT_REGION_NAME);
@@ -80,19 +79,19 @@ public class TargetPoolApiLiveTest extends BaseGoogleComputeEngineApiLiveTest {
                @Override
                public boolean apply(Image input) {
                   // filter out all deprecated images
-                  return !(input.getDeprecated().isPresent() && input.getDeprecated().get().getState().isPresent());
+                  return !(input.deprecated() != null && input.deprecated().state() != null);
                }
             })
-            .first().get().getSelfLink();
+            .first().get().selfLink();
 
       // Make and instanceTemplate
-      InstanceTemplate instanceTemplate = InstanceTemplate.builder()
-            .forMachineType(getDefaultMachineTypeUrl(userProject.get()))
+      InstanceTemplate instanceTemplate = new InstanceTemplate()
+            .machineType(getDefaultMachineTypeUrl(userProject.get()))
             .addNetworkInterface(getNetworkUrl(userProject.get(), INSTANCE_NETWORK_NAME),
                                  Instance.NetworkInterface.AccessConfig.Type.ONE_TO_ONE_NAT)
             .addMetadata("mykey", "myvalue")
             .description("a description")
-            .addDisk(InstanceTemplate.PersistentDisk.Mode.READ_WRITE, getDiskUrl(userProject.get(), BOOT_DISK_NAME),
+            .addDisk(Instance.AttachedDisk.Mode.READ_WRITE, getDiskUrl(userProject.get(), BOOT_DISK_NAME),
                      null, true, true)
             .image(imageUri);
 
@@ -102,7 +101,7 @@ public class TargetPoolApiLiveTest extends BaseGoogleComputeEngineApiLiveTest {
               (INSTANCE_NETWORK_NAME, IPV4_RANGE), TIME_WAIT_LONG);
 
       // Create a disk.
-      DiskCreationOptions diskCreationOptions = new DiskCreationOptions().sourceImage(instanceTemplate.getImage());
+      DiskCreationOptions diskCreationOptions = new DiskCreationOptions().sourceImage(instanceTemplate.image());
       assertZoneOperationDoneSucessfully(api.getDiskApi(userProject.get())
                                         .createInZone(BOOT_DISK_NAME, DEFAULT_DISK_SIZE_GB, DEFAULT_ZONE_NAME, diskCreationOptions),
                                         TIME_WAIT_LONG);
@@ -113,8 +112,8 @@ public class TargetPoolApiLiveTest extends BaseGoogleComputeEngineApiLiveTest {
                                                                   instanceTemplate),
                                                                   TIME_WAIT_LONG);
       Instance instance = instanceApi.getInZone(DEFAULT_ZONE_NAME, INSTANCE_NAME);
-      instances = new HashSet<URI>();
-      instances.add(instance.getSelfLink());
+      instances = new ArrayList<URI>();
+      instances.add(instance.selfLink());
 
       // Create a healthCheck
       HttpHealthCheckCreationOptions options = new HttpHealthCheckCreationOptions()
@@ -123,8 +122,8 @@ public class TargetPoolApiLiveTest extends BaseGoogleComputeEngineApiLiveTest {
          .description("A test HealthCheck for adding to targetPools");
       assertGlobalOperationDoneSucessfully(httpHealthCheckApi.insert(HEALTHCHECK_NAME, options), TIME_WAIT);
       HttpHealthCheck healthCheck = httpHealthCheckApi.get(HEALTHCHECK_NAME);
-      httpHealthChecks = new HashSet<URI>();
-      httpHealthChecks.add(healthCheck.getSelfLink());
+      httpHealthChecks = new ArrayList<URI>();
+      httpHealthChecks.add(healthCheck.selfLink());
    }
 
    @Test(groups = "live")
@@ -143,25 +142,25 @@ public class TargetPoolApiLiveTest extends BaseGoogleComputeEngineApiLiveTest {
       TargetPoolCreationOptions targetPoolCreationOptions = new TargetPoolCreationOptions()
          .description(DESCRIPTION)
          .sessionAffinity(SessionAffinityValue.CLIENT_IP)
-         .backupPool(targetPool.getSelfLink())
+         .backupPool(targetPool.selfLink())
          .failoverRatio((float) 0.5);
       assertRegionOperationDoneSucessfully(api().create(TARGETPOOL_NAME, targetPoolCreationOptions), TIME_WAIT);
       TargetPool targetPool2 = api().get(TARGETPOOL_NAME);
       assertNotNull(targetPool2);
-      assertEquals(targetPool2.getName(), TARGETPOOL_NAME);
-      assertEquals(targetPool2.getDescription(), fromNullable(DESCRIPTION));
-      assertEquals(targetPool2.getFailoverRatio(), (float) 0.5);
-      assertEquals(targetPool2.getBackupPool(), fromNullable(targetPool.getSelfLink()));
-      assertEquals(targetPool2.getSessionAffinity(), fromNullable(SessionAffinityValue.CLIENT_IP));
+      assertEquals(targetPool2.name(), TARGETPOOL_NAME);
+      assertEquals(targetPool2.description(), DESCRIPTION);
+      assertEquals(targetPool2.failoverRatio(), (float) 0.5);
+      assertEquals(targetPool2.backupPool(), targetPool.selfLink());
+      assertEquals(targetPool2.sessionAffinity(), SessionAffinityValue.CLIENT_IP);
    }
 
    @Test(groups = "live", dependsOnMethods = "testInsertTargetPool")
    public void testGetTargetPool() {
       TargetPool targetPool = api().get(BACKUP_TARGETPOOL_NAME);
       assertNotNull(targetPool);
-      assertEquals(targetPool.getName(), BACKUP_TARGETPOOL_NAME);
-      assertEquals(targetPool.getDescription(), fromNullable(DESCRIPTION_BACKUP));
-      assertEquals(targetPool.getSessionAffinity(), fromNullable(SessionAffinityValue.CLIENT_IP));
+      assertEquals(targetPool.name(), BACKUP_TARGETPOOL_NAME);
+      assertEquals(targetPool.description(), DESCRIPTION_BACKUP);
+      assertEquals(targetPool.sessionAffinity(), SessionAffinityValue.CLIENT_IP);
    }
 
    @Test(groups = "live", dependsOnMethods = {"testInsertTargetPool", "testCreateInstanceAndHealthCheck"})
@@ -169,8 +168,8 @@ public class TargetPoolApiLiveTest extends BaseGoogleComputeEngineApiLiveTest {
       assertRegionOperationDoneSucessfully(api().addInstance(BACKUP_TARGETPOOL_NAME, instances), TIME_WAIT);
       TargetPool targetPool = api().get(BACKUP_TARGETPOOL_NAME);
       assertNotNull(targetPool);
-      assertEquals(targetPool.getName(), BACKUP_TARGETPOOL_NAME);
-      assertEquals(targetPool.getInstances(), instances);
+      assertEquals(targetPool.name(), BACKUP_TARGETPOOL_NAME);
+      assertEquals(targetPool.instances(), instances);
    }
 
    @Test(groups = "live", dependsOnMethods = "testAddInstanceTargetPool")
@@ -180,8 +179,8 @@ public class TargetPoolApiLiveTest extends BaseGoogleComputeEngineApiLiveTest {
       TargetPool targetPool = api().get(BACKUP_TARGETPOOL_NAME);
 
       assertNotNull(targetPool);
-      assertEquals(targetPool.getName(), BACKUP_TARGETPOOL_NAME);
-      assertNotEquals(targetPool.getInstances(), fromNullable(instances));
+      assertEquals(targetPool.name(), BACKUP_TARGETPOOL_NAME);
+      assertNotEquals(targetPool.instances(), instances);
    }
 
    @Test(groups = "live", dependsOnMethods = {"testInsertTargetPool2", "testCreateInstanceAndHealthCheck"})
@@ -189,8 +188,8 @@ public class TargetPoolApiLiveTest extends BaseGoogleComputeEngineApiLiveTest {
       assertRegionOperationDoneSucessfully(api().addHealthCheck(TARGETPOOL_NAME, httpHealthChecks), TIME_WAIT);
       TargetPool targetPool = api().get(TARGETPOOL_NAME);
       assertNotNull(targetPool);
-      assertEquals(targetPool.getName(), TARGETPOOL_NAME);
-      assertEquals(targetPool.getHealthChecks(), httpHealthChecks);
+      assertEquals(targetPool.name(), TARGETPOOL_NAME);
+      assertEquals(targetPool.healthChecks(), httpHealthChecks);
    }
 
    @Test(groups = "live", dependsOnMethods = "testAddHealthCheckTargetPool")
@@ -200,43 +199,43 @@ public class TargetPoolApiLiveTest extends BaseGoogleComputeEngineApiLiveTest {
       TargetPool targetPool = api().get(TARGETPOOL_NAME);
 
       assertNotNull(targetPool);
-      assertEquals(targetPool.getName(), TARGETPOOL_NAME);
-      assertNotEquals(targetPool.getHealthChecks(), fromNullable(httpHealthChecks));
+      assertEquals(targetPool.name(), TARGETPOOL_NAME);
+      assertNotEquals(targetPool.healthChecks(), httpHealthChecks);
    }
 
    @Test(groups = "live", dependsOnMethods = "testInsertTargetPool")
    public void testListTargetPool() {
 
-      IterableWithMarker<TargetPool> targetPool = api().list(new ListOptions.Builder()
+      ListPage<TargetPool> targetPool = api().list(new ListOptions.Builder()
               .filter("name eq " + BACKUP_TARGETPOOL_NAME));
-      assertEquals(targetPool.toList().size(), 1);
+      assertEquals(targetPool.size(), 1);
    }
 
    @Test(groups = "live", dependsOnMethods = {"testInsertTargetPool2"})
-   public void testSetBackupTargetPool() {
+   public void testListBackupTargetPool() {
       TargetPoolCreationOptions options = new TargetPoolCreationOptions().description("A targetPool for testing setBackup.");
       assertRegionOperationDoneSucessfully(api().create(THIRD_TARGETPOOL_NAME, options), TIME_WAIT);
       TargetPool targetPool = api().get(THIRD_TARGETPOOL_NAME);
       assertNotNull(targetPool);
-      assertEquals(targetPool.getName(), THIRD_TARGETPOOL_NAME);
-      assertEquals(targetPool.getBackupPool(), fromNullable(null));
+      assertEquals(targetPool.name(), THIRD_TARGETPOOL_NAME);
+      assertEquals(targetPool.backupPool(), null);
 
-      URI selfLink = api().get(TARGETPOOL_NAME).getSelfLink();
+      URI selfLink = api().get(TARGETPOOL_NAME).selfLink();
 
       Float failoverRatio = Float.valueOf((float) 0.5);
       assertRegionOperationDoneSucessfully(api().setBackup(THIRD_TARGETPOOL_NAME, failoverRatio, selfLink), TIME_WAIT);
 
       TargetPool targetPoolUpdated = api().get(THIRD_TARGETPOOL_NAME);
       assertNotNull(targetPoolUpdated);
-      assertEquals(targetPoolUpdated.getName(), THIRD_TARGETPOOL_NAME);
-      assertEquals(targetPoolUpdated.getBackupPool(), fromNullable(selfLink));
+      assertEquals(targetPoolUpdated.name(), THIRD_TARGETPOOL_NAME);
+      assertEquals(targetPoolUpdated.backupPool(), selfLink);
    }
 
    @Test(groups = "live", dependsOnMethods = {"testListTargetPool",
                                               "testGetTargetPool",
                                               "testRemoveInstanceTargetPool",
                                               "testRemoveHealthCheckTargetPool",
-                                              "testSetBackupTargetPool"}, alwaysRun = true)
+                                              "testListBackupTargetPool"}, alwaysRun = true)
    public void testDeleteTargetPool() {
       // Note: This ordering matters due one being the backup of the other ect.
       assertRegionOperationDoneSucessfully(api().delete(THIRD_TARGETPOOL_NAME), TIME_WAIT);

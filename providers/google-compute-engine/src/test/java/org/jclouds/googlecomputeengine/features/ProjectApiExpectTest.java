@@ -24,17 +24,17 @@ import javax.ws.rs.core.MediaType;
 import org.jclouds.googlecomputeengine.GoogleComputeEngineConstants;
 import org.jclouds.googlecomputeengine.domain.Metadata;
 import org.jclouds.googlecomputeengine.internal.BaseGoogleComputeEngineApiExpectTest;
+import org.jclouds.googlecomputeengine.parse.ParseGlobalOperationTest;
 import org.jclouds.googlecomputeengine.parse.ParseMetadataTest;
-import org.jclouds.googlecomputeengine.parse.ParseOperationTest;
 import org.jclouds.googlecomputeengine.parse.ParseProjectTest;
 import org.jclouds.http.HttpRequest;
 import org.jclouds.http.HttpResponse;
 import org.testng.annotations.Test;
 
-@Test(groups = "unit")
+@Test(groups = "unit", testName = "ProjectApiExpectTest")
 public class ProjectApiExpectTest extends BaseGoogleComputeEngineApiExpectTest {
 
-   public static final String PROJECTS_URL_PREFIX = "https://www.googleapis.com/compute/v1/projects";
+   public static final String PROJECTS_URL_PREFIX = BASE_URL + "";
 
    public static final HttpRequest GET_PROJECT_REQUEST = HttpRequest
            .builder()
@@ -88,8 +88,8 @@ public class ProjectApiExpectTest extends BaseGoogleComputeEngineApiExpectTest {
               TOKEN_RESPONSE, setMetadata,
               setMetadataResponse).getProjectApi();
       Metadata expected = new ParseMetadataTest().expected();
-      assertEquals(api.setCommonInstanceMetadata("myproject", expected.getItems(), expected.getFingerprint()),
-              new ParseOperationTest().expected());
+      assertEquals(api.setCommonInstanceMetadata("myproject", expected.items(), expected.fingerprint()),
+              new ParseGlobalOperationTest().expected());
    }
 
 }

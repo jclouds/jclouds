@@ -16,117 +16,45 @@
  */
 package org.jclouds.googlecomputeengine.domain;
 
-
-import static com.google.common.base.Optional.fromNullable;
-import static com.google.common.base.Preconditions.checkNotNull;
-
-import java.beans.ConstructorProperties;
 import java.net.URI;
-import java.util.Date;
 
-import com.google.common.annotations.Beta;
-import com.google.common.base.Objects;
-import com.google.common.base.Optional;
+import org.jclouds.javax.annotation.Nullable;
+import org.jclouds.json.SerializedNames;
+
+import com.google.auto.value.AutoValue;
 
 /**
  * Represents a network used to enable instance communication.
  */
-@Beta
-public final class Network extends Resource {
+@AutoValue
+public abstract class Network {
 
-   private final String IPv4Range;
-   private final Optional<String> gatewayIPv4;
+   public abstract String id();
 
-   @ConstructorProperties({
-           "id", "creationTimestamp", "selfLink", "name", "description", "IPv4Range",
-           "gatewayIPv4"
-   })
-   protected Network(String id, Date creationTimestamp, URI selfLink, String name, String description,
-                     String IPv4Range, String gatewayIPv4) {
-      super(Kind.NETWORK, id, creationTimestamp, selfLink, name, description);
-      this.IPv4Range = checkNotNull(IPv4Range);
-      this.gatewayIPv4 = fromNullable(gatewayIPv4);
-   }
+   public abstract URI selfLink();
+
+   public abstract String name();
+
+   @Nullable public abstract String description();
 
    /**
-    * @return Required; The range of internal addresses that are legal on this network. This range is a CIDR
-    *         specification, for example: 192.168.0.0/16.
+    * The range of internal addresses that are legal on this network. This range is a CIDR
+    * specification, for example: {@code 192.168.0.0/16}.
     */
-   public String getIPv4Range() {
-      return IPv4Range;
-   }
+   public abstract String rangeIPv4();
 
    /**
     * This must be within the range specified by IPv4Range, and is typically the first usable address in that range.
     * If not specified, the default value is the first usable address in IPv4Range.
-    *
-    * @return an optional address that is used for default routing to other networks.
     */
-   public Optional<String> getGatewayIPv4() {
-      return gatewayIPv4;
+   @Nullable public abstract String gatewayIPv4();
+
+   @SerializedNames({ "id", "selfLink", "name", "description", "IPv4Range", "gatewayIPv4" })
+   public static Network create(String id, URI selfLink, String name, String description, String rangeIPv4,
+         String gatewayIPv4) {
+      return new AutoValue_Network(id, selfLink, name, description, rangeIPv4, gatewayIPv4);
    }
 
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   protected Objects.ToStringHelper string() {
-      return super.string()
-              .omitNullValues()
-              .add("IPv4Range", IPv4Range)
-              .add("gatewayIPv4", gatewayIPv4.orNull());
+   Network() {
    }
-
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   public String toString() {
-      return string().toString();
-   }
-
-   public static Builder builder() {
-      return new Builder();
-   }
-
-   public Builder toBuilder() {
-      return new Builder().fromNetwork(this);
-   }
-
-   public static final class Builder extends Resource.Builder<Builder> {
-
-      private String IPv4Range;
-      private String gatewayIPv4;
-
-      /**
-       * @see Network#getIPv4Range()
-       */
-      public Builder IPv4Range(String IPv4Range) {
-         this.IPv4Range = IPv4Range;
-         return this;
-      }
-
-      /**
-       * @see Network#getGatewayIPv4()
-       */
-      public Builder gatewayIPv4(String gatewayIPv4) {
-         this.gatewayIPv4 = gatewayIPv4;
-         return this;
-      }
-
-      @Override
-      protected Builder self() {
-         return this;
-      }
-
-      public Network build() {
-         return new Network(super.id, super.creationTimestamp, super.selfLink, super.name,
-                 super.description, IPv4Range, gatewayIPv4);
-      }
-
-      public Builder fromNetwork(Network in) {
-         return super.fromResource(in);
-      }
-   }
-
 }

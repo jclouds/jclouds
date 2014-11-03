@@ -28,10 +28,10 @@ import org.jclouds.http.HttpRequest;
 import org.jclouds.http.HttpResponse;
 import org.testng.annotations.Test;
 
-@Test(groups = "unit")
+@Test(groups = "unit", testName = "RegionApiExpectTest")
 public class RegionApiExpectTest extends BaseGoogleComputeEngineApiExpectTest {
 
-   public static final String REGIONS_URL_PREFIX = "https://www.googleapis.com/compute/v1/projects/myproject/regions";
+   public static final String REGIONS_URL_PREFIX = BASE_URL + "/myproject/regions";
 
    public static final HttpRequest GET_REGION_REQ = HttpRequest
            .builder()

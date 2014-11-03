@@ -32,7 +32,6 @@ import org.jclouds.googlecomputeengine.options.ListOptions;
 import org.testng.annotations.Test;
 
 import com.google.common.collect.Iterables;
-import com.google.common.collect.Lists;
 
 public class MachineTypeApiLiveTest extends BaseGoogleComputeEngineApiLiveTest {
 
@@ -52,7 +51,7 @@ public class MachineTypeApiLiveTest extends BaseGoogleComputeEngineApiLiveTest {
       assertTrue(pageIterator.hasNext());
 
       IterableWithMarker<MachineType> singlePageIterator = pageIterator.next();
-      List<MachineType> machineTypeAsList = Lists.newArrayList(singlePageIterator);
+      List<MachineType> machineTypeAsList = singlePageIterator.toList();
 
       assertSame(machineTypeAsList.size(), 1);
 
@@ -62,12 +61,12 @@ public class MachineTypeApiLiveTest extends BaseGoogleComputeEngineApiLiveTest {
 
    @Test(groups = "live", dependsOnMethods = "testListMachineType")
    public void testGetMachineType() {
-      MachineType machineType = api().getInZone(DEFAULT_ZONE_NAME, this.machineType.getName());
+      MachineType machineType = api().getInZone(DEFAULT_ZONE_NAME, this.machineType.name());
       assertNotNull(machineType);
       assertMachineTypeEquals(machineType, this.machineType);
    }
 
    private void assertMachineTypeEquals(MachineType result, MachineType expected) {
-      assertEquals(result.getName(), expected.getName());
+      assertEquals(result.name(), expected.name());
    }
 }

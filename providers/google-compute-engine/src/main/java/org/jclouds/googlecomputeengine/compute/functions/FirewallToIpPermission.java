@@ -16,69 +16,49 @@
  */
 package org.jclouds.googlecomputeengine.compute.functions;
 
-import javax.annotation.Resource;
-import javax.inject.Named;
+import java.util.List;
 
-import org.jclouds.compute.reference.ComputeServiceConstants;
 import org.jclouds.googlecomputeengine.domain.Firewall;
 import org.jclouds.googlecomputeengine.domain.Firewall.Rule;
-import org.jclouds.logging.Logger;
 import org.jclouds.net.domain.IpPermission;
 import org.jclouds.net.domain.IpProtocol;
 
 import com.google.common.base.Function;
-import com.google.common.collect.ImmutableSet;
-import com.google.common.collect.Range;
+import com.google.common.base.Splitter;
+import com.google.common.collect.ImmutableList;
 
-/**
- * A function for transforming a GCE-specific Firewall into a generic
- * IpPermission object.
- */
-public class FirewallToIpPermission implements Function<Firewall, Iterable<IpPermission>> {
-   @Resource
-   @Named(ComputeServiceConstants.COMPUTE_LOGGER)
-   protected Logger logger = Logger.NULL;
+public final class FirewallToIpPermission implements Function<Firewall, Iterable<IpPermission>> {
+   @Override public Iterable<IpPermission> apply(Firewall fw) {
+      ImmutableList.Builder<IpPermission> rules = ImmutableList.builder();
 
-   public FirewallToIpPermission() {
-   }
-
-
-   @Override
-   public Iterable<IpPermission> apply(Firewall fw) {
-      ImmutableSet.Builder setBuilder = ImmutableSet.builder();
-
-      for (Rule rule : fw.getAllowed()) {
-         if (!rule.getPorts().isEmpty()) {
-            for (Range<Integer> r : rule.getPorts().asRanges()) {
-               IpPermission.Builder builder = populateBuilder(fw, rule.getIpProtocol());
-               builder.fromPort(r.lowerEndpoint());
-               builder.toPort(r.upperEndpoint());
-               setBuilder.add(builder.build());
+      for (Rule rule : fw.allowed()) {
+         if (rule.ports() != null && !rule.ports().isEmpty()) {
+            for (String r : rule.ports()) {
+               IpPermission.Builder builder = populateBuilder(fw, rule.ipProtocol());
+               List<String> range = Splitter.on('-').splitToList(r);
+               int from = Integer.valueOf(range.get(0));
+               builder.fromPort(from);
+               builder.toPort(range.size() == 2 ? Integer.valueOf(range.get(1)) : from);
+               rules.add(builder.build());
             }
          } else {
-            setBuilder.add(populateBuilder(fw, rule.getIpProtocol()).build());
+            rules.add(populateBuilder(fw, rule.ipProtocol()).build());
          }
       }
 
-      return setBuilder.build();
+      return rules.build();
    }
 
-   /**
-    * Convenience method for populating common parts of the IpPermission.
-    * @param fw
-    * @param protocol
-    * @return a pre-populated builder.
-    */
-   private IpPermission.Builder populateBuilder(Firewall fw, IpProtocol protocol) {
+   private static IpPermission.Builder populateBuilder(Firewall fw, String protocol) {
       IpPermission.Builder builder = IpPermission.builder();
 
-      builder.ipProtocol(protocol);
+      builder.ipProtocol(IpProtocol.fromValue(protocol.toUpperCase()));
 
-      if (!fw.getSourceRanges().isEmpty()) {
-         builder.cidrBlocks(fw.getSourceRanges());
+      if (!fw.sourceRanges().isEmpty()) {
+         builder.cidrBlocks(fw.sourceRanges());
       }
-      if (!fw.getSourceTags().isEmpty()) {
-         builder.groupIds(fw.getSourceTags());
+      if (!fw.sourceTags().isEmpty()) {
+         builder.groupIds(fw.sourceTags());
       }
 
       return builder;

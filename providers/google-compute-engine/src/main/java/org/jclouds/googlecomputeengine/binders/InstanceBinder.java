@@ -22,14 +22,14 @@ import java.util.Map;
 import javax.inject.Inject;
 import javax.inject.Named;
 
-import org.jclouds.googlecomputeengine.domain.InstanceTemplate;
+import org.jclouds.googlecomputeengine.domain.templates.InstanceTemplate;
 import org.jclouds.http.HttpRequest;
 import org.jclouds.rest.MapBinder;
 import org.jclouds.rest.binders.BindToJsonPayload;
 
 import com.google.common.base.Function;
 
-public class InstanceBinder implements MapBinder {
+public final class InstanceBinder implements MapBinder {
 
    private final BindToJsonPayload jsonBinder;
    private final Function<String, URI> machineTypesToURI;
@@ -44,10 +44,10 @@ public class InstanceBinder implements MapBinder {
       InstanceTemplate template = (InstanceTemplate) postParams.get("template");
       template.name(postParams.get("name").toString());
 
-      if (template.getMachineTypeName() != null) {
-         template.machineType(machineTypesToURI.apply(template.getMachineTypeName()));
+      if (template.machineTypeName() != null) {
+         template.machineType(machineTypesToURI.apply(template.machineTypeName()));
+         template.machineTypeName(null);
       }
-      template.machineType((String) null);
       return bindToRequest(request, template);
    }
 
