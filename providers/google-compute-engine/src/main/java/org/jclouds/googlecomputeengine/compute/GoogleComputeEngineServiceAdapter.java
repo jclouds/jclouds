@@ -22,12 +22,12 @@ import static com.google.common.collect.Iterables.contains;
 import static com.google.common.collect.Iterables.filter;
 import static com.google.common.collect.Iterables.transform;
 import static com.google.common.collect.Iterables.tryFind;
+import static com.google.common.collect.Lists.newArrayList;
 import static java.util.concurrent.TimeUnit.MILLISECONDS;
-import static org.jclouds.googlecomputeengine.GoogleComputeEngineConstants.CENTOS_PROJECT;
-import static org.jclouds.googlecomputeengine.GoogleComputeEngineConstants.DEBIAN_PROJECT;
 import static org.jclouds.googlecomputeengine.GoogleComputeEngineConstants.GCE_BOOT_DISK_SUFFIX;
 import static org.jclouds.googlecomputeengine.GoogleComputeEngineConstants.GCE_DELETE_BOOT_DISK_METADATA_KEY;
 import static org.jclouds.googlecomputeengine.GoogleComputeEngineConstants.GCE_IMAGE_METADATA_KEY;
+import static org.jclouds.googlecomputeengine.GoogleComputeEngineConstants.GCE_IMAGE_PROJECTS;
 import static org.jclouds.googlecomputeengine.GoogleComputeEngineConstants.OPERATION_COMPLETE_INTERVAL;
 import static org.jclouds.googlecomputeengine.GoogleComputeEngineConstants.OPERATION_COMPLETE_TIMEOUT;
 import static org.jclouds.googlecomputeengine.domain.Instance.NetworkInterface.AccessConfig.Type;
@@ -39,6 +39,7 @@ import java.net.URI;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.NoSuchElementException;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicReference;
@@ -75,7 +76,6 @@ import org.jclouds.googlecomputeengine.features.InstanceApi;
 import org.jclouds.googlecomputeengine.options.DiskCreationOptions;
 
 import com.google.common.base.Function;
-import com.google.common.base.Objects;
 import com.google.common.base.Predicate;
 import com.google.common.base.Supplier;
 import com.google.common.collect.FluentIterable;
@@ -97,6 +97,7 @@ public final class GoogleComputeEngineServiceAdapter implements ComputeServiceAd
    private final long operationCompleteCheckInterval;
    private final long operationCompleteCheckTimeout;
    private final FirewallTagNamingConvention.Factory firewallTagNamingConvention;
+   private final List<String> imageProjects;
 
    @Inject GoogleComputeEngineServiceAdapter(GoogleComputeEngineApi api,
                                             @UserProject Supplier<String> userProject,
@@ -106,7 +107,8 @@ public final class GoogleComputeEngineServiceAdapter implements ComputeServiceAd
                                             @Named(OPERATION_COMPLETE_INTERVAL) Long operationCompleteCheckInterval,
                                             @Named(OPERATION_COMPLETE_TIMEOUT) Long operationCompleteCheckTimeout,
                                             @Memoized Supplier<Map<URI, ? extends Location>> zones,
-                                            FirewallTagNamingConvention.Factory firewallTagNamingConvention) {
+                                            FirewallTagNamingConvention.Factory firewallTagNamingConvention,
+                                            @Named(GCE_IMAGE_PROJECTS) List<String> imageProjects) {
       this.api = api;
       this.userProject = userProject;
       this.metatadaFromTemplateOptions = metatadaFromTemplateOptions;
@@ -116,6 +118,7 @@ public final class GoogleComputeEngineServiceAdapter implements ComputeServiceAd
                                                operationCompleteCheckInterval, TimeUnit.MILLISECONDS);
       this.zones = zones;
       this.firewallTagNamingConvention = firewallTagNamingConvention;
+      this.imageProjects = imageProjects;
    }
 
    @Override
@@ -261,19 +264,29 @@ public final class GoogleComputeEngineServiceAdapter implements ComputeServiceAd
 
    @Override
    public Iterable<Image> listImages() {
-      return Iterables.concat( //
-            concat(api.getImageApi(userProject.get()).list()), //
-            concat(api.getImageApi(DEBIAN_PROJECT).list()), //
-            concat(api.getImageApi(CENTOS_PROJECT).list()));
+      List<Iterable<Image>> images = newArrayList();
+
+      images.add(concat(api.getImageApi(userProject.get()).list()));
+
+      for (String project : imageProjects) {
+         images.add(concat(api.getImageApi(project).list()));
+      }
+
+      return Iterables.concat(images);
    }
 
-   @SuppressWarnings("deprecation")
    @Override
    public Image getImage(String id) {
-      return Objects.firstNonNull(api.getImageApi(userProject.get()).get(id),
-                                  Objects.firstNonNull(api.getImageApi(DEBIAN_PROJECT).get(id),
-                                          api.getImageApi(CENTOS_PROJECT).get(id)));
+      Image image = api.getImageApi(userProject.get()).get(id);
+      for (int i = 0; i < imageProjects.size() && image == null; i++) {
+          image = api.getImageApi(imageProjects.get(i)).get(id);
+      }
 
+      if (image == null) {
+          throw new NoSuchElementException("No image found with id: " + id);
+      }
+
+      return image;
    }
 
    @Override

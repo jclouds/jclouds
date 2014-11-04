@@ -20,6 +20,7 @@ import static com.google.common.collect.Iterables.getOnlyElement;
 import static org.jclouds.googlecomputeengine.GoogleComputeEngineConstants.COMPUTE_READONLY_SCOPE;
 import static org.jclouds.googlecomputeengine.GoogleComputeEngineConstants.COMPUTE_SCOPE;
 import static org.jclouds.googlecomputeengine.GoogleComputeEngineConstants.GCE_BOOT_DISK_SUFFIX;
+import static org.jclouds.googlecomputeengine.GoogleComputeEngineConstants.GCE_IMAGE_PROJECTS;
 import static org.jclouds.googlecomputeengine.features.GlobalOperationApiExpectTest.GET_GLOBAL_OPERATION_REQUEST;
 import static org.jclouds.googlecomputeengine.features.GlobalOperationApiExpectTest.GET_GLOBAL_OPERATION_RESPONSE;
 import static org.jclouds.googlecomputeengine.features.ImageApiExpectTest.LIST_CENTOS_IMAGES_REQUEST;
@@ -217,6 +218,7 @@ public class GoogleComputeEngineServiceExpectTest extends BaseGoogleComputeEngin
    protected Properties setupProperties() {
       Properties overrides = super.setupProperties();
       overrides.put("google-compute-engine.identity", "myproject");
+      overrides.put(GCE_IMAGE_PROJECTS, "debian-cloud,centos-cloud");
       try {
          overrides.put("google-compute-engine.credential", toStringAndClose(getClass().getResourceAsStream("/testpk.pem")));
       } catch (IOException e) {

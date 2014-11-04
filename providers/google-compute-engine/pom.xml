@@ -39,7 +39,7 @@
         </test.google-compute-engine.credential>
         <test.google-compute-engine.api-version>v1</test.google-compute-engine.api-version>
         <test.google-compute-engine.build-version/>
-        <test.google-compute-engine.template>imageId=debian-7-wheezy-v20131120,locationId=us-central1-a,minRam=2048</test.google-compute-engine.template>
+        <test.google-compute-engine.template>imageNameMatches=debian-7-wheezy-v[0-9]*,locationId=us-central1-a,minRam=2048</test.google-compute-engine.template>
     </properties>
 
     <dependencies>

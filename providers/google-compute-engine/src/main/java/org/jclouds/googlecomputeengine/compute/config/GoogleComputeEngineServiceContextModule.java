@@ -20,8 +20,10 @@ import static com.google.common.collect.Iterables.transform;
 import static com.google.common.collect.Maps.uniqueIndex;
 import static org.jclouds.Constants.PROPERTY_SESSION_INTERVAL;
 import static org.jclouds.googlecomputeengine.internal.ListPages.concat;
+import static org.jclouds.googlecomputeengine.GoogleComputeEngineConstants.GCE_IMAGE_PROJECTS;
 
 import java.net.URI;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
@@ -81,6 +83,7 @@ import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Function;
 import com.google.common.base.Optional;
 import com.google.common.base.Predicate;
+import com.google.common.base.Splitter;
 import com.google.common.base.Supplier;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
@@ -280,5 +283,12 @@ public class GoogleComputeEngineServiceContextModule
    @Provides
    protected Map<Instance.Status, NodeMetadata.Status> toPortableNodeStatus() {
       return toPortableNodeStatus;
+   }
+
+   @Singleton
+   @Provides
+   @Named(GCE_IMAGE_PROJECTS)
+   protected List<String> imageProjects(@Named(GCE_IMAGE_PROJECTS) String imageProjects) {
+      return Splitter.on(',').splitToList(imageProjects);
    }
 }

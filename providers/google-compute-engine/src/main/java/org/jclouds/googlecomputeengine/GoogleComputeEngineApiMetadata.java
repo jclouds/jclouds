@@ -18,6 +18,7 @@ package org.jclouds.googlecomputeengine;
 
 import static org.jclouds.Constants.PROPERTY_SESSION_INTERVAL;
 import static org.jclouds.compute.config.ComputeServiceProperties.TEMPLATE;
+import static org.jclouds.googlecomputeengine.GoogleComputeEngineConstants.GCE_IMAGE_PROJECTS;
 import static org.jclouds.googlecomputeengine.GoogleComputeEngineConstants.GCE_PROVIDER_NAME;
 import static org.jclouds.googlecomputeengine.GoogleComputeEngineConstants.OPERATION_COMPLETE_INTERVAL;
 import static org.jclouds.googlecomputeengine.GoogleComputeEngineConstants.OPERATION_COMPLETE_TIMEOUT;
@@ -66,6 +67,7 @@ public class GoogleComputeEngineApiMetadata extends BaseHttpApiMetadata<GoogleCo
       properties.setProperty(TEMPLATE, "osFamily=DEBIAN,osVersionMatches=7\\..*,locationId=us-central1-a,loginUser=jclouds");
       properties.put(OPERATION_COMPLETE_INTERVAL, 500);
       properties.put(OPERATION_COMPLETE_TIMEOUT, 600000);
+      properties.put(GCE_IMAGE_PROJECTS, "centos-cloud,debian-cloud,rhel-cloud,suse-cloud,opensuse-cloud,gce-nvme,coreos-cloud");
       return properties;
    }
 

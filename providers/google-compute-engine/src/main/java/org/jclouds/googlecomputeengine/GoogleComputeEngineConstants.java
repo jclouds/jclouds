@@ -31,10 +31,6 @@ public final class GoogleComputeEngineConstants {
     */
    public static final String GOOGLE_PROJECT = "google";
 
-   public static final String CENTOS_PROJECT = "centos-cloud";
-
-   public static final String DEBIAN_PROJECT = "debian-cloud";
-
    public static final String COMPUTE_SCOPE = "https://www.googleapis.com/auth/compute";
 
    public static final String COMPUTE_READONLY_SCOPE = "https://www.googleapis.com/auth/compute.readonly";
@@ -58,6 +54,12 @@ public final class GoogleComputeEngineConstants {
 
    public static final Location GOOGLE_PROVIDER_LOCATION = new LocationBuilder().scope(LocationScope.PROVIDER).id
            (GCE_PROVIDER_NAME).description(GCE_PROVIDER_NAME).build();
+
+   /**
+    * The list of projects that will be scanned looking for images.
+    */
+   @Beta
+   public static final String GCE_IMAGE_PROJECTS = "jclouds.google-compute-engine.image-projects";
 
 
    /**
