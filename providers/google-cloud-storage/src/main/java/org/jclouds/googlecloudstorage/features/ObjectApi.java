@@ -34,6 +34,7 @@ import javax.ws.rs.core.MediaType;
 import org.jclouds.Fallbacks.FalseOnNotFoundOr404;
 import org.jclouds.Fallbacks.NullOnNotFoundOr404;
 import org.jclouds.Fallbacks.TrueOnNotFoundOr404;
+import org.jclouds.googlecloudstorage.GoogleCloudStorageFallbacks.EmptyListPageOnNotFoundOr404;
 import org.jclouds.googlecloudstorage.binders.MultipartUploadBinder;
 import org.jclouds.googlecloudstorage.binders.UploadBinder;
 import org.jclouds.googlecloudstorage.domain.GCSObject;
@@ -48,8 +49,8 @@ import org.jclouds.googlecloudstorage.options.InsertObjectOptions;
 import org.jclouds.googlecloudstorage.options.ListObjectOptions;
 import org.jclouds.googlecloudstorage.options.UpdateObjectOptions;
 import org.jclouds.googlecloudstorage.parser.ParseToPayloadEnclosing;
-import org.jclouds.http.internal.PayloadEnclosingImpl;
 import org.jclouds.io.Payload;
+import org.jclouds.io.PayloadEnclosing;
 import org.jclouds.javax.annotation.Nullable;
 import org.jclouds.oauth.v2.config.OAuthScopes;
 import org.jclouds.oauth.v2.filters.OAuthAuthenticator;
@@ -154,7 +155,7 @@ public interface ObjectApi {
    @ResponseParser(ParseToPayloadEnclosing.class)
    @Fallback(NullOnNotFoundOr404.class)
    @Nullable
-   PayloadEnclosingImpl download(@PathParam("bucket") String bucketName, @PathParam("object") String objectName);
+   PayloadEnclosing download(@PathParam("bucket") String bucketName, @PathParam("object") String objectName);
 
    /**
     * Retrieves objects
@@ -177,8 +178,7 @@ public interface ObjectApi {
    @ResponseParser(ParseToPayloadEnclosing.class)
    @OAuthScopes(STORAGE_FULLCONTROL_SCOPE)
    @Fallback(NullOnNotFoundOr404.class)
-   @Nullable
-   PayloadEnclosingImpl download(@PathParam("bucket") String bucketName, @PathParam("object") String objectName,
+   @Nullable PayloadEnclosing download(@PathParam("bucket") String bucketName, @PathParam("object") String objectName,
             GetObjectOptions options);
 
    /**
@@ -254,8 +254,7 @@ public interface ObjectApi {
    @Produces(MediaType.APPLICATION_JSON)
    @Path("storage/v1/b/{bucket}/o")
    @OAuthScopes(STORAGE_FULLCONTROL_SCOPE)
-   @Fallback(NullOnNotFoundOr404.class)
-   @Nullable
+   @Fallback(EmptyListPageOnNotFoundOr404.class)
    ListPage<GCSObject> listObjects(@PathParam("bucket") String bucketName);
 
    /**

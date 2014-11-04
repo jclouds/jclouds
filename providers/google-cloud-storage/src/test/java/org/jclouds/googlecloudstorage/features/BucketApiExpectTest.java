@@ -20,21 +20,22 @@ package org.jclouds.googlecloudstorage.features;
 import static org.jclouds.googlecloudstorage.reference.GoogleCloudStorageConstants.STORAGE_FULLCONTROL_SCOPE;
 import static org.jclouds.googlecloudstorage.reference.GoogleCloudStorageConstants.STORAGE_READONLY_SCOPE;
 import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertTrue;
 import static org.testng.AssertJUnit.assertNull;
 
 import javax.ws.rs.core.MediaType;
 
 import org.jclouds.googlecloudstorage.domain.BucketAccessControls;
-import org.jclouds.googlecloudstorage.domain.DomainResourceReferences.Projection;
 import org.jclouds.googlecloudstorage.domain.BucketAccessControls.Role;
+import org.jclouds.googlecloudstorage.domain.DomainResourceReferences.Projection;
 import org.jclouds.googlecloudstorage.domain.templates.BucketTemplate;
 import org.jclouds.googlecloudstorage.internal.BaseGoogleCloudStorageApiExpectTest;
 import org.jclouds.googlecloudstorage.options.GetBucketOptions;
 import org.jclouds.googlecloudstorage.options.ListOptions;
 import org.jclouds.googlecloudstorage.options.UpdateBucketOptions;
 import org.jclouds.googlecloudstorage.parse.BucketUpdateTest;
-import org.jclouds.googlecloudstorage.parse.NoAclBucketTest;
 import org.jclouds.googlecloudstorage.parse.NoAclBucketListTest;
+import org.jclouds.googlecloudstorage.parse.NoAclBucketTest;
 import org.jclouds.http.HttpRequest;
 import org.jclouds.http.HttpResponse;
 import org.testng.annotations.Test;
@@ -126,7 +127,7 @@ public class BucketApiExpectTest extends BaseGoogleCloudStorageApiExpectTest {
       BucketApi api = requestsSendResponses(requestForScopes(STORAGE_FULLCONTROL_SCOPE), TOKEN_RESPONSE,
                LIST_BUCKET_REQUEST, listResponse).getBucketApi();
 
-      assertNull(api.listBucket(EXPECTED_TEST_PROJECT_NUMBER));
+      assertTrue(api.listBucket(EXPECTED_TEST_PROJECT_NUMBER).isEmpty());
    }
 
    // Test createBucket without options

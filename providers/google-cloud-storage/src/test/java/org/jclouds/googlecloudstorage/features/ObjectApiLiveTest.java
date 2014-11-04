@@ -49,6 +49,7 @@ import org.jclouds.googlecloudstorage.options.UpdateObjectOptions;
 import org.jclouds.http.internal.PayloadEnclosingImpl;
 import org.jclouds.io.ByteStreams2;
 import org.jclouds.io.ContentMetadata;
+import org.jclouds.io.PayloadEnclosing;
 import org.jclouds.io.Payloads;
 import org.jclouds.io.payloads.ByteSourcePayload;
 import org.jclouds.utils.TestUtils;
@@ -74,7 +75,7 @@ public class ObjectApiLiveTest extends BaseGoogleCloudStorageApiLiveTest {
    private static final String COMPOSED_OBJECT = "ComposedObject1.txt";
    private static final String COMPOSED_OBJECT2 = "ComposedObject2.json";
 
-   private PayloadEnclosingImpl testPayload;
+   private PayloadEnclosing testPayload;
    private Long RANDOM_LONG = 100L;
 
    private Long metageneration;
@@ -105,8 +106,7 @@ public class ObjectApiLiveTest extends BaseGoogleCloudStorageApiLiveTest {
       ByteSource byteSource = TestUtils.randomByteSource().slice(0, contentLength);
       ByteSourcePayload byteSourcePayload = Payloads.newByteSourcePayload(byteSource);
 
-      PayloadEnclosingImpl payload = new PayloadEnclosingImpl();
-      payload.setPayload(byteSourcePayload);
+      PayloadEnclosing payload = new PayloadEnclosingImpl(byteSourcePayload);
       payload.getPayload().getContentMetadata().setContentLength(contentLength);
 
       this.testPayload = payload;
@@ -123,7 +123,7 @@ public class ObjectApiLiveTest extends BaseGoogleCloudStorageApiLiveTest {
 
    @Test(groups = "live", dependsOnMethods = "testSimpleUpload")
    public void testDownload() throws IOException {
-      PayloadEnclosingImpl impl = api().download(BUCKET_NAME, UPLOAD_OBJECT_NAME);
+      PayloadEnclosing impl = api().download(BUCKET_NAME, UPLOAD_OBJECT_NAME);
       ContentMetadata meta = impl.getPayload().getContentMetadata();
       assertNotNull(impl);
       assertNotNull(impl.getPayload());
@@ -196,7 +196,7 @@ public class ObjectApiLiveTest extends BaseGoogleCloudStorageApiLiveTest {
 
       // Test for data
 
-      PayloadEnclosingImpl impl = api().download(BUCKET_NAME2, COPIED_OBJECT_NAME);
+      PayloadEnclosing impl = api().download(BUCKET_NAME2, COPIED_OBJECT_NAME);
       assertNotNull(impl);
       assertEquals(ByteStreams2.toByteArrayAndClose(impl.getPayload().openStream()),
                ByteStreams2.toByteArrayAndClose(testPayload.getPayload().openStream()));
@@ -364,7 +364,7 @@ public class ObjectApiLiveTest extends BaseGoogleCloudStorageApiLiveTest {
       long contentLength = 32 * 1024L;
       ByteSource byteSource = TestUtils.randomByteSource().slice(0, contentLength);
       ByteSourcePayload payload = Payloads.newByteSourcePayload(byteSource);
-      PayloadEnclosingImpl payloadImpl = new PayloadEnclosingImpl(payload);
+      PayloadEnclosing payloadImpl = new PayloadEnclosingImpl(payload);
 
       ObjectTemplate template = new ObjectTemplate();
 
@@ -389,7 +389,7 @@ public class ObjectApiLiveTest extends BaseGoogleCloudStorageApiLiveTest {
       assertThat(gcsObject.metadata()).contains(entry("custommetakey1", "custommetavalue1"),
                entry("Adrian", "powderpuff")).doesNotContainKey("adrian");
 
-      PayloadEnclosingImpl impl = api().download(BUCKET_NAME, MULTIPART_UPLOAD_OBJECT);
+      PayloadEnclosing impl = api().download(BUCKET_NAME, MULTIPART_UPLOAD_OBJECT);
 
       assertThat(ByteStreams2.toByteArrayAndClose(impl.getPayload().openStream())).isEqualTo(
                ByteStreams2.toByteArrayAndClose(payloadImpl.getPayload().openStream()));
