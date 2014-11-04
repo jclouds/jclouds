@@ -70,35 +70,20 @@ public class ListOptions extends BaseHttpRequestOptions {
       return this;
    }
 
-   /**
-    * Marks the beginning of the next list page
-    */
-   public ListOptions marker(String marker) {
-      this.queryParameters.put("pageToken", checkNotNull(marker, "marker"));
-      return this;
-   }
-
    public static class Builder {
 
       /**
        * @see ListOptions#filter(String)
        */
-      public ListOptions filter(String filter) {
+      public static ListOptions filter(String filter) {
          return new ListOptions().filter(filter);
       }
 
       /**
        * @see ListOptions#maxResults(Integer)
        */
-      public ListOptions maxResults(Integer maxResults) {
+      public static ListOptions maxResults(Integer maxResults) {
          return new ListOptions().maxResults(maxResults);
-      }
-
-      /**
-       * @see ListOptions#marker(String)
-       */
-      public ListOptions marker(String marker) {
-         return new ListOptions().marker(marker);
       }
    }
 }

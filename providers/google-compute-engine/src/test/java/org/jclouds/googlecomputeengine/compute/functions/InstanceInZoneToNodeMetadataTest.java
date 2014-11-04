@@ -218,7 +218,7 @@ public class InstanceInZoneToNodeMetadataTest {
 
    @Test
    public final void testTagFilteringWorks() {
-      InstanceInZone instanceInZone = new InstanceInZone(instance, "zoneId");
+      InstanceInZone instanceInZone = InstanceInZone.create(instance, "zoneId");
       NodeMetadata nodeMetadata = groupGroupNodeParser.apply(instanceInZone);
       assertEquals(nodeMetadata.getId(), "id/test-0");
       assertEquals(nodeMetadata.getTags(), ImmutableSet.<String>of(
@@ -229,7 +229,7 @@ public class InstanceInZoneToNodeMetadataTest {
 
    @Test
    public final void testInstanceWithGroupNull() {
-      InstanceInZone instanceInZone = new InstanceInZone(instance, "zoneId");
+      InstanceInZone instanceInZone = InstanceInZone.create(instance, "zoneId");
       NodeMetadata nodeMetadata = groupNullNodeParser.apply(instanceInZone);
       assertEquals(nodeMetadata.getId(), "id/test-0");
       assertEquals(nodeMetadata.getTags(), ImmutableSet.<String>of("aTag", "Group-port-42"));

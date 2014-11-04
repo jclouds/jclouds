@@ -125,10 +125,10 @@ public class GoogleComputeEngineHttpApiModule extends HttpApiModule<GoogleComput
       return new Function<String, URI>() {
          @Override
          public URI apply(String input) {
-            SlashEncodedIds slashEncodedIds = SlashEncodedIds.fromSlashEncoded(input);
+            SlashEncodedIds zoneAndMachineType = SlashEncodedIds.fromSlashEncoded(input);
             return Uris.uriBuilder(endpoint.get()).appendPath("/projects/").appendPath(userProject.get())
-                    .appendPath("/zones/").appendPath(slashEncodedIds.getFirstId())
-                    .appendPath("/machineTypes/").appendPath(slashEncodedIds.getSecondId()).build();
+                    .appendPath("/zones/").appendPath(zoneAndMachineType.left())
+                    .appendPath("/machineTypes/").appendPath(zoneAndMachineType.right()).build();
          }
       };
    }

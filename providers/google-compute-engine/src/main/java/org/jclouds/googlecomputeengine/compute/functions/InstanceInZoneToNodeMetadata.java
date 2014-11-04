@@ -43,9 +43,6 @@ import com.google.common.base.Supplier;
 import com.google.common.collect.FluentIterable;
 import com.google.common.collect.ImmutableList;
 
-/**
- * Transforms a google compute domain Instance into a generic NodeMetatada object.
- */
 public final class InstanceInZoneToNodeMetadata implements Function<InstanceInZone, NodeMetadata> {
 
    private final Map<Instance.Status, NodeMetadata.Status> toPortableNodeStatus;
@@ -56,11 +53,11 @@ public final class InstanceInZoneToNodeMetadata implements Function<InstanceInZo
    private final FirewallTagNamingConvention.Factory firewallTagNamingConvention;
 
    @Inject InstanceInZoneToNodeMetadata(Map<Instance.Status, NodeMetadata.Status> toPortableNodeStatus,
-                                 GroupNamingConvention.Factory namingConvention,
-                                 @Memoized Supplier<Map<URI, ? extends Image>> images,
-                                 @Memoized Supplier<Map<URI, ? extends Hardware>> hardwares,
-                                 @Memoized Supplier<Map<URI, ? extends Location>> locations,
-                                 FirewallTagNamingConvention.Factory firewallTagNamingConvention) {
+                                        GroupNamingConvention.Factory namingConvention,
+                                        @Memoized Supplier<Map<URI, ? extends Image>> images,
+                                        @Memoized Supplier<Map<URI, ? extends Hardware>> hardwares,
+                                        @Memoized Supplier<Map<URI, ? extends Location>> locations,
+                                        FirewallTagNamingConvention.Factory firewallTagNamingConvention) {
       this.toPortableNodeStatus = toPortableNodeStatus;
       this.nodeNamingConvention = namingConvention.createWithoutPrefix();
       this.images = images;
@@ -70,10 +67,9 @@ public final class InstanceInZoneToNodeMetadata implements Function<InstanceInZo
    }
 
    @Override public NodeMetadata apply(InstanceInZone instanceInZone) {
-      Instance input = instanceInZone.getInstance();
+      Instance input = instanceInZone.instance();
 
-      String group = groupFromMapOrName(input.metadata().items(),
-                                               input.name(), nodeNamingConvention);
+      String group = groupFromMapOrName(input.metadata().items(), input.name(), nodeNamingConvention);
       FluentIterable<String> tags = FluentIterable.from(input.tags().items());
       if (group != null) {
          tags = tags.filter(Predicates.not(firewallTagNamingConvention.get(group).isFirewallTag()));
@@ -81,13 +77,12 @@ public final class InstanceInZoneToNodeMetadata implements Function<InstanceInZo
 
       NodeMetadataBuilder builder = new NodeMetadataBuilder();
 
-      builder.id(SlashEncodedIds.fromTwoIds(checkNotNull(locations.get().get(input.zone()),
-                                                                "location for %s", input.zone())
-                                                    .getId(), input.name()).slashEncode())
+      Location location = checkNotNull(locations.get().get(input.zone()), "location for %s", input.zone());
+      builder.id(SlashEncodedIds.from(location.getId(), input.name()).slashEncode())
               .name(input.name())
               .providerId(input.id())
               .hostname(input.name())
-              .location(checkNotNull(locations.get().get(input.zone()), "location for %s", input.zone()))
+              .location(location)
               .hardware(hardwares.get().get(input.machineType()))
               .status(toPortableNodeStatus.get(input.status()))
               .tags(tags)
@@ -99,8 +94,7 @@ public final class InstanceInZoneToNodeMetadata implements Function<InstanceInZo
 
       if (input.metadata().items().containsKey(GCE_IMAGE_METADATA_KEY)) {
          try {
-            URI imageUri = URI.create(input.metadata().items()
-                                              .get(GCE_IMAGE_METADATA_KEY));
+            URI imageUri = URI.create(input.metadata().items().get(GCE_IMAGE_METADATA_KEY));
 
             Map<URI, ? extends Image> imagesMap = images.get();
 

@@ -68,7 +68,7 @@ public class MachineTypeInZoneToHardware implements Function<MachineTypeInZone, 
               input.machineType().zone());
 
       return new HardwareBuilder()
-              .id(SlashEncodedIds.fromTwoIds(input.machineType().zone(), input.machineType().name()).slashEncode())
+              .id(SlashEncodedIds.from(input.machineType().zone(), input.machineType().name()).slashEncode())
               .location(location)
               .name(input.machineType().name())
               .hypervisor("kvm")

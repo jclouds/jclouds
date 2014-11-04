@@ -73,17 +73,16 @@ import com.google.common.util.concurrent.Atomics;
  */
 public class GoogleComputeEngineSecurityGroupExtension implements SecurityGroupExtension {
 
-   protected final Supplier<String> userProject;
-   protected final GroupNamingConvention.Factory namingConvention;
-   protected final LoadingCache<NetworkAndAddressRange, Network> networkCreator;
-   protected final Function<Network, SecurityGroup> groupConverter;
-   protected final GoogleComputeEngineApi api;
-   protected final Predicate<AtomicReference<Operation>> operationDonePredicate;
-   protected final long operationCompleteCheckInterval;
-   protected final long operationCompleteCheckTimeout;
+   private final Supplier<String> userProject;
+   private final GroupNamingConvention.Factory namingConvention;
+   private final LoadingCache<NetworkAndAddressRange, Network> networkCreator;
+   private final Function<Network, SecurityGroup> groupConverter;
+   private final GoogleComputeEngineApi api;
+   private final Predicate<AtomicReference<Operation>> operationDonePredicate;
+   private final long operationCompleteCheckInterval;
+   private final long operationCompleteCheckTimeout;
 
-   @Inject
-   public GoogleComputeEngineSecurityGroupExtension(GoogleComputeEngineApi api,
+   @Inject GoogleComputeEngineSecurityGroupExtension(GoogleComputeEngineApi api,
          @UserProject Supplier<String> userProject, GroupNamingConvention.Factory namingConvention,
          LoadingCache<NetworkAndAddressRange, Network> networkCreator, Function<Network, SecurityGroup> groupConverter,
          @Named("global") Predicate<AtomicReference<Operation>> operationDonePredicate,
@@ -113,10 +112,9 @@ public class GoogleComputeEngineSecurityGroupExtension implements SecurityGroupE
 
    @Override
    public Set<SecurityGroup> listSecurityGroupsForNode(String id) {
-      SlashEncodedIds slashEncodedIds = SlashEncodedIds.fromSlashEncoded(id);
+      SlashEncodedIds zoneAndId = SlashEncodedIds.fromSlashEncoded(id);
 
-      Instance instance = api.getInstanceApi(userProject.get())
-            .getInZone(slashEncodedIds.getFirstId(), slashEncodedIds.getSecondId());
+      Instance instance = api.getInstanceApi(userProject.get(), zoneAndId.left()).get(zoneAndId.right());
 
       if (instance == null) {
          return ImmutableSet.of();

@@ -16,39 +16,20 @@
  */
 package org.jclouds.googlecomputeengine.compute.domain;
 
-import static com.google.common.base.Objects.equal;
-import static com.google.common.base.Preconditions.checkNotNull;
-
 import org.jclouds.googlecomputeengine.domain.MachineType;
 
-public class MachineTypeInZone extends SlashEncodedIds {
-   protected final MachineType machineType;
+import com.google.auto.value.AutoValue;
 
-   public MachineTypeInZone(MachineType machineType, String zoneId) {
-      super(zoneId, checkNotNull(machineType, "machineType").name());
-      this.machineType = machineType;
+@AutoValue
+public abstract class MachineTypeInZone {
+   public abstract MachineType machineType();
+
+   public abstract String zoneId();
+
+   public static MachineTypeInZone create(MachineType machineType, String zoneId) {
+      return new AutoValue_MachineTypeInZone(machineType, zoneId);
    }
 
-   public MachineType machineType() {
-      return machineType;
+   MachineTypeInZone(){
    }
-
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   public boolean equals(Object obj) {
-      if (this == obj) return true;
-      if (obj == null || getClass() != obj.getClass()) return false;
-      MachineTypeInZone that = MachineTypeInZone.class.cast(obj);
-      return equal(this.machineType, that.machineType)
-              && equal(this.firstId, that.firstId)
-              && equal(this.secondId, that.secondId);
-   }
-
-   @Override
-   public String toString() {
-      return "[machineType=" + machineType + ", zoneId=" + firstId + "]";
-   }
-
 }

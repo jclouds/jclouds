@@ -16,39 +16,24 @@
  */
 package org.jclouds.googlecomputeengine.compute.domain;
 
-import static com.google.common.base.Objects.equal;
-import static com.google.common.base.Preconditions.checkNotNull;
-
 import org.jclouds.googlecomputeengine.domain.Instance;
 
-public class InstanceInZone extends SlashEncodedIds {
-   protected final Instance instance;
+import com.google.auto.value.AutoValue;
 
-   public InstanceInZone(Instance instance, String zoneId) {
-      super(zoneId, checkNotNull(instance, "instance").name());
-      this.instance = instance;
+@AutoValue
+public abstract class InstanceInZone {
+   public abstract Instance instance();
+
+   public abstract String zoneId();
+
+   public static InstanceInZone create(Instance instance, String zoneId) {
+      return new AutoValue_InstanceInZone(instance, zoneId);
    }
 
-   public Instance getInstance() {
-      return instance;
+   InstanceInZone(){
    }
 
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   public boolean equals(Object obj) {
-      if (this == obj) return true;
-      if (obj == null || getClass() != obj.getClass()) return false;
-      InstanceInZone that = InstanceInZone.class.cast(obj);
-      return equal(this.instance, that.instance)
-              && equal(this.firstId, that.firstId)
-              && equal(this.secondId, that.secondId);
+   public String slashEncode() {
+      return zoneId() + "/" + instance().name();
    }
-
-   @Override
-   public String toString() {
-      return "[instance=" + instance + ", zoneId=" + firstId + "]";
-   }
-
 }

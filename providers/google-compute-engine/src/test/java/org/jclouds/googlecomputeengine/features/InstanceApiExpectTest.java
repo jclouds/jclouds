@@ -88,9 +88,9 @@ public class InstanceApiExpectTest extends BaseGoogleComputeEngineApiExpectTest 
 
       InstanceApi api = requestsSendResponses(
               requestForScopes(COMPUTE_READONLY_SCOPE), TOKEN_RESPONSE,
-              GET_INSTANCE_REQUEST, GET_INSTANCE_RESPONSE).getInstanceApi("myproject");
+              GET_INSTANCE_REQUEST, GET_INSTANCE_RESPONSE).getInstanceApi("myproject", "us-central1-a");
 
-      assertEquals(api.getInZone("us-central1-a", "test-1"), new ParseInstanceTest().expected());
+      assertEquals(api.get("test-1"), new ParseInstanceTest().expected());
    }
 
    public void testGetInstanceResponseIs4xx() throws Exception {
@@ -98,9 +98,9 @@ public class InstanceApiExpectTest extends BaseGoogleComputeEngineApiExpectTest 
       HttpResponse operationResponse = HttpResponse.builder().statusCode(404).build();
 
       InstanceApi api = requestsSendResponses(requestForScopes(COMPUTE_READONLY_SCOPE),
-              TOKEN_RESPONSE, GET_INSTANCE_REQUEST, operationResponse).getInstanceApi("myproject");
+              TOKEN_RESPONSE, GET_INSTANCE_REQUEST, operationResponse).getInstanceApi("myproject", "us-central1-a");
 
-      assertNull(api.getInZone("us-central1-a", "test-1"));
+      assertNull(api.get("test-1"));
    }
 
    public void testGetInstanceSerialPortOutput() throws Exception {
@@ -116,9 +116,9 @@ public class InstanceApiExpectTest extends BaseGoogleComputeEngineApiExpectTest 
 
 
       InstanceApi api = requestsSendResponses(requestForScopes(COMPUTE_READONLY_SCOPE),
-              TOKEN_RESPONSE, get, operationResponse).getInstanceApi("myproject");
+              TOKEN_RESPONSE, get, operationResponse).getInstanceApi("myproject", "us-central1-a");
 
-      assertEquals(api.getSerialPortOutputInZone("us-central1-a", "test-1"), new ParseInstanceSerialOutputTest().expected());
+      assertEquals(api.getSerialPortOutput("test-1"), new ParseInstanceSerialOutputTest().expected());
    }
 
    public void testInsertInstanceResponseIs2xxNoOptions() {
@@ -135,12 +135,12 @@ public class InstanceApiExpectTest extends BaseGoogleComputeEngineApiExpectTest 
               TOKEN_RESPONSE, GET_PROJECT_REQUEST, GET_PROJECT_RESPONSE,
               requestForScopes(COMPUTE_SCOPE),
               TOKEN_RESPONSE, insert,
-              CREATE_INSTANCE_RESPONSE)).getInstanceApi("myproject");
+              CREATE_INSTANCE_RESPONSE)).getInstanceApi("myproject", "us-central1-a");
 
       InstanceTemplate options = new InstanceTemplate().machineTypeName("us-central1-a/n1-standard-1")
               .addNetworkInterface(URI.create(BASE_URL + "/myproject/global/networks/default"));
 
-      assertEquals(api.createInZone("test-1", "us-central1-a", options), new ParseZoneOperationTest().expected());
+      assertEquals(api.create("test-1", options), new ParseZoneOperationTest().expected());
    }
 
    public void testInsertInstanceResponseIs2xxAllOptions() {
@@ -159,7 +159,7 @@ public class InstanceApiExpectTest extends BaseGoogleComputeEngineApiExpectTest 
       InstanceApi api = requestsSendResponses(ImmutableMap.of(requestForScopes(COMPUTE_READONLY_SCOPE),
               TOKEN_RESPONSE, GET_PROJECT_REQUEST, GET_PROJECT_RESPONSE,
               requestForScopes(COMPUTE_SCOPE),
-              TOKEN_RESPONSE, insert, insertInstanceResponse)).getInstanceApi("myproject");
+              TOKEN_RESPONSE, insert, insertInstanceResponse)).getInstanceApi("myproject", "us-central1-a");
 
       InstanceTemplate options = new InstanceTemplate().machineTypeName("us-central1-a/n1-standard-1")
               .addNetworkInterface(
@@ -172,8 +172,7 @@ public class InstanceApiExpectTest extends BaseGoogleComputeEngineApiExpectTest 
               .addServiceAccount(Instance.ServiceAccount.create("default", ImmutableList.of("myscope")))
               .addMetadata("aKey", "aValue");
 
-      assertEquals(api.createInZone("test-0", "us-central1-a", options),
-              new ParseZoneOperationTest().expected());
+      assertEquals(api.create("test-0", options), new ParseZoneOperationTest().expected());
    }
 
    public void testDeleteInstanceResponseIs2xx() {
@@ -188,9 +187,9 @@ public class InstanceApiExpectTest extends BaseGoogleComputeEngineApiExpectTest 
               .payload(payloadFromResource("/zone_operation.json")).build();
 
       InstanceApi api = requestsSendResponses(requestForScopes(COMPUTE_SCOPE),
-              TOKEN_RESPONSE, delete, deleteResponse).getInstanceApi("myproject");
+              TOKEN_RESPONSE, delete, deleteResponse).getInstanceApi("myproject", "us-central1-a");
 
-      assertEquals(api.deleteInZone("us-central1-a", "test-1"),
+      assertEquals(api.delete("test-1"),
               new ParseZoneOperationTest().expected());
    }
 
@@ -205,19 +204,18 @@ public class InstanceApiExpectTest extends BaseGoogleComputeEngineApiExpectTest 
       HttpResponse deleteResponse = HttpResponse.builder().statusCode(404).build();
 
       InstanceApi api = requestsSendResponses(requestForScopes(COMPUTE_SCOPE),
-              TOKEN_RESPONSE, delete, deleteResponse).getInstanceApi("myproject");
+              TOKEN_RESPONSE, delete, deleteResponse).getInstanceApi("myproject", "us-central1-a");
 
-      assertNull(api.deleteInZone("us-central1-a", "test-1"));
+      assertNull(api.delete("test-1"));
    }
 
    public void testListInstancesResponseIs2xx() {
 
       InstanceApi api = requestsSendResponses(
               requestForScopes(COMPUTE_READONLY_SCOPE), TOKEN_RESPONSE,
-              LIST_INSTANCES_REQUEST, LIST_INSTANCES_RESPONSE).getInstanceApi("myproject");
+              LIST_INSTANCES_REQUEST, LIST_INSTANCES_RESPONSE).getInstanceApi("myproject", "us-central1-a");
 
-      assertEquals(api.listInZone("us-central1-a").next().toString(),
-              new ParseInstanceListTest().expected().toString());
+      assertEquals(api.list().next().toString(), new ParseInstanceListTest().expected().toString());
    }
 
    public void testListInstancesResponseIs4xx() {
@@ -231,9 +229,9 @@ public class InstanceApiExpectTest extends BaseGoogleComputeEngineApiExpectTest 
       HttpResponse operationResponse = HttpResponse.builder().statusCode(404).build();
 
       InstanceApi api = requestsSendResponses(requestForScopes(COMPUTE_READONLY_SCOPE),
-              TOKEN_RESPONSE, list, operationResponse).getInstanceApi("myproject");
+              TOKEN_RESPONSE, list, operationResponse).getInstanceApi("myproject", "us-central1-a");
 
-      assertFalse(api.listInZone("us-central1-a").hasNext());
+      assertFalse(api.list().hasNext());
    }
 
    public void testSetInstanceMetadataResponseIs2xx() {
@@ -250,9 +248,9 @@ public class InstanceApiExpectTest extends BaseGoogleComputeEngineApiExpectTest 
               .payload(payloadFromResource("/zone_operation.json")).build();
 
       InstanceApi api = requestsSendResponses(requestForScopes(COMPUTE_SCOPE),
-              TOKEN_RESPONSE, setMetadata, setMetadataResponse).getInstanceApi("myproject");
+              TOKEN_RESPONSE, setMetadata, setMetadataResponse).getInstanceApi("myproject", "us-central1-a");
 
-      assertEquals(api.setMetadataInZone("us-central1-a", "test-1", ImmutableMap.of("foo", "bar"), "efgh"),
+      assertEquals(api.setMetadata("test-1", ImmutableMap.of("foo", "bar"), "efgh"),
               new ParseZoneOperationTest().expected());
    }
 
@@ -270,9 +268,9 @@ public class InstanceApiExpectTest extends BaseGoogleComputeEngineApiExpectTest 
       HttpResponse setMetadataResponse = HttpResponse.builder().statusCode(404).build();
 
       InstanceApi api = requestsSendResponses(requestForScopes(COMPUTE_SCOPE),
-              TOKEN_RESPONSE, setMetadata, setMetadataResponse).getInstanceApi("myproject");
+              TOKEN_RESPONSE, setMetadata, setMetadataResponse).getInstanceApi("myproject", "us-central1-a");
 
-      api.setMetadataInZone("us-central1-a", "test-1", ImmutableMap.of("foo", "bar"), "efgh");
+      api.setMetadata("test-1", ImmutableMap.of("foo", "bar"), "efgh");
    }
 
    public void testSetInstanceTagsResponseIs2xx() {
@@ -289,9 +287,9 @@ public class InstanceApiExpectTest extends BaseGoogleComputeEngineApiExpectTest 
               .payload(payloadFromResource("/zone_operation.json")).build();
 
       InstanceApi api = requestsSendResponses(requestForScopes(COMPUTE_SCOPE),
-              TOKEN_RESPONSE, setTags, setTagsResponse).getInstanceApi("myproject");
+              TOKEN_RESPONSE, setTags, setTagsResponse).getInstanceApi("myproject", "us-central1-a");
 
-      assertEquals(api.setTagsInZone("us-central1-a", "test-1", ImmutableList.of("foo", "bar"), "efgh"),
+      assertEquals(api.setTags("test-1", ImmutableList.of("foo", "bar"), "efgh"),
               new ParseZoneOperationTest().expected());
    }
 
@@ -309,9 +307,9 @@ public class InstanceApiExpectTest extends BaseGoogleComputeEngineApiExpectTest 
       HttpResponse setTagsResponse = HttpResponse.builder().statusCode(404).build();
 
       InstanceApi api = requestsSendResponses(requestForScopes(COMPUTE_SCOPE),
-              TOKEN_RESPONSE, setTags, setTagsResponse).getInstanceApi("myproject");
+              TOKEN_RESPONSE, setTags, setTagsResponse).getInstanceApi("myproject", "us-central1-a");
 
-      api.setTagsInZone("us-central1-a", "test-1", ImmutableList.of("foo", "bar"), "efgh");
+      api.setTags("test-1", ImmutableList.of("foo", "bar"), "efgh");
    }
 
    public void testResetInstanceResponseIs2xx() {
@@ -326,9 +324,9 @@ public class InstanceApiExpectTest extends BaseGoogleComputeEngineApiExpectTest 
               .payload(payloadFromResource("/zone_operation.json")).build();
 
       InstanceApi api = requestsSendResponses(requestForScopes(COMPUTE_SCOPE),
-              TOKEN_RESPONSE, reset, resetResponse).getInstanceApi("myproject");
+              TOKEN_RESPONSE, reset, resetResponse).getInstanceApi("myproject", "us-central1-a");
 
-      assertEquals(api.resetInZone("us-central1-a", "test-1"),
+      assertEquals(api.reset("test-1"),
               new ParseZoneOperationTest().expected());
    }
 
@@ -344,9 +342,9 @@ public class InstanceApiExpectTest extends BaseGoogleComputeEngineApiExpectTest 
       HttpResponse resetResponse = HttpResponse.builder().statusCode(404).build();
 
       InstanceApi api = requestsSendResponses(requestForScopes(COMPUTE_SCOPE),
-              TOKEN_RESPONSE, reset, resetResponse).getInstanceApi("myproject");
+              TOKEN_RESPONSE, reset, resetResponse).getInstanceApi("myproject", "us-central1-a");
 
-      api.resetInZone("us-central1-a", "test-1");
+      api.reset("test-1");
    }
 
    public void testAttachDiskResponseIs2xx() {
@@ -363,9 +361,9 @@ public class InstanceApiExpectTest extends BaseGoogleComputeEngineApiExpectTest 
               .payload(payloadFromResource("/zone_operation.json")).build();
 
       InstanceApi api = requestsSendResponses(requestForScopes(COMPUTE_SCOPE),
-              TOKEN_RESPONSE, attach, attachResponse).getInstanceApi("myproject");
+              TOKEN_RESPONSE, attach, attachResponse).getInstanceApi("myproject", "us-central1-a");
 
-      assertEquals(api.attachDiskInZone("us-central1-a", "test-1",
+      assertEquals(api.attachDisk("test-1",
               new AttachDiskOptions()
                       .mode(DiskMode.READ_ONLY)
                       .source(URI.create(BASE_URL + "/myproject/zones/us-central1-a/disks/testimage1"))
@@ -387,9 +385,9 @@ public class InstanceApiExpectTest extends BaseGoogleComputeEngineApiExpectTest 
       HttpResponse attachResponse = HttpResponse.builder().statusCode(404).build();
 
       InstanceApi api = requestsSendResponses(requestForScopes(COMPUTE_SCOPE),
-              TOKEN_RESPONSE, attach, attachResponse).getInstanceApi("myproject");
+              TOKEN_RESPONSE, attach, attachResponse).getInstanceApi("myproject", "us-central1-a");
 
-      api.attachDiskInZone("us-central1-a", "test-1",
+      api.attachDisk("test-1",
               new AttachDiskOptions()
                       .mode(DiskMode.READ_ONLY)
                       .source(URI.create(BASE_URL + "/myproject/zones/us-central1-a/disks/testimage1"))
@@ -410,9 +408,9 @@ public class InstanceApiExpectTest extends BaseGoogleComputeEngineApiExpectTest 
               .payload(payloadFromResource("/zone_operation.json")).build();
 
       InstanceApi api = requestsSendResponses(requestForScopes(COMPUTE_SCOPE),
-              TOKEN_RESPONSE, detach, detachResponse).getInstanceApi("myproject");
+              TOKEN_RESPONSE, detach, detachResponse).getInstanceApi("myproject", "us-central1-a");
 
-      assertEquals(api.detachDiskInZone("us-central1-a", "test-1", "test-disk-1"),
+      assertEquals(api.detachDisk("test-1", "test-disk-1"),
               new ParseZoneOperationTest().expected());
    }
 
@@ -429,9 +427,9 @@ public class InstanceApiExpectTest extends BaseGoogleComputeEngineApiExpectTest 
       HttpResponse detachResponse = HttpResponse.builder().statusCode(404).build();
 
       InstanceApi api = requestsSendResponses(requestForScopes(COMPUTE_SCOPE),
-              TOKEN_RESPONSE, detach, detachResponse).getInstanceApi("myproject");
+              TOKEN_RESPONSE, detach, detachResponse).getInstanceApi("myproject", "us-central1-a");
 
-      api.detachDiskInZone("us-central1-a", "test-1", "test-disk-1");
+      api.detachDisk("test-1", "test-disk-1");
    }
 
 }

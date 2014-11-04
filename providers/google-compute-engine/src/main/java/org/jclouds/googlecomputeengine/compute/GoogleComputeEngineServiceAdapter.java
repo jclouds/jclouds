@@ -139,9 +139,9 @@ public final class GoogleComputeEngineServiceAdapter implements ComputeServiceAd
 
          disks.add(new PersistentDisk(Mode.READ_WRITE,
                                       bootDisk.selfLink(),
-                                      null,
-                                      true,
-                                      true));
+                                      null, // deviceName
+                                      true, // autoDelete
+                                      true)); // boot
       }
 
       disks.addAll(options.getDisks());
@@ -169,9 +169,9 @@ public final class GoogleComputeEngineServiceAdapter implements ComputeServiceAd
       instanceTemplate.metadata(metadataBuilder.build());
       instanceTemplate.serviceAccounts(options.getServiceAccounts());
 
-      final InstanceApi instanceApi = api.getInstanceApi(userProject.get());
-      final String zone = template.getLocation().getId();
-      Operation operation = instanceApi.createInZone(name, zone, instanceTemplate);
+      String zone = template.getLocation().getId();
+      final InstanceApi instanceApi = api.getInstanceApi(userProject.get(), zone);
+      Operation operation = instanceApi.create(name, instanceTemplate);
 
       if (options.shouldBlockUntilRunning()) {
          waitOperationDone(operation);
@@ -181,23 +181,20 @@ public final class GoogleComputeEngineServiceAdapter implements ComputeServiceAd
       AtomicReference<Instance> instance = Atomics.newReference();
 
       retry(new Predicate<AtomicReference<Instance>>() {
-         @Override
-         public boolean apply(AtomicReference<Instance> input) {
-            input.set(instanceApi.getInZone(zone, name));
+         @Override public boolean apply(AtomicReference<Instance> input) {
+            input.set(instanceApi.get(name));
             return input.get() != null;
          }
       }, operationCompleteCheckTimeout, operationCompleteCheckInterval, MILLISECONDS).apply(instance);
 
       if (!options.getTags().isEmpty()) {
-         Operation tagsOperation = instanceApi
-               .setTagsInZone(zone, name, options.getTags(), instance.get().tags().fingerprint());
+         Operation tagsOperation = instanceApi.setTags(name, options.getTags(), instance.get().tags().fingerprint());
 
          waitOperationDone(tagsOperation);
 
          retry(new Predicate<AtomicReference<Instance>>() {
-            @Override
-            public boolean apply(AtomicReference<Instance> input) {
-               input.set(instanceApi.getInZone(zone, name));
+            @Override public boolean apply(AtomicReference<Instance> input) {
+               input.set(instanceApi.get(name));
                return input.get() != null;
             }
          }, operationCompleteCheckTimeout, operationCompleteCheckInterval, MILLISECONDS).apply(instance);
@@ -206,18 +203,14 @@ public final class GoogleComputeEngineServiceAdapter implements ComputeServiceAd
       // Add tags for security groups
       final FirewallTagNamingConvention naming = firewallTagNamingConvention.get(group);
       Set<String> tags = FluentIterable.from(Ints.asList(options.getInboundPorts()))
-              .transform(new Function<Integer, String>(){
-                       @Override
-                       public String apply(Integer input) {
-                          return input != null
-                                  ? naming.name(input)
-                                  : null;
-                       }
-                    })
-              .toSet();
-      instanceApi.setTagsInZone(zone, instance.get().name(), tags, instance.get().tags().fingerprint());
+            .transform(new Function<Integer, String>() {
+               @Override public String apply(Integer input) {
+                  return input != null ? naming.name(input) : null;
+               }
+            }).toSet();
+      instanceApi.setTags(instance.get().name(), tags, instance.get().tags().fingerprint());
 
-      InstanceInZone instanceInZone = new InstanceInZone(instance.get(), zone);
+      InstanceInZone instanceInZone = InstanceInZone.create(instance.get(), zone);
 
       return new NodeAndInitialCredentials<InstanceInZone>(instanceInZone, instanceInZone.slashEncode(), credentials);
    }
@@ -240,8 +233,7 @@ public final class GoogleComputeEngineServiceAdapter implements ComputeServiceAd
 
       waitOperationDone(diskOperation);
 
-      return api.getDiskApi(userProject.get()).getInZone(template.getLocation().getId(),
-                                                                   diskName);
+      return api.getDiskApi(userProject.get()).getInZone(template.getLocation().getId(), diskName);
    }
 
    @Override
@@ -252,15 +244,12 @@ public final class GoogleComputeEngineServiceAdapter implements ComputeServiceAd
          for (Iterator<ListPage<MachineType>> i = api.getMachineTypeApi(userProject.get()).listInZone(zone.getId());
                i.hasNext(); ) {
             builder.addAll(FluentIterable.from(i.next()).filter(new Predicate<MachineType>() {
-               @Override
-               public boolean apply(MachineType input) {
+               @Override public boolean apply(MachineType input) {
                   return input.deprecated() == null;
                }
             }).transform(new Function<MachineType, MachineTypeInZone>() {
-
-               @Override
-               public MachineTypeInZone apply(MachineType arg0) {
-                  return new MachineTypeInZone(arg0, arg0.zone());
+               @Override public MachineTypeInZone apply(MachineType arg0) {
+                  return MachineTypeInZone.create(arg0, arg0.zone());
                }
             }));
          }
@@ -294,24 +283,20 @@ public final class GoogleComputeEngineServiceAdapter implements ComputeServiceAd
 
    @Override
    public InstanceInZone getNode(String name) {
-      SlashEncodedIds slashEncodedIds = SlashEncodedIds.fromSlashEncoded(name);
-
-      Instance instance = api.getInstanceApi(userProject.get()).getInZone(slashEncodedIds.getFirstId(),
-              slashEncodedIds.getSecondId());
-
-      return instance == null ?  null : new InstanceInZone(instance, slashEncodedIds.getFirstId());
+      SlashEncodedIds zoneAndId = SlashEncodedIds.fromSlashEncoded(name);
+      Instance instance = api.getInstanceApi(userProject.get(), zoneAndId.left()).get(zoneAndId.right());
+      return instance == null ? null : InstanceInZone.create(instance, zoneAndId.left());
    }
 
    @Override
    public Iterable<InstanceInZone> listNodes() {
       return FluentIterable.from(zones.get().values())
             .transformAndConcat(new Function<Location, Iterable<InstanceInZone>>() {
-               @Override
-               public Iterable<InstanceInZone> apply(final Location input) {
-                  return transform(concat(api.getInstanceApi(userProject.get()).listInZone(input.getId())),
+               @Override public Iterable<InstanceInZone> apply(final Location input) {
+                  return transform(concat(api.getInstanceApi(userProject.get(), input.getId()).list()),
                         new Function<Instance, InstanceInZone>() {
                            @Override public InstanceInZone apply(Instance arg0) {
-                              return new InstanceInZone(arg0, input.getId());
+                              return InstanceInZone.create(arg0, input.getId());
                            }
                         });
                }
@@ -319,22 +304,19 @@ public final class GoogleComputeEngineServiceAdapter implements ComputeServiceAd
    }
 
    @Override
-   public Iterable<InstanceInZone> listNodesByIds(final Iterable<String> ids) {
+   public Iterable<InstanceInZone> listNodesByIds(final Iterable<String> zoneAndId) {
       return filter(listNodes(), new Predicate<InstanceInZone>() {
-
-         @Override
-         public boolean apply(InstanceInZone instanceInZone) {
-            return contains(ids, instanceInZone.getInstance().name());
+         @Override public boolean apply(InstanceInZone instanceInZone) {
+            return contains(zoneAndId, instanceInZone.instance().name());
          }
       });
    }
 
    @Override
    public void destroyNode(final String name) {
-      SlashEncodedIds slashEncodedIds = SlashEncodedIds.fromSlashEncoded(name);
+      SlashEncodedIds zoneAndId = SlashEncodedIds.fromSlashEncoded(name);
       String diskName = null;
-      Instance instance = api.getInstanceApi(userProject.get()).getInZone(slashEncodedIds.getFirstId(),
-                                                                           slashEncodedIds.getSecondId());
+      Instance instance = api.getInstanceApi(userProject.get(), zoneAndId.left()).get(zoneAndId.right());
       if (instance != null &&
             "true".equals(instance.metadata().items().get(GCE_DELETE_BOOT_DISK_METADATA_KEY))) {
          for (AttachedDisk input : instance.disks()) {
@@ -344,20 +326,17 @@ public final class GoogleComputeEngineServiceAdapter implements ComputeServiceAd
             }
          }
       }
-      waitOperationDone(api.getInstanceApi(userProject.get()).deleteInZone(slashEncodedIds.getFirstId(),
-              slashEncodedIds.getSecondId()));
+      waitOperationDone(api.getInstanceApi(userProject.get(), zoneAndId.left()).delete(zoneAndId.right()));
 
       if (diskName != null) {
-         waitOperationDone(api.getDiskApi(userProject.get()).deleteInZone(slashEncodedIds.getFirstId(), diskName));
+         waitOperationDone(api.getDiskApi(userProject.get()).deleteInZone(zoneAndId.left(), diskName));
       }
    }
 
    @Override
    public void rebootNode(final String name) {
-      SlashEncodedIds slashEncodedIds = SlashEncodedIds.fromSlashEncoded(name);
-
-      waitOperationDone(api.getInstanceApi(userProject.get()).resetInZone(slashEncodedIds.getFirstId(),
-              slashEncodedIds.getSecondId()));
+      SlashEncodedIds zoneAndId = SlashEncodedIds.fromSlashEncoded(name);
+      waitOperationDone(api.getInstanceApi(userProject.get(), zoneAndId.left()).reset(zoneAndId.right()));
    }
 
    @Override

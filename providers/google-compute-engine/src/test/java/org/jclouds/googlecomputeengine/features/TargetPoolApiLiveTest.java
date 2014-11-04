@@ -70,7 +70,7 @@ public class TargetPoolApiLiveTest extends BaseGoogleComputeEngineApiLiveTest {
 
    @Test(groups = "live")
    public void testCreateInstanceAndHealthCheck(){
-      InstanceApi instanceApi = api.getInstanceApi(userProject.get());
+      InstanceApi instanceApi = api.getInstanceApi(userProject.get(), DEFAULT_ZONE_NAME);
       HttpHealthCheckApi httpHealthCheckApi = api.getHttpHealthCheckApi(userProject.get());
 
       ListPage<Image> list = api.getImageApi("centos-cloud").list(new ListOptions.Builder().filter("name eq centos.*"))
@@ -109,9 +109,9 @@ public class TargetPoolApiLiveTest extends BaseGoogleComputeEngineApiLiveTest {
             TIME_WAIT_LONG);
 
       // Create an instance.
-      assertZoneOperationDoneSuccessfully(instanceApi.createInZone(INSTANCE_NAME, DEFAULT_ZONE_NAME, instanceTemplate),
+      assertZoneOperationDoneSuccessfully(instanceApi.create(INSTANCE_NAME, instanceTemplate),
             TIME_WAIT_LONG);
-      Instance instance = instanceApi.getInZone(DEFAULT_ZONE_NAME, INSTANCE_NAME);
+      Instance instance = instanceApi.get(INSTANCE_NAME);
       instances = new ArrayList<URI>();
       instances.add(instance.selfLink());
 
@@ -244,11 +244,11 @@ public class TargetPoolApiLiveTest extends BaseGoogleComputeEngineApiLiveTest {
 
    @AfterClass(groups = { "integration", "live" })
    public void testCleanup(){
-      InstanceApi instanceApi = api.getInstanceApi(userProject.get());
+      InstanceApi instanceApi = api.getInstanceApi(userProject.get(), DEFAULT_ZONE_NAME);
       HttpHealthCheckApi httpHealthCheckApi = api.getHttpHealthCheckApi(userProject.get());
 
       try {
-         waitZoneOperationDone(instanceApi.deleteInZone(DEFAULT_ZONE_NAME, INSTANCE_NAME), TIME_WAIT_LONG);
+         waitZoneOperationDone(instanceApi.delete(INSTANCE_NAME), TIME_WAIT_LONG);
 
          waitZoneOperationDone(api.getDiskApi(userProject.get()).deleteInZone(DEFAULT_ZONE_NAME, BOOT_DISK_NAME),
                                TIME_WAIT);

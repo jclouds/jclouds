@@ -16,8 +16,11 @@
  */
 package org.jclouds.googlecomputeengine.features;
 
+import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
 import static org.jclouds.googlecomputeengine.GoogleComputeEngineConstants.COMPUTE_READONLY_SCOPE;
 import static org.jclouds.googlecomputeengine.GoogleComputeEngineConstants.COMPUTE_SCOPE;
+import static org.jclouds.googlecomputeengine.domain.Instance.NetworkInterface.AccessConfig;
+import static org.jclouds.googlecomputeengine.domain.Instance.SerialPortOutput;
 
 import java.util.Iterator;
 import java.util.Map;
@@ -31,7 +34,6 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
-import javax.ws.rs.core.MediaType;
 
 import org.jclouds.Fallbacks.NullOnNotFoundOr404;
 import org.jclouds.googlecomputeengine.GoogleComputeEngineFallbacks.EmptyIteratorOnNotFoundOr404;
@@ -64,69 +66,50 @@ import org.jclouds.rest.binders.BindToJsonPayload;
  */
 @SkipEncoding({'/', '='})
 @RequestFilters(OAuthAuthenticationFilter.class)
+@Path("/instances")
+@Consumes(APPLICATION_JSON)
 public interface InstanceApi {
 
-   /**
-    * Returns the specified instance resource.
-    *
-    * @param zone zone the instance is in.
-    * @param instanceName name of the instance resource to return.
-    * @return an Instance resource
-    */
+   /** Returns an instance by name or null if not found. */
    @Named("Instances:get")
    @GET
-   @Consumes(MediaType.APPLICATION_JSON)
-   @Path("/zones/{zone}/instances/{instance}")
+   @Path("/{instance}")
    @OAuthScopes(COMPUTE_READONLY_SCOPE)
    @Fallback(NullOnNotFoundOr404.class)
    @Nullable
-   Instance getInZone(@PathParam("zone") String zone, @PathParam("instance") String instanceName);
+   Instance get(@PathParam("instance") String instance);
 
    /**
     * Creates a instance resource in the specified project using the data included in the request.
     *
     *
-    * @param instanceName this name of the instance to be created
-    * @param zone the name of the zone where the instance will be created
+    * @param instance this name of the instance to be created
     * @param template the instance template
     * @return an Operation resource. To check on the status of an operation, poll the Operations resource returned to
     *         you, and look for the status field.
     */
    @Named("Instances:insert")
    @POST
-   @Consumes(MediaType.APPLICATION_JSON)
-   @Produces(MediaType.APPLICATION_JSON)
-   @Path("/zones/{zone}/instances")
+   @Produces(APPLICATION_JSON)
    @OAuthScopes({COMPUTE_SCOPE})
    @MapBinder(InstanceBinder.class)
-   Operation createInZone(@PayloadParam("name") String instanceName, @PathParam("zone") String zone,
-                          @PayloadParam("template") InstanceTemplate template);
-                          
+   Operation create(@PayloadParam("name") String instance, @PayloadParam("template") InstanceTemplate template);
 
-   /**
-    * Deletes the specified instance resource.
-    *
-    * @param zone the instance is in.
-    * @param instanceName name of the instance resource to delete.
-    * @return an Operation resource. To check on the status of an operation, poll the Operations resource returned to
-    *         you, and look for the status field.  If the instance did not exist the result is null.
-    */
+   /** Deletes an instance by name and returns the operation in progress, or null if not found. */
    @Named("Instances:delete")
    @DELETE
-   @Consumes(MediaType.APPLICATION_JSON)
-   @Path("/zones/{zone}/instances/{instance}")
+   @Path("/{instance}")
    @OAuthScopes(COMPUTE_SCOPE)
    @Fallback(NullOnNotFoundOr404.class)
    @Nullable
-   Operation deleteInZone(@PathParam("zone") String zone, @PathParam("instance") String instanceName);
+   Operation delete(@PathParam("instance") String instance);
 
    /**
     * Retrieves the list of instance resources available to the specified project.
     * By default the list as a maximum size of 100, if no options are provided or ListOptions#getMaxResults() has not
     * been set.
     *
-    * @param zone zone instances are in
-    * @param marker      marks the beginning of the next list page
+    * @param token       marks the beginning of the next list page
     * @param listOptions listing options
     * @return a page of the list
     * @see ListOptions
@@ -134,45 +117,37 @@ public interface InstanceApi {
     */
    @Named("Instances:list")
    @GET
-   @Consumes(MediaType.APPLICATION_JSON)
-   @Path("/zones/{zone}/instances")
    @OAuthScopes(COMPUTE_READONLY_SCOPE)
    @ResponseParser(ParseInstances.class)
    @Fallback(EmptyListPageOnNotFoundOr404.class)
-   ListPage<Instance> listAtMarkerInZone(@PathParam("zone") String zone, @Nullable String marker,
-                                         ListOptions listOptions);
+   ListPage<Instance> listPage(@Nullable String token, ListOptions listOptions);
 
    /**
-    * @see InstanceApi#listInZone(String, org.jclouds.googlecomputeengine.options.ListOptions)
+    * @see InstanceApi#list(org.jclouds.googlecomputeengine.options.ListOptions)
     */
    @Named("Instances:list")
    @GET
-   @Consumes(MediaType.APPLICATION_JSON)
-   @Path("/zones/{zone}/instances")
    @OAuthScopes(COMPUTE_READONLY_SCOPE)
    @ResponseParser(ParseInstances.class)
    @Transform(ParseInstances.ToIteratorOfListPage.class)
    @Fallback(EmptyIteratorOnNotFoundOr404.class)
-   Iterator<ListPage<Instance>> listInZone(@PathParam("zone") String zone);
+   Iterator<ListPage<Instance>> list();
 
    /**
-    * @see InstanceApi#listInZone(String, org.jclouds.googlecomputeengine.options.ListOptions)
+    * @see InstanceApi#list(org.jclouds.googlecomputeengine.options.ListOptions)
     */
    @Named("Instances:list")
    @GET
-   @Consumes(MediaType.APPLICATION_JSON)
-   @Path("/zones/{zone}/instances")
    @OAuthScopes(COMPUTE_READONLY_SCOPE)
    @ResponseParser(ParseInstances.class)
    @Transform(ParseInstances.ToIteratorOfListPage.class)
    @Fallback(EmptyIteratorOnNotFoundOr404.class)
-   Iterator<ListPage<Instance>> listInZone(@PathParam("zone") String zone, ListOptions options);
+   Iterator<ListPage<Instance>> list(ListOptions options);
 
    /**
     * Adds an access config to an instance's network interface.
     *
-    * @param zone zone instance is in
-    * @param instanceName         the instance name.
+    * @param instance         the instance name.
     * @param accessConfig         the AccessConfig to add.
     * @param networkInterfaceName network interface name.
     * @return an Operation resource. To check on the status of an operation, poll the Operations resource returned to
@@ -180,21 +155,18 @@ public interface InstanceApi {
     */
    @Named("Instances:addAccessConfig")
    @POST
-   @Consumes(MediaType.APPLICATION_JSON)
-   @Produces(MediaType.APPLICATION_JSON)
-   @Path("/zones/{zone}/instances/{instance}/addAccessConfig")
+   @Produces(APPLICATION_JSON)
+   @Path("/{instance}/addAccessConfig")
    @OAuthScopes({COMPUTE_SCOPE})
-   Operation addAccessConfigToNicInZone(@PathParam("zone") String zone,
-                                        @PathParam("instance") String instanceName,
-                                        @BinderParam(BindToJsonPayload.class)
-                                        Instance.NetworkInterface.AccessConfig accessConfig,
-                                        @QueryParam("network_interface") String networkInterfaceName);
+   Operation addAccessConfigToNic(@PathParam("instance") String instance,
+                                  @BinderParam(BindToJsonPayload.class)
+                                  AccessConfig accessConfig,
+                                  @QueryParam("network_interface") String networkInterfaceName);
   
    /**
     * Deletes an access config from an instance's network interface.
     *
-    * @param zone zone instance is in
-    * @param instanceName         the instance name.
+    * @param instance         the instance name.
     * @param accessConfigName     the name of the access config to delete
     * @param networkInterfaceName network interface name.
     * @return an Operation resource. To check on the status of an operation, poll the Operations resource returned to
@@ -202,50 +174,41 @@ public interface InstanceApi {
     */
    @Named("Instances:deleteAccessConfig")
    @DELETE
-   @Consumes(MediaType.APPLICATION_JSON)
-   @Path("/zones/{zone}/instances/{instance}/deleteAccessConfig")
+   @Path("/{instance}/deleteAccessConfig")
    @OAuthScopes(COMPUTE_SCOPE)
-   Operation deleteAccessConfigFromNicInZone(@PathParam("zone") String zone,
-                                             @PathParam("instance") String instanceName,
-                                             @QueryParam("access_config") String accessConfigName,
-                                             @QueryParam("network_interface") String networkInterfaceName);
+   Operation deleteAccessConfigFromNic(@PathParam("instance") String instance,
+                                       @QueryParam("access_config") String accessConfigName,
+                                       @QueryParam("network_interface") String networkInterfaceName);
 
    /**
     * Returns the specified instance's serial port output.
     *
-    * @param zone zone instance is in
-    * @param instanceName the instance name.
+    * @param instance the instance name.
     * @return if successful, this method returns a SerialPortOutput containing the instance's serial output.
     */
    @Named("Instances:serialPort")
    @GET
-   @Consumes(MediaType.APPLICATION_JSON)
-   @Path("/zones/{zone}/instances/{instance}/serialPort")
+   @Path("/{instance}/serialPort")
    @OAuthScopes(COMPUTE_READONLY_SCOPE)
-   Instance.SerialPortOutput getSerialPortOutputInZone(@PathParam("zone") String zone,
-                                                       @PathParam("instance") String instanceName);
+   SerialPortOutput getSerialPortOutput(@PathParam("instance") String instance);
 
    /**
     * Hard-resets the instance.
     *
-    * @param zone         the zone the instance is in
-    * @param instanceName the instance name
+    * @param instance the instance name
     * @return an Operation resource. To check on the status of an operation, poll the Operations resource returned to
     *         you, and look for the status field.
     */
    @Named("Instances:reset")
    @POST
-   @Consumes(MediaType.APPLICATION_JSON)
-   @Path("/zones/{zone}/instances/{instance}/reset")
+   @Path("/{instance}/reset")
    @OAuthScopes(COMPUTE_SCOPE)
-   Operation resetInZone(@PathParam("zone") String zone,
-                         @PathParam("instance") String instanceName);
+   Operation reset(@PathParam("instance") String instance);
 
    /**
     * Attaches a disk to an instance
     *
-    * @param zone The zone the instance is in.
-    * @param instanceName The instance name to attach to
+    * @param instance The instance name to attach to
     * @param attachDiskOptions The options for attaching the disk.
     *
     * @return an Operation resource. To check on the status of an operation, poll the Operations resource returned to
@@ -253,19 +216,16 @@ public interface InstanceApi {
     */
    @Named("Instances:attachDisk")
    @POST
-   @Consumes(MediaType.APPLICATION_JSON)
-   @Produces(MediaType.APPLICATION_JSON)
-   @Path("/zones/{zone}/instances/{instance}/attachDisk")
+   @Produces(APPLICATION_JSON)
+   @Path("/{instance}/attachDisk")
    @OAuthScopes(COMPUTE_SCOPE)
-   Operation attachDiskInZone(@PathParam("zone") String zone,
-                              @PathParam("instance") String instanceName,
-                              @BinderParam(BindToJsonPayload.class) AttachDiskOptions attachDiskOptions);
+   Operation attachDisk(@PathParam("instance") String instance,
+                        @BinderParam(BindToJsonPayload.class) AttachDiskOptions attachDiskOptions);
 
    /**
     * Detaches an attached disk from an instance
     *
-    * @param zone The zone the instance is in.
-    * @param instanceName The instance name to attach to
+    * @param instance The instance name to attach to
     * @param deviceName The device name of the disk to detach.
     *
     * @return an Operation resource. To check on the status of an operation, poll the Operations resource returned to
@@ -273,12 +233,9 @@ public interface InstanceApi {
     */
    @Named("Instances:detachDisk")
    @POST
-   @Consumes(MediaType.APPLICATION_JSON)
-   @Path("/zones/{zone}/instances/{instance}/detachDisk")
+   @Path("/{instance}/detachDisk")
    @OAuthScopes(COMPUTE_SCOPE)
-   Operation detachDiskInZone(@PathParam("zone") String zone,
-                              @PathParam("instance") String instanceName,
-                              @QueryParam("deviceName") String deviceName);
+   Operation detachDisk(@PathParam("instance") String instance, @QueryParam("deviceName") String deviceName);
 
    /**
     * Sets metadata for an instance using the data included in the request.
@@ -287,13 +244,12 @@ public interface InstanceApi {
     * if there are pre-existing metadata items that must be kept these must be fetched first and then re-set on the
     * new Metadata, e.g.
     * <pre><tt>
-    *    Metadata.Builder current = instanceApi.getInZone("us-central1-a", "myInstance").getMetadata().toBuilder();
+    *    Metadata.Builder current = instanceApi.get("us-central1-a", "myInstance").getMetadata().toBuilder();
     *    current.addItem("newItem","newItemValue");
-    *    instanceApi.setMetadataInZone("us-central1-a", "myInstance", current.build());
+    *    instanceApi.setMetadata("us-central1-a", "myInstance", current.build());
     * </tt></pre>
     *
-    * @param zone The zone the instance is in
-    * @param instanceName The name of the instance
+    * @param instance The name of the instance
     * @param metadata the metadata to set
     * @param fingerprint The current fingerprint for the items
     *
@@ -302,21 +258,18 @@ public interface InstanceApi {
     */
    @Named("Instances:setMetadata")
    @POST
-   @Path("/zones/{zone}/instances/{instance}/setMetadata")
+   @Path("/{instance}/setMetadata")
    @OAuthScopes(COMPUTE_SCOPE)
-   @Consumes(MediaType.APPLICATION_JSON)
-   @Produces(MediaType.APPLICATION_JSON)
+   @Produces(APPLICATION_JSON)
    @MapBinder(MetadataBinder.class)
-   Operation setMetadataInZone(@PathParam("zone") String zone,
-                               @PathParam("instance") String instanceName,
-                               @PayloadParam("items") Map<String, String> metadata,
-                               @PayloadParam("fingerprint") String fingerprint);
+   Operation setMetadata(@PathParam("instance") String instance,
+                         @PayloadParam("items") Map<String, String> metadata,
+                         @PayloadParam("fingerprint") String fingerprint);
 
    /**
     * Lists items for an instance
     *
-    * @param zone The zone the instance is in
-    * @param instanceName the name of the instance
+    * @param instance the name of the instance
     * @param items A set of items
     * @param fingerprint The current fingerprint for the items
     * @return an Operations resource. To check on the status of an operation, poll the Operations resource returned
@@ -324,15 +277,12 @@ public interface InstanceApi {
     */
    @Named("Instances:setTags")
    @POST
-   @Path("/zones/{zone}/instances/{instance}/setTags")
+   @Path("/{instance}/setTags")
    @OAuthScopes(COMPUTE_SCOPE)
-   @Consumes(MediaType.APPLICATION_JSON)
-   @Produces(MediaType.APPLICATION_JSON)
+   @Produces(APPLICATION_JSON)
    @MapBinder(BindToJsonPayload.class)
-   Operation setTagsInZone(@PathParam("zone") String zone,
-                           @PathParam("instance") String instanceName,
-                           @PayloadParam("items") Iterable<String> items,
-                           @PayloadParam("fingerprint") String fingerprint);
-
+   Operation setTags(@PathParam("instance") String instance,
+                     @PayloadParam("items") Iterable<String> items,
+                     @PayloadParam("fingerprint") String fingerprint);
 }
 

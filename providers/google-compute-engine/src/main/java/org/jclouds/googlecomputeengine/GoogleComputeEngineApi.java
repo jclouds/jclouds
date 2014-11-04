@@ -131,10 +131,11 @@ public interface GoogleComputeEngineApi extends Closeable {
     * Provides access to Instance features
     *
     * @param projectName the name of the project
+    * @param zone zone the instances are in.
     */
    @Delegate
-   @Path("/projects/{project}")
-   InstanceApi getInstanceApi(@PathParam("project") String projectName);
+   @Path("/projects/{project}/zones/{zone}")
+   InstanceApi getInstanceApi(@PathParam("project") String projectName, @PathParam("zone") String zone);
 
    /**
     * Provides access to MachineType features

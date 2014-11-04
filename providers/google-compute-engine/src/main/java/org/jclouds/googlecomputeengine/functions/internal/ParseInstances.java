@@ -44,12 +44,11 @@ public final class ParseInstances extends ParseJson<ListPage<Instance>> {
          this.api = api;
       }
 
-      @Override
-      protected Function<String, ListPage<Instance>> fetchNextPage(final String project, final String zone,
+      @Override protected Function<String, ListPage<Instance>> fetchNextPage(final String project, final String zone,
             final ListOptions options) {
          return new Function<String, ListPage<Instance>>() {
             @Override public ListPage<Instance> apply(String input) {
-               return api.getInstanceApi(project).listAtMarkerInZone(zone, input, options);
+               return api.getInstanceApi(project, zone).listPage(input, options);
             }
          };
       }
