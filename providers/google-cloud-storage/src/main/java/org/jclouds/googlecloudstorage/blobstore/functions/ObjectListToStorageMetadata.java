@@ -58,6 +58,5 @@ public class ObjectListToStorageMetadata implements Function<ListPage<GCSObject>
                      return input;
                   }
                }), from.nextPageToken());
-
    }
 }

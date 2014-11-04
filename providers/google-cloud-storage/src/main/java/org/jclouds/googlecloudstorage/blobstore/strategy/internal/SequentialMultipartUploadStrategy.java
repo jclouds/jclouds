@@ -20,13 +20,10 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 import java.util.List;
 
-import javax.annotation.Resource;
-import javax.inject.Named;
 import javax.inject.Provider;
 
 import org.jclouds.blobstore.domain.Blob;
 import org.jclouds.blobstore.domain.BlobBuilder;
-import org.jclouds.blobstore.reference.BlobStoreConstants;
 import org.jclouds.googlecloudstorage.GoogleCloudStorageApi;
 import org.jclouds.googlecloudstorage.blobstore.functions.BlobMetadataToObjectTemplate;
 import org.jclouds.googlecloudstorage.domain.GCSObject;
@@ -34,16 +31,11 @@ import org.jclouds.googlecloudstorage.domain.templates.ComposeObjectTemplate;
 import org.jclouds.googlecloudstorage.domain.templates.ObjectTemplate;
 import org.jclouds.io.Payload;
 import org.jclouds.io.PayloadSlicer;
-import org.jclouds.logging.Logger;
 
 import com.google.common.collect.Lists;
 import com.google.inject.Inject;
 
-public class SequentialMultipartUploadStrategy extends MultipartUploadStrategy {
-
-   @Resource
-   @Named(BlobStoreConstants.BLOBSTORE_LOGGER)
-   private Logger logger = Logger.NULL;
+public final class SequentialMultipartUploadStrategy extends MultipartUploadStrategy {
 
    private final GoogleCloudStorageApi api;
    private final Provider<BlobBuilder> blobBuilders;
@@ -52,16 +44,15 @@ public class SequentialMultipartUploadStrategy extends MultipartUploadStrategy {
    private final PayloadSlicer slicer;
    private final MultipartNamingStrategy namingStrategy;
 
-   @Inject
-   public SequentialMultipartUploadStrategy(GoogleCloudStorageApi api, Provider<BlobBuilder> blobBuilders,
+   @Inject SequentialMultipartUploadStrategy(GoogleCloudStorageApi api, Provider<BlobBuilder> blobBuilders,
             BlobMetadataToObjectTemplate blob2ObjectTemplate, MultipartUploadSlicingAlgorithm algorithm,
             PayloadSlicer slicer, MultipartNamingStrategy namingStrategy) {
-      this.api = checkNotNull(api, "api");
-      this.blobBuilders = checkNotNull(blobBuilders, "blobBuilders");
-      this.blob2ObjectTemplate = checkNotNull(blob2ObjectTemplate, "blob2Object");
-      this.algorithm = checkNotNull(algorithm, "algorithm");
-      this.slicer = checkNotNull(slicer, "slicer");
-      this.namingStrategy = checkNotNull(namingStrategy, "namingStrategy");
+      this.api = api;
+      this.blobBuilders = blobBuilders;
+      this.blob2ObjectTemplate = blob2ObjectTemplate;
+      this.algorithm = algorithm;
+      this.slicer = slicer;
+      this.namingStrategy = namingStrategy;
    }
 
    @Override

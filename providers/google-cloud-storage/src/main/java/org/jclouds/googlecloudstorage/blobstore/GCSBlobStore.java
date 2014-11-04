@@ -18,12 +18,13 @@ package org.jclouds.googlecloudstorage.blobstore;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.io.BaseEncoding.base64;
+import static org.jclouds.googlecloudstorage.domain.DomainResourceReferences.ObjectRole.READER;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.Set;
 
-import javax.inject.Singleton;
+import javax.inject.Inject;
 
 import org.jclouds.blobstore.BlobStoreContext;
 import org.jclouds.blobstore.domain.Blob;
@@ -35,6 +36,7 @@ import org.jclouds.blobstore.domain.internal.BlobImpl;
 import org.jclouds.blobstore.domain.internal.PageSetImpl;
 import org.jclouds.blobstore.internal.BaseBlobStore;
 import org.jclouds.blobstore.options.CreateContainerOptions;
+import org.jclouds.blobstore.options.GetOptions;
 import org.jclouds.blobstore.options.ListContainerOptions;
 import org.jclouds.blobstore.options.PutOptions;
 import org.jclouds.blobstore.strategy.internal.FetchBlobMetadata;
@@ -50,7 +52,7 @@ import org.jclouds.googlecloudstorage.blobstore.functions.ObjectToBlobMetadata;
 import org.jclouds.googlecloudstorage.blobstore.strategy.internal.MultipartUploadStrategy;
 import org.jclouds.googlecloudstorage.config.UserProject;
 import org.jclouds.googlecloudstorage.domain.Bucket;
-import org.jclouds.googlecloudstorage.domain.DomainResourceReferences.ObjectRole;
+import org.jclouds.googlecloudstorage.domain.DomainResourceReferences;
 import org.jclouds.googlecloudstorage.domain.GCSObject;
 import org.jclouds.googlecloudstorage.domain.ListPage;
 import org.jclouds.googlecloudstorage.domain.templates.BucketTemplate;
@@ -66,24 +68,21 @@ import com.google.common.base.Supplier;
 import com.google.common.base.Throwables;
 import com.google.common.collect.Iterables;
 import com.google.common.hash.HashCode;
-import com.google.inject.Inject;
 import com.google.inject.Provider;
 
-@Singleton
-public class GCSBlobStore extends BaseBlobStore {
+public final class GCSBlobStore extends BaseBlobStore {
 
-   GoogleCloudStorageApi api;
-   BucketToStorageMetadata bucketToStorageMetadata;
-   ObjectToBlobMetadata objectToBlobMetadata;
-   ObjectListToStorageMetadata objectListToStorageMetadata;
-   Provider<FetchBlobMetadata> fetchBlobMetadataProvider;
-   BlobMetadataToObjectTemplate blobMetadataToObjectTemplate;
-   BlobStoreListContainerOptionsToListObjectOptions listContainerOptionsToListObjectOptions;
-   MultipartUploadStrategy multipartUploadStrategy;
-   Supplier<String> projectId;
+   private final GoogleCloudStorageApi api;
+   private final BucketToStorageMetadata bucketToStorageMetadata;
+   private final ObjectToBlobMetadata objectToBlobMetadata;
+   private final ObjectListToStorageMetadata objectListToStorageMetadata;
+   private final Provider<FetchBlobMetadata> fetchBlobMetadataProvider;
+   private final BlobMetadataToObjectTemplate blobMetadataToObjectTemplate;
+   private final BlobStoreListContainerOptionsToListObjectOptions listContainerOptionsToListObjectOptions;
+   private final MultipartUploadStrategy multipartUploadStrategy;
+   private final Supplier<String> projectId;
 
-   @Inject
-   protected GCSBlobStore(BlobStoreContext context, BlobUtils blobUtils, Supplier<Location> defaultLocation,
+   @Inject GCSBlobStore(BlobStoreContext context, BlobUtils blobUtils, Supplier<Location> defaultLocation,
             @Memoized Supplier<Set<? extends Location>> locations, GoogleCloudStorageApi api,
             BucketToStorageMetadata bucketToStorageMetadata, ObjectToBlobMetadata objectToBlobMetadata,
             ObjectListToStorageMetadata objectListToStorageMetadata,
@@ -105,9 +104,10 @@ public class GCSBlobStore extends BaseBlobStore {
 
    @Override
    public PageSet<? extends StorageMetadata> list() {
-      return new Function<ListPage<Bucket>, org.jclouds.blobstore.domain.PageSet<? extends StorageMetadata>>() {
-         public org.jclouds.blobstore.domain.PageSet<? extends StorageMetadata> apply(ListPage<Bucket> from) {
-            return new PageSetImpl<StorageMetadata>(Iterables.transform(from, bucketToStorageMetadata), null);
+      return new Function<ListPage<Bucket>, PageSet<? extends StorageMetadata>>() {
+         public PageSet<? extends StorageMetadata> apply(ListPage<Bucket> from) {
+            return new PageSetImpl<StorageMetadata>(Iterables.transform(from, bucketToStorageMetadata),
+                  from.nextPageToken());
          }
       }.apply(api.getBucketApi().listBucket(projectId.get()));
    }
@@ -121,8 +121,7 @@ public class GCSBlobStore extends BaseBlobStore {
    public boolean createContainerInLocation(Location location, String container) {
       BucketTemplate template = new BucketTemplate().name(container);
       if (location != null) {
-         org.jclouds.googlecloudstorage.domain.DomainResourceReferences.Location gcsLocation = org.jclouds.googlecloudstorage.domain.DomainResourceReferences.Location
-                  .fromValue(location.getId());
+         DomainResourceReferences.Location gcsLocation = DomainResourceReferences.Location.fromValue(location.getId());
          template = template.location(gcsLocation);
       }
       return api.getBucketApi().createBucket(projectId.get(), template) != null;
@@ -132,15 +131,13 @@ public class GCSBlobStore extends BaseBlobStore {
    public boolean createContainerInLocation(Location location, String container, CreateContainerOptions options) {
       BucketTemplate template = new BucketTemplate().name(container);
       if (location != null) {
-         org.jclouds.googlecloudstorage.domain.DomainResourceReferences.Location gcsLocation = org.jclouds.googlecloudstorage.domain.DomainResourceReferences.Location
-                  .fromValue(location.getId());
+         DomainResourceReferences.Location gcsLocation = DomainResourceReferences.Location.fromValue(location.getId());
          template = template.location(gcsLocation);
       }
       Bucket bucket = api.getBucketApi().createBucket(projectId.get(), template);
       if (options.isPublicRead()) {
          try {
-            ObjectAccessControlsTemplate doAclTemplate = ObjectAccessControlsTemplate
-                  .create("allUsers", ObjectRole.READER);
+            ObjectAccessControlsTemplate doAclTemplate = ObjectAccessControlsTemplate.create("allUsers", READER);
             api.getDefaultObjectAccessControlsApi().createDefaultObjectAccessControls(container, doAclTemplate);
          } catch (HttpResponseException e) {
             // If DefaultObjectAccessControls operation fail, Reverse create operation the operation.
@@ -162,7 +159,6 @@ public class GCSBlobStore extends BaseBlobStore {
 
    @Override
    public PageSet<? extends StorageMetadata> list(String container, ListContainerOptions options) {
-
       if (options != null && options != ListContainerOptions.NONE) {
          ListObjectOptions listOptions = listContainerOptionsToListObjectOptions.apply(options);
          ListPage<GCSObject> gcsList = api.getObjectApi().listObjects(container, listOptions);
@@ -218,7 +214,7 @@ public class GCSBlobStore extends BaseBlobStore {
    }
 
    @Override
-   public Blob getBlob(String container, String name, org.jclouds.blobstore.options.GetOptions options) {
+   public Blob getBlob(String container, String name, GetOptions options) {
       GCSObject gcsObject = api.getObjectApi().getObject(container, name);
       if (gcsObject == null) {
          return null;

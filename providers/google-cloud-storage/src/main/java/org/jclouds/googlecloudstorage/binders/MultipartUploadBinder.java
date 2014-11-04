@@ -29,30 +29,35 @@ import org.jclouds.io.Payloads;
 import org.jclouds.io.payloads.MultipartForm;
 import org.jclouds.io.payloads.Part;
 import org.jclouds.io.payloads.StringPayload;
+import org.jclouds.json.Json;
 import org.jclouds.rest.MapBinder;
 
-import com.google.gson.Gson;
+import com.google.inject.Inject;
 
-public class MultipartUploadBinder implements MapBinder {
-
+public final class MultipartUploadBinder implements MapBinder {
    private static final String BOUNDARY_HEADER = "multipart_boundary";
+
+   private final Json json;
+
+   @Inject MultipartUploadBinder(Json json){
+      this.json = json;
+   }
 
    @Override public <R extends HttpRequest> R bindToRequest(R request, Map<String, Object> postParams) {
       ObjectTemplate template = (ObjectTemplate) postParams.get("template");
       Payload payload = (Payload) postParams.get("payload");
 
-      String contentType = checkNotNull(template.cacheControl(), "contentType");
+      String contentType = checkNotNull(template.contentType(), "contentType");
       Long length = checkNotNull(template.size(), "contentLength");
 
-      StringPayload jsonPayload = Payloads.newStringPayload(new Gson().toJson(template));
+      StringPayload jsonPayload = Payloads.newStringPayload(json.toJson(template));
 
       payload.getContentMetadata().setContentLength(length);
 
       Part jsonPart = Part.create("Metadata", jsonPayload, new Part.PartOptions().contentType(APPLICATION_JSON));
       Part mediaPart = Part.create(template.name(), payload, new Part.PartOptions().contentType(contentType));
 
-      MultipartForm compPayload = new MultipartForm(BOUNDARY_HEADER, jsonPart, mediaPart);
-      request.setPayload(compPayload);
+      request.setPayload(new MultipartForm(BOUNDARY_HEADER, jsonPart, mediaPart));
       // HeaderPart
       request.toBuilder().replaceHeader(CONTENT_TYPE, "Multipart/related; boundary= " + BOUNDARY_HEADER).build();
       return request;

@@ -474,7 +474,6 @@ public interface ObjectApi {
     *
     * @return a {@link GCSObject}
     */
-
    @Named("Object:multipartUpload")
    @POST
    @QueryParams(keys = "uploadType", values = "multipart")
@@ -483,6 +482,6 @@ public interface ObjectApi {
    @OAuthScopes(STORAGE_FULLCONTROL_SCOPE)
    @MapBinder(MultipartUploadBinder.class)
    GCSObject multipartUpload(@PathParam("bucket") String bucketName,
-            @BinderParam(BindToJsonPayload.class) ObjectTemplate objectTemplate,
+            @PayloadParam("template") ObjectTemplate objectTemplate,
             @PayloadParam("payload") Payload payload);
 }

@@ -44,31 +44,31 @@ public abstract class GCSObject {
    public abstract String etag();
    public abstract String name();
    public abstract String bucket();
-   public abstract Long generation();
-   public abstract Long metageneration();
+   public abstract long generation();
+   public abstract long metageneration();
    public abstract String contentType();
    public abstract Date updated();
-   public abstract Date timeDeleted();
+   @Nullable public abstract Date timeDeleted();
    public abstract StorageClass storageClass();
-   public abstract Long size();
+   public abstract long size();
    @Nullable public abstract String md5Hash();
    public abstract URI mediaLink();
    public abstract Map<String, String> metadata();
-   public abstract String contentEncoding();
-   public abstract String contentDisposition();
-   public abstract String contentLanguage();
-   public abstract String cacheControl();
+   @Nullable public abstract String contentEncoding();
+   @Nullable public abstract String contentDisposition();
+   @Nullable public abstract String contentLanguage();
+   @Nullable public abstract String cacheControl();
    public abstract List<ObjectAccessControls> acl();
    public abstract Owner owner();
    @Nullable public abstract String crc32c();
-   public abstract Integer componentCount();
+   @Nullable public abstract Integer componentCount();
 
    @SerializedNames(
          { "id", "selfLink", "etag", "name", "bucket", "generation", "metageneration", "contentType", "updated",
                "timeDeleted", "storageClass", "size", "md5Hash", "mediaLink", "metadata", "contentEncoding",
                "contentDisposition", "contentLanguage", "cacheControl", "acl", "owner", "crc32c", "componentCount" })
-   public static GCSObject create(String id, URI selfLink, String etag, String name, String bucket, Long generation,
-         Long metageneration, String contentType, Date updated, Date timeDeleted, StorageClass storageClass, Long size,
+   public static GCSObject create(String id, URI selfLink, String etag, String name, String bucket, long generation,
+         long metageneration, String contentType, Date updated, Date timeDeleted, StorageClass storageClass, long size,
          String md5Hash, URI mediaLink, Map<String, String> metadata, String contentEncoding, String contentDisposition,
          String contentLanguage, String cacheControl, List<ObjectAccessControls> acl, Owner owner, String crc32c,
          Integer componentCount) {
