@@ -16,32 +16,31 @@
  */
 package org.jclouds.googlecloudstorage.domain;
 
+import static org.jclouds.googlecloudstorage.internal.NullSafeCopies.copyOf;
+
 import java.beans.ConstructorProperties;
 import java.util.List;
 
 import org.jclouds.javax.annotation.Nullable;
 
 import com.google.common.collect.ForwardingList;
-import com.google.common.collect.ImmutableList;
 
-/**
- * The collection returned from any <code>listFirstPage()</code> method.
- */
+/** An immutable list that includes a token, if there is another page available. */
 public final class ListPage<T> extends ForwardingList<T> {
 
    private final List<T> items;
    private final String nextPageToken;
    private final List<String> prefixes;
 
-   public static <T> ListPage<T> create(Iterable<T> items, String nextPageToken, List<String> prefixes) {
+   public static <T> ListPage<T> create(List<T> items, String nextPageToken, List<String> prefixes) {
       return new ListPage<T>(items, nextPageToken, prefixes);
    }
 
    @ConstructorProperties({ "items", "nextPageToken", "prefixes" })
-   ListPage(Iterable<T> items, String nextPageToken, List<String> prefixes) {
-      this.items = items != null ? ImmutableList.copyOf(items) : ImmutableList.<T>of();
+   ListPage(List<T> items, String nextPageToken, List<String> prefixes) {
+      this.items = copyOf(items);
       this.nextPageToken = nextPageToken;
-      this.prefixes = prefixes != null ? prefixes : ImmutableList.<String>of();
+      this.prefixes = copyOf(prefixes);
    }
 
    @Nullable public String nextPageToken() {
