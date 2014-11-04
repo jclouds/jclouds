@@ -52,8 +52,7 @@ public class ParseAddressListTest extends BaseGoogleComputeEngineParseTest<ListP
       );
       return ListPage.create( //
             ImmutableList.of(address1, address2), // items
-            null, // nextPageToken
-            null // prefixes
+            null // nextPageToken
       );
    }
 }

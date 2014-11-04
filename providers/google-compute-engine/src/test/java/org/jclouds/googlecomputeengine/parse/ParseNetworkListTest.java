@@ -39,8 +39,7 @@ public class ParseNetworkListTest extends BaseGoogleComputeEngineParseTest<ListP
    public ListPage<Network> expected() {
       return ListPage.create( //
             ImmutableList.of(new ParseNetworkTest().expected()), // items
-            null, // nextPageToken
-            null // prefixes
+            null // nextPageToken
       );
    }
 }

@@ -39,8 +39,7 @@ public class ParseDiskListTest extends BaseGoogleComputeEngineParseTest<ListPage
    public ListPage<Disk> expected() {
       return ListPage.create( //
             ImmutableList.of(new ParseDiskTest().expected()), // items
-            null, // nextPageToken
-            null // prefixes
+            null // nextPageToken
       );
    }
 }

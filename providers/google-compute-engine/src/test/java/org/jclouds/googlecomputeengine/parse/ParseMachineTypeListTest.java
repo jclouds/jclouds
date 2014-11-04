@@ -80,8 +80,7 @@ public class ParseMachineTypeListTest extends BaseGoogleComputeEngineParseTest<L
       );
       return ListPage.create( //
             ImmutableList.of(machineType1, machineType2, machineType3), // items
-            null, // nextPageToken
-            null // prefixes
+            null // nextPageToken
       );
    }
 }

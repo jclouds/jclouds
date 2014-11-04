@@ -39,8 +39,7 @@ public class ParseTargetPoolListTest extends BaseGoogleComputeEngineParseTest<Li
    public ListPage<TargetPool> expected() {
       return ListPage.create( //
             ImmutableList.of(new ParseTargetPoolTest().expected()), // items
-            null, // nextPageToken
-            null // prefixes
+            null // nextPageToken
       );
    }
 }

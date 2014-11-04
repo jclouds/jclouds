@@ -100,8 +100,7 @@ public class ZoneOperationApiExpectTest extends BaseGoogleComputeEngineApiExpect
    private static ListPage<Operation> expectedList() {
       return ListPage.create( //
             ImmutableList.of(new ParseZoneOperationTest().expected()), // items
-            null, // nextPageToken
-            null // prefixes
+            null // nextPageToken
       );
    }
 

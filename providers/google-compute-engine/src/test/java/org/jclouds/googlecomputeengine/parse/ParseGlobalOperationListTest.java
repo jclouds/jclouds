@@ -39,8 +39,7 @@ public class ParseGlobalOperationListTest extends BaseGoogleComputeEngineParseTe
    public ListPage<Operation> expected() {
       return ListPage.create( //
             ImmutableList.of(new ParseGlobalOperationTest().expected()), // items
-            null, // nextPageToken
-            null // prefixes
+            null // nextPageToken
       );
    }
 }

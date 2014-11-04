@@ -25,32 +25,24 @@ import org.jclouds.javax.annotation.Nullable;
 
 import com.google.common.collect.ForwardingList;
 
-/**
- * The collection returned from any <code>listFirstPage()</code> method.
- */
+/** An immutable list that includes a token, if there is another page available. */
 public final class ListPage<T> extends ForwardingList<T> {
 
    private final List<T> items;
    private final String nextPageToken;
-   private final List<String> prefixes;
 
-   public static <T> ListPage<T> create(List<T> items, String nextPageToken, List<String> prefixes) {
-      return new ListPage<T>(items, nextPageToken, prefixes);
+   public static <T> ListPage<T> create(List<T> items, String nextPageToken) {
+      return new ListPage<T>(items, nextPageToken);
    }
 
-   @ConstructorProperties({ "items", "nextPageToken", "prefixes" })
-   ListPage(List<T> items, String nextPageToken, List<String> prefixes) {
+   @ConstructorProperties({ "items", "nextPageToken" })
+   ListPage(List<T> items, String nextPageToken) {
       this.items = copyOf(items);
       this.nextPageToken = nextPageToken;
-      this.prefixes = copyOf(prefixes);
    }
 
    @Nullable public String nextPageToken() {
       return nextPageToken;
-   }
-
-   public List<String> prefixes() {
-      return prefixes;
    }
 
    @Override protected List<T> delegate() {

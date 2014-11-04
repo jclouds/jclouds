@@ -52,8 +52,7 @@ public class ParseDiskTypeListTest extends BaseGoogleComputeEngineParseTest<List
       DiskType diskType2 = new ParseDiskTypeTest().expected();
       return ListPage.create( //
             ImmutableList.of(diskType1, diskType2), // items
-            null, // nextPageToken
-            null // prefixes
+            null // nextPageToken
       );
    }
 }

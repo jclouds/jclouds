@@ -40,6 +40,7 @@ import org.testng.annotations.AfterClass;
 import org.testng.annotations.Test;
 
 import com.google.common.base.Predicate;
+import com.google.common.collect.Iterables;
 
 public class TargetPoolApiLiveTest extends BaseGoogleComputeEngineApiLiveTest {
 
@@ -205,10 +206,9 @@ public class TargetPoolApiLiveTest extends BaseGoogleComputeEngineApiLiveTest {
 
    @Test(groups = "live", dependsOnMethods = "testInsertTargetPool")
    public void testListTargetPool() {
-
       ListPage<TargetPool> targetPool = api().list(new ListOptions.Builder()
               .filter("name eq " + BACKUP_TARGETPOOL_NAME));
-      assertEquals(targetPool.size(), 1);
+      assertEquals(Iterables.size(targetPool), 1);
    }
 
    @Test(groups = "live", dependsOnMethods = {"testInsertTargetPool2"})

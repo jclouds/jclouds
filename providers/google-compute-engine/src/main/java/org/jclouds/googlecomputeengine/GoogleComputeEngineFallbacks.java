@@ -37,7 +37,7 @@ public final class GoogleComputeEngineFallbacks {
    }
    public static final class EmptyListPageOnNotFoundOr404 implements Fallback<Object> {
       @Override public ListPage<Object> createOrPropagate(Throwable t) throws Exception {
-         return valOnNotFoundOr404(ListPage.create(null, null, null), t);
+         return valOnNotFoundOr404(ListPage.create(null, null), t);
       }
    }
 }

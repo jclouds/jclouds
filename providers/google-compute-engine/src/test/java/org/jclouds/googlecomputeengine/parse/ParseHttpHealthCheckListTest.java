@@ -70,8 +70,7 @@ public class ParseHttpHealthCheckListTest extends BaseGoogleComputeEngineParseTe
       );
       return ListPage.create( //
             ImmutableList.of(healthCheck1, healthCheck2, healthCheck3), // items
-            null, // nextPageToken
-            null // prefixes
+            null // nextPageToken
       );
    }
 }

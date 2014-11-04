@@ -53,8 +53,7 @@ public class ParseFirewallListTest extends BaseGoogleComputeEngineParseTest<List
       );
       return ListPage.create( //
             ImmutableList.of(firewall1, firewall2), // items
-            null, // nextPageToken
-            null // prefixes
+            null // nextPageToken
       );
    }
 }

@@ -56,8 +56,7 @@ public class ParseRouteListTest extends BaseGoogleComputeEngineParseTest<ListPag
       );
       return ListPage.create( //
             ImmutableList.of(route1, route2), // items
-            null, // nextPageToken
-            null // prefixes
+            null // nextPageToken
       );
    }
 }

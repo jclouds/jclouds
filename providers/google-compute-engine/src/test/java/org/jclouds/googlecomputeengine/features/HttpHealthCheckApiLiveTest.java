@@ -27,6 +27,8 @@ import org.jclouds.googlecomputeengine.options.HttpHealthCheckCreationOptions;
 import org.jclouds.googlecomputeengine.options.ListOptions;
 import org.testng.annotations.Test;
 
+import com.google.common.collect.Iterables;
+
 public class HttpHealthCheckApiLiveTest extends BaseGoogleComputeEngineApiLiveTest {
 
    private static final String HTTP_HEALTH_CHECK_NAME = "http-health-check-api-live-test";
@@ -69,7 +71,7 @@ public class HttpHealthCheckApiLiveTest extends BaseGoogleComputeEngineApiLiveTe
    public void testListHttpHealthCheck() {
       ListPage<HttpHealthCheck> httpHealthCheck = api().list(new ListOptions.Builder()
               .filter("name eq " + HTTP_HEALTH_CHECK_NAME));
-      assertEquals(httpHealthCheck.size(), 1);
+      assertEquals(Iterables.size(httpHealthCheck), 1);
    }
 
    @Test(groups = "live", dependsOnMethods = "testGetHttpHealthCheck")

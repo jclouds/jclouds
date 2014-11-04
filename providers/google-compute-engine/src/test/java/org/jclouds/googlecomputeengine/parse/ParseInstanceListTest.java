@@ -39,8 +39,7 @@ public class ParseInstanceListTest extends BaseGoogleComputeEngineParseTest<List
    public ListPage<Instance> expected() {
       return ListPage.create( //
             ImmutableList.of(new ParseInstanceTest().expected()), // items
-            null, // nextPageToken
-            null // prefixes
+            null // nextPageToken
       );
    }
 }

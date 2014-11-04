@@ -53,8 +53,7 @@ public class RegionOperationApiExpectTest extends BaseGoogleComputeEngineApiExpe
    private ListPage<Operation> expectedList() {
       return ListPage.create( //
             ImmutableList.of(new ParseRegionOperationTest().expected()), // items
-            null, // nextPageToken
-            null // prefixes
+            null // nextPageToken
       );
    }
 

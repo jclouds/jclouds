@@ -38,8 +38,7 @@ public class ParseImageListTest extends BaseGoogleComputeEngineParseTest<ListPag
    public ListPage<Image> expected() {
       return ListPage.create( //
             ImmutableList.of(new ParseImageTest().expected()), // items
-            null, // nextPageToken
-            null // prefixes
+            null // nextPageToken
       );
    }
 }

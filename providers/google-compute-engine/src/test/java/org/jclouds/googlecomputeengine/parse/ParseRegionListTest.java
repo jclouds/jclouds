@@ -61,8 +61,7 @@ public class ParseRegionListTest extends BaseGoogleComputeEngineParseTest<ListPa
       );
       return ListPage.create( //
             ImmutableList.of(region1, region2), // items
-            null, // nextPageToken
-            null // prefixes
+            null // nextPageToken
       );
    }
 }

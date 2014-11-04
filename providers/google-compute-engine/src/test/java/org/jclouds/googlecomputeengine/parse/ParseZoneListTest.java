@@ -57,8 +57,7 @@ public class ParseZoneListTest extends BaseGoogleComputeEngineParseTest<ListPage
       );
       return ListPage.create( //
             ImmutableList.of(zone1, zone2), // items
-            null, // nextPageToken
-            null // prefixes
+            null // nextPageToken
       );
    }
 }

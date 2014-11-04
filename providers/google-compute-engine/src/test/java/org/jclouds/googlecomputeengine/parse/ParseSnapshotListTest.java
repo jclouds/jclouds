@@ -52,8 +52,7 @@ public class ParseSnapshotListTest extends BaseGoogleComputeEngineParseTest<List
       );
       return ListPage.create( //
             ImmutableList.of(snapshot1, snapshot2), // items
-            null, // nextPageToken
-            null // prefixes
+            null // nextPageToken
       );
    }
 

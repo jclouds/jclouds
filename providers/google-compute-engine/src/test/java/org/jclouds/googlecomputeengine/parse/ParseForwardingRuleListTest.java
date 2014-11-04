@@ -39,8 +39,7 @@ public class ParseForwardingRuleListTest extends BaseGoogleComputeEngineParseTes
    public ListPage<ForwardingRule> expected() {
       return ListPage.create( //
             ImmutableList.of(new ParseForwardingRuleTest().expected()), // items
-            null, // nextPageToken
-            null // prefixes
+            null // nextPageToken
       );
    }
 }
